@@ -62,8 +62,14 @@ gda_freetds_get_value_type (TDSCOLINFO *col)
 			} else if (col->column_size == 4) {
 				return GDA_VALUE_TYPE_INTEGER;
 			} else if (col->column_size == 8) {
+				return GDA_VALUE_TYPE_BIGINT;
 			}
 			break;
+		case SYBREAL:
+			return GDA_VALUE_TYPE_SINGLE;
+		case SYBFLT8:
+		case SYBFLTN:
+			return GDA_VALUE_TYPE_DOUBLE;
 		default:
 			return GDA_VALUE_TYPE_STRING;
 	}
@@ -121,7 +127,16 @@ gda_freetds_set_gdavalue (GdaValue *field, gchar *val, TDSCOLINFO *col)
 					gda_value_set_integer (field,
 					                        *(TDS_INT *) val);
 				} else if (col->column_size == 8) {
+					gda_value_set_bigint (field,
+					                      *(long long *) val);
 				}
+				break;
+			case SYBREAL:
+				gda_value_set_single (field, *(TDS_REAL *) val);
+				break;
+			case SYBFLT8:
+			case SYBFLTN:
+				gda_value_set_double (field, *(TDS_FLOAT *) val);
 				break;
 			default:
 				if (col->column_size > max_size) {
