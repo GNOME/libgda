@@ -23,7 +23,8 @@
 #include "gda-corba.h"
 #include "gda-connection.h"
 #include "gda-command.h"
-#include <bonobo.h>
+#include <bonobo/bonobo-object.h>
+#include <bonobo/bonobo-moniker-util.h>
 
 #include <gtk/gtksignal.h>
 
