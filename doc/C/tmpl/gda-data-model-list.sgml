@@ -44,24 +44,6 @@ GdaDataModelList
 
 @model: 
 @value: 
-
-
-<!-- ##### FUNCTION gda_data_model_list_prepend_value ##### -->
-<para>
-
-</para>
-
-@model: 
-@value: 
-
-
-<!-- ##### FUNCTION gda_data_model_list_insert_value ##### -->
-<para>
-
-</para>
-
-@model: 
-@value: 
-@row: 
+@Returns: 
 
 

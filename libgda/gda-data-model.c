@@ -105,6 +105,8 @@ gda_data_model_class_init (GdaDataModelClass *klass)
 	klass->get_n_columns = NULL;
 	klass->describe_column = NULL;
 	klass->get_value_at = NULL;
+	klass->is_editable = NULL;
+	klass->append_row = NULL;
 }
 
 static void
@@ -360,6 +362,41 @@ gda_data_model_get_value_at (GdaDataModel *model, gint col, gint row)
 }
 
 /**
+ * gda_data_model_is_editable
+ * @model: a #GdaDataModel object.
+ *
+ * Check whether the given data model can be edited or not.
+ *
+ * Returns: TRUE if it can be edited, FALSE if not.
+ */
+gboolean
+gda_data_model_is_editable (GdaDataModel *model)
+{
+	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
+	g_return_val_if_fail (CLASS (model)->is_editable != NULL, FALSE);
+
+	return CLASS (model)->is_editable (model);
+}
+
+/**
+ * gda_data_model_append_row
+ * @model: a #GdaDataModel object.
+ * @row: the row to add.
+ *
+ * Append a row to the given data model.
+ *
+ * Returns: the unique ID of the added row.
+ */
+const GdaRow *
+gda_data_model_append_row (GdaDataModel *model, const GList *values)
+{
+	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
+	g_return_val_if_fail (CLASS (model)->append_row != NULL, NULL);
+
+	return CLASS (model)->append_row (model, values);
+}
+
+/**
  * gda_data_model_foreach
  * @model: a #GdaDataModel object.
  * @func: callback function.
@@ -399,7 +436,6 @@ gda_data_model_foreach (GdaDataModel *model,
 		for (c = 0; c < cols; c++) {
 			GdaField *field;
 			GdaFieldAttributes *fa;
-			GdaValue *value;
 
 			field = gda_row_get_field (row, c);
 			fa = gda_data_model_describe_column (model, c);

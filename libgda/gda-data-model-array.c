@@ -29,7 +29,7 @@ struct _GdaDataModelArrayPrivate {
 	/* number of columns in each row */
 	gint number_of_columns;
 
-	/* the array of rows, each item is a GList of GdaValue's */
+	/* the array of rows, each item is a GdaRow */
 	GPtrArray *rows;
 };
 
@@ -61,7 +61,7 @@ gda_data_model_array_get_n_columns (GdaDataModel *model)
 static const GdaValue *
 gda_data_model_array_get_value_at (GdaDataModel *model, gint col, gint row)
 {
-	GList *fields;
+	GdaRow *fields;
 
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_ARRAY (model), NULL);
 
@@ -70,16 +70,55 @@ gda_data_model_array_get_value_at (GdaDataModel *model, gint col, gint row)
 
 	fields = g_ptr_array_index (GDA_DATA_MODEL_ARRAY (model)->priv->rows, row);
 	if (fields != NULL) {
-		gint len = g_list_length (fields);
+		GdaField *field;
 
-		if (col < len) {
-			GList *node = g_list_nth (fields, col);
-			if (node != NULL)
-				return (GdaValue *) node->data;
-		}
+		field = gda_row_get_field (fields, col);
+		return (const GdaValue *) gda_field_get_value (field);
 	}
 
 	return NULL;
+}
+
+static gboolean
+gda_data_model_array_is_editable (GdaDataModel *model)
+{
+	g_return_val_if_fail (GDA_IS_DATA_MODEL_ARRAY (model), FALSE);
+	return TRUE;
+}
+
+static const GdaRow *
+gda_data_model_array_append_row (GdaDataModel *model, const GList *values)
+{
+	gint len;
+	gint i;
+	GList *list = NULL;
+	GdaRow *row = NULL;
+
+	g_return_val_if_fail (GDA_IS_DATA_MODEL_ARRAY (model), NULL);
+	g_return_val_if_fail (values != NULL, NULL);
+
+	len = g_list_length ((GList *) values);
+	if (len != GDA_DATA_MODEL_ARRAY (model)->priv->number_of_columns)
+		return NULL;
+
+	row = gda_row_new (len);
+	for (i = 0; i < len; i++) {
+		GList *l;
+		GdaField *field;
+
+		l = g_list_nth ((GList *) values, i);
+		if (!l)
+			return NULL;
+
+		field = gda_row_get_field (row, i);
+		/* FIXME: set properties for the GdaField */
+		gda_field_set_value (field, (const GdaValue *) l->data);
+	}
+
+	g_ptr_array_add (GDA_DATA_MODEL_ARRAY (model)->priv->rows, row);
+	gda_data_model_changed (model);
+
+	return (const GdaRow *) row;
 }
 
 static void
@@ -95,6 +134,8 @@ gda_data_model_array_class_init (GdaDataModelArrayClass *klass)
 	model_class->get_n_columns = gda_data_model_array_get_n_columns;
 	model_class->describe_column = NULL;
 	model_class->get_value_at = gda_data_model_array_get_value_at;
+	model_class->is_editable = gda_data_model_array_is_editable;
+	model_class->append_row = gda_data_model_array_append_row;
 }
 
 static void
@@ -183,44 +224,10 @@ gda_data_model_array_clear (GdaDataModelArray *model)
 	g_return_if_fail (GDA_IS_DATA_MODEL_ARRAY (model));
 
 	while (model->priv->rows->len > 0) {
-		GList *cols = (GList *) g_ptr_array_index (model->priv->rows, 0);
+		GdaRow *row = (GList *) g_ptr_array_index (model->priv->rows, 0);
 
-		if (cols != NULL)
-			g_list_foreach (cols, (GFunc) gda_value_free, NULL);
+		if (row != NULL)
+			gda_row_free (row);
 		g_ptr_array_remove_index (model->priv->rows, 0);
-		g_list_free (cols);
 	}
-}
-
-/**
- * gda_data_model_array_append_row
- */
-void
-gda_data_model_array_append_row (GdaDataModelArray *model, const GList *values)
-{
-	gint len;
-	gint i;
-	GList *list = NULL;
-
-	g_return_if_fail (GDA_IS_DATA_MODEL_ARRAY (model));
-	g_return_if_fail (values != NULL);
-
-	len = g_list_length ((GList *) values);
-	if (len != model->priv->number_of_columns)
-		return;
-
-	for (i = 0; i < len; i++) {
-		GList *l;
-		GdaValue *new_value;
-
-		l = g_list_nth ((GList *) values, i);
-		if (!l)
-			return;
-
-		new_value = gda_value_copy ((GdaValue *) l->data);
-		list = g_list_append (list, new_value);
-	}
-
-	g_ptr_array_add (model->priv->rows, list);
-	gda_data_model_changed (GDA_DATA_MODEL (model));
 }

@@ -1,5 +1,46 @@
 2002-05-09  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* libgda/gda-data-model.[ch]: added "append_row" and "is_editable"
+	virtual methods.
+	(gda_data_model_class_init): initialize new members.
+	(gda_data_model_is_editable): new function.
+	(gda_data_model_append_row): new function.
+
+	* libgda/gda-data-model-array.[ch]: store GdaRow's instead of
+	GList's of values.
+	(gda_data_model_array_get_value_at): changed to deal with new
+	internal organization of data.
+	(gda_data_model_array_clear): likewise.
+	(gda_data_model_array_is_editable): new function.
+	(gda_data_model_array_append_row): made it private and changed to
+	return a GdaRow.
+
+	* libgda/gda-data-model-list.c: changed to use a GdaDataModelArray
+	for storing the values (with one column only).
+	(gda_data_model_list_get_value_at): call get_value_at on the internal
+	GdaDataModelArray.
+	(gda_data_model_list_get_n_rows): likewise.
+	(gda_data_model_list_is_editable): new function.
+	(gda_data_model_list_append_row): new function.
+	(gda_data_model_list_class_init): initialized new class members.
+	(gda_data_model_list_init): create internal GdaDataModelArray.
+	(gda_data_model_list_finalize): unref internal GdaDataModelArray.
+	(gda_data_model_list_append_value): changed to return a GdaRow, and
+	to just call the gda_data_model_array_* functions on the internal
+	GdaDataModelArray.
+	(gda_data_model_list_prepend_value): removed.
+	(gda_data_model_list_insert_value): removed.
+
+	* providers/default/gda-default-provider.c:
+	* providers/mysql/gda-mysql-provider.c:
+	* providers/postgres/gda-postgres-provider.c:
+	* testing/models.c:
+	* libgda/gda-recordset.c:
+	* libgda/gda-config.c: use gda_data_model_append_row, and not
+	gda_data_model_array_append_row.
+	
+2002-05-09  Rodrigo Moya <rodrigo@gnome-db.org>
+
 	* libgda/gda-data-model.[ch] (gda_data_model_foreach): new function.
 
 2002-05-09  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>

@@ -24,9 +24,9 @@
 #  define __gda_data_model_h__
 
 #include <glib-object.h>
+#include <libgda/gda-command.h>
 #include <libgda/gda-row.h>
 #include <libgda/gda-value.h>
-#include <libgda/gda-command.h>
 
 G_BEGIN_DECLS
 
@@ -60,6 +60,9 @@ struct _GdaDataModelClass {
 	gint (* get_n_columns) (GdaDataModel *model);
 	GdaFieldAttributes * (* describe_column) (GdaDataModel *model, gint col);
 	const GdaValue * (* get_value_at) (GdaDataModel *model, gint col, gint row);
+
+	gboolean (* is_editable) (GdaDataModel *model);
+	const GdaRow * (* append_row) (GdaDataModel *model, const GList *values);
 };
 
 GType               gda_data_model_get_type (void);
@@ -74,6 +77,9 @@ GdaFieldAttributes *gda_data_model_describe_column (GdaDataModel *model, gint co
 const gchar        *gda_data_model_get_column_title (GdaDataModel *model, gint col);
 void                gda_data_model_set_column_title (GdaDataModel *model, gint col, const gchar *title);
 const GdaValue     *gda_data_model_get_value_at (GdaDataModel *model, gint col, gint row);
+
+gboolean            gda_data_model_is_editable (GdaDataModel *model);
+const GdaRow       *gda_data_model_append_row (GdaDataModel *model, const GList *values);
 
 typedef gboolean (* GdaDataModelForeachFunc) (GdaDataModel *model,
 					      GdaRow *row,

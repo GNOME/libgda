@@ -603,7 +603,7 @@ add_string_row (gpointer data, gpointer user_data)
 	list.next = NULL;
 	list.prev = NULL;
 
-	gda_data_model_array_append_row (recset, &list);
+	gda_data_model_append_row (GDA_DATA_MODEL (recset), &list);
 
 	gda_value_free (value);
 }
@@ -1029,7 +1029,7 @@ add_g_list_row (gpointer data, gpointer user_data)
 	GList *rowlist = data;
 	GdaDataModelArray *recset = user_data;
 
-	gda_data_model_array_append_row (recset, rowlist);
+	gda_data_model_append_row (GDA_DATA_MODEL (recset), rowlist);
 	g_list_foreach (rowlist, (GFunc) gda_value_free, NULL);
 	g_list_free (rowlist);
 }

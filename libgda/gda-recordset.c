@@ -123,8 +123,8 @@ gda_recordset_get_value_at (GdaDataModel *model, gint col, gint row)
 			value_list = g_list_append (value_list, value);
 		}
 
-		gda_data_model_array_append_row (GDA_DATA_MODEL_ARRAY (recset),
-						 (const GList *) value_list);
+		gda_data_model_append_row (GDA_DATA_MODEL (recset),
+					   (const GList *) value_list);
 
 		gda_row_free (row_data);
 		g_list_free (value_list);

@@ -429,7 +429,7 @@ add_string_row (GdaDataModelArray *recset, const gchar *str)
 	list.next = NULL;
 	list.prev = NULL;
 
-	gda_data_model_array_append_row (recset, &list);
+	gda_data_model_append_row (GDA_DATA_MODEL (recset), &list);
 
 	gda_value_free (value);
 }
@@ -478,7 +478,8 @@ get_tables (GdaConnection *cnc, GdaXmlDatabase *xmldb)
 
 			value = gda_value_new_string ((const gchar *) l->data);
 			value_list = g_list_append (NULL, value);
-			gda_data_model_array_append_row (recset, (const GList *) value_list);
+			gda_data_model_append_row (GDA_DATA_MODEL (recset),
+						   (const GList *) value_list);
 
 			gda_value_free (value);
 			g_list_free (value_list);

@@ -189,7 +189,7 @@ test_array_model (void)
 		values = g_list_append (values, gda_value_new_string ("Another string"));
 		values = g_list_append (values, gda_value_new_double (4560.45672113323093));
 
-		gda_data_model_array_append_row (model, values);
+		gda_data_model_append_row (GDA_DATA_MODEL (model), values);
 
 		g_list_foreach (values, (GFunc) gda_value_free, NULL);
 		g_list_free (values);

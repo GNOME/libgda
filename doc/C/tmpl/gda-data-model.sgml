@@ -103,6 +103,25 @@ GdaDataModel
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_data_model_is_editable ##### -->
+<para>
+
+</para>
+
+@model: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_model_append_row ##### -->
+<para>
+
+</para>
+
+@model: 
+@values: 
+@Returns: 
+
+
 <!-- ##### USER_FUNCTION GdaDataModelForeachFunc ##### -->
 <para>
 

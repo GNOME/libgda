@@ -20,13 +20,13 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#include <libgda/gda-data-model-array.h>
 #include <libgda/gda-data-model-list.h>
 
 #define PARENT_TYPE GDA_TYPE_DATA_MODEL
 
 struct _GdaDataModelListPrivate {
-	/* list of GdaValue's */
-	GList *value_list;
+	GdaDataModelArray *rows;
 };
 
 static void gda_data_model_list_class_init (GdaDataModelListClass *klass);
@@ -44,7 +44,7 @@ static gint
 gda_data_model_list_get_n_rows (GdaDataModel *model)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_LIST (model), -1);
-	return g_list_length (GDA_DATA_MODEL_LIST (model)->priv->value_list);
+	return gda_data_model_get_n_rows (GDA_DATA_MODEL (GDA_DATA_MODEL_LIST (model)->priv->rows));
 }
 
 static gint
@@ -57,18 +57,27 @@ gda_data_model_list_get_n_columns (GdaDataModel *model)
 static const GdaValue *
 gda_data_model_list_get_value_at (GdaDataModel *model, gint col, gint row)
 {
-	gint count;
-	GList *l;
-
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_LIST (model), NULL);
 	g_return_val_if_fail (col == 0, NULL);
 
-	count = g_list_length (GDA_DATA_MODEL_LIST (model)->priv->value_list);
-	if (row > count)
-		return NULL;
+	return gda_data_model_get_value_at (GDA_DATA_MODEL (GDA_DATA_MODEL_LIST (model)->priv->rows), col, row);
+}
 
-	l = g_list_nth (GDA_DATA_MODEL_LIST (model)->priv->value_list, row);
-	return l ? (GdaValue *) l->data : NULL;
+static gboolean
+gda_data_model_list_is_editable (GdaDataModel *model)
+{
+	g_return_val_if_fail (GDA_IS_DATA_MODEL_LIST (model), FALSE);
+	return TRUE;
+}
+
+static const GdaRow *
+gda_data_model_list_append_row (GdaDataModel *model, const GList *values)
+{
+	g_return_val_if_fail (GDA_IS_DATA_MODEL_LIST (model), NULL);
+	g_return_val_if_fail (values != NULL, NULL);
+
+	return gda_data_model_list_append_value (GDA_DATA_MODEL_LIST (model),
+						 (const GdaValue *) values->data);
 }
 
 static void
@@ -84,6 +93,8 @@ gda_data_model_list_class_init (GdaDataModelListClass *klass)
 	model_class->get_n_columns = gda_data_model_list_get_n_columns;
 	model_class->describe_column = NULL;
 	model_class->get_value_at = gda_data_model_list_get_value_at;
+	model_class->is_editable = gda_data_model_list_is_editable;
+	model_class->append_row = gda_data_model_list_append_row;
 }
 
 static void
@@ -91,7 +102,7 @@ gda_data_model_list_init (GdaDataModelList *list, GdaDataModelListClass *klass)
 {
 	/* allocate internal structure */
 	list->priv = g_new0 (GdaDataModelListPrivate, 1);
-	list->priv->value_list = NULL;
+	list->priv->rows = gda_data_model_array_new (1);
 }
 
 static void
@@ -102,8 +113,7 @@ gda_data_model_list_finalize (GObject *object)
 	g_return_if_fail (GDA_IS_DATA_MODEL_LIST (model));
 
 	/* free memory */
-	g_list_foreach (model->priv->value_list, (GFunc) gda_value_free, NULL);
-	g_list_free (model->priv->value_list);
+	g_object_unref (G_OBJECT (model->priv->rows));
 
 	g_free (model->priv);
 	model->priv = NULL;
@@ -175,31 +185,19 @@ gda_data_model_list_new_from_string_list (const GList *list)
 /**
  * gda_data_model_list_append_value
  */
-void
+const GdaRow *
 gda_data_model_list_append_value (GdaDataModelList *model, const GdaValue *value)
 {
-	GdaValue *new_value;
+	GList *values;
+	GdaRow *row;
 
 	g_return_if_fail (GDA_IS_DATA_MODEL_LIST (model));
 	g_return_if_fail (value != NULL);
 
-	new_value = gda_value_copy ((GdaValue *) value);
-	model->priv->value_list = g_list_append (model->priv->value_list, new_value);
-	gda_data_model_changed (GDA_DATA_MODEL (model));
-}
+	values = g_list_append (NULL, value);
+	row = gda_data_model_append_row (GDA_DATA_MODEL (model->priv->rows), values);
+	if (row)
+		gda_data_model_changed (GDA_DATA_MODEL (model));
 
-/**
- * gda_data_model_list_prepend_value
- */
-void
-gda_data_model_list_prepend_value (GdaDataModelList *model, const GdaValue *value)
-{
-	GdaValue *new_value;
-
-	g_return_if_fail (GDA_IS_DATA_MODEL_LIST (model));
-	g_return_if_fail (value != NULL);
-
-	new_value = gda_value_copy ((GdaValue *) value);
-	model->priv->value_list = g_list_prepend (model->priv->value_list, new_value);
-	gda_data_model_changed (GDA_DATA_MODEL (model));
+	return row;
 }

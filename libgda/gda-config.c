@@ -1193,7 +1193,7 @@ gda_config_get_data_source_model (void)
 		value_list = g_list_append (value_list, gda_value_new_string (dsn_info->description));
 		value_list = g_list_append (value_list, gda_value_new_string (dsn_info->username));
 
-		gda_data_model_array_append_row (GDA_DATA_MODEL_ARRAY (model), value_list);
+		gda_data_model_append_row (GDA_DATA_MODEL_ARRAY (model), value_list);
 	}
 	
 	/* free memory */

@@ -46,12 +46,3 @@ GdaDataModelArray
 @model: 
 
 
-<!-- ##### FUNCTION gda_data_model_array_append_row ##### -->
-<para>
-
-</para>
-
-@model: 
-@values: 
-
-

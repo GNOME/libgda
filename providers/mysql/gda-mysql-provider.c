@@ -432,7 +432,7 @@ add_string_row (GdaDataModelArray *recset, const gchar *str)
 	list.next = NULL;
 	list.prev = NULL;
 
-	gda_data_model_array_append_row (recset, &list);
+	gda_data_model_append_row (GDA_DATA_MODEL (recset), &list);
 
 	gda_value_free (value);
 }
@@ -818,7 +818,8 @@ get_table_fields (GdaConnection *cnc, GdaParameterList *params)
 			return NULL;
 		}
 
-		gda_data_model_array_append_row (recset, (const GList *) value_list);
+		gda_data_model_append_row (GDA_DATA_MODEL (recset),
+					   (const GList *) value_list);
 
 		g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
 		g_list_free (value_list);

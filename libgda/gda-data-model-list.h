@@ -50,13 +50,8 @@ GType         gda_data_model_list_get_type (void);
 GdaDataModel *gda_data_model_list_new (void);
 GdaDataModel *gda_data_model_list_new_from_string_list (const GList *list);
 
-void          gda_data_model_list_append_value (GdaDataModelList *model,
+const GdaRow *gda_data_model_list_append_value (GdaDataModelList *model,
 						const GdaValue *value);
-void          gda_data_model_list_prepend_value (GdaDataModelList *model,
-						 const GdaValue *value);
-void          gda_data_model_list_insert_value (GdaDataModelList *model,
-						const GdaValue *value,
-						gint row);
 
 G_END_DECLS
 
