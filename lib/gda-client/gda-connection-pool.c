@@ -22,6 +22,7 @@
 #include "gda-connection-pool.h"
 #include "gda-common.h"
 #include "GDA.h"
+#include <gtk/gtksignal.h>
 
 #ifdef ENABLE_NLS
 #  include <libintl.h>

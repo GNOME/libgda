@@ -1,3 +1,8 @@
+2001-03-19  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* replaced all gtk/gtk.h with gtkobject.h, since it's the only
+	file needed. Now, should compile much faster
+
 2001-02-22  Carlos Perelló Marín <carlos@gnome-db.org>
 
 	* libgda.spec.in: Updated to reflect the .oafinfo --> .oaf change

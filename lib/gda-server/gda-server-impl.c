@@ -19,6 +19,7 @@
 
 #include "config.h"
 #include "gda-server.h"
+#include <gtk/gtksignal.h>
 
 #ifdef ENABLE_NLS
 #  include <libintl.h>

@@ -20,6 +20,7 @@
 
 #include "config.h"
 #include "gda-recordset.h"
+#include <gtk/gtksignal.h>
 
 enum {
 	RECORDSET_ERROR,
