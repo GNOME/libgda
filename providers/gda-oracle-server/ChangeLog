@@ -1,3 +1,8 @@
+2001-07-15  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-oracle-connection.c (gda_oracle_connection_open_schema): return
+	a GdaError if we don't support the schema
+
 2001-07-14  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-oracle-connection.c (gda_oracle_connection_open): parse

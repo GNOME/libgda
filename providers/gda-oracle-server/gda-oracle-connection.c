@@ -18,6 +18,7 @@
  */
 
 #include "gda-quark-list.h"
+#include "gda-server-private.h"
 #include "gda-oracle.h"
 
 typedef GdaServerRecordset* (*schema_ops_fn)(GdaError *,
@@ -285,24 +286,26 @@ gda_oracle_connection_open_schema (GdaServerConnection *cnc,
 	fn = schema_ops[(gint) t];
 	if (fn)
 		return fn(error, cnc, constraints, length);
-	else
-		gda_log_error(_("Unhandled SCHEMA_QTYPE %d"), (gint) t);
+
+	/* we don't support this schema type */
+	gda_server_error_make (error, NULL, cnc, __PRETTY_FUNCTION__);
+	gda_error_set_description (error, _("Unknown schema type"));
 
 	return NULL;
 }
 
 glong
 gda_oracle_connection_modify_schema (GdaServerConnection *cnc,
-                                   GDA_Connection_QType t,
-                                   GDA_Connection_Constraint *constraints,
-                                   gint length)
+				     GDA_Connection_QType t,
+				     GDA_Connection_Constraint *constraints,
+				     gint length)
 {
 	return -1;
 }
 
 gint
 gda_oracle_connection_start_logging (GdaServerConnection *cnc,
-				   const gchar *filename)
+				     const gchar *filename)
 {
 	return -1;
 }
@@ -315,7 +318,7 @@ gda_oracle_connection_stop_logging (GdaServerConnection *cnc)
 
 gchar *
 gda_oracle_connection_create_table (GdaServerConnection *cnc,
-				       GDA_RowAttributes *columns)
+				    GDA_RowAttributes *columns)
 {
 	return NULL;
 }
@@ -411,9 +414,9 @@ gda_oracle_connection_free (GdaServerConnection *cnc)
 
 void
 gda_oracle_error_make (GdaError *error,
-		     GdaServerRecordset *recset,
-		     GdaServerConnection *cnc,
-		     gchar *where)
+		       GdaServerRecordset *recset,
+		       GdaServerConnection *cnc,
+		       gchar *where)
 {
 	ORACLE_Connection* ora_cnc;
 
