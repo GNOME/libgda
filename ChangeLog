@@ -1,3 +1,7 @@
+2002-01-29  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* configure.in: bumped version to 0.8.103
+
 2002-01-28  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
 	* ChangeLog: Removed some po related entries.
