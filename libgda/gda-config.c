@@ -70,31 +70,36 @@ static GdaParameter *
 activation_property_to_parameter (Bonobo_ActivationProperty *prop)
 {
 	GdaParameter *param;
-	GdaValue *value;
 	gchar *str;
 
 	g_return_val_if_fail (prop != NULL, NULL);
 
-	param = gda_parameter_new ((const gchar *) prop->name);
-	value = gda_parameter_get_value (param);
-
 	switch (prop->v._d) {
 	case Bonobo_ACTIVATION_P_STRING :
-		gda_value_set_string (value, prop->v._u.value_string);
+		param = gda_parameter_new ((const gchar *) prop->name, GDA_VALUE_TYPE_STRING);
+		gda_value_set_string (gda_parameter_get_value (param),
+				      prop->v._u.value_string);
 		break;
 	case Bonobo_ACTIVATION_P_NUMBER :
-		gda_value_set_double (value, prop->v._u.value_number);
+		param = gda_parameter_new ((const gchar *) prop->name, GDA_VALUE_TYPE_DOUBLE);
+		gda_value_set_double (gda_parameter_get_value (param),
+				      prop->v._u.value_number);
 		break;
 	case Bonobo_ACTIVATION_P_BOOLEAN :
-		gda_value_set_boolean (value, prop->v._u.value_boolean);
+		param = gda_parameter_new ((const gchar *) prop->name, GDA_VALUE_TYPE_BOOLEAN);
+		gda_value_set_boolean (gda_parameter_get_value (param),
+				       prop->v._u.value_boolean);
 		break;
 	case Bonobo_ACTIVATION_P_STRINGV :
+		param = gda_parameter_new ((const gchar *) prop->name, GDA_VALUE_TYPE_STRING);
 		str = activation_property_to_string (prop);
 		if (str) {
-			gda_value_set_string (value, str);
+			gda_value_set_string (gda_parameter_get_value (param), str);
 			g_free (str);
 		}
 		break;
+	default :
+		param = NULL;
 	}
 
 	return param;

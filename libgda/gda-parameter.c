@@ -40,6 +40,7 @@ free_hash_param (gpointer key, gpointer value, gpointer user_data)
 /**
  * gda_parameter_new
  * @name: name for the parameter being created.
+ * @type: GDA value type for this parameter.
  *
  * Create a new #GdaParameter object, which is usually used
  * with #GdaParameterList.
@@ -47,14 +48,16 @@ free_hash_param (gpointer key, gpointer value, gpointer user_data)
  * Returns: the newly created #GdaParameter.
  */
 GdaParameter *
-gda_parameter_new (const gchar *name)
+gda_parameter_new (const gchar *name, GdaValueType type)
 {
 	GdaParameter *param;
+	const gchar *static_data = NULL;
 
 	param = GNOME_Database_Parameter__alloc ();
 	if (name)
 		gda_parameter_set_name (param, name);
 	CORBA_any_set_release (&param->value, TRUE);
+	param->value._type = CORBA_Object_duplicate ((CORBA_Object) type, NULL);
 
 	return param;
 }

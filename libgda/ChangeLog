@@ -1,3 +1,11 @@
+2001-11-23  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-parameter.[ch] (gda_parameter_new): added a GdaValueType
+	parameter
+
+	* gda-config.c (activation_property_to_parameter): adapted to recent
+	changes in GdaParameter API
+
 2001-11-22  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-parameter.[ch] (gda_parameter_list_add_value): implemented

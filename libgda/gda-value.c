@@ -366,11 +366,11 @@ gda_value_set_string (GdaValue *value, const gchar *val)
 {
 	g_return_if_fail (value != NULL);
 
-	//CORBA_Object_release ((CORBA_Object) value->_type, NULL);
+	g_return_if_fail (gda_value_isa (value, GDA_VALUE_TYPE_STRING));
 
-	//value->_type = (CORBA_TypeCode) CORBA_Object_duplicate (
-	//	(CORBA_Object) TC_CORBA_string, NULL);
-	BONOBO_ARG_SET_STRING (value, val);
+	if (value->_value)
+		CORBA_free (value->_value);
+	value->_value = ORBit_copy_value (&val, BONOBO_ARG_STRING);
 }
 
 /**

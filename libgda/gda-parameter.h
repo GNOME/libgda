@@ -30,7 +30,7 @@ G_BEGIN_DECLS
 
 typedef GNOME_Database_Parameter GdaParameter;
 
-GdaParameter *gda_parameter_new (const gchar *name);
+GdaParameter *gda_parameter_new (const gchar *name, GdaValueType type);
 void          gda_parameter_free (GdaParameter *param);
 const gchar  *gda_parameter_get_name (GdaParameter *param);
 void          gda_parameter_set_name (GdaParameter *param, const gchar *name);
