@@ -16,6 +16,9 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#ifndef __gda_bindings_cpp_gdaIncludesH
+#define __gda_bindings_cpp_gdaIncludesH
+
 namespace gda
 {
 	class Batch;
@@ -27,7 +30,7 @@ namespace gda
 	class Recordset;
 	class Value;
 };
-*/
+
 extern "C" {
 
 // hack to remove nasty compiler warnings

@@ -83,16 +83,25 @@ then
 fi
 
 # Bonobo checks
-AC_MSG_CHECKING(for Bonobo >= 1.0.x)
-if gnome-config --libs bonobox > /dev/null 2>&1
+AC_MSG_CHECKING(for Bonobo >= 1.0.9)
+if gnome-config --libs bonobo > /dev/null 2>&1
 then
-	AC_MSG_RESULT(found)
-	gda_bonobo_cflags=`gnome-config --cflags bonobox`
-	gda_bonobo_libs=`gnome-config --libs bonobox`
+	verstxt=`gnome-config --modversion bonobo`
+	vers=`echo "$verstxt" | sed -e "s/^bonobo-//" | \
+		   awk -F. '{ printf "%d", ($1 * 1000 + $2) * 1000 + $3;}'`
+        if test "$vers" -ge 1000009
+	then
+		AC_MSG_RESULT(found)
+	else
+		AC_MSG_ERROR([
+*** Bonobo 1.0.9 or later is necessary to build libgda.])
+	fi
 else
 	AC_MSG_ERROR([
-*** Bonobo 1.0.x or later is necessary in order to build libgda.])
+*** Bonobo 1.0.9 or later is necessary to build libgda.])
 fi
+gda_bonobo_cflags=`gnome-config --cflags bonobox`
+gda_bonobo_libs=`gnome-config --libs bonobox`
 
 dnl Check for libxml
 AC_MSG_CHECKING(for libxml)

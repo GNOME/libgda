@@ -38,7 +38,7 @@ namespace gda
 		void addCommand (const gchar * cmd);
 		void clear ();
 
-		gboolean start ();
+		bool start ();
 		void stop ();
 		gboolean isRunning ();
 
