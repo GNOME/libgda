@@ -1656,19 +1656,19 @@ gda_postgres_fill_md_data (const gchar *tblname, GdaDataModelArray *recset,
 
 	if (priv_data->version_float < 7.3)
 		query = g_strdup_printf (
-			"(SELECT a.attname, b.typname, a.atttypmod, b.typlen, not a.attnotnull, d.adsrc, "
+			"(SELECT a.attname, b.typname, a.atttypmod, b.typlen, a.attnotnull, d.adsrc, "
 			"a.attnum FROM pg_class c, pg_attribute a, pg_type b, pg_attrdef d "
 			"WHERE c.relname = '%s' AND a.attnum > 0 AND "
 			"a.attrelid = c.oid and b.oid = a.atttypid AND "
 			"a.atthasdef = 't' and d.adrelid=c.oid and d.adnum=a.attnum) "
-			"UNION (SELECT a.attname, b.typname, a.atttypmod, b.typlen, not a.attnotnull, NULL, "
+			"UNION (SELECT a.attname, b.typname, a.atttypmod, b.typlen, a.attnotnull, NULL, "
 			"a.attnum FROM pg_class c, pg_attribute a, pg_type b "
 			  "WHERE c.relname = '%s' AND a.attnum > 0 AND "
 			"a.attrelid = c.oid and b.oid = a.atttypid AND a.atthasdef = 'f') ORDER BY 7",
 			tblname, tblname);
 	else 
 		query = g_strdup_printf (
-			"SELECT a.attname, t.typname, a.atttypmod, t.typlen, not a.attnotnull, d.adsrc, a.attnum "
+			"SELECT a.attname, t.typname, a.atttypmod, t.typlen, a.attnotnull, d.adsrc, a.attnum "
 			"FROM pg_catalog.pg_class c "
 			"LEFT JOIN pg_catalog.pg_attribute a ON (a.attrelid = c.oid) "
 			"FULL JOIN pg_catalog.pg_attrdef d ON (a.attnum = d.adnum AND d.adrelid=c.oid) "
