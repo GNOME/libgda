@@ -1,3 +1,7 @@
+2001-04-01  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-config.h: use "/apps" prefix for all GConf stuff
+
 2001-03-05  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-common.h: remove "#include xml-query.h"

@@ -26,8 +26,8 @@
 extern "C" {
 #endif
 
-#define GDA_CONFIG_SECTION_DATASOURCES "/gda/Datasources"
-#define GDA_CONFIG_SECTION_LOG         "/gda/Log"
+#define GDA_CONFIG_SECTION_DATASOURCES "/apps/gda/Datasources"
+#define GDA_CONFIG_SECTION_LOG         "/apps/gda/Log"
 
 /*
  * Configuration system access
