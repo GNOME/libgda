@@ -68,7 +68,7 @@ gda_log_disable (void)
 /**
  * gda_log_is_enabled
  *
- * Return: whether GDA logs are enabled (%TRUE or %FALSE).
+ * Returns: whether GDA logs are enabled (%TRUE or %FALSE).
  */
 gboolean
 gda_log_is_enabled (void)

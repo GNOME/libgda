@@ -761,7 +761,7 @@ gda_config_remove_section (const gchar *path)
 
 	cfg_client = get_config_client ();
 	section = gda_config_search_section (cfg_client->user, path);
-	if (section == NULL){
+	if (section == NULL) {
 		g_warning ("Section %s not found!", path);
 		return;
 	}

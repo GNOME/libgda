@@ -817,8 +817,8 @@ gda_data_model_update_column (GdaDataModel *model, gint col, const GdaFieldAttri
  *
  * where "row" would be the row being read, and "user_data" the parameter
  * specified in @user_data in the call to gda_data_model_foreach.
- * This callback function can return %FALSE to stop the processing. If it
- * returns %TRUE, processing will continue until no rows remain.
+ * This callback function can return %FALSE to stop the processing. If
+ * it returns %TRUE, processing will continue until no rows remain.
  */
 void
 gda_data_model_foreach (GdaDataModel *model,
@@ -1217,7 +1217,7 @@ add_xml_row (GdaDataModel *model, xmlNodePtr xml_row)
 /**
  * gda_data_model_add_data_from_xml_node
  * @model: a #GdaDataModel.
- * @node: a XML node representing a <data> XML node.
+ * @node: a XML node representing a &lt;data&gt; XML node.
  *
  * Adds the data from a XML node to the given data model.
  *

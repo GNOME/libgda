@@ -905,11 +905,11 @@ gda_value_new_from_string (const gchar *as_string, GdaValueType type)
 
 /**
  * gda_value_new_from_xml
- * @xml: a XML node representing the value.
+ * @node: a XML node representing the value.
  *
  * Creates a GdaValue from a XML representation of it. That XML
  * node corresponds to the following string representation:
- *    <value type="gdatype">value</value>
+ *    &lt;value type="gdatype"&gt;value&lt;/value&gt;
  *
  * Returns:  the newly created #GdaValue.
  */

@@ -108,7 +108,7 @@ gda_report_item_get_type (void)
  *
  * Creates a new item with the given name, and using the given #GdaReportValid object
  *
- * Return: the new #GdaReportItem or NULL if there is some problem
+ * Returns: the new #GdaReportItem or NULL if there is some problem
  **/
 GdaReportItem *
 gda_report_item_new (GdaReportValid *valid,
@@ -132,7 +132,7 @@ gda_report_item_new (GdaReportValid *valid,
  *
  * Creates a new item with the given name, as a child of the parent object
  *
- * Return: the new #GdaReportItem or NULL if there is some problem
+ * Returns: the new #GdaReportItem or NULL if there is some problem
 GdaReportItem *
 gda_report_item_new_child (GdaReportItem *parent,
 		           const gchar *name)
@@ -162,7 +162,7 @@ gda_report_item_new_child (GdaReportItem *parent,
  *
  * Creates a new item from a given xml node
  *
- * Return: the new #GdaReportItem or NULL if there is some problem
+ * Returns: the new #GdaReportItem or NULL if there is some problem
  **/
 GdaReportItem *
 gda_report_item_new_from_dom (xmlNodePtr node)
@@ -439,6 +439,11 @@ gda_report_item_get_inherit_attribute (GdaReportItem *item,
 
 /**
  * gda_report_item_set_content
+ * @item:
+ * @content:
+ *
+ * Returns:
+ * 
  **/
 gboolean 
 gda_report_item_set_content (GdaReportItem *item,
@@ -452,6 +457,10 @@ gda_report_item_set_content (GdaReportItem *item,
 
 /**
  * gda_report_item_get_content
+ * @item:
+ *
+ * Returns:
+ * 
  **/
 gchar *
 gda_report_item_get_content (GdaReportItem *item)

@@ -1,3 +1,14 @@
+2004-07-31  Dani Baeyens <daniel.baeyens@hispalinux.es>
+	
+	* doc/C/Makefile.am, doc/C/libgda-docs.sgml,
+	libgda/gda-connection.c, libgda/gda-data-model.c,
+	libgda/gda-log.c, libgda/gda-server-provider.c,
+	libgda/gda-server-provider.c, libgda/gda-value.c,
+	report/libgda-report/gda-report-document.c, 
+	report/libgda-report/gda-report-item.c,
+	report/libgda-report/gda-report-result.c: Changed to have
+	documentation with .devhelp book (and no errors when making)
+	
 2004-07-22  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	Released 1.1.5.

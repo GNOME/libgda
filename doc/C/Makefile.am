@@ -15,6 +15,8 @@ DOC_SOURCE_DIR=../../libgda
 # Extra options to supply to gtkdoc-scan.
 SCAN_OPTIONS=--source-dir=../../report/libgda-report
 
+INCLUDES = -I$(top_srcdir) $(LIBGDA_CFLAGS)
+
 # Extra options to supply to gtkdoc-mkdb.
 MKDB_OPTIONS=--source-dir=../../report/libgda-report --output-format=xml
 
@@ -22,8 +24,8 @@ MKDB_OPTIONS=--source-dir=../../report/libgda-report --output-format=xml
 FIXXREF_OPTIONS=
 
 # Used for dependencies.
-HFILE_GLOB=
-CFILE_GLOB=
+HFILE_GLOB=$(top_srcdir)/libgda/*.h
+CFILE_GLOB=$(top_srcdir)/libgda/*.c
 
 # Header files to ignore when scanning.
 IGNORE_HFILES=config.h \
@@ -43,7 +45,7 @@ extra_files = examples/full_example.c
 # CFLAGS and LDFLAGS for compiling scan program. Only needed if your app/lib
 # contains GtkObjects/GObjects and you want to document signals and properties.
 GTKDOC_CFLAGS = $(LIBGDA_CFLAGS) -I$(top_srcdir) -I$(top_builddir)
-GTKDOC_LIBS = $(LIBGDA_LIBS)
+GTKDOC_LIBS = ../../libgda/libgda-2.0.la $(LIBGDA_LIBS)
 
 GTKDOC_CC=$(LIBTOOL) --mode=compile $(CC)
 GTKDOC_LD=$(LIBTOOL) --mode=link $(CC)
@@ -53,7 +55,7 @@ GTKDOC_LD=$(LIBTOOL) --mode=link $(CC)
 DOC_OVERRIDES =
 #DOC_OVERRIDES = $(DOC_MODULE)-overrides.txt
 
-
+SCANOBJ_OPTIONS=
 
 ###########################################################################
 # Everything below here is generic and you shouldn't need to change it.
@@ -143,8 +145,8 @@ maintainer-clean-local: clean
 
 install-data-local:
 	$(mkinstalldirs) $(DESTDIR)$(TARGET_DIR)
-	(installfiles=`echo $(srcdir)/html/*.html`; \
-	if test "$$installfiles" = '$(srcdir)/html/*.html'; \
+	(installfiles=`echo $(srcdir)/html/*`; \
+	if test "$$installfiles" = '$(srcdir)/html/*'; \
 	then echo '-- Nothing to install' ; \
 	else \
 	  for i in $$installfiles; do \
@@ -168,12 +170,11 @@ endif
 
 dist-hook: dist-check-gtkdoc html-build.stamp dist-hook-local
 	mkdir $(distdir)/tmpl
-	mkdir $(distdir)/sgml
+	mkdir $(distdir)/xml
 	mkdir $(distdir)/html
 	-cp $(srcdir)/tmpl/*.sgml $(distdir)/tmpl
-	-cp $(srcdir)/xml/*.sgml $(distdir)/xml
-	-cp $(srcdir)/html/index.sgml $(distdir)/html
-	-cp $(srcdir)/html/*.html $(srcdir)/html/*.css $(distdir)/html
+	-cp $(srcdir)/xml/*.xml $(distdir)/xml
+	-cp $(srcdir)/html/* $(distdir)/html
 
 	images=$(HTML_IMAGES) ;    	      \
 	for i in $$images ; do		      \

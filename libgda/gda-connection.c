@@ -494,6 +494,7 @@ gda_connection_get_password (GdaConnection *cnc)
 /**
  * gda_connection_add_error
  * @cnc: a #GdaConnection object.
+ * @error: is stored internally, so you don't need to unref it.
  *
  * Adds an error to the given connection. This function is usually
  * called by providers, to inform clients of errors that happened
@@ -504,7 +505,6 @@ gda_connection_get_password (GdaConnection *cnc)
  * emits the "error" signal, to which clients can connect to be
  * informed of errors.
  *
- * @error is stored internally, so you don't need to unref it.
  */
 void
 gda_connection_add_error (GdaConnection *cnc, GdaError *error)

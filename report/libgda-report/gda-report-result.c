@@ -359,6 +359,10 @@ gda_report_result_pagefooter (GdaReportItem *report,
 
 /*
  * gda_report_result_reportfooter
+ * @report:
+ * @result:
+ *
+ * Returns:
  */
 void
 gda_report_result_reportfooter (GdaReportItem *report,
@@ -370,6 +374,11 @@ gda_report_result_reportfooter (GdaReportItem *report,
 
 /*
  * gda_report_result_page_end
+ * @report:
+ * @result:
+ *
+ * Returns:
+ * 
  */
 void 
 gda_report_result_page_end (GdaReportItem *report,
@@ -386,6 +395,11 @@ gda_report_result_page_end (GdaReportItem *report,
 
 /*
  * gda_report_result_report_end
+ * @report:
+ * @result:
+ *
+ * Returns:
+ * 
  */
 void
 gda_report_result_report_end (GdaReportItem *report,
@@ -402,6 +416,8 @@ gda_report_result_report_end (GdaReportItem *report,
 
 /*
  * gda_report_result_construct
+ * @document:
+ * @result:
  *
  * Executes the #GdaReportDocument and put the results in 
  * the #GdaReportResult
@@ -430,6 +446,7 @@ gda_report_result_construct (GdaReportDocument *document,
 
 /**
  * gda_report_result_new_to_memory
+ * @document:
  *
  * Create in memory a new #GdaReportResult object, 
  * which is the result to process a #GdaReportDocument object
@@ -455,6 +472,8 @@ gda_report_result_new_to_memory (GdaReportDocument *document)
 
 /**
  * gda_report_result_new_to_uri
+ * @uri:
+ * @document:
  *
  * Create in a uri a new #GdaReportResult object, 
  * which is the result to process a #GdaReportDocument object

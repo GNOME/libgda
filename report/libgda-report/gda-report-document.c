@@ -108,6 +108,9 @@ gda_report_document_get_type (void)
 
 /*
  * gda_report_document_construct
+ * @valid:
+ *
+ * Returns:
  */
 GdaReportDocument *
 gda_report_document_construct (GdaReportValid *valid)
@@ -123,7 +126,6 @@ gda_report_document_construct (GdaReportValid *valid)
 
 /**
  * gda_report_document_new
- *
  * @valid: Validator for the document (nowadays a DTD), or
  * 	   NULL to use the default one
  *
@@ -152,6 +154,11 @@ gda_report_document_new (GdaReportValid *valid)
 
 /**
  * gda_report_document_new_from_string
+ * @xml:
+ * @valid:
+ *
+ * Returns:
+ * 
  */
 GdaReportDocument *
 gda_report_document_new_from_string (const gchar *xml, 
@@ -188,6 +195,11 @@ gda_report_document_new_from_string (const gchar *xml,
 
 /**
  * gda_report_document_new_from_uri
+ * @uri:
+ * @valid:
+ *
+ * Returns:
+ * 
  */
 GdaReportDocument *
 gda_report_document_new_from_uri (const gchar *uri,
@@ -218,6 +230,10 @@ gda_report_document_new_from_uri (const gchar *uri,
 
 /*
  * gda_report_document_to_dom
+ * @document:
+ *
+ * Returns:
+ * 
  */
 xmlDocPtr 
 gda_report_document_to_dom (GdaReportDocument *document) 
@@ -229,6 +245,10 @@ gda_report_document_to_dom (GdaReportDocument *document)
 
 /*
  * gda_report_document_get_valid
+ * @document:
+ *
+ * Returns:
+ * 
  */
 GdaReportValid*
 gda_report_document_get_valid (GdaReportDocument *document)
@@ -240,6 +260,11 @@ gda_report_document_get_valid (GdaReportDocument *document)
 
 /*
  * gda_report_document_set_root_item
+ * @document:
+ * @item:
+ *
+ * Returns:
+ * 
  */
 gboolean
 gda_report_document_set_root_item (GdaReportDocument *document,
@@ -263,6 +288,10 @@ gda_report_document_set_root_item (GdaReportDocument *document,
 
 /*
  * gda_report_document_get_root_item
+ * @document:
+ *
+ * Returns:
+ * 
  */
 GdaReportItem *
 gda_report_document_get_root_item (GdaReportDocument *document)
@@ -278,6 +307,11 @@ gda_report_document_get_root_item (GdaReportDocument *document)
 
 /*
  * gda_report_document_save_file
+ * @filename:
+ * @document:
+ *
+ * Returns:
+ * 
  */
 gboolean
 gda_report_document_save_file (const char *filename,

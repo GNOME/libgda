@@ -150,7 +150,7 @@ gda_server_provider_get_version (GdaServerProvider *provider)
  * gda_server_provider_open_connection
  * @provider: a #GdaServerProvider object.
  * @cnc: a #GdaConnection object.
- * @cnc_string: connection string.
+ * @params:
  * @username: user name for logging in.
  * @password: password for authentication.
  *
@@ -199,6 +199,11 @@ gda_server_provider_open_connection (GdaServerProvider *provider,
 
 /**
  * gda_server_provider_close_connection
+ * @provider:
+ * @cnc:
+ *
+ * Returns:
+ * 
  */
 gboolean
 gda_server_provider_close_connection (GdaServerProvider *provider, GdaConnection *cnc)
@@ -222,7 +227,10 @@ gda_server_provider_close_connection (GdaServerProvider *provider, GdaConnection
 
 /**
  * gda_server_provider_get_server_version
- * @
+ * @provider:
+ * @cnc:
+ *
+ * Returns:
  */
 const gchar *
 gda_server_provider_get_server_version (GdaServerProvider *provider, GdaConnection *cnc)
@@ -281,8 +289,8 @@ gda_server_provider_change_database (GdaServerProvider *provider,
 /**
  * gda_server_provider_create_database
  * @provider: a #GdaServerProvider object.
- * @cnc: a #GdaConnection object.
  * @name: database name.
+ * @cnc: a #GdaConnection object.
  *
  * Proxy the call to the create_database method on the
  * #GdaServerProvider class to the corresponding provider.
@@ -379,6 +387,13 @@ gda_server_provider_drop_table (GdaServerProvider *provider,
 
 /**
  * gda_server_provider_execute_command
+ * @provider:
+ * @cnc:
+ * @cmd:
+ * @params:
+ *
+ * Returns:
+ * 
  */
 GList *
 gda_server_provider_execute_command (GdaServerProvider *provider,
@@ -398,7 +413,7 @@ gda_server_provider_execute_command (GdaServerProvider *provider,
  * gda_server_provider_get_last_insert_id
  * @provider: a #GdaServerProvider object.
  * @cnc: connection to act upon.
- * @model: resultset to get the last insert ID from.
+ * @recset: resultset to get the last insert ID from.
  *
  * Retrieve from the given #GdaServerProvider the ID of the last inserted row.
  * A connection must be specified, and, optionally, a result set. If not NULL,
@@ -420,6 +435,12 @@ gda_server_provider_get_last_insert_id (GdaServerProvider *provider, GdaConnecti
 
 /**
  * gda_server_provider_begin_transaction
+ * @provider:
+ * @cnc:
+ * @xaction:
+ *
+ * Returns:
+ * 
  */
 gboolean
 gda_server_provider_begin_transaction (GdaServerProvider *provider,
@@ -435,6 +456,12 @@ gda_server_provider_begin_transaction (GdaServerProvider *provider,
 
 /**
  * gda_server_provider_commit_transaction
+ * @provider:
+ * @cnc:
+ * @xaction:
+ *
+ * Returns:
+ * 
  */
 gboolean
 gda_server_provider_commit_transaction (GdaServerProvider *provider,
@@ -450,6 +477,12 @@ gda_server_provider_commit_transaction (GdaServerProvider *provider,
 
 /**
  * gda_server_provider_rollback_transaction
+ * @provider:
+ * @cnc:
+ * @xaction:
+ *
+ * Returns:
+ * 
  */
 gboolean
 gda_server_provider_rollback_transaction (GdaServerProvider *provider,
@@ -465,6 +498,11 @@ gda_server_provider_rollback_transaction (GdaServerProvider *provider,
 
 /**
  * gda_server_provider_supports
+ * @provider:
+ * @cnc:
+ * @feature:
+ *
+ * Returns:
  */
 gboolean
 gda_server_provider_supports (GdaServerProvider *provider,
@@ -480,6 +518,13 @@ gda_server_provider_supports (GdaServerProvider *provider,
 
 /**
  * gda_server_provider_get_schema
+ * @provider:
+ * @cnc:
+ * @schema:
+ * @params:
+ *
+ * Returns:
+ * 
  */
 GdaDataModel *
 gda_server_provider_get_schema (GdaServerProvider *provider,
