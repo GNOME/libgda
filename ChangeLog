@@ -1,5 +1,16 @@
 2002-05-16  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* libgda/gda-select.[ch]: added basic implementation.
+	(gda_select_init): create GScanner object.
+	(gda_select_finalize): destroy GScanner object.
+	(gda_select_set_source): new function.
+	(gda_select_set_expression): new function.
+	(gda_select_run): new function.
+	(fill_data): implemented basic parsing of the expression (it only
+	supports "foo=bar AND bar=foo..." expressions).
+
+2002-05-16  Rodrigo Moya <rodrigo@gnome-db.org>
+
 	* libgda/gda-data-model.c (gda_data_model_begin_edit): don't start
 	editing if the data model is not editable.
 	(gda_data_model_get_column_position): new function.
