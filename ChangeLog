@@ -1,3 +1,7 @@
+2001-06-19  Gonzalo Odiard <gonza_asa@asatej.com.ar>
+
+	* configure.in: set ORACLE_LIBS to work with Oracle 8i
+
 2001-06-15  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* lib/gda-xml: added new directory which will contain all XML
