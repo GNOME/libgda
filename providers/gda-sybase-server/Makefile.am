@@ -29,7 +29,7 @@ libgda_sybase_la_SOURCES = \
 	gda-sybase-types.h \
 	gda-sybase.h
 
-EXTRA_DIST = gda-sybase.oafinfo
+EXTRA_DIST = GNOME_GDA_Provider_Sybase.oafinfo
 
 oafinfodir=$(GDA_oafinfodir)
 oafinfo_DATA=GNOME_GDA_Provider_Sybase.oafinfo

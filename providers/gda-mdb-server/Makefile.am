@@ -22,7 +22,7 @@ libgda_mdb_la_SOURCES = \
 	gda-mdb-recordset.c \
 	gda-mdb.h
 
-EXTRA_DIST = gda-mdb.oafinfo
+EXTRA_DIST = GNOME_GDA_Provider_MDB.oafinfo
 
 oafinfodir=$(GDA_oafinfodir)
-oafinfo_DATA=gda-mdb.oafinfo
+oafinfo_DATA=GNOME_GDA_Provider_MDB.oafinfo

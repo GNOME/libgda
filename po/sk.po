@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda 0.2.2\n"
-"POT-Creation-Date: 2000-12-20 21:28+0100\n"
+"POT-Creation-Date: 2000-12-22 14:14+0100\n"
 "PO-Revision-Date: 2000-12-20 22:03CET\n"
 "Last-Translator: Stanislav Visnovsky <visnovsky@nenya.ms.mff.cuni.cz>\n"
 "Language-Team: Slovak <sk-i18n@rak.isternet.sk>\n"
@@ -34,12 +34,12 @@ msgstr "%s: Server neodpovedal."
 msgid "%s: An Error occured in the CORBA system."
 msgstr "%s: Nastala chyba v systéme CORBA."
 
-#: lib/gda-client/gda-connection.c:529
+#: lib/gda-client/gda-connection.c:493
 #, c-format
 msgid "Database '%s' not found in system configuration"
 msgstr "Databáza '%s' nebola nájdená v systémovej konfigurácii"
 
-#: lib/gda-client/gda-connection.c:545
+#: lib/gda-client/gda-connection.c:509
 msgid "Could not open CORBA factory"
 msgstr "Nie je mo¾né otvori» CORBA factory"
 
@@ -167,11 +167,13 @@ msgstr "Spú¹»am poskytovateµa %s bez implementaèných funkcií"
 
 #: lib/gda-server/gda-server-impl.c:210
 #: report/server/gda-report-server-main.c:120
-msgid "OAF doesn't know about our IID; indicates broken installation. Exiting..."
+msgid ""
+"OAF doesn't know about our IID; indicates broken installation. Exiting..."
 msgstr "OAF nepozná na¹e IID, asi po¹kodená in¹talácia. Konèím..."
 
 #: lib/gda-server/gda-server-impl.c:213
-msgid "Another instance of this provider is already registered with OAF. Exiting..."
+msgid ""
+"Another instance of this provider is already registered with OAF. Exiting..."
 msgstr "Iná in¹tancia tohoto poskytovateµa je u¾ registrovaná u OAF. Konèím..."
 
 #: lib/gda-server/gda-server-impl.c:216
@@ -300,8 +302,8 @@ msgid ""
 "a PORT. Please remove the UNIX_SOCKET, or remove both the HOST and PORT "
 "options"
 msgstr ""
-"%s:%d: Nemô¾ete poskytova» UNIX_SOCKET ak tie¾ poskytujete HOSTITE¥ alebo "
-"a PORT. Prosím, odstráòte UNIX_SOCKET, alebo odstráòte obidve voµby HOSTITE¥ a "
+"%s:%d: Nemô¾ete poskytova» UNIX_SOCKET ak tie¾ poskytujete HOSTITE¥ alebo a "
+"PORT. Prosím, odstráòte UNIX_SOCKET, alebo odstráòte obidve voµby HOSTITE¥ a "
 "PORT"
 
 #: providers/gda-mdb-server/gda-mdb-connection.c:147
@@ -357,15 +359,15 @@ msgstr "¾iadny text"
 msgid "Could not register ODBC provider implementation"
 msgstr "Nie je mo¾né registrova» implementáciu ODBC poskytovateµa"
 
-#: providers/gda-oracle-server/gda-oracle-command.c:195
+#: providers/gda-oracle-server/gda-oracle-command.c:185
 msgid "Could not allocate statement handle"
 msgstr "Nie je mo¾né alokova» statement handle"
 
-#: providers/gda-oracle-server/gda-oracle-command.c:199
+#: providers/gda-oracle-server/gda-oracle-command.c:189
 msgid "command object being created without associated connection"
 msgstr "objekt príkazu je vytvorený bez asociovaného spojenia"
 
-#: providers/gda-oracle-server/gda-oracle-command.c:226
+#: providers/gda-oracle-server/gda-oracle-command.c:220
 #, c-format
 msgid "Executing command '%s'"
 msgstr "Vykonávam príkaz '%s'"
@@ -627,7 +629,9 @@ msgstr "gda_sybase_error_make(%p,%p,%p,%p)"
 #: providers/gda-sybase-server/gda-sybase-error.c:74
 #, c-format
 msgid "No error flag ist set, though %s is called. This may be a bug."
-msgstr "Nie je nastavený ¾iadny príznak chyby, ale bola zavolaná %s. To je mo¾no chyba."
+msgstr ""
+"Nie je nastavený ¾iadny príznak chyby, ale bola zavolaná %s. To je mo¾no "
+"chyba."
 
 #: providers/gda-sybase-server/gda-sybase-error.c:138
 msgid "cs_diag() initialized"
@@ -844,7 +848,8 @@ msgstr "Zachytený signál %d, èisto vypínam."
 
 #: report/server/gda-report-server-main.c:96
 msgid "Failed to initialize OAF: please mail bug report to OAF maintainers"
-msgstr "Nepodarilo sa inicializova» OAF: prosím, odo¹lite správu o chybe správcom OAF"
+msgstr ""
+"Nepodarilo sa inicializova» OAF: prosím, odo¹lite správu o chybe správcom OAF"
 
 #: report/server/gda-report-server-main.c:106
 msgid "Could not activate report engine"
@@ -906,4 +911,3 @@ msgstr "%s: chyba v konfigurácii polo¾ky DSN"
 #, c-format
 msgid "%s: data source '%s' not found\n"
 msgstr "%s: zdroj dát '%s' nenájdený\n"
-

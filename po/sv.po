@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2000-12-15 19:46+0100\n"
+"POT-Creation-Date: 2000-12-22 14:14+0100\n"
 "PO-Revision-Date: 2000-12-15 19:48+0200\n"
 "Last-Translator: Christian Rose <menthos@menthos.com>\n"
 "Language-Team: Swedish <sv@li.org>\n"
@@ -34,12 +34,12 @@ msgstr "%s: Servern svarade inte."
 msgid "%s: An Error occured in the CORBA system."
 msgstr "%s: Ett fel inträffade i CORBA-systemet."
 
-#: lib/gda-client/gda-connection.c:529
+#: lib/gda-client/gda-connection.c:493
 #, c-format
 msgid "Database '%s' not found in system configuration"
 msgstr "Databasen \"%s\" kunde inte hittas i systemkonfigurationen"
 
-#: lib/gda-client/gda-connection.c:545
+#: lib/gda-client/gda-connection.c:509
 msgid "Could not open CORBA factory"
 msgstr "Kunde inte öppna CORBA-fabrik"
 
@@ -160,40 +160,40 @@ msgstr "%s: längd = %d"
 msgid "%s: sending field description for '%s'"
 msgstr "%s: skickar fältbeskrivning för \"%s\""
 
-#: lib/gda-server/gda-server-impl.c:195
+#: lib/gda-server/gda-server-impl.c:184
 #, c-format
 msgid "Starting provider %s with no implementation functions"
 msgstr "Startar leverantör %s utan några implementationsfunktioner"
 
-#: lib/gda-server/gda-server-impl.c:222
+#: lib/gda-server/gda-server-impl.c:210
 #: report/server/gda-report-server-main.c:120
 msgid ""
 "OAF doesn't know about our IID; indicates broken installation. Exiting..."
 msgstr ""
 "OAF känner inte till vårt IID; antyder trasig installation. Avslutar..."
 
-#: lib/gda-server/gda-server-impl.c:225
+#: lib/gda-server/gda-server-impl.c:213
 msgid ""
 "Another instance of this provider is already registered with OAF. Exiting..."
 msgstr ""
 "En annan instans av denna leverantör är redan registrerad hos OAF. "
 "Avslutar..."
 
-#: lib/gda-server/gda-server-impl.c:228
+#: lib/gda-server/gda-server-impl.c:216
 msgid "Unknown error registering this provider with OAF. Exiting"
 msgstr "Okänt fel vid registrering av denna leverantör hos OAF. Avslutar"
 
-#: lib/gda-server/gda-server-impl.c:232
+#: lib/gda-server/gda-server-impl.c:220
 #, c-format
 msgid "Registered with ID = %s"
 msgstr "Registrerad med ID = %s"
 
-#: lib/gda-server/gda-server-impl.c:314
+#: lib/gda-server/gda-server-impl.c:296
 #, c-format
 msgid "CORBA system exception %s"
 msgstr "CORBA-systemundantag %s"
 
-#: lib/gda-server/gda-server-impl.c:317
+#: lib/gda-server/gda-server-impl.c:299
 #, c-format
 msgid "CORBA user exception: %s"
 msgstr "CORBA-användarundantag: %s"
@@ -362,15 +362,15 @@ msgstr "ingen text"
 msgid "Could not register ODBC provider implementation"
 msgstr "Kunde inte registrera ODBC-leverantörsimplementation"
 
-#: providers/gda-oracle-server/gda-oracle-command.c:195
+#: providers/gda-oracle-server/gda-oracle-command.c:185
 msgid "Could not allocate statement handle"
 msgstr "Kunde inte allokera uppgiftshandtag"
 
-#: providers/gda-oracle-server/gda-oracle-command.c:199
+#: providers/gda-oracle-server/gda-oracle-command.c:189
 msgid "command object being created without associated connection"
 msgstr "kommandoobjekt skapas utan associerad anslutning"
 
-#: providers/gda-oracle-server/gda-oracle-command.c:226
+#: providers/gda-oracle-server/gda-oracle-command.c:220
 #, c-format
 msgid "Executing command '%s'"
 msgstr "Kör kommandot \"%s\""

@@ -1,3 +1,7 @@
+2001-01-01	Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* version 0.2.2
+
 2000-12-22	Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* providers/gda-interbase-server/gda-interbase-command.c,

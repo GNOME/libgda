@@ -29,7 +29,7 @@ libgda_tds_la_SOURCES = \
 	gda-tds-types.h \
 	gda-tds.h
 
-EXTRA_DIST = gda-tds.oafinfo
+EXTRA_DIST = GNOME_GDA_Provider_TDS.oafinfo
 
 oafinfodir=$(GDA_oafinfodir)
 oafinfo_DATA=GNOME_GDA_Provider_TDS.oafinfo

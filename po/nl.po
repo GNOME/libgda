@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Libgda CVS\n"
-"POT-Creation-Date: 2000-11-30 01:23+0100\n"
+"POT-Creation-Date: 2000-12-22 14:14+0100\n"
 "PO-Revision-Date: 2000-11-05 12:36+0100\n"
 "Last-Translator: Almer S. Tigelaar <almer1@dds.nl>\n"
 "Language-Team: Dutch <nl@li.org>\n"
@@ -33,12 +33,12 @@ msgstr "%s: De server gaf geen antwoord."
 msgid "%s: An Error occured in the CORBA system."
 msgstr "%s: Een fout is opgetreden in het CORBA systeem."
 
-#: lib/gda-client/gda-connection.c:529
+#: lib/gda-client/gda-connection.c:493
 #, c-format
 msgid "Database '%s' not found in system configuration"
 msgstr "Databank '%s' niet gevonden in systeemconfiguratie"
 
-#: lib/gda-client/gda-connection.c:545
+#: lib/gda-client/gda-connection.c:509
 msgid "Could not open CORBA factory"
 msgstr "Kon 'CORBA factory' niet openen"
 
@@ -159,40 +159,40 @@ msgstr "%s: lengte = %d"
 msgid "%s: sending field description for '%s'"
 msgstr "%s: bezig met versturing veld omschrijving voor '%s'"
 
-#: lib/gda-server/gda-server-impl.c:195
+#: lib/gda-server/gda-server-impl.c:184
 #, c-format
 msgid "Starting provider %s with no implementation functions"
 msgstr "Bezig met starten provider %s met geen implementatie functies"
 
-#: lib/gda-server/gda-server-impl.c:222
+#: lib/gda-server/gda-server-impl.c:210
 #: report/server/gda-report-server-main.c:120
 msgid ""
 "OAF doesn't know about our IID; indicates broken installation. Exiting..."
 msgstr "Fout: OAF kent onze IID niet; dit geeft een foutieve installatie aan!"
 
-#: lib/gda-server/gda-server-impl.c:225
+#: lib/gda-server/gda-server-impl.c:213
 msgid ""
 "Another instance of this provider is already registered with OAF. Exiting..."
 msgstr ""
 "Fout: Een andere instantie van deze provider is al geregistreerd bij OAF."
 
-#: lib/gda-server/gda-server-impl.c:228
+#: lib/gda-server/gda-server-impl.c:216
 msgid "Unknown error registering this provider with OAF. Exiting"
 msgstr ""
 "Fout: Een onbekende fout trad op tijdens het registreren van deze provider "
 "bij OAF."
 
-#: lib/gda-server/gda-server-impl.c:232
+#: lib/gda-server/gda-server-impl.c:220
 #, c-format
 msgid "Registered with ID = %s"
 msgstr "Geregistreerd met ID = %s"
 
-#: lib/gda-server/gda-server-impl.c:314
+#: lib/gda-server/gda-server-impl.c:296
 #, c-format
 msgid "CORBA system exception %s"
 msgstr "CORBA systeem uitzondering %s"
 
-#: lib/gda-server/gda-server-impl.c:317
+#: lib/gda-server/gda-server-impl.c:299
 #, c-format
 msgid "CORBA user exception: %s"
 msgstr "CORBA gebruikers uitzondering: %s"
@@ -219,7 +219,7 @@ msgstr "Poging om een reeds geinitialiseerde provider opnieuw te initialiseren"
 #: providers/gda-odbc-server/gda-odbc-connection.c:642
 #: providers/gda-oracle-server/gda-oracle-connection.c:426
 #: providers/gda-postgres-server/gda-postgres-connection.c:779
-#: providers/gda-sybase-server/gda-sybase-error.c:106
+#: providers/gda-sybase-server/gda-sybase-error.c:109
 #, c-format
 msgid "error '%s' at %s"
 msgstr "fout '%s' bij %s"
@@ -240,8 +240,8 @@ msgstr "fout '%s' bij %s"
 #: providers/gda-oracle-server/gda-oracle-connection.c:432
 #: providers/gda-postgres-server/gda-postgres-connection.c:786
 #: providers/gda-postgres-server/gda-postgres-connection.c:787
-#: providers/gda-sybase-server/gda-sybase-error.c:115
-#: providers/gda-sybase-server/gda-sybase-error.c:116
+#: providers/gda-sybase-server/gda-sybase-error.c:118
+#: providers/gda-sybase-server/gda-sybase-error.c:119
 msgid "Not available"
 msgstr "Niet beschikbaar"
 
@@ -251,7 +251,7 @@ msgstr "Niet beschikbaar"
 #: providers/gda-mysql-server/gda-mysql-connection.c:393
 #: providers/gda-oracle-server/gda-oracle-connection.c:433
 #: providers/gda-postgres-server/gda-postgres-connection.c:788
-#: providers/gda-sybase-server/gda-sybase-error.c:117
+#: providers/gda-sybase-server/gda-sybase-error.c:120
 msgid "error"
 msgstr "fout"
 
@@ -362,15 +362,15 @@ msgstr "geen tekst"
 msgid "Could not register ODBC provider implementation"
 msgstr "Kon ODBC provider implementatie niet registreren"
 
-#: providers/gda-oracle-server/gda-oracle-command.c:195
+#: providers/gda-oracle-server/gda-oracle-command.c:185
 msgid "Could not allocate statement handle"
 msgstr "Kon 'statement handle' niet toewijzen"
 
-#: providers/gda-oracle-server/gda-oracle-command.c:199
+#: providers/gda-oracle-server/gda-oracle-command.c:189
 msgid "command object being created without associated connection"
 msgstr "commando object word gemaakt zonder bijbehorende verbinding"
 
-#: providers/gda-oracle-server/gda-oracle-command.c:226
+#: providers/gda-oracle-server/gda-oracle-command.c:220
 #, c-format
 msgid "Executing command '%s'"
 msgstr "Bezig met uitvoeren van commando '%s'"
@@ -627,143 +627,143 @@ msgstr "Kon lokale structuur niet verwijderen"
 msgid "Fatal error: %s\n"
 msgstr "Fatale fout: %s\n"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:62
+#: providers/gda-sybase-server/gda-sybase-error.c:65
 #, c-format
 msgid "gda_sybase_error_make(%p,%p,%p,%p)"
 msgstr "gda_sybase_error_make(%p,%p,%p,%p)"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:71
+#: providers/gda-sybase-server/gda-sybase-error.c:74
 #, c-format
 msgid "No error flag ist set, though %s is called. This may be a bug."
 msgstr ""
 "Er is geen fout vlag ingesteld, toch werd %s aangeroepen. Dit zou een fout "
 "in het programma kunnen zijn."
 
-#: providers/gda-sybase-server/gda-sybase-error.c:135
+#: providers/gda-sybase-server/gda-sybase-error.c:138
 msgid "cs_diag() initialized"
 msgstr "cd_diag() geinitializeerd"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:138
+#: providers/gda-sybase-server/gda-sybase-error.c:141
 msgid "Could not initialize cs_diag()"
 msgstr "Kon cs_diag() niet initializeren"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:145
+#: providers/gda-sybase-server/gda-sybase-error.c:148
 msgid "ct_diag() initialized"
 msgstr "ct_diag() geinitializeerd"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:148
+#: providers/gda-sybase-server/gda-sybase-error.c:151
 msgid "Could not initialize ct_diag()"
 msgstr "Kon ct_diag() niet initializeren"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:182
+#: providers/gda-sybase-server/gda-sybase-error.c:185
 #, c-format
 msgid "%s could not find server implementation"
 msgstr "%s kon server implementatie niet vinden"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:188
+#: providers/gda-sybase-server/gda-sybase-error.c:191
 #, c-format
 msgid "%s could not get cnc userdata"
 msgstr "%s kon cnc gebruikers gegevens niet vergaren"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:200
+#: providers/gda-sybase-server/gda-sybase-error.c:203
 msgid "Could not get # of messages"
 msgstr "Kon # berichten niet vergaren"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:205
+#: providers/gda-sybase-server/gda-sybase-error.c:208
 #, c-format
 msgid "%d ctlib messages to fetch"
 msgstr "%d ctlib berichten om op te halen"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:207
+#: providers/gda-sybase-server/gda-sybase-error.c:210
 #, c-format
 msgid "%d ctlib message to fetch"
 msgstr "%d ctlib bericht om op te halen"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:243
+#: providers/gda-sybase-server/gda-sybase-error.c:246
 msgid "error is nullpointer in gda_sybase_messages_handle"
 msgstr "fout is een 'nullpointer' in gda_sybase_messages_handle"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:268
-#: providers/gda-sybase-server/gda-sybase-error.c:335
-#: providers/gda-sybase-server/gda-sybase-error.c:378
+#: providers/gda-sybase-server/gda-sybase-error.c:271
+#: providers/gda-sybase-server/gda-sybase-error.c:338
+#: providers/gda-sybase-server/gda-sybase-error.c:381
 msgid "Could not get # of server messages"
 msgstr "Kon # server berichten niet ophalen"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:276
+#: providers/gda-sybase-server/gda-sybase-error.c:279
 #, c-format
 msgid "Fetching %d client messages"
 msgstr "Bezig met ophalen %d client berichten"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:278
+#: providers/gda-sybase-server/gda-sybase-error.c:281
 #, c-format
 msgid "Fetching %d client message"
 msgstr "Bezig met ophalen %d client bericht"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:287
+#: providers/gda-sybase-server/gda-sybase-error.c:290
 #, c-format
 msgid "Could not get client msg # %d"
 msgstr "Kon # %d client berichten niet ophalen"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:303
+#: providers/gda-sybase-server/gda-sybase-error.c:306
 msgid "Could not get # of client messages"
 msgstr "Kon # client berichten niet ophalen"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:311
+#: providers/gda-sybase-server/gda-sybase-error.c:314
 msgid "Could not clear client messages"
 msgstr "Kon client berichten niet leegmaken"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:343
+#: providers/gda-sybase-server/gda-sybase-error.c:346
 #, c-format
 msgid "Fetching %d server messages"
 msgstr "Bezig met ophalen %d server berichten"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:345
+#: providers/gda-sybase-server/gda-sybase-error.c:348
 #, c-format
 msgid "Fetching %d server message"
 msgstr "Beizg met ophalen %d server bericht"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:354
+#: providers/gda-sybase-server/gda-sybase-error.c:357
 #, c-format
 msgid "Could not get server msg # %d"
 msgstr "Kon server bericht # %d niet ophalen"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:386
+#: providers/gda-sybase-server/gda-sybase-error.c:389
 msgid "Could not clear server messages"
 msgstr "Kon server berichten niet leegmaken"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:408
-#: providers/gda-sybase-server/gda-sybase-error.c:444
+#: providers/gda-sybase-server/gda-sybase-error.c:411
+#: providers/gda-sybase-server/gda-sybase-error.c:447
 msgid "Could not get # of cslib messages"
 msgstr "Kon # cslib berichten niet ophalen"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:416
+#: providers/gda-sybase-server/gda-sybase-error.c:419
 #, c-format
 msgid "Fetching %d cslib messages"
 msgstr "Bezg met ophalen %d cslib berichten"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:418
-#, c-format
-msgid "Fetchong %d cslib message"
-msgstr "Bezig met ophalen %d cslib bericht"
+#: providers/gda-sybase-server/gda-sybase-error.c:421
+#, fuzzy, c-format
+msgid "Fetching %d cslib message"
+msgstr "Bezg met ophalen %d cslib berichten"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:428
+#: providers/gda-sybase-server/gda-sybase-error.c:431
 #, c-format
 msgid "Could not get cslib msg # %d"
 msgstr "Kon cslib bericht # %d niet ophalen"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:452
+#: providers/gda-sybase-server/gda-sybase-error.c:455
 msgid "Could not clear cslib messages"
 msgstr "Kon cslib berichten niet leegmaken"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:584
+#: providers/gda-sybase-server/gda-sybase-error.c:587
 msgid "Server message:"
 msgstr "Server bericht:"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:593
+#: providers/gda-sybase-server/gda-sybase-error.c:596
 msgid "Client message:"
 msgstr "Client bericht:"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:600
+#: providers/gda-sybase-server/gda-sybase-error.c:603
 msgid "CS-Library error:"
 msgstr "CS-Bibliotheek fout:"
 
@@ -919,6 +919,9 @@ msgstr "%s: verkeerd geconfigureerd DSN item"
 #, c-format
 msgid "%s: data source '%s' not found\n"
 msgstr "%s: gegevensbron '%s' kon niet worden gevonden\n"
+
+#~ msgid "Fetchong %d cslib message"
+#~ msgstr "Bezig met ophalen %d cslib bericht"
 
 #~ msgid "%s: not implemented"
 #~ msgstr "%s: niet geimplementeerd"

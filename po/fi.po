@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2000-11-30 01:23+0100\n"
+"POT-Creation-Date: 2000-12-22 14:14+0100\n"
 "PO-Revision-Date: 2000-11-12 19:00+0100\n"
 "Last-Translator: Markku Verkkoniemi <myv@iki.fi>\n"
 "Language-Team: Finnish <fi@li.org>\n"
@@ -34,12 +34,12 @@ msgstr "%s: Palvelin ei vastaa."
 msgid "%s: An Error occured in the CORBA system."
 msgstr "%s: CORBA-j‰rjestelm‰ss‰ virhe."
 
-#: lib/gda-client/gda-connection.c:529
+#: lib/gda-client/gda-connection.c:493
 #, c-format
 msgid "Database '%s' not found in system configuration"
 msgstr "J‰rjestelm‰asetuksista ei lˆydy tietokantaa \"%s\""
 
-#: lib/gda-client/gda-connection.c:545
+#: lib/gda-client/gda-connection.c:509
 msgid "Could not open CORBA factory"
 msgstr "CORBA-tehdasta ei voi avata"
 
@@ -160,39 +160,39 @@ msgstr "%s: pituus = %d"
 msgid "%s: sending field description for '%s'"
 msgstr "%s: l‰hetet‰‰n \"%s\":lle kentt‰kuvaus"
 
-#: lib/gda-server/gda-server-impl.c:195
+#: lib/gda-server/gda-server-impl.c:184
 #, c-format
 msgid "Starting provider %s with no implementation functions"
 msgstr "K‰ynnistet‰‰n tuottaja %s ilman toteutustoimintoja"
 
-#: lib/gda-server/gda-server-impl.c:222
+#: lib/gda-server/gda-server-impl.c:210
 #: report/server/gda-report-server-main.c:120
 msgid ""
 "OAF doesn't know about our IID; indicates broken installation. Exiting..."
 msgstr ""
 "OAF ei tied‰ mit‰‰n IID:st‰mme; kertoo asennuksen olevan rikki. Lopettaa..."
 
-#: lib/gda-server/gda-server-impl.c:225
+#: lib/gda-server/gda-server-impl.c:213
 msgid ""
 "Another instance of this provider is already registered with OAF. Exiting..."
 msgstr ""
 "T‰m‰n tuottajan toinen ilmentym‰ on jo rekisterˆity OAF:‰‰n. Lopettaa..."
 
-#: lib/gda-server/gda-server-impl.c:228
+#: lib/gda-server/gda-server-impl.c:216
 msgid "Unknown error registering this provider with OAF. Exiting"
 msgstr "Tuntematon virhe t‰t‰ tuottajaa OAF:‰‰n rekisterˆidess‰. Lopettaa"
 
-#: lib/gda-server/gda-server-impl.c:232
+#: lib/gda-server/gda-server-impl.c:220
 #, c-format
 msgid "Registered with ID = %s"
 msgstr "Rekisterˆity ID = %s"
 
-#: lib/gda-server/gda-server-impl.c:314
+#: lib/gda-server/gda-server-impl.c:296
 #, c-format
 msgid "CORBA system exception %s"
 msgstr "CORBA-j‰rjestelm‰poikkeus %s"
 
-#: lib/gda-server/gda-server-impl.c:317
+#: lib/gda-server/gda-server-impl.c:299
 #, c-format
 msgid "CORBA user exception: %s"
 msgstr "CORBA-k‰ytt‰j‰poikkeus"
@@ -219,7 +219,7 @@ msgstr "Yritys alustaa jo alustettu tuottaja"
 #: providers/gda-odbc-server/gda-odbc-connection.c:642
 #: providers/gda-oracle-server/gda-oracle-connection.c:426
 #: providers/gda-postgres-server/gda-postgres-connection.c:779
-#: providers/gda-sybase-server/gda-sybase-error.c:106
+#: providers/gda-sybase-server/gda-sybase-error.c:109
 #, c-format
 msgid "error '%s' at %s"
 msgstr "virhe \"%s\" paikassa %s"
@@ -240,8 +240,8 @@ msgstr "virhe \"%s\" paikassa %s"
 #: providers/gda-oracle-server/gda-oracle-connection.c:432
 #: providers/gda-postgres-server/gda-postgres-connection.c:786
 #: providers/gda-postgres-server/gda-postgres-connection.c:787
-#: providers/gda-sybase-server/gda-sybase-error.c:115
-#: providers/gda-sybase-server/gda-sybase-error.c:116
+#: providers/gda-sybase-server/gda-sybase-error.c:118
+#: providers/gda-sybase-server/gda-sybase-error.c:119
 msgid "Not available"
 msgstr "Ei saatavilla"
 
@@ -251,7 +251,7 @@ msgstr "Ei saatavilla"
 #: providers/gda-mysql-server/gda-mysql-connection.c:393
 #: providers/gda-oracle-server/gda-oracle-connection.c:433
 #: providers/gda-postgres-server/gda-postgres-connection.c:788
-#: providers/gda-sybase-server/gda-sybase-error.c:117
+#: providers/gda-sybase-server/gda-sybase-error.c:120
 msgid "error"
 msgstr "virhe"
 
@@ -360,15 +360,15 @@ msgstr "ei teksti‰"
 msgid "Could not register ODBC provider implementation"
 msgstr "ODBC-tuottajatoteutusta ei voi rekisterˆid‰"
 
-#: providers/gda-oracle-server/gda-oracle-command.c:195
+#: providers/gda-oracle-server/gda-oracle-command.c:185
 msgid "Could not allocate statement handle"
 msgstr "Lausekahvaa ei voi varata"
 
-#: providers/gda-oracle-server/gda-oracle-command.c:199
+#: providers/gda-oracle-server/gda-oracle-command.c:189
 msgid "command object being created without associated connection"
 msgstr "komentokohdetta luodaan ilman johdettua yhteytt‰"
 
-#: providers/gda-oracle-server/gda-oracle-command.c:226
+#: providers/gda-oracle-server/gda-oracle-command.c:220
 #, c-format
 msgid "Executing command '%s'"
 msgstr "Komentoa \"%s\" suoritetaan"
@@ -622,141 +622,141 @@ msgstr "locale-rakennetta ei voi poistaa"
 msgid "Fatal error: %s\n"
 msgstr "Vakava virhe: %s\n"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:62
+#: providers/gda-sybase-server/gda-sybase-error.c:65
 #, c-format
 msgid "gda_sybase_error_make(%p,%p,%p,%p)"
 msgstr "gda_sybase_error_make(%p,%p,%p,%p)"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:71
+#: providers/gda-sybase-server/gda-sybase-error.c:74
 #, c-format
 msgid "No error flag ist set, though %s is called. This may be a bug."
 msgstr "Virhelippua ei asetettu, vaikka %s kutsuttu. Voi olla virhe."
 
-#: providers/gda-sybase-server/gda-sybase-error.c:135
+#: providers/gda-sybase-server/gda-sybase-error.c:138
 msgid "cs_diag() initialized"
 msgstr "cs_diag() alustettu"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:138
+#: providers/gda-sybase-server/gda-sybase-error.c:141
 msgid "Could not initialize cs_diag()"
 msgstr "cs_diag():ia ei voi alustaa"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:145
+#: providers/gda-sybase-server/gda-sybase-error.c:148
 msgid "ct_diag() initialized"
 msgstr "ct_diag() alustettu"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:148
+#: providers/gda-sybase-server/gda-sybase-error.c:151
 msgid "Could not initialize ct_diag()"
 msgstr "ct_diag():ia ei voi alustaa"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:182
+#: providers/gda-sybase-server/gda-sybase-error.c:185
 #, c-format
 msgid "%s could not find server implementation"
 msgstr "%s ei lˆyd‰ palvelintoteutusta"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:188
+#: providers/gda-sybase-server/gda-sybase-error.c:191
 #, c-format
 msgid "%s could not get cnc userdata"
 msgstr "%s ei saa cnc-k‰yttˆtietoja"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:200
+#: providers/gda-sybase-server/gda-sybase-error.c:203
 msgid "Could not get # of messages"
 msgstr "Ilmoitusten m‰‰r‰‰ ei saada"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:205
+#: providers/gda-sybase-server/gda-sybase-error.c:208
 #, c-format
 msgid "%d ctlib messages to fetch"
 msgstr "%d ctlib-ilmoitusta haettavana"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:207
+#: providers/gda-sybase-server/gda-sybase-error.c:210
 #, c-format
 msgid "%d ctlib message to fetch"
 msgstr "%d ctlib-ilmoitusta haettavana"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:243
+#: providers/gda-sybase-server/gda-sybase-error.c:246
 msgid "error is nullpointer in gda_sybase_messages_handle"
 msgstr "Virhe on nollaosoitin gda_sybase_messages_handle:ssa"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:268
-#: providers/gda-sybase-server/gda-sybase-error.c:335
-#: providers/gda-sybase-server/gda-sybase-error.c:378
+#: providers/gda-sybase-server/gda-sybase-error.c:271
+#: providers/gda-sybase-server/gda-sybase-error.c:338
+#: providers/gda-sybase-server/gda-sybase-error.c:381
 msgid "Could not get # of server messages"
 msgstr "Palvelinilmoitusten m‰‰r‰‰ ei saada"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:276
+#: providers/gda-sybase-server/gda-sybase-error.c:279
 #, c-format
 msgid "Fetching %d client messages"
 msgstr "Haetaan %d asiakasilmoitusta"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:278
+#: providers/gda-sybase-server/gda-sybase-error.c:281
 #, c-format
 msgid "Fetching %d client message"
 msgstr "Haetaan %d asiakasilmoitus"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:287
+#: providers/gda-sybase-server/gda-sybase-error.c:290
 #, c-format
 msgid "Could not get client msg # %d"
 msgstr "Asiakasilmoitusten m‰‰r‰‰ %d ei saada"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:303
+#: providers/gda-sybase-server/gda-sybase-error.c:306
 msgid "Could not get # of client messages"
 msgstr "Asiakasilmoitusten m‰‰r‰‰ ei saada"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:311
+#: providers/gda-sybase-server/gda-sybase-error.c:314
 msgid "Could not clear client messages"
 msgstr "Asikasilmoituksia ei voi tyhjent‰‰"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:343
+#: providers/gda-sybase-server/gda-sybase-error.c:346
 #, c-format
 msgid "Fetching %d server messages"
 msgstr "Haetaan %d palvelinilmoitusta"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:345
+#: providers/gda-sybase-server/gda-sybase-error.c:348
 #, c-format
 msgid "Fetching %d server message"
 msgstr "Haetaan %d palvelinilmoitus"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:354
+#: providers/gda-sybase-server/gda-sybase-error.c:357
 #, c-format
 msgid "Could not get server msg # %d"
 msgstr "Palvelinilmoitusten %d m‰‰r‰‰ ei saada"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:386
+#: providers/gda-sybase-server/gda-sybase-error.c:389
 msgid "Could not clear server messages"
 msgstr "Palvelinilmoituksia ei voi tyhjent‰‰"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:408
-#: providers/gda-sybase-server/gda-sybase-error.c:444
+#: providers/gda-sybase-server/gda-sybase-error.c:411
+#: providers/gda-sybase-server/gda-sybase-error.c:447
 msgid "Could not get # of cslib messages"
 msgstr "cslib-ilmoitusten m‰‰r‰‰ ei saada"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:416
+#: providers/gda-sybase-server/gda-sybase-error.c:419
 #, c-format
 msgid "Fetching %d cslib messages"
 msgstr "Haetaan %d cslib-ilmoitusta"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:418
-#, c-format
-msgid "Fetchong %d cslib message"
-msgstr "Haetaan %d cslib-ilmoitus"
+#: providers/gda-sybase-server/gda-sybase-error.c:421
+#, fuzzy, c-format
+msgid "Fetching %d cslib message"
+msgstr "Haetaan %d cslib-ilmoitusta"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:428
+#: providers/gda-sybase-server/gda-sybase-error.c:431
 #, c-format
 msgid "Could not get cslib msg # %d"
 msgstr "cslib-ilmoitusten m‰‰r‰‰ %d ei saada"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:452
+#: providers/gda-sybase-server/gda-sybase-error.c:455
 msgid "Could not clear cslib messages"
 msgstr "cslib-ilmoituksia ei voi tyhjent‰‰"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:584
+#: providers/gda-sybase-server/gda-sybase-error.c:587
 msgid "Server message:"
 msgstr "Palvelinilmoitus:"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:593
+#: providers/gda-sybase-server/gda-sybase-error.c:596
 msgid "Client message:"
 msgstr "Asiakasilmoitus:"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:600
+#: providers/gda-sybase-server/gda-sybase-error.c:603
 msgid "CS-Library error:"
 msgstr "CS-kirjastovirhe:"
 
@@ -910,3 +910,6 @@ msgstr "%s: DSN-kohta v‰‰rin asetettu"
 #, c-format
 msgid "%s: data source '%s' not found\n"
 msgstr "%s: datal‰hdett‰ \"%s\" ei lˆydy\n"
+
+#~ msgid "Fetchong %d cslib message"
+#~ msgstr "Haetaan %d cslib-ilmoitus"

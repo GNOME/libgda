@@ -22,7 +22,7 @@ libgda_primebase_la_SOURCES = \
 	gda-primebase-recordset.c \
 	gda-primebase.h
 
-EXTRA_DIST = gda-primebase.oafinfo
+EXTRA_DIST = GNOME_GDA_Provider_Primebase.oafinfo
 
 oafinfodir=$(GDA_oafinfodir)
 oafinfo_DATA=GNOME_GDA_Provider_Primebase.oafinfo

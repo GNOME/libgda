@@ -22,7 +22,7 @@ libgda_interbase_la_SOURCES = \
 	gda-interbase-recordset.c \
 	gda-interbase.h
 
-EXTRA_DIST = gda-interbase.oafinfo
+EXTRA_DIST = GNOME_GDA_Provider_InterBase.oafinfo
 
 oafinfodir=$(GDA_oafinfodir)
 oafinfo_DATA=GNOME_GDA_Provider_InterBase.oafinfo

@@ -22,7 +22,7 @@ libgda_oracle_la_SOURCES = \
 	gda-oracle-recordset.c \
 	gda-oracle.h
 
-EXTRA_DIST = gda-oracle.oafinfo gda-oracle.spec.in
+EXTRA_DIST = GNOME_GDA_Provider_Oracle.oafinfo gda-oracle.spec.in
 
 oafinfodir=$(GDA_oafinfodir)
 oafinfo_DATA=GNOME_GDA_Provider_Oracle.oafinfo
