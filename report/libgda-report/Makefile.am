@@ -42,11 +42,11 @@ libgda_report_2_la_SOURCES =	\
 	gda-report-item-label.c \
 	gda-report-item-repfield.c \
 	gda-report-result.c
-	
+
 
 libgda_report_2_la_LDFLAGS = -version-info $(GDA_CURRENT):$(GDA_REVISION):$(GDA_AGE)
 libgda_report_2_la_LIBADD = $(LIBGDA_LIBS) $(top_builddir)/libgda/libgda-2.la
 
-gdareportincludedir=$(includedir)/libgda-report
+gdareportincludedir=$(includedir)/libgda-$(GDA_MAJOR_VERSION).$(GDA_MINOR_VERSION)/libgda-report
 gdareportinclude_HEADERS=$(gda_report_headers)
 

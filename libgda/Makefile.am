@@ -162,7 +162,7 @@ libgda_2_la_SOURCES = \
 libgda_2_la_LDFLAGS = -version-info $(GDA_CURRENT):$(GDA_REVISION):$(GDA_AGE)
 libgda_2_la_LIBADD = $(LIBGDA_LIBS) $(top_builddir)/libsql/libgdasql.la
 
-gdaincludedir=$(includedir)/libgda
+gdaincludedir=$(includedir)/libgda-$(GDA_MAJOR_VERSION).$(GDA_MINOR_VERSION)/libgda
 gdainclude_HEADERS=$(libgda_built_headers) $(gda_headers)
 
 CLEANFILES = $(libgda_built_headers) $(libgda_built_cfiles) \

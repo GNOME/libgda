@@ -1,5 +1,13 @@
 2004-10-10  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* libgda.pc.in:
+	* libsql/Makefile.am:
+	* libgda/Makefile.am:
+	* report/libgda-report/Makefile.am: install headers in versioned
+	directories.
+
+2004-10-10  Rodrigo Moya <rodrigo@gnome-db.org>
+
 	* libgda/gda-config.[ch]: added GdaProviderParameterInfo structure.
 	Changed list of params in GdaProviderInfo to be a list of
 	GdaProviderParameterInfo structures.
