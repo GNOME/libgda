@@ -1271,7 +1271,7 @@ get_oracle_objects (GdaConnection *cnc, GdaParameterList *params, GdaConnectionS
 			GDA_COMMAND_OPTION_STOP_ON_ERRORS);
 
 	gda_parameter_list_free (query_params);
-	g_string_free (sql);
+	g_string_free (sql, TRUE);
 
 	if (!reclist)
 		return NULL;

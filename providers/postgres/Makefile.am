@@ -2,6 +2,8 @@ providerdir=$(prefix)/lib/libgda/providers
 provider_LTLIBRARIES = libgda-postgres.la
 
 INCLUDES = \
+	-I$(top_srcdir) \
+	-I$(top_builddir) \
 	$(LIBGDA_CFLAGS) \
 	$(POSTGRES_CFLAGS)
 

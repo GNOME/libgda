@@ -1,3 +1,18 @@
+2002-06-21  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* libsql/Makefile.am: missing header files to SOURCES.
+
+	* providers/mysql/Makefile.am:
+	* providers/odbc/Makefile.am:
+	* providers/oracle/Makefile.am:
+	* providers/postgres/Makefile.am:
+	* providers/mdb/Makefile.am: fixed INCLUDES path.
+
+	* providers/oracle/gda-oracle-provider.c (get_oracle_objects): fixed
+	call to g_string_free.
+
+	* testing/client.c: s/SQL Language/SQL.
+
 2002-06-20  Tim Coleman <tim@timcoleman.com>
 
 	* providers/oracle/gda-oracle-provider.c:

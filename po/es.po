@@ -10,7 +10,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: es\n"
-"POT-Creation-Date: 2002-06-06 01:41+0200\n"
+"POT-Creation-Date: 2002-06-21 20:36+0200\n"
 "PO-Revision-Date: 2002-06-05 22:51GMT -03:00\n"
 "Last-Translator: Pablo Gonzalo del Campo <pablodc@bigfoot.com>\n"
 "Language-Team: español <traductores@es.gnome.org>\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: KBabel 1.0beta1\n"
 
-#: libgda/gda-client.c:226 libgda/gda-client.c:412 libgda/gda-connection.c:208
+#: libgda/gda-client.c:226 libgda/gda-client.c:413 libgda/gda-connection.c:214
 #, c-format
 msgid "Data source %s not found in configuration"
 msgstr "Origen de datos %s no encontrado en la configuración"
@@ -43,48 +43,49 @@ msgstr "El proveedor %s no implementa punto de entrada"
 msgid "Creation of GdaServerProvider failed"
 msgstr "Ha fallado la creación de GdaServerProvider"
 
-#: libgda/gda-client.c:340
+#: libgda/gda-client.c:341
 msgid "Temporary data source created by libgda. Don't remove it"
 msgstr "Fuente de datos temporaria creada por libgda. No borrarla"
 
 #. gda_server_recordset_model_set_field_defined_size (recset, 0, 256);
-#: libgda/gda-config.c:1244 providers/default/gda-default-provider.c:463
+#: libgda/gda-config.c:1270 providers/default/gda-default-provider.c:463
 #: providers/default/gda-default-provider.c:485
 #: providers/default/gda-default-provider.c:522
-#: providers/mysql/gda-mysql-provider.c:550
+#: providers/mysql/gda-mysql-provider.c:584
+#: providers/oracle/gda-oracle-provider.c:933
 msgid "Name"
 msgstr "Nombre"
 
-#: libgda/gda-config.c:1245
+#: libgda/gda-config.c:1271
 msgid "Provider"
 msgstr "Proveedor"
 
-#: libgda/gda-config.c:1246
+#: libgda/gda-config.c:1272
 msgid "Connection string"
 msgstr "Cadena de conexión"
 
-#: libgda/gda-config.c:1247
+#: libgda/gda-config.c:1273
 msgid "Description"
 msgstr "Descripción"
 
-#: libgda/gda-config.c:1248
+#: libgda/gda-config.c:1274
 msgid "Username"
 msgstr "Usuario"
 
-#: libgda/gda-config.c:1249
+#: libgda/gda-config.c:1275
 msgid "Password"
 msgstr "Contraseña"
 
-#: libgda/gda-data-model.c:583
+#: libgda/gda-data-model.c:589
 #, c-format
 msgid "Data model %p is not editable"
 msgstr "El modelo de datos %p no es editable"
 
-#: libgda/gda-init.c:42
+#: libgda/gda-init.c:49
 msgid "Attempt to initialize an already initialized client"
 msgstr "Se ha intentado inicializar un cliente que ya lo estaba"
 
-#: libgda/gda-init.c:53
+#: libgda/gda-init.c:60
 msgid "libgda needs GModule. Finishing..."
 msgstr "libgda necesita GModule. Terminando..."
 
@@ -145,11 +146,11 @@ msgstr "Error leyendo %s: %s"
 msgid "Could not create file %s"
 msgstr "No se pudo crear el archivo %s"
 
-#: libgda/gda-value.c:1321
+#: libgda/gda-value.c:1315
 msgid "TRUE"
 msgstr "SI"
 
-#: libgda/gda-value.c:1323
+#: libgda/gda-value.c:1317
 msgid "FALSE"
 msgstr "NO"
 
@@ -188,8 +189,9 @@ msgid "Invalid XML node"
 msgstr "Nodo XML inválido"
 
 #: providers/default/gda-default-provider.c:173
-#: providers/sqlite/gda-sqlite-provider.c:166
-msgid "A full path must be specified on the connection string to open a database."
+#: providers/sqlite/gda-sqlite-provider.c:186
+msgid ""
+"A full path must be specified on the connection string to open a database."
 msgstr ""
 "Una ruta completa debe ser especificada en la cadena de conexión para abrir "
 "la base de datos."
@@ -199,49 +201,57 @@ msgid "Not Implemented"
 msgstr "No implementado"
 
 #: providers/default/gda-default-provider.c:361
-#: providers/mysql/gda-mysql-provider.c:839
+#: providers/mysql/gda-mysql-provider.c:873
+#: providers/oracle/gda-oracle-provider.c:990
 #: providers/postgres/gda-postgres-provider.c:829
 msgid "Field name"
 msgstr "Nombre del campo"
 
 #: providers/default/gda-default-provider.c:362
-#: providers/mysql/gda-mysql-provider.c:840
+#: providers/mysql/gda-mysql-provider.c:874
+#: providers/oracle/gda-oracle-provider.c:991
 #: providers/postgres/gda-postgres-provider.c:830
 msgid "Data type"
 msgstr "Tipo de dato"
 
 #: providers/default/gda-default-provider.c:363
-#: providers/mysql/gda-mysql-provider.c:841
+#: providers/mysql/gda-mysql-provider.c:875
+#: providers/oracle/gda-oracle-provider.c:992
 #: providers/postgres/gda-postgres-provider.c:831
 msgid "Size"
 msgstr "Tamaño"
 
 #: providers/default/gda-default-provider.c:364
-#: providers/mysql/gda-mysql-provider.c:842
+#: providers/mysql/gda-mysql-provider.c:876
+#: providers/oracle/gda-oracle-provider.c:993
 #: providers/postgres/gda-postgres-provider.c:832
 msgid "Scale"
 msgstr "Escala"
 
 #: providers/default/gda-default-provider.c:365
-#: providers/mysql/gda-mysql-provider.c:843
+#: providers/mysql/gda-mysql-provider.c:877
+#: providers/oracle/gda-oracle-provider.c:994
 #: providers/postgres/gda-postgres-provider.c:833
 msgid "Not null?"
 msgstr "¿No nulo?"
 
 #: providers/default/gda-default-provider.c:366
-#: providers/mysql/gda-mysql-provider.c:844
+#: providers/mysql/gda-mysql-provider.c:878
+#: providers/oracle/gda-oracle-provider.c:995
 #: providers/postgres/gda-postgres-provider.c:834
 msgid "Primary key?"
 msgstr "¿Clave primaria?"
 
 #: providers/default/gda-default-provider.c:367
-#: providers/mysql/gda-mysql-provider.c:845
+#: providers/mysql/gda-mysql-provider.c:879
+#: providers/oracle/gda-oracle-provider.c:996
 #: providers/postgres/gda-postgres-provider.c:835
 msgid "Unique index?"
 msgstr "¿Índice Único?"
 
 #: providers/default/gda-default-provider.c:368
-#: providers/mysql/gda-mysql-provider.c:846
+#: providers/mysql/gda-mysql-provider.c:880
+#: providers/oracle/gda-oracle-provider.c:997
 #: providers/postgres/gda-postgres-provider.c:836
 msgid "References"
 msgstr "Referencias"
@@ -287,52 +297,60 @@ msgstr "Nombre de la Tabla"
 msgid "GDA provider for MS Access files"
 msgstr "Proveedor GDA para archivos MS Access"
 
-#: providers/mysql/gda-mysql-provider.c:194
-msgid "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
-msgstr "No puede proveer un UNIX_SOCKET si al mismo tiempo provee un HOST o un PORT."
+#: providers/mysql/gda-mysql-provider.c:198
+msgid ""
+"You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
+msgstr ""
+"No puede proveer un UNIX_SOCKET si al mismo tiempo provee un HOST o un PORT."
 
-#: providers/mysql/gda-mysql-provider.c:265
-#: providers/mysql/gda-mysql-provider.c:315
-#: providers/mysql/gda-mysql-provider.c:338
-#: providers/mysql/gda-mysql-provider.c:367
-#: providers/mysql/gda-mysql-provider.c:432
-#: providers/mysql/gda-mysql-provider.c:460
-#: providers/mysql/gda-mysql-provider.c:488
+#: providers/mysql/gda-mysql-provider.c:269
+#: providers/mysql/gda-mysql-provider.c:319
+#: providers/mysql/gda-mysql-provider.c:342
+#: providers/mysql/gda-mysql-provider.c:372
+#: providers/mysql/gda-mysql-provider.c:401
+#: providers/mysql/gda-mysql-provider.c:466
+#: providers/mysql/gda-mysql-provider.c:494
+#: providers/mysql/gda-mysql-provider.c:522
 msgid "Invalid MYSQL handle"
 msgstr "Manejador MYSQL inválido"
 
 #. gda_server_recordset_model_set_field_defined_size (recset, 0, 32);
-#: providers/mysql/gda-mysql-provider.c:741
+#: providers/mysql/gda-mysql-provider.c:775
+#: providers/oracle/gda-oracle-provider.c:1294
 msgid "Type"
 msgstr "Tipo"
 
-#: providers/mysql/gda-mysql-provider.c:854
+#: providers/mysql/gda-mysql-provider.c:888
 #: providers/mysql/gda-mysql-recordset.c:58
 #: providers/mysql/gda-mysql-recordset.c:174
 msgid "Invalid MySQL handle"
 msgstr "Manejador MySQL inválido"
 
-#: providers/mysql/gda-mysql-provider.c:863
-#: providers/mysql/gda-mysql-provider.c:871
+#: providers/mysql/gda-mysql-provider.c:897
+#: providers/mysql/gda-mysql-provider.c:905
 msgid "You need to specify the name of the table"
 msgstr "Necesita especificar el nombre de la tabla"
 
 #: providers/mysql/gda-mysql-recordset.c:69
 #: providers/postgres/gda-postgres-recordset.c:184
 #: providers/postgres/gda-postgres-recordset.c:222
-#: providers/sqlite/gda-sqlite-recordset.c:64
+#: providers/sqlite/gda-sqlite-recordset.c:168
+#: providers/sqlite/gda-sqlite-recordset.c:207
 msgid "Row number out of range"
 msgstr "Número de fila fuera de rango"
 
 #: providers/mysql/gda-mysql-recordset.c:281
+#: providers/oracle/gda-oracle-recordset.c:446
 msgid "Attempt to insert a row with an invalid number of columns"
 msgstr "Intentando insertar una fila con una número inválido de columnas"
 
 #: providers/mysql/gda-mysql-recordset.c:296
+#: providers/oracle/gda-oracle-recordset.c:461
 msgid "Could not retrieve column's information"
 msgstr "No se pudo devolver la información de la columna"
 
 #: providers/mysql/gda-mysql-recordset.c:314
+#: providers/oracle/gda-oracle-recordset.c:479
 msgid "Could not retrieve column's value"
 msgstr "No se pudo obtener de valor de la columna"
 
@@ -344,29 +362,323 @@ msgstr "Proveedor GDA para bases de datos MySQL"
 msgid "GDA bridge to ODBC data sources"
 msgstr "Puente GDA a origen de datos ODBC"
 
-#: providers/oracle/gda-oracle-connection.c:79
-msgid "Could not initialize Oracle environment"
+#: providers/oracle/gda-oracle-provider.c:187
+#, fuzzy
+msgid "Could not initialize Oracle"
 msgstr "No se pudo inicializar el ambiente Oracle"
 
-#: providers/oracle/gda-oracle-connection.c:89
-msgid "Could not initialize Oracle error handler"
-msgstr "No se pudo inicializar el manejador de errores de Oracle"
+#: providers/oracle/gda-oracle-provider.c:198
+#, fuzzy
+msgid "Could not initialize the Oracle environment"
+msgstr "No se pudo inicializar el ambiente Oracle"
 
-#: providers/oracle/gda-oracle-connection.c:100
-msgid "Could not initialize Oracle server handle"
+#: providers/oracle/gda-oracle-provider.c:210
+#, fuzzy
+msgid "Could not allocate the Oracle service handle"
 msgstr "No se pudo inicializar el manejador de servidor Oracle"
 
-#: providers/oracle/gda-oracle-connection.c:111
-msgid "Could not initialize Oracle service context"
+#: providers/oracle/gda-oracle-provider.c:220
+#, fuzzy
+msgid "Could not allocate the Oracle error handle"
+msgstr "No se pudo inicializar el manejador de errores de Oracle"
+
+#: providers/oracle/gda-oracle-provider.c:230
+#, fuzzy
+msgid "Could not allocate the Oracle server handle"
+msgstr "No se pudo inicializar el manejador de servidor Oracle"
+
+#: providers/oracle/gda-oracle-provider.c:240
+#, fuzzy
+msgid "Could not allocate the Oracle session handle"
+msgstr "No se pudo inicializar el manejador de errores de Oracle"
+
+#: providers/oracle/gda-oracle-provider.c:266
+#, fuzzy
+msgid "Could not attach to the Oracle server"
+msgstr "No se pudo inicializar el manejador de servidor Oracle"
+
+#: providers/oracle/gda-oracle-provider.c:277
+#, fuzzy
+msgid "Could not set the Oracle server attribute in the service context"
 msgstr "No se pudo inicializar el servicio de contexto Oracle"
 
-#: providers/oracle/main.c:48
-msgid "Could not initiate Oracle component factory"
+#: providers/oracle/gda-oracle-provider.c:288
+#, fuzzy
+msgid "Could not set the Oracle username attribute"
+msgstr "No se pudo inicializar el manejador de servidor Oracle"
+
+#: providers/oracle/gda-oracle-provider.c:299
+#, fuzzy
+msgid "Could not set the Oracle password attribute"
 msgstr "No se pudo inicializar el origen de componente Oracle"
 
-#: providers/oracle/main.c:74
-msgid "Could not initialize OCI library"
-msgstr "No se pudo inicializar la librería OCI"
+#: providers/oracle/gda-oracle-provider.c:309
+#, fuzzy
+msgid "Could not begin the Oracle session"
+msgstr "No se pudo inicializar el ambiente Oracle"
+
+#: providers/oracle/gda-oracle-provider.c:324
+#, fuzzy
+msgid "Could not set the Oracle session attribute in the service context"
+msgstr "No se pudo inicializar el servicio de contexto Oracle"
+
+#: providers/oracle/gda-oracle-provider.c:400
+#: providers/oracle/gda-oracle-provider.c:470
+#: providers/oracle/gda-oracle-provider.c:598
+#: providers/oracle/gda-oracle-provider.c:621
+#: providers/oracle/gda-oracle-provider.c:644
+#: providers/oracle/gda-oracle-provider.c:674
+#: providers/oracle/gda-oracle-provider.c:730
+#: providers/oracle/gda-oracle-provider.c:799
+#: providers/oracle/gda-oracle-provider.c:854
+#: providers/oracle/gda-oracle-recordset.c:160
+#: providers/oracle/gda-oracle-recordset.c:367
+#, fuzzy
+msgid "Invalid Oracle handle"
+msgstr "Manejador Sqlite inválido"
+
+#: providers/oracle/gda-oracle-provider.c:411
+#, fuzzy
+msgid "Could not allocate the Oracle statement handle"
+msgstr "No se pudo inicializar el manejador de servidor Oracle"
+
+#: providers/oracle/gda-oracle-provider.c:422
+#, fuzzy
+msgid "Could not prepare the Oracle statement"
+msgstr "No se pudo inicializar el ambiente Oracle"
+
+#: providers/oracle/gda-oracle-provider.c:452
+#, fuzzy
+msgid "Could not bind the Oracle statement parameter"
+msgstr "No se pudo inicializar el origen de componente Oracle"
+
+#: providers/oracle/gda-oracle-provider.c:495
+#, fuzzy
+msgid "Could not get the Oracle statement type"
+msgstr "No se pudo inicializar el origen de componente Oracle"
+
+#: providers/oracle/gda-oracle-provider.c:511
+#, fuzzy
+msgid "Could not execute the Oracle statement"
+msgstr "No se pudo inicializar el ambiente Oracle"
+
+#: providers/oracle/gda-oracle-provider.c:522
+msgid "Could not get the number of columns in the result set"
+msgstr ""
+
+#: providers/oracle/gda-oracle-provider.c:537
+msgid "Could not get the parameter descripter in the result set"
+msgstr ""
+
+#: providers/oracle/gda-oracle-provider.c:547
+#, fuzzy
+msgid "Could not get the column name in the result set"
+msgstr "No se pudo obtener de valor de la columna"
+
+#: providers/oracle/gda-oracle-provider.c:691
+#: providers/oracle/gda-oracle-provider.c:765
+#: providers/oracle/gda-oracle-provider.c:811
+#: providers/oracle/gda-oracle-provider.c:866
+#, fuzzy
+msgid "Could not attach the transaction to the service context"
+msgstr "No se pudo inicializar el servicio de contexto Oracle"
+
+#: providers/oracle/gda-oracle-provider.c:741
+#, fuzzy
+msgid "Could not allocate the Oracle transaction handle"
+msgstr "No se pudo inicializar el manejador de errores de Oracle"
+
+#: providers/oracle/gda-oracle-provider.c:753
+#, fuzzy
+msgid "Could not set the Oracle transaction name"
+msgstr "No se pudo inicializar el ambiente Oracle"
+
+#: providers/oracle/gda-oracle-provider.c:774
+#, fuzzy
+msgid "Could not start the Oracle transaction"
+msgstr "No se pudo inicializar el origen de componente Oracle"
+
+#: providers/oracle/gda-oracle-provider.c:820
+#, fuzzy
+msgid "Could not prepare the transaction to commit"
+msgstr "No se pudo obtener la descripción de la columna"
+
+#: providers/oracle/gda-oracle-provider.c:828
+#, fuzzy
+msgid "Could not commit the Oracle transaction"
+msgstr "No se pudo inicializar el origen de componente Oracle"
+
+#: providers/oracle/gda-oracle-provider.c:873
+#, fuzzy
+msgid "Could not rollback the Oracle transaction"
+msgstr "No se pudo inicializar el origen de componente Oracle"
+
+#: providers/oracle/gda-oracle-provider.c:1030
+#, fuzzy
+msgid "Could not allocate the Oracle describe handle"
+msgstr "No se pudo inicializar el manejador de servidor Oracle"
+
+#: providers/oracle/gda-oracle-provider.c:1043
+#, fuzzy
+msgid "Could not describe the Oracle table"
+msgstr "No se pudo obtener de valor de la columna"
+
+#: providers/oracle/gda-oracle-provider.c:1054
+#, fuzzy
+msgid "Could not get the Oracle parameter handle"
+msgstr "No se pudo inicializar el manejador de servidor Oracle"
+
+#: providers/oracle/gda-oracle-provider.c:1065
+#, fuzzy
+msgid "Could not get the number of columns in the table"
+msgstr "No se pudo obtener de valor de la columna"
+
+#: providers/oracle/gda-oracle-provider.c:1075
+#, fuzzy
+msgid "Could not get the column list"
+msgstr "No se pudo obtener el archivo desde %s"
+
+#: providers/oracle/gda-oracle-provider.c:1098
+#, fuzzy
+msgid "Could not get the Oracle column handle"
+msgstr "No se pudo inicializar el manejador de errores de Oracle"
+
+#: providers/oracle/gda-oracle-provider.c:1109
+#, fuzzy
+msgid "Could not get the Oracle field name"
+msgstr "No se pudo inicializar el ambiente Oracle"
+
+#: providers/oracle/gda-oracle-provider.c:1127
+#, fuzzy
+msgid "Could not get the Oracle field data type"
+msgstr "No se pudo inicializar el origen de componente Oracle"
+
+#: providers/oracle/gda-oracle-provider.c:1142
+#, fuzzy
+msgid "Could not get the Oracle field defined size"
+msgstr "No se pudo obtener el archivo desde %s"
+
+#: providers/oracle/gda-oracle-provider.c:1156
+#, fuzzy
+msgid "Could not get the Oracle field scale"
+msgstr "No se pudo inicializar el manejador de servidor Oracle"
+
+#: providers/oracle/gda-oracle-provider.c:1170
+msgid "Could not get the Oracle field nullable attribute"
+msgstr ""
+
+#. Set it here instead of the SQL query to allow i18n
+#: providers/oracle/gda-oracle-provider.c:1212
+#: providers/postgres/gda-postgres-provider.c:1197 testing/client.c:123
+msgid "Users"
+msgstr "Usuarios"
+
+#. Set it here instead of the SQL query to allow i18n
+#: providers/oracle/gda-oracle-provider.c:1380
+#: providers/postgres/gda-postgres-provider.c:767 testing/client.c:121
+msgid "Indexes"
+msgstr "Índices"
+
+#: providers/oracle/gda-oracle-provider.c:1384
+#, fuzzy
+msgid "Procedures"
+msgstr "\t\tProcedimientos: %s\n"
+
+#. Set it here instead of the SQL query to allow i18n
+#: providers/oracle/gda-oracle-provider.c:1388
+#: providers/postgres/gda-postgres-provider.c:1225 testing/client.c:124
+msgid "Sequences"
+msgstr "Secuencias"
+
+#. Set it here instead of the SQL query to allow i18n
+#: providers/oracle/gda-oracle-provider.c:1392
+#: providers/postgres/gda-postgres-provider.c:672
+msgid "Tables"
+msgstr "Tablas"
+
+#. Set it here instead of the SQL query to allow i18n
+#: providers/oracle/gda-oracle-provider.c:1396
+#: providers/postgres/gda-postgres-provider.c:818 testing/client.c:125
+msgid "Triggers"
+msgstr "Disparadores"
+
+#. Set it here instead of the SQL query to allow i18n
+#: providers/oracle/gda-oracle-provider.c:1400
+#: providers/postgres/gda-postgres-provider.c:742 testing/client.c:120
+msgid "Views"
+msgstr "Vistas"
+
+#: providers/oracle/gda-oracle-recordset.c:73
+#, fuzzy
+msgid "Could not get the Oracle parameter"
+msgstr "No se pudo inicializar el ambiente Oracle"
+
+#: providers/oracle/gda-oracle-recordset.c:83
+#, fuzzy
+msgid "Could not get the parameter defined size"
+msgstr "No se pudo crear el archivo %s"
+
+#: providers/oracle/gda-oracle-recordset.c:94
+#, fuzzy
+msgid "Could not get the parameter data type"
+msgstr "No se pudo crear un componente de tipo %s"
+
+#: providers/oracle/gda-oracle-recordset.c:123
+#, fuzzy
+msgid "Could not define by position"
+msgstr "No se pudo cargar el archivo en %s"
+
+#: providers/oracle/gda-oracle-recordset.c:166
+#: providers/postgres/gda-postgres-recordset.c:261
+msgid "Column out of range"
+msgstr "Columna fuera de rango"
+
+#: providers/oracle/gda-oracle-recordset.c:178
+#, fuzzy
+msgid "Could not get the Oracle parameter information"
+msgstr "No se pudo devolver la información de la columna"
+
+#: providers/oracle/gda-oracle-recordset.c:188
+#, fuzzy
+msgid "Could not get the Oracle column name"
+msgstr "No se pudo obtener de valor de la columna"
+
+#: providers/oracle/gda-oracle-recordset.c:201
+#, fuzzy
+msgid "Could not get the Oracle column data type"
+msgstr "No se pudo inicializar el origen de componente Oracle"
+
+#: providers/oracle/gda-oracle-recordset.c:211
+#, fuzzy
+msgid "Could not get the Oracle column scale"
+msgstr "No se pudo obtener de valor de la columna"
+
+#: providers/oracle/gda-oracle-recordset.c:221
+#, fuzzy
+msgid "Could not get the Oracle column nullable attribute"
+msgstr "No se pudo inicializar el origen de componente Oracle"
+
+#: providers/oracle/gda-oracle-recordset.c:231
+#, fuzzy
+msgid "Could not get the Oracle defined size"
+msgstr "No se pudo obtener el archivo desde %s"
+
+#: providers/oracle/gda-oracle-recordset.c:333
+msgid "An error occurred during fetch"
+msgstr ""
+
+#: providers/oracle/libmain.c:34
+#, fuzzy
+msgid "GDA provider for Oracle databases"
+msgstr "Proveedor GDA para bases de datos SQLite"
+
+#: providers/oracle/utils.c:67 providers/postgres/utils.c:47
+msgid "NO DESCRIPTION"
+msgstr "SIN DESCRIPCIÓN"
+
+#: providers/oracle/utils.c:72 providers/postgres/utils.c:52
+msgid "Not available"
+msgstr "No está disponible"
 
 #: providers/postgres/gda-postgres-provider.c:382
 #: providers/postgres/gda-postgres-provider.c:453
@@ -377,24 +689,9 @@ msgstr "No se pudo inicializar la librería OCI"
 msgid "Invalid PostgreSQL handle"
 msgstr "Manejador PostgresSQL inválido"
 
-#. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:672
-msgid "Tables"
-msgstr "Tablas"
-
 #: providers/postgres/gda-postgres-provider.c:711
 msgid "Types"
 msgstr "Tipos"
-
-#. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:742 testing/client.c:120
-msgid "Views"
-msgstr "Vistas"
-
-#. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:767 testing/client.c:121
-msgid "Indexes"
-msgstr "Índices"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/postgres/gda-postgres-provider.c:793 testing/client.c:122
@@ -402,55 +699,52 @@ msgid "Aggregates"
 msgstr "Agregados"
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:818 testing/client.c:125
-msgid "Triggers"
-msgstr "Disparadores"
-
-#. Set it here instead of the SQL query to allow i18n
 #: providers/postgres/gda-postgres-provider.c:1172 testing/client.c:116
 msgid "Databases"
 msgstr "Bases de datos"
 
-#. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:1197 testing/client.c:123
-msgid "Users"
-msgstr "Usuarios"
+#: providers/postgres/gda-postgres-provider.c:1265
+#, fuzzy
+msgid "Table name"
+msgstr "Nombre de la Tabla"
 
-#. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:1225 testing/client.c:124
-msgid "Sequences"
+#: providers/postgres/gda-postgres-provider.c:1266
+#, fuzzy
+msgid "Sequence"
 msgstr "Secuencias"
 
 #: providers/postgres/gda-postgres-recordset.c:228
+#: providers/sqlite/gda-sqlite-recordset.c:213
+#: providers/sqlite/gda-sqlite-recordset.c:245
 msgid "Column number out of range"
 msgstr "Número de columna fuera de rango"
-
-#: providers/postgres/gda-postgres-recordset.c:261
-msgid "Column out of range"
-msgstr "Columna fuera de rango"
 
 #: providers/postgres/libmain.c:41
 msgid "GDA provider for PostgreSQL databases"
 msgstr "Proveedor GDA para bases de datos PostgreSQL"
 
-#: providers/postgres/utils.c:47
-msgid "NO DESCRIPTION"
-msgstr "SIN DESCRIPCIÓN"
-
-#: providers/postgres/utils.c:52
-msgid "Not available"
-msgstr "No está disponible"
-
-#: providers/sqlite/gda-sqlite-provider.c:224
-#: providers/sqlite/gda-sqlite-recordset.c:54
+#: providers/sqlite/gda-sqlite-provider.c:246
 msgid "Invalid SQLITE handle"
 msgstr "Manejador SQLITE inválido"
 
-#: providers/sqlite/gda-sqlite-provider.c:286
+#: providers/sqlite/gda-sqlite-provider.c:314
+#: providers/sqlite/gda-sqlite-provider.c:449
+#: providers/sqlite/gda-sqlite-recordset.c:159
+#: providers/sqlite/gda-sqlite-recordset.c:198
+#: providers/sqlite/gda-sqlite-recordset.c:239
+#, fuzzy
+msgid "Invalid SQLite handle"
+msgstr "Manejador Sqlite inválido"
+
+#: providers/sqlite/gda-sqlite-provider.c:332
 msgid "Only one database per connection is allowed"
 msgstr "Sólo se permite una base de datos por conexión"
 
-#: providers/sqlite/libmain.c:36
+#: providers/sqlite/gda-sqlite-provider.c:346
+msgid "To remove a SQLite database you should remove the database file by hand"
+msgstr ""
+
+#: providers/sqlite/libmain.c:41
 msgid "GDA provider for SQLite databases"
 msgstr "Proveedor GDA para bases de datos SQLite"
 
@@ -516,8 +810,8 @@ msgid "\t\tSequences: %s\n"
 msgstr "\t\tSecuencias: %s\n"
 
 #: testing/client.c:96
-#, c-format
-msgid "\t\tSQL language: %s\n"
+#, fuzzy, c-format
+msgid "\t\tSQL: %s\n"
 msgstr "\t\tLenguaje SQL: %s\n"
 
 #: testing/client.c:99
@@ -611,8 +905,8 @@ msgstr "\tdescripción = %s\n"
 msgid "\tgda_params ="
 msgstr "\tgda_params ="
 
-#~ msgid "Invalid Sqlite handle"
-#~ msgstr "Manejador Sqlite inválido"
+#~ msgid "Could not initialize OCI library"
+#~ msgstr "No se pudo inicializar la librería OCI"
 
 #~ msgid "CORBA exception: %s"
 #~ msgstr "Excepción CORBA: %s"
@@ -655,9 +949,6 @@ msgstr "\tgda_params ="
 
 #~ msgid "Don't know how to create components with IID %s"
 #~ msgstr "No sé como crear componentes con ID %s"
-
-#~ msgid "Could not create component of type %s"
-#~ msgstr "No se pudo crear un componente de tipo %s"
 
 #~ msgid "Could not duplicate client object. Client won't get notifications"
 #~ msgstr ""
@@ -738,4 +1029,3 @@ msgstr "\tgda_params ="
 
 #~ msgid "\tdomain = %s\n"
 #~ msgstr "\tdominio = %s\n"
-

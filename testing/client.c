@@ -93,7 +93,7 @@ open_connection (GdaClient *client,
 	g_print (_("\t\tSequences: %s\n"),
 		 gda_connection_supports (cnc, GDA_CONNECTION_FEATURE_SEQUENCES) ?
 		 _("Supported") : _("Not supported"));
-	g_print (_("\t\tSQL language: %s\n"),
+	g_print (_("\t\tSQL: %s\n"),
 		 gda_connection_supports (cnc, GDA_CONNECTION_FEATURE_SQL) ?
 		 _("Supported") : _("Not supported"));
 	g_print (_("\t\tTransactions: %s\n"),

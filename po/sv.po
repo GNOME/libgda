@@ -8,7 +8,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2002-06-21 11:57+0200\n"
+"POT-Creation-Date: 2002-06-21 20:36+0200\n"
 "PO-Revision-Date: 2002-06-21 11:57+0200\n"
 "Last-Translator: Christian Rose <menthos@menthos.com>\n"
 "Language-Team: Swedish <sv@li.org>\n"
@@ -755,8 +755,8 @@ msgid "\t\tSequences: %s\n"
 msgstr "\t\tSekvenser: %s\n"
 
 #: testing/client.c:96
-#, c-format
-msgid "\t\tSQL language: %s\n"
+#, fuzzy, c-format
+msgid "\t\tSQL: %s\n"
 msgstr "\t\tSQL-språk: %s\n"
 
 #: testing/client.c:99

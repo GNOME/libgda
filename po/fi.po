@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2002-05-25 00:31+0200\n"
+"POT-Creation-Date: 2002-06-21 20:36+0200\n"
 "PO-Revision-Date: 2000-11-12 19:00+0100\n"
 "Last-Translator: Markku Verkkoniemi <myv@iki.fi>\n"
 "Language-Team: Finnish <fi@li.org>\n"
@@ -14,7 +14,7 @@ msgstr ""
 "Content-Type: text/plain; charset=iso-8859-15\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: libgda/gda-client.c:226 libgda/gda-client.c:384 libgda/gda-connection.c:206
+#: libgda/gda-client.c:226 libgda/gda-client.c:413 libgda/gda-connection.c:214
 #, fuzzy, c-format
 msgid "Data source %s not found in configuration"
 msgstr "J‰rjestelm‰asetuksista ei lˆydy tietokantaa \"%s\""
@@ -38,42 +38,52 @@ msgstr "K‰ynnistet‰‰n tuottaja %s ilman toteutustoimintoja"
 msgid "Creation of GdaServerProvider failed"
 msgstr ""
 
+#: libgda/gda-client.c:341
+msgid "Temporary data source created by libgda. Don't remove it"
+msgstr ""
+
 #. gda_server_recordset_model_set_field_defined_size (recset, 0, 256);
-#: libgda/gda-config.c:1189 providers/default/gda-default-provider.c:463
+#: libgda/gda-config.c:1270 providers/default/gda-default-provider.c:463
 #: providers/default/gda-default-provider.c:485
 #: providers/default/gda-default-provider.c:522
-#: providers/mysql/gda-mysql-provider.c:535
+#: providers/mysql/gda-mysql-provider.c:584
+#: providers/oracle/gda-oracle-provider.c:933
 msgid "Name"
 msgstr ""
 
-#: libgda/gda-config.c:1190
+#: libgda/gda-config.c:1271
 msgid "Provider"
 msgstr ""
 
-#: libgda/gda-config.c:1191
+#: libgda/gda-config.c:1272
 #, fuzzy
 msgid "Connection string"
 msgstr "Yhteys n‰ytt‰‰ olevan poikki"
 
-#: libgda/gda-config.c:1192
+#: libgda/gda-config.c:1273
 msgid "Description"
 msgstr ""
 
-#: libgda/gda-config.c:1193
+#: libgda/gda-config.c:1274
 #, fuzzy
 msgid "Username"
 msgstr "k‰ytt‰j‰tunnus"
 
-#: libgda/gda-data-model.c:583
+#: libgda/gda-config.c:1275
+#, fuzzy
+msgid "Password"
+msgstr "salasana"
+
+#: libgda/gda-data-model.c:589
 #, fuzzy, c-format
 msgid "Data model %p is not editable"
 msgstr "taulu %p ei ole voimassa"
 
-#: libgda/gda-init.c:42
+#: libgda/gda-init.c:49
 msgid "Attempt to initialize an already initialized client"
 msgstr "Yritys alustaa jo alustettu asiakas"
 
-#: libgda/gda-init.c:53
+#: libgda/gda-init.c:60
 msgid "libgda needs GModule. Finishing..."
 msgstr ""
 
@@ -134,11 +144,11 @@ msgstr ""
 msgid "Could not create file %s"
 msgstr "localea ei voi asettaa \"%s\":ksi"
 
-#: libgda/gda-value.c:1321
+#: libgda/gda-value.c:1315
 msgid "TRUE"
 msgstr "TOSI"
 
-#: libgda/gda-value.c:1323
+#: libgda/gda-value.c:1317
 msgid "FALSE"
 msgstr "EPƒTOSI"
 
@@ -177,7 +187,7 @@ msgid "Invalid XML node"
 msgstr ""
 
 #: providers/default/gda-default-provider.c:173
-#: providers/sqlite/gda-sqlite-provider.c:166
+#: providers/sqlite/gda-sqlite-provider.c:186
 msgid ""
 "A full path must be specified on the connection string to open a database."
 msgstr ""
@@ -188,52 +198,60 @@ msgid "Not Implemented"
 msgstr "%s ei toteutettu"
 
 #: providers/default/gda-default-provider.c:361
-#: providers/mysql/gda-mysql-provider.c:824
-#: providers/postgres/gda-postgres-provider.c:807
+#: providers/mysql/gda-mysql-provider.c:873
+#: providers/oracle/gda-oracle-provider.c:990
+#: providers/postgres/gda-postgres-provider.c:829
 #, fuzzy
 msgid "Field name"
 msgstr "tiedostonimi"
 
 #: providers/default/gda-default-provider.c:362
-#: providers/mysql/gda-mysql-provider.c:825
-#: providers/postgres/gda-postgres-provider.c:808
+#: providers/mysql/gda-mysql-provider.c:874
+#: providers/oracle/gda-oracle-provider.c:991
+#: providers/postgres/gda-postgres-provider.c:830
 msgid "Data type"
 msgstr ""
 
 #: providers/default/gda-default-provider.c:363
-#: providers/mysql/gda-mysql-provider.c:826
-#: providers/postgres/gda-postgres-provider.c:809
+#: providers/mysql/gda-mysql-provider.c:875
+#: providers/oracle/gda-oracle-provider.c:992
+#: providers/postgres/gda-postgres-provider.c:831
 msgid "Size"
 msgstr ""
 
 #: providers/default/gda-default-provider.c:364
-#: providers/mysql/gda-mysql-provider.c:827
-#: providers/postgres/gda-postgres-provider.c:810
+#: providers/mysql/gda-mysql-provider.c:876
+#: providers/oracle/gda-oracle-provider.c:993
+#: providers/postgres/gda-postgres-provider.c:832
 #, fuzzy
 msgid "Scale"
 msgstr "Ep‰tosi"
 
 #: providers/default/gda-default-provider.c:365
-#: providers/mysql/gda-mysql-provider.c:828
-#: providers/postgres/gda-postgres-provider.c:811
+#: providers/mysql/gda-mysql-provider.c:877
+#: providers/oracle/gda-oracle-provider.c:994
+#: providers/postgres/gda-postgres-provider.c:833
 msgid "Not null?"
 msgstr ""
 
 #: providers/default/gda-default-provider.c:366
-#: providers/mysql/gda-mysql-provider.c:829
-#: providers/postgres/gda-postgres-provider.c:812
+#: providers/mysql/gda-mysql-provider.c:878
+#: providers/oracle/gda-oracle-provider.c:995
+#: providers/postgres/gda-postgres-provider.c:834
 msgid "Primary key?"
 msgstr ""
 
 #: providers/default/gda-default-provider.c:367
-#: providers/mysql/gda-mysql-provider.c:830
-#: providers/postgres/gda-postgres-provider.c:813
+#: providers/mysql/gda-mysql-provider.c:879
+#: providers/oracle/gda-oracle-provider.c:996
+#: providers/postgres/gda-postgres-provider.c:835
 msgid "Unique index?"
 msgstr ""
 
 #: providers/default/gda-default-provider.c:368
-#: providers/mysql/gda-mysql-provider.c:831
-#: providers/postgres/gda-postgres-provider.c:814
+#: providers/mysql/gda-mysql-provider.c:880
+#: providers/oracle/gda-oracle-provider.c:997
+#: providers/postgres/gda-postgres-provider.c:836
 msgid "References"
 msgstr ""
 
@@ -277,7 +295,7 @@ msgstr ""
 msgid "GDA provider for MS Access files"
 msgstr ""
 
-#: providers/mysql/gda-mysql-provider.c:191
+#: providers/mysql/gda-mysql-provider.c:198
 #, fuzzy
 msgid ""
 "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
@@ -285,48 +303,55 @@ msgstr ""
 "%s:%d: UNIX_SOCKETia ei voi antaa, jos joko HOST tai PORT on jo annettu. "
 "Poista UNIX_SOCKET tai sek‰ HOST- ett‰ PORT-valinta"
 
-#: providers/mysql/gda-mysql-provider.c:262
-#: providers/mysql/gda-mysql-provider.c:316
-#: providers/mysql/gda-mysql-provider.c:349
-#: providers/mysql/gda-mysql-provider.c:417
-#: providers/mysql/gda-mysql-provider.c:445
-#: providers/mysql/gda-mysql-provider.c:473
+#: providers/mysql/gda-mysql-provider.c:269
+#: providers/mysql/gda-mysql-provider.c:319
+#: providers/mysql/gda-mysql-provider.c:342
+#: providers/mysql/gda-mysql-provider.c:372
+#: providers/mysql/gda-mysql-provider.c:401
+#: providers/mysql/gda-mysql-provider.c:466
+#: providers/mysql/gda-mysql-provider.c:494
+#: providers/mysql/gda-mysql-provider.c:522
 msgid "Invalid MYSQL handle"
 msgstr ""
 
 #. gda_server_recordset_model_set_field_defined_size (recset, 0, 32);
-#: providers/mysql/gda-mysql-provider.c:726
+#: providers/mysql/gda-mysql-provider.c:775
+#: providers/oracle/gda-oracle-provider.c:1294
 msgid "Type"
 msgstr ""
 
-#: providers/mysql/gda-mysql-provider.c:839
+#: providers/mysql/gda-mysql-provider.c:888
 #: providers/mysql/gda-mysql-recordset.c:58
 #: providers/mysql/gda-mysql-recordset.c:174
 msgid "Invalid MySQL handle"
 msgstr ""
 
-#: providers/mysql/gda-mysql-provider.c:848
-#: providers/mysql/gda-mysql-provider.c:856
+#: providers/mysql/gda-mysql-provider.c:897
+#: providers/mysql/gda-mysql-provider.c:905
 msgid "You need to specify the name of the table"
 msgstr ""
 
 #: providers/mysql/gda-mysql-recordset.c:69
 #: providers/postgres/gda-postgres-recordset.c:184
 #: providers/postgres/gda-postgres-recordset.c:222
-#: providers/sqlite/gda-sqlite-recordset.c:64
+#: providers/sqlite/gda-sqlite-recordset.c:168
+#: providers/sqlite/gda-sqlite-recordset.c:207
 msgid "Row number out of range"
 msgstr ""
 
 #: providers/mysql/gda-mysql-recordset.c:281
+#: providers/oracle/gda-oracle-recordset.c:446
 msgid "Attempt to insert a row with an invalid number of columns"
 msgstr ""
 
 #: providers/mysql/gda-mysql-recordset.c:296
+#: providers/oracle/gda-oracle-recordset.c:461
 #, fuzzy
 msgid "Could not retrieve column's information"
 msgstr "yhteytt‰ paikkaan %s ei voi avata"
 
 #: providers/mysql/gda-mysql-recordset.c:314
+#: providers/oracle/gda-oracle-recordset.c:479
 #, fuzzy
 msgid "Could not retrieve column's value"
 msgstr "Palvelinilmoituksia ei voi tyhjent‰‰"
@@ -339,120 +364,388 @@ msgstr ""
 msgid "GDA bridge to ODBC data sources"
 msgstr ""
 
-#: providers/oracle/gda-oracle-connection.c:79
+#: providers/oracle/gda-oracle-provider.c:187
 #, fuzzy
-msgid "Could not initialize Oracle environment"
+msgid "Could not initialize Oracle"
 msgstr "ct_diag():ia ei voi alustaa"
 
-#: providers/oracle/gda-oracle-connection.c:89
+#: providers/oracle/gda-oracle-provider.c:198
 #, fuzzy
-msgid "Could not initialize Oracle error handler"
+msgid "Could not initialize the Oracle environment"
 msgstr "ct_diag():ia ei voi alustaa"
 
-#: providers/oracle/gda-oracle-connection.c:100
+#: providers/oracle/gda-oracle-provider.c:210
 #, fuzzy
-msgid "Could not initialize Oracle server handle"
+msgid "Could not allocate the Oracle service handle"
 msgstr "cs_diag():ia ei voi alustaa"
 
-#: providers/oracle/gda-oracle-connection.c:111
+#: providers/oracle/gda-oracle-provider.c:220
 #, fuzzy
-msgid "Could not initialize Oracle service context"
+msgid "Could not allocate the Oracle error handle"
+msgstr "ct_diag():ia ei voi alustaa"
+
+#: providers/oracle/gda-oracle-provider.c:230
+#, fuzzy
+msgid "Could not allocate the Oracle server handle"
 msgstr "cs_diag():ia ei voi alustaa"
 
-#: providers/oracle/main.c:48
+#: providers/oracle/gda-oracle-provider.c:240
 #, fuzzy
-msgid "Could not initiate Oracle component factory"
+msgid "Could not allocate the Oracle session handle"
+msgstr "Lausekahvaa ei voi varata"
+
+#: providers/oracle/gda-oracle-provider.c:266
+#, fuzzy
+msgid "Could not attach to the Oracle server"
+msgstr "cs_diag():ia ei voi alustaa"
+
+#: providers/oracle/gda-oracle-provider.c:277
+#, fuzzy
+msgid "Could not set the Oracle server attribute in the service context"
+msgstr "cs_diag():ia ei voi alustaa"
+
+#: providers/oracle/gda-oracle-provider.c:288
+#, fuzzy
+msgid "Could not set the Oracle username attribute"
+msgstr "cs_diag():ia ei voi alustaa"
+
+#: providers/oracle/gda-oracle-provider.c:299
+#, fuzzy
+msgid "Could not set the Oracle password attribute"
 msgstr "CORBA-tehdasta ei voi avata"
 
-#: providers/oracle/main.c:74
+#: providers/oracle/gda-oracle-provider.c:309
 #, fuzzy
-msgid "Could not initialize OCI library"
+msgid "Could not begin the Oracle session"
 msgstr "ct_diag():ia ei voi alustaa"
 
-#: providers/postgres/gda-postgres-provider.c:380
-#: providers/postgres/gda-postgres-provider.c:565
+#: providers/oracle/gda-oracle-provider.c:324
+#, fuzzy
+msgid "Could not set the Oracle session attribute in the service context"
+msgstr "cs_diag():ia ei voi alustaa"
+
+#: providers/oracle/gda-oracle-provider.c:400
+#: providers/oracle/gda-oracle-provider.c:470
+#: providers/oracle/gda-oracle-provider.c:598
+#: providers/oracle/gda-oracle-provider.c:621
+#: providers/oracle/gda-oracle-provider.c:644
+#: providers/oracle/gda-oracle-provider.c:674
+#: providers/oracle/gda-oracle-provider.c:730
+#: providers/oracle/gda-oracle-provider.c:799
+#: providers/oracle/gda-oracle-provider.c:854
+#: providers/oracle/gda-oracle-recordset.c:160
+#: providers/oracle/gda-oracle-recordset.c:367
+msgid "Invalid Oracle handle"
+msgstr ""
+
+#: providers/oracle/gda-oracle-provider.c:411
+#, fuzzy
+msgid "Could not allocate the Oracle statement handle"
+msgstr "Lausekahvaa ei voi varata"
+
+#: providers/oracle/gda-oracle-provider.c:422
+#, fuzzy
+msgid "Could not prepare the Oracle statement"
+msgstr "ct_diag():ia ei voi alustaa"
+
+#: providers/oracle/gda-oracle-provider.c:452
+#, fuzzy
+msgid "Could not bind the Oracle statement parameter"
+msgstr "CORBA-tehdasta ei voi avata"
+
+#: providers/oracle/gda-oracle-provider.c:495
+#, fuzzy
+msgid "Could not get the Oracle statement type"
+msgstr "CORBA-tehdasta ei voi avata"
+
+#: providers/oracle/gda-oracle-provider.c:511
+#, fuzzy
+msgid "Could not execute the Oracle statement"
+msgstr "ct_diag():ia ei voi alustaa"
+
+#: providers/oracle/gda-oracle-provider.c:522
+#, fuzzy
+msgid "Could not get the number of columns in the result set"
+msgstr "Asiakasilmoitusten m‰‰r‰‰ ei saada"
+
+#: providers/oracle/gda-oracle-provider.c:537
+msgid "Could not get the parameter descripter in the result set"
+msgstr ""
+
+#: providers/oracle/gda-oracle-provider.c:547
+#, fuzzy
+msgid "Could not get the column name in the result set"
+msgstr "Asiakasilmoitusten m‰‰r‰‰ ei saada"
+
+#: providers/oracle/gda-oracle-provider.c:691
+#: providers/oracle/gda-oracle-provider.c:765
+#: providers/oracle/gda-oracle-provider.c:811
+#: providers/oracle/gda-oracle-provider.c:866
+#, fuzzy
+msgid "Could not attach the transaction to the service context"
+msgstr "cs_diag():ia ei voi alustaa"
+
+#: providers/oracle/gda-oracle-provider.c:741
+#, fuzzy
+msgid "Could not allocate the Oracle transaction handle"
+msgstr "Lausekahvaa ei voi varata"
+
+#: providers/oracle/gda-oracle-provider.c:753
+#, fuzzy
+msgid "Could not set the Oracle transaction name"
+msgstr "ct_diag():ia ei voi alustaa"
+
+#: providers/oracle/gda-oracle-provider.c:774
+#, fuzzy
+msgid "Could not start the Oracle transaction"
+msgstr "CORBA-tehdasta ei voi avata"
+
+#: providers/oracle/gda-oracle-provider.c:820
+#, fuzzy
+msgid "Could not prepare the transaction to commit"
+msgstr "yhteytt‰ paikkaan %s ei voi avata"
+
+#: providers/oracle/gda-oracle-provider.c:828
+#, fuzzy
+msgid "Could not commit the Oracle transaction"
+msgstr "CORBA-tehdasta ei voi avata"
+
+#: providers/oracle/gda-oracle-provider.c:873
+#, fuzzy
+msgid "Could not rollback the Oracle transaction"
+msgstr "locale-rakennetta ei voi varata"
+
+#: providers/oracle/gda-oracle-provider.c:1030
+#, fuzzy
+msgid "Could not allocate the Oracle describe handle"
+msgstr "Lausekahvaa ei voi varata"
+
+#: providers/oracle/gda-oracle-provider.c:1043
+#, fuzzy
+msgid "Could not describe the Oracle table"
+msgstr "Palvelinilmoituksia ei voi tyhjent‰‰"
+
+#: providers/oracle/gda-oracle-provider.c:1054
+#, fuzzy
+msgid "Could not get the Oracle parameter handle"
+msgstr "cs_diag():ia ei voi alustaa"
+
+#: providers/oracle/gda-oracle-provider.c:1065
+#, fuzzy
+msgid "Could not get the number of columns in the table"
+msgstr "Palvelinilmoituksia ei voi tyhjent‰‰"
+
+#: providers/oracle/gda-oracle-provider.c:1075
+#, fuzzy
+msgid "Could not get the column list"
+msgstr "localea ei voi asettaa \"%s\":ksi"
+
+#: providers/oracle/gda-oracle-provider.c:1098
+#, fuzzy
+msgid "Could not get the Oracle column handle"
+msgstr "ct_diag():ia ei voi alustaa"
+
+#: providers/oracle/gda-oracle-provider.c:1109
+#, fuzzy
+msgid "Could not get the Oracle field name"
+msgstr "ct_diag():ia ei voi alustaa"
+
+#: providers/oracle/gda-oracle-provider.c:1127
+#, fuzzy
+msgid "Could not get the Oracle field data type"
+msgstr "CORBA-tehdasta ei voi avata"
+
+#: providers/oracle/gda-oracle-provider.c:1142
+#, fuzzy
+msgid "Could not get the Oracle field defined size"
+msgstr "localea ei voi asettaa \"%s\":ksi"
+
+#: providers/oracle/gda-oracle-provider.c:1156
+#, fuzzy
+msgid "Could not get the Oracle field scale"
+msgstr "Asiakasilmoitusten m‰‰r‰‰ ei saada"
+
+#: providers/oracle/gda-oracle-provider.c:1170
+msgid "Could not get the Oracle field nullable attribute"
+msgstr ""
+
+#. Set it here instead of the SQL query to allow i18n
+#: providers/oracle/gda-oracle-provider.c:1212
+#: providers/postgres/gda-postgres-provider.c:1197 testing/client.c:123
+#, fuzzy
+msgid "Users"
+msgstr "k‰ytt‰j‰tunnus"
+
+#. Set it here instead of the SQL query to allow i18n
+#: providers/oracle/gda-oracle-provider.c:1380
+#: providers/postgres/gda-postgres-provider.c:767 testing/client.c:121
+msgid "Indexes"
+msgstr ""
+
+#: providers/oracle/gda-oracle-provider.c:1384
+msgid "Procedures"
+msgstr ""
+
+#. Set it here instead of the SQL query to allow i18n
+#: providers/oracle/gda-oracle-provider.c:1388
+#: providers/postgres/gda-postgres-provider.c:1225 testing/client.c:124
+msgid "Sequences"
+msgstr ""
+
+#. Set it here instead of the SQL query to allow i18n
+#: providers/oracle/gda-oracle-provider.c:1392
+#: providers/postgres/gda-postgres-provider.c:672
+msgid "Tables"
+msgstr ""
+
+#. Set it here instead of the SQL query to allow i18n
+#: providers/oracle/gda-oracle-provider.c:1396
+#: providers/postgres/gda-postgres-provider.c:818 testing/client.c:125
+msgid "Triggers"
+msgstr ""
+
+#. Set it here instead of the SQL query to allow i18n
+#: providers/oracle/gda-oracle-provider.c:1400
+#: providers/postgres/gda-postgres-provider.c:742 testing/client.c:120
+msgid "Views"
+msgstr ""
+
+#: providers/oracle/gda-oracle-recordset.c:73
+#, fuzzy
+msgid "Could not get the Oracle parameter"
+msgstr "ct_diag():ia ei voi alustaa"
+
+#: providers/oracle/gda-oracle-recordset.c:83
+#, fuzzy
+msgid "Could not get the parameter defined size"
+msgstr "localea ei voi asettaa \"%s\":ksi"
+
+#: providers/oracle/gda-oracle-recordset.c:94
+#, fuzzy
+msgid "Could not get the parameter data type"
+msgstr "kentt‰‰ ei voi varata"
+
+#: providers/oracle/gda-oracle-recordset.c:123
+#, fuzzy
+msgid "Could not define by position"
+msgstr "localea ei voi asettaa \"%s\":ksi"
+
+#: providers/oracle/gda-oracle-recordset.c:166
+#: providers/postgres/gda-postgres-recordset.c:261
+msgid "Column out of range"
+msgstr ""
+
+#: providers/oracle/gda-oracle-recordset.c:178
+#, fuzzy
+msgid "Could not get the Oracle parameter information"
+msgstr "yhteytt‰ paikkaan %s ei voi avata"
+
+#: providers/oracle/gda-oracle-recordset.c:188
+#, fuzzy
+msgid "Could not get the Oracle column name"
+msgstr "Palvelinilmoituksia ei voi tyhjent‰‰"
+
+#: providers/oracle/gda-oracle-recordset.c:201
+#, fuzzy
+msgid "Could not get the Oracle column data type"
+msgstr "CORBA-tehdasta ei voi avata"
+
+#: providers/oracle/gda-oracle-recordset.c:211
+#, fuzzy
+msgid "Could not get the Oracle column scale"
+msgstr "Palvelinilmoituksia ei voi tyhjent‰‰"
+
+#: providers/oracle/gda-oracle-recordset.c:221
+#, fuzzy
+msgid "Could not get the Oracle column nullable attribute"
+msgstr "CORBA-tehdasta ei voi avata"
+
+#: providers/oracle/gda-oracle-recordset.c:231
+#, fuzzy
+msgid "Could not get the Oracle defined size"
+msgstr "localea ei voi asettaa \"%s\":ksi"
+
+#: providers/oracle/gda-oracle-recordset.c:333
+#, fuzzy
+msgid "An error occurred during fetch"
+msgstr "Komennon suorituksessa tapahtui virhe"
+
+#: providers/oracle/libmain.c:34
+msgid "GDA provider for Oracle databases"
+msgstr ""
+
+#: providers/oracle/utils.c:67 providers/postgres/utils.c:47
+msgid "NO DESCRIPTION"
+msgstr ""
+
+#: providers/oracle/utils.c:72 providers/postgres/utils.c:52
+msgid "Not available"
+msgstr "Ei saatavilla"
+
+#: providers/postgres/gda-postgres-provider.c:382
+#: providers/postgres/gda-postgres-provider.c:453
+#: providers/postgres/gda-postgres-provider.c:587
 #: providers/postgres/gda-postgres-recordset.c:175
 #: providers/postgres/gda-postgres-recordset.c:213
 #: providers/postgres/gda-postgres-recordset.c:255
 msgid "Invalid PostgreSQL handle"
 msgstr ""
 
-#. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:650
-msgid "Tables"
-msgstr ""
-
-#: providers/postgres/gda-postgres-provider.c:689
+#: providers/postgres/gda-postgres-provider.c:711
 msgid "Types"
 msgstr ""
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:720 testing/client.c:120
-msgid "Views"
-msgstr ""
-
-#. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:745 testing/client.c:121
-msgid "Indexes"
-msgstr ""
-
-#. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:771 testing/client.c:122
+#: providers/postgres/gda-postgres-provider.c:793 testing/client.c:122
 msgid "Aggregates"
 msgstr ""
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:796 testing/client.c:125
-msgid "Triggers"
-msgstr ""
-
-#. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:1150 testing/client.c:116
+#: providers/postgres/gda-postgres-provider.c:1172 testing/client.c:116
 #, fuzzy
 msgid "Databases"
 msgstr "tietokantanimi"
 
-#. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:1175 testing/client.c:123
+#: providers/postgres/gda-postgres-provider.c:1265
 #, fuzzy
-msgid "Users"
-msgstr "k‰ytt‰j‰tunnus"
+msgid "Table name"
+msgstr "tiedostonimi"
 
-#. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:1203 testing/client.c:124
-msgid "Sequences"
+#: providers/postgres/gda-postgres-provider.c:1266
+msgid "Sequence"
 msgstr ""
 
 #: providers/postgres/gda-postgres-recordset.c:228
+#: providers/sqlite/gda-sqlite-recordset.c:213
+#: providers/sqlite/gda-sqlite-recordset.c:245
 msgid "Column number out of range"
-msgstr ""
-
-#: providers/postgres/gda-postgres-recordset.c:261
-msgid "Column out of range"
 msgstr ""
 
 #: providers/postgres/libmain.c:41
 msgid "GDA provider for PostgreSQL databases"
 msgstr ""
 
-#: providers/postgres/utils.c:47
-msgid "NO DESCRIPTION"
-msgstr ""
-
-#: providers/postgres/utils.c:52
-msgid "Not available"
-msgstr "Ei saatavilla"
-
-#: providers/sqlite/gda-sqlite-provider.c:224
-#: providers/sqlite/gda-sqlite-recordset.c:54
+#: providers/sqlite/gda-sqlite-provider.c:246
 msgid "Invalid SQLITE handle"
 msgstr ""
 
-#: providers/sqlite/gda-sqlite-provider.c:286
+#: providers/sqlite/gda-sqlite-provider.c:314
+#: providers/sqlite/gda-sqlite-provider.c:449
+#: providers/sqlite/gda-sqlite-recordset.c:159
+#: providers/sqlite/gda-sqlite-recordset.c:198
+#: providers/sqlite/gda-sqlite-recordset.c:239
+msgid "Invalid SQLite handle"
+msgstr ""
+
+#: providers/sqlite/gda-sqlite-provider.c:332
 msgid "Only one database per connection is allowed"
 msgstr ""
 
-#: providers/sqlite/libmain.c:36
+#: providers/sqlite/gda-sqlite-provider.c:346
+msgid "To remove a SQLite database you should remove the database file by hand"
+msgstr ""
+
+#: providers/sqlite/libmain.c:41
 msgid "GDA provider for SQLite databases"
 msgstr ""
 
@@ -461,12 +754,12 @@ msgstr ""
 msgid "Could not initiate Sybase component factory"
 msgstr "CORBA-tehdasta ei voi avata"
 
-#: report/libgda-report/gda-report-document.c:138
+#: report/libgda-report/gda-report-document.c:166
 #, fuzzy
 msgid "Could not parse XML document"
 msgstr "localea ei voi asettaa \"%s\":ksi"
 
-#: report/libgda-report/gda-report-document.c:163
+#: report/libgda-report/gda-report-document.c:191
 #, fuzzy, c-format
 msgid "Could not get file from %s"
 msgstr "localea ei voi asettaa \"%s\":ksi"
@@ -521,7 +814,7 @@ msgstr ""
 
 #: testing/client.c:96
 #, c-format
-msgid "\t\tSQL language: %s\n"
+msgid "\t\tSQL: %s\n"
 msgstr ""
 
 #: testing/client.c:99
@@ -618,6 +911,10 @@ msgid "\tgda_params ="
 msgstr ""
 
 #, fuzzy
+#~ msgid "Could not initialize OCI library"
+#~ msgstr "ct_diag():ia ei voi alustaa"
+
+#, fuzzy
 #~ msgid "CORBA exception: %s"
 #~ msgstr "CORBA-k‰ytt‰j‰poikkeus: %s"
 
@@ -655,10 +952,6 @@ msgstr ""
 #, fuzzy
 #~ msgid "Could not initialize Bonobo"
 #~ msgstr "ct_diag():ia ei voi alustaa"
-
-#, fuzzy
-#~ msgid "Could not create component of type %s"
-#~ msgstr "kentt‰‰ ei voi varata"
 
 #, fuzzy
 #~ msgid "Could not notify client about action %d"
@@ -823,9 +1116,6 @@ msgstr ""
 #~ msgid "Could not register ODBC provider implementation"
 #~ msgstr "ODBC-tuottajatoteutusta ei voi rekisterˆid‰"
 
-#~ msgid "Could not allocate statement handle"
-#~ msgstr "Lausekahvaa ei voi varata"
-
 #~ msgid "command object being created without associated connection"
 #~ msgstr "komentokohdetta luodaan ilman johdettua yhteytt‰"
 
@@ -888,9 +1178,6 @@ msgstr ""
 
 #~ msgid "No further results, command completly succeeded."
 #~ msgstr "Ei muita tuloksia, komento t‰ysin suoritettu."
-
-#~ msgid "An error occured during command execution."
-#~ msgstr "Komennon suorituksessa tapahtui virhe"
 
 #~ msgid "Cmd execution returned unknown result, may be an error"
 #~ msgstr "Komennon suoritus palautti tuntemattoman tuloksen, ehk‰ virhe"
@@ -964,9 +1251,6 @@ msgstr ""
 #~ msgid "%s: use command failed"
 #~ msgstr "%s: k‰yttˆkomento ei onnistu"
 
-#~ msgid "Could not allocate locale structure"
-#~ msgstr "locale-rakennetta ei voi varata"
-
 #~ msgid "Could not set locale to '%s'"
 #~ msgstr "localea ei voi asettaa \"%s\":ksi"
 
@@ -1020,9 +1304,6 @@ msgstr ""
 
 #~ msgid "Fetching %d client message"
 #~ msgstr "Haetaan %d asiakasilmoitus"
-
-#~ msgid "Could not get # of client messages"
-#~ msgstr "Asiakasilmoitusten m‰‰r‰‰ ei saada"
 
 #~ msgid "Could not clear client messages"
 #~ msgstr "Asikasilmoituksia ei voi tyhjent‰‰"
@@ -1218,9 +1499,6 @@ msgstr ""
 
 #~ msgid "USER-NAME"
 #~ msgstr "KƒYTTƒJƒTUNNUS"
-
-#~ msgid "password"
-#~ msgstr "salasana"
 
 #~ msgid "PASSWORD"
 #~ msgstr "SALASANA"

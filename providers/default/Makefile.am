@@ -3,7 +3,6 @@ provider_LTLIBRARIES = libgda-default.la
 
 INCLUDES = \
 	$(LIBGDA_CFLAGS) \
-	$(SQLITE_CFLAGS) \
 	-I$(top_srcdir) \
 	-I$(top_builddir)
 

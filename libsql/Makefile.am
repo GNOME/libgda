@@ -17,11 +17,15 @@ lib_LTLIBRARIES = libgdasql.la
 
 libgdasql_la_SOURCES = \
 	parser.c \
+	parser.h \
 	lexer.c \
 	sql_parser.c \
+	sql_parser.h \
 	mem.c \
+	mem.h \
 	sql_display.c \
-	sql_tree.c 
+	sql_tree.c \
+	sql_tree.h
 libgdasqlincdir = $(includedir)/libgda/sql
 libgdasqlinc_HEADERS = 
 libgdasql_la_LDFLAGS = $(LIBGDA_LIBS)
