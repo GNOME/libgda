@@ -1,3 +1,11 @@
+2001-07-14  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-server-connection.[ch] (gda_server_connection_add_listener):
+	new method
+	(gda_server_connection_remove_listener): new function
+	(impl_GDA_Connection_addListener): implemented
+	(impl_GDA_Connection_removeListener): implemented
+
 2001-07-06  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-server-*.c: inform correctly of errors

@@ -265,6 +265,24 @@ impl_GDA_Connection_xml2sql (PortableServer_Servant servant,
 	return gda_server_connection_xml2sql (cnc, xml);
 }
 
+void
+impl_GDA_Connection_addListener (PortableServer_Servant servant,
+				 GDA_Listener listener,
+				 CORBA_Environment *ev)
+{
+	GdaServerConnection *cnc = (GdaServerConnection *) bonobo_x_object (servant);
+	gda_server_connection_add_listener (cnc, listener);
+}
+
+void
+impl_GDA_Connection_removeListener (PortableServer_Servant servant,
+				    GDA_Listener listener,
+				    CORBA_Environment *ev)
+{
+	GdaServerConnection *cnc = (GdaServerConnection *) bonobo_x_object (servant);
+	gda_server_connection_remove_listener (cnc, listener);
+}
+
 /*
  * Private functions
  */
@@ -312,6 +330,8 @@ gda_server_connection_class_init (GdaServerConnectionClass *klass)
 	epv->supports = impl_GDA_Connection_supports;
 	epv->sql2xml = impl_GDA_Connection_sql2xml;
 	epv->xml2sql = impl_GDA_Connection_xml2sql;
+	epv->addListener = impl_GDA_Connection_addListener;
+	epv->removeListener = impl_GDA_Connection_removeListener;
 }
 
 static void
@@ -322,6 +342,7 @@ gda_server_connection_init (GdaServerConnection *cnc)
 	cnc->password = NULL;
 	cnc->commands = NULL;
 	cnc->errors = NULL;
+	cnc->listeners = NULL;
 	cnc->user_data = NULL;
 }
 
@@ -344,7 +365,30 @@ gda_server_connection_destroy (GtkObject *object)
 	if (cnc->password) g_free((gpointer) cnc->password);
 	//g_list_foreach(cnc->commands, (GFunc) gda_server_command_free, NULL);
 	//free_error_list(cnc->errors);
-	
+
+	if (cnc->listeners) {
+		GList *l;
+		CORBA_Environment ev;
+
+		CORBA_exception_init (&ev);
+		for (l = cnc->listeners; l != NULL; l = g_list_next (l)) {
+			GDA_Listener listener = (GDA_Listener) l->data;
+
+			if (listener != CORBA_OBJECT_NIL) {
+				GDA_Listener_notifyAction (
+					listener,
+					_("Connection being closed"),
+					GDA_LISTENER_ACTION_SHUTDOWN,
+					_("This connection is being closed, so all listeners are released"),
+					&ev);
+				//CORBA_Object_release (listener, &ev);
+			}
+		}
+
+		CORBA_exception_free (&ev);
+		g_list_free (cnc->listeners);
+	}
+
 	if (cnc->server_impl) {
 		cnc->server_impl->connections = g_list_remove(cnc->server_impl->connections,
 							      (gpointer) cnc);
@@ -767,3 +811,27 @@ gda_server_connection_free (GdaServerConnection *cnc)
 	bonobo_object_unref (BONOBO_OBJECT (cnc));
 }
 
+/**
+ * gda_server_connection_add_listener
+ */
+void
+gda_server_connection_add_listener (GdaServerConnection *cnc, GDA_Listener listener)
+{
+	g_return_if_fail (GDA_IS_SERVER_CONNECTION (cnc));
+	g_return_if_fail (listener != CORBA_OBJECT_NIL);
+
+	cnc->listeners = g_list_append (cnc->listeners, listener);
+}
+
+/**
+ * gda_server_connection_remove_listener
+ */
+void
+gda_server_connection_remove_listener (GdaServerConnection *cnc, GDA_Listener listener)
+{
+	g_return_if_fail (GDA_IS_SERVER_CONNECTION (cnc));
+	g_return_if_fail (listener != CORBA_OBJECT_NIL);
+
+	cnc->listeners = g_list_remove (cnc->listeners, listener);
+	// CORBA_Object_release (listener, &ev);
+}

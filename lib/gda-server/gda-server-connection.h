@@ -22,10 +22,11 @@
 
 #include <bonobo/bonobo-xobject.h>
 #include <GDA.h>
+#include <gda-error.h>
+#include <gda-listener.h>
 
 typedef struct _GdaServerConnection GdaServerConnection;
 
-#include <gda-error.h>
 #include <gda-server-recordset.h>
 #include <gda-server-error.h>
 
@@ -51,6 +52,7 @@ struct _GdaServerConnection {
 	gchar*        password;
 	GList*        commands;
 	GList*        errors;
+	GList*        listeners;
 
 	gpointer      user_data;
 };
@@ -111,6 +113,10 @@ gchar*               gda_server_connection_sql2xml (GdaServerConnection *cnc,
                                                      const gchar *sql);
 gchar*               gda_server_connection_xml2sql (GdaServerConnection *cnc,
                                                      const gchar *xml);
+void                 gda_server_connection_add_listener (GdaServerConnection *cnc,
+							 GDA_Listener listener);
+void                 gda_server_connection_remove_listener (GdaServerConnection *cnc,
+							    GDA_Listener listener);
 
 #if defined(__cplusplus)
 }
