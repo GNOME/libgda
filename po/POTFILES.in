@@ -38,6 +38,10 @@ providers/postgres/gda-postgres-provider.c
 providers/postgres/gda-postgres-recordset.c
 providers/postgres/main.c
 providers/postgres/utils.c
+providers/sqlite/GNOME_Database_Provider_SQLite.server.in
+providers/sqlite/gda-sqlite-provider.c
+providers/sqlite/gda-sqlite-recordset.c
+providers/sqlite/main.c
 providers/sybase/GNOME_Database_Provider_Sybase.server.in
 providers/sybase/gda-sybase-error.c
 providers/sybase/main.c
