@@ -107,8 +107,7 @@ impl_GNOME_GenericFactory_supports (impl_POA_GNOME_GenericFactory * servant,
 				    CORBA_char * obj_goad_id,
 				    CORBA_Environment * ev)
 {
-  g_error("%s: not implemented\n", __PRETTY_FUNCTION__);
-  return 0;
+  return impl_GDA_ConnectionFactory_supports(servant, obj_goad_id, ev);
 }
 
 CORBA_Object
@@ -117,8 +116,7 @@ impl_GNOME_GenericFactory_create_object (impl_POA_GNOME_GenericFactory * servant
 					 GNOME_stringlist * params,
 					 CORBA_Environment * ev)
 {
-  g_error("%s: not implemented", __PRETTY_FUNCTION__);
-  return 0;
+  return impl_GDA_ConnectionFactory_create_connection(servant, goad_id, ev);
 }
 
 GDA_ConnectionFactory
@@ -166,7 +164,8 @@ impl_GDA_ConnectionFactory_supports (impl_POA_GDA_ConnectionFactory * servant,
 				     CORBA_char * obj_goad_id,
 				     CORBA_Environment * ev)
 {
-  return FALSE;
+  Gda_ServerImpl* server_impl = gda_server_impl_find(obj_goad_id);
+  return server_impl ? TRUE : FALSE;
 }
 
 CORBA_Object
@@ -175,6 +174,5 @@ impl_GDA_ConnectionFactory_create_object (impl_POA_GDA_ConnectionFactory * serva
 					  GNOME_stringlist * params,
 					  CORBA_Environment * ev)
 {
-  g_error("%s: not implemented", __PRETTY_FUNCTION__);
-  return 0;
+  return impl_GDA_ConnectionFactory_create_connection(servant, goad_id, ev);
 }
