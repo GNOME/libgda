@@ -76,10 +76,10 @@ gda_postgres_type_oid_to_gda (GdaPostgresTypeOid *type_data, gint ntypes, Oid po
 		if (type_data[i].oid == postgres_type) 
 			break;
 
-	if (type_data[i].oid != postgres_type)
-		return GDA_VALUE_TYPE_STRING;
-
-	return type_data[i].type;
+  	if (i >= ntypes) /* If it was not found. */ 
+    		return GDA_VALUE_TYPE_STRING;
+ 	else 
+		return type_data[i].type;
 }
 
 /* Makes a point from a string like "(3.2,5.6)" */
