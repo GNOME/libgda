@@ -9,6 +9,10 @@
 
 	* configure.in: removed gconf stuff.
 
+	* testing/client.c:
+	* testing/postgres-test.h: activate postgres tests.
+
+
 
 2002-04-27  Rodrigo Moya <rodrigo@gnome-db.org>
 

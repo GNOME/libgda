@@ -116,7 +116,7 @@ open_connection (GdaClient *client,
 
 	dsn_info = gda_config_find_data_source (name);
 	/* Postgres own tests */
-	if (!strcmp (dsn_info->provider, POSTGRES_PROVIDER_OAFIID))
+	if (!strcmp (dsn_info->provider, POSTGRES_PROVIDER_NAME))
 		do_postgres_test (cnc);
 
 	/* close the connection */

@@ -23,7 +23,7 @@
 #include "gda-test.h"
 #include "models.h"
 
-#define POSTGRES_PROVIDER_OAFIID "OAFIID:GNOME_Database_Postgres_Provider"
+#define POSTGRES_PROVIDER_NAME "PostgreSQL"
 
 G_BEGIN_DECLS
 
