@@ -1,3 +1,8 @@
+2001-07-28  Carlos Perelló Marín <carlos@gnome-db.org>
+
+	* configure.in: Reactivated the Makefile generation at report dirs.
+	Added the IDL_FLAGS var.
+
 2001-07-23  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* removed all GLib-2.0 related code, since all this code is now

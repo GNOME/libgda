@@ -11,11 +11,11 @@ dnl
 dnl Checks for programs
 dnl
 AC_PROG_CC
+AC_PROG_CXX
 AC_ISC_POSIX
 AC_STDC_HEADERS
 AC_ARG_PROGRAM
 AM_PROG_LIBTOOL
-AC_PROG_CXX
 
 dnl
 dnl Checks for libraries
@@ -589,7 +589,9 @@ GDA_PROVIDER_LIBS="$gda_base_libs $gda_xml_libs $gda_gconf_libs $gda_bonobo_libs
 GDA_PROVIDER_CFLAGS="$gda_base_cflags $gda_xml_cflags $gda_gconf_cflags $gda_bonobo_cflags"
 XML_LIBS="$gda_xslt_libs"
 XML_CFLAGS="$gda_xslt_cflags"
+IDL_FLAGS=`gnome-config --cflags idl`
 
+AC_SUBST(IDL_FLAGS)
 AC_SUBST(GDA_CLIENT_LIBS)
 AC_SUBST(GDA_CLIENT_CFLAGS)
 AC_SUBST(GDA_PROVIDER_LIBS)
@@ -658,10 +660,10 @@ tools/gda-config
 tools/gda-buildserver
 tools/gda-buildclient
 tools/templates/Makefile
-dnl report/Makefile
-dnl report.dtd
-dnl report/idl/Makefile
-dnl report/server/Makefile
+report/Makefile
+report/gda-report.dtd
+report/idl/Makefile
+report/engine/Makefile
 testing/Makefile
 doc/Makefile
 doc/es/Makefile
