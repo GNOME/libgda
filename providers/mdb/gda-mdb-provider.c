@@ -179,7 +179,7 @@ gda_mdb_provider_new (void)
 static const gchar *
 gda_mdb_provider_get_version (GdaServerProvider *provider)
 {
-	return VERSION;
+	return PACKAGE_VERSION;
 }
 
 /* open_connection handler for the GdaMdbProvider class */

@@ -566,7 +566,7 @@ gda_ldap_provider_get_version (GdaServerProvider *provider)
 	GdaLdapProvider *myprv = (GdaLdapProvider *) provider;
 
 	g_return_val_if_fail (GDA_IS_LDAP_PROVIDER (myprv), NULL);
-	return VERSION;
+	return PACKAGE_VERSION;
 }
 
 /* get_server_version handler for the GdaLDAPProvider class */

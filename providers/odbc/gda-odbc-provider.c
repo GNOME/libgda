@@ -433,7 +433,7 @@ gda_odbc_provider_get_version (GdaServerProvider *provider)
 
 	g_return_val_if_fail (GDA_IS_ODBC_PROVIDER (pg_prv), NULL);
 
-	return VERSION;
+	return PACKAGE_VERSION;
 }
 
 static const gchar *

@@ -1,15 +1,20 @@
-AC_PREREQ(2.52)
-AC_INIT(libgda/libgda.h)
+m4_define(major, 1)
+m4_define(minor, 1)
+m4_define(micro, 99)
 
-GDA_MAJOR_VERSION=1
-GDA_MINOR_VERSION=1
-GDA_MICRO_VERSION=7
-GDA_VERSION=$GDA_MAJOR_VERSION.$GDA_MINOR_VERSION.$GDA_MICRO_VERSION
+AC_INIT(GNU Data Access, major.minor.micro, gnome-db-list@gnome.org, libgda)
+AC_PREREQ(2.59)
+AC_CONFIG_SRCDIR(libgda/libgda.h)
+AM_INIT_AUTOMAKE(1.8 -Wall check-news no-define dist-bzip2)
 
-AC_SUBST(GDA_MAJOR_VERSION)
-AC_SUBST(GDA_MINOR_VERSION)
-AC_SUBST(GDA_MICRO_VERSION)
-AC_SUBST(GDA_VERSION)
+AC_SUBST(GDA_MAJOR_VERSION, major)
+AC_SUBST(GDA_MINOR_VERSION, minor)
+AC_SUBST(GDA_MICRO_VERSION, micro)
+AC_SUBST(GDA_VERSION, major.minor.micro)
+
+m4_undefine([major])
+m4_undefine([minor])
+m4_undefine([micro])
 
 #
 # Making releases:
@@ -25,10 +30,6 @@ AC_SUBST(GDA_CURRENT)
 AC_SUBST(GDA_REVISION)
 AC_SUBST(GDA_AGE)
 
-AM_INIT_AUTOMAKE(libgda, $GDA_VERSION)
-
-AM_MAINTAINER_MODE
-
 AC_PROG_INTLTOOL
 
 AC_DEFINE_UNQUOTED(BONOBO_EXPLICIT_TRANSLATION_DOMAIN, "libgda-2")
@@ -43,6 +44,7 @@ AC_STDC_HEADERS
 AM_PROG_LIBTOOL
 AM_PROG_LEX
 AC_PROG_YACC
+AC_PROG_MAKE_SET
 
 dnl ******************************
 dnl glib-genmarshal
@@ -54,7 +56,7 @@ dnl Scrollkeeper
 dnl ******************************
 AC_PATH_PROG(SCROLLKEEPER_CONFIG, scrollkeeper-config,no)
 if test x$SCROLLKEEPER_CONFIG = xno; then
-   AC_MSG_WARN(Couldn't find scrollkeeper-config -- please install the scrollkeeper package)
+   AC_MSG_WARN(Could not find scrollkeeper-config -- please install the scrollkeeper package)
 else
    SCROLLKEEPER_LOCALSTATE_DIR=`scrollkeeper-config --pkglocalstatedir`
    AC_SUBST(SCROLLKEEPER_LOCALSTATE_DIR)

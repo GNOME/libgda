@@ -145,7 +145,7 @@ gda_server_provider_get_version (GdaServerProvider *provider)
 	if (CLASS (provider)->get_version != NULL)
 		return CLASS (provider)->get_version (provider);
 
-	return VERSION;
+	return PACKAGE_VERSION;
 }
 
 /**

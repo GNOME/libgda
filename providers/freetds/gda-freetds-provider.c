@@ -655,7 +655,7 @@ static const gchar
 
 	g_return_val_if_fail (GDA_IS_FREETDS_PROVIDER (tds_prov), NULL);
 
-	return VERSION;
+	return PACKAGE_VERSION;
 }
 
 static GdaDataModel

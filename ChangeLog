@@ -1,3 +1,35 @@
+2004-10-09  Julio M. Merino Vidal <jmmv@menta.net>
+
+	Fixes #152217
+
+	* Makefile.am: added --enable-gtk-doc to DISTCHECK_CONFIGURE_FLAGS.
+
+	* autogen.sh:
+	* configure.in: fixed to work with autoconf >= 2.59 and automake >= 1.8.
+
+	* libgda/gda-server-provider.c (gda_server_provider_get_version):
+	* libgda/gda-xml-database.c (gda_xml_database_to_string):
+	* providers/bdb/gda-bdb-provider.c (gda_bdb_provider_get_version):
+	* providers/firebird/gda-firebird-provider.c
+	(gda_firebird_provider_get_version):
+	* providers/freetds/gda-freetds-provider.c
+	(gda_freetds_provider_get_version):
+	* providers/ibmdb2/gda-ibmdb2-provider.c (gda_ibmdb2_provider_get_version):
+	* providers/ldap/gda-ldap-provider.c (gda_ldap_provider_get_version):
+	* providers/mdb/gda-mdb-provider.c (gda_mdb_provider_get_version):
+	* providers/msql/gda-msql-provider.c (gda_msql_provider_get_version):
+	* providers/mysql/gda-mysql-provider.c (gda_mysql_provider_get_version):
+	* providers/odbc/gda-odbc-provider.c (gda_odbc_provider_get_version):
+	* providers/oracle/gda-oracle-provider.c (gda_oracle_provider_get_version):
+	* providers/postgres/gda-postgres-provider.c
+	(gda_postgres_provider_get_version):
+	* providers/sqlite/gda-sqlite-provider.c (gda_sqlite_provider_get_version):
+	* providers/sybase/gda-sybase-provider.c (gda_sybase_provider_get_version):
+	* providers/sybase/main.c (main):
+	* providers/xbase/gda-xbase-provider.c (gda_xbase_provider_get_version):
+	* providers/xml/gda-xml-provider.c (gda_xml_provider_get_version):
+	* testing/gda-test.c (main): use PACKAGE_VERSION rather than VERSION.
+
 2004-10-09  Alan Knowles <alan@akbkhome.com>
 
 	* libgda/gda-log.c: made it compile under Win32.

@@ -834,7 +834,7 @@ gda_firebird_connection_make_error (GdaConnection *cnc,
 static const gchar *
 gda_firebird_provider_get_version (GdaServerProvider *provider)
 {
-	return VERSION;
+	return PACKAGE_VERSION;
 }
 
 /* open_connection handler for the GdaFirebirdProvider class */

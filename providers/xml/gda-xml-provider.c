@@ -164,7 +164,7 @@ gda_xml_provider_get_version (GdaServerProvider *provider)
 	GdaXmlProvider *dfprv = (GdaXmlProvider *) provider;
 
 	g_return_val_if_fail (GDA_IS_XML_PROVIDER (dfprv), NULL);
-	return VERSION;
+	return PACKAGE_VERSION;
 }
 
 /* open_connection handler for the GdaXmlProvider class */

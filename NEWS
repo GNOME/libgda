@@ -24,6 +24,7 @@ libgda 1.1.99, 2004-10-10
  - Removed lots of compilation warnings (szalai)
  - Added reset_connection virtual method for providers (rodrigo)
  - Fixed compilation under Win32 (alan)
+ - Improved autotools setup (julio)
  - Updated translations:
         - cs (miroslav)
 	- en_CA (adam)

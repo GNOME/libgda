@@ -171,7 +171,7 @@ gda_sqlite_provider_new (void)
 static const gchar *
 gda_sqlite_provider_get_version (GdaServerProvider *provider)
 {
-	return VERSION;
+	return PACKAGE_VERSION;
 }
 
 /* open_connection handler for the GdaSqliteProvider class */

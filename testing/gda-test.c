@@ -37,7 +37,7 @@ run_gda_test (gpointer user_data)
 int
 main(int argc, char *argv[])
 {
-	gda_init ("gda-test", VERSION, argc, argv);
+	gda_init ("gda-test", PACKAGE_VERSION, argc, argv);
 
 	gda_main_run ((GdaInitFunc) run_gda_test, NULL);
 

@@ -1265,7 +1265,7 @@ gda_sybase_provider_get_version (GdaServerProvider *provider)
 
 	g_return_val_if_fail (GDA_IS_SYBASE_PROVIDER (syb_prov), NULL);
 	
-	return VERSION;
+	return PACKAGE_VERSION;
 }
 
 static gboolean 

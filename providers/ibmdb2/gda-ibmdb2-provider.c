@@ -671,7 +671,7 @@ gda_ibmdb2_provider_get_version (GdaServerProvider *provider)
 	
     g_return_val_if_fail (GDA_IS_IBMDB2_PROVIDER (db2_prov), NULL);
 		
-    return VERSION;
+    return PACKAGE_VERSION;
 }
 				
 static const gchar *

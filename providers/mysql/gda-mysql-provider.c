@@ -176,7 +176,7 @@ gda_mysql_provider_get_version (GdaServerProvider *provider)
 
 	g_return_val_if_fail (GDA_IS_MYSQL_PROVIDER (myprv), NULL);
 
-	return VERSION;
+	return PACKAGE_VERSION;
 }
 
 /* open_connection handler for the GdaMysqlProvider class */

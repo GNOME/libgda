@@ -125,7 +125,7 @@ gda_bdb_provider_get_version (GdaServerProvider *provider)
 	GdaBdbProvider *bdb_prv = (GdaBdbProvider *) provider;
 
 	g_return_val_if_fail (GDA_IS_BDB_PROVIDER (bdb_prv), NULL);
-	return VERSION;
+	return PACKAGE_VERSION;
 }
 
 /* open_connection handler for the GdaBdbProvider class */

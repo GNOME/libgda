@@ -350,7 +350,7 @@ gda_postgres_provider_get_version (GdaServerProvider *provider)
 	GdaPostgresProvider *pg_prv = (GdaPostgresProvider *) provider;
 
 	g_return_val_if_fail (GDA_IS_POSTGRES_PROVIDER (pg_prv), NULL);
-	return VERSION;
+	return PACKAGE_VERSION;
 }
 
 /* get the float version og a Postgres version which looks like:

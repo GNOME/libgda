@@ -67,7 +67,7 @@ main (int argc, char *argv[])
 	setlocale (LC_ALL, "");
 
 	/* initialize application */
-	gda_init ("gda-sybase-srv", VERSION, argc, argv);
+	gda_init ("gda-sybase-srv", PACKAGE_VERSION, argc, argv);
 
 	setup_factory ();
 
