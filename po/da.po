@@ -11,8 +11,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2002-05-03 02:43+0200\n"
-"PO-Revision-Date: 2002-03-07 22:46+0100\n"
+"POT-Creation-Date: 2002-05-11 15:47+0200\n"
+"PO-Revision-Date: 2002-05-11 15:51+0200\n"
 "Last-Translator: Ole Laursen <olau@hardworking.dk>\n"
 "Language-Team: Danish <dansk@klid.dk>\n"
 "MIME-Version: 1.0\n"
@@ -27,43 +27,43 @@ msgstr "Database '%s' ikke fundet i konfiguration"
 #: libgda/gda-client.c:225
 #, c-format
 msgid "Provider %s is not installed"
-msgstr ""
+msgstr "Udbyderen %s er ikke installeret"
 
 #: libgda/gda-client.c:234
-#, fuzzy, c-format
+#, c-format
 msgid "Could not load %s provider"
-msgstr "Kunne ikke forespørge CORBA-udbydere"
+msgstr "Kunne ikke indlæse udbyderen %s"
 
 #: libgda/gda-client.c:250
 #, c-format
 msgid "Provider %s does not implement entry point"
-msgstr ""
+msgstr "Udbyderen %s implementerer ikke indgangspunkt"
 
 #: libgda/gda-client.c:259
 msgid "Creation of GdaServerProvider failed"
-msgstr ""
+msgstr "Oprettelse af GdaServerProvider mislykkedes"
 
 #. gda_server_recordset_model_set_field_defined_size (recset, 0, 256);
-#: libgda/gda-config.c:1105 providers/default/gda-default-provider.c:445
+#: libgda/gda-config.c:1176 providers/default/gda-default-provider.c:445
 #: providers/default/gda-default-provider.c:467
-#: providers/default/gda-default-provider.c:503
+#: providers/default/gda-default-provider.c:504
 #: providers/mysql/gda-mysql-provider.c:450
 msgid "Name"
 msgstr "Navn"
 
-#: libgda/gda-config.c:1106
+#: libgda/gda-config.c:1177
 msgid "Provider"
 msgstr "Udbyder"
 
-#: libgda/gda-config.c:1107
+#: libgda/gda-config.c:1178
 msgid "Connection string"
 msgstr "Forbindelsesstreng"
 
-#: libgda/gda-config.c:1108
+#: libgda/gda-config.c:1179
 msgid "Description"
 msgstr "Beskrivelse"
 
-#: libgda/gda-config.c:1109
+#: libgda/gda-config.c:1180
 msgid "Username"
 msgstr "Brugernavn"
 
@@ -73,7 +73,7 @@ msgstr "Forsøg på at klargøre en allerede klargjort klient"
 
 #: libgda/gda-init.c:53
 msgid "libgda needs GModule. Finishing..."
-msgstr ""
+msgstr "libgda skal bruge GModule. Afslutter..."
 
 #: libgda/gda-table.c:233
 #, c-format
@@ -131,67 +131,65 @@ msgstr ""
 
 #: providers/default/gda-default-provider.c:343
 #: providers/mysql/gda-mysql-provider.c:739
-#: providers/postgres/gda-postgres-provider.c:737
+#: providers/postgres/gda-postgres-provider.c:747
 msgid "Field name"
-msgstr ""
+msgstr "Feltnavn"
 
 #: providers/default/gda-default-provider.c:344
 #: providers/mysql/gda-mysql-provider.c:740
-#: providers/postgres/gda-postgres-provider.c:738
+#: providers/postgres/gda-postgres-provider.c:748
 msgid "Data type"
-msgstr ""
+msgstr "Datatype"
 
 #: providers/default/gda-default-provider.c:345
 #: providers/mysql/gda-mysql-provider.c:741
-#: providers/postgres/gda-postgres-provider.c:739
+#: providers/postgres/gda-postgres-provider.c:749
 msgid "Size"
-msgstr ""
+msgstr "Størrelse"
 
 #: providers/default/gda-default-provider.c:346
 #: providers/mysql/gda-mysql-provider.c:742
-#: providers/postgres/gda-postgres-provider.c:740
+#: providers/postgres/gda-postgres-provider.c:750
 msgid "Scale"
-msgstr ""
+msgstr "Skalering"
 
 #: providers/default/gda-default-provider.c:347
 #: providers/mysql/gda-mysql-provider.c:743
-#: providers/postgres/gda-postgres-provider.c:741
+#: providers/postgres/gda-postgres-provider.c:751
 msgid "Not null?"
-msgstr ""
+msgstr "Forskellige fra nul"
 
 #: providers/default/gda-default-provider.c:348
 #: providers/mysql/gda-mysql-provider.c:744
-#: providers/postgres/gda-postgres-provider.c:742
+#: providers/postgres/gda-postgres-provider.c:752
 msgid "Primary key?"
-msgstr ""
+msgstr "Primær nøgle"
 
 #: providers/default/gda-default-provider.c:349
 #: providers/mysql/gda-mysql-provider.c:745
-#: providers/postgres/gda-postgres-provider.c:743
+#: providers/postgres/gda-postgres-provider.c:753
 msgid "Unique index?"
-msgstr ""
+msgstr "Unikt indeks"
 
 #: providers/default/gda-default-provider.c:350
 #: providers/mysql/gda-mysql-provider.c:746
-#: providers/postgres/gda-postgres-provider.c:744
+#: providers/postgres/gda-postgres-provider.c:754
 msgid "References"
-msgstr ""
+msgstr "Referencer"
 
 #: providers/default/gda-default-provider.c:360
 #: providers/default/gda-default-provider.c:366
-#, fuzzy
 msgid "Invalid argument"
-msgstr "Ugyldigt punkt"
+msgstr "Ugyldig parameter"
 
 #: providers/default/gda-default-provider.c:373
 #, c-format
 msgid "Table %s not found"
-msgstr ""
+msgstr "Tabellen %s ikke fundet"
 
 #: providers/default/gda-default-provider.c:398
-#, fuzzy
 msgid "Could not get description for column"
-msgstr "Kunne ikke oprette forbindelseskomponent"
+msgstr "Kunne ikke finde en beskrivelse for kolonne"
 
 #: providers/mysql/gda-mysql-provider.c:183
 msgid ""
@@ -209,23 +207,22 @@ msgstr "Ugyldigt MySQL-håndtag"
 
 #. gda_server_recordset_model_set_field_defined_size (recset, 0, 32);
 #: providers/mysql/gda-mysql-provider.c:641
-#: providers/postgres/gda-postgres-provider.c:623
 msgid "Type"
 msgstr "Type"
 
 #: providers/mysql/gda-mysql-provider.c:754
-#: providers/mysql/gda-mysql-recordset.c:63
-#: providers/mysql/gda-mysql-recordset.c:166
+#: providers/mysql/gda-mysql-recordset.c:58
+#: providers/mysql/gda-mysql-recordset.c:179
 msgid "Invalid MySQL handle"
 msgstr "Ugyldigt MySQL-håndtag"
 
 #: providers/mysql/gda-mysql-provider.c:763
 #: providers/mysql/gda-mysql-provider.c:771
 msgid "You need to specify the name of the table"
-msgstr ""
+msgstr "Du skal angive navnet på tabellen"
 
-#: providers/mysql/gda-mysql-recordset.c:76
-#: providers/postgres/gda-postgres-recordset.c:85
+#: providers/mysql/gda-mysql-recordset.c:69
+#: providers/postgres/gda-postgres-recordset.c:188
 #: providers/sqlite/gda-sqlite-recordset.c:74
 msgid "Row number out of range"
 msgstr "Rækkenummer uden for det gyldige interval"
@@ -255,11 +252,64 @@ msgid "Could not initialize OCI library"
 msgstr "Kunne ikke klargøre OCI-bibliotek"
 
 #: providers/postgres/gda-postgres-provider.c:370
-#: providers/postgres/gda-postgres-provider.c:508
-#: providers/postgres/gda-postgres-recordset.c:72
-#: providers/postgres/gda-postgres-recordset.c:128
+#: providers/postgres/gda-postgres-provider.c:513
+#: providers/postgres/gda-postgres-recordset.c:176
+#: providers/postgres/gda-postgres-recordset.c:225
 msgid "Invalid PostgreSQL handle"
 msgstr "Ugyldigt PostgreSQL-håndtag"
+
+#. Set it here instead of the SQL query to allow i18n
+#: providers/postgres/gda-postgres-provider.c:590
+msgid "Tables"
+msgstr "Tabeller"
+
+#: providers/postgres/gda-postgres-provider.c:629
+msgid "Types"
+msgstr "Typer"
+
+#. Set it here instead of the SQL query to allow i18n
+#: providers/postgres/gda-postgres-provider.c:660 testing/client.c:93
+msgid "Views"
+msgstr "Visninger"
+
+#. Set it here instead of the SQL query to allow i18n
+#: providers/postgres/gda-postgres-provider.c:685 testing/client.c:94
+msgid "Indexes"
+msgstr "Indekser"
+
+# RETMIG: find på et eller andet til disse to
+#. Set it here instead of the SQL query to allow i18n
+#: providers/postgres/gda-postgres-provider.c:711 testing/client.c:95
+msgid "Aggregates"
+msgstr "Aggregater"
+
+#. Set it here instead of the SQL query to allow i18n
+#: providers/postgres/gda-postgres-provider.c:736 testing/client.c:98
+msgid "Triggers"
+msgstr "Triggere"
+
+#. Set it here instead of the SQL query to allow i18n
+#: providers/postgres/gda-postgres-provider.c:1090 testing/client.c:89
+msgid "Databases"
+msgstr "Databaser"
+
+#. Set it here instead of the SQL query to allow i18n
+#: providers/postgres/gda-postgres-provider.c:1115 testing/client.c:96
+msgid "Users"
+msgstr "Brugere"
+
+#. Set it here instead of the SQL query to allow i18n
+#: providers/postgres/gda-postgres-provider.c:1143 testing/client.c:97
+msgid "Sequences"
+msgstr "Sekvenser"
+
+#: providers/postgres/gda-postgres-recordset.c:194
+msgid "Column number out of range"
+msgstr "Kolonnenummer uden for det gyldige interval"
+
+#: providers/postgres/gda-postgres-recordset.c:232
+msgid "Column out of range"
+msgstr "Kolonne uden for det gyldige interval"
 
 #: providers/postgres/utils.c:47
 msgid "NO DESCRIPTION"
@@ -352,11 +402,6 @@ msgstr "Understøttet"
 msgid "Not supported"
 msgstr "Ikke understøttet"
 
-#. show connection schemas
-#: testing/client.c:89
-msgid "Databases"
-msgstr ""
-
 #: testing/client.c:90
 msgid "Stored procedures"
 msgstr "Lagrede procedurer"
@@ -368,32 +413,6 @@ msgstr "Forbindelsestabeller"
 #: testing/client.c:92
 msgid "Available types"
 msgstr "Tilgængelige typer"
-
-#: testing/client.c:93
-msgid "Views"
-msgstr "Visninger"
-
-#: testing/client.c:94
-msgid "Indexes"
-msgstr "Indekser"
-
-# RETMIG: find på et eller andet til disse to
-#: testing/client.c:95
-msgid "Aggregates"
-msgstr "Aggregater"
-
-#: testing/client.c:96
-#, fuzzy
-msgid "Users"
-msgstr "Brugernavn"
-
-#: testing/client.c:97
-msgid "Sequences"
-msgstr ""
-
-#: testing/client.c:98
-msgid "Triggers"
-msgstr "Triggere"
 
 #. test transactions
 #: testing/client.c:101 testing/client.c:109
@@ -523,10 +542,6 @@ msgstr "\tgda_params ="
 
 #~ msgid "Could not initiate PostgreSQL component factory"
 #~ msgstr "Kunne ikke klargøre PostgreSQL-komponentfabrik"
-
-#, fuzzy
-#~ msgid "numeric"
-#~ msgstr "nummer"
 
 #~ msgid "GDA SQLite Datasource Access"
 #~ msgstr "GDA-datakildetilgang til SQLite"
