@@ -1,3 +1,9 @@
+2002-07-17  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
+	* tools/gda-config-tool.c: added options for listing datasources and
+	providers.
+	(batch_options): fixed section name.
+
 2002-07-10  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
 	* providers/postgres/gda-postgres-recordset.c: set number of rows to

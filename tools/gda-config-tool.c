@@ -3,10 +3,11 @@
 #include <string.h>
 #include <glib.h>
 #include <popt.h>
-#include <readline/readline.h>
-#include <readline/history.h>
+#include <libgda/libgda.h>
 #include <libxml/xmlmemory.h>
 #include <libxml/parser.h>
+#include <readline/readline.h>
+#include <readline/history.h>
 
 
 #define PRINT_ALL	0
@@ -40,13 +41,22 @@ static const gchar *prompt_config = "config> ";
 //static const gchar *prompt_query = "query> ";
 //static const gchar *prompt_query_cont = "-> ";
 
+enum {
+	ACTION_NONE = 0,
+	ACTION_FILE = 1,
+	ACTION_LIST_PROVIDERS = 1 << 1,
+	ACTION_LIST_DATASOURCES = 1 << 2
+};
+
 typedef struct {
 	gboolean config_file_g_free;
+	gint actions;
 	gchar *config_file;
 	gchar *user;
 	gchar *password;
 	gchar *dsn;
 	gchar *name;
+	gchar *provider;
 } CmdArguments;
 
 CmdArguments cmdArgs;
@@ -144,31 +154,38 @@ cmd_quit (const gchar *unused)
 	return CMD_QUIT;
 }
 
+static void
+pretty_print (const gchar *ptr, gint wrap)
+{
+	gint i;
+
+	while (*ptr != '\0'){
+		for (i = 0; i < 80 - wrap && *ptr; i++){
+			g_print ("%c", *ptr++);
+			if (*ptr && i > (80 - wrap - 8) && g_ascii_isspace (*ptr))
+				break;
+		}
+
+		g_print ("\n");
+
+		if (*ptr){
+			g_print ("%*s", wrap, "");
+			while (*ptr && g_ascii_isspace (*ptr))
+				ptr++;
+		}
+	}
+}
+
 static CmdResult
 help (const gchar *unused)
 {
 	gchar *command;
 	gint idx;
-	gchar *ptr;
-	gint i;
 
 	idx = 0;
 	while ((command = commands [idx].command) != NULL){
 		g_print ("%14s  ", command);
-		ptr = commands [idx].help;
-		while (*ptr != '\0'){
-			for (i = 0; i < 80 - 16 && *ptr; i++){
-				g_print ("%c", *ptr++);
-				if (i > (80 - 16 - 8) && g_ascii_isspace (*ptr))
-					break;
-			}
-			g_print ("\n");
-			if (*ptr){
-				g_print ("%16s", "");
-				while (*ptr && g_ascii_isspace (*ptr))
-					ptr++;
-			}
-		}
+		pretty_print (commands [idx].help, 16);
 		idx++;
 	}
 
@@ -1147,6 +1164,9 @@ initialize_readline ()
 	rl_attempted_completion_function = completion_func;
 }
 
+/*
+ */
+
 static void 
 options (int argc, const char **argv)
 {
@@ -1159,8 +1179,24 @@ options (int argc, const char **argv)
 			POPT_ARG_STRING, 
 			&cmdArgs.config_file, 
 			0, 
-			"File to load the configuration from",
+			"File to load the configuration from.",
 			"filename"
+		},
+		{
+			"list-providers",
+			'l',
+			POPT_ARG_VAL | POPT_ARGFLAG_OR,
+			&cmdArgs.actions,
+			ACTION_LIST_PROVIDERS,
+			"Lists installed providers"
+		},
+		{
+			"list-datasources",
+			'L',
+			POPT_ARG_VAL | POPT_ARGFLAG_OR,
+			&cmdArgs.actions,
+			ACTION_LIST_DATASOURCES,
+			"Lists configured datasources"
 		},
 		{
 			"name",
@@ -1168,7 +1204,7 @@ options (int argc, const char **argv)
 			POPT_ARG_STRING,
 			&cmdArgs.name,
 			0,
-			"Provider name to add/change."
+			"User-assigned name for this connection."
 		},
 		{
 			"user",
@@ -1186,6 +1222,14 @@ options (int argc, const char **argv)
 			0,
 			"Password for the given user to connect to the DB "
 			"backend."
+		},
+		{
+			"provider",
+			'P',
+			POPT_ARG_STRING,
+			&cmdArgs.provider,
+			0,
+			"Provider name."
 		},
 		{
 			"DSN",
@@ -1215,9 +1259,18 @@ options (int argc, const char **argv)
 
 	if (!cmdArgs.name && (cmdArgs.user || 
 			      cmdArgs.dsn  || 
-			      cmdArgs.password)){
-		g_print ("-Error: You must use -n option along -u, -d and/or -p\n");
+			      cmdArgs.password ||
+			      cmdArgs.provider)){
+		g_print ("-Error: You must use -n option along -u, -d, -p and/or -P.\n");
 		exit (1);
+	}
+
+	if (cmdArgs.name != NULL) {
+		if (cmdArgs.actions != ACTION_NONE) {
+			g_print ("-Error: cannot use -n in this context.\n");
+			exit (1);
+		}
+		cmdArgs.actions |= ACTION_FILE;
 	}
 
 	if (cmdArgs.config_file == NULL){
@@ -1262,7 +1315,7 @@ batch_options ()
 	// don't care about return value of this one
 	(void) config_load_file (cmdArgs.config_file);
 	
-	line = g_strdup_printf ("\"%s\"", cmdArgs.name);
+	line = g_strdup_printf ("\"/apps/libgda/Datasources/%s\"", cmdArgs.name);
 	result = config_add_section (line);
 	if (result != CMD_OK){
 		g_print ("Error adding section %s\n", line);
@@ -1272,6 +1325,12 @@ batch_options ()
 	}
 
 	section = current_section->data;
+	if (cmdArgs.provider)
+		section->entries = change_entry (section->entries,
+						 "Provider",
+						 "string",
+						 cmdArgs.provider);
+	
 	if (cmdArgs.user)
 		section->entries = change_entry (section->entries,
 						 "User",
@@ -1295,6 +1354,97 @@ batch_options ()
 	g_free (line);
 }
 
+static void
+add_param_name_to_string (gpointer data, gpointer user_data)
+{
+	gchar *param = data;
+	GString *str = user_data;
+
+	if (param != NULL) {
+		g_string_append_c (str, ' ');
+		g_string_append (str, param);
+	}
+}
+
+static void
+display_provider (gpointer data, gpointer user_data)
+{
+	GdaProviderInfo *info = data;
+	GString *str;
+	const char *desc = "Description: ";
+	const char *paramInDsn = "DSN parameters:";
+
+	g_print ("Provider name: %s\n", info->id);
+	g_print (desc);
+	pretty_print (info->description, strlen (desc));
+	g_print (paramInDsn);
+	str = g_string_new (NULL);
+	g_list_foreach (info->gda_params, add_param_name_to_string, str);
+	pretty_print (str->str, strlen (paramInDsn) + 1);
+	g_string_free (str, TRUE);
+	g_print ("Location: %s\n", info->location);
+	g_print ("---\n");
+}
+
+static void
+list_providers ()
+{
+	GList *providers;
+	
+	if (cmdArgs.config_file_g_free == FALSE)
+		g_print ("Warning: this providers are listed from %s/%s\n", 
+			 g_get_home_dir (), LIBGDA_USER_CONFIG_FILE);
+
+	providers = gda_config_get_provider_list ();
+	if (providers == NULL){
+		g_print ("No providers available!\n");
+		return;
+	}
+	
+	g_print ("---Providers list---\n");
+	g_list_foreach (providers, display_provider, NULL);
+	gda_config_free_provider_list (providers);
+}
+
+static void
+display_datasource (gpointer data, gpointer user_data)
+{
+	GdaDataSourceInfo *info = data;
+
+	g_print ("Datasource name: %s\n", info->name);
+	if (info->provider)
+		g_print ("Provider: %s\n", info->provider);
+	if (info->description)
+		g_print ("Description: %s\n", info->description);
+	if (info->cnc_string)
+		g_print ("DSN: %s\n", info->cnc_string);
+	if (info->username)
+		g_print ("User name: %s\n", info->username);
+	if (info->password)
+		g_print ("Password: %s\n", info->password);
+	g_print ("---\n");
+}
+
+static void
+list_datasources ()
+{
+	GList *datasources;
+
+	if (cmdArgs.config_file_g_free == FALSE)
+		g_print ("Warning: this datasources are listed from %s/%s\n", 
+			 g_get_home_dir (), LIBGDA_USER_CONFIG_FILE);
+
+	datasources = gda_config_get_data_source_list ();
+	if (datasources == NULL){
+		g_print ("No datasources configured!\n");
+		return;
+	}
+	
+	g_print("---Datasources list---\n");
+	g_list_foreach (datasources, display_datasource, NULL);
+	gda_config_free_data_source_list (datasources);
+}
+
 /*
  * main
  */
@@ -1302,13 +1452,21 @@ int
 main (int argc, char *argv [])
 {
 	options (argc, (const char **) argv);
-	if (!cmdArgs.name){
+	if (cmdArgs.actions == ACTION_NONE) {
 		g_print ("Using configuration file from %s\n", cmdArgs.config_file);
 		initialize_readline ();
 		mode_gda ();
-	}
-	else
-		batch_options ();
+	} else {
+		if ((cmdArgs.actions & ACTION_LIST_PROVIDERS) != 0)
+			list_providers ();
+
+		if ((cmdArgs.actions & ACTION_LIST_DATASOURCES) != 0)
+			list_datasources ();
+
+		if ((cmdArgs.actions & ACTION_FILE) != 0)
+			batch_options ();
+
+	} 
 
 	if (cmdArgs.config_file_g_free)
 		g_free (cmdArgs.config_file);
