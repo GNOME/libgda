@@ -29,6 +29,15 @@ Functions for accesing #GdaRow.
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_row_new_from_list ##### -->
+<para>
+
+</para>
+
+@values: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_row_free ##### -->
 <para>
 

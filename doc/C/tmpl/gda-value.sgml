@@ -573,6 +573,16 @@ to any data, get a newly allocated copy of the data.
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_value_set_from_value ##### -->
+<para>
+
+</para>
+
+@value: 
+@from: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_value_compare ##### -->
 <para>
 

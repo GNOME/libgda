@@ -277,8 +277,11 @@ process_sql_commands (GList *reclist, GdaConnection *cnc, const gchar *sql)
 
 			mysql_res = mysql_store_result (mysql);
 			recset = gda_mysql_recordset_new (cnc, mysql_res);
-			if (GDA_IS_MYSQL_RECORDSET (recset))
+			if (GDA_IS_MYSQL_RECORDSET (recset)) {
+				gda_data_model_set_command_text (recset, arr[n]);
+				gda_data_model_set_command_type (recset, GDA_COMMAND_TYPE_SQL);
 				reclist = g_list_append (reclist, recset);
+			}
 
 			n++;
 		}
@@ -344,6 +347,13 @@ gda_mysql_provider_execute_command (GdaServerProvider *provider,
 	case GDA_COMMAND_TYPE_TABLE :
 		str = g_strdup_printf ("SELECT * FROM %s", gda_command_get_text (cmd));
 		reclist = process_sql_commands (reclist, cnc, str);
+		if (reclist && GDA_IS_DATA_MODEL (reclist->data)) {
+			gda_data_model_set_command_text (GDA_DATA_MODEL (reclist->data),
+							 gda_command_get_text (cmd));
+			gda_data_model_set_command_type (GDA_DATA_MODEL (reclist->data),
+							 GDA_COMMAND_TYPE_TABLE);
+		}
+
 		g_free (str);
 		break;
 	default:

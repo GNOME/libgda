@@ -243,22 +243,114 @@ gda_mysql_recordset_get_value_at (GdaDataModel *model, gint col, gint row)
 		return NULL;
 
 	fields = gda_mysql_recordset_get_row (model, row);
-	return fields != NULL ? gda_row_get_value (fields, col) : NULL;
+	return fields != NULL ? gda_row_get_value ((GdaRow *) fields, col) : NULL;
 }
 
 static gboolean
 gda_mysql_recordset_is_editable (GdaDataModel *model)
 {
+	GdaCommandType cmd_type;
 	GdaMysqlRecordset *recset = (GdaMysqlRecordset *) model;
 
 	g_return_val_if_fail (GDA_IS_MYSQL_RECORDSET (recset), FALSE);
-	return FALSE;
+	
+	cmd_type = gda_data_model_get_command_type (model);
+	return cmd_type == GDA_COMMAND_TYPE_TABLE ? TRUE : FALSE;
 }
 
 static const GdaRow *
 gda_mysql_recordset_append_row (GdaDataModel *model, const GList *values)
 {
-	return NULL;
+	GString *sql;
+	GdaRow *row;
+	gint i;
+	gint rc;
+	gint cols;
+	GList *l;
+	GdaMysqlRecordset *recset = (GdaMysqlRecordset *) model;
+
+	g_return_val_if_fail (GDA_IS_MYSQL_RECORDSET (recset), NULL);
+	g_return_val_if_fail (values != NULL, NULL);
+	g_return_val_if_fail (gda_data_model_is_editable (model), NULL);
+	g_return_val_if_fail (gda_data_model_is_editing (model), NULL);
+
+	cols = mysql_num_fields (recset->mysql_res);
+	if (cols != g_list_length ((GList *) values)) {
+		gda_connection_add_error_string (
+			recset->cnc,
+			_("Attempt to insert a row with an invalid number of columns"));
+		return NULL;
+	}
+
+	/* prepare the SQL command */
+	sql = g_string_new ("INSERT INTO ");
+	sql = g_string_append (sql, gda_data_model_get_command_text (model));
+	sql = g_string_append (sql, "(");
+	for (i = 0; i < cols; i++) {
+		GdaFieldAttributes *fa;
+
+		fa = gda_data_model_describe_column (model, i);
+		if (!fa) {
+			gda_connection_add_error_string (
+				recset->cnc,
+				_("Could not retrieve column's information"));
+			g_string_free (sql, TRUE);
+			return NULL;
+		}
+
+		if (i != 0)
+			sql = g_string_append (sql, ", ");
+		sql = g_string_append (sql, gda_field_attributes_get_name (fa));
+	}
+	sql = g_string_append (sql, ") VALUES (");
+
+	for (l = (GList *) values, i = 0; i < cols; i++, l = l->next) {
+		gchar *val_str;
+		const GdaValue *val = (const GdaValue *) l->data;
+
+		if (!val) {
+			gda_connection_add_error_string (
+				recset->cnc,
+				_("Could not retrieve column's value"));
+			g_string_free (sql, TRUE);
+			return NULL;
+		}
+
+		if (i != 0)
+			sql = g_string_append (sql, ", ");
+		val_str = gda_mysql_value_to_sql_string (val);
+		sql = g_string_append (sql, val_str);
+
+		g_free (val_str);
+	}
+	sql = g_string_append (sql, ")");
+
+	/* execute the UPDATE command */
+	rc = mysql_real_query (recset->mysql_res->handle, sql->str, strlen (sql->str));
+	g_string_free (sql, TRUE);
+	if (rc != 0) {
+		gda_connection_add_error (
+			recset->cnc, gda_mysql_make_error (recset->mysql_res->handle));
+		return NULL;
+	}
+
+	/* append the row to the data model */
+	row = gda_row_new_from_list (values);
+	g_ptr_array_add (recset->rows, row);
+
+	return (const GdaRow *) row;
+}
+
+static gboolean
+gda_mysql_recordset_remove_row (GdaDataModel *model, const GdaRow *row)
+{
+	return FALSE;
+}
+
+static gboolean
+gda_mysql_recordset_update_row (GdaDataModel *model, const GdaRow *row)
+{
+	return FALSE;
 }
 
 static void
@@ -277,6 +369,8 @@ gda_mysql_recordset_class_init (GdaMysqlRecordsetClass *klass)
 	model_class->get_value_at = gda_mysql_recordset_get_value_at;
 	model_class->is_editable = gda_mysql_recordset_is_editable;
 	model_class->append_row = gda_mysql_recordset_append_row;
+	model_class->remove_row = gda_mysql_recordset_remove_row;
+	model_class->update_row = gda_mysql_recordset_update_row;
 }
 
 static void

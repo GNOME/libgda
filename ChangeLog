@@ -1,5 +1,26 @@
 2002-05-19  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* libgda/gda-row.[ch] (gda_row_new_from_list): new function.
+
+	* libgda/gda-data-model-hash.c (gda_data_model_hash_append_row):
+	* libgda/gda-data-model-array.c (gda_data_model_array_append_row):
+	call gda_row_new_from_list.
+
+	* providers/mysql/gda-mysql-recordset.c: made it editable (only
+	append_row so far).
+	(gda_mysql_recordset_is_editable): return TRUE if the command type
+	is GDA_COMMAND_TYPE_TABLE, for others, return FALSE.
+	(gda_mysql_recordset_append_row): implemented.
+
+	* providers/mysql/gda-mysql-provider.c (process_sql_commands): set
+	data model's command text and type.
+	(gda_mysql_provider_execute_command): likewise.
+
+	* providers/mysql/utils.c (gda_mysql_value_to_sql_string): new
+	function.
+
+2002-05-19  Rodrigo Moya <rodrigo@gnome-db.org>
+
 	* libgda/gda-data-model-array.c (gda_data_model_array_remove_row):
 	* libgda/gda-data-model-list.c (gda_data_model_list_remove_row):
 	implemented remove_row method.

@@ -54,6 +54,34 @@ gda_row_new (gint count)
 }
 
 /**
+ * gda_row_new_from_list
+ * @values: a list of #GdaValue's.
+ *
+ * Create a #GdaRow from a list of #GdaValue's.
+ *
+ * Returns: the newly created row.
+ */
+GdaRow *
+gda_row_new_from_list (const GList *values)
+{
+	GdaRow *row;
+	const GList *l;
+	gint i;
+
+	row = gda_row_new (g_list_length ((GList *) values));
+	for (i = 0, l = values; l != NULL; l = l->next, i++) {
+		const GdaValue *value = (const GdaValue *) l->data;
+
+		if (value)
+			gda_value_set_from_value (gda_row_get_value (row, i), value);
+		else
+			gda_value_set_null (gda_row_get_value (row, i));
+	}
+
+	return row;
+}
+
+/**
  * gda_row_free
  * @row: the resource to free.
  *

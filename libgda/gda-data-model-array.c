@@ -109,8 +109,6 @@ static const GdaRow *
 gda_data_model_array_append_row (GdaDataModel *model, const GList *values)
 {
 	gint len;
-	gint i;
-	const GList *l;
 	GdaRow *row = NULL;
 
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_ARRAY (model), NULL);
@@ -120,21 +118,11 @@ gda_data_model_array_append_row (GdaDataModel *model, const GList *values)
 	if (len != GDA_DATA_MODEL_ARRAY (model)->priv->number_of_columns)
 		return NULL;
 
-	l = values;
-	row = gda_row_new (len);
-	for (i = 0; i < len; i++) {
-		GdaValue *field;
-
-		if (!l)
-			return NULL;
-
-		field = gda_value_copy ((GdaValue *) l->data);
-		memcpy (gda_row_get_value (row, i), field, sizeof (GdaValue));
-		l = l->next;
+	row = gda_row_new_from_list (values);
+	if (row) {
+		g_ptr_array_add (GDA_DATA_MODEL_ARRAY (model)->priv->rows, row);
+		gda_data_model_changed (model);
 	}
-
-	g_ptr_array_add (GDA_DATA_MODEL_ARRAY (model)->priv->rows, row);
-	gda_data_model_changed (model);
 
 	return (const GdaRow *) row;
 }

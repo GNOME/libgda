@@ -142,6 +142,26 @@ Basic data model class
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_data_model_remove_row ##### -->
+<para>
+
+</para>
+
+@model: 
+@row: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_model_update_row ##### -->
+<para>
+
+</para>
+
+@model: 
+@row: 
+@Returns: 
+
+
 <!-- ##### USER_FUNCTION GdaDataModelForeachFunc ##### -->
 <para>
 
