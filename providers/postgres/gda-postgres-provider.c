@@ -1330,8 +1330,12 @@ gda_postgres_fill_md_data (const gchar *tblname, GdaDataModelArray *recset,
 		rowlist = g_list_append (rowlist, value);
 
 		/* Default value */
-		thevalue = PQgetvalue (pg_res, i, 5);
-	        value = gda_value_new_string (thevalue);
+		if (!PQgetisnull (pg_res, i, 5)) {
+			thevalue = PQgetvalue (pg_res, i, 5);
+			value = gda_value_new_string (thevalue);
+		}
+		else
+			value = gda_value_new_null ();
 	        rowlist = g_list_append (rowlist, value);
 		
 

@@ -583,37 +583,24 @@ gda_value_new_from_string (const gchar *as_string, GdaValueType type)
 
 /**
  * gda_value_new_from_xml
- * @xml: a XML string representing the value.
+ * @xml: a XML node representing the value.
  *
  * Create a GdaValue from a XML representation of it. That XML
- * string has the format:
+ * node corresponds to the following string representation:
  *    <value type="gdatype">value</value>
  *
  * Returns:  The newly created #GdaValue.
  */
 GdaValue *
-gda_value_new_from_xml (const gchar *xml)
+gda_value_new_from_xml (const xmlNodePtr node)
 {
 	GdaValue *value;
-	GString *str;
-	xmlDocPtr xmldoc;
-	xmlNodePtr node;
 
-	g_return_val_if_fail (xml != NULL, NULL);
+	g_return_val_if_fail (node != NULL, NULL);
 
 	/* parse the XML */
-	str = g_string_new ("<?xml version=\"1.0\"?>");
-	str = g_string_append (str, xml);
-	xmldoc = xmlParseMemory ((const char *) str->str, strlen (str->str));
-	g_string_free (str, TRUE);
-	if (!xmldoc)
+	if (!node || !(node->name) || (node && strcmp (node->name, "value"))) 
 		return NULL;
-
-	node = xmlDocGetRootElement (xmldoc);
-	if (!node || !node->name || strcmp (node->name, "value")) {
-		xmlFreeDoc (xmldoc);
-		return NULL;
-	}
 
 	value = g_new0 (GdaValue, 1);
 	if (!gda_value_set_from_string (value,
@@ -622,9 +609,6 @@ gda_value_new_from_xml (const gchar *xml)
 		g_free (value);
 		value = NULL;
 	}
-
-	/* free memory */
-	xmlFreeDoc (xmldoc);
 
 	return value;
 }
@@ -1705,28 +1689,23 @@ gda_value_compare (const GdaValue *value1, const GdaValue *value2)
  *
  * Serialize the given #GdaValue to a XML node string.
  *
- * Returns: the XML string representing the XML node. Once not
+ * Returns: the XML node. Once not
  * needed anymore, you should free it.
  */
-gchar *
+xmlNodePtr
 gda_value_to_xml (GdaValue *value)
 {
-	GString *str;
 	gchar *valstr;
-	gchar *retval;
+	xmlNodePtr retval;
 
 	g_return_val_if_fail (value != NULL, NULL);
 
 	valstr = gda_value_stringify (value);
 
-	str = g_string_new ("<value type=\"");
-	str = g_string_append (str, gda_type_to_string (value->type));
-	str = g_string_append (str, "\">");
-	str = g_string_append (str, valstr);
-	str = g_string_append (str, "</value>");
+	retval = xmlNewNode (NULL, "value");
+	xmlSetProp (retval, "type", gda_type_to_string (value->type));
+	xmlNodeSetContent (retval, valstr);
 
-	retval = str->str;
-	g_string_free (str, FALSE);
 	g_free (valstr);
 
 	return retval;
