@@ -1,3 +1,7 @@
+2001-10-28  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* Makefile.am: adapted to new header files installation
+
 2001-10-27  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-server-recordset.[ch]: re-added

@@ -2,7 +2,8 @@ lib_LTLIBRARIES = libgda-server-2.la
 
 INCLUDES = \
 	$(GDA_PROVIDER_CFLAGS) \
-	-I$(top_builddir)/lib/gda-common
+	-I$(top_srcdir)/lib \
+	-I$(top_builddir)/lib
 
 gda_server_headers = \
 	gda-server-connection.h \
@@ -16,6 +17,6 @@ libgda_server_2_la_SOURCES = \
 	gda-server.c 
 libgda_server_2_la_LIBADD = -lpopt
 
-gdaincludedir=$(includedir)/libgda-$(VERSION)/gda
+gdaincludedir=$(includedir)/libgda-$(VERSION)/gda-server
 gdainclude_HEADERS=$(gda_server_headers)
 
