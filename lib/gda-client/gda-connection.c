@@ -33,6 +33,7 @@ struct _GdaConnectionPrivate {
 	gchar *username;
 	gchar *password;
 	gboolean is_open;
+	GList *error_list;
 };
 
 static void gda_connection_class_init (GdaConnectionClass *klass);
@@ -72,6 +73,7 @@ gda_connection_init (GdaConnection *cnc, GdaConnectionClass *klass)
 	cnc->priv->username = NULL;
 	cnc->priv->password = NULL;
 	cnc->priv->is_open = FALSE;
+	cnc->priv->errors = NULL;
 }
 
 static void
@@ -98,6 +100,9 @@ gda_connection_finalize (GObject *object)
 	g_free (cnc->priv->cnc_string);
 	g_free (cnc->priv->username);
 	g_free (cnc->priv->password);
+
+	g_list_foreach (cnc->priv->error_list, (GFunc) gda_error_free, NULL);
+	g_list_free (cnc->priv->error_list);
 
 	g_free (cnc->priv);
 	cnc->priv = NULL;
@@ -164,6 +169,7 @@ gda_connection_new (GdaClient *client,
 		(const CORBA_char *) cnc->priv->username,
 		(const CORBA_char *) cnc->priv->password, &ev);
 	if (!corba_res || BONOBO_EX (&ev)) {
+		gda_connection_add_error_list (cnc, gda_error_list_from_exception (&ev));
 		CORBA_exception_free (&ev);
 		g_object_unref (G_OBJECT (cnc));
 		return NULL;
@@ -240,4 +246,126 @@ gda_connection_get_password (GdaConnection *cnc)
 {
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	return (const gchar *) cnc->priv->password;
+}
+
+/**
+ * gda_connection_add_error
+ */
+void
+gda_connection_add_error (GdaConnection *cnc, GdaError *error)
+{
+	g_return_if_fail (GDA_IS_CONNECTION (cnc));
+	g_return_if_fail (GDA_IS_ERROR (error));
+
+	cnc->priv->error_list = g_list_append (cnc->priv->error_list, error);
+}
+
+/**
+ * gda_connection_add_error_list
+ */
+void
+gda_connection_add_error_list (GdaConnection *cnc, GList *error_list)
+{
+	GList *l;
+
+	g_return_if_fail (GDA_IS_CONNECTION (cnc));
+	g_return_if_fail (error_list != NULL);
+
+	for (l = error_list; l; l = l->next) {
+		GdaError *error = GDA_ERROR (l->data);
+		gda_connection_add_error (cnc, error);
+	}
+
+	gda_client_notify_errors (cnc->priv->client, cnc, error_list);
+	g_list_free (error_list);
+}
+
+/**
+ * gda_connection_execute_command
+ */
+GdaRecordsetList *
+gda_connection_execute_command (GdaConnection *cnc,
+				GdaCommand *cmd,
+				GdaParameterList *params)
+{
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+	g_return_val_if_fail (cmd != NULL, NULL);
+}
+
+/**
+ * gda_connection_begin_transaction
+ */
+gboolean
+gda_connection_begin_transaction (GdaConnection *cnc, const gchar *id)
+{
+	CORBA_boolean corba_res;
+	CORBA_Environment ev;
+
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+
+	CORBA_exception_init (&ev);
+
+	corba_res = GNOME_Database_Connection_beginTransaction (
+		cnc->priv->corba_cnc, id, &ev);
+	if (!corba_res || BONOBO_EX (&ev)) {
+		gda_connection_add_error_list (cnc, gda_error_list_from_exception (&ev));
+		CORBA_exception_free (&ev);
+		return FALSE;
+	}
+
+	CORBA_exception_free (&ev);
+
+	return TRUE;
+}
+
+/**
+ * gda_connection_commit_transaction
+ */
+gboolean
+gda_connection_commit_transaction (GdaConnection *cnc, const gchar *id)
+{
+	CORBA_boolean corba_res;
+	CORBA_Environment ev;
+
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+
+	CORBA_exception_init (&ev);
+
+	corba_res = GNOME_Database_Connection_commitTransaction (
+		cnc->priv->corba_cnc, id, &ev);
+	if (!corba_res || BONOBO_EX (&ev)) {
+		gda_connection_add_error_list (cnc, gda_error_list_from_exception (&ev));
+		CORBA_exception_free (&ev);
+		return FALSE;
+	}
+
+	CORBA_exception_free (&ev);
+
+	return TRUE;
+}
+
+/**
+ * gda_connection_rollback_transaction
+ */
+gboolean
+gda_connection_rollback_transaction (GdaConnection *cnc, const gchar *id)
+{
+	CORBA_boolean corba_res;
+	CORBA_Environment ev;
+
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+
+	CORBA_exception_init (&ev);
+
+	corba_res = GNOME_Database_Connection_rollbackTransaction (
+		cnc->priv->corba_cnc, id, &ev);
+	if (!corba_res || BONOBO_EX (&ev)) {
+		gda_connection_add_error_list (cnc, gda_error_list_from_exception (&ev));
+		CORBA_exception_free (&ev);
+		return FALSE;
+	}
+
+	CORBA_exception_free (&ev);
+
+	return TRUE;
 }

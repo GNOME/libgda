@@ -1,5 +1,16 @@
 2001-10-27  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* gda-connection.c (gda_connection_begin_transaction):
+	(gda_connection_commit_transaction):
+	(gda_connection_rollback_transaction): new functions
+	(gda_connection_add_error):
+	(gda_connection_add_error_list): new functions
+
+	* gda-data-model-recordset.[ch]: removed, since the GdaRecordset
+	class will be based on GdaDataModel
+
+2001-10-27  Rodrigo Moya <rodrigo@gnome-db.org>
+
 	* gda-connection.[ch] (gda_connection_get_string):
 	(gda_connection_get_username):
 	(gda_connection_get_password): new functions
