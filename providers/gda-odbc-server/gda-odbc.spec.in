@@ -15,7 +15,7 @@ Release: 	%rel
 Copyright: 	GPL
 Group: 		Applications/Databases
 Source:		ftp://ftp.gnome.org/pub/GNOME/sources/gnome-db/libgda-%{ver}.tar.gz
-BuildRoot: 	/var/tmp/%{name}-%{ver}-root
+BuildRoot: 	/var/tmp/libgda-%{ver}-root
 URL: 		http://www.gnome.org/projects/gnome-db/
 DocDir: 	%{prefix}/doc
 

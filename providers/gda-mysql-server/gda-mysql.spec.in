@@ -1,6 +1,6 @@
 # Note that this is NOT a relocatable package
 # defaults for redhat
-%define name	gda-mysql
+%define name	@PACKAGE@
 %define ver	@VERSION@
 %define prefix     /usr
 %define sysconfdir /etc

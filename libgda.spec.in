@@ -48,6 +48,63 @@ GNU Data Access is an attempt to provide uniform access to
  separated from it to allow non-GNOME applications to be
  developed based on it.
 
+%package -n gda-odbc
+Summary: GDA ODBC Provider
+Group:		Applications/Databases
+Requires:	%name = %{PACKAGE_VERSION}
+
+%description -n gda-odbc
+GNU Data Access is an attempt to provide uniform access to
+ different kinds of data sources (databases, information
+ servers, mail spools, etc).
+ It is a complete architecture that provides all you need to
+ access your data.
+ .
+ libgda was part of the GNOME-DB project
+ (http://www.gnome.org/projects/gnome-db), but has been
+ separated from it to allow non-GNOME applications to be
+ developed based on it.
+
+ This package includes the GDA ODBC provider
+
+%package -n gda-postgres
+Summary: GDA PostgreSQL Provider
+Group:		Applications/Databases
+Requires:	%name = %{PACKAGE_VERSION}
+
+%description -n gda-postgres
+GNU Data Access is an attempt to provide uniform access to
+ different kinds of data sources (databases, information
+ servers, mail spools, etc).
+ It is a complete architecture that provides all you need to
+ access your data.
+ .
+ libgda was part of the GNOME-DB project
+ (http://www.gnome.org/projects/gnome-db), but has been
+ separated from it to allow non-GNOME applications to be
+ developed based on it.
+
+ This package includes the GDA PostgreSQL provider
+
+%package -n gda-mysql
+Summary: GDA MySQL Provider
+Group:		Applications/Databases
+Requires:	%name = %{PACKAGE_VERSION}
+
+%description -n gda-mysql
+GNU Data Access is an attempt to provide uniform access to
+ different kinds of data sources (databases, information
+ servers, mail spools, etc).
+ It is a complete architecture that provides all you need to
+ access your data.
+ .
+ libgda was part of the GNOME-DB project
+ (http://www.gnome.org/projects/gnome-db), but has been
+ separated from it to allow non-GNOME applications to be
+ developed based on it.
+
+ This package includes the GDA MySQL provider
+
 %changelog
 * Sat Sep 2 2000 Rodrigo Moya <rodrigo@linuxave.net>
 - Initial spec imported from old GNOME-DB spec
@@ -64,9 +121,9 @@ GNU Data Access is an attempt to provide uniform access to
 
 # Needed for snapshot releases.
 if [ ! -f configure ]; then
-  CFLAGS="$RPM_OPT_FLAGS" ./autogen.sh $ARCH_FLAGS --prefix=%{prefix} --sysconfdir=%{sysconfdir} 
+  CFLAGS="$RPM_OPT_FLAGS" ./autogen.sh $ARCH_FLAGS --prefix=%{prefix} --sysconfdir=%{sysconfdir} --with-odbc=/opt/unixodbc --with-postgres=yes --with-mysql=yes
 else
-  CFLAGS="$RPM_OPT_FLAGS" ./configure $ARCH_FLAGS --prefix=%{prefix} --sysconfdir=%{sysconfdir}
+  CFLAGS="$RPM_OPT_FLAGS" ./configure $ARCH_FLAGS --prefix=%{prefix} --sysconfdir=%{sysconfdir} --with-odbc=/opt/unixodbc --with-postgres=yes --with-mysql=yes
 fi
 
 if [ "$SMP" != "" ]; then
@@ -118,3 +175,23 @@ fi
 %{prefix}/include/gda/*
 %{prefix}/share/idl/*
 
+%files -n gda-odbc
+%defattr(-, root, root)
+
+%{prefix}/bin/gda-odbc-srv
+%{prefix}/lib/libgda-odbc.so*
+%{prefix}/share/oaf/gda-odbc.oafinfo
+
+%files -n gda-postgres
+%defattr(-, root, root)
+
+%{prefix}/bin/gda-postgres-srv
+%{prefix}/lib/libgda-postgres.so*
+%{prefix}/share/oaf/gda-postgres.oafinfo
+
+%files -n gda-mysql
+%defattr(-, root, root)
+
+%{prefix}/bin/gda-mysql-srv
+%{prefix}/lib/libgda-mysql.so*
+%{prefix}/share/oaf/gda-mysql.oafinfo
