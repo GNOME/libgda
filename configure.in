@@ -85,24 +85,32 @@ else
 	AC_MSG_WARN(not found)
 fi
 
-dnl
-dnl checking for GOB (Gtk Object Builder)
-dnl
-GOB_CHECK(1.0.5)
-
 dnl ******************************
 dnl gtk-doc
 dnl ******************************
-
 AC_CHECK_PROG(GTKDOC, gtkdoc-mkdb, true, false)
 AM_CONDITIONAL(HAVE_GTK_DOC, $GTKDOC)
 AC_SUBST(HAVE_GTK_DOC)
 
 AM_CONDITIONAL(ENABLE_GTK_DOC, $GTKDOC)
 
-dnl
+dnl ******************************
+dnl scrollkeeper
+dnl ******************************
+SCROLLKEEPER_REQUIRED=0.1.4
+AC_SUBST(SCROLLKEEPER_REQUIRED)
+
+AC_PATH_PROG(SCROLLKEEPER_CONFIG, scrollkeeper-config,no)
+if test x$SCROLLKEEPER_CONFIG = xno
+then
+	AC_MSG_ERROR(Couldn't find scrollkeeper-config, please install the scrollkeeper package)
+fi
+SCROLLKEEPER_LOCALSTATE_DIR=`scrollkeeper-config --pkglocalstatedir`
+AC_SUBST(SCROLLKEEPER_LOCALSTATE_DIR)
+
+dnl ******************************
 dnl Checks for providers
-dnl
+dnl ******************************
 
 dnl Test for ODBC
 AC_ARG_WITH(odbc,
