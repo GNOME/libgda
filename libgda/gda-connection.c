@@ -267,7 +267,7 @@ gda_connection_new (GdaClient *client,
 		   that's the only way we can notify it of errors */
 		if (errors_copy) {
 			g_signal_emit_by_name (G_OBJECT (client), "error",
-					       0, cnc, errors_copy);
+					       cnc, errors_copy);
 		}
 		gda_quark_list_free (params);
 		g_object_unref (G_OBJECT (cnc));

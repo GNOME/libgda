@@ -1,3 +1,9 @@
+2002-09-04  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* libgda/gda-connection.c (gda_connection_new): if the provider sets
+	errors on connecting, notify the client about those errors by emitting
+	its "error" signal.
+
 2002-09-02  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* providers/mdb/gda-mdb-provider.c (gda_mdb_provider_get_version):
