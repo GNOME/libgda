@@ -1,4 +1,11 @@
 2004-04-23  Murray Cumming  <murrayc@murrayc.com>
+
+	* libgda/gda-command.h, gda-config.h, gda-field.h, gda-parameter.h: 
+	Use the typedef struct _Something Something technique to allow
+	other code to declare prototypes, so that the C++ bindings do not
+	need to include the headers in their public headers.
+
+2004-04-23  Murray Cumming  <murrayc@murrayc.com>
 	* providers/postgres/gda-postgres-recordset.c (guess_table_name):
 	Copy the table_name before freeing the struct, not after, to fix
 	an occasional crash. Thanks valgrind.

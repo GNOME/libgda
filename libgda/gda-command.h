@@ -46,12 +46,14 @@ typedef enum {
 	GDA_COMMAND_TYPE_INVALID
 } GdaCommandType;
 
-typedef struct {
+typedef struct _GdaCommand GdaCommand;
+
+struct _GdaCommand {
 	gchar *text;
 	GdaCommandType type;
 	GdaCommandOptions options;
 	GdaTransaction *xaction;
-} GdaCommand;
+};
 
 #define GDA_TYPE_COMMAND (gda_command_get_type ())
 

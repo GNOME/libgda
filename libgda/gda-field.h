@@ -29,7 +29,9 @@
 
 G_BEGIN_DECLS
 
-typedef struct {
+typedef struct _GdaFieldAttributes GdaFieldAttributes;
+
+struct _GdaFieldAttributes {
 	gint defined_size;
 	gchar *name;
 	gchar *table;
@@ -45,7 +47,7 @@ typedef struct {
 	glong auto_increment_step;
 	gint position;
 	GdaValue *default_value;
-} GdaFieldAttributes;
+};
 
 /* NOTE: Can't find any code using GdaField struct */
 typedef struct {
