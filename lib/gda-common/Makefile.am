@@ -4,20 +4,24 @@ INCLUDES = \
 	$(GDA_CLIENT_CFLAGS) \
 	-I.
 
-BUILT_SOURCES = GDA-skels.c GDA-stubs.c GDA-common.c GDA.h
+BUILT_SOURCES = \
+	GNOME_Database-skels.c
+	GNOME_Database-stubs.c \
+	GNOME_Database-common.c \
+	GNOME_Database.h
 CLEANFILES += $(BUILT_SOURCES)
 IDL_FILES = \
-	$(top_builddir)/idl/GDA.idl \
-	$(top_builddir)/idl/GDA_Command.idl \
-	$(top_builddir)/idl/GDA_Connection.idl \
-	$(top_builddir)/idl/GDA_Error.idl \
-	$(top_builddir)/idl/GDA_Field.idl \
-	$(top_builddir)/idl/GDA_Listener.idl \
-	$(top_builddir)/idl/GDA_Parameter.idl \
-	$(top_builddir)/idl/GDA_Recordset.idl
+	$(top_builddir)/idl/GNOME_Database.idl \
+	$(top_builddir)/idl/GNOME_Database_Command.idl \
+	$(top_builddir)/idl/GNOME_Database_Connection.idl \
+	$(top_builddir)/idl/GNOME_Database_Error.idl \
+	$(top_builddir)/idl/GNOME_Database_Field.idl \
+	$(top_builddir)/idl/GNOME_Database_Listener.idl \
+	$(top_builddir)/idl/GNOME_Database_Parameter.idl \
+	$(top_builddir)/idl/GNOME_Database_Recordset.idl
 
-GDA-skels.c GDA-stubs.c GDA-common.c GDA.h: $(IDLFILES) $(ORBIT_IDL)
-	$(ORBIT_IDL) -I$(top_builddir)/idl -I$(BONOBO_ACTIVATION_IDL_DIR) $(top_builddir)/idl/GDA.idl
+GNOME_Database-skels.c GNOME_Database-stubs.c GNOME_Database-common.c GNOME_Database.h: $(IDLFILES) $(ORBIT_IDL)
+	$(ORBIT_IDL) -I$(top_builddir)/idl -I$(BONOBO_ACTIVATION_IDL_DIR) $(top_builddir)/idl/GNOME_Database.idl
 
 gda_common_headers = \
 	gda-common-defs.h \
@@ -37,14 +41,14 @@ gda_common_headers = \
 	gda-xml-list-item.h \
 	gda-xml-util.h \
 	gda-common.h \
-	GDA.h
+	GNOME_Database.h
 
 libgda_common_2_la_SOURCES = \
 	$(gda_common_headers) \
 	gda-common-private.h \
-	GDA-common.c \
-	GDA-skels.c \
-	GDA-stubs.c \
+	GNOME_Database-common.c \
+	GNOME_Database-skels.c \
+	GNOME_Database-stubs.c \
 	gda-config.c \
 	gda-corba.c \
 	gda-error.c \

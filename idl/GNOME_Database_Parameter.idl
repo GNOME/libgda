@@ -16,7 +16,7 @@ module Database {
 		PARAM_INOUT
 	};
 	struct CmdParameter {
-		FieldValue         value;
+		Value              value;
 		ParameterDirection dir;
 		string             name;
 		long               precision;

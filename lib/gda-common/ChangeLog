@@ -1,3 +1,7 @@
+2001-08-17  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* Makefile.am: s/GDA/GNOME_Database
+
 2001-08-03  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* .[ch]: s/oaf/bonobo_activation

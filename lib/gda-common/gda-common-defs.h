@@ -22,6 +22,6 @@
 
 #include <glib/gmacros.h>
 #include <glib-object.h>
-#include <GDA.h>
+#include <GNOME_Database.h>
 
 #endif
