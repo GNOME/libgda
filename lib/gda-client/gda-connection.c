@@ -456,8 +456,8 @@ gda_connection_open (GdaConnection * cnc, const gchar * dsn,
 	}
 
 	cnc->database = g_strdup (db_to_use);
-	cnc->user = g_strdup (user);
-	cnc->passwd = g_strdup (pwd);
+	cnc->user = user ? g_strdup (user) : g_strdup ("");
+	cnc->passwd = pwd ? g_strdup (pwd) : g_strdup ("");
 
 	/* start CORBA connection */
 	if (get_corba_connection (cnc) < 0) {

@@ -1,3 +1,8 @@
+2001-09-05  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-connection.c (gda_connection_open): don't pass NULL strings
+	to the CORBA-generated functions
+
 2001-09-02  Liam Girdwood <liam@novalinux.com>
 
 	* gda-recordset.[ch] (gda_recordset_get_row):

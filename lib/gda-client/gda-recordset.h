@@ -97,7 +97,6 @@ void gda_recordset_get_name (GdaRecordset * rs, gchar * name);
 void gda_recordset_close (GdaRecordset * rs);
 GdaField *gda_recordset_field_name (GdaRecordset * rs, gchar * name);
 GdaField *gda_recordset_field_idx (GdaRecordset * rs, gint idx);
-GPtrArray *gda_recordset_to_array (GdaRecordset * rs);
 gboolean gda_recordset_bof (GdaRecordset * rs);
 gboolean gda_recordset_eof (GdaRecordset * rs);
 gulong gda_recordset_move (GdaRecordset * rs,
@@ -128,6 +127,8 @@ void gda_recordset_set_cursorloc (GdaRecordset * rs,
 GDA_CursorType gda_recordset_get_cursortype (GdaRecordset * rs);
 void gda_recordset_set_cursortype (GdaRecordset * rs,
 				   GDA_CursorType type);
+
+GPtrArray *gda_recordset_to_array (GdaRecordset * rs);
 GList *gda_recordset_get_row (GdaRecordset *rs);
 gchar *gda_recordset_get_row_as_string (GdaRecordset *rs);
 
