@@ -803,3 +803,25 @@ gda_xml_database_new_table_from_node (GdaXmlDatabase *xmldb, xmlNodePtr node)
 
 	return table;
 }
+
+gboolean
+gda_xml_database_remove_table (GdaXmlDatabase *xmldb, const gchar *name)
+{
+	GdaTable *table;
+	
+	g_return_val_if_fail (GDA_IS_XML_DATABASE (xmldb), FALSE);
+	g_return_val_if_fail (name != NULL, FALSE);
+
+	table = g_hash_table_lookup (xmldb->priv->tables, name);
+	if (table == NULL) {
+		gda_log_error (_("Table %s doesn't exist"), name);
+		return FALSE;
+	}
+
+	g_signal_handlers_disconnect_by_func (G_OBJECT (table), G_CALLBACK (table_changed_cb), xmldb);
+	g_signal_handlers_disconnect_by_func (G_OBJECT (table), G_CALLBACK (table_name_changed_cb), xmldb);
+	g_hash_table_remove (xmldb->priv->tables, name);
+	gda_xml_database_changed (xmldb);
+
+	return TRUE;
+}

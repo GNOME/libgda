@@ -78,6 +78,8 @@ GdaTable       *gda_xml_database_new_table_from_model (GdaXmlDatabase *xmldb,
 						       gboolean add_data);
 GdaTable       *gda_xml_database_new_table_from_node (GdaXmlDatabase *xmldb,
 						      xmlNodePtr node);
+gboolean        gda_xml_database_remove_table (GdaXmlDatabase *xmldb,
+					       const gchar *name);
 
 G_END_DECLS
 
