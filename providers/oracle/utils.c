@@ -34,7 +34,190 @@
 GdaError *
 gda_oracle_make_error (GdaOracleConnectionData *handle)
 {
-	return NULL;
+	GdaError *error;
+	gchar errbuf[512];
+	ub4 buflen;
+	ub4 errcode;
+
+	error = gda_error_new ();
+
+	if (handle != NULL) {
+		OCIErrorGet ((dvoid *) handle->herr, 
+				(ub4) 1, 
+				(text *) NULL, 
+				&errcode, 
+				errbuf, 
+				(ub4) sizeof (errbuf), 
+				(ub4) OCI_HTYPE_ERROR);
+	
+		gda_error_set_description (error, errbuf);	
+	} else {
+		gda_error_set_description (error, _("NO DESCRIPTION"));
+	}
+		
+	gda_error_set_number (error, errcode);
+	gda_error_set_source (error, "gda-oracle");
+	gda_error_set_sqlstate (error, _("Not available"));
+	
+	return error;
+}
+
+GdaValueType 
+oracle_sqltype_to_gda_type (const ub2 sqltype)
+{
+	/* an incomplete list of all the oracle types */
+	switch (sqltype) {
+	case SQLT_CHR:
+	case SQLT_STR:
+	case SQLT_VCS:
+	case SQLT_RID:
+	case SQLT_LNG:
+	case SQLT_LVC:
+	case SQLT_AFC:
+	case SQLT_AVC:
+	case SQLT_LAB:
+	case SQLT_VST:
+	case SQLT_CLOB:
+	case SQLT_CFILEE:
+		return GDA_VALUE_TYPE_STRING;
+	case SQLT_NUM:
+		return GDA_VALUE_TYPE_NUMERIC;
+	case SQLT_INT:
+		return GDA_VALUE_TYPE_INTEGER;
+	case SQLT_FLT:
+		return GDA_VALUE_TYPE_SINGLE;
+	case SQLT_VBI:
+	case SQLT_BIN:
+	case SQLT_LBI:
+	case SQLT_LVB:
+	case SQLT_BLOB:
+	case SQLT_BFILEE:
+		return GDA_VALUE_TYPE_BINARY;
+	case SQLT_UIN:
+		return GDA_VALUE_TYPE_INTEGER;
+	case SQLT_DAT:
+	case SQLT_ODT:
+	case SQLT_DATE:
+		return GDA_VALUE_TYPE_DATE;
+	case SQLT_TIME:
+	case SQLT_TIME_TZ:
+		return GDA_VALUE_TYPE_TIME;
+	case SQLT_TIMESTAMP:
+	case SQLT_TIMESTAMP_TZ:
+	case SQLT_TIMESTAMP_LTZ:
+		return GDA_VALUE_TYPE_TIMESTAMP;
+	case SQLT_SLS:
+	case SQLT_CUR:
+	case SQLT_RDD:
+	case SQLT_OSL:
+	case SQLT_NTY:
+	case SQLT_REF:
+	case SQLT_RSET:
+	case SQLT_NCO:
+	case SQLT_INTERVAL_YM:
+	case SQLT_INTERVAL_DS:
+	case SQLT_VNU:
+	case SQLT_PDN:
+	case SQLT_NON:
+	default:
+		return GDA_VALUE_TYPE_UNKNOWN;
+	}
+}
+
+gchar * 
+oracle_sqltype_to_string (const ub2 sqltype)
+{
+	/* an incomplete list of all the oracle types */
+	switch (sqltype) {
+	case SQLT_CHR:
+		return "VARCHAR2";
+	case SQLT_NUM:
+		return "NUMERIC";
+	case SQLT_INT:
+		return "INTEGER";
+	case SQLT_FLT:
+		return "FLOAT";
+	case SQLT_STR:
+		return "STRING";
+	case SQLT_VNU:
+		return "VARNUM";
+	case SQLT_PDN:
+		return "";
+	case SQLT_LNG:
+		return "LONG";
+	case SQLT_VCS:
+		return "VARCHAR";
+	case SQLT_NON:
+		return "";
+	case SQLT_RID:
+		return "ROWID";
+	case SQLT_DAT:
+		return "DATE";
+	case SQLT_VBI:
+		return "VARRAW";
+	case SQLT_BIN:
+		return "RAW";
+	case SQLT_LBI:
+		return "LONG RAW";
+	case SQLT_UIN:
+		return "UNSIGNED INT";
+	case SQLT_SLS:
+		return "";
+	case SQLT_LVC:
+		return "LONG VARCHAR";
+	case SQLT_LVB:
+		return "LONG VARRAW";
+	case SQLT_AFC:
+		return "CHAR";
+	case SQLT_AVC:
+		return "CHARZ";
+	case SQLT_CUR:
+		return "CURSOR";
+	case SQLT_RDD:
+		return "ROWID";
+	case SQLT_LAB:
+		return "LABEL";
+	case SQLT_OSL:
+		return "OSLABEL";
+	case SQLT_NTY:
+		return "";
+	case SQLT_REF:
+		return "";
+	case SQLT_CLOB:
+		return "CLOB";
+	case SQLT_BLOB:
+		return "BLOB";
+	case SQLT_BFILEE:
+		return "BFILE";
+	case SQLT_CFILEE:
+		return "CFILE";
+	case SQLT_RSET:
+		return "RESULT SET";
+	case SQLT_NCO:
+		return "";
+	case SQLT_VST:
+		return "";
+	case SQLT_ODT:
+		return "OCI DATE";
+	case SQLT_DATE:
+		return "ANSI DATE";
+	case SQLT_TIME:
+		return "TIME";
+	case SQLT_TIME_TZ:
+		return "TIME WITH TIME ZONE";
+	case SQLT_TIMESTAMP:
+		return "TIMESTAMP";
+	case SQLT_TIMESTAMP_TZ:
+		return "TIMESTAMP WITH TIME ZONE";
+	case SQLT_INTERVAL_YM:
+		return "INTERVAL YEAR TO MONTH";
+	case SQLT_INTERVAL_DS:
+		return "INTERVAL DAY TO SECOND";
+	case SQLT_TIMESTAMP_LTZ:
+		return "TIMESTAMP WITH LOCAL TIME ZONE";
+	default:
+		return "UNKNOWN";
+	}
 }
 
 gchar *
@@ -68,55 +251,113 @@ gda_oracle_value_to_sql_string (GdaValue *value)
 	return ret;
 }
 
+GdaOracleValue *
+gda_value_to_oracle_value (GdaValue *value)
+{
+	GdaOracleValue *ora_value;
+	gchar *val_str;
+	OCIDate *oci_date;
+	GdaDate *gda_date;
+
+	val_str = gda_value_stringify (value);
+	if (!val_str)
+		return NULL;
+
+	ora_value = g_new0 (GdaOracleValue, 1);
+
+	ora_value->gda_type = value->type;
+	ora_value->indicator = 0;
+	ora_value->hdef = (OCIDefine *) 0;
+	ora_value->pard = (OCIParam *) 0;
+
+	switch (ora_value->gda_type) {
+	case GDA_VALUE_TYPE_NULL:
+		ora_value->indicator = -1;
+		break;
+	case GDA_VALUE_TYPE_BIGINT :
+	case GDA_VALUE_TYPE_DOUBLE :
+	case GDA_VALUE_TYPE_INTEGER :
+	case GDA_VALUE_TYPE_NUMERIC :
+	case GDA_VALUE_TYPE_SINGLE :
+	case GDA_VALUE_TYPE_SMALLINT :
+	case GDA_VALUE_TYPE_TINYINT :
+		ora_value->sql_type = SQLT_NUM;
+		ora_value->value = (void *) val_str;
+		ora_value->defined_size = strlen (val_str);
+		break;
+	case GDA_VALUE_TYPE_DATE :
+		ora_value->sql_type = SQLT_ODT;
+		oci_date = (OCIDate *) 0;
+		gda_date = gda_value_get_date (value);
+		ora_value->defined_size = 7;
+		OCIDateSetDate (oci_date, gda_date->year, gda_date->month, gda_date->day);
+		break;
+	default :
+		ora_value->sql_type = SQLT_CHR;
+		ora_value->value = g_malloc0 (strlen (val_str));
+		ora_value->value = val_str;
+		ora_value->defined_size = strlen (val_str);
+	}
+
+	/*g_free (val_str);*/
+	return ora_value;
+}
+
 void
 gda_oracle_set_value (GdaValue *value, 
-			GdaValueType type, 
-			gconstpointer thevalue, 
-			gboolean isNull,
-			gint defined_size)
+			GdaOracleValue *ora_value,
+			GdaConnection *cnc)
 {
 	GDate *gdate;
 	GdaDate date;
-	GdaTime timegda;
-	GdaTimestamp timestamp;
-	GdaGeometricPoint point;
 	GdaNumeric numeric;
-	gchar string_buffer[defined_size+1];
 
-	if (isNull) {
+	gchar string_buffer[ora_value->defined_size+1];
+
+	if (-1 == (ora_value->indicator)) {
 		gda_value_set_null (value);
 		return;
 	}
 
-	switch (type) {
+	switch (ora_value->gda_type) {
 	case GDA_VALUE_TYPE_BOOLEAN:
-		gda_value_set_boolean (value, (atoi (thevalue)) ? TRUE: FALSE);
+		gda_value_set_boolean (value, (atoi (ora_value->value)) ? TRUE: FALSE);
 		break;
 	case GDA_VALUE_TYPE_STRING:
-		memcpy (string_buffer, thevalue, defined_size);
-		string_buffer[defined_size] = '\0';
+		memcpy (string_buffer, ora_value->value, ora_value->defined_size);
+		string_buffer[ora_value->defined_size] = '\0';
 		gda_value_set_string (value, string_buffer);
 		break;
 	case GDA_VALUE_TYPE_BIGINT:
-		gda_value_set_bigint (value, atoll (thevalue));
+		gda_value_set_bigint (value, atoll (ora_value->value));
 		break;
 	case GDA_VALUE_TYPE_INTEGER:
-		gda_value_set_integer (value, atol (thevalue));
+		gda_value_set_integer (value, atol (ora_value->value));
 		break;
 	case GDA_VALUE_TYPE_SMALLINT:
-		gda_value_set_smallint (value, atoi (thevalue));
+		gda_value_set_smallint (value, atoi (ora_value->value));
 		break;
 	case GDA_VALUE_TYPE_SINGLE:
-		gda_value_set_single (value, atof (thevalue));
+		gda_value_set_single (value, atof (ora_value->value));
 		break;
 	case GDA_VALUE_TYPE_DOUBLE:
-		gda_value_set_double (value, atof (thevalue));
+		gda_value_set_double (value, atof (ora_value->value));
 		break;
 	case GDA_VALUE_TYPE_NUMERIC:
-		numeric.number = thevalue;
-		numeric.precision = 0; // FIXME
-		numeric.width = 0; // FIXME
+		numeric.number = ora_value->value;
+		numeric.precision = 5; // FIXME
+		numeric.width = 5; // FIXME
 		gda_value_set_numeric (value, &numeric);
+		break;
+	case GDA_VALUE_TYPE_DATE:
+		gdate = g_date_new ();
+		g_date_clear (gdate, 1);
+		OCIDateGetDate ((CONST OCIDate *) ora_value->value,
+				(sb2 *) &date.year,
+				(ub1 *) &date.month,
+				(ub1 *) &date.day);
+		gda_value_set_date (value, &date);
+		g_date_free (gdate);
 		break;
 	case GDA_VALUE_TYPE_GEOMETRIC_POINT:
 		break;
@@ -131,6 +372,6 @@ gda_oracle_set_value (GdaValue *value,
 		// FIXME
 		break;
 	default:
-		gda_value_set_string (value, thevalue);
+		gda_value_set_string (value, ora_value->value);
 	}
 }

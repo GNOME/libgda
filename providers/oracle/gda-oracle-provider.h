@@ -49,7 +49,6 @@ typedef struct {
 	OCIServer *hserver;
 	OCISvcCtx *hservice;
 	OCISession *hsession;
-	OCIStmt *hstmt;
 	sword stmt_type;
 } GdaOracleConnectionData;
 
@@ -61,7 +60,6 @@ G_BEGIN_DECLS
 
 GType                gda_oracle_provider_get_type (void);
 GdaServerProvider   *gda_oracle_provider_new (void);
-GdaValueType  oracle_sqltype_to_gda_type (const ub2 sqltype);
 
 
 G_END_DECLS

@@ -38,6 +38,7 @@
 #include <libgda/gda-intl.h>
 #include <libgda/gda-value.h>
 #include "gda-oracle-provider.h"
+#include "gda-oracle-recordset.h"
 #include <oci.h>
 
 #define GDA_ORACLE_PROVIDER_ID          "GDA Oracle provider"
@@ -51,11 +52,13 @@ G_BEGIN_DECLS
 
 GdaError *gda_oracle_make_error (GdaOracleConnectionData *handle);
 void gda_oracle_set_value (GdaValue *value, 
-				GdaValueType type, 
-				gconstpointer thevalue, 
-				gboolean isNull,
-				gint defined_size);
+				GdaOracleValue *thevalue,
+				GdaConnection *cnc);
 gchar *gda_oracle_value_to_sql_string (GdaValue *value);
+GdaValueType  oracle_sqltype_to_gda_type (const ub2 sqltype);
+gchar *oracle_sqltype_to_string (const ub2 sqltype);
+GdaOracleValue *gda_value_to_oracle_value (GdaValue *value);
+
 
 G_END_DECLS
 

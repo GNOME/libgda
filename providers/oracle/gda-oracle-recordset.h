@@ -30,6 +30,7 @@
 
 #include <libgda/gda-data-model-hash.h>
 #include <libgda/gda-value.h>
+#include <oci.h>
 
 G_BEGIN_DECLS
 
@@ -55,9 +56,19 @@ struct _GdaOracleRecordsetClass {
 	GdaDataModelClass parent_class;
 };
 
+struct _GdaOracleValue {
+	OCIDefine *hdef;
+	OCIParam *pard;
+	sb2 indicator;
+	ub2 sql_type;
+	ub2 defined_size;
+	gpointer value;
+	GdaValueType gda_type;
+};
+
 
 GType               gda_oracle_recordset_get_type (void);
-GdaOracleRecordset *gda_oracle_recordset_new (GdaConnection *cnc, GdaOracleConnectionData *cdata);
+GdaOracleRecordset *gda_oracle_recordset_new (GdaConnection *cnc, GdaOracleConnectionData *cdata, OCIStmt *stmthp);
 
 G_END_DECLS
 
