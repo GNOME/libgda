@@ -1,3 +1,7 @@
+2001-12-22  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-default-provider.c: added missing #include's
+
 2001-12-22  Carlos Perelló Marín <carlos@gnome-db.org>
 
 	* gda-default-provider.c: Finished the implementation of execute

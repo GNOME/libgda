@@ -22,6 +22,7 @@
  */
 
 #include "gda-default.h"
+#include "gda-default-recordset.h"
 #include <libgda/gda-row.h>
 #include <libgda/gda-server-recordset.h>
 
