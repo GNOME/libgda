@@ -106,17 +106,19 @@ define_columns (GdaOracleRecordsetPrivate *priv)
 			break;
 		}
 
-		ora_value->value = g_malloc0 (ora_value->defined_size);
+		if (ora_value->defined_size == 0)
+		    ora_value->value = NULL;
+		else
+		    ora_value->value = g_malloc0 (ora_value->defined_size+1);
 		ora_value->hdef = (OCIDefine *) 0;
 		ora_value->indicator = 0;
 		ora_value->gda_type = oracle_sqltype_to_gda_type (ora_value->sql_type);
-
 		result = OCIDefineByPos ((OCIStmt *) priv->hstmt,
 					(OCIDefine **) &(ora_value->hdef),
 					(OCIError *) priv->cdata->herr,
 					(ub4) i + 1,
 					ora_value->value,
-					ora_value->defined_size,
+					ora_value->defined_size+1,
 					(ub2) ora_value->sql_type,
 					(dvoid *) &(ora_value->indicator),
 					(ub2 *) 0,
@@ -303,6 +305,7 @@ gda_oracle_recordset_get_n_rows (GdaDataModel *model)
 				(CONST OCISnapshot *) NULL,
 				(OCISnapshot *) NULL,
 				OCI_DEFAULT);
+	
 	if (!gda_oracle_check_result (result, priv_data->cnc, priv_data->cdata, 
 		OCI_HTYPE_ERROR, "Could not execute Oracle statement")) {
 		return 0;

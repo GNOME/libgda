@@ -1,3 +1,12 @@
+2003-02-19  Steve Fosdick <gnomedb@pelvoux.demon.co.uk>
+
+	* Add minimal support for Oracle 9i.
+
+	* configure.in: Changed to use the shared OCI client library.
+
+	* providers/oracle/gda-oracle-*.c: worked around what appears to
+	be a bug in pre-fetching in Oracle 9.2.0.2.0
+	
 2003-02-15  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
 	* providers/postgres/gda-postgres-provider.c: applied fix to get the

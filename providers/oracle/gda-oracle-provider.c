@@ -554,6 +554,7 @@ process_sql_commands (GList *reclist, GdaConnection *cnc,
 	GdaOracleConnectionData *priv_data;
 	gchar **arr;
 	gint result;
+	ub4 prefetch = 200;
 
 	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_ORACLE_HANDLE);
 	if (!priv_data) {
@@ -586,7 +587,18 @@ process_sql_commands (GList *reclist, GdaConnection *cnc,
 				OCIHandleFree ((dvoid *) stmthp, OCI_HTYPE_STMT);
 				return NULL;
 			}
-				
+
+			result = OCIAttrSet (stmthp,
+					     OCI_HTYPE_STMT,
+					     &prefetch,
+					     0,
+					     OCI_ATTR_PREFETCH_ROWS,
+					     priv_data->herr);
+			if (!gda_oracle_check_result (result, cnc, priv_data, OCI_HTYPE_ERROR,
+					_("Could not set the Oracle statement pre-fetch row count"))) {
+				OCIHandleFree ((dvoid *) stmthp, OCI_HTYPE_STMT);
+				return NULL;
+			}
 
 			result = OCIStmtExecute (priv_data->hservice,
 						stmthp,
