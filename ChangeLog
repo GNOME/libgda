@@ -1,5 +1,8 @@
 2002-05-14  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* providers/mysql/gda-mysql-recordset.c: check pointers before
+	using them.
+
 	* providers/mysql/gda-mysql-providers.h: fixed typo.
 
 	* providers/sqlite/gda-sqlite-recordset.[ch]: don't use anymore

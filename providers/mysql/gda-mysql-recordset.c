@@ -183,8 +183,11 @@ gda_mysql_recordset_describe_column (GdaDataModel *model, gint col)
 	attrs = gda_field_attributes_new ();
 
 	mysql_fields = mysql_fetch_field (recset->mysql_res);
+	if (!mysql_fields)
+		return NULL;
 
-	gda_field_attributes_set_name (attrs, mysql_fields[col].name);
+	if (mysql_fields[col].name)
+		gda_field_attributes_set_name (attrs, mysql_fields[col].name);
 	gda_field_attributes_set_defined_size (attrs, mysql_fields[col].max_length);
 	gda_field_attributes_set_scale (attrs, mysql_fields[col].decimals);
 	gda_field_attributes_set_gdatype (attrs, gda_mysql_type_to_gda (mysql_fields[col].type));
