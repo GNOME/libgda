@@ -47,7 +47,7 @@ struct _GdaMysqlRecordset {
 };
 
 struct _GdaMysqlRecordsetClass {
-	GdaDataModel parent_class;
+	GdaDataModelClass parent_class;
 };
 
 GType              gda_mysql_recordset_get_type (void);
