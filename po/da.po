@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: GNOME db/CVS\n"
-"POT-Creation-Date: 2001-10-04 18:53+0200\n"
-"PO-Revision-Date: 2001-09-25 21:50+02:00\n"
+"POT-Creation-Date: 2001-10-07 20:11-0400\n"
+"PO-Revision-Date: 2001-10-08 11:50+02:00\n"
 "Last-Translator: Keld Simonsen <keld@dkuug.dk>\n"
 "Language-Team: Danish <dansk@klid.dk>\n"
 "MIME-Version: 1.0\n"
@@ -37,22 +37,23 @@ msgstr "[GDA klientbibliotek]"
 msgid "Could not open CORBA factory"
 msgstr "Kunne ikke åbne CORBA fabrik"
 
-#: lib/gda-client/gda-field.c:228 lib/gda-client/gda-field.c:285
-#: lib/gda-client/gda-field.c:294
+#: lib/gda-client/gda-field.c:243 lib/gda-client/gda-field.c:298
+#: lib/gda-client/gda-field.c:307
+#: providers/gda-mysql-server/gda-mysql-recordset.c:197
 msgid "<NULL>"
 msgstr "<NULL>"
 
-#: lib/gda-client/gda-field.c:233 lib/gda-client/gda-field.c:236
+#: lib/gda-client/gda-field.c:248 lib/gda-client/gda-field.c:251
 msgid "<Unknown GDA Type(NULL)>"
 msgstr "<Ukendt GDA type(NULL)>"
 
-#: lib/gda-client/gda-field.c:249
-msgid "TRUE"
-msgstr "TRUE"
+#: lib/gda-client/gda-field.c:264
+msgid "true"
+msgstr "sand"
 
-#: lib/gda-client/gda-field.c:251
-msgid "FALSE"
-msgstr "FALSE"
+#: lib/gda-client/gda-field.c:266
+msgid "false"
+msgstr "falsk"
 
 #: lib/gda-common/gda-corba.c:88
 #, c-format
@@ -1030,3 +1031,9 @@ msgstr "%s: datakilde '%s' ikke fundet\n"
 #: tools/templates/main-srv.c.tmpl:60
 msgid "Could not register <PROVIDER-NAME> provider implementation"
 msgstr "Kunne ikke registrere <UDBYDER-NAVN> udbyderimplementation"
+
+#~ msgid "TRUE"
+#~ msgstr "TRUE"
+
+#~ msgid "FALSE"
+#~ msgstr "FALSE"
