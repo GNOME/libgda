@@ -20,7 +20,10 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include <config.h>
+#if defined(HAVE_CONFIG_H)
+#  include <config.h>
+#endif
+
 #include <libgda/gda-intl.h>
 #include <libgda/gda-data-model.h>
 #include <string.h>
