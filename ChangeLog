@@ -1,3 +1,8 @@
+2003-07-30  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* libgda/gda-util.c (gda_file_save): added permissions to
+	the open function call.
+
 2003-07-27  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* libgda/gda-xml-database.c (gda_xml_database_new_table,

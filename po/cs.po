@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda HEAD\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2003-07-08 13:12+0200\n"
+"POT-Creation-Date: 2003-07-28 23:41+0200\n"
 "PO-Revision-Date: 2003-07-08 21:11+0200\n"
 "Last-Translator: Miloslav Trmac <mitr@volny.cz>\n"
 "Language-Team: Czech <cs@li.org>\n"
@@ -44,7 +44,6 @@ msgstr "Dočasný zdroj dat vytvořený programem libgda. Neodstraňujte."
 msgid "Error: %s"
 msgstr "Chyba: %s"
 
-#. gda_server_recordset_model_set_field_defined_size (recset, 0, 256);
 #: libgda/gda-config.c:1323 providers/ldap/gda-ldap-provider.c:327
 #: providers/mdb/gda-mdb-provider.c:457 providers/mdb/gda-mdb-provider.c:594
 #: providers/mdb/gda-mdb-provider.c:654 providers/msql/gda-msql-provider.c:448
@@ -56,8 +55,8 @@ msgstr "Chyba: %s"
 #: providers/oracle/gda-oracle-provider.c:1910
 #: providers/oracle/gda-oracle-provider.c:1955
 #: providers/oracle/gda-oracle-provider.c:1972
-#: providers/xml/gda-xml-provider.c:567 providers/xml/gda-xml-provider.c:587
-#: providers/xml/gda-xml-provider.c:626
+#: providers/xml/gda-xml-provider.c:567 providers/xml/gda-xml-provider.c:586
+#: providers/xml/gda-xml-provider.c:620
 msgid "Name"
 msgstr "Název"
 
@@ -100,12 +99,12 @@ msgstr "Pokus o inicializaci již inicializovaného klienta"
 msgid "libgda needs GModule. Finishing..."
 msgstr "Program libgda potřebuje GModule. Končím..."
 
-#: libgda/gda-select.c:315
+#: libgda/gda-select.c:393
 #, c-format
 msgid "Could not parse SQL string '%s'"
 msgstr "Nelze zpracovat řetězec s SQL '%s'"
 
-#: libgda/gda-select.c:319
+#: libgda/gda-select.c:397
 #, c-format
 msgid "SQL command is not a SELECT (is '%s'"
 msgstr "Příkaz SQL není typu SELECT (je '%s'"
@@ -147,46 +146,46 @@ msgstr "(GObject typu '%s'"
 msgid "NULL GObject"
 msgstr "GObject NULL"
 
-#: libgda/gda-xml-database.c:248
+#: libgda/gda-xml-database.c:263
 #, c-format
 msgid "Could not load file at %s"
 msgstr "Nelze načíst soubor v %s"
 
-#: libgda/gda-xml-database.c:257
+#: libgda/gda-xml-database.c:272
 #, c-format
 msgid "Could not parse file at %s"
 msgstr "Nelze zpracovat soubor v %s"
 
-#: libgda/gda-xml-database.c:267
+#: libgda/gda-xml-database.c:282
 #, c-format
 msgid "Invalid XML database file '%s'"
 msgstr "Neplatný soubor s databází XML '%s'"
 
-#: libgda/gda-xml-database.c:493
+#: libgda/gda-xml-database.c:508
 #, c-format
 msgid "Could not create a XML node from table %s"
 msgstr "Nelze vytvořit uzel XML z tabulky %s"
 
-#: libgda/gda-xml-database.c:511
+#: libgda/gda-xml-database.c:526
 msgid "Could not dump XML file to memory"
 msgstr "Nelze vypsat soubor XML do paměti"
 
-#: libgda/gda-xml-database.c:604 libgda/gda-xml-database.c:640
-#: libgda/gda-xml-database.c:683
+#: libgda/gda-xml-database.c:619 libgda/gda-xml-database.c:656
+#: libgda/gda-xml-database.c:700
 #, c-format
 msgid "Table %s already exists"
 msgstr "Tabulka %s již existuje"
 
-#: libgda/gda-xml-database.c:676
+#: libgda/gda-xml-database.c:693
 msgid "Invalid node"
 msgstr "Neplatný uzel"
 
-#: libgda/gda-xml-database.c:718
+#: libgda/gda-xml-database.c:735
 #, c-format
 msgid "Duplicated <data> node for table %s"
 msgstr "Duplikátní uzel <data> pro tabulku %s"
 
-#: libgda/gda-xml-database.c:725
+#: libgda/gda-xml-database.c:742
 msgid "Invalid XML node"
 msgstr "Neplatný uzel XML"
 
@@ -1627,7 +1626,9 @@ msgstr "Poskytovatel pro soubory Xbase (dBase, FoxPro atd.)"
 msgid ""
 "A full path must be specified on the connection string to open a database on "
 "the XML provider."
-msgstr "Pro otevření databáze v poskytovateli XML musí být v připojovacím řetězci zadána úplná cesta."
+msgstr ""
+"Pro otevření databáze v poskytovateli XML musí být v připojovacím řetězci "
+"zadána úplná cesta."
 
 #: providers/xml/gda-xml-provider.c:221 providers/xml/gda-xml-provider.c:243
 msgid "Invalid XML handle"

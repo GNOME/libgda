@@ -198,7 +198,7 @@ gda_file_save (const gchar *filename, const gchar *buffer, gint len)
 	
 	g_return_val_if_fail (filename != NULL, FALSE);
 
-	fd = open (filename, O_RDWR | O_CREAT);
+	fd = open (filename, O_RDWR | O_CREAT, 0644);
 	if (fd == -1) {
 		gda_log_error (_("Could not create file %s"), filename);
 		return FALSE;
