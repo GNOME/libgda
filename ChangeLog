@@ -1,3 +1,19 @@
+2002-09-01  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* libgda/gda-xml-database.c (gda_xml_database_save): implemented.
+	(gda_xml_database_new_from_data_model): check return value from
+	gda_table_new_from_model.
+	(gda_xml_database_new_table_from_node): type is stored as a string
+	in the XML. Scan more properties.
+
+	* libgda/gda-data-model.[ch] (gda_data_model_to_xml_node): new
+	function for converting data models to xmlNodePtr's.
+
+	* providers/default/gda-default-provider.c (process_table_commands):
+	new function for managing GDA_COMMAND_TYPE_TABLE commands.
+	(gda_default_provider_execute_command): implemented case for TABLE
+	commands.
+
 2002-08-31  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* configure.in: added summary at the end, to display all detected

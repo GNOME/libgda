@@ -729,6 +729,66 @@ gda_data_model_to_xml (GdaDataModel *model, gboolean standalone)
 	return NULL;
 }
 
+static void
+xml_set_boolean (xmlNodePtr node, const gchar *name, gboolean value)
+{
+	xmlSetProp (node, name, value ? "1" : "0");
+}
+
+static void
+xml_set_int (xmlNodePtr node, const gchar *name, gint value)
+{
+	char s[80];
+
+	sprintf (s, "%d", value);
+	xmlSetProp (node, name, s);
+}
+
+/**
+ * gda_data_model_to_xml_node
+ */
+xmlNodePtr
+gda_data_model_to_xml_node (GdaDataModel *model, const gchar *name)
+{
+	xmlNodePtr *node;
+	gint cols, rows, i;
+
+	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
+
+	node = xmlNewNode (NULL, "table");
+	if (name != NULL)
+		xmlSetProp (node, "name", name);
+
+	/* set the table structure */
+	cols = gda_data_model_get_n_columns (model);
+	for (i = 0; i < cols; i++) {
+		GdaFieldAttributes *fa;
+		xmlNodePtr field;
+
+		fa = gda_data_model_describe_column (model, i);
+		if (!fa) {
+			xmlFreeNode (node);
+			return NULL;
+		}
+
+		field = xmlNewChild (node, NULL, "field", NULL);
+		xmlSetProp (field, "name", gda_field_attributes_get_name (fa));
+		xmlSetProp (field, "caption", gda_field_attributes_get_caption (fa));
+		xmlSetProp (field, "gdatype", gda_type_to_string (gda_field_attributes_get_gdatype (fa)));
+		xml_set_int (field, "size", gda_field_attributes_get_defined_size (fa));
+		xml_set_int (field, "scale", gda_field_attributes_get_scale (fa));
+		xml_set_boolean (field, "pkey", gda_field_attributes_get_primary_key (fa));
+		xml_set_boolean (field, "unique", gda_field_attributes_get_unique_key (fa));
+		xml_set_boolean (field, "isnull", gda_field_attributes_get_allow_null (fa));
+		xml_set_boolean (field, "auto_increment", gda_field_attributes_get_auto_increment (fa));
+		xmlSetProp (field, "references", gda_field_attributes_get_references (fa));
+	}
+	
+	/* FIXME: add data to XML node */
+
+	return node;
+}
+
 /**
  * gda_data_model_get_command_text
  * @model: a #GdaDataModel.

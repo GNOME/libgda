@@ -24,6 +24,8 @@
 #  define __gda_data_model_h__
 
 #include <glib-object.h>
+#include <libxml/parser.h>
+#include <libxml/tree.h>
 #include <libgda/gda-command.h>
 #include <libgda/gda-row.h>
 #include <libgda/gda-value.h>
@@ -104,6 +106,7 @@ gboolean            gda_data_model_end_edit (GdaDataModel *model);
 gchar              *gda_data_model_to_comma_separated (GdaDataModel *model);
 gchar              *gda_data_model_to_tab_separated (GdaDataModel *model);
 gchar              *gda_data_model_to_xml (GdaDataModel *model, gboolean standalone);
+xmlNodePtr          gda_data_model_to_xml_node (GdaDataModel *model, const gchar *name);
 
 const gchar        *gda_data_model_get_command_text (GdaDataModel *recset);
 void                gda_data_model_set_command_text (GdaDataModel *recset, const gchar *txt);

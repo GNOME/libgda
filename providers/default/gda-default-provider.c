@@ -261,6 +261,13 @@ static GList *
 process_sql_commands (GList *reclist, GdaConnection *cnc, const gchar *sql)
 {
 	gchar **arr;
+	GdaXmlDatabase *xmldb;
+
+	xmldb = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_DEFAULT_HANDLE);
+	if (!xmldb) {
+		gda_connection_add_error_string (cnc, _("Invalid internal handle"));
+		return reclist;
+	}
 
 	/* parse SQL string, which can contain several commands, separated by ';' */
 	arr = g_strsplit (sql, ";", 0);
@@ -268,6 +275,42 @@ process_sql_commands (GList *reclist, GdaConnection *cnc, const gchar *sql)
 		gint n = 0;
 
 		while (arr[n]) {
+			n++;
+		}
+
+		g_strfreev (arr);
+	}
+
+	return reclist;
+}
+
+static GList *
+process_table_commands (GList *reclist, GdaConnection *cnc, const gchar *str)
+{
+	gchar **arr;
+	GdaXmlDatabase *xmldb;
+
+	xmldb = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_DEFAULT_HANDLE);
+	if (!xmldb) {
+		gda_connection_add_error_string (cnc, _("Invalid internal handle"));
+		return reclist;
+	}
+
+	/* parse string, which can contain several table names */
+	arr = g_strsplit (str, ";", 0);
+	if (arr) {
+		gint n = 0;
+
+		while (arr[n]) {
+			GdaTable *table;
+
+			table = gda_xml_database_find_table (xmldb, arr[n]);
+			if (GDA_IS_TABLE (table))
+				reclist = g_list_append (reclist, table);
+			else {
+				// FIXME: what to do on errors?
+			}
+
 			n++;
 		}
 
@@ -318,6 +361,8 @@ gda_default_provider_execute_command (GdaServerProvider *provider,
 			/* FIXME: Implement */
 			return NULL;
 		case GDA_COMMAND_TYPE_TABLE:
+			reclist = process_table_commands (reclist, cnc,
+							  gda_command_get_text (cmd));
 			break;
 		case GDA_COMMAND_TYPE_INVALID:
 			return NULL;

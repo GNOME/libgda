@@ -45,12 +45,17 @@ struct _GdaXmlDatabasePrivate {
 #define OBJECT_VIEW         "view"
 #define OBJECT_VIEWS_NODE   "views"
 
-#define PROPERTY_ALLOW_NULL "isnull"
-#define PROPERTY_GDATYPE    "gdatype"
-#define PROPERTY_NAME       "name"
-#define PROPERTY_OWNER      "owner"
-#define PROPERTY_SCALE      "scale"
-#define PROPERTY_SIZE       "size"
+#define PROPERTY_ALLOW_NULL  "isnull"
+#define PROPERTY_AUTO        "auto_increment"
+#define PROPERTY_CAPTION     "caption"
+#define PROPERTY_GDATYPE     "gdatype"
+#define PROPERTY_NAME        "name"
+#define PROPERTY_OWNER       "owner"
+#define PROPERTY_PRIMARY_KEY "pkey"
+#define PROPERTY_REFERENCES  "references"
+#define PROPERTY_SCALE       "scale"
+#define PROPERTY_SIZE        "size"
+#define PROPERTY_UNIQUE_KEY  "unique"
 
 static void gda_xml_database_class_init (GdaXmlDatabaseClass *klass);
 static void gda_xml_database_init       (GdaXmlDatabase *xmldb, GdaXmlDatabaseClass *klass);
@@ -83,8 +88,9 @@ process_tables_node (GdaXmlDatabase *xmldb, xmlNodePtr children)
 
 	g_return_if_fail (GDA_IS_XML_DATABASE (xmldb));
 
-	for (node = children; node != NULL; node = node->next)
+	for (node = children; node != NULL; node = node->next) {
 		gda_xml_database_new_table_from_node (xmldb, node);
+	}
 }
 
 static void
@@ -376,10 +382,54 @@ gda_xml_database_reload (GdaXmlDatabase *xmldb)
 gboolean
 gda_xml_database_save (GdaXmlDatabase *xmldb, const gchar *uri)
 {
+	xmlDocPtr doc;
+	xmlNodePtr root;
+	xmlNodePtr tables_node = NULL;
+	GList *list, *l;
+	xmlChar *xml;
+	gint size;
+	gboolean result;
+
 	g_return_val_if_fail (GDA_IS_XML_DATABASE (xmldb), FALSE);
 
-	/* FIXME: implement */
-	return FALSE;
+	/* create the top node */
+	doc = xmlNewDoc ("1.0");
+	root = xmlNewDocNode (doc, NULL, OBJECT_DATABASE, NULL);
+	xmlDocSetRootElement (doc, root);
+
+	/* add tables */
+	list = gda_xml_database_get_tables (xmldb);
+	for (l = list; l != NULL; l = l->next) {
+		GdaTable *table = gda_xml_database_find_table (xmldb, l->data);
+		xmlNodePtr node = gda_data_model_to_xml_node (GDA_DATA_MODEL (table), l->data);
+
+		if (!node) {
+			gda_log_error (_("Could not create a XML node from table %s"), l->data);
+			xmlFreeDoc (doc);
+			gda_xml_database_free_table_list (list);
+			return FALSE;
+		}
+
+		if (!tables_node)
+			tables_node = xmlNewChild (root, NULL, OBJECT_TABLES_NODE, NULL);
+
+		xmlAddChild (tables_node, node);
+	}
+
+	gda_xml_database_free_table_list (list);
+
+	/* save to file */
+	xmlDocDumpMemory (doc, &xml, &size);
+	xmlFreeDoc (doc);
+	if (!xml) {
+		gda_log_error (_("Could not dump XML file to memory"));
+		return FALSE;
+	}
+
+	result = gda_file_save (uri, xml, size);
+	g_free (xml);
+
+	return result;
 }
 
 static void
@@ -506,8 +556,10 @@ gda_xml_database_new_table_from_model (GdaXmlDatabase *xmldb,
 	}
 
 	table = gda_table_new_from_model (name, model, add_data);
-	g_hash_table_insert (xmldb->priv->tables, g_strdup (name), table);
-	gda_xml_database_changed (xmldb);
+	if (GDA_IS_TABLE (table)) {
+		g_hash_table_insert (xmldb->priv->tables, g_strdup (name), table);
+		gda_xml_database_changed (xmldb);
+	}
 
 	return table;
 }
@@ -559,9 +611,19 @@ gda_xml_database_new_table_from_node (GdaXmlDatabase *xmldb, xmlNodePtr node)
 			gda_field_attributes_set_scale (
 				fa, atoi (xmlGetProp (children, PROPERTY_SCALE)));
 			gda_field_attributes_set_gdatype (
-				fa, atoi (xmlGetProp (children, PROPERTY_GDATYPE)));
+				fa, gda_type_from_string (xmlGetProp (children, PROPERTY_GDATYPE)));
 			gda_field_attributes_set_allow_null (
 				fa, atoi (xmlGetProp (children, PROPERTY_ALLOW_NULL)));
+			gda_field_attributes_set_primary_key (
+				fa, atoi (xmlGetProp (children, PROPERTY_PRIMARY_KEY)));
+			gda_field_attributes_set_unique_key (
+				fa, atoi (xmlGetProp (children, PROPERTY_UNIQUE_KEY)));
+			gda_field_attributes_set_references (
+				fa, xmlGetProp (children, PROPERTY_REFERENCES));
+			gda_field_attributes_set_caption (
+				fa, atoi (xmlGetProp (children, PROPERTY_CAPTION)));
+			gda_field_attributes_set_auto_increment (
+				fa, atoi (xmlGetProp (children, PROPERTY_AUTO)));
 
 			gda_table_add_field (table, fa);
 		}
