@@ -1,12 +1,12 @@
 # German po for libgda
-# Copyright (C) 2000 Free Software Foundation, Inc.
-# Christian Meyer <cm@ggtt.de>, 2000, 2001.
+# Copyright (C) 2000, 2001 Free Software Foundation, Inc.
+# Christian Meyer <chrisime@gnome.org>, 2000, 2001.
 # Kai Lahmann <kl@linuxfaqs.de>, 2000.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda-0.2.3-cvs\n"
-"POT-Creation-Date: 2002-03-07 00:28+0100\n"
+"POT-Creation-Date: 2002-03-16 18:12+0100\n"
 "PO-Revision-Date: 2002-03-05 13:45+01:00\n"
 "Last-Translator: Christian Meyer <chrisime@gnome.org>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
@@ -99,11 +99,16 @@ msgstr "Client konnte nicht über Aktion %d benachrichtigt werden"
 msgid "No implementation for the fetch() method found"
 msgstr "Keine Implementation der Methode fetch() gefunden"
 
-#: libgda/gda-value.c:926
+#: libgda/gda-table.c:229
+#, c-format
+msgid "There is already a field called %s"
+msgstr "Es gibt bereits ein Feld mit dem Namen %s"
+
+#: libgda/gda-value.c:981
 msgid "TRUE"
 msgstr "WAHR"
 
-#: libgda/gda-value.c:928
+#: libgda/gda-value.c:983
 msgid "FALSE"
 msgstr "FALSCH"
 
@@ -120,17 +125,16 @@ msgstr "Datei bei %s konnte nicht interpretiert werden"
 #: libgda/gda-xml-database.c:232 libgda/gda-xml-database.c:249
 #, c-format
 msgid "Invalid XML database file '%s'"
-msgstr ""
+msgstr "Ungültige XML-Datenbankdatei »%s«"
 
 #: libgda/gda-xml-database.c:293 libgda/gda-xml-database.c:333
-#, fuzzy, c-format
+#, c-format
 msgid "Table %s already exists"
-msgstr "Tabelle %s existiert schon"
+msgstr "Tabelle %s existiert bereits"
 
 #: libgda/gda-xml-database.c:327
-#, fuzzy
 msgid "Invalid node"
-msgstr "Ungültiger MYSQL-Handle"
+msgstr "Ungültiger Node"
 
 #: libgda/gda-xml-database.c:358
 #, c-format
@@ -138,9 +142,8 @@ msgid "Duplicated <data> node for table %s"
 msgstr ""
 
 #: libgda/gda-xml-database.c:365
-#, fuzzy
 msgid "Invalid XML node"
-msgstr "Ungültiger MYSQL-Handle"
+msgstr "Ungültiger XML-Node"
 
 #: providers/default/gda-default-provider.c:139
 #: providers/sqlite/gda-sqlite-provider.c:152
@@ -488,15 +491,3 @@ msgstr "\tDomain = %s\n"
 #: testing/config.c:106
 msgid "\tgda_params ="
 msgstr "\tGDA_Parameter ="
-
-#~ msgid "Bad formed document at %s"
-#~ msgstr "Formal ungültiges Dokument bei %s"
-
-#~ msgid "%p is not a valid table"
-#~ msgstr "%p ist keine gültige Tabelle"
-
-#~ msgid "Invalid DEFAULT handle"
-#~ msgstr "Ungültiger DEFAULT-Handle"
-
-#~ msgid "Invalid Default handle"
-#~ msgstr "Ungültiger Vorgabe-Handle"
