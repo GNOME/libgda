@@ -309,12 +309,17 @@ gda_freetds_set_gdavalue (GdaValue *field, gchar *val, TDSCOLINFO *col,
 				txt = g_new0 (gchar, col_size);
 
 				/* tds_convert api changed to 0.6x */
-#ifndef HAVE_FREETDS_VER0_6X
-				tds_convert (col->column_type, val,
-				             col->column_size, SYBCHAR,
-				             txt, col_size - 1);
-				gda_value_set_string (field, txt ? txt : "");
-#else
+#ifdef HAVE_FREETDS_VER0_6X
+				if (tds_convert (tds_cnc->ctx,
+						 col->column_type, val,
+						 col->column_size, SYBCHAR,
+						 &tds_conv) < 0) {
+					gda_value_set_string (field, "");
+				} else {
+					gda_value_set_string (field, 
+						(tds_conv.c ? tds_conv.c : (tds_conv.ib ? tds_conv.ib : "")));
+				}
+#elif HAVE_FREETDS_VER0_60
 				tds_convert (tds_cnc->ctx, 
 				             col->column_type, val,
 				             col->column_size, SYBCHAR,
@@ -325,6 +330,11 @@ gda_freetds_set_gdavalue (GdaValue *field, gchar *val, TDSCOLINFO *col,
 				                        : (tds_conv.ib
 				                            ? tds_conv.ib
 				                            : "")));
+#else
+				tds_convert (col->column_type, val,
+				             col->column_size, SYBCHAR,
+				             txt, col_size - 1);
+				gda_value_set_string (field, txt ? txt : "");
 #endif
 				if (txt) {
 					g_free (txt);

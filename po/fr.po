@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda 0.10.1\n"
-"POT-Creation-Date: 2003-02-23 14:35+0100\n"
+"POT-Creation-Date: 2003-03-09 19:39+0100\n"
 "PO-Revision-Date: 2003-02-23 14:30+0100\n"
 "Last-Translator: Christophe Merlet (RedFox) <redfox@redfoxcenter.org>\n"
 "Language-Team: GNOME French Team <gnomefr@traduc.org>\n"
@@ -340,76 +340,76 @@ msgstr "Gestionnaire SQLITE invalide"
 msgid "Provider for FireBird databases"
 msgstr ""
 
-#: providers/freetds/gda-freetds-provider.c:195
+#: providers/freetds/gda-freetds-provider.c:197
 msgid ""
 "Connection aborted. You must provide at least a host, username and password "
 "using DSN 'QUERY=;USER=;PASSWORD='."
 msgstr ""
 
-#: providers/freetds/gda-freetds-provider.c:208
+#: providers/freetds/gda-freetds-provider.c:210
 msgid "Error creating message container."
 msgstr ""
 
-#: providers/freetds/gda-freetds-provider.c:215
+#: providers/freetds/gda-freetds-provider.c:217
 msgid "Error creating error container."
 msgstr ""
 
-#: providers/freetds/gda-freetds-provider.c:253
 #: providers/freetds/gda-freetds-provider.c:255
+#: providers/freetds/gda-freetds-provider.c:257
 msgid "Allocating tds context failed."
 msgstr ""
 
-#: providers/freetds/gda-freetds-provider.c:271
-#: providers/freetds/gda-freetds-provider.c:273
+#: providers/freetds/gda-freetds-provider.c:275
+#: providers/freetds/gda-freetds-provider.c:277
 msgid "Establishing connection failed."
 msgstr ""
 
-#: providers/freetds/gda-freetds-provider.c:285
-#: providers/freetds/gda-freetds-provider.c:286
+#: providers/freetds/gda-freetds-provider.c:291
+#: providers/freetds/gda-freetds-provider.c:292
 msgid "Failed getting connection info."
 msgstr ""
 
-#: providers/freetds/gda-freetds-provider.c:768
-#: providers/freetds/gda-freetds-provider.c:769
+#: providers/freetds/gda-freetds-provider.c:781
+#: providers/freetds/gda-freetds-provider.c:782
 msgid "Query did not succeed in execute_cmd()."
 msgstr ""
 
-#: providers/freetds/gda-freetds-provider.c:778
-#: providers/freetds/gda-freetds-provider.c:780
+#: providers/freetds/gda-freetds-provider.c:795
+#: providers/freetds/gda-freetds-provider.c:797
 msgid "Unexpected result tokens in execute_cmd()."
 msgstr ""
 
-#: providers/freetds/gda-freetds-provider.c:788
-#: providers/freetds/gda-freetds-provider.c:789
+#: providers/freetds/gda-freetds-provider.c:805
+#: providers/freetds/gda-freetds-provider.c:806
 msgid "Unexpected return in execute_cmd()."
 msgstr ""
 
-#: providers/freetds/gda-freetds-provider.c:1024
+#: providers/freetds/gda-freetds-provider.c:1043
 #, c-format
 msgid ""
 "Msg %d, Level %d, State %d, Server %s, Line %d\n"
 "%s\n"
 msgstr ""
 
-#: providers/freetds/gda-freetds-provider.c:1043 providers/freetds/utils.c:44
+#: providers/freetds/gda-freetds-provider.c:1062 providers/freetds/utils.c:44
 #: providers/oracle/utils.c:71 providers/postgres/utils.c:51
 #: providers/sybase/utils.c:171
 msgid "Not available"
 msgstr "Non disponible"
 
-#: providers/freetds/gda-freetds-recordset.c:362
+#: providers/freetds/gda-freetds-recordset.c:376
 msgid "Error processing result rows.\n"
 msgstr ""
 
-#: providers/freetds/gda-freetds-recordset.c:369
+#: providers/freetds/gda-freetds-recordset.c:383
 msgid "Unexpected freetds return code in tds_process_row_tokens().\n"
 msgstr ""
 
-#: providers/freetds/gda-freetds-recordset.c:379
+#: providers/freetds/gda-freetds-recordset.c:393
 msgid "Error processing results.\n"
 msgstr ""
 
-#: providers/freetds/gda-freetds-recordset.c:386
+#: providers/freetds/gda-freetds-recordset.c:400
 msgid "Unexpected freetds return code in tds_process_result_tokens\n"
 msgstr ""
 
@@ -1558,15 +1558,15 @@ msgstr "Gestionnaire SQLITE invalide"
 msgid "Provider for Xbase databases"
 msgstr ""
 
-#: report/libgda-report/gda-report-document.c:161
+#: report/libgda-report/gda-report-document.c:171
 msgid "Could not parse XML document"
 msgstr "Ne peut analyser le document XML"
 
-#: report/libgda-report/gda-report-document.c:171
+#: report/libgda-report/gda-report-document.c:181
 msgid "XML document is not valid"
 msgstr ""
 
-#: report/libgda-report/gda-report-document.c:195
+#: report/libgda-report/gda-report-document.c:208
 #, c-format
 msgid "Could not get file from %s"
 msgstr "Ne peut obtenir le fichier depuis %s"

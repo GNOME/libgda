@@ -279,9 +279,13 @@ static TDSCOLINFO
 		
 		/* set pointers to NULL */
 		copy->column_nullbind = NULL;
+#ifdef HAVE_FREETDS_VER0_6X
+		copy->column_varaddr = NULL;
+#else
 		copy->varaddr = NULL;
-		copy->column_lenbind = NULL;
 		copy->column_textvalue = NULL;
+#endif
+		copy->column_lenbind = NULL;
 	}
 
 	return copy;
@@ -335,10 +339,20 @@ GdaDataModel
 	recset->priv->tds_cnc = tds_cnc;
 	recset->priv->res = tds_cnc->tds->res_info;
 
+#ifdef HAVE_FREETDS_VER0_6X
+	while ((tds_cnc->rc = tds_process_result_tokens (tds_cnc->tds,
+							 &tds_cnc->result_type))
+	       == TDS_SUCCEED) {
+		if (tds_cnc->result_type == TDS_ROW_RESULT) {
+			gint row_type, compute_id;
+
+			while ((tds_cnc->rc = tds_process_row_tokens(tds_cnc->tds, &row_type, &compute_id))
+#else
 	while ((tds_cnc->rc = tds_process_result_tokens(tds_cnc->tds))
 	       == TDS_SUCCEED) {
 		if (tds_cnc->tds->res_info->rows_exist) {
 			while ((tds_cnc->rc = tds_process_row_tokens(tds_cnc->tds))
+#endif
 			       == TDS_SUCCEED) {
 				recset->priv->res = tds_cnc->tds->res_info;
 				if (columns_set == FALSE) {

@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 2.2\n"
-"POT-Creation-Date: 2003-02-28 23:49+0000\n"
+"POT-Creation-Date: 2003-03-09 19:39+0100\n"
 "PO-Revision-Date: 2003-03-01 01:19+0100\n"
 "Last-Translator: Duarte Loreto <happyguy_pt@hotmail.com>\n"
 "Language-Team: Portuguese <gnome_pt@yahoogroups.com>\n"
@@ -334,7 +334,7 @@ msgstr "Handle transacção inválida"
 msgid "Provider for FireBird databases"
 msgstr "Fornecedor para bases de dados Firebird"
 
-#: providers/freetds/gda-freetds-provider.c:195
+#: providers/freetds/gda-freetds-provider.c:197
 msgid ""
 "Connection aborted. You must provide at least a host, username and password "
 "using DSN 'QUERY=;USER=;PASSWORD='."
@@ -342,45 +342,45 @@ msgstr ""
 "Ligação abortada. Tem de indicar pelo menos um servidor, utilizador e senha "
 "utilizando DSN 'QUERY=;USER;PASSWORD='."
 
-#: providers/freetds/gda-freetds-provider.c:208
+#: providers/freetds/gda-freetds-provider.c:210
 msgid "Error creating message container."
 msgstr "Erro ao criar contentor de mensagem."
 
-#: providers/freetds/gda-freetds-provider.c:215
+#: providers/freetds/gda-freetds-provider.c:217
 msgid "Error creating error container."
 msgstr "Erro ao criar contentor de erro."
 
-#: providers/freetds/gda-freetds-provider.c:253
 #: providers/freetds/gda-freetds-provider.c:255
+#: providers/freetds/gda-freetds-provider.c:257
 msgid "Allocating tds context failed."
 msgstr "Falha na alocação de contexto tds"
 
-#: providers/freetds/gda-freetds-provider.c:271
-#: providers/freetds/gda-freetds-provider.c:273
+#: providers/freetds/gda-freetds-provider.c:275
+#: providers/freetds/gda-freetds-provider.c:277
 msgid "Establishing connection failed."
 msgstr "Falha ao estabelecer ligação."
 
-#: providers/freetds/gda-freetds-provider.c:285
-#: providers/freetds/gda-freetds-provider.c:286
+#: providers/freetds/gda-freetds-provider.c:291
+#: providers/freetds/gda-freetds-provider.c:292
 msgid "Failed getting connection info."
 msgstr "Falha ao obter informação de ligação."
 
-#: providers/freetds/gda-freetds-provider.c:768
-#: providers/freetds/gda-freetds-provider.c:769
+#: providers/freetds/gda-freetds-provider.c:781
+#: providers/freetds/gda-freetds-provider.c:782
 msgid "Query did not succeed in execute_cmd()."
 msgstr "Query falhou em execute_cmd()."
 
-#: providers/freetds/gda-freetds-provider.c:778
-#: providers/freetds/gda-freetds-provider.c:780
+#: providers/freetds/gda-freetds-provider.c:795
+#: providers/freetds/gda-freetds-provider.c:797
 msgid "Unexpected result tokens in execute_cmd()."
 msgstr "Secções de resultado inesperadas em execute_cmd()."
 
-#: providers/freetds/gda-freetds-provider.c:788
-#: providers/freetds/gda-freetds-provider.c:789
+#: providers/freetds/gda-freetds-provider.c:805
+#: providers/freetds/gda-freetds-provider.c:806
 msgid "Unexpected return in execute_cmd()."
 msgstr "Resultado inesperado em execute_cmd()."
 
-#: providers/freetds/gda-freetds-provider.c:1024
+#: providers/freetds/gda-freetds-provider.c:1043
 #, c-format
 msgid ""
 "Msg %d, Level %d, State %d, Server %s, Line %d\n"
@@ -389,25 +389,25 @@ msgstr ""
 "Mens %d, Nível %d, Estado %d, Servidor %s, Linha %d\n"
 "%s\n"
 
-#: providers/freetds/gda-freetds-provider.c:1043 providers/freetds/utils.c:44
+#: providers/freetds/gda-freetds-provider.c:1062 providers/freetds/utils.c:44
 #: providers/oracle/utils.c:71 providers/postgres/utils.c:51
 #: providers/sybase/utils.c:171
 msgid "Not available"
 msgstr "Indisponível"
 
-#: providers/freetds/gda-freetds-recordset.c:362
+#: providers/freetds/gda-freetds-recordset.c:376
 msgid "Error processing result rows.\n"
 msgstr "Erro ao processar registos de resultado.\n"
 
-#: providers/freetds/gda-freetds-recordset.c:369
+#: providers/freetds/gda-freetds-recordset.c:383
 msgid "Unexpected freetds return code in tds_process_row_tokens().\n"
 msgstr "Código de retorno freetds inesperado em tds_process_row_tokens().\n"
 
-#: providers/freetds/gda-freetds-recordset.c:379
+#: providers/freetds/gda-freetds-recordset.c:393
 msgid "Error processing results.\n"
 msgstr "Erro ao processar resultados.\n"
 
-#: providers/freetds/gda-freetds-recordset.c:386
+#: providers/freetds/gda-freetds-recordset.c:400
 msgid "Unexpected freetds return code in tds_process_result_tokens\n"
 msgstr "Código de retorno freetds inesperado em tds_process_result_tokens\n"
 
@@ -1261,8 +1261,8 @@ msgid ""
 "Cmd structure already in use. Command will not be executed because of "
 "blocked connection."
 msgstr ""
-"Estrutura de comando já em utilização. Comando não será executado "
-"devido à ligação bloqueada."
+"Estrutura de comando já em utilização. Comando não será executado devido à "
+"ligação bloqueada."
 
 #: providers/sybase/gda-sybase-provider.c:626
 #, c-format

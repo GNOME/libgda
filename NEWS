@@ -1,3 +1,27 @@
+libgda 0.11, 2003-03-08
+-----------------------
+
+ - Improvements on Oracle provider (steve)
+ - Added support for Oracle 9 (steve)
+ - Improvements on IBM DB2 provider (sergey)
+ - Fixed crash on weak references when destroying provider hash table (gonzalo)
+ - ANSI-compliant fixes (tagoh)
+ - Spec file fixes (yanko, rodrigo)
+ - Fixed incorrect password problem in Postgres provider (david, gonzalo)
+ - Fixed typos in Oracle provider strings (cneumair)
+ - More work on the report engine (santi)
+ - Made FreeTDS provider work with freetds-0.61 (tagoh)
+ - Updated translations:
+	- ca (jordim)
+	- cs (mitr)
+	- de (cneumair)
+	- es (pablodc)
+	- nl (adrighem)
+	- pt_BR (gdvieira)
+	- ru (dmitrym)
+	- sv (menthos)
+	- uk (rasta)
+
 libgda 0.10, 2003-01-27
 -----------------------
 

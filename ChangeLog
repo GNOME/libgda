@@ -1,3 +1,12 @@
+2003-03-09  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	Released 0.11.0
+
+2003-03-09  Akira Tagoh <tagoh@gnome-db.org>
+
+	* configure.in:
+	* providers/freetds/*: made it work with latest (0.61) FreeTDS.
+
 2003-03-03  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* report/Makefile.am: added DTD_FILES to EXTRA_DIST.

@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda HEAD\n"
-"POT-Creation-Date: 2003-02-25 20:22+0100\n"
+"POT-Creation-Date: 2003-03-09 19:39+0100\n"
 "PO-Revision-Date: 2003-02-23 00:24+0100\n"
 "Last-Translator: Miloslav Trmac <mitr@volny.cz>\n"
 "Language-Team: Czech <cs@li.org>\n"
@@ -336,7 +336,7 @@ msgstr "Neplatný handle transakce"
 msgid "Provider for FireBird databases"
 msgstr "Poskytovatel pro databáze Firebird"
 
-#: providers/freetds/gda-freetds-provider.c:195
+#: providers/freetds/gda-freetds-provider.c:197
 msgid ""
 "Connection aborted. You must provide at least a host, username and password "
 "using DSN 'QUERY=;USER=;PASSWORD='."
@@ -344,45 +344,45 @@ msgstr ""
 "Spojení přerušeno. Musíte zadat alespoň název počítače, uživatelské jméno a "
 "heslo pomocí DSN 'QUERY=;USER=;PASSWORD='"
 
-#: providers/freetds/gda-freetds-provider.c:208
+#: providers/freetds/gda-freetds-provider.c:210
 msgid "Error creating message container."
 msgstr "Chyba při vytváření kontejneru zprávy."
 
-#: providers/freetds/gda-freetds-provider.c:215
+#: providers/freetds/gda-freetds-provider.c:217
 msgid "Error creating error container."
 msgstr "Chyba při vytváření kontejneru chyby."
 
-#: providers/freetds/gda-freetds-provider.c:253
 #: providers/freetds/gda-freetds-provider.c:255
+#: providers/freetds/gda-freetds-provider.c:257
 msgid "Allocating tds context failed."
 msgstr "Alokace kontextu tds selhala."
 
-#: providers/freetds/gda-freetds-provider.c:271
-#: providers/freetds/gda-freetds-provider.c:273
+#: providers/freetds/gda-freetds-provider.c:275
+#: providers/freetds/gda-freetds-provider.c:277
 msgid "Establishing connection failed."
 msgstr "Vytváření spojení selhalo."
 
-#: providers/freetds/gda-freetds-provider.c:285
-#: providers/freetds/gda-freetds-provider.c:286
+#: providers/freetds/gda-freetds-provider.c:291
+#: providers/freetds/gda-freetds-provider.c:292
 msgid "Failed getting connection info."
 msgstr "Selhalo získání informací o spojení."
 
-#: providers/freetds/gda-freetds-provider.c:768
-#: providers/freetds/gda-freetds-provider.c:769
+#: providers/freetds/gda-freetds-provider.c:781
+#: providers/freetds/gda-freetds-provider.c:782
 msgid "Query did not succeed in execute_cmd()."
 msgstr "Dotaz neuspěl při volání execute_cmd()."
 
-#: providers/freetds/gda-freetds-provider.c:778
-#: providers/freetds/gda-freetds-provider.c:780
+#: providers/freetds/gda-freetds-provider.c:795
+#: providers/freetds/gda-freetds-provider.c:797
 msgid "Unexpected result tokens in execute_cmd()."
 msgstr "Neočekávané symboly s výsledkem při volání execute_cmd()."
 
-#: providers/freetds/gda-freetds-provider.c:788
-#: providers/freetds/gda-freetds-provider.c:789
+#: providers/freetds/gda-freetds-provider.c:805
+#: providers/freetds/gda-freetds-provider.c:806
 msgid "Unexpected return in execute_cmd()."
 msgstr "Neočekávaný návrat z volání execute_cmd()."
 
-#: providers/freetds/gda-freetds-provider.c:1024
+#: providers/freetds/gda-freetds-provider.c:1043
 #, c-format
 msgid ""
 "Msg %d, Level %d, State %d, Server %s, Line %d\n"
@@ -391,25 +391,25 @@ msgstr ""
 "Zpráva %d, Úroveň %d, Stav %d, Server %s, Řádek %d\n"
 "%s\n"
 
-#: providers/freetds/gda-freetds-provider.c:1043 providers/freetds/utils.c:44
+#: providers/freetds/gda-freetds-provider.c:1062 providers/freetds/utils.c:44
 #: providers/oracle/utils.c:71 providers/postgres/utils.c:51
 #: providers/sybase/utils.c:171
 msgid "Not available"
 msgstr "Není k dispozici"
 
-#: providers/freetds/gda-freetds-recordset.c:362
+#: providers/freetds/gda-freetds-recordset.c:376
 msgid "Error processing result rows.\n"
 msgstr "Chyba při zpracování řádků výsledku.\n"
 
-#: providers/freetds/gda-freetds-recordset.c:369
+#: providers/freetds/gda-freetds-recordset.c:383
 msgid "Unexpected freetds return code in tds_process_row_tokens().\n"
 msgstr "Neočekávaný návratový kód freetds v tds_process_row_tokens().\n"
 
-#: providers/freetds/gda-freetds-recordset.c:379
+#: providers/freetds/gda-freetds-recordset.c:393
 msgid "Error processing results.\n"
 msgstr "Chyba při zpracování výsledků.\n"
 
-#: providers/freetds/gda-freetds-recordset.c:386
+#: providers/freetds/gda-freetds-recordset.c:400
 msgid "Unexpected freetds return code in tds_process_result_tokens\n"
 msgstr "Neočekávaný návratový kód freetds v tds_process_result_tokens\n"
 
@@ -1730,69 +1730,69 @@ msgstr "Položka s ID %s není label"
 msgid "Item with ID %s is not a repfield"
 msgstr "Položka s ID %s není repfield"
 
-msgid "Could not allocate environment handle."
-msgstr "Nelze alokovat handle prostředí."
+#~ msgid "Could not allocate environment handle."
+#~ msgstr "Nelze alokovat handle prostředí."
 
-msgid "Could not set autocommit to off.\n"
-msgstr "Nelze vypnout autocommit.\n"
+#~ msgid "Could not set autocommit to off.\n"
+#~ msgstr "Nelze vypnout autocommit.\n"
 
-msgid "SQLGetFunctions gave unexpected return. Connection terminated.\n"
-msgstr ""
-"SQLGetFunctions vrátila neočekávanou hodnotu. Spojení bylo přerušeno.\n"
+#~ msgid "SQLGetFunctions gave unexpected return. Connection terminated.\n"
+#~ msgstr ""
+#~ "SQLGetFunctions vrátila neočekávanou hodnotu. Spojení bylo přerušeno.\n"
 
-msgid "MESSAGE: %s"
-msgstr "ZPRÁVA: %s"
+#~ msgid "MESSAGE: %s"
+#~ msgstr "ZPRÁVA: %s"
 
-msgid "ERROR: %s"
-msgstr "CHYBA: %s"
+#~ msgid "ERROR: %s"
+#~ msgstr "CHYBA: %s"
 
-msgid "Table Name"
-msgstr "Název tabulky"
+#~ msgid "Table Name"
+#~ msgstr "Název tabulky"
 
-msgid "Tables"
-msgstr "Tabulky"
+#~ msgid "Tables"
+#~ msgstr "Tabulky"
 
-msgid "Types"
-msgstr "Typy"
+#~ msgid "Types"
+#~ msgstr "Typy"
 
-msgid "Field Name"
-msgstr "Název pole"
+#~ msgid "Field Name"
+#~ msgstr "Název pole"
 
-msgid "Data Type"
-msgstr "Datový typ"
+#~ msgid "Data Type"
+#~ msgstr "Datový typ"
 
-msgid "Precision"
-msgstr "Přesnost"
+#~ msgid "Precision"
+#~ msgstr "Přesnost"
 
-msgid "Identity"
-msgstr "Identita"
+#~ msgid "Identity"
+#~ msgstr "Identita"
 
-msgid "Nullable"
-msgstr "Nulovatelný"
+#~ msgid "Nullable"
+#~ msgstr "Nulovatelný"
 
-msgid "Domain"
-msgstr "Doména"
+#~ msgid "Domain"
+#~ msgstr "Doména"
 
-msgid "Could not attach to database"
-msgstr "Nelze se připojit k databázi"
+#~ msgid "Could not attach to database"
+#~ msgstr "Nelze se připojit k databázi"
 
-msgid "Unexpected integer value"
-msgstr "Neočekávaná celočíselná hodnota"
+#~ msgid "Unexpected integer value"
+#~ msgstr "Neočekávaná celočíselná hodnota"
 
-msgid "Unexpected float value"
-msgstr "Neočekávaná reálná hodnota"
+#~ msgid "Unexpected float value"
+#~ msgstr "Neočekávaná reálná hodnota"
 
-msgid "Unexpected symbol '='"
-msgstr "Neočekávaný symbol '='"
+#~ msgid "Unexpected symbol '='"
+#~ msgstr "Neočekávaný symbol '='"
 
-msgid "Unexpected symbol '<'"
-msgstr "Neočekávaný symbol '<'"
+#~ msgid "Unexpected symbol '<'"
+#~ msgstr "Neočekávaný symbol '<'"
 
-msgid "Unexpected symbol '>'"
-msgstr "Neočekávaný symbol '>'"
+#~ msgid "Unexpected symbol '>'"
+#~ msgstr "Neočekávaný symbol '>'"
 
-msgid "Found a non-numeric value after a '-' sign"
-msgstr "Nalezena nenumerická hodnota po znaménku '-'"
+#~ msgid "Found a non-numeric value after a '-' sign"
+#~ msgstr "Nalezena nenumerická hodnota po znaménku '-'"
 
-msgid "Unexpected identifier"
-msgstr "Neočekávaný identifikátor"
+#~ msgid "Unexpected identifier"
+#~ msgstr "Neočekávaný identifikátor"

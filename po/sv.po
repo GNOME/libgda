@@ -8,7 +8,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2003-02-26 22:47+0100\n"
+"POT-Creation-Date: 2003-03-09 19:39+0100\n"
 "PO-Revision-Date: 2003-02-26 22:48+0100\n"
 "Last-Translator: Christian Rose <menthos@menthos.com>\n"
 "Language-Team: Swedish <sv@li.org>\n"
@@ -337,7 +337,7 @@ msgstr "Ogiltigt transaktionshandtag"
 msgid "Provider for FireBird databases"
 msgstr "Leverantör för Firebird-databaser"
 
-#: providers/freetds/gda-freetds-provider.c:195
+#: providers/freetds/gda-freetds-provider.c:197
 msgid ""
 "Connection aborted. You must provide at least a host, username and password "
 "using DSN 'QUERY=;USER=;PASSWORD='."
@@ -345,45 +345,45 @@ msgstr ""
 "Anslutning avbruten. Du måste ange åtminstone en värd, ett användarnamn och "
 "lösenord genom att använda DSN \"QUERY=;USER=;PASSWORD=\"."
 
-#: providers/freetds/gda-freetds-provider.c:208
+#: providers/freetds/gda-freetds-provider.c:210
 msgid "Error creating message container."
 msgstr "Fel vid skapande av meddelandebehållare."
 
-#: providers/freetds/gda-freetds-provider.c:215
+#: providers/freetds/gda-freetds-provider.c:217
 msgid "Error creating error container."
 msgstr "Fel vid skapande av felbehållare."
 
-#: providers/freetds/gda-freetds-provider.c:253
 #: providers/freetds/gda-freetds-provider.c:255
+#: providers/freetds/gda-freetds-provider.c:257
 msgid "Allocating tds context failed."
 msgstr "Allokering av tds-sammanhang misslyckades."
 
-#: providers/freetds/gda-freetds-provider.c:271
-#: providers/freetds/gda-freetds-provider.c:273
+#: providers/freetds/gda-freetds-provider.c:275
+#: providers/freetds/gda-freetds-provider.c:277
 msgid "Establishing connection failed."
 msgstr "Etablering av anslutning misslyckades."
 
-#: providers/freetds/gda-freetds-provider.c:285
-#: providers/freetds/gda-freetds-provider.c:286
+#: providers/freetds/gda-freetds-provider.c:291
+#: providers/freetds/gda-freetds-provider.c:292
 msgid "Failed getting connection info."
 msgstr "Misslyckades vid försök att hämta anslutningsinformation."
 
-#: providers/freetds/gda-freetds-provider.c:768
-#: providers/freetds/gda-freetds-provider.c:769
+#: providers/freetds/gda-freetds-provider.c:781
+#: providers/freetds/gda-freetds-provider.c:782
 msgid "Query did not succeed in execute_cmd()."
 msgstr "Fråga lyckades inte i execute_cmd()."
 
-#: providers/freetds/gda-freetds-provider.c:778
-#: providers/freetds/gda-freetds-provider.c:780
+#: providers/freetds/gda-freetds-provider.c:795
+#: providers/freetds/gda-freetds-provider.c:797
 msgid "Unexpected result tokens in execute_cmd()."
 msgstr "Oväntade resultatelement i execute_cmd()."
 
-#: providers/freetds/gda-freetds-provider.c:788
-#: providers/freetds/gda-freetds-provider.c:789
+#: providers/freetds/gda-freetds-provider.c:805
+#: providers/freetds/gda-freetds-provider.c:806
 msgid "Unexpected return in execute_cmd()."
 msgstr "Oväntad retur i execute_cmd()."
 
-#: providers/freetds/gda-freetds-provider.c:1024
+#: providers/freetds/gda-freetds-provider.c:1043
 #, c-format
 msgid ""
 "Msg %d, Level %d, State %d, Server %s, Line %d\n"
@@ -392,25 +392,25 @@ msgstr ""
 "Meddelande %d, nivå %d, tillstånd %d, server %s, rad %d\n"
 "%s\n"
 
-#: providers/freetds/gda-freetds-provider.c:1043 providers/freetds/utils.c:44
+#: providers/freetds/gda-freetds-provider.c:1062 providers/freetds/utils.c:44
 #: providers/oracle/utils.c:71 providers/postgres/utils.c:51
 #: providers/sybase/utils.c:171
 msgid "Not available"
 msgstr "Inte tillgänglig"
 
-#: providers/freetds/gda-freetds-recordset.c:362
+#: providers/freetds/gda-freetds-recordset.c:376
 msgid "Error processing result rows.\n"
 msgstr "Fel vid behandling av resultatrad.\n"
 
-#: providers/freetds/gda-freetds-recordset.c:369
+#: providers/freetds/gda-freetds-recordset.c:383
 msgid "Unexpected freetds return code in tds_process_row_tokens().\n"
 msgstr "Oväntad freetds-returkod i tds_process_row_tokens().\n"
 
-#: providers/freetds/gda-freetds-recordset.c:379
+#: providers/freetds/gda-freetds-recordset.c:393
 msgid "Error processing results.\n"
 msgstr "Fel vid behandling av resultat.\n"
 
-#: providers/freetds/gda-freetds-recordset.c:386
+#: providers/freetds/gda-freetds-recordset.c:400
 msgid "Unexpected freetds return code in tds_process_result_tokens\n"
 msgstr "Oväntad freetds-returkod i tds_process_result_tokens\n"
 

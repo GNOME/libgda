@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Libgda CVS\n"
-"POT-Creation-Date: 2003-02-23 12:26+0100\n"
+"POT-Creation-Date: 2003-03-09 19:39+0100\n"
 "PO-Revision-Date: 2002-03-09 19:16+0100\n"
 "Last-Translator: Jan-Willem Harmanny <jwharmanny@hotmail.com>\n"
 "Language-Team: Dutch <nl@li.org>\n"
@@ -336,7 +336,7 @@ msgstr "Ongeldige transactie handle"
 msgid "Provider for FireBird databases"
 msgstr "Leverancier voor FireBird databases"
 
-#: providers/freetds/gda-freetds-provider.c:195
+#: providers/freetds/gda-freetds-provider.c:197
 msgid ""
 "Connection aborted. You must provide at least a host, username and password "
 "using DSN 'QUERY=;USER=;PASSWORD='."
@@ -344,45 +344,45 @@ msgstr ""
 "Verbinding afgebroken. U dient minstens een host, gebruikersnaam, en "
 "wachtwoord op te geven met DSN 'QUERY=;USER=;PASSWORD='."
 
-#: providers/freetds/gda-freetds-provider.c:208
+#: providers/freetds/gda-freetds-provider.c:210
 msgid "Error creating message container."
 msgstr "Fout bij aanmaken van bericht container"
 
-#: providers/freetds/gda-freetds-provider.c:215
+#: providers/freetds/gda-freetds-provider.c:217
 msgid "Error creating error container."
 msgstr "Fout bij aanmaken van fout container"
 
-#: providers/freetds/gda-freetds-provider.c:253
 #: providers/freetds/gda-freetds-provider.c:255
+#: providers/freetds/gda-freetds-provider.c:257
 msgid "Allocating tds context failed."
 msgstr "Toewijzen van tds context mislukt."
 
-#: providers/freetds/gda-freetds-provider.c:271
-#: providers/freetds/gda-freetds-provider.c:273
+#: providers/freetds/gda-freetds-provider.c:275
+#: providers/freetds/gda-freetds-provider.c:277
 msgid "Establishing connection failed."
 msgstr "Verbinding maken is mislukt."
 
-#: providers/freetds/gda-freetds-provider.c:285
-#: providers/freetds/gda-freetds-provider.c:286
+#: providers/freetds/gda-freetds-provider.c:291
+#: providers/freetds/gda-freetds-provider.c:292
 msgid "Failed getting connection info."
 msgstr "Kan geen verbinding info ophalen."
 
-#: providers/freetds/gda-freetds-provider.c:768
-#: providers/freetds/gda-freetds-provider.c:769
+#: providers/freetds/gda-freetds-provider.c:781
+#: providers/freetds/gda-freetds-provider.c:782
 msgid "Query did not succeed in execute_cmd()."
 msgstr "Query kon niet succesvol execute_cmd() uitvoeren."
 
-#: providers/freetds/gda-freetds-provider.c:778
-#: providers/freetds/gda-freetds-provider.c:780
+#: providers/freetds/gda-freetds-provider.c:795
+#: providers/freetds/gda-freetds-provider.c:797
 msgid "Unexpected result tokens in execute_cmd()."
 msgstr "Onverwachte resultaat tokens in execute_cmd()."
 
-#: providers/freetds/gda-freetds-provider.c:788
-#: providers/freetds/gda-freetds-provider.c:789
+#: providers/freetds/gda-freetds-provider.c:805
+#: providers/freetds/gda-freetds-provider.c:806
 msgid "Unexpected return in execute_cmd()."
 msgstr "Onverwachte return in execute_cmd()."
 
-#: providers/freetds/gda-freetds-provider.c:1024
+#: providers/freetds/gda-freetds-provider.c:1043
 #, c-format
 msgid ""
 "Msg %d, Level %d, State %d, Server %s, Line %d\n"
@@ -391,25 +391,25 @@ msgstr ""
 "Msg %d, Level %d, Status %d, Server %s, Regel %d\n"
 "%s\n"
 
-#: providers/freetds/gda-freetds-provider.c:1043 providers/freetds/utils.c:44
+#: providers/freetds/gda-freetds-provider.c:1062 providers/freetds/utils.c:44
 #: providers/oracle/utils.c:71 providers/postgres/utils.c:51
 #: providers/sybase/utils.c:171
 msgid "Not available"
 msgstr "Niet beschikbaar"
 
-#: providers/freetds/gda-freetds-recordset.c:362
+#: providers/freetds/gda-freetds-recordset.c:376
 msgid "Error processing result rows.\n"
 msgstr "Fout bij verwerken van resultaat rijen.\n"
 
-#: providers/freetds/gda-freetds-recordset.c:369
+#: providers/freetds/gda-freetds-recordset.c:383
 msgid "Unexpected freetds return code in tds_process_row_tokens().\n"
 msgstr "Onverwachte freetds return code in tds_process_row_tokens().\n"
 
-#: providers/freetds/gda-freetds-recordset.c:379
+#: providers/freetds/gda-freetds-recordset.c:393
 msgid "Error processing results.\n"
 msgstr "Fout bij verwerken van de resultaten.\n"
 
-#: providers/freetds/gda-freetds-recordset.c:386
+#: providers/freetds/gda-freetds-recordset.c:400
 msgid "Unexpected freetds return code in tds_process_result_tokens\n"
 msgstr "Onverwachte freetds return code in tds_process_result_tokens\n"
 
@@ -1492,15 +1492,15 @@ msgstr "Ongeldige Xbase handeling"
 msgid "Provider for Xbase databases"
 msgstr "Leverancier voor Xbase databases"
 
-#: report/libgda-report/gda-report-document.c:161
+#: report/libgda-report/gda-report-document.c:171
 msgid "Could not parse XML document"
 msgstr "Kan XML document niet ontleden"
 
-#: report/libgda-report/gda-report-document.c:171
+#: report/libgda-report/gda-report-document.c:181
 msgid "XML document is not valid"
 msgstr "XML document is niet geldig"
 
-#: report/libgda-report/gda-report-document.c:195
+#: report/libgda-report/gda-report-document.c:208
 #, c-format
 msgid "Could not get file from %s"
 msgstr "Kon bestand niet van %s verkrijgen"

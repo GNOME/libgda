@@ -27,6 +27,7 @@
 #include <libgda/gda-log.h>
 #include <glib.h>
 #include <stdlib.h>
+#include <string.h>
 #include <tds.h>
 #include "gda-freetds.h"
 
@@ -113,8 +114,9 @@ static void gda_freetds_free_connection_data (GdaFreeTDSConnectionData *tds_cnc)
 static gboolean gda_freetds_execute_cmd (GdaConnection *cnc, const gchar *sql);
 
 static int gda_freetds_provider_tds_handle_message (void *aStruct,
+						    void *bStruct,
                                                     const gboolean is_err_msg);
-#ifdef HAVE_FREETDS_VER0_6X
+#if defined(HAVE_FREETDS_VER0_6X) || defined(HAVE_FREETDS_VER0_60)
   static int gda_freetds_provider_tds_handle_info_msg (TDSCONTEXT *,
                                                        TDSSOCKET *,
                                                        TDSMSGINFO *);
@@ -247,7 +249,7 @@ gda_freetds_provider_open_connection (GdaServerProvider *provider,
 	tds_set_packet(tds_cnc->login, 512);
 
 	/* Version 0.60 api uses context additionaly */
-#ifdef HAVE_FREETDS_VER0_6X
+#if defined(HAVE_FREETDS_VER0_6X) || defined(HAVE_FREETDS_VER0_60)
 	tds_cnc->ctx = tds_alloc_context();
 	if (! tds_cnc->ctx) {
 		gda_log_error (_("Allocating tds context failed."));
@@ -262,10 +264,12 @@ gda_freetds_provider_open_connection (GdaServerProvider *provider,
 #endif
 
 	/* establish connection; change in 0.6x api */
-#ifndef HAVE_FREETDS_VER0_6X
-	tds_cnc->tds = tds_connect(tds_cnc->login, NULL);
-#else
+#if defined(HAVE_FREETDS_VER0_60)
 	tds_cnc->tds = tds_connect(tds_cnc->login, tds_cnc->ctx, NULL);
+#elif defined(HAVE_FREETDS_VER0_6X)
+	tds_connect (tds_cnc->tds, tds_cnc->config);
+#else
+	tds_cnc->tds = tds_connect(tds_cnc->login, NULL);
 #endif
 	if (! tds_cnc->tds) {
 		gda_log_error (_("Establishing connection failed."));
@@ -276,10 +280,12 @@ gda_freetds_provider_open_connection (GdaServerProvider *provider,
 	}
 
 	/* try to receive connection info for sanity check */
-#ifndef HAVE_FREETDS_VER0_6X
-	tds_cnc->config = tds_get_config(tds_cnc->tds, tds_cnc->login);
-#else
+#if defined(HAVE_FREETDS_VER0_6X)
+	/* do nothing */
+#elif defined(HAVE_FREETDS_VER0_60)
 	tds_cnc->config = tds_get_config(tds_cnc->tds, tds_cnc->login, tds_cnc->ctx->locale);
+#else
+	tds_cnc->config = tds_get_config(tds_cnc->tds, tds_cnc->login);
 #endif
 	if (! tds_cnc->config) {
 		gda_log_error (_("Failed getting connection info."));	
@@ -334,7 +340,11 @@ gda_freetds_free_connection_data (GdaFreeTDSConnectionData *tds_cnc)
 		tds_cnc->database = NULL;
 	}
 	if (tds_cnc->config) {
+#ifdef HAVE_FREETDS_VER0_6X
+		tds_free_connect (tds_cnc->config);
+#else
 		tds_free_config(tds_cnc->config);
+#endif
 		tds_cnc->config = NULL;
 	}
 	if (tds_cnc->tds) {
@@ -343,7 +353,7 @@ gda_freetds_free_connection_data (GdaFreeTDSConnectionData *tds_cnc)
 		tds_free_socket (tds_cnc->tds);
 		tds_cnc->tds = NULL;
 	}
-#ifdef HAVE_FREETDS_VER0_6X
+#if defined(HAVE_FREETDS_VER0_6X) || defined(HAVE_FREETDS_VER0_60)
 	if (tds_cnc->ctx) {
 		/* Clear callback handler */
 		tds_cnc->ctx->msg_handler = NULL;
@@ -755,6 +765,9 @@ gda_freetds_execute_cmd (GdaConnection *cnc, const gchar *sql)
 {
 	GdaFreeTDSConnectionData *tds_cnc;
 	GdaError *error;
+#ifdef HAVE_FREETDS_VER0_6X
+	int result_type = 0;
+#endif
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (sql != NULL, FALSE);
@@ -772,7 +785,11 @@ gda_freetds_execute_cmd (GdaConnection *cnc, const gchar *sql)
 	}
 
 	/* there should not be any result tokens */
+#ifdef HAVE_FREETDS_VER0_6X
+	while ((tds_cnc->rc = tds_process_result_tokens (tds_cnc->tds, &tds_cnc->result_type))
+#else
 	while ((tds_cnc->rc = tds_process_result_tokens (tds_cnc->tds)) 
+#endif
 	       == TDS_SUCCEED) {
 		if (tds_cnc->tds->res_info->rows_exist) {
 			gda_log_error (_("Unexpected result tokens in execute_cmd()."));
@@ -1005,16 +1022,18 @@ gda_freetds_provider_finalize (GObject *object)
  *        (0.6x code)
  */
 static int gda_freetds_provider_tds_handle_message (void *aStruct,
+						    void *bStruct,
                                                     const gboolean is_err_msg)
 {
 	TDSSOCKET *tds = (TDSSOCKET *) aStruct;
+	TDSMSGINFO *msg_info = (TDSMSGINFO *) bStruct;
 	GdaConnection *cnc = NULL;
 	GdaFreeTDSConnectionData *tds_cnc = NULL;
 	GdaError *error = NULL;
 	gchar *msg = NULL;
 
 	g_return_val_if_fail (tds != NULL, TDS_SUCCEED);
-	g_return_val_if_fail (tds->msg_info != NULL, TDS_SUCCEED);
+	g_return_val_if_fail (msg_info != NULL, TDS_SUCCEED);
 	cnc = (GdaConnection *) tds_get_parent (tds);
 	
 	/* what if we cannot determine where the message belongs to? */
@@ -1022,23 +1041,23 @@ static int gda_freetds_provider_tds_handle_message (void *aStruct,
 	                      TDS_SUCCEED);
 
 	msg = g_strdup_printf(_("Msg %d, Level %d, State %d, Server %s, Line %d\n%s\n"),
-	                      tds->msg_info->msg_number,
-	                      tds->msg_info->msg_level,
-	                      tds->msg_info->msg_state,
-	                      (tds->msg_info->server ? tds->msg_info->server : ""),
-	                      tds->msg_info->line_number,
-	                      tds->msg_info->message ? tds->msg_info->message : "");
+	                      msg_info->msg_number,
+	                      msg_info->msg_level,
+	                      msg_info->msg_state,
+	                      (msg_info->server ? msg_info->server : ""),
+	                      msg_info->line_number,
+	                      msg_info->message ? msg_info->message : "");
 
 	/* if errormessage, proceed */
 	if (is_err_msg == TRUE) {
 		if (cnc != NULL) {
 			error = gda_error_new ();
 			gda_error_set_description (error, msg);
-			gda_error_set_number (error, tds->msg_info->msg_number);
+			gda_error_set_number (error, msg_info->msg_number);
 			gda_error_set_source (error, "gda-freetds");
-			if (tds->msg_info->sql_state != NULL) {
+			if (msg_info->sql_state != NULL) {
 				gda_error_set_sqlstate (error,
-				                        tds->msg_info->sql_state);
+				                        msg_info->sql_state);
 			} else {
 				gda_error_set_sqlstate (error, _("Not available"));
 			}
@@ -1059,13 +1078,19 @@ static int gda_freetds_provider_tds_handle_message (void *aStruct,
 	return TDS_SUCCEED;
 }
 
-#ifdef HAVE_FREETDS_VER0_6X
+#if defined(HAVE_FREETDS_VER0_6X) || defined(HAVE_FREETDS_VER0_60)
 /* FIXME: rewrite tds_handle_message as well/use new parameters here */
 static int
 gda_freetds_provider_tds_handle_info_msg (TDSCONTEXT *ctx, TDSSOCKET *tds,
                                           TDSMSGINFO *msg)
 {
-	return gda_freetds_provider_tds_handle_message ((void *) tds, FALSE);
+	return gda_freetds_provider_tds_handle_message ((void *) tds,
+#ifdef HAVE_FREETDS_VER0_6X
+							(void *) msg,
+#else
+							(void *) tds->msg_info,
+#endif
+							FALSE);
 }
 #else
 static int
@@ -1075,13 +1100,19 @@ gda_freetds_provider_tds_handle_info_msg (void *aStruct)
 }
 #endif
 
-#ifdef HAVE_FREETDS_VER0_6X
+#if defined(HAVE_FREETDS_VER0_6X) || defined(HAVE_FREETDS_VER0_60)
 /* FIXME: rewrite tds_handle_message as well/use new parameters here */
 static int
 gda_freetds_provider_tds_handle_err_msg (TDSCONTEXT *ctx, TDSSOCKET *tds,
                                          TDSMSGINFO *msg)
 {
-	return gda_freetds_provider_tds_handle_message ((void *) tds, TRUE);
+	return gda_freetds_provider_tds_handle_message ((void *) tds,
+#ifdef HAVE_FREETDS_VER0_6X
+							(void *) msg,
+#else
+							(void *) tds->msg_info,
+#endif
+							TRUE);
 }
 #else
 static int

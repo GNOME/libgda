@@ -10,7 +10,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2003-03-04 12:34+0100\n"
+"POT-Creation-Date: 2003-03-09 19:39+0100\n"
 "PO-Revision-Date: 2003-03-04 12:18-0300\n"
 "Last-Translator: Pablo Gonzalo del Campo <pablodc@bigfoot.com>\n"
 "Language-Team: Spanish <traductores@es.gnome.org>\n"
@@ -196,7 +196,8 @@ msgstr "Nodo XML inválido"
 
 #: providers/default/gda-default-provider.c:190
 #: providers/sqlite/gda-sqlite-provider.c:198
-msgid "A full path must be specified on the connection string to open a database."
+msgid ""
+"A full path must be specified on the connection string to open a database."
 msgstr ""
 "Una ruta completa debe ser especificada en la cadena de conexión para abrir "
 "la base de datos."
@@ -339,7 +340,7 @@ msgstr "Manejador de transacción inválido"
 msgid "Provider for FireBird databases"
 msgstr "Proveedor para bases de datos FireBird"
 
-#: providers/freetds/gda-freetds-provider.c:195
+#: providers/freetds/gda-freetds-provider.c:197
 msgid ""
 "Connection aborted. You must provide at least a host, username and password "
 "using DSN 'QUERY=;USER=;PASSWORD='."
@@ -347,45 +348,45 @@ msgstr ""
 "Conexión abortada. Debe proveer al menos un equipo, usuario y contraseña  al "
 "utilizar DSN «QUERY=;USER=;PASSWORD=»."
 
-#: providers/freetds/gda-freetds-provider.c:208
+#: providers/freetds/gda-freetds-provider.c:210
 msgid "Error creating message container."
 msgstr "Error al crear el contenedor del mensaje."
 
-#: providers/freetds/gda-freetds-provider.c:215
+#: providers/freetds/gda-freetds-provider.c:217
 msgid "Error creating error container."
 msgstr "Error al crear el contenedor de error."
 
-#: providers/freetds/gda-freetds-provider.c:253
 #: providers/freetds/gda-freetds-provider.c:255
+#: providers/freetds/gda-freetds-provider.c:257
 msgid "Allocating tds context failed."
 msgstr "Ha fallado la asignación del contexto tds."
 
-#: providers/freetds/gda-freetds-provider.c:271
-#: providers/freetds/gda-freetds-provider.c:273
+#: providers/freetds/gda-freetds-provider.c:275
+#: providers/freetds/gda-freetds-provider.c:277
 msgid "Establishing connection failed."
 msgstr "Ha fallado el establecimiento de la conexión."
 
-#: providers/freetds/gda-freetds-provider.c:285
-#: providers/freetds/gda-freetds-provider.c:286
+#: providers/freetds/gda-freetds-provider.c:291
+#: providers/freetds/gda-freetds-provider.c:292
 msgid "Failed getting connection info."
 msgstr "Ha fallado la obtención de la información de la conexión."
 
-#: providers/freetds/gda-freetds-provider.c:768
-#: providers/freetds/gda-freetds-provider.c:769
+#: providers/freetds/gda-freetds-provider.c:781
+#: providers/freetds/gda-freetds-provider.c:782
 msgid "Query did not succeed in execute_cmd()."
 msgstr "La consulta no ha tenido éxito en execute_cmd()."
 
-#: providers/freetds/gda-freetds-provider.c:778
-#: providers/freetds/gda-freetds-provider.c:780
+#: providers/freetds/gda-freetds-provider.c:795
+#: providers/freetds/gda-freetds-provider.c:797
 msgid "Unexpected result tokens in execute_cmd()."
 msgstr "Señales de resultado inesperadas en execute_cmd()."
 
-#: providers/freetds/gda-freetds-provider.c:788
-#: providers/freetds/gda-freetds-provider.c:789
+#: providers/freetds/gda-freetds-provider.c:805
+#: providers/freetds/gda-freetds-provider.c:806
 msgid "Unexpected return in execute_cmd()."
 msgstr "Retorno inesperado en execute_cmd()."
 
-#: providers/freetds/gda-freetds-provider.c:1024
+#: providers/freetds/gda-freetds-provider.c:1043
 #, c-format
 msgid ""
 "Msg %d, Level %d, State %d, Server %s, Line %d\n"
@@ -394,25 +395,25 @@ msgstr ""
 "Msj %d, Nivel %d, Estado %d, Servidor %s, Línea %d\n"
 "%s\n"
 
-#: providers/freetds/gda-freetds-provider.c:1043 providers/freetds/utils.c:44
+#: providers/freetds/gda-freetds-provider.c:1062 providers/freetds/utils.c:44
 #: providers/oracle/utils.c:71 providers/postgres/utils.c:51
 #: providers/sybase/utils.c:171
 msgid "Not available"
 msgstr "No está disponible"
 
-#: providers/freetds/gda-freetds-recordset.c:362
+#: providers/freetds/gda-freetds-recordset.c:376
 msgid "Error processing result rows.\n"
 msgstr "Error al procesar la fila del resultado.\n"
 
-#: providers/freetds/gda-freetds-recordset.c:369
+#: providers/freetds/gda-freetds-recordset.c:383
 msgid "Unexpected freetds return code in tds_process_row_tokens().\n"
 msgstr "Código de retorno «freetds» inesperado en tds_process_row_tokens().\n"
 
-#: providers/freetds/gda-freetds-recordset.c:379
+#: providers/freetds/gda-freetds-recordset.c:393
 msgid "Error processing results.\n"
 msgstr "Error al procesar los resultados.\n"
 
-#: providers/freetds/gda-freetds-recordset.c:386
+#: providers/freetds/gda-freetds-recordset.c:400
 msgid "Unexpected freetds return code in tds_process_result_tokens\n"
 msgstr "Código de retorno «freetds» inesperado en tds_process_result_tokens\n"
 
@@ -749,8 +750,10 @@ msgid "Provider for Microsoft Access files"
 msgstr "Proveedor para archivos de Microsoft Access"
 
 #: providers/mysql/gda-mysql-provider.c:218
-msgid "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
-msgstr "No puede proveer un UNIX_SOCKET si al mismo tiempo provee un HOST o un PORT."
+msgid ""
+"You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
+msgstr ""
+"No puede proveer un UNIX_SOCKET si al mismo tiempo provee un HOST o un PORT."
 
 #: providers/mysql/gda-mysql-provider.c:294
 #: providers/mysql/gda-mysql-provider.c:1085
@@ -923,7 +926,9 @@ msgstr "No se ha podido obtener el tipo de sentencia de Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:598
 msgid "Could not set the Oracle statement pre-fetch row count"
-msgstr "No se ha podido establecer la sentencia de obtención previa de cantidad de filas de Oracle"
+msgstr ""
+"No se ha podido establecer la sentencia de obtención previa de cantidad de "
+"filas de Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:615
 msgid "Could not execute the Oracle statement"
@@ -931,7 +936,8 @@ msgstr "No se ha podido ejecutar la sentencia de Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:628
 msgid "Could not get the number of columns in the result set"
-msgstr "No se ha podido obtener la cantidad de columnas en el conjunto de resultado"
+msgstr ""
+"No se ha podido obtener la cantidad de columnas en el conjunto de resultado"
 
 #: providers/oracle/gda-oracle-provider.c:645
 msgid "Could not get the parameter descripter in the result set"
@@ -941,7 +947,8 @@ msgstr ""
 
 #: providers/oracle/gda-oracle-provider.c:657
 msgid "Could not get the column name in the result set"
-msgstr "No se ha podido obtener el nombre de la columna en el conjunto de resultado"
+msgstr ""
+"No se ha podido obtener el nombre de la columna en el conjunto de resultado"
 
 #: providers/oracle/gda-oracle-provider.c:803
 #: providers/oracle/gda-oracle-provider.c:884
@@ -1319,7 +1326,8 @@ msgstr "%s: %s ha fallado"
 
 #: providers/sybase/gda-sybase-provider.c:857
 #, c-format
-msgid "Connection already in use. Could not allocate command structure in %s()."
+msgid ""
+"Connection already in use. Could not allocate command structure in %s()."
 msgstr ""
 "La conexión ya esta siendo usada. No se ha podido asignar la estructura de "
 "comando en %s()"
@@ -1331,7 +1339,8 @@ msgstr "Ha fallado la liberación de la estructura de comando en %s()."
 
 #: providers/sybase/gda-sybase-recordset.c:317
 msgid "Could not allocate datamodel. No results will be returned."
-msgstr "No se ha podido asignar el modelo de datos. No se devolverán los resultados."
+msgstr ""
+"No se ha podido asignar el modelo de datos. No se devolverán los resultados."
 
 #: providers/sybase/gda-sybase-recordset.c:320
 msgid "ct_cancel() failed."
@@ -1349,7 +1358,8 @@ msgstr "%s ha devuelto <= 0 columnas."
 
 #: providers/sybase/gda-sybase-recordset.c:359
 msgid "Could not allocate structure for column metainformation."
-msgstr "No se ha podido asignar la estructura para la metainformación de la columna."
+msgstr ""
+"No se ha podido asignar la estructura para la metainformación de la columna."
 
 #: providers/sybase/gda-sybase-recordset.c:363
 #, c-format
@@ -1493,7 +1503,8 @@ msgstr ""
 
 #: providers/xbase/gda-xbase-provider.c:232
 msgid "Either FILENAME or DIRECTORY must be specified in the connection string"
-msgstr "Deben especificarse el ARCHIVO o el DIRECTORIO en la cadena de conexión"
+msgstr ""
+"Deben especificarse el ARCHIVO o el DIRECTORIO en la cadena de conexión"
 
 #: providers/xbase/gda-xbase-provider.c:261
 #: providers/xbase/gda-xbase-provider.c:379
@@ -1981,4 +1992,3 @@ msgstr "El elemento con el ID %s no es un repfield"
 
 #~ msgid "\tdomain = %s\n"
 #~ msgstr "\tdominio = %s\n"
-

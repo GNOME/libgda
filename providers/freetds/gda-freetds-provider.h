@@ -53,22 +53,27 @@ struct _GdaFreeTDSProviderClass {
 
 typedef struct _GdaFreeTDSConnectionData GdaFreeTDSConnectionData;
 struct _GdaFreeTDSConnectionData {
-	gint          rc;         /* rc code of last operation */
-	GPtrArray     *msg_arr;   /* array containing msgs from server */
-	GPtrArray     *err_arr;   /* array containing error msgs from server */
-	gchar         *database;  /* database we are connected to */
+	gint           rc;         /* rc code of last operation */
+	GPtrArray      *msg_arr;   /* array containing msgs from server */
+	GPtrArray      *err_arr;   /* array containing error msgs from server */
+	gchar          *database;  /* database we are connected to */
 	
-	TDSLOGIN      *login;     /* tds login struct */
-#ifdef HAVE_FREETDS_VER0_6X
-	TDSCONTEXT    *ctx;       /* tds context */
+	TDSLOGIN       *login;     /* tds login struct */
+#if defined(HAVE_FREETDS_VER0_6X) || defined(HAVE_FREETDS_VER0_60)
+	TDSCONTEXT     *ctx;       /* tds context */
 #endif
-	TDSSOCKET     *tds;       /* connection handle */
-	TDSCONFIGINFO *config;    /* tds config struct */
+	TDSSOCKET      *tds;       /* connection handle */
+#ifdef HAVE_FREETDS_VER0_6X
+	TDSCONNECTINFO *config;    /* tds connect struct */
+#else
+	TDSCONFIGINFO  *config     /* tds config struct */
+#endif
 
 	/* Data just got at connection beginning */
-	gchar         *server_id; /* Server identifier/version string */
-	gboolean      is_sybase;  /* true if cnc to ASE, false for mssql */
-	gulong        srv_ver;    /* Server version */
+	gchar          *server_id; /* Server identifier/version string */
+	gboolean       is_sybase;  /* true if cnc to ASE, false for mssql */
+	gulong         srv_ver;    /* Server version */
+	gint           result_type;
 };
 
 GType              gda_freetds_provider_get_type (void);

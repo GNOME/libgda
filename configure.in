@@ -2,8 +2,8 @@ AC_PREREQ(2.52)
 AC_INIT(libgda/libgda.h)
 
 GDA_MAJOR_VERSION=0
-GDA_MINOR_VERSION=10
-GDA_MICRO_VERSION=1
+GDA_MINOR_VERSION=11
+GDA_MICRO_VERSION=0
 GDA_VERSION=$GDA_MAJOR_VERSION.$GDA_MINOR_VERSION.$GDA_MICRO_VERSION
 
 AC_SUBST(GDA_MAJOR_VERSION)
@@ -314,6 +314,12 @@ then
 				*v0.5*) AC_MSG_RESULT($freetdsvercheck - using v0.5x api)
 					AC_DEFINE(HAVE_FREETDS_VER0_5X)
 					FREETDS_CFLAGS="-I${freetds_incdir}"
+					FREETDS_LIBS="-L${freetdsdir}/lib -ltds"
+					AC_DEFINE(HAVE_FREETDS)
+					;;
+				*v0.60) AC_MSG_RESULT($freetdsvercheck - using v0.60 api)
+					AC_DEFINE(HAVE_FREETDS_VER0_60)
+					FREETDS_CFLAGS="-l${freetds_incdir}"
 					FREETDS_LIBS="-L${freetdsdir}/lib -ltds"
 					AC_DEFINE(HAVE_FREETDS)
 					;;
