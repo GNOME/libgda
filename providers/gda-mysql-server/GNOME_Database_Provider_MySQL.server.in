@@ -1,19 +1,19 @@
 <oaf_info>
 
-<oaf_server iid="OAFIID:GNOME_GDA_Provider_MySQL_ConnectionFactory"
+<oaf_server iid="OAFIID:GNOME_Database_MySQL_ComponentFactory"
             type="exe"
             location="gda-mysql-srv">
 	<oaf_attribute name="repo_ids" type="stringv">
 		<item value="IDL:GNOME/GenericFactory:1.0"/>
 	</oaf_attribute>
-	<oaf_attribute name="name" type="string" _value="MySQL provider connection factory"/>
+	<oaf_attribute name="name" type="string" _value="MySQL component factory"/>
 </oaf_server>
 
-<oaf_server iid="OAFIID:GNOME_GDA_Provider_MySQL_Connection"
+<oaf_server iid="OAFIID:GNOME_Database_MySQL_Provider"
 	    type="factory"
-	    location="OAFIID:GNOME_GDA_Provider_MySQL_ConnectionFactory">
+	    location="OAFIID:GNOME_Database_MySQL_ComponentFactory">
 	<oaf_attribute name="repo_ids" type="stringv">
-		<item value="IDL:GDA/Connection:1.0"/>
+		<item value="IDL:GNOME/Database/Provider:1.0"/>
 	</oaf_attribute>
 	<oaf_attribute name="description" type="string"
 	               _value="GDA Datasource Access for MySQL"/>
