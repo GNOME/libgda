@@ -1,5 +1,9 @@
 2001-11-02  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* configure.in: bumped version to 0.9.0
+
+2001-11-02  Rodrigo Moya <rodrigo@gnome-db.org>
+
 	* configure.in: removed tools/templates directory
 
 	* libgda.pc.in: new file to replace libgda-client.pc.in and
