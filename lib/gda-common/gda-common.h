@@ -23,13 +23,13 @@
 #if !defined(__gda_common_h__)
 #  define __gda_common_h__
 
-#include <gda-command.h>
-#include <gda-config.h>
-#include <gda-data-model.h>
-#include <gda-listener.h>
-#include <gda-parameter.h>
-#include <gda-quark-list.h>
-#include <gda-value.h>
+#include <gda-common/gda-command.h>
+#include <gda-common/gda-config.h>
+#include <gda-common/gda-data-model.h>
+#include <gda-common/gda-listener.h>
+#include <gda-common/gda-parameter.h>
+#include <gda-common/gda-quark-list.h>
+#include <gda-common/gda-value.h>
 
 G_BEGIN_DECLS
 

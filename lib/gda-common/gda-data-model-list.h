@@ -23,7 +23,7 @@
 #if !defined(__gda_data_model_list_h__)
 #  define __gda_data_model_list_h__
 
-#include <gda-data-model.h>
+#include <gda-common/gda-data-model.h>
 
 G_BEGIN_DECLS
 

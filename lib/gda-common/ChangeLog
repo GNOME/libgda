@@ -1,5 +1,9 @@
 2001-10-28  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* Makefile.am: adapted to new header files installation
+
+	* gda-data-model-array.[ch]: new class
+
 	* gda-data-model.[ch]: some minor tweaks, and removed some
 	unneeded functions that I added last time
 

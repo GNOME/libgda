@@ -95,7 +95,6 @@ gda_data_model_list_init (GdaDataModelList *list, GdaDataModelListClass *klass)
 static void
 gda_data_model_list_finalize (GObject *object)
 {
-	GObjectClass *parent_class;
 	GdaDataModelList *model = (GdaDataModelList *) object;
 
 	g_return_if_fail (GDA_IS_DATA_MODEL_LIST (model));

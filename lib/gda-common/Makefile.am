@@ -2,7 +2,8 @@ lib_LTLIBRARIES = libgda-common-2.la
 
 INCLUDES = \
 	$(GDA_CLIENT_CFLAGS) \
-	-I.
+	-I$(top_srcdir)/lib \
+	-I$(top_builddir)/lib
 
 BUILT_SOURCES = \
 	GNOME_Database-skels.c
@@ -30,9 +31,12 @@ gda-marshal.c: gda-marshal.list $(GLIB_GENMARSHAL)
 	$(GLIB_GENMARSHAL) $< --body --prefix=gda_marshal > $@
 
 gda_common_headers = \
+	gda-command.h \
 	gda-common.h \
 	gda-config.h \
 	gda-data-model.h \
+	gda-data-model-list.c \
+	gda-data-model-list.h \
 	gda-error.h \
 	gda-field.h \
 	gda-parameter.h \
@@ -47,8 +51,11 @@ libgda_common_2_la_SOURCES = \
 	GNOME_Database-common.c \
 	GNOME_Database-skels.c \
 	GNOME_Database-stubs.c \
+	gda-command.c \
 	gda-config.c \
 	gda-data-model.c \
+	gda-data-model-array.c \
+	gda-data-model-list.c \
 	gda-error.c \
 	gda-field.c \
 	gda-init.c \
@@ -59,7 +66,7 @@ libgda_common_2_la_SOURCES = \
 libgda_common_2_la_LIBADD=\
 	$(GDA_CLIENT_LIBS) 
 
-gdaincludedir=$(includedir)/libgda-$(VERSION)/gda
+gdaincludedir=$(includedir)/libgda-$(VERSION)/gda-common
 gdainclude_HEADERS=$(gda_common_headers)
 
 CLEANFILES = $(gda_marshal_built_files) $(gda_corba_built_sources)
