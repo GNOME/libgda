@@ -1,5 +1,7 @@
 2001-05-09  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* C/reference/libgda-client/: added the client library to
+	the API reference
 	* pt_BR: added Portuguese translation
 	* C/reference: use gtk-doc to generate the API reference
 	(for the moment, only libgda-common)

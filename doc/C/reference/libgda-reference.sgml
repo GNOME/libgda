@@ -1,5 +1,6 @@
 <!DOCTYPE book PUBLIC "-//Davenport//DTD DocBook V3.0//EN"[
 <!ENTITY libgda-common-reference SYSTEM "libgda-common/libgda-common-docs.sgml">
+<!ENTITY libgda-client-reference SYSTEM "libgda-client/libgda-client-docs.sgml">
 
 <!ENTITY libgda-common-h SYSTEM "libgda-common/sgml/gda-common.sgml">
 <!ENTITY libgda-config-h SYSTEM "libgda-common/sgml/gda-config.sgml">
@@ -9,6 +10,16 @@
 <!ENTITY libgda-util-h SYSTEM "libgda-common/sgml/gda-util.sgml">
 <!ENTITY libgda-xml-database-h SYSTEM "libgda-common/sgml/gda-xml-database.sgml">
 <!ENTITY libgda-xml-file-h SYSTEM "libgda-common/sgml/gda-xml-file.sgml">
+
+<!ENTITY libgda-GDA-h SYSTEM "libgda-client/sgml/GDA.sgml">
+<!ENTITY libgda-batch-h SYSTEM "libgda-client/sgml/gda-batch.sgml">
+<!ENTITY libgda-command-h SYSTEM "libgda-client/sgml/gda-command.sgml">
+<!ENTITY libgda-connection-pool-h SYSTEM "libgda-client/sgml/gda-connection-pool.sgml">
+<!ENTITY libgda-connection-h SYSTEM "libgda-client/sgml/gda-connection.sgml">
+<!ENTITY libgda-error-h SYSTEM "libgda-client/sgml/gda-error.sgml">
+<!ENTITY libgda-field-h SYSTEM "libgda-client/sgml/gda-field.sgml">
+<!ENTITY libgda-recordset-h SYSTEM "libgda-client/sgml/gda-recordset.sgml">
+<!ENTITY libgda-value-h SYSTEM "libgda-client/sgml/gda-value.sgml">
 ]>
 
 <book id="libgda-reference">
@@ -16,6 +27,13 @@
     <title>libgda API reference</title>
 
     <authorgroup>
+	  <author>
+		<firstname>Rodrigo</firstname>
+		<surname>Moya</surname>
+		<affiliation>
+		  <address><email>rodrigo@gnome-db.org</email></address>
+		</affiliation>
+	  </author>
     </authorgroup>
 
     <copyright>
@@ -48,5 +66,6 @@
   </bookinfo>
 
   &libgda-common-reference;
+  &libgda-client-reference;
 
 </book>

@@ -1,0 +1,147 @@
+<!-- ##### SECTION Title ##### -->
+GdaConnectionPool
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### MACRO GDA_TYPE_CONNECTION_POOL ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO GDA_CONNECTION_POOL ##### -->
+<para>
+
+</para>
+
+@obj: 
+
+
+<!-- ##### MACRO GDA_CONNECTION_POOL_CLASS ##### -->
+<para>
+
+</para>
+
+@klass: 
+
+
+<!-- ##### MACRO IS_GDA_CONNECTION_POOL ##### -->
+<para>
+
+</para>
+
+@obj: 
+
+
+<!-- ##### MACRO IS_GDA_CONNECTION_POOL_CLASS ##### -->
+<para>
+
+</para>
+
+@klass: 
+
+
+<!-- ##### FUNCTION gda_connection_pool_get_type ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_connection_pool_new ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_connection_pool_free ##### -->
+<para>
+
+</para>
+
+@pool: 
+
+
+<!-- ##### FUNCTION gda_connection_pool_open_connection ##### -->
+<para>
+
+</para>
+
+@pool: 
+@gda_name: 
+@username: 
+@password: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_connection_pool_close_connection ##### -->
+<para>
+
+</para>
+
+@pool: 
+@cnc: 
+
+
+<!-- ##### FUNCTION gda_connection_pool_close_all ##### -->
+<para>
+
+</para>
+
+@pool: 
+
+
+<!-- ##### USER_FUNCTION GdaConnectionPoolForeachFunc ##### -->
+<para>
+
+</para>
+
+@pool: 
+@cnc: 
+@gda_name: 
+@username: 
+@password: 
+@user_data: 
+
+
+<!-- ##### FUNCTION gda_connection_pool_foreach ##### -->
+<para>
+
+</para>
+
+@pool: 
+@func: 
+@user_data: 
+
+
+<!-- ##### SIGNAL GdaConnectionPool::open ##### -->
+<para>
+
+</para>
+
+@gdaconnectionpool: the object which received the signal.
+@arg1: 
+
+<!-- ##### SIGNAL GdaConnectionPool::error ##### -->
+<para>
+
+</para>
+
+@gdaconnectionpool: the object which received the signal.
+@arg1: 
+

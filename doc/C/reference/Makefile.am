@@ -1,4 +1,4 @@
-SUBDIRS=libgda-common
+SUBDIRS=libgda-common libgda-client
 
 DOC_MODULE=libgda-reference
 
@@ -15,7 +15,22 @@ local_entities = \
 	libgda-common/libgda-common-docs.sgml \
 	libgda-common/sgml/gda-common.sgml \
 	libgda-common/sgml/gda-config.sgml \
-	libgda-common/sgml/gda-corba.sgml
+	libgda-common/sgml/gda-corba.sgml \
+	libgda-common/sgml/gda-log.sgml \
+	libgda-common/sgml/gda-thread.sgml \
+	libgda-common/sgml/gda-util.sgml \
+	libgda-common/sgml/gda-xml-database.sgml \
+	libgda-common/sgml/gda-xml-file.sgml \
+	libgda-client/libgda-client-docs.sgml \
+	libgda-client/sgml/GDA.sgml \
+	libgda-client/sgml/gda-batch.sgml \
+	libgda-client/sgml/gda-command.sgml \
+	libgda-client/sgml/gda-connection-pool.sgml \
+	libgda-client/sgml/gda-connection.sgml \
+	libgda-client/sgml/gda-error.sgml \
+	libgda-client/sgml/gda-field.sgml \
+	libgda-client/sgml/gda-recordset.sgml \
+	libgda-client/sgml/gda-value.sgml
 
 EXTRA_DIST = $(content_files)
 
