@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda 0.2.9\n"
-"POT-Creation-Date: 2001-10-10 23:26+0200\n"
-"PO-Revision-Date: 2001-10-14 16:04CET\n"
+"POT-Creation-Date: 2001-11-11 12:58+0100\n"
+"PO-Revision-Date: 2001-11-11 12:58CET\n"
 "Last-Translator: Stanislav Visnovsky <visnovsky@nenya.ms.mff.cuni.cz>\n"
 "Language-Team: Slovak <sk-i18n@lists.linux.sk>\n"
 "MIME-Version: 1.0\n"
@@ -220,7 +220,7 @@ msgstr "GDA prístup k zdroju dát pre LDAP"
 msgid "LDAP provider connection factory"
 msgstr "Vytváracie rozhranie spojenia pre poskytovateľa LDAP"
 
-#: providers/gda-interbase-server/gda-interbase-connection.c:288
+#: providers/gda-interbase-server/gda-interbase-connection.c:331
 #: providers/gda-ldap-server/gda-ldap-connection.c:293
 #: providers/gda-mdb-server/gda-mdb-connection.c:372
 #: providers/gda-mysql-server/gda-mysql-connection.c:490
@@ -235,7 +235,7 @@ msgid "error '%s' at %s"
 msgstr "chyba '%s' v %s"
 
 #. gda_error_set_help_file (error, _("Not available"));
-#: providers/gda-interbase-server/gda-interbase-connection.c:294
+#: providers/gda-interbase-server/gda-interbase-connection.c:337
 #: providers/gda-ldap-server/gda-ldap-connection.c:298
 #: providers/gda-ldap-server/gda-ldap-connection.c:299
 #: providers/gda-mdb-server/gda-mdb-connection.c:377
@@ -257,7 +257,7 @@ msgstr "chyba '%s' v %s"
 msgid "Not available"
 msgstr "Nie je k dispozícii"
 
-#: providers/gda-interbase-server/gda-interbase-connection.c:295
+#: providers/gda-interbase-server/gda-interbase-connection.c:338
 #: providers/gda-ldap-server/gda-ldap-connection.c:300
 #: providers/gda-mdb-server/gda-mdb-connection.c:378
 #: providers/gda-mysql-server/gda-mysql-connection.c:500
@@ -281,10 +281,10 @@ msgstr "GDA prístup k zdroju dát pre Interbase"
 msgid "InterBase provider connection factory"
 msgstr "Vytváracie rozhranie spojenia pre poskytovateľa InterBase"
 
-#: providers/gda-interbase-server/gda-interbase-connection.c:286
+#: providers/gda-interbase-server/gda-interbase-connection.c:327
 #, c-format
-msgid "Error code %ld"
-msgstr "Kód chyby %ld"
+msgid "Error code %ld (%s)"
+msgstr "Kód chyby %ld (%s)"
 
 #: providers/gda-interbase-server/main-interbase.c:74
 msgid "Could not register INTERBASE provider implementation"
@@ -1033,3 +1033,4 @@ msgstr "%s: zdroj dát '%s' nenájdený\n"
 #: tools/templates/main-srv.c.tmpl:60
 msgid "Could not register <PROVIDER-NAME> provider implementation"
 msgstr "Nie je možné registrovať implementáciu <PROVIDER-NAME> poskytovateľa"
+
