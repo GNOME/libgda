@@ -762,7 +762,7 @@ gda_connection_execute_non_query (GdaConnection *cnc,
  * @cnc: a #GdaConnection object.
  * @xaction: a #GdaTransaction object.
  *
- * Startq a transaction on the data source, identified by the
+ * Starts a transaction on the data source, identified by the
  * @xaction parameter.
  *
  * Before starting a transaction, you can check whether the underlying
