@@ -22,6 +22,9 @@
  */
 
 // $Log$
+// Revision 1.2  2000/10/04 08:40:05  rodrigo
+// Fixed untranslatable strings
+//
 // Revision 1.1.1.1  2000/08/10 09:32:38  rodrigo
 // First version of libgda separated from GNOME-DB
 //
@@ -869,8 +872,8 @@ gda_sybase_connection_reopen(Gda_ServerConnection *cnc)
 		       "Could not request servername");
     return FALSE;
   } else {
-    gda_log_message(_("%sonnected to '%s'"),
-		    (first_connection == FALSE) ? "Rec" : "C",
+    gda_log_message(_("%s to '%s'"),
+		    (first_connection == FALSE) ? "Reconnected" : "Connected",
 		    buf);
     if (scnc->database) {
       scnc->ret = gda_sybase_connection_select_database(cnc, scnc->database);
