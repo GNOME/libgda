@@ -9,8 +9,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2002-03-28 21:57+0100\n"
-"PO-Revision-Date: 2002-03- 21:59+0100\n"
+"POT-Creation-Date: 2002-04-05 23:32+0200\n"
+"PO-Revision-Date: 2002-04-05 23:33+0200\n"
 "Last-Translator: GNOME PL Team <translators@gnome.pl>\n"
 "Language-Team: Polish <pl@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -41,6 +41,7 @@ msgid "Could not query CORBA providers"
 msgstr "Zapytanie o dostarczycieli corbowych nie powiodło się"
 
 #: libgda/gda-config.c:1 providers/default/gda-default-provider.c:1
+#: providers/default/gda-default-provider.c:1
 #: providers/mysql/gda-mysql-provider.c:1
 msgid "Name"
 msgstr "Nazwa"
@@ -132,6 +133,7 @@ msgid "Invalid XML database file '%s'"
 msgstr "Niepoprawny plik bazy danych w XML-u \"%s\""
 
 #: libgda/gda-xml-database.c:1 libgda/gda-xml-database.c:1
+#: libgda/gda-xml-database.c:1
 #, c-format
 msgid "Table %s already exists"
 msgstr "Tabela %s już istnieje"
@@ -346,74 +348,6 @@ msgstr "BRA OPISU"
 msgid "Not available"
 msgstr "Niedostępne"
 
-#: providers/postgres/utils.c:1
-msgid "NULL"
-msgstr "NULL"
-
-#: providers/postgres/utils.c:1
-msgid "big integer"
-msgstr "duży całkowity"
-
-#: providers/postgres/utils.c:1
-msgid "binary"
-msgstr "binarny"
-
-#: providers/postgres/utils.c:1
-msgid "boolean"
-msgstr "logiczny"
-
-#: providers/postgres/utils.c:1
-msgid "date"
-msgstr "datowy"
-
-#: providers/postgres/utils.c:1
-msgid "double precision"
-msgstr "podwójnej precyzji"
-
-#: providers/postgres/utils.c:1
-msgid "geometric point"
-msgstr "punkt geometryczny"
-
-#: providers/postgres/utils.c:1
-msgid "integer"
-msgstr "całkowity"
-
-#: providers/postgres/utils.c:1
-msgid "list of values"
-msgstr "lista wartości"
-
-#: providers/postgres/utils.c:1
-msgid "numeric"
-msgstr "numeryczny"
-
-#: providers/postgres/utils.c:1
-msgid "single precision"
-msgstr "pojedynczej precyzji"
-
-#: providers/postgres/utils.c:1
-msgid "small integer"
-msgstr "mały całkowity"
-
-#: providers/postgres/utils.c:1
-msgid "string"
-msgstr "napisowy"
-
-#: providers/postgres/utils.c:1
-msgid "time"
-msgstr "czasowy"
-
-#: providers/postgres/utils.c:1
-msgid "timestamp"
-msgstr "znacznika czasu"
-
-#: providers/postgres/utils.c:1
-msgid "tiny integer"
-msgstr "najmniejszy całkowity"
-
-#: providers/postgres/utils.c:1
-msgid "Unknown type"
-msgstr "Nieznany typ"
-
 #: providers/sqlite/gda-sqlite-provider.c:1
 #: providers/sqlite/gda-sqlite-recordset.c:1
 msgid "Invalid SQLITE handle"
@@ -520,6 +454,10 @@ msgstr "Nieobsługiwane"
 
 #. show connection schemas
 #: testing/client.c:1
+msgid "Databases"
+msgstr "Bazy danych"
+
+#: testing/client.c:1
 msgid "Stored procedures"
 msgstr "Procedury zapamiętane"
 
@@ -542,6 +480,14 @@ msgstr "Indeksy"
 #: testing/client.c:1
 msgid "Aggregates"
 msgstr "Agregaty"
+
+#: testing/client.c:1
+msgid "Users"
+msgstr "Użytkownicy"
+
+#: testing/client.c:1
+msgid "Sequences"
+msgstr "Sekwencje"
 
 #: testing/client.c:1
 msgid "Triggers"
