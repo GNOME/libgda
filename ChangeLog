@@ -1,3 +1,7 @@
+2004-04-28  Murray Cumming  <murrayc@murrayc.com>
+ 
+ 	* libgda/gda-field.[h|c]: Added gda_field_attribute_equal().
+
 2004-04-23  Murray Cumming  <murrayc@murrayc.com>
 
 	* libgda/gda-field.c (gda_field_attribute_copy): Don't copy the

@@ -24,6 +24,7 @@
 #include <glib/gmessages.h>
 #include <glib/gstrfuncs.h>
 #include <libgda/gda-field.h>
+#include <string.h>
 
 GType
 gda_field_attributes_get_type (void)
@@ -119,6 +120,69 @@ gda_field_attributes_free (GdaFieldAttributes *fa)
 	g_free (fa->references);
 	g_free (fa->default_value);
 	g_free (fa);
+}
+
+/**
+ * gda_field_attributes_equal:
+ * @lhs: a #GdaFieldAttributes
+ * @rhs: another #GdaFieldAttributes
+ *
+ * Tests whether two field attributes are equal.
+ *
+ * Return value: %TRUE if the field attributes contain the same information.
+ **/
+gboolean
+gda_field_attributes_equal (const GdaFieldAttributes *lhs,
+                            const GdaFieldAttributes *rhs)
+{
+  g_return_val_if_fail (lhs != NULL, FALSE);
+  g_return_val_if_fail (rhs != NULL, FALSE);
+
+  /* Compare every struct field: */
+  if ((lhs->defined_size != rhs->defined_size) ||
+          (lhs->scale != rhs->scale) ||
+          (lhs->gda_type != rhs->gda_type) ||
+          (lhs->allow_null != rhs->allow_null) ||
+          (lhs->primary_key != rhs->primary_key) ||
+          (lhs->unique_key != rhs->unique_key) ||
+          (lhs->auto_increment != rhs->auto_increment) ||
+          (lhs->auto_increment_step != rhs->auto_increment_step) ||
+          (lhs->position != rhs->position))  
+    return FALSE;
+
+  /* Check the strings if they have are not null.
+     Then check whether one is null while the other is not, because strcmp can not do that. */
+  if ((lhs->name && rhs->name) && (strcmp (lhs->name, rhs->name) != 0))
+    return FALSE;
+    
+  if ((lhs->name == 0) != (rhs->name == 0))
+    return FALSE;
+    
+  if ((lhs->table && rhs->table) && (strcmp (lhs->table, rhs->table) != 0))
+    return FALSE;
+
+  if ((lhs->table == 0) != (rhs->table == 0))
+    return FALSE;
+
+  if ((lhs->caption && rhs->caption) && (strcmp (lhs->caption, rhs->caption) != 0))
+    return FALSE;
+
+  if ((lhs->caption == 0) != (rhs->caption == 0))
+    return FALSE;
+    
+  if ((lhs->references && rhs->references) && (strcmp (lhs->references, rhs->references) != 0))
+    return FALSE;
+
+  if ((lhs->references == 0) != (rhs->references == 0))
+    return FALSE;
+    
+  if (lhs->default_value && rhs->default_value && gda_value_compare (lhs->default_value, rhs->default_value) != 0)
+    return FALSE;
+
+  if ((lhs->default_value == 0) != (rhs->default_value == 0))
+    return FALSE;
+    
+  return TRUE;
 }
 
 /**
