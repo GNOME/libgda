@@ -47,6 +47,17 @@ static gboolean gda_mdb_provider_close_connection (GdaServerProvider *provider,
 						     GdaConnection *cnc);
 static const gchar *gda_mdb_provider_get_server_version (GdaServerProvider *provider,
 							 GdaConnection *cnc);
+static const gchar *gda_mdb_provider_get_database (GdaServerProvider *provider,
+						   GdaConnection *cnc);
+static gboolean gda_mdb_provider_change_database (GdaServerProvider *provider,
+						  GdaConnection *cnc,
+						  const gchar *name);
+static gboolean gda_mdb_provider_create_database (GdaServerProvider *provider,
+						  GdaConnection *cnc,
+						  const gchar *name);
+static gboolean gda_mdb_provider_drop_database (GdaServerProvider *provider,
+						GdaConnection *cnc,
+						const gchar *name);
 static GList *gda_mdb_provider_execute_command (GdaServerProvider *provider,
 						  GdaConnection *cnc,
 						  GdaCommand *cmd,
@@ -92,6 +103,10 @@ gda_mdb_provider_class_init (GdaMdbProviderClass *klass)
 	provider_class->open_connection = gda_mdb_provider_open_connection;
 	provider_class->close_connection = gda_mdb_provider_close_connection;
 	provider_class->get_server_version = gda_mdb_provider_get_server_version;
+	provider_class->get_database = gda_mdb_provider_get_database;
+	provider_class->change_database = gda_mdb_provider_change_database;
+	provider_class->create_database = gda_mdb_provider_create_database;
+	provider_class->drop_database = gda_mdb_provider_drop_database;
 	provider_class->execute_command = gda_mdb_provider_execute_command;
 	provider_class->begin_transaction = gda_mdb_provider_begin_transaction;
 	provider_class->commit_transaction = gda_mdb_provider_commit_transaction;
@@ -254,6 +269,36 @@ gda_mdb_provider_get_server_version (GdaServerProvider *provider,
 	return (const gchar *) mdb_cnc->server_version;
 }
 
+/* get_database handler for the GdaMdbProvider class */
+static const gchar *
+gda_mdb_provider_get_database (GdaServerProvider *provider, GdaConnection *cnc)
+{
+}
+
+/* change_database handler for the GdaMdbProvider class */
+static gboolean
+gda_mdb_provider_change_database (GdaServerProvider *provider,
+				  GdaConnection *cnc,
+				  const gchar *name)
+{
+}
+
+/* create_database handler for the GdaMdbProvider class */
+static gboolean
+gda_mdb_provider_create_database (GdaServerProvider *provider,
+				  GdaConnection *cnc,
+				  const gchar *name)
+{
+}
+
+/* drop_database handler for the GdaMdbProvider class */
+static gboolean
+gda_mdb_provider_drop_database (GdaServerProvider *provider,
+				GdaConnection *cnc,
+				const gchar *name)
+{
+}
+
 /* execute_command handler for the GdaMdbProvider class */
 static GList *
 gda_mdb_provider_execute_command (GdaServerProvider *provider,
@@ -309,8 +354,13 @@ get_mdb_tables (GdaMdbConnection *mdb_cnc)
 	g_return_val_if_fail (mdb_cnc != NULL, NULL);
 	g_return_val_if_fail (mdb_cnc->mdb != NULL, NULL);
 
-	model = (GdaDataModelList *) gda_data_model_list_new ();
-	gda_data_model_set_column_title (GDA_DATA_MODEL (model), 0, _("Table Name"));
+	model = (GdaDataModelList *) gda_data_model_array_new (4);
+	gda_data_model_set_column_title (GDA_DATA_MODEL (model), 0, _("Name"));
+	gda_data_model_set_column_title (GDA_DATA_MODEL (model), 1, _("Owner"));
+	gda_data_model_set_column_title (GDA_DATA_MODEL (model), 2, _("Comments"));
+	gda_data_model_set_column_title (GDA_DATA_MODEL (model), 3, "SQL");
+
+	mdb_read_catalog (mdb_cnc->mdb, MDB_TABLE);
 	for (i = 0; i < mdb_cnc->mdb->num_catalog; i++) {
 		GdaValue *value;
 		MdbCatalogEntry *entry;
@@ -319,11 +369,23 @@ get_mdb_tables (GdaMdbConnection *mdb_cnc)
 
  		/* if it's a table */
 		if (entry->object_type == MDB_TABLE) {
-			value = gda_value_new_string (entry->object_name);
-			gda_data_model_list_append_value (model, (const GdaValue *) value);
-			gda_value_free (value);
+			/* skip the MSys tables */
+			if (strncmp (entry->object_name, "MSys", 4)) {
+				GList *value_list = NULL;
+
+				value_list = g_list_append (value_list,
+							    gda_value_new_string (entry->object_name));
+				/* FIXME */
+
+				gda_data_model_append_row (model, value_list);
+
+				g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
+				g_list_free (value_list);
+			}
 		}
 	}
+
+	// mdb_free_catalog (mdb_cnc->mdb);
 
 	return GDA_DATA_MODEL (model);
 }
