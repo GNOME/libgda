@@ -1,0 +1,26 @@
+
+
+NAMES = lexer.o  mem.o  parser.o  sql_display.o  sql_parser.o  sql_parser_test.o  sql_tree.o
+OBJECTS = $(patsubst %.o, .libs/%.o, $(NAMES))
+
+ 
+all:  $(OBJECTS) 
+	 
+
+$(OBJECTS) : $(patsubst %.o, %.c, $(NAMES))
+	$(CC) $(DVALUES) $(IPATHS) $(WFLAGS)  -O2 -MD -MP \
+		-MT $(patsubst .libs/%.o, %.lo, $@) \
+		-MF $(patsubst .libs/%.o, .deps/%.Tpo, $@) \
+		-c $(patsubst .libs/%.o, %.c, $@)  -o $@
+	
+parser.c : parser.y
+	$(BISON) -y -v -d -o  parser.c -p sql  parser.y
+
+lexer.c : lexer.l
+	$(FLEX)  -olexer.c -Psql  lexer.l
+	
+
+clean:
+	rm .libs/*; \
+	rm lexer.c; \
+	rm parser.c
