@@ -5,5 +5,5 @@ Makefile.in
 .deps
 .libs
 gda-report.dtd
-gda-report-engine-2
+gda-report-engine
 GNOME_Database_Report.server

@@ -10,48 +10,19 @@
 #ifndef __GNOME_Database_Report_idl__
 #define __GNOME_Database_Report_idl__
 
-#include <Bonobo.idl>
+#include <GNOME_Database.idl>
 
 module GNOME {
 	module Database {
 		module Report {
 
 			/*
-			 * Document interface - represents a report document
-			 */
-			interface Document : Bonobo::Unknown {
-				//Output run ();
-			};
-			typedef sequence<Document> DocumentList;
-
-			/*
-			 * Client interface - for the engine to be able
-			 * to communicate with its clients
-			 */
-			interface Client : Bonobo::Unknown {
-				void notify (); /* FIXME: */
-			};
-
-			/*
 			 * Engine interface - the report engine
 			 */
 			interface Engine : Bonobo::Unknown {
-				/*
-				 * interface for clients connection
-				 */
-				void connect (in Client client,
-					      in string host,
-					      in string username,
-					      in string password);
-				void disconnect (in Client client);
-
-				/*
-				 * document repository
-				 */
-				Document createDocument ();
-				DocumentList getStoredDocuments ();
-				void storeDocument (in Document doc);
-				void unstoreDocument (in Document doc);
+				/* document management */
+				string runDocument (in string xml,
+						    in GNOME::Database::ParameterList params);
 			};
 		};
 	};

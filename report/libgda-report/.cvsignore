@@ -1,2 +1,8 @@
 Makefile
 Makefile.in
+GNOME_Database_Report.h
+GNOME_Database_Report-common.c
+GNOME_Database_Report-skels.c
+GNOME_Database_Report-stubs.c
+*.o
+*.lo

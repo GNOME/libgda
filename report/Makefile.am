@@ -1,30 +1,34 @@
-SUBDIRS = idl common engine
+SUBDIRS = idl libgda-report
 
 INCLUDES = \
 	-I$(top_srcdir) \
 	-I$(top_builddir) \
-	-I$(top_builddir)/report/common \
-	-I$(top_srcdir)/report/common \
+	-I$(top_builddir)/report \
+	-I$(top_srcdir)/report \
 	$(LIBGDA_CFLAGS)
 
-lib_LTLIBRARIES = libgda-report.la
+bin_PROGRAMS = gda-report-engine
 
-gda_report_headers = \
-	gda-report-client.h \
-	gda-report.h
+gda_report_engine_SOURCES = \
+	gda-report-engine.c \
+	gda-report-engine.h \
+	main.c
 
-libgda_report_la_SOURCES = \
-	$(gda_report_headers) \
-	gda-report-client.c
-
-libgda_report_la_LDFLAGS = -version-info $(GDA_CURRENT):$(GDA_REVISION):$(GDA_AGE)
-libgda_report_la_LIBADD = \
-	$(LIBGDA_LIBS)
-
-gdaincludedir=$(includedir)/gda
-gdainclude_HEADERS=$(gda_report_headers)
+gda_report_engine_LDADD = \
+	$(LIBGDA_LIBS) \
+	$(top_builddir)/libgda/libgda-2.la \
+	$(top_builddir)/report/libgda-report/libgda-report-2.la
 
 DTD_FILES=gda-report.dtd
-dtddir=$(datadir)/gda/dtd
+dtddir=$(datadir)/libgda/dtd
 dtd_DATA=$(DTD_FILES)
+
+serverdir=$(libdir)/bonobo/servers
+
+server_in_files = GNOME_Database_Report.server.in
+server_DATA = $(server_in_files:.server.in=.server)
+
+@INTLTOOL_SERVER_RULE@
+
+EXTRA_DIST=$(server_in_files) $(server_DATA)
 

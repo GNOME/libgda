@@ -1,3 +1,18 @@
+2001-12-23  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* main.c: main file for the engine binary
+
+	* gda-report-engine.[ch]: GNOME::Database::Report::Engine object
+	implementation
+
+	* GNOME_Database_Report.server.in: added
+
+	* idl/GNOME_Database_Report.idl: 1st phase of the report engine is
+	very simple, so reflect that in the IDL. Also, reuse definitions
+	from GNOME::Database
+
+	* libgda-report/gda-report-client.[ch]: new files
+
 2001-12-22  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* common/*:
