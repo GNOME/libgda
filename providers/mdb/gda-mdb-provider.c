@@ -458,7 +458,7 @@ get_mdb_databases (GdaMdbConnection *mdb_cnc)
 
 	l.prev = l.next = NULL;
 	l.data = gda_value_new_string (mdb_cnc->mdb->f->filename);
-	gda_data_model_append_row (model, &l);
+	gda_data_model_append_values (model, &l);
 
 	gda_value_free (l.data);
 
@@ -522,7 +522,7 @@ get_mdb_fields (GdaMdbConnection *mdb_cnc, GdaParameterList *params)
 				value_list = g_list_append (value_list, gda_value_new_string (NULL));
 				value_list = g_list_append (value_list, gda_value_new_string (NULL));
 
-				gda_data_model_append_row (model, value_list);
+				gda_data_model_append_values (model, value_list);
 
 				g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
 				g_list_free (value_list);
@@ -571,7 +571,7 @@ get_mdb_procedures (GdaMdbConnection *mdb_cnc)
 			value_list = g_list_append (value_list, gda_value_new_string (NULL));
 			value_list = g_list_append (value_list, gda_value_new_string (NULL));
 
-			gda_data_model_append_row (GDA_DATA_MODEL (model), value_list);
+			gda_data_model_append_values (GDA_DATA_MODEL (model), value_list);
 
 			g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
 			g_list_free (value_list);
@@ -614,7 +614,7 @@ get_mdb_tables (GdaMdbConnection *mdb_cnc)
 				value_list = g_list_append (value_list, gda_value_new_string (""));
 				value_list = g_list_append (value_list, gda_value_new_string (""));
 
-				gda_data_model_append_row (model, value_list);
+				gda_data_model_append_values (model, value_list);
 
 				g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
 				g_list_free (value_list);
@@ -636,7 +636,7 @@ add_type (GdaDataModel *model, const gchar *typname, const gchar *owner,
 	value_list = g_list_append (value_list, gda_value_new_string (comments));
 	value_list = g_list_append (value_list, gda_value_new_type (type));
 
-	gda_data_model_append_row (model, value_list);
+	gda_data_model_append_values (model, value_list);
 
 	g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
 	g_list_free (value_list);
@@ -777,7 +777,7 @@ gda_mdb_provider_execute_sql (GdaMdbProvider *mdbprv, GdaConnection *cnc, const 
 		for (c = 0; c < mdb_SQL->num_columns; c++)
 			value_list = g_list_append (value_list, gda_value_new_string (bound_data[c]));
 
-		gda_data_model_append_row (GDA_DATA_MODEL (model), value_list);
+		gda_data_model_append_values (GDA_DATA_MODEL (model), value_list);
 
 		g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
 		g_list_free (value_list);

@@ -294,7 +294,7 @@ add_string_row (GdaDataModelArray *recset, const gchar *str)
 	list.next = NULL;
 	list.prev = NULL;
 
-	gda_data_model_append_row (GDA_DATA_MODEL (recset), &list);
+	gda_data_model_append_values (GDA_DATA_MODEL (recset), &list);
 
 	gda_value_free (value);
 }
@@ -395,7 +395,7 @@ get_ldap_tables (GdaConnection *cnc, GdaParameterList *params)
 						value_list = g_list_append (value_list, gda_value_new_string (""));
 						value_list = g_list_append (value_list, gda_value_new_string (""));
 
-						gda_data_model_append_row (GDA_DATA_MODEL (recset), value_list);
+						gda_data_model_append_values (GDA_DATA_MODEL (recset), value_list);
 						/*printf ("%s\n", oc->oc_names[j]);*/
 
 						g_list_foreach (value_list, (GFunc) gda_value_free, NULL);

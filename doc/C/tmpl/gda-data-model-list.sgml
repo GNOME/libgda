@@ -19,8 +19,6 @@ An implementation of #GdaDataModel based on a list
 
 </para>
 
-@model: 
-@priv: 
 
 <!-- ##### FUNCTION gda_data_model_list_new ##### -->
 <para>

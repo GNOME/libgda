@@ -569,7 +569,7 @@ add_string_row (GdaDataModelArray *recset, const gchar *str)
 	list.next = NULL;
 	list.prev = NULL;
 
-	gda_data_model_append_row (GDA_DATA_MODEL (recset), &list);
+	gda_data_model_append_values (GDA_DATA_MODEL (recset), &list);
 
 	gda_value_free (value);
 }
@@ -612,7 +612,7 @@ get_tables (GdaConnection *cnc, GdaXmlDatabase *xmldb)
 
 			value = gda_value_new_string ((const gchar *) l->data);
 			value_list = g_list_append (NULL, value);
-			gda_data_model_append_row (GDA_DATA_MODEL (recset),
+			gda_data_model_append_values (GDA_DATA_MODEL (recset),
 						   (const GList *) value_list);
 
 			gda_value_free (value);
@@ -636,7 +636,7 @@ add_type_row (GdaDataModelArray *recset, const gchar *type, const gchar *owner,
 	value_list = g_list_append (value_list, gda_value_new_string (comments));
 	value_list = g_list_append (value_list, gda_value_new_type (gda_type));
 
-	gda_data_model_append_row (GDA_DATA_MODEL (recset), value_list);
+	gda_data_model_append_values (GDA_DATA_MODEL (recset), value_list);
 
 	g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
 	g_list_free (value_list);

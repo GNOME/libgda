@@ -66,7 +66,8 @@ static gboolean             gda_data_model_base_has_changed     (GdaDataModel *m
 static void                 gda_data_model_base_begin_changes   (GdaDataModel *model);
 static gboolean             gda_data_model_base_commit_changes  (GdaDataModel *model);
 static gboolean             gda_data_model_base_cancel_changes  (GdaDataModel *model);
-static const GdaRow        *gda_data_model_base_append_row      (GdaDataModel *model, const GList *values);
+static const GdaRow        *gda_data_model_base_append_values   (GdaDataModel *model, const GList *values);
+static gboolean             gda_data_model_base_append_row      (GdaDataModel *model, GdaRow *row);
 static gboolean             gda_data_model_base_remove_row      (GdaDataModel *model, const GdaRow *row);
 static gboolean             gda_data_model_base_update_row      (GdaDataModel *model, const GdaRow *row);
 static gboolean             gda_data_model_base_append_column   (GdaDataModel *model, const GdaDataModelColumnAttributes *attrs);
@@ -111,7 +112,8 @@ gda_data_model_base_data_model_init (GdaDataModelIface *iface)
 	iface->i_begin_changes = gda_data_model_base_begin_changes;
 	iface->i_cancel_changes = gda_data_model_base_cancel_changes;
 	iface->i_commit_changes = gda_data_model_base_commit_changes;
-        iface->i_append_row = gda_data_model_base_append_row;
+        iface->i_append_values = gda_data_model_base_append_values;
+	iface->i_append_row = gda_data_model_base_append_row;
 	iface->i_remove_row = gda_data_model_base_remove_row;
 	iface->i_update_row = gda_data_model_base_update_row;
 	iface->i_append_column = gda_data_model_base_append_column;
@@ -407,16 +409,41 @@ gda_data_model_base_cancel_changes (GdaDataModel *model)
 	return TRUE;
 }
 
+
+
 static const GdaRow *
-gda_data_model_base_append_row (GdaDataModel *model, const GList *values)
+gda_data_model_base_append_values (GdaDataModel *model, const GList *values)
 {
 	const GdaRow *row;
 
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_BASE (model), NULL);
-	g_return_val_if_fail (CLASS (model)->append_row != NULL, NULL);
+	g_return_val_if_fail (CLASS (model)->append_values != NULL, NULL);
 
-	row = CLASS (model)->append_row (GDA_DATA_MODEL_BASE (model), values);
+	row = CLASS (model)->append_values (GDA_DATA_MODEL_BASE (model), values);
 	return row;
+}
+
+static gboolean
+gda_data_model_base_append_row (GdaDataModel *model, GdaRow *row)
+{
+	GList *values = NULL;
+	gint i, length;
+	const GdaRow *newrow;
+
+	g_return_val_if_fail (GDA_IS_DATA_MODEL_BASE (model), NULL);
+	g_return_val_if_fail (CLASS (model)->append_values != NULL, NULL);
+	g_return_val_if_fail (row != NULL, FALSE);
+
+	length = gda_row_get_length (row);
+	for (i=length-1; i>=0; i--) 
+		values = g_list_prepend (values, gda_row_get_value (row, i));
+	newrow = gda_data_model_base_append_values (model, values);
+	g_list_free (values);
+	if (newrow) {
+		gda_row_set_number (row, gda_row_get_number (newrow));
+	}
+	else
+		return FALSE;
 }
 
 static gboolean

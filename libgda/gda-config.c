@@ -1219,7 +1219,7 @@ gda_config_get_provider_model (void)
 		value_list = g_list_append (value_list, gda_value_new_string (prov_info->location));
 		value_list = g_list_append (value_list, gda_value_new_string (prov_info->description));
 
-		gda_data_model_append_row (GDA_DATA_MODEL (model), value_list);
+		gda_data_model_append_values (GDA_DATA_MODEL (model), value_list);
 	}
 	
 	/* free memory */
@@ -1549,7 +1549,7 @@ gda_config_get_data_source_model (void)
 		value_list = g_list_append (value_list, gda_value_new_string (dsn_info->username));
 		value_list = g_list_append (value_list, gda_value_new_string ("******"));
 
-		gda_data_model_append_row (GDA_DATA_MODEL (model), value_list);
+		gda_data_model_append_values (GDA_DATA_MODEL (model), value_list);
 	}
 	
 	/* free memory */

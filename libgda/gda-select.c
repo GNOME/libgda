@@ -1,5 +1,5 @@
 /* GDA common library
- * Copyright (C) 1998 - 2004 The GNOME Foundation.
+ * Copyright (C) 1998 - 2005 The GNOME Foundation.
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
@@ -103,7 +103,7 @@ gda_select_is_updatable (GdaDataModelBase *model)
 }
 
 static const GdaRow *
-gda_select_append_row (GdaDataModelBase *model, const GList *values)
+gda_select_append_values (GdaDataModelBase *model, const GList *values)
 {
 	GdaSelect *sel = (GdaSelect *) model;
 
@@ -126,7 +126,7 @@ gda_select_class_init (GdaSelectClass *klass)
 	model_class->get_row = gda_select_get_row;
 	/* we use the get_value_at of the base class */
 	model_class->is_updatable = gda_select_is_updatable;
-	model_class->append_row = gda_select_append_row;
+	model_class->append_values = gda_select_append_values;
 }
 
 static void
@@ -351,7 +351,7 @@ populate_from_single_table (GdaSelect *sel, const gchar *table_name, GList *sql_
 			}
 		}
 
-		GDA_DATA_MODEL_BASE_CLASS (parent_class)->append_row (GDA_DATA_MODEL_BASE (sel), value_list);
+		GDA_DATA_MODEL_BASE_CLASS (parent_class)->append_values (GDA_DATA_MODEL_BASE (sel), value_list);
 
 		g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
 		g_list_free (value_list);

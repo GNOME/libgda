@@ -26,10 +26,10 @@
 
 struct _GdaRow {
 	GdaDataModel *model;
-	gint number;
-	gchar *id;
-	GdaValue *fields;
-	gint nfields;
+	gint          number;
+	gchar       *id;
+	GdaValue    *fields;
+	gint         nfields;
 };
 
 GType gda_row_get_type (void)

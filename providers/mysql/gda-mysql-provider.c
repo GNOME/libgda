@@ -713,7 +713,7 @@ add_aggregate_row (GdaDataModelArray *recset, const gchar *str, const gchar *com
 	/* 7th the SQL definition */
 	list = g_list_append (list, gda_value_new_string (NULL));
 
-	gda_data_model_append_row (GDA_DATA_MODEL (recset), list);
+	gda_data_model_append_values (GDA_DATA_MODEL (recset), list);
 
 	g_list_foreach (list, (GFunc) gda_value_free, NULL);
 	g_list_free (list);
@@ -954,7 +954,7 @@ get_mysql_tables (GdaConnection *cnc, GdaParameterList *params)
 		else
 			value_list = g_list_append (value_list, gda_value_new_string (""));
 
-		gda_data_model_append_row (model, value_list);
+		gda_data_model_append_values (model, value_list);
 
 		g_free (name);
 		g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
@@ -1022,7 +1022,7 @@ get_mysql_types (GdaConnection *cnc, GdaParameterList *params)
 		value_list = g_list_append (value_list, gda_value_new_string (types[i].comments));
 		value_list = g_list_append (value_list, gda_value_new_type (types[i].type));
 
-		gda_data_model_append_row (GDA_DATA_MODEL (recset), value_list);
+		gda_data_model_append_values (GDA_DATA_MODEL (recset), value_list);
 
 		g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
 		g_list_free (value_list);
@@ -1193,7 +1193,7 @@ get_table_fields (GdaConnection *cnc, GdaParameterList *params)
 			return NULL;
 		}
 
-		gda_data_model_append_row (GDA_DATA_MODEL (recset),
+		gda_data_model_append_values (GDA_DATA_MODEL (recset),
 					   (const GList *) value_list);
 
 		g_list_foreach (value_list, (GFunc) gda_value_free, NULL);

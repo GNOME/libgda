@@ -148,6 +148,7 @@ gda_data_model_get_column_position
 gda_data_model_get_row
 gda_data_model_get_value_at
 gda_data_model_is_updatable
+gda_data_model_append_values
 gda_data_model_append_row
 gda_data_model_remove_row
 gda_data_model_update_row

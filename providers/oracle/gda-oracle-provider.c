@@ -1120,7 +1120,7 @@ aggregate_foreach (gpointer key, gpointer value, gpointer data)
 	list = g_list_append(list, gda_value_new_string("NUMBER"));
 	list = g_list_append(list, gda_value_new_string(ptr->args));
 	list = g_list_append(list, gda_value_new_string(""));
-	gda_data_model_append_row (GDA_DATA_MODEL(data), list);
+	gda_data_model_append_values (GDA_DATA_MODEL(data), list);
 	for (listp = list; listp; listp = listp->next)
 		gda_value_free(listp->data);
 	g_list_free(list);
@@ -1859,7 +1859,7 @@ get_tables_foreach(gpointer key, gpointer value, gpointer data)
     cols = g_list_append(cols, gda_value_new_string((const gchar *)value));
     cols = g_list_append(cols, gda_value_new_string(""));
     cols = g_list_append(cols, gda_value_new_string(""));
-    gda_data_model_append_row((GdaDataModel *)data, cols);
+    gda_data_model_append_values((GdaDataModel *)data, cols);
     return FALSE;
 }
 
@@ -2104,7 +2104,7 @@ get_oracle_types (GdaConnection *cnc, GdaParameterList *params)
         value_list = g_list_append (value_list, gda_value_new_string ("NULL"));
         value_list = g_list_append (value_list, gda_value_new_type (otp->type));
 
-	gda_data_model_append_row (GDA_DATA_MODEL (recset), value_list);
+	gda_data_model_append_values (GDA_DATA_MODEL (recset), value_list);
         g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
         g_list_free (value_list);
     }
@@ -2117,7 +2117,7 @@ add_g_list_row (gpointer data, gpointer user_data)
 	GList *rowlist = data;
 	GdaDataModelArray *recset = user_data;
 
-	gda_data_model_append_row (GDA_DATA_MODEL (recset), rowlist);
+	gda_data_model_append_values (GDA_DATA_MODEL (recset), rowlist);
 	g_list_foreach (rowlist, (GFunc) gda_value_free, NULL);
 	g_list_free (rowlist);
 }

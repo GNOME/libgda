@@ -1,5 +1,5 @@
 /* GDA common library
- * Copyright (C) 1998 - 2004 The GNOME Foundation.
+ * Copyright (C) 1998 - 2005 The GNOME Foundation.
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
@@ -79,7 +79,7 @@ gda_data_model_list_is_updatable (GdaDataModelBase *model)
 }
 
 static const GdaRow *
-gda_data_model_list_append_row (GdaDataModelBase *model, const GList *values)
+gda_data_model_list_append_values (GdaDataModelBase *model, const GList *values)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_LIST (model), NULL);
 	g_return_val_if_fail (values != NULL, NULL);
@@ -112,7 +112,7 @@ gda_data_model_list_class_init (GdaDataModelListClass *klass)
 	model_class->get_row = gda_data_model_list_get_row;
 	model_class->get_value_at = gda_data_model_list_get_value_at;
 	model_class->is_updatable = gda_data_model_list_is_updatable;
-	model_class->append_row = gda_data_model_list_append_row;
+	model_class->append_values = gda_data_model_list_append_values;
 	model_class->remove_row = gda_data_model_list_remove_row;
 	model_class->update_row = NULL;
 }
@@ -276,7 +276,7 @@ gda_data_model_list_append_value (GdaDataModelList *model, const GdaValue *value
 	g_return_val_if_fail (value != NULL, NULL);
 
 	values = g_list_append (NULL, (GdaValue *) value);
-	row = gda_data_model_append_row (GDA_DATA_MODEL (model->priv->rows), values);
+	row = gda_data_model_append_values (GDA_DATA_MODEL (model->priv->rows), values);
 	if (row)
 		gda_data_model_changed (GDA_DATA_MODEL (model));
 

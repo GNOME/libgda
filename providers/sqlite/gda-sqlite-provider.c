@@ -642,7 +642,7 @@ add_type_row (GdaDataModelArray *recset, const gchar *name,
 	value_list = g_list_append (value_list, gda_value_new_string (comments));
 	value_list = g_list_append (value_list, gda_value_new_type (type));
 
-	gda_data_model_append_row (GDA_DATA_MODEL (recset), value_list);
+	gda_data_model_append_values (GDA_DATA_MODEL (recset), value_list);
 
 	g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
 	g_list_free (value_list);
@@ -729,7 +729,7 @@ get_table_fields (GdaConnection *cnc, GdaParameterList *params)
 			gda_value_new_string (gda_data_model_column_attributes_get_references (fa)));
 		value_list = g_list_append (value_list, gda_value_new_string (NULL));
 
-		gda_data_model_append_row (GDA_DATA_MODEL (recset), value_list);
+		gda_data_model_append_values (GDA_DATA_MODEL (recset), value_list);
 
 		g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
 		g_list_free (value_list);

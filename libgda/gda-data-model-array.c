@@ -1,5 +1,5 @@
 /* GDA library
- * Copyright (C) 1998 - 2004 The GNOME Foundation.
+ * Copyright (C) 1998 - 2005 The GNOME Foundation.
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
@@ -107,7 +107,7 @@ gda_data_model_array_is_updatable (GdaDataModelBase *model)
 }
 
 static const GdaRow *
-gda_data_model_array_append_row (GdaDataModelBase *model, const GList *values)
+gda_data_model_array_append_values (GdaDataModelBase *model, const GList *values)
 {
 	gint len;
 	GdaRow *row = NULL;
@@ -209,7 +209,7 @@ gda_data_model_array_class_init (GdaDataModelArrayClass *klass)
 	model_class->get_row = gda_data_model_array_get_row;
 	model_class->get_value_at = gda_data_model_array_get_value_at;
 	model_class->is_updatable = gda_data_model_array_is_updatable;
-	model_class->append_row = gda_data_model_array_append_row;
+	model_class->append_values = gda_data_model_array_append_values;
 	model_class->remove_row = gda_data_model_array_remove_row;
 	model_class->update_row = gda_data_model_array_update_row;
 	model_class->append_column = gda_data_model_array_append_column;

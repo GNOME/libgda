@@ -58,7 +58,7 @@ static const GdaValue *gda_postgres_recordset_get_value_at    (GdaDataModelBase 
 static GdaDataModelColumnAttributes *gda_postgres_recordset_describe    (GdaDataModelBase *model, gint col);
 static gint gda_postgres_recordset_get_n_rows 		      (GdaDataModelBase *model);
 static const GdaRow *gda_postgres_recordset_get_row 	      (GdaDataModelBase *model, gint rownum);
-static const GdaRow *gda_postgres_recordset_append_row        (GdaDataModelBase *model, const GList *values);
+static const GdaRow *gda_postgres_recordset_append_values        (GdaDataModelBase *model, const GList *values);
 static gboolean gda_postgres_recordset_remove_row 	      (GdaDataModelBase *model, const GdaRow *row);
 static gboolean gda_postgres_recordset_update_row 	      (GdaDataModelBase *model, const GdaRow *row);
 
@@ -93,7 +93,7 @@ gda_postgres_recordset_class_init (GdaPostgresRecordsetClass *klass)
 	model_class->describe_column = gda_postgres_recordset_describe;
 	model_class->get_value_at = gda_postgres_recordset_get_value_at;
 	model_class->get_row = gda_postgres_recordset_get_row;
-	model_class->append_row = gda_postgres_recordset_append_row;
+	model_class->append_values = gda_postgres_recordset_append_values;
 	model_class->remove_row = gda_postgres_recordset_remove_row;
 	model_class->update_row = gda_postgres_recordset_update_row;
 }
@@ -209,7 +209,7 @@ gda_postgres_recordset_get_row (GdaDataModelBase *model, gint row)
 }
 
 static const GdaRow *
-gda_postgres_recordset_append_row (GdaDataModelBase *model, const GList *values)
+gda_postgres_recordset_append_values (GdaDataModelBase *model, const GList *values)
 {
 	GdaPostgresRecordset *recset = (GdaPostgresRecordset *) model;
 	GdaPostgresRecordsetPrivate *priv_data;
@@ -317,7 +317,7 @@ gda_postgres_recordset_append_row (GdaDataModelBase *model, const GList *values)
 					  gda_postgres_make_error (pg_conn, NULL));
 
 	/* append row in hash table */
-	row = GDA_DATA_MODEL_BASE_CLASS (parent_class)->append_row (model, values);
+	row = GDA_DATA_MODEL_BASE_CLASS (parent_class)->append_values (model, values);
 
 	return row;
 }

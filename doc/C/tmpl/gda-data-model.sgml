@@ -19,8 +19,82 @@ Basic data model class
 
 </para>
 
-@object: 
-@priv: 
+
+<!-- ##### SIGNAL GdaDataModel::begin-update ##### -->
+<para>
+
+</para>
+
+@gdadatamodel: the object which received the signal.
+
+<!-- ##### SIGNAL GdaDataModel::cancel-update ##### -->
+<para>
+
+</para>
+
+@gdadatamodel: the object which received the signal.
+
+<!-- ##### SIGNAL GdaDataModel::changed ##### -->
+<para>
+
+</para>
+
+@gdadatamodel: the object which received the signal.
+
+<!-- ##### SIGNAL GdaDataModel::column-inserted ##### -->
+<para>
+
+</para>
+
+@gdadatamodel: the object which received the signal.
+@arg1: 
+
+<!-- ##### SIGNAL GdaDataModel::column-removed ##### -->
+<para>
+
+</para>
+
+@gdadatamodel: the object which received the signal.
+@arg1: 
+
+<!-- ##### SIGNAL GdaDataModel::column-updated ##### -->
+<para>
+
+</para>
+
+@gdadatamodel: the object which received the signal.
+@arg1: 
+
+<!-- ##### SIGNAL GdaDataModel::commit-update ##### -->
+<para>
+
+</para>
+
+@gdadatamodel: the object which received the signal.
+
+<!-- ##### SIGNAL GdaDataModel::row-inserted ##### -->
+<para>
+
+</para>
+
+@gdadatamodel: the object which received the signal.
+@arg1: 
+
+<!-- ##### SIGNAL GdaDataModel::row-removed ##### -->
+<para>
+
+</para>
+
+@gdadatamodel: the object which received the signal.
+@arg1: 
+
+<!-- ##### SIGNAL GdaDataModel::row-updated ##### -->
+<para>
+
+</para>
+
+@gdadatamodel: the object which received the signal.
+@arg1: 
 
 <!-- ##### FUNCTION gda_data_model_changed ##### -->
 <para>
@@ -188,13 +262,23 @@ Basic data model class
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_data_model_append_row ##### -->
+<!-- ##### FUNCTION gda_data_model_append_values ##### -->
 <para>
 
 </para>
 
 @model: 
 @values: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_model_append_row ##### -->
+<para>
+
+</para>
+
+@model: 
+@row: 
 @Returns: 
 
 
@@ -299,15 +383,6 @@ Basic data model class
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_data_model_end_update ##### -->
-<para>
-
-</para>
-
-@model: 
-@Returns: 
-
-
 <!-- ##### FUNCTION gda_data_model_to_comma_separated ##### -->
 <para>
 
@@ -374,8 +449,8 @@ Basic data model class
 
 @model: 
 @txt: 
-<!-- # Unused Parameters # -->
 @Returns: 
+<!-- # Unused Parameters # -->
 @recset: 
 
 
@@ -397,8 +472,8 @@ Basic data model class
 
 @model: 
 @type: 
-<!-- # Unused Parameters # -->
 @Returns: 
+<!-- # Unused Parameters # -->
 @recset: 
 
 

@@ -1,3 +1,9 @@
+2005-01-23  Vivien Malerba <malerba@gnome-db.org>
+	* libgda/gda-data-model.[ch]: renamed gda_data_model_append_row() to gda_data_model_append_values(), 
+	  (which is marked as deprecated), and crated a new gda_data_model_append_row() 
+	  function with a signature similar to the other gda_data_model_*_row() functions.
+	* all other modifications: related to the above modifications
+
 2005-01-20  Bas Driessen <bas.driessen@xobas.com>
 
 	* providers/postgres/gda-postgres-recordset.c

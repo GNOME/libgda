@@ -1,5 +1,5 @@
 /* GDA mSQL Provider
- * Copyright (C) 1998 - 2004 The GNOME Foundation
+ * Copyright (C) 1998 - 2005 The GNOME Foundation
  *
  * AUTHORS:
  * 	   Danilo Schoeneberg <dj@starfire-programming.net
@@ -211,7 +211,7 @@ static gboolean gda_msql_recordset_is_updatable(GdaDataModelBase *model) {
 }
 
 static const GdaRow 
-*gda_msql_recordset_append_row(GdaDataModelBase *model,const GList *values) {
+*gda_msql_recordset_append_values(GdaDataModelBase *model,const GList *values) {
 	GString          *sql;
 	GdaRow           *row;
 	gint              rc,cols;
@@ -296,7 +296,7 @@ static void gda_msql_recordset_class_init(GdaMsqlRecordsetClass *cl) {
 	mdl_class->get_row=gda_msql_recordset_get_row;
 	mdl_class->get_value_at=gda_msql_recordset_get_value_at;
 	mdl_class->is_updatable=gda_msql_recordset_is_updatable;
-	mdl_class->append_row=gda_msql_recordset_append_row;
+	mdl_class->append_values=gda_msql_recordset_append_values;
 	mdl_class->remove_row=gda_msql_recordset_remove_row;
 	mdl_class->update_row=gda_msql_recordset_update_row;
 }

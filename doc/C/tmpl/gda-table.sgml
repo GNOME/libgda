@@ -19,8 +19,6 @@ An in-memory representation of a database table
 
 </para>
 
-@model: 
-@priv: 
 
 <!-- ##### FUNCTION gda_table_new ##### -->
 <para>

@@ -479,7 +479,7 @@ get_msql_tables(GdaConnection *cnc,GdaParameterList *params)
 		vlist=g_list_append(vlist,gda_value_new_string("n/a"));
 		vlist=g_list_append(vlist,gda_value_new_string("n/a"));
 		vlist=g_list_append(vlist,gda_value_new_string("n/a"));
-		gda_data_model_append_row(GDA_DATA_MODEL(model),vlist);
+		gda_data_model_append_values(GDA_DATA_MODEL(model),vlist);
 	}
 	msqlFreeResult(res);
 	return GDA_DATA_MODEL(model);    
@@ -519,7 +519,7 @@ get_msql_types(GdaConnection *cnc,GdaParameterList *params)
 		value_list=g_list_append(value_list,gda_value_new_string(types[i].owner));
 		value_list=g_list_append(value_list,gda_value_new_string(types[i].comments));
 		value_list=g_list_append(value_list,gda_value_new_type(types[i].type));  
-		gda_data_model_append_row(GDA_DATA_MODEL(rs),value_list);
+		gda_data_model_append_values(GDA_DATA_MODEL(rs),value_list);
 		g_list_foreach(value_list,(GFunc)gda_value_free,NULL);
 		g_list_free(value_list);
 	}
@@ -611,7 +611,7 @@ get_table_fields(GdaConnection *cnc,GdaParameterList *params)
 			g_object_unref(G_OBJECT(rs));
 			return NULL;
 		}
-		gda_data_model_append_row(GDA_DATA_MODEL(rs),(const GList*)value_list);
+		gda_data_model_append_values(GDA_DATA_MODEL(rs),(const GList*)value_list);
 		g_list_foreach(value_list,(GFunc)gda_value_free,NULL);
 		g_list_free(value_list);
 	}

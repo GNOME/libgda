@@ -347,7 +347,7 @@ process_sql_commands (GList *reclist, GdaConnection *cnc, const gchar *sql, GdaC
 						}
 					}
 
-					gda_data_model_append_row (GDA_DATA_MODEL (recset), value_list);
+					gda_data_model_append_values (GDA_DATA_MODEL (recset), value_list);
 
 					g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
 					g_list_free (value_list);
@@ -743,7 +743,7 @@ get_databases_rs( GdaOdbcConnectionData *priv_data, GdaDataModelArray *recset )
 			value_list = g_list_append (value_list, gda_value_new_string (""));
 		}
 
-		gda_data_model_append_row (GDA_DATA_MODEL (recset), value_list);
+		gda_data_model_append_values (GDA_DATA_MODEL (recset), value_list);
 
 		g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
 		g_list_free (value_list);
@@ -913,7 +913,7 @@ get_columns_rs( GdaOdbcConnectionData *priv_data, GdaDataModelArray *recset )
 			value_list = g_list_append (value_list, gda_value_new_string (""));
 		}
 
-		gda_data_model_append_row (GDA_DATA_MODEL (recset), value_list);
+		gda_data_model_append_values (GDA_DATA_MODEL (recset), value_list);
 
 		g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
 		g_list_free (value_list);
@@ -1002,7 +1002,7 @@ get_namespaces_rs( GdaOdbcConnectionData *priv_data, GdaDataModelArray *recset )
 		}
 
 
-		gda_data_model_append_row (GDA_DATA_MODEL (recset), value_list);
+		gda_data_model_append_values (GDA_DATA_MODEL (recset), value_list);
 
 		g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
 		g_list_free (value_list);
@@ -1111,7 +1111,7 @@ get_procedure_rs( GdaOdbcConnectionData *priv_data, GdaDataModelArray *recset )
 		/* Definition */
 		value_list = g_list_append (value_list, gda_value_new_string (""));
 
-		gda_data_model_append_row (GDA_DATA_MODEL (recset), value_list);
+		gda_data_model_append_values (GDA_DATA_MODEL (recset), value_list);
 
 		g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
 		g_list_free (value_list);
@@ -1221,7 +1221,7 @@ get_tables_rs( GdaOdbcConnectionData *priv_data, GdaDataModelArray *recset )
 
 		value_list = g_list_append (value_list, gda_value_new_string (""));
 
-		gda_data_model_append_row (GDA_DATA_MODEL (recset), value_list);
+		gda_data_model_append_values (GDA_DATA_MODEL (recset), value_list);
 
 		g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
 		g_list_free (value_list);
@@ -1326,7 +1326,7 @@ get_types_rs( GdaOdbcConnectionData *priv_data, GdaDataModelArray *recset, const
 			value_list = g_list_append (value_list, gda_value_new_type ( GDA_VALUE_TYPE_UNKNOWN ));
 		}
 
-		gda_data_model_append_row (GDA_DATA_MODEL (recset), value_list);
+		gda_data_model_append_values (GDA_DATA_MODEL (recset), value_list);
 
 		g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
 		g_list_free (value_list);

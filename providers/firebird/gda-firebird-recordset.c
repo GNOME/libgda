@@ -1,5 +1,5 @@
 /* GDA FireBird Provider
- * Copyright (C) 1998 - 2004 The GNOME Foundation
+ * Copyright (C) 1998 - 2005 The GNOME Foundation
  *
  * AUTHORS:
  *         Albi Jeronimo <jeronimoalbi@yahoo.com.ar>
@@ -67,7 +67,7 @@ static const GdaValue 		*gda_firebird_recordset_get_value_at (GdaDataModelBase *
 								      gint col,
 								      gint row);
 static gboolean			gda_firebird_recordset_is_updatable (GdaDataModelBase *model);
-static const GdaRow 		*gda_firebird_recordset_append_row (GdaDataModelBase *model,
+static const GdaRow 		*gda_firebird_recordset_append_values (GdaDataModelBase *model,
 								    const GList *values);
 static gboolean			gda_firebird_recordset_remove_row (GdaDataModelBase *model,
 								   const GdaRow *row);
@@ -751,7 +751,7 @@ gda_firebird_recordset_is_updatable (GdaDataModelBase *model)
 }
                                                                                                                             
 static const GdaRow *
-gda_firebird_recordset_append_row (GdaDataModelBase *model,
+gda_firebird_recordset_append_values (GdaDataModelBase *model,
 				   const GList *values)
 {
 	return NULL;
@@ -849,7 +849,7 @@ gda_firebird_recordset_class_init (GdaFirebirdRecordsetClass *klass)
 	model_class->get_row = gda_firebird_recordset_get_row;
 	model_class->get_value_at = gda_firebird_recordset_get_value_at;
 	model_class->is_updatable = gda_firebird_recordset_is_updatable;
-	model_class->append_row = gda_firebird_recordset_append_row;
+	model_class->append_values = gda_firebird_recordset_append_values;
 	model_class->remove_row = gda_firebird_recordset_remove_row;
 	model_class->update_row = gda_firebird_recordset_update_row;
 }

@@ -782,7 +782,7 @@ static GdaDataModel
 		str = g_strndup(alias, alias_len);
 	    
 	    	value_list = g_list_append (NULL, gda_value_new_string (str));
-	    	gda_data_model_append_row (GDA_DATA_MODEL (recset), value_list);
+	    	gda_data_model_append_values (GDA_DATA_MODEL (recset), value_list);
 	   
 	    	g_free(str);
 		g_list_foreach (value_list, (GFunc) gda_value_free, NULL);

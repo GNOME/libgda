@@ -1115,7 +1115,7 @@ gda_sybase_provider_get_types (GdaConnection *cnc,
 			value_list = g_list_append (value_list,
 																	gda_value_new_type (gda_sybase_type_list[i].gda_type));
 
-			gda_data_model_append_row (GDA_DATA_MODEL (recset), value_list);
+			gda_data_model_append_values (GDA_DATA_MODEL (recset), value_list);
 			g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
 			g_list_free (value_list);
 		}

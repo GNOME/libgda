@@ -28,8 +28,16 @@ Database client access
 
 </para>
 
-@object: 
-@priv: 
+
+<!-- ##### SIGNAL GdaClient::event-notification ##### -->
+<para>
+
+</para>
+
+@gdaclient: the object which received the signal.
+@arg1: 
+@arg2: 
+@arg3: 
 
 <!-- ##### ENUM GdaClientEvent ##### -->
 <para>

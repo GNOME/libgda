@@ -113,7 +113,7 @@ gda_data_model_hash_is_updatable (GdaDataModelBase *model)
 }
 
 static const GdaRow *
-gda_data_model_hash_append_row (GdaDataModelBase *model, const GList *values)
+gda_data_model_hash_append_values (GdaDataModelBase *model, const GList *values)
 {
 	GdaRow *row;
 	gint cols, rownum_hash_new, rownum_array_new;
@@ -211,7 +211,7 @@ gda_data_model_hash_class_init (GdaDataModelHashClass *klass)
 	model_class->get_row = gda_data_model_hash_get_row;
 	model_class->get_value_at = gda_data_model_hash_get_value_at;
 	model_class->is_updatable = gda_data_model_hash_is_updatable;
-	model_class->append_row = gda_data_model_hash_append_row;
+	model_class->append_values = gda_data_model_hash_append_values;
 	model_class->remove_row = gda_data_model_hash_remove_row;
 }
 

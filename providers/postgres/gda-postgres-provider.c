@@ -1247,7 +1247,7 @@ get_postgres_types (GdaConnection *cnc, GdaParameterList *params)
 		value_list = g_list_append (value_list, gda_value_new_string (priv_data->type_data[i].comments));
 		value_list = g_list_append (value_list, gda_value_new_type (priv_data->type_data[i].type));
 
-		gda_data_model_append_row (GDA_DATA_MODEL (recset), value_list);
+		gda_data_model_append_values (GDA_DATA_MODEL (recset), value_list);
 
 		g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
 		g_list_free (value_list);
@@ -1908,7 +1908,7 @@ add_g_list_row (gpointer data, gpointer user_data)
 	GList *rowlist = data;
 	GdaDataModelArray *recset = user_data;
 
-	gda_data_model_append_row (GDA_DATA_MODEL (recset), rowlist);
+	gda_data_model_append_values (GDA_DATA_MODEL (recset), rowlist);
 	g_list_foreach (rowlist, (GFunc) gda_value_free, NULL);
 	g_list_free (rowlist);
 }

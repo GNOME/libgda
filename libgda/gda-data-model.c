@@ -555,7 +555,7 @@ gda_data_model_is_updatable (GdaDataModel *model)
 }
 
 /**
- * gda_data_model_append_row
+ * gda_data_model_append_values
  * @model: a #GdaDataModel object.
  * @values: #GList of #GdaValue* representing the row to add.  The
  *          length must match model's column count.  These #GdaValue
@@ -563,22 +563,58 @@ gda_data_model_is_updatable (GdaDataModel *model)
  *
  * Appends a row to the given data model.
  *
+ * Deprecated: will be removed in future versions, use gda_data_model_append_row() instead.
+ *
  * Returns: the added row.
  */
 const GdaRow *
-gda_data_model_append_row (GdaDataModel *model, const GList *values)
+gda_data_model_append_values (GdaDataModel *model, const GList *values)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
 
-	if (GDA_DATA_MODEL_GET_IFACE (model)->i_append_row) {
+	if (GDA_DATA_MODEL_GET_IFACE (model)->i_append_values) {
 		const GdaRow *row;
-		row = (GDA_DATA_MODEL_GET_IFACE (model)->i_append_row) (model, values);
+		row = (GDA_DATA_MODEL_GET_IFACE (model)->i_append_values) (model, values);
 		gda_data_model_row_inserted (model, gda_row_get_number ((GdaRow *) row));
 		return row;
 	}
 	else {
 		g_warning ("%s() method not supported\n", __FUNCTION__);
 		return NULL;
+	}
+}
+
+/**
+ * gda_data_model_append_row
+ * @model: a #GdaDataModel object.
+ * @row: the #GdaRow to be appended
+ * 
+ * Appends a row to the data model. The 'number' attribute of @row may be
+ * modified by the data model to represent the actual row position.
+ *
+ * This function differs from the gda_data_model_append_values() method in that
+ * it is more coherent with the other gda_data_model_*_row() functions, and also
+ * is more adapted to #GdaDataModel which don't manage themselves any #GdaRow internally.
+ *
+ * Returns: %TRUE if successful, %FALSE otherwise.
+ */
+gboolean
+gda_data_model_append_row (GdaDataModel *model, GdaRow *row)
+{
+	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
+	g_return_val_if_fail (row != NULL, FALSE);
+
+	if (GDA_DATA_MODEL_GET_IFACE (model)->i_append_row) {
+		gboolean result;
+		
+		result = (GDA_DATA_MODEL_GET_IFACE (model)->i_append_row) (model, row);
+		if (result) 
+			gda_data_model_row_inserted (model, gda_row_get_number ((GdaRow *) row));
+		return result;
+	}
+	else {
+		g_warning ("%s() method not supported\n", __FUNCTION__);
+		return FALSE;
 	}
 }
 
@@ -1139,7 +1175,7 @@ add_xml_row (GdaDataModel *model, xmlNodePtr xml_row)
 		}
 
 		if (retval)
-			gda_data_model_append_row (model, value_list);
+			gda_data_model_append_values (model, value_list);
 
 		g_list_free (value_list);
 	}

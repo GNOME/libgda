@@ -1,5 +1,5 @@
 /* GDA Oracle provider
- * Copyright (C) 1998 - 2004 The GNOME Foundation.
+ * Copyright (C) 1998 - 2005 The GNOME Foundation.
  *
  * AUTHORS:
  * 	Tim Coleman <tim@timcoleman.com>
@@ -448,7 +448,7 @@ gda_oracle_recordset_is_updatable (GdaDataModelBase *model)
 }
 
 static const GdaRow *
-gda_oracle_recordset_append_row (GdaDataModelBase *model, const GList *values)
+gda_oracle_recordset_append_values (GdaDataModelBase *model, const GList *values)
 {
 	GString *sql;
 	GdaRow *row;
@@ -565,7 +565,7 @@ gda_oracle_recordset_class_init (GdaOracleRecordsetClass *klass)
 	model_class->get_row = gda_oracle_recordset_get_row;
 	model_class->get_value_at = gda_oracle_recordset_get_value_at;
 	model_class->is_updatable = gda_oracle_recordset_is_updatable;
-	model_class->append_row = gda_oracle_recordset_append_row;
+	model_class->append_values = gda_oracle_recordset_append_values;
 	model_class->remove_row = gda_oracle_recordset_remove_row;
 	model_class->update_row = gda_oracle_recordset_update_row;
 }
