@@ -76,24 +76,34 @@ gda_config_read_entries (xmlNodePtr cur)
 		if (!strcmp(cur->name, "entry")){
 			entry = g_new (gda_config_entry, 1);
 			entry->name = xmlGetProp(cur, "name");
-			if (entry->name == NULL)
+			if (entry->name == NULL){
 				g_warning ("NULL 'name' in an entry");
+				entry->name = g_strdup ("");
+			}
 
 			entry->type =  xmlGetProp(cur, "type");
-			if (entry->type == NULL)
+			if (entry->type == NULL){
 				g_warning ("NULL 'type' in an entry");
+				entry->type = g_strdup ("");
+			}
 
 			entry->value =  xmlGetProp(cur, "value");
-			if (entry->value == NULL)
+			if (entry->value == NULL){
 				g_warning ("NULL 'value' in an entry");
+				entry->value = g_strdup ("");
+			}
 
 			entry->muser =  xmlGetProp(cur, "muser");
-			if (entry->value == NULL)
+			if (entry->value == NULL){
 				g_warning ("NULL 'muser' in an entry");
+				entry->muser = g_strdup ("");
+			}
 
 			entry->mtime =  xmlGetProp(cur, "mtime");
-			if (entry->value == NULL)
+			if (entry->value == NULL){
 				g_warning ("NULL 'mtime' in an entry");
+				entry->mtime = g_strdup ("");
+			}
 
 			list = g_list_append (list, entry);
 		} else {
@@ -315,11 +325,11 @@ add_xml_entry (xmlNodePtr parent, gda_config_entry *entry)
 	xmlNodePtr new_node;
 
 	new_node = xmlNewTextChild (parent, NULL, "entry", NULL);
-	xmlSetProp (new_node, "name", entry->name ? entry->name : "");
-	xmlSetProp (new_node, "type", entry->type ? entry->type : "");
-	xmlSetProp (new_node, "value", entry->value ? entry->value : "");
-	xmlSetProp (new_node, "mtime", entry->name ? entry->name : "");
-	xmlSetProp (new_node, "muser", entry->type ? entry->type : "");
+	xmlSetProp (new_node, "name", entry->name);
+	xmlSetProp (new_node, "type", entry->type);
+	xmlSetProp (new_node, "value", entry->value);
+	xmlSetProp (new_node, "mtime", entry->mtime);
+	xmlSetProp (new_node, "muser", entry->muser);
 }
 
 static xmlNodePtr
@@ -754,6 +764,9 @@ gda_config_has_section (const gchar *path)
 
 	cfg_client = get_config_client ();
 	section = gda_config_search_section (cfg_client->user, path);
+	if (section == NULL)
+		section = gda_config_search_section (cfg_client->global, path);
+
 	return (section != NULL) ? TRUE : FALSE;
 }
 
@@ -775,7 +788,42 @@ gda_config_has_key (const gchar *path)
 
 	cfg_client = get_config_client ();
 	entry = gda_config_search_entry (cfg_client->user, path, NULL);
+	if (entry == NULL)
+		entry = gda_config_search_entry (cfg_client->global,
+						 path,
+						 NULL);
+
 	return (entry != NULL) ? TRUE : FALSE;
+}
+
+/**
+ * gda_config_get_type
+ * @path: path to the configuration key
+ *
+ * Gets a string representing the type of the value of the given key.
+ * The caller is responsible of freeing the returned value.
+ *
+ * Returns: NULL if not found. Otherwise: "string", "float", "long", "bool".
+ */
+gchar *
+gda_config_get_type (const gchar *path)
+{
+	gda_config_entry *entry;
+	gda_config_client *cfg_client;
+
+	g_return_val_if_fail (path != NULL, FALSE);
+
+	cfg_client = get_config_client ();
+	entry = gda_config_search_entry (cfg_client->user, path, NULL);
+	if (entry == NULL)
+		entry = gda_config_search_entry (cfg_client->global, 
+						 path,
+						 NULL);
+
+	if (entry == NULL)
+		return NULL;
+
+	return g_strdup (entry->type);
 }
 
 /**

@@ -1,3 +1,14 @@
+2002-06-03  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
+	* libgda/gda-config.[ch]: 
+	(gda_config_get_type): new function to get the type of an entry.
+
+	(gda_config_has_key):
+	(gda_config_has_section): also look for section/keys in global data.
+	
+	(gda_config_read_entries): When reading from the configuration file,
+	set the value to "" if it is NULL.
+
 2002-06-02  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* libgda/gda-config.c (gda_config_get_data_source_list): retrieve

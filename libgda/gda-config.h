@@ -48,6 +48,7 @@ gboolean gda_config_has_section (const gchar *path);
 gboolean gda_config_has_key (const gchar *path);
 GList   *gda_config_list_sections (const gchar *path);
 GList   *gda_config_list_keys (const gchar *path);
+gchar   *gda_config_get_type (const gchar *path);
 
 void     gda_config_free_list (GList *list);
 
