@@ -1,5 +1,7 @@
 2001-10-31  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* configure.in: set library AGE to 1
+
 	* Makefile.am: removed bindings from SUBDIRS. Those will need
 	a good bit of work when refactoring is completed
 

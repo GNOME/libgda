@@ -17,7 +17,7 @@ AC_SUBST(GDA_VERSION)
 # - If binary compatibility has been broken (e.g. removed or changed interfaces), set GDA_CURRENT += 1, GDA_REVISION and GDA_AGE to 0
 # - If interfaces is the same as the previous version, set GDA_REVISION += 1
 #
-GDA_CURRENT=0
+GDA_CURRENT=1
 GDA_REVISION=0
 GDA_AGE=0
 
