@@ -8,7 +8,6 @@ module GNOME {
 		/*
 		 * Basic types
 		 */
-		typedef sequence<string> StringList;
 		typedef any Value;
 
 		struct Parameter {
@@ -21,16 +20,70 @@ module GNOME {
 		 * GDA data types
 		 */
 		enum ValueType {
+			TYPE_NULL,
 			TYPE_BIGINT,
+			TYPE_BINARY,
+			TYPE_BOOLEAN,
+			TYPE_BSTR,
 			TYPE_CHAR,
+			TYPE_CURRENCY,
 			TYPE_DATE,
-			TYPE_DOUBLE,
-			TYPE_SINGLE,
-			TYPE_SMALLINT,
 			TYPE_TIME,
 			TYPE_TIMESTAMP,
+			TYPE_DECIMAL,
+			TYPE_DOUBLE,
+			TYPE_INTEGER,
+			TYPE_LONGVARBIN,
+			TYPE_LONGVARCHAR,
+			TYPE_LONGVARWCHAR,
+			TYPE_NUMERIC,
+			TYPE_SINGLE,
+			TYPE_SMALLINT,
+			TYPE_TINYINY,
 			TYPE_VARCHAR,
+			TYPE_VARBIN,
+			TYPE_VARWCHAR,
+			TYPE_FIXCHAR,
+			TYPE_FIXBIN,
+			TYPE_FIXWCHAR,
 			TYPE_UNKNOWN
+		};
+
+		struct Date{
+			short year;
+			unsigned short month;
+			unsigned short day;
+		};
+		struct Time {
+			unsigned short hour;
+			unsigned short minute;
+			unsigned short second;
+		};
+		struct Timestamp {
+			short year;
+			unsigned short month;
+			unsigned short day;
+			unsigned short hour;
+			unsigned short minute;
+			unsigned short second;
+			unsigned long  fraction;
+		};
+
+		/*
+		 * Error management
+		 */
+		struct Error {
+			string description;
+			long   number;
+			string source;
+			string sqlstate;
+		};
+
+		typedef sequence<Error> ErrorSeq;
+
+		exception DriverError {
+			ErrorSeq errors;
+			string   realcommand;
 		};
 
 		/*
@@ -39,22 +92,31 @@ module GNOME {
 		 * provider as a result of executing a command
 		 */
 		struct FieldAttributes {
-			string name;
-			short size;
-			short scale;
-			ValueType type;
+			long       definedSize;
+			string     name;
+			long       scale;
+			ValueType  gdaType;
 		};
 		struct Field {
-			FieldAttributes attr;
+			long actualSize;
 			Value value;
+			FieldAttributes attributes;
 		};
 		typedef sequence<FieldAttributes> RowAttributes;
 		typedef sequence<Field> Row;
 
-		struct Recordset {
-			Command parent;
-			RowAttributes attr;
-			Row current;
+		/*
+		 * The Recordset interface
+		 */
+		interface Recordset : Bonobo::Unknown {
+			RowAttributes describe ();
+
+			boolean moveFirst ();
+			boolean moveNext ();
+			boolean movePrevious ();
+			boolean moveLast ();
+
+			Row fetch ();
 		};
 		typedef sequence<Recordset> RecordsetList;
 
@@ -73,11 +135,31 @@ module GNOME {
 		struct Command {
 			string text;
 			CommandType type;
-			RecordsetList recordsets;
 		};
-		typedef sequence<Command> Command;
 
-		typedef string ConnectionId;
+		/*
+		 * The Connection interface provides access to an
+		 * open database connection.
+		 */
+		typedef string TransactionId;
+
+		interface Connection : Bonobo::Unknown {
+			/* opening/closing connections */
+			boolean open (in string cnc_string,
+				      in string username,
+				      in string password) raise DriverError;
+			boolean close () raise DriverError;
+
+			/* command execution */
+			RecordsetList executeCommand (in Command cmd,
+						      in ParameterList params)
+				raise DriverError;
+
+			/* transactions */
+			boolean beginTransaction (TransactionId id) raise DriverError;
+			boolean commitTransaction (TransactionId id) raise DriverError;
+			boolean rollbackTransaction (TransactionId id) raise DriverError;
+		};
 
 		/*
 		 * The Provider interface is the CORBA interface to be
@@ -88,25 +170,7 @@ module GNOME {
 			string getVersion ();
 
 			/* basic operations */
-			ConnectionId openConnection (in string cnc_string,
-						     in string username,
-						     in string password);
-			boolean closeConnection (in ConnectionId cnc);
-
-			/* command execution methods */
-			Command createCommand (in ConnectionId cnc,
-					       in string text,
-					       CommandType type);
-			boolean prepareCommand (inout Command cmd, in ParameterList plist);
-			RecordsetList executeCommand (inout Command cmd,
-						      in ParameterList plist);
-
-			/* recordset management methods */
-			boolean moveFirst (inout Recordset recset);
-			boolean moveLast (inout Recordset recset);
-			boolean moveNext (inout Recordset recset);
-			boolean movePrevious (inout Recordset recset);
-			Row fetchRow (inout Recordset recset);
+			Connection createConnection ();
 		};
 	};
 

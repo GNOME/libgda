@@ -1,3 +1,10 @@
+2001-10-11  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* Makefile.am: install IDL files in $datadir/idl/libgda
+
+	* GNOME_Database.idl: some fixes, and added ::Listener interface, and
+	related methods in the ::Provider interface
+
 2001-10-07  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* *.idl: started refactoring on the IDL interfaces
