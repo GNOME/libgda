@@ -14,18 +14,25 @@ $(BUILT_SOURCES): $(top_builddir)/report/idl/GDA_Report.idl
 	orbit-idl $(top_builddir)/report/idl/GDA_Report.idl
 
 gda_report_headers = \
+	gda-report.h \
+	gda-report-client.h \
 	gda-report-defs.h \
+	gda-report-element.h \
 	gda-report-engine.h \
-	gda-report-stream.h \
-	gda-report-client.h
+	gda-report-format.h \
+	gda-report-output.h \
+	gda-report-stream.h
 
 libgda_report_la_SOURCES = \
 	GDA_Report.h \
 	GDA_Report-common.c \
+	GDA_Report-skels.c \
 	GDA_Report-stubs.c \
 	gda-report-engine.c \
 	gda-report-stream.c \
+	gda-report.c \
 	$(gda_report_headers)
+
 libgda_report_la_LIBADD = \
 	$(GDA_CLIENT_LIBS)
 

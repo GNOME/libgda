@@ -28,7 +28,7 @@
 #include <gtk/gtk.h>
 #endif
 
-#define GDA_REPORTSTREAM_NEXT	-1
+#define GDA_REPORT_STREAM_NEXT	-1
 
 #if defined(__cplusplus)
 extern "C" {
@@ -60,21 +60,21 @@ struct _Gda_ReportStreamClass {
 	void (* error)   (Gda_ReportStream* object, GList* errors);
 };
 
-#define GDA_TYPE_REPORTSTREAM          (gda_reportstream_get_type())
+#define GDA_TYPE_REPORT_STREAM          (gda_reportstream_get_type())
 #ifdef HAVE_GOBJECT
-#define GDA_REPORTSTREAM(obj) \
-		G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_REPORTSTREAM, Gda_ReportStream)
-#define GDA_REPORTSTREAM_CLASS(klass) \
-		G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_REPORTSTREAM, Gda_ReportStreamClass)
-#define GDA_IS_REPORTSTREAM(obj) \
-		G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_REPORTSTREAM)
-#define GDA_IS_REPORTSTREAM_CLASS(klass) \
-		G_TYPE_CHECK_CLASS_TYPE ((klass), GDA_TYPE_REPORTSTREAM)
+#define GDA_REPORT_STREAM(obj) \
+		G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_REPORT_STREAM, Gda_ReportStream)
+#define GDA_REPORT_STREAM_CLASS(klass) \
+		G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_REPORT_STREAM, Gda_ReportStreamClass)
+#define GDA_IS_REPORT_STREAM(obj) \
+		G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_REPORT_STREAM)
+#define GDA_IS_REPORT_STREAM_CLASS(klass) \
+		G_TYPE_CHECK_CLASS_TYPE ((klass), GDA_TYPE_REPORT_STREAM)
 #else
-#define GDA_REPORTSTREAM(obj)          GTK_CHECK_CAST(obj, GDA_TYPE_REPORTSTREAM, Gda_ReportStream)
-#define GDA_REPORTSTREAM_CLASS(klass)  GTK_CHECK_CLASS_CAST(klass, GDA_TYPE_REPORTSTREAM, GdaReportStreamClass)
-#define GDA_IS_REPORTSTREAM(obj)       GTK_CHECK_TYPE(obj, GDA_TYPE_REPORTSTREAM)
-#define GDA_IS_REPORTSTREAM_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_REPORTSTREAM))
+#define GDA_REPORT_STREAM(obj)          GTK_CHECK_CAST(obj, GDA_TYPE_REPORT_STREAM, Gda_ReportStream)
+#define GDA_REPORT_STREAM_CLASS(klass)  GTK_CHECK_CLASS_CAST(klass, GDA_TYPE_REPORT_STREAM, GdaReportStreamClass)
+#define GDA_IS_REPORT_STREAM(obj)       GTK_CHECK_TYPE(obj, GDA_TYPE_REPORT_STREAM)
+#define GDA_IS_REPORT_STREAM_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_REPORT_STREAM))
 #endif
 
 #ifdef HAVE_GOBJECT

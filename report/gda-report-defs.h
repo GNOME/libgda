@@ -19,6 +19,16 @@
 #if !defined(__gda_report_defs_h__)
 #  define __gda_report_defs_h__
 
+#include <gda-common.h>
+
 #define GDA_REPORT_OAFIID "OAFIID:GNOME_GDA_ReportEngine"
+
+typedef struct _Gda_ReportAttribute Gda_ReportAttribute;
+
+struct _Gda_ReportAttribute {
+	gchar* name;
+	gchar* value;
+};
+
 
 #endif

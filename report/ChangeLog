@@ -1,3 +1,13 @@
+2001-03-03  Carlos Perelló Marín <carlos@gnome-db.org>
+
+	* Makefile.am: Added the new files.
+	* gda-report*.[ch]: Updated, now all the objects are defined,
+	  but now I will do a major change to the IDL for include the
+	  report objects inside the IDL. Rodrigo I know that we talk
+	  about it and we saw that the actual IDL was right, but I
+	  have been thinking about it, so I will send a modification
+	  proposal shortly ;-).
+
 2001-02-18  Carlos Perelló Marín <carlos@gnome-db.org>
 
 	* gda-report.[hc]: Almost completly implemented but at this momment

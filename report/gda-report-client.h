@@ -16,8 +16,8 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef __gda_report_h__
-#define __gda_report_h__
+#ifndef __gda_report_client_h__
+#define __gda_report_client_h__
 
 #include <gda-common.h>
 #include <GDA_Report.h>
@@ -37,8 +37,11 @@
 #define N_(String) (String)
 #endif
 
+#include <gda-report.h>
 #include <gda-report-defs.h>
+#include <gda-report-element.h>
 #include <gda-report-engine.h>
+#include <gda-report-format.h>
 #include <gda-report-stream.h>
 
 void gda_report_init ();

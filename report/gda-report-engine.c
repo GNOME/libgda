@@ -21,8 +21,8 @@
 #include <gda-report-engine.h>
 
 enum {
-	REPORTENGINE_ERROR,
-	REPORTENGINE_WARNING,
+	REPORT_ENGINE_ERROR,
+	REPORT_ENGINE_WARNING,
 	LAST_SIGNAL
 };
 
@@ -115,14 +115,14 @@ gda_report_engine_class_init (Gda_ReportEngineClass* klass)
 {
 	GtkObjectClass*   object_class = GTK_OBJECT_CLASS(klass);
 
-	gda_report_engine_signals[REPORTENGINE_ERROR] = \
+	gda_report_engine_signals[REPORT_ENGINE_ERROR] = \
 					gtk_signal_new("error",
 							GTK_RUN_FIRST,
 							object_class->type,
 							GTK_SIGNAL_OFFSET(Gda_ReportEngineClass, error),
 							gtk_marshal_NONE__POINTER,
 							GTK_TYPE_NONE, 1, GTK_TYPE_POINTER);
-	gda_report_engine_signals[REPORTENGINE_WARNING] = \
+	gda_report_engine_signals[REPORT_ENGINE_WARNING] = \
 					gtk_signal_new("warning",
 							GTK_RUN_LAST,
 							object_class->type,
@@ -142,7 +142,7 @@ gda_report_engine_init (Gda_ReportEngine* object, Gda_ReportEngineClass *klass)
 gda_report_engine_init (Gda_ReportEngine *object)
 #endif
 {
-	g_return_if_fail(GDA_IS_REPORTENGINE(object));
+	g_return_if_fail(GDA_IS_REPORT_ENGINE(object));
 }
 
  
@@ -161,7 +161,7 @@ gda_report_engine_new (void)
 	CORBA_Environment ev;
 
 #ifdef HAVE_GOBJECT
-	engine = GDA_REPORTENGINE (g_object_new (GDA_TYPE_REPORTENGINE, NULL));
+	engine = GDA_REPORT_ENGINE (g_object_new (GDA_TYPE_REPORT_ENGINE, NULL));
 #else
 	engine = gtk_type_new(gda_report_engine_get_type());
 #endif

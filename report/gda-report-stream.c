@@ -21,8 +21,8 @@
 
 
 enum {
-	REPORTSTREAM_ERROR,
-	REPORTSTREAM_WARNING,
+	REPORT_STREAM_ERROR,
+	REPORT_STREAM_WARNING,
 	LAST_SIGNAL
 };
 
@@ -116,14 +116,14 @@ gda_report_stream_class_init (Gda_ReportStreamClass* klass)
 {
 	GtkObjectClass*   object_class = GTK_OBJECT_CLASS(klass);
   
-	gda_report_stream_signals[REPORTSTREAM_ERROR] = \
+	gda_report_stream_signals[REPORT_STREAM_ERROR] = \
 				gtk_signal_new("error",
 						GTK_RUN_FIRST,
 						object_class->type,
 						GTK_SIGNAL_OFFSET(Gda_ReportStreamClass, error),
 						gtk_marshal_NONE__POINTER,
 						GTK_TYPE_NONE, 1, GTK_TYPE_POINTER);
-	gda_report_stream_signals[REPORTSTREAM_WARNING] = \
+	gda_report_stream_signals[REPORT_STREAM_WARNING] = \
 				gtk_signal_new("warning",
 						GTK_RUN_LAST,
 						object_class->type,
@@ -143,7 +143,7 @@ gda_report_stream_init (Gda_ReportStream* object, Gda_ReportStreamClass *klass)
 gda_report_stream_init (Gda_ReportStream *object)
 #endif
 {
-	g_return_if_fail(GDA_REPORTSTREAM_IS_OBJECT(object));
+	g_return_if_fail(GDA_REPORT_STREAM_IS_OBJECT(object));
 	object->corba_reportstream = CORBA_OBJECT_NIL;
 	object->engine = NULL;
 	object->seek = 0;
@@ -164,10 +164,10 @@ gda_report_stream_new (Gda_ReportEngine* engine)
 	CORBA_Environment ev;
 	Gda_ReportStream* object;
 	
-	g_return_val_if_fail(IS_GDA_REPORTENGINE(engine), NULL);
+	g_return_val_if_fail(IS_GDA_REPORT_ENGINE(engine), NULL);
 
 #ifdef HAVE_GOBJECT
-	object = GDA_REPORTSTREAM (g_object_new (GDA_TYPE_REPORTSTREAM, NULL));
+	object = GDA_REPORT_STREAM (g_object_new (GDA_TYPE_REPORT_STREAM, NULL));
 #else
 	object = gtk_type_new(gda_report_stream_get_type());
 #endif
@@ -194,7 +194,7 @@ gda_report_stream_free (Gda_ReportStream* object)
 {
 	CORBA_Environment ev;
 	
-	g_return_if_fail(IS_GDA_REPORTSTREAM(object));
+	g_return_if_fail(IS_GDA_REPORT_STREAM(object));
 	g_return_if_fail(object->corba_reportstream != CORBA_OBJECT_NIL);
 
 	CORBA_exception_init(&ev);
@@ -231,9 +231,9 @@ gda_report_stream_readChunk (Gda_ReportStream* object, guchar** data, gint32 sta
 	GDA_ReportStreamChunk *chunk;
 	gint32 real_size;
 	
-	g_return_val_if_fail(IS_GDA_REPORTSTREAM(object), -1);
+	g_return_val_if_fail(IS_GDA_REPORT_STREAM(object), -1);
 
-	if (start == GDA_REPORTSTREAM_NEXT) {
+	if (start == GDA_REPORT_STREAM_NEXT) {
 		chunk = GDA_ReportStream_readChunk(object->corba_reportstream, object->seek, size, &ev);
 		
 	} else {
@@ -246,7 +246,7 @@ gda_report_stream_readChunk (Gda_ReportStream* object, guchar** data, gint32 sta
 
 	real_size = chunk->_length;
 	*data = (guchar *) g_memdup(chunk->_buffer, real_size);
-	if (start == GDA_REPORTSTREAM_NEXT) {
+	if (start == GDA_REPORT_STREAM_NEXT) {
 		object->seek = real_size;
 	} else {
 		object->seek += real_size;
@@ -273,7 +273,7 @@ gda_report_stream_writeChunk (Gda_ReportStream* object, guchar* data, gint32 siz
 	GDA_ReportStreamChunk chunk;
 	gint32 real_size;
 	
-	g_return_val_if_fail(IS_GDA_REPORTSTREAM(object), -1);
+	g_return_val_if_fail(IS_GDA_REPORT_STREAM(object), -1);
 
 	chunk._maximum = 0;
 	chunk._length = size;
@@ -304,7 +304,7 @@ gda_report_stream_length (Gda_ReportStream* object)
 	CORBA_Environment ev;
 	gint32            size;
 
-	g_return_val_if_fail(IS_GDA_REPORTSTREAM(object), -1);
+	g_return_val_if_fail(IS_GDA_REPORT_STREAM(object), -1);
 	
 	CORBA_exception_init(&ev);
 	size = GDA_ReportStream_getLength(object->corba_reportstream, &ev);

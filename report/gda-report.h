@@ -17,8 +17,8 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef __gda_report_object_h__
-#define __gda_report_object_h__
+#ifndef __gda_report_h__
+#define __gda_report_h__
 
 #ifdef HAVE_GOBJECT
 #include <glib-object.h>
@@ -32,6 +32,9 @@ extern "C" {
 
 #include <GDA_Report.h>
 #include <gda-report-engine.h>
+#include <gda-report-element.h>
+#include <gda-report-format.h>
+#include <gda-report-output.h>
 
 typedef struct _Gda_Report       Gda_Report;
 typedef struct _Gda_ReportClass  Gda_ReportClass;
@@ -47,7 +50,6 @@ struct _Gda_Report {
 	gchar*		rep_name;
 	gchar*		description;
 	GList*		errors_head;
-	gint32		seek;
 };
 
 struct _Gda_ReportClass {
@@ -84,19 +86,17 @@ Gda_Report*		gda_report_new			(gchar* rep_name, gchar* description);
 void			gda_report_free			(Gda_Report* object);
 
 gchar*			gda_report_get_name		(Gda_Report* object);
-gint*			gda_report_set_name		(Gda_Report* object, gchar* name);
+gint			gda_report_set_name		(Gda_Report* object, gchar* name);
 
 gchar*			gda_report_get_description	(Gda_Report* object);
-gint*			gda_report_set_description	(Gda_Report* object, gchar* description);
+gint			gda_report_set_description	(Gda_Report* object, gchar* description);
 
 Gda_ReportElement*	gda_report_get_elements		(Gda_Report* object);
-gint*			gda_report_set_elements		(Gda_Report* object, Gda_ReportElement* element);
+gint			gda_report_set_elements		(Gda_Report* object, Gda_ReportElement* element);
 
 Gda_ReportFormat*	gda_report_get_format		(Gda_Report* object);
 
-Gda_ReportOutput*	gda_report_run			(Gda_Report* object,
-							 Gda_ReportParamList list,
-							 gint32 flags);
+Gda_ReportOutput*	gda_report_run			(Gda_Report* object, GList param, gint32 flags);
 							 
 gboolean		gda_report_isLocked		(Gda_Report* object);
 void			gda_report_lock			(Gda_Report* object);
