@@ -61,6 +61,32 @@ static gint gda_client_signals[LAST_SIGNAL] = { 0 };
 static GObjectClass *parent_class = NULL;
 
 /*
+ * Private functions
+ */
+
+static void
+emit_client_error (GdaClient *client, GdaConnection *cnc, const gchar *format, ...)
+{
+	va_list args;
+	gchar sz[2048];
+	GdaError *error;
+	GList *list;
+
+	/* build the message string */
+	va_start (args, format);
+	vsprintf (sz, format, args);
+	va_end (args);
+
+	/* create the error list */
+	error = gda_error_new ();
+	gda_error_set_description (error, sz);
+	gda_error_set_source (error, "[GDA client]");
+
+	list = g_list_append (NULL, error);
+	g_signal_emit (G_OBJECT (client), gda_client_signals[ERROR], 0, cnc, list);
+}
+
+/*
  * Callbacks
  */
 
@@ -218,6 +244,7 @@ gda_client_open_connection (GdaClient *client,
 	GdaConnection *cnc;
 	LoadedProvider *prv;
 	GdaDataSourceInfo *dsn_info;
+	GdaError *error;
 
 	g_return_val_if_fail (GDA_IS_CLIENT (client), NULL);
 
@@ -242,7 +269,9 @@ gda_client_open_connection (GdaClient *client,
 
 		prv_info = gda_config_get_provider_by_name (dsn_info->provider);
 		if (!prv_info) {
-			gda_log_error (_("Provider %s is not installed"), dsn_info->provider);
+			emit_client_error (client, NULL,
+					   _("Could not find provider %s in the current setup"),
+					   dsn_info->provider);
 			gda_config_free_data_source_info (dsn_info);
 			return NULL;
 		}
@@ -251,7 +280,7 @@ gda_client_open_connection (GdaClient *client,
 		prv = g_new0 (LoadedProvider, 1);
 		prv->handle = g_module_open (prv_info->location, G_MODULE_BIND_LAZY);
 		if (!prv->handle) {
-			gda_log_error (_("Could not load %s provider"), dsn_info->provider);
+			emit_client_error (client, NULL, g_module_error ());
 			gda_config_free_data_source_info (dsn_info);
 			g_free (prv);
 			return NULL;
@@ -267,8 +296,9 @@ gda_client_open_connection (GdaClient *client,
 				 (gpointer) &prv->plugin_create_provider);
 
 		if (!prv->plugin_create_provider) {
-			gda_log_error (_("Provider %s does not implement entry point"),
-				       dsn_info->provider);
+			emit_client_error (client, NULL,
+					   _("Provider %s does not implement entry function"),
+					   dsn_info->provider);
 			gda_config_free_data_source_info (dsn_info);
 			g_free (prv);
 			return NULL;
@@ -276,7 +306,8 @@ gda_client_open_connection (GdaClient *client,
 
 		prv->provider = prv->plugin_create_provider ();
 		if (!prv->provider) {
-			gda_log_error (_("Creation of GdaServerProvider failed"));
+			emit_client_error (client, NULL,
+					   _("Could not create GdaServerProvider object from plugin"));
 			gda_config_free_data_source_info (dsn_info);
 			g_free (prv);
 			return NULL;
