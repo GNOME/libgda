@@ -523,14 +523,13 @@ gda_freetds_get_fields (GdaConnection *cnc, GdaParameterList *params)
 	                         "       c.length, "
 	                         "       c.prec, "
 	                         "       c.scale, "
-	                         "       t.allownulls, "
+	                         "       (CASE WHEN ((c.status & 0x80) = 0x80) THEN 1 ELSE 0 END) AS \"identity\", "
+				 "       (CASE WHEN ((c.status & 0x08) = 0x08) THEN 1 ELSE 0 END) AS nullable, "
 	                         "       c.domain, "
 	                         "       c.printfmt "
-	                         "  FROM syscolumns c, sysobjects o, "
-	                         "       systypes t "
-	                         "    WHERE c.id = o.id "
-	                         "      AND c.usertype = t.usertype "
-	                         "    HAVING o.name = '%s' "
+	                         "  FROM syscolumns c, systypes t "
+	                         "    WHERE (c.id = OBJECT_ID('%s')) "
+	                         "      AND (c.usertype = t.usertype) "
 	                         "  ORDER BY c.colid ASC", table);
 	recset = gda_freetds_execute_query (cnc, query);
 	g_free (query);
@@ -548,10 +547,12 @@ gda_freetds_get_fields (GdaConnection *cnc, GdaParameterList *params)
 		gda_data_model_set_column_title (GDA_DATA_MODEL (recset),  4,
 		                                 _("Scale"));
 		gda_data_model_set_column_title (GDA_DATA_MODEL (recset),  5,
-		                                 _("Nullable"));
+		                                 _("Identity"));
 		gda_data_model_set_column_title (GDA_DATA_MODEL (recset),  6,
-		                                 _("Domain"));
+		                                 _("Nullable"));
 		gda_data_model_set_column_title (GDA_DATA_MODEL (recset),  7,
+		                                 _("Domain"));
+		gda_data_model_set_column_title (GDA_DATA_MODEL (recset),  8,
 		                                 _("Printfmt"));
 	}
 
