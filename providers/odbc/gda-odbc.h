@@ -25,10 +25,6 @@
 #if !defined(__gda_odbc_h__)
 #  define __gda_odbc_h__
 
-#if defined(HAVE_CONFIG_H)
-#  include <config.h>
-#endif
-
 #include <glib/gmacros.h>
 #include <glib-object.h>
 #include <libgda/gda-intl.h>

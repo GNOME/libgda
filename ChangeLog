@@ -1,3 +1,10 @@
+2003-01-28  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
+	* providers/odbc/gda-odbc-provider.c:
+	* providers/odbc/gda-odbc-recordset.c:
+	* providers/odbc/gda-odbc.h:
+	* providers/odbc/utils.c: removed config.h.
+
 2003-01-27  Santi Camps <santi@gnome-db.org>
 
 	* libgda/report/libgda-report/Makefile.am: 
