@@ -41,9 +41,12 @@ typedef enum {
 	   should notify on very special cases (like a transaction being started
 	   or committed via a BEGIN/COMMIT command directly sent to the
 	   execute_command method on the provider */
-	GDA_CLIENT_EVENT_ERROR,             /* params: "error" */
-	GDA_CLIENT_EVENT_CONNECTION_OPENED, /* params: */
-	GDA_CLIENT_EVENT_CONNECTION_CLOSED  /* */
+	GDA_CLIENT_EVENT_ERROR,                 /* params: "error" */
+	GDA_CLIENT_EVENT_CONNECTION_OPENED,     /* params: */
+	GDA_CLIENT_EVENT_CONNECTION_CLOSED,     /* params: */
+	GDA_CLIENT_EVENT_TRANSACTION_STARTED,   /* params: "transaction" */
+	GDA_CLIENT_EVENT_TRANSACTION_COMMITTED, /* params: "transaction" */
+	GDA_CLIENT_EVENT_TRANSACTION_CANCELLED, /* params: "transaction" */
 } GdaClientEvent;
 
 typedef struct _GdaClientClass   GdaClientClass;
@@ -85,6 +88,17 @@ void           gda_client_close_all_connections (GdaClient *client);
 
 void           gda_client_notify_event (GdaClient *client, GdaConnection *cnc,
 					GdaClientEvent event, GdaParameterList *params);
+void           gda_client_notify_error_event (GdaClient *client, GdaConnection *cnc, GdaError *error);
+void           gda_client_notify_connection_opened_event (GdaClient *client, GdaConnection *cnc);
+void           gda_client_notify_transaction_started_event (GdaClient *client,
+							    GdaConnection *cnc,
+							    GdaTransaction *xaction);
+void           gda_client_notify_transaction_committed_event (GdaClient *client,
+							      GdaConnection *cnc,
+							      GdaTransaction *xaction);
+void           gda_client_notify_transaction_cancelled_event (GdaClient *client,
+							      GdaConnection *cnc,
+							      GdaTransaction *xaction);
 
 /*
  * Connection stack functions

@@ -15,6 +15,19 @@ Database client access
  #GdaConnection.
 </para>
 
+<!-- ##### ENUM GdaClientEvent ##### -->
+<para>
+
+</para>
+
+@GDA_CLIENT_EVENT_INVALID: 
+@GDA_CLIENT_EVENT_ERROR: 
+@GDA_CLIENT_EVENT_CONNECTION_OPENED: 
+@GDA_CLIENT_EVENT_CONNECTION_CLOSED: 
+@GDA_CLIENT_EVENT_TRANSACTION_STARTED: 
+@GDA_CLIENT_EVENT_TRANSACTION_COMMITTED: 
+@GDA_CLIENT_EVENT_TRANSACTION_CANCELLED: 
+
 <!-- ##### STRUCT GdaClientPrivate ##### -->
 <para>
 
@@ -81,6 +94,66 @@ Database client access
 </para>
 
 @client: 
+
+
+<!-- ##### FUNCTION gda_client_notify_event ##### -->
+<para>
+
+</para>
+
+@client: 
+@cnc: 
+@event: 
+@params: 
+
+
+<!-- ##### FUNCTION gda_client_notify_error_event ##### -->
+<para>
+
+</para>
+
+@client: 
+@cnc: 
+@error: 
+
+
+<!-- ##### FUNCTION gda_client_notify_connection_opened_event ##### -->
+<para>
+
+</para>
+
+@client: 
+@cnc: 
+
+
+<!-- ##### FUNCTION gda_client_notify_transaction_started_event ##### -->
+<para>
+
+</para>
+
+@client: 
+@cnc: 
+@xaction: 
+
+
+<!-- ##### FUNCTION gda_client_notify_transaction_committed_event ##### -->
+<para>
+
+</para>
+
+@client: 
+@cnc: 
+@xaction: 
+
+
+<!-- ##### FUNCTION gda_client_notify_transaction_cancelled_event ##### -->
+<para>
+
+</para>
+
+@client: 
+@cnc: 
+@xaction: 
 
 
 <!-- ##### FUNCTION gda_client_begin_transaction ##### -->

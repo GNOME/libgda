@@ -1,3 +1,22 @@
+2003-01-26  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* libgda/gda-client.h: added new event types.
+
+	* libgda/gda-client.c (gda_client_notify_error_event):
+	(gda_client_notify_connection_opened_event):
+	(gda_client_notify_connection_closed_event):
+	(gda_client_notify_transaction_started_event):
+	(gda_client_notify_transaction_committed_event):
+	(gda_client_notify_transaction_cancelled_event): new functions.
+	(connection_error_cb, gda_client_open_connection): use the new
+	gda_client_notify_* functions to notify events.
+
+	* libgda/gda-connection.c (gda_connection_finalize,
+	gda_connection_new, gda_connection_begin_transaction,
+	gda_connection_commit_transaction,
+	gda_connection_rollback_transaction): use the new gda_client_notify_*
+	functions to notify events.
+
 2003-01-23  Santi Camps <santi@gnome-db.org>
 
 	* libgda/report/libgda-report/Makefile.am: 

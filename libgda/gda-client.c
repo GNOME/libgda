@@ -111,21 +111,14 @@ free_hash_provider (gpointer key, gpointer value, gpointer user_data)
 static void
 connection_error_cb (GdaConnection *cnc, GList *error_list, gpointer user_data)
 {
-	GdaParameterList *params;
 	GList *l;
 	GdaClient *client = (GdaClient *) user_data;
 
 	g_return_if_fail (GDA_IS_CLIENT (client));
 
 	/* notify actions */
-	for (l = error_list; l != NULL; l = l->next) {
-		params = gda_parameter_list_new ();
-		gda_parameter_list_add_parameter (
-			params,
-			gda_parameter_new_gobject ("error", (const GObject *) l->data));
-		gda_client_notify_event (client, cnc, GDA_CLIENT_EVENT_ERROR, params);
-		gda_parameter_list_free (params);
-	}
+	for (l = error_list; l != NULL; l = l->next)
+		gda_client_notify_error_event (client, cnc, GDA_ERROR (l->data));
 }
 
 static void
@@ -312,8 +305,7 @@ gda_client_open_connection (GdaClient *client,
 	cnc = gda_client_find_connection (client, dsn, username, password);
 	if (cnc) {
 		g_object_ref (G_OBJECT (cnc));
-
-		gda_client_notify_event (client, cnc, GDA_CLIENT_EVENT_CONNECTION_OPENED, NULL);
+		gda_client_notify_connection_opened_event (client, cnc);
 		return cnc;
 	}
 
@@ -568,6 +560,134 @@ gda_client_notify_event (GdaClient *client,
 	g_return_if_fail (GDA_IS_CLIENT (client));
 	g_signal_emit (G_OBJECT (client), gda_client_signals[EVENT_NOTIFICATION], 0,
 		       cnc, event, params);
+}
+
+/**
+ * gda_client_notify_error_event
+ * @client: a #GdaClient object.
+ * @cnc: a #GdaConnection object.
+ * @error: the error to be notified.
+ *
+ * Notify the given #GdaClient of the #GDA_CLIENT_EVENT_ERROR event.
+ */
+void
+gda_client_notify_error_event (GdaClient *client, GdaConnection *cnc, GdaError *error)
+{
+	GdaParameterList *params;
+
+	g_return_if_fail (GDA_IS_CLIENT (client));
+	g_return_if_fail (GDA_IS_CONNECTION (cnc));
+	g_return_if_fail (error != NULL);
+
+	params = gda_parameter_list_new ();
+	gda_parameter_list_add_parameter (params, gda_parameter_new_gobject ("error", error));
+	gda_client_notify_event (client, cnc, GDA_CLIENT_EVENT_ERROR, params);
+
+	gda_parameter_list_free (params);
+}
+
+/**
+ * gda_client_notify_connection_opened_event
+ * @client: a #GdaClient object.
+ * @cnc: a #GdaConnection object.
+ *
+ * Notify the given #GdaClient of the #GDA_CLIENT_EVENT_CONNECTION_OPENED event.
+ */
+void
+gda_client_notify_connection_opened_event (GdaClient *client, GdaConnection *cnc)
+{
+	g_return_if_fail (GDA_IS_CLIENT (client));
+	g_return_if_fail (GDA_IS_CONNECTION (cnc));
+
+	gda_client_notify_event (client, cnc, GDA_CLIENT_EVENT_CONNECTION_OPENED, NULL);
+}
+
+/**
+ * gda_client_notify_connection_closed_event
+ * @client: a #GdaClient object.
+ * @cnc: a #GdaConnection object.
+ *
+ * Notify the given #GdaClient of the #GDA_CLIENT_EVENT_CONNECTION_CLOSED event.
+ */
+void
+gda_client_notify_connection_closed_event (GdaClient *client, GdaConnection *cnc)
+{
+	g_return_if_fail (GDA_IS_CLIENT (client));
+	g_return_if_fail (GDA_IS_CONNECTION (cnc));
+
+	gda_client_notify_event (client, cnc, GDA_CLIENT_EVENT_CONNECTION_CLOSED, NULL);
+}
+
+/**
+ * gda_client_notify_transaction_started_event
+ * @client: a #GdaClient object.
+ * @cnc: a #GdaConnection object.
+ * @xaction: a #GdaTransaction object.
+ *
+ * Notify the given #GdaClient of the #GDA_CLIENT_EVENT_TRANSACTION_STARTED event.
+ */
+void
+gda_client_notify_transaction_started_event (GdaClient *client, GdaConnection *cnc, GdaTransaction *xaction)
+{
+	GdaParameterList *params;
+
+	g_return_if_fail (GDA_IS_CLIENT (client));
+	g_return_if_fail (GDA_IS_CONNECTION (cnc));
+	g_return_if_fail (GDA_IS_TRANSACTION (xaction));
+
+	params = gda_parameter_list_new ();
+	gda_parameter_list_add_parameter (params, gda_parameter_new_gobject ("transaction", xaction));
+	gda_client_notify_event (client, cnc, GDA_CLIENT_EVENT_TRANSACTION_STARTED, params);
+
+	gda_parameter_list_free (params);
+}
+
+/**
+ * gda_client_notify_transaction_committed_event
+ * @client: a #GdaClient object.
+ * @cnc: a #GdaConnection object.
+ * @xaction: a #GdaTransaction object.
+ *
+ * Notify the given #GdaClient of the #GDA_CLIENT_EVENT_TRANSACTION_COMMITTED event.
+ */
+void
+gda_client_notify_transaction_committed_event (GdaClient *client, GdaConnection *cnc, GdaTransaction *xaction)
+{
+	GdaParameterList *params;
+
+	g_return_if_fail (GDA_IS_CLIENT (client));
+	g_return_if_fail (GDA_IS_CONNECTION (cnc));
+	g_return_if_fail (GDA_IS_TRANSACTION (xaction));
+
+	params = gda_parameter_list_new ();
+	gda_parameter_list_add_parameter (params, gda_parameter_new_gobject ("transaction", xaction));
+	gda_client_notify_event (client, cnc, GDA_CLIENT_EVENT_TRANSACTION_COMMITTED, params);
+
+	gda_parameter_list_free (params);
+}
+
+/**
+ * gda_client_notify_transaction_cancelled_event
+ * @client: a #GdaClient object.
+ * @cnc: a #GdaConnection object.
+ * @xaction: a #GdaTransaction object.
+ *
+ * Notify the given #GdaClient of the #GDA_CLIENT_EVENT_TRANSACTION_CANCELLED event.
+ */
+void
+gda_client_notify_transaction_cancelled_event (GdaClient *client, GdaConnection *cnc, GdaTransaction *xaction)
+{
+	GdaParameterList *params;
+
+	g_return_if_fail (GDA_IS_CLIENT (client));
+	g_return_if_fail (GDA_IS_CONNECTION (cnc));
+	g_return_if_fail (GDA_IS_TRANSACTION (xaction));
+
+	params = gda_parameter_list_new ();
+	gda_parameter_list_add_parameter (params, gda_parameter_new_gobject ("transaction", xaction));
+	gda_client_notify_event (client, cnc, GDA_CLIENT_EVENT_TRANSACTION_CANCELLED, params);
+
+	gda_parameter_list_free (params);
 }
 
 /**

@@ -129,7 +129,7 @@ gda_connection_finalize (GObject *object)
 	if (cnc->priv->is_open) {
 		/* close the connection to the provider */
 		gda_server_provider_close_connection (cnc->priv->provider_obj, cnc);
-		gda_client_notify_event (cnc->priv->client, cnc, GDA_CLIENT_EVENT_CONNECTION_CLOSED, NULL);
+		gda_client_notify_connection_closed_event (cnc->priv->client, cnc);
 	}
 
 	g_object_unref (G_OBJECT (cnc->priv->provider_obj));
@@ -272,18 +272,10 @@ gda_connection_new (GdaClient *client,
 		   that's the only way we can notify it of errors
 		   when creating the connection */
 		if (errors_copy) {
-			GdaParameterList *params;
 			GList *l;
 
-			for (l = errors_copy; l != NULL; l = l->next) {
-				params = gda_parameter_list_new ();
-				gda_parameter_list_add_parameter (
-					params,
-					gda_parameter_new_gobject ("error", (const GObject *) l->data));
-				gda_client_notify_event (client, cnc, GDA_CLIENT_EVENT_ERROR, params);
-
-				gda_parameter_list_free (params);
-			}
+			for (l = errors_copy; l != NULL; l = l->next)
+				gda_client_notify_error_event (client, cnc, GDA_ERROR (l->data));
 		}
 		gda_quark_list_free (params);
 		g_object_unref (G_OBJECT (cnc));
@@ -291,7 +283,7 @@ gda_connection_new (GdaClient *client,
 	}
 
 	/* notify action */
-	gda_client_notify_event (client, cnc, GDA_CLIENT_EVENT_CONNECTION_OPENED, NULL);
+	gda_client_notify_connection_opened_event (client, cnc);
 
 	/* free memory */
 	gda_quark_list_free (params);
@@ -776,8 +768,15 @@ gda_connection_execute_non_query (GdaConnection *cnc,
 gboolean
 gda_connection_begin_transaction (GdaConnection *cnc, GdaTransaction *xaction)
 {
+	gboolean retval;
+
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-	return gda_server_provider_begin_transaction (cnc->priv->provider_obj, cnc, xaction);
+
+	retval = gda_server_provider_begin_transaction (cnc->priv->provider_obj, cnc, xaction);
+	if (retval)
+		gda_client_notify_transaction_started_event (cnc->priv->client, cnc, xaction);
+
+	return retval;
 }
 
 /**
@@ -794,8 +793,15 @@ gda_connection_begin_transaction (GdaConnection *cnc, GdaTransaction *xaction)
 gboolean
 gda_connection_commit_transaction (GdaConnection *cnc, GdaTransaction *xaction)
 {
+	gboolean retval;
+
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-	return gda_server_provider_commit_transaction (cnc->priv->provider_obj, cnc, xaction);
+
+	retval = gda_server_provider_commit_transaction (cnc->priv->provider_obj, cnc, xaction);
+	if (retval)
+		gda_client_notify_transaction_committed_event (cnc->priv->client, cnc, xaction);
+
+	return retval;
 }
 
 /**
@@ -813,8 +819,14 @@ gda_connection_commit_transaction (GdaConnection *cnc, GdaTransaction *xaction)
 gboolean
 gda_connection_rollback_transaction (GdaConnection *cnc, GdaTransaction *xaction)
 {
+	gboolean retval;
+
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-	return gda_server_provider_rollback_transaction (cnc->priv->provider_obj, cnc, xaction);
+	retval = gda_server_provider_rollback_transaction (cnc->priv->provider_obj, cnc, xaction);
+	if (retval)
+		gda_client_notify_transaction_cancelled_event (cnc->priv->client, cnc, xaction);
+
+	return retval;
 }
 
 /**

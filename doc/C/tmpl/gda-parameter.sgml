@@ -30,6 +30,16 @@ Functions to manage parameters
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_parameter_new_gobject ##### -->
+<para>
+
+</para>
+
+@name: 
+@value: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_parameter_new_string ##### -->
 <para>
 
