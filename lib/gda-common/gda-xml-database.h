@@ -54,6 +54,7 @@ Gda_XmlDatabase* gda_xml_database_new              (void);
 Gda_XmlDatabase* gda_xml_database_new_from_file    (const gchar *filename);
 void             gda_xml_database_free             (Gda_XmlDatabase *xmldb);
 
+void             gda_xml_database_save             (Gda_XmlDatabase *xmldb, const gchar *filename);
 void             gda_xml_database_changed          (Gda_XmlDatabase *xmldb);
 
 #define gda_xml_database_get_tables(_xmldb_) (GDA_IS_XML_DATABASE((_xmldb_)) ? (_xmldb_)->tables : NULL)

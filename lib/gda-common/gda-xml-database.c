@@ -52,11 +52,11 @@ gda_xml_database_class_init (Gda_XmlDatabaseClass *klass)
 
   xmldb_signals[GDA_XML_DATABASE_CHANGED] =
     gtk_signal_new("changed",
-		   GTK_RUN_FIRST,
-		   object_class->type,
-		   GTK_SIGNAL_OFFSET(Gda_XmlDatabaseClass, changed),
-		   gtk_signal_default_marshaller,
-		   GTK_TYPE_NONE, 0);
+                   GTK_RUN_FIRST,
+                   object_class->type,
+                   GTK_SIGNAL_OFFSET(Gda_XmlDatabaseClass, changed),
+                   gtk_signal_default_marshaller,
+                   GTK_TYPE_NONE, 0);
   gtk_object_class_add_signals(object_class, xmldb_signals, GDA_XML_DATABASE_LAST_SIGNAL);
 
   klass->changed = NULL;
@@ -108,8 +108,8 @@ gda_xml_database_new (void)
   gda_xml_file_construct(GDA_XML_FILE(xmldb), OBJECT_DATABASE);
 
   /* initialize XML nodes */
-  xmldb->tables = xmlNewChild(GDA_XML_FILE(xmldb)->root, NULL, OBJECT_TABLE, NULL);
-  xmldb->views = xmlNewChild(GDA_XML_FILE(xmldb)->root, NULL, OBJECT_VIEW, NULL);
+  xmldb->tables = xmlNewChild(GDA_XML_FILE(xmldb)->root, NULL, "tables", NULL);
+  xmldb->views = xmlNewChild(GDA_XML_FILE(xmldb)->root, NULL, "views", NULL);
 
   return xmldb;
 }
@@ -131,9 +131,9 @@ gda_xml_database_new_from_file (const gchar *filename)
       node = GDA_XML_FILE(xmldb)->root->childs;
       while (node)
         {
-        	if (!strcmp(node->name, OBJECT_TABLE))
+        	if (!strcmp(node->name, "tables"))
         	  xmldb->tables = node;
-        	else if (!strcmp(node->name, OBJECT_VIEW))
+        	else if (!strcmp(node->name, "views"))
         	  xmldb->views = node;
         	node = node->next;
         }
@@ -164,6 +164,19 @@ gda_xml_database_free (Gda_XmlDatabase *xmldb)
 {
   g_return_if_fail(GDA_IS_XML_DATABASE(xmldb));
   gtk_object_destroy(GTK_OBJECT(xmldb));
+}
+
+/**
+ * gda_xml_database_save
+ */
+void
+gda_xml_database_save (Gda_XmlDatabase *xmldb, const gchar *filename)
+{
+  g_return_if_fail(GDA_IS_XML_DATABASE(xmldb));
+  
+  if (!xmlSaveFile(filename, GDA_XML_FILE(xmldb)->doc))
+    {
+    }
 }
 
 /**
