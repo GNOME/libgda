@@ -69,6 +69,14 @@ GdaConnection *gda_client_find_connection (GdaClient *client,
 					   const gchar *password);
 void           gda_client_close_all_connections (GdaClient *client);
 
+/*
+ * Connection stack functions
+ */
+
+gboolean       gda_client_begin_transaction (GdaClient *client, GdaTransaction *xaction);
+gboolean       gda_client_commit_transaction (GdaClient *client, GdaTransaction *xaction);
+gboolean       gda_client_rollback_transaction (GdaClient *client, GdaTransaction *xaction);
+
 G_END_DECLS
 
 #endif

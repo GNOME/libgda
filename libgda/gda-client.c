@@ -244,7 +244,6 @@ gda_client_open_connection (GdaClient *client,
 	GdaConnection *cnc;
 	LoadedProvider *prv;
 	GdaDataSourceInfo *dsn_info;
-	GdaError *error;
 
 	g_return_val_if_fail (GDA_IS_CLIENT (client), NULL);
 
@@ -481,4 +480,108 @@ gda_client_close_all_connections (GdaClient *client)
 	g_list_foreach (client->priv->connections, (GFunc) g_object_unref, NULL);
 	g_list_free (client->priv->connections);
 	client->priv->connections = NULL;
+}
+
+/**
+ * gda_client_begin_transaction
+ * @client: a #GdaClient object.
+ * @xaction: a #GdaTransaction object.
+ *
+ * Start a transaction on all connections being managed by the given
+ * #GdaClient. It is important to note that this operates on all
+ * connections opened within a #GdaClient, which could not be what
+ * you're looking for.
+ *
+ * To execute a transaction on a unique connection, use
+ * #gda_connection_begin_transaction, #gda_connection_commit_transaction
+ * and #gda_connection_rollback_transaction.
+ *
+ * Returns: TRUE if all transactions could be started successfully,
+ * or FALSE if one of them fails.
+ */
+gboolean
+gda_client_begin_transaction (GdaClient *client, GdaTransaction *xaction)
+{
+	GList *l;
+
+	g_return_val_if_fail (GDA_IS_CLIENT (client), FALSE);
+	g_return_val_if_fail (GDA_IS_TRANSACTION (xaction), FALSE);
+
+	for (l = client->priv->connections; l != NULL; l = l->next) {
+		if (!gda_connection_begin_transaction (GDA_CONNECTION (l->data), xaction)) {
+			gda_client_rollback_transaction (client, xaction);
+			return FALSE;
+		}
+	}
+
+	return TRUE;
+}
+
+/**
+ * gda_client_commit_transaction
+ * @client: a #GdaClient object.
+ * @xaction: a #GdaTransaction object.
+ *
+ * Commit a running transaction on all connections being managed by the given
+ * #GdaClient. It is important to note that this operates on all
+ * connections opened within a #GdaClient, which could not be what
+ * you're looking for.
+ *
+ * To execute a transaction on a unique connection, use
+ * #gda_connection_begin_transaction, #gda_connection_commit_transaction
+ * and #gda_connection_rollback_transaction.
+ *
+ * Returns: TRUE if all transactions could be committed successfully,
+ * or FALSE if one of them fails.
+ */
+gboolean
+gda_client_commit_transaction (GdaClient *client, GdaTransaction *xaction)
+{
+	GList *l;
+
+	g_return_val_if_fail (GDA_IS_CLIENT (client), FALSE);
+	g_return_val_if_fail (GDA_IS_TRANSACTION (xaction), FALSE);
+
+	for (l = client->priv->connections; l != NULL; l = l->next) {
+		if (!gda_connection_commit_transaction (GDA_CONNECTION (l->data), xaction)) {
+			gda_client_rollback_transaction (client, xaction);
+			return FALSE;
+		}
+	}
+
+	return TRUE;
+}
+
+/**
+ * gda_client_rollback_transaction
+ * @client: a #GdaClient object.
+ * @xaction: a #GdaTransaction object.
+ *
+ * Cancels a running transaction on all connections being managed by the given
+ * #GdaClient. It is important to note that this operates on all
+ * connections opened within a #GdaClient, which could not be what
+ * you're looking for.
+ *
+ * To execute a transaction on a unique connection, use
+ * #gda_connection_begin_transaction, #gda_connection_commit_transaction
+ * and #gda_connection_rollback_transaction.
+ *
+ * Returns: TRUE if all transactions could be cancelled successfully,
+ * or FALSE if one of them fails.
+ */
+gboolean
+gda_client_rollback_transaction (GdaClient *client, GdaTransaction *xaction)
+{
+	GList *l;
+	gint failures = 0;
+
+	g_return_val_if_fail (GDA_IS_CLIENT (client), FALSE);
+	g_return_val_if_fail (GDA_IS_TRANSACTION (xaction), FALSE);
+
+	for (l = client->priv->connections; l != NULL; l = l->next) {
+		if (!gda_connection_rollback_transaction (GDA_CONNECTION (l->data), xaction))
+			failures++;
+	}
+
+	return failures == 0 ? TRUE : FALSE;
 }

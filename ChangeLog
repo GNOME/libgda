@@ -1,3 +1,15 @@
+2002-10-10  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* libgda/gda-client.[ch]: added support for using it as a connection
+	stack. That is so that clients can make operations (search for a
+	table, run transactions, etc) on a group of connections.
+	(gda_client_begin_transaction, gda_client_commit_transaction,
+	 gda_client_rollback_transaction): support for distributed (many
+	DB connections) transactions.
+	(gda_client_open_connection): removed unused variable.
+
+	* doc/C/tmpl/*: updated.
+
 2002-10-06  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	Fixes #94845

@@ -250,6 +250,15 @@ gda-value
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_value_new_from_xml ##### -->
+<para>
+
+</para>
+
+@node: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_value_free ##### -->
 <para>
 
@@ -633,6 +642,15 @@ gda-value
 
 
 <!-- ##### FUNCTION gda_value_stringify ##### -->
+<para>
+
+</para>
+
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_value_to_xml ##### -->
 <para>
 
 </para>

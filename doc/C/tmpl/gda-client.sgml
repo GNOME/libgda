@@ -81,3 +81,33 @@ Database client access
 @client: 
 
 
+<!-- ##### FUNCTION gda_client_begin_transaction ##### -->
+<para>
+
+</para>
+
+@client: 
+@xaction: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_client_commit_transaction ##### -->
+<para>
+
+</para>
+
+@client: 
+@xaction: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_client_rollback_transaction ##### -->
+<para>
+
+</para>
+
+@client: 
+@xaction: 
+@Returns: 
+
+

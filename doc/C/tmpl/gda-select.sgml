@@ -28,22 +28,13 @@ GdaSelect
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_select_set_source ##### -->
+<!-- ##### FUNCTION gda_select_set_sql ##### -->
 <para>
 
 </para>
 
 @sel: 
-@source: 
-
-
-<!-- ##### FUNCTION gda_select_set_expression ##### -->
-<para>
-
-</para>
-
-@sel: 
-@expression: 
+@sql: 
 
 
 <!-- ##### FUNCTION gda_select_run ##### -->

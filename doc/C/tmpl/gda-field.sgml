@@ -34,6 +34,15 @@ Management of database fields
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_field_attributes_copy ##### -->
+<para>
+
+</para>
+
+@fa: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_field_attributes_free ##### -->
 <para>
 
@@ -78,6 +87,24 @@ Management of database fields
 
 @fa: 
 @name: 
+
+
+<!-- ##### FUNCTION gda_field_attributes_get_table ##### -->
+<para>
+
+</para>
+
+@fa: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_field_attributes_set_table ##### -->
+<para>
+
+</para>
+
+@fa: 
+@table: 
 
 
 <!-- ##### FUNCTION gda_field_attributes_get_caption ##### -->
@@ -204,5 +231,23 @@ Management of database fields
 
 @fa: 
 @ref: 
+
+
+<!-- ##### FUNCTION gda_field_attributes_get_auto_increment ##### -->
+<para>
+
+</para>
+
+@fa: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_field_attributes_set_auto_increment ##### -->
+<para>
+
+</para>
+
+@fa: 
+@is_auto: 
 
 
