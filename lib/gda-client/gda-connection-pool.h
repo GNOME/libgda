@@ -99,6 +99,7 @@ void               gda_connection_pool_close_connection (GdaConnectionPool *pool
 void               gda_connection_pool_close_all (GdaConnectionPool *pool);
 
 typedef void (*GdaConnectionPoolForeachFunc)(GdaConnectionPool *pool,
+											 GdaConnection *cnc,
 											 const gchar *gda_name,
 											 const gchar *username,
 											 const gchar *password,

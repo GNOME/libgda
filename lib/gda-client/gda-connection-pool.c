@@ -434,6 +434,7 @@ gda_connection_pool_foreach (GdaConnectionPool *pool,
 			dsn = (GdaDsn *) gtk_object_get_data(GTK_OBJECT(cnc), "GDA_ConnectionPool_DSN");
 #endif
 			func(pool,
+				 cnc,
 				 GDA_DSN_GDA_NAME(dsn),
 				 gda_connection_get_user(cnc),
 				 gda_connection_get_password(cnc),
