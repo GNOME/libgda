@@ -452,8 +452,7 @@ AC_SUBST(XML_CFLAGS)
 AC_OUTPUT([
 Makefile
 libgda.spec
-libgda-client.pc
-libgda-server.pc
+libgda.pc
 po/Makefile.in
 idl/Makefile
 libgda/Makefile

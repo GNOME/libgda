@@ -1,4 +1,4 @@
-/* GDA common library
+/* GDA library
  * Copyright (C) 1998-2001 The Free Software Foundation
  *
  * AUTHORS:

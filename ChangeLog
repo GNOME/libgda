@@ -1,5 +1,8 @@
 2001-11-02  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* libgda.pc.in: new file to replace libgda-client.pc.in and
+	libgda-server.pc.in
+
 	* configure.in: use shorter names in providers' directories
 
 	* lib/: removed. The new library is in libgda/
