@@ -2,6 +2,7 @@ Makefile
 Makefile.in
 *.o
 *.lo
+*.la
 libgda-primebase
 gda-primebase-srv
 .deps
