@@ -207,6 +207,25 @@ gda_select_new (void)
 }
 
 /**
+ * gda_select_add_source
+ * @sel: a #GdaSelect object.
+ * @source: a #GdaDataModel from which to get data.
+ *
+ * Add a data model as a source of data for the #GdaSelect object. When
+ * the select object is run (via #gda_select_run), it will parse the SQL
+ * and get the required data from the source data models.
+ */
+void
+gda_select_add_source (GdaSelect *sel, const GdaDataModel *source)
+{
+	g_return_if_fail (GDA_IS_SELECT (sel));
+	g_return_if_fail (GDA_IS_DATA_MODEL (source));
+
+	g_object_ref (G_OBJECT (source));
+	sel->priv->source_models = g_list_append (sel->priv->source_models, source);
+}
+
+/**
  * gda_select_set_sql
  * @sel: a #GdaSelect object.
  * @sql: the SQL command to be used for filtering rows.

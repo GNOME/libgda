@@ -1,5 +1,7 @@
 2002-10-10  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* libgda/gda-select.[ch] (gda_select_add_source): new function.
+
 	* libgda/gda-client.[ch]: added support for using it as a connection
 	stack. That is so that clients can make operations (search for a
 	table, run transactions, etc) on a group of connections.

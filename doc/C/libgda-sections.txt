@@ -235,6 +235,7 @@ GDA_IS_EXPORT_CLASS
 GdaSelectPrivate
 <TITLE>GdaSelect</TITLE>
 gda_select_new
+gda_select_add_source
 gda_select_set_sql
 gda_select_run
 <SUBSECTION Standard>
