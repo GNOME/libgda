@@ -58,6 +58,9 @@ gda_mysql_provider_class_init (GdaMysqlProviderClass *klass)
 	object_class->finalize = gda_mysql_provider_finalize;
 	provider_class->open_connection = gda_mysql_provider_open_connection;
 	provider_class->close_connection = gda_mysql_provider_close_connection;
+	provider_class->begin_transaction = NULL;
+	provider_class->commit_transaction = NULL;
+	provider_class->rollback_transaction = NULL;
 }
 
 static void

@@ -46,11 +46,11 @@ struct _GdaServerProviderClass {
 	void (* last_connection_gone) (GdaServerProvider *provider);
 
 	/* virtual methods */
-	GdaServerConnection * (* open_connection) (GdaServerProvider *provider,
-						   GdaServerConnection *cnc,
-						   GdaQuarkList *params,
-						   const gchar *username,
-						   const gchar *password);
+	gboolean (* open_connection) (GdaServerProvider *provider,
+				      GdaServerConnection *cnc,
+				      GdaQuarkList *params,
+				      const gchar *username,
+				      const gchar *password);
 	gboolean (* close_connection) (GdaServerProvider *provider,
 				       GdaServerConnection *cnc);
 
@@ -68,7 +68,7 @@ struct _GdaServerProviderClass {
 GType    gda_server_provider_get_type (void);
 gboolean gda_server_provider_open_connection (GdaServerProvider *provider,
 					      GdaServerConnection *cnc,
-					      GdaParameterList *params,
+					      GdaQuarkList *params,
 					      const gchar *username,
 					      const gchar *password);
 gboolean gda_server_provider_close_connection (GdaServerProvider *provider,

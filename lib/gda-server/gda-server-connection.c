@@ -50,18 +50,18 @@ impl_Connection_open (PortableServer_Servant servant,
 		      CORBA_Environment *ev)
 {
 	gboolean result;
-	GdaParameterList *params;
+	GdaQuarkList *params;
 	GdaServerConnection *cnc = (GdaServerConnection *) bonobo_x_object (servant);
 
 	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), FALSE);
 
-	params = gda_parameter_list_new_from_string (cnc_string);
+	params = gda_quark_list_new_from_string (cnc_string);
 	result = gda_server_provider_open_connection (cnc->priv->provider,
 						      cnc, params, username, password);
 	if (!result)
 		gda_error_list_to_exception (cnc->priv->errors, ev);
 	gda_server_connection_free_error_list (cnc);
-	gda_parameter_list_free (params);
+	gda_quark_list_free (params);
 
 	return result;
 }

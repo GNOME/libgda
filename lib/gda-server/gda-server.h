@@ -24,6 +24,9 @@
 #  define __gda_server_h__
 
 #include <gda-common.h>
+#include <gda-server-connection.h>
+#include <gda-server-provider.h>
+#include <gda-server-recordset.h>
 
 G_BEGIN_DECLS
 

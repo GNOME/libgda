@@ -136,7 +136,7 @@ BONOBO_X_TYPE_FUNC_FULL (GdaServerProvider,
 gboolean
 gda_server_provider_open_connection (GdaServerProvider *provider,
 				     GdaServerConnection *cnc,
-				     GdaParameterList *params,
+				     GdaQuarkList *params,
 				     const gchar *username,
 				     const gchar *password)
 {
