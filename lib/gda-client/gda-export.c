@@ -30,6 +30,7 @@ struct _GdaExportPrivate {
 	GHashTable *selected_tables;
 
 	gboolean running;
+	GdaExportFlags tmp_flags;
 	GList *tmp_tables;
 	GdaXmlDatabase *tmp_xmldb;
 };
@@ -158,7 +159,9 @@ run_export_cb (gpointer user_data)
 			g_free (type);
 		}
 
-		/* FIXME: export data */
+		if (exp->priv->tmp_flags & GDA_EXPORT_FLAGS_TABLE_DATA) {
+			/* FIXME: export data */
+		}
 
 		/* free memory */
 		gda_recordset_free (recset);
@@ -166,6 +169,8 @@ run_export_cb (gpointer user_data)
 
 		exp->priv->tmp_tables = g_list_remove (exp->priv->tmp_tables, name);
 		g_free (name);
+
+		num_found++;
 	}
 
 	/* if we didn't treat any object, we're finished */
@@ -420,19 +425,21 @@ gda_export_unselect_table (GdaExport *exp, const gchar *table)
 /**
  * gda_export_run
  * @export: a #GdaExport object
+ * @flags: execution flags
  *
  * Starts the execution of the given export object. This means that, after
  * calling this function, your application will lose control about the export
  * process and will only receive notifications via the class signals
  */
 void
-gda_export_run (GdaExport *exp)
+gda_export_run (GdaExport *exp, GdaExportFlags flags)
 {
 	g_return_if_fail (GDA_IS_EXPORT (exp));
 	g_return_if_fail (exp->priv->running == FALSE);
 	g_return_if_fail (gda_connection_is_open (exp->priv->cnc));
 
 	exp->priv->running = TRUE;
+	exp->priv->tmp_flags = flags;
 	exp->priv->tmp_tables = gda_util_hash_to_list (exp->priv->selected_tables);
 	exp->priv->tmp_xmldb = gda_xml_database_new ();
 

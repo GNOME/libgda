@@ -63,6 +63,10 @@ struct _GdaExportClass {
 	void (*cancelled) (GdaExport *exp);
 };
 
+typedef enum {
+	GDA_EXPORT_FLAGS_TABLE_DATA = 1
+} GdaExportFlags;
+
 GtkType        gda_export_get_type (void);
 
 GdaExport     *gda_export_new (GdaConnection * cnc);
@@ -74,7 +78,7 @@ void           gda_export_select_table (GdaExport * exp, const gchar * table);
 void           gda_export_select_table_list (GdaExport *exp, GList *tables);
 void           gda_export_unselect_table (GdaExport * exp, const gchar * table);
 
-void           gda_export_run (GdaExport * exp);
+void           gda_export_run (GdaExport * exp, GdaExportFlags flags);
 void           gda_export_stop (GdaExport * exp);
 
 GdaConnection *gda_export_get_connection (GdaExport * exp);
