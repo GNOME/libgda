@@ -40,7 +40,7 @@ extern "C" {
 #define GDA_TYPE_XML_ITEM (gda_xml_item_get_type ())
 #define GDA_XML_ITEM(obj)            GTK_CHECK_CAST(obj, GDA_TYPE_XML_ITEM, GdaXmlItem)
 #define GDA_XML_ITEM_CLASS(klass)    GTK_CHECK_CLASS_CAST(klass, GDA_TYPE_XML_ITEM, GdaXmlItemClass)
-#define GDA_IS_XML_ITEM(obj)         GTK_CHECK_TYPE(obj, GDA_TYPE_XMLITEM)
+#define GDA_IS_XML_ITEM(obj)         GTK_CHECK_TYPE(obj, GDA_TYPE_XML_ITEM)
 #define GDA_IS_XML_ITEM_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_XML_ITEM))
 
 typedef struct _GdaXmlItem        GdaXmlItem;

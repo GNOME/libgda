@@ -29,8 +29,12 @@ gda_common_headers = \
 	gda-quark-list.h \
 	gda-thread.h \
 	gda-util.h \
+	gda-xml-atom-item.h \
+	gda-xml-bin-item.h \
 	gda-xml-database.h \
 	gda-xml-document.h \
+	gda-xml-item.h \
+	gda-xml-list-item.h \
 	gda-xml-util.h \
 	gda-common.h \
 	GDA.h
@@ -49,8 +53,12 @@ libgda_common_la_SOURCES = \
 	gda-quark-list.c \
 	gda-thread.c \
 	gda-util.c \
+	gda-xml-atom-item.c \
+	gda-xml-bin-item.c \
 	gda-xml-database.c \
 	gda-xml-document.c \
+	gda-xml-item.c \
+	gda-xml-list-item.c \
 	gda-xml-util.c
 
 libgda_common_la_LIBADD=\

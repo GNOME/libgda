@@ -23,6 +23,22 @@
 
 #include "config.h"
 #include "gda-xml-item.h"
+#include "gda-util.h"
+
+#ifdef ENABLE_NLS
+#  include <libintl.h>
+#  define _(String) gettext (String)
+#  define N_(String) (String)
+#else
+/* Stubs that do something close enough. */
+#  define textdomain(String)
+#  define gettext(String) (String)
+#  define dgettext(Domain,Message) (Message)
+#  define dcgettext(Domain,Message,Type) (Message)
+#  define bindtextdomain(Domain,Directory)
+#  define _(String) (String)
+#  define N_(String) (String)
+#endif
 
 struct _GdaXmlItemPrivate {
 	gchar*      tag;
@@ -36,6 +52,7 @@ static void gda_xml_item_class_init (GdaXmlItemClass *klass);
 static void gda_xml_item_init       (GdaXmlItem *item);
 static void gda_xml_item_destroy    (GtkObject *object);
 
+static GdaXmlItem *gda_xml_item_class_find_id (GdaXmlItem *item, const gchar *id);
 static xmlNodePtr gda_xml_item_class_to_dom (GdaXmlItem *item, xmlNodePtr parent_node);
 
 /**
@@ -85,7 +102,7 @@ gda_xml_item_class_init (GdaXmlItemClass *klass)
 {
 	GtkObjectClass *object_class = GTK_OBJECT_CLASS (klass);
 
-	object_class->destroy = gda_xml_file_destroy;
+	object_class->destroy = gda_xml_item_destroy;
 	klass->add = NULL;
 	klass->to_dom = gda_xml_item_class_to_dom;
 	klass->find_id = gda_xml_item_class_find_id;
@@ -296,7 +313,7 @@ gda_xml_item_find_root (GdaXmlItem *item)
 	return gda_xml_item_find_root (parent);
 }
 
-static void
+static GdaXmlItem *
 gda_xml_item_class_find_id (GdaXmlItem *item, const gchar *id)
 {
 	g_return_val_if_fail (GDA_IS_XML_ITEM (item), NULL);
@@ -362,7 +379,7 @@ gda_xml_item_add_ref (GdaXmlItem *item, const gchar *ref)
 	root = gda_xml_item_find_root (item);
 	ref_node = gda_xml_item_find_id (root, ref);
 	if (ref_node == NULL) {
-		gda_log_warning (_("Item with id %s not found"), ref);
+		gda_log_message (_("Item with id %s not found"), ref);
 		return;
 	}
 

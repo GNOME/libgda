@@ -33,19 +33,19 @@ extern "C" {
 #define GDA_TYPE_XML_LIST_ITEM            (gda_xml_list_item_get_type ())
 #define GDA_XML_LIST_ITEM(obj)            GTK_CHECK_CAST(obj, GDA_TYPE_XML_LIST_ITEM, GdaXmlListItem)
 #define GDA_XML_LIST_ITEM_CLASS(klass)    GTK_CHECK_CLASS_CAST(klass, GDA_TYPE_XML_LIST_ITEM, GdaXmlListItemClass)
-#define GDA_IS_XML_LIST_ITEM(obj)         GTK_CHECK_TYPE(obj, GDA_TYPE_XMLBIN)
+#define GDA_IS_XML_LIST_ITEM(obj)         GTK_CHECK_TYPE(obj, GDA_TYPE_XML_LIST_ITEM)
 #define GDA_IS_XML_LIST_ITEM_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_XML_LIST_ITEM))
 
 typedef struct _GdaXmlListItem        GdaXmlListItem;
 typedef struct _GdaXmlListItemClass   GdaXmlListItemClass;
 typedef struct _GdaXmlListItemPrivate GdaXmlListItemPrivate;
 
-typedef struct _GdaXmlListItem {
+struct _GdaXmlListItem {
 	GdaXmlItem item;
 	GdaXmlListItemPrivate *priv;
 };
 
-typedef struct _GdaXmlListItemClass {
+struct _GdaXmlListItemClass {
 	GdaXmlItemClass parent_class;
 };
 

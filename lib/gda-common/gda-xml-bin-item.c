@@ -22,7 +22,7 @@
  */
 
 #include "config.h"
-#include "gda-xml-bin.h"
+#include "gda-xml-bin-item.h"
 
 struct _GdaXmlBinItemPrivate {
 	GdaXmlItem *child;

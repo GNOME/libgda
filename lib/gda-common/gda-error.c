@@ -214,7 +214,7 @@ gda_error_list_from_exception (CORBA_Environment* ev)
 		break;
 	}
 	default:
-		g_error("Unknown CORBA exception for connection");
+		g_error (_("Unknown CORBA exception for connection"));
 	}
 
 	return all_errors;

@@ -49,11 +49,12 @@ static void
 gda_xml_list_item_class_init (GdaXmlListItemClass *klass)
 {
 	GtkObjectClass *object_class = GTK_OBJECT_CLASS (klass);
+	GdaXmlItemClass *item_class = GDA_XML_ITEM_CLASS (klass);
 
 	object_class->destroy = gda_xml_list_item_destroy;
-	klass->add = gda_xml_list_item_add;
-	klass->to_dom = gda_xml_list_item_to_dom;
-	klass->find_id = gda_xml_list_item_find_id;
+	item_class->add = gda_xml_list_item_add;
+	item_class->to_dom = gda_xml_list_item_to_dom;
+	item_class->find_id = gda_xml_list_item_find_id;
 }
 
 static void
