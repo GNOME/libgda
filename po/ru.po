@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda-2\n"
-"POT-Creation-Date: 2002-03-14 08:10-0500\n"
-"PO-Revision-Date: 2002-03-15 14:00+0300\n"
+"POT-Creation-Date: 2002-03-18 08:49-0500\n"
+"PO-Revision-Date: 2002-03-18 21:59+03:00\n"
 "Last-Translator: Valek Filippov <frob@df.ru>\n"
 "Language-Team: Russian <gnome-cyr@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -36,7 +36,7 @@ msgstr "Не удалось запросить компоненты COBRA"
 msgid "Could not query CORBA providers"
 msgstr "Не удалось запросить провайдеров COBRA"
 
-#: libgda/gda-config.c:869
+#: libgda/gda-config.c:869 providers/default/gda-default-provider.c:331
 msgid "Name"
 msgstr "Название"
 
@@ -124,35 +124,40 @@ msgstr "Не удалось загрузить файл %s"
 msgid "Could not parse file at %s"
 msgstr "Не удалось проанализировать файл %s"
 
-#: libgda/gda-xml-database.c:232 libgda/gda-xml-database.c:249
+#: libgda/gda-xml-database.c:233
 #, c-format
 msgid "Invalid XML database file '%s'"
 msgstr "Неправильный файл базы данных XML \"%s\""
 
-#: libgda/gda-xml-database.c:293 libgda/gda-xml-database.c:333
+#: libgda/gda-xml-database.c:369 libgda/gda-xml-database.c:410
 #, c-format
 msgid "Table %s already exists"
 msgstr "Таблица %s уже существует"
 
-#: libgda/gda-xml-database.c:327
+#: libgda/gda-xml-database.c:403
 msgid "Invalid node"
 msgstr "Неправильный узел"
 
-#: libgda/gda-xml-database.c:358
+#: libgda/gda-xml-database.c:435
 #, c-format
 msgid "Duplicated <data> node for table %s"
 msgstr "Дублированный узел <data> для таблицы %s"
 
-#: libgda/gda-xml-database.c:365
+#: libgda/gda-xml-database.c:442
 msgid "Invalid XML node"
 msgstr "Неправильный узел XML"
 
-#: providers/default/gda-default-provider.c:139
+#: providers/default/gda-default-provider.c:159
 #: providers/sqlite/gda-sqlite-provider.c:152
 msgid ""
 "A full path must be specified on the connection string to open a database."
 msgstr ""
 "В строке соединения должен быть указан полный путь для открытия базы данных."
+
+# fe/fe_editor.c:175 fe/fe_editor.c:212
+#: providers/default/gda-default-provider.c:167
+msgid "Could not open given file"
+msgstr "Не удалось открыть указанный файл"
 
 #: providers/default/GNOME_Database_Provider_Default.server.in.h:1
 msgid "Default component factory"
@@ -179,7 +184,7 @@ msgid "Invalid MYSQL handle"
 msgstr "Неправильный обработчик MySQL"
 
 #: providers/mysql/gda-mysql-provider.c:464
-#: providers/postgres/gda-postgres-provider.c:570
+#: providers/postgres/gda-postgres-provider.c:568
 msgid "Type"
 msgstr "Тип"
 
@@ -189,7 +194,7 @@ msgid "Invalid MySQL handle"
 msgstr "Неправильный обработчик MySQL"
 
 #: providers/mysql/gda-mysql-recordset.c:76
-#: providers/postgres/gda-postgres-recordset.c:70
+#: providers/postgres/gda-postgres-recordset.c:79
 #: providers/sqlite/gda-sqlite-recordset.c:74
 msgid "Row number out of range"
 msgstr "Номер строки вне диапазона"
@@ -250,12 +255,44 @@ msgstr "Не удалось инициализировать фабрику компонента Oracle"
 msgid "Could not initialize OCI library"
 msgstr "Не удалось инициализировать библиотеку OCI"
 
-#: providers/postgres/gda-postgres-provider.c:318
-#: providers/postgres/gda-postgres-provider.c:456
-#: providers/postgres/gda-postgres-recordset.c:59
-#: providers/postgres/gda-postgres-recordset.c:110
+#: providers/postgres/gda-postgres-provider.c:315
+#: providers/postgres/gda-postgres-provider.c:453
+#: providers/postgres/gda-postgres-recordset.c:68
+#: providers/postgres/gda-postgres-recordset.c:123
 msgid "Invalid PostgreSQL handle"
 msgstr "Неправильный обработчик PostgreSQL"
+
+#: providers/postgres/gda-postgres-provider.c:679
+msgid "Field name"
+msgstr "Название поля"
+
+#: providers/postgres/gda-postgres-provider.c:680
+msgid "Data type"
+msgstr "Тип данных"
+
+#: providers/postgres/gda-postgres-provider.c:681
+msgid "Size"
+msgstr "Размер"
+
+#: providers/postgres/gda-postgres-provider.c:682
+msgid "Scale"
+msgstr "Масштаб"
+
+#: providers/postgres/gda-postgres-provider.c:683
+msgid "Not null?"
+msgstr "Не null?"
+
+#: providers/postgres/gda-postgres-provider.c:684
+msgid "Primary key?"
+msgstr "Первичный ключ?"
+
+#: providers/postgres/gda-postgres-provider.c:685
+msgid "Unique index?"
+msgstr "Уникальный индекс?"
+
+#: providers/postgres/gda-postgres-provider.c:686
+msgid "References"
+msgstr "Ссылки"
 
 #: providers/postgres/GNOME_Database_Provider_Postgres.server.in.h:1
 msgid "GDA Datasource Access for Postgres"
