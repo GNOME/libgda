@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda HEAD\n"
-"POT-Creation-Date: 2002-12-20 06:45+0100\n"
-"PO-Revision-Date: 2002-12-20 13:12+0100\n"
+"POT-Creation-Date: 2002-12-25 06:57+0100\n"
+"PO-Revision-Date: 2002-12-25 13:23+0100\n"
 "Last-Translator: Miloslav Trmac <mitr@volny.cz>\n"
 "Language-Team: Czech <cs@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -714,13 +714,13 @@ msgstr "Nelze zjistit nulovatelný atribut pole Oracle"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/oracle/gda-oracle-provider.c:1491
-#: providers/postgres/gda-postgres-provider.c:1789 testing/client.c:129
+#: providers/postgres/gda-postgres-provider.c:1789 testing/client.c:133
 msgid "Users"
 msgstr "Uživatelé"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/oracle/gda-oracle-provider.c:1717
-#: providers/postgres/gda-postgres-provider.c:1218 testing/client.c:127
+#: providers/postgres/gda-postgres-provider.c:1218 testing/client.c:131
 msgid "Indexes"
 msgstr "Indexy"
 
@@ -728,17 +728,17 @@ msgstr "Indexy"
 msgid "Procedures"
 msgstr "Procedury"
 
-#: providers/oracle/gda-oracle-provider.c:1725 testing/client.c:130
+#: providers/oracle/gda-oracle-provider.c:1725 testing/client.c:134
 msgid "Sequences"
 msgstr "Sekvence"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/oracle/gda-oracle-provider.c:1732
-#: providers/postgres/gda-postgres-provider.c:1335 testing/client.c:131
+#: providers/postgres/gda-postgres-provider.c:1335 testing/client.c:135
 msgid "Triggers"
 msgstr "Triggery"
 
-#: providers/oracle/gda-oracle-provider.c:1736 testing/client.c:126
+#: providers/oracle/gda-oracle-provider.c:1736 testing/client.c:130
 msgid "Views"
 msgstr "Náhledy"
 
@@ -859,7 +859,7 @@ msgid "InType"
 msgstr "InType"
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:1754 testing/client.c:122
+#: providers/postgres/gda-postgres-provider.c:1754 testing/client.c:126
 msgid "Databases"
 msgstr "Databáze"
 
@@ -1253,14 +1253,14 @@ msgstr "\t\tAgregace: %s\n"
 #: testing/client.c:90 testing/client.c:93 testing/client.c:96
 #: testing/client.c:99 testing/client.c:102 testing/client.c:105
 #: testing/client.c:108 testing/client.c:111 testing/client.c:114
-#: testing/client.c:117
+#: testing/client.c:117 testing/client.c:120
 msgid "Supported"
 msgstr "Podporováno"
 
 #: testing/client.c:90 testing/client.c:93 testing/client.c:96
 #: testing/client.c:99 testing/client.c:102 testing/client.c:105
 #: testing/client.c:108 testing/client.c:111 testing/client.c:114
-#: testing/client.c:117
+#: testing/client.c:117 testing/client.c:120
 msgid "Not supported"
 msgstr "Nepodporováno"
 
@@ -1271,46 +1271,51 @@ msgstr "\t\tIndexy: %s\n"
 
 #: testing/client.c:94
 #, c-format
+msgid "\t\tNamespaces: %s\n"
+msgstr "\t\tProstory jmen: %s\n"
+
+#: testing/client.c:97
+#, c-format
 msgid "\t\tProcedures: %s\n"
 msgstr "\t\tProcedury: %s\n"
 
-#: testing/client.c:97
+#: testing/client.c:100
 #, c-format
 msgid "\t\tSequences: %s\n"
 msgstr "\t\tSekvence: %s\n"
 
-#: testing/client.c:100
+#: testing/client.c:103
 #, c-format
 msgid "\t\tSQL: %s\n"
 msgstr "\t\tSQL: %s\n"
 
-#: testing/client.c:103
+#: testing/client.c:106
 #, c-format
 msgid "\t\tTransactions: %s\n"
 msgstr "\t\tTransakce: %s\n"
 
-#: testing/client.c:106
+#: testing/client.c:109
 #, c-format
 msgid "\t\tTriggers: %s\n"
 msgstr "\t\tTriggery: %s\n"
 
-#: testing/client.c:109
+#: testing/client.c:112
 #, c-format
 msgid "\t\tUsers: %s\n"
 msgstr "\t\tUživatelé: %s\n"
 
-#: testing/client.c:112
+#: testing/client.c:115
 #, c-format
 msgid "\t\tViews: %s\n"
 msgstr "\t\tPohledy: %s\n"
 
-#: testing/client.c:115
+#: testing/client.c:118
 #, c-format
 msgid "\t\tXML queries: %s\n"
 msgstr "\t\tDotazy XML: %s\n"
 
 #. show connection schemas
-#: testing/client.c:120
+#: testing/client.c:123
 #, c-format
 msgid ""
 "\n"
@@ -1321,49 +1326,57 @@ msgstr ""
 "\tPoskytovatel hlásí verzi: %s\n"
 "\n"
 
-#: testing/client.c:123
+#: testing/client.c:125
+msgid "Namespaces"
+msgstr "Prostory jmen"
+
+#: testing/client.c:127
 msgid "Stored procedures"
 msgstr "Uložené procedury"
 
-#: testing/client.c:124
+#: testing/client.c:128
 msgid "Connection Tables"
 msgstr "Tabulky připojení"
 
-#: testing/client.c:125
+#: testing/client.c:129
 msgid "Available types"
 msgstr "Dostupné typy"
 
-#: testing/client.c:128
+#: testing/client.c:132
 msgid "Aggregates"
 msgstr "Agregace"
 
-#: testing/client.c:136 testing/client.c:144
+#: testing/client.c:136
+msgid "Languages"
+msgstr "Jazyky"
+
+#: testing/client.c:141 testing/client.c:149
 msgid "\tStarting transaction..."
 msgstr "\tStartuji transakci..."
 
-#: testing/client.c:138 testing/client.c:142 testing/client.c:146
-#: testing/client.c:150
+#: testing/client.c:143 testing/client.c:147 testing/client.c:151
+#: testing/client.c:155
 msgid "Error"
 msgstr "Chyba"
 
-#: testing/client.c:140
+#: testing/client.c:145
 msgid "\tFinishing transaction..."
 msgstr "\tUkončuji transakci..."
 
-#: testing/client.c:148
+#: testing/client.c:153
 msgid "\tRolling back transaction..."
 msgstr "\tVracím zpět transakci..."
 
-#: testing/client.c:176
+#: testing/client.c:181
 msgid "Testing GDA client API"
 msgstr "Testovací API pro klienta GDA"
 
-#: testing/client.c:185
+#: testing/client.c:190
 msgid "** ERROR: gda_config_get_data_source_list returned a NULL item\n"
 msgstr ""
 "** CHYBA: gda_config_get_data_source_list vrátilo prázdnou (NULL) položku\n"
 
-#: testing/client.c:189
+#: testing/client.c:194
 #, c-format
 msgid " Data source = %s, User = %s\n"
 msgstr " Zdroj dat = %s, Uživatel = %s\n"
