@@ -1,5 +1,5 @@
 bin_PROGRAMS = gda-mail-srv
-lib_LTLIBRARIES = libgda-mail.la
+noinst_LIBRARIES = libgda-mail.a
 
 INCLUDES = \
 	-I. \
@@ -13,9 +13,9 @@ gda_mail_srv_LDADD = \
 	$(GDA_PROVIDER_LIBS) \
 	$(top_builddir)/lib/gda-common/libgda-common.la \
 	$(top_builddir)/lib/gda-server/libgda-server.la \
-	$(top_builddir)/providers/gda-mail-server/libgda-mail.la
+	$(top_builddir)/providers/gda-mail-server/libgda-mail.a
 
-libgda_mail_la_SOURCES = \
+libgda_mail_a_SOURCES = \
 	gda-mail-command.c \
 	gda-mail-connection.c \
 	gda-mail-recordset.c \

@@ -1,5 +1,5 @@
 bin_PROGRAMS = gda-odbc-srv
-lib_LTLIBRARIES = libgda-odbc.la
+noinst_LIBRARIES = libgda-odbc.a
 
 INCLUDES = \
 	-I. \
@@ -13,10 +13,10 @@ gda_odbc_srv_LDADD = \
 	$(GDA_PROVIDER_LIBS) \
 	$(top_builddir)/lib/gda-common/libgda-common.la \
 	$(top_builddir)/lib/gda-server/libgda-server.la \
-	$(top_builddir)/providers/gda-odbc-server/libgda-odbc.la \
+	$(top_builddir)/providers/gda-odbc-server/libgda-odbc.a \
 	$(ODBC_LIBS)
 
-libgda_odbc_la_SOURCES = \
+libgda_odbc_a_SOURCES = \
 	gda-odbc-command.c \
 	gda-odbc-connection.c \
 	gda-odbc-recordset.c \

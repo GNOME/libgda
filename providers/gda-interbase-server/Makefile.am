@@ -1,5 +1,5 @@
 bin_PROGRAMS = gda-interbase-srv
-lib_LTLIBRARIES = libgda-interbase.la
+noinst_LIBRARIES = libgda-interbase.a
 
 INCLUDES = \
 	-I. \
@@ -13,10 +13,10 @@ gda_interbase_srv_LDADD = \
 	$(GDA_PROVIDER_LIBS) \
 	$(top_builddir)/lib/gda-common/libgda-common.la \
 	$(top_builddir)/lib/gda-server/libgda-server.la \
-	$(top_builddir)/providers/gda-interbase-server/libgda-interbase.la \
+	$(top_builddir)/providers/gda-interbase-server/libgda-interbase.a \
 	$(INTERBASE_LIBS)
 
-libgda_interbase_la_SOURCES = \
+libgda_interbase_a_SOURCES = \
 	gda-interbase-command.c \
 	gda-interbase-connection.c \
 	gda-interbase-recordset.c \

@@ -1,5 +1,5 @@
 bin_PROGRAMS = gda-mdb-srv
-lib_LTLIBRARIES = libgda-mdb.la
+noinst_LIBRARIES = libgda-mdb.a
 
 INCLUDES = \
 	-I. \
@@ -13,10 +13,10 @@ gda_mdb_srv_LDADD = \
 	$(GDA_PROVIDER_LIBS) \
 	$(top_builddir)/lib/gda-common/libgda-common.la \
 	$(top_builddir)/lib/gda-server/libgda-server.la \
-	$(top_builddir)/providers/gda-mdb-server/libgda-mdb.la \
+	$(top_builddir)/providers/gda-mdb-server/libgda-mdb.a \
 	$(MDB_LIBS)
 
-libgda_mdb_la_SOURCES = \
+libgda_mdb_a_SOURCES = \
 	gda-mdb-command.c \
 	gda-mdb-connection.c \
 	gda-mdb-recordset.c \

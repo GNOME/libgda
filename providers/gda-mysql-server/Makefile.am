@@ -1,5 +1,5 @@
 bin_PROGRAMS = gda-mysql-srv
-lib_LTLIBRARIES = libgda-mysql.la
+noinst_LIBRARIES = libgda-mysql.a
 
 INCLUDES = \
 	-I. \
@@ -13,10 +13,10 @@ gda_mysql_srv_LDADD = \
 	$(GDA_PROVIDER_LIBS) \
 	$(top_builddir)/lib/gda-common/libgda-common.la \
 	$(top_builddir)/lib/gda-server/libgda-server.la \
-	$(top_builddir)/providers/gda-mysql-server/libgda-mysql.la \
+	$(top_builddir)/providers/gda-mysql-server/libgda-mysql.a \
 	$(MYSQL_LIBS)
 
-libgda_mysql_la_SOURCES = \
+libgda_mysql_a_SOURCES = \
 	gda-mysql-command.c \
 	gda-mysql-connection.c \
 	gda-mysql-recordset.c \

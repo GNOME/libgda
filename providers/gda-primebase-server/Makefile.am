@@ -1,5 +1,5 @@
 bin_PROGRAMS = gda-primebase-srv
-lib_LTLIBRARIES = libgda-primebase.la
+noinst_LIBRARIES = libgda-primebase.a
 
 INCLUDES = \
 	-I. \
@@ -13,10 +13,10 @@ gda_primebase_srv_LDADD = \
 	$(GDA_PROVIDER_LIBS) \
 	$(top_builddir)/lib/gda-common/libgda-common.la \
 	$(top_builddir)/lib/gda-server/libgda-server.la \
-	$(top_builddir)/providers/gda-primebase-server/libgda-primebase.la \
+	$(top_builddir)/providers/gda-primebase-server/libgda-primebase.a \
 	$(PRIMEBASE_LIBS)
 
-libgda_primebase_la_SOURCES = \
+libgda_primebase_a_SOURCES = \
 	gda-primebase-command.c \
 	gda-primebase-connection.c \
 	gda-primebase-recordset.c \

@@ -1,5 +1,5 @@
 bin_PROGRAMS = gda-tds-srv
-lib_LTLIBRARIES = libgda-tds.la
+noinst_LIBRARIES = libgda-tds.a
 
 INCLUDES = \
 	-I. \
@@ -13,10 +13,10 @@ gda_tds_srv_LDADD = \
 	$(GDA_PROVIDER_LIBS) \
 	$(top_builddir)/lib/gda-common/libgda-common.la \
 	$(top_builddir)/lib/gda-server/libgda-server.la \
-	$(top_builddir)/providers/gda-tds-server/libgda-tds.la \
+	$(top_builddir)/providers/gda-tds-server/libgda-tds.a \
 	$(TDS_LIBS)
 
-libgda_tds_la_SOURCES = \
+libgda_tds_a_SOURCES = \
 	gda-tds-command.c \
 	gda-tds-command.h \
 	gda-tds-connection.c \

@@ -1,5 +1,5 @@
 bin_PROGRAMS = gda-ldap-srv
-lib_LTLIBRARIES = libgda-ldap.la
+noinst_LIBRARIES = libgda-ldap.a
 
 INCLUDES = \
 	-I. \
@@ -13,10 +13,10 @@ gda_ldap_srv_LDADD = \
 	$(GDA_PROVIDER_LIBS) \
 	$(top_builddir)/lib/gda-common/libgda-common.la \
 	$(top_builddir)/lib/gda-server/libgda-server.la \
-	$(top_builddir)/providers/gda-ldap-server/libgda-ldap.la \
+	$(top_builddir)/providers/gda-ldap-server/libgda-ldap.a \
 	$(LDAP_LIBS)
 
-libgda_ldap_la_SOURCES = \
+libgda_ldap_a_SOURCES = \
 	gda-ldap-command.c \
 	gda-ldap-connection.c \
 	gda-ldap-recordset.c \

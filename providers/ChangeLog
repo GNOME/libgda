@@ -1,0 +1,6 @@
+2001-04-28  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* ChangeLog: added
+	* made all providers' libraries not being installed, since,
+	for the moment, the CORBA servers can't be activated on the
+	shared library, they need the driver program

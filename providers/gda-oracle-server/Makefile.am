@@ -1,5 +1,5 @@
 bin_PROGRAMS = gda-oracle-srv
-lib_LTLIBRARIES = libgda-oracle.la
+noinst_LIBRARIES = libgda-oracle.a
 
 INCLUDES = \
 	-I. \
@@ -13,10 +13,10 @@ gda_oracle_srv_LDADD = \
 	$(GDA_PROVIDER_LIBS) \
 	$(top_builddir)/lib/gda-common/libgda-common.la \
 	$(top_builddir)/lib/gda-server/libgda-server.la \
-	$(top_builddir)/providers/gda-oracle-server/libgda-oracle.la \
+	$(top_builddir)/providers/gda-oracle-server/libgda-oracle.a \
 	$(ORACLE_LIBS)
 
-libgda_oracle_la_SOURCES = \
+libgda_oracle_a_SOURCES = \
 	gda-oracle-command.c \
 	gda-oracle-connection.c \
 	gda-oracle-recordset.c \

@@ -1,5 +1,5 @@
 bin_PROGRAMS = gda-postgres-srv
-lib_LTLIBRARIES = libgda-postgres.la
+noinst_LIBRARIES = libgda-postgres.a
 
 INCLUDES = \
 	-I. \
@@ -13,10 +13,10 @@ gda_postgres_srv_LDADD = \
 	$(GDA_PROVIDER_LIBS) \
 	$(top_builddir)/lib/gda-common/libgda-common.la \
 	$(top_builddir)/lib/gda-server/libgda-server.la \
-	$(top_builddir)/providers/gda-postgres-server/libgda-postgres.la \
+	$(top_builddir)/providers/gda-postgres-server/libgda-postgres.a \
 	$(POSTGRES_LIBS)
 
-libgda_postgres_la_SOURCES = \
+libgda_postgres_a_SOURCES = \
 	gda-builtin-res.c \
 	gda-builtin-res.h \
 	gda-postgres-command.c \
