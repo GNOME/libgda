@@ -8,6 +8,7 @@
 
 static int sql_display_select (int indent, sql_select_statement * statement);
 static int sql_display_field (int indent, sql_field * field);
+static int sql_display_order_by (int indent, sql_order_field *order_by);
 
 static int
 sql_display_field_item (int indent, sql_field_item * item)
@@ -93,6 +94,9 @@ sql_display_condition (int indent, sql_condition * cond)
 	case SQL_leq:
 		condstr = "<=";
 		break;
+	case SQL_diff:
+		condstr = "!=";
+		break;
 	case SQL_between:
 		condstr = "BETWEEN";
 		break;
@@ -167,7 +171,8 @@ sql_display_table (int indent, sql_table * table)
 	case SQL_join:
 		output ("table:");
 		output ("cond:");
-		sql_display_condition (indent + 1, table->d.join.cond);
+		if (table->d.join.cond)
+			sql_display_where (indent + 1, table->d.join.cond);
 		output ("left");
 		sql_display_table (indent + 1, table->d.join.left);
 		output ("right");
@@ -208,13 +213,23 @@ sql_display_select (int indent, sql_select_statement * statement)
 	if (statement->order)
 		output ("order by:");
 	for (cur = statement->order; cur != NULL; cur = cur->next)
-		sql_display_field (indent + 1, cur->data);
+		sql_display_order_by (indent + 1, cur->data);
 
 	if (statement->group)
 		output ("group by:");
 	for (cur = statement->group; cur != NULL; cur = cur->next)
 		sql_display_field (indent + 1, cur->data);
 
+	return 0;
+}
+
+static int 
+sql_display_order_by (int indent, sql_order_field *order_by)
+{
+	GList *walk;
+	output ("order by %s", order_by->order_type == SQL_asc ? "ASC": "DESC");
+	for (walk = order_by->name; walk; walk = walk->next)
+		output ("%s", (gchar*) walk->data);
 	return 0;
 }
 

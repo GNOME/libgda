@@ -165,6 +165,7 @@ table:    table_simple                          {;}
 
 table_simple: L_IDENT					{$$ = sql_table_build ($1); memsql_free ($1);}
 	| table L_JOIN table L_ON where_list		{$$ = sql_table_build_join ($1, $3, $5); }
+	| table L_JOIN table				{$$ = sql_table_build_join ($1, $3, NULL); }
 	| select_statement				{$$ = sql_table_build_select ($1);}
 	| L_LBRACKET table_simple L_RBRACKET		{$$ = $2;}
 	;
