@@ -1,3 +1,27 @@
+libgda 1.0.2, 2003-11-30
+------------------------
+
+ - Register missing structs as boxed types (murray, laurent)
+ - Fixed memory leaks in MySQL provider (paisa)
+ - Added more API documentation (laurent)
+ - Implemented missing case in gda_data_model_to_xml, where standalone
+   XML files were not being generated (laurent)
+ - Fixed compilation problems when enabling BSD compatibility layer
+   on Linux (jonathan)
+ - Fixed gda_value_copy for GdaNumeric values (david)
+ - Use $(libdir) as the directory for installing libraries instead of
+   $(prefix)/lib (fredreric)
+ - Fixes for 64bit platforms (fredreric)
+ - Fixed crash in MDB provider (filip)
+ - Added missing emission of signals in data model class (gonzalo)
+ - Updated translations:
+        - cs (miroslav)
+        - es (pablo)
+	- ja (aihana)
+	- nl (vincent)
+	- pt (duarte)
+	- sr (danilo)
+
 libgda 1.0.1, 2003-10-13
 ------------------------
 
