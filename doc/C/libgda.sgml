@@ -421,10 +421,82 @@
           This section provides information specific to each of the
           available &Libgda; providers.
         </para>
+	<sect3 id="installation-provider-default">
+		<title>Default provider</title>
+		<para>
+			The GDA default provider is always installed with
+			libgda, which means that you've got always a default
+			database system available for you. To connect to
+			a default provider's database, you only need to
+			specify, in the DSN string, a string of the form
+			"DIRECTORY=/directory/for/the/database". When you
+			first connect to the new data source, the GDA
+			default provider will create the database, in the
+			directory you specified in the DSN string, if it
+			does not exist.
+		</para>
+	</sect3>
+	<sect3 id="installation-provider-odbc">
+		<title>ODBC Provider</title>
+		<para>
+			The ODBC provider is a special case, since ODBC is
+			itself a data access layer, the same as libgda. So,
+			in the case of the GDA ODBC provider, the DSN string
+			is completely up to the ODBC driver manager. That is,
+			the GDA ODBC provider does not parse it all, nor does
+			it try to understand what it means; it simply pass
+			it over to the ODBC library.
+		</para>
+		<para>
+			So, if you want to use libgda with ODBC, you should
+			first know how to set up an ODBC data source, and then
+			just specify the DSN string you would pass to the
+			ODBC library in the DSN string of the GDA data sources.
+		</para>
+		<para>
+			There is a project called
+			<ulink url="http://www.unixodbc.org">unixODBC</a>,
+			which provides some graphical tools to help you in
+			setting up ODBC data sources. You may find it
+			interesting to give it a try.
+		</para>
+	</sect3>
+	<sect3 id="installation-provider-postgres">
+		<title>PostgreSQL Provider</title>
+		<para>
+			To use the GDA PostgreSQL provider, you'll need
+			the gda-postgres package.	
+		</para>
+		<para>
+			The PostgreSQL provider accepts the following
+			arguments in the GDA data source's DSN string:
+			<itemizedlist>
+				<listitem>
+					<para>
+						HOST: name of the host where
+						the database server is running
+					</para>
+				</listitem>
+				<listitem>
+					<para>
+						DATABASE: name of the database
+						you want to access
+					</para>
+				</listitem>
+			</itemizedlist>
+		</para>
+	</sect3>
         <sect3 id="installation-provider-mysql">
-          <title>MySQL Provider</title>
-          <para>
-          </para>
+        	<title>MySQL Provider</title>
+        	<para>
+			To configure a data source to access a MySQL database,
+			you'll need to install the GDA MySQL provider (package
+			gda-mysql).
+        	</para>
+		<para>
+			It accepts the following arguments in the DSN
+			string:	
+		</para>
         </sect3>
       </sect2>
     </sect1>

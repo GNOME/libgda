@@ -1,7 +1,12 @@
-2001-01-19	Rodrigo Moya <rodrigo@gnome-db.org>
+2001-05-05  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* libgda.sgml: re-added the section about provider's
+	specific information
+
+2001-01-19  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* removed lang="es" from <book> tag
 
-2000-12-10	Rodrigo Moya <rodrigo@gnome-db.org>
+2000-12-10  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* fixed some outdated things
