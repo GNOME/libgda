@@ -20,13 +20,13 @@
 #if !defined(__gda_report_engine_h__)
 #define __gda_report_engine_h__
 
-#include <gda-report.h>
-
 #ifdef HAVE_GOBJECT
 #include <glib-object.h>
 #else
 #include <gtk/gtk.h>
 #endif
+
+#include <GDA_Report.h>
 
 #if defined(__cplusplus)
 extern "C" {
@@ -34,6 +34,10 @@ extern "C" {
 
 typedef struct _Gda_ReportEngine Gda_ReportEngine;
 typedef struct _Gda_ReportEngineClass Gda_ReportEngineClass;
+
+typedef enum {
+	GDA_REPORT_FLAGS_NONE,
+} Gda_ReportFlags;
 
 struct _Gda_ReportEngine {
 #ifdef HAVE_GOBJECT

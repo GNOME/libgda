@@ -37,13 +37,9 @@
 #  define N_(String) (String)
 #endif
 
-typedef enum {
-  GDA_REPORT_FLAGS_NONE
-} Gda_ReportFlags;
-
 #include <gda-report-defs.h>
 #include <gda-report-engine.h>
-//#include <gda-report-stream.h> FIXME: if i activate this the gda-report-engine.cdoesn't compile, Why?
+#include <gda-report-stream.h>
 
 void gda_report_init ();
 

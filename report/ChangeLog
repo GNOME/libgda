@@ -1,3 +1,7 @@
+2001-01-15	Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* fixed header files issue
+
 2001-01-14	Carlos Perelló Marín <carlos@gnome-db.org>
 
 	* gda-report-stream.c: minor updates.

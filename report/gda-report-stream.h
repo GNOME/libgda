@@ -20,7 +20,7 @@
 #ifndef __gda_report_stream_h__
 #define __gda_report_stream_h__
 
-#include <gda-report.h>
+#include <gda-report-engine.h>
 
 #ifdef HAVE_GOBJECT
 #include <glib-object.h>
