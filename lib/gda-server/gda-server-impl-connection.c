@@ -314,6 +314,29 @@ impl_GDA_Connection_openSchema (impl_POA_GDA_Connection * servant,
   return new_recset;
 }
 
+CORBA_long
+impl_GDA_Connection_modifySchema (impl_POA_GDA_Connection * servant,
+                                  GDA_Connection_QType t,
+                                  GDA_Connection_ConstraintSeq * constraints,
+                                  CORBA_Environment * ev)
+{
+  Gda_ServerConnection* cnc = servant->cnc;
+
+  if (gda_server_connection_modify_schema(cnc, t, constraints->_buffer, constraints->_length)
+      != 0)
+    {
+      GDA_DriverError* exception = GDA_DriverError__alloc();
+      exception->errors._length = g_list_length(servant->cnc->errors);
+      exception->errors._buffer = gda_server_impl_make_error_buffer(servant->cnc);
+      exception->realcommand = CORBA_string_dup(__PRETTY_FUNCTION__);
+      CORBA_exception_set(ev, CORBA_USER_EXCEPTION, ex_GDA_DriverError, exception);
+      return -1;
+    }
+  if (!gda_server_impl_exception(ev)) return -1;
+  
+  return 0;
+}
+
 GDA_Command
 impl_GDA_Connection_createCommand (impl_POA_GDA_Connection * servant,
 				   CORBA_Environment * ev)

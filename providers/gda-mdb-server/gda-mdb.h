@@ -83,6 +83,10 @@ Gda_ServerRecordset* gda_mdb_connection_open_schema (Gda_ServerConnection *cnc,
 						       GDA_Connection_QType t,
 						       GDA_Connection_Constraint *constraints,
 						       gint length);
+glong gda_mdb_connection_modfy_schema (Gda_ServerConnection *cnc,
+                                       GDA_Connection_QType t,
+                                       GDA_Connection_Constraint *constraints,
+                                       gint length);
 gint gda_mdb_connection_start_logging (Gda_ServerConnection *cnc,
 					     const gchar *filename);
 gint gda_mdb_connection_stop_logging (Gda_ServerConnection *cnc);

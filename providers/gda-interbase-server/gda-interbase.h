@@ -71,10 +71,14 @@ gint gda_interbase_connection_begin_transaction (Gda_ServerConnection *cnc);
 gint gda_interbase_connection_commit_transaction (Gda_ServerConnection *cnc);
 gint gda_interbase_connection_rollback_transaction (Gda_ServerConnection *cnc);
 Gda_ServerRecordset* gda_interbase_connection_open_schema (Gda_ServerConnection *cnc,
-							       Gda_ServerError *error,
-							       GDA_Connection_QType t,
-							       GDA_Connection_Constraint *constraints,
-							       gint length);
+							                               Gda_ServerError *error,
+							                               GDA_Connection_QType t,
+							                               GDA_Connection_Constraint *constraints,
+							                               gint length);
+glong gda_interbase_connection_modify_schema (Gda_ServerConnection *cnc,
+							                  GDA_Connection_QType t,
+							                  GDA_Connection_Constraint *constraints,
+							                  gint length);
 gint gda_interbase_connection_start_logging (Gda_ServerConnection *cnc,
 					     const gchar *filename);
 gint gda_interbase_connection_stop_logging (Gda_ServerConnection *cnc);

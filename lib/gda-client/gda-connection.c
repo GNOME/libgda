@@ -774,6 +774,17 @@ gda_connection_open_schema (Gda_Connection* cnc, GDA_Connection_QType t, ...)
 }
 
 /**
+ * gda_connection_modify_schema
+ */
+glong
+gda_connection_modify_schema (Gda_Connection *cnc, GDA_Connection_QType t, ...)
+{
+  g_return_val_if_fail(IS_GDA_CONNECTION(cnc), -1);
+  g_return_val_if_fail(gda_connection_is_open(cnc), -1);
+  g_return_val_if_fail(cnc->connection != NULL, -1);
+}
+
+/**
  * gda_connection_get_errors:
  * @cnc: the connection object
  *

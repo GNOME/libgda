@@ -124,7 +124,11 @@ gint               gda_connection_open                (Gda_Connection* cnc, gcha
 void               gda_connection_close               (Gda_Connection* cnc);
 Gda_Recordset*     gda_connection_open_schema         (Gda_Connection* cnc,
                                                        GDA_Connection_QType t, ...);
-Gda_Recordset*     gda_connection_open_schema_array   (Gda_Connection* cnc, GDA_Connection_QType t, Gda_Constraint_Element*);
+Gda_Recordset*     gda_connection_open_schema_array   (Gda_Connection* cnc,
+                                                       GDA_Connection_QType t,
+                                                       Gda_Constraint_Element*);
+glong              gda_connection_modify_schema       (Gda_Connection *cnc,
+                                                       GDA_Connection_QType t, ...);
 GList*             gda_connection_get_errors          (Gda_Connection* cnc);
 GList*             gda_connection_list_datasources    (Gda_Connection* cnc);
 gint               gda_connection_begin_transaction   (Gda_Connection* cnc);

@@ -28,6 +28,7 @@ static Gda_ServerImplFunctions server_impl_functions =
   gda_ldap_connection_commit_transaction,
   gda_ldap_connection_rollback_transaction,
   gda_ldap_connection_open_schema,
+  gda_ldap_connection_modify_schema,
   gda_ldap_connection_start_logging,
   gda_ldap_connection_stop_logging,
   gda_ldap_connection_create_table,

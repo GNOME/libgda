@@ -107,6 +107,8 @@ module GDA {
 		long        close();
 		long        open   (in string dsn, in string user, in string passwd) raises (DriverError);
 		Recordset   openSchema (in QType t, in ConstraintSeq constraints) raises (NotSupported, DriverError);
+		long        modifySchema (in QType t, in ConstraintSeq constraints);
+		
 		Command     createCommand();
 		Recordset   createRecordset();
 

@@ -144,16 +144,32 @@ gda_server_connection_rollback_transaction (Gda_ServerConnection *cnc)
  */
 Gda_ServerRecordset *
 gda_server_connection_open_schema (Gda_ServerConnection *cnc,
-				   Gda_ServerError *error,
-				   GDA_Connection_QType t,
-				   GDA_Connection_Constraint *constraints,
-				   gint length)
+                                   Gda_ServerError *error,
+                                   GDA_Connection_QType t,
+                                   GDA_Connection_Constraint *constraints,
+                                   gint length)
 {
   g_return_val_if_fail(cnc != NULL, NULL);
   g_return_val_if_fail(cnc->server_impl != NULL, NULL);
   g_return_val_if_fail(cnc->server_impl->functions.connection_open_schema != NULL, NULL);
 
   return cnc->server_impl->functions.connection_open_schema(cnc, error, t, constraints, length);
+}
+
+/**
+ * gda_server_connection_modify_schema
+ */
+glong
+gda_server_connection_modify_schema (Gda_ServerConnection *cnc,
+                                     GDA_Connection_QType t,
+                                     GDA_Connection_Constraint *constraints,
+                                     gint length)
+{
+  g_return_val_if_fail(cnc != NULL, -1);
+  g_return_val_if_fail(cnc->server_impl != NULL, -1);
+  g_return_val_if_fail(cnc->server_impl->functions.connection_modify_schema != NULL, -1);
+  
+  return cnc->server_impl->functions.connection_modify_schema(cnc, t, constraints, length);
 }
 
 /**

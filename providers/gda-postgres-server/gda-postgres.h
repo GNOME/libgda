@@ -131,6 +131,10 @@ Gda_ServerRecordset* gda_postgres_connection_open_schema (Gda_ServerConnection *
                                                           GDA_Connection_QType t,
                                                           GDA_Connection_Constraint *constraints,
                                                           gint length);
+glong     gda_postgres_connection_modify_schema (Gda_ServerConnection *cnc,
+                                   GDA_Connection_QType t,
+                                   GDA_Connection_Constraint *constraints,
+                                   gint length);
 gint          gda_postgres_connection_start_logging (Gda_ServerConnection *cnc,
                                                      const gchar *filename);
 gint          gda_postgres_connection_stop_logging (Gda_ServerConnection *cnc);

@@ -110,6 +110,15 @@ gda_mail_connection_open_schema (Gda_ServerConnection * cnc,
 	return NULL;
 }
 
+glong
+gda_mail_connection_modify_schema (Gda_ServerConnection *cnc,
+                                   GDA_Connection_QType t,
+                                   GDA_Connection_Constraint *constraints,
+                                   gint length)
+{
+  return -1;
+}
+
 gint
 gda_mail_connection_start_logging (Gda_ServerConnection * cnc,
 								   const gchar * filename)

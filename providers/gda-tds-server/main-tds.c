@@ -33,6 +33,7 @@ static Gda_ServerImplFunctions server_impl_functions =
   gda_tds_connection_commit_transaction,
   gda_tds_connection_rollback_transaction,
   gda_tds_connection_open_schema,
+  gda_tds_connection_modify_schema,
   gda_tds_connection_start_logging,
   gda_tds_connection_stop_logging,
   gda_tds_connection_create_table,

@@ -79,6 +79,10 @@ Gda_ServerRecordset* gda_sybase_connection_open_schema (Gda_ServerConnection *cn
 							GDA_Connection_QType t,
 							GDA_Connection_Constraint *constraints,
 							gint length);
+glong gda_sybase_connection_modify_schema (Gda_ServerConnection *cnc,
+                                   GDA_Connection_QType t,
+                                   GDA_Connection_Constraint *constraints,
+                                   gint length);
 gint gda_sybase_connection_start_logging (Gda_ServerConnection *cnc,
 					  const gchar *filename);
 gint gda_sybase_connection_stop_logging (Gda_ServerConnection *cnc);

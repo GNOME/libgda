@@ -28,6 +28,7 @@ static Gda_ServerImplFunctions server_impl_functions =
   gda_odbc_connection_commit_transaction,
   gda_odbc_connection_rollback_transaction,
   gda_odbc_connection_open_schema,
+  gda_odbc_connection_modify_schema,
   gda_odbc_connection_start_logging,
   gda_odbc_connection_stop_logging,
   gda_odbc_connection_create_table,

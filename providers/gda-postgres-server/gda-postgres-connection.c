@@ -512,6 +512,14 @@ gda_postgres_connection_open_schema (Gda_ServerConnection *cnc,
   return NULL;
 }
 
+glong
+gda_postgres_connection_modify_schema (Gda_ServerConnection *cnc,
+                                   GDA_Connection_QType t,
+                                   GDA_Connection_Constraint *constraints,
+                                   gint length)
+{
+  return -1;
+}
 
 /* logging */
 gint

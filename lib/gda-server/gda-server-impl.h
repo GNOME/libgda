@@ -137,6 +137,10 @@ struct _Gda_ServerImplFunctions
                                                  GDA_Connection_QType t,
                                                  GDA_Connection_Constraint *constraints,
                                                  gint length);
+  glong                (*connection_modify_schema)(Gda_ServerConnection *cnc,
+                                                   GDA_Connection_QType t,
+                                                   GDA_Connection_Constraint *constraints,
+                                                   gint length);
   gint                 (*connection_start_logging)(Gda_ServerConnection *cnc,
                                                    const gchar *filename);
   gint                 (*connection_stop_logging)(Gda_ServerConnection *cnc);

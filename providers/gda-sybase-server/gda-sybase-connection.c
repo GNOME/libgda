@@ -22,6 +22,11 @@
  */
 
 // $Log$
+// Revision 1.7  2000/11/27 17:50:27  rodrigo
+// 2000-11-27	Rodrigo Moya <rodrigo@gnome-db.org>
+//
+// 	* added modifySchema method to GDA::Connection interface
+//
 // Revision 1.6  2000/11/27 12:09:13  holger
 // 2000-11-27	Holger Thon <holger.thon@gnome-db.org>
 //
@@ -265,6 +270,15 @@ gda_sybase_connection_open_schema (Gda_ServerConnection *cnc,
   }
   
   return NULL;
+}
+
+glong
+gda_sybase_connection_modify_schema (Gda_ServerConnection *cnc,
+                                   GDA_Connection_QType t,
+                                   GDA_Connection_Constraint *constraints,
+                                   gint length)
+{
+  return -1;
 }
 
 gint

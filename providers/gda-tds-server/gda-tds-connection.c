@@ -22,6 +22,11 @@
  */
 
 // $Log$
+// Revision 1.3  2000/11/27 17:50:28  rodrigo
+// 2000-11-27	Rodrigo Moya <rodrigo@gnome-db.org>
+//
+// 	* added modifySchema method to GDA::Connection interface
+//
 // Revision 1.2  2000/11/21 19:57:14  holger
 // 2000-11-21 Holger Thon <holger@gidayu.max.uni-duisburg.de>
 //
@@ -254,6 +259,15 @@ gda_tds_connection_open_schema (Gda_ServerConnection *cnc,
   }
   
   return NULL;
+}
+
+glong
+gda_tds_connection_modify_schema (Gda_ServerConnection *cnc,
+                                   GDA_Connection_QType t,
+                                   GDA_Connection_Constraint *constraints,
+                                   gint length)
+{
+  return -1;
 }
 
 gint

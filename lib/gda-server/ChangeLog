@@ -1,3 +1,7 @@
+2000-11-27	Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* added modifySchema to GDA::Connection interface
+
 2000-11-24	Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* added correct license notices (LGPL) to source files

@@ -1,3 +1,7 @@
+2000-11-27	Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* added modifySchema method to the GDA::Connection interface
+
 2000-11-22	Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* removed GDA_Fieldx, which is now GDA_Field, as the old
