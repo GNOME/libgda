@@ -1,2 +1,8 @@
 Makefile
 Makefile.in
+GNOME_Database_Provider_Sybase.server
+*.o
+*.lo
+gda-sybase-srv
+.deps
+.libs

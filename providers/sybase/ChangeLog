@@ -1,0 +1,4 @@
+2001-12-05  mr mike <wingert.3@postbox.acs.ohio-state.edu>
+
+	* Started new version of the Sybase provider, based on the new
+	Provider API

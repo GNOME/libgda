@@ -1,0 +1,84 @@
+/* GDA MySQL provider
+ * Copyright (C) 1998-2001 The Free Software Foundation
+ *
+ * AUTHORS:
+	*  Mike Wingert <wingert.3@postbox.acs.ohio-state.edu>
+	*      based on the MySQL provider by
+ *         Michael Lausch <michael@lausch.at>
+ *	        Rodrigo Moya <rodrigo@gnome-db.org>
+ *         Vivien Malerba <malerba@gnome-db.org>
+	*         and the pre gnome 2.0 sybase provider
+ * This Library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public License as
+ * published by the Free Software Foundation; either version 2 of the
+ * License, or (at your option) any later version.
+ *
+ * This Library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this Library; see the file COPYING.LIB.  If not,
+ * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ */
+
+#if !defined(__gda_sybase_h__)
+#  define __gda_sybase_h__
+
+#include <glib/gmacros.h>
+#include <bonobo/bonobo-i18n.h>
+#include <config.h>
+#include <libgda/gda-server.h>
+#include <gda-sybase-provider.h>
+#include <ctpublic.h>
+#include <cspublic.h>
+
+G_BEGIN_DECLS
+
+typedef struct _sybaseError
+{
+		gchar *error_msg;
+} sybase_error;
+
+
+typedef struct _sybaseConnection
+{
+		CS_CONTEXT    *context;
+		CS_CONNECTION *connection;
+		sybase_error err;
+} sybase_connection; 
+
+#define PARENT_TYPE GDA_TYPE_SERVER_PROVIDER
+#define OBJECT_DATA_SYBASE_HANDLE "GDA_Sybase_SybaseHandle"
+#define GDA_SYBASE_COMPONENT_FACTORY_ID "OAFIID:GNOME_Database_Sybase_ComponentFactory"
+#define GDA_SYBASE_PROVIDER_ID          "OAFIID:GNOME_Database_Sybase_Provider"
+
+/*
+ * Utility functions
+ */
+
+GdaError *gda_sybase_make_error (sybase_connection *);
+
+gboolean sybase_check_messages(GdaServerConnection *);
+
+gboolean sybase_check_clientmsg(GdaServerConnection *);
+
+gboolean sybase_check_servermsg(GdaServerConnection *);
+
+gboolean sybase_check_cmsg(GdaServerConnection *);
+
+gchar *sprintf_clientmsg(const gchar *, 
+																									CS_CLIENTMSG *);
+
+gchar *sprintf_servermsg(const gchar *,
+																									CS_SERVERMSG *);
+
+void sybase_debug_msg(gchar *);
+
+
+
+G_END_DECLS
+
+#endif
