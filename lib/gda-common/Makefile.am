@@ -40,6 +40,7 @@ gda_common_headers = \
 	gda-common-defs.h \
 	gda-config.h \
 	gda-corba.h \
+	gda-data-model-list.h \
 	gda-data-model.h \
 	gda-error.h \
 	gda-field.h \
@@ -69,6 +70,7 @@ libgda_common_2_la_SOURCES = \
 	GNOME_Database-stubs.c \
 	gda-config.c \
 	gda-corba.c \
+	gda-data-model-list.c \
 	gda-data-model.c \
 	gda-error.c \
 	gda-field.c \
