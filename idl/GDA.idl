@@ -3,6 +3,7 @@
 #define __gda__ 1
 
 #include "GDA_Error.idl"
+#include "GDA_Listener.idl"
 #include "GDA_Field.idl"
 #include "GDA_Recordset.idl"
 #include "GDA_Command.idl"	
