@@ -17,18 +17,15 @@
  */
 
 #include "config.h"
+#include "gda-server.h"
 #include <signal.h>
 
 #ifdef HAVE_GOBJECT
 #  include <glib-object.h>
-#else
-#  include <popt.h>
 #endif
 
+#include <popt.h>
 #include <liboaf/liboaf.h>
-
-/* This must be after gnome.h because of oaf_popt_options */
-#include "gda-server.h"
 
 #ifdef ENABLE_NLS
 #  include <libintl.h>
