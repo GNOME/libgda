@@ -42,6 +42,7 @@ gda_common_headers = \
 
 libgda_common_la_SOURCES = \
 	$(gda_common_headers) \
+	gda-common-private.h \
 	GDA-common.c \
 	GDA-skels.c \
 	GDA-stubs.c \
