@@ -455,7 +455,7 @@
 		</para>
 		<para>
 			There is a project called
-			<ulink url="http://www.unixodbc.org">unixODBC</a>,
+			<ulink url="http://www.unixodbc.org">unixODBC</ulink>,
 			which provides some graphical tools to help you in
 			setting up ODBC data sources. You may find it
 			interesting to give it a try.
