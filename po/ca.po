@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-06-08 00:08+0200\n"
+"POT-Creation-Date: 2004-07-22 12:24+0200\n"
 "PO-Revision-Date: 2003-08-31 21:50+0200\n"
 "Last-Translator: Aleix Badia i Bosch <abadia@ica.es>\n"
 "Language-Team: Catalan <tradgnome@softcatala.org>\n"
@@ -140,20 +140,20 @@ msgstr "S'ha produït un error llegint %s: %s"
 msgid "Could not create file %s"
 msgstr "No s'ha pogut crear el fitxer %s"
 
-#: libgda/gda-value.c:1961
+#: libgda/gda-value.c:2069
 msgid "TRUE"
 msgstr "CERT"
 
-#: libgda/gda-value.c:1963
+#: libgda/gda-value.c:2071
 msgid "FALSE"
 msgstr "FALS"
 
-#: libgda/gda-value.c:2032
+#: libgda/gda-value.c:2140
 #, c-format
 msgid "(GObject of type '%s'"
 msgstr "(GObject de tipus '%s'"
 
-#: libgda/gda-value.c:2035
+#: libgda/gda-value.c:2143
 msgid "NULL GObject"
 msgstr "GObject NUL"
 
@@ -214,7 +214,7 @@ msgstr ""
 msgid "Syntax error near `%s'"
 msgstr ""
 
-#: libsql/sql_parser.c:358
+#: libsql/sql_parser.c:361
 msgid "Empty query to parse"
 msgstr ""
 
@@ -1263,7 +1263,7 @@ msgstr ""
 msgid "Column number out of range"
 msgstr "Número de columna fora de rang"
 
-#: providers/postgres/gda-postgres-recordset.c:581
+#: providers/postgres/gda-postgres-recordset.c:584
 #, c-format
 msgid "Tuples:\"%s\""
 msgstr "Tuples:\"%s\""

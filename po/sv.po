@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-06-08 00:08+0200\n"
+"POT-Creation-Date: 2004-07-22 12:24+0200\n"
 "PO-Revision-Date: 2004-04-16 22:49+0200\n"
 "Last-Translator: Christian Rose <menthos@menthos.com>\n"
 "Language-Team: Swedish <sv@li.org>\n"
@@ -141,20 +141,20 @@ msgstr "Fel vid läsande av %s: %s"
 msgid "Could not create file %s"
 msgstr "Kunde inte skapa filen %s"
 
-#: libgda/gda-value.c:1961
+#: libgda/gda-value.c:2069
 msgid "TRUE"
 msgstr "SANT"
 
-#: libgda/gda-value.c:1963
+#: libgda/gda-value.c:2071
 msgid "FALSE"
 msgstr "FALSKT"
 
-#: libgda/gda-value.c:2032
+#: libgda/gda-value.c:2140
 #, c-format
 msgid "(GObject of type '%s'"
 msgstr "(GObject av typen \"%s\""
 
-#: libgda/gda-value.c:2035
+#: libgda/gda-value.c:2143
 msgid "NULL GObject"
 msgstr "NULL-GObject"
 
@@ -215,7 +215,7 @@ msgstr ""
 msgid "Syntax error near `%s'"
 msgstr ""
 
-#: libsql/sql_parser.c:358
+#: libsql/sql_parser.c:361
 msgid "Empty query to parse"
 msgstr ""
 
@@ -1251,7 +1251,7 @@ msgstr "Modellen har inga ickeunika värden att uppdatera."
 msgid "Column number out of range"
 msgstr "Kolumnnummer utanför intervallet"
 
-#: providers/postgres/gda-postgres-recordset.c:581
+#: providers/postgres/gda-postgres-recordset.c:584
 #, c-format
 msgid "Tuples:\"%s\""
 msgstr "Tupler:\"%s\""

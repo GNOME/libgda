@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda HEAD\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-06-27 18:46+0900\n"
+"POT-Creation-Date: 2004-07-22 12:24+0200\n"
 "PO-Revision-Date: 2004-06-26 12:45+0900\n"
 "Last-Translator: Ryoichi INAGAKI <ryo1@bc.wakwak.com>\n"
 "Language-Team: Japanese <translation@gnome.gr.jp>\n"
@@ -1248,7 +1248,7 @@ msgstr ""
 msgid "Column number out of range"
 msgstr "列の数が範囲外です"
 
-#: providers/postgres/gda-postgres-recordset.c:581
+#: providers/postgres/gda-postgres-recordset.c:584
 #, c-format
 msgid "Tuples:\"%s\""
 msgstr "タプル:\"%s\""

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda.HEAD.nl\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-07-07 04:45+0200\n"
+"POT-Creation-Date: 2004-07-22 12:24+0200\n"
 "PO-Revision-Date: 2003-03-14 19:15+0100\n"
 "Last-Translator: Jan-Willem Harmanny <jwharmanny@hotmail.com>\n"
 "Language-Team: Dutch <nl@li.org>\n"
@@ -1252,7 +1252,7 @@ msgstr "Model heeft geen niet-unieke waarden om bij te werken."
 msgid "Column number out of range"
 msgstr "Kolom nummer buiten bereik"
 
-#: providers/postgres/gda-postgres-recordset.c:581
+#: providers/postgres/gda-postgres-recordset.c:584
 #, c-format
 msgid "Tuples:\"%s\""
 msgstr "Tupels:\"%s\""
@@ -1613,8 +1613,8 @@ msgid ""
 "Sybase OpenClient Msg: severity(%ld), number(%ld), origin(%ld), layer(%ld): %"
 "s"
 msgstr ""
-"Sybase OpenClient Bericht: severity(%ld), number(%ld), origin(%ld), "
-"layer(%ld): %s"
+"Sybase OpenClient Bericht: severity(%ld), number(%ld), origin(%ld), layer(%"
+"ld): %s"
 
 #: providers/sybase/utils.c:272
 msgid "call to cs_diag failed when attempting to clear the client messages"

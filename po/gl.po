@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-06-08 00:08+0200\n"
+"POT-Creation-Date: 2004-07-22 12:24+0200\n"
 "PO-Revision-Date: 2000-10-29 15:03+0100\n"
 "Last-Translator: Jesús Bravo Álvarez <jba@pobox.com>\n"
 "Language-Team: Galician <trasno@ceu.fi.udc.es>\n"
@@ -147,20 +147,20 @@ msgstr ""
 msgid "Could not create file %s"
 msgstr "Non foi posible establece-lo locale a '%s'"
 
-#: libgda/gda-value.c:1961
+#: libgda/gda-value.c:2069
 msgid "TRUE"
 msgstr "CERTO"
 
-#: libgda/gda-value.c:1963
+#: libgda/gda-value.c:2071
 msgid "FALSE"
 msgstr "FALSO"
 
-#: libgda/gda-value.c:2032
+#: libgda/gda-value.c:2140
 #, c-format
 msgid "(GObject of type '%s'"
 msgstr ""
 
-#: libgda/gda-value.c:2035
+#: libgda/gda-value.c:2143
 msgid "NULL GObject"
 msgstr ""
 
@@ -223,7 +223,7 @@ msgstr ""
 msgid "Syntax error near `%s'"
 msgstr ""
 
-#: libsql/sql_parser.c:358
+#: libsql/sql_parser.c:361
 msgid "Empty query to parse"
 msgstr ""
 
@@ -1323,7 +1323,7 @@ msgstr ""
 msgid "Column number out of range"
 msgstr ""
 
-#: providers/postgres/gda-postgres-recordset.c:581
+#: providers/postgres/gda-postgres-recordset.c:584
 #, c-format
 msgid "Tuples:\"%s\""
 msgstr ""

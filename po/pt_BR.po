@@ -11,13 +11,13 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-07-07 04:45+0200\n"
+"POT-Creation-Date: 2004-07-22 12:24+0200\n"
 "PO-Revision-Date: 2004-07-07 12:56-0300\n"
 "Last-Translator: Afonso Celso Medina <medina@maua.br>\n"
 "Language-Team: Portuguese/Brazil\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit"
+"Content-Transfer-Encoding: 8bit\n"
 
 #: libgda/gda-client.c:312 libgda/gda-client.c:539 libgda/gda-connection.c:218
 #, c-format
@@ -358,7 +358,8 @@ msgstr "Impossível alocar handle de ambiente.\n"
 #. is needed for tables schema
 #: providers/ibmdb2/gda-ibmdb2-provider.c:211
 msgid "SQLGetInfo is unsupported. Hence IBM DB2 Provider will not work.\n"
-msgstr "SQLGetInfo não é suportado. Assim o Provedor IBM DB2 não irá funcionar.\n"
+msgstr ""
+"SQLGetInfo não é suportado. Assim o Provedor IBM DB2 não irá funcionar.\n"
 
 #: providers/ibmdb2/gda-ibmdb2-provider.c:450
 #: providers/ibmdb2/gda-ibmdb2-provider.c:580
@@ -807,12 +808,14 @@ msgstr "Handle mSQL inválida"
 
 #: providers/msql/gda-msql-provider.c:318
 msgid "mSQL allows database creation only through the msqladmin tool."
-msgstr "O mSQL permite a criação de banco de dados somente através da ferramenta "
+msgstr ""
+"O mSQL permite a criação de banco de dados somente através da ferramenta "
 "msqladmin."
 
 #: providers/msql/gda-msql-provider.c:331
 msgid "mSQL allows database drops only through the msqladmin tool."
-msgstr "O mSQL permite o abandono do banco de dados somente através da ferramenta "
+msgstr ""
+"O mSQL permite o abandono do banco de dados somente através da ferramenta "
 "msqladmin."
 
 #: providers/msql/gda-msql-provider.c:376
@@ -838,7 +841,8 @@ msgstr "Não nulo"
 #: providers/mysql/gda-mysql-provider.c:1119
 #: providers/mysql/gda-mysql-provider.c:1127
 msgid "Table name is needed but none specified in parameter list"
-msgstr "O nome da tabela é necessário mas nenhum foi especificado na lista de "
+msgstr ""
+"O nome da tabela é necessário mas nenhum foi especificado na lista de "
 "parâmetros"
 
 #: providers/msql/gda-msql-recordset.c:57
@@ -849,8 +853,8 @@ msgstr "Número da linha fora do limite"
 msgid ""
 "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
 msgstr ""
-"Você não pode indicar um UNIX_SOCKET se também indicar ou um SERVIDOR "
-"ou uma PORTA."
+"Você não pode indicar um UNIX_SOCKET se também indicar ou um SERVIDOR ou uma "
+"PORTA."
 
 #: providers/mysql/gda-mysql-provider.c:299
 #: providers/mysql/gda-mysql-provider.c:1110
@@ -959,7 +963,8 @@ msgstr "Impossível se ligar ao servidor Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:315
 msgid "Could not set the Oracle server attribute in the service context"
-msgstr "Impossível definir o atributo de servidor Oracle no contexto do serviço"
+msgstr ""
+"Impossível definir o atributo de servidor Oracle no contexto do serviço"
 
 #: providers/oracle/gda-oracle-provider.c:331
 msgid "Could not set the Oracle username attribute"
@@ -1255,7 +1260,7 @@ msgstr "O modelo não possui nenhum valor não único para atualizar."
 msgid "Column number out of range"
 msgstr "Número de coluna fora do limite"
 
-#: providers/postgres/gda-postgres-recordset.c:581
+#: providers/postgres/gda-postgres-recordset.c:584
 #, c-format
 msgid "Tuples:\"%s\""
 msgstr "Tuplas:\"%s\""
@@ -1296,7 +1301,8 @@ msgstr "É permitido apenas um banco de dados por conexão"
 
 #: providers/sqlite/gda-sqlite-provider.c:426
 msgid "To remove a SQLite database you should remove the database file by hand"
-msgstr "Para remover um banco de dados SQLite é necessário remover manualmente o "
+msgstr ""
+"Para remover um banco de dados SQLite é necessário remover manualmente o "
 "arquivo de banco de dados"
 
 #: providers/sqlite/gda-sqlite-provider.c:700
@@ -1321,8 +1327,8 @@ msgid ""
 "Cmd structure already in use. Command will not be executed because of "
 "blocked connection."
 msgstr ""
-"Estrutura cmd já está em uso. O comando não será executado devido a "
-"conexão bloqueada."
+"Estrutura cmd já está em uso. O comando não será executado devido a conexão "
+"bloqueada."
 
 #: providers/sybase/gda-sybase-provider.c:656
 #, c-format
@@ -1360,8 +1366,8 @@ msgid ""
 "an error occured when calling ct_diag attempting to test if there is a "
 "server message for resultset"
 msgstr ""
-"ocorreu um erro chamando ct_diag ao testar a existência de uma "
-"mensagem de servidor para o conjunto resultados (resultset)"
+"ocorreu um erro chamando ct_diag ao testar a existência de uma mensagem de "
+"servidor para o conjunto resultados (resultset)"
 
 #: providers/sybase/gda-sybase-provider.c:793
 #, c-format
@@ -1399,7 +1405,8 @@ msgstr "%s: %s falhou"
 
 #: providers/sybase/gda-sybase-provider.c:974
 msgid "could not allocate cmd structure to find current database."
-msgstr "impossível alocar estrutura de comandos para encontrar o banco de dados "
+msgstr ""
+"impossível alocar estrutura de comandos para encontrar o banco de dados "
 "atual."
 
 #: providers/sybase/gda-sybase-provider.c:985
@@ -1421,7 +1428,8 @@ msgstr "impossível buscar dados para encontrar o banco de dados atual."
 
 #: providers/sybase/gda-sybase-provider.c:1058
 msgid "could not drop cmd structure to find current database."
-msgstr "impossível descartar estrutura de comandos para encontrar o banco de dados "
+msgstr ""
+"impossível descartar estrutura de comandos para encontrar o banco de dados "
 "atual."
 
 #: providers/sybase/gda-sybase-recordset.c:315
@@ -1467,7 +1475,8 @@ msgstr "Impossível alocar reserva de espaço para coluna %d"
 #: providers/sybase/gda-sybase-recordset.c:422
 #, c-format
 msgid "Could not run %s to cancel processing row resultset."
-msgstr "Impossível rodar %s para cancelar o processamento do resultset de linha."
+msgstr ""
+"Impossível rodar %s para cancelar o processamento do resultset de linha."
 
 #: providers/sybase/gda-sybase-recordset.c:438
 #, c-format
@@ -1590,7 +1599,9 @@ msgstr "ct_diag() falhou determinando o número de mensagens dos clientes."
 
 #: providers/sybase/utils.c:202
 msgid "call to cs_diag failed when attempting to the amount of client messages"
-msgstr "chamada ao ct_diag() falhou ao determinar a quantidade de mensagens dos clientes"
+msgstr ""
+"chamada ao ct_diag() falhou ao determinar a quantidade de mensagens dos "
+"clientes"
 
 #: providers/sybase/utils.c:220
 msgid ""
@@ -1612,8 +1623,8 @@ msgid ""
 "Sybase OpenClient Msg: severity(%ld), number(%ld), origin(%ld), layer(%ld): %"
 "s"
 msgstr ""
-"Sybase OpenClient Msg: severidade(%ld), número(%ld), origem(%ld), camada(%ld): %"
-"s"
+"Sybase OpenClient Msg: severidade(%ld), número(%ld), origem(%ld), camada(%"
+"ld): %s"
 
 #: providers/sybase/utils.c:272
 msgid "call to cs_diag failed when attempting to clear the client messages"
@@ -1656,7 +1667,9 @@ msgstr "Linha"
 
 #: providers/sybase/utils.c:442
 msgid "call to ct_diag failed when attempting to the amount of client messages"
-msgstr "chamada ao ct_diag falhou ao determinar a quantidade de mensagens dos clientes"
+msgstr ""
+"chamada ao ct_diag falhou ao determinar a quantidade de mensagens dos "
+"clientes"
 
 #: providers/sybase/utils.c:459
 msgid ""
@@ -1687,13 +1700,11 @@ msgstr "Operação impossível, conexão ocupada."
 #: providers/xbase/gda-xbase-provider.c:185
 msgid "Either FILENAME or DIRECTORY can be specified, but not both or neither"
 msgstr ""
-"FILENAME ou DIRECTORY podem ser especificados, mas não os dois ou "
-"nenhum"
+"FILENAME ou DIRECTORY podem ser especificados, mas não os dois ou nenhum"
 
 #: providers/xbase/gda-xbase-provider.c:232
 msgid "Either FILENAME or DIRECTORY must be specified in the connection string"
-msgstr ""
-"Um FILENAME ou DIRECTORY deve ser especificado na string de conexão"
+msgstr "Um FILENAME ou DIRECTORY deve ser especificado na string de conexão"
 
 #: providers/xbase/gda-xbase-provider.c:261
 #: providers/xbase/gda-xbase-provider.c:379
@@ -1892,7 +1903,8 @@ msgstr "Sem declaração para o atributo %s do elemento %s\n"
 #: report/libgda-report/gda-report-valid.c:283
 #, c-format
 msgid "Value \"%s\" for attribute %s of %s is not among the enumerated set\n"
-msgstr "Valor \"%s\" para o atributo %s de %s não está detro do conjunto enumerado\n"
+msgstr ""
+"Valor \"%s\" para o atributo %s de %s não está detro do conjunto enumerado\n"
 
 #: testing/client.c:42
 msgid "\t\tNONE\n"

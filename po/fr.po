@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda 1.1.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-06-08 00:08+0200\n"
+"POT-Creation-Date: 2004-07-22 12:24+0200\n"
 "PO-Revision-Date: 2004-02-29 14:33+0100\n"
 "Last-Translator: Christophe Merlet (RedFox) <redfox@redfoxcenter.org>\n"
 "Language-Team: GNOME French Team <gnomefr@traduc.org>\n"
@@ -142,20 +142,20 @@ msgstr "Erreur de lecture de %s : %s"
 msgid "Could not create file %s"
 msgstr "Impossible de créer le fichier %s"
 
-#: libgda/gda-value.c:1961
+#: libgda/gda-value.c:2069
 msgid "TRUE"
 msgstr "VRAI"
 
-#: libgda/gda-value.c:1963
+#: libgda/gda-value.c:2071
 msgid "FALSE"
 msgstr "FAUX"
 
-#: libgda/gda-value.c:2032
+#: libgda/gda-value.c:2140
 #, c-format
 msgid "(GObject of type '%s'"
 msgstr "(GObject de type « %s »"
 
-#: libgda/gda-value.c:2035
+#: libgda/gda-value.c:2143
 msgid "NULL GObject"
 msgstr "NULL GObject"
 
@@ -216,7 +216,7 @@ msgstr ""
 msgid "Syntax error near `%s'"
 msgstr ""
 
-#: libsql/sql_parser.c:358
+#: libsql/sql_parser.c:361
 msgid "Empty query to parse"
 msgstr ""
 
@@ -1267,7 +1267,7 @@ msgstr "Le modèle n'a pas de valeur non unique à mettre à jour."
 msgid "Column number out of range"
 msgstr "Nombre de colonnes hors limite"
 
-#: providers/postgres/gda-postgres-recordset.c:581
+#: providers/postgres/gda-postgres-recordset.c:584
 #, c-format
 msgid "Tuples:\"%s\""
 msgstr "Tuples :\"%s\""

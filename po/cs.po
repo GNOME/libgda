@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda HEAD\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-06-08 00:08+0200\n"
+"POT-Creation-Date: 2004-07-22 12:24+0200\n"
 "PO-Revision-Date: 2004-05-03 15:16+0200\n"
 "Last-Translator: Miloslav Trmac <mitr@volny.cz>\n"
 "Language-Team: Czech <cs@li.org>\n"
@@ -141,20 +141,20 @@ msgstr "Chyba při čtení %s: %s"
 msgid "Could not create file %s"
 msgstr "Nelze vytvořit soubor %s"
 
-#: libgda/gda-value.c:1961
+#: libgda/gda-value.c:2069
 msgid "TRUE"
 msgstr "PRAVDA"
 
-#: libgda/gda-value.c:1963
+#: libgda/gda-value.c:2071
 msgid "FALSE"
 msgstr "NEPRAVDA"
 
-#: libgda/gda-value.c:2032
+#: libgda/gda-value.c:2140
 #, c-format
 msgid "(GObject of type '%s'"
 msgstr "(GObject typu '%s'"
 
-#: libgda/gda-value.c:2035
+#: libgda/gda-value.c:2143
 msgid "NULL GObject"
 msgstr "GObject NULL"
 
@@ -215,7 +215,7 @@ msgstr "Chyba zpracovávání poblíž `%s'"
 msgid "Syntax error near `%s'"
 msgstr "Chyba syntaxe poblíž `%s'"
 
-#: libsql/sql_parser.c:358
+#: libsql/sql_parser.c:361
 msgid "Empty query to parse"
 msgstr "Zpracováván prázdný dotaz"
 
@@ -1247,7 +1247,7 @@ msgstr "Model neobsahuje nejedinečné hodnoty k aktualizaci."
 msgid "Column number out of range"
 msgstr "Sloupec mimo rozsah"
 
-#: providers/postgres/gda-postgres-recordset.c:581
+#: providers/postgres/gda-postgres-recordset.c:584
 #, c-format
 msgid "Tuples:\"%s\""
 msgstr "n-tice:\"%s\""

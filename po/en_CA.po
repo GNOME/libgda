@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-06-08 00:08+0200\n"
+"POT-Creation-Date: 2004-07-22 12:24+0200\n"
 "PO-Revision-Date: 2004-05-22 18:05-0400\n"
 "Last-Translator: Alexander Winston <alexander.winston@comcast.net>\n"
 "Language-Team: en_CA <adamw@FreeBSD.org>\n"
@@ -139,20 +139,20 @@ msgstr "Error while reading %s: %s"
 msgid "Could not create file %s"
 msgstr "Could not create file %s"
 
-#: libgda/gda-value.c:1961
+#: libgda/gda-value.c:2069
 msgid "TRUE"
 msgstr "TRUE"
 
-#: libgda/gda-value.c:1963
+#: libgda/gda-value.c:2071
 msgid "FALSE"
 msgstr "FALSE"
 
-#: libgda/gda-value.c:2032
+#: libgda/gda-value.c:2140
 #, c-format
 msgid "(GObject of type '%s'"
 msgstr "(GObject of type '%s'"
 
-#: libgda/gda-value.c:2035
+#: libgda/gda-value.c:2143
 msgid "NULL GObject"
 msgstr "NULL GObject"
 
@@ -213,7 +213,7 @@ msgstr "Parse error near `%s'"
 msgid "Syntax error near `%s'"
 msgstr "Syntax error near `%s'"
 
-#: libsql/sql_parser.c:358
+#: libsql/sql_parser.c:361
 msgid "Empty query to parse"
 msgstr "Empty query to parse"
 
@@ -1245,7 +1245,7 @@ msgstr "Model doesn't have any non-unique values to update."
 msgid "Column number out of range"
 msgstr "Column number out of range"
 
-#: providers/postgres/gda-postgres-recordset.c:581
+#: providers/postgres/gda-postgres-recordset.c:584
 #, c-format
 msgid "Tuples:\"%s\""
 msgstr "Tuples:\"%s\""
