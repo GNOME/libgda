@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2000-10-09 16:50+0200\n"
-"PO-Revision-Date: 2000-10-09 16:55+0200\n"
+"POT-Creation-Date: 2000-10-10 11:46+0200\n"
+"PO-Revision-Date: 2000-10-10 12:19+0200\n"
 "Last-Translator: Christian Rose <menthos@menthos.com>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -17,7 +17,7 @@ msgstr ""
 #: lib/gda-client/gda-connection-pool.c:169
 #, c-format
 msgid "could not open connection to %s"
-msgstr "Kunde inte öppna anslutning till %s"
+msgstr "kunde inte öppna anslutning till %s"
 
 #: lib/gda-client/gda-connection-pool.c:180
 #, c-format
@@ -59,53 +59,53 @@ msgstr "SANT"
 msgid "FALSE"
 msgstr "FALSKT"
 
-#: lib/gda-common/gda-corba.c:72
+#: lib/gda-common/gda-corba.c:88
 msgid "True"
 msgstr "Sant"
 
-#: lib/gda-common/gda-corba.c:72
+#: lib/gda-common/gda-corba.c:88
 msgid "False"
 msgstr "Falskt"
 
-#: lib/gda-common/gda-corba.c:119
+#: lib/gda-common/gda-corba.c:135
 #, c-format
 msgid "CORBA System exception: %s"
 msgstr "Undantag i CORBA-systemet: %s"
 
-#: lib/gda-common/gda-init.c:32
+#: lib/gda-common/gda-init.c:58
 msgid "Attempt to initialize an already initialized client"
 msgstr "Försök att initiera en redan initierad klient"
 
-#: lib/gda-common/gda-log.c:29
+#: lib/gda-common/gda-log.c:47
 msgid "Saving log...x"
 msgstr "Sparar logg...x"
 
 #. compose message
-#: lib/gda-common/gda-log.c:50
+#: lib/gda-common/gda-log.c:68
 msgid "ERROR: "
 msgstr "FEL: "
 
-#: lib/gda-common/gda-log.c:50
+#: lib/gda-common/gda-log.c:68
 msgid "MESSAGE: "
 msgstr "MEDDELANDE: "
 
-#: lib/gda-common/gda-thread.c:150
+#: lib/gda-common/gda-thread.c:210
 msgid "thread is already running"
 msgstr "tråden kör redan"
 
-#: lib/gda-common/gda-xml-database.c:224
+#: lib/gda-common/gda-xml-database.c:281
 #, c-format
 msgid "table %s already exists"
 msgstr "tabellen %s finns redan"
 
-#: lib/gda-common/gda-xml-database.c:388
+#: lib/gda-common/gda-xml-database.c:445
 #, c-format
 msgid "%p is not a valid table"
 msgstr "%p är ingen giltig tabell"
 
 #: lib/gda-server/gda-server-error.c:169
 msgid "Could not get pointer to server implementation"
-msgstr "Kunde inte få tag i pekare till serverimplementationen"
+msgstr "Kunde inte få pekare till serverimplementationen"
 
 #: lib/gda-server/gda-server-impl-connection.c:106
 #: lib/gda-server/gda-server-impl-connection.c:115
@@ -157,7 +157,7 @@ msgstr "%s: inte implementerat"
 #: lib/gda-server/gda-server-impl-recordset.c:434
 #, c-format
 msgid "%s: an error ocurred while fetching data"
-msgstr "%s: ett fel inträffade vid hämtande av data"
+msgstr "%s: ett fel inträffade vid hämtning av data"
 
 #: lib/gda-server/gda-server-impl-recordset.c:473
 #, c-format
@@ -461,7 +461,7 @@ msgstr "ct_results() returnerade %x"
 
 #: providers/gda-sybase-server/gda-sybase-command.c:252
 msgid "No further results, command completly succeeded."
-msgstr "Inga ytterlilgare resultat, kommandot lyckades helt."
+msgstr "Inga ytterligare resultat, kommandot lyckades helt."
 
 #: providers/gda-sybase-server/gda-sybase-command.c:256
 msgid "An error occured during command execution."
@@ -559,7 +559,7 @@ msgstr "anslutningsstatus: %x"
 #: providers/gda-sybase-server/gda-sybase-connection.c:708
 #, c-format
 msgid "return code: %x"
-msgstr "återvändskod: %x"
+msgstr "returkod: %x"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:745
 msgid "attempting reconnection"
