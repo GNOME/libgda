@@ -13,7 +13,6 @@ gda_client_headers = \
 	gda-connection.h \
 	gda-export.h \
 	gda-recordset.h \
-	gda-value.h \
 	gda-client.h 
 
 libgda_client_2_la_SOURCES = \

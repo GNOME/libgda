@@ -212,7 +212,7 @@ row_by_idx (GdaRecordset * rs, gint idx)
 GdaRecordset *
 gda_recordset_new (void)
 {
-	return GDA_RECORDSET (g_object_new (GDA_TYPE_RECORDSET));
+	return GDA_RECORDSET (g_object_new (GDA_TYPE_RECORDSET, NULL));
 }
 
 /**
@@ -587,13 +587,18 @@ gda_recordset_field_idx (GdaRecordset * rs, gint idx)
 	rowsize = rs->field_attributes->_length;
 	if (idx >= rowsize)
 		return 0;
+
+	/* create the field to be returned */
 	rc = gda_field_new ();
-	rc->attributes = &rs->field_attributes->_buffer[idx];
-	if (rs->current_row) {
-		//rc->real_value = &rs->current_row->_buffer[idx].realValue;
-		//rc->shadow_value = &rs->current_row->_buffer[idx].shadowValue;
-		//rc->original_value = &rs->current_row->_buffer[idx].originalValue;
-	}
+	gda_field_set_defined_size (rc, rs->field_attributes->_buffer[idx].definedSize);
+	gda_field_set_name (rc, rs->field_attributes->_buffer[idx].name);
+	gda_field_set_scale (rc, rs->field_attributes->_buffer[idx].scale);
+	gda_field_set_gdatype (rc, rs->field_attributes->_buffer[idx].gdaType);
+	gda_field_set_ctype (rc, rs->field_attributes->_buffer[idx].cType);
+	gda_field_set_nativetype (rc, rs->field_attributes->_buffer[idx].nativeType);
+	if (rs->current_row)
+		gda_field_set_value (rc, &rs->current_row->_buffer[idx].value);
+
 	return rc;
 }
 
@@ -779,8 +784,8 @@ gda_recordset_open (GdaRecordset * rs,
 	g_return_val_if_fail (GDA_IS_RECORDSET (rs), -1);
 	g_return_val_if_fail (!rs->open, -1);
 
-	gda_recordset_init (rs);
-	corba_parameters = __gda_command_get_params (cmd);
+	gda_recordset_init (rs, NULL);
+	corba_parameters = NULL; //__gda_command_get_params (cmd);
 	rs->cursor_type = cursor_type;
 	rs->lock_type = lock_type;
 	CORBA_exception_init (&ev);
@@ -863,12 +868,10 @@ gda_recordset_open_txt (GdaRecordset *rs,
  * gda_recordset_add_field
  */
 gint
-gda_recordset_add_field (GdaRecordset * rs, GdaField * field)
+gda_recordset_add_field (GdaRecordset *rs, GdaField *field)
 {
 	g_return_val_if_fail (GDA_IS_RECORDSET (rs), -1);
 	g_return_val_if_fail (GDA_IS_FIELD (field), -1);
-	g_return_val_if_fail (field->attributes, -1);
-	g_return_val_if_fail (field->attributes->name, -1);
 
 	if (rs->field_attributes) {
 		GNOME_Database_FieldAttributes *old;
@@ -876,7 +879,7 @@ gda_recordset_add_field (GdaRecordset * rs, GdaField * field)
 
 		for (idx = 0; idx < rs->field_attributes->_length; idx++) {
 			if (strcasecmp (rs->field_attributes->_buffer[idx].name,
-					field->attributes->name) == 0)
+					gda_field_get_name (field)) == 0)
 				return -1;
 		}
 		rs->field_attributes->_length++;
@@ -893,11 +896,17 @@ gda_recordset_add_field (GdaRecordset * rs, GdaField * field)
 			CORBA_sequence_GNOME_Database_FieldAttributes_allocbuf (
 				rs->field_attributes->_length);
 	}
-	rs->field_attributes->_buffer[rs->field_attributes->_length - 1].definedSize = field->attributes->definedSize;
-	rs->field_attributes->_buffer[rs->field_attributes->_length - 1].name = CORBA_string_dup (field->attributes->name);
-	rs->field_attributes->_buffer[rs->field_attributes->_length - 1].scale = field->attributes->scale;
-	rs->field_attributes->_buffer[rs->field_attributes->_length - 1].gdaType = field->attributes->gdaType;
-	rs->field_attributes->_buffer[rs->field_attributes->_length - 1].cType = field->attributes->cType;
+	rs->field_attributes->_buffer[rs->field_attributes->_length - 1].definedSize =
+		gda_field_get_defined_size (field);
+	rs->field_attributes->_buffer[rs->field_attributes->_length - 1].name =
+		CORBA_string_dup (gda_field_get_name (field));
+	rs->field_attributes->_buffer[rs->field_attributes->_length - 1].scale =
+		gda_field_get_scale (field);
+	rs->field_attributes->_buffer[rs->field_attributes->_length - 1].gdaType =
+		gda_field_get_gdatype (field);
+	rs->field_attributes->_buffer[rs->field_attributes->_length - 1].cType =
+		gda_field_get_ctype (field);
+
 	return 0;
 }
 
