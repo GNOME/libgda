@@ -23,7 +23,9 @@
 #  define __gda_freetds_provider_h__
 
 #include <libgda/gda-server-provider.h>
+#include <tds.h>
 
+G_BEGIN_DECLS
 
 #define GDA_TYPE_FREETDS_PROVIDER            (gda_freetds_provider_get_type())
 #define GDA_FREETDS_PROVIDER(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_FREETDS_PROVIDER, GdaFreeTDSProvider))
@@ -46,7 +48,14 @@ struct _GdaFreeTDSProviderClass {
 	GdaServerProviderClass parent_class;
 };
 
-G_BEGIN_DECLS
+typedef struct _GdaFreeTDSConnectionData GdaFreeTDSConnectionData;
+
+struct _GdaFreeTDSConnectionData {
+	gint          rc;
+	TDSLOGIN      *login;
+	TDSSOCKET     *socket;
+	TDSCONFIGINFO *config;
+};
 
 GType              gda_freetds_provider_get_type (void);
 GdaServerProvider *gda_freetds_provider_new (void);
