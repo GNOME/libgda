@@ -259,7 +259,7 @@ gda_server_register_component (GdaServer *server,
 
 	if (g_hash_table_lookup_extended (server->priv->components, iid,
 					  &orig_key, &value)) {
-		ptype = (GType *) ptype;
+		ptype = (GType *) orig_key;
 
 		/* already exists, so replace the component information
 		   if it has changed */

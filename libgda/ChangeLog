@@ -1,3 +1,8 @@
+2001-11-24  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-server.c (gda_server_register_component): if I use
+	"ptype = (GType *) ptype", I'll always get an invalid pointer :-)
+
 2001-11-23  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-client.c (gda_client_open_connection): don't pass NULL
