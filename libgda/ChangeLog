@@ -1,3 +1,8 @@
+2001-12-02  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-client.c (gda_client_get_connection_list): new function
+	(gda_client_find_connection): new function
+
 2001-12-01  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-config.c (gda_config_get_component_list): add the created

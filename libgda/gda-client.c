@@ -161,7 +161,6 @@ gda_client_open_connection (GdaClient *client,
 			    const gchar *username,
 			    const gchar *password)
 {
-	GList *l;
 	GdaConnection *cnc;
 	GNOME_Database_Provider corba_provider;
 	GNOME_Database_Connection corba_cnc;
@@ -178,21 +177,10 @@ gda_client_open_connection (GdaClient *client,
 	}
 
 	/* search for the connection in our private list */
-	for (l = client->priv->connections; l; l = l->next) {
-		const gchar *tmp_str, *tmp_usr, *tmp_pwd;
-
-		cnc = GDA_CONNECTION (l->data);
-		tmp_str = gda_connection_get_string (cnc);
-		tmp_usr = gda_connection_get_username (cnc);
-		tmp_pwd = gda_connection_get_password (cnc);
-
-		if (((!tmp_str && !dsn_info->cnc_string) || !strcmp (tmp_str, dsn_info->cnc_string)) &&
-		    ((!tmp_usr && !username) || !strcmp (tmp_usr, username)) &&
-		    ((!tmp_pwd && !password) || !strcmp (tmp_pwd, password))) {
-			g_object_ref (G_OBJECT (cnc));
-			gda_config_free_data_source_info (dsn_info);
-			return cnc;
-		}
+	cnc = gda_client_find_connection (client, dsn, username, password);
+	if (cnc) {
+		g_object_ref (G_OBJECT (cnc));
+		return cnc;
 	}
 
 	/* try to find provider in our hash table */
@@ -224,22 +212,80 @@ gda_client_open_connection (GdaClient *client,
 	if (BONOBO_EX (&ev)) {
 		CORBA_exception_free (&ev);
 		gda_log_error (_("Could not create connection component"));
+		gda_config_free_data_source_info (dsn_info);
 		return NULL;
 	}
 
 	CORBA_exception_free (&ev);
 
-	cnc = gda_connection_new (client, corba_cnc, dsn_info->cnc_string, username ? username : "", password ? password : "");
-	gda_config_free_data_source_info (dsn_info);
+	cnc = gda_connection_new (client, corba_cnc, dsn_info->cnc_string,
+				  username ? username : "", password ? password : "");
 
-	if (!GDA_IS_CONNECTION (cnc))
+	if (!GDA_IS_CONNECTION (cnc)) {
+		gda_config_free_data_source_info (dsn_info);
 		return NULL;
+	}
 
 	/* add list to our private list */
 	client->priv->connections = g_list_append (client->priv->connections, cnc);
 	g_signal_connect (G_OBJECT (cnc), "finalize",
 			  G_CALLBACK (connection_finalized_cb), client);
 
+	/* free memory */
+	gda_config_free_data_source_info (dsn_info);
+
 	return cnc;
 }
 
+/**
+ * gda_client_get_connection_list
+ */
+const GList *
+gda_client_get_connection_list (GdaClient *client)
+{
+	g_return_val_if_fail (GDA_IS_CLIENT (client), NULL);
+	return (const GList *) client->priv->connections;
+}
+
+/**
+ * gda_client_find_connection
+ */
+GdaConnection *
+gda_client_find_connection (GdaClient *client,
+			    const gchar *dsn,
+			    const gchar *username,
+			    const gchar *password)
+{
+	GList *l;
+	GdaDataSourceInfo *dsn_info;
+	GdaConnection *cnc;
+
+	g_return_val_if_fail (GDA_IS_CLIENT (client), NULL);
+
+	/* get the data source info */
+	dsn_info = gda_config_find_data_source (dsn);
+	if (!dsn_info) {
+		gda_log_error (_("Data source %s not found in configuration"), dsn);
+		return NULL;
+	}
+
+	for (l = client->priv->connections; l; l = l->next) {
+		const gchar *tmp_str, *tmp_usr, *tmp_pwd;
+
+		cnc = GDA_CONNECTION (l->data);
+		tmp_str = gda_connection_get_string (cnc);
+		tmp_usr = gda_connection_get_username (cnc);
+		tmp_pwd = gda_connection_get_password (cnc);
+
+		if (((!tmp_str && !dsn_info->cnc_string) || !strcmp (tmp_str, dsn_info->cnc_string)) &&
+		    ((!tmp_usr && !username) || !strcmp (tmp_usr, username)) &&
+		    ((!tmp_pwd && !password) || !strcmp (tmp_pwd, password))) {
+			gda_config_free_data_source_info (dsn_info);
+			return cnc;
+		}
+	}
+
+	gda_config_free_data_source_info (dsn_info);
+
+	return NULL;
+}

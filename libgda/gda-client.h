@@ -61,6 +61,11 @@ GdaConnection *gda_client_open_connection (GdaClient *client,
 					   const gchar *dsn,
 					   const gchar *username,
 					   const gchar *password);
+const GList   *gda_client_get_connection_list (GdaClient *client);
+GdaConnection *gda_client_find_connection (GdaClient *client,
+					   const gchar *dsn,
+					   const gchar *username,
+					   const gchar *password);
 
 G_END_DECLS
 
