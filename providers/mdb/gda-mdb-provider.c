@@ -349,18 +349,18 @@ static GdaDataModel *
 get_mdb_tables (GdaMdbConnection *mdb_cnc)
 {
 	gint i;
-	GdaDataModelList *model;
+	GdaDataModelArray *model;
 
 	g_return_val_if_fail (mdb_cnc != NULL, NULL);
 	g_return_val_if_fail (mdb_cnc->mdb != NULL, NULL);
 
-	model = (GdaDataModelList *) gda_data_model_array_new (4);
+	model = (GdaDataModelArray *) gda_data_model_array_new (4);
 	gda_data_model_set_column_title (GDA_DATA_MODEL (model), 0, _("Name"));
 	gda_data_model_set_column_title (GDA_DATA_MODEL (model), 1, _("Owner"));
 	gda_data_model_set_column_title (GDA_DATA_MODEL (model), 2, _("Comments"));
 	gda_data_model_set_column_title (GDA_DATA_MODEL (model), 3, "SQL");
 
-	mdb_read_catalog (mdb_cnc->mdb, MDB_TABLE);
+	//mdb_read_catalog (mdb_cnc->mdb, MDB_TABLE);
 	for (i = 0; i < mdb_cnc->mdb->num_catalog; i++) {
 		GdaValue *value;
 		MdbCatalogEntry *entry;
@@ -375,7 +375,9 @@ get_mdb_tables (GdaMdbConnection *mdb_cnc)
 
 				value_list = g_list_append (value_list,
 							    gda_value_new_string (entry->object_name));
-				/* FIXME */
+				value_list = g_list_append (value_list, gda_value_new_null ());
+				value_list = g_list_append (value_list, gda_value_new_null ());
+				value_list = g_list_append (value_list, gda_value_new_null ());
 
 				gda_data_model_append_row (model, value_list);
 
@@ -390,6 +392,53 @@ get_mdb_tables (GdaMdbConnection *mdb_cnc)
 	return GDA_DATA_MODEL (model);
 }
 
+static void
+add_type (GdaDataModel *model, const gchar *typname, const gchar *owner,
+	  const gchar *comments, GdaValueType type)
+{
+	GList *value_list = NULL;
+
+	value_list = g_list_append (value_list, gda_value_new_string (typname));
+	value_list = g_list_append (value_list, gda_value_new_string (owner));
+	value_list = g_list_append (value_list, gda_value_new_string (comments));
+	value_list = g_list_append (value_list, gda_value_new_type (type));
+
+	gda_data_model_append_row (model, value_list);
+
+	g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
+	g_list_free (value_list);
+}
+
+static GdaDataModel *
+get_mdb_types (GdaMdbConnection *mdb_cnc)
+{
+	GdaDataModelArray *model;
+
+	g_return_val_if_fail (mdb_cnc != NULL, NULL);
+	g_return_val_if_fail (mdb_cnc->mdb != NULL, NULL);
+
+	model = (GdaDataModelArray *) gda_data_model_array_new (4);
+	gda_data_model_set_column_title (GDA_DATA_MODEL (model), 0, _("Name"));
+	gda_data_model_set_column_title (GDA_DATA_MODEL (model), 1, _("Owner"));
+	gda_data_model_set_column_title (GDA_DATA_MODEL (model), 2, _("Comments"));
+	gda_data_model_set_column_title (GDA_DATA_MODEL (model), 3, _("GDA Type"));
+
+	add_type (model, "boolean", NULL, _("Boolean type"), GDA_VALUE_TYPE_BOOLEAN);
+	add_type (model, "byte", NULL, _("1-byte integers"), GDA_VALUE_TYPE_TINYINT);
+	add_type (model, "double", NULL, _("Double precision values"), GDA_VALUE_TYPE_DOUBLE);
+	add_type (model, "float", NULL, _("Single precision values"), GDA_VALUE_TYPE_SINGLE);
+	add_type (model, "int", NULL, _("32-bit integers"), GDA_VALUE_TYPE_INTEGER);
+	add_type (model, "longint", NULL, _("64-bit integers"), GDA_VALUE_TYPE_BIGINT);
+	add_type (model, "memo", NULL, _("Variable length character strings"), GDA_VALUE_TYPE_BINARY);
+	add_type (model, "money", NULL, _("Money amounts"), GDA_VALUE_TYPE_DOUBLE);
+	add_type (model, "ole", NULL, _("OLE object"), GDA_VALUE_TYPE_BINARY);
+	add_type (model, "repid", NULL, _("FIXME"), GDA_VALUE_TYPE_BINARY);
+	add_type (model, "sdatetime", NULL, _("Date/time value"), GDA_VALUE_TYPE_TIMESTAMP);
+	add_type (model, "text", NULL, _("Character strings"), GDA_VALUE_TYPE_STRING);
+
+	return model;
+}
+
 /* get_schema handler for the GdaMdbProvider class */
 static GdaDataModel *
 gda_mdb_provider_get_schema (GdaServerProvider *provider,
@@ -399,8 +448,6 @@ gda_mdb_provider_get_schema (GdaServerProvider *provider,
 {
 	GdaMdbConnection *mdb_cnc;
 	GdaMdbProvider *mdb_prv = (GdaMdbProvider *) provider;
-
-	G_BREAKPOINT();
 
 	g_return_val_if_fail (GDA_IS_MDB_PROVIDER (mdb_prv), NULL);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
@@ -414,6 +461,8 @@ gda_mdb_provider_get_schema (GdaServerProvider *provider,
 	switch (schema) {
 	case GDA_CONNECTION_SCHEMA_TABLES :
 		return get_mdb_tables (mdb_cnc);
+	case GDA_CONNECTION_SCHEMA_TYPES :
+		return get_mdb_types (mdb_cnc);
 	default :
 		break;
 	}

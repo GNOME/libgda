@@ -1,5 +1,10 @@
 2002-12-26  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* providers/mdb/gda-mdb-provider.c (get_mdb_types): implemented TYPES
+	schema.
+
+2002-12-26  Rodrigo Moya <rodrigo@gnome-db.org>
+
 	* providers/mdb/gda-mdb-provider.c (gda_mdb_provider_get_database,
 	gda_mdb_provider_change_database, gda_mdb_provider_create_database,
 	gda_mdb_provider_drop_database): added missing methods.
