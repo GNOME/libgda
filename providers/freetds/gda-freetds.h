@@ -28,10 +28,9 @@
 #include <glib/gmacros.h>
 #include <libgda/gda-intl.h>
 #include <libgda/gda-server-provider.h>
-#include "gda-freetds-provider.h"
-//#include "gda-freetds-recordset.h"
-
 #include <tds.h>
+#include "gda-freetds-provider.h"
+#include "gda-freetds-recordset.h"
 
 #define GDA_FREETDS_PROVIDER_ID          "GDA FreeTDS provider"
 
@@ -42,6 +41,8 @@ G_BEGIN_DECLS
  */
 
 GdaError *gda_freetds_make_error (gchar *message);
+gchar **gda_freetds_split_commandlist(const gchar *cmdlist);
+	
 
 G_END_DECLS
 
