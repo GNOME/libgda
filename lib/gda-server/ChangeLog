@@ -1,3 +1,7 @@
+2000-12-20	Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* fixed OAF servers' deactivation
+
 2000-11-27	Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* added modifySchema to GDA::Connection interface

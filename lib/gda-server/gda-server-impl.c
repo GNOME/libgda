@@ -50,105 +50,96 @@ static GList* server_list = NULL;
  */
 #ifdef HAVE_GOBJECT
 static void
-gda_server_impl_class_init (Gda_ServerImplClass *klass, gpointer data)
-{
-  GObjectClass *object_class = G_OBJECT_CLASS (klass);
-
-  object_class->finalize = &gda_server_impl_finalize;
-  klass->parent = g_type_class_peek_parent (klass);
+gda_server_impl_class_init (Gda_ServerImplClass *klass, gpointer data) {
+	GObjectClass *object_class = G_OBJECT_CLASS (klass);
+	
+	object_class->finalize = &gda_server_impl_finalize;
+	klass->parent = g_type_class_peek_parent (klass);
 }
 #else
 static void
-gda_server_impl_class_init (Gda_ServerImplClass *klass)
-{
-  GtkObjectClass* object_class = (GtkObjectClass *) klass;
-
-  object_class->destroy = gda_server_impl_destroy;
+gda_server_impl_class_init (Gda_ServerImplClass *klass) {
+	GtkObjectClass* object_class = (GtkObjectClass *) klass;
+	
+	object_class->destroy = gda_server_impl_destroy;
 }
 #endif
 
 #ifdef HAVE_GOBJECT
 static void
-gda_server_impl_init (Gda_ServerImpl *server_impl, Gda_ServerImplClass *klass)
+gda_server_impl_init (Gda_ServerImpl *server_impl, Gda_ServerImplClass *klass) {
 #else
 static void
-gda_server_impl_init (Gda_ServerImpl *server_impl)
+gda_server_impl_init (Gda_ServerImpl *server_impl) {
 #endif
-{
-  g_return_if_fail(IS_GDA_SERVER_IMPL(server_impl));
-
-  server_impl->name = NULL;
-  memset((void *) &server_impl->functions, 0, sizeof(Gda_ServerImplFunctions));
+	g_return_if_fail(IS_GDA_SERVER_IMPL(server_impl));
+	
+	server_impl->name = NULL;
+	memset((void *) &server_impl->functions, 0, sizeof(Gda_ServerImplFunctions));
 }
 
 #ifdef HAVE_GOBJECT
 static void
-gda_server_impl_finalize (GObject *object)
-{
-  Gda_ServerImpl *server_impl = GDA_SERVER_IMPL (object);
-  Gda_ServerImplClass *klass =
-    G_TYPE_INSTANCE_GET_CLASS (object, GDA_SERVER_IMPL_CLASS,
-                               Gda_ServerImplClass);
+gda_server_impl_finalize (GObject *object) {
+	Gda_ServerImpl *server_impl = GDA_SERVER_IMPL (object);
+	Gda_ServerImplClass *klass =
+		G_TYPE_INSTANCE_GET_CLASS (object, GDA_SERVER_IMPL_CLASS, Gda_ServerImplClass);
 
-  if (server_impl->name)
-    g_free ((gpointer) server_impl->name);
-  klass->parent->finalize (object);
+	server_list = g_list_remove(server_list, (gpointer) server_impl);	
+	if (server_impl->name)
+		g_free ((gpointer) server_impl->name);
+	klass->parent->finalize (object);
 }
 #else
 static void
-gda_server_impl_destroy (Gda_ServerImpl *server_impl)
-{
-  g_return_if_fail(IS_GDA_SERVER_IMPL(server_impl));
-
-  if (server_impl->name) g_free((gpointer) server_impl->name);
+gda_server_impl_destroy (Gda_ServerImpl *server_impl) {
+	g_return_if_fail(IS_GDA_SERVER_IMPL(server_impl));
+	
+	server_list = g_list_remove(server_list, (gpointer) server_impl);
+	if (server_impl->name) g_free((gpointer) server_impl->name);
 }
 #endif
 
 #ifdef HAVE_GOBJECT
 GType
-gda_server_impl_get_type (void)
-{
-  static GType type = 0;
-  if (!type)
-    {
-      GTypeInfo info =
-      {
-	sizeof (Gda_ServerImplClass),                /* class_size */
-        NULL,                                        /* base_init */
-        NULL,                                        /* base_finalize */
-	(GClassInitFunc) gda_server_impl_class_init, /* class_init */
-        NULL,                                        /* class_finalize */
-        NULL,                                        /* class_data */
-	sizeof (Gda_ServerImpl),                     /* instance_size */
-        0,                                           /* n_preallocs */
-	(GInstanceInitFunc) gda_server_impl_init,    /* instance_init */
-        NULL,                                        /* value_table */
-      };
-      type = g_type_register_static (G_TYPE_OBJECT, "Gda_ServerImpl", &info);
-    }
-  return (type);
+gda_server_impl_get_type (void) {
+	static GType type = 0;
+	
+	if (!type) {
+		GTypeInfo info = {
+			sizeof (Gda_ServerImplClass),                /* class_size */
+			NULL,                                        /* base_init */
+			NULL,                                        /* base_finalize */
+			(GClassInitFunc) gda_server_impl_class_init, /* class_init */
+			NULL,                                        /* class_finalize */
+			NULL,                                        /* class_data */
+			sizeof (Gda_ServerImpl),                     /* instance_size */
+			0,                                           /* n_preallocs */
+			(GInstanceInitFunc) gda_server_impl_init,    /* instance_init */
+			NULL,                                        /* value_table */
+		};
+		type = g_type_register_static (G_TYPE_OBJECT, "Gda_ServerImpl", &info);
+	}
+	return (type);
 }
 #else
 GtkType
-gda_server_impl_get_type (void)
-{
-  static guint type = 0;
-
-  if (!type)
-    {
-      GtkTypeInfo info =
-      {
-	"Gda_ServerImpl",
-	sizeof (Gda_ServerImpl),
-	sizeof (Gda_ServerImplClass),
-	(GtkClassInitFunc) gda_server_impl_class_init,
-	(GtkObjectInitFunc) gda_server_impl_init,
-	(GtkArgSetFunc)NULL,
-        (GtkArgSetFunc)NULL,
-      };
-      type = gtk_type_unique(gtk_object_get_type(), &info);
-    }
-  return type;
+gda_server_impl_get_type (void) {
+	static guint type = 0;
+	
+	if (!type) {
+		GtkTypeInfo info = {
+			"Gda_ServerImpl",
+			sizeof (Gda_ServerImpl),
+			sizeof (Gda_ServerImplClass),
+			(GtkClassInitFunc) gda_server_impl_class_init,
+			(GtkObjectInitFunc) gda_server_impl_init,
+			(GtkArgSetFunc)NULL,
+			(GtkArgSetFunc)NULL,
+		};
+		type = gtk_type_unique(gtk_object_get_type(), &info);
+	}
+	return type;
 }
 #endif
 
@@ -164,75 +155,72 @@ gda_server_impl_get_type (void)
  * #gda_server_impl_start
  */
 Gda_ServerImpl *
-gda_server_impl_new (const gchar *name, Gda_ServerImplFunctions *functions)
-{
-  Gda_ServerImpl*        server_impl;
-  PortableServer_POA     root_poa;
-  CORBA_char*            objref;
-  CORBA_ORB              orb;
-  OAF_RegistrationResult result;
-
-  g_return_val_if_fail(name != NULL, NULL);
-
-  /* look for an already running instance */
-  server_impl = gda_server_impl_find(name);
-  if (server_impl) return server_impl;
-
-  /* create provider instance */
+gda_server_impl_new (const gchar *name, Gda_ServerImplFunctions *functions) {
+	Gda_ServerImpl*        server_impl;
+	PortableServer_POA     root_poa;
+	CORBA_char*            objref;
+	CORBA_ORB              orb;
+	OAF_RegistrationResult result;
+	
+	g_return_val_if_fail(name != NULL, NULL);
+	
+	/* look for an already running instance */
+	server_impl = gda_server_impl_find(name);
+	if (server_impl) return server_impl;
+	
+	/* create provider instance */
 #ifdef HAVE_GOBJECT
-  server_impl = GDA_SERVER_IMPL (g_object_new (GDA_TYPE_SERVER_IMPL, NULL));
+	server_impl = GDA_SERVER_IMPL (g_object_new (GDA_TYPE_SERVER_IMPL, NULL));
 #else
-  server_impl = GDA_SERVER_IMPL(gtk_type_new(gda_server_impl_get_type()));
+	server_impl = GDA_SERVER_IMPL(gtk_type_new(gda_server_impl_get_type()));
 #endif
-  server_impl->name = g_strdup(name);
-  g_set_prgname(server_impl->name);
-  if (functions)
-    {
-      memcpy((void *) &server_impl->functions,
-             (const void *) functions,
-             sizeof(Gda_ServerImplFunctions));
-    }
-  else gda_log_message(_("Starting provider %s with no implementation functions"), name);
+	server_impl->name = g_strdup(name);
+	g_set_prgname(server_impl->name);
+	if (functions) {
+		memcpy((void *) &server_impl->functions,
+		       (const void *) functions,
+		       sizeof(Gda_ServerImplFunctions));
+	}
+	else gda_log_message(_("Starting provider %s with no implementation functions"), name);
+	
+	server_impl->connections = NULL;
+	server_impl->is_running = FALSE;
+	
+	/* create CORBA connection factory */
+	orb = gda_corba_get_orb();
+	server_impl->ev = g_new0(CORBA_Environment, 1);
+	server_impl->root_poa = (PortableServer_POA) CORBA_ORB_resolve_initial_references(orb,
+	                                                                                  "RootPOA",
+	                                                                                  server_impl->ev);
+	gda_server_impl_exception(server_impl->ev);
+	
+	server_impl->connection_factory_obj = impl_GDA_ConnectionFactory__create(server_impl->root_poa,
+	                                                                         server_impl->ev);
+	gda_server_impl_exception(server_impl->ev);
+	objref = CORBA_ORB_object_to_string(orb,
+	                                    server_impl->connection_factory_obj,
+	                                    server_impl->ev);
+	gda_server_impl_exception(server_impl->ev);
 
-  server_impl->connections = NULL;
-  server_impl->is_running = FALSE;
-
-  /* create CORBA connection factory */
-  orb = gda_corba_get_orb();
-  server_impl->ev = g_new0(CORBA_Environment, 1);
-  server_impl->root_poa = (PortableServer_POA)
-    CORBA_ORB_resolve_initial_references(orb, "RootPOA", server_impl->ev);
-  gda_server_impl_exception(server_impl->ev);
-
-  server_impl->connection_factory_obj = impl_GDA_ConnectionFactory__create(server_impl->root_poa,
-									   server_impl->ev);
-  gda_server_impl_exception(server_impl->ev);
-  objref = CORBA_ORB_object_to_string(orb,
-				      server_impl->connection_factory_obj,
-				      server_impl->ev);
-  gda_server_impl_exception(server_impl->ev);
-
-  /* register server with OAF */
-  result = oaf_active_server_register(server_impl->name, server_impl->connection_factory_obj);
-  if (result != OAF_REG_SUCCESS)
-    {
-      switch (result)
-        {
-        case OAF_REG_NOT_LISTED :
-          gda_log_error(_("OAF doesn't know about our IID; indicates broken installation. Exiting..."));
-          break;
-        case OAF_REG_ALREADY_ACTIVE :
-          gda_log_error(_("Another instance of this provider is already registered with OAF. Exiting..."));
-          break;
-        default :
-          gda_log_error(_("Unknown error registering this provider with OAF. Exiting"));
-        }
-      exit(-1);
-    }
-  gda_log_message(_("Registered with ID = %s"), objref);
-  
-  server_list = g_list_append(server_list, (gpointer) server_impl);
-  return server_impl;
+	/* register server with OAF */
+	result = oaf_active_server_register(server_impl->name, server_impl->connection_factory_obj);
+	if (result != OAF_REG_SUCCESS) {
+		switch (result) {
+			case OAF_REG_NOT_LISTED :
+				gda_log_error(_("OAF doesn't know about our IID; indicates broken installation. Exiting..."));
+				break;
+			case OAF_REG_ALREADY_ACTIVE :
+				gda_log_error(_("Another instance of this provider is already registered with OAF. Exiting..."));
+				break;
+			default :
+				gda_log_error(_("Unknown error registering this provider with OAF. Exiting"));
+		}
+		exit(-1);
+	}
+	gda_log_message(_("Registered with ID = %s"), objref);
+	
+	server_list = g_list_append(server_list, (gpointer) server_impl);
+	return server_impl;
 }
 
 /**
@@ -243,21 +231,19 @@ gda_server_impl_new (const gchar *name, Gda_ServerImplFunctions *functions)
  * identification
  */
 Gda_ServerImpl *
-gda_server_impl_find (const gchar *id)
-{
-  GList* node;
-
-  g_return_val_if_fail(id != NULL, NULL);
-
-  node = g_list_first(server_list);
-  while (node)
-    {
-      Gda_ServerImpl* server_impl = GDA_SERVER_IMPL(node->data);
-      if (server_impl && !strcmp(server_impl->name, id))
-	return server_impl;
-      node = g_list_next(node);
-    }
-  return NULL;
+gda_server_impl_find (const gchar *id) {
+	GList* node;
+	
+	g_return_val_if_fail(id != NULL, NULL);
+	
+	node = g_list_first(server_list);
+	while (node) {
+		Gda_ServerImpl* server_impl = GDA_SERVER_IMPL(node->data);
+		if (server_impl && !strcmp(server_impl->name, id))
+			return server_impl;
+		node = g_list_next(node);
+	}
+	return NULL;
 }
 
 /**
@@ -267,20 +253,19 @@ gda_server_impl_find (const gchar *id)
  * Starts the given GDA provider
  */
 void
-gda_server_impl_start (Gda_ServerImpl *server_impl)
-{
-  PortableServer_POAManager pm;
-
-  g_return_if_fail(server_impl != NULL);
-  g_return_if_fail(server_impl->is_running == FALSE);
-
-  pm = PortableServer_POA__get_the_POAManager(server_impl->root_poa, server_impl->ev);
-  gda_server_impl_exception(server_impl->ev);
-  PortableServer_POAManager_activate(pm, server_impl->ev);
-  gda_server_impl_exception(server_impl->ev);
-
-  server_impl->is_running = TRUE;
-  CORBA_ORB_run(oaf_orb_get(), server_impl->ev);
+gda_server_impl_start (Gda_ServerImpl *server_impl) {
+	PortableServer_POAManager pm;
+	
+	g_return_if_fail(server_impl != NULL);
+	g_return_if_fail(server_impl->is_running == FALSE);
+	
+	pm = PortableServer_POA__get_the_POAManager(server_impl->root_poa, server_impl->ev);
+	gda_server_impl_exception(server_impl->ev);
+	PortableServer_POAManager_activate(pm, server_impl->ev);
+	gda_server_impl_exception(server_impl->ev);
+	
+	server_impl->is_running = TRUE;
+	CORBA_ORB_run(oaf_orb_get(), server_impl->ev);
 }
 
 /**
@@ -290,71 +275,66 @@ gda_server_impl_start (Gda_ServerImpl *server_impl)
  * Stops the given server implementation
  */
 void
-gda_server_impl_stop (Gda_ServerImpl *server_impl)
-{
-  g_return_if_fail(IS_GDA_SERVER_IMPL(server_impl));
-  g_return_if_fail(server_impl->is_running);
-
-  CORBA_ORB_shutdown(oaf_orb_get(), TRUE, server_impl->ev);
-  oaf_active_server_unregister("IID", server_impl->connection_factory_obj);
-  server_impl->is_running = FALSE;
+gda_server_impl_stop (Gda_ServerImpl *server_impl) {
+	g_return_if_fail(IS_GDA_SERVER_IMPL(server_impl));
+	g_return_if_fail(server_impl->is_running);
+	
+	CORBA_ORB_shutdown(oaf_orb_get(), TRUE, server_impl->ev);
+	oaf_active_server_unregister(server_impl->name, server_impl->connection_factory_obj);
+	server_impl->is_running = FALSE;
 }
 
 /*
  * Convenience functions
  */
 gint
-gda_server_impl_exception (CORBA_Environment *ev)
-{
-  g_return_val_if_fail(ev != NULL, -1);
-
-  switch (ev->_major)
-    {
-    case CORBA_SYSTEM_EXCEPTION :
-      gda_log_error(_("CORBA system exception %s"), CORBA_exception_id(ev));
-      return -1;
-    case CORBA_USER_EXCEPTION :
-      gda_log_error(_("CORBA user exception: %s"), CORBA_exception_id( ev ));
-      return -1;
-    default:
-      break;
-    }
-  return 0;
+gda_server_impl_exception (CORBA_Environment *ev) {
+	g_return_val_if_fail(ev != NULL, -1);
+	
+	switch (ev->_major) {
+		case CORBA_SYSTEM_EXCEPTION :
+			gda_log_error(_("CORBA system exception %s"), CORBA_exception_id(ev));
+			return -1;
+		case CORBA_USER_EXCEPTION :
+			gda_log_error(_("CORBA user exception: %s"), CORBA_exception_id( ev ));
+			return -1;
+		default:
+			break;
+	}
+	return 0;
 }
 
 GDA_Error *
-gda_server_impl_make_error_buffer (Gda_ServerConnection *cnc)
-{
-  gint       idx;
-  GList*     ptr;
-  GDA_Error* rc;
-
-  g_return_val_if_fail(cnc != NULL, CORBA_OBJECT_NIL);
-
-  rc  = CORBA_sequence_GDA_Error_allocbuf(g_list_length(cnc->errors));
-  idx = 0;
-  ptr = cnc->errors;
-
-  while (ptr)
-    {
-      Gda_ServerError* e = (Gda_ServerError *) ptr->data;
-
-      rc[idx].description = CORBA_string_dup(e->description);
-      rc[idx].number = e->number;
-      rc[idx].source = CORBA_string_dup(e->source);
+gda_server_impl_make_error_buffer (Gda_ServerConnection *cnc) {
+	gint       idx;
+	GList*     ptr;
+	GDA_Error* rc;
+	
+	g_return_val_if_fail(cnc != NULL, CORBA_OBJECT_NIL);
+	
+	rc  = CORBA_sequence_GDA_Error_allocbuf(g_list_length(cnc->errors));
+	idx = 0;
+	ptr = cnc->errors;
+	
+	while (ptr) {
+		Gda_ServerError* e = (Gda_ServerError *) ptr->data;
+		
+		rc[idx].description = CORBA_string_dup(e->description);
+		rc[idx].number = e->number;
+		rc[idx].source = CORBA_string_dup(e->source);
 #if 0
-      rc->_buffer[idx].helpfile = CORBA_string_dup(e->helpfile);
-      rc->_buffer[idx].helpctxt = CORBA_string_dup(e->helpctxt);
+		rc->_buffer[idx].helpfile = CORBA_string_dup(e->helpfile);
+		rc->_buffer[idx].helpctxt = CORBA_string_dup(e->helpctxt);
 #endif
-      rc[idx].sqlstate = CORBA_string_dup(e->sqlstate);
-      rc[idx].nativeMsg   = CORBA_string_dup(e->native);
-      gda_server_error_free(e);
-      ptr = g_list_next(ptr);
-      idx++;
-    }
-  g_list_free(cnc->errors);
-  cnc->errors = NULL;
-  return rc;
+		rc[idx].sqlstate = CORBA_string_dup(e->sqlstate);
+		rc[idx].nativeMsg   = CORBA_string_dup(e->native);
+		gda_server_error_free(e);
+		ptr = g_list_next(ptr);
+		idx++;
+	}
+	g_list_free(cnc->errors);
+	cnc->errors = NULL;
+	return rc;
 }
 
 
