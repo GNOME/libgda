@@ -91,6 +91,7 @@ sql_field_build_function (gchar * funcname, GList * funcarglist)
 
 }
 
+
 sql_field_item *
 sql_field_item_build (GList * name)
 {
@@ -185,6 +186,20 @@ sql_table_build (char *tablename)
 	retval->join_cond = NULL;
 
 	return retval;
+}
+
+sql_table *
+sql_table_build_function (gchar * funcname, GList * funcarglist)
+{
+	sql_table *item;
+
+	item = memsql_alloc (sizeof *item);
+	item->type = SQL_tablefunction;
+	item->d.function.funcname = funcname;
+	item->d.function.funcarglist = funcarglist;
+
+	return item;
+
 }
 
 sql_table *

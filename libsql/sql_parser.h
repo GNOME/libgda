@@ -146,7 +146,8 @@ struct param_spec
 typedef enum
 {
 	SQL_simple,
-	SQL_nestedselect
+	SQL_nestedselect,
+        SQL_tablefunction
 }
 sql_table_type;
 
@@ -166,7 +167,12 @@ struct sql_table
 	union
 	{
 		char                 *simple;
-		sql_select_statement *select;
+		sql_select_statement *select;	        
+		struct
+		{
+			gchar *funcname;
+			GList *funcarglist;
+		} function;
 	}
 	d;
 	char          *as;
@@ -194,7 +200,8 @@ typedef enum
 	SQL_regexp_ci,
 	SQL_not_regexp,
 	SQL_not_regexp_ci,
-	SQL_similar
+	SQL_similar,
+        SQL_not
 }
 sql_condition_operator;
 

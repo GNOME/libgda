@@ -152,6 +152,7 @@ sql_destroy_condition (sql_condition * cond)
 	case SQL_regexp_ci:
 	case SQL_not_regexp:
 	case SQL_not_regexp_ci:
+	case SQL_not:
 	case SQL_similar:
 		sql_destroy_field (cond->d.pair.left);
 		sql_destroy_field (cond->d.pair.right);
@@ -198,6 +199,7 @@ sql_destroy_where (sql_where * where)
 static int
 sql_destroy_table (sql_table * table)
 {
+   	GList *walk;
 	if (!table)
 		return 0;
 
@@ -209,8 +211,16 @@ sql_destroy_table (sql_table * table)
 	case SQL_nestedselect:
 		sql_destroy_select (table->d.select);
 		break;
-	}
+	   
+	case SQL_tablefunction:
+		memsql_free (table->d.function.funcname);
+		for (walk = table->d.function.funcarglist; walk != NULL; walk = walk->next)
+			sql_destroy_field (walk->data);
 
+		g_list_free (table->d.function.funcarglist);
+	        break;
+	    
+	}
 	if (table->join_cond)
 		sql_destroy_where (table->join_cond);
 
@@ -534,6 +544,8 @@ sql_condition_op_stringify (sql_condition_operator op)
 		return memsql_strdup ("!~*");
 	case SQL_similar:
 		return memsql_strdup ("similar to");
+        case SQL_not:
+                return memsql_strdup ("not");
 	default:
 		fprintf (stderr, "Invalid condition op: %d\n", op);
 	}
@@ -588,6 +600,7 @@ static char *
 sql_table_stringify (sql_table * table)
 {
 	char *retval = NULL;
+   	GList *walk;
 
 	if (!table)
 		return NULL;
@@ -624,6 +637,18 @@ sql_table_stringify (sql_table * table)
 		retval = memsql_strappend_free (retval, memsql_strdup (")"));
 		break;
 
+	case SQL_tablefunction:
+		retval = memsql_strappend_free (
+			 memsql_strdup (table->d.function.funcname),
+			 memsql_strdup ("("));
+		for (walk = table->d.function.funcarglist; walk != NULL; walk = walk->next) 
+	     		{
+			retval = memsql_strappend_free (retval, sql_field_stringify (walk->data));
+			if (walk->next)
+		     		retval = memsql_strappend_free (retval, memsql_strdup (", "));
+			}
+		retval = memsql_strappend_free (retval, memsql_strdup (")"));
+	   	break;
 	default:
 		fprintf (stderr, "Invalid table type: %d\n", table->type);
 		retval = NULL;
@@ -1048,12 +1073,19 @@ sql_statement_append_where (sql_statement * statement, char *leftfield,
 	}
 	/* in case null passed in on the rightfield. Modify it to handle it correctly */
 	if (!rightfield) {
-		/*if (condopr == SQL_eq || condopr == SQL_like)
+	   /* Code put back in by Dru. Not sure on how we are to handle
+	    * Not conditions. My code that uses the parser makes uses
+	    * of Nots and it was quicker to place SQL_not support in than
+	    * other methods. I havn't done any changes to lexer.l or parser.y
+	    * for NOT. Only in preparing SQL statements so I can build
+	    * an sql statment contianing NOT's
+	    */
+		if (condopr == SQL_eq || condopr == SQL_like)
 			condopr = SQL_is;
 		else
-			condopr = SQL_isnot; *//* FIXME */
+			condopr = SQL_not; /* was isnot */ 
 		rightfield = memsql_strdup ("NULL");
-		freerightfield = TRUE;
+		freerightfield = TRUE;  /* FIXME */
 	}
 	/* The actual work */
 	leftf = memsql_calloc (sizeof (sql_field));

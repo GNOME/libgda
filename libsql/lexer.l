@@ -15,8 +15,8 @@
 #include "parser.h"
 #include "mem.h"
 
-#warning "strings are limited to 2000 characters"
-#define MAX_STR_CONST 2000
+#warning "strings are limited to 2048 characters"
+#define MAX_STR_CONST 2048
 char string_buf[MAX_STR_CONST];
 char *string_buf_ptr;
 %}

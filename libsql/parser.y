@@ -83,7 +83,7 @@ update_statement: L_UPDATE table L_SET set_list opt_where
 
 delete_statement: L_DELETE L_FROM table opt_where
                         {$$ = sql_delete_statement_build ($3, $4);}
-                ;
+        ;
 
 set_list: set_item					{$$ = g_list_append (NULL, $1);}
 	| set_item L_COMMA set_list	{$$ = g_list_prepend ($3, $1);}
@@ -142,6 +142,8 @@ table:    L_IDENT                       {$$ = sql_table_build ($1); memsql_free 
         | table L_AS L_IDENT            {$$ = sql_table_set_as ($1, $3);}
         | table L_IDENT                 {$$ = sql_table_set_as ($1, $2);}
         | select_statement              {$$ = sql_table_build_select ($1);}
+	| L_IDENT L_LBRACKET fields_list L_RBRACKET {$$ = sql_table_build_function($1, $3); }
+        | L_IDENT L_LBRACKET L_RBRACKET {$$ = sql_table_build_function($1, NULL); }
         | L_LBRACKET table L_RBRACKET   {$$ = $2;}
         ;
 

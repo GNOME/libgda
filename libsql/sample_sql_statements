@@ -21,3 +21,5 @@ update foo set a=b, c=d  where foo=5
 select sd.sd, sdf.wed, sdfs.sdf from asd join ses on asd=asd where aas=sd order by a
 SELECT * FROM roomavailable(24,NULL,NULL,'2004-01-01','2004-01-04')
 select * from b where b = 'b\'a'
+select * from c, d where d.fieldname = Now()
+selcet * from b where b = '14' order by field1 

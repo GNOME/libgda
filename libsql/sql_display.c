@@ -76,7 +76,10 @@ sql_display_condition (int indent, sql_condition * cond)
 	case SQL_like:
 		condstr = "LIKE";
 		break;
-	case SQL_gt:
+	case SQL_not:
+		condstr = "NOT";
+	   	break;
+        case SQL_gt:
 		condstr = ">";
 		break;
 	case SQL_lt:
@@ -130,6 +133,8 @@ sql_display_condition (int indent, sql_condition * cond)
 	case SQL_regexp_ci:
 	case SQL_not_regexp:
 	case SQL_not_regexp_ci:
+	case SQL_not:
+	case SQL_diff:
 	case SQL_similar:
 		output ("left:");
 		sql_display_field (indent + 1, cond->d.pair.left);
@@ -178,6 +183,7 @@ sql_display_where (int indent, sql_where * where)
 static int
 sql_display_table (int indent, sql_table * table)
 {
+   	GList *cur;
 	if (table->join_type != SQL_cross_join) {
 		switch (table->join_type) {
 		case SQL_inner_join:
@@ -206,13 +212,20 @@ sql_display_table (int indent, sql_table * table)
 		output ("table:");
 		sql_display_select (indent + 1, table->d.select);
 		break;
+	   
+	 case SQL_tablefunction:
+		output ("function: %s", table->d.function.funcname);
+		for (cur = table->d.function.funcarglist; cur != NULL; cur = cur->next)
+			sql_display_field (indent + 1, cur->data);
+	   	
+	   	break;
 	}
 
 	if (table->join_cond) {
 		output ("cond:");
 		sql_display_where (indent + 1, table->join_cond);
 	}
-
+   	
 	return 0;
 }
 
@@ -286,8 +299,7 @@ sql_display_insert (int indent, sql_insert_statement * insert)
 static int
 sql_display_update (int indent, sql_update_statement * update)
 {
-	GList *walk;
-
+   	GList *walk;
 	output ("table:");
 	sql_display_table (indent + 1, update->table);
 
@@ -307,8 +319,6 @@ sql_display_update (int indent, sql_update_statement * update)
 static int
 sql_display_delete (int indent, sql_delete_statement * delete)
 {
-	GList *walk;
-	
 	output ("table:");
 	sql_display_table (indent + 1, delete->table);
 
