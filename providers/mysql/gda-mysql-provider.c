@@ -682,7 +682,7 @@ gda_mysql_provider_create_table (GdaServerProvider *provider,
 			dmi = (GdaDataModelIndex *) g_list_nth_data ((GList *) index_list, i);
 
 			/* create index */
-			retval = gda_postgres_provider_create_index (provider, cnc, dmi, table_name);
+			retval = gda_mysql_provider_create_index (provider, cnc, dmi, table_name);
 			if (retval == FALSE)
 				return FALSE;
 		}

@@ -1,3 +1,10 @@
+2005-02-06  Bas Driessen <bas.driessen@xobas.com>
+
+	* providers/mysql/gda-mysql-provider.c
+	(gda_mysql_provider_create_table):
+	bugfix; call function gda_mysql_provider_create_index()
+	rather than the postgres one.
+
 2005-02-05  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda/gda-value.c: make gda_value_stringify() return "NULL" if its argument is NULL, and fixed a bug in
