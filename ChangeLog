@@ -1,9 +1,26 @@
-2003-01-11  Rodrigo Moya <rodrigo@gnome-db.org>
+2003-01-10  Santi Camps <santi@gnome-db.org>
 
-	* providers/mysql/gda-mysql-provider.c (add_aggregate_row): fixed the
-	AGGREGATES schema returned data.
-	(get_mysql_aggregates): create the data model with the correct number
-	of columns.
+	* libgda/report/Makefile.am: install gda-report.dtd to 
+	  \$(datadir)/libgda/xml instead of \$(datadir)/libgda/dtd
+	* libgda/report/gda-report-example.xml: added a sql query to be well 
+	  formed against the .dtd
+	* libgda/report/gda-report.dtd.in: some little changes to simplify the
+	  use of libxml
+	* libgda/report/testing/*: a simple program to make some tests 
+	* libgda/report/libgda-report/Makefile.am: some new files added
+	* libgda/report/libgda-report/gda-report-document.[ch]: changed. Now it
+	  manages the report as a document, but not the root element "report"
+	* libgda/report/libgda-report/gda-report-types.h: most of types removed,
+	  and now validated against the .dtd
+	* libgda/report/libgda-report/gda-report.h: some new files added
+	* libgda/report/libgda-report/gda-report-item.[ch]: implemented a generic
+	  item of the report.  Each element of the report will inherit from it
+	* libgda/report/libgda-report/gda-report-valid.[ch]:  implemented some
+	  validations against the .dtd
+	* libgda/report/libgda-report/gda-report-item-report.[ch]: implemented
+	  the report root element "report"
+	* libgda/report/libgda-report/gda-report-item-reportheader.[ch]: 
+	  implemented the report item "reportheader"
 
 2003-01-10  Rodrigo Moya <rodrigo@gnome-db.org>
 
