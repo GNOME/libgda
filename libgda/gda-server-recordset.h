@@ -23,7 +23,6 @@
 #if !defined(__gda_server_recordset_h__)
 #  define __gda_server_recordset_h__
 
-#include <gda-common.h>
 #include <bonobo/bonobo-xobject.h>
 
 G_BEGIN_DECLS

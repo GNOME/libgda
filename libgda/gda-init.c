@@ -1,4 +1,4 @@
-/* GDA Common Library
+/* GDA Library
  * Copyright (C) 2000,2001 Rodrigo Moya
  *
  * This Library is free software; you can redistribute it and/or
@@ -17,9 +17,9 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include "gda-common-private.h"
-#include "gda-common.h"
 #include <bonobo-activation/bonobo-activation.h>
+#include <bonobo/bonobo-i18n.h>
+#include <libgda/libgda.h>
 
 /* Include the marshalers here */
 #include "gda-marshal.h"
@@ -30,14 +30,12 @@
  * gda_init
  */
 void
-gda_init (const gchar * app_id, const gchar * version, gint nargs,
-	  gchar * args[])
+gda_init (const gchar *app_id, const gchar *version, gint nargs, gchar *args[])
 {
 	static gboolean initialized = FALSE;
 
 	if (initialized) {
-		gda_log_error (_
-			       ("Attempt to initialize an already initialized client"));
+		gda_log_error (_("Attempt to initialize an already initialized client"));
 		return;
 	}
 

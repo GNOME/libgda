@@ -21,6 +21,9 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#if !defined(__libgda_h__)
+#  define __libgda_h__
+
 #include <libgda/gda-batch.h>
 #include <libgda/gda-client.h>
 #include <libgda/gda-command.h>
@@ -38,3 +41,16 @@
 #include <libgda/gda-server.h>
 #include <libgda/gda-value.h>
 #include <libgda/gda-xml-database.h>
+
+G_BEGIN_DECLS
+
+void gda_init (const gchar *app_id, const gchar *version, gint nargs, gchar *args[]);
+
+typedef void (* GdaInitFunc) (gpointer user_data);
+
+void gda_main_run (GdaInitFunc init_func, gpointer user_data);
+void gda_main_quit (void);
+
+G_END_DECLS
+
+#endif

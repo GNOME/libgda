@@ -22,9 +22,7 @@
  */
 
 #include <time.h>
-#include "gda-common-private.h"
-#include "gda-field.h"
-#include "gda-value.h"
+#include <libgda/gda-field.h>
 #include <bonobo/bonobo-i18n.h>
 
 struct _GdaFieldPrivate {
@@ -202,7 +200,7 @@ gda_field_set_scale (GdaField *field, glong scale)
 GNOME_Database_ValueType
 gda_field_get_gdatype (GdaField *field)
 {
-	g_return_val_if_fail (GDA_IS_FIELD (field), GNOME_Database_TypeNull);
+	g_return_val_if_fail (GDA_IS_FIELD (field), GNOME_Database_TYPE_NULL);
 	return field->priv->corba_field->attributes.gdaType;
 }
 
@@ -214,46 +212,6 @@ gda_field_set_gdatype (GdaField *field, GNOME_Database_ValueType type)
 {
 	g_return_if_fail (GDA_IS_FIELD (field));
 	field->priv->corba_field->attributes.gdaType = type;
-}
-
-/**
- * gda_field_get_ctype
- */
-gint
-gda_field_get_ctype (GdaField *field)
-{
-	g_return_val_if_fail (GDA_IS_FIELD (field), -1);
-	return field->priv->corba_field->attributes.cType;
-}
-
-/**
- * gda_field_set_ctype
- */
-void
-gda_field_set_ctype (GdaField *field, gint type)
-{
-	g_return_if_fail (GDA_IS_FIELD (field));
-	field->priv->corba_field->attributes.cType = type;
-}
-
-/**
- * gda_field_get_nativetype
- */
-gint
-gda_field_get_nativetype (GdaField *field)
-{
-	g_return_val_if_fail (GDA_IS_FIELD (field), -1);
-	return field->priv->corba_field->attributes.nativeType;
-}
-
-/**
- * gda_field_set_nativetype
- */
-void
-gda_field_set_nativetype (GdaField *field, gint type)
-{
-	g_return_if_fail (GDA_IS_FIELD (field));
-	field->priv->corba_field->attributes.nativeType = type;
 }
 
 /**
@@ -311,7 +269,7 @@ gda_field_set_bigint_value (GdaField *field, long long value)
 {
 	g_return_if_fail (GDA_IS_FIELD (field));
 
-	field->priv->corba_field->attributes.gdaType = GNOME_Database_TypeBigint;
+	field->priv->corba_field->attributes.gdaType = GNOME_Database_TYPE_BIGINT;
 	field->priv->corba_field->actualSize = sizeof (long long);
 
 	gda_value_set_bigint (&field->priv->corba_field->value, value);
@@ -351,7 +309,7 @@ gda_field_set_boolean_value (GdaField *field, gboolean value)
 {
 	g_return_if_fail (GDA_IS_FIELD (field));
 
-	field->priv->corba_field->attributes.gdaType = GNOME_Database_TypeBoolean;
+	field->priv->corba_field->attributes.gdaType = GNOME_Database_TYPE_BOOLEAN;
 	field->priv->corba_field->actualSize = sizeof (gboolean);
 
 	gda_value_set_boolean (&field->priv->corba_field->value, value);
@@ -365,7 +323,8 @@ gda_field_get_date_value (GdaField *field)
 {
 	g_return_val_if_fail (GDA_IS_FIELD (field), NULL);
 	g_return_val_if_fail (
-		field->priv->corba_field->attributes.gdaType == GNOME_Database_TypeDate, NULL);
+		field->priv->corba_field->attributes.gdaType == GNOME_Database_TYPE_DATE,
+		NULL);
 
 	return gda_value_get_date (&field->priv->corba_field->value);
 }
@@ -378,7 +337,7 @@ gda_field_set_date_value (GdaField *field, GDate *date)
 {
 	g_return_if_fail (GDA_IS_FIELD (field));
 
-	field->priv->corba_field->attributes.gdaType = GNOME_Database_TypeDate;
+	field->priv->corba_field->attributes.gdaType = GNOME_Database_TYPE_DATE;
 	field->priv->corba_field->actualSize = sizeof (GNOME_Database_Date);
 
 	gda_value_set_date (&field->priv->corba_field->value, date);
@@ -402,7 +361,7 @@ gda_field_set_double_value (GdaField *field, gdouble value)
 {
 	g_return_if_fail (GDA_IS_FIELD (field));
 
-	field->priv->corba_field->attributes.gdaType = GNOME_Database_TypeDouble;
+	field->priv->corba_field->attributes.gdaType = GNOME_Database_TYPE_DOUBLE;
 	field->priv->corba_field->actualSize = sizeof (gdouble);
 
 	gda_value_set_double (&field->priv->corba_field->value, value);
@@ -426,7 +385,7 @@ gda_field_set_integer_value (GdaField *field, gint value)
 {
 	g_return_if_fail (GDA_IS_FIELD (field));
 
-	field->priv->corba_field->attributes.gdaType = GNOME_Database_TypeInteger;
+	field->priv->corba_field->attributes.gdaType = GNOME_Database_TYPE_INTEGER;
 	field->priv->corba_field->actualSize = sizeof (gint);
 
 	gda_value_set_integer (&field->priv->corba_field->value, value);
@@ -458,7 +417,7 @@ gda_field_set_single_value (GdaField *field, gfloat value)
 {
 	g_return_if_fail (GDA_IS_FIELD (field));
 
-	field->priv->corba_field->attributes.gdaType = GNOME_Database_TypeSingle;
+	field->priv->corba_field->attributes.gdaType = GNOME_Database_TYPE_SINGLE;
 	field->priv->corba_field->actualSize = sizeof (gfloat);
 
 	gda_value_set_single (&field->priv->corba_field->value, value);
@@ -482,7 +441,7 @@ gda_field_set_smallint_value (GdaField *field, gshort value)
 {
 	g_return_if_fail (GDA_IS_FIELD (field));
 
-	field->priv->corba_field->attributes.gdaType = GNOME_Database_TypeSmallint;
+	field->priv->corba_field->attributes.gdaType = GNOME_Database_TYPE_SMALLINT;
 	field->priv->corba_field->actualSize = sizeof (gshort);
 
 	gda_value_set_smallint (&field->priv->corba_field->value, value);
@@ -506,7 +465,7 @@ gda_field_set_string_value (GdaField *field, const gchar *value)
 {
 	g_return_if_fail (GDA_IS_FIELD (field));
 
-	field->priv->corba_field->attributes.gdaType = GNOME_Database_TypeVarchar;
+	field->priv->corba_field->attributes.gdaType = GNOME_Database_TYPE_VARCHAR;
 	field->priv->corba_field->actualSize = value ? strlen (value) : 0;
 
 	gda_value_set_string (&field->priv->corba_field->value, value);
@@ -519,7 +478,9 @@ GTime
 gda_field_get_time_value (GdaField *field)
 {
 	g_return_val_if_fail (GDA_IS_FIELD (field), -1);
-	g_return_val_if_fail (field->priv->corba_field->attributes.gdaType == GNOME_Database_TypeTime, -1);
+	g_return_val_if_fail (
+		field->priv->corba_field->attributes.gdaType == GNOME_Database_TYPE_TIME,
+		-1);
 
 	return gda_value_get_time (&field->priv->corba_field->value);
 }
@@ -541,7 +502,8 @@ gda_field_get_timestamp_value (GdaField *field)
 {
 	g_return_val_if_fail (GDA_IS_FIELD (field), -1);
 	g_return_val_if_fail (
-		field->priv->corba_field->attributes.gdaType == GNOME_Database_TypeTimestamp, -1);
+		field->priv->corba_field->attributes.gdaType == GNOME_Database_TYPE_TIMESTAMP,
+		-1);
 
 	return gda_value_get_timestamp (&field->priv->corba_field->value);
 }
@@ -554,7 +516,7 @@ gda_field_set_timestamp_value (GdaField *field, time_t value)
 {
 	g_return_if_fail (GDA_IS_FIELD (field));
 
-	field->priv->corba_field->attributes.gdaType = GNOME_Database_TypeTimestamp;
+	field->priv->corba_field->attributes.gdaType = GNOME_Database_TYPE_TIMESTAMP;
 	field->priv->corba_field->actualSize = sizeof (GNOME_Database_Timestamp);
 
 	gda_value_set_timestamp (&field->priv->corba_field->value, value);
@@ -578,7 +540,7 @@ gda_field_set_tinyint_value (GdaField *field, gchar value)
 {
 	g_return_if_fail (GDA_IS_FIELD (field));
 
-	field->priv->corba_field->attributes.gdaType = GNOME_Database_TypeTinyint;
+	field->priv->corba_field->attributes.gdaType = GNOME_Database_TYPE_TINYINT;
 	field->priv->corba_field->actualSize = sizeof (gchar);
 
 	gda_value_set_tinyint (&field->priv->corba_field->value, value);
@@ -597,8 +559,6 @@ gda_field_copy_to_corba (GdaField *field, GNOME_Database_Field *corba_field)
 	corba_field->attributes.name = CORBA_string_dup (field->priv->corba_field->attributes.name);
 	corba_field->attributes.scale = field->priv->corba_field->attributes.scale;
 	corba_field->attributes.gdaType = field->priv->corba_field->attributes.gdaType;
-	corba_field->attributes.cType = field->priv->corba_field->attributes.cType;
-	corba_field->attributes.nativeType = field->priv->corba_field->attributes.nativeType;
 
 	corba_field->actualSize = field->priv->corba_field->actualSize;
 	corba_field->value._type = field->priv->corba_field->value._type;
@@ -621,8 +581,6 @@ gda_field_copy_to_corba_attributes (GdaField *field,
 	attrs->name = CORBA_string_dup (field->priv->corba_field->attributes.name);
 	attrs->scale = field->priv->corba_field->attributes.scale;
 	attrs->gdaType = field->priv->corba_field->attributes.gdaType;
-	attrs->cType = field->priv->corba_field->attributes.cType;
-	attrs->nativeType = field->priv->corba_field->attributes.nativeType;
 }
 
 /**

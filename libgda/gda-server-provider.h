@@ -23,8 +23,7 @@
 #if !defined(__gda_server_provider_h__)
 #  define __gda_server_provider_h__
 
-#include <gda-common.h>
-#include <gda-server-connection.h>
+#include <libgda/gda-server-connection.h>
 #include <bonobo/bonobo-xobject.h>
 
 G_BEGIN_DECLS

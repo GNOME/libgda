@@ -23,8 +23,7 @@
 #if !defined(__gda_quark_list_h__)
 #  define __gda_quark_list_h__
 
-#include <glib.h>
-#include <gda-common-defs.h>
+#include <glib/gmacros.h>
 
 G_BEGIN_DECLS
 
@@ -35,8 +34,8 @@ GdaQuarkList *gda_quark_list_new_from_string (const gchar * string);
 void          gda_quark_list_free (GdaQuarkList * qlist);
 
 void          gda_quark_list_add_from_string (GdaQuarkList * qlist,
-				     const gchar * string,
-				     gboolean cleanup);
+					      const gchar * string,
+					      gboolean cleanup);
 const gchar *gda_quark_list_find (GdaQuarkList * qlist,
 				  const gchar * name);
 

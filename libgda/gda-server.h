@@ -23,10 +23,9 @@
 #if !defined(__gda_server_h__)
 #  define __gda_server_h__
 
-#include <gda-common.h>
-#include <gda-server-connection.h>
-#include <gda-server-provider.h>
-#include <gda-server-recordset.h>
+#include <libgda/gda-server-connection.h>
+#include <libgda/gda-server-provider.h>
+#include <libgda/gda-server-recordset.h>
 
 G_BEGIN_DECLS
 

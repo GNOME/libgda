@@ -21,9 +21,7 @@
 #if !defined(__gda_field_h__)
 #  define __gda_field_h__
 
-#include <gda-common-defs.h>
-#include <gda-value.h>
-#include <GNOME_Database.h>
+#include <libgda/gda-value.h>
 
 G_BEGIN_DECLS
 
@@ -62,10 +60,6 @@ void                     gda_field_set_scale (GdaField *field, glong scale);
 GNOME_Database_ValueType gda_field_get_gdatype (GdaField *field);
 void                     gda_field_set_gdatype (GdaField *field,
 						GNOME_Database_ValueType type);
-gint                     gda_field_get_ctype (GdaField *field);
-void                     gda_field_set_ctype (GdaField *field, gint type);
-gint                     gda_field_get_nativetype (GdaField *field);
-void                     gda_field_set_nativetype (GdaField *field, gint type);
 
 gboolean                 gda_field_is_null (GdaField *field);
 GdaValue                *gda_field_get_value (GdaField *field);
