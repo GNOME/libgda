@@ -366,6 +366,7 @@ gda_field_set_bigint_value (GdaField *field, gint64 value)
 gconstpointer
 gda_field_get_binary_value (GdaField *field)
 {
+	return NULL;
 }
 
 /**
@@ -502,7 +503,7 @@ gda_field_set_integer_value (GdaField *field, gint value)
 /**
  * gda_field_get_list_value
  */
-GdaValueList *
+const GdaValueList *
 gda_field_get_list_value (GdaField *field)
 {
 	g_return_val_if_fail (field != NULL, NULL);
@@ -690,5 +691,5 @@ gchar *
 gda_field_stringify (const GdaField *field)
 {
 	g_return_val_if_fail (field != NULL, NULL);
-	return gda_value_stringify (&field->value);
+	return gda_value_stringify ((GdaValue *) &field->value);
 }

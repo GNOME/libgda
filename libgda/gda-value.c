@@ -22,7 +22,9 @@
  */
 
 #include <time.h>
+#define ORBIT2_INTERNAL_API
 #include <orbit/orb-core/orbit-object.h>
+#undef ORBIT2_INTERNAL_API
 #include <bonobo/bonobo-arg.h>
 #include <bonobo/bonobo-i18n.h>
 #include <libgda/gda-value.h>
@@ -118,7 +120,7 @@ gda_value_new_boolean (gboolean val)
  * Returns: The newly created #GdaValue.
  */
 GdaValue *
-gda_value_new_date (GdaDate *val)
+gda_value_new_date (const GdaDate *val)
 {
 	g_return_val_if_fail (val != NULL, NULL);
 
@@ -152,7 +154,7 @@ gda_value_new_double (gdouble val)
  * Returns: The newly created #GdaValue.
  */
 GdaValue *
-gda_value_new_geometric_point (GdaGeometricPoint *val)
+gda_value_new_geometric_point (const GdaGeometricPoint *val)
 {
 	g_return_val_if_fail (val != NULL, NULL);
 
@@ -184,7 +186,7 @@ gda_value_new_integer (gint val)
  * Returns: The newly created #GdaValue.
  */
 GdaValue *
-gda_value_new_list (GdaValueList *val)
+gda_value_new_list (const GdaValueList *val)
 {
 	g_return_val_if_fail (val != NULL, NULL);
 
@@ -248,7 +250,7 @@ gda_value_new_string (const gchar *val)
  * Returns: The newly created #GdaValue.
  */
 GdaValue *
-gda_value_new_time (GdaTime *val)
+gda_value_new_time (const GdaTime *val)
 {
 	g_return_val_if_fail (val != NULL, NULL);
 
@@ -265,7 +267,7 @@ gda_value_new_time (GdaTime *val)
  * Returns: The newly created #GdaValue.
  */
 GdaValue *
-gda_value_new_timestamp (GdaTimestamp *val)
+gda_value_new_timestamp (const GdaTimestamp *val)
 {
 	g_return_val_if_fail (val != NULL, NULL);
 
@@ -445,7 +447,7 @@ gda_value_set_boolean (GdaValue *value, gboolean val)
 
 	if (!gda_value_isa (value, GDA_VALUE_TYPE_BOOLEAN)) {
 		clear_value (value);
-		value->_type = ORBit_RootObject_duplicate (GDA_VALUE_TYPE_BOOLEAN);
+		value->_type = (CORBA_TypeCode) ORBit_RootObject_duplicate (GDA_VALUE_TYPE_BOOLEAN);
 	}
 	else if (value->_value);
 		CORBA_free (value->_value);
@@ -617,7 +619,7 @@ gda_value_set_integer (GdaValue *value, gint val)
  * 
  * Returns: the value contained in @value.
  */
-GdaValueList *
+const GdaValueList *
 gda_value_get_list (GdaValue *value)
 {
 	g_return_val_if_fail (value != NULL, NULL);
@@ -918,7 +920,7 @@ gda_value_stringify (GdaValue *value)
 	g_return_val_if_fail (value != NULL, NULL);
 
 	if (gda_value_isa (value, GDA_VALUE_TYPE_BIGINT))
-		retval = g_strdup_printf ("%ld", gda_value_get_bigint (value));
+		retval = g_strdup_printf ("%lld", gda_value_get_bigint (value));
 	else if (gda_value_isa (value, GDA_VALUE_TYPE_BOOLEAN)) {
 		if (gda_value_get_boolean (value))
 			retval = g_strdup (_("TRUE"));
@@ -936,7 +938,7 @@ gda_value_stringify (GdaValue *value)
 	else if (gda_value_isa (value, GDA_VALUE_TYPE_DOUBLE))
 		retval = g_strdup_printf ("%f", gda_value_get_double (value));
 	else if (gda_value_isa (value, GDA_VALUE_TYPE_TIME)) {
-		GdaTime *gdatime;
+		const GdaTime *gdatime;
 
 		gdatime = gda_value_get_time (value);
 		retval = g_strdup_printf (gdatime->timezone == TIMEZONE_INVALID ?
@@ -947,7 +949,7 @@ gda_value_stringify (GdaValue *value)
 						gdatime->timezone/3600);
 	}
 	else if (gda_value_isa (value, GDA_VALUE_TYPE_DATE)) {
-		GdaDate *gdadate;
+		const GdaDate *gdadate;
 
 		gdadate = gda_value_get_date (value);
 		retval = g_strdup_printf ("%04u-%02u-%02u",gdadate->year,
@@ -955,10 +957,9 @@ gda_value_stringify (GdaValue *value)
 							   gdadate->day);
 	}
 	else if (gda_value_isa (value, GDA_VALUE_TYPE_TIMESTAMP)) {
-		GdaTimestamp *timestamp;
+		const GdaTimestamp *timestamp;
 
 		timestamp = gda_value_get_timestamp (value);
-		CLAMP (timestamp->fraction, 0, 999);
 		retval = g_strdup_printf (timestamp->timezone == TIMEZONE_INVALID ?
 			"%04u-%02u-%02u %02u:%02u:%02u.%03d" :
 			"%04u-%02u-%02u %02u:%02u:%02u.%03d%+03d",
@@ -972,17 +973,17 @@ gda_value_stringify (GdaValue *value)
 						timestamp->timezone/3600);
 	}
 	else if (gda_value_isa (value, GDA_VALUE_TYPE_GEOMETRIC_POINT)) {
-		GdaGeometricPoint *point;
+		const GdaGeometricPoint *point;
 
 		point = gda_value_get_geometric_point (value);
-		retval = g_strdup_printf ("(%.*lg,%.*lg)",
+		retval = g_strdup_printf ("(%.*g,%.*g)",
 					  DBL_DIG,
 					  point->x,
 					  DBL_DIG,
 					  point->y);
 	}
 	else if (gda_value_isa (value, GDA_VALUE_TYPE_LIST)) {
-		GdaValueList *list;
+		const GdaValueList *list;
 
 		list = gda_value_get_list (value);
 		if (list) {

@@ -98,7 +98,7 @@ const GdaGeometricPoint  *gda_field_get_geometric_point_value (GdaField *field);
 void                gda_field_set_geometric_point_value (GdaField *field, GdaGeometricPoint *value);
 gint                gda_field_get_integer_value (GdaField *field);
 void                gda_field_set_integer_value (GdaField *field, gint value);
-GdaValueList       *gda_field_get_list_value (GdaField *field);
+const GdaValueList *gda_field_get_list_value (GdaField *field);
 void                gda_field_set_list_value (GdaField *field, GdaValueList *value);
 void                gda_field_set_null_value (GdaField *field);
 gfloat              gda_field_get_single_value (GdaField *field);

@@ -4,7 +4,8 @@
 	in *_list().
 
 	* gda-value.[ch]:
-	* gda-row.[ch]: changed 'long long' by 'gint64'.
+	* gda-row.[ch]: changed 'long long' by 'gint64'. Removed all warnings.
+	Added some missing const to *value_new_*
 	
 2002-01-14  Rodrigo Moya <rodrigo@gnome-db.org>
 
