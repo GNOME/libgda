@@ -8,8 +8,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2002-01-17 02:39+0100\n"
-"PO-Revision-Date: 2002-01-17 02:39+0100\n"
+"POT-Creation-Date: 2002-01-22 22:40+0100\n"
+"PO-Revision-Date: 2002-01-22 22:40+0100\n"
 "Last-Translator: Christian Rose <menthos@menthos.com>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -85,7 +85,7 @@ msgstr ""
 msgid "Could not notify client about action %d"
 msgstr "Kunde inte notifiera klienten om åtgärden %d"
 
-#: libgda/gda-server-recordset.c:204
+#: libgda/gda-server-recordset.c:207
 msgid "No implementation for the fetch() method found"
 msgstr "Ingen implementation för fetch()-metoden hittades"
 
@@ -189,7 +189,7 @@ msgid "Invalid MYSQL handle"
 msgstr "Ogiltigt MYSQL-handtag"
 
 #: providers/mysql/gda-mysql-provider.c:463
-#: providers/postgres/gda-postgres-provider.c:558
+#: providers/postgres/gda-postgres-provider.c:568
 msgid "Type"
 msgstr "Typ"
 
@@ -242,8 +242,8 @@ msgstr "GDA-datakälleåtkomst för Postgres"
 msgid "Postgres component factory"
 msgstr "Postgres-komponentfabrik"
 
-#: providers/postgres/gda-postgres-provider.c:316
-#: providers/postgres/gda-postgres-provider.c:447
+#: providers/postgres/gda-postgres-provider.c:317
+#: providers/postgres/gda-postgres-provider.c:455
 #: providers/postgres/gda-postgres-recordset.c:59
 #: providers/postgres/gda-postgres-recordset.c:110
 msgid "Invalid PostgreSQL handle"
@@ -388,6 +388,25 @@ msgstr "Kunde inte hämta filen från %s"
 msgid "Could not initiate Report component factory"
 msgstr "Kunde inte initiera rapportkomponentfabrik"
 
+#: testing/client.c:37
+msgid "\t\tNONE\n"
+msgstr "\t\tINGEN\n"
+
+#: testing/client.c:76
+#, c-format
+msgid "** ERROR: could not open connection to %s\n"
+msgstr "** FEL: kunde inte öppna anslutning till %s\n"
+
+#. show provider features
+#: testing/client.c:81
+msgid "\tProvider capabilities...\n"
+msgstr "\tLeverantörskapabiliteter...\n"
+
+#: testing/client.c:82
+#, c-format
+msgid "\t\tTransactions: %s\n"
+msgstr "\t\tTransaktioner: %s\n"
+
 #: testing/client.c:84
 msgid "Supported"
 msgstr "Stöds"
@@ -395,6 +414,58 @@ msgstr "Stöds"
 #: testing/client.c:84
 msgid "Not supported"
 msgstr "Stöds inte"
+
+#. show connection schemas
+#: testing/client.c:87
+msgid "Stored procedures"
+msgstr "Lagrade procedurer"
+
+#: testing/client.c:88
+msgid "Connection Tables"
+msgstr "Anslutningstabeller"
+
+#: testing/client.c:89
+msgid "Available types"
+msgstr "Tillgängliga typer"
+
+#: testing/client.c:90
+msgid "Views"
+msgstr "Vyer"
+
+#: testing/client.c:91
+msgid "Indexes"
+msgstr "Index"
+
+#. test transactions
+#: testing/client.c:94 testing/client.c:102
+msgid "\tStarting transaction..."
+msgstr "\tStartar transaktion..."
+
+#: testing/client.c:96 testing/client.c:100 testing/client.c:104
+#: testing/client.c:108
+msgid "Error"
+msgstr "Fel"
+
+#: testing/client.c:98
+msgid "\tFinishing transaction..."
+msgstr "\tSlutförde transaktion..."
+
+#: testing/client.c:106
+msgid "\tRolling back transaction..."
+msgstr "\tÅterställer transaktion..."
+
+#: testing/client.c:127
+msgid "Testing GDA client API"
+msgstr "Testar GDA-klient-API"
+
+#: testing/client.c:136
+msgid "** ERROR: gda_config_get_data_source_list returned a NULL item\n"
+msgstr "** FEL: gda_config_get_data_source_list returnerade ett NULL-objekt\n"
+
+#: testing/client.c:140
+#, c-format
+msgid " Data source = %s, User = %s\n"
+msgstr " Datakälla = %s, användare = %s\n"
 
 #: testing/config.c:84
 msgid "** ERROR: gda_config_get_provider_list returned a NULL item\n"
@@ -442,9 +513,6 @@ msgstr "\tdomän = %s\n"
 #: testing/config.c:106
 msgid "\tgda_params ="
 msgstr "\tgda_params ="
-
-#~ msgid "Data source %s not found"
-#~ msgstr "Datakällan %s kunde inte hittas"
 
 #~ msgid "[GDA Client Library]"
 #~ msgstr "[GDA-klientbibliotek]"
@@ -526,9 +594,6 @@ msgstr "\tgda_params ="
 
 #~ msgid "error '%s' at %s"
 #~ msgstr "fel \"%s\" vid %s"
-
-#~ msgid "error"
-#~ msgstr "fel"
 
 #~ msgid "Could not register LDAP provider implementation"
 #~ msgstr "Kunde inte registrera LDAP-leverantörsimplementation"
