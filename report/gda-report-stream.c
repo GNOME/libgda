@@ -254,7 +254,7 @@ gda_report_stream_readChunk (Gda_ReportStream* object, guchar** data, gint32 sta
 	} else {
 		object->seek += real_size;
 	}
-
+	CORBA_sequence_set_release (chunk, CORBA_TRUE);
 	CORBA_free (chunk);
 	return real_size;
 }
@@ -281,14 +281,14 @@ gda_report_stream_writeChunk (Gda_ReportStream* object, guchar* data, gint32 siz
 	chunk._maximum = 0;
 	chunk._length = size;
 	chunk._buffer = (CORBA_octet *) g_memdup(data, size);
-	chunk._release = CORBA_FALSE;	/* FIXME: I don't know which value must be!! */
+	chunk._release = CORBA_FALSE;
  
 	real_size = GDA_ReportStream_writeChunk(object->corba_reportstream, &chunk, size, &ev);
 	/*  if (gda_reportstream_corba_exception(object, &ev))
 	return -1;
 	else*/
 	CORBA_exception_free(&ev);
-
+	CORBA_sequence_set_release (&chunk, CORBA_TRUE);
 	CORBA_free (chunk._buffer);
 	return real_size;
 }

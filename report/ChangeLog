@@ -1,5 +1,9 @@
 2001-01-14	Carlos Perelló Marín <carlos@gnome-db.org>
 
+	* gda-report-stream.c: minor updates.
+
+2001-01-14	Carlos Perelló Marín <carlos@gnome-db.org>
+
 	* gda-report-stream.[ch]: Implemented, only need the exception handling
 	  and a better errors control.
 	* gda-report-enbine.[ch]: Added all the objetc stuff and as gda-report-stream.[ch]
