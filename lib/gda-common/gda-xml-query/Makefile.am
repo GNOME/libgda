@@ -1,4 +1,4 @@
-noinst_LTLIBRARIES = libxmlquery.la
+noinst_LIBRARIES = libxmlquery.a
 
 SUBDIRS = . testing
 
@@ -44,7 +44,7 @@ xmlquery_headers = \
 	$(gob_lst) \
 	$(gob_hdr)
 
-libxmlquery_la_SOURCES = \
+libxmlquery_a_SOURCES = \
 	$(xmlquery_headers) \
 	$(gob_src) \
 	utils.c \

@@ -1,3 +1,8 @@
+2001-05-22  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* reverted last change, thus forcing new versions of
+	automake/autoconf/libtool
+
 2001-05-21  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* Makefile.am, gda-xml-query/Makefile.am,
