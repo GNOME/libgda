@@ -665,14 +665,10 @@ gda_data_model_is_updatable (GdaDataModel *model)
 const GdaRow *
 gda_data_model_append_row (GdaDataModel *model, const GList *values)
 {
-	const GdaRow *row;
-
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
 	g_return_val_if_fail (CLASS (model)->append_row != NULL, NULL);
 
-	row = CLASS (model)->append_row (model, values);
-	gda_data_model_row_inserted (model, gda_row_get_number ((GdaRow *) row));
-	return row;
+	return CLASS (model)->append_row (model, values);
 }
 
 /**
@@ -688,18 +684,11 @@ gda_data_model_append_row (GdaDataModel *model, const GList *values)
 gboolean
 gda_data_model_remove_row (GdaDataModel *model, const GdaRow *row)
 {
-	gboolean result;
-
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
 	g_return_val_if_fail (row != NULL, FALSE);
 	g_return_val_if_fail (CLASS (model)->remove_row != NULL, FALSE);
 
-	result = CLASS (model)->remove_row (model, row);
-	if (result) {
-		gda_data_model_row_removed (model, gda_row_get_number ((GdaRow *) row));
-	}
-
-	return result;
+	return CLASS (model)->remove_row (model, row);
 }
 
 /**
@@ -715,17 +704,11 @@ gda_data_model_remove_row (GdaDataModel *model, const GdaRow *row)
 gboolean
 gda_data_model_update_row (GdaDataModel *model, const GdaRow *row)
 {
-	gboolean result;
-
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
 	g_return_val_if_fail (row != NULL, FALSE);
 	g_return_val_if_fail (CLASS (model)->update_row != NULL, FALSE);
 
-	result = CLASS (model)->update_row (model, row);
-	if (result) {
-		gda_data_model_row_updated (model, gda_row_get_number ((GdaRow *) row));
-	}
-	return result;
+	return CLASS (model)->update_row (model, row);
 }
 
 /**

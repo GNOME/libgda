@@ -1,3 +1,11 @@
+2005-02-02  Álvaro Peña <alvaropg@telefonica.net>
+
+	* libgda/gda-data-model.c: Removed the signals emits
+	that must to emit the implementations, not this 
+	"interface".
+	* libgda/gda-data-model-array.c: When a row is removed,
+	the following rows must to be renumber.
+	
 2005-01-25  Bas Driessen <bas.driessen@xobas.com>
 
 	* providers/postgres/gda-postgres-recordset.c:

@@ -131,11 +131,26 @@ gda_data_model_array_append_row (GdaDataModel *model, const GList *values)
 static gboolean
 gda_data_model_array_remove_row (GdaDataModel *model, const GdaRow *row)
 {
+	gint      i, rownum;
+	GdaValue *value;
+	
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_ARRAY (model), FALSE);
 	g_return_val_if_fail (row != NULL, FALSE);
 
+	/* remove entry from the array */
 	if (g_ptr_array_remove (GDA_DATA_MODEL_ARRAY (model)->priv->rows, (gpointer) row)) {
-		gda_data_model_row_removed (model, gda_row_get_number (row));
+		/* renumber following rows */
+		rownum = gda_row_get_number ((GdaRow *) row);
+		for (i = (rownum + 1); i < GDA_DATA_MODEL_ARRAY (model)->priv->rows->len; i++)
+			gda_row_set_number ((GdaRow *) gda_data_model_get_row (GDA_DATA_MODEL (model), i), (i-1));
+
+		/* tag the row as being removed */
+		gda_row_set_id ((GdaRow *) row, "R");
+		gda_row_set_number ((GdaRow *) row, -1);
+
+		/* emit updated signals */
+		gda_data_model_row_removed (model, rownum);
+
 		return TRUE;
 	}
 
