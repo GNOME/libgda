@@ -128,10 +128,9 @@ struct _GdaServerProviderClass {
 				  GdaConnection *cnc,
 				  GdaBlob *blob);
 	
-	gboolean (* escape_string) (GdaServerProvider *provider,
+	gchar * (* value_to_sql_string) (GdaServerProvider *provider,
 				    GdaConnection *cnc,
-				    const gchar *from,
-				    gchar *to);
+				    GdaValue *from);
 				  
 				  
 };
@@ -210,10 +209,9 @@ gboolean gda_server_provider_create_blob (GdaServerProvider *provider,
 					  GdaConnection *cnc,
 					  GdaBlob *blob);
 
-gboolean gda_server_provider_escape_string (GdaServerProvider *provider,
+gchar * gda_server_provider_value_to_sql_string (GdaServerProvider *provider,
 					    GdaConnection *cnc,
-					    const gchar *from,
-					    gchar *to);
+					    GdaValue *from);
 	
 
 G_END_DECLS

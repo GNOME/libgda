@@ -117,10 +117,10 @@ static gboolean gda_postgres_provider_create_blob (GdaServerProvider *provider,
 						   GdaConnection *cnc,
 						   GdaBlob *blob);
 
-static gboolean gda_postgres_provider_escape_string (GdaServerProvider *provider,
-						     GdaConnection *cnc,
-						     const gchar *from,
-						     gchar *to);
+gchar *
+gda_postgres_provider_value_to_sql_string (GdaServerProvider *provider, /* we dont actually use this!*/
+					GdaConnection *cnc,
+					GdaValue *from);
 				 		 
 typedef struct {
 	gchar *col_name;
@@ -178,7 +178,7 @@ gda_postgres_provider_class_init (GdaPostgresProviderClass *klass)
 	provider_class->supports = gda_postgres_provider_supports;
 	provider_class->get_schema = gda_postgres_provider_get_schema;
 	provider_class->create_blob = gda_postgres_provider_create_blob;
-	provider_class->escape_string = gda_postgres_provider_escape_string;
+	provider_class->value_to_sql_string = gda_postgres_provider_value_to_sql_string;
 }
 
 static void
@@ -2505,16 +2505,57 @@ static gboolean gda_postgres_provider_create_blob (GdaServerProvider *provider,
 	return gda_postgres_blob_create (blob, cnc);
 }
 
-gboolean
-gda_postgres_provider_escape_string (GdaServerProvider *provider,
-				     GdaConnection *cnc,
-				     const gchar *from,
-				     gchar *to)
+gchar *
+gda_postgres_provider_value_to_sql_string (
+				GdaServerProvider *provider, /* we dont actually use this!*/
+				GdaConnection *cnc,
+				GdaValue *from)
 {
-	g_return_val_if_fail (GDA_IS_POSTGRES_PROVIDER (provider), FALSE);
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-	g_return_val_if_fail (from != NULL, FALSE);
-	g_return_val_if_fail (to != NULL, FALSE);
+	gchar *val_str;
+	gchar *ret;
+	
+	g_return_val_if_fail (from != NULL, NULL);
 
-	return (unsigned long)  PQescapeString (to, from, (size_t) strlen (from));
+	val_str = gda_value_stringify (from);
+	if (!val_str)
+		return NULL;
+
+	switch (from->type) {
+		case GDA_VALUE_TYPE_BIGINT :
+		case GDA_VALUE_TYPE_DOUBLE :
+		case GDA_VALUE_TYPE_INTEGER :
+		case GDA_VALUE_TYPE_NUMERIC :
+		case GDA_VALUE_TYPE_SINGLE :
+		case GDA_VALUE_TYPE_SMALLINT :
+		case GDA_VALUE_TYPE_TINYINT :
+			ret = g_strdup (val_str);
+			break;
+		case GDA_VALUE_TYPE_TIMESTAMP:
+		case GDA_VALUE_TYPE_DATE :
+		case GDA_VALUE_TYPE_TIME :
+			ret = g_strdup_printf ("\"%s\"", val_str);
+			break;
+		case GDA_VALUE_TYPE_BINARY:
+		{
+			int qlen;
+			char *quoted;
+			quoted = PQescapeBytea(val_str, (size_t) strlen(val_str), &qlen);
+			ret = g_strdup_printf ("\"%s\"", quoted);
+			PQfreemem(quoted);
+			break;
+		}
+		default :
+		{
+			char *quoted;
+			quoted = ret = g_malloc(strlen(val_str) * 2 + 3);
+			*quoted++     	= '\'';
+			quoted += PQescapeString (quoted, val_str, (size_t) strlen (val_str));
+			*quoted++     	= '\'';
+			*quoted++     	= '\0';
+			ret = g_realloc(ret, quoted - ret + 1);
+		}
+	}
+	g_free (val_str);
+
+	return ret;
 }

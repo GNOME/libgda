@@ -122,8 +122,8 @@ gboolean             gda_connection_commit_transaction (GdaConnection *cnc, GdaT
 gboolean             gda_connection_rollback_transaction (GdaConnection *cnc, GdaTransaction *xaction);
 
 gboolean             gda_connection_create_blob (GdaConnection *cnc, GdaBlob *blob);
-gboolean             gda_connection_escape_string (GdaConnection *cnc, const gchar *from, gchar *to);
 
+gchar *			gda_connection_value_to_sql_string (GdaConnection *cnc, GdaValue *from);
 const GList         *gda_connection_get_errors (GdaConnection *cnc);
 
 typedef enum {

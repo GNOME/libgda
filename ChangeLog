@@ -1,3 +1,24 @@
+2005-03-19 Alan Knowles<alan@akbkhome.com>
+
+	* libgda/gda-connection.c
+	* libgda/gda-connection.h
+	* libgda/gda-server-provider.c
+	* libgda/gda-server-provider.h
+	* providers/mysql/gda-mysql-provider.c
+	* providers/mysql/gda-mysql-recordset.c
+	* providers/mysql/utils.c
+	* providers/postgres/gda-postgres-provider.c
+	Replace gda_connection_escape_string with more generic 
+	gda_connection_value_to_sql_string, correctly adds slashes and 
+	quotes which can help to prevent SQL injection.
+	Notes:
+	- this has a knock on effect that calls like 
+	  gda_data_model_update_row will add slashes to 's, so if you
+	  where already doing this, you may end up with double slashes.
+	- It only works with postgres and mysql at present. 
+
+
+
 2005-03-18  Bas Driessen <bas.driessen@xobas.com>
 
 	* doc/C/Makefile.am: Fix noise autogen.sh by

@@ -119,10 +119,9 @@ static GdaDataModel *gda_mysql_provider_get_schema (GdaServerProvider *provider,
 						    GdaConnectionSchema schema,
 						    GdaParameterList *params);
 
-static gboolean gda_mysql_provider_escape_string (GdaServerProvider *provider,
+static gchar *gda_mysql_provider_value_to_sql_string (GdaServerProvider *provider,
 						  GdaConnection *cnc,
-						  const gchar *from,
-						  gchar *to);
+						  GdaValue *from);
 
 static GObjectClass *parent_class = NULL;
 
@@ -158,7 +157,7 @@ gda_mysql_provider_class_init (GdaMysqlProviderClass *klass)
 	provider_class->rollback_transaction = gda_mysql_provider_rollback_transaction;
 	provider_class->supports = gda_mysql_provider_supports;
 	provider_class->get_schema = gda_mysql_provider_get_schema;
-	provider_class->escape_string = gda_mysql_provider_escape_string;
+	provider_class->value_to_sql_string = gda_mysql_provider_value_to_sql_string;
 }
 
 static void
@@ -1608,25 +1607,61 @@ gda_mysql_provider_get_schema (GdaServerProvider *provider,
 	return NULL;
 }
 
-
-gboolean
-gda_mysql_provider_escape_string (GdaServerProvider *provider,
-				  GdaConnection *cnc,
-				  const gchar *from,
-				  gchar *to)
+gchar *
+gda_mysql_provider_value_to_sql_string (
+				GdaServerProvider *provider, /* we dont actually use this!*/
+				GdaConnection *cnc,
+				GdaValue *from)
 {
-	MYSQL *mysql;
-	GdaMysqlProvider *myprv = (GdaMysqlProvider *) provider;
+	gchar *val_str;
+	gchar *ret;
 
-	g_return_val_if_fail (GDA_IS_MYSQL_PROVIDER (myprv), FALSE);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (from != NULL, FALSE);
-	g_return_val_if_fail (to != NULL, FALSE);
+	
+	val_str = gda_value_stringify (from);
+	if (!val_str)
+		return NULL;
 
-	mysql = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_MYSQL_HANDLE);
-	if (!mysql) {
-		gda_connection_add_error_string (cnc, _("Invalid MYSQL handle"));
-		return 0;
+	switch (from->type) {
+		case GDA_VALUE_TYPE_BIGINT :
+		case GDA_VALUE_TYPE_DOUBLE :
+		case GDA_VALUE_TYPE_INTEGER :
+		case GDA_VALUE_TYPE_NUMERIC :
+		case GDA_VALUE_TYPE_SINGLE :
+		case GDA_VALUE_TYPE_SMALLINT :
+		case GDA_VALUE_TYPE_TINYINT :
+			ret = g_strdup (val_str);
+			break;
+		case GDA_VALUE_TYPE_TIMESTAMP:
+		case GDA_VALUE_TYPE_DATE :
+		case GDA_VALUE_TYPE_TIME :
+			ret = g_strdup_printf ("\"%s\"", val_str);
+			break;
+		default:
+		{
+			MYSQL *mysql;
+			char *quoted;
+			mysql = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_MYSQL_HANDLE);
+			
+			if (!mysql) {
+				gda_connection_add_error_string (cnc, _("Invalid MYSQL handle"));
+				return NULL;
+			}
+			quoted = ret = g_malloc(strlen(val_str) * 2 + 3);
+			*quoted++ 	= '\'';
+			quoted += mysql_real_escape_string (
+					mysql, quoted, val_str, strlen (val_str));
+					
+			*quoted++     	= '\'';
+			*quoted++     	= '\0';
+			ret = g_realloc(ret, quoted - ret + 1);
+		}
+		
 	}
-	return mysql_real_escape_string (mysql, to, from, strlen (from));
+
+	g_free (val_str);
+
+	return ret;
 }
+

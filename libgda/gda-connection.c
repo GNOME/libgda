@@ -1072,24 +1072,21 @@ gda_connection_create_blob (GdaConnection *cnc, GdaBlob *blob)
 
 
 /**
- * gda_connection_escape_string
+ * gda_connection_value_to_sql_string
  * @cnc: a #GdaConnection object.
- * @from: String to be escaped.
- * @to: Buffer to save the escaped string to.
+ * @from: #GdaValue to convert from
  *
- * Natively escapes string with \ slashes etc.
+ * Produces a fully quoted and escaped string from a GdaValue
  *
- * Returns: %FALSE if the database does not support escaping.?
+ * Returns: escaped and quoted value or NULL if not supported.
  */
-gboolean
-gda_connection_escape_string (GdaConnection *cnc,
-			      const gchar *from,
-			      gchar *to)
+gchar *
+gda_connection_value_to_sql_string (GdaConnection *cnc,
+			      GdaValue *from)
 {
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (from != NULL, FALSE);
-	g_return_val_if_fail (to != NULL, FALSE);
 
 	/* execute the command on the provider */
-	return gda_server_provider_escape_string (cnc->priv->provider_obj, cnc, from, to);
+	return gda_server_provider_value_to_sql_string (cnc->priv->provider_obj, cnc, from);
 }
