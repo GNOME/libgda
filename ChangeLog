@@ -1,3 +1,8 @@
+2000-12-13	Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* added HACKING file, copied from Miguel's HACKING file
+	in Gnumeric
+
 2000-12-05	Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* started Perl bindings
