@@ -27,10 +27,120 @@
 #endif
 
 #include <libgda/gda-log.h>
+#include <cspublic.h>
+#include <ctpublic.h>
 
 #include "gda-sybase.h"
 
-void sybase_debug_msg(gchar *fmt, ...)
+CS_RETCODE CS_PUBLIC
+gda_sybase_csmsg_callback(CS_CONTEXT *context, CS_CLIENTMSG *msg)
+{
+	sybase_debug_msg (_("Call: csmsg callback"));
+	if (!msg) {
+		return CS_SUCCEED;
+	}
+	
+	sybase_debug_msg (_("CS-Library error:\n\tseverity(%ld) layer(%ld) origin (%ld) number(%ld)\n\t%s"),
+	                  (long) CS_SEVERITY (msg->msgnumber),
+	                  (long) CS_LAYER (msg->msgnumber),
+	                  (long) CS_ORIGIN (msg->msgnumber),
+	                  (long) CS_NUMBER (msg->msgnumber),
+	                  (msg->msgstring) ? msg->msgstring : "");
+	if (msg->osstringlen > 0)
+		sybase_debug_msg (_("OS error: %s"), msg->osstring);
+
+	return CS_SUCCEED;
+}
+
+CS_RETCODE CS_PUBLIC
+gda_sybase_clientmsg_callback (CS_CONTEXT *context,
+                               CS_CONNECTION *conn,
+                               CS_CLIENTMSG *msg)
+{
+	sybase_debug_msg (_("Call: Client callback."));
+	if (!msg) {
+		return CS_SUCCEED;
+	}
+
+	sybase_debug_msg (_("CT-Client error:\n\tseverity(%ld) layer(%ld) origin (%ld) number(%ld)\n\t%s"),
+	                  (long) CS_SEVERITY (msg->msgnumber),
+	                  (long) CS_LAYER (msg->msgnumber),
+	                  (long) CS_ORIGIN (msg->msgnumber),
+	                  (long) CS_NUMBER (msg->msgnumber),
+	                  (msg->msgstring) ? msg->msgstring : "");
+
+	return CS_SUCCEED;
+}
+
+CS_RETCODE CS_PUBLIC
+gda_sybase_servermsg_callback (CS_CONTEXT *context,
+                               CS_CONNECTION *conn,
+                               CS_SERVERMSG *msg)
+{
+	sybase_debug_msg (_("Call: server callback"));
+	if (!msg) {
+		return CS_SUCCEED;
+	}
+
+	sybase_debug_msg (_("CT-Server message:\n\tnumber(%ld) severity(%ld) state(%ld) line(%ld)"),
+	                  (long) msg->msgnumber, (long) msg->severity,
+	                  (long) msg->state, (long) msg->line);
+	
+	if (msg->svrnlen > 0)
+		sybase_debug_msg(_("\tServer name: %s\n"), msg->svrname);
+
+	if (msg->proclen > 0)
+		sybase_debug_msg(_("\tProcedure name: %s\n"), msg->proc);
+
+	sybase_debug_msg (_("\t%s\n"), msg->text);
+
+	return CS_SUCCEED;
+}
+
+
+gboolean
+sybase_check_messages(GdaConnection *cnc)
+{
+	GdaSybaseConnectionData *sconn;
+	
+	CS_CLIENTMSG msg;
+	CS_INT       msgcnt = 0;
+	CS_INT       msgcur = 0;
+
+	g_return_val_if_fail (cnc != NULL, FALSE);
+	sconn = (GdaSybaseConnectionData *) g_object_get_data (G_OBJECT (cnc),
+	                                                       OBJECT_DATA_SYBASE_HANDLE);
+	g_return_val_if_fail (sconn != NULL, FALSE);
+	g_return_val_if_fail (sconn->context != NULL, FALSE);
+
+	if (sconn->connection) {
+		sconn->mret = ct_diag (sconn->connection,
+		                       CS_STATUS, 
+		                       CS_ALLMSG_TYPE, 
+		                       CS_UNUSED,
+		                       &msgcnt);
+	} else {
+		sconn->mret = cs_diag (sconn->context,
+		                       CS_STATUS,
+				       CS_CLIENTMSG_TYPE,
+				       CS_UNUSED,
+				       &msgcnt);
+	}
+	if (sconn->mret != CS_SUCCEED) {
+		sybase_debug_msg (_("ct_diag() failed determining # of client messages."));
+		return FALSE;
+	}
+	
+	while (msgcur < msgcnt) {
+		msgcur++;
+	}
+
+	sybase_debug_msg (_("%d messages fetched."), msgcnt);
+	return TRUE;
+}
+
+void
+sybase_debug_msg(gchar *fmt, ...)
 {
 	va_list args;
 	const size_t buf_size = 4096;
@@ -40,5 +150,5 @@ void sybase_debug_msg(gchar *fmt, ...)
 	vsnprintf(buf, buf_size, fmt, args);
 	va_end(args);
 	
-	gda_log_message("Sybase: ", buf);
+	gda_log_message("Sybase: %s", buf);
 }

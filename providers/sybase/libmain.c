@@ -56,6 +56,7 @@ plugin_get_connection_params (void)
 	/************************************/
 	/* environment variables for sybase */
 	list = g_list_append (list, g_strdup ("SYBASE"));
+	list = g_list_append (list, g_strdup ("LOCALE"));
 
 	return list;
 }
