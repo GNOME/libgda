@@ -1,5 +1,8 @@
 2002-05-28  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* doc/C/libgda-docs.sgml:
+	* doc/C/tmpl/gda-report-types.sgml: added new template.
+
 	* libgda/gda-server-provider.[ch]: added get_database virtual method.
 	(gda_server_provider_get_database): new method.
 

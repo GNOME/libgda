@@ -1,0 +1,106 @@
+<!-- ##### SECTION Title ##### -->
+gda-report-types
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### ENUM GdaReportStyle ##### -->
+<para>
+
+</para>
+
+@GDA_REPORT_STYLE_FORM: 
+@GDA_REPORT_STYLE_LIST: 
+
+<!-- ##### ENUM GdaReportPageSize ##### -->
+<para>
+
+</para>
+
+@GDA_REPORT_PAGE_SIZE_A3: 
+@GDA_REPORT_PAGE_SIZE_A4: 
+@GDA_REPORT_PAGE_SIZE_A5: 
+@GDA_REPORT_PAGE_SIZE_A6: 
+@GDA_REPORT_PAGE_SIZE_B3: 
+@GDA_REPORT_PAGE_SIZE_B4: 
+@GDA_REPORT_PAGE_SIZE_B5: 
+@GDA_REPORT_PAGE_SIZE_B6: 
+@GDA_REPORT_PAGE_SIZE_LETTER: 
+@GDA_REPORT_PAGE_SIZE_LEGAL: 
+@GDA_REPORT_PAGE_SIZE_EXECUTIVE: 
+
+<!-- ##### ENUM GdaReportOrientation ##### -->
+<para>
+
+</para>
+
+@GDA_REPORT_ORIENTATION_PORTRAIT: 
+@GDA_REPORT_ORIENTATION_LANDSCAPE: 
+
+<!-- ##### ENUM GdaReportUnits ##### -->
+<para>
+
+</para>
+
+@GDA_REPORT_UNITS_INCH: 
+@GDA_REPORT_UNITS_CM: 
+@GDA_REPORT_UNITS_PT: 
+
+<!-- ##### ENUM GdaReportLineStyle ##### -->
+<para>
+
+</para>
+
+@GDA_REPORT_LINE_STYLE_NONE: 
+@GDA_REPORT_LINE_STYLE_SOLID: 
+@GDA_REPORT_LINE_STYLE_DASH: 
+@GDA_REPORT_LINE_STYLE_DOT: 
+@GDA_REPORT_LINE_STYLE_DASH_DOT: 
+@GDA_REPORT_LINE_STYLE_DASH_DOT_DOT: 
+
+<!-- ##### ENUM GdaReportFontWeight ##### -->
+<para>
+
+</para>
+
+@GDA_REPORT_FONT_WEIGHT_LIGHT: 
+@GDA_REPORT_FONT_WEIGHT_NORMAL: 
+@GDA_REPORT_FONT_WEIGHT_SEMIBOLD: 
+@GDA_REPORT_FONT_WEIGHT_BOLD: 
+@GDA_REPORT_FONT_WEIGHT_BLACK: 
+
+<!-- ##### ENUM GdaReportHAlignment ##### -->
+<para>
+
+</para>
+
+@GDA_REPORT_H_ALIGNMENT_STANDAR: 
+@GDA_REPORT_H_ALIGNMENT_LEFT: 
+@GDA_REPORT_H_ALIGNMENT_CENTER: 
+@GDA_REPORT_H_ALIGNMENT_RIGHT: 
+
+<!-- ##### ENUM GdaReportVAlignment ##### -->
+<para>
+
+</para>
+
+@GDA_REPORT_V_ALIGNMENT_TOP: 
+@GDA_REPORT_V_ALIGNMENT_CENTER: 
+@GDA_REPORT_V_ALIGNMENT_BOTTOM: 
+
+<!-- ##### TYPEDEF GdaReportColor ##### -->
+<para>
+
+</para>
+
+

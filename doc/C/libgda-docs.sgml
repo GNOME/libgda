@@ -71,6 +71,7 @@
 <!ENTITY libgda-xql-utils SYSTEM "sgml/gda-xql-utils.sgml">
 <!ENTITY libgda-xql-value SYSTEM "sgml/gda-xql-value.sgml">
 <!ENTITY libgda-xql-valueref SYSTEM "sgml/gda-xql-valueref.sgml">
+<!ENTITY libgda-report-types SYSTEM "sgml/gda-report-types.sgml">
 <!ENTITY libgda-report-document SYSTEM "sgml/gda-report-document.sgml">
 <!ENTITY fdl-appendix SYSTEM "fdl-appendix.sgml">
 ]>
@@ -936,6 +937,7 @@
     <title>&GDA; Report Engine</title>
     <para>
     </para>
+    &libgda-report-types;
     &libgda-report-document;
   </chapter>
   
