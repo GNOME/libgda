@@ -1,3 +1,12 @@
+libgda 0.12.1, 2003-06-08
+-------------------------
+
+ - Fixed leak in Oracle provider to prevent running out of cursors (fozzy)
+ - Fixed normal and build requirements in spec file (david)
+ - Updated translations:
+        - nl (adrighem)
+        - sv (menthos)
+
 libgda 0.12, 2003-05-28
 -----------------------
 
