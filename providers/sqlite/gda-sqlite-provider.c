@@ -251,6 +251,42 @@ gda_sqlite_provider_close_connection (GdaServerProvider *provider,
 	return TRUE;
 }
 
+static gchar **
+sql_split (const gchar *sql)
+{
+	GSList *string_list = NULL, *slist;
+	gchar **str_array;
+	guint n = 0;
+	const gchar *remainder = sql, *next = sql;
+
+	while ((next = (const gchar *) strchr (next, ';')) != NULL) {
+		gchar *tmp = g_strndup (remainder, next - remainder + 1);
+		if (sqlite_complete (tmp)) {
+			string_list = g_slist_prepend (string_list, tmp);
+			n++;
+			remainder = (const gchar *) (next + 1);
+		} else {
+			g_free (tmp);
+		}
+		next++;
+	}
+
+	if (*remainder) {
+		n++;
+		string_list = g_slist_prepend (string_list, g_strdup (remainder));
+	}
+
+	str_array = g_new (gchar*, n + 1);
+
+	str_array[n--] = NULL;
+	for (slist = string_list; slist; slist = slist->next)
+		str_array[n--] = slist->data;
+
+	g_slist_free (string_list);
+
+	return str_array;
+}
+  
 static GList *
 process_sql_commands (GList *reclist, GdaConnection *cnc,
 		      const gchar *sql, GdaCommandOptions options)
@@ -266,7 +302,7 @@ process_sql_commands (GList *reclist, GdaConnection *cnc,
 	}
 
 	/* parse SQL string, which can contain several commands, separated by ';' */
-	arr = g_strsplit (sql, ";", 0);
+	arr = sql_split (sql);
 	if (arr) {
 		gint n = 0;
 
@@ -301,6 +337,7 @@ process_sql_commands (GList *reclist, GdaConnection *cnc,
 				g_list_foreach (reclist, (GFunc) g_object_unref, NULL);
 				g_list_free (reclist);
 				free (errmsg);
+				reclist = NULL;
 
 				break;
 			}
