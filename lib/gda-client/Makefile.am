@@ -7,26 +7,15 @@ INCLUDES = \
 	-DDTDINSTALLDIR=\""$(datadir)/gda/dtd"\"
 
 gda_client_headers = \
-	gda-batch.h \
-	gda-command.h \
-	gda-connection-pool.h \
-	gda-connection.h \
-	gda-data-model-recordset.h \
-	gda-export.h \
-	gda-recordset.h \
-	gda-client.h 
+	gda-client.h \
+	gda-connection.h
 
 libgda_client_2_la_SOURCES = \
 	$(gda_client_headers) \
-	gda-batch.c \
-	gda-command.c \
-	gda-connection-pool.c \
-	gda-connection.c \
-	gda-data-model-recordset.c \
-	gda-export.c \
-	gda-recordset.c 
+	gda-client.c \
+	gda-connection.c
 libgda_client_2_la_LIBADD =
 
-gdaincludedir=$(includedir)/gnome/2/gda
+gdaincludedir=$(includedir)/libgda-$(VERSION)/gda
 gdainclude_HEADERS=$(gda_client_headers)
 

@@ -1,10 +1,13 @@
-/* GDA client libary
- * Copyright (C) 1998,1999 Michael Lausch
- * Copyright (C) 2000 Rodrigo Moya
+/* GDA client library
+ * Copyright (C) 1998-2001 The Free Software Foundation
+ *
+ * AUTHORS:
+ *      Michael Lausch <michael@lausch.at>
+ *	Rodrigo Moya <rodrigo@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
- *  published by the Free Software Foundation; either version 2 of the
+ * published by the Free Software Foundation; either version 2 of the
  * License, or (at your option) any later version.
  *
  * This Library is distributed in the hope that it will be useful,
@@ -21,14 +24,30 @@
 #if !defined(__gda_client_h__)
 #  define __gda_client_h__
 
-#include <gda-common.h>
 #include <gda-connection.h>
-#include <gda-connection-pool.h>
-#include <gda-command.h>
-#include <gda-data-model-recordset.h>
-#include <gda-recordset.h>
-#include <gda-error.h>
-#include <gda-batch.h>
-#include <gda-export.h>
+#include <glib/gobject.h>
+
+G_BEGIN_DECLS
+
+typedef struct _GdaClientClass   GdaClientClass;
+typedef struct _GdaClientPrivate GdaClientPrivate;
+
+struct _GdaClient {
+	GObject object;
+	GdaClientPrivate;
+};
+
+GType          gda_client_get_type (void);
+GdaClient     *gda_client_new (const gchar *iid);
+
+GdaConnection *gda_client_open_connection (GdaClient *client,
+					   const gchar *cnc_string,
+					   const gchar *username,
+					   const gchar *password);
+gboolean       gda_client_close_connection (GdaClient *client, GdaConnection *cnc);
+void           gda_client_add_connection (GdaClient *client, GdaConnection *cnc);
+void           gda_client_remove_connection (GdaClient *client, GdaConnection *cnc);
+
+G_END_DECLS
 
 #endif
