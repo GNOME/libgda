@@ -33,7 +33,7 @@ gda_postgres_make_error (PGconn *handle)
 
 	error = gda_error_new ();
 	if (handle != NULL) {
-		gda_error_set_description (error, PQerrorMessage(handle));
+		gda_error_set_description (error, PQerrorMessage (handle));
 		gda_error_set_number (error, -1);
 	} else {
 		gda_error_set_description (error, _("NO DESCRIPTION"));

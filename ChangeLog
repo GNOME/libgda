@@ -1,3 +1,8 @@
+2002-03-19  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* libgda/gda-server-connection.c (impl_Connection_getSchema): if there
+	are no errors, return an empty recordset.
+
 2002-03-19  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
 	* libgda/gda-parameter.c: initialize corba_list->_length. Changed

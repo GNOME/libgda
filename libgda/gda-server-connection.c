@@ -283,8 +283,13 @@ impl_Connection_getSchema (PortableServer_Servant servant,
 	gda_parameter_list_free (plist);
 
 	if (!GDA_IS_SERVER_RECORDSET (recset)) {
-		gda_error_list_to_exception (cnc->priv->errors, ev);
-		return CORBA_OBJECT_NIL;
+		if (cnc->priv->errors != NULL) {
+			gda_error_list_to_exception (cnc->priv->errors, ev);
+			return CORBA_OBJECT_NIL;
+		}
+
+		/* create an empty recset, since there are no errors */
+		recset = gda_server_recordset_model_new (cnc, 0);
 	}
 
 	return bonobo_object_corba_objref (BONOBO_OBJECT (recset));
