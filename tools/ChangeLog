@@ -1,3 +1,8 @@
+2002-01-08  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-buildclient.in:
+	* gda-buildserver.in: removed useless scripts, not needed anymore
+
 2001-11-02  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* templates/*: removed, not needed anymore
