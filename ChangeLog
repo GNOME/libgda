@@ -1,3 +1,7 @@
+2004-01-03 Laurent Sansonetti <lrz@gnome.org>
+
+	* libgda/gda-util.c (gda_file_save): added O_TRUNC flag.
+
 2003-12-22  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* libgda/gda-command.c (gda_command_copy): dont use C99.
