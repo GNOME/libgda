@@ -14,6 +14,14 @@ GdaConnection
 
 </para>
 
+<!-- ##### STRUCT GdaServerProvider ##### -->
+<para>
+
+</para>
+
+@object: 
+@priv: 
+
 <!-- ##### STRUCT GdaConnectionPrivate ##### -->
 <para>
 
@@ -132,6 +140,16 @@ GdaConnection
 
 @cnc: 
 @error: 
+
+
+<!-- ##### FUNCTION gda_connection_add_error_string ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@str: 
+@Varargs: 
 
 
 <!-- ##### FUNCTION gda_connection_add_error_list ##### -->

@@ -25,6 +25,7 @@ gda_headers = \
 	gda-data-model-list.h \
 	gda-error.h \
 	gda-export.h \
+	gda-field.h \
 	gda-log.h \
 	gda-marshal.h \
 	gda-parameter.h \
@@ -73,6 +74,7 @@ libgda_2_la_SOURCES = \
 	gda-data-model-list.c \
 	gda-error.c \
 	gda-export.c \
+	gda-field.c \
 	gda-init.c \
 	gda-intl.h \
 	gda-log.c \

@@ -1,5 +1,22 @@
 2002-05-04  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* libgda/gda-row.[ch]: moved GdaField* stuff...
+	
+	* libgda/gda-field.[ch]: ...to here.
+	(gda_field_attributes_get_caption): new function.
+	(gda_field_attributes_set_caption): new function.
+	(gda_field_get_caption): new function.
+	(gda_field_set_caption): new function.
+	(gda_field_attributes_new): initialize 'caption' member.
+	(gda_field_attributes_free): free 'caption' member.
+	
+	* libgda/libgda.h:
+	* libgda/Makefile.am: added new header files.
+
+	* doc/C/*: added new API header file.
+
+2002-05-04  Rodrigo Moya <rodrigo@gnome-db.org>
+
 	* Release 0.8.190
 
 2002-05-02  Rodrigo Moya <rodrigo@gnome-db.org>

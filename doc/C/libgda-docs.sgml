@@ -31,6 +31,7 @@
 <!ENTITY libgda-data-model SYSTEM "sgml/gda-data-model.sgml">
 <!ENTITY libgda-error SYSTEM "sgml/gda-error.sgml">
 <!ENTITY libgda-export SYSTEM "sgml/gda-export.sgml">
+<!ENTITY libgda-field SYSTEM "sgml/gda-field.sgml">
 <!ENTITY libgda-init SYSTEM "sgml/libgda.sgml">
 <!ENTITY libgda-log SYSTEM "sgml/gda-log.sgml">
 <!ENTITY libgda-parameter SYSTEM "sgml/gda-parameter.sgml">
@@ -743,6 +744,7 @@
     &libgda-data-model;
     &libgda-error;
     &libgda-export;
+    &libgda-field;
     &libgda-log;
     &libgda-parameter;
     &libgda-quark-list;

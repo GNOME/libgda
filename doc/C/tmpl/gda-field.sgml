@@ -1,0 +1,719 @@
+<!-- ##### SECTION Title ##### -->
+gda-field
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### TYPEDEF GdaFieldAttributes ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### TYPEDEF GdaField ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION gda_field_attributes_new ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_field_attributes_free ##### -->
+<para>
+
+</para>
+
+@fa: 
+
+
+<!-- ##### FUNCTION gda_field_attributes_get_defined_size ##### -->
+<para>
+
+</para>
+
+@fa: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_field_attributes_set_defined_size ##### -->
+<para>
+
+</para>
+
+@fa: 
+@size: 
+<!-- # Unused Parameters # -->
+@fs: 
+
+
+<!-- ##### FUNCTION gda_field_attributes_get_name ##### -->
+<para>
+
+</para>
+
+@fa: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_field_attributes_set_name ##### -->
+<para>
+
+</para>
+
+@fa: 
+@name: 
+
+
+<!-- ##### FUNCTION gda_field_attributes_get_caption ##### -->
+<para>
+
+</para>
+
+@fa: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_field_attributes_set_caption ##### -->
+<para>
+
+</para>
+
+@fa: 
+@caption: 
+
+
+<!-- ##### FUNCTION gda_field_attributes_get_scale ##### -->
+<para>
+
+</para>
+
+@fa: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_field_attributes_set_scale ##### -->
+<para>
+
+</para>
+
+@fa: 
+@scale: 
+
+
+<!-- ##### FUNCTION gda_field_attributes_get_gdatype ##### -->
+<para>
+
+</para>
+
+@fa: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_field_attributes_set_gdatype ##### -->
+<para>
+
+</para>
+
+@fa: 
+@type: 
+
+
+<!-- ##### FUNCTION gda_field_attributes_get_allow_null ##### -->
+<para>
+
+</para>
+
+@fa: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_field_attributes_set_allow_null ##### -->
+<para>
+
+</para>
+
+@fa: 
+@allow: 
+
+
+<!-- ##### FUNCTION gda_field_attributes_get_primary_key ##### -->
+<para>
+
+</para>
+
+@fa: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_field_attributes_set_primary_key ##### -->
+<para>
+
+</para>
+
+@fa: 
+@pk: 
+
+
+<!-- ##### FUNCTION gda_field_attributes_get_unique_key ##### -->
+<para>
+
+</para>
+
+@fa: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_field_attributes_set_unique_key ##### -->
+<para>
+
+</para>
+
+@fa: 
+@uk: 
+
+
+<!-- ##### FUNCTION gda_field_attributes_get_references ##### -->
+<para>
+
+</para>
+
+@fa: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_field_attributes_set_references ##### -->
+<para>
+
+</para>
+
+@fa: 
+@ref: 
+
+
+<!-- ##### FUNCTION gda_field_new ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_field_free ##### -->
+<para>
+
+</para>
+
+@field: 
+
+
+<!-- ##### FUNCTION gda_field_get_actual_size ##### -->
+<para>
+
+</para>
+
+@field: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_field_set_actual_size ##### -->
+<para>
+
+</para>
+
+@field: 
+@size: 
+
+
+<!-- ##### FUNCTION gda_field_get_defined_size ##### -->
+<para>
+
+</para>
+
+@field: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_field_set_defined_size ##### -->
+<para>
+
+</para>
+
+@field: 
+@size: 
+
+
+<!-- ##### FUNCTION gda_field_get_name ##### -->
+<para>
+
+</para>
+
+@field: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_field_set_name ##### -->
+<para>
+
+</para>
+
+@field: 
+@name: 
+
+
+<!-- ##### FUNCTION gda_field_get_caption ##### -->
+<para>
+
+</para>
+
+@field: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_field_set_caption ##### -->
+<para>
+
+</para>
+
+@field: 
+@caption: 
+
+
+<!-- ##### FUNCTION gda_field_get_scale ##### -->
+<para>
+
+</para>
+
+@field: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_field_set_scale ##### -->
+<para>
+
+</para>
+
+@field: 
+@scale: 
+
+
+<!-- ##### FUNCTION gda_field_get_gdatype ##### -->
+<para>
+
+</para>
+
+@field: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_field_set_gdatype ##### -->
+<para>
+
+</para>
+
+@field: 
+@type: 
+
+
+<!-- ##### FUNCTION gda_field_get_allow_null ##### -->
+<para>
+
+</para>
+
+@field: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_field_set_allow_null ##### -->
+<para>
+
+</para>
+
+@field: 
+@allow: 
+
+
+<!-- ##### FUNCTION gda_field_get_primary_key ##### -->
+<para>
+
+</para>
+
+@field: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_field_set_primary_key ##### -->
+<para>
+
+</para>
+
+@field: 
+@pk: 
+
+
+<!-- ##### FUNCTION gda_field_get_unique_key ##### -->
+<para>
+
+</para>
+
+@field: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_field_set_unique_key ##### -->
+<para>
+
+</para>
+
+@field: 
+@uk: 
+
+
+<!-- ##### FUNCTION gda_field_get_references ##### -->
+<para>
+
+</para>
+
+@field: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_field_set_references ##### -->
+<para>
+
+</para>
+
+@field: 
+@ref: 
+
+
+<!-- ##### FUNCTION gda_field_is_null ##### -->
+<para>
+
+</para>
+
+@field: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_field_get_value ##### -->
+<para>
+
+</para>
+
+@field: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_field_set_value ##### -->
+<para>
+
+</para>
+
+@field: 
+@value: 
+
+
+<!-- ##### FUNCTION gda_field_get_bigint_value ##### -->
+<para>
+
+</para>
+
+@field: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_field_set_bigint_value ##### -->
+<para>
+
+</para>
+
+@field: 
+@value: 
+
+
+<!-- ##### FUNCTION gda_field_get_binary_value ##### -->
+<para>
+
+</para>
+
+@field: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_field_set_binary_value ##### -->
+<para>
+
+</para>
+
+@field: 
+@value: 
+@size: 
+
+
+<!-- ##### FUNCTION gda_field_get_boolean_value ##### -->
+<para>
+
+</para>
+
+@field: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_field_set_boolean_value ##### -->
+<para>
+
+</para>
+
+@field: 
+@value: 
+
+
+<!-- ##### FUNCTION gda_field_get_date_value ##### -->
+<para>
+
+</para>
+
+@field: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_field_set_date_value ##### -->
+<para>
+
+</para>
+
+@field: 
+@date: 
+
+
+<!-- ##### FUNCTION gda_field_get_double_value ##### -->
+<para>
+
+</para>
+
+@field: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_field_set_double_value ##### -->
+<para>
+
+</para>
+
+@field: 
+@value: 
+
+
+<!-- ##### FUNCTION gda_field_get_geometric_point_value ##### -->
+<para>
+
+</para>
+
+@field: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_field_set_geometric_point_value ##### -->
+<para>
+
+</para>
+
+@field: 
+@value: 
+
+
+<!-- ##### FUNCTION gda_field_get_integer_value ##### -->
+<para>
+
+</para>
+
+@field: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_field_set_integer_value ##### -->
+<para>
+
+</para>
+
+@field: 
+@value: 
+
+
+<!-- ##### FUNCTION gda_field_get_list_value ##### -->
+<para>
+
+</para>
+
+@field: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_field_set_list_value ##### -->
+<para>
+
+</para>
+
+@field: 
+@value: 
+
+
+<!-- ##### FUNCTION gda_field_set_null_value ##### -->
+<para>
+
+</para>
+
+@field: 
+
+
+<!-- ##### FUNCTION gda_field_get_numeric_value ##### -->
+<para>
+
+</para>
+
+@field: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_field_set_numeric_value ##### -->
+<para>
+
+</para>
+
+@field: 
+@value: 
+
+
+<!-- ##### FUNCTION gda_field_get_single_value ##### -->
+<para>
+
+</para>
+
+@field: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_field_set_single_value ##### -->
+<para>
+
+</para>
+
+@field: 
+@value: 
+
+
+<!-- ##### FUNCTION gda_field_get_smallint_value ##### -->
+<para>
+
+</para>
+
+@field: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_field_set_smallint_value ##### -->
+<para>
+
+</para>
+
+@field: 
+@value: 
+
+
+<!-- ##### FUNCTION gda_field_get_string_value ##### -->
+<para>
+
+</para>
+
+@field: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_field_set_string_value ##### -->
+<para>
+
+</para>
+
+@field: 
+@value: 
+
+
+<!-- ##### FUNCTION gda_field_get_time_value ##### -->
+<para>
+
+</para>
+
+@field: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_field_set_time_value ##### -->
+<para>
+
+</para>
+
+@field: 
+@value: 
+
+
+<!-- ##### FUNCTION gda_field_get_timestamp_value ##### -->
+<para>
+
+</para>
+
+@field: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_field_set_timestamp_value ##### -->
+<para>
+
+</para>
+
+@field: 
+@value: 
+
+
+<!-- ##### FUNCTION gda_field_get_tinyint_value ##### -->
+<para>
+
+</para>
+
+@field: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_field_set_tinyint_value ##### -->
+<para>
+
+</para>
+
+@field: 
+@value: 
+
+
+<!-- ##### FUNCTION gda_field_stringify ##### -->
+<para>
+
+</para>
+
+@field: 
+@Returns: 
+
+

@@ -29,18 +29,6 @@ to any data, get a newly allocated copy of the data.
 
 
 
-<!-- ##### TYPEDEF GdaValue ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### TYPEDEF GdaValueList ##### -->
-<para>
-
-</para>
-
-
 <!-- ##### ENUM GdaValueType ##### -->
 <para>
 
@@ -89,6 +77,18 @@ to any data, get a newly allocated copy of the data.
 
 
 <!-- ##### TYPEDEF GdaTimestamp ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### TYPEDEF GdaValueList ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### TYPEDEF GdaValue ##### -->
 <para>
 
 </para>

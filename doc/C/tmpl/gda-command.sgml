@@ -16,12 +16,6 @@ providers.
 
 </para>
 
-<!-- ##### TYPEDEF GdaCommand ##### -->
-<para>
-
-</para>
-
-
 <!-- ##### ENUM GdaCommandOptions ##### -->
 <para>
 And OR'ed combination of GDA_COMMAND_OPTIONS_* values.
@@ -53,6 +47,12 @@ sentences.
 @GDA_COMMAND_TYPE_TABLE: the text of the command is composed of zero or more
 table names.
 @GDA_COMMAND_TYPE_INVALID: 
+
+<!-- ##### TYPEDEF GdaCommand ##### -->
+<para>
+
+</para>
+
 
 <!-- ##### FUNCTION gda_command_new ##### -->
 <para>

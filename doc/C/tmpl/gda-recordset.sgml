@@ -20,6 +20,27 @@ GdaRecordset
 </para>
 
 
+<!-- ##### USER_FUNCTION GdaRecordsetFetchFunc ##### -->
+<para>
+
+</para>
+
+@recset: 
+@rownum: 
+@user_data: 
+@Returns: 
+
+
+<!-- ##### USER_FUNCTION GdaRecordsetDescribeFunc ##### -->
+<para>
+
+</para>
+
+@recset: 
+@user_data: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_recordset_new ##### -->
 <para>
 
@@ -34,6 +55,15 @@ GdaRecordset
 @corba_recset: 
 
 
+<!-- ##### FUNCTION gda_recordset_get_connection ##### -->
+<para>
+
+</para>
+
+@recset: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_recordset_get_command_text ##### -->
 <para>
 
@@ -43,6 +73,15 @@ GdaRecordset
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_recordset_set_command_text ##### -->
+<para>
+
+</para>
+
+@recset: 
+@txt: 
+
+
 <!-- ##### FUNCTION gda_recordset_get_command_type ##### -->
 <para>
 
@@ -50,5 +89,14 @@ GdaRecordset
 
 @recset: 
 @Returns: 
+
+
+<!-- ##### FUNCTION gda_recordset_set_command_type ##### -->
+<para>
+
+</para>
+
+@recset: 
+@type: 
 
 
