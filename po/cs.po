@@ -8,15 +8,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda HEAD\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2003-10-12 14:54+0200\n"
-"PO-Revision-Date: 2003-09-19 01:45+0200\n"
+"POT-Creation-Date: 2003-11-12 04:17+0100\n"
+"PO-Revision-Date: 2003-11-12 11:34+0100\n"
 "Last-Translator: Miloslav Trmac <mitr@volny.cz>\n"
 "Language-Team: Czech <cs@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: libgda/gda-client.c:312 libgda/gda-client.c:516 libgda/gda-connection.c:218
+#: libgda/gda-client.c:312 libgda/gda-client.c:517 libgda/gda-connection.c:218
 #, c-format
 msgid "Data source %s not found in configuration"
 msgstr "Zdroj dat %s nebyl nalezen v nastavení"
@@ -35,7 +35,7 @@ msgstr "Poskytovatel %s neimplementuje vstupní funkci"
 msgid "Could not create GdaServerProvider object from plugin"
 msgstr "Ze zásuvného modulu nelze vytvořit objekt GdaServerProvider"
 
-#: libgda/gda-client.c:443
+#: libgda/gda-client.c:444
 msgid "Temporary data source created by libgda. Don't remove it"
 msgstr "Dočasný zdroj dat vytvořený programem libgda. Neodstraňujte."
 
@@ -44,7 +44,7 @@ msgstr "Dočasný zdroj dat vytvořený programem libgda. Neodstraňujte."
 msgid "Error: %s"
 msgstr "Chyba: %s"
 
-#: libgda/gda-config.c:1323 providers/ldap/gda-ldap-provider.c:327
+#: libgda/gda-config.c:1400 providers/ldap/gda-ldap-provider.c:327
 #: providers/mdb/gda-mdb-provider.c:457 providers/mdb/gda-mdb-provider.c:594
 #: providers/mdb/gda-mdb-provider.c:654 providers/msql/gda-msql-provider.c:448
 #: providers/mysql/gda-mysql-provider.c:701
@@ -60,15 +60,15 @@ msgstr "Chyba: %s"
 msgid "Name"
 msgstr "Název"
 
-#: libgda/gda-config.c:1324
+#: libgda/gda-config.c:1401
 msgid "Provider"
 msgstr "Poskytovatel"
 
-#: libgda/gda-config.c:1325
+#: libgda/gda-config.c:1402
 msgid "Connection string"
 msgstr "Řetězec připojení"
 
-#: libgda/gda-config.c:1326 providers/ibmdb2/gda-ibmdb2-provider.c:863
+#: libgda/gda-config.c:1403 providers/ibmdb2/gda-ibmdb2-provider.c:863
 #: providers/ibmdb2/gda-ibmdb2-provider.c:892
 #: providers/ibmdb2/gda-ibmdb2-provider.c:920
 #: providers/ibmdb2/gda-ibmdb2-provider.c:1001
@@ -78,24 +78,24 @@ msgstr "Řetězec připojení"
 msgid "Description"
 msgstr "Popis"
 
-#: libgda/gda-config.c:1327
+#: libgda/gda-config.c:1404
 msgid "Username"
 msgstr "Uživatelské jméno"
 
-#: libgda/gda-config.c:1328
+#: libgda/gda-config.c:1405
 msgid "Password"
 msgstr "Heslo"
 
-#: libgda/gda-data-model.c:687
+#: libgda/gda-data-model.c:698
 #, c-format
 msgid "Data model %p is not editable"
 msgstr "Datový model %p nelze editovat"
 
-#: libgda/gda-init.c:48
+#: libgda/gda-init.c:47
 msgid "Attempt to initialize an already initialized client"
 msgstr "Pokus o inicializaci již inicializovaného klienta"
 
-#: libgda/gda-init.c:59
+#: libgda/gda-init.c:58
 msgid "libgda needs GModule. Finishing..."
 msgstr "Program libgda potřebuje GModule. Končím..."
 
@@ -109,87 +109,87 @@ msgstr "Nelze zpracovat řetězec s SQL '%s'"
 msgid "SQL command is not a SELECT (is '%s'"
 msgstr "Příkaz SQL není typu SELECT (je '%s'"
 
-#: libgda/gda-table.c:286
+#: libgda/gda-table.c:284
 #, c-format
 msgid "There is already a field called %s"
 msgstr "Pole nazvané %s již existuje"
 
-#: libgda/gda-util.c:147
+#: libgda/gda-util.c:154
 #, c-format
 msgid "Could not parse SQL command '%s'"
 msgstr "Nelze zpracovat příkaz SQL '%s'"
 
-#: libgda/gda-util.c:180
+#: libgda/gda-util.c:187
 #, c-format
 msgid "Error while reading %s: %s"
 msgstr "Chyba při čtení %s: %s"
 
-#: libgda/gda-util.c:206
+#: libgda/gda-util.c:213
 #, c-format
 msgid "Could not create file %s"
 msgstr "Nelze vytvořit soubor %s"
 
-#: libgda/gda-value.c:1982
+#: libgda/gda-value.c:1953
 msgid "TRUE"
 msgstr "PRAVDA"
 
-#: libgda/gda-value.c:1984
+#: libgda/gda-value.c:1955
 msgid "FALSE"
 msgstr "NEPRAVDA"
 
-#: libgda/gda-value.c:2053
+#: libgda/gda-value.c:2024
 #, c-format
 msgid "(GObject of type '%s'"
 msgstr "(GObject typu '%s'"
 
-#: libgda/gda-value.c:2056
+#: libgda/gda-value.c:2027
 msgid "NULL GObject"
 msgstr "GObject NULL"
 
-#: libgda/gda-xml-database.c:271
+#: libgda/gda-xml-database.c:279
 #, c-format
 msgid "Could not load file at %s"
 msgstr "Nelze načíst soubor v %s"
 
-#: libgda/gda-xml-database.c:280
+#: libgda/gda-xml-database.c:288
 #, c-format
 msgid "Could not parse file at %s"
 msgstr "Nelze zpracovat soubor v %s"
 
-#: libgda/gda-xml-database.c:290
+#: libgda/gda-xml-database.c:298
 #, c-format
 msgid "Invalid XML database file '%s'"
 msgstr "Neplatný soubor s databází XML '%s'"
 
-#: libgda/gda-xml-database.c:536
+#: libgda/gda-xml-database.c:541
 #, c-format
 msgid "Could not create a XML node from table %s"
 msgstr "Nelze vytvořit uzel XML z tabulky %s"
 
-#: libgda/gda-xml-database.c:554
+#: libgda/gda-xml-database.c:559
 msgid "Could not dump XML file to memory"
 msgstr "Nelze vypsat soubor XML do paměti"
 
-#: libgda/gda-xml-database.c:647 libgda/gda-xml-database.c:684
-#: libgda/gda-xml-database.c:728
+#: libgda/gda-xml-database.c:650 libgda/gda-xml-database.c:687
+#: libgda/gda-xml-database.c:731
 #, c-format
 msgid "Table %s already exists"
 msgstr "Tabulka %s již existuje"
 
-#: libgda/gda-xml-database.c:721
+#: libgda/gda-xml-database.c:724
 msgid "Invalid node"
 msgstr "Neplatný uzel"
 
-#: libgda/gda-xml-database.c:763
+#: libgda/gda-xml-database.c:766
 #, c-format
 msgid "Duplicated <data> node for table %s"
 msgstr "Duplikátní uzel <data> pro tabulku %s"
 
-#: libgda/gda-xml-database.c:770
+#: libgda/gda-xml-database.c:773
 msgid "Invalid XML node"
 msgstr "Neplatný uzel XML"
 
-#: libgda/gda-xml-database.c:779
+#: libgda/gda-xml-database.c:782
 msgid "Could not add the data from the XML node"
 msgstr "Nemohu získat data z uzlu XML"
 
@@ -495,8 +495,8 @@ msgstr "Neplatný handle LDAP"
 
 #: providers/ldap/gda-ldap-recordset.c:69
 #: providers/mysql/gda-mysql-recordset.c:69
-#: providers/postgres/gda-postgres-recordset.c:189
-#: providers/postgres/gda-postgres-recordset.c:229
+#: providers/postgres/gda-postgres-recordset.c:193
+#: providers/postgres/gda-postgres-recordset.c:357
 #: providers/sqlite/gda-sqlite-recordset.c:165
 #: providers/sqlite/gda-sqlite-recordset.c:204
 msgid "Row number out of range"
@@ -1124,7 +1124,7 @@ msgid "Could not define by position"
 msgstr "Nelze definovat pomocí pozice"
 
 #: providers/oracle/gda-oracle-recordset.c:173
-#: providers/postgres/gda-postgres-recordset.c:268
+#: providers/postgres/gda-postgres-recordset.c:476
 msgid "Column out of range"
 msgstr "Sloupec mimo rozsah"
 
@@ -1164,9 +1164,9 @@ msgstr "Poskytovatel pro databáze Oracle"
 #: providers/postgres/gda-postgres-provider.c:581
 #: providers/postgres/gda-postgres-provider.c:652
 #: providers/postgres/gda-postgres-provider.c:787
-#: providers/postgres/gda-postgres-recordset.c:180
-#: providers/postgres/gda-postgres-recordset.c:220
-#: providers/postgres/gda-postgres-recordset.c:262
+#: providers/postgres/gda-postgres-recordset.c:184
+#: providers/postgres/gda-postgres-recordset.c:348
+#: providers/postgres/gda-postgres-recordset.c:470
 #: providers/postgres/utils.c:178
 msgid "Invalid PostgreSQL handle"
 msgstr "Neplatný handle PostgreSQL"
@@ -1181,13 +1181,29 @@ msgstr "Pohled"
 msgid "Databases"
 msgstr "Databáze"
 
+#: providers/postgres/gda-postgres-recordset.c:228
+msgid "Given row doesn't belong to the model."
+msgstr "Daný řádek nepatří do modelu."
+
 #: providers/postgres/gda-postgres-recordset.c:235
+msgid "Table name could not be guessed."
+msgstr "Nebylo možné uhodnout název tabulky."
+
+#: providers/postgres/gda-postgres-recordset.c:287
+msgid "Model doesn't have at least one non-modified unique key."
+msgstr "Model neobsahuje alespoň jeden neupravený jedinečný klíč."
+
+#: providers/postgres/gda-postgres-recordset.c:291
+msgid "Model doesn't have any non-unique values to update."
+msgstr "Model neobsahuje nejedinečné hodnoty k aktualizaci."
+
+#: providers/postgres/gda-postgres-recordset.c:363
 #: providers/sqlite/gda-sqlite-recordset.c:210
 #: providers/sqlite/gda-sqlite-recordset.c:242
 msgid "Column number out of range"
 msgstr "Sloupec mimo rozsah"
 
-#: providers/postgres/gda-postgres-recordset.c:358
+#: providers/postgres/gda-postgres-recordset.c:581
 #, c-format
 msgid "Tuples:\"%s\""
 msgstr "n-tice:\"%s\""
