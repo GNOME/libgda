@@ -1,3 +1,9 @@
+2002-01-26  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* libgda/gda-config.[ch] (gda_config_get_provider_by_name): new
+	function.
+	(gda_config_free_provider_info): new function.
+
 2002-01-26  Carlos Perelló Marín <carlos@gnome-db.org>
 
 	* providers/sqlite/gda-sqlite-provider.c

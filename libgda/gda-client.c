@@ -218,6 +218,7 @@ gda_client_open_connection (GdaClient *client,
 			if (g_hash_table_lookup_extended (client->priv->providers,
 							  dsn_info->provider,
 							  &orig_key, &orig_data)) {
+				g_hash_table_remove (client->priv->providers, dsn_info->provider);
 				free_hash_provider (orig_key, orig_data, NULL);
 			}
 

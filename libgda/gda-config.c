@@ -673,24 +673,61 @@ gda_config_free_provider_list (GList *list)
 	for (l = g_list_first (list); l; l = l->next) {
 		GdaProviderInfo *provider_info = (GdaProviderInfo *) l->data;
 
-		if (provider_info != NULL) {
-			g_free (provider_info->id);
-			g_free (provider_info->location);
-			g_free (provider_info->description);
-			g_free (provider_info->username);
-			g_free (provider_info->hostname);
-			g_free (provider_info->domain);
-
-			g_list_foreach (provider_info->repo_ids, (GFunc) g_free, NULL);
-			g_list_free (provider_info->repo_ids);
-			g_list_foreach (provider_info->gda_params, (GFunc) g_free, NULL);
-			g_list_free (provider_info->gda_params);
-
-			g_free (provider_info);
-		}
+		if (provider_info != NULL)
+			gda_config_free_provider_info (provider_info);
 	}
 
 	g_list_free (list);
+}
+
+/**
+ * gda_config_get_provider_by_name
+ */
+GdaProviderInfo *
+gda_config_get_provider_by_name (const gchar *name)
+{
+	GList *prov_list;
+	GList *l;
+
+	prov_list = gda_config_get_provider_list ();
+
+	for (l = prov_list; l != NULL; l = l->next) {
+		GdaProviderInfo *provider_info = (GdaProviderInfo *) l->data;
+
+		if (provider_info && !strcmp (provider_info->id, name)) {
+			l->data = NULL;
+			gda_config_free_provider_list (prov_list);
+
+			return provider_info;
+		}
+	}
+
+	gda_config_free_provider_list (prov_list);
+
+	return NULL;
+}
+
+/**
+ * gda_config_free_provider_info
+ */
+void
+gda_config_free_provider_info (GdaProviderInfo *provider_info)
+{
+	g_return_if_fail (provider_info != NULL);
+
+	g_free (provider_info->id);
+	g_free (provider_info->location);
+	g_free (provider_info->description);
+	g_free (provider_info->username);
+	g_free (provider_info->hostname);
+	g_free (provider_info->domain);
+
+	g_list_foreach (provider_info->repo_ids, (GFunc) g_free, NULL);
+	g_list_free (provider_info->repo_ids);
+	g_list_foreach (provider_info->gda_params, (GFunc) g_free, NULL);
+	g_list_free (provider_info->gda_params);
+
+	g_free (provider_info);
 }
 
 /**

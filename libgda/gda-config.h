@@ -97,8 +97,10 @@ typedef struct {
 	GList *gda_params;
 } GdaProviderInfo;
 
-GList *gda_config_get_provider_list (void);
-void   gda_config_free_provider_list (GList *list);
+GList           *gda_config_get_provider_list (void);
+void             gda_config_free_provider_list (GList *list);
+GdaProviderInfo *gda_config_get_provider_by_name (const gchar *name);
+void             gda_config_free_provider_info (GdaProviderInfo *provider_info);
 
 /*
  * Data sources configuration
