@@ -26,6 +26,9 @@ AC_SUBST(ORBIT_IDL)
 BONOBO_ACTIVATION_IDL_DIR="`$PKG_CONFIG --variable=idldir bonobo-activation-2.0`"
 AC_SUBST(BONOBO_ACTIVATION_IDL_DIR)
 
+BONOBO_IDL_DIR="`$PKG_CONFIG --variable=idldir libbonobo-2.0`"
+AC_SUBST(BONOBO_IDL_DIR)
+
 dnl ******************************
 dnl glib-genmarshal
 dnl ******************************
