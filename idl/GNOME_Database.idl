@@ -22,6 +22,7 @@ module GNOME {
 			TYPE_DATE,
 			TYPE_GEOMETRIC_POINT,
 			TYPE_LIST,
+			TYPE_NUMERIC,
 			TYPE_TIME,
 			TYPE_TIMESTAMP,
 			TYPE_DOUBLE,
@@ -38,6 +39,16 @@ module GNOME {
 			unsigned short month;
 			unsigned short day;
 		};
+		struct GeometricPoint {
+			double x;
+			double y;
+		};
+		struct Numeric {
+			long digits;
+			long decimals;
+			long intpart;
+			long decpart;
+		};
 		struct Time {
 			unsigned short hour;
 			unsigned short minute;
@@ -53,10 +64,6 @@ module GNOME {
 			unsigned short second;
 			unsigned long  fraction;
 			long timezone;	// # of seconds to the east UTC
-		};
-		struct GeometricPoint {
-			double x;
-			double y;
 		};
 
 		/*

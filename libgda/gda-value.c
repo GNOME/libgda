@@ -195,6 +195,21 @@ gda_value_new_list (const GdaValueList *val)
 }
 
 /**
+ * gda_value_new_numeric
+ * @val: value to set for the new #GdaValue.
+ *
+ * Make a new #GdaValue of type #GDA_VALUE_TYPE_NUMERIC with value @val.
+ *
+ * Returns: The newly created #GdaValue.
+ */
+GdaValue *
+gda_value_new_numeric (const GdaNumeric *val)
+{
+	return (GdaValue *) bonobo_arg_new_from (GDA_VALUE_TYPE_NUMERIC,
+						 (gconstpointer) val);
+}
+
+/**
  * gda_value_new_single
  * @val: value to set for the new #GdaValue.
  *
@@ -255,7 +270,7 @@ gda_value_new_time (const GdaTime *val)
 	g_return_val_if_fail (val != NULL, NULL);
 
 	return (GdaValue *) bonobo_arg_new_from (GDA_VALUE_TYPE_TIME,
-					(gconstpointer) val);
+						 (gconstpointer) val);
 }
 
 /**
@@ -671,6 +686,46 @@ gda_value_set_null (GdaValue *value)
 		CORBA_free (value->_value);
 
 	value->_value = NULL;
+}
+
+/**
+ * gda_value_get_numeric
+ * @value: a #GdaValue whose value we want to get.
+ *
+ * Gets the value stored in @value.
+ * 
+ * Returns: the value contained in @value.
+ */
+const GdaNumeric *
+gda_value_get_numeric (GdaValue *value)
+{
+	g_return_val_if_fail (value != NULL, NULL);
+	g_return_val_if_fail (gda_value_isa (value, GDA_VALUE_TYPE_NUMERIC), NULL);
+
+	return (const GdaNumeric *) value->_value;
+}
+
+/**
+ * gda_value_set_numeric
+ * @value: a #GdaValue that will store @val.
+ * @val: value to be stored in @value.
+ *
+ * Stores @val into @value.
+ */
+void
+gda_value_set_numeric (GdaValue *value, GdaNumeric *val)
+{
+	g_return_if_fail (value != NULL);
+	g_return_if_fail (val != NULL);
+
+	if (!gda_value_isa (value, GDA_VALUE_TYPE_NUMERIC)) {
+		clear_value (value);
+		value->_type = ORBit_RootObject_duplicate (GDA_VALUE_TYPE_NUMERIC);
+	}
+	else if (value->_value)
+		CORBA_free (value->_value);
+
+	value->_value = ORBit_copy_value (val, GDA_VALUE_TYPE_NUMERIC);
 }
 
 /**

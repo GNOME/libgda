@@ -753,7 +753,7 @@ gda_field_set_list_value (GdaField *field, GdaValueList *value)
 	g_return_if_fail (field != NULL);
 	g_return_if_fail (value != NULL);
 
-	field->attributes.gdaType = GDA_TYPE_GEOMETRIC_POINT;
+	field->attributes.gdaType = GDA_TYPE_LIST;
 	field->actualSize = sizeof (GdaValueList) * value->_length;
 
 	gda_value_set_list (&field->value, value);
@@ -772,6 +772,38 @@ gda_field_set_null_value (GdaField *field)
 
 	field->actualSize = 0;
 	gda_value_set_null (&field->value);
+}
+
+/**
+ * gda_field_get_numeric_value
+ * @field: a #GdaField.
+ *
+ * Returns: a pointer to the #GdaNumeric value stored in @field.
+ */
+const GdaNumeric *
+gda_field_get_numeric_value (GdaField *field)
+{
+	g_return_val_if_fail (field != NULL, NULL);
+	return gda_value_get_numeric (&field->value);
+}
+
+/**
+ * gda_field_set_numeric_value
+ * @field: a #GdaField.
+ * @value: the #GdaNumeric value to store in @field.
+ *
+ * Sets the value of @field to @value.
+ */
+void
+gda_field_set_numeric_value (GdaField *field, GdaNumeric *value)
+{
+	g_return_if_fail (field != NULL);
+	g_return_if_fail (value != NULL);
+
+	field->attributes.gdaType = GDA_TYPE_NUMERIC;
+	field->actualSize = sizeof (GdaNumeric);
+
+	gda_value_set_numeric (&field->value, value);
 }
 
 /**

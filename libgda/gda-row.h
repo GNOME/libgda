@@ -44,6 +44,7 @@ typedef enum {
 	GDA_TYPE_GEOMETRIC_POINT = GNOME_Database_TYPE_GEOMETRIC_POINT,
 	GDA_TYPE_INTEGER = GNOME_Database_TYPE_INTEGER,
 	GDA_TYPE_LIST = GNOME_Database_TYPE_LIST,
+	GDA_TYPE_NUMERIC = GNOME_Database_TYPE_NUMERIC,
 	GDA_TYPE_SINGLE = GNOME_Database_TYPE_SINGLE,
 	GDA_TYPE_SMALLINT = GNOME_Database_TYPE_SMALLINT,
 	GDA_TYPE_STRING = GNOME_Database_TYPE_STRING,
@@ -107,6 +108,8 @@ void                gda_field_set_integer_value (GdaField *field, gint value);
 const GdaValueList *gda_field_get_list_value (GdaField *field);
 void                gda_field_set_list_value (GdaField *field, GdaValueList *value);
 void                gda_field_set_null_value (GdaField *field);
+const GdaNumeric   *gda_field_get_numeric_value (GdaField *field);
+void                gda_field_set_numeric_value (GdaField *field, GdaNumeric *value);
 gfloat              gda_field_get_single_value (GdaField *field);
 void                gda_field_set_single_value (GdaField *field, gfloat value);
 gshort              gda_field_get_smallint_value (GdaField *field);

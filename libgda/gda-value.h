@@ -34,8 +34,9 @@ G_BEGIN_DECLS
 typedef CORBA_any                     GdaValue;
 typedef GNOME_Database_ValueList      GdaValueList;
 typedef CORBA_TypeCode                GdaValueType;
-typedef GNOME_Database_GeometricPoint GdaGeometricPoint;
 typedef GNOME_Database_Date           GdaDate;
+typedef GNOME_Database_GeometricPoint GdaGeometricPoint;
+typedef GNOME_Database_Numeric        GdaNumeric;
 typedef GNOME_Database_Time           GdaTime;
 typedef GNOME_Database_Timestamp      GdaTimestamp;
 
@@ -48,6 +49,7 @@ typedef GNOME_Database_Timestamp      GdaTimestamp;
 #define GDA_VALUE_TYPE_GEOMETRIC_POINT     TC_GNOME_Database_GeometricPoint
 #define GDA_VALUE_TYPE_INTEGER   TC_CORBA_long
 #define GDA_VALUE_TYPE_LIST      TC_GNOME_Database_ValueList
+#define GDA_VALUE_TYPE_NUMERIC   TC_GNOME_Database_Numeric
 #define GDA_VALUE_TYPE_SINGLE    TC_CORBA_float
 #define GDA_VALUE_TYPE_SMALLINT  TC_CORBA_short
 #define GDA_VALUE_TYPE_STRING    TC_CORBA_string
@@ -64,6 +66,7 @@ GdaValue     *gda_value_new_double (gdouble val);
 GdaValue     *gda_value_new_geometric_point (const GdaGeometricPoint *val);
 GdaValue     *gda_value_new_integer (gint val);
 GdaValue     *gda_value_new_list (const GdaValueList *val);
+GdaValue     *gda_value_new_numeric (const GdaNumeric *val);
 GdaValue     *gda_value_new_single (gfloat val);
 GdaValue     *gda_value_new_smallint (gshort val);
 GdaValue     *gda_value_new_string (const gchar *val);
@@ -94,6 +97,8 @@ void          gda_value_set_integer (GdaValue *value, gint val);
 const GdaValueList *gda_value_get_list (GdaValue *value);
 void          gda_value_set_list (GdaValue *value, GdaValueList *val);
 void          gda_value_set_null (GdaValue *value);
+const GdaNumeric *gda_value_get_numeric (GdaValue *value);
+void          gda_value_set_numeric (GdaValue *value, GdaNumeric *val);
 gfloat        gda_value_get_single (GdaValue *value);
 void          gda_value_set_single (GdaValue *value, gfloat val);
 gshort        gda_value_get_smallint (GdaValue *value);

@@ -1,3 +1,14 @@
+2002-03-13  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* idl/GNOME_Database.idl: added Numeric type.
+
+	* libgda/gda-value.[ch] (gda_value_new_numeric): new function.
+	(gda_value_get_numeric): new function.
+	(gda_value_set_numeric): new function.
+
+	* libgda/gda-row.[ch] (gda_field_set_numeric_value): new function.
+	(gda_field_get_numeric_value): new function.
+
 2002-03-12  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
 	* configure.in: don't check for the version of intltool.
