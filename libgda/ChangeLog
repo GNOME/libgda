@@ -1,3 +1,9 @@
+2002-01-05  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-server.c (factory_callback): if we fail creating an object,
+	and we've got no clients attached, emit the "last_client_gone" signal,
+	so that processes can terminate.
+
 2002-01-03  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
 	* gda-row.[ch]:

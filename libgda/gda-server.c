@@ -78,6 +78,20 @@ component_destroyed_cb (BonoboObject *object, gpointer user_data)
 	}
 }
 
+static gboolean
+emit_last_client_gone_idle_cb (gpointer user_data)
+{
+	GdaServer *server = (GdaServer *) user_data;
+
+	g_return_val_if_fail (GDA_IS_SERVER (server), FALSE);
+
+	g_signal_emit (G_OBJECT (server),
+		       gda_server_signals[LAST_CLIENT_GONE],
+		       0);
+
+	return FALSE;
+}
+
 static BonoboObject *
 factory_callback (BonoboGenericFactory *factory,
 		  const char *component_id,
@@ -100,6 +114,13 @@ factory_callback (BonoboGenericFactory *factory,
 	object = g_object_new (*ptype, NULL);
 	if (!BONOBO_IS_OBJECT (object)) {
 		gda_log_error (_("Could not create component of type %s"), component_id);
+
+		/* emit the termination signals if we've got no clients */
+		if (!server->priv->clients) {
+			/* but emit it after having returned from here */
+			g_idle_add ((GSourceFunc) emit_last_client_gone_idle_cb, server);
+		}
+
 		return NULL;
 	}
 
