@@ -447,6 +447,38 @@ fi
 
 AM_CONDITIONAL(MDB, test x$mdbdir != x)
 
+dnl test for Camel
+AC_ARG_WITH(camel,
+--with-camel=<directory>     use Mail backend in <directory>,[
+if test $withval != yes
+then
+	dir=$withval
+else
+	dir="/usr/local"
+fi
+AC_MSG_CHECKING(for Camel files)
+cameldir=""
+for d in $dir /usr /usr/local
+do
+	if test -f $d/bin/evolution
+	then
+		AC_MSG_RESULT(found Camel in $d)
+		cameldir=$d
+		break
+	fi
+done
+if test x$cameldir = x
+then
+	AC_MSG_WARN(Mail backend not used)
+else
+	CAMEL_CFLAGS="-I$d/include"
+	CAMEL_LIBS="-L${cameldir}/lib -lcamel"
+	AC_DEFINE(HAVE_CAMEL)
+fi
+])
+
+AM_CONDITIONAL(MAIL, test x$cameldir != x)
+
 dnl
 dnl Translations
 dnl
@@ -488,6 +520,8 @@ AC_SUBST(INTERBASE_LIBS)
 AC_SUBST(INTERBASE_CFLAGS)
 AC_SUBST(MDB_LIBS)
 AC_SUBST(MDB_CFLAGS)
+AC_SUBST(CAMEL_LIBS)
+AC_SUBST(CAMEL_CFLAGS)
 
 GDA_oafinfodir=`oaf-config --prefix`/share/oaf
 
@@ -518,6 +552,7 @@ providers/gda-ldap-server/Makefile
 providers/gda-oracle-server/Makefile
 providers/gda-interbase-server/Makefile
 providers/gda-mdb-server/Makefile
+providers/gda-mail-server/Makefile
 tools/Makefile
 tools/gda-config
 tools/gda-buildserver

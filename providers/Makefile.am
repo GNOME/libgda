@@ -30,6 +30,10 @@ if MDB
 GDA_MDB_SERVER=gda-mdb-server
 endif
 
+if MAIL
+GDA_MAIL_SERVER=gda-mail-server
+endif
+
 SUBDIRS = \
 	$(GDA_ODBC_SERVER) \
 	$(GDA_MYSQL_SERVER) \
@@ -38,4 +42,5 @@ SUBDIRS = \
 	$(GDA_LDAP_SERVER) \
 	$(GDA_ORACLE_SERVER) \
 	$(GDA_INTERBASE_SERVER) \
-	$(GDA_MDB_SERVER)
+	$(GDA_MDB_SERVER) \
+	$(GDA_MAIL_SERVER)

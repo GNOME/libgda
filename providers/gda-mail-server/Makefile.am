@@ -5,7 +5,8 @@ INCLUDES = \
 	-I. \
 	$(GDA_PROVIDER_CFLAGS) \
 	-I$(top_builddir)/lib/gda-common \
-	-I$(top_builddir)/lib/gda-server
+	-I$(top_builddir)/lib/gda-server \
+	$(CAMEL_CFLAGS)
 
 gda_mail_srv_SOURCES = main-mail.c
 gda_mail_srv_LDADD = \
