@@ -41,6 +41,8 @@ module GDA {
 	};
 	typedef sequence<Attribute> AttributeList;
 	
+	interface ReportElement;
+	typedef sequence<ReportElement> ElementList;
 	enum ContentType {
 		AnElement,
 		PCDATA
@@ -64,7 +66,6 @@ module GDA {
 		ReportElement addChild (in string name);
 		void          removeChild (in string name);
 	};
-	typedef sequence<ReportElement> ElementList;
 	
 	interface ReportFormat {
 		readonly attribute string xml;
