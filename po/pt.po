@@ -1,12 +1,12 @@
 # libgda's Portuguese translation
 # Copyright (C) 1999-2001 Free Software Foundation, Inc.
-# Duarte Loreto <happyguy_pt@hotmail.com>, 2001
+# Duarte Loreto <happyguy_pt@hotmail.com>, 2001, 2002
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: 2.0\n"
-"POT-Creation-Date: 2002-02-10 20:00+0100\n"
-"PO-Revision-Date: 2002-01-02 23:42+0000\n"
+"POT-Creation-Date: 2002-02-11 01:19+0000\n"
+"PO-Revision-Date: 2002-02-11 01:20+0000\n"
 "Last-Translator: Duarte Loreto <happyguy_pt@hotmail.com>\n"
 "Language-Team: Portuguese <none@none.org>\n"
 "MIME-Version: 1.0\n"
@@ -146,12 +146,11 @@ msgstr "Handle DEFEITO inválida"
 #: providers/postgres/gda-postgres-recordset.c:70
 #: providers/sqlite/gda-sqlite-recordset.c:74
 msgid "Row number out of range"
-msgstr ""
+msgstr "Número de linha fora do limite"
 
 #: providers/default/gda-default-recordset.c:110
-#, fuzzy
 msgid "Invalid Default handle"
-msgstr "Handle DEFEITO inválida"
+msgstr "Handle Defeito inválida"
 
 #: providers/default/GNOME_Database_Provider_Default.server.in.h:1
 msgid "Default component factory"
@@ -185,9 +184,8 @@ msgstr "Tipo"
 
 #: providers/mysql/gda-mysql-recordset.c:63
 #: providers/mysql/gda-mysql-recordset.c:170
-#, fuzzy
 msgid "Invalid MySQL handle"
-msgstr "Handle MYSQL inválida"
+msgstr "Handle MySQL inválida"
 
 #: providers/mysql/GNOME_Database_Provider_MySQL.server.in.h:1
 msgid "GDA Datasource Access for MySQL"
@@ -202,117 +200,96 @@ msgid "Could not initiate MySQL component factory"
 msgstr "Incapaz de inicializar fábrica de componente MySQL"
 
 #: providers/odbc/GNOME_Database_Provider_ODBC.server.in.h:1
-#, fuzzy
 msgid "GDA Datasource Access for ODBC"
-msgstr "Acesso a Fonte de Dados GDA para Sybase"
+msgstr "Acesso a Fonte de Dados GDA para ODBC"
 
 #: providers/odbc/GNOME_Database_Provider_ODBC.server.in.h:2
-#, fuzzy
 msgid "ODBC component factory"
-msgstr "Fábrica de componente Sybase"
+msgstr "Fábrica de componente ODBC"
 
 #: providers/odbc/main.c:49
-#, fuzzy
 msgid "Could not initiate ODBC component factory"
-msgstr "Incapaz de inicializar fábrica de componente Sybase"
+msgstr "Incapaz de inicializar fábrica de componente ODBC"
 
 #: providers/oracle/gda-oracle-connection.c:77
-#, fuzzy
 msgid "Could not initialize Oracle environment"
-msgstr "Incapaz de inicializar Bonobo"
+msgstr "Incapaz de inicializar ambiente Oracle"
 
 #: providers/oracle/gda-oracle-connection.c:87
-#, fuzzy
 msgid "Could not initialize Oracle error handler"
-msgstr "Incapaz de inicializar Bonobo"
+msgstr "Incapaz de inicializar gestor de erros Oracle"
 
 #: providers/oracle/gda-oracle-connection.c:98
-#, fuzzy
 msgid "Could not initialize Oracle server handle"
-msgstr "Incapaz de inicializar Bonobo"
+msgstr "Incapaz de inicializar handle de servidor Oracle"
 
 #: providers/oracle/gda-oracle-connection.c:109
-#, fuzzy
 msgid "Could not initialize Oracle service context"
-msgstr "Incapaz de inicializar Bonobo"
+msgstr "Incapaz de inicializar contexto de serviço Oracle"
 
 #: providers/oracle/GNOME_Database_Provider_Oracle.server.in.h:1
-#, fuzzy
 msgid "GDA Datasource Access for Oracle"
-msgstr "Acesso a Fonte de Dados GDA para Sybase"
+msgstr "Acesso a Fonte de Dados GDA para Oracle"
 
 #: providers/oracle/GNOME_Database_Provider_Oracle.server.in.h:2
-#, fuzzy
 msgid "Oracle component factory"
-msgstr "Fábrica de componente Sybase"
+msgstr "Fábrica de componente Oracle"
 
 #: providers/oracle/main.c:46
-#, fuzzy
 msgid "Could not initiate Oracle component factory"
-msgstr "Incapaz de inicializar fábrica de componente Sybase"
+msgstr "Incapaz de inicializar fábrica de componente Oracle"
 
 #: providers/oracle/main.c:70
-#, fuzzy
 msgid "Could not initialize OCI library"
-msgstr "Incapaz de inicializar Bonobo"
+msgstr "Incapaz de inicializar biblioteca OCI"
 
 #: providers/postgres/gda-postgres-provider.c:318
 #: providers/postgres/gda-postgres-provider.c:456
 #: providers/postgres/gda-postgres-recordset.c:59
 #: providers/postgres/gda-postgres-recordset.c:110
-#, fuzzy
 msgid "Invalid PostgreSQL handle"
-msgstr "Handle MYSQL inválida"
+msgstr "Handle PostgreSQL inválida"
 
 #: providers/postgres/GNOME_Database_Provider_Postgres.server.in.h:1
-#, fuzzy
 msgid "GDA Datasource Access for Postgres"
-msgstr "Acesso a Fonte de Dados GDA para Sybase"
+msgstr "Acesso a Fonte de Dados GDA para Postgres"
 
 #: providers/postgres/GNOME_Database_Provider_Postgres.server.in.h:2
-#, fuzzy
 msgid "Postgres component factory"
-msgstr "Fábrica de componente Sybase"
+msgstr "Fábrica de componente Postgres"
 
 #: providers/postgres/main.c:49
-#, fuzzy
 msgid "Could not initiate PostgreSQL component factory"
-msgstr "Incapaz de inicializar fábrica de componente MySQL"
+msgstr "Incapaz de inicializar fábrica de componente PostgreSQL"
 
 #: providers/postgres/utils.c:39
 msgid "NO DESCRIPTION"
-msgstr ""
+msgstr "SEM DESCRIÇÃO"
 
 #: providers/postgres/utils.c:44
-#, fuzzy
 msgid "Not available"
-msgstr "%p não é uma tabela válida"
+msgstr "Indisponível"
 
 #: providers/sqlite/gda-sqlite-provider.c:211
 #: providers/sqlite/gda-sqlite-recordset.c:63
-#, fuzzy
 msgid "Invalid SQLITE handle"
-msgstr "Handle MYSQL inválida"
+msgstr "Handle SQLITE inválida"
 
 #: providers/sqlite/gda-sqlite-recordset.c:114
-#, fuzzy
 msgid "Invalid Sqlite handle"
-msgstr "Handle DEFEITO inválida"
+msgstr "Handle Sqlite inválida"
 
 #: providers/sqlite/GNOME_Database_Provider_SQLite.server.in.h:1
-#, fuzzy
 msgid "GDA SQLite Datasource Access"
-msgstr "Acesso de Fonte de Dados de Defeito GDA"
+msgstr "Acesso de Fonte de Dados GDA SQLite"
 
 #: providers/sqlite/GNOME_Database_Provider_SQLite.server.in.h:2
-#, fuzzy
 msgid "SQLite component factory"
-msgstr "Fábrica de componente MySQL"
+msgstr "Fábrica de componente SQLite"
 
 #: providers/sqlite/main.c:54
-#, fuzzy
 msgid "Could not initiate Sqlite component factory"
-msgstr "Incapaz de inicializar fábrica de componente Sybase"
+msgstr "Incapaz de inicializar fábrica de componente Sqlite"
 
 #: providers/sybase/gda-sybase-error.c:137
 msgid "ct_diag 1 failed in sybase_check_clientmsg"
@@ -406,174 +383,167 @@ msgstr "Incapaz de inicializar fábrica de componente Sybase"
 #: report/libgda-report/gda-report-client.c:209
 #, c-format
 msgid "CORBA exception: %s"
-msgstr ""
+msgstr "Excepção CORBA: %s"
 
 #: report/gda-report-engine.c:105
-#, fuzzy
 msgid "Could not create global GDA client"
-msgstr "Incapaz de criar componente de ligação"
+msgstr "Incapaz de criar cliente global GDA"
 
 #: report/GNOME_Database_Report.server.in.h:1
 msgid "GDA Report engine"
-msgstr ""
+msgstr "Motor de Relatório GDA"
 
 #: report/GNOME_Database_Report.server.in.h:2
 msgid "GDA Report engine factory"
-msgstr ""
+msgstr "Fábrica de motor de Relatório GDA"
 
 #: report/job.c:43
-#, fuzzy
 msgid "Could not parse XML report"
-msgstr "Incapaz de parsear ficheiro em %s"
+msgstr "Incapaz de parsear relatório XML"
 
 #: report/libgda-report/gda-report-client.c:141
-#, fuzzy
 msgid "Could not activate report engine"
-msgstr "Incapaz de activar objecto %s"
+msgstr "Incapaz de activar motor de relatórios"
 
 #: report/libgda-report/gda-report-client.c:182
-#, fuzzy
 msgid "Could not create BonoboStreamMem object"
-msgstr "Incapaz de criar componente de ligação"
+msgstr "Incapaz de criar objecto BonoboStreamMem"
 
 #: report/libgda-report/gda-report-document.c:137
-#, fuzzy
 msgid "Could not parse XML document"
-msgstr "Incapaz de parsear ficheiro em %s"
+msgstr "Incapaz de parsear documento XML"
 
 #: report/libgda-report/gda-report-document.c:162
-#, fuzzy, c-format
+#, c-format
 msgid "Could not get file from %s"
-msgstr "Incapaz de parsear ficheiro em %s"
+msgstr "Incapaz de obter ficheiro de %s"
 
 #: report/main.c:47
-#, fuzzy
 msgid "Could not initiate Report component factory"
-msgstr "Incapaz de inicializar fábrica de componentes de Defeito"
+msgstr "Incapaz de inicializar fábrica de componentes de Relatório"
 
 #: testing/client.c:37
 msgid "\t\tNONE\n"
-msgstr ""
+msgstr "\t\tNENHUM\n"
 
 #: testing/client.c:76
 #, c-format
 msgid "** ERROR: could not open connection to %s\n"
-msgstr ""
+msgstr "** ERRO: incapaz de abrir ligação a %s\n"
 
 #. show provider features
 #: testing/client.c:81
 msgid "\tProvider capabilities...\n"
-msgstr ""
+msgstr "\tCapacidades do fornecedor...\n"
 
 #: testing/client.c:82
 #, c-format
 msgid "\t\tTransactions: %s\n"
-msgstr ""
+msgstr "\t\tTransacções: %s\n"
 
 #: testing/client.c:84
 msgid "Supported"
-msgstr ""
+msgstr "Suportado"
 
 #: testing/client.c:84
 msgid "Not supported"
-msgstr ""
+msgstr "Não suportado"
 
 #. show connection schemas
 #: testing/client.c:87
 msgid "Stored procedures"
-msgstr ""
+msgstr "Procedimentos armazenados"
 
 #: testing/client.c:88
-#, fuzzy
 msgid "Connection Tables"
-msgstr "Expressão de ligação"
+msgstr "Tabelas de Ligação"
 
 #: testing/client.c:89
 msgid "Available types"
-msgstr ""
+msgstr "Tipos disponíveis"
 
 #: testing/client.c:90
 msgid "Views"
-msgstr ""
+msgstr "Vistas"
 
 #: testing/client.c:91
 msgid "Indexes"
-msgstr ""
+msgstr "Índices"
 
 #. test transactions
 #: testing/client.c:94 testing/client.c:102
 msgid "\tStarting transaction..."
-msgstr ""
+msgstr "\tA iniciar transacção..."
 
 #: testing/client.c:96 testing/client.c:100 testing/client.c:104
 #: testing/client.c:108
 msgid "Error"
-msgstr ""
+msgstr "Erro"
 
 #: testing/client.c:98
 msgid "\tFinishing transaction..."
-msgstr ""
+msgstr "\tA terminar transacção..."
 
 #: testing/client.c:106
 msgid "\tRolling back transaction..."
-msgstr ""
+msgstr "\tA fazer rollback da transacção..."
 
 #: testing/client.c:127
 msgid "Testing GDA client API"
-msgstr ""
+msgstr "A testar API cliente do GDA"
 
 #: testing/client.c:136
 msgid "** ERROR: gda_config_get_data_source_list returned a NULL item\n"
-msgstr ""
+msgstr "** ERRO: gda_config_get_data_source_list devolveu um item NULL\n"
 
 #: testing/client.c:140
 #, c-format
 msgid " Data source = %s, User = %s\n"
-msgstr ""
+msgstr " Fonte de dados = %s, Utilizador = %s\n"
 
 #: testing/config.c:84
 msgid "** ERROR: gda_config_get_provider_list returned a NULL item\n"
-msgstr ""
+msgstr "** ERRO: gda_config_get_provider_list devolveu um item NULL\n"
 
 #: testing/config.c:88
-#, fuzzy, c-format
+#, c-format
 msgid " Provider = %s\n"
-msgstr "Fornecedor"
+msgstr " Fornecedor = %s\n"
 
 #: testing/config.c:89
 #, c-format
 msgid "\tlocation = %s\n"
-msgstr ""
+msgstr "\tlocalização = %s\n"
 
 #: testing/config.c:90
 #, c-format
 msgid "\ttype = %s\n"
-msgstr ""
+msgstr "\ttipo = %s\n"
 
 #: testing/config.c:93
-#, fuzzy, c-format
+#, c-format
 msgid "\tdescription = %s\n"
-msgstr "Descrição"
+msgstr "\tdescrição = %s\n"
 
 #: testing/config.c:95
 msgid "\trepo_ids ="
-msgstr ""
+msgstr "\trepo_ids ="
 
 #: testing/config.c:102
-#, fuzzy, c-format
+#, c-format
 msgid "\tusername = %s\n"
-msgstr "Utilizador"
+msgstr "\tutilizador = %s\n"
 
 #: testing/config.c:103
 #, c-format
 msgid "\thostname = %s\n"
-msgstr ""
+msgstr "\tservidor = %s\n"
 
 #: testing/config.c:104
 #, c-format
 msgid "\tdomain = %s\n"
-msgstr ""
+msgstr "\tdomínio = %s\n"
 
 #: testing/config.c:106
 msgid "\tgda_params ="
-msgstr ""
+msgstr "\tgda_params ="
