@@ -34,6 +34,8 @@ static POA_GDA_ReportEngine__epv impl_GDA_ReportEngine_epv =
   (gpointer) & impl_GDA_ReportEngine_removeReport,
   (gpointer) & impl_GDA_ReportEngine_registerConverter,
   (gpointer) & impl_GDA_ReportEngine_unregisterConverter,
+  (gpointer) & impl_GDA_ReportEngine_findConverter,
+  (gpointer) & impl_GDA_ReportEngine_createStream,
 };
 static POA_GDA_ReportEngine__vepv impl_GDA_ReportEngine_vepv =
 {
@@ -143,4 +145,16 @@ impl_GDA_ReportEngine_findConverter (impl_POA_GDA_ReportEngine *servant,
                                      CORBA_char *format,
                                      CORBA_Environment *ev)
 {
+}
+
+GDA_ReportStream
+impl_GDA_ReportEngine_createStream (impl_POA_GDA_ReportEngine *servant, CORBA_Environment *ev)
+{
+  GDA_ReportStream new_stream;
+  
+  g_return_val_if_fail(servant != NULL, CORBA_OBJECT_NIL);
+  
+  new_stream = impl_GDA_ReportStream__create(servant->poa, ev);
+  gda_corba_handle_exception(ev);
+  return new_stream;
 }

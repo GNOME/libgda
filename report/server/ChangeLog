@@ -1,0 +1,4 @@
+2000-11-04	Rodrigo Moya <rodrigo@linuxave.net>
+
+	* gda-report-server-stream.c: implemented
+	* gda-report-server-engine.c: implemented GDA_ReportEngine_createStream

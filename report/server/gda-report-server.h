@@ -39,6 +39,30 @@
 #endif
 
 /*
+ * Report streams
+ */
+typedef struct
+{
+  POA_GDA_ReportStream servant;
+  PortableServer_POA poa;
+  
+  /* added fields */
+  GArray* stream_data;
+} impl_POA_GDA_ReportStream;
+
+GDA_ReportStream impl_GDA_ReportStream__create (PortableServer_POA poa, CORBA_Environment *ev);
+void impl_GDA_ReportStream__destroy (impl_POA_GDA_ReportStream *servant, CORBA_Environment *ev);
+GDA_ReportStreamChunk* impl_GDA_ReportStream_readChunk (impl_POA_GDA_ReportStream *servant,
+                                                        CORBA_long start,
+                                                        CORBA_long size,
+                                                        CORBA_Environment *ev);
+CORBA_long impl_GDA_ReportStream_writeChunk (impl_POA_GDA_ReportStream *servant,
+                                             GDA_ReportStreamChunk *data,
+                                             CORBA_long size,
+                                             CORBA_Environment * ev);
+CORBA_long impl_GDA_ReportStream_getLength (impl_POA_GDA_ReportStream *servant, CORBA_Environment *ev);
+
+/*
  * The report engine
  */
 typedef struct
@@ -77,6 +101,8 @@ void impl_GDA_ReportEngine_unregisterConverter (impl_POA_GDA_ReportEngine *serva
 GDA_ReportConverter impl_GDA_ReportEngine_findConverter (impl_POA_GDA_ReportEngine *servant,
                                                          CORBA_char *format,
                                                          CORBA_Environment *ev);
+GDA_ReportStream impl_GDA_ReportEngine_createStream (impl_POA_GDA_ReportEngine *servant,
+                                                     CORBA_Environment *ev);
 
 /*
  * Global variables

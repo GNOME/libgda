@@ -14,6 +14,7 @@ gda_report_server_SOURCES = \
 	GDA_Report-skels.c \
 	gda-report-server-engine.c \
 	gda-report-server-main.c \
+	gda-report-server-stream.c \
 	gda-report-server.h
 gda_report_server_LDADD = \
 	$(GDA_CLIENT_LIBS) \
