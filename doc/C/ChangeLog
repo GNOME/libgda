@@ -1,3 +1,8 @@
+2001-12-23  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* Makefile.am:
+	* libgda-docs.sgml: added libgda-report to documentation
+
 2001-12-21  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* re-enabled doc directory, now including both the manual and
