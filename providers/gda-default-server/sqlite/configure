@@ -1527,7 +1527,7 @@ fi
 
 fi
 if test "$found" = "no"; then
-  for dir in /usr/local /usr/pkg /usr/contrib; do
+  for dir in /usr /usr/local /usr/pkg /usr/contrib; do
     
 ac_safe=`echo "$dir/include/gdbm.h" | sed 'y%./+-%__p_%'`
 echo $ac_n "checking for $dir/include/gdbm.h""... $ac_c" 1>&6

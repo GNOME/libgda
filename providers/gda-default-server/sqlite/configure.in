@@ -466,7 +466,7 @@ else
   AC_CHECK_HEADER(gdbm.h, [found=yes])
 fi
 if test "$found" = "no"; then
-  for dir in /usr/local /usr/pkg /usr/contrib; do
+  for dir in /usr /usr/local /usr/pkg /usr/contrib; do
     AC_CHECK_FILE($dir/include/gdbm.h, found=yes)
     if test "$found" = "yes"; then
       TARGET_GDBM_INC="-I$dir/include"
