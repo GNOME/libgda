@@ -1,3 +1,8 @@
+2002-10-01  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* tools/Makefile.am: autoconf does not support EXTRA_DIST to be
+	defined conditionally.
+
 2002-09-30  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* doc/libgda-C.omf.in: fixed path to documentation.
