@@ -117,6 +117,17 @@ table_changed_cb (GdaDataModel *model, gpointer user_data)
 	gda_xml_database_changed (xmldb);
 }
 
+static void
+table_name_changed_cb (GdaDataModel *model, gchar *old_name, gpointer user_data)
+{
+	GdaXmlDatabase *xmldb = (GdaXmlDatabase *) user_data;
+
+	g_return_if_fail (GDA_IS_XML_DATABASE (xmldb));
+
+	g_hash_table_remove (xmldb->priv->tables, old_name);
+	g_hash_table_insert (xmldb->priv->tables, gda_table_get_name (GDA_TABLE (model)), GDA_TABLE (model));
+}
+
 /*
  * GdaXmlDatabase class interface
  */
@@ -653,6 +664,7 @@ gda_xml_database_new_table (GdaXmlDatabase *xmldb, const gchar *name)
 
 	table = gda_table_new (name);
 	g_signal_connect (G_OBJECT (table), "changed", G_CALLBACK (table_changed_cb), xmldb);
+	g_signal_connect (G_OBJECT (table), "name_changed", G_CALLBACK (table_name_changed_cb), xmldb);
 	g_hash_table_insert (xmldb->priv->tables, g_strdup (name), table);
 	gda_xml_database_changed (xmldb);
 
@@ -690,6 +702,7 @@ gda_xml_database_new_table_from_model (GdaXmlDatabase *xmldb,
 
 	table = gda_table_new_from_model (name, model, add_data);
 	g_signal_connect (G_OBJECT (table), "changed", G_CALLBACK (table_changed_cb), xmldb);
+	g_signal_connect (G_OBJECT (table), "name_changed", G_CALLBACK (table_name_changed_cb), xmldb);
 	if (GDA_IS_TABLE (table)) {
 		g_hash_table_insert (xmldb->priv->tables, g_strdup (name), table);
 		gda_xml_database_changed (xmldb);
@@ -785,6 +798,7 @@ gda_xml_database_new_table_from_node (GdaXmlDatabase *xmldb, xmlNodePtr node)
 	/* add the table to the XML database object */
 	g_hash_table_insert (xmldb->priv->tables, g_strdup (name), table);
 	g_signal_connect (G_OBJECT (table), "changed", G_CALLBACK (table_changed_cb), xmldb);
+	g_signal_connect (G_OBJECT (table), "name_changed", G_CALLBACK (table_name_changed_cb), xmldb);
 	gda_xml_database_changed (xmldb);
 
 	return table;

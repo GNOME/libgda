@@ -132,7 +132,6 @@ static gboolean
 gda_data_model_array_remove_row (GdaDataModel *model, const GdaRow *row)
 {
 	gint      i, rownum;
-	GdaValue *value;
 	
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_ARRAY (model), FALSE);
 	g_return_val_if_fail (row != NULL, FALSE);

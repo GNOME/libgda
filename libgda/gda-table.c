@@ -31,10 +31,16 @@ struct _GdaTablePrivate {
 	GHashTable *fields;
 };
 
+enum {
+	NAME_CHANGED,
+	LAST_SIGNAL
+};
+
 static void gda_table_class_init (GdaTableClass *klass);
 static void gda_table_init       (GdaTable *table, GdaTableClass *klass);
 static void gda_table_finalize   (GObject *object);
 
+static guint gda_table_signals[LAST_SIGNAL];
 static GObjectClass *parent_class = NULL;
 
 /*
@@ -89,6 +95,15 @@ gda_table_class_init (GdaTableClass *klass)
 	GdaDataModelClass *model_class = GDA_DATA_MODEL_CLASS (klass);
 
 	parent_class = g_type_class_peek_parent (klass);
+
+	gda_table_signals[NAME_CHANGED] =
+		g_signal_new ("name_changed",
+			      G_TYPE_FROM_CLASS (object_class),
+			      G_SIGNAL_RUN_LAST,
+			      G_STRUCT_OFFSET (GdaTableClass, name_changed),
+			      NULL, NULL,
+			      g_cclosure_marshal_VOID__STRING,
+			      G_TYPE_NONE, 1, G_TYPE_STRING);
 
 	object_class->finalize = gda_table_finalize;
 	model_class->describe_column = gda_table_describe_column;
@@ -250,13 +265,20 @@ gda_table_get_name (GdaTable *table)
 void
 gda_table_set_name (GdaTable *table, const gchar *name)
 {
+	gchar *old_name;
+	
 	g_return_if_fail (GDA_IS_TABLE (table));
 	g_return_if_fail (name != NULL);
 
+	old_name = g_strdup (table->priv->name);
 	if (table->priv->name)
 		g_free (table->priv->name);
 
 	table->priv->name = g_strdup (name);
+	g_signal_emit (G_OBJECT (table),
+		       gda_table_signals[NAME_CHANGED],
+		       0, old_name);
+	gda_data_model_changed (GDA_DATA_MODEL (table));
 }
 
 /**

@@ -45,6 +45,9 @@ struct _GdaTable {
 
 struct _GdaTableClass {
 	GdaDataModelArrayClass parent_class;
+
+	/* signals */
+	void (* name_changed) (GdaTable *table, const gchar *old_name);
 };
 
 GType        gda_table_get_type (void);

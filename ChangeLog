@@ -1,3 +1,14 @@
+2005-02-10  Álvaro Peña  <alvaropg@telefonica.net>
+
+	* libgda/gda-data-model-array.c:
+	(gda_data_model_array_remove_row):
+	Removed unused declaration.
+	* libgda/gda-table.[ch]: Added NAME_CHANGED signal, emited
+	when the table name change.
+	* libgda/gda-xml-database.c: Connect to NAME_CHANGED table
+	signal. When a table named change, the database hash update
+	to the new key (the new table name).
+
 2005-02-02  Álvaro Peña <alvaropg@telefonica.net>
 
 	* libgda/gda-data-model.c: Removed the signals emits
