@@ -1,3 +1,11 @@
+2000-11-05	Rodrigo Moya <rodrigo@linuxave.net>
+
+	* gda-report-server-element.c: implemented
+	* gda-report-server-format.c: basic structure
+	* gda-report-server-cache.[ch]: added
+	* gda-report-server-db.c: added
+	* added correct license notice in source files
+
 2000-11-04	Rodrigo Moya <rodrigo@linuxave.net>
 
 	* gda-report-server-stream.c: implemented
