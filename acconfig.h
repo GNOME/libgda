@@ -1,2 +1,8 @@
 #undef HAVE_ODBC
 #undef HAVE_MYSQL
+#undef HAVE_INTERBASE
+#undef HAVE_LDAP
+#undef HAVE_MDB
+#undef HAVE_ORACLE
+#undef HAVE_SYBASE
+#undef SYBASE_DEBUG

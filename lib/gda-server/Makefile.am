@@ -5,7 +5,10 @@ INCLUDES = \
 	$(GDA_PROVIDER_CFLAGS) \
 	-I.
 
-libgda_server_la_SOURCES =
+gda_server_headers = \
+	gda-server.h
+
+libgda_server_la_SOURCES = $(gda_server_headers)
 libgda_server_la_LIBADD =
 
 gdaincludedir=$(includedir)/gda

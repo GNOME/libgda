@@ -5,8 +5,13 @@ INCLUDES = \
 	$(GDA_PROVIDER_CFLAGS) \
 	-I.
 
-libgda_common_la_SOURCES =
+gda_common_headers = \
+	gda-common.h
+
+libgda_common_la_SOURCES = \
+	$(gda_common_headers)
+
 libgda_common_la_LIBADD =
 
 gdaincludedir=$(includedir)/gda
-gdainclude_HEADERS=$(gda_common_headers) $(gda_client_headers) $(gda_server_headers)
+gdainclude_HEADERS=$(gda_common_headers)
