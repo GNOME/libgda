@@ -495,7 +495,7 @@ gda_mysql_provider_get_schema (GdaServerProvider *provider,
 
 	switch (schema) {
 	case GNOME_Database_Connection_SCHEMA_PROCEDURES :
-		break; /* FIXME */
+		break;
 	case GNOME_Database_Connection_SCHEMA_TABLES :
 		return get_mysql_tables (cnc, params);
 	case GNOME_Database_Connection_SCHEMA_TYPES :

@@ -32,7 +32,6 @@ AM_MAINTAINER_MODE
 
 AC_PROG_INTLTOOL([0.11])
 
-GNOME_COMMON_INIT
 GNOME_PLATFORM_GNOME_2(yes, force)
 
 dnl ******************************
@@ -76,6 +75,9 @@ AM_GCONF_SOURCE_2
 dnl ******************************
 dnl Checks for libraries
 dnl ******************************
+GNOME_COMPILE_WARNINGS(maximum)
+CFLAGS="$CFLAGS $WARN_CFLAGS"
+CPPFLAGS="$CPPFLAGS $WARN_FLAGS"
 AC_SUBST(CFLAGS)
 AC_SUBST(CPPFLAGS)
 AC_SUBST(LDFLAGS)
