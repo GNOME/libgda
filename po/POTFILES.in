@@ -12,7 +12,6 @@ libgda/gda-init.c
 libgda/gda-log.c
 libgda/gda-parameter.c
 libgda/gda-quark-list.c
-libgda/gda-recordset.c
 libgda/gda-row.c
 libgda/gda-select.c
 libgda/gda-server-provider.c
