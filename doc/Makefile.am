@@ -1,1 +1,1 @@
-all:
+SUBDIRS = C
