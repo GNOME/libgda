@@ -1,5 +1,6 @@
 2001-12-02  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* pascal/*:
 	* python/*: removed, since bindings for libgda will not be needed
 	for any language, as all the features are going to be accessible
 	via the CORBA interfaces
