@@ -91,7 +91,7 @@ connection_error_cb (GdaConnection * cnc, GList * errors, gpointer user_data)
 
 #ifndef HAVE_GOBJECT
 	gtk_signal_emit (GTK_OBJECT (pool),
-			 gda_connection_pool_signals[ERROR], cnc);
+			 gda_connection_pool_signals[ERROR], cnc, errors);
 #endif
 }
 
@@ -141,8 +141,9 @@ gda_connection_pool_class_init (GdaConnectionPoolClass * klass)
 		gtk_signal_new ("error", GTK_RUN_FIRST, object_class->type,
 				GTK_SIGNAL_OFFSET (GdaConnectionPoolClass,
 						   error),
-				gtk_marshal_NONE__POINTER, GTK_TYPE_NONE, 1,
-				GTK_TYPE_POINTER);
+				gtk_marshal_NONE__POINTER_POINTER,
+				GTK_TYPE_NONE, 2,
+				GTK_TYPE_POINTER, GTK_TYPE_POINTER);
 	gtk_object_class_add_signals (object_class,
 				      gda_connection_pool_signals,
 				      LAST_SIGNAL);

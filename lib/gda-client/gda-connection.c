@@ -795,16 +795,16 @@ GList *
 gda_connection_get_errors (GdaConnection * cnc)
 {
 	GList *retval;
-	GDA_ErrorSeq *remote_errors;
-	CORBA_Environment ev;
-	gint idx;
-
+	
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), 0);
-	CORBA_exception_init (&ev);
 
 	if (cnc->connection) {
-		remote_errors =
-			GDA_Connection__get_errors (cnc->connection, &ev);
+	        GDA_ErrorSeq *remote_errors;
+ 	        CORBA_Environment ev;
+	        gint idx;
+
+                CORBA_exception_init (&ev);
+		remote_errors = GDA_Connection__get_errors (cnc->connection, &ev);
 		gda_connection_corba_exception (cnc, &ev);
 		for (idx = 0; idx < remote_errors->_length; idx++) {
 			GdaError *e;
@@ -827,11 +827,13 @@ gda_connection_get_errors (GdaConnection * cnc)
 					      nativeMsg);
 			gda_connection_add_single_error (cnc, e);
 		}
-		CORBA_free (remote_errors);
+		CORBA_free(remote_errors);
+		CORBA_exception_free (&ev);
 	}
 
 	retval = cnc->errors_head;
-	cnc->errors_head = 0;
+	cnc->errors_head = NULL;
+
 	return retval;
 }
 
@@ -1022,17 +1024,17 @@ gda_connection_create_recordset (GdaConnection * cnc, GdaRecordset * rs)
 void
 gda_connection_add_single_error (GdaConnection * cnc, GdaError * error)
 {
-	GList *error_list = 0;
-
+	GList* error_list = NULL;
+	
 	g_return_if_fail (GDA_IS_CONNECTION (cnc));
 	g_return_if_fail (error != 0);
-
+	
 	error_list = g_list_append (error_list, error);
-#ifndef HAVE_GOBJECT		/* FIXME */
+#ifndef HAVE_GOBJECT /* FIXME */
 	gtk_signal_emit (GTK_OBJECT (cnc),
-			 gda_connection_signals[CONNECTION_ERROR],
-			 error_list);
+	                 gda_connection_signals[CONNECTION_ERROR], error_list);
 #endif
+	gda_error_list_free (error_list);
 }
 
 void

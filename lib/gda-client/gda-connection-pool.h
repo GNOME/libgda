@@ -79,7 +79,7 @@ extern "C"
 #endif
 		/* signals */
 		void (*open) (GdaConnectionPool * pool, GdaConnection * cnc);
-		void (*error) (GdaConnectionPool * pool, GdaConnection * cnc);
+		void (*error) (GdaConnectionPool * pool, GdaConnection * cnc, GList *error_list);
 	};
 
 #ifdef HAVE_GOBJECT
