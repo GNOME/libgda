@@ -1,0 +1,6 @@
+usr/bin/gda-build*
+usr/bin/gda-config
+usr/bin/gda-run
+usr/include/gda
+usr/include/gda/gda++
+usr/lib/*.{so,la,a}

@@ -1,0 +1,3 @@
+usr/bin/gda-mysql-srv
+usr/lib/libgda-mysql.so.*
+usr/share/oaf/gda-mysql.oafinfo

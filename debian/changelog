@@ -1,0 +1,9 @@
+libgda (0.0.97-1) unstable; urgency=low
+
+  * Initial Release.
+
+ -- Akira TAGOH <at@ue-spacy.com>  Sat,  2 Sep 2000 01:53:36 +0900
+
+Local variables:
+mode: debian-changelog
+End:

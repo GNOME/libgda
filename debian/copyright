@@ -1,0 +1,17 @@
+This package was debianized by Akira TAGOH <at@ue-spacy.com> on
+Sat,  2 Sep 2000 01:53:36 +0900.
+
+It was downloaded from ftp://ftp.gnome.org/pub/GNOME/stable/sources/gnome-db/
+
+Upstream Author(s):
+ Michael Lausch <michael@lausch.at>
+ Rodrigo Moya <rodrigo@linuxave.net>
+ Vivien Malerba <malerba@linuxave.net>
+ Stephan Heinze <stephan.heinze@xcom.de>
+ Nick Gorham <nick@lurcher.org>
+ Chris Wiegand <cwiegand@urgentmail.com>
+ Alvaro del Castillo <acs@barrapunto.com>
+ Akira TAGOH <at@ue-spacy.com>
+
+Copyright:
+ See /usr/share/common-licenses/GPL on your debian system.
