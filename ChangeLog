@@ -1,3 +1,7 @@
+2002-05-26  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
+	* doc/C/libgda-docs.sgml: added some more doc.
+
 2002-05-26  Carlos Perelló Marín <carlos@gnome-db.org>
 
 	* report/libgda-report/Makefile.am: Added gda-report-type.h.

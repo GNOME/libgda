@@ -21,6 +21,9 @@
 <!ENTITY SYBASE          "<application>Sybase</application>">
 <!ENTITY MSACC           "<application>MS Access</application>">
 <!ENTITY INFOR           "<application>Informix</application>">
+<!ENTITY GDADATAMODEL    "<xref linkend='libgda-GdaDataModel'/">
+<!ENTITY GDADATAMODELARRAY "<xref linkend='libgda-GdaDataModelArray'/">
+<!ENTITY GDADATAMODELHASH "<xref linkend='libgda-GdaDataModelHash'/">
 <!ENTITY libgda-batch SYSTEM "sgml/gda-batch.sgml">
 <!ENTITY libgda-client SYSTEM "sgml/gda-client.sgml">
 <!ENTITY libgda-command SYSTEM "sgml/gda-command.sgml">
@@ -732,7 +735,7 @@
   <chapter id="libgda-api">
     <title>&LIBGDA; API Reference</title>
     <para>
-      The following sections describe the API available for &GDA applications.
+      The following sections describe the API available for &GDA; applications.
     </para>
     &libgda-init;
     &libgda-batch;
@@ -763,39 +766,141 @@
 
   <chapter id="libgda-providers">
     <title>GDA Providers</title>
+    <sect1 id="libgda-provider-introduction">
+    <title>Introduction</title>
     <para>
-      As stated before, for each different data source supported by
-      &LIBGDA;, there must be a CORBA object implementing the
-      GNOME::Database::Provider interface. So, in theory, you just need
-      the &LIBGDA; IDL files (included in the &LIBGDA; distribution),
-      and make use of them from your favorite language. That is, you
-      can access directly the &LIBGDA; architecture by talking to the different
-      via CORBA with the help of the IDL files.
+       For each different data source supported by &LIBGDA; there must be a
+       GObject that implements the virtual methods defined in GdaServerProvider
+       class.
     </para>
     <para>
-      As an example for this, we should talk about bonobo-python or
-      bonobo-perl, which are 2 of the most advanced Bonobo bindings
-      available, and which would help you in accessign the GDA
-      framework from those 2 lenguages.
+       Providers must also create their own object to implement the virtual
+       methods defined in &GDADATAMODEL; or one of
+       its subclasses (currently &GDADATAMODELARRAY; and &GDADATAMODELHASH;) 
+       to support recordsets.
     </para>
     <para>
       Since &LIBGDA; itself is developed in the C language, and that most
       providers are also implemented in that language, the &LIBGDA; library
-      itself contains a set of helper classes and functions to help you
+      itself contains a set of helper classes and functions to guide you
       in the addition of a new provider to the GDA framework.
     </para>
+    </sect1>
     <sect1 id="libgda-provider-class">
-      <title>The GdaServerProvider class </title>
+      <title>The GdaServerProvider class</title>
       <para>
 	The GdaServerProvider is the class you should implement for adding
 	a new provider. This class is just a typical GObject-based class,
-	with a set of virtual methods, that are the ones that you must implement.
-	These virtual methods are declared in the class structure, in the
-	<filename>gda-server-provider.h</filename> file. They are:
+	with a set of virtual methods, that are the ones that you must
+	implement. These virtual methods are declared in the class structure,
+	in the <filename>gda-server-provider.h</filename> file. They are:
+       </para>
+       <itemizedlist>
+	<listitem>
+	   <para>open_connection</para>
+	   <para>
+	   Sets up the connection to the database backend using the parameters
+	   received as arguments and returns a boolean TRUE if the connection
+	   is successfully established, otherwise FALSE.
+	   </para>
+	</listitem>
+	<listitem>
+	   <para>close_connection</para>
+	   <para>
+	   Frees the resources allocated for the connection and returns TRUE
+	   if everything is ok
+	   </para>
+	</listitem>
+	<listitem>
+	   <para>create_database</para>
+	   <para>
+	   Creates a new database whose name is received in a parameter.	
+	   </para>
+	</listitem>
+	<listitem>
+	   <para>execute_command</para>
+	   <para>
+	   Executes a command and returns a GList of &GDADATAMODEL; with the
+	   results.
+	   </para>
+	</listitem>
+	<listitem>
+	   <para>begin_transaction</para>
+	   <para>
+	   Initiates a transaction if the DB backend supports transactions.
+	   </para>
+	</listitem>
+	<listitem>
+	   <para>commit_transaction</para>
+	   <para>
+	   Commits a transaction if the DB backend supports transactions.
+	   </para>
+	</listitem>
+	<listitem>
+	   <para>rollback_transaction</para>
+	   <para>
+	   Rollback a transaction if the DB backend supports transactions.
+	   </para>
+	</listitem>
+	<listitem>
+	   <para>supports</para>
+	   <para>
+	   Tests if a given feature is supported by the provider and the
+	   DB backend. You can view the list of features in <filename>
+	   gda-connection.h</filename>, enumeration GdaConnectionFeature.
+	   </para>
+	</listitem>
+	<listitem>
+	   <para>get_schema</para>
+	   <para>
+	   Returns a &GDADATAMODEL; with the schema information requested.
+	   You can view the list of features in <filename>
+	   gda-connection.h</filename>, enumeration GdaConnectionSchema.
+	   </para>
+	</listitem>
+       </itemizedlist>
+    </sect1>
+    <sect1 id="libgda-provider-recordset">
+      <title>The recordset class</title>
+      <para>
+      You have to extend one of &GDADATAMODEL;, &GDADATAMODELARRAY; or
+      &GDADATAMODELHASH;. The easiest to extend are the last two. They both
+      derive from &GDADATAMODEL;.
       </para>
-      <programlisting>
-	
-      </programlisting>
+      <para>
+      Here is the list of methods that you have to override. If you use
+      &GDADATAMODELHASH;, you don't need to override 
+      append_row.
+      </para>
+      <itemizedlist>
+	<listitem>
+	<para>get_n_rows</para>
+	</listitem>
+	<listitem>
+	<para>get_n_columns</para>
+	</listitem>
+	<listitem>
+	<para>describe_column</para>
+	</listitem>
+	<listitem>
+	<para>get_row</para>
+	</listitem>
+	<listitem>
+	<para>get_value_at</para>
+	</listitem>
+	<listitem>
+	<para>is_editable</para>
+	</listitem>
+	<listitem>
+	<para>append_row</para>
+	</listitem>
+	<listitem>
+	<para>update_row</para>
+	</listitem>
+	<listitem>
+	<para>remove_row</para>
+	</listitem>
+      </itemizedlist>
     </sect1>
   </chapter>
 
