@@ -1,8 +1,14 @@
 2002-08-04  Rodrigo Moya <rodrigo@gnome-db.org>
 
-	* libgda/providers/mysql/gda-mysql-recordset.c
+	* libgda/gda-data-model.c (gda_data_model_get_column_title): if we
+	don't have the title, call @describe_column.
+	(gda_data_model_set_column_title): if the key already exists, remove
+	it from the hash table before re-adding it again.
+
+	* providers/mysql/gda-mysql-recordset.c
 	(gda_mysql_recordset_describe_column): use mysql_fetch_fields, not
 	mysql_fetch_field, or we'll get unknown results.
+	(gda_mysql_recordset_new): set column titles on the data model.
 
 2002-08-04  Florian Blaser <florian@tizoo.ch>
 

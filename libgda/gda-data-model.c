@@ -144,9 +144,11 @@ gda_data_model_finalize (GObject *object)
 	/* free memory */
 	g_hash_table_foreach (model->priv->column_titles, free_hash_string, NULL);
 	g_hash_table_destroy (model->priv->column_titles);
+	model->priv->column_titles = NULL;
 
 	g_free (model->priv->cmd_text);
 	model->priv->cmd_text = NULL;
+
 	g_free (model->priv);
 	model->priv = NULL;
 
@@ -317,8 +319,20 @@ gda_data_model_get_column_title (GdaDataModel *model, gint col)
 	if (col < n_cols && col >= 0){
 		title = g_hash_table_lookup (model->priv->column_titles,
 					     GINT_TO_POINTER (col));
-		if (title == NULL)
-			title = "";
+		if (title == NULL) {
+			GdaFieldAttributes *fa;
+
+			fa = gda_data_model_describe_column (model, col);
+			if (fa) {
+				gda_data_model_set_column_title (model, col, title);
+				gda_field_attributes_free (fa);
+
+				return g_hash_table_lookup (model->priv->column_titles,
+							    GINT_TO_POINTER (col));
+			}
+			else
+				title = "";
+		}
 	}
 	else
 		title = "";
@@ -341,11 +355,15 @@ gda_data_model_set_column_title (GdaDataModel *model, gint col, const gchar *tit
 
 	n_cols = gda_data_model_get_n_columns (model);
 	if (col >= 0 && col < n_cols) {
-		gpointer value;
+		gpointer key, value;
 
-		value = g_hash_table_lookup (model->priv->column_titles,
+		if (g_hash_table_lookup_extended (model->priv->column_titles,
+						  GINT_TO_POINTER (col),
+						  &key, &value)) {
+			g_hash_table_remove (model->priv->column_titles,
 					     GINT_TO_POINTER (col));
-		g_free (value);
+			g_free (value);
+		}
 
 		g_hash_table_insert (model->priv->column_titles, 
 				     GINT_TO_POINTER (col), g_strdup (title));
