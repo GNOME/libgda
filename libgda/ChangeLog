@@ -4,7 +4,8 @@
 	errors
 
 	* gda-server-provider.c (gda_server_provider_close_connection):
-	unref the provider when no connections remain open
+	(gda_server_provider_open_connection): unref the provider when
+	no connections remain open
 
 2002-01-13  Rodrigo Moya <rodrigo@gnome-db.org>
 	

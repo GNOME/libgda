@@ -156,9 +156,15 @@ gda_server_provider_open_connection (GdaServerProvider *provider,
 	}
 
 	retcode = CLASS (provider)->open_connection (provider, cnc, params, username, password);
-	if (retcode)
-		provider->priv->connections =
-			g_list_append (provider->priv->connections, cnc);
+	if (retcode) {
+		provider->priv->connections = g_list_append (
+			provider->priv->connections, cnc);
+	}
+	else {
+		/* unref the object if we've got no connections */
+		if (!provider->priv->connections)
+			bonobo_object_idle_unref (BONOBO_OBJECT (provider));
+	}
 
 	return retcode;
 }
