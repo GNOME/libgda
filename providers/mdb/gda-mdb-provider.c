@@ -24,6 +24,7 @@
 #include <glib/gbacktrace.h>
 #include <libgda/gda-data-model-array.h>
 #include <libgda/gda-data-model-list.h>
+#include <libgda/gda-table.h>
 #include <libgda/gda-intl.h>
 #include "gda-mdb.h"
 
@@ -80,6 +81,8 @@ static GdaDataModel *gda_mdb_provider_get_schema (GdaServerProvider *provider,
 
 static GObjectClass *parent_class = NULL;
 static gint loaded_providers = 0;
+extern MdbSQL *mdb_SQL;
+char *g_input_ptr;
 
 /*
  * Private functions
@@ -325,7 +328,71 @@ gda_mdb_provider_execute_command (GdaServerProvider *provider,
 				  GdaCommand *cmd,
 				  GdaParameterList *params)
 {
-	return NULL;
+	GList *reclist = NULL;
+	gchar **arr;
+	GdaMdbConnection *mdb_cnc;
+	GdaMdbProvider *mdb_prv = (GdaMdbProvider *) provider;
+
+	g_return_val_if_fail (GDA_IS_MDB_PROVIDER (mdb_prv), NULL);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+	g_return_val_if_fail (cmd != NULL, NULL);
+
+	mdb_cnc = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_MDB_HANDLE);
+	if (!mdb_cnc) {
+		gda_connection_add_error_string (cnc, _("Invalid MDB handle"));
+		return NULL;
+	}
+
+	switch (gda_command_get_command_type (cmd)) {
+	case GDA_COMMAND_TYPE_SQL :
+		arr = g_strsplit (cmd->text, ";", 0);
+		if (arr) {
+			gint i = 0;
+
+			while (arr[i]) {
+				GdaDataModel *model;
+
+				model = gda_mdb_provider_execute_sql (mdb_prv, cnc, arr[i]);
+				if (model)
+					reclist = g_list_append (reclist, model);
+				else {
+					if (cmd->options & GDA_COMMAND_OPTION_STOP_ON_ERRORS)
+						break;
+				}
+
+				i++;
+			}
+
+			g_strfreev (arr);
+		}
+		break;
+	case GDA_COMMAND_TYPE_TABLE :
+		arr = g_strsplit (cmd->text, ";", 0);
+		if (arr) {
+			gint i = 0;
+
+			while (arr[i]) {
+				GdaDataModel *model;
+				gchar *rsql;
+
+				rsql = g_strdup_printf ("select * from %s", arr[i]);
+				model = gda_mdb_provider_execute_sql (mdb_prv, cnc, rsql);
+				g_free (rsql);
+				if (model)
+					reclist = g_list_append (reclist, model);
+				else {
+					if (cmd->options & GDA_COMMAND_OPTION_STOP_ON_ERRORS)
+						break;
+				}
+			}
+
+			g_strfreev (arr);
+		}
+		break;
+	default :
+	}
+
+	return reclist;
 }
 
 /* begin_transaction handler for the GdaMdbProvider class */
@@ -640,4 +707,80 @@ gda_mdb_provider_get_schema (GdaServerProvider *provider,
 	}
 
 	return NULL;
+}
+
+GdaDataModel *
+gda_mdb_provider_execute_sql (GdaMdbProvider *mdbprv, GdaConnection *cnc, const gchar *sql)
+{
+	gchar *bound_data[256];
+	gint c, r;
+	GdaMdbConnection *mdb_cnc;
+	GdaTable *model;
+
+	g_return_val_if_fail (GDA_IS_MDB_PROVIDER (mdbprv), NULL);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+	g_return_val_if_fail (sql != NULL, NULL);
+
+	mdb_cnc = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_MDB_HANDLE);
+	if (!mdb_cnc) {
+		gda_connection_add_error_string (cnc, _("Invalid MDB handle"));
+		return NULL;
+	}
+
+	/* parse the SQL command */
+	mdb_SQL->mdb = mdb_cnc->mdb;
+	g_input_ptr = sql;
+	/* begin unsafe */
+	_mdb_sql (mdb_SQL);
+	if (yyparse ()) {
+		/* end unsafe */
+		gda_connection_add_error_string (cnc, _("Could not parse '%s' command"), sql);
+		mdb_sql_reset (mdb_SQL);
+		return NULL;
+	}
+
+	model = gda_table_new (sql);
+
+	/* allocate bound data */
+	for (c = 0; c < mdb_SQL->num_columns; c++) {
+		MdbSQLColumn *sqlcol;
+		GdaFieldAttributes *fa;
+
+		bound_data[c] = (gchar *) malloc (MDB_BIND_SIZE);
+		bound_data[c][0] = '\0';
+		mdbsql_bind_column (mdb_SQL, c + 1, bound_data[c]);
+
+		/* set description for the field */
+		sqlcol = g_ptr_array_index (mdb_SQL->columns, c);
+		fa = gda_field_attributes_new ();
+		gda_field_attributes_set_name (fa, sqlcol->name);
+		gda_field_attributes_set_defined_size (fa, sqlcol->disp_size);
+		gda_field_attributes_set_gdatype (fa, gda_mdb_type_to_gda (sqlcol->bind_type));
+
+		/* and add it to the table */
+		gda_table_add_field (model, (const GdaFieldAttributes *) fa);
+		gda_field_attributes_free (fa);
+	}
+
+	/* read data */
+	r = 0;
+	while (mdb_fetch_row (mdb_SQL->cur_table)) {
+		GList *value_list = NULL;
+
+		r++;
+		for (c = 0; c < mdb_SQL->num_columns; c++)
+			value_list = g_list_append (value_list, gda_value_new_string (bound_data[c]));
+
+		gda_data_model_append_row (GDA_DATA_MODEL (model), value_list);
+
+		g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
+		g_list_free (value_list);
+	}
+
+	/* free memory */
+	for (c = 0; c < mdb_SQL->num_columns; c++)
+		free (bound_data[c]);
+	mdb_sql_reset (mdb_SQL);
+
+	return GDA_DATA_MODEL (model);
 }

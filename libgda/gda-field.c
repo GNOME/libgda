@@ -47,6 +47,7 @@ gda_field_attributes_new (void)
 	fa->auto_increment = FALSE;
 	fa->auto_increment_start = 0;
 	fa->auto_increment_step = 0;
+	fa->position = -1;
 
 	return fa;
 }
@@ -75,6 +76,7 @@ gda_field_attributes_copy (GdaFieldAttributes *fa)
 	fa_copy->auto_increment = fa->auto_increment;
 	fa_copy->auto_increment_start = fa->auto_increment_start;
 	fa_copy->auto_increment_step = fa->auto_increment_step;
+	fa_copy->position = fa->position;
 
 	return fa_copy;
 }
@@ -384,4 +386,29 @@ gda_field_attributes_set_auto_increment (GdaFieldAttributes *fa,
 {
 	g_return_if_fail (fa != NULL);
 	fa->auto_increment = is_auto;
+}
+
+/**
+ * gda_field_attributes_get_position
+ * @fa: a #GdaFieldAttributes.
+ *
+ * Get the position of the field the attributes refer to.
+ *
+ * The position of this field in the containing data model.
+ */
+gint
+gda_field_attributes_get_position (GdaFieldAttributes *fa)
+{
+	g_return_val_if_fail (fa != NULL, -1);
+	return fa->position;
+}
+
+/**
+ * gda_field_attributes_set_position
+ */
+void
+gda_field_attributes_set_position (GdaFieldAttributes *fa, gint position)
+{
+	g_return_if_fail (fa != NULL);
+	fa->position = position;
 }

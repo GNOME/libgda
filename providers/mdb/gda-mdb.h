@@ -30,6 +30,7 @@
 #include <libgda/gda-value.h>
 #include "gda-mdb-provider.h"
 #include <mdbtools.h>
+#include <mdbsql.h>
 
 #define GDA_MYSQL_PROVIDER_ID          "GDA MDB provider"
 

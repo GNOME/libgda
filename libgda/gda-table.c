@@ -41,10 +41,29 @@ static GObjectClass *parent_class = NULL;
  * GdaTable class implementation
  */
 
+typedef struct {
+	GdaTable *table;
+	gint col_to_search;
+	GdaFieldAttributes *fa;
+} DescColData;
+
+static void
+search_field_in_hash (gpointer key, gpointer value, gpointer user_data)
+{
+	DescColData *cb_data = user_data;
+	GdaFieldAttributes *fa = value;
+
+	if (cb_data->fa)
+		return;
+	if (gda_field_attributes_get_position (fa) == cb_data->col_to_search)
+		cb_data->fa = fa;
+}
+
 static GdaFieldAttributes *
 gda_table_describe_column (GdaDataModel *model, gint col)
 {
-	GdaFieldAttributes *fa = NULL, *new_fa;
+	DescColData cb_data;
+	GdaFieldAttributes *new_fa;
 	GdaTable *table = (GdaTable *) model;
 
 	g_return_val_if_fail (GDA_IS_TABLE (table), NULL);
@@ -52,14 +71,14 @@ gda_table_describe_column (GdaDataModel *model, gint col)
 	if (col >= g_hash_table_size (table->priv->fields))
 		return NULL;
 
-	/* FIXME: obtain 'fa' from hash table */
-	new_fa = gda_field_attributes_new ();
-	gda_field_attributes_set_defined_size (new_fa, fa->defined_size);
-	gda_field_attributes_set_name (new_fa, fa->name);
-	gda_field_attributes_set_scale (new_fa, fa->scale);
-	gda_field_attributes_set_gdatype (new_fa, fa->gda_type);
-	gda_field_attributes_set_allow_null (new_fa, fa->allow_null);
+	cb_data.table = table;
+	cb_data.col_to_search = col;
+	cb_data.fa = NULL;
+	g_hash_table_foreach (table->priv->fields, (GHFunc) search_field_in_hash, &cb_data);
+	if (!cb_data.fa)
+		return NULL;
 
+	new_fa = gda_field_attributes_copy (cb_data.fa);
 	return new_fa;
 }
 
@@ -270,6 +289,8 @@ gda_table_add_field (GdaTable *table, const GdaFieldAttributes *fa)
 
 	/* add the new field to the table */
 	new_fa = gda_field_attributes_new ();
+	gda_field_attributes_set_table (new_fa, table->priv->name);
+	gda_field_attributes_set_position (new_fa, g_hash_table_size (table->priv->fields));
 	gda_field_attributes_set_defined_size (new_fa, gda_field_attributes_get_defined_size ((GdaFieldAttributes *) fa));
 	gda_field_attributes_set_name (new_fa, name);
 	gda_field_attributes_set_scale (new_fa, gda_field_attributes_get_scale ((GdaFieldAttributes *) fa));

@@ -20,7 +20,9 @@
  */
 
 #include <libgda/gda-intl.h>
-#include "gda-mdb-provider.h"
+#include "gda-mdb.h"
+
+MdbSQL *mdb_SQL = NULL;
 
 const gchar *
 plugin_get_name (void)
@@ -48,4 +50,26 @@ GdaServerProvider *
 plugin_create_provider (void)
 {
 	return gda_mdb_provider_new ();
+}
+
+/*
+ * GModule functions
+ */
+
+const gchar *
+g_module_check_init (void)
+{
+	if (!mdb_SQL)
+		mdb_SQL = mdb_sql_init ();
+
+	return NULL;
+}
+
+void
+g_module_unload (void)
+{
+	if (mdb_SQL) {
+		mdb_sql_exit (mdb_SQL);
+		mdb_SQL = NULL;
+	}
 }

@@ -670,7 +670,7 @@ then
 	mdbdir=""
 	for d in $dir /usr /usr/local /opt/gnome
 	do
-		if test -f $d/include/mdbtools.h
+		if test -f $d/include/mdbtools.h -a -f $d/lib/libmdbsql.so
 		then
 			AC_MSG_RESULT(found MDB Tools in $d)
 			mdbdir=$d
@@ -682,7 +682,7 @@ then
 		AC_MSG_WARN(MDB backend not used)
 	else
 		MDB_CFLAGS=-I${mdbdir}/include
-		MDB_LIBS="-L${mdbdir}/lib -lmdb"
+		MDB_LIBS="-L${mdbdir}/lib -lmdb -lmdbsql"
 		AC_DEFINE(HAVE_MDB)
 	fi
 fi

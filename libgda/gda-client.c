@@ -79,6 +79,8 @@ emit_client_error (GdaClient *client, GdaConnection *cnc, const gchar *format, .
 	vsprintf (sz, format, args);
 	va_end (args);
 
+	g_print ("Error: %s\n", sz);
+
 	/* create the error list */
 	error = gda_error_new ();
 	gda_error_set_description (error, sz);

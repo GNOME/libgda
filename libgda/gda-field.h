@@ -43,6 +43,7 @@ typedef struct {
 	gboolean auto_increment;
 	glong auto_increment_start;
 	glong auto_increment_step;
+	gint position;
 } GdaFieldAttributes;
 
 typedef struct {
@@ -78,6 +79,8 @@ void                gda_field_attributes_set_references (GdaFieldAttributes *fa,
 gboolean            gda_field_attributes_get_auto_increment (GdaFieldAttributes *fa);
 void                gda_field_attributes_set_auto_increment (GdaFieldAttributes *fa,
 							     gboolean is_auto);
+gint                gda_field_attributes_get_position (GdaFieldAttributes *fa);
+void                gda_field_attributes_set_position (GdaFieldAttributes *fa, gint position);
 
 G_END_DECLS
 

@@ -1069,6 +1069,7 @@ gda_config_get_provider_list (void)
 				     name, NULL);
 		handle = g_module_open (path, G_MODULE_BIND_LAZY);
 		if (!handle) {
+			g_warning (_("Error: %s"), g_module_error ());
 			g_free (path);
 			continue;
 		}

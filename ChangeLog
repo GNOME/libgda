@@ -1,3 +1,25 @@
+2003-01-20  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* configure.in: require MDB's SQL interface.
+
+	* libgda/gda-field.[ch] (gda_field_attributes_get_position,
+	gda_field_attributes_set_position): new functions.
+	(gda_field_attributes_copy): copy the new structure's member.
+
+	* libgda/gda-table.c (gda_table_add_field): set table name and
+	position on the field attributes.
+	(gda_table_describe_column): added missing code.
+
+	* providers/mdb/gda-mdb.h: included mdbsql.h.
+
+	* providers/mdb/libmain.c (g_module_check_init, g_module_unload):
+	added GModule load/unload functions, and initialize/cleanup MDB's SQL
+	interface on them.
+
+	* providers/mdb/gda-mdb-provider.[ch] (gda_mdb_provider_execute_sql):
+	new function for executing SQL commands.
+	(gda_mdb_provider_execute_command): implemented.
+
 2003-01-19  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
 	* testing/postgres-test.c: fixed child table name.
