@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
 "POT-Creation-Date: 2003-03-07 17:08+0200\n"
-"PO-Revision-Date: 2003-03-07 11:02--500\n"
+"PO-Revision-Date: 2003-03-07 11:22--500\n"
 "Last-Translator: Yuriy Syrota <yuri@renome.rovno.ua>\n"
 "Language-Team: Ukrainian <uk@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -758,7 +758,7 @@ msgstr "Не вдалось проаналізувати команду \"%s\""
 
 #: providers/mdb/libmain.c:36
 msgid "Provider for Microsoft Access files"
-msgstr ""
+msgstr "Постачальник для файлів Microsoft Access"
 
 #: providers/mysql/gda-mysql-provider.c:218
 msgid "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
@@ -769,7 +769,7 @@ msgstr "Ви не можете вказати UNIX_SOCKET, якщо ви вже 
 #: providers/mysql/gda-mysql-recordset.c:58
 #: providers/mysql/gda-mysql-recordset.c:174
 msgid "Invalid MySQL handle"
-msgstr ""
+msgstr "Неправильний логічний номер MySQL"
 
 #: providers/mysql/gda-mysql-provider.c:310
 #: providers/mysql/gda-mysql-provider.c:380
@@ -780,7 +780,7 @@ msgstr ""
 #: providers/mysql/gda-mysql-provider.c:591
 #: providers/mysql/gda-mysql-provider.c:624
 msgid "Invalid MYSQL handle"
-msgstr ""
+msgstr "Неправильний логічний номер MySQL"
 
 #: providers/mysql/gda-mysql-provider.c:539
 #: providers/mysql/gda-mysql-provider.c:596
@@ -934,9 +934,8 @@ msgid "Could not set the Oracle statement pre-fetch row count"
 msgstr "Не вдалося ініціювати фабрику копонентів Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:615
-#, fuzzy
 msgid "Could not execute the Oracle statement"
-msgstr "Не вдалося ініціалізувати середовище Oracle"
+msgstr "Не вдалось виконати вираз"
 
 #: providers/oracle/gda-oracle-provider.c:628
 msgid "Could not get the number of columns in the result set"
@@ -960,34 +959,28 @@ msgid "Could not attach the transaction to the service context"
 msgstr "Не вдалося ініціалізувати Bonobo"
 
 #: providers/oracle/gda-oracle-provider.c:858
-#, fuzzy
 msgid "Could not allocate the Oracle transaction handle"
-msgstr "Не вдалося ініціалізувати обробника помилок Oracle"
+msgstr "Не вдалось виділити логічний номер транзакції Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:870
-#, fuzzy
 msgid "Could not set the Oracle transaction name"
-msgstr "Не вдалося ініціалізувати середовище Oracle"
+msgstr "Не вдалось встановити назву транзакції Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:895
-#, fuzzy
 msgid "Could not start the Oracle transaction"
-msgstr "Не вдалося ініціювати фабрику копонентів Oracle"
+msgstr "Не вдалось розпочати транзакцію Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:948
-#, fuzzy
 msgid "Could not prepare the transaction to commit"
-msgstr "Не вдалося отримати опис стовпчика"
+msgstr "Не вдалось підготувати транзакцію до закріплення"
 
 #: providers/oracle/gda-oracle-provider.c:956
-#, fuzzy
 msgid "Could not commit the Oracle transaction"
-msgstr "Не вдалося ініціювати фабрику копонентів Oracle"
+msgstr "Не вдалось закріпити транзакцію Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:1007
-#, fuzzy
 msgid "Could not rollback the Oracle transaction"
-msgstr "Не вдалося ініціювати фабрику копонентів Oracle"
+msgstr "Не вдалось відкотити транзакцію Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:1378
 #, fuzzy
@@ -1203,9 +1196,8 @@ msgid "To remove a SQLite database you should remove the database file by hand"
 msgstr ""
 
 #: providers/sqlite/gda-sqlite-provider.c:664
-#, fuzzy
 msgid "Could not retrieve information for field"
-msgstr "Не вдалося створити компонент з'єднання"
+msgstr "Не вдалось отримати інформацію про поле"
 
 #: providers/sqlite/libmain.c:41
 msgid "Provider for SQLite databases"
@@ -1302,7 +1294,7 @@ msgstr "Не вдалося проаналізувати файл на %s"
 
 #: providers/sybase/gda-sybase-provider.c:646
 msgid "Sending sql-command failed."
-msgstr ""
+msgstr "Не вдалось відіслати команду SQL."
 
 #: providers/sybase/gda-sybase-provider.c:717
 msgid "Failed dropping command structure."
