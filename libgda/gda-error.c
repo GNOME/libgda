@@ -238,7 +238,7 @@ gda_error_get_sqlstate (GdaError *error)
 /**
  * gda_error_set_sqlstate
  * @error: error code
- * @sqlstate: SQL statement which generated the error
+ * @sqlstate: SQL State, the error message to be associated with the @error.
  */
 void
 gda_error_set_sqlstate (GdaError *error, const gchar *sqlstate)
