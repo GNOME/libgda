@@ -161,6 +161,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/gnome/html/*
 %{_datadir}/gda
 %{_datadir}/oaf/GNOME_GDA_Provider_Default.oaf
+%{_datadir}/idl/*
 
 %files devel
 %defattr(-, root, root)
@@ -170,7 +171,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/lib*.*a
 %{_libdir}/lib*.so
 %{_includedir}/*
-%{_datadir}/idl/*
 
 %files -n gda-odbc
 %defattr(-, root, root)
