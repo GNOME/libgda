@@ -100,10 +100,13 @@ gda_command_free (GdaCommand *cmd)
 GdaCommand *
 gda_command_copy (GdaCommand *cmd)
 {
+	GdaCommand *new_cmd;
+	
 	g_return_val_if_fail (cmd != NULL, NULL);
-	GdaCommand *new_cmd = gda_command_new (gda_command_get_text (cmd),
-					       gda_command_get_command_type (cmd),
-					       gda_command_get_options (cmd));
+	new_cmd = gda_command_new (gda_command_get_text (cmd),
+				       gda_command_get_command_type (cmd),
+				       gda_command_get_options (cmd));
+
 	gda_command_set_transaction (new_cmd,
 				     gda_command_get_transaction (cmd));
 	return new_cmd;

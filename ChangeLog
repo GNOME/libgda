@@ -1,3 +1,7 @@
+2003-12-22  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* libgda/gda-command.c (gda_command_copy): dont use C99.
+
 2003-12-19  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* libgda/gda-config.c (gda_config_get_data_source_list): fixed
