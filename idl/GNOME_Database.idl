@@ -19,33 +19,20 @@ module GNOME {
 		/*
 		 * GDA data types
 		 */
-		enum ValueType {
+		enum Type {
 			TYPE_NULL,
 			TYPE_BIGINT,
 			TYPE_BINARY,
 			TYPE_BOOLEAN,
-			TYPE_BSTR,
-			TYPE_CHAR,
-			TYPE_CURRENCY,
 			TYPE_DATE,
 			TYPE_TIME,
 			TYPE_TIMESTAMP,
-			TYPE_DECIMAL,
 			TYPE_DOUBLE,
 			TYPE_INTEGER,
-			TYPE_LONGVARBIN,
-			TYPE_LONGVARCHAR,
-			TYPE_LONGVARWCHAR,
-			TYPE_NUMERIC,
 			TYPE_SINGLE,
 			TYPE_SMALLINT,
 			TYPE_TINYINT,
-			TYPE_VARCHAR,
-			TYPE_VARBIN,
-			TYPE_VARWCHAR,
-			TYPE_FIXCHAR,
-			TYPE_FIXBIN,
-			TYPE_FIXWCHAR,
+			TYPE_STRING,
 			TYPE_UNKNOWN
 		};
 
@@ -92,10 +79,10 @@ module GNOME {
 		 * provider as a result of executing a command
 		 */
 		struct FieldAttributes {
-			long       definedSize;
-			string     name;
-			long       scale;
-			ValueType  gdaType;
+			long    definedSize;
+			string  name;
+			long    scale;
+			Type    gdaType;
 		};
 		struct Field {
 			long actualSize;
