@@ -1,3 +1,8 @@
+2002-06-08  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
+	* tools/gda-config-tool.c: added command line options that make
+	posible create a new section and add/modify user, password and DSN.
+
 2002-06-07  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
 	* libgda/gda-data-model.c:

@@ -40,16 +40,22 @@ static const gchar *prompt_config = "config> ";
 //static const gchar *prompt_query = "query> ";
 //static const gchar *prompt_query_cont = "-> ";
 
-static gboolean config_file_g_free = FALSE;
-static gchar *config_file;
+typedef struct {
+	gboolean config_file_g_free;
+	gchar *config_file;
+	gchar *user;
+	gchar *password;
+	gchar *dsn;
+	gchar *name;
+} CmdArguments;
+
+CmdArguments cmdArgs;
+
 static cmd *commands;
 gboolean changed_config = FALSE;
 static GList *config_data;
 static GList *current_section;
 
-/*
- * Generic functions
- */
 static gchar *
 get_input_line (const gchar *prompt)
 {
@@ -58,6 +64,7 @@ get_input_line (const gchar *prompt)
 
 	line = NULL;
 	line_read = readline (prompt);
+
 	if (line_read){
 		if (*line_read)
 			add_history (line_read);
@@ -347,6 +354,14 @@ free_section (gpointer data, gpointer user_data)
 	g_free (section);
 }
 
+static void
+free_config_data ()
+{
+	g_list_foreach (config_data, free_section, NULL);
+	g_list_free (config_data);
+	config_data = NULL;
+}
+
 static gboolean
 config_load_file (const gchar *file)
 {
@@ -533,6 +548,7 @@ config_add_section (const gchar *line)
 {
 	gda_config_section *section;
 	gchar *section_name;
+	GList *ls;
 
 	section_name = g_strstrip (g_strdup (line));
 	if (*section_name == '\0'){
@@ -547,10 +563,11 @@ config_add_section (const gchar *line)
 		return CMD_ERROR;
 	}
 
-	if (search_section (config_data, section_name) != NULL){
+	if ((ls = search_section (config_data, section_name)) != NULL){
 		g_print ("Warning: section '%s' already exists. "
-			 "Ignoring command.\n", section_name);
+			 "Section selected.\n", section_name);
 		g_free (section_name);
+		current_section = ls;
 		return CMD_OK;
 	}
 	
@@ -973,7 +990,7 @@ config_write (const gchar *line)
 			g_print ("No changes made.\n");
 			return CMD_OK;
 		}
-		result = write_config_file (config_file);
+		result = write_config_file (cmdArgs.config_file);
 	}
 	else {
 		result = write_config_file (file);
@@ -1037,10 +1054,10 @@ mode_config (const gchar *unused)
 		{ NULL, NULL, NULL }
 	};
 
-	if (!config_load_file (config_file)){
+	if (!config_load_file (cmdArgs.config_file)){
 		g_print ("File '%s' not found or not readable. You "
 			 "are going to start a new configuration.\n",
-			 config_file);
+			 cmdArgs.config_file);
 	}
 
 	current_section = NULL;
@@ -1053,9 +1070,8 @@ mode_config (const gchar *unused)
 		if (yes_or_no ("lose the changes made to the configuration"))
 			break;
 	} while (1);
-	g_list_foreach (config_data, free_section, NULL);
-	g_list_free (config_data);
-	config_data = NULL;
+
+	free_config_data ();
 	commands = old_commands;
 	return result;
 }
@@ -1131,7 +1147,8 @@ initialize_readline ()
 	rl_attempted_completion_function = completion_func;
 }
 
-static void options (int argc, const char **argv)
+static void 
+options (int argc, const char **argv)
 {
 	poptContext context;
 	
@@ -1140,10 +1157,44 @@ static void options (int argc, const char **argv)
 			"config-file", 
 			'c', 
 			POPT_ARG_STRING, 
-			&config_file, 
+			&cmdArgs.config_file, 
 			0, 
 			"File to load the configuration from",
 			"filename"
+		},
+		{
+			"name",
+			'n',
+			POPT_ARG_STRING,
+			&cmdArgs.name,
+			0,
+			"Provider name to add/change."
+		},
+		{
+			"user",
+			'u',
+			POPT_ARG_STRING,
+			&cmdArgs.user,
+			0,
+			"User name to pass to the provider."
+		},
+		{
+			"password",
+			'p',
+			POPT_ARG_STRING,
+			&cmdArgs.password,
+			0,
+			"Password for the given user to connect to the DB "
+			"backend."
+		},
+		{
+			"DSN",
+			'd',
+			POPT_ARG_STRING,
+			&cmdArgs.dsn,
+			0,
+			"Semi-colon separated string with name=value options "
+			"to pass to the GDA provider."
 		},
 		POPT_AUTOHELP
 		{NULL, '\0', 0, NULL, 0}
@@ -1159,7 +1210,89 @@ static void options (int argc, const char **argv)
 		poptFreeContext (context);
 		exit (1);
 	}
+
 	poptFreeContext (context);
+
+	if (!cmdArgs.name && (cmdArgs.user || 
+			      cmdArgs.dsn  || 
+			      cmdArgs.password)){
+		g_print ("-Error: You must use -n option along -u, -d and/or -p\n");
+		exit (1);
+	}
+
+	if (cmdArgs.config_file == NULL){
+		cmdArgs.config_file = g_strdup_printf ("%s%s", g_get_home_dir (),
+						LIBGDA_USER_CONFIG_FILE);
+		cmdArgs.config_file_g_free = TRUE;
+	}
+}
+
+static GList *
+change_entry (GList *entries,
+	      const gchar *name,
+	      const gchar *type,
+	      const gchar *value)
+{
+	gda_config_entry *entry;
+	GList *le;
+
+	le = search_entry (entries, name);
+	if (le == NULL){
+		entry = g_new0 (gda_config_entry, 1);
+		entries = g_list_append (entries, entry);
+		entry->name = g_strdup (name);
+	}
+	else
+		entry = le->data;
+
+	g_free (entry->type);
+	g_free (entry->value);
+	entry->type = g_strdup (type);
+	entry->value = g_strdup (value);
+	return entries;
+}
+
+static void
+batch_options ()
+{
+	gda_config_section *section;
+	CmdResult result;
+	gchar *line;
+
+	// don't care about return value of this one
+	(void) config_load_file (cmdArgs.config_file);
+	
+	line = g_strdup_printf ("\"%s\"", cmdArgs.name);
+	result = config_add_section (line);
+	if (result != CMD_OK){
+		g_print ("Error adding section %s\n", line);
+		g_free (line);
+		free_config_data ();
+		return;
+	}
+
+	section = current_section->data;
+	if (cmdArgs.user)
+		section->entries = change_entry (section->entries,
+						 "User",
+						 "string",
+						 cmdArgs.user);
+	
+	if (cmdArgs.password)
+		section->entries = change_entry (section->entries,
+						 "Password",
+						 "string",
+						 cmdArgs.password);
+
+	if (cmdArgs.dsn)
+		section->entries = change_entry (section->entries,
+						 "DSN",
+						 "string",
+						 cmdArgs.dsn);
+
+	write_config_file (cmdArgs.config_file);
+	free_config_data ();
+	g_free (line);
 }
 
 /*
@@ -1169,19 +1302,19 @@ int
 main (int argc, char *argv [])
 {
 	options (argc, (const char **) argv);
-	if (config_file == NULL){
-		config_file = g_strdup_printf ("%s%s", g_get_home_dir (),
-						LIBGDA_USER_CONFIG_FILE);
-		config_file_g_free = TRUE;
+	if (!cmdArgs.name){
+		g_print ("Using configuration file from %s\n", cmdArgs.config_file);
+		initialize_readline ();
+		mode_gda ();
 	}
-
-	g_print ("Using configuration file from %s\n", config_file);
-	initialize_readline ();
-	mode_gda ();
-	if (config_file_g_free)
-		g_free (config_file);
 	else
-		free (config_file);
+		batch_options ();
+
+	if (cmdArgs.config_file_g_free)
+		g_free (cmdArgs.config_file);
+	else
+		free (cmdArgs.config_file);
+
 	g_print ("\n");
 	return 0;
 }
