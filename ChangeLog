@@ -1,3 +1,9 @@
+2004-04-01  Leonardo Boshell <p@kapcoweb.com>
+
+	Fixes #138741
+
+	* doc/C/libgda-docs.sgml: fixed Docbook markup.
+
 2004-03-17  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* libgda/gda-config.[ch] (gda_provider_info_free): renamed from

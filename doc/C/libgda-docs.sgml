@@ -2,7 +2,7 @@
 
 <!ENTITY LIBGDA          "<application>libgda</application>">
 <!ENTITY GNOMEDB         "<application>GNOME-DB</application>">
-<!ENTITY igalia          '<ulink url="http://www.igalia.com">Igalia, S.L.</ulink>'>
+<!ENTITY igalia          '<emphasis><ulink url="http://www.igalia.com">Igalia, S.L.</ulink></emphasis>'>
 <!ENTITY API             "<acronym>API</acronym>">
 <!ENTITY DBMS            "<acronym>DBMS</acronym>">
 <!ENTITY DSN             "<acronym>DSN</acronym>">
@@ -28,7 +28,6 @@
 <!ENTITY GDADATAMODELHASH "<xref linkend='libgda-GdaDataModelHash'>">
 <!ENTITY fullexample SYSTEM "examples/full_example.c" CDATA linespecific>
 <!ENTITY migration.sgml SYSTEM "migration.sgml">
-<!ENTITY libgda-batch SYSTEM "sgml/gda-batch.sgml">
 <!ENTITY libgda-blob SYSTEM "sgml/gda-blob.sgml">
 <!ENTITY libgda-client SYSTEM "sgml/gda-client.sgml">
 <!ENTITY libgda-command SYSTEM "sgml/gda-command.sgml">
@@ -391,23 +390,23 @@
 	    will need to install a few packages in the following way:
 	  </para>
           <PROGRAMLISTING>
-            <SYSTEMITEM CLASS="prompt">$</SYSTEMITEM> <USERINPUT> apt-get install <EMPHASIS>package-names</EMPHASIS></USERINPUT>
+            <SYSTEMITEM CLASS="prompt">$</SYSTEMITEM> <USERINPUT> apt-get install <REPLACEABLE>package-names</REPLACEABLE></USERINPUT>
           </PROGRAMLISTING>
           <para>
             These are the packages you will need for this:
           </para>
           <ITEMIZEDLIST>
-            <LISTITEM>libgda2-1</LISTITEM>
-            <LISTITEM>libgda2-common</LISTITEM>
-            <LISTITEM>libgda2-dev</LISTITEM>
-            <LISTITEM>libgda2-doc</LISTITEM>
-            <LISTITEM>libgda2-dbg</LISTITEM>
+          <LISTITEM><para>libgda2-1</para></LISTITEM>
+            <LISTITEM><para>libgda2-common</para></LISTITEM>
+            <LISTITEM><para>libgda2-dev</para></LISTITEM>
+            <LISTITEM><para>libgda2-doc</para></LISTITEM>
+            <LISTITEM><para>libgda2-dbg</para></LISTITEM>
           </ITEMIZEDLIST>
           <para>
             You can obtain information about any packages with:
           </para>
           <PROGRAMLISTING>
-            <SYSTEMITEM CLASS="prompt">$</SYSTEMITEM> <USERINPUT> apt-cache show <EMPHASIS>package-names</EMPHASIS></USERINPUT>
+            <SYSTEMITEM CLASS="prompt">$</SYSTEMITEM> <USERINPUT> apt-cache show <replaceable>package-names</replaceable></USERINPUT>
           </PROGRAMLISTING>
           <para>
             If you cannot find this packages, you must include in
@@ -637,8 +636,8 @@
               <LINK LINKEND="installation-provider">providers specific information</LINK>.
             </para>
             <para>
-              There was a little bug<footnote>It can be fixed, but it
-              is better not to run the risk of it.</footnote>, and it
+              There was a little bug<footnote><para>It can be fixed, but it
+              is better not to run the risk of it.</para></footnote>, and it
 	      is that <LINK
 	      LINKEND="gda-config-save-data-source">gda_config_save_data_source()</LINK> 
               does not create the configuration directory <filename
@@ -1141,7 +1140,7 @@
         <para>
           The command type we most commonly use is <LINK
           LINKEND="GdaCommandType">GDA_COMMAND_TYPE_SQL</LINK> because we will only
-          focus on &SQL; queries<footnote>There are other command types, as &XML; and so on.
+          focus on &SQL; queries<footnote><para>There are other command types, as &XML; and so on.</para>
           </footnote>
         </para>
         <PROGRAMLISTINGCO>
@@ -1244,13 +1243,13 @@
           LINKEND="data-model">data models</LINK>). You have two ways to do this:
         </para>
         <ITEMIZEDLIST>
-          <LISTITEM>
+          <LISTITEM><para>
             <LINK LINKEND="gda-connection-execute-single-command">
-              gda_data_model_execute_single_command()</LINK>
+              gda_data_model_execute_single_command()</LINK></para>
           </LISTITEM>
-          <LISTITEM>
+          <LISTITEM><para>
             <LINK LINKEND="gda-connection-execute-command">
-              gda_data_model_execute_command()</LINK>
+              gda_data_model_execute_command()</LINK></para>
           </LISTITEM>
         </ITEMIZEDLIST>
         <para>
@@ -1340,29 +1339,29 @@
         Let's see the functions we need:
       </para>
       <ITEMIZEDLIST>
-        <LISTITEM>
-          <LINK LINKEND="gda-data-model-get-n-rows">gda_data_model_get_n_rows()</LINK>
+        <LISTITEM><para>
+          <LINK LINKEND="gda-data-model-get-n-rows">gda_data_model_get_n_rows()</LINK></para>
         </LISTITEM>
-        <LISTITEM>
-          <LINK LINKEND="gda-data-model-get-n-columns">gda_data_model_get_n_columns()</LINK>
+        <LISTITEM><para>
+          <LINK LINKEND="gda-data-model-get-n-columns">gda_data_model_get_n_columns()</LINK></para>
         </LISTITEM>
-        <LISTITEM>
-          <LINK LINKEND="gda-data-model-describe-column">gda_data_model_describe_column()</LINK>
+        <LISTITEM><para>
+          <LINK LINKEND="gda-data-model-describe-column">gda_data_model_describe_column()</LINK></para>
         </LISTITEM>
-        <LISTITEM>
-          <LINK LINKEND="gda-data-model-get-column-title">gda_data_model_get_column_title()</LINK>
+        <LISTITEM><para>
+          <LINK LINKEND="gda-data-model-get-column-title">gda_data_model_get_column_title()</LINK></para>
         </LISTITEM>
-        <LISTITEM>
-          <LINK LINKEND="gda-data-model-get-column-position">gda_data_model_get_column_position()</LINK>
+        <LISTITEM><para>
+          <LINK LINKEND="gda-data-model-get-column-position">gda_data_model_get_column_position()</LINK></para>
         </LISTITEM>
-        <LISTITEM>
-          <LINK LINKEND="gda-data-model-get-row">gda_data_model_get_row()</LINK>
+        <LISTITEM><para>
+          <LINK LINKEND="gda-data-model-get-row">gda_data_model_get_row()</LINK></para>
         </LISTITEM>
-        <LISTITEM>
-          <LINK LINKEND="gda-data-model-get-value-at">gda_data_model_get_value_at()</LINK>
+        <LISTITEM><para>
+          <LINK LINKEND="gda-data-model-get-value-at">gda_data_model_get_value_at()</LINK></para>
         </LISTITEM>
-        <LISTITEM>
-          <LINK LINKEND="gda-row-get-value">gda_row_get_value()</LINK>
+        <LISTITEM><para>
+          <LINK LINKEND="gda-row-get-value">gda_row_get_value()</LINK></para>
         </LISTITEM>
       </ITEMIZEDLIST>
       <para>
@@ -1514,7 +1513,7 @@
         </para>
       </sect2>
     </sect1>
-    <sect1 ID="gdavalue">
+    <sect1 ID="manage-gdavalue">
       <title>Managing values</title>
       <para>
         Values returned by functions of managing data are <LINK
@@ -1524,20 +1523,20 @@
         of them:
       </para>
       <ITEMIZEDLIST>
-        <LISTITEM>
-          <LINK LINKEND="gda-value-free">gda_value_free()</LINK>
+        <LISTITEM><para>
+          <LINK LINKEND="gda-value-free">gda_value_free()</LINK></para>
         </LISTITEM>
-        <LISTITEM>
-          <LINK LINKEND="gda-value-is-null">gda_value_is_null()</LINK>
+        <LISTITEM><para>
+          <LINK LINKEND="gda-value-is-null">gda_value_is_null()</LINK></para>
         </LISTITEM>
-        <LISTITEM>
-          <LINK LINKEND="gda-value-copy">gda_value_copy()</LINK>
+        <LISTITEM><para>
+          <LINK LINKEND="gda-value-copy">gda_value_copy()</LINK></para>
         </LISTITEM>
-        <LISTITEM>
-          <LINK LINKEND="gda-value-compare">gda_value_compare()</LINK>
+        <LISTITEM><para>
+          <LINK LINKEND="gda-value-compare">gda_value_compare()</LINK></para>
         </LISTITEM>
-        <LISTITEM>
-          <LINK LINKEND="gda-value-stringify">gda_value_stringify()</LINK>
+        <LISTITEM><para>
+          <LINK LINKEND="gda-value-stringify">gda_value_stringify()</LINK></para>
         </LISTITEM>
       </ITEMIZEDLIST>
       <para>
@@ -1637,20 +1636,20 @@
         classes, and they are:
       </para>
       <ITEMIZEDLIST>
-        <LISTITEM>
-          <LINK LINKEND="gda-transaction-new">gda_transaction_new ()</LINK>
+        <LISTITEM><para>
+          <LINK LINKEND="gda-transaction-new">gda_transaction_new ()</LINK></para>
         </LISTITEM>
-        <LISTITEM>
-          <LINK LINKEND="gda-connection-begin-transaction">gda_connection_begin_transaction ()</LINK>
+        <LISTITEM><para>
+          <LINK LINKEND="gda-connection-begin-transaction">gda_connection_begin_transaction ()</LINK></para>
         </LISTITEM>
-        <LISTITEM>
-          <LINK LINKEND="gda-connection-commit-transaction">gda_connection_commit_transaction ()</LINK>
+        <LISTITEM><para>
+          <LINK LINKEND="gda-connection-commit-transaction">gda_connection_commit_transaction ()</LINK></para>
         </LISTITEM>
-        <LISTITEM>
-          <LINK LINKEND="gda-connection-rollback-transaction">gda_connection_rollback_transaction ()</LINK>
+        <LISTITEM><para>
+          <LINK LINKEND="gda-connection-rollback-transaction">gda_connection_rollback_transaction ()</LINK></para>
         </LISTITEM>
-        <LISTITEM>
-          <LINK LINKEND="gda-command-set-transaction">gda_command_set_transaction ()</LINK>
+        <LISTITEM><para>
+          <LINK LINKEND="gda-command-set-transaction">gda_command_set_transaction ()</LINK></para>
         </LISTITEM>
       </ITEMIZEDLIST>
       <para>
@@ -1809,17 +1808,17 @@
       Here you see the functions to manage errors:
     </para>
     <ITEMIZEDLIST>
-      <LISTITEM>
-        <LINK LINKEND="gda-error-get-description">gda_error_get_description()</LINK>
+      <LISTITEM><para>
+        <LINK LINKEND="gda-error-get-description">gda_error_get_description()</LINK></para>
       </LISTITEM>
-      <LISTITEM>
-        <LINK LINKEND="gda-error-get-number">gda_error_get_number()</LINK>
+      <LISTITEM><para>
+        <LINK LINKEND="gda-error-get-number">gda_error_get_number()</LINK></para>
       </LISTITEM>
-      <LISTITEM>
-        <LINK LINKEND="gda-error-get-source">gda_error_get_source()</LINK>
+      <LISTITEM><para>
+        <LINK LINKEND="gda-error-get-source">gda_error_get_source()</LINK></para>
       </LISTITEM>
-      <LISTITEM>
-        <LINK LINKEND="gda-error-get-sqlstate">gda_error_get_sqlstate()</LINK>
+      <LISTITEM><para>
+        <LINK LINKEND="gda-error-get-sqlstate">gda_error_get_sqlstate()</LINK></para>
       </LISTITEM>
     </ITEMIZEDLIST>
     <para>
@@ -1920,9 +1919,9 @@
         <para>
           There is no problem about calling several times to this
           function because if you save an existing data source, it
-          is replaced, so it could be advisable<footnote>But you must think
+          is replaced, so it could be advisable<footnote><para>But you must think
           of security if you distribute the source code because people would see
-          the passwords of your databases.</footnote> to save the data source
+          the passwords of your databases.</para></footnote> to save the data source
           each time you want to create the connection.
         </para>
       </sect2>
@@ -1971,9 +1970,9 @@
           A normal query is a query that return data. This is made as a
           <LINK LINKEND="libgda-GdaDataModel">data model</LINK>, analogous
           to <EMPHASIS>GdaRecordset</EMPHASIS> in the old
-          version<footnote>Now you have a <LINK
+          version<footnote><para>Now you have a <LINK
           LINKEND="libgda-provider-recordset">GdaRecordset</LINK> class,
-          but it is not recommended.</footnote>.
+          but it is not recommended.</para></footnote>.
         </para>
         <para>
           As you can see in the following example, the function we use to
@@ -1987,11 +1986,11 @@
         </para>
         <para>
           As in the case of <LINK
-          INKEND="gda-connection-execute-non-query">non queries</LINK>, you
+          LINKEND="gda-connection-execute-non-query">non queries</LINK>, you
           must not use several semicolon-separated sentences, because you
-          have a special function to do this<footnote><LINK
+          have a special function to do this<footnote><para><LINK
           LINKEND="gda-connection-execute-command">gda_connection_execute_command
-          ()</LINK></footnote>, but it is not recommended.
+          ()</LINK></para></footnote>, but it is not recommended.
         </para>
       </sect2>
     </sect1>
@@ -2037,6 +2036,7 @@
           changes using &SQL;, so we consider data models not to be
           modifiable.
         </para>
+      </sect2>
       <sect2>
         <title>Accessing directly to columns</title>
         <para>
@@ -2080,7 +2080,6 @@
       The following sections describe the API available for &GDA; applications.
     </para>
     &libgda-init;
-    &libgda-batch;
     &libgda-blob;
     &libgda-client;
     &libgda-command;
@@ -2268,7 +2267,7 @@
 		<entry>Tables</entry>
 		<entry><parameter>GDA_CONNECTION_SCHEMA_TABLES</parameter></entry>
 		<entry>"name" (name of table, optional)</entry>
-		<entry>name, owner, comments, SQL definition
+		<entry>name, owner, comments, SQL definition</entry>
 	      </row>
 	      <row>
 		<entry>Tables' parents</entry>
@@ -2355,7 +2354,7 @@
 	  <para>describe_column</para>
 	  <para>
 	    Returns information about a given column, in the form of
-	    a <xref linkend="GdaFieldAttributes">GdaFieldAttributes</xref>.
+	    a <link linkend="GdaFieldAttributes">GdaFieldAttributes</link>.
 	  </para>
 	</listitem>
 	<listitem>
@@ -2363,10 +2362,10 @@
 	  <para>
 	    Retrieves a row from the data model. This function is very important
 	    for the implementation of editable data models. What this function
-	    returns is a <xref linkend"GdaRow">GdaRow</xref>, which providers
-	    should uniquely identify (via <xref linkend="gda-row-set-id">gda_row_set_id</xref>).
+	    returns is a <link linkend="GdaRow">GdaRow</link>, which providers
+	    should uniquely identify (via <link linkend="gda-row-set-id">gda_row_set_id</link>).
 	    This is needed so that later on, client applications can use the same
-	    <xref linkend="GdaRow">GdaRow</xref> returned by this method in
+	    <link linkend="GdaRow">GdaRow</link> returned by this method in
 	    the <function>update_row</function> and <function>remove_row</function>
 	    methods.
 	  </para>
@@ -2387,9 +2386,9 @@
 	  </para>
 	  <para>
 	    Before a data model can be edited, client applications must call the
-	    <xref linkend="gda-data-model-begin-edit">gda_data_model_begin_edit</xref>
+	    <link linkend="gda-data-model-begin-edit">gda_data_model_begin_edit</link>
 	    function, which emits the "begin_edit" signal on the
-	    <xref linkend="GdaDataModel">GdaDataModel</xref> class. So, providers
+	    <link linkend="GdaDataModel">GdaDataModel</link> class. So, providers
 	    should connect to this signal to be informed when the data model
 	    starts being editing. In the callback connected to that signal,
 	    it should start a transaction, for instance.
@@ -2430,7 +2429,10 @@
 	</listitem>
       </itemizedlist>
     </sect1>
-    &libgda-server-provider;
+    <sect1 id="libgda-server-provider-details">
+      <title>Details</title>
+      &libgda-server-provider;
+    </sect1>
   </chapter>
 
   <chapter id="libgda-xql">
