@@ -9,12 +9,12 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda release-1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-04-02 18:16-0500\n"
-"PO-Revision-Date: 2004-04-02 13:50+0100\n"
+"POT-Creation-Date: 2004-04-13 16:05-0400\n"
+"PO-Revision-Date: 2004-04-13 16:06-0400\n"
 "Last-Translator: David Lodge <dave@cirt.net>\n"
 "Language-Team: English/GB <en@li.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=iso-8859-1\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: libgda/gda-client.c:312 libgda/gda-client.c:535 libgda/gda-connection.c:218
@@ -53,9 +53,8 @@ msgid "Id"
 msgstr "Id"
 
 #: libgda/gda-config.c:1195
-#, fuzzy
 msgid "Location"
-msgstr "Function"
+msgstr "Location"
 
 #: libgda/gda-config.c:1196 libgda/gda-config.c:1455
 #: providers/ibmdb2/gda-ibmdb2-provider.c:863
@@ -101,9 +100,9 @@ msgid "Password"
 msgstr "Password"
 
 #: libgda/gda-data-model.c:889
-#, fuzzy, c-format
+#, c-format
 msgid "Data model %p is not updatable"
-msgstr "Data model %p is not editable"
+msgstr "Data model %p is not updatable"
 
 #: libgda/gda-init.c:47
 msgid "Attempt to initialize an already initialized client"
@@ -1199,19 +1198,19 @@ msgstr "Databases"
 
 #: providers/postgres/gda-postgres-recordset.c:228
 msgid "Given row doesn't belong to the model."
-msgstr ""
+msgstr "Given row doesn't belong to the model."
 
 #: providers/postgres/gda-postgres-recordset.c:235
 msgid "Table name could not be guessed."
-msgstr ""
+msgstr "Table name could not be guessed."
 
 #: providers/postgres/gda-postgres-recordset.c:287
 msgid "Model doesn't have at least one non-modified unique key."
-msgstr ""
+msgstr "Model doesn't have at least one non-modified unique key."
 
 #: providers/postgres/gda-postgres-recordset.c:291
 msgid "Model doesn't have any non-unique values to update."
-msgstr ""
+msgstr "Model doesn't have any non-unique values to update."
 
 #: providers/postgres/gda-postgres-recordset.c:363
 #: providers/sqlite/gda-sqlite-recordset.c:210
@@ -1570,14 +1569,13 @@ msgid ") Message: "
 msgstr ") Message: "
 
 #: providers/sybase/utils.c:244
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Sybase OpenClient Msg: severity(%ld), number(%ld), origin(%ld), layer(%ld): %"
 "s"
 msgstr ""
-"CT-Client error:\n"
-"\tseverity(%ld) layer(%ld) origin (%ld) number(%ld)\n"
-"\t%s"
+"Sybase OpenClient Msg: severity(%ld), number(%ld), origin(%ld), layer(%ld): %"
+"s"
 
 #: providers/sybase/utils.c:272
 msgid "call to cs_diag failed when attempting to clear the client messages"
@@ -1954,29 +1952,25 @@ msgid "\tgda_params ="
 msgstr "\tgda_params ="
 
 #: providers/bdb/gda-bdb-provider.c:154
-#, fuzzy
 msgid "The FILE parameter is not defined in the connection string."
-msgstr "A database FILENAME must be specified in the connection_string"
+msgstr "The FILE parameter is not defined in the connection string."
 
 #: providers/bdb/gda-bdb-provider.c:185
 msgid "-"
-msgstr ""
+msgstr "-"
 
 #: providers/bdb/gda-bdb-provider.c:242 providers/bdb/gda-bdb-provider.c:263
 #: providers/bdb/gda-bdb-provider.c:286
-#, fuzzy
 msgid "Invalid BDB handle"
-msgstr "Invalid MDB handle"
+msgstr "Invalid BDB handle"
 
 #: providers/bdb/gda-bdb-recordset.c:242
-#, fuzzy
 msgid "Database is empty"
-msgstr "Databases"
+msgstr "Database is empty"
 
 #: providers/bdb/libmain.c:39
-#, fuzzy
 msgid "Provider for Berkeley databases"
-msgstr "Provider for Oracle databases"
+msgstr "Provider for Berkeley databases"
 
 #~ msgid "Sybase OpenClient Msg: severity("
 #~ msgstr "Sybase OpenClient Msg: severity("
