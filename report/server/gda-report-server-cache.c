@@ -24,56 +24,47 @@ static GCache* report_cache = NULL;
  * Private functions
  */
 static void
-destroy_key_func (gpointer value)
-{
+destroy_key_func (gpointer value) {
 }
 
 static void
-destroy_value_func (gpointer value)
-{
+destroy_value_func (gpointer value) {
 }
 
 static gpointer
-dup_key_func (gpointer value)
-{
+dup_key_func (gpointer value) {
 }
 
 static guint
-hash_key_func (gconstpointer key)
-{
+hash_key_func (gconstpointer key) {
 }
 
-static guint hash_value_func (gconstpointer key)
-{
+static guint hash_value_func (gconstpointer key) {
 }
 
 static gint
-key_compare_func (gconstpointer a, gconstpointer b)
-{
+key_compare_func (gconstpointer a, gconstpointer b) {
 }
 
 static gpointer
-new_value_func (gpointer key)
-{
+new_value_func (gpointer key) {
 }
 
 /*
  * Public functions
  */
 void
-report_server_cache_init (void)
-{
-  static gboolean initialized = FALSE;
-  
-  if (!initialized)
-    {
-      report_cache = g_cache_new((GCacheNewFunc) new_value_func,
-                                 (GCacheDestroyFunc) destroy_value_func,
-                                 (GCacheDupFunc) dup_key_func,
-                                 (GCacheDestroyFunc) destroy_key_func,
-                                 (GHashFunc) hash_key_func,
-                                 (GHashFunc) hash_value_func,
-                                 (GCompareFunc) key_compare_func);
-    }
-  initialized = TRUE;
+report_server_cache_init (void) {
+	static gboolean initialized = FALSE;
+	
+	if (!initialized) {
+		report_cache = g_cache_new((GCacheNewFunc) new_value_func,
+		                           (GCacheDestroyFunc) destroy_value_func,
+		                           (GCacheDupFunc) dup_key_func,
+		                           (GCacheDestroyFunc) destroy_key_func,
+		                           (GHashFunc) hash_key_func,
+		                           (GHashFunc) hash_value_func,
+		                           (GCompareFunc) key_compare_func);
+	}
+	initialized = TRUE;
 }

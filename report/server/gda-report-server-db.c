@@ -26,16 +26,13 @@ static Gda_ConnectionPool* connection_pool = NULL;
  * Public functions
  */
 void
-report_server_db_init (void)
-{
-  if (!connection_pool)
-    {
-      connection_pool = gda_connection_pool_new();
-    }
+report_server_db_init (void) {
+	if (!connection_pool) {
+		connection_pool = gda_connection_pool_new();
+	}
 }
 
 gpointer
-report_server_db_open (const gchar *dsn, const gchar *user, const gchar *pwd)
-{
-  g_return_val_if_fail(dsn != NULL, NULL);
+report_server_db_open (const gchar *dsn, const gchar *user, const gchar *pwd) {
+	g_return_val_if_fail(dsn != NULL, NULL);
 }

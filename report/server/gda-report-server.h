@@ -45,13 +45,12 @@
 /*
  * Report streams
  */
-typedef struct
-{
-  POA_GDA_ReportStream servant;
-  PortableServer_POA poa;
-  
-  /* added fields */
-  GArray* stream_data;
+typedef struct {
+	POA_GDA_ReportStream servant;
+	PortableServer_POA poa;
+	
+	/* added fields */
+	GArray* stream_data;
 } impl_POA_GDA_ReportStream;
 
 GDA_ReportStream impl_GDA_ReportStream__create (PortableServer_POA poa, CORBA_Environment *ev);
@@ -69,16 +68,14 @@ CORBA_long impl_GDA_ReportStream_getLength (impl_POA_GDA_ReportStream *servant, 
 /*
  * Report elements
  */
-typedef struct
-{
-  POA_GDA_ReportElement servant;
-  PortableServer_POA poa;
-
-  GDA_ReportAttributeList attr_attr_list;
-  GDA_VE attr_contents;
-  
-  /* added fields */
-  xmlNodePtr element_xmlnode;
+typedef struct {
+	POA_GDA_ReportElement servant;
+	PortableServer_POA poa;
+	GDA_ReportAttributeList attr_attr_list;
+	GDA_VE attr_contents;
+	
+	/* added fields */
+	xmlNodePtr element_xmlnode;
 } impl_POA_GDA_ReportElement;
 
 GDA_ReportElement impl_GDA_ReportElement__create (PortableServer_POA poa,
@@ -120,13 +117,12 @@ void impl_GDA_ReportElement_setName (impl_POA_GDA_ReportElement *servant,
 /*
  * Report format
  */
-typedef struct
-{
-  POA_GDA_ReportFormat servant;
-  PortableServer_POA poa;
-  
-  /* added fields */
-  xmlDocPtr         format_xmldoc;
+typedef struct {
+	POA_GDA_ReportFormat servant;
+	PortableServer_POA poa;
+	
+	/* added fields */
+	xmlDocPtr         format_xmldoc;
 } impl_POA_GDA_ReportFormat;
 
 GDA_ReportFormat impl_GDA_ReportFormat__create (PortableServer_POA poa, CORBA_Environment *ev);
@@ -139,11 +135,10 @@ GDA_ReportStream impl_GDA_ReportFormat_getStream (impl_POA_GDA_ReportFormat *ser
 /*
  * Output converters
  */
-typedef struct
-{
-  POA_GDA_ReportConverter servant;
-  PortableServer_POA poa;
-  CORBA_char *attr_format;
+typedef struct {
+	POA_GDA_ReportConverter servant;
+	PortableServer_POA poa;
+	CORBA_char *attr_format;
 } impl_POA_GDA_ReportConverter;
 
 GDA_ReportConverter impl_GDA_ReportConverter__create (PortableServer_POA poa, CORBA_Environment *ev);
@@ -154,10 +149,9 @@ CORBA_char* impl_GDA_ReportConverter__get_format (impl_POA_GDA_ReportConverter *
 /*
  * Report output
  */
-typedef struct
-{
-  POA_GDA_ReportOutput servant;
-  PortableServer_POA poa;
+typedef struct {
+	POA_GDA_ReportOutput servant;
+	PortableServer_POA poa;
 } impl_POA_GDA_ReportOutput;
 
 GDA_ReportOutput impl_GDA_ReportOutput__create (PortableServer_POA poa, CORBA_Environment *ev);
@@ -170,14 +164,13 @@ GDA_ReportStream impl_GDA_ReportOutput_convert (impl_POA_GDA_ReportOutput * serv
 /*
  * Report instances
  */
-typedef struct
-{
-  POA_GDA_Report servant;
-  PortableServer_POA poa;
-  CORBA_char *attr_name;
-  CORBA_char *attr_description;
-  GDA_ReportFormat attr_format;
-  CORBA_boolean attr_isLocked;
+typedef struct {
+	POA_GDA_Report servant;
+	PortableServer_POA poa;
+	CORBA_char *attr_name;
+	CORBA_char *attr_description;
+	GDA_ReportFormat attr_format;
+	CORBA_boolean attr_isLocked;
 } impl_POA_GDA_Report;
 
 GDA_Report impl_GDA_Report__create (PortableServer_POA poa, CORBA_Environment *ev);
@@ -198,11 +191,10 @@ void impl_GDA_Report_unlock (impl_POA_GDA_Report * servant, CORBA_Environment * 
 /*
  * The report engine
  */
-typedef struct
-{
-  POA_GDA_ReportEngine    servant;
-  PortableServer_POA      poa;
-  GDA_ReportConverterList attr_conv_list;
+typedef struct {
+	POA_GDA_ReportEngine    servant;
+	PortableServer_POA      poa;
+	GDA_ReportConverterList attr_conv_list;
 } impl_POA_GDA_ReportEngine;
 
 GDA_ReportEngine impl_GDA_ReportEngine__create (PortableServer_POA poa, CORBA_Environment * ev);
