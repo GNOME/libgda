@@ -1,3 +1,7 @@
+2003-01-19  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
+	* testing/postgres-test.c: fixed child table name.
+
 2003-01-19  Santi Camps <santi@gnome-db.org>
 
 	* libgda/report/testing/gda-report-test.c: some new tests added

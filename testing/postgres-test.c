@@ -152,7 +152,7 @@ test_parent_tables (GdaConnection *cnc)
 	}
 	g_print ("Parent and child created.\n");
 
-	param = gda_parameter_new_string ("name", "child");
+	param = gda_parameter_new_string ("name", "gda_postgres_child");
 	params = gda_parameter_list_new ();
 	gda_parameter_list_add_parameter (params, param);
 	model = gda_connection_get_schema (cnc, 
