@@ -9,21 +9,22 @@
 # Antonio de la Torre <adltorre@terra.es>, 2001.
 # Pablo Gonzalo del Campo <pablodc@bigfoot.com>,2002-2003.
 # Francisco Javier F. Serrador <serrador@arrakis.es>, 2003.
+# Francisco Javier F. Serrador <franciscojavier.fernandez.serrador@hispalinux.es>, 2003.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda.release-1-0-branch\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2003-10-12 14:54+0200\n"
-"PO-Revision-Date: 2003-08-27 06:41+0200\n"
-"Last-Translator: Francisco Javier F. Serrador <serrador@arrakis.es>\n"
+"POT-Creation-Date: 2003-11-11 15:39+0100\n"
+"PO-Revision-Date: 2003-11-11 16:49+0100\n"
+"Last-Translator: Francisco Javier F. Serrador <franciscojavier.fernandez.serrador@hispalinux.es>\n"
 "Language-Team: Spanish <traductores@es.gnome.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: KBabel 1.0.2\n"
 
-#: libgda/gda-client.c:312 libgda/gda-client.c:516 libgda/gda-connection.c:218
+#: libgda/gda-client.c:312 libgda/gda-client.c:517 libgda/gda-connection.c:218
 #, c-format
 msgid "Data source %s not found in configuration"
 msgstr "Fuente de datos %s no encontrada en la configuración"
@@ -42,7 +43,7 @@ msgstr "El proveedor %s no implementa la función de entrada"
 msgid "Could not create GdaServerProvider object from plugin"
 msgstr "No se ha podido crear el objeto GdaServerProvider desde la extensión"
 
-#: libgda/gda-client.c:443
+#: libgda/gda-client.c:444
 msgid "Temporary data source created by libgda. Don't remove it"
 msgstr "Fuente de datos temporaria creada por libgda. No borrarla"
 
@@ -51,7 +52,7 @@ msgstr "Fuente de datos temporaria creada por libgda. No borrarla"
 msgid "Error: %s"
 msgstr "Error: %s"
 
-#: libgda/gda-config.c:1323 providers/ldap/gda-ldap-provider.c:327
+#: libgda/gda-config.c:1400 providers/ldap/gda-ldap-provider.c:327
 #: providers/mdb/gda-mdb-provider.c:457 providers/mdb/gda-mdb-provider.c:594
 #: providers/mdb/gda-mdb-provider.c:654 providers/msql/gda-msql-provider.c:448
 #: providers/mysql/gda-mysql-provider.c:701
@@ -67,15 +68,15 @@ msgstr "Error: %s"
 msgid "Name"
 msgstr "Nombre"
 
-#: libgda/gda-config.c:1324
+#: libgda/gda-config.c:1401
 msgid "Provider"
 msgstr "Proveedor"
 
-#: libgda/gda-config.c:1325
+#: libgda/gda-config.c:1402
 msgid "Connection string"
 msgstr "Cadena de conexión"
 
-#: libgda/gda-config.c:1326 providers/ibmdb2/gda-ibmdb2-provider.c:863
+#: libgda/gda-config.c:1403 providers/ibmdb2/gda-ibmdb2-provider.c:863
 #: providers/ibmdb2/gda-ibmdb2-provider.c:892
 #: providers/ibmdb2/gda-ibmdb2-provider.c:920
 #: providers/ibmdb2/gda-ibmdb2-provider.c:1001
@@ -85,24 +86,24 @@ msgstr "Cadena de conexión"
 msgid "Description"
 msgstr "Descripción"
 
-#: libgda/gda-config.c:1327
+#: libgda/gda-config.c:1404
 msgid "Username"
 msgstr "Usuario"
 
-#: libgda/gda-config.c:1328
+#: libgda/gda-config.c:1405
 msgid "Password"
 msgstr "Contraseña"
 
-#: libgda/gda-data-model.c:687
+#: libgda/gda-data-model.c:698
 #, c-format
 msgid "Data model %p is not editable"
 msgstr "El modelo de datos %p no es editable"
 
-#: libgda/gda-init.c:48
+#: libgda/gda-init.c:47
 msgid "Attempt to initialize an already initialized client"
 msgstr "Se ha intentado inicializar un cliente que ya lo estaba"
 
-#: libgda/gda-init.c:59
+#: libgda/gda-init.c:58
 msgid "libgda needs GModule. Finishing..."
 msgstr "libgda necesita GModule. Terminando..."
 
@@ -116,87 +117,87 @@ msgstr "No se ha podido analizar la cadena SQL «%s»"
 msgid "SQL command is not a SELECT (is '%s'"
 msgstr "El comando SQL no es un SELECT (es «%s»"
 
-#: libgda/gda-table.c:286
+#: libgda/gda-table.c:284
 #, c-format
 msgid "There is already a field called %s"
 msgstr "Ya hay un campo con el nombre %s"
 
-#: libgda/gda-util.c:147
+#: libgda/gda-util.c:154
 #, c-format
 msgid "Could not parse SQL command '%s'"
 msgstr "No se ha podido analizar el comando SQL «%s»"
 
-#: libgda/gda-util.c:180
+#: libgda/gda-util.c:187
 #, c-format
 msgid "Error while reading %s: %s"
 msgstr "Error leyendo %s: %s"
 
-#: libgda/gda-util.c:206
+#: libgda/gda-util.c:213
 #, c-format
 msgid "Could not create file %s"
 msgstr "No se ha podido crear el archivo %s"
 
-#: libgda/gda-value.c:1982
+#: libgda/gda-value.c:1941
 msgid "TRUE"
 msgstr "VERDADERO"
 
-#: libgda/gda-value.c:1984
+#: libgda/gda-value.c:1943
 msgid "FALSE"
 msgstr "FALSO"
 
-#: libgda/gda-value.c:2053
+#: libgda/gda-value.c:2012
 #, c-format
 msgid "(GObject of type '%s'"
 msgstr "(GObject del tipo «%s»"
 
-#: libgda/gda-value.c:2056
+#: libgda/gda-value.c:2015
 msgid "NULL GObject"
 msgstr "GObject NULO"
 
-#: libgda/gda-xml-database.c:271
+#: libgda/gda-xml-database.c:279
 #, c-format
 msgid "Could not load file at %s"
 msgstr "No se ha podido cargar el archivo en %s"
 
-#: libgda/gda-xml-database.c:280
+#: libgda/gda-xml-database.c:288
 #, c-format
 msgid "Could not parse file at %s"
 msgstr "No se ha podido analizar el archivo en %s"
 
-#: libgda/gda-xml-database.c:290
+#: libgda/gda-xml-database.c:298
 #, c-format
 msgid "Invalid XML database file '%s'"
 msgstr "Archivo de base de datos XML inválido «%s»"
 
-#: libgda/gda-xml-database.c:536
+#: libgda/gda-xml-database.c:541
 #, c-format
 msgid "Could not create a XML node from table %s"
 msgstr "No se ha podido crear un nodo XML desde la tabla %s"
 
-#: libgda/gda-xml-database.c:554
+#: libgda/gda-xml-database.c:559
 msgid "Could not dump XML file to memory"
 msgstr "No se ha podido volcar el archivo XML a la memoria"
 
-#: libgda/gda-xml-database.c:647 libgda/gda-xml-database.c:684
-#: libgda/gda-xml-database.c:728
+#: libgda/gda-xml-database.c:650 libgda/gda-xml-database.c:687
+#: libgda/gda-xml-database.c:731
 #, c-format
 msgid "Table %s already exists"
 msgstr "La tabla %s ya existe"
 
-#: libgda/gda-xml-database.c:721
+#: libgda/gda-xml-database.c:724
 msgid "Invalid node"
 msgstr "Nodo inválido"
 
-#: libgda/gda-xml-database.c:763
+#: libgda/gda-xml-database.c:766
 #, c-format
 msgid "Duplicated <data> node for table %s"
 msgstr "Nodo <data> duplicado en la tabla %s"
 
-#: libgda/gda-xml-database.c:770
+#: libgda/gda-xml-database.c:773
 msgid "Invalid XML node"
 msgstr "Nodo XML inválido"
 
-#: libgda/gda-xml-database.c:779
+#: libgda/gda-xml-database.c:782
 msgid "Could not add the data from the XML node"
 msgstr "No se han podido añadir los datos desde el nodo XML"
 
@@ -248,9 +249,8 @@ msgstr "Ha fallado la asignación del contexto tds."
 
 #: providers/freetds/gda-freetds-provider.c:275
 #: providers/freetds/gda-freetds-provider.c:277
-#, fuzzy
 msgid "Allocating tds socket failed."
-msgstr "Ha fallado la asignación del contexto tds."
+msgstr "Ha fallado la asignación del socket tds."
 
 #. gda_freetds_free_connection_data (tds_cnc);
 #: providers/freetds/gda-freetds-provider.c:283
@@ -809,10 +809,8 @@ msgid "Row number out of bounds"
 msgstr "Número de fila fuera de rango"
 
 #: providers/mysql/gda-mysql-provider.c:218
-msgid ""
-"You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
-msgstr ""
-"No puede proveer un UNIX_SOCKET si al mismo tiempo provee un HOST o un PORT."
+msgid "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
+msgstr "No puede proveer un UNIX_SOCKET si al mismo tiempo provee un HOST o un PORT."
 
 #: providers/mysql/gda-mysql-provider.c:294
 #: providers/mysql/gda-mysql-provider.c:1085
@@ -994,8 +992,7 @@ msgstr "No se ha podido ejecutar la sentencia de Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:640
 msgid "Could not get the number of columns in the result set"
-msgstr ""
-"No se ha podido obtener la cantidad de columnas en el conjunto de resultado"
+msgstr "No se ha podido obtener la cantidad de columnas en el conjunto de resultado"
 
 #: providers/oracle/gda-oracle-provider.c:657
 msgid "Could not get the parameter descripter in the result set"
@@ -1005,8 +1002,7 @@ msgstr ""
 
 #: providers/oracle/gda-oracle-provider.c:669
 msgid "Could not get the column name in the result set"
-msgstr ""
-"No se ha podido obtener el nombre de la columna en el conjunto de resultado"
+msgstr "No se ha podido obtener el nombre de la columna en el conjunto de resultado"
 
 #: providers/oracle/gda-oracle-provider.c:815
 #: providers/oracle/gda-oracle-provider.c:896
@@ -1225,8 +1221,7 @@ msgid "Provider for PostgreSQL databases"
 msgstr "Proveedor para bases de datos PostgreSQL"
 
 #: providers/sqlite/gda-sqlite-provider.c:198
-msgid ""
-"A full path must be specified on the connection string to open a database."
+msgid "A full path must be specified on the connection string to open a database."
 msgstr ""
 "Una ruta completa debe ser especificada en la cadena de conexión para abrir "
 "la base de datos."
@@ -1366,18 +1361,15 @@ msgstr ""
 
 #: providers/sybase/gda-sybase-provider.c:985
 msgid "could not execute command to get current database."
-msgstr ""
-"No se ha podido ejecutar el comando para obtener la base de datos actual."
+msgstr "No se ha podido ejecutar el comando para obtener la base de datos actual."
 
 #: providers/sybase/gda-sybase-provider.c:993
 msgid "could not send command to get current database."
-msgstr ""
-"No se ha podido enviar el comando para obtener la base de datos actual."
+msgstr "No se ha podido enviar el comando para obtener la base de datos actual."
 
 #: providers/sybase/gda-sybase-provider.c:1016
 msgid "could not bind variable to get current database."
-msgstr ""
-"No se ha podido asignar la variable para obtener la base de datos actual."
+msgstr "No se ha podido asignar la variable para obtener la base de datos actual."
 
 #: providers/sybase/gda-sybase-provider.c:1029
 #: providers/sybase/gda-sybase-provider.c:1044
@@ -1392,8 +1384,7 @@ msgstr ""
 
 #: providers/sybase/gda-sybase-recordset.c:315
 msgid "Could not allocate datamodel. No results will be returned."
-msgstr ""
-"No se ha podido asignar el modelo de datos. No se devolverán los resultados."
+msgstr "No se ha podido asignar el modelo de datos. No se devolverán los resultados."
 
 #: providers/sybase/gda-sybase-recordset.c:318
 msgid "ct_cancel() failed."
@@ -1412,8 +1403,7 @@ msgstr "%s ha devuelto <= 0 columnas."
 #: providers/sybase/gda-sybase-recordset.c:359
 #: providers/sybase/gda-sybase-recordset.c:549
 msgid "Could not allocate structure for column metainformation."
-msgstr ""
-"No se ha podido asignar la estructura para la metainformación de la columna."
+msgstr "No se ha podido asignar la estructura para la metainformación de la columna."
 
 #: providers/sybase/gda-sybase-recordset.c:363
 #: providers/sybase/gda-sybase-recordset.c:553
@@ -1461,8 +1451,7 @@ msgstr ""
 
 #: providers/sybase/gda-sybase-recordset.c:518
 msgid "attempting to make recordset and msg count != 1 !"
-msgstr ""
-"se esta intentando crear un conjunto de registros y la cuenta de msg != 1"
+msgstr "se esta intentando crear un conjunto de registros y la cuenta de msg != 1"
 
 #: providers/sybase/gda-sybase-recordset.c:531
 msgid ""
@@ -1570,8 +1559,7 @@ msgstr ""
 "mensajes del cliente"
 
 #: providers/sybase/utils.c:220
-msgid ""
-"an error occured when calling cs_diag attempting to retrieve a client message"
+msgid "an error occured when calling cs_diag attempting to retrieve a client message"
 msgstr ""
 "ha ocurrido un error al llamar a cs_diag cuando intentaba recuperara un "
 "mensaje del cliente"
@@ -1613,8 +1601,7 @@ msgstr ""
 "mensajes del servidor"
 
 #: providers/sybase/utils.c:334
-msgid ""
-"an error occured when calling ct_diag attempting to retrieve a server message"
+msgid "an error occured when calling ct_diag attempting to retrieve a server message"
 msgstr ""
 "ha ocurrido un error al llamar a ct_diag cuando se intentaba recuperar un "
 "mensaje del servidor"
@@ -1650,8 +1637,7 @@ msgstr ""
 "mensajes del cliente"
 
 #: providers/sybase/utils.c:463
-msgid ""
-"an error occured when calling ct_diag attempting to retrieve a client message"
+msgid "an error occured when calling ct_diag attempting to retrieve a client message"
 msgstr ""
 "ha ocurrido un error al llamar a ct_diag cuando se intentaba recuperar un "
 "mensaje del cliente"
@@ -1686,8 +1672,7 @@ msgstr ""
 
 #: providers/xbase/gda-xbase-provider.c:232
 msgid "Either FILENAME or DIRECTORY must be specified in the connection string"
-msgstr ""
-"Deben especificarse el ARCHIVO o el DIRECTORIO en la cadena de conexión"
+msgstr "Deben especificarse el ARCHIVO o el DIRECTORIO en la cadena de conexión"
 
 #: providers/xbase/gda-xbase-provider.c:261
 #: providers/xbase/gda-xbase-provider.c:379
@@ -2280,3 +2265,4 @@ msgstr "\tgda_params ="
 
 #~ msgid "\tdomain = %s\n"
 #~ msgstr "\tdominio = %s\n"
+
