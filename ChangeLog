@@ -1,3 +1,8 @@
+2002-08-22  Vivien Malerba <malerba@gnome-db.org>
+	* libgda-docs.sgml: updated the schemas
+	* providers/postgres/gda-postgres-provider.c: set the schemas in sync
+	with the docs
+
 2002-08-21  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* libgda/gda-value.[ch] (gda_value_get_type): made this a function,

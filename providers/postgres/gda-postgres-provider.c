@@ -683,13 +683,13 @@ gda_postgres_init_procs_recset (GdaConnection *cnc)
 	GdaDataModelArray *recset;
 	gint i;
 	GdaPostgresColData cols[8] = {
-		{ N_("Id")	        , GDA_VALUE_TYPE_STRING  },
-		{ N_("Procedure name")	, GDA_VALUE_TYPE_STRING  },
+		{ N_("Procedure")	, GDA_VALUE_TYPE_STRING  },
+		{ N_("Id")              , GDA_VALUE_TYPE_STRING  },
 		{ N_("Owner")		, GDA_VALUE_TYPE_STRING  },
 		{ N_("Comments")       	, GDA_VALUE_TYPE_STRING  },
-		{ N_("Out type")	, GDA_VALUE_TYPE_STRING  },
+		{ N_("Return type")	, GDA_VALUE_TYPE_STRING  },
 		{ N_("Nb args")	        , GDA_VALUE_TYPE_INTEGER },
-		{ N_("In types")	, GDA_VALUE_TYPE_STRING  },
+		{ N_("Args types")	, GDA_VALUE_TYPE_STRING  },
 		{ N_("Definition")	, GDA_VALUE_TYPE_STRING  }
 		};
 
@@ -750,13 +750,13 @@ gda_postgres_fill_procs_data (GdaDataModelArray *recset,
 		GList *rowlist = NULL;
 		gboolean insert = TRUE;
 
-		/* Proc_Id */
-		thevalue = PQgetvalue (pg_res, i, 0);
+		/* Proc name */
+		procname = thevalue = PQgetvalue(pg_res, i, 1);
 		value = gda_value_new_string (thevalue);
 		rowlist = g_list_append (rowlist, value);
 
-		/* Proc name */
-		procname = thevalue = PQgetvalue(pg_res, i, 1);
+		/* Proc_Id */
+		thevalue = PQgetvalue (pg_res, i, 0);
 		value = gda_value_new_string (thevalue);
 		rowlist = g_list_append (rowlist, value);
 
@@ -906,30 +906,6 @@ get_postgres_tables (GdaConnection *cnc, GdaParameterList *params)
 	return recset;
 }
 
-/* FIXME: to be removed */
-static void
-add_string_row (gpointer data, gpointer user_data)
-{
-	GdaValue *value;
-	GList list;
-	GdaDataModelArray *recset;
-	GdaPostgresTypeOid *td;
-	
-	td = data;
-	recset = user_data;
-
-	g_return_if_fail (GDA_IS_DATA_MODEL_ARRAY (recset));
-
-	value = gda_value_new_string (td->name);
-	list.data = value;
-	list.next = NULL;
-	list.prev = NULL;
-
-	gda_data_model_append_row (GDA_DATA_MODEL (recset), &list);
-
-	gda_value_free (value);
-}
-
 static GdaDataModel *
 get_postgres_types (GdaConnection *cnc, GdaParameterList *params)
 {
@@ -962,7 +938,6 @@ get_postgres_types (GdaConnection *cnc, GdaParameterList *params)
 		g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
 		g_list_free (value_list);
 	}
-		/*FIXME: to be removed add_string_row (&priv_data->type_data[i], recset);*/
 
 	return GDA_DATA_MODEL (recset);
 }
@@ -990,7 +965,7 @@ get_postgres_views (GdaConnection *cnc, GdaParameterList *params)
 	/* Set it here instead of the SQL query to allow i18n */
 	gda_data_model_set_column_title (recset, 0, _("View"));
 	gda_data_model_set_column_title (recset, 1, _("Owner"));
-	gda_data_model_set_column_title (recset, 2, _("Description"));
+	gda_data_model_set_column_title (recset, 2, _("Comments"));
 	gda_data_model_set_column_title (recset, 3, _("Definition"));
 
 	return recset;
@@ -1031,10 +1006,10 @@ get_postgres_aggregates (GdaConnection *cnc, GdaParameterList *params)
 
 	reclist = process_sql_commands (
 		NULL, cnc, 
-		"(SELECT a.oid, a.aggname, usename, obj_description (a.oid), t1.typname, t2.typname "
+		"(SELECT a.aggname, a.oid, usename, obj_description (a.oid), t2.typname, t1.typname, NULL "
 		"FROM pg_aggregate a, pg_type t1, pg_type t2, pg_user u "
 		"WHERE a.aggbasetype = t1.oid AND a.aggfinaltype = t2.oid AND u.usesysid=aggowner) UNION "
-		"(SELECT a.oid, a.aggname, usename, obj_description (a.oid), '-', t2.typname "
+		"(SELECT a.aggname, a.oid, usename, obj_description (a.oid), t2.typname , '-', NULL "
 		"FROM pg_aggregate a, pg_type t2, pg_user u "
 		"WHERE a.aggfinaltype = t2.oid AND u.usesysid=aggowner AND a.aggbasetype = 0) ORDER BY 2",
 		GDA_COMMAND_OPTION_STOP_ON_ERRORS);
@@ -1045,12 +1020,13 @@ get_postgres_aggregates (GdaConnection *cnc, GdaParameterList *params)
 	recset = GDA_DATA_MODEL (reclist->data);
 	g_list_free (reclist);
 	/* Set it here instead of the SQL query to allow i18n */
-	gda_data_model_set_column_title (recset, 0, _("Id"));
-	gda_data_model_set_column_title (recset, 1, _("Aggregate"));
+	gda_data_model_set_column_title (recset, 0, _("Aggregate"));
+	gda_data_model_set_column_title (recset, 1, _("Id"));
 	gda_data_model_set_column_title (recset, 2, _("Owner"));
 	gda_data_model_set_column_title (recset, 3, _("Comments"));
-	gda_data_model_set_column_title (recset, 4, _("InType"));
-	gda_data_model_set_column_title (recset, 5, _("OutType"));
+	gda_data_model_set_column_title (recset, 4, _("OutType"));
+	gda_data_model_set_column_title (recset, 5, _("InType"));
+	gda_data_model_set_column_title (recset, 6, _("Definition"));
 
 	return recset;
 }
@@ -1085,7 +1061,7 @@ gda_postgres_init_md_recset (GdaConnection *cnc)
 {
 	GdaDataModelArray *recset;
 	gint i;
-	GdaPostgresColData cols[8] = {
+	GdaPostgresColData cols[9] = {
 		{ N_("Field name")	, GDA_VALUE_TYPE_STRING  },
 		{ N_("Data type")	, GDA_VALUE_TYPE_STRING  },
 		{ N_("Size")		, GDA_VALUE_TYPE_INTEGER },
@@ -1093,7 +1069,8 @@ gda_postgres_init_md_recset (GdaConnection *cnc)
 		{ N_("Not null?")	, GDA_VALUE_TYPE_BOOLEAN },
 		{ N_("Primary key?")	, GDA_VALUE_TYPE_BOOLEAN },
 		{ N_("Unique index?")	, GDA_VALUE_TYPE_BOOLEAN },
-		{ N_("References")	, GDA_VALUE_TYPE_STRING  }
+		{ N_("References")	, GDA_VALUE_TYPE_STRING  },
+		{ N_("Default value")   , GDA_VALUE_TYPE_STRING  }
 		};
 
 	recset = GDA_DATA_MODEL_ARRAY (gda_data_model_array_new (sizeof cols / sizeof cols[0]));
@@ -1273,11 +1250,16 @@ gda_postgres_fill_md_data (const gchar *tblname, GdaDataModelArray *recset,
 	GList *ref_list;
 
 	query = g_strdup_printf (
-			"SELECT a.attname, b.typname, a.atttypmod, b.typlen, not a.attnotnull "
-			"FROM pg_class c, pg_attribute a, pg_type b "
+			"(SELECT a.attname, b.typname, a.atttypmod, b.typlen, not a.attnotnull, d.adsrc, "
+			"a.attnum FROM pg_class c, pg_attribute a, pg_type b, pg_attrdef d "
 			"WHERE c.relname = '%s' AND a.attnum > 0 AND "
-			"      a.attrelid = c.oid and b.oid = a.atttypid "
-			"ORDER BY a.attnum", tblname);
+			"a.attrelid = c.oid and b.oid = a.atttypid AND "
+			"a.atthasdef = 't' and d.adrelid=c.oid and d.adnum=a.attnum) "
+			"UNION (SELECT a.attname, b.typname, a.atttypmod, b.typlen, not a.attnotnull, NULL, "
+			"a.attnum FROM pg_class c, pg_attribute a, pg_type b "
+			"WHERE c.relname = '%s' AND a.attnum > 0 AND "
+			"a.attrelid = c.oid and b.oid = a.atttypid AND a.atthasdef = 'f') ORDER BY 7",
+			tblname, tblname);
 
 	pg_res = PQexec(priv_data->pconn, query);
 	g_free (query);
@@ -1344,9 +1326,14 @@ gda_postgres_fill_md_data (const gchar *tblname, GdaDataModelArray *recset,
 			ref = ((GdaPostgresRefData *) rlist->data)->reference;
 		else
 			ref = "";
-
 		value = gda_value_new_string (ref);
 		rowlist = g_list_append (rowlist, value);
+
+		/* Default value */
+		thevalue = PQgetvalue (pg_res, i, 5);
+	        value = gda_value_new_string (thevalue);
+	        rowlist = g_list_append (rowlist, value);
+		
 
 		list = g_list_append (list, rowlist);
 		rowlist = NULL;
@@ -1482,7 +1469,7 @@ get_postgres_sequences (GdaConnection *cnc, GdaParameterList *params)
 	/* Set it here instead of the SQL query to allow i18n */
 	gda_data_model_set_column_title (recset, 0, _("Sequence"));
 	gda_data_model_set_column_title (recset, 1, _("Owner"));
-	gda_data_model_set_column_title (recset, 2, _("Description"));
+	gda_data_model_set_column_title (recset, 2, _("Comments"));
         gda_data_model_set_column_title (recset, 3, _("Definition"));
 
 	return recset;
@@ -1507,13 +1494,10 @@ get_postgres_parent_tables (GdaConnection *cnc, GdaParameterList *params)
 	g_return_val_if_fail (tblname != NULL, NULL);
 
 	query = g_strdup_printf ("SELECT a.relname, b.inhseqno "
-				 "FROM pg_inherits b, pg_class a, pg_class c "
-				 "WHERE (a.oid=b.inhparent OR "
-				 "a.relfilenode=b.inhparent) AND "
-				 "(b.inhrelid = c.reltype OR "
-				 "b.inhrelid = c.relfilenode) AND "
-				 "c.relname = '%s' "
-				 "ORDER BY b.inhseqno", tblname);
+			         "FROM pg_inherits b, pg_class a, pg_class c "
+				 "WHERE a.oid=b.inhparent AND b.inhrelid = c.oid "
+				 "AND c.relname = '%s' ORDER BY b.inhseqno",
+				 tblname);
 
 	reclist = process_sql_commands (NULL, cnc, query,
 					GDA_COMMAND_OPTION_STOP_ON_ERRORS);
@@ -1523,7 +1507,7 @@ get_postgres_parent_tables (GdaConnection *cnc, GdaParameterList *params)
 
 	recset = GDA_DATA_MODEL (reclist->data);
 	g_list_free (reclist);
-	gda_data_model_set_column_title (recset, 0, _("Table name"));
+	gda_data_model_set_column_title (recset, 0, _("Table"));
 	gda_data_model_set_column_title (recset, 1, _("Sequence"));
 
 	return recset;

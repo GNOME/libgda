@@ -102,7 +102,7 @@
         <firstname>Vivien</firstname>
         <surname>Malerba</surname>
         <affiliation>
-          <address><email>malerba@linuxave.net</email></address>
+          <address><email>malerba@gnome-db.org</email></address>
         </affiliation>
       </author>
       <author role="clean up">
@@ -2216,7 +2216,7 @@
 		<entry>Table (or view) fields</entry>
 		<entry><parameter>GDA_CONNECTION_SCHEMA_FIELDS</parameter></entry>
 		<entry>"name" (name of table (or view), required)</entry>
-		<entry>name, type, size, scale, not null?, primary key?, unique index?, references</entry>
+		<entry>name, type, size, scale, not null?, primary key?, unique index?, references, default value</entry>
 	      </row>
 	      <row>
 		<entry>Sequences</entry>
@@ -2228,19 +2228,16 @@
 		<entry>Procedures</entry>
 		<entry><parameter>GDA_CONNECTION_SCHEMA_PROCEDURES</parameter></entry>
 		<entry>"name" (name of procedure, optional)</entry>
-		<entry>name, owner, comments, return type, number of arguments, SQL definition</entry>
-	      </row>
-	      <row>
-		<entry>Procedure parameters</entry>
-		<entry><parameter>GDA_CONNECTION_SCHEMA_PROCEDURE_PARAMS</parameter></entry>
-		<entry>"name" (name of procedure, required)</entry>
-		<entry>name, usage (in, out, inout), type</entry>
+		<entry>name, unique id, owner, comments, return type, number of arguments, arguments types 
+		       (arguments types in the order, separated by spaces) and SQL definition.
+		       For the arguments where any type is accepted, '-' is returned as type.</entry>
 	      </row>
 	      <row>
 		<entry>Aggregates</entry>
 		<entry><parameter>GDA_CONNECTION_SCHEMA_AGGREGATES</parameter></entry>
 		<entry>"name" (name of aggregate, optional)</entry>
-		<entry>name, owner, comments, return type, in type, SQL definition</entry>
+		<entry>name, unique id, owner, comments, return type, argument type, SQL definition.
+		       If the argument can be of any type, then '-' is returned as type.</entry>
 	      </row>
 	      <row>
 		<entry>Types</entry>
