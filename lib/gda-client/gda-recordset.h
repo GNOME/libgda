@@ -128,6 +128,8 @@ void gda_recordset_set_cursorloc (GdaRecordset * rs,
 GDA_CursorType gda_recordset_get_cursortype (GdaRecordset * rs);
 void gda_recordset_set_cursortype (GdaRecordset * rs,
 				   GDA_CursorType type);
+GList *gda_recordset_get_row (GdaRecordset *rs);
+gchar *gda_recordset_get_row_as_string (GdaRecordset *rs);
 
 G_END_DECLS
 

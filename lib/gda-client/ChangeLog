@@ -1,3 +1,8 @@
+2001-09-02  Liam Girdwood <liam@novalinux.com>
+
+	* gda-recordset.[ch] (gda_recordset_get_row):
+	(gda_recordset_get_row_as_string): new functions
+
 2001-08-14  Diego Gonzalez <dggonz@yahoo.com>
 
 	* gda-recordset.c (gda_recordset_to_array): new function to convert

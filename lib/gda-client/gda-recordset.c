@@ -975,3 +975,83 @@ gda_recordset_set_cursortype (GdaRecordset * rs, GDA_CursorType type)
 	g_return_if_fail (GDA_IS_RECORDSET (rs));
 	rs->cursor_type = type;
 }
+
+/**
+ * gda_recordset_get_row:
+ * @rs: the recordset
+ *
+ * Get the current row from the recordset.
+ * Returns a GList of char *'s.
+ */
+GList *              
+gda_recordset_get_row(GdaRecordset *rs)
+{
+	gint rowsize;
+	GdaField *rc;
+	GList *row = NULL;
+	gint i;
+	gchar *string;
+	
+	/* is rs valid */
+	g_return_val_if_fail(GDA_IS_RECORDSET(rs), 0);
+	g_return_val_if_fail(rs->open, 0);
+		
+	if (!rs->current_row && !rs->field_attributes) {
+		g_warning("This shouldn't happen. Inconsistent recordset\n");
+		return NULL;
+	}
+	
+	rowsize = rs->field_attributes->_length;
+	
+	for (i = 0; i < rowsize; i++) {
+		rc = gda_recordset_field_idx (rs, i);
+		string = gda_stringify_value (NULL, 0, rc);
+		row = g_list_append (row, (gpointer) string);
+	}
+	return row;
+}
+
+/**
+ * gda_recordset_get_row_as_string:
+ * @rs: the recordset
+ *
+ * Get the current row as a string.
+ */
+gchar *
+gda_recordset_get_row_as_string(GdaRecordset *rs)
+{
+	gint rowsize;
+	GdaField *rc;
+	gint i;
+	GString *row = NULL;
+	gchar *field;
+	gint size = 0;
+	gchar *ret_value;
+	
+	/* is rs valid */
+	g_return_val_if_fail(GDA_IS_RECORDSET(rs), 0);
+	g_return_val_if_fail(rs->open, 0);
+		
+	if (!rs->current_row && !rs->field_attributes) {
+		g_warning("This shouldn't happen. Inconsistent recordset\n");
+		return 0;
+	}
+		
+	rowsize = rs->field_attributes->_length;
+	
+	for (i = 0; i < rowsize; i++) {
+		rc = gda_recordset_field_idx (rs, i);
+		field = gda_stringify_value (NULL, 0, rc);
+
+		if (!row)
+			row = g_string_new (field);
+		else
+			row = g_string_append (row, field);
+
+	}
+	
+	ret_value = row->str;
+	g_string_free (row, FALSE);
+
+	return ret_value;
+}
