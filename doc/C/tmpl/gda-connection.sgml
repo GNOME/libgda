@@ -88,6 +88,15 @@ Management of connections to data sources
 @client: 
 
 
+<!-- ##### FUNCTION gda_connection_get_database ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_connection_get_dsn ##### -->
 <para>
 

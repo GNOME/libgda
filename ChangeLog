@@ -1,5 +1,21 @@
 2002-05-28  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* libgda/gda-server-provider.[ch]: added get_database virtual method.
+	(gda_server_provider_get_database): new method.
+
+	* libgda/gda-connection.[ch] (gda_connection_get_database): new
+	function.
+
+	* providers/mysql/gda-mysql-provider.c
+	(gda_mysql_provider_get_database): implemented new method.
+	(gda_mysql_provider_create_database): use mysql_create_db.
+	(gda_mysql_provider_drop_database): use mysql_drop_db.
+
+	* providers/postgres/gda-postgres-provider.c
+	(gda_postgres_provider_get_database): implemented new method.
+
+2002-05-28  Rodrigo Moya <rodrigo@gnome-db.org>
+
 	* libgda/gda-connection.[ch] (gda_connection_execute_non_query):
 	new function for executing a command and returning the number of
 	rows affected.

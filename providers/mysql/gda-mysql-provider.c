@@ -45,6 +45,8 @@ static gboolean gda_mysql_provider_open_connection (GdaServerProvider *provider,
 						    const gchar *password);
 static gboolean gda_mysql_provider_close_connection (GdaServerProvider *provider,
 						     GdaConnection *cnc);
+static const gchar *gda_mysql_provider_get_database (GdaServerProvider *provider,
+						     GdaConnection *cnc);
 static gboolean gda_mysql_provider_create_database (GdaServerProvider *provider,
 						    GdaConnection *cnc,
 						    const gchar *name);
@@ -89,6 +91,7 @@ gda_mysql_provider_class_init (GdaMysqlProviderClass *klass)
 	object_class->finalize = gda_mysql_provider_finalize;
 	provider_class->open_connection = gda_mysql_provider_open_connection;
 	provider_class->close_connection = gda_mysql_provider_close_connection;
+	provider_class->get_database = gda_mysql_provider_get_database;
 	provider_class->create_database = gda_mysql_provider_create_database;
 	provider_class->drop_database = gda_mysql_provider_drop_database;
 	provider_class->execute_command = gda_mysql_provider_execute_command;
@@ -296,6 +299,26 @@ process_sql_commands (GList *reclist, GdaConnection *cnc, const gchar *sql)
 	return reclist;
 }
 
+/* get_database handler for the GdaMysqlProvider class */
+static const gchar *
+gda_mysql_provider_get_database (GdaServerProvider *provider,
+				 GdaConnection *cnc)
+{
+	MYSQL *mysql;
+	GdaMysqlProvider *myprv = (GdaMysqlProvider *) provider;
+
+	g_return_val_if_fail (GDA_IS_MYSQL_PROVIDER (myprv), NULL);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+
+	mysql = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_MYSQL_HANDLE);
+	if (!mysql) {
+		gda_connection_add_error_string (cnc, _("Invalid MYSQL handle"));
+		return NULL;
+	}
+
+	return (const gchar *) mysql->db;
+}
+
 /* create_database handler for the GdaMysqlProvider class */
 static gboolean
 gda_mysql_provider_create_database (GdaServerProvider *provider,
@@ -304,7 +327,6 @@ gda_mysql_provider_create_database (GdaServerProvider *provider,
 {
 	gint rc;
 	MYSQL *mysql;
-	gchar *sql;
 	GdaMysqlProvider *myprv = (GdaMysqlProvider *) provider;
 
 	g_return_val_if_fail (GDA_IS_MYSQL_PROVIDER (myprv), FALSE);
@@ -317,10 +339,7 @@ gda_mysql_provider_create_database (GdaServerProvider *provider,
 		return FALSE;
 	}
 
-	sql = g_strdup_printf ("CREATE DATABASE %s", name);
-	rc = mysql_real_query (mysql, sql, strlen (sql));
-	g_free (sql);
-
+	rc = mysql_create_db (mysql, name);
 	if (rc != 0) {
 		gda_connection_add_error (cnc, gda_mysql_make_error (mysql));
 		return FALSE;
@@ -337,7 +356,6 @@ gda_mysql_provider_drop_database (GdaServerProvider *provider,
 {
 	gint rc;
 	MYSQL *mysql;
-	gchar *sql;
 	GdaMysqlProvider *myprv = (GdaMysqlProvider *) provider;
 
 	g_return_val_if_fail (GDA_IS_MYSQL_PROVIDER (myprv), FALSE);
@@ -350,10 +368,7 @@ gda_mysql_provider_drop_database (GdaServerProvider *provider,
 		return FALSE;
 	}
 
-	sql = g_strdup_printf ("DROP DATABASE IF EXISTS %s", name);
-	rc = mysql_real_query (mysql, sql, strlen (sql));
-	g_free (sql);
-
+	rc = mysql_drop_db (mysql, name);
 	if (rc != 0) {
 		gda_connection_add_error (cnc, gda_mysql_make_error (mysql));
 		return FALSE;

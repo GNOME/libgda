@@ -52,6 +52,7 @@ gda_connection_close
 gda_connection_is_open
 gda_connection_get_client
 gda_connection_set_client
+gda_connection_get_database
 gda_connection_get_dsn
 gda_connection_get_cnc_string
 gda_connection_get_provider
@@ -243,6 +244,7 @@ GdaServerProviderPrivate
 <TITLE>GdaServerProvider</TITLE>
 gda_server_provider_open_connection
 gda_server_provider_close_connection
+gda_server_provider_get_database
 gda_server_provider_create_database
 gda_server_provider_drop_database
 gda_server_provider_execute_command

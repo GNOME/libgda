@@ -41,7 +41,8 @@ static gboolean gda_postgres_provider_open_connection (GdaServerProvider *provid
 
 static gboolean gda_postgres_provider_close_connection (GdaServerProvider *provider,
 							GdaConnection *cnc);
-
+static const gchar *gda_postgres_provider_get_database (GdaServerProvider *provider,
+							GdaConnection *cnc);
 static gboolean gda_postgres_provider_create_database (GdaServerProvider *provider,
 						       GdaConnection *cnc,
 						       const gchar *name);
@@ -117,6 +118,7 @@ gda_postgres_provider_class_init (GdaPostgresProviderClass *klass)
 	object_class->finalize = gda_postgres_provider_finalize;
 	provider_class->open_connection = gda_postgres_provider_open_connection;
 	provider_class->close_connection = gda_postgres_provider_close_connection;
+	provider_class->get_database = gda_postgres_provider_get_database;
 	provider_class->create_database = gda_postgres_provider_create_database;
 	provider_class->drop_database = gda_postgres_provider_drop_database;
 	provider_class->execute_command = gda_postgres_provider_execute_command;
@@ -433,6 +435,26 @@ process_sql_commands (GList *reclist, GdaConnection *cnc,
 	}
 
 	return reclist;
+}
+
+/* get_database handler for the GdaPostgresProvider class */
+static const gchar *
+gda_postgres_provider_get_database (GdaServerProvider *provider,
+				    GdaConnection *cnc)
+{
+	GdaPostgresConnectionData *priv_data;
+	GdaPostgresProvider *pg_prv = (GdaPostgresProvider *) provider;
+
+	g_return_val_if_fail (GDA_IS_POSTGRES_PROVIDER (pg_prv), NULL);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+
+	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE);
+	if (!priv_data) {
+		gda_connection_add_error_string (cnc, _("Invalid PostgreSQL handle"));
+		return NULL;
+	}
+
+	return (const char *) PQdb ((const PGconn *) priv_data->pconn);
 }
 
 /* create_database handler for the GdaPostgresProvider class */

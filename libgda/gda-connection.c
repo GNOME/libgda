@@ -304,6 +304,22 @@ gda_connection_set_client (GdaConnection *cnc, GdaClient *client)
 }
 
 /**
+ * gda_connection_get_database
+ * @cnc: A #GdaConnection object.
+ *
+ * Get the name of the currently active database in the given
+ * @GdaConnection.
+ *
+ * Returns: the name of the current database.
+ */
+const gchar *
+gda_connection_get_database (GdaConnection *cnc)
+{
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+	return gda_server_provider_get_database (cnc->priv->provider_obj, cnc);
+}
+
+/**
  * gda_connection_get_dsn
  * @cnc: A #GdaConnection object
  *

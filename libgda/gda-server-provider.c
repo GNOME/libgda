@@ -52,6 +52,7 @@ gda_server_provider_class_init (GdaServerProviderClass *klass)
 	object_class->finalize = gda_server_provider_finalize;
 	klass->open_connection = NULL;
 	klass->close_connection = NULL;
+	klass->get_database = NULL;
 	klass->create_database = NULL;
 	klass->drop_database = NULL;
 	klass->execute_command = NULL;
@@ -179,6 +180,27 @@ gda_server_provider_close_connection (GdaServerProvider *provider, GdaConnection
 		g_object_unref (G_OBJECT (provider));
 
 	return retcode;
+}
+
+/**
+ * gda_server_provider_get_database
+ * @provider: a #GdaServerProvider object.
+ * @cnc: a #GdaConnection object.
+ *
+ * Proxy the call to the get_database method on the
+ * #GdaServerProvider class to the corresponding provider.
+ *
+ * Returns: the name of the current database.
+ */
+const gchar *
+gda_server_provider_get_database (GdaServerProvider *provider,
+				  GdaConnection *cnc)
+{
+	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+	g_return_val_if_fail (CLASS (provider)->get_database != NULL, NULL);
+
+	return CLASS (provider)->get_database (provider, cnc);
 }
 
 /**

@@ -43,6 +43,16 @@ Base class for implementing new providers
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_server_provider_get_database ##### -->
+<para>
+
+</para>
+
+@provider: 
+@cnc: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_server_provider_create_database ##### -->
 <para>
 
