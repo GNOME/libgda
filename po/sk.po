@@ -5,14 +5,14 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda 0.3.1\n"
-"POT-Creation-Date: 2002-01-06 00:04+0100\n"
-"PO-Revision-Date: 2001-12-13 14:37CET\n"
+"POT-Creation-Date: 2002-01-09 11:16+0100\n"
+"PO-Revision-Date: 2002-01-09 11:20CET\n"
 "Last-Translator: Stanislav Visnovsky <visnovsky@nenya.ms.mff.cuni.cz>\n"
 "Language-Team: Slovak <sk-i18n@lists.linux.sk>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: KBabel 0.9.6\n"
+"X-Generator: KBabel 0.9.5\n"
 
 #: libgda/gda-client.c:200 libgda/gda-client.c:294
 #, c-format
@@ -85,8 +85,7 @@ msgstr "Nie je možné vytvoriť komponent typu %s"
 
 #: libgda/gda-server-connection.c:90
 msgid "Could not duplicate client object. Client won't get notifications"
-msgstr ""
-"Nie je možné duplikovať klientský objekt. Klient nebude dostávať upozornenia"
+msgstr "Nie je možné duplikovať klientský objekt. Klient nebude dostávať upozornenia"
 
 #: libgda/gda-server-connection.c:440
 #, c-format
@@ -95,30 +94,30 @@ msgstr "Nie je možné informovať klienta o akcii %d"
 
 #: libgda/gda-server-recordset.c:204
 msgid "No implementation for the fetch() method found"
-msgstr ""
+msgstr "Nenájdená implementácia metódy fetch()"
 
-#: libgda/gda-value.c:610
+#: libgda/gda-value.c:638
 msgid "TRUE"
 msgstr "TRUE"
 
-#: libgda/gda-value.c:612
+#: libgda/gda-value.c:640
 msgid "FALSE"
 msgstr "FALSE"
 
 #: libgda/gda-xml-database.c:162
-#, fuzzy, c-format
+#, c-format
 msgid "Could not load file at %s"
-msgstr "Nie je aktivovať objekt %s"
+msgstr "Nie je možné načítať súbor %s"
 
 #: libgda/gda-xml-database.c:173
-#, fuzzy, c-format
+#, c-format
 msgid "Could not parse file at %s"
-msgstr "Nie je aktivovať objekt %s"
+msgstr "Nie je možné spracovať súbor %s"
 
 #: libgda/gda-xml-database.c:183
-#, fuzzy, c-format
+#, c-format
 msgid "Bad formed document at %s"
-msgstr "neplatný dokument"
+msgstr "Neplatný dokument %s"
 
 #: libgda/gda-xml-database.c:258
 #, c-format
@@ -131,13 +130,12 @@ msgid "%p is not a valid table"
 msgstr "%p nie je platná tabuľka"
 
 #: providers/default/gda-default-provider.c:141
-msgid ""
-"A full path must be specified on the connection string to open a database."
+msgid "A full path must be specified on the connection string to open a database."
 msgstr "Pre otvorenie databáze musíte zadať celú cestu v reťazci spojenia."
 
 #: providers/default/gda-default-provider.c:199
 msgid "Invalid DEFAULT handle"
-msgstr ""
+msgstr "Neplatný handle DEFAULT"
 
 #: providers/default/GNOME_Database_Provider_Default.server.in.h:1
 msgid "Default component factory"
@@ -149,25 +147,22 @@ msgstr "GDA štandardný prístup k zdroju dát"
 
 #: providers/default/main.c:47
 msgid "Could not initiate Default component factory"
-msgstr ""
-"Nie je možné inicializovať vytváracie rozhranie pre štandardný komponent"
+msgstr "Nie je možné inicializovať vytváracie rozhranie pre štandardný komponent"
 
 #: providers/mysql/gda-mysql-provider.c:173
-msgid ""
-"You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
-msgstr ""
-"Nemôžete poskytovať UNIX_SOCKET ak tiež poskytujete HOSTITEĽ alebo a PORT."
+msgid "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
+msgstr "Nemôžete poskytovať UNIX_SOCKET ak tiež poskytujete HOSTITEĽ alebo a PORT."
 
 #: providers/mysql/gda-mysql-provider.c:244
 #: providers/mysql/gda-mysql-provider.c:323
 #: providers/mysql/gda-mysql-provider.c:352
 #: providers/mysql/gda-mysql-provider.c:381
 msgid "Invalid MYSQL handle"
-msgstr ""
+msgstr "Neplatný handle MYSQL"
 
 #: providers/mysql/gda-mysql-provider.c:460
 msgid "Type"
-msgstr ""
+msgstr "Typ"
 
 #: providers/mysql/GNOME_Database_Provider_MySQL.server.in.h:1
 msgid "GDA Datasource Access for MySQL"
@@ -182,79 +177,77 @@ msgid "Could not initiate MySQL component factory"
 msgstr "Nie je možné inicializovať vytváracie rozhranie pre komponent MySQL"
 
 #: providers/sybase/GNOME_Database_Provider_Sybase.server.in.h:1
-#, fuzzy
 msgid "GDA Datasource Access for Sybase"
-msgstr "GDA prístup k zdroju dát pre MySQL"
+msgstr "GDA prístup k zdroju dát pre Sybase"
 
 #: providers/sybase/GNOME_Database_Provider_Sybase.server.in.h:2
-#, fuzzy
 msgid "Sybase component factory"
-msgstr "Vytváracie rozhranie komponentu pre MySQL"
+msgstr "Vytváracie rozhranie komponentu pre Sybase"
 
 #: providers/sybase/gda-sybase-error.c:137
 msgid "ct_diag 1 failed in sybase_check_clientmsg"
-msgstr ""
+msgstr "ct_diag 1 zlyhalo v sybase_check_clientmsg"
 
 #: providers/sybase/gda-sybase-error.c:159
 #: providers/sybase/gda-sybase-error.c:197
 msgid "ct_diag 2 failed in sybase_check_clientmsg"
-msgstr ""
+msgstr "ct_diag 2 zlyhalo v sybase_check_clientmsg"
 
 #: providers/sybase/gda-sybase-error.c:167
 #: providers/sybase/gda-sybase-error.c:376
 msgid "Client Message: "
-msgstr ""
+msgstr "Správa klienta:"
 
 #: providers/sybase/gda-sybase-error.c:178
 #: providers/sybase/gda-sybase-error.c:387
 msgid "Informational Client  Message: "
-msgstr ""
+msgstr "Informácia od klienta:"
 
 #: providers/sybase/gda-sybase-error.c:239
 msgid "ct_diag 1 failed in sybase_check_servermsg"
-msgstr ""
+msgstr "ct_diag 1 zlyhalo v sybase_check_servermsg"
 
 #: providers/sybase/gda-sybase-error.c:261
 #: providers/sybase/gda-sybase-error.c:304
 msgid "ct_diag 2 failed in sybase_check_servermsg"
-msgstr ""
+msgstr "ct_diag 2 zlyhalo v sybase_check_servermsg"
 
 #: providers/sybase/gda-sybase-error.c:274
 msgid "Server Message: "
-msgstr ""
+msgstr "Správa serveru:"
 
 #: providers/sybase/gda-sybase-error.c:285
 msgid "Informational Server  Message: "
-msgstr ""
+msgstr "Informácia od serveru:"
 
 #: providers/sybase/gda-sybase-error.c:346
 msgid "cs_diag 1 failed in sybase_check_clientmsg"
-msgstr ""
+msgstr "cs_diag 1 zlyhalo v sybase_check_clientmsg"
 
 #: providers/sybase/gda-sybase-error.c:368
 #: providers/sybase/gda-sybase-error.c:406
 msgid "cs_diag 2 failed in sybase_check_clientmsg"
-msgstr ""
+msgstr "cs_diag 2 zlyhalo v sybase_check_clientmsg"
 
 #: providers/sybase/gda-sybase-error.c:429
 msgid "SYB"
-msgstr ""
+msgstr "SYB"
 
 #: providers/sybase/gda-sybase-error.c:431
 msgid "severity"
-msgstr ""
+msgstr "dôležitosť"
 
 #: providers/sybase/gda-sybase-error.c:433
 msgid "number"
-msgstr ""
+msgstr "počet"
 
 #: providers/sybase/gda-sybase-error.c:435
 msgid "origin"
-msgstr ""
+msgstr "pôvod"
 
 #: providers/sybase/gda-sybase-error.c:437
 msgid "layer"
-msgstr ""
+msgstr "vrstva"
 
 #: providers/sybase/gda-sybase-error.c:444
 #, c-format
@@ -263,8 +256,11 @@ msgid ""
 "\tOperating system error number(%ld):\n"
 "\t%s"
 msgstr ""
+"\n"
+"\tČíslo chyby operačného systému (%ld):\n"
+"\t%s"
 
 #: providers/sybase/main.c:49
-#, fuzzy
 msgid "Could not initiate Sybase component factory"
-msgstr "Nie je možné inicializovať vytváracie rozhranie pre komponent MySQL"
+msgstr "Nie je možné inicializovať vytváracie rozhranie pre komponent Sybase"
+
