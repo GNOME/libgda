@@ -129,7 +129,7 @@ run_export_cb (gpointer user_data)
 		gda_command_set_cmd_type (cmd, GDA_COMMAND_TYPE_TABLE);
 		gda_command_set_text (cmd, name);
 
-		recset = gda_command_execute (cmd, &reccount, NULL);
+		recset = gda_command_execute (cmd, &reccount, 0);
 		if (!GDA_IS_RECORDSET (recset)) {
 			gda_command_free (cmd);
 			gda_export_stop (exp);

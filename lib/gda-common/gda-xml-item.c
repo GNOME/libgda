@@ -23,6 +23,7 @@
 
 #include "config.h"
 #include "gda-xml-item.h"
+#include "gda-xml-util.h"
 #include "gda-util.h"
 
 #ifdef ENABLE_NLS

@@ -243,7 +243,7 @@ gda_batch_clear (GdaBatch * job)
 	job->cnc = 0;
 	job->is_running = FALSE;
 
-	g_list_foreach (job->commands, g_free, 0);
+	g_list_foreach (job->commands, (GFunc) g_free, 0);
 	g_list_free (job->commands);
 	job->commands = 0;
 }

@@ -122,7 +122,7 @@ gda_connection_pool_class_init (GdaConnectionPoolClass * klass)
 				      gda_connection_pool_signals,
 				      LAST_SIGNAL);
 
-	object_class->destroy = gda_connection_pool_destroy;
+	object_class->destroy = (void (*)(GtkObject *)) gda_connection_pool_destroy;
 	klass->open = NULL;
 	klass->error = NULL;
 }

@@ -452,7 +452,7 @@ gda_field_get_date_value (GdaField *field)
 	if (field->attributes->gdaType == GDA_TypeDate) {
 		struct tm *stm;
 
-		stm = localtime (&field->real_value->_u.v._u.d);
+		stm = localtime ((time_t) &field->real_value->_u.v._u.d);
 		if (stm != NULL) {
 			dt = g_date_new_dmy (stm->tm_mday,
 					     stm->tm_mon,

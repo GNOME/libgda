@@ -1,3 +1,7 @@
+2001-09-22  Gonzalo Paniagua Javier <gpanjav@tquevedo.hispalinux.es>
+
+	* remove lots of compilation warnings
+
 2001-09-15  Akira TAGOH <tagoh@gnome-db.org>
 
 	* configure.in: add --enable-gtk-doc option.

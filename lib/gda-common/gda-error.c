@@ -260,7 +260,7 @@ gda_error_list_to_corba_seq (GList * error_list)
 		GdaError *error = GDA_ERROR (l->data);
 
 		if (GDA_IS_ERROR (error)) {
-			gchar *desc, *source, *state, *native;
+			const gchar *desc, *source, *state, *native;
 
 			desc = gda_error_get_description (error);
 			source = gda_error_get_source (error);

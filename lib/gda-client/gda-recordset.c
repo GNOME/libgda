@@ -23,6 +23,7 @@
 
 #include "config.h"
 #include "gda-recordset.h"
+#include "gda-command.h"
 
 #include <gtk/gtksignal.h>
 
@@ -33,6 +34,8 @@ enum {
 	RECORDSET_ROW_CHANGED,
 	LAST_SIGNAL
 };
+
+extern GDA_CmdParameterSeq *__gda_command_get_params (GdaCommand * cmd);
 
 static gint gda_recordset_signals[LAST_SIGNAL] = { 0, };
 
@@ -135,7 +138,7 @@ gda_recordset_class_init (GdaRecordsetClass * klass)
 	klass->eof = NULL;
 	klass->bof = NULL;
 	klass->row_changed = NULL;
-	object_class->destroy = gda_recordset_destroy;
+	object_class->destroy = (void (*)(GtkObject *))gda_recordset_destroy;
 }
 
 static void
