@@ -6,7 +6,8 @@ Quark lists (lists of KEY=VALUE's)
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
-
+  Parameter lists are used primary in the parsing and creation
+  of connection strings.
 </para>
 
 <!-- ##### SECTION See_Also ##### -->
