@@ -3,6 +3,9 @@
 	* libgda/gda-config.c (write_config_file): assign the root node to the
 	document to avoid overwriting the config file with an empty one :-).
 
+	* providers/postgres/gda-postgres-recordset.c (describe): fixed
+	comparison between the column number and the number of fields.
+
 2002-05-10  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* libgda/gda-data-model-array.c (gda_data_model_array_append_row):

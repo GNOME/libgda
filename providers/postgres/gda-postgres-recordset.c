@@ -189,7 +189,7 @@ gda_postgres_recordset_get_value_at (GdaDataModel *model, gint col, gint row)
 		return NULL;
 	}
 
-	if (field_count < 0 || col >= field_count) {
+	if (col >= field_count) {
 		gda_connection_add_error_string (priv_data->cnc,
 						_("Column number out of range"));
 		return NULL;
@@ -227,7 +227,7 @@ gda_postgres_recordset_describe (GdaDataModel *model, gint col)
 	}
 
 	field_count = PQnfields (pg_res);
-	if (field_count >= col){
+	if (col >= field_count){
 		gda_connection_add_error_string (priv_data->cnc,
 						_("Column out of range"));
 		return NULL;
