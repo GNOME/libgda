@@ -80,7 +80,7 @@ cnc_weak_cb (gpointer user_data, GObject *object)
 static void
 impl_Client_notifyAction (PortableServer_Servant servant,
 			  GNOME_Database_ActionId action,
-			  GNOME_Database_ParameterList *corba_params,
+			  Bonobo_PropertySet *corba_params,
 			  CORBA_Environment *ev)
 {
 }

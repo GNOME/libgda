@@ -23,7 +23,7 @@ module GNOME {
 			interface DataSource : Bonobo::Unknown {
 				GNOME::Database::Recordset runQuery (
 					in string query,
-					in GNOME::Database::ParameterList params);
+					in Bonobo::PropertySet params);
 			};
 
 			/*
@@ -40,7 +40,7 @@ module GNOME {
 				/* document management */
 				Output runDocument (
 					in Bonobo::Stream xml,
-					in GNOME::Database::ParameterList params);
+					in Bonobo::PropertySet params);
 			};
 		};
 	};

@@ -52,7 +52,7 @@ gda_parameter_new (const gchar *name, GdaValueType type)
 {
 	GdaParameter *param;
 
-	param = GNOME_Database_Parameter__alloc ();
+	param = Bonobo_Pair__alloc ();
 	if (name)
 		gda_parameter_set_name (param, name);
 	CORBA_any_set_release (&param->value, TRUE);
@@ -139,10 +139,10 @@ gda_parameter_list_new (void)
  * @corba_list: a #GNOME_Database_ParameterList.
  *
  * Create a new #GdaParameterList from a CORBA sequence
- * (#GNOME_Database_ParameterList)
+ * (#Bonobo_PropertySet)
  */
 GdaParameterList *
-gda_parameter_list_new_from_corba (GNOME_Database_ParameterList *corba_list)
+gda_parameter_list_new_from_corba (Bonobo_PropertySet *corba_list)
 {
 	GdaParameterList *plist;
 	gint n;
@@ -240,17 +240,17 @@ gda_parameter_list_get_length (GdaParameterList *plist)
 /**
  * gda_parameter_list_to_corba
  */
-GNOME_Database_ParameterList *
+Bonobo_PropertySet *
 gda_parameter_list_to_corba (GdaParameterList *plist)
 {
-	GNOME_Database_ParameterList *corba_list;
+	Bonobo_PropertySet *corba_list;
 	gint length;
 
 	length = gda_parameter_list_get_length (plist);
 
-	corba_list = GNOME_Database_ParameterList__alloc ();
+	corba_list = Bonobo_PropertySet__alloc ();
 	CORBA_sequence_set_release (corba_list, TRUE);
-	corba_list->_buffer = GNOME_Database_ParameterList_allocbuf (length);
+	corba_list->_buffer = Bonobo_PropertySet_allocbuf (length);
 
 	/* FIXME: put all parameters in 'params' into the CORBA sequence */
 

@@ -142,7 +142,7 @@ impl_Connection_close (PortableServer_Servant servant,
 static GNOME_Database_RecordsetList *
 impl_Connection_executeCommand (PortableServer_Servant servant,
 				const GNOME_Database_Command *cmd,
-				const GNOME_Database_ParameterList *params,
+				const Bonobo_PropertySet *params,
 				CORBA_Environment *ev)
 {
 	GList *recset_list;
@@ -269,7 +269,7 @@ impl_Connection_supports (PortableServer_Servant servant,
 static GNOME_Database_Recordset
 impl_Connection_getSchema (PortableServer_Servant servant,
 			   const GNOME_Database_Connection_Schema schema,
-			   const GNOME_Database_ParameterList *params,
+			   const Bonobo_PropertySet *params,
 			   CORBA_Environment *ev)
 {
 	GdaServerRecordset *recset;
@@ -278,7 +278,7 @@ impl_Connection_getSchema (PortableServer_Servant servant,
 
 	bonobo_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), CORBA_OBJECT_NIL, ev);
 
-	plist = gda_parameter_list_new_from_corba ((GNOME_Database_ParameterList *) params);
+	plist = gda_parameter_list_new_from_corba ((Bonobo_PropertySet *) params);
 	recset = gda_server_provider_get_schema (cnc->priv->provider, cnc, schema, plist);
 	gda_parameter_list_free (plist);
 
@@ -430,7 +430,7 @@ gda_server_connection_notify_action (GdaServerConnection *cnc,
 		client = (GNOME_Database_Client) l->data;
 		if (client != CORBA_OBJECT_NIL) {
 			CORBA_Environment ev;
-			GNOME_Database_ParameterList *corba_params;
+			Bonobo_PropertySet *corba_params;
 
 			corba_params = gda_parameter_list_to_corba (params);
 

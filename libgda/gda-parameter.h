@@ -28,7 +28,7 @@
 
 G_BEGIN_DECLS
 
-typedef GNOME_Database_Parameter GdaParameter;
+typedef Bonobo_Pair GdaParameter;
 
 GdaParameter *gda_parameter_new (const gchar *name, GdaValueType type);
 void          gda_parameter_free (GdaParameter *param);
@@ -39,17 +39,17 @@ void          gda_parameter_set_value (GdaParameter *param, GdaValue *value);
 
 typedef struct _GdaParameterList GdaParameterList;
 
-GdaParameterList             *gda_parameter_list_new (void);
-GdaParameterList             *gda_parameter_list_new_from_corba (GNOME_Database_ParameterList *corba_list);
-void                          gda_parameter_list_free (GdaParameterList *plist);
-void                          gda_parameter_list_add_parameter (GdaParameterList *plist,
-								GdaParameter *param);
-GdaParameter                 *gda_parameter_list_find (GdaParameterList *plist,
-						       const gchar *name);
-void                          gda_parameter_list_clear (GdaParameterList *plist);
-guint                         gda_parameter_list_get_length (GdaParameterList *plist);
+GdaParameterList   *gda_parameter_list_new (void);
+GdaParameterList   *gda_parameter_list_new_from_corba (Bonobo_PropertySet *corba_list);
+void                gda_parameter_list_free (GdaParameterList *plist);
+void                gda_parameter_list_add_parameter (GdaParameterList *plist,
+						GdaParameter *param);
+GdaParameter       *gda_parameter_list_find (GdaParameterList *plist,
+				       const gchar *name);
+void                gda_parameter_list_clear (GdaParameterList *plist);
+guint               gda_parameter_list_get_length (GdaParameterList *plist);
 
-GNOME_Database_ParameterList *gda_parameter_list_to_corba (GdaParameterList *plist);
+Bonobo_PropertySet *gda_parameter_list_to_corba (GdaParameterList *plist);
 
 G_END_DECLS
 

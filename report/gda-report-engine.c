@@ -49,7 +49,7 @@ static GdaClient *db_client = NULL;
 static GNOME_Database_Report_Output
 impl_ReportEngine_runDocument (PortableServer_Servant servant,
 			       const Bonobo_Stream xml,
-			       const GNOME_Database_ParameterList *params,
+			       const Bonobo_PropertySet *params,
 			       CORBA_Environment *ev)
 {
 	CORBA_long res;

@@ -11,12 +11,6 @@ module GNOME {
 		typedef any Value;
 		typedef sequence<Value> ValueList;
 
-		struct Parameter {
-			string name;
-			Value value;
-		};
-		typedef sequence<Parameter> ParameterList;
-
 		/*
 		 * GDA data types
 		 */
@@ -159,7 +153,7 @@ module GNOME {
 		};
 
 		interface Client : Bonobo::Unknown {
-			void notifyAction (in ActionId action, in ParameterList params);
+			void notifyAction (in ActionId action, in Bonobo::PropertySet params);
 		};
 
 		/*
@@ -184,7 +178,7 @@ module GNOME {
 
 			/* command execution */
 			RecordsetList executeCommand (in Command cmd,
-						      in ParameterList params)
+						      in Bonobo::PropertySet params)
 				raises (DriverError);
 
 			/* transactions */
@@ -206,7 +200,8 @@ module GNOME {
 				SCHEMA_VIEWS
 			};
 
-			Recordset getSchema (in Schema schema, in ParameterList params);
+			Recordset getSchema (in Schema schema,
+				             in Bonobo::PropertySet params);
 		};
 
 		/*

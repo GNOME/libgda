@@ -391,7 +391,7 @@ gda_connection_execute_command (GdaConnection *cnc,
 				GdaParameterList *params)
 {
 	GNOME_Database_RecordsetList *corba_reclist;
-	GNOME_Database_ParameterList *corba_params;
+	Bonobo_PropertySet *corba_params;
 	CORBA_Environment ev;
 	GList *reclist = NULL;
 	gint n;
@@ -545,7 +545,7 @@ gda_connection_get_schema (GdaConnection *cnc,
 			   GdaConnectionSchema schema,
 			   GdaParameterList *params)
 {
-	GNOME_Database_ParameterList *corba_params;
+	Bonobo_PropertySet *corba_params;
 	GNOME_Database_Recordset corba_recset;
 	GdaRecordset *recset;
 	CORBA_Environment ev;

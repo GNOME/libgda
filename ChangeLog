@@ -1,3 +1,14 @@
+2002-02-22  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* libgda/gda-parameter.[ch]:
+	* libgda/gda-client.c:
+	* libgda/gda-connection.c:
+	* libgda/gda-server-connection.c:
+	* report/gda-report-engine.c:
+	* report/idl/GNOME_Database_Report.idl:
+	* idl/GNOME_Database.idl: replaced ParameterList with
+	Bonobo::PropertySet, since they are exactly the same.
+
 2002-02-20  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* libgda/gda-connection.h:
