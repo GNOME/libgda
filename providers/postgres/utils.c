@@ -49,7 +49,7 @@ gda_postgres_make_error (PGconn *handle)
 GdaType
 gda_postgres_type_name_to_gda (const gchar *name)
 {
-	if (!strcmp (name, "boolean"))
+	if (!strcmp (name, "bool"))
 		return GDA_TYPE_BOOLEAN;
 	if (!strcmp (name, "int8"))
 		return GDA_TYPE_BIGINT;

@@ -1,3 +1,8 @@
+2002-03-19  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
+	* providers/postgres/utils.c: fix little mistake when mapping boolean
+	type from postgres to gda.
+
 2002-03-18  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* libgda/gda-parameter.[ch] (gda_parameter_new_string): new function.
