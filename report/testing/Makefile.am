@@ -1,6 +1,7 @@
 INCLUDES = \
         -I$(top_srcdir) \
         -I$(top_builddir) \
+	-I$(top_srcdir)/report \
         -I$(top_builddir)/report \
         $(LIBGDA_CFLAGS)
 

@@ -1,3 +1,47 @@
+libgda 0.10, 2003-01-27
+-----------------------
+
+ - Added support for PostgreSQL 7.3 new features (vivien, gonzalo)
+ - Added LANGUAGES schema to set of supported schemas (rodrigo)
+ - Fixed TABLES schema retrieval on Oracle (rodrigo)
+ - Fixed translatable strings (menthos, holger)
+ - Improvements on FreeTDS provider (holger)
+ - Added changes notifications in data models (rodrigo)
+ - Added new schemas to test suite (rodrigo)
+ - Fixed GdaTable class (rodrigo)
+ - First working version of the MDB (MS Access files) provider (rodrigo)
+ - Fixed retrieval of NUMERIC fields' info on PostgreSQL provider (santi)
+ - Fixed circular calls in gda_data_model_describe_column (rodrigo)
+ - Added man page for configuration tool (gonzalo)
+ - Added build requirements for gda-sqlite and man page for gda-config-tool
+   in SPEC file (david)
+ - Fixed FreeTDS include path for RedHat (holger)
+ - Made all plugins resident (rodrigo)
+ - Implemented basic read-onlyness for MySQL connections (rodrigo)
+ - Fixed AGGREGATES schema for MySQL (rodrigo)
+ - Lots of work on the reporting engine (santi)
+ - Added support for PostgreSQL's bytea type fields (gonzalo)
+ - Added use of syslog for the log functions (rodrigo)
+ - Fixed unref'ing problems on providers (gonzalo)
+ - Added first working version of the LDAP provider (german)
+ - Removed obsolete config.h files all over (gonzalo)
+ - Added event notification framework to GdaClient, and converted error notification
+   to the new system (rodrigo)
+ - Implemented saving data models to XML (rodrigo)
+ - First basic version of the xBase provider (rodrigo)
+ - First GNOME 2 version of the ODBC provider (nick)
+ - Added support for SSL in MySQL connections (rodrigo)
+ - Added MONEY type (rodrigo)
+ - Unified parameter names for providers' connection strings (gonzalo)
+ - Updated translations:
+        - cs (mitr)
+        - de (cneumair, chrisime)
+	- es (pablodc)
+	- no (kmaraas)
+	- sk (stano)
+	- sl (minmax)
+	- sv (menthos)
+
 libgda 0.9, 2002-12-10
 ----------------------
 

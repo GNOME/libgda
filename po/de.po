@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda HEAD\n"
-"POT-Creation-Date: 2003-01-26 16:14+0100\n"
+"POT-Creation-Date: 2003-01-28 01:43+0100\n"
 "PO-Revision-Date: 2003-01-26 16:14+0100\n"
 "Last-Translator: Christian Neumair <chris@gnome-de.org>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
@@ -53,8 +53,8 @@ msgstr "Fehler: %s"
 #: providers/mdb/gda-mdb-provider.c:594 providers/mdb/gda-mdb-provider.c:654
 #: providers/mysql/gda-mysql-provider.c:701
 #: providers/mysql/gda-mysql-provider.c:889
-#: providers/odbc/gda-odbc-provider.c:734
-#: providers/odbc/gda-odbc-provider.c:790
+#: providers/odbc/gda-odbc-provider.c:733
+#: providers/odbc/gda-odbc-provider.c:789
 #: providers/oracle/gda-oracle-provider.c:1045
 #: providers/oracle/gda-oracle-provider.c:1544
 msgid "Name"
@@ -68,8 +68,8 @@ msgstr "Treiber"
 msgid "Connection string"
 msgstr "Verbindungszeichenkette"
 
-#: libgda/gda-config.c:1325 providers/odbc/gda-odbc-provider.c:1143
-#: providers/odbc/gda-odbc-provider.c:1299
+#: libgda/gda-config.c:1325 providers/odbc/gda-odbc-provider.c:1142
+#: providers/odbc/gda-odbc-provider.c:1298
 #: providers/postgres/gda-postgres-provider.c:1106
 msgid "Description"
 msgstr "Beschreibung"
@@ -208,7 +208,7 @@ msgstr "Nicht implementiert"
 #: providers/default/gda-default-provider.c:454
 #: providers/mdb/gda-mdb-provider.c:490
 #: providers/mysql/gda-mysql-provider.c:1069
-#: providers/odbc/gda-odbc-provider.c:915
+#: providers/odbc/gda-odbc-provider.c:914
 #: providers/oracle/gda-oracle-provider.c:1102
 #: providers/postgres/gda-postgres-provider.c:1351
 #: providers/sqlite/gda-sqlite-provider.c:622
@@ -218,7 +218,7 @@ msgstr "Feldname"
 #: providers/default/gda-default-provider.c:455
 #: providers/mdb/gda-mdb-provider.c:491
 #: providers/mysql/gda-mysql-provider.c:1070
-#: providers/odbc/gda-odbc-provider.c:916
+#: providers/odbc/gda-odbc-provider.c:915
 #: providers/oracle/gda-oracle-provider.c:1103
 #: providers/postgres/gda-postgres-provider.c:1352
 #: providers/sqlite/gda-sqlite-provider.c:623
@@ -228,7 +228,7 @@ msgstr "Daten-Typ"
 #: providers/default/gda-default-provider.c:456
 #: providers/mdb/gda-mdb-provider.c:492
 #: providers/mysql/gda-mysql-provider.c:1071
-#: providers/odbc/gda-odbc-provider.c:917
+#: providers/odbc/gda-odbc-provider.c:916
 #: providers/oracle/gda-oracle-provider.c:1104
 #: providers/postgres/gda-postgres-provider.c:1353
 #: providers/sqlite/gda-sqlite-provider.c:624
@@ -238,7 +238,7 @@ msgstr "Größe"
 #: providers/default/gda-default-provider.c:457
 #: providers/mdb/gda-mdb-provider.c:493
 #: providers/mysql/gda-mysql-provider.c:1072
-#: providers/odbc/gda-odbc-provider.c:918
+#: providers/odbc/gda-odbc-provider.c:917
 #: providers/oracle/gda-oracle-provider.c:1105
 #: providers/postgres/gda-postgres-provider.c:1354
 #: providers/sqlite/gda-sqlite-provider.c:625
@@ -248,7 +248,7 @@ msgstr "Skalierung"
 #: providers/default/gda-default-provider.c:458
 #: providers/mdb/gda-mdb-provider.c:494
 #: providers/mysql/gda-mysql-provider.c:1073
-#: providers/odbc/gda-odbc-provider.c:919
+#: providers/odbc/gda-odbc-provider.c:918
 #: providers/oracle/gda-oracle-provider.c:1106
 #: providers/postgres/gda-postgres-provider.c:1355
 #: providers/sqlite/gda-sqlite-provider.c:626
@@ -258,7 +258,7 @@ msgstr "Nicht Null?"
 #: providers/default/gda-default-provider.c:459
 #: providers/mdb/gda-mdb-provider.c:495
 #: providers/mysql/gda-mysql-provider.c:1074
-#: providers/odbc/gda-odbc-provider.c:920
+#: providers/odbc/gda-odbc-provider.c:919
 #: providers/oracle/gda-oracle-provider.c:1107
 #: providers/postgres/gda-postgres-provider.c:1356
 #: providers/sqlite/gda-sqlite-provider.c:627
@@ -268,7 +268,7 @@ msgstr "Primärschlüssel?"
 #: providers/default/gda-default-provider.c:460
 #: providers/mdb/gda-mdb-provider.c:496
 #: providers/mysql/gda-mysql-provider.c:1075
-#: providers/odbc/gda-odbc-provider.c:921
+#: providers/odbc/gda-odbc-provider.c:920
 #: providers/oracle/gda-oracle-provider.c:1108
 #: providers/postgres/gda-postgres-provider.c:1357
 #: providers/sqlite/gda-sqlite-provider.c:628
@@ -278,7 +278,7 @@ msgstr "Eindeutiger Index?"
 #: providers/default/gda-default-provider.c:461
 #: providers/mdb/gda-mdb-provider.c:497
 #: providers/mysql/gda-mysql-provider.c:1076
-#: providers/odbc/gda-odbc-provider.c:922
+#: providers/odbc/gda-odbc-provider.c:921
 #: providers/oracle/gda-oracle-provider.c:1109
 #: providers/postgres/gda-postgres-provider.c:1358
 #: providers/sqlite/gda-sqlite-provider.c:629
@@ -465,11 +465,11 @@ msgstr "Ungültiger LDAP-Handle"
 #: providers/mysql/gda-mysql-provider.c:703
 #: providers/mysql/gda-mysql-provider.c:890
 #: providers/mysql/gda-mysql-provider.c:972
-#: providers/odbc/gda-odbc-provider.c:1033
-#: providers/odbc/gda-odbc-provider.c:1142
-#: providers/odbc/gda-odbc-provider.c:1256
-#: providers/odbc/gda-odbc-provider.c:1298
-#: providers/odbc/gda-odbc-provider.c:1350
+#: providers/odbc/gda-odbc-provider.c:1032
+#: providers/odbc/gda-odbc-provider.c:1141
+#: providers/odbc/gda-odbc-provider.c:1255
+#: providers/odbc/gda-odbc-provider.c:1297
+#: providers/odbc/gda-odbc-provider.c:1349
 #: providers/oracle/gda-oracle-provider.c:1544
 #: providers/postgres/gda-postgres-provider.c:835
 #: providers/postgres/gda-postgres-provider.c:1105
@@ -487,9 +487,9 @@ msgstr "Besitzer"
 #: providers/mysql/gda-mysql-provider.c:704
 #: providers/mysql/gda-mysql-provider.c:891
 #: providers/mysql/gda-mysql-provider.c:973
-#: providers/odbc/gda-odbc-provider.c:1034
-#: providers/odbc/gda-odbc-provider.c:1257
-#: providers/odbc/gda-odbc-provider.c:1351
+#: providers/odbc/gda-odbc-provider.c:1033
+#: providers/odbc/gda-odbc-provider.c:1256
+#: providers/odbc/gda-odbc-provider.c:1350
 #: providers/oracle/gda-oracle-provider.c:1544
 #: providers/postgres/gda-postgres-provider.c:836
 #: providers/postgres/gda-postgres-provider.c:1125
@@ -504,7 +504,7 @@ msgstr "Kommentare"
 #. gda_server_recordset_model_set_field_defined_size (recset, 0, 32);
 #: providers/ldap/gda-ldap-provider.c:423
 #: providers/mysql/gda-mysql-provider.c:971
-#: providers/odbc/gda-odbc-provider.c:1255
+#: providers/odbc/gda-odbc-provider.c:1254
 #: providers/oracle/gda-oracle-provider.c:1643
 #: providers/postgres/gda-postgres-provider.c:1123
 #: providers/sqlite/gda-sqlite-provider.c:751
@@ -568,7 +568,7 @@ msgstr "Der MDB-Treiber unterstützt Transaktionen nicht"
 
 #: providers/mdb/gda-mdb-provider.c:498
 #: providers/mysql/gda-mysql-provider.c:1077
-#: providers/odbc/gda-odbc-provider.c:923
+#: providers/odbc/gda-odbc-provider.c:922
 #: providers/postgres/gda-postgres-provider.c:1359
 #: providers/sqlite/gda-sqlite-provider.c:630
 msgid "Default value"
@@ -576,7 +576,7 @@ msgstr "Vorgabe-Wert"
 
 # CHECK
 #: providers/mdb/gda-mdb-provider.c:546
-#: providers/odbc/gda-odbc-provider.c:1031
+#: providers/odbc/gda-odbc-provider.c:1030
 #: providers/postgres/gda-postgres-provider.c:833
 msgid "Procedure"
 msgstr "Prozedur"
@@ -588,7 +588,7 @@ msgstr "Kennung"
 
 #: providers/mdb/gda-mdb-provider.c:550
 #: providers/mysql/gda-mysql-provider.c:705
-#: providers/odbc/gda-odbc-provider.c:1035
+#: providers/odbc/gda-odbc-provider.c:1034
 #: providers/postgres/gda-postgres-provider.c:837
 msgid "Return type"
 msgstr "Rückgabetyp"
@@ -601,16 +601,16 @@ msgstr "Anz. Arg."
 # CHECK
 #: providers/mdb/gda-mdb-provider.c:552
 #: providers/mysql/gda-mysql-provider.c:706
-#: providers/odbc/gda-odbc-provider.c:1037
+#: providers/odbc/gda-odbc-provider.c:1036
 #: providers/postgres/gda-postgres-provider.c:839
 msgid "Args types"
 msgstr "Arg.-Typen"
 
 #: providers/mdb/gda-mdb-provider.c:553
-#: providers/odbc/gda-odbc-provider.c:1038
-#: providers/odbc/gda-odbc-provider.c:1144
-#: providers/odbc/gda-odbc-provider.c:1300
-#: providers/odbc/gda-odbc-provider.c:1352
+#: providers/odbc/gda-odbc-provider.c:1037
+#: providers/odbc/gda-odbc-provider.c:1143
+#: providers/odbc/gda-odbc-provider.c:1299
+#: providers/odbc/gda-odbc-provider.c:1351
 #: providers/postgres/gda-postgres-provider.c:840
 #: providers/postgres/gda-postgres-provider.c:1107
 #: providers/postgres/gda-postgres-provider.c:1186
@@ -723,7 +723,7 @@ msgid "SQL"
 msgstr "SQL"
 
 #: providers/mysql/gda-mysql-provider.c:974
-#: providers/odbc/gda-odbc-provider.c:1258
+#: providers/odbc/gda-odbc-provider.c:1257
 #: providers/postgres/gda-postgres-provider.c:1126
 #: providers/sqlite/gda-sqlite-provider.c:754
 #: providers/sybase/gda-sybase-provider.c:909
@@ -740,45 +740,45 @@ msgstr ""
 msgid "Provider for MySQL databases"
 msgstr "Treiber für MySQL-Datenbanken"
 
-#: providers/odbc/gda-odbc-provider.c:184
+#: providers/odbc/gda-odbc-provider.c:183
 msgid "Unable to SQLAllocEnv()..."
 msgstr "»SQLAllocEnv()« fehlgeschlagen..."
 
-#: providers/odbc/gda-odbc-provider.c:434
-#: providers/odbc/gda-odbc-provider.c:454
-#: providers/odbc/gda-odbc-provider.c:484
-#: providers/odbc/gda-odbc-provider.c:514
-#: providers/odbc/gda-odbc-provider.c:545
-#: providers/odbc/gda-odbc-provider.c:575
+#: providers/odbc/gda-odbc-provider.c:433
+#: providers/odbc/gda-odbc-provider.c:453
+#: providers/odbc/gda-odbc-provider.c:483
+#: providers/odbc/gda-odbc-provider.c:513
+#: providers/odbc/gda-odbc-provider.c:544
+#: providers/odbc/gda-odbc-provider.c:574
 msgid "Invalid Odbc handle"
 msgstr "Ungültiger ODBC-Handle"
 
-#: providers/odbc/gda-odbc-provider.c:1032
+#: providers/odbc/gda-odbc-provider.c:1031
 #: providers/postgres/gda-postgres-provider.c:834
 #: providers/postgres/gda-postgres-provider.c:1300
 msgid "Id"
 msgstr "Kennung"
 
 # CHECK
-#: providers/odbc/gda-odbc-provider.c:1036
+#: providers/odbc/gda-odbc-provider.c:1035
 #: providers/postgres/gda-postgres-provider.c:838
 msgid "Nb args"
 msgstr "Zhl. Arg."
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/odbc/gda-odbc-provider.c:1141
+#: providers/odbc/gda-odbc-provider.c:1140
 #: providers/postgres/gda-postgres-provider.c:1104
 #: providers/postgres/gda-postgres-provider.c:1899
 msgid "Table"
 msgstr "Tabelle"
 
-#: providers/odbc/gda-odbc-provider.c:1297
+#: providers/odbc/gda-odbc-provider.c:1296
 #: providers/oracle/gda-oracle-provider.c:1750 testing/client.c:129
 msgid "Views"
 msgstr "Ansichten"
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/odbc/gda-odbc-provider.c:1349
+#: providers/odbc/gda-odbc-provider.c:1348
 #: providers/postgres/gda-postgres-provider.c:1844
 #: providers/postgres/gda-postgres-provider.c:1900
 msgid "Sequence"
@@ -1468,11 +1468,11 @@ msgstr "XML-Dokument ist nicht gültig"
 msgid "Could not get file from %s"
 msgstr "Datei von %s war nicht zu erreichen"
 
-#: report/libgda-report/gda-report-item.c:272
+#: report/libgda-report/gda-report-item.c:276
 msgid "Error setting parent -> child relation"
 msgstr "Fehler beim Einrichten der Eltern->Kind-Relation"
 
-#: report/libgda-report/gda-report-item.c:356
+#: report/libgda-report/gda-report-item.c:375
 #, c-format
 msgid "Error setting value %s to attribute %s of item %s"
 msgstr "Attribut %2$s des Objekts %3$s konnte nicht auf »%1$s« gesetzt werden"
@@ -1676,13 +1676,29 @@ msgstr "\tBeschreibung = %s\n"
 msgid "\tgda_params ="
 msgstr "\tGDA-_Parameter ="
 
-#: report/libgda-report/gda-report-item-pagefooter.c:169
-#: report/libgda-report/gda-report-item-pageheader.c:158
-#: report/libgda-report/gda-report-item-reportfooter.c:170
-#: report/libgda-report/gda-report-item-reportheader.c:169
+#: report/libgda-report/gda-report-item-pagefooter.c:171
+#: report/libgda-report/gda-report-item-pageheader.c:160
+#: report/libgda-report/gda-report-item-reportfooter.c:172
+#: report/libgda-report/gda-report-item-reportheader.c:171
 #, c-format
 msgid "An element with ID %s already exists in the report"
 msgstr "Es existiert bereits ein Element mit der Kennung %s im Bericht"
+
+#: report/libgda-report/gda-report-item-pagefooter.c:196
+#: report/libgda-report/gda-report-item-pageheader.c:185
+#: report/libgda-report/gda-report-item-reportfooter.c:197
+#: report/libgda-report/gda-report-item-reportheader.c:196
+#, c-format
+msgid "Item with ID %s is not a label"
+msgstr ""
+
+#: report/libgda-report/gda-report-item-pagefooter.c:224
+#: report/libgda-report/gda-report-item-pageheader.c:214
+#: report/libgda-report/gda-report-item-reportfooter.c:225
+#: report/libgda-report/gda-report-item-reportheader.c:224
+#, c-format
+msgid "Item with ID %s is not a repfield"
+msgstr ""
 
 #~ msgid "Error setting parent of new node"
 #~ msgstr "Fehler beim Einrichten des Elternobjekts des neuen Knotens"

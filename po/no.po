@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-db 0.0.91\n"
-"POT-Creation-Date: 2003-01-24 22:30+0100\n"
+"POT-Creation-Date: 2003-01-28 01:43+0100\n"
 "PO-Revision-Date: 2003-01-24 22:48+0100\n"
 "Last-Translator: Kjartan Maraas <kmaraas@online.no>\n"
 "Language-Team: Norwegian <no@li.org>\n"
@@ -13,26 +13,26 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8-bit\n"
 
-#: libgda/gda-client.c:307 libgda/gda-client.c:510 libgda/gda-connection.c:218
+#: libgda/gda-client.c:300 libgda/gda-client.c:502 libgda/gda-connection.c:218
 #, c-format
 msgid "Data source %s not found in configuration"
 msgstr "Datakilde «%s» ble ikke funnet i konfigurasjonen"
 
-#: libgda/gda-client.c:333
+#: libgda/gda-client.c:325
 #, c-format
 msgid "Could not find provider %s in the current setup"
 msgstr "Kunne ikke hente tilbyder %s i aktivt oppsett"
 
-#: libgda/gda-client.c:362
+#: libgda/gda-client.c:354
 #, c-format
 msgid "Provider %s does not implement entry function"
 msgstr "Tilbyder %s implementerer ikke inngangsfunksjonen"
 
-#: libgda/gda-client.c:372
+#: libgda/gda-client.c:364
 msgid "Could not create GdaServerProvider object from plugin"
 msgstr "Kunne ikke opprette GdaServerProvider-objekt fra tillegg"
 
-#: libgda/gda-client.c:437
+#: libgda/gda-client.c:429
 msgid "Temporary data source created by libgda. Don't remove it"
 msgstr ""
 
@@ -49,8 +49,8 @@ msgstr "Feil: %s"
 #: providers/mdb/gda-mdb-provider.c:594 providers/mdb/gda-mdb-provider.c:654
 #: providers/mysql/gda-mysql-provider.c:701
 #: providers/mysql/gda-mysql-provider.c:889
-#: providers/odbc/gda-odbc-provider.c:734
-#: providers/odbc/gda-odbc-provider.c:790
+#: providers/odbc/gda-odbc-provider.c:733
+#: providers/odbc/gda-odbc-provider.c:789
 #: providers/oracle/gda-oracle-provider.c:1045
 #: providers/oracle/gda-oracle-provider.c:1544
 msgid "Name"
@@ -64,8 +64,8 @@ msgstr "Tilbyder"
 msgid "Connection string"
 msgstr "Tilkoblingsstreng"
 
-#: libgda/gda-config.c:1325 providers/odbc/gda-odbc-provider.c:1143
-#: providers/odbc/gda-odbc-provider.c:1299
+#: libgda/gda-config.c:1325 providers/odbc/gda-odbc-provider.c:1142
+#: providers/odbc/gda-odbc-provider.c:1298
 #: providers/postgres/gda-postgres-provider.c:1106
 msgid "Description"
 msgstr "Beskrivelse"
@@ -201,7 +201,7 @@ msgstr "Ikke implementert"
 #: providers/default/gda-default-provider.c:454
 #: providers/mdb/gda-mdb-provider.c:490
 #: providers/mysql/gda-mysql-provider.c:1069
-#: providers/odbc/gda-odbc-provider.c:915
+#: providers/odbc/gda-odbc-provider.c:914
 #: providers/oracle/gda-oracle-provider.c:1102
 #: providers/postgres/gda-postgres-provider.c:1351
 #: providers/sqlite/gda-sqlite-provider.c:622
@@ -211,7 +211,7 @@ msgstr "Feltnavn"
 #: providers/default/gda-default-provider.c:455
 #: providers/mdb/gda-mdb-provider.c:491
 #: providers/mysql/gda-mysql-provider.c:1070
-#: providers/odbc/gda-odbc-provider.c:916
+#: providers/odbc/gda-odbc-provider.c:915
 #: providers/oracle/gda-oracle-provider.c:1103
 #: providers/postgres/gda-postgres-provider.c:1352
 #: providers/sqlite/gda-sqlite-provider.c:623
@@ -221,7 +221,7 @@ msgstr "Datatype"
 #: providers/default/gda-default-provider.c:456
 #: providers/mdb/gda-mdb-provider.c:492
 #: providers/mysql/gda-mysql-provider.c:1071
-#: providers/odbc/gda-odbc-provider.c:917
+#: providers/odbc/gda-odbc-provider.c:916
 #: providers/oracle/gda-oracle-provider.c:1104
 #: providers/postgres/gda-postgres-provider.c:1353
 #: providers/sqlite/gda-sqlite-provider.c:624
@@ -231,7 +231,7 @@ msgstr "Størrelse"
 #: providers/default/gda-default-provider.c:457
 #: providers/mdb/gda-mdb-provider.c:493
 #: providers/mysql/gda-mysql-provider.c:1072
-#: providers/odbc/gda-odbc-provider.c:918
+#: providers/odbc/gda-odbc-provider.c:917
 #: providers/oracle/gda-oracle-provider.c:1105
 #: providers/postgres/gda-postgres-provider.c:1354
 #: providers/sqlite/gda-sqlite-provider.c:625
@@ -241,7 +241,7 @@ msgstr "Skala"
 #: providers/default/gda-default-provider.c:458
 #: providers/mdb/gda-mdb-provider.c:494
 #: providers/mysql/gda-mysql-provider.c:1073
-#: providers/odbc/gda-odbc-provider.c:919
+#: providers/odbc/gda-odbc-provider.c:918
 #: providers/oracle/gda-oracle-provider.c:1106
 #: providers/postgres/gda-postgres-provider.c:1355
 #: providers/sqlite/gda-sqlite-provider.c:626
@@ -251,7 +251,7 @@ msgstr "Ikke null"
 #: providers/default/gda-default-provider.c:459
 #: providers/mdb/gda-mdb-provider.c:495
 #: providers/mysql/gda-mysql-provider.c:1074
-#: providers/odbc/gda-odbc-provider.c:920
+#: providers/odbc/gda-odbc-provider.c:919
 #: providers/oracle/gda-oracle-provider.c:1107
 #: providers/postgres/gda-postgres-provider.c:1356
 #: providers/sqlite/gda-sqlite-provider.c:627
@@ -261,7 +261,7 @@ msgstr "Primærnøkkel"
 #: providers/default/gda-default-provider.c:460
 #: providers/mdb/gda-mdb-provider.c:496
 #: providers/mysql/gda-mysql-provider.c:1075
-#: providers/odbc/gda-odbc-provider.c:921
+#: providers/odbc/gda-odbc-provider.c:920
 #: providers/oracle/gda-oracle-provider.c:1108
 #: providers/postgres/gda-postgres-provider.c:1357
 #: providers/sqlite/gda-sqlite-provider.c:628
@@ -271,7 +271,7 @@ msgstr "Unik indeks"
 #: providers/default/gda-default-provider.c:461
 #: providers/mdb/gda-mdb-provider.c:497
 #: providers/mysql/gda-mysql-provider.c:1076
-#: providers/odbc/gda-odbc-provider.c:922
+#: providers/odbc/gda-odbc-provider.c:921
 #: providers/oracle/gda-oracle-provider.c:1109
 #: providers/postgres/gda-postgres-provider.c:1358
 #: providers/sqlite/gda-sqlite-provider.c:629
@@ -292,6 +292,11 @@ msgstr "Tabell %s ikke funnet"
 #: providers/default/gda-default-provider.c:509
 msgid "Could not get description for column"
 msgstr "Kunne ikke hente beskrivelse for kolonne"
+
+#: providers/default/libmain.c:33
+#, fuzzy
+msgid "Default"
+msgstr "Forvalgt verdi"
 
 #: providers/default/libmain.c:39
 msgid "Default provider, based on XML"
@@ -417,7 +422,7 @@ msgstr "Kunne ikke sette autolagre til av.\n"
 msgid "Could not allocate environment handle.\n"
 msgstr "Kunne ikke allokere miljøhåndtak.\n"
 
-#. GetInfo is needed for obtaining database name 
+#. GetInfo is needed for obtaining database name
 #. is needed for tables schema
 #: providers/ibmdb2/gda-ibmdb2-provider.c:190
 msgid "SQLGetInfo is unsupported. Hence IBM DB2 Provider will not work.\n"
@@ -446,11 +451,11 @@ msgstr "Ugyldig LDAP-håndtak"
 #: providers/mysql/gda-mysql-provider.c:703
 #: providers/mysql/gda-mysql-provider.c:890
 #: providers/mysql/gda-mysql-provider.c:972
-#: providers/odbc/gda-odbc-provider.c:1033
-#: providers/odbc/gda-odbc-provider.c:1142
-#: providers/odbc/gda-odbc-provider.c:1256
-#: providers/odbc/gda-odbc-provider.c:1298
-#: providers/odbc/gda-odbc-provider.c:1350
+#: providers/odbc/gda-odbc-provider.c:1032
+#: providers/odbc/gda-odbc-provider.c:1141
+#: providers/odbc/gda-odbc-provider.c:1255
+#: providers/odbc/gda-odbc-provider.c:1297
+#: providers/odbc/gda-odbc-provider.c:1349
 #: providers/oracle/gda-oracle-provider.c:1544
 #: providers/postgres/gda-postgres-provider.c:835
 #: providers/postgres/gda-postgres-provider.c:1105
@@ -468,9 +473,9 @@ msgstr "Eier"
 #: providers/mysql/gda-mysql-provider.c:704
 #: providers/mysql/gda-mysql-provider.c:891
 #: providers/mysql/gda-mysql-provider.c:973
-#: providers/odbc/gda-odbc-provider.c:1034
-#: providers/odbc/gda-odbc-provider.c:1257
-#: providers/odbc/gda-odbc-provider.c:1351
+#: providers/odbc/gda-odbc-provider.c:1033
+#: providers/odbc/gda-odbc-provider.c:1256
+#: providers/odbc/gda-odbc-provider.c:1350
 #: providers/oracle/gda-oracle-provider.c:1544
 #: providers/postgres/gda-postgres-provider.c:836
 #: providers/postgres/gda-postgres-provider.c:1125
@@ -485,7 +490,7 @@ msgstr "Kommentarer"
 #. gda_server_recordset_model_set_field_defined_size (recset, 0, 32);
 #: providers/ldap/gda-ldap-provider.c:423
 #: providers/mysql/gda-mysql-provider.c:971
-#: providers/odbc/gda-odbc-provider.c:1255
+#: providers/odbc/gda-odbc-provider.c:1254
 #: providers/oracle/gda-oracle-provider.c:1643
 #: providers/postgres/gda-postgres-provider.c:1123
 #: providers/sqlite/gda-sqlite-provider.c:751
@@ -547,14 +552,14 @@ msgstr ""
 
 #: providers/mdb/gda-mdb-provider.c:498
 #: providers/mysql/gda-mysql-provider.c:1077
-#: providers/odbc/gda-odbc-provider.c:923
+#: providers/odbc/gda-odbc-provider.c:922
 #: providers/postgres/gda-postgres-provider.c:1359
 #: providers/sqlite/gda-sqlite-provider.c:630
 msgid "Default value"
 msgstr "Forvalgt verdi"
 
 #: providers/mdb/gda-mdb-provider.c:546
-#: providers/odbc/gda-odbc-provider.c:1031
+#: providers/odbc/gda-odbc-provider.c:1030
 #: providers/postgres/gda-postgres-provider.c:833
 msgid "Procedure"
 msgstr "Prosedyre"
@@ -566,7 +571,7 @@ msgstr "ID"
 
 #: providers/mdb/gda-mdb-provider.c:550
 #: providers/mysql/gda-mysql-provider.c:705
-#: providers/odbc/gda-odbc-provider.c:1035
+#: providers/odbc/gda-odbc-provider.c:1034
 #: providers/postgres/gda-postgres-provider.c:837
 msgid "Return type"
 msgstr "Returtype"
@@ -577,16 +582,16 @@ msgstr "# argumenter"
 
 #: providers/mdb/gda-mdb-provider.c:552
 #: providers/mysql/gda-mysql-provider.c:706
-#: providers/odbc/gda-odbc-provider.c:1037
+#: providers/odbc/gda-odbc-provider.c:1036
 #: providers/postgres/gda-postgres-provider.c:839
 msgid "Args types"
 msgstr "Args-type"
 
 #: providers/mdb/gda-mdb-provider.c:553
-#: providers/odbc/gda-odbc-provider.c:1038
-#: providers/odbc/gda-odbc-provider.c:1144
-#: providers/odbc/gda-odbc-provider.c:1300
-#: providers/odbc/gda-odbc-provider.c:1352
+#: providers/odbc/gda-odbc-provider.c:1037
+#: providers/odbc/gda-odbc-provider.c:1143
+#: providers/odbc/gda-odbc-provider.c:1299
+#: providers/odbc/gda-odbc-provider.c:1351
 #: providers/postgres/gda-postgres-provider.c:840
 #: providers/postgres/gda-postgres-provider.c:1107
 #: providers/postgres/gda-postgres-provider.c:1186
@@ -697,7 +702,7 @@ msgid "SQL"
 msgstr ""
 
 #: providers/mysql/gda-mysql-provider.c:974
-#: providers/odbc/gda-odbc-provider.c:1258
+#: providers/odbc/gda-odbc-provider.c:1257
 #: providers/postgres/gda-postgres-provider.c:1126
 #: providers/sqlite/gda-sqlite-provider.c:754
 #: providers/sybase/gda-sybase-provider.c:909
@@ -713,44 +718,44 @@ msgstr ""
 msgid "Provider for MySQL databases"
 msgstr "Tilbyder for MySQL-databaser"
 
-#: providers/odbc/gda-odbc-provider.c:184
+#: providers/odbc/gda-odbc-provider.c:183
 msgid "Unable to SQLAllocEnv()..."
 msgstr ""
 
-#: providers/odbc/gda-odbc-provider.c:434
-#: providers/odbc/gda-odbc-provider.c:454
-#: providers/odbc/gda-odbc-provider.c:484
-#: providers/odbc/gda-odbc-provider.c:514
-#: providers/odbc/gda-odbc-provider.c:545
-#: providers/odbc/gda-odbc-provider.c:575
+#: providers/odbc/gda-odbc-provider.c:433
+#: providers/odbc/gda-odbc-provider.c:453
+#: providers/odbc/gda-odbc-provider.c:483
+#: providers/odbc/gda-odbc-provider.c:513
+#: providers/odbc/gda-odbc-provider.c:544
+#: providers/odbc/gda-odbc-provider.c:574
 msgid "Invalid Odbc handle"
 msgstr "Ugyldig ODBC-håndtak"
 
-#: providers/odbc/gda-odbc-provider.c:1032
+#: providers/odbc/gda-odbc-provider.c:1031
 #: providers/postgres/gda-postgres-provider.c:834
 #: providers/postgres/gda-postgres-provider.c:1300
 msgid "Id"
 msgstr "ID"
 
-#: providers/odbc/gda-odbc-provider.c:1036
+#: providers/odbc/gda-odbc-provider.c:1035
 #: providers/postgres/gda-postgres-provider.c:838
 msgid "Nb args"
 msgstr ""
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/odbc/gda-odbc-provider.c:1141
+#: providers/odbc/gda-odbc-provider.c:1140
 #: providers/postgres/gda-postgres-provider.c:1104
 #: providers/postgres/gda-postgres-provider.c:1899
 msgid "Table"
 msgstr "Tabell"
 
-#: providers/odbc/gda-odbc-provider.c:1297
+#: providers/odbc/gda-odbc-provider.c:1296
 #: providers/oracle/gda-oracle-provider.c:1750 testing/client.c:129
 msgid "Views"
 msgstr "Visninger"
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/odbc/gda-odbc-provider.c:1349
+#: providers/odbc/gda-odbc-provider.c:1348
 #: providers/postgres/gda-postgres-provider.c:1844
 #: providers/postgres/gda-postgres-provider.c:1900
 msgid "Sequence"
@@ -1268,7 +1273,7 @@ msgid "Could not run %s on column %d"
 msgstr "Kunne ikke kjøre %s på kolonne %d"
 
 #: providers/sybase/gda-sybase-recordset.c:386
-#, c-format, fuzzy
+#, fuzzy, c-format
 msgid "Could not allocate data placeholder for column %d"
 msgstr "Kunne ikke allokere feilhåndterer for Oracle"
 
@@ -1408,11 +1413,11 @@ msgstr "XML-dokumentet er ikke gyldig"
 msgid "Could not get file from %s"
 msgstr "Kunne ikke hente fil fra %s"
 
-#: report/libgda-report/gda-report-item.c:272
+#: report/libgda-report/gda-report-item.c:276
 msgid "Error setting parent -> child relation"
 msgstr ""
 
-#: report/libgda-report/gda-report-item.c:356
+#: report/libgda-report/gda-report-item.c:375
 #, c-format
 msgid "Error setting value %s to attribute %s of item %s"
 msgstr ""
@@ -1607,12 +1612,28 @@ msgstr "\tbeskrivelse = %s\n"
 msgid "\tgda_params ="
 msgstr "\tgda_parametere ="
 
-#: report/libgda-report/gda-report-item-pagefooter.c:169
-#: report/libgda-report/gda-report-item-pageheader.c:158
-#: report/libgda-report/gda-report-item-reportfooter.c:170
-#: report/libgda-report/gda-report-item-reportheader.c:169
+#: report/libgda-report/gda-report-item-pagefooter.c:171
+#: report/libgda-report/gda-report-item-pageheader.c:160
+#: report/libgda-report/gda-report-item-reportfooter.c:172
+#: report/libgda-report/gda-report-item-reportheader.c:171
 #, c-format
 msgid "An element with ID %s already exists in the report"
+msgstr ""
+
+#: report/libgda-report/gda-report-item-pagefooter.c:196
+#: report/libgda-report/gda-report-item-pageheader.c:185
+#: report/libgda-report/gda-report-item-reportfooter.c:197
+#: report/libgda-report/gda-report-item-reportheader.c:196
+#, c-format
+msgid "Item with ID %s is not a label"
+msgstr ""
+
+#: report/libgda-report/gda-report-item-pagefooter.c:224
+#: report/libgda-report/gda-report-item-pageheader.c:214
+#: report/libgda-report/gda-report-item-reportfooter.c:225
+#: report/libgda-report/gda-report-item-reportheader.c:224
+#, c-format
+msgid "Item with ID %s is not a repfield"
 msgstr ""
 
 #~ msgid "MESSAGE: %s"

@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda VERSION\n"
-"POT-Creation-Date: 2002-10-23 22:48+0200\n"
+"POT-Creation-Date: 2003-01-28 01:43+0100\n"
 "PO-Revision-Date: 2001-12-14 16:37GMT+0200\n"
 "Last-Translator: Vasif İsmayıloğlu MD <azerb_linux@hotmail.com>\n"
 "Language-Team: Azerbaijani Turkic <linuxaz@azerimail.net>\n"
@@ -14,84 +14,83 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: KBabel 0.9.5\n"
 
-#: libgda/gda-client.c:253 libgda/gda-client.c:444 libgda/gda-connection.c:214
+#: libgda/gda-client.c:300 libgda/gda-client.c:502 libgda/gda-connection.c:218
 #, c-format
 msgid "Data source %s not found in configuration"
 msgstr "%s verilən mənbəyi qurğuda tapıla bilmədi"
 
-#: libgda/gda-client.c:272
+#: libgda/gda-client.c:325
 #, c-format
 msgid "Could not find provider %s in the current setup"
 msgstr ""
 
-#: libgda/gda-client.c:299
+#: libgda/gda-client.c:354
 #, c-format
 msgid "Provider %s does not implement entry function"
 msgstr ""
 
-#: libgda/gda-client.c:309
+#: libgda/gda-client.c:364
 #, fuzzy
 msgid "Could not create GdaServerProvider object from plugin"
 msgstr "Bağlantı komponenti yaradıla bimədi"
 
-#: libgda/gda-client.c:372
+#: libgda/gda-client.c:429
 msgid "Temporary data source created by libgda. Don't remove it"
 msgstr ""
 
+#: libgda/gda-config.c:1072
+#, c-format
+msgid "Error: %s"
+msgstr ""
+
 #. gda_server_recordset_model_set_field_defined_size (recset, 0, 256);
-#: libgda/gda-config.c:1269 providers/default/gda-default-provider.c:556
-#: providers/default/gda-default-provider.c:576
-#: providers/default/gda-default-provider.c:613
-#: providers/mysql/gda-mysql-provider.c:662
-#: providers/oracle/gda-oracle-provider.c:1031
+#: libgda/gda-config.c:1322 providers/default/gda-default-provider.c:555
+#: providers/default/gda-default-provider.c:575
+#: providers/default/gda-default-provider.c:612
+#: providers/ldap/gda-ldap-provider.c:327 providers/mdb/gda-mdb-provider.c:457
+#: providers/mdb/gda-mdb-provider.c:594 providers/mdb/gda-mdb-provider.c:654
+#: providers/mysql/gda-mysql-provider.c:701
+#: providers/mysql/gda-mysql-provider.c:889
+#: providers/odbc/gda-odbc-provider.c:733
+#: providers/odbc/gda-odbc-provider.c:789
+#: providers/oracle/gda-oracle-provider.c:1045
+#: providers/oracle/gda-oracle-provider.c:1544
 msgid "Name"
 msgstr ""
 
-#: libgda/gda-config.c:1270
+#: libgda/gda-config.c:1323
 msgid "Provider"
 msgstr ""
 
-#: libgda/gda-config.c:1271
+#: libgda/gda-config.c:1324
 msgid "Connection string"
 msgstr ""
 
-#: libgda/gda-config.c:1272 providers/postgres/gda-postgres-provider.c:903
+#: libgda/gda-config.c:1325 providers/odbc/gda-odbc-provider.c:1142
+#: providers/odbc/gda-odbc-provider.c:1298
+#: providers/postgres/gda-postgres-provider.c:1106
 msgid "Description"
 msgstr ""
 
-#: libgda/gda-config.c:1273
+#: libgda/gda-config.c:1326
 msgid "Username"
 msgstr ""
 
-#: libgda/gda-config.c:1274
+#: libgda/gda-config.c:1327
 msgid "Password"
 msgstr ""
 
-#: libgda/gda-data-model.c:608
+#: libgda/gda-data-model.c:686
 #, c-format
 msgid "Data model %p is not editable"
 msgstr ""
 
-#: libgda/gda-init.c:49
+#: libgda/gda-init.c:48
 msgid "Attempt to initialize an already initialized client"
 msgstr "Onsuz da hazırlanmış alıcını hazırlamağa cəhd et"
 
-#: libgda/gda-init.c:60
+#: libgda/gda-init.c:59
 msgid "libgda needs GModule. Finishing..."
-msgstr ""
-
-#: libgda/gda-init.c:64
-msgid "libgda successfully initialized"
-msgstr ""
-
-#: libgda/gda-log.c:82
-#, c-format
-msgid "MESSAGE: %s"
-msgstr ""
-
-#: libgda/gda-log.c:101
-#, c-format
-msgid "ERROR: %s"
 msgstr ""
 
 #: libgda/gda-select.c:315
@@ -104,7 +103,7 @@ msgstr "%s cismi fəallaşdırıla bilmədi"
 msgid "SQL command is not a SELECT (is '%s'"
 msgstr ""
 
-#: libgda/gda-table.c:234
+#: libgda/gda-table.c:286
 #, c-format
 msgid "There is already a field called %s"
 msgstr ""
@@ -124,844 +123,1026 @@ msgstr ""
 msgid "Could not create file %s"
 msgstr "%s cismi fəallaşdırıla bilmədi"
 
-#: libgda/gda-value.c:1488
+#: libgda/gda-value.c:1650
 msgid "TRUE"
 msgstr "DOĞRU"
 
-#: libgda/gda-value.c:1490
+#: libgda/gda-value.c:1652
 msgid "FALSE"
 msgstr "YANLIŞ"
 
-#: libgda/gda-xml-database.c:236
+#: libgda/gda-value.c:1712
+#, c-format
+msgid "(GObject of type '%s'"
+msgstr ""
+
+#: libgda/gda-value.c:1715
+msgid "NULL GObject"
+msgstr ""
+
+#: libgda/gda-xml-database.c:235
 #, fuzzy, c-format
 msgid "Could not load file at %s"
 msgstr "%s cismi fəallaşdırıla bilmədi"
 
-#: libgda/gda-xml-database.c:245
+#: libgda/gda-xml-database.c:244
 #, fuzzy, c-format
 msgid "Could not parse file at %s"
 msgstr "%s cismi fəallaşdırıla bilmədi"
 
-#: libgda/gda-xml-database.c:255
+#: libgda/gda-xml-database.c:254
 #, c-format
 msgid "Invalid XML database file '%s'"
 msgstr ""
 
-#: libgda/gda-xml-database.c:407
+#: libgda/gda-xml-database.c:434
 #, fuzzy, c-format
 msgid "Could not create a XML node from table %s"
 msgstr "%s cismi fəallaşdırıla bilmədi"
 
-#: libgda/gda-xml-database.c:425
+#: libgda/gda-xml-database.c:452
 #, fuzzy
 msgid "Could not dump XML file to memory"
 msgstr "%s cismi fəallaşdırıla bilmədi"
 
-#: libgda/gda-xml-database.c:518 libgda/gda-xml-database.c:554
-#: libgda/gda-xml-database.c:597
+#: libgda/gda-xml-database.c:545 libgda/gda-xml-database.c:581
+#: libgda/gda-xml-database.c:624
 #, fuzzy, c-format
 msgid "Table %s already exists"
 msgstr "%s cədvəli onsuz da mövcuddur"
 
-#: libgda/gda-xml-database.c:590
+#: libgda/gda-xml-database.c:617
 msgid "Invalid node"
 msgstr ""
 
-#: libgda/gda-xml-database.c:632
+#: libgda/gda-xml-database.c:659
 #, c-format
 msgid "Duplicated <data> node for table %s"
 msgstr ""
 
-#: libgda/gda-xml-database.c:639
+#: libgda/gda-xml-database.c:666
 msgid "Invalid XML node"
 msgstr ""
 
-#: providers/default/gda-default-provider.c:191
-#: providers/sqlite/gda-sqlite-provider.c:200
+#: providers/default/gda-default-provider.c:190
+#: providers/sqlite/gda-sqlite-provider.c:198
 msgid ""
 "A full path must be specified on the connection string to open a database."
 msgstr ""
 "Verilənlər bazasının açılmağı üçün bağlantı qatarı tam cığır adı "
 "müəyyənləşdirilməlidir."
 
-#: providers/default/gda-default-provider.c:253
-#: providers/default/gda-default-provider.c:268
-#: providers/default/gda-default-provider.c:295
+#: providers/default/gda-default-provider.c:252
+#: providers/default/gda-default-provider.c:267
+#: providers/default/gda-default-provider.c:294
 msgid "Invalid internal handle"
 msgstr ""
 
-#: providers/default/gda-default-provider.c:334
+#: providers/default/gda-default-provider.c:333
 msgid "Not Implemented"
 msgstr ""
 
-#: providers/default/gda-default-provider.c:455
-#: providers/mysql/gda-mysql-provider.c:1022
-#: providers/oracle/gda-oracle-provider.c:1088
-#: providers/postgres/gda-postgres-provider.c:1065
-#: providers/sqlite/gda-sqlite-provider.c:617
+#: providers/default/gda-default-provider.c:454
+#: providers/mdb/gda-mdb-provider.c:490
+#: providers/mysql/gda-mysql-provider.c:1069
+#: providers/odbc/gda-odbc-provider.c:914
+#: providers/oracle/gda-oracle-provider.c:1102
+#: providers/postgres/gda-postgres-provider.c:1351
+#: providers/sqlite/gda-sqlite-provider.c:622
 msgid "Field name"
 msgstr ""
 
-#: providers/default/gda-default-provider.c:456
-#: providers/mysql/gda-mysql-provider.c:1023
-#: providers/oracle/gda-oracle-provider.c:1089
-#: providers/postgres/gda-postgres-provider.c:1066
-#: providers/sqlite/gda-sqlite-provider.c:618
+#: providers/default/gda-default-provider.c:455
+#: providers/mdb/gda-mdb-provider.c:491
+#: providers/mysql/gda-mysql-provider.c:1070
+#: providers/odbc/gda-odbc-provider.c:915
+#: providers/oracle/gda-oracle-provider.c:1103
+#: providers/postgres/gda-postgres-provider.c:1352
+#: providers/sqlite/gda-sqlite-provider.c:623
 msgid "Data type"
 msgstr ""
 
-#: providers/default/gda-default-provider.c:457
-#: providers/freetds/gda-freetds-provider.c:791
-#: providers/mysql/gda-mysql-provider.c:1024
-#: providers/oracle/gda-oracle-provider.c:1090
-#: providers/postgres/gda-postgres-provider.c:1067
-#: providers/sqlite/gda-sqlite-provider.c:619
+#: providers/default/gda-default-provider.c:456
+#: providers/mdb/gda-mdb-provider.c:492
+#: providers/mysql/gda-mysql-provider.c:1071
+#: providers/odbc/gda-odbc-provider.c:916
+#: providers/oracle/gda-oracle-provider.c:1104
+#: providers/postgres/gda-postgres-provider.c:1353
+#: providers/sqlite/gda-sqlite-provider.c:624
 msgid "Size"
 msgstr ""
 
-#: providers/default/gda-default-provider.c:458
-#: providers/freetds/gda-freetds-provider.c:795
-#: providers/mysql/gda-mysql-provider.c:1025
-#: providers/oracle/gda-oracle-provider.c:1091
-#: providers/postgres/gda-postgres-provider.c:1068
-#: providers/sqlite/gda-sqlite-provider.c:620
+#: providers/default/gda-default-provider.c:457
+#: providers/mdb/gda-mdb-provider.c:493
+#: providers/mysql/gda-mysql-provider.c:1072
+#: providers/odbc/gda-odbc-provider.c:917
+#: providers/oracle/gda-oracle-provider.c:1105
+#: providers/postgres/gda-postgres-provider.c:1354
+#: providers/sqlite/gda-sqlite-provider.c:625
 msgid "Scale"
 msgstr ""
 
-#: providers/default/gda-default-provider.c:459
-#: providers/mysql/gda-mysql-provider.c:1026
-#: providers/oracle/gda-oracle-provider.c:1092
-#: providers/postgres/gda-postgres-provider.c:1069
-#: providers/sqlite/gda-sqlite-provider.c:621
+#: providers/default/gda-default-provider.c:458
+#: providers/mdb/gda-mdb-provider.c:494
+#: providers/mysql/gda-mysql-provider.c:1073
+#: providers/odbc/gda-odbc-provider.c:918
+#: providers/oracle/gda-oracle-provider.c:1106
+#: providers/postgres/gda-postgres-provider.c:1355
+#: providers/sqlite/gda-sqlite-provider.c:626
 msgid "Not null?"
 msgstr ""
 
-#: providers/default/gda-default-provider.c:460
-#: providers/mysql/gda-mysql-provider.c:1027
-#: providers/oracle/gda-oracle-provider.c:1093
-#: providers/postgres/gda-postgres-provider.c:1070
-#: providers/sqlite/gda-sqlite-provider.c:622
+#: providers/default/gda-default-provider.c:459
+#: providers/mdb/gda-mdb-provider.c:495
+#: providers/mysql/gda-mysql-provider.c:1074
+#: providers/odbc/gda-odbc-provider.c:919
+#: providers/oracle/gda-oracle-provider.c:1107
+#: providers/postgres/gda-postgres-provider.c:1356
+#: providers/sqlite/gda-sqlite-provider.c:627
 msgid "Primary key?"
 msgstr ""
 
-#: providers/default/gda-default-provider.c:461
-#: providers/mysql/gda-mysql-provider.c:1028
-#: providers/oracle/gda-oracle-provider.c:1094
-#: providers/postgres/gda-postgres-provider.c:1071
-#: providers/sqlite/gda-sqlite-provider.c:623
+#: providers/default/gda-default-provider.c:460
+#: providers/mdb/gda-mdb-provider.c:496
+#: providers/mysql/gda-mysql-provider.c:1075
+#: providers/odbc/gda-odbc-provider.c:920
+#: providers/oracle/gda-oracle-provider.c:1108
+#: providers/postgres/gda-postgres-provider.c:1357
+#: providers/sqlite/gda-sqlite-provider.c:628
 msgid "Unique index?"
 msgstr ""
 
-#: providers/default/gda-default-provider.c:462
-#: providers/mysql/gda-mysql-provider.c:1029
-#: providers/oracle/gda-oracle-provider.c:1095
-#: providers/postgres/gda-postgres-provider.c:1072
-#: providers/sqlite/gda-sqlite-provider.c:624
+#: providers/default/gda-default-provider.c:461
+#: providers/mdb/gda-mdb-provider.c:497
+#: providers/mysql/gda-mysql-provider.c:1076
+#: providers/odbc/gda-odbc-provider.c:921
+#: providers/oracle/gda-oracle-provider.c:1109
+#: providers/postgres/gda-postgres-provider.c:1358
+#: providers/sqlite/gda-sqlite-provider.c:629
 msgid "References"
 msgstr ""
 
-#: providers/default/gda-default-provider.c:472
-#: providers/default/gda-default-provider.c:478
+#: providers/default/gda-default-provider.c:471
+#: providers/default/gda-default-provider.c:477
 msgid "Invalid argument"
 msgstr ""
 
-#: providers/default/gda-default-provider.c:485
+#: providers/default/gda-default-provider.c:484
+#: providers/mdb/gda-mdb-table.c:48
 #, c-format
 msgid "Table %s not found"
 msgstr ""
 
-#: providers/default/gda-default-provider.c:510
+#: providers/default/gda-default-provider.c:509
 #, fuzzy
 msgid "Could not get description for column"
 msgstr "Bağlantı komponenti yaradıla bimədi"
 
-#: providers/default/libmain.c:39
-msgid "GDA default provider, based on the libgda XML format"
+#: providers/default/libmain.c:33
+msgid "Default"
 msgstr ""
 
-#: providers/freetds/gda-freetds-provider.c:188
+#: providers/default/libmain.c:39
+msgid "Default provider, based on XML"
+msgstr ""
+
+#: providers/firebird/gda-firebird-provider.c:187
+msgid "No database specified"
+msgstr ""
+
+#: providers/firebird/gda-firebird-provider.c:234
+#: providers/firebird/gda-firebird-provider.c:261
+#: providers/firebird/gda-firebird-provider.c:279
+#: providers/firebird/gda-firebird-provider.c:313
+#: providers/firebird/gda-firebird-provider.c:368
+#: providers/firebird/gda-firebird-provider.c:413
+#: providers/firebird/gda-firebird-provider.c:447
+#: providers/firebird/gda-firebird-provider.c:485
+#: providers/firebird/gda-firebird-provider.c:539
+msgid "Invalid Firebird handle"
+msgstr ""
+
+#: providers/firebird/gda-firebird-provider.c:453
+#: providers/firebird/gda-firebird-provider.c:491
+msgid "Invalid transaction handle"
+msgstr ""
+
+#: providers/firebird/libmain.c:39
+#, fuzzy
+msgid "Provider for FireBird databases"
+msgstr "GDA Əsas Verilənlər Mənbəyi Yetişilməsi"
+
+#: providers/freetds/gda-freetds-provider.c:195
 msgid ""
 "Connection aborted. You must provide at least a host, username and password "
 "using DSN 'QUERY=;USER=;PASSWORD='."
 msgstr ""
 
-#: providers/freetds/gda-freetds-provider.c:201
+#: providers/freetds/gda-freetds-provider.c:208
 msgid "Error creating message container."
 msgstr ""
 
-#: providers/freetds/gda-freetds-provider.c:208
+#: providers/freetds/gda-freetds-provider.c:215
 msgid "Error creating error container."
 msgstr ""
 
-#: providers/freetds/gda-freetds-provider.c:246
-#: providers/freetds/gda-freetds-provider.c:248
+#: providers/freetds/gda-freetds-provider.c:253
+#: providers/freetds/gda-freetds-provider.c:255
 msgid "Allocating tds context failed."
 msgstr ""
 
-#: providers/freetds/gda-freetds-provider.c:264
-#: providers/freetds/gda-freetds-provider.c:266
+#: providers/freetds/gda-freetds-provider.c:271
+#: providers/freetds/gda-freetds-provider.c:273
 msgid "Establishing connection failed."
 msgstr ""
 
-#: providers/freetds/gda-freetds-provider.c:278
-#: providers/freetds/gda-freetds-provider.c:279
+#: providers/freetds/gda-freetds-provider.c:285
+#: providers/freetds/gda-freetds-provider.c:286
 msgid "Failed getting connection info."
 msgstr ""
 
-#: providers/freetds/gda-freetds-provider.c:622
-#: providers/oracle/gda-oracle-provider.c:1687
-msgid "Procedures"
-msgstr ""
-
-#: providers/freetds/gda-freetds-provider.c:631
-#: providers/oracle/gda-oracle-provider.c:1695
-msgid "Tables"
-msgstr ""
-
-#: providers/freetds/gda-freetds-provider.c:639
-msgid "Types"
-msgstr ""
-
-#. Set it here instead of the SQL query to allow i18n
-#: providers/freetds/gda-freetds-provider.c:647
-#: providers/oracle/gda-oracle-provider.c:1491
-#: providers/postgres/gda-postgres-provider.c:1448 testing/client.c:128
-msgid "Users"
-msgstr ""
-
-#: providers/freetds/gda-freetds-provider.c:655
-#: providers/oracle/gda-oracle-provider.c:1703 testing/client.c:125
-msgid "Views"
-msgstr ""
-
-#: providers/freetds/gda-freetds-provider.c:688
-#: providers/freetds/gda-freetds-provider.c:689
+#: providers/freetds/gda-freetds-provider.c:766
+#: providers/freetds/gda-freetds-provider.c:767
 msgid "Query did not succeed in execute_cmd()."
 msgstr ""
 
-#: providers/freetds/gda-freetds-provider.c:698
-#: providers/freetds/gda-freetds-provider.c:700
+#: providers/freetds/gda-freetds-provider.c:776
+#: providers/freetds/gda-freetds-provider.c:778
 msgid "Unexpected result tokens in execute_cmd()."
 msgstr ""
 
-#: providers/freetds/gda-freetds-provider.c:708
-#: providers/freetds/gda-freetds-provider.c:709
+#: providers/freetds/gda-freetds-provider.c:786
+#: providers/freetds/gda-freetds-provider.c:787
 msgid "Unexpected return in execute_cmd()."
 msgstr ""
 
-#: providers/freetds/gda-freetds-provider.c:787
-msgid "Field Name"
-msgstr ""
-
-#: providers/freetds/gda-freetds-provider.c:789
-msgid "Data Type"
-msgstr ""
-
-#: providers/freetds/gda-freetds-provider.c:793
-msgid "Precision"
-msgstr ""
-
-#: providers/freetds/gda-freetds-provider.c:797
-msgid "Identity"
-msgstr ""
-
-#: providers/freetds/gda-freetds-provider.c:799
-msgid "Nullable"
-msgstr ""
-
-#: providers/freetds/gda-freetds-provider.c:801
-msgid "Domain"
-msgstr ""
-
-#: providers/freetds/gda-freetds-provider.c:803
-msgid "Printfmt"
-msgstr ""
-
-#: providers/freetds/gda-freetds-provider.c:929
+#: providers/freetds/gda-freetds-provider.c:1021
 #, c-format
 msgid ""
 "Msg %d, Level %d, State %d, Server %s, Line %d\n"
 "%s\n"
 msgstr ""
 
-#: providers/freetds/gda-freetds-provider.c:948 providers/freetds/utils.c:45
-#: providers/oracle/utils.c:72 providers/postgres/utils.c:52
+#: providers/freetds/gda-freetds-provider.c:1040 providers/freetds/utils.c:44
+#: providers/oracle/utils.c:71 providers/postgres/utils.c:51
+#: providers/sybase/utils.c:171
 #, fuzzy
 msgid "Not available"
 msgstr "%p hökmlü cədvəl deyildir"
 
-#: providers/freetds/gda-freetds-recordset.c:357
+#: providers/freetds/gda-freetds-recordset.c:360
 msgid "Error processing result rows.\n"
 msgstr ""
 
-#: providers/freetds/gda-freetds-recordset.c:365
+#: providers/freetds/gda-freetds-recordset.c:367
 msgid "Unexpected freetds return code in tds_process_row_tokens().\n"
 msgstr ""
 
-#: providers/freetds/gda-freetds-recordset.c:374
+#: providers/freetds/gda-freetds-recordset.c:377
 msgid "Error processing results.\n"
 msgstr ""
 
-#: providers/freetds/gda-freetds-recordset.c:381
+#: providers/freetds/gda-freetds-recordset.c:384
 msgid "Unexpected freetds return code in tds_process_result_tokens\n"
 msgstr ""
 
 #: providers/freetds/libmain.c:39
 #, fuzzy
-msgid "GDA provider for TDS-based databases (using FreeTDS)"
+msgid "Provider for TDS-based databases (using FreeTDS)"
 msgstr "GDA Əsas Verilənlər Mənbəyi Yetişilməsi"
 
-#: providers/freetds/utils.c:41 providers/oracle/utils.c:67
-#: providers/postgres/utils.c:47
+#: providers/freetds/utils.c:40 providers/oracle/utils.c:66
+#: providers/postgres/utils.c:46 providers/sybase/utils.c:166
 msgid "NO DESCRIPTION"
 msgstr ""
 
-#: providers/ibmdb2/gda-ibmdb2-provider.c:142
-#: providers/ibmdb2/gda-ibmdb2-provider.c:154
+#: providers/ibmdb2/gda-ibmdb2-provider.c:141
+#: providers/ibmdb2/gda-ibmdb2-provider.c:153
 #, fuzzy
 msgid "Could not allocate environment handle."
 msgstr "Bonobonu başlada bilmədim"
 
-#: providers/ibmdb2/gda-ibmdb2-provider.c:165
+#: providers/ibmdb2/gda-ibmdb2-provider.c:164
 #, fuzzy
 msgid "Could not set autocommit to off.\n"
 msgstr "%s cismi fəallaşdırıla bilmədi"
 
-#: providers/ibmdb2/gda-ibmdb2-provider.c:179
+#: providers/ibmdb2/gda-ibmdb2-provider.c:178
 #, fuzzy
 msgid "Could not allocate environment handle.\n"
 msgstr "Bonobonu başlada bilmədim"
 
 #. GetInfo is needed for obtaining database name
 #. is needed for tables schema
-#: providers/ibmdb2/gda-ibmdb2-provider.c:191
+#: providers/ibmdb2/gda-ibmdb2-provider.c:190
 msgid "SQLGetInfo is unsupported. Hence IBM DB2 Provider will not work.\n"
 msgstr ""
 
-#: providers/ibmdb2/gda-ibmdb2-provider.c:205
+#: providers/ibmdb2/gda-ibmdb2-provider.c:204
 msgid "SQLGetFunctions gave unexpected return. Connection terminated.\n"
 msgstr ""
 
 #: providers/ibmdb2/libmain.c:39
 #, fuzzy
-msgid "GDA provider for IBMDB2"
+msgid "Provider for IBMDB2 databases"
 msgstr "GDA Əsas Verilənlər Mənbəyi Yetişilməsi"
 
-#: providers/mdb/gda-mdb-provider.c:188
+#: providers/ldap/gda-ldap-provider.c:257
+#: providers/ldap/gda-ldap-provider.c:490
+#: providers/ldap/gda-ldap-provider.c:519
+#: providers/ldap/gda-ldap-provider.c:548
+#: providers/ldap/gda-ldap-provider.c:587
+#: providers/ldap/gda-ldap-recordset.c:58
+#: providers/ldap/gda-ldap-recordset.c:176
+msgid "Invalid LDAP handle"
+msgstr ""
+
+#: providers/ldap/gda-ldap-provider.c:328 providers/mdb/gda-mdb-provider.c:548
+#: providers/mdb/gda-mdb-provider.c:595 providers/mdb/gda-mdb-provider.c:655
+#: providers/mysql/gda-mysql-provider.c:703
+#: providers/mysql/gda-mysql-provider.c:890
+#: providers/mysql/gda-mysql-provider.c:972
+#: providers/odbc/gda-odbc-provider.c:1032
+#: providers/odbc/gda-odbc-provider.c:1141
+#: providers/odbc/gda-odbc-provider.c:1255
+#: providers/odbc/gda-odbc-provider.c:1297
+#: providers/odbc/gda-odbc-provider.c:1349
+#: providers/oracle/gda-oracle-provider.c:1544
+#: providers/postgres/gda-postgres-provider.c:835
+#: providers/postgres/gda-postgres-provider.c:1105
+#: providers/postgres/gda-postgres-provider.c:1124
+#: providers/postgres/gda-postgres-provider.c:1184
+#: providers/postgres/gda-postgres-provider.c:1301
+#: providers/postgres/gda-postgres-provider.c:1845
+#: providers/sqlite/gda-sqlite-provider.c:752
+#: providers/sybase/gda-sybase-provider.c:905
+msgid "Owner"
+msgstr ""
+
+#: providers/ldap/gda-ldap-provider.c:329 providers/mdb/gda-mdb-provider.c:549
+#: providers/mdb/gda-mdb-provider.c:596 providers/mdb/gda-mdb-provider.c:656
+#: providers/mysql/gda-mysql-provider.c:704
+#: providers/mysql/gda-mysql-provider.c:891
+#: providers/mysql/gda-mysql-provider.c:973
+#: providers/odbc/gda-odbc-provider.c:1033
+#: providers/odbc/gda-odbc-provider.c:1256
+#: providers/odbc/gda-odbc-provider.c:1350
+#: providers/oracle/gda-oracle-provider.c:1544
+#: providers/postgres/gda-postgres-provider.c:836
+#: providers/postgres/gda-postgres-provider.c:1125
+#: providers/postgres/gda-postgres-provider.c:1185
+#: providers/postgres/gda-postgres-provider.c:1302
+#: providers/postgres/gda-postgres-provider.c:1846
+#: providers/sqlite/gda-sqlite-provider.c:753
+#: providers/sybase/gda-sybase-provider.c:907
+msgid "Comments"
+msgstr ""
+
+#. gda_server_recordset_model_set_field_defined_size (recset, 0, 32);
+#: providers/ldap/gda-ldap-provider.c:423
+#: providers/mysql/gda-mysql-provider.c:971
+#: providers/odbc/gda-odbc-provider.c:1254
+#: providers/oracle/gda-oracle-provider.c:1643
+#: providers/postgres/gda-postgres-provider.c:1123
+#: providers/sqlite/gda-sqlite-provider.c:751
+#: providers/sybase/gda-sybase-provider.c:903
+msgid "Type"
+msgstr ""
+
+#: providers/ldap/gda-ldap-recordset.c:69
+#: providers/mysql/gda-mysql-recordset.c:69
+#: providers/postgres/gda-postgres-recordset.c:185
+#: providers/postgres/gda-postgres-recordset.c:225
+#: providers/sqlite/gda-sqlite-recordset.c:165
+#: providers/sqlite/gda-sqlite-recordset.c:204
+msgid "Row number out of range"
+msgstr ""
+
+#: providers/ldap/gda-ldap-recordset.c:283
+#: providers/mysql/gda-mysql-recordset.c:288
+#: providers/oracle/gda-oracle-recordset.c:466
+msgid "Attempt to insert a row with an invalid number of columns"
+msgstr ""
+
+#: providers/ldap/gda-ldap-recordset.c:298
+#: providers/mysql/gda-mysql-recordset.c:303
+#: providers/oracle/gda-oracle-recordset.c:481
+msgid "Could not retrieve column's information"
+msgstr ""
+
+#: providers/ldap/gda-ldap-recordset.c:316
+#: providers/mysql/gda-mysql-recordset.c:321
+#: providers/oracle/gda-oracle-recordset.c:499
+#, fuzzy
+msgid "Could not retrieve column's value"
+msgstr "%s cismi fəallaşdırıla bilmədi"
+
+#: providers/ldap/libmain.c:42
+msgid "Provider for LDAP directory"
+msgstr ""
+
+#: providers/mdb/gda-mdb-provider.c:205
 #, fuzzy
 msgid "A database FILENAME must be specified in the connection_string"
 msgstr ""
 "Verilənlər bazasının açılmağı üçün bağlantı qatarı tam cığır adı "
 "müəyyənləşdirilməlidir."
 
-#: providers/mdb/gda-mdb-provider.c:197
+#: providers/mdb/gda-mdb-provider.c:214
+#: providers/xbase/gda-xbase-provider.c:223
 #, fuzzy, c-format
 msgid "Could not open file %s"
 msgstr "%s cismi fəallaşdırıla bilmədi"
 
-#: providers/mdb/gda-mdb-provider.c:219 providers/mdb/gda-mdb-provider.c:247
-#: providers/mdb/gda-mdb-provider.c:348
+#: providers/mdb/gda-mdb-provider.c:238 providers/mdb/gda-mdb-provider.c:268
+#: providers/mdb/gda-mdb-provider.c:290 providers/mdb/gda-mdb-provider.c:342
+#: providers/mdb/gda-mdb-provider.c:690 providers/mdb/gda-mdb-provider.c:726
 msgid "Invalid MDB handle"
 msgstr ""
 
-#: providers/mdb/gda-mdb-provider.c:313
-msgid "Table Name"
+#: providers/mdb/gda-mdb-provider.c:404 providers/mdb/gda-mdb-provider.c:414
+#: providers/mdb/gda-mdb-provider.c:424
+msgid "Transactions not supported in MDB provider"
 msgstr ""
 
-#: providers/mdb/libmain.c:34
-msgid "GDA provider for MS Access files"
+#: providers/mdb/gda-mdb-provider.c:498
+#: providers/mysql/gda-mysql-provider.c:1077
+#: providers/odbc/gda-odbc-provider.c:922
+#: providers/postgres/gda-postgres-provider.c:1359
+#: providers/sqlite/gda-sqlite-provider.c:630
+msgid "Default value"
 msgstr ""
 
-#: providers/mysql/gda-mysql-provider.c:215
+#: providers/mdb/gda-mdb-provider.c:546
+#: providers/odbc/gda-odbc-provider.c:1030
+#: providers/postgres/gda-postgres-provider.c:833
+msgid "Procedure"
+msgstr ""
+
+#: providers/mdb/gda-mdb-provider.c:547
+#: providers/mysql/gda-mysql-provider.c:702
+msgid "ID"
+msgstr ""
+
+#: providers/mdb/gda-mdb-provider.c:550
+#: providers/mysql/gda-mysql-provider.c:705
+#: providers/odbc/gda-odbc-provider.c:1034
+#: providers/postgres/gda-postgres-provider.c:837
+msgid "Return type"
+msgstr ""
+
+#: providers/mdb/gda-mdb-provider.c:551
+msgid "# of args"
+msgstr ""
+
+#: providers/mdb/gda-mdb-provider.c:552
+#: providers/mysql/gda-mysql-provider.c:706
+#: providers/odbc/gda-odbc-provider.c:1036
+#: providers/postgres/gda-postgres-provider.c:839
+msgid "Args types"
+msgstr ""
+
+#: providers/mdb/gda-mdb-provider.c:553
+#: providers/odbc/gda-odbc-provider.c:1037
+#: providers/odbc/gda-odbc-provider.c:1143
+#: providers/odbc/gda-odbc-provider.c:1299
+#: providers/odbc/gda-odbc-provider.c:1351
+#: providers/postgres/gda-postgres-provider.c:840
+#: providers/postgres/gda-postgres-provider.c:1107
+#: providers/postgres/gda-postgres-provider.c:1186
+#: providers/postgres/gda-postgres-provider.c:1305
+#: providers/postgres/gda-postgres-provider.c:1847
+msgid "Definition"
+msgstr ""
+
+#: providers/mdb/gda-mdb-provider.c:657
+msgid "GDA Type"
+msgstr ""
+
+#: providers/mdb/gda-mdb-provider.c:659
+msgid "Boolean type"
+msgstr ""
+
+#: providers/mdb/gda-mdb-provider.c:660
+msgid "1-byte integers"
+msgstr ""
+
+#: providers/mdb/gda-mdb-provider.c:661
+msgid "Double precision values"
+msgstr ""
+
+#: providers/mdb/gda-mdb-provider.c:662
+msgid "Single precision values"
+msgstr ""
+
+#: providers/mdb/gda-mdb-provider.c:663
+msgid "32-bit integers"
+msgstr ""
+
+#: providers/mdb/gda-mdb-provider.c:664
+msgid "64-bit integers"
+msgstr ""
+
+#: providers/mdb/gda-mdb-provider.c:665
+msgid "Variable length character strings"
+msgstr ""
+
+#: providers/mdb/gda-mdb-provider.c:666
+msgid "Money amounts"
+msgstr ""
+
+#: providers/mdb/gda-mdb-provider.c:667
+msgid "OLE object"
+msgstr ""
+
+#: providers/mdb/gda-mdb-provider.c:668
+msgid "FIXME"
+msgstr ""
+
+#: providers/mdb/gda-mdb-provider.c:669
+msgid "Date/time value"
+msgstr ""
+
+#: providers/mdb/gda-mdb-provider.c:670
+msgid "Character strings"
+msgstr ""
+
+#. end unsafe
+#: providers/mdb/gda-mdb-provider.c:737
+#, fuzzy, c-format
+msgid "Could not parse '%s' command"
+msgstr "%s cismi fəallaşdırıla bilmədi"
+
+#: providers/mdb/libmain.c:36
+msgid "Provider for Microsoft Access files"
+msgstr ""
+
+#: providers/mysql/gda-mysql-provider.c:218
 msgid ""
 "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
 msgstr ""
 "Ya QOVŞAQ ya da QAPI müəyyənləşdirirsinizsə UNIX_SOCKET müəyyənləşdirə "
 "bilməzsiniz"
 
-#: providers/mysql/gda-mysql-provider.c:290
-#: providers/mysql/gda-mysql-provider.c:1038
-#: providers/mysql/gda-mysql-recordset.c:59
-#: providers/mysql/gda-mysql-recordset.c:175
+#: providers/mysql/gda-mysql-provider.c:294
+#: providers/mysql/gda-mysql-provider.c:1085
+#: providers/mysql/gda-mysql-recordset.c:58
+#: providers/mysql/gda-mysql-recordset.c:174
 msgid "Invalid MySQL handle"
 msgstr ""
 
-#: providers/mysql/gda-mysql-provider.c:305
-#: providers/mysql/gda-mysql-provider.c:355
-#: providers/mysql/gda-mysql-provider.c:378
-#: providers/mysql/gda-mysql-provider.c:409
-#: providers/mysql/gda-mysql-provider.c:441
-#: providers/mysql/gda-mysql-provider.c:509
-#: providers/mysql/gda-mysql-provider.c:561
-#: providers/mysql/gda-mysql-provider.c:589
+#: providers/mysql/gda-mysql-provider.c:310
+#: providers/mysql/gda-mysql-provider.c:380
+#: providers/mysql/gda-mysql-provider.c:403
+#: providers/mysql/gda-mysql-provider.c:434
+#: providers/mysql/gda-mysql-provider.c:466
+#: providers/mysql/gda-mysql-provider.c:534
+#: providers/mysql/gda-mysql-provider.c:591
+#: providers/mysql/gda-mysql-provider.c:624
 msgid "Invalid MYSQL handle"
 msgstr ""
 
-#: providers/mysql/gda-mysql-provider.c:924
-#: providers/oracle/gda-oracle-provider.c:1595
-#: providers/postgres/gda-postgres-provider.c:920
-#: providers/sqlite/gda-sqlite-provider.c:746
-msgid "Type"
+#: providers/mysql/gda-mysql-provider.c:539
+#: providers/mysql/gda-mysql-provider.c:596
+#: providers/mysql/gda-mysql-provider.c:629
+#: providers/oracle/gda-oracle-provider.c:822
+#: providers/oracle/gda-oracle-provider.c:904
+#: providers/oracle/gda-oracle-provider.c:965
+#: providers/sqlite/gda-sqlite-provider.c:472
+msgid "Transactions are not supported in read-only mode"
 msgstr ""
 
-#: providers/mysql/gda-mysql-provider.c:925
-#: providers/postgres/gda-postgres-provider.c:688
-#: providers/postgres/gda-postgres-provider.c:902
-#: providers/postgres/gda-postgres-provider.c:921
-#: providers/postgres/gda-postgres-provider.c:967
-#: providers/postgres/gda-postgres-provider.c:1025
-#: providers/postgres/gda-postgres-provider.c:1475
-#: providers/sqlite/gda-sqlite-provider.c:747
-msgid "Owner"
+#: providers/mysql/gda-mysql-provider.c:707
+msgid "SQL"
 msgstr ""
 
-#: providers/mysql/gda-mysql-provider.c:926
-#: providers/postgres/gda-postgres-provider.c:689
-#: providers/postgres/gda-postgres-provider.c:922
-#: providers/postgres/gda-postgres-provider.c:968
-#: providers/postgres/gda-postgres-provider.c:1026
-#: providers/postgres/gda-postgres-provider.c:1476
-#: providers/sqlite/gda-sqlite-provider.c:748
-msgid "Comments"
-msgstr ""
-
-#: providers/mysql/gda-mysql-provider.c:927
-#: providers/postgres/gda-postgres-provider.c:923
-#: providers/sqlite/gda-sqlite-provider.c:749
+#: providers/mysql/gda-mysql-provider.c:974
+#: providers/odbc/gda-odbc-provider.c:1257
+#: providers/postgres/gda-postgres-provider.c:1126
+#: providers/sqlite/gda-sqlite-provider.c:754
+#: providers/sybase/gda-sybase-provider.c:909
 msgid "GDA type"
 msgstr ""
 
-#: providers/mysql/gda-mysql-provider.c:1030
-#: providers/postgres/gda-postgres-provider.c:1073
-#: providers/sqlite/gda-sqlite-provider.c:625
-msgid "Default value"
-msgstr ""
-
-#: providers/mysql/gda-mysql-provider.c:1047
-#: providers/mysql/gda-mysql-provider.c:1055
+#: providers/mysql/gda-mysql-provider.c:1094
+#: providers/mysql/gda-mysql-provider.c:1102
 msgid "Table name is needed but none specified in parameter list"
 msgstr ""
 
-#: providers/mysql/gda-mysql-recordset.c:70
-#: providers/postgres/gda-postgres-recordset.c:184
-#: providers/postgres/gda-postgres-recordset.c:224
-#: providers/sqlite/gda-sqlite-recordset.c:166
-#: providers/sqlite/gda-sqlite-recordset.c:205
-msgid "Row number out of range"
-msgstr ""
-
-#: providers/mysql/gda-mysql-recordset.c:289
-#: providers/oracle/gda-oracle-recordset.c:467
-msgid "Attempt to insert a row with an invalid number of columns"
-msgstr ""
-
-#: providers/mysql/gda-mysql-recordset.c:304
-#: providers/oracle/gda-oracle-recordset.c:482
-msgid "Could not retrieve column's information"
-msgstr ""
-
-#: providers/mysql/gda-mysql-recordset.c:322
-#: providers/oracle/gda-oracle-recordset.c:500
-#, fuzzy
-msgid "Could not retrieve column's value"
-msgstr "%s cismi fəallaşdırıla bilmədi"
-
 #: providers/mysql/libmain.c:41
-msgid "GDA provider for MySQL databases"
-msgstr ""
-
-#: providers/odbc/libmain.c:36
 #, fuzzy
-msgid "GDA bridge to ODBC data sources"
+msgid "Provider for MySQL databases"
 msgstr "GDA Əsas Verilənlər Mənbəyi Yetişilməsi"
 
-#: providers/oracle/gda-oracle-provider.c:205
+#: providers/odbc/gda-odbc-provider.c:183
+msgid "Unable to SQLAllocEnv()..."
+msgstr ""
+
+#: providers/odbc/gda-odbc-provider.c:433
+#: providers/odbc/gda-odbc-provider.c:453
+#: providers/odbc/gda-odbc-provider.c:483
+#: providers/odbc/gda-odbc-provider.c:513
+#: providers/odbc/gda-odbc-provider.c:544
+#: providers/odbc/gda-odbc-provider.c:574
+msgid "Invalid Odbc handle"
+msgstr ""
+
+#: providers/odbc/gda-odbc-provider.c:1031
+#: providers/postgres/gda-postgres-provider.c:834
+#: providers/postgres/gda-postgres-provider.c:1300
+msgid "Id"
+msgstr ""
+
+#: providers/odbc/gda-odbc-provider.c:1035
+#: providers/postgres/gda-postgres-provider.c:838
+msgid "Nb args"
+msgstr ""
+
+#. Set it here instead of the SQL query to allow i18n
+#: providers/odbc/gda-odbc-provider.c:1140
+#: providers/postgres/gda-postgres-provider.c:1104
+#: providers/postgres/gda-postgres-provider.c:1899
+msgid "Table"
+msgstr ""
+
+#: providers/odbc/gda-odbc-provider.c:1296
+#: providers/oracle/gda-oracle-provider.c:1750 testing/client.c:129
+msgid "Views"
+msgstr ""
+
+#. Set it here instead of the SQL query to allow i18n
+#: providers/odbc/gda-odbc-provider.c:1348
+#: providers/postgres/gda-postgres-provider.c:1844
+#: providers/postgres/gda-postgres-provider.c:1900
+msgid "Sequence"
+msgstr ""
+
+#: providers/odbc/libmain.c:41
+#, fuzzy
+msgid "Provider for ODBC data sources"
+msgstr "GDA Əsas Verilənlər Mənbəyi Yetişilməsi"
+
+#: providers/oracle/gda-oracle-provider.c:204
 #, fuzzy
 msgid "Could not initialize Oracle"
 msgstr "Bonobonu başlada bilmədim"
 
-#: providers/oracle/gda-oracle-provider.c:216
+#: providers/oracle/gda-oracle-provider.c:215
 #, fuzzy
 msgid "Could not initialize the Oracle environment"
 msgstr "Bonobonu başlada bilmədim"
 
-#: providers/oracle/gda-oracle-provider.c:228
+#: providers/oracle/gda-oracle-provider.c:227
 #, fuzzy
 msgid "Could not allocate the Oracle service handle"
 msgstr "Bonobonu başlada bilmədim"
 
-#: providers/oracle/gda-oracle-provider.c:238
+#: providers/oracle/gda-oracle-provider.c:237
 #, fuzzy
 msgid "Could not allocate the Oracle error handle"
 msgstr "Bonobonu başlada bilmədim"
 
-#: providers/oracle/gda-oracle-provider.c:250
+#: providers/oracle/gda-oracle-provider.c:249
 #, fuzzy
 msgid "Could not allocate the Oracle server handle"
 msgstr "Bonobonu başlada bilmədim"
 
-#: providers/oracle/gda-oracle-provider.c:263
+#: providers/oracle/gda-oracle-provider.c:262
 #, fuzzy
 msgid "Could not allocate the Oracle session handle"
 msgstr "Bonobonu başlada bilmədim"
 
-#: providers/oracle/gda-oracle-provider.c:293
+#: providers/oracle/gda-oracle-provider.c:292
 #, fuzzy
 msgid "Could not attach to the Oracle server"
 msgstr "Bonobonu başlada bilmədim"
 
-#: providers/oracle/gda-oracle-provider.c:309
+#: providers/oracle/gda-oracle-provider.c:308
 #, fuzzy
 msgid "Could not set the Oracle server attribute in the service context"
 msgstr "Bonobonu başlada bilmədim"
 
-#: providers/oracle/gda-oracle-provider.c:325
+#: providers/oracle/gda-oracle-provider.c:324
 #, fuzzy
 msgid "Could not set the Oracle username attribute"
 msgstr "Bonobonu başlada bilmədim"
 
-#: providers/oracle/gda-oracle-provider.c:341
+#: providers/oracle/gda-oracle-provider.c:340
 #, fuzzy
 msgid "Could not set the Oracle password attribute"
 msgstr "Əsas komponenet emalatxanasl hazırlana bilmədi"
 
-#: providers/oracle/gda-oracle-provider.c:356
+#: providers/oracle/gda-oracle-provider.c:355
 #, fuzzy
 msgid "Could not begin the Oracle session"
 msgstr "Bonobonu başlada bilmədim"
 
-#: providers/oracle/gda-oracle-provider.c:374
+#: providers/oracle/gda-oracle-provider.c:373
 #, fuzzy
 msgid "Could not set the Oracle session attribute in the service context"
 msgstr "Bonobonu başlada bilmədim"
 
-#: providers/oracle/gda-oracle-provider.c:444
-#: providers/oracle/gda-oracle-provider.c:476
-#: providers/oracle/gda-oracle-provider.c:550
-#: providers/oracle/gda-oracle-provider.c:688
-#: providers/oracle/gda-oracle-provider.c:711
-#: providers/oracle/gda-oracle-provider.c:734
-#: providers/oracle/gda-oracle-provider.c:764
-#: providers/oracle/gda-oracle-provider.c:820
-#: providers/oracle/gda-oracle-provider.c:895
-#: providers/oracle/gda-oracle-provider.c:951
-#: providers/oracle/gda-oracle-recordset.c:166
-#: providers/oracle/gda-oracle-recordset.c:388
-#: providers/oracle/gda-oracle-recordset.c:589
+#: providers/oracle/gda-oracle-provider.c:443
+#: providers/oracle/gda-oracle-provider.c:475
+#: providers/oracle/gda-oracle-provider.c:549
+#: providers/oracle/gda-oracle-provider.c:687
+#: providers/oracle/gda-oracle-provider.c:710
+#: providers/oracle/gda-oracle-provider.c:733
+#: providers/oracle/gda-oracle-provider.c:763
+#: providers/oracle/gda-oracle-provider.c:817
+#: providers/oracle/gda-oracle-provider.c:899
+#: providers/oracle/gda-oracle-provider.c:960
+#: providers/oracle/gda-oracle-recordset.c:165
+#: providers/oracle/gda-oracle-recordset.c:387
+#: providers/oracle/gda-oracle-recordset.c:588
 msgid "Invalid Oracle handle"
 msgstr ""
 
-#: providers/oracle/gda-oracle-provider.c:487
+#: providers/oracle/gda-oracle-provider.c:486
 #, fuzzy
 msgid "Could not allocate the Oracle statement handle"
 msgstr "Bonobonu başlada bilmədim"
 
-#: providers/oracle/gda-oracle-provider.c:498
+#: providers/oracle/gda-oracle-provider.c:497
 #, fuzzy
 msgid "Could not prepare the Oracle statement"
 msgstr "Bonobonu başlada bilmədim"
 
-#: providers/oracle/gda-oracle-provider.c:530
+#: providers/oracle/gda-oracle-provider.c:529
 #, fuzzy
 msgid "Could not bind the Oracle statement parameter"
 msgstr "Əsas komponenet emalatxanasl hazırlana bilmədi"
 
-#: providers/oracle/gda-oracle-provider.c:575
+#: providers/oracle/gda-oracle-provider.c:574
 #, fuzzy
 msgid "Could not get the Oracle statement type"
 msgstr "Əsas komponenet emalatxanasl hazırlana bilmədi"
 
-#: providers/oracle/gda-oracle-provider.c:593
+#: providers/oracle/gda-oracle-provider.c:592
 #, fuzzy
 msgid "Could not execute the Oracle statement"
 msgstr "Bonobonu başlada bilmədim"
 
-#: providers/oracle/gda-oracle-provider.c:606
+#: providers/oracle/gda-oracle-provider.c:605
 msgid "Could not get the number of columns in the result set"
 msgstr ""
 
-#: providers/oracle/gda-oracle-provider.c:623
+#: providers/oracle/gda-oracle-provider.c:622
 msgid "Could not get the parameter descripter in the result set"
 msgstr ""
 
-#: providers/oracle/gda-oracle-provider.c:635
+#: providers/oracle/gda-oracle-provider.c:634
 #, fuzzy
 msgid "Could not get the column name in the result set"
 msgstr "%s cismi fəallaşdırıla bilmədi"
 
-#: providers/oracle/gda-oracle-provider.c:781
-#: providers/oracle/gda-oracle-provider.c:857
-#: providers/oracle/gda-oracle-provider.c:907
-#: providers/oracle/gda-oracle-provider.c:963
+#: providers/oracle/gda-oracle-provider.c:780
+#: providers/oracle/gda-oracle-provider.c:861
+#: providers/oracle/gda-oracle-provider.c:916
+#: providers/oracle/gda-oracle-provider.c:977
 #, fuzzy
 msgid "Could not attach the transaction to the service context"
 msgstr "Bonobonu başlada bilmədim"
 
-#: providers/oracle/gda-oracle-provider.c:831
+#: providers/oracle/gda-oracle-provider.c:835
 #, fuzzy
 msgid "Could not allocate the Oracle transaction handle"
 msgstr "Bonobonu başlada bilmədim"
 
-#: providers/oracle/gda-oracle-provider.c:843
+#: providers/oracle/gda-oracle-provider.c:847
 #, fuzzy
 msgid "Could not set the Oracle transaction name"
 msgstr "Bonobonu başlada bilmədim"
 
-#: providers/oracle/gda-oracle-provider.c:868
+#: providers/oracle/gda-oracle-provider.c:872
 #, fuzzy
 msgid "Could not start the Oracle transaction"
 msgstr "Əsas komponenet emalatxanasl hazırlana bilmədi"
 
-#: providers/oracle/gda-oracle-provider.c:916
+#: providers/oracle/gda-oracle-provider.c:925
 #, fuzzy
 msgid "Could not prepare the transaction to commit"
 msgstr "Bağlantı komponenti yaradıla bimədi"
 
-#: providers/oracle/gda-oracle-provider.c:924
+#: providers/oracle/gda-oracle-provider.c:933
 #, fuzzy
 msgid "Could not commit the Oracle transaction"
 msgstr "Əsas komponenet emalatxanasl hazırlana bilmədi"
 
-#: providers/oracle/gda-oracle-provider.c:970
+#: providers/oracle/gda-oracle-provider.c:984
 #, fuzzy
 msgid "Could not rollback the Oracle transaction"
 msgstr "Əsas komponenet emalatxanasl hazırlana bilmədi"
 
-#: providers/oracle/gda-oracle-provider.c:1259
+#: providers/oracle/gda-oracle-provider.c:1273
 #, fuzzy
 msgid "Could not allocate the Oracle describe handle"
 msgstr "Bonobonu başlada bilmədim"
 
-#: providers/oracle/gda-oracle-provider.c:1272
+#: providers/oracle/gda-oracle-provider.c:1286
 #, fuzzy
 msgid "Could not describe the Oracle table"
 msgstr "%s cismi fəallaşdırıla bilmədi"
 
-#: providers/oracle/gda-oracle-provider.c:1285
+#: providers/oracle/gda-oracle-provider.c:1299
 #, fuzzy
 msgid "Could not get the Oracle parameter handle"
 msgstr "Bonobonu başlada bilmədim"
 
-#: providers/oracle/gda-oracle-provider.c:1298
+#: providers/oracle/gda-oracle-provider.c:1312
 #, fuzzy
 msgid "Could not get the number of columns in the table"
 msgstr "%s cismi fəallaşdırıla bilmədi"
 
-#: providers/oracle/gda-oracle-provider.c:1310
+#: providers/oracle/gda-oracle-provider.c:1324
 #, fuzzy
 msgid "Could not get the column list"
 msgstr "%s cismi fəallaşdırıla bilmədi"
 
-#: providers/oracle/gda-oracle-provider.c:1339
+#: providers/oracle/gda-oracle-provider.c:1353
 #, fuzzy
 msgid "Could not get the Oracle column handle"
 msgstr "Bonobonu başlada bilmədim"
 
-#: providers/oracle/gda-oracle-provider.c:1352
+#: providers/oracle/gda-oracle-provider.c:1366
 #, fuzzy
 msgid "Could not get the Oracle field name"
 msgstr "Bonobonu başlada bilmədim"
 
-#: providers/oracle/gda-oracle-provider.c:1373
+#: providers/oracle/gda-oracle-provider.c:1387
 #, fuzzy
 msgid "Could not get the Oracle field data type"
 msgstr "Əsas komponenet emalatxanasl hazırlana bilmədi"
 
-#: providers/oracle/gda-oracle-provider.c:1391
+#: providers/oracle/gda-oracle-provider.c:1405
 #, fuzzy
 msgid "Could not get the Oracle field defined size"
 msgstr "%s cismi fəallaşdırıla bilmədi"
 
-#: providers/oracle/gda-oracle-provider.c:1408
+#: providers/oracle/gda-oracle-provider.c:1422
 #, fuzzy
 msgid "Could not get the Oracle field scale"
 msgstr "Bonobonu başlada bilmədim"
 
-#: providers/oracle/gda-oracle-provider.c:1425
+#: providers/oracle/gda-oracle-provider.c:1439
 msgid "Could not get the Oracle field nullable attribute"
 msgstr ""
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/oracle/gda-oracle-provider.c:1683
-#: providers/postgres/gda-postgres-provider.c:994 testing/client.c:126
+#: providers/oracle/gda-oracle-provider.c:1505
+#: providers/postgres/gda-postgres-provider.c:1803 testing/client.c:132
+msgid "Users"
+msgstr ""
+
+#. Set it here instead of the SQL query to allow i18n
+#: providers/oracle/gda-oracle-provider.c:1731
+#: providers/postgres/gda-postgres-provider.c:1223 testing/client.c:130
 msgid "Indexes"
 msgstr ""
 
-#: providers/oracle/gda-oracle-provider.c:1691 testing/client.c:129
+#: providers/oracle/gda-oracle-provider.c:1735
+msgid "Procedures"
+msgstr ""
+
+#: providers/oracle/gda-oracle-provider.c:1739 testing/client.c:133
 msgid "Sequences"
 msgstr ""
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/oracle/gda-oracle-provider.c:1699
-#: providers/postgres/gda-postgres-provider.c:1054 testing/client.c:130
+#: providers/oracle/gda-oracle-provider.c:1746
+#: providers/postgres/gda-postgres-provider.c:1340 testing/client.c:134
 msgid "Triggers"
 msgstr ""
 
-#: providers/oracle/gda-oracle-recordset.c:73
+#: providers/oracle/gda-oracle-recordset.c:72
 #, fuzzy
 msgid "Could not get the Oracle parameter"
 msgstr "Bonobonu başlada bilmədim"
 
-#: providers/oracle/gda-oracle-recordset.c:83
+#: providers/oracle/gda-oracle-recordset.c:82
 #, fuzzy
 msgid "Could not get the parameter defined size"
 msgstr "%s cismi fəallaşdırıla bilmədi"
 
-#: providers/oracle/gda-oracle-recordset.c:96
+#: providers/oracle/gda-oracle-recordset.c:95
 #, fuzzy
 msgid "Could not get the parameter data type"
 msgstr "%s növündə komponentin necə yaradılacağını bilmirəm"
 
-#: providers/oracle/gda-oracle-recordset.c:127
+#: providers/oracle/gda-oracle-recordset.c:126
 #, fuzzy
 msgid "Could not define by position"
 msgstr "%s cismi fəallaşdırıla bilmədi"
 
-#: providers/oracle/gda-oracle-recordset.c:172
-#: providers/postgres/gda-postgres-recordset.c:263
+#: providers/oracle/gda-oracle-recordset.c:171
+#: providers/postgres/gda-postgres-recordset.c:264
 msgid "Column out of range"
 msgstr ""
 
-#: providers/oracle/gda-oracle-recordset.c:184
+#: providers/oracle/gda-oracle-recordset.c:183
 #, fuzzy
 msgid "Could not get the Oracle parameter information"
 msgstr "Əsas komponenet emalatxanasl hazırlana bilmədi"
 
-#: providers/oracle/gda-oracle-recordset.c:194
+#: providers/oracle/gda-oracle-recordset.c:193
 #, fuzzy
 msgid "Could not get the Oracle column name"
 msgstr "%s cismi fəallaşdırıla bilmədi"
 
-#: providers/oracle/gda-oracle-recordset.c:209
+#: providers/oracle/gda-oracle-recordset.c:208
 #, fuzzy
 msgid "Could not get the Oracle column data type"
 msgstr "Əsas komponenet emalatxanasl hazırlana bilmədi"
 
-#: providers/oracle/gda-oracle-recordset.c:221
+#: providers/oracle/gda-oracle-recordset.c:220
 #, fuzzy
 msgid "Could not get the Oracle column scale"
 msgstr "%s cismi fəallaşdırıla bilmədi"
 
-#: providers/oracle/gda-oracle-recordset.c:233
+#: providers/oracle/gda-oracle-recordset.c:232
 #, fuzzy
 msgid "Could not get the Oracle column nullable attribute"
 msgstr "Əsas komponenet emalatxanasl hazırlana bilmədi"
 
-#: providers/oracle/gda-oracle-recordset.c:245
+#: providers/oracle/gda-oracle-recordset.c:244
 #, fuzzy
 msgid "Could not get the Oracle defined size"
 msgstr "%s cismi fəallaşdırıla bilmədi"
 
-#: providers/oracle/gda-oracle-recordset.c:353
+#: providers/oracle/gda-oracle-recordset.c:352
 #, fuzzy
 msgid "Could not fetch a row"
 msgstr "%s cismi fəallaşdırıla bilmədi"
 
 #: providers/oracle/libmain.c:34
 #, fuzzy
-msgid "GDA provider for Oracle databases"
+msgid "Provider for Oracle databases"
 msgstr "GDA Əsas Verilənlər Mənbəyi Yetişilməsi"
 
-#: providers/postgres/gda-postgres-provider.c:413
-#: providers/postgres/gda-postgres-provider.c:430
-#: providers/postgres/gda-postgres-provider.c:501
-#: providers/postgres/gda-postgres-provider.c:635
-#: providers/postgres/gda-postgres-recordset.c:175
-#: providers/postgres/gda-postgres-recordset.c:215
-#: providers/postgres/gda-postgres-recordset.c:257
+#: providers/postgres/gda-postgres-provider.c:553
+#: providers/postgres/gda-postgres-provider.c:570
+#: providers/postgres/gda-postgres-provider.c:641
+#: providers/postgres/gda-postgres-provider.c:776
+#: providers/postgres/gda-postgres-recordset.c:176
+#: providers/postgres/gda-postgres-recordset.c:216
+#: providers/postgres/gda-postgres-recordset.c:258
 msgid "Invalid PostgreSQL handle"
 msgstr ""
 
-#: providers/postgres/gda-postgres-provider.c:686
-msgid "Procedure"
-msgstr ""
-
-#: providers/postgres/gda-postgres-provider.c:687
-#: providers/postgres/gda-postgres-provider.c:1024
-msgid "Id"
-msgstr ""
-
-#: providers/postgres/gda-postgres-provider.c:690
-msgid "Return type"
-msgstr ""
-
-#: providers/postgres/gda-postgres-provider.c:691
-msgid "Nb args"
-msgstr ""
-
-#: providers/postgres/gda-postgres-provider.c:692
-msgid "Args types"
-msgstr ""
-
-#: providers/postgres/gda-postgres-provider.c:693
-#: providers/postgres/gda-postgres-provider.c:904
-#: providers/postgres/gda-postgres-provider.c:969
-#: providers/postgres/gda-postgres-provider.c:1029
-#: providers/postgres/gda-postgres-provider.c:1477
-msgid "Definition"
-msgstr ""
-
 #. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:901
-#: providers/postgres/gda-postgres-provider.c:1514
-msgid "Table"
-msgstr ""
-
-#. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:966
+#: providers/postgres/gda-postgres-provider.c:1183
 msgid "View"
 msgstr ""
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:1023
+#: providers/postgres/gda-postgres-provider.c:1299
 msgid "Aggregate"
 msgstr ""
 
-#: providers/postgres/gda-postgres-provider.c:1027
+#: providers/postgres/gda-postgres-provider.c:1303
 msgid "OutType"
 msgstr ""
 
-#: providers/postgres/gda-postgres-provider.c:1028
+#: providers/postgres/gda-postgres-provider.c:1304
 msgid "InType"
 msgstr ""
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:1423 testing/client.c:121
+#: providers/postgres/gda-postgres-provider.c:1768 testing/client.c:125
 msgid "Databases"
 msgstr ""
 
-#. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:1474
-#: providers/postgres/gda-postgres-provider.c:1515
-msgid "Sequence"
-msgstr ""
-
-#: providers/postgres/gda-postgres-recordset.c:230
-#: providers/sqlite/gda-sqlite-recordset.c:211
-#: providers/sqlite/gda-sqlite-recordset.c:243
+#: providers/postgres/gda-postgres-recordset.c:231
+#: providers/sqlite/gda-sqlite-recordset.c:210
+#: providers/sqlite/gda-sqlite-recordset.c:242
 msgid "Column number out of range"
 msgstr ""
 
-#: providers/postgres/gda-postgres-recordset.c:353
+#: providers/postgres/gda-postgres-recordset.c:354
 #, c-format
 msgid "Tuples:\"%s\""
 msgstr ""
 
 #: providers/postgres/libmain.c:41
-msgid "GDA provider for PostgreSQL databases"
+#, fuzzy
+msgid "Provider for PostgreSQL databases"
+msgstr "GDA Əsas Verilənlər Mənbəyi Yetişilməsi"
+
+#: providers/sqlite/gda-sqlite-provider.c:220
+msgid "Could not set empty_result_callbacks SQLite option"
 msgstr ""
 
-#: providers/sqlite/gda-sqlite-provider.c:242
+#: providers/sqlite/gda-sqlite-provider.c:243
 #: providers/sqlite/gda-sqlite-provider.c:343
-#: providers/sqlite/gda-sqlite-provider.c:549
-#: providers/sqlite/gda-sqlite-provider.c:714
-#: providers/sqlite/gda-sqlite-recordset.c:157
-#: providers/sqlite/gda-sqlite-recordset.c:196
-#: providers/sqlite/gda-sqlite-recordset.c:237
+#: providers/sqlite/gda-sqlite-provider.c:554
+#: providers/sqlite/gda-sqlite-provider.c:719
+#: providers/sqlite/gda-sqlite-recordset.c:156
+#: providers/sqlite/gda-sqlite-recordset.c:195
+#: providers/sqlite/gda-sqlite-recordset.c:236
 msgid "Invalid SQLite handle"
 msgstr ""
 
-#: providers/sqlite/gda-sqlite-provider.c:264
+#: providers/sqlite/gda-sqlite-provider.c:265
 msgid "Invalid SQLITE handle"
 msgstr ""
 
@@ -974,29 +1155,366 @@ msgstr ""
 msgid "To remove a SQLite database you should remove the database file by hand"
 msgstr ""
 
-#: providers/sqlite/gda-sqlite-provider.c:659
+#: providers/sqlite/gda-sqlite-provider.c:664
 #, fuzzy
 msgid "Could not retrieve information for field"
 msgstr "%s cismi fəallaşdırıla bilmədi"
 
 #: providers/sqlite/libmain.c:41
-msgid "GDA provider for SQLite databases"
+#, fuzzy
+msgid "Provider for SQLite databases"
+msgstr "GDA Əsas Verilənlər Mənbəyi Yetişilməsi"
+
+#. the logic to connect to the database
+#: providers/sybase/gda-sybase-provider.c:250
+msgid "about to open connection"
 msgstr ""
 
-#: providers/sybase/main.c:52
+#: providers/sybase/gda-sybase-provider.c:276
+msgid "Out of memory. Allocating connection structure failed."
+msgstr ""
+
+#: providers/sybase/gda-sybase-provider.c:288
+msgid "Context allocated."
+msgstr ""
+
+#: providers/sybase/gda-sybase-provider.c:295
+msgid "Client library initialized."
+msgstr ""
+
+#: providers/sybase/gda-sybase-provider.c:321
+#, c-format
+msgid "Locale set to '%s'."
+msgstr ""
+
+#: providers/sybase/gda-sybase-provider.c:336
+#, fuzzy
+msgid "Could not initialize cslib callback"
+msgstr "Bonobonu başlada bilmədim"
+
+#: providers/sybase/gda-sybase-provider.c:340
+msgid "CS-lib callback initialized."
+msgstr ""
+
+#: providers/sybase/gda-sybase-provider.c:346
+#, fuzzy
+msgid "Could not initialize ct-client callback"
+msgstr "Bonobonu başlada bilmədim"
+
+#: providers/sybase/gda-sybase-provider.c:350
+msgid "CT-Client callback initialized."
+msgstr ""
+
+#: providers/sybase/gda-sybase-provider.c:357
+#, fuzzy
+msgid "Could not initialize ct-server callback"
+msgstr "Bonobonu başlada bilmədim"
+
+#: providers/sybase/gda-sybase-provider.c:361
+msgid "CT-Server callback initialized."
+msgstr ""
+
+#: providers/sybase/gda-sybase-provider.c:369
+msgid "Connection allocated."
+msgstr ""
+
+#: providers/sybase/gda-sybase-provider.c:409
+msgid "Appname set."
+msgstr ""
+
+#: providers/sybase/gda-sybase-provider.c:422
+msgid "Username set."
+msgstr ""
+
+#: providers/sybase/gda-sybase-provider.c:436
+msgid "Password set."
+msgstr ""
+
+#: providers/sybase/gda-sybase-provider.c:448
+msgid "Empty password set."
+msgstr ""
+
+#: providers/sybase/gda-sybase-provider.c:458
+msgid "Connected."
+msgstr ""
+
+#: providers/sybase/gda-sybase-provider.c:476
+msgid "Finally connected."
+msgstr ""
+
+#: providers/sybase/gda-sybase-provider.c:610
+msgid ""
+"Cmd structure already in use. Command will not be executed because of "
+"blocked connection."
+msgstr ""
+
+#: providers/sybase/gda-sybase-provider.c:624
+#, c-format
+msgid "Failed allocating a command structure in %s()"
+msgstr ""
+
+#: providers/sybase/gda-sybase-provider.c:635
+#, fuzzy
+msgid "Could not prepare command structure."
+msgstr "%s cismi fəallaşdırıla bilmədi"
+
+#: providers/sybase/gda-sybase-provider.c:644
+msgid "Sending sql-command failed."
+msgstr ""
+
+#: providers/sybase/gda-sybase-provider.c:713
+msgid "Failed dropping command structure."
+msgstr ""
+
+#: providers/sybase/gda-sybase-provider.c:743
+#, c-format
+msgid "Command structure already in use. %s failed."
+msgstr ""
+
+#: providers/sybase/gda-sybase-provider.c:751
+#: providers/sybase/gda-sybase-provider.c:855
+#, fuzzy
+msgid "Could not allocate command structure."
+msgstr "Bonobonu başlada bilmədim"
+
+#: providers/sybase/gda-sybase-provider.c:759
+#, fuzzy, c-format
+msgid "Could not prepare command structure with %s."
+msgstr "%s cismi fəallaşdırıla bilmədi"
+
+#: providers/sybase/gda-sybase-provider.c:768
+msgid "Sending command failed."
+msgstr ""
+
+#: providers/sybase/gda-sybase-provider.c:792
+#: providers/sybase/gda-sybase-provider.c:808
+#: providers/sybase/gda-sybase-provider.c:818
+#, c-format
+msgid "%s: %s failed"
+msgstr ""
+
+#: providers/sybase/gda-sybase-provider.c:853
+#, c-format
+msgid ""
+"Connection already in use. Could not allocate command structure in %s()."
+msgstr ""
+
+#: providers/sybase/gda-sybase-provider.c:866
+#, c-format
+msgid "Failed dropping command structure in %s()."
+msgstr ""
+
+#: providers/sybase/gda-sybase-recordset.c:314
+#, fuzzy
+msgid "Could not allocate datamodel. No results will be returned."
+msgstr "Bonobonu başlada bilmədim"
+
+#: providers/sybase/gda-sybase-recordset.c:317
+msgid "ct_cancel() failed."
+msgstr ""
+
+#: providers/sybase/gda-sybase-recordset.c:329
+#, c-format
+msgid "%s failed while processing a row result."
+msgstr ""
+
+#: providers/sybase/gda-sybase-recordset.c:336
+#, c-format
+msgid "%s returned <= 0 columns."
+msgstr ""
+
+#: providers/sybase/gda-sybase-recordset.c:356
+#, fuzzy
+msgid "Could not allocate structure for column metainformation."
+msgstr "Bonobonu başlada bilmədim"
+
+#: providers/sybase/gda-sybase-recordset.c:360
+#, fuzzy, c-format
+msgid "Could not call %s while processing row resultset."
+msgstr "%s cismi fəallaşdırıla bilmədi"
+
+#: providers/sybase/gda-sybase-recordset.c:378
+#: providers/sybase/gda-sybase-recordset.c:397
+#, fuzzy, c-format
+msgid "Could not run %s on column %d"
+msgstr "%s cismi fəallaşdırıla bilmədi"
+
+#: providers/sybase/gda-sybase-recordset.c:386
+#, fuzzy, c-format
+msgid "Could not allocate data placeholder for column %d"
+msgstr "Bonobonu başlada bilmədim"
+
+#: providers/sybase/gda-sybase-recordset.c:415
+#, fuzzy, c-format
+msgid "Could not run %s to cancel processing row resultset."
+msgstr "%s cismi fəallaşdırıla bilmədi"
+
+#: providers/sybase/gda-sybase-recordset.c:430
+#, c-format
+msgid "%s failed on row %d"
+msgstr ""
+
+#: providers/sybase/gda-sybase-recordset.c:456
+#, c-format
+msgid "%s terminated with unexpected return code."
+msgstr ""
+
+#: providers/sybase/gda-sybase-recordset.c:530
+#, c-format
+msgid "%s returned %s"
+msgstr ""
+
+#: providers/sybase/gda-sybase-types.c:94
+#: providers/sybase/gda-sybase-types.c:97
+msgid "Attempt setting a nonnullable field to null."
+msgstr ""
+
+#: providers/sybase/gda-sybase-types.c:208
+#, c-format
+msgid "cslib cannot convert type %d"
+msgstr ""
+
+#: providers/sybase/gda-sybase-types.c:223
+#, c-format
+msgid "data conversion failed for type %d"
+msgstr ""
+
+#: providers/sybase/libmain.c:40
+#, fuzzy
+msgid "Provider for sybase databases (using OpenClient)"
+msgstr "GDA Əsas Verilənlər Mənbəyi Yetişilməsi"
+
+#: providers/sybase/main.c:51
 #, fuzzy
 msgid "Could not initiate Sybase component factory"
 msgstr "MySQL komponent emalatxanası hazırlana bilmədi"
 
-#: report/libgda-report/gda-report-document.c:166
+#: providers/sybase/utils.c:37
+msgid "Call: csmsg callback"
+msgstr ""
+
+#: providers/sybase/utils.c:42
+#, c-format
+msgid ""
+"CS-Library error:\n"
+"\tseverity(%ld) layer(%ld) origin (%ld) number(%ld)\n"
+"\t%s"
+msgstr ""
+
+#: providers/sybase/utils.c:49
+#, c-format
+msgid "OS error: %s"
+msgstr ""
+
+#: providers/sybase/utils.c:59
+msgid "Call: Client callback."
+msgstr ""
+
+#: providers/sybase/utils.c:64
+#, c-format
+msgid ""
+"CT-Client error:\n"
+"\tseverity(%ld) layer(%ld) origin (%ld) number(%ld)\n"
+"\t%s"
+msgstr ""
+
+#: providers/sybase/utils.c:79
+msgid "Call: server callback"
+msgstr ""
+
+#: providers/sybase/utils.c:84
+#, c-format
+msgid ""
+"CT-Server message:\n"
+"\tnumber(%ld) severity(%ld) state(%ld) line(%ld)"
+msgstr ""
+
+#: providers/sybase/utils.c:89
+#, c-format
+msgid "\tServer name: %s\n"
+msgstr ""
+
+#: providers/sybase/utils.c:92
+#, c-format
+msgid "\tProcedure name: %s\n"
+msgstr ""
+
+#: providers/sybase/utils.c:130
+msgid "ct_diag() failed determining # of client messages."
+msgstr ""
+
+#: providers/sybase/utils.c:138
+#, c-format
+msgid "%d messages fetched."
+msgstr ""
+
+#: providers/sybase/utils.c:152
+msgid "Operation not possible, connection busy."
+msgstr ""
+
+#: providers/xbase/gda-xbase-provider.c:185
+msgid "Either FILENAME or DIRECTORY can be specified, but not both or neither"
+msgstr ""
+
+#: providers/xbase/gda-xbase-provider.c:232
+#, fuzzy
+msgid "Either FILENAME or DIRECTORY must be specified in the connection string"
+msgstr ""
+"Verilənlər bazasının açılmağı üçün bağlantı qatarı tam cığır adı "
+"müəyyənləşdirilməlidir."
+
+#: providers/xbase/gda-xbase-provider.c:261
+#: providers/xbase/gda-xbase-provider.c:379
+msgid "Invalid Xbase handle"
+msgstr ""
+
+#: providers/xbase/libmain.c:39
+#, fuzzy
+msgid "Provider for Xbase databases"
+msgstr "GDA Əsas Verilənlər Mənbəyi Yetişilməsi"
+
+#: report/libgda-report/gda-report-document.c:161
 #, fuzzy
 msgid "Could not parse XML document"
 msgstr "MySQL komponent emalatxanası hazırlana bilmədi"
 
-#: report/libgda-report/gda-report-document.c:191
+#: report/libgda-report/gda-report-document.c:171
+msgid "XML document is not valid"
+msgstr ""
+
+#: report/libgda-report/gda-report-document.c:195
 #, fuzzy, c-format
 msgid "Could not get file from %s"
 msgstr "%s cismi fəallaşdırıla bilmədi"
+
+#: report/libgda-report/gda-report-item.c:276
+msgid "Error setting parent -> child relation"
+msgstr ""
+
+#: report/libgda-report/gda-report-item.c:375
+#, c-format
+msgid "Error setting value %s to attribute %s of item %s"
+msgstr ""
+
+#: report/libgda-report/gda-report-valid.c:130
+#, fuzzy, c-format
+msgid "could not get DTD from %s"
+msgstr "%s cismi fəallaşdırıla bilmədi"
+
+#: report/libgda-report/gda-report-valid.c:231
+#, c-format
+msgid "Error validating element %s"
+msgstr ""
+
+#: report/libgda-report/gda-report-valid.c:269
+#, c-format
+msgid "No declaration for attribute %s of element %s\n"
+msgstr ""
+
+#: report/libgda-report/gda-report-valid.c:283
+#, c-format
+msgid "Value \"%s\" for attribute %s of %s is not among the enumerated set\n"
+msgstr ""
 
 #: testing/client.c:41
 msgid "\t\tNONE\n"
@@ -1020,14 +1538,14 @@ msgstr ""
 #: testing/client.c:89 testing/client.c:92 testing/client.c:95
 #: testing/client.c:98 testing/client.c:101 testing/client.c:104
 #: testing/client.c:107 testing/client.c:110 testing/client.c:113
-#: testing/client.c:116
+#: testing/client.c:116 testing/client.c:119
 msgid "Supported"
 msgstr ""
 
 #: testing/client.c:89 testing/client.c:92 testing/client.c:95
 #: testing/client.c:98 testing/client.c:101 testing/client.c:104
 #: testing/client.c:107 testing/client.c:110 testing/client.c:113
-#: testing/client.c:116
+#: testing/client.c:116 testing/client.c:119
 msgid "Not supported"
 msgstr ""
 
@@ -1038,46 +1556,51 @@ msgstr ""
 
 #: testing/client.c:93
 #, c-format
-msgid "\t\tProcedures: %s\n"
+msgid "\t\tNamespaces: %s\n"
 msgstr ""
 
 #: testing/client.c:96
 #, c-format
-msgid "\t\tSequences: %s\n"
+msgid "\t\tProcedures: %s\n"
 msgstr ""
 
 #: testing/client.c:99
 #, c-format
-msgid "\t\tSQL: %s\n"
+msgid "\t\tSequences: %s\n"
 msgstr ""
 
 #: testing/client.c:102
 #, c-format
-msgid "\t\tTransactions: %s\n"
+msgid "\t\tSQL: %s\n"
 msgstr ""
 
 #: testing/client.c:105
 #, c-format
-msgid "\t\tTriggers: %s\n"
+msgid "\t\tTransactions: %s\n"
 msgstr ""
 
 #: testing/client.c:108
 #, c-format
-msgid "\t\tUsers: %s\n"
+msgid "\t\tTriggers: %s\n"
 msgstr ""
 
 #: testing/client.c:111
 #, c-format
-msgid "\t\tViews: %s\n"
+msgid "\t\tUsers: %s\n"
 msgstr ""
 
 #: testing/client.c:114
+#, c-format
+msgid "\t\tViews: %s\n"
+msgstr ""
+
+#: testing/client.c:117
 #, c-format
 msgid "\t\tXML queries: %s\n"
 msgstr ""
 
 #. show connection schemas
-#: testing/client.c:119
+#: testing/client.c:122
 #, c-format
 msgid ""
 "\n"
@@ -1085,74 +1608,110 @@ msgid ""
 "\n"
 msgstr ""
 
-#: testing/client.c:122
+#: testing/client.c:124
+msgid "Namespaces"
+msgstr ""
+
+#: testing/client.c:126
 msgid "Stored procedures"
 msgstr ""
 
-#: testing/client.c:123
+#: testing/client.c:127
 msgid "Connection Tables"
 msgstr ""
 
-#: testing/client.c:124
+#: testing/client.c:128
 msgid "Available types"
 msgstr ""
 
-#: testing/client.c:127
+#: testing/client.c:131
 msgid "Aggregates"
 msgstr ""
 
-#: testing/client.c:135 testing/client.c:143
+#: testing/client.c:135
+msgid "Languages"
+msgstr ""
+
+#: testing/client.c:140 testing/client.c:148
 msgid "\tStarting transaction..."
 msgstr ""
 
-#: testing/client.c:137 testing/client.c:141 testing/client.c:145
-#: testing/client.c:149
+#: testing/client.c:142 testing/client.c:146 testing/client.c:150
+#: testing/client.c:154
 msgid "Error"
 msgstr ""
 
-#: testing/client.c:139
+#: testing/client.c:144
 msgid "\tFinishing transaction..."
 msgstr ""
 
-#: testing/client.c:147
+#: testing/client.c:152
 msgid "\tRolling back transaction..."
 msgstr ""
 
-#: testing/client.c:173
+#: testing/client.c:180
 msgid "Testing GDA client API"
 msgstr ""
 
-#: testing/client.c:182
+#: testing/client.c:189
 msgid "** ERROR: gda_config_get_data_source_list returned a NULL item\n"
 msgstr ""
 
-#: testing/client.c:186
+#: testing/client.c:193
 #, c-format
 msgid " Data source = %s, User = %s\n"
 msgstr ""
 
-#: testing/config.c:85
+#: testing/config.c:84
 msgid "** ERROR: gda_config_get_provider_list returned a NULL item\n"
 msgstr ""
 
-#: testing/config.c:89
+#: testing/config.c:88
 #, c-format
 msgid " Provider = %s\n"
 msgstr ""
 
-#: testing/config.c:90
+#: testing/config.c:89
 #, c-format
 msgid "\tlocation = %s\n"
 msgstr ""
 
-#: testing/config.c:91
+#: testing/config.c:90
 #, c-format
 msgid "\tdescription = %s\n"
 msgstr ""
 
-#: testing/config.c:93
+#: testing/config.c:92
 msgid "\tgda_params ="
 msgstr ""
+
+#: report/libgda-report/gda-report-item-pagefooter.c:171
+#: report/libgda-report/gda-report-item-pageheader.c:160
+#: report/libgda-report/gda-report-item-reportfooter.c:172
+#: report/libgda-report/gda-report-item-reportheader.c:171
+#, c-format
+msgid "An element with ID %s already exists in the report"
+msgstr ""
+
+#: report/libgda-report/gda-report-item-pagefooter.c:196
+#: report/libgda-report/gda-report-item-pageheader.c:185
+#: report/libgda-report/gda-report-item-reportfooter.c:197
+#: report/libgda-report/gda-report-item-reportheader.c:196
+#, c-format
+msgid "Item with ID %s is not a label"
+msgstr ""
+
+#: report/libgda-report/gda-report-item-pagefooter.c:224
+#: report/libgda-report/gda-report-item-pageheader.c:214
+#: report/libgda-report/gda-report-item-reportfooter.c:225
+#: report/libgda-report/gda-report-item-reportheader.c:224
+#, c-format
+msgid "Item with ID %s is not a repfield"
+msgstr ""
+
+#, fuzzy
+#~ msgid "GDA provider for IBMDB2"
+#~ msgstr "GDA Əsas Verilənlər Mənbəyi Yetişilməsi"
 
 #, fuzzy
 #~ msgid "Could not load %s provider"
@@ -1165,10 +1724,6 @@ msgstr ""
 #, fuzzy
 #~ msgid "Could not parse report file at %s"
 #~ msgstr "%s cismi fəallaşdırıla bilmədi"
-
-#, fuzzy
-#~ msgid "Could not initialize OCI library"
-#~ msgstr "Bonobonu başlada bilmədim"
 
 #, fuzzy
 #~ msgid "Could not create global GDA client"
