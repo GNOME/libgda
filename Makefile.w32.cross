@@ -7,46 +7,30 @@
 
 
 # where the mingw root is..
-export ROOT = /usr/src/win32mingw
 
-#where are the binaries to build stuff 
-export BIN = $(ROOT)/cross-tools/bin
 
 #where is gcc.. and others..
-export CC = $(BIN)/i386-mingw32msvc-gcc -g3
-export DLLTOOL = $(BIN)/i386-mingw32msvc-dlltool
+export CC = $(src_dir)/download/cross-tools/bin/i386-mingw32msvc-gcc -g3
+export DLLTOOL = $(src_dir)/download/cross-tools/bin/i386-mingw32msvc-dlltool
 export BISON = `which bison`
 export FLEX = `which flex`
 export GLIBMKENUMS = `which glib-mkenums`
 export GLIBGENMARSHAL = `which glib-genmarshal`
+
+export MINGWGET = `wget -N -c http://www.libsdl.org/extras/win32/cross/mingw32-linux-x86-glibc-2.3.tar.gz;`
 # the -I include paths.
 
-export IPATHS = \
-	-I. \
-	-I.. \
-	-I$(ROOT)/include \
-	-I$(ROOT)/include/glib-2.0  \
-	-I$(ROOT)/lib/glib-2.0/include \
-	-I$(ROOT)/libxml2-2.6.13.win32/include \
-	-I$(ROOT)/libxslt-1.1.10.win32/include \
-	-I$(ROOT)/zlib-1.2.1.win32/include \
-	-I$(ROOT)/cross-tools/include/
-
-export LIBDIRS = \
-	-L$(ROOT)/bin \
-	-L$(ROOT)/lib \
-	-L$(ROOT)/libxml2-2.6.13.win32/bin \
-	-L$(ROOT)/libxslt-1.1.10.win32/bin \
-	-L$(ROOT)/zlib-1.2.1.win32/bin \
-	-L$(ROOT)/cross-tools\bin 
 
 export DVALUES += \
 	-DLIBGDA_PLUGINDIR=\"C:/libgda/providers\" \
 	-DLIBGDA_LOCALEDIR=\"/usr/local/share/locale\" \
-	-DLIBGDA_GLOBAL_CONFIG_FILE=\"C:/libgda/config\" \
+	-DLIBGDA_GLOBAL_CONFIG_FILE=\"C:/libgda/config\" 
 
-	
-	
+export IPATHS += \
+	-I$(src_dir)/download/cross-tools/include/
+
+export LIBDIRS += \
+	-L$(src_dir)/download/cross-tools/bin 
 	
 
 

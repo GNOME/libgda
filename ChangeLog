@@ -1,3 +1,12 @@
+2004-10-27 Alan <alan@akbkhome.com>
+        * Makefile.w32
+	* libgda/Makefile.w32
+	* libsql/Makefile.w32
+	* Makefile.w32.cross: Upload Windows makefiles, including
+	support for cross compiling, and potentially native with mingw
+	along with dependancy download support, see top level Makefile.w32
+	for full details on usage.
+
 2004-10-27 Dru <andru@treshna.com>
 	
 	* libsql/sql_parser.c: Fixing sql_statement_get_tables() to

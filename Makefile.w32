@@ -63,8 +63,8 @@ export DVALUES = -DPACKAGE_NAME=\"GNU\ Data\ Access\" \
 	-DHAVE_POPT_H=1 \
 	-DPIC	\
 	-DLIBGDA_WIN32
-	
-	
+
+
 export LIBS = \
 	-llibglib-2.0-0 \
 	-llibgmodule-2.0-0 \
@@ -74,33 +74,70 @@ export LIBS = \
 	-liconv \
 	-lintl \
 	-llibxslt
-	
+
 export WFLAGS = -Wall -Wmissing-prototypes -Wnested-externs -Wpointer-arith -Wno-sign-compare
 
-#special trick to include variables specific to each make platform..
-#** change this so it does it by using OS detection?
-ifeq ($(MAKECMDGOALS),cross)
-include Makefile.w32.cross
-endif
+export src_dir = $(shell pwd)
 
-ifeq ($(MAKECMDGOALS),win32)
-include Makefile.w32.win32
+export IPATHS = \
+	-I. \
+	-I.. \
+	-I$(src_dir)/download/include \
+	-I$(src_dir)/download/include/glib-2.0  \
+	-I$(src_dir)/download/lib/glib-2.0/include \
+	-I$(src_dir)/download/libxml2-2.6.14.win32/include \
+	-I$(src_dir)/download/libxslt-1.1.11.win32/include \
+	-I$(src_dir)/download/zlib-1.2.1.win32/include 
+
+export LIBDIRS = \
+	-L$(src_dir)/download/bin \
+	-L$(src_dir)/download/lib \
+	-L$(src_dir)/download/libxml2-2.6.14.win32/bin \
+	-L$(src_dir)/download/libxslt-1.1.11.win32/bin \
+	-L$(src_dir)/download/zlib-1.2.1.win32/bin 
+
+
+
+
+#based on what OS we are running - include the right config file.
+ifeq ($(strip $(shell uname)),Linux)
+        include Makefile.w32.cross
+else
+        include Makefile.w32.win32
 endif
 
 
 #list of phoney targets (eg. files that dont exists?)
-.PHONY: all clean
+.PHONY: all clean download
  
-cross: all
-
-win32: all
-
 all:
 	$(MAKE) -C libsql -f Makefile.w32; \
-	$(MAKE) -C libgda -f Makefile.w32
-
+	$(MAKE) -C libgda -f Makefile.w32;
 
 
 clean:
 	$(MAKE) -C libsql -f Makefile.w32 clean; \
-	$(MAKE) -C libgda -f Makefile.w32 clean
+	$(MAKE) -C libgda -f Makefile.w32 clean;
+
+
+#-------------------------Downloading section--------------------------------
+#This may be a bit of a nightmare to maintain - but it save a hell of alot of time building this.
+
+
+
+download:
+	mkdir download; \
+	cd download; \
+	$(MINGWGET); \
+	wget -N -c http://www.gimp.org/~tml/gimp/win32/glib-2.4.5-20040903.zip; \
+	wget -N -c http://www.gimp.org/~tml/gimp/win32/glib-dev-2.4.5.zip; \
+	wget -N -c http://www.gimp.org/~tml/gimp/win32/libiconv-1.9.1.bin.woe32.zip; \
+	wget -N -c http://www.gimp.org/~tml/gimp/win32/gettext-runtime-0.13.1.zip; \
+	wget -N -c ftp://ftp.zlatkovic.com/pub/libxml/libxml2-2.6.14.win32.zip; \
+	wget -N -c ftp://ftp.zlatkovic.com/pub/libxml/libxslt-1.1.11.win32.zip; \
+	wget -N -c ftp://ftp.zlatkovic.com/pub/libxml/zlib-1.2.1.win32.zip; \
+	wget -N -c http://mysql.mirrors.pair.com/Downloads/MySQL-4.0/mysql-4.0.21-win-noinstall.zip; \
+	wget -N -c http://www.hagander.net/pgsql/win32snap/postgres_win32_7.5_devel.zip; \
+	ls *.zip | xargs -n1  unzip; \
+	ls *.tar.gz | xargs -n1 tar xvfz; \
+
