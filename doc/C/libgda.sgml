@@ -7,7 +7,7 @@
 <!entity gda-gda-srv SYSTEM "gda-srv.sgml">
 ]>
 
-<book id="libgda">
+<book id="libgda" lang="es">
   <bookinfo>
     <title>GNU Data Access</title>
     <authorgroup>
