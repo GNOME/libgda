@@ -23,8 +23,12 @@ libgda/gda-xml-document.c
 providers/default/gda-default-provider.c
 providers/default/gda-default-recordset.c
 providers/default/libmain.c
+providers/freetds/gda-freetds-provider.c
+providers/freetds/gda-freetds-recordset.c
 providers/freetds/libmain.c
 providers/freetds/utils.c
+providers/ibmdb2/gda-ibmdb2-provider.c
+providers/ibmdb2/libmain.c
 providers/mdb/gda-mdb-provider.c
 providers/mdb/libmain.c
 providers/mysql/gda-mysql-provider.c
