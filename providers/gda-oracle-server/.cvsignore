@@ -6,3 +6,4 @@ libgda-oracle.la
 gda-oracle-srv
 .deps
 .libs
+gda-oracle.spec
