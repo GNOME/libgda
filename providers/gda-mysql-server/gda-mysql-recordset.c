@@ -80,8 +80,7 @@ fill_field_values (GdaServerRecordset * recset,
 							  mysql_recset->
 							  array);
 		}
-		mysql_recset->lengths =
-			mysql_fetch_lengths (mysql_recset->mysql_res);
+		mysql_recset->lengths = mysql_fetch_lengths (mysql_recset->mysql_res);
 		rowlength = mysql_num_fields (mysql_recset->mysql_res);
 	}
 	else
@@ -103,30 +102,25 @@ fill_field_values (GdaServerRecordset * recset,
 					(mysql_recset->btin_res, row,
 					 fieldidx);
 			if (thevalue) {
-				GdaServerField *field =
-					(GdaServerField *) node->data;
-				switch (gda_server_field_get_sql_type (field)) {
+				GdaField *field = (GdaField *) node->data;
+				switch (gda_field_get_ctype (field)) {
 				case FIELD_TYPE_TINY:
 				case FIELD_TYPE_SHORT:
-					gda_server_field_set_smallint (field,
-								       atoi
-								       (thevalue));
+					gda_field_set_smallint_value (
+						field, atoi (thevalue));
 					break;
 				case FIELD_TYPE_LONG:
-					gda_server_field_set_integer (field,
-								      atoi
-								      (thevalue));
+					gda_field_set_integer_value (
+						field, atoi (thevalue));
 					break;
 				case FIELD_TYPE_DECIMAL:
 				case FIELD_TYPE_FLOAT:
-					gda_server_field_set_single (field,
-								     atof
-								     (thevalue));
+					gda_field_set_single_value (
+						field, atof (thevalue));
 					break;
 				case FIELD_TYPE_DOUBLE:
-					gda_server_field_set_double (field,
-								     atof
-								     (thevalue));
+					gda_field_set_double_value (
+						field, atof (thevalue));
 					break;
 				case FIELD_TYPE_DATE:
 					stm = str_to_tmstruct_date2
@@ -143,53 +137,42 @@ fill_field_values (GdaServerRecordset * recset,
 								       +
 								       1900);
 						g_print ("Day %d, month %d, year %d\n", stm->tm_mday, stm->tm_mon, stm->tm_year + 1900);
-						gda_server_field_set_date
-							(field, date);
+						gda_field_set_date_value (field, date);
 						g_date_free (date);
 						g_free (stm);
 					}
 					else
-						gda_server_field_set_date
-							(field, NULL);
+						gda_field_set_date_value (field, NULL);
 
 				case FIELD_TYPE_TINY_BLOB:
 				case FIELD_TYPE_MEDIUM_BLOB:
 				case FIELD_TYPE_LONG_BLOB:
 				case FIELD_TYPE_BLOB:
-					gda_server_field_set_varbin (field,
-								     (gpointer)
-								     thevalue,
-								     field->
-								     defined_length);
+					gda_field_set_binary_value (
+						field, (gpointer) thevalue,
+						gda_field_get_defined_size (field));
 					break;
 				case FIELD_TYPE_BOOL:
 					if (thevalue) {
 						if (*thevalue == 't')
-							gda_server_field_set_boolean
-								(field, TRUE);
+							gda_field_set_boolean_value (field, TRUE);
 						else
-							gda_server_field_set_boolean
-								(field,
-								 FALSE);
+							gda_field_set_boolean_value (field, FALSE);
 					}
 					else {
-						gda_server_field_set_boolean
-							(field, FALSE);
+						gda_field_set_boolean_value (field, FALSE);
 						/* tell it the bool value is not valid */
-						gda_server_field_set_actual_length
-							(field, 0);
+						gda_field_set_actual_size (field, 0);
 					}
 					break;
 				case FIELD_TYPE_STRING:
 				default:
-					gda_server_field_set_varchar (field,
-								      thevalue);
+					gda_field_set_string_value (field, thevalue);
 					break;
 				}
 			}
 			else {	/* NULL value */
-
-				gda_server_field_set_actual_length ((GdaServerField *) node->data, 0);
+				gda_field_set_actual_size ((GdaField *) node->data, 0);
 			}
 		}
 	}
@@ -213,13 +196,10 @@ gda_mysql_recordset_move_next (GdaServerRecordset * recset)
 
 	g_return_val_if_fail (recset != NULL, -1);
 
-	mysql_recset =
-		(MYSQL_Recordset *)
-		gda_server_recordset_get_user_data (recset);
+	mysql_recset = (MYSQL_Recordset *) gda_server_recordset_get_user_data (recset);
 	if (mysql_recset) {
 		if (mysql_recset->mysql_res) {
-			mysql_recset->array =
-				mysql_fetch_row (mysql_recset->mysql_res);
+			mysql_recset->array = mysql_fetch_row (mysql_recset->mysql_res);
 			if (mysql_recset->array) {
 				fill_field_values (recset, mysql_recset);
 				mysql_recset->pos++;
@@ -227,10 +207,8 @@ gda_mysql_recordset_move_next (GdaServerRecordset * recset)
 			}
 			else {	/* end-of-file */
 
-				gda_server_recordset_set_at_begin (recset,
-								   FALSE);
-				gda_server_recordset_set_at_end (recset,
-								 TRUE);
+				gda_server_recordset_set_at_begin (recset, FALSE);
+				gda_server_recordset_set_at_end (recset, TRUE);
 				return 1;
 			}
 		}

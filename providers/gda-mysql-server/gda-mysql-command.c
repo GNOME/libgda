@@ -39,45 +39,32 @@ gda_mysql_init_recset_fields (GdaServerRecordset * recset,
 		max_fieldidx = mysql_num_fields (mysql_recset->mysql_res);
 		for (fieldidx = 0; fieldidx < max_fieldidx; fieldidx++) {
 			MYSQL_FIELD *mysql_field;
-			GdaServerField *field;
+			GdaField *field;
 
-			mysql_field =
-				mysql_fetch_field (mysql_recset->mysql_res);
-			field = gda_server_field_new ();
-			gda_server_field_set_name (field, mysql_field->name);
-			gda_server_field_set_sql_type (field,
-						       mysql_field->type);
-			gda_server_field_set_scale (field,
-						    mysql_field->decimals);
-			gda_server_field_set_actual_length (field,
-							    mysql_field->
-							    length);
-			gda_server_field_set_defined_length (field,
-							     mysql_field->
-							     max_length);
-			gda_server_field_set_user_data (field,
-							(gpointer)
-							mysql_field);
+			mysql_field = mysql_fetch_field (mysql_recset->mysql_res);
+			field = gda_field_new ();
+			gda_field_set_name (field, mysql_field->name);
+			gda_field_set_ctype (field, mysql_field->type);
+			gda_field_set_scale (field, mysql_field->decimals);
+			gda_field_set_actual_size (field, mysql_field->length);
+			gda_field_set_defined_size (field, mysql_field->max_length);
+			gda_field_set_user_data (field, (gpointer) mysql_field);
 
 			gda_server_recordset_add_field (recset, field);
 		}
 	}
 	else {			/* we use the builtin result */
-		max_fieldidx =
-			GdaBuiltin_Result_get_nbfields (mysql_recset->
-							btin_res);
+		max_fieldidx = GdaBuiltin_Result_get_nbfields (mysql_recset->btin_res);
 		for (fieldidx = 0; fieldidx < max_fieldidx; fieldidx++) {
-			GdaServerField *field;
+			GdaField *field;
 
-			field = gda_server_field_new ();
-			gda_server_field_set_name (field,
-						   GdaBuiltin_Result_get_fname
-						   (mysql_recset->btin_res,
-						    fieldidx));
-			gda_server_field_set_sql_type (field,
-						       GdaBuiltin_Result_get_ftype
-						       (mysql_recset->
-							btin_res, fieldidx));
+			field = gda_field_new ();
+			gda_field_set_name (
+				field,
+				GdaBuiltin_Result_get_fname (mysql_recset->btin_res, fieldidx));
+			gda_field_set_ctype (
+				field,
+				GdaBuiltin_Result_get_ftype (mysql_recset->btin_res, fieldidx));
 			gda_server_recordset_add_field (recset, field);
 		}
 	}
@@ -95,7 +82,7 @@ gda_mysql_command_new (GdaServerCommand * cmd)
 GdaServerRecordset *
 gda_mysql_command_execute (GdaServerCommand * cmd,
 			   GdaError * error,
-			   const GDA_CmdParameterSeq * params,
+			   const GNOME_Database_CmdParameterSeq * params,
 			   gulong * affected, gulong options)
 {
 	gint rc;
@@ -106,20 +93,17 @@ gda_mysql_command_execute (GdaServerCommand * cmd,
 
 	cnc = gda_server_command_get_connection (cmd);
 	if (cnc) {
-		mysql_cnc =
-			(MYSQL_Connection *)
-			gda_server_connection_get_user_data (cnc);
+		mysql_cnc = (MYSQL_Connection *) gda_server_connection_get_user_data (cnc);
 		if (mysql_cnc) {
 			gchar *tmp;
 
 			switch (gda_server_command_get_cmd_type (cmd)) {
-			case GDA_COMMAND_TYPE_TABLE:
-				cmd_string =
-					g_strdup_printf ("SELECT * FROM %s",
-							 gda_server_command_get_text
-							 (cmd));
+			case GNOME_Database_COMMAND_TYPE_TABLE:
+				cmd_string = g_strdup_printf (
+					"SELECT * FROM %s",
+					gda_server_command_get_text (cmd));
 				break;
-			case GDA_COMMAND_TYPE_XML:
+			case GNOME_Database_COMMAND_TYPE_XML:
 				tmp = gda_mysql_connection_xml2sql (cnc,
 								    gda_server_command_get_text
 								    (cmd));
@@ -128,10 +112,8 @@ gda_mysql_command_execute (GdaServerCommand * cmd,
 				else
 					cmd_string = NULL;
 				break;
-			case GDA_COMMAND_TYPE_TEXT:
-				cmd_string =
-					g_strdup (gda_server_command_get_text
-						  (cmd));
+			case GNOME_Database_COMMAND_TYPE_TEXT:
+				cmd_string = g_strdup (gda_server_command_get_text (cmd));
 				break;
 			default:
 				cmd_string = NULL;
@@ -147,29 +129,22 @@ gda_mysql_command_execute (GdaServerCommand * cmd,
 						       cmd_string,
 						       strlen (cmd_string));
 				gda_log_message (_("info '%s'"),
-						 mysql_info (mysql_cnc->
-							     mysql));
+						 mysql_info (mysql_cnc->mysql));
 				if (rc == 0) {
 					MYSQL_Recordset *mysql_recset;
 
 					/* create the recordset to be returned */
-					recset = gda_server_recordset_new
-						(cnc);
-					mysql_recset =
-						(MYSQL_Recordset *)
-						gda_server_recordset_get_user_data
-						(recset);
+					recset = gda_server_recordset_new (cnc);
+					mysql_recset = (MYSQL_Recordset *)
+						gda_server_recordset_get_user_data (recset);
 					if (mysql_recset) {
-						mysql_recset->mysql_res =
-							mysql_store_result
-							(mysql_cnc->mysql);
-						gda_mysql_init_recset_fields
-							(recset,
-							 mysql_recset);
+						mysql_recset->mysql_res = 
+							mysql_store_result (mysql_cnc->mysql);
+						gda_mysql_init_recset_fields (recset, mysql_recset);
 					}
 				}
 				else
-					gda_server_error_make (error, 0, cnc,
+					gda_server_connection_make_error (error, 0, cnc,
 							       __PRETTY_FUNCTION__);
 
 				g_free ((gpointer) cmd_string);

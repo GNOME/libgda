@@ -28,23 +28,7 @@
 #include <libpq-fe.h>
 #include <gda-builtin-res.h>
 
-#ifdef ENABLE_NLS
-#  include <libintl.h>
-#  define _(String) gettext (String)
-#  define N_(String) (String)
-#else
-/* Stubs that do something close enough.  */
-#  define textdomain(String)
-#  define gettext(String) (String)
-#  define dgettext(Domain,Message) (Message)
-#  define dcgettext(Domain,Message,Type) (Message)
-#  define bindtextdomain(Domain,Directory)
-#  define _(String) (String)
-#  define N_(String) (String)
-#endif
-
-typedef enum
-{
+typedef enum {
 	SQL_C_DATE,
 	SQL_C_TIME,
 	SQL_C_TIMESTAMP,
@@ -63,20 +47,16 @@ typedef enum
 	SQL_C_STINYINT,
 	SQL_C_UTINYINT,
 	SQL_C_BOOKMARK
-}
-POSTGRES_CType;
+} POSTGRES_CType;
 
-typedef struct POSTGRES_Types_Array
-{
+typedef struct POSTGRES_Types_Array {
 	gchar *postgres_type;
 	gulong oid;
-	GDA_ValueType gda_type;
+	GNOME_Database_ValueType gda_type;
 	POSTGRES_CType c_type;
-}
-POSTGRES_Types_Array;
+} POSTGRES_Types_Array;
 
-typedef struct POSTGRES_Connection
-{
+typedef struct POSTGRES_Connection {
 	gchar *pq_host;
 	gchar *pq_port;
 	gchar *pq_options;
@@ -88,37 +68,30 @@ typedef struct POSTGRES_Connection
 	GList *errors;
 	POSTGRES_Types_Array *types_array;
 	gfloat version;		/* Postgres version like 6.53 or 7.02, etc */
-}
-POSTGRES_Connection;
+} POSTGRES_Connection;
 
 /* unused so far! */
-typedef struct POSTGRES_Command
-{
+typedef struct POSTGRES_Command {
 	struct POSTGRES_Connection *cnc;
 	gchar *cmd;
 	gulong type;
-}
-POSTGRES_Command;
+} POSTGRES_Command;
 
-typedef struct POSTGRES_Recordset
-{
+typedef struct POSTGRES_Recordset {
 	/*  struct POSTGRES_Command *cmd; */
 	PGresult *pq_data;
 	GdaBuiltin_Result *btin_res;
 	POSTGRES_Connection *cnc;
 	gulong pos;
 	GSList *replacements;
-}
-POSTGRES_Recordset;
+} POSTGRES_Recordset;
 
 /* struct to replace values within Recordsets at fil value time */
-typedef struct POSTGRES_Recordset_Replacement
-{
+typedef struct POSTGRES_Recordset_Replacement {
 	guint colnum;
 	gchar *(*trans_func) (POSTGRES_Recordset * recset, gchar * value);
-	GDA_ValueType newtype;
-}
-POSTGRES_Recordset_Replacement;
+	GNOME_Database_ValueType newtype;
+} POSTGRES_Recordset_Replacement;
 
 
 /*
@@ -136,26 +109,26 @@ gint gda_postgres_connection_rollback_transaction (GdaServerConnection * cnc);
 GdaServerRecordset *gda_postgres_connection_open_schema (GdaServerConnection *
 							 cnc,
 							 GdaError * error,
-							 GDA_Connection_QType
+							 GNOME_Database_Connection_QType
 							 t,
-							 GDA_Connection_Constraint
+							 GNOME_Database_Connection_Constraint
 							 * constraints,
 							 gint length);
 glong gda_postgres_connection_modify_schema (GdaServerConnection * cnc,
-					     GDA_Connection_QType t,
-					     GDA_Connection_Constraint *
+					     GNOME_Database_Connection_QType t,
+					     GNOME_Database_Connection_Constraint *
 					     constraints, gint length);
 gint gda_postgres_connection_start_logging (GdaServerConnection * cnc,
 					    const gchar * filename);
 gint gda_postgres_connection_stop_logging (GdaServerConnection * cnc);
 gchar *gda_postgres_connection_create_table (GdaServerConnection * cnc,
-					     GDA_RowAttributes * columns);
+					     GNOME_Database_RowAttributes * columns);
 gboolean gda_postgres_connection_supports (GdaServerConnection * cnc,
-					   GDA_Connection_Feature feature);
-GDA_ValueType gda_postgres_connection_get_gda_type (GdaServerConnection * cnc,
+					   GNOME_Database_Connection_Feature feature);
+GNOME_Database_ValueType gda_postgres_connection_get_gda_type (GdaServerConnection * cnc,
 						    gulong sql_type);
 gshort gda_postgres_connection_get_c_type (GdaServerConnection * cnc,
-					   GDA_ValueType type);
+					   GNOME_Database_ValueType type);
 gchar *gda_postgres_connection_sql2xml (GdaServerConnection * cnc,
 					const gchar * sql);
 gchar *gda_postgres_connection_xml2sql (GdaServerConnection * cnc,
@@ -166,7 +139,7 @@ void gda_postgres_connection_free (GdaServerConnection * cnc);
  /**/ gboolean gda_postgres_command_new (GdaServerCommand * cmd);
 GdaServerRecordset *gda_postgres_command_execute (GdaServerCommand * cmd,
 						  GdaError * error,
-						  const GDA_CmdParameterSeq *
+						  const GNOME_Database_CmdParameterSeq *
 						  params, gulong * affected,
 						  gulong options);
 void gda_postgres_command_free (GdaServerCommand * cmd);
@@ -189,11 +162,11 @@ void gda_postgres_recordset_free (GdaServerRecordset * recset);
 /* types conversion utilities */
 gulong gda_postgres_connection_get_sql_type (POSTGRES_Connection * cnc,
 					     gchar * postgres_type);
-GDA_ValueType gda_postgres_connection_get_gda_type_psql (POSTGRES_Connection *
+GNOME_Database_ValueType gda_postgres_connection_get_gda_type_psql (POSTGRES_Connection *
 							 cnc,
 							 gulong sql_type);
 gshort gda_postgres_connection_get_c_type_psql (POSTGRES_Connection * cnc,
-						GDA_ValueType type);
+						GNOME_Database_ValueType type);
 GSList *convert_tabular_to_list (gchar * tab);
 GdaServerRecordset
 	*gda_postgres_command_build_recset_with_builtin (GdaServerConnection *

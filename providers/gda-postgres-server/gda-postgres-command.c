@@ -35,7 +35,7 @@ gda_postgres_command_new (GdaServerCommand * cmd)
 GdaServerRecordset *
 gda_postgres_command_execute (GdaServerCommand * cmd,
 			      GdaError * error,
-			      const GDA_CmdParameterSeq * params,
+			      const GNOME_Database_CmdParameterSeq * params,
 			      gulong * affected, gulong options)
 {
 	GdaServerConnection *cnc;
@@ -50,12 +50,12 @@ gda_postgres_command_execute (GdaServerCommand * cmd,
 		if (pc) {
 			/* determine command string by command type */
 			switch (gda_server_command_get_cmd_type (cmd)) {
-			case GDA_COMMAND_TYPE_TEXT:
+			case GNOME_Database_COMMAND_TYPE_TEXT:
 				cmd_string =
 					g_strdup (gda_server_command_get_text
 						  (cmd));
 				break;
-			case GDA_COMMAND_TYPE_TABLE:
+			case GNOME_Database_COMMAND_TYPE_TABLE:
 				cmd_string =
 					g_strdup_printf ("SELECT * FROM %s",
 							 gda_server_command_get_text
@@ -170,34 +170,30 @@ init_recset_fields (GdaServerRecordset * recset, POSTGRES_Recordset * prc)
 	/* check parameters */
 	g_return_val_if_fail (recset != NULL, NULL);
 	for (cnt = 0; cnt < ncols; cnt++) {
-		GdaServerField *f = gda_server_field_new ();
+		GdaField *f = gda_field_new ();
 		if (prc->pq_data) {
-			gda_server_field_set_name (f,
-						   PQfname (prc->pq_data,
-							    cnt));
-			gda_server_field_set_sql_type (f,
-						       PQftype (prc->pq_data,
-								cnt));
+			gda_field_set_name (f,
+					    PQfname (prc->pq_data, cnt));
+			gda_field_set_ctype (f,
+					     PQftype (prc->pq_data, cnt));
 		}
 		else {
-			gda_server_field_set_name (f,
-						   GdaBuiltin_Result_get_fname
-						   (prc->btin_res, cnt));
+			gda_field_set_name (f,
+					    GdaBuiltin_Result_get_fname (prc->btin_res, cnt));
 			/* The Sql Type will be modified when there is 
 			   a replacement function */
-			gda_server_field_set_sql_type (f,
-						       GdaBuiltin_Result_get_ftype
-						       (prc->btin_res, cnt));
+			gda_field_set_ctype (f,
+					     GdaBuiltin_Result_get_ftype (prc->btin_res, cnt));
 		}
 
-		f->c_type =
-			gda_postgres_connection_get_c_type_psql (prc->cnc,
-								 f->sql_type);
+		gda_field_set_native_type (
+			f, gda_postgres_connection_get_c_type_psql (
+				prc->cnc,
+				gda_field_get_ctype (f)));
 		/* f->nullable can not be set because no way of getting it
 		   from the beckend! */
-		f->value = NULL;
-		f->precision = 0;
-		gda_server_field_set_scale (f, 0);	/* ???? */
+		gda_field_set_null_value (f);
+		gda_field_set_scale (f, 0);	/* ???? */
 
 		/* these things will be set when the field is filled */
 		/*if (prc->pq_data)

@@ -24,7 +24,7 @@
 
 typedef GdaServerRecordset *(*schema_ops_fn) (GdaError *,
 					      GdaServerConnection *,
-					      GDA_Connection_Constraint *,
+					      GNOME_Database_Connection_Constraint *,
 					      gint);
 typedef struct _Gdaconnection_data
 {
@@ -52,7 +52,7 @@ static gfloat get_postmaster_version (PGconn * conn);
 static Gdaconnection_data *find_connection_data (POSTGRES_Connection * cnc);
 
 
-schema_ops_fn schema_ops[GDA_Connection_GDCN_SCHEMA_LAST] = { 0, };
+schema_ops_fn schema_ops[GNOME_Database_Connection_GDCN_SCHEMA_LAST] = { 0, };
 
 
 
@@ -61,37 +61,38 @@ schema_ops_fn schema_ops[GDA_Connection_GDCN_SCHEMA_LAST] = { 0, };
 
 /* These are the data types for which we are able to make a conversion with 
    C type and GDA type. For the other data types, the C type will be
-   SQL_C_CHAR and the Gda type GDA_TypeVarchar as returned by
+   SQL_C_CHAR and the Gda type GNOME_Database_TypeVarchar as returned by
    gda_postgres_connection_get_c_type() and
    gda_postgres_connection_get_gda_type() 
 */
 
 #define POSTGRES_Types_Array_Nb 27
 POSTGRES_Types_Array types_array[POSTGRES_Types_Array_Nb] = {
-	{"datetime", 0, GDA_TypeDbTimestamp, SQL_C_TIMESTAMP},	/* DO NOT REMOVE */
-	{"timestamp", 0, GDA_TypeDbTimestamp, SQL_C_TIMESTAMP},	/* DO NOT REMOVE */
-	{"abstime", 0, GDA_TypeDbTimestamp, SQL_C_TIMESTAMP},	/* DO NOT REMOVE */
-	{"interval", 0, GDA_TypeDbTimestamp, SQL_C_TIMESTAMP}, /**/ {"tinterval", 0, GDA_TypeDbTimestamp, SQL_C_TIMESTAMP}, /**/ {"reltime", 0, GDA_TypeDbTimestamp, SQL_C_TIMESTAMP}, /**/ {"bool", 0, GDA_TypeBoolean, SQL_C_BIT},	/* DO NOT REMOVE */
-	{"bpchar", 0, GDA_TypeChar, SQL_C_CHAR},
-	{"char", 0, GDA_TypeChar, SQL_C_CHAR},
-	{"date", 0, GDA_TypeDbDate, SQL_C_DATE},
-	{"float4", 0, GDA_TypeSingle, SQL_C_FLOAT},
-	{"float8", 0, GDA_TypeDouble, SQL_C_DOUBLE},
-	{"int2", 0, GDA_TypeSmallint, SQL_C_SSHORT},	/* DO NOT REMOVE */
-	{"int4", 0, GDA_TypeInteger, SQL_C_SLONG},
-	{"text", 0, GDA_TypeLongvarchar, SQL_C_CHAR},
-	{"varchar", 0, GDA_TypeVarchar, SQL_C_CHAR},	/* DO NOT REMOVE */
-	{"char2", 0, GDA_TypeChar, SQL_C_CHAR},
-	{"char4", 0, GDA_TypeChar, SQL_C_CHAR},
-	{"char8", 0, GDA_TypeChar, SQL_C_CHAR},
-	{"char16", 0, GDA_TypeChar, SQL_C_CHAR},
-	{"name", 0, GDA_TypeChar, SQL_C_CHAR},
-	{"bytea", 0, GDA_TypeVarbin, SQL_C_BINARY},
-	{"oid", 0, GDA_TypeInteger, SQL_C_SLONG},
-	{"xid", 0, GDA_TypeInteger, SQL_C_SLONG},
-	{"time", 0, GDA_TypeDbTime, SQL_C_TIME},
-	{"timez", 0, GDA_TypeDbTime, SQL_C_TIME}, /**/
-		{"money", 0, GDA_TypeSingle, SQL_C_FLOAT}
+	{"datetime", 0, GNOME_Database_TypeTimestamp, SQL_C_TIMESTAMP},	/* DO NOT REMOVE */
+	{"timestamp", 0, GNOME_Database_TypeTimestamp, SQL_C_TIMESTAMP},	/* DO NOT REMOVE */
+	{"abstime", 0, GNOME_Database_TypeTimestamp, SQL_C_TIMESTAMP},	/* DO NOT REMOVE */
+	{"interval", 0, GNOME_Database_TypeTimestamp, SQL_C_TIMESTAMP}, /**/ {"tinterval", 0, GNOME_Database_TypeTimestamp, SQL_C_TIMESTAMP}, /**/ {"reltime", 0, GNOME_Database_TypeTimestamp, SQL_C_TIMESTAMP}, /**/
+	{"bool", 0, GNOME_Database_TypeBoolean, SQL_C_BIT},	/* DO NOT REMOVE */
+	{"bpchar", 0, GNOME_Database_TypeChar, SQL_C_CHAR},
+	{"char", 0, GNOME_Database_TypeChar, SQL_C_CHAR},
+	{"date", 0, GNOME_Database_TypeDate, SQL_C_DATE},
+	{"float4", 0, GNOME_Database_TypeSingle, SQL_C_FLOAT},
+	{"float8", 0, GNOME_Database_TypeDouble, SQL_C_DOUBLE},
+	{"int2", 0, GNOME_Database_TypeSmallint, SQL_C_SSHORT},	/* DO NOT REMOVE */
+	{"int4", 0, GNOME_Database_TypeInteger, SQL_C_SLONG},
+	{"text", 0, GNOME_Database_TypeLongvarchar, SQL_C_CHAR},
+	{"varchar", 0, GNOME_Database_TypeVarchar, SQL_C_CHAR},	/* DO NOT REMOVE */
+	{"char2", 0, GNOME_Database_TypeChar, SQL_C_CHAR},
+	{"char4", 0, GNOME_Database_TypeChar, SQL_C_CHAR},
+	{"char8", 0, GNOME_Database_TypeChar, SQL_C_CHAR},
+	{"char16", 0, GNOME_Database_TypeChar, SQL_C_CHAR},
+	{"name", 0, GNOME_Database_TypeChar, SQL_C_CHAR},
+	{"bytea", 0, GNOME_Database_TypeVarbin, SQL_C_BINARY},
+	{"oid", 0, GNOME_Database_TypeInteger, SQL_C_SLONG},
+	{"xid", 0, GNOME_Database_TypeInteger, SQL_C_SLONG},
+	{"time", 0, GNOME_Database_TypeTime, SQL_C_TIME},
+	{"timez", 0, GNOME_Database_TypeTime, SQL_C_TIME}, /**/
+	{"money", 0, GNOME_Database_TypeSingle, SQL_C_FLOAT}
 };
 GSList *global_connection_data_list = NULL;
 
@@ -340,7 +341,7 @@ gda_postgres_connection_open (GdaServerConnection * cnc,
 							  (res, i, 0));
 					pty->oid =
 						atoi (PQgetvalue (res, i, 1));
-					pty->gda_type = GDA_TypeVarchar;
+					pty->gda_type = GNOME_Database_TypeVarchar;
 					pty->c_type = SQL_C_CHAR;
 					added_types_index++;
 				}
@@ -469,8 +470,8 @@ gda_postgres_connection_rollback_transaction (GdaServerConnection * cnc)
 GdaServerRecordset *
 gda_postgres_connection_open_schema (GdaServerConnection * cnc,
 				     GdaError * error,
-				     GDA_Connection_QType t,
-				     GDA_Connection_Constraint * constraints,
+				     GNOME_Database_Connection_QType t,
+				     GNOME_Database_Connection_Constraint * constraints,
 				     gint length)
 {
 	schema_ops_fn fn;
@@ -490,8 +491,8 @@ gda_postgres_connection_open_schema (GdaServerConnection * cnc,
 
 glong
 gda_postgres_connection_modify_schema (GdaServerConnection * cnc,
-				       GDA_Connection_QType t,
-				       GDA_Connection_Constraint *
+				       GNOME_Database_Connection_QType t,
+				       GNOME_Database_Connection_Constraint *
 				       constraints, gint length)
 {
 	return -1;
@@ -552,7 +553,7 @@ gda_postgres_connection_stop_logging (GdaServerConnection * cnc)
 
 gchar *
 gda_postgres_connection_create_table (GdaServerConnection * cnc,
-				      GDA_RowAttributes * columns)
+				      GNOME_Database_RowAttributes * columns)
 {
 	return NULL;
 }
@@ -560,17 +561,17 @@ gda_postgres_connection_create_table (GdaServerConnection * cnc,
 
 gboolean
 gda_postgres_connection_supports (GdaServerConnection * cnc,
-				  GDA_Connection_Feature feature)
+				  GNOME_Database_Connection_Feature feature)
 {
 	gboolean retval;
 
 	g_return_val_if_fail (cnc != NULL, FALSE);
 
 	switch (feature) {
-	case GDA_Connection_FEATURE_TRANSACTIONS:
-	case GDA_Connection_FEATURE_SEQUENCES:
-	case GDA_Connection_FEATURE_PROCS:
-	case GDA_Connection_FEATURE_INHERITANCE:
+	case GNOME_Database_Connection_FEATURE_TRANSACTIONS:
+	case GNOME_Database_Connection_FEATURE_SEQUENCES:
+	case GNOME_Database_Connection_FEATURE_PROCS:
+	case GNOME_Database_Connection_FEATURE_INHERITANCE:
 		retval = TRUE;
 		break;
 
@@ -583,17 +584,17 @@ gda_postgres_connection_supports (GdaServerConnection * cnc,
 
 
 
-GDA_ValueType
+GNOME_Database_ValueType
 gda_postgres_connection_get_gda_type_psql (POSTGRES_Connection * cnc,
 					   gulong sql_type)
 {
-	GDA_ValueType gda_type = GDA_TypeVarchar;	/* default value */
+	GNOME_Database_ValueType gda_type = GNOME_Database_TypeVarchar;	/* default value */
 	gboolean found;
 	gint i, max = 0;
 	Gdaconnection_data *data;
 
-	g_return_val_if_fail ((cnc != NULL), GDA_TypeNull);
-	g_return_val_if_fail ((cnc->types_array != NULL), GDA_TypeNull);
+	g_return_val_if_fail ((cnc != NULL), GNOME_Database_TypeNull);
+	g_return_val_if_fail ((cnc->types_array != NULL), GNOME_Database_TypeNull);
 
 	data = find_connection_data (cnc);
 	if (data)
@@ -611,13 +612,13 @@ gda_postgres_connection_get_gda_type_psql (POSTGRES_Connection * cnc,
 	return gda_type;
 }
 
-GDA_ValueType
+GNOME_Database_ValueType
 gda_postgres_connection_get_gda_type (GdaServerConnection * cnc,
 				      gulong sql_type)
 {
 	POSTGRES_Connection *pc;
 
-	g_return_val_if_fail (cnc != NULL, GDA_TypeNull);
+	g_return_val_if_fail (cnc != NULL, GNOME_Database_TypeNull);
 	pc = (POSTGRES_Connection *)
 		gda_server_connection_get_user_data (cnc);
 	return gda_postgres_connection_get_gda_type_psql (pc, sql_type);
@@ -654,7 +655,7 @@ gda_postgres_connection_get_c_type_from_sql (POSTGRES_Connection * cnc,
 
 gshort
 gda_postgres_connection_get_c_type_psql (POSTGRES_Connection * cnc,
-					 GDA_ValueType gda_type)
+					 GNOME_Database_ValueType gda_type)
 {
 	POSTGRES_CType c_type = SQL_C_CHAR;	/* default value */
 	gboolean found;
@@ -683,7 +684,7 @@ gda_postgres_connection_get_c_type_psql (POSTGRES_Connection * cnc,
 
 gshort
 gda_postgres_connection_get_c_type (GdaServerConnection * cnc,
-				    GDA_ValueType gda_type)
+				    GNOME_Database_ValueType gda_type)
 {
 	POSTGRES_Connection *pc;
 
@@ -786,14 +787,14 @@ gda_postgres_error_make (GdaError * error, GdaServerRecordset * recset,	/* can b
 static GdaServerRecordset *
 schema_tables (GdaError * error,
 	       GdaServerConnection * cnc,
-	       GDA_Connection_Constraint * constraint, gint length)
+	       GNOME_Database_Connection_Constraint * constraint, gint length)
 {
 
 	GdaServerRecordset *recset = 0;
 	GdaServerCommand *cmd;
 
 	GString *query;
-	GDA_Connection_Constraint *ptr;
+	GNOME_Database_Connection_Constraint *ptr;
 	gboolean extra_info = FALSE;
 	gint cnt;
 	GString *and_condition = 0;
@@ -803,10 +804,10 @@ schema_tables (GdaError * error,
 	ptr = constraint;
 	for (cnt = 0; cnt < length && ptr != 0; cnt++) {
 		switch (ptr->ctype) {
-		case GDA_Connection_EXTRA_INFO:
+		case GNOME_Database_Connection_EXTRA_INFO:
 			extra_info = TRUE;
 			break;
-		case GDA_Connection_OBJECT_NAME:
+		case GNOME_Database_Connection_OBJECT_NAME:
 			if (!and_condition)
 				and_condition = g_string_new ("");
 			g_string_sprintfa (and_condition,
@@ -814,7 +815,7 @@ schema_tables (GdaError * error,
 			fprintf (stderr, "schema_tables: table name = '%s'\n",
 				 ptr->value);
 			break;
-		case GDA_Connection_OBJECT_SCHEMA:
+		case GNOME_Database_Connection_OBJECT_SCHEMA:
 			if (!and_condition)
 				and_condition = g_string_new ("");
 			g_string_sprintfa (and_condition,
@@ -823,7 +824,7 @@ schema_tables (GdaError * error,
 				 "schema_tables: table_schema = '%s'\n",
 				 ptr->value);
 			break;
-		case GDA_Connection_OBJECT_CATALOG:
+		case GNOME_Database_Connection_OBJECT_CATALOG:
 			fprintf (stderr,
 				 "schema_procedures: proc_catalog = '%s' UNUSED!\n",
 				 ptr->value);
@@ -878,7 +879,7 @@ schema_tables (GdaError * error,
 			gda_server_recordset_get_user_data (recset);
 		repl = g_new0 (POSTGRES_Recordset_Replacement, 1);
 		repl->colnum = 3;
-		repl->newtype = GDA_TypeVarchar;
+		repl->newtype = GNOME_Database_TypeVarchar;
 		repl->trans_func = replace_TABLE_NAME_with_SQL;
 		add_replacement_function (recset, repl, "varchar");
 	}
@@ -894,11 +895,11 @@ schema_tables (GdaError * error,
 static GdaServerRecordset *
 schema_columns (GdaError * error,
 		GdaServerConnection * cnc,
-		GDA_Connection_Constraint * constraint, gint length)
+		GNOME_Database_Connection_Constraint * constraint, gint length)
 {
 	GdaServerCommand *cmd;
 	GdaServerRecordset *recset = 0;
-	GDA_Connection_Constraint *ptr;
+	GNOME_Database_Connection_Constraint *ptr;
 	gulong affected;
 	gchar *table_qualifier = 0, *table_owner = 0, *table_name = 0,
 		*column_name = 0;
@@ -908,25 +909,25 @@ schema_columns (GdaError * error,
 	ptr = constraint;
 	while (length) {
 		switch (ptr->ctype) {
-		case GDA_Connection_OBJECT_CATALOG:	/* not used in postgres! */
+		case GNOME_Database_Connection_OBJECT_CATALOG:	/* not used in postgres! */
 			table_qualifier = ptr->value;
 			fprintf (stderr,
 				 "schema_columns: table_qualifier = '%s' UNUSED!\n",
 				 table_qualifier);
 			break;
-		case GDA_Connection_OBJECT_SCHEMA:
+		case GNOME_Database_Connection_OBJECT_SCHEMA:
 			table_owner = ptr->value;
 			fprintf (stderr,
 				 "schema_columns: table_owner = '%s'\n",
 				 table_owner);
 			break;
-		case GDA_Connection_OBJECT_NAME:
+		case GNOME_Database_Connection_OBJECT_NAME:
 			table_name = ptr->value;
 			fprintf (stderr,
 				 "schema_columns: table_name = '%s'\n",
 				 table_name);
 			break;
-		case GDA_Connection_COLUMN_NAME:
+		case GNOME_Database_Connection_COLUMN_NAME:
 			column_name = ptr->value;
 			fprintf (stderr,
 				 "schema_columns: column_name = '%s'\n",
@@ -984,19 +985,19 @@ schema_columns (GdaError * error,
 			gda_server_recordset_get_user_data (recset);
 		repl = g_new0 (POSTGRES_Recordset_Replacement, 1);
 		repl->colnum = 2;
-		repl->newtype = GDA_TypeSmallint;
+		repl->newtype = GNOME_Database_TypeSmallint;
 		repl->trans_func = replace_TABLE_FIELD_with_length;
 		add_replacement_function (recset, repl, "int2");
 		/* Setting replacement for default value */
 		repl = g_new0 (POSTGRES_Recordset_Replacement, 1);
 		repl->colnum = 6;
-		repl->newtype = GDA_TypeVarchar;
+		repl->newtype = GNOME_Database_TypeVarchar;
 		repl->trans_func = replace_TABLE_FIELD_with_defaultval;
 		add_replacement_function (recset, repl, "varchar");
 		/* Setting replacements for key or not */
 		repl = g_new0 (POSTGRES_Recordset_Replacement, 1);
 		repl->colnum = 5;
-		repl->newtype = GDA_TypeBoolean;
+		repl->newtype = GNOME_Database_TypeBoolean;
 		repl->trans_func = replace_TABLE_FIELD_with_iskey;
 		add_replacement_function (recset, repl, "bool");
 	}
@@ -1010,13 +1011,13 @@ schema_columns (GdaError * error,
 static GdaServerRecordset *
 schema_tab_parents (GdaError * error,
 		    GdaServerConnection * cnc,
-		    GDA_Connection_Constraint * constraint, gint length)
+		    GNOME_Database_Connection_Constraint * constraint, gint length)
 {
 	GString *query;
 	GdaServerCommand *cmd;
 	GdaServerRecordset *recset = 0;
 	POSTGRES_Connection *pc;
-	GDA_Connection_Constraint *ptr;
+	GNOME_Database_Connection_Constraint *ptr;
 	gint cnt, oid;
 	gchar *table_name = NULL;
 	PGresult *res;
@@ -1026,9 +1027,9 @@ schema_tab_parents (GdaError * error,
 	ptr = constraint;
 	for (cnt = 0; cnt < length && ptr != 0; cnt++) {
 		switch (ptr->ctype) {
-		case GDA_Connection_OBJECT_CATALOG:	/* not used in postgres */
+		case GNOME_Database_Connection_OBJECT_CATALOG:	/* not used in postgres */
 			break;
-		case GDA_Connection_OBJECT_NAME:
+		case GNOME_Database_Connection_OBJECT_NAME:
 			table_name = ptr->value;
 			fprintf (stderr,
 				 "schema_tab_parents: table_name = '%s'\n",
@@ -1088,11 +1089,11 @@ schema_tab_parents (GdaError * error,
 static GdaServerRecordset *
 schema_procedures (GdaError * error,
 		   GdaServerConnection * cnc,
-		   GDA_Connection_Constraint * constraint, gint length)
+		   GNOME_Database_Connection_Constraint * constraint, gint length)
 {
 	gboolean extra_info = FALSE;
 	gint cnt, i, cntnt, cntntsym;
-	GDA_Connection_Constraint *ptr;
+	GNOME_Database_Connection_Constraint *ptr;
 	POSTGRES_Connection *pc;
 	GdaServerRecordset *recset = 0;
 	gchar *proc_name = 0;
@@ -1113,7 +1114,7 @@ schema_procedures (GdaError * error,
 	ptr = constraint;
 	for (cnt = 0; cnt < length && ptr != 0; cnt++) {
 		switch (ptr->ctype) {
-		case GDA_Connection_OBJECT_NAME:
+		case GNOME_Database_Connection_OBJECT_NAME:
 			proc_name = ptr->value;
 			fprintf (stderr,
 				 "schema_procedures: proc_name = '%s'\n",
@@ -1129,7 +1130,7 @@ schema_procedures (GdaError * error,
 						   "AND p.proname = '%s' ",
 						   ptr->value);
 			break;
-		case GDA_Connection_OBJECT_SCHEMA:
+		case GNOME_Database_Connection_OBJECT_SCHEMA:
 			proc_owner = ptr->value;
 			fprintf (stderr,
 				 "schema_procedures: proc_owner = '%s'\n",
@@ -1145,12 +1146,12 @@ schema_procedures (GdaError * error,
 						   "AND u.usename = '%s' ",
 						   ptr->value);
 			break;
-		case GDA_Connection_OBJECT_CATALOG:
+		case GNOME_Database_Connection_OBJECT_CATALOG:
 			fprintf (stderr,
 				 "schema_procedures: proc_catalog = '%s' UNUSED!\n",
 				 ptr->value);
 			break;
-		case GDA_Connection_EXTRA_INFO:
+		case GNOME_Database_Connection_EXTRA_INFO:
 			extra_info = TRUE;
 			break;
 		default:
@@ -1403,7 +1404,7 @@ schema_procedures (GdaError * error,
 		/* Setting replacements for SQL definition */
 		repl = g_new0 (POSTGRES_Recordset_Replacement, 1);
 		repl->colnum = 5;
-		repl->newtype = GDA_TypeVarchar;
+		repl->newtype = GNOME_Database_TypeVarchar;
 		repl->trans_func = replace_FUNCTION_OID_with_SQL;
 		add_replacement_function (recset, repl, "varchar");
 	}
@@ -1413,10 +1414,10 @@ schema_procedures (GdaError * error,
 static GdaServerRecordset *
 schema_proc_params (GdaError * error,
 		    GdaServerConnection * cnc,
-		    GDA_Connection_Constraint * constraint, gint length)
+		    GNOME_Database_Connection_Constraint * constraint, gint length)
 {
 	gint cnt;
-	GDA_Connection_Constraint *ptr;
+	GNOME_Database_Connection_Constraint *ptr;
 	GdaServerRecordset *recset = 0;
 	gchar *proc_name = 0;
 	gchar *query;
@@ -1431,7 +1432,7 @@ schema_proc_params (GdaError * error,
 	ptr = constraint;
 	for (cnt = 0; cnt < length && ptr != 0; cnt++) {
 		switch (ptr->ctype) {
-		case GDA_Connection_OBJECT_NAME:
+		case GNOME_Database_Connection_OBJECT_NAME:
 			proc_name = ptr->value;
 			fprintf (stderr,
 				 "schema_proc_params: proc_name = '%s'\n",
@@ -1524,12 +1525,12 @@ schema_proc_params (GdaError * error,
 static GdaServerRecordset *
 schema_aggregates (GdaError * error,
 		   GdaServerConnection * cnc,
-		   GDA_Connection_Constraint * constraint, gint length)
+		   GNOME_Database_Connection_Constraint * constraint, gint length)
 {
 	GString *query;
 	GdaServerCommand *cmd;
 	GdaServerRecordset *recset = 0;
-	GDA_Connection_Constraint *ptr;
+	GNOME_Database_Connection_Constraint *ptr;
 	gint cnt;
 	GString *and_condition = 0;
 	gulong affected;
@@ -1539,10 +1540,10 @@ schema_aggregates (GdaError * error,
 	ptr = constraint;
 	for (cnt = 0; cnt < length && ptr != 0; cnt++) {
 		switch (ptr->ctype) {
-		case GDA_Connection_EXTRA_INFO:
+		case GNOME_Database_Connection_EXTRA_INFO:
 			extra_info = TRUE;
 			break;
-		case GDA_Connection_OBJECT_NAME:
+		case GNOME_Database_Connection_OBJECT_NAME:
 			if (!and_condition)
 				and_condition = g_string_new ("");
 			g_string_sprintfa (and_condition, "AND a.oid='%s' ",
@@ -1551,7 +1552,7 @@ schema_aggregates (GdaError * error,
 				 "schema_tables: aggregate name = '%s'\n",
 				 ptr->value);
 			break;
-		case GDA_Connection_OBJECT_SCHEMA:
+		case GNOME_Database_Connection_OBJECT_SCHEMA:
 			if (!and_condition)
 				and_condition = g_string_new ("");
 			g_string_sprintfa (and_condition,
@@ -1560,7 +1561,7 @@ schema_aggregates (GdaError * error,
 				 "schema_tables: table_schema = '%s'\n",
 				 ptr->value);
 			break;
-		case GDA_Connection_OBJECT_CATALOG:
+		case GNOME_Database_Connection_OBJECT_CATALOG:
 			fprintf (stderr,
 				 "schema_procedures: proc_catalog = '%s' UNUSED!\n",
 				 ptr->value);
@@ -1635,7 +1636,7 @@ schema_aggregates (GdaError * error,
 			gda_server_recordset_get_user_data (recset);
 		repl = g_new0 (POSTGRES_Recordset_Replacement, 1);
 		repl->colnum = 5;
-		repl->newtype = GDA_TypeVarchar;
+		repl->newtype = GNOME_Database_TypeVarchar;
 		repl->trans_func = replace_AGGREGATE_OID_with_SQL;
 		add_replacement_function (recset, repl, "varchar");
 	}
@@ -1647,12 +1648,12 @@ schema_aggregates (GdaError * error,
 static GdaServerRecordset *
 schema_sequences (GdaError * error,
 		  GdaServerConnection * cnc,
-		  GDA_Connection_Constraint * constraint, gint length)
+		  GNOME_Database_Connection_Constraint * constraint, gint length)
 {
 	GString *query;
 	GdaServerCommand *cmd;
 	GdaServerRecordset *recset = 0;
-	GDA_Connection_Constraint *ptr;
+	GNOME_Database_Connection_Constraint *ptr;
 	gboolean extra_info = FALSE;
 	gint cnt;
 	GString *and_condition = 0;
@@ -1662,12 +1663,12 @@ schema_sequences (GdaError * error,
 	ptr = constraint;
 	for (cnt = 0; cnt < length && ptr != 0; cnt++) {
 		switch (ptr->ctype) {
-		case GDA_Connection_EXTRA_INFO:
+		case GNOME_Database_Connection_EXTRA_INFO:
 			extra_info = TRUE;
 			break;
-		case GDA_Connection_OBJECT_CATALOG:	/* not used in postgres */
+		case GNOME_Database_Connection_OBJECT_CATALOG:	/* not used in postgres */
 			break;
-		case GDA_Connection_OBJECT_NAME:
+		case GNOME_Database_Connection_OBJECT_NAME:
 			if (!and_condition)
 				and_condition = g_string_new ("");
 			g_string_sprintfa (and_condition,
@@ -1676,7 +1677,7 @@ schema_sequences (GdaError * error,
 				 "schema_sequences: seq name = '%s'\n",
 				 ptr->value);
 			break;
-		case GDA_Connection_OBJECT_SCHEMA:
+		case GNOME_Database_Connection_OBJECT_SCHEMA:
 			if (!and_condition)
 				and_condition = g_string_new ("");
 			g_string_sprintfa (and_condition,
@@ -1734,7 +1735,7 @@ schema_sequences (GdaError * error,
 			gda_server_recordset_get_user_data (recset);
 		repl = g_new0 (POSTGRES_Recordset_Replacement, 1);
 		repl->colnum = 3;
-		repl->newtype = GDA_TypeVarchar;
+		repl->newtype = GNOME_Database_TypeVarchar;
 		repl->trans_func = replace_SEQUENCE_NAME_with_SQL;
 		add_replacement_function (recset, repl, "varchar");
 	}
@@ -1745,11 +1746,11 @@ schema_sequences (GdaError * error,
 static GdaServerRecordset *
 schema_types (GdaError * error,
 	      GdaServerConnection * cnc,
-	      GDA_Connection_Constraint * constraint, gint length)
+	      GNOME_Database_Connection_Constraint * constraint, gint length)
 {
 	gboolean extra_info = FALSE;
 	gint cnt;
-	GDA_Connection_Constraint *ptr;
+	GNOME_Database_Connection_Constraint *ptr;
 	GdaServerCommand *cmd;
 	GdaServerRecordset *recset;
 	GString *query = NULL, *and_condition = NULL;
@@ -1767,7 +1768,7 @@ schema_types (GdaError * error,
 	ptr = constraint;
 	for (cnt = 0; cnt < length && ptr != 0; cnt++) {
 		switch (ptr->ctype) {
-		case GDA_Connection_OBJECT_NAME:
+		case GNOME_Database_Connection_OBJECT_NAME:
 			if (!and_condition)
 				and_condition = g_string_new ("");
 			g_string_sprintfa (and_condition,
@@ -1775,7 +1776,7 @@ schema_types (GdaError * error,
 			fprintf (stderr, "schema_tables: type name = '%s'\n",
 				 ptr->value);
 			break;
-		case GDA_Connection_OBJECT_SCHEMA:
+		case GNOME_Database_Connection_OBJECT_SCHEMA:
 			if (!and_condition)
 				and_condition = g_string_new ("");
 			g_string_sprintfa (and_condition,
@@ -1783,9 +1784,9 @@ schema_types (GdaError * error,
 			fprintf (stderr, "schema_tables: owner     = '%s'\n",
 				 ptr->value);
 			break;
-		case GDA_Connection_OBJECT_CATALOG:	/* not used in postgres */
+		case GNOME_Database_Connection_OBJECT_CATALOG:	/* not used in postgres */
 			break;
-		case GDA_Connection_EXTRA_INFO:
+		case GNOME_Database_Connection_EXTRA_INFO:
 			extra_info = TRUE;
 			break;
 		default:
@@ -1844,7 +1845,7 @@ schema_types (GdaError * error,
 			gda_server_recordset_get_user_data (recset);
 		repl = g_new0 (POSTGRES_Recordset_Replacement, 1);
 		repl->colnum = 3;
-		repl->newtype = GDA_TypeSmallint;
+		repl->newtype = GNOME_Database_TypeSmallint;
 		repl->trans_func = replace_PROV_TYPES_with_gdatype;
 		add_replacement_function (recset, repl, "int2");
 	}
@@ -1856,14 +1857,14 @@ schema_types (GdaError * error,
 static GdaServerRecordset *
 schema_views (GdaError * error,
 	      GdaServerConnection * cnc,
-	      GDA_Connection_Constraint * constraint, gint length)
+	      GNOME_Database_Connection_Constraint * constraint, gint length)
 {
 	gchar *query = 0;
 	gchar *view_name = 0;
 	gint cnt;
 	GdaServerCommand *cmd;
 	GdaServerRecordset *recset = 0;
-	GDA_Connection_Constraint *ptr;
+	GNOME_Database_Connection_Constraint *ptr;
 	gboolean extra_info = FALSE;
 	gulong affected;
 
@@ -1871,10 +1872,10 @@ schema_views (GdaError * error,
 	ptr = constraint;
 	for (cnt = 0; cnt < length && ptr != 0; cnt++) {
 		switch (ptr->ctype) {
-		case GDA_Connection_EXTRA_INFO:
+		case GNOME_Database_Connection_EXTRA_INFO:
 			extra_info = TRUE;
 			break;
-		case GDA_Connection_OBJECT_NAME:
+		case GNOME_Database_Connection_OBJECT_NAME:
 			view_name = ptr->value;
 			fprintf (stderr, "schema_views: view name = '%s'\n",
 				 view_name);
@@ -1989,21 +1990,21 @@ initialize_schema_ops (void)
 	gint i;
 
 	/* sane init */
-	for (i = GDA_Connection_GDCN_SCHEMA_AGGREGATES;
-	     i <= GDA_Connection_GDCN_SCHEMA_LAST; i++)
+	for (i = GNOME_Database_Connection_GDCN_SCHEMA_AGGREGATES;
+	     i <= GNOME_Database_Connection_GDCN_SCHEMA_LAST; i++)
 		schema_ops[i] = 0;
 
 	/* what is implemented */
-	schema_ops[GDA_Connection_GDCN_SCHEMA_TABLES] = schema_tables;
-	schema_ops[GDA_Connection_GDCN_SCHEMA_COLS] = schema_columns;
-	schema_ops[GDA_Connection_GDCN_SCHEMA_PROCS] = schema_procedures;
-	schema_ops[GDA_Connection_GDCN_SCHEMA_PROC_PARAMS] =
+	schema_ops[GNOME_Database_Connection_GDCN_SCHEMA_TABLES] = schema_tables;
+	schema_ops[GNOME_Database_Connection_GDCN_SCHEMA_COLS] = schema_columns;
+	schema_ops[GNOME_Database_Connection_GDCN_SCHEMA_PROCS] = schema_procedures;
+	schema_ops[GNOME_Database_Connection_GDCN_SCHEMA_PROC_PARAMS] =
 		schema_proc_params;
-	schema_ops[GDA_Connection_GDCN_SCHEMA_AGGREGATES] = schema_aggregates;
-	schema_ops[GDA_Connection_GDCN_SCHEMA_PROV_TYPES] = schema_types;
-	schema_ops[GDA_Connection_GDCN_SCHEMA_VIEWS] = schema_views;
-	schema_ops[GDA_Connection_GDCN_SCHEMA_SEQUENCES] = schema_sequences;
-	schema_ops[GDA_Connection_GDCN_SCHEMA_TAB_PARENTS] =
+	schema_ops[GNOME_Database_Connection_GDCN_SCHEMA_AGGREGATES] = schema_aggregates;
+	schema_ops[GNOME_Database_Connection_GDCN_SCHEMA_PROV_TYPES] = schema_types;
+	schema_ops[GNOME_Database_Connection_GDCN_SCHEMA_VIEWS] = schema_views;
+	schema_ops[GNOME_Database_Connection_GDCN_SCHEMA_SEQUENCES] = schema_sequences;
+	schema_ops[GNOME_Database_Connection_GDCN_SCHEMA_TAB_PARENTS] =
 		schema_tab_parents;
 }
 
@@ -2123,7 +2124,7 @@ add_replacement_function (GdaServerRecordset * recset,
 	POSTGRES_Recordset *prc;
 	POSTGRES_Connection *pc;
 	gulong sqltype;
-	GdaServerField *field;
+	GdaField *field;
 
 	g_return_if_fail (sql_type != NULL);
 	g_return_if_fail (repl != NULL);
@@ -2140,7 +2141,7 @@ add_replacement_function (GdaServerRecordset * recset,
 	prc->replacements = g_slist_append (prc->replacements, repl);
 
 	/* Now set the right sql_type value of the field */
-	field = (GdaServerField *) g_list_nth_data (recset->fields,
+	field = (GdaField *) g_list_nth_data (recset->fields,
 						    repl->colnum);
-	gda_server_field_set_sql_type (field, sqltype);
+	gda_field_set_ctype (field, sqltype);
 }

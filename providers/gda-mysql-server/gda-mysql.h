@@ -30,29 +30,13 @@
 #include <mysql_com.h>
 #include <gda-builtin-res.h>
 
-#ifdef ENABLE_NLS
-#  include <libintl.h>
-#  define _(String) gettext (String)
-#  define N_(String) (String)
-#else
-/* Stubs that do something close enough.  */
-#  define textdomain(String)
-#  define gettext(String) (String)
-#  define dgettext(Domain,Message) (Message)
-#  define dcgettext(Domain,Message,Type) (Message)
-#  define bindtextdomain(Domain,Directory)
-#  define _(String) (String)
-#  define N_(String) (String)
-#endif
-
 /* The following constant defines the "bool" types, which IS NOT a MySQL data
  * type; it is used by the schema functions to be able to return boolean
  * values when necessary. It WILL NOT appear as a possible data type 
  */
 #define FIELD_TYPE_BOOL 100001
 
-typedef enum
-{
+typedef enum {
 	SQL_C_DATE,
 	SQL_C_TIME,
 	SQL_C_TIMESTAMP,
@@ -74,11 +58,10 @@ typedef enum
 }
 MYSQL_CType;
 
-typedef struct MYSQL_Types_Array
-{
+typedef struct MYSQL_Types_Array {
 	gchar *mysql_type;
 	gulong oid;
-	GDA_ValueType gda_type;
+	GNOME_Database_ValueType gda_type;
 	MYSQL_CType c_type;
 	gchar *description;
 	gchar *owner;
@@ -89,22 +72,19 @@ MYSQL_Types_Array;
 /*
  * Per-object specific structures
  */
-typedef struct
-{
+typedef struct {
 	MYSQL *mysql;
 	MYSQL_Types_Array *types_array;
 }
 MYSQL_Connection;
 
-typedef struct
-{
+typedef struct {
 }
 MYSQL_Command;
 
 typedef struct _MYSQL_Recordset MYSQL_Recordset;
 typedef MYSQL_ROW (*MYSQL_FixFieldsFunc) (MYSQL_Recordset *, MYSQL_ROW);
-struct _MYSQL_Recordset
-{
+struct _MYSQL_Recordset {
 	MYSQL_RES *mysql_res;
 	gint *order;
 	gint order_count;
@@ -130,25 +110,25 @@ gint gda_mysql_connection_commit_transaction (GdaServerConnection * cnc);
 gint gda_mysql_connection_rollback_transaction (GdaServerConnection * cnc);
 GdaServerRecordset *gda_mysql_connection_open_schema (GdaServerConnection *
 						      cnc, GdaError * error,
-						      GDA_Connection_QType t,
-						      GDA_Connection_Constraint
+						      GNOME_Database_Connection_QType t,
+						      GNOME_Database_Connection_Constraint
 						      * constraints,
 						      gint length);
 glong gda_mysql_connection_modify_schema (GdaServerConnection * cnc,
-					  GDA_Connection_QType t,
-					  GDA_Connection_Constraint *
+					  GNOME_Database_Connection_QType t,
+					  GNOME_Database_Connection_Constraint *
 					  constraints, gint length);
 gint gda_mysql_connection_start_logging (GdaServerConnection * cnc,
 					 const gchar * filename);
 gint gda_mysql_connection_stop_logging (GdaServerConnection * cnc);
 gchar *gda_mysql_connection_create_table (GdaServerConnection * cnc,
-					  GDA_RowAttributes * columns);
+					  GNOME_Database_RowAttributes * columns);
 gboolean gda_mysql_connection_supports (GdaServerConnection * cnc,
-					GDA_Connection_Feature feature);
-GDA_ValueType gda_mysql_connection_get_gda_type (GdaServerConnection * cnc,
+					GNOME_Database_Connection_Feature feature);
+GNOME_Database_ValueType gda_mysql_connection_get_gda_type (GdaServerConnection * cnc,
 						 gulong sql_type);
 gshort gda_mysql_connection_get_c_type (GdaServerConnection * cnc,
-					GDA_ValueType type);
+					GNOME_Database_ValueType type);
 gchar *gda_mysql_connection_sql2xml (GdaServerConnection * cnc,
 				     const gchar * sql);
 gchar *gda_mysql_connection_xml2sql (GdaServerConnection * cnc,
@@ -158,7 +138,7 @@ void gda_mysql_connection_free (GdaServerConnection * cnc);
 gboolean gda_mysql_command_new (GdaServerCommand * cmd);
 GdaServerRecordset *gda_mysql_command_execute (GdaServerCommand * cmd,
 					       GdaError * error,
-					       const GDA_CmdParameterSeq *
+					       const GNOME_Database_CmdParameterSeq *
 					       params, gulong * affected,
 					       gulong options);
 void gda_mysql_command_free (GdaServerCommand * cmd);
@@ -182,10 +162,10 @@ void gda_mysql_init_recset_fields (GdaServerRecordset * recset,
 /* types conversion utilities */
 gulong gda_mysql_connection_get_sql_type (MYSQL_Connection * cnc,
 					  gchar * mysql_type);
-GDA_ValueType gda_mysql_connection_get_gda_type_psql (MYSQL_Connection * cnc,
+GNOME_Database_ValueType gda_mysql_connection_get_gda_type_psql (MYSQL_Connection * cnc,
 						      gulong sql_type);
 gshort gda_mysql_connection_get_c_type_psql (MYSQL_Connection * cnc,
-					     GDA_ValueType type);
+					     GNOME_Database_ValueType type);
 GdaServerRecordset
 	*gda_mysql_command_build_recset_with_builtin (GdaServerConnection *
 						      cnc,

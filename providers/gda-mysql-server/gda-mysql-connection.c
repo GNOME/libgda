@@ -1,4 +1,4 @@
-/* GNOME DB MYSQL Provider
+/* GDA MYSQL Provider
  * Copyright (C) 1998 Michael Lausch
  * Copyright (C) 2000 Rodrigo Moya
  * Copyright (C) 2001 Vivien Malerba
@@ -24,79 +24,79 @@
 
 typedef GdaServerRecordset *(*schema_ops_fn) (GdaError *,
 					      GdaServerConnection *,
-					      GDA_Connection_Constraint *,
+					      GNOME_Database_Connection_Constraint *,
 					      gint);
 
 static GdaServerRecordset *schema_tables (GdaError * error,
 					  GdaServerConnection * cnc,
-					  GDA_Connection_Constraint *
+					  GNOME_Database_Connection_Constraint *
 					  constraints, gint length);
 static GdaServerRecordset *schema_columns (GdaError * error,
 					   GdaServerConnection * cnc,
-					   GDA_Connection_Constraint *
+					   GNOME_Database_Connection_Constraint *
 					   constraints, gint length);
 
 static GdaServerRecordset *schema_types (GdaError * error,
 					 GdaServerConnection * cnc,
-					 GDA_Connection_Constraint *
+					 GNOME_Database_Connection_Constraint *
 					 constraint, gint length);
 
-schema_ops_fn schema_ops[GDA_Connection_GDCN_SCHEMA_LAST] = { 0, };
+schema_ops_fn schema_ops[GNOME_Database_Connection_GDCN_SCHEMA_LAST] = { 0, };
 
 #define MYSQL_Types_Array_Nb 18
 MYSQL_Types_Array types_array[MYSQL_Types_Array_Nb + 1] = {	/* +1 for the dummy BOOL data type */
-	{"bigint", FIELD_TYPE_LONGLONG, GDA_TypeUBigint, SQL_C_ULONG,
+	{"bigint", FIELD_TYPE_LONGLONG, GNOME_Database_TypeBigint, SQL_C_ULONG,
 	 "Large integer: the signed range is `-9223372036854775808' to `9223372036854775807' and the unsigned one is `0' to `18446744073709551615'",
 	 "dbowner"},
-	{"blob", FIELD_TYPE_BLOB, GDA_TypeVarchar, SQL_C_BINARY,
+	{"blob", FIELD_TYPE_BLOB, GNOME_Database_TypeVarchar, SQL_C_BINARY,
 	 "`BLOB' or `TEXT' column with a maximum length of 65535 (2^16 - 1) characters",
 	 "dbowner"},
-	{"char", FIELD_TYPE_TINY, GDA_TypeChar, SQL_C_CHAR,
+	{"char", FIELD_TYPE_TINY, GNOME_Database_TypeChar, SQL_C_CHAR,
 	 "Fixed-length string that is always right-padded with spaces to the specified length",
 	 "dbowner"},
-	{"date", FIELD_TYPE_DATE, GDA_TypeDbDate, SQL_C_DATE,
+	{"date", FIELD_TYPE_DATE, GNOME_Database_TypeDate, SQL_C_DATE,
 	 "Date: the supported range is `'1000-01-01'' to `'9999-12-31''",
 	 "dbowner"},
-	{"datetime", FIELD_TYPE_DATETIME, GDA_TypeDbTimestamp,
+	{"datetime", FIELD_TYPE_DATETIME, GNOME_Database_TypeTimestamp,
 	 SQL_C_TIMESTAMP,
 	 "Date and time combination: the supported range is `'1000-01-01 00:00:00'' to `'9999-12-31 23:59:59''",
 	 "dbowner"},
-	{"decimal", FIELD_TYPE_DECIMAL, GDA_TypeDecimal, SQL_C_FLOAT,
+	{"decimal", FIELD_TYPE_DECIMAL, GNOME_Database_TypeDecimal, SQL_C_FLOAT,
 	 "floating-point number", "dbowner"},
-	{"double", FIELD_TYPE_DOUBLE, GDA_TypeDouble, SQL_C_DOUBLE,
+	{"double", FIELD_TYPE_DOUBLE, GNOME_Database_TypeDouble, SQL_C_DOUBLE,
 	 "Normal-size (double-precision) floating-point number cannot be unsigned",
 	 "dbowner"},
-	{"enum", FIELD_TYPE_ENUM, GDA_TypeVarchar, SQL_C_CHAR,
+	{"enum", FIELD_TYPE_ENUM, GNOME_Database_TypeVarchar, SQL_C_CHAR,
 	 "Enumeration: a string object that can have only one value, chosen from the list of values",
 	 "dbowner"},
-	{"float", FIELD_TYPE_FLOAT, GDA_TypeSingle, SQL_C_FLOAT,
+	{"float", FIELD_TYPE_FLOAT, GNOME_Database_TypeSingle, SQL_C_FLOAT,
 	 "A floating-point number, cannot be unsigned", "dbowner"},
-	{"integer", FIELD_TYPE_LONG, GDA_TypeBigint, SQL_C_SLONG,
+	{"integer", FIELD_TYPE_LONG, GNOME_Database_TypeBigint, SQL_C_SLONG,
 	 "Normal-size integer: the signed range is `-2147483648' to `2147483647' and the unsigned one is `0' to `4294967295'",
 	 "dbowner"},
-	{"mediumint", FIELD_TYPE_INT24, GDA_TypeBigint, SQL_C_SLONG,
+	{"mediumint", FIELD_TYPE_INT24, GNOME_Database_TypeBigint, SQL_C_SLONG,
 	 "Medium-size integer: the signed range is `-8388608' to `8388607' and the unsigned one is `0' to `16777215'",
 	 "dbowner"},
-	{"set", FIELD_TYPE_SET, GDA_TypeVarchar, SQL_C_BINARY,
+	{"set", FIELD_TYPE_SET, GNOME_Database_TypeVarchar, SQL_C_BINARY,
 	 "Set: a string object that can have zero or more values, each of which must be chosen from the list of values",
 	 "dbowner"},
-	{"smallint", FIELD_TYPE_SHORT, GDA_TypeSmallint, SQL_C_SSHORT,
+	{"smallint", FIELD_TYPE_SHORT, GNOME_Database_TypeSmallint, SQL_C_SSHORT,
 	 "Small integer: the signed range is `-32768' to `32767' and the unsigned one is `0' to `65535'",
 	 "dbowner"},
-	{"time", FIELD_TYPE_TIME, GDA_TypeDbTime, SQL_C_TIME,
+	{"time", FIELD_TYPE_TIME, GNOME_Database_TypeTime, SQL_C_TIME,
 	 "Time: the range is `'-838:59:59'' to `'838:59:59''", "dbowner"},
-	{"timestamp", FIELD_TYPE_TIMESTAMP, GDA_TypeDbTimestamp,
+	{"timestamp", FIELD_TYPE_TIMESTAMP, GNOME_Database_TypeTimestamp,
 	 SQL_C_TIMESTAMP,
 	 "Timestamp: the range is `'1970-01-01 00:00:00'' to sometime in the year `2037'",
 	 "dbowner"},
-	{"varchar", FIELD_TYPE_STRING, GDA_TypeVarchar, SQL_C_CHAR,
+	{"varchar", FIELD_TYPE_STRING, GNOME_Database_TypeVarchar, SQL_C_CHAR,
 	 "Variable-length string", "dbowner"},
-	{"year", FIELD_TYPE_YEAR, GDA_TypeInteger, SQL_C_SLONG,
+	{"year", FIELD_TYPE_YEAR, GNOME_Database_TypeInteger, SQL_C_SLONG,
 	 "Year in 2- or 4-digit format (default is 4-digit): the allowable values are `1901' to `2155', `0000' in the 4-digit year format, and 1970-2069 if you use the 2-digit format (70-69)",
 	 "dbowner"},
-	{"null", FIELD_TYPE_NULL, GDA_TypeNull, SQL_C_CHAR, "Unknown",
+	{"null", FIELD_TYPE_NULL, GNOME_Database_TypeNull, SQL_C_CHAR, "Unknown",
 	 "dbowner"},
-	{"bool", FIELD_TYPE_BOOL, GDA_TypeBoolean, SQL_C_BIT,
+	{"bool", FIELD_TYPE_BOOL, GNOME_Database_TypeBoolean, SQL_C_BIT,
 	 "Does not go to the user!", "GDA only"}
 };
 
@@ -111,9 +111,9 @@ gda_mysql_connection_new (GdaServerConnection * cnc)
 
 	/* initialize schema functions */
 	if (!initialized) {
-		schema_ops[GDA_Connection_GDCN_SCHEMA_TABLES] = schema_tables;
-		schema_ops[GDA_Connection_GDCN_SCHEMA_COLS] = schema_columns;
-		schema_ops[GDA_Connection_GDCN_SCHEMA_PROV_TYPES] =
+		schema_ops[GNOME_Database_Connection_GDCN_SCHEMA_TABLES] = schema_tables;
+		schema_ops[GNOME_Database_Connection_GDCN_SCHEMA_COLS] = schema_columns;
+		schema_ops[GNOME_Database_Connection_GDCN_SCHEMA_PROV_TYPES] =
 			schema_types;
 	}
 
@@ -201,15 +201,15 @@ gda_mysql_connection_open (GdaServerConnection * cnc,
 					 t_unix_socket,
 					 t_flags ? atoi (t_flags) : 0);
 		if (!rc) {
-			gda_server_error_make (gda_error_new (), 0, cnc,
-					       __PRETTY_FUNCTION__);
+			gda_server_connection_make_error (gda_error_new (), 0, cnc,
+							  __PRETTY_FUNCTION__);
 			gda_quark_list_free (qlist);
 			return -1;
 		}
 #if MYSQL_VERSION_ID < 32200
 		err = mysql_select_db (mysql_cnc->mysql, t_db);
 		if (err != 0) {
-			gda_server_error_make (gda_error_new (), 0, cnc,
+			gda_server_connection_make_error (gda_error_new (), 0, cnc,
 					       __PRETTY_FUNCTION__);
 			gda_quark_list_free (qlist);
 			return -1;
@@ -265,8 +265,8 @@ gda_mysql_connection_rollback_transaction (GdaServerConnection * cnc)
 GdaServerRecordset *
 gda_mysql_connection_open_schema (GdaServerConnection * cnc,
 				  GdaError * error,
-				  GDA_Connection_QType t,
-				  GDA_Connection_Constraint * constraints,
+				  GNOME_Database_Connection_QType t,
+				  GNOME_Database_Connection_Constraint * constraints,
 				  gint length)
 {
 	schema_ops_fn fn;
@@ -278,7 +278,7 @@ gda_mysql_connection_open_schema (GdaServerConnection * cnc,
 		return fn (error, cnc, constraints, length);
 
 	/* we don't support this schema type */
-	gda_server_error_make (error, NULL, cnc, __PRETTY_FUNCTION__);
+	gda_server_connection_make_error (error, NULL, cnc, __PRETTY_FUNCTION__);
 	gda_error_set_description (error, _("Unknown schema type"));
 
 	return NULL;
@@ -286,8 +286,8 @@ gda_mysql_connection_open_schema (GdaServerConnection * cnc,
 
 glong
 gda_mysql_connection_modify_schema (GdaServerConnection * cnc,
-				    GDA_Connection_QType t,
-				    GDA_Connection_Constraint * constraints,
+				    GNOME_Database_Connection_QType t,
+				    GNOME_Database_Connection_Constraint * constraints,
 				    gint length)
 {
 	return -1;
@@ -308,20 +308,20 @@ gda_mysql_connection_stop_logging (GdaServerConnection * cnc)
 
 gchar *
 gda_mysql_connection_create_table (GdaServerConnection * cnc,
-				   GDA_RowAttributes * columns)
+				   GNOME_Database_RowAttributes * columns)
 {
 	return NULL;
 }
 
 gboolean
 gda_mysql_connection_supports (GdaServerConnection * cnc,
-			       GDA_Connection_Feature feature)
+			       GNOME_Database_Connection_Feature feature)
 {
 	g_return_val_if_fail (cnc != NULL, FALSE);
 
 	switch (feature) {
-	case GDA_Connection_FEATURE_SQL:
-	case GDA_Connection_FEATURE_XML_QUERIES:
+	case GNOME_Database_Connection_FEATURE_SQL:
+	case GNOME_Database_Connection_FEATURE_XML_QUERIES:
 		return TRUE;
 	default:
 		return FALSE;
@@ -352,16 +352,16 @@ gda_mysql_connection_get_sql_type (MYSQL_Connection * cnc, gchar * mysql_type)
 }
 
 
-GDA_ValueType
+GNOME_Database_ValueType
 gda_mysql_connection_get_gda_type_mysql (MYSQL_Connection * mycnc,
 					 gulong sql_type)
 {
-	GDA_ValueType gda_type = GDA_TypeVarchar;	/* default value */
+	GNOME_Database_ValueType gda_type = GNOME_Database_TypeVarchar;	/* default value */
 	gboolean found = FALSE;
 	gint i = 0;
 
-	g_return_val_if_fail ((mycnc != NULL), GDA_TypeNull);
-	g_return_val_if_fail ((mycnc->types_array != NULL), GDA_TypeNull);
+	g_return_val_if_fail ((mycnc != NULL), GNOME_Database_TypeNull);
+	g_return_val_if_fail ((mycnc->types_array != NULL), GNOME_Database_TypeNull);
 
 	while ((i < MYSQL_Types_Array_Nb - 1) && !found) {
 		if (mycnc->types_array[i].oid == sql_type) {
@@ -381,8 +381,8 @@ gda_mysql_connection_get_charsql_type_mysql (MYSQL_Connection * mycnc,
 	gboolean found = FALSE;
 	gint i = 0;
 
-	g_return_val_if_fail ((mycnc != NULL), GDA_TypeNull);
-	g_return_val_if_fail ((mycnc->types_array != NULL), GDA_TypeNull);
+	g_return_val_if_fail ((mycnc != NULL), GNOME_Database_TypeNull);
+	g_return_val_if_fail ((mycnc->types_array != NULL), GNOME_Database_TypeNull);
 
 	while ((i < MYSQL_Types_Array_Nb - 1) && !found) {
 		if (mycnc->types_array[i].oid == sql_type) {
@@ -395,11 +395,11 @@ gda_mysql_connection_get_charsql_type_mysql (MYSQL_Connection * mycnc,
 }
 
 
-GDA_ValueType
+GNOME_Database_ValueType
 gda_mysql_connection_get_gda_type (GdaServerConnection * cnc, gulong sql_type)
 {
 	MYSQL_Connection *mycnc;
-	g_return_val_if_fail (cnc != NULL, GDA_TypeNull);
+	g_return_val_if_fail (cnc != NULL, GNOME_Database_TypeNull);
 
 	mycnc = (MYSQL_Connection *)
 		gda_server_connection_get_user_data (cnc);
@@ -408,7 +408,7 @@ gda_mysql_connection_get_gda_type (GdaServerConnection * cnc, gulong sql_type)
 
 gshort
 gda_mysql_connection_get_c_type_mysql (MYSQL_Connection * mycnc,
-				       GDA_ValueType gda_type)
+				       GNOME_Database_ValueType gda_type)
 {
 	MYSQL_CType c_type = SQL_C_CHAR;	/* default value */
 	gboolean found = FALSE;
@@ -429,7 +429,7 @@ gda_mysql_connection_get_c_type_mysql (MYSQL_Connection * mycnc,
 
 gshort
 gda_mysql_connection_get_c_type (GdaServerConnection * cnc,
-				 GDA_ValueType type)
+				 GNOME_Database_ValueType type)
 {
 	MYSQL_Connection *mycnc;
 
@@ -502,7 +502,7 @@ gda_mysql_error_make (GdaError * error,
 static GdaServerRecordset *
 schema_tables (GdaError * error,
 	       GdaServerConnection * cnc,
-	       GDA_Connection_Constraint * constraints, gint length)
+	       GNOME_Database_Connection_Constraint * constraints, gint length)
 {
 	GdaServerRecordset *recset;
 	MYSQL_Connection *mycnc;
@@ -512,7 +512,7 @@ schema_tables (GdaError * error,
 	if (mycnc) {
 		gboolean extra_info = FALSE;
 		gchar *table_name = NULL;
-		GDA_Connection_Constraint *ptr = NULL;
+		GNOME_Database_Connection_Constraint *ptr = NULL;
 		gint cnt;
 		gchar *query;
 		gint rc;
@@ -522,14 +522,14 @@ schema_tables (GdaError * error,
 		ptr = constraints;
 		for (cnt = 0; cnt < length && ptr != NULL; cnt++) {
 			switch (ptr->ctype) {
-			case GDA_Connection_OBJECT_NAME:
+			case GNOME_Database_Connection_OBJECT_NAME:
 				table_name = ptr->value;
 				break;
-			case GDA_Connection_EXTRA_INFO:
+			case GNOME_Database_Connection_EXTRA_INFO:
 				extra_info = TRUE;
 				break;
-			case GDA_Connection_OBJECT_SCHEMA:
-			case GDA_Connection_OBJECT_CATALOG:
+			case GNOME_Database_Connection_OBJECT_SCHEMA:
+			case GNOME_Database_Connection_OBJECT_CATALOG:
 				/* N/A */
 				break;
 			default:
@@ -546,7 +546,7 @@ schema_tables (GdaError * error,
 		rc = mysql_real_query (mycnc->mysql, query, strlen (query));
 		g_free (query);
 		if (rc) {
-			gda_server_error_make (error, NULL, cnc,
+			gda_server_connection_make_error (error, NULL, cnc,
 					       __PRETTY_FUNCTION__);
 		}
 		else {
@@ -554,7 +554,7 @@ schema_tables (GdaError * error,
 
 			res = mysql_store_result (mycnc->mysql);
 			if (!res) {
-				gda_server_error_make (error, NULL, cnc,
+				gda_server_connection_make_error (error, NULL, cnc,
 						       __PRETTY_FUNCTION__);
 			}
 			else {
@@ -628,7 +628,7 @@ schema_tables (GdaError * error,
 				}
 				if (!mysql_eof (res)) {	/* mysql_fetch_row() failed due to an error */
 					mysql_free_result (res);
-					gda_server_error_make (error, NULL,
+					gda_server_connection_make_error (error, NULL,
 							       cnc,
 							       __PRETTY_FUNCTION__);
 				}
@@ -653,14 +653,14 @@ schema_tables (GdaError * error,
 static GdaServerRecordset *
 schema_columns (GdaError * error,
 		GdaServerConnection * cnc,
-		GDA_Connection_Constraint * constraints, gint length)
+		GNOME_Database_Connection_Constraint * constraints, gint length)
 {
 	GdaServerCommand *cmd;
 	GdaServerRecordset *recset;
 	gulong affected = 0;
 	gchar *query;
 	gchar *table_name = NULL;
-	GDA_Connection_Constraint *ptr;
+	GNOME_Database_Connection_Constraint *ptr;
 	gint cnt;
 	MYSQL_Connection *mycnc;
 
@@ -671,10 +671,10 @@ schema_columns (GdaError * error,
 	ptr = constraints;
 	for (cnt = 0; cnt < length && ptr != NULL; cnt++) {
 		switch (ptr->ctype) {
-		case GDA_Connection_OBJECT_NAME:
+		case GNOME_Database_Connection_OBJECT_NAME:
 			table_name = ptr->value;
 			break;
-		case GDA_Connection_COLUMN_NAME:
+		case GNOME_Database_Connection_COLUMN_NAME:
 			break;
 		default:
 		}
@@ -690,7 +690,7 @@ schema_columns (GdaError * error,
 		rc = mysql_real_query (mycnc->mysql, query, strlen (query));
 		g_free (query);
 		if (rc) {
-			gda_server_error_make (error, NULL, cnc,
+			gda_server_connection_make_error (error, NULL, cnc,
 					       __PRETTY_FUNCTION__);
 		}
 		else {
@@ -698,7 +698,7 @@ schema_columns (GdaError * error,
 
 			res = mysql_store_result (mycnc->mysql);
 			if (!res)
-				gda_server_error_make (error, NULL, cnc,
+				gda_server_connection_make_error (error, NULL, cnc,
 						       __PRETTY_FUNCTION__);
 			else {
 				GdaBuiltin_Result *bres;
@@ -767,7 +767,7 @@ schema_columns (GdaError * error,
 							       (query));
 					g_free (query);
 					if (rc) {
-						gda_server_error_make (error,
+						gda_server_connection_make_error (error,
 								       NULL,
 								       cnc,
 								       __PRETTY_FUNCTION__);
@@ -780,7 +780,7 @@ schema_columns (GdaError * error,
 						myrow = mysql_fetch_row
 							(res2);
 						if (!myrow) {
-							gda_server_error_make
+							gda_server_connection_make_error
 								(error, NULL,
 								 cnc,
 								 __PRETTY_FUNCTION__);
@@ -842,13 +842,13 @@ schema_columns (GdaError * error,
 static GdaServerRecordset *
 schema_types (GdaError * error,
 	      GdaServerConnection * cnc,
-	      GDA_Connection_Constraint * constraint, gint length)
+	      GNOME_Database_Connection_Constraint * constraint, gint length)
 {
 	GdaServerRecordset *recset = 0;
 	gulong affected = 0;
 	GdaBuiltin_Result *bres;
 	gint cnt;
-	GDA_Connection_Constraint *ptr;
+	GNOME_Database_Connection_Constraint *ptr;
 	MYSQL_Connection *mycnc;
 	gboolean extra_info = FALSE;
 	gchar *typename = NULL;
@@ -859,16 +859,16 @@ schema_types (GdaError * error,
 	ptr = constraint;
 	for (cnt = 0; cnt < length && ptr != 0; cnt++) {
 		switch (ptr->ctype) {
-		case GDA_Connection_OBJECT_NAME:
+		case GNOME_Database_Connection_OBJECT_NAME:
 			typename = ptr->value;
 			break;
-		case GDA_Connection_OBJECT_SCHEMA:
+		case GNOME_Database_Connection_OBJECT_SCHEMA:
 			/* N/A */
 			break;
-		case GDA_Connection_OBJECT_CATALOG:
+		case GNOME_Database_Connection_OBJECT_CATALOG:
 			/* N/A */
 			break;
-		case GDA_Connection_EXTRA_INFO:
+		case GNOME_Database_Connection_EXTRA_INFO:
 			extra_info = TRUE;
 			break;
 		default:

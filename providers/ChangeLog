@@ -1,3 +1,7 @@
+2001-08-31  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* first successful compilation on a GNOME 2 environment
+
 2001-07-05  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* adapted all providers to new API names in libgda-server

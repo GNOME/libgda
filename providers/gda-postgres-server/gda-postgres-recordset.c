@@ -1,4 +1,4 @@
-/* GNOME-DB
+/* GDA Postgres provider
  * Copyright (c) 1998 by Rodrigo Moya
  * Copyright (c) 2000 by Vivien Malerba
  *
@@ -590,7 +590,7 @@ fill_field_values (GdaServerRecordset * recset, POSTGRES_Recordset * prc)
 	GList *node;
 	GSList *repl_list;
 	POSTGRES_Recordset_Replacement *repl;
-	guint valtype = GDA_TypeUnknown;
+	guint valtype = GNOME_Database_TypeUnknown;
 	/* need to know about the postgres version. */
 	POSTGRES_Connection *cnc;
 
@@ -607,12 +607,12 @@ fill_field_values (GdaServerRecordset * recset, POSTGRES_Recordset * prc)
 
 	fprintf (stderr, "getting data from row %ld\n", row);
 	while (node != NULL) {
-		GdaServerField *field = (GdaServerField *) node->data;
+		GdaField *field = (GdaField *) node->data;
 		struct tm *stm;
 
 		if (field != 0) {
 			/*
-			 * field value (GDA_Value)
+			 * field value (GNOME_Database_Value)
 			 */
 			gchar *native_value = NULL, *tmpstr;
 
@@ -664,25 +664,24 @@ fill_field_values (GdaServerRecordset * recset, POSTGRES_Recordset * prc)
 				native_value = NULL;
 
 			switch (valtype) {
-			case GDA_TypeBoolean:
+			case GNOME_Database_TypeBoolean:
 				if (native_value) {
 					if (*native_value == 't')
-						gda_server_field_set_boolean
+						gda_field_set_boolean_value
 							(field, TRUE);
 					else
-						gda_server_field_set_boolean
+						gda_field_set_boolean_value
 							(field, FALSE);
 				}
 				else {
-					gda_server_field_set_boolean (field,
+					gda_field_set_boolean_value (field,
 								      FALSE);
 					/* tell it the bool value is not valid */
-					gda_server_field_set_actual_length
-						(field, 0);
+					gda_field_set_actual_size (field, 0);
 				}
 				break;
 
-			case GDA_TypeDbDate:
+			case GNOME_Database_TypeDbDate:
 				/* the date is DD-MM-YYYY, as set at connection opening */
 				stm = NULL;
 				if (native_value) {
@@ -700,23 +699,20 @@ fill_field_values (GdaServerRecordset * recset, POSTGRES_Recordset * prc)
 								       tm_year
 								       +
 								       1900);
-						gda_server_field_set_date
-							(field, date);
+						gda_field_set_date_value (field, date);
 						g_date_free (date);
 					}
 					else
-						gda_server_field_set_date
-							(field, NULL);
+						gda_field_set_date_value (field, NULL);
 				}
 				if (!native_value || !stm)
-					gda_server_field_set_date (field,
-								   NULL);
+					gda_field_set_date_value (field, NULL);
 
 				if (stm)
 					g_free (stm);
 				break;
 
-			case GDA_TypeDbTime:
+			case GNOME_Database_TypeTime:
 				stm = NULL;
 				if (native_value) {
 					GTime mtime;
@@ -724,22 +720,20 @@ fill_field_values (GdaServerRecordset * recset, POSTGRES_Recordset * prc)
 						(native_value);
 					if (stm) {
 						mtime = mktime (stm);
-						gda_server_field_set_time
-							(field, mtime);
+						gda_field_set_time_value (field, mtime);
 					}
 					else
-						gda_server_field_set_time
-							(field, 0);
+						gda_field_set_time_value (field, 0);
 				}
 				if (!native_value || !stm)
-					gda_server_field_set_time (field, 0);
+					gda_field_set_time_value (field, 0);
 
 
 				if (stm)
 					g_free (stm);
 				break;
 
-			case GDA_TypeDbTimestamp:	/* FIXME */
+			case GNOME_Database_TypeTimestamp:	/* FIXME */
 				/* binded to datetime, timestamp, abstime, interval/timespan, 
 				   tinterval, reltime */
 
@@ -755,19 +749,13 @@ fill_field_values (GdaServerRecordset * recset, POSTGRES_Recordset * prc)
 				   because the DATESTYLE is set in gda-postgres-connection.c
 				   to SQL with US (NonEuropean) conventions. */
 
-				field->value->_u.dbtstamp.year = 0;
-				field->value->_u.dbtstamp.month = 0;
-				field->value->_u.dbtstamp.day = 0;
-				field->value->_u.dbtstamp.hour = 0;
-				field->value->_u.dbtstamp.minute = 0;
-				field->value->_u.dbtstamp.second = 0;
-				field->value->_u.dbtstamp.fraction = 0;
+				gda_field_set_timestamp_value (field, 0);
 				if (!native_value) {
-					field->actual_length = 0;
+					gda_field_set_actual_size (field, 0);
 					break;
 				}
 				field->actual_length =
-					sizeof (GDA_DbTimestamp);
+					sizeof (GNOME_Database_Timestamp);
 
 				if (((field->sql_type ==
 				      gda_postgres_connection_get_sql_type
@@ -853,7 +841,7 @@ fill_field_values (GdaServerRecordset * recset, POSTGRES_Recordset * prc)
 
 				break;
 
-			case GDA_TypeSmallint:
+			case GNOME_Database_TypeSmallint:
 				if (native_value)
 					gda_server_field_set_smallint (field,
 								       atoi
@@ -866,7 +854,7 @@ fill_field_values (GdaServerRecordset * recset, POSTGRES_Recordset * prc)
 				}
 				break;
 
-			case GDA_TypeInteger:
+			case GNOME_Database_TypeInteger:
 				if (native_value)
 					gda_server_field_set_integer (field,
 								      atol
@@ -879,23 +867,23 @@ fill_field_values (GdaServerRecordset * recset, POSTGRES_Recordset * prc)
 				}
 				break;
 
-			case GDA_TypeLongvarchar:
+			case GNOME_Database_TypeLongvarchar:
 				gda_server_field_set_longvarchar (field,
 								  native_value);
 				break;
 
-			case GDA_TypeChar:
+			case GNOME_Database_TypeChar:
 				gda_server_field_set_char (field,
 							   native_value);
 				break;
 
 			default:	/* FIXME */
-			case GDA_TypeVarchar:
+			case GNOME_Database_TypeVarchar:
 				gda_server_field_set_varchar (field,
 							      native_value);
 				break;
 
-			case GDA_TypeSingle:
+			case GNOME_Database_TypeSingle:
 				if (native_value)
 					gda_server_field_set_single (field,
 								     atof
@@ -908,7 +896,7 @@ fill_field_values (GdaServerRecordset * recset, POSTGRES_Recordset * prc)
 				}
 				break;
 
-			case GDA_TypeDouble:
+			case GNOME_Database_TypeDouble:
 				if (native_value)
 					gda_server_field_set_double (field,
 								     atof
@@ -921,7 +909,7 @@ fill_field_values (GdaServerRecordset * recset, POSTGRES_Recordset * prc)
 				}
 				break;
 
-			case GDA_TypeVarbin:
+			case GNOME_Database_TypeVarbin:
 				/* FIXME:
 				   the IDL is typedef sequence<octet> VarBinString;
 				   and the struct:
