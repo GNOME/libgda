@@ -8,7 +8,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2001-02-13 01:38+0100\n"
+"POT-Creation-Date: 2001-03-02 13:07+0100\n"
 "PO-Revision-Date: 2001-02-05 02:42+0100\n"
 "Last-Translator: Christian Rose <menthos@menthos.com>\n"
 "Language-Team: Swedish <sv@li.org>\n"
