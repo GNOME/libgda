@@ -187,15 +187,16 @@ get_config_client ()
 		xmlKeepBlanksDefault(0);
 		if (g_file_get_contents (LIBGDA_GLOBAL_CONFIG_FILE, &full_file,
 					 &len, NULL)){
-			config_client->global = 
-				gda_config_parse_config_file (full_file, len);
+			config_client->global = gda_config_parse_config_file (full_file, len);
+			g_free (full_file);
+
 		}
 
 		user_config = g_strdup_printf ("%s%s", g_get_home_dir (),
 						LIBGDA_USER_CONFIG_FILE);
 		if (g_file_get_contents (user_config, &full_file, &len, NULL)){
-			config_client->user =
-				gda_config_parse_config_file (full_file, len);
+			config_client->user = gda_config_parse_config_file (full_file, len);
+			g_free (full_file);
 		} else {
 			if (!g_file_test (user_config, G_FILE_TEST_EXISTS)){
 				gchar *dirpath;
