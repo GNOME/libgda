@@ -460,12 +460,12 @@ write_config_file ()
 
 /**
  * gda_config_get_string
- * @path: path to the configuration entry
+ * @path: path to the configuration entry.
  *
  * Gets the value of the specified configuration entry as a string. You
- * are then responsible to free the returned string
+ * are then responsible to free the returned string.
  *
- * Returns: the value stored at the given entry
+ * Returns: the value stored at the given entry.
  */
 gchar *
 gda_config_get_string (const gchar *path)
@@ -487,11 +487,11 @@ gda_config_get_string (const gchar *path)
 
 /**
  * gda_config_get_int
- * @path: path to the configuration entry
+ * @path: path to the configuration entry.
  *
- * Gets the value of the specified configuration entry as an integer
+ * Gets the value of the specified configuration entry as an integer.
  *
- * Returns: the value stored at the given entry
+ * Returns: the value stored at the given entry.
  */
 gint
 gda_config_get_int (const gchar *path)
@@ -513,11 +513,11 @@ gda_config_get_int (const gchar *path)
 
 /**
  * gda_config_get_float
- * @path: path to the configuration entry
+ * @path: path to the configuration entry.
  *
- * Gets the value of the specified configuration entry as a float
+ * Gets the value of the specified configuration entry as a float.
  *
- * Returns: the value stored at the given entry
+ * Returns: the value stored at the given entry.
  */
 gdouble
 gda_config_get_float (const gchar *path)
@@ -539,11 +539,11 @@ gda_config_get_float (const gchar *path)
 
 /**
  * gda_config_get_boolean
- * @path: path to the configuration entry
+ * @path: path to the configuration entry.
  *
- * Gets the value of the specified configuration entry as a boolean
+ * Gets the value of the specified configuration entry as a boolean.
  *
- * Returns: the value stored at the given entry
+ * Returns: the value stored at the given entry.
  */
 gboolean
 gda_config_get_boolean (const gchar *path)
@@ -565,10 +565,10 @@ gda_config_get_boolean (const gchar *path)
 
 /**
  * gda_config_set_string
- * @path: path to the configuration entry
- * @new_value: new value
+ * @path: path to the configuration entry.
+ * @new_value: new value.
  *
- * Sets the given configuration entry to contain a string
+ * Sets the given configuration entry to contain a string.
  */
 void
 gda_config_set_string (const gchar *path, const gchar *new_value)
@@ -607,10 +607,10 @@ gda_config_set_string (const gchar *path, const gchar *new_value)
 
 /**
  * gda_config_set_int
- * @path: path to the configuration entry
- * @new_value: new value
+ * @path: path to the configuration entry.
+ * @new_value: new value.
  *
- * Sets the given configuration entry to contain an integer
+ * Sets the given configuration entry to contain an integer.
  */
 void
 gda_config_set_int (const gchar *path, gint new_value)
@@ -651,10 +651,10 @@ gda_config_set_int (const gchar *path, gint new_value)
 
 /**
  * gda_config_set_float
- * @path: path to the configuration entry
- * @new_value: new value
+ * @path: path to the configuration entry.
+ * @new_value: new value.
  *
- * Sets the given configuration entry to contain a float
+ * Sets the given configuration entry to contain a float.
  */
 void
 gda_config_set_float (const gchar * path, gdouble new_value)
@@ -695,10 +695,10 @@ gda_config_set_float (const gchar * path, gdouble new_value)
 
 /**
  * gda_config_set_boolean
- * @path: path to the configuration entry
- * @new_value: new value
+ * @path: path to the configuration entry.
+ * @new_value: new value.
  *
- * Sets the given configuration entry to contain a boolean
+ * Sets the given configuration entry to contain a boolean.
  */
 void
 gda_config_set_boolean (const gchar *path, gboolean new_value)
@@ -739,9 +739,9 @@ gda_config_set_boolean (const gchar *path, gboolean new_value)
 
 /**
  * gda_config_remove_section
- * @path: path to the configuration section
+ * @path: path to the configuration section.
  *
- * Remove the given section from the configuration database
+ * Removes the given section from the configuration database.
  */
 void
 gda_config_remove_section (const gchar *path)
@@ -766,9 +766,9 @@ gda_config_remove_section (const gchar *path)
 
 /**
  * gda_config_remove_key
- * @path: path to the configuration entry
+ * @path: path to the configuration entry.
  *
- * Remove the given entry from the configuration database
+ * Removes the given entry from the configuration database.
  * If the section is empty, also remove the section.
  */
 void
@@ -825,12 +825,12 @@ gda_config_remove_key (const gchar *path)
 
 /**
  * gda_config_has_section
- * @path: path to the configuration section
+ * @path: path to the configuration section.
  *
  * Checks whether the given section exists in the configuration
- * system
+ * system.
  *
- * Returns: TRUE if the section exists, FALSE otherwise
+ * Returns: %TRUE if the section exists, %FALSE otherwise.
  */
 gboolean
 gda_config_has_section (const gchar *path)
@@ -850,11 +850,11 @@ gda_config_has_section (const gchar *path)
 
 /**
  * gda_config_has_key
- * @path: path to the configuration key
+ * @path: path to the configuration key.
  *
- * Check whether the given key exists in the configuration system
+ * Checks whether the given key exists in the configuration system.
  *
- * Returns: TRUE if the entry exists, FALSE otherwise
+ * Returns: %TRUE if the entry exists, %FALSE otherwise.
  */
 gboolean
 gda_config_has_key (const gchar *path)
@@ -876,12 +876,12 @@ gda_config_has_key (const gchar *path)
 
 /**
  * gda_config_get_type
- * @path: path to the configuration key
+ * @path: path to the configuration key.
  *
  * Gets a string representing the type of the value of the given key.
  * The caller is responsible of freeing the returned value.
  *
- * Returns: NULL if not found. Otherwise: "string", "float", "long", "bool".
+ * Returns: %NULL if not found. Otherwise: "string", "float", "long", "bool".
  */
 gchar *
 gda_config_get_type (const gchar *path)
@@ -906,14 +906,14 @@ gda_config_get_type (const gchar *path)
 
 /**
  * gda_config_list_sections
- * @path: path for root dir
+ * @path: path for root dir.
  *
- * Return a GList containing the names of all the sections available
+ * Returns a GList containing the names of all the sections available
  * under the given root directory.
  *
- * To free the returned value, you can use #gda_config_free_list
+ * To free the returned value, you can use #gda_config_free_list.
  *
- * Returns: a list containing all the section names
+ * Returns: a list containing all the section names.
  */
 GList *
 gda_config_list_sections (const gchar *path)
@@ -956,13 +956,13 @@ gda_config_list_sections (const gchar *path)
 
 /**
  * gda_config_list_keys
- * @path: path for root dir
+ * @path: path for root dir.
  *
  * Returns a list of all keys that exist under the given path.
  *
- * To free the returned value, you can use #gda_config_free_list
+ * To free the returned value, you can use #gda_config_free_list.
  *
- * Returns: a list containing all the key names
+ * Returns: a list containing all the key names.
  */
 GList *
 gda_config_list_keys (const gchar * path)
@@ -1013,10 +1013,10 @@ gda_config_list_keys (const gchar * path)
 
 /**
  * gda_config_free_list
- * @list: list to be freed
+ * @list: list to be freed.
  *
- * Free all memory used by the given GList, which must be the return value
- * from either #gda_config_list_sections and #gda_config_list_keys
+ * Frees all memory used by the given GList, which must be the return value
+ * from either #gda_config_list_sections and #gda_config_list_keys.
  */
 void
 gda_config_free_list (GList *list)
@@ -1028,7 +1028,7 @@ gda_config_free_list (GList *list)
 /**
  * gda_config_get_provider_list
  *
- * Return a list of all providers currently installed in
+ * Returns a list of all providers currently installed in
  * the system. Each of the nodes in the returned GList
  * is a #GdaProviderInfo. To free the returned list,
  * call the #gda_config_free_provider_list function.
@@ -1115,7 +1115,7 @@ gda_config_get_provider_list (void)
  * gda_config_free_provider_list
  * @list: the list to be freed.
  *
- * Free a list of #GdaProviderInfo structures.
+ * Frees a list of #GdaProviderInfo structures.
  */
 void
 gda_config_free_provider_list (GList *list)
@@ -1134,6 +1134,11 @@ gda_config_free_provider_list (GList *list)
 
 /**
  * gda_config_get_provider_by_name
+ * @name: name of the provider to search for.
+ *
+ * Gets a #GdaProviderInfo structure from the provider list givin its name.
+ *
+ * Returns: a #GdaProviderInfo structure, if found, or %NULL if not found.
  */
 GdaProviderInfo *
 gda_config_get_provider_by_name (const gchar *name)
@@ -1161,6 +1166,12 @@ gda_config_get_provider_by_name (const gchar *name)
 
 /**
  * gda_provider_info_copy
+ * @src: provider information to get a copy from.
+ *
+ * Creates a new #GdaProviderInfo structure from an existing one.
+
+ * Returns: a newly allocated #GdaProviderInfo with contains a copy of 
+ * information in @src.
  */
 GdaProviderInfo*
 gda_provider_info_copy (GdaProviderInfo *src)
@@ -1190,6 +1201,9 @@ gda_provider_info_copy (GdaProviderInfo *src)
 
 /**
  * gda_config_free_provider_info
+ * @provider_info: provider information to free.
+ *
+ * Deallocates all memory associated to the given #GdaProviderInfo.
  */
 void
 gda_config_free_provider_info (GdaProviderInfo *provider_info)
@@ -1207,6 +1221,13 @@ gda_config_free_provider_info (GdaProviderInfo *provider_info)
 
 /**
  * gda_config_get_data_source_list
+ *
+ * Returns a list of all data sources currently configured in the system.
+ * Each of the nodes in the returned GList is a #GdaDataSourceInfo.
+ * To free the returned list, call the #gda_config_free_data_source_info
+ * function.
+ *
+ * Returns: a GList of #GdaDataSourceInfo structures.
  */
 GList *
 gda_config_get_data_source_list (void)
@@ -1258,6 +1279,12 @@ gda_config_get_data_source_list (void)
 
 /**
  * gda_config_find_data_source
+ * @name: name of the data source to search for.
+ *
+ * Gets a #GdaDataSourceInfo structure from the data source list givin its 
+ * name.
+ *
+ * Returns: a #GdaDataSourceInfo structure, if found, or %NULL if not found.
  */
 GdaDataSourceInfo *
 gda_config_find_data_source (const gchar *name)
@@ -1285,6 +1312,12 @@ gda_config_find_data_source (const gchar *name)
 
 /**
  * gda_config_copy_data_source_info
+ * @src: data source information to get a copy from.
+ *
+ * Creates a new #GdaDataSourceInfo structure from an existing one.
+
+ * Returns: a newly allocated #GdaDataSourceInfo with contains a copy of 
+ * information in @src.
  */
 GdaDataSourceInfo *
 gda_config_copy_data_source_info (GdaDataSourceInfo *src)
@@ -1306,6 +1339,9 @@ gda_config_copy_data_source_info (GdaDataSourceInfo *src)
 
 /**
  * gda_config_free_data_source_info
+ * @info: data source information to free.
+ *
+ * Deallocates all memory associated to the given #GdaDataSourceInfo.
  */
 void
 gda_config_free_data_source_info (GdaDataSourceInfo *info)
@@ -1324,6 +1360,9 @@ gda_config_free_data_source_info (GdaDataSourceInfo *info)
 
 /**
  * gda_config_free_data_source_list
+ * @list: the list to be freed.
+ *
+ * Frees a list of #GdaDataSourceInfo structures.
  */
 void
 gda_config_free_data_source_list (GList *list)
@@ -1340,6 +1379,15 @@ gda_config_free_data_source_list (GList *list)
 
 /**
  * gda_config_get_data_source_model
+ *
+ * Fills and returns a new #GdaDataModel object using information from all 
+ * data sources which are currently configured in the system.
+ *
+ * Rows are separated in 6 columns: 
+ * 'Name', 'Provider', 'Connection string', 'Description', 'Username' and 
+ * 'Password'.
+ *
+ * Returns: a new #GdaDataModel object. 
  */
 GdaDataModel *
 gda_config_get_data_source_model (void)
@@ -1382,12 +1430,12 @@ gda_config_get_data_source_model (void)
 
 /**
  * gda_config_save_data_source
- * @name: Name for the data source to be saved.
- * @provider: Provider ID for the new data source.
- * @cnc_string: Connection string for the new data source.
- * @description: Description for the new data source.
- * @username: User name for the new data source.
- * @password: Password to use when authenticating @username.
+ * @name: name for the data source to be saved.
+ * @provider: provider ID for the new data source.
+ * @cnc_string: connection string for the new data source.
+ * @description: description for the new data source.
+ * @username: user name for the new data source.
+ * @password: password to use when authenticating @username.
  *
  * Adds a new data source (or update an existing one) to the GDA
  * configuration, based on the parameters given.
@@ -1447,9 +1495,9 @@ gda_config_save_data_source (const gchar *name,
 
 /**
  * gda_config_save_data_source_info
- * @dsn_info: A #GdaDataSourceInfo structure.
+ * @dsn_info: a #GdaDataSourceInfo structure.
  *
- * Save a data source in the libgda configuration given a
+ * Saves a data source in the libgda configuration given a
  * #GdaDataSourceInfo structure containing all the information
  * about the data source.
  */
@@ -1468,7 +1516,7 @@ gda_config_save_data_source_info (GdaDataSourceInfo *dsn_info)
 
 /**
  * gda_config_remove_data_source
- * @name: Name for the data source to be removed.
+ * @name: name for the data source to be removed.
  *
  * Removes the given data source from the GDA configuration.
  */
@@ -1557,6 +1605,10 @@ gda_config_add_listener (const gchar *path,
 
 /**
  * gda_config_remove_listener
+ * @id: the ID of the listener to remove.
+ *
+ * Removes a configuration listener previously installed with
+ * #gda_config_add_listener, givin its ID.
  */
 void
 gda_config_remove_listener (guint id)

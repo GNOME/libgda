@@ -31,13 +31,12 @@ static GMainLoop *main_loop = NULL;
 
 /**
  * gda_init
- * @app_id:
- * @version: 
- * @nargs: argv passed in from you main()
- * @args: List of arguments 
+ * @app_id: name of the program.
+ * @version: revision number of the program.
+ * @nargs: number of arguments, usually argc from main().
+ * @args: list of arguments, usually argv from main().
  * 
- * 
- * 
+ * Initializes the GDA library. 
  */
 void
 gda_init (const gchar *app_id, const gchar *version, gint nargs, gchar *args[])
@@ -83,8 +82,8 @@ idle_cb (gpointer user_data)
 
 /**
  * gda_main_run
- * @init_func: function to be called when everything has been initialized
- * @user_data: data to be passed to the init function
+ * @init_func: function to be called when everything has been initialized.
+ * @user_data: data to be passed to the init function.
  *
  * Runs the GDA main loop, which is nothing more than the Bonobo main
  * loop, but with internally added stuff specific for applications using
@@ -116,7 +115,7 @@ gda_main_run (GdaInitFunc init_func, gpointer user_data)
 /**
  * gda_main_quit
  * 
- * Exit main loop
+ * Exits the main loop.
  */
 void
 gda_main_quit (void)

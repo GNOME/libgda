@@ -191,7 +191,7 @@ gda_data_model_hash_get_type (void)
  * gda_data_model_hash_new
  * @cols: number of columns for rows in this data model.
  *
- * Returns: A pointer to the newly created #GdaDataModel.
+ * Returns: a pointer to the newly created #GdaDataModel.
  */
 GdaDataModel *
 gda_data_model_hash_new (gint cols)
@@ -209,7 +209,7 @@ gda_data_model_hash_new (gint cols)
  * @col: column number (starting from 0).
  * @row: row number (starting from 0).
  *
- * Retrieve the value at a specified column and row.
+ * Retrieves the value at a specified column and row.
  * Returns: a pointer to a #GdaValue.
  */
 const GdaValue *
@@ -232,7 +232,7 @@ gda_data_model_hash_get_value_at (GdaDataModel *model, gint col, gint row)
  * @rownum: the number of the row.
  * @row: the row to insert. The model is responsible of freeing it!
  *
- * Inserts a row in the model.
+ * Inserts a @row in the @model.
  */
 void
 gda_data_model_hash_insert_row (GdaDataModelHash *model,
@@ -279,10 +279,10 @@ gda_data_model_hash_get_row (GdaDataModel *model, gint row)
 
 /**
  * gda_data_model_hash_set_n_columns
- * @model: the #GdaDataModelHash which is gonna hold the row.
+ * @model: the #GdaDataModelHash.
  * @cols: the number of columns for rows inserted in @model.
  *
- * Set the nunber of columns for rows inserted in this model.
+ * Sets the number of columns for rows inserted in this model.
  * @cols must be greater than or equal to 0.
  *
  * This function calls #gda_data_model_hash_clear to free the
@@ -300,7 +300,7 @@ gda_data_model_hash_set_n_columns (GdaDataModelHash *model, gint cols)
 
 /**
  * gda_data_model_hash_clear
- * @model: the model to clear
+ * @model: the model to clear.
  *
  * Frees all the rows inserted in @model.
  */

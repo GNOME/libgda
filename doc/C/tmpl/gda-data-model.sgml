@@ -299,8 +299,10 @@ Basic data model class
 
 </para>
 
-@recset: 
+@model: 
 @Returns: 
+<!-- # Unused Parameters # -->
+@recset: 
 
 
 <!-- ##### FUNCTION gda_data_model_set_command_text ##### -->
@@ -308,8 +310,10 @@ Basic data model class
 
 </para>
 
-@recset: 
+@model: 
 @txt: 
+<!-- # Unused Parameters # -->
+@recset: 
 
 
 <!-- ##### FUNCTION gda_data_model_get_command_type ##### -->
@@ -317,8 +321,10 @@ Basic data model class
 
 </para>
 
-@recset: 
+@model: 
 @Returns: 
+<!-- # Unused Parameters # -->
+@recset: 
 
 
 <!-- ##### FUNCTION gda_data_model_set_command_type ##### -->
@@ -326,7 +332,9 @@ Basic data model class
 
 </para>
 
-@recset: 
+@model: 
 @type: 
+<!-- # Unused Parameters # -->
+@recset: 
 
 

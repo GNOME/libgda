@@ -1,3 +1,10 @@
+2003-10-18  Laurent Sansonetti <laurent@datarescue.be>
+
+	* libgda/*.c:
+	* doc/C/tmpl/*.sgml:
+	Added some missing entries in the API reference, and fixed existing
+	ones.
+
 2003-10-16  Paisa Seeluagnsawat <paisa@users.sf.net>
 
 	* provider/mysql/gda-mysql-recordset.c: fixed possible memory

@@ -37,7 +37,7 @@ static gboolean log_opened = FALSE;
 /**
  * gda_log_enable
  *
- * Enables GDA logs
+ * Enables GDA logs.
  */
 void
 gda_log_enable (void)
@@ -51,6 +51,8 @@ gda_log_enable (void)
 
 /**
  * gda_log_disable
+ *
+ * Disables GDA logs.
  */
 void
 gda_log_disable (void)
@@ -64,6 +66,8 @@ gda_log_disable (void)
 
 /**
  * gda_log_is_enabled
+ *
+ * Return: whether GDA logs are enabled (%TRUE or %FALSE).
  */
 gboolean
 gda_log_is_enabled (void)
@@ -73,9 +77,10 @@ gda_log_is_enabled (void)
 
 /**
  * gda_log_message
- * @format: message string
+ * @format: format string (see the printf(3) documentation).
+ * @...: arguments to insert in the message.
  *
- * Logs the given message in the GDA log file
+ * Logs the given message in the GDA log file.
  */
 void
 gda_log_message (const gchar *format, ...)
@@ -102,6 +107,10 @@ gda_log_message (const gchar *format, ...)
 
 /**
  * gda_log_error
+ * @format: format string (see the printf(3) documentation).
+ * @...: arguments to insert in the error.
+ *
+ * Logs the given error in the GDA log file.
  */
 void
 gda_log_error (const gchar * format, ...)
@@ -130,9 +139,10 @@ gda_log_error (const gchar * format, ...)
  * gda_log_clean_all
  * @prgname: program name
  *
- * Clear the entire log for the given program
+ * Clears the entire log for the given program name.
  */
 void
 gda_log_clean_all (const gchar * prgname)
 {
+  /* FIXME: implement me */
 }

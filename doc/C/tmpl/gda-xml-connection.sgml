@@ -2,7 +2,7 @@
 GdaXmlConnection
 
 <!-- ##### SECTION Short_Description ##### -->
-
+Management of connections to XML data sources
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>

@@ -199,7 +199,9 @@ XML database representation (used for import/export and in the default provider)
 </para>
 
 @xmldb: 
-@xmlnode: 
+@node: 
 @Returns: 
+<!-- # Unused Parameters # -->
+@xmlnode: 
 
 

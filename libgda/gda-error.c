@@ -132,13 +132,13 @@ gda_error_free (GdaError *error)
 
 /**
  * gda_error_list_copy:
- * @errors: a glist holding error objects.
+ * @errors: a GList holding error objects.
  *
  * Creates a new list which contains the same errors as @errors and
  * adds a reference for each error in the list.
  *
- * You must free the list using #gda_error_list_free
- * Returns: a list of errors
+ * You must free the list using #gda_error_list_free.
+ * Returns: a list of errors.
  */
 GList *
 gda_error_list_copy (const GList * errors)
@@ -155,7 +155,7 @@ gda_error_list_copy (const GList * errors)
 
 /**
  * gda_error_list_free:
- * @errors: a glist holding error objects.
+ * @errors: a GList holding error objects.
  *
  * Frees all error objects in the list and the list itself.
  * After this function has been called, the @errors parameter doesn't point
@@ -170,6 +170,9 @@ gda_error_list_free (GList * errors)
 
 /**
  * gda_error_get_description
+ * @error: a #GdaError.
+ *
+ * Returns: @error's description.
  */
 const gchar *
 gda_error_get_description (GdaError *error)
@@ -179,7 +182,11 @@ gda_error_get_description (GdaError *error)
 }
 
 /**
- * gda_error_get_description
+ * gda_error_set_description
+ * @error: a #GdaError.
+ * @description: a description.
+ *
+ * Sets @error's @description.
  */
 void
 gda_error_set_description (GdaError *error, const gchar *description)
@@ -193,6 +200,9 @@ gda_error_set_description (GdaError *error, const gchar *description)
 
 /**
  * gda_error_get_number
+ * @error: a #GdaError.
+ *
+ * Returns: @error's number. 
  */
 const glong
 gda_error_get_number (GdaError * error)
@@ -203,6 +213,10 @@ gda_error_get_number (GdaError * error)
 
 /**
  * gda_error_set_number
+ * @error: a #GdaError.
+ * @number: a number.
+ *
+ * Sets @error's @number.
  */
 void
 gda_error_set_number (GdaError *error, glong number)
@@ -213,6 +227,9 @@ gda_error_set_number (GdaError *error, glong number)
 
 /**
  * gda_error_get_source
+ * @error: a #GdaError.
+ *
+ * Returns: @error's source. 
  */
 const gchar *
 gda_error_get_source (GdaError *error)
@@ -223,8 +240,10 @@ gda_error_get_source (GdaError *error)
 
 /**
  * gda_error_set_source
- * @error:
- * @source:
+ * @error: a #GdaError.
+ * @source: a source.
+ *
+ * Sets @error's @source.
  */
 void
 gda_error_set_source (GdaError *error, const gchar *source)
@@ -238,9 +257,9 @@ gda_error_set_source (GdaError *error, const gchar *source)
 
 /**
  * gda_error_get_sqlstate
- * @error:
+ * @error: a #GdaError.
  * 
- * 
+ * Returns: @error's SQL state.
  */
 const gchar *
 gda_error_get_sqlstate (GdaError *error)
@@ -251,8 +270,10 @@ gda_error_get_sqlstate (GdaError *error)
 
 /**
  * gda_error_set_sqlstate
- * @error: error code
- * @sqlstate: SQL State, the error message to be associated with the @error.
+ * @error: a #GdaError.
+ * @sqlstate: SQL state.
+ *
+ * Sets @error's SQL state.
  */
 void
 gda_error_set_sqlstate (GdaError *error, const gchar *sqlstate)

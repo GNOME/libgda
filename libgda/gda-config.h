@@ -97,7 +97,7 @@ typedef struct {
 #define GDA_TYPE_DATA_SOURCE_INFO (gda_data_source_info_get_type ())
 
 GType              gda_data_source_info_get_type (void);
-GdaDataSourceInfo *gda_config_copy_data_source_info (GdaDataSourceInfo *info); //TODO: Rename to gda_data_source_info_copy
+GdaDataSourceInfo *gda_config_copy_data_source_info (GdaDataSourceInfo *src);  //TODO: Rename to gda_data_source_info_copy
 void               gda_config_free_data_source_info (GdaDataSourceInfo *info); //TODO: Rename to gda_data_source_info_free
 
 GList             *gda_config_get_data_source_list (void);

@@ -106,7 +106,7 @@ gda_transaction_get_type (void)
  * gda_transaction_new
  * @name: name for the transaction.
  *
- * Create a new #GdaTransaction object, which allows a fine-tune and
+ * Creates a new #GdaTransaction object, which allows a fine-tune and
  * full control of transactions to be used with providers.
  *
  * Returns: the newly created object.
@@ -127,7 +127,7 @@ gda_transaction_new (const gchar *name)
  * gda_transaction_get_isolation_level
  * @xaction: a #GdaTransaction object.
  *
- * Get the isolation level for the given transaction. This specifies
+ * Gets the isolation level for the given transaction. This specifies
  * the locking behavior for the database connection during the given
  * transaction.
  *
@@ -145,7 +145,7 @@ gda_transaction_get_isolation_level (GdaTransaction *xaction)
  * @xaction: a #GdaTransaction object.
  * @level: the isolation level.
  *
- * Set the isolation level for the given transaction.
+ * Sets the isolation level for the given transaction.
  */
 void
 gda_transaction_set_isolation_level (GdaTransaction *xaction,
@@ -159,8 +159,8 @@ gda_transaction_set_isolation_level (GdaTransaction *xaction,
  * gda_transaction_get_name
  * @xaction: a #GdaTransaction object.
  *
- * Retrieve the name of the given transaction, as specified by the
- * client application (via a non-NULL parameter in the call to
+ * Retrieves the name of the given transaction, as specified by the
+ * client application (via a non-%NULL parameter in the call to
  * #gda_transaction_new, or by calling #gda_transaction_set_name).
  * Note that some providers may set, when you call
  * #gda_connection_begin_transaction, the name of the transaction if
@@ -181,7 +181,7 @@ gda_transaction_get_name (GdaTransaction *xaction)
  * @xaction: a #GdaTransaction object.
  * @name: new name for the transaction.
  *
- * Set the name of the given transaction. This is very useful when
+ * Sets the name of the given transaction. This is very useful when
  * using providers that support named transactions.
  */
 void

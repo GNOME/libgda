@@ -27,6 +27,8 @@
 
 /**
  * gda_field_attributes_new
+ *
+ * Returns: a newly allocated #GdaFieldAttributes object.
  */
 GdaFieldAttributes *
 gda_field_attributes_new (void)
@@ -54,6 +56,11 @@ gda_field_attributes_new (void)
 
 /**
  * gda_field_attributes_copy
+ * @fa: attributes to get a copy from.
+ *
+ * Creates a new #GdaFieldAttributes object from an existing one.
+ * Returns: a newly allocated #GdaFieldAttributes with a copy of the data
+ * in @fa.
  */
 GdaFieldAttributes *
 gda_field_attributes_copy (GdaFieldAttributes *fa)
@@ -83,6 +90,9 @@ gda_field_attributes_copy (GdaFieldAttributes *fa)
 
 /**
  * gda_field_attributes_free
+ * @fa: the resource to free.
+ *
+ * Deallocates all memory associated to the given #GdaFieldAttributes object.
  */
 void
 gda_field_attributes_free (GdaFieldAttributes *fa)
@@ -98,7 +108,7 @@ gda_field_attributes_free (GdaFieldAttributes *fa)
 
 /**
  * gda_field_attributes_get_defined_size
- * @fa: a @GdaFieldAttributes
+ * @fa: a @GdaFieldAttributes.
  *
  * Returns: the defined size of @fa.
  */
@@ -158,9 +168,7 @@ gda_field_attributes_set_name (GdaFieldAttributes *fa, const gchar *name)
  * gda_field_attributes_get_table
  * @fa: a #GdaFieldAttributes.
  *
- * Get the table to which this field belongs.
- *
- * Returns: the name of the table.
+ * Returns: the name of the table to which this field belongs.
  */
 const gchar *
 gda_field_attributes_get_table (GdaFieldAttributes *fa)
@@ -174,7 +182,7 @@ gda_field_attributes_get_table (GdaFieldAttributes *fa)
  * @fa: a #GdaFieldAttributes.
  * @table: table name.
  *
- * Set the name of the table to which the given field belongs.
+ * Sets the name of the table to which the given field belongs.
  */
 void
 gda_field_attributes_set_table (GdaFieldAttributes *fa, const gchar *table)
@@ -188,6 +196,9 @@ gda_field_attributes_set_table (GdaFieldAttributes *fa, const gchar *table)
 
 /**
  * gda_field_attributes_get_caption
+ * @fa: a #GdaFieldAttributes.
+ *
+ * Returns: @fa's caption.
  */
 const gchar *
 gda_field_attributes_get_caption (GdaFieldAttributes *fa)
@@ -198,6 +209,10 @@ gda_field_attributes_get_caption (GdaFieldAttributes *fa)
 
 /**
  * gda_field_attributes_set_caption
+ * @fa: a #GdaFieldAttributes.
+ * @caption: caption.
+ *
+ * Sets @fa's @caption.
  */
 void
 gda_field_attributes_set_caption (GdaFieldAttributes *fa, const gchar *caption)
@@ -267,9 +282,9 @@ gda_field_attributes_set_gdatype (GdaFieldAttributes *fa, GdaValueType type)
  * gda_field_attributes_get_allow_null
  * @fa: a #GdaFieldAttributes.
  *
- * Get the 'allow null' flag of the given field attributes.
+ * Gets the 'allow null' flag of the given field attributes.
  *
- * Returns: whether the given field allows null values or not.
+ * Returns: whether the given field allows null values or not (%TRUE or %FALSE).
  */
 gboolean
 gda_field_attributes_get_allow_null (GdaFieldAttributes *fa)
@@ -281,7 +296,7 @@ gda_field_attributes_get_allow_null (GdaFieldAttributes *fa)
 /**
  * gda_field_attributes_set_allow_null
  * @fa: a #GdaFieldAttributes.
- * @allow:
+ * @allow: whether the given field should allows null values or not.
  *
  * Sets the 'allow null' flag of the given field attributes.
  */
@@ -295,6 +310,8 @@ gda_field_attributes_set_allow_null (GdaFieldAttributes *fa, gboolean allow)
 /**
  * gda_field_attributes_get_primary_key
  * @fa: a #GdaFieldAttributes.
+ *
+ * Returns: whether if the given field is a primary key (%TRUE or %FALSE).
  */
 gboolean
 gda_field_attributes_get_primary_key (GdaFieldAttributes *fa)
@@ -305,6 +322,10 @@ gda_field_attributes_get_primary_key (GdaFieldAttributes *fa)
 
 /**
  * gda_field_attributes_set_primary_key
+ * @fa: a #GdaFieldAttributes.
+ * @pk: whether if the given field should be a primary key.
+ *
+ * Sets the 'primary key' flag of the given field attributes.
  */
 void
 gda_field_attributes_set_primary_key (GdaFieldAttributes *fa, gboolean pk)
@@ -315,6 +336,9 @@ gda_field_attributes_set_primary_key (GdaFieldAttributes *fa, gboolean pk)
 
 /**
  * gda_field_attributes_get_unique_key
+ * @fa: a #GdaFieldAttributes.
+ *
+ * Returns: whether if the given field is an unique key (%TRUE or %FALSE).
  */
 gboolean
 gda_field_attributes_get_unique_key (GdaFieldAttributes *fa)
@@ -325,6 +349,10 @@ gda_field_attributes_get_unique_key (GdaFieldAttributes *fa)
 
 /**
  * gda_field_attributes_set_unique_key
+ * @fa: a #GdaFieldAttributes.
+ * @uk: whether if the given field should be an unique key.
+ *
+ * Sets the 'unique key' flag of the given field attributes.
  */
 void
 gda_field_attributes_set_unique_key (GdaFieldAttributes *fa, gboolean uk)
@@ -335,6 +363,9 @@ gda_field_attributes_set_unique_key (GdaFieldAttributes *fa, gboolean uk)
 
 /**
  * gda_field_attributes_get_references
+ * @fa: a #GdaFieldAttributes.
+ *
+ * Returns: @fa's references.
  */
 const gchar *
 gda_field_attributes_get_references (GdaFieldAttributes *fa)
@@ -345,6 +376,10 @@ gda_field_attributes_get_references (GdaFieldAttributes *fa)
 
 /**
  * gda_field_attributes_set_references
+ * @fa: a #GdaFieldAttributes.
+ * @ref: references.
+ *
+ * Sets @fa's @references.
  */
 void
 gda_field_attributes_set_references (GdaFieldAttributes *fa, const gchar *ref)
@@ -362,9 +397,7 @@ gda_field_attributes_set_references (GdaFieldAttributes *fa, const gchar *ref)
  * gda_field_attributes_get_auto_increment
  * @fa: a #GdaFieldAttributes.
  *
- * Get whether the given field is an auto incremented one.
- *
- * Returns: TRUE or FALSE.
+ * Returns: whether the given field is an auto incremented one (%TRUE or %FALSE).
  */
 gboolean
 gda_field_attributes_get_auto_increment (GdaFieldAttributes *fa)
@@ -378,7 +411,7 @@ gda_field_attributes_get_auto_increment (GdaFieldAttributes *fa)
  * @fa: a #GdaFieldAttributes.
  * @is_auto: auto increment status.
  *
- * Set the auto increment flag for the given field.
+ * Sets the auto increment flag for the given field.
  */
 void
 gda_field_attributes_set_auto_increment (GdaFieldAttributes *fa,
@@ -392,9 +425,8 @@ gda_field_attributes_set_auto_increment (GdaFieldAttributes *fa,
  * gda_field_attributes_get_position
  * @fa: a #GdaFieldAttributes.
  *
- * Get the position of the field the attributes refer to.
- *
- * The position of this field in the containing data model.
+ * Returns: the position of the field the attributes refer to in the
+ * containing data model.
  */
 gint
 gda_field_attributes_get_position (GdaFieldAttributes *fa)
@@ -405,6 +437,11 @@ gda_field_attributes_get_position (GdaFieldAttributes *fa)
 
 /**
  * gda_field_attributes_set_position
+ * @fa: a #GdaFieldAttributes.
+ * @position: the wanted position of the field in the containing data model.
+ *
+ * Sets the position of the field the attributes refer to in the containing
+ * data model.
  */
 void
 gda_field_attributes_set_position (GdaFieldAttributes *fa, gint position)

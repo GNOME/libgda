@@ -2,7 +2,7 @@
 GdaDataModelList
 
 <!-- ##### SECTION Short_Description ##### -->
-List model class
+An implementation of #GdaDataModel based on a list
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>

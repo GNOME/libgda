@@ -240,7 +240,9 @@ gda_xml_database_get_type (void)
  *
  * Creates a new #GdaXmlDatabase object, which can be used to describe
  * a database which will then be loaded by a provider to create its
- * defined structure
+ * defined structure.
+ *
+ * Returns: the newly created object.
  */
 GdaXmlDatabase *
 gda_xml_database_new (void)
@@ -253,6 +255,12 @@ gda_xml_database_new (void)
 
 /**
  * gda_xml_database_new_from_uri
+ * @uri: an uniform resource identifier.
+ *
+ * Creates a new #GdaXmlDatabase object from a XML representation, 
+ * contained in the given @uri.
+ *
+ * Returns: the newly created object.
  */
 GdaXmlDatabase *
 gda_xml_database_new_from_uri (const gchar *uri)
@@ -326,9 +334,7 @@ gda_xml_database_new_from_uri (const gchar *uri)
  * gda_xml_database_get_name
  * @xmldb: XML database.
  *
- * Return the name of the given XML database.
- *
- * Returns: the name of the database.
+ * Returns: the name of the given XML database.
  */
 const gchar *
 gda_xml_database_get_name (GdaXmlDatabase *xmldb)
@@ -342,7 +348,7 @@ gda_xml_database_get_name (GdaXmlDatabase *xmldb)
  * @xmldb: XML database.
  * @name: new name for the database.
  *
- * Set the name of the given XML database object.
+ * Sets the name of the given XML database object.
  */
 void
 gda_xml_database_set_name (GdaXmlDatabase *xmldb, const gchar *name)
@@ -360,9 +366,7 @@ gda_xml_database_set_name (GdaXmlDatabase *xmldb, const gchar *name)
  * gda_xml_database_get_user_version
  * @xmldb: XML database.
  *
- * Get the user defined version of the given #GdaXmlDatabase object.
- *
- * Returns: the database version defined by the user.
+ * Returns: the user defined version of the given #GdaXmlDatabase object.
  */
 const gchar *
 gda_xml_database_get_user_version (GdaXmlDatabase *xmldb)
@@ -374,9 +378,9 @@ gda_xml_database_get_user_version (GdaXmlDatabase *xmldb)
 /**
  * gda_xml_database_set_user_version
  * @xmldb: XML database.
- * @user_version: User defined Version string.
+ * @user_version: user defined version string.
  *
- * Set the user defined version of the given XML database.
+ * Sets the user defined version of the given XML database.
  */
 void
 gda_xml_database_set_user_version (GdaXmlDatabase *xmldb, const gchar *user_version)
@@ -395,7 +399,7 @@ gda_xml_database_set_user_version (GdaXmlDatabase *xmldb, const gchar *user_vers
  * gda_xml_database_get_version
  * @xmldb: XML database.
  *
- * Get the version of libgda used to create the #GdaXmlDatabase object.
+ * Gets the version of libgda used to create the #GdaXmlDatabase object.
  * This version is the one that was used for saving the XML file last 
  * time it was saved. This value can only be "get" as it is an internal
  * information related to the creation of the #GdaXmlDatabase object.
@@ -415,11 +419,8 @@ gda_xml_database_get_version (GdaXmlDatabase *xmldb)
  * gda_xml_database_get_uri
  * @xmldb: XML database.
  *
- * Return the URI associated with the given XML database. This URI will
- * be used when saving the XML database (#gda_xml_database_save) and no
- * URI is given.
- *
- * Returns: the URI for the XML database.
+ * Returns: the URI associated with the given XML database. This URI will
+ * be used when saving the XML database (#gda_xml_database_save).
  */
 const gchar *
 gda_xml_database_get_uri (GdaXmlDatabase *xmldb)
@@ -431,6 +432,10 @@ gda_xml_database_get_uri (GdaXmlDatabase *xmldb)
 /**
  * gda_xml_database_set_uri
  * @xmldb: XML database.
+ * @uri: an uniform resource identifier.
+ *
+ * Associates an @uri with a given XML database. This URI will
+ * be used when saving the XML database (#gda_xml_database_save).
  */
 void
 gda_xml_database_set_uri (GdaXmlDatabase *xmldb, const gchar *uri)
@@ -446,7 +451,7 @@ gda_xml_database_set_uri (GdaXmlDatabase *xmldb, const gchar *uri)
  * gda_xml_database_changed
  * @xmldb: XML database
  *
- * Emit the "changed" signal for the given XML database
+ * Emits the "changed" signal for the given XML database.
  */
 void
 gda_xml_database_changed (GdaXmlDatabase * xmldb)
@@ -461,7 +466,7 @@ gda_xml_database_changed (GdaXmlDatabase * xmldb)
  * gda_xml_database_reload
  * @xmldb: XML database.
  *
- * Reload the given XML database from its original place, discarding
+ * Reloads the given XML database from its original place, discarding
  * all changes that may have happened.
  */
 void
@@ -475,7 +480,9 @@ gda_xml_database_reload (GdaXmlDatabase *xmldb)
  * @xmldb: XML database.
  * @uri: URI to save the XML database to.
  *
- * Save the given XML database to disk.
+ * Saves the given XML database to disk.
+ *
+ * Returns: %TRUE if the database was successfully saved, %FALSE otherwise.
  */
 gboolean
 gda_xml_database_save (GdaXmlDatabase *xmldb, const gchar *uri)
@@ -498,8 +505,6 @@ gda_xml_database_save (GdaXmlDatabase *xmldb, const gchar *uri)
 /**
  * gda_xml_database_to_string
  * @xmldb: a #GdaXmlDatabase object.
- *
- * Get the given XML database contents as a XML string.
  *
  * Returns: the XML string representing the structure and contents of the
  * given #GdaXmlDatabase object. The returned value must be freed when no
@@ -574,11 +579,9 @@ add_table_to_list (gpointer key, gpointer value, gpointer user_data)
  * gda_xml_database_get_tables
  * @xmldb: XML database.
  *
- * Return a list of all table names present in the given database.
+ * Returns: a GList of all table names present in the given database.
  * You must free the returned GList when you no longer need it, by
  * using the #gda_xml_database_free_table_list function.
- *
- * Returns: a GList of strings.
  */
 GList *
 gda_xml_database_get_tables (GdaXmlDatabase *xmldb)
@@ -593,9 +596,9 @@ gda_xml_database_get_tables (GdaXmlDatabase *xmldb)
 
 /**
  * gda_xml_database_free_table_list
- * @list: list of tables, as returned by #gda_xml_database_get_tables.
+ * @list: list of table names, as returned by #gda_xml_database_get_tables.
  *
- * Free a GList of strings returned by #gda_xml_database_get_tables.
+ * Frees a GList of strings returned by #gda_xml_database_get_tables.
  */
 void
 gda_xml_database_free_table_list (GList *list)
@@ -610,12 +613,12 @@ gda_xml_database_free_table_list (GList *list)
 /**
  * gda_xml_database_find_table
  * @xmldb: XML database.
- * @name: Name for the table to look for.
+ * @name: name for the table to look for.
  *
  * Searches the given XML database for a table named @name, and
  * returns a pointer to it.
  *
- * Returns: a pointer to the table, or NULL if not found.
+ * Returns: a pointer to the table, or %NULL if not found.
  */
 GdaTable *
 gda_xml_database_find_table (GdaXmlDatabase *xmldb, const gchar *name)
@@ -629,9 +632,9 @@ gda_xml_database_find_table (GdaXmlDatabase *xmldb, const gchar *name)
 /**
  * gda_xml_database_new_table
  * @xmldb: XML database.
- * @name: Name for the new table.
+ * @name: name for the new table.
  *
- * Create a new empty table in the given XML database.
+ * Creates a new empty table in the given XML database.
  *
  * Returns: a pointer to the newly created in-memory table.
  */
@@ -659,11 +662,11 @@ gda_xml_database_new_table (GdaXmlDatabase *xmldb, const gchar *name)
 /**
  * gda_xml_database_new_table_from_model
  * @xmldb: XML database.
- * @name: Name for the new table.
- * @model: Model to create the table from.
- * @add_data: Whether to add model's data or not.
+ * @name: name for the new table.
+ * @model: model to create the table from.
+ * @add_data: whether to add model's data or not.
  *
- * Create a new table in the given XML database from the given
+ * Creates a new table in the given XML database from the given
  * #GdaDataModel.
  *
  * Returns: a pointer to the newly created in-memory table.
@@ -698,9 +701,9 @@ gda_xml_database_new_table_from_model (GdaXmlDatabase *xmldb,
 /**
  * gda_xml_database_new_table_from_node
  * @xmldb: XML Database.
- * @node: A XML node pointer.
+ * @node: a XML node pointer.
  *
- * Add a table to the given XML database by parsing the given
+ * Adds a table to the given XML database by parsing the given
  * XML node pointer, which usually is obtained from an
  * already loaded xmlDocPtr.
  *

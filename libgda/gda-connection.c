@@ -155,7 +155,7 @@ gda_connection_finalize (GObject *object)
 /**
  * gda_connection_get_type
  * 
- * Register the GdaConnection class on the GLib type system.
+ * Registers the #GdaConnection class on the GLib type system.
  * 
  * Returns: the GType identifying the class.
  */
@@ -302,11 +302,11 @@ gda_connection_new (GdaClient *client,
  * gda_connection_close
  * @cnc: a #GdaConnection object.
  *
- * Close the connection to the underlying data source. After calling this
+ * Closes the connection to the underlying data source. After calling this
  * function, you should not use anymore the #GdaConnection object, since
  * it may have been destroyed.
  *
- * Returns: TRUE if successful, FALSE otherwise.
+ * Returns: %TRUE if successful, %FALSE otherwise.
  */
 gboolean
 gda_connection_close (GdaConnection *cnc)
@@ -321,9 +321,9 @@ gda_connection_close (GdaConnection *cnc)
  * gda_connection_is_open
  * @cnc: a #GdaConnection object.
  *
- * Check whether a connection is open or not.
+ * Checks whether a connection is open or not.
  *
- * Returns: TRUE if the connection is open, FALSE if it's not.
+ * Returns: %TRUE if the connection is open, %FALSE if it's not.
  */
 gboolean
 gda_connection_is_open (GdaConnection *cnc)
@@ -337,7 +337,7 @@ gda_connection_is_open (GdaConnection *cnc)
  * gda_connection_get_client
  * @cnc: a #GdaConnection object.
  *
- * Get the #GdaClient object associated with a connection. This
+ * Gets the #GdaClient object associated with a connection. This
  * is always the client that created the connection, as returned
  * by #gda_client_open_connection.
  *
@@ -355,7 +355,7 @@ gda_connection_get_client (GdaConnection *cnc)
  * @cnc: a #GdaConnection object.
  * @client: a #GdaClient object.
  *
- * Associate a #GdaClient with this connection. This function is
+ * Associates a #GdaClient with this connection. This function is
  * not intended to be called by applications.
  */
 void
@@ -371,10 +371,10 @@ gda_connection_set_client (GdaConnection *cnc, GdaClient *client)
  * gda_connection_get_options
  * @cnc: a #GdaConnection object.
  *
- * Get the #GdaConnectionOptions used to open this connection.
+ * Gets the #GdaConnectionOptions used to open this connection.
  *
- + Returns: the connection options.
-*/
+ * Returns: the connection options.
+ */
 GdaConnectionOptions
 gda_connection_get_options (GdaConnection *cnc)
 {
@@ -384,9 +384,9 @@ gda_connection_get_options (GdaConnection *cnc)
 
 /**
  * gda_connection_get_server_version
- * @cnc: A #GdaConnection object.
+ * @cnc: a #GdaConnection object.
  *
- * Get the version string of the underlying database server.
+ * Gets the version string of the underlying database server.
  *
  * Returns: the server version string.
  */
@@ -401,7 +401,7 @@ gda_connection_get_server_version (GdaConnection *cnc)
  * gda_connection_get_database
  * @cnc: A #GdaConnection object.
  *
- * Get the name of the currently active database in the given
+ * Gets the name of the currently active database in the given
  * @GdaConnection.
  *
  * Returns: the name of the current database.
@@ -415,7 +415,7 @@ gda_connection_get_database (GdaConnection *cnc)
 
 /**
  * gda_connection_get_dsn
- * @cnc: A #GdaConnection object
+ * @cnc: a #GdaConnection object
  *
  * Returns the data source name the connection object is connected
  * to.
@@ -431,7 +431,7 @@ gda_connection_get_dsn (GdaConnection *cnc)
  * gda_connection_get_cnc_string
  * @cnc: a #GdaConnection object.
  *
- * Get the connection string used to open this connection.
+ * Gets the connection string used to open this connection.
  *
  * The connection string is the string sent over to the underlying
  * database provider, which describes the parameters to be used
@@ -450,7 +450,7 @@ gda_connection_get_cnc_string (GdaConnection *cnc)
  * gda_connection_get_provider
  * @cnc: a #GdaConnection object.
  *
- * Get the provider id that this connection is connected to.
+ * Gets the provider id that this connection is connected to.
  *
  * Returns: the provider ID used to open this connection.
  */
@@ -465,7 +465,7 @@ gda_connection_get_provider (GdaConnection *cnc)
  * gda_connection_get_username
  * @cnc: a #GdaConnection object.
  *
- * Get the user name used to open this connection.
+ * Gets the user name used to open this connection.
  *
  * Returns: the user name.
  */
@@ -480,7 +480,7 @@ gda_connection_get_username (GdaConnection *cnc)
  * gda_connection_get_password
  * @cnc: a #GdaConnection object.
  *
- * Get the password used to open this connection.
+ * Gets the password used to open this connection.
  *
  * Returns: the password.
  */
@@ -495,7 +495,7 @@ gda_connection_get_password (GdaConnection *cnc)
  * gda_connection_add_error
  * @cnc: a #GdaConnection object.
  *
- * Add an error to the given connection. This function is usually
+ * Adds an error to the given connection. This function is usually
  * called by providers, to inform clients of errors that happened
  * during some operation.
  *
@@ -525,8 +525,9 @@ gda_connection_add_error (GdaConnection *cnc, GdaError *error)
 
 /**
  * gda_connection_add_error_string
- * @cnc: A #GdaServerConnection object.
- * @str: Error message.
+ * @cnc: a #GdaServerConnection object.
+ * @str: a format string (see the printf(3) documentation).
+ * @...: the arguments to insert in the error message.
  *
  * Adds a new error to the given connection object. This is just a convenience
  * function that simply creates a #GdaError and then calls
@@ -596,10 +597,10 @@ gda_connection_add_error_list (GdaConnection *cnc, GList *error_list)
  * @cnc: a #GdaConnection object.
  * @name: name of database to switch to.
  *
- * Change the current database for the given connection. This operation
+ * Change sthe current database for the given connection. This operation
  * is not available in all providers.
  *
- * Returns: TRUE if successful, FALSE otherwise.
+ * Returns: %TRUE if successful, %FALSE otherwise.
  */
 gboolean
 gda_connection_change_database (GdaConnection *cnc, const gchar *name)
@@ -615,9 +616,9 @@ gda_connection_change_database (GdaConnection *cnc, const gchar *name)
  * @cnc: a #GdaConnection object.
  * @name: database name.
  *
- * Create a new database named @name on the given connection.
+ * Creates a new database named @name on the given connection.
  *
- * Returns: TRUE if successful, FALSE otherwise.
+ * Returns: %TRUE if successful, %FALSE otherwise.
  */
 gboolean
 gda_connection_create_database (GdaConnection *cnc, const gchar *name)
@@ -633,9 +634,9 @@ gda_connection_create_database (GdaConnection *cnc, const gchar *name)
  * @cnc: a #GdaConnection object.
  * @name: database name.
  *
- * Drop a database from the given connection.
+ * Drops a database from the given connection.
  *
- * Returns: TRUE if successful, FALSE otherwise.
+ * Returns: %TRUE if successful, %FALSE otherwise.
  */
 gboolean
 gda_connection_drop_database (GdaConnection *cnc, const gchar *name)
@@ -652,7 +653,7 @@ gda_connection_drop_database (GdaConnection *cnc, const gchar *name)
  * @cmd: a #GdaCommand.
  * @params: parameter list.
  *
- * Execute a command on the underlying data source.
+ * Executes a command on the underlying data source.
  *
  * This function provides the way to send several commands
  * at once to the data source being accessed by the given
@@ -685,7 +686,7 @@ gda_connection_execute_command (GdaConnection *cnc,
  * @cmd: a #GdaCommand.
  * @params: parameter list.
  *
- * Execute a single command on the given connection.
+ * Executes a single command on the given connection.
  *
  * This function lets you retrieve a simple data model from
  * the underlying difference, instead of having to retrieve
@@ -724,7 +725,7 @@ gda_connection_execute_single_command (GdaConnection *cnc,
  * @cmd: a #GdaCommand.
  * @params: parameter list.
  *
- * Execute a single command on the underlying database, and get the
+ * Executes a single command on the underlying database, and gets the
  * number of rows affected.
  *
  * Returns: the number of affected rows by the executed command,
@@ -761,14 +762,14 @@ gda_connection_execute_non_query (GdaConnection *cnc,
  * @cnc: a #GdaConnection object.
  * @xaction: a #GdaTransaction object.
  *
- * Start a transaction on the data source, identified by the
+ * Startq a transaction on the data source, identified by the
  * @xaction parameter.
  *
  * Before starting a transaction, you can check whether the underlying
  * provider does support transactions or not by using the
  * #gda_connection_supports function.
  *
- * Returns: TRUE if the transaction was started successfully, FALSE
+ * Returns: %TRUE if the transaction was started successfully, %FALSE
  * otherwise.
  */
 gboolean
@@ -791,11 +792,11 @@ gda_connection_begin_transaction (GdaConnection *cnc, GdaTransaction *xaction)
  * @cnc: a #GdaConnection object.
  * @xaction: a #GdaTransaction object.
  *
- * Commit the given transaction to the backend database.  You need to do 
+ * Commits the given transaction to the backend database.  You need to do 
  * gda_connection_begin_transaction() first.
  *
- * Returns: TRUE if the transaction was finished successfully,
- * FALSE otherwise.
+ * Returns: %TRUE if the transaction was finished successfully,
+ * %FALSE otherwise.
  */
 gboolean
 gda_connection_commit_transaction (GdaConnection *cnc, GdaTransaction *xaction)
@@ -817,12 +818,12 @@ gda_connection_commit_transaction (GdaConnection *cnc, GdaTransaction *xaction)
  * @cnc: a #GdaConnection object.
  * @xaction: a #GdaTransaction object.
  *
- * Rollback the given transaction. This means that all changes
+ * Rollbacks the given transaction. This means that all changes
  * made to the underlying data source since the last call to
  * #gda_connection_begin_transaction or #gda_connection_commit_transaction
  * will be discarded.
  *
- * Returns: TRUE if the operation was successful, FALSE otherwise.
+ * Returns: %TRUE if the operation was successful, %FALSE otherwise.
  */
 gboolean
 gda_connection_rollback_transaction (GdaConnection *cnc, GdaTransaction *xaction)
@@ -844,9 +845,9 @@ gda_connection_rollback_transaction (GdaConnection *cnc, GdaTransaction *xaction
  * @cnc: a #GdaConnection object.
  * @feature: feature to ask for.
  *
- * Ask the underlying provider for if a specific feature is supported.
+ * Asks the underlying provider for if a specific feature is supported.
  *
- * Returns: TRUE if the provider supports it, FALSE if not.
+ * Returns: %TRUE if the provider supports it, %FALSE if not.
  */
 gboolean
 gda_connection_supports (GdaConnection *cnc, GdaConnectionFeature feature)
@@ -861,7 +862,7 @@ gda_connection_supports (GdaConnection *cnc, GdaConnectionFeature feature)
  * @schema: database schema to get.
  * @params: parameter list.
  *
- * Ask the underlying data source for a list of database objects.
+ * Asks the underlying data source for a list of database objects.
  *
  * This is the function that lets applications ask the different
  * providers about all their database objects (tables, views, procedures,
@@ -907,7 +908,7 @@ gda_connection_get_errors (GdaConnection *cnc)
  *
  * Creates a BLOB (Binary Large OBject) with read/write access.
  *
- * Returns: FALSE if the database does not support BLOBs. TRUE otherwise
+ * Returns: %FALSE if the database does not support BLOBs. %TRUE otherwise
  * and the GdaBlob is created and ready to be used.
  */
 gboolean

@@ -2,7 +2,7 @@
 GdaDataModelArray
 
 <!-- ##### SECTION Short_Description ##### -->
-Array model class
+An implementation of #GdaDataModel based on an array
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>

@@ -81,7 +81,7 @@ gda_command_free (GdaCommand *cmd)
  * gda_command_get_text
  * @cmd: a #GdaCommand.
  *
- * Get the command text held by @cmd.
+ * Gets the command text held by @cmd.
  * 
  * Returns: the command string of @cmd.
  */
@@ -185,7 +185,7 @@ gda_command_set_options (GdaCommand *cmd, GdaCommandOptions options)
  * gda_command_get_transaction
  * @cmd: a #GdaCommand.
  *
- * Get the #GdaTransaction associated with the given #GdaCommand.
+ * Gets the #GdaTransaction associated with the given #GdaCommand.
  *
  * Returns: the transaction for the command.
  */
@@ -201,7 +201,7 @@ gda_command_get_transaction (GdaCommand *cmd)
  * @cmd: a #GdaCommand.
  * @xaction: a #GdaTransaction object.
  *
- * Set the #GdaTransaction associated with the given #GdaCommand.
+ * Sets the #GdaTransaction associated with the given #GdaCommand.
  */
 void
 gda_command_set_transaction (GdaCommand *cmd, GdaTransaction *xaction)

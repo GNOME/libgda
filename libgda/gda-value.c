@@ -292,9 +292,9 @@ set_from_string (GdaValue *value, const gchar *as_string)
 /**
  * gda_value_new_null
  *
- * Make a new #GdaValue of type #GDA_VALUE_TYPE_NULL.
+ * Makes a new #GdaValue of type #GDA_VALUE_TYPE_NULL.
  *
- * Returns: The newly created #GdaValue.
+ * Returns: the newly created #GdaValue.
  */
 GdaValue *
 gda_value_new_null (void)
@@ -311,9 +311,9 @@ gda_value_new_null (void)
  * gda_value_new_bigint
  * @val: value to set for the new #GdaValue.
  *
- * Make a new #GdaValue of type #GDA_VALUE_TYPE_BIGINT with value @val.
+ * Makes a new #GdaValue of type #GDA_VALUE_TYPE_BIGINT with value @val.
  *
- * Returns: The newly created #GdaValue.
+ * Returns: the newly created #GdaValue.
  */
 GdaValue *
 gda_value_new_bigint (gint64 val)
@@ -330,9 +330,9 @@ gda_value_new_bigint (gint64 val)
  * gda_value_new_biguint
  * @val: value to set for the new #GdaValue.
  *
- * Make a new #GdaValue of type #GDA_VALUE_TYPE_BIGUINT with value @val.
+ * Makes a new #GdaValue of type #GDA_VALUE_TYPE_BIGUINT with value @val.
  *
- * Returns: The newly created #GdaValue.
+ * Returns: the newly created #GdaValue.
  */
 
 GdaValue *gda_value_new_biguint(guint64 val) {
@@ -346,10 +346,11 @@ GdaValue *gda_value_new_biguint(guint64 val) {
 /**
  * gda_value_new_binary
  * @val: value to set for the new #GdaValue.
+ * @size: the size of the memory pool pointer to by @val.
  *
- * Make a new #GdaValue of type #GDA_VALUE_TYPE_BINARY with value @val.
+ * Makes a new #GdaValue of type #GDA_VALUE_TYPE_BINARY with value @val.
  *
- * Returns: The newly created #GdaValue.
+ * Returns: the newly created #GdaValue.
  */
 GdaValue *
 gda_value_new_binary (gconstpointer val, glong size)
@@ -366,9 +367,9 @@ gda_value_new_binary (gconstpointer val, glong size)
  * gda_value_new_boolean
  * @val: value to set for the new #GdaValue.
  *
- * Make a new #GdaValue of type #GDA_VALUE_TYPE_BOOLEAN with value @val.
+ * Makes a new #GdaValue of type #GDA_VALUE_TYPE_BOOLEAN with value @val.
  *
- * Returns: The newly created #GdaValue.
+ * Returns: the newly created #GdaValue.
  */
 GdaValue *
 gda_value_new_boolean (gboolean val)
@@ -385,9 +386,9 @@ gda_value_new_boolean (gboolean val)
  * gda_value_new_date
  * @val: value to set for the new #GdaValue.
  *
- * Make a new #GdaValue of type #GDA_VALUE_TYPE_DATE with value @val.
+ * Makes a new #GdaValue of type #GDA_VALUE_TYPE_DATE with value @val.
  *
- * Returns: The newly created #GdaValue.
+ * Returns: the newly created #GdaValue.
  */
 GdaValue *
 gda_value_new_date (const GdaDate *val)
@@ -404,9 +405,9 @@ gda_value_new_date (const GdaDate *val)
  * gda_value_new_double
  * @val: value to set for the new #GdaValue.
  *
- * Make a new #GdaValue of type #GDA_VALUE_TYPE_DOUBLE with value @val.
+ * Makes a new #GdaValue of type #GDA_VALUE_TYPE_DOUBLE with value @val.
  *
- * Returns: The newly created #GdaValue.
+ * Returns: the newly created #GdaValue.
  */
 GdaValue *
 gda_value_new_double (gdouble val)
@@ -423,10 +424,10 @@ gda_value_new_double (gdouble val)
  * gda_value_new_geometric_point
  * @val: value to set for the new #GdaValue.
  *
- * Make a new #GdaValue of type #GDA_VALUE_TYPE_GEOMETRIC_POINT with value
+ * Makes a new #GdaValue of type #GDA_VALUE_TYPE_GEOMETRIC_POINT with value
  * @val.
  *
- * Returns: The newly created #GdaValue.
+ * Returns: the newly created #GdaValue.
  */
 GdaValue *
 gda_value_new_geometric_point (const GdaGeometricPoint *val)
@@ -443,7 +444,7 @@ gda_value_new_geometric_point (const GdaGeometricPoint *val)
  * gda_value_new_gobject
  * @val: value to set for the new #GdaValue.
  *
- * Make a new #GdaValue of type #GDA_VALUE_TYPE_GOBJECT with value @val.
+ * Makes a new #GdaValue of type #GDA_VALUE_TYPE_GOBJECT with value @val.
  *
  * Returns: the newly created #GdaValue.
  */
@@ -462,9 +463,9 @@ gda_value_new_gobject (const GObject *val)
  * gda_value_new_integer
  * @val: value to set for the new #GdaValue.
  *
- * Make a new #GdaValue of type #GDA_VALUE_TYPE_INTEGER with value @val.
+ * Makes a new #GdaValue of type #GDA_VALUE_TYPE_INTEGER with value @val.
  *
- * Returns: The newly created #GdaValue.
+ * Returns: the newly created #GdaValue.
  */
 GdaValue *
 gda_value_new_integer (gint val)
@@ -481,9 +482,9 @@ gda_value_new_integer (gint val)
  * gda_value_new_uinteger
  * @val: value to set for the new #GdaValue.
  *
- * Make a new #GdaValue of type #GDA_VALUE_TYPE_UINTEGER with value @val.
+ * Makes a new #GdaValue of type #GDA_VALUE_TYPE_UINTEGER with value @val.
  *
- * Returns: The newly created #GdaValue.
+ * Returns: the newly created #GdaValue.
  */
 
 GdaValue *gda_value_new_uinteger(guint val) {
@@ -499,9 +500,9 @@ GdaValue *gda_value_new_uinteger(guint val) {
  * gda_value_new_list
  * @val: value to set for the new #GdaValue.
  *
- * Make a new #GdaValue of type #GDA_VALUE_TYPE_LIST with value @val.
+ * Makes a new #GdaValue of type #GDA_VALUE_TYPE_LIST with value @val.
  *
- * Returns: The newly created #GdaValue.
+ * Returns: the newly created #GdaValue.
  */
 GdaValue *
 gda_value_new_list (const GdaValueList *val)
@@ -518,9 +519,9 @@ gda_value_new_list (const GdaValueList *val)
  + gda_value_new_money
  * @val: value to set for the new #GdaValue.
  *
- * Make a new #GdaValue of type #GDA_VALUE_TYPE_MONEY with value @val.
+ * Makes a new #GdaValue of type #GDA_VALUE_TYPE_MONEY with value @val.
  *
- * Returns: The newly created #GdaValue.
+ * Returns: the newly created #GdaValue.
  */
 GdaValue *
 gda_value_new_money (const GdaMoney *val)
@@ -537,9 +538,9 @@ gda_value_new_money (const GdaMoney *val)
  * gda_value_new_numeric
  * @val: value to set for the new #GdaValue.
  *
- * Make a new #GdaValue of type #GDA_VALUE_TYPE_NUMERIC with value @val.
+ * Makes a new #GdaValue of type #GDA_VALUE_TYPE_NUMERIC with value @val.
  *
- * Returns: The newly created #GdaValue.
+ * Returns: the newly created #GdaValue.
  */
 GdaValue *
 gda_value_new_numeric (const GdaNumeric *val)
@@ -556,9 +557,9 @@ gda_value_new_numeric (const GdaNumeric *val)
  * gda_value_new_single
  * @val: value to set for the new #GdaValue.
  *
- * Make a new #GdaValue of type #GDA_VALUE_TYPE_SINGLE with value @val.
+ * Makes a new #GdaValue of type #GDA_VALUE_TYPE_SINGLE with value @val.
  *
- * Returns: The newly created #GdaValue.
+ * Returns: the newly created #GdaValue.
  */
 GdaValue *
 gda_value_new_single (gfloat val)
@@ -575,9 +576,9 @@ gda_value_new_single (gfloat val)
  * gda_value_new_smallint
  * @val: value to set for the new #GdaValue.
  *
- * Make a new #GdaValue of type #GDA_VALUE_TYPE_SMALLINT with value @val.
+ * Makes a new #GdaValue of type #GDA_VALUE_TYPE_SMALLINT with value @val.
  *
- * Returns: The newly created #GdaValue.
+ * Returns: the newly created #GdaValue.
  */
 GdaValue *
 gda_value_new_smallint (gshort val)
@@ -594,9 +595,9 @@ gda_value_new_smallint (gshort val)
  * gda_value_new_smalluint
  * @val: value to set for the new #GdaValue.
  *
- * Make a new #GdaValue of type #GDA_VALUE_TYPE_SMALLUINT with value @val.
+ * Makes a new #GdaValue of type #GDA_VALUE_TYPE_SMALLUINT with value @val.
  *
- * Returns: The newly created #GdaValue.
+ * Returns: the newly created #GdaValue.
  */
 GdaValue *
 gda_value_new_smalluint (gushort val)
@@ -613,9 +614,9 @@ gda_value_new_smalluint (gushort val)
  * gda_value_new_string
  * @val: value to set for the new #GdaValue.
  *
- * Make a new #GdaValue of type #GDA_VALUE_TYPE_STRING with value @val.
+ * Makes a new #GdaValue of type #GDA_VALUE_TYPE_STRING with value @val.
  *
- * Returns: The newly created #GdaValue.
+ * Returns: the newly created #GdaValue.
  */
 GdaValue *
 gda_value_new_string (const gchar *val)
@@ -632,9 +633,9 @@ gda_value_new_string (const gchar *val)
  * gda_value_new_time
  * @val: value to set for the new #GdaValue.
  *
- * Make a new #GdaValue of type #GDA_VALUE_TYPE_TIME with value @val.
+ * Makes a new #GdaValue of type #GDA_VALUE_TYPE_TIME with value @val.
  *
- * Returns: The newly created #GdaValue.
+ * Returns: the newly created #GdaValue.
  */
 GdaValue *
 gda_value_new_time (const GdaTime *val)
@@ -651,9 +652,9 @@ gda_value_new_time (const GdaTime *val)
  * gda_value_new_timestamp
  * @val: value to set for the new #GdaValue.
  *
- * Make a new #GdaValue of type #GDA_VALUE_TYPE_TIMESTAMP with value @val.
+ * Makes a new #GdaValue of type #GDA_VALUE_TYPE_TIMESTAMP with value @val.
  *
- * Returns: The newly created #GdaValue.
+ * Returns: the newly created #GdaValue.
  */
 GdaValue *
 gda_value_new_timestamp (const GdaTimestamp *val)
@@ -670,8 +671,8 @@ gda_value_new_timestamp (const GdaTimestamp *val)
  * gda_value_new_timestamp_from_timet
  * @val: value to set for the new #GdaValue.
  *
- * Make a new #GdaValue of type #GDA_VALUE_TYPE_TIMESTAMP with value @val (of type
- * time_t).
+ * Makes a new #GdaValue of type #GDA_VALUE_TYPE_TIMESTAMP with value @val 
+ * (of type time_t).
  *
  * Returns: the newly created #GdaValue.
  */
@@ -703,9 +704,9 @@ gda_value_new_timestamp_from_timet (time_t val)
  * gda_value_new_tinyint
  * @val: value to set for the new #GdaValue.
  *
- * Make a new #GdaValue of type #GDA_VALUE_TYPE_TINYINT with value @val.
+ * Makes a new #GdaValue of type #GDA_VALUE_TYPE_TINYINT with value @val.
  *
- * Returns: The newly created #GdaValue.
+ * Returns: the newly created #GdaValue.
  */
 GdaValue *
 gda_value_new_tinyint (gchar val)
@@ -722,9 +723,9 @@ gda_value_new_tinyint (gchar val)
  * gda_value_new_tinyuint
  * @val: value to set for the new #GdaValue.
  *
- * Make a new #GdaValue of type #GDA_VALUE_TYPE_TINYUINT with value @val.
+ * Makes a new #GdaValue of type #GDA_VALUE_TYPE_TINYUINT with value @val.
  *
- * Returns: The newly created #GdaValue.
+ * Returns: the newly created #GdaValue.
  */
 GdaValue *
 gda_value_new_tinyuint (guchar val)
@@ -741,7 +742,7 @@ gda_value_new_tinyuint (guchar val)
  * gda_value_new_type
  * @val: Value to set for the new #GdaValue.
  *
- * Make a new #GdaValue of type #GDA_VALUE_TYPE_TYPE with value @val.
+ * Makes a new #GdaValue of type #GDA_VALUE_TYPE_TYPE with value @val.
  *
  * Returns: the newly created #GdaValue.
  */
@@ -760,11 +761,11 @@ gda_value_new_type (GdaValueType val)
 /**
  * gda_value_new_from_string
  * @as_string: stringified representation of the value.
- * @type: tha new value type.
+ * @type: the new value type.
  *
- * Make a new #GdaValue of type @type from its string representation.
+ * Makes a new #GdaValue of type @type from its string representation.
  *
- * Returns: The newly created #GdaValue or NULL if the string representation
+ * Returns: the newly created #GdaValue or %NULL if the string representation
  * cannot be converted to the specified @type.
  */
 GdaValue *
@@ -786,11 +787,11 @@ gda_value_new_from_string (const gchar *as_string, GdaValueType type)
  * gda_value_new_from_xml
  * @xml: a XML node representing the value.
  *
- * Create a GdaValue from a XML representation of it. That XML
+ * Creates a GdaValue from a XML representation of it. That XML
  * node corresponds to the following string representation:
  *    <value type="gdatype">value</value>
  *
- * Returns:  The newly created #GdaValue.
+ * Returns:  the newly created #GdaValue.
  */
 GdaValue *
 gda_value_new_from_xml (const xmlNodePtr node)
@@ -818,7 +819,7 @@ gda_value_new_from_xml (const xmlNodePtr node)
  * gda_value_free
  * @value: the resource to free.
  *
- * Deallocates all memory associated to  a #GdaValue.
+ * Deallocates all memory associated to a #GdaValue.
  */
 void
 gda_value_free (GdaValue *value)
@@ -833,7 +834,7 @@ gda_value_free (GdaValue *value)
  * gda_value_get_type
  * @value: value to get the type from.
  *
- * Retrieve the type of the given value.
+ * Retrieves the type of the given value.
  *
  * Returns: the #GdaValueType of the value.
  */
@@ -864,10 +865,10 @@ gda_value_is_null (const GdaValue *value)
  * gda_value_is_number
  * @value: a #GdaValue.
  *
- * Get whether the value stored in the given #GdaValue is of
+ * Gets whether the value stored in the given #GdaValue is of
  * numeric type or not.
  *
- * Returns: TRUE if a number, FALSE otherwise.
+ * Returns: %TRUE if a number, %FALSE otherwise.
  */
 gboolean
 gda_value_is_number (const GdaValue *value)
@@ -1039,9 +1040,7 @@ gda_value_set_bigint (GdaValue *value, gint64 val)
  * gda_value_get_biguint
  * @value: a #GdaValue whose value we want to get.
  *
- * Gets the value stored in @value.
- * 
- * Returns: the value contained in @value.
+ * Returns: the value stored in @value.
  */
 guint64
 gda_value_get_biguint (const GdaValue *value)
@@ -1073,9 +1072,7 @@ gda_value_set_biguint (GdaValue *value, guint64 val)
  * @value: a #GdaValue whose value we want to get.
  * @size: holder for length of data.
  *
- * Gets the value stored in @value.
- * 
- * Returns: the value contained in @value.
+ * Returns: the value stored in @value.
  */
 G_CONST_RETURN gpointer
 gda_value_get_binary (const GdaValue *value, glong *size)
@@ -1116,9 +1113,7 @@ gda_value_set_binary (GdaValue *value, gconstpointer val, glong size)
  * gda_value_get_blob
  * @value: a #GdaValue whose value we want to get.
  *
- * Gets the value stored in @value.
- * 
- * Returns: the value contained in @value.
+ * Returns: the value stored in @value.
  */
 const GdaBlob *
 gda_value_get_blob (const GdaValue *value)
@@ -1155,9 +1150,7 @@ gda_value_set_blob (GdaValue *value, const GdaBlob *val)
  * gda_value_get_boolean
  * @value: a #GdaValue whose value we want to get.
  *
- * Gets the value stored in @value.
- * 
- * Returns: the value contained in @value.
+ * Returns: the value stored in @value.
  */
 gboolean
 gda_value_get_boolean (const GdaValue *value)
@@ -1188,9 +1181,7 @@ gda_value_set_boolean (GdaValue *value, gboolean val)
  * gda_value_get_date
  * @value: a #GdaValue whose value we want to get.
  *
- * Gets the value stored in @value.
- * 
- * Returns: the value contained in @value.
+ * Returns: the value stored in @value.
  */
 G_CONST_RETURN GdaDate *
 gda_value_get_date (const GdaValue *value)
@@ -1224,9 +1215,7 @@ gda_value_set_date (GdaValue *value, const GdaDate *val)
  * gda_value_get_double
  * @value: a #GdaValue whose value we want to get.
  *
- * Gets the value stored in @value.
- * 
- * Returns: the value contained in @value.
+ * Returns: the value stored in @value.
  */
 gdouble
 gda_value_get_double (const GdaValue *value)
@@ -1257,9 +1246,7 @@ gda_value_set_double (GdaValue *value, gdouble val)
  * gda_value_get_geometric_point
  * @value: a #GdaValue whose value we want to get.
  *
- * Gets the value stored in @value.
- * 
- * Returns: the value contained in @value.
+ * Returns: the value stored in @value.
  */
 G_CONST_RETURN GdaGeometricPoint *
 gda_value_get_geometric_point (const GdaValue *value)
@@ -1292,7 +1279,7 @@ gda_value_set_geometric_point (GdaValue *value, const GdaGeometricPoint *val)
  * gda_value_get_gobject
  * @value: a #GdaValue whose value we want to get.
  *
- * Gets the value stored in @value.
+ * Returns: the value stored in @value.
  */
 G_CONST_RETURN GObject *
 gda_value_get_gobject (const GdaValue *value)
@@ -1325,9 +1312,7 @@ gda_value_set_gobject (GdaValue *value, const GObject *val)
  * gda_value_get_integer
  * @value: a #GdaValue whose value we want to get.
  *
- * Gets the value stored in @value.
- * 
- * Returns: the value contained in @value.
+ * Returns: the value stored in @value.
  */
 gint
 gda_value_get_integer (const GdaValue *value)
@@ -1358,9 +1343,7 @@ gda_value_set_integer (GdaValue *value, gint val)
  * gda_value_get_list
  * @value: a #GdaValue whose value we want to get.
  *
- * Gets the value stored in @value.
- * 
- * Returns: the value contained in @value.
+ * Returns: the value stored in @value.
  */
 G_CONST_RETURN GdaValueList *
 gda_value_get_list (const GdaValue *value)
@@ -1390,9 +1373,7 @@ gda_value_set_list (GdaValue *value, const GdaValueList *val)
  * gda_value_get_money
  * @value: a #GdaValue whose value we want to get.
  *
- * Gets the value stored in @value.
- * 
- * Returns: the value contained in @value.
+ * Returns: the value stored in @value.
  */
 G_CONST_RETURN GdaMoney *
 gda_value_get_money (const GdaValue *value)
@@ -1440,9 +1421,7 @@ gda_value_set_null (GdaValue *value)
  * gda_value_get_numeric
  * @value: a #GdaValue whose value we want to get.
  *
- * Gets the value stored in @value.
- * 
- * Returns: the value contained in @value.
+ * Returns: the value stored in @value.
  */
 G_CONST_RETURN GdaNumeric *
 gda_value_get_numeric (const GdaValue *value)
@@ -1476,9 +1455,7 @@ gda_value_set_numeric (GdaValue *value, const GdaNumeric *val)
  * gda_value_get_single
  * @value: a #GdaValue whose value we want to get.
  *
- * Gets the value stored in @value.
- * 
- * Returns: the value contained in @value.
+ * Returns: the value stored in @value.
  */
 gfloat
 gda_value_get_single (const GdaValue *value)
@@ -1509,9 +1486,7 @@ gda_value_set_single (GdaValue *value, gfloat val)
  * gda_value_get_smallint
  * @value: a #GdaValue whose value we want to get.
  *
- * Gets the value stored in @value.
- * 
- * Returns: the value contained in @value.
+ * Returns: the value stored in @value.
  */
 gshort
 gda_value_get_smallint (const GdaValue *value)
@@ -1542,9 +1517,7 @@ gda_value_set_smallint (GdaValue *value, gshort val)
  * gda_value_get_smalluint
  * @value: a #GdaValue whose value we want to get.
  *
- * Gets the value stored in @value.
- * 
- * Returns: the value contained in @value.
+ * Returns: the value stored in @value.
  */
 gushort
 gda_value_get_smalluint (const GdaValue *value)
@@ -1575,9 +1548,7 @@ gda_value_set_smalluint (GdaValue *value, gushort val)
  * gda_value_get_string
  * @value: a #GdaValue whose value we want to get.
  *
- * Gets the value stored in @value.
- * 
- * Returns: the value contained in @value.
+ * Returns: the value stored in @value.
  */
 const gchar *
 gda_value_get_string (const GdaValue *value)
@@ -1608,9 +1579,7 @@ gda_value_set_string (GdaValue *value, const gchar *val)
  * gda_value_get_time
  * @value: a #GdaValue whose value we want to get.
  *
- * Gets the value stored in @value.
- * 
- * Returns: the value contained in @value.
+ * Returns: the value stored in @value.
  */
 const GdaTime *
 gda_value_get_time (const GdaValue *value)
@@ -1645,9 +1614,7 @@ gda_value_set_time (GdaValue *value, const GdaTime *val)
  * gda_value_get_timestamp
  * @value: a #GdaValue whose value we want to get.
  *
- * Gets the value stored in @value.
- * 
- * Returns: the value contained in @value.
+ * Returns: the value stored in @value.
  */
 const GdaTimestamp *
 gda_value_get_timestamp (const GdaValue *value)
@@ -1686,9 +1653,7 @@ gda_value_set_timestamp (GdaValue *value, const GdaTimestamp *val)
  * gda_value_get_tinyint
  * @value: a #GdaValue whose value we want to get.
  *
- * Gets the value stored in @value.
- * 
- * Returns: the value contained in @value.
+ * Returns: the value stored in @value.
  */
 gchar
 gda_value_get_tinyint (const GdaValue *value)
@@ -1719,9 +1684,7 @@ gda_value_set_tinyint (GdaValue *value, gchar val)
  * gda_value_get_tinyuint
  * @value: a #GdaValue whose value we want to get.
  *
- * Gets the value stored in @value.
- * 
- * Returns: the value contained in @value.
+ * Returns: the value stored in @value.
  */
 guchar
 gda_value_get_tinyuint (const GdaValue *value)
@@ -1752,9 +1715,7 @@ gda_value_set_tinyuint (GdaValue *value, guchar val)
  * gda_value_get_uinteger
  * @value: a #GdaValue whose value we want to get.
  *
- * Gets the value stored in @value.
- * 
- * Returns: the value contained in @value.
+ * Returns: the value stored in @value.
  */
 guint
 gda_value_get_uinteger (const GdaValue *value)
@@ -1785,10 +1746,8 @@ gda_value_set_uinteger (GdaValue *value, guint val)
  * gda_value_get_vtype
  * @value: a #GdaValue whose value we want to get.
  * 
- * Gets the value stored in @value.
- * 
- * Returns: the value contained in @value.
- **/
+ * Returns: the value stored in @value.
+ */
 GdaValueType
 gda_value_get_vtype (const GdaValue *value)
 {
@@ -1823,8 +1782,8 @@ gda_value_set_vtype (GdaValue *value, GdaValueType type)
  *
  * Stores the value data from its string representation as @type.
  *
- * Returns: TRUE if the value has been properly converted to @type from
- * its string representation. FALSE otherwise.
+ * Returns: %TRUE if the value has been properly converted to @type from
+ * its string representation. %FALSE otherwise.
  */
 gboolean
 gda_value_set_from_string (GdaValue *value, 
@@ -1844,12 +1803,12 @@ gda_value_set_from_string (GdaValue *value,
  * @value: a #GdaValue.
  * @from: the value to copy from.
  *
- * Set the value of a #GdaValue from another #GdaValue. This
+ * Sets the value of a #GdaValue from another #GdaValue. This
  * is different from #gda_value_copy, which creates a new #GdaValue.
  * #gda_value_set_from_value, on the other hand, copies the contents
  * of @copy into @value, which must already be allocated.
  *
- * Returns: TRUE if successful, FALSE otherwise.
+ * Returns: %TRUE if successful, %FALSE otherwise.
  */
 gboolean
 gda_value_set_from_value (GdaValue *value, const GdaValue *from)
@@ -2112,9 +2071,9 @@ gda_value_stringify (const GdaValue *value)
  * @value1: a #GdaValue to compare.
  * @value2: the other #GdaValue to be compared to @value1.
  *
- * Compares two values of the <b>same</b> type.
+ * Compares two values of the same type.
  *
- * Returns: if both values have the same time, return 0 if both contains
+ * Returns: if both values have the same time, returns 0 if both contains
  * the same value, an integer less than 0 if @value1 is less than @value2 or
  * an integer greater than 0 if @value1 is greater than @value2.
  */
@@ -2262,10 +2221,9 @@ to_string (const GdaValue *value)
  * gda_value_to_xml
  * @value: a #GdaValue.
  *
- * Serialize the given #GdaValue to a XML node string.
+ * Serializes the given #GdaValue to a XML node string.
  *
- * Returns: the XML node. Once not
- * needed anymore, you should free it.
+ * Returns: the XML node. Once not needed anymore, you should free it.
  */
 xmlNodePtr
 gda_value_to_xml (const GdaValue *value)

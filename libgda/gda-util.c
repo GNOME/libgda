@@ -37,9 +37,7 @@
  * gda_type_to_string
  * @type: Type to convert from.
  *
- * Return the string representing the given #GdaType.
- *
- * Returns: the name of the type.
+ * Returns: the string representing the given #GdaValueType.
  */
 const gchar *
 gda_type_to_string (GdaValueType type)
@@ -70,6 +68,9 @@ gda_type_to_string (GdaValueType type)
 
 /**
  * gda_type_from_string
+ * @str: the name of a #GdaValueType.
+ *
+ * Returns: the #GdaValueType represented by the given @str.
  */
 GdaValueType
 gda_type_from_string (const gchar *str)
@@ -108,6 +109,12 @@ add_string_key_to_list (gpointer key, gpointer value, gpointer user_data)
 
 /**
  * gda_string_hash_to_list
+ * @hash_table: a hash table.
+ *
+ * Creates a new list of strings, which contains all keys of a given hash 
+ * table. After using it, you should free this list by calling g_list_free.
+ * 
+ * Returns: a new GList.
  */
 GList *
 gda_string_hash_to_list (GHashTable *hash_table)
@@ -122,14 +129,14 @@ gda_string_hash_to_list (GHashTable *hash_table)
 
 /**
  * gda_sql_replace_placeholders
- * @sql: A SQL command containing placeholders for values.
- * @params: List of values for the placeholders.
+ * @sql: a SQL command containing placeholders for values.
+ * @params: a list of values for the placeholders.
  *
  * Replaces the placeholders (:name) in the given SQL command with
  * the values from the #GdaParameterList specified as the @params
  * argument.
  *
- * Returns: the SQL string with all placeholders replaced, or NULL
+ * Returns: the SQL string with all placeholders replaced, or %NULL
  * on error. On success, the returned string must be freed by the caller
  * when no longer needed.
  */
@@ -162,7 +169,7 @@ gda_sql_replace_placeholders (const gchar *sql, GdaParameterList *params)
  *
  * It is the caller's responsibility to free the returned value.
  *
- * Returns: the file contents as a newly-allocated string, or NULL
+ * Returns: the file contents as a newly-allocated string, or %NULL
  * if there is an error.
  */
 gchar *
@@ -191,7 +198,7 @@ gda_file_load (const gchar *filename)
  *
  * Saves a chunk of data into a file.
  *
- * Returns: TRUE if successful, FALSE on error.
+ * Returns: %TRUE if successful, %FALSE on error.
  */
 gboolean
 gda_file_save (const gchar *filename, const gchar *buffer, gint len)

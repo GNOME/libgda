@@ -27,7 +27,7 @@
 <!ENTITY GDADATAMODELARRAY "<xref linkend='libgda-GdaDataModelArray'>">
 <!ENTITY GDADATAMODELHASH "<xref linkend='libgda-GdaDataModelHash'>">
 <!ENTITY fullexample SYSTEM "examples/full_example.c" CDATA linespecific>
-<!entity migration.sgml system "migration.sgml">
+<!ENTITY migration.sgml SYSTEM "migration.sgml">
 <!ENTITY libgda-batch SYSTEM "sgml/gda-batch.sgml">
 <!ENTITY libgda-blob SYSTEM "sgml/gda-blob.sgml">
 <!ENTITY libgda-client SYSTEM "sgml/gda-client.sgml">

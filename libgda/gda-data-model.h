@@ -114,10 +114,10 @@ gchar              *gda_data_model_to_xml (GdaDataModel *model, gboolean standal
 xmlNodePtr          gda_data_model_to_xml_node (GdaDataModel *model, const gchar *name);
 gboolean            gda_data_model_add_data_from_xml_node (GdaDataModel *model, xmlNodePtr node);
 
-const gchar        *gda_data_model_get_command_text (GdaDataModel *recset);
-void                gda_data_model_set_command_text (GdaDataModel *recset, const gchar *txt);
-GdaCommandType      gda_data_model_get_command_type (GdaDataModel *recset);
-void                gda_data_model_set_command_type (GdaDataModel *recset,
+const gchar        *gda_data_model_get_command_text (GdaDataModel *model);
+void                gda_data_model_set_command_text (GdaDataModel *model, const gchar *txt);
+GdaCommandType      gda_data_model_get_command_type (GdaDataModel *model);
+void                gda_data_model_set_command_type (GdaDataModel *model,
 						     GdaCommandType type);
 
 G_END_DECLS

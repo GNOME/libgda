@@ -44,9 +44,9 @@ free_hash_param (gpointer key, gpointer value, gpointer user_data)
 /**
  * gda_parameter_new_from_value
  * @name: name for the parameter being created.
- * @value: GDA value for this parameter.
+ * @value: a #GdaValue for this parameter.
  *
- * Create a new #GdaParameter object, which is usually used
+ * Creates a new #GdaParameter object, which is usually used
  * with #GdaParameterList.
  *
  * Returns: the newly created #GdaParameter.
@@ -71,7 +71,7 @@ gda_parameter_new_from_value (const gchar *name, GdaValue *value)
  * @name: name for the parameter being created.
  * @value: a boolean value.
  *
- * Create a new #GdaParameter from a gboolean value.
+ * Creates a new #GdaParameter from a gboolean value.
  *
  * Returns: the newly created #GdaParameter.
  */
@@ -94,7 +94,7 @@ gda_parameter_new_boolean (const gchar *name, gboolean value)
  * @name: name for the parameter being created.
  * @value: a gdouble value.
  *
- * Create a new #GdaParameter from a gdouble value.
+ * Creates a new #GdaParameter from a gdouble value.
  *
  * Returns: the newly created #GdaParameter.
  */
@@ -117,7 +117,8 @@ gda_parameter_new_double (const gchar *name, gdouble value)
  * @name: name for the parameter being created.
  * @value: a GObject value.
  *
- * Create a new #GdaParameter from a GObject.
+ * Creates a new #GdaParameter from a GObject.
+ *
  * Returns: the newly created #GdaParameter.
  */
 GdaParameter *
@@ -140,7 +141,7 @@ gda_parameter_new_gobject (const gchar *name, const GObject *value)
  * @name: name for the parameter being created.
  * @value: string value.
  *
- * Create a new #GdaParameter from a string.
+ * Creates a new #GdaParameter from a string.
  *
  * Returns: the newly created #GdaParameter.
  */
@@ -163,7 +164,7 @@ gda_parameter_new_string (const gchar *name, const gchar *value)
  * gda_parameter_free
  * @param: the #GdaParameter to be freed.
  *
- * Release all memory occupied by the given #GdaParameter.
+ * Releases all memory occupied by the given #GdaParameter.
  */
 void
 gda_parameter_free (GdaParameter *param)
@@ -193,7 +194,7 @@ gda_parameter_get_name (GdaParameter *param)
  * @param: a #GdaParameter.
  * @name: new name for the parameter.
  *
- * Set the name of the given #GdaParameter.
+ * Sets the name of the given #GdaParameter.
  */
 void
 gda_parameter_set_name (GdaParameter *param, const gchar *name)
@@ -210,9 +211,7 @@ gda_parameter_set_name (GdaParameter *param, const gchar *name)
  * gda_parameter_get_value
  * @param: a #GdaParameter.
  *
- * Get the value stored in the given #GdaParameter.
- *
- * Returns: the value stored in the parameter.
+ * Returns: the value stored in the given @param.
  */
 const GdaValue *
 gda_parameter_get_value (GdaParameter *param)
@@ -223,6 +222,10 @@ gda_parameter_get_value (GdaParameter *param)
 
 /**
  * gda_parameter_set_value
+ * @param: a #GdaParameter.
+ * @value: a #GdaValue.
+ *
+ * Stores the given @value in the given @param.
  */
 void
 gda_parameter_set_value (GdaParameter *param, GdaValue *value)
@@ -233,7 +236,7 @@ gda_parameter_set_value (GdaParameter *param, GdaValue *value)
 /**
  * gda_parameter_list_new
  *
- * Create a new #GdaParameterList.
+ * Creates a new #GdaParameterList.
  *
  * Returns: the newly created parameter list.
  */
@@ -252,7 +255,7 @@ gda_parameter_list_new (void)
  * gda_parameter_list_free
  * @plist: a #GdaParameterList.
  *
- * Release all memory occupied by the given #GdaParameterList.
+ * Releases all memory occupied by the given #GdaParameterList.
  */
 void
 gda_parameter_list_free (GdaParameterList *plist)
@@ -270,10 +273,10 @@ gda_parameter_list_free (GdaParameterList *plist)
  * @plist: a #GdaParameterList.
  * @param: the #GdaParameter to be added to the list.
  *
- * Add a new parameter to the given #GdaParameterList. Note that @param is, when
- * calling this function, is owned by the #GdaParameterList, so the caller should
- * just forget about it and not try to free the parameter once it's been added
- * to the #GdaParameterList.
+ * Adds a new parameter to the given #GdaParameterList. Note that @param is, 
+ * when calling this function, is owned by the #GdaParameterList, so the 
+ * caller should just forget about it and not try to free the parameter once 
+ * it's been added to the #GdaParameterList.
  */
 void
 gda_parameter_list_add_parameter (GdaParameterList *plist, GdaParameter *param)
@@ -309,7 +312,7 @@ get_names_cb (gpointer key, gpointer value, gpointer user_data)
  * gda_parameter_list_get_names
  * @plist: a #GdaParameterList.
  *
- * Get the names of all parameters in the parameter list.
+ * Gets the names of all parameters in the parameter list.
  *
  * Returns: a GList containing the names of the parameters. After
  * using it, you should free this list by calling g_list_free.
@@ -330,9 +333,9 @@ gda_parameter_list_get_names (GdaParameterList *plist)
  * @plist: a #GdaParameterList.
  * @name: name of the parameter to search for.
  *
- * Get a #GdaParameter from the parameter list given its name.
+ * Gets a #GdaParameter from the parameter list given its name.
  *
- * Returns: the #GdaParameter identified by @name, if found, or NULL
+ * Returns: the #GdaParameter identified by @name, if found, or %NULL
  * if not found.
  */
 GdaParameter *
@@ -348,7 +351,7 @@ gda_parameter_list_find (GdaParameterList *plist, const gchar *name)
  * gda_parameter_list_clear
  * @plist: a #GdaParameterList.
  *
- * Clear the parameter list. This means removing all #GdaParameter's currently
+ * Clears the parameter list. This means removing all #GdaParameter's currently
  * being stored in the parameter list. After calling this function,
  * the parameter list is empty.
  */
@@ -363,9 +366,7 @@ gda_parameter_list_clear (GdaParameterList *plist)
  * gda_parameter_list_get_length
  * @plist: a #GdaParameterList.
  *
- * Get the number of parameters stored in the given parameter list.
- *
- * Returns: the number of parameters in the list.
+ * Returns: the number of parameters stored in the given parameter list.
  */
 guint
 gda_parameter_list_get_length (GdaParameterList *plist)
