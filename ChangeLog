@@ -1,3 +1,10 @@
+2005-01-24  Bas Driessen <bas.driessen@xobas.com>
+
+	* providers/mysql/gda-mysql-provider.c
+	(gda_mysql_provider_open_connection): Fix to
+	allow parameters "USER" and "PASSWORD" be used
+	as arguments in the MySQL DSN string.
+
 2005-01-20  Bas Driessen <bas.driessen@xobas.com>
 
 	* providers/postgres/gda-postgres-recordset.c

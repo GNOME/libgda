@@ -214,9 +214,9 @@ gda_mysql_provider_open_connection (GdaServerProvider *provider,
 	t_unix_socket = gda_quark_list_find (params, "UNIX_SOCKET");
 	t_use_ssl = gda_quark_list_find (params, "USE_SSL");
 
-	if (username)
+	if (username && *username != '\0')
 		t_user = username;
-	if (password)
+	if (password && *password != '\0')
 		t_password = password;
 
 	if (t_use_ssl && atoi (t_use_ssl) == 1)
