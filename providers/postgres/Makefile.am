@@ -1,4 +1,4 @@
-providerdir=$(prefix)/lib/libgda/providers
+providerdir=$(libdir)/libgda/providers
 provider_LTLIBRARIES = libgda-postgres.la
 
 INCLUDES = \

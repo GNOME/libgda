@@ -221,7 +221,7 @@ get_config_client ()
 	 *	  wait until the operation finishes
 	 */
 	if (config_client == NULL){
-		gint len;
+		gsize  len;
 		gchar *full_file;
 		gchar *user_config;
 

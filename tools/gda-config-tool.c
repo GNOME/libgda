@@ -404,7 +404,7 @@ static gboolean
 config_load_file (const gchar *file)
 {
 	gchar *file_contents;
-	gint len;
+	gsize  len;
 
 	if (g_file_get_contents (file, &file_contents, &len, NULL)){
 		config_data = parse_config_file (file_contents, len);

@@ -1,3 +1,30 @@
+2003-11-13  Frederic Crozat  <fcrozat@mandrakesoft.com>
+
+	* libgda/Makefile.am:
+	* providers/firebird/Makefile.am:
+	* providers/freetds/Makefile.am:
+	* providers/ibmdb2/Makefile.am:
+	* providers/ldap/Makefile.am:
+	* providers/mdb/Makefile.am:
+	* providers/msql/Makefile.am:
+	* providers/mysql/Makefile.am:
+	* providers/mysql/gda-mysql-provider.c:
+	* providers/odbc/Makefile.am:
+	* providers/oracle/Makefile.am:
+	* providers/postgres/Makefile.am:
+	* providers/sqlite/Makefile.am:
+	* providers/sybase/Makefile.am:
+	* providers/xbase/Makefile.am:
+	* providers/xml/Makefile.am:
+	Use libdir instead of prefix/lib.
+
+	* libgda/gda-config.c: (get_config_client):
+	* tools/gda-config-tool.c: (config_load_file):
+	Use correct type (fix for 64bits platform).
+
+	* providers/mysql/gda-mysql-provider.c:
+	Add missing header.
+
 2003-11-12  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
 	* libgda/gda-value.c: fixed gda_value_copy for GdaNumeric. Patch by
