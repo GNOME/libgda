@@ -72,6 +72,7 @@ gda_type_to_string (GdaValueType type)
 	case GDA_VALUE_TYPE_TYPE : return "type";
 	case GDA_VALUE_TYPE_UNKNOWN : return "unknown";
 	default:
+		break;
 	}
 
 	return "unknown";

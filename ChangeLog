@@ -1,3 +1,9 @@
+2004-08-10  Erik Sigra <sigra@home.se>
+
+	* libgda/gda-util.c (gda_type_to_string):
+	* providers/xml/gda-xml-provider.c (gda_xml_provider_get_schema):
+	added break statements in empty 'default:' labels.
+
 2004-08-06  Szalai Ferenc <szferi@einstein.ki.iif.hu>
                                                                                 
 	* libgda/gda-row.c (gda_row_set_number): set the GdaRow's to $number,

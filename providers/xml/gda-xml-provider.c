@@ -682,6 +682,7 @@ gda_xml_provider_get_schema (GdaServerProvider *provider,
 	case GDA_CONNECTION_SCHEMA_TYPES :
 		return get_types (cnc);
 	default :
+		break;
 	}
 
 	return NULL;
