@@ -3,6 +3,7 @@
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
+ *	Juan-Mariano de Goyeneche <jmseyas@dit.upm.es> (BLOB issues)
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -46,6 +47,7 @@ gda_type_to_string (GdaValueType type)
 	switch (type) {
 	case GDA_VALUE_TYPE_NULL : return "null";
 	case GDA_VALUE_TYPE_BIGINT : return "bigint";
+	case GDA_VALUE_TYPE_BLOB : return "blob";
 	case GDA_VALUE_TYPE_BINARY : return "binary";
 	case GDA_VALUE_TYPE_BOOLEAN : return "boolean";
 	case GDA_VALUE_TYPE_DATE : return "date";
@@ -77,6 +79,7 @@ gda_type_from_string (const gchar *str)
 	if (!g_strcasecmp (str, "null")) return GDA_VALUE_TYPE_NULL;
 	else if (!g_strcasecmp (str, "bigint")) return GDA_VALUE_TYPE_BIGINT;
 	else if (!g_strcasecmp (str, "binary")) return GDA_VALUE_TYPE_BINARY;
+	else if (!g_strcasecmp (str, "blob")) return GDA_VALUE_TYPE_BLOB;
 	else if (!g_strcasecmp (str, "boolean")) return GDA_VALUE_TYPE_BOOLEAN;
 	else if (!g_strcasecmp (str, "date")) return GDA_VALUE_TYPE_DATE;
 	else if (!g_strcasecmp (str, "double")) return GDA_VALUE_TYPE_DOUBLE;

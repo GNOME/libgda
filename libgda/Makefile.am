@@ -16,6 +16,7 @@ gda-marshal.c: gda-marshal.list $(GLIB_GENMARSHAL)
 	$(GLIB_GENMARSHAL) $< --body --prefix=gda_marshal > $@
 
 gda_headers = \
+	gda-blob.h \
 	gda-client.h \
 	gda-command.h \
 	gda-config.h \
@@ -68,6 +69,7 @@ $(libgda_2_la_OBJECTS): $(gda_marshal_built_files)
 
 libgda_2_la_SOURCES = \
 	$(gda_headers) \
+	gda-blob.c \
 	gda-client.c \
 	gda-command.c \
 	gda-config.c \

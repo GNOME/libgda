@@ -1,4 +1,17 @@
-2003-08-15  Gonzalo Paniagua Javier <gonzalo@ximian.com>
+2003-08-15  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
+	* libgda/Makefile.am:
+	* libgda/gda-blob.c:
+	* libgda/gda-blob.h:
+	* libgda/gda-util.c:
+	* libgda/gda-value.c:
+	* libgda/gda-value.h:
+	* providers/postgres/gda-postgres-provider.c:
+	* providers/postgres/utils.c: added GdaBlob and support for BLOBs in
+	the postgres provider. Patch by Juan-Mariano de Goyeneche
+	(jmseyas@dit.upm.es).
+
+2003-08-15  Gonzalo Paniagua Javier <gonzalo@gnome-db.org.com>
 
 	* providers/mysql/gda-mysql-provider.c: pass the MYSQL pointer to the
 	new recordset.

@@ -5,6 +5,7 @@
  *         Vivien Malerba <malerba@gnome-db.org>
  *         Rodrigo Moya <rodrigo@gnome-db.org>
  *         Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+ *         Juan-Mariano de Goyeneche <jmseyas@dit.upm.es> (BLOB issues)
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -25,6 +26,7 @@
 #include <libgda/gda-intl.h>
 #include <stdlib.h>
 #include <string.h>
+#include <libpq/libpq-fs.h>
 #include "gda-postgres.h"
 
 GdaError *
@@ -157,6 +159,179 @@ make_timestamp (GdaTimestamp *timestamp, const gchar *value)
 	}
 }
 
+typedef struct _PostgresBlobPrivateData PostgresBlobPrivateData;
+
+struct _PostgresBlobPrivateData {
+	int blobid;
+	GdaBlobMode mode;
+	int fd;
+};
+
+static PGconn *
+get_pconn (GdaConnection *cnc)
+{
+	GdaPostgresConnectionData *priv_data;
+
+	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE);
+	if (!priv_data) {
+		gda_connection_add_error_string (cnc, _("Invalid PostgreSQL handle"));
+		return NULL;
+	}
+
+	return priv_data->pconn;
+}
+
+static gint 
+gda_postgres_blob_open (gpointer connection, GdaBlob *blob, GdaBlobMode mode)
+{
+	PostgresBlobPrivateData *priv;
+	PGconn *pconn;
+	int pg_mode;
+	Oid oid;
+	GdaConnection *cnc;
+
+	cnc = (GdaConnection *)connection;
+
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), -1);
+	g_return_val_if_fail (blob != NULL, -1);
+	g_return_val_if_fail (blob->priv_data != NULL, -1);
+
+	priv = blob->priv_data;
+	priv->mode = mode;
+	switch (mode) {
+	case GDA_BLOB_MODE_RDONLY :
+		pg_mode = INV_READ;
+		break;
+	case GDA_BLOB_MODE_WRONLY :
+		pg_mode = INV_WRITE;
+		break;
+	case GDA_BLOB_MODE_RDWR :
+		pg_mode = INV_READ | INV_WRITE;
+		break;
+	default:
+		return -1;
+	}
+
+	pconn = get_pconn (cnc);
+	oid = priv->blobid;
+	priv->fd = lo_open (pconn, oid, mode);
+
+	return priv->fd;
+}
+
+static gint 
+gda_postgres_blob_read (gpointer connection, GdaBlob *blob, gint size, 
+			gpointer data, gint *read_length)
+{
+	PostgresBlobPrivateData *priv;
+	PGconn *pconn;
+	GdaConnection *cnc;
+
+	cnc = (GdaConnection *) connection;
+
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), -1);
+	g_return_val_if_fail (blob != NULL, -1);
+	g_return_val_if_fail (blob->priv_data != NULL, -1);
+
+	priv = blob->priv_data;
+
+	g_return_val_if_fail ((priv->mode != GDA_BLOB_MODE_RDONLY) &&
+			      (priv->mode != GDA_BLOB_MODE_RDWR), -1);
+	g_return_val_if_fail (priv->fd >= 0, -1);
+
+	pconn = get_pconn(cnc);
+	*read_length = lo_read (pconn, priv->fd, (gchar *) data, size);
+	return 0;
+}
+
+static gint 
+gda_postgres_blob_write (gpointer connection, GdaBlob *blob, gint size, 
+			gconstpointer data, gint *written_length)
+{
+	PostgresBlobPrivateData *priv;
+	PGconn *pconn;
+	GdaConnection *cnc;
+
+	cnc = (GdaConnection *) connection;
+
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), -1);
+	g_return_val_if_fail (blob != NULL, -1);
+	g_return_val_if_fail (blob->priv_data != NULL, -1);
+
+	priv = blob->priv_data;
+
+	g_return_val_if_fail ((priv->mode != GDA_BLOB_MODE_WRONLY) && 
+			      (priv->mode != GDA_BLOB_MODE_RDWR), -1);
+	g_return_val_if_fail (priv->fd >= 0, -1);
+
+	pconn = get_pconn (cnc);
+	/* 
+	 * According to docs, "data" is a "const char*", but according to libpq
+	 * isn't. Cast to char* to avoid compiler warning...
+	 */
+	*written_length = lo_write (pconn, priv->fd, (gchar *) data, size);
+	return 0;
+}
+
+static gint 
+gda_postgres_blob_lseek (gpointer connection, GdaBlob *blob, gint offset,
+			 gint whence)
+{
+	PostgresBlobPrivateData *priv;
+	PGconn *pconn;
+	GdaConnection *cnc;
+
+	cnc = (GdaConnection *) connection;
+
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), -1);
+	g_return_val_if_fail (blob != NULL, -1);
+	g_return_val_if_fail (blob->priv_data != NULL, -1);
+
+	priv = blob->priv_data;
+
+	g_return_val_if_fail (priv->fd >= 0, -1);
+
+	pconn = get_pconn (cnc);
+	return lo_lseek (pconn, priv->fd, offset, whence);
+}
+
+static gint 
+gda_postgres_blob_close (gpointer connection, GdaBlob *blob)
+{
+	PostgresBlobPrivateData *priv;
+	PGconn *pconn;
+	GdaConnection *cnc;
+
+	cnc = (GdaConnection *) connection;
+
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), -1);
+	g_return_val_if_fail (blob != NULL, -1);
+	g_return_val_if_fail (blob->priv_data != NULL, -1);
+
+	priv = blob->priv_data;
+
+	g_return_val_if_fail (priv->fd >= 0, -1);
+
+	pconn = get_pconn (cnc);
+	return lo_close (pconn, priv->fd);
+}
+
+static void
+make_blob (GdaBlob *blob, const gchar *value)
+{
+	PostgresBlobPrivateData *priv = g_new0 (PostgresBlobPrivateData, 1);
+	priv->blobid = atoi (value);
+	priv->mode = -1;
+	priv->fd = -1;
+
+	blob->priv_data = (gpointer) priv;
+	blob->open = gda_postgres_blob_open;
+	blob->read = gda_postgres_blob_read;
+	blob->write = gda_postgres_blob_write;
+	blob->lseek = gda_postgres_blob_lseek;
+	blob->close = gda_postgres_blob_close;
+}
+
 void
 gda_postgres_set_value (GdaValue *value,
 			GdaValueType type,
@@ -170,6 +345,7 @@ gda_postgres_set_value (GdaValue *value,
 	GdaTimestamp timestamp;
 	GdaGeometricPoint point;
 	GdaNumeric numeric;
+	GdaBlob blob;
 	/* guchar *unescaped; See comment below on BINARY */
 
 	if (isNull){
@@ -247,6 +423,10 @@ gda_postgres_set_value (GdaValue *value,
 		}
 		*/
 		break;
+	case GDA_VALUE_TYPE_BLOB :
+		make_blob (&blob, thevalue);
+		gda_value_set_blob (value, &blob);
+ 		break;
 	default :
 		gda_value_set_string (value, thevalue);
 	}

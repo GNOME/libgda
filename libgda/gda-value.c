@@ -5,6 +5,7 @@
  *	Michael Lausch <michael@lausch.at>
  *	Rodrigo Moya <rodrigo@gnome-db.org>
  *	Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+ *	Juan-Mariano de Goyeneche <jmseyas@dit.upm.es> (BLOB issues)
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -58,6 +59,15 @@ clear_value (GdaValue *value)
 	case GDA_VALUE_TYPE_STRING :
 		g_free (value->value.v_string);
 		value->value.v_string = NULL;
+		break;
+	case GDA_VALUE_TYPE_BLOB :
+		g_free (value->value.v_blob.priv_data);
+		value->value.v_blob.priv_data = NULL;
+		value->value.v_blob.open = NULL;
+		value->value.v_blob.read = NULL;
+		value->value.v_blob.write = NULL;
+		value->value.v_blob.lseek = NULL;
+		value->value.v_blob.close = NULL;
 		break;
 	default :
 		break;
@@ -912,6 +922,10 @@ gda_value_copy (const GdaValue *value)
 		copy->binary_length = value->binary_length;
 		memcpy (copy->value.v_binary, value->value.v_binary, value->binary_length);
 		break;
+	case GDA_VALUE_TYPE_BLOB :
+		memcpy (&copy->value.v_blob, &value->value.v_blob,
+			sizeof (GdaBlob));
+		break;
 	case GDA_VALUE_TYPE_BOOLEAN :
 		copy->value.v_boolean = value->value.v_boolean;
 		break;
@@ -1093,6 +1107,45 @@ gda_value_set_binary (GdaValue *value, gconstpointer val, glong size)
 	value->value.v_binary = g_malloc0 (size);
 	value->binary_length = size;
 	memcpy (value->value.v_binary, val, size);
+}
+
+/**
+ * gda_value_get_blob
+ * @value: a #GdaValue whose value we want to get.
+ *
+ * Gets the value stored in @value.
+ * 
+ * Returns: the value contained in @value.
+ */
+const GdaBlob *
+gda_value_get_blob (const GdaValue *value)
+{
+	g_return_val_if_fail (value != NULL, NULL);
+	g_return_val_if_fail (gda_value_isa (value, GDA_VALUE_TYPE_BLOB), NULL);
+	return (const GdaBlob *) &value->value.v_blob;
+}
+
+/**
+ * gda_value_set_blob
+ * @value: a #GdaValue that will store @val.
+ * @val: value to be stored in @value.
+ *
+ * Stores @val into @value.
+ */
+void
+gda_value_set_blob (GdaValue *value, const GdaBlob *val)
+{
+	g_return_if_fail (value != NULL);
+	g_return_if_fail (val != NULL);
+
+	clear_value (value);
+	value->type = GDA_VALUE_TYPE_BLOB;
+	value->value.v_blob.priv_data = val->priv_data;
+	value->value.v_blob.open = val->open;
+	value->value.v_blob.read = val->read;
+	value->value.v_blob.write = val->write;
+	value->value.v_blob.lseek = val->lseek;
+	value->value.v_blob.close = val->close;
 }
 
 /**
@@ -1806,67 +1859,70 @@ gda_value_set_from_value (GdaValue *value, const GdaValue *from)
 		gda_value_set_null (value);
 		break;
 	case GDA_VALUE_TYPE_BIGINT :
-		gda_value_set_bigint (value, gda_value_get_bigint ((GdaValue *) from));
+		gda_value_set_bigint (value, gda_value_get_bigint (from));
 		break;
         case GDA_VALUE_TYPE_BIGUINT :
-                gda_value_set_biguint (value, gda_value_get_biguint ((GdaValue*) from));
+                gda_value_set_biguint (value, gda_value_get_biguint (from));
                 break;
 	case GDA_VALUE_TYPE_BINARY :
 		gda_value_set_binary (value, from->value.v_binary, from->binary_length);
 		break;
+	case GDA_VALUE_TYPE_BLOB :
+		gda_value_set_blob (value, gda_value_get_blob (from));
+		break;
 	case GDA_VALUE_TYPE_BOOLEAN :
-		gda_value_set_boolean (value, gda_value_get_boolean ((GdaValue *) from));
+		gda_value_set_boolean (value, gda_value_get_boolean (from));
 		break;
 	case GDA_VALUE_TYPE_DATE :
-		gda_value_set_date (value, gda_value_get_date ((GdaValue *) from));
+		gda_value_set_date (value, gda_value_get_date (from));
 		break;
 	case GDA_VALUE_TYPE_DOUBLE :
-		gda_value_set_double (value, gda_value_get_double ((GdaValue *) from));
+		gda_value_set_double (value, gda_value_get_double (from));
 		break;
 	case GDA_VALUE_TYPE_GEOMETRIC_POINT :
-		gda_value_set_geometric_point (value, gda_value_get_geometric_point ((GdaValue *) from));
+		gda_value_set_geometric_point (value, gda_value_get_geometric_point (from));
 		break;
 	case GDA_VALUE_TYPE_GOBJECT :
-		gda_value_set_gobject (value, gda_value_get_gobject ((GdaValue *) from));
+		gda_value_set_gobject (value, gda_value_get_gobject (from));
 		break;
 	case GDA_VALUE_TYPE_INTEGER :
-		gda_value_set_integer (value, gda_value_get_integer ((GdaValue *) from));
+		gda_value_set_integer (value, gda_value_get_integer (from));
 		break;
         case GDA_VALUE_TYPE_UINTEGER :
-                gda_value_set_uinteger (value, gda_value_get_integer ((GdaValue *)from));
+                gda_value_set_uinteger (value, gda_value_get_integer (from));
                 break;
 	case GDA_VALUE_TYPE_LIST :
-		gda_value_set_list (value, gda_value_get_list ((GdaValue *) from));
+		gda_value_set_list (value, gda_value_get_list (from));
 		break;
 	case GDA_VALUE_TYPE_MONEY :
-		gda_value_set_money (value, gda_value_get_money ((GdaValue *) from));
+		gda_value_set_money (value, gda_value_get_money (from));
 		break;
 	case GDA_VALUE_TYPE_NUMERIC :
-		gda_value_set_numeric (value, gda_value_get_numeric ((GdaValue *) from));
+		gda_value_set_numeric (value, gda_value_get_numeric (from));
 		break;
 	case GDA_VALUE_TYPE_SINGLE :
-		gda_value_set_single (value, gda_value_get_single ((GdaValue *) from));
+		gda_value_set_single (value, gda_value_get_single (from));
 		break;
 	case GDA_VALUE_TYPE_SMALLINT :
-		gda_value_set_smallint (value,gda_value_get_smallint ((GdaValue *) from));
+		gda_value_set_smallint (value,gda_value_get_smallint (from));
 		break;
         case GDA_VALUE_TYPE_SMALLUINT :
-                gda_value_set_smalluint(value,gda_value_get_smalluint((GdaValue*)from));
+                gda_value_set_smalluint(value,gda_value_get_smalluint(from));
                 break;
 	case GDA_VALUE_TYPE_STRING :
-		gda_value_set_string (value, gda_value_get_string ((GdaValue *) from));
+		gda_value_set_string (value, gda_value_get_string (from));
 		break;
 	case GDA_VALUE_TYPE_TIME :
-		gda_value_set_time (value, gda_value_get_time ((GdaValue *) from));
+		gda_value_set_time (value, gda_value_get_time (from));
 		break;
 	case GDA_VALUE_TYPE_TIMESTAMP :
-		gda_value_set_timestamp (value, gda_value_get_timestamp ((GdaValue *) from));
+		gda_value_set_timestamp (value, gda_value_get_timestamp (from));
 		break;
 	case GDA_VALUE_TYPE_TINYINT :
-		gda_value_set_tinyint (value, gda_value_get_tinyint ((GdaValue *) from));
+		gda_value_set_tinyint (value, gda_value_get_tinyint (from));
 		break;
         case GDA_VALUE_TYPE_TINYUINT :
-                gda_value_set_tinyuint(value, gda_value_get_tinyuint((GdaValue*)from));
+                gda_value_set_tinyuint(value, gda_value_get_tinyuint(from));
                 break;
 	case GDA_VALUE_TYPE_TYPE :
 		clear_value (value);
@@ -1899,6 +1955,7 @@ gda_value_stringify (const GdaValue *value)
 	const GdaGeometricPoint *point;
 	const GdaValueList *list;
 	const GdaNumeric *numeric;
+	const GdaBlob *gdablob;
 	GList *l;
 	GString *str = NULL;
 	gchar *retval = NULL;
@@ -1995,6 +2052,10 @@ gda_value_stringify (const GdaValue *value)
 		} else
 			retval = g_strdup_printf (_("NULL GObject"));
 		break;
+	case GDA_VALUE_TYPE_BLOB:
+		gdablob = gda_value_get_blob (value);
+		retval = g_strdup_printf ("%s", gdablob->stringify ());
+		break;
 	case GDA_VALUE_TYPE_LIST:
 		list = gda_value_get_list (value);
 		for (l = (GList *) list; l != NULL; l = l->next) {
@@ -2076,6 +2137,10 @@ gda_value_compare (const GdaValue *value1, const GdaValue *value2)
 		break;
 	case GDA_VALUE_TYPE_BOOLEAN :
 		retval = value1->value.v_boolean - value2->value.v_boolean;
+		break;
+	case GDA_VALUE_TYPE_BLOB :
+		/* FIXME: Does compare() make sense with BLOBs? */
+		retval = 0;
 		break;
 	case GDA_VALUE_TYPE_DATE :
 		retval = memcmp (&value1->value.v_date, &value2->value.v_date,

@@ -208,6 +208,8 @@ postgres_name_to_gda_type (const gchar *name)
 		return GDA_VALUE_TYPE_TIME;
 	else if (!strcmp (name, "point"))
 		return GDA_VALUE_TYPE_GEOMETRIC_POINT;
+	else if (!strcmp (name, "oid"))
+		return GDA_VALUE_TYPE_BLOB;
 	else if (!strcmp (name, "bytea"))
 		return GDA_VALUE_TYPE_BINARY;
 

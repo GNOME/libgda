@@ -4,6 +4,7 @@
  * AUTHORS:
  *	Michael Lausch <michael@lausch.at>
  *	Rodrigo Moya <rodrigo@gnome-db.org>
+ *	Juan-Mariano de Goyeneche <jmseyas@dit.upm.es> (BLOB issues) 
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -29,6 +30,7 @@
 #include <glib/gmacros.h>
 #include <glib-object.h>
 #include <libxml/tree.h>
+#include <libgda/gda-blob.h>
 
 G_BEGIN_DECLS
 
@@ -39,6 +41,7 @@ typedef enum {
 	GDA_VALUE_TYPE_BIGINT,
 	GDA_VALUE_TYPE_BIGUINT,
 	GDA_VALUE_TYPE_BINARY,
+	GDA_VALUE_TYPE_BLOB,
 	GDA_VALUE_TYPE_BOOLEAN,
 	GDA_VALUE_TYPE_DATE,
 	GDA_VALUE_TYPE_DOUBLE,
@@ -108,6 +111,7 @@ typedef struct {
 		gint64 v_bigint;
  	        guint64 v_biguint;
 		gpointer v_binary;
+		GdaBlob v_blob;
 		gboolean v_boolean;
 		GdaDate v_date;
 		gdouble v_double;
@@ -135,6 +139,7 @@ GdaValue     *gda_value_new_null (void);
 GdaValue     *gda_value_new_bigint (gint64 val);
 GdaValue     *gda_value_new_biguint(guint64 val);
 GdaValue     *gda_value_new_binary (gconstpointer val, glong size);
+GdaValue     *gda_value_new_blob (const GdaBlob *val);
 GdaValue     *gda_value_new_boolean (gboolean val);
 GdaValue     *gda_value_new_date (const GdaDate *val);
 GdaValue     *gda_value_new_double (gdouble val);
@@ -173,6 +178,8 @@ guint64       gda_value_get_biguint (const GdaValue *value);
 void          gda_value_set_biguint (GdaValue *value, guint64 val);
 G_CONST_RETURN gpointer gda_value_get_binary (const GdaValue *value, glong *size);
 void          gda_value_set_binary (GdaValue *value, gconstpointer val, glong size);
+G_CONST_RETURN GdaBlob *gda_value_get_blob (const GdaValue *value);
+void          gda_value_set_blob (GdaValue *value, const GdaBlob *val);
 gboolean      gda_value_get_boolean (const GdaValue *value);
 void          gda_value_set_boolean (GdaValue *value, gboolean val);
 G_CONST_RETURN GdaDate *gda_value_get_date (const GdaValue *value);
