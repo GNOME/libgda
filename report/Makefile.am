@@ -42,3 +42,6 @@ gdainclude_HEADERS=$(gda_report_headers)
 DTD_FILES=gda-report.dtd
 dtddir=$(datadir)/gda/dtd
 dtd_DATA=$(DTD_FILES)
+
+dist-hook:
+	cd $(distdir); rm -f $(BUILT_SOURCES)

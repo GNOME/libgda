@@ -1,3 +1,7 @@
+2001-04-14  Michael Meeks  <michael@ximian.com>
+
+	* Makefile.am (dist-hook): remove built files from dist.
+
 2001-04-01  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-connection-pool.[ch]: renamed "new_connection" signal to "open"

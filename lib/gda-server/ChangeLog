@@ -1,3 +1,7 @@
+2001-04-14  Michael Meeks  <michael@ximian.com>
+
+	* Makefile.am: remove built files from dist.
+
 2001-01-05	Carlos Perelló Marín <carlos@gnome-db.org>
 
 	* Makefile.am: Added the rule to erase the idl generated

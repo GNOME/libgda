@@ -49,3 +49,5 @@ libgda_client_la_LIBADD =
 gdaincludedir=$(includedir)/gda
 gdainclude_HEADERS=$(gda_client_headers)
 
+dist-hook:
+	cd $(distdir); rm -f $(BUILT_SOURCES)
