@@ -9,9 +9,9 @@ msgstr ""
 "Project-Id-Version: gnome-db\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2003-08-06 00:17+0200\n"
-"PO-Revision-Date: 2003-05-06 16:57+0200\n"
+"PO-Revision-Date: 2003-09-04 01:12GMT\n"
 "Last-Translator: Marco Ciampa <ciampix@libero.it>\n"
-"Language-Team: Italian <tp@lists.linux.it>, <it@li.org>\n"
+"Language-Team: italiano <tp@lists.linux.it>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -318,8 +318,7 @@ msgstr "Non è possibile allocare un handle di ambiente.\n"
 #. is needed for tables schema
 #: providers/ibmdb2/gda-ibmdb2-provider.c:211
 msgid "SQLGetInfo is unsupported. Hence IBM DB2 Provider will not work.\n"
-msgstr ""
-"SQLGetInfo non è supportato. Perciò il provider DB2 IBM non funzionerà.\n"
+msgstr "SQLGetInfo non è supportato. Perciò il provider DB2 IBM non funzionerà.\n"
 
 #: providers/ibmdb2/gda-ibmdb2-provider.c:450
 #: providers/ibmdb2/gda-ibmdb2-provider.c:580
@@ -517,8 +516,7 @@ msgstr "Provider per directory LDAP"
 
 #: providers/mdb/gda-mdb-provider.c:205
 msgid "A database FILENAME must be specified in the connection_string"
-msgstr ""
-"Un FILENAME di database deve essere specificato nella connection_string"
+msgstr "Un FILENAME di database deve essere specificato nella connection_string"
 
 #: providers/mdb/gda-mdb-provider.c:214
 #: providers/xbase/gda-xbase-provider.c:223
@@ -787,10 +785,8 @@ msgid "Row number out of bounds"
 msgstr "Numero riga fuori capacità"
 
 #: providers/mysql/gda-mysql-provider.c:218
-msgid ""
-"You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
-msgstr ""
-"Impossibile fornire una UNIX_SOCKET se si è già fornito un HOST o una PORTA."
+msgid "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
+msgstr "Impossibile fornire una UNIX_SOCKET se si è già fornito un HOST o una PORTA."
 
 #: providers/mysql/gda-mysql-provider.c:294
 #: providers/mysql/gda-mysql-provider.c:1085
@@ -905,8 +901,7 @@ msgstr "Non è possibile connettersi al server Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:315
 msgid "Could not set the Oracle server attribute in the service context"
-msgstr ""
-"Impossibile impostare l'attributo server Oracle nel contesto di servizio"
+msgstr "Impossibile impostare l'attributo server Oracle nel contesto di servizio"
 
 #: providers/oracle/gda-oracle-provider.c:331
 msgid "Could not set the Oracle username attribute"
@@ -961,8 +956,7 @@ msgstr "Impossibile ottenere il tipo di comando Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:610
 msgid "Could not set the Oracle statement pre-fetch row count"
-msgstr ""
-"Impossibile impostare il conteggio di righe di pre-fetch del comando Oracle"
+msgstr "Impossibile impostare il conteggio di righe di pre-fetch del comando Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:627
 msgid "Could not execute the Oracle statement"
@@ -1196,8 +1190,7 @@ msgid "Provider for PostgreSQL databases"
 msgstr "Provider per database PostgreSQL"
 
 #: providers/sqlite/gda-sqlite-provider.c:198
-msgid ""
-"A full path must be specified on the connection string to open a database."
+msgid "A full path must be specified on the connection string to open a database."
 msgstr ""
 "Sulla stringa di connessione per aprire un database deve essere specificato "
 "un percorso completo. "
@@ -1241,8 +1234,7 @@ msgstr "Provider per database SQLite"
 
 #: providers/sybase/gda-sybase-provider.c:291
 msgid "Out of memory. Allocating connection structure failed."
-msgstr ""
-"Memoria esaurita. Fallita l'allocazione della struttura di connessione."
+msgstr "Memoria esaurita. Fallita l'allocazione della struttura di connessione."
 
 #: providers/sybase/gda-sybase-provider.c:336
 #, c-format
@@ -1346,8 +1338,7 @@ msgstr "Non è possibile inviare il comando per ottenere il database corrente."
 
 #: providers/sybase/gda-sybase-provider.c:1016
 msgid "could not bind variable to get current database."
-msgstr ""
-"Impossibile collegarsi alla variabile per ottenere il database corrente."
+msgstr "Impossibile collegarsi alla variabile per ottenere il database corrente."
 
 #: providers/sybase/gda-sybase-provider.c:1029
 #: providers/sybase/gda-sybase-provider.c:1044
@@ -1383,15 +1374,13 @@ msgstr "%s ha restituito <=0 colonne."
 #: providers/sybase/gda-sybase-recordset.c:359
 #: providers/sybase/gda-sybase-recordset.c:549
 msgid "Could not allocate structure for column metainformation."
-msgstr ""
-"Impossibile allocare una struttura per le metainformazioni delle colonne."
+msgstr "Impossibile allocare una struttura per le metainformazioni delle colonne."
 
 #: providers/sybase/gda-sybase-recordset.c:363
 #: providers/sybase/gda-sybase-recordset.c:553
 #, c-format
 msgid "Could not call %s while processing row resultset."
-msgstr ""
-"Impossibile chiamare %s durante l'elaborazione della riga di risultato."
+msgstr "Impossibile chiamare %s durante l'elaborazione della riga di risultato."
 
 #: providers/sybase/gda-sybase-recordset.c:382
 #: providers/sybase/gda-sybase-recordset.c:403
@@ -1407,8 +1396,7 @@ msgstr "Impossibile allocare il contenitore dei dati per la colonna %d"
 #: providers/sybase/gda-sybase-recordset.c:422
 #, c-format
 msgid "Could not run %s to cancel processing row resultset."
-msgstr ""
-"Impossibile eseguire %s per annullare l'elaborazione della riga di risultato."
+msgstr "Impossibile eseguire %s per annullare l'elaborazione della riga di risultato."
 
 #: providers/sybase/gda-sybase-recordset.c:438
 #, c-format
@@ -1535,12 +1523,10 @@ msgstr ""
 
 #: providers/sybase/utils.c:202
 msgid "call to cs_diag failed when attempting to the amount of client messages"
-msgstr ""
-"chiamata a cs_diag fallita nel tentativo di contare i messaggi del client"
+msgstr "chiamata a cs_diag fallita nel tentativo di contare i messaggi del client"
 
 #: providers/sybase/utils.c:220
-msgid ""
-"an error occured when calling cs_diag attempting to retrieve a client message"
+msgid "an error occured when calling cs_diag attempting to retrieve a client message"
 msgstr ""
 "si è verificato un errore durante la chiamata a cs_diag nel tentativo di "
 "ricevere un messaggio del client"
@@ -1571,17 +1557,14 @@ msgstr "), strato("
 
 #: providers/sybase/utils.c:276
 msgid "call to cs_diag failed when attempting to clear the client messages"
-msgstr ""
-"chiamata a cs_diag fallita nel tentativo di cancellare i messaggi del client"
+msgstr "chiamata a cs_diag fallita nel tentativo di cancellare i messaggi del client"
 
 #: providers/sybase/utils.c:317
 msgid "call to ct_diag failed when attempting to the amount of server messages"
-msgstr ""
-"chiamata a ct_diag fallita nel tentativo di sommare i messaggi del server"
+msgstr "chiamata a ct_diag fallita nel tentativo di sommare i messaggi del server"
 
 #: providers/sybase/utils.c:334
-msgid ""
-"an error occured when calling ct_diag attempting to retrieve a server message"
+msgid "an error occured when calling ct_diag attempting to retrieve a server message"
 msgstr ""
 "si è verificato un errore durante la chiamata a ct_diag nel tentativo di "
 "recuperare un messaggio del server"
@@ -1612,12 +1595,10 @@ msgstr "Linea"
 
 #: providers/sybase/utils.c:446
 msgid "call to ct_diag failed when attempting to the amount of client messages"
-msgstr ""
-"chiamata a ct_diag fallita nel tentativo di sommare i messaggi del client"
+msgstr "chiamata a ct_diag fallita nel tentativo di sommare i messaggi del client"
 
 #: providers/sybase/utils.c:463
-msgid ""
-"an error occured when calling ct_diag attempting to retrieve a client message"
+msgid "an error occured when calling ct_diag attempting to retrieve a client message"
 msgstr ""
 "si è verificato un errore durante la chiamata a ct_diag nel tentativo di "
 "recuperare un messaggio del client"
@@ -1636,8 +1617,7 @@ msgstr "Numero messaggio"
 
 #: providers/sybase/utils.c:502
 msgid "call to ct_diag failed when attempting to clear the client messages"
-msgstr ""
-"chiamata a ct_diag fallita nel tentativo di cancellare i messaggi del client"
+msgstr "chiamata a ct_diag fallita nel tentativo di cancellare i messaggi del client"
 
 #: providers/sybase/utils.c:523
 msgid "Operation not possible, connection busy."
@@ -1651,8 +1631,7 @@ msgstr ""
 
 #: providers/xbase/gda-xbase-provider.c:232
 msgid "Either FILENAME or DIRECTORY must be specified in the connection string"
-msgstr ""
-"O FILENAME o DIRECTORY devono essere specificati nella stringa di connessione"
+msgstr "O FILENAME o DIRECTORY devono essere specificati nella stringa di connessione"
 
 #: providers/xbase/gda-xbase-provider.c:261
 #: providers/xbase/gda-xbase-provider.c:379
@@ -1664,18 +1643,16 @@ msgid "Provider for Xbase (dBase, FoxPro, etc) files"
 msgstr "Provider per file Xbase (dBase, FoxPro, etc)"
 
 #: providers/xml/gda-xml-provider.c:190
-#, fuzzy
 msgid ""
 "A full path must be specified on the connection string to open a database on "
 "the XML provider."
 msgstr ""
-"Sulla stringa di connessione per aprire un database deve essere specificato "
-"un percorso completo. "
+"Sulla stringa di connessione per aprire un database su un provider XML, deve essere "
+"specificato un percorso completo."
 
 #: providers/xml/gda-xml-provider.c:221 providers/xml/gda-xml-provider.c:243
-#, fuzzy
 msgid "Invalid XML handle"
-msgstr "Handle MySQL non valido"
+msgstr "Handle XML non valido"
 
 #: providers/xml/gda-xml-provider.c:262 providers/xml/gda-xml-provider.c:277
 #: providers/xml/gda-xml-provider.c:304
@@ -1696,11 +1673,11 @@ msgstr "Impossibile ottenere una descrizione per la colonna"
 
 #: providers/xml/libmain.c:33
 msgid "XML"
-msgstr ""
+msgstr "XML"
 
 #: providers/xml/libmain.c:39
 msgid "XML provider, based on the libgda XML database format"
-msgstr ""
+msgstr "Provider XML, basato sul formato database XML di libgda"
 
 #: report/libgda-report/gda-report-document.c:171
 msgid "Could not parse XML document"
@@ -1916,8 +1893,7 @@ msgstr "Prova dell'API del client GDA"
 
 #: testing/client.c:193
 msgid "** ERROR: gda_config_get_data_source_list returned a NULL item\n"
-msgstr ""
-"** ERRORE: gda_config_get_data_source_list ha restituito un elemento NULL\n"
+msgstr "** ERRORE: gda_config_get_data_source_list ha restituito un elemento NULL\n"
 
 #: testing/client.c:197
 #, c-format
@@ -1926,8 +1902,7 @@ msgstr " Sorgente dati = %s, Utente = %s\n"
 
 #: testing/config.c:84
 msgid "** ERROR: gda_config_get_provider_list returned a NULL item\n"
-msgstr ""
-"** ERRORE: gda_config_get_provider_list ha restituito un elemento NULL\n"
+msgstr "** ERRORE: gda_config_get_provider_list ha restituito un elemento NULL\n"
 
 #: testing/config.c:88
 #, c-format
@@ -1953,3 +1928,4 @@ msgstr "\tgda_params ="
 
 #~ msgid "Default provider, based on XML"
 #~ msgstr "Fornitore predefinito, in base all'XML"
+
