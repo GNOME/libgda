@@ -127,6 +127,7 @@ set_from_string (GdaValue *value, const gchar *as_string)
 	gchar *endptr [1];
 	gdouble dvalue;
 	glong lvalue;
+        gulong ulvalue;
 
 	g_return_val_if_fail (value != NULL, FALSE);
 
@@ -153,6 +154,13 @@ set_from_string (GdaValue *value, const gchar *as_string)
 			retval = TRUE;
 		}
 		break;
+        case GDA_VALUE_TYPE_BIGUINT :
+ 	        dvalue = g_strtod (as_string, endptr);
+                if (*as_string!=0 && **endptr==0) {
+                  gda_value_set_biguint(value,(guint64)dvalue);
+                  retval=TRUE;
+                }
+                break;
 	case GDA_VALUE_TYPE_INTEGER :
 		lvalue = strtol (as_string, endptr, 10);
 		if (*as_string != '\0' && **endptr == '\0'){
@@ -160,6 +168,13 @@ set_from_string (GdaValue *value, const gchar *as_string)
 			retval = TRUE;
 		}
 		break;
+        case GDA_VALUE_TYPE_UINTEGER :
+                ulvalue = strtoul (as_string, endptr, 10);
+                if (*as_string!=0 && **endptr==0) {
+                  gda_value_set_uinteger(value,(guint32)ulvalue);
+                  retval=TRUE;
+                }
+                break;
 	case GDA_VALUE_TYPE_SMALLINT :
 		lvalue = strtol (as_string, endptr, 10);
 		if (*as_string != '\0' && **endptr == '\0'){
@@ -167,6 +182,27 @@ set_from_string (GdaValue *value, const gchar *as_string)
 			retval = TRUE;
 		}
 		break;
+        case GDA_VALUE_TYPE_SMALLUINT :
+                ulvalue = strtoul (as_string, endptr, 10);
+                if (*as_string!=0 && **endptr==0) {
+                  gda_value_set_smalluint(value,(guint16)ulvalue);
+                  retval=TRUE;
+                }
+                break;
+        case GDA_VALUE_TYPE_TINYINT :
+                lvalue = strtol(as_string, endptr, 10);
+                if (*as_string!=0 && **endptr==0) {
+                  gda_value_set_tinyint(value,(gchar)lvalue);
+                  retval=TRUE;
+                }
+                break;
+        case GDA_VALUE_TYPE_TINYUINT :
+                ulvalue = strtoul(as_string,endptr, 10);
+                if (*as_string!=0 && **endptr==0) {
+                  gda_value_set_tinyuint(value,(guchar)ulvalue);
+                  retval=TRUE;
+                }
+                break;
 	case GDA_VALUE_TYPE_SINGLE :
 		dvalue = g_strtod (as_string, endptr);
 		if (*as_string != '\0' && **endptr == '\0'){
@@ -275,6 +311,23 @@ gda_value_new_bigint (gint64 val)
 	gda_value_set_bigint (value, val);
 
 	return value;
+}
+
+/**
+ * gda_value_new_biguint
+ * @val: value to set for the new #GdaValue.
+ *
+ * Make a new #GdaValue of type #GDA_VALUE_TYPE_BIGUINT with value @val.
+ *
+ * Returns: The newly created #GdaValue.
+ */
+
+GdaValue *gda_value_new_biguint(guint64 val) {
+  GdaValue *value;
+
+  value = g_new0(GdaValue,1);
+  gda_value_set_biguint(value,val);
+  return value;
 }
 
 /**
@@ -412,6 +465,24 @@ gda_value_new_integer (gint val)
 }
 
 /**
+ * gda_value_new_uinteger
+ * @val: value to set for the new #GdaValue.
+ *
+ * Make a new #GdaValue of type #GDA_VALUE_TYPE_UINTEGER with value @val.
+ *
+ * Returns: The newly created #GdaValue.
+ */
+
+GdaValue *gda_value_new_uinteger(guint val) {
+  GdaValue *value;
+
+  value=g_new0(GdaValue,1);
+  gda_value_set_uinteger(value,val);
+  return value;
+}
+
+
+/**
  * gda_value_new_list
  * @val: value to set for the new #GdaValue.
  *
@@ -502,6 +573,25 @@ gda_value_new_smallint (gshort val)
 
 	value = g_new0 (GdaValue, 1);
 	gda_value_set_smallint (value, val);
+
+	return value;
+}
+
+/**
+ * gda_value_new_smalluint
+ * @val: value to set for the new #GdaValue.
+ *
+ * Make a new #GdaValue of type #GDA_VALUE_TYPE_SMALLUINT with value @val.
+ *
+ * Returns: The newly created #GdaValue.
+ */
+GdaValue *
+gda_value_new_smalluint (gushort val)
+{
+	GdaValue *value;
+
+	value = g_new0 (GdaValue, 1);
+	gda_value_set_smalluint (value, val);
 
 	return value;
 }
@@ -611,6 +701,25 @@ gda_value_new_tinyint (gchar val)
 
 	value = g_new0 (GdaValue, 1);
 	gda_value_set_tinyint (value, val);
+
+	return value;
+}
+
+/**
+ * gda_value_new_tinyuint
+ * @val: value to set for the new #GdaValue.
+ *
+ * Make a new #GdaValue of type #GDA_VALUE_TYPE_TINYUINT with value @val.
+ *
+ * Returns: The newly created #GdaValue.
+ */
+GdaValue *
+gda_value_new_tinyuint (guchar val)
+{
+	GdaValue *value;
+
+	value = g_new0 (GdaValue, 1);
+	gda_value_set_tinyuint (value, val);
 
 	return value;
 }
@@ -761,8 +870,12 @@ gda_value_is_number (GdaValue *value)
 	case GDA_VALUE_TYPE_SINGLE :
 	case GDA_VALUE_TYPE_SMALLINT :
 	case GDA_VALUE_TYPE_TINYINT :
+        case GDA_VALUE_TYPE_BIGUINT :
+        case GDA_VALUE_TYPE_UINTEGER :
+        case GDA_VALUE_TYPE_SMALLUINT :
+        case GDA_VALUE_TYPE_TINYUINT :
 		return TRUE;
-	default :
+	default :;
 	}
 
 	return FALSE;
@@ -791,6 +904,9 @@ gda_value_copy (const GdaValue *value)
 	case GDA_VALUE_TYPE_BIGINT :
 		copy->value.v_bigint = value->value.v_bigint;
 		break;
+        case GDA_VALUE_TYPE_BIGUINT :
+                copy->value.v_biguint = value->value.v_biguint;
+                break;
 	case GDA_VALUE_TYPE_BINARY :
 		copy->value.v_binary = g_malloc0 (value->binary_length);
 		copy->binary_length = value->binary_length;
@@ -815,6 +931,9 @@ gda_value_copy (const GdaValue *value)
 	case GDA_VALUE_TYPE_INTEGER :
 		copy->value.v_integer = value->value.v_integer;
 		break;
+        case GDA_VALUE_TYPE_UINTEGER :
+                copy->value.v_uinteger = value->value.v_uinteger;
+                break;
 	case GDA_VALUE_TYPE_LIST :
 		copy->value.v_list = NULL;
 		for (l = value->value.v_list; l != NULL; l = l->next) {
@@ -836,6 +955,9 @@ gda_value_copy (const GdaValue *value)
 	case GDA_VALUE_TYPE_SMALLINT :
 		copy->value.v_smallint = value->value.v_smallint;
 		break;
+        case GDA_VALUE_TYPE_SMALLUINT :
+                copy->value.v_smalluint = value->value.v_smalluint;
+                break;
 	case GDA_VALUE_TYPE_STRING :
 		copy->value.v_string = g_strdup (value->value.v_string);
 		break;
@@ -848,6 +970,9 @@ gda_value_copy (const GdaValue *value)
 	case GDA_VALUE_TYPE_TINYINT :
 		copy->value.v_tinyint = value->value.v_tinyint;
 		break;
+        case GDA_VALUE_TYPE_TINYUINT :
+                copy->value.v_tinyuint = value->value.v_tinyuint;
+                break;
 	case GDA_VALUE_TYPE_TYPE :
 		copy->value.v_type = value->value.v_type;
 		break;
@@ -877,6 +1002,23 @@ gda_value_get_bigint (GdaValue *value)
 }
 
 /**
+ * gda_value_get_biguint
+ * @value: a #GdaValue whose value we want to get.
+ *
+ * Gets the value stored in @value.
+ * 
+ * Returns: the value contained in @value.
+ */
+guint64
+gda_value_get_biguint (GdaValue *value)
+{
+	g_return_val_if_fail (value != NULL, -1);
+	g_return_val_if_fail (gda_value_isa (value, GDA_VALUE_TYPE_BIGUINT), -1);
+	return value->value.v_biguint;
+}
+
+
+/**
  * gda_value_set_bigint
  * @value: a #GdaValue that will store @val.
  * @val: value to be stored in @value.
@@ -891,6 +1033,23 @@ gda_value_set_bigint (GdaValue *value, gint64 val)
 	clear_value (value);
 	value->type = GDA_VALUE_TYPE_BIGINT;
 	value->value.v_bigint = val;
+}
+
+/**
+ * gda_value_set_biguint
+ * @value: a #GdaValue that will store @val.
+ * @val: value to be stored in @value.
+ *
+ * Stores @val into @value.
+ */
+void
+gda_value_set_biguint (GdaValue *value, guint64 val)
+{
+	g_return_if_fail (value != NULL);
+
+	clear_value (value);
+	value->type = GDA_VALUE_TYPE_BIGUINT;
+	value->value.v_biguint = val;
 }
 
 /**
@@ -1124,6 +1283,22 @@ gda_value_get_integer (GdaValue *value)
 }
 
 /**
+ * gda_value_get_uinteger
+ * @value: a #GdaValue whose value we want to get.
+ *
+ * Gets the value stored in @value.
+ * 
+ * Returns: the value contained in @value.
+ */
+guint
+gda_value_get_uinteger (GdaValue *value)
+{
+	g_return_val_if_fail (value != NULL, -1);
+	g_return_val_if_fail (gda_value_isa (value, GDA_VALUE_TYPE_UINTEGER), -1);
+	return value->value.v_uinteger;
+}
+
+/**
  * gda_value_set_integer
  * @value: a #GdaValue that will store @val.
  * @val: value to be stored in @value.
@@ -1138,6 +1313,23 @@ gda_value_set_integer (GdaValue *value, gint val)
 	clear_value (value);
 	value->type = GDA_VALUE_TYPE_INTEGER;
 	value->value.v_integer = val;
+}
+
+/**
+ * gda_value_set_uinteger
+ * @value: a #GdaValue that will store @val.
+ * @val: value to be stored in @value.
+ *
+ * Stores @val into @value.
+ */
+void
+gda_value_set_uinteger (GdaValue *value, guint val)
+{
+	g_return_if_fail (value != NULL);
+
+	clear_value (value);
+	value->type = GDA_VALUE_TYPE_UINTEGER;
+	value->value.v_uinteger = val;
 }
 
 /**
@@ -1308,6 +1500,22 @@ gda_value_get_smallint (GdaValue *value)
 }
 
 /**
+ * gda_value_get_smalluint
+ * @value: a #GdaValue whose value we want to get.
+ *
+ * Gets the value stored in @value.
+ * 
+ * Returns: the value contained in @value.
+ */
+gushort
+gda_value_get_smalluint (GdaValue *value)
+{
+	g_return_val_if_fail (value != NULL, -1);
+	g_return_val_if_fail (gda_value_isa (value, GDA_VALUE_TYPE_SMALLUINT), -1);
+	return value->value.v_smalluint;
+}
+
+/**
  * gda_value_set_smallint
  * @value: a #GdaValue that will store @val.
  * @val: value to be stored in @value.
@@ -1322,6 +1530,23 @@ gda_value_set_smallint (GdaValue *value, gshort val)
 	clear_value (value);
 	value->type = GDA_VALUE_TYPE_SMALLINT;
 	value->value.v_smallint = val;
+}
+
+/**
+ * gda_value_set_smalluint
+ * @value: a #GdaValue that will store @val.
+ * @val: value to be stored in @value.
+ *
+ * Stores @val into @value.
+ */
+void
+gda_value_set_smalluint (GdaValue *value, gushort val)
+{
+	g_return_if_fail (value != NULL);
+
+	clear_value (value);
+	value->type = GDA_VALUE_TYPE_SMALLUINT;
+	value->value.v_smalluint = val;
 }
 
 /**
@@ -1452,6 +1677,22 @@ gda_value_get_tinyint (GdaValue *value)
 }
 
 /**
+ * gda_value_get_tinyuint
+ * @value: a #GdaValue whose value we want to get.
+ *
+ * Gets the value stored in @value.
+ * 
+ * Returns: the value contained in @value.
+ */
+guchar
+gda_value_get_tinyuint (GdaValue *value)
+{
+	g_return_val_if_fail (value != NULL, -1);
+	g_return_val_if_fail (gda_value_isa (value, GDA_VALUE_TYPE_TINYUINT), -1);
+	return value->value.v_tinyuint;
+}
+
+/**
  * gda_value_set_tinyint
  * @value: a #GdaValue that will store @val.
  * @val: value to be stored in @value.
@@ -1466,6 +1707,23 @@ gda_value_set_tinyint (GdaValue *value, gchar val)
 	clear_value (value);
 	value->type = GDA_VALUE_TYPE_TINYINT;
 	value->value.v_tinyint = val;
+}
+
+/**
+ * gda_value_set_tinyuint
+ * @value: a #GdaValue that will store @val.
+ * @val: value to be stored in @value.
+ *
+ * Stores @val into @value.
+ */
+void
+gda_value_set_tinyuint (GdaValue *value, guchar val)
+{
+	g_return_if_fail (value != NULL);
+
+	clear_value (value);
+	value->type = GDA_VALUE_TYPE_TINYUINT;
+	value->value.v_tinyuint = val;
 }
 
 /**
@@ -1551,6 +1809,9 @@ gda_value_set_from_value (GdaValue *value, const GdaValue *from)
 	case GDA_VALUE_TYPE_BIGINT :
 		gda_value_set_bigint (value, gda_value_get_bigint ((GdaValue *) from));
 		break;
+        case GDA_VALUE_TYPE_BIGUINT :
+                gda_value_set_biguint (value, gda_value_get_biguint ((GdaValue*) from));
+                break;
 	case GDA_VALUE_TYPE_BINARY :
 		gda_value_set_binary (value, from->value.v_binary, from->binary_length);
 		break;
@@ -1572,6 +1833,9 @@ gda_value_set_from_value (GdaValue *value, const GdaValue *from)
 	case GDA_VALUE_TYPE_INTEGER :
 		gda_value_set_integer (value, gda_value_get_integer ((GdaValue *) from));
 		break;
+        case GDA_VALUE_TYPE_UINTEGER :
+                gda_value_set_uinteger (value, gda_value_get_integer ((GdaValue *)from));
+                break;
 	case GDA_VALUE_TYPE_LIST :
 		gda_value_set_list (value, gda_value_get_list ((GdaValue *) from));
 		break;
@@ -1585,8 +1849,11 @@ gda_value_set_from_value (GdaValue *value, const GdaValue *from)
 		gda_value_set_single (value, gda_value_get_single ((GdaValue *) from));
 		break;
 	case GDA_VALUE_TYPE_SMALLINT :
-		gda_value_set_smallint (value, gda_value_get_smallint ((GdaValue *) from));
+		gda_value_set_smallint (value,gda_value_get_smallint ((GdaValue *) from));
 		break;
+        case GDA_VALUE_TYPE_SMALLUINT :
+                gda_value_set_smalluint(value,gda_value_get_smalluint((GdaValue*)from));
+                break;
 	case GDA_VALUE_TYPE_STRING :
 		gda_value_set_string (value, gda_value_get_string ((GdaValue *) from));
 		break;
@@ -1599,6 +1866,9 @@ gda_value_set_from_value (GdaValue *value, const GdaValue *from)
 	case GDA_VALUE_TYPE_TINYINT :
 		gda_value_set_tinyint (value, gda_value_get_tinyint ((GdaValue *) from));
 		break;
+        case GDA_VALUE_TYPE_TINYUINT :
+                gda_value_set_tinyuint(value, gda_value_get_tinyuint((GdaValue*)from));
+                break;
 	case GDA_VALUE_TYPE_TYPE :
 		clear_value (value);
 		value->type = GDA_VALUE_TYPE_TYPE;
@@ -1640,6 +1910,9 @@ gda_value_stringify (GdaValue *value)
 	case GDA_VALUE_TYPE_BIGINT:
 		retval = g_strdup_printf ("%lld", gda_value_get_bigint (value));
 		break;
+        case GDA_VALUE_TYPE_BIGUINT:
+                retval = g_strdup_printf ("%lud", gda_value_get_biguint (value));
+                break;
 	case GDA_VALUE_TYPE_BINARY :
 		retval = g_malloc0 (value->binary_length + 1);
 		memcpy (retval, value->value.v_binary, value->binary_length);
@@ -1657,12 +1930,21 @@ gda_value_stringify (GdaValue *value)
 	case GDA_VALUE_TYPE_INTEGER:
 		retval = g_strdup_printf ("%d", gda_value_get_integer (value));
 		break;
+        case GDA_VALUE_TYPE_UINTEGER:
+                retval = g_strdup_printf ("%u", gda_value_get_uinteger (value));
+                break;
 	case GDA_VALUE_TYPE_SMALLINT:
 		retval = g_strdup_printf ("%d", gda_value_get_smallint (value));
 		break;
+        case GDA_VALUE_TYPE_SMALLUINT:
+                retval = g_strdup_printf ("%u", gda_value_get_smalluint (value));
+                break;
 	case GDA_VALUE_TYPE_TINYINT:
 		retval = g_strdup_printf ("%d", gda_value_get_tinyint (value));
 		break;
+        case GDA_VALUE_TYPE_TINYUINT:
+                retval = g_strdup_printf ("%u", gda_value_get_tinyuint (value));
+                break;
 	case GDA_VALUE_TYPE_SINGLE:
 		retval = g_strdup_printf ("%.2f", gda_value_get_single (value));
 		break;
@@ -1786,6 +2068,9 @@ gda_value_compare (const GdaValue *value1, const GdaValue *value2)
 	case GDA_VALUE_TYPE_BIGINT :
 		retval = (gint) value1->value.v_bigint - value2->value.v_bigint;
 		break;
+        case GDA_VALUE_TYPE_BIGUINT :
+                retval = (gint) value1->value.v_biguint - value2->value.v_biguint;
+                break;
 	case GDA_VALUE_TYPE_BINARY :
 		/* FIXME */
 		retval = 0;
@@ -1813,6 +2098,9 @@ gda_value_compare (const GdaValue *value1, const GdaValue *value2)
 	case GDA_VALUE_TYPE_INTEGER :
 		retval = value1->value.v_integer - value2->value.v_integer;
 		break;
+        case GDA_VALUE_TYPE_UINTEGER :
+                retval = value1->value.v_integer - value2->value.v_integer;
+                break;
 	case GDA_VALUE_TYPE_LIST :
 		retval = 0;
 		for (l1 = value1->value.v_list, l2 = value2->value.v_list; 
@@ -1842,6 +2130,9 @@ gda_value_compare (const GdaValue *value1, const GdaValue *value2)
 	case GDA_VALUE_TYPE_SMALLINT :
 		retval = value1->value.v_smallint - value2->value.v_smallint;
 		break;
+        case GDA_VALUE_TYPE_SMALLUINT :
+                retval = value1->value.v_smalluint - value2->value.v_smalluint;
+                break;
 	case GDA_VALUE_TYPE_STRING :
 		retval = strcmp (value1->value.v_string, value2->value.v_string);
 		break;
@@ -1857,6 +2148,9 @@ gda_value_compare (const GdaValue *value1, const GdaValue *value2)
 	case GDA_VALUE_TYPE_TINYINT :
 		retval = value1->value.v_tinyint - value2->value.v_tinyint;
 		break;
+        case GDA_VALUE_TYPE_TINYUINT:
+                retval = value1->value.v_tinyuint - value2->value.v_tinyuint;
+                break;
 	case GDA_VALUE_TYPE_TYPE :
 		retval = value1->value.v_type == value2->value.v_type ? 0 : -1;
 		break;

@@ -54,6 +54,10 @@ typedef enum {
 	GDA_VALUE_TYPE_TIMESTAMP,
 	GDA_VALUE_TYPE_TINYINT,
 	GDA_VALUE_TYPE_TYPE,
+        GDA_VALUE_TYPE_TINYUINT,
+        GDA_VALUE_TYPE_SMALLUINT,
+        GDA_VALUE_TYPE_UINTEGER,
+        GDA_VALUE_TYPE_BIGUINT,
 	GDA_VALUE_TYPE_UNKNOWN
 } GdaValueType;
 
@@ -102,6 +106,7 @@ typedef struct {
 	GdaValueType type;
 	union {
 		gint64 v_bigint;
+ 	        guint64 v_biguint;
 		gpointer v_binary;
 		gboolean v_boolean;
 		GdaDate v_date;
@@ -109,15 +114,18 @@ typedef struct {
 		GdaGeometricPoint v_point;
 		GObject *v_gobj;
 		gint v_integer;
+ 	        guint v_uinteger;
 		GdaValueList *v_list;
 		GdaMoney v_money;
 		GdaNumeric v_numeric;
 		gfloat v_single;
 		gshort v_smallint;
+ 	        gushort v_smalluint;
 		gchar *v_string;
 		GdaTime v_time;
 		GdaTimestamp v_timestamp;
 		gchar v_tinyint;
+ 	        guchar v_tinyuint;
 		GdaValueType v_type;
 	} value;
 	glong binary_length;
@@ -125,6 +133,7 @@ typedef struct {
 
 GdaValue     *gda_value_new_null (void);
 GdaValue     *gda_value_new_bigint (gint64 val);
+GdaValue     *gda_value_new_biguint(guint64 val);
 GdaValue     *gda_value_new_binary (gconstpointer val, glong size);
 GdaValue     *gda_value_new_boolean (gboolean val);
 GdaValue     *gda_value_new_date (const GdaDate *val);
@@ -132,16 +141,19 @@ GdaValue     *gda_value_new_double (gdouble val);
 GdaValue     *gda_value_new_geometric_point (const GdaGeometricPoint *val);
 GdaValue     *gda_value_new_gobject (const GObject *val);
 GdaValue     *gda_value_new_integer (gint val);
+GdaValue     *gda_value_new_uinteger(guint val);
 GdaValue     *gda_value_new_list (const GdaValueList *val);
 GdaValue     *gda_value_new_money (const GdaMoney *val);
 GdaValue     *gda_value_new_numeric (const GdaNumeric *val);
 GdaValue     *gda_value_new_single (gfloat val);
 GdaValue     *gda_value_new_smallint (gshort val);
+GdaValue     *gda_value_new_smalluint (gushort val);
 GdaValue     *gda_value_new_string (const gchar *val);
 GdaValue     *gda_value_new_time (const GdaTime *val);
 GdaValue     *gda_value_new_timestamp (const GdaTimestamp *val);
 GdaValue     *gda_value_new_timestamp_from_timet (time_t val);
 GdaValue     *gda_value_new_tinyint (gchar val);
+GdaValue     *gda_value_new_tinyuint (guchar val);
 GdaValue     *gda_value_new_type (GdaValueType val);
 GdaValue     *gda_value_new_from_string (const gchar *as_string,
 					 GdaValueType type);
@@ -157,6 +169,8 @@ GdaValue     *gda_value_copy (const GdaValue *value);
 
 gint64        gda_value_get_bigint (GdaValue *value);
 void          gda_value_set_bigint (GdaValue *value, gint64 val);
+guint64       gda_value_get_biguint (GdaValue *value);
+void          gda_value_set_biguint (GdaValue *value, guint64 val);
 gconstpointer gda_value_get_binary (GdaValue *value, glong *size);
 void          gda_value_set_binary (GdaValue *value, gconstpointer val, glong size);
 gboolean      gda_value_get_boolean (GdaValue *value);
@@ -171,6 +185,8 @@ const GObject *gda_value_get_gobject (GdaValue *value);
 void          gda_value_set_gobject (GdaValue *value, const GObject *val);
 gint          gda_value_get_integer (GdaValue *value);
 void          gda_value_set_integer (GdaValue *value, gint val);
+guint         gda_value_get_uinteger (GdaValue *value);
+void          gda_value_set_uinteger (GdaValue *value, guint val);
 const GdaValueList *gda_value_get_list (GdaValue *value);
 void          gda_value_set_list (GdaValue *value, const GdaValueList *val);
 void          gda_value_set_null (GdaValue *value);
@@ -182,6 +198,8 @@ gfloat        gda_value_get_single (GdaValue *value);
 void          gda_value_set_single (GdaValue *value, gfloat val);
 gshort        gda_value_get_smallint (GdaValue *value);
 void          gda_value_set_smallint (GdaValue *value, gshort val);
+gushort       gda_value_get_smalluint (GdaValue *value);
+void          gda_value_set_smalluint (GdaValue *value, gushort val);
 const gchar  *gda_value_get_string (GdaValue *value);
 void          gda_value_set_string (GdaValue *value, const gchar *val);
 const GdaTime *gda_value_get_time (GdaValue *value);
@@ -190,6 +208,8 @@ const GdaTimestamp *gda_value_get_timestamp (GdaValue *value);
 void          gda_value_set_timestamp (GdaValue *value, const GdaTimestamp *val);
 gchar         gda_value_get_tinyint (GdaValue *value);
 void          gda_value_set_tinyint (GdaValue *value, gchar val);
+guchar        gda_value_get_tinyuint (GdaValue *value);
+void          gda_value_set_tinyuint (GdaValue *value, guchar val);
 GdaValueType  gda_value_get_vtype (GdaValue *value);
 void          gda_value_set_vtype (GdaValue *value, GdaValueType type);
 gboolean      gda_value_set_from_string (GdaValue *value, 
