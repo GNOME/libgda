@@ -17,7 +17,7 @@ gda_report_headers = \
 	gda-report-defs.h \
 	gda-report-engine.h \
 	gda-report-stream.h \
-	gda-report.h
+	gda-report-client.h
 
 libgda_report_la_SOURCES = \
 	GDA_Report.h \

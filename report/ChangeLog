@@ -1,3 +1,8 @@
+2001-02-06	Carlos Perelló Marín <carlos@gnome-db.org>
+
+	* gda-report.h: Renamed to gda-report-client.h
+	* gda-report-object.[ch]: Renamed to gda-report.[ch]
+
 2001-01-31      Carlos Perelló Marín <carlos@gnome-db.org>
 
         * gda-report-object.[ch]: Started its implementation
