@@ -9,8 +9,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2002-06-04 23:00+0200\n"
-"PO-Revision-Date: 2002-06-04 23:01+0200\n"
+"POT-Creation-Date: 2002-06-20 18:59+0200\n"
+"PO-Revision-Date: 2002-06-20 19:07+0200\n"
 "Last-Translator: GNOME PL Team <translators@gnome.pl>\n"
 "Language-Team: Polish <pl@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -41,11 +41,16 @@ msgstr "Dostarczyciel %s nie implementuje punktu wejścia"
 msgid "Creation of GdaServerProvider failed"
 msgstr "Nie można utworzyć obiektu GdaServerProvider"
 
+#: libgda/gda-client.c:1
+msgid "Temporary data source created by libgda. Don't remove it"
+msgstr "Tymczasowe źródło danych utworzone przez libgda. Nie usuwaj go."
+
 #. gda_server_recordset_model_set_field_defined_size (recset, 0, 256);
 #: libgda/gda-config.c:1 providers/default/gda-default-provider.c:1
 #: providers/default/gda-default-provider.c:1
 #: providers/default/gda-default-provider.c:1
 #: providers/mysql/gda-mysql-provider.c:1
+#: providers/oracle/gda-oracle-provider.c:1
 msgid "Name"
 msgstr "Nazwa"
 
@@ -195,48 +200,56 @@ msgstr "Niezaimplementowane"
 
 #: providers/default/gda-default-provider.c:1
 #: providers/mysql/gda-mysql-provider.c:1
+#: providers/oracle/gda-oracle-provider.c:1
 #: providers/postgres/gda-postgres-provider.c:1
 msgid "Field name"
 msgstr "Nazwa pola"
 
 #: providers/default/gda-default-provider.c:1
 #: providers/mysql/gda-mysql-provider.c:1
+#: providers/oracle/gda-oracle-provider.c:1
 #: providers/postgres/gda-postgres-provider.c:1
 msgid "Data type"
 msgstr "Typ danych"
 
 #: providers/default/gda-default-provider.c:1
 #: providers/mysql/gda-mysql-provider.c:1
+#: providers/oracle/gda-oracle-provider.c:1
 #: providers/postgres/gda-postgres-provider.c:1
 msgid "Size"
 msgstr "Rozmiar"
 
 #: providers/default/gda-default-provider.c:1
 #: providers/mysql/gda-mysql-provider.c:1
+#: providers/oracle/gda-oracle-provider.c:1
 #: providers/postgres/gda-postgres-provider.c:1
 msgid "Scale"
 msgstr "Skala"
 
 #: providers/default/gda-default-provider.c:1
 #: providers/mysql/gda-mysql-provider.c:1
+#: providers/oracle/gda-oracle-provider.c:1
 #: providers/postgres/gda-postgres-provider.c:1
 msgid "Not null?"
 msgstr "Niepuste?"
 
 #: providers/default/gda-default-provider.c:1
 #: providers/mysql/gda-mysql-provider.c:1
+#: providers/oracle/gda-oracle-provider.c:1
 #: providers/postgres/gda-postgres-provider.c:1
 msgid "Primary key?"
 msgstr "Klucz główny?"
 
 #: providers/default/gda-default-provider.c:1
 #: providers/mysql/gda-mysql-provider.c:1
+#: providers/oracle/gda-oracle-provider.c:1
 #: providers/postgres/gda-postgres-provider.c:1
 msgid "Unique index?"
 msgstr "Unikatowy indeks?"
 
 #: providers/default/gda-default-provider.c:1
 #: providers/mysql/gda-mysql-provider.c:1
+#: providers/oracle/gda-oracle-provider.c:1
 #: providers/postgres/gda-postgres-provider.c:1
 msgid "References"
 msgstr "Referencja"
@@ -297,11 +310,13 @@ msgstr ""
 #: providers/mysql/gda-mysql-provider.c:1
 #: providers/mysql/gda-mysql-provider.c:1
 #: providers/mysql/gda-mysql-provider.c:1
+#: providers/mysql/gda-mysql-provider.c:1
 msgid "Invalid MYSQL handle"
 msgstr "Niepoprawny uchwyt MySQL-a"
 
 #. gda_server_recordset_model_set_field_defined_size (recset, 0, 32);
 #: providers/mysql/gda-mysql-provider.c:1
+#: providers/oracle/gda-oracle-provider.c:1
 msgid "Type"
 msgstr "Typ"
 
@@ -320,19 +335,23 @@ msgstr "Należy podać nazwę tabeli"
 #: providers/postgres/gda-postgres-recordset.c:1
 #: providers/postgres/gda-postgres-recordset.c:1
 #: providers/sqlite/gda-sqlite-recordset.c:1
+#: providers/sqlite/gda-sqlite-recordset.c:1
 msgid "Row number out of range"
 msgstr "Numer wiersza poza zakresem"
 
 #: providers/mysql/gda-mysql-recordset.c:1
+#: providers/oracle/gda-oracle-recordset.c:1
 msgid "Attempt to insert a row with an invalid number of columns"
 msgstr "Próba wstawienia wiersza o niewłaściwej liczbie kolumn"
 
 #: providers/mysql/gda-mysql-recordset.c:1
+#: providers/oracle/gda-oracle-recordset.c:1
 msgid "Could not retrieve column's information"
 msgstr "Nie można pobrać informacji o kolumnie"
 
 # y, c-format
 #: providers/mysql/gda-mysql-recordset.c:1
+#: providers/oracle/gda-oracle-recordset.c:1
 msgid "Could not retrieve column's value"
 msgstr "Nie można pobrać wartości kolumny"
 
@@ -344,29 +363,157 @@ msgstr "Dostarczyciel GDA dla baz danych MySQL"
 msgid "GDA bridge to ODBC data sources"
 msgstr "Most GDA do źródeł danych ODBC"
 
-#: providers/oracle/gda-oracle-connection.c:1
+#: providers/oracle/gda-oracle-provider.c:1
+msgid "Could not initialize Oracle "
+msgstr "Nie można zainicjować Oracle'a"
+
+#: providers/oracle/gda-oracle-provider.c:1
 msgid "Could not initialize Oracle environment"
 msgstr "Nie można zainicjować środowiska Oracle'a"
 
-#: providers/oracle/gda-oracle-connection.c:1
-msgid "Could not initialize Oracle error handler"
-msgstr "Nie można zainicjować uchwytu błędów Oracle'a"
-
-#: providers/oracle/gda-oracle-connection.c:1
-msgid "Could not initialize Oracle server handle"
-msgstr "Nie można zainicjować uchwytu serwera Oracle'a"
-
-#: providers/oracle/gda-oracle-connection.c:1
+#: providers/oracle/gda-oracle-provider.c:1
 msgid "Could not initialize Oracle service context"
 msgstr "Nie można zainicjować kontekstu usługi Oracle'a"
 
-#: providers/oracle/main.c:1
-msgid "Could not initiate Oracle component factory"
-msgstr "Nie można zainicjować generatora komponenetów Oracle'a"
+#: providers/oracle/gda-oracle-provider.c:1
+msgid "Could not initialize Oracle error handle"
+msgstr "Nie można zainicjować uchwytu błędów Oracle'a"
 
-#: providers/oracle/main.c:1
-msgid "Could not initialize OCI library"
-msgstr "Nie można zainicjować biblioteki OCI"
+#: providers/oracle/gda-oracle-provider.c:1
+msgid "Could not initialize Oracle server handle"
+msgstr "Nie można zainicjować uchwytu serwera Oracle'a"
+
+#: providers/oracle/gda-oracle-provider.c:1
+msgid "Could not initialize Oracle session handle"
+msgstr "Nie można zainicjować uchwytu sesji Oracle'a"
+
+#: providers/oracle/gda-oracle-provider.c:1
+msgid "Could not attach to the Oracle server"
+msgstr "Nie można dołączyć się do serwera Oracle'a"
+
+#: providers/oracle/gda-oracle-provider.c:1
+msgid "Could not set the Oracle server attribute in the service context"
+msgstr "Nie można ustawić atrybutu serwera Oracle w kontekście usługi"
+
+#: providers/oracle/gda-oracle-provider.c:1
+msgid "Could not set the Oracle username attribute"
+msgstr "Nie można ustawić atrybutu nazwy użytkownika Oracle'a"
+
+#: providers/oracle/gda-oracle-provider.c:1
+msgid "Could not set the Oracle password attribute"
+msgstr "Nie można ustawić atrybutu hasła Oracle'a"
+
+#: providers/oracle/gda-oracle-provider.c:1
+msgid "Could not initialize the Oracle connection"
+msgstr "Nie można zainicjować połączenia Oracle'a"
+
+#: providers/oracle/gda-oracle-provider.c:1
+msgid "Could not set the Oracle session attribute in the service context"
+msgstr "Nie można ustawić atrybutu sesji Oracle'a w kontekście usługi"
+
+#: providers/oracle/gda-oracle-provider.c:1
+msgid "Could not end the Oracle session"
+msgstr "Nie można zakończyć sesji Oracle'a"
+
+#: providers/oracle/gda-oracle-provider.c:1
+#: providers/oracle/gda-oracle-provider.c:1
+#: providers/oracle/gda-oracle-provider.c:1
+#: providers/oracle/gda-oracle-provider.c:1
+#: providers/oracle/gda-oracle-provider.c:1
+#: providers/oracle/gda-oracle-provider.c:1
+#: providers/oracle/gda-oracle-provider.c:1
+#: providers/oracle/gda-oracle-provider.c:1
+#: providers/oracle/gda-oracle-provider.c:1
+#: providers/oracle/gda-oracle-recordset.c:1
+#: providers/oracle/gda-oracle-recordset.c:1
+msgid "Invalid Oracle handle"
+msgstr "Niepoprawny uchwyt Oracle'a"
+
+#: providers/oracle/gda-oracle-provider.c:1
+msgid "Could not get the Oracle statement type"
+msgstr "Nie można uzyskać typu instrukcji Oracle'a"
+
+#: providers/oracle/gda-oracle-provider.c:1
+msgid "Could not execute the Oracle command"
+msgstr "Nie można wykonać polecenia Oracle'a"
+
+# y, c-format
+#: providers/oracle/gda-oracle-provider.c:1
+msgid "Could not get the column name"
+msgstr "Nie można pobrać nazwy kolumny"
+
+#. Set it here instead of the SQL query to allow i18n
+#: providers/oracle/gda-oracle-provider.c:1
+#: providers/postgres/gda-postgres-provider.c:1 testing/client.c:1
+msgid "Users"
+msgstr "Użytkownicy"
+
+#. Set it here instead of the SQL query to allow i18n
+#: providers/oracle/gda-oracle-provider.c:1
+#: providers/postgres/gda-postgres-provider.c:1 testing/client.c:1
+msgid "Indexes"
+msgstr "Indeksy"
+
+#: providers/oracle/gda-oracle-provider.c:1
+msgid "Procedures"
+msgstr "Procedury"
+
+#. Set it here instead of the SQL query to allow i18n
+#: providers/oracle/gda-oracle-provider.c:1
+#: providers/postgres/gda-postgres-provider.c:1 testing/client.c:1
+msgid "Sequences"
+msgstr "Sekwencje"
+
+#. Set it here instead of the SQL query to allow i18n
+#: providers/oracle/gda-oracle-provider.c:1
+#: providers/postgres/gda-postgres-provider.c:1
+msgid "Tables"
+msgstr "Tabele"
+
+#. Set it here instead of the SQL query to allow i18n
+#: providers/oracle/gda-oracle-provider.c:1
+#: providers/postgres/gda-postgres-provider.c:1 testing/client.c:1
+msgid "Triggers"
+msgstr "Wyzwalacze"
+
+#. Set it here instead of the SQL query to allow i18n
+#: providers/oracle/gda-oracle-provider.c:1
+#: providers/postgres/gda-postgres-provider.c:1 testing/client.c:1
+msgid "Views"
+msgstr "Perspektywy"
+
+#: providers/oracle/gda-oracle-recordset.c:1
+msgid "Could not get the Oracle parameter"
+msgstr "Nie można pobrać parametru Oracle'a"
+
+#: providers/oracle/gda-oracle-recordset.c:1
+msgid "Could not define by position"
+msgstr "Nie można zdefiniować według położenia"
+
+#: providers/oracle/gda-oracle-recordset.c:1
+#: providers/postgres/gda-postgres-recordset.c:1
+msgid "Column out of range"
+msgstr "Kolumna poza zakresem"
+
+#: providers/oracle/gda-oracle-recordset.c:1
+msgid "Could not retrieve the parameter information from Oracle"
+msgstr "Nie można pobrać od Oracle'a informacji o parametrze"
+
+#: providers/oracle/gda-oracle-recordset.c:1
+msgid "An error occurred during fetch"
+msgstr "Podczas pobierania wystąpił błąd"
+
+#: providers/oracle/libmain.c:1
+msgid "GDA provider for Oracle databases"
+msgstr "Dostarczyciel GDA dla baz danych Oracle"
+
+#: providers/oracle/utils.c:1 providers/postgres/utils.c:1
+msgid "NO DESCRIPTION"
+msgstr "BRA OPISU"
+
+#: providers/oracle/utils.c:1 providers/postgres/utils.c:1
+msgid "Not available"
+msgstr "Niedostępne"
 
 #: providers/postgres/gda-postgres-provider.c:1
 #: providers/postgres/gda-postgres-provider.c:1
@@ -377,24 +524,9 @@ msgstr "Nie można zainicjować biblioteki OCI"
 msgid "Invalid PostgreSQL handle"
 msgstr "Niepoprawny uchwytu PostgreSQL-a"
 
-#. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:1
-msgid "Tables"
-msgstr "Tabele"
-
 #: providers/postgres/gda-postgres-provider.c:1
 msgid "Types"
 msgstr "Typy"
-
-#. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:1 testing/client.c:1
-msgid "Views"
-msgstr "Perspektywy"
-
-#. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:1 testing/client.c:1
-msgid "Indexes"
-msgstr "Indeksy"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/postgres/gda-postgres-provider.c:1 testing/client.c:1
@@ -403,52 +535,46 @@ msgstr "Agregaty"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/postgres/gda-postgres-provider.c:1 testing/client.c:1
-msgid "Triggers"
-msgstr "Wyzwalacze"
-
-#. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:1 testing/client.c:1
 msgid "Databases"
 msgstr "Bazy danych"
 
-#. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:1 testing/client.c:1
-msgid "Users"
-msgstr "Użytkownicy"
+#: providers/postgres/gda-postgres-provider.c:1
+msgid "Table name"
+msgstr "Nazwa tabeli"
 
-#. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:1 testing/client.c:1
-msgid "Sequences"
-msgstr "Sekwencje"
+#: providers/postgres/gda-postgres-provider.c:1
+msgid "Sequence"
+msgstr "Sekwencja"
 
 #: providers/postgres/gda-postgres-recordset.c:1
+#: providers/sqlite/gda-sqlite-recordset.c:1
+#: providers/sqlite/gda-sqlite-recordset.c:1
 msgid "Column number out of range"
 msgstr "Numer kolumny poza zakresem"
-
-#: providers/postgres/gda-postgres-recordset.c:1
-msgid "Column out of range"
-msgstr "Kolumna poza zakresem"
 
 #: providers/postgres/libmain.c:1
 msgid "GDA provider for PostgreSQL databases"
 msgstr "Dostarczyciel GDA dla baz danych PostgreSQL"
 
-#: providers/postgres/utils.c:1
-msgid "NO DESCRIPTION"
-msgstr "BRA OPISU"
-
-#: providers/postgres/utils.c:1
-msgid "Not available"
-msgstr "Niedostępne"
-
 #: providers/sqlite/gda-sqlite-provider.c:1
-#: providers/sqlite/gda-sqlite-recordset.c:1
 msgid "Invalid SQLITE handle"
 msgstr "Niepoprawny uchwyt SQLit"
 
 #: providers/sqlite/gda-sqlite-provider.c:1
+#: providers/sqlite/gda-sqlite-provider.c:1
+#: providers/sqlite/gda-sqlite-recordset.c:1
+#: providers/sqlite/gda-sqlite-recordset.c:1
+#: providers/sqlite/gda-sqlite-recordset.c:1
+msgid "Invalid SQLite handle"
+msgstr "Niepoprawny uchwyt SQLite"
+
+#: providers/sqlite/gda-sqlite-provider.c:1
 msgid "Only one database per connection is allowed"
 msgstr "Dopuszczalna jest tylko jedna baza danych na połączenie"
+
+#: providers/sqlite/gda-sqlite-provider.c:1
+msgid "To remove a SQLite database you should remove the database file by hand"
+msgstr "Aby usunąć bazę danych SQLite, należy ręcznie usunąć plik bazy danych."
 
 #: providers/sqlite/libmain.c:1
 msgid "GDA provider for SQLite databases"
