@@ -153,65 +153,63 @@ msgstr ""
 #: providers/mysql/gda-mysql-provider.c:717
 #: providers/postgres/gda-postgres-provider.c:724
 msgid "Field name"
-msgstr ""
+msgstr "Nama Medan"
 
 #: providers/default/gda-default-provider.c:334
 #: providers/mysql/gda-mysql-provider.c:718
 #: providers/postgres/gda-postgres-provider.c:725
 msgid "Data type"
-msgstr ""
+msgstr "Jenis data"
 
 #: providers/default/gda-default-provider.c:335
 #: providers/mysql/gda-mysql-provider.c:719
 #: providers/postgres/gda-postgres-provider.c:726
 msgid "Size"
-msgstr ""
+msgstr "Saiz"
 
 #: providers/default/gda-default-provider.c:336
 #: providers/mysql/gda-mysql-provider.c:720
 #: providers/postgres/gda-postgres-provider.c:727
 msgid "Scale"
-msgstr ""
+msgstr "Skala"
 
 #: providers/default/gda-default-provider.c:337
 #: providers/mysql/gda-mysql-provider.c:721
 #: providers/postgres/gda-postgres-provider.c:728
 msgid "Not null?"
-msgstr ""
+msgstr "Tidak null?"
 
 #: providers/default/gda-default-provider.c:338
 #: providers/mysql/gda-mysql-provider.c:722
 #: providers/postgres/gda-postgres-provider.c:729
 msgid "Primary key?"
-msgstr ""
+msgstr "Kekunci Utama?"
 
 #: providers/default/gda-default-provider.c:339
 #: providers/mysql/gda-mysql-provider.c:723
 #: providers/postgres/gda-postgres-provider.c:730
 msgid "Unique index?"
-msgstr ""
+msgstr "Indeks unik?"
 
 #: providers/default/gda-default-provider.c:340
 #: providers/mysql/gda-mysql-provider.c:724
 #: providers/postgres/gda-postgres-provider.c:731
 msgid "References"
-msgstr ""
+msgstr "Rujukan"
 
 #: providers/default/gda-default-provider.c:350
 #: providers/default/gda-default-provider.c:356
-#, fuzzy
 msgid "Invalid argument"
-msgstr "Nod tidak sah"
+msgstr "Hujah tidak sah"
 
 #: providers/default/gda-default-provider.c:363
 #, c-format
 msgid "Table %s not found"
-msgstr ""
+msgstr "Jadual %s tidak dijumpai"
 
 #: providers/default/gda-default-provider.c:388
-#, fuzzy
 msgid "Could not get description for column"
-msgstr "Tak dapat mencipta komponen sambungan"
+msgstr "Tak memperolehi huraian bagi kolum"
 
 #: providers/default/gda-default-provider.c:472
 #: providers/mysql/gda-mysql-provider.c:619
@@ -341,71 +339,71 @@ msgstr "Tidak ada"
 
 #: providers/postgres/utils.c:240
 msgid "NULL"
-msgstr ""
+msgstr "NULL"
 
 #: providers/postgres/utils.c:243
 msgid "big integer"
-msgstr ""
+msgstr "integer besar"
 
 #: providers/postgres/utils.c:246
 msgid "binary"
-msgstr ""
+msgstr "binari"
 
 #: providers/postgres/utils.c:249
 msgid "boolean"
-msgstr ""
+msgstr "boolean"
 
 #: providers/postgres/utils.c:252
 msgid "date"
-msgstr ""
+msgstr "tarikh"
 
 #: providers/postgres/utils.c:255
 msgid "double precision"
-msgstr ""
+msgstr "dwi ketepatan"
 
 #: providers/postgres/utils.c:258
 msgid "geometric point"
-msgstr ""
+msgstr "titik geometrik"
 
 #: providers/postgres/utils.c:261
 msgid "integer"
-msgstr ""
+msgstr "integer"
 
 #: providers/postgres/utils.c:264
 msgid "list of values"
-msgstr ""
+msgstr "senarai nilai"
 
 #: providers/postgres/utils.c:267
 msgid "numeric"
-msgstr ""
+msgstr "numerik"
 
 #: providers/postgres/utils.c:270
 msgid "single precision"
-msgstr ""
+msgstr "ketepatan tunggal"
 
 #: providers/postgres/utils.c:273
 msgid "small integer"
-msgstr ""
+msgstr "integer kecil"
 
 #: providers/postgres/utils.c:276
 msgid "string"
-msgstr ""
+msgstr "rentetan"
 
 #: providers/postgres/utils.c:279
 msgid "time"
-msgstr ""
+msgstr "masa"
 
 #: providers/postgres/utils.c:282
 msgid "timestamp"
-msgstr ""
+msgstr "setem masa"
 
 #: providers/postgres/utils.c:285
 msgid "tiny integer"
-msgstr ""
+msgstr "integer halus"
 
 #: providers/postgres/utils.c:288
 msgid "Unknown type"
-msgstr ""
+msgstr "Jenis takdikenali"
 
 #: providers/sqlite/gda-sqlite-provider.c:211
 #: providers/sqlite/gda-sqlite-recordset.c:63
