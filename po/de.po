@@ -11,7 +11,7 @@ msgstr ""
 "Last-Translator: Christian Meyer <chrisime@gnome.org>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=ISO-8859-1\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: libgda/gda-client.c:200 libgda/gda-client.c:310 libgda/gda-connection.c:213
@@ -90,7 +90,7 @@ msgstr "Client-Objekt konnte nicht dupliziert werden. Client wird keine Benachri
 #: libgda/gda-server-connection.c:440
 #, c-format
 msgid "Could not notify client about action %d"
-msgstr "Client konnte nicht über Aktion %d benachrichtigt werden"
+msgstr "Client konnte nicht Ã¼ber Aktion %d benachrichtigt werden"
 
 #: libgda/gda-server-recordset.c:207
 msgid "No implementation for the fetch() method found"
@@ -117,7 +117,7 @@ msgstr "Datei bei %s konnte nicht interpretiert werden"
 #: libgda/gda-xml-database.c:185
 #, c-format
 msgid "Bad formed document at %s"
-msgstr "Formal ungültiges Dokument bei %s"
+msgstr "Formal ungÃ¼ltiges Dokument bei %s"
 
 #: libgda/gda-xml-database.c:260
 #, c-format
@@ -127,29 +127,29 @@ msgstr "Tabelle %s existiert schon"
 #: libgda/gda-xml-database.c:442
 #, c-format
 msgid "%p is not a valid table"
-msgstr "%p ist keine gültige Tabelle"
+msgstr "%p ist keine gÃ¼ltige Tabelle"
 
 #: providers/default/gda-default-provider.c:141
 #: providers/sqlite/gda-sqlite-provider.c:152
 msgid ""
 "A full path must be specified on the connection string to open a database."
-msgstr "Um eine Datenbank zu öffnen, muss in der Verbindungszeichenkette ein voller Pfad angegeben werden."
+msgstr "Um eine Datenbank zu Ã¶ffnen, muss in der Verbindungszeichenkette ein voller Pfad angegeben werden."
 
 #: providers/default/gda-default-provider.c:199
 #: providers/default/gda-default-recordset.c:59
 msgid "Invalid DEFAULT handle"
-msgstr "Ungültiger DEFAULT-Handle"
+msgstr "UngÃ¼ltiger DEFAULT-Handle"
 
 #: providers/default/gda-default-recordset.c:70
 #: providers/mysql/gda-mysql-recordset.c:76
 #: providers/postgres/gda-postgres-recordset.c:70
 #: providers/sqlite/gda-sqlite-recordset.c:74
 msgid "Row number out of range"
-msgstr "Zeilennummer außerhalb des Erlaubten"
+msgstr "Zeilennummer auÃŸerhalb des Erlaubten"
 
 #: providers/default/gda-default-recordset.c:110
 msgid "Invalid Default handle"
-msgstr "Ungültiger Vorgabe-Handle"
+msgstr "UngÃ¼ltiger Vorgabe-Handle"
 
 #: providers/default/GNOME_Database_Provider_Default.server.in.h:1
 msgid "Default component factory"
@@ -161,19 +161,19 @@ msgstr "GDA-Vorgabe-Datenquellen-Zugriff"
 
 #: providers/default/main.c:48
 msgid "Could not initiate Default component factory"
-msgstr "Vorgabe-Komponentenfabrik konnte nicht angestoßen werden"
+msgstr "Vorgabe-Komponentenfabrik konnte nicht angestoÃŸen werden"
 
 #: providers/mysql/gda-mysql-provider.c:175
 msgid ""
 "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
-msgstr "Sie können keinen UNIX_SOCKET anbieten, wenn Sie auch einen PORT oder einen HOST angeben."
+msgstr "Sie kÃ¶nnen keinen UNIX_SOCKET anbieten, wenn Sie auch einen PORT oder einen HOST angeben."
 
 #: providers/mysql/gda-mysql-provider.c:246
 #: providers/mysql/gda-mysql-provider.c:326
 #: providers/mysql/gda-mysql-provider.c:355
 #: providers/mysql/gda-mysql-provider.c:384
 msgid "Invalid MYSQL handle"
-msgstr "Ungültiger MYSQL-Handle"
+msgstr "UngÃ¼ltiger MYSQL-Handle"
 
 #: providers/mysql/gda-mysql-provider.c:464
 #: providers/postgres/gda-postgres-provider.c:570
@@ -183,11 +183,11 @@ msgstr "Typ"
 #: providers/mysql/gda-mysql-recordset.c:63
 #: providers/mysql/gda-mysql-recordset.c:170
 msgid "Invalid MySQL handle"
-msgstr "Ungültiger MySQL-Handle"
+msgstr "UngÃ¼ltiger MySQL-Handle"
 
 #: providers/mysql/GNOME_Database_Provider_MySQL.server.in.h:1
 msgid "GDA Datasource Access for MySQL"
-msgstr "GDA-Datasource-Access für MySQL"
+msgstr "GDA-Datasource-Access fÃ¼r MySQL"
 
 #: providers/mysql/GNOME_Database_Provider_MySQL.server.in.h:2
 msgid "MySQL component factory"
@@ -195,11 +195,11 @@ msgstr "MySQL-Komponentenfabrik"
 
 #: providers/mysql/main.c:49
 msgid "Could not initiate MySQL component factory"
-msgstr "MySQL-Komponentenfabrik konnte nicht angestoßen werden"
+msgstr "MySQL-Komponentenfabrik konnte nicht angestoÃŸen werden"
 
 #: providers/odbc/GNOME_Database_Provider_ODBC.server.in.h:1
 msgid "GDA Datasource Access for ODBC"
-msgstr "GDA-Datasource-Access für ODBC"
+msgstr "GDA-Datasource-Access fÃ¼r ODBC"
 
 #: providers/odbc/GNOME_Database_Provider_ODBC.server.in.h:2
 msgid "ODBC component factory"
@@ -227,7 +227,7 @@ msgstr "Oracle-Dienstekontext konnte nicht initialisiert werden"
 
 #: providers/oracle/GNOME_Database_Provider_Oracle.server.in.h:1
 msgid "GDA Datasource Access for Oracle"
-msgstr "GDA-Datasource-Access für Oracle"
+msgstr "GDA-Datasource-Access fÃ¼r Oracle"
 
 #: providers/oracle/GNOME_Database_Provider_Oracle.server.in.h:2
 msgid "Oracle component factory"
@@ -235,7 +235,7 @@ msgstr "Oracle-Komponentenfabrik"
 
 #: providers/oracle/main.c:46
 msgid "Could not initiate Oracle component factory"
-msgstr "Oracle-Komponentenfabrik konnte nicht geöffnet werden"
+msgstr "Oracle-Komponentenfabrik konnte nicht geÃ¶ffnet werden"
 
 #: providers/oracle/main.c:70
 msgid "Could not initialize OCI library"
@@ -246,11 +246,11 @@ msgstr "OCI-Bibliothek konnte nicht initialisiert werden"
 #: providers/postgres/gda-postgres-recordset.c:59
 #: providers/postgres/gda-postgres-recordset.c:110
 msgid "Invalid PostgreSQL handle"
-msgstr "Ungültiger PostgreSQL-Handle"
+msgstr "UngÃ¼ltiger PostgreSQL-Handle"
 
 #: providers/postgres/GNOME_Database_Provider_Postgres.server.in.h:1
 msgid "GDA Datasource Access for Postgres"
-msgstr "GDA-Datasource-Access für Postgres"
+msgstr "GDA-Datasource-Access fÃ¼r Postgres"
 
 #: providers/postgres/GNOME_Database_Provider_Postgres.server.in.h:2
 msgid "Postgres component factory"
@@ -258,7 +258,7 @@ msgstr "Postgres-Komponentenfabrik"
 
 #: providers/postgres/main.c:49
 msgid "Could not initiate PostgreSQL component factory"
-msgstr "PostgreSQL-Komponentenfabrik konnte nicht angestoßen werden"
+msgstr "PostgreSQL-Komponentenfabrik konnte nicht angestoÃŸen werden"
 
 #: providers/postgres/utils.c:39
 msgid "NO DESCRIPTION"
@@ -266,16 +266,16 @@ msgstr "KEINE BESCHREIBUNG"
 
 #: providers/postgres/utils.c:44
 msgid "Not available"
-msgstr "Nicht verfügbar"
+msgstr "Nicht verfÃ¼gbar"
 
 #: providers/sqlite/gda-sqlite-provider.c:211
 #: providers/sqlite/gda-sqlite-recordset.c:63
 msgid "Invalid SQLITE handle"
-msgstr "Ungültiger SQLITE-Handle"
+msgstr "UngÃ¼ltiger SQLITE-Handle"
 
 #: providers/sqlite/gda-sqlite-recordset.c:114
 msgid "Invalid Sqlite handle"
-msgstr "Ungültiger SQLite-Handle"
+msgstr "UngÃ¼ltiger SQLite-Handle"
 
 #: providers/sqlite/GNOME_Database_Provider_SQLite.server.in.h:1
 msgid "GDA SQLite Datasource Access"
@@ -287,11 +287,11 @@ msgstr "SQLite-Komponentenfabrik"
 
 #: providers/sqlite/main.c:54
 msgid "Could not initiate Sqlite component factory"
-msgstr "SQLite-Komponentenfabrik konnte nicht angestoßen werden"
+msgstr "SQLite-Komponentenfabrik konnte nicht angestoÃŸen werden"
 
 #: providers/sybase/GNOME_Database_Provider_Sybase.server.in.h:1
 msgid "GDA Datasource Access for Sybase"
-msgstr "GDA-Datasource-Access für Sybase"
+msgstr "GDA-Datasource-Access fÃ¼r Sybase"
 
 #: providers/sybase/GNOME_Database_Provider_Sybase.server.in.h:2
 msgid "Sybase component factory"
@@ -299,7 +299,7 @@ msgstr "Sybase-Komponentenfabrik"
 
 #: providers/sybase/main.c:50
 msgid "Could not initiate Sybase component factory"
-msgstr "Sybase-Komponentenfabrik konnte nicht angestoßen werden"
+msgstr "Sybase-Komponentenfabrik konnte nicht angestoÃŸen werden"
 
 #: report/gda-report-engine.c:67 report/libgda-report/gda-report-client.c:195
 #: report/libgda-report/gda-report-client.c:209
@@ -342,7 +342,7 @@ msgstr "Datei von %s war nicht zu erreichen"
 
 #: report/main.c:47
 msgid "Could not initiate Report component factory"
-msgstr "Berichts-Komponentenfabrik konnte nicht angestoßen werden"
+msgstr "Berichts-Komponentenfabrik konnte nicht angestoÃŸen werden"
 
 #: testing/client.c:37
 msgid "\t\tNONE\n"
@@ -351,12 +351,12 @@ msgstr "\t\tNICHTS\n"
 #: testing/client.c:76
 #, c-format
 msgid "** ERROR: could not open connection to %s\n"
-msgstr "** FEHLER: Verbindung zu %s konnte nicht geöffnet werden\n"
+msgstr "** FEHLER: Verbindung zu %s konnte nicht geÃ¶ffnet werden\n"
 
 #. show provider features
 #: testing/client.c:81
 msgid "\tProvider capabilities...\n"
-msgstr "\tLieferanten-Fähigkeiten...\n"
+msgstr "\tLieferanten-FÃ¤higkeiten...\n"
 
 #: testing/client.c:82
 #, c-format
@@ -365,11 +365,11 @@ msgstr "\t\tTransaktionen: %s\n"
 
 #: testing/client.c:84
 msgid "Supported"
-msgstr "Unterstützt"
+msgstr "UnterstÃ¼tzt"
 
 #: testing/client.c:84
 msgid "Not supported"
-msgstr "Nicht unterstützt"
+msgstr "Nicht unterstÃ¼tzt"
 
 #. show connection schemas
 #: testing/client.c:87
@@ -382,7 +382,7 @@ msgstr "Verbindungstabellen"
 
 #: testing/client.c:89
 msgid "Available types"
-msgstr "Verfügbare Typen"
+msgstr "VerfÃ¼gbare Typen"
 
 #: testing/client.c:90
 msgid "Views"
@@ -416,7 +416,7 @@ msgstr "\tTransaktion wird beendet..."
 
 #: testing/client.c:108
 msgid "\tRolling back transaction..."
-msgstr "\tTransaktion wird rückgängig gemacht..."
+msgstr "\tTransaktion wird rÃ¼ckgÃ¤ngig gemacht..."
 
 #: testing/client.c:129
 msgid "Testing GDA client API"
@@ -424,7 +424,7 @@ msgstr "Testen der GDA-Client-API"
 
 #: testing/client.c:138
 msgid "** ERROR: gda_config_get_data_source_list returned a NULL item\n"
-msgstr "** FEHLER: gda_config_get_data_source_list hat einen NULL-Eintrag zurückgegeben\n"
+msgstr "** FEHLER: gda_config_get_data_source_list hat einen NULL-Eintrag zurÃ¼ckgegeben\n"
 
 #: testing/client.c:142
 #, c-format
@@ -433,7 +433,7 @@ msgstr " Datenquelle = %s, Benutzer = %s\n"
 
 #: testing/config.c:84
 msgid "** ERROR: gda_config_get_provider_list returned a NULL item\n"
-msgstr "** FEHLER: gda_config_get_provider_list hat einen NULL-Eintrag zurückgegeben\n"
+msgstr "** FEHLER: gda_config_get_provider_list hat einen NULL-Eintrag zurÃ¼ckgegeben\n"
 
 #: testing/config.c:88
 #, c-format
