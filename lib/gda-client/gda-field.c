@@ -77,9 +77,7 @@ gda_field_get_type (void)
 static void
 gda_field_class_init (GdaFieldClass * klass)
 {
-	GtkObjectClass *object_class;
-
-	object_class = (GtkObjectClass *) klass;
+	GtkObjectClass *object_class = GTK_OBJECT_CLASS (klass);
 }
 
 static void
@@ -438,7 +436,56 @@ void
 gda_field_free (GdaField * f)
 {
 	g_return_if_fail (GDA_IS_FIELD (f));
-	gtk_object_destroy (GTK_OBJECT (f));
+	gtk_object_unref (GTK_OBJECT (f));
+}
+
+/**
+ * gda_field_get_date_value
+ */
+GDate *
+gda_field_get_date_value (GdaField *field)
+{
+	GDate *dt = NULL;
+
+	g_return_val_if_fail (GDA_IS_FIELD (field), NULL);
+
+	if (field->attributes->gdaType == GDA_TypeDate) {
+		struct tm *stm;
+
+		stm = localtime (&field->real_value->_u.v._u.d);
+		if (stm != NULL) {
+			dt = g_date_new_dmy (stm->tm_mday,
+					     stm->tm_mon,
+					     stm->tm_year);
+		}
+	}
+	else if (field->attributes->gdaType == GDA_TypeDbDate) {
+		dt = g_date_new_dmy (field->real_value->_u.v._u.dbd.day,
+				     field->real_value->_u.v._u.dbd.month,
+				     field->real_value->_u.v._u.dbd.year);
+	}
+
+	return dt;
+}
+
+/**
+ * gda_field_get_timestamp_value
+ */
+time_t
+gda_field_get_timestamp_value (GdaField *field)
+{
+	struct tm stm;
+
+	g_return_val_if_fail (GDA_IS_FIELD (field), -1);
+
+	stm.tm_year = field->real_value->_u.v._u.dbtstamp.year;
+	stm.tm_mon = field->real_value->_u.v._u.dbtstamp.month;
+	stm.tm_mday = field->real_value->_u.v._u.dbtstamp.day;
+	stm.tm_hour = field->real_value->_u.v._u.dbtstamp.hour;
+	stm.tm_min = field->real_value->_u.v._u.dbtstamp.minute;
+	stm.tm_sec = field->real_value->_u.v._u.dbtstamp.second;
+
+	return mktime (&stm);
 }
 
 /**

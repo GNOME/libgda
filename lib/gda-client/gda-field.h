@@ -51,44 +51,39 @@ struct _GdaFieldClass {
 	GtkObjectClass parent_class;
 };
 
-#define gda_field_isnull(f)         (f->real_value ? (f)->real_value->_d : 1)
-#define gda_field_typecode(f)       ((f)->real_value->_u._d)
-#define gda_field_tinyint(f)        ((f)->real_value->_u.v._u.c)
-#define gda_field_typechar(f)       ((f)->real_value->_u.v._u.c1)
-#define gda_field_bigint(f)         ((f)->real_value->_u.v._u.ll)
-#define gda_field_bstr(f)           ((f)->real_value->_u.v._u.s)
-#define gda_field_boolean(f)        ((f)->real_value->_u.v._u.b)
-#define gda_field_date(f)           ((f)->real_value->_u.v._u.d)
-#define gda_field_dbdate(f)         ((f)->real_value->_u.v._u.dbd)
-#define gda_field_dbtime(f)         ((f)->real_value->_u.v._u.dbt)
-#define gda_field_timestamp(f)      ((f)->real_value->_u.v._u.dbtstamp)
-#define gda_field_dec(f)            ((f)->real_value->_u.v._u.dec)
-#define gda_field_double(f)         ((f)->real_value->_u.v._u.dp)
-#define gda_field_integer(f)        ((f)->real_value->_u.v._u.i)
-#define gda_field_varbin(f)         ((f)->real_value->_u.v._u.lvb._buffer)
-#define gda_field_varbin_length(f)  ((f)->real_value->_u.v._u.lvb._length)
-#define gda_field_fixbin(f)         ((f)->real_value->_u.v._u.fb._buffer)
-#define gda_field_fixbin_length(f)  ((f)->real_value->_u.v._u.fb._length)
-#define gda_field_longvarchar(f)    ((f)->real_value->_u.v._u.lvc)
-#define gda_field_single(fld)       ((fld)->real_value->_u.v._u.f)
-#define gda_field_smallint(f)       ((f)->real_value->_u.v._u.si)
-#define gda_field_ubingint(f)       ((f)->real_value->_u.v._u.ull)
-#define gda_field_usmallint(f)      ((f)->real_value->_u.v._u.us)
+#define gda_field_is_null(f)             (f->real_value ? (f)->real_value->_d : 1)
 
-guint gda_field_get_type (void);
-GdaField *gda_field_new (void);
-gchar *gda_fieldtype_2_string (gchar * bfr, gint length,
-			       GDA_ValueType type);
+#define gda_field_get_tinyint_value(f)   ((f)->real_value->_u.v._u.c)
+#define gda_field_get_bigint_value(f)    ((f)->real_value->_u.v._u.ll)
+#define gda_field_get_boolean_value(f)   ((f)->real_value->_u.v._u.b)
+GDate  *gda_field_get_date_value         (GdaField *field);
+#define gda_field_get_time_value(f)      ((f)->real_value->_u.v._u.dbt)
+time_t  gda_field_get_timestamp_value    (GdaField *field);
+#define gda_field_get_double_value(f)    ((f)->real_value->_u.v._u.dp)
+#define gda_field_get_integer_value(f)   ((f)->real_value->_u.v._u.i)
+#define gda_field_get_binary_value(f)    ((f)->real_value->_u.v._u.lvb._buffer)
+#define gda_field_get_string_value(f)    ((f)->real_value->_u.v._u.lvc)
+#define gda_field_get_single_value(fld)  ((fld)->real_value->_u.v._u.f)
+#define gda_field_get_smallint_value(f)  ((f)->real_value->_u.v._u.si)
+#define gda_field_get_ubingint_value(f)  ((f)->real_value->_u.v._u.ull)
+#define gda_field_get_usmallint_value(f) ((f)->real_value->_u.v._u.us)
+
+guint         gda_field_get_type (void);
+GdaField     *gda_field_new (void);
+void          gda_field_free (GdaField *field);
+
+gint          gda_field_get_actual_size (GdaField * f);
+#define       gda_field_get_defined_size(f) (f->attributes->definedSize)
+#define       gda_field_get_name(f)         (f->attributes->name)
+#define       gda_field_get_scale(f)        (f->attributes->scale)
+#define       gda_field_get_gdatype(f)      (f->attributes->gdaType)
+#define       gda_field_get_ctype(f)        (f->attributes->cType)
+#define       gda_field_get_nativetype(f)   (f->attributes->nativeType)
+
+gchar        *gda_fieldtype_2_string (gchar * bfr, gint length,
+				      GDA_ValueType type);
 GDA_ValueType gda_string_2_fieldtype (gchar * type);
-gchar *gda_stringify_value (gchar * bfr, gint length, GdaField * f);
-
-gint gda_field_actual_size (GdaField * f);
-#define       gda_field_defined_size(f) (f->attributes->definedSize)
-#define       gda_field_name(f)         (f->attributes->name)
-#define       gda_field_scale(f)        (f->attributes->scale)
-#define       gda_field_type(f)         (f->attributes->gdaType)
-#define       gda_field_cType(f)        (f->attributes->cType)
-#define       gda_field_nativeType(f)   (f->attributes->nativeType)
+gchar        *gda_stringify_value (gchar * bfr, gint length, GdaField * f);
 
 G_END_DECLS
 

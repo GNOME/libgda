@@ -1,3 +1,8 @@
+2001-09-06  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-field.[ch]: cleaned up API and make it match with the new
+	GdaField API in the GNOME 2 branch
+
 2001-09-05  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-connection.c (gda_connection_open): don't pass NULL strings
