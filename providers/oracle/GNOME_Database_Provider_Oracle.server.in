@@ -1,0 +1,24 @@
+<oaf_info>
+
+<oaf_server iid="OAFIID:GNOME_Database_Oracle_ComponentFactory"
+            type="exe"
+            location="gda-oracle-srv-2">
+	<oaf_attribute name="repo_ids" type="stringv">
+		<item value="IDL:GNOME/GenericFactory:1.0"/>
+	</oaf_attribute>
+	<oaf_attribute name="name" type="string" _value="Oracle component factory"/>
+</oaf_server>
+
+<oaf_server iid="OAFIID:GNOME_Database_Oracle_Provider"
+	    type="factory"
+	    location="OAFIID:GNOME_Database_Oracle_ComponentFactory">
+	<oaf_attribute name="repo_ids" type="stringv">
+		<item value="IDL:GNOME/Database/Provider:1.0"/>
+	</oaf_attribute>
+	<oaf_attribute name="description" type="string"
+	               _value="GDA Datasource Access for Oracle"/>
+	<oaf_attribute name="gda_params" type="stringv">
+	</oaf_attribute>
+</oaf_server>
+
+</oaf_info>
