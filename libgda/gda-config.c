@@ -616,3 +616,129 @@ gda_config_free_provider_list (GList *list)
 
 	g_list_free (list);
 }
+
+/**
+ * gda_config_get_data_source_list
+ */
+GList *
+gda_config_get_data_source_list (void)
+{
+	GList *list = NULL;
+	GList *sections;
+	GList *l;
+
+	sections = gda_config_list_sections (GDA_CONFIG_SECTION_DATASOURCES);
+	for (l = sections; l != NULL; l = l->next) {
+		gchar *tmp;
+		GdaDataSourceInfo *info;
+
+		info = g_new0 (GdaDataSourceInfo, 1);
+		info->name = g_strdup ((const gchar *) l->data);
+
+		/* get the provider */
+		tmp = g_strdup_printf ("%s/%s/Provider", GDA_CONFIG_SECTION_DATASOURCES, l->data);
+		info->provider = gda_config_get_string (tmp);
+		g_free (tmp);
+
+		/* get the connection string */
+		tmp = g_strdup_printf ("%s/%s/DSN", GDA_CONFIG_SECTION_DATASOURCES, l->data);
+		info->cnc_string = gda_config_get_string (tmp);
+		g_free (tmp);
+
+		/* get the description */
+		tmp = g_strdup_printf ("%s/%s/Description", GDA_CONFIG_SECTION_DATASOURCES, l->data);
+		info->description = gda_config_get_string (tmp);
+		g_free (tmp);
+
+		/* get the user name */
+		tmp = g_strdup_printf ("%s/%s/Username", GDA_CONFIG_SECTION_DATASOURCES, l->data);
+		info->username = gda_config_get_string (tmp);
+		g_free (tmp);
+
+		list = g_list_append (list, info);
+	}
+
+	gda_config_free_list (sections);
+
+	return list;
+}
+
+/**
+ * gda_config_find_data_source
+ */
+GdaDataSourceInfo *
+gda_config_find_data_source (const gchar *name)
+{
+	GList *dsnlist;
+	GList *l;
+	GdaDataSourceInfo *info = NULL;
+
+	g_return_val_if_fail (name != NULL, NULL);
+
+	dsnlist = gda_config_get_data_source_list ();
+	for (l = dsnlist; l != NULL; l = l->next) {
+		GdaDataSourceInfo *tmp_info = (GdaDataSourceInfo *) l->data;
+
+		if (tmp_info && !g_strcasecmp (tmp_info->name, name)) {
+			info = gda_config_copy_data_source_info (tmp_info);
+			break;
+		}
+	}
+
+	gda_config_free_data_source_list (dsnlist);
+
+	return info;
+}
+
+/**
+ * gda_config_copy_data_source_info
+ */
+GdaDataSourceInfo *
+gda_config_copy_data_source_info (GdaDataSourceInfo *src)
+{
+	GdaDataSourceInfo *info;
+
+	g_return_val_if_fail (src != NULL, NULL);
+
+	info = g_new0 (GdaDataSourceInfo, 1);
+	info->name = g_strdup (src->name);
+	info->provider = g_strdup (src->provider);
+	info->cnc_string = g_strdup (src->cnc_string);
+	info->description = g_strdup (src->description);
+	info->username = g_strdup (src->username);
+
+	return info;
+}
+
+/**
+ * gda_config_free_data_source_info
+ */
+void
+gda_config_free_data_source_info (GdaDataSourceInfo *info)
+{
+	g_return_if_fail (info != NULL);
+
+	g_free (info->name);
+	g_free (info->provider);
+	g_free (info->cnc_string);
+	g_free (info->description);
+	g_free (info->username);
+
+	g_free (info);
+}
+
+/**
+ * gda_config_free_data_source_list
+ */
+void
+gda_config_free_data_source_list (GList *list)
+{
+	GList *l;
+
+	while ((l = g_list_first (list))) {
+		GdaDataSourceInfo *info = (GdaDataSourceInfo *) l->data;
+
+		list = g_list_remove (list, info);
+		gda_config_free_data_source_info (info);
+	}
+}

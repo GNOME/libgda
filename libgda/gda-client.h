@@ -55,10 +55,10 @@ struct _GdaClientClass {
 };
 
 GType          gda_client_get_type (void);
-GdaClient     *gda_client_new (const gchar *iid);
+GdaClient     *gda_client_new (void);
 
 GdaConnection *gda_client_open_connection (GdaClient *client,
-					   const gchar *cnc_string,
+					   const gchar *dsn,
 					   const gchar *username,
 					   const gchar *password);
 

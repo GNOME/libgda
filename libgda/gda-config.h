@@ -95,6 +95,20 @@ void   gda_config_free_provider_list (GList *list);
  * Data sources configuration
  */
 
+typedef struct {
+	gchar *name;
+	gchar *provider;
+	gchar *cnc_string;
+	gchar *description;
+	gchar *username;
+} GdaDataSourceInfo;
+
+GList             *gda_config_get_data_source_list (void);
+GdaDataSourceInfo *gda_config_find_data_source (const gchar *name);
+GdaDataSourceInfo *gda_config_copy_data_source_info (GdaDataSourceInfo *info);
+void               gda_config_free_data_source_info (GdaDataSourceInfo *info);
+void               gda_config_free_data_source_list (GList *list);
+
 G_END_DECLS
 
 #endif
