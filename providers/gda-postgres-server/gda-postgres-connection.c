@@ -48,6 +48,7 @@ typedef struct _Gda_connection_data
   gchar *user;
   guint nreg;
   POSTGRES_Types_Array *types_array;
+  gfloat version; /* postmaster version */
 } Gda_connection_data;
 
 
@@ -128,6 +129,58 @@ get_value(gchar* ptr)
   while (*ptr && isspace(*ptr))
     ptr++;
   return (g_strdup(ptr));
+}
+
+static gfloat get_postmaster_version(PGconn *conn)
+{
+  PGresult *res;
+  gchar *nver, *ver;
+  gchar *ptr, *index, *index2;
+  gfloat retval;
+  gboolean first = TRUE;
+
+  res = PQexec(conn, "SELECT version()");
+  if (!res || (PQresultStatus(res) != PGRES_TUPLES_OK))
+    {
+      if (res) 
+	PQclear(res);
+      return (-1);
+    }  
+  nver = g_strdup(PQgetvalue(res, 0, 0));
+  PQclear(res);
+
+  ptr = strtok(nver, " ");
+  ptr = strtok(NULL, " ");
+
+  ver = g_strdup(ptr);
+  index = ptr;
+  index2 = ver;
+  while (*index != 0)
+    {
+      if (*index == '.') 
+	{
+	  if (first)
+	    {
+	      first = FALSE;
+	      *index2 = '.';
+	      index2 ++;
+	    }
+	}
+      else
+	{
+	  *index2 = *index;
+	  index2 ++;
+	}
+	  
+      index ++;
+    }
+  *index2 = 0;
+
+  g_free(nver);
+  retval = (gfloat) atof(ver);
+  g_free(ver);
+
+  return retval;
 }
 
 /* open new connection to database server */
@@ -215,6 +268,10 @@ gda_postgres_connection_open (Gda_ServerConnection *cnc,
 	   * now loads the correspondance between postgres 
 	   * data types and GDA types 
 	   */
+	  gfloat version;
+	  version = get_postmaster_version(pc->pq_conn);
+	  g_print("POSTMASTER VERSION: %f\n", version);
+
 	  pc->types_array = g_malloc(sizeof(types_array));
 	  memcpy(pc->types_array, types_array, sizeof(types_array));
 	  res = PQexec(pc->pq_conn,
@@ -260,6 +317,7 @@ gda_postgres_connection_open (Gda_ServerConnection *cnc,
 	  data->user = g_strdup(user);
 	  data->nreg = 1;
 	  data->types_array = pc->types_array;
+	  data->version = version;
 	  global_connection_data_list = 
 	    g_slist_append(global_connection_data_list, data);
 	}
