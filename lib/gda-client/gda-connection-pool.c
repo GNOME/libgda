@@ -382,3 +382,34 @@ gda_connection_pool_close_all (GdaConnectionPool *pool)
 		}
     }
 }
+
+/**
+ * gda_connection_pool_foreach
+ */
+void
+gda_connection_pool_foreach (GdaConnectionPool *pool,
+							 GdaConnectionPoolForeachFunc func,
+							 gpointer user_data)
+{
+	GList *l;
+
+	g_return_if_fail(IS_GDA_CONNECTION_POOL(pool));
+	g_return_if_fail(func != NULL);
+
+	for (l = g_list_first(pool->connections); l != NULL; l = g_list_next(l)) {
+		GdaConnection *cnc = (GdaConnection *) l->data;
+
+		if (IS_GDA_CONNECTION(cnc)) {
+			GdaDsn *dsn;
+
+#ifndef HAVE_GOBJECT
+			dsn = (GdaDsn *) gtk_object_get_data(GTK_OBJECT(cnc), "GDA_ConnectionPool_DSN");
+#endif
+			func(pool,
+				 GDA_DSN_GDA_NAME(dsn),
+				 gda_connection_get_user(cnc),
+				 gda_connection_get_password(cnc),
+				 user_data);
+		}
+	}
+}

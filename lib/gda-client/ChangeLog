@@ -1,3 +1,8 @@
+2001-04-16  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-connection-pool.[ch] (gda_connection_pool_foreach):
+	new function
+
 2001-04-14  Michael Meeks  <michael@ximian.com>
 
 	* Makefile.am (dist-hook): remove built files from dist.

@@ -62,6 +62,7 @@ static void    gda_connection_init          (GdaConnection *cnc,
 #else
 static void    gda_connection_class_init    (GdaConnectionClass* klass);
 static void    gda_connection_init          (GdaConnection* cnc);
+static void    gda_connection_destroy       (GtkObject *object, gpointer user_data);
 #endif
 
 static void    gda_connection_real_error    (GdaConnection* cnc, GList*);
@@ -316,10 +317,49 @@ gda_connection_new (CORBA_ORB orb)
 	cnc = GDA_CONNECTION (g_object_new (GDA_TYPE_CONNECTION, NULL));
 #else
 	cnc = gtk_type_new(gda_connection_get_type());
+	gtk_signal_connect(GTK_OBJECT(cnc),
+					   "destroy",
+					   GTK_SIGNAL_FUNC(gda_connection_destroy),
+					   NULL);
 #endif
 	cnc->orb = orb;
 	return cnc;
 }
+
+#ifndef HAVE_GOBJECT
+static void
+gda_connection_destroy (GtkObject *object, gpointer user_data)
+{
+	GdaConnection *cnc = (GdaConnection *) object;
+
+	g_return_if_fail(IS_GDA_CONNECTION(cnc));
+
+	/* be sure to emit "close" signal for listeners */
+	if (gda_connection_is_open(cnc)) {
+		if (cnc->commands)
+			g_warning("Commands still associated with gda_connection");
+		if (cnc->recordsets)
+			g_warning("Recordsets still associated with gda_connection");
+		if (cnc->errors_head)
+			g_warning("Errors still associated with gda_connection");
+		gda_connection_close(cnc);
+	}
+	else
+		gtk_signal_emit(GTK_OBJECT(cnc), gda_connection_signals[CONNECTION_CLOSE]);
+
+	/* free all memory */
+	if (cnc->provider)
+		g_free(cnc->provider);
+	if (cnc->default_db)
+		g_free(cnc->default_db);
+	if (cnc->database)
+		g_free(cnc->database);
+	if (cnc->user)
+		g_free(cnc->user);
+	if (cnc->passwd)
+		g_free(cnc->passwd);
+}
+#endif
 
 /**
  * gda_connection_free:
@@ -333,27 +373,6 @@ gda_connection_new (CORBA_ORB orb)
 void
 gda_connection_free (GdaConnection* cnc)
 {
-	g_return_if_fail(IS_GDA_CONNECTION(cnc));
-	
-	if (gda_connection_is_open(cnc)) {
-		if (cnc->commands)
-			g_warning("Commands still associated with gda_connection");
-		if (cnc->recordsets)
-			g_warning("Recordsets still associated with gda_connection");
-		if (cnc->errors_head)
-			g_warning("Errors still associated with gda_connection");
-		gda_connection_close(cnc);
-	}
-	if (cnc->provider)
-		g_free(cnc->provider);
-	if (cnc->default_db)
-		g_free(cnc->default_db);
-	if (cnc->database)
-		g_free(cnc->database);
-	if (cnc->user)
-		g_free(cnc->user);
-	if (cnc->passwd)
-		g_free(cnc->passwd);
 #ifdef HAVE_GOBJECT
 	g_object_unref (G_OBJECT (cnc));
 #else
