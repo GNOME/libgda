@@ -1,3 +1,9 @@
+2003-01-06  Holger Thon <holger.thon@gnome-db.org>
+
+	* configure.in: freetds include fix for redhat
+	* providers/freetds/gda-freetds-provider.[ch]: server id 
+	renamed
+
 2003-01-04  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
 	* tools/Makefile.am: added gda-config.5.
@@ -77,6 +83,17 @@
 	gda_data_model_hash_insert_row): emit more fine-grained modification
 	signals.
 
+2002-12-19  Holger Thon <holger.thon@gnome-db.org>
+
+	* providers/sybase/gda-sybase{.h,-schemas.h}: separated schemas
+	from freetds provider
+
+        * providers/freetds/gda-freetds-provider.[ch]: fixed charset 
+	setting, implemented get_database (hoping mssql has the same 
+	builtin function)
+        * providers/freetds/gda-tds-schemas.h: Fixed attribute types 
+	of schema queries, though this did not fix bug #101353
+
 2002-12-19  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* libgda/gda-row.[ch] (gda_row_get_number, gda_row_set_number): new
@@ -114,6 +131,7 @@
 
 	* providers/sybase/gda-sybase-provider.c: Fixed typo.
 
+>>>>>>> 1.429
 2002-12-16  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	Should fix #101046

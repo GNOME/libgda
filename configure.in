@@ -278,6 +278,7 @@ else
 fi
 ])
 freetdsdir=""
+freetds_incdir=""
 freetdsvercheck=""
 if test $try_freetds = true
 then
@@ -288,6 +289,13 @@ then
 		then
 			AC_MSG_RESULT(found freetds in $d)
 			freetdsdir="$d"
+			freetds_incdir="$d/include"
+			break
+		elif test -f "$d/include/freetds/tds.h" -a -e "$d/lib/libtds.so" -a -f "$d/include/freetds/tdsver.h"
+		then
+			AC_MSG_RESULT(found freetds in $d and includes in $d/include/freetds)
+			freetdsdir="$d"
+			freetds_incdir="$d/include/freetds"
 			break
 		fi
 	done
@@ -296,27 +304,29 @@ then
 		AC_MSG_WARN(tds backend not used)
 	else
 		AC_MSG_CHECKING(for freetds version)
-		freetdsvercheck="`grep \"^#define \(VERSION_NO \|TDS_VERSION_NO \)\" $freetdsdir/include/tdsver.h|sed 's|^.*"\(.*\)"|\1|'`"
+		freetdsvercheck="`grep \"^#define \(VERSION_NO \|TDS_VERSION_NO \)\" $freetds_incdir/tdsver.h|sed 's|^.*"\(.*\)"|\1|'`"
 		if test "x$freetdsvercheck" = "x"
 		then
 			AC_MSG_WARN(freetds version check failed - backend not used)
 			freetdsdir=""
+			freetds_incdir=""
 		else
 			case "$freetdsvercheck" in
 				*v0.5*) AC_MSG_RESULT($freetdsvercheck - using v0.5x api)
 					AC_DEFINE(HAVE_FREETDS_VER0_5X)
-					FREETDS_CFLAGS="-I${freetdsdir}/include"
+					FREETDS_CFLAGS="-I${freetds_incdir}"
 					FREETDS_LIBS="-L${freetdsdir}/lib -ltds"
 					AC_DEFINE(HAVE_FREETDS)
 					;;
 				*v0.6*) AC_MSG_RESULT($freetdsvercheck - using v0.6x api)
 					AC_DEFINE(HAVE_FREETDS_VER0_6X)
-					FREETDS_CFLAGS="-I${freetdsdir}/include"
+					FREETDS_CFLAGS="-I${freetds_incdir}"
 					FREETDS_LIBS="-L${freetdsdir}/lib -ltds"
 					AC_DEFINE(HAVE_FREETDS)
 					;;
 				*)	AC_MSG_WARN($freetdsvercheck not supprted - backend not used)
 					freetdsdir=""
+					freetds_incdir=""
 					;;
 			esac
 					
