@@ -1,3 +1,9 @@
+2004-10-18  Tomasz Kì©©oczko <kloczek@pld.org.pl>
+
+	* configure.in: better looking PKG_CHECK_MODULES() output. Declare
+	in one common place required versions of other tools using
+	m4_define(). Fixed identation.
+
 2004-10-15  Vivien Malerba <malerba@gnome-db.org>
 
 	* providers/mysql/gda-mysql-recordset.c (fill_gda_value): fixed
@@ -18,7 +24,7 @@
 
 	* libgda.spec.in: fixed for correct building on RH.
 
-2004-10-10  Tomasz K≈Çoczko <kloczek@pld.org.pl>
+2004-10-10  Tomasz KÅ≈Çoczko <kloczek@pld.org.pl>
 
 	* configure.in, providers/xbase/gda-xbase-database.cpp: fixes for
 	  correct detect xbase library and build backend module (fixed
@@ -270,7 +276,7 @@
 
 2004-08-21  Kjartan Maraas  <kmaraas@gnome.org>
 
-	* configure.in: Add ´nbª to ALL_LINGUAS.
+	* configure.in: Add Å´nbÅª to ALL_LINGUAS.
 
 2004-08-20  Vivien Malerba <malerba@gnome-db.org>
 
@@ -300,7 +306,7 @@
 	(gda_firebird_provider_get_schema, gda_firebird_provider_supports):
 	Added support for GDA_CONNECTION_SCHEMA_AGGREGATES.
 
-2004-08-18  JosÈ MarÌa Casanova Crespo <jmcasanova@igalia.com>
+2004-08-18  JosÅÈ MarÅÌa Casanova Crespo <jmcasanova@igalia.com>
 
 	* libgda/gda-connection.[ch] (gda_connection_clear_error_list):
 	new function.
@@ -511,7 +517,7 @@
 
 	* doc/C/libgda-docs.sgml: fixes for xsltproc.
 
-2004-05-31  J¸rg Billeter <j@bitron.ch>
+2004-05-31  JÅ¸rg Billeter <j@bitron.ch>
 
 	* libgda/gda-util.c:
 	* providers/mdb/gda-mdb-provider.c:
@@ -585,7 +591,7 @@
 	gda_client_notify_transaction_cancelled_event): Cast the objects to
 	GObject, to avoid compiler warnings.
 
-2004-04-28  ¡lvaro PeÒa  <apg@esware.com>
+2004-04-28  Å¡lvaro PeÅÒa  <apg@esware.com>
 
 	* libgda/gda-data-model.c: (export_to_separated),
 	(gda_data_model_to_xml_node): don't use gda_value_stringify
@@ -760,7 +766,7 @@
 
 	* libgda/gda-value.c: bugs fixes in gda_value_compare()
 
-2004-02-09  Tomasz K≥oczko <kloczek@pld.org.pl>
+2004-02-09  Tomasz KÅ≥oczko <kloczek@pld.org.pl>
 
 	* configure.in: Trivial cleanup: remove AC_SUBST(CFLAGS),
 	  AC_SUBST(CPPFLAGS) and AC_SUBST(LDFLAGS). This variables are
@@ -988,7 +994,7 @@
 2003-11-12  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
 	* libgda/gda-value.c: fixed gda_value_copy for GdaNumeric. Patch by
-	David MarÌn <david@aspl.es>.
+	David MarÅÌn <david@aspl.es>.
 
 2003-11-11  Laurent Sansonetti <laurent@datarescue.be>
 
@@ -1272,7 +1278,7 @@
 
 	Released 0.91.0
 
-2003-08-01  Carlos Perell√≥ Mar√≠n <carlos@pemas.net>
+2003-08-01  Carlos PerellÅ√Å≥ MarÅ√Å≠n <carlos@pemas.net>
 
 	* bindings/Makefile.am, bindings/.cvsignore: Removed so we can nuke
 	this directory.
@@ -1420,7 +1426,7 @@
 
 	Released 0.12.0
 
-2003-05-28  Danilo ≈†egan  <dsegan@gmx.net>
+2003-05-28  Danilo Å≈Å†egan  <dsegan@gmx.net>
 
 	* configure.in: Added "sr" and "sr@Latn" to ALL_LINGUAS.
 
@@ -1431,7 +1437,7 @@
 
 	* configure.in: upped version numbers.
 
-2003-05-13  Xabier Rodr√≠guez Calvar <xrcalvar@igalia.com>
+2003-05-13  Xabier RodrÅ√Å≠guez Calvar <xrcalvar@igalia.com>
 
 	* doc/C: some changes to make it more solid
 
@@ -1547,7 +1553,7 @@
 2003-03-17  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
 	* providers/postgres/gda-postgres-provider.c: small fix by David
-	Martin Carre√±o (david@aspl.es).
+	Martin CarreÅ√Å±o (david@aspl.es).
 
 2003-03-16  Roozbeh Pournader  <roozbeh@sharif.edu>
 
@@ -2978,7 +2984,7 @@
 	* doc/C/Makefile.am: fixed connection string description for the
 	default provider (FILENAME->URI).
 	
-2002-08-23  Margus V√§li <mvali@hot.ee>
+2002-08-23  Margus VÅ√Å§li <mvali@hot.ee>
 
 	* report/libgda-report/Makefile.am: link libgda-report with libgda-2,
 	for cygwin compilation.
@@ -3342,7 +3348,7 @@
 2002-07-10  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
 	* providers/postgres/gda-postgres-recordset.c: set number of rows to
-	PQcmdTuples for non-select queries. Thanks to Jos√© Dapena Paz.
+	PQcmdTuples for non-select queries. Thanks to JosÅ√Å© Dapena Paz.
 	Fixes bug #87762.
 
 2002-07-10  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
@@ -3515,7 +3521,7 @@
 	  provider to properly retrieve data, support transactions (untested)
 	  and parameters for queries.
 
-2002-06-17  Carlos Perell√≥ Mar√≠n <carlos@gnome-db.org>
+2002-06-17  Carlos PerellÅ√Å≥ MarÅ√Å≠n <carlos@gnome-db.org>
 
 	* doc/C/tmpl/gda-command.sgml: Automatic update.
 	* doc/C/tmpl/gda-parameter.sgml: ditto.
@@ -3747,7 +3753,7 @@
 
 	* doc/C/libgda-docs.sgml: added some more doc.
 
-2002-05-26  Carlos Perell√≥ Mar√≠n <carlos@gnome-db.org>
+2002-05-26  Carlos PerellÅ√Å≥ MarÅ√Å≠n <carlos@gnome-db.org>
 
 	* report/libgda-report/Makefile.am: Added gda-report-type.h.
 	* report/libgda-report/gda-report-document.c: Added all its properties
@@ -3778,7 +3784,7 @@
 
 	* report/libgda-report/Makefile.am: fixed INCLUDES.
 
-2002-05-21  Carlos Perell√≥ Mar√≠n <carlos@gnome-db.org>
+2002-05-21  Carlos PerellÅ√Å≥ MarÅ√Å≠n <carlos@gnome-db.org>
 
 	* report/idl/*: Removed. It's not needed anymore because we don't
 	use CORBA here.
@@ -4899,7 +4905,7 @@
 	function.
 	(gda_config_free_provider_info): new function.
 
-2002-01-26  Carlos Perell√≥ Mar√≠n <carlos@gnome-db.org>
+2002-01-26  Carlos PerellÅ√Å≥ MarÅ√Å≠n <carlos@gnome-db.org>
 
 	* providers/sqlite/gda-sqlite-provider.c
 	* providers/sqlite/gda-sqlite-provider.h
@@ -5008,7 +5014,7 @@
 
 	* configure.ini: Added Malay (ms)to ALL_LINGUAS.
 
-2002-01-18  Carlos Perell√≥ Mar√≠n <carlos@gnome-db.org>
+2002-01-18  Carlos PerellÅ√Å≥ MarÅ√Å≠n <carlos@gnome-db.org>
 
 	* providers/default/sqlite/*: Removed, we use now distributions packages.
 	* providers/default/Makefile.am: Changed to use the system sqlite installation.
@@ -5036,7 +5042,7 @@
 
 	* doc/C/tmpl/gda-command.sgml: added documentation.
 
-2002-01-17  Carlos Perell√≥ Mar√≠n <carlos@gnome-db.org>
+2002-01-17  Carlos PerellÅ√Å≥ MarÅ√Å≠n <carlos@gnome-db.org>
 
 	* configure.in: Added sqlite detection code
 
@@ -5518,7 +5524,7 @@
 	* report/libgda-report/Makefile.am: more changes to really
 	pass distcheck. 0.8.99 is ready
 
-2001-12-29  Carlos Perell√≥ Mar√≠n <carlos@gnome-db.org>
+2001-12-29  Carlos PerellÅ√Å≥ MarÅ√Å≠n <carlos@gnome-db.org>
 
 	* providers/default/sqlite/Makefile.am: Fixed to pass distcheck.
 	It's only a bad fix, we should review it. Happy New Year!!!
@@ -5714,13 +5720,13 @@
 
 	* configure.in: added libgnome-vfs to list of required libraries
 
-2001-12-22  Carlos Perell√≥ Mar√≠n <carlos@gnome-db.org>
+2001-12-22  Carlos PerellÅ√Å≥ MarÅ√Å≠n <carlos@gnome-db.org>
 
 	* providers/default/gda-default-provider.c: Finished the implementation of execute
 	command for SQL queries.
 	* providers/default/gda-default-recordset.[ch]: Added to create new default-recordset.
 
-2001-12-22  Carlos Perell√≥ Mar√≠n <carlos@gnome-db.org>
+2001-12-22  Carlos PerellÅ√Å≥ MarÅ√Å≠n <carlos@gnome-db.org>
 
 	* libgda/Makefile.am: Fixed.
 
@@ -5803,11 +5809,11 @@
 	* libgda/gda-server-connection.c:
 	* libgda/gda-server-provider.c: s/g_return*_if_fail/bonobo_return*_if_fail
 
-2001-12-20  Carlos Perell√≥ Mar√≠n <carlos@gnome-db.org>
+2001-12-20  Carlos PerellÅ√Å≥ MarÅ√Å≠n <carlos@gnome-db.org>
 
 	* providers/default/sqlite/Makefile.am: Defined OS_UNIX=1
 
-2001-12-20  Carlos Perell√≥ Mar√≠n <carlos@gnome-db.org>
+2001-12-20  Carlos PerellÅ√Å≥ MarÅ√Å≠n <carlos@gnome-db.org>
 
 	* providers/default/sqlite/*: Updated to 2.1.7 release.
 
@@ -6050,7 +6056,7 @@
 	(gda_server_connection_get_username): new function
 	(gda_server_connection_get_password): new function
 
-2001-11-25  Carlos Perell√≥ Mar√≠n <carlos@gnome-db.org>
+2001-11-25  Carlos PerellÅ√Å≥ MarÅ√Å≠n <carlos@gnome-db.org>
 
 	* providers/default/gda-default-provider.c (gda_default_provider_execute_command):
 	Started the implementation.
@@ -6084,7 +6090,7 @@
 
 	* configure.in: require glib >= 1.3.10
 
-2001-11-21  Carlos Perell√≥ Mar√≠n <carlos@gnome-db.org>
+2001-11-21  Carlos PerellÅ√Å≥ MarÅ√Å≠n <carlos@gnome-db.org>
 
 	* configure.in: Changed GETTEXT_PACKAGE from libgda-2.0 to libgda-2
 
@@ -6189,35 +6195,35 @@
 	(gda_config_free_data_source_info):
 	(gda_config_free_data_source_list): new functions
 
-2001-11-04  Carlos Perell√≥ Mar√≠n <carlos@gnome-db.org>
+2001-11-04  Carlos PerellÅ√Å≥ MarÅ√Å≠n <carlos@gnome-db.org>
 
 	* providers/mysql/Makefile.am: Removed lib/ references.
 
-2001-11-04  Carlos Perell√≥ Mar√≠n <carlos@gnome-db.org>
+2001-11-04  Carlos PerellÅ√Å≥ MarÅ√Å≠n <carlos@gnome-db.org>
 
 	* providers/default/gda-default-provider.[ch]:
 	* providers/default/gda-default.h, main.c: Started the implementation for GNOME 2
 
-2001-11-04  Carlos Perell√≥ Mar√≠n <carlos@gnome-db.org>
+2001-11-04  Carlos PerellÅ√Å≥ MarÅ√Å≠n <carlos@gnome-db.org>
 
 	* libgda/gda-init.c, Makefile.am: Adapted to use GLIB_GETTEXT.
 
-2001-11-04  Carlos Perell√≥ Mar√≠n <carlos@gnome-db.org>
+2001-11-04  Carlos PerellÅ√Å≥ MarÅ√Å≠n <carlos@gnome-db.org>
 
 	* libgda/gda-init.c: Added the call to bind_textdomain_codeset
 	to fix always UTF-8.
 
-2001-11-04  Carlos Perell√≥ Mar√≠n <carlos@gnome-db.org>
+2001-11-04  Carlos PerellÅ√Å≥ MarÅ√Å≠n <carlos@gnome-db.org>
 
 	* configure.in:
 	* Makefile.am:
 	* */*/Makefile.am: Migrated to intltool
 
-2001-11-04  Carlos Perell√≥ Mar√≠n <carlos@gnome-db.org>
+2001-11-04  Carlos PerellÅ√Å≥ MarÅ√Å≠n <carlos@gnome-db.org>
 
 	* acconfig.h, configure.in: Adapted to use GLIB_GETTEXT
 
-2001-11-04  Carlos Perell√≥ Mar√≠n <carlos@gnome-db.org>
+2001-11-04  Carlos PerellÅ√Å≥ MarÅ√Å≠n <carlos@gnome-db.org>
 
 	* AUTHORS: I'm the mantainer for gda-default.
 
@@ -6265,16 +6271,16 @@
 	* Makefile.am: removed report from SUBDIRS, until we've got time
 	to make it build without errors
 
-2001-11-03  Carlos Perell√≥ Mar√≠n <carlos@gnome-db.org>
+2001-11-03  Carlos PerellÅ√Å≥ MarÅ√Å≠n <carlos@gnome-db.org>
 
 	* providers/default/sqlite/lemon.c: Applied the patch from Akira TAGOH
 	<tagoh@gnome-db.org> to fix 64 bit pointer issues.
 
-2001-11-03  Carlos Perell√≥ Mar√≠n <carlos@gnome-db.org>
+2001-11-03  Carlos PerellÅ√Å≥ MarÅ√Å≠n <carlos@gnome-db.org>
 
 	* providers/default/sqlite: Added from stable branch.
 
-2001-11-03  Carlos Perell√≥ Mar√≠n <carlos@gnome-db.org>
+2001-11-03  Carlos PerellÅ√Å≥ MarÅ√Å≠n <carlos@gnome-db.org>
 
 	* configure.in: Modified to build the Makefile for sqlite
 
@@ -6441,13 +6447,13 @@
 	* libgda-client.pc.in:
 	* libgda-server.pc.in: re-added, shouldn't have been removed
 
-2001-10-11  Carlos Perell√≥ Mar√≠n <carlos@gnome-db.org>
+2001-10-11  Carlos PerellÅ√Å≥ MarÅ√Å≠n <carlos@gnome-db.org>
 
 	* providers/default/sqlite/*
 	* providers/default/Makefile.am: Imported the sqlite 2.0.2. This version need an update
 	of the old database, I will prepare a program to do the update soon.
 
-2001-10-10  Carlos Perell√≥ Mar√≠n <carlos@gnome-db.org>
+2001-10-10  Carlos PerellÅ√Å≥ MarÅ√Å≠n <carlos@gnome-db.org>
 
 	* providers/default/Makefile.am: Fixed the sqlite.h build problem.
 
@@ -6542,7 +6548,7 @@
 
 	* doc/C/reference/*: fixed to make it build again
 
-2001-07-28  Carlos Perell√≥ Mar√≠n <carlos@gnome-db.org>
+2001-07-28  Carlos PerellÅ√Å≥ MarÅ√Å≠n <carlos@gnome-db.org>
 
 	* configure.in: Reactivated the Makefile generation at report dirs.
 	Added the IDL_FLAGS var.
@@ -6573,15 +6579,15 @@
 
 	* providers/default/gda-default-connection.c (schema_aggregates): new schema function
 
-2001-07-19  Carlos Perell√≥ Mar√≠n <carlos@gnome-db.org>
+2001-07-19  Carlos PerellÅ√Å≥ MarÅ√Å≠n <carlos@gnome-db.org>
 
 	* report/Makefile.am: Reverted the changes about IDL's name.
 
-2001-07-19  Carlos Perell√≥ Mar√≠n <carlos@gnome-db.org>
+2001-07-19  Carlos PerellÅ√Å≥ MarÅ√Å≠n <carlos@gnome-db.org>
 
 	* report/*.[ch]: Removed, need a heavy reimplementation.
 
-2001-07-19  Carlos Perell√≥ Mar√≠n <carlos@gnome-db.org>
+2001-07-19  Carlos PerellÅ√Å≥ MarÅ√Å≠n <carlos@gnome-db.org>
 
 	* report/server: renamed to engine and reimplemented all.
 	
@@ -6628,7 +6634,7 @@
 
 	* idl/GDA_Listener.idl: new interface
 
-2001-07-08  Carlos Perell√≥ Mar√≠n <carlos@gnome-db.org>
+2001-07-08  Carlos PerellÅ√Å≥ MarÅ√Å≠n <carlos@gnome-db.org>
 
 	* testing/gda*test.c: Changed the use of getline with fgets. It must
 	fix the #51404
@@ -6730,12 +6736,12 @@
 	directories
 	(fixes bug #54979)
 
-2001-05-19  Carlos Perell√≥ Mar√≠n <carlos@gnome-db.org>
+2001-05-19  Carlos PerellÅ√Å≥ MarÅ√Å≠n <carlos@gnome-db.org>
 
 	* report/gda-report*.h: Reviewed and corrected some mistakes.
 	* report/Makefile.am: Added the new .h files.
 	
-2001-05-18  Carlos Perell√≥ Mar√≠n <carlos@gnome-db.org>
+2001-05-18  Carlos PerellÅ√Å≥ MarÅ√Å≠n <carlos@gnome-db.org>
 
 	* report/gda-report*header.h, gda-report*footer.h, gda-report-detail.h,
 	  gda-report-data.h, gda-report-page.h, gda-report-picture.h,
@@ -6760,7 +6766,7 @@
 	linking with libxml2 (needed by libxslt) does not work with
 	current Bonobo
 
-2001-05-16  Carlos Perell√≥ Mar√≠n <carlos@gnome-db.org>
+2001-05-16  Carlos PerellÅ√Å≥ MarÅ√Å≠n <carlos@gnome-db.org>
 
 	* report/gda-report-defs.h: Updated.
 	* report/gda-report-section.h: Added and started the implementation...
@@ -6796,9 +6802,9 @@
 	* configure.in: added check for gtk-doc, and add reference/ to
 	the list of directories
 
-2001-05-07  Reinhard M√ºller  <reinhard.mueller@bytewise.at>
+2001-05-07  Reinhard MÅ√Åºller  <reinhard.mueller@bytewise.at>
 
-        * gda-test.c: Applied Margus V√§li's patch to let the user select
+        * gda-test.c: Applied Margus VÅ√Å§li's patch to let the user select
         the provider to use if more than one provider is installed
 
         * gda-test.c: Changed coding style to K&R with 8 char indentation
