@@ -6,10 +6,11 @@
 	* gda-row.c: added documentation.
 	(gda_field_get_gdatype): changed GNOME_Database_TYPE_NULL to
 	GDA_TYPE_NULL.
+	(gda_field_stringify): remove const from the GdaValue parameter.
 
 	* gda-row.h: changed parameter name for 
 	gda_field_attributes_set_defined_size(): so as gtk-doc doesn't
-	complains about it.
+	complains about it. Remove const from the GdaValue parameter.
 
 	* gda-value.[ch]:
 	* gda-row.[ch]: changed 'long long' by 'gint64'. Removed all warnings.
