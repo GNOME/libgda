@@ -44,3 +44,47 @@ gda_mysql_make_error (MYSQL *handle)
 
 	return error;
 }
+
+GdaType
+gda_mysql_type_to_gda (enum enum_field_types mysql_type)
+{
+	switch (mysql_type) {
+	case FIELD_TYPE_DATE :
+		return GDA_TYPE_DATE;
+	case FIELD_TYPE_DECIMAL :
+	case FIELD_TYPE_DOUBLE :
+		return GDA_TYPE_DOUBLE;
+	case FIELD_TYPE_FLOAT :
+		return GDA_TYPE_SINGLE;
+	case FIELD_TYPE_LONG :
+	case FIELD_TYPE_YEAR :
+		return GDA_TYPE_INTEGER;
+	case FIELD_TYPE_LONGLONG :
+	case FIELD_TYPE_INT24 :
+		return GDA_TYPE_BIGINT;
+	case FIELD_TYPE_SHORT :
+		return GDA_TYPE_SMALLINT;
+	case FIELD_TYPE_TIME :
+		return GDA_TYPE_TIME;
+	case FIELD_TYPE_TIMESTAMP :
+	case FIELD_TYPE_DATETIME :
+		return GDA_TYPE_TIMESTAMP;
+	case FIELD_TYPE_TINY :
+		return GDA_TYPE_TINYINT;
+	case FIELD_TYPE_TINY_BLOB :
+	case FIELD_TYPE_MEDIUM_BLOB :
+	case FIELD_TYPE_LONG_BLOB :
+	case FIELD_TYPE_BLOB :
+		return GDA_TYPE_BINARY;
+	case FIELD_TYPE_VAR_STRING :
+	case FIELD_TYPE_STRING :
+		return GDA_TYPE_STRING;
+	case FIELD_TYPE_NULL :
+	case FIELD_TYPE_NEWDATE :
+	case FIELD_TYPE_ENUM :
+	case FIELD_TYPE_SET :
+		break;
+	}
+
+	return GDA_TYPE_UNKNOWN;
+}

@@ -22,29 +22,17 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#if !defined(__gda_mysql_h__)
-#  define __gda_mysql_h__
+#if !defined(__gda_mysql_recordset_h__)
+#  define __gda_mysql_recordset_h__
 
-#include <glib/gmacros.h>
-#include <bonobo/bonobo-i18n.h>
-#include <config.h>
-#include <libgda/gda-server.h>
-#include <libgda/gda-value.h>
-#include <gda-mysql-provider.h>
-#include <mysql.h>
-#include <mysql_com.h>
-
-#define GDA_MYSQL_COMPONENT_FACTORY_ID "OAFIID:GNOME_Database_MySQL_ComponentFactory"
-#define GDA_MYSQL_PROVIDER_ID          "OAFIID:GNOME_Database_MySQL_Provider"
+#include <libgda/gda-server-connection.h>
+#include <libgda/gda-server-recordset.h>
+#include <mysql/mysql.h>
 
 G_BEGIN_DECLS
 
-/*
- * Utility functions
- */
-
-GdaError *gda_mysql_make_error (MYSQL *handle);
-GdaType   gda_mysql_type_to_gda (enum enum_field_types mysql_type);
+GdaServerRecordset *gda_mysql_recordset_new (GdaServerConnection *cnc,
+					     MYSQL_RES *mysql_res);
 
 G_END_DECLS
 

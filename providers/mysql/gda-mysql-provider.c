@@ -40,6 +40,10 @@ static gboolean gda_mysql_provider_open_connection (GdaServerProvider *provider,
 						    const gchar *password);
 static gboolean gda_mysql_provider_close_connection (GdaServerProvider *provider,
 						     GdaServerConnection *cnc);
+static GList *gda_mysql_provider_execute_command (GdaServerProvider *provider,
+						  GdaServerConnection *cnc,
+						  GdaCommand *cmd,
+						  GdaParameterList *params);
 
 static GObjectClass *parent_class = NULL;
 
@@ -58,6 +62,7 @@ gda_mysql_provider_class_init (GdaMysqlProviderClass *klass)
 	object_class->finalize = gda_mysql_provider_finalize;
 	provider_class->open_connection = gda_mysql_provider_open_connection;
 	provider_class->close_connection = gda_mysql_provider_close_connection;
+	provider_class->execute_command = gda_mysql_provider_execute_command;
 	provider_class->begin_transaction = NULL;
 	provider_class->commit_transaction = NULL;
 	provider_class->rollback_transaction = NULL;
@@ -208,4 +213,76 @@ gda_mysql_provider_close_connection (GdaServerProvider *provider, GdaServerConne
 	g_object_set_data (G_OBJECT (cnc), OBJECT_DATA_MYSQL_HANDLE, NULL);
 
 	return TRUE;
+}
+
+static GList *
+process_sql_commands (GList *reclist, GdaServerConnection *cnc, const gchar *sql)
+{
+	MYSQL *mysql;
+	gchar *arr;
+
+	mysql = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_MYSQL_HANDLE);
+	if (!mysql) {
+		gda_server_connection_add_error_string (cnc, _("Invalid MYSQL handle"));
+		return NULL;
+	}
+
+	/* parse SQL string, which can contain several commands, separated by ';' */
+	arr = g_strsplit (sql, ";", 0);
+	if (arr) {
+		gint n;
+
+		while (arr[n]) {
+			gint rc;
+			MYSQL_RES *mysql_res;
+			GdaServerRecordset *recset;
+
+			rc = mysql_real_query (mysql, arr[n], strlen (arr[n]));
+			if (rc != 0) {
+				gda_server_connection_add_error (
+					cnc, gda_mysql_make_error (mysql));
+				break;
+			}
+
+			mysql_res = mysql_store_result (mysql);
+			recset = gda_mysql_recordset_new (cnc, mysql_res);
+			if (GDA_IS_SERVER_RECORDSET (recset))
+				reclist = g_list_append (reclist, recset);
+
+			n++;
+		}
+
+		g_strfreev (arr);
+	}
+
+	return reclist;
+}
+
+/* execute_command handler for the GdaMysqlProvider class */
+static GList *
+gda_mysql_provider_execute_command (GdaServerProvider *provider,
+				    GdaServerConnection *cnc,
+				    GdaCommand *cmd,
+				    GdaParameterList *params)
+{
+	GList *reclist = NULL;
+	gchar *str;
+	GdaMysqlProvider *myprv = (GdaMysqlProvider *) provider;
+
+	g_return_val_if_fail (GDA_IS_MYSQL_PROVIDER (myprv), NULL);
+	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), NULL);
+	g_return_val_if_fail (cmd != NULL, NULL);
+
+	switch (gda_command_get_command_type (cmd)) {
+	case GDA_COMMAND_TYPE_SQL :
+		reclist = process_sql_commands (reclist, cnc, gda_command_get_text (cmd));
+		break;
+	case GDA_COMMAND_TYPE_TABLE :
+		str = g_strdup_printf ("SELECT * FROM %s", gda_command_get_text (cmd));
+		reclist = process_sql_commands (reclist, cnc, str);
+		g_free (str);
+		break;
+	}
+
+	return reclist;
 }

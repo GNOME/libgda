@@ -8,6 +8,8 @@ INCLUDES = \
 gda_mysql_srv_SOURCES = \
 	gda-mysql-provider.c \
 	gda-mysql-provider.h \
+	gda-mysql-recordset.c \
+	gda-mysql-recordset.h \
 	gda-mysql.h \
 	main.c \
 	utils.c

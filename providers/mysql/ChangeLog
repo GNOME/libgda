@@ -1,3 +1,13 @@
+2001-12-17  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* utils.c (gda_mysql_type_to_gda): new function
+
+2001-12-16  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-mysql-provider.c (gda_mysql_provider_execute_command): impl
+
+	* gda-mysql-recordset.[ch]: new files
+
 2001-11-04  Carlos Perelló Marín <carlos@gnome-db.org>
 
 	* Makefile.am: Removed lib/ references.
