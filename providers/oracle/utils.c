@@ -378,6 +378,7 @@ gda_oracle_set_value (GdaValue *value,
 		string_buffer = g_malloc0 (ora_value->defined_size+1);
 		memcpy (string_buffer, ora_value->value, ora_value->defined_size);
 		string_buffer[ora_value->defined_size] = '\0';
+		g_strchomp(string_buffer);
 		gda_value_set_string (value, string_buffer);
 		break;
 	case GDA_VALUE_TYPE_BIGINT:

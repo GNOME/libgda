@@ -1,3 +1,8 @@
+2003-01-31  Steve Fosdick <fozzy@pelvoux.demon.co.uk>
+
+	* providers/oracle/utils.c (gda_oracle_set_value): remove trailing
+	spaces from strings read from the database.
+
 2003-01-28  Yanko Kaneti <yaneti@declera.com>
 
 	* libgda.spec.in: added --without flags.
