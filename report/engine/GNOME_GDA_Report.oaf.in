@@ -1,10 +1,10 @@
 <oaf_info>
-    <oaf_server iid="OAFIID:GNOME_Database_Report_Factory"
+    <oaf_server iid="OAFIID:GNOME_GDA_Report_DocumentFactory"
 		type="exe"
 		location="gda-report-engine">
 
 	<oaf_attribute name="repo_ids" type="stringv">
-	    <item value="IDL:GNOME/Database/ReportFactory:1.0"/>
+	    <item value="IDL:GNOME/GDA/Report/DocumentFactory:1.0"/>
 	    <item value="IDL:GNOME/ObjectFactory:1.0"/>
 	</oaf_attribute>
 	
@@ -12,11 +12,11 @@
 	 _value="GDA Distributed Report Engine"/>
     </oaf_server>
 
-    <oaf_server iid="OAFIID:GNOME_Database_Report"
+    <oaf_server iid="OAFIID:GNOME_GDA_Report_Document"
     		type="factory"
-		location="OAFIID:GNOME_Database_Report_Factory">
+		location="OAFIID:GNOME_GDA_Report_DocumentFactory">
 	<oaf_attribute name="repo_ids" type="stringv">
-	    <item value="IDL:GNOME/Database/Report:1.0"/>
+	    <item value="IDL:GNOME/GDA/Report/Document:1.0"/>
 	</oaf_attribute>
 	
 	<oaf_attribute name="description" type="string"

@@ -7,18 +7,20 @@ INCLUDES = \
 	$(GDA_CLIENT_CFLAGS)
 
 BUILT_SOURCES = \
-	GNOME_Database_Report.h \
-	GNOME_Database_Report-common.c \
-	GNOME_Database_Report-stubs.c \
-	GNOME_Database_Report-skels.c
+	GDA_Report.h \
+	GDA_Report-common.c \
+	GDA_Report-stubs.c \
+	GDA_Report-skels.c
 
 CLEANFILES += $(BUILT_SOURCES)
 
-$(BUILT_SOURCES): $(top_builddir)/report/idl/GNOME_Database_Report.idl
-	$(ORBIT_IDL) $(top_builddir)/report/idl/GNOME_Database_Report.idl
+$(BUILT_SOURCES): $(top_builddir)/report/idl/GDA_Report.idl
+	$(ORBIT_IDL) $(top_builddir)/report/idl/GDA_Report.idl
 
 gda_report_server_SOURCES = \
-	$(BUILT_SOURCES)
+	$(BUILT_SOURCES) \
+	gda-report-document-factory.h \
+	main.c
 
 gda_report_server_LDADD = \
 	$(GDA_CLIENT_LIBS) \
@@ -26,7 +28,7 @@ gda_report_server_LDADD = \
 	$(top_builddir)/lib/gda-client/libgda-client.la
 
 oafdir=$(GDA_oafdir)
-oaf_in_files = GNOME_Database_Report.oaf.in
+oaf_in_files = GNOME_GDA_Report.oaf.in
 oaf_DATA = $(oaf_in_files:.oaf.in=.oaf)
 @XML_I18N_MERGE_OAF_RULE@
 
