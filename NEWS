@@ -1,3 +1,40 @@
+libgda 0.8.193, 2002-09-09
+--------------------------
+
+ - Added support for storing types in GdaValue's (rodrigo)
+ - Updated schemas information in MySQL (rodrigo) and PostgreSQL (vivien)
+ - Fixed encoding problems in PostgreSQL provider (gonzalo)
+ - Set correctly number of rows in PostgreSQL non-select queries (gonzalo)
+ - Added support for listing data sources and providers in libgda's
+   command line configuration tool (gonzalo)
+ - Fixed retrieval of fields information on the MySQL provider (rodrigo)
+ - Starting port of the FreeTDS provider (holger)
+ - Added FreeTDS-specific tests to the test suite (holger)
+ - New detailed documentation, including migration formulae (xabier)
+ - Added missing types to gda_value_stringify (holger)
+ - Started IBM DB2 provider (holger)
+ - Added get_server and get_server_version methods to the GdaServerProvider
+   class (rodrigo), and implemented them in MySQL (rodrigo), PostgreSQL (gonzalo),
+   FreeTDS (holger)
+ - Fixed spec files (ben)
+ - Added isolation level support to transactions (rodrigo)
+ - Implemented support for binary values in GdaValue's (rodrigo)
+ - Added more information to GdaFieldAttributes structure (rodrigo)
+ - Added basic support for commands to default provider (rodrigo)
+ - Fixed suffix names problem for running on Windows (gonzalo)
+ - Propagate errors to GdaClient when opening connections (rodrigo)
+ - Updated translations:
+        - ca (pablo)
+        - da (olau)
+        - de (mborchers, cneumair)
+        - es (pablodc)
+        - no (kmaraas)
+        - pl (chyla)
+        - pt (dnloreto)
+        - ru (dmitrym)
+        - sv (menthos)
+        - vi (pablo)
+
 libgda 0.8.192, 2002-07-08
 --------------------------
 

@@ -12,7 +12,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2002-09-03 22:06+0200\n"
+"POT-Creation-Date: 2002-09-09 22:11+0200\n"
 "PO-Revision-Date: 2002-09-03 22:14+0200\n"
 "Last-Translator: Ole Laursen <olau@hardworking.dk>\n"
 "Language-Team: Danish <dansk@klid.dk>\n"
@@ -299,7 +299,9 @@ msgstr "GDA-standardudbyder, baseret på libgda-XML-formatet"
 msgid ""
 "Connection aborted. You must provide at least a host, username and password "
 "using DSN 'QUERY=;USER=;PASSWORD='."
-msgstr "Forbindelse afbrudt. Du skal mindst angive en vært, brugernavn og adgangskode vha. DSN 'QUERY=;USER=;PASSWORD='."
+msgstr ""
+"Forbindelse afbrudt. Du skal mindst angive en vært, brugernavn og "
+"adgangskode vha. DSN 'QUERY=;USER=;PASSWORD='."
 
 #: providers/freetds/gda-freetds-provider.c:187
 msgid "Error creating message container."
@@ -428,7 +430,8 @@ msgstr "Kunne ikke allokere miljøhåndtag.\n"
 #. is needed for tables schema
 #: providers/ibmdb2/gda-ibmdb2-provider.c:191
 msgid "SQLGetInfo is unsupported. Hence IBM DB2 Provider will not work.\n"
-msgstr "SQLGetInfo er ikke understøttet. Derfor vil IBM DB2-udbyderen ikke virke.\n"
+msgstr ""
+"SQLGetInfo er ikke understøttet. Derfor vil IBM DB2-udbyderen ikke virke.\n"
 
 #: providers/ibmdb2/gda-ibmdb2-provider.c:205
 msgid "SQLGetFunctions gave unexpected return. Connection terminated.\n"
@@ -438,20 +441,21 @@ msgstr "SQLGetFunctions gav uventet returkode. Forbindelse afbrudt.\n"
 msgid "GDA provider for IBMDB2"
 msgstr "GDB-udbyder for IBMDB2"
 
-#: providers/mdb/gda-mdb-provider.c:176
+#: providers/mdb/gda-mdb-provider.c:188
 msgid "A database FILENAME must be specified in the connection_string"
 msgstr "Et database-FILNAVN skal angives i forbindelsesstrengen"
 
-#: providers/mdb/gda-mdb-provider.c:184
+#: providers/mdb/gda-mdb-provider.c:197
 #, c-format
 msgid "Could not open file %s"
 msgstr "Kunne ikke åbne filen %s"
 
-#: providers/mdb/gda-mdb-provider.c:206 providers/mdb/gda-mdb-provider.c:308
+#: providers/mdb/gda-mdb-provider.c:219 providers/mdb/gda-mdb-provider.c:247
+#: providers/mdb/gda-mdb-provider.c:348
 msgid "Invalid MDB handle"
 msgstr "Ugyldigt MDB-håndtag"
 
-#: providers/mdb/gda-mdb-provider.c:273
+#: providers/mdb/gda-mdb-provider.c:313
 msgid "Table Name"
 msgstr "Tabelnavn"
 
@@ -1005,7 +1009,10 @@ msgid ""
 "\n"
 "\tProvider reports version: %s\n"
 "\n"
-msgstr "\n\tUdbyderrapporteringsversion: %s\n\n"
+msgstr ""
+"\n"
+"\tUdbyderrapporteringsversion: %s\n"
+"\n"
 
 #: testing/client.c:122
 msgid "Stored procedures"

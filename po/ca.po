@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-db CVS\n"
-"POT-Creation-Date: 2002-07-14 09:54+0200\n"
+"POT-Creation-Date: 2002-09-09 22:11+0200\n"
 "PO-Revision-Date: 2002-08-16 03:58+0000\n"
 "Last-Translator: Eduard Pertez i Juncosa <eduardp@eduard.pertinez>\n"
 "Language-Team:  <ca@li.org>\n"
@@ -13,39 +13,39 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: KBabel 0.9.6\n"
 
-#: libgda/gda-client.c:226 libgda/gda-client.c:413 libgda/gda-connection.c:214
+#: libgda/gda-client.c:227 libgda/gda-client.c:414 libgda/gda-connection.c:214
 #, c-format
 msgid "Data source %s not found in configuration"
 msgstr "L'origen de dades %s no s'ha trobat en la configuració del GDA"
 
-#: libgda/gda-client.c:244
+#: libgda/gda-client.c:245
 #, c-format
 msgid "Provider %s is not installed"
 msgstr "El proveïdor %s no es troba instal·lat."
 
-#: libgda/gda-client.c:253
+#: libgda/gda-client.c:254
 #, c-format
 msgid "Could not load %s provider"
 msgstr "No és possible carregar el proveïdor %s"
 
-#: libgda/gda-client.c:269
+#: libgda/gda-client.c:270
 #, c-format
 msgid "Provider %s does not implement entry point"
 msgstr "El proveïdor %s no implementa el punt d'entrada"
 
-#: libgda/gda-client.c:278
+#: libgda/gda-client.c:279
 msgid "Creation of GdaServerProvider failed"
 msgstr "La creació del GdaServerProvider ha fallat"
 
-#: libgda/gda-client.c:341
+#: libgda/gda-client.c:342
 msgid "Temporary data source created by libgda. Don't remove it"
 msgstr "Font de dades temporal creat per libgda. No l'elimineu"
 
 #. gda_server_recordset_model_set_field_defined_size (recset, 0, 256);
-#: libgda/gda-config.c:1268 providers/default/gda-default-provider.c:463
-#: providers/default/gda-default-provider.c:485
-#: providers/default/gda-default-provider.c:522
-#: providers/mysql/gda-mysql-provider.c:584
+#: libgda/gda-config.c:1268 providers/default/gda-default-provider.c:557
+#: providers/default/gda-default-provider.c:579
+#: providers/default/gda-default-provider.c:616
+#: providers/mysql/gda-mysql-provider.c:651
 #: providers/oracle/gda-oracle-provider.c:999
 msgid "Name"
 msgstr "Nom"
@@ -58,7 +58,7 @@ msgstr "Proveïdor"
 msgid "Connection string"
 msgstr "Cadena de connexió"
 
-#: libgda/gda-config.c:1271
+#: libgda/gda-config.c:1271 providers/postgres/gda-postgres-provider.c:903
 msgid "Description"
 msgstr "Descripció"
 
@@ -70,7 +70,7 @@ msgstr "Nom d'usuari"
 msgid "Password"
 msgstr "Contrasenya"
 
-#: libgda/gda-data-model.c:589
+#: libgda/gda-data-model.c:608
 #, c-format
 msgid "Data model %p is not editable"
 msgstr "El model de dades %p no és editable"
@@ -83,6 +83,10 @@ msgstr "S'intenta inicialitzar un client que ja ho ha estat "
 msgid "libgda needs GModule. Finishing..."
 msgstr "libgda necessita GModule. Finalitzant..."
 
+#: libgda/gda-init.c:64
+msgid "libgda successfully initialized"
+msgstr ""
+
 #: libgda/gda-log.c:82
 #, c-format
 msgid "MESSAGE: %s"
@@ -93,35 +97,35 @@ msgstr "MISSATGE: %s"
 msgid "ERROR: %s"
 msgstr "ERROR: %s"
 
-#: libgda/gda-select.c:119 libgda/gda-select.c:142 libgda/gda-select.c:201
+#: libgda/gda-select.c:120 libgda/gda-select.c:143 libgda/gda-select.c:202
 msgid "Unexpected integer value"
 msgstr "Valor enter inesperat"
 
-#: libgda/gda-select.c:131 libgda/gda-select.c:211
+#: libgda/gda-select.c:132 libgda/gda-select.c:212
 msgid "Unexpected float value"
 msgstr "Valor real inesperat"
 
-#: libgda/gda-select.c:154
+#: libgda/gda-select.c:155
 msgid "Unexpected string value"
 msgstr "Valor de cadena inesperat"
 
-#: libgda/gda-select.c:165
+#: libgda/gda-select.c:166
 msgid "Unexpected symbol '='"
 msgstr "Símbol '=' inesperat"
 
-#: libgda/gda-select.c:176
+#: libgda/gda-select.c:177
 msgid "Unexpected symbol '<'"
 msgstr "Símbol '<' inesperat"
 
-#: libgda/gda-select.c:187
+#: libgda/gda-select.c:188
 msgid "Unexpected symbol '>'"
 msgstr "Símbol '>' inesperat"
 
-#: libgda/gda-select.c:215
+#: libgda/gda-select.c:216
 msgid "Found a non-numeric value after a '-' sign"
 msgstr "S'ha trobat un valor no numèric darrera el signe '-'"
 
-#: libgda/gda-select.c:231
+#: libgda/gda-select.c:232
 msgid "Unexpected identifier"
 msgstr "Identificador inesperat"
 
@@ -140,124 +144,146 @@ msgstr "S'ha produït un error en llegir %s: %s"
 msgid "Could not create file %s"
 msgstr "No s'ha pogut crear el fitxer  %s"
 
-#: libgda/gda-value.c:1346
+#: libgda/gda-value.c:1454
 msgid "TRUE"
 msgstr "CERT"
 
-#: libgda/gda-value.c:1348
+#: libgda/gda-value.c:1456
 msgid "FALSE"
 msgstr "FALS"
 
-#: libgda/gda-xml-database.c:229
+#: libgda/gda-xml-database.c:236
 #, c-format
 msgid "Could not load file at %s"
 msgstr "No s'ha pogut carregar el fitxer a  %s"
 
-#: libgda/gda-xml-database.c:238
+#: libgda/gda-xml-database.c:245
 #, c-format
 msgid "Could not parse file at %s"
 msgstr "No s'ha pogut analitzar el fitxer a  %s"
 
-#: libgda/gda-xml-database.c:248
+#: libgda/gda-xml-database.c:255
 #, c-format
 msgid "Invalid XML database file '%s'"
 msgstr "Base de Dades XML %s invàlida"
 
-#: libgda/gda-xml-database.c:467 libgda/gda-xml-database.c:503
-#: libgda/gda-xml-database.c:544
+#: libgda/gda-xml-database.c:407
+#, fuzzy, c-format
+msgid "Could not create a XML node from table %s"
+msgstr "No s'ha pogut crear el fitxer  %s"
+
+#: libgda/gda-xml-database.c:425
+#, fuzzy
+msgid "Could not dump XML file to memory"
+msgstr "No s'ha pogut carregar el fitxer a  %s"
+
+#: libgda/gda-xml-database.c:518 libgda/gda-xml-database.c:554
+#: libgda/gda-xml-database.c:597
 #, c-format
 msgid "Table %s already exists"
 msgstr "La taula %s ja existeix"
 
-#: libgda/gda-xml-database.c:537
+#: libgda/gda-xml-database.c:590
 msgid "Invalid node"
 msgstr "Node invàlid"
 
-#: libgda/gda-xml-database.c:569
+#: libgda/gda-xml-database.c:632
 #, c-format
 msgid "Duplicated <data> node for table %s"
 msgstr "Node <dades> duplicat per la taula %s"
 
-#: libgda/gda-xml-database.c:576
+#: libgda/gda-xml-database.c:639
 msgid "Invalid XML node"
 msgstr "Node XML invàlid"
 
-#: providers/default/gda-default-provider.c:173
+#: providers/default/gda-default-provider.c:191
 #: providers/sqlite/gda-sqlite-provider.c:186
-msgid "A full path must be specified on the connection string to open a database."
-msgstr "Per obrir una base de dades cal especificar un camí complert a la cadena de connexió."
+msgid ""
+"A full path must be specified on the connection string to open a database."
+msgstr ""
+"Per obrir una base de dades cal especificar un camí complert a la cadena de "
+"connexió."
 
-#: providers/default/gda-default-provider.c:242
+#: providers/default/gda-default-provider.c:253
+#: providers/default/gda-default-provider.c:268
+#: providers/default/gda-default-provider.c:295
+#, fuzzy
+msgid "Invalid internal handle"
+msgstr "Manegador Oracle invàlid"
+
+#: providers/default/gda-default-provider.c:334
 msgid "Not Implemented"
 msgstr "No implementat"
 
-#: providers/default/gda-default-provider.c:361
-#: providers/mysql/gda-mysql-provider.c:941
+#: providers/default/gda-default-provider.c:455
+#: providers/mysql/gda-mysql-provider.c:1011
 #: providers/oracle/gda-oracle-provider.c:1056
-#: providers/postgres/gda-postgres-provider.c:835
+#: providers/postgres/gda-postgres-provider.c:1065
 msgid "Field name"
 msgstr "Nom del camp"
 
-#: providers/default/gda-default-provider.c:362
-#: providers/mysql/gda-mysql-provider.c:942
+#: providers/default/gda-default-provider.c:456
+#: providers/mysql/gda-mysql-provider.c:1012
 #: providers/oracle/gda-oracle-provider.c:1057
-#: providers/postgres/gda-postgres-provider.c:836
+#: providers/postgres/gda-postgres-provider.c:1066
 msgid "Data type"
 msgstr "Tipus de Dada"
 
-#: providers/default/gda-default-provider.c:363
-#: providers/mysql/gda-mysql-provider.c:943
+#: providers/default/gda-default-provider.c:457
+#: providers/freetds/gda-freetds-provider.c:649
+#: providers/mysql/gda-mysql-provider.c:1013
 #: providers/oracle/gda-oracle-provider.c:1058
-#: providers/postgres/gda-postgres-provider.c:837
+#: providers/postgres/gda-postgres-provider.c:1067
 msgid "Size"
 msgstr "Mida"
 
-#: providers/default/gda-default-provider.c:364
-#: providers/mysql/gda-mysql-provider.c:944
+#: providers/default/gda-default-provider.c:458
+#: providers/freetds/gda-freetds-provider.c:653
+#: providers/mysql/gda-mysql-provider.c:1014
 #: providers/oracle/gda-oracle-provider.c:1059
-#: providers/postgres/gda-postgres-provider.c:838
+#: providers/postgres/gda-postgres-provider.c:1068
 msgid "Scale"
 msgstr "Escala"
 
-#: providers/default/gda-default-provider.c:365
-#: providers/mysql/gda-mysql-provider.c:945
+#: providers/default/gda-default-provider.c:459
+#: providers/mysql/gda-mysql-provider.c:1015
 #: providers/oracle/gda-oracle-provider.c:1060
-#: providers/postgres/gda-postgres-provider.c:839
+#: providers/postgres/gda-postgres-provider.c:1069
 msgid "Not null?"
 msgstr "No és nul?"
 
-#: providers/default/gda-default-provider.c:366
-#: providers/mysql/gda-mysql-provider.c:946
+#: providers/default/gda-default-provider.c:460
+#: providers/mysql/gda-mysql-provider.c:1016
 #: providers/oracle/gda-oracle-provider.c:1061
-#: providers/postgres/gda-postgres-provider.c:840
+#: providers/postgres/gda-postgres-provider.c:1070
 msgid "Primary key?"
 msgstr "És clau primària?"
 
-#: providers/default/gda-default-provider.c:367
-#: providers/mysql/gda-mysql-provider.c:947
+#: providers/default/gda-default-provider.c:461
+#: providers/mysql/gda-mysql-provider.c:1017
 #: providers/oracle/gda-oracle-provider.c:1062
-#: providers/postgres/gda-postgres-provider.c:841
+#: providers/postgres/gda-postgres-provider.c:1071
 msgid "Unique index?"
 msgstr "L'índex és exclusiu?"
 
-#: providers/default/gda-default-provider.c:368
-#: providers/mysql/gda-mysql-provider.c:948
+#: providers/default/gda-default-provider.c:462
+#: providers/mysql/gda-mysql-provider.c:1018
 #: providers/oracle/gda-oracle-provider.c:1063
-#: providers/postgres/gda-postgres-provider.c:842
+#: providers/postgres/gda-postgres-provider.c:1072
 msgid "References"
 msgstr "Referències"
 
-#: providers/default/gda-default-provider.c:378
-#: providers/default/gda-default-provider.c:384
+#: providers/default/gda-default-provider.c:472
+#: providers/default/gda-default-provider.c:478
 msgid "Invalid argument"
 msgstr "Argument invàlid"
 
-#: providers/default/gda-default-provider.c:391
+#: providers/default/gda-default-provider.c:485
 #, c-format
 msgid "Table %s not found"
 msgstr "La taula %s no s'ha trobat"
 
-#: providers/default/gda-default-provider.c:416
+#: providers/default/gda-default-provider.c:510
 msgid "Could not get description for column"
 msgstr "No s'ha pogut recuperar el descriptor per la columna"
 
@@ -265,20 +291,179 @@ msgstr "No s'ha pogut recuperar el descriptor per la columna"
 msgid "GDA default provider, based on the libgda XML format"
 msgstr "Proveïdor GDA per defecte, basat en el format XML de libgda"
 
-#: providers/mdb/gda-mdb-provider.c:176
-msgid "A database FILENAME must be specified in the connection_string"
-msgstr "La base de dades FILENAME ha de ser especificada a la cadena de connexió (connection_string)"
+#: providers/freetds/gda-freetds-provider.c:174
+msgid ""
+"Connection aborted. You must provide at least a host, username and password "
+"using DSN 'QUERY=;USER=;PASSWORD='."
+msgstr ""
 
-#: providers/mdb/gda-mdb-provider.c:184
+#: providers/freetds/gda-freetds-provider.c:187
+msgid "Error creating message container."
+msgstr ""
+
+#: providers/freetds/gda-freetds-provider.c:194
+msgid "Error creating error container."
+msgstr ""
+
+#: providers/freetds/gda-freetds-provider.c:229
+msgid "Establishing connection failed."
+msgstr ""
+
+#: providers/freetds/gda-freetds-provider.c:237
+#, fuzzy
+msgid "Failed getting connection info."
+msgstr "Obre una connexió nova "
+
+#: providers/freetds/gda-freetds-provider.c:542
+#: providers/oracle/gda-oracle-provider.c:1655
+#, fuzzy
+msgid "Procedures"
+msgstr "Procediments"
+
+#: providers/freetds/gda-freetds-provider.c:550
+#: providers/oracle/gda-oracle-provider.c:1663
+msgid "Tables"
+msgstr "Taules"
+
+#: providers/freetds/gda-freetds-provider.c:556
+#: providers/postgres/gda-postgres-provider.c:920
+msgid "Types"
+msgstr "Tipus"
+
+#. Set it here instead of the SQL query to allow i18n
+#: providers/freetds/gda-freetds-provider.c:562
+#: providers/oracle/gda-oracle-provider.c:1459
+#: providers/postgres/gda-postgres-provider.c:1444 testing/client.c:128
+#, fuzzy
+msgid "Users"
+msgstr "Usuaris"
+
+#: providers/freetds/gda-freetds-provider.c:568
+#: providers/oracle/gda-oracle-provider.c:1671 testing/client.c:125
+msgid "Views"
+msgstr "Vistes"
+
+#: providers/freetds/gda-freetds-provider.c:645
+#, fuzzy
+msgid "Field Name"
+msgstr "Nom del camp"
+
+#: providers/freetds/gda-freetds-provider.c:647
+#, fuzzy
+msgid "Data Type"
+msgstr "Tipus de Dada"
+
+#: providers/freetds/gda-freetds-provider.c:651
+#, fuzzy
+msgid "Precision"
+msgstr "Versió"
+
+#: providers/freetds/gda-freetds-provider.c:655
+#, fuzzy
+msgid "Identity"
+msgstr "Identitat de l'usuari"
+
+#: providers/freetds/gda-freetds-provider.c:657
+#, fuzzy
+msgid "Nullable"
+msgstr "taula"
+
+#: providers/freetds/gda-freetds-provider.c:659
+#, fuzzy
+msgid "Domain"
+msgstr "Ordre"
+
+#: providers/freetds/gda-freetds-provider.c:661
+#, fuzzy
+msgid "Printfmt"
+msgstr "Imprimeix"
+
+#: providers/freetds/gda-freetds-provider.c:780
+#, c-format
+msgid ""
+"Msg %d, Level %d, State %d, Server %s, Line %d\n"
+"%s\n"
+msgstr ""
+
+#: providers/freetds/gda-freetds-provider.c:798 providers/freetds/utils.c:45
+#: providers/oracle/utils.c:72 providers/postgres/utils.c:52
+msgid "Not available"
+msgstr "No disponible"
+
+#: providers/freetds/gda-freetds-recordset.c:356
+msgid "Error processing result rows.\n"
+msgstr ""
+
+#: providers/freetds/gda-freetds-recordset.c:364
+msgid "Unexpected freetds return code in tds_process_row_tokens().\n"
+msgstr ""
+
+#: providers/freetds/gda-freetds-recordset.c:373
+msgid "Error processing results.\n"
+msgstr ""
+
+#: providers/freetds/gda-freetds-recordset.c:380
+msgid "Unexpected freetds return code in tds_process_result_tokens\n"
+msgstr ""
+
+#: providers/freetds/libmain.c:39
+#, fuzzy
+msgid "GDA provider for TDS-based databases (using FreeTDS)"
+msgstr "Proveïdor GDA per bases de dades Oracle"
+
+#: providers/freetds/utils.c:41 providers/oracle/utils.c:67
+#: providers/postgres/utils.c:47
+msgid "NO DESCRIPTION"
+msgstr "Sense Descripció"
+
+#: providers/ibmdb2/gda-ibmdb2-provider.c:142
+#: providers/ibmdb2/gda-ibmdb2-provider.c:154
+#, fuzzy
+msgid "Could not allocate environment handle."
+msgstr "No s'ha pogut ser assignat el manegador d'ordre d'Oracle"
+
+#: providers/ibmdb2/gda-ibmdb2-provider.c:165
+#, fuzzy
+msgid "Could not set autocommit to off.\n"
+msgstr "No és pot carregar el fitxer '%s'"
+
+#: providers/ibmdb2/gda-ibmdb2-provider.c:179
+#, fuzzy
+msgid "Could not allocate environment handle.\n"
+msgstr "No s'ha pogut ser assignat el manegador d'ordre d'Oracle"
+
+#. GetInfo is needed for obtaining database name
+#. is needed for tables schema
+#: providers/ibmdb2/gda-ibmdb2-provider.c:191
+msgid "SQLGetInfo is unsupported. Hence IBM DB2 Provider will not work.\n"
+msgstr ""
+
+#: providers/ibmdb2/gda-ibmdb2-provider.c:205
+msgid "SQLGetFunctions gave unexpected return. Connection terminated.\n"
+msgstr ""
+
+#: providers/ibmdb2/libmain.c:39
+#, fuzzy
+msgid "GDA provider for IBMDB2"
+msgstr "Proveïdor GDA per Bases de Dades MySQL"
+
+#: providers/mdb/gda-mdb-provider.c:188
+msgid "A database FILENAME must be specified in the connection_string"
+msgstr ""
+"La base de dades FILENAME ha de ser especificada a la cadena de connexió "
+"(connection_string)"
+
+#: providers/mdb/gda-mdb-provider.c:197
 #, c-format
 msgid "Could not open file %s"
 msgstr "No s'ha pogut obrir el fitxer %s"
 
-#: providers/mdb/gda-mdb-provider.c:206 providers/mdb/gda-mdb-provider.c:308
+#: providers/mdb/gda-mdb-provider.c:219 providers/mdb/gda-mdb-provider.c:247
+#: providers/mdb/gda-mdb-provider.c:348
 msgid "Invalid MDB handle"
 msgstr "El Manegador MDB és invàlid"
 
-#: providers/mdb/gda-mdb-provider.c:273
+#: providers/mdb/gda-mdb-provider.c:313
 msgid "Table Name"
 msgstr "Nom de la Taula"
 
@@ -286,56 +471,71 @@ msgstr "Nom de la Taula"
 msgid "GDA provider for MS Access files"
 msgstr "Proveïdor GDA per fitxers MS Access"
 
-#: providers/mysql/gda-mysql-provider.c:198
-msgid "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
-msgstr "No pots donar un UNIX_SOCKET si a la vegada estàs donant un HOST o un PORT."
+#: providers/mysql/gda-mysql-provider.c:215
+msgid ""
+"You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
+msgstr ""
+"No pots donar un UNIX_SOCKET si a la vegada estàs donant un HOST o un PORT."
 
-#: providers/mysql/gda-mysql-provider.c:269
-#: providers/mysql/gda-mysql-provider.c:319
-#: providers/mysql/gda-mysql-provider.c:342
-#: providers/mysql/gda-mysql-provider.c:372
-#: providers/mysql/gda-mysql-provider.c:401
-#: providers/mysql/gda-mysql-provider.c:466
-#: providers/mysql/gda-mysql-provider.c:494
-#: providers/mysql/gda-mysql-provider.c:522
+#: providers/mysql/gda-mysql-provider.c:290
+#: providers/mysql/gda-mysql-provider.c:1027
+#: providers/mysql/gda-mysql-recordset.c:59
+#: providers/mysql/gda-mysql-recordset.c:175
+msgid "Invalid MySQL handle"
+msgstr "Manegador MySQL invàlid"
+
+#: providers/mysql/gda-mysql-provider.c:305
+#: providers/mysql/gda-mysql-provider.c:355
+#: providers/mysql/gda-mysql-provider.c:378
+#: providers/mysql/gda-mysql-provider.c:409
+#: providers/mysql/gda-mysql-provider.c:441
+#: providers/mysql/gda-mysql-provider.c:509
+#: providers/mysql/gda-mysql-provider.c:561
+#: providers/mysql/gda-mysql-provider.c:589
 msgid "Invalid MYSQL handle"
 msgstr "Manegador MYSQL invàlid"
 
-#. 2nd, the owner
-#: providers/mysql/gda-mysql-provider.c:779
-msgid "Unknown"
-msgstr "Desconegut"
-
-#: providers/mysql/gda-mysql-provider.c:846
+#: providers/mysql/gda-mysql-provider.c:913
 #: providers/oracle/gda-oracle-provider.c:1563
 #, fuzzy
 msgid "Type"
 msgstr "Tipus"
 
-#: providers/mysql/gda-mysql-provider.c:847
+#: providers/mysql/gda-mysql-provider.c:914
+#: providers/postgres/gda-postgres-provider.c:688
+#: providers/postgres/gda-postgres-provider.c:902
+#: providers/postgres/gda-postgres-provider.c:921
+#: providers/postgres/gda-postgres-provider.c:967
+#: providers/postgres/gda-postgres-provider.c:1025
+#: providers/postgres/gda-postgres-provider.c:1471
 msgid "Owner"
 msgstr "Propietari"
 
-#: providers/mysql/gda-mysql-provider.c:848
+#: providers/mysql/gda-mysql-provider.c:915
+#: providers/postgres/gda-postgres-provider.c:689
+#: providers/postgres/gda-postgres-provider.c:922
+#: providers/postgres/gda-postgres-provider.c:968
+#: providers/postgres/gda-postgres-provider.c:1026
+#: providers/postgres/gda-postgres-provider.c:1472
 msgid "Comments"
 msgstr "Commentaris"
 
-#: providers/mysql/gda-mysql-provider.c:849
+#: providers/mysql/gda-mysql-provider.c:916
+#: providers/postgres/gda-postgres-provider.c:923
 msgid "GDA type"
 msgstr "Tipus GDA"
 
-#: providers/mysql/gda-mysql-provider.c:956
-#: providers/mysql/gda-mysql-recordset.c:58
-#: providers/mysql/gda-mysql-recordset.c:174
-msgid "Invalid MySQL handle"
-msgstr "Manegador MySQL invàlid"
+#: providers/mysql/gda-mysql-provider.c:1019
+#: providers/postgres/gda-postgres-provider.c:1073
+msgid "Default value"
+msgstr ""
 
-#: providers/mysql/gda-mysql-provider.c:965
-#: providers/mysql/gda-mysql-provider.c:973
-msgid "You need to specify the name of the table"
-msgstr "Necessites especificar el nom de la taula"
+#: providers/mysql/gda-mysql-provider.c:1036
+#: providers/mysql/gda-mysql-provider.c:1044
+msgid "Table name is needed but none specified in parameter list"
+msgstr ""
 
-#: providers/mysql/gda-mysql-recordset.c:69
+#: providers/mysql/gda-mysql-recordset.c:70
 #: providers/postgres/gda-postgres-recordset.c:184
 #: providers/postgres/gda-postgres-recordset.c:224
 #: providers/sqlite/gda-sqlite-recordset.c:168
@@ -343,22 +543,22 @@ msgstr "Necessites especificar el nom de la taula"
 msgid "Row number out of range"
 msgstr "Número de fila fora de rang"
 
-#: providers/mysql/gda-mysql-recordset.c:281
+#: providers/mysql/gda-mysql-recordset.c:289
 #: providers/oracle/gda-oracle-recordset.c:467
 msgid "Attempt to insert a row with an invalid number of columns"
 msgstr "S'ha intentat inserir una fila amb un número invàlid de columnes"
 
-#: providers/mysql/gda-mysql-recordset.c:296
+#: providers/mysql/gda-mysql-recordset.c:304
 #: providers/oracle/gda-oracle-recordset.c:482
 msgid "Could not retrieve column's information"
 msgstr "No s'ha pogut recuperar la informació de la columna"
 
-#: providers/mysql/gda-mysql-recordset.c:314
+#: providers/mysql/gda-mysql-recordset.c:322
 #: providers/oracle/gda-oracle-recordset.c:500
 msgid "Could not retrieve column's value"
 msgstr "No s'ha pogut recuperar el valor de la columna"
 
-#: providers/mysql/libmain.c:36
+#: providers/mysql/libmain.c:41
 msgid "GDA provider for MySQL databases"
 msgstr "Proveïdor GDA per Bases de Dades MySQL"
 
@@ -396,7 +596,9 @@ msgstr "No es pot connectar amb el servidor Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:297
 msgid "Could not set the Oracle server attribute in the service context"
-msgstr "No s'han pogut definir els atributs del servidor Oracle en el context del servei"
+msgstr ""
+"No s'han pogut definir els atributs del servidor Oracle en el context del "
+"servei"
 
 #: providers/oracle/gda-oracle-provider.c:313
 msgid "Could not set the Oracle username attribute"
@@ -455,7 +657,9 @@ msgstr "No s'ha pogut recuperar el número de columnes del conjunt de resultats"
 
 #: providers/oracle/gda-oracle-provider.c:591
 msgid "Could not get the parameter descripter in the result set"
-msgstr "No s'ha pogut recuperar el descriptor de paràmetres en el conjunt de resultats"
+msgstr ""
+"No s'ha pogut recuperar el descriptor de paràmetres en el conjunt de "
+"resultats"
 
 #: providers/oracle/gda-oracle-provider.c:603
 msgid "Could not get the column name in the result set"
@@ -537,46 +741,20 @@ msgid "Could not get the Oracle field nullable attribute"
 msgstr "No s'ha pogut recuperar l'atribut de nul·labilitat del camp"
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/oracle/gda-oracle-provider.c:1459
-#: providers/postgres/gda-postgres-provider.c:1203 testing/client.c:123
-#, fuzzy
-msgid "Users"
-msgstr "Usuaris"
-
-#. Set it here instead of the SQL query to allow i18n
 #: providers/oracle/gda-oracle-provider.c:1651
-#: providers/postgres/gda-postgres-provider.c:773 testing/client.c:121
+#: providers/postgres/gda-postgres-provider.c:994 testing/client.c:126
 msgid "Indexes"
 msgstr "Índexs"
 
-#: providers/oracle/gda-oracle-provider.c:1655
-#, fuzzy
-msgid "Procedures"
-msgstr "Procediments"
-
-#. Set it here instead of the SQL query to allow i18n
-#: providers/oracle/gda-oracle-provider.c:1659
-#: providers/postgres/gda-postgres-provider.c:1231 testing/client.c:124
+#: providers/oracle/gda-oracle-provider.c:1659 testing/client.c:129
 msgid "Sequences"
 msgstr "Seqüències"
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/oracle/gda-oracle-provider.c:1663
-#: providers/postgres/gda-postgres-provider.c:678
-msgid "Tables"
-msgstr "Taules"
-
-#. Set it here instead of the SQL query to allow i18n
 #: providers/oracle/gda-oracle-provider.c:1667
-#: providers/postgres/gda-postgres-provider.c:824 testing/client.c:125
+#: providers/postgres/gda-postgres-provider.c:1054 testing/client.c:130
 msgid "Triggers"
 msgstr "Gallets"
-
-#. Set it here instead of the SQL query to allow i18n
-#: providers/oracle/gda-oracle-provider.c:1671
-#: providers/postgres/gda-postgres-provider.c:748 testing/client.c:120
-msgid "Views"
-msgstr "Vistes"
 
 #: providers/oracle/gda-oracle-recordset.c:73
 msgid "Could not get the Oracle parameter"
@@ -631,43 +809,86 @@ msgstr "No s'ha pogut agafar una columna"
 msgid "GDA provider for Oracle databases"
 msgstr "Proveïdor GDA per bases de dades Oracle"
 
-#: providers/oracle/utils.c:67 providers/postgres/utils.c:47
-msgid "NO DESCRIPTION"
-msgstr "Sense Descripció"
-
-#: providers/oracle/utils.c:72 providers/postgres/utils.c:52
-msgid "Not available"
-msgstr "No disponible"
-
-#: providers/postgres/gda-postgres-provider.c:388
-#: providers/postgres/gda-postgres-provider.c:459
-#: providers/postgres/gda-postgres-provider.c:593
+#: providers/postgres/gda-postgres-provider.c:413
+#: providers/postgres/gda-postgres-provider.c:430
+#: providers/postgres/gda-postgres-provider.c:501
+#: providers/postgres/gda-postgres-provider.c:635
 #: providers/postgres/gda-postgres-recordset.c:175
 #: providers/postgres/gda-postgres-recordset.c:215
 #: providers/postgres/gda-postgres-recordset.c:257
 msgid "Invalid PostgreSQL handle"
 msgstr "Manegador PostgreSQL invàlid"
 
-#: providers/postgres/gda-postgres-provider.c:717
-msgid "Types"
+#: providers/postgres/gda-postgres-provider.c:686
+#, fuzzy
+msgid "Procedure"
+msgstr "Procediments"
+
+#: providers/postgres/gda-postgres-provider.c:687
+#: providers/postgres/gda-postgres-provider.c:1024
+msgid "Id"
+msgstr ""
+
+#: providers/postgres/gda-postgres-provider.c:690
+#, fuzzy
+msgid "Return type"
+msgstr "Tipus de Dada"
+
+#: providers/postgres/gda-postgres-provider.c:691
+msgid "Nb args"
+msgstr ""
+
+#: providers/postgres/gda-postgres-provider.c:692
+#, fuzzy
+msgid "Args types"
+msgstr "Tipus GDA"
+
+#: providers/postgres/gda-postgres-provider.c:693
+#: providers/postgres/gda-postgres-provider.c:904
+#: providers/postgres/gda-postgres-provider.c:969
+#: providers/postgres/gda-postgres-provider.c:1029
+#: providers/postgres/gda-postgres-provider.c:1473
+#, fuzzy
+msgid "Definition"
+msgstr "Descripció"
+
+#. Set it here instead of the SQL query to allow i18n
+#: providers/postgres/gda-postgres-provider.c:901
+#: providers/postgres/gda-postgres-provider.c:1510
+#, fuzzy
+msgid "Table"
+msgstr "Taules"
+
+#. Set it here instead of the SQL query to allow i18n
+#: providers/postgres/gda-postgres-provider.c:966
+msgid "View"
+msgstr "Visualitza"
+
+#. Set it here instead of the SQL query to allow i18n
+#: providers/postgres/gda-postgres-provider.c:1023
+#, fuzzy
+msgid "Aggregate"
+msgstr "Afegits"
+
+#: providers/postgres/gda-postgres-provider.c:1027
+#, fuzzy
+msgid "OutType"
+msgstr "Tipus"
+
+#: providers/postgres/gda-postgres-provider.c:1028
+#, fuzzy
+msgid "InType"
 msgstr "Tipus"
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:799 testing/client.c:122
-msgid "Aggregates"
-msgstr "Afegits"
-
-#. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:1178 testing/client.c:116
+#: providers/postgres/gda-postgres-provider.c:1419 testing/client.c:121
 #, fuzzy
 msgid "Databases"
 msgstr "Base de dades"
 
-#: providers/postgres/gda-postgres-provider.c:1271
-msgid "Table name"
-msgstr "Nom de la Taula"
-
-#: providers/postgres/gda-postgres-provider.c:1272
+#. Set it here instead of the SQL query to allow i18n
+#: providers/postgres/gda-postgres-provider.c:1470
+#: providers/postgres/gda-postgres-provider.c:1511
 #, fuzzy
 msgid "Sequence"
 msgstr "Seqüència"
@@ -705,7 +926,8 @@ msgstr "Només està permesa una base de dades per connexió"
 
 #: providers/sqlite/gda-sqlite-provider.c:346
 msgid "To remove a SQLite database you should remove the database file by hand"
-msgstr "Per eliminar una base de dades SQLite n'has d'esborrar el fitxer manualment"
+msgstr ""
+"Per eliminar una base de dades SQLite n'has d'esborrar el fitxer manualment"
 
 #: providers/sqlite/libmain.c:41
 msgid "GDA provider for SQLite databases"
@@ -724,123 +946,135 @@ msgstr "No s'ha pogut analitzar el document XML"
 msgid "Could not get file from %s"
 msgstr "No s'ha pogut recuperar el fitxer des de %s"
 
-#: testing/client.c:39
+#: testing/client.c:41
 msgid "\t\tNONE\n"
 msgstr "\t\tCAP\n"
 
-#: testing/client.c:78
+#: testing/client.c:81
 #, c-format
 msgid "** ERROR: could not open connection to %s\n"
 msgstr "** ERROR:  No s'ha pogut obrir la connexió amb %s\n"
 
 #. show provider features
-#: testing/client.c:83
+#: testing/client.c:86
 msgid "\tProvider capabilities...\n"
 msgstr "\tCaracterístiques del .proveïdor..\n"
 
-#: testing/client.c:84
+#: testing/client.c:87
 #, c-format
 msgid "\t\tAggregates: %s\n"
 msgstr "\t\tAfegits: %s\n"
 
-#: testing/client.c:86 testing/client.c:89 testing/client.c:92
-#: testing/client.c:95 testing/client.c:98 testing/client.c:101
-#: testing/client.c:104 testing/client.c:107 testing/client.c:110
-#: testing/client.c:113
+#: testing/client.c:89 testing/client.c:92 testing/client.c:95
+#: testing/client.c:98 testing/client.c:101 testing/client.c:104
+#: testing/client.c:107 testing/client.c:110 testing/client.c:113
+#: testing/client.c:116
 msgid "Supported"
 msgstr "Suportat"
 
-#: testing/client.c:86 testing/client.c:89 testing/client.c:92
-#: testing/client.c:95 testing/client.c:98 testing/client.c:101
-#: testing/client.c:104 testing/client.c:107 testing/client.c:110
-#: testing/client.c:113
+#: testing/client.c:89 testing/client.c:92 testing/client.c:95
+#: testing/client.c:98 testing/client.c:101 testing/client.c:104
+#: testing/client.c:107 testing/client.c:110 testing/client.c:113
+#: testing/client.c:116
 msgid "Not supported"
 msgstr "No suportat"
 
-#: testing/client.c:87
+#: testing/client.c:90
 #, c-format
 msgid "\t\tIndexes: %s\n"
 msgstr "Índexs\t\t: %s\n"
 
-#: testing/client.c:90
+#: testing/client.c:93
 #, c-format
 msgid "\t\tProcedures: %s\n"
 msgstr "\t\tProcediments: %s\n"
 
-#: testing/client.c:93
+#: testing/client.c:96
 #, c-format
 msgid "\t\tSequences: %s\n"
 msgstr "\t\tSeqüències: %s\n"
 
-#: testing/client.c:96
+#: testing/client.c:99
 #, c-format
 msgid "\t\tSQL: %s\n"
 msgstr "\t\tSQL: %s\n"
 
-#: testing/client.c:99
+#: testing/client.c:102
 #, c-format
 msgid "\t\tTransactions: %s\n"
 msgstr "\t\tTransaccions: %s\n"
 
-#: testing/client.c:102
+#: testing/client.c:105
 #, c-format
 msgid "\t\tTriggers: %s\n"
 msgstr "\t\tTriggers: %s\n"
 
-#: testing/client.c:105
+#: testing/client.c:108
 #, c-format
 msgid "\t\tUsers: %s\n"
 msgstr "\t\tUsuaris: %s\n"
 
-#: testing/client.c:108
+#: testing/client.c:111
 #, c-format
 msgid "\t\tViews: %s\n"
 msgstr "\t\tVistes: %s\n"
 
-#: testing/client.c:111
+#: testing/client.c:114
 #, c-format
 msgid "\t\tXML queries: %s\n"
 msgstr "\t\tConsultes XML: %s\n"
 
-#: testing/client.c:117
+#. show connection schemas
+#: testing/client.c:119
+#, c-format
+msgid ""
+"\n"
+"\tProvider reports version: %s\n"
+"\n"
+msgstr ""
+
+#: testing/client.c:122
 msgid "Stored procedures"
 msgstr "Procediments emmagatzemats"
 
-#: testing/client.c:118
+#: testing/client.c:123
 msgid "Connection Tables"
 msgstr "Taules de connexió"
 
-#: testing/client.c:119
+#: testing/client.c:124
 msgid "Available types"
 msgstr "Tipus disponibles"
 
-#. test transactions
-#: testing/client.c:128 testing/client.c:136
+#: testing/client.c:127
+msgid "Aggregates"
+msgstr "Afegits"
+
+#: testing/client.c:135 testing/client.c:143
 msgid "\tStarting transaction..."
 msgstr "\tComença la transacció..."
 
-#: testing/client.c:130 testing/client.c:134 testing/client.c:138
-#: testing/client.c:142
+#: testing/client.c:137 testing/client.c:141 testing/client.c:145
+#: testing/client.c:149
 msgid "Error"
 msgstr "Error"
 
-#: testing/client.c:132
+#: testing/client.c:139
 msgid "\tFinishing transaction..."
 msgstr "\tFinalitzant la transacció..."
 
-#: testing/client.c:140
+#: testing/client.c:147
 msgid "\tRolling back transaction..."
 msgstr "\tTirant enrera la transacció..."
 
-#: testing/client.c:162
+#: testing/client.c:173
 msgid "Testing GDA client API"
 msgstr "Testant l'API del client GDA"
 
-#: testing/client.c:171
+#: testing/client.c:182
 msgid "** ERROR: gda_config_get_data_source_list returned a NULL item\n"
 msgstr "** ERROR: gda_config_get_data_source_list ha tornat un element NULL\n"
 
-#: testing/client.c:175
+#: testing/client.c:186
 #, c-format
 msgid " Data source = %s, User = %s\n"
 msgstr "Origen de les dades = %s, Usuari = %s\n"
@@ -867,6 +1101,15 @@ msgstr "\tDescripció = %s\n"
 #: testing/config.c:93
 msgid "\tgda_params ="
 msgstr "\tgda_params ="
+
+#~ msgid "Unknown"
+#~ msgstr "Desconegut"
+
+#~ msgid "You need to specify the name of the table"
+#~ msgstr "Necessites especificar el nom de la taula"
+
+#~ msgid "Table name"
+#~ msgstr "Nom de la Taula"
 
 #, fuzzy
 #~ msgid "An error occurred during fetch"
@@ -1158,10 +1401,6 @@ msgstr "\tgda_params ="
 #~ msgstr "Codi d'error %ld"
 
 #, fuzzy
-#~ msgid "attempting reconnection"
-#~ msgstr "Obre una connexió nova "
-
-#, fuzzy
 #~ msgid "Reconnected to '%s'"
 #~ msgstr "Connectat a %s"
 
@@ -1187,10 +1426,6 @@ msgstr "\tgda_params ="
 #, fuzzy
 #~ msgid "%s: use command failed"
 #~ msgstr "Ordre fallida"
-
-#, fuzzy
-#~ msgid "Could not set locale to '%s'"
-#~ msgstr "No és pot carregar el fitxer '%s'"
 
 #, fuzzy
 #~ msgid "Could not configure locale to be '%s'"
@@ -1447,9 +1682,6 @@ msgstr "\tgda_params ="
 #~ msgid "Trace File"
 #~ msgstr "Fitxer de seguiment"
 
-#~ msgid "View"
-#~ msgstr "Visualitza"
-
 #~ msgid "New"
 #~ msgstr "Nou"
 
@@ -1503,9 +1735,6 @@ msgstr "\tgda_params ="
 #~ msgid "Save file with another name"
 #~ msgstr "Desa el fitxer amb un altre nom"
 
-#~ msgid "Print"
-#~ msgstr "Imprimeix"
-
 #~ msgid "Print current file"
 #~ msgstr "Imprimeix el fitxer actual"
 
@@ -1532,9 +1761,6 @@ msgstr "\tgda_params ="
 
 #~ msgid "Run Command"
 #~ msgstr "Executa l'ordre"
-
-#~ msgid "Command"
-#~ msgstr "Ordre"
 
 #~ msgid "Directory"
 #~ msgstr "Directori"
@@ -2127,10 +2353,6 @@ msgstr "\tgda_params ="
 #, fuzzy
 #~ msgid "Rollback executed successfully"
 #~ msgstr "Rollback executat correctament"
-
-#, fuzzy
-#~ msgid "Version"
-#~ msgstr "Versió"
 
 #, fuzzy
 #~ msgid "Open Connection..."
@@ -2744,9 +2966,6 @@ msgstr "\tgda_params ="
 #~ msgid "new instance %p created"
 #~ msgstr "nova instancia %p creada"
 
-#~ msgid "User identity"
-#~ msgstr "Identitat de l'usuari"
-
 #~ msgid "User passord"
 #~ msgstr "Contrasenya de l'usuari"
 
@@ -2906,10 +3125,6 @@ msgstr "\tgda_params ="
 #~ msgstr "PROVEIDOR"
 
 #, fuzzy
-#~ msgid "table"
-#~ msgstr "taula"
-
-#, fuzzy
 #~ msgid "TABLENAME"
 #~ msgstr "NOM DE LA TAULA"
 
@@ -2945,4 +3160,3 @@ msgstr "\tgda_params ="
 
 #~ msgid "Reload config drivers"
 #~ msgstr "Torna a carregar els controladors de la configuració"
-

@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda HEAD\n"
-"POT-Creation-Date: 2002-09-02 12:06+0200\n"
+"POT-Creation-Date: 2002-09-09 22:11+0200\n"
 "PO-Revision-Date: 2002-09-02 12:05+0100\n"
 "Last-Translator: Christian Neumair <christian-neumair@web.de>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
@@ -443,22 +443,23 @@ msgstr ""
 msgid "GDA provider for IBMDB2"
 msgstr "GDA-Treiber IBMDB2"
 
-#: providers/mdb/gda-mdb-provider.c:176
+#: providers/mdb/gda-mdb-provider.c:188
 msgid "A database FILENAME must be specified in the connection_string"
 msgstr ""
 "In der Verbindungszeichenkette muß der Dateiname einer Datenbank angegeben "
 "werden."
 
-#: providers/mdb/gda-mdb-provider.c:184
+#: providers/mdb/gda-mdb-provider.c:197
 #, c-format
 msgid "Could not open file %s"
 msgstr "Datei %s konnte nicht geöffnet werden"
 
-#: providers/mdb/gda-mdb-provider.c:206 providers/mdb/gda-mdb-provider.c:308
+#: providers/mdb/gda-mdb-provider.c:219 providers/mdb/gda-mdb-provider.c:247
+#: providers/mdb/gda-mdb-provider.c:348
 msgid "Invalid MDB handle"
 msgstr "Ungültiger MDB-Handle"
 
-#: providers/mdb/gda-mdb-provider.c:273
+#: providers/mdb/gda-mdb-provider.c:313
 msgid "Table Name"
 msgstr "Tabellenname"
 

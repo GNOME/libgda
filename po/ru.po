@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda-2\n"
-"POT-Creation-Date: 2002-09-09 16:28+0400\n"
+"POT-Creation-Date: 2002-09-09 22:11+0200\n"
 "PO-Revision-Date: 2002-09-09 17:23+0400\n"
 "Last-Translator: Dmitry G. Mastrukov <dmitry@taurussoft.org>\n"
 "Language-Team: Russian <gnome-cyr@gnome.org>\n"
@@ -302,8 +302,8 @@ msgid ""
 "Connection aborted. You must provide at least a host, username and password "
 "using DSN 'QUERY=;USER=;PASSWORD='."
 msgstr ""
-"Соединение прервано. Необходимо указать по крайней мере узел, имя пользователя "
-"и пароль, используя строку DSN 'QUERY=;USER=;PASSWORD='."
+"Соединение прервано. Необходимо указать по крайней мере узел, имя "
+"пользователя и пароль, используя строку DSN 'QUERY=;USER=;PASSWORD='."
 
 #: providers/freetds/gda-freetds-provider.c:187
 msgid "Error creating message container."
@@ -396,7 +396,8 @@ msgstr "Ошибка при обработке результата.\n"
 
 #: providers/freetds/gda-freetds-recordset.c:364
 msgid "Unexpected freetds return code in tds_process_row_tokens().\n"
-msgstr "Неожиданный код возврата от freetds в функции tds_process_row_tokens().\n"
+msgstr ""
+"Неожиданный код возврата от freetds в функции tds_process_row_tokens().\n"
 
 #: providers/freetds/gda-freetds-recordset.c:373
 msgid "Error processing results.\n"
@@ -433,12 +434,14 @@ msgstr "Не удалось разместить обработчик окруж
 #. is needed for tables schema
 #: providers/ibmdb2/gda-ibmdb2-provider.c:191
 msgid "SQLGetInfo is unsupported. Hence IBM DB2 Provider will not work.\n"
-msgstr "Фунеция SQLGetInfo не поддерживается. Следовательно, провайдер IBM DB2 " 
-"не будет работать.\n"
+msgstr ""
+"Фунеция SQLGetInfo не поддерживается. Следовательно, провайдер IBM DB2 не "
+"будет работать.\n"
 
 #: providers/ibmdb2/gda-ibmdb2-provider.c:205
 msgid "SQLGetFunctions gave unexpected return. Connection terminated.\n"
-msgstr "Фунеция SQLGetInfo вернула неожиданное значение. Соединение завершено.\n"
+msgstr ""
+"Фунеция SQLGetInfo вернула неожиданное значение. Соединение завершено.\n"
 
 #: providers/ibmdb2/libmain.c:39
 msgid "GDA provider for IBMDB2"

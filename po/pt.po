@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 2.0\n"
-"POT-Creation-Date: 2002-08-25 23:09+0100\n"
+"POT-Creation-Date: 2002-09-09 22:11+0200\n"
 "PO-Revision-Date: 2002-08-25 23:19+0100\n"
 "Last-Translator: Duarte Loreto <happyguy_pt@hotmail.com>\n"
 "Language-Team: Portuguese <gnome_pt@yahoogroups.com>\n"
@@ -42,10 +42,10 @@ msgid "Temporary data source created by libgda. Don't remove it"
 msgstr "Fonte de dados temporária criada pelo libgda. Não a remova"
 
 #. gda_server_recordset_model_set_field_defined_size (recset, 0, 256);
-#: libgda/gda-config.c:1268 providers/default/gda-default-provider.c:512
-#: providers/default/gda-default-provider.c:534
-#: providers/default/gda-default-provider.c:571
-#: providers/mysql/gda-mysql-provider.c:645
+#: libgda/gda-config.c:1268 providers/default/gda-default-provider.c:557
+#: providers/default/gda-default-provider.c:579
+#: providers/default/gda-default-provider.c:616
+#: providers/mysql/gda-mysql-provider.c:651
 #: providers/oracle/gda-oracle-provider.c:999
 msgid "Name"
 msgstr "Nome"
@@ -144,45 +144,55 @@ msgstr "Erro ao ler %s: %s"
 msgid "Could not create file %s"
 msgstr "Incapaz de criar ficheiro %s"
 
-#: libgda/gda-value.c:1425
+#: libgda/gda-value.c:1454
 msgid "TRUE"
 msgstr "VERDADEIRO"
 
-#: libgda/gda-value.c:1427
+#: libgda/gda-value.c:1456
 msgid "FALSE"
 msgstr "FALSO"
 
-#: libgda/gda-xml-database.c:230
+#: libgda/gda-xml-database.c:236
 #, c-format
 msgid "Could not load file at %s"
 msgstr "Incapaz de ler ficheiro em %s"
 
-#: libgda/gda-xml-database.c:239
+#: libgda/gda-xml-database.c:245
 #, c-format
 msgid "Could not parse file at %s"
 msgstr "Incapaz de parsear ficheiro em %s"
 
-#: libgda/gda-xml-database.c:249
+#: libgda/gda-xml-database.c:255
 #, c-format
 msgid "Invalid XML database file '%s'"
 msgstr "Ficheiro XML de base de dados '%s' inválido"
 
-#: libgda/gda-xml-database.c:468 libgda/gda-xml-database.c:504
-#: libgda/gda-xml-database.c:545
+#: libgda/gda-xml-database.c:407
+#, fuzzy, c-format
+msgid "Could not create a XML node from table %s"
+msgstr "Incapaz de criar ficheiro %s"
+
+#: libgda/gda-xml-database.c:425
+#, fuzzy
+msgid "Could not dump XML file to memory"
+msgstr "Incapaz de ler ficheiro em %s"
+
+#: libgda/gda-xml-database.c:518 libgda/gda-xml-database.c:554
+#: libgda/gda-xml-database.c:597
 #, c-format
 msgid "Table %s already exists"
 msgstr "Tabela %s já existe"
 
-#: libgda/gda-xml-database.c:538
+#: libgda/gda-xml-database.c:590
 msgid "Invalid node"
 msgstr "Nó inválido"
 
-#: libgda/gda-xml-database.c:570
+#: libgda/gda-xml-database.c:632
 #, c-format
 msgid "Duplicated <data> node for table %s"
 msgstr "Nó <data> duplicado para a tabela %s"
 
-#: libgda/gda-xml-database.c:577
+#: libgda/gda-xml-database.c:639
 msgid "Invalid XML node"
 msgstr "Nó XML inválido"
 
@@ -195,82 +205,84 @@ msgstr ""
 "uma base de dados."
 
 #: providers/default/gda-default-provider.c:253
+#: providers/default/gda-default-provider.c:268
+#: providers/default/gda-default-provider.c:295
 msgid "Invalid internal handle"
 msgstr "Handle interna inválida"
 
-#: providers/default/gda-default-provider.c:291
+#: providers/default/gda-default-provider.c:334
 msgid "Not Implemented"
 msgstr "Não Implementado"
 
-#: providers/default/gda-default-provider.c:410
-#: providers/mysql/gda-mysql-provider.c:1005
+#: providers/default/gda-default-provider.c:455
+#: providers/mysql/gda-mysql-provider.c:1011
 #: providers/oracle/gda-oracle-provider.c:1056
 #: providers/postgres/gda-postgres-provider.c:1065
 msgid "Field name"
 msgstr "Nome campo"
 
-#: providers/default/gda-default-provider.c:411
-#: providers/mysql/gda-mysql-provider.c:1006
+#: providers/default/gda-default-provider.c:456
+#: providers/mysql/gda-mysql-provider.c:1012
 #: providers/oracle/gda-oracle-provider.c:1057
 #: providers/postgres/gda-postgres-provider.c:1066
 msgid "Data type"
 msgstr "Tipo dados"
 
-#: providers/default/gda-default-provider.c:412
+#: providers/default/gda-default-provider.c:457
 #: providers/freetds/gda-freetds-provider.c:649
-#: providers/mysql/gda-mysql-provider.c:1007
+#: providers/mysql/gda-mysql-provider.c:1013
 #: providers/oracle/gda-oracle-provider.c:1058
 #: providers/postgres/gda-postgres-provider.c:1067
 msgid "Size"
 msgstr "Tamanho"
 
-#: providers/default/gda-default-provider.c:413
+#: providers/default/gda-default-provider.c:458
 #: providers/freetds/gda-freetds-provider.c:653
-#: providers/mysql/gda-mysql-provider.c:1008
+#: providers/mysql/gda-mysql-provider.c:1014
 #: providers/oracle/gda-oracle-provider.c:1059
 #: providers/postgres/gda-postgres-provider.c:1068
 msgid "Scale"
 msgstr "Escala"
 
-#: providers/default/gda-default-provider.c:414
-#: providers/mysql/gda-mysql-provider.c:1009
+#: providers/default/gda-default-provider.c:459
+#: providers/mysql/gda-mysql-provider.c:1015
 #: providers/oracle/gda-oracle-provider.c:1060
 #: providers/postgres/gda-postgres-provider.c:1069
 msgid "Not null?"
 msgstr "Não nulo?"
 
-#: providers/default/gda-default-provider.c:415
-#: providers/mysql/gda-mysql-provider.c:1010
+#: providers/default/gda-default-provider.c:460
+#: providers/mysql/gda-mysql-provider.c:1016
 #: providers/oracle/gda-oracle-provider.c:1061
 #: providers/postgres/gda-postgres-provider.c:1070
 msgid "Primary key?"
 msgstr "Chave primária?"
 
-#: providers/default/gda-default-provider.c:416
-#: providers/mysql/gda-mysql-provider.c:1011
+#: providers/default/gda-default-provider.c:461
+#: providers/mysql/gda-mysql-provider.c:1017
 #: providers/oracle/gda-oracle-provider.c:1062
 #: providers/postgres/gda-postgres-provider.c:1071
 msgid "Unique index?"
 msgstr "Índice único?"
 
-#: providers/default/gda-default-provider.c:417
-#: providers/mysql/gda-mysql-provider.c:1012
+#: providers/default/gda-default-provider.c:462
+#: providers/mysql/gda-mysql-provider.c:1018
 #: providers/oracle/gda-oracle-provider.c:1063
 #: providers/postgres/gda-postgres-provider.c:1072
 msgid "References"
 msgstr "Referências"
 
-#: providers/default/gda-default-provider.c:427
-#: providers/default/gda-default-provider.c:433
+#: providers/default/gda-default-provider.c:472
+#: providers/default/gda-default-provider.c:478
 msgid "Invalid argument"
 msgstr "Argumento inválido"
 
-#: providers/default/gda-default-provider.c:440
+#: providers/default/gda-default-provider.c:485
 #, c-format
 msgid "Table %s not found"
 msgstr "Tabela %s não encontrada"
 
-#: providers/default/gda-default-provider.c:465
+#: providers/default/gda-default-provider.c:510
 msgid "Could not get description for column"
 msgstr "Incapaz de obter descrição para coluna"
 
@@ -413,7 +425,8 @@ msgstr "Incapaz de alocar handle de ambiente.\n"
 #. is needed for tables schema
 #: providers/ibmdb2/gda-ibmdb2-provider.c:191
 msgid "SQLGetInfo is unsupported. Hence IBM DB2 Provider will not work.\n"
-msgstr "SQLGetInfo não é suportado. Assim o Fornecedor IBM DB2 não irá funcionar.\n"
+msgstr ""
+"SQLGetInfo não é suportado. Assim o Fornecedor IBM DB2 não irá funcionar.\n"
 
 #: providers/ibmdb2/gda-ibmdb2-provider.c:205
 msgid "SQLGetFunctions gave unexpected return. Connection terminated.\n"
@@ -423,21 +436,22 @@ msgstr "SQLGetFunctions deu resultado inesperado. Ligação terminada.\n"
 msgid "GDA provider for IBMDB2"
 msgstr "Fornecedor GDA para IBMDB2"
 
-#: providers/mdb/gda-mdb-provider.c:176
+#: providers/mdb/gda-mdb-provider.c:188
 msgid "A database FILENAME must be specified in the connection_string"
 msgstr ""
 "Tem de ser indicado um NOME DE FICHEIRO de base de dados na connection_string"
 
-#: providers/mdb/gda-mdb-provider.c:184
+#: providers/mdb/gda-mdb-provider.c:197
 #, c-format
 msgid "Could not open file %s"
 msgstr "Incapaz de abrir ficheiro %s"
 
-#: providers/mdb/gda-mdb-provider.c:206 providers/mdb/gda-mdb-provider.c:308
+#: providers/mdb/gda-mdb-provider.c:219 providers/mdb/gda-mdb-provider.c:247
+#: providers/mdb/gda-mdb-provider.c:348
 msgid "Invalid MDB handle"
 msgstr "Handle MDB inválida"
 
-#: providers/mdb/gda-mdb-provider.c:273
+#: providers/mdb/gda-mdb-provider.c:313
 msgid "Table Name"
 msgstr "Nome Tabela"
 
@@ -452,7 +466,7 @@ msgstr ""
 "Não pode indicar um UNIX_SOCKET se também indicar ou um SERVIDOR ou PORTO."
 
 #: providers/mysql/gda-mysql-provider.c:290
-#: providers/mysql/gda-mysql-provider.c:1021
+#: providers/mysql/gda-mysql-provider.c:1027
 #: providers/mysql/gda-mysql-recordset.c:59
 #: providers/mysql/gda-mysql-recordset.c:175
 msgid "Invalid MySQL handle"
@@ -461,20 +475,20 @@ msgstr "Handle MySQL inválida"
 #: providers/mysql/gda-mysql-provider.c:305
 #: providers/mysql/gda-mysql-provider.c:355
 #: providers/mysql/gda-mysql-provider.c:378
-#: providers/mysql/gda-mysql-provider.c:408
-#: providers/mysql/gda-mysql-provider.c:437
-#: providers/mysql/gda-mysql-provider.c:503
-#: providers/mysql/gda-mysql-provider.c:555
-#: providers/mysql/gda-mysql-provider.c:583
+#: providers/mysql/gda-mysql-provider.c:409
+#: providers/mysql/gda-mysql-provider.c:441
+#: providers/mysql/gda-mysql-provider.c:509
+#: providers/mysql/gda-mysql-provider.c:561
+#: providers/mysql/gda-mysql-provider.c:589
 msgid "Invalid MYSQL handle"
 msgstr "Handle MYSQL inválida"
 
-#: providers/mysql/gda-mysql-provider.c:907
+#: providers/mysql/gda-mysql-provider.c:913
 #: providers/oracle/gda-oracle-provider.c:1563
 msgid "Type"
 msgstr "Tipo"
 
-#: providers/mysql/gda-mysql-provider.c:908
+#: providers/mysql/gda-mysql-provider.c:914
 #: providers/postgres/gda-postgres-provider.c:688
 #: providers/postgres/gda-postgres-provider.c:902
 #: providers/postgres/gda-postgres-provider.c:921
@@ -484,7 +498,7 @@ msgstr "Tipo"
 msgid "Owner"
 msgstr "Dono"
 
-#: providers/mysql/gda-mysql-provider.c:909
+#: providers/mysql/gda-mysql-provider.c:915
 #: providers/postgres/gda-postgres-provider.c:689
 #: providers/postgres/gda-postgres-provider.c:922
 #: providers/postgres/gda-postgres-provider.c:968
@@ -493,20 +507,22 @@ msgstr "Dono"
 msgid "Comments"
 msgstr "Comentários"
 
-#: providers/mysql/gda-mysql-provider.c:910
+#: providers/mysql/gda-mysql-provider.c:916
 #: providers/postgres/gda-postgres-provider.c:923
 msgid "GDA type"
 msgstr "Tipos GDA"
 
-#: providers/mysql/gda-mysql-provider.c:1013
+#: providers/mysql/gda-mysql-provider.c:1019
 #: providers/postgres/gda-postgres-provider.c:1073
 msgid "Default value"
 msgstr "Valor por omissão"
 
-#: providers/mysql/gda-mysql-provider.c:1030
-#: providers/mysql/gda-mysql-provider.c:1038
+#: providers/mysql/gda-mysql-provider.c:1036
+#: providers/mysql/gda-mysql-provider.c:1044
 msgid "Table name is needed but none specified in parameter list"
-msgstr "Nome de tabela é necessário mas nenhum foi especificado na lista de parâmetros"
+msgstr ""
+"Nome de tabela é necessário mas nenhum foi especificado na lista de "
+"parâmetros"
 
 #: providers/mysql/gda-mysql-recordset.c:70
 #: providers/postgres/gda-postgres-recordset.c:184
@@ -516,17 +532,17 @@ msgstr "Nome de tabela é necessário mas nenhum foi especificado na lista de pa
 msgid "Row number out of range"
 msgstr "Número de linha fora do limite"
 
-#: providers/mysql/gda-mysql-recordset.c:284
+#: providers/mysql/gda-mysql-recordset.c:289
 #: providers/oracle/gda-oracle-recordset.c:467
 msgid "Attempt to insert a row with an invalid number of columns"
 msgstr "Tentativa de inserção de uma linha com um número inválido de colunas"
 
-#: providers/mysql/gda-mysql-recordset.c:299
+#: providers/mysql/gda-mysql-recordset.c:304
 #: providers/oracle/gda-oracle-recordset.c:482
 msgid "Could not retrieve column's information"
 msgstr "Incapaz de obter informação da coluna"
 
-#: providers/mysql/gda-mysql-recordset.c:317
+#: providers/mysql/gda-mysql-recordset.c:322
 #: providers/oracle/gda-oracle-recordset.c:500
 msgid "Could not retrieve column's value"
 msgstr "Incapaz de obter valor da coluna"
