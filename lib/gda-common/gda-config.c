@@ -375,113 +375,6 @@ gda_provider_free (Gda_Provider* provider)
   g_free(provider);
 }
 
-#if defined(USING_OAF)
-# if defined(USING_OLD_OAF)
-/* FIXME: This definitions should abolish it in the future. */
-static gchar *
-get_oaf_attribute (CORBA_sequence_OAF_Attribute attrs, const gchar *name)
-{
-  gchar* ret = NULL;
-  gint   i, j;
-
-  g_return_val_if_fail(name != NULL, NULL);
-
-  for (i = 0; i < attrs._length; i++)
-    {
-      if (!g_strcasecmp(attrs._buffer[i].name, name))
-	{
-	  switch (attrs._buffer[i].v._d)
-	    {
-	    case OAF_A_STRING :
-	      return g_strdup(attrs._buffer[i].v._u.value_string);
-	    case OAF_A_NUMBER :
-	      return g_strdup_printf("%f", attrs._buffer[i].v._u.value_number);
-	    case OAF_A_BOOLEAN :
-	      return g_strdup(attrs._buffer[i].v._u.value_boolean ?
-			      _("True") : _("False"));
-	    case OAF_A_STRINGV :
-	      {
-		GNOME_stringlist strlist;
-		GString*         str = NULL;
-
-		strlist = attrs._buffer[i].v._u.value_stringv;
-		for (j = 0; j < strlist._length; j++)
-		  {
-		    if (!str)
-                      str = g_string_new(strlist._buffer[j]);
-		    else
-		      {
-			str = g_string_append(str, ";");
-			str = g_string_append(str, strlist._buffer[j]);
-		      }
-		  }
-		if (str)
-                  {
-		    ret = g_strdup(str->str);
-		    g_string_free(str, TRUE);
-                  }
-		return ret;
-	      }
-	    }
-	}
-    }
-
-  return ret;
-}
-# else /* OAF version 0.4.0 or higher */
-static gchar *
-get_oaf_attribute (CORBA_sequence_OAF_Property props, const gchar *name)
-{
-  gchar* ret = NULL;
-  gint   i, j;
-
-  g_return_val_if_fail(name != NULL, NULL);
-
-  for (i = 0; i < props._length; i++)
-    {
-      if (!g_strcasecmp(props._buffer[i].name, name))
-	{
-	  switch (props._buffer[i].v._d)
-	    {
-	    case OAF_P_STRING :
-	      return g_strdup(props._buffer[i].v._u.value_string);
-	    case OAF_P_NUMBER :
-	      return g_strdup_printf("%f", props._buffer[i].v._u.value_number);
-	    case OAF_P_BOOLEAN :
-	      return g_strdup(props._buffer[i].v._u.value_boolean ?
-			      _("True") : _("False"));
-	    case OAF_P_STRINGV :
-	      {
-		GNOME_stringlist strlist;
-		GString*         str = NULL;
-
-		strlist = props._buffer[i].v._u.value_stringv;
-		for (j = 0; j < strlist._length; j++)
-		  {
-		    if (!str)
-                      str = g_string_new(strlist._buffer[j]);
-		    else
-		      {
-			str = g_string_append(str, ";");
-			str = g_string_append(str, strlist._buffer[j]);
-		      }
-		  }
-		if (str)
-                  {
-		    ret = g_strdup(str->str);
-		    g_string_free(str, TRUE);
-                  }
-		return ret;
-	      }
-	    }
-	}
-    }
-
-  return ret;
-}
-# endif /* defined(USING_OLD_OAF) */
-#endif
-
 /**
  * gda_provider_list:
  *
@@ -515,28 +408,28 @@ gda_provider_list (void)
 	  provider->name = g_strdup(servlist->_buffer[i].iid);
 	  provider->location = g_strdup(servlist->_buffer[i].location_info);
 # if defined(USING_OLD_OAF)
-	  provider->comment = get_oaf_attribute(servlist->_buffer[i].attrs, "description");
-	  provider->repo_id = get_oaf_attribute(servlist->_buffer[i].attrs, "repo_ids");
+	  provider->comment = gda_corba_get_oaf_attribute(servlist->_buffer[i].attrs, "description");
+	  provider->repo_id = gda_corba_get_oaf_attribute(servlist->_buffer[i].attrs, "repo_ids");
 # else
-	  provider->comment = get_oaf_attribute(servlist->_buffer[i].props, "description");
-	  provider->repo_id = get_oaf_attribute(servlist->_buffer[i].props, "repo_ids");
+	  provider->comment = gda_corba_get_oaf_attribute(servlist->_buffer[i].props, "description");
+	  provider->repo_id = gda_corba_get_oaf_attribute(servlist->_buffer[i].props, "repo_ids");
 # endif
 	  provider->type = g_strdup(servlist->_buffer[i].server_type);
 	  provider->username = g_strdup(servlist->_buffer[i].username);
 	  provider->hostname = g_strdup(servlist->_buffer[i].hostname);
 	  provider->domain = g_strdup(servlist->_buffer[i].domain);
 #if defined(USING_OLD_OAF)
-	  provider->main_config = get_oaf_attribute(servlist->_buffer[i].attrs, "gda-main-config");
-	  provider->users_list_config = get_oaf_attribute(servlist->_buffer[i].attrs, "gda-users-list-config");
-	  provider->users_ac_config = get_oaf_attribute(servlist->_buffer[i].attrs, "gda-users-ac-config");
-	  provider->db_config = get_oaf_attribute(servlist->_buffer[i].attrs, "gda-db-config");
-	  provider->dsn_config = get_oaf_attribute(servlist->_buffer[i].attrs, "gda-dsn-config");
+	  provider->main_config = gda_corba_get_oaf_attribute(servlist->_buffer[i].attrs, "gda-main-config");
+	  provider->users_list_config = gda_corba_get_oaf_attribute(servlist->_buffer[i].attrs, "gda-users-list-config");
+	  provider->users_ac_config = gda_corba_get_oaf_attribute(servlist->_buffer[i].attrs, "gda-users-ac-config");
+	  provider->db_config = gda_corba_get_oaf_attribute(servlist->_buffer[i].attrs, "gda-db-config");
+	  provider->dsn_config = gda_corba_get_oaf_attribute(servlist->_buffer[i].attrs, "gda-dsn-config");
 #else
-	  provider->main_config = get_oaf_attribute(servlist->_buffer[i].props, "gda-main-config");
-	  provider->users_list_config = get_oaf_attribute(servlist->_buffer[i].props, "gda-users-list-config");
-	  provider->users_ac_config = get_oaf_attribute(servlist->_buffer[i].props, "gda-users-ac-config");
-	  provider->db_config = get_oaf_attribute(servlist->_buffer[i].props, "gda-db-config");
-	  provider->dsn_config = get_oaf_attribute(servlist->_buffer[i].props, "gda-dsn-config");
+	  provider->main_config = gda_corba_get_oaf_attribute(servlist->_buffer[i].props, "gda-main-config");
+	  provider->users_list_config = gda_corba_get_oaf_attribute(servlist->_buffer[i].props, "gda-users-list-config");
+	  provider->users_ac_config = gda_corba_get_oaf_attribute(servlist->_buffer[i].props, "gda-users-ac-config");
+	  provider->db_config = gda_corba_get_oaf_attribute(servlist->_buffer[i].props, "gda-db-config");
+	  provider->dsn_config = gda_corba_get_oaf_attribute(servlist->_buffer[i].props, "gda-dsn-config");
 #endif
 	  retval = g_list_append(retval, (gpointer) provider);
 	}
