@@ -25,27 +25,29 @@
 // a list of gdaErrors would make more sense under C++. You *can* do it
 // the other way.. -- cdw
 
-gdaErrorList::gdaErrorList(CORBA_Environment* ev) {
+using namespace gda;
+
+ErrorList::ErrorList(CORBA_Environment* ev) {
 	_errors = gda_errors_from_exception(ev);
 }
 
-gdaErrorList::gdaErrorList(GList *errorList) {
+ErrorList::ErrorList(GList *errorList) {
 	_errors = errorList;
 }
 
-gdaErrorList::~gdaErrorList() {
+ErrorList::~ErrorList() {
 	if (_errors) gda_error_list_free(_errors);
 }
 
-GList* gdaErrorList::getCStruct() {
+GList* ErrorList::getCStruct() {
 	return _errors;
 }
 
-GList *gdaErrorList::errors() {
+GList *ErrorList::errors() {
 	return _errors;
 }
 
-void gdaErrorList::setCStruct(GList *errorList) {
+void ErrorList::setCStruct(GList *errorList) {
 	_errors = errorList;
 }
 

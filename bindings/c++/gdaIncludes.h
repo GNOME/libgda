@@ -16,15 +16,18 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-class gdaBatch;
-class gdaCommand;
-class gdaConnection;
-class gdaError;
-class gdaErrorList;
-class gdaField;
-class gdaRecordset;
-class gdaValue;
+namespace gda {
+	class Batch;
+	class Command;
+	class Connection;
+	class Error;
+	class ErrorList;
+	class Field;
+	class Recordset;
+	class Value;
+};
 
+extern "C" {
 #include "glib.h"
 #include "gda-client.h"
 
@@ -34,6 +37,7 @@ class gdaValue;
 #include "gda-error.h"
 #include "gda-field.h"
 #include "gda-recordset.h"
+}
 
 #include "gdaBatch.h"
 #include "gdaCommand.h"

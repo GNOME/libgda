@@ -21,11 +21,13 @@
 
 #include "gdaIncludes.h"
 
-class gdaValue {
+namespace gda {
+
+class Value {
 	public:
-		gdaValue();
-		gdaValue(GDA_FieldValue *fv);
-		~gdaValue();
+		Value();
+		Value(GDA_FieldValue *fv);
+		~Value();
 		
 		GDA_FieldValue *getCStruct();
 	//	GDA_Value getCValue();
@@ -67,6 +69,8 @@ class gdaValue {
 
 	private:
 		GDA_FieldValue *_gda_fieldvalue;
+};
+
 };
 
 #endif

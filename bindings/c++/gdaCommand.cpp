@@ -19,61 +19,73 @@
 #include "config.h"
 #include "gdaCommand.h"
 
-gdaCommand::gdaCommand() {
+using namespace gda;
+
+Command::Command() {
 	_gda_command = gda_command_new();
 }
 
-gdaCommand::~gdaCommand() {
+Command::~Command() {
 	if (_gda_command) gda_command_free(_gda_command);
 }
 
-GdaCommand *gdaCommand::getCStruct() {
+GdaCommand *Command::getCStruct() {
 	return _gda_command;
 }
 
-void gdaCommand::setCStruct(GdaCommand *cmd) {
+void Command::setCStruct(GdaCommand *cmd) {
 	_gda_command = cmd;
 }
 		
-gdaConnection *gdaCommand::getConnection() {
+Connection *Command::getConnection() {
 	return cnc;
 }
 
-gint gdaCommand::setConnection(gdaConnection *a) {
+gint Command::setConnection(Connection *a) {
 	cnc = a;
 	return gda_command_set_connection(_gda_command,cnc->getCStruct());
 }
 
-gchar* gdaCommand::getText() {
+gchar* Command::getText() {
 	return gda_command_get_text(_gda_command);
 }
 
-void gdaCommand::setText(gchar *text) {
+void Command::setText(gchar *text) {
 	gda_command_set_text(_gda_command,text);
 }
 
-GDA_CommandType gdaCommand::getCmdType() {
+GDA_CommandType Command::getCmdType() {
 	return gda_command_get_cmd_type(_gda_command);
 }
 
-void gdaCommand::setCmdType(GDA_CommandType type) {
+void Command::setCmdType(GDA_CommandType type) {
 	gda_command_set_cmd_type(_gda_command, type);
 }
 
-gdaRecordset* gdaCommand::execute(gulong* reccount, gulong flags) {
-	gda_command_execute(_gda_command,reccount,flags);
+Recordset* Command::execute(gulong* reccount, gulong flags) {
+	GdaRecordset *pGdaRecordset = NULL;
+	pGdaRecordset = gda_command_execute(_gda_command, reccount, flags);
+
+	Recordset *pRecordset = NULL;
+	if (pGdaRecordset != NULL) {
+		pRecordset = new Recordset (pGdaRecordset, cnc);
+	} else {
+		pRecordset = new Recordset ();
+	}
+
+	return pRecordset;
 }
 
-//void gdaCommand::createParameter(gchar* name, GDA_ParameterDirection inout, gdaValue *value) {
+//void Command::createParameter(gchar* name, GDA_ParameterDirection inout, Value *value) {
 // FIXME If we don't use GDA_Value, how do use use the c function gda_command_create_parameter?
 //	GDA_Value v(value->getCValue());
 //	gda_command_create_parameter(_gda_command,name,inout,&v);
 //}
 
-glong gdaCommand::getTimeout() {
+glong Command::getTimeout() {
 	return gda_command_get_timeout(_gda_command);
 }
 
-void gdaCommand::setTimeout(glong timeout) {
+void Command::setTimeout(glong timeout) {
 	gda_command_set_timeout(_gda_command,timeout);
 }

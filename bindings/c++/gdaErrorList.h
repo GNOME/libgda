@@ -21,6 +21,8 @@
 
 #include "gdaIncludes.h"
 
+namespace gda {
+
 class gdaErrorList {
 	public:
 		gdaErrorList(CORBA_Environment* ev);
@@ -34,6 +36,8 @@ class gdaErrorList {
 	private:
 		GList* _errors;
 };
-							     
+
+};
+
 #endif  
   

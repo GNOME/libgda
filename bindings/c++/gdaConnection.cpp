@@ -20,141 +20,143 @@
 #include "config.h"
 #include "gdaConnection.h"
 
-gdaConnection::gdaConnection() {
+using namespace gda;
+
+Connection::Connection() {
 	_gda_connection = NULL;
 }
 
-gdaConnection::gdaConnection(GdaConnection *a) {
+Connection::Connection(GdaConnection *a) {
 	_gda_connection = a;
 }
 
-gdaConnection::gdaConnection(CORBA_ORB orb) {
+Connection::Connection(CORBA_ORB orb) {
 	_gda_connection = gda_connection_new(orb);
 }
 
-gdaConnection::~gdaConnection() {
+Connection::~Connection() {
 	if (_gda_connection) gda_connection_free(_gda_connection);
 }
 
-GdaConnection* gdaConnection::getCStruct() {
+GdaConnection* Connection::getCStruct() {
 	return _gda_connection;
 }
 
-void gdaConnection::setCStruct(GdaConnection *cnc) {
+void Connection::setCStruct(GdaConnection *cnc) {
 	_gda_connection = cnc;
 }
 		
-void gdaConnection::setProvider(gchar* name) {
+void Connection::setProvider(gchar* name) {
 	gda_connection_set_provider(_gda_connection,name);
 }
 
-const gchar* gdaConnection::getProvider() {
+const gchar* Connection::getProvider() {
 	return gda_connection_get_provider(_gda_connection);
 }
 
-gboolean gdaConnection::supports(GDA_Connection_Feature feature) {
+gboolean Connection::supports(GDA_Connection_Feature feature) {
 	return gda_connection_supports(_gda_connection,feature);
 }
 
-void gdaConnection::setDefaultDB(gchar* dsn) {
+void Connection::setDefaultDB(gchar* dsn) {
 	gda_connection_set_default_db(_gda_connection,dsn);
 }
 
-gint gdaConnection::open(gchar* dsn, gchar* user,gchar* pwd ) {
+gint Connection::open(gchar* dsn, gchar* user,gchar* pwd ) {
 	return gda_connection_open(_gda_connection,dsn,user,pwd);
 }
 
-void gdaConnection::close() {
+void Connection::close() {
 	gda_connection_close(_gda_connection);
 }
 
-gdaErrorList* gdaConnection::getErrors() {
-	gdaErrorList *a = NULL;
-	a = new gdaErrorList(gda_connection_get_errors(_gda_connection));
+ErrorList* Connection::getErrors() {
+	ErrorList *a = NULL;
+	a = new ErrorList(gda_connection_get_errors(_gda_connection));
 	return a;
 }
 
-gint gdaConnection::beginTransaction() {
+gint Connection::beginTransaction() {
 	return gda_connection_begin_transaction(_gda_connection);
 }
 
-gint gdaConnection::commitTransaction() {
+gint Connection::commitTransaction() {
 	return gda_connection_commit_transaction(_gda_connection);
 }
 
-gint gdaConnection::rollbackTransaction() {
+gint Connection::rollbackTransaction() {
 	return gda_connection_rollback_transaction(_gda_connection);
 }
 
-gdaRecordset* gdaConnection::execute(gchar* txt, gulong* reccount, gulong flags) {
+Recordset* gdaConnection::execute(gchar* txt, gulong* reccount, gulong flags) {
 	GdaRecordset *b = NULL;
-	gdaRecordset *a = NULL;
+	Recordset *a = NULL;
 	b = gda_connection_execute(_gda_connection,txt,reccount,flags);
-	a = new gdaRecordset(b,this);
+	a = new Recordset(b,this);
 	return a;
 }
 
-gint gdaConnection::startLogging(gchar* filename) {
+gint Connection::startLogging(gchar* filename) {
 	return gda_connection_start_logging(_gda_connection,filename);
 }
 
-gint gdaConnection::stopLogging() {
+gint Connection::stopLogging() {
 	return gda_connection_stop_logging(_gda_connection);
 }
 
-void gdaConnection::addSingleError(gdaError* error) {
+void Connection::addSingleError(Error* error) {
 	gda_connection_add_single_error(_gda_connection,error->getCStruct());
 }
 
-void gdaConnection::addErrorlist(gdaErrorList* list) {
+void Connection::addErrorlist(ErrorList* list) {
 	gda_connection_add_errorlist(_gda_connection,list->errors());
 }
 
-gboolean gdaConnection::isOpen() {
+gboolean Connection::isOpen() {
 	return gda_connection_is_open(_gda_connection);
 }
 
-gchar* gdaConnection::getDSN() {
+gchar* Connection::getDSN() {
 	return gda_connection_get_dsn(_gda_connection);
 }
 
-gchar* gdaConnection::getUser() {
+gchar* Connection::getUser() {
 	return gda_connection_get_user(_gda_connection);
 }
 
-glong gdaConnection::getFlags() {
+glong Connection::getFlags() {
 	return gda_connection_get_flags(_gda_connection);
 }
 
-void gdaConnection::setFlags(glong flags) {
+void Connection::setFlags(glong flags) {
 	gda_connection_set_flags(_gda_connection,flags);
 }
 
-glong gdaConnection::getCmdTimeout() {
+glong Connection::getCmdTimeout() {
 	return gda_connection_get_cmd_timeout(_gda_connection);
 }
 
-void gdaConnection::setCmdTimeout(glong cmd_timeout) {
+void Connection::setCmdTimeout(glong cmd_timeout) {
 	gda_connection_set_cmd_timeout(_gda_connection,cmd_timeout);
 }
 
-glong gdaConnection::getConnectTimeout() {
+glong Connection::getConnectTimeout() {
 	return gda_connection_get_connect_timeout(_gda_connection);
 }
 
-void gdaConnection::setConnectTimeout(glong timeout) {
+void Connection::setConnectTimeout(glong timeout) {
 	gda_connection_set_connect_timeout(_gda_connection,timeout);
 }
 
-GDA_CursorLocation gdaConnection::getCursorLocation() {
+GDA_CursorLocation Connection::getCursorLocation() {
 	return gda_connection_get_cursor_location(_gda_connection);
 }
 
-void gdaConnection::setCursorLocation(GDA_CursorLocation cursor) {
+void Connection::setCursorLocation(GDA_CursorLocation cursor) {
 	gda_connection_set_cursor_location(_gda_connection,cursor);
 }
 
-gchar* gdaConnection::getVersion() {
+gchar* Connection::getVersion() {
 	return gda_connection_get_version(_gda_connection);
 }
 

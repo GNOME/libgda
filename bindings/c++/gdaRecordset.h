@@ -21,12 +21,14 @@
 
 #include "gdaIncludes.h"
 
-class gdaRecordset {
+namespace gda {
+
+class Recordset {
 	public:
-		gdaRecordset();
-		gdaRecordset(GdaRecordset *rst, gdaConnection *cnc); // convenience functions!
-		gdaRecordset(GdaRecordset *rst, GdaConnection *cnc); // convenience functions!
-		~gdaRecordset();
+		Recordset();
+		Recordset(GdaRecordset *rst, Connection *cnc); // convenience functions!
+		Recordset(GdaRecordset *rst, GdaConnection *cnc); // convenience functions!
+		~Recordset();
 
 		GdaRecordset* getCStruct();
 		void setCStruct(GdaRecordset *rst);
@@ -34,9 +36,9 @@ class gdaRecordset {
 		void setName(gchar* name);
 		void getName(gchar* name);
 		void close();
-		gdaField* field(gchar* name);
+		Field* field(gchar* name);
 		// FIXME: possibly add a fieldText() func?
-		gdaField* field(gint idx);
+		Field* field(gint idx);
 		gint bof();
 		gint eof();
 		gulong move (gint count, gpointer bookmark);
@@ -46,12 +48,12 @@ class gdaRecordset {
 		gulong movePrev();
 		gint rowsize();
 		gulong affectedRows();
-		gint open(gdaCommand* cmd, GDA_CursorType cursor_type, GDA_LockType lock_type, gulong options); // FIXME: defaults
+		gint open(Command* cmd, GDA_CursorType cursor_type, GDA_LockType lock_type, gulong options); // FIXME: defaults
 		gint open(gchar* txt, GDA_CursorType cursor_type, GDA_LockType lock_type, gulong options);
-		gint open(gdaCommand* cmd, gdaConnection *cnc, GDA_CursorType cursor_type, GDA_LockType lock_type, gulong options); // FIXME: defaults
-		gint open(gchar* txt, gdaConnection *cnc, GDA_CursorType cursor_type, GDA_LockType lock_type, gulong options);
-		gint setConnection(gdaConnection *cnc);
-		gdaConnection *getConnection();
+		gint open(Command* cmd, Connection *cnc, GDA_CursorType cursor_type, GDA_LockType lock_type, gulong options); // FIXME: defaults
+		gint open(gchar* txt, Connection *cnc, GDA_CursorType cursor_type, GDA_LockType lock_type, gulong options);
+		gint setConnection(Connection *cnc);
+		Connection *getConnection();
 		gint addField(GdaField* field);
 		GDA_CursorLocation getCursorloc();
 		void setCursorloc(GDA_CursorLocation loc );
@@ -59,8 +61,10 @@ class gdaRecordset {
 		void setCursortype(GDA_CursorType type);
 
 	private:
-		gdaConnection *cnc;
+		Connection *cnc;
 		GdaRecordset* _gda_recordset;
+};
+
 };
 
 #endif // __gda_bindings_cpp_gdaRecordsetH

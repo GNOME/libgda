@@ -19,52 +19,54 @@
 #include "config.h"
 #include "gdaError.h"
 
-gdaError::gdaError() {
+using namespace gda;
+
+Error::Error() {
 	_gda_error = gda_error_new();
 }
 
-gdaError::gdaError(GdaError *e) {
+Error::Error(GdaError *e) {
 	_gda_error = e;
 }
 
-gdaError::~gdaError() {
+Error::~Error() {
 	if (_gda_error) gda_error_free(_gda_error);
 }
 
-GdaError *gdaError::getCStruct() {
+GdaError *Error::getCStruct() {
 	return _gda_error;
 }
 
-void gdaError::setCStruct(GdaError *e) {
+void Error::setCStruct(GdaError *e) {
 	_gda_error = e;
 }
 
 
-const gchar* gdaError::description() {
+const gchar* Error::description() {
 	return gda_error_description(_gda_error);
 }
 
-const glong gdaError::number() {
+const glong Error::number() {
 	return gda_error_number(_gda_error);
 }
 
-const gchar* gdaError::source() {
+const gchar* Error::source() {
 	return gda_error_source(_gda_error);
 }
 
-const gchar* gdaError::helpurl() {
+const gchar* Error::helpurl() {
 	return gda_error_helpurl(_gda_error);
 }
 
-const gchar* gdaError::sqlstate() {
+const gchar* Error::sqlstate() {
 	return gda_error_sqlstate(_gda_error);
 }
 
-const gchar* gdaError::nativeMsg() {
+const gchar* Error::nativeMsg() {
 	return gda_error_nativeMsg(_gda_error);
 }
 
-const gchar* gdaError::realcommand() {
+const gchar* Error::realcommand() {
 	return gda_error_realcommand(_gda_error);
 }
 

@@ -22,12 +22,14 @@
 
 #include "gdaIncludes.h"
 
+namespace gda {
+
 class gdaConnection {
 	public:
-		gdaConnection();
-		gdaConnection(GdaConnection *a);
-		gdaConnection(CORBA_ORB orb);
-		~gdaConnection();
+		Connection();
+		Connection(GdaConnection *a);
+		Connection(CORBA_ORB orb);
+		~Connection();
 		
 		GdaConnection* getCStruct();
 		void setCStruct(GdaConnection *cnc);
@@ -38,16 +40,16 @@ class gdaConnection {
 		void setDefaultDB(gchar* dsn);
 		gint open(gchar* dsn, gchar* user,gchar* pwd);	
 		void close();
-		gdaErrorList *getErrors();
+		ErrorList *getErrors();
 		gint beginTransaction();
 		gint commitTransaction();
 		gint rollbackTransaction();
-		gdaRecordset* execute(gchar* txt, gulong* reccount, gulong flags);
+		Recordset* execute(gchar* txt, gulong* reccount, gulong flags);
 		gint startLogging(gchar* filename);
 		gint stopLogging();
 	
-		void addSingleError(gdaError* error);
-		void addErrorlist(gdaErrorList* list);
+		void addSingleError(Error* error);
+		void addErrorlist(ErrorList* list);
 
 		gboolean isOpen();
 		gchar* getDSN();
@@ -65,6 +67,8 @@ class gdaConnection {
 			
 	private:
 		GdaConnection* _gda_connection;
+};
+
 };
 
 #endif // __gda_bindings_cpp_gdaConnectionH

@@ -21,17 +21,19 @@
 
 #include "gdaIncludes.h"
 
-class gdaField {
+namespace gda {
+
+class Field {
 	public:
-		gdaField();
-		gdaField(GdaField *f);
-		~gdaField();
+		Field();
+		Field(GdaField *f);
+		~Field();
 
 		GdaField *getCStruct();
 		void setCStruct(GdaField *f);
 
-		gdaValue *realValue();
-		gdaValue *origValue();
+		Value *realValue();
+		Value *origValue();
 		// What's shadowValue for? FIXME
 		
 		bool isNull();
@@ -69,6 +71,8 @@ class gdaField {
 
 	private:
 		GdaField *_gda_field;
+};
+
 };
 
 #endif

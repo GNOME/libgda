@@ -19,46 +19,48 @@
 #include "config.h"
 #include "gdaField.h"
 
-gdaField::gdaField() {
+using namespace gda;
+
+Field::Field() {
 	_gda_field = NULL;
 }
 
-gdaField::gdaField(GdaField *f) {
+Field::Field(GdaField *f) {
 	_gda_field = f;
 }
 
-gdaField::~gdaField() {
+Field::~Field() {
 //	if (_gda_field) gda_field_free(_gda_field);
 // FIXME What?! no gda_field_free?!?!
 }
 
-GdaField *gdaField::getCStruct() {
+GdaField *Field::getCStruct() {
 	return _gda_field;
 }
 
-void gdaField::setCStruct(GdaField *f) {
+void Field::setCStruct(GdaField *f) {
 	_gda_field = f;
 }
 
-bool gdaField::isNull() {
+bool Field::isNull() {
 	return gda_field_isnull(_gda_field);
 }
 
-gdaValue *gdaField::realValue() {
-	gdaValue *v = new gdaValue(_gda_field->real_value);
+Value *Field::realValue() {
+	Value *v = new gdaValue(_gda_field->real_value);
 	return v;
 }
 
-gdaValue *gdaField::origValue() {
-	gdaValue *v = new gdaValue(_gda_field->original_value);
+Value *Field::origValue() {
+	Value *v = new gdaValue(_gda_field->original_value);
 	return v;
 }
 
-GDA_ValueType gdaField::typeCode() {
+GDA_ValueType Field::typeCode() {
 	return _gda_field->real_value->_u.v._d;
 }
 
-gchar *gdaField::typeCodeString() {
+gchar *Field::typeCodeString() {
 	// Convenience function to get the string of the field's value type
 	// without resorting to the C commands...
 	gchar *a = 0;
@@ -72,76 +74,76 @@ gchar *gdaField::typeCodeString() {
 	return a;
 }
 		
-gchar gdaField::getTinyint() {
+gchar Field::getTinyint() {
 	return gda_field_tinyint(_gda_field);
 }
 
-glong gdaField::getBigint() {
+glong Field::getBigint() {
 	return gda_field_bigint(_gda_field);
 }
 
-bool gdaField::getBoolean() {
+bool Field::getBoolean() {
 	return gda_field_boolean(_gda_field);
 }
 
-GDA_Date gdaField::getDate() {
+GDA_Date Field::getDate() {
 	return gda_field_date(_gda_field);
 }
 
-GDA_DbDate gdaField::getDBdate() {
+GDA_DbDate Field::getDBdate() {
 	return gda_field_dbdate(_gda_field);
 }
 
-GDA_DbTime gdaField::getDBtime() {
+GDA_DbTime Field::getDBtime() {
 	return gda_field_dbtime(_gda_field);
 }
 
-GDA_DbTimestamp gdaField::getDBtstamp() {
+GDA_DbTimestamp Field::getDBtstamp() {
 	return gda_field_timestamp(_gda_field);
 }
 
-gdouble gdaField::getDouble() {
+gdouble Field::getDouble() {
 	return gda_field_double(_gda_field);
 }
 
-glong gdaField::getInteger() {
+glong Field::getInteger() {
 	return gda_field_integer(_gda_field);
 }
 
-// GDA_VarBinString gdaField::getVarLenString() {
+// GDA_VarBinString Field::getVarLenString() {
 // 	return gda_field_varbin(_gda_field);
 // }
 
-// GDA_VarBinString gdaField::getFixLenString() {
+// GDA_VarBinString Field::getFixLenString() {
 // 	return gda_field_fixbin(_gda_field);
 // }
 
-gchar *gdaField::getLongVarChar() {
+gchar *Field::getLongVarChar() {
 	return gda_field_longvarchar(_gda_field);
 }
 
-gfloat gdaField::getFloat() {
+gfloat Field::getFloat() {
 	return gda_field_single(_gda_field);
 	// return _gda_field->real_value->_u.v._u.f;
 }
 
-gint gdaField::getSmallInt() {
+gint Field::getSmallInt() {
 	return gda_field_smallint(_gda_field);
 }
 
-gulong gdaField::getULongLongInt() {
+gulong Field::getULongLongInt() {
 	return gda_field_ubingint(_gda_field);
 }
 
-guint gdaField::getUSmallInt() {
+guint Field::getUSmallInt() {
 	return gda_field_usmallint(_gda_field);
 }
 
-//gchar *gdaField::getText() {
+//gchar *Field::getText() {
 //	return getNewString();
 //}
 //
-//gchar *gdaField::getNewString() {
+//gchar *Field::getNewString() {
 //	// Find the size of the value, then make a string that big
 //	// then put it into the string.
 //	// FIXME: Can we use getLongVarChar instead of this? -- cdw
@@ -153,35 +155,35 @@ guint gdaField::getUSmallInt() {
 //	return a;
 //}
 
-gchar *gdaField::putInString(gchar *bfr, gint maxLength) {
+gchar *Field::putInString(gchar *bfr, gint maxLength) {
 	return gda_stringify_value(bfr,maxLength,_gda_field);
 }
 
-gint gdaField::actualSize() {
+gint Field::actualSize() {
 	return gda_field_actual_size(_gda_field);
 }
 
-glong gdaField::definedSize() {
+glong Field::definedSize() {
 	return gda_field_defined_size(_gda_field);
 }
 
-gchar *gdaField::name() {
+gchar *Field::name() {
 	return gda_field_name(_gda_field);
 }
 
-glong gdaField::scale() {
+glong Field::scale() {
 	return gda_field_scale(_gda_field);
 }
 
-GDA_ValueType gdaField::type() {
+GDA_ValueType Field::type() {
 	return gda_field_type(_gda_field);
 }
 
-glong gdaField::cType() {
+glong Field::cType() {
 	return gda_field_cType(_gda_field);
 }
 
-glong gdaField::nativeType() {
+glong Field::nativeType() {
 	return gda_field_nativeType(_gda_field);
 }
 

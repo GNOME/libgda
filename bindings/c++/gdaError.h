@@ -21,11 +21,13 @@
 
 #include "gdaIncludes.h"
 
-class gdaError {
+namespace gda {
+
+class Error {
 	public:
-		gdaError();
-		gdaError(GdaError *e);
-		~gdaError();
+		Error();
+		Error(GdaError *e);
+		~Error();
 
 		GdaError *getCStruct();
 		void setCStruct(GdaError *e);
@@ -40,6 +42,8 @@ class gdaError {
 
 	private:
 		GdaError* _gda_error;
+};
+
 };
 
 #endif

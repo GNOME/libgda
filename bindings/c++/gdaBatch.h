@@ -21,11 +21,13 @@
 
 #include "gdaIncludes.h"
 
-class gdaBatch {
+namespace gda {
+
+class Batch {
 	public:
-		gdaBatch();
-		gdaBatch(GdaBatch *a);
-		~gdaBatch();
+		Batch();
+		Batch(GdaBatch *a);
+		~Batch();
 
 		GdaBatch *getCStruct();
 		void setCStruct(GdaBatch *job);
@@ -38,14 +40,16 @@ class gdaBatch {
 		void stop();
 		gboolean isRunning();
 
-		gdaConnection* getConnection();
-		void setConnection(gdaConnection *cnc);
+		Connection* getConnection();
+		void setConnection(Connection *cnc);
 		gboolean getTransactionMode();
 		void setTransactionMode(gboolean mode);
 
 	private:
 		GdaBatch* _gda_batch;
-		gdaConnection *cnc;
+		Connection *cnc;
+
+};
 
 };
 

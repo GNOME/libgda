@@ -19,63 +19,65 @@
 #include "config.h"
 #include "gdaBatch.h"
 
-gdaBatch::gdaBatch() {
+using namespace gda;
+
+Batch::Batch() {
 	_gda_batch = gda_batch_new();
 }
 
-gdaBatch::gdaBatch(GdaBatch *a) {
+Batch::Batch(GdaBatch *a) {
 	_gda_batch = a;
 }
 
-gdaBatch::~gdaBatch() {
+Batch::~Batch() {
 	if (_gda_batch) gda_batch_free(_gda_batch);
 }
 
-void gdaBatch::setCStruct(GdaBatch *job) {
+void Batch::setCStruct(GdaBatch *job) {
 	_gda_batch = job;
 }
 
-GdaBatch *gdaBatch::getCStruct() {
+GdaBatch *Batch::getCStruct() {
 	return _gda_batch;
 }
 
-gboolean gdaBatch::loadFile(const gchar *filename, gboolean clean) {
+gboolean Batch::loadFile(const gchar *filename, gboolean clean) {
 	return gda_batch_load_file(_gda_batch,filename,clean);
 }
 
-void gdaBatch::addCommand(const gchar *cmd) {
+void Batch::addCommand(const gchar *cmd) {
 	gda_batch_add_command(_gda_batch,cmd);
 }
 
-void gdaBatch::clear() {
+void Batch::clear() {
 	gda_batch_clear(_gda_batch);
 }
 
-gboolean gdaBatch::start() {
+gboolean Batch::start() {
 	return gda_batch_start(_gda_batch);
 }
 
-void gdaBatch::stop() {
+void Batch::stop() {
 	gda_batch_stop(_gda_batch);
 }
 
-gboolean gdaBatch::isRunning() {
+gboolean Batch::isRunning() {
 	return gda_batch_is_running(_gda_batch);
 }
 
-gdaConnection* gdaBatch::getConnection() {
+Connection* Batch::getConnection() {
 	return cnc;
 }
 
-void gdaBatch::setConnection(gdaConnection *a) {
+void Batch::setConnection(Connection *a) {
 	cnc = a;
 }
 
-gboolean gdaBatch::getTransactionMode() {
+gboolean Batch::getTransactionMode() {
 	return gda_batch_get_transaction_mode(_gda_batch);
 }
 
-void gdaBatch::setTransactionMode(gboolean mode) {
+void Batch::setTransactionMode(gboolean mode) {
 	gda_batch_set_transaction_mode(_gda_batch,mode);
 }
 

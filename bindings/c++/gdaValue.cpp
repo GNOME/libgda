@@ -19,155 +19,157 @@
 #include "config.h"
 #include "gdaValue.h"
 
-gdaValue::gdaValue() {
+using namespace gda;
+
+Value::Value() {
 	_gda_fieldvalue = NULL;
 }
 
-gdaValue::gdaValue(GDA_FieldValue *fv) {
+Value::Value(GDA_FieldValue *fv) {
 	_gda_fieldvalue = fv;
 }
 
-gdaValue::~gdaValue() {
+Value::~Value() {
 	// no free function!
 }
 		
-GDA_FieldValue *gdaValue::getCStruct() {
+GDA_FieldValue *Value::getCStruct() {
 	return _gda_fieldvalue;
 }
 
-//GDA_Value gdaValue::getCValue() {
+//GDA_Value Value::getCValue() {
 //	return _gda_fieldvalue->_u.v;
 //}
 
-void gdaValue::setCStruct(GDA_FieldValue *v) {
+void Value::setCStruct(GDA_FieldValue *v) {
 	_gda_fieldvalue = v;
 }
 
-gchar gdaValue::getTinyint() {
+gchar Value::getTinyint() {
 	return _gda_fieldvalue->_u.v._u.c;
 }
 
-glong gdaValue::getBigint() {
+glong Value::getBigint() {
 	return _gda_fieldvalue->_u.v._u.ll;
 }
 
-bool gdaValue::getBoolean() {
+bool Value::getBoolean() {
 	return _gda_fieldvalue->_u.v._u.b;
 }
 
-GDA_Date gdaValue::getDate() {
+GDA_Date Value::getDate() {
 	return _gda_fieldvalue->_u.v._u.d;
 }
 
-GDA_DbDate gdaValue::getDBdate() {
+GDA_DbDate Value::getDBdate() {
 	return _gda_fieldvalue->_u.v._u.dbd;
 }
 
-GDA_DbTime gdaValue::getDBtime() {
+GDA_DbTime Value::getDBtime() {
 	return _gda_fieldvalue->_u.v._u.dbt;
 }
 
-GDA_DbTimestamp gdaValue::getDBtstamp() {
+GDA_DbTimestamp Value::getDBtstamp() {
 	return _gda_fieldvalue->_u.v._u.dbtstamp;
 }
 
-gdouble gdaValue::getDouble() {
+gdouble Value::getDouble() {
 	return _gda_fieldvalue->_u.v._u.dp;
 }
 
-glong gdaValue::getInteger() {
+glong Value::getInteger() {
 	return _gda_fieldvalue->_u.v._u.i;
 }
 
-GDA_VarBinString gdaValue::getVarLenString() {
+GDA_VarBinString Value::getVarLenString() {
 	return _gda_fieldvalue->_u.v._u.lvb;
 }
 
-GDA_VarBinString gdaValue::getFixLenString() {
+GDA_VarBinString Value::getFixLenString() {
 	return _gda_fieldvalue->_u.v._u.fb;
 }
 
-gchar *gdaValue::getLongVarChar() {
+gchar *Value::getLongVarChar() {
 	return g_strdup(_gda_fieldvalue->_u.v._u.lvc);
 }
 
-gfloat gdaValue::getFloat() {
+gfloat Value::getFloat() {
 	return _gda_fieldvalue->_u.v._u.f;
 }
 
-gint gdaValue::getSmallInt() {
+gint Value::getSmallInt() {
 	return _gda_fieldvalue->_u.v._u.si;
 }
 
-gulong gdaValue::getULongLongInt() {
+gulong Value::getULongLongInt() {
 	return _gda_fieldvalue->_u.v._u.ull;
 }
 
-guint gdaValue::getUSmallInt() {
+guint Value::getUSmallInt() {
 	return _gda_fieldvalue->_u.v._u.us;
 }
 
-void gdaValue::set(gchar a) {
+void Value::set(gchar a) {
 	_gda_fieldvalue->_u.v._u.c = a;
 }
 
-//void gdaValue::set(glong a) {
+//void Value::set(glong a) {
 //	_gda_fieldvalue->_u.v._u.ll = a;
 //}
 
-void gdaValue::set(bool a) {
+void Value::set(bool a) {
 	_gda_fieldvalue->_u.v._u.b = a;
 }
 
-void gdaValue::set(GDA_Date a) {
+void Value::set(GDA_Date a) {
 	_gda_fieldvalue->_u.v._u.d = a;
 }
 
-void gdaValue::set(GDA_DbDate a) {
+void Value::set(GDA_DbDate a) {
 	_gda_fieldvalue->_u.v._u.dbd = a;
 }
 
-void gdaValue::set(GDA_DbTime a) {
+void Value::set(GDA_DbTime a) {
 	_gda_fieldvalue->_u.v._u.dbt = a;
 }
 
-void gdaValue::set(GDA_DbTimestamp a) {
+void Value::set(GDA_DbTimestamp a) {
 	_gda_fieldvalue->_u.v._u.dbtstamp = a;
 }
 
-void gdaValue::set(gdouble a) {
+void Value::set(gdouble a) {
 	_gda_fieldvalue->_u.v._u.dp = a;
 }
 
-void gdaValue::set(glong a) {
+void Value::set(glong a) {
 	_gda_fieldvalue->_u.v._u.i = a;
 }
 
-void gdaValue::set(GDA_VarBinString a) {
+void Value::set(GDA_VarBinString a) {
 	_gda_fieldvalue->_u.v._u.lvb = a;
 }
 
-// void gdaValue::set(GDA_VarBinString a) {
+// void Value::set(GDA_VarBinString a) {
 // 	_gda_fieldvalue->_u.v._u.fb = a;
 // }
 
-void gdaValue::set(gchar *a) {
+void Value::set(gchar *a) {
 	_gda_fieldvalue->_u.v._u.lvc = g_strdup(a);
 }
 
-void gdaValue::set(gfloat a) {
+void Value::set(gfloat a) {
 	_gda_fieldvalue->_u.v._u.f = a;
 }
 
-// void gdaValue::set(gint a) {
+// void Value::set(gint a) {
 // 	_gda_fieldvalue->_u.v._u.ull = a;
 // }
 
-void gdaValue::set(gulong a) {
+void Value::set(gulong a) {
 	_gda_fieldvalue->_u.v._u.us = a;
 }
 
-void gdaValue::set(guint a) {
+void Value::set(guint a) {
 	_gda_fieldvalue->_u.v._u.c = a;
 }
 
