@@ -3,3 +3,5 @@ Makefile.in
 sgml
 sgml.stamp
 tmpl.stamp
+*.txt
+libgda-common.signals
