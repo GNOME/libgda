@@ -1,3 +1,7 @@
+2001-03-05	Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* added COMMAND_TYPE_XML to the GDA_CommandType enum
+
 2000-11-27	Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* added modifySchema method to the GDA::Connection interface
