@@ -462,7 +462,7 @@ gda_config_add_listener (const gchar *path, GdaConfigListenerFunc func, gpointer
 		get_conf_client (),
 		path,
 		(GConfClientNotifyFunc) config_listener_func,
-		listener_data->user_data,
+		listener_data,
 		(GFreeFunc) g_free,
 		&err);
 	if (listener_data->id == 0) {

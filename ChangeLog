@@ -1,3 +1,8 @@
+2002-03-03  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* libgda/gda-config.c (gda_config_add_listener): pass correctly the
+	user_data pointer, to avoid the crash in bug #72818.
+
 2002-03-02  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* providers/sybase/gda-sybase-error.c: removed dead file.
