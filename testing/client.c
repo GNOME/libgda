@@ -57,13 +57,13 @@ show_schema (GdaConnection *cnc, GdaConnectionSchema schema, const gchar *label)
 
 }
 
-/* Prints the data in a GdaServerRecordset. Called from g_list_foreach() */
+/* Prints the data in a GdaRecordset. Called from g_list_foreach() */
 static void
 display_row_data (gpointer data, gpointer user_data)
 {
-	GdaServerRecordset *recset = GDA_SERVER_RECORDSET (data);
+	GdaRecordset *recset = GDA_RECORDSET (data);
 
-	g_return_if_fail (GDA_IS_SERVER_RECORDSET (recset));
+	g_return_if_fail (GDA_IS_RECORDSET (recset));
 }
 
 /* Postgres provider own tests */
@@ -223,7 +223,7 @@ open_connection (GdaClient *client,
 	g_print ("%s\n", res ? "OK" : "Error");
 
 	/* Postgres own tests */
-	if (!strcmp (name, "postgres"))
+	if (!strcmp (name, "PostgreSQL"))
 		do_postgres_test (cnc);
 
 	/* close the connection */
