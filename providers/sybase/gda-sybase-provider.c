@@ -2,12 +2,13 @@
  * Copyright (C) 1998-2002 The GNOME Foundation.
  *
  * AUTHORS:
-	*  Mike Wingert <wingert.3@postbox.acs.ohio-state.edu>
-	*      based on the MySQL provider by
+ *         Mike Wingert <wingert.3@postbox.acs.ohio-state.edu>
+ *         Holger Thon <holger.thon@gnome-db.org>
+ *      based on the MySQL provider by
  *         Michael Lausch <michael@lausch.at>
  *	        Rodrigo Moya <rodrigo@gnome-db.org>
  *         Vivien Malerba <malerba@gnome-db.org>
-	*
+ *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
  * published by the Free Software Foundation; either version 2 of the
@@ -24,20 +25,26 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#if defined(HAVE_CONFIG_H)
+#  include <config.h>
+#endif
+
 #include "gda-sybase.h"
 
-static void 
-gda_sybase_provider_class_init (GdaSybaseProviderClass *klass);
+#define PARENT_TYPE GDA_TYPE_SERVER_PROVIDER
+
+static void gda_sybase_provider_class_init (GdaSybaseProviderClass *klass);
 static void gda_sybase_provider_init (GdaSybaseProvider *provider,
-				      GdaSybaseProviderClass *klass);
-static void gda_sybase_provider_finalize   (GObject *object);
+                                      GdaSybaseProviderClass *klass);
+static void gda_sybase_provider_finalize (GObject *object);
+
 static gboolean gda_sybase_provider_open_connection (GdaServerProvider *provider,
-						     GdaServerConnection *cnc,
+						     GdaConnection *cnc,
 						     GdaQuarkList *params,
 						     const gchar *username,
 						     const gchar *password);
 static gboolean gda_sybase_provider_close_connection (GdaServerProvider *provider,
-						      GdaServerConnection *cnc);
+						      GdaConnection *cnc);
 
 static GObjectClass *parent_class = NULL;
 
@@ -85,21 +92,19 @@ gda_sybase_provider_get_type (void)
 	static GType type = 0;
 
 	if (!type) {
-		if (type == 0) {
-			static GTypeInfo info = {
-				sizeof (GdaSybaseProviderClass),
-				(GBaseInitFunc) NULL,
-				(GBaseFinalizeFunc) NULL,
-				(GClassInitFunc) gda_sybase_provider_class_init,
-				NULL, NULL,
-				sizeof (GdaSybaseProvider),
-				0,
-				(GInstanceInitFunc) gda_sybase_provider_init
-			};
-			type = g_type_register_static (PARENT_TYPE,
-						       "GdaSybaseProvider",
-						       &info, 0);
-		}
+		static GTypeInfo info = {
+			sizeof (GdaSybaseProviderClass),
+			(GBaseInitFunc) NULL,
+			(GBaseFinalizeFunc) NULL,
+			(GClassInitFunc) gda_sybase_provider_class_init,
+			NULL, NULL,
+			sizeof (GdaSybaseProvider),
+			0,
+			(GInstanceInitFunc) gda_sybase_provider_init
+		};
+		type = g_type_register_static (PARENT_TYPE,
+					       "GdaSybaseProvider",
+					       &info, 0);
 	}
 
 	return type;
@@ -108,7 +113,7 @@ gda_sybase_provider_get_type (void)
 /* open_connection handler for the GdaSybaseProvider class */
 static gboolean
 gda_sybase_provider_open_connection (GdaServerProvider *provider,
-				     GdaServerConnection *cnc,
+				     GdaConnection *cnc,
 				     GdaQuarkList *params,
 				     const gchar *username,
 				     const gchar *password)
@@ -302,8 +307,6 @@ gda_sybase_provider_open_connection (GdaServerProvider *provider,
 	}						
 	return TRUE;
 
-		
-		
 	g_object_set_data (G_OBJECT (cnc), OBJECT_DATA_SYBASE_HANDLE, sconn);
 
 	return TRUE;
@@ -312,11 +315,11 @@ gda_sybase_provider_open_connection (GdaServerProvider *provider,
 /* close_connection handler for the GdaSybaseProvider class */
 static gboolean
 gda_sybase_provider_close_connection (GdaServerProvider *provider, 
-				      GdaServerConnection *cnc)
+				      GdaConnection *cnc)
 {
 	sybase_connection *sconn;
 	g_return_val_if_fail (GDA_IS_SYBASE_PROVIDER (provider), FALSE);
-	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	sconn = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_SYBASE_HANDLE);
 	if (sconn->connection != NULL) {
 		ct_con_drop (sconn->connection);

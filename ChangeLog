@@ -13,6 +13,11 @@
 	* providers/freetds/gda-freetds-provider.c (get_schema):
 	users schema fixed
 
+	* providers/sybase/Makefile.am,
+	providers/sybase/gda-sybase-provider.{c,h},
+	providers/sybase/gda-sybase.h,
+	providers/sybase/libmain.c: started port of sybase provider
+
 2002-10-29  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
 	* libsql/parser.y: a couple of fixes to make bison not to complain.

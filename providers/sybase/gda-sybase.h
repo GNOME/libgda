@@ -2,12 +2,13 @@
  * Copyright (C) 1998-2002 The GNOME Foundation.
  *
  * AUTHORS:
-	*  Mike Wingert <wingert.3@postbox.acs.ohio-state.edu>
-	*      based on the MySQL provider by
+ *         Mike Wingert <wingert.3@postbox.acs.ohio-state.edu>
+ *         Holger Thon <holger.thon@gnome-db.org>
+ *      based on the MySQL provider by
  *         Michael Lausch <michael@lausch.at>
  *	        Rodrigo Moya <rodrigo@gnome-db.org>
  *         Vivien Malerba <malerba@gnome-db.org>
-	*         and the pre gnome 2.0 sybase provider
+ *         and the pre gnome 2.0 sybase provider
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
  * published by the Free Software Foundation; either version 2 of the
@@ -27,13 +28,20 @@
 #if !defined(__gda_sybase_h__)
 #  define __gda_sybase_h__
 
+#if defined(HAVE_CONFIG_H)
+#  include <config.h>
+#endif
+
 #include <glib/gmacros.h>
-#include <bonobo/bonobo-i18n.h>
-#include <config.h>
-#include <libgda/gda-server.h>
-#include <gda-sybase-provider.h>
+#include <libgda/gda-intl.h>
+#include <libgda/gda-server-provider.h>
+
 #include <ctpublic.h>
 #include <cspublic.h>
+
+#include "gda-sybase-provider.h"
+
+#define GDA_SYBASE_PROVIDER_ID		"GDA sybase provider"
 
 G_BEGIN_DECLS
 
@@ -53,12 +61,12 @@ typedef struct _sybaseConnection
 #define PARENT_TYPE GDA_TYPE_SERVER_PROVIDER
 #define OBJECT_DATA_SYBASE_HANDLE "GDA_Sybase_SybaseHandle"
 #define GDA_SYBASE_COMPONENT_FACTORY_ID "OAFIID:GNOME_Database_Sybase_ComponentFactory"
-#define GDA_SYBASE_PROVIDER_ID          "OAFIID:GNOME_Database_Sybase_Provider"
 
 /*
  * Utility functions
  */
 
+/*
 GdaError *gda_sybase_make_error (sybase_connection *);
 
 gboolean sybase_check_messages(GdaServerConnection *);
@@ -77,7 +85,7 @@ gchar *sprintf_servermsg(const gchar *,
 
 void sybase_debug_msg(gchar *);
 
-
+*/
 
 G_END_DECLS
 

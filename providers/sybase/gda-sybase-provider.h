@@ -3,6 +3,7 @@
  *
  * AUTHORS:
  *  Mike Wingert <wingert.3@postbox.acs.ohio-state.edu>
+ *  Holger Thon <holger.thon@gnome-db.org>
  *      based on the MySQL provider by
  *         Michael Lausch <michael@lausch.at>
  *	        Rodrigo Moya <rodrigo@gnome-db.org>
@@ -27,7 +28,14 @@
 #if !defined(__gda_sybase_provider_h__)
 #  define __gda_sybase_provider_h__
 
+#if defined(HAVE_CONFIG_H)
+#  include <config.h>
+#endif
+
 #include <libgda/gda-server-provider.h>
+
+#include <ctpublic.h>
+#include <cspublic.h>
 
 G_BEGIN_DECLS
 
@@ -48,7 +56,13 @@ struct _GdaSybaseProviderClass {
 	GdaServerProviderClass parent_class;
 };
 
-GType gda_sybase_provider_get_type (void);
+typedef struct _GdaSybaseConnectionData {
+	CS_CONTEXT     *context;
+	CS_CONNECTION  *connection;
+} GdaSybaseConnectionData;
+
+GType              gda_sybase_provider_get_type (void);
+GdaServerProvider *gda_sybase_provider_new (void);
 
 G_END_DECLS
 

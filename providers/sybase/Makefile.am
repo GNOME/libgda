@@ -1,18 +1,23 @@
-bin_PROGRAMS = gda-sybase-srv
+providerdir=$(prefix)/lib/libgda/providers
+provider_LTLIBRARIES = libgda-sybase.la
 
 INCLUDES = \
-	-I. \
-	$(LIBGDA_CFLAGS) \
-	$(SYBASE_CFLAGS)
+	$(SYBASE_CFLAGS) \
+	-I$(top_srcdir) \
+	-I$(top_builddir) \
+	$(LIBGDA_CFLAGS)
 
-gda_sybase_srv_SOURCES = \
+libgda_sybase_la_SOURCES = \
 	gda-sybase-provider.c \
 	gda-sybase-provider.h \
 	gda-sybase.h \
-	main.c
+	gda-tds-schemas.h \
+	libmain.c \
+	utils.c
 
-gda_sybase_srv_LDADD = \
+libgda_sybase_la_LDFLAGS = -export-dynamic -module -avoid-version
+libgda_sybase_la_LIBADD = \
+	$(SYBASE_LIBS) \
 	$(LIBGDA_LIBS) \
-	$(top_builddir)/libgda/libgda-2.la \
-	$(SYBASE_LIBS)
+	$(top_builddir)/libgda/libgda-2.la 
 
