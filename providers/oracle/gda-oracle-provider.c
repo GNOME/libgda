@@ -1942,7 +1942,7 @@ get_oracle_views (GdaConnection *cnc, GdaParameterList *params)
  * see any use for any user passed parameters at this point.
  */
 static GdaDataModel *
-get_oracle_objects (GdaConnection *cnc, GdaParameterList *params, GdaConnectionSchema schema, gint nargs)
+get_oracle_objects (GdaConnection *cnc, GdaParameterList *params, GdaConnectionSchema schema, gint nargs, const gchar *title)
 {
 	GList *reclist;
 	GdaDataModel *recset;
@@ -1993,9 +1993,10 @@ get_oracle_objects (GdaConnection *cnc, GdaParameterList *params, GdaConnectionS
 	if (!reclist)
 		return NULL;
 
-	recset = GDA_DATA_MODEL (reclist->data);
+	if ((recset = GDA_DATA_MODEL (reclist->data)) != NULL)
+		gda_data_model_set_column_title (recset, 0, title);
 	g_list_free (reclist);
-
+	
 	return recset;
 }
 
@@ -2095,23 +2096,19 @@ gda_oracle_provider_get_schema (GdaServerProvider *provider,
 		recset = get_oracle_databases (cnc, params);
 		break;
 	case GDA_CONNECTION_SCHEMA_INDEXES :
-		recset = get_oracle_objects (cnc, params, schema, 1);
-		gda_data_model_set_column_title (recset, 0, _("Indexes"));
+		recset = get_oracle_objects (cnc, params, schema, 1, _("Indexes"));
 		break;
 	case GDA_CONNECTION_SCHEMA_PROCEDURES :
-		recset = get_oracle_objects (cnc, params, schema, 8);
-		gda_data_model_set_column_title (recset, 0, _("Procedures"));
+		recset = get_oracle_objects (cnc, params, schema, 8, _("Procedures"));
 		break;
 	case GDA_CONNECTION_SCHEMA_SEQUENCES :
-		recset = get_oracle_objects (cnc, params, schema, 4);
-		gda_data_model_set_column_title (recset, 0, _("Sequences"));
+		recset = get_oracle_objects (cnc, params, schema, 4, _("Sequences"));
 		break;
 	case GDA_CONNECTION_SCHEMA_TABLES :
 		recset = get_oracle_tables (cnc, params);
 		break;
 	case GDA_CONNECTION_SCHEMA_TRIGGERS :
-		recset = get_oracle_objects (cnc, params, schema, 1);
-		gda_data_model_set_column_title (recset, 0, _("Triggers"));
+		recset = get_oracle_objects (cnc, params, schema, 1, _("Triggers"));
 		break;
 	case GDA_CONNECTION_SCHEMA_VIEWS :
 		recset = get_oracle_views(cnc, params);
@@ -2120,6 +2117,12 @@ gda_oracle_provider_get_schema (GdaServerProvider *provider,
 	default :
 		recset = NULL;
 	}
-
 	return recset;
 }
+
+/*
+  Local Variables:
+  mode:C
+  c-basic-offset: 8
+  End:
+*/

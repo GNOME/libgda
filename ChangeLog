@@ -1,5 +1,15 @@
 2003-04-18  Steve Fosdick <gnomedb@pelvoux.demon.co.uk>
 
+	* libgda/providers/oracle/gda-oracle-provider.c: Fixed a bug in
+	gda_oracle_provider_get_schema - previously a number of calls were
+	made to the function get_oracle_objects which normally returns a
+	GDA data model but which could return NULL, then an attempt was
+	made to set of the first column of the retruned data model without
+	checking for NULL.  Now the title is set within get_oracle_objects
+	which does check for NULL.
+	
+2003-04-18  Steve Fosdick <gnomedb@pelvoux.demon.co.uk>
+
 	* libgda/providers/oracle/gda-oracle-provider.c: Removed debugging
 	messages and added local variable declaration for Emacs to help
 	keep to the coding style.
