@@ -1,3 +1,15 @@
+2005-01-31  Bas Driessen <bas.driessen@xobas.com>
+
+	* providers/mysql/gda-postgres-provider.c: added functions
+	gda_mysql_provider_create_table(), gda_mysql_provider_drop_table().
+
+	* providers/mysql/utils.[ch]: new function
+	gda_mysql_type_from_gda()
+
+	* providers/postgres/gda-postgres-provider.c
+	(postgres_name_from_gda_type): typing error; "date" instead of
+	"data".
+
 2005-01-29  Bas Driessen <bas.driessen@xobas.com>
 
 	* providers/postgres/gda-postgres-provider.c: added prototypes and functions

@@ -5,6 +5,7 @@
  *      Michael Lausch <michael@lausch.at>
  *	Rodrigo Moya <rodrigo@gnome-db.org>
  *      Vivien Malerba <malerba@gnome-db.org>
+ *	Bas Driessen <bas.driessen@xobas.com>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -521,13 +522,139 @@ gda_mysql_provider_create_table (GdaServerProvider *provider,
 {
 	MYSQL *mysql;
 	GdaMysqlProvider *myprv = (GdaMysqlProvider *) provider;
+	GdaDataModelColumnAttributes *dmca;
+	GString *sql;
+	gint i, rc;
+	gchar *mysql_data_type, *default_value, *references;
+	glong size;
+	GdaValueType value_type;
 
 	g_return_val_if_fail (GDA_IS_MYSQL_PROVIDER (myprv), FALSE);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (table_name != NULL, FALSE);
 	g_return_val_if_fail (attributes_list != NULL, FALSE);
 
-	return FALSE;
+	/* check for valid MySQL handle */
+	mysql = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_MYSQL_HANDLE);
+	if (!mysql) {
+		gda_connection_add_error_string (cnc, _("Invalid MYSQL handle"));
+		return FALSE;
+	}
+
+	/* prepare the SQL command */
+	sql = g_string_new ("CREATE TABLE ");
+	g_string_append_printf (sql, "%s (", table_name);
+
+	/* step through list */
+	for (i=0; i<g_list_length ((GList *) attributes_list); i++) {
+
+		if (i>0)
+			g_string_append_printf (sql, ", ");
+
+		dmca = (GdaDataModelColumnAttributes *) g_list_nth_data ((GList *) attributes_list, i);
+
+		/* name */
+		g_string_append_printf (sql, "`%s` ", gda_data_model_column_attributes_get_name (dmca));
+
+		/* data type */
+		value_type = gda_data_model_column_attributes_get_gdatype (dmca);
+		mysql_data_type = gda_mysql_type_from_gda (value_type);
+		g_string_append_printf (sql, "%s", mysql_data_type);
+		g_free(mysql_data_type);
+
+		/* size */
+		size = gda_data_model_column_attributes_get_defined_size (dmca);
+		if (value_type == GDA_VALUE_TYPE_STRING)
+			g_string_append_printf (sql, "(%ld)", size);
+		else if (value_type == GDA_VALUE_TYPE_NUMERIC)
+			g_string_append_printf (sql, "(%ld,%ld)",
+				gda_data_model_column_attributes_get_defined_size (dmca),
+				gda_data_model_column_attributes_get_scale (dmca));
+		else if (value_type == GDA_VALUE_TYPE_MONEY)
+			g_string_append_printf (sql, "(%ld)", size);
+
+		/* optional sizes */
+		if ((value_type == GDA_VALUE_TYPE_BIGINT) && (size > 0))
+			g_string_append_printf (sql, "(%ld)", size);
+		else if ((value_type == GDA_VALUE_TYPE_BIGUINT) && (size > 0))
+			g_string_append_printf (sql, "(%ld)", size);
+		else if ((value_type == GDA_VALUE_TYPE_BIGUINT) && (size > 0))
+			g_string_append_printf (sql, "(%ld)", size);
+		else if ((value_type == GDA_VALUE_TYPE_DOUBLE) && (size > 0))
+			g_string_append_printf (sql, "(%ld)", size);
+		else if ((value_type == GDA_VALUE_TYPE_INTEGER) && (size > 0))
+			g_string_append_printf (sql, "(%ld)", size);
+		else if ((value_type == GDA_VALUE_TYPE_SINGLE) && (size > 0))
+			g_string_append_printf (sql, "(%ld)", size);
+		else if ((value_type == GDA_VALUE_TYPE_SMALLINT) && (size > 0))
+			g_string_append_printf (sql, "(%ld)", size);
+		else if ((value_type == GDA_VALUE_TYPE_SMALLUINT) && (size > 0))
+			g_string_append_printf (sql, "(%ld)", size);
+		else if ((value_type == GDA_VALUE_TYPE_TINYINT) && (size > 0))
+			g_string_append_printf (sql, "(%ld)", size);
+		else if ((value_type == GDA_VALUE_TYPE_TINYUINT) && (size > 0))
+			g_string_append_printf (sql, "(%ld)", size);
+		else if ((value_type == GDA_VALUE_TYPE_UINTEGER) && (size > 0))
+			g_string_append_printf (sql, "(%ld)", size);
+
+		/* set UNSIGNED if applicable */
+		switch (value_type) {
+		case GDA_VALUE_TYPE_BIGUINT :
+			g_string_append_printf (sql, "UNSIGNED");
+		case GDA_VALUE_TYPE_SMALLUINT :
+			g_string_append_printf (sql, "UNSIGNED");
+		case GDA_VALUE_TYPE_TINYUINT :
+			g_string_append_printf (sql, "UNSIGNED");
+		case GDA_VALUE_TYPE_UINTEGER :
+			g_string_append_printf (sql, "UNSIGNED");
+		}
+
+		/* NULL */
+		if (gda_data_model_column_attributes_get_allow_null (dmca) == TRUE)
+			g_string_append_printf (sql, " NULL");
+		else
+			g_string_append_printf (sql, " NOT NULL");
+
+		/* auto increment */
+		if (gda_data_model_column_attributes_get_auto_increment (dmca) == TRUE)
+			g_string_append_printf (sql, "AUTO_INCREMENT");
+
+		/* (primary) key */
+		if (gda_data_model_column_attributes_get_primary_key (dmca) == TRUE)
+			g_string_append_printf (sql, " PRIMARY KEY");
+		else
+			if (gda_data_model_column_attributes_get_unique_key (dmca) == TRUE)
+				g_string_append_printf (sql, " UNIQUE");
+			
+		/* default value (in case of string, user needs to add "'" around the field) */
+                if (gda_data_model_column_attributes_get_default_value (dmca) != NULL) {
+			default_value = gda_value_stringify ((GdaValue *) gda_data_model_column_attributes_get_default_value (dmca));
+			if ((default_value != NULL) && (*default_value != '\0'))
+				g_string_append_printf (sql, " DEFAULT %s", default_value);
+		}
+
+		/* any additional parameters */
+		if (gda_data_model_column_attributes_get_references (dmca) != NULL) {
+			references = (gchar *) gda_data_model_column_attributes_get_references (dmca);
+			if ((references != NULL) && (*references != '\0'))
+				g_string_append_printf (sql, " %s", references);
+		}
+	}
+
+	/* finish the SQL command */
+	g_string_append_printf (sql, ")");
+
+	/* execute sql command */
+	rc = mysql_query (mysql, sql->str);
+	if (rc != 0) {
+		gda_connection_add_error (cnc, gda_mysql_make_error (mysql));
+		return FALSE;
+	}
+
+	/* clean up */
+	g_string_free (sql, TRUE);
+
+	return TRUE;
 }
 
 /* drop_table handler for the GdaMysqlProvider class */

@@ -265,7 +265,7 @@ postgres_name_from_gda_type (const GdaValueType type)
 	case GDA_VALUE_TYPE_BOOLEAN :
 		return g_strdup_printf ("bool");
 	case GDA_VALUE_TYPE_DATE :
-		return g_strdup_printf ("data");
+		return g_strdup_printf ("date");
 	case GDA_VALUE_TYPE_DOUBLE :
 		return g_strdup_printf ("float8");
 	case GDA_VALUE_TYPE_GEOMETRIC_POINT :
@@ -275,7 +275,7 @@ postgres_name_from_gda_type (const GdaValueType type)
 	case GDA_VALUE_TYPE_INTEGER :
 		return g_strdup_printf ("int4");
 	case GDA_VALUE_TYPE_LIST :
-		return g_strdup_printf ("varchar");
+		return g_strdup_printf ("text");
 	case GDA_VALUE_TYPE_MONEY :
 		return g_strdup_printf ("money");
 	case GDA_VALUE_TYPE_NUMERIC :
@@ -861,13 +861,12 @@ gda_postgres_provider_create_table (GdaServerProvider *provider,
 		else
 			g_string_append_printf (sql, " NOT NULL");
 	
-		/* primary key */
+		/* (primary) key */
 		if (gda_data_model_column_attributes_get_primary_key (dmca) == TRUE)
 			g_string_append_printf (sql, " PRIMARY KEY");
-
-		/* unique key */
-		if (gda_data_model_column_attributes_get_unique_key (dmca) == TRUE)
-			g_string_append_printf (sql, " UNIQUE");
+		else
+			if (gda_data_model_column_attributes_get_unique_key (dmca) == TRUE)
+				g_string_append_printf (sql, " UNIQUE");
 
 		/* default value (in case of string, user needs to add "'" around the field) */
 		if (gda_data_model_column_attributes_get_default_value (dmca) != NULL) {

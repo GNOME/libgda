@@ -1,10 +1,11 @@
 /* GDA MySQL provider
- * Copyright (C) 1998-2002 The GNOME Foundation.
+ * Copyright (C) 1998-2005 The GNOME Foundation.
  *
  * AUTHORS:
  *      Michael Lausch <michael@lausch.at>
  *	Rodrigo Moya <rodrigo@gnome-db.org>
  *      Vivien Malerba <malerba@gnome-db.org>
+ *	Bas Driessen <bas.driessen@xobas.com>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -96,6 +97,67 @@ gda_mysql_type_to_gda (enum enum_field_types mysql_type, gboolean is_unsigned)
 	}
 
 	return GDA_VALUE_TYPE_UNKNOWN;
+}
+
+gchar *
+gda_mysql_type_from_gda (const GdaValueType type)
+{
+	switch (type) {
+	case GDA_VALUE_TYPE_NULL :
+		return g_strdup_printf ("text");
+	case GDA_VALUE_TYPE_BIGINT :
+		return g_strdup_printf ("bigint");
+	case GDA_VALUE_TYPE_BIGUINT :
+		return g_strdup_printf ("bigint");
+	case GDA_VALUE_TYPE_BINARY :
+		return g_strdup_printf ("binary");
+	case GDA_VALUE_TYPE_BLOB :
+		return g_strdup_printf ("blob");
+	case GDA_VALUE_TYPE_BOOLEAN :
+		return g_strdup_printf ("tinyint");
+	case GDA_VALUE_TYPE_DATE :
+		return g_strdup_printf ("date");
+	case GDA_VALUE_TYPE_DOUBLE :
+		return g_strdup_printf ("double");
+	case GDA_VALUE_TYPE_GEOMETRIC_POINT :
+		return g_strdup_printf ("text");
+	case GDA_VALUE_TYPE_GOBJECT :
+		return g_strdup_printf ("text");
+	case GDA_VALUE_TYPE_INTEGER :
+		return g_strdup_printf ("integer");
+	case GDA_VALUE_TYPE_LIST :
+		return g_strdup_printf ("text");
+	case GDA_VALUE_TYPE_MONEY :
+		return g_strdup_printf ("char");
+	case GDA_VALUE_TYPE_NUMERIC :
+		return g_strdup_printf ("numeric");
+	case GDA_VALUE_TYPE_SINGLE :
+		return g_strdup_printf ("float");
+	case GDA_VALUE_TYPE_SMALLINT :
+		return g_strdup_printf ("smallint");
+	case GDA_VALUE_TYPE_SMALLUINT :
+		return g_strdup_printf ("smallint");
+	case GDA_VALUE_TYPE_STRING :
+		return g_strdup_printf ("varchar");
+	case GDA_VALUE_TYPE_TIME :
+		return g_strdup_printf ("time");
+	case GDA_VALUE_TYPE_TIMESTAMP :
+		return g_strdup_printf ("timestamp");
+	case GDA_VALUE_TYPE_TINYINT :
+		return g_strdup_printf ("tinyint");
+	case GDA_VALUE_TYPE_TINYUINT :
+		return g_strdup_printf ("tinyint");
+	case GDA_VALUE_TYPE_TYPE :
+		return g_strdup_printf ("smallint");
+        case GDA_VALUE_TYPE_UINTEGER :
+		return g_strdup_printf ("integer");
+	case GDA_VALUE_TYPE_UNKNOWN :
+		return g_strdup_printf ("text");
+	default :
+		return g_strdup_printf ("text");
+	}
+
+	return g_strdup_printf ("text");
 }
 
 gchar *
