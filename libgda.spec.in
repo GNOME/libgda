@@ -44,6 +44,9 @@ BuildRequires:    postgresql-devel
 BuildRequires:    unixODBC-devel
 %endif
 
+%if %{SQLITE}
+BuildRequires:	  sqlite-devel
+%endif
 
 %description
 libgda is a library that eases the task of writing
@@ -207,6 +210,7 @@ rm -rf %{buildroot}
 %dir %{_libdir}/libgda
 %dir %{_libdir}/libgda/providers
 %{_libdir}/libgda/providers/libgda-default.so
+%{_mandir}/man1/gda-config-tool.1*
 
 %files devel
 %defattr(-,root,root)
@@ -260,6 +264,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Dec 31 2002 David Hollis <dhollis@davehollis.com>
+- Added sqlite-devel buildreq
+- Include gda-config-tool man page
+
 * Mon Aug 19 2002 Ben Liblit <liblit@acm.org>
 - Fixed version number substitutions
 

@@ -1,3 +1,8 @@
+2003-01-02  David Hollis <dhollis@davehollis.com>
+
+	* libgda.spec.in: added build requirements for gda-sqlite and man page
+	for gda-config-tool.
+
 2002-12-29  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* configure.in:
