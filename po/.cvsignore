@@ -6,3 +6,4 @@ cat-id-tbl.c
 libgda.pot
 stamp-cat-id
 *.gmo
+messages
