@@ -1,3 +1,7 @@
+2002-09-11  Carlos Perello Marin <carlos@gnome-db.org>
+
+	* configure.in (ALL_LINGUAS): Added ko
+
 2002-09-11  Xabier Rodriguez Calvar <xrcalvar@igalia.com>
 
 	* doc/C/libgda-docs.sgml: small change in compilation instructions.
