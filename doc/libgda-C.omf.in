@@ -16,7 +16,7 @@
     </description>
     <type>user's guide</type>
     <format mime="text/html"/>
-    <identifier url="file:/@prefix@/share/gtk-doc/html/libgda/index.html"/>
+    <identifier url="file:@prefix@/share/gtk-doc/html/libgda/index.html"/>
     <language code="C"/>
     <relation seriesid="ebe4f574-a94d-11d6-8bc3-bd1f202a92f8"/>
     <rights type="GNU FDL" license.version="1.1"/>

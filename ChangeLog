@@ -1,3 +1,9 @@
+2005-02-28  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	Fixes #160666
+
+	* libgda-C.omf.in: removed double // in file URI.
+
 2005-02-18  Denis Fortin <denis.fortin@free.fr>
 
 	* configure.in: check for sqlite3.
