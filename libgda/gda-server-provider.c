@@ -248,10 +248,12 @@ gda_server_provider_rollback_transaction (GdaServerProvider *provider,
  * gda_server_provider_supports
  */
 gboolean
-gda_server_provider_supports (GdaServerProvider *provider, GNOME_Database_Feature feature)
+gda_server_provider_supports (GdaServerProvider *provider,
+			      GdaServerConnection *cnc,
+			      GNOME_Database_Feature feature)
 {
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), FALSE);
 	g_return_val_if_fail (CLASS (provider)->supports != NULL, FALSE);
 
-	return CLASS (provider)->supports (provider, feature);
+	return CLASS (provider)->supports (provider, cnc, feature);
 }

@@ -1,3 +1,8 @@
+2001-12-22  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-mysql-provider.c (gda_mysql_provider_supports): new method
+	implementation for the MySQL provider
+
 2001-12-20  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-mysql-provider.c (gda_mysql_provider_begin_transaction):

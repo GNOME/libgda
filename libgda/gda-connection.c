@@ -456,7 +456,7 @@ gda_connection_supports (GdaConnection *cnc, GdaConnectionFeature feature)
 	CORBA_Environment ev;
 	CORBA_boolean corba_res;
 
-	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 
 	CORBA_exception_init (&ev);
 

@@ -262,7 +262,7 @@ impl_Connection_supports (PortableServer_Servant servant,
 
 	bonobo_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), FALSE, ev);
 
-	result = gda_server_provider_supports (cnc->priv->provider, feature);
+	result = gda_server_provider_supports (cnc->priv->provider, cnc, feature);
 	return result;
 }
 

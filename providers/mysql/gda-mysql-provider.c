@@ -50,10 +50,12 @@ static gboolean gda_mysql_provider_begin_transaction (GdaServerProvider *provide
 static gboolean gda_mysql_provider_commit_transaction (GdaServerProvider *provider,
 						       GdaServerConnection *cnc,
 						       const gchar *trans_id);
-
 static gboolean gda_mysql_provider_rollback_transaction (GdaServerProvider *provider,
 							 GdaServerConnection *cnc,
 							 const gchar *trans_id);
+static gboolean gda_mysql_provider_supports (GdaServerProvider *provider,
+					     GdaServerConnection *cnc,
+					     GNOME_Database_Feature feature);
 
 static GObjectClass *parent_class = NULL;
 
@@ -76,6 +78,7 @@ gda_mysql_provider_class_init (GdaMysqlProviderClass *klass)
 	provider_class->begin_transaction = gda_mysql_provider_begin_transaction;
 	provider_class->commit_transaction = gda_mysql_provider_commit_transaction;
 	provider_class->rollback_transaction = gda_mysql_provider_rollback_transaction;
+	provider_class->supports = gda_mysql_provider_supports;
 }
 
 static void
@@ -380,4 +383,23 @@ gda_mysql_provider_rollback_transaction (GdaServerProvider *provider,
 	}
 
 	return TRUE;
+}
+
+/* supports handler for the GdaMysqlProvider class */
+static gboolean
+gda_mysql_provider_supports (GdaServerProvider *provider,
+			     GdaServerConnection *cnc,
+			     GNOME_Database_Feature feature)
+{
+	GdaMysqlProvider *myprv = (GdaMysqlProvider *) provider;
+
+	g_return_val_if_fail (GDA_IS_MYSQL_PROVIDER (myprv), FALSE);
+
+	switch (feature) {
+	case GNOME_Database_FEATURE_TRANSACTIONS :
+		return TRUE;
+	default :
+	}
+
+	return FALSE;
 }

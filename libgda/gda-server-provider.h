@@ -75,7 +75,9 @@ struct _GdaServerProviderClass {
 					   GdaServerConnection *cnc,
 					   const gchar *trans_id);
 
-	gboolean (* supports) (GdaServerProvider *provider, GNOME_Database_Feature feature);
+	gboolean (* supports) (GdaServerProvider *provider,
+			       GdaServerConnection *cnc,
+			       GNOME_Database_Feature feature);
 };
 
 GType    gda_server_provider_get_type (void);
@@ -103,6 +105,7 @@ gboolean gda_server_provider_rollback_transaction (GdaServerProvider *provider,
 						   const gchar *trans_id);
 
 gboolean gda_server_provider_supports (GdaServerProvider *provider,
+				       GdaServerConnection *cnc,
 				       GNOME_Database_Feature feature);
 
 G_END_DECLS
