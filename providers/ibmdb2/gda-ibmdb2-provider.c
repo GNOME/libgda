@@ -128,9 +128,14 @@ gda_ibmdb2_provider_open_connection (GdaServerProvider *provider,
 	
 	db2 = g_new0 (GdaIBMDB2ConnectionData, 1);
 	g_return_val_if_fail (db2 != NULL, FALSE);
+	db2->henv = SQL_NULL_HANDLE;
+	db2->hdbc = SQL_NULL_HANDLE;
 	
 	db2->rc = SQLAllocHandle (SQL_HANDLE_ENV, SQL_NULL_HANDLE, &db2->henv);
 	if (db2->rc != SQL_SUCCESS) {
+		if (db2->henv != SQL_NULL_HANDLE) {
+			SQLFreeHandle (SQL_HANDLE_ENV, db2->henv);
+		}
 		g_free (db2);
 		db2 = NULL;
 		
@@ -139,6 +144,9 @@ gda_ibmdb2_provider_open_connection (GdaServerProvider *provider,
 	}
 	db2->rc = SQLAllocHandle (SQL_HANDLE_DBC, db2->henv, &db2->hdbc);
 	if (db2->rc != SQL_SUCCESS) {
+		if (db2->hdbc != SQL_NULL_HANDLE) {
+			db2->rc = SQLFreeHandle (SQL_HANDLE_DBC, db2->hdbc);
+		}
 		db2->rc = SQLFreeHandle (SQL_HANDLE_ENV, db2->henv);
 		g_free (db2);
 		db2 = NULL;
@@ -182,12 +190,14 @@ gda_ibmdb2_provider_open_connection (GdaServerProvider *provider,
 		// is needed for tables schema
 		gda_connection_add_error_string (cnc, _("SQLGetInfo is unsupported. Hence IBM DB2 Provider will not work.\n"));
 
+		db2->rc = SQLDisconnect (db2->hdbc);
 		db2->rc = SQLFreeHandle (SQL_HANDLE_DBC, db2->hdbc);
 		db2->rc = SQLFreeHandle (SQL_HANDLE_ENV, db2->henv);
 		g_free (db2);
 		db2 = NULL;
 		return FALSE;
 	} else {
+		db2->rc = SQLDisconnect (db2->hdbc);
 		db2->rc = SQLFreeHandle (SQL_HANDLE_DBC, db2->hdbc);
 		db2->rc = SQLFreeHandle (SQL_HANDLE_ENV, db2->henv);
 		g_free (db2);
@@ -195,6 +205,8 @@ gda_ibmdb2_provider_open_connection (GdaServerProvider *provider,
 		gda_connection_add_error_string (cnc, _("SQLGetFunctions gave unexpected return. Connection terminated.\n"));
 		return FALSE;
 	}
+
+	g_object_set_data (G_OBJECT  (cnc), OBJECT_DATA_IBMDB2_HANDLE, db2);
 	
 	return TRUE;
 }
