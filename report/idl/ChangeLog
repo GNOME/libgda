@@ -1,3 +1,7 @@
+2001-04-23  Carlos Perelló Marín <carlos@gnome-db.org>
+
+	* GDA_Report.idl: Added all the DTD objects and some exceptions
+
 2000-11-04	Rodrigo Moya <rodrigo@linuxave.net>
 
 	* added missing stuff for the GDA_ReportStream interface
