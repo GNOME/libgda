@@ -124,6 +124,8 @@ GdaValue     *gda_value_new_string (const gchar *val);
 GdaValue     *gda_value_new_time (const GdaTime *val);
 GdaValue     *gda_value_new_timestamp (const GdaTimestamp *val);
 GdaValue     *gda_value_new_tinyint (gchar val);
+GdaValue     *gda_value_new_from_string (const gchar *as_string,
+					 GdaValueType type);
 
 void          gda_value_free (GdaValue *value);
 
@@ -162,7 +164,13 @@ const GdaTimestamp *gda_value_get_timestamp (GdaValue *value);
 void          gda_value_set_timestamp (GdaValue *value, const GdaTimestamp *val);
 gchar         gda_value_get_tinyint (GdaValue *value);
 void          gda_value_set_tinyint (GdaValue *value, gchar val);
+gboolean      gda_value_set_from_string (GdaValue *value, 
+					 const gchar *as_string,
+					 GdaValueType type);
 
+
+gint          gda_value_compare (const GdaValue *value1,
+				 const GdaValue *value2);
 gchar        *gda_value_stringify (GdaValue *value);
 
 G_END_DECLS

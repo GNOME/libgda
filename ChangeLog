@@ -1,3 +1,10 @@
+2002-05-16  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
+	* libgda/gda-value.[ch]:
+	(gda_value_new_from_string):
+	(gda_value_set_from_string):
+	(gda_value_compare): new functions.
+
 2002-05-15  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* libgda/gda-server-provider.[ch]: added create_database to

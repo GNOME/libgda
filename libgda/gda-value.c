@@ -21,8 +21,11 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#include <string.h>
+#include <stdlib.h>
 #include <config.h>
 #include <time.h>
+#include <glib/gdate.h>
 #include <glib/gmessages.h>
 #include <glib/gstrfuncs.h>
 #include <glib/gstring.h>
@@ -54,6 +57,171 @@ clear_value (GdaValue *value)
 
 	value->type = GDA_VALUE_TYPE_UNKNOWN;
 }
+
+/* Makes a point from a string like "(3.2,5.6)" */
+static void
+make_point (GdaGeometricPoint *point, const gchar *value)
+{
+	value++;
+	point->x = atof (value);
+	value = strchr (value, ',');
+	value++;
+	point->y = atof (value);
+}
+
+/* Makes a GdaTime from a string like "12:30:15+01" */
+static void
+make_time (GdaTime *timegda, const gchar *value)
+{
+	timegda->hour = atoi (value);
+	value += 3;
+	timegda->minute = atoi (value);
+	value += 3;
+	timegda->second = atoi (value);
+	value += 2;
+	if (*value)
+		timegda->timezone = atoi (value);
+	else
+		timegda->timezone = TIMEZONE_INVALID;
+}
+
+/* Makes a GdaTimestamp from a string like "2003-12-13 13:12:01.12+01" */
+static void
+make_timestamp (GdaTimestamp *timestamp, const gchar *value)
+{
+	timestamp->year = atoi (value);
+	value += 5;
+	timestamp->month = atoi (value);
+	value += 3;
+	timestamp->day = atoi (value);
+	value += 3;
+	timestamp->hour = atoi (value);
+	value += 3;
+	timestamp->minute = atoi (value);
+	value += 3;
+	timestamp->second = atoi (value);
+	value += 3;
+	timestamp->fraction = atol (value) * 10; // I have only hundredths of second
+	value += 3;
+	timestamp->timezone = atol (value) * 60 * 60;
+}
+
+static gboolean
+set_from_string (GdaValue *value, const gchar *as_string)
+{
+	GDate *gdate;
+	GdaDate date;
+	GdaTime timegda;
+	GdaTimestamp timestamp;
+	GdaGeometricPoint point;
+	GdaNumeric numeric;
+	gboolean retval;
+	gchar *endptr [1];
+	gdouble dvalue;
+	glong lvalue;
+
+	g_return_val_if_fail (value != NULL, FALSE);
+
+	retval = FALSE;
+	switch (value->type) {
+	case GDA_VALUE_TYPE_BOOLEAN :
+		if (g_strcasecmp (as_string, "true") == 0){
+			gda_value_set_boolean (value, TRUE);
+			retval = TRUE;
+		}
+		else if (g_strcasecmp (as_string, "false") == 0){
+			gda_value_set_boolean (value, FALSE);
+			retval = TRUE;
+		}
+		break;
+	case GDA_VALUE_TYPE_BIGINT :
+		/* Use g_strtod instead of strtoll */
+		dvalue = g_strtod (as_string, endptr);
+		if (*as_string != '\0' && **endptr == '\0'){
+			gda_value_set_bigint (value, (gint64) dvalue);
+			retval = TRUE;
+		}
+		break;
+	case GDA_VALUE_TYPE_INTEGER :
+		lvalue = strtol (as_string, endptr, 10);
+		if (*as_string != '\0' && **endptr == '\0'){
+			gda_value_set_integer (value, (gint32) lvalue);
+			retval = TRUE;
+		}
+		break;
+	case GDA_VALUE_TYPE_SMALLINT :
+		lvalue = strtol (as_string, endptr, 10);
+		if (*as_string != '\0' && **endptr == '\0'){
+			gda_value_set_smallint (value, (gint16) lvalue);
+			retval = TRUE;
+		}
+		break;
+	case GDA_VALUE_TYPE_SINGLE :
+		dvalue = g_strtod (as_string, endptr);
+		if (*as_string != '\0' && **endptr == '\0'){
+			gda_value_set_single (value, (gfloat) dvalue);
+			retval = TRUE;
+		}
+		break;
+	case GDA_VALUE_TYPE_DOUBLE :
+		dvalue = g_strtod (as_string, endptr);
+		if (*as_string != '\0' && **endptr == '\0'){
+			gda_value_set_double (value, dvalue);
+			retval = TRUE;
+		}
+		break;
+	case GDA_VALUE_TYPE_NUMERIC :
+		//FIXME: what test whould i do for numeric?
+		numeric.number = g_strdup (as_string);
+		numeric.precision = 0; //FIXME
+		numeric.width = 0; //FIXME
+		gda_value_set_numeric (value, &numeric);
+		g_free (numeric.number);
+		retval = TRUE;
+		break;
+	case GDA_VALUE_TYPE_DATE :
+		gdate = g_date_new ();
+		g_date_set_parse (gdate, as_string);
+		if (g_date_valid (gdate)) {
+			date.day = g_date_get_day (gdate);
+			date.month = g_date_get_month (gdate);
+			date.year = g_date_get_year (gdate);
+			gda_value_set_date (value, &date);
+			retval = TRUE;
+		}
+		g_date_free (gdate);
+		break;
+	case GDA_VALUE_TYPE_GEOMETRIC_POINT :
+		//FIXME: add more checks to make_point
+		make_point (&point, as_string);
+		gda_value_set_geometric_point (value, &point);
+		break;
+	case GDA_VALUE_TYPE_NULL :
+		gda_value_set_null (value);
+		break;
+	case GDA_VALUE_TYPE_TIMESTAMP :
+		//FIXME: add more checks to make_timestamp
+		make_timestamp (&timestamp, as_string);
+		gda_value_set_timestamp (value, &timestamp);
+		break;
+	case GDA_VALUE_TYPE_TIME :
+		//FIXME: add more checks to make_time
+		make_time (&timegda, as_string);
+		gda_value_set_time (value, &timegda);
+		break;
+	case GDA_VALUE_TYPE_LIST : //FIXME
+	case GDA_VALUE_TYPE_BINARY : //FIXME
+	default :
+		gda_value_set_string (value, as_string);
+		retval = TRUE;
+	}
+
+	return retval;
+}
+
+/*
+ * Public functions
+ */
 
 /**
  * gda_value_new_null
@@ -351,6 +519,31 @@ gda_value_new_tinyint (gchar val)
 
 	value = g_new0 (GdaValue, 1);
 	gda_value_set_tinyint (value, val);
+
+	return value;
+}
+
+/**
+ * gda_value_new_from_string
+ * @as_string: stringified representation of the value.
+ * @type: tha new value type.
+ *
+ * Make a new #GdaValue of type @type from its string representation.
+ *
+ * Returns: The newly created #GdaValue or NULL if the string representation
+ * cannot be converted to the specified @type;
+ */
+GdaValue *
+gda_value_new_from_string (const gchar *as_string, GdaValueType type)
+{
+	GdaValue *value;
+
+	g_return_val_if_fail (as_string != NULL, NULL);
+	value = g_new0 (GdaValue, 1);
+	if (!gda_value_set_from_string (value, as_string, type)){
+		g_free (value);
+		value = NULL;
+	}
 
 	return value;
 }
@@ -1007,6 +1200,30 @@ gda_value_set_tinyint (GdaValue *value, gchar val)
 }
 
 /**
+ * gda_value_set_from_string
+ * @value: a #GdaValue that will store @val.
+ * @as_string: the stringified representation of the value.
+ * @type: the type of the value
+ *
+ * Stores the value data from its string representation as @type.
+ *
+ * Returns: TRUE if the value has been property converted to @type from
+ * its string representation. FALSE otherwise.
+ */
+gboolean
+gda_value_set_from_string (GdaValue *value, 
+			   const gchar *as_string,
+			   GdaValueType type)
+{
+	g_return_val_if_fail (value != NULL, FALSE);
+	g_return_val_if_fail (as_string != NULL, FALSE);
+
+	clear_value (value);
+	value->type = type;
+	return set_from_string (value, as_string);
+}
+
+/**
  * gda_value_stringify
  * @value: a #GdaValue.
  *
@@ -1131,3 +1348,96 @@ gda_value_stringify (GdaValue *value)
         	
 	return retval;
 }
+
+/**
+ * gda_value_compare
+ * @value1: a #GdaValue to compare.
+ * @value2: the other #GdaValue to be compared to @value1.
+ *
+ * Compares two values of the <b>same</b> type.
+ *
+ * Returns: if both values have the same time, return 0 if both contains
+ * the same value, an integer less than 0 if @value1 is less than @value2 or
+ * an integer greater than 0 if @value1 is greater than @value2.
+ */
+gint
+gda_value_compare (const GdaValue *value1, const GdaValue *value2)
+{
+	GList *l1, *l2;
+	gint retval;
+
+	g_return_val_if_fail (value1 != NULL && value2 != NULL, -1);
+	g_return_val_if_fail (value1->type != value2->type, -1);
+
+	switch (value1->type) {
+	case GDA_VALUE_TYPE_BIGINT :
+		retval = (gint) value1->value.v_bigint - value2->value.v_bigint;
+		break;
+	case GDA_VALUE_TYPE_BINARY :
+		//FIXME
+		retval = -1;
+		break;
+	case GDA_VALUE_TYPE_BOOLEAN :
+		retval = value1->value.v_boolean - value2->value.v_boolean;
+		break;
+	case GDA_VALUE_TYPE_DATE :
+		retval = memcmp (&value1->value.v_date, &value2->value.v_date,
+				  sizeof (GdaDate));
+		break;
+	case GDA_VALUE_TYPE_DOUBLE :
+		retval = (gint) value1->value.v_double - value2->value.v_double;
+		break;
+	case GDA_VALUE_TYPE_GEOMETRIC_POINT :
+		retval = memcmp (&value1->value.v_point, &value2->value.v_point,
+				 sizeof (GdaGeometricPoint));
+		break;
+	case GDA_VALUE_TYPE_INTEGER :
+		retval = value1->value.v_integer - value2->value.v_integer;
+		break;
+	case GDA_VALUE_TYPE_LIST :
+		retval = 0;
+		for (l1 = value1->value.v_list, l2 = value2->value.v_list; 
+		     l1 != NULL && l2 != NULL; l1 = l1->next, l2 = l2->next){
+			retval = gda_value_compare ((GdaValue *) l1->data,
+						    (GdaValue *) l2->data);
+			if (retval != 0) break;
+		}
+		if (retval == 0 && (l1 == NULL || l2 == NULL) && l1 != l2)
+			retval = (l1 == NULL) ? -1 : 1;
+		break;
+	case GDA_VALUE_TYPE_NUMERIC :
+		retval = memcmp (&value1->value.v_numeric,
+				 &value2->value.v_numeric,
+				 sizeof (GdaNumeric));
+		break;
+	case GDA_VALUE_TYPE_SINGLE :
+		retval = (gint) value1->value.v_single - value2->value.v_single;
+		break;
+	case GDA_VALUE_TYPE_SMALLINT :
+		retval = value1->value.v_smallint - value2->value.v_smallint;
+		break;
+	case GDA_VALUE_TYPE_STRING :
+		retval = strcmp (value1->value.v_string, value2->value.v_string);
+		break;
+	case GDA_VALUE_TYPE_TIME :
+		retval = memcmp (&value1->value.v_time, &value2->value.v_time,
+				 sizeof (GdaTime));
+		break;
+	case GDA_VALUE_TYPE_TIMESTAMP :
+		retval = memcmp (&value1->value.v_timestamp,
+				 &value2->value.v_timestamp,
+				 sizeof (GdaTimestamp));
+		break;
+	case GDA_VALUE_TYPE_TINYINT :
+		retval = value1->value.v_tinyint - value2->value.v_tinyint;
+		break;
+	default :
+		//FIXME
+		retval = -1;
+		break;
+	}
+
+	return retval;
+}
+
+
