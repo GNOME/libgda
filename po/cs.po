@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda HEAD\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2003-08-29 20:45+0200\n"
+"POT-Creation-Date: 2003-09-11 00:35+0200\n"
 "PO-Revision-Date: 2003-08-30 14:57+0200\n"
 "Last-Translator: Miloslav Trmac <mitr@volny.cz>\n"
 "Language-Team: Czech <cs@li.org>\n"
@@ -55,8 +55,8 @@ msgstr "Chyba: %s"
 #: providers/oracle/gda-oracle-provider.c:1910
 #: providers/oracle/gda-oracle-provider.c:1955
 #: providers/oracle/gda-oracle-provider.c:1972
-#: providers/xml/gda-xml-provider.c:567 providers/xml/gda-xml-provider.c:586
-#: providers/xml/gda-xml-provider.c:620
+#: providers/xml/gda-xml-provider.c:584 providers/xml/gda-xml-provider.c:603
+#: providers/xml/gda-xml-provider.c:637
 msgid "Name"
 msgstr "Název"
 
@@ -546,7 +546,7 @@ msgstr "Transakce nejsou poskytovatelem MDB podporovány"
 #: providers/oracle/gda-oracle-provider.c:1248
 #: providers/postgres/gda-postgres-provider.c:1363
 #: providers/sqlite/gda-sqlite-provider.c:622
-#: providers/xml/gda-xml-provider.c:464
+#: providers/xml/gda-xml-provider.c:489
 msgid "Field name"
 msgstr "Název pole"
 
@@ -556,7 +556,7 @@ msgstr "Název pole"
 #: providers/oracle/gda-oracle-provider.c:1249
 #: providers/postgres/gda-postgres-provider.c:1364
 #: providers/sqlite/gda-sqlite-provider.c:623
-#: providers/xml/gda-xml-provider.c:465
+#: providers/xml/gda-xml-provider.c:490
 msgid "Data type"
 msgstr "Datový typ"
 
@@ -566,7 +566,7 @@ msgstr "Datový typ"
 #: providers/oracle/gda-oracle-provider.c:1250
 #: providers/postgres/gda-postgres-provider.c:1365
 #: providers/sqlite/gda-sqlite-provider.c:624
-#: providers/xml/gda-xml-provider.c:466
+#: providers/xml/gda-xml-provider.c:491
 msgid "Size"
 msgstr "Velikost"
 
@@ -576,7 +576,7 @@ msgstr "Velikost"
 #: providers/oracle/gda-oracle-provider.c:1251
 #: providers/postgres/gda-postgres-provider.c:1366
 #: providers/sqlite/gda-sqlite-provider.c:625
-#: providers/xml/gda-xml-provider.c:467
+#: providers/xml/gda-xml-provider.c:492
 msgid "Scale"
 msgstr "Škála"
 
@@ -586,7 +586,7 @@ msgstr "Škála"
 #: providers/oracle/gda-oracle-provider.c:1252
 #: providers/postgres/gda-postgres-provider.c:1367
 #: providers/sqlite/gda-sqlite-provider.c:626
-#: providers/xml/gda-xml-provider.c:468
+#: providers/xml/gda-xml-provider.c:493
 msgid "Not null?"
 msgstr "Nenulový?"
 
@@ -596,7 +596,7 @@ msgstr "Nenulový?"
 #: providers/oracle/gda-oracle-provider.c:1253
 #: providers/postgres/gda-postgres-provider.c:1368
 #: providers/sqlite/gda-sqlite-provider.c:627
-#: providers/xml/gda-xml-provider.c:469
+#: providers/xml/gda-xml-provider.c:494
 msgid "Primary key?"
 msgstr "Primární klíč?"
 
@@ -606,7 +606,7 @@ msgstr "Primární klíč?"
 #: providers/oracle/gda-oracle-provider.c:1254
 #: providers/postgres/gda-postgres-provider.c:1369
 #: providers/sqlite/gda-sqlite-provider.c:628
-#: providers/xml/gda-xml-provider.c:470
+#: providers/xml/gda-xml-provider.c:495
 msgid "Unique index?"
 msgstr "Unikátní index?"
 
@@ -616,7 +616,7 @@ msgstr "Unikátní index?"
 #: providers/oracle/gda-oracle-provider.c:1255
 #: providers/postgres/gda-postgres-provider.c:1370
 #: providers/sqlite/gda-sqlite-provider.c:629
-#: providers/xml/gda-xml-provider.c:471
+#: providers/xml/gda-xml-provider.c:496
 msgid "References"
 msgstr "Reference"
 
@@ -724,7 +724,7 @@ msgstr "Řetězce znaků"
 msgid "Could not parse '%s' command"
 msgstr "Nelze zpracovat příkaz '%s'"
 
-#: providers/mdb/gda-mdb-table.c:48 providers/xml/gda-xml-provider.c:494
+#: providers/mdb/gda-mdb-table.c:48 providers/xml/gda-xml-provider.c:519
 #, c-format
 msgid "Table %s not found"
 msgstr "Tabulka %s nebyla nalezena"
@@ -1627,7 +1627,7 @@ msgstr "Neplatný handle Xbase"
 msgid "Provider for Xbase (dBase, FoxPro, etc) files"
 msgstr "Poskytovatel pro soubory Xbase (dBase, FoxPro atd.)"
 
-#: providers/xml/gda-xml-provider.c:190
+#: providers/xml/gda-xml-provider.c:191
 msgid ""
 "A full path must be specified on the connection string to open a database on "
 "the XML provider."
@@ -1635,24 +1635,24 @@ msgstr ""
 "Pro otevření databáze v poskytovateli XML musí být v připojovacím řetězci "
 "zadána úplná cesta."
 
-#: providers/xml/gda-xml-provider.c:221 providers/xml/gda-xml-provider.c:243
+#: providers/xml/gda-xml-provider.c:222 providers/xml/gda-xml-provider.c:244
 msgid "Invalid XML handle"
 msgstr "Neplatný handle XML"
 
-#: providers/xml/gda-xml-provider.c:262 providers/xml/gda-xml-provider.c:277
-#: providers/xml/gda-xml-provider.c:304
+#: providers/xml/gda-xml-provider.c:263 providers/xml/gda-xml-provider.c:278
+#: providers/xml/gda-xml-provider.c:329
 msgid "Invalid internal handle"
 msgstr "Neplatný interní handle"
 
-#: providers/xml/gda-xml-provider.c:343
+#: providers/xml/gda-xml-provider.c:368
 msgid "Not Implemented"
 msgstr "Neimplementováno"
 
-#: providers/xml/gda-xml-provider.c:481 providers/xml/gda-xml-provider.c:487
+#: providers/xml/gda-xml-provider.c:506 providers/xml/gda-xml-provider.c:512
 msgid "Invalid argument"
 msgstr "Neplatný parametr"
 
-#: providers/xml/gda-xml-provider.c:521
+#: providers/xml/gda-xml-provider.c:538
 msgid "Could not get description for column"
 msgstr "Nelze získat popis pro sloupec"
 

@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 2.4\n"
-"Report-Msgid-Bugs-To: Duarte Loreto <happyguy_pt@hotmail.com>\n"
-"POT-Creation-Date: 2003-08-26 15:03+0100\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2003-09-11 00:35+0200\n"
 "PO-Revision-Date: 2003-08-26 15:05+0000\n"
 "Last-Translator: Duarte Loreto <happyguy_pt@hotmail.com>\n"
 "Language-Team: Portuguese <gnome_pt@yahoogroups.com>\n"
@@ -54,8 +54,8 @@ msgstr "Erro: %s"
 #: providers/oracle/gda-oracle-provider.c:1910
 #: providers/oracle/gda-oracle-provider.c:1955
 #: providers/oracle/gda-oracle-provider.c:1972
-#: providers/xml/gda-xml-provider.c:567 providers/xml/gda-xml-provider.c:586
-#: providers/xml/gda-xml-provider.c:620
+#: providers/xml/gda-xml-provider.c:584 providers/xml/gda-xml-provider.c:603
+#: providers/xml/gda-xml-provider.c:637
 msgid "Name"
 msgstr "Nome"
 
@@ -546,7 +546,7 @@ msgstr "Transacções não suportadas no fornecedor MDB"
 #: providers/oracle/gda-oracle-provider.c:1248
 #: providers/postgres/gda-postgres-provider.c:1363
 #: providers/sqlite/gda-sqlite-provider.c:622
-#: providers/xml/gda-xml-provider.c:464
+#: providers/xml/gda-xml-provider.c:489
 msgid "Field name"
 msgstr "Nome campo"
 
@@ -556,7 +556,7 @@ msgstr "Nome campo"
 #: providers/oracle/gda-oracle-provider.c:1249
 #: providers/postgres/gda-postgres-provider.c:1364
 #: providers/sqlite/gda-sqlite-provider.c:623
-#: providers/xml/gda-xml-provider.c:465
+#: providers/xml/gda-xml-provider.c:490
 msgid "Data type"
 msgstr "Tipo dados"
 
@@ -566,7 +566,7 @@ msgstr "Tipo dados"
 #: providers/oracle/gda-oracle-provider.c:1250
 #: providers/postgres/gda-postgres-provider.c:1365
 #: providers/sqlite/gda-sqlite-provider.c:624
-#: providers/xml/gda-xml-provider.c:466
+#: providers/xml/gda-xml-provider.c:491
 msgid "Size"
 msgstr "Tamanho"
 
@@ -576,7 +576,7 @@ msgstr "Tamanho"
 #: providers/oracle/gda-oracle-provider.c:1251
 #: providers/postgres/gda-postgres-provider.c:1366
 #: providers/sqlite/gda-sqlite-provider.c:625
-#: providers/xml/gda-xml-provider.c:467
+#: providers/xml/gda-xml-provider.c:492
 msgid "Scale"
 msgstr "Escala"
 
@@ -586,7 +586,7 @@ msgstr "Escala"
 #: providers/oracle/gda-oracle-provider.c:1252
 #: providers/postgres/gda-postgres-provider.c:1367
 #: providers/sqlite/gda-sqlite-provider.c:626
-#: providers/xml/gda-xml-provider.c:468
+#: providers/xml/gda-xml-provider.c:493
 msgid "Not null?"
 msgstr "Não nulo?"
 
@@ -596,7 +596,7 @@ msgstr "Não nulo?"
 #: providers/oracle/gda-oracle-provider.c:1253
 #: providers/postgres/gda-postgres-provider.c:1368
 #: providers/sqlite/gda-sqlite-provider.c:627
-#: providers/xml/gda-xml-provider.c:469
+#: providers/xml/gda-xml-provider.c:494
 msgid "Primary key?"
 msgstr "Chave primária?"
 
@@ -606,7 +606,7 @@ msgstr "Chave primária?"
 #: providers/oracle/gda-oracle-provider.c:1254
 #: providers/postgres/gda-postgres-provider.c:1369
 #: providers/sqlite/gda-sqlite-provider.c:628
-#: providers/xml/gda-xml-provider.c:470
+#: providers/xml/gda-xml-provider.c:495
 msgid "Unique index?"
 msgstr "Índice único?"
 
@@ -616,7 +616,7 @@ msgstr "Índice único?"
 #: providers/oracle/gda-oracle-provider.c:1255
 #: providers/postgres/gda-postgres-provider.c:1370
 #: providers/sqlite/gda-sqlite-provider.c:629
-#: providers/xml/gda-xml-provider.c:471
+#: providers/xml/gda-xml-provider.c:496
 msgid "References"
 msgstr "Referências"
 
@@ -724,7 +724,7 @@ msgstr "Expressões caracteres"
 msgid "Could not parse '%s' command"
 msgstr "Incapaz de parsear comando '%s'"
 
-#: providers/mdb/gda-mdb-table.c:48 providers/xml/gda-xml-provider.c:494
+#: providers/mdb/gda-mdb-table.c:48 providers/xml/gda-xml-provider.c:519
 #, c-format
 msgid "Table %s not found"
 msgstr "Tabela %s não encontrada"
@@ -1642,7 +1642,7 @@ msgstr "Handle Xbase inválida"
 msgid "Provider for Xbase (dBase, FoxPro, etc) files"
 msgstr "Fornecedor para ficheiros Xbase (dBase, FoxPro, etc)"
 
-#: providers/xml/gda-xml-provider.c:190
+#: providers/xml/gda-xml-provider.c:191
 msgid ""
 "A full path must be specified on the connection string to open a database on "
 "the XML provider."
@@ -1650,24 +1650,24 @@ msgstr ""
 "Tem de ser indicado um caminho completo na expressão de ligação para abrir "
 "uma base de dados no fornecedor XML."
 
-#: providers/xml/gda-xml-provider.c:221 providers/xml/gda-xml-provider.c:243
+#: providers/xml/gda-xml-provider.c:222 providers/xml/gda-xml-provider.c:244
 msgid "Invalid XML handle"
 msgstr "Handle XML inválida"
 
-#: providers/xml/gda-xml-provider.c:262 providers/xml/gda-xml-provider.c:277
-#: providers/xml/gda-xml-provider.c:304
+#: providers/xml/gda-xml-provider.c:263 providers/xml/gda-xml-provider.c:278
+#: providers/xml/gda-xml-provider.c:329
 msgid "Invalid internal handle"
 msgstr "Handle interna inválida"
 
-#: providers/xml/gda-xml-provider.c:343
+#: providers/xml/gda-xml-provider.c:368
 msgid "Not Implemented"
 msgstr "Não Implementado"
 
-#: providers/xml/gda-xml-provider.c:481 providers/xml/gda-xml-provider.c:487
+#: providers/xml/gda-xml-provider.c:506 providers/xml/gda-xml-provider.c:512
 msgid "Invalid argument"
 msgstr "Argumento inválido"
 
-#: providers/xml/gda-xml-provider.c:521
+#: providers/xml/gda-xml-provider.c:538
 msgid "Could not get description for column"
 msgstr "Incapaz de obter descrição para coluna"
 

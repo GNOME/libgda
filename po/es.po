@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda.release-1-0-branch\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2003-08-27 04:34+0200\n"
+"POT-Creation-Date: 2003-09-11 00:35+0200\n"
 "PO-Revision-Date: 2003-08-27 06:41+0200\n"
 "Last-Translator: Francisco Javier F. Serrador <serrador@arrakis.es>\n"
 "Language-Team: Spanish <traductores@es.gnome.org>\n"
@@ -62,8 +62,8 @@ msgstr "Error: %s"
 #: providers/oracle/gda-oracle-provider.c:1910
 #: providers/oracle/gda-oracle-provider.c:1955
 #: providers/oracle/gda-oracle-provider.c:1972
-#: providers/xml/gda-xml-provider.c:567 providers/xml/gda-xml-provider.c:586
-#: providers/xml/gda-xml-provider.c:620
+#: providers/xml/gda-xml-provider.c:584 providers/xml/gda-xml-provider.c:603
+#: providers/xml/gda-xml-provider.c:637
 msgid "Name"
 msgstr "Nombre"
 
@@ -556,7 +556,7 @@ msgstr "Las transacciones no están soportadas en el proveedor MDB"
 #: providers/oracle/gda-oracle-provider.c:1248
 #: providers/postgres/gda-postgres-provider.c:1363
 #: providers/sqlite/gda-sqlite-provider.c:622
-#: providers/xml/gda-xml-provider.c:464
+#: providers/xml/gda-xml-provider.c:489
 msgid "Field name"
 msgstr "Nombre del campo"
 
@@ -566,7 +566,7 @@ msgstr "Nombre del campo"
 #: providers/oracle/gda-oracle-provider.c:1249
 #: providers/postgres/gda-postgres-provider.c:1364
 #: providers/sqlite/gda-sqlite-provider.c:623
-#: providers/xml/gda-xml-provider.c:465
+#: providers/xml/gda-xml-provider.c:490
 msgid "Data type"
 msgstr "Tipo de dato"
 
@@ -576,7 +576,7 @@ msgstr "Tipo de dato"
 #: providers/oracle/gda-oracle-provider.c:1250
 #: providers/postgres/gda-postgres-provider.c:1365
 #: providers/sqlite/gda-sqlite-provider.c:624
-#: providers/xml/gda-xml-provider.c:466
+#: providers/xml/gda-xml-provider.c:491
 msgid "Size"
 msgstr "Tamaño"
 
@@ -586,7 +586,7 @@ msgstr "Tamaño"
 #: providers/oracle/gda-oracle-provider.c:1251
 #: providers/postgres/gda-postgres-provider.c:1366
 #: providers/sqlite/gda-sqlite-provider.c:625
-#: providers/xml/gda-xml-provider.c:467
+#: providers/xml/gda-xml-provider.c:492
 msgid "Scale"
 msgstr "Escala"
 
@@ -596,7 +596,7 @@ msgstr "Escala"
 #: providers/oracle/gda-oracle-provider.c:1252
 #: providers/postgres/gda-postgres-provider.c:1367
 #: providers/sqlite/gda-sqlite-provider.c:626
-#: providers/xml/gda-xml-provider.c:468
+#: providers/xml/gda-xml-provider.c:493
 msgid "Not null?"
 msgstr "¿No nulo?"
 
@@ -606,7 +606,7 @@ msgstr "¿No nulo?"
 #: providers/oracle/gda-oracle-provider.c:1253
 #: providers/postgres/gda-postgres-provider.c:1368
 #: providers/sqlite/gda-sqlite-provider.c:627
-#: providers/xml/gda-xml-provider.c:469
+#: providers/xml/gda-xml-provider.c:494
 msgid "Primary key?"
 msgstr "¿Clave primaria?"
 
@@ -616,7 +616,7 @@ msgstr "¿Clave primaria?"
 #: providers/oracle/gda-oracle-provider.c:1254
 #: providers/postgres/gda-postgres-provider.c:1369
 #: providers/sqlite/gda-sqlite-provider.c:628
-#: providers/xml/gda-xml-provider.c:470
+#: providers/xml/gda-xml-provider.c:495
 msgid "Unique index?"
 msgstr "¿Índice Único?"
 
@@ -626,7 +626,7 @@ msgstr "¿Índice Único?"
 #: providers/oracle/gda-oracle-provider.c:1255
 #: providers/postgres/gda-postgres-provider.c:1370
 #: providers/sqlite/gda-sqlite-provider.c:629
-#: providers/xml/gda-xml-provider.c:471
+#: providers/xml/gda-xml-provider.c:496
 msgid "References"
 msgstr "Referencias"
 
@@ -734,7 +734,7 @@ msgstr "Cadenas de caracteres"
 msgid "Could not parse '%s' command"
 msgstr "No se ha podido analizar el comando «%s»"
 
-#: providers/mdb/gda-mdb-table.c:48 providers/xml/gda-xml-provider.c:494
+#: providers/mdb/gda-mdb-table.c:48 providers/xml/gda-xml-provider.c:519
 #, c-format
 msgid "Table %s not found"
 msgstr "Tabla %s no encontrada"
@@ -800,8 +800,10 @@ msgid "Row number out of bounds"
 msgstr "Número de fila fuera de rango"
 
 #: providers/mysql/gda-mysql-provider.c:218
-msgid "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
-msgstr "No puede proveer un UNIX_SOCKET si al mismo tiempo provee un HOST o un PORT."
+msgid ""
+"You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
+msgstr ""
+"No puede proveer un UNIX_SOCKET si al mismo tiempo provee un HOST o un PORT."
 
 #: providers/mysql/gda-mysql-provider.c:294
 #: providers/mysql/gda-mysql-provider.c:1085
@@ -983,7 +985,8 @@ msgstr "No se ha podido ejecutar la sentencia de Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:640
 msgid "Could not get the number of columns in the result set"
-msgstr "No se ha podido obtener la cantidad de columnas en el conjunto de resultado"
+msgstr ""
+"No se ha podido obtener la cantidad de columnas en el conjunto de resultado"
 
 #: providers/oracle/gda-oracle-provider.c:657
 msgid "Could not get the parameter descripter in the result set"
@@ -993,7 +996,8 @@ msgstr ""
 
 #: providers/oracle/gda-oracle-provider.c:669
 msgid "Could not get the column name in the result set"
-msgstr "No se ha podido obtener el nombre de la columna en el conjunto de resultado"
+msgstr ""
+"No se ha podido obtener el nombre de la columna en el conjunto de resultado"
 
 #: providers/oracle/gda-oracle-provider.c:815
 #: providers/oracle/gda-oracle-provider.c:896
@@ -1212,7 +1216,8 @@ msgid "Provider for PostgreSQL databases"
 msgstr "Proveedor para bases de datos PostgreSQL"
 
 #: providers/sqlite/gda-sqlite-provider.c:198
-msgid "A full path must be specified on the connection string to open a database."
+msgid ""
+"A full path must be specified on the connection string to open a database."
 msgstr ""
 "Una ruta completa debe ser especificada en la cadena de conexión para abrir "
 "la base de datos."
@@ -1352,15 +1357,18 @@ msgstr ""
 
 #: providers/sybase/gda-sybase-provider.c:985
 msgid "could not execute command to get current database."
-msgstr "No se ha podido ejecutar el comando para obtener la base de datos actual."
+msgstr ""
+"No se ha podido ejecutar el comando para obtener la base de datos actual."
 
 #: providers/sybase/gda-sybase-provider.c:993
 msgid "could not send command to get current database."
-msgstr "No se ha podido enviar el comando para obtener la base de datos actual."
+msgstr ""
+"No se ha podido enviar el comando para obtener la base de datos actual."
 
 #: providers/sybase/gda-sybase-provider.c:1016
 msgid "could not bind variable to get current database."
-msgstr "No se ha podido asignar la variable para obtener la base de datos actual."
+msgstr ""
+"No se ha podido asignar la variable para obtener la base de datos actual."
 
 #: providers/sybase/gda-sybase-provider.c:1029
 #: providers/sybase/gda-sybase-provider.c:1044
@@ -1375,7 +1383,8 @@ msgstr ""
 
 #: providers/sybase/gda-sybase-recordset.c:315
 msgid "Could not allocate datamodel. No results will be returned."
-msgstr "No se ha podido asignar el modelo de datos. No se devolverán los resultados."
+msgstr ""
+"No se ha podido asignar el modelo de datos. No se devolverán los resultados."
 
 #: providers/sybase/gda-sybase-recordset.c:318
 msgid "ct_cancel() failed."
@@ -1394,7 +1403,8 @@ msgstr "%s ha devuelto <= 0 columnas."
 #: providers/sybase/gda-sybase-recordset.c:359
 #: providers/sybase/gda-sybase-recordset.c:549
 msgid "Could not allocate structure for column metainformation."
-msgstr "No se ha podido asignar la estructura para la metainformación de la columna."
+msgstr ""
+"No se ha podido asignar la estructura para la metainformación de la columna."
 
 #: providers/sybase/gda-sybase-recordset.c:363
 #: providers/sybase/gda-sybase-recordset.c:553
@@ -1442,7 +1452,8 @@ msgstr ""
 
 #: providers/sybase/gda-sybase-recordset.c:518
 msgid "attempting to make recordset and msg count != 1 !"
-msgstr "se esta intentando crear un conjunto de registros y la cuenta de msg != 1"
+msgstr ""
+"se esta intentando crear un conjunto de registros y la cuenta de msg != 1"
 
 #: providers/sybase/gda-sybase-recordset.c:531
 msgid ""
@@ -1550,7 +1561,8 @@ msgstr ""
 "mensajes del cliente"
 
 #: providers/sybase/utils.c:220
-msgid "an error occured when calling cs_diag attempting to retrieve a client message"
+msgid ""
+"an error occured when calling cs_diag attempting to retrieve a client message"
 msgstr ""
 "ha ocurrido un error al llamar a cs_diag cuando intentaba recuperara un "
 "mensaje del cliente"
@@ -1592,7 +1604,8 @@ msgstr ""
 "mensajes del servidor"
 
 #: providers/sybase/utils.c:334
-msgid "an error occured when calling ct_diag attempting to retrieve a server message"
+msgid ""
+"an error occured when calling ct_diag attempting to retrieve a server message"
 msgstr ""
 "ha ocurrido un error al llamar a ct_diag cuando se intentaba recuperar un "
 "mensaje del servidor"
@@ -1628,7 +1641,8 @@ msgstr ""
 "mensajes del cliente"
 
 #: providers/sybase/utils.c:463
-msgid "an error occured when calling ct_diag attempting to retrieve a client message"
+msgid ""
+"an error occured when calling ct_diag attempting to retrieve a client message"
 msgstr ""
 "ha ocurrido un error al llamar a ct_diag cuando se intentaba recuperar un "
 "mensaje del cliente"
@@ -1663,7 +1677,8 @@ msgstr ""
 
 #: providers/xbase/gda-xbase-provider.c:232
 msgid "Either FILENAME or DIRECTORY must be specified in the connection string"
-msgstr "Deben especificarse el ARCHIVO o el DIRECTORIO en la cadena de conexión"
+msgstr ""
+"Deben especificarse el ARCHIVO o el DIRECTORIO en la cadena de conexión"
 
 #: providers/xbase/gda-xbase-provider.c:261
 #: providers/xbase/gda-xbase-provider.c:379
@@ -1674,7 +1689,7 @@ msgstr "Manejador de Xbase inválido"
 msgid "Provider for Xbase (dBase, FoxPro, etc) files"
 msgstr "Proveedor para archivos Xbase (dBase, FoxPro, etc)"
 
-#: providers/xml/gda-xml-provider.c:190
+#: providers/xml/gda-xml-provider.c:191
 msgid ""
 "A full path must be specified on the connection string to open a database on "
 "the XML provider."
@@ -1682,24 +1697,24 @@ msgstr ""
 "Debe especificarse una ruta completa en la cadena de conexión para abrir "
 "unabase de datos en un proveedor XML."
 
-#: providers/xml/gda-xml-provider.c:221 providers/xml/gda-xml-provider.c:243
+#: providers/xml/gda-xml-provider.c:222 providers/xml/gda-xml-provider.c:244
 msgid "Invalid XML handle"
 msgstr "Manejador XML inválido"
 
-#: providers/xml/gda-xml-provider.c:262 providers/xml/gda-xml-provider.c:277
-#: providers/xml/gda-xml-provider.c:304
+#: providers/xml/gda-xml-provider.c:263 providers/xml/gda-xml-provider.c:278
+#: providers/xml/gda-xml-provider.c:329
 msgid "Invalid internal handle"
 msgstr "Manejador interno inválido"
 
-#: providers/xml/gda-xml-provider.c:343
+#: providers/xml/gda-xml-provider.c:368
 msgid "Not Implemented"
 msgstr "No implementado"
 
-#: providers/xml/gda-xml-provider.c:481 providers/xml/gda-xml-provider.c:487
+#: providers/xml/gda-xml-provider.c:506 providers/xml/gda-xml-provider.c:512
 msgid "Invalid argument"
 msgstr "Argumento inválido"
 
-#: providers/xml/gda-xml-provider.c:521
+#: providers/xml/gda-xml-provider.c:538
 msgid "Could not get description for column"
 msgstr "No se ha podido obtener la descripción de la columna"
 
@@ -2256,4 +2271,3 @@ msgstr "\tgda_params ="
 
 #~ msgid "\tdomain = %s\n"
 #~ msgstr "\tdominio = %s\n"
-

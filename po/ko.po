@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2003-08-06 00:17+0200\n"
+"POT-Creation-Date: 2003-09-11 00:35+0200\n"
 "PO-Revision-Date: 2002-05-01 13:08+0900\n"
 "Last-Translator: Young-Ho, Cha <ganadist@chollian.net>\n"
 "Language-Team: Korean <gnome-kr-translation@lists.sourceforge.net>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: libgda/gda-client.c:312 libgda/gda-client.c:515 libgda/gda-connection.c:218
+#: libgda/gda-client.c:312 libgda/gda-client.c:516 libgda/gda-connection.c:218
 #, c-format
 msgid "Data source %s not found in configuration"
 msgstr "데이터 소스 %s는 설정에서 찾을 수 없습니다"
@@ -25,16 +25,16 @@ msgstr "데이터 소스 %s는 설정에서 찾을 수 없습니다"
 msgid "Could not find provider %s in the current setup"
 msgstr ""
 
-#: libgda/gda-client.c:368
+#: libgda/gda-client.c:369
 #, fuzzy, c-format
 msgid "Provider %s does not implement entry function"
 msgstr "제공자 %s 가 설치되지 않았습니다"
 
-#: libgda/gda-client.c:378
+#: libgda/gda-client.c:379
 msgid "Could not create GdaServerProvider object from plugin"
 msgstr ""
 
-#: libgda/gda-client.c:442
+#: libgda/gda-client.c:443
 msgid "Temporary data source created by libgda. Don't remove it"
 msgstr "임시 데이터 소스가 libgda에 의해 생성되었습니다. 지우지 않습니다"
 
@@ -54,8 +54,8 @@ msgstr "오류"
 #: providers/oracle/gda-oracle-provider.c:1910
 #: providers/oracle/gda-oracle-provider.c:1955
 #: providers/oracle/gda-oracle-provider.c:1972
-#: providers/xml/gda-xml-provider.c:567 providers/xml/gda-xml-provider.c:586
-#: providers/xml/gda-xml-provider.c:620
+#: providers/xml/gda-xml-provider.c:584 providers/xml/gda-xml-provider.c:603
+#: providers/xml/gda-xml-provider.c:637
 msgid "Name"
 msgstr "이름"
 
@@ -73,7 +73,7 @@ msgstr "연결 문자열"
 #: providers/ibmdb2/gda-ibmdb2-provider.c:1001
 #: providers/odbc/gda-odbc-provider.c:1142
 #: providers/odbc/gda-odbc-provider.c:1298
-#: providers/postgres/gda-postgres-provider.c:1107
+#: providers/postgres/gda-postgres-provider.c:1118
 msgid "Description"
 msgstr "설명"
 
@@ -85,7 +85,7 @@ msgstr "사용자이름"
 msgid "Password"
 msgstr "비밀번호"
 
-#: libgda/gda-data-model.c:686
+#: libgda/gda-data-model.c:687
 #, c-format
 msgid "Data model %p is not editable"
 msgstr "데이터 모델 %p 는 편집가능하지 않습니다"
@@ -113,81 +113,86 @@ msgstr ""
 msgid "There is already a field called %s"
 msgstr "이미 %s 라는 필드가 있습니다"
 
-#: libgda/gda-util.c:144
+#: libgda/gda-util.c:147
 #, fuzzy, c-format
 msgid "Could not parse SQL command '%s'"
 msgstr "%s에서 파일을 분석할 수 없습니다"
 
-#: libgda/gda-util.c:177
+#: libgda/gda-util.c:180
 #, c-format
 msgid "Error while reading %s: %s"
 msgstr "%s 을(를) 읽는 중 오류: %s"
 
-#: libgda/gda-util.c:203
+#: libgda/gda-util.c:206
 #, c-format
 msgid "Could not create file %s"
 msgstr "파일 %s를 만들 수 없습니다"
 
-#: libgda/gda-value.c:1922
+#: libgda/gda-value.c:1982
 msgid "TRUE"
 msgstr "참"
 
-#: libgda/gda-value.c:1924
+#: libgda/gda-value.c:1984
 msgid "FALSE"
 msgstr "거짓"
 
-#: libgda/gda-value.c:1993
+#: libgda/gda-value.c:2053
 #, c-format
 msgid "(GObject of type '%s'"
 msgstr ""
 
-#: libgda/gda-value.c:1996
+#: libgda/gda-value.c:2056
 msgid "NULL GObject"
 msgstr ""
 
-#: libgda/gda-xml-database.c:263
+#: libgda/gda-xml-database.c:271
 #, c-format
 msgid "Could not load file at %s"
 msgstr "%s에서 파일을 읽을 수 없습니다"
 
-#: libgda/gda-xml-database.c:272
+#: libgda/gda-xml-database.c:280
 #, c-format
 msgid "Could not parse file at %s"
 msgstr "%s에서 파일을 분석할 수 없습니다"
 
-#: libgda/gda-xml-database.c:282
+#: libgda/gda-xml-database.c:290
 #, c-format
 msgid "Invalid XML database file '%s'"
 msgstr "잘못된 XML 데이터베이스 파일 '%s'"
 
-#: libgda/gda-xml-database.c:508
+#: libgda/gda-xml-database.c:536
 #, fuzzy, c-format
 msgid "Could not create a XML node from table %s"
 msgstr "파일 %s를 만들 수 없습니다"
 
-#: libgda/gda-xml-database.c:526
+#: libgda/gda-xml-database.c:554
 #, fuzzy
 msgid "Could not dump XML file to memory"
 msgstr "%s에서 파일을 읽을 수 없습니다"
 
-#: libgda/gda-xml-database.c:619 libgda/gda-xml-database.c:656
-#: libgda/gda-xml-database.c:700
+#: libgda/gda-xml-database.c:647 libgda/gda-xml-database.c:684
+#: libgda/gda-xml-database.c:728
 #, c-format
 msgid "Table %s already exists"
 msgstr "테이블 %s 는 이미 있습니다"
 
-#: libgda/gda-xml-database.c:693
+#: libgda/gda-xml-database.c:721
 msgid "Invalid node"
 msgstr "잘못된 노드"
 
-#: libgda/gda-xml-database.c:735
+#: libgda/gda-xml-database.c:763
 #, c-format
 msgid "Duplicated <data> node for table %s"
 msgstr "테이블 %s에서 중복된 <data> 노드"
 
-#: libgda/gda-xml-database.c:742
+#: libgda/gda-xml-database.c:770
 msgid "Invalid XML node"
 msgstr "잘못된 XML 노드"
+
+#: libgda/gda-xml-database.c:779
+#, fuzzy
+msgid "Could not add the data from the XML node"
+msgstr "Oracle 서버 처리 초기화를 할 수 없습니다"
 
 #: providers/firebird/gda-firebird-provider.c:187
 msgid "No database specified"
@@ -270,7 +275,7 @@ msgid ""
 msgstr ""
 
 #: providers/freetds/gda-freetds-provider.c:1062 providers/freetds/utils.c:44
-#: providers/oracle/utils.c:74 providers/postgres/utils.c:51
+#: providers/oracle/utils.c:74 providers/postgres/utils.c:53
 #: providers/sybase/gda-sybase-provider.c:765
 #: providers/sybase/gda-sybase-recordset.c:512
 #: providers/sybase/gda-sybase-recordset.c:534
@@ -307,7 +312,7 @@ msgid "Provider for TDS-based databases (using FreeTDS)"
 msgstr "오라클 데이터베이스용 GDA 제공자"
 
 #: providers/freetds/utils.c:40 providers/oracle/utils.c:67
-#: providers/postgres/utils.c:46 providers/sybase/utils.c:538
+#: providers/postgres/utils.c:48 providers/sybase/utils.c:538
 msgid "NO DESCRIPTION"
 msgstr "설명 없음"
 
@@ -359,12 +364,12 @@ msgstr ""
 #: providers/oracle/gda-oracle-provider.c:1955
 #: providers/oracle/gda-oracle-provider.c:1973
 #: providers/oracle/gda-oracle-provider.c:2096
-#: providers/postgres/gda-postgres-provider.c:836
-#: providers/postgres/gda-postgres-provider.c:1106
-#: providers/postgres/gda-postgres-provider.c:1125
-#: providers/postgres/gda-postgres-provider.c:1185
-#: providers/postgres/gda-postgres-provider.c:1302
-#: providers/postgres/gda-postgres-provider.c:1935
+#: providers/postgres/gda-postgres-provider.c:847
+#: providers/postgres/gda-postgres-provider.c:1117
+#: providers/postgres/gda-postgres-provider.c:1136
+#: providers/postgres/gda-postgres-provider.c:1196
+#: providers/postgres/gda-postgres-provider.c:1313
+#: providers/postgres/gda-postgres-provider.c:1946
 #: providers/sqlite/gda-sqlite-provider.c:752
 #: providers/sybase/gda-sybase-provider.c:1098
 msgid "Owner"
@@ -385,8 +390,8 @@ msgstr "색인"
 #: providers/ibmdb2/gda-ibmdb2-provider.c:890
 #: providers/ibmdb2/gda-ibmdb2-provider.c:999
 #: providers/odbc/gda-odbc-provider.c:1140
-#: providers/postgres/gda-postgres-provider.c:1105
-#: providers/postgres/gda-postgres-provider.c:1989
+#: providers/postgres/gda-postgres-provider.c:1116
+#: providers/postgres/gda-postgres-provider.c:2000
 #, fuzzy
 msgid "Table"
 msgstr "테이블"
@@ -394,7 +399,7 @@ msgstr "테이블"
 #: providers/ibmdb2/gda-ibmdb2-provider.c:860
 #: providers/mdb/gda-mdb-provider.c:546
 #: providers/odbc/gda-odbc-provider.c:1030
-#: providers/postgres/gda-postgres-provider.c:834
+#: providers/postgres/gda-postgres-provider.c:845
 #, fuzzy
 msgid "Procedure"
 msgstr "\t\t프로시져: %s\n"
@@ -413,7 +418,7 @@ msgstr "설명"
 #. Set it here instead of the SQL query to allow i18n
 #: providers/ibmdb2/gda-ibmdb2-provider.c:918
 #: providers/oracle/gda-oracle-provider.c:2189
-#: providers/postgres/gda-postgres-provider.c:1341 testing/client.c:135
+#: providers/postgres/gda-postgres-provider.c:1352 testing/client.c:139
 msgid "Triggers"
 msgstr "트리거"
 
@@ -423,7 +428,7 @@ msgstr "트리거"
 #: providers/mysql/gda-mysql-provider.c:971
 #: providers/odbc/gda-odbc-provider.c:1254
 #: providers/oracle/gda-oracle-provider.c:2095
-#: providers/postgres/gda-postgres-provider.c:1124
+#: providers/postgres/gda-postgres-provider.c:1135
 #: providers/sqlite/gda-sqlite-provider.c:751
 #: providers/sybase/gda-sybase-provider.c:1096
 msgid "Type"
@@ -446,11 +451,11 @@ msgstr "형식"
 #: providers/oracle/gda-oracle-provider.c:1955
 #: providers/oracle/gda-oracle-provider.c:1974
 #: providers/oracle/gda-oracle-provider.c:2097
-#: providers/postgres/gda-postgres-provider.c:837
-#: providers/postgres/gda-postgres-provider.c:1126
-#: providers/postgres/gda-postgres-provider.c:1186
-#: providers/postgres/gda-postgres-provider.c:1303
-#: providers/postgres/gda-postgres-provider.c:1936
+#: providers/postgres/gda-postgres-provider.c:848
+#: providers/postgres/gda-postgres-provider.c:1137
+#: providers/postgres/gda-postgres-provider.c:1197
+#: providers/postgres/gda-postgres-provider.c:1314
+#: providers/postgres/gda-postgres-provider.c:1947
 #: providers/sqlite/gda-sqlite-provider.c:753
 #: providers/sybase/gda-sybase-provider.c:1100
 msgid "Comments"
@@ -461,7 +466,7 @@ msgstr ""
 #: providers/mysql/gda-mysql-provider.c:974
 #: providers/odbc/gda-odbc-provider.c:1257
 #: providers/oracle/gda-oracle-provider.c:2097
-#: providers/postgres/gda-postgres-provider.c:1127
+#: providers/postgres/gda-postgres-provider.c:1138
 #: providers/sqlite/gda-sqlite-provider.c:754
 #: providers/sybase/gda-sybase-provider.c:1102
 #, fuzzy
@@ -471,7 +476,7 @@ msgstr "데이터 형식"
 #. Set it here instead of the SQL query to allow i18n
 #: providers/ibmdb2/gda-ibmdb2-provider.c:974
 #: providers/oracle/gda-oracle-provider.c:1825
-#: providers/postgres/gda-postgres-provider.c:1893 testing/client.c:133
+#: providers/postgres/gda-postgres-provider.c:1904 testing/client.c:137
 msgid "Users"
 msgstr "사용자"
 
@@ -493,8 +498,8 @@ msgstr "잘못된 MDB 처리"
 
 #: providers/ldap/gda-ldap-recordset.c:69
 #: providers/mysql/gda-mysql-recordset.c:69
-#: providers/postgres/gda-postgres-recordset.c:185
-#: providers/postgres/gda-postgres-recordset.c:225
+#: providers/postgres/gda-postgres-recordset.c:189
+#: providers/postgres/gda-postgres-recordset.c:229
 #: providers/sqlite/gda-sqlite-recordset.c:165
 #: providers/sqlite/gda-sqlite-recordset.c:204
 msgid "Row number out of range"
@@ -502,21 +507,21 @@ msgstr "열 번호 범위 넘음"
 
 #: providers/ldap/gda-ldap-recordset.c:283
 #: providers/msql/gda-msql-recordset.c:227
-#: providers/mysql/gda-mysql-recordset.c:288
+#: providers/mysql/gda-mysql-recordset.c:294
 #: providers/oracle/gda-oracle-recordset.c:469
 msgid "Attempt to insert a row with an invalid number of columns"
 msgstr ""
 
 #: providers/ldap/gda-ldap-recordset.c:298
 #: providers/msql/gda-msql-recordset.c:239
-#: providers/mysql/gda-mysql-recordset.c:303
+#: providers/mysql/gda-mysql-recordset.c:309
 #: providers/oracle/gda-oracle-recordset.c:484
 msgid "Could not retrieve column's information"
 msgstr ""
 
 #: providers/ldap/gda-ldap-recordset.c:316
 #: providers/msql/gda-msql-recordset.c:253
-#: providers/mysql/gda-mysql-recordset.c:321
+#: providers/mysql/gda-mysql-recordset.c:327
 #: providers/oracle/gda-oracle-recordset.c:502
 msgid "Could not retrieve column's value"
 msgstr ""
@@ -550,9 +555,9 @@ msgstr ""
 #: providers/mysql/gda-mysql-provider.c:1069
 #: providers/odbc/gda-odbc-provider.c:914
 #: providers/oracle/gda-oracle-provider.c:1248
-#: providers/postgres/gda-postgres-provider.c:1352
+#: providers/postgres/gda-postgres-provider.c:1363
 #: providers/sqlite/gda-sqlite-provider.c:622
-#: providers/xml/gda-xml-provider.c:464
+#: providers/xml/gda-xml-provider.c:489
 msgid "Field name"
 msgstr "필드 이름"
 
@@ -560,9 +565,9 @@ msgstr "필드 이름"
 #: providers/mysql/gda-mysql-provider.c:1070
 #: providers/odbc/gda-odbc-provider.c:915
 #: providers/oracle/gda-oracle-provider.c:1249
-#: providers/postgres/gda-postgres-provider.c:1353
+#: providers/postgres/gda-postgres-provider.c:1364
 #: providers/sqlite/gda-sqlite-provider.c:623
-#: providers/xml/gda-xml-provider.c:465
+#: providers/xml/gda-xml-provider.c:490
 msgid "Data type"
 msgstr "데이터 형식"
 
@@ -570,9 +575,9 @@ msgstr "데이터 형식"
 #: providers/mysql/gda-mysql-provider.c:1071
 #: providers/odbc/gda-odbc-provider.c:916
 #: providers/oracle/gda-oracle-provider.c:1250
-#: providers/postgres/gda-postgres-provider.c:1354
+#: providers/postgres/gda-postgres-provider.c:1365
 #: providers/sqlite/gda-sqlite-provider.c:624
-#: providers/xml/gda-xml-provider.c:466
+#: providers/xml/gda-xml-provider.c:491
 msgid "Size"
 msgstr "크기"
 
@@ -580,9 +585,9 @@ msgstr "크기"
 #: providers/mysql/gda-mysql-provider.c:1072
 #: providers/odbc/gda-odbc-provider.c:917
 #: providers/oracle/gda-oracle-provider.c:1251
-#: providers/postgres/gda-postgres-provider.c:1355
+#: providers/postgres/gda-postgres-provider.c:1366
 #: providers/sqlite/gda-sqlite-provider.c:625
-#: providers/xml/gda-xml-provider.c:467
+#: providers/xml/gda-xml-provider.c:492
 msgid "Scale"
 msgstr "규모"
 
@@ -590,9 +595,9 @@ msgstr "규모"
 #: providers/mysql/gda-mysql-provider.c:1073
 #: providers/odbc/gda-odbc-provider.c:918
 #: providers/oracle/gda-oracle-provider.c:1252
-#: providers/postgres/gda-postgres-provider.c:1356
+#: providers/postgres/gda-postgres-provider.c:1367
 #: providers/sqlite/gda-sqlite-provider.c:626
-#: providers/xml/gda-xml-provider.c:468
+#: providers/xml/gda-xml-provider.c:493
 msgid "Not null?"
 msgstr "널 아님?"
 
@@ -600,9 +605,9 @@ msgstr "널 아님?"
 #: providers/mysql/gda-mysql-provider.c:1074
 #: providers/odbc/gda-odbc-provider.c:919
 #: providers/oracle/gda-oracle-provider.c:1253
-#: providers/postgres/gda-postgres-provider.c:1357
+#: providers/postgres/gda-postgres-provider.c:1368
 #: providers/sqlite/gda-sqlite-provider.c:627
-#: providers/xml/gda-xml-provider.c:469
+#: providers/xml/gda-xml-provider.c:494
 msgid "Primary key?"
 msgstr "기본 키?"
 
@@ -610,9 +615,9 @@ msgstr "기본 키?"
 #: providers/mysql/gda-mysql-provider.c:1075
 #: providers/odbc/gda-odbc-provider.c:920
 #: providers/oracle/gda-oracle-provider.c:1254
-#: providers/postgres/gda-postgres-provider.c:1358
+#: providers/postgres/gda-postgres-provider.c:1369
 #: providers/sqlite/gda-sqlite-provider.c:628
-#: providers/xml/gda-xml-provider.c:470
+#: providers/xml/gda-xml-provider.c:495
 msgid "Unique index?"
 msgstr "단일 색인?"
 
@@ -620,9 +625,9 @@ msgstr "단일 색인?"
 #: providers/mysql/gda-mysql-provider.c:1076
 #: providers/odbc/gda-odbc-provider.c:921
 #: providers/oracle/gda-oracle-provider.c:1255
-#: providers/postgres/gda-postgres-provider.c:1359
+#: providers/postgres/gda-postgres-provider.c:1370
 #: providers/sqlite/gda-sqlite-provider.c:629
-#: providers/xml/gda-xml-provider.c:471
+#: providers/xml/gda-xml-provider.c:496
 msgid "References"
 msgstr "참조"
 
@@ -630,7 +635,7 @@ msgstr "참조"
 #: providers/mysql/gda-mysql-provider.c:1077
 #: providers/odbc/gda-odbc-provider.c:922
 #: providers/oracle/gda-oracle-provider.c:1256
-#: providers/postgres/gda-postgres-provider.c:1360
+#: providers/postgres/gda-postgres-provider.c:1371
 #: providers/sqlite/gda-sqlite-provider.c:630
 msgid "Default value"
 msgstr ""
@@ -643,7 +648,7 @@ msgstr ""
 #: providers/mdb/gda-mdb-provider.c:550
 #: providers/mysql/gda-mysql-provider.c:705
 #: providers/odbc/gda-odbc-provider.c:1034
-#: providers/postgres/gda-postgres-provider.c:838
+#: providers/postgres/gda-postgres-provider.c:849
 msgid "Return type"
 msgstr ""
 
@@ -654,7 +659,7 @@ msgstr ""
 #: providers/mdb/gda-mdb-provider.c:552
 #: providers/mysql/gda-mysql-provider.c:706
 #: providers/odbc/gda-odbc-provider.c:1036
-#: providers/postgres/gda-postgres-provider.c:840
+#: providers/postgres/gda-postgres-provider.c:851
 msgid "Args types"
 msgstr ""
 
@@ -664,11 +669,11 @@ msgstr ""
 #: providers/odbc/gda-odbc-provider.c:1299
 #: providers/odbc/gda-odbc-provider.c:1351
 #: providers/oracle/gda-oracle-provider.c:1158
-#: providers/postgres/gda-postgres-provider.c:841
-#: providers/postgres/gda-postgres-provider.c:1108
-#: providers/postgres/gda-postgres-provider.c:1187
-#: providers/postgres/gda-postgres-provider.c:1306
-#: providers/postgres/gda-postgres-provider.c:1937
+#: providers/postgres/gda-postgres-provider.c:852
+#: providers/postgres/gda-postgres-provider.c:1119
+#: providers/postgres/gda-postgres-provider.c:1198
+#: providers/postgres/gda-postgres-provider.c:1317
+#: providers/postgres/gda-postgres-provider.c:1948
 #, fuzzy
 msgid "Definition"
 msgstr "설명"
@@ -732,7 +737,7 @@ msgstr ""
 msgid "Could not parse '%s' command"
 msgstr "%s에서 파일을 분석할 수 없습니다"
 
-#: providers/mdb/gda-mdb-table.c:48 providers/xml/gda-xml-provider.c:494
+#: providers/mdb/gda-mdb-table.c:48 providers/xml/gda-xml-provider.c:519
 #, c-format
 msgid "Table %s not found"
 msgstr "테이블 %s를 찾을 수 없습니다"
@@ -806,7 +811,7 @@ msgstr "HOST나 PORT가 입력되어 있으면 UNIX_SOCKET을 입력할 수 없�
 #: providers/mysql/gda-mysql-provider.c:294
 #: providers/mysql/gda-mysql-provider.c:1085
 #: providers/mysql/gda-mysql-recordset.c:58
-#: providers/mysql/gda-mysql-recordset.c:174
+#: providers/mysql/gda-mysql-recordset.c:180
 msgid "Invalid MySQL handle"
 msgstr "잘못된 MySQL 처리"
 
@@ -858,25 +863,25 @@ msgstr "잘못된 MDB 처리"
 
 #: providers/odbc/gda-odbc-provider.c:1031
 #: providers/oracle/gda-oracle-provider.c:1153
-#: providers/postgres/gda-postgres-provider.c:835
-#: providers/postgres/gda-postgres-provider.c:1301
+#: providers/postgres/gda-postgres-provider.c:846
+#: providers/postgres/gda-postgres-provider.c:1312
 msgid "Id"
 msgstr ""
 
 #: providers/odbc/gda-odbc-provider.c:1035
-#: providers/postgres/gda-postgres-provider.c:839
+#: providers/postgres/gda-postgres-provider.c:850
 msgid "Nb args"
 msgstr ""
 
 #: providers/odbc/gda-odbc-provider.c:1296
-#: providers/oracle/gda-oracle-provider.c:2193 testing/client.c:130
+#: providers/oracle/gda-oracle-provider.c:2193 testing/client.c:134
 msgid "Views"
 msgstr "보기"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/odbc/gda-odbc-provider.c:1348
-#: providers/postgres/gda-postgres-provider.c:1934
-#: providers/postgres/gda-postgres-provider.c:1990
+#: providers/postgres/gda-postgres-provider.c:1945
+#: providers/postgres/gda-postgres-provider.c:2001
 msgid "Sequence"
 msgstr "시퀀스"
 
@@ -1047,19 +1052,19 @@ msgstr ""
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/oracle/gda-oracle-provider.c:1152
-#: providers/postgres/gda-postgres-provider.c:1300
+#: providers/postgres/gda-postgres-provider.c:1311
 #, fuzzy
 msgid "Aggregate"
 msgstr "집합"
 
 #: providers/oracle/gda-oracle-provider.c:1156
-#: providers/postgres/gda-postgres-provider.c:1304
+#: providers/postgres/gda-postgres-provider.c:1315
 #, fuzzy
 msgid "OutType"
 msgstr "형식"
 
 #: providers/oracle/gda-oracle-provider.c:1157
-#: providers/postgres/gda-postgres-provider.c:1305
+#: providers/postgres/gda-postgres-provider.c:1316
 #, fuzzy
 msgid "InType"
 msgstr "형식"
@@ -1147,7 +1152,7 @@ msgstr ""
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/oracle/gda-oracle-provider.c:2177
-#: providers/postgres/gda-postgres-provider.c:1224 testing/client.c:131
+#: providers/postgres/gda-postgres-provider.c:1235 testing/client.c:135
 msgid "Indexes"
 msgstr "색인"
 
@@ -1156,7 +1161,7 @@ msgstr "색인"
 msgid "Procedures"
 msgstr "\t\t프로시져: %s\n"
 
-#: providers/oracle/gda-oracle-provider.c:2183 testing/client.c:134
+#: providers/oracle/gda-oracle-provider.c:2183 testing/client.c:138
 msgid "Sequences"
 msgstr "시퀀스"
 
@@ -1181,7 +1186,7 @@ msgid "Could not define by position"
 msgstr "%s에서 파일을 읽을 수 없습니다"
 
 #: providers/oracle/gda-oracle-recordset.c:173
-#: providers/postgres/gda-postgres-recordset.c:264
+#: providers/postgres/gda-postgres-recordset.c:268
 msgid "Column out of range"
 msgstr "열 범위 넘음"
 
@@ -1224,34 +1229,35 @@ msgstr "%s에서 파일을 가져올 수 없습니다"
 msgid "Provider for Oracle databases"
 msgstr "오라클 데이터베이스용 GDA 제공자"
 
-#: providers/postgres/gda-postgres-provider.c:554
-#: providers/postgres/gda-postgres-provider.c:571
-#: providers/postgres/gda-postgres-provider.c:642
-#: providers/postgres/gda-postgres-provider.c:777
-#: providers/postgres/gda-postgres-recordset.c:176
-#: providers/postgres/gda-postgres-recordset.c:216
-#: providers/postgres/gda-postgres-recordset.c:258
+#: providers/postgres/gda-postgres-provider.c:564
+#: providers/postgres/gda-postgres-provider.c:581
+#: providers/postgres/gda-postgres-provider.c:652
+#: providers/postgres/gda-postgres-provider.c:787
+#: providers/postgres/gda-postgres-recordset.c:180
+#: providers/postgres/gda-postgres-recordset.c:220
+#: providers/postgres/gda-postgres-recordset.c:262
+#: providers/postgres/utils.c:178
 msgid "Invalid PostgreSQL handle"
 msgstr "잘못된 PostgreSQL 처리"
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:1184
+#: providers/postgres/gda-postgres-provider.c:1195
 #, fuzzy
 msgid "View"
 msgstr "보기"
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:1858 testing/client.c:126
+#: providers/postgres/gda-postgres-provider.c:1869 testing/client.c:130
 msgid "Databases"
 msgstr "데이터베이스"
 
-#: providers/postgres/gda-postgres-recordset.c:231
+#: providers/postgres/gda-postgres-recordset.c:235
 #: providers/sqlite/gda-sqlite-recordset.c:210
 #: providers/sqlite/gda-sqlite-recordset.c:242
 msgid "Column number out of range"
 msgstr "열 번호 범위 넘음"
 
-#: providers/postgres/gda-postgres-recordset.c:354
+#: providers/postgres/gda-postgres-recordset.c:358
 #, c-format
 msgid "Tuples:\"%s\""
 msgstr ""
@@ -1700,33 +1706,33 @@ msgstr "잘못된 MDB 처리"
 msgid "Provider for Xbase (dBase, FoxPro, etc) files"
 msgstr "오라클 데이터베이스용 GDA 제공자"
 
-#: providers/xml/gda-xml-provider.c:190
+#: providers/xml/gda-xml-provider.c:191
 #, fuzzy
 msgid ""
 "A full path must be specified on the connection string to open a database on "
 "the XML provider."
 msgstr "데이터베이스를 열기 위해 연결 문자열에 전체 경로가 지정되어야 합니다."
 
-#: providers/xml/gda-xml-provider.c:221 providers/xml/gda-xml-provider.c:243
+#: providers/xml/gda-xml-provider.c:222 providers/xml/gda-xml-provider.c:244
 #, fuzzy
 msgid "Invalid XML handle"
 msgstr "잘못된 MySQL 처리"
 
-#: providers/xml/gda-xml-provider.c:262 providers/xml/gda-xml-provider.c:277
-#: providers/xml/gda-xml-provider.c:304
+#: providers/xml/gda-xml-provider.c:263 providers/xml/gda-xml-provider.c:278
+#: providers/xml/gda-xml-provider.c:329
 #, fuzzy
 msgid "Invalid internal handle"
 msgstr "잘못된 MDB 처리"
 
-#: providers/xml/gda-xml-provider.c:343
+#: providers/xml/gda-xml-provider.c:368
 msgid "Not Implemented"
 msgstr "구현되지 않음"
 
-#: providers/xml/gda-xml-provider.c:481 providers/xml/gda-xml-provider.c:487
+#: providers/xml/gda-xml-provider.c:506 providers/xml/gda-xml-provider.c:512
 msgid "Invalid argument"
 msgstr "잘못된 인자"
 
-#: providers/xml/gda-xml-provider.c:521
+#: providers/xml/gda-xml-provider.c:538
 msgid "Could not get description for column"
 msgstr "열에 대한 설명을 얻을 수 없습니다"
 
@@ -1814,87 +1820,92 @@ msgstr ""
 msgid "\t\tNONE\n"
 msgstr "\t\tNONE\n"
 
-#: testing/client.c:82
+#: testing/client.c:83
 #, c-format
 msgid "** ERROR: could not open connection to %s\n"
 msgstr "** 오류: %s에 연결을 열 수 없습니다\n"
 
 #. show provider features
-#: testing/client.c:87
+#: testing/client.c:88
 msgid "\tProvider capabilities...\n"
 msgstr "\t제공자 특성...\n"
 
-#: testing/client.c:88
+#: testing/client.c:89
 #, c-format
 msgid "\t\tAggregates: %s\n"
 msgstr ""
 
-#: testing/client.c:90 testing/client.c:93 testing/client.c:96
-#: testing/client.c:99 testing/client.c:102 testing/client.c:105
-#: testing/client.c:108 testing/client.c:111 testing/client.c:114
-#: testing/client.c:117 testing/client.c:120
+#: testing/client.c:91 testing/client.c:94 testing/client.c:97
+#: testing/client.c:100 testing/client.c:103 testing/client.c:106
+#: testing/client.c:109 testing/client.c:112 testing/client.c:115
+#: testing/client.c:118 testing/client.c:121 testing/client.c:124
 msgid "Supported"
 msgstr "지원됨"
 
-#: testing/client.c:90 testing/client.c:93 testing/client.c:96
-#: testing/client.c:99 testing/client.c:102 testing/client.c:105
-#: testing/client.c:108 testing/client.c:111 testing/client.c:114
-#: testing/client.c:117 testing/client.c:120
+#: testing/client.c:91 testing/client.c:94 testing/client.c:97
+#: testing/client.c:100 testing/client.c:103 testing/client.c:106
+#: testing/client.c:109 testing/client.c:112 testing/client.c:115
+#: testing/client.c:118 testing/client.c:121 testing/client.c:124
 msgid "Not supported"
 msgstr "지원하지 않음"
 
-#: testing/client.c:91
+#: testing/client.c:92
 #, c-format
 msgid "\t\tIndexes: %s\n"
 msgstr "\t\t색인: %s\n"
 
-#: testing/client.c:94
+#: testing/client.c:95
 #, fuzzy, c-format
 msgid "\t\tNamespaces: %s\n"
 msgstr "\t\t사용자: %s\n"
 
-#: testing/client.c:97
+#: testing/client.c:98
 #, c-format
 msgid "\t\tProcedures: %s\n"
 msgstr "\t\t프로시져: %s\n"
 
-#: testing/client.c:100
+#: testing/client.c:101
 #, c-format
 msgid "\t\tSequences: %s\n"
 msgstr "\t\t시퀀스: %s\n"
 
-#: testing/client.c:103
+#: testing/client.c:104
 #, fuzzy, c-format
 msgid "\t\tSQL: %s\n"
 msgstr "\t\tSQL 언어: %s\n"
 
-#: testing/client.c:106
+#: testing/client.c:107
 #, c-format
 msgid "\t\tTransactions: %s\n"
 msgstr "\t\t트랜잭션: %s\n"
 
-#: testing/client.c:109
+#: testing/client.c:110
 #, c-format
 msgid "\t\tTriggers: %s\n"
 msgstr "\t\t트리거: %s\n"
 
-#: testing/client.c:112
+#: testing/client.c:113
 #, c-format
 msgid "\t\tUsers: %s\n"
 msgstr "\t\t사용자: %s\n"
 
-#: testing/client.c:115
+#: testing/client.c:116
 #, c-format
 msgid "\t\tViews: %s\n"
 msgstr ""
 
-#: testing/client.c:118
+#: testing/client.c:119
 #, c-format
 msgid "\t\tXML queries: %s\n"
 msgstr "\t\tXML 질의: %s\n"
 
+#: testing/client.c:122
+#, fuzzy, c-format
+msgid "\t\tBLOBs: %s\n"
+msgstr "\t\tSQL 언어: %s\n"
+
 #. show connection schemas
-#: testing/client.c:123
+#: testing/client.c:127
 #, c-format
 msgid ""
 "\n"
@@ -1902,56 +1913,56 @@ msgid ""
 "\n"
 msgstr ""
 
-#: testing/client.c:125
+#: testing/client.c:129
 msgid "Namespaces"
 msgstr ""
 
-#: testing/client.c:127
+#: testing/client.c:131
 msgid "Stored procedures"
 msgstr "저장된 프로시져"
 
-#: testing/client.c:128
+#: testing/client.c:132
 msgid "Connection Tables"
 msgstr "연결 테이블"
 
-#: testing/client.c:129
+#: testing/client.c:133
 msgid "Available types"
 msgstr "사용 가능한 형식"
 
-#: testing/client.c:132
+#: testing/client.c:136
 msgid "Aggregates"
 msgstr "집합"
 
-#: testing/client.c:136
+#: testing/client.c:140
 msgid "Languages"
 msgstr ""
 
-#: testing/client.c:141 testing/client.c:149
+#: testing/client.c:145 testing/client.c:153
 msgid "\tStarting transaction..."
 msgstr "\t트랜잭션 시작 중..."
 
-#: testing/client.c:143 testing/client.c:147 testing/client.c:151
-#: testing/client.c:155
+#: testing/client.c:147 testing/client.c:151 testing/client.c:155
+#: testing/client.c:159
 msgid "Error"
 msgstr "오류"
 
-#: testing/client.c:145
+#: testing/client.c:149
 msgid "\tFinishing transaction..."
 msgstr "\t트랜잭션 끝내는 중..."
 
-#: testing/client.c:153
+#: testing/client.c:157
 msgid "\tRolling back transaction..."
 msgstr "\t트랜잭션 롤백 중..."
 
-#: testing/client.c:184
+#: testing/client.c:188
 msgid "Testing GDA client API"
 msgstr "GDA 클라이언트 API 시험중"
 
-#: testing/client.c:193
+#: testing/client.c:197
 msgid "** ERROR: gda_config_get_data_source_list returned a NULL item\n"
 msgstr "** 오류: gda_config_get_data_source_list 가 NULL 항목을 반환했습니다\n"
 
-#: testing/client.c:197
+#: testing/client.c:201
 #, c-format
 msgid " Data source = %s, User = %s\n"
 msgstr " 데이터 소스 = %s, 사용자 = %s\n"
