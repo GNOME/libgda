@@ -1,0 +1,5 @@
+2001-04-28  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* started gda-default-server, which will be a server *always*
+	installed with libgda, so that users don't have to worry about
+	setting up a RDBMS to use GNOME-DB/libgda

@@ -1,0 +1,9 @@
+Makefile
+Makefile.in
+*.oaf
+*.o
+*.lo
+libgda-default.a
+gda-default-srv
+.deps
+.libs
