@@ -1,3 +1,7 @@
+2001-01-31      Carlos Perelló Marín <carlos@gnome-db.org>
+
+        * gda-report-object.[ch]: Started its implementation
+
 2001-01-30	Carlos Perelló Marín <carlos@gnome-db.org>
 
 	* gda-report*.[ch]: Modified to the GNOME codify style
