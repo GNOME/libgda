@@ -28,33 +28,6 @@ GdaXmlDatabase
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_xml_database_new_from_file ##### -->
-<para>
-
-</para>
-
-@filename: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_xml_database_free ##### -->
-<para>
-
-</para>
-
-@xmldb: 
-
-
-<!-- ##### FUNCTION gda_xml_database_save ##### -->
-<para>
-
-</para>
-
-@xmldb: 
-@filename: 
-@Returns: 
-
-
 <!-- ##### FUNCTION gda_xml_database_changed ##### -->
 <para>
 

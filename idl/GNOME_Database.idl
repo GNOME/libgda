@@ -169,6 +169,13 @@ module GNOME {
 
 			/* information about the connection */
 			boolean supports (in Feature feature);
+
+			/* schemas */
+			enum Schema {
+				SCHEMA_TABLES
+			};
+
+			Recordset getSchema (in Schema schema, in ParameterList params);
 		};
 
 		/*
