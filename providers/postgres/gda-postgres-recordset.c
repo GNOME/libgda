@@ -24,9 +24,9 @@
  */
 
 #include <bonobo/bonobo-i18n.h>
-#include "gda-postgres-recordset.h"
+#include "gda-postgres.h"
 
-#define OBJECT_DATA_RECSET_HANDLE "GDA_Mysql_RecsetHandle"
+#define OBJECT_DATA_RECSET_HANDLE "GDA_Postgres_RecsetHandle"
 
 /*
  * Private functions

@@ -2,6 +2,10 @@
 
 	* main.c: included libgda/libgda.h to avoid warnings.
 
+	* gda-postgres-recordset.c: include gda-postgres.h instead of
+	gda-postgres-recordset.h to avoid warnings.  Corrected 
+	OBJECT_DATA_RECSET_HANDLE #define (was still *_Mysql_*!).
+
 2002-01-11  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
 	* gda-postgres-recordset.c: updated copyright notice.
