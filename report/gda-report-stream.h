@@ -1,6 +1,6 @@
 /* libgda library
  *
- * Copyright (C) 2000 Carlos Perelló Marín <carlos@hispalinux.es>
+ * Copyright (C) 2000 Carlos Perelló Marín <carlos@gnome-db.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU Library General Public License as
@@ -17,17 +17,22 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef __gda_reportstream_h__
-#define __gda_reportstream_h__
+#ifndef __gda_report_stream_h__
+#define __gda_report_stream_h__
 
-#if defined(__cplusplus)
-extern "C" {
-#endif
+#include <glib.h>
 
 #ifdef HAVE_GOBJECT
 #  include <glib-object.h>
 #else
 #  include <gtk/gtk.h>
+#endif
+
+#include <orb/orbit.h>
+#include <gda-error.h>
+
+#if defined(__cplusplus)
+extern "C" {
 #endif
 
 /* Data Structures and Prototypes for the LibGDA Report Client
@@ -62,6 +67,8 @@ struct _Gda_ReportStream
 #endif
   CORBA_Object  reportstream;
   CORBA_ORB     orb;
+  GList*        errors_head;
+
 };
 
 struct _Gda_ReportStreamClass
@@ -72,8 +79,8 @@ struct _Gda_ReportStreamClass
 #else
   GtkObjectClass parent_class;
 #endif
-  void (* warning) (Gda_ReportStream *object, const char *msg);
-  void (* error)   (Gda_ReportStream *object, const char *msg);
+  void (* warning) (Gda_ReportStream* object, GList* errors);
+  void (* error)   (Gda_ReportStream* object, GList* errors);
 };
 
 #ifdef HAVE_GOBJECT

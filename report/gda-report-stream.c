@@ -1,6 +1,6 @@
 /* libgda library
  *
- * Copyright (C) 2000 Carlos Perelló Marín <carlos@hispalinux.es>
+ * Copyright (C) 2000 Carlos Perelló Marín <carlos@gnome-db.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU Library General Public License as
@@ -48,8 +48,8 @@ static void    gda_reportstream_class_init    (Gda_ReportStreamClass* klass);
 static void    gda_reportstream_init          (Gda_ReportStream* object);
 #endif
 
-static void    gda_reportstream_real_error    (Gda_ReportStream* object, GList*);
-static void    gda_reportstream_real_warning  (Gda_ReportStream* object, GList*);
+static void    gda_reportstream_real_error    (Gda_ReportStream* object, GList* errors);
+static void    gda_reportstream_real_warning  (Gda_ReportStream* object, GList* errors);
 
 static void
 gda_reportstream_real_error (Gda_ReportStream* object, GList* errors)
@@ -195,7 +195,7 @@ gda_reportstream_corba_exception (Gda_ReportStream* object, CORBA_Environment* e
 	  gda_reportstream_add_single_error(object, error);
       return -1;
     default:
-      g_error("Unknown CORBA exception for reportstream");
+      g_error(_("Unknown CORBA exception for reportstream"));
     }
   return 0;
 }

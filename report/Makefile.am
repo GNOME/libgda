@@ -2,6 +2,7 @@ SUBDIRS = idl server
 
 INCLUDES = \
 	-I$(top_builddir)/lib/gda-common \
+	-I$(top_builddir)/lib/gda-client \
 	$(GDA_CLIENT_CFLAGS)
 
 lib_LTLIBRARIES = libgda-report.la
