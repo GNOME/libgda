@@ -1,3 +1,8 @@
+2004-03-10	Mohammad DAMT  <mdamt@Bisnisweb.com>
+
+	* configure.in: Added id to ALL_LINGUAS
+	* po/id.po: Added Indonesian Translation by Arief Mulya Utama <arief_mulya@yahoo.com>
+
 2004-02-25  Laurent Sansonetti <lrz@gnome.org>
 
 	Fixes #132216
