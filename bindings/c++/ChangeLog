@@ -1,3 +1,7 @@
+2001-10-28  Akira TAGOH <tagoh@gnome-db.org>
+
+	* Makefile.am: Added library age.
+
 2001-09-06  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gdaField.cpp: adapted to new GdaField API

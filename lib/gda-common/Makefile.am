@@ -63,6 +63,8 @@ libgda_common_la_SOURCES = \
 	gda-xml-list-item.c \
 	gda-xml-util.c
 
+libgda_common_la_LDFLAGS = -version-info $(GDA_CURRENT):$(GDA_REVISION):$(GDA_AGE)
+
 libgda_common_la_LIBADD=\
 	$(GDA_CLIENT_LIBS) 
 #	$(top_builddir)/lib/gda-common/gda-xml-query/libxmlquery.a

@@ -26,6 +26,7 @@ libgda_server_la_SOURCES = \
 	gda-builtin-res.c \
 	gda-builtin-res.h \
 	gda-server.c 
+libgda_server_la_LDFLAGS = -version-info $(GDA_CURRENT):$(GDA_REVISION):$(GDA_AGE)
 libgda_server_la_LIBADD = -lpopt
 
 gdaincludedir=$(includedir)/libgda-$(VERSION)/gda

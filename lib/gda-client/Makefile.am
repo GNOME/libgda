@@ -26,6 +26,7 @@ libgda_client_la_SOURCES = \
 	gda-export.c \
 	gda-field.c \
 	gda-recordset.c 
+libgda_client_la_LDFLAGS = -version-info $(GDA_CURRENT):$(GDA_REVISION):$(GDA_AGE)
 libgda_client_la_LIBADD =
 
 gdaincludedir=$(includedir)/libgda-$(VERSION)/gda
