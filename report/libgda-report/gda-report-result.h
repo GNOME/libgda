@@ -55,8 +55,6 @@ GdaReportResult *gda_report_result_new_to_memory (GdaReportDocument *document);
 GdaReportResult *gda_report_result_new_to_uri (const gchar *uri,
 					       GdaReportDocument *document);
 
-GdaReportResult *gda_report_result_load_from_uri (const gchar *uri);
-
 
 G_END_DECLS
 
