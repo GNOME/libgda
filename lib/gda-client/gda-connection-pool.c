@@ -304,6 +304,8 @@ gda_connection_pool_open_connection (GdaConnectionPool *pool,
 									cnc);
 					gtk_object_ref(GTK_OBJECT(cnc));
 #endif
+					gda_config_save_last_connection (gda_name, username);
+
 					return cnc;
 				}
 			}
@@ -340,6 +342,8 @@ gda_connection_pool_open_connection (GdaConnectionPool *pool,
 		}
 
 		pool->connections = g_list_append(pool->connections, (gpointer) cnc);
+		gda_config_save_last_connection (gda_name, username);
+
 		return cnc;
 	}
 	else g_warning(_("Data source %s not found"), gda_name);

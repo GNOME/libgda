@@ -592,6 +592,7 @@ gda_connection_open (GdaConnection* cnc, const gchar* dsn, const gchar* user, co
 #ifndef HAVE_GOBJECT /* FIXME */
 	gtk_signal_emit(GTK_OBJECT(cnc), gda_connection_signals[CONNECTION_OPEN]);
 #endif
+
 	return 0;
 }
 
