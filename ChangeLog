@@ -1,3 +1,11 @@
+2004-01-10  J.H.M. Dassen (Ray) <jdassen@debian.org>
+
+	http://bugs.debian.org/226560
+
+	* providers/sqlite/gda-sqlite-provider.c: #include <gda-util.h> to
+	have gda_type_to_string declared. This fixes pointer/integer issues on
+	64-bit architectures, in particular IA64.
+
 2004-01-09  Jon Willeke <willeke@users.sourceforge.net>
 
 	Fixes #130945

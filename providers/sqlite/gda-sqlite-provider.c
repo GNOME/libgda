@@ -27,6 +27,7 @@
 #include <stdlib.h>
 #include <libgda/gda-intl.h>
 #include <libgda/gda-data-model-array.h>
+#include <libgda/gda-util.h>
 #include "gda-sqlite.h"
 #include "gda-sqlite-provider.h"
 #include "gda-sqlite-recordset.h"
