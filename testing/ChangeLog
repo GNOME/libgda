@@ -1,0 +1,4 @@
+2000-09-25  Reinhard Müller  <reinhard@gnue.org>
+
+	* Makefile.am, gda-test.c: First "official" version
+

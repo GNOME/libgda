@@ -1,7 +1,28 @@
-/*
- * Test program for libgda
- */
+/***********************************************************************/
+/*                                                                     */
+/*  GNU Data Access                                                    */
+/*  Testing program                                                    */
+/*  (c) 2000 Free Software Foundation                                  */
+/*                                                                     */
+/***********************************************************************/
+/*                                                                     */
+/*  This program is free software; you can redistribute it and/or      */
+/*  modify it under the terms of the GNU General Public License as     */
+/*  published by the Free Software Foundation; either version 2 of     */
+/*  the License, or (at your option) any later version.                */
+/*                                                                     */
+/*  This program is distributed in the hope that it will be useful,    */
+/*  but WITHOUT ANY WARRANTY; without even the implied warranty of     */
+/*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the      */
+/*  GNU General Public License for more details.                       */
+/*                                                                     */
+/*  You should have received a copy of the GNU General Public License  */
+/*  along with this program; if not, write to the Free Software        */
+/*  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.          */
+/*                                                                     */
+/***********************************************************************/
 
+#include "config.h"
 #include <glib.h>
 #include <orb/orb.h>
 #include <liboaf/liboaf.h>
@@ -10,9 +31,27 @@
 
 static CORBA_ORB orb;
 
-/*
- * Print errors and exit program
- ********************************/
+/* ------------------------------------------------------------------------- */
+/* Print intro messages
+/* ------------------------------------------------------------------------- */
+void
+intro ()
+{
+  g_print ("GDA-Test version %s\n", VERSION);
+  g_print ("Copyright (c) 2000 Free Software Foundation, Inc.\n");
+  g_print ("This program is part of GNU Data Access (GDA) version %s.\n",
+	   VERSION);
+  g_print ("GDA-Test comes with NO WARRANTY, ");
+  g_print ("to the extent permitted by law.\n");
+  g_print ("You may redistribute copies of ");
+  g_print ("GDA-Test under the terms of the GNU\n");
+  g_print ("General Public License. ");
+  g_print ("For more information see the file COPYING.\n");
+}
+
+/* ------------------------------------------------------------------------- */
+/* Print errors and exit program
+/* ------------------------------------------------------------------------- */
 int
 die (Gda_Connection* cnc)
 {
@@ -21,7 +60,7 @@ die (Gda_Connection* cnc)
   Gda_Error* error;
 
   errors = gda_connection_get_errors (cnc);
-  for (node = g_list_first (errors); node; node = g_list_next (errors))
+  for (node = g_list_first (errors); node; node = g_list_next (node))
     {
       error = (Gda_Error*) node->data;
       g_print ("%s\n", gda_error_description (error));
@@ -30,9 +69,9 @@ die (Gda_Connection* cnc)
   exit (1);
 }
 
-/*
- * List all providers
- *********************/
+/* ------------------------------------------------------------------------- */
+/* List all providers
+/* ------------------------------------------------------------------------- */
 char*
 list_providers ()
 {
@@ -45,28 +84,36 @@ list_providers ()
   list = gda_provider_list ();
   if (!list)
     {
-      g_print ("\nNo GDA providers are available\n");
-      return (NULL);
+      g_print ("\n*** Error ***\n");
+      g_print ("There are no GDA providers available.\n");
+      g_print ("If you installed libgda from a RPM, a DEB, or a Linux\n");
+      g_print ("Distribution, you should install one of the providers,\n");
+      g_print ("which you can get from the same source as you got libgda.\n");
+      g_print ("If you built libgda yourself, you should run ./configure\n");
+      g_print ("with one of the options that enable the providers (run\n");
+      g_print ("./configure --help for details) and then make and install\n");
+      g_print ("again.\n");
+      g_print ("If you already installed a provider, the .oafinfo file is\n");
+      g_print ("maybe not installed in the right directory.\n");
+      exit (1);
     }
-  else
+
+  g_print ("\nThe following %d GDA providers are available:\n",
+	   g_list_length (list));
+  for (node = g_list_first (list); node; node = g_list_next (node))
     {
-      g_print ("\nThe following %d GDA providers are available:\n",
-	       g_list_length (list));
-      for (node = g_list_first (list); node; node = g_list_next (list))
-	{
-	  provider = (Gda_Provider*) node->data;
-	  g_print ("%d: %s\n", ++i, GDA_PROVIDER_NAME (provider));
-	  if (i = 1)
-	    selected = g_strdup (GDA_PROVIDER_NAME (provider));
-	}
-      gda_provider_free_list (list);
+      provider = (Gda_Provider*) node->data;
+      g_print ("%d: %s\n", ++i, GDA_PROVIDER_NAME (provider));
+      if (i = 1)
+	selected = g_strdup (GDA_PROVIDER_NAME (provider));
     }
+  gda_provider_free_list (list);
   return (selected);
 }
 
-/*
- * List all tables for a connection
- *****************************************/
+/* ------------------------------------------------------------------------- */
+/* List all tables for a connection
+/* ------------------------------------------------------------------------- */
 void
 list_tables (Gda_Connection* cnc)
 {
@@ -93,9 +140,9 @@ list_tables (Gda_Connection* cnc)
   gda_recordset_free (rs);
 }
 
-/*
- * Main function
- ****************/
+/* ------------------------------------------------------------------------- */
+/* Main function
+/* ------------------------------------------------------------------------- */
 int
 main (int argc, char* argv[])
 {
@@ -107,13 +154,12 @@ main (int argc, char* argv[])
   gint dummy;
   gint length;
 
-  g_print ("\n*** GDA test program ***\n");
+  intro ();
   g_print ("\ninitializing...\n");
   gtk_init (&argc, &argv);
   orb = oaf_init (argc, argv);
-  provider = list_providers ();
-  g_print ("\ncreating connection object...\n");
   cnc = gda_connection_new (orb);
+  provider = list_providers ();
   g_print ("\nchoosing %s...\n", provider);
   gda_connection_set_provider (cnc, provider);
   g_print ("\nPlease enter dsn (like 'DATABASE=test'): ");
