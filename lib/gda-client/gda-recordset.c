@@ -609,6 +609,42 @@ gda_recordset_field_idx (GdaRecordset * rs, gint idx)
 }
 
 /**
+ * gda_recordset_to_array:
+ * @rs: the recordset
+ *
+ * Returns a pointer array containing the whole recordset
+ **/
+
+GPtrArray *
+gda_recordset_to_array (GdaRecordset *rs)
+{
+	GPtrArray *array, *row;
+	GdaField *rc;
+	gint fields, i, j;
+	
+	g_return_val_if_fail (GDA_IS_RECORDSET(rs), 0);
+	g_return_val_if_fail (rs->open, 0);
+	
+	gda_recordset_move_first(rs);
+	fields = rs->field_attributes->_length;
+
+	array = g_ptr_array_new();
+
+	for (i = 0; i < rs->affected_rows; i++) {
+		row = g_ptr_array_new(); 
+
+		for (j = 0; j < fields; j++) {
+			rc = gda_recordset_field_idx(rs, j);
+			g_ptr_array_add(row, rc);
+		}
+		
+		g_ptr_array_add(array, row);
+	}
+
+	return array;
+}
+
+/**
  * gda_recordset_field_name:
  * @rs: the recordset
  * @idx: the name of the field in the current row
