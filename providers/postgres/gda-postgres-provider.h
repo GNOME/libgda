@@ -62,8 +62,14 @@ typedef struct {
 	gint                ntypes;
 	GdaPostgresTypeOid *type_data;
 	GHashTable         *h_table;
+
+	/* Version of the backend to which we are connected */
 	gchar              *version;
 	gfloat              version_float;
+
+	/* Internal data types not returned */
+	gchar              *avoid_types;
+	gchar              *avoid_types_oids;
 } GdaPostgresConnectionData;
 
 /* NOTE ABOUT THE POSTGRES VERSIONS:

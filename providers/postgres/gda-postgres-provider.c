@@ -221,40 +221,65 @@ get_connection_type_list (GdaPostgresConnectionData *priv_td)
 {
 	GHashTable *h_table;
 	GdaPostgresTypeOid *td;
-	PGresult *pg_res;
+	PGresult *pg_res, *pg_res_avoid;
 	gint nrows, i;
+	gchar *avoid_types = NULL;
+	GString *string;
 
-	/* without namespace:
-	   SELECT t.oid, typname, usename, obj_description(t.oid)
-	   FROM pg_catalog.pg_type t, pg_catalog.pg_user u
-	   WHERE typowner=usesysid AND typrelid = 0 AND typname !~ '^_'
-	   AND pg_type_is_visible (t.oid)
-	   AND typname not in ('cstring', 'internal', 'void', 'opaque', 'SET', 'cid', 'oid', 'int2vector', 'oidvector', 'regproc', 'trigger', 'unknown', 'language_handler', 'any', 'anyarray', 'record', 'xid', 'tid', 'smgr')
-	   ORDER BY typname;
+	if (priv_td->version_float < 7.3) {
+		gchar *query;
+		avoid_types = "'SET', 'cid', 'oid', 'int2vector', 'oidvector', 'regproc', 'smgr', 'tid', 'unknown', 'xid'";
+		/* main query to fetch infos about the data types */
+		query = g_strdup_printf ("SELECT pg_type.oid, typname, usename, obj_description(pg_type.oid) "
+					 "FROM pg_type, pg_user "
+					 "WHERE typowner=usesysid AND typrelid = 0 AND typname !~ '^_' "
+					 "AND  typname not in (%s) "
+					 "ORDER BY typname", avoid_types);
+		pg_res = PQexec (priv_td->pconn, query);
+		g_free (query);
 
-	   with namespace:
-	   SELECT t.oid, typname, usename, obj_description(t.oid)
-	   FROM pg_catalog.pg_type t, pg_catalog.pg_user u, pg_catalog.pg_namespace ns
-	   WHERE typowner=usesysid AND typrelid = 0 AND typname !~ '^_'
-	   AND t.typnamespace=ns.oid AND (ns.nspname='pg_catalog' OR ns.nspname='public')
-	   AND typname not in ('cstring', 'internal', 'void', 'opaque', 'SET', 'cid', 'oid', 'int2vector', 'oidvector', 'regproc', 'trigger', 'unknown', 'language_handler', 'any', 'anyarray', 'record', 'xid', 'tid', 'smgr')
-	   ORDER BY typname;
-	*/
+		/* query to fetch non returned data types */
+		query = g_strdup_printf ("SELECT pg_type.oid FROM pg_type WHERE typname in (%s)", avoid_types);
+		pg_res_avoid = PQexec (priv_td->pconn, query);
+		g_free (query);
+	}
+	else {
+		gchar *query;
+		avoid_types = "'any', 'anyarray', 'cid', 'cstring', 'int2vector', 'internal', 'language_handler', 'oid', 'oidvector', 'opaque', 'record', 'refcursor', 'regclass', 'regoper', 'regoperator', 'regproc', 'regprocedure', 'regtype', 'SET', 'smgr', 'tid', 'trigger', 'unknown', 'void', 'xid'";
 
-	pg_res = PQexec (priv_td->pconn,
-			 "SELECT pg_type.oid, typname, usename, obj_description(pg_type.oid) "
-			 "FROM pg_type, pg_user "
-			 "WHERE typowner=usesysid AND typrelid = 0 AND typname !~ '^_' "
-			 " AND  typname not in ('SET', 'cid', 'oid', "
-			 "'int2vector', 'oidvector', 'regproc', "
-			 "'smgr', 'tid', 'unknown', 'xid') "
-			 "ORDER BY typname");
+		/* main query to fetch infos about the data types */
+		query = g_strdup_printf (
+                          "SELECT t.oid, t.typname, u.usename, pg_catalog.obj_description(t.oid) "
+			  "FROM pg_catalog.pg_type t, pg_catalog.pg_user u, pg_catalog.pg_namespace n "
+			  "WHERE t.typowner=u.usesysid "
+			  "AND n.oid = t.typnamespace "
+			  "AND pg_catalog.pg_type_is_visible(t.oid) "
+			  /*--AND (n.nspname = 'public' OR n.nspname = 'pg_catalog')*/
+			  "AND typname !~ '^_' "
+			  "AND (t.typrelid = 0 OR "
+			  "(SELECT c.relkind = 'c' FROM pg_catalog.pg_class c WHERE c.oid = t.typrelid)) "
+			  "AND t.typname not in (%s) "
+			  "ORDER BY typname", avoid_types);
+		pg_res = PQexec (priv_td->pconn, query);
+		g_free (query);
 
-	if (pg_res == NULL || PQresultStatus (pg_res) != PGRES_TUPLES_OK) {
-		if (pg_res) PQclear (pg_res);
+		/* query to fetch non returned data types */
+		query = g_strdup_printf ("SELECT t.oid FROM pg_catalog.pg_type t WHERE t.typname in (%s)", 
+					 avoid_types);
+		pg_res_avoid = PQexec (priv_td->pconn, query);
+		g_free (query);
+	}
+
+	if (!pg_res || (PQresultStatus (pg_res) != PGRES_TUPLES_OK) ||
+	    !pg_res_avoid || (PQresultStatus (pg_res_avoid) != PGRES_TUPLES_OK)) {
+		if (pg_res)
+			PQclear (pg_res);
+		if (pg_res_avoid)
+			PQclear (pg_res_avoid);
 		return -1;
 	}
 
+	/* Data types returned */
 	nrows = PQntuples (pg_res);
 	td = g_new (GdaPostgresTypeOid, nrows);
 	h_table = g_hash_table_new (g_str_hash, g_str_equal);
@@ -272,6 +297,20 @@ get_connection_type_list (GdaPostgresConnectionData *priv_td)
 	priv_td->type_data = td;
 	priv_td->h_table = h_table;
 
+	/* Make a string of data types internal to postgres and not returned, for future queries */
+	string = NULL;
+	nrows = PQntuples (pg_res_avoid);
+	for (i = 0; i < nrows; i++) {
+		if (!string) 
+			string = g_string_new (PQgetvalue (pg_res_avoid, i, 0));
+		else
+			g_string_append_printf (string, ", %s", PQgetvalue (pg_res_avoid, i, 0));
+	}
+	PQclear (pg_res_avoid);
+	priv_td->avoid_types = avoid_types;
+	priv_td->avoid_types_oids = string->str;
+	g_string_free (string, FALSE);
+	
 	return 0;
 }
 
@@ -328,6 +367,7 @@ gda_postgres_provider_open_connection (GdaServerProvider *provider,
 {
 	const gchar *pq_host;
 	const gchar *pq_db;
+	const gchar *pg_searchpath;
 	const gchar *pq_port;
 	const gchar *pq_options;
 	const gchar *pq_tty;
@@ -339,6 +379,8 @@ gda_postgres_provider_open_connection (GdaServerProvider *provider,
 	GdaPostgresConnectionData *priv_data;
 	PGconn *pconn;
 	PGresult *pg_res;
+	gchar *version;
+	gfloat version_float;
 
 	GdaPostgresProvider *pg_prv = (GdaPostgresProvider *) provider;
 
@@ -349,6 +391,7 @@ gda_postgres_provider_open_connection (GdaServerProvider *provider,
 	pq_host = gda_quark_list_find (params, "HOST");
 	pq_hostaddr = gda_quark_list_find (params, "HOSTADDR");
 	pq_db = gda_quark_list_find (params, "DATABASE");
+	pg_searchpath = gda_quark_list_find (params, "SEARCHPATH");
 	pq_port = gda_quark_list_find (params, "PORT");
 	pq_options = gda_quark_list_find (params, "OPTIONS");
 	pq_tty = gda_quark_list_find (params, "TTY");
@@ -400,19 +443,59 @@ gda_postgres_provider_open_connection (GdaServerProvider *provider,
 	pg_res = PQexec (pconn, "SET CLIENT_ENCODING TO 'UNICODE'");
 	PQclear (pg_res);
 
+	/*
+	 * Get the vesrion as a float
+	 */
+	pg_res = PQexec (pconn, "SELECT version ()");
+	version = g_strdup (PQgetvalue(pg_res, 0, 0));
+	version_float = get_pg_version_float (PQgetvalue(pg_res, 0, 0));
+	PQclear (pg_res);
+
+	/*
+	 * Set the search_path
+	 */
+	if ((version_float >= 7.3) && pg_searchpath) {
+		const gchar *ptr;
+		gboolean path_valid = TRUE;
+
+		ptr = pg_searchpath;
+		while (*ptr) {
+			if (*ptr == ';')
+				path_valid = FALSE;
+			ptr++;
+		}
+		
+		if (path_valid) {
+			gchar *query = g_strdup_printf ("SET search_path TO %s", pg_searchpath);
+			pg_res = PQexec (pconn, query);
+			g_free (query);
+
+			if (!pg_res || (PQresultStatus (pg_res) != PGRES_COMMAND_OK)) {
+				g_warning ("Could not set search_path to %s\n", pg_searchpath);
+				PQclear (pg_res);
+				return FALSE;
+			}
+			PQclear (pg_res);
+		}
+		else {
+			g_warning ("Search path %s is invalid\n", pg_searchpath);
+			return FALSE;
+		}
+	}
+
+	/*
+	 * Associated data
+	 */
 	priv_data = g_new0 (GdaPostgresConnectionData, 1);
 	priv_data->pconn = pconn;
+	priv_data->version = version;
+	priv_data->version_float = version_float;
 	if (get_connection_type_list (priv_data) != 0) {
 		gda_connection_add_error (cnc, gda_postgres_make_error (pconn, NULL));
 		PQfinish(pconn);
 		g_free (priv_data);
 		return FALSE;
 	}
-	
-	pg_res = PQexec (pconn, "SELECT version ()");
-	priv_data->version = g_strdup (PQgetvalue(pg_res, 0, 0));
-	priv_data->version_float = get_pg_version_float (PQgetvalue(pg_res, 0, 0));
-	PQclear (pg_res);
 
 	g_object_set_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE, priv_data);
 
@@ -443,6 +526,7 @@ gda_postgres_provider_close_connection (GdaServerProvider *provider, GdaConnecti
 	g_hash_table_destroy (priv_data->h_table);
 	g_free (priv_data->type_data);
 	g_free (priv_data->version);
+	g_free (priv_data->avoid_types_oids);
 	g_free (priv_data);
 
 	g_object_set_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE, NULL);
@@ -626,6 +710,7 @@ gda_postgres_provider_execute_command (GdaServerProvider *provider,
 		g_free (str);
 		break;
 	default:
+		break;
 	}
 
 	return reclist;
@@ -727,6 +812,7 @@ static gboolean gda_postgres_provider_supports (GdaServerProvider *provider,
 		if (priv_data->version_float >= 7.3)
 			return TRUE;
 	default :
+		break;
 	}
  
 	return FALSE;
@@ -780,17 +866,34 @@ gda_postgres_fill_procs_data (GdaDataModelArray *recset,
 	gint row_count, i;
 	GList *list = NULL;
 
-	query = g_strdup (
-			  "SELECT pg_proc.oid, proname, usename, obj_description (pg_proc.oid), typname, "
-			  "pronargs, proargtypes, prosrc "
-			  "FROM pg_proc, pg_user, pg_type "
-			  "WHERE pg_type.oid=prorettype AND usesysid=proowner AND "
-			  "pg_type.oid in (SELECT ty.oid FROM pg_type ty WHERE ty.typrelid = 0 AND "
-			  "ty.typname !~ '^_' AND  ty.typname not in ('SET', 'cid', 'int2vector', "
-			  "'oidvector', 'regproc', 'smgr', 'tid', 'unknown', 'xid', 'oid')) "
-			  "AND proretset = 'f' AND ((pronargs != 0 AND oidvectortypes (proargtypes)!= '') "
-			  "OR pronargs=0) "
-			  "ORDER BY proname, pronargs");
+	if (priv_data->version_float < 7.3) 
+		query = g_strdup_printf (
+                         "SELECT pg_proc.oid, proname, usename, obj_description (pg_proc.oid), typname, "
+			 "pronargs, proargtypes, prosrc "
+			 "FROM pg_proc, pg_user, pg_type "
+			 "WHERE pg_type.oid=prorettype AND usesysid=proowner AND "
+			 "pg_type.oid in (SELECT ty.oid FROM pg_type ty WHERE ty.typrelid = 0 AND "
+			 "ty.typname !~ '^_' AND  ty.oid not in (%s)) "
+			 "AND proretset = 'f' AND ((pronargs != 0 AND oidvectortypes (proargtypes)!= '') "
+			 "OR pronargs=0) "
+			 "ORDER BY proname, pronargs",
+			 priv_data->avoid_types_oids);
+	else
+		query = g_strdup_printf (
+                         "SELECT p.oid, p.proname, u.usename, pg_catalog.obj_description (p.oid), "
+			 "t.typname, p.pronargs, p.proargtypes, p.prosrc "
+			 "FROM pg_catalog.pg_proc p, pg_catalog.pg_user u, pg_catalog.pg_type t, "
+			 "pg_catalog.pg_namespace n "
+			 "WHERE t.oid=p.prorettype AND u.usesysid=p.proowner AND n.oid = p.pronamespace "
+			 "AND p.prorettype <> 'pg_catalog.cstring'::pg_catalog.regtype "
+			 "AND p.proargtypes[0] <> 'pg_catalog.cstring'::pg_catalog.regtype "
+			 "AND t.oid in (SELECT ty.oid FROM pg_catalog.pg_type ty WHERE ty.typrelid = 0 AND "
+			 "ty.typname !~ '^_' AND ty.oid not in (%s)) "
+			 "AND p.proretset = 'f' "
+			 "AND NOT p.proisagg "
+			 "AND pg_catalog.pg_function_is_visible(p.oid) "
+			 "ORDER BY proname, pronargs",
+			 priv_data->avoid_types_oids);
 
 	pg_res = PQexec(priv_data->pconn, query);
 	g_free (query);
@@ -976,14 +1079,15 @@ get_postgres_tables (GdaConnection *cnc, GdaParameterList *params)
 			g_free (query);
 		}
 		else
-			reclist = process_sql_commands (NULL, cnc,
-							"SELECT c.relname, u.usename, pg_catalog.obj_description(c.oid), NULL "
-							"FROM pg_catalog.pg_class c, pg_catalog.pg_user u, pg_catalog.pg_namespace n "
-							"WHERE u.usesysid=c.relowner AND c.relkind = 'r' "
-							"AND c.relnamespace=n.oid AND pg_catalog.pg_table_is_visible (c.oid) "
-							"AND n.nspname NOT IN ('pg_catalog', 'pg_toast') "
-							"ORDER BY relname",
-							GDA_COMMAND_OPTION_STOP_ON_ERRORS);
+			reclist = process_sql_commands (
+				    NULL, cnc,
+				    "SELECT c.relname, u.usename, pg_catalog.obj_description(c.oid), NULL "
+				    "FROM pg_catalog.pg_class c, pg_catalog.pg_user u, pg_catalog.pg_namespace n "
+				    "WHERE u.usesysid=c.relowner AND c.relkind = 'r' "
+				    "AND c.relnamespace=n.oid AND pg_catalog.pg_table_is_visible (c.oid) "
+				    "AND n.nspname NOT IN ('pg_catalog', 'pg_toast') "
+				    "ORDER BY relname",
+				    GDA_COMMAND_OPTION_STOP_ON_ERRORS);
 	}
 
 	if (!reclist)
@@ -1040,16 +1144,30 @@ static GdaDataModel *
 get_postgres_views (GdaConnection *cnc, GdaParameterList *params)
 {
 	GList *reclist;
+	GdaPostgresConnectionData *priv_data;
 	GdaDataModel *recset;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
-	reclist = process_sql_commands (
-		NULL, cnc, 
-		"SELECT relname, usename, obj_description(pg_class.oid), NULL "
-		"FROM pg_class, pg_user "
-		"WHERE usesysid=relowner AND relkind = 'v' AND relname !~ '^pg_' ORDER BY relname",
-		GDA_COMMAND_OPTION_STOP_ON_ERRORS);
+	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE);
+	if (priv_data->version_float < 7.3) 
+		reclist = process_sql_commands (
+			       NULL, cnc, 
+			       "SELECT relname, usename, obj_description(pg_class.oid), NULL "
+			       "FROM pg_class, pg_user "
+			       "WHERE usesysid=relowner AND relkind = 'v' AND relname !~ '^pg_' ORDER BY relname",
+			       GDA_COMMAND_OPTION_STOP_ON_ERRORS);
+	else
+		reclist = process_sql_commands (
+			       NULL, cnc, 
+			       "SELECT c.relname, u.usename, pg_catalog.obj_description(c.oid), "
+			       "pg_catalog.pg_get_viewdef (c.oid) "
+			       "FROM pg_catalog.pg_class c, pg_catalog.pg_user u, pg_catalog.pg_namespace n "
+			       "WHERE u.usesysid=c.relowner AND c.relkind = 'v' "
+			       "AND c.relnamespace=n.oid AND pg_catalog.pg_table_is_visible (c.oid) "
+			       "AND n.nspname NOT IN ('pg_catalog', 'pg_toast') "
+			       "ORDER BY relname",
+			       GDA_COMMAND_OPTION_STOP_ON_ERRORS);
 
 	if (!reclist)
 		return NULL;
@@ -1069,15 +1187,27 @@ static GdaDataModel *
 get_postgres_indexes (GdaConnection *cnc, GdaParameterList *params)
 {
 	GList *reclist;
+	GdaPostgresConnectionData *priv_data;
 	GdaDataModel *recset;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
-	reclist = process_sql_commands (
-		NULL, cnc, 
-		"SELECT relname FROM pg_class WHERE relkind = 'i' AND "
-		"relname !~ '^pg_' ORDER BY relname",
-		GDA_COMMAND_OPTION_STOP_ON_ERRORS);
+	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE);
+	if (priv_data->version_float < 7.3) 
+		reclist = process_sql_commands (NULL, cnc, 
+						"SELECT relname FROM pg_class WHERE relkind = 'i' AND "
+						"relname !~ '^pg_' ORDER BY relname",
+						GDA_COMMAND_OPTION_STOP_ON_ERRORS);
+	else
+		reclist = process_sql_commands (NULL, cnc, 
+						"SELECT c.relname "
+						"FROM pg_catalog.pg_class c, pg_catalog.pg_namespace n "
+						"WHERE relkind = 'i' "
+						"AND n.oid = c.relnamespace "
+						"AND pg_catalog.pg_table_is_visible(c.oid) "
+						"AND n.nspname NOT IN ('pg_catalog', 'pg_toast') "
+						"ORDER BY relname",
+						GDA_COMMAND_OPTION_STOP_ON_ERRORS);
 
 	if (!reclist)
 		return NULL;
@@ -1109,14 +1239,15 @@ get_postgres_aggregates (GdaConnection *cnc, GdaParameterList *params)
 
 	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE);
 	if (priv_data->version_float < 7.3) {
-		reclist = process_sql_commands (NULL, cnc, 
-						"(SELECT a.aggname, a.oid, usename, obj_description (a.oid), t2.typname, t1.typname, NULL "
-						"FROM pg_aggregate a, pg_type t1, pg_type t2, pg_user u "
-						"WHERE a.aggbasetype = t1.oid AND a.aggfinaltype = t2.oid AND u.usesysid=aggowner) UNION "
-						"(SELECT a.aggname, a.oid, usename, obj_description (a.oid), t2.typname , '-', NULL "
-						"FROM pg_aggregate a, pg_type t2, pg_user u "
-						"WHERE a.aggfinaltype = t2.oid AND u.usesysid=aggowner AND a.aggbasetype = 0) ORDER BY 2",
-						GDA_COMMAND_OPTION_STOP_ON_ERRORS);
+		reclist = process_sql_commands (
+			   NULL, cnc, 
+			   "(SELECT a.aggname, a.oid, usename, obj_description (a.oid), t2.typname, t1.typname, NULL "
+			   "FROM pg_aggregate a, pg_type t1, pg_type t2, pg_user u "
+			   "WHERE a.aggbasetype = t1.oid AND a.aggfinaltype = t2.oid AND u.usesysid=aggowner) UNION "
+			   "(SELECT a.aggname, a.oid, usename, obj_description (a.oid), t2.typname , '-', NULL "
+			   "FROM pg_aggregate a, pg_type t2, pg_user u "
+			   "WHERE a.aggfinaltype = t2.oid AND u.usesysid=aggowner AND a.aggbasetype = 0) ORDER BY 2",
+			   GDA_COMMAND_OPTION_STOP_ON_ERRORS);
 	}
 	else {
 		if (namespace) {
@@ -1127,23 +1258,30 @@ get_postgres_aggregates (GdaConnection *cnc, GdaParameterList *params)
 			g_free (query);
 		}
 		else {
-			reclist = process_sql_commands (NULL, cnc, 
-							"SELECT p.proname, p.oid, u.usename, pg_catalog.obj_description(p.oid),"
-							"CASE p.proargtypes[0] "
-							"WHEN 'pg_catalog.\"any\"'::pg_catalog.regtype "
-							"THEN CAST('-' AS pg_catalog.text) "
-							"ELSE typi.typname "
-							"END,"
-							"typo.typname, NULL "
-							"FROM pg_catalog.pg_proc p, pg_catalog.pg_user u, pg_catalog.pg_namespace n, pg_catalog.pg_type typi, pg_catalog.pg_type typo "
-							"WHERE u.usesysid=p.proowner "
-							"AND n.oid = p.pronamespace "
-							"AND p.prorettype = typo.oid "
-							"AND p.proargtypes[0] = typi.oid "
-							"AND p.proisagg "
-							"AND pg_catalog.pg_function_is_visible(p.oid) "
-							"ORDER BY 2",
-							GDA_COMMAND_OPTION_STOP_ON_ERRORS);
+			gchar *query;
+
+			query = g_strdup_printf (
+                                  "SELECT p.proname, p.oid, u.usename, pg_catalog.obj_description(p.oid),"
+				  "CASE p.proargtypes[0] "
+				  "WHEN 'pg_catalog.\"any\"'::pg_catalog.regtype "
+				  "THEN CAST('-' AS pg_catalog.text) "
+				  "ELSE typi.typname "
+				  "END,"
+				  "typo.typname, NULL "
+				  "FROM pg_catalog.pg_proc p, pg_catalog.pg_user u, pg_catalog.pg_namespace n, "
+				  "pg_catalog.pg_type typi, pg_catalog.pg_type typo "
+				  "WHERE u.usesysid=p.proowner "
+				  "AND n.oid = p.pronamespace "
+				  "AND p.prorettype = typo.oid "
+				  "AND typo.oid NOT IN (%s) "
+				  "AND p.proargtypes[0] = typi.oid "
+				  "AND typi.oid NOT IN (%s) "
+				  "AND p.proisagg "
+				  "AND pg_catalog.pg_function_is_visible(p.oid) "
+				  "ORDER BY 2", priv_data->avoid_types_oids, 
+				  priv_data->avoid_types_oids);
+			reclist = process_sql_commands (NULL, cnc, query, GDA_COMMAND_OPTION_STOP_ON_ERRORS);
+			g_free (query);
 		}
 	}
 
@@ -1169,15 +1307,25 @@ get_postgres_triggers (GdaConnection *cnc, GdaParameterList *params)
 {
 	GList *reclist;
 	GdaDataModel *recset;
+	GdaPostgresConnectionData *priv_data;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
-	reclist = process_sql_commands (NULL, cnc, 
-					"SELECT tgname FROM pg_trigger "
-					"WHERE tgisconstraint = false "
-					"ORDER BY tgname ",
-					GDA_COMMAND_OPTION_STOP_ON_ERRORS);
-
+	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE);
+	if (priv_data->version_float < 7.3) 
+		reclist = process_sql_commands (NULL, cnc, 
+						"SELECT tgname FROM pg_trigger "
+						"WHERE tgisconstraint = false "
+						"ORDER BY tgname ",
+						GDA_COMMAND_OPTION_STOP_ON_ERRORS);
+	else
+		/* REM: the triggers don't seem to belong to a particular schema... */
+		reclist = process_sql_commands (NULL, cnc, 
+						"SELECT t.tgname "
+						"FROM pg_catalog.pg_trigger t "
+						"WHERE t.tgisconstraint = false "
+						"ORDER BY t.tgname",
+						GDA_COMMAND_OPTION_STOP_ON_ERRORS);
 	if (!reclist)
 		return NULL;
 
@@ -1214,7 +1362,7 @@ gda_postgres_init_md_recset (GdaConnection *cnc)
 }
 
 static GList *
-gda_postgres_get_idx_data (PGconn *pconn, const gchar *tblname)
+gda_postgres_get_idx_data (GdaPostgresConnectionData *priv_data, const gchar *tblname)
 {
 	gint nidx, i;
 	GList *idx_list = NULL;
@@ -1222,13 +1370,20 @@ gda_postgres_get_idx_data (PGconn *pconn, const gchar *tblname)
 	gchar *query;
 	PGresult *pg_idx;
 
-	query = g_strdup_printf (
-			"SELECT i.indkey, i.indisprimary, i.indisunique "
-			"FROM pg_class c, pg_class c2, pg_index i "
-			"WHERE c.relname = '%s' AND c.oid = i.indrelid "
-			"AND i.indexrelid = c2.oid", tblname);
+	if (priv_data->version_float < 7.3)
+		query = g_strdup_printf ("SELECT i.indkey, i.indisprimary, i.indisunique "
+					 "FROM pg_class c, pg_class c2, pg_index i "
+					 "WHERE c.relname = '%s' AND c.oid = i.indrelid "
+					 "AND i.indexrelid = c2.oid", tblname);
+	else
+		query = g_strdup_printf ("SELECT i.indkey, i.indisprimary, i.indisunique "
+					 "FROM pg_catalog.pg_class c, pg_catalog.pg_class c2, pg_catalog.pg_index i "
+					 "WHERE c.relname = '%s' "
+					 "AND c.oid = i.indrelid "
+					 "AND i.indexrelid = c2.oid "
+					 "AND pg_catalog.pg_table_is_visible(c.oid)", tblname);
 
-	pg_idx = PQexec(pconn, query);
+	pg_idx = PQexec(priv_data->pconn, query);
 	g_free (query);
 	if (pg_idx == NULL)
 		return NULL;
@@ -1298,7 +1453,7 @@ gda_postgres_index_type (gint colnum, GList *idx_list, IdxType type)
 }
 
 static GList *
-gda_postgres_get_ref_data (PGconn *pconn, const gchar *tblname)
+gda_postgres_get_ref_data (GdaPostgresConnectionData *priv_data, const gchar *tblname)
 {
 	gint nref, i;
 	GList *ref_list = NULL;
@@ -1309,12 +1464,20 @@ gda_postgres_get_ref_data (PGconn *pconn, const gchar *tblname)
 
 	// WARNING: don't know a better way to get references :-(
 	lentblname = strlen (tblname);
-	query = g_strdup_printf ("SELECT tr.tgargs "
-				 "FROM pg_class c, pg_trigger tr "
-				 "WHERE c.relname = '%s' AND c.oid = tr.tgrelid AND "
-				 "tr.tgisconstraint = true AND tr.tgnargs = 6", tblname);
 
-	pg_ref = PQexec(pconn, query);
+	if (priv_data->version_float < 7.3) 
+		query = g_strdup_printf ("SELECT tr.tgargs "
+					 "FROM pg_class c, pg_trigger tr "
+					 "WHERE c.relname = '%s' AND c.oid = tr.tgrelid AND "
+					 "tr.tgisconstraint = true AND tr.tgnargs = 6", tblname);
+	else
+		/* FIXME using the pg_constraint table */
+		query = g_strdup_printf ("SELECT tr.tgargs "
+					 "FROM pg_class c, pg_trigger tr "
+					 "WHERE c.relname = '%s' AND c.oid = tr.tgrelid AND "
+					 "tr.tgisconstraint = true AND tr.tgnargs = 6", tblname);
+
+	pg_ref = PQexec(priv_data->pconn, query);
 	g_free (query);
 	if (pg_ref == NULL)
 		return NULL;
@@ -1382,7 +1545,8 @@ gda_postgres_fill_md_data (const gchar *tblname, GdaDataModelArray *recset,
 	GList *idx_list;
 	GList *ref_list;
 
-	query = g_strdup_printf (
+	if (priv_data->version_float < 7.3)
+		query = g_strdup_printf (
 			"(SELECT a.attname, b.typname, a.atttypmod, b.typlen, not a.attnotnull, d.adsrc, "
 			"a.attnum FROM pg_class c, pg_attribute a, pg_type b, pg_attrdef d "
 			"WHERE c.relname = '%s' AND a.attnum > 0 AND "
@@ -1390,8 +1554,32 @@ gda_postgres_fill_md_data (const gchar *tblname, GdaDataModelArray *recset,
 			"a.atthasdef = 't' and d.adrelid=c.oid and d.adnum=a.attnum) "
 			"UNION (SELECT a.attname, b.typname, a.atttypmod, b.typlen, not a.attnotnull, NULL, "
 			"a.attnum FROM pg_class c, pg_attribute a, pg_type b "
-			"WHERE c.relname = '%s' AND a.attnum > 0 AND "
+			  "WHERE c.relname = '%s' AND a.attnum > 0 AND "
 			"a.attrelid = c.oid and b.oid = a.atttypid AND a.atthasdef = 'f') ORDER BY 7",
+			tblname, tblname);
+	else 
+		query = g_strdup_printf (
+			"(SELECT a.attname, t.typname, a.atttypmod, t.typlen, not a.attnotnull, d.adsrc, a.attnum "
+			"FROM pg_catalog.pg_class c INNER JOIN pg_catalog.pg_attribute a ON (a.attrelid = c.oid) "
+			"INNER JOIN pg_catalog.pg_attrdef d ON (a.attnum = d.adnum AND d.adrelid=c.oid), "
+			"pg_catalog.pg_type t "
+			"WHERE c.relname = '%s' "
+			"AND pg_catalog.pg_table_is_visible (c.oid) "
+			"AND a.attnum > 0 "
+			"AND t.oid = a.atttypid "
+			"AND NOT a.attisdropped "
+			"AND a.atthasdef) "
+			"UNION "
+			"(SELECT a.attname, t.typname, a.atttypmod, t.typlen, not a.attnotnull, NULL, a.attnum "
+			"FROM pg_catalog.pg_class c INNER JOIN pg_catalog.pg_attribute a ON (a.attrelid = c.oid), "
+			"pg_catalog.pg_type t "
+			"WHERE c.relname = '%s' "
+			"AND pg_catalog.pg_table_is_visible (c.oid) "
+			"AND a.attnum > 0 "
+			"AND t.oid = a.atttypid "
+			"AND NOT a.attisdropped "
+			"AND NOT a.atthasdef) "
+			"ORDER BY 7 ",
 			tblname, tblname);
 
 	pg_res = PQexec(priv_data->pconn, query);
@@ -1399,8 +1587,8 @@ gda_postgres_fill_md_data (const gchar *tblname, GdaDataModelArray *recset,
 	if (pg_res == NULL)
 		return NULL;
 
-	idx_list = gda_postgres_get_idx_data (priv_data->pconn, tblname);
-	ref_list = gda_postgres_get_ref_data (priv_data->pconn, tblname);
+	idx_list = gda_postgres_get_idx_data (priv_data, tblname);
+	ref_list = gda_postgres_get_ref_data (priv_data, tblname);
 
 	row_count = PQntuples (pg_res);
 	for (i = 0; i < row_count; i++) {
@@ -1537,15 +1725,25 @@ static GdaDataModel *
 get_postgres_databases (GdaConnection *cnc, GdaParameterList *params)
 {
 	GList *reclist;
+	GdaPostgresConnectionData *priv_data;
 	GdaDataModel *recset;
-
+	
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
-	reclist = process_sql_commands (NULL, cnc, 
-					"SELECT datname "
-					"FROM pg_database "
-					"ORDER BY 1",
-					GDA_COMMAND_OPTION_STOP_ON_ERRORS);
+	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE);
+
+	if (priv_data->version_float < 7.3)
+		reclist = process_sql_commands (NULL, cnc, 
+						"SELECT datname "
+						"FROM pg_database "
+						"ORDER BY 1",
+						GDA_COMMAND_OPTION_STOP_ON_ERRORS);
+	else
+		reclist = process_sql_commands (NULL, cnc, 
+						"SELECT datname "
+						"FROM pg_catalog.pg_database "
+						"ORDER BY 1",
+						GDA_COMMAND_OPTION_STOP_ON_ERRORS);
 
 	if (!reclist)
 		return NULL;
@@ -1563,14 +1761,24 @@ get_postgres_users (GdaConnection *cnc, GdaParameterList *params)
 {
 	GList *reclist;
 	GdaDataModel *recset;
+	GdaPostgresConnectionData *priv_data;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
-	reclist = process_sql_commands (NULL, cnc, 
-					"SELECT usename "
-					"FROM pg_user "
-					"ORDER BY usename",
-					GDA_COMMAND_OPTION_STOP_ON_ERRORS);
+	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE);
+	
+	if (priv_data->version_float < 7.3)
+		reclist = process_sql_commands (NULL, cnc, 
+						"SELECT usename "
+						"FROM pg_user "
+						"ORDER BY usename",
+						GDA_COMMAND_OPTION_STOP_ON_ERRORS);
+	else
+		reclist = process_sql_commands (NULL, cnc, 
+						"SELECT u.usename "
+						"FROM pg_catalog.pg_user u"
+						"ORDER BY u.usename",
+						GDA_COMMAND_OPTION_STOP_ON_ERRORS);	
 
 	if (!reclist)
 		return NULL;
@@ -1588,15 +1796,30 @@ get_postgres_sequences (GdaConnection *cnc, GdaParameterList *params)
 {
 	GList *reclist;
 	GdaDataModel *recset;
+	GdaPostgresConnectionData *priv_data;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
-
-	reclist = process_sql_commands (NULL, cnc, 
-					"SELECT relname, usename, obj_description(pg_class.oid), NULL "
-					"FROM pg_class, pg_user "
-					"WHERE usesysid=relowner AND relkind = 'S' AND relname !~ '^pg_' ORDER BY relname",
-					GDA_COMMAND_OPTION_STOP_ON_ERRORS);
+	
+	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE);
+	
+	if (priv_data->version_float < 7.3)
+		reclist = process_sql_commands (
+                            NULL, cnc, 
+			    "SELECT relname, usename, obj_description(pg_class.oid), NULL "
+			    "FROM pg_class, pg_user "
+			    "WHERE usesysid=relowner AND relkind = 'S' AND relname !~ '^pg_' ORDER BY relname",
+			    GDA_COMMAND_OPTION_STOP_ON_ERRORS);
+	else
+		reclist = process_sql_commands (
+                            NULL, cnc, 
+			    "SELECT c.relname, u.usename, obj_description (c.oid), NULL "
+			    "FROM pg_catalog.pg_class c, pg_catalog.pg_user u "
+			    "WHERE u.usesysid = c.relowner "
+			    "AND c.relkind = 'S' "
+			    "AND pg_catalog.pg_table_is_visible(c.oid) "
+			    "ORDER BY relname",
+			    GDA_COMMAND_OPTION_STOP_ON_ERRORS);
 
 	if (!reclist)
 		return NULL;
@@ -1620,7 +1843,8 @@ get_postgres_parent_tables (GdaConnection *cnc, GdaParameterList *params)
 	gchar *query;
 	const gchar *tblname;
 	GdaParameter *par;
-
+	GdaPostgresConnectionData *priv_data;
+	
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (params != NULL, NULL);
 
@@ -1630,11 +1854,25 @@ get_postgres_parent_tables (GdaConnection *cnc, GdaParameterList *params)
 	tblname = gda_value_get_string ((GdaValue *) gda_parameter_get_value (par));
 	g_return_val_if_fail (tblname != NULL, NULL);
 
-	query = g_strdup_printf ("SELECT a.relname, b.inhseqno "
-			         "FROM pg_inherits b, pg_class a, pg_class c "
-				 "WHERE a.oid=b.inhparent AND b.inhrelid = c.oid "
-				 "AND c.relname = '%s' ORDER BY b.inhseqno",
-				 tblname);
+	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE);
+
+	if (priv_data->version_float < 7.3)
+		query = g_strdup_printf ("SELECT a.relname, b.inhseqno "
+					 "FROM pg_inherits b, pg_class a, pg_class c "
+					 "WHERE a.oid=b.inhparent AND b.inhrelid = c.oid "
+					 "AND c.relname = '%s' ORDER BY b.inhseqno",
+					 tblname);
+	else
+		query = g_strdup_printf ("SELECT p.relname, h.inhseqno "
+					 "FROM pg_catalog.pg_inherits h, pg_catalog.pg_class p, pg_catalog.pg_class c "
+					 "WHERE pg_catalog.pg_table_is_visible(c.oid) "
+					 "AND pg_catalog.pg_table_is_visible(p.oid) "
+					 "AND p.oid = h.inhparent "
+					 "AND h.inhrelid = c.oid "
+					 "AND c.relname = '%s' "
+					 "ORDER BY h.inhseqno", 
+					 tblname);
+		
 
 	reclist = process_sql_commands (NULL, cnc, query,
 					GDA_COMMAND_OPTION_STOP_ON_ERRORS);
@@ -1686,6 +1924,7 @@ gda_postgres_provider_get_schema (GdaServerProvider *provider,
 	case GDA_CONNECTION_SCHEMA_PARENT_TABLES :
 		return get_postgres_parent_tables (cnc, params);
 	default:
+		break;
 	}
 
 	return NULL;

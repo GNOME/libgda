@@ -1,3 +1,14 @@
+2002-12-18  Vivien Malerba <malerba@gnome-db.org>
+	* providers/postgres/libmain.c: added a connection parameter to specify a "search_path" (which is a list
+	of Postgres's 7.3 schemas separated by a comma where database objects can be found). This parameter
+	has no effect when connecting to postgres versions prior to 7.3.
+	* providers/postgres/gda-postgres-provider.c: implemented most of the schemas for postgres 7.3 (the only
+	remaining is for the references).
+	* providers/postgres/gda-postgres-provider.h: added two fields to the
+	private structure to hold strings of data types that are considered to
+	be Postgres internal only (one string for plain data type names and
+	one for the OIDs versions).
+	
 2002-12-16  Christian Neumair  <chris@gnome-de.org>
 
 	* providers/sybase/gda-sybase-provider.c: Fixed typo.
