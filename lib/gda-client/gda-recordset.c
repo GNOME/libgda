@@ -622,13 +622,14 @@ gda_recordset_to_array (GdaRecordset *rs)
 {
 	GPtrArray *array, *row;
 	GdaField *rc;
-	gint fields, i, j;
+	gint fields, j;
 	gulong position;
 	
 	g_return_val_if_fail (GDA_IS_RECORDSET(rs), 0);
 	g_return_val_if_fail (rs->open, 0);
 	
-	position = gda_recordset_move_first(rs);
+	position = gda_recordset_move_first (rs);
+	fields = gda_recordset_rowsize (rs);
 
 	array = g_ptr_array_new();
 
