@@ -22,6 +22,9 @@ gboolean
 gda_primebase_update_cell (Gda_ServerField *field, primebase_Recordset *prset,
                            gpointer *data)
 {
+  return FALSE;
+
+/*
   DALDatePtr      ddate = NULL;
   DALTimePtr      dtime = NULL;
   DALTimeStampPtr dts = NULL;
@@ -74,6 +77,7 @@ gda_primebase_update_cell (Gda_ServerField *field, primebase_Recordset *prset,
   }
 
   return TRUE;
+*/
 }
 
 gboolean
@@ -108,6 +112,9 @@ gda_primebase_recordset_move_next (Gda_ServerRecordset *recset)
   pcnc = (primebase_Connection *) gda_server_connection_get_user_data(cnc);
   g_return_val_if_fail(pcnc != NULL, -1);
 
+  return -1;
+
+/*
   if (!prset->initialized) {
     prset->type = A_ANYTYPE;
     while ((pcnc->state = CLGetItem(pcnc->sid, AW_DEFAULT, &prset->type,
@@ -206,6 +213,7 @@ gda_primebase_recordset_move_next (Gda_ServerRecordset *recset)
 	 return 0;
   }
   return -1;
+*/
 }
 
 gint

@@ -24,8 +24,8 @@
 #endif
 
 #include <gda-server.h>
-#include <dalapi.h>
-#include <daltypes.h>
+#include <pbapi.h>
+#define PRIMEBASE_DEBUG 1
 
 #ifdef ENABLE_NLS
 #  include <libintl.h>
@@ -57,6 +57,7 @@ typedef struct
 
 typedef struct
 {
+  PBConnInfo info;
   long sid;   // The connections' session id
   long snum;  // The current session number active of the connection
 
