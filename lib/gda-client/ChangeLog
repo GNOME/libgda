@@ -1,3 +1,7 @@
+2001-06-14  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-export.c (gda_export_free): added missing function
+
 2001-06-08  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-export.[ch]: new class for managing database exports

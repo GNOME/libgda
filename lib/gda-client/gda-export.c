@@ -202,7 +202,7 @@ gda_export_free (GdaExport *export)
 #ifdef HAVE_GOBJECT
 	g_object_unref (export);
 #else
-	gtk_object_unref (GTK_OBJECT (object));
+	gtk_object_unref (GTK_OBJECT (export));
 #endif
 }
 
