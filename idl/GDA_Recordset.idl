@@ -40,9 +40,10 @@ module GDA {
 
 		long          getRowCount();
 		long          close();
-		long          move(in long count, in long bookmark);
 		long          moveFirst();
 		long          moveLast();
+		long          moveNext();
+		long          movePrev();
 		long          reQuery();
 		boolean       supports(in Option what);
 		Chunk         fetch(in long count) raises(NotSupported, DriverError);

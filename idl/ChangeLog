@@ -1,3 +1,8 @@
+2001-07-24  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* GDA_Recordset.idl: removed "move" method and added "moveNext" and
+	"movePrev"
+
 2001-07-14  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* GDA_Connection.idl: added 2 new methods (addListener and
