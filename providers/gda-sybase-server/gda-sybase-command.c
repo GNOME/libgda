@@ -22,8 +22,8 @@
  */
 
 // $Log$
-// Revision 1.1  2000/08/10 09:32:37  rodrigo
-// Initial revision
+// Revision 1.1.1.1  2000/08/10 09:32:37  rodrigo
+// First version of libgda separated from GNOME-DB
 //
 // Revision 1.1  2000/08/04 10:20:37  rodrigo
 // New Sybase provider

@@ -22,8 +22,8 @@
  */
 
 // $Log$
-// Revision 1.1  2000/08/10 09:32:38  rodrigo
-// Initial revision
+// Revision 1.1.1.1  2000/08/10 09:32:38  rodrigo
+// First version of libgda separated from GNOME-DB
 //
 // Revision 1.2  2000/08/04 11:36:30  rodrigo
 // Things I forgot in the last commit
