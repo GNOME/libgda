@@ -1160,6 +1160,35 @@ gda_config_get_provider_by_name (const gchar *name)
 }
 
 /**
+ * gda_provider_info_copy
+ */
+GdaProviderInfo*
+gda_provider_info_copy (GdaProviderInfo *src)
+{
+	GdaProviderInfo *info;
+	GList *list = NULL;
+	GList *list_src = NULL;
+
+	g_return_val_if_fail (src != NULL, NULL);
+
+	info = g_new0 (GdaProviderInfo, 1);
+	info->id = g_strdup (src->id);
+	info->location = g_strdup (src->location);
+	info->description = g_strdup (src->description);
+
+	/* Deep copy: */
+	list_src = src->gda_params;
+	while (list_src) {
+		list = g_list_append (list, g_strdup (list_src->data));
+		list_src = g_list_next (list_src);
+	}
+
+	info->gda_params = list;
+
+	return info;
+}
+
+/**
  * gda_config_free_provider_info
  */
 void
@@ -1545,4 +1574,33 @@ gda_config_remove_listener (guint id)
 		}
 	}
 }
+
+GType
+gda_provider_info_get_type (void)
+{
+	static GType our_type = 0;
+
+	if (our_type == 0)
+		our_type = g_boxed_type_register_static ("GdaProviderInfo",
+			(GBoxedCopyFunc) gda_provider_info_copy,
+			(GBoxedFreeFunc) gda_config_free_provider_info);
+
+  return our_type;
+}
+
+GType
+gda_data_source_info_get_type (void)
+{
+	static GType our_type = 0;
+
+	if (our_type == 0)
+		our_type = g_boxed_type_register_static ("GdaDataSourceInfo",
+			(GBoxedCopyFunc) gda_config_copy_data_source_info,
+			(GBoxedFreeFunc) gda_config_free_data_source_info);
+
+  return our_type;
+}
+
+
+
 
