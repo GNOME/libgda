@@ -1,5 +1,10 @@
 2003-12-19  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* libgda/gda-config.c (gda_config_get_data_source_list): fixed
+	documentation typo.
+
+2003-12-19  Rodrigo Moya <rodrigo@gnome-db.org>
+
 	* libgda/gda-error.[ch] (gda_error_get_number): removed 'const' from
 	function's return type.
 

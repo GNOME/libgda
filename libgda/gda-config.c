@@ -1136,7 +1136,7 @@ gda_config_free_provider_list (GList *list)
  * gda_config_get_provider_by_name
  * @name: name of the provider to search for.
  *
- * Gets a #GdaProviderInfo structure from the provider list givin its name.
+ * Gets a #GdaProviderInfo structure from the provider list given its name.
  *
  * Returns: a #GdaProviderInfo structure, if found, or %NULL if not found.
  */
@@ -1281,7 +1281,7 @@ gda_config_get_data_source_list (void)
  * gda_config_find_data_source
  * @name: name of the data source to search for.
  *
- * Gets a #GdaDataSourceInfo structure from the data source list givin its 
+ * Gets a #GdaDataSourceInfo structure from the data source list given its 
  * name.
  *
  * Returns: a #GdaDataSourceInfo structure, if found, or %NULL if not found.
@@ -1608,7 +1608,7 @@ gda_config_add_listener (const gchar *path,
  * @id: the ID of the listener to remove.
  *
  * Removes a configuration listener previously installed with
- * #gda_config_add_listener, givin its ID.
+ * #gda_config_add_listener, given its ID.
  */
 void
 gda_config_remove_listener (guint id)
