@@ -52,17 +52,10 @@ then
 	gda_oaf_cflags=`oaf-config --cflags`
 	
 	dnl Test for old version of OAF
-	AM_PATH_OAF(0.4.0)
+	AM_PATH_OAF(0.5.0)
 	if test "x$OAF_CFLAGS" = "x"
 	then
 		AC_DEFINE(USING_OLD_OAF)
-	else
-		oaf_prefix=`oaf-config --prefix`
-		oaf_test=`grep OAF_P_STRING ${oaf_prefix}/include/liboaf/oaf.h`
-		if test "x$oaf_test" = "x"
-		then
-			AC_DEFINE(USING_OLD_OAF)
-		fi
 	fi
 else
 	AC_MSG_ERROR(not found)

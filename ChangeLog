@@ -1,6 +1,6 @@
 02/09/2000	Akira TAGOH <at@ue-spacy.com>
 
-	* *.oafinfo: fixed that OAFIID was duplicated.
+	* configure.in: deleted an USING_OLD_OAF judgment by the same version.
 
 08/08/2000	Rodrigo Moya <rodrigo@linuxave.net>
 
