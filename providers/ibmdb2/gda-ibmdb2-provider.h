@@ -53,6 +53,9 @@ struct _GdaIBMDB2ConnectionData {
 	SQLRETURN rc;
 	SQLHANDLE henv;
 	SQLHANDLE hdbc;
+
+	gchar    *database;
+	gboolean GetInfo_supported;
 };
 
 G_BEGIN_DECLS

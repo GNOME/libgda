@@ -38,47 +38,49 @@ static GObjectClass *parent_class = NULL;
 
 static void gda_ibmdb2_provider_class_init (GdaIBMDB2ProviderClass *klass);
 static void gda_ibmdb2_provider_init       (GdaIBMDB2Provider      *provider,
-                                             GdaIBMDB2ProviderClass *klass);
+                                            GdaIBMDB2ProviderClass *klass);
 static void gda_ibmdb2_provider_finalize   (GObject                 *object);
 
 static gboolean gda_ibmdb2_provider_open_connection (GdaServerProvider *provider,
-                                                      GdaConnection *cnc,
-                                                      GdaQuarkList *params,
-                                                      const gchar *username,
-                                                      const gchar *password);
+                                                     GdaConnection *cnc,
+                                                     GdaQuarkList *params,
+                                                     const gchar *username,
+                                                     const gchar *password);
 static gboolean gda_ibmdb2_provider_close_connection (GdaServerProvider *provider,
-                                                       GdaConnection *cnc);
+                                                      GdaConnection *cnc);
 static const gchar *gda_ibmdb2_provider_get_database (GdaServerProvider *provider,
-                                                       GdaConnection *cnc);
+                                                      GdaConnection *cnc);
 static gboolean gda_ibmdb2_provider_change_database (GdaServerProvider *provider,
-                                                      GdaConnection *cnc,
-                                                      const gchar *name);
+                                                     GdaConnection *cnc,
+                                                     const gchar *name);
 static gboolean gda_ibmdb2_provider_create_database (GdaServerProvider *provider,
-                                                      GdaConnection *cnc,
-                                                      const gchar *name);
+                                                     GdaConnection *cnc,
+                                                     const gchar *name);
 static gboolean gda_ibmdb2_provider_drop_database (GdaServerProvider *provider,
-                                                    GdaConnection *cnc,
-                                                    const gchar *name);
+                                                   GdaConnection *cnc,
+                                                   const gchar *name);
 static GList *gda_ibmdb2_provider_execute_command (GdaServerProvider *provider,
-                                                    GdaConnection *cnc,
-                                                    GdaCommand *cmd,
-                                                    GdaParameterList *params);
+                                                   GdaConnection *cnc,
+                                                   GdaCommand *cmd,
+                                                   GdaParameterList *params);
 static gboolean gda_ibmdb2_provider_begin_transaction (GdaServerProvider *provider,
+                                                       GdaConnection *cnc,
+                                                       GdaTransaction *xaction);
+static gboolean gda_ibmdb2_provider_commit_transaction (GdaServerProvider *provider,
                                                         GdaConnection *cnc,
                                                         GdaTransaction *xaction);
-static gboolean gda_ibmdb2_provider_commit_transaction (GdaServerProvider *provider,
-                                                         GdaConnection *cnc,
-                                                         GdaTransaction *xaction);
 static gboolean gda_ibmdb2_provider_rollback_transaction (GdaServerProvider *provider,
-                                                           GdaConnection *cnc,
-                                                           GdaTransaction *xaction);
+                                                          GdaConnection *cnc,
+                                                          GdaTransaction *xaction);
 static gboolean gda_ibmdb2_provider_supports (GdaServerProvider *provider,
-                                               GdaConnection *cnc,
-                                               GdaConnectionFeature feature);
+                                              GdaConnection *cnc,
+                                              GdaConnectionFeature feature);
 static GdaDataModel *gda_ibmdb2_provider_get_schema (GdaServerProvider *provider,
-                                                      GdaConnection *cnc,
-                                                      GdaConnectionSchema schema,
-                                                      GdaParameterList *params);
+                                                     GdaConnection *cnc,
+                                                     GdaConnectionSchema schema,
+                                                     GdaParameterList *params);
+
+static const gboolean gda_ibmdb2_provider_update_database (GdaIBMDB2ConnectionData *db2);
 
 
 static gboolean
@@ -91,6 +93,7 @@ gda_ibmdb2_provider_open_connection (GdaServerProvider *provider,
 	GdaError *error = NULL;
 	GdaIBMDB2Provider *db2_prov = (GdaIBMDB2Provider *) provider;
 	GdaIBMDB2ConnectionData *db2 = NULL;
+	SQLUSMALLINT flag;
 	gchar *db2_dsn = NULL;
 
 	const gchar *t_database = NULL;
@@ -158,7 +161,31 @@ gda_ibmdb2_provider_open_connection (GdaServerProvider *provider,
 		g_free (db2);
 		db2 = NULL;
 
-		gda_connection_add_error_string (cnc, _("Could not allocate environment handle."));
+		gda_connection_add_error_string (cnc, _("Could not allocate environment handle.\n"));
+		return FALSE;
+	}
+
+	db2->rc = SQLGetFunctions (db2->hdbc, SQL_API_SQLGETINFO, &flag);
+	if (flag == SQL_TRUE) {
+		db2->GetInfo_supported = TRUE;
+	} else if (flag == SQL_FALSE) {
+		db2->GetInfo_supported = FALSE;
+
+		// GetInfo is needed for obtaining database name 
+		// is needed for tables schema
+		gda_connection_add_error_string (cnc, _("SQLGetInfo is unsupported. Hence IBM DB2 Provider will not work.\n"));
+
+		db2->rc = SQLFreeHandle (SQL_HANDLE_DBC, db2->hdbc);
+		db2->rc = SQLFreeHandle (SQL_HANDLE_ENV, db2->henv);
+		g_free (db2);
+		db2 = NULL;
+		return FALSE;
+	} else {
+		db2->rc = SQLFreeHandle (SQL_HANDLE_DBC, db2->hdbc);
+		db2->rc = SQLFreeHandle (SQL_HANDLE_ENV, db2->henv);
+		g_free (db2);
+		db2 = NULL;
+		gda_connection_add_error_string (cnc, _("SQLGetFunctions gave unexpected return. Connection terminated.\n"));
 		return FALSE;
 	}
 	
@@ -193,10 +220,19 @@ static const gchar
                                    GdaConnection *cnc)
 {
 	GdaIBMDB2Provider *db2_prov = (GdaIBMDB2Provider *) provider;
+	GdaIBMDB2ConnectionData *db2 = NULL;
 
 	g_return_val_if_fail (GDA_IS_IBMDB2_PROVIDER (db2_prov), NULL);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
+	db2 = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_IBMDB2_HANDLE);
+	g_return_val_if_fail (db2 != NULL, NULL);
+	g_return_val_if_fail (db2->GetInfo_supported, NULL);
+
+	if (gda_ibmdb2_provider_update_database (db2)) {
+		return (const gchar *) db2->database;
+	}
+	
 	return NULL;
 }
 
@@ -227,8 +263,8 @@ gda_ibmdb2_provider_create_database (GdaServerProvider *provider,               
 
 static gboolean
 gda_ibmdb2_provider_drop_database (GdaServerProvider *provider,
-                                    GdaConnection *cnc,
-                                    const gchar *name)
+                                   GdaConnection *cnc,
+                                   const gchar *name)
 {
 	GdaIBMDB2Provider *db2_prov = (GdaIBMDB2Provider *) provider;
 
@@ -240,9 +276,9 @@ gda_ibmdb2_provider_drop_database (GdaServerProvider *provider,
 
 static GList
 *gda_ibmdb2_provider_execute_command (GdaServerProvider *provider,
-                                       GdaConnection *cnc,
-                                       GdaCommand *cmd,
-                                       GdaParameterList *params)
+                                      GdaConnection *cnc,
+                                      GdaCommand *cmd,
+                                      GdaParameterList *params)
 {
 	GdaIBMDB2Provider *db2_prov = (GdaIBMDB2Provider *) provider;
 
@@ -316,6 +352,33 @@ static GdaDataModel
 	return NULL;
 }
 
+static const gboolean 
+gda_ibmdb2_provider_update_database (GdaIBMDB2ConnectionData *db2)
+{
+	SQLRETURN   rc = SQL_SUCCESS;
+	SQLCHAR     database[255];
+	SQLSMALLINT name_len = 0;
+	
+	g_return_val_if_fail (db2 != NULL, FALSE);
+	g_return_val_if_fail (db2->GetInfo_supported != FALSE, FALSE);
+
+	rc = SQLGetInfo (db2->hdbc, SQL_DATABASE_NAME, database,
+	                 sizeof(database), &name_len);
+	if (rc != SQL_SUCCESS) {
+		return FALSE;
+	}
+	if (db2->database) {
+		g_free (db2->database);
+	}
+	db2->database = g_strndup (database, name_len);
+	if (db2->database) {
+		return TRUE;
+	}
+
+	return FALSE;
+}
+
+
 
 /* Initialization */
 static void
@@ -343,7 +406,7 @@ gda_ibmdb2_provider_class_init (GdaIBMDB2ProviderClass *klass)
 
 static void
 gda_ibmdb2_provider_init (GdaIBMDB2Provider *provider,
-                           GdaIBMDB2ProviderClass *klass)
+                          GdaIBMDB2ProviderClass *klass)
 {
 }
 
