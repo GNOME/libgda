@@ -1,0 +1,1537 @@
+# Swedish translation of gnome-db.
+# Copyright (C) 1999 Free Software Foundation, Inc.
+# Andreas Hyden <a.hyden@cyberpoint.se>, 2000.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gnome-db 0.0.25\n"
+"POT-Creation-Date: 2000-05-23 00:42+0200\n"
+"PO-Revision-Date: 1999-08-11 10:41+02:00\n"
+"Last-Translator: Andreas Hyden <a.hyden@cyberpoint.se>\n"
+"Language-Team: Swedish <sv@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-1\n"
+"Content-Transfer-Encoding: 8-bit\n"
+
+#: fe/fe_browser.c:27
+msgid "Create script"
+msgstr "Skapa skript"
+
+#: fe/fe_browser.c:27
+msgid "Create script from object definition"
+msgstr "Skapa skript från objektdefinition"
+
+#: fe/fe_browser.c:30 fe/fe_export.c:51 fe/fe_log.c:34 fe/fe_sqlwin.c:46
+msgid "Refresh"
+msgstr "Uppdatera"
+
+#: fe/fe_browser.c:30
+msgid "Refresh all lists"
+msgstr "Uppdatera alla listor"
+
+#: fe/fe_browser.c:34 fe/fe_designer.c:41 fe/fe_editor.c:60 fe/fe_editor.c:74
+#: fe/fe_export.c:58 fe/fe_log.c:44 gda-manager/gda-mgr-main.c:37
+#: gda-manager/gda-mgr-main.c:86
+msgid "Close"
+msgstr "Stäng"
+
+#: fe/fe_browser.c:34 fe/fe_designer.c:41 fe/fe_editor.c:74 fe/fe_export.c:58
+#: fe/fe_log.c:44
+msgid "Close this window"
+msgstr "Stäng detta fönster"
+
+#: fe/fe_browser.c:108
+#, c-format
+msgid "Browser: %s@%s"
+msgstr "Läsare: %s@%s"
+
+#: fe/fe_browser.c:124 fe/fe_export.c:356
+msgid "No connection open"
+msgstr "Ingen anslutning öppen"
+
+#: fe/fe_config.c:49
+msgid "General"
+msgstr "Generellt"
+
+#: fe/fe_config.c:50
+msgid "Environment"
+msgstr "Miljö"
+
+#: fe/fe_config.c:51
+msgid "Config File"
+msgstr "Konfigurationsfil"
+
+#: fe/fe_config.c:79 fe/fe_designer.c:37 fe/fe_editor.c:51 fe/fe_sqlwin.c:59
+#: gda-fe/gda-fe-connection.c:73
+msgid "Save"
+msgstr "Spara"
+
+#: fe/fe_config.c:83 fe/fe_log.c:40
+msgid "Save As"
+msgstr "Spara som"
+
+#: fe/fe_config.c:87 fe/fe_export.c:54 fe/fe_log.c:37 fe/fe_sqlwin.c:49
+#: gda-fe/gda-fe-connection.c:89 gda-fe/gda-fe-connection.c:99
+msgid "Clear"
+msgstr "Rensa"
+
+#: fe/fe_config.c:107 fe/fe_config.c:405
+msgid "Variable"
+msgstr "Variabel"
+
+#: fe/fe_config.c:107 fe/fe_config.c:351 fe/fe_config.c:405
+msgid "Value"
+msgstr "Värde"
+
+#: fe/fe_config.c:128
+msgid "Add"
+msgstr "Lägg till"
+
+#: fe/fe_config.c:132 gda-clnt-ui/gnome-db-browser.c:471
+msgid "Remove"
+msgstr "Ta bort"
+
+#: fe/fe_config.c:136
+msgid "Current"
+msgstr "Aktiv"
+
+#: fe/fe_config.c:160
+msgid "Save options on exit"
+msgstr "Spara alternativ vid avslut"
+
+#: fe/fe_config.c:166
+msgid "Open connection dialog on entry"
+msgstr "Öppna anslutningsdialog vid angivelse"
+
+#. Fonts
+#: fe/fe_config.c:179
+msgid "Editor Font"
+msgstr "Editor typsnitt"
+
+#: fe/fe_config.c:199
+msgid "Grid Font"
+msgstr "Rutnät typsnitt"
+
+#: fe/fe_config.c:221
+msgid "Language"
+msgstr "Språk"
+
+#. shell
+#: fe/fe_config.c:240 fe/fe_editor.c:435
+msgid "Shell"
+msgstr "Skal"
+
+#. window tabs
+#: fe/fe_config.c:255 fe/fe_main.c:274
+msgid "Tabs position"
+msgstr "Placering av flik"
+
+#: fe/fe_config.c:263 fe/fe_main.c:245
+msgid "Top"
+msgstr "Överst"
+
+#: fe/fe_config.c:272 fe/fe_main.c:248
+msgid "Bottom"
+msgstr "Nederst"
+
+#: fe/fe_config.c:281 fe/fe_main.c:251
+msgid "Left"
+msgstr "Vänster"
+
+#: fe/fe_config.c:290 fe/fe_main.c:254
+msgid "Right"
+msgstr "Höger"
+
+#. create the dialog box
+#: fe/fe_config.c:331
+msgid "Add Environment Variable"
+msgstr "Lägg till miljövariabel"
+
+#. create fields
+#: fe/fe_config.c:341 fe/fe_export.c:327
+msgid "Name"
+msgstr "Namn"
+
+#. create dialog
+#: fe/fe_config.c:411
+msgid "Current Environment"
+msgstr "Aktiv miljö"
+
+#: fe/fe_config.c:506 fe/fe_editor.c:54 fe/fe_editor.c:329 fe/fe_editor.c:354
+msgid "Save As..."
+msgstr "Spara som..."
+
+#: fe/fe_config.c:578 fe/fe_main.c:316 gda-fe/gda-fe-main.c:140
+#: gda-manager/gda-mgr-main.c:90
+msgid "Preferences"
+msgstr "Inställningar"
+
+#: fe/fe_connection.c:33 gda-fe/gda-fe-connection.c:606
+msgid "Error Viewer"
+msgstr "Felvisare"
+
+#: fe/fe_connection.c:51
+#, c-format
+msgid "Connected to %s"
+msgstr "Ansluten till %s"
+
+#: fe/fe_connection.c:81 gda-fe/gda-fe-connection.c:125
+msgid "Object Identifiers"
+msgstr "Objektidentifierare"
+
+#: fe/fe_connection.c:82 gda-fe/gda-fe-connection.c:126
+msgid "Object Inheritance"
+msgstr "Objektärvning"
+
+#: fe/fe_connection.c:83 gda-fe/gda-fe-connection.c:127
+msgid "Sequences"
+msgstr "Sekvenser"
+
+#: fe/fe_connection.c:84 gda-fe/gda-fe-connection.c:128
+msgid "Stored Procedures"
+msgstr "Sparade procedurer"
+
+#: fe/fe_connection.c:85 gda-fe/gda-fe-connection.c:129
+msgid "Transactions"
+msgstr "Transaktioner"
+
+#: fe/fe_connection.c:86 gda-fe/gda-fe-connection.c:130
+msgid "XML Queries"
+msgstr "XML köer"
+
+#: fe/fe_connection.c:165 gda-fe/gda-fe-callbacks.c:125
+msgid "Open Connection"
+msgstr "Öppna anslutning"
+
+#: fe/fe_connection.c:178 gda-fe/gda-fe-callbacks.c:142
+msgid "Connecting..."
+msgstr "Ansluter..."
+
+#: fe/fe_connection.c:193 gda-fe/gda-fe-connection.c:622
+msgid "Transaction started"
+msgstr "Transaktion startad"
+
+#: fe/fe_connection.c:195 fe/fe_connection.c:210 fe/fe_connection.c:225
+msgid "Transactions not supported"
+msgstr "Transaktioner stöds ej"
+
+#: fe/fe_connection.c:208
+msgid "Commit executed"
+msgstr "Sändning startad"
+
+#: fe/fe_connection.c:223
+msgid "Rollback executed"
+msgstr "\"Rollback\" startad"
+
+#. create dialog
+#: fe/fe_connection.c:240 fe/fe_main.c:175 gda-fe/gda-fe-connection.c:777
+#: gda-fe/gda-fe-main.c:73
+msgid "Connection Properties"
+msgstr "Anslutnings inställningar"
+
+#: fe/fe_connection.c:242 fe/fe_export.c:315 gda-fe/gda-fe-connection.c:780
+msgid "Properties"
+msgstr "Egenskaper"
+
+#: fe/fe_connection.c:249 gda-fe/gda-fe-connection.c:786
+msgid "GDA Name"
+msgstr "GDA-namn"
+
+#: fe/fe_connection.c:257 gda-fe/gda-fe-connection.c:792
+msgid "Provider"
+msgstr "Leverantör"
+
+#: fe/fe_connection.c:265 gda-fe/gda-fe-connection.c:798
+msgid "DSN"
+msgstr "DSN"
+
+#: fe/fe_connection.c:273 gda-fe/gda-fe-connection.c:804
+msgid "Command Timeout"
+msgstr "Kommando \"timeout\""
+
+#: fe/fe_connection.c:282 gda-fe/gda-fe-connection.c:811
+msgid "Connect Timeout"
+msgstr "Anslutnings \"timeout\""
+
+#: fe/fe_connection.c:291 gda-fe/gda-fe-connection.c:818
+msgid "Trace File"
+msgstr "Spåra fil"
+
+#: fe/fe_connection.c:300 gda-fe/gda-fe-connection.c:822
+msgid "View"
+msgstr "Visa"
+
+#: fe/fe_connection.c:306 gda-fe/gda-fe-connection.c:825
+msgid "Provider Features"
+msgstr "Leverantör"
+
+#: fe/fe_designer.c:31 fe/fe_designer.c:48 fe/fe_editor.c:45
+#: fe/fe_gdaconfig.c:225
+msgid "New"
+msgstr "Ny"
+
+#: fe/fe_designer.c:31
+msgid "Create new database design"
+msgstr "Skapa ny databasdesign"
+
+#: fe/fe_designer.c:34 fe/fe_editor.c:48 fe/fe_sqlwin.c:56
+#: gda-fe/gda-fe-connection.c:70
+msgid "Open"
+msgstr "Öppna"
+
+#: fe/fe_designer.c:34
+msgid "Open database design from file"
+msgstr "Öppna databasdesign från fil"
+
+#: fe/fe_designer.c:37
+msgid "Save database design to file"
+msgstr "Spara databasdesign till fil"
+
+#: fe/fe_designer.c:48
+msgid "Add new object"
+msgstr "Lägg till nytt objekt"
+
+#: fe/fe_designer.c:51 fe/fe_gdaconfig.c:230
+msgid "Delete"
+msgstr "Ta bort"
+
+#: fe/fe_designer.c:51
+msgid "Delete selected object"
+msgstr "Ta bort markerade objekt"
+
+#: fe/fe_designer.c:97
+msgid "Open XML File"
+msgstr "Öppna XML-fil"
+
+#: fe/fe_designer.c:120 fe/fe_widget.c:37 fe/fe_widget.c:119
+#: fe/fe_widget.c:144
+msgid "Select File"
+msgstr "Välj fil"
+
+#: fe/fe_designer.c:125
+#, c-format
+msgid ""
+"Error saving file\n"
+"'%s'"
+msgstr ""
+"Fel vid sparning av filn\n"
+"'%s'"
+
+#: fe/fe_designer.c:141
+msgid "Designer"
+msgstr "Designer"
+
+#: fe/fe_editor.c:45
+msgid "Create a new empty file"
+msgstr "Skapa en ny tom fil"
+
+#: fe/fe_editor.c:48
+msgid "Open an existing file"
+msgstr "Öppna en ny existerande fil"
+
+#: fe/fe_editor.c:51 gda-fe/gda-fe-connection.c:73
+msgid "Save current file"
+msgstr "Spara aktiv fil"
+
+#: fe/fe_editor.c:54
+msgid "Save file with another name"
+msgstr "Spara fil med ett annat namn"
+
+#: fe/fe_editor.c:57 fe/fe_sqlwin.c:52
+msgid "Print"
+msgstr "Skriv ut"
+
+#: fe/fe_editor.c:57
+msgid "Print current file"
+msgstr "Skriv ut aktiv fil"
+
+#: fe/fe_editor.c:60
+msgid "Close current file"
+msgstr "Stäng aktiv fil"
+
+#: fe/fe_editor.c:64 fe/fe_sqlwin.c:63 fe/fe_widget.c:162
+#: gda-fe/gda-fe-connection.c:80
+msgid "Cut"
+msgstr "Klipp ut"
+
+#: fe/fe_editor.c:64 gda-fe/gda-fe-connection.c:80
+msgid "Cut selected text"
+msgstr "Klipp ut vald text"
+
+#: fe/fe_editor.c:67 fe/fe_sqlwin.c:66 fe/fe_widget.c:165
+#: gda-fe/gda-fe-connection.c:83
+msgid "Copy"
+msgstr "Kopiera"
+
+#: fe/fe_editor.c:67 fe/fe_sqlwin.c:66 fe/fe_widget.c:165
+msgid "Copy selected text to clipboard"
+msgstr "Kopiera markerad text till urklipp"
+
+#: fe/fe_editor.c:70 fe/fe_sqlwin.c:69 fe/fe_widget.c:168
+#: gda-fe/gda-fe-connection.c:86
+msgid "Paste"
+msgstr "Klistra in"
+
+#: fe/fe_editor.c:70
+msgid "Paste clipboard's contents"
+msgstr "Klistra in urklippets innehåll"
+
+#: fe/fe_editor.c:134
+msgid "Run Command"
+msgstr "Kör Kommando"
+
+#: fe/fe_editor.c:141
+msgid "Command"
+msgstr "Kommando"
+
+#: fe/fe_editor.c:152
+msgid "Directory"
+msgstr "Katalog"
+
+#: fe/fe_editor.c:178 fe/fe_editor.c:215
+#, c-format
+msgid "Could not change to directory '%s'"
+msgstr "Kunde inte ändra till katalog '%s'"
+
+#: fe/fe_editor.c:188
+#, c-format
+msgid "Running '%s'"
+msgstr "Kör '%s'"
+
+#. write header
+#: fe/fe_editor.c:194
+#, c-format
+msgid ""
+"Output from '%s'\n"
+"In directory '%s'\n"
+"\n"
+msgstr ""
+"Utskrift från '%s'\n"
+"I katalog '%s'\n"
+"\n"
+
+#: fe/fe_editor.c:206
+#, c-format
+msgid "Command '%s' completed"
+msgstr "Kommando '%s' färdigt"
+
+#: fe/fe_editor.c:208 fe/fe_editor.c:274 fe/fe_editor.c:473
+#: gda-fe/gda-fe-callbacks.c:196
+#, c-format
+msgid "Unable to execute '%s'"
+msgstr "Kunde inte köra '%s'"
+
+#: fe/fe_editor.c:244
+#, c-format
+msgid ""
+"File\n"
+" '%s'\n"
+" has been changed.\n"
+" Do you want to save the changes?"
+msgstr ""
+"Filen\n"
+" '%s'\n"
+" har blivit ändrad.\n"
+" Vill du spara ändringarna?"
+
+#: fe/fe_editor.c:303
+msgid "Open File"
+msgstr "Öppna Fil"
+
+#: fe/fe_editor.c:422
+msgid "Editor"
+msgstr "Redigerare"
+
+#: fe/fe_editor.c:429 fe/fe_sqlwin.c:37
+msgid "Run"
+msgstr "Kör"
+
+#: fe/fe_editor.c:441
+msgid "Find"
+msgstr "Hitta"
+
+#: fe/fe_gdaconfig.c:185
+msgid "GDA Config"
+msgstr "GDA-konfiguration"
+
+#: fe/fe_gdaconfig.c:194
+msgid "Data Sources"
+msgstr "Data källor"
+
+#: fe/fe_export.c:44
+msgid "To XML"
+msgstr "Till XML"
+
+#: fe/fe_export.c:44
+msgid "Export selected data to XML file"
+msgstr "Exportera markerad data till XML-fil"
+
+#: fe/fe_export.c:47
+msgid "To SQL"
+msgstr "Till SQL"
+
+#: fe/fe_export.c:47
+msgid "Export selected data as a SQL script"
+msgstr "Exportera markerad data som ett SQL-skript"
+
+#: fe/fe_export.c:51
+msgid "Refresh data"
+msgstr "Uppdatera data"
+
+#: fe/fe_export.c:54
+msgid "Clear all widgets"
+msgstr "Rensa alla komponenter"
+
+#: fe/fe_export.c:169
+msgid "You have to provide a file name"
+msgstr "Du måste ange ett filnamn"
+
+#: fe/fe_export.c:175
+msgid "You have to specify a name for the database export"
+msgstr "Du måste ange ett namn för databasexporten"
+
+#: fe/fe_export.c:195
+#, c-format
+msgid "Exporting object named '%s'"
+msgstr "Exporterar objekt med namnet '%s'"
+
+#. save XML file
+#: fe/fe_export.c:225
+#, c-format
+msgid "Saving to '%s' ..."
+msgstr "Sparar till '%s' .."
+
+#: fe/fe_export.c:227
+#, c-format
+msgid ""
+"Error saving XML file\n"
+"'%s'"
+msgstr ""
+"Fel vid sparning av XML-filen\n"
+"'%s'"
+
+#: fe/fe_export.c:235
+msgid "No objects are selected"
+msgstr "Inga objekt är markerade"
+
+#. create the view window
+#: fe/fe_export.c:280
+#, c-format
+msgid "Export: %s@%s"
+msgstr "Exportera: %s@%s"
+
+#: fe/fe_export.c:295
+msgid "TABLES"
+msgstr "TABELLER"
+
+#: fe/fe_export.c:305
+msgid "VIEWS"
+msgstr "VISNINGAR"
+
+#: fe/fe_export.c:322 gda-fe/gda-fe-connection.c:220
+msgid "File name"
+msgstr "Filnamn"
+
+#: fe/fe_export.c:332
+msgid "Export data"
+msgstr "Exportera data"
+
+#: fe/fe_export.c:335
+msgid "Show file when done"
+msgstr "Visa fil när den är färdig"
+
+#: fe/fe_export.c:338
+msgid "Add object extra info"
+msgstr "Lägg till objekt extrainfo"
+
+#: fe/fe_log.c:34
+msgid "Refresh log"
+msgstr "Uppdatera logg"
+
+#: fe/fe_log.c:37
+msgid "Clear file contents"
+msgstr "Töm filinnehållet"
+
+#: fe/fe_log.c:40
+msgid "Save log file with a different name"
+msgstr "Spara logfil med ett annan namn"
+
+#: fe/fe_log.c:120
+#, c-format
+msgid "Could not truncate file %s"
+msgstr "Kunde inte tömma fil %s"
+
+#: fe/fe_log.c:156
+msgid "Save Log File"
+msgstr "Spara loggfil"
+
+#: fe/fe_log.c:177
+#, c-format
+msgid ""
+"Could not load file\n"
+" %s"
+msgstr ""
+"Kunde inte ladda filen\n"
+" %s"
+
+#: fe/fe_log.c:179 fe/fe_main.c:348 gda-fe/gda-fe-callbacks.c:61
+#: gda-fe/gda-fe-connection.c:593 gda-manager/gda-mgr-main.c:196
+msgid "Ready"
+msgstr "Klar"
+
+#: fe/fe_log.c:181 fe/fe_ui.c:199
+#, c-format
+msgid "File %s loaded"
+msgstr "Fil %s laddad"
+
+#: fe/fe_log.c:196 fe/fe_main.c:208
+msgid "GDA logs"
+msgstr "GDA-logger"
+
+#: fe/fe_main.c:78 gda-fe/gda-fe-callbacks.c:70 gda-manager/gda-mgr-main.c:51
+msgid "GNOME-DB Front End"
+msgstr "GNOME-DB gränssnitt"
+
+#: fe/fe_main.c:149
+msgid "Open connection..."
+msgstr "Öppna anslutning..."
+
+#: fe/fe_main.c:149 fe/fe_main.c:300
+msgid "Open a new connection"
+msgstr "Öppna en ny anslutning"
+
+#: fe/fe_main.c:152 gda-fe/gda-fe-connection.c:57
+msgid "Close connection"
+msgstr "Stäng anslutning"
+
+#: fe/fe_main.c:152 fe/fe_main.c:303 fe/fe_sqlwin.c:73 gda-fe/gda-fe-main.c:28
+msgid "Close current connection"
+msgstr "Stäng aktiv anslutning"
+
+#: fe/fe_main.c:155 gda-fe/gda-fe-main.c:31
+msgid "Close all connections"
+msgstr "Stäng alla anslutningar"
+
+#: fe/fe_main.c:161 fe/fe_main.c:320 gda-fe/gda-fe-main.c:37
+#: gda-fe/gda-fe-main.c:144 gda-manager/gda-mgr-main.c:43
+#: gda-manager/gda-mgr-main.c:94
+msgid "Quit"
+msgstr "Avsluta"
+
+#: fe/fe_main.c:161 fe/fe_main.c:320 gda-fe/gda-fe-main.c:37
+#: gda-manager/gda-mgr-main.c:43 gda-manager/gda-mgr-main.c:94
+msgid "Exit application"
+msgstr "Avsluta applikationen"
+
+#: fe/fe_main.c:168
+msgid "Object Browser"
+msgstr "Objektvisare"
+
+#: fe/fe_main.c:168
+msgid "Browse database objects"
+msgstr "Bläddra databasobjekten"
+
+#: fe/fe_main.c:171
+msgid "SQL Builder"
+msgstr "SQL-byggare"
+
+#: fe/fe_main.c:171
+msgid "Construct SQL statements"
+msgstr "Konstruera SQL påstående"
+
+#: fe/fe_main.c:175 gda-fe/gda-fe-main.c:73
+msgid "View connection properties"
+msgstr "Visa anslutningsegenskaper"
+
+#: fe/fe_main.c:178
+msgid "Start/Stop Server Trace"
+msgstr "Starta/Stoppa serverspårning"
+
+#: fe/fe_main.c:178
+msgid "Start or stop server trace"
+msgstr "Starta eller stoppa serverspårning"
+
+#: fe/fe_main.c:181
+msgid "View Server Trace"
+msgstr "Visa serverspårning"
+
+#: fe/fe_main.c:181
+msgid "View server trace file"
+msgstr "Visa serverspårningsfilen"
+
+#: fe/fe_main.c:185 gda-fe/gda-fe-connection.c:50
+#: gda-fe/gda-fe-connection.c:244 gda-fe/gda-fe-main.c:56
+msgid "Export"
+msgstr "Exportera"
+
+#: fe/fe_main.c:185
+msgid "Export Data to Different Formats"
+msgstr "Exportera data till andra format"
+
+#: fe/fe_main.c:188 gda-fe/gda-fe-connection.c:53
+#: gda-fe/gda-fe-connection.c:258 gda-fe/gda-fe-main.c:59
+msgid "Import"
+msgstr "Importera"
+
+#: fe/fe_main.c:188
+msgid "Import Data into the Database"
+msgstr "Importera data till databasen"
+
+#: fe/fe_main.c:192
+msgid "Begin Transaction"
+msgstr "Starta transaktion"
+
+#: fe/fe_main.c:192
+msgid "Begin new transaction"
+msgstr "Starta en ny transaktion"
+
+#: fe/fe_main.c:195 gda-fe/gda-fe-main.c:66
+msgid "Commit"
+msgstr "Skicka"
+
+#: fe/fe_main.c:195
+msgid "Commit changes"
+msgstr "Skicka ändringar"
+
+#: fe/fe_main.c:198 gda-fe/gda-fe-main.c:69
+msgid "Rollback"
+msgstr "\"Rollback\""
+
+#: fe/fe_main.c:198 gda-fe/gda-fe-main.c:69
+msgid "Discard all changes"
+msgstr "Ignorera alla ändringar"
+
+#: fe/fe_main.c:205
+msgid "Database Designer"
+msgstr "Databasdesigner"
+
+#: fe/fe_main.c:205
+msgid "Visual Database Designer"
+msgstr "Visuell databasedesigner"
+
+#: fe/fe_main.c:208 fe/fe_main.c:306
+msgid "View GDA server log files"
+msgstr "Visa GDA-serverns loggfiler"
+
+#: fe/fe_main.c:211
+msgid "Text editor"
+msgstr "Text editor"
+
+#: fe/fe_main.c:211
+msgid "Open the internal text editor"
+msgstr "Öppna den interna texteditorn"
+
+#: fe/fe_main.c:214
+msgid "Run shell"
+msgstr "Kör skal"
+
+#: fe/fe_main.c:214
+msgid "Open shell window"
+msgstr "Öppna skalfönster"
+
+#: fe/fe_main.c:217
+msgid "Calculator"
+msgstr "Kalkulator"
+
+#: fe/fe_main.c:217
+msgid "Open desktop calculator"
+msgstr "Öppna skrivbordskalkulator"
+
+#: fe/fe_main.c:221
+msgid "GDA Manager"
+msgstr "GDA-Hanterare"
+
+#: fe/fe_main.c:221
+msgid "The GDA configuration tool"
+msgstr "GDA-konfigurationsverktyget"
+
+#: fe/fe_main.c:224
+msgid "GDA Builder"
+msgstr "GDA-byggare"
+
+#: fe/fe_main.c:224
+msgid "The GDA development environment"
+msgstr "GDA utvecklingsmiljö"
+
+#: fe/fe_main.c:231 gda-fe/gda-fe-main.c:103
+msgid "Preferences..."
+msgstr "Inställningar..."
+
+#: fe/fe_main.c:231 fe/fe_main.c:316 gda-fe/gda-fe-main.c:103
+#: gda-fe/gda-fe-main.c:140 gda-manager/gda-mgr-main.c:90
+msgid "Configure user preferences"
+msgstr "Konfigurera användarinställningar"
+
+#: fe/fe_main.c:234
+msgid "GDA Configuration..."
+msgstr "GDA Konfiguration..."
+
+#: fe/fe_main.c:234
+msgid "GDA Configuration"
+msgstr "GDA Konfiguration"
+
+#: fe/fe_main.c:238
+msgid "Save Options"
+msgstr "Spara Inställningar"
+
+#: fe/fe_main.c:238 gda-fe/gda-fe-main.c:110
+msgid "Save current configuration"
+msgstr "Spara aktiv konfiguration"
+
+#: fe/fe_main.c:261
+msgid "Previous window"
+msgstr "Förra fönstret"
+
+#: fe/fe_main.c:261 fe/fe_main.c:310
+msgid "Move to previous window on list"
+msgstr "Gå till det föregående fönstret på listen"
+
+#: fe/fe_main.c:264
+msgid "Next window"
+msgstr "Nästa fönster"
+
+#: fe/fe_main.c:264 fe/fe_main.c:313
+msgid "Move to next window on list"
+msgstr "Gå till nästa fönster på listen"
+
+#: fe/fe_main.c:267
+msgid "Close current"
+msgstr "Stäng aktiv"
+
+#: fe/fe_main.c:267
+msgid "Close active window"
+msgstr "Stäng aktivt fönster"
+
+#: fe/fe_main.c:270
+msgid "Close all"
+msgstr "Stäng alla"
+
+#: fe/fe_main.c:270
+msgid "Close all open windows"
+msgstr "Stäng alla öppna fönster"
+
+#: fe/fe_main.c:281 gda-fe/gda-fe-main.c:117 gda-manager/gda-mgr-main.c:70
+msgid "About gnome-db..."
+msgstr "Om gnome-db..."
+
+#: fe/fe_main.c:281 gda-fe/gda-fe-main.c:117 gda-manager/gda-mgr-main.c:70
+msgid "About this program"
+msgstr "Om detta programmet"
+
+#: fe/fe_main.c:288 gda-fe/gda-fe-main.c:124 gda-manager/gda-mgr-main.c:77
+msgid "File"
+msgstr "Fil"
+
+#: fe/fe_main.c:289 gda-fe/gda-fe-main.c:125
+msgid "Database"
+msgstr "Databas"
+
+#: fe/fe_main.c:290 gda-fe/gda-fe-main.c:126 gda-manager/gda-mgr-main.c:78
+msgid "Tools"
+msgstr "Verktyg"
+
+#: fe/fe_main.c:291 gda-fe/gda-fe-main.c:127
+msgid "Options"
+msgstr "Alternativ"
+
+#: fe/fe_main.c:292
+msgid "Window"
+msgstr "Fönster"
+
+#: fe/fe_main.c:293 gda-fe/gda-fe-main.c:128 gda-manager/gda-mgr-main.c:79
+msgid "Help"
+msgstr "Hjälp"
+
+#: fe/fe_main.c:300 gda-fe/gda-fe-main.c:133
+msgid "Connect"
+msgstr "Anslut"
+
+#: fe/fe_main.c:303 fe/fe_sqlwin.c:73 gda-fe/gda-fe-connection.c:57
+#: gda-fe/gda-fe-main.c:28
+msgid "Disconnect"
+msgstr "Avbrypt anslutningen"
+
+#: fe/fe_main.c:306
+msgid "GDA Logs"
+msgstr "GDA-logger"
+
+#: fe/fe_main.c:310
+msgid "Previous"
+msgstr "Föregående"
+
+#: fe/fe_main.c:313
+msgid "Next"
+msgstr "Nästa"
+
+#: fe/fe_session.c:108
+msgid "Could not load editor font"
+msgstr "Kunde inte ladda editortypsnitt"
+
+#: fe/fe_session.c:115
+msgid "Could not load grid font"
+msgstr "Kunde inte ladda rutnätstypsnitt"
+
+#: fe/fe_sqlwin.c:37
+msgid "Execute SQL command"
+msgstr "Kör SQL-kommando"
+
+#: fe/fe_sqlwin.c:40
+msgid "Run Script"
+msgstr "Kör skript"
+
+#: fe/fe_sqlwin.c:40
+msgid "Execute buffer as SQL script"
+msgstr "Kör buffer som SQL-skript"
+
+#: fe/fe_sqlwin.c:43 fe/fe_sqlwin.c:273
+msgid "Select SQL Command"
+msgstr "Välj SQL-kommando"
+
+#: fe/fe_sqlwin.c:46
+msgid "Refresh grid"
+msgstr "Uppdatera rutnätet"
+
+#: fe/fe_sqlwin.c:49
+msgid "Clear SQL window"
+msgstr "Rensa SQL-fönstret"
+
+#: fe/fe_sqlwin.c:52
+msgid "Print grid"
+msgstr "Skriv ut rutnätet"
+
+#: fe/fe_sqlwin.c:56 gda-fe/gda-fe-connection.c:70
+msgid "Load file into buffer"
+msgstr "Ladda fil till buffer"
+
+#: fe/fe_sqlwin.c:59
+msgid "Save current buffer"
+msgstr "Spara aktiv buffer"
+
+#: fe/fe_sqlwin.c:63 fe/fe_widget.c:162
+msgid "Cut selected text to clipboard"
+msgstr "Klipp ut markerad text till urklipp"
+
+#: fe/fe_sqlwin.c:69 fe/fe_widget.c:168
+msgid "Paste text from clipboard"
+msgstr "Klistra in text från urklipp"
+
+#: fe/fe_sqlwin.c:118 gda-clnt-ui/gnome-db-browser.c:125
+#: gda-fe/gda-fe-connection.c:398
+#, c-format
+msgid "%d rows"
+msgstr "%d rader"
+
+#: fe/fe_sqlwin.c:127
+msgid "Select SQL Script"
+msgstr "Välj SQL-skript"
+
+#: fe/fe_sqlwin.c:201
+#, c-format
+msgid "Executing '%s'"
+msgstr "Kör '%s'"
+
+#: fe/fe_sqlwin.c:205 fe/fe_sqlwin.c:234 gda-fe/gda-fe-connection.c:451
+msgid "Command succeeded"
+msgstr "Kommando '%s' utfört utan problem"
+
+#: fe/fe_sqlwin.c:208 gda-fe/gda-fe-connection.c:456
+msgid "Command failed"
+msgstr "Kommando misslyckades"
+
+#: fe/fe_sqlwin.c:248
+msgid "Save SQL Script"
+msgstr "Spara SQL-skript"
+
+#: fe/fe_sqlwin.c:260 gda-fe/gda-fe-connection.c:408
+#, c-format
+msgid "Row %d - %d rows selected"
+msgstr "Rad %d - %d rader selected"
+
+#: fe/fe_trace.c:37
+msgid "Server trace stopped"
+msgstr "Serverspårning stoppad"
+
+#. start logging for this connection
+#: fe/fe_trace.c:43
+msgid "Select Trace File"
+msgstr "Välj spårningsfil"
+
+#: fe/fe_trace.c:49
+#, c-format
+msgid "Server trace to file %s started"
+msgstr "Serverspårning till filen %s startad"
+
+#: fe/fe_trace.c:67
+msgid "Server Trace File"
+msgstr "Serverspårningsfil"
+
+#: fe/fe_trace.c:81
+msgid "Server trace is disabled for this connection"
+msgstr "Serverspårning är inaktiverat för den här anslutningen"
+
+#: fe/fe_ui.c:150 fe/fe_ui.c:192
+#, c-format
+msgid ""
+"Error reading file\n"
+" %s"
+msgstr ""
+"Fel vid läsning av fil\n"
+" %s"
+
+#: fe/fe_ui.c:157
+#, c-format
+msgid "File %s inserted"
+msgstr "Fil %s infogad"
+
+#: fe/fe_ui.c:159 fe/fe_ui.c:201 fe/fe_ui.c:229
+#, c-format
+msgid ""
+"Error opening file\n"
+" %s"
+msgstr ""
+"Fel vid öppning av fil\n"
+" %s"
+
+#: fe/fe_ui.c:223
+#, c-format
+msgid ""
+"Error writing to file\n"
+" %s"
+msgstr ""
+"Fel vid skrivning till fil\n"
+" %s"
+
+#: fe/fe_ui.c:224
+#, c-format
+msgid "Wrote file %s"
+msgstr "Skrev fil %s"
+
+#. create dialog box
+#: fe/fe_ui.c:291
+msgid "Question"
+msgstr "Fråga"
+
+#: fe/fe_widget.c:171 gda-fe/gda-fe-connection.c:102
+msgid "Select all"
+msgstr "Välj alla"
+
+#: fe/fe_widget.c:171
+msgid "Select all text in buffer"
+msgstr "Välj all text i bufferten"
+
+#: fe/fe_widget.c:175
+msgid "Insert file..."
+msgstr "Infoga fil..."
+
+#: fe/fe_widget.c:175
+msgid "Insert file into current position"
+msgstr "Infoga fil till den nuvarande positionen"
+
+#: fe/fe_widget.c:178
+msgid "Save to file..."
+msgstr "Spara till fil..."
+
+#: fe/fe_widget.c:178
+msgid "Save widget contents to file"
+msgstr "Spara komponentinnehåll till fil"
+
+#: fe/fe_widget.c:181
+msgid "Print..."
+msgstr "Skriv ut..."
+
+#: fe/fe_widget.c:181
+msgid "Print buffer"
+msgstr "Skriv ut buffer"
+
+#: gda-clnt-ui/gnome-db-browser.c:81
+msgid "Object Name"
+msgstr "Objektnamn"
+
+#: gda-clnt-ui/gnome-db-browser.c:100
+msgid "0 rows"
+msgstr "0 rader"
+
+#: gda-clnt-ui/gnome-db-browser.c:416
+msgid "Tables"
+msgstr "Tabeller"
+
+#: gda-clnt-ui/gnome-db-browser.c:424
+msgid "Views"
+msgstr "Visningar"
+
+#: gda-clnt-ui/gnome-db-browser.c:432
+msgid "Procedures"
+msgstr "Procedurer"
+
+#: gda-clnt-ui/gnome-db-browser.c:440
+msgid "Types"
+msgstr "Typer"
+
+#: gda-clnt-ui/gnome-db-browser.c:448
+msgid "Aggregates"
+msgstr "Aggregat"
+
+#: gda-clnt-ui/gnome-db-browser.c:463
+msgid "Data"
+msgstr "Data"
+
+#: gda-clnt-ui/gnome-db-browser.c:478
+msgid "Extra Info"
+msgstr "Extra Info"
+
+#: gda-clnt/gda-field.c:187
+msgid "<NULL>"
+msgstr "<NULL>"
+
+#: gda-clnt/gda-field.c:193 gda-clnt/gda-field.c:195
+msgid "<Unknown GDA Type(NULL)>"
+msgstr "<Okänd GDA-typ(NULL)>"
+
+#: gda-clnt/gda-field.c:208
+msgid "TRUE"
+msgstr "SANT"
+
+#: gda-clnt/gda-field.c:209
+msgid "FALSE"
+msgstr "FALSKT"
+
+#: gda-manager/gda-mgr-main.c:37 gda-manager/gda-mgr-main.c:86
+msgid "Close configurator"
+msgstr "Stäng konfiguerare"
+
+#: gda-manager/gda-mgr-main.c:51
+msgid "The GNOME-DB front end"
+msgstr "GNOME-DB gränssnitt"
+
+#: gda-manager/gda-mgr-main.c:55
+msgid "SQL Front End"
+msgstr "SQL gränssnitt"
+
+#: gda-manager/gda-mgr-main.c:55
+msgid "The SQL front end"
+msgstr "SQL gränssnitt"
+
+#: gda-fe/gda-fe-main.c:96 gda-manager/gda-mgr-main.c:59
+msgid "GNOME-DB Builder"
+msgstr "GNOME-DB byggare"
+
+#: gda-manager/gda-mgr-main.c:59
+msgid "The GNOME-DB development environment"
+msgstr "GNOME-DB utvecklingsmiljö"
+
+#: gda-fe/gda-fe-main.c:25
+msgid "Open Connection..."
+msgstr "Öppna anslutning..."
+
+#: gda-fe/gda-fe-main.c:25 gda-fe/gda-fe-main.c:133
+msgid "Open a connection to a data source"
+msgstr "Öppna en anslutning mot en datakälla"
+
+#: gda-fe/gda-fe-main.c:31
+msgid "Disconnect all"
+msgstr "Avbryt all anslutning"
+
+#: gda-fe/gda-fe-connection.c:38 gda-fe/gda-fe-main.c:44
+msgid "SQL Window"
+msgstr "SQL fönster"
+
+#: gda-fe/gda-fe-main.c:44
+msgid "SQL window"
+msgstr "SQL fönster"
+
+#: gda-fe/gda-fe-connection.c:41 gda-fe/gda-fe-main.c:47
+msgid "Batch"
+msgstr "Uppsättning"
+
+#: gda-fe/gda-fe-connection.c:41 gda-fe/gda-fe-main.c:47
+msgid "Batch commands window"
+msgstr "Uppsättnings kommandofönster"
+
+#: gda-fe/gda-fe-main.c:50
+msgid "Query Designer"
+msgstr "Köa designer"
+
+#: gda-fe/gda-fe-connection.c:44 gda-fe/gda-fe-main.c:50
+msgid "Query designer"
+msgstr "Köa designer"
+
+#: gda-fe/gda-fe-connection.c:47 gda-fe/gda-fe-connection.c:184
+#: gda-fe/gda-fe-main.c:53
+msgid "Browser"
+msgstr "Bläddrare"
+
+#: gda-fe/gda-fe-main.c:53
+msgid "Browse database"
+msgstr "Bläddra databas"
+
+#: gda-fe/gda-fe-connection.c:50 gda-fe/gda-fe-main.c:56
+msgid "Export database"
+msgstr "Exportera databas"
+
+#: gda-fe/gda-fe-connection.c:53 gda-fe/gda-fe-main.c:59
+msgid "Import data into current database"
+msgstr "Importera data till aktuella databasen"
+
+#: gda-fe/gda-fe-main.c:63
+msgid "Begin transaction"
+msgstr "Starta transaktion"
+
+#: gda-fe/gda-fe-main.c:66
+msgid "Commit transaction"
+msgstr "Skicka transaktion"
+
+#: gda-fe/gda-fe-main.c:76
+msgid "Configure"
+msgstr "Konfiguera"
+
+#: gda-fe/gda-fe-main.c:76
+msgid "Configure underlying database"
+msgstr "Konfigurera underliggande databas"
+
+#: gda-fe/gda-fe-main.c:83 gda-fe/gda-fe-main.c:136
+msgid "View logs"
+msgstr "Visa loggar"
+
+#: gda-fe/gda-fe-main.c:83
+msgid "View the different logs"
+msgstr "Visa olika loggar"
+
+#: gda-fe/gda-fe-main.c:86
+msgid "Database designer"
+msgstr "Databasdesigner"
+
+#: gda-fe/gda-fe-main.c:86
+msgid "Open the database designer"
+msgstr "Öppna databasdesignern"
+
+#: gda-fe/gda-fe-main.c:89
+msgid "Service control"
+msgstr "Servicekontroll"
+
+#: gda-fe/gda-fe-main.c:89
+msgid "View service activity"
+msgstr "Visa service-aktivitet"
+
+#: gda-fe/gda-fe-main.c:93
+msgid "GNOME-DB Manager"
+msgstr "GNOME-DB Hanteraren"
+
+#: gda-fe/gda-fe-main.c:93
+msgid "The GNOME-DB configuration tool"
+msgstr "GNOME-DB konfigurationsverktyget"
+
+#: gda-fe/gda-fe-main.c:96
+msgid "The GNOME-DB Development Environment"
+msgstr "GNOME-DB utvecklingsmiljö"
+
+#: gda-fe/gda-fe-main.c:106
+msgid "Data sources..."
+msgstr "Data källor..."
+
+#: gda-fe/gda-fe-main.c:106
+msgid "Configure GDA data sources"
+msgstr "Konfigurera GDA-datakällor"
+
+#: gda-fe/gda-fe-main.c:110
+msgid "Save options"
+msgstr "Spara Inställningar"
+
+#: gda-fe/gda-fe-main.c:136
+msgid "Logs"
+msgstr "Loggar"
+
+#: gda-fe/gda-fe-main.c:144
+msgid "Exit Application"
+msgstr "Avsluta applikationen"
+
+#: gda-fe/gda-fe-main.c:171
+msgid "Could not initialize Bonobo\n"
+msgstr "Kunde inte initialisera Bonobo\n"
+
+#: gda-fe/gda-fe-callbacks.c:49
+#, c-format
+msgid "Connected to '%s'"
+msgstr "Ansluten till \"%s\""
+
+#: gda-fe/gda-fe-callbacks.c:204
+msgid "Configuration file saved"
+msgstr "Konfigurationsfil sparad"
+
+#: gda-fe/gda-fe-connection.c:38
+msgid "SQL"
+msgstr "SQL"
+
+#: gda-fe/gda-fe-connection.c:44
+msgid "Queries"
+msgstr "Köer"
+
+#: gda-fe/gda-fe-connection.c:47
+msgid "Browse Database"
+msgstr "Bläddra databas"
+
+#: gda-fe/gda-fe-connection.c:64
+msgid "Execute"
+msgstr "Kör"
+
+#: gda-fe/gda-fe-connection.c:64
+msgid "Execute current command"
+msgstr "Kör aktuellt kommando"
+
+#: gda-fe/gda-fe-connection.c:67
+msgid "Select"
+msgstr "Markera"
+
+#: gda-fe/gda-fe-connection.c:67
+msgid "Select from previous commands"
+msgstr "Markera från föregående kommandon"
+
+#: gda-fe/gda-fe-connection.c:83
+msgid "Copy selected text"
+msgstr "Kopiera markerad text"
+
+#: gda-fe/gda-fe-connection.c:86
+msgid "Paste clipboard contents"
+msgstr "Klistra in urklippets innehåll"
+
+#: gda-fe/gda-fe-connection.c:89
+msgid "Clear window contents"
+msgstr "Töm fönsterinnehållet"
+
+#: gda-fe/gda-fe-connection.c:96
+msgid "Start"
+msgstr "Start"
+
+#: gda-fe/gda-fe-connection.c:96
+msgid "Start export"
+msgstr "Starta exportering"
+
+#: gda-fe/gda-fe-connection.c:99
+msgid "Clear all fields"
+msgstr "Rensa alla fällt"
+
+#: gda-fe/gda-fe-connection.c:102
+msgid "Select all objects in database"
+msgstr "Markera alla objekt i databasen"
+
+#: gda-fe/gda-fe-connection.c:105
+msgid "Unselect"
+msgstr "Avmarkera"
+
+#: gda-fe/gda-fe-connection.c:105
+msgid "Clear object selection"
+msgstr "Rensa objektmarkering"
+
+#: gda-fe/gda-fe-connection.c:418 gda-fe/gda-fe-connection.c:470
+msgid "Select file"
+msgstr "Välj fil"
+
+#. create dialog
+#: gda-fe/gda-fe-connection.c:492
+msgid "Select Command"
+msgstr "Välj kommando"
+
+#: gda-fe/gda-fe-connection.c:627
+msgid "Begin transaction failed"
+msgstr "Starta transaktion misslyckades"
+
+#: gda-fe/gda-fe-connection.c:633 gda-fe/gda-fe-connection.c:660
+#: gda-fe/gda-fe-connection.c:687
+msgid "Data source does not support transactions"
+msgstr "Datakällor stöder inte transaktioner"
+
+#: gda-fe/gda-fe-connection.c:649
+msgid "Commit executed successfully"
+msgstr "Sändning lyckades"
+
+#: gda-fe/gda-fe-connection.c:654
+msgid "Commit transaction failed"
+msgstr "Sändning misslyckades"
+
+#: gda-fe/gda-fe-connection.c:676
+msgid "Rollback executed successfully"
+msgstr "\"Rollback\" lyckades"
+
+#: gda-fe/gda-fe-connection.c:681
+msgid "Rollback transaction failed"
+msgstr "\"Rollback\"-transaktion misslyckades"
+
+#: gda-fe/gda-fe-connection.c:762
+msgid "Could not activate module %s"
+msgstr "Kunde inte aktivera modulen %s"
+
+#~ msgid "Load..."
+#~ msgstr "Ladda..."
+
+#~ msgid "Load config component"
+#~ msgstr "Ladda konfigurationskomponent"
+
+#~ msgid "Configure tab properties"
+#~ msgstr "Konfigurera tabb-inställningar"
+
+#~ msgid "Load"
+#~ msgstr "Ladda"
+
+#~ msgid "Run the GDA configuration tool"
+#~ msgstr "Kör GDA-konfigurationsverktyget"
+
+#~ msgid "Username"
+#~ msgstr "Användarnamn"
+
+#~ msgid "Description"
+#~ msgstr "Beskrivelse"
+
+#~ msgid "Copyright The Free Software Foundation (C) 1998-2000"
+#~ msgstr "Copyright The Free software Foundation (C) 1998-2000"
+
+#~ msgid ""
+#~ "This program is part of the GNOME project for LINUX. GNOME Data Access comes "
+#~ "with ABSOLUTELY NO WARRANTY. This is free software, and you are welcome to "
+#~ "redistribute it under the conditions of the GNU General Public Licence."
+#~ msgstr ""
+#~ "Detta programmet är en del av GNOME projeketet för LINUX. GNOME Data Access "
+#~ "kommer med ABSOLUT INGEN GARANTI. Det är fri mjukvara, och får gärna "
+#~ "omdistributeras under villkoren i GNU General Public License."
+
+#~ msgid "Printer setup..."
+#~ msgstr "Skrivar inställningar..."
+
+#~ msgid "Open printer setup dialog"
+#~ msgstr "Öppna skrivarinställnings dialogen"
+
+#~ msgid "Exit"
+#~ msgstr "Avsluta"
+
+#~ msgid "Reload config drivers"
+#~ msgstr "Ladda om konfigurationsdrivrutiner"
+
+#~ msgid "Provider DSN"
+#~ msgstr "Leverantör DSN"
+
+#~ msgid "Remove field"
+#~ msgstr "Ta bort fält"
+
+#~ msgid "Remove selected fields"
+#~ msgstr "Ta bort markerade fält"
+
+#~ msgid "Open Table"
+#~ msgstr "Öppna tabell"
+
+#~ msgid "New Table"
+#~ msgstr "Ny tabell"
+
+#~ msgid "Field Name"
+#~ msgstr "Fältnamn"
+
+#~ msgid "Type"
+#~ msgstr "Typ"
+
+#~ msgid "Size"
+#~ msgstr "Storlek"
+
+#~ msgid "Precision"
+#~ msgstr "Precision"
+
+#~ msgid "Update"
+#~ msgstr "Uppdatera"
+
+#~ msgid "Record %d of %d"
+#~ msgstr "Post %d of %d"
+
+#~ msgid "Field name cannot be empty"
+#~ msgstr "Fältnamn kan inte vara tomma"
+
+#~ msgid "Do you want to save changes?"
+#~ msgstr "Vill du spara ändringarna?"
+
+#~ msgid "Error saving database design to file %s"
+#~ msgstr "Fel vid sparning av dabasdesign till fil %s"
+
+#~ msgid "Open database"
+#~ msgstr "Öppna databas"
+
+#~ msgid "Error opening file '%s'"
+#~ msgstr "Fel vid öppning av fil '%s'"
+
+#~ msgid "First open or create a design"
+#~ msgstr "Öppna eller skapa en design först"
+
+#~ msgid "Got description for table '%s'"
+#~ msgstr "Mottog beskrivning för tabell '%s'"
+
+#~ msgid "Edit"
+#~ msgstr "Redigera"
+
+#~ msgid "Start Selected Operation"
+#~ msgstr "Starta vald operation"
+
+#~ msgid "Clear all entries"
+#~ msgstr "Töm alla poster"
+
+#~ msgid "ok\n"
+#~ msgstr "ok\n"
+
+#~ msgid "no\n"
+#~ msgstr "nej\n"
+
+#~ msgid "Error saving XML database to disk"
+#~ msgstr "Fel vid sparning av XML-databas till disk"
+
+#~ msgid "Export finished successfully"
+#~ msgstr "Exporten avslutades utan problem"
+
+#~ msgid "Objects"
+#~ msgstr "Objekt"
+
+#~ msgid "Add all"
+#~ msgstr "Lägg till alla"
+
+#~ msgid "Remove All"
+#~ msgstr "Ta bort alla"
+
+#~ msgid "Selection List"
+#~ msgstr "Valningslista"
+
+#~ msgid "Cannot allocate %d bytes"
+#~ msgstr "Kan inte allokera %d bytes"
+
+#~ msgid "Load script"
+#~ msgstr "Ladda skript"
+
+#~ msgid "GDA Server Properties"
+#~ msgstr "GDA-server Egenskaper"
+
+#~ msgid "Standalone Executable"
+#~ msgstr "Statiskt länkat program"
+
+#~ msgid "Shared Library"
+#~ msgstr "Dynamiskt länkat bibliotek"
+
+#~ msgid "Repository ID"
+#~ msgstr "Förvarings ID"
+
+#~ msgid "Location"
+#~ msgstr "Placering"
+
+#~ msgid "GDA Server Location"
+#~ msgstr "GDA-Server placering"
+
+#~ msgid "OK"
+#~ msgstr "OK"
+
+#~ msgid "GDA Data Source Properties"
+#~ msgstr "GDA datakällegenskaper"
+
+#~ msgid "Data Source Name(DSN)"
+#~ msgstr "Datakäll namn(DSN)"
+
+#~ msgid "Driver Configuration"
+#~ msgstr "Drivrutingkonfiguration"
+
+#~ msgid "Accept"
+#~ msgstr "Acceptera"
+
+#~ msgid "GDA Administrator"
+#~ msgstr "GDA-administratör"
+
+#~ msgid "Could not find the GDA manual!"
+#~ msgstr "Kunde inte hitta GDA manualen!"

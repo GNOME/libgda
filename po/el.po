@@ -1,0 +1,1227 @@
+# gnome-db Greek PO file
+# Copyright (C) 2000 Free Software Foundation, Inc.
+# Simos Xenitellis <simos@hellug.gr>, 2000.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gnome-db 0.0.91\n"
+"POT-Creation-Date: 2000-03-18 15:14+0000\n"
+"PO-Revision-Date: 2000-02-12 19:29+0000\n"
+"Last-Translator: Simos Xenitellis <simos@hellug.gr>\n"
+"Language-Team: Greek <nls@tux.hellug.gr>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-7\n"
+"Content-Transfer-Encoding: 8bit\n"
+#
+# File: fe/fe_browser.c, line: 27
+msgid "Create script"
+msgstr "Δημιουργία γραφής"
+#
+# File: fe/fe_browser.c, line: 27
+msgid "Create script from object definition"
+msgstr "Δημιουργίά γραφής από ορισμό αντικειμένου"
+#
+# File: fe/fe_browser.c, line: 30
+# File: fe/fe_export.c, line: 51
+# File: fe/fe_log.c, line: 34
+# File: fe/fe_sqlwin.c, line: 46
+msgid "Refresh"
+msgstr "Ανανέωση"
+#
+# File: fe/fe_browser.c, line: 30
+msgid "Refresh all lists"
+msgstr "Ανανέωση όλων των λιστών"
+#
+# File: fe/fe_browser.c, line: 34
+# File: fe/fe_designer.c, line: 41
+# File: fe/fe_editor.c, line: 60
+# File: fe/fe_editor.c, line: 74
+# File: fe/fe_export.c, line: 58
+# File: fe/fe_log.c, line: 44
+msgid "Close"
+msgstr "Κλείσιμο"
+#
+# File: fe/fe_browser.c, line: 34
+# File: fe/fe_designer.c, line: 41
+# File: fe/fe_editor.c, line: 74
+# File: fe/fe_export.c, line: 58
+# File: fe/fe_log.c, line: 44
+msgid "Close this window"
+msgstr "Κλείσιμο του παραθύρου"
+#
+# File: fe/fe_browser.c, line: 108
+#, c-format
+msgid "Browser: %s@%s"
+msgstr "Φυλλομετρητής: %s@%s"
+#
+# File: fe/fe_browser.c, line: 124
+# File: fe/fe_export.c, line: 356
+msgid "No connection open"
+msgstr "Δεν υπάρχει ανοιχτή σύνδεση"
+#
+# File: fe/fe_config.c, line: 49
+msgid "General"
+msgstr "Γενικά"
+#
+# File: fe/fe_config.c, line: 50
+msgid "Environment"
+msgstr "Περιβάλλον"
+#
+# File: fe/fe_config.c, line: 51
+msgid "Config File"
+msgstr "Αρχείο Ρυθμίσεων"
+#
+# File: fe/fe_config.c, line: 79
+# File: fe/fe_designer.c, line: 37
+# File: fe/fe_editor.c, line: 51
+# File: fe/fe_sqlwin.c, line: 59
+msgid "Save"
+msgstr "Αποθήκευση"
+#
+# File: fe/fe_config.c, line: 83
+# File: fe/fe_log.c, line: 40
+msgid "Save As"
+msgstr "Αποθήκευση Ως"
+#
+# File: fe/fe_config.c, line: 87
+# File: fe/fe_export.c, line: 54
+# File: fe/fe_log.c, line: 37
+# File: fe/fe_sqlwin.c, line: 49
+msgid "Clear"
+msgstr "Καθαρισμός"
+#
+# File: fe/fe_config.c, line: 107
+# File: fe/fe_config.c, line: 405
+msgid "Variable"
+msgstr "Μεταβλητή"
+#
+# File: fe/fe_config.c, line: 107
+# File: fe/fe_config.c, line: 351
+# File: fe/fe_config.c, line: 405
+msgid "Value"
+msgstr "Τιμή"
+#
+# File: fe/fe_config.c, line: 133
+msgid "Add"
+msgstr "Πρόσθεση"
+#
+# File: fe/fe_config.c, line: 137
+# File: gda-clnt-ui/gnome-db-browser.c, line: 472
+msgid "Remove"
+msgstr "Διαγραφή"
+#
+# File: fe/fe_config.c, line: 141
+msgid "Current"
+msgstr "Τρέχον"
+#
+# File: fe/fe_config.c, line: 160
+msgid "Save options on exit"
+msgstr "Αποθήκευση επιλογών και έξοδος"
+#
+# File: fe/fe_config.c, line: 166
+msgid "Open connection dialog on entry"
+msgstr "Άνοιγμα διαλόγου σύνδεσης στην είσοδο"
+#
+#. Fonts
+# File: fe/fe_config.c, line: 179
+msgid "Editor Font"
+msgstr "Γραμματοσειρά Επεξεργαστή Κειμένου"
+#
+# File: fe/fe_config.c, line: 199
+msgid "Grid Font"
+msgstr "Γραμματοσειρά Πλέγματος"
+#
+# File: fe/fe_config.c, line: 221
+msgid "Language"
+msgstr "Γλώσσα"
+#
+#. shell
+# File: fe/fe_config.c, line: 240
+# File: fe/fe_editor.c, line: 435
+msgid "Shell"
+msgstr "Φλοιός"
+#
+#. window tabs
+# File: fe/fe_config.c, line: 255
+# File: fe/fe_main.c, line: 289
+msgid "Tabs position"
+msgstr "Θέση στηλοθετών"
+#
+# File: fe/fe_config.c, line: 263
+# File: fe/fe_main.c, line: 260
+msgid "Top"
+msgstr "Κορυφή"
+#
+# File: fe/fe_config.c, line: 272
+# File: fe/fe_main.c, line: 263
+msgid "Bottom"
+msgstr "Βάση"
+#
+# File: fe/fe_config.c, line: 281
+# File: fe/fe_main.c, line: 266
+msgid "Left"
+msgstr "Αριστερά"
+#
+# File: fe/fe_config.c, line: 290
+# File: fe/fe_main.c, line: 269
+msgid "Right"
+msgstr "Δεξιά"
+#
+#. create the dialog box
+# File: fe/fe_config.c, line: 331
+msgid "Add Environment Variable"
+msgstr "Προσθήκη Μεταβλητής Περιβάλλοντος"
+#
+#. create fields
+# File: fe/fe_config.c, line: 341
+# File: fe/fe_export.c, line: 327
+msgid "Name"
+msgstr "Όνομα"
+#
+#. create dialog
+# File: fe/fe_config.c, line: 411
+msgid "Current Environment"
+msgstr "Τρέχον Περιβάλλον"
+#
+# File: fe/fe_config.c, line: 506
+# File: fe/fe_editor.c, line: 54
+# File: fe/fe_editor.c, line: 329
+# File: fe/fe_editor.c, line: 354
+msgid "Save As..."
+msgstr "Αποθήκευση Ως..."
+#
+# File: fe/fe_config.c, line: 578
+# File: fe/fe_main.c, line: 331
+# File: gda-manager/gda-mgr-main.c, line: 85
+msgid "Preferences"
+msgstr "Προτιμίσεις"
+#
+# File: fe/fe_connection.c, line: 33
+msgid "Error Viewer"
+msgstr "Παρατηρητής Σφαλμάτων"
+#
+# File: fe/fe_connection.c, line: 51
+#, c-format
+msgid "Connected to %s"
+msgstr "Σύνδεση με %s"
+#
+# File: fe/fe_connection.c, line: 81
+msgid "Object Identifiers"
+msgstr "Ταυτότητες Αντικειμένου"
+#
+# File: fe/fe_connection.c, line: 82
+msgid "Object Inheritance"
+msgstr "Κληρονομικότητα Αντικειμένου"
+#
+# File: fe/fe_connection.c, line: 83
+msgid "Sequences"
+msgstr "Ακολουθίες"
+#
+# File: fe/fe_connection.c, line: 84
+msgid "Stored Procedures"
+msgstr "Αποθηκευμένες Διαδικασίες"
+
+# File: fe/fe_connection.c, line: 85
+msgid "Transactions"
+msgstr "Διενέργειες"
+#
+# File: fe/fe_connection.c, line: 86
+msgid "XML Queries"
+msgstr "Ερωτήσεις XML"
+#
+# File: fe/fe_connection.c, line: 165
+msgid "Open Connection"
+msgstr "Άνοιγμα Σύνδεσης"
+#
+# File: fe/fe_connection.c, line: 178
+msgid "Connecting..."
+msgstr "Σύνδεση..."
+#
+# File: fe/fe_connection.c, line: 193
+msgid "Transaction started"
+msgstr "Έναρξη διενέργειας"
+#
+# File: fe/fe_connection.c, line: 195
+# File: fe/fe_connection.c, line: 210
+# File: fe/fe_connection.c, line: 225
+msgid "Transactions not supported"
+msgstr "Δεν υποστηρίζονται διενέργειες"
+#
+# File: fe/fe_connection.c, line: 208
+msgid "Commit executed"
+msgstr "Η δέσμευση εκτελέστηκε"
+#
+# File: fe/fe_connection.c, line: 223
+msgid "Rollback executed"
+msgstr "Η επαναφορά εκτελέστηκε"
+#
+#. create dialog
+# File: fe/fe_connection.c, line: 240
+# File: fe/fe_main.c, line: 190
+msgid "Connection Properties"
+msgstr "Ρυθμίσεις Σύνδεσης"
+#
+# File: fe/fe_connection.c, line: 242
+# File: fe/fe_export.c, line: 315
+msgid "Properties"
+msgstr "Ρυθμίσεις"
+#
+# File: fe/fe_connection.c, line: 249
+# File: fe/fe_gdaconfig.c, line: 289
+msgid "GDA Name"
+msgstr "Όνομα GDA"
+#
+# File: fe/fe_connection.c, line: 257
+# File: fe/fe_gdaconfig.c, line: 298
+msgid "Provider"
+msgstr "Παροχεύς"
+#
+# File: fe/fe_connection.c, line: 265
+# File: fe/fe_gdaconfig.c, line: 308
+msgid "DSN"
+msgstr "DSN"
+#
+# File: fe/fe_connection.c, line: 273
+msgid "Command Timeout"
+msgstr "Λήξη Χρόνου Εντολής"
+#
+# File: fe/fe_connection.c, line: 282
+msgid "Connect Timeout"
+msgstr "Λήξη Χρόνου Σύνδεσης"
+#
+# File: fe/fe_connection.c, line: 291
+msgid "Trace File"
+msgstr "Αρχείο Καταγραφής"
+#
+# File: fe/fe_connection.c, line: 300
+msgid "View"
+msgstr "Όψη"
+#
+# File: fe/fe_connection.c, line: 306
+msgid "Provider Features"
+msgstr "Χαρακτηριστικά Παροχέα"
+#
+# File: fe/fe_designer.c, line: 31
+# File: fe/fe_designer.c, line: 136
+# File: fe/fe_editor.c, line: 45
+# File: fe/fe_gdaconfig.c, line: 347
+msgid "New"
+msgstr "Νέο"
+#
+# File: fe/fe_designer.c, line: 31
+msgid "Create new database design"
+msgstr "Δημιουργία νέας σχεδίασης βάσης"
+#
+# File: fe/fe_designer.c, line: 34
+# File: fe/fe_editor.c, line: 48
+# File: fe/fe_sqlwin.c, line: 56
+msgid "Open"
+msgstr "Άνοιγμα"
+#
+# File: fe/fe_designer.c, line: 34
+msgid "Open database design from file"
+msgstr "Άνοιγμα σχεδίασης βάσης από αρχείο"
+#
+# File: fe/fe_designer.c, line: 37
+msgid "Save database design to file"
+msgstr "Αποθήκευση σχεδίασης βάσης σε αρχείο"
+#
+# File: fe/fe_designer.c, line: 87
+msgid "Open XML File"
+msgstr "Άνοιγμα Αρχείου XML"
+#
+# File: fe/fe_designer.c, line: 110
+# File: fe/fe_widget.c, line: 37
+# File: fe/fe_widget.c, line: 119
+# File: fe/fe_widget.c, line: 144
+msgid "Select File"
+msgstr "Επιλογή Αρχείου"
+#
+# File: fe/fe_designer.c, line: 115
+#, c-format
+msgid ""
+"Error saving file\n"
+"'%s'"
+msgstr ""
+"Σφάλμα αποθήκευσης αρχείου\n"
+"'%s'"
+#
+# File: fe/fe_designer.c, line: 131
+msgid "Designer"
+msgstr "Σχεδιαστής"
+#
+# File: fe/fe_designer.c, line: 142
+# File: fe/fe_gdaconfig.c, line: 352
+msgid "Delete"
+msgstr "Διαγραφή"
+#
+# File: fe/fe_editor.c, line: 45
+msgid "Create a new empty file"
+msgstr "Δημιουργία νέου κενού αρχείου"
+#
+# File: fe/fe_editor.c, line: 48
+msgid "Open an existing file"
+msgstr "Άνοιγμα υπάρχοντος αρχείου"
+#
+# File: fe/fe_editor.c, line: 51
+msgid "Save current file"
+msgstr "Αποθήκευση τρέχοντος αρχείου"
+#
+# File: fe/fe_editor.c, line: 54
+msgid "Save file with another name"
+msgstr "Αποθήκευση αρχείου με άλλο όνομα"
+#
+# File: fe/fe_editor.c, line: 57
+# File: fe/fe_sqlwin.c, line: 52
+msgid "Print"
+msgstr "Εκτύπωση"
+#
+# File: fe/fe_editor.c, line: 57
+msgid "Print current file"
+msgstr "Εκτύπωση τρέχοντος αρχείου"
+#
+# File: fe/fe_editor.c, line: 60
+msgid "Close current file"
+msgstr "Κλείσιμο τρέχοντος αρχείου"
+#
+# File: fe/fe_editor.c, line: 64
+# File: fe/fe_sqlwin.c, line: 63
+# File: fe/fe_widget.c, line: 162
+msgid "Cut"
+msgstr "Αποκοπή"
+#
+# File: fe/fe_editor.c, line: 64
+msgid "Cut selected text"
+msgstr "Αποκοπή επιλεγμένου κειμένου"
+#
+# File: fe/fe_editor.c, line: 67
+# File: fe/fe_sqlwin.c, line: 66
+# File: fe/fe_widget.c, line: 165
+msgid "Copy"
+msgstr "Αντιγραφή"
+#
+# File: fe/fe_editor.c, line: 67
+# File: fe/fe_sqlwin.c, line: 66
+# File: fe/fe_widget.c, line: 165
+msgid "Copy selected text to clipboard"
+msgstr "Αντιγραφή επιλεγμένου κειμένου στο clipboard"
+#
+# File: fe/fe_editor.c, line: 70
+# File: fe/fe_sqlwin.c, line: 69
+# File: fe/fe_widget.c, line: 168
+msgid "Paste"
+msgstr "Επικόλληση"
+#
+# File: fe/fe_editor.c, line: 70
+msgid "Paste clipboard's contents"
+msgstr "Επικόλληση του περιεχομένου του clipboard"
+#
+# File: fe/fe_editor.c, line: 134
+msgid "Run Command"
+msgstr "Εκτέλεση Εντολής"
+#
+# File: fe/fe_editor.c, line: 141
+msgid "Command"
+msgstr "Εντολή"
+#
+# File: fe/fe_editor.c, line: 152
+msgid "Directory"
+msgstr "Κατάλογος"
+#
+# File: fe/fe_editor.c, line: 178
+# File: fe/fe_editor.c, line: 215
+#, c-format
+msgid "Could not change to directory '%s'"
+msgstr "Αδυναμία αλλαγής στον κατάλογο '%s'"
+#
+# File: fe/fe_editor.c, line: 188
+#, c-format
+msgid "Running '%s'"
+msgstr "Εκτέλεση του '%s'"
+#
+#. write header
+# File: fe/fe_editor.c, line: 194
+#, c-format
+msgid ""
+"Output from '%s'\n"
+"In directory '%s'\n"
+"\n"
+msgstr ""
+"Έξοδος από το '%s'\n"
+"Στον κατάλογο '%s'\n"
+#
+# File: fe/fe_editor.c, line: 206
+#, c-format
+msgid "Command '%s' completed"
+msgstr "Η εντολή '%s' εκτελέστηκε"
+#
+# File: fe/fe_editor.c, line: 208
+# File: fe/fe_editor.c, line: 274
+# File: fe/fe_editor.c, line: 473
+# File: gda-manager/gda-mgr-main.c, line: 193
+#, c-format
+msgid "Unable to execute '%s'"
+msgstr "Αδυναμίά εκτέλεσης του '%s'"
+#
+# File: fe/fe_editor.c, line: 244
+#, c-format
+msgid ""
+"File\n"
+" '%s'\n"
+" has been changed.\n"
+" Do you want to save the changes?"
+msgstr ""
+"Το αρχείο\n"
+" '%s'\n"
+" έχει τροποποιηθεί.\n"
+" Θέλετε να αποθηκεύσετε τις αλλαγές;"
+#
+# File: fe/fe_editor.c, line: 303
+msgid "Open File"
+msgstr "Άνοιγμα Αρχείου"
+#
+# File: fe/fe_editor.c, line: 422
+msgid "Editor"
+msgstr "Κειμενογράφος"
+#
+# File: fe/fe_editor.c, line: 429
+# File: fe/fe_sqlwin.c, line: 37
+msgid "Run"
+msgstr "Εκτέλεση"
+#
+# File: fe/fe_editor.c, line: 441
+msgid "Find"
+msgstr "Εύρεση"
+#
+# File: fe/fe_gdaconfig.c, line: 264
+msgid "GDA Config"
+msgstr "Ρύθμιση GDA"
+#
+# File: fe/fe_gdaconfig.c, line: 273
+msgid "Data Sources"
+msgstr "Πηγές Δεδομένων"
+#
+# File: fe/fe_gdaconfig.c, line: 316
+msgid "Username"
+msgstr "Όνομα χρήστη"
+#
+# File: fe/fe_gdaconfig.c, line: 324
+msgid "Description"
+msgstr "Περιγραφή"
+#
+# File: fe/fe_gdaconfig.c, line: 332
+msgid "Config"
+msgstr "Ρύθμιση"
+#
+# File: fe/fe_export.c, line: 44
+msgid "To XML"
+msgstr "Σε XML"
+#
+# File: fe/fe_export.c, line: 44
+msgid "Export selected data to XML file"
+msgstr "Εξαγωγή επιλεγμένων δεδομένων σε αρχείου XML"
+#
+# File: fe/fe_export.c, line: 47
+msgid "To SQL"
+msgstr "Σε SQL"
+#
+# File: fe/fe_export.c, line: 47
+msgid "Export selected data as a SQL script"
+msgstr "Εξαγωγή επιλεγμένων δεδομένων σε πρόγραμμα SQL"
+#
+# File: fe/fe_export.c, line: 51
+msgid "Refresh data"
+msgstr "Ανανέωση δεδομένων"
+#
+# File: fe/fe_export.c, line: 54
+msgid "Clear all widgets"
+msgstr "Καθαρισμός των widgets"
+#
+# File: fe/fe_export.c, line: 169
+msgid "You have to provide a file name"
+msgstr "Πρέπει να παράσχετε ένα όνομα αρχείου"
+#
+# File: fe/fe_export.c, line: 175
+msgid "You have to specify a name for the database export"
+msgstr "Πρέπει να παράσχετε ένα όνομα για την εξαγωγή της βάσης"
+#
+# File: fe/fe_export.c, line: 195
+#, c-format
+msgid "Exporting object named '%s'"
+msgstr "Εξαγωγή αντικειμένου με όνομα '%s'"
+#
+#. save XML file
+# File: fe/fe_export.c, line: 225
+#, c-format
+msgid "Saving to '%s' ..."
+msgstr "Αποθήκευση στο '%s' ..."
+#
+# File: fe/fe_export.c, line: 227
+#, c-format
+msgid ""
+"Error saving XML file\n"
+"'%s'"
+msgstr ""
+"Σφάλμα στην αποθήκευση αρχείου XML\n"
+"'%s'"
+#
+# File: fe/fe_export.c, line: 235
+msgid "No objects are selected"
+msgstr "Δεν έχουν επιλεγεί αντικείμενα"
+#
+#. create the view window
+# File: fe/fe_export.c, line: 280
+#, c-format
+msgid "Export: %s@%s"
+msgstr "Εξαγωγή: %s@%s"
+#
+# File: fe/fe_export.c, line: 295
+msgid "TABLES"
+msgstr "ΠΙΝΑΚΕΣ"
+#
+# File: fe/fe_export.c, line: 305
+msgid "VIEWS"
+msgstr "ΟΨΕΙΣ"
+#
+# File: fe/fe_export.c, line: 322
+msgid "File name"
+msgstr "Όνομα αρχείου"
+#
+# File: fe/fe_export.c, line: 332
+msgid "Export data"
+msgstr "Εξαγωγή δεδομένων"
+#
+# File: fe/fe_export.c, line: 335
+msgid "Show file when done"
+msgstr "Εμφάνιση αρχείου μετά των περάτωση"
+#
+# File: fe/fe_export.c, line: 338
+msgid "Add object extra info"
+msgstr "Πρόσθεση επιπλέον πληροφοριών αντικειμένου"
+#
+# File: fe/fe_log.c, line: 34
+msgid "Refresh log"
+msgstr "Ανανέωση καταγραφών"
+#
+# File: fe/fe_log.c, line: 37
+msgid "Clear file contents"
+msgstr "Καθαρισμός περιεχομένων αρχείου"
+#
+# File: fe/fe_log.c, line: 40
+msgid "Save log file with a different name"
+msgstr "Αποθήκευση αρχείου με διαφορετικό όνομα"
+#
+# File: fe/fe_log.c, line: 120
+#, c-format
+msgid "Could not truncate file %s"
+msgstr "Αδυναμία περικοπής αρχείου %s"
+#
+# File: fe/fe_log.c, line: 156
+msgid "Save Log File"
+msgstr "Αποθήκευση Αρχείου Καταγραφών"
+#
+# File: fe/fe_log.c, line: 177
+#, c-format
+msgid ""
+"Could not load file\n"
+" %s"
+msgstr ""
+"Αδυναμία φόρτωσης αρχείου\n"
+" %s"
+#
+# File: fe/fe_log.c, line: 179
+# File: fe/fe_main.c, line: 363
+# File: gda-manager/gda-mgr-main.c, line: 252
+msgid "Ready"
+msgstr "Έτοιμος"
+#
+# File: fe/fe_log.c, line: 181
+# File: fe/fe_ui.c, line: 199
+#, c-format
+msgid "File %s loaded"
+msgstr "Το αρχείο %s φορτώθηκε"
+#
+# File: fe/fe_log.c, line: 196
+# File: fe/fe_main.c, line: 223
+msgid "GDA logs"
+msgstr "Καταγραφές GDA"
+#
+# File: fe/fe_main.c, line: 83
+msgid "GNOME-DB Front End"
+msgstr "Περιβάλλον Χρήσης του GNOME-DB"
+#
+# File: fe/fe_main.c, line: 84
+# File: gda-manager/gda-mgr-main.c, line: 160
+msgid "Copyright The Free Software Foundation (C) 1998-2000"
+msgstr "Πνευματικά Δικαιώματα The Free Software Foundation (C) 1998-2000"
+#
+# File: fe/fe_main.c, line: 86
+# File: gda-manager/gda-mgr-main.c, line: 162
+msgid ""
+"This program is part of the GNOME project for LINUX. GNOME Data Access comes "
+"with ABSOLUTELY NO WARRANTY. This is free software, and you are welcome to "
+"redistribute it under the conditions of the GNU General Public Licence."
+msgstr ""
+"Το παρόν πρόγραμμα είναι μέρος του Έργου GNOME για το Linux. Η Πρόσβαση Σε "
+"Βάσεις Δεδομένων του GNOME (GNOME Data Access) δεν παρέχει ΚΑΜΙΑ ΑΠΟΛΥΤΩΣ "
+"ΕΓΓΥΗΣΗ. Αυτό είναι ελεύθερο λογισμικό και είστε ευσπρόσδεκτοι να το "
+"επαναδιανείμετε κάτων από τους κανόνες του GNU General Public Licence."
+#
+# File: fe/fe_main.c, line: 162
+msgid "Open connection..."
+msgstr "Άνοιγμα σύνδεσης..."
+#
+# File: fe/fe_main.c, line: 162
+# File: fe/fe_main.c, line: 315
+msgid "Open a new connection"
+msgstr "Άνοιγμα νέας σύνδεσης"
+#
+# File: fe/fe_main.c, line: 165
+msgid "Close connection"
+msgstr "Κλείσιμο σύνδεσης"
+#
+# File: fe/fe_main.c, line: 165
+# File: fe/fe_main.c, line: 318
+# File: fe/fe_sqlwin.c, line: 73
+msgid "Close current connection"
+msgstr "Κλείσιμο τρέχουσας σύνδεσης"
+#
+# File: fe/fe_main.c, line: 168
+msgid "Close all connections"
+msgstr "Κλείσιμο όλων των συνδέσεων"
+#
+# File: fe/fe_main.c, line: 172
+msgid "Printer setup..."
+msgstr "Ρύθμιση εκτυπωτή..."
+#
+# File: fe/fe_main.c, line: 172
+msgid "Open printer setup dialog"
+msgstr "Άνοιγμα διαλόγου ρύθμισης εκτυπωτή"
+#
+# File: fe/fe_main.c, line: 176
+# File: fe/fe_main.c, line: 335
+# File: gda-manager/gda-mgr-main.c, line: 47
+# File: gda-manager/gda-mgr-main.c, line: 89
+msgid "Quit"
+msgstr "Τερματισμός"
+#
+# File: fe/fe_main.c, line: 176
+# File: fe/fe_main.c, line: 335
+# File: gda-manager/gda-mgr-main.c, line: 47
+# File: gda-manager/gda-mgr-main.c, line: 89
+msgid "Exit application"
+msgstr "Έξοδος από εφαρμογή"
+#
+# File: fe/fe_main.c, line: 183
+msgid "Object Browser"
+msgstr "Φυλλομετρητής Αντικειμένων"
+#
+# File: fe/fe_main.c, line: 183
+msgid "Browse database objects"
+msgstr "Ερεύνηση αντικειμένων βάσης"
+#
+# File: fe/fe_main.c, line: 186
+msgid "SQL Builder"
+msgstr "Δομητής SQL"
+#
+# File: fe/fe_main.c, line: 186
+msgid "Construct SQL statements"
+msgstr "Δόμηση εντολών SQL"
+#
+# File: fe/fe_main.c, line: 190
+msgid "View connection properties"
+msgstr "Εμφάνιση ρυθμίσεων σύνδεσης"
+#
+# File: fe/fe_main.c, line: 193
+msgid "Start/Stop Server Trace"
+msgstr "Εκκίνηση/Τερματισμός Παρακολούθησης Εξυπηρετητή"
+#
+# File: fe/fe_main.c, line: 193
+msgid "Start or stop server trace"
+msgstr "Εκκίνηση ή τερματισμός παρακολούθησης εξυπηρετητή"
+#
+# File: fe/fe_main.c, line: 196
+msgid "View Server Trace"
+msgstr "Προβολή Παρακολούθησης Εξυπηρετητή"
+#
+# File: fe/fe_main.c, line: 196
+msgid "View server trace file"
+msgstr "Προβολή αρχείου παρακολούθησης εξυπηρετητή"
+#
+# File: fe/fe_main.c, line: 200
+msgid "Export"
+msgstr "Εξαγωγή"
+#
+# File: fe/fe_main.c, line: 200
+msgid "Export Data to Different Formats"
+msgstr "Εξαγωγή Δεδομένων σε Διάφορες Μορφές"
+#
+# File: fe/fe_main.c, line: 203
+msgid "Import"
+msgstr "Εισαγωγή"
+#
+# File: fe/fe_main.c, line: 203
+msgid "Import Data into the Database"
+msgstr "Εισαγωγή Δεδομένων στη Βάση"
+#
+# File: fe/fe_main.c, line: 207
+msgid "Begin Transaction"
+msgstr "Εκκίνηση Διενέργειας"
+#
+# File: fe/fe_main.c, line: 207
+msgid "Begin new transaction"
+msgstr "Εκκίνηση νέας διενέργειας"
+#
+# File: fe/fe_main.c, line: 210
+msgid "Commit"
+msgstr "Διάπραξη"
+#
+# File: fe/fe_main.c, line: 210
+msgid "Commit changes"
+msgstr "Διάπραξη αλλαγών"
+#
+# File: fe/fe_main.c, line: 213
+msgid "Rollback"
+msgstr "Επαναφορά"
+#
+# File: fe/fe_main.c, line: 213
+msgid "Discard all changes"
+msgstr "Απόρριψη όλων των αλλαγών"
+#
+# File: fe/fe_main.c, line: 220
+msgid "Database Designer"
+msgstr "Σχεδιαστής Βάσης"
+#
+# File: fe/fe_main.c, line: 220
+msgid "Visual Database Designer"
+msgstr "Γραφικός Σχεδιαστής Βάσης"
+#
+# File: fe/fe_main.c, line: 223
+# File: fe/fe_main.c, line: 321
+msgid "View GDA server log files"
+msgstr "Εμφάνιση αρχείων καταγραφής εξυπηρετητή GDA"
+#
+# File: fe/fe_main.c, line: 226
+msgid "Text editor"
+msgstr "Κειμενογράγος"
+#
+# File: fe/fe_main.c, line: 226
+msgid "Open the internal text editor"
+msgstr "Άνοιγμα εσωτερικού κειμενογράφου"
+#
+# File: fe/fe_main.c, line: 229
+msgid "Run shell"
+msgstr "Εκτέλεση φλοιού"
+#
+# File: fe/fe_main.c, line: 229
+msgid "Open shell window"
+msgstr "Άνοιγμα παραθύρου φλοιού"
+#
+# File: fe/fe_main.c, line: 232
+msgid "Calculator"
+msgstr "Υπολογιστής"
+#
+# File: fe/fe_main.c, line: 232
+msgid "Open desktop calculator"
+msgstr "Άνοιγμα παραθύρου υπολογιστή"
+#
+# File: fe/fe_main.c, line: 236
+msgid "GDA Manager"
+msgstr "Διαχειριστής GDA"
+#
+# File: fe/fe_main.c, line: 236
+msgid "The GDA configuration tool"
+msgstr "Το εργαλείο ρύθμισης του GDA"
+#
+# File: fe/fe_main.c, line: 239
+# File: gda-manager/gda-mgr-main.c, line: 57
+msgid "GDA Builder"
+msgstr "Δομητής GDA"
+#
+# File: fe/fe_main.c, line: 239
+# File: gda-manager/gda-mgr-main.c, line: 57
+msgid "The GDA development environment"
+msgstr "Το περιβάλλον ανάπτυξης του GDA"
+#
+# File: fe/fe_main.c, line: 246
+msgid "Preferences..."
+msgstr "Προτιμίσεις..."
+#
+# File: fe/fe_main.c, line: 246
+# File: fe/fe_main.c, line: 331
+# File: gda-manager/gda-mgr-main.c, line: 85
+msgid "Configure user preferences"
+msgstr "Ρύθμιση προτιμίσεων χρήστη"
+#
+# File: fe/fe_main.c, line: 249
+msgid "GDA Configuration..."
+msgstr "Ρύθμιση GDA..."
+#
+# File: fe/fe_main.c, line: 249
+msgid "GDA Configuration"
+msgstr "Ρύθμιση GDA"
+#
+# File: fe/fe_main.c, line: 253
+msgid "Save Options"
+msgstr "Αποθήκευση Επιλογών"
+#
+# File: fe/fe_main.c, line: 253
+msgid "Save current configuration"
+msgstr "Αποθήκευση τρέχουσας διαρρύθμισης"
+#
+# File: fe/fe_main.c, line: 276
+msgid "Previous window"
+msgstr "Προηγούμενο παράθυρο"
+#
+# File: fe/fe_main.c, line: 276
+# File: fe/fe_main.c, line: 325
+msgid "Move to previous window on list"
+msgstr "Μετακίνηση στο προηγούμενο παράθυρο στη λίστα"
+#
+# File: fe/fe_main.c, line: 279
+msgid "Next window"
+msgstr "Επόμενο παράθυρο"
+#
+# File: fe/fe_main.c, line: 279
+# File: fe/fe_main.c, line: 328
+msgid "Move to next window on list"
+msgstr "Μετακίνηση στο επόμενο παράθυρο στη λίστα"
+#
+# File: fe/fe_main.c, line: 282
+msgid "Close current"
+msgstr "Κλείσιμο τρεχόντος"
+#
+# File: fe/fe_main.c, line: 282
+msgid "Close active window"
+msgstr "Κλείσιμο ενεργού παραθύρου"
+#
+# File: fe/fe_main.c, line: 285
+msgid "Close all"
+msgstr "Κλείσιμο όλων"
+#
+# File: fe/fe_main.c, line: 285
+msgid "Close all open windows"
+msgstr "Κλείσιμο όλων των ανοικτών παραθύρων"
+#
+# File: fe/fe_main.c, line: 296
+# File: gda-manager/gda-mgr-main.c, line: 66
+msgid "About gnome-db..."
+msgstr "Σχετικά με το gnome-db..."
+#
+# File: fe/fe_main.c, line: 296
+# File: gda-manager/gda-mgr-main.c, line: 66
+msgid "About this program"
+msgstr "Σχετικά με αυτό το πρόγραμμα"
+#
+# File: fe/fe_main.c, line: 303
+# File: gda-manager/gda-mgr-main.c, line: 73
+msgid "File"
+msgstr "Αρχείο"
+#
+# File: fe/fe_main.c, line: 304
+msgid "Database"
+msgstr "Βάση"
+#
+# File: fe/fe_main.c, line: 305
+# File: gda-manager/gda-mgr-main.c, line: 74
+msgid "Tools"
+msgstr "Εργαλεία"
+#
+# File: fe/fe_main.c, line: 306
+msgid "Options"
+msgstr "Επιλογές"
+#
+# File: fe/fe_main.c, line: 307
+msgid "Window"
+msgstr "Παράθυρο"
+#
+# File: fe/fe_main.c, line: 308
+# File: gda-manager/gda-mgr-main.c, line: 75
+msgid "Help"
+msgstr "Βοήθεια"
+#
+# File: fe/fe_main.c, line: 315
+msgid "Connect"
+msgstr "Σύνδεση"
+#
+# File: fe/fe_main.c, line: 318
+# File: fe/fe_sqlwin.c, line: 73
+msgid "Disconnect"
+msgstr "Αποσύνδεση"
+#
+# File: fe/fe_main.c, line: 321
+msgid "GDA Logs"
+msgstr "Καταγραφές GDA"
+#
+# File: fe/fe_main.c, line: 325
+msgid "Previous"
+msgstr "Προηγούμενο"
+#
+# File: fe/fe_main.c, line: 328
+msgid "Next"
+msgstr "Επόμενο"
+#
+# File: fe/fe_session.c, line: 108
+msgid "Could not load editor font"
+msgstr "Αδυναμία φόρτωσης γραμματοσειράς κειμενογράφου"
+#
+# File: fe/fe_session.c, line: 115
+msgid "Could not load grid font"
+msgstr "Αδυναμία φόρτωσης γραμματοσειράς πλέγματος"
+#
+# File: fe/fe_sqlwin.c, line: 37
+msgid "Execute SQL command"
+msgstr "Εκτέλεση εντολής SQL"
+#
+# File: fe/fe_sqlwin.c, line: 40
+msgid "Run Script"
+msgstr "Εκτέλεση Προγράμματος Εντολών"
+#
+# File: fe/fe_sqlwin.c, line: 40
+msgid "Execute buffer as SQL script"
+msgstr "Εκτέλεση ενταμιευτή ως πρόγραμμα εντολών SQL"
+#
+# File: fe/fe_sqlwin.c, line: 43
+# File: fe/fe_sqlwin.c, line: 273
+msgid "Select SQL Command"
+msgstr "Επιλογή Εντολής SQL"
+#
+# File: fe/fe_sqlwin.c, line: 46
+msgid "Refresh grid"
+msgstr "Ανανέωση πλέγματος"
+#
+# File: fe/fe_sqlwin.c, line: 49
+msgid "Clear SQL window"
+msgstr "Καθαρισμός παραθύρου SQL"
+#
+# File: fe/fe_sqlwin.c, line: 52
+msgid "Print grid"
+msgstr "Εκτύπωση πλέγματος"
+#
+# File: fe/fe_sqlwin.c, line: 56
+msgid "Load file into buffer"
+msgstr "Φόρτωση αρχείου στον ενταμιευτή"
+#
+# File: fe/fe_sqlwin.c, line: 59
+msgid "Save current buffer"
+msgstr "Αποθήκευση τρέχοντος ενταμιευτή"
+#
+# File: fe/fe_sqlwin.c, line: 63
+# File: fe/fe_widget.c, line: 162
+msgid "Cut selected text to clipboard"
+msgstr "Αποκοπή επιλεγμένου κειμένου στο clipboard"
+#
+# File: fe/fe_sqlwin.c, line: 69
+# File: fe/fe_widget.c, line: 168
+msgid "Paste text from clipboard"
+msgstr "Επικόλληση κειμένο από το clipboard"
+#
+# File: fe/fe_sqlwin.c, line: 118
+# File: gda-clnt-ui/gnome-db-browser.c, line: 121
+#, c-format
+msgid "%d rows"
+msgstr "%d γραμμές"
+#
+# File: fe/fe_sqlwin.c, line: 127
+msgid "Select SQL Script"
+msgstr "Επιλογή Προγράμματος Εντολών SQL"
+#
+# File: fe/fe_sqlwin.c, line: 201
+#, c-format
+msgid "Executing '%s'"
+msgstr "Εκτέλεση του '%s'"
+#
+# File: fe/fe_sqlwin.c, line: 205
+# File: fe/fe_sqlwin.c, line: 234
+msgid "Command succeeded"
+msgstr "Η εντολή ήταν επιτυχής"
+#
+# File: fe/fe_sqlwin.c, line: 208
+msgid "Command failed"
+msgstr "Αποτυχία εντολής"
+#
+# File: fe/fe_sqlwin.c, line: 248
+msgid "Save SQL Script"
+msgstr "Αποθήκευση Προγράμματος Εντολών SQL"
+#
+# File: fe/fe_sqlwin.c, line: 260
+#, c-format
+msgid "Row %d - %d rows selected"
+msgstr "Γραμμή %d - %d γραμμές επιλέχθηκαν"
+#
+# File: fe/fe_trace.c, line: 37
+msgid "Server trace stopped"
+msgstr "Η παρακολούθηση εξυπηρετητή διακόπηκε"
+#
+#. start logging for this connection
+# File: fe/fe_trace.c, line: 43
+msgid "Select Trace File"
+msgstr "Επιλογή Αρχείου Παρακολούθησης"
+#
+# File: fe/fe_trace.c, line: 49
+#, c-format
+msgid "Server trace to file %s started"
+msgstr "Η παρακολούθηση εξυπηρετητή στο αρχείο %s ξεκίνησε"
+#
+# File: fe/fe_trace.c, line: 67
+msgid "Server Trace File"
+msgstr "Αρχείο Παρακολούθησης Εξυπηρετητή"
+#
+# File: fe/fe_trace.c, line: 81
+msgid "Server trace is disabled for this connection"
+msgstr "Η παρακολούθηση εξυπηρετητή είναι ανενεργή για αυτή τη σύνδεση"
+#
+# File: fe/fe_ui.c, line: 150
+# File: fe/fe_ui.c, line: 192
+#, c-format
+msgid ""
+"Error reading file\n"
+" %s"
+msgstr ""
+"Σφάλμα ανάγνωσης αρχείου\n"
+" %s"
+#
+# File: fe/fe_ui.c, line: 157
+#, c-format
+msgid "File %s inserted"
+msgstr "Το αρχείο %s εισήχθηκε"
+#
+# File: fe/fe_ui.c, line: 159
+# File: fe/fe_ui.c, line: 201
+# File: fe/fe_ui.c, line: 229
+#, c-format
+msgid ""
+"Error opening file\n"
+" %s"
+msgstr ""
+"Σφάλμα ανοίγματος αρχείου\n"
+" %s"
+#
+# File: fe/fe_ui.c, line: 223
+#, c-format
+msgid ""
+"Error writing to file\n"
+" %s"
+msgstr ""
+"Σφάλμα γραψίματος αρχείου\n"
+" %s"
+#
+# File: fe/fe_ui.c, line: 224
+#, c-format
+msgid "Wrote file %s"
+msgstr "Γράψιμο αρχείου %s"
+#
+#. create dialog box
+# File: fe/fe_ui.c, line: 291
+msgid "Question"
+msgstr "Ερώτηση"
+#
+# File: fe/fe_widget.c, line: 171
+msgid "Select all"
+msgstr "Επιλογή όλων"
+#
+# File: fe/fe_widget.c, line: 171
+msgid "Select all text in buffer"
+msgstr "Επιλογή όλου του κειμένου στον ενταμιευτή"
+#
+# File: fe/fe_widget.c, line: 175
+msgid "Insert file..."
+msgstr "Εισαγωγή αρχείου..."
+#
+# File: fe/fe_widget.c, line: 175
+msgid "Insert file into current position"
+msgstr "Εισαγωγή αρχείου στην τρέχουσα θέση"
+#
+# File: fe/fe_widget.c, line: 178
+msgid "Save to file..."
+msgstr "Αποθήκευση σε αρχείο..."
+#
+# File: fe/fe_widget.c, line: 178
+msgid "Save widget contents to file"
+msgstr "Αποθήκευση περιεχομένων widget σε αρχείο"
+#
+# File: fe/fe_widget.c, line: 181
+msgid "Print..."
+msgstr "Εκτύπωση..."
+#
+# File: fe/fe_widget.c, line: 181
+msgid "Print buffer"
+msgstr "Εκτύπωση ενταμιευτή"
+#
+# File: gda-clnt-ui/gnome-db-browser.c, line: 79
+msgid "Object Name"
+msgstr "Όνομα Αντικειμένου"
+#
+# File: gda-clnt-ui/gnome-db-browser.c, line: 96
+msgid "0 rows"
+msgstr "0 γραμμές"
+#
+# File: gda-clnt-ui/gnome-db-browser.c, line: 411
+msgid "Tables"
+msgstr "Πίνακες"
+#
+# File: gda-clnt-ui/gnome-db-browser.c, line: 419
+msgid "Views"
+msgstr "Προβολές"
+#
+# File: gda-clnt-ui/gnome-db-browser.c, line: 427
+msgid "Procedures"
+msgstr "Διαδικασίες"
+#
+# File: gda-clnt-ui/gnome-db-browser.c, line: 435
+msgid "Types"
+msgstr "Τύποι"
+#
+# File: gda-clnt-ui/gnome-db-browser.c, line: 443
+msgid "Aggregates"
+msgstr "Ενοποιήσεις"
+#
+# File: gda-clnt-ui/gnome-db-browser.c, line: 464
+msgid "Data"
+msgstr "Δεδομένα"
+#
+# File: gda-clnt-ui/gnome-db-browser.c, line: 479
+msgid "Extra Info"
+msgstr "Επιπλέον Πληροφορίες"
+#
+# File: gda-clnt/gda-field.c, line: 187
+msgid "<NULL>"
+msgstr "«ΚΕΝΟ»"
+#
+# File: gda-clnt/gda-field.c, line: 193
+# File: gda-clnt/gda-field.c, line: 195
+msgid "<Unknown GDA Type(NULL)>"
+msgstr "«Άγνωστος Τύπος GDA(ΚΕΝΟ)»"
+#
+# File: gda-clnt/gda-field.c, line: 208
+msgid "TRUE"
+msgstr "ΑΛΗΘΕΣ"
+#
+# File: gda-clnt/gda-field.c, line: 209
+msgid "FALSE"
+msgstr "ΨΕΥΔΕΣ"
+#
+# File: gda-manager/gda-mgr-main.c, line: 43
+# File: gda-manager/gda-mgr-main.c, line: 82
+msgid "Reload"
+msgstr "Επαναφόρτωση"
+#
+# File: gda-manager/gda-mgr-main.c, line: 43
+# File: gda-manager/gda-mgr-main.c, line: 82
+msgid "Reload config drivers"
+msgstr "Επαναφόρτωση οδηγών ρυθμίσεων"
+#
+# File: gda-manager/gda-mgr-main.c, line: 54
+msgid "SQL Front End"
+msgstr "Περιβάλλον Λειτουργίας SQL"
+#
+# File: gda-manager/gda-mgr-main.c, line: 54
+msgid "The SQL front end"
+msgstr "Το περιβάλλον λειτουργίας SQL"
+#
+# File: gda-manager/gda-mgr-main.c, line: 159
+msgid "GNOME-DB Manager"
+msgstr "Διαχειριστής GNOME-DB"
+#
+#~ msgid "Features"
+#~ msgstr "Χαρακτηριστικά"

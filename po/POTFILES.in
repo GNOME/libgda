@@ -40,6 +40,8 @@ providers/gda-interbase-server/gda-interbase-command.c
 providers/gda-interbase-server/gda-interbase-connection.c
 providers/gda-interbase-server/gda-interbase-recordset.c
 providers/gda-interbase-server/main-interbase.c
+providers/gda-mail-server/gda-mail-connection.c
+providers/gda-mail-server/main-mail.c
 providers/gda-mdb-server/gda-mdb-command.c
 providers/gda-mdb-server/gda-mdb-connection.c
 providers/gda-mdb-server/gda-mdb-recordset.c

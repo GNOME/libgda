@@ -1,0 +1,1178 @@
+# Ukrainian translation of gnome-db.
+# Copyright (C) 1999 Free Software Foundation, Inc.
+# Yuri Syrota <rasta@renome.rovno.ua>, 1999.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gnome-db 0.0.25\n"
+"POT-Creation-Date: 2000-01-11 13:45+0200\n"
+"PO-Revision-Date: 1999-11-17 10:06+0200\n"
+"Last-Translator: Yuri Syrota <rasta@renome.rovno.ua>\n"
+"Language-Team: Ukrainian <uk@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=koi8-u\n"
+"Content-Transfer-Encoding: 8-bit\n"
+
+#: fe/fe_browser.c:27
+msgid "Create script"
+msgstr "Створити скрипт"
+
+#: fe/fe_browser.c:27
+msgid "Create script from object definition"
+msgstr "Створити скрипт ╕з опису об'╓кта"
+
+#: fe/fe_browser.c:30 fe/fe_designer.c:867 fe/fe_log.c:34 fe/fe_sqlwin.c:42
+msgid "Refresh"
+msgstr "Оновити"
+
+#: fe/fe_browser.c:30
+msgid "Refresh all lists"
+msgstr "Оновити ус╕ списки"
+
+#: fe/fe_browser.c:34 fe/fe_designer.c:77 fe/fe_editor.c:59 fe/fe_editor.c:73
+#: fe/fe_impexp.c:77 fe/fe_log.c:44
+msgid "Close"
+msgstr "Закрити"
+
+#: fe/fe_browser.c:34 fe/fe_designer.c:77 fe/fe_editor.c:73 fe/fe_impexp.c:77
+#: fe/fe_log.c:44
+msgid "Close this window"
+msgstr "Закрити це в╕кно"
+
+#: fe/fe_browser.c:104
+#, c-format
+msgid "Browser: %s@%s"
+msgstr "Переглядач: %s@%s"
+
+#: fe/fe_config.c:50
+msgid "General"
+msgstr "Загальн╕"
+
+#: fe/fe_config.c:51
+msgid "Environment"
+msgstr "Середовище"
+
+#: fe/fe_config.c:52
+msgid "Config File"
+msgstr "Файл конф╕гурац╕╖"
+
+#: fe/fe_config.c:53 fe/fe_gdaconfig.c:297
+msgid "Data Sources"
+msgstr "Джерела даних"
+
+#: fe/fe_config.c:81 fe/fe_config.c:125 fe/fe_designer.c:69 fe/fe_editor.c:50
+#: fe/fe_sqlwin.c:55
+msgid "Save"
+msgstr "Зберегти"
+
+#: fe/fe_config.c:85 fe/fe_config.c:129 fe/fe_log.c:40
+msgid "Save As"
+msgstr "Зберегти як"
+
+#: fe/fe_config.c:89 fe/fe_config.c:133 fe/fe_designer.c:73
+#: fe/fe_designer.c:234 fe/fe_impexp.c:73 fe/fe_log.c:37 fe/fe_sqlwin.c:45
+msgid "Clear"
+msgstr "Очистити"
+
+#: fe/fe_config.c:156 fe/fe_config.c:458
+msgid "Variable"
+msgstr "Зм╕нна"
+
+#: fe/fe_config.c:156 fe/fe_config.c:404 fe/fe_config.c:458
+msgid "Value"
+msgstr "Значення"
+
+#: fe/fe_config.c:182 fe/fe_impexp.c:433
+msgid "Add"
+msgstr "Додати"
+
+#: fe/fe_config.c:186 fe/fe_impexp.c:437 gda-clnt-ui/gnome-db-browser.c:386
+msgid "Remove"
+msgstr "Вилучити"
+
+#: fe/fe_config.c:190
+msgid "Current"
+msgstr "Поточне"
+
+#: fe/fe_config.c:209
+msgid "Save options on exit"
+msgstr "Зберегти параметри та вийти"
+
+#: fe/fe_config.c:215
+msgid "Open connection dialog on entry"
+msgstr "В╕дкривати в╕кно з'╓днання на початку"
+
+#. Fonts
+#: fe/fe_config.c:228
+msgid "Editor Font"
+msgstr "Шрифт редактора"
+
+#: fe/fe_config.c:248
+msgid "Grid Font"
+msgstr "Шрифт с╕тки"
+
+#: fe/fe_config.c:270
+msgid "Language"
+msgstr "Мова"
+
+#. shell
+#: fe/fe_config.c:289 fe/fe_editor.c:423
+msgid "Shell"
+msgstr "Оболонка"
+
+#. window tabs
+#: fe/fe_config.c:308 fe/fe_main.c:282
+msgid "Tabs position"
+msgstr "Розм╕щеня закладок"
+
+#: fe/fe_config.c:316 fe/fe_main.c:253
+msgid "Top"
+msgstr "Зверху"
+
+#: fe/fe_config.c:325 fe/fe_main.c:256
+msgid "Bottom"
+msgstr "Знизу"
+
+#: fe/fe_config.c:334 fe/fe_main.c:259
+msgid "Left"
+msgstr "Л╕воруч"
+
+#: fe/fe_config.c:343 fe/fe_main.c:262
+msgid "Right"
+msgstr "Праворуч"
+
+#. create the dialog box
+#: fe/fe_config.c:384
+msgid "Add Environment Variable"
+msgstr "Додати зм╕нну середовища"
+
+#. create fields
+#: fe/fe_config.c:394 fe/fe_designer.c:835
+msgid "Name"
+msgstr "Назва"
+
+#. create dialog
+#: fe/fe_config.c:463
+msgid "Current Environment"
+msgstr "Поточне середовище"
+
+#: fe/fe_config.c:548 fe/fe_editor.c:53 fe/fe_editor.c:317 fe/fe_editor.c:342
+msgid "Save As..."
+msgstr "Зберегти як..."
+
+#: fe/fe_config.c:633 fe/fe_main.c:324
+msgid "Preferences"
+msgstr "Установки"
+
+#: fe/fe_connection.c:30
+msgid "Error Viewer"
+msgstr "Переглядач помилок"
+
+#: fe/fe_connection.c:47
+#, c-format
+msgid "Connected to %s"
+msgstr "З'╓днано з %s"
+
+#: fe/fe_connection.c:89
+msgid "Open Connection"
+msgstr "В╕дкрити з'╓днання"
+
+#: fe/fe_connection.c:96
+msgid "Connecting..."
+msgstr "З'╓днування..."
+
+#: fe/fe_connection.c:109
+msgid "Transaction started"
+msgstr "Транзакц╕я почалась"
+
+#: fe/fe_connection.c:120
+msgid "Commit executed"
+msgstr "Закр╕плення в╕дбулось"
+
+#: fe/fe_connection.c:131
+msgid "Rollback executed"
+msgstr "В╕дкат в╕дбувся"
+
+#. create dialog
+#: fe/fe_connection.c:145 fe/fe_main.c:189
+msgid "Connection Properties"
+msgstr "Властивост╕ зв'язку"
+
+#: fe/fe_connection.c:146
+msgid "Properties"
+msgstr "Властивост╕"
+
+#: fe/fe_connection.c:152 fe/fe_gdaconfig.c:333
+msgid "DSN"
+msgstr "DSN"
+
+#: fe/fe_connection.c:160 fe/fe_gdaconfig.c:323 gda-manager/main.c:144
+msgid "Provider"
+msgstr "Провайдер"
+
+#: fe/fe_connection.c:168
+msgid "Provider DSN"
+msgstr "Провайдер DSN"
+
+#: fe/fe_connection.c:176
+msgid "Command Timeout"
+msgstr "Час оч╕кування команди"
+
+#: fe/fe_connection.c:185
+msgid "Connect Timeout"
+msgstr "Час оч╕кування з'╓днання"
+
+#: fe/fe_connection.c:194
+msgid "Trace File"
+msgstr "Файл трасування"
+
+#. add bottom button bar
+#: fe/fe_designer.c:63 fe/fe_designer.c:215 fe/fe_designer.c:849
+#: fe/fe_editor.c:44 fe/fe_gdaconfig.c:364
+msgid "New"
+msgstr "Новий"
+
+#: fe/fe_designer.c:63
+msgid "Create new database design"
+msgstr "Створити новий проект бази даних"
+
+#: fe/fe_designer.c:66 fe/fe_editor.c:47 fe/fe_sqlwin.c:52
+msgid "Open"
+msgstr "В╕дкрити"
+
+#: fe/fe_designer.c:66
+msgid "Open database design from file"
+msgstr "В╕дкрити проект бази"
+
+#: fe/fe_designer.c:69
+msgid "Save database design to file"
+msgstr "Зберегти проект бази даних"
+
+#: fe/fe_designer.c:73
+msgid "Clear all widgets"
+msgstr "Очистити вс╕ в╕джети"
+
+#: fe/fe_designer.c:84
+msgid "Remove field"
+msgstr "Видалити поле"
+
+#: fe/fe_designer.c:84
+msgid "Remove selected fields"
+msgstr "Видалити вибран╕ поля"
+
+#. create dialog box
+#: fe/fe_designer.c:128
+msgid "Open Table"
+msgstr "В╕дкрити таблицю"
+
+#: fe/fe_designer.c:128
+msgid "New Table"
+msgstr "Нова таблиця"
+
+#: fe/fe_designer.c:136
+msgid "Table name"
+msgstr "Назва таблиц╕"
+
+#. add top buttons
+#: fe/fe_designer.c:150 fe/fe_main.c:318
+msgid "Previous"
+msgstr "Поп."
+
+#: fe/fe_designer.c:158 fe/fe_main.c:321
+msgid "Next"
+msgstr "Наст."
+
+#. add field description widgets
+#: fe/fe_designer.c:167
+msgid "Field Name"
+msgstr "Назва поля"
+
+#: fe/fe_designer.c:178 fe/fe_designer.c:835 gda-manager/main.c:59
+msgid "Type"
+msgstr "Тип"
+
+#: fe/fe_designer.c:190 fe/fe_designer.c:835
+msgid "Size"
+msgstr "Розм╕р"
+
+#: fe/fe_designer.c:201 fe/fe_designer.c:835
+msgid "Precision"
+msgstr "Точн╕сть"
+
+#: fe/fe_designer.c:222 fe/fe_designer.c:861 fe/fe_gdaconfig.c:369
+msgid "Delete"
+msgstr "Видалити"
+
+#: fe/fe_designer.c:229
+msgid "Update"
+msgstr "Поновити"
+
+#: fe/fe_designer.c:249 fe/fe_designer.c:403
+#, c-format
+msgid "Record %d of %d"
+msgstr "Запис %d з %d"
+
+#: fe/fe_designer.c:330
+msgid "Field name cannot be empty"
+msgstr "Назва поля не може бути пустою"
+
+#: fe/fe_designer.c:620
+msgid "Do you want to save changes?"
+msgstr "Ви хочете зберегти зм╕ни?"
+
+#: fe/fe_designer.c:628 fe/fe_designer.c:762 fe/fe_widget.c:37
+#: fe/fe_widget.c:131 fe/fe_widget.c:156
+msgid "Select File"
+msgstr "Вибер╕ть файл"
+
+#: fe/fe_designer.c:637 fe/fe_designer.c:770
+#, c-format
+msgid "Error saving database design to file %s"
+msgstr "Помилка збереження проекту бази даних у файл╕ %s"
+
+#: fe/fe_designer.c:670
+msgid "Open database"
+msgstr "В╕дкрити базу даних"
+
+#: fe/fe_designer.c:685
+#, c-format
+msgid "Error opening file '%s'"
+msgstr "Помилка в╕дкриття файлу \"%s\""
+
+#: fe/fe_designer.c:757
+msgid "First open or create a design"
+msgstr "Спочатку створ╕ть чи в╕дкрийте проект"
+
+#: fe/fe_designer.c:823
+#, c-format
+msgid "Got description for table '%s'"
+msgstr "Отримано опис до таблиц╕ \"%s\""
+
+#: fe/fe_designer.c:841
+msgid "Designer"
+msgstr "Дизайнер"
+
+#: fe/fe_designer.c:855
+msgid "Edit"
+msgstr "Редагування"
+
+#: fe/fe_editor.c:44
+msgid "Create a new empty file"
+msgstr "Створити новий порожн╕й файл"
+
+#: fe/fe_editor.c:47
+msgid "Open an existing file"
+msgstr "В╕дкрити ╕снуючий файл"
+
+#: fe/fe_editor.c:50
+msgid "Save current file"
+msgstr "Зберегти поточний файл"
+
+#: fe/fe_editor.c:53
+msgid "Save file with another name"
+msgstr "Зберегти файл з ╕ншою назвою"
+
+#: fe/fe_editor.c:56 fe/fe_sqlwin.c:48
+msgid "Print"
+msgstr "Надрукувати"
+
+#: fe/fe_editor.c:56
+msgid "Print current file"
+msgstr "Надрукувати поточний файл"
+
+#: fe/fe_editor.c:59
+msgid "Close current file"
+msgstr "Закрити поточний файл"
+
+#: fe/fe_editor.c:63 fe/fe_sqlwin.c:59 fe/fe_widget.c:174
+msgid "Cut"
+msgstr "Вир╕зати"
+
+#: fe/fe_editor.c:63
+msgid "Cut selected text"
+msgstr "Вир╕зати в╕дм╕чений текст"
+
+#: fe/fe_editor.c:66 fe/fe_sqlwin.c:62 fe/fe_widget.c:177
+msgid "Copy"
+msgstr "Скоп╕ювати"
+
+#: fe/fe_editor.c:66 fe/fe_sqlwin.c:62 fe/fe_widget.c:177
+msgid "Copy selected text to clipboard"
+msgstr "Скоп╕ювати в╕дм╕чкний текст в буфер обм╕ну"
+
+#: fe/fe_editor.c:69 fe/fe_sqlwin.c:65 fe/fe_widget.c:180
+msgid "Paste"
+msgstr "Вставити"
+
+#: fe/fe_editor.c:69
+msgid "Paste clipboard's contents"
+msgstr "Встивити вм╕ст буферу обм╕ну"
+
+#: fe/fe_editor.c:131
+msgid "Run Command"
+msgstr "Виконати команду"
+
+#: fe/fe_editor.c:138
+msgid "Command"
+msgstr "Команда"
+
+#: fe/fe_editor.c:149
+msgid "Directory"
+msgstr "Каталог"
+
+#: fe/fe_editor.c:175 fe/fe_editor.c:212
+#, c-format
+msgid "Could not change to directory '%s'"
+msgstr "Не вдалося перейти в каталог \"%s\""
+
+#: fe/fe_editor.c:185
+#, c-format
+msgid "Running '%s'"
+msgstr "Виконання \"%s\""
+
+#. write header
+#: fe/fe_editor.c:191
+#, c-format
+msgid ""
+"Output from '%s'\n"
+"In directory '%s'\n"
+"\n"
+msgstr ""
+"Вив╕д з \"%s\"\n"
+"В каталог \"%s\"\n"
+"\n"
+
+#: fe/fe_editor.c:203
+#, c-format
+msgid "Command '%s' completed"
+msgstr "Каманду \"%s\" завершено"
+
+#: fe/fe_editor.c:205 fe/fe_editor.c:262 fe/fe_editor.c:461
+#, c-format
+msgid "Unable to execute '%s'"
+msgstr "Не вдалося виконати \"%s\""
+
+#: fe/fe_editor.c:241
+#, c-format
+msgid ""
+"File\n"
+" '%s'\n"
+" has been changed.\n"
+" Do you want to save the changes?"
+msgstr ""
+"Файл\n"
+" \"%s\"\n"
+" було зм╕нено. \n"
+" Ви хочете зберегти зм╕ни?"
+
+#: fe/fe_editor.c:291
+msgid "Open File"
+msgstr "В╕дкрити файл"
+
+#: fe/fe_editor.c:410
+msgid "Editor"
+msgstr "Редактор"
+
+#: fe/fe_editor.c:417 fe/fe_sqlwin.c:36
+msgid "Run"
+msgstr "Виконати"
+
+#: fe/fe_editor.c:429
+msgid "Find"
+msgstr "Шукати"
+
+#: fe/fe_gdaconfig.c:288
+msgid "GDA Config"
+msgstr "Конф╕гурац╕я GDA"
+
+#: fe/fe_gdaconfig.c:314
+msgid "GDA Name"
+msgstr "Назва GDA"
+
+#: fe/fe_gdaconfig.c:341 gda-manager/main.c:96 gda-manager/main.c:173
+msgid "Description"
+msgstr "Опис"
+
+#: fe/fe_gdaconfig.c:349
+msgid "Config"
+msgstr "Конф╕гурац╕я"
+
+#: fe/fe_impexp.c:70
+msgid "Start"
+msgstr "Старт"
+
+#: fe/fe_impexp.c:70
+msgid "Start Selected Operation"
+msgstr "Розпочати вибрану операц╕ю"
+
+#: fe/fe_impexp.c:73
+msgid "Clear all entries"
+msgstr "Очистити вс╕ записи"
+
+#. add object type list to combo box
+#: fe/fe_impexp.c:177 fe/fe_impexp.c:287 fe/fe_impexp.c:412
+#: gda-clnt-ui/gnome-db-browser.c:333
+msgid "Tables"
+msgstr "Таблиц╕"
+
+#: fe/fe_impexp.c:268 fe/fe_impexp.c:333
+msgid "You must provide a file name"
+msgstr "Вам необх╕дно вказати назву файлу"
+
+#: fe/fe_impexp.c:291
+#, c-format
+msgid "Adding table %s..."
+msgstr "Додавання таблиц╕ %s..."
+
+#: fe/fe_impexp.c:304 fe/fe_impexp.c:305
+msgid "ok\n"
+msgstr "гаразд\n"
+
+#: fe/fe_impexp.c:307 fe/fe_impexp.c:308
+msgid "no\n"
+msgstr "н╕\n"
+
+#: fe/fe_impexp.c:322 fe/fe_impexp.c:323
+msgid "Exporting database\n"
+msgstr "Експортування бази даних\n"
+
+#: fe/fe_impexp.c:327
+msgid "Error saving XML database to disk"
+msgstr "Помилка збереження бази даних XML на диску"
+
+#: fe/fe_impexp.c:328
+msgid "Export finished successfully"
+msgstr "Еспортування усп╕шно завершено"
+
+#: fe/fe_impexp.c:379
+#, c-format
+msgid "Export: %s@%s"
+msgstr "Експорт: %s@%s"
+
+#: fe/fe_impexp.c:403
+msgid "Objects"
+msgstr "Об'╓кти"
+
+#: fe/fe_impexp.c:413 gda-clnt-ui/gnome-db-browser.c:341
+msgid "Views"
+msgstr "Види"
+
+#: fe/fe_impexp.c:419
+msgid "Object List"
+msgstr "Список об'╓кт╕в"
+
+#: fe/fe_impexp.c:441
+msgid "Add all"
+msgstr "Додати все"
+
+#: fe/fe_impexp.c:445
+msgid "Remove All"
+msgstr "Видалити все"
+
+#: fe/fe_impexp.c:454
+msgid "Selection List"
+msgstr "Список вид╕лень"
+
+#: fe/fe_impexp.c:469
+msgid "Log"
+msgstr "Журнал"
+
+#: fe/fe_impexp.c:485
+msgid "To XML"
+msgstr "В XML"
+
+#. "To SQL" radio button and friends
+#: fe/fe_impexp.c:500
+msgid "To SQL"
+msgstr "В SQL"
+
+#. "To Connection" radio button and friends
+#: fe/fe_impexp.c:515
+msgid "To Connection"
+msgstr "До з'╓днання"
+
+#: fe/fe_impexp.c:527
+#, c-format
+msgid "Cannot allocate %d bytes"
+msgstr "Не вдалося розм╕стити %d байт"
+
+#: fe/fe_log.c:34
+msgid "Refresh log"
+msgstr "Оновити журнал"
+
+#: fe/fe_log.c:37
+msgid "Clear file contents"
+msgstr "Очистити файл"
+
+#: fe/fe_log.c:40
+msgid "Save log file with a different name"
+msgstr "Записати файл журналу з ╕ншою назвою"
+
+#: fe/fe_log.c:120
+#, c-format
+msgid "Could not truncate file %s"
+msgstr "Невдалось в╕дс╕кти файл %s"
+
+#: fe/fe_log.c:156
+msgid "Save Log File"
+msgstr "Зберегти файл журналу"
+
+#: fe/fe_log.c:177
+#, c-format
+msgid ""
+"Could not load file\n"
+" %s"
+msgstr ""
+"Не вдалося завантажити файл\n"
+" %s"
+
+#: fe/fe_log.c:193 fe/fe_main.c:222
+msgid "GDA logs"
+msgstr "Журнали GDA"
+
+#: fe/fe_main.c:82
+msgid "GNOME-DB Front End"
+msgstr "╤нтерфейс GNOME-DB"
+
+#: fe/fe_main.c:83
+msgid "Copyright The Free Software Foundation (C) 1998-2000"
+msgstr "Copyright The Free software Foundation © 1998-2000"
+
+#: fe/fe_main.c:85
+msgid ""
+"This program is part of the GNOME project for LINUX. GNOME Data Access comes "
+"with ABSOLUTELY NO WARRANTY. This is free software, and you are welcome to "
+"redistribute it under the conditions of the GNU General Public Licence."
+msgstr ""
+"Ця програма - частина проекта GNOME для LINUX. GNOME Data Access "
+"поставля╓ться АБСОЛЮТНО БЕЗ ГАРАНТ╤Й. Це безкоштовна прграма ╕ ви можете "
+"розповсюджувати ╖╖ у в╕дпов╕дност╕ з GNU General Public Licence."
+
+#: fe/fe_main.c:161
+msgid "Open connection..."
+msgstr "В╕дкрити з'╓днання..."
+
+#: fe/fe_main.c:161 fe/fe_main.c:308
+msgid "Open a new connection"
+msgstr "В╕дкрити нове з'╓днання"
+
+#: fe/fe_main.c:164
+msgid "Close connection"
+msgstr "Закрити з'╓днання"
+
+#: fe/fe_main.c:164 fe/fe_main.c:311 fe/fe_sqlwin.c:69
+msgid "Close current connection"
+msgstr "Закрити поточне з'╓днання"
+
+#: fe/fe_main.c:167
+msgid "Close all connections"
+msgstr "Закрити вс╕ з'╓днання"
+
+#: fe/fe_main.c:171
+msgid "Printer setup..."
+msgstr "Установки принтера..."
+
+#: fe/fe_main.c:171
+msgid "Open printer setup dialog"
+msgstr "В╕дкрити в╕кно установок принтера"
+
+#: fe/fe_main.c:175
+msgid "Quit"
+msgstr "Вийти"
+
+#: fe/fe_main.c:175 fe/fe_main.c:328
+msgid "Exit application"
+msgstr "Завершити програму"
+
+#: fe/fe_main.c:182
+msgid "Object Browser"
+msgstr "Переглядач об'╓кт╕в"
+
+#: fe/fe_main.c:182
+msgid "Browse database objects"
+msgstr "Переглянути об'╓кти бази даних"
+
+#: fe/fe_main.c:185
+msgid "SQL Builder"
+msgstr "SQL-конструктор"
+
+#: fe/fe_main.c:185
+msgid "Construct SQL statements"
+msgstr "Сконструювати SQL-запит"
+
+#: fe/fe_main.c:189
+msgid "View connection properties"
+msgstr "Показати властивост╕ з'╓днання"
+
+#: fe/fe_main.c:192
+msgid "Start/Stop Server Trace"
+msgstr "Розпочати/Зупинити трасування серверу"
+
+#: fe/fe_main.c:192
+msgid "Start or stop server trace"
+msgstr "Початок чи зупинка трасування серверу"
+
+#: fe/fe_main.c:195
+msgid "View Server Trace"
+msgstr "Показати трасування серверу"
+
+#: fe/fe_main.c:195
+msgid "View server trace file"
+msgstr "Показати файл трасування серверу"
+
+#: fe/fe_main.c:199
+msgid "Export"
+msgstr "Експорт"
+
+#: fe/fe_main.c:199
+msgid "Export Data to Different Formats"
+msgstr "Експортувати дан╕ в ╕нш╕ формати"
+
+#: fe/fe_main.c:202
+msgid "Import"
+msgstr "╤мпорт"
+
+#: fe/fe_main.c:202
+msgid "Import Data into the Database"
+msgstr "╤мпортувати дан╕ в базу даних"
+
+#: fe/fe_main.c:206
+msgid "Begin Transaction"
+msgstr "Розпочати транзакц╕ю"
+
+#: fe/fe_main.c:206
+msgid "Begin new transaction"
+msgstr "Розпочати нову транзакц╕ю"
+
+#: fe/fe_main.c:209
+msgid "Commit"
+msgstr "Закр╕пити"
+
+#: fe/fe_main.c:209
+msgid "Commit changes"
+msgstr "Закр╕пити зм╕ни"
+
+#: fe/fe_main.c:212
+msgid "Rollback"
+msgstr "В╕дкат"
+
+#: fe/fe_main.c:212
+msgid "Discard all changes"
+msgstr "В╕дкинути вс╕ зм╕ни"
+
+#: fe/fe_main.c:219
+msgid "Database Designer"
+msgstr "Дизайнер бази даних"
+
+#: fe/fe_main.c:219
+msgid "Visual Database Designer"
+msgstr "Наочний дизайнер баз даних"
+
+#: fe/fe_main.c:222 fe/fe_main.c:314
+msgid "View GDA server log files"
+msgstr "Показати журнальн╕ файли сервера GDA"
+
+#: fe/fe_main.c:226
+msgid "Text editor"
+msgstr "Текстовий редактор"
+
+#: fe/fe_main.c:226
+msgid "Open the internal text editor"
+msgstr "В╕дкрити у внутр╕шньому редактор╕"
+
+#: fe/fe_main.c:229
+msgid "Run shell"
+msgstr "Виконати оболонку"
+
+#: fe/fe_main.c:229
+msgid "Open shell window"
+msgstr "В╕дкрити в╕кно оболонки"
+
+#: fe/fe_main.c:232
+msgid "Calculator"
+msgstr "Калькулятор"
+
+#: fe/fe_main.c:232
+msgid "Open desktop calculator"
+msgstr "В╕дкрити калькулятор"
+
+#: fe/fe_main.c:239
+msgid "Preferences..."
+msgstr "Установки..."
+
+#: fe/fe_main.c:239 fe/fe_main.c:324
+msgid "Configure user preferences"
+msgstr "Настро╓ння установок користувача"
+
+#: fe/fe_main.c:242
+msgid "GDA Configuration..."
+msgstr "Конф╕гурац╕я GDA..."
+
+#: fe/fe_main.c:242
+msgid "GDA Configuration"
+msgstr "Конф╕гурац╕я GDA"
+
+#: fe/fe_main.c:246
+msgid "Save Options"
+msgstr "Зберегти параментри"
+
+#: fe/fe_main.c:246
+msgid "Save current configuration"
+msgstr "Зберегти поточну конф╕гурац╕ю"
+
+#: fe/fe_main.c:269
+msgid "Previous window"
+msgstr "Попередн╓ в╕кно"
+
+#: fe/fe_main.c:269 fe/fe_main.c:318
+msgid "Move to previous window on list"
+msgstr "Перейти до попереднього в╕кна в списку"
+
+#: fe/fe_main.c:272
+msgid "Next window"
+msgstr "Наступне в╕кно"
+
+#: fe/fe_main.c:272 fe/fe_main.c:321
+msgid "Move to next window on list"
+msgstr "Перейти на наступне в╕кно у списку"
+
+#: fe/fe_main.c:275
+msgid "Close current"
+msgstr "Закрити поточне"
+
+#: fe/fe_main.c:275
+msgid "Close active window"
+msgstr "Закрити поточне в╕кно"
+
+#: fe/fe_main.c:278
+msgid "Close all"
+msgstr "Закрити вс╕"
+
+#: fe/fe_main.c:278
+msgid "Close all open windows"
+msgstr "Закрити вс╕ в╕дкрит╕ в╕кна"
+
+#: fe/fe_main.c:289
+msgid "About gnome-db..."
+msgstr "Про gnome-db..."
+
+#: fe/fe_main.c:289
+msgid "About this program"
+msgstr "Про цю програму"
+
+#: fe/fe_main.c:296
+msgid "File"
+msgstr "Файл"
+
+#: fe/fe_main.c:297
+msgid "Database"
+msgstr "База даних"
+
+#: fe/fe_main.c:298
+msgid "Tools"
+msgstr "╤нструменти"
+
+#: fe/fe_main.c:299
+msgid "Options"
+msgstr "Параметри"
+
+#: fe/fe_main.c:300
+msgid "Window"
+msgstr "В╕кно"
+
+#: fe/fe_main.c:301
+msgid "Help"
+msgstr "Дов╕дка"
+
+#: fe/fe_main.c:308
+msgid "Connect"
+msgstr "З'╓днатись"
+
+#: fe/fe_main.c:311 fe/fe_sqlwin.c:69
+msgid "Disconnect"
+msgstr "Роз'╓днатись"
+
+#: fe/fe_main.c:314
+msgid "GDA Logs"
+msgstr "Журнали GDA"
+
+#: fe/fe_main.c:328
+msgid "Exit"
+msgstr "Завершити"
+
+#: fe/fe_main.c:356
+msgid "Ready"
+msgstr "Готово"
+
+#: fe/fe_session.c:108
+msgid "Could not load editor font"
+msgstr "Не вдалося завантажити шрифт редактора"
+
+#: fe/fe_session.c:115
+msgid "Could not load grid font"
+msgstr "Неможливо завантажити шрифт с╕тки"
+
+#: fe/fe_sqlwin.c:36
+msgid "Execute SQL command"
+msgstr "Виконати команду SQL"
+
+#: fe/fe_sqlwin.c:39 fe/fe_sqlwin.c:225
+msgid "Select SQL Command"
+msgstr "Вибрати команду SQL"
+
+#: fe/fe_sqlwin.c:42
+msgid "Refresh grid"
+msgstr "Оновити с╕тку"
+
+#: fe/fe_sqlwin.c:45
+msgid "Clear SQL window"
+msgstr "Очистити в╕кно SQL"
+
+#: fe/fe_sqlwin.c:48
+msgid "Print grid"
+msgstr "Надрукувати с╕тку"
+
+#: fe/fe_sqlwin.c:52
+msgid "Load script"
+msgstr "Завантажити скрипт"
+
+#: fe/fe_sqlwin.c:55
+msgid "Save current buffer"
+msgstr "Зберегти поточний буфер"
+
+#: fe/fe_sqlwin.c:59 fe/fe_widget.c:174
+msgid "Cut selected text to clipboard"
+msgstr "Вир╕зати в╕дм╕чений текст в буфер обм╕ну"
+
+#: fe/fe_sqlwin.c:65 fe/fe_widget.c:180
+msgid "Paste text from clipboard"
+msgstr "Вставити в╕дм╕чений текст з буферу обм╕ну"
+
+#: fe/fe_sqlwin.c:114 gda-clnt-ui/gnome-db-browser.c:128
+#, c-format
+msgid "%d rows"
+msgstr "%d рядк╕в"
+
+#: fe/fe_sqlwin.c:123
+msgid "Select SQL Script"
+msgstr "Вибрати SQL-скрипт"
+
+#: fe/fe_sqlwin.c:186
+msgid "Command succeeded"
+msgstr "Команду виконано усп╕шно"
+
+#: fe/fe_sqlwin.c:200
+msgid "Save SQL Script"
+msgstr "Зберегти SQL-скрипт"
+
+#: fe/fe_sqlwin.c:212
+#, c-format
+msgid "Row %d - %d rows selected"
+msgstr "Рядок %d - %d рядк╕в вибрано"
+
+#: fe/fe_trace.c:37
+msgid "Server trace stopped"
+msgstr "Трасування серверу зупинено"
+
+#. start logging for this connection
+#: fe/fe_trace.c:43
+msgid "Select Trace File"
+msgstr "Вибер╕ть файл трасування"
+
+#: fe/fe_trace.c:49
+#, c-format
+msgid "Server trace to file %s started"
+msgstr "Трасування серверу в файл %s розпочато"
+
+#: fe/fe_trace.c:67
+msgid "Server Trace File"
+msgstr "Файл трасування серверу"
+
+#: fe/fe_trace.c:78
+msgid "Server trace is disabled for this connection"
+msgstr "Трасування серверу заборонено для цього з'╓днання"
+
+#: fe/fe_ui.c:150 fe/fe_ui.c:192
+#, c-format
+msgid ""
+"Error reading file\n"
+" %s"
+msgstr ""
+"Помилка зчитування файлу\n"
+" %s"
+
+#: fe/fe_ui.c:157
+#, c-format
+msgid "File %s inserted"
+msgstr "Файл %s вставлено"
+
+#: fe/fe_ui.c:159 fe/fe_ui.c:201 fe/fe_ui.c:229
+#, c-format
+msgid ""
+"Error opening file\n"
+" %s"
+msgstr ""
+"Помилка в╕дкриття файлу\n"
+" %s"
+
+#: fe/fe_ui.c:199
+#, c-format
+msgid "File %s loaded"
+msgstr "Файл %s завантажено"
+
+#: fe/fe_ui.c:223
+#, c-format
+msgid ""
+"Error writing to file\n"
+" %s"
+msgstr ""
+"Помилка записування у файл\n"
+" %s"
+
+#: fe/fe_ui.c:224
+#, c-format
+msgid "Wrote file %s"
+msgstr "Записано файл %s"
+
+#. create dialog box
+#: fe/fe_ui.c:291
+msgid "Question"
+msgstr "Запитання"
+
+#: fe/fe_widget.c:183
+msgid "Select all"
+msgstr "Вид╕лити все"
+
+#: fe/fe_widget.c:183
+msgid "Select all text in buffer"
+msgstr "Вид╕лити весь текст в буфер╕"
+
+#: fe/fe_widget.c:187
+msgid "Insert file..."
+msgstr "Вставити файл..."
+
+#: fe/fe_widget.c:187
+msgid "Insert file into current position"
+msgstr "Вставити файл в поточну позиц╕ю"
+
+#: fe/fe_widget.c:190
+msgid "Save to file..."
+msgstr "Зберегти у файл..."
+
+#: fe/fe_widget.c:190
+msgid "Save widget contents to file"
+msgstr "Зберегти вм╕ст в╕джета у файл╕"
+
+#: fe/fe_widget.c:193
+msgid "Print..."
+msgstr "Надрукувати..."
+
+#: fe/fe_widget.c:193
+msgid "Print buffer"
+msgstr "Надрукувати буфер"
+
+#: gda-clnt-ui/gnome-db-browser.c:81
+msgid "Object Name"
+msgstr "Назва об'╓кту"
+
+#: gda-clnt-ui/gnome-db-browser.c:100
+msgid "0 rows"
+msgstr "0 рядк╕в"
+
+#: gda-clnt-ui/gnome-db-browser.c:349
+msgid "Procedures"
+msgstr "Процедури"
+
+#: gda-clnt-ui/gnome-db-browser.c:357
+msgid "Types"
+msgstr "Типи"
+
+#: gda-clnt-ui/gnome-db-browser.c:378
+msgid "Data"
+msgstr "Дан╕"
+
+#: gda-clnt-ui/gnome-db-browser.c:393
+msgid "Extra Info"
+msgstr "Додаткова ╕нформац╕я"
+
+#: gda-clnt/gda-field.c:184
+msgid "<NULL>"
+msgstr "<NULL>"
+
+#: gda-clnt/gda-field.c:190 gda-clnt/gda-field.c:192
+msgid "<Unknown GDA Type(NULL)>"
+msgstr "<Нев╕домий тип GDA(NULL)>"
+
+#: gda-clnt/gda-field.c:206
+msgid "TRUE"
+msgstr "╤СТИНА"
+
+#: gda-clnt/gda-field.c:208
+msgid "FALSE"
+msgstr "ХИБН╤СТЬ"
+
+#: gda-manager/main.c:54
+msgid "GDA Server Properties"
+msgstr "Установки сервера GDA"
+
+#: gda-manager/main.c:61
+msgid "Standalone Executable"
+msgstr "Виконувавий файл"
+
+#: gda-manager/main.c:63
+msgid "Shared Library"
+msgstr "Колективна б╕бл╕отека"
+
+#: gda-manager/main.c:80
+msgid "Repository ID"
+msgstr "╤дентиф╕катор репозитор╕я"
+
+#: gda-manager/main.c:107
+msgid "Location"
+msgstr "Розм╕щення"
+
+#: gda-manager/main.c:109
+msgid "GDA Server Location"
+msgstr "Розм╕щення сервера GDA"
+
+#: gda-manager/main.c:119
+msgid "OK"
+msgstr "Гаразд"
+
+#: gda-manager/main.c:139
+msgid "GDA Data Source Properties"
+msgstr "Властивост╕ джерела даних GDA"
+
+#: gda-manager/main.c:158
+msgid "Data Source Name(DSN)"
+msgstr "Назва джерела даних (DSN)"
+
+#: gda-manager/main.c:185
+msgid "Driver Configuration"
+msgstr "Конф╕гурац╕я драйвера"
+
+#: gda-manager/main.c:198
+msgid "Accept"
+msgstr "Прийняти"
+
+#: gda-manager/main.c:285
+msgid "GDA Administrator"
+msgstr "Адм╕н╕стратор GDA"
+
+#~ msgid ""
+#~ "Below is a list of links to several sites related to GNOME-DB for you to be "
+#~ "able to find any information that may be missing in the GNOME-DB "
+#~ "documentation"
+#~ msgstr ""
+#~ "Нижче наведено список посилань на дек╕лька сайт╕в, що мають в╕дношення до "
+#~ "GNOME-DB, для того щоб ви могли знайти будь-яку ╕нформац╕ю, яко╖ може не "
+#~ "бути в документац╕╖ GNOME-DB"
+
+#~ msgid "Related Links"
+#~ msgstr "Спор╕днен╕ зв'язки"
+
+#~ msgid "Contents"
+#~ msgstr "Вм╕ст"
+
+#~ msgid "Cannot allocate %d bytes of memory"
+#~ msgstr "Не вдалося ром╕зстити %d байт пам'ят╕"

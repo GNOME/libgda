@@ -1,0 +1,1086 @@
+# Irish (Gaeilge) translations for gnome-db
+# Copyright (C) 2000 Free Software Foundation, Inc.
+# Alastair McKinstry <mckinstry@computer.org>, 2000.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gnome-db CVS\n"
+"POT-Creation-Date: 2000-03-10 23:07+0000\n"
+"PO-Revision-Date: 2000-03-13 18:23+0000\n"
+"Last-Translator:  Alastair McKinstry <mckinstry@computer.org>\n"
+"Language-Team: Irish <ga@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-1\n"
+"Content-Transfer-Encoding: 8-bit\n"
+
+#: fe/fe_browser.c:27
+msgid "Create script"
+msgstr ""
+
+#: fe/fe_browser.c:27
+msgid "Create script from object definition"
+msgstr ""
+
+#: fe/fe_browser.c:30 fe/fe_designer.c:148 fe/fe_export.c:51 fe/fe_log.c:34
+#: fe/fe_sqlwin.c:46
+msgid "Refresh"
+msgstr ""
+
+#: fe/fe_browser.c:30
+msgid "Refresh all lists"
+msgstr ""
+
+#: fe/fe_browser.c:34 fe/fe_designer.c:41 fe/fe_editor.c:60 fe/fe_editor.c:74
+#: fe/fe_export.c:58 fe/fe_log.c:44
+msgid "Close"
+msgstr "Dún"
+
+#: fe/fe_browser.c:34 fe/fe_designer.c:41 fe/fe_editor.c:74 fe/fe_export.c:58
+#: fe/fe_log.c:44
+msgid "Close this window"
+msgstr "Dún an fhuinneog seo"
+
+#: fe/fe_browser.c:108
+#, c-format
+msgid "Browser: %s@%s"
+msgstr ""
+
+#: fe/fe_browser.c:124 fe/fe_export.c:356
+msgid "No connection open"
+msgstr ""
+
+#: fe/fe_config.c:50
+msgid "General"
+msgstr ""
+
+#: fe/fe_config.c:51
+msgid "Environment"
+msgstr "Imshaoil"
+
+#: fe/fe_config.c:52
+msgid "Config File"
+msgstr ""
+
+#: fe/fe_config.c:53 fe/fe_gdaconfig.c:273
+msgid "Data Sources"
+msgstr ""
+
+#: fe/fe_config.c:81 fe/fe_config.c:125 fe/fe_designer.c:37 fe/fe_editor.c:51
+#: fe/fe_sqlwin.c:59
+msgid "Save"
+msgstr "Sábháil"
+
+#: fe/fe_config.c:85 fe/fe_config.c:129 fe/fe_log.c:40
+msgid "Save As"
+msgstr "Sábháil le"
+
+#: fe/fe_config.c:89 fe/fe_config.c:133 fe/fe_export.c:54 fe/fe_log.c:37
+#: fe/fe_sqlwin.c:49
+msgid "Clear"
+msgstr "Glan"
+
+#: fe/fe_config.c:156 fe/fe_config.c:454
+msgid "Variable"
+msgstr ""
+
+#: fe/fe_config.c:156 fe/fe_config.c:400 fe/fe_config.c:454
+msgid "Value"
+msgstr "Luach"
+
+#: fe/fe_config.c:182
+msgid "Add"
+msgstr "Suim"
+
+#: fe/fe_config.c:186 gda-clnt-ui/gnome-db-browser.c:472
+msgid "Remove"
+msgstr "Scríos"
+
+#: fe/fe_config.c:190
+msgid "Current"
+msgstr ""
+
+#: fe/fe_config.c:209
+msgid "Save options on exit"
+msgstr ""
+
+#: fe/fe_config.c:215
+msgid "Open connection dialog on entry"
+msgstr ""
+
+#. Fonts
+#: fe/fe_config.c:228
+msgid "Editor Font"
+msgstr ""
+
+#: fe/fe_config.c:248
+msgid "Grid Font"
+msgstr ""
+
+#: fe/fe_config.c:270
+msgid "Language"
+msgstr "Teanga"
+
+#. shell
+#: fe/fe_config.c:289 fe/fe_editor.c:435
+msgid "Shell"
+msgstr "Blaosc"
+
+#. window tabs
+#: fe/fe_config.c:304 fe/fe_main.c:283
+msgid "Tabs position"
+msgstr ""
+
+#: fe/fe_config.c:312 fe/fe_main.c:254
+msgid "Top"
+msgstr "Barr"
+
+#: fe/fe_config.c:321 fe/fe_main.c:257
+msgid "Bottom"
+msgstr "Bun"
+
+#: fe/fe_config.c:330 fe/fe_main.c:260
+msgid "Left"
+msgstr "Clé"
+
+#: fe/fe_config.c:339 fe/fe_main.c:263
+msgid "Right"
+msgstr "Deis"
+
+#. create the dialog box
+#: fe/fe_config.c:380
+msgid "Add Environment Variable"
+msgstr ""
+
+#. create fields
+#: fe/fe_config.c:390 fe/fe_export.c:327
+msgid "Name"
+msgstr "Ainm"
+
+#. create dialog
+#: fe/fe_config.c:459
+msgid "Current Environment"
+msgstr ""
+
+#: fe/fe_config.c:544 fe/fe_editor.c:54 fe/fe_editor.c:329 fe/fe_editor.c:354
+msgid "Save As..."
+msgstr "Sábháil Le..."
+
+#: fe/fe_config.c:629 fe/fe_main.c:325 gda-manager/gda-mgr-main.c:73
+msgid "Preferences"
+msgstr "Roghnachais"
+
+#: fe/fe_connection.c:33
+msgid "Error Viewer"
+msgstr ""
+
+#: fe/fe_connection.c:51
+#, c-format
+msgid "Connected to %s"
+msgstr ""
+
+#: fe/fe_connection.c:81
+msgid "Object Identifiers"
+msgstr ""
+
+#: fe/fe_connection.c:82
+msgid "Object Inheritance"
+msgstr ""
+
+#: fe/fe_connection.c:83
+msgid "Sequences"
+msgstr ""
+
+#: fe/fe_connection.c:84
+msgid "Stored Procedures"
+msgstr ""
+
+#: fe/fe_connection.c:85
+msgid "Transactions"
+msgstr ""
+
+#: fe/fe_connection.c:86
+msgid "XML Queries"
+msgstr ""
+
+#: fe/fe_connection.c:165
+msgid "Open Connection"
+msgstr ""
+
+#: fe/fe_connection.c:178
+msgid "Connecting..."
+msgstr ""
+
+#: fe/fe_connection.c:193
+msgid "Transaction started"
+msgstr ""
+
+#: fe/fe_connection.c:195 fe/fe_connection.c:210 fe/fe_connection.c:225
+msgid "Transactions not supported"
+msgstr ""
+
+#: fe/fe_connection.c:208
+msgid "Commit executed"
+msgstr ""
+
+#: fe/fe_connection.c:223
+msgid "Rollback executed"
+msgstr ""
+
+#. create dialog
+#: fe/fe_connection.c:240 fe/fe_main.c:190
+msgid "Connection Properties"
+msgstr ""
+
+#: fe/fe_connection.c:242 fe/fe_export.c:315
+msgid "Properties"
+msgstr "Albachtaí"
+
+#: fe/fe_connection.c:249 fe/fe_gdaconfig.c:289
+msgid "GDA Name"
+msgstr "Ainm GDA"
+
+#: fe/fe_connection.c:257 fe/fe_gdaconfig.c:298
+msgid "Provider"
+msgstr ""
+
+#: fe/fe_connection.c:265 fe/fe_gdaconfig.c:308
+msgid "DSN"
+msgstr ""
+
+#: fe/fe_connection.c:273
+msgid "Command Timeout"
+msgstr ""
+
+#: fe/fe_connection.c:282
+msgid "Connect Timeout"
+msgstr ""
+
+#: fe/fe_connection.c:291
+msgid "Trace File"
+msgstr ""
+
+#: fe/fe_connection.c:300
+msgid "View"
+msgstr "Radharc"
+
+#: fe/fe_connection.c:306
+msgid "Provider Features"
+msgstr ""
+
+#: fe/fe_designer.c:31 fe/fe_designer.c:136 fe/fe_editor.c:45
+#: fe/fe_gdaconfig.c:347
+msgid "New"
+msgstr "Nua"
+
+#: fe/fe_designer.c:31
+msgid "Create new database design"
+msgstr ""
+
+#: fe/fe_designer.c:34 fe/fe_editor.c:48 fe/fe_sqlwin.c:56
+msgid "Open"
+msgstr "Oscail"
+
+#: fe/fe_designer.c:34
+msgid "Open database design from file"
+msgstr ""
+
+#: fe/fe_designer.c:37
+msgid "Save database design to file"
+msgstr ""
+
+#: fe/fe_designer.c:87
+msgid "Open XML File"
+msgstr ""
+
+#: fe/fe_designer.c:110 fe/fe_widget.c:37 fe/fe_widget.c:119
+#: fe/fe_widget.c:144
+msgid "Select File"
+msgstr "Tóg Comhad"
+
+#: fe/fe_designer.c:115
+#, c-format
+msgid ""
+"Error saving file\n"
+"'%s'"
+msgstr ""
+
+#: fe/fe_designer.c:131
+msgid "Designer"
+msgstr ""
+
+#: fe/fe_designer.c:142 fe/fe_gdaconfig.c:352
+msgid "Delete"
+msgstr "Dealaigh"
+
+#: fe/fe_editor.c:45
+msgid "Create a new empty file"
+msgstr ""
+
+#: fe/fe_editor.c:48
+msgid "Open an existing file"
+msgstr ""
+
+#: fe/fe_editor.c:51
+msgid "Save current file"
+msgstr ""
+
+#: fe/fe_editor.c:54
+msgid "Save file with another name"
+msgstr ""
+
+#: fe/fe_editor.c:57 fe/fe_sqlwin.c:52
+msgid "Print"
+msgstr "Priontáil"
+
+#: fe/fe_editor.c:57
+msgid "Print current file"
+msgstr ""
+
+#: fe/fe_editor.c:60
+msgid "Close current file"
+msgstr ""
+
+#: fe/fe_editor.c:64 fe/fe_sqlwin.c:63 fe/fe_widget.c:162
+msgid "Cut"
+msgstr "Gearr"
+
+#: fe/fe_editor.c:64
+msgid "Cut selected text"
+msgstr ""
+
+#: fe/fe_editor.c:67 fe/fe_sqlwin.c:66 fe/fe_widget.c:165
+msgid "Copy"
+msgstr "Cóip"
+
+#: fe/fe_editor.c:67 fe/fe_sqlwin.c:66 fe/fe_widget.c:165
+msgid "Copy selected text to clipboard"
+msgstr ""
+
+#: fe/fe_editor.c:70 fe/fe_sqlwin.c:69 fe/fe_widget.c:168
+msgid "Paste"
+msgstr "Greamhaigh"
+
+#: fe/fe_editor.c:70
+msgid "Paste clipboard's contents"
+msgstr ""
+
+#: fe/fe_editor.c:134
+msgid "Run Command"
+msgstr ""
+
+#: fe/fe_editor.c:141
+msgid "Command"
+msgstr "Ordú"
+
+#: fe/fe_editor.c:152
+msgid "Directory"
+msgstr "Fillteán"
+
+#: fe/fe_editor.c:178 fe/fe_editor.c:215
+#, c-format
+msgid "Could not change to directory '%s'"
+msgstr ""
+
+#: fe/fe_editor.c:188
+#, c-format
+msgid "Running '%s'"
+msgstr "Ag rith '%s'"
+
+#. write header
+#: fe/fe_editor.c:194
+#, c-format
+msgid ""
+"Output from '%s'\n"
+"In directory '%s'\n"
+"\n"
+msgstr ""
+
+#: fe/fe_editor.c:206
+#, c-format
+msgid "Command '%s' completed"
+msgstr ""
+
+#: fe/fe_editor.c:208 fe/fe_editor.c:274 fe/fe_editor.c:473
+#, c-format
+msgid "Unable to execute '%s'"
+msgstr ""
+
+#: fe/fe_editor.c:244
+#, c-format
+msgid ""
+"File\n"
+" '%s'\n"
+" has been changed.\n"
+" Do you want to save the changes?"
+msgstr ""
+
+#: fe/fe_editor.c:303
+msgid "Open File"
+msgstr "Oscail Comhad"
+
+#: fe/fe_editor.c:422
+msgid "Editor"
+msgstr "Eagarthóir"
+
+#: fe/fe_editor.c:429 fe/fe_sqlwin.c:37
+msgid "Run"
+msgstr "Rith"
+
+#: fe/fe_editor.c:441
+msgid "Find"
+msgstr "Faigh"
+
+#: fe/fe_gdaconfig.c:264
+msgid "GDA Config"
+msgstr ""
+
+#: fe/fe_gdaconfig.c:316
+msgid "Username"
+msgstr "Úsáidtheoir"
+
+#: fe/fe_gdaconfig.c:324
+msgid "Description"
+msgstr ""
+
+#: fe/fe_gdaconfig.c:332
+msgid "Config"
+msgstr ""
+
+#: fe/fe_export.c:44
+msgid "To XML"
+msgstr ""
+
+#: fe/fe_export.c:44
+msgid "Export selected data to XML file"
+msgstr ""
+
+#: fe/fe_export.c:47
+msgid "To SQL"
+msgstr ""
+
+#: fe/fe_export.c:47
+msgid "Export selected data as a SQL script"
+msgstr ""
+
+#: fe/fe_export.c:51
+msgid "Refresh data"
+msgstr ""
+
+#: fe/fe_export.c:54
+msgid "Clear all widgets"
+msgstr ""
+
+#: fe/fe_export.c:169
+msgid "You have to provide a file name"
+msgstr ""
+
+#: fe/fe_export.c:175
+msgid "You have to specify a name for the database export"
+msgstr ""
+
+#: fe/fe_export.c:195
+#, c-format
+msgid "Exporting object named '%s'"
+msgstr ""
+
+#. save XML file
+#: fe/fe_export.c:225
+#, c-format
+msgid "Saving to '%s' ..."
+msgstr ""
+
+#: fe/fe_export.c:227
+#, c-format
+msgid ""
+"Error saving XML file\n"
+"'%s'"
+msgstr ""
+
+#: fe/fe_export.c:235
+msgid "No objects are selected"
+msgstr ""
+
+#. create the view window
+#: fe/fe_export.c:280
+#, c-format
+msgid "Export: %s@%s"
+msgstr ""
+
+#: fe/fe_export.c:295
+msgid "TABLES"
+msgstr ""
+
+#: fe/fe_export.c:305
+msgid "VIEWS"
+msgstr ""
+
+#: fe/fe_export.c:322
+msgid "File name"
+msgstr "Ainm comhad"
+
+#: fe/fe_export.c:332
+msgid "Export data"
+msgstr ""
+
+#: fe/fe_export.c:335
+msgid "Show file when done"
+msgstr ""
+
+#: fe/fe_export.c:338
+msgid "Add object extra info"
+msgstr ""
+
+#: fe/fe_log.c:34
+msgid "Refresh log"
+msgstr ""
+
+#: fe/fe_log.c:37
+msgid "Clear file contents"
+msgstr ""
+
+#: fe/fe_log.c:40
+msgid "Save log file with a different name"
+msgstr ""
+
+#: fe/fe_log.c:120
+#, c-format
+msgid "Could not truncate file %s"
+msgstr ""
+
+#: fe/fe_log.c:156
+msgid "Save Log File"
+msgstr ""
+
+#: fe/fe_log.c:177
+#, c-format
+msgid ""
+"Could not load file\n"
+" %s"
+msgstr ""
+
+#: fe/fe_log.c:179 fe/fe_main.c:357 gda-manager/gda-mgr-main.c:217
+msgid "Ready"
+msgstr ""
+
+#: fe/fe_log.c:181 fe/fe_ui.c:199
+#, c-format
+msgid "File %s loaded"
+msgstr ""
+
+#: fe/fe_log.c:196 fe/fe_main.c:223
+msgid "GDA logs"
+msgstr "Loganna GDA"
+
+#: fe/fe_main.c:83
+msgid "GNOME-DB Front End"
+msgstr ""
+
+#: fe/fe_main.c:84 gda-manager/gda-mgr-main.c:135
+msgid "Copyright The Free Software Foundation (C) 1998-2000"
+msgstr ""
+
+#: fe/fe_main.c:86 gda-manager/gda-mgr-main.c:137
+msgid ""
+"This program is part of the GNOME project for LINUX. GNOME Data Access comes "
+"with ABSOLUTELY NO WARRANTY. This is free software, and you are welcome to "
+"redistribute it under the conditions of the GNU General Public Licence."
+msgstr ""
+
+#: fe/fe_main.c:162
+msgid "Open connection..."
+msgstr ""
+
+#: fe/fe_main.c:162 fe/fe_main.c:309
+msgid "Open a new connection"
+msgstr ""
+
+#: fe/fe_main.c:165
+msgid "Close connection"
+msgstr ""
+
+#: fe/fe_main.c:165 fe/fe_main.c:312 fe/fe_sqlwin.c:73
+msgid "Close current connection"
+msgstr ""
+
+#: fe/fe_main.c:168
+msgid "Close all connections"
+msgstr ""
+
+#: fe/fe_main.c:172
+msgid "Printer setup..."
+msgstr "Socraigh Printéir..."
+
+#: fe/fe_main.c:172
+msgid "Open printer setup dialog"
+msgstr ""
+
+#: fe/fe_main.c:176 gda-manager/gda-mgr-main.c:46
+#: gda-manager/gda-mgr-main.c:77
+msgid "Quit"
+msgstr "Ealu"
+
+#: fe/fe_main.c:176 fe/fe_main.c:329 gda-manager/gda-mgr-main.c:46
+#: gda-manager/gda-mgr-main.c:77
+msgid "Exit application"
+msgstr "Eirigh as fiedhmchlár"
+
+#: fe/fe_main.c:183
+msgid "Object Browser"
+msgstr ""
+
+#: fe/fe_main.c:183
+msgid "Browse database objects"
+msgstr ""
+
+#: fe/fe_main.c:186
+msgid "SQL Builder"
+msgstr ""
+
+#: fe/fe_main.c:186
+msgid "Construct SQL statements"
+msgstr ""
+
+#: fe/fe_main.c:190
+msgid "View connection properties"
+msgstr ""
+
+#: fe/fe_main.c:193
+msgid "Start/Stop Server Trace"
+msgstr ""
+
+#: fe/fe_main.c:193
+msgid "Start or stop server trace"
+msgstr ""
+
+#: fe/fe_main.c:196
+msgid "View Server Trace"
+msgstr ""
+
+#: fe/fe_main.c:196
+msgid "View server trace file"
+msgstr ""
+
+#: fe/fe_main.c:200
+msgid "Export"
+msgstr ""
+
+#: fe/fe_main.c:200
+msgid "Export Data to Different Formats"
+msgstr ""
+
+#: fe/fe_main.c:203
+msgid "Import"
+msgstr ""
+
+#: fe/fe_main.c:203
+msgid "Import Data into the Database"
+msgstr ""
+
+#: fe/fe_main.c:207
+msgid "Begin Transaction"
+msgstr ""
+
+#: fe/fe_main.c:207
+msgid "Begin new transaction"
+msgstr ""
+
+#: fe/fe_main.c:210
+msgid "Commit"
+msgstr ""
+
+#: fe/fe_main.c:210
+msgid "Commit changes"
+msgstr ""
+
+#: fe/fe_main.c:213
+msgid "Rollback"
+msgstr ""
+
+#: fe/fe_main.c:213
+msgid "Discard all changes"
+msgstr ""
+
+#: fe/fe_main.c:220
+msgid "Database Designer"
+msgstr ""
+
+#: fe/fe_main.c:220
+msgid "Visual Database Designer"
+msgstr ""
+
+#: fe/fe_main.c:223 fe/fe_main.c:315
+msgid "View GDA server log files"
+msgstr ""
+
+#: fe/fe_main.c:227
+msgid "Text editor"
+msgstr "Eagathóir teacs"
+
+#: fe/fe_main.c:227
+msgid "Open the internal text editor"
+msgstr ""
+
+#: fe/fe_main.c:230
+msgid "Run shell"
+msgstr ""
+
+#: fe/fe_main.c:230
+msgid "Open shell window"
+msgstr ""
+
+#: fe/fe_main.c:233
+msgid "Calculator"
+msgstr "Aireamhán"
+
+#: fe/fe_main.c:233
+msgid "Open desktop calculator"
+msgstr ""
+
+#: fe/fe_main.c:240
+msgid "Preferences..."
+msgstr "Roghnachais..."
+
+#: fe/fe_main.c:240 fe/fe_main.c:325 gda-manager/gda-mgr-main.c:73
+msgid "Configure user preferences"
+msgstr ""
+
+#: fe/fe_main.c:243
+msgid "GDA Configuration..."
+msgstr ""
+
+#: fe/fe_main.c:243
+msgid "GDA Configuration"
+msgstr ""
+
+#: fe/fe_main.c:247
+msgid "Save Options"
+msgstr ""
+
+#: fe/fe_main.c:247
+msgid "Save current configuration"
+msgstr ""
+
+#: fe/fe_main.c:270
+msgid "Previous window"
+msgstr ""
+
+#: fe/fe_main.c:270 fe/fe_main.c:319
+msgid "Move to previous window on list"
+msgstr ""
+
+#: fe/fe_main.c:273
+msgid "Next window"
+msgstr ""
+
+#: fe/fe_main.c:273 fe/fe_main.c:322
+msgid "Move to next window on list"
+msgstr ""
+
+#: fe/fe_main.c:276
+msgid "Close current"
+msgstr ""
+
+#: fe/fe_main.c:276
+msgid "Close active window"
+msgstr ""
+
+#: fe/fe_main.c:279
+msgid "Close all"
+msgstr "Dún gach rud"
+
+#: fe/fe_main.c:279
+msgid "Close all open windows"
+msgstr "Dún gach fhuinneog oscailte"
+
+#: fe/fe_main.c:290 gda-manager/gda-mgr-main.c:55
+msgid "About gnome-db..."
+msgstr "Faoi gnome-db..."
+
+#: fe/fe_main.c:290 gda-manager/gda-mgr-main.c:55
+msgid "About this program"
+msgstr "Faoi ríomhchlár seo"
+
+#: fe/fe_main.c:297 gda-manager/gda-mgr-main.c:62
+msgid "File"
+msgstr "Comhad"
+
+#: fe/fe_main.c:298
+msgid "Database"
+msgstr ""
+
+#: fe/fe_main.c:299
+msgid "Tools"
+msgstr ""
+
+#: fe/fe_main.c:300
+msgid "Options"
+msgstr "Roghnachais"
+
+#: fe/fe_main.c:301
+msgid "Window"
+msgstr "Fuinneog"
+
+#: fe/fe_main.c:302 gda-manager/gda-mgr-main.c:63
+msgid "Help"
+msgstr "Cabhair"
+
+#: fe/fe_main.c:309
+msgid "Connect"
+msgstr ""
+
+#: fe/fe_main.c:312 fe/fe_sqlwin.c:73
+msgid "Disconnect"
+msgstr ""
+
+#: fe/fe_main.c:315
+msgid "GDA Logs"
+msgstr ""
+
+#: fe/fe_main.c:319
+msgid "Previous"
+msgstr ""
+
+#: fe/fe_main.c:322
+msgid "Next"
+msgstr ""
+
+#: fe/fe_main.c:329
+msgid "Exit"
+msgstr "Ealu"
+
+#: fe/fe_session.c:108
+msgid "Could not load editor font"
+msgstr ""
+
+#: fe/fe_session.c:115
+msgid "Could not load grid font"
+msgstr ""
+
+#: fe/fe_sqlwin.c:37
+msgid "Execute SQL command"
+msgstr ""
+
+#: fe/fe_sqlwin.c:40
+msgid "Run Script"
+msgstr ""
+
+#: fe/fe_sqlwin.c:40
+msgid "Execute buffer as SQL script"
+msgstr ""
+
+#: fe/fe_sqlwin.c:43 fe/fe_sqlwin.c:273
+msgid "Select SQL Command"
+msgstr ""
+
+#: fe/fe_sqlwin.c:46
+msgid "Refresh grid"
+msgstr ""
+
+#: fe/fe_sqlwin.c:49
+msgid "Clear SQL window"
+msgstr ""
+
+#: fe/fe_sqlwin.c:52
+msgid "Print grid"
+msgstr ""
+
+#: fe/fe_sqlwin.c:56
+msgid "Load file into buffer"
+msgstr ""
+
+#: fe/fe_sqlwin.c:59
+msgid "Save current buffer"
+msgstr ""
+
+#: fe/fe_sqlwin.c:63 fe/fe_widget.c:162
+msgid "Cut selected text to clipboard"
+msgstr ""
+
+#: fe/fe_sqlwin.c:69 fe/fe_widget.c:168
+msgid "Paste text from clipboard"
+msgstr ""
+
+#: fe/fe_sqlwin.c:118 gda-clnt-ui/gnome-db-browser.c:121
+#, c-format
+msgid "%d rows"
+msgstr ""
+
+#: fe/fe_sqlwin.c:127
+msgid "Select SQL Script"
+msgstr ""
+
+#: fe/fe_sqlwin.c:201
+#, c-format
+msgid "Executing '%s'"
+msgstr ""
+
+#: fe/fe_sqlwin.c:205 fe/fe_sqlwin.c:234
+msgid "Command succeeded"
+msgstr ""
+
+#: fe/fe_sqlwin.c:208
+msgid "Command failed"
+msgstr ""
+
+#: fe/fe_sqlwin.c:248
+msgid "Save SQL Script"
+msgstr ""
+
+#: fe/fe_sqlwin.c:260
+#, c-format
+msgid "Row %d - %d rows selected"
+msgstr ""
+
+#: fe/fe_trace.c:37
+msgid "Server trace stopped"
+msgstr ""
+
+#. start logging for this connection
+#: fe/fe_trace.c:43
+msgid "Select Trace File"
+msgstr ""
+
+#: fe/fe_trace.c:49
+#, c-format
+msgid "Server trace to file %s started"
+msgstr ""
+
+#: fe/fe_trace.c:67
+msgid "Server Trace File"
+msgstr ""
+
+#: fe/fe_trace.c:81
+msgid "Server trace is disabled for this connection"
+msgstr ""
+
+#: fe/fe_ui.c:150 fe/fe_ui.c:192
+#, c-format
+msgid ""
+"Error reading file\n"
+" %s"
+msgstr ""
+
+#: fe/fe_ui.c:157
+#, c-format
+msgid "File %s inserted"
+msgstr ""
+
+#: fe/fe_ui.c:159 fe/fe_ui.c:201 fe/fe_ui.c:229
+#, c-format
+msgid ""
+"Error opening file\n"
+" %s"
+msgstr ""
+
+#: fe/fe_ui.c:223
+#, c-format
+msgid ""
+"Error writing to file\n"
+" %s"
+msgstr ""
+
+#: fe/fe_ui.c:224
+#, c-format
+msgid "Wrote file %s"
+msgstr ""
+
+#. create dialog box
+#: fe/fe_ui.c:291
+msgid "Question"
+msgstr ""
+
+#: fe/fe_widget.c:171
+msgid "Select all"
+msgstr "Tóg gach rud"
+
+#: fe/fe_widget.c:171
+msgid "Select all text in buffer"
+msgstr ""
+
+#: fe/fe_widget.c:175
+msgid "Insert file..."
+msgstr ""
+
+#: fe/fe_widget.c:175
+msgid "Insert file into current position"
+msgstr ""
+
+#: fe/fe_widget.c:178
+msgid "Save to file..."
+msgstr ""
+
+#: fe/fe_widget.c:178
+msgid "Save widget contents to file"
+msgstr ""
+
+#: fe/fe_widget.c:181
+msgid "Print..."
+msgstr "Priontáil..."
+
+#: fe/fe_widget.c:181
+msgid "Print buffer"
+msgstr ""
+
+#: gda-clnt-ui/gnome-db-browser.c:79
+msgid "Object Name"
+msgstr ""
+
+#: gda-clnt-ui/gnome-db-browser.c:96
+msgid "0 rows"
+msgstr ""
+
+#: gda-clnt-ui/gnome-db-browser.c:411
+msgid "Tables"
+msgstr ""
+
+#: gda-clnt-ui/gnome-db-browser.c:419
+msgid "Views"
+msgstr ""
+
+#: gda-clnt-ui/gnome-db-browser.c:427
+msgid "Procedures"
+msgstr ""
+
+#: gda-clnt-ui/gnome-db-browser.c:435
+msgid "Types"
+msgstr ""
+
+#: gda-clnt-ui/gnome-db-browser.c:443
+msgid "Aggregates"
+msgstr ""
+
+#: gda-clnt-ui/gnome-db-browser.c:464
+msgid "Data"
+msgstr ""
+
+#: gda-clnt-ui/gnome-db-browser.c:479
+msgid "Extra Info"
+msgstr ""
+
+#: gda-clnt/gda-field.c:187
+msgid "<NULL>"
+msgstr ""
+
+#: gda-clnt/gda-field.c:193 gda-clnt/gda-field.c:195
+msgid "<Unknown GDA Type(NULL)>"
+msgstr ""
+
+#: gda-clnt/gda-field.c:208
+msgid "TRUE"
+msgstr ""
+
+#: gda-clnt/gda-field.c:209
+msgid "FALSE"
+msgstr ""
+
+#: gda-manager/gda-mgr-main.c:42 gda-manager/gda-mgr-main.c:70
+msgid "Reload"
+msgstr ""
+
+#: gda-manager/gda-mgr-main.c:42 gda-manager/gda-mgr-main.c:70
+msgid "Reload config drivers"
+msgstr ""
+
+#: gda-manager/gda-mgr-main.c:134
+msgid "GNOME-DB Manager"
+msgstr "Bainisteoir GNOME-DB"

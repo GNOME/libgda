@@ -1,0 +1,1112 @@
+# gnome-db ja.po
+# Copyright (C) 1999 Free Software Foundation, Inc.
+# Yuusuke Tahara <tahara@gnome.gr.jp>, 2000.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gnome-db 0.90\n"
+"POT-Creation-Date: 1999-12-21 17:33+0100\n"
+"PO-Revision-Date: 2000-02-21 20:43+09:00\n"
+"Last-Translator: Yuusuke Tahara <tahara@gehenna.u-aizu.ac.jp>\n"
+"Language-Team: Japanese <translation@gnome.gr.jp>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=euc-jp\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: fe/fe_browser.c:27
+msgid "Create script"
+msgstr "スクリプト作成"
+
+#: fe/fe_browser.c:27
+msgid "Create script from object definition"
+msgstr "オブジェクト定義からスクリプトを作成します"
+
+#: fe/fe_browser.c:30 fe/fe_designer.c:867 fe/fe_log.c:34 fe/fe_sqlwin.c:42
+msgid "Refresh"
+msgstr "更新"
+
+#: fe/fe_browser.c:30
+msgid "Refresh all lists"
+msgstr "リストを更新します"
+
+#: fe/fe_browser.c:34 fe/fe_designer.c:77 fe/fe_editor.c:59 fe/fe_editor.c:73
+#: fe/fe_impexp.c:77 fe/fe_log.c:44
+msgid "Close"
+msgstr "閉じる"
+
+#: fe/fe_browser.c:34 fe/fe_designer.c:77 fe/fe_editor.c:73 fe/fe_impexp.c:77
+#: fe/fe_log.c:44
+msgid "Close this window"
+msgstr "ウィンドウを閉じます"
+
+#: fe/fe_browser.c:104
+#, c-format
+msgid "Browser: %s@%s"
+msgstr "ブラウザ: %s@%s"
+
+#: fe/fe_config.c:49
+msgid "General"
+msgstr "一般"
+
+#: fe/fe_config.c:50
+msgid "Environment"
+msgstr "環境変数"
+
+#: fe/fe_config.c:51
+msgid "Config File"
+msgstr "設定ファイル"
+
+#: fe/fe_config.c:52 fe/fe_gdaconfig.c:297
+msgid "Data Sources"
+msgstr "データソース"
+
+#: fe/fe_config.c:80 fe/fe_config.c:124 fe/fe_designer.c:69 fe/fe_editor.c:50
+#: fe/fe_sqlwin.c:55
+msgid "Save"
+msgstr "保存"
+
+#: fe/fe_config.c:84 fe/fe_config.c:128 fe/fe_log.c:40
+msgid "Save As"
+msgstr "名前をつけて保存"
+
+#: fe/fe_config.c:88 fe/fe_config.c:132 fe/fe_designer.c:73
+#: fe/fe_designer.c:234 fe/fe_impexp.c:73 fe/fe_log.c:37 fe/fe_sqlwin.c:45
+msgid "Clear"
+msgstr "消去"
+
+#: fe/fe_config.c:155 fe/fe_config.c:436
+msgid "Variable"
+msgstr "変数"
+
+#: fe/fe_config.c:155 fe/fe_config.c:395 fe/fe_config.c:436
+msgid "Value"
+msgstr "値"
+
+#: fe/fe_config.c:181 fe/fe_impexp.c:427
+msgid "Add"
+msgstr "追加"
+
+#: fe/fe_config.c:185 fe/fe_impexp.c:431 gda-clnt-ui/gnome-db-browser.c:361
+msgid "Remove"
+msgstr "削除"
+
+#: fe/fe_config.c:189
+msgid "Current"
+msgstr "現在の設定"
+
+#: fe/fe_config.c:208
+msgid "Save options on exit"
+msgstr "設定を保存して終了"
+
+#. Fonts
+#: fe/fe_config.c:219
+msgid "Editor Font"
+msgstr "エディタのフォント"
+
+#: fe/fe_config.c:239
+msgid "Grid Font"
+msgstr "グリッドのフォント"
+
+#: fe/fe_config.c:261
+msgid "Language"
+msgstr "言語"
+
+#. shell
+#: fe/fe_config.c:280 fe/fe_editor.c:423
+msgid "Shell"
+msgstr "シェル"
+
+#. window tabs
+#: fe/fe_config.c:299 fe/fe_main.c:281
+msgid "Tabs position"
+msgstr "タブの位置"
+
+#: fe/fe_config.c:307 fe/fe_main.c:252
+msgid "Top"
+msgstr "上"
+
+#: fe/fe_config.c:316 fe/fe_main.c:255
+msgid "Bottom"
+msgstr "下"
+
+#: fe/fe_config.c:325 fe/fe_main.c:258
+msgid "Left"
+msgstr "左"
+
+#: fe/fe_config.c:334 fe/fe_main.c:261
+msgid "Right"
+msgstr "右"
+
+#. create the dialog box
+#: fe/fe_config.c:375
+msgid "Add Environment Variable"
+msgstr "環境変数を追加"
+
+#. create fields
+#: fe/fe_config.c:385 fe/fe_designer.c:835
+msgid "Name"
+msgstr "名前"
+
+#. create dialog
+#: fe/fe_config.c:441
+msgid "Current Environment"
+msgstr "現在の環境変数"
+
+#: fe/fe_config.c:526 fe/fe_editor.c:53 fe/fe_editor.c:317 fe/fe_editor.c:342
+msgid "Save As..."
+msgstr "名前をつけて保存..."
+
+#: fe/fe_config.c:610 fe/fe_main.c:326
+msgid "Preferences"
+msgstr "設定"
+
+#: fe/fe_connection.c:30 fe/fe_main.c:187
+msgid "Error Viewer"
+msgstr "エラー ビュワー"
+
+#: fe/fe_connection.c:46
+#, c-format
+msgid "Connected to %s"
+msgstr "%s に接続完了"
+
+#: fe/fe_connection.c:88
+msgid "Open Connection"
+msgstr "接続を開く"
+
+#: fe/fe_connection.c:94
+msgid "Connecting..."
+msgstr "接続中..."
+
+#: fe/fe_connection.c:117
+msgid "Transaction started"
+msgstr "トランザクション開始"
+
+#: fe/fe_connection.c:128
+msgid "Commit executed"
+msgstr "コミットを実行"
+
+#: fe/fe_connection.c:139
+msgid "Rollback executed"
+msgstr ""
+
+#. add bottom button bar
+#: fe/fe_designer.c:63 fe/fe_designer.c:215 fe/fe_designer.c:849
+#: fe/fe_editor.c:44 fe/fe_gdaconfig.c:364
+msgid "New"
+msgstr "新規"
+
+#: fe/fe_designer.c:63
+msgid "Create new database design"
+msgstr "新しいデザインを作成します"
+
+#: fe/fe_designer.c:66 fe/fe_editor.c:47 fe/fe_sqlwin.c:52
+msgid "Open"
+msgstr "開く"
+
+#: fe/fe_designer.c:66
+msgid "Open database design from file"
+msgstr "デザインをファイルから開きます"
+
+#: fe/fe_designer.c:69
+msgid "Save database design to file"
+msgstr "デザインをファイルに保存します"
+
+#: fe/fe_designer.c:73
+msgid "Clear all widgets"
+msgstr "すべての部品を削除します"
+
+#: fe/fe_designer.c:84
+msgid "Remove field"
+msgstr ""
+
+#: fe/fe_designer.c:84
+msgid "Remove selected fields"
+msgstr ""
+
+#. create dialog box
+#: fe/fe_designer.c:128
+msgid "Open Table"
+msgstr "テーブルを開く"
+
+#: fe/fe_designer.c:128
+msgid "New Table"
+msgstr "新規テーブル"
+
+#: fe/fe_designer.c:136
+msgid "Table name"
+msgstr "テーブル名"
+
+#. add top buttons
+#: fe/fe_designer.c:150 fe/fe_main.c:320
+msgid "Previous"
+msgstr "前へ"
+
+#: fe/fe_designer.c:158 fe/fe_main.c:323
+msgid "Next"
+msgstr "次へ"
+
+#. add field description widgets
+#: fe/fe_designer.c:167
+msgid "Field Name"
+msgstr "フィールド名"
+
+#: fe/fe_designer.c:178 fe/fe_designer.c:835 gda-manager/main.c:59
+msgid "Type"
+msgstr "型"
+
+#: fe/fe_designer.c:190 fe/fe_designer.c:835
+msgid "Size"
+msgstr "サイズ"
+
+#: fe/fe_designer.c:201 fe/fe_designer.c:835
+msgid "Precision"
+msgstr "精度"
+
+#: fe/fe_designer.c:222 fe/fe_designer.c:861 fe/fe_gdaconfig.c:369
+msgid "Delete"
+msgstr "削除"
+
+#: fe/fe_designer.c:229
+msgid "Update"
+msgstr "更新"
+
+#: fe/fe_designer.c:249 fe/fe_designer.c:403
+#, c-format
+msgid "Record %d of %d"
+msgstr ""
+
+#: fe/fe_designer.c:330
+msgid "Field name cannot be empty"
+msgstr "フィールド名は空にできません"
+
+#: fe/fe_designer.c:620
+msgid "Do you want to save changes?"
+msgstr "変更を保存しますか?"
+
+#: fe/fe_designer.c:628 fe/fe_designer.c:762 fe/fe_widget.c:37
+#: fe/fe_widget.c:131 fe/fe_widget.c:156
+msgid "Select File"
+msgstr "ファイル選択"
+
+#: fe/fe_designer.c:637 fe/fe_designer.c:770
+#, c-format
+msgid "Error saving database design to file %s"
+msgstr "デザインをファイル %s に保存できませんでした"
+
+#: fe/fe_designer.c:670
+msgid "Open database"
+msgstr "データベースを開く"
+
+#: fe/fe_designer.c:685
+#, c-format
+msgid "Error opening file '%s'"
+msgstr "ファイル '%s' を開けませんでした"
+
+#: fe/fe_designer.c:757
+msgid "First open or create a design"
+msgstr ""
+
+#: fe/fe_designer.c:823
+#, c-format
+msgid "Got description for table '%s'"
+msgstr ""
+
+#: fe/fe_designer.c:841
+msgid "Designer"
+msgstr "デザイナー"
+
+#: fe/fe_designer.c:855
+msgid "Edit"
+msgstr "編集"
+
+#: fe/fe_editor.c:44
+msgid "Create a new empty file"
+msgstr "空のファイルを新しく作成します"
+
+#: fe/fe_editor.c:47
+msgid "Open an existing file"
+msgstr "ファイルを開きます"
+
+#: fe/fe_editor.c:50
+msgid "Save current file"
+msgstr "現在のファイルで保存します"
+
+#: fe/fe_editor.c:53
+msgid "Save file with another name"
+msgstr "ファイル名を付けて保存します"
+
+#: fe/fe_editor.c:56 fe/fe_sqlwin.c:48
+msgid "Print"
+msgstr "印刷"
+
+#: fe/fe_editor.c:56
+msgid "Print current file"
+msgstr "ファイルを印刷します"
+
+#: fe/fe_editor.c:59
+msgid "Close current file"
+msgstr "ファイルを閉じます"
+
+#: fe/fe_editor.c:63 fe/fe_sqlwin.c:59 fe/fe_widget.c:174
+msgid "Cut"
+msgstr "消去"
+
+#: fe/fe_editor.c:63
+msgid "Cut selected text"
+msgstr "選択したテキストをクリップボードに移動します"
+
+#: fe/fe_editor.c:66 fe/fe_sqlwin.c:62 fe/fe_widget.c:177
+msgid "Copy"
+msgstr "コピー"
+
+#: fe/fe_editor.c:66 fe/fe_sqlwin.c:62 fe/fe_widget.c:177
+msgid "Copy selected text to clipboard"
+msgstr "選択したテキストをクリップボードに記録します"
+
+#: fe/fe_editor.c:69 fe/fe_sqlwin.c:65 fe/fe_widget.c:180
+msgid "Paste"
+msgstr "貼付け"
+
+#: fe/fe_editor.c:69
+msgid "Paste clipboard's contents"
+msgstr "クリップボードの内容を貼付けます"
+
+#: fe/fe_editor.c:131
+msgid "Run Command"
+msgstr "コマンド実行"
+
+#: fe/fe_editor.c:138
+msgid "Command"
+msgstr "コマンド"
+
+#: fe/fe_editor.c:149
+msgid "Directory"
+msgstr "ディレクトリ"
+
+#: fe/fe_editor.c:175 fe/fe_editor.c:212
+#, c-format
+msgid "Could not change to directory '%s'"
+msgstr "ディレクトリ '%s' に移動できませんでした"
+
+#: fe/fe_editor.c:185
+#, c-format
+msgid "Running '%s'"
+msgstr ""
+
+#. write header
+#: fe/fe_editor.c:191
+#, c-format
+msgid ""
+"Output from '%s'\n"
+"In directory '%s'\n"
+"\n"
+msgstr ""
+
+#: fe/fe_editor.c:203
+#, c-format
+msgid "Command '%s' completed"
+msgstr ""
+
+#: fe/fe_editor.c:205 fe/fe_editor.c:262 fe/fe_editor.c:461
+#, c-format
+msgid "Unable to execute '%s'"
+msgstr "'%s' を実行できません"
+
+#: fe/fe_editor.c:241
+#, c-format
+msgid "File '%s' has been changed. Do you want to save the changes?"
+msgstr "ファイル '%s' は変更されています. 保存しますか?"
+
+#: fe/fe_editor.c:291
+msgid "Open File"
+msgstr "ファイルを開く"
+
+#: fe/fe_editor.c:410
+msgid "Editor"
+msgstr "エディタ"
+
+#: fe/fe_editor.c:417 fe/fe_sqlwin.c:36
+msgid "Run"
+msgstr "実行"
+
+#: fe/fe_editor.c:429
+msgid "Find"
+msgstr "検索"
+
+#: fe/fe_gdaconfig.c:288
+msgid "GDA Config"
+msgstr "GDA の設定"
+
+#: fe/fe_gdaconfig.c:314
+msgid "GDA Name"
+msgstr "名称"
+
+#: fe/fe_gdaconfig.c:323 gda-manager/main.c:144
+msgid "Provider"
+msgstr "プロバイダ"
+
+#: fe/fe_gdaconfig.c:333
+msgid "DSN"
+msgstr "ソース名"
+
+#: fe/fe_gdaconfig.c:341 gda-manager/main.c:96 gda-manager/main.c:173
+msgid "Description"
+msgstr "概要"
+
+#: fe/fe_gdaconfig.c:349
+msgid "Config"
+msgstr "設定"
+
+#: fe/fe_help.c:42
+msgid "Could not find the GNOME-DB manual!"
+msgstr "マニュアルが見つかりません!"
+
+#: fe/fe_help.c:66
+msgid ""
+"Below is a list of links to several sites related to GNOME-DB for you to be "
+"able to find any information that may be missing in the GNOME-DB "
+"documentation"
+msgstr "これらは GNOME-DB に関連するサイトのリンクです. もしあなたが, GNOME-DB に関連する情報を探しているなら, これらのサイトを参照してみてください."
+
+#: fe/fe_help.c:71 fe/fe_help.c:72
+msgid "Related Links"
+msgstr "関連リンク"
+
+#: fe/fe_impexp.c:70
+msgid "Start"
+msgstr "開始"
+
+#: fe/fe_impexp.c:70
+msgid "Start Selected Operation"
+msgstr "選択した文を実行します"
+
+#: fe/fe_impexp.c:73
+msgid "Clear all entries"
+msgstr ""
+
+#. add object type list to combo box
+#: fe/fe_impexp.c:171 fe/fe_impexp.c:281 fe/fe_impexp.c:406
+#: gda-clnt-ui/gnome-db-browser.c:316
+msgid "Tables"
+msgstr "テーブル"
+
+#: fe/fe_impexp.c:262 fe/fe_impexp.c:327
+msgid "You must provide a file name"
+msgstr "ファイル名を指定してください"
+
+#: fe/fe_impexp.c:285
+#, c-format
+msgid "Adding table %s..."
+msgstr ""
+
+#: fe/fe_impexp.c:298 fe/fe_impexp.c:299
+msgid "ok\n"
+msgstr "了解\n"
+
+#: fe/fe_impexp.c:301 fe/fe_impexp.c:302
+msgid "no\n"
+msgstr "いいえ\n"
+
+#: fe/fe_impexp.c:316 fe/fe_impexp.c:317
+msgid "Exporting database\n"
+msgstr ""
+
+#: fe/fe_impexp.c:321
+msgid "Error saving XML database to disk"
+msgstr ""
+
+#: fe/fe_impexp.c:322
+msgid "Export finished successfully"
+msgstr ""
+
+#: fe/fe_impexp.c:373
+#, c-format
+msgid "Export: %s@%s"
+msgstr "エクスポート: %s@%s"
+
+#: fe/fe_impexp.c:397
+msgid "Objects"
+msgstr "オブジェクト"
+
+#: fe/fe_impexp.c:407 gda-clnt-ui/gnome-db-browser.c:324
+msgid "Views"
+msgstr "ビュー"
+
+#: fe/fe_impexp.c:413
+msgid "Object List"
+msgstr ""
+
+#: fe/fe_impexp.c:435
+msgid "Add all"
+msgstr ""
+
+#: fe/fe_impexp.c:439
+msgid "Remove All"
+msgstr ""
+
+#: fe/fe_impexp.c:448
+msgid "Selection List"
+msgstr ""
+
+#: fe/fe_impexp.c:463
+msgid "Log"
+msgstr "ログ"
+
+#: fe/fe_impexp.c:479
+msgid "To XML"
+msgstr "XML へ"
+
+#. "To SQL" radio button and friends
+#: fe/fe_impexp.c:494
+msgid "To SQL"
+msgstr "SQL へ"
+
+#. "To Connection" radio button and friends
+#: fe/fe_impexp.c:509
+msgid "To Connection"
+msgstr "サーバへ"
+
+#: fe/fe_impexp.c:521
+#, c-format
+msgid "Cannot allocate %d bytes"
+msgstr "%d バイトを割り当てることができません"
+
+#: fe/fe_log.c:34
+msgid "Refresh log"
+msgstr "ログを更新します"
+
+#: fe/fe_log.c:37
+msgid "Clear file contents"
+msgstr "ファイルの中身を消去します"
+
+#: fe/fe_log.c:40
+msgid "Save log file with a different name"
+msgstr "ログを異なるファイル名で保存します"
+
+#: fe/fe_log.c:120
+#, c-format
+msgid "Could not truncate file %s"
+msgstr ""
+
+#: fe/fe_log.c:156
+msgid "Save Log File"
+msgstr "ログを保存"
+
+#: fe/fe_log.c:177
+#, c-format
+msgid "Could not load file %s"
+msgstr "ファイル %s をロードできませんでした"
+
+#: fe/fe_log.c:193 fe/fe_main.c:221
+msgid "GDA logs"
+msgstr "GDA ログ"
+
+#: fe/fe_main.c:81
+msgid "GNOME-DB"
+msgstr "GNOME-DB"
+
+#: fe/fe_main.c:81
+msgid "Front-End"
+msgstr "フロントエンド"
+
+#: fe/fe_main.c:82
+msgid "Copyright The Free Software Foundation (C) 1998"
+msgstr "Copyright The Free Software Foundation (C) 1998"
+
+#: fe/fe_main.c:84
+msgid ""
+"This program is part of the GNOME project for LINUX. GNOME Data Access comes "
+"with ABSOLUTELY NO WARRANTY. This is free software, and you are welcome to "
+"redistribute it under the conditions of the GNU General Public Licence."
+msgstr ""
+
+#: fe/fe_main.c:160
+msgid "Open connection..."
+msgstr "接続を開く..."
+
+#: fe/fe_main.c:160 fe/fe_main.c:310
+msgid "Open a new connection"
+msgstr "新しい接続を開きます"
+
+#: fe/fe_main.c:163
+msgid "Close connection"
+msgstr "接続を閉じる"
+
+#: fe/fe_main.c:163 fe/fe_main.c:313 fe/fe_sqlwin.c:69
+msgid "Close current connection"
+msgstr "現在の接続を閉じます"
+
+#: fe/fe_main.c:166
+msgid "Close all connections"
+msgstr "すべての接続を閉じる"
+
+#: fe/fe_main.c:170
+msgid "Printer setup..."
+msgstr "プリンタの設定..."
+
+#: fe/fe_main.c:170
+msgid "Open printer setup dialog"
+msgstr "プリンタ設定のダイアログを開く"
+
+#: fe/fe_main.c:174
+msgid "Quit"
+msgstr "終了"
+
+#: fe/fe_main.c:174 fe/fe_main.c:330
+msgid "Exit application"
+msgstr "アプリケーションを終了します"
+
+#: fe/fe_main.c:181
+msgid "Object Browser"
+msgstr "オブジェクトブラウザ"
+
+#: fe/fe_main.c:181
+msgid "Browse database objects"
+msgstr "データベースオブジェクトを閲覧します"
+
+#: fe/fe_main.c:184
+msgid "SQL Builder"
+msgstr "SQL ビルダー"
+
+#: fe/fe_main.c:184
+msgid "Construct SQL statements"
+msgstr "SQL 文を作成します"
+
+#: fe/fe_main.c:187
+msgid "View all errors in the connection"
+msgstr "この接続に関するエラーを表示します"
+
+#: fe/fe_main.c:191
+msgid "Start/Stop Server Trace"
+msgstr "サーバのトレースを開始/終了"
+
+#: fe/fe_main.c:191
+msgid "Start or stop server trace"
+msgstr "サーバのトレースを開始または止めます"
+
+#: fe/fe_main.c:194
+msgid "View Server Trace"
+msgstr "サーバのトレースを表示"
+
+#: fe/fe_main.c:194
+msgid "View server trace file"
+msgstr "サーバのトレースファイルを表示します"
+
+#: fe/fe_main.c:198
+msgid "Export"
+msgstr "エクスポート"
+
+#: fe/fe_main.c:198
+msgid "Export Data to Different Formats"
+msgstr "データを異なるフォーマットで書き出します"
+
+#: fe/fe_main.c:201
+msgid "Import"
+msgstr "インポート"
+
+#: fe/fe_main.c:201
+msgid "Import Data into the Database"
+msgstr "データをデータベースに読み込みます"
+
+#: fe/fe_main.c:205
+msgid "Begin Transaction"
+msgstr "トランザクションの開始"
+
+#: fe/fe_main.c:205
+msgid "Begin new transaction"
+msgstr "新しいトランザクションを開始します"
+
+#: fe/fe_main.c:208
+msgid "Commit"
+msgstr "コミット"
+
+#: fe/fe_main.c:208
+msgid "Commit changes"
+msgstr "変更をコミットします"
+
+#: fe/fe_main.c:211
+msgid "Rollback"
+msgstr "ロールバック"
+
+#: fe/fe_main.c:211
+msgid "Discard all changes"
+msgstr "すべての変更を破棄します"
+
+#: fe/fe_main.c:218
+msgid "Database Designer"
+msgstr "データベース デザイナー"
+
+#: fe/fe_main.c:218
+msgid "Visual Database Designer"
+msgstr "GUI でデータベースをデザインできます"
+
+#: fe/fe_main.c:221 fe/fe_main.c:316
+msgid "View GDA server log files"
+msgstr "GDA サーバのログを表示します"
+
+#: fe/fe_main.c:225
+msgid "Text editor"
+msgstr "テキストエディタ"
+
+#: fe/fe_main.c:225
+msgid "Open the internal text editor"
+msgstr "内部テキストエディタを開きます"
+
+#: fe/fe_main.c:228
+msgid "Run shell"
+msgstr "シェル起動"
+
+#: fe/fe_main.c:228
+msgid "Open shell window"
+msgstr "シェルをウィンドウ内で開きます"
+
+#: fe/fe_main.c:231
+msgid "Calculator"
+msgstr "電卓"
+
+#: fe/fe_main.c:231
+msgid "Open desktop calculator"
+msgstr "電卓を開く"
+
+#: fe/fe_main.c:238
+msgid "Preferences..."
+msgstr "設定..."
+
+#: fe/fe_main.c:238 fe/fe_main.c:326
+msgid "Configure user preferences"
+msgstr "ユーザの設定を行います"
+
+#: fe/fe_main.c:241
+msgid "GDA Configuration..."
+msgstr "GDA の設定..."
+
+#: fe/fe_main.c:241
+msgid "GDA Configuration"
+msgstr "GDA の設定を行います"
+
+#: fe/fe_main.c:245
+msgid "Save Options"
+msgstr "設定を保存"
+
+#: fe/fe_main.c:245
+msgid "Save current configuration"
+msgstr "現在の設定を保存します"
+
+#: fe/fe_main.c:268
+msgid "Previous window"
+msgstr "前のウィンドウ"
+
+#: fe/fe_main.c:268 fe/fe_main.c:320
+msgid "Move to previous window on list"
+msgstr "前のウィンドウに移動します"
+
+#: fe/fe_main.c:271
+msgid "Next window"
+msgstr "次のウィンドウ"
+
+#: fe/fe_main.c:271 fe/fe_main.c:323
+msgid "Move to next window on list"
+msgstr "次のウィンドウに移動します"
+
+#: fe/fe_main.c:274
+msgid "Close current"
+msgstr "閉じる"
+
+#: fe/fe_main.c:274
+msgid "Close active window"
+msgstr "現在のウィンドウを閉じます"
+
+#: fe/fe_main.c:277
+msgid "Close all"
+msgstr "すべて閉じる"
+
+#: fe/fe_main.c:277
+msgid "Close all open windows"
+msgstr "すべてのウィンドウを閉じます"
+
+#: fe/fe_main.c:287
+msgid "Related links..."
+msgstr "関連リンク..."
+
+#: fe/fe_main.c:287
+msgid "GNOME-DB-related information on the WWW"
+msgstr "GNOME-DB に関連する情報がある WWW サイトです"
+
+#: fe/fe_main.c:291
+msgid "About gnome-db..."
+msgstr "gnome-db について..."
+
+#: fe/fe_main.c:291
+msgid "About this program"
+msgstr "このプログラムについて"
+
+#: fe/fe_main.c:298
+msgid "File"
+msgstr "ファイル"
+
+#: fe/fe_main.c:299
+msgid "Database"
+msgstr "データベース"
+
+#: fe/fe_main.c:300
+msgid "Tools"
+msgstr "ツール"
+
+#: fe/fe_main.c:301
+msgid "Options"
+msgstr "設定"
+
+#: fe/fe_main.c:302
+msgid "Window"
+msgstr "ウィンドウ"
+
+#: fe/fe_main.c:303
+msgid "Help"
+msgstr "ヘルプ"
+
+#: fe/fe_main.c:310
+msgid "Connect"
+msgstr "接続"
+
+#: fe/fe_main.c:313 fe/fe_sqlwin.c:69
+msgid "Disconnect"
+msgstr "切断"
+
+#: fe/fe_main.c:316
+msgid "GDA Logs"
+msgstr "GDA ログ"
+
+#: fe/fe_main.c:330
+msgid "Exit"
+msgstr "終了"
+
+#: fe/fe_main.c:358
+msgid "Ready"
+msgstr "準備完了"
+
+#: fe/fe_session.c:108
+msgid "Could not load editor font"
+msgstr "エディタのフォントが見つかりません"
+
+#: fe/fe_session.c:115
+msgid "Could not load grid font"
+msgstr "グリッドのフォントが見つかりません"
+
+#: fe/fe_sqlwin.c:36
+msgid "Execute SQL command"
+msgstr "SQL 文を実行します"
+
+#: fe/fe_sqlwin.c:39 fe/fe_sqlwin.c:225
+msgid "Select SQL Command"
+msgstr "SQL コマンドを選択します"
+
+#: fe/fe_sqlwin.c:42
+msgid "Refresh grid"
+msgstr "グリッドを更新します"
+
+#: fe/fe_sqlwin.c:45
+msgid "Clear SQL window"
+msgstr "ウィンドウの内容を消去します"
+
+#: fe/fe_sqlwin.c:48
+msgid "Print grid"
+msgstr "グリッドを表示します"
+
+#: fe/fe_sqlwin.c:52
+msgid "Load script"
+msgstr "スクリプトを読み込みます"
+
+#: fe/fe_sqlwin.c:55
+msgid "Save current buffer"
+msgstr "バッファの内容を保存します"
+
+#: fe/fe_sqlwin.c:59 fe/fe_widget.c:174
+msgid "Cut selected text to clipboard"
+msgstr "選択したテキストをクリップボードに移動します"
+
+#: fe/fe_sqlwin.c:65 fe/fe_widget.c:180
+msgid "Paste text from clipboard"
+msgstr "クリップボードのテキストを貼付けます"
+
+#: fe/fe_sqlwin.c:114
+#, c-format
+msgid "%d rows"
+msgstr ""
+
+#: fe/fe_sqlwin.c:123
+msgid "Select SQL Script"
+msgstr ""
+
+#: fe/fe_sqlwin.c:186
+msgid "Command succeeded"
+msgstr "コマンドは実行されました"
+
+#: fe/fe_sqlwin.c:200
+msgid "Save SQL Script"
+msgstr ""
+
+#: fe/fe_sqlwin.c:212
+#, c-format
+msgid "Row %d - %d rows selected"
+msgstr ""
+
+#: fe/fe_trace.c:37
+msgid "Server trace stopped"
+msgstr ""
+
+#. start logging for this connection
+#: fe/fe_trace.c:43
+msgid "Select Trace File"
+msgstr ""
+
+#: fe/fe_trace.c:49
+#, c-format
+msgid "Server trace to file %s started"
+msgstr ""
+
+#: fe/fe_trace.c:67
+msgid "Server Trace File"
+msgstr ""
+
+#: fe/fe_trace.c:78
+msgid "Server trace is disabled for this connection"
+msgstr ""
+
+#: fe/fe_ui.c:143 fe/fe_ui.c:183
+#, c-format
+msgid "Error reading file %s"
+msgstr "ファイル %s が読み込めません"
+
+#: fe/fe_ui.c:150
+#, c-format
+msgid "File %s inserted"
+msgstr "ファイル %s が挿入されました"
+
+#: fe/fe_ui.c:152 fe/fe_ui.c:192 fe/fe_ui.c:217
+#, c-format
+msgid "Error opening file %s"
+msgstr "ファイル %s が開けません"
+
+#: fe/fe_ui.c:190
+#, c-format
+msgid "File %s loaded"
+msgstr "ファイル %s がロードされました"
+
+#: fe/fe_ui.c:212
+#, c-format
+msgid "Error writing to file %s"
+msgstr "ファイル %s に書き込めません"
+
+#: fe/fe_ui.c:213
+#, c-format
+msgid "Wrote file %s"
+msgstr "ファイル %s に書き込みました"
+
+#. create dialog box
+#: fe/fe_ui.c:275
+msgid "Question"
+msgstr ""
+
+#: fe/fe_widget.c:183
+msgid "Select all"
+msgstr "すべてを選択"
+
+#: fe/fe_widget.c:183
+msgid "Select all text in buffer"
+msgstr ""
+
+#: fe/fe_widget.c:187
+msgid "Insert file..."
+msgstr "ファイルを追加..."
+
+#: fe/fe_widget.c:187
+msgid "Insert file into current position"
+msgstr "現在の位置にファイルを追加します"
+
+#: fe/fe_widget.c:190
+msgid "Save to file..."
+msgstr "ファイルに保存..."
+
+#: fe/fe_widget.c:190
+msgid "Save widget contents to file"
+msgstr ""
+
+#: fe/fe_widget.c:193
+msgid "Print..."
+msgstr "印刷..."
+
+#: fe/fe_widget.c:193
+msgid "Print buffer"
+msgstr "バッファの内容を印刷します"
+
+#: gda-clnt-ui/gnome-db-browser.c:332
+msgid "Procedures"
+msgstr "プロシージャ"
+
+#: gda-clnt-ui/gnome-db-browser.c:353
+msgid "Data"
+msgstr "データ"
+
+#: gda-clnt/gda-field.c:184
+msgid "<NULL>"
+msgstr ""
+
+#: gda-clnt/gda-field.c:190 gda-clnt/gda-field.c:192
+msgid "<Unknown GDA Type(NULL)>"
+msgstr ""
+
+#: gda-clnt/gda-field.c:206
+msgid "TRUE"
+msgstr ""
+
+#: gda-clnt/gda-field.c:208
+msgid "FALSE"
+msgstr ""
+
+#: gda-manager/main.c:54
+msgid "GDA Server Properties"
+msgstr "GDA サーバの設定"
+
+#: gda-manager/main.c:61
+msgid "Standalone Executable"
+msgstr "実行可能形式"
+
+#: gda-manager/main.c:63
+msgid "Shared Library"
+msgstr "共有ライブラリ"
+
+#: gda-manager/main.c:80
+msgid "Repository ID"
+msgstr "レポジトリ ID"
+
+#: gda-manager/main.c:107
+msgid "Location"
+msgstr "位置"
+
+#: gda-manager/main.c:109
+msgid "GDA Server Location"
+msgstr "GDA サーバの位置"
+
+#: gda-manager/main.c:119
+msgid "OK"
+msgstr "了解"
+
+#: gda-manager/main.c:139
+msgid "GDA Data Source Properties"
+msgstr "GDA データソースの設定"
+
+#: gda-manager/main.c:158
+msgid "Data Source Name(DSN)"
+msgstr "ソースの名前"
+
+#: gda-manager/main.c:185
+msgid "Driver Configuration"
+msgstr "ドライバの設定"
+
+#: gda-manager/main.c:198
+msgid "Accept"
+msgstr "適用"
+
+#: gda-manager/main.c:285
+msgid "GDA Administrator"
+msgstr "GDA 管理ツール"
