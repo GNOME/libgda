@@ -182,8 +182,8 @@ void gda_xml_file_construct(GdaXmlFile *xmlfile, const gchar *root_doc)
 {
   /* initialize XML document */
   xmlfile->doc = xmlNewDoc("1.0");
-  xmlfile->doc->root = xmlNewDocNode(xmlfile->doc, NULL, root_doc, NULL);
-  xmlfile->root = xmlfile->doc->root;
+  xmlfile->root = xmlNewDocNode(xmlfile->doc, NULL, root_doc, NULL);
+  xmlDocSetRootElement(xmlfile->doc, xmlfile->root);
 
   xmlfile->context = g_new0(xmlValidCtxt, 1);
   xmlfile->context->userData = xmlfile;

@@ -203,7 +203,7 @@ gda_xml_database_new_from_file (const gchar *filename)
     {
       xmlNodePtr node;
       GDA_XML_FILE(xmldb)->root = xmlDocGetRootElement(GDA_XML_FILE(xmldb)->doc);
-      node = GDA_XML_FILE(xmldb)->root->childs;
+      node = GDA_XML_FILE(xmldb)->root->xmlChildrenNode;
       while (node)
         {
           if (!strcmp(node->name, OBJECT_TABLES_NODE))
@@ -332,7 +332,7 @@ gda_xml_database_table_find (GdaXmlDatabase *xmldb, const gchar *tname)
   g_return_val_if_fail(GDA_IS_XML_DATABASE(xmldb), NULL);
   g_return_val_if_fail(tname != NULL, NULL);
 
-  for (node = xmldb->tables->childs; node != NULL; node = node->next)
+  for (node = xmldb->tables->xmlChildrenNode; node != NULL; node = node->next)
     {
       gchar* name = xmlGetProp(node, PROPERTY_NAME);
       if (name && !strcmp(name, tname)) return node;
@@ -412,7 +412,7 @@ gda_xml_database_table_field_count (GdaXmlDatabase *xmldb, xmlNodePtr table)
   g_return_val_if_fail(GDA_IS_XML_DATABASE(xmldb), -1);
   g_return_val_if_fail(table != NULL, -1);
   
-  for (xmlnode = table->childs; xmlnode != NULL; xmlnode = xmlnode->next)
+  for (xmlnode = table->xmlChildrenNode; xmlnode != NULL; xmlnode = xmlnode->next)
     {
       if (!strcmp(xmlnode->name, OBJECT_FIELD)) cnt++;
     }
@@ -484,7 +484,7 @@ gda_xml_database_table_get_field (GdaXmlDatabase *xmldb, xmlNodePtr table, gint 
   g_return_val_if_fail(GDA_IS_XML_DATABASE(xmldb), NULL);
   g_return_val_if_fail(table != NULL, NULL);
   
-  for (xmlnode = table->childs; xmlnode != NULL; xmlnode = xmlnode->next)
+  for (xmlnode = table->xmlChildrenNode; xmlnode != NULL; xmlnode = xmlnode->next)
     {
       if (!strcmp(xmlnode->name, OBJECT_FIELD))
         {
@@ -512,7 +512,7 @@ gda_xml_database_table_find_field (GdaXmlDatabase *xmldb, xmlNodePtr table, cons
   g_return_val_if_fail(table != NULL, NULL);
   g_return_val_if_fail(fname != NULL, NULL);
 
-  for (node = table->childs; node != NULL; node = node->next)
+  for (node = table->xmlChildrenNode; node != NULL; node = node->next)
     {
       if (!strcmp(node->name, OBJECT_FIELD))
         {

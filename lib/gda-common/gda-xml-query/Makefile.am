@@ -15,10 +15,10 @@ gob_lst = \
 	xml-query-column.gob \
 	xml-query-const.gob \
 	xml-query-target.gob \
+	xml-query-dual.gob \
 	xml-query-join.gob \
 	xml-query-dml.gob \
 	xml-query-value.gob \
-	xml-query-dual.gob \
 	xml-query-field.gob \
 	xml-query-func.gob \
 	xml-query-delete.gob \

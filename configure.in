@@ -105,6 +105,17 @@ else
 	AC_MSG_ERROR(not found)
 fi
 
+dnl Check for libxslt
+AC_MSG_CHECKING(for libxslt)
+if xslt-config --libs > /dev/null 2>&1
+then
+	AC_MSG_RESULT(found)
+	gda_xml_libs="$(gda_xml_libs) `xslt-config --libs`"
+	gda_xml_cflags="$(gda_xml_cflags) `xslt-config --cflags`"
+else
+	AC_MSG_ERROR(not found)
+fi
+
 dnl Check for Perl
 AC_CHECK_PROG(perl_val, perl, true, false)
 if $perl_val
