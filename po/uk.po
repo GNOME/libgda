@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2000-12-01 14:21+0200\n"
+"POT-Creation-Date: 2001-01-18 19:38+0200\n"
 "PO-Revision-Date: 1999-11-17 10:06+0200\n"
 "Last-Translator: Yuri Syrota <rasta@renome.rovno.ua>\n"
 "Language-Team: Ukrainian <uk@li.org>\n"
@@ -33,14 +33,14 @@ msgstr "%s: Сервер не в╕дпов╕в."
 msgid "%s: An Error occured in the CORBA system."
 msgstr "%s: Сталася помилка у систем╕ CORBA."
 
-#: lib/gda-client/gda-connection.c:529
+#: lib/gda-client/gda-connection.c:493
 #, c-format
 msgid "Database '%s' not found in system configuration"
 msgstr "Базу даних \"%s\" не знайдено у системн╕й конф╕╜урац╕╖"
 
-#: lib/gda-client/gda-connection.c:545
+#: lib/gda-client/gda-connection.c:509
 msgid "Could not open CORBA factory"
-msgstr ""
+msgstr "Не вдалось в╕дкрити фабрику CORBA"
 
 #: lib/gda-client/gda-field.c:245
 msgid "<NULL>"
@@ -58,16 +58,16 @@ msgstr "╤СТИНА"
 msgid "FALSE"
 msgstr "ХИБН╤СТЬ"
 
-#: lib/gda-common/gda-corba.c:77
+#: lib/gda-common/gda-corba.c:73
 #, c-format
 msgid "CORBA System exception: %s"
 msgstr "Виключення системи CORBA: %s"
 
-#: lib/gda-common/gda-corba.c:110
+#: lib/gda-common/gda-corba.c:102
 msgid "True"
 msgstr "╤стина"
 
-#: lib/gda-common/gda-corba.c:110
+#: lib/gda-common/gda-corba.c:102
 msgid "False"
 msgstr "Хибн╕сть"
 
@@ -147,7 +147,7 @@ msgstr "impl_GDA_Connection_open: в╕дкривання з'╓днання з DSN: %s"
 #: lib/gda-server/gda-server-impl-recordset.c:407
 #, c-format
 msgid "%s: an error ocurred while fetching data"
-msgstr ""
+msgstr "%s: виявлено помилку п╕д час отримання даних"
 
 #: lib/gda-server/gda-server-impl-recordset.c:446
 #, c-format
@@ -159,37 +159,37 @@ msgstr "%s: довжина = %d"
 msgid "%s: sending field description for '%s'"
 msgstr "%s: в╕дсилання опису поля для \"%s\""
 
-#: lib/gda-server/gda-server-impl.c:195
+#: lib/gda-server/gda-server-impl.c:184
 #, c-format
 msgid "Starting provider %s with no implementation functions"
 msgstr ""
 
-#: lib/gda-server/gda-server-impl.c:222
-#: report/server/gda-report-server-main.c:120
+#: lib/gda-server/gda-server-impl.c:210
+#: report/server/gda-report-server-main.c:113
 msgid ""
 "OAF doesn't know about our IID; indicates broken installation. Exiting..."
 msgstr ""
 
-#: lib/gda-server/gda-server-impl.c:225
+#: lib/gda-server/gda-server-impl.c:213
 msgid ""
 "Another instance of this provider is already registered with OAF. Exiting..."
 msgstr ""
 
-#: lib/gda-server/gda-server-impl.c:228
+#: lib/gda-server/gda-server-impl.c:216
 msgid "Unknown error registering this provider with OAF. Exiting"
 msgstr ""
 
-#: lib/gda-server/gda-server-impl.c:232
+#: lib/gda-server/gda-server-impl.c:220
 #, c-format
 msgid "Registered with ID = %s"
 msgstr "Заре╓стровано з ╕дентиф╕катором %s"
 
-#: lib/gda-server/gda-server-impl.c:314
+#: lib/gda-server/gda-server-impl.c:296
 #, c-format
 msgid "CORBA system exception %s"
 msgstr "Виключення системи CORBA %s"
 
-#: lib/gda-server/gda-server-impl.c:317
+#: lib/gda-server/gda-server-impl.c:299
 #, c-format
 msgid "CORBA user exception: %s"
 msgstr "Виключення користувача CORBA: %s"
@@ -216,7 +216,7 @@ msgstr "Спроба ╕н╕ц╕ал╕зувати вже ╕н╕ц╕ал╕зованого постачальника"
 #: providers/gda-odbc-server/gda-odbc-connection.c:642
 #: providers/gda-oracle-server/gda-oracle-connection.c:426
 #: providers/gda-postgres-server/gda-postgres-connection.c:779
-#: providers/gda-sybase-server/gda-sybase-error.c:106
+#: providers/gda-sybase-server/gda-sybase-error.c:109
 #, c-format
 msgid "error '%s' at %s"
 msgstr "помилка \"%s\" на %s"
@@ -237,8 +237,8 @@ msgstr "помилка \"%s\" на %s"
 #: providers/gda-oracle-server/gda-oracle-connection.c:432
 #: providers/gda-postgres-server/gda-postgres-connection.c:786
 #: providers/gda-postgres-server/gda-postgres-connection.c:787
-#: providers/gda-sybase-server/gda-sybase-error.c:115
-#: providers/gda-sybase-server/gda-sybase-error.c:116
+#: providers/gda-sybase-server/gda-sybase-error.c:118
+#: providers/gda-sybase-server/gda-sybase-error.c:119
 msgid "Not available"
 msgstr "Не доступне"
 
@@ -248,7 +248,7 @@ msgstr "Не доступне"
 #: providers/gda-mysql-server/gda-mysql-connection.c:393
 #: providers/gda-oracle-server/gda-oracle-connection.c:433
 #: providers/gda-postgres-server/gda-postgres-connection.c:788
-#: providers/gda-sybase-server/gda-sybase-error.c:117
+#: providers/gda-sybase-server/gda-sybase-error.c:120
 msgid "error"
 msgstr "помилка"
 
@@ -273,7 +273,7 @@ msgstr "Не вдалося заре╓струвати реал╕зац╕ю постачальника INTERBASE"
 #: providers/gda-sybase-server/gda-sybase-connection.c:269
 #, c-format
 msgid "Unhandled SCHEMA_QTYPE %d"
-msgstr ""
+msgstr "Необроблене значення SCHEMA_QTYPE %d"
 
 #: providers/gda-mail-server/main-mail.c:70
 msgid "Could not register Mail provider implementation"
@@ -340,7 +340,7 @@ msgstr ""
 #: providers/gda-odbc-server/gda-odbc-connection.c:280
 #, c-format
 msgid "gda_odbc_connection_open_schema: Unhandled SCHEMA_QTYPE %d\n"
-msgstr ""
+msgstr "gda_odbc_connection_open_schema: Необроблене значення SCHEMA_QTYPE %d\n"
 
 #: providers/gda-odbc-server/gda-odbc-connection.c:626
 #: providers/gda-odbc-server/gda-odbc-connection.c:627
@@ -355,15 +355,15 @@ msgstr "нема╓ тексту"
 msgid "Could not register ODBC provider implementation"
 msgstr "Не вдалося заре╓струвати реал╕зац╕ю постачальника ODBC"
 
-#: providers/gda-oracle-server/gda-oracle-command.c:195
+#: providers/gda-oracle-server/gda-oracle-command.c:185
 msgid "Could not allocate statement handle"
-msgstr ""
+msgstr "Не вдалося розм╕стити обробника оператора"
 
-#: providers/gda-oracle-server/gda-oracle-command.c:199
+#: providers/gda-oracle-server/gda-oracle-command.c:189
 msgid "command object being created without associated connection"
 msgstr ""
 
-#: providers/gda-oracle-server/gda-oracle-command.c:226
+#: providers/gda-oracle-server/gda-oracle-command.c:220
 #, c-format
 msgid "Executing command '%s'"
 msgstr "Виконаня команди \"%s\""
@@ -395,7 +395,7 @@ msgstr ""
 
 #: providers/gda-oracle-server/main-oracle.c:69
 msgid "Could not register ORACLE provider implementation"
-msgstr ""
+msgstr "Не вдалося розм╕стити реал╕зац╕ю постачальника Oracle"
 
 #: providers/gda-postgres-server/gda-postgres-connection.c:888
 #: providers/gda-postgres-server/gda-postgres-connection.c:1000
@@ -449,11 +449,11 @@ msgstr ""
 
 #: providers/gda-sybase-server/gda-sybase-command.c:260
 msgid "An error occured during command execution."
-msgstr ""
+msgstr "Виявлено помилку п╕д час виконання команди."
 
 #: providers/gda-sybase-server/gda-sybase-command.c:267
 msgid "Cmd execution returned unknown result, may be an error"
-msgstr ""
+msgstr "Виконання команди повернуло нев╕домий результат, можливо була помилка"
 
 #: providers/gda-sybase-server/gda-sybase-command.c:280
 msgid "No data returned, freeing recordset structure"
@@ -462,7 +462,7 @@ msgstr ""
 #: providers/gda-sybase-server/gda-sybase-command.c:311
 #: providers/gda-sybase-server/gda-sybase-command.c:323
 msgid "Freeing command structure failed"
-msgstr ""
+msgstr "Не вдалося зв╕льнити командну структуру"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:149
 msgid "Error allocating error structure"
@@ -478,14 +478,12 @@ msgid "schema_cols: table_name '%s'"
 msgstr "schema_cols: table_name \"%s\""
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:438
-#, fuzzy
 msgid "Could not allocate command structure"
-msgstr "Не вдалося розм╕стити %d байт"
+msgstr "Не вдалося розм╕стити командну стуктуру"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:460
-#, fuzzy
 msgid "Could not allocate enough memory for query"
-msgstr "Не вдалося ром╕зстити %d байт пам'ят╕"
+msgstr "Не вдалося вид╕лити достатньо пам'ят╕ для запиту"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:474
 msgid "Could not get recordset in schema_cols"
@@ -514,9 +512,8 @@ msgid "schema_procs: invalid constraint type %d"
 msgstr ""
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:533
-#, fuzzy
 msgid "Could not allocate cmd structure"
-msgstr "Не вдалося розм╕стити %d байт"
+msgstr "Не вдалося розм╕стити командну структуру"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:596
 #, c-format
@@ -535,7 +532,7 @@ msgstr ""
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:702
 msgid "Could not allocate Gda_ServerCommand"
-msgstr ""
+msgstr "Не вдалося розм╕стити Gda_ServerCommand"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:732
 #: providers/gda-sybase-server/gda-sybase-connection.c:737
@@ -565,17 +562,17 @@ msgstr "З'╓днано з %s"
 #: providers/gda-sybase-server/gda-sybase-connection.c:919
 #, c-format
 msgid "Selected database '%s'"
-msgstr ""
+msgstr "Вибрана база даних \"%s\""
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:948
-#, fuzzy, c-format
+#, c-format
 msgid "%s: Could not allocate cmd structure"
-msgstr "Не вдалося розм╕стити %d байт"
+msgstr "%s: Не вдалося розм╕стити командку структуру"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:957
-#, fuzzy, c-format
+#, c-format
 msgid "%s: Could not allocate memory for cmd string"
-msgstr "Не вдалося завантажити шрифт редактора"
+msgstr "%s: Не вдалося вид╕лити пам'ять для командного рядка"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:970
 #, c-format
@@ -626,147 +623,147 @@ msgstr ""
 msgid "Fatal error: %s\n"
 msgstr "Фатальна помилка: %s\n"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:62
+#: providers/gda-sybase-server/gda-sybase-error.c:65
 #, c-format
 msgid "gda_sybase_error_make(%p,%p,%p,%p)"
 msgstr "gda_sybase_error_make(%p,%p,%p,%p)"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:71
+#: providers/gda-sybase-server/gda-sybase-error.c:74
 #, c-format
 msgid "No error flag ist set, though %s is called. This may be a bug."
 msgstr ""
 
-#: providers/gda-sybase-server/gda-sybase-error.c:135
+#: providers/gda-sybase-server/gda-sybase-error.c:138
 msgid "cs_diag() initialized"
 msgstr "cs_diag() ╕н╕ц╕ал╕зовано"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:138
+#: providers/gda-sybase-server/gda-sybase-error.c:141
 msgid "Could not initialize cs_diag()"
 msgstr "Не вдалося ╕н╕ц╕ал╕зувати cs_diag()"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:145
+#: providers/gda-sybase-server/gda-sybase-error.c:148
 msgid "ct_diag() initialized"
 msgstr "ct_diag() ╕н╕ц╕ал╕зовано"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:148
+#: providers/gda-sybase-server/gda-sybase-error.c:151
 msgid "Could not initialize ct_diag()"
 msgstr "Не вдалося ╕н╕ц╕ал╕зувати ct_diag()"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:182
+#: providers/gda-sybase-server/gda-sybase-error.c:185
 #, c-format
 msgid "%s could not find server implementation"
 msgstr ""
 
-#: providers/gda-sybase-server/gda-sybase-error.c:188
+#: providers/gda-sybase-server/gda-sybase-error.c:191
 #, c-format
 msgid "%s could not get cnc userdata"
 msgstr ""
 
-#: providers/gda-sybase-server/gda-sybase-error.c:200
+#: providers/gda-sybase-server/gda-sybase-error.c:203
 msgid "Could not get # of messages"
 msgstr ""
 
-#: providers/gda-sybase-server/gda-sybase-error.c:205
+#: providers/gda-sybase-server/gda-sybase-error.c:208
 #, c-format
 msgid "%d ctlib messages to fetch"
 msgstr ""
 
-#: providers/gda-sybase-server/gda-sybase-error.c:207
+#: providers/gda-sybase-server/gda-sybase-error.c:210
 #, c-format
 msgid "%d ctlib message to fetch"
 msgstr ""
 
-#: providers/gda-sybase-server/gda-sybase-error.c:243
+#: providers/gda-sybase-server/gda-sybase-error.c:246
 msgid "error is nullpointer in gda_sybase_messages_handle"
 msgstr ""
 
-#: providers/gda-sybase-server/gda-sybase-error.c:268
-#: providers/gda-sybase-server/gda-sybase-error.c:335
-#: providers/gda-sybase-server/gda-sybase-error.c:378
+#: providers/gda-sybase-server/gda-sybase-error.c:271
+#: providers/gda-sybase-server/gda-sybase-error.c:338
+#: providers/gda-sybase-server/gda-sybase-error.c:381
 msgid "Could not get # of server messages"
 msgstr ""
 
-#: providers/gda-sybase-server/gda-sybase-error.c:276
+#: providers/gda-sybase-server/gda-sybase-error.c:279
 #, c-format
 msgid "Fetching %d client messages"
 msgstr ""
 
-#: providers/gda-sybase-server/gda-sybase-error.c:278
+#: providers/gda-sybase-server/gda-sybase-error.c:281
 #, c-format
 msgid "Fetching %d client message"
 msgstr ""
 
-#: providers/gda-sybase-server/gda-sybase-error.c:287
+#: providers/gda-sybase-server/gda-sybase-error.c:290
 #, fuzzy, c-format
 msgid "Could not get client msg # %d"
 msgstr "Не вдалося перейти в каталог \"%s\""
 
-#: providers/gda-sybase-server/gda-sybase-error.c:303
+#: providers/gda-sybase-server/gda-sybase-error.c:306
 msgid "Could not get # of client messages"
 msgstr ""
 
-#: providers/gda-sybase-server/gda-sybase-error.c:311
+#: providers/gda-sybase-server/gda-sybase-error.c:314
 #, fuzzy
 msgid "Could not clear client messages"
 msgstr ""
 "Не вдалося завантажити файл\n"
 " %s"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:343
+#: providers/gda-sybase-server/gda-sybase-error.c:346
 #, c-format
 msgid "Fetching %d server messages"
 msgstr ""
 
-#: providers/gda-sybase-server/gda-sybase-error.c:345
+#: providers/gda-sybase-server/gda-sybase-error.c:348
 #, c-format
 msgid "Fetching %d server message"
 msgstr ""
 
-#: providers/gda-sybase-server/gda-sybase-error.c:354
+#: providers/gda-sybase-server/gda-sybase-error.c:357
 #, fuzzy, c-format
 msgid "Could not get server msg # %d"
 msgstr "Не вдалося перейти в каталог \"%s\""
 
-#: providers/gda-sybase-server/gda-sybase-error.c:386
+#: providers/gda-sybase-server/gda-sybase-error.c:389
 msgid "Could not clear server messages"
 msgstr ""
 
-#: providers/gda-sybase-server/gda-sybase-error.c:408
-#: providers/gda-sybase-server/gda-sybase-error.c:444
+#: providers/gda-sybase-server/gda-sybase-error.c:411
+#: providers/gda-sybase-server/gda-sybase-error.c:447
 msgid "Could not get # of cslib messages"
 msgstr ""
 
-#: providers/gda-sybase-server/gda-sybase-error.c:416
+#: providers/gda-sybase-server/gda-sybase-error.c:419
 #, c-format
 msgid "Fetching %d cslib messages"
 msgstr ""
 
-#: providers/gda-sybase-server/gda-sybase-error.c:418
+#: providers/gda-sybase-server/gda-sybase-error.c:421
 #, c-format
-msgid "Fetchong %d cslib message"
+msgid "Fetching %d cslib message"
 msgstr ""
 
-#: providers/gda-sybase-server/gda-sybase-error.c:428
+#: providers/gda-sybase-server/gda-sybase-error.c:431
 #, c-format
 msgid "Could not get cslib msg # %d"
 msgstr ""
 
-#: providers/gda-sybase-server/gda-sybase-error.c:452
+#: providers/gda-sybase-server/gda-sybase-error.c:455
 #, fuzzy
 msgid "Could not clear cslib messages"
 msgstr ""
 "Не вдалося завантажити файл\n"
 " %s"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:584
+#: providers/gda-sybase-server/gda-sybase-error.c:587
 msgid "Server message:"
 msgstr ""
 
-#: providers/gda-sybase-server/gda-sybase-error.c:593
+#: providers/gda-sybase-server/gda-sybase-error.c:596
 msgid "Client message:"
 msgstr ""
 
-#: providers/gda-sybase-server/gda-sybase-error.c:600
+#: providers/gda-sybase-server/gda-sybase-error.c:603
 msgid "CS-Library error:"
 msgstr "Помилка CS-Library:"
 
@@ -839,42 +836,42 @@ msgstr "не вдалося вид╕лити поле"
 msgid "Could not register gda-sybase provider implementation"
 msgstr "Не вдалося заре╓струвати реал╕зац╕ю постачальника gda-sybase"
 
-#: report/gda-report-engine.c:87
+#: report/gda-report-engine.c:207
 #, c-format
 msgid "CORBA exception unloading report engine: %s"
 msgstr ""
 
-#: report/server/gda-report-server-main.c:43
-#: report/server/gda-report-server-main.c:50
+#: report/server/gda-report-server-main.c:41
+#: report/server/gda-report-server-main.c:48
 #, fuzzy, c-format
 msgid "Received signal %d, shutting down."
 msgstr "Отримано си╜нал %d, завершення роботи"
 
-#: report/server/gda-report-server-main.c:54
+#: report/server/gda-report-server-main.c:52
 #, fuzzy, c-format
 msgid "Received signal %d, shutting down cleanly"
 msgstr "Отримано си╜нал %d, завершення роботи"
 
-#: report/server/gda-report-server-main.c:96
+#: report/server/gda-report-server-main.c:92
 msgid "Failed to initialize OAF: please mail bug report to OAF maintainers"
 msgstr ""
 
-#: report/server/gda-report-server-main.c:106
+#: report/server/gda-report-server-main.c:101
 #, fuzzy
 msgid "Could not activate report engine"
 msgstr "не вдалося вид╕лити поле"
 
-#: report/server/gda-report-server-main.c:123
+#: report/server/gda-report-server-main.c:116
 msgid ""
 "Another instance of the report engine is already registered with OAF. "
 "Exiting..."
 msgstr ""
 
-#: report/server/gda-report-server-main.c:126
+#: report/server/gda-report-server-main.c:119
 msgid "Unknown error registering report engine with OAF. Exiting"
 msgstr ""
 
-#: report/server/gda-report-server-main.c:130
+#: report/server/gda-report-server-main.c:123
 #, fuzzy, c-format
 msgid "Registered report engine with ID = %s"
 msgstr "Заре╓стровано з ╕дентиф╕катором %s"
