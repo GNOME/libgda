@@ -1,14 +1,14 @@
-# German po for libgda
-# Copyright (C) 2000, 2001 Free Software Foundation, Inc.
-# Christian Neumair <chris@gnome-de.org>, 2002.
-# Christian Meyer <chrisime@gnome.org>, 2000, 2001.
+# German libgda translation
+# Copyright (C) 2000-2003 Free Software Foundation, Inc.
 # Kai Lahmann <kl@linuxfaqs.de>, 2000.
+# Christian Meyer <chrisime@gnome.org>, 2000, 2001, 2002.
+# Christian Neumair <chris@gnome-de.org>, 2002, 2003.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda HEAD\n"
-"POT-Creation-Date: 2002-12-29 10:54+0100\n"
-"PO-Revision-Date: 2002-12-16 23:18+0100\n"
+"POT-Creation-Date: 2003-01-03 18:48+0100\n"
+"PO-Revision-Date: 2002-01-03 18:50+0100\n"
 "Last-Translator: Christian Neumair <chris@gnome-de.org>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -44,7 +44,7 @@ msgstr "Eine von libgda erstellte temporäre Datenquelle. Nicht löschen"
 #: libgda/gda-config.c:1322 providers/default/gda-default-provider.c:556
 #: providers/default/gda-default-provider.c:576
 #: providers/default/gda-default-provider.c:613
-#: providers/mdb/gda-mdb-provider.c:366 providers/mdb/gda-mdb-provider.c:429
+#: providers/mdb/gda-mdb-provider.c:370 providers/mdb/gda-mdb-provider.c:430
 #: providers/mysql/gda-mysql-provider.c:663
 #: providers/mysql/gda-mysql-provider.c:847
 #: providers/oracle/gda-oracle-provider.c:1031
@@ -72,7 +72,7 @@ msgstr "Benutzername"
 msgid "Password"
 msgstr "Passwort"
 
-#: libgda/gda-data-model.c:683
+#: libgda/gda-data-model.c:685
 #, c-format
 msgid "Data model %p is not editable"
 msgstr "Das Datenmodell %p ist nicht veränderbar"
@@ -107,7 +107,7 @@ msgstr "SQL-Zeichenkette %s konnte nicht interpretiert werden"
 msgid "SQL command is not a SELECT (is '%s'"
 msgstr "SQL-Befehl ist kein SELECT-Befehl (sondern »%s«"
 
-#: libgda/gda-table.c:234
+#: libgda/gda-table.c:268
 #, c-format
 msgid "There is already a field called %s"
 msgstr "Es gibt bereits ein Feld mit dem Namen %s"
@@ -396,30 +396,30 @@ msgstr ""
 msgid "GDA provider for IBMDB2"
 msgstr "GDA-Treiber IBMDB2"
 
-#: providers/interbase/gda-interbase-provider.c:188
+#: providers/firebird/gda-firebird-provider.c:188
 msgid "No database specified"
 msgstr "Keine Datenbank angegeben"
 
-#: providers/interbase/gda-interbase-provider.c:235
-#: providers/interbase/gda-interbase-provider.c:262
-#: providers/interbase/gda-interbase-provider.c:280
-#: providers/interbase/gda-interbase-provider.c:314
-#: providers/interbase/gda-interbase-provider.c:369
-#: providers/interbase/gda-interbase-provider.c:414
-#: providers/interbase/gda-interbase-provider.c:448
-#: providers/interbase/gda-interbase-provider.c:486
-#: providers/interbase/gda-interbase-provider.c:540
-msgid "Invalid Interbase handle"
-msgstr "Ungültiger Interbase-Handle"
+#: providers/firebird/gda-firebird-provider.c:235
+#: providers/firebird/gda-firebird-provider.c:262
+#: providers/firebird/gda-firebird-provider.c:280
+#: providers/firebird/gda-firebird-provider.c:314
+#: providers/firebird/gda-firebird-provider.c:369
+#: providers/firebird/gda-firebird-provider.c:414
+#: providers/firebird/gda-firebird-provider.c:448
+#: providers/firebird/gda-firebird-provider.c:486
+#: providers/firebird/gda-firebird-provider.c:540
+msgid "Invalid Firebird handle"
+msgstr "Ungültiger Firebird-Handle"
 
-#: providers/interbase/gda-interbase-provider.c:454
-#: providers/interbase/gda-interbase-provider.c:492
+#: providers/firebird/gda-firebird-provider.c:454
+#: providers/firebird/gda-firebird-provider.c:492
 msgid "Invalid transaction handle"
 msgstr "Ungültiger Transaktionshandle"
 
-#: providers/interbase/libmain.c:39
-msgid "GDA provider for Interbase/Firebird databases"
-msgstr "GDA-Treiber für Interbase/Firebird-Datenbanken"
+#: providers/firebird/libmain.c:39
+msgid "GDA provider for FireBird databases"
+msgstr "GDA-Treiber für FireBird-Datenbanken"
 
 #: providers/mdb/gda-mdb-provider.c:203
 msgid "A database FILENAME must be specified in the connection_string"
@@ -433,12 +433,12 @@ msgstr ""
 msgid "Could not open file %s"
 msgstr "Datei %s konnte nicht geöffnet werden"
 
-#: providers/mdb/gda-mdb-provider.c:234 providers/mdb/gda-mdb-provider.c:262
-#: providers/mdb/gda-mdb-provider.c:465
+#: providers/mdb/gda-mdb-provider.c:236 providers/mdb/gda-mdb-provider.c:266
+#: providers/mdb/gda-mdb-provider.c:466
 msgid "Invalid MDB handle"
 msgstr "Ungültiger MDB-Handle"
 
-#: providers/mdb/gda-mdb-provider.c:367 providers/mdb/gda-mdb-provider.c:430
+#: providers/mdb/gda-mdb-provider.c:371 providers/mdb/gda-mdb-provider.c:431
 #: providers/mysql/gda-mysql-provider.c:848
 #: providers/mysql/gda-mysql-provider.c:930
 #: providers/oracle/gda-oracle-provider.c:1530
@@ -453,7 +453,7 @@ msgstr "Ungültiger MDB-Handle"
 msgid "Owner"
 msgstr "Besitzer"
 
-#: providers/mdb/gda-mdb-provider.c:368 providers/mdb/gda-mdb-provider.c:431
+#: providers/mdb/gda-mdb-provider.c:372 providers/mdb/gda-mdb-provider.c:432
 #: providers/mysql/gda-mysql-provider.c:849
 #: providers/mysql/gda-mysql-provider.c:931
 #: providers/oracle/gda-oracle-provider.c:1530
@@ -467,57 +467,57 @@ msgstr "Besitzer"
 msgid "Comments"
 msgstr "Kommentare"
 
-#: providers/mdb/gda-mdb-provider.c:432
+#: providers/mdb/gda-mdb-provider.c:433
 msgid "GDA Type"
 msgstr "GDA-Typ"
 
-#: providers/mdb/gda-mdb-provider.c:434
+#: providers/mdb/gda-mdb-provider.c:435
 msgid "Boolean type"
 msgstr "Boolescher Typ"
 
-#: providers/mdb/gda-mdb-provider.c:435
+#: providers/mdb/gda-mdb-provider.c:436
 msgid "1-byte integers"
 msgstr "Ganzzahlen der Länge 1 Byte"
 
-#: providers/mdb/gda-mdb-provider.c:436
+#: providers/mdb/gda-mdb-provider.c:437
 msgid "Double precision values"
 msgstr "Werte mit zweifacher Genauigkeit"
 
-#: providers/mdb/gda-mdb-provider.c:437
+#: providers/mdb/gda-mdb-provider.c:438
 msgid "Single precision values"
 msgstr "Werte mit einfacher Genauigkeit"
 
-#: providers/mdb/gda-mdb-provider.c:438
+#: providers/mdb/gda-mdb-provider.c:439
 msgid "32-bit integers"
 msgstr "Ganzzahlen der Länge 32 Bit"
 
-#: providers/mdb/gda-mdb-provider.c:439
+#: providers/mdb/gda-mdb-provider.c:440
 msgid "64-bit integers"
 msgstr "Ganzzahlen der Länge 64 Bit"
 
 # CHECK
-#: providers/mdb/gda-mdb-provider.c:440
+#: providers/mdb/gda-mdb-provider.c:441
 msgid "Variable length character strings"
 msgstr "Zeichenketten mit variabler Länge"
 
 # CHECK
-#: providers/mdb/gda-mdb-provider.c:441
+#: providers/mdb/gda-mdb-provider.c:442
 msgid "Money amounts"
 msgstr "Geldmengen"
 
-#: providers/mdb/gda-mdb-provider.c:442
+#: providers/mdb/gda-mdb-provider.c:443
 msgid "OLE object"
 msgstr "OLE-Objekt"
 
-#: providers/mdb/gda-mdb-provider.c:443
+#: providers/mdb/gda-mdb-provider.c:444
 msgid "FIXME"
 msgstr "FIXME"
 
-#: providers/mdb/gda-mdb-provider.c:444
+#: providers/mdb/gda-mdb-provider.c:445
 msgid "Date/time value"
 msgstr "Wert für Datum/Zeit"
 
-#: providers/mdb/gda-mdb-provider.c:445
+#: providers/mdb/gda-mdb-provider.c:446
 msgid "Character strings"
 msgstr "Zeichenketten"
 
@@ -1503,6 +1503,12 @@ msgstr "\tBeschreibung = %s\n"
 #: testing/config.c:93
 msgid "\tgda_params ="
 msgstr "\tGDA-_Parameter ="
+
+#~ msgid "Invalid Interbase handle"
+#~ msgstr "Ungültiger Interbase-Handle"
+
+#~ msgid "GDA provider for Interbase/Firebird databases"
+#~ msgstr "GDA-Treiber für Interbase/Firebird-Datenbanken"
 
 #~ msgid "Table Name"
 #~ msgstr "Tabellenname"
