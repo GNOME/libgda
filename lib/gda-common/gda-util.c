@@ -37,6 +37,37 @@
 #  define N_(String) (String)
 #endif
 
+/* function called by g_hash_table_foreach to add items to a GList */
+static void
+add_key_to_list (gpointer key, gpointer value, gpointer user_data)
+{
+	GList **list = (GList **) user_data;
+
+	*list = g_list_append (*list, key);
+}
+
+/**
+ * gda_util_hash_to_list
+ * @hash_table: a hash table
+ *
+ * Convert a #GHashTable into a #GList. It only adds to the list the
+ * hash table's keys, not the data associated with it. Another thing
+ * this function assumes is that the keys are strings (that is,
+ * zero-delimited sequence of characters)
+ *
+ * Returns: the newly created #GList
+ */
+GList *
+gda_util_hash_to_list (GHashTable *hash_table)
+{
+	GList *list = NULL;
+
+	g_return_val_if_fail (hash_table != NULL, NULL);
+
+	g_hash_table_foreach (hash_table, (GHFunc) add_key_to_list, &list);
+	return list;
+}
+
 /**
  * gda_util_load_file
  * @filename: file name

@@ -26,6 +26,8 @@
 extern "C" {
 #endif
 
+GList*   gda_util_hash_to_list (GHashTable *hash_table);
+
 gchar*   gda_util_load_file (const gchar *filename);
 gboolean gda_util_save_file (const gchar *filename, const gchar *text);
 
