@@ -12,7 +12,6 @@ lib/gda-common/gda-log.c
 lib/gda-common/gda-thread.c
 lib/gda-common/gda-xml-database.c
 lib/gda-common/gda-xml-file.c
-lib/gda-common/gda-xml-query.c
 lib/gda-server/gda-server-command.c
 lib/gda-server/gda-server-connection.c
 lib/gda-server/gda-server-error.c

@@ -30,6 +30,9 @@
 extern "C" {
 #endif
 
+#include <GDA_Report.h>
+#include <gda-report-engine.h>
+
 typedef struct _Gda_Report       Gda_Report;
 typedef struct _Gda_ReportClass  Gda_ReportClass;
 
@@ -39,8 +42,10 @@ struct _Gda_Report {
 #else
 	GtkObject	object;
 #endif
-	GDA_Report  corba_report;
+	GDA_Report	corba_report;
 	Gda_ReportEngine* engine;
+	gchar*		rep_name;
+	gchar*		description;
 	GList*		errors_head;
 	gint32		seek;
 };
@@ -75,7 +80,7 @@ GType			gda_report_get_type		(void);
 GtkType			gda_report_get_type		(void);
 #endif
 
-Gda_Report*		gda_report_new			(Gda_ReportEngine* engine);
+Gda_Report*		gda_report_new			(gchar* rep_name, gchar* description);
 void			gda_report_free			(Gda_Report* object);
 
 gchar*			gda_report_get_name		(Gda_Report* object);
@@ -88,11 +93,12 @@ Gda_ReportElement*	gda_report_get_elements		(Gda_Report* object);
 gint*			gda_report_set_elements		(Gda_Report* object, Gda_ReportElement* element);
 
 Gda_ReportFormat*	gda_report_get_format		(Gda_Report* object);
-gboolean		gda_report_isLocked		(Gda_Report* object);
 
 Gda_ReportOutput*	gda_report_run			(Gda_Report* object,
-							 Gda_ReportParamList,
+							 Gda_ReportParamList list,
 							 gint32 flags);
+							 
+gboolean		gda_report_isLocked		(Gda_Report* object);
 void			gda_report_lock			(Gda_Report* object);
 void			gda_report_unlock		(Gda_Report* object);
 

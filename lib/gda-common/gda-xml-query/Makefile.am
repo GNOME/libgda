@@ -8,6 +8,7 @@ INCLUDES = \
 	-DDTDINSTALLDIR=\""$(datadir)/gda/dtd"\"
 
 gob_lst = \
+	xml-query-item.gob \
 	xml-query-list.gob \
 	xml-query-atom.gob \
 	xml-query-bin.gob \
@@ -17,11 +18,10 @@ gob_lst = \
 	xml-query-join.gob \
 	xml-query-dml.gob \
 	xml-query-value.gob \
-	xml-query-item.gob \
 	xml-query-dual.gob \
 	xml-query-field.gob \
-	xml-query-delete.gob \
 	xml-query-func.gob \
+	xml-query-delete.gob \
 	xml-query-insert.gob \
 	xml-query-query.gob \
 	xml-query-select.gob \
@@ -46,9 +46,9 @@ xmlquery_headers = \
 
 libxmlquery_la_SOURCES = \
 	$(xmlquery_headers) \
-	read.c \
+	$(gob_src) \
 	utils.c \
-	$(gob_src)
+	read.c
 
 libxmlquery_la_LIBADD=$(GTK_LIBS) $(XML_LIBS)
 

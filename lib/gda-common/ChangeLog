@@ -1,3 +1,8 @@
+2001-02-18  Carlos Perelló Marín <carlos@gnome-db.org>
+
+	* Makefile.am: Removed all the references to gda-xml-query.*
+	* gda-common.h: Updated to the new xml-query
+
 2000-11-29	Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda_config_list_keys: fixed

@@ -5,8 +5,7 @@ SUBDIRS = gda-xml-query
 INCLUDES = \
 	$(GDA_CLIENT_CFLAGS) \
 	$(GDA_PROVIDER_CFLAGS) \
-	-I. \
-	-DDTDINSTALLDIR=\""$(datadir)/gda/dtd"\"
+	-I.
 
 gda_common_headers = \
 	gda-config.h \
@@ -16,7 +15,6 @@ gda_common_headers = \
 	gda-util.h \
 	gda-xml-database.h \
 	gda-xml-file.h \
-	gda-xml-query.h \
 	gda-common.h
 
 libgda_common_la_SOURCES = \
@@ -28,15 +26,9 @@ libgda_common_la_SOURCES = \
 	gda-thread.c \
 	gda-util.c \
 	gda-xml-database.c \
-	gda-xml-file.c \
-	gda-xml-query.c
+	gda-xml-file.c
+
 libgda_common_la_LIBADD=$(GDA_CLIENT_LIBS)
 
 gdaincludedir=$(includedir)/gda
 gdainclude_HEADERS=$(gda_common_headers)
-
-DTD_FILES = gda-xml-query.dtd
-dtddir=$(datadir)/gda/dtd
-dtd_DATA=$(DTD_FILES)
-
-EXTRA_DIST = $(DTD_FILES)

@@ -147,7 +147,7 @@ AM_CONDITIONAL(WITH_PERL, test $perl_val == true)
 dnl
 dnl checking for GOB (Gtk Object Builder)
 dnl
-GOB_CHECK
+GOB_CHECK(1.0.5)
 
 dnl
 dnl Checks for providers

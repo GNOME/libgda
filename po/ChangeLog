@@ -1,3 +1,8 @@
+2001-02-18  Carlos Perelló Marín <carlos@gnome-db.org>
+
+	* POTFILES.in: Removed lib/gda-common/gda-xml-query.c
+	  How we must do to translate the new .gob files?
+
 2001-02-14  Akira TAGOH  <tagoh@gnome-db.org>
 
 	* ja.po: Updated Japanese translation.

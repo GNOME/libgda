@@ -143,16 +143,17 @@ gda_report_init (Gda_Report* object, Gda_ReportClass *klass)
 gda_report_init (Gda_Report *object)
 #endif
 {
-	g_return_if_fail(GDA_REPORT_IS_OBJECT(object));
+	g_return_if_fail(GDA_IS_REPORT(object));
 	object->corba_report = CORBA_OBJECT_NIL;
 	object->engine = NULL;
+	object->rep_name = NULL;
+	object->description = NULL;
 	object->seek = 0;
 	object->errors_head = NULL;
 }
 
 /**
  * gda_report_new:
- * @engine: the Report Engine to connect.
  * @rep_name: The Report's name.
  * @description: A descripiton.
  *
@@ -161,28 +162,24 @@ gda_report_init (Gda_Report *object)
  * Returns: the pointer to the allocated object
  */
 Gda_Report*
-gda_report_new (Gda_ReportEngine* engine, gchar* rep_name, gchar* description)
+gda_report_new (gchar* rep_name, gchar* description)
 {
-	CORBA_Environment ev;
 	Gda_Report* object;
 	
-	g_return_val_if_fail(IS_GDA_REPORTENGINE(engine), NULL);
-	g_return_val_if_null(rep_name, NULL);
-	g_return_val_if_null(description, NULL);
-
 #ifdef HAVE_GOBJECT
 	object = GDA_REPORT (g_object_new (GDA_TYPE_REPORT, NULL));
 #else
 	object = gtk_type_new(gda_report_get_type());
 #endif
-	object->engine = engine;
-	CORBA_exception_init(&ev);
-	object->corba_report = GDA_ReportEngine_addReport(engine->corba_engine, \
-							  rep_name, description, &ev);
-	/*  if (gda_reportstream_corba_exception(object, &ev))
-	return -1;
-	else*/
-	CORBA_exception_free(&ev);
+	object->engine = NULL;
+	if (rep_name) {
+		object->rep_name = g_strdup(rep_name);	/* FIXME: I don't know if we must use
+						      gda_report_set_name */
+	}
+	if (description) {
+		object->description = g_strdup(description); /* FIXME: I don't know if we must use
+							  gda_report_set_description */
+	}
 	return object;
 }
 
@@ -198,143 +195,275 @@ gda_report_free (Gda_Report* object)
 {
 	CORBA_Environment ev;
 	
-	g_return_if_fail(IS_GDA_REPORTSTREAM(object));
-	g_return_if_fail(object->corba_reportstream != CORBA_OBJECT_NIL);
+	g_return_if_fail(IS_GDA_REPORT(object));
+	
+	if (object->corba_report != CORBA_OBJECT_NIL) {
+		CORBA_exception_init(&ev);
+		CORBA_Object_release(object->corba_reportstream, &ev);
+		if (!gda_corba_handle_exception(&ev)) {
+			gda_log_error(_("CORBA exception unloading report engine: %s"), CORBA_exception_id(&ev));
+		}
 
-	CORBA_exception_init(&ev);
-	CORBA_Object_release(object->corba_reportstream, &ev);
-	if (!gda_corba_handle_exception(&ev)) {
-		gda_log_error(_("CORBA exception unloading report engine: %s"), CORBA_exception_id(&ev));
+		CORBA_exception_free(&ev);
 	}
-
-	CORBA_exception_free(&ev);
-
+	g_free(object->engine);
+	g_free(object->rep_name);
+	g_free(object->description);
+	
 #ifdef HAVE_GOBJECT
 	g_object_unref (G_OBJECT (object));
 #else
 	gtk_object_destroy (GTK_OBJECT (object));
-#endif*/
+#endif
 }
 
 /**
- * gda_report_stream_readchunk:
- * @object: The ReportStream object.
- * @data:   The pointer to a pointer where we will put the reference to the buffer
- *	    we have read, this buffer MUST be freed after its use.
- * @start: The position where we must start to read, if this param has the
- *	   GDA_REPORTSTREAM_NEXT value, it starts from the previus possition.
- * @size: The number of bytes we must read.
+ * gda_report_get_name:
+ * @object: The Report object.
  *
- * Returns: The size (in bytes) of the data buffer, -1 if exists an error.
+ * Returns: The name of the report, NULL if it doesn't have name. You must free the
+ *	    string after use it.
  *
  */
-gint32
-gda_report_stream_readChunk (Gda_ReportStream* object, guchar** data, gint32 start, gint32 size)
+gchar*
+gda_report_get_name (Gda_Report* object)
+{
+
+	g_return_if_fail(IS_GDA_REPORT(object));
+	
+	g_return_val_if_fail(object->rep_name != NULL, NULL);
+
+	return g_strdup(object->rep_name);
+}
+
+/**
+ * gda_report_set_name:
+ * @object: The Report object.
+ * @name: The Report's name.
+ *
+ * Returns: -1 on error, 0 on success
+ *
+ */
+gint*
+gda_report_set_name (Gda_Report* object, gchar* name)
 {
 	CORBA_Environment ev;
-	GDA_ReportStreamChunk *chunk;
-	gint32 real_size;
 	
-	g_return_val_if_fail(IS_GDA_REPORTSTREAM(object), -1);
+	g_return_val_if_fail(IS_GDA_REPORT(object), -1);
+	g_return_val_if_fail(name != NULL, -1);
 
-	if (start == GDA_REPORTSTREAM_NEXT) {
-		chunk = GDA_ReportStream_readChunk(object->corba_reportstream, object->seek, size, &ev);
-		
-	} else {
-		chunk = GDA_ReportStream_readChunk(object->corba_reportstream, start, size, &ev);
+	if (object->rep_name) {
+		g_free(object->rep_name);
 	}
-	/*  if (gda_reportstream_corba_exception(object, &ev))
+	object->rep_name = g_strdup(name);
+	
+	if(object->corba_report != CORBA_OBJECT_NIL) {
+		GDA_Report__set_name(object->corba_report, name, &ev);
+	}
+	/*  if (gda_corba_exception(object, &ev))
 	return -1;
 	else*/
 	CORBA_exception_free(&ev);
-
-	real_size = chunk->_length;
-	*data = (guchar *) g_memdup(chunk->_buffer, real_size);
-	if (start == GDA_REPORTSTREAM_NEXT) {
-		object->seek = real_size;
-	} else {
-		object->seek += real_size;
-	}
-	CORBA_sequence_set_release (chunk, CORBA_TRUE);
-	CORBA_free (chunk);
-	return real_size;
+	return 0;
 }
 
 /**
- * gda_report_stream_writechunk:
- * @object: The ReportStream object.
- * @data:   The pointer to the data which will be writted.
- * @size:   The number of bytes we must write (the data buffer MUST be <= size.
+ * gda_report_get_description:
+ * @object: The Report object.
  *
- * Returns: The number of bytes we have wroten to the ReportStream, -1 if exists
- *	    an error.
+ * Returns: The description of the report, NULL if it doesn't have name. You must free the
+ *	    string after use it.
  *
  */
-gint32
-gda_report_stream_writeChunk (Gda_ReportStream* object, guchar* data, gint32 size)
+gchar*
+gda_report_get_description (Gda_Report* object)
+{
+
+	g_return_if_fail(IS_GDA_REPORT(object));
+	
+	g_return_val_if_fail(object->description != NULL, NULL);
+
+	return g_strdup(object->description);
+}
+
+/**
+ * gda_report_set_description:
+ * @object: The Report object.
+ * @name: The Report's description.
+ *
+ * Returns: -1 on error, 0 on success
+ *
+ */
+gint*
+gda_report_set_description (Gda_Report* object, gchar* description)
 {
 	CORBA_Environment ev;
-	GDA_ReportStreamChunk chunk;
-	gint32 real_size;
 	
-	g_return_val_if_fail(IS_GDA_REPORTSTREAM(object), -1);
+	g_return_val_if_fail(IS_GDA_REPORT(object), -1);
+	g_return_val_if_fail(description != NULL, -1);
 
-	chunk._maximum = 0;
-	chunk._length = size;
-	chunk._buffer = (CORBA_octet *) g_memdup(data, size);
-	chunk._release = CORBA_FALSE;
- 
-	real_size = GDA_ReportStream_writeChunk(object->corba_reportstream, &chunk, size, &ev);
-	/*  if (gda_reportstream_corba_exception(object, &ev))
+	if (object->description) {
+		g_free(object->description);
+	}
+	object->description = g_strdup(description);
+	
+	if(object->corba_report != CORBA_OBJECT_NIL) {
+		GDA_Report__set_description(object->corba_report, description, &ev);
+	}
+	/*  if (gda_corba_exception(object, &ev))
 	return -1;
 	else*/
 	CORBA_exception_free(&ev);
-	CORBA_sequence_set_release (&chunk, CORBA_TRUE);
-	CORBA_free (chunk._buffer);
-	return real_size;
+	return 0;
+
 }
 
 /**
- * gda_report_stream_length:
+ * gda_report_get_elements:
+ * @object: The Report object.
  *
- * Gets the report stream's size in bytes.
- *
- * Returns: The size (in bytes) of the report stream, -1 if exists an error.
+ * Return: The main ReportElement
  *
  */
-gint32
-gda_report_stream_length (Gda_ReportStream* object)
+Gda_ReportElement*
+gda_report_get_elements (Gda_Report* object)
 {
 	CORBA_Environment ev;
-	gint32            size;
+	Gda_ReportElement *element;
+	
+	g_return_val_if_fail(IS_GDA_REPORT(object), NULL);
 
-	g_return_val_if_fail(IS_GDA_REPORTSTREAM(object), -1);
+	element = gda_report_element_new();
 	
 	CORBA_exception_init(&ev);
-	size = GDA_ReportStream_getLength(object->corba_reportstream, &ev);
-	/*  if (gda_reportstream_corba_exception(object, &ev))
-		return -1;
-	else*/
+	element->corba_element = GDA_Report__get_elements(object->corba_report, &ev);
+	if (gda_corba_handle_exception(&ev)) {
+
+	}
 	CORBA_exception_free(&ev);
-	return size;
+	return element;
+	
+}
+
+/**
+ * gda_report_set_elements:
+ * @object: The Report object.
+ * @element: The main ReportElement
+ *
+ * Return: -1 on error, 0 on success.
+ *
+ */
+gint*
+gda_report_set_elements (Gda_Report* object, Gda_ReportElement* element)
+{
+	CORBA_Environment ev;
+	
+	g_return_val_if_fail(IS_GDA_REPORT(object), -1);
+	g_return_val_if_fail(IS_GDA_REPORTELEMENT(element), -1);
+
+	CORBA_exception_init(&ev);
+	GDA_Report__set_elements(object->corba_report, element->corba_element, &ev);
+	if (gda_corba_handle_exception(&ev)) {
+
+	}
+	CORBA_exception_free(&ev);
+	return 0;
 
 }
 
+/**
+ * gda_report_get_format:
+ * @object: The Report object.
+ *
+ * Return: The format of the Report Object.
+ *
+ */
+Gda_ReportFormat*
+gda_report_get_format (Gda_Report* object)
+{
+	/* FIXME: Implement me, please!!! */
+	return NULL;
+}
 
-gchar*			gda_report_get_name		(Gda_Report* object);
-gint*			gda_report_set_name		(Gda_Report* object, gchar* name);
+/**
+ * gda_report_isLocked:
+ * @object: The Report object.
+ *
+ * Return: If the Report Object is locked ot not
+ *
+ */
+gboolean
+gda_report_isLocked (Gda_Report* object)
+{
+	CORBA_Environment ev;
+	gboolean locked;
+	
+	g_return_val_if_fail(IS_GDA_REPORT(object), NULL);
 
-gchar*			gda_report_get_description	(Gda_Report* object);
-gint*			gda_report_set_description	(Gda_Report* object, gchar* description);
+	CORBA_exception_init(&ev);
+	locked = GDA_Report__get_isLocked(object->corba_report, &ev);
+	if (gda_corba_handle_exception(&ev)) {
 
-Gda_ReportElement*	gda_report_get_elements		(Gda_Report* object);
-gint*			gda_report_set_elements		(Gda_Report* object, Gda_ReportElement* element);
+	}
+	CORBA_exception_free(&ev);
+	return locked;
 
-Gda_ReportFormat*	gda_report_get_format		(Gda_Report* object);
-gboolean		gda_report_isLocked		(Gda_Report* object);
+}
 
-Gda_ReportOutput*	gda_report_run			(Gda_Report* object,
-							 Gda_ReportParamList,
-							 gint32 flags);
-void			gda_report_lock			(Gda_Report* object);
-void			gda_report_unlock		(Gda_Report* object);
+/**
+ * gda_report_run:
+ * @object: The Report object.
+ * @list:
+ * @flags:
+ *
+ * Return: The result of running the report.
+ *
+ */
+Gda_ReportOutput*
+gda_report_run (Gda_Report* object, Gda_ReportParamList list, gint32 flags)
+{
+	/* FIXME: Implement me, please!!! */
+	return NULL;
+}
+
+/**
+ * gda_report_lock:
+ * @object: The Report object.
+ *
+ *
+ */
+void
+gda_report_lock (Gda_Report* object)
+{
+	CORBA_Environment ev;
+	
+	g_return_val_if_fail(IS_GDA_REPORT(object), NULL);
+
+	CORBA_exception_init(&ev);
+	GDA_Report_lock(object->corba_report, &ev);
+	if (gda_corba_handle_exception(&ev)) {
+
+	}
+	CORBA_exception_free(&ev);
+}
+
+/**
+ * gda_report_unlock:
+ * @object: The Report object.
+ *
+ *
+ */
+void
+gda_report_unlock (Gda_Report* object)
+{
+	CORBA_Environment ev;
+	
+	g_return_val_if_fail(IS_GDA_REPORT(object), NULL);
+
+	CORBA_exception_init(&ev);
+	GDA_Report_unlock(object->corba_report, &ev);
+	if (gda_corba_handle_exception(&ev)) {
+
+	}
+	CORBA_exception_free(&ev);
+}

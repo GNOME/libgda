@@ -142,7 +142,7 @@ gda_report_engine_init (Gda_ReportEngine* object, Gda_ReportEngineClass *klass)
 gda_report_engine_init (Gda_ReportEngine *object)
 #endif
 {
-	g_return_if_fail(GDA_REPORTENGINE_IS_OBJECT(object));
+	g_return_if_fail(GDA_IS_REPORTENGINE(object));
 }
 
  
