@@ -5,14 +5,14 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda-2\n"
-"POT-Creation-Date: 2003-06-28 16:04+0400\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2003-07-03 16:39+0200\n"
 "PO-Revision-Date: 2003-06-28 16:24+0400\n"
 "Last-Translator: Valek Filippov <frob@df.ru>\n"
 "Language-Team: Russian <gnome-cyr@gnome.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8-bit\n"
-"Report-Msgid-Bugs-To: \n"
 
 #: libgda/gda-client.c:312 libgda/gda-client.c:515 libgda/gda-connection.c:218
 #, c-format
@@ -801,11 +801,13 @@ msgstr "Неправильный обработчик mSQL"
 
 #: providers/msql/gda-msql-provider.c:318
 msgid "mSQL allows database creation only through the msqladmin tool."
-msgstr "mSQL допускает создание баз данных только с помощью программы msqladmin."
+msgstr ""
+"mSQL допускает создание баз данных только с помощью программы msqladmin."
 
 #: providers/msql/gda-msql-provider.c:331
 msgid "mSQL allows database drops only through the msqladmin tool."
-msgstr "mSQL допускает удаление баз данных только с помощью программы msqladmin."
+msgstr ""
+"mSQL допускает удаление баз данных только с помощью программы msqladmin."
 
 #: providers/msql/gda-msql-provider.c:376
 #: providers/msql/gda-msql-provider.c:389
@@ -1502,7 +1504,8 @@ msgstr ""
 
 #: providers/sybase/libmain.c:40
 msgid "GDA provider for sybase databases (using OpenClient)"
-msgstr "Провайдер GDA для доступа к базам данных Sybase (c использованием OpenClient)"
+msgstr ""
+"Провайдер GDA для доступа к базам данных Sybase (c использованием OpenClient)"
 
 #: providers/sybase/main.c:52
 msgid "Could not initiate Sybase component factory"

@@ -1,3 +1,7 @@
+2003-07-03  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	Released 0.90.0
+
 2003-06-22  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* libgda/gda-value.[ch]: keep alphabetical sort.

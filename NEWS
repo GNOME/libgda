@@ -1,3 +1,20 @@
+libgda 0.90.0, 2003-07-03
+-------------------------
+
+ - Added missing stanzas for MDB and LDAP providers in spec file (adam)
+ - Added version 3 support for the mSQL provider (dschoene)
+ - Added support for unsigned integer values (dschoene)
+ - Added DONT_SHARE option for connections (rodrigo)
+ - Some more documentation (rodrigo)
+ - Updated translations:
+        - cs (mitr)
+	- es (pablodc)
+        - ml (karunakar)
+	- nl (vincent)
+	- pt (dnloreto)
+	- ru (frob)
+        - zh_TW (baddog)
+
 libgda 0.12.1, 2003-06-08
 -------------------------
 
