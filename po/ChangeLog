@@ -1,3 +1,8 @@
+2001-01-25  Carlos Perelló Marín <carlos@gnome-db.org>
+
+	* update.pl: removed because don't work with xml-i18n-tools
+	  update.sh: Stolen from Nautilus, it's only a wrapper to xml-i18n-tools
+
 2001-01-24  Stanislav Visnovsky <visnovsky@nenya.ms.mff.cuni.cz>
 
 	* sk.po: Updated Slovak translation
