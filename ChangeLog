@@ -1,3 +1,19 @@
+2003-01-15  German Poo-Caaman~o <gpoo@ubiobio.cl>
+
+	* configure.in: Added LDAP files check.
+	* providers/Makefile.am: Added conditional LDAP build
+	* providers/ldap: 
+	* providers/ldap/gda-ldap.h:
+	* providers/ldap/gda-ldap-provider.[ch]:
+	* providers/ldap/gda-ldap-recordset.[ch]:
+	* providers/ldap/libmain.c:
+	* providers/ldap/utils.c: Added LDAP provider.  Currently
+	  supports open_connection, close_connection, providers_supports,
+	  get_database, get_schema, get_version, get_server_version.
+	  LDAP doesn't support transation, but begin_transaction,
+	  rollback_transaction and commit_transaction are implemented 
+	  in a simple way.
+
 2003-01-15  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* libgda/gda-log.c: use syslog for log messages.

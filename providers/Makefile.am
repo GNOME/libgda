@@ -42,6 +42,10 @@ if XBASE
 GDA_XBASE_SERVER=xbase
 endif
 
+if LDAP
+GDA_LDAP_SERVER=ldap
+endif
+
 SUBDIRS = \
 	$(GDA_FREETDS_SERVER) \
 	$(GDA_IBMDB2_SERVER) \
@@ -54,4 +58,5 @@ SUBDIRS = \
 	$(GDA_SQLITE_SERVER) \
 	$(GDA_SYBASE_SERVER) \
 	$(GDA_XBASE_SERVER) \
+	$(GDA_LDAP_SERVER) \
 	default
