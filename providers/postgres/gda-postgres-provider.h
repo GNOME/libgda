@@ -1,5 +1,5 @@
 /* GNOME DB Postgres Provider
- * Copyright (C) 1998-2001 The Free Software Foundation
+ * Copyright (C) 1998-2002 The GNOME Foundation
  *
  * AUTHORS:
  *         Vivien Malerba <malerba@gnome-db.org>
@@ -25,14 +25,17 @@
 #  define __gda_postgres_provider_h__
 
 #include <libgda/gda-server-provider.h>
-
-G_BEGIN_DECLS
+#include <libgda/gda-server-recordset-model.h>
 
 #define GDA_TYPE_POSTGRES_PROVIDER            (gda_postgres_provider_get_type())
 #define GDA_POSTGRES_PROVIDER(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_POSTGRES_PROVIDER, GdaPostgresProvider))
 #define GDA_POSTGRES_PROVIDER_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_POSTGRES_PROVIDER, GdaPostgresProviderClass))
 #define GDA_IS_POSTGRES_PROVIDER(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_POSTGRES_PROVIDER))
 #define GDA_IS_POSTGRES_PROVIDER_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GDA_TYPE_POSTGRES_PROVIDER))
+
+#define PARENT_TYPE GDA_TYPE_SERVER_PROVIDER
+#define OBJECT_DATA_POSTGRES_HANDLE "GDA_Postgres_PostgresHandle"
+
 
 typedef struct _GdaPostgresProvider      GdaPostgresProvider;
 typedef struct _GdaPostgresProviderClass GdaPostgresProviderClass;
@@ -44,6 +47,8 @@ struct _GdaPostgresProvider {
 struct _GdaPostgresProviderClass {
 	GdaServerProviderClass parent_class;
 };
+
+G_BEGIN_DECLS
 
 GType gda_postgres_provider_get_type (void);
 

@@ -1,3 +1,12 @@
+2002-01-07  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
+	* *.[ch]: changed copyright to the GNOME Foundation.
+
+	* gda-postgres-provider.[ch]: moved #define's to header file. Now use
+	GdaPostgresConnectionPrivate to store the connection and the data
+	associated data types.
+	(add_string_row()): now it is called from g_list_foreach().
+
 2002-01-03  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
 	* utils.c:
