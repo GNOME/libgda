@@ -26,6 +26,7 @@
 #include "gda-test.h"
 #include "postgres-test.h"
 #include "freetds-test.h"
+#include "sybase-test.h"
 
 /* Shows the object schemas */
 static void
@@ -156,6 +157,8 @@ open_connection (GdaClient *client,
 		do_postgres_test (cnc);
 	if (!strcmp (dsn_info->provider, FREETDS_PROVIDER_NAME))
 		do_freetds_test (cnc);
+	if (!strcmp (dsn_info->provider, SYBASE_PROVIDER_NAME))
+		do_sybase_test (cnc);
 	gda_config_free_data_source_info (dsn_info);
 
 	/* close the connection */

@@ -172,7 +172,7 @@ G_BEGIN_DECLS
 	}
 #define TDS_SCHEMA_USERS \
 	"SELECT name " \
-	"  FROM syslogins " \
+	"  FROM master..syslogins " \
 	" ORDER BY name"
 
 

@@ -10,6 +10,10 @@ INCLUDES = \
 libgda_sybase_la_SOURCES = \
 	gda-sybase-provider.c \
 	gda-sybase-provider.h \
+	gda-sybase-recordset.c \
+	gda-sybase-recordset.h \
+	gda-sybase-types.c \
+	gda-sybase-types.h \
 	gda-sybase.h \
 	libmain.c \
 	utils.c

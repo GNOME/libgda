@@ -1,3 +1,18 @@
+2002-12-09  Holger Thon <holger.thon@gnome-db.org>
+
+	* providers/freetds/gda-tds-schemas.h: corrected users schema
+	* providers/sybase/gda-sybase-provider.[ch]: finished basic
+	connection code and schema implementation
+	* providers/sybase/gda-sybase-types.[ch]: type conversion added
+	* providers/sybase/gda-sybase-recordset.[ch]: implementation of
+	proceeding row results
+	* providers/sybase/utils.c, providers/sybase/gda-sybase.h: added 
+	logging/error help functions
+	* providers/sybase/Makefile.am: commit of scheduled sybase provider
+
+	* testing/sybase-test.[ch], testing/Makefile.am, testing/client.c:
+	Added sybase provider tests
+
 2002-11-28  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* libgda/gda-init.c (gda_init): removed debug messages.

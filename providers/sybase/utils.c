@@ -139,9 +139,46 @@ sybase_check_messages(GdaConnection *cnc)
 	return TRUE;
 }
 
+GdaError *
+gda_sybase_make_error (GdaSybaseConnectionData *scnc, gchar *fmt, ...)
+{
+	GdaError *error;
+	va_list args;
+	const size_t buf_size = 4096;
+	char buf[buf_size + 1];
+
+	if (scnc != NULL) {
+		switch (scnc->ret) {
+			case CS_BUSY:	sybase_error_msg(_("Operation not possible, connection busy."));
+					break;
+		}
+	}
+	
+	error = gda_error_new();
+	if (error) {
+		if (fmt) {
+			va_start(args, fmt);
+			vsnprintf(buf, buf_size, fmt, args);
+			va_end(args);
+
+			gda_error_set_description (error, fmt);
+		} else {
+			gda_error_set_description (error, _("NO DESCRIPTION"));
+		}
+
+		gda_error_set_number (error, -1);
+		gda_error_set_source (error, "gda-sybase");
+		gda_error_set_sqlstate (error, _("Not available"));
+	}
+
+	return error;
+}
+
 void
 sybase_debug_msg(gchar *fmt, ...)
 {
+// FIXME: remove comment after reviewing error code
+//#ifdef SYBASE_DEBUG
 	va_list args;
 	const size_t buf_size = 4096;
 	char buf[buf_size + 1];
@@ -150,5 +187,21 @@ sybase_debug_msg(gchar *fmt, ...)
 	vsnprintf(buf, buf_size, fmt, args);
 	va_end(args);
 	
+	gda_log_message("Sybase: %s", buf);
+// FIXME: remove comment after reviewing error code
+//#endif
+}
+
+void
+sybase_error_msg(gchar *fmt, ...)
+{
+	va_list args;
+	const size_t buf_size = 4096;
+	char buf[buf_size + 1];
+
+	va_start(args, fmt);
+	vsnprintf(buf, buf_size, fmt, args);
+	va_end(args);
+
 	gda_log_message("Sybase: %s", buf);
 }
