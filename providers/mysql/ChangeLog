@@ -1,3 +1,7 @@
+2001-12-30  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-mysql-provider.c (get_mysql_types): implemented TYPES schema
+
 2001-12-29  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-mysql-recordset.c (fetch_func): if there are no rows, just

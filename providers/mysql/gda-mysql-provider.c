@@ -22,6 +22,8 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#include <bonobo/bonobo-i18n.h>
+#include <libgda/gda-server-recordset-model.h>
 #include "gda-mysql.h"
 
 #define PARENT_TYPE GDA_TYPE_SERVER_PROVIDER
@@ -427,6 +429,60 @@ get_mysql_tables (GdaServerConnection *cnc, GdaParameterList *params)
 	return recset;
 }
 
+static void
+add_string_row (GdaServerRecordsetModel *recset, const gchar *str)
+{
+	GdaValue *value;
+	GList list;
+
+	g_return_if_fail (GDA_IS_SERVER_RECORDSET_MODEL (recset));
+
+	value = gda_value_new_string (str);
+	list.data = value;
+	list.next = NULL;
+	list.prev = NULL;
+
+	gda_server_recordset_model_append_row (recset, &list);
+
+	gda_value_free (value);
+}
+
+static GdaServerRecordset *
+get_mysql_types (GdaServerConnection *cnc, GdaParameterList *params)
+{
+	GdaServerRecordsetModel *recset;
+
+	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), NULL);
+
+	/* create the recordset */
+	recset = gda_server_recordset_model_new (cnc, 1);
+	gda_server_recordset_model_set_field_defined_size (recset, 0, 32);
+	gda_server_recordset_model_set_field_name (recset, 0, _("Type"));
+	gda_server_recordset_model_set_field_scale (recset, 0, 0);
+	gda_server_recordset_model_set_field_gdatype (recset, 0, GDA_TYPE_STRING);
+
+	/* fill the recordset */
+	add_string_row (recset, "blob");
+	add_string_row (recset, "date");
+	add_string_row (recset, "datetime");
+	add_string_row (recset, "decimal");
+	add_string_row (recset, "double");
+	add_string_row (recset, "enum");
+	add_string_row (recset, "float");
+	add_string_row (recset, "int24");
+	add_string_row (recset, "long");
+	add_string_row (recset, "longlong");
+	add_string_row (recset, "set");
+	add_string_row (recset, "short");
+	add_string_row (recset, "string");
+	add_string_row (recset, "time");
+	add_string_row (recset, "timestamp");
+	add_string_row (recset, "tiny");
+	add_string_row (recset, "year");
+
+	return recset;
+}
+
 /* get_schema handler for the GdaMysqlProvider class */
 static GdaServerRecordset *
 gda_mysql_provider_get_schema (GdaServerProvider *provider,
@@ -438,8 +494,14 @@ gda_mysql_provider_get_schema (GdaServerProvider *provider,
 	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), NULL);
 
 	switch (schema) {
+	case GNOME_Database_Connection_SCHEMA_PROCEDURES :
+		break; /* FIXME */
 	case GNOME_Database_Connection_SCHEMA_TABLES :
 		return get_mysql_tables (cnc, params);
+	case GNOME_Database_Connection_SCHEMA_TYPES :
+		return get_mysql_types (cnc, params);
+	case GNOME_Database_Connection_SCHEMA_VIEWS :
+		break; /* FIXME */
 	}
 
 	return NULL;
