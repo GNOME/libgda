@@ -15,6 +15,9 @@ goals in mind:
 modify the sources directly on the CVS repository, please keep those
 things in mind.  Specifically, this means:
 
+	- Only if you maintain that part of the code, or if you are a
+	  GNOME build sheriff you can commit directly. In other cases,
+	  please send your patch to gnome-db-list@gnome.org.
 	- Make sure your code does not generate warnings at all.
 	- Please follow the coding style used libGDA.
 
