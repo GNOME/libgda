@@ -27,7 +27,7 @@ get_conf_engine (void)
 {
   if (!conf_engine)
     {
-      conf_engine = gconf_engine_new();
+      conf_engine = gconf_engine_get_default();
     }
   return conf_engine;
 }
