@@ -560,5 +560,7 @@ tools/Makefile
 tools/gda-config
 tools/gda-buildserver
 tools/gda-buildclient
+report/Makefile
+report/idl/Makefile
 testing/Makefile
 stamp.h],[sed -e "/POTFILES =/r po/POTFILES" po/Makefile.in > po/Makefile])

@@ -7,7 +7,7 @@ SUBDIRS = \
 	bindings \
 	providers \
 	tools \
-	testing
+	report 
 
 dist-hook: libgda.spec
 	cp libgda.spec $(distdir)
