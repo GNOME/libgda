@@ -2,12 +2,12 @@ SUBDIRS = \
 	po \
 	macros \
 	doc \
-	intl \
 	idl \
 	lib \
 	bindings \
 	providers \
-	tools
+	tools \
+	testing
 
 dist-hook: libgda.spec
 	cp libgda.spec $(distdir)

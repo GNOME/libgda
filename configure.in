@@ -1,7 +1,7 @@
 AC_INIT(lib/gda-common/gda-common.h)
 AM_CONFIG_HEADER(config.h)
 
-AM_INIT_AUTOMAKE(libgda,0.0.97)
+AM_INIT_AUTOMAKE(libgda,0.0.99)
 AM_MAINTAINER_MODE
 AM_ACLOCAL_INCLUDE(macros)
 
@@ -560,4 +560,5 @@ tools/Makefile
 tools/gda-config
 tools/gda-buildserver
 tools/gda-buildclient
+testing/Makefile
 stamp.h],[sed -e "/POTFILES =/r po/POTFILES" po/Makefile.in > po/Makefile])
