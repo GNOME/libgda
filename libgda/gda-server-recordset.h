@@ -57,6 +57,12 @@ GdaServerRecordset  *gda_server_recordset_new (GdaServerConnection *cnc,
 					       GdaServerRecordsetFetchFunc fetch_func,
 					       GdaServerRecordsetDescribeFunc desc_func);
 GdaServerConnection *gda_server_recordset_get_connection (GdaServerRecordset *recset);
+void                 gda_server_recordset_set_connection (GdaServerRecordset *recset,
+							  GdaServerConnection *cnc);
+void                 gda_server_recordset_set_fetch_func (GdaServerRecordset *recset,
+							  GdaServerRecordsetFetchFunc func);
+void                 gda_server_recordset_set_describe_func (GdaServerRecordset *recset,
+							     GdaServerRecordsetDescribeFunc func);
 
 G_END_DECLS
 

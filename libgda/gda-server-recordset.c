@@ -308,3 +308,37 @@ gda_server_recordset_get_connection (GdaServerRecordset *recset)
 	g_return_val_if_fail (GDA_IS_SERVER_RECORDSET (recset), NULL);
 	return recset->priv->cnc;
 }
+
+/**
+ * gda_server_recordset_set_connection
+ */
+void
+gda_server_recordset_set_connection (GdaServerRecordset *recset, GdaServerConnection *cnc)
+{
+	g_return_if_fail (GDA_IS_SERVER_RECORDSET (recset));
+	g_return_if_fail (GDA_IS_SERVER_CONNECTION (cnc));
+
+	recset->priv->cnc = cnc;
+}
+
+/**
+ * gda_server_recordset_set_fetch_func
+ */
+void
+gda_server_recordset_set_fetch_func (GdaServerRecordset *recset,
+				     GdaServerRecordsetFetchFunc func)
+{
+	g_return_if_fail (GDA_IS_SERVER_RECORDSET (recset));
+	recset->priv->fetch_func = func;
+}
+
+/**
+ * gda_server_recordset_set_describe_func
+ */
+void
+gda_server_recordset_set_describe_func (GdaServerRecordset *recset,
+					GdaServerRecordsetDescribeFunc func)
+{
+	g_return_if_fail (GDA_IS_SERVER_RECORDSET (recset));
+	recset->priv->desc_func = func;
+}

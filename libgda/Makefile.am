@@ -50,6 +50,7 @@ gda_headers = \
 	gda-server-connection.h \
 	gda-server-provider.h \
 	gda-server-recordset.h \
+	gda-server-recordset-model.h \
 	gda-util.h \
 	gda-value.h \
 	gda-xml-database.h \
@@ -102,6 +103,7 @@ libgda_2_la_SOURCES = \
 	gda-server-connection.c \
 	gda-server-provider.c \
 	gda-server-recordset.c \
+	gda-server-recordset-model.c \
 	gda-util.c \
 	gda-value.c \
 	gda-xml-database.c \

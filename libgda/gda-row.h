@@ -80,7 +80,7 @@ GdaType             gda_field_get_gdatype (GdaField *field);
 void                gda_field_set_gdatype (GdaField *field, GdaType type);
 gboolean            gda_field_is_null (GdaField *field);
 GdaValue           *gda_field_get_value (GdaField *field);
-void                gda_field_set_value (GdaField *field, GdaValue *value);
+void                gda_field_set_value (GdaField *field, const GdaValue *value);
 long long           gda_field_get_bigint_value (GdaField *field);
 void                gda_field_set_bigint_value (GdaField *field, long long value);
 gconstpointer       gda_field_get_binary_value (GdaField *field);

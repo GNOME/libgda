@@ -323,7 +323,7 @@ gda_field_get_value (GdaField *field)
  * gda_field_set_value
  */
 void
-gda_field_set_value (GdaField *field, GdaValue *value)
+gda_field_set_value (GdaField *field, const GdaValue *value)
 {
 	g_return_if_fail (field != NULL);
 	g_return_if_fail (value != NULL);

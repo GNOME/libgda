@@ -1,3 +1,14 @@
+2001-12-30  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-server-recordset-model.[ch]: new class, for creating
+	GdaServerRecordset's from data models
+
+	* gda-server-recordset.[ch] (gda_server_recordset_set_connection):
+	(gda_server_recordset_set_fetch_func):
+	(gda_server_recordset_set_describe_func): new functions
+
+	* gda-row.[ch] (gda_field_set_value): set const for GdaValue argument
+
 2001-12-29  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-connection.h: added new schemas to GdaConnectionSchema
