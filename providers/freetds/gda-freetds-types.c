@@ -128,6 +128,9 @@ gda_freetds_get_value_type (TDSCOLINFO *col)
 {
 	g_return_val_if_fail (col != NULL, GDA_VALUE_TYPE_UNKNOWN);
 
+//	gda_log_message (_("Type: %d (0x%0000x): Len: %d"),
+//	                 col->column_type, col->column_type, col->column_size);
+	
 	switch (col->column_type) {
 		case SYBBIT:
 		case SYBBITN:
@@ -178,7 +181,7 @@ gda_freetds_get_value_type (TDSCOLINFO *col)
 		case SYBDATETIME4:
 			return GDA_VALUE_TYPE_TIMESTAMP;
 		default:
-			return GDA_VALUE_TYPE_STRING;
+			return GDA_VALUE_TYPE_UNKNOWN;
 	}
 	
 	return GDA_VALUE_TYPE_UNKNOWN;
@@ -190,6 +193,7 @@ gda_freetds_set_gdavalue (GdaValue *field, gchar *val, TDSCOLINFO *col,
 			  GdaFreeTDSConnectionData *tds_cnc)
 {
 	const TDS_INT max_size = 255;
+	TDS_INT int_val = 0;
 	TDS_INT col_size = 0;
 	gchar *txt = NULL;
 #ifdef HAVE_FREETDS_VER0_6X

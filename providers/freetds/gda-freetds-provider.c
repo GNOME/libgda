@@ -617,6 +617,73 @@ static const gchar
 }
 
 static GdaDataModel
+*gda_freetds_provider_get_types (GdaConnection    *cnc,
+                                 GdaParameterList *params)
+{
+	GdaDataModel *model = NULL;
+	TDSCOLINFO col;
+	GdaValueType gda_type;
+	GdaValue     *value = NULL;
+	guint uid = 0;
+	gint i = 1;
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+
+	model = gda_freetds_execute_query (cnc, TDS_SCHEMA_TYPES);
+	TDS_FIXMODEL_SCHEMA_TYPES (model);
+
+	memset (&col, 0, sizeof (col));
+	
+	if (model) {
+		for (i = 0; i < gda_data_model_get_n_rows (model); i++) {
+			GdaRow *row = (GdaRow *) gda_data_model_get_row (model,
+			                                                 i);
+			
+			// first fix gda_type
+			if (row) {
+				value = gda_row_get_value (row, 2);
+				
+				if (gda_value_get_type (value) == GDA_VALUE_TYPE_INTEGER) {
+					col.column_size = gda_value_get_integer (value);
+				} else {
+					col.column_size = 0;
+				}
+				value = gda_row_get_value (row, 3);
+				if (gda_value_get_type (value) != GDA_VALUE_TYPE_TINYINT) {
+					col.column_type = SYBVARIANT;
+				} else {
+					col.column_type = gda_value_get_tinyint (value);
+				}
+				
+				gda_type = gda_freetds_get_value_type (&col);
+				// col 3: type -> clear and set
+				//   step 1: make sure value is cleared
+				gda_value_set_null (value);
+				memset (value, 0, sizeof(GdaValue));
+				//   step 2: set type of gdavalue
+				value->type = GDA_VALUE_TYPE_TYPE;
+				value->value.v_type = gda_type;
+				
+				// col 2: comment -> clear
+				value = gda_row_get_value (row, 2);
+				gda_value_set_string (value, "");
+				
+				// col 1: owner -> set
+				value = gda_row_get_value (row, 1);
+				// FIXME: use correct userid
+				uid = gda_value_get_integer (value);
+				if (uid <= 1) {
+					gda_value_set_string (value, "dbo");
+				} else {
+					gda_value_set_null (value);
+				}
+			}
+		}
+	}
+
+	return model;
+}
+
+static GdaDataModel
 *gda_freetds_provider_get_schema (GdaServerProvider *provider,                                                    GdaConnection *cnc,
                                   GdaConnectionSchema schema,
                                   GdaParameterList *params)
@@ -648,8 +715,7 @@ static GdaDataModel
 			return recset;
 			break;
 		case GDA_CONNECTION_SCHEMA_TYPES:
-			recset = gda_freetds_execute_query (cnc, TDS_SCHEMA_TYPES);
-			TDS_FIXMODEL_SCHEMA_TYPES (recset)
+			recset = gda_freetds_provider_get_types (cnc, params);
 	
 			return recset;
 			break;
