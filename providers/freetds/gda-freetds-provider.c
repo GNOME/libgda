@@ -19,7 +19,10 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include <config.h>
+#if defined(HAVE_CONFIG_H)
+#  include <config.h>
+#endif
+
 #include <libgda/gda-data-model-array.h>
 #include <libgda/gda-intl.h>
 #include <libgda/gda-log.h>
@@ -574,11 +577,14 @@ static const gchar
 {
 	GdaFreeTDSProvider *tds_prov = (GdaFreeTDSProvider *) provider;
 	GdaFreeTDSConnectionData *tds_cnc = NULL;
+	GdaDataModel *recset = NULL;
 	
 	g_return_val_if_fail (GDA_IS_FREETDS_PROVIDER (tds_prov), NULL);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	tds_cnc = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_FREETDS_HANDLE);
 	g_return_val_if_fail (tds_cnc != NULL, NULL);
+
+//	recset = gda_freetds_execute_query (cnc, TDS_QUERY_SERVER_VERSION);
 
 	// FIXME:
 	return NULL;
@@ -600,7 +606,7 @@ static GdaDataModel
                                   GdaParameterList *params)
 {
 	GdaFreeTDSProvider *tds_prov = (GdaFreeTDSProvider *) provider;
-	gchar        *query = NULL;
+//	gchar        *query = NULL;
 	GdaDataModel *recset = NULL;
 	
 	g_return_val_if_fail (GDA_IS_FREETDS_PROVIDER (tds_prov), NULL);
@@ -615,44 +621,31 @@ static GdaDataModel
 			break;
 		case GDA_CONNECTION_SCHEMA_PROCEDURES:
 			recset = gda_freetds_execute_query (cnc, TDS_SCHEMA_PROCEDURES);
-			g_free (query);
-			query = NULL;
-			if (recset != NULL)
-				gda_data_model_set_column_title (GDA_DATA_MODEL (recset),
-				                                 0, _("Procedures"));
+			TDS_FIXMODEL_SCHEMA_PROCEDURES (recset)
+			
 			return recset;
 			break;
 		case GDA_CONNECTION_SCHEMA_TABLES:
 			recset = gda_freetds_execute_query (cnc, TDS_SCHEMA_TABLES);
-			g_free (query);
-			query = NULL;
-			if (recset != NULL)
-				gda_data_model_set_column_title (GDA_DATA_MODEL (recset),
-				                                 0, _("Tables"));
+			TDS_FIXMODEL_SCHEMA_TABLES (recset)
 			
 			return recset;
 			break;
 		case GDA_CONNECTION_SCHEMA_TYPES:
-				recset = gda_freetds_execute_query (cnc, TDS_SCHEMA_TYPES);
-				if (recset != NULL)
-					gda_data_model_set_column_title (GDA_DATA_MODEL (recset),
-					                                 0, _("Types"));
-		
-				return recset;
+			recset = gda_freetds_execute_query (cnc, TDS_SCHEMA_TYPES);
+			TDS_FIXMODEL_SCHEMA_TYPES (recset)
+	
+			return recset;
 			break;
 		case GDA_CONNECTION_SCHEMA_USERS:
 			recset = gda_freetds_execute_query (cnc, TDS_SCHEMA_USERS);
-			if (recset != NULL)
-				gda_data_model_set_column_title (GDA_DATA_MODEL (recset),
-				                                 0, _("Users"));
+			TDS_FIXMODEL_SCHEMA_USERS (recset)
 				
 			return recset;
 			break;
 		case GDA_CONNECTION_SCHEMA_VIEWS:
 			recset = gda_freetds_execute_query (cnc, TDS_SCHEMA_VIEWS);
-			if (recset != NULL)
-				gda_data_model_set_column_title (GDA_DATA_MODEL (recset),
-				                                 0, _("Views"));
+			TDS_FIXMODEL_SCHEMA_VIEWS (recset)
 
 			return recset;
 			break;
@@ -756,6 +749,7 @@ gda_freetds_get_databases (GdaConnection *cnc, GdaParameterList *params)
 
 	recset = GDA_FREETDS_RECORDSET (reclist->data);
 	g_list_free (reclist);
+	TDS_FIXMODEL_SCHEMA_DATABASES(recset)
 
 	return GDA_DATA_MODEL (recset);
 }
@@ -783,24 +777,7 @@ gda_freetds_get_fields (GdaConnection *cnc, GdaParameterList *params)
 	query = NULL;
 
 	if (GDA_IS_FREETDS_RECORDSET (recset)) {
-		gda_data_model_set_column_title (GDA_DATA_MODEL (recset),  0,
-		                                 _("Field Name"));
-		gda_data_model_set_column_title (GDA_DATA_MODEL (recset),  1,
-		                                 _("Data Type"));
-		gda_data_model_set_column_title (GDA_DATA_MODEL (recset),  2,
-		                                 _("Size"));
-		gda_data_model_set_column_title (GDA_DATA_MODEL (recset),  3,
-		                                 _("Precision"));
-		gda_data_model_set_column_title (GDA_DATA_MODEL (recset),  4,
-		                                 _("Scale"));
-		gda_data_model_set_column_title (GDA_DATA_MODEL (recset),  5,
-		                                 _("Identity"));
-		gda_data_model_set_column_title (GDA_DATA_MODEL (recset),  6,
-		                                 _("Nullable"));
-		gda_data_model_set_column_title (GDA_DATA_MODEL (recset),  7,
-		                                 _("Domain"));
-		gda_data_model_set_column_title (GDA_DATA_MODEL (recset),  8,
-		                                 _("Printfmt"));
+		TDS_FIXMODEL_SCHEMA_FIELDS (recset)
 	}
 
 	return recset;
