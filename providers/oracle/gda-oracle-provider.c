@@ -418,7 +418,7 @@ gda_oracle_provider_close_connection (GdaServerProvider *provider, GdaConnection
 				priv_data->hsession,
 				OCI_DEFAULT))) {
 		gda_connection_add_error (cnc, 
-			gda_oracle_make_error (priv_data->herr, OCI_HTYPE_ERROR));
+			gda_oracle_make_error (priv_data->herr, OCI_HTYPE_ERROR, __FILE__, __LINE__));
 		return FALSE;
 	}
 

@@ -1,5 +1,12 @@
 2003-04-18  Steve Fosdick <gnomedb@pelvoux.demon.co.uk>
 
+	* Oracle Provider - changed error handling -
+	gda_oracle_check_result is now a macro rather than a function and
+	therefore has access to the compiler __FILE__ and __LINE__ macros
+	which are then included as part of the source or the error message.
+
+2003-04-18  Steve Fosdick <gnomedb@pelvoux.demon.co.uk>
+
 	* libgda/providers/oracle/gda-oracle-provider.c: Fixed a bug in
 	gda_oracle_provider_get_schema - previously a number of calls were
 	made to the function get_oracle_objects which normally returns a

@@ -44,11 +44,12 @@
  * The error number is set to the Oracle error code.
  */
 GdaError *
-gda_oracle_make_error (dvoid *hndlp, ub4 type)
+gda_oracle_make_error (dvoid *hndlp, ub4 type, const gchar *file, gint line)
 {
 	GdaError *error;
 	gchar errbuf[512];
 	ub4 errcode;
+	gchar *source;
 
 	error = gda_error_new ();
 
@@ -67,7 +68,9 @@ gda_oracle_make_error (dvoid *hndlp, ub4 type)
 	}
 		
 	gda_error_set_number (error, errcode);
-	gda_error_set_source (error, "gda-oracle");
+	source = g_strdup_printf("gda-oracle:%s:%d", file, line);
+	gda_error_set_source (error, source);
+	g_free(source);
 	gda_error_set_sqlstate (error, _("Not available"));
 	
 	return error;
@@ -89,8 +92,10 @@ gda_oracle_make_error (dvoid *hndlp, ub4 type)
  * make an error using the given message.
  */
 gboolean 
-gda_oracle_check_result (gint result, GdaConnection *cnc, 
-		GdaOracleConnectionData *priv_data, ub4 type, const gchar *msg)
+gda_oracle_handle_error(gint result, GdaConnection *cnc, 
+			GdaOracleConnectionData *priv_data,
+			ub4 type, const gchar *msg,
+			const gchar *file, gint line)
 {
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 
@@ -99,10 +104,14 @@ gda_oracle_check_result (gint result, GdaConnection *cnc,
 	case OCI_SUCCESS_WITH_INFO:
 		return TRUE;
 	case OCI_ERROR:
-		if (type == OCI_HTYPE_ERROR) 
-			gda_connection_add_error (cnc, gda_oracle_make_error (priv_data->herr, type));
-		if (type == OCI_HTYPE_ENV)
-			gda_connection_add_error (cnc, gda_oracle_make_error (priv_data->henv, type));
+		switch(type) {
+		case OCI_HTYPE_ERROR:
+			gda_connection_add_error (cnc, gda_oracle_make_error (priv_data->herr, type, file, line));
+			break;
+		case OCI_HTYPE_ENV:
+			gda_connection_add_error (cnc, gda_oracle_make_error (priv_data->henv, type, file, line));
+		default:
+		}
 		break;
 	default:
 		gda_connection_add_error_string (cnc, msg);
@@ -432,3 +441,9 @@ gda_oracle_set_value (GdaValue *value,
 	}
 }
 
+/*
+  Local Variables:
+  mode:C
+  c-basic-offset: 8
+  End:
+*/
