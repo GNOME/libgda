@@ -95,9 +95,11 @@ static GList* gda_freetds_provider_process_sql_commands(GList         *reclist,
                                                         GdaConnection *cnc,
                                                         const gchar   *sql);
 
-static gboolean tds_cbs_initialized = FALSE;
-extern int (*g_tds_msg_handler)();
-extern int (*g_tds_err_handler)();
+#ifdef HAVE_FREETDS_VER0_5X
+  static gboolean tds_cbs_initialized = FALSE;
+  extern int (*g_tds_msg_handler)();
+  extern int (*g_tds_err_handler)();
+#endif
 
 static void gda_freetds_free_connection_data (GdaFreeTDSConnectionData *tds_cnc);
 
@@ -105,8 +107,17 @@ static gboolean gda_freetds_execute_cmd (GdaConnection *cnc, const gchar *sql);
 
 static int gda_freetds_provider_tds_handle_message (void *aStruct,
                                                     const gboolean is_err_msg);
-static int gda_freetds_provider_tds_handle_info_msg (void *aStruct);
-static int gda_freetds_provider_tds_handle_err_msg (void *aStruct);
+#ifdef HAVE_FREETDS_VER0_6X
+  static int gda_freetds_provider_tds_handle_info_msg (TDSCONTEXT *,
+                                                       TDSSOCKET *,
+                                                       TDSMSGINFO *);
+  static int gda_freetds_provider_tds_handle_err_msg (TDSCONTEXT *,
+                                                      TDSSOCKET *,
+                                                      TDSMSGINFO *);
+#else
+  static int gda_freetds_provider_tds_handle_info_msg (void *aStruct);
+  static int gda_freetds_provider_tds_handle_err_msg (void *aStruct);
+#endif
 
 static gboolean
 gda_freetds_provider_open_connection (GdaServerProvider *provider,
@@ -238,6 +249,9 @@ gda_freetds_provider_open_connection (GdaServerProvider *provider,
 		gda_connection_add_error(cnc, error);
 		return FALSE;
 	}
+	// Initialize callbacks which are now in context struct
+	tds_cnc->ctx->msg_handler = gda_freetds_provider_tds_handle_info_msg;
+	tds_cnc->ctx->err_handler = gda_freetds_provider_tds_handle_err_msg;
 #endif
 
 	// establish connection; change in 0.6x api
@@ -310,6 +324,9 @@ gda_freetds_free_connection_data (GdaFreeTDSConnectionData *tds_cnc)
 	}
 #ifdef HAVE_FREETDS_VER0_6X
 	if (tds_cnc->ctx) {
+		// Clear callback handler
+		tds_cnc->ctx->msg_handler = NULL;
+		tds_cnc->ctx->err_handler = NULL;
 		tds_free_context (tds_cnc->ctx);
 		tds_cnc->ctx = NULL;
 	}
@@ -857,12 +874,14 @@ gda_freetds_provider_class_init (GdaFreeTDSProviderClass *klass)
 	provider_class->supports = gda_freetds_provider_supports;
 	provider_class->get_schema = gda_freetds_provider_get_schema;
 
+#ifdef HAVE_FREETDS_VER0_5X
 	if (tds_cbs_initialized == FALSE) {
 		tds_cbs_initialized = TRUE;
 
 		g_tds_msg_handler = gda_freetds_provider_tds_handle_info_msg;
 		g_tds_err_handler = gda_freetds_provider_tds_handle_err_msg;
 	}
+#endif
 }
 
 static void
@@ -878,14 +897,18 @@ gda_freetds_provider_finalize (GObject *object)
 
 	g_return_if_fail (GDA_IS_FREETDS_PROVIDER (provider));
 
+#ifdef HAVE_FREETDS_VER0_5X
 	tds_cbs_initialized = FALSE;
 	g_tds_msg_handler = NULL;
 	g_tds_err_handler = NULL;
+#endif
 
 	/* chain to parent class */
 	parent_class->finalize (object);
 }
 
+// FIXME: rewrite this function to suit new callback parameters
+//        (0.6x code)
 static int gda_freetds_provider_tds_handle_message (void *aStruct,
                                                     const gboolean is_err_msg)
 {
@@ -900,7 +923,8 @@ static int gda_freetds_provider_tds_handle_message (void *aStruct,
 	cnc = (GdaConnection *) tds_get_parent (tds);
 	
 	// what if we cannot determine where the message belongs to?
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), TDS_SUCCEED);
+	g_return_val_if_fail (((GDA_IS_CONNECTION (cnc)) || (cnc == NULL)),
+	                      TDS_SUCCEED);
 
 	msg = g_strdup_printf(_("Msg %d, Level %d, State %d, Server %s, Line %d\n%s\n"),
 	                      tds->msg_info->msg_number,
@@ -912,18 +936,24 @@ static int gda_freetds_provider_tds_handle_message (void *aStruct,
 
 	// if errormessage, proceed
 	if (is_err_msg == TRUE) {
-		error = gda_error_new ();
-		gda_error_set_description (error, msg);
-		gda_error_set_number (error, tds->msg_info->msg_number);
-		gda_error_set_source (error, "gda-freetds");
-		if (tds->msg_info->sql_state != NULL) {
-			gda_error_set_sqlstate (error,
-			                        tds->msg_info->sql_state);
-		} else {
-			gda_error_set_sqlstate (error, _("Not available"));
-		}
+		if (cnc != NULL) {
+			error = gda_error_new ();
+			gda_error_set_description (error, msg);
+			gda_error_set_number (error, tds->msg_info->msg_number);
+			gda_error_set_source (error, "gda-freetds");
+			if (tds->msg_info->sql_state != NULL) {
+				gda_error_set_sqlstate (error,
+				                        tds->msg_info->sql_state);
+			} else {
+				gda_error_set_sqlstate (error, _("Not available"));
+			}
 
-		gda_connection_add_error (cnc, error);
+			gda_connection_add_error (cnc, error);
+		} else {
+			gda_log_error (msg);
+		}
+	} else {
+		gda_log_message (msg);
 	}
 	
 	if (msg) {
@@ -934,18 +964,37 @@ static int gda_freetds_provider_tds_handle_message (void *aStruct,
 	return TDS_SUCCEED;
 }
 
+#ifdef HAVE_FREETDS_VER0_6X
+// FIXME: rewrite tds_handle_message as well/use new parameters here
+static int
+gda_freetds_provider_tds_handle_info_msg (TDSCONTEXT *ctx, TDSSOCKET *tds,
+                                          TDSMSGINFO *msg)
+{
+	return gda_freetds_provider_tds_handle_message ((void *) tds, FALSE);
+}
+#else
 static int
 gda_freetds_provider_tds_handle_info_msg (void *aStruct)
 {
 	return gda_freetds_provider_tds_handle_message (aStruct, FALSE);
 }
+#endif
 
+#ifdef HAVE_FREETDS_VER0_6X
+// FIXME: rewrite tds_handle_message as well/use new parameters here
+static int
+gda_freetds_provider_tds_handle_err_msg (TDSCONTEXT *ctx, TDSSOCKET *tds,
+                                         TDSMSGINFO *msg)
+{
+	return gda_freetds_provider_tds_handle_message ((void *) tds, TRUE);
+}
+#else
 static int
 gda_freetds_provider_tds_handle_err_msg (void *aStruct)
 {
 	return gda_freetds_provider_tds_handle_message (aStruct, TRUE);
 }
-
+#endif
 
 /////////////////////////////////////////////////////////////////////////////
 // Public functions                                                       
