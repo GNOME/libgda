@@ -1,3 +1,10 @@
+2003-12-09  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	Fixes #128929
+
+	* libgda/gda-client.h: added missing space in function prototype
+	that confuses pygtk's h2def.py.
+
 2003-12-03  Laurent Sansonetti <lrz@gnome.org>
 
 	* libgda/gda-data-model.[ch]:
@@ -83,7 +90,6 @@
 	(gda_data_model_foreach): stop the loop when user function returns
 	  FALSE (as advertised in the spec).  No longer clones the GdaRows
 	  sent to user's callback.
-
 
 2003-11-12  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
