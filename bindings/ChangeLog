@@ -1,0 +1,4 @@
+2001-07-12  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* perl/: removed all files from the old perl bindings, since now
+	the perl bindings have their own module (libgda-perl)

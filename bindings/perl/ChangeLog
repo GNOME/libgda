@@ -1,8 +1,0 @@
-2000-12-10	Rodrigo Moya <rodrigo@gnome-db.org>
-
-	* completed integration of the perl build system with
-	autoconf/automake
-
-2000-12-06	Rodrigo Moya <rodrigo@gnome-db.org>
-
-	* added basic structure for the new Perl bindings
