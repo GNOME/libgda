@@ -1,3 +1,8 @@
+2004-12-14  Dru <andru@treshna.com>
+
+	* libgda/sql_parser.c: Fixed bug in IS NOT clauses in
+	SQL with NOT getting dropped.
+
 2004-10-28  Bas Driessen <bas.driessen@xobas.com>
 
 	* providers/postgres/gda-postgres-recordset.c

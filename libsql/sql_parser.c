@@ -575,6 +575,7 @@ sql_condition_op_stringify(sql_condition_operator op)
 	default:
 		fprintf(stderr, "Invalid condition op: %d\n", op);
 		}
+	
 	return NULL;
 	}
 
@@ -607,6 +608,9 @@ sql_condition_stringify(sql_condition * cond)
 		retval = memsql_strappend_free(retval, 
 				sql_condition_op_stringify(cond->op));
 		retval = memsql_strappend_free(retval, memsql_strdup(" "));
+		/* For is not support */
+		if (cond->negated && retval)
+		   retval = memsql_strappend_free(retval,memsql_strdup("not "));
 		retval =  memsql_strappend_free(retval,sql_field_stringify(
 					cond->d.pair.right));
 		break;
