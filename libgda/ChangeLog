@@ -1,3 +1,8 @@
+2002-01-10  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-server-connection.c (gda_server_connection_add_error_string):
+	implemented
+
 2002-01-10  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
 	* gda-row.[ch]: *_get_* returns const. *_set_* receives const.

@@ -461,10 +461,28 @@ gda_server_connection_add_error (GdaServerConnection *cnc, GdaError *error)
 
 /**
  * gda_server_connection_add_error_string
+ * @cnc: a #GdaServerConnection object.
+ * @msg: error message.
+ *
+ * Adds a new error to the given connection object. This is just a convenience
+ * function that simply creates a @GdaError and then calls
+ * @gda_server_connection_add_error.
  */
 void
 gda_server_connection_add_error_string (GdaServerConnection *cnc, const gchar *msg)
 {
+	GdaError *error;
+
+	g_return_if_fail (GDA_IS_SERVER_CONNECTION (cnc));
+	g_return_if_fail (msg != NULL);
+
+	error = gda_error_new ();
+	gda_error_set_description (error, msg);
+	gda_error_set_number (error, -1);
+	gda_error_set_source (error, g_get_prgname ());
+	gda_error_set_sqlstate (error, "-1");
+
+	gda_server_connection_add_error (cnc, error);
 }
 
 /**
