@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda 0.2.9\n"
-"POT-Creation-Date: 2001-10-10 23:26+0200\n"
-"PO-Revision-Date: 2001-09-21 12:46CET\n"
+"POT-Creation-Date: 2001-10-14 16:03+0200\n"
+"PO-Revision-Date: 2001-10-14 16:04CET\n"
 "Last-Translator: Stanislav Visnovsky <visnovsky@nenya.ms.mff.cuni.cz>\n"
 "Language-Team: Slovak <sk-i18n@lists.linux.sk>\n"
 "MIME-Version: 1.0\n"
@@ -48,14 +48,12 @@ msgid "<Unknown GDA Type(NULL)>"
 msgstr "<Neznámy GDA Typ(NULL)>"
 
 #: lib/gda-client/gda-field.c:264
-#, fuzzy
 msgid "true"
-msgstr "True"
+msgstr "true"
 
 #: lib/gda-client/gda-field.c:266
-#, fuzzy
 msgid "false"
-msgstr "False"
+msgstr "false"
 
 #: lib/gda-common/gda-corba.c:88
 #, c-format
@@ -1036,8 +1034,3 @@ msgstr "%s: zdroj dát '%s' nenájdený\n"
 msgid "Could not register <PROVIDER-NAME> provider implementation"
 msgstr "Nie je možné registrovať implementáciu <PROVIDER-NAME> poskytovateľa"
 
-#~ msgid "TRUE"
-#~ msgstr "TRUE"
-
-#~ msgid "FALSE"
-#~ msgstr "FALSE"
