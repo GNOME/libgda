@@ -9,3 +9,5 @@ GNOME_Database.h
 GNOME_Database-common.c
 GNOME_Database-skels.c
 GNOME_Database-stubs.c
+gda-marshal.h
+gda-marshal.c
