@@ -414,6 +414,12 @@
         <PROGRAMLISTING>
           <SYSTEMITEM CLASS="prompt">$</SYSTEMITEM> <USERINPUT> gcc -o main `pkg-config --cflags --libs libgda` main.c</USERINPUT>
         </PROGRAMLISTING>
+	<para>
+	  Doing this will add to the C compiler command line all needed header files
+	  and library directories as well as all needed libraries for linking your GDA
+	  application. To include header files, you can just use <filename>libgda/libgda.h</filename>,
+	  which will include all GDA header files.
+	</para>
     </sect1>
     <sect1 id="installation-configuring">
       <title>Configuring</title>
