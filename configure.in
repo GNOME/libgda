@@ -74,25 +74,10 @@ then
 *** GConf $gconfminver or later is necessary in order to build libgda.])
 fi
 
-dnl Check for OAF
-use_oaf=false
-oafminver="0.5.0"
-AC_MSG_CHECKING(for OAF >= $oafminver)
-if oaf-config --libs > /dev/null 2>&1
-then
-	oafver=`oaf-config --version | awk 'BEGIN {FS="."}{printf "%d", $1*10000+$2*100+$3}'`
-	if test "$oafver" -ge 500
-	then
-		AC_MSG_RESULT(found)
-		gda_oaf_libs=`oaf-config --libs`
-		gda_oaf_cflags=`oaf-config --cflags`
-
-		use_oaf=true
-	fi	
-else
-	AC_MSG_ERROR([
-*** OAF $oafminver or later is necessary in order to build libgda.])
-fi
+# Bonobo checks
+AM_PATH_BONOBO(1.0,,AC_MSG_ERROR(Bonobo >= 1.0 is needed to compile GNOME-DB))
+gda_bonobo_cflags=`gnome-config --cflags bonobo`
+gda_bonobo_libs=`gnome-config --libs bonobo`
 
 dnl Check for libxml
 AC_MSG_CHECKING(for libxml)
@@ -649,10 +634,10 @@ AM_GNU_GETTEXT
 dnl
 dnl Variables
 dnl
-GDA_CLIENT_LIBS="$gda_base_libs $gda_xml_libs $gda_gconf_libs $gda_oaf_libs"
-GDA_CLIENT_CFLAGS="$gda_base_cflags $gda_xml_cflags $gda_gconf_cflags $gda_oaf_cflags"
-GDA_PROVIDER_LIBS="$gda_base_libs $gda_xml_libs $gda_gconf_libs $gda_oaf_libs"
-GDA_PROVIDER_CFLAGS="$gda_base_cflags $gda_xml_cflags $gda_gconf_cflags $gda_oaf_cflags"
+GDA_CLIENT_LIBS="$gda_base_libs $gda_xml_libs $gda_gconf_libs $gda_bonobo_libs"
+GDA_CLIENT_CFLAGS="$gda_base_cflags $gda_xml_cflags $gda_gconf_cflags $gda_bonobo_cflags"
+GDA_PROVIDER_LIBS="$gda_base_libs $gda_xml_libs $gda_gconf_libs $gda_bonobo_libs"
+GDA_PROVIDER_CFLAGS="$gda_base_cflags $gda_xml_cflags $gda_gconf_cflags $gda_bonobo_cflags"
 XML_LIBS="$gda_xslt_libs"
 XML_CFLAGS="$gda_xslt_cflags"
 

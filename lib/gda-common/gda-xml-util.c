@@ -1,5 +1,6 @@
-/* GDA Server Library
- * Copyright (C) 2000,2001 Rodrigo Moya
+/* GDA common library
+ * Copyright (C) 1998,1999 Michael Lausch
+ * Copyright (C) 1999-2001 Rodrigo Moya
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -17,25 +18,4 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#if !defined(__gda_server_private_h__)
-#  define __gda_server_private_h__
-
-#include "config.h"
-#include "GDA.h"
-
-#ifdef ENABLE_NLS
-//#  include <libintl.h>
-//#  define _(String) gettext (String)
-//#  define N_(String) (String)
-#else
-/* Stubs that do something close enough.  */
-//#  define textdomain(String)
-//#  define gettext(String) (String)
-//#  define dgettext(Domain,Message) (Message)
-//#  define dcgettext(Domain,Message,Type) (Message)
-//#  define bindtextdomain(Domain,Directory)
-//#  define _(String) (String)
-//#  define N_(String) (String)
-#endif
-
-#endif
+#include "gda-xml-util.h"

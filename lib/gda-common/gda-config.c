@@ -435,7 +435,7 @@ gda_provider_list (void)
 	GdaProvider*        provider;
 
 	CORBA_exception_init(&ev);
-	servlist = oaf_query("repo_ids.has('IDL:GDA/ConnectionFactory:1.0')", NULL, &ev);
+	servlist = oaf_query("repo_ids.has('IDL:GDA/Connection:1.0')", NULL, &ev);
 	if (servlist) {
 		for (i = 0; i < servlist->_length; i++) {
 			gchar* dsn_params;

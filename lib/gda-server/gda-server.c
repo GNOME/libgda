@@ -93,6 +93,7 @@ gda_server_destroy (GtkObject *object)
 	server_list = g_list_remove (server_list, (gpointer) server_impl);
 	if (server_impl->name)
 		g_free ((gpointer) server_impl->name);
+	bonobo_object_unref (BONOBO_OBJECT (server_impl->connection_factory));
 
 	parent_class = gtk_type_class (gtk_object_get_type ());
 	if (parent_class && parent_class->destroy)
@@ -145,6 +146,13 @@ gda_server_get_type (void)
 }
 #endif
 
+static BonoboObject *
+factory_function (BonoboGenericFactory *factory, void *closure)
+{
+	GdaServer *server_impl = (GdaServer *) closure;
+	return BONOBO_OBJECT (gda_server_connection_new (server_impl));
+}
+
 /**
  * gda_server_new
  * @name: name of the server
@@ -159,11 +167,6 @@ GdaServer *
 gda_server_new (const gchar *name, GdaServerImplFunctions *functions)
 {
 	GdaServer *server_impl;
-	PortableServer_POA root_poa;
-	CORBA_char *objref;
-	CORBA_ORB orb;
-	OAF_RegistrationResult result;
-	PortableServer_POAManager pm;
 	
 	g_return_val_if_fail(name != NULL, NULL);
 	
@@ -185,52 +188,20 @@ gda_server_new (const gchar *name, GdaServerImplFunctions *functions)
 			(const void *) functions,
 			sizeof (GdaServerImplFunctions));
 	}
-	else gda_log_message (_("Starting provider %s with no implementation functions"), name);
+	else
+		gda_log_message (_("Starting provider %s with no implementation functions"), name);
 	
 	server_impl->connections = NULL;
 	server_impl->is_running = FALSE;
-	
+
 	/* create CORBA connection factory */
-	orb = gda_corba_get_orb();
-	server_impl->ev = g_new0(CORBA_Environment, 1);
-	server_impl->root_poa =
-		(PortableServer_POA) CORBA_ORB_resolve_initial_references(orb,
-									  "RootPOA",
-									  server_impl->ev);
-	gda_server_exception(server_impl->ev);
-
-	server_impl->connection_factory_obj = impl_GDA_ConnectionFactory__create(server_impl->root_poa,
-	                                                                         server_impl->ev);
-	gda_server_exception(server_impl->ev);
-	objref = CORBA_ORB_object_to_string(orb,
-	                                    server_impl->connection_factory_obj,
-	                                    server_impl->ev);
-	gda_server_exception(server_impl->ev);
-
-	/* register server with OAF */
-	result = oaf_active_server_register(server_impl->name, server_impl->connection_factory_obj);
-	if (result != OAF_REG_SUCCESS) {
-		switch (result) {
-		case OAF_REG_NOT_LISTED :
-			gda_log_error(_("OAF doesn't know about our IID; indicates broken installation. Exiting..."));
-			break;
-		case OAF_REG_ALREADY_ACTIVE :
-			gda_log_error(_("Another instance of this provider is already registered with OAF. Exiting..."));
-			break;
-		default :
-			gda_log_error(_("Unknown error registering this provider with OAF. Exiting"));
-		}
-		exit(-1);
-	}
-	gda_log_message(_("Registered with ID = %s"), objref);
-
-	/* activate the POA manager */
-	pm = PortableServer_POA__get_the_POAManager(server_impl->root_poa, server_impl->ev);
-	gda_server_exception(server_impl->ev);
-	PortableServer_POAManager_activate(pm, server_impl->ev);
-	gda_server_exception(server_impl->ev);
-	
+	server_impl->connection_factory = bonobo_generic_factory_new (
+		name, factory_function, server_impl);
+	bonobo_running_context_auto_exit_unref (BONOBO_OBJECT (server_impl->connection_factory));
 	server_list = g_list_append(server_list, (gpointer) server_impl);
+
+	bonobo_activate ();
+
 	return server_impl;
 }
 
@@ -271,7 +242,7 @@ gda_server_start (GdaServer *server_impl)
 	g_return_if_fail(server_impl->is_running == FALSE);
 	
 	server_impl->is_running = TRUE;
-	CORBA_ORB_run(oaf_orb_get(), server_impl->ev);
+	bonobo_main ();
 }
 
 /**
@@ -286,8 +257,7 @@ gda_server_stop (GdaServer *server_impl)
 	g_return_if_fail(GDA_IS_SERVER(server_impl));
 	g_return_if_fail(server_impl->is_running);
 	
-	CORBA_ORB_shutdown(oaf_orb_get(), TRUE, server_impl->ev);
-	oaf_active_server_unregister(server_impl->name, server_impl->connection_factory_obj);
+	gtk_main_quit ();
 	server_impl->is_running = FALSE;
 }
 

@@ -83,10 +83,3 @@ Recordset* Command::execute(gulong* reccount, gulong flags) {
 //	gda_command_create_parameter(_gda_command,name,inout,&v);
 //}
 
-glong Command::getTimeout() {
-	return gda_command_get_timeout(_gda_command);
-}
-
-void Command::setTimeout(glong timeout) {
-	gda_command_set_timeout(_gda_command,timeout);
-}

@@ -63,7 +63,7 @@ gda_default_command_execute (GdaServerCommand *cmd,
 				return NULL;
 			}
 
-			switch (gda_server_command_get_type(cmd)) {
+			switch (gda_server_command_get_cmd_type(cmd)) {
 			case GDA_COMMAND_TYPE_TEXT :
 				cmd_string = g_strdup(gda_server_command_get_text(cmd));
 				break;

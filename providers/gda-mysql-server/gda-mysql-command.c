@@ -97,7 +97,7 @@ gda_mysql_command_execute (GdaServerCommand *cmd,
 		if (mysql_cnc) {
 			gchar* tmp;
 
-			switch (gda_server_command_get_type(cmd)) {
+			switch (gda_server_command_get_cmd_type(cmd)) {
 				case GDA_COMMAND_TYPE_TABLE :
 					cmd_string = g_strdup_printf("SELECT * FROM %s", gda_server_command_get_text(cmd));
 					break;

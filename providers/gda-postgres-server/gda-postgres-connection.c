@@ -22,9 +22,9 @@
 #include <ctype.h>
 
 typedef GdaServerRecordset* (*schema_ops_fn)(GdaError *,
-											 GdaServerConnection *,
-											 GDA_Connection_Constraint *,
-											 gint );
+					     GdaServerConnection *,
+					     GDA_Connection_Constraint *,
+					     gint );
 typedef struct _Gdaconnection_data {
 	gchar *dsn;
 	gchar *user;
@@ -39,12 +39,12 @@ typedef struct _Gdaconnection_data {
 static void                initialize_schema_ops (void);
 static gint                execute_command (GdaServerConnection *cnc, gchar *cmd);
 static gboolean            gda_postgres_connection_is_type_known (POSTGRES_Connection *cnc,
-																  gulong sql_type);
+								  gulong sql_type);
 static gchar*              gda_postgres_connection_get_type_name(POSTGRES_Connection *cnc, 
-																 gulong oid);
+								 gulong oid);
 static void                add_replacement_function(GdaServerRecordset *recset,
-													POSTGRES_Recordset_Replacement *repl,
-													gchar *sql_type);
+						    POSTGRES_Recordset_Replacement *repl,
+						    gchar *sql_type);
 static gfloat              get_postmaster_version(PGconn *conn);
 static Gdaconnection_data *find_connection_data(POSTGRES_Connection *cnc);
 
@@ -109,7 +109,7 @@ gda_postgres_connection_new (GdaServerConnection *cnc)
 	if (!initialized) {
 		initialize_schema_ops();
 		initialized = TRUE;
-    }
+	}
 
 	/* initialize everything to 0 to avoid core dumped */
 	c = g_new0(POSTGRES_Connection, 1);
@@ -172,7 +172,7 @@ static gfloat version_to_float(gchar *str)
 		}
 
 		ptr ++;
-    }
+	}
 
 	return ver;
 }
@@ -190,7 +190,7 @@ static gfloat get_postmaster_version(PGconn *conn)
 		if (res) 
 			PQclear(res);
 		return (-1);
-    }  
+	}  
 	nver = g_strdup(PQgetvalue(res, 0, 0));
 	PQclear(res);
 
@@ -206,9 +206,9 @@ static gfloat get_postmaster_version(PGconn *conn)
 /* open new connection to database server */
 gint
 gda_postgres_connection_open (GdaServerConnection *cnc, 
-							  const gchar *dsn,
-							  const gchar *user, 
-							  const gchar *password)
+			      const gchar *dsn,
+			      const gchar *user, 
+			      const gchar *password)
 {
 	POSTGRES_Connection *pc;
 	gchar *ptr_s, *ptr_e;
@@ -480,9 +480,9 @@ gda_postgres_connection_open_schema (GdaServerConnection *cnc,
 
 glong
 gda_postgres_connection_modify_schema (GdaServerConnection *cnc,
-									   GDA_Connection_QType t,
-									   GDA_Connection_Constraint *constraints,
-									   gint length)
+				       GDA_Connection_QType t,
+				       GDA_Connection_Constraint *constraints,
+				       gint length)
 {
 	return -1;
 }
@@ -490,7 +490,7 @@ gda_postgres_connection_modify_schema (GdaServerConnection *cnc,
 /* logging */
 gint
 gda_postgres_connection_start_logging (GdaServerConnection *cnc, 
-									   const gchar *filename)
+				       const gchar *filename)
 {
 	FILE *f;
 	gchar *str;
@@ -517,7 +517,7 @@ gda_postgres_connection_start_logging (GdaServerConnection *cnc,
 		if (str != filename)
 			g_free(str);
 		return (0);
-    }
+	}
 	else
 		return -1;
 }
@@ -534,13 +534,13 @@ gda_postgres_connection_stop_logging (GdaServerConnection *cnc)
 		if (PQstatus(pc->pq_conn) != CONNECTION_OK)
 			return (-1);
 		PQuntrace(pc->pq_conn);
-    }
+	}
 	return (0);
 }
 
 gchar *
 gda_postgres_connection_create_table (GdaServerConnection *cnc,
-									  GDA_RowAttributes *columns)
+				      GDA_RowAttributes *columns)
 {
 	return NULL;
 }
@@ -548,23 +548,23 @@ gda_postgres_connection_create_table (GdaServerConnection *cnc,
 
 gboolean
 gda_postgres_connection_supports (GdaServerConnection* cnc,
-								  GDA_Connection_Feature feature)
+				  GDA_Connection_Feature feature)
 {
 	gboolean retval;
 
 	g_return_val_if_fail(cnc != NULL, FALSE);
 
 	switch (feature) {
-    case GDA_Connection_FEATURE_TRANSACTIONS:
-    case GDA_Connection_FEATURE_SEQUENCES:
-    case GDA_Connection_FEATURE_PROCS:
-    case GDA_Connection_FEATURE_INHERITANCE:
+	case GDA_Connection_FEATURE_TRANSACTIONS:
+	case GDA_Connection_FEATURE_SEQUENCES:
+	case GDA_Connection_FEATURE_PROCS:
+	case GDA_Connection_FEATURE_INHERITANCE:
 		retval = TRUE;
 		break;
 
-    default :
+	default :
 		retval = FALSE;
-    }
+	}
 
 	return retval;
 }
@@ -573,7 +573,7 @@ gda_postgres_connection_supports (GdaServerConnection* cnc,
 
 GDA_ValueType           
 gda_postgres_connection_get_gda_type_psql (POSTGRES_Connection *cnc, 
-										   gulong sql_type)
+					   gulong sql_type)
 {
 	GDA_ValueType gda_type = GDA_TypeVarchar; /* default value */
 	gboolean found;
@@ -595,13 +595,13 @@ gda_postgres_connection_get_gda_type_psql (POSTGRES_Connection *cnc,
 			found = TRUE;
 		}
 		i++;
-    }
+	}
 	return gda_type;
 }
 
 GDA_ValueType           
 gda_postgres_connection_get_gda_type (GdaServerConnection *cnc, 
-									  gulong sql_type)
+				      gulong sql_type)
 {
 	POSTGRES_Connection *pc;
 
@@ -613,7 +613,7 @@ gda_postgres_connection_get_gda_type (GdaServerConnection *cnc,
 
 POSTGRES_CType     
 gda_postgres_connection_get_c_type_from_sql (POSTGRES_Connection *cnc, 
-											 gulong sql_type)
+					     gulong sql_type)
 {
 	POSTGRES_CType c_type = SQL_C_CHAR; /* default value */
 	gboolean found;
@@ -635,13 +635,13 @@ gda_postgres_connection_get_c_type_from_sql (POSTGRES_Connection *cnc,
 			found = TRUE;
 		}
 		i++;
-    }
+	}
 	return c_type;
 }
 
 gshort
 gda_postgres_connection_get_c_type_psql (POSTGRES_Connection *cnc, 
-										 GDA_ValueType gda_type)
+					 GDA_ValueType gda_type)
 {
 	POSTGRES_CType c_type = SQL_C_CHAR; /* default value */
 	gboolean found;
@@ -663,14 +663,14 @@ gda_postgres_connection_get_c_type_psql (POSTGRES_Connection *cnc,
 			found = TRUE;
 		}
 		i++;
-    }
+	}
 
 	return c_type;
 }
 
 gshort
 gda_postgres_connection_get_c_type (GdaServerConnection *cnc, 
-									GDA_ValueType gda_type)
+				    GDA_ValueType gda_type)
 {
 	POSTGRES_Connection *pc;
 
@@ -711,15 +711,15 @@ gda_postgres_connection_free (GdaServerConnection *cnc)
 		fprintf(stderr, "gda_postgres_connection_free(%p)\n", pc);
 		g_free((gpointer) pc);
 		gda_server_connection_set_user_data(cnc, NULL);
-    }
+	}
 }
 
 
 void
 gda_postgres_error_make (GdaError *error,
-						 GdaServerRecordset *recset, /* can be NULL! */
-						 GdaServerConnection *cnc,
-						 gchar *where)
+			 GdaServerRecordset *recset, /* can be NULL! */
+			 GdaServerConnection *cnc,
+			 gchar *where)
 {
 	POSTGRES_Connection* pc;
 	POSTGRES_Recordset*  pr;
@@ -732,16 +732,16 @@ gda_postgres_error_make (GdaError *error,
 		pr = gda_server_recordset_get_user_data(recset);
 		if (pr && pr->pq_data)
 			gda_error_set_description(error, 
-											 PQresultErrorMessage(pr->pq_data));
+						  PQresultErrorMessage(pr->pq_data));
 		else {
 			if (pc->pq_conn)
 				gda_error_set_description(error, 
-												 PQerrorMessage(pc->pq_conn));
+							  PQerrorMessage(pc->pq_conn));
 			else
 				gda_error_set_description(error, "NO DESCRIPTION");
 		}
 		gda_log_error(_("error '%s' at %s"), 
-					  gda_error_get_description(error), where);
+			      gda_error_get_description(error), where);
 		if (pr && pr->pq_data)
 			gda_error_set_number(error, PQresultStatus(pr->pq_data));
 		else
@@ -751,7 +751,7 @@ gda_postgres_error_make (GdaError *error,
 		gda_error_set_help_context(error, _("Not available"));
 		gda_error_set_sqlstate(error, _("error"));
 		gda_error_set_native(error, gda_error_get_description(error));
-    }
+	}
 }
 
 /*
@@ -802,7 +802,7 @@ schema_tables (GdaError *error,
 			return (0);
 		}
 		ptr++;
-    }
+	}
   
 	/* build the query */
 	query = g_string_new("SELECT a.relname AS \"Name\", ");
@@ -843,7 +843,7 @@ schema_tables (GdaError *error,
 		repl->newtype = GDA_TypeVarchar;
 		repl->trans_func = replace_TABLE_NAME_with_SQL;
 		add_replacement_function(recset, repl, "varchar");
-    }
+	}
 
 	if (!recset)
 		gda_error_set_description(error, _("postgres_recset is NULL"));
@@ -855,7 +855,7 @@ schema_tables (GdaError *error,
 static GdaServerRecordset *
 schema_columns (GdaError *error,
                 GdaServerConnection *cnc, 
-				GDA_Connection_Constraint *constraint,
+		GDA_Connection_Constraint *constraint,
                 gint length)
 {
 	GdaServerCommand *cmd;
@@ -894,31 +894,31 @@ schema_columns (GdaError *error,
         }
 		length--;
 		ptr++;
-    }
+	}
 
 	if (!table_name) {
 		fprintf(stderr, "schema_columns: table name is null\n");
 		return (0);
-    }
+	}
 
 	query = g_strdup_printf("SELECT b.attname AS \"Name\", "
-							"c.typname AS \"Type\", "
-							"textcat(b.attlen, textcat('/', b.atttypmod)) "
-							"AS \"Size\", "
-							"0 AS \"Precision\", "
-							"NOT(b.attnotnull) AS \"Nullable\", "
-							"textcat('%s ', b.attnum) AS \"Key\", "
-							"textcat('%s ', b.attname) AS \"Default Value\", "
-							"obj_description(b.oid) AS \"Comments\" "
-							"FROM pg_type c, "
-							"pg_attribute b, "
-							"pg_class a "
-							"WHERE a.relname = '%s' "
-							"AND b.attrelid = a.oid "
-							"AND c.oid = b.atttypid "
-							"AND b.attnum > 0 "
-							"ORDER BY b.attnum", table_name,
-							table_name, table_name);
+				"c.typname AS \"Type\", "
+				"textcat(b.attlen, textcat('/', b.atttypmod)) "
+				"AS \"Size\", "
+				"0 AS \"Precision\", "
+				"NOT(b.attnotnull) AS \"Nullable\", "
+				"textcat('%s ', b.attnum) AS \"Key\", "
+				"textcat('%s ', b.attname) AS \"Default Value\", "
+				"obj_description(b.oid) AS \"Comments\" "
+				"FROM pg_type c, "
+				"pg_attribute b, "
+				"pg_class a "
+				"WHERE a.relname = '%s' "
+				"AND b.attrelid = a.oid "
+				"AND c.oid = b.atttypid "
+				"AND b.attnum > 0 "
+				"ORDER BY b.attnum", table_name,
+				table_name, table_name);
 
 	/* build the command object */
 	cmd = gda_server_command_new(cnc);
@@ -952,7 +952,7 @@ schema_columns (GdaError *error,
 		repl->newtype = GDA_TypeBoolean;
 		repl->trans_func = replace_TABLE_FIELD_with_iskey;
 		add_replacement_function(recset, repl, "bool");
-    }
+	}
 	else
 		gda_error_set_description(error, _("postgres_recset is NULL"));
 	return (recset);
@@ -961,13 +961,13 @@ schema_columns (GdaError *error,
 
 static GdaServerRecordset *
 schema_tab_parents (GdaError *error,
-					GdaServerConnection *cnc,
-					GDA_Connection_Constraint *constraint,
-					gint length)
+		    GdaServerConnection *cnc,
+		    GDA_Connection_Constraint *constraint,
+		    gint length)
 {
 	GString*                   query;
-	GdaServerCommand*         cmd;
-	GdaServerRecordset*       recset = 0;
+	GdaServerCommand*          cmd;
+	GdaServerRecordset*        recset = 0;
 	POSTGRES_Connection*       pc;
 	GDA_Connection_Constraint* ptr;
 	gint                       cnt, oid;
@@ -979,25 +979,25 @@ schema_tab_parents (GdaError *error,
 	ptr = constraint;
 	for (cnt = 0; cnt < length && ptr != 0; cnt++) {
 		switch (ptr->ctype) {
-        case GDA_Connection_OBJECT_CATALOG : /* not used in postgres */
+		case GDA_Connection_OBJECT_CATALOG : /* not used in postgres */
 			break;
-        case GDA_Connection_OBJECT_NAME :
+		case GDA_Connection_OBJECT_NAME :
 			table_name = ptr->value;
 			fprintf(stderr, "schema_tab_parents: table_name = '%s'\n", 
-					table_name);
+				table_name);
 			break;
-        default:
+		default:
 			fprintf(stderr, "schema_tab_parents: invalid constraint type %d\n", 
-					ptr->ctype);
+				ptr->ctype);
 			return (0);
-        }
+		}
 		ptr++;
-    }
+	}
 
 	if (!table_name) {
 		fprintf(stderr, "schema_tab_parents: table name is null\n");
 		return (0);
-    }
+	}
 
 	/* find the oid of the table */
 	query = g_string_new("SELECT oid from pg_class where ");
@@ -1010,15 +1010,15 @@ schema_tab_parents (GdaError *error,
 		if (res)
 			PQclear(res);
 		return NULL;
-    }
+	}
 	oid = atoi(PQgetvalue(res, 0, 0));
 	PQclear(res);
 
 	/* build the query */
 	query = g_string_new("SELECT a.relname AS \"Table Name\", "
-						 "b.inhseqno AS \"Sequence\" FROM "
-						 "pg_inherits b, pg_class a WHERE a.oid=b.inhparent "
-						 "AND b.inhrel = ");
+			     "b.inhseqno AS \"Sequence\" FROM "
+			     "pg_inherits b, pg_class a WHERE a.oid=b.inhparent "
+			     "AND b.inhrel = ");
 	g_string_sprintfa(query, "%d order by b.inhseqno", oid);
 
 	/* build the command object */
@@ -1063,7 +1063,7 @@ schema_procedures (GdaError *error,
 	ptr = constraint;
 	for (cnt = 0; cnt < length && ptr != 0; cnt++) {
 		switch (ptr->ctype) {
-        case GDA_Connection_OBJECT_NAME :
+		case GDA_Connection_OBJECT_NAME :
 			proc_name = ptr->value;
 			fprintf(stderr, "schema_procedures: proc_name = '%s'\n", proc_name);
 			if (!and_value) {
@@ -1073,7 +1073,7 @@ schema_procedures (GdaError *error,
 			else
 				g_string_sprintfa(and_value, "AND p.proname = '%s' ", ptr->value);
 			break;
-        case GDA_Connection_OBJECT_SCHEMA :
+		case GDA_Connection_OBJECT_SCHEMA :
 			proc_owner = ptr->value;
 			fprintf(stderr, "schema_procedures: proc_owner = '%s'\n",proc_owner);
 			if (!and_value) {
@@ -1083,19 +1083,19 @@ schema_procedures (GdaError *error,
 			else
 				g_string_sprintfa(and_value, "AND u.usename = '%s' ", ptr->value);
 			break;
-        case GDA_Connection_OBJECT_CATALOG :
+		case GDA_Connection_OBJECT_CATALOG :
 			fprintf(stderr, "schema_procedures: proc_catalog = '%s' UNUSED!\n", 
 					ptr->value);
 			break;
-        case GDA_Connection_EXTRA_INFO :
+		case GDA_Connection_EXTRA_INFO :
 			extra_info = TRUE;
 			break;
-        default:
+		default:
 			fprintf(stderr, "schema_procedures: invalid constraint type %d\n", ptr->ctype);
 			return (0);
-        }
+		}
 		ptr++;
-    }
+	}
 
 	/* build the query */
 
@@ -1109,35 +1109,35 @@ schema_procedures (GdaError *error,
 	if (extra_info) {
 		if (pc->version < 7.0)
 			query = g_string_new("SELECT p.proname AS \"Name\", "
-								 "p.oid AS \"Object Id\", "
-								 "u.usename AS \"Owner\", "
-								 "obj_description(p.oid) AS \"Comments\", "
-								 "p.pronargs AS \"Number of args\", "
-								 "p.oid AS \"SQL Def.\", "
-								 "p.prorettype, p.proargtypes " /* for checking */
-								 "FROM pg_proc p, pg_user u "
-								 "WHERE u.usesysid=p.proowner AND "
-								 "(pronargs = 0 or oid8types(p.proargtypes)!= '') ");
+					     "p.oid AS \"Object Id\", "
+					     "u.usename AS \"Owner\", "
+					     "obj_description(p.oid) AS \"Comments\", "
+					     "p.pronargs AS \"Number of args\", "
+					     "p.oid AS \"SQL Def.\", "
+					     "p.prorettype, p.proargtypes " /* for checking */
+					     "FROM pg_proc p, pg_user u "
+					     "WHERE u.usesysid=p.proowner AND "
+					     "(pronargs = 0 or oid8types(p.proargtypes)!= '') ");
 		else
 			query = g_string_new("SELECT p.proname AS \"Name\", "
-								 "p.oid AS \"Object Id\", "
-								 "u.usename AS \"Owner\", "
-								 "obj_description(p.oid) AS \"Comments\", "
-								 "p.pronargs AS \"Number of args\", "
-								 "p.oid AS \"SQL Def.\", "
-								 "p.prorettype, p.proargtypes " /* for checking */
-								 "FROM pg_proc p, pg_user u "
-								 "WHERE u.usesysid=p.proowner AND "
-								 "(pronargs = 0 or oidvectortypes(p.proargtypes)!= '') ");
+					     "p.oid AS \"Object Id\", "
+					     "u.usename AS \"Owner\", "
+					     "obj_description(p.oid) AS \"Comments\", "
+					     "p.pronargs AS \"Number of args\", "
+					     "p.oid AS \"SQL Def.\", "
+					     "p.prorettype, p.proargtypes " /* for checking */
+					     "FROM pg_proc p, pg_user u "
+					     "WHERE u.usesysid=p.proowner AND "
+					     "(pronargs = 0 or oidvectortypes(p.proargtypes)!= '') ");
 		where = TRUE;
 		nbcols = 6;
-    }
+	}
 	else {
 		query = g_string_new("SELECT p.proname AS \"Name\", "
-							 "p.oid AS \"Object Id\", "
-							 "obj_description(p.oid) AS \"Comments\", "
-							 "p.prorettype, p.proargtypes " /* for checking */
-							 "FROM pg_proc p ");
+				     "p.oid AS \"Object Id\", "
+				     "obj_description(p.oid) AS \"Comments\", "
+				     "p.prorettype, p.proargtypes " /* for checking */
+				     "FROM pg_proc p ");
 		if (proc_owner) {
 			g_string_append(query, ", pg_user u WHERE u.usesysid=p.proowner ");
 			where = TRUE;
@@ -1155,7 +1155,7 @@ schema_procedures (GdaError *error,
 			g_string_append(query, "(pronargs = 0 or oidvectortypes(p.proargtypes)!= '') ");
       
 		nbcols = 3;
-    }
+	}
 
 	if (and_value) {
 		if (!where) {
@@ -1166,7 +1166,7 @@ schema_procedures (GdaError *error,
 			g_string_append(query, "AND ");
 		g_string_sprintfa(query, "%s", and_value->str);
 		g_string_free(and_value, TRUE);
-    }
+	}
 	if (!where)
 		g_string_append(query, "WHERE ");
 	else
@@ -1177,27 +1177,27 @@ schema_procedures (GdaError *error,
 	/* build the builtin result and tell the columns types */
 	bres = GdaBuiltin_Result_new(nbcols, "result", 0, -1);
 	GdaBuiltin_Result_set_att(bres, 0, "Name", 
-							  gda_postgres_connection_get_sql_type(pc, "varchar"), -1);
+				  gda_postgres_connection_get_sql_type(pc, "varchar"), -1);
 	GdaBuiltin_Result_set_att(bres, 1, "Object Id", 
-							  gda_postgres_connection_get_sql_type(pc, "varchar"), -1);
+				  gda_postgres_connection_get_sql_type(pc, "varchar"), -1);
 	if (extra_info) {
 		GdaBuiltin_Result_set_att(bres, 2, "Owner", 
-								  gda_postgres_connection_get_sql_type(pc, "varchar"), -1);
+					  gda_postgres_connection_get_sql_type(pc, "varchar"), -1);
 		GdaBuiltin_Result_set_att(bres, 3, "Comments", 
-								  gda_postgres_connection_get_sql_type(pc, "varchar"), -1);
+					  gda_postgres_connection_get_sql_type(pc, "varchar"), -1);
 		GdaBuiltin_Result_set_att(bres, 4, "Number of Args.", 
-								  gda_postgres_connection_get_sql_type(pc, "int2"), 4);
+					  gda_postgres_connection_get_sql_type(pc, "int2"), 4);
 		GdaBuiltin_Result_set_att(bres, 5, "Sql Def.", 
-								  gda_postgres_connection_get_sql_type(pc, "varchar"), -1);
-    }
+					  gda_postgres_connection_get_sql_type(pc, "varchar"), -1);
+	}
 	else
 		GdaBuiltin_Result_set_att(bres, 2, "Comments", 
-								  gda_postgres_connection_get_sql_type(pc, "varchar"), -1);
+					  gda_postgres_connection_get_sql_type(pc, "varchar"), -1);
 
 	/* run the query, get a PGresult, and for each tuple:
 	   - see if the function is authorized (not in the result of notypes)
 	   - see if all the parameters and return type are in the known postgres 
-       types. If that is the case, add the tuple to the builtin result. 
+	   types. If that is the case, add the tuple to the builtin result. 
 	   Then clear the PGresult */
 	res = PQexec(pc->pq_conn, query->str);
 	fprintf(stderr, "Query: %s\n", query->str);
@@ -1222,22 +1222,22 @@ schema_procedures (GdaError *error,
 	/* notypes and notypes_sym are unioned so we have one PGresult which is already sorted */
 
 	notypes =PQexec(pc->pq_conn, 
-					"select distinct int4(text(oprcode)) as code FROM "
-					"pg_operator UNION "
-					"select p.oid as code from pg_proc p where "
-					"text(p.proname)!=p.prosrc and p.prosrc IN "
-					"(select text(proname) from pg_proc where text(proname)= "
-					"p.prosrc) order by code");
+			"select distinct int4(text(oprcode)) as code FROM "
+			"pg_operator UNION "
+			"select p.oid as code from pg_proc p where "
+			"text(p.proname)!=p.prosrc and p.prosrc IN "
+			"(select text(proname) from pg_proc where text(proname)= "
+			"p.prosrc) order by code");
 
 	if ((!res || (PQresultStatus(res) != PGRES_TUPLES_OK) ||
-		 (PQntuples(res) < 1)) ||
-		(!notypes || (PQresultStatus(notypes) != PGRES_TUPLES_OK) ||
-		 (PQntuples(notypes) < 1)))
+	     (PQntuples(res) < 1)) ||
+	    (!notypes || (PQresultStatus(notypes) != PGRES_TUPLES_OK) ||
+	     (PQntuples(notypes) < 1)))
 		/* || (!notypes_sym || (PQresultStatus(notypes_sym) != PGRES_TUPLES_OK) ||
 		   (PQntuples(notypes_sym) < 1))*/ {
 
 		/*fprintf(stderr, "Error: res=%p and notypes=%p and notypes_syn=%p\n", 
-	      res, notypes, notypes_sym);*/
+		  res, notypes, notypes_sym);*/
 		fprintf(stderr, "Error: res=%p and notypes=%p\n", res, notypes);
 		if (res)
 			PQclear(res);
@@ -1246,7 +1246,7 @@ schema_procedures (GdaError *error,
 		/*if (notypes_sym)
 		  PQclear(notypes_sym);*/
 		return NULL;
-    }
+	}
   
 	cnt = PQntuples(res);
 	cntnt = PQntuples(notypes);
@@ -1294,13 +1294,13 @@ schema_procedures (GdaError *error,
 		 */
 		/* checking on the OUT params */
 		if (insert && !gda_postgres_connection_is_type_known(pc, 
-															 atoi(PQgetvalue(res, i, nbcols))))
+								     atoi(PQgetvalue(res, i, nbcols))))
 			insert = FALSE;
 		if (insert) /* checking on the IN params */ {
 			list = convert_tabular_to_list((PQgetvalue(res, i, nbcols+1)));
 			while (list) {
 				if (!gda_postgres_connection_is_type_known(pc,
-														   atoi((gchar*)(list->data))))
+									   atoi((gchar*)(list->data))))
 					insert = FALSE;
 				g_free(list->data);
 				list = g_slist_remove_link(list, list);
@@ -1313,7 +1313,7 @@ schema_procedures (GdaError *error,
 				row[j] = PQgetvalue(res, i, j);
 			GdaBuiltin_Result_add_row(bres, row);      
 		}
-    }
+	}
 	PQclear(res);
 	PQclear(notypes);
 	/*PQclear(notypes_sym);*/
@@ -1321,8 +1321,8 @@ schema_procedures (GdaError *error,
 
 	/* build the recset */
 	recset = gda_postgres_command_build_recset_with_builtin (cnc,
-															 bres,  
-															 &affected);
+								 bres,  
+								 &affected);
 	fprintf(stderr, "Nb of procs: %ld\n", affected);
 	if (recset && extra_info) { /* Setting replacements for nb of params */
 		POSTGRES_Recordset *prc;
@@ -1335,23 +1335,23 @@ schema_procedures (GdaError *error,
 		repl->newtype = GDA_TypeVarchar;
 		repl->trans_func = replace_FUNCTION_OID_with_SQL;
 		add_replacement_function(recset, repl, "varchar");
-    }
+	}
 	return (recset);
 }
 
 static GdaServerRecordset *
 schema_proc_params (GdaError *error,
-					GdaServerConnection *cnc,
-					GDA_Connection_Constraint *constraint,
-					gint length)
+		    GdaServerConnection *cnc,
+		    GDA_Connection_Constraint *constraint,
+		    gint length)
 {
 	gint                       cnt;
 	GDA_Connection_Constraint* ptr;
-	GdaServerRecordset*       recset = 0;
+	GdaServerRecordset*        recset = 0;
 	gchar*                     proc_name = 0;
 	gchar*                     query;
 	gulong                     affected;
-	GdaBuiltin_Result*        bres;
+	GdaBuiltin_Result*         bres;
 	PGresult*                  res;
 	gchar                      *row[2];
 	GSList*                    list;
@@ -1361,45 +1361,45 @@ schema_proc_params (GdaError *error,
 	ptr = constraint;
 	for (cnt = 0; cnt < length && ptr != 0; cnt++) {
 		switch (ptr->ctype) {
-        case GDA_Connection_OBJECT_NAME :
+		case GDA_Connection_OBJECT_NAME :
 			proc_name = ptr->value;
 			fprintf(stderr, "schema_proc_params: proc_name = '%s'\n", proc_name);
 			break;
-        default:
+		default:
 			fprintf(stderr, "schema_procedures: invalid constraint type %d\n", 
-					ptr->ctype);
+				ptr->ctype);
 			return (0);
-        }
+		}
 		ptr++;
-    }
+	}
 
 	if (!proc_name) {
 		fprintf(stderr, "schema_proc_params: proc name is null\n");
 		return (0);
-    }  
+	}
 
 	/* building initial builtin result */
 	pc = (POSTGRES_Connection *) gda_server_connection_get_user_data(cnc);
 	bres = GdaBuiltin_Result_new(2, "result", 0, -1);
 	GdaBuiltin_Result_set_att(bres, 0, "InOut", 
-							  gda_postgres_connection_get_sql_type(pc, "varchar"),
-							  -1);
+				  gda_postgres_connection_get_sql_type(pc, "varchar"),
+				  -1);
 	GdaBuiltin_Result_set_att(bres, 1, "Type", 
-							  gda_postgres_connection_get_sql_type(pc, "varchar"),
-							  -1);
+				  gda_postgres_connection_get_sql_type(pc, "varchar"),
+				  -1);
 
 
 	/* fetch what we want, and put it into out builtin result */
 	if (pc->version < 7.0)  
 		query = g_strdup_printf("SELECT prorettype, proargtypes FROM pg_proc "
-								"WHERE (pronargs = 0 or "
-								"oid8types(proargtypes)!= '')"
-								" AND oid = %s", proc_name);
+					"WHERE (pronargs = 0 or "
+					"oid8types(proargtypes)!= '')"
+					" AND oid = %s", proc_name);
 	else
 		query = g_strdup_printf("SELECT prorettype, proargtypes FROM pg_proc "
-								"WHERE (pronargs = 0 or "
-								"oidvectortypes(proargtypes)!= '')"
-								" AND oid = %s", proc_name);
+					"WHERE (pronargs = 0 or "
+					"oidvectortypes(proargtypes)!= '')"
+					" AND oid = %s", proc_name);
 	res = PQexec(pc->pq_conn, query);
 	g_free(query);
 	if (!res || (PQresultStatus(res) != PGRES_TUPLES_OK) ||
@@ -1407,10 +1407,10 @@ schema_proc_params (GdaError *error,
 		if (res)
 			PQclear(res);
 		return NULL;
-    }
+	}
 	row[0] = "out";
 	row[1] = gda_postgres_connection_get_type_name(pc, 
-												   atoi(PQgetvalue(res, 0, 0)));
+						       atoi(PQgetvalue(res, 0, 0)));
 	if (row[1])
 		GdaBuiltin_Result_add_row(bres, row);
 	list = convert_tabular_to_list(PQgetvalue(res, 0, 1));
@@ -1418,18 +1418,18 @@ schema_proc_params (GdaError *error,
 	row[0] = "in";
 	while (list) {
 		row[1] = gda_postgres_connection_get_type_name(pc, 
-													   atoi((gchar*)(list->data)));
+							       atoi((gchar*)(list->data)));
 		if (row[1])
 			GdaBuiltin_Result_add_row(bres, row);
 		if (list->data)
 			g_free(list->data);
 		list = g_slist_remove_link(list, list);
-    }
+	}
 
 	/* final step */
 	recset = gda_postgres_command_build_recset_with_builtin (cnc,
-															 bres,  
-															 &affected);
+								 bres,  
+								 &affected);
 	fprintf(stderr, "Nb of proc params: %ld\n", affected);
 	return (recset);
 
@@ -1458,74 +1458,74 @@ schema_aggregates (GdaError *error,
 	ptr = constraint;
 	for (cnt = 0; cnt < length && ptr != 0; cnt++) {
 		switch (ptr->ctype) {
-        case GDA_Connection_EXTRA_INFO :
+		case GDA_Connection_EXTRA_INFO :
 			extra_info = TRUE;
 			break;
-        case GDA_Connection_OBJECT_NAME :
-			if (!and_condition) and_condition = g_string_new("");
+		case GDA_Connection_OBJECT_NAME :
+			if (!and_condition)
+				and_condition = g_string_new("");
 			g_string_sprintfa(and_condition, "AND a.oid='%s' ", ptr->value);
 			fprintf(stderr, "schema_tables: aggregate name = '%s'\n", 
-					ptr->value);
+				ptr->value);
 			break;
-        case GDA_Connection_OBJECT_SCHEMA :
+		case GDA_Connection_OBJECT_SCHEMA :
 			if (!and_condition) and_condition = g_string_new("");
 			g_string_sprintfa(and_condition, "AND b.usename='%s' ", ptr->value);
 			fprintf(stderr, "schema_tables: table_schema = '%s'\n", ptr->value);
 			break;
-        case GDA_Connection_OBJECT_CATALOG :
+		case GDA_Connection_OBJECT_CATALOG :
 			fprintf(stderr, "schema_procedures: proc_catalog = '%s' UNUSED!\n", 
-					ptr->value);
+				ptr->value);
 			break;
-        default :
+		default :
 			fprintf(stderr, "schema_tables: invalid constraint type %d\n", 
-					ptr->ctype);
+				ptr->ctype);
 			g_string_free(and_condition, TRUE);
 			return (0);
-        }
+		}
 		ptr++;
-    }
+	}
 
 	/* build the query: no difference between postgres versions. */
 	/* 1st: aggregates that work on a particular type */
 	query = g_string_new("SELECT a.aggname AS \"Name\", "
-						 "a.oid AS \"Object Id\", "
-						 "t.typname as \"IN Type\", ");
+			     "a.oid AS \"Object Id\", "
+			     "t.typname as \"IN Type\", ");
 	if (extra_info) 
 		g_string_append(query, "b.usename AS \"Owner\", "
-						"obj_description(a.oid) AS \"Comments\", "
-						"a.oid AS \"SQL\" ");
+				"obj_description(a.oid) AS \"Comments\", "
+				"a.oid AS \"SQL\" ");
 	else 
 		g_string_append(query, "obj_description(a.oid) AS \"Comments\" ");
 
 	g_string_append(query, "FROM pg_aggregate a, pg_type t, pg_user b "
-					"WHERE a.aggbasetype = t.oid AND b.usesysid=a.aggowner ");
+			"WHERE a.aggbasetype = t.oid AND b.usesysid=a.aggowner ");
 	if (and_condition) {
 		g_string_append(query, and_condition->str);
 		g_string_free(and_condition, TRUE);
-    }
+	}
 
 	/* 2nd: aggregates that work on any type */
 	g_string_append(query, " UNION ");
 	g_string_append(query, "SELECT a.aggname AS \"Name\", "
-					"a.oid AS \"Object Id\", "
-					"'---' as \"IN Type\", ");
+			"a.oid AS \"Object Id\", "
+			"'---' as \"IN Type\", ");
 	if (extra_info) 
 		g_string_append(query, "b.usename AS \"Owner\", "
-						"obj_description(a.oid) AS \"Comments\", "
-						"a.oid AS \"SQL\" ");
+				"obj_description(a.oid) AS \"Comments\", "
+				"a.oid AS \"SQL\" ");
 	else 
 		g_string_append(query, "obj_description(a.oid) AS \"Comments\" ");
 
 	g_string_append(query, "FROM pg_aggregate a, pg_user b "
-					"WHERE a.aggbasetype = 0 AND b.usesysid=a.aggowner ");
+			"WHERE a.aggbasetype = 0 AND b.usesysid=a.aggowner ");
 	if (and_condition) {
 		g_string_append(query, and_condition->str);
 		g_string_free(and_condition, TRUE);
-    }
+	}
 
 	/* then ordering */
-	g_string_append(query, "ORDER BY aggname, typname");		  
-
+	g_string_append(query, "ORDER BY aggname, typname");
 
 	/* build the command object */
 	cmd = gda_server_command_new(cnc);
@@ -1547,23 +1547,21 @@ schema_aggregates (GdaError *error,
 		repl->newtype = GDA_TypeVarchar;
 		repl->trans_func = replace_AGGREGATE_OID_with_SQL;
 		add_replacement_function(recset, repl, "varchar");
-    }
+	}
   
 	return (recset);
 }
 
 
-
-
 static GdaServerRecordset *
 schema_sequences (GdaError *error,
-				  GdaServerConnection *cnc,
-				  GDA_Connection_Constraint *constraint,
-				  gint length)
+		  GdaServerConnection *cnc,
+		  GDA_Connection_Constraint *constraint,
+		  gint length)
 {
 	GString*                   query;
-	GdaServerCommand*         cmd;
-	GdaServerRecordset*       recset = 0;
+	GdaServerCommand*          cmd;
+	GdaServerRecordset*        recset = 0;
 	GDA_Connection_Constraint* ptr;
 	gboolean                   extra_info = FALSE;
 	gint                       cnt;
@@ -1574,47 +1572,48 @@ schema_sequences (GdaError *error,
 	ptr = constraint;
 	for (cnt = 0; cnt < length && ptr != 0; cnt++) {
 		switch (ptr->ctype) {
-        case GDA_Connection_EXTRA_INFO :
+		case GDA_Connection_EXTRA_INFO :
 			extra_info = TRUE;
 			break;
-        case GDA_Connection_OBJECT_CATALOG : /* not used in postgres */
+		case GDA_Connection_OBJECT_CATALOG : /* not used in postgres */
 			break;
-        case GDA_Connection_OBJECT_NAME :
+		case GDA_Connection_OBJECT_NAME :
 			if (!and_condition) and_condition = g_string_new("");
 			g_string_sprintfa(and_condition, "AND a.relname='%s' ", ptr->value);
 			fprintf(stderr, "schema_sequences: seq name = '%s'\n", ptr->value);
 			break;
-        case GDA_Connection_OBJECT_SCHEMA :
+		case GDA_Connection_OBJECT_SCHEMA :
 			if (!and_condition) and_condition = g_string_new("");
 			g_string_sprintfa(and_condition, "AND b.usename='%s' ", ptr->value);
 			fprintf(stderr, "schema_sequences: seq schema = '%s'\n", ptr->value);
 			break;
-        default :
+		default :
 			fprintf(stderr, "schema_sequences: invalid constraint type %d\n", 
-					ptr->ctype);
+				ptr->ctype);
 			g_string_free(and_condition, TRUE);
 			return (0);
-        }
+		}
 		ptr++;
-    }
+	}
 
 	/* build the query */
 	query = g_string_new("SELECT a.relname AS \"Name\", ");
 	if (extra_info) 
 		g_string_append(query, "b.usename AS \"Owner\", "
-						"obj_description(a.oid) AS \"Comments\", "
-						"a.relname AS \"SQL\" ");
+				"obj_description(a.oid) AS \"Comments\", "
+				"a.relname AS \"SQL\" ");
 	else 
 		g_string_append(query, "obj_description(a.oid) AS \"Comments\" ");
 	g_string_append(query, " FROM pg_class a, pg_user b "
-					"WHERE ( relkind = 'S') and relname !~ '^pg_' "
-					"AND relname !~ '^xin[vx][0-9]+' AND "
-					"b.usesysid = a.relowner ");
+			"WHERE ( relkind = 'S') and relname !~ '^pg_' "
+			"AND relname !~ '^xin[vx][0-9]+' AND "
+			"b.usesysid = a.relowner ");
 	if (and_condition) 
 		g_string_sprintfa(query, "%s", and_condition->str);
- 
+
 	g_string_append(query, " ORDER BY a.relname");
-	if (and_condition) g_string_free(and_condition, TRUE);
+	if (and_condition)
+		g_string_free(and_condition, TRUE);
 
 	/* build the command object */
 	cmd = gda_server_command_new(cnc);
@@ -1636,8 +1635,8 @@ schema_sequences (GdaError *error,
 		repl->newtype = GDA_TypeVarchar;
 		repl->trans_func = replace_SEQUENCE_NAME_with_SQL;
 		add_replacement_function(recset, repl, "varchar");
-    }
-  
+	}
+
 	return (recset);
 }
 
@@ -1666,56 +1665,56 @@ schema_types (GdaError *error,
 	ptr = constraint;
 	for (cnt = 0; cnt < length && ptr != 0; cnt++) {
 		switch (ptr->ctype) {
-        case GDA_Connection_OBJECT_NAME :
+		case GDA_Connection_OBJECT_NAME :
 			if (!and_condition) and_condition = g_string_new("");
 			g_string_sprintfa(and_condition, "AND a.typname='%s' ", ptr->value);
 			fprintf(stderr, "schema_tables: type name = '%s'\n", ptr->value);
 			break;
-        case GDA_Connection_OBJECT_SCHEMA :
+		case GDA_Connection_OBJECT_SCHEMA :
 			if (!and_condition) and_condition = g_string_new("");
 			g_string_sprintfa(and_condition, "AND b.usename='%s' ", ptr->value);
 			fprintf(stderr, "schema_tables: owner     = '%s'\n", ptr->value);
 			break;
-        case GDA_Connection_OBJECT_CATALOG : /* not used in postgres */
+		case GDA_Connection_OBJECT_CATALOG : /* not used in postgres */
 			break;
-        case GDA_Connection_EXTRA_INFO :
+		case GDA_Connection_EXTRA_INFO :
 			extra_info = TRUE;
 			break;
-        default :
+		default :
 			fprintf(stderr, "schema_types: invalid constraint type %d\n", 
-					ptr->ctype);
+				ptr->ctype);
 			return (0);
-        }
+		}
 		ptr++;
-    }
+	}
 
 	/* build the query */
 	if (extra_info) {
 		query = g_string_new("SELECT a.typname AS \"Name\", b.usename "
-							 "AS \"Owner\", "
-							 "obj_description(a.oid) AS \"Comments\", "
-							 "a.oid AS \"Gda Type\", "
-							 "a.oid as \"Local Type\" "
-							 "FROM pg_type a, pg_user b WHERE typrelid = 0 "
-							 "AND a.typowner=b.usesysid ");
-    }
+				     "AS \"Owner\", "
+				     "obj_description(a.oid) AS \"Comments\", "
+				     "a.oid AS \"Gda Type\", "
+				     "a.oid as \"Local Type\" "
+				     "FROM pg_type a, pg_user b WHERE typrelid = 0 "
+				     "AND a.typowner=b.usesysid ");
+	}
 	else {
 		query = g_string_new("SELECT a.typname AS \"Name\", "
-							 "obj_description(a.oid) AS \"Comments\" "
-							 "FROM pg_type a, pg_user b "
-							 "WHERE typrelid = 0 ");
-    }
+				     "obj_description(a.oid) AS \"Comments\" "
+				     "FROM pg_type a, pg_user b "
+				     "WHERE typrelid = 0 ");
+	}
 	if (and_condition) {
 		g_string_sprintfa(query, "%s", and_condition->str);
 		g_string_free(and_condition, TRUE);
-    }
+	}
 	g_string_append(query, "AND typname not in " IN_PG_TYPES_HIDDEN 
-					" AND b.usesysid=a.typowner ");
+			" AND b.usesysid=a.typowner ");
   
 	g_string_append(query, "AND typname !~ '^_.*' ");
  
 	g_string_append(query, /*"AND obj_description(a.oid) is not null "*/
-					"ORDER BY typname");
+			"ORDER BY typname");
 
 	/* build the command object */
 	cmd = gda_server_command_new(cnc);
@@ -1738,7 +1737,7 @@ schema_types (GdaError *error,
 		repl->newtype = GDA_TypeSmallint;
 		repl->trans_func = replace_PROV_TYPES_with_gdatype;
 		add_replacement_function(recset, repl, "int2");
-    }
+	}
 
 	return (recset);
 }
@@ -1763,19 +1762,19 @@ schema_views (GdaError *error,
 	ptr = constraint;
 	for (cnt = 0; cnt < length && ptr != 0; cnt++) {
 		switch (ptr->ctype) {
-        case GDA_Connection_EXTRA_INFO :
+		case GDA_Connection_EXTRA_INFO :
 			extra_info = TRUE;
 			break;
-        case GDA_Connection_OBJECT_NAME :
+		case GDA_Connection_OBJECT_NAME :
 			view_name = ptr->value;
 			fprintf(stderr, "schema_views: view name = '%s'\n", view_name);
 			break;
-        default :
+		default :
 			fprintf(stderr, "schema_views: invalid constraint type %d\n", ptr->ctype);
 			return (0);
-        }
+		}
 		ptr++;
-    }
+	}
 
 	/* build the query: it is taken from the definition of pg_views and adapted
 	   because oid can't be got from pg_views. */
@@ -1784,38 +1783,38 @@ schema_views (GdaError *error,
 
 		if (view_name != 0) {
 			where_clause = g_strdup_printf("AND c.relname = '%s'", view_name);
-        }
+		}
 		else 
 			where_clause = g_strdup(" ");
 		query = g_strdup_printf("SELECT c.relname AS \"Name\", "
-								"pg_get_userbyid(c.relowner) AS \"Owner\", "
-								"obj_description(c.oid) as \"Comments\", "
-								"pg_get_viewdef(c.relname) AS \"Definition\" "
-								"FROM pg_class c WHERE (c.relhasrules AND "
-								"(EXISTS (SELECT r.rulename FROM pg_rewrite "
-								"r WHERE ((r.ev_class = c.oid) AND "
-								"(r.ev_type = '1'::\"char\"))))) "
-								"AND c.relname !~ '^pg_' AND "
-								"c.relname !~ '^xin[vx][0-9]+' "
-								"%s ORDER BY c.relname", where_clause);
+					"pg_get_userbyid(c.relowner) AS \"Owner\", "
+					"obj_description(c.oid) as \"Comments\", "
+					"pg_get_viewdef(c.relname) AS \"Definition\" "
+					"FROM pg_class c WHERE (c.relhasrules AND "
+					"(EXISTS (SELECT r.rulename FROM pg_rewrite "
+					"r WHERE ((r.ev_class = c.oid) AND "
+					"(r.ev_type = '1'::\"char\"))))) "
+					"AND c.relname !~ '^pg_' AND "
+					"c.relname !~ '^xin[vx][0-9]+' "
+					"%s ORDER BY c.relname", where_clause);
 		g_free((gpointer) where_clause);
-    }
+	}
 	else {
 		query = g_strdup("SELECT c.relname AS \"Name\", "
-						 "obj_description(c.oid) as \"Comments\" "
-						 "FROM pg_class c WHERE (c.relhasrules AND "
-						 "(EXISTS (SELECT r.rulename FROM pg_rewrite "
-						 "r WHERE ((r.ev_class = c.oid) AND "
-						 "(r.ev_type = '1'::\"char\"))))) "
-						 "AND c.relname !~ '^pg_' AND "
-						 "c.relname !~ '^xin[vx][0-9]+' "
-						 "ORDER BY c.relname");
+				 "obj_description(c.oid) as \"Comments\" "
+				 "FROM pg_class c WHERE (c.relhasrules AND "
+				 "(EXISTS (SELECT r.rulename FROM pg_rewrite "
+				 "r WHERE ((r.ev_class = c.oid) AND "
+				 "(r.ev_type = '1'::\"char\"))))) "
+				 "AND c.relname !~ '^pg_' AND "
+				 "c.relname !~ '^xin[vx][0-9]+' "
+				 "ORDER BY c.relname");
 		/* This was the old and simple query:
 		   query = g_strdup("SELECT viewname AS \"Name\", "
 		   "       null AS \"Comments\" "
 		   " FROM pg_views "
 		   " ORDER BY viewname");*/
-    }
+	}
 
 	/* build the command object */
 	cmd = gda_server_command_new(cnc);
@@ -1862,7 +1861,7 @@ execute_command (GdaServerConnection *cnc, gchar *cmd)
 				PQclear(rc);
 			gda_server_error_make(gda_error_new(), 0, cnc, __PRETTY_FUNCTION__);
 		}
-    }
+	}
 	return (-1);
 }
 
@@ -1890,11 +1889,9 @@ initialize_schema_ops (void)
 }
 
 
-
-
 gulong
 gda_postgres_connection_get_sql_type(POSTGRES_Connection *cnc, 
-									 gchar *postgres_type)
+				     gchar *postgres_type)
 {
 	gulong oid = 0; /* default return value */
 	gboolean found;
@@ -1916,7 +1913,7 @@ gda_postgres_connection_get_sql_type(POSTGRES_Connection *cnc,
 			found = TRUE;
 		}
 		i++;
-    }
+	}
 
 	return oid;
 }
@@ -1937,13 +1934,13 @@ static Gdaconnection_data *find_connection_data(POSTGRES_Connection *cnc)
 			else
 				list = g_slist_next(list);
 		}
-    }
+	}
 
 	return retval;
 }
 
 static gchar* gda_postgres_connection_get_type_name(POSTGRES_Connection *cnc, 
-													gulong oid)
+						    gulong oid)
 {
 	gchar* str=NULL; /* default value */
 	gboolean found;
@@ -1965,7 +1962,7 @@ static gchar* gda_postgres_connection_get_type_name(POSTGRES_Connection *cnc,
 			found = TRUE;
 		}
 		i++;
-    }
+	}
 
 	return str;
 }
@@ -1992,14 +1989,14 @@ gda_postgres_connection_is_type_known (POSTGRES_Connection *cnc,
 		if (cnc->types_array[i].oid == sql_type)
 			found = TRUE;
 		i++;
-    }
+	}
 	return found;
 }
 
 
 static void add_replacement_function(GdaServerRecordset *recset,
-									 POSTGRES_Recordset_Replacement *repl,
-									 gchar *sql_type)
+				     POSTGRES_Recordset_Replacement *repl,
+				     gchar *sql_type)
 {
 	POSTGRES_Recordset *prc;
 	POSTGRES_Connection *pc;

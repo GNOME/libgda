@@ -5,6 +5,8 @@
 #ifndef __recordset__
 #define __recordset__ 1
 
+#include <Bonobo.idl>
+
 module GDA {
 
 	enum LockType {
@@ -13,15 +15,14 @@ module GDA {
 		LOCK_OPTIMISTIC,
 		LOCK_BATCH
 	};
-	enum CursorType
-	{
+	enum CursorType {
 		OPEN_FWDONLY,
 		OPEN_KEYSET,
 		OPEN_DYNAMIC,
 		OPEN_STATIC
 	};
 	
-	enum Option{
+	enum Option {
 		ADD_NEW,
 		APPROX_POS,
 		BOOKMARK,
@@ -33,30 +34,18 @@ module GDA {
 		UPDATE_BATCH
 	};
 	
-	interface Recordset {
+	interface Recordset : Bonobo::Unknown {
 
 		typedef  sequence<Row> Chunk;
 
-		attribute long            currentBookmark; /* really, this should be any */
-		attribute long            cachesize;
-		attribute CursorType      currentCursorType;
-		attribute LockType        lockingMode;
-		attribute long            maxrecords;
-		readonly attribute long   pagecount;
-		attribute long            pagesize;
-		readonly attribute long   recCount;
-		readonly attribute string source;
-		readonly attribute long   status;
-
+		long          getRowCount();
 		long          close();
 		long          move(in long count, in long bookmark);
 		long          moveFirst();
 		long          moveLast();
 		long          reQuery();
-		long          reSync();
 		boolean       supports(in Option what);
-		Chunk         fetch(in long count)
-					  raises(NotSupported, DriverError);
+		Chunk         fetch(in long count) raises(NotSupported, DriverError);
 		RowAttributes describe();
 	};
 };

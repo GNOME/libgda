@@ -124,38 +124,6 @@ gchar* Connection::getUser() {
 	return gda_connection_get_user(_gda_connection);
 }
 
-glong Connection::getFlags() {
-	return gda_connection_get_flags(_gda_connection);
-}
-
-void Connection::setFlags(glong flags) {
-	gda_connection_set_flags(_gda_connection,flags);
-}
-
-glong Connection::getCmdTimeout() {
-	return gda_connection_get_cmd_timeout(_gda_connection);
-}
-
-void Connection::setCmdTimeout(glong cmd_timeout) {
-	gda_connection_set_cmd_timeout(_gda_connection,cmd_timeout);
-}
-
-glong Connection::getConnectTimeout() {
-	return gda_connection_get_connect_timeout(_gda_connection);
-}
-
-void Connection::setConnectTimeout(glong timeout) {
-	gda_connection_set_connect_timeout(_gda_connection,timeout);
-}
-
-GDA_CursorLocation Connection::getCursorLocation() {
-	return gda_connection_get_cursor_location(_gda_connection);
-}
-
-void Connection::setCursorLocation(GDA_CursorLocation cursor) {
-	gda_connection_set_cursor_location(_gda_connection,cursor);
-}
-
 gchar* Connection::getVersion() {
 	return gda_connection_get_version(_gda_connection);
 }

@@ -72,7 +72,7 @@ gda_primebase_command_execute (GdaServerCommand *cmd,
   cmd_len = strlen(sql_cmd);
   ptr = sql_cmd;
 
-  cmd_type = gda_server_command_get_type(cmd);
+  cmd_type = gda_server_command_get_cmd_type(cmd);
   switch (cmd_type) {
     case GDA_COMMAND_TYPE_FILE:
 //      sql_cmd = gda_primebase_connection_loadfile(pcnc, sql_cmd);

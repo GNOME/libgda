@@ -209,7 +209,7 @@ gda_oracle_command_execute (GdaServerCommand *cmd,
 		ora_cmd = (ORACLE_Command *) gda_server_command_get_user_data(cmd);
 		ora_recset = (ORACLE_Recordset *) gda_server_recordset_get_user_data(recset);
 		if (ora_cmd && ora_recset) {
-			switch (gda_server_command_get_type(cmd)) {
+			switch (gda_server_command_get_cmd_type(cmd)) {
 				case GDA_COMMAND_TYPE_TABLE : {
 					gchar* tmp = g_strdup_printf("SELECT * FROM %s", gda_server_command_get_text(cmd));
 					gda_server_command_set_text(cmd, tmp);

@@ -21,234 +21,32 @@
 #include "gda-server.h"
 #include "gda-server-private.h"
 
-/*
- * epv structures
- */
-
-static PortableServer_ServantBase__epv impl_GDA_Recordset_base_epv = {
-	NULL,                        /* _private data */
-	(gpointer) & impl_GDA_Recordset__destroy,    /* finalize routine */
-	NULL,                        /* default_POA routine */
-};
-
-static POA_GDA_Recordset__epv impl_GDA_Recordset_epv = {
-	NULL,                        /* _private */
-	(gpointer) & impl_GDA_Recordset__get_currentBookmark,
-	(gpointer) & impl_GDA_Recordset__set_currentBookmark,
-	(gpointer) & impl_GDA_Recordset__get_cachesize,
-	(gpointer) & impl_GDA_Recordset__set_cachesize,
-	(gpointer) & impl_GDA_Recordset__get_currentCursorType,
-	(gpointer) & impl_GDA_Recordset__set_currentCursorType,
-	(gpointer) & impl_GDA_Recordset__get_lockingMode,
-	(gpointer) & impl_GDA_Recordset__set_lockingMode,
-	(gpointer) & impl_GDA_Recordset__get_maxrecords,
-	(gpointer) & impl_GDA_Recordset__set_maxrecords,
-	(gpointer) & impl_GDA_Recordset__get_pagecount,
-	(gpointer) & impl_GDA_Recordset__get_pagesize,
-	(gpointer) & impl_GDA_Recordset__set_pagesize,
-	(gpointer) & impl_GDA_Recordset__get_recCount,
-	(gpointer) & impl_GDA_Recordset__get_source,
-	(gpointer) & impl_GDA_Recordset__get_status,
-	(gpointer) & impl_GDA_Recordset_close,
-	(gpointer) & impl_GDA_Recordset_move,
-	(gpointer) & impl_GDA_Recordset_moveFirst,
-	(gpointer) & impl_GDA_Recordset_moveLast,
-	(gpointer) & impl_GDA_Recordset_reQuery,
-	(gpointer) & impl_GDA_Recordset_reSync,
-	(gpointer) & impl_GDA_Recordset_supports,
-	(gpointer) & impl_GDA_Recordset_fetch,
-	(gpointer) & impl_GDA_Recordset_describe,
-};
-
-/*
- * vepv structures
- */
-
-static POA_GDA_Recordset__vepv impl_GDA_Recordset_vepv = {
-	&impl_GDA_Recordset_base_epv,
-	&impl_GDA_Recordset_epv,
-};
+static void gda_server_recordset_init       (GdaServerRecordset *recset);
+static void gda_server_recordset_class_init (GdaServerRecordsetClass *klass);
+static void gda_server_recordset_destroy    (GtkObject *object);
 
 /*
  * Stub implementations
  */
-GDA_Recordset
-impl_GDA_Recordset__create (PortableServer_POA poa,
-			    GdaServerRecordset *recset,
-			    CORBA_Environment *ev)
+CORBA_long
+impl_GDA_Recordset_getRowCount (PortableServer_Servant servant,
+				CORBA_Environment *ev)
 {
-	GDA_Recordset retval;
-	impl_POA_GDA_Recordset *newservant;
-	PortableServer_ObjectId *objid;
-
-	newservant = g_new0(impl_POA_GDA_Recordset, 1);
-	newservant->servant.vepv = &impl_GDA_Recordset_vepv;
-	newservant->poa = poa;
-	newservant->recset = recset;
-	POA_GDA_Recordset__init((PortableServer_Servant) newservant, ev);
-	objid = PortableServer_POA_activate_object(poa, newservant, ev);
-	CORBA_free(objid);
-	retval = PortableServer_POA_servant_to_reference(poa, newservant, ev);
-
-	return retval;
-}
-
-/* You shouldn't call this routine directly without first deactivating the servant... */
-void
-impl_GDA_Recordset__destroy (impl_POA_GDA_Recordset * servant, CORBA_Environment * ev)
-{
-	POA_GDA_Recordset__fini((PortableServer_Servant) servant, ev);
-	g_free(servant);
+	return -1;
 }
 
 CORBA_long
-impl_GDA_Recordset__get_currentBookmark (impl_POA_GDA_Recordset * servant,
-					 CORBA_Environment * ev)
-{
-	gda_log_error(_("%s not implemented"), __PRETTY_FUNCTION__);
-	return 0;
-}
-
-void
-impl_GDA_Recordset__set_currentBookmark (impl_POA_GDA_Recordset * servant,
-					 CORBA_long value,
-					 CORBA_Environment * ev)
-{
-	gda_log_error(_("%s not implemented"), __PRETTY_FUNCTION__);
-}
-
-CORBA_long
-impl_GDA_Recordset__get_cachesize (impl_POA_GDA_Recordset * servant,
-				   CORBA_Environment * ev)
-{
-	gda_log_error(_("%s not implemented"), __PRETTY_FUNCTION__);
-	return 0;
-}
-
-void
-impl_GDA_Recordset__set_cachesize (impl_POA_GDA_Recordset * servant,
-				   CORBA_long value,
-				   CORBA_Environment * ev)
-{
-}
-
-GDA_CursorType
-impl_GDA_Recordset__get_currentCursorType (impl_POA_GDA_Recordset * servant,
-					   CORBA_Environment * ev)
-{
-	gda_log_error(_("%s not implemented"), __PRETTY_FUNCTION__);
-	return 0;
-}
-
-void
-impl_GDA_Recordset__set_currentCursorType (impl_POA_GDA_Recordset * servant,
-					   GDA_CursorType value,
-					   CORBA_Environment * ev)
-{
-	gda_log_error(_("%s not implemented"), __PRETTY_FUNCTION__);
-}
-
-GDA_LockType
-impl_GDA_Recordset__get_lockingMode (impl_POA_GDA_Recordset * servant,
-				     CORBA_Environment * ev)
-{
-	gda_log_error(_("%s not implemented"), __PRETTY_FUNCTION__);
-	return 0;
-}
-
-void
-impl_GDA_Recordset__set_lockingMode (impl_POA_GDA_Recordset * servant,
-				     GDA_LockType value,
-				     CORBA_Environment * ev)
-{
-	gda_log_error(_("%s not implemented"), __PRETTY_FUNCTION__);
-}
-
-CORBA_long
-impl_GDA_Recordset__get_maxrecords (impl_POA_GDA_Recordset * servant,
-				    CORBA_Environment * ev)
-{
-	gda_log_error(_("%s not implemented"), __PRETTY_FUNCTION__);
-	return 0;
-}
-
-void
-impl_GDA_Recordset__set_maxrecords (impl_POA_GDA_Recordset * servant,
-				    CORBA_long value,
-				    CORBA_Environment * ev)
-{
-	gda_log_error(_("%s not implemented"), __PRETTY_FUNCTION__);
-}
-
-CORBA_long
-impl_GDA_Recordset__get_pagecount (impl_POA_GDA_Recordset * servant,
-				   CORBA_Environment * ev)
-{
-	gda_log_error(_("%s not implemented"), __PRETTY_FUNCTION__);
-	return 0;
-}
-
-CORBA_long
-impl_GDA_Recordset__get_pagesize (impl_POA_GDA_Recordset * servant,
-				  CORBA_Environment * ev)
-{
-	gda_log_error(_("%s not implemented"), __PRETTY_FUNCTION__);
-	return 0;
-}
-
-void
-impl_GDA_Recordset__set_pagesize (impl_POA_GDA_Recordset * servant,
-				  CORBA_long value,
-				  CORBA_Environment * ev)
-{
-	gda_log_error(_("%s not implemented"), __PRETTY_FUNCTION__);
-}
-
-CORBA_long
-impl_GDA_Recordset__get_recCount (impl_POA_GDA_Recordset * servant,
-				  CORBA_Environment * ev)
-{
-	gda_log_error(_("%s not implemented"), __PRETTY_FUNCTION__);
-	return 0;
-}
-
-CORBA_char *
-impl_GDA_Recordset__get_source (impl_POA_GDA_Recordset * servant,
-				CORBA_Environment * ev)
-{
-	gda_log_error(_("%s not implemented"), __PRETTY_FUNCTION__);
-	return 0;
-}
-
-CORBA_long
-impl_GDA_Recordset__get_status (impl_POA_GDA_Recordset * servant,
-				CORBA_Environment * ev)
-{
-	gda_log_error(_("%s not implemented"), __PRETTY_FUNCTION__);
-	return 0;
-}
-
-CORBA_long
-impl_GDA_Recordset_close (impl_POA_GDA_Recordset * servant,
+impl_GDA_Recordset_close (PortableServer_Servant servant,
 			  CORBA_Environment * ev)
 {
-	g_return_val_if_fail(CORBA_Object_is_nil(servant, ev), -1);
+	GdaServerRecordset *recset = (GdaServerRecordset *) bonobo_x_object (servant);
 
-	gda_server_recordset_close(servant->recset);
-	gda_server_recordset_free(servant->recset);
-	PortableServer_POA_deactivate_object(
-		servant->poa,
-		PortableServer_POA_servant_to_id(servant->poa,servant, ev),
-		ev);
-	gda_server_exception(ev);
-	impl_GDA_Recordset__destroy(servant, ev);
-	if (gda_server_exception(ev) < 0)
-		return -1;
-	return 0;
+	g_return_val_if_fail (GDA_IS_SERVER_RECORDSET (recset), -1);
+	return gda_server_recordset_close(recset);
 }
 
 CORBA_long
-impl_GDA_Recordset_move (impl_POA_GDA_Recordset * servant,
+impl_GDA_Recordset_move (PortableServer_Servant servant,
 			 CORBA_long count,
 			 CORBA_long bookmark,
 			 CORBA_Environment * ev)
@@ -258,7 +56,7 @@ impl_GDA_Recordset_move (impl_POA_GDA_Recordset * servant,
 }
 
 CORBA_long
-impl_GDA_Recordset_moveFirst (impl_POA_GDA_Recordset * servant,
+impl_GDA_Recordset_moveFirst (PortableServer_Servant servant,
 			      CORBA_Environment * ev)
 {
 	gda_log_error(_("%s not implemented"), __PRETTY_FUNCTION__);
@@ -266,7 +64,7 @@ impl_GDA_Recordset_moveFirst (impl_POA_GDA_Recordset * servant,
 }
 
 CORBA_long
-impl_GDA_Recordset_moveLast (impl_POA_GDA_Recordset * servant,
+impl_GDA_Recordset_moveLast (PortableServer_Servant servant,
 			     CORBA_Environment * ev)
 {
 	gda_log_error(_("%s not implemented"), __PRETTY_FUNCTION__);
@@ -274,23 +72,15 @@ impl_GDA_Recordset_moveLast (impl_POA_GDA_Recordset * servant,
 }
 
 CORBA_long
-impl_GDA_Recordset_reQuery (impl_POA_GDA_Recordset * servant,
+impl_GDA_Recordset_reQuery (PortableServer_Servant servant,
 			    CORBA_Environment * ev)
 {
 	gda_log_error(_("%s not implemented"), __PRETTY_FUNCTION__);
 	return 0;
 }
 
-CORBA_long
-impl_GDA_Recordset_reSync (impl_POA_GDA_Recordset * servant,
-			   CORBA_Environment * ev)
-{
-	gda_log_error(_("%s not implemented"), __PRETTY_FUNCTION__);
-	return 0;
-}
-
 CORBA_boolean
-impl_GDA_Recordset_supports (impl_POA_GDA_Recordset * servant,
+impl_GDA_Recordset_supports (PortableServer_Servant servant,
 			     GDA_Option what,
 			     CORBA_Environment * ev)
 {
@@ -299,30 +89,30 @@ impl_GDA_Recordset_supports (impl_POA_GDA_Recordset * servant,
 }
 
 GDA_Recordset_Chunk *
-impl_GDA_Recordset_fetch (impl_POA_GDA_Recordset * servant,
+impl_GDA_Recordset_fetch (PortableServer_Servant servant,
                           CORBA_long count,
                           CORBA_Environment * ev)
 {
-	GdaServerRecordset* rs = servant->recset;
-	GDA_Row*                 row;
-	GDA_Recordset_Chunk*     chunk;
-	GDA_Field*               field;
-	GdaServerField*         server_field;
-	GList*                   ptr;
-	gint                     rowidx = 0;
-	gint                     colidx;
-	gint                     rc;
-	GList*                   tmp_rows;
-	gint                     rowlength;
+	GdaServerRecordset*  rs = GDA_SERVER_RECORDSET (bonobo_x_object (servant));
+	GDA_Row*             row;
+	GDA_Recordset_Chunk* chunk;
+	GDA_Field*           field;
+	GdaServerField*      server_field;
+	GList*               ptr;
+	gint                 rowidx = 0;
+	gint                 colidx;
+	gint                 rc;
+	GList*               tmp_rows;
+	gint                 rowlength;
 
-	if (!servant->recset)
+	if (!GDA_IS_SERVER_RECORDSET (rs))
 		return CORBA_OBJECT_NIL;
 
 	tmp_rows = 0;
 	rowidx = 0;
-	rowlength = g_list_length(rs->fields);
+	rowlength = g_list_length (rs->fields);
 
-	chunk = GDA_Recordset_Chunk__alloc();
+	chunk = GDA_Recordset_Chunk__alloc ();
 	chunk->_buffer = 0;
 	chunk->_length = 0;
 
@@ -330,8 +120,8 @@ impl_GDA_Recordset_fetch (impl_POA_GDA_Recordset * servant,
 		return (chunk);
 
 	do {
-		row = g_new0(GDA_Row, 1);
-		row->_buffer = CORBA_sequence_GDA_Field_allocbuf(rowlength);
+		row = g_new0 (GDA_Row, 1);
+		row->_buffer = CORBA_sequence_GDA_Field_allocbuf (rowlength);
 		row->_length = rowlength;
 		ptr = rs->fields;
 
@@ -347,14 +137,14 @@ impl_GDA_Recordset_fetch (impl_POA_GDA_Recordset * servant,
 			colidx++;
 		}
 
-		rc = gda_server_recordset_move_next(rs);
+		rc = gda_server_recordset_move_next (rs);
 
 		if (rc != 0) {
-			CORBA_free(row->_buffer);
-			g_free(row);
+			CORBA_free (row->_buffer);
+			g_free (row);
 			break;
 		}
-		tmp_rows = g_list_append(tmp_rows, row);
+		tmp_rows = g_list_append (tmp_rows, row);
 
 		ptr = rs->fields;
 		field = &row->_buffer[0];
@@ -362,7 +152,7 @@ impl_GDA_Recordset_fetch (impl_POA_GDA_Recordset * servant,
 
 		while(ptr) {
 			server_field = ptr->data;
-	  
+
 			field->actualSize = server_field->actual_length;
 			field->realValue._d = server_field->actual_length == 0;
 			field->shadowValue._d   = 1;
@@ -374,47 +164,40 @@ impl_GDA_Recordset_fetch (impl_POA_GDA_Recordset * servant,
 	} while (rowidx < count);
 
 	if (rc < 0) {
-		GDA_DriverError*          exception = GDA_DriverError__alloc();
-		GdaServerConnection* cnc = rs->cnc;
-
-		gda_log_error(_("%s: an error ocurred while fetching data"), __PRETTY_FUNCTION__);
-		exception->errors._length = g_list_length(cnc->errors);
-		exception->errors._buffer = gda_error_list_to_corba_seq(cnc->errors);
-		exception->realcommand = CORBA_string_dup("Fetch");
-		CORBA_exception_set(ev, CORBA_USER_EXCEPTION, ex_GDA_DriverError, exception);
+		gda_error_list_to_exception (rs->cnc->errors, ev);
 		return chunk;
 	}
 
 	if (rowidx)
-		chunk->_buffer = CORBA_sequence_GDA_Row_allocbuf(rowidx);
+		chunk->_buffer = CORBA_sequence_GDA_Row_allocbuf (rowidx);
 
 	chunk->_length = rowidx;
-	for (ptr = tmp_rows, count = 0; count < rowidx; ptr = g_list_next(ptr), count++) {
+	for (ptr = tmp_rows, count = 0; count < rowidx; ptr = g_list_next (ptr), count++) {
 		row = ptr->data;
 		chunk->_buffer[count]._length = row->_length;
 		chunk->_buffer[count]._buffer = row->_buffer;
 		g_free(row);
 	}
-	g_list_free(tmp_rows);
+	g_list_free (tmp_rows);
 	return chunk;
 }
 
 GDA_RowAttributes *
-impl_GDA_Recordset_describe (impl_POA_GDA_Recordset * servant,
+impl_GDA_Recordset_describe (PortableServer_Servant servant,
 			     CORBA_Environment * ev)
 {
-	GdaServerRecordset* rs = servant->recset;
-	GDA_RowAttributes*       rc;
-	GList*                   ptr;
-	GdaServerField*     server_field;
-	GDA_FieldAttributes*     field;
-	gint                     idx;
+	GdaServerRecordset*  rs = (GdaServerRecordset *) bonobo_x_object (servant);
+	GDA_RowAttributes*   rc;
+	GList*               ptr;
+	GdaServerField*      server_field;
+	GDA_FieldAttributes* field;
+	gint                 idx;
 
-	g_return_val_if_fail(rs != NULL, NULL);
+	g_return_val_if_fail (GDA_IS_SERVER_RECORDSET (rs), NULL);
 
-	rc = GDA_RowAttributes__alloc();
-	rc->_length = g_list_length(rs->fields);
-	rc->_buffer = CORBA_sequence_GDA_FieldAttributes_allocbuf(rc->_length);
+	rc = GDA_RowAttributes__alloc ();
+	rc->_length = g_list_length (rs->fields);
+	rc->_buffer = CORBA_sequence_GDA_FieldAttributes_allocbuf (rc->_length);
 	rc->_maximum = 0;
 
 	idx = 0;
@@ -424,11 +207,10 @@ impl_GDA_Recordset_describe (impl_POA_GDA_Recordset * servant,
 
 		server_field = (GdaServerField *)(ptr->data);
 
-		field->name = CORBA_string_dup(server_field->name);
+		field->name = CORBA_string_dup (server_field->name);
 		field->definedSize = server_field->defined_length;
 		field->scale = server_field->num_scale;
-		field->gdaType = gda_server_connection_get_gda_type(
-			rs->cnc, server_field->sql_type);
+		field->gdaType = gda_server_connection_get_gda_type (rs->cnc, server_field->sql_type);
 		field->nativeType = server_field->sql_type;
 		field->cType = gda_server_connection_get_c_type(rs->cnc, field->gdaType);
 		ptr = g_list_next(ptr);
@@ -436,6 +218,85 @@ impl_GDA_Recordset_describe (impl_POA_GDA_Recordset * servant,
 	}
 
 	return rc;
+}
+
+/*
+ * GdaServerRecordset class implementation
+ */
+static void
+gda_server_recordset_class_init (GdaServerRecordsetClass *klass)
+{
+	POA_GDA_Recordset__epv *epv;
+	GtkObjectClass *object_class = GTK_OBJECT_CLASS (klass);
+
+	object_class->destroy = gda_server_recordset_destroy;
+
+	/* set the epv */
+	epv = &klass->epv;
+	epv->getRowCount = impl_GDA_Recordset_getRowCount;
+	epv->close = impl_GDA_Recordset_close;
+	epv->move = impl_GDA_Recordset_move;
+	epv->moveFirst = impl_GDA_Recordset_moveFirst;
+	epv->moveLast = impl_GDA_Recordset_moveLast;
+	epv->reQuery = impl_GDA_Recordset_reQuery;
+	epv->supports = impl_GDA_Recordset_supports;
+	epv->fetch = impl_GDA_Recordset_fetch;
+	epv->describe = impl_GDA_Recordset_describe;
+}
+
+static void
+gda_server_recordset_init (GdaServerRecordset *recset)
+{
+	recset->cnc = NULL;
+	recset->fields = NULL;
+	recset->position = -1;
+	recset->at_begin = FALSE;
+	recset->at_end = FALSE;
+	recset->user_data = NULL;
+}
+
+static void
+gda_server_recordset_destroy (GtkObject *object)
+{
+	GtkObjectClass *parent_class;
+	GdaServerRecordset *recset = (GdaServerRecordset *) object;
+
+	g_return_if_fail (GDA_IS_SERVER_RECORDSET (recset));
+
+	if ((recset->cnc != NULL) &&
+	    (recset->cnc->server_impl != NULL) &&
+	    (recset->cnc->server_impl->functions.recordset_free != NULL))
+		recset->cnc->server_impl->functions.recordset_free(recset);
+
+	g_list_foreach(recset->fields, (GFunc) gda_server_field_free, NULL);
+
+	parent_class = gtk_type_class (BONOBO_X_OBJECT_TYPE);
+	if (parent_class && parent_class->destroy)
+		parent_class->destroy (object);
+}
+
+GtkType
+gda_server_recordset_get_type (void)
+{
+        static GtkType type = 0;
+
+        if (!type) {
+                GtkTypeInfo info = {
+                        "GdaServerRecordset",
+                        sizeof (GdaServerRecordset),
+                        sizeof (GdaServerRecordsetClass),
+                        (GtkClassInitFunc) gda_server_recordset_class_init,
+                        (GtkObjectInitFunc) gda_server_recordset_init,
+                        (GtkArgSetFunc) NULL,
+                        (GtkArgSetFunc) NULL
+                };
+                type = bonobo_x_type_unique(
+                        BONOBO_X_OBJECT_TYPE,
+                        POA_GDA_Recordset__init, NULL,
+                        GTK_STRUCT_OFFSET (GdaServerRecordsetClass, epv),
+                        &info);
+        }
+        return type;
 }
 
 /**
@@ -446,15 +307,10 @@ gda_server_recordset_new (GdaServerConnection *cnc)
 {
 	GdaServerRecordset* recset;
 
-	g_return_val_if_fail(cnc != NULL, NULL);
+	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), NULL);
 
-	recset = g_new0(GdaServerRecordset, 1);
+	recset = GDA_SERVER_RECORDSET (gtk_type_new (gda_server_recordset_get_type ()));
 	recset->cnc = cnc;
-	recset->fields = NULL;
-	recset->position = -1;
-	recset->at_begin = FALSE;
-	recset->at_end = FALSE;
-	recset->users = 1;
   
 	if ((recset->cnc->server_impl != NULL) &&
 	    (recset->cnc->server_impl->functions.recordset_new != NULL))
@@ -469,7 +325,7 @@ gda_server_recordset_new (GdaServerConnection *cnc)
 GdaServerConnection *
 gda_server_recordset_get_connection (GdaServerRecordset *recset)
 {
-	g_return_val_if_fail(recset != NULL, NULL);
+	g_return_val_if_fail (GDA_IS_SERVER_RECORDSET (recset), NULL);
 	return recset->cnc;
 }
 
@@ -479,10 +335,10 @@ gda_server_recordset_get_connection (GdaServerRecordset *recset)
 void
 gda_server_recordset_add_field (GdaServerRecordset *recset, GdaServerField *field)
 {
-	g_return_if_fail(recset != NULL);
-	g_return_if_fail(field != NULL);
+	g_return_if_fail (GDA_IS_SERVER_RECORDSET (recset));
+	g_return_if_fail (field != NULL);
 
-	recset->fields = g_list_append(recset->fields, (gpointer) field);
+	recset->fields = g_list_append (recset->fields, (gpointer) field);
 }
 
 /**
@@ -491,7 +347,7 @@ gda_server_recordset_add_field (GdaServerRecordset *recset, GdaServerField *fiel
 GList *
 gda_server_recordset_get_fields (GdaServerRecordset *recset)
 {
-	g_return_val_if_fail(recset != NULL, NULL);
+	g_return_val_if_fail (GDA_IS_SERVER_RECORDSET (recset), NULL);
 	return recset->fields;
 }
 
@@ -561,18 +417,7 @@ gda_server_recordset_set_user_data (GdaServerRecordset *recset, gpointer user_da
 void
 gda_server_recordset_free (GdaServerRecordset *recset)
 {
-	g_return_if_fail(recset != NULL);
-
-	if ((recset->cnc != NULL) &&
-	    (recset->cnc->server_impl != NULL) &&
-	    (recset->cnc->server_impl->functions.recordset_free != NULL))
-		recset->cnc->server_impl->functions.recordset_free(recset);
-
-	recset->users--;
-	if (!recset->users) {
-		g_list_foreach(recset->fields, (GFunc) gda_server_field_free, NULL);
-		g_free((gpointer) recset);
-	}
+	bonobo_object_unref (BONOBO_OBJECT (recset));
 }
 
 /**

@@ -20,6 +20,9 @@
 #if !defined(__gda_server_connection_h__)
 #  define __gda_server_connection_h__
 
+#include <bonobo/bonobo-xobject.h>
+#include <GDA.h>
+
 typedef struct _GdaServerConnection GdaServerConnection;
 
 #include <gda-error.h>
@@ -30,18 +33,35 @@ typedef struct _GdaServerConnection GdaServerConnection;
 extern "C" {
 #endif
 
-struct _GdaServerConnection {
-	GdaServer* server_impl;
-	gchar*     dsn;
-	gchar*     username;
-	gchar*     password;
-	GList*     commands;
-	GList*     errors;
-	gint       users;
+#define GDA_TYPE_SERVER_CONNECTION            (gda_server_connection_get_type())
+#define GDA_SERVER_CONNECTION(obj)            GTK_CHECK_CAST(obj, GDA_TYPE_SERVER_CONNECTION, GdaServerConnection)
+#define GDA_SERVER_CONNECTION_CLASS(klass)    GTK_CHECK_CLASS_CAST(klass, GDA_TYPE_SERVER_CONNECTION, GdaServerConnectionClass)
+#define GDA_IS_SERVER_CONNECTION(obj)         GTK_CHECK_TYPE(obj, GDA_TYPE_SERVER_CONNECTION)
+#define GDA_IS_SERVER_CONNECTION_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_SERVER_CONNECTION))
 
-	gpointer   user_data;
+typedef struct _GdaServerConnectionClass GdaServerConnectionClass;
+
+struct _GdaServerConnection {
+	BonoboXObject object;
+
+	/* data */
+	GdaServer*    server_impl;
+	gchar*        dsn;
+	gchar*        username;
+	gchar*        password;
+	GList*        commands;
+	GList*        errors;
+
+	gpointer      user_data;
 };
 
+struct _GdaServerConnectionClass {
+	BonoboXObjectClass parent_class;
+
+	POA_GDA_Connection__epv epv;
+};
+
+GtkType              gda_server_connection_get_type (void);
 GdaServerConnection* gda_server_connection_new  (GdaServer *server_impl);
 gchar*               gda_server_connection_get_dsn (GdaServerConnection *cnc);
 void                 gda_server_connection_set_dsn (GdaServerConnection *cnc, const gchar *dsn);
@@ -72,6 +92,10 @@ GdaServerRecordset*  gda_server_connection_open_schema (GdaServerConnection *cnc
                                                          GDA_Connection_QType t,
                                                          GDA_Connection_Constraint *constraints,
                                                          gint length);
+glong                gda_server_connection_modify_schema (GdaServerConnection *cnc,
+							  GDA_Connection_QType t,
+							  GDA_Connection_Constraint *constraints,
+							  gint length);
 gint                 gda_server_connection_start_logging (GdaServerConnection *cnc,
                                                            const gchar *filename);
 gint                 gda_server_connection_stop_logging (GdaServerConnection *cnc);

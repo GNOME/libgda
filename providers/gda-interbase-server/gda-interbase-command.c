@@ -100,7 +100,7 @@ gda_interbase_command_execute (GdaServerCommand *cmd,
 	
 	ib_cnc = (INTERBASE_Connection *) gda_server_connection_get_user_data(cmd->cnc);
 	if (ib_cnc) {
-		switch (gda_server_command_get_type(cmd)) {
+		switch (gda_server_command_get_cmd_type(cmd)) {
 			case GDA_COMMAND_TYPE_TABLE : {
 				/* it's a TABLE command, command's text is the name of a table */
 				gchar* tmp = g_strdup_printf("SELECT * FROM %s", gda_server_command_get_text(cmd));

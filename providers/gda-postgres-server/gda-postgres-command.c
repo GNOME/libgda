@@ -19,7 +19,7 @@
 #include "gda-postgres.h"
 
 static GdaServerRecordset *init_recset_fields (GdaServerRecordset *recset, 
-											   POSTGRES_Recordset *prc);
+					       POSTGRES_Recordset *prc);
 
 /*
  * Public functions
@@ -34,14 +34,14 @@ gda_postgres_command_new (GdaServerCommand *cmd)
 
 GdaServerRecordset *
 gda_postgres_command_execute (GdaServerCommand *cmd,
-							  GdaError *error,
-							  const GDA_CmdParameterSeq *params,
-							  gulong *affected,
-							  gulong options)
+			      GdaError *error,
+			      const GDA_CmdParameterSeq *params,
+			      gulong *affected,
+			      gulong options)
 {
 	GdaServerConnection* cnc;
 	POSTGRES_Connection *pc;
-	gchar*                cmd_string;
+	gchar*               cmd_string;
 	GdaServerRecordset*  recset = NULL;
 
 	cnc = gda_server_command_get_connection(cmd);
@@ -49,13 +49,13 @@ gda_postgres_command_execute (GdaServerCommand *cmd,
 		pc = (POSTGRES_Connection *) gda_server_connection_get_user_data(cnc);
 		if (pc) {
 			/* determine command string by command type */
-			switch (gda_server_command_get_type(cmd)) {
+			switch (gda_server_command_get_cmd_type(cmd)) {
 			case GDA_COMMAND_TYPE_TEXT :
 				cmd_string = g_strdup(gda_server_command_get_text(cmd));
 				break;
 			case GDA_COMMAND_TYPE_TABLE :
 				cmd_string = g_strdup_printf("SELECT * FROM %s",
-											 gda_server_command_get_text(cmd));
+							     gda_server_command_get_text(cmd));
 				break;
 			default :
 				cmd_string = NULL;

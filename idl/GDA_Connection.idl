@@ -15,7 +15,7 @@ module GDA {
 		USE_SERVER_CURSOR
 	};
 	
-	interface Connection {
+	interface Connection : Bonobo::Unknown {
 		enum QType {
 			GDCN_SCHEMA_AGGREGATES,
 			GDCN_SCHEMA_ASSERTS,
@@ -93,10 +93,6 @@ module GDA {
 		typedef sequence<Constraint> ConstraintSeq;
 		typedef sequence<string>     DSNlist;
 
-		attribute long               flags;
-		attribute long               cmdTimeout;
-		attribute long               connectTimeout;
-		attribute CursorLocation     cursor;
 		readonly attribute string    version;
 		readonly attribute ErrorSeq  errors;
 

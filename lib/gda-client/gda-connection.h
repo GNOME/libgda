@@ -1,6 +1,6 @@
 /* GDA client libary
  * Copyright (C) 1998,1999 Michael Lausch
- * Copyright (C) 2000 Rodrigo Moya
+ * Copyright (C) 2000,2001 Rodrigo Moya
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -18,8 +18,8 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#ifndef __gda_connection_h__
-#define __gda_connection_h__ 1
+#if !defined(__gda_connection_h__)
+#  define __gda_connection_h__
 
 #include <glib.h>
 
@@ -49,21 +49,15 @@ typedef struct _GdaConnectionClass  GdaConnectionClass;
 #define GDA_TYPE_CONNECTION            (gda_connection_get_type())
 
 #ifdef HAVE_GOBJECT
-#  define GDA_CONNECTION(obj) \
-            G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_CONNECTION, \
-                                        GdaConnection)
-#  define GDA_CONNECTION_CLASS(klass) \
-            G_TYPE_CHECK_CLASS_CAST (obj, GDA_TYPE_CONNECTION, \
-                                     GdaConnectionClass)
-#  define GDA_IS_CONNECTION(obj) \
-            G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_CONNECTION)
-#  define GDA_IS_CONNECTION_CLASS(klass) \
-            G_TYPE_CHECK_CLASS_TYPE (klass, GDA_TYPE_CONNECTION)
+#define GDA_CONNECTION(obj)            G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_CONNECTION, GdaConnection)
+#define GDA_CONNECTION_CLASS(klass)    G_TYPE_CHECK_CLASS_CAST (obj, GDA_TYPE_CONNECTION,  GdaConnectionClass)
+#define GDA_IS_CONNECTION(obj)         G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_CONNECTION)
+#define GDA_IS_CONNECTION_CLASS(klass) G_TYPE_CHECK_CLASS_TYPE (klass, GDA_TYPE_CONNECTION)
 #else
-#  define GDA_CONNECTION(obj)            GTK_CHECK_CAST(obj, GDA_TYPE_CONNECTION, GdaConnection)
-#  define GDA_CONNECTION_CLASS(klass)    GTK_CHECK_CLASS_CAST(klass, GDA_TYPE_CONNECTION, GdaConnectionClass)
-#  define GDA_IS_CONNECTION(obj)         GTK_CHECK_TYPE(obj, GDA_TYPE_CONNECTION)
-#  define GDA_IS_CONNECTION_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_CONNECTION))
+#define GDA_CONNECTION(obj)            GTK_CHECK_CAST(obj, GDA_TYPE_CONNECTION, GdaConnection)
+#define GDA_CONNECTION_CLASS(klass)    GTK_CHECK_CLASS_CAST(klass, GDA_TYPE_CONNECTION, GdaConnectionClass)
+#define GDA_IS_CONNECTION(obj)         GTK_CHECK_TYPE(obj, GDA_TYPE_CONNECTION)
+#define GDA_IS_CONNECTION_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_CONNECTION))
 #endif
 
 struct _GdaConnection {
@@ -146,16 +140,6 @@ void               gda_connection_add_error_list      (GdaConnection* cnc, GList
 #define            gda_connection_get_dsn(cnc)        ((cnc) ? GDA_CONNECTION(cnc)->database : 0)
 #define            gda_connection_get_user(cnc)       ((cnc) ? GDA_CONNECTION(cnc)->user : 0)
 #define            gda_connection_get_password(cnc)   ((cnc) ? GDA_CONNECTION(cnc)->passwd : 0)
-
-glong              gda_connection_get_flags           (GdaConnection* cnc);
-void               gda_connection_set_flags           (GdaConnection* cnc, glong flags);
-glong              gda_connection_get_cmd_timeout     (GdaConnection* cnc);
-void               gda_connection_set_cmd_timeout     (GdaConnection* cnc, glong cmd_timeout);
-glong              gda_connection_get_connect_timeout (GdaConnection* cnc);
-void               gda_connection_set_connect_timeout (GdaConnection* cnc, glong timeout);
-
-GDA_CursorLocation gda_connection_get_cursor_location (GdaConnection* cnc);
-void               gda_connection_set_cursor_location (GdaConnection* cnc, GDA_CursorLocation cursor);
 
 gchar*             gda_connection_get_version         (GdaConnection *cnc);
 

@@ -21,7 +21,6 @@ libgda_server_la_SOURCES = \
 	gda-server-connection.c \
 	gda-server-error.c \
 	gda-server-field.c \
-	gda-server-impl-factory.c \
 	gda-server-init.c \
 	gda-server-recordset.c \
 	gda-builtin-res.c \

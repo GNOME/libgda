@@ -793,12 +793,12 @@ gda_recordset_open (GdaRecordset* rs,
 #ifdef HAVE_GOBJECT
 	gda_recordset_init (rs, NULL);    /* FIXME: calling the constructor here */
 #else                               /* is not very beautiful */
-	gda_recordset_init(rs);
+	gda_recordset_init (rs);
 #endif
-	corba_parameters = __gda_command_get_params(cmd);
+	corba_parameters = __gda_command_get_params (cmd);
 	rs->cursor_type = cursor_type;
 	rs->lock_type   = lock_type;
-	CORBA_exception_init(&ev);
+	CORBA_exception_init (&ev);
 	rs->cnc = cmd->connection;
 	rs->corba_rs = GDA_Command_open(cmd->command, corba_parameters,
 	                                cursor_type, lock_type, &affected, &ev);
@@ -815,7 +815,8 @@ gda_recordset_open (GdaRecordset* rs,
 		rs->field_attributes = NULL;
 		return -1;
 	}
-	else rs->field_attributes = GDA_Recordset_describe(rs->corba_rs, &ev);
+	else
+		rs->field_attributes = GDA_Recordset_describe(rs->corba_rs, &ev);
 	error_list = gda_error_list_from_exception(&ev);
 	if (error_list) {
 		gda_connection_add_error_list(rs->cnc, error_list);

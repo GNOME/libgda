@@ -1,5 +1,5 @@
 /* GDA Common Library
- * Copyright (C) 2000 Rodrigo Moya
+ * Copyright (C) 2000,2001 Rodrigo Moya
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -52,20 +52,19 @@
 void
 gda_init (const gchar *app_id, const gchar *version, gint nargs, gchar *args[])
 {
-  static gboolean initialized = FALSE;
+	static gboolean initialized = FALSE;
 
-  if (initialized)
-    {
-      gda_log_error(_("Attempt to initialize an already initialized client"));
-      return;
-    }
+	if (initialized) {
+		gda_log_error(_("Attempt to initialize an already initialized client"));
+		return;
+	}
 
-  g_set_prgname (app_id);
-#ifdef HAVE_GOBJECT
-  g_type_init ();
-#else
-  gtk_type_init();
-#endif
-  oaf_init(nargs, args);
-  initialized = TRUE;
+	gtk_type_init ();
+	g_set_prgname (app_id);
+
+	oaf_init(nargs, args);
+	if (!bonobo_init (gda_corba_get_orb (), NULL, NULL))
+		g_error (_("Could not initialize Bonobo"));
+
+	initialized = TRUE;
 }

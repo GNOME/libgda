@@ -21,390 +21,245 @@
 #include "gda-server.h"
 #include "gda-server-private.h"
 
-/*
- * epv structures
- */
-
-static PortableServer_ServantBase__epv impl_GDA_Connection_base_epv = {
-	NULL,                        /* _private data */
-	(gpointer) & impl_GDA_Connection__destroy,   /* finalize routine */
-	NULL,                        /* default_POA routine */
-};
-
-static POA_GDA_Connection__epv impl_GDA_Connection_epv = {
-	NULL,                        /* _private */
-	(gpointer) & impl_GDA_Connection__get_flags,
-	(gpointer) & impl_GDA_Connection__set_flags,
-	(gpointer) & impl_GDA_Connection__get_cmdTimeout,
-	(gpointer) & impl_GDA_Connection__set_cmdTimeout,
-	(gpointer) & impl_GDA_Connection__get_connectTimeout,
-	(gpointer) & impl_GDA_Connection__set_connectTimeout,
-	(gpointer) & impl_GDA_Connection__get_cursor,
-	(gpointer) & impl_GDA_Connection__set_cursor,
-	(gpointer) & impl_GDA_Connection__get_version,
-	(gpointer) & impl_GDA_Connection__get_errors,
-	(gpointer) & impl_GDA_Connection_beginTransaction,
-	(gpointer) & impl_GDA_Connection_commitTransaction,
-	(gpointer) & impl_GDA_Connection_rollbackTransaction,
-	(gpointer) & impl_GDA_Connection_close,
-	(gpointer) & impl_GDA_Connection_open,
-	(gpointer) & impl_GDA_Connection_openSchema,
-	(gpointer) & impl_GDA_Connection_modifySchema,
-	(gpointer) & impl_GDA_Connection_createCommand,
-	(gpointer) & impl_GDA_Connection_createRecordset,
-	(gpointer) & impl_GDA_Connection_startLogging,
-	(gpointer) & impl_GDA_Connection_stopLogging,
-	(gpointer) & impl_GDA_Connection_createTable,
-	(gpointer) & impl_GDA_Connection_supports,
-	(gpointer) & impl_GDA_Connection_sql2xml,
-	(gpointer) & impl_GDA_Connection_xml2sql
-};
-
-/*
- * vepv structures
- */
-
-static POA_GDA_Connection__vepv impl_GDA_Connection_vepv = {
-	&impl_GDA_Connection_base_epv,
-	&impl_GDA_Connection_epv,
-};
+static void gda_server_connection_init       (GdaServerConnection *cnc);
+static void gda_server_connection_class_init (GdaServerConnectionClass *klass);
+static void gda_server_connection_destroy    (GtkObject *object);
 
 /*
  * Stub implementations
  */
-GDA_Connection
-impl_GDA_Connection__create (PortableServer_POA poa, CORBA_char *id, CORBA_Environment * ev)
-{
-	GDA_Connection retval;
-	impl_POA_GDA_Connection *newservant;
-	PortableServer_ObjectId *objid;
-
-	newservant = g_new0(impl_POA_GDA_Connection, 1);
-	newservant->servant.vepv = &impl_GDA_Connection_vepv;
-	newservant->poa = poa;
-
-	newservant->cnc = NULL;
-	newservant->id = g_strdup (id);
-
-	POA_GDA_Connection__init((PortableServer_Servant) newservant, ev);
-	objid = PortableServer_POA_activate_object(poa, newservant, ev);
-	CORBA_free(objid);
-	retval = PortableServer_POA_servant_to_reference(poa, newservant, ev);
-
-	return retval;
-}
-
-/* You shouldn't call this routine directly without first deactivating the servant... */
-void
-impl_GDA_Connection__destroy (impl_POA_GDA_Connection * servant, CORBA_Environment * ev)
-{
-	POA_GDA_Connection__fini((PortableServer_Servant) servant, ev);
-	g_free(servant);
-}
-
-CORBA_long
-impl_GDA_Connection__get_flags (impl_POA_GDA_Connection * servant,
-				CORBA_Environment * ev)
-{
-	gda_log_message(_("%s not implemented"), __PRETTY_FUNCTION__);
-	return 0;
-}
-
-void
-impl_GDA_Connection__set_flags (impl_POA_GDA_Connection * servant,
-				CORBA_long value,
-				CORBA_Environment * ev)
-{
-	gda_log_message(_("%s not implemented"), __PRETTY_FUNCTION__);
-}
-
-CORBA_long
-impl_GDA_Connection__get_cmdTimeout (impl_POA_GDA_Connection * servant,
-				     CORBA_Environment * ev)
-{
-	gda_log_message(_("%s not implemented"), __PRETTY_FUNCTION__);
-	return 0;
-}
-
-void
-impl_GDA_Connection__set_cmdTimeout (impl_POA_GDA_Connection * servant,
-				     CORBA_long value,
-				     CORBA_Environment * ev)
-{
-	gda_log_message(_("%s not implemented"), __PRETTY_FUNCTION__);
-}
-
-CORBA_long
-impl_GDA_Connection__get_connectTimeout (impl_POA_GDA_Connection * servant,
-					 CORBA_Environment * ev)
-{
-	gda_log_message(_("%s not implemented"), __PRETTY_FUNCTION__);
-	return 0;
-}
-
-void
-impl_GDA_Connection__set_connectTimeout (impl_POA_GDA_Connection * servant,
-					 CORBA_long value,
-					 CORBA_Environment * ev)
-{
-	gda_log_message(_("%s not implemented"), __PRETTY_FUNCTION__);
-}
-
-GDA_CursorLocation
-impl_GDA_Connection__get_cursor (impl_POA_GDA_Connection * servant,
-				 CORBA_Environment * ev)
-{
-	gda_log_message(_("%s not implemented"), __PRETTY_FUNCTION__);
-	return 0;
-}
-
-void
-impl_GDA_Connection__set_cursor (impl_POA_GDA_Connection * servant,
-				 GDA_CursorLocation value,
-				 CORBA_Environment * ev)
-{
-	gda_log_message(_("%s not implemented"), __PRETTY_FUNCTION__);
-}
-
 CORBA_char *
-impl_GDA_Connection__get_version (impl_POA_GDA_Connection * servant,
+impl_GDA_Connection__get_version (PortableServer_Servant servant,
 				  CORBA_Environment * ev)
 {
 	return CORBA_string_dup(VERSION);
 }
 
 GDA_ErrorSeq *
-impl_GDA_Connection__get_errors (impl_POA_GDA_Connection * servant,
+impl_GDA_Connection__get_errors (PortableServer_Servant servant,
 				 CORBA_Environment * ev)
 {
-	return gda_error_list_to_corba_seq (servant->cnc->errors);
+	GdaServerConnection *cnc = GDA_SERVER_CONNECTION (bonobo_x_object (servant));
+
+	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), CORBA_OBJECT_NIL);
+	return gda_error_list_to_corba_seq (cnc->errors);
 }
 
 CORBA_long
-impl_GDA_Connection_beginTransaction (impl_POA_GDA_Connection * servant,
+impl_GDA_Connection_beginTransaction (PortableServer_Servant servant,
 				      CORBA_Environment * ev)
 {
-	GdaServerConnection* cnc = servant->cnc;
-	GDA_NotSupported*     exception;
+	GdaServerConnection* cnc = (GdaServerConnection *) bonobo_x_object (servant);
 
-	if (gda_server_connection_begin_transaction(cnc) != -1)
-		return (0);
-	exception = GDA_NotSupported__alloc();
-	exception->errormsg = CORBA_string_dup("Transactions not Supported");
-	CORBA_exception_set(ev, CORBA_USER_EXCEPTION, ex_GDA_NotSupported, exception);
+	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), -1);
+
+	if (gda_server_connection_begin_transaction (cnc) != -1)
+		return 0;
+	gda_error_list_to_exception (cnc->errors, ev);
+
 	return -1;
 }
 
 CORBA_long
-impl_GDA_Connection_commitTransaction (impl_POA_GDA_Connection * servant,
+impl_GDA_Connection_commitTransaction (PortableServer_Servant servant,
 				       CORBA_Environment * ev)
 {
-	GdaServerConnection* cnc = servant->cnc;
-	GDA_NotSupported*         exception;
+	GdaServerConnection* cnc = (GdaServerConnection *) bonobo_x_object (servant);
 
-	if (gda_server_connection_commit_transaction(cnc) != -1)
+	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), -1);
+
+	if (gda_server_connection_commit_transaction (cnc) != -1)
 		return 0;
-	exception = GDA_NotSupported__alloc();
-	exception->errormsg = CORBA_string_dup("Transactions not Supported");
-	CORBA_exception_set(ev, CORBA_USER_EXCEPTION, ex_GDA_NotSupported, exception); 
+	gda_error_list_to_exception (cnc->errors, ev);
+
 	return -1;
 }
 
 CORBA_long
-impl_GDA_Connection_rollbackTransaction (impl_POA_GDA_Connection * servant,
+impl_GDA_Connection_rollbackTransaction (PortableServer_Servant servant,
 					 CORBA_Environment * ev)
 {
-	GdaServerConnection* cnc = servant->cnc;
-	GDA_NotSupported*         exception;
+	GdaServerConnection* cnc = (GdaServerConnection *) bonobo_x_object (servant);
 
-	if (gda_server_connection_rollback_transaction(cnc) != -1)
-		return (0);
-	exception = GDA_NotSupported__alloc();
-	exception->errormsg = CORBA_string_dup("Transactions not Supported");
-	CORBA_exception_set(ev, CORBA_USER_EXCEPTION, ex_GDA_NotSupported, exception); 
-	return (-1);
+	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), -1);
+
+	if (gda_server_connection_rollback_transaction (cnc) != -1)
+		return 0;
+	gda_error_list_to_exception (cnc->errors, ev);
+
+	return -1;
 
 }
 
 CORBA_long
-impl_GDA_Connection_close (impl_POA_GDA_Connection * servant,
+impl_GDA_Connection_close (PortableServer_Servant servant,
 			   CORBA_Environment * ev)
 {
-	CORBA_long rc = 0;
+        GdaServerConnection *cnc = (GdaServerConnection *) bonobo_x_object (servant);
 
-	gda_server_connection_close (servant->cnc);
-	gda_server_connection_free (servant->cnc);
-	servant->cnc = NULL;
-	g_free (servant->id);
+	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), -1);
 
-	PortableServer_POA_deactivate_object (
-		servant->poa,
-		PortableServer_POA_servant_to_id(servant->poa, servant, ev),
-		ev);
-	if (gda_server_exception(ev) < 0)
-		rc = -1;
-	return rc;
+	gda_server_connection_close (cnc);
+	gda_server_connection_free (cnc);
+
+	bonobo_object_unref (BONOBO_OBJECT (cnc));
 }
 
 CORBA_long
-impl_GDA_Connection_open (impl_POA_GDA_Connection * servant,
+impl_GDA_Connection_open (PortableServer_Servant servant,
 			  CORBA_char * dsn,
 			  CORBA_char * user,
 			  CORBA_char * passwd,
 			  CORBA_Environment * ev)
 {
-	gda_log_message(_("impl_GDA_Connection_open: opening connection with DSN: %s"), dsn);
+	GdaServerConnection *cnc = (GdaServerConnection *) bonobo_x_object (servant);
 
-	/* free the previous GdaServerConnection, if any */
-	if (servant->cnc != NULL)
-		gda_server_connection_free (servant->cnc);
-	servant->cnc = gda_server_connection_new(gda_server_find(servant->id));
-	if (!servant->cnc)
-		return -1;
+	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), -1);
 
-	if (gda_server_connection_open(servant->cnc, dsn, user, passwd) != 0)
-		gda_error_list_to_exception (servant->cnc->errors, ev);
+	if (gda_server_connection_open (cnc, dsn, user, passwd) != 0)
+		gda_error_list_to_exception (cnc->errors, ev);
 
 	return 0;
 }
 
 GDA_Recordset
-impl_GDA_Connection_openSchema (impl_POA_GDA_Connection * servant,
+impl_GDA_Connection_openSchema (PortableServer_Servant servant,
                                 GDA_Connection_QType t,
 				GDA_Connection_ConstraintSeq * constraints,
 				CORBA_Environment * ev)
 {
-	GdaServerConnection* cnc = servant->cnc;
-	GDA_Recordset        new_recset;
-	GdaServerRecordset*  recset;
-	GdaServer            e;
+	GdaServerConnection* cnc = (GdaServerConnection *) bonobo_x_object (servant);
+	GdaServerRecordset* recset;
+	GdaError e;
 
-	memset(&e, '\0', sizeof(e));
-	if ((recset = gda_server_connection_open_schema(cnc, &e, t,
-							constraints->_buffer,
-							constraints->_length)) == 0) {
-		gda_error_list_to_exception (cnc->errors, ev);
+	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), CORBA_OBJECT_NIL);
+
+	memset (&e, '\0', sizeof(e));
+	if ((recset = gda_server_connection_open_schema (cnc, &e, t,
+							 constraints->_buffer,
+							 constraints->_length)) == 0) {
+		gda_error_to_exception (&e, ev);
 		return CORBA_OBJECT_NIL;
 	}
-	new_recset = impl_GDA_Recordset__create(servant->poa, recset, ev);
-	gda_server_exception(ev);
 
-	return new_recset;
+	return bonobo_object_corba_objref (BONOBO_OBJECT (recset));;
 }
 
 CORBA_long
-impl_GDA_Connection_modifySchema (impl_POA_GDA_Connection * servant,
+impl_GDA_Connection_modifySchema (PortableServer_Servant servant,
                                   GDA_Connection_QType t,
                                   GDA_Connection_ConstraintSeq * constraints,
                                   CORBA_Environment * ev)
 {
-	GdaServerConnection* cnc = servant->cnc;
+	GdaServerConnection* cnc = (GdaServerConnection *) bonobo_x_object (servant);
 
-	if (gda_server_connection_modify_schema(cnc, t, constraints->_buffer, constraints->_length)
-	    != 0) {
+	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), -1);
+
+	if (gda_server_connection_modify_schema (cnc, t,
+						 constraints->_buffer,
+						 constraints->_length) != 0) {
 		gda_error_list_to_exception (cnc->errors, ev);
 		return -1;
 	}
-	if (!gda_server_exception(ev))
-		return -1;
   
 	return 0;
 }
 
 GDA_Command
-impl_GDA_Connection_createCommand (impl_POA_GDA_Connection * servant,
+impl_GDA_Connection_createCommand (PortableServer_Servant servant,
 				   CORBA_Environment * ev)
 {
-	GDA_Command retval;
-	GdaServerCommand* cmd = gda_server_command_new(servant->cnc);
+	GdaServerCommand *cmd;
+	GdaServerConnection *cnc = (GdaServerConnection *) bonobo_x_object (servant);
 
-	retval = impl_GDA_Command__create(servant->poa, cmd, ev);
-	if (gda_server_exception(ev)) {
-		gda_server_command_free(cmd);
+	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), CORBA_OBJECT_NIL);
+
+	cmd = gda_server_command_new (cnc);
+	if (!GDA_IS_SERVER_COMMAND (cmd)) {
+		gda_error_list_to_exception (cnc->errors, ev);
 		return CORBA_OBJECT_NIL;
 	}
-	cmd->cnc = servant->cnc;
 
-	return retval;
+	return bonobo_object_corba_objref (BONOBO_OBJECT (cmd));
 }
 
 GDA_Recordset
-impl_GDA_Connection_createRecordset (impl_POA_GDA_Connection * servant,
+impl_GDA_Connection_createRecordset (PortableServer_Servant servant,
 				     CORBA_Environment * ev)
 {
-	GDA_Recordset            retval;
-	GdaServerRecordset* rs = gda_server_recordset_new(servant->cnc);
+	GdaServerRecordset *recset;
+	GdaServerConnection *cnc = (GdaServerConnection *) bonobo_x_object (servant);
 
-	retval = impl_GDA_Recordset__create(servant->poa, rs, ev);
-	if (gda_server_exception(ev)) {
-		gda_server_recordset_free(rs);
+	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), CORBA_OBJECT_NIL);
+
+	recset = gda_server_recordset_new (cnc);
+	if (!GDA_IS_SERVER_RECORDSET (recset)) {
+		gda_error_list_to_exception (cnc->errors, ev);
 		return CORBA_OBJECT_NIL;
-    }
-	rs->cnc = servant->cnc;
-	return retval;
+	}
+
+	return bonobo_object_corba_objref (BONOBO_OBJECT (recset));
 }
 
 CORBA_long
-impl_GDA_Connection_startLogging (impl_POA_GDA_Connection * servant,
+impl_GDA_Connection_startLogging (PortableServer_Servant servant,
 				  CORBA_char * filename,
 				  CORBA_Environment * ev)
 {
-	GdaServerConnection *cnc = servant->cnc;
-
-	if (gda_server_connection_start_logging(cnc, filename) != -1)
-		return 0;
-	gda_error_list_to_exception (cnc->errors, ev);
-
 	return -1;
 }
 
 CORBA_long
-impl_GDA_Connection_stopLogging (impl_POA_GDA_Connection * servant,
+impl_GDA_Connection_stopLogging (PortableServer_Servant servant,
 				 CORBA_Environment * ev)
 {
-	GdaServerConnection *cnc = servant->cnc;
-
-	if (gda_server_connection_stop_logging(cnc) != -1)
-		return 0;
-	gda_error_list_to_exception (cnc->errors, ev);
-
-	return (-1);
+	return -1;
 }
 
 CORBA_char *
-impl_GDA_Connection_createTable (impl_POA_GDA_Connection * servant,
+impl_GDA_Connection_createTable (PortableServer_Servant servant,
 				 CORBA_char * name,
 				 GDA_RowAttributes * columns,
 				 CORBA_Environment * ev)
 {
-	CORBA_char* retval;
+	CORBA_char *retval;
+	GdaServerConnection *cnc = (GdaServerConnection *) bonobo_x_object (servant);
 
-	retval = gda_server_connection_create_table(servant->cnc, columns);
-	return (retval);
+	g_return_if_fail (GDA_IS_SERVER_CONNECTION (cnc));
+
+	retval = gda_server_connection_create_table (cnc, columns);
+	if (!retval)
+		gda_error_list_to_exception (cnc->errors, ev);
+	return retval;
 }
 
 CORBA_boolean
-impl_GDA_Connection_supports (impl_POA_GDA_Connection * servant,
+impl_GDA_Connection_supports (PortableServer_Servant servant,
                               GDA_Connection_Feature feature,
                               CORBA_Environment *ev)
 {
-	return gda_server_connection_supports(servant->cnc, feature);
+	GdaServerConnection *cnc = (GdaServerConnection *) bonobo_x_object (servant);
+
+	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), FALSE);
+	return gda_server_connection_supports (cnc, feature);
 }
 
 CORBA_char *
-impl_GDA_Connection_sql2xml (impl_POA_GDA_Connection *servant,
+impl_GDA_Connection_sql2xml (PortableServer_Servant servant,
                              CORBA_char *sql,
                              CORBA_Environment *ev)
 {
-	return gda_server_connection_sql2xml(servant->cnc, sql);
+	GdaServerConnection *cnc = (GdaServerConnection *) bonobo_x_object (servant);
+	return gda_server_connection_sql2xml (cnc, sql);
 }
 
 CORBA_char *
-impl_GDA_Connection_xml2sql (impl_POA_GDA_Connection *servant,
+impl_GDA_Connection_xml2sql (PortableServer_Servant servant,
                              CORBA_char *xml,
                              CORBA_Environment *ev)
 {
-	return gda_server_connection_xml2sql(servant->cnc, xml);
+	GdaServerConnection *cnc = (GdaServerConnection *) bonobo_x_object (servant);
+	return gda_server_connection_xml2sql (cnc, xml);
 }
 
 /*
@@ -424,6 +279,125 @@ free_error_list (GList *list)
 	}
 }
 
+/*
+ * GdaServerConnection class implementation
+ */
+static void
+gda_server_connection_class_init (GdaServerConnectionClass *klass)
+{
+	POA_GDA_Connection__epv *epv;
+	GtkObjectClass *object_class = (GtkObjectClass *) klass;
+
+	object_class->destroy = gda_server_connection_destroy;
+
+	/* set the epv */
+	epv = &klass->epv;
+	epv->_get_version = impl_GDA_Connection__get_version;
+	epv->_get_errors = impl_GDA_Connection__get_errors;
+	epv->beginTransaction = impl_GDA_Connection_beginTransaction;
+	epv->commitTransaction = impl_GDA_Connection_commitTransaction;
+	epv->rollbackTransaction = impl_GDA_Connection_rollbackTransaction;
+	epv->close = impl_GDA_Connection_close;
+	epv->open = impl_GDA_Connection_open;
+	epv->openSchema = impl_GDA_Connection_openSchema;
+	epv->modifySchema = impl_GDA_Connection_modifySchema;
+	epv->createCommand = impl_GDA_Connection_createCommand;
+	epv->createRecordset = impl_GDA_Connection_createRecordset;
+	epv->startLogging = impl_GDA_Connection_startLogging;
+	epv->stopLogging = impl_GDA_Connection_stopLogging;
+	epv->createTable = impl_GDA_Connection_createTable;
+	epv->supports = impl_GDA_Connection_supports;
+	epv->sql2xml = impl_GDA_Connection_sql2xml;
+	epv->xml2sql = impl_GDA_Connection_xml2sql;
+}
+
+static void
+gda_server_connection_init (GdaServerConnection *cnc)
+{
+	cnc->dsn = NULL;
+	cnc->username = NULL;
+	cnc->password = NULL;
+	cnc->commands = NULL;
+	cnc->errors = NULL;
+	cnc->user_data = NULL;
+}
+
+static void
+gda_server_connection_destroy (GtkObject *object)
+{
+	GtkObjectClass *parent_class;
+	GdaServerConnection *cnc = (GdaServerConnection *) object;
+
+	g_return_if_fail (GDA_IS_SERVER_CONNECTION (cnc));
+
+	if ((cnc->server_impl != NULL) &&
+	    (cnc->server_impl->functions.connection_free != NULL)) {
+		cnc->server_impl->functions.connection_free(cnc);
+	}
+	
+	if (cnc->dsn)
+		g_free((gpointer) cnc->dsn);
+	if (cnc->username) g_free((gpointer) cnc->username);
+	if (cnc->password) g_free((gpointer) cnc->password);
+	//g_list_foreach(cnc->commands, (GFunc) gda_server_command_free, NULL);
+	//free_error_list(cnc->errors);
+	
+	if (cnc->server_impl) {
+		cnc->server_impl->connections = g_list_remove(cnc->server_impl->connections,
+							      (gpointer) cnc);
+		if (!cnc->server_impl->connections) {
+			/* if no connections left, terminate */
+			gda_log_message("No connections left. Terminating");
+			gda_server_stop(cnc->server_impl);
+		}
+	}
+
+	parent_class = gtk_type_class (BONOBO_X_OBJECT_TYPE);
+	if (parent_class && parent_class->destroy)
+		parent_class->destroy (object);
+}
+
+GtkType
+gda_server_connection_get_type (void)
+{
+        static GtkType type = 0;
+
+        if (!type) {
+                GtkTypeInfo info = {
+                        "GdaServerConnection",
+                        sizeof (GdaServerConnection),
+                        sizeof (GdaServerConnectionClass),
+                        (GtkClassInitFunc) gda_server_connection_class_init,
+                        (GtkObjectInitFunc) gda_server_connection_init,
+                        (GtkArgSetFunc) NULL,
+                        (GtkArgSetFunc) NULL
+                };
+                type = bonobo_x_type_unique (
+                        BONOBO_X_OBJECT_TYPE,
+                        POA_GDA_Connection__init, NULL,
+                        GTK_STRUCT_OFFSET (GdaServerConnectionClass, epv),
+                        &info);
+        }
+        return type;
+}
+
+GdaServerConnection *
+gda_server_connection_construct (GdaServerConnection *cnc, GdaServer *server_impl)
+{
+	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), NULL);
+	g_return_val_if_fail (GDA_IS_SERVER (server_impl), cnc);
+
+	cnc->server_impl = server_impl;
+
+	/* notify 'real' provider */
+	cnc->server_impl->connections = g_list_append(cnc->server_impl->connections, (gpointer) cnc);
+	if (cnc->server_impl->functions.connection_new != NULL) {
+		cnc->server_impl->functions.connection_new(cnc);
+	}
+
+	return cnc;
+}
+
 /**
  * gda_server_connection_new
  */
@@ -431,21 +405,11 @@ GdaServerConnection *
 gda_server_connection_new (GdaServer *server_impl)
 {
 	GdaServerConnection* cnc;
-	
+
 	g_return_val_if_fail(server_impl != NULL, NULL);
-	
-	/* FIXME: could be possible to share connections */
-	cnc = g_new0(GdaServerConnection, 1);
-	cnc->server_impl = server_impl;
-	cnc->users = 1;
-	
-	/* notify 'real' provider */
-	cnc->server_impl->connections = g_list_append(cnc->server_impl->connections, (gpointer) cnc);
-	if (cnc->server_impl->functions.connection_new != NULL) {
-		cnc->server_impl->functions.connection_new(cnc);
-	}
-	
-	return cnc;
+
+	cnc = GDA_SERVER_CONNECTION (gtk_type_new (gda_server_connection_get_type ()));
+	return gda_server_connection_construct (cnc, server_impl);
 }
 
 /**
@@ -464,11 +428,11 @@ gda_server_connection_open (GdaServerConnection *cnc,
 	g_return_val_if_fail(cnc->server_impl != NULL, -1);
 	g_return_val_if_fail(cnc->server_impl->functions.connection_open != NULL, -1);
 	
-	rc = cnc->server_impl->functions.connection_open(cnc, dsn, user, password);
+	rc = cnc->server_impl->functions.connection_open (cnc, dsn, user, password);
 	if (rc != -1) {
-		gda_server_connection_set_dsn(cnc, dsn);
-		gda_server_connection_set_username(cnc, user);
-		gda_server_connection_set_password(cnc, password);
+		gda_server_connection_set_dsn (cnc, dsn);
+		gda_server_connection_set_username (cnc, user);
+		gda_server_connection_set_password (cnc, password);
 		rc = 0;
 	}
 	return rc;
@@ -796,31 +760,6 @@ gda_server_connection_set_user_data (GdaServerConnection *cnc, gpointer user_dat
 void
 gda_server_connection_free (GdaServerConnection *cnc)
 {
-	g_return_if_fail(cnc != NULL);
-	
-	if ((cnc->server_impl != NULL) &&
-	    (cnc->server_impl->functions.connection_free != NULL)) {
-		cnc->server_impl->functions.connection_free(cnc);
-	}
-	
-	cnc->users--;
-	if (!cnc->users) {
-		if (cnc->dsn) g_free((gpointer) cnc->dsn);
-		if (cnc->username) g_free((gpointer) cnc->username);
-		if (cnc->password) g_free((gpointer) cnc->password);
-		//g_list_foreach(cnc->commands, (GFunc) gda_server_command_free, NULL);
-		//free_error_list(cnc->errors);
-		
-		if (cnc->server_impl) {
-			cnc->server_impl->connections = g_list_remove(cnc->server_impl->connections,
-			                                              (gpointer) cnc);
-			if (!cnc->server_impl->connections) {
-				/* if no connections left, terminate */
-				gda_log_message("No connections left. Terminating");
-				gda_server_stop(cnc->server_impl);
-			}
-		}
-		g_free((gpointer) cnc);
-	}
+	bonobo_object_unref (BONOBO_OBJECT (cnc));
 }
 

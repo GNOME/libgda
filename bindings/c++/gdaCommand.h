@@ -40,8 +40,6 @@ class Command {
 		void setCmdType(GDA_CommandType type);
 		Recordset *execute(gulong* reccount, gulong flags);
 		void createParameter(gchar* name, GDA_ParameterDirection inout, Value *value);
-		glong getTimeout();
-		void setTimeout(glong timeout);
 
 	private:
 		Connection *cnc;

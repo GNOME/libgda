@@ -39,7 +39,7 @@ gda_mail_command_execute (GdaServerCommand * cmd,
 						  gulong options) {
 	GdaServerRecordset * recset = NULL;
 
-	switch (gda_server_command_get_type(cmd)) {
+	switch (gda_server_command_get_cmd_type(cmd)) {
 		case GDA_COMMAND_TYPE_TEXT :
 		case GDA_COMMAND_TYPE_TABLE :
 		case GDA_COMMAND_TYPE_STOREDPROCEDURE :

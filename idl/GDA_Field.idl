@@ -109,10 +109,13 @@ module GDA {
 	typedef sequence<Field>           Row;
 	typedef sequence<FieldAttributes> RowAttributes;
 
+/*
 	interface Fieldx {
 		long             appendChunk(in VarBinString data);
 		VarBinString     getChunk   (in long amount);
-	};  
+	};
+*/
+
 };
 
 #endif

@@ -2,8 +2,6 @@
 #ifndef __gda__
 #define __gda__ 1
 
-#include <oaf-factory.idl>
-
 #include "GDA_Error.idl"
 #include "GDA_Field.idl"
 #include "GDA_Recordset.idl"
@@ -27,10 +25,6 @@ module GDA {
 		IL_READ_INCOMMTED,
 		IL_READ_REPEATED,
 		IL_READ_SERIALIZABLE
-	};
-
-	interface ConnectionFactory : GNOME::ObjectFactory {
-		Object create_connection(in string goad_id) raises (CannotActivate);
 	};
 };
 

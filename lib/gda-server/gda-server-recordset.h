@@ -20,6 +20,8 @@
 #if !defined(__gda_server_recordset_h__)
 #  define __gda_server_recordset_h__
 
+#include <bonobo/bonobo-xobject.h>
+#include <GDA.h>
 #include <gda-server-connection.h>
 #include <gda-server-field.h>
 
@@ -27,17 +29,35 @@
 extern "C" {
 #endif
 
-typedef struct {
+#define GDA_TYPE_SERVER_RECORDSET            (gda_server_recordset_get_type())
+#define GDA_SERVER_RECORDSET(obj)            GTK_CHECK_CAST(obj, GDA_TYPE_SERVER_RECORDSET, GdaServerRecordset)
+#define GDA_SERVER_RECORDSET_CLASS(klass)    GTK_CHECK_CLASS_CAST(klass, GDA_TYPE_SERVER_RECORDSET, GdaServerRecordsetClass)
+#define GDA_IS_SERVER_RECORDSET(obj)         GTK_CHECK_TYPE(obj, GDA_TYPE_SERVER_RECORDSET)
+#define GDA_IS_SERVER_RECORDSET_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_SERVER_RECORDSET))
+
+typedef struct _GdaServerRecordset      GdaServerRecordset;
+typedef struct _GdaServerRecordsetClass GdaServerRecordsetClass;
+
+struct _GdaServerRecordset {
+	BonoboXObject        object;
+
+	/* data */
 	GdaServerConnection* cnc;
 	GList*               fields;
 	gulong               position;
 	gboolean             at_begin;
 	gboolean             at_end;
-	gint                 users;
-	
-	gpointer             user_data;
-} GdaServerRecordset;
 
+	gpointer             user_data;
+};
+
+struct _GdaServerRecordsetClass {
+	BonoboXObjectClass parent_class;
+
+	POA_GDA_Recordset__epv epv;
+};
+
+GtkType              gda_server_recordset_get_type (void);
 GdaServerRecordset*  gda_server_recordset_new  (GdaServerConnection *cnc);
 GdaServerConnection* gda_server_recordset_get_connection (GdaServerRecordset *recset);
 void                 gda_server_recordset_add_field (GdaServerRecordset *recset,

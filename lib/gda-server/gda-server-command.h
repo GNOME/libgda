@@ -20,6 +20,7 @@
 #if !defined(__gda_server_command_h__)
 #  define __gda_server_command_h__
 
+#include <bonobo/bonobo-xobject.h>
 #include <GDA.h>
 #include <gda-error.h>
 #include <gda-server-connection.h>
@@ -28,22 +29,40 @@
 extern "C" {
 #endif
 
-typedef struct {
+#define GDA_TYPE_SERVER_COMMAND            (gda_server_command_get_type())
+#define GDA_SERVER_COMMAND(obj)            GTK_CHECK_CAST(obj, GDA_TYPE_SERVER_COMMAND, GdaServerCommand)
+#define GDA_SERVER_COMMAND_CLASS(klass)    GTK_CHECK_CLASS_CAST(klass, GDA_TYPE_SERVER_COMMAND, GdaServerCommandClass)
+#define GDA_IS_SERVER_COMMAND(obj)         GTK_CHECK_TYPE(obj, GDA_TYPE_SERVER_COMMAND)
+#define GDA_IS_SERVER_COMMAND_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_SERVER_COMMAND))
+
+typedef struct _GdaServerCommand      GdaServerCommand;
+typedef struct _GdaServerCommandClass GdaServerCommandClass;
+
+struct _GdaServerCommand {
+	BonoboXObject        object;
+
+	/* data */
 	GdaServerConnection* cnc;
 	gchar*               text;
 	GDA_CommandType      type;
-	gint                 users;
 	
 	gpointer             user_data;
-} GdaServerCommand;
+};
 
+struct _GdaServerCommandClass {
+	BonoboXObjectClass parent_class;
+
+	POA_GDA_Command__epv epv;
+};
+
+GtkType              gda_server_command_get_type (void);
 GdaServerCommand*    gda_server_command_new  (GdaServerConnection *cnc);
 GdaServerConnection* gda_server_command_get_connection (GdaServerCommand *cmd);
 gchar*               gda_server_command_get_text (GdaServerCommand *cmd);
 void                 gda_server_command_set_text (GdaServerCommand *cmd,
                                                    const gchar *text);
-GDA_CommandType      gda_server_command_get_type (GdaServerCommand *cmd);
-void                 gda_server_command_set_type (GdaServerCommand *cmd,
+GDA_CommandType      gda_server_command_get_cmd_type (GdaServerCommand *cmd);
+void                 gda_server_command_set_cmd_type (GdaServerCommand *cmd,
                                                    GDA_CommandType type);
 gpointer             gda_server_command_get_user_data (GdaServerCommand *cmd);
 void                 gda_server_command_set_user_data (GdaServerCommand *cmd,

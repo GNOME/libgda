@@ -21,6 +21,7 @@
 #  define __gda_server_h__
 
 #include <gtk/gtkobject.h>
+#include <bonobo/bonobo-generic-factory.h>
 
 /*
  * This is the main header file for the libgda-server library
@@ -122,9 +123,7 @@ struct _GdaServer {
 #else
 	GtkObject              object;
 #endif
-	CORBA_Object           connection_factory_obj;
-	PortableServer_POA     root_poa;
-	CORBA_Environment*     ev;
+	BonoboGenericFactory*  connection_factory;
 	gchar*                 name;
 	GdaServerImplFunctions functions;
 	GList*                 connections;

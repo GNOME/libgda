@@ -49,19 +49,15 @@ typedef struct _GdaCommandClass GdaCommandClass;
 #define GDA_TYPE_COMMAND            (gda_command_get_type())
 
 #ifdef HAVE_GOBJECT
-#  define GDA_COMMAND(obj) \
-            G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_COMMAND, GdaCommand)
-#  define GDA_COMMAND_CLASS(klass) \
-            G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_COMMAND, GdaCommandClass)
-#  define GDA_IS_COMMAND(obj) \
-            G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_COMMAND)
-#  define GDA_IS_COMMAND_CLASS(klass) \
-            G_TYPE_CHECK_CLASS_TYPE (klass, GDA_TYPE_COMMAND)
+#define GDA_COMMAND(obj)            G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_COMMAND, GdaCommand)
+#define GDA_COMMAND_CLASS(klass)    G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_COMMAND, GdaCommandClass)
+#define GDA_IS_COMMAND(obj)         G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_COMMAND)
+#define GDA_IS_COMMAND_CLASS(klass) G_TYPE_CHECK_CLASS_TYPE (klass, GDA_TYPE_COMMAND)
 #else
-#  define GDA_COMMAND(obj)            GTK_CHECK_CAST(obj, GDA_TYPE_COMMAND, GdaCommand)
-#  define GDA_COMMAND_CLASS(klass)    GTK_CHECK_CLASS_CAST(klass, GDA_TYPE_COMMAND, GdaCommandClass)
-#  define GDA_IS_COMMAND(obj)         GTK_CHECK_TYPE(obj, GDA_TYPE_COMMAND)
-#  define GDA_IS_COMMAND_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_COMMAND))
+#define GDA_COMMAND(obj)            GTK_CHECK_CAST(obj, GDA_TYPE_COMMAND, GdaCommand)
+#define GDA_COMMAND_CLASS(klass)    GTK_CHECK_CLASS_CAST(klass, GDA_TYPE_COMMAND, GdaCommandClass)
+#define GDA_IS_COMMAND(obj)         GTK_CHECK_TYPE(obj, GDA_TYPE_COMMAND)
+#define GDA_IS_COMMAND_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_COMMAND))
 #endif
 
 struct _GdaCommand {
@@ -107,8 +103,6 @@ void            gda_command_create_parameter (GdaCommand* cmd,
                                               gchar* name,
                                               GDA_ParameterDirection inout,
                                               GDA_Value* value);
-glong           gda_command_get_timeout      (GdaCommand* cmd);
-void            gda_command_set_timeout      (GdaCommand* cmd, glong timeout);
 
 #if defined(__cplusplus)
 }

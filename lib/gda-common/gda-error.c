@@ -179,6 +179,7 @@ gda_error_list_from_exception (CORBA_Environment* ev)
 			break;
 		}
 		all_errors = g_list_append(all_errors, error);
+		break;
 	}
 	case CORBA_USER_EXCEPTION: {
 		if (strcmp(CORBA_exception_id(ev), ex_GDA_NotSupported) == 0) {

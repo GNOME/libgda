@@ -55,14 +55,6 @@ class Connection {
 		gchar* getDSN();
 		gchar* getUser();
 
-		glong getFlags();
-		void setFlags(glong flags);
-		glong getCmdTimeout();
-		void setCmdTimeout(glong cmd_timeout);
-		glong getConnectTimeout();
-		void setConnectTimeout(glong timeout);
-		GDA_CursorLocation getCursorLocation();
-		void setCursorLocation(GDA_CursorLocation cursor);
 		gchar* getVersion();
 			
 	private:

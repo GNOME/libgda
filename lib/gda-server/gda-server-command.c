@@ -21,210 +21,161 @@
 #include "gda-server.h"
 #include "gda-server-private.h"
 
-/*
- * epv structures
- */
-
-static PortableServer_ServantBase__epv impl_GDA_Parameter_base_epv = {
-	NULL,                        /* _private data */
-	(gpointer) & impl_GDA_Parameter__destroy,    /* finalize routine */
-	NULL,                        /* default_POA routine */
-};
-
-static POA_GDA_Parameter__epv impl_GDA_Parameter_epv = {
-	NULL,                        /* _private */
-	(gpointer) & impl_GDA_Parameter_appendChunk,
-};
-
-static PortableServer_ServantBase__epv impl_GDA_Command_base_epv = {
-	NULL,                        /* _private data */
-	(gpointer) & impl_GDA_Command__destroy,      /* finalize routine */
-	NULL,                        /* default_POA routine */
-};
-
-static POA_GDA_Command__epv impl_GDA_Command_epv = {
-	NULL,                        /* _private */
-	(gpointer) & impl_GDA_Command__get_cmdTimeout,
-	(gpointer) & impl_GDA_Command__set_cmdTimeout,
-	(gpointer) & impl_GDA_Command__get_prepared,
-	(gpointer) & impl_GDA_Command__get_state,
-	(gpointer) & impl_GDA_Command__set_state,
-	(gpointer) & impl_GDA_Command__get_text,
-	(gpointer) & impl_GDA_Command__set_text,
-	(gpointer) & impl_GDA_Command__get_type,
-	(gpointer) & impl_GDA_Command__set_type,
-	(gpointer) & impl_GDA_Command_open,
-};
-
-/*
- * vepv structures
- */
-static POA_GDA_Parameter__vepv impl_GDA_Parameter_vepv = {
-	&impl_GDA_Parameter_base_epv,
-	&impl_GDA_Parameter_epv,
-};
-
-static POA_GDA_Command__vepv impl_GDA_Command_vepv = {
-	&impl_GDA_Command_base_epv,
-	&impl_GDA_Command_epv,
-};
+static void gda_server_command_init       (GdaServerCommand *cmd);
+static void gda_server_command_class_init (GdaServerCommandClass *klass);
+static void gda_server_command_destroy    (GtkObject *object);
 
 /*
  * Stub implementations
  */
-GDA_Parameter
-impl_GDA_Parameter__create (PortableServer_POA poa, CORBA_Environment * ev) {
-	GDA_Parameter retval;
-	impl_POA_GDA_Parameter *newservant;
-	PortableServer_ObjectId *objid;
-	
-	newservant = g_new0(impl_POA_GDA_Parameter, 1);
-	newservant->servant.vepv = &impl_GDA_Parameter_vepv;
-	newservant->poa = poa;
-	POA_GDA_Parameter__init((PortableServer_Servant) newservant, ev);
-	objid = PortableServer_POA_activate_object(poa, newservant, ev);
-	CORBA_free(objid);
-	retval = PortableServer_POA_servant_to_reference(poa, newservant, ev);
-	
-	return retval;
-}
-
-/* You shouldn't call this routine directly without first deactivating the servant... */
-void
-impl_GDA_Parameter__destroy (impl_POA_GDA_Parameter * servant, CORBA_Environment * ev) {
-	POA_GDA_Parameter__fini((PortableServer_Servant) servant, ev);
-	g_free(servant);
-}
-
-CORBA_long
-impl_GDA_Parameter_appendChunk (impl_POA_GDA_Parameter * servant,
-                                GDA_Parameter_VarBinString * data,
-                                CORBA_Environment * ev) {
-	g_error("%s: not implemented", __PRETTY_FUNCTION__);
-	return 0;
-}
-
-GDA_Command
-impl_GDA_Command__create (PortableServer_POA poa,
-                          GdaServerCommand* cmd,
-                          CORBA_Environment * ev) {
-	GDA_Command retval;
-	impl_POA_GDA_Command *newservant;
-	PortableServer_ObjectId *objid;
-	
-	newservant = g_new0(impl_POA_GDA_Command, 1);
-	newservant->servant.vepv = &impl_GDA_Command_vepv;
-	newservant->poa = poa;
-	
-	newservant->cmd = cmd;
-	if (newservant->cmd) {
-		//newservant->cmd->type = GDA_COMMAND_TYPE_TEXT; /* default command type */
-	}
-	
-	POA_GDA_Command__init((PortableServer_Servant) newservant, ev);
-	objid = PortableServer_POA_activate_object(poa, newservant, ev);
-	CORBA_free(objid);
-	retval = PortableServer_POA_servant_to_reference(poa, newservant, ev);
-
-	return retval;
-}
-
-/* You shouldn't call this routine directly without first deactivating the servant... */
-void
-impl_GDA_Command__destroy (impl_POA_GDA_Command * servant, CORBA_Environment * ev) {
-	POA_GDA_Command__fini((PortableServer_Servant) servant, ev);
-	g_free(servant);
-}
-
-CORBA_long
-impl_GDA_Command__get_cmdTimeout (impl_POA_GDA_Command * servant,
-                                  CORBA_Environment * ev) {
-	return 0;
-}
-
-void
-impl_GDA_Command__set_cmdTimeout (impl_POA_GDA_Command * servant,
-                                  CORBA_long value,
-                                  CORBA_Environment * ev) {
-}
-
-CORBA_boolean
-impl_GDA_Command__get_prepared (impl_POA_GDA_Command * servant, CORBA_Environment * ev) {
-	g_error("%s: not implemented", __PRETTY_FUNCTION__);
-	return 0;
-}
-
-CORBA_long
-impl_GDA_Command__get_state (impl_POA_GDA_Command * servant, CORBA_Environment * ev) {
-	g_error("%s: not implemented", __PRETTY_FUNCTION__);
-	return 0;
-}
-
-void
-impl_GDA_Command__set_state (impl_POA_GDA_Command * servant,
-                             CORBA_long value,
-                             CORBA_Environment * ev) {
-}
-
 CORBA_char *
-impl_GDA_Command__get_text (impl_POA_GDA_Command * servant, CORBA_Environment * ev) {
+impl_GDA_Command__get_text (PortableServer_Servant servant, CORBA_Environment * ev)
+{
 	CORBA_char *retval;
+	GdaServerCommand *cmd = (GdaServerCommand *) bonobo_x_object (servant);
+
+	g_return_val_if_fail (GDA_IS_SERVER_COMMAND (cmd), CORBA_OBJECT_NIL);
 	
-	if (!servant->cmd->text)
-		retval = 0;
+	if (cmd->text)
+		retval = CORBA_string_dup ("");
 	else
-		retval = CORBA_string_dup(servant->cmd->text);
+		retval = CORBA_string_dup (cmd->text);
 	return retval;
 }
 
 void
-impl_GDA_Command__set_text (impl_POA_GDA_Command * servant,
+impl_GDA_Command__set_text (PortableServer_Servant servant,
                             CORBA_char * value,
-                            CORBA_Environment * ev) {
-	g_return_if_fail (!CORBA_Object_is_nil(servant, ev));
-	gda_server_command_set_text (servant->cmd, (const gchar *) value);
+                            CORBA_Environment * ev)
+{
+	GdaServerCommand *cmd = (GdaServerCommand *) bonobo_x_object (servant);
+	g_return_if_fail (GDA_IS_SERVER_COMMAND (cmd));
+	gda_server_command_set_text (cmd, (const gchar *) value);
 }
 
 GDA_CommandType
-impl_GDA_Command__get_type (impl_POA_GDA_Command * servant, CORBA_Environment * ev) {
-	CORBA_unsigned_long retval;
-	retval = servant->cmd->type;
-	return retval;
+impl_GDA_Command__get_type (PortableServer_Servant servant, CORBA_Environment * ev)
+{
+	GdaServerCommand *cmd = (GdaServerCommand *) bonobo_x_object (servant);
+	g_return_val_if_fail (GDA_IS_SERVER_COMMAND (cmd), -1);
+	return cmd->type;
 }
 
 void
-impl_GDA_Command__set_type (impl_POA_GDA_Command * servant,
+impl_GDA_Command__set_type (PortableServer_Servant servant,
                             GDA_CommandType value,
-                            CORBA_Environment * ev) {
-	g_return_if_fail(!CORBA_Object_is_nil(servant, ev));
-	gda_server_command_set_type(servant->cmd, value);
+                            CORBA_Environment * ev)
+{
+	GdaServerCommand *cmd = (GdaServerCommand *) bonobo_x_object (servant);
+	g_return_if_fail (GDA_IS_SERVER_COMMAND (cmd));
+	gda_server_command_set_cmd_type (cmd, value);
 }
 
 GDA_Recordset
-impl_GDA_Command_open (impl_POA_GDA_Command * servant,
+impl_GDA_Command_open (PortableServer_Servant servant,
                        GDA_CmdParameterSeq * param,
                        GDA_CursorType ct,
                        GDA_LockType lt,
                        CORBA_unsigned_long * affected,
-                       CORBA_Environment * ev) {
-	GDA_Recordset       retval;
-	GdaServerRecordset* recset;
-	GdaError*           error;
-	gulong              laffected = 0;
+                       CORBA_Environment * ev)
+{
+	GdaError *error;
+	GdaServerRecordset *recset;
+	gulong laffected;
+	GdaServerCommand *cmd = (GdaServerCommand *) bonobo_x_object (servant);
+
+	g_return_val_if_fail (GDA_IS_SERVER_COMMAND (cmd), CORBA_OBJECT_NIL);
 	
-	error = gda_error_new();
-	recset = gda_server_command_execute(servant->cmd, error, param, &laffected, 0);
-	if (!recset) {
+	error = gda_error_new ();
+	recset = gda_server_command_execute (cmd, error, param, &laffected, 0);
+	if (!GDA_IS_SERVER_RECORDSET (recset)) {
 		if (error->description)
 			gda_error_to_exception (error, ev);
-		gda_error_free(error);
+		gda_error_free (error);
 		return CORBA_OBJECT_NIL;
 	}
 	gda_error_free(error);
-	if (affected) *affected = laffected;
-	retval = impl_GDA_Recordset__create(servant->poa, recset, ev);
-	gda_server_exception(ev);
-	return retval;
+	if (affected)
+		*affected = laffected;
+
+	return bonobo_object_corba_objref (BONOBO_OBJECT (recset));
+}
+
+/*
+ * GdaServerCommand class implementation
+ */
+static void
+gda_server_command_class_init (GdaServerCommandClass *klass)
+{
+	POA_GDA_Command__epv *epv;
+	GtkObjectClass *object_class = GTK_OBJECT_CLASS (klass);
+
+	object_class->destroy = gda_server_command_destroy;
+
+	/* set the epv */
+	epv = &klass->epv;
+	epv->_get_text = impl_GDA_Command__get_text;
+	epv->_set_text = impl_GDA_Command__set_text;
+	epv->_get_type = impl_GDA_Command__get_type;
+	epv->_set_type = impl_GDA_Command__set_type;
+	epv->open = impl_GDA_Command_open;
+}
+
+static void
+gda_server_command_init (GdaServerCommand *cmd)
+{
+	cmd->cnc = NULL;
+	cmd->text = NULL;
+	cmd->type = 0;
+	cmd->user_data = NULL;
+}
+
+static void
+gda_server_command_destroy (GtkObject *object)
+{
+	GtkObjectClass *parent_class;
+	GdaServerCommand *cmd = (GdaServerCommand *) object;
+
+	g_return_if_fail (GDA_IS_SERVER_COMMAND (cmd));
+
+	if ((cmd->cnc != NULL) &&
+	    (cmd->cnc->server_impl != NULL) &&
+	    (cmd->cnc->server_impl->functions.command_free != NULL)) {
+		cmd->cnc->server_impl->functions.command_free(cmd);
+	}
+	
+	cmd->cnc->commands = g_list_remove(cmd->cnc->commands, (gpointer) cmd);
+	if (cmd->text)
+		g_free((gpointer) cmd->text);
+
+	parent_class = gtk_type_class (BONOBO_X_OBJECT_TYPE);
+	if (parent_class && parent_class->destroy)
+		parent_class->destroy (object);
+		
+}
+
+GtkType
+gda_server_command_get_type (void)
+{
+        static GtkType type = 0;
+
+        if (!type) {
+                GtkTypeInfo info = {
+                        "GdaServerCommand",
+                        sizeof (GdaServerCommand),
+                        sizeof (GdaServerCommandClass),
+                        (GtkClassInitFunc) gda_server_command_class_init,
+                        (GtkObjectInitFunc) gda_server_command_init,
+                        (GtkArgSetFunc) NULL,
+                        (GtkArgSetFunc) NULL
+                };
+                type = bonobo_x_type_unique(
+                        BONOBO_X_OBJECT_TYPE,
+                        POA_GDA_Command__init, NULL,
+                        GTK_STRUCT_OFFSET (GdaServerCommandClass, epv),
+                        &info);
+        }
+        return type;
 }
 
 /**
@@ -235,18 +186,17 @@ gda_server_command_new (GdaServerConnection *cnc)
 {
 	GdaServerCommand* cmd;
 	
-	g_return_val_if_fail(cnc != NULL, NULL);
+	g_return_val_if_fail(GDA_IS_SERVER_CONNECTION (cnc), NULL);
 	
-	cmd = g_new0(GdaServerCommand, 1);
+	cmd = GDA_SERVER_COMMAND (gtk_type_new (gda_server_command_get_type ()));
 	cmd->cnc = cnc;
-	cmd->users = 1;
 	
 	if ((cmd->cnc->server_impl != NULL) &&
 	    (cmd->cnc->server_impl->functions.command_new != NULL)) {
 		cmd->cnc->server_impl->functions.command_new(cmd);
 	}
 	cmd->cnc->commands = g_list_append(cmd->cnc->commands, (gpointer) cmd);
-	
+
 	return cmd;
 }
 
@@ -284,20 +234,20 @@ gda_server_command_set_text (GdaServerCommand *cmd, const gchar *text)
 }
 
 /**
- * gda_server_command_get_type
+ * gda_server_command_get_cmd_type
  */
 GDA_CommandType
-gda_server_command_get_type (GdaServerCommand *cmd)
+gda_server_command_get_cmd_type (GdaServerCommand *cmd)
 {
 	g_return_val_if_fail(cmd != NULL, 0);
 	return cmd->type;
 }
 
 /**
- * gda_server_command_set_type
+ * gda_server_command_set_cmd_type
  */
 void
-gda_server_command_set_type (GdaServerCommand *cmd, GDA_CommandType type)
+gda_server_command_set_cmd_type (GdaServerCommand *cmd, GDA_CommandType type)
 {
 	g_return_if_fail(cmd != NULL);
 	cmd->type = type;
@@ -329,20 +279,7 @@ gda_server_command_set_user_data (GdaServerCommand *cmd, gpointer user_data)
 void
 gda_server_command_free (GdaServerCommand *cmd)
 {
-	g_return_if_fail(cmd != NULL);
-	
-	if ((cmd->cnc != NULL) &&
-	    (cmd->cnc->server_impl != NULL) &&
-	    (cmd->cnc->server_impl->functions.command_free != NULL)) {
-		cmd->cnc->server_impl->functions.command_free(cmd);
-	}
-	
-	cmd->users--;
-	if (!cmd->users) {
-		cmd->cnc->commands = g_list_remove(cmd->cnc->commands, (gpointer) cmd);
-		if (cmd->text) g_free((gpointer) cmd->text);
-		g_free((gpointer) cmd);
-	}
+	bonobo_object_unref (BONOBO_OBJECT (cmd));
 }
 
 /**
@@ -366,4 +303,3 @@ gda_server_command_execute (GdaServerCommand *cmd,
 	                                                          affected, options);
 	return recset;
 }
-
