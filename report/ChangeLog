@@ -1,5 +1,9 @@
 2001-07-19  Carlos Perelló Marín <carlos@gnome-db.org>
 
+	* *.[ch]: Removed, need a heavy reimplementation.
+
+2001-07-19  Carlos Perelló Marín <carlos@gnome-db.org>
+
 	* server: renamed to engine and reimplemented all.
 	
 2001-05-19  Carlos Perelló Marín <carlos@gnome-db.org>
