@@ -9,7 +9,6 @@ gda_sybase_srv_SOURCES = \
 	gda-sybase-provider.c \
 	gda-sybase-provider.h \
 	gda-sybase.h \
-	gda-sybase-error.c \
 	main.c
 
 gda_sybase_srv_LDADD = \

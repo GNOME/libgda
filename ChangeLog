@@ -1,3 +1,7 @@
+2002-03-02  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* providers/sybase/gda-sybase-error.c: removed dead file.
+
 2002-02-26  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* idl/GNOME_Database.idl:
