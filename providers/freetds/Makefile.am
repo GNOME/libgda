@@ -10,6 +10,8 @@ INCLUDES = \
 libgda_freetds_la_SOURCES = \
 	gda-freetds-provider.c \
 	gda-freetds-provider.h \
+	gda-freetds-recordset.c \
+	gda-freetds-recordset.h \
 	gda-freetds.h \
 	libmain.c \
 	utils.c
