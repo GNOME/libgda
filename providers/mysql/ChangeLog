@@ -1,3 +1,8 @@
+2001-12-18  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-mysql-recordset.c (fetch_func): implemented
+	(describe_func): implemented
+
 2001-12-17  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* utils.c (gda_mysql_type_to_gda): new function

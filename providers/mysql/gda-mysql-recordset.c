@@ -41,8 +41,105 @@ free_mysql_res (gpointer data)
 }
 
 static GdaRow *
-fetch_func (GdaServerRecordset *recset, glong row)
+fetch_func (GdaServerRecordset *recset, gulong rownum)
 {
+	GdaRow *row;
+	gint field_count;
+	gint row_count;
+	gint i;
+	unsigned long *lengths;
+	MYSQL_FIELD *mysql_fields;
+	MYSQL_RES *mysql_res;
+
+	g_return_val_if_fail (GDA_IS_SERVER_RECORDSET (recset), NULL);
+
+	mysql_res = g_object_get_data (G_OBJECT (recset), OBJECT_DATA_RECSET_HANDLE);
+	if (!mysql_res) {
+		gda_server_connection_add_error_string (
+			gda_server_recordset_get_connection (recset),
+			_("Invalid MySQL handle"));
+		return NULL;
+	}
+
+	/* move to the corresponding row */
+	row_count = mysql_num_rows (mysql_res);
+	field_count = mysql_num_fields (mysql_res);
+
+	if (rownum < 0 || rownum >= row_count) {
+		gda_server_connection_add_error_string (
+			gda_server_recordset_get_connection (recset),
+			_("Row number out of range"));
+		return NULL;
+	}
+
+	mysql_data_seek (mysql_res, rownum);
+	row = gda_row_new (field_count);
+
+	lengths = mysql_fetch_lengths (mysql_res);
+	mysql_fields = mysql_fetch_fields (mysql_res);
+
+	for (i = 0; i < field_count; i++) {
+		GdaField *field;
+		gchar *thevalue;
+
+		field = gda_row_get_field (row, i);
+		gda_field_set_actual_size (field, lengths[i]);
+		gda_field_set_defined_size (field, mysql_fields[i].max_length);
+		gda_field_set_name (field, mysql_fields[i].name);
+		gda_field_set_scale (field, mysql_fields[i].decimals);
+		gda_field_set_gdatype (field, gda_mysql_type_to_gda (mysql_fields[i].type));
+
+		thevalue = mysql_res->current_row[i];
+
+		switch (mysql_fields[i].type) {
+		case FIELD_TYPE_DATE : /* FIXME */
+			break;
+		case FIELD_TYPE_DECIMAL :
+		case FIELD_TYPE_DOUBLE :
+			gda_field_set_double_value (field, atof (thevalue));
+			break;
+		case FIELD_TYPE_FLOAT :
+			gda_field_set_single_value (field, atof (thevalue));
+			break;
+		case FIELD_TYPE_LONG :
+		case FIELD_TYPE_YEAR :
+			gda_field_set_integer_value (field, atol (thevalue));
+			break;
+		case FIELD_TYPE_LONGLONG :
+		case FIELD_TYPE_INT24 :
+			gda_field_set_bigint_value (field, atoll (thevalue));
+			break;
+		case FIELD_TYPE_SHORT :
+			gda_field_set_smallint_value (field, atoi (thevalue));
+			break;
+		case FIELD_TYPE_TIME : /* FIXME */
+			break;
+		case FIELD_TYPE_TIMESTAMP :
+		case FIELD_TYPE_DATETIME : /* FIXME */
+			break;
+		case FIELD_TYPE_TINY :
+			gda_field_set_tinyint_value (field, atoi (thevalue));
+			break;
+		case FIELD_TYPE_TINY_BLOB :
+		case FIELD_TYPE_MEDIUM_BLOB :
+		case FIELD_TYPE_LONG_BLOB :
+		case FIELD_TYPE_BLOB :
+			gda_field_set_binary_value (field, thevalue, lengths[i]);
+			break;
+		case FIELD_TYPE_VAR_STRING :
+		case FIELD_TYPE_STRING :
+			gda_field_set_string_value (field, thevalue);
+			break;
+		case FIELD_TYPE_NULL :
+		case FIELD_TYPE_NEWDATE :
+		case FIELD_TYPE_ENUM :
+		case FIELD_TYPE_SET : /* FIXME */
+			gda_field_set_string_value (field, thevalue);
+			break;
+		}
+	}
+
+	return row;
 }
 
 static GdaRowAttributes *
