@@ -269,6 +269,7 @@ process_sql_commands (GList *reclist, GdaConnection *cnc, GdaCommand *cmd)
 	SQLCHAR *sql;
 	SQLSMALLINT ncols;
 	SQLRETURN rc;
+	SQLCHAR *sql_as_ansi;
 	int i;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
@@ -281,7 +282,9 @@ process_sql_commands (GList *reclist, GdaConnection *cnc, GdaCommand *cmd)
 	sql = (SQLCHAR*) gda_command_get_text ( cmd );
 	opts = gda_command_get_options ( cmd );
 
-	rc = SQLExecDirect ( priv_data->hstmt, sql, SQL_NTS );
+	sql_as_ansi = (SQLCHAR *) g_locale_from_utf8 (sql, -1, NULL, NULL, NULL);
+	rc = SQLExecDirect ( priv_data->hstmt, sql_as_ansi, SQL_NTS );
+	g_free (sql_as_ansi);
 	if ( SQL_SUCCEEDED( rc )) {
 		do
 		{
@@ -331,7 +334,9 @@ process_sql_commands (GList *reclist, GdaConnection *cnc, GdaCommand *cmd)
 								value, sizeof( value ), &ind );
 
 						if ( SQL_SUCCEEDED( rc ) && ind >= 0 ) {
-							value_list = g_list_append (value_list, gda_value_new_string ( value ));
+							gchar *value_as_utf = g_locale_to_utf8 (value, -1, NULL, NULL, NULL);
+							value_list = g_list_append (value_list, gda_value_new_string (value_as_utf));
+							g_free (value_as_utf);
 						}
 						else {
 							value_list = g_list_append (value_list, gda_value_new_string (""));

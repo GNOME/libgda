@@ -1,3 +1,10 @@
+2004-01-28  Jon Willeke <willeke@users.sourceforge.net>
+
+	Fixes #131592
+
+	* providers/odbc/gda-odbc-provider.c (process_sql_commands):
+	UTF-8 conversions for SQLExecDirect() and SQLGetData().
+
 2004-02-11  Robert Sedak  <robert.sedak@sk.htnet.hr>
 
         * configure.in: Added "hr" (Croatian) to ALL_LINGUAS.
