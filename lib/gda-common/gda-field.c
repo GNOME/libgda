@@ -25,6 +25,7 @@
 #include "gda-common-private.h"
 #include "gda-field.h"
 #include "gda-value.h"
+#include <bonobo/bonobo-i18n.h>
 
 struct _GdaFieldPrivate {
 	GNOME_Database_Field *corba_field;
@@ -254,6 +255,16 @@ gda_field_set_nativetype (GdaField *field, gint type)
 {
 	g_return_if_fail (GDA_IS_FIELD (field));
 	field->priv->corba_field->attributes.nativeType = type;
+}
+
+/**
+ * gda_field_is_null
+ */
+gboolean
+gda_field_is_null (GdaField *field)
+{
+	g_return_val_if_fail (GDA_IS_FIELD (field), TRUE);
+	return FALSE;
 }
 
 /**
@@ -613,6 +624,58 @@ gda_field_copy_to_corba_attributes (GdaField *field,
 	attrs->gdaType = field->priv->corba_field->attributes.gdaType;
 	attrs->cType = field->priv->corba_field->attributes.cType;
 	attrs->nativeType = field->priv->corba_field->attributes.nativeType;
+}
+
+/**
+ * gda_field_stringify
+ */
+gchar *
+gda_field_stringify (GdaField *field)
+{
+	gchar *retval = NULL;
+
+	g_return_val_if_fail (GDA_IS_FIELD (field), NULL);
+
+	if (gda_field_is_null (field))
+		return g_strdup (_("<NULL>"));
+
+	switch (gda_field_get_gdatype (field)) {
+	case GNOME_Database_TypeNull :
+		retval = g_strdup (_("<Unknown GDA Type(NULL)>"));
+		break;
+	case GNOME_Database_TypeBigint :
+		retval = g_strdup_printf ("%d", gda_field_get_bigint_value (field));
+		break;
+	case GNOME_Database_TypeBoolean :
+		if (gda_field_get_boolean_value (field))
+			retval = g_strdup (_("TRUE"));
+		else
+			retval = g_strdup (_("FALSE"));
+		break;
+	case GNOME_Database_TypeVarchar :
+	case GNOME_Database_TypeChar :
+		retval = g_strdup (gda_field_get_string_value (field));
+		break;
+	case GNOME_Database_TypeInteger :
+		retval = g_strdup_printf ("%d", gda_field_get_integer_value (field));
+		break;
+	case GNOME_Database_TypeSmallint :
+		retval = g_strdup_printf ("%d", gda_field_get_smallint_value (field));
+		break;
+	case GNOME_Database_TypeSingle :
+		retval = g_strdup_printf ("%f", gda_field_get_single_value (field));
+		break;
+	case GNOME_Database_TypeDouble :
+		retval = g_strdup_printf ("%f", gda_field_get_double_value (field));
+		break;
+	case GNOME_Database_TypeTime :
+	case GNOME_Database_TypeDate :
+	case GNOME_Database_TypeTimestamp :
+		/* FIXME: implement, and add all missing ones */
+		break;
+	}
+
+	return retval;
 }
 
 /**

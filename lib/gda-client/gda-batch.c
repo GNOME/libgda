@@ -311,8 +311,8 @@ gda_batch_start (GdaBatch * job)
 			gulong reccount;
 
 			/* execute command */
-			gtk_signal_emit (G_OBJECT (job),
-					 gda_batch_signals[GDA_BATCH_EXECUTE_COMMAND],
+			g_signal_emit (G_OBJECT (job),
+				       gda_batch_signals[GDA_BATCH_EXECUTE_COMMAND],
 					 0, cmd);
 			recset = gda_connection_execute (job->cnc, cmd,
 							 &reccount, 0);

@@ -24,6 +24,7 @@
 #include "gda-connection.h"
 #include "gda-command.h"
 #include <gobject/gsignal.h>
+#include <bonobo/bonobo-i18n.h>
 
 static GObjectClass *parent_class = NULL;
 
@@ -952,8 +953,9 @@ gda_connection_add_error_list (GdaConnection * cnc, GList * errors)
 	g_return_if_fail (GDA_IS_CONNECTION (cnc));
 	g_return_if_fail (errors != 0);
 
-	gtk_signal_emit (GTK_OBJECT (cnc),
-			 gda_connection_signals[CONNECTION_ERROR], errors);
+	g_signal_emit (G_OBJECT (cnc),
+		gda_connection_signals[CONNECTION_ERROR],
+		0, errors);
 }
 
 /**

@@ -67,6 +67,7 @@ void                     gda_field_set_ctype (GdaField *field, gint type);
 gint                     gda_field_get_nativetype (GdaField *field);
 void                     gda_field_set_nativetype (GdaField *field, gint type);
 
+gboolean                 gda_field_is_null (GdaField *field);
 GdaValue                *gda_field_get_value (GdaField *field);
 void                     gda_field_set_value (GdaField *field, GdaValue *value);
 
@@ -99,6 +100,7 @@ void                     gda_field_set_tinyint_value (GdaField *field, gchar val
 void                     gda_field_copy_to_corba (GdaField *field, GNOME_Database_Field *corba_field);
 void                     gda_field_copy_to_corba_attributes (GdaField *field,
 							     GNOME_Database_FieldAttributes *attrs);
+gchar                   *gda_field_stringify (GdaField *field);
 
 /*
  * Backwards compatible functions. DON'T USE IN NEW CODE

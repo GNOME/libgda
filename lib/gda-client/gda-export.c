@@ -88,10 +88,13 @@ get_object_list (GdaConnection * cnc,
 	while (pos != GDA_RECORDSET_INVALID_POSITION &&
 	       !gda_recordset_eof (recset)) {
 		GdaField *field;
+		gchar *value;
 
 		field = gda_recordset_field_idx (recset, 0);
-		list = g_list_append (list,
-				      gda_field_stringify (0, 0, field));
+		value = gda_field_stringify (field);
+		list = g_list_append (list, value);
+
+		g_free (value);
 
 		pos = gda_recordset_move (recset, 1, 0);
 	}
@@ -146,7 +149,7 @@ run_export_cb (gpointer user_data)
 			gchar *type;
 
 			gda_field = gda_recordset_field_idx (recset, cnt);
-			type = gda_util_gdatype_2_string (gda_field_type (gda_field));
+			type = gda_util_gdatype_to_string (gda_field_get_gdatype (gda_field));
 
 			xml_field = gda_xml_database_table_add_field (exp->priv->tmp_xmldb,
 								      xml_table,
@@ -240,7 +243,7 @@ gda_export_class_init (GdaExportClass *klass)
 			      G_TYPE_NONE, 2,
 			      G_TYPE_INT, G_TYPE_STRING);
 	gda_export_signals[FINISHED] =
-		gtk_signal_new ("finished",
+		g_signal_new ("finished",
 				G_TYPE_FROM_CLASS (object_class),
 			      G_SIGNAL_RUN_LAST,
 			      G_STRUCT_OFFSET (GdaExportClass, finished),

@@ -184,7 +184,7 @@ gda_command_set_connection (GdaCommand * cmd, GdaConnection * cnc)
 	}
 
 	/* get a new GDA::Command object */
-	cmd->command = GDA_Connection_createCommand (cnc->connection, &ev);
+	cmd->command = GNOME_Database_Connection_createCommand (cnc->connection, &ev);
 	if (gda_connection_corba_exception (cmd->connection, &ev) < 0) {
 		gda_connection_free (cmd->connection);
 		cmd->connection = NULL;

@@ -12,7 +12,7 @@ CFLAGS =" \
 
 LDFLAGS=" \
 	$(GDA_CLIENT_LIBS) \
-	$(top_builddir)/lib/gda-common/.libs/libgda-common.a \
+	$(top_builddir)/lib/gda-common/.libs/libgda-common-2.a \
 	"
 
 DOC_DIR=$(datadir)/gnome/html
@@ -43,8 +43,6 @@ SOURCE_FILES = \
 	$(top_builddir)/lib/gda-common/gda-log.h \
 	$(top_builddir)/lib/gda-common/gda-quark-list.c \
 	$(top_builddir)/lib/gda-common/gda-quark-list.h \
-	$(top_builddir)/lib/gda-common/gda-thread.c \
-	$(top_builddir)/lib/gda-common/gda-thread.h \
 	$(top_builddir)/lib/gda-common/gda-util.c \
 	$(top_builddir)/lib/gda-common/gda-util.h \
 	$(top_builddir)/lib/gda-common/gda-xml-atom-item.c \

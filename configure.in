@@ -417,10 +417,6 @@ AC_SUBST(CAMEL_CFLAGS)
 AC_SUBST(XML_LIBS)
 AC_SUBST(XML_CFLAGS)
 
-GDA_oafdir=`oaf-config --prefix`/share/oaf
-
-AC_SUBST(GDA_oafdir)
-
 AC_OUTPUT([
 Makefile
 libgda.spec
@@ -454,6 +450,7 @@ tools/templates/Makefile
 report/Makefile
 report/gda-report.dtd
 report/idl/Makefile
+report/common/Makefile
 report/engine/Makefile
 testing/Makefile
 doc/Makefile

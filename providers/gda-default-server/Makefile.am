@@ -33,16 +33,16 @@ libsqlite.a:
 	make
 	cp build_sqlite/libsqlite.a libsqlite.a
 
-oafdir=$(GDA_oafdir)
+serverdir=$(libdir)/bonobo/servers
 
-oaf_in_files = GNOME_GDA_Provider_Default.oaf.in
-oaf_DATA = $(oaf_in_files:.oaf.in=.oaf)
+server_in_files = GNOME_Database_Provider_Default.server.in
+server_DATA = $(server_in_files:.server.in=.server)
 
-@XML_I18N_MERGE_OAF_RULE@
+@XML_I18N_MERGE_SERVER_RULE@
 
 EXTRA_DIST=\
-	$(oaf_in_files) \
-	$(oaf_DATA) \
+	$(server_in_files) \
+	$(server_DATA) \
 	sqlite/COPYRIGHT \
 	sqlite/Makefile.in \
 	sqlite/NO-AUTO-GEN \

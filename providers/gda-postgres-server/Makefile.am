@@ -22,11 +22,10 @@ libgda_postgres_a_SOURCES = \
 	gda-postgres-recordset.c \
 	gda-postgres.h
 
-oafdir=$(GDA_oafdir)
+serverdir=$(libdir)/bonobo/servers
+server_in_files = GNOME_Database_Provider_Postgres.server.in
+server_DATA = $(server_in_files:.server.in=.server)
 
-oaf_in_files = GNOME_GDA_Provider_Postgres.oaf.in
-oaf_DATA = $(oaf_in_files:.oaf.in=.oaf)
+@XML_I18N_MERGE_SERVER_RULE@
 
-@XML_I18N_MERGE_OAF_RULE@
-
-EXTRA_DIST=$(oaf_in_files) $(oaf_DATA) gda-postgres.spec.in
+EXTRA_DIST=$(server_in_files) $(server_DATA) gda-postgres.spec.in

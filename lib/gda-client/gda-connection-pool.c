@@ -23,6 +23,7 @@
 #include "gda-common.h"
 #include "GNOME_Database.h"
 #include <gobject/gsignal.h>
+#include <bonobo/bonobo-i18n.h>
 #include <bonobo/bonobo-marshal.h>
 
 static void gda_connection_pool_class_init (GdaConnectionPoolClass * klass);
@@ -96,7 +97,7 @@ gda_connection_pool_class_init (GdaConnectionPoolClass * klass)
 			      g_cclosure_marshal_VOID__POINTER,
 			      G_TYPE_NONE, 1, G_TYPE_POINTER);
 	gda_connection_pool_signals[ERROR] =
-		gtk_signal_new ("error",
+		g_signal_new ("error",
 				G_TYPE_FROM_CLASS (object_class),
 				G_SIGNAL_RUN_LAST,
 				G_STRUCT_OFFSET (GdaConnectionPoolClass, error),
@@ -150,7 +151,7 @@ gda_connection_pool_get_type (void)
 GdaConnectionPool *
 gda_connection_pool_new (void)
 {
-	return GDA_CONNECTION_POOL (gtk_object_new (GDA_TYPE_CONNECTION_POOL));
+	return GDA_CONNECTION_POOL (g_object_new (GDA_TYPE_CONNECTION_POOL, NULL));
 }
 
 static void
@@ -217,7 +218,7 @@ gda_connection_pool_open_connection (GdaConnectionPool * pool,
 				    && (!g_strcasecmp (password, dsn_password)
 					|| (!password && !dsn_password))) {
 					/* emit the open signal, for top-level uses */
-					g_signal_emit (GTK_OBJECT (pool),
+					g_signal_emit (G_OBJECT (pool),
 						       gda_connection_pool_signals[OPEN],
 						       0, cnc);
 					g_object_ref (G_OBJECT (cnc));
@@ -238,7 +239,7 @@ gda_connection_pool_open_connection (GdaConnectionPool * pool,
 				   "GDA_ConnectionPool_DSN",
 				   (gpointer) dsn);
 
-		g_signal_connect (GTK_OBJECT (cnc),
+		g_signal_connect (G_OBJECT (cnc),
 				  "open",
 				  G_CALLBACK (connection_opened_cb),
 				  (gpointer) pool);

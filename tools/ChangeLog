@@ -1,3 +1,7 @@
+2001-08-31  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-run.c: remove all GTK related code
+
 2001-08-03  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-config.in: removed, since it's not needed anymore

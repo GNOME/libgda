@@ -4,7 +4,7 @@
 srcdir=`dirname $0`
 test -z "$srcdir" && srcdir=.
 
-PKG_NAME="GNU Data Access"
+PKG_NAME="GNOME Data Access"
 
 (test -f $srcdir/configure.in \
   && test -d $srcdir/idl \

@@ -173,7 +173,7 @@ initialize_types_array (void)
 }
 
 /**
- * gda_fieldtype_to_string
+ * gda_util_gdatype_to_string
  */
 const gchar *
 gda_util_gdatype_to_string (GNOME_Database_ValueType type)

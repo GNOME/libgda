@@ -116,8 +116,8 @@ list_tables (GdaConnection* cnc)
   gint i;
 
   g_print ("\nopening table schema...\n");
-  rs = gda_connection_open_schema (cnc, GDA_Connection_GDCN_SCHEMA_TABLES,
-				   GDA_Connection_no_CONSTRAINT);
+  rs = gda_connection_open_schema (cnc, GNOME_Database_Connection_GDCN_SCHEMA_TABLES,
+				   GNOME_Database_Connection_no_CONSTRAINT);
   if (!rs) die (cnc);
   g_print ("\nThis database has following tables:\n");
   for (gda_recordset_move_first (rs); !gda_recordset_eof (rs);
@@ -126,8 +126,8 @@ list_tables (GdaConnection* cnc)
       for (i = 0; i < gda_recordset_rowsize (rs); i++)
 	{
 	  field = gda_recordset_field_idx (rs, i);
-	  g_print ("%s=%s\t", gda_field_name (field),
-		   gda_stringify_value (NULL, 0, field));
+	  g_print ("%s=%s\t", gda_field_get_name (field),
+		   gda_field_stringify (field));
 	}
       g_print ("\n");
     }
