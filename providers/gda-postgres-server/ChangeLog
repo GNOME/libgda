@@ -1,3 +1,11 @@
+2001-07-15  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-postgres-connection.c (gda_postgres_connection_open_schema):
+	return a GdaError if we don't support the schema
+
+	(gda_postgres_connection_open): use a GdaQuarkList to parse the
+	connection string
+
 2001-05-21  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-postgres-recordset.c (fill_field_values): add +1 to the

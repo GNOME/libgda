@@ -1,4 +1,4 @@
-/* GNOME-DB
+/* GDA Postgres Provider
  * Copyright (c) 1998-2000 by Rodrigo Moya
  * Copyright (c) 2000 by Vivien Malerba
  *
@@ -18,8 +18,9 @@
  */
 
 #include <stdlib.h>
-#include "gda-postgres.h"
 #include <ctype.h>
+#include "gda-quark-list.h"
+#include "gda-postgres.h"
 
 typedef GdaServerRecordset* (*schema_ops_fn)(GdaError *,
 					     GdaServerConnection *,
@@ -129,24 +130,10 @@ gda_postgres_connection_new (GdaServerConnection *cnc)
 	return TRUE;
 }
 
-static gchar*
-get_value(gchar* ptr)
-{
-	while (*ptr && *ptr != '=')
-		ptr++;
-	if (!*ptr)
-		return 0;
-	ptr++;
-	if (!*ptr)
-		return 0;
-	while (*ptr && isspace(*ptr))
-		ptr++;
-	return (g_strdup(ptr));
-}
-
 /* returns the version as for example 6.53 or 7.02 for 6.5.3 or 7.0.2 
    so that versions can be numerically compared */
-static gfloat version_to_float(gchar *str)
+static gfloat
+version_to_float(gchar *str)
 {
 	gfloat ver=0;
 	gchar *ptr = str;
@@ -177,7 +164,8 @@ static gfloat version_to_float(gchar *str)
 	return ver;
 }
 
-static gfloat get_postmaster_version(PGconn *conn)
+static gfloat
+get_postmaster_version(PGconn *conn)
 {
 	PGresult *res;
 	gchar *nver;
@@ -211,7 +199,6 @@ gda_postgres_connection_open (GdaServerConnection *cnc,
 			      const gchar *password)
 {
 	POSTGRES_Connection *pc;
-	gchar *ptr_s, *ptr_e;
 	PGresult *res;
 	gint i, j, cmp, length;
 	gboolean found;
@@ -222,43 +209,34 @@ gda_postgres_connection_open (GdaServerConnection *cnc,
 
 	pc = (POSTGRES_Connection *) gda_server_connection_get_user_data(cnc);
 	if (pc) {
+		GdaQuarkList *qlist;
+
 		/* parse connection string */
-		ptr_s = (gchar *) dsn;
-		while (ptr_s && *ptr_s) {
-			ptr_e = strchr(ptr_s, ';');
-			if (ptr_e) *ptr_e = '\0';
-			if (strncasecmp(ptr_s, "HOST", strlen("HOST")) == 0)
-				pc->pq_host = get_value(ptr_s);
-			else if (strncasecmp(ptr_s, "DATABASE", strlen("DATABASE")) == 0)
-				pc->pq_db = get_value(ptr_s);
-			else if (strncasecmp(ptr_s, "PORT", strlen("PORT")) == 0)
-				pc->pq_port = get_value(ptr_s);
-			else if (strncasecmp(ptr_s, "OPTIONS", strlen("OPTIONS")) == 0)
-				pc->pq_options = get_value(ptr_s);
-			else if (strncasecmp(ptr_s, "TTY", strlen("TTY")) == 0)
-				pc->pq_tty = get_value(ptr_s);
-			else if (strncasecmp(ptr_s, "LOGIN", strlen("LOGIN")) == 0)
-				pc->pq_login = get_value(ptr_s);
-			else if (strncasecmp(ptr_s, "PASSWORD", strlen("PASSWORD")) == 0)
-				pc->pq_pwd = get_value(ptr_s);
-			ptr_s = ptr_e;
-			if (ptr_s)
-				ptr_s++;
-		}
+		qlist = gda_quark_list_new_from_string (dsn);
+		pc->pq_host = g_strdup (gda_quark_list_find (qlist, "HOST"));
+		pc->pq_db = g_strdup (gda_quark_list_find (qlist, "DATABASE"));
+		pc->pq_port = g_strdup (gda_quark_list_find (qlist, "PORT"));
+		pc->pq_options = g_strdup (gda_quark_list_find (qlist, "OPTIONS"));
+		pc->pq_tty = g_strdup (gda_quark_list_find (qlist, "TTY"));
+		pc->pq_login = g_strdup (gda_quark_list_find (qlist, "LOGIN"));
+		pc->pq_pwd = g_strdup (gda_quark_list_find (qlist, "PASSWORD"));
+
+		gda_quark_list_free (qlist);
 		if (!pc->pq_login) 
-			pc->pq_login = user != 0 ? g_strdup(user) : 0;
+			pc->pq_login = user != NULL ? g_strdup(user) : NULL;
 		if (!pc->pq_pwd)
-			pc->pq_pwd = password != 0 ? g_strdup(password) : 0;
+			pc->pq_pwd = password != NULL ? g_strdup(password) : NULL;
 
 		/* actually establish the connection */
-		pc->pq_conn = PQsetdbLogin(pc->pq_host, pc->pq_port, pc->pq_options,
-								   pc->pq_tty, pc->pq_db, pc->pq_login, 
-								   pc->pq_pwd);
-		fprintf(stderr, "gda_postgres_connection_open(): DSN=%s\n\tpc=%p and "
-				"pq_conn=%p\n", dsn, pc, pc->pq_conn);
+		pc->pq_conn = PQsetdbLogin (
+			pc->pq_host, pc->pq_port, pc->pq_options,
+			pc->pq_tty, pc->pq_db, pc->pq_login, 
+			pc->pq_pwd);
+		gda_log_message ("gda_postgres_connection_open(): DSN=%s\n\tpc=%p and "
+				 "pq_conn=%p\n", dsn, pc, pc->pq_conn);
 		if (PQstatus(pc->pq_conn) != CONNECTION_OK) {
 			gda_server_error_make(gda_error_new(), NULL, cnc, 
-								  __PRETTY_FUNCTION__);
+					      __PRETTY_FUNCTION__);
 			return (-1);
 		}
       
@@ -290,10 +268,10 @@ gda_postgres_connection_open (GdaServerConnection *cnc,
 			guint added_types_index;
        
 			res = PQexec(pc->pq_conn,
-						 "SELECT typname, oid FROM pg_type "
-						 "WHERE typrelid = 0 AND typname !~ '^_.*' "
-						 "AND typname not in " IN_PG_TYPES_HIDDEN " "
-						 "ORDER BY typname");
+				     "SELECT typname, oid FROM pg_type "
+				     "WHERE typrelid = 0 AND typname !~ '^_.*' "
+				     "AND typname not in " IN_PG_TYPES_HIDDEN " "
+				     "ORDER BY typname");
 
 			if (!res || (PQresultStatus(res) != PGRES_TUPLES_OK)) {
 				if (res) 
@@ -369,7 +347,7 @@ gda_postgres_connection_open (GdaServerConnection *cnc,
 		 * one. Otherwise the command would be:
 		 * "SET TIME ZONE '???'" or "SET TIME ZONE DEFAULT"
 		 */
-    }
+	}
 	else
 		return -1;
 
@@ -473,8 +451,11 @@ gda_postgres_connection_open_schema (GdaServerConnection *cnc,
 
 	if (fn)
 		return fn(error, cnc, constraints, length);
-	else
-		gda_log_error(_("Unhandled SCHEMA_QTYPE %d"), (gint) t);
+
+	/* we don't support this schema type */
+	gda_server_error_make (error, NULL, cnc, __PRETTY_FUNCTION__);
+	gda_error_set_description (error, _("Unknown schema type"));
+
 	return NULL;
 }
 
