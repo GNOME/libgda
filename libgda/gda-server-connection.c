@@ -1,4 +1,4 @@
-/* GDA server library
+/* GDA library
  * Copyright (C) 1998-2001 The Free Software Foundation
  *
  * AUTHORS:
@@ -20,11 +20,11 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include "gda-server-connection.h"
-#include "gda-server-provider.h"
+#include <libgda/gda-server-connection.h>
+#include <libgda/gda-server-provider.h>
+#include <libgda/gda-server-recordset.h>
 
 #define PARENT_TYPE BONOBO_X_OBJECT_TYPE
-#define CLASS(cnc) (GDA_SERVER_CONNECTION_CLASS (G_OBJECT_GET_CLASS (cnc)))
 
 struct _GdaServerConnectionPrivate {
 	GdaServerProvider *provider;
@@ -115,7 +115,7 @@ impl_Connection_close (PortableServer_Servant servant,
 		is_equal = CORBA_Object_is_equivalent (tmp_client, client, &ev2);
 		if (!BONOBO_EX (&ev2) && is_equal) {
 			cnc->priv->clients = g_list_remove (cnc->priv->clients, tmp_client);
-			bonobo_object_release_unref (tmp_client);
+			bonobo_object_release_unref (tmp_client, NULL);
 			gda_server_connection_notify_action (
 				cnc,
 				GNOME_Database_ACTION_CLIENT_EXITED,
@@ -145,12 +145,13 @@ impl_Connection_executeCommand (PortableServer_Servant servant,
 	GList *l;
 	gint count;
 	GNOME_Database_RecordsetList *seq;
+	GdaParameterList *param_list = NULL;
 	GdaServerConnection *cnc = (GdaServerConnection *) bonobo_x_object (servant);
 
 	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), NULL);
 
 	recset_list = gda_server_provider_execute_command (cnc->priv->provider,
-							   cnc, cmd);
+							   cnc, cmd, param_list);
 	if (!recset_list) {
 		gda_error_list_to_exception (cnc->priv->errors, ev);
 		gda_server_connection_free_error_list (cnc);

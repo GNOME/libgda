@@ -21,10 +21,8 @@
  */
 
 #include <gobject/gsignal.h>
-#include "config.h"
-#include "gda-common-private.h"
-#include "gda-xml-database.h"
-#include "gda-xml-list-item.h"
+#include <config.h>
+#include <libgda/gda-xml-database.h>
 
 struct _GdaXmlDatabasePrivate {
 	xmlNodePtr tables;

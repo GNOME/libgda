@@ -1,4 +1,4 @@
-/* GDA common library
+/* GDA library
  * Copyright (C) 1998-2001 The Free Software Foundation
  *
  * AUTHORS:
@@ -21,7 +21,7 @@
  */
 
 #include <glib/garray.h>
-#include "gda-data-model-array.h"
+#include <libgda/gda-data-model-array.h>
 
 #define PARENT_TYPE GDA_TYPE_DATA_MODEL
 
@@ -139,7 +139,7 @@ gda_data_model_array_get_type (void)
 			0,
 			(GInstanceInitFunc) gda_data_model_array_init
 		};
-		type = g_type_register_static (G_TYPE_OBJECT,
+		type = g_type_register_static (PARENT_TYPE,
 					       "GdaDataModelArray",
 					       &info, 0);
 	}

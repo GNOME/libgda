@@ -1,4 +1,4 @@
-/* GDA client library
+/* GDA library
  * Copyright (C) 1998-2001 The Free Software Foundation
  *
  * AUTHORS:
@@ -21,40 +21,16 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#if !defined(__gda_client_h__)
-#  define __gda_client_h__
+#if !defined(__gda_row_h__)
+#  define __gda_row_h__
 
-#include <gda-connection.h>
-#include <GNOME_Database.h>
-#include <bonobo/bonobo-xobject.h>
+#include <libgda/GNOME_Database.h>
+#include <glib/gmacros.h>
 
 G_BEGIN_DECLS
 
-typedef struct _GdaClientClass   GdaClientClass;
-typedef struct _GdaClientPrivate GdaClientPrivate;
-
-struct _GdaClient {
-	BonoboXObject object;
-	GdaClientPrivate;
-};
-
-struct _GdaClientClass {
-	BonoboXObjectClass parent_class;
-	POA_GNOME_Database_Client__epv epv;
-
-	/* signals */
-	void (* action_notified) (GdaClient *client,
-				  GNOME_Database_ActionId action,
-				  GdaParameterList *params);
-};
-
-GType          gda_client_get_type (void);
-GdaClient     *gda_client_new (const gchar *iid);
-
-GdaConnection *gda_client_open_connection (GdaClient *client,
-					   const gchar *cnc_string,
-					   const gchar *username,
-					   const gchar *password);
+typedef GNOME_Database_Row GdaRow;
+typedef GNOME_Database_RowAttributes GdaRowAttributes;
 
 G_END_DECLS
 

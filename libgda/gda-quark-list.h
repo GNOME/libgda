@@ -24,6 +24,7 @@
 #  define __gda_quark_list_h__
 
 #include <glib/gmacros.h>
+#include <glib/gtypes.h>
 
 G_BEGIN_DECLS
 

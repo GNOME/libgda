@@ -50,6 +50,31 @@ impl_Recordset_describe (PortableServer_Servant servant, CORBA_Environment *ev)
 	g_return_val_if_fail (GDA_IS_SERVER_RECORDSET (recset), NULL);
 }
 
+static CORBA_boolean
+impl_Recordset_moveFirst (PortableServer_Servant servant, CORBA_Environment *ev)
+{
+}
+
+static CORBA_boolean
+impl_Recordset_moveNext (PortableServer_Servant servant, CORBA_Environment *ev)
+{
+}
+
+static CORBA_boolean
+impl_Recordset_movePrevious (PortableServer_Servant servant, CORBA_Environment *ev)
+{
+}
+
+static CORBA_boolean
+impl_Recordset_moveLast (PortableServer_Servant servant, CORBA_Environment *ev)
+{
+}
+
+static GNOME_Database_Row *
+impl_Recordset_fetch (PortableServer_Servant servant, CORBA_Environment *ev)
+{
+}
+
 /*
  * GdaServerRecordset class implementation
  */

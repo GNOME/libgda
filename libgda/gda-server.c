@@ -60,6 +60,32 @@ remove_component_hash (gpointer key, gpointer value, gpointer user_data)
  * Callbacks
  */
 
+static void
+component_destroyed_cb (GObject *object, gpointer user_data)
+{
+	GList *l;
+	BonoboObject *comp;
+	GdaServer *server = (GdaServer *) user_data;
+
+	g_return_if_fail (GDA_IS_SERVER (server));
+
+	comp = BONOBO_OBJECT (object);
+
+	for (l = g_list_first (server->priv->clients); l; l = l->next) {
+		BonoboObject *lcomp = BONOBO_OBJECT (l->data);
+
+		if (lcomp == comp) {
+			server->priv->clients = g_list_remove (
+				server->priv->clients, lcomp);
+			if (!server->priv->clients) {
+				g_signal_emit (G_OBJECT (server),
+					       gda_server_signals[LAST_CLIENT_GONE],
+					       0);
+			}
+		}
+	}
+}
+
 static BonoboObject *
 factory_callback (BonoboGenericFactory *factory,
 		  const char *component_id,
@@ -85,39 +111,13 @@ factory_callback (BonoboGenericFactory *factory,
 		return NULL;
 	}
 
+	server->priv->clients = g_list_append (server->priv->clients, object);
 	g_signal_connect (G_OBJECT (object),
 			  "destroy",
-			  G_CALLBACK (object_destroyed_cb),
+			  G_CALLBACK (component_destroyed_cb),
 			  server);
-	server->priv->clients = g_list_append (server->priv->clients, object);
 
 	return object;
-}
-
-static void
-component_destroyed_cb (GObject *object, gpointer user_data)
-{
-	GList *l;
-	BonoboObject *comp;
-	GdaServer *server = (GdaServer *) user_data;
-
-	g_return_if_fail (GDA_IS_SERVER (server));
-
-	comp = BONOBO_OBJECT (object);
-
-	for (l = g_list_first (server->priv->clients); l; l = l->next) {
-		BonoboObject *lcomp = BONOBO_OBJECT (l->data);
-
-		if (lcomp == comp) {
-			server->priv->clients = g_list_remove (
-				server->priv->clients, lcomp);
-			if (!server->priv->clients) {
-				g_signal_emit (G_OBJECT (server),
-					       gda_server_signals[LAST_CLIENT_GONE],
-					       0);
-			}
-		}
-	}
 }
 
 /*
@@ -213,14 +213,14 @@ gda_server_new (const gchar *factory_iid)
 {
 	GdaServer *server;
 
-	g_return_val_if_fail (factory_iid != NULL);
+	g_return_val_if_fail (factory_iid != NULL, NULL);
 
 	server = g_object_new (GDA_TYPE_SERVER, NULL);
 
 	/* create the object factory for this server */
-	server->priv->factory_iid = g_strdup (factory_iid);
+	server->priv->factory_id = g_strdup (factory_iid);
 	server->priv->factory = bonobo_generic_factory_new (
-		server->priv->factory_iid,
+		server->priv->factory_id,
 		factory_callback,
 		server);
 	if (!BONOBO_IS_GENERIC_FACTORY (server->priv->factory)) {
@@ -283,16 +283,12 @@ gda_server_unregister_component (GdaServer *server, const char *iid)
 {
 	gpointer orig_key;
 	gpointer value;
-	GType *ptype;
 
 	g_return_if_fail (GDA_IS_SERVER (server));
 	g_return_if_fail (iid != NULL);
-	g_return_if_fail (type > 0);
 
 	if (g_hash_table_lookup_extended (server->priv->components, iid,
 					  &orig_key, &value)) {
-		ptype = (GType *) ptype;
-
 		g_hash_table_remove (server->priv->components, orig_key);
 		g_free (orig_key);
 		g_free (value);

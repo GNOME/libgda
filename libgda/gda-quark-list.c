@@ -20,13 +20,24 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include "gda-quark-list.h"
-#include "gda-util.h"
+#include <libgda/gda-quark-list.h>
+#include <glib/ghash.h>
+#include <glib/gmem.h>
 
-struct _GdaQuarkList
-{
+struct _GdaQuarkList {
 	GHashTable *hash_table;
 };
+
+/*
+ * Private functions
+ */
+
+static void
+free_hash_pair (gpointer key, gpointer value, gpointer user_data)
+{
+	g_free (key);
+	g_free (value);
+}
 
 /**
  * gda_quark_list_new
@@ -36,7 +47,7 @@ gda_quark_list_new (void)
 {
 	GdaQuarkList *qlist;
 
-	qlist = g_new (GdaQuarkList, 1);
+	qlist = g_new0 (GdaQuarkList, 1);
 	qlist->hash_table = g_hash_table_new (g_str_hash, g_str_equal);
 
 	return qlist;
@@ -65,7 +76,7 @@ gda_quark_list_free (GdaQuarkList * qlist)
 	g_return_if_fail (qlist != NULL);
 
 	g_hash_table_foreach_remove (qlist->hash_table,
-				     (GHRFunc) gda_util_destroy_hash_pair,
+				     (GHRFunc) free_hash_pair,
 				     g_free);
 	g_hash_table_destroy (qlist->hash_table);
 
@@ -98,10 +109,8 @@ gda_quark_list_add_from_string (GdaQuarkList * qlist,
 				gchar *name = pair[0];
 				gchar *value = pair[1];
 				g_hash_table_insert (qlist->hash_table,
-						     (gpointer)
-						     g_strdup (name),
-						     (gpointer)
-						     g_strdup (value));
+						     (gpointer) g_strdup (name),
+						     (gpointer) g_strdup (value));
 				g_strfreev (pair);
 			}
 			n++;

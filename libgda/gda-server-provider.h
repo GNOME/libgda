@@ -1,4 +1,4 @@
-/* GDA server library
+/* GDA library
  * Copyright (C) 1998-2001 The Free Software Foundation
  *
  * AUTHORS:
@@ -23,6 +23,8 @@
 #if !defined(__gda_server_provider_h__)
 #  define __gda_server_provider_h__
 
+#include <libgda/gda-command.h>
+#include <libgda/gda-quark-list.h>
 #include <libgda/gda-server-connection.h>
 #include <bonobo/bonobo-xobject.h>
 
@@ -34,7 +36,6 @@ G_BEGIN_DECLS
 #define GDA_IS_SERVER_PROVIDER(obj)         (G_TYPE_CHECK_INSTANCE_TYPE(obj, GDA_TYPE_SERVER_PROVIDER))
 #define GDA_IS_SERVER_PROVIDER_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), GDA_TYPE_SERVER_PROVIDER))
 
-typedef struct _GdaServerProvider        GdaServerProvider;
 typedef struct _GdaServerProviderClass   GdaServerProviderClass;
 typedef struct _GdaServerProviderPrivate GdaServerProviderPrivate;
 
@@ -61,7 +62,8 @@ struct _GdaServerProviderClass {
 
 	GList * (* execute_command) (GdaServerProvider *provider,
 				     GdaServerConnection *cnc,
-				     GdaCommand *cmd);
+				     GdaCommand *cmd,
+				     GdaParameterList *params);
 
 	gboolean (* begin_transaction) (GdaServerProvider *provider,
 					GdaServerConnection *cnc,
@@ -83,6 +85,11 @@ gboolean gda_server_provider_open_connection (GdaServerProvider *provider,
 gboolean gda_server_provider_close_connection (GdaServerProvider *provider,
 					       GdaServerConnection *cnc);
 
+GList   *gda_server_provider_execute_command (GdaServerProvider *provider,
+					      GdaServerConnection *cnc,
+					      GdaCommand *cmd,
+					      GdaParameterList *params);
+
 gboolean gda_server_provider_begin_transaction (GdaServerProvider *provider,
 						GdaServerConnection *cnc,
 						const gchar *trans_id);
@@ -90,7 +97,7 @@ gboolean gda_server_provider_commit_transaction (GdaServerProvider *provider,
 						 GdaServerConnection *cnc,
 						 const gchar *trans_id);
 gboolean gda_server_provider_rollback_transaction (GdaServerProvider *provider,
-						   GdaConnection *cnc,
+						   GdaServerConnection *cnc,
 						   const gchar *trans_id);
 
 G_END_DECLS

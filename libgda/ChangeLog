@@ -1,3 +1,22 @@
+2001-11-02  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-server.c (factory_callback): add all created componentes to
+	our private list, and connect to their "destroy" signal, so that we
+	can keep track of all components, and terminate when there are no
+	more
+	(component_destroyed_cb): callback function. When no more components
+	exist, emit the LAST_CLIENT_GONE signal
+
+	* gda-row.[ch]: new files
+
+	* gda-parameter.c (free_hash_param): added function body
+
+	* gda-server-recordset.c (impl_Recordset_moveFirst):
+	(impl_Recordset_moveNext):
+	(impl_Recordset_movePrevious):
+	(impl_Recordset_moveLast):
+	(impl_Recordset_fetch): implemented
+
 2001-11-01  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* new version of the libraries, just all the stuff in a

@@ -29,6 +29,12 @@
 
 G_BEGIN_DECLS
 
+#define GDA_TYPE_SERVER            (gda_server_get_type())
+#define GDA_SERVER(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_SERVER, GdaServer))
+#define GDA_SERVER_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_SERVER, GdaServerClass))
+#define GDA_IS_SERVER(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_SERVER))
+#define GDA_IS_SERVER_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GDA_TYPE_SERVER))
+
 typedef struct _GdaServer        GdaServer;
 typedef struct _GdaServerClass   GdaServerClass;
 typedef struct _GdaServerPrivate GdaServerPrivate;

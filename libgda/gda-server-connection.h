@@ -23,15 +23,24 @@
 #if !defined(__gda_server_connection_h__)
 #  define __gda_server_connection_h__
 
-#include <gda-error.h>
-#include <GNOME_Database.h>
+#include <libgda/gda-error.h>
+#include <libgda/gda-parameter.h>
+#include <libgda/GNOME_Database.h>
 #include <bonobo/bonobo-xobject.h>
 
 G_BEGIN_DECLS
 
+#define GDA_TYPE_SERVER_CONNECTION            (gda_server_connection_get_type())
+#define GDA_SERVER_CONNECTION(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_SERVER_CONNECTION, GdaServerConnection))
+#define GDA_SERVER_CONNECTION_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_SERVER_CONNECTION, GdaServerConnectionClass))
+#define GDA_IS_SERVER_CONNECTION(obj)         (G_TYPE_CHECK_INSTANCE_TYPE(obj, GDA_TYPE_SERVER_CONNECTION))
+#define GDA_IS_SERVER_CONNECTION_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), GDA_TYPE_SERVER_CONNECTION))
+
 typedef struct _GdaServerConnection        GdaServerConnection;
 typedef struct _GdaServerConnectionClass   GdaServerConnectionClass;
 typedef struct _GdaServerConnectionPrivate GdaServerConnectionPrivate;
+
+typedef struct _GdaServerProvider          GdaServerProvider;
 
 struct _GdaServerConnection {
 	BonoboXObject object;

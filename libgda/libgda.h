@@ -33,13 +33,14 @@
 #include <libgda/gda-data-model-array.h>
 #include <libgda/gda-data-model-list.h>
 #include <libgda/gda-error.h>
-#include <libgda/gda-export.h>
+//#include <libgda/gda-export.h>
 #include <libgda/gda-field.h>
 #include <libgda/gda-parameter.h>
 #include <libgda/gda-quark-list.h>
 #include <libgda/gda-recordset.h>
 #include <libgda/gda-server.h>
 #include <libgda/gda-value.h>
+#include <libgda/gda-xml-document.h>
 #include <libgda/gda-xml-database.h>
 
 G_BEGIN_DECLS

@@ -1,4 +1,4 @@
-/* GDA server library
+/* GDA library
  * Copyright (C) 1998-2001 The Free Software Foundation
  *
  * AUTHORS:
@@ -142,14 +142,14 @@ gda_server_provider_open_connection (GdaServerProvider *provider,
 				     const gchar *password)
 {
 	gboolean retcode;
-	GdaServerConnection *cnc;
 
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), FALSE);
 	g_return_val_if_fail (CLASS (provider)->open_connection != NULL, FALSE);
 
 	retcode = CLASS (provider)->open_connection (provider, cnc, params, username, password);
 	if (retcode)
-		provider->priv->connections = g_list_append (provider->priv->connections);
+		provider->priv->connections =
+			g_list_append (provider->priv->connections, cnc);
 
 	return retcode;
 }

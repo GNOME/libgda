@@ -26,6 +26,15 @@ struct _GdaParameterList {
 	GHashTable *hash;
 };
 
+/*
+ * Private functions
+ */
+
+static void
+free_hash_param (gpointer key, gpointer value, gpointer user_data)
+{
+}
+
 /**
  * gda_parameter_new
  * @name: name for the parameter being created.

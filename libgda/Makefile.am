@@ -37,13 +37,14 @@ gda_headers = \
 	gda-config.h \
 	gda-connection.h \
 	gda-data-model.h \
-	gda-data-model-array.c \
+	gda-data-model-array.h \
 	gda-data-model-list.h \
 	gda-error.h \
 	gda-field.h \
 	gda-parameter.h \
 	gda-quark-list.h \
 	gda-recordset.h \
+	gda-row.h \
 	gda-server.h \
 	gda-server-connection.h \
 	gda-server-provider.h \
@@ -73,6 +74,7 @@ libgda_2_la_SOURCES = \
 	gda-parameter.c \
 	gda-quark-list.c \
 	gda-recordset.c \
+	gda-row.c \
 	gda-server.c \
 	gda-server-connection.c \
 	gda-server-provider.c \

@@ -27,6 +27,7 @@
 #include <libxml/tree.h>
 #include <libxml/parser.h>
 #include <libxml/valid.h>
+#include <glib-object.h>
 
 G_BEGIN_DECLS
 

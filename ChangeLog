@@ -1,3 +1,9 @@
+2001-11-02  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* configure.in: use shorter names in providers' directories
+
+	* lib/: removed. The new library is in libgda/
+
 2001-11-01  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* reorganization, putting all libraries in a single one
