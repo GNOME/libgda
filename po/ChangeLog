@@ -1,3 +1,8 @@
+2002-03-05  Christian Rose  <menthos@menthos.com>
+
+	* POTFILES.in: Remove the .h extensions so that intltool can
+	be used again and the status updated.
+
 2002-03-03  Kjartan Maraas  <kmaraas@gnome.org>
 
 	* no.po: Updated Norwegian (bokmål) translation.
