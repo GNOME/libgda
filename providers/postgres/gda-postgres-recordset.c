@@ -24,9 +24,16 @@
  */
 
 #include <bonobo/bonobo-i18n.h>
+#include <string.h>
 #include "gda-postgres.h"
 
 #define OBJECT_DATA_RECSET_HANDLE "GDA_Postgres_RecsetHandle"
+
+typedef struct {
+	PGresult *pg_res;
+	gint ntypes;
+	GdaPostgresTypeOid *type_data;
+} GdaPostgresRecordsetPrivate;
 
 /*
  * Private functions
@@ -44,6 +51,7 @@ free_postgres_res (gpointer data)
 static GdaRow *
 fetch_func (GdaServerRecordset *recset, gulong rownum)
 {
+	GdaPostgresRecordsetPrivate *priv_data;
 	GdaRow *row;
 	gint field_count;
 	gint row_count;
@@ -52,7 +60,8 @@ fetch_func (GdaServerRecordset *recset, gulong rownum)
 
 	g_return_val_if_fail (GDA_IS_SERVER_RECORDSET (recset), NULL);
 
-	pg_res = g_object_get_data (G_OBJECT (recset), OBJECT_DATA_RECSET_HANDLE);
+	priv_data = g_object_get_data (G_OBJECT (recset), OBJECT_DATA_RECSET_HANDLE);
+	pg_res = priv_data->pg_res;
 	if (!pg_res) {
 		gda_server_connection_add_error_string (
 			gda_server_recordset_get_connection (recset),
@@ -82,7 +91,9 @@ fetch_func (GdaServerRecordset *recset, gulong rownum)
 		field = gda_row_get_field (row, i);
 		thevalue = PQgetvalue(pg_res, rownum, i);
 
-		ftype = gda_postgres_type_to_gda (PQftype (pg_res, i));
+		ftype = gda_postgres_type_oid_to_gda (priv_data->type_data,
+						      priv_data->ntypes, 
+						      PQftype (pg_res, i));
 		isNull = *thevalue != '\0' ? 
 				FALSE : PQgetisnull (pg_res, rownum, i);
 
@@ -96,6 +107,7 @@ fetch_func (GdaServerRecordset *recset, gulong rownum)
 static GdaRowAttributes *
 describe_func (GdaServerRecordset *recset)
 {
+	GdaPostgresRecordsetPrivate *priv_data;
 	PGresult *pg_res;
 	gint field_count;
 	gint i;
@@ -103,7 +115,8 @@ describe_func (GdaServerRecordset *recset)
 
 	g_return_val_if_fail (GDA_IS_SERVER_RECORDSET (recset), NULL);
 
-	pg_res = g_object_get_data (G_OBJECT (recset), OBJECT_DATA_RECSET_HANDLE);
+	priv_data = g_object_get_data (G_OBJECT (recset), OBJECT_DATA_RECSET_HANDLE);
+	pg_res = priv_data->pg_res;
 	if (!pg_res) {
 		gda_server_connection_add_error_string (
 			gda_server_recordset_get_connection (recset),
@@ -123,7 +136,10 @@ describe_func (GdaServerRecordset *recset)
 		field_attrs = gda_row_attributes_get_field (attrs, i);
 		gda_field_attributes_set_name (field_attrs, PQfname (pg_res, i));
 
-		ftype = gda_postgres_type_to_gda (PQftype (pg_res, i));
+		ftype = gda_postgres_type_oid_to_gda (priv_data->type_data,
+						      priv_data->ntypes, 
+						      PQftype (pg_res, i));
+
 		scale = (ftype == GDA_TYPE_DOUBLE) ? DBL_DIG :
 			(ftype == GDA_TYPE_SINGLE) ? FLT_DIG : 0;
 
@@ -146,13 +162,23 @@ GdaServerRecordset *
 gda_postgres_recordset_new (GdaServerConnection *cnc, PGresult *pg_res)
 {
 	GdaServerRecordset *recset;
+	GdaPostgresRecordsetPrivate *priv_data;
+	GdaPostgresConnectionData *cnc_priv_data;
 
 	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (pg_res != NULL, NULL);
 
 	recset = gda_server_recordset_new (cnc, fetch_func, describe_func);
+
+	cnc_priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE);
+
+	priv_data = g_new0 (GdaPostgresRecordsetPrivate, 1);
+	priv_data->pg_res = pg_res;
+	priv_data->ntypes = cnc_priv_data->ntypes;
+	priv_data->type_data = cnc_priv_data->type_data;
+
 	g_object_set_data_full (G_OBJECT (recset), OBJECT_DATA_RECSET_HANDLE,
-				pg_res, (GDestroyNotify) free_postgres_res);
+				priv_data, (GDestroyNotify) free_postgres_res);
 
 	return recset;
 }

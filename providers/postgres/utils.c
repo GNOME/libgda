@@ -22,8 +22,8 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include <postgres.h>
-#include <catalog/pg_type.h>
+#include <stdlib.h>
+#include <string.h>
 #include "gda-postgres.h"
 
 GdaError *
@@ -47,45 +47,50 @@ gda_postgres_make_error (PGconn *handle)
 }
 
 GdaType
-gda_postgres_type_to_gda (Oid postgres_type)
+gda_postgres_type_name_to_gda (const gchar *name)
 {
-	switch (postgres_type) {
-	case BOOLOID :
+	if (!strcmp (name, "boolean"))
 		return GDA_TYPE_BOOLEAN;
-	case BYTEAOID :
-	case CHAROID :
-	case NAMEOID :
-	case TEXTOID :
-	case BPCHAROID :
-	case VARCHAROID :
-		return GDA_TYPE_STRING;
-	case INT8OID :
+	if (!strcmp (name, "int8"))
 		return GDA_TYPE_BIGINT;
-	case INT4OID :
-	case RELTIMEOID :
+	if (!strcmp (name, "int4") || !strcmp (name, "abstime") || !strcmp (name, "oid"))
 		return GDA_TYPE_INTEGER;
-	case INT2OID :
+	if (!strcmp (name, "int2"))
 		return GDA_TYPE_SMALLINT;
-	case FLOAT4OID :
+	if (!strcmp (name, "float4"))
 		return GDA_TYPE_SINGLE;
-	case FLOAT8OID :
-	case NUMERICOID :
+	// TODO: when we have a numeric type, move "numeric".
+	if (!strcmp (name, "float8") || !strcmp (name, "numeric"))
 		return GDA_TYPE_DOUBLE;
-	case ABSTIMEOID :
-	case TIMESTAMPOID :
+	if (!strncmp (name, "timestamp", 9))
 		return GDA_TYPE_TIMESTAMP;
-	case DATEOID :
+	if (!strcmp (name, "date"))
 		return GDA_TYPE_DATE;
-	case TIMEOID :
-	case TIMETZOID :
+	if (!strncmp (name, "time", 4))
 		return GDA_TYPE_TIME;
-	case VARBITOID :
+	/*TODO: by now, this one not supported
+	if (!strncmp (name, "bit", 3))
 		return GDA_TYPE_BINARY;
-	case POINTOID :
+	*/
+	if (!strcmp (name, "point"))
 		return GDA_TYPE_GEOMETRIC_POINT;
-	}
 
 	return GDA_TYPE_STRING;
+}
+
+GdaType
+gda_postgres_type_oid_to_gda (GdaPostgresTypeOid *type_data, gint ntypes, Oid postgres_type)
+{
+	gint i;
+
+	for (i = 0; i < ntypes; i++)
+		if (type_data[i].oid == postgres_type) 
+			break;
+
+	if (type_data[i].oid != postgres_type)
+		return GDA_TYPE_STRING;
+
+	return gda_postgres_type_name_to_gda (type_data[i].name);
 }
 
 /* Makes a point from a string like "(3.2,5.6)" */

@@ -21,9 +21,9 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include <stdlib.h>
 #include "gda-postgres.h"
 #include "gda-postgres-provider.h"
-#include <stdlib.h>
 
 static void gda_postgres_provider_class_init (GdaPostgresProviderClass *klass);
 static void gda_postgres_provider_init       (GdaPostgresProvider *provider,
@@ -70,14 +70,21 @@ static GdaServerRecordset *gda_postgres_provider_get_schema (GdaServerProvider *
 							     GdaParameterList *params);
 
 typedef struct {
-	Oid oid;
-	gchar *name;
-} GdaPostgresTypeDataPrivate;
+	gchar *col_name;
+	GdaType data_type;
+} GdaPostgresColData;
 
 typedef struct {
-	PGconn *pconn;	
-	GList *type_list; // list of GdaPostgresTypeDataPrivate
-} GdaPostgresConnectionPrivate;
+	gint ncolumns;
+	gint *columns;
+	gboolean primary;
+	gboolean unique;
+} GdaPostgresIdxData;
+
+typedef enum {
+	IDX_PRIMARY,
+	IDX_UNIQUE
+} IdxType;
 
 static GObjectClass *parent_class = NULL;
 
@@ -143,16 +150,14 @@ gda_postgres_provider_get_type (void)
 	return type;
 }
 
-static GList *
-get_connection_type_list (PGconn *pconn)
+static int
+get_connection_type_list (GdaPostgresConnectionData *priv_td)
 {
+	GdaPostgresTypeOid *td;
 	PGresult *pg_res;
-	GList *list;
-	GdaPostgresTypeDataPrivate *priv_td;
-	gint llen;
-	gint i;
+	gint nrows, i;
 
-	pg_res = PQexec (pconn, "SELECT oid, typname FROM pg_type "
+	pg_res = PQexec (priv_td->pconn, "SELECT oid, typname FROM pg_type "
 				"WHERE typrelid = 0 AND typname !~ '^_' "
 				" AND  typname not in ('SET', 'cid', "
 				"'int2vector', 'oidvector', 'regproc', "
@@ -161,21 +166,21 @@ get_connection_type_list (PGconn *pconn)
 
 	if (pg_res == NULL || PQresultStatus (pg_res) != PGRES_TUPLES_OK) {
 		if (pg_res) PQclear (pg_res);
-		return NULL;
+		return -1;
 	}
 
-	list = NULL;
-	llen = PQntuples (pg_res);
-	for (i = 0; i < llen; i++) {
-		priv_td = g_new (GdaPostgresTypeDataPrivate, 1);	
-		priv_td->oid = atoi (PQgetvalue (pg_res, i, 0));
-		priv_td->name = g_strdup (PQgetvalue (pg_res, i, 1));
-		list = g_list_append (list, priv_td);
+	nrows = PQntuples (pg_res);
+	td = g_new0 (GdaPostgresTypeOid, nrows);
+	for (i = 0; i < nrows; i++) {
+		td[i].name = g_strdup (PQgetvalue (pg_res, i, 1));
+		td[i].oid = atoi (PQgetvalue (pg_res, i, 0));
 	}
 
 	PQclear (pg_res);
+	priv_td->ntypes = nrows;
+	priv_td->type_data = td;
 
-	return list;
+	return 0;
 }
 
 /* open_connection handler for the GdaPostgresProvider class */
@@ -196,8 +201,7 @@ gda_postgres_provider_open_connection (GdaServerProvider *provider,
 	const gchar *pq_hostaddr;
 	const gchar *pq_requiressl;
 	gchar *conn_string;
-	GdaPostgresConnectionPrivate *priv_data;
-	GList *type_list;
+	GdaPostgresConnectionData *priv_data;
 	PGconn *pconn;
 	PGresult *pg_res;
 
@@ -256,36 +260,26 @@ gda_postgres_provider_open_connection (GdaServerProvider *provider,
 	pg_res = PQexec (pconn, "SET DATESTYLE TO 'ISO'");
 	PQclear (pg_res);
 
-	type_list = get_connection_type_list (pconn);
-	if (type_list == NULL) {
+	priv_data = g_new0 (GdaPostgresConnectionData, 1);
+	priv_data->pconn = pconn;
+	if (get_connection_type_list (priv_data) != 0) {
 		gda_server_connection_add_error (
 				cnc, gda_postgres_make_error (pconn));
 		PQfinish(pconn);
+		g_free (priv_data);
 		return FALSE;
 	}
 	
-	priv_data = g_new0 (GdaPostgresConnectionPrivate, 1);
-	priv_data->pconn = pconn;
-	priv_data->type_list = type_list;
 	g_object_set_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE, priv_data);
 	return TRUE;
-}
-
-static void
-free_type_list (gpointer data, gpointer user_data)
-{
-	GdaPostgresTypeDataPrivate *priv_td;
-
-	priv_td = data;
-	g_free (priv_td->name);
-	g_free (priv_td);
 }
 
 /* close_connection handler for the GdaPostgresProvider class */
 static gboolean
 gda_postgres_provider_close_connection (GdaServerProvider *provider, GdaServerConnection *cnc)
 {
-	GdaPostgresConnectionPrivate *priv_data;
+	GdaPostgresConnectionData *priv_data;
+	gint i;
 
 	GdaPostgresProvider *pg_prv = (GdaPostgresProvider *) provider;
 
@@ -297,8 +291,11 @@ gda_postgres_provider_close_connection (GdaServerProvider *provider, GdaServerCo
 		return FALSE;
 
 	PQfinish (priv_data->pconn);
-	g_list_foreach (priv_data->type_list, free_type_list, NULL);
-	g_list_free (priv_data->type_list);
+
+	for (i = 0; i < priv_data->ntypes; i++)
+		g_free (priv_data->type_data[i].name);
+	
+	g_free (priv_data->type_data);
 	g_free (priv_data);
 
 	g_object_set_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE, NULL);
@@ -309,7 +306,7 @@ static GList *
 process_sql_commands (GList *reclist, GdaServerConnection *cnc,
 		      const gchar *sql, GdaCommandOptions options)
 {
-	GdaPostgresConnectionPrivate *priv_data;
+	GdaPostgresConnectionData *priv_data;
 	PGconn *pconn;
 	gchar **arr;
 
@@ -446,7 +443,7 @@ gda_postgres_provider_single_command (const GdaPostgresProvider *provider,
 				      GdaServerConnection *cnc,
 				      const gchar *command)
 {
-	GdaPostgresConnectionPrivate *priv_data;
+	GdaPostgresConnectionData *priv_data;
 	PGconn *pconn;
 	PGresult *pg_res;
 	gboolean result;
@@ -539,14 +536,14 @@ add_string_row (gpointer data, gpointer user_data)
 	GdaValue *value;
 	GList list;
 	GdaServerRecordsetModel *recset;
-	GdaPostgresTypeDataPrivate *priv_td;
+	GdaPostgresTypeOid *td;
 	
-	priv_td = data;
+	td = data;
 	recset = user_data;
 
 	g_return_if_fail (GDA_IS_SERVER_RECORDSET_MODEL (recset));
 
-	value = gda_value_new_string (priv_td->name);
+	value = gda_value_new_string (td->name);
 	list.data = value;
 	list.next = NULL;
 	list.prev = NULL;
@@ -560,7 +557,8 @@ static GdaServerRecordset *
 get_postgres_types (GdaServerConnection *cnc, GdaParameterList *params)
 {
 	GdaServerRecordsetModel *recset;
-	GdaPostgresConnectionPrivate *priv_data;
+	GdaPostgresConnectionData *priv_data;
+	gint i;
 
 	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), NULL);
 
@@ -574,7 +572,8 @@ get_postgres_types (GdaServerConnection *cnc, GdaParameterList *params)
 	/* fill the recordset */
 	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE);
 
-	g_list_foreach (priv_data->type_list, add_string_row, recset);
+	for (i = 0; i < priv_data->ntypes; i++)
+		add_string_row (&priv_data->type_data[i], recset);
 
 	return GDA_SERVER_RECORDSET (recset);
 }
@@ -669,6 +668,245 @@ get_postgres_triggers (GdaServerConnection *cnc, GdaParameterList *params)
 	return recset;
 }
 
+static GdaServerRecordsetModel *
+gda_postgres_init_md_recset (GdaServerConnection *cnc)
+{
+	GdaServerRecordsetModel *recset;
+	GdaType data_type;
+	gint defined_size;
+	int i;
+	GdaPostgresColData cols[8] = {
+		{ N_("Field name")	, GDA_TYPE_STRING  },
+		{ N_("Data type")	, GDA_TYPE_INTEGER },
+		{ N_("Size")		, GDA_TYPE_INTEGER },
+		{ N_("Scale")		, GDA_TYPE_INTEGER },
+		{ N_("Not null?")	, GDA_TYPE_BOOLEAN },
+		{ N_("Primary key?")	, GDA_TYPE_BOOLEAN },
+		{ N_("Unique index?")	, GDA_TYPE_BOOLEAN },
+		{ N_("References")	, GDA_TYPE_STRING  }
+		};
+
+	recset = GDA_SERVER_RECORDSET_MODEL (gda_server_recordset_model_new (cnc, 8));
+	for (i = 0; i < 8; i++) {
+		data_type = cols[i].data_type;
+		defined_size =  (data_type == GDA_TYPE_STRING) ? NAMEDATALEN : 
+				(data_type == GDA_TYPE_INTEGER) ? sizeof(gint) : 1;
+
+		gda_server_recordset_model_set_field_defined_size (recset, i, defined_size);
+		gda_server_recordset_model_set_field_name (recset, i, cols[i].col_name);
+		gda_server_recordset_model_set_field_scale (recset, i, 0);
+		gda_server_recordset_model_set_field_gdatype (recset, i, data_type);
+	}
+
+	return recset;
+}
+
+static GList *
+gda_postgres_get_idx_data (PGconn *pconn, const gchar *tblname)
+{
+	gint nidx, i;
+	GList *idx_list = NULL;
+	GdaPostgresIdxData *idx_data;
+	gchar *query;
+	PGresult *pg_idx;
+
+	query = g_strdup_printf (
+			"SELECT i.indkey, i.indisprimary, i.indisunique "
+			"FROM pg_class c, pg_class c2, pg_index i "
+			"WHERE c.relname = '%s' AND c.oid = i.indrelid "
+			"AND i.indexrelid = c2.oid", tblname);
+
+	pg_idx = PQexec(pconn, query);
+	g_free (query);
+	if (pg_idx == NULL) {
+		return NULL;
+	}
+
+	nidx = PQntuples (pg_idx);
+
+	idx_data = g_new0 (GdaPostgresIdxData, nidx);
+	for (i = 0; i < nidx; i++){
+		gchar **arr, **ptr;
+		gint ncolumns;
+		gchar *value;
+		gint k;
+
+		arr = g_strsplit (PQgetvalue (pg_idx, i, 0), " ", 0);
+		if (arr == NULL || arr[0][0] == '\0') {
+			idx_data[i].ncolumns = 0;
+			continue;
+		}
+		
+		value = PQgetvalue (pg_idx, i, 1);
+		idx_data[i].primary = (*value == 't') ? TRUE : FALSE;
+		value = PQgetvalue (pg_idx, i, 2);
+		idx_data[i].unique = (*value == 't') ? TRUE : FALSE;
+
+		ptr = arr;
+		ncolumns = 0;
+		while (*ptr++)
+			ncolumns++;
+
+		idx_data[i].ncolumns = ncolumns;
+		idx_data[i].columns = g_new0 (gint, ncolumns);
+		for (k = 0; k < ncolumns; k++)
+			idx_data[i].columns[k] = atoi (arr[k]) - 1;
+
+		idx_list = g_list_append (idx_list, &idx_data[i]);
+	}
+
+	PQclear (pg_idx);
+
+	return idx_list;
+}
+
+static gboolean
+gda_postgres_index_type (gint colnum, GList *idx_list, IdxType type)
+{
+	GList *list;
+	GdaPostgresIdxData *idx_data;
+	gint i;
+
+	for (list = idx_list; list; list = list->next) {
+		idx_data = (GdaPostgresIdxData *) list->data;
+		for (i = 0; i < idx_data->ncolumns; i++) {
+			if (idx_data->columns[i] == colnum){
+				return (type == IDX_PRIMARY) ? 
+					idx_data->primary : idx_data->unique;
+			}
+		}
+		
+
+	}
+
+	return FALSE;
+}
+
+static GList *
+gda_postgres_fill_md_data (const gchar *tblname, GdaServerRecordsetModel *recset,
+			  GdaPostgresConnectionData *priv_data)
+{
+	gchar *query;
+	PGresult *pg_res;
+	gint row_count, i;
+	GList *list = NULL;
+	GList *idx_data;
+
+	query = g_strdup_printf (
+			"SELECT a.attname, b.typname, a.atttypmod, a.attnotnull "
+			"FROM pg_class c, pg_attribute a, pg_type b "
+			"WHERE c.relname = '%s' AND a.attnum > 0 AND "
+			"      a.attrelid = c.oid and b.oid = a.atttypid "
+			"ORDER BY a.attnum", tblname);
+
+	pg_res = PQexec(priv_data->pconn, query);
+	g_free (query);
+	if (pg_res == NULL)
+		return NULL;
+
+	idx_data = gda_postgres_get_idx_data (priv_data->pconn, tblname);
+
+	row_count = PQntuples (pg_res);
+	for (i = 0; i < row_count; i++) {
+		GdaValue *value;
+		gchar *thevalue;
+		GdaType type;
+		gint32 integer;
+		GList *rowlist = NULL;
+
+		/* Field name */
+		thevalue = PQgetvalue(pg_res, i, 0);
+		value = gda_value_new_string (thevalue);
+		rowlist = g_list_append (rowlist, value);
+
+		/* Data type */
+		thevalue = PQgetvalue(pg_res, i, 1);
+		type = gda_postgres_type_name_to_gda (thevalue);
+		value = gda_value_new_integer (type);
+		rowlist = g_list_append (rowlist, value);
+
+		/* Defined size */
+		thevalue = PQgetvalue(pg_res, i, 2);
+		integer = atoi (thevalue);
+		value = gda_value_new_integer ((integer != -1) ? integer : 0);
+		rowlist = g_list_append (rowlist, value);
+
+		/* Scale */ 
+		value = gda_value_new_integer (0); // TODO
+		rowlist = g_list_append (rowlist, value);
+
+		/* Not null? */
+		thevalue = PQgetvalue(pg_res, i, 3);
+		value = gda_value_new_boolean ((*thevalue == 't' ? TRUE : FALSE));
+		rowlist = g_list_append (rowlist, value);
+
+		/* Primary key? */
+		value = gda_value_new_boolean (
+				gda_postgres_index_type (i, idx_data, IDX_PRIMARY));
+		rowlist = g_list_append (rowlist, value);
+
+		/* Unique index? */
+		value = gda_value_new_boolean (
+				gda_postgres_index_type (i, idx_data, IDX_UNIQUE));
+		rowlist = g_list_append (rowlist, value);
+
+		/* References */
+		value = gda_value_new_string (""); // TODO: don't get this info yet
+		rowlist = g_list_append (rowlist, value);
+
+		list = g_list_append (list, rowlist);
+		rowlist = NULL;
+	}
+
+	PQclear (pg_res);
+	g_free (idx_data->data);
+	g_list_free (idx_data);
+
+	return list;
+}
+
+static void
+add_g_list_row (gpointer data, gpointer user_data)
+{
+	GList *rowlist = data;
+	GdaServerRecordsetModel *recset = user_data;
+
+
+	gda_server_recordset_model_append_row (recset, rowlist);
+	g_list_foreach (rowlist, (GFunc) gda_value_free, NULL);
+	g_list_free (rowlist);
+}
+
+static GdaServerRecordset *
+get_postgres_fields_metadata (GdaServerConnection *cnc, GdaParameterList *params)
+{
+	GList *list;
+	GdaPostgresConnectionData *priv_data;
+	GdaServerRecordsetModel *recset;
+	GdaParameter *par;
+	const gchar *tblname;
+
+	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), NULL);
+	
+	g_return_val_if_fail (params != NULL, NULL);
+
+	par = gda_parameter_list_find (params, "name");
+	g_return_val_if_fail (par != NULL, NULL);
+
+	tblname = gda_value_get_string (gda_parameter_get_value (par));
+
+	g_return_val_if_fail (tblname != NULL, NULL);
+	
+	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE);
+
+	recset = gda_postgres_init_md_recset (cnc);
+	list = gda_postgres_fill_md_data (tblname, recset, priv_data);
+	g_list_foreach (list, add_g_list_row, recset);
+	g_list_free (list);
+
+	return GDA_SERVER_RECORDSET (recset);
+}
+
 /* get_schema handler for the GdaPostgresProvider class */
 static GdaServerRecordset *
 gda_postgres_provider_get_schema (GdaServerProvider *provider,
@@ -694,6 +932,8 @@ gda_postgres_provider_get_schema (GdaServerProvider *provider,
 		return get_postgres_aggregates (cnc, params);
 	case GNOME_Database_Connection_SCHEMA_TRIGGERS :
 		return get_postgres_triggers (cnc, params);
+	case GNOME_Database_Connection_SCHEMA_FIELDS :
+		return get_postgres_fields_metadata (cnc, params);
 	}
 
 	return NULL;

@@ -26,6 +26,7 @@
 
 #include <libgda/gda-server-provider.h>
 #include <libgda/gda-server-recordset-model.h>
+#include <libpq-fe.h>
 
 #define GDA_TYPE_POSTGRES_PROVIDER            (gda_postgres_provider_get_type())
 #define GDA_POSTGRES_PROVIDER(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_POSTGRES_PROVIDER, GdaPostgresProvider))
@@ -47,6 +48,19 @@ struct _GdaPostgresProvider {
 struct _GdaPostgresProviderClass {
 	GdaServerProviderClass parent_class;
 };
+
+// Connection data.
+typedef struct {
+	gchar *name;
+	Oid oid;
+} GdaPostgresTypeOid;
+
+typedef struct {
+	PGconn *pconn;
+	gint ntypes;
+	GdaPostgresTypeOid *type_data;
+} GdaPostgresConnectionData;
+
 
 G_BEGIN_DECLS
 

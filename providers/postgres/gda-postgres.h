@@ -31,7 +31,6 @@
 #include <glib/gmacros.h>
 #include <bonobo/bonobo-i18n.h>
 #include <libgda/gda-server.h>
-#include <libpq-fe.h>
 #include "gda-postgres-provider.h"
 #include "gda-postgres-recordset.h"
 
@@ -45,10 +44,13 @@ G_BEGIN_DECLS
  */
 
 GdaError *gda_postgres_make_error (PGconn *cnc);
-GdaType gda_postgres_type_to_gda (Oid postgres_type);
 void gda_postgres_set_field_data (GdaField *field, const gchar *fname,
 				GdaType type, const gchar *value, 
 				gint dbsize, gboolean isNull);
+
+GdaType gda_postgres_type_oid_to_gda (GdaPostgresTypeOid *type_data, 
+				  gint ntypes, Oid postgres_type);
+GdaType gda_postgres_type_name_to_gda (const gchar *name);
 
 G_END_DECLS
 
