@@ -1,3 +1,12 @@
+2002-06-06  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
+	* providers/postgres/gda-postgres-provider.c: 
+	(get_postgres_parent_tables): new function.
+
+	* testing/postgres-test.c: added test SCHEMA_PARENT_TABLES.
+	(execute_non_query): new function used for all the queries except
+	SELECT.
+
 2002-06-05  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* libgda/gda-connection.h: added PARENT_TABLES schema.

@@ -26,13 +26,30 @@
 #define STOP_ON_ERR	GDA_COMMAND_OPTION_STOP_ON_ERRORS
 
 static gboolean
-create_table (GdaConnection *cnc)
+execute_non_query (GdaConnection *cnc, const gchar *query)
 {
-	GdaCommand *create_command;
+	GdaCommand *command;
 	gboolean retval;
 	GList *list;
 
-	create_command = gda_command_new ( "create table gda_postgres_test ("
+	command = gda_command_new (query, 
+				   GDA_COMMAND_TYPE_SQL,
+				   STOP_ON_ERR);
+
+	list = gda_connection_execute_command (cnc, command, NULL);
+	retval = (list == NULL) ? FALSE : TRUE;
+	g_list_foreach (list, (GFunc) g_object_unref, NULL);
+	g_list_free (list);
+	gda_command_free (command);
+
+	return retval;
+}
+
+static gboolean
+create_table (GdaConnection *cnc)
+{
+	return execute_non_query (cnc,
+				"create table gda_postgres_test ("
 				"boolean_value boolean, "
 				"int2_value smallint, "
 				"int4_value integer, "
@@ -48,45 +65,20 @@ create_table (GdaConnection *cnc)
 				"date_value date, "
 				"timestamp_value timestamp, "
 				"null_value char(1) "
-				")",
-				GDA_COMMAND_TYPE_SQL, STOP_ON_ERR);
-
-	list = gda_connection_execute_command (cnc, create_command, 
-						NULL);
-	retval = list == NULL ? FALSE : TRUE;
-	g_list_foreach (list, (GFunc) g_object_unref, NULL);
-	g_list_free (list);
-	gda_command_free (create_command);
-
-	return retval;
+				")");
 }
 
 static gboolean
 drop_table (GdaConnection *cnc)
 {
-	GdaCommand *drop_command;
-	gboolean retval;
-	GList *list;
-
-	drop_command = gda_command_new ( "drop table gda_postgres_test",
-					GDA_COMMAND_TYPE_SQL, IGNORE_ERR);
-
-	list = gda_connection_execute_command (cnc, drop_command, NULL);
-	retval = list == NULL ? FALSE : TRUE;
-	g_list_foreach (list, (GFunc) g_object_unref, NULL);
-	g_list_free (list);
-	gda_command_free (drop_command);
-
-	return retval;
+	return execute_non_query (cnc, "drop table gda_postgres_test");
 }
 
-static GList *
+static gboolean
 insert_data (GdaConnection *cnc)
 {
-	GdaCommand *insert_command;
-	GList *list;
-
-	insert_command = gda_command_new ( "insert into gda_postgres_test ("
+	return execute_non_query (cnc, 
+			"insert into gda_postgres_test ("
 				"boolean_value, "
 				"int2_value, "
 				"int4_value, "
@@ -116,13 +108,7 @@ insert_data (GdaConnection *cnc)
 				"'2000-02-29', "
 				"'2004-02-29 14:00:11.31', "
 				"'(1,0)' "
-				")",
-				GDA_COMMAND_TYPE_SQL, STOP_ON_ERR);
-
-	list = gda_connection_execute_command (cnc, insert_command, NULL);
-	gda_command_free (insert_command);
-
-	return list;
+				")");
 }
 
 static GList *
@@ -139,6 +125,44 @@ select_data (GdaConnection *cnc)
 	gda_command_free (select_command);
 
 	return list;
+}
+
+static void
+test_parent_tables (GdaConnection *cnc)
+{
+	GdaParameter *param;
+	GdaParameterList *params;
+	gchar *query;
+	GdaDataModel *model;
+
+	g_print ("Testing schema parent tables...\n");
+	query ="create table gda_postgres_parent (a1 integer)";
+	if (execute_non_query (cnc, query) == FALSE){
+		g_print ("ERROR creating parent table.\n");
+		return;
+	}
+	g_print ("Parent table created.\n");
+	query ="create table gda_postgres_child (a2 integer) inherits (parent)";
+	if (execute_non_query (cnc, query) == FALSE){
+		g_print ("ERROR creating child table.\n");
+		return;
+	}
+	g_print ("Parent and child created.\n");
+
+	param = gda_parameter_new_string ("name", "child");
+	params = gda_parameter_list_new ();
+	gda_parameter_list_add_parameter (params, param);
+	model = gda_connection_get_schema (cnc, 
+					   GDA_CONNECTION_SCHEMA_PARENT_TABLES, 
+					   params);
+	if (model != NULL){
+		display_recordset_data (model);
+		g_object_unref (model);
+	}
+	else
+		g_print ("ERROR!: No parent table found for child\n");
+
+	gda_parameter_list_free (params);
 }
 
 /* Postgres provider tests */
@@ -160,11 +184,8 @@ do_postgres_test (GdaConnection *cnc)
 			create_table (cnc) ? "OK" : "Error");
 
 	/* Inserts values */
-	list = insert_data (cnc);
 	g_print ("\t\tInsert values for all known types: %s\n",
-				 list ? "OK" : "Error");
-	g_list_foreach (list, (GFunc) g_object_unref, NULL);
-	g_list_free (list);
+				 insert_data (cnc) ? "OK" : "Error");
 
 	/* Selects values */
 	list = select_data (cnc);
@@ -177,6 +198,14 @@ do_postgres_test (GdaConnection *cnc)
 
 	g_list_foreach (list, (GFunc) g_object_unref, NULL);
 	g_list_free (list);
+
+	/* Parent tables */
+	execute_non_query (cnc, "drop table gda_postgres_parent");
+	execute_non_query (cnc, "drop table gda_postgres_child");
+	test_parent_tables (cnc);
+	execute_non_query (cnc, "drop table gda_postgres_child");
+	execute_non_query (cnc, "drop table gda_postgres_parent");
+	g_print ("-----------------\n");
 
 	/* Test random access speed */
 	list = select_data (cnc);

@@ -1227,6 +1227,47 @@ get_postgres_sequences (GdaConnection *cnc, GdaParameterList *params)
 	return recset;
 }
 
+static GdaDataModel *
+get_postgres_parent_tables (GdaConnection *cnc, GdaParameterList *params)
+{
+	GList *reclist;
+	GdaDataModel *recset;
+	gchar *query;
+	const gchar *tblname;
+	GdaParameter *par;
+
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+	g_return_val_if_fail (params != NULL, NULL);
+
+	par = gda_parameter_list_find (params, "name");
+	g_return_val_if_fail (par != NULL, NULL);
+
+	tblname = gda_value_get_string ((GdaValue *) gda_parameter_get_value (par));
+	g_return_val_if_fail (tblname != NULL, NULL);
+
+	query = g_strdup_printf ("SELECT a.relname, b.inhseqno "
+				 "FROM pg_inherits b, pg_class a, pg_class c "
+				 "WHERE (a.oid=b.inhparent OR "
+				 "a.relfilenode=b.inhparent) AND "
+				 "(b.inhrelid = c.reltype OR "
+				 "b.inhrelid = c.relfilenode) AND "
+				 "c.relname = '%s' "
+				 "ORDER BY b.inhseqno", tblname);
+
+	reclist = process_sql_commands (NULL, cnc, query,
+					GDA_COMMAND_OPTION_STOP_ON_ERRORS);
+	g_free (query);
+	if (!reclist)
+		return NULL;
+
+	recset = GDA_DATA_MODEL (reclist->data);
+	g_list_free (reclist);
+	gda_data_model_set_column_title (recset, 0, _("Table name"));
+	gda_data_model_set_column_title (recset, 1, _("Sequence"));
+
+	return recset;
+}
+
 /* get_schema handler for the GdaPostgresProvider class */
 static GdaDataModel *
 gda_postgres_provider_get_schema (GdaServerProvider *provider,
@@ -1260,7 +1301,9 @@ gda_postgres_provider_get_schema (GdaServerProvider *provider,
 		return get_postgres_users (cnc, params);
 	case GDA_CONNECTION_SCHEMA_VIEWS :
 		return get_postgres_views (cnc, params);
-
+	case GDA_CONNECTION_SCHEMA_PARENT_TABLES :
+		return get_postgres_parent_tables (cnc, params);
+	default:
 	}
 
 	return NULL;
