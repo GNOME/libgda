@@ -149,6 +149,7 @@ gda_mysql_connection_open (GdaServerConnection * cnc,
 		(MYSQL_Connection *)
 		gda_server_connection_get_user_data (cnc);
 	if (mysql_cnc) {
+		mysql_cnc->mysql = NULL;
 		/* parse connection string */
 		qlist = gda_quark_list_new_from_string (dsn);
 
@@ -481,12 +482,18 @@ gda_mysql_error_make (GdaError * error,
 		(MYSQL_Connection *)
 		gda_server_connection_get_user_data (cnc);
 	if (mysql_cnc) {
-		gda_error_set_description (error,
+		if (mysql_cnc->mysql)
+			gda_error_set_description (error,
 					   mysql_error (mysql_cnc->mysql));
+		else 
+			gda_error_set_description(error, "NO DESCRIPTION"); 
 		gda_log_error (_("error '%s' at %s"),
 			       gda_error_get_description (error), where);
 
-		gda_error_set_number (error, mysql_errno (mysql_cnc->mysql));
+		if (mysql_cnc->mysql)
+			gda_error_set_number (error, mysql_errno (mysql_cnc->mysql));
+		else 
+			gda_error_set_description(error, 0);
 		gda_error_set_source (error, "[gda-mysql]");
 		gda_error_set_help_url (error, _("Not available"));
 		gda_error_set_help_context (error, _("Not available"));
