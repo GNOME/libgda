@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda 0.2.4\n"
-"POT-Creation-Date: 2001-02-13 12:42+0100\n"
+"POT-Creation-Date: 2001-02-13 15:20+0100\n"
 "PO-Revision-Date: 2001-02-13 12:43+0100\n"
 "Last-Translator: Christophe Merlet (RedFox) <redfox@eikonex.org>\n"
 "Language-Team: GNOME French Team <gnomefr@gnomefr.traduc.org>\n"
@@ -964,7 +964,7 @@ msgstr "Propriétées du serveur source GDA"
 
 #: providers/gda-primebase-server/gda-primebase-command.c:128
 msgid "An error occured."
-msgstr ""
+msgstr "Une erreur est survenue."
 
 #: providers/gda-primebase-server/gda-primebase-connection.c:137
 #, c-format
@@ -977,14 +977,13 @@ msgid "%2ld: ConInfo: %s@%s, Client API v%x, status: %x"
 msgstr ""
 
 #: providers/gda-primebase-server/gda-primebase-connection.c:145
-#, fuzzy, c-format
+#, c-format
 msgid "Could not connect to '%s'"
-msgstr "ne peut ouvrir de connexion sur %s"
+msgstr "Ne peut se connecter à « %s »"
 
 #: providers/gda-primebase-server/gda-primebase-connection.c:316
-#, fuzzy
 msgid "Not enough memory for primebase_Error structure."
-msgstr "Pas assez de mémoire pour la connexion Sybase"
+msgstr "Pas assez de mémoire pour la structure primebase_Error"
 
 #: providers/gda-primebase-server/gda-primebase-connection.c:324
 #, c-format
@@ -996,33 +995,30 @@ msgid "No according field found"
 msgstr ""
 
 #: providers/gda-primebase-server/main-primebase.c:68
-#, fuzzy
 msgid "Could not register PRIMEBASE provider implementation"
-msgstr "Ne peut enregistrer l'implémentation du fournisseur INTERBASE"
+msgstr "Ne peut enregistrer l'implémentation du fournisseur PRIMEBASE"
 
 #: providers/gda-tds-server/GNOME_GDA_Provider_TDS.oaf.in.h:1
 msgid "GDA Datasource Access for Sybase/MS SQL"
 msgstr ""
 
 #: providers/gda-tds-server/gda-tds-connection.c:153
-#, fuzzy
 msgid "Not enough memory for tds_Connection"
-msgstr "Pas assez de mémoire pour la connexion Sybase"
+msgstr "Pas assez de mémoire pour la connexion tds"
 
 #: providers/gda-tds-server/gda-tds-connection.c:870
-#, fuzzy, c-format
+#, c-format
 msgid "Reconnected to %s"
-msgstr "Reconnecté à '%s'"
+msgstr "Reconnecté à %s"
 
 #: providers/gda-tds-server/gda-tds-error.c:63
-#, fuzzy, c-format
+#, c-format
 msgid "gda_tds_error_make(%p,%p,%p,%p)"
-msgstr "gda_sybase_error_make(%p,%p,%p,%p)"
+msgstr "gda_tds_error_make(%p,%p,%p,%p)"
 
 #: providers/gda-tds-server/main-tds.c:74
-#, fuzzy
 msgid "Could not register gda-tds provider implementation"
-msgstr "Ne peut enregistrer l'implémentation du fournisseur gda-sybase"
+msgstr "Ne peut enregistrer l'implémentation du fournisseur gda-tds"
 
 #: report/gda-report-engine.c:209
 #, c-format
@@ -1031,7 +1027,7 @@ msgstr "Exception CORBA durant le déchargement du moteur de rapport : %s"
 
 #: report/server/GNOME_GDA_Report.oaf.in.h:1
 msgid "GDA Distributed Report Engine"
-msgstr ""
+msgstr "Moteur de rapport distribué GDA"
 
 #: report/server/gda-report-server-main.c:41
 #: report/server/gda-report-server-main.c:48
@@ -1701,7 +1697,7 @@ msgstr "%s : source de données « %s » non trouvé\n"
 #~ msgstr "Créer un nouvel objet"
 
 #~ msgid "Refresh grids"
-#~ msgstr "Rafraichir les grilles"
+#~ msgstr "Rafraîchir les grilles"
 
 #~ msgid "Script"
 #~ msgstr "Script"
@@ -1761,7 +1757,7 @@ msgstr "%s : source de données « %s » non trouvé\n"
 #~ msgstr "Vers Fichier"
 
 #~ msgid "Refresh grid contents"
-#~ msgstr "Rafraichir le contenu de la grille"
+#~ msgstr "Rafraîchir le contenu de la grille"
 
 #~ msgid "Print grid contents"
 #~ msgstr "Imprimer le contenu de la grille"
