@@ -1,3 +1,18 @@
+2004-02-25  Laurent Sansonetti <lrz@gnome.org>
+
+	Fixes #132216
+
+	* libgda/gda-client.c (gda_client_open_connection_from_string): Reuses
+	existing connections by looking in the opened connections pool.
+
+	* libgda/gda-client.c (gda_client_open_connection): Fixed a memory leak.
+
+	Fixes #129560
+	
+	* libgda/gda-config.c (gda_config_set_string, gda_config_set_int,
+	gda_config_set_float, gda_config_set_boolean): Changes the type of the key
+	if already existing.
+
 2004-01-28  Jon Willeke <willeke@users.sourceforge.net>
 
 	Fixes #131592

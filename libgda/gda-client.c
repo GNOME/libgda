@@ -320,6 +320,7 @@ gda_client_open_connection (GdaClient *client,
 		    ! (gda_connection_get_options (cnc) & GDA_CONNECTION_OPTIONS_DONT_SHARE)) {
 			g_object_ref (G_OBJECT (cnc));
 			gda_client_notify_connection_opened_event (client, cnc);
+			gda_config_free_data_source_info (dsn_info);
 			return cnc;
 		}
 	}
@@ -433,9 +434,24 @@ gda_client_open_connection_from_string (GdaClient *client,
 	GdaDataSourceInfo *dsn_info;
 	GdaConnection *cnc;
 	static gint count = 0;
+	GList *l;
 
 	g_return_val_if_fail (GDA_IS_CLIENT (client), NULL);
 	g_return_val_if_fail (provider_id != NULL, NULL);
+	
+	if (! (options & GDA_CONNECTION_OPTIONS_DONT_SHARE)) {
+		for (l = client->priv->connections; l != NULL; l = l->next) {
+			const gchar *tmp_prov, *tmp_cnc_string;
+	
+			cnc = GDA_CONNECTION (l->data);
+			tmp_prov = gda_connection_get_provider (cnc);
+			tmp_cnc_string = gda_connection_get_cnc_string (cnc);
+	
+			if (strcmp(provider_id, tmp_prov) == 0
+			    && (cnc_string != NULL && strcmp (cnc_string, tmp_cnc_string) == 0))
+				return cnc;
+		}
+	}
 
 	/* create a temporary DSNInfo */
 	dsn_info = g_new (GdaDataSourceInfo, 1);
@@ -454,7 +470,8 @@ gda_client_open_connection_from_string (GdaClient *client,
 				     dsn_info->password);
 
 	/* open the connection */
-	cnc = gda_client_open_connection (client, dsn_info->name,
+	cnc = gda_client_open_connection (client,
+					  dsn_info->name,
 					  dsn_info->username,
 					  dsn_info->password,
 					  options);
