@@ -1,3 +1,8 @@
+2001-05-03  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* providers/gda-default-server/*: basic default provider
+	now working
+
 2001-04-28  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* configure.in: added providers/gda-default-server to list

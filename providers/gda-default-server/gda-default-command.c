@@ -76,12 +76,12 @@ gda_default_command_execute (GdaServerCommand *cmd,
 			}
 
 			/* execute the command */
-			if (!sqlite_get_table(default_cnc->sqlite,
+			if (sqlite_get_table(default_cnc->sqlite,
 								 cmd_string,
 								 &default_recset->data,
 								 &default_recset->number_of_rows,
 								 &default_recset->number_of_cols,
-								 &errmsg)) {
+								 &errmsg) == SQLITE_OK) {
 				default_recset->position = -1;
 				gda_server_recordset_set_at_begin(recset, TRUE);
 				gda_server_recordset_set_at_end(recset, FALSE);

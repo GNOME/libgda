@@ -156,7 +156,7 @@ gda_default_connection_begin_transaction (GdaServerConnection *cnc)
 	if (default_cnc) {
 		gchar *errmsg = NULL;
 
-		if (!sqlite_exec(default_cnc->sqlite, "BEGIN", NULL, NULL, &errmsg))
+		if (sqlite_exec(default_cnc->sqlite, "BEGIN", NULL, NULL, &errmsg) == SQLITE_OK)
 			retval = 0;
 		else
 			gda_server_connection_add_error_string(cnc, errmsg);
@@ -179,7 +179,7 @@ gda_default_connection_commit_transaction (GdaServerConnection *cnc)
 	if (default_cnc) {
 		gchar *errmsg = NULL;
 
-		if (!sqlite_exec(default_cnc->sqlite, "COMMIT", NULL, NULL, &errmsg))
+		if (sqlite_exec(default_cnc->sqlite, "COMMIT", NULL, NULL, &errmsg) == SQLITE_OK)
 			retval = 0;
 		else
 			gda_server_connection_add_error_string(cnc, errmsg);
@@ -202,7 +202,7 @@ gda_default_connection_rollback_transaction (GdaServerConnection *cnc)
 	if (default_cnc) {
 		gchar *errmsg = NULL;
 
-		if (!sqlite_exec(default_cnc->sqlite, "ROLLBACK", NULL, NULL, &errmsg))
+		if (sqlite_exec(default_cnc->sqlite, "ROLLBACK", NULL, NULL, &errmsg) == SQLITE_OK)
 			retval = 0;
 		else
 			gda_server_connection_add_error_string(cnc, errmsg);
@@ -280,6 +280,7 @@ gda_default_connection_supports (GdaServerConnection *cnc,
 GDA_ValueType
 gda_default_connection_get_gda_type (GdaServerConnection *cnc, gulong sql_type)
 {
+	return GDA_TypeVarchar;
 }
 
 gshort

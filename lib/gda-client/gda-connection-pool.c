@@ -378,6 +378,7 @@ gda_connection_pool_close_connection (GdaConnectionPool *pool, GdaConnection *cn
 #else
 			gtk_object_unref(GTK_OBJECT(cnc));
 #endif
+			break;
 		}
 	}
 }

@@ -37,6 +37,7 @@ fill_field_values (GdaServerRecordset *recset, gulong pos)
 {
 	gint n;
 	DEFAULT_Recordset *default_recset;
+	gulong col_to_fetch;
 
 	g_return_if_fail(recset != NULL);
 
@@ -50,11 +51,9 @@ fill_field_values (GdaServerRecordset *recset, gulong pos)
 			node = g_list_nth(gda_server_recordset_get_fields(recset), n);
 			field = node != NULL ? (GdaServerField *) node->data : NULL;
 			if (field) {
-				gulong row_to_fetch;
-
 				/* all data are returned as strings */
-				row_to_fetch = ((pos + 1) * default_recset->number_of_cols) + n;
-				gda_server_field_set_varchar(field, default_recset->data[row_to_fetch]);
+				col_to_fetch = ((pos + 1) * default_recset->number_of_cols) + n;
+				gda_server_field_set_varchar(field, default_recset->data[col_to_fetch]);
 			}
 		}
 
