@@ -17,12 +17,23 @@ module GNOME {
 		module Report {
 
 			/*
+			 * Datasource interface - for adding new ways
+			 * of getting data for the report
+			 */
+			interface DataSource : Bonobo::Unknown {
+				GNOME::Database::Recordset runQuery (
+					in string query,
+					GNOME::Database::ParameterList params);
+			};
+
+			/*
 			 * Engine interface - the report engine
 			 */
 			interface Engine : Bonobo::Unknown {
 				/* document management */
-				string runDocument (in string xml,
-						    in GNOME::Database::ParameterList params);
+				Bonobo::Stream runDocument (
+					in Bonobo::Stream xml,
+					in GNOME::Database::ParameterList params);
 			};
 		};
 	};

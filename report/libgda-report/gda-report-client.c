@@ -24,6 +24,9 @@
 #include <libgda-report/GNOME_Database_Report.h>
 #include <bonobo/bonobo-exception.h>
 #include <bonobo/bonobo-i18n.h>
+#include <bonobo/bonobo-object.h>
+#include <bonobo/bonobo-stream-client.h>
+#include <bonobo/bonobo-stream-memory.h>
 
 #define PARENT_TYPE G_TYPE_OBJECT
 
@@ -141,4 +144,79 @@ gda_report_client_new (void)
 	CORBA_exception_free (&ev);
 
 	return client;
+}
+
+/**
+ * gda_report_client_run_document
+ * @client: a #GdaReportClient object.
+ * @xml: the XML string containing the report definition.
+ *
+ * Runs a report document on the server engine. This means that
+ * a XML string containing the report definition is sent to the
+ * report engine, which gets all data defined in the report, and
+ * returns the same XML string filled in with data.
+ *
+ * Returns: a #GdaReportDocument object containing the report output,
+ * or NULL on error.
+ */
+GdaReportDocument *
+gda_report_client_run_document (GdaReportClient *client, const gchar *xml)
+{
+	GdaReportDocument *document;
+	CORBA_Environment ev;
+	Bonobo_Stream stream;
+	BonoboStream *mem_stream;
+	gchar *body;
+	CORBA_long res;
+
+	g_return_val_if_fail (GDA_IS_REPORT_CLIENT (client), NULL);
+	g_return_val_if_fail (client->priv->corba_engine != CORBA_OBJECT_NIL, NULL);
+	g_return_val_if_fail (xml != NULL, NULL);
+
+	/* create the Bonobo::Stream object to be passed to the CORBA method */
+	mem_stream = bonobo_stream_mem_create (xml, strlen (xml), TRUE, FALSE);
+	if (!BONOBO_STREAM_MEM (mem_stream)) {
+		gda_log_error (_("Could not create BonoboStreamMem object"));
+		return NULL;
+	}
+
+	/* call the CORBA method on the server */
+	CORBA_exception_init (&ev);
+
+	stream = GNOME_Database_Report_Engine_runDocument (
+		client->priv->corba_engine,
+		bonobo_object_corba_objref (BONOBO_OBJECT (mem_stream)),
+		gda_parameter_list_to_corba (NULL), /* FIXME */
+		&ev);
+	if (BONOBO_EX (&ev)) {
+		gda_log_error (_("CORBA exception: %s"),
+			       bonobo_exception_get_text (&ev));
+		CORBA_exception_free (&ev);
+		bonobo_object_unref (BONOBO_OBJECT (mem_stream));
+		return NULL;
+	}
+
+	CORBA_exception_free (&ev);
+
+	/* read XML output from returned stream */
+	CORBA_exception_init (&ev);
+
+	res = bonobo_stream_client_read_string (stream, &body, &ev);
+	if (BONOBO_EX (&ev) || res == -1) {
+		gda_log_error (_("CORBA exception: %s"),
+			       bonobo_exception_get_text (&ev));
+		CORBA_exception_free (&ev);
+		bonobo_object_unref (BONOBO_OBJECT (mem_stream));
+		return NULL;
+	}
+
+	CORBA_exception_free (&ev);
+
+	document = gda_report_document_new_from_string (body);
+
+	/* free memory */
+	bonobo_object_unref (BONOBO_OBJECT (mem_stream));
+	g_free (body);
+
+	return document;
 }

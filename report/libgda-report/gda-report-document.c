@@ -20,7 +20,10 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#include <libgda/gda-log.h>
+#include <libgda/gda-util.h>
 #include <libgda-report/gda-report-document.h>
+#include <bonobo/bonobo-i18n.h>
 
 #define PARENT_TYPE GDA_TYPE_XML_DOCUMENT
 
@@ -130,4 +133,21 @@ gda_report_document_new_from_string (const gchar *xml)
 GdaReportDocument *
 gda_report_document_new_from_uri (const gchar *uri)
 {
+	gchar *body;
+	GdaReportDocument *document;
+
+	g_return_val_if_fail (uri != NULL, NULL);
+
+	/* get the file contents from the given URI */
+	body = gda_file_load (uri);
+	if (!body) {
+		gda_log_error (_("Could not get file from %s"), uri);
+		return NULL;
+	}
+
+	/* create the GdaReportDocument object */
+	document = gda_report_document_new_from_string (body);
+	g_free (body);
+
+	return document;
 }

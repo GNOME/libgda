@@ -24,6 +24,7 @@
 #  define __gda_report_client_h__
 
 #include <glib-object.h>
+#include <libgda-report/gda-report-document.h>
 
 G_BEGIN_DECLS
 
@@ -46,8 +47,10 @@ struct _GdaReportClientClass {
 	GObjectClass parent_class;
 };
 
-GType            gda_report_client_get_type (void);
-GdaReportClient *gda_report_client_new (void);
+GType              gda_report_client_get_type (void);
+GdaReportClient   *gda_report_client_new (void);
+GdaReportDocument *gda_report_client_run_document (GdaReportClient *client,
+						   const gchar *xml);
 
 G_END_DECLS
 

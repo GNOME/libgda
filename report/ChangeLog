@@ -1,3 +1,18 @@
+2001-12-25  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* libgda-report/gda-report-document.c
+	(gda_report_document_new_from_uri): implemented
+
+	* libgda-report/gda-report-client.[ch]
+	(gda_report_client_run_document): implemented
+
+	* libgda-report/gda-report-datasource.[ch]: new files
+
+	* idl/GNOME_Database_Report.idl: made runDocument use
+	Bonobo::Stream's instead of simple string's, since we
+	might be sending back and forth very big chunks of data.
+	Added GNOME::Database::Report::DataSource interface
+
 2001-12-24  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* libgda-report/gda-report-document.[ch]: new files for managing
