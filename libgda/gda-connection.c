@@ -153,8 +153,9 @@ gda_connection_finalize (GObject *object)
 /**
  * gda_connection_get_type
  * 
- * Figure out what the type of connection you have open.
+ * Register the GdaConnection class on the GLib type system.
  * 
+ * Returns: the GType identifying the class.
  */
 GType
 gda_connection_get_type (void)
