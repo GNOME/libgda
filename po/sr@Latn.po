@@ -9,15 +9,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2003-10-12 14:54+0200\n"
-"PO-Revision-Date: 2003-09-19 01:12+0200\n"
+"POT-Creation-Date: 2003-11-27 06:32+0100\n"
+"PO-Revision-Date: 2003-11-27 06:33+0100\n"
 "Last-Translator: Dejan Matijević <dejan@ns.sympatico.ca>\n"
 "Language-Team: Serbian (sr) <serbiangnome-lista@nongnu.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: libgda/gda-client.c:312 libgda/gda-client.c:516 libgda/gda-connection.c:218
+#: libgda/gda-client.c:312 libgda/gda-client.c:517 libgda/gda-connection.c:218
 #, c-format
 msgid "Data source %s not found in configuration"
 msgstr "Izvor podataka %s nije nađen u podešavanju"
@@ -36,7 +36,7 @@ msgstr "Posrednik %s ne izvršava ulaznu funkciju"
 msgid "Could not create GdaServerProvider object from plugin"
 msgstr "Nemoguće napraviti GdaServerProvider objekat iz priključka"
 
-#: libgda/gda-client.c:443
+#: libgda/gda-client.c:444
 msgid "Temporary data source created by libgda. Don't remove it"
 msgstr "Privremeni izvor podataka napravila libgda. Nemojte ga ukloniti"
 
@@ -45,11 +45,11 @@ msgstr "Privremeni izvor podataka napravila libgda. Nemojte ga ukloniti"
 msgid "Error: %s"
 msgstr "Greška: %s"
 
-#: libgda/gda-config.c:1323 providers/ldap/gda-ldap-provider.c:327
+#: libgda/gda-config.c:1400 providers/ldap/gda-ldap-provider.c:327
 #: providers/mdb/gda-mdb-provider.c:457 providers/mdb/gda-mdb-provider.c:594
 #: providers/mdb/gda-mdb-provider.c:654 providers/msql/gda-msql-provider.c:448
-#: providers/mysql/gda-mysql-provider.c:701
-#: providers/mysql/gda-mysql-provider.c:889
+#: providers/mysql/gda-mysql-provider.c:702
+#: providers/mysql/gda-mysql-provider.c:890
 #: providers/odbc/gda-odbc-provider.c:733
 #: providers/odbc/gda-odbc-provider.c:789
 #: providers/oracle/gda-oracle-provider.c:1893
@@ -61,15 +61,15 @@ msgstr "Greška: %s"
 msgid "Name"
 msgstr "Ime"
 
-#: libgda/gda-config.c:1324
+#: libgda/gda-config.c:1401
 msgid "Provider"
 msgstr "Posrednik"
 
-#: libgda/gda-config.c:1325
+#: libgda/gda-config.c:1402
 msgid "Connection string"
 msgstr "Niz konekcije"
 
-#: libgda/gda-config.c:1326 providers/ibmdb2/gda-ibmdb2-provider.c:863
+#: libgda/gda-config.c:1403 providers/ibmdb2/gda-ibmdb2-provider.c:863
 #: providers/ibmdb2/gda-ibmdb2-provider.c:892
 #: providers/ibmdb2/gda-ibmdb2-provider.c:920
 #: providers/ibmdb2/gda-ibmdb2-provider.c:1001
@@ -79,24 +79,24 @@ msgstr "Niz konekcije"
 msgid "Description"
 msgstr "Opis"
 
-#: libgda/gda-config.c:1327
+#: libgda/gda-config.c:1404
 msgid "Username"
 msgstr "Korisničko ime"
 
-#: libgda/gda-config.c:1328
+#: libgda/gda-config.c:1405
 msgid "Password"
 msgstr "Lozinka"
 
-#: libgda/gda-data-model.c:687
+#: libgda/gda-data-model.c:698
 #, c-format
 msgid "Data model %p is not editable"
 msgstr "Model podataka %p nije izmenjiv"
 
-#: libgda/gda-init.c:48
+#: libgda/gda-init.c:47
 msgid "Attempt to initialize an already initialized client"
 msgstr "Pokušava da započne več započetog klijenta"
 
-#: libgda/gda-init.c:59
+#: libgda/gda-init.c:58
 msgid "libgda needs GModule. Finishing..."
 msgstr "libgda treba GModule. Završavanje..."
 
@@ -110,87 +110,87 @@ msgstr "Nisam mogao da obradim SQL niz znakova '%s'"
 msgid "SQL command is not a SELECT (is '%s'"
 msgstr "SQL komanda nije SELECT (is '%s'"
 
-#: libgda/gda-table.c:286
+#: libgda/gda-table.c:284
 #, c-format
 msgid "There is already a field called %s"
 msgstr "Več postoji polje zvano %s"
 
-#: libgda/gda-util.c:147
+#: libgda/gda-util.c:154
 #, c-format
 msgid "Could not parse SQL command '%s'"
 msgstr "Nisam mogao da obradim SQL naredbu '%s'"
 
-#: libgda/gda-util.c:180
+#: libgda/gda-util.c:187
 #, c-format
 msgid "Error while reading %s: %s"
 msgstr "Greška pri čitanju %s: %s"
 
-#: libgda/gda-util.c:206
+#: libgda/gda-util.c:213
 #, c-format
 msgid "Could not create file %s"
 msgstr "Ne može da kreira datoteku %s"
 
-#: libgda/gda-value.c:1982
+#: libgda/gda-value.c:1954
 msgid "TRUE"
 msgstr "Jeste"
 
-#: libgda/gda-value.c:1984
+#: libgda/gda-value.c:1956
 msgid "FALSE"
 msgstr "Nije"
 
-#: libgda/gda-value.c:2053
+#: libgda/gda-value.c:2025
 #, c-format
 msgid "(GObject of type '%s'"
 msgstr "(GObject tipa '%s'"
 
-#: libgda/gda-value.c:2056
+#: libgda/gda-value.c:2028
 msgid "NULL GObject"
 msgstr "Nepostojeći GObject"
 
-#: libgda/gda-xml-database.c:271
+#: libgda/gda-xml-database.c:279
 #, c-format
 msgid "Could not load file at %s"
 msgstr "Ne može da natovari datoteku na %s"
 
-#: libgda/gda-xml-database.c:280
+#: libgda/gda-xml-database.c:288
 #, c-format
 msgid "Could not parse file at %s"
 msgstr "Nisam mogao da obradim datoteku na %s"
 
-#: libgda/gda-xml-database.c:290
+#: libgda/gda-xml-database.c:298
 #, c-format
 msgid "Invalid XML database file '%s'"
 msgstr "Pogrešan XML datoteka baze podataka '%s'"
 
-#: libgda/gda-xml-database.c:536
+#: libgda/gda-xml-database.c:541
 #, c-format
 msgid "Could not create a XML node from table %s"
 msgstr "Ne može da napravi XML čvorište od tabele %s"
 
-#: libgda/gda-xml-database.c:554
+#: libgda/gda-xml-database.c:559
 msgid "Could not dump XML file to memory"
 msgstr "Ne može da skladišti XML datoteku u memoriju"
 
-#: libgda/gda-xml-database.c:647 libgda/gda-xml-database.c:684
-#: libgda/gda-xml-database.c:728
+#: libgda/gda-xml-database.c:650 libgda/gda-xml-database.c:687
+#: libgda/gda-xml-database.c:731
 #, c-format
 msgid "Table %s already exists"
 msgstr "Tabela %s već postoji"
 
-#: libgda/gda-xml-database.c:721
+#: libgda/gda-xml-database.c:724
 msgid "Invalid node"
 msgstr "Pogrešno čvorište"
 
-#: libgda/gda-xml-database.c:763
+#: libgda/gda-xml-database.c:766
 #, c-format
 msgid "Duplicated <data> node for table %s"
 msgstr "Duplirano <podaci> čvorište od tabele %s"
 
-#: libgda/gda-xml-database.c:770
+#: libgda/gda-xml-database.c:773
 msgid "Invalid XML node"
 msgstr "Pogrešan XML čvorište"
 
-#: libgda/gda-xml-database.c:779
+#: libgda/gda-xml-database.c:782
 msgid "Could not add the data from the XML node"
 msgstr "Ne može da doda podatke iz XML čvora"
 
@@ -355,9 +355,9 @@ msgstr "Funkcije"
 #: providers/mdb/gda-mdb-provider.c:595 providers/mdb/gda-mdb-provider.c:655
 #: providers/msql/gda-msql-provider.c:449
 #: providers/msql/gda-msql-provider.c:487
-#: providers/mysql/gda-mysql-provider.c:703
-#: providers/mysql/gda-mysql-provider.c:890
-#: providers/mysql/gda-mysql-provider.c:972
+#: providers/mysql/gda-mysql-provider.c:704
+#: providers/mysql/gda-mysql-provider.c:891
+#: providers/mysql/gda-mysql-provider.c:973
 #: providers/odbc/gda-odbc-provider.c:1032
 #: providers/odbc/gda-odbc-provider.c:1141
 #: providers/odbc/gda-odbc-provider.c:1255
@@ -425,7 +425,7 @@ msgstr "Okidači"
 #. gda_server_recordset_model_set_field_defined_size (recset, 0, 32);
 #: providers/ibmdb2/gda-ibmdb2-provider.c:946
 #: providers/ldap/gda-ldap-provider.c:423
-#: providers/mysql/gda-mysql-provider.c:971
+#: providers/mysql/gda-mysql-provider.c:972
 #: providers/odbc/gda-odbc-provider.c:1254
 #: providers/oracle/gda-oracle-provider.c:2095
 #: providers/postgres/gda-postgres-provider.c:1135
@@ -439,9 +439,9 @@ msgstr "Tip"
 #: providers/mdb/gda-mdb-provider.c:596 providers/mdb/gda-mdb-provider.c:656
 #: providers/msql/gda-msql-provider.c:450
 #: providers/msql/gda-msql-provider.c:488
-#: providers/mysql/gda-mysql-provider.c:704
-#: providers/mysql/gda-mysql-provider.c:891
-#: providers/mysql/gda-mysql-provider.c:973
+#: providers/mysql/gda-mysql-provider.c:705
+#: providers/mysql/gda-mysql-provider.c:892
+#: providers/mysql/gda-mysql-provider.c:974
 #: providers/odbc/gda-odbc-provider.c:1033
 #: providers/odbc/gda-odbc-provider.c:1256
 #: providers/odbc/gda-odbc-provider.c:1350
@@ -463,7 +463,7 @@ msgstr "Komentari"
 
 #: providers/ibmdb2/gda-ibmdb2-provider.c:949
 #: providers/msql/gda-msql-provider.c:489
-#: providers/mysql/gda-mysql-provider.c:974
+#: providers/mysql/gda-mysql-provider.c:975
 #: providers/odbc/gda-odbc-provider.c:1257
 #: providers/oracle/gda-oracle-provider.c:2097
 #: providers/postgres/gda-postgres-provider.c:1138
@@ -549,7 +549,7 @@ msgid "Transactions not supported in MDB provider"
 msgstr "Transakcija nije podržana u MDB posredniku"
 
 #: providers/mdb/gda-mdb-provider.c:490
-#: providers/mysql/gda-mysql-provider.c:1069
+#: providers/mysql/gda-mysql-provider.c:1070
 #: providers/odbc/gda-odbc-provider.c:914
 #: providers/oracle/gda-oracle-provider.c:1248
 #: providers/postgres/gda-postgres-provider.c:1363
@@ -559,7 +559,7 @@ msgid "Field name"
 msgstr "Naziv polja"
 
 #: providers/mdb/gda-mdb-provider.c:491 providers/msql/gda-msql-provider.c:537
-#: providers/mysql/gda-mysql-provider.c:1070
+#: providers/mysql/gda-mysql-provider.c:1071
 #: providers/odbc/gda-odbc-provider.c:915
 #: providers/oracle/gda-oracle-provider.c:1249
 #: providers/postgres/gda-postgres-provider.c:1364
@@ -569,7 +569,7 @@ msgid "Data type"
 msgstr "Vrsta podatka"
 
 #: providers/mdb/gda-mdb-provider.c:492 providers/msql/gda-msql-provider.c:538
-#: providers/mysql/gda-mysql-provider.c:1071
+#: providers/mysql/gda-mysql-provider.c:1072
 #: providers/odbc/gda-odbc-provider.c:916
 #: providers/oracle/gda-oracle-provider.c:1250
 #: providers/postgres/gda-postgres-provider.c:1365
@@ -579,7 +579,7 @@ msgid "Size"
 msgstr "Veličina"
 
 #: providers/mdb/gda-mdb-provider.c:493 providers/msql/gda-msql-provider.c:539
-#: providers/mysql/gda-mysql-provider.c:1072
+#: providers/mysql/gda-mysql-provider.c:1073
 #: providers/odbc/gda-odbc-provider.c:917
 #: providers/oracle/gda-oracle-provider.c:1251
 #: providers/postgres/gda-postgres-provider.c:1366
@@ -589,7 +589,7 @@ msgid "Scale"
 msgstr "Razmera"
 
 #: providers/mdb/gda-mdb-provider.c:494
-#: providers/mysql/gda-mysql-provider.c:1073
+#: providers/mysql/gda-mysql-provider.c:1074
 #: providers/odbc/gda-odbc-provider.c:918
 #: providers/oracle/gda-oracle-provider.c:1252
 #: providers/postgres/gda-postgres-provider.c:1367
@@ -599,7 +599,7 @@ msgid "Not null?"
 msgstr "Nije nul?"
 
 #: providers/mdb/gda-mdb-provider.c:495 providers/msql/gda-msql-provider.c:541
-#: providers/mysql/gda-mysql-provider.c:1074
+#: providers/mysql/gda-mysql-provider.c:1075
 #: providers/odbc/gda-odbc-provider.c:919
 #: providers/oracle/gda-oracle-provider.c:1253
 #: providers/postgres/gda-postgres-provider.c:1368
@@ -609,7 +609,7 @@ msgid "Primary key?"
 msgstr "Osnovni kljuć?"
 
 #: providers/mdb/gda-mdb-provider.c:496 providers/msql/gda-msql-provider.c:542
-#: providers/mysql/gda-mysql-provider.c:1075
+#: providers/mysql/gda-mysql-provider.c:1076
 #: providers/odbc/gda-odbc-provider.c:920
 #: providers/oracle/gda-oracle-provider.c:1254
 #: providers/postgres/gda-postgres-provider.c:1369
@@ -619,7 +619,7 @@ msgid "Unique index?"
 msgstr "Unikatni indeks?"
 
 #: providers/mdb/gda-mdb-provider.c:497 providers/msql/gda-msql-provider.c:543
-#: providers/mysql/gda-mysql-provider.c:1076
+#: providers/mysql/gda-mysql-provider.c:1077
 #: providers/odbc/gda-odbc-provider.c:921
 #: providers/oracle/gda-oracle-provider.c:1255
 #: providers/postgres/gda-postgres-provider.c:1370
@@ -629,7 +629,7 @@ msgid "References"
 msgstr "Preporuke"
 
 #: providers/mdb/gda-mdb-provider.c:498 providers/msql/gda-msql-provider.c:544
-#: providers/mysql/gda-mysql-provider.c:1077
+#: providers/mysql/gda-mysql-provider.c:1078
 #: providers/odbc/gda-odbc-provider.c:922
 #: providers/oracle/gda-oracle-provider.c:1256
 #: providers/postgres/gda-postgres-provider.c:1371
@@ -638,12 +638,12 @@ msgid "Default value"
 msgstr "Uobičajena vrednost"
 
 #: providers/mdb/gda-mdb-provider.c:547
-#: providers/mysql/gda-mysql-provider.c:702
+#: providers/mysql/gda-mysql-provider.c:703
 msgid "ID"
 msgstr "ID"
 
 #: providers/mdb/gda-mdb-provider.c:550
-#: providers/mysql/gda-mysql-provider.c:705
+#: providers/mysql/gda-mysql-provider.c:706
 #: providers/odbc/gda-odbc-provider.c:1034
 #: providers/postgres/gda-postgres-provider.c:849
 msgid "Return type"
@@ -654,7 +654,7 @@ msgid "# of args"
 msgstr "# od args"
 
 #: providers/mdb/gda-mdb-provider.c:552
-#: providers/mysql/gda-mysql-provider.c:706
+#: providers/mysql/gda-mysql-provider.c:707
 #: providers/odbc/gda-odbc-provider.c:1036
 #: providers/postgres/gda-postgres-provider.c:851
 msgid "Args types"
@@ -684,7 +684,7 @@ msgstr "Tip Bulovog operatora"
 
 #: providers/mdb/gda-mdb-provider.c:660
 msgid "1-byte integers"
-msgstr "1-bajt celi broj"
+msgstr "1-bajtni celi broj"
 
 #: providers/mdb/gda-mdb-provider.c:661
 msgid "Double precision values"
@@ -730,7 +730,14 @@ msgstr "Niz znakova"
 #: providers/mdb/gda-mdb-provider.c:737
 #, c-format
 msgid "Could not parse '%s' command"
-msgstr "Nisam mogao da obradim naredbu '%s'"
+msgstr "Nisam mogao da obradim naredbu „%s“"
+
+#. parsing went fine, but there is no result
+#. (e.g. because of an invalid column name)
+#: providers/mdb/gda-mdb-provider.c:744
+#, c-format
+msgid "Got no result for '%s' command"
+msgstr "Nisam primio rezultat za naredbu „%s“"
 
 #: providers/mdb/gda-mdb-table.c:48 providers/xml/gda-xml-provider.c:519
 #, c-format
@@ -782,8 +789,8 @@ msgstr "Nije nul?"
 
 #: providers/msql/gda-msql-provider.c:557
 #: providers/msql/gda-msql-provider.c:563
-#: providers/mysql/gda-mysql-provider.c:1094
-#: providers/mysql/gda-mysql-provider.c:1102
+#: providers/mysql/gda-mysql-provider.c:1095
+#: providers/mysql/gda-mysql-provider.c:1103
 msgid "Table name is needed but none specified in parameter list"
 msgstr "Ime tabele je neophodno ali nije određeno u listi parametara"
 
@@ -791,33 +798,33 @@ msgstr "Ime tabele je neophodno ali nije određeno u listi parametara"
 msgid "Row number out of bounds"
 msgstr "Broj reda van granica"
 
-#: providers/mysql/gda-mysql-provider.c:218
+#: providers/mysql/gda-mysql-provider.c:219
 msgid ""
 "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
 msgstr ""
 "Vi nemožete obezbediti UNIX_SOCKET ako ne obezbediti i domaćina ili port."
 
-#: providers/mysql/gda-mysql-provider.c:294
-#: providers/mysql/gda-mysql-provider.c:1085
+#: providers/mysql/gda-mysql-provider.c:295
+#: providers/mysql/gda-mysql-provider.c:1086
 #: providers/mysql/gda-mysql-recordset.c:58
 #: providers/mysql/gda-mysql-recordset.c:180
 msgid "Invalid MySQL handle"
 msgstr "Neispravna MySQL oznaka"
 
-#: providers/mysql/gda-mysql-provider.c:310
-#: providers/mysql/gda-mysql-provider.c:380
-#: providers/mysql/gda-mysql-provider.c:403
-#: providers/mysql/gda-mysql-provider.c:434
-#: providers/mysql/gda-mysql-provider.c:466
-#: providers/mysql/gda-mysql-provider.c:534
-#: providers/mysql/gda-mysql-provider.c:591
-#: providers/mysql/gda-mysql-provider.c:624
+#: providers/mysql/gda-mysql-provider.c:311
+#: providers/mysql/gda-mysql-provider.c:381
+#: providers/mysql/gda-mysql-provider.c:404
+#: providers/mysql/gda-mysql-provider.c:435
+#: providers/mysql/gda-mysql-provider.c:467
+#: providers/mysql/gda-mysql-provider.c:535
+#: providers/mysql/gda-mysql-provider.c:592
+#: providers/mysql/gda-mysql-provider.c:625
 msgid "Invalid MYSQL handle"
 msgstr "Neispravna MySQL oznaka"
 
-#: providers/mysql/gda-mysql-provider.c:539
-#: providers/mysql/gda-mysql-provider.c:596
-#: providers/mysql/gda-mysql-provider.c:629
+#: providers/mysql/gda-mysql-provider.c:540
+#: providers/mysql/gda-mysql-provider.c:597
+#: providers/mysql/gda-mysql-provider.c:630
 #: providers/oracle/gda-oracle-provider.c:857
 #: providers/oracle/gda-oracle-provider.c:939
 #: providers/oracle/gda-oracle-provider.c:1000
@@ -825,7 +832,7 @@ msgstr "Neispravna MySQL oznaka"
 msgid "Transactions are not supported in read-only mode"
 msgstr "Transakcije nisu podržane u modu samo za čitanje"
 
-#: providers/mysql/gda-mysql-provider.c:707
+#: providers/mysql/gda-mysql-provider.c:708
 #: providers/oracle/gda-oracle-provider.c:1913
 #: providers/oracle/gda-oracle-provider.c:1975
 msgid "SQL"
@@ -1647,8 +1654,8 @@ msgid ""
 "A full path must be specified on the connection string to open a database on "
 "the XML provider."
 msgstr ""
-"Puna putanja mora biti navedena u tekstu za vezu radi otvoranja baze "
-"podataka od XML dobavljača."
+"Puna putanja mora biti navedena u tekstu za vezu radi otvoranja baze podataka "
+"od XML dobavljača."
 
 #: providers/xml/gda-xml-provider.c:222 providers/xml/gda-xml-provider.c:244
 msgid "Invalid XML handle"
