@@ -50,7 +50,7 @@ static void
 free_hash_entry (gpointer key, gpointer value, gpointer user_data)
 {
 	g_free (key);
-	g_free (value);
+	//g_free (value);
 }
 
 static void
@@ -150,6 +150,7 @@ static void
 gda_export_init (GdaExport * exp)
 {
 	exp->priv = g_new0 (GdaExportPrivate, 1);
+	exp->priv->selected_tables = g_hash_table_new (g_str_hash, g_str_equal);
 }
 
 static void
@@ -161,8 +162,10 @@ gda_export_destroy (GtkObject *object)
 	g_return_if_fail (GDA_IS_EXPORT (exp));
 
 	destroy_hash_table (&exp->priv->selected_tables);
-
+	if (GDA_IS_CONNECTION (exp->priv->cnc))
+		gda_connection_free (exp->priv->cnc);
 	g_free (exp->priv);
+	exp->priv = NULL;
 
 	parent_class = gtk_type_class (gtk_object_get_type ());
 	if (parent_class && parent_class->destroy)
@@ -257,7 +260,7 @@ gda_export_get_selected_tables (GdaExport * exp)
  * Add the given table to the list of selected tables
  */
 void
-gda_export_select_table (GdaExport * exp, const gchar * table)
+gda_export_select_table (GdaExport *exp, const gchar *table)
 {
 	gchar *data;
 
@@ -284,7 +287,7 @@ gda_export_select_table (GdaExport * exp, const gchar * table)
  * Remove the given table name from the list of selected tables
  */
 void
-gda_export_unselect_table (GdaExport * exp, const gchar * table)
+gda_export_unselect_table (GdaExport *exp, const gchar *table)
 {
 	gchar *data;
 
@@ -295,6 +298,7 @@ gda_export_unselect_table (GdaExport * exp, const gchar * table)
 				    (gconstpointer) table);
 	if (data) {
 		g_hash_table_remove (exp->priv->selected_tables, table);
+		g_free (data);
 		gtk_signal_emit (GTK_OBJECT (exp),
 				 gda_export_signals[OBJECT_UNSELECTED],
 				 GDA_Connection_GDCN_SCHEMA_TABLES, table);
@@ -331,6 +335,7 @@ gda_export_set_connection (GdaExport *exp, GdaConnection * cnc)
 		exp->priv->cnc = NULL;
 	}
 	destroy_hash_table (&exp->priv->selected_tables);
+	exp->priv->selected_tables = g_hash_table_new (g_str_hash, g_str_equal);
 
 	if (GDA_IS_CONNECTION (cnc)) {
 		exp->priv->cnc = cnc;

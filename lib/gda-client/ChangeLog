@@ -1,3 +1,8 @@
+2001-07-24  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-export.c (gda_export_init): create the internal hash table
+	here
+
 2001-07-21  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* *.h: s/#if defined(__cplusplus).../G_BEGIN_END_DECLS
