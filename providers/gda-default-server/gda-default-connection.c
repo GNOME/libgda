@@ -19,6 +19,7 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include "gda-server-private.h"
 #include "gda-default.h"
 #include <ctype.h>
 
@@ -227,7 +228,11 @@ gda_default_connection_open_schema (GdaServerConnection *cnc,
 	fn = schema_ops[(gint) t];
 	if (fn)
 		return fn(error, cnc, constraints, length);
-	else gda_log_error(_("Unhandled SCHEMA_QTYPE %d"), (gint) t);
+
+	/* we don't support this schema type */
+	gda_server_error_make (error, NULL, cnc, __PRETTY_FUNCTION__);
+	gda_error_set_description (error, _("Unknown schema type"));
+
 	return NULL;
 }
 

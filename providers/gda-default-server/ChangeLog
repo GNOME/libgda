@@ -1,3 +1,8 @@
+2001-07-15  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-default-connection.c (gda_default_connection_open_schema): return
+	a GdaError if we don't support the schema
+
 2001-06-05  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* sqlite/configure.in: added /usr to the search list for gdbm.h
