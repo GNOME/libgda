@@ -11,17 +11,17 @@
     </partintro>
 
 	&libgda-common-defs-h;
-    &libgda-common-h;
-    &libgda-config-h;
-    &libgda-corba-h;
+	&libgda-common-h;
+	&libgda-config-h;
+	&libgda-corba-h;
 	&libgda-error-h;
 	&libgda-listener-h;
-    &libgda-log-h;
+	&libgda-log-h;
 	&libgda-quark-list-h;
-    &libgda-thread-h;
-    &libgda-util-h;
-    &libgda-xml-database-h;
-    &libgda-xml-file-h;
+	&libgda-thread-h;
+	&libgda-util-h;
+	&libgda-xml-database-h;
+	&libgda-xml-document-h;
 	&libgda-xml-util-h;
 
 </reference>
