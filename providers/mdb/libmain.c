@@ -41,7 +41,10 @@ plugin_get_connection_params (void)
 {
 	GList *list = NULL;
 
-	list = g_list_append (list, g_strdup ("FILENAME"));
+	list = g_list_append (list,
+			      gda_provider_parameter_info_new_full ("FILENAME", _("File Name"),
+								    _("Full path of the file containing the database"),
+								    GDA_VALUE_TYPE_STRING));
 
 	return list;
 }

@@ -1378,12 +1378,12 @@ batch_options ()
 static void
 add_param_name_to_string (gpointer data, gpointer user_data)
 {
-	gchar *param = data;
+	GdaProviderParameterInfo *param_info = data;
 	GString *str = user_data;
 
-	if (param != NULL) {
+	if (param_info != NULL) {
 		g_string_append_c (str, ' ');
-		g_string_append (str, param);
+		g_string_append (str, param_info->name);
 	}
 }
 

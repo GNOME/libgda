@@ -64,12 +64,29 @@ void     gda_config_remove_listener (guint id);
  */
 
 typedef struct _GdaProviderInfo GdaProviderInfo;
- 
+
+typedef struct {
+	char *name;
+	char *short_description;
+	char *long_description;
+	GdaValueType type;
+} GdaProviderParameterInfo;
+
+#define GDA_TYPE_PROVIDER_PARAMETER_INFO (gda_provider_parameter_info_get_type ())
+
+GType                     gda_provider_parameter_info_get_type (void);
+GdaProviderParameterInfo *gda_provider_parameter_info_new_full (const gchar *name,
+								const gchar *short_description,
+								const gchar *long_description,
+								GdaValueType type);
+GdaProviderParameterInfo *gda_provider_parameter_info_copy (GdaProviderParameterInfo *param_info);
+void                      gda_provider_parameter_info_free (GdaProviderParameterInfo *param_info);
+
 struct _GdaProviderInfo {
 	gchar *id;
 	gchar *location;
 	gchar *description;
-	GList *gda_params; /* A list of const char* */
+	GList *gda_params; /* A list of GdaProviderParameterInfo pointers */
 };
 
 #define GDA_TYPE_PROVIDER_INFO (gda_provider_info_get_type ())

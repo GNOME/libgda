@@ -40,16 +40,16 @@
 /* FIXME: many functions are not thread safe! */
 
 typedef struct {
-    gchar *name;
-    gchar *type;
-    gchar *value;
-    /* gchar *mtime; */
-    /* gchar *muser; */
+	gchar *name;
+	gchar *type;
+	gchar *value;
+	/* gchar *mtime; */
+	/* gchar *muser; */
 } gda_config_entry;
 
 typedef struct {
-    gchar *path;
-    GList *entries;
+	gchar *path;
+	GList *entries;
 } gda_config_section;
 
 typedef struct {
@@ -1217,6 +1217,72 @@ gda_config_get_provider_model (void)
 }
 
 /**
+ * gda_provider_parameter_info_new_full:
+ * @name:
+ * @short_description:
+ * @long_description:
+ * @type:
+ */
+GdaProviderParameterInfo *
+gda_provider_parameter_info_new_full (const gchar *name,
+				      const gchar *short_description,
+				      const gchar *long_description,
+				      GdaValueType type)
+{
+	GdaProviderParameterInfo *param_info;
+
+	param_info = g_new0 (GdaProviderParameterInfo, 1);
+	param_info->name = g_strdup (name);
+	param_info->short_description = g_strdup (short_description);
+	param_info->long_description = g_strdup (long_description);
+	param_info->type = type;
+
+	return param_info;
+}
+
+/**
+ * gda_provider_parameter_info_copy:
+ * @param_info: a #GdaProviderParameterInfo structure.
+ *
+ * Creates a new #GdaProviderParameterInfo structure with the values
+ * contained in the given @param_info argument..
+ *
+ * Returns: a newly allocated #GdaProviderParameterInfo structure.
+ */
+GdaProviderParameterInfo *
+gda_provider_parameter_info_copy (GdaProviderParameterInfo *param_info)
+{
+	GdaProviderParameterInfo *new_info;
+
+	g_return_val_if_fail (param_info != NULL, NULL);
+
+	new_info = g_new0 (GdaProviderParameterInfo, 1);
+	new_info->name = g_strdup (param_info->name);
+	new_info->short_description = g_strdup (param_info->short_description);
+	new_info->long_description = g_strdup (param_info->long_description);
+	new_info->type = param_info->type;
+
+	return new_info;
+}
+
+/**
+ * gda_provider_parameter_info_free:
+ * @param_info: a #GdaProviderParameterInfo structure to be freed.
+ *
+ * Free the memory associated with the given @param_info argument.
+ */
+void
+gda_provider_parameter_info_free (GdaProviderParameterInfo *param_info)
+{
+	g_return_if_fail (param_info != NULL);
+
+	g_free (param_info->name);
+	g_free (param_info->short_description);
+	g_free (param_info->long_description);
+	g_free (param_info);
+}
+
+/**
  * gda_provider_info_copy
  * @src: provider information to get a copy from.
  *
@@ -1242,7 +1308,7 @@ gda_provider_info_copy (GdaProviderInfo *src)
 	/* Deep copy: */
 	list_src = src->gda_params;
 	while (list_src) {
-		list = g_list_append (list, g_strdup (list_src->data));
+		list = g_list_append (list, gda_provider_parameter_info_copy (list_src->data));
 		list_src = g_list_next (list_src);
 	}
 
@@ -1265,7 +1331,7 @@ gda_provider_info_free (GdaProviderInfo *provider_info)
 	g_free (provider_info->id);
 	g_free (provider_info->location);
 	g_free (provider_info->description);
-	g_list_foreach (provider_info->gda_params, (GFunc) g_free, NULL);
+	g_list_foreach (provider_info->gda_params, (GFunc) gda_provider_parameter_info_free, NULL);
 	g_list_free (provider_info->gda_params);
 
 	g_free (provider_info);
@@ -1680,16 +1746,29 @@ gda_config_remove_listener (guint id)
 }
 
 GType
+gda_provider_parameter_info_get_type (void)
+{
+	static GType our_type = 0;
+
+	if (our_type == 0)
+		our_type = g_boxed_type_register_static ("GdaProviderParameterInfo",
+							 (GBoxedCopyFunc) gda_provider_parameter_info_copy,
+							 (GBoxedFreeFunc) gda_provider_parameter_info_free);
+
+	return our_type;
+}
+
+GType
 gda_provider_info_get_type (void)
 {
 	static GType our_type = 0;
 
 	if (our_type == 0)
 		our_type = g_boxed_type_register_static ("GdaProviderInfo",
-			(GBoxedCopyFunc) gda_provider_info_copy,
-			(GBoxedFreeFunc) gda_provider_info_free);
+							 (GBoxedCopyFunc) gda_provider_info_copy,
+							 (GBoxedFreeFunc) gda_provider_info_free);
 
-  return our_type;
+	return our_type;
 }
 
 GType
@@ -1699,10 +1778,10 @@ gda_data_source_info_get_type (void)
 
 	if (our_type == 0)
 		our_type = g_boxed_type_register_static ("GdaDataSourceInfo",
-			(GBoxedCopyFunc) gda_config_copy_data_source_info,
-			(GBoxedFreeFunc) gda_config_free_data_source_info);
+							 (GBoxedCopyFunc) gda_config_copy_data_source_info,
+							 (GBoxedFreeFunc) gda_config_free_data_source_info);
 
-  return our_type;
+	return our_type;
 }
 
 

@@ -31,28 +31,43 @@ GdaServerProvider *plugin_create_provider(void);
 
 /*--------------------------------------------------------------------------*/
 
-const gchar *plugin_get_name(void) {
-  return "mSQL";
+const gchar *
+plugin_get_name (void)
+{
+	return "mSQL";
 }
 
 /*--------------------------------------------------------------------------*/
 
-const gchar *plugin_get_description(void) {
-  return _("Provider for Hughes Technologies mSQL databases");
+const gchar *
+plugin_get_description (void)
+{
+	return _("Provider for Hughes Technologies mSQL databases");
 }
 
 /*--------------------------------------------------------------------------*/
 
-GList *plugin_get_connection_params(void) {
-  GList *list = NULL;
+GList *
+plugin_get_connection_params (void)
+{
+	GList *list = NULL;
 
-  list=g_list_append(list,g_strdup("DATABASE"));
-  list=g_list_append(list,g_strdup("HOST"));
-  return list;
+	list = g_list_append (list,
+			      gda_provider_parameter_info_new_full ("DATABASE", _("Database Name"),
+								   _("Name of the database to use"),
+								   GDA_VALUE_TYPE_STRING));
+	list = g_list_append (list,
+			      gda_provider_parameter_info_new_full ("HOST", _("Host Name"),
+								    _("Name of the host to connect to"),
+								    GDA_VALUE_TYPE_STRING));
+
+	return list;
 }
 
 /*--------------------------------------------------------------------------*/
 
-GdaServerProvider *plugin_create_provider(void) {
-  return gda_msql_provider_new();
+GdaServerProvider *
+plugin_create_provider (void)
+{
+  return gda_msql_provider_new ();
 }

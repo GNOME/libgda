@@ -39,9 +39,10 @@ plugin_get_connection_params (void)
 {
 	GList *list = NULL;
 
-	list = g_list_append (list, g_strdup ("TNSNAME"));
-	list = g_list_append (list, g_strdup ("USER"));
-	list = g_list_append (list, g_strdup ("PASSWORD"));
+	list = g_list_append (list,
+			      gda_provider_parameter_info_new_full ("TNSNAME", _("TNS Name"),
+								    _("Name of the TNS configuration to use for connecting"),
+								    GDA_VALUE_TYPE_STRING));
 
 	return list;
 }

@@ -45,12 +45,22 @@ plugin_get_connection_params (void)
 {
 	GList *list = NULL;
 
-	list = g_list_append (list, g_strdup ("DATABASE"));
-	list = g_list_append (list, g_strdup ("PASSWORD"));
-	list = g_list_append (list, g_strdup ("USER"));
-	list = g_list_append (list, g_strdup ("CHARACTER_SET"));	/* Default: NONE */
-	list = g_list_append (list, g_strdup ("SQL_DIALECT"));  	/* Default: 3 */
-	list = g_list_append (list, g_strdup ("PAGE_SIZE"));		/* Default: 4096 */
+	list = g_list_append (list,
+			      gda_provider_parameter_info_new_full ("DATABASE", _("Database Name"),
+								    _("Name of the database to be used"),
+								    GDA_VALUE_TYPE_STRING));
+	list = g_list_append (list,
+			      gda_provider_parameter_info_new_full ("CHARACTER_SET", _("Character Set"),
+								    _("Character set to be used on the connection"),
+								    GDA_VALUE_TYPE_STRING));
+	list = g_list_append (list,
+			      gda_provider_parameter_info_new_full ("SQL_DIALECT", _("SQL Dialect"),
+								    _("SQL dialect to use on the connection"),
+								    GDA_VALUE_TYPE_INTEGER));
+	list = g_list_append (list,
+			      gda_provider_parameter_info_new_full ("PAGE_SIZE", _("Page Size"),
+								    _("Page size to use on the database"),
+								    GDA_VALUE_TYPE_INTEGER));
 
 	return list;
 }

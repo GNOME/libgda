@@ -46,7 +46,10 @@ plugin_get_connection_params (void)
 {
 	GList *list = NULL;
 
-	list = g_list_append (list, g_strdup ("STRING"));
+	list = g_list_append (list,
+			      gda_provider_parameter_info_new_full ("STRING", _("Connection String"),
+								    _("ODBC connection string"),
+								    GDA_VALUE_TYPE_STRING));
 
 	return list;
 }

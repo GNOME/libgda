@@ -91,8 +91,10 @@ list_all_providers (void)
 
 		g_print (_("\tgda_params ="));
 		for (ll = info->gda_params; ll != NULL; ll = ll->next) {
-			if (ll->data != NULL)
-				g_print (" %s", (const gchar *) ll->data);
+			if (ll->data != NULL) {
+				GdaProviderParameterInfo *param_info = ll->data;
+				g_print (" %s (%s) ", param_info->name, param_info->short_description);
+			}
 		}
 		g_print ("\n");
 	}

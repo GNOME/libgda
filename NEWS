@@ -26,6 +26,7 @@ libgda 1.1.99, 2004-10-10
  - Fixed compilation under Win32 (alan)
  - Improved autotools setup (julio)
  - Fixed leaks in some samples contained in the documentation (rodrigo)
+ - Improved provider parameter descriptions API (rodrigo)
  - Updated translations:
         - cs (miroslav)
 	- en_CA (adam)

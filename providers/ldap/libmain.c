@@ -52,12 +52,26 @@ plugin_get_connection_params (void)
 {
 	GList *list = NULL;
 
-	list = g_list_append (list, g_strdup ("FLAGS"));
-	list = g_list_append (list, g_strdup ("HOST"));
-	list = g_list_append (list, g_strdup ("PORT"));
-	list = g_list_append (list, g_strdup ("BINDDN"));
-	list = g_list_append (list, g_strdup ("PASSWORD"));
-	list = g_list_append (list, g_strdup ("AUTHMETHOD"));
+	list = g_list_append (list,
+			      gda_provider_parameter_info_new_full ("FLAGS", _("LDAP Flags"),
+								    _("LDAP flags"),
+								    GDA_VALUE_TYPE_STRING));
+	list = g_list_append (list,
+			      gda_provider_parameter_info_new_full ("HOST", _("Host Name"),
+								    _("Host name of the LDAP server"),
+								    GDA_VALUE_TYPE_STRING));
+	list = g_list_append (list,
+			      gda_provider_parameter_info_new_full ("PORT", _("Port"),
+								    _("Port to use for connecting to the LDAP server"),
+								    GDA_VALUE_TYPE_INTEGER));
+	list = g_list_append (list,
+			      gda_provider_parameter_info_new_full ("BINDDN", _("Bind Domain"),
+								    _("LDAP bind domain to use for authentication"),
+								    GDA_VALUE_TYPE_STRING));
+	list = g_list_append (list,
+			      gda_provider_parameter_info_new_full ("AUTHMETHOD", _("Authentication Method"),
+								    _("Authentication method to use for connecting"),
+								    GDA_VALUE_TYPE_STRING));
 
 	return list;
 }

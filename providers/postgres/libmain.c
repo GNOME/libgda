@@ -46,16 +46,38 @@ plugin_get_connection_params (void)
 {
 	GList *list = NULL;
 
-	list = g_list_append (list, g_strdup ("DATABASE"));
-	list = g_list_append (list, g_strdup ("SEARCHPATH"));
-	list = g_list_append (list, g_strdup ("HOST"));
-	list = g_list_append (list, g_strdup ("HOSTADDR"));
-	list = g_list_append (list, g_strdup ("OPTIONS"));
-	list = g_list_append (list, g_strdup ("PASSWORD"));
-	list = g_list_append (list, g_strdup ("PORT"));
-	list = g_list_append (list, g_strdup ("REQUIRESSL"));
-	list = g_list_append (list, g_strdup ("TTY"));
-	list = g_list_append (list, g_strdup ("USER"));
+	list = g_list_append (list,
+			      gda_provider_parameter_info_new_full ("DATABASE", _("Database Name"),
+								    _("Name of the database to use"),
+								    GDA_VALUE_TYPE_STRING));
+	list = g_list_append (list,
+			      gda_provider_parameter_info_new_full ("SEARCHPATH", _("Search Path"),
+								    _("Search path"),
+								    GDA_VALUE_TYPE_STRING));
+	list = g_list_append (list,
+			      gda_provider_parameter_info_new_full ("HOST", _("Host Name"),
+								    _("Name of the host to connect to"),
+								    GDA_VALUE_TYPE_STRING));
+	list = g_list_append (list,
+			      gda_provider_parameter_info_new_full ("HOSTADDR", _("Host Address"),
+								    _("IP address of the host to connect to"),
+								    GDA_VALUE_TYPE_STRING));
+	list = g_list_append (list,
+			      gda_provider_parameter_info_new_full ("OPTIONS", _("Extra Options"),
+								    _("Extra PostgreSQL options to use for the connection"),
+								    GDA_VALUE_TYPE_STRING));
+	list = g_list_append (list,
+			      gda_provider_parameter_info_new_full ("PORT", _("Port"),
+								    _("Port number to use for the connection"),
+								    GDA_VALUE_TYPE_INTEGER));
+	list = g_list_append (list,
+			      gda_provider_parameter_info_new_full ("REQUIRESSL", _("Require SSL"),
+								    _("Whether to require SSL or not when connecting"),
+								    GDA_VALUE_TYPE_BOOLEAN));
+	list = g_list_append (list,
+			      gda_provider_parameter_info_new_full ("TTY", _("TTY"),
+								    _("TTY"),
+								    GDA_VALUE_TYPE_STRING));
 
 	return list;
 }

@@ -44,8 +44,14 @@ plugin_get_connection_params (void)
 {
 	GList *list = NULL;
 
-	list = g_list_append (list, g_strdup ("FILE"));
-	list = g_list_append (list, g_strdup ("DATABASE"));
+	list = g_list_append (list,
+			      gda_provider_parameter_info_new_full ("FILE", _("Database File"),
+								    _("Berkeley DB database file to be used"),
+								    GDA_VALUE_TYPE_STRING));
+	list = g_list_append (list,
+			      gda_provider_parameter_info_new_full ("DATABASE", _("Database name"),
+								    _("Name of the database in the database file to be used"),
+								    GDA_VALUE_TYPE_STRING));
 
 	return list;
 }

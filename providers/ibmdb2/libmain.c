@@ -44,10 +44,14 @@ plugin_get_connection_params (void)
 {
 	GList *list = NULL;
 
-	list = g_list_append (list, g_strdup ("DATABASE"));
-	list = g_list_append (list, g_strdup ("OPTIONS")); 
-	list = g_list_append (list, g_strdup ("PASSWORD"));
-	list = g_list_append (list, g_strdup ("USER"));
+	list = g_list_append (list,
+			      gda_provider_parameter_info_new_full ("DATABASE", _("Database Name"),
+								    _("Name of the database to use"),
+								    GDA_VALUE_TYPE_STRING));
+	list = g_list_append (list,
+			      gda_provider_parameter_info_new_full ("OPTIONS", _("Extra Options"),
+								    _("Extra database options"),
+								    GDA_VALUE_TYPE_STRING));
 
 	return list;
 }

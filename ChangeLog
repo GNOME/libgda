@@ -1,3 +1,34 @@
+2004-10-10  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* libgda/gda-config.[ch]: added GdaProviderParameterInfo structure.
+	Changed list of params in GdaProviderInfo to be a list of
+	GdaProviderParameterInfo structures.
+	(gda_provider_parameter_info_get_type, gda_provider_parameter_info_copy,
+	gda_provider_parameter_info_free): new functions.
+	(gda_provider_info_copy, gda_provider_info_free): manage correctly the
+	new list of arguments.
+
+	* providers/bdb/libmain.c (plugin_get_connection_params):
+	* providers/firebird/libmain.c (plugin_get_connection_params):
+	* providers/freetds/libmain.c (plugin_get_connection_params):
+	* providers/ibmdb2/libmain.c (plugin_get_connection_params):
+	* providers/ldap/libmain.c (plugin_get_connection_params):
+	* providers/mdb/libmain.c (plugin_get_connection_params):
+	* providers/msql/gda-msqlp-libmain.c (plugin_get_connection_params):
+	* providers/mysql/libmain.c (plugin_get_connection_params):
+	* providers/odbc/libmain.c (plugin_get_connection_params):
+	* providers/oracle/libmain.c (plugin_get_connection_params):
+	* providers/postgres/libmain.c (plugin_get_connection_params):
+	* providers/sqlite/libmain.c (plugin_get_connection_params):
+	* providers/sybase/libmain.c (plugin_get_connection_params):
+	* providers/xbase/libmain.c (plugin_get_connection_params):
+	* providers/xml/libmain.c (plugin_get_connection_params):
+	updated to return a list of GdaProviderParameterInfo instead of simple
+	strings only.
+
+	* tools/gda-config-tool.c (add_param_name_to_string):
+	* testing/config.c (list_all_providers): adapted to above changes.
+
 2004-10-09  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	Fixes #152495
