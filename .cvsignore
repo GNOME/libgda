@@ -23,3 +23,6 @@ xml-i18n-extract
 xml-i18n-update.in
 xml-i18n-merge.in
 xml-i18n-extract.in
+control-stamp
+configure-stamp
+build-stamp
