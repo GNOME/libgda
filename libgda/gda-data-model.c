@@ -29,6 +29,8 @@
 struct _GdaDataModelPrivate {
 	gboolean notify_changes;
 	GHashTable *column_titles;
+	gchar *cmd_text;
+	GdaCommandType cmd_type;
 
 	/* edition mode */
 	gboolean editing;
@@ -109,10 +111,12 @@ gda_data_model_init (GdaDataModel *model, GdaDataModelClass *klass)
 {
 	g_return_if_fail (GDA_IS_DATA_MODEL (model));
 
-	model->priv = g_new0 (GdaDataModelPrivate, 1);
+	model->priv = g_new (GdaDataModelPrivate, 1);
 	model->priv->notify_changes = TRUE;
 	model->priv->column_titles = g_hash_table_new (g_str_hash, g_str_equal);
 	model->priv->editing = FALSE;
+	model->priv->cmd_text = NULL;
+	model->priv->cmd_type = GDA_COMMAND_TYPE_INVALID;
 }
 
 static void
@@ -133,6 +137,8 @@ gda_data_model_finalize (GObject *object)
 	g_hash_table_foreach (model->priv->column_titles, (GHFunc) free_hash_string, NULL);
 	g_hash_table_destroy (model->priv->column_titles);
 
+	g_free (model->priv->cmd_text);
+	model->priv->cmd_text = NULL;
 	g_free (model->priv);
 	model->priv = NULL;
 
@@ -494,3 +500,62 @@ gda_data_model_to_xml (GdaDataModel *model, gboolean standalone)
 {
 	return NULL;
 }
+
+/**
+ * gda_data_model_get_command_text
+ * @model: a #GdaDataModel.
+ *
+ * Get the text of command that generated this data model.
+ *
+ * Returns: a string with the command issued.
+ */
+const gchar *
+gda_data_model_get_command_text (GdaDataModel *model)
+{
+	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
+	return model->priv->cmd_text;
+}
+
+/**
+ * gda_data_model_set_command_text
+ * @model: a #GdaDataModel.
+ * @txt: the command text.
+ */
+void
+gda_data_model_set_command_text (GdaDataModel *model, const gchar *txt)
+{
+	g_return_if_fail (GDA_IS_DATA_MODEL (model));
+	g_return_if_fail (txt != NULL);
+
+	if (model->priv->cmd_text)
+		g_free (model->priv->cmd_text);
+	model->priv->cmd_text = g_strdup (txt);
+}
+
+/**
+ * gda_data_model_get_command_type
+ * @model: a #GdaDataModel.
+ *
+ * Get the type of command that generated this data model.
+ *
+ * Returns: a #GdaCommandType.
+ */
+GdaCommandType
+gda_data_model_get_command_type (GdaDataModel *model)
+{
+	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), GDA_COMMAND_TYPE_INVALID);
+	return model->priv->cmd_type;
+}
+
+/**
+ * gda_data_model_set_command_type
+ * @model: a #GdaDataModel.
+ * @type: the type of the command (one of #GdaCommandType)
+ */
+void
+gda_data_model_set_command_type (GdaDataModel *model, GdaCommandType type)
+{
+	g_return_if_fail (GDA_IS_DATA_MODEL (model));
+	model->priv->cmd_type = type;
+}
+

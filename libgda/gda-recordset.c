@@ -106,7 +106,7 @@ gda_recordset_get_value_at (GdaDataModel *model, gint col, gint row)
 		return GDA_DATA_MODEL_CLASS (parent_class)->get_value_at (model, col, row);
 
 	for (i = fetched_count; i <= row; i++) {
-		GdaRow *row_data;
+		GList *row_data;
 		GList *value_list = NULL;
 		GList *l;
 
@@ -282,57 +282,3 @@ gda_recordset_get_connection (GdaRecordset *recset)
 	return recset->priv->cnc;
 }
 
-/**
- * gda_recordset_get_command_text
- * @recset: a #GdaRecordset.
- *
- * Get the text of command that generated this recordset.
- *
- * Returns: a string with the command issued.
- */
-const gchar *
-gda_recordset_get_command_text (GdaRecordset *recset)
-{
-	g_return_val_if_fail (GDA_IS_RECORDSET (recset), NULL);
-	return recset->priv->cmd_text;
-}
-
-/**
- * gda_recordset_set_command_text
- */
-void
-gda_recordset_set_command_text (GdaRecordset *recset, const gchar *txt)
-{
-	g_return_if_fail (GDA_IS_RECORDSET (recset));
-	g_return_if_fail (txt != NULL);
-
-	if (recset->priv->cmd_text)
-		g_free (recset->priv->cmd_text);
-	recset->priv->cmd_text = g_strdup (txt);
-}
-
-/**
- * gda_recordset_get_command_type
- * @recset: a #GdaRecordset.
- *
- * Get the type of command that generated this recordset.
- *
- * Returns: a #GdaCommandType.
- */
-GdaCommandType
-gda_recordset_get_command_type (GdaRecordset *recset)
-{
-	g_return_val_if_fail (GDA_IS_RECORDSET (recset), GDA_COMMAND_TYPE_INVALID);
-	return recset->priv->cmd_type;
-
-}
-
-/**
- * gda_recordset_set_command_type
- */
-void
-gda_recordset_set_command_type (GdaRecordset *recset, GdaCommandType type)
-{
-	g_return_if_fail (GDA_IS_RECORDSET (recset));
-	recset->priv->cmd_type = type;
-}

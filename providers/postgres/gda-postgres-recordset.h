@@ -26,12 +26,13 @@
 #if !defined(__gda_postgres_recordset_h__)
 #  define __gda_postgres_recordset_h__
 
-#include <libgda/gda-recordset.h>
+#include <libgda/gda-data-model-array.h>
+#include <libgda/gda-value.h>
 #include <libpq-fe.h>
 
 G_BEGIN_DECLS
 
-GdaRecordset *gda_postgres_recordset_new (GdaConnection *cnc, PGresult *pgres);
+GdaDataModel *gda_postgres_recordset_new (GdaConnection *cnc, PGresult *pgres);
 
 G_END_DECLS
 

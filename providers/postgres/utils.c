@@ -129,10 +129,10 @@ make_timestamp (GdaTimestamp *timestamp, const gchar *value)
 	timestamp->timezone = atol (value) * 60 * 60;
 }
 
-void 
-gda_postgres_set_field_data (GdaField *field, const gchar *fname,
-			     GdaValueType type, const gchar *value, 
-			     gint dbsize, gboolean isNull)
+void
+gda_postgres_set_value (GdaValue *value, const gchar *fname,
+			GdaValueType type, const gchar *thevalue, 
+			gint dbsize, gboolean isNull)
 {
 	GDate *gdate;
 	GdaDate date;
@@ -140,101 +140,80 @@ gda_postgres_set_field_data (GdaField *field, const gchar *fname,
 	GdaTimestamp timestamp;
 	GdaGeometricPoint point;
 	GdaNumeric numeric;
-	gint scale;
 
-	g_return_if_fail (field != NULL);
-	g_return_if_fail (fname != NULL);
 	g_return_if_fail (value != NULL);
+	g_return_if_fail (fname != NULL);
+	g_return_if_fail (thevalue != NULL);
 
 	//TODO: What do I do with BLOBs?
 
-	gda_field_set_name (field, fname);
-	// dbsize == -1 => variable length
-	gda_field_set_defined_size (field, dbsize);
-	scale = (type == GDA_VALUE_TYPE_DOUBLE) ? DBL_DIG :
-		(type == GDA_VALUE_TYPE_SINGLE) ? FLT_DIG : 0;
-	gda_field_set_scale (field, scale);
-
-	if (isNull) 
-		type = GDA_VALUE_TYPE_NULL;
+	if (isNull){
+		gda_value_set_null (value);
+		return;
+	}
 
 	switch (type) {
 	case GDA_VALUE_TYPE_BOOLEAN :
-		gda_field_set_gdatype (field, type);
-		gda_field_set_boolean_value (field, 
-				(*value == 't') ? TRUE : FALSE);
+		gda_value_set_boolean (value, (*thevalue == 't') ? TRUE : FALSE);
 		break;
 	case GDA_VALUE_TYPE_STRING :
-		gda_field_set_gdatype (field, type);
-		gda_field_set_string_value (field, value);
+		gda_value_set_string (value, thevalue);
 		break;
 	case GDA_VALUE_TYPE_BIGINT :
-		gda_field_set_gdatype (field, type);
-		gda_field_set_bigint_value (field, atoll (value));
+		gda_value_set_bigint (value, atoll (thevalue));
 		break;
 	case GDA_VALUE_TYPE_INTEGER :
-		gda_field_set_gdatype (field, type);
-		gda_field_set_integer_value (field, atol (value));
+		gda_value_set_integer (value, atol (thevalue));
 		break;
 	case GDA_VALUE_TYPE_SMALLINT :
-		gda_field_set_gdatype (field, type);
-		gda_field_set_smallint_value (field, atoi (value));
+		gda_value_set_smallint (value, atoi (thevalue));
 		break;
 	case GDA_VALUE_TYPE_SINGLE :
-		gda_field_set_gdatype (field, type);
-		gda_field_set_single_value (field, atof (value));
+		gda_value_set_single (value, atof (thevalue));
 		break;
 	case GDA_VALUE_TYPE_DOUBLE :
-		gda_field_set_gdatype (field, type);
-		gda_field_set_double_value (field, atof (value));
+		gda_value_set_double (value, atof (thevalue));
 		break;
 	case GDA_VALUE_TYPE_NUMERIC :
-		numeric.number = g_strdup (value);
+		numeric.number = g_strdup (thevalue);
 		numeric.precision = 0; //FIXME
 		numeric.width = 0; //FIXME
-		gda_field_set_gdatype (field, type);
-		gda_field_set_numeric_value (field, &numeric);
+		gda_value_set_numeric (value, &numeric);
 		g_free (numeric.number);
 		break;
 	case GDA_VALUE_TYPE_DATE :
-		gda_field_set_gdatype (field, type);
 		gdate = g_date_new ();
-		g_date_set_parse (gdate, value);
+		g_date_set_parse (gdate, thevalue);
 		if (!g_date_valid (gdate)) {
 			g_warning ("Could not parse '%s' "
-				"Setting date to 01/01/0001!\n", value);
+				"Setting date to 01/01/0001!\n", thevalue);
 			g_date_clear (gdate, 1);
 			g_date_set_dmy (gdate, 1, 1, 1);
 		}
 		date.day = g_date_get_day (gdate);
 		date.month = g_date_get_month (gdate);
 		date.year = g_date_get_year (gdate);
-		gda_field_set_date_value (field, &date);
+		gda_value_set_date (value, &date);
 		g_date_free (gdate);
 		break;
 	case GDA_VALUE_TYPE_GEOMETRIC_POINT :
-		make_point (&point, value);
-		gda_field_set_geometric_point_value (field, &point);
-		gda_field_set_gdatype (field, type);
+		make_point (&point, thevalue);
+		gda_value_set_geometric_point (value, &point);
 		break;
 	case GDA_VALUE_TYPE_NULL :
-		gda_field_set_gdatype (field, type);
-		gda_field_set_null_value (field);
+		gda_value_set_null (value);
 		break;
 	case GDA_VALUE_TYPE_TIMESTAMP :
-		make_timestamp (&timestamp, value);
-		gda_field_set_timestamp_value (field, &timestamp);
-		gda_field_set_gdatype (field, type);
+		make_timestamp (&timestamp, thevalue);
+		gda_value_set_timestamp (value, &timestamp);
 		break;
 	case GDA_VALUE_TYPE_TIME :
-		make_time (&timegda, value);
-		gda_field_set_time_value (field, &timegda);
-		gda_field_set_gdatype (field, type);
+		make_time (&timegda, thevalue);
+		gda_value_set_time (value, &timegda);
 		break;
 	case GDA_VALUE_TYPE_BINARY : //FIXME
 	default :
-		gda_field_set_string_value (field, value);
-		gda_field_set_gdatype (field, GDA_VALUE_TYPE_STRING);
+		gda_value_set_string (value, thevalue);
 	}
 }
 

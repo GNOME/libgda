@@ -1,3 +1,24 @@
+2002-05-09  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
+	* libgda/gda-command.h: added GDA_COMMAND_TYPE_SCHEMA.
+
+	* libgda/gda-data-model.[ch]: added get/set for command text and type.
+
+	* libgda/gda-field.c (gda_field_set_caption): changed assertion. The
+	function returns void.
+
+	* libgda/gda-recordset.c: removed get/set for command text and type.
+
+	* providers/postgres/gda-postgres-provider.c:
+	* providers/postgres/gda-postgres-recordset.[ch]:
+	* providers/postgres/gda-postgres-recordset.h:
+	* providers/postgres/gda-postgres.h:
+	* providers/postgres/utils.c: use GdaDataModel instead of
+	GdaRecordset.
+
+	* testing/models.c: changed some GDA_IS_RECORDSET by GDA_IS_DATA_MODEL
+	and gda_recordset_get_command* by gda_data_model_get_command*.
+
 2002-05-07  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
 	* libgda/gda-config.c: added writing configuration file support.

@@ -379,7 +379,7 @@ process_sql_commands (GList *reclist, GdaConnection *cnc,
 
 		while (arr[n]) {
 			PGresult *pg_res;
-			GdaRecordset *recset;
+			GdaDataModel *recset;
 			gint status;
 
 			pg_res = PQexec(pconn, arr[n]);
@@ -397,9 +397,9 @@ process_sql_commands (GList *reclist, GdaConnection *cnc,
 			    status == PGRES_TUPLES_OK 			||
 			    status == PGRES_COMMAND_OK) {
 				recset = gda_postgres_recordset_new (cnc, pg_res);
-				if (GDA_IS_RECORDSET (recset)) {
-					gda_recordset_set_command_text (recset, arr[n]);
-					gda_recordset_set_command_type (recset, GDA_COMMAND_TYPE_SQL);
+				if (GDA_IS_DATA_MODEL (recset)) {
+					gda_data_model_set_command_text (recset, arr[n]);
+					gda_data_model_set_command_type (recset, GDA_COMMAND_TYPE_SQL);
 					reclist = g_list_append (reclist, recset);
 				}
 			}
@@ -545,7 +545,7 @@ static GdaDataModel *
 get_postgres_procedures (GdaConnection *cnc, GdaParameterList *params)
 {
 	GList *reclist;
-	GdaRecordset *recset;
+	GdaDataModel *recset;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
@@ -556,17 +556,17 @@ get_postgres_procedures (GdaConnection *cnc, GdaParameterList *params)
 	if (!reclist)
 		return NULL;
 
-	recset = GDA_RECORDSET (reclist->data);
+	recset = GDA_DATA_MODEL (reclist->data);
 	g_list_free (reclist);
 
-	return GDA_DATA_MODEL (recset);
+	return recset;
 }
 
 static GdaDataModel *
 get_postgres_tables (GdaConnection *cnc, GdaParameterList *params)
 {
 	GList *reclist;
-	GdaRecordset *recset;
+	GdaDataModel *recset;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
@@ -579,10 +579,10 @@ get_postgres_tables (GdaConnection *cnc, GdaParameterList *params)
 	if (!reclist)
 		return NULL;
 
-	recset = GDA_RECORDSET (reclist->data);
+	recset = GDA_DATA_MODEL (reclist->data);
 	g_list_free (reclist);
 
-	return GDA_DATA_MODEL (recset);
+	return recset;
 }
 
 static void
@@ -619,10 +619,7 @@ get_postgres_types (GdaConnection *cnc, GdaParameterList *params)
 
 	/* create the recordset */
 	recset = GDA_DATA_MODEL_ARRAY (gda_data_model_array_new (1));
-	//gda_server_recordset_model_set_field_defined_size (recset, 0, 32);
 	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 0, _("Type"));
-	//gda_server_recordset_model_set_field_scale (recset, 0, 0);
-	//gda_server_recordset_model_set_field_gdatype (recset, 0, GDA_VALUE_TYPE_STRING);
 
 	/* fill the recordset */
 	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE);
@@ -637,7 +634,7 @@ static GdaDataModel *
 get_postgres_views (GdaConnection *cnc, GdaParameterList *params)
 {
 	GList *reclist;
-	GdaRecordset *recset;
+	GdaDataModel *recset;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
@@ -650,17 +647,17 @@ get_postgres_views (GdaConnection *cnc, GdaParameterList *params)
 	if (!reclist)
 		return NULL;
 
-	recset = GDA_RECORDSET (reclist->data);
+	recset = GDA_DATA_MODEL (reclist->data);
 	g_list_free (reclist);
 
-	return GDA_DATA_MODEL (recset);
+	return recset;
 }
 
 static GdaDataModel *
 get_postgres_indexes (GdaConnection *cnc, GdaParameterList *params)
 {
 	GList *reclist;
-	GdaRecordset *recset;
+	GdaDataModel *recset;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
@@ -673,17 +670,17 @@ get_postgres_indexes (GdaConnection *cnc, GdaParameterList *params)
 	if (!reclist)
 		return NULL;
 
-	recset = GDA_RECORDSET (reclist->data);
+	recset = GDA_DATA_MODEL (reclist->data);
 	g_list_free (reclist);
 
-	return GDA_DATA_MODEL (recset);
+	return recset;
 }
 
 static GdaDataModel *
 get_postgres_aggregates (GdaConnection *cnc, GdaParameterList *params)
 {
 	GList *reclist;
-	GdaRecordset *recset;
+	GdaDataModel *recset;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
@@ -697,17 +694,17 @@ get_postgres_aggregates (GdaConnection *cnc, GdaParameterList *params)
 	if (!reclist)
 		return NULL;
 
-	recset = GDA_RECORDSET (reclist->data);
+	recset = GDA_DATA_MODEL (reclist->data);
 	g_list_free (reclist);
 
-	return GDA_DATA_MODEL (recset);
+	return recset;
 }
 
 static GdaDataModel *
 get_postgres_triggers (GdaConnection *cnc, GdaParameterList *params)
 {
 	GList *reclist;
-	GdaRecordset *recset;
+	GdaDataModel *recset;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
@@ -720,19 +717,19 @@ get_postgres_triggers (GdaConnection *cnc, GdaParameterList *params)
 	if (!reclist)
 		return NULL;
 
-	recset = GDA_RECORDSET (reclist->data);
+	recset = GDA_DATA_MODEL (reclist->data);
 	g_list_free (reclist);
 
-	return GDA_DATA_MODEL (recset);
+	return recset;
 }
 
 static GdaDataModelArray *
 gda_postgres_init_md_recset (GdaConnection *cnc)
 {
 	GdaDataModelArray *recset;
-	GdaValueType data_type;
-	gint defined_size;
-	int i;
+	//GdaValueType data_type;
+	//gint defined_size;
+	gint i;
 	GdaPostgresColData cols[8] = {
 		{ N_("Field name")	, GDA_VALUE_TYPE_STRING  },
 		{ N_("Data type")	, GDA_VALUE_TYPE_STRING  },
@@ -744,11 +741,11 @@ gda_postgres_init_md_recset (GdaConnection *cnc)
 		{ N_("References")	, GDA_VALUE_TYPE_STRING  }
 		};
 
-	recset = GDA_DATA_MODEL_ARRAY (gda_data_model_array_new (8));
+	recset = GDA_DATA_MODEL_ARRAY (gda_data_model_array_new (sizeof cols / sizeof cols[0]));
 	for (i = 0; i < sizeof cols / sizeof cols[0]; i++) {
-		data_type = cols[i].data_type;
-		defined_size =  (data_type == GDA_VALUE_TYPE_STRING) ? NAMEDATALEN : 
-				(data_type == GDA_VALUE_TYPE_INTEGER) ? sizeof(gint) : 1;
+		//data_type = cols[i].data_type;
+		//defined_size =  (data_type == GDA_VALUE_TYPE_STRING) ? NAMEDATALEN : 
+		//		(data_type == GDA_VALUE_TYPE_INTEGER) ? sizeof(gint) : 1;
 
 		//gda_server_recordset_model_set_field_defined_size (recset, i, defined_size);
 		gda_data_model_set_column_title (GDA_DATA_MODEL (recset), i, _(cols[i].col_name));
@@ -1069,7 +1066,7 @@ static GdaDataModel *
 get_postgres_databases (GdaConnection *cnc, GdaParameterList *params)
 {
 	GList *reclist;
-	GdaRecordset *recset;
+	GdaDataModel *recset;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
@@ -1082,17 +1079,17 @@ get_postgres_databases (GdaConnection *cnc, GdaParameterList *params)
 	if (!reclist)
 		return NULL;
 
-	recset = GDA_RECORDSET (reclist->data);
+	recset = GDA_DATA_MODEL (reclist->data);
 	g_list_free (reclist);
 
-	return GDA_DATA_MODEL (recset);
+	return recset;
 }
 
 static GdaDataModel *
 get_postgres_users (GdaConnection *cnc, GdaParameterList *params)
 {
 	GList *reclist;
-	GdaRecordset *recset;
+	GdaDataModel *recset;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
@@ -1105,17 +1102,17 @@ get_postgres_users (GdaConnection *cnc, GdaParameterList *params)
 	if (!reclist)
 		return NULL;
 
-	recset = GDA_RECORDSET (reclist->data);
+	recset = GDA_DATA_MODEL (reclist->data);
 	g_list_free (reclist);
 
-	return GDA_DATA_MODEL (recset);
+	return recset;
 }
 
 static GdaDataModel *
 get_postgres_sequences (GdaConnection *cnc, GdaParameterList *params)
 {
 	GList *reclist;
-	GdaRecordset *recset;
+	GdaDataModel *recset;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
@@ -1131,10 +1128,10 @@ get_postgres_sequences (GdaConnection *cnc, GdaParameterList *params)
 	if (!reclist)
 		return NULL;
 
-	recset = GDA_RECORDSET (reclist->data);
+	recset = GDA_DATA_MODEL (reclist->data);
 	g_list_free (reclist);
 
-	return GDA_DATA_MODEL (recset);
+	return recset;
 }
 
 /* get_schema handler for the GdaPostgresProvider class */

@@ -43,9 +43,9 @@ G_BEGIN_DECLS
  */
 
 GdaError *gda_postgres_make_error (PGconn *pconn, PGresult *pg_res);
-void gda_postgres_set_field_data (GdaField *field, const gchar *fname,
-				  GdaValueType type, const gchar *value, 
-				  gint dbsize, gboolean isNull);
+void gda_postgres_set_value (GdaValue *value, const gchar *fname,
+			     GdaValueType type, const gchar *thevalue, 
+			     gint dbsize, gboolean isNull);
 
 GdaValueType gda_postgres_type_oid_to_gda (GdaPostgresTypeOid *type_data, 
 					   gint ntypes, Oid postgres_type);

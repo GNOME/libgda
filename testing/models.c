@@ -67,7 +67,7 @@ display_recordset_data (GdaDataModel *model)
 	GdaCommandType cmd_type;
 	const gchar *cmd_text, *type_text;
 
-	g_return_if_fail (GDA_IS_RECORDSET (model));
+	g_return_if_fail (GDA_IS_DATA_MODEL (model));
 
 	cols = gda_data_model_get_n_columns (model);
 	rows = gda_data_model_get_n_rows (model);
@@ -75,9 +75,9 @@ display_recordset_data (GdaDataModel *model)
 	g_print ("Displaying recordset %p, with %d columns and %d rows:\n",
 		 model, cols, rows);
 
-	cmd_type = gda_recordset_get_command_type (GDA_RECORDSET (model));
+	cmd_type = gda_data_model_get_command_type (model);
 	type_text = command_type_to_string (cmd_type);
-	cmd_text = gda_recordset_get_command_text (GDA_RECORDSET (model));
+	cmd_text = gda_data_model_get_command_text (model);
 	g_print ("The query (type '%s') leading up to this result was:\n\t'%s'\n\n",
 			type_text, cmd_text ? cmd_text : "<null>");
 

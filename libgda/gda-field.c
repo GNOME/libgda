@@ -426,7 +426,7 @@ gda_field_get_caption (GdaField *field)
 void
 gda_field_set_caption (GdaField *field, const gchar *caption)
 {
-	g_return_val_if_fail (field != NULL, NULL);
+	g_return_if_fail (field != NULL);
 	gda_field_attributes_set_caption (field->attributes, caption);
 }
 
