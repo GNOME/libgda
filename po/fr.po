@@ -7,10 +7,10 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: libgda 0.99.0\n"
+"Project-Id-Version: libgda 1.0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2003-09-11 00:35+0200\n"
-"PO-Revision-Date: 2003-09-06 11:53+0200\n"
+"POT-Creation-Date: 2003-09-20 17:49+0200\n"
+"PO-Revision-Date: 2003-09-20 12:57+0200\n"
 "Last-Translator: Baptiste MILLE-MATHIAS <bmm80@ifrance.com>\n"
 "Language-Team: GNOME French Team <gnomefr@traduc.org>\n"
 "MIME-Version: 1.0\n"
@@ -235,37 +235,45 @@ msgstr "Erreur lors de la création du conteneur de message."
 msgid "Error creating error container."
 msgstr "Erreur lors de la création du conteneur d'erreur."
 
-#: providers/freetds/gda-freetds-provider.c:255
-#: providers/freetds/gda-freetds-provider.c:257
+#: providers/freetds/gda-freetds-provider.c:258
+#: providers/freetds/gda-freetds-provider.c:260
 msgid "Allocating tds context failed."
-msgstr "Échec de l'allocation de contexte tds."
+msgstr "L'allocation du contexte tds a échoué."
 
 #: providers/freetds/gda-freetds-provider.c:275
 #: providers/freetds/gda-freetds-provider.c:277
-msgid "Establishing connection failed."
-msgstr "Échec de l'établissement de connexion."
+msgid "Allocating tds socket failed."
+msgstr "L'allocation du socket tds a échoué."
 
-#: providers/freetds/gda-freetds-provider.c:291
+#. gda_freetds_free_connection_data (tds_cnc);
+#: providers/freetds/gda-freetds-provider.c:283
+#: providers/freetds/gda-freetds-provider.c:285
 #: providers/freetds/gda-freetds-provider.c:292
-msgid "Failed getting connection info."
-msgstr "Échec de réception de l'information de connexion."
+#: providers/freetds/gda-freetds-provider.c:294
+msgid "Establishing connection failed."
+msgstr "L'établissement de connexion a échoué."
 
-#: providers/freetds/gda-freetds-provider.c:781
-#: providers/freetds/gda-freetds-provider.c:782
+#: providers/freetds/gda-freetds-provider.c:308
+#: providers/freetds/gda-freetds-provider.c:309
+msgid "Failed getting connection info."
+msgstr "La réception de l'information de connexion a échoué."
+
+#: providers/freetds/gda-freetds-provider.c:798
+#: providers/freetds/gda-freetds-provider.c:799
 msgid "Query did not succeed in execute_cmd()."
 msgstr "La requète à échoué dans execute_cmd()."
 
-#: providers/freetds/gda-freetds-provider.c:795
-#: providers/freetds/gda-freetds-provider.c:797
+#: providers/freetds/gda-freetds-provider.c:812
+#: providers/freetds/gda-freetds-provider.c:814
 msgid "Unexpected result tokens in execute_cmd()."
 msgstr "Jetons de résultat inattendus dans execute_cmd()."
 
-#: providers/freetds/gda-freetds-provider.c:805
-#: providers/freetds/gda-freetds-provider.c:806
+#: providers/freetds/gda-freetds-provider.c:822
+#: providers/freetds/gda-freetds-provider.c:823
 msgid "Unexpected return in execute_cmd()."
 msgstr "Résultat inattendue dans execute_cmd()."
 
-#: providers/freetds/gda-freetds-provider.c:1043
+#: providers/freetds/gda-freetds-provider.c:1060
 #, c-format
 msgid ""
 "Msg %d, Level %d, State %d, Server %s, Line %d\n"
@@ -274,7 +282,7 @@ msgstr ""
 "Msg %d, Niveau %d, Statut %d, Serveur %s, Ligne %d\n"
 "%s\n"
 
-#: providers/freetds/gda-freetds-provider.c:1062 providers/freetds/utils.c:44
+#: providers/freetds/gda-freetds-provider.c:1079 providers/freetds/utils.c:44
 #: providers/oracle/utils.c:74 providers/postgres/utils.c:53
 #: providers/sybase/gda-sybase-provider.c:765
 #: providers/sybase/gda-sybase-recordset.c:512
@@ -496,7 +504,7 @@ msgid "Row number out of range"
 msgstr "Numéro d'enregistrements hors limite"
 
 #: providers/ldap/gda-ldap-recordset.c:283
-#: providers/msql/gda-msql-recordset.c:227
+#: providers/msql/gda-msql-recordset.c:229
 #: providers/mysql/gda-mysql-recordset.c:294
 #: providers/oracle/gda-oracle-recordset.c:469
 msgid "Attempt to insert a row with an invalid number of columns"
@@ -505,14 +513,14 @@ msgstr ""
 "non valide de colonnes"
 
 #: providers/ldap/gda-ldap-recordset.c:298
-#: providers/msql/gda-msql-recordset.c:239
+#: providers/msql/gda-msql-recordset.c:241
 #: providers/mysql/gda-mysql-recordset.c:309
 #: providers/oracle/gda-oracle-recordset.c:484
 msgid "Could not retrieve column's information"
 msgstr "Impossible de récupérer les informations de la colonne"
 
 #: providers/ldap/gda-ldap-recordset.c:316
-#: providers/msql/gda-msql-recordset.c:253
+#: providers/msql/gda-msql-recordset.c:255
 #: providers/mysql/gda-mysql-recordset.c:327
 #: providers/oracle/gda-oracle-recordset.c:502
 msgid "Could not retrieve column's value"
@@ -747,7 +755,7 @@ msgstr "Fournisseur pour bases de données Hughes Technologies mSQL"
 #: providers/msql/gda-msql-provider.c:293
 #: providers/msql/gda-msql-provider.c:551
 #: providers/msql/gda-msql-recordset.c:50
-#: providers/msql/gda-msql-recordset.c:138
+#: providers/msql/gda-msql-recordset.c:140
 msgid "Invalid mSQL handle"
 msgstr "Gestion mSQL non valide"
 
@@ -1253,7 +1261,7 @@ msgstr "Fournisseur pour bases de données SQLite"
 
 #: providers/sybase/gda-sybase-provider.c:291
 msgid "Out of memory. Allocating connection structure failed."
-msgstr "Manque de mémoire. L'allocation de la stucture de connexion a échouée."
+msgstr "Manque de mémoire. L'allocation de la stucture de connexion a échoué."
 
 #: providers/sybase/gda-sybase-provider.c:336
 #, c-format
@@ -1314,7 +1322,7 @@ msgstr "%s a renvoyé %s"
 
 #: providers/sybase/gda-sybase-provider.c:820
 msgid "Failed dropping command structure."
-msgstr "Erreur de suppression de la structure de commande."
+msgstr "La suppression de la structure de commande a échoué."
 
 #: providers/sybase/gda-sybase-provider.c:850
 #, c-format
@@ -1542,7 +1550,8 @@ msgstr "ct_diag() n'a pu déterminé le nb. de messages client."
 
 #: providers/sybase/utils.c:202
 msgid "call to cs_diag failed when attempting to the amount of client messages"
-msgstr "l'appel·à·ct_diag·a·échoué·en·atteignant·la·quantité·des·messages·client"
+msgstr ""
+"l'appel à ct_diag a échoué en atteignant la quantité des messages client"
 
 #: providers/sybase/utils.c:220
 msgid ""
@@ -1619,7 +1628,8 @@ msgstr "Ligne"
 
 #: providers/sybase/utils.c:446
 msgid "call to ct_diag failed when attempting to the amount of client messages"
-msgstr "l'appel·à·ct_diag·a·échoué·en·atteignant·la·quantité·des·messages·client"
+msgstr ""
+"l'appel à ct_diag a échoué en atteignant la quantité des messages client"
 
 #: providers/sybase/utils.c:463
 msgid ""
