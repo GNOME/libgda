@@ -1,3 +1,8 @@
+2004-08-16  Vivien Malerba <malerba@gnome-db.org>
+	* libsql/parser.y: bug fixed to allow the alias specification for any
+	  target in queries
+	* libsql/sql_tree.c: bug fixed with uninitialized allocated memory
+
 2004-08-16  Joe Marcus Clarke <marcus@freebsd.org>
 
 	* providers/xml/gda-xml-provider.c (get_types): use empty strings

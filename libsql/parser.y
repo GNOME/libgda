@@ -45,10 +45,10 @@ sql_order_field *of;
 
 %type <v> select_statement insert_statement update_statement delete_statement
 %type <str> L_IDENT L_STRING L_TEXTUAL
-%type <list> fields_list tables_list field_name dotted_name opt_orderby opt_groupby opt_fields_list set_list param_spec param_spec_list order_fields_list
+%type <list> fields_list targets_list field_name dotted_name opt_orderby opt_groupby opt_fields_list set_list param_spec param_spec_list order_fields_list
 %type <f> field
 %type <fi> field_raw
-%type <t> simple_table table 
+%type <t> simple_table table target simple_target
 %type <i> condition_operator field_op opt_distinct join_type
 %type <w> where_list opt_where
 %type <c> where_item set_item
@@ -67,21 +67,21 @@ statement: select_statement	{sql_result = sql_statement_build (SQL_select, $1);}
 	| delete_statement	{sql_result = sql_statement_build (SQL_delete, $1);}
 	;
 	
-select_statement: L_SELECT opt_distinct fields_list L_FROM tables_list opt_where opt_orderby opt_groupby
+select_statement: L_SELECT opt_distinct fields_list L_FROM targets_list opt_where opt_orderby opt_groupby
                         {$$ = sql_select_statement_build ($2, $3, $5, $6, $7, $8);}
 	| L_SELECT opt_distinct fields_list opt_where opt_orderby opt_groupby
                         {$$ = sql_select_statement_build ($2, $3, NULL, $4, $5, $6);}
         ;
 
-insert_statement: L_INSERT L_INTO simple_table opt_fields_list L_VALUES L_LBRACKET fields_list L_RBRACKET
+insert_statement: L_INSERT L_INTO simple_target opt_fields_list L_VALUES L_LBRACKET fields_list L_RBRACKET
 			{$$ = sql_insert_statement_build ($3, $4, $7);}
 	;
 
-update_statement: L_UPDATE simple_table L_SET set_list opt_where
+update_statement: L_UPDATE simple_target L_SET set_list opt_where
 			{$$ = sql_update_statement_build ($2, $4, $5);}
 	;
 
-delete_statement: L_DELETE L_FROM simple_table opt_where
+delete_statement: L_DELETE L_FROM simple_target opt_where
                         {$$ = sql_delete_statement_build ($3, $4);}
         ;
 
@@ -132,23 +132,30 @@ join_type: L_LEFT L_JOIN		{$$ = SQL_left_join;}
 	| L_JOIN			{$$ = SQL_inner_join;}
 	;
 
-tables_list: table					{$$ = g_list_append (NULL, $1);}
-	| tables_list L_COMMA table			{$$ = g_list_append ($1, $3);}
-	| tables_list join_type table			{$$ = g_list_append ($1, sql_table_set_join ($3, $2, NULL));}
-	| tables_list join_type table L_ON where_list   {$$ = g_list_append ($1, sql_table_set_join ($3, $2, $5));}
+targets_list: target					{$$ = g_list_append (NULL, $1);}
+	| targets_list L_COMMA target			{$$ = g_list_append ($1, $3);}
+	| targets_list join_type target		 	{$$ = g_list_append ($1, sql_table_set_join ($3, $2, NULL));}
+	| targets_list join_type target L_ON where_list {$$ = g_list_append ($1, sql_table_set_join ($3, $2, $5));}
 	;
 
-simple_table: L_IDENT                   {$$ = sql_table_build ($1); memsql_free ($1);}
-        | simple_table L_AS L_IDENT            {$$ = sql_table_set_as ($1, $3);}
-        | simple_table L_IDENT                 {$$ = sql_table_set_as ($1, $2);}
+simple_table: L_IDENT                       {$$ = sql_table_build ($1); memsql_free ($1);}
         ;
 
-table:    simple_table                  {$$ = $1;}
+table:  simple_table                    {$$ = $1;}
         | select_statement              {$$ = sql_table_build_select ($1);}
         | L_LBRACKET table L_RBRACKET   {$$ = $2;}
 	| L_IDENT L_LBRACKET fields_list L_RBRACKET {$$ = sql_table_build_function ($1, $3); }
         | L_IDENT L_LBRACKET L_RBRACKET {$$ = sql_table_build_function ($1, NULL); }
         ;
+
+target:   table                         {$$ = $1;}
+        | table L_AS L_IDENT            {$$ = sql_table_set_as ($1, $3);}
+        | table L_IDENT                 {$$ = sql_table_set_as ($1, $2);}
+
+simple_target: simple_table                    {$$ = $1;}
+	| simple_table L_AS L_IDENT            {$$ = sql_table_set_as ($1, $3);}
+        | simple_table L_IDENT                 {$$ = sql_table_set_as ($1, $2);}
+	;
 
 dotted_name: L_IDENT                    {$$ = g_list_append (NULL, memsql_strdup ($1)); memsql_free ($1);}
         | L_IDENT L_DOT dotted_name     {$$ = g_list_prepend ($3, memsql_strdup ($1)); memsql_free ($1);}

@@ -217,8 +217,11 @@ sql_table_build_select (sql_select_statement * select)
 	sql_table *retval;
 
 	retval = memsql_alloc (sizeof *retval);
-	retval->type = SQL_nestedselect, retval->d.select = select;
+	retval->type = SQL_nestedselect;
+	retval->d.select = select;
 	retval->as = NULL;
+	retval->join_cond = NULL;
+	retval->join_type = SQL_cross_join;
 
 	return retval;
 }
