@@ -20,7 +20,48 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include "gda-test.h"
+#include "models.h"
+
+/*
+ * display_recordset_data
+ * @model: a recordset with the data to display.
+ *
+ * For each row in the recordset displays the name of each column, type,
+ * value...
+ *
+ * Returns: nothing
+ */
+void
+display_recordset_data (GdaDataModel *model)
+{
+	gint cols, rows;
+	gint c, r;
+
+	g_return_if_fail (GDA_IS_RECORDSET (model));
+
+	cols = gda_data_model_get_n_columns (model);
+	rows = gda_data_model_get_n_rows (model);
+
+	g_print ("Displaying recordset %p, with %d columns and %d rows:\n",
+		 model, cols, rows);
+
+	for (r = 0; r < rows; r++) {
+		g_print ("\tRow %02d -------\n", r);
+		for (c = 0; c < cols; c++) {
+			GdaValue *value;
+			gchar *strvalue;
+			const gchar *colname;
+
+			colname = gda_data_model_get_column_title (model, c);
+			value = (GdaValue *) gda_data_model_get_value_at (model, c, r);
+			strvalue = gda_value_stringify (value);
+			g_print ("\t\tColumn %02d name: %s\n", 
+					c, colname);
+			g_print ("\t\t         value: ('%s')\n", strvalue);
+			g_free (strvalue);
+		}
+	}
+}
 
 void
 display_data_model (GdaDataModel *model)
@@ -42,6 +83,7 @@ display_data_model (GdaDataModel *model)
 			value = (GdaValue *) gda_data_model_get_value_at (model, c, r);
 			str = gda_value_stringify (value);
 			g_print ("\tColumn %d - Row %d: %s\n", c, r, str);
+			g_free (str);
 		}
 	}
 }
@@ -75,7 +117,7 @@ test_list_model (void)
 
 	/* retrieve a string list */
 	sections = gda_config_list_keys ("/desktop/gnome/interface");
-	model = gda_data_model_list_new_from_string_list (sections);
+	model = (GdaDataModelList *) gda_data_model_list_new_from_string_list (sections);
 	gda_config_free_list (sections);
 
 	if (!GDA_IS_DATA_MODEL (model)) {
@@ -95,7 +137,7 @@ test_array_model (void)
 
 	g_print (" Testing array model...\n");
 
-	model = gda_data_model_array_new (6);
+	model = (GdaDataModelArray *) gda_data_model_array_new (6);
 	if (!GDA_IS_DATA_MODEL_ARRAY (model)) {
 		g_print ("** ERROR: Could not create GdaDataModelArray\n");
 		gda_main_quit ();
@@ -113,7 +155,7 @@ test_array_model (void)
 
 		gda_data_model_array_append_row (model, values);
 
-		g_list_foreach (values, gda_value_free, NULL);
+		g_list_foreach (values, (GFunc) gda_value_free, NULL);
 		g_list_free (values);
 	}
 

@@ -140,10 +140,7 @@ select_data (GdaConnection *cnc)
 void
 do_postgres_test (GdaConnection *cnc)
 {
-	GdaCommand *insert_command;
-	GdaCommand *select_command;
 	GList *list;
-	gint col_count;
 
 	g_return_if_fail (GDA_IS_CONNECTION (cnc));
 
@@ -170,7 +167,7 @@ do_postgres_test (GdaConnection *cnc)
 			 list ? "OK" : "Error");
 
 	g_print ("-----------------\n");
-	g_list_foreach (list, (GFunc) display_data_model, NULL);
+	g_list_foreach (list, (GFunc) display_recordset_data, NULL);
 	g_print ("-----------------\n");
 
 	g_list_foreach (list, (GFunc) g_object_unref, NULL);

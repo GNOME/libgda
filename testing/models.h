@@ -25,6 +25,7 @@
 
 G_BEGIN_DECLS
 
+void display_recordset_data (GdaDataModel *model);
 void display_data_model (GdaDataModel *model);
 /* Main entry point for the data models test suite */
 void test_models (void);

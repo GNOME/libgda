@@ -1,3 +1,14 @@
+2002-01-15  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
+	* models.h: added declaration of display_recordset_data().
+
+	* models.c (display_recordset_data): new function to show all the data
+	associated with a recordset (column name, data type, scale...).
+	(display_data_model): free the string returned by
+	gda_value_stringify(). Removed warnings.
+
+	* postgres-test.c: use the new function in models.c
+
 2002-01-12  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* Makefile.am: added models.h to _SOURCES for distcheck
