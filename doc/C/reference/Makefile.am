@@ -20,7 +20,7 @@ local_entities = \
 	libgda-common/sgml/gda-thread.sgml \
 	libgda-common/sgml/gda-util.sgml \
 	libgda-common/sgml/gda-xml-database.sgml \
-	libgda-common/sgml/gda-xml-file.sgml \
+	libgda-common/sgml/gda-xml-document.sgml \
 	libgda-client/libgda-client-docs.sgml \
 	libgda-client/sgml/GDA.sgml \
 	libgda-client/sgml/gda-batch.sgml \
