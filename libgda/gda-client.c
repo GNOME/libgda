@@ -144,19 +144,19 @@ typedef struct {
 	gboolean already_removed;
 } prv_weak_cb_data;
 
-static void
+static gboolean
 remove_provider_in_hash (gpointer key, gpointer value, gpointer user_data)
 {
 	LoadedProvider *prv = value;
 	prv_weak_cb_data *cb_data = user_data;
 
 	if (prv->provider == cb_data->provider && !cb_data->already_removed) {
-		g_hash_table_remove (cb_data->client->priv->providers, key);
 		g_free (key);
 		g_module_close (prv->handle);
 		g_free (prv);
 		cb_data->already_removed = TRUE;
 	}
+	return TRUE;
 }
 
 static void
@@ -172,7 +172,7 @@ provider_weak_cb (gpointer user_data, GObject *object)
 	cb_data.client = client;
 	cb_data.provider = provider;
 	cb_data.already_removed = FALSE;
-	g_hash_table_foreach (client->priv->providers, (GHFunc) remove_provider_in_hash, &cb_data);
+	g_hash_table_foreach_remove (client->priv->providers, (GHRFunc) remove_provider_in_hash, &cb_data);
 }
 
 /*

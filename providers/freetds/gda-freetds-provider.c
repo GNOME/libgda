@@ -162,7 +162,7 @@ gda_freetds_provider_open_connection (GdaServerProvider *provider,
 	t_host = gda_quark_list_find (params, "HOST");
 	t_hostaddr = gda_quark_list_find (params, "HOSTADDR");
 	t_options = gda_quark_list_find (params, "OPTIONS");
-	t_user = gda_quark_list_find (params, "USERNAME");
+	t_user = gda_quark_list_find (params, "USER");
 	t_password = gda_quark_list_find (params, "PASSWORD");
 	t_port = gda_quark_list_find (params, "PORT");
 	

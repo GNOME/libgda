@@ -52,7 +52,7 @@ plugin_get_connection_params (void)
 	list = g_list_append (list, g_strdup ("PORT"));
 	list = g_list_append (list, g_strdup ("UNIX_SOCKET"));
 	list = g_list_append (list, g_strdup ("USE_SSL"));
-	list = g_list_append (list, g_strdup ("USERNAME"));
+	list = g_list_append (list, g_strdup ("USER"));
 
 	return list;
 }

@@ -198,7 +198,7 @@ gda_mysql_provider_open_connection (GdaServerProvider *provider,
 	/* get all parameters received */
 	t_host = gda_quark_list_find (params, "HOST");
 	t_db = gda_quark_list_find (params, "DATABASE");
-	t_user = gda_quark_list_find (params, "USERNAME");
+	t_user = gda_quark_list_find (params, "USER");
 	t_password = gda_quark_list_find (params, "PASSWORD");
 	t_port = gda_quark_list_find (params, "PORT");
 	t_unix_socket = gda_quark_list_find (params, "UNIX_SOCKET");

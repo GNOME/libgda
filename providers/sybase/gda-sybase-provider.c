@@ -252,7 +252,7 @@ gda_sybase_provider_open_connection (GdaServerProvider *provider,
 	if (username)
 		t_user = g_strdup(username);
 	else
-		t_user = gda_quark_list_find (params, "USERNAME");
+		t_user = gda_quark_list_find (params, "USER");
 
 		
 	if (password)

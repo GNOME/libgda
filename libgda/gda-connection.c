@@ -228,9 +228,9 @@ gda_connection_new (GdaClient *client,
 		if (dsn_info->username)
 			real_username = dsn_info->username;
 		else {
-			real_username = gda_quark_list_find (params, "USERNAME");
+			real_username = gda_quark_list_find (params, "USER");
 			if (real_username)
-				gda_quark_list_remove (params, "USERNAME");
+				gda_quark_list_remove (params, "USER");
 		}
 	}
 

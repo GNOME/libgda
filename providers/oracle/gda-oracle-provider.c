@@ -270,7 +270,7 @@ gda_oracle_provider_open_connection (GdaServerProvider *provider,
 	if (strlen(username) > 0)
 		ora_username = username;
 	else
-		ora_username = gda_quark_list_find (params, "USERNAME");
+		ora_username = gda_quark_list_find (params, "USER");
 
 	/* if the username isn't provided, try to find it in the DSN */
 	if (strlen(password) > 0)

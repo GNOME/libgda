@@ -1,3 +1,22 @@
+2003-01-19  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
+	* libgda/gda-client.c: use g_hash_table_foreach_remove instead of
+	removing the hash entry inside remove_provider_in_hash (tracked down
+	with Rodrigo).
+
+	* libgda/gda-connection.c:
+	* providers/freetds/gda-freetds-provider.c:
+	* providers/mysql/gda-mysql-provider.c:
+	* providers/mysql/libmain.c:
+	* providers/oracle/gda-oracle-provider.c:
+	* providers/oracle/libmain.c:
+	* providers/sybase/gda-sybase-provider.c: unified the parameter name
+	for the user (USER instead of USERNAME).
+
+	* providers/postgres/gda-postgres-provider.c: 'username' and
+	'password' arguments take precedence over the ones in the provider
+	configuration.
+
 2003-01-18  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	Fixes #102024

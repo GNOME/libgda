@@ -392,8 +392,16 @@ gda_postgres_provider_open_connection (GdaServerProvider *provider,
 	pq_port = gda_quark_list_find (params, "PORT");
 	pq_options = gda_quark_list_find (params, "OPTIONS");
 	pq_tty = gda_quark_list_find (params, "TTY");
-	pq_user = gda_quark_list_find (params, "USER");
-	pq_pwd = gda_quark_list_find (params, "PASSWORD");
+	if (!username || *username == '\0')
+		pq_user = gda_quark_list_find (params, "USER");
+	else
+		pq_user = username;
+
+	if (!pq_pwd || pq_pwd != '\0')
+		pq_pwd = gda_quark_list_find (params, "PASSWORD");
+	else
+		pq_pwd = password;
+
 	pq_requiressl = gda_quark_list_find (params, "REQUIRESSL");
 
 	conn_string = g_strconcat ("",
@@ -410,10 +418,10 @@ gda_postgres_provider_open_connection (GdaServerProvider *provider,
 				   pq_options ? "'" : "",
 				   pq_tty ? " tty=" : "",
 				   pq_tty ? pq_tty : "",
-				   pq_user ? " user=" : "",
-				   pq_user ? pq_user : "",
-				   pq_pwd ? " password=" : "",
-				   pq_pwd ? pq_pwd : "",
+				   (pq_user && *pq_user) ? " user=" : "",
+				   (pq_user && *pq_user)? pq_user : "",
+				   (pq_pwd && *pq_pwd) ? " password=" : "",
+				   (pq_pwd && *pq_pwd) ? pq_pwd : "",
 				   pq_requiressl ? " requiressl=" : "",
 				   pq_requiressl ? pq_requiressl : "",
 				   NULL);

@@ -40,7 +40,7 @@ plugin_get_connection_params (void)
 	GList *list = NULL;
 
 	list = g_list_append (list, g_strdup ("TNSNAME"));
-	list = g_list_append (list, g_strdup ("USERNAME"));
+	list = g_list_append (list, g_strdup ("USER"));
 	list = g_list_append (list, g_strdup ("PASSWORD"));
 
 	return list;
