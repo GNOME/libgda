@@ -32,6 +32,7 @@ void test_5 (void);
 void test_6 (void);
 void test_7 (void);
 void test_8 (void);
+void test_9 (void);
 
 
 int
@@ -48,6 +49,7 @@ main (int argc, char **argv)
 		g_print ("	6 -> Setting new reportheader and reportfooter\n");
 		g_print ("	7 -> Working with pageheaderlist\n");
 		g_print ("	8 -> Creating a new report\n");
+		g_print ("	9 -> Executing a simple report\n");
 		return 0;
 	}
 	
@@ -60,6 +62,7 @@ main (int argc, char **argv)
 	if (g_ascii_strncasecmp(argv[1], "6", 1) == 0) test_6();
 	if (g_ascii_strncasecmp(argv[1], "7", 1) == 0) test_7();
 	if (g_ascii_strncasecmp(argv[1], "8", 1) == 0) test_8();
+	if (g_ascii_strncasecmp(argv[1], "9", 1) == 0) test_9();
 
 	return 0;
 }
@@ -435,3 +438,18 @@ test_8 (void)
 		g_print ("TEST: Error during set\n");	
 	
 }
+
+
+void
+test_9 (void) 
+{
+	GdaReportDocument  *document;
+	GdaReportResult    *res_mem;
+	GdaReportResult    *res_file;
+ 
+	document = gda_report_document_new_from_uri ("valid-example.xml", NULL);
+	res_mem = gda_report_result_new_to_memory (document);
+	res_file = gda_report_result_new_to_uri ("test-9-result.xml", document);
+}
+
+

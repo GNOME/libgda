@@ -124,6 +124,9 @@ gda_report_document_construct (GdaReportValid *valid)
 /**
  * gda_report_document_new
  *
+ * @valid: Validator for the document (nowadays a DTD), or
+ * 	   NULL to use the default one
+ *
  * Create a new #GdaReportDocument object, which is a wrapper that lets
  * you easily manage the XML format used in the GDA report engine.
  *
@@ -134,7 +137,11 @@ gda_report_document_new (GdaReportValid *valid)
 {
 	GdaReportDocument *document;
 
-	g_return_val_if_fail (GDA_IS_REPORT_VALID(valid), NULL);
+	if (valid != NULL)
+		g_return_val_if_fail (GDA_IS_REPORT_VALID(valid), NULL);
+	else
+		valid = gda_report_valid_load ();
+	
 	document = gda_report_document_construct(valid);
 	document->priv->doc = xmlNewDoc ("1.0");
 	document->priv->doc->intSubset = gda_report_valid_to_dom (valid);
@@ -153,8 +160,11 @@ gda_report_document_new_from_string (const gchar *xml,
 	GdaReportDocument *document;
 
 	g_return_val_if_fail (xml != NULL, NULL);
-	g_return_val_if_fail (GDA_IS_REPORT_VALID(valid), NULL);
-
+	if (valid != NULL)
+		g_return_val_if_fail (GDA_IS_REPORT_VALID(valid), NULL);
+	else
+		valid = gda_report_valid_load ();
+	
 	document = gda_report_document_construct (valid);
 	document->priv->doc = xmlParseMemory (xml, strlen (xml));
 	if (!document->priv->doc) {
@@ -187,8 +197,11 @@ gda_report_document_new_from_uri (const gchar *uri,
 	GdaReportDocument *document;
 
 	g_return_val_if_fail (uri != NULL, NULL);
-	g_return_val_if_fail (GDA_IS_REPORT_VALID(valid), NULL);
-
+	if (valid != NULL)
+		g_return_val_if_fail (GDA_IS_REPORT_VALID(valid), NULL);
+	else
+		valid = gda_report_valid_load ();
+	
 	body = gda_file_load (uri);
 	if (!body) 
 	{

@@ -98,6 +98,11 @@ gchar *gda_report_item_get_inherit_attribute (GdaReportItem *item,
 GdaReportItem *gda_report_item_get_child_by_id (GdaReportItem *parent,
 						const gchar *id);
 						
+GdaReportItem *gda_report_item_get_first_child (GdaReportItem *parent);
+						
+GdaReportItem *gda_report_item_get_next_child (GdaReportItem *parent,
+					       GdaReportItem *item);
+						
 gboolean gda_report_item_set_content (GdaReportItem *item,
 	 			      const gchar *content);
 

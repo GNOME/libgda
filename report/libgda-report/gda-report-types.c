@@ -111,6 +111,16 @@ gda_report_types_number_new (gdouble value)
 
 
 /*
+ * gda_report_types_number_to_double 
+ */
+gdouble 
+gda_report_types_number_to_double (GdaReportNumber *number)
+{
+	return number->priv->value;
+}
+
+
+/*
  * gda_report_types_number_to_value
  */
 gchar *

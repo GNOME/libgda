@@ -66,6 +66,12 @@ GdaReportItem *gda_report_item_detail_get_label_by_id (GdaReportItem *detail,
 
 GdaReportItem *gda_report_item_detail_get_repfield_by_id (GdaReportItem *detail,
 						          const gchar *id);
+							  
+GdaReportItem *gda_report_item_detail_get_first_item (GdaReportItem *detail);
+
+GdaReportItem *gda_report_item_detail_get_next_item (GdaReportItem *detail,
+						     GdaReportItem *item);
+							  
 
 gboolean gda_report_item_detail_set_query (GdaReportItem *item,
 					   const gchar *value);

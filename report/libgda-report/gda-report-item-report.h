@@ -88,7 +88,7 @@ GdaReportItem *gda_report_item_report_get_nth_pagefooter (GdaReportItem *report,
 							  gint position);
 
 gboolean gda_report_item_report_set_detail (GdaReportItem *report,
-					    GdaReportItem *footer);
+					    GdaReportItem *detail);
 
 GdaReportItem *gda_report_item_report_get_detail (GdaReportItem *item);
 

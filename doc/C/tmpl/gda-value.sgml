@@ -33,10 +33,8 @@ gda-value
 @GDA_VALUE_TYPE_DATE: 
 @GDA_VALUE_TYPE_DOUBLE: 
 @GDA_VALUE_TYPE_GEOMETRIC_POINT: 
-@GDA_VALUE_TYPE_GOBJECT: 
 @GDA_VALUE_TYPE_INTEGER: 
 @GDA_VALUE_TYPE_LIST: 
-@GDA_VALUE_TYPE_MONEY: 
 @GDA_VALUE_TYPE_NUMERIC: 
 @GDA_VALUE_TYPE_SINGLE: 
 @GDA_VALUE_TYPE_SMALLINT: 
@@ -54,12 +52,6 @@ gda-value
 
 
 <!-- ##### TYPEDEF GdaGeometricPoint ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### TYPEDEF GdaMoney ##### -->
 <para>
 
 </para>
@@ -158,15 +150,6 @@ gda-value
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_value_new_gobject ##### -->
-<para>
-
-</para>
-
-@val: 
-@Returns: 
-
-
 <!-- ##### FUNCTION gda_value_new_integer ##### -->
 <para>
 
@@ -177,15 +160,6 @@ gda-value
 
 
 <!-- ##### FUNCTION gda_value_new_list ##### -->
-<para>
-
-</para>
-
-@val: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_value_new_money ##### -->
 <para>
 
 </para>
@@ -240,15 +214,6 @@ gda-value
 
 
 <!-- ##### FUNCTION gda_value_new_timestamp ##### -->
-<para>
-
-</para>
-
-@val: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_value_new_timestamp_from_timet ##### -->
 <para>
 
 </para>
@@ -457,24 +422,6 @@ gda-value
 @val: 
 
 
-<!-- ##### FUNCTION gda_value_get_gobject ##### -->
-<para>
-
-</para>
-
-@value: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_value_set_gobject ##### -->
-<para>
-
-</para>
-
-@value: 
-@val: 
-
-
 <!-- ##### FUNCTION gda_value_get_integer ##### -->
 <para>
 
@@ -517,24 +464,6 @@ gda-value
 </para>
 
 @value: 
-
-
-<!-- ##### FUNCTION gda_value_get_money ##### -->
-<para>
-
-</para>
-
-@value: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_value_set_money ##### -->
-<para>
-
-</para>
-
-@value: 
-@val: 
 
 
 <!-- ##### FUNCTION gda_value_get_numeric ##### -->

@@ -69,6 +69,8 @@ GdaReportColor *gda_report_types_value_to_color (gchar *value);
 
 GdaReportNumber *gda_report_types_number_new (gdouble value);
 
+gdouble gda_report_types_number_to_double (GdaReportNumber *number);
+
 gchar *gda_report_types_number_to_value (GdaReportNumber *number);
 
 GdaReportNumber *gda_report_types_value_to_number (gchar *value);

@@ -251,21 +251,3 @@ Management of database fields
 @is_auto: 
 
 
-<!-- ##### FUNCTION gda_field_attributes_get_position ##### -->
-<para>
-
-</para>
-
-@fa: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_field_attributes_set_position ##### -->
-<para>
-
-</para>
-
-@fa: 
-@position: 
-
-

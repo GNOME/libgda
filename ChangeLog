@@ -1,3 +1,24 @@
+2003-02-23  Santi Camps <santi@gnome-db.org>
+
+	* libgda/report/Makefile.am: new dtd added
+	* libgda/report/gda-report-result.dtd: new dtd for report results
+	  (after execution and before format)
+
+	* libgda/report/libgda-report/Makefile.am: 
+	* libgda/report/libgda-report/gda-report.h: 
+	  new sources added
+
+	* libgda/report/libgda-report/gda-report-document.[ch]: DTD parameter optional
+	* libgda/report/libgda-report/gda-report-types.[ch]: new read methods
+	
+	* libgda/report/libgda-report/gda-report-item.[ch]: 
+	* libgda/report/libgda-report/gda-report-item-detail.[ch]: 
+	  added methods to retrieve childs sequentially
+
+	 * libgda/report/libgda-report/gda-report-result.[ch]: 
+	  To obtain a report result from a report document (not working, just beginning)
+
+	
 2003-02-19  Steve Fosdick <gnomedb@pelvoux.demon.co.uk>
 
 	* Add minimal support for Oracle 9i.
@@ -50,6 +71,7 @@
 	* don't use C++ comment in C sources/headers. it breaks the
 	  compilation with -ansi option. (#105037)
 
+>>>>>>> 1.494
 2003-02-01  Steve Fosdick <gnomedb@pelvoux.demon.co.uk>
 
 	* providers/oracle/gda-oracle-provider.c (gda_oracle_init_md_recset,

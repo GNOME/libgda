@@ -40,8 +40,6 @@ G_BEGIN_DECLS
 typedef struct _GdaReportDocument GdaReportDocument;
 typedef struct _GdaReportDocumentClass GdaReportDocumentClass;
 typedef struct _GdaReportDocumentPrivate GdaReportDocumentPrivate;
-typedef struct _GdaReportValidator GdaReportValidator;
-typedef struct _GdaReportValidatorPrivate GdaReportValidatorPrivate;
 
 struct _GdaReportDocument {
 	GObject object;
@@ -50,10 +48,6 @@ struct _GdaReportDocument {
 
 struct _GdaReportDocumentClass {
 	GObjectClass parent_class;
-};
-
-struct _GdaReportValidator {
-	GdaReportValidatorPrivate *priv;
 };
 
 GType gda_report_document_get_type (void);

@@ -466,7 +466,7 @@ gda_report_item_get_content (GdaReportItem *item)
  * @parent: a #GdaReportItem object
  * @id: the id of the searched child item
  *
- * Searches for a child item with the given Id
+ * Searches recursively for a child item with the given Id
  *
  * Returns: the child item if found, or NULL otherwise
  **/
@@ -514,6 +514,50 @@ gda_report_item_get_child_by_id_internal (xmlNodePtr parent,
 	return NULL;
 }
 
+
+/**
+ * gda_report_item_get_first_child
+ * @parent: a #GdaReportItem object
+ *
+ * Returns: the first child item found, 
+ * 	or NULL if no child exists
+ **/
+GdaReportItem *
+gda_report_item_get_first_child (GdaReportItem *parent)
+{
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM (parent), NULL);
+	if (parent->priv->node->children != NULL)
+		return gda_report_item_new_from_dom(parent->priv->node->children);
+	else
+		return NULL;
+}
+
+						
+/**
+ * gda_report_item_get_next_child
+ * @parent: a #GdaReportItem object
+ * @item  : the previous item to the searched one
+ *
+ * Returns: next child item to the given child item
+ **/
+GdaReportItem *
+gda_report_item_get_next_child (GdaReportItem *parent,
+ 			        GdaReportItem *item)
+{
+	xmlNodePtr node;
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM (parent), NULL);
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM (item), NULL);
+	
+	node = parent->priv->node->children;
+	while ((node->prev != item->priv->node) && (node != NULL))
+		node = node->next;
+
+	if (node == NULL)
+		return NULL;
+	else
+		return gda_report_item_new_from_dom(node);	
+}
+						
 
 /**
  * gda_report_item_belongs_to_report

@@ -222,6 +222,50 @@ gda_report_item_detail_get_repfield_by_id (GdaReportItem *detail,
 }
 
 
+/*
+ * gda_report_item_detail_get_first_item 
+ */
+GdaReportItem *
+gda_report_item_detail_get_first_item (GdaReportItem *detail)
+{
+	GdaReportItem *result;
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM_DETAIL (detail), NULL);
+	
+	result = gda_report_item_get_first_child (detail);
+	if (result != NULL)
+	{
+		if (g_ascii_strcasecmp(gda_report_item_get_item_type(result), ITEM_REPFIELD_NAME) == 0)
+			return gda_report_item_repfield_new_from_dom (result->priv->node);
+
+		if (g_ascii_strcasecmp(gda_report_item_get_item_type(result), ITEM_LABEL_NAME) == 0)
+			return gda_report_item_label_new_from_dom (result->priv->node);
+	}
+	return NULL;
+}
+
+
+/*
+ * gda_report_item_detail_get_next_item 
+ */
+GdaReportItem *
+gda_report_item_detail_get_next_item (GdaReportItem *detail,
+				      GdaReportItem *item)
+{
+	GdaReportItem *result;
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM_DETAIL (detail), NULL);
+	
+	result = gda_report_item_get_next_child (detail, item);
+	if (result != NULL)
+	{
+		if (g_ascii_strcasecmp(gda_report_item_get_item_type(result), ITEM_REPFIELD_NAME) == 0)
+			return gda_report_item_repfield_new_from_dom (result->priv->node);
+
+		if (g_ascii_strcasecmp(gda_report_item_get_item_type(result), ITEM_LABEL_NAME) == 0)
+			return gda_report_item_label_new_from_dom (result->priv->node);
+	}
+	return NULL;
+}
+
 
 /*
  * gda_report_item_detail_remove

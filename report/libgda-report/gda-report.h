@@ -25,6 +25,7 @@
 #  define __gda_report_h__
 
 #include <libgda-report/gda-report-document.h>
+#include <libgda-report/gda-report-result.h>
 #include <libgda-report/gda-report-valid.h>
 #include <libgda-report/gda-report-types.h>
 #include <libgda-report/gda-report-item.h>
