@@ -60,15 +60,6 @@ gda_data_model_hash_describe_column (GdaDataModel *model, gint col)
 	return NULL;
 }
 
-static const GdaRow *
-gda_data_model_hash_get_row (GdaDataModel *model, gint row)
-{
-	g_return_val_if_fail (GDA_IS_DATA_MODEL_HASH (model), NULL);
-
-	return (const GdaRow *) g_hash_table_lookup (GDA_DATA_MODEL_HASH (model)->priv->rows,
-						     GINT_TO_POINTER (row));
-}
-
 static gboolean
 gda_data_model_hash_is_editable (GdaDataModel *model)
 {
@@ -263,6 +254,24 @@ gda_data_model_hash_insert_row (GdaDataModelHash *model,
 	g_hash_table_insert (model->priv->rows,
 			     GINT_TO_POINTER (rownum), row);
 	gda_data_model_changed (GDA_DATA_MODEL (model));
+}
+
+/**
+ * gda_data_model_hash_get_row
+ * @model: the GdaDataModelHash
+ * @row: row number
+ *
+ * Retrieves a row from the underlying hash table.
+ *
+ * Returns: a #GdaRow or NULL if the requested row is not in the hash table.
+ */
+const GdaRow *
+gda_data_model_hash_get_row (GdaDataModel *model, gint row)
+{
+	g_return_val_if_fail (GDA_IS_DATA_MODEL_HASH (model), NULL);
+
+	return (const GdaRow *) g_hash_table_lookup (GDA_DATA_MODEL_HASH (model)->priv->rows,
+						     GINT_TO_POINTER (row));
 }
 
 /**

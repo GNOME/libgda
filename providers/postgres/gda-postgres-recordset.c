@@ -160,14 +160,14 @@ gda_postgres_recordset_get_row (GdaDataModel *model, gint row)
 {
 	GdaPostgresRecordset *recset = (GdaPostgresRecordset *) model;
 	GdaPostgresRecordsetPrivate *priv_data;
-	const GdaRow *row_list;
+	GdaRow *row_list;
 	
 	g_return_val_if_fail (GDA_IS_POSTGRES_RECORDSET (recset), NULL);
 	g_return_val_if_fail (recset->priv != NULL, 0);
 
-	row_list = GDA_DATA_MODEL_CLASS (model)->get_row (model, row);
+	row_list = (GdaRow *) gda_data_model_hash_get_row (model, row);
 	if (row_list != NULL)
-		return row_list;
+		return (const GdaRow *)row_list;
 
 	priv_data = recset->priv;
 	if (!priv_data->pg_res) {
@@ -186,8 +186,10 @@ gda_postgres_recordset_get_row (GdaDataModel *model, gint row)
 	}
 
 	row_list = get_row (priv_data, row);
+	gda_data_model_hash_insert_row (GDA_DATA_MODEL_HASH (model),
+					 row, row_list);
 
-	return row_list;
+	return (const GdaRow *) row_list;
 }
 
 static const GdaValue *

@@ -61,6 +61,8 @@ void 	      gda_data_model_hash_insert_row (GdaDataModelHash *model,
 					      gint rownum, 
 					      GdaRow *row);
 
+const GdaRow *gda_data_model_hash_get_row (GdaDataModel *model, gint row);
+
 G_END_DECLS
 
 #endif
