@@ -6,3 +6,4 @@
 #undef HAVE_ORACLE
 #undef HAVE_SYBASE
 #undef SYBASE_DEBUG
+#undef HAVE_POSTGRES

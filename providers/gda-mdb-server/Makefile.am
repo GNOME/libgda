@@ -7,14 +7,14 @@ INCLUDES = \
 	-I$(top_builddir)/lib/gda-common \
 	-I$(top_builddir)/lib/gda-server
 
-gda_mdb = main-mdb.c
+gda_mdb_srv_SOURCES = main-mdb.c
 gda_mdb_srv_LDADD = \
 	$(GDA_PROVIDER_LIBS) \
 	$(top_builddir)/lib/gda-common/libgda-common.la \
 	$(top_builddir)/lib/gda-server/libgda-server.la \
 	$(top_builddir)/providers/gda-mdb-server/libgda-mdb.la
 
-libgda_mdb_SOURCES = \
+libgda_mdb_la_SOURCES = \
 	gda-mdb-command.c \
 	gda-mdb-connection.c \
 	gda-mdb-recordset.c \

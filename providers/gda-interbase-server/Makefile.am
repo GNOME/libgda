@@ -14,7 +14,7 @@ gda_interbase_srv_LDADD = \
 	$(top_builddir)/lib/gda-server/libgda-server.la \
 	$(top_builddir)/providers/gda-interbase/libgda-interbase.la
 
-libgda_interbase_SOURCES = \
+libgda_interbase_la_SOURCES = \
 	gda-interbase-command.c \
 	gda-interbase-connection.c \
 	gda-interbase-recordset.c \

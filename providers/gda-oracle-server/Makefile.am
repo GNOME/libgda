@@ -14,7 +14,7 @@ gda_oracle_srv_LDADD = \
 	$(top_builddir)/lib/gda-server/libgda-server.la \
 	$(top_builddir)/providers/gda-oracle-server/libgda-oracle.la
 
-libgda_oracle_SOURCES = \
+libgda_oracle_la_SOURCES = \
 	gda-oracle-command.c \
 	gda-oracle-connection.c \
 	gda-oracle-recordset.c \

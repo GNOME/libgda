@@ -1,4 +1,6 @@
 SUBDIRS = \
+	po \
+	macros \
 	doc \
 	idl \
 	lib \

@@ -14,7 +14,7 @@ gda_sybase_srv_LDADD = \
 	$(top_builddir)/lib/gda-server/libgda-server.la \
 	$(top_builddir)/providers/gda-sybase-server/libgda-sybase.la
 
-libgda_sybase_SOURCES = \
+libgda_sybase_la_SOURCES = \
 	gda-sybase-command.c \
 	gda-sybase-command.h \
 	gda-sybase-connection.c \

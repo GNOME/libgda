@@ -3,11 +3,14 @@ AM_CONFIG_HEADER(config.h)
 
 AM_INIT_AUTOMAKE(libgda,0.0.97)
 AM_MAINTAINER_MODE
+AM_ACLOCAL_INCLUDE(macros)
 
 dnl
 dnl Checks for programs
 dnl
 AC_PROG_CC
+AC_STDC_HEADERS
+AC_ARG_PROGRAM
 AM_PROG_LIBTOOL
 AC_PROG_CXX
 
@@ -54,7 +57,7 @@ dnl
 
 dnl Test for ODBC
 AC_ARG_WITH(odbc,
-   --with-odbc=<directory>     use ODBC libraries in <directory>,[
+--with-odbc=<directory>     use ODBC libraries in <directory>,[
 if test $withval != yes
 then
 	dir=$withval
@@ -85,8 +88,8 @@ then
 	AC_MSG_WARN(ODBC backend not used)
 else
 	AC_DEFINE(HAVE_ODBC)
-	ODBC_CFLAGS=${odbcdir}/include
-	ODBC_LIBS="${odbcdir}/lib $odbclib"
+	ODBC_CFLAGS=-I${odbcdir}/include
+	ODBC_LIBS="-L${odbcdir}/lib $odbclib"
 fi
 ])
 
@@ -94,7 +97,7 @@ AM_CONDITIONAL(ODBC, test x$odbcdir != x)
 
 dnl Test for MySQL
 AC_ARG_WITH(mysql,
-   --with-mysql=<directory>     use mysql backend in <directory>,[
+--with-mysql=<directory>     use mysql backend in <directory>,[
 if test $withval != yes
 then
 	dir=$withval
@@ -143,7 +146,7 @@ AM_CONDITIONAL(MYSQL, test x$mysqldir != x)
 
 dnl Test for PostgreSQL
 AC_ARG_WITH(postgres,
-   --with-postgres=<directory>     use postgres backend in <directory>,[
+--with-postgres=<directory>     use postgres backend in <directory>,[
 if test $withval != yes
 then
 	dir=$withval
@@ -179,15 +182,15 @@ else
 		postgresdir=""
 	fi
 	POSTGRES_LIBS="-L${postgresdir}/lib -lpq"
+	AC_DEFINE(HAVE_POSTGRES)
 fi
-
 ])
 
 AM_CONDITIONAL(POSTGRES, test x$postgresdir != x)
 
 dnl Test for Sybase
 AC_ARG_WITH(sybase,
-   --with-sybase=<directory>     use SyBASE backend in <directory>,[
+--with-sybase=<directory>     use SyBASE backend in <directory>,[
 if test $withval != yes
 then
 	dir=$withval
@@ -269,7 +272,7 @@ fi
 
 dnl test for LDAP
 AC_ARG_WITH(ldap,
-   --with-ldap=<directory>     use LDAP backend in <directory>,[
+--with-ldap=<directory>     use LDAP backend in <directory>,[
 if test $withval != yes
 then
 	dir=$withval
@@ -301,16 +304,16 @@ then
 else
 	if test -f ${ldapdir}/include/ldap.h
 	then
-		LDAP_CFLAGS="-I$ldapdir/include"
+		LDAP_CFLAGS="-I${ldapdir}/include"
 	elif test -f ${ldapdir}/include/openldap/ldap.h
 	then
-		LDAP_CFLAGS="-I$ldapdir/include/openldap"
+		LDAP_CFLAGS="-I${ldapdir}/include/openldap"
 	else
 		AC_MSG_WARN(LDAP include files not found. backend not used)
 		ldapdir=""
 	fi
 	AC_DEFINE(HAVE_LDAP)
-	LDAP_LIBS="-L$ldapdir/lib $LDAP_LIBS"
+	LDAP_LIBS="-L${ldapdir}/lib ${LDAP_LIBS}"
 fi
 ])
 
@@ -318,7 +321,7 @@ AM_CONDITIONAL(LDAP, test x$ldapdir != x)
 
 dnl test for ORACLE
 AC_ARG_WITH(oracle,
-   --with-oracle=<directory>     use ORACLE backend in <directoty>,[
+--with-oracle=<directory>     use ORACLE backend in <directoty>,[
 if test $withval != yes
 then
 	dir=$withval
@@ -353,7 +356,7 @@ AM_CONDITIONAL(ORACLE, test x$oracledir != x)
 
 dnl test for INTERBASE
 AC_ARG_WITH(interbase,
-   --with-interbase=<directory>     use INTERBASE backend in <directoty>,[
+--with-interbase=<directory>     use INTERBASE backend in <directoty>,[
 if test $withval != yes
 then
 	dir=$withval
@@ -384,7 +387,7 @@ AM_CONDITIONAL(INTERBASE, test x$interbasedir != x)
 
 dnl test for MDB libraries
 AC_ARG_WITH(mdb,
-   --with-mdb=<directory>     use MDB libraries in <directoty>,[
+--with-mdb=<directory>     use MDB libraries in <directoty>,[
 if test $withval != yes
 then
 	dir=$withval
@@ -426,6 +429,10 @@ GDA_CLIENT_CFLAGS="$gda_xml_cflags $gda_oaf_cflags"
 GDA_PROVIDER_LIBS="$gda_xml_libs $gda_oaf_libs"
 GDA_PROVIDER_CFLAGS="$gda_xml_cflags $gda_oaf_cflags"
 
+AC_SUBST(CFLAGS)
+AC_SUBST(CXXFLAGS)
+AC_SUBST(CPPFLAGS)
+AC_SUBST(LDFLAGS)
 AC_SUBST(GDA_CLIENT_LIBS)
 AC_SUBST(GDA_CLIENT_CFLAGS)
 AC_SUBST(GDA_PROVIDER_LIBS)
@@ -454,6 +461,7 @@ AC_SUBST(GDA_oafinfodir)
 
 AC_OUTPUT([
 Makefile
+macros/Makefile
 po/Makefile.in
 doc/Makefile
 idl/Makefile
@@ -463,14 +471,14 @@ lib/gda-client/Makefile
 lib/gda-server/Makefile
 bindings/Makefile
 providers/Makefile
-providers/gda-odbc-server
-providers/gda-mysql-server
-providers/gda-postgres-server
-providers/gda-sybase-server
-providers/gda-ldap-server
-providers/gda-oracle-server
-providers/gda-interbase-server
-providers/gda-mdb-server
+providers/gda-odbc-server/Makefile
+providers/gda-mysql-server/Makefile
+providers/gda-postgres-server/Makefile
+providers/gda-sybase-server/Makefile
+providers/gda-ldap-server/Makefile
+providers/gda-oracle-server/Makefile
+providers/gda-interbase-server/Makefile
+providers/gda-mdb-server/Makefile
 tools/Makefile
 tools/gda-config
 tools/gda-buildserver

@@ -14,7 +14,7 @@ gda_ldap_srv_LDADD = \
 	$(top_builddir)/lib/gda-server/libgda-server.la \
 	$(top_builddir)/providers/gda-interbase/libgda-ldap.la
 
-libgda_ldap_SOURCES = \
+libgda_ldap_la_SOURCES = \
 	gda-ldap-command.c \
 	gda-ldap-connection.c \
 	gda-ldap-recordset.c \

@@ -14,7 +14,7 @@ gda_postgres_srv_LDADD = \
 	$(top_builddir)/lib/gda-server/libgda-server.la \
 	$(top_builddir)/providers/gda-postgres-server/libgda-postgres.la
 
-libgda_postgres_SOURCES = \
+libgda_postgres_la_SOURCES = \
 	gda-builtin-res.c \
 	gda-builtin-res.h \
 	gda-postgres-command.c \

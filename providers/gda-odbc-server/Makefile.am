@@ -7,14 +7,14 @@ INCLUDES = \
 	-I$(top_builddir)/lib/gda-common \
 	-I$(top_builddir)/lib/gda-server
 
-gda_odbc_SOURCES = main-odbc.c
+gda_odbc_srv_SOURCES = main-odbc.c
 gda_odbc_srv_LDADD = \
 	$(GDA_PROVIDER_LIBS) \
 	$(top_builddir)/lib/gda-common/libgda-common.la \
 	$(top_builddir)/lib/gda-server/libgda-server.la \
 	$(top_builddir)/providers/gda-odbc-server/libgda-odbc.la
 
-libgda_odbc_SOURCES = \
+libgda_odbc_la_SOURCES = \
 	gda-odbc-command.c \
 	gda-odbc-connection.c \
 	gda-odbc-recordset.c \
