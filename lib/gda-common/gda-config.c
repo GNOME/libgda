@@ -233,14 +233,15 @@ gda_config_list_keys (const gchar *path)
 
   g_return_val_if_fail(path != NULL, NULL);
   
-  slist = gconf_engine_all_entries(get_conf_engine(), path, NULL);
+  slist = gconf_engine_all_entries(get_conf_engine(), path, &error);
   if (slist)
     {
       GSList* node;
       
       for (node = slist; node != NULL; node = g_slist_next(node))
         {
-          ret = g_list_append(ret, g_strdup(node->data));
+          g_warning("adding key %s", (gchar *) node->data);
+          ret = g_list_append(ret, g_strdup((gchar *) node->data));
         }
       g_slist_free(slist);
     }
