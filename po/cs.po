@@ -1,16 +1,16 @@
 # libgda cs.po Czech translation
 # Copyright (C) 2002 Free Software Foundation
-# Copyright (C) 2004 Miloslav Trmac <mitr@volny.cz>
+# Copyright (C) 2004, 2005 Miloslav Trmac <mitr@volny.cz>
 # This file is distributed under the same license as the libgda package.
 # Michal Bukovjan <bukm@centrum.cz>, 2002.
-# Miloslav Trmac <mitr@volny.cz>, 2003, 2004.
+# Miloslav Trmac <mitr@volny.cz>, 2003, 2004, 2005.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda HEAD\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-10-11 03:54+0200\n"
-"PO-Revision-Date: 2004-10-11 16:13+0200\n"
+"POT-Creation-Date: 2005-01-23 11:29+0100\n"
+"PO-Revision-Date: 2005-01-23 15:19+0100\n"
 "Last-Translator: Miloslav Trmac <mitr@volny.cz>\n"
 "Language-Team: Czech <cs@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -40,23 +40,23 @@ msgstr "Ze zásuvného modulu nelze vytvořit objekt GdaServerProvider"
 msgid "Temporary data source created by libgda. Don't remove it"
 msgstr "Dočasný zdroj dat vytvořený programem libgda. Neodstraňujte."
 
-#: libgda/gda-config.c:1081
+#: libgda/gda-config.c:1093
 #, c-format
 msgid "Error: %s"
 msgstr "Chyba: %s"
 
-#: libgda/gda-config.c:1194 providers/odbc/gda-odbc-provider.c:1137
+#: libgda/gda-config.c:1206 providers/odbc/gda-odbc-provider.c:1137
 #: providers/oracle/gda-oracle-provider.c:1153
 #: providers/postgres/gda-postgres-provider.c:945
 #: providers/postgres/gda-postgres-provider.c:1412
 msgid "Id"
 msgstr "Id"
 
-#: libgda/gda-config.c:1195
+#: libgda/gda-config.c:1207
 msgid "Location"
 msgstr "Umístění"
 
-#: libgda/gda-config.c:1196 libgda/gda-config.c:1521
+#: libgda/gda-config.c:1208 libgda/gda-config.c:1533
 #: providers/firebird/gda-firebird-provider.c:322
 #: providers/ibmdb2/gda-ibmdb2-provider.c:863
 #: providers/ibmdb2/gda-ibmdb2-provider.c:892
@@ -68,7 +68,7 @@ msgstr "Umístění"
 msgid "Description"
 msgstr "Popis"
 
-#: libgda/gda-config.c:1518 providers/firebird/gda-firebird-provider.c:730
+#: libgda/gda-config.c:1530 providers/firebird/gda-firebird-provider.c:730
 #: providers/ldap/gda-ldap-provider.c:327 providers/mdb/gda-mdb-provider.c:457
 #: providers/mdb/gda-mdb-provider.c:594 providers/mdb/gda-mdb-provider.c:654
 #: providers/msql/gda-msql-provider.c:471
@@ -84,23 +84,23 @@ msgstr "Popis"
 msgid "Name"
 msgstr "Název"
 
-#: libgda/gda-config.c:1519
+#: libgda/gda-config.c:1531
 msgid "Provider"
 msgstr "Poskytovatel"
 
-#: libgda/gda-config.c:1520
+#: libgda/gda-config.c:1532
 msgid "Connection string"
 msgstr "Řetězec připojení"
 
-#: libgda/gda-config.c:1522
+#: libgda/gda-config.c:1534
 msgid "Username"
 msgstr "Uživatelské jméno"
 
-#: libgda/gda-config.c:1523
+#: libgda/gda-config.c:1535
 msgid "Password"
 msgstr "Heslo"
 
-#: libgda/gda-data-model.c:880
+#: libgda/gda-data-model.c:801
 #, c-format
 msgid "Data model %p is not updatable"
 msgstr "Datový model %p nelze aktualizovat"
@@ -113,17 +113,17 @@ msgstr "Pokus o inicializaci již inicializovaného klienta"
 msgid "libgda needs GModule. Finishing..."
 msgstr "libgda potřebuje GModule. Končím..."
 
-#: libgda/gda-select.c:393
+#: libgda/gda-select.c:395
 #, c-format
 msgid "Could not parse SQL string '%s'"
 msgstr "Nelze zpracovat řetězec s SQL '%s'"
 
-#: libgda/gda-select.c:397
+#: libgda/gda-select.c:399
 #, c-format
 msgid "SQL command is not a SELECT (is '%s'"
 msgstr "Příkaz SQL není typu SELECT (je '%s'"
 
-#: libgda/gda-table.c:284
+#: libgda/gda-table.c:286
 #, c-format
 msgid "There is already a field called %s"
 msgstr "Pole nazvané %s již existuje"
@@ -233,8 +233,8 @@ msgstr "Zpracováván prázdný dotaz"
 #: providers/firebird/gda-firebird-provider.c:1207
 #: providers/firebird/gda-firebird-provider.c:1241
 #: providers/firebird/gda-firebird-provider.c:1279
-#: providers/firebird/gda-firebird-recordset.c:694
-#: providers/firebird/gda-firebird-recordset.c:896
+#: providers/firebird/gda-firebird-recordset.c:695
+#: providers/firebird/gda-firebird-recordset.c:897
 msgid "Invalid Firebird handle"
 msgstr "Neplatný handle Firebird"
 
@@ -538,20 +538,20 @@ msgstr "Není zadána databáze"
 msgid "Invalid transaction handle"
 msgstr "Neplatný handle transakce"
 
-#: providers/firebird/gda-firebird-recordset.c:345
-#: providers/firebird/gda-firebird-recordset.c:386
+#: providers/firebird/gda-firebird-recordset.c:346
+#: providers/firebird/gda-firebird-recordset.c:387
 msgid "Statement already prepared."
 msgstr "Příkaz je již připraven."
 
-#: providers/firebird/gda-firebird-recordset.c:349
+#: providers/firebird/gda-firebird-recordset.c:350
 msgid "Transaction not initialized."
 msgstr "Transakce neinicializována."
 
-#: providers/firebird/gda-firebird-recordset.c:456
+#: providers/firebird/gda-firebird-recordset.c:457
 msgid "Firebird's ARRAY datatype not supported yet!\n"
 msgstr "Typ dat Firebirdu ARRAY ještě není podporován!\n"
 
-#: providers/firebird/gda-firebird-recordset.c:565
+#: providers/firebird/gda-firebird-recordset.c:566
 msgid "Unknown Firebird's field value!\n"
 msgstr "Neznámá hodnota pole Firebirdu!\n"
 
@@ -561,7 +561,7 @@ msgstr "Poskytovatel pro databáze Firebird"
 
 #: providers/firebird/libmain.c:49 providers/freetds/libmain.c:48
 #: providers/ibmdb2/libmain.c:48 providers/msql/gda-msql-libmain.c:56
-#: providers/mysql/libmain.c:50 providers/postgres/libmain.c:50
+#: providers/mysql/libmain.c:50 providers/postgres/libmain.c:51
 #: providers/sybase/libmain.c:49
 msgid "Database Name"
 msgstr "Název databáze"
@@ -660,9 +660,9 @@ msgstr ""
 #: providers/freetds/gda-freetds-provider.c:1079 providers/freetds/utils.c:44
 #: providers/oracle/utils.c:74 providers/postgres/utils.c:53
 #: providers/sybase/gda-sybase-provider.c:765
-#: providers/sybase/gda-sybase-recordset.c:512
-#: providers/sybase/gda-sybase-recordset.c:534
-#: providers/sybase/gda-sybase-recordset.c:593 providers/sybase/utils.c:205
+#: providers/sybase/gda-sybase-recordset.c:513
+#: providers/sybase/gda-sybase-recordset.c:535
+#: providers/sybase/gda-sybase-recordset.c:594 providers/sybase/utils.c:205
 #: providers/sybase/utils.c:223 providers/sybase/utils.c:239
 #: providers/sybase/utils.c:255 providers/sybase/utils.c:275
 #: providers/sybase/utils.c:316 providers/sybase/utils.c:333
@@ -701,12 +701,12 @@ msgstr "Počítač"
 msgid "Host name of the machine where the database is located"
 msgstr "Jméno počítače, kde je umístěna databáze"
 
-#: providers/freetds/libmain.c:56 providers/postgres/libmain.c:62
+#: providers/freetds/libmain.c:56 providers/postgres/libmain.c:63
 #: providers/sybase/libmain.c:61
 msgid "Host Address"
 msgstr "Adresa počítače"
 
-#: providers/freetds/libmain.c:57 providers/postgres/libmain.c:63
+#: providers/freetds/libmain.c:57 providers/postgres/libmain.c:64
 #: providers/sybase/libmain.c:62
 msgid "IP address of the host to connect to"
 msgstr "IP adresa počítače, ke kterému se připojit"
@@ -720,7 +720,7 @@ msgid "Extra options to use on the connection"
 msgstr "Další možnosti, které používat ve spojení"
 
 #: providers/freetds/libmain.c:64 providers/ldap/libmain.c:64
-#: providers/mysql/libmain.c:58 providers/postgres/libmain.c:70
+#: providers/mysql/libmain.c:58 providers/postgres/libmain.c:71
 #: providers/sybase/libmain.c:69
 msgid "Port"
 msgstr "Port"
@@ -833,14 +833,14 @@ msgstr "Definice SQL"
 #. Set it here instead of the SQL query to allow i18n
 #: providers/ibmdb2/gda-ibmdb2-provider.c:918
 #: providers/oracle/gda-oracle-provider.c:2189
-#: providers/postgres/gda-postgres-provider.c:1452 testing/client.c:139
+#: providers/postgres/gda-postgres-provider.c:1452 testing/client.c:143
 msgid "Triggers"
 msgstr "Triggery"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/ibmdb2/gda-ibmdb2-provider.c:974
 #: providers/oracle/gda-oracle-provider.c:1825
-#: providers/postgres/gda-postgres-provider.c:2009 testing/client.c:137
+#: providers/postgres/gda-postgres-provider.c:2009 testing/client.c:141
 msgid "Users"
 msgstr "Uživatelé"
 
@@ -857,11 +857,11 @@ msgid "Provider for IBMDB2 databases"
 msgstr "Poskytovatel pro databáze IBMDB2"
 
 #: providers/ibmdb2/libmain.c:49 providers/msql/gda-msql-libmain.c:57
-#: providers/postgres/libmain.c:51 providers/sybase/libmain.c:50
+#: providers/postgres/libmain.c:52 providers/sybase/libmain.c:50
 msgid "Name of the database to use"
 msgstr "Název databáze, kterou používat"
 
-#: providers/ibmdb2/libmain.c:52 providers/postgres/libmain.c:66
+#: providers/ibmdb2/libmain.c:52 providers/postgres/libmain.c:67
 #: providers/sybase/libmain.c:65
 msgid "Extra Options"
 msgstr "Další možnosti"
@@ -881,37 +881,37 @@ msgid "Invalid LDAP handle"
 msgstr "Neplatný handle LDAP"
 
 #: providers/ldap/gda-ldap-recordset.c:69
-#: providers/mysql/gda-mysql-recordset.c:139
-#: providers/postgres/gda-postgres-recordset.c:196
-#: providers/postgres/gda-postgres-recordset.c:474
-#: providers/sqlite/gda-sqlite-recordset.c:165
-#: providers/sqlite/gda-sqlite-recordset.c:204
+#: providers/mysql/gda-mysql-recordset.c:145
+#: providers/postgres/gda-postgres-recordset.c:200
+#: providers/postgres/gda-postgres-recordset.c:585
+#: providers/sqlite/gda-sqlite-recordset.c:166
+#: providers/sqlite/gda-sqlite-recordset.c:205
 #: providers/bdb/gda-bdb-recordset.c:111
 msgid "Row number out of range"
 msgstr "Číslo řádku mimo rozsah"
 
 #: providers/ldap/gda-ldap-recordset.c:283
-#: providers/msql/gda-msql-recordset.c:229
-#: providers/mysql/gda-mysql-recordset.c:320
-#: providers/oracle/gda-oracle-recordset.c:469
-#: providers/postgres/gda-postgres-recordset.c:242
+#: providers/msql/gda-msql-recordset.c:230
+#: providers/mysql/gda-mysql-recordset.c:326
+#: providers/oracle/gda-oracle-recordset.c:471
+#: providers/postgres/gda-postgres-recordset.c:246
 msgid "Attempt to insert a row with an invalid number of columns"
 msgstr "Pokus o vložení řádku s neplatným počtem sloupců"
 
 #: providers/ldap/gda-ldap-recordset.c:298
-#: providers/msql/gda-msql-recordset.c:241
-#: providers/mysql/gda-mysql-recordset.c:335
-#: providers/oracle/gda-oracle-recordset.c:484
-#: providers/postgres/gda-postgres-recordset.c:257
+#: providers/msql/gda-msql-recordset.c:242
+#: providers/mysql/gda-mysql-recordset.c:341
+#: providers/oracle/gda-oracle-recordset.c:486
+#: providers/postgres/gda-postgres-recordset.c:261
 msgid "Could not retrieve column's information"
 msgstr "Nelze získat informace o sloupci"
 
 #: providers/ldap/gda-ldap-recordset.c:316
-#: providers/msql/gda-msql-recordset.c:255
-#: providers/mysql/gda-mysql-recordset.c:353
-#: providers/oracle/gda-oracle-recordset.c:502
-#: providers/postgres/gda-postgres-recordset.c:275
-#: providers/postgres/gda-postgres-recordset.c:286
+#: providers/msql/gda-msql-recordset.c:256
+#: providers/mysql/gda-mysql-recordset.c:359
+#: providers/oracle/gda-oracle-recordset.c:504
+#: providers/postgres/gda-postgres-recordset.c:281
+#: providers/postgres/gda-postgres-recordset.c:292
 msgid "Could not retrieve column's value"
 msgstr "Nelze získat hodnotu sloupci"
 
@@ -928,7 +928,7 @@ msgid "LDAP flags"
 msgstr "Přepínače LDAP"
 
 #: providers/ldap/libmain.c:60 providers/msql/gda-msql-libmain.c:60
-#: providers/mysql/libmain.c:54 providers/postgres/libmain.c:58
+#: providers/mysql/libmain.c:54 providers/postgres/libmain.c:59
 #: providers/sybase/libmain.c:53 providers/sybase/libmain.c:57
 msgid "Host Name"
 msgstr "Název počítače"
@@ -1070,7 +1070,7 @@ msgid "Provider for Hughes Technologies mSQL databases"
 msgstr "Poskytovatel pro databáze Hughes Technologies mSQL"
 
 #: providers/msql/gda-msql-libmain.c:61 providers/mysql/libmain.c:55
-#: providers/postgres/libmain.c:59 providers/sybase/libmain.c:54
+#: providers/postgres/libmain.c:60 providers/sybase/libmain.c:54
 #: providers/sybase/libmain.c:58
 msgid "Name of the host to connect to"
 msgstr "Název počítače, ke kterému se připojit"
@@ -1079,8 +1079,8 @@ msgstr "Název počítače, ke kterému se připojit"
 #: providers/msql/gda-msql-provider.c:286
 #: providers/msql/gda-msql-provider.c:307
 #: providers/msql/gda-msql-provider.c:578
-#: providers/msql/gda-msql-recordset.c:50
-#: providers/msql/gda-msql-recordset.c:140
+#: providers/msql/gda-msql-recordset.c:51
+#: providers/msql/gda-msql-recordset.c:141
 msgid "Invalid mSQL handle"
 msgstr "Neplatný handle mSQL"
 
@@ -1110,7 +1110,7 @@ msgstr "Název pole"
 msgid "Not null"
 msgstr "Nenulový"
 
-#: providers/msql/gda-msql-recordset.c:57
+#: providers/msql/gda-msql-recordset.c:58
 msgid "Row number out of bounds"
 msgstr "Číslo řádku mimo rozsah"
 
@@ -1121,8 +1121,8 @@ msgstr "Nelze zadat UNIX_SOCKET pokud jste také zadali HOST nebo PORT."
 
 #: providers/mysql/gda-mysql-provider.c:304
 #: providers/mysql/gda-mysql-provider.c:1125
-#: providers/mysql/gda-mysql-recordset.c:128
-#: providers/mysql/gda-mysql-recordset.c:202
+#: providers/mysql/gda-mysql-recordset.c:134
+#: providers/mysql/gda-mysql-recordset.c:208
 msgid "Invalid MySQL handle"
 msgstr "Neplatný handle MySQL"
 
@@ -1197,7 +1197,7 @@ msgid "Nb args"
 msgstr "Počet argumentů"
 
 #: providers/odbc/gda-odbc-provider.c:1402
-#: providers/oracle/gda-oracle-provider.c:2193 testing/client.c:134
+#: providers/oracle/gda-oracle-provider.c:2193 testing/client.c:138
 msgid "Views"
 msgstr "Náhledy"
 
@@ -1283,9 +1283,9 @@ msgstr "Nelze nastavit atribut sezení Oracle v kontextu služby"
 #: providers/oracle/gda-oracle-provider.c:934
 #: providers/oracle/gda-oracle-provider.c:995
 #: providers/oracle/gda-oracle-provider.c:1142
-#: providers/oracle/gda-oracle-recordset.c:167
-#: providers/oracle/gda-oracle-recordset.c:390
-#: providers/oracle/gda-oracle-recordset.c:591
+#: providers/oracle/gda-oracle-recordset.c:169
+#: providers/oracle/gda-oracle-recordset.c:392
+#: providers/oracle/gda-oracle-recordset.c:593
 msgid "Invalid Oracle handle"
 msgstr "Neplatný handle Oracle"
 
@@ -1440,7 +1440,7 @@ msgstr "Nelze zjistit nulovatelný atribut pole Oracle"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/oracle/gda-oracle-provider.c:2177
-#: providers/postgres/gda-postgres-provider.c:1334 testing/client.c:135
+#: providers/postgres/gda-postgres-provider.c:1334 testing/client.c:139
 msgid "Indexes"
 msgstr "Indexy"
 
@@ -1448,56 +1448,56 @@ msgstr "Indexy"
 msgid "Procedures"
 msgstr "Procedury"
 
-#: providers/oracle/gda-oracle-provider.c:2183 testing/client.c:138
+#: providers/oracle/gda-oracle-provider.c:2183 testing/client.c:142
 msgid "Sequences"
 msgstr "Sekvence"
 
-#: providers/oracle/gda-oracle-recordset.c:72
+#: providers/oracle/gda-oracle-recordset.c:74
 msgid "Could not get the Oracle parameter"
 msgstr "Nelze získat parametr Oracle"
 
-#: providers/oracle/gda-oracle-recordset.c:82
+#: providers/oracle/gda-oracle-recordset.c:84
 msgid "Could not get the parameter defined size"
 msgstr "Nelze získat definovanou velikost parametru"
 
-#: providers/oracle/gda-oracle-recordset.c:95
+#: providers/oracle/gda-oracle-recordset.c:97
 msgid "Could not get the parameter data type"
 msgstr "Nelze získat datový typ parametru"
 
-#: providers/oracle/gda-oracle-recordset.c:128
+#: providers/oracle/gda-oracle-recordset.c:130
 msgid "Could not define by position"
 msgstr "Nelze definovat pomocí pozice"
 
-#: providers/oracle/gda-oracle-recordset.c:173
-#: providers/postgres/gda-postgres-recordset.c:597
+#: providers/oracle/gda-oracle-recordset.c:175
+#: providers/postgres/gda-postgres-recordset.c:708
 msgid "Column out of range"
 msgstr "Sloupec mimo rozsah"
 
-#: providers/oracle/gda-oracle-recordset.c:185
+#: providers/oracle/gda-oracle-recordset.c:187
 msgid "Could not get the Oracle parameter information"
 msgstr "Nelze získat informace o parametru Oracle"
 
-#: providers/oracle/gda-oracle-recordset.c:195
+#: providers/oracle/gda-oracle-recordset.c:197
 msgid "Could not get the Oracle column name"
 msgstr "Nelze získat název sloupce Oracle"
 
-#: providers/oracle/gda-oracle-recordset.c:210
+#: providers/oracle/gda-oracle-recordset.c:212
 msgid "Could not get the Oracle column data type"
 msgstr "Nelze získat datový typ sloupce Oracle"
 
-#: providers/oracle/gda-oracle-recordset.c:222
+#: providers/oracle/gda-oracle-recordset.c:224
 msgid "Could not get the Oracle column scale"
 msgstr "Nelze získat škálu sloupce Oracle"
 
-#: providers/oracle/gda-oracle-recordset.c:234
+#: providers/oracle/gda-oracle-recordset.c:236
 msgid "Could not get the Oracle column nullable attribute"
 msgstr "Nelze získat atribut nulovatelnosti sloupce Oracle"
 
-#: providers/oracle/gda-oracle-recordset.c:246
+#: providers/oracle/gda-oracle-recordset.c:248
 msgid "Could not get the Oracle defined size"
 msgstr "Nelze získat definovanou velikost Oracle"
 
-#: providers/oracle/gda-oracle-recordset.c:355
+#: providers/oracle/gda-oracle-recordset.c:357
 msgid "Could not fetch a row"
 msgstr "Nelze získat řádek"
 
@@ -1518,9 +1518,9 @@ msgstr "Název nastavení TNS, které používat pro připojování"
 #: providers/postgres/gda-postgres-provider.c:676
 #: providers/postgres/gda-postgres-provider.c:775
 #: providers/postgres/gda-postgres-provider.c:886
-#: providers/postgres/gda-postgres-recordset.c:187
-#: providers/postgres/gda-postgres-recordset.c:465
-#: providers/postgres/gda-postgres-recordset.c:591
+#: providers/postgres/gda-postgres-recordset.c:191
+#: providers/postgres/gda-postgres-recordset.c:576
+#: providers/postgres/gda-postgres-recordset.c:702
 #: providers/postgres/utils.c:178
 msgid "Invalid PostgreSQL handle"
 msgstr "Neplatný handle PostgreSQL"
@@ -1539,68 +1539,74 @@ msgid "View"
 msgstr "Pohled"
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:1974 testing/client.c:130
+#: providers/postgres/gda-postgres-provider.c:1974 testing/client.c:134
 msgid "Databases"
 msgstr "Databáze"
 
-#: providers/postgres/gda-postgres-recordset.c:234
-#: providers/postgres/gda-postgres-recordset.c:348
+#: providers/postgres/gda-postgres-recordset.c:238
+#: providers/postgres/gda-postgres-recordset.c:358
+#: providers/postgres/gda-postgres-recordset.c:457
 msgid "Table name could not be guessed."
 msgstr "Nebylo možné uhodnout název tabulky."
 
-#: providers/postgres/gda-postgres-recordset.c:341
+#: providers/postgres/gda-postgres-recordset.c:351
+#: providers/postgres/gda-postgres-recordset.c:450
 msgid "Given row doesn't belong to the model."
 msgstr "Daný řádek nepatří do modelu."
 
-#: providers/postgres/gda-postgres-recordset.c:400
+#: providers/postgres/gda-postgres-recordset.c:391
+msgid "Model doesn't have at least one unique key."
+msgstr "Model neobsahuje alespoň jeden jedinečný klíč."
+
+#: providers/postgres/gda-postgres-recordset.c:509
 msgid "Model doesn't have at least one non-modified unique key."
 msgstr "Model neobsahuje alespoň jeden neupravený jedinečný klíč."
 
-#: providers/postgres/gda-postgres-recordset.c:404
+#: providers/postgres/gda-postgres-recordset.c:513
 msgid "Model doesn't have any non-unique values to update."
 msgstr "Model neobsahuje nejedinečné hodnoty k aktualizaci."
 
-#: providers/postgres/gda-postgres-recordset.c:480
-#: providers/sqlite/gda-sqlite-recordset.c:210
-#: providers/sqlite/gda-sqlite-recordset.c:242
+#: providers/postgres/gda-postgres-recordset.c:591
+#: providers/sqlite/gda-sqlite-recordset.c:211
+#: providers/sqlite/gda-sqlite-recordset.c:243
 #: providers/bdb/gda-bdb-recordset.c:166
 msgid "Column number out of range"
 msgstr "Sloupec mimo rozsah"
 
-#: providers/postgres/gda-postgres-recordset.c:707
+#: providers/postgres/gda-postgres-recordset.c:823
 #, c-format
 msgid "Tuples:\"%s\""
 msgstr "n-tice:\"%s\""
 
-#: providers/postgres/libmain.c:41
+#: providers/postgres/libmain.c:42
 msgid "Provider for PostgreSQL databases"
 msgstr "Poskytovatel pro databáze PostgreSQL"
 
-#: providers/postgres/libmain.c:54
+#: providers/postgres/libmain.c:55
 msgid "Search Path"
 msgstr "Cesta hledání"
 
-#: providers/postgres/libmain.c:55
+#: providers/postgres/libmain.c:56
 msgid "Search path"
 msgstr "Cesta hledání"
 
-#: providers/postgres/libmain.c:67
+#: providers/postgres/libmain.c:68
 msgid "Extra PostgreSQL options to use for the connection"
 msgstr "Další možnosti PostgreSQL, které pro připojení používat"
 
-#: providers/postgres/libmain.c:71 providers/sybase/libmain.c:70
+#: providers/postgres/libmain.c:72 providers/sybase/libmain.c:70
 msgid "Port number to use for the connection"
 msgstr "Číslo portu, které používat pro připojování"
 
-#: providers/postgres/libmain.c:74
+#: providers/postgres/libmain.c:75
 msgid "Require SSL"
 msgstr "Vyžadovat SSL"
 
-#: providers/postgres/libmain.c:75
+#: providers/postgres/libmain.c:76
 msgid "Whether to require SSL or not when connecting"
 msgstr "Jestli při připojování vyžadovat SSL"
 
-#: providers/postgres/libmain.c:78 providers/postgres/libmain.c:79
+#: providers/postgres/libmain.c:79 providers/postgres/libmain.c:80
 msgid "TTY"
 msgstr "TTY"
 
@@ -1619,9 +1625,9 @@ msgstr "Nelze nastavit volbu SQLite empty_result_callbacks"
 #: providers/sqlite/gda-sqlite-provider.c:379
 #: providers/sqlite/gda-sqlite-provider.c:590
 #: providers/sqlite/gda-sqlite-provider.c:755
-#: providers/sqlite/gda-sqlite-recordset.c:156
-#: providers/sqlite/gda-sqlite-recordset.c:195
-#: providers/sqlite/gda-sqlite-recordset.c:236
+#: providers/sqlite/gda-sqlite-recordset.c:157
+#: providers/sqlite/gda-sqlite-recordset.c:196
+#: providers/sqlite/gda-sqlite-recordset.c:237
 msgid "Invalid SQLite handle"
 msgstr "Neplatný handle SQLite"
 
@@ -1767,62 +1773,62 @@ msgstr "nelze získat data pro nalezení aktuální databáze."
 msgid "could not drop cmd structure to find current database."
 msgstr "nelze uvolnit strukturu cmd pro nalezení aktuální databáze."
 
-#: providers/sybase/gda-sybase-recordset.c:315
+#: providers/sybase/gda-sybase-recordset.c:316
 msgid "Could not allocate datamodel. No results will be returned."
 msgstr "Nelze alokovat datamodel. Nebudou vráceny žádné výsledky."
 
-#: providers/sybase/gda-sybase-recordset.c:318
+#: providers/sybase/gda-sybase-recordset.c:319
 msgid "ct_cancel() failed."
 msgstr "ct_cancel() selhalo."
 
-#: providers/sybase/gda-sybase-recordset.c:331
+#: providers/sybase/gda-sybase-recordset.c:332
 #, c-format
 msgid "%s failed while processing a row result."
 msgstr "%s() selhalo při zpracovávání řádku výsledku."
 
-#: providers/sybase/gda-sybase-recordset.c:339
+#: providers/sybase/gda-sybase-recordset.c:340
 #, c-format
 msgid "%s returned <= 0 columns."
 msgstr "%s() vrátilo <= 0 sloupců."
 
-#: providers/sybase/gda-sybase-recordset.c:359
-#: providers/sybase/gda-sybase-recordset.c:549
+#: providers/sybase/gda-sybase-recordset.c:360
+#: providers/sybase/gda-sybase-recordset.c:550
 msgid "Could not allocate structure for column metainformation."
 msgstr "Nelze alokovat strukturu pro metainformace o sloupci."
 
-#: providers/sybase/gda-sybase-recordset.c:363
-#: providers/sybase/gda-sybase-recordset.c:553
+#: providers/sybase/gda-sybase-recordset.c:364
+#: providers/sybase/gda-sybase-recordset.c:554
 #, c-format
 msgid "Could not call %s while processing row resultset."
 msgstr "Nelze zavolat %s při zpracovávání row resultset."
 
-#: providers/sybase/gda-sybase-recordset.c:382
-#: providers/sybase/gda-sybase-recordset.c:403
+#: providers/sybase/gda-sybase-recordset.c:383
+#: providers/sybase/gda-sybase-recordset.c:404
 #, c-format
 msgid "Could not run %s on column %d"
 msgstr "Nelze spustit %s na sloupci %d"
 
-#: providers/sybase/gda-sybase-recordset.c:391
+#: providers/sybase/gda-sybase-recordset.c:392
 #, c-format
 msgid "Could not allocate data placeholder for column %d"
 msgstr "Nelze alokovat placeholder dat pro sloupec %d"
 
-#: providers/sybase/gda-sybase-recordset.c:422
+#: providers/sybase/gda-sybase-recordset.c:423
 #, c-format
 msgid "Could not run %s to cancel processing row resultset."
 msgstr "Nelze spustit %s pro zrušení zpracovávání row resultset."
 
-#: providers/sybase/gda-sybase-recordset.c:438
+#: providers/sybase/gda-sybase-recordset.c:439
 #, c-format
 msgid "%s failed on row %d"
 msgstr "%s selhalo na řádku %d"
 
-#: providers/sybase/gda-sybase-recordset.c:465
+#: providers/sybase/gda-sybase-recordset.c:466
 #, c-format
 msgid "%s terminated with unexpected return code."
 msgstr "%s skončilo s neočekávaným návratovým kódem."
 
-#: providers/sybase/gda-sybase-recordset.c:509
+#: providers/sybase/gda-sybase-recordset.c:510
 msgid ""
 "an error occured when calling ct_diag attempting to retrieve a server "
 "message count for resultset"
@@ -1830,11 +1836,11 @@ msgstr ""
 "při volání cg_diag při pokusu získat počet zpráv serveru pro resultset došlo "
 "k chybě"
 
-#: providers/sybase/gda-sybase-recordset.c:518
+#: providers/sybase/gda-sybase-recordset.c:519
 msgid "attempting to make recordset and msg count != 1 !"
 msgstr "pokouším se vytvořit resultset a počet zpráv != 1 !"
 
-#: providers/sybase/gda-sybase-recordset.c:531
+#: providers/sybase/gda-sybase-recordset.c:532
 msgid ""
 "an error occured when calling ct_diag attempting to retrieve a server "
 "message for recordset"
@@ -1842,7 +1848,7 @@ msgstr ""
 "při volání cg_diag při pokusu získat zprávu serveru pro recordset došlo k "
 "chybě"
 
-#: providers/sybase/gda-sybase-recordset.c:590 providers/sybase/utils.c:408
+#: providers/sybase/gda-sybase-recordset.c:591 providers/sybase/utils.c:408
 msgid "call to ct_diag failed when attempting to clear the server messages"
 msgstr "volání ct_diag selhalo pokusu smazat zprávy serveru"
 
@@ -1876,10 +1882,6 @@ msgstr "Locale"
 #: providers/sybase/libmain.c:81
 msgid "Locale to use in the connection"
 msgstr "Locale, které pro připojení používat"
-
-#: providers/sybase/main.c:52
-msgid "Could not initiate Sybase component factory"
-msgstr "Nelze inicializovat generátor komponent Sybase"
 
 #: providers/sybase/utils.c:48
 msgid "Call: csmsg callback"
@@ -2258,92 +2260,92 @@ msgstr "Hodnota \"%s\" atributu %s elementu %s není ve výčtu\n"
 msgid "\t\tNONE\n"
 msgstr "\t\tNIC\n"
 
-#: testing/client.c:83
+#: testing/client.c:87
 #, c-format
 msgid "** ERROR: could not open connection to %s\n"
 msgstr "** CHYBA: nelze otevřít připojení k %s\n"
 
 #. show provider features
-#: testing/client.c:88
+#: testing/client.c:92
 msgid "\tProvider capabilities...\n"
 msgstr "\tSchopnosti poskytovatele...\n"
 
-#: testing/client.c:89
+#: testing/client.c:93
 #, c-format
 msgid "\t\tAggregates: %s\n"
 msgstr "\t\tAgregace: %s\n"
 
-#: testing/client.c:91 testing/client.c:94 testing/client.c:97
-#: testing/client.c:100 testing/client.c:103 testing/client.c:106
-#: testing/client.c:109 testing/client.c:112 testing/client.c:115
-#: testing/client.c:118 testing/client.c:121 testing/client.c:124
+#: testing/client.c:95 testing/client.c:98 testing/client.c:101
+#: testing/client.c:104 testing/client.c:107 testing/client.c:110
+#: testing/client.c:113 testing/client.c:116 testing/client.c:119
+#: testing/client.c:122 testing/client.c:125 testing/client.c:128
 msgid "Supported"
 msgstr "Podporováno"
 
-#: testing/client.c:91 testing/client.c:94 testing/client.c:97
-#: testing/client.c:100 testing/client.c:103 testing/client.c:106
-#: testing/client.c:109 testing/client.c:112 testing/client.c:115
-#: testing/client.c:118 testing/client.c:121 testing/client.c:124
+#: testing/client.c:95 testing/client.c:98 testing/client.c:101
+#: testing/client.c:104 testing/client.c:107 testing/client.c:110
+#: testing/client.c:113 testing/client.c:116 testing/client.c:119
+#: testing/client.c:122 testing/client.c:125 testing/client.c:128
 msgid "Not supported"
 msgstr "Nepodporováno"
 
-#: testing/client.c:92
+#: testing/client.c:96
 #, c-format
 msgid "\t\tIndexes: %s\n"
 msgstr "\t\tIndexy: %s\n"
 
-#: testing/client.c:95
+#: testing/client.c:99
 #, c-format
 msgid "\t\tNamespaces: %s\n"
 msgstr "\t\tProstory jmen: %s\n"
 
-#: testing/client.c:98
+#: testing/client.c:102
 #, c-format
 msgid "\t\tProcedures: %s\n"
 msgstr "\t\tProcedury: %s\n"
 
-#: testing/client.c:101
+#: testing/client.c:105
 #, c-format
 msgid "\t\tSequences: %s\n"
 msgstr "\t\tSekvence: %s\n"
 
-#: testing/client.c:104
+#: testing/client.c:108
 #, c-format
 msgid "\t\tSQL: %s\n"
 msgstr "\t\tSQL: %s\n"
 
-#: testing/client.c:107
+#: testing/client.c:111
 #, c-format
 msgid "\t\tTransactions: %s\n"
 msgstr "\t\tTransakce: %s\n"
 
-#: testing/client.c:110
+#: testing/client.c:114
 #, c-format
 msgid "\t\tTriggers: %s\n"
 msgstr "\t\tTriggery: %s\n"
 
-#: testing/client.c:113
+#: testing/client.c:117
 #, c-format
 msgid "\t\tUsers: %s\n"
 msgstr "\t\tUživatelé: %s\n"
 
-#: testing/client.c:116
+#: testing/client.c:120
 #, c-format
 msgid "\t\tViews: %s\n"
 msgstr "\t\tPohledy: %s\n"
 
-#: testing/client.c:119
+#: testing/client.c:123
 #, c-format
 msgid "\t\tXML queries: %s\n"
 msgstr "\t\tDotazy XML: %s\n"
 
-#: testing/client.c:122
+#: testing/client.c:126
 #, c-format
 msgid "\t\tBLOBs: %s\n"
 msgstr "\t\tBLOBy: %s\n"
 
 #. show connection schemas
-#: testing/client.c:127
+#: testing/client.c:131
 #, c-format
 msgid ""
 "\n"
@@ -2354,57 +2356,57 @@ msgstr ""
 "\tPoskytovatel hlásí verzi: %s\n"
 "\n"
 
-#: testing/client.c:129
+#: testing/client.c:133
 msgid "Namespaces"
 msgstr "Prostory jmen"
 
-#: testing/client.c:131
+#: testing/client.c:135
 msgid "Stored procedures"
 msgstr "Uložené procedury"
 
-#: testing/client.c:132
+#: testing/client.c:136
 msgid "Connection Tables"
 msgstr "Tabulky připojení"
 
-#: testing/client.c:133
+#: testing/client.c:137
 msgid "Available types"
 msgstr "Dostupné typy"
 
-#: testing/client.c:136
+#: testing/client.c:140
 msgid "Aggregates"
 msgstr "Agregace"
 
-#: testing/client.c:140
+#: testing/client.c:144
 msgid "Languages"
 msgstr "Jazyky"
 
-#: testing/client.c:145 testing/client.c:153
+#: testing/client.c:149 testing/client.c:157
 msgid "\tStarting transaction..."
 msgstr "\tStartuji transakci..."
 
-#: testing/client.c:147 testing/client.c:151 testing/client.c:155
-#: testing/client.c:159
+#: testing/client.c:151 testing/client.c:155 testing/client.c:159
+#: testing/client.c:163
 msgid "Error"
 msgstr "Chyba"
 
-#: testing/client.c:149
+#: testing/client.c:153
 msgid "\tFinishing transaction..."
 msgstr "\tUkončuji transakci..."
 
-#: testing/client.c:157
+#: testing/client.c:161
 msgid "\tRolling back transaction..."
 msgstr "\tVracím zpět transakci..."
 
-#: testing/client.c:188
+#: testing/client.c:192
 msgid "Testing GDA client API"
 msgstr "Testovací API pro klienta GDA"
 
-#: testing/client.c:197
+#: testing/client.c:201
 msgid "** ERROR: gda_config_get_data_source_list returned a NULL item\n"
 msgstr ""
 "** CHYBA: gda_config_get_data_source_list vrátilo prázdnou (NULL) položku\n"
 
-#: testing/client.c:201
+#: testing/client.c:205
 #, c-format
 msgid " Data source = %s, User = %s\n"
 msgstr " Zdroj dat = %s, Uživatel = %s\n"
