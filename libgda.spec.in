@@ -8,7 +8,7 @@
 %define  RELEASE 1
 %define  rel     %{?CUSTOM_RELEASE} %{!?CUSTOM_RELEASE:%RELEASE}
 
-Summary: GDA
+Summary: GNU Data Access
 Name: 		%name
 Version:	%ver
 Release: 	%rel
@@ -32,7 +32,7 @@ separated from it to allow non-GNOME applications to be
 developed based on it.
 
 %package devel
-Summary: GNOME DB Development
+Summary: GNU Data Access Development
 Group: 		Applications/Databases
 Requires:	%name = %{PACKAGE_VERSION}
 
@@ -104,6 +104,7 @@ fi
 %{prefix}/lib/libgda-client.so*
 %{prefix}/lib/libgda-server.so*
 %{prefix}/share/gda/dtd/*
+%{prefix}/share/gnome/help/libgda/*
 
 %files devel
 %defattr(-, root, root)
@@ -111,9 +112,9 @@ fi
 %{prefix}/bin/gda-build*
 %{prefix}/bin/gda-run
 %{prefix}/bin/gda-config
-%{prefix}/lib/libgda-common.*
-%{prefix}/lib/libgda-client.*
-%{prefix}/lib/libgda-server.*
+%{prefix}/lib/libgda-common.*a
+%{prefix}/lib/libgda-client.*a
+%{prefix}/lib/libgda-server.*a
 %{prefix}/include/gda/*
 %{prefix}/share/idl/*
 
