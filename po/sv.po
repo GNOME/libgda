@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2000-10-04 07:18+0200\n"
-"PO-Revision-Date: 2000-10-04 07:18+0200\n"
+"POT-Creation-Date: 2000-10-05 07:45+0200\n"
+"PO-Revision-Date: 2000-10-05 07:48+0200\n"
 "Last-Translator: Christian Rose <menthos@menthos.com>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -278,7 +278,7 @@ msgstr "Kunde inte registrera INTERBASE-leverantörsimplementation"
 #: providers/gda-mysql-server/gda-mysql-connection.c:251
 #: providers/gda-oracle-server/gda-oracle-connection.c:295
 #: providers/gda-postgres-server/gda-postgres-connection.c:511
-#: providers/gda-sybase-server/gda-sybase-connection.c:243
+#: providers/gda-sybase-server/gda-sybase-connection.c:249
 #, c-format
 msgid "Unhandled SCHEMA_QTYPE %d"
 msgstr "Ej hanterad SCHEMA_QTYPE %d"
@@ -330,7 +330,7 @@ msgstr "mysql_recset är NULL"
 
 #: providers/gda-mdb-server/gda-mdb-connection.c:448
 #: providers/gda-mysql-server/gda-mysql-connection.c:475
-#: providers/gda-sybase-server/gda-sybase-connection.c:397
+#: providers/gda-sybase-server/gda-sybase-connection.c:403
 msgid "No table name given for SCHEMA_COLS"
 msgstr "Inget tabellnamn angivet för SCHEMA_COLS"
 
@@ -475,150 +475,155 @@ msgstr "Ingen data returnerad, frigör postsamlingsstrukturen"
 msgid "Freeing command structure failed"
 msgstr "Frigörning av kommandostrukturen misslyckades"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:123
+#: providers/gda-sybase-server/gda-sybase-connection.c:129
 msgid "Error allocating error structure"
 msgstr "Fel vid allokering av felstruktur"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:131
+#: providers/gda-sybase-server/gda-sybase-connection.c:137
 msgid "Not enough memory for sybase_Connection"
 msgstr "Inte tillräckligt med minne för sybase_Connection"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:387
+#: providers/gda-sybase-server/gda-sybase-connection.c:393
 #, c-format
 msgid "schema_cols: table_name '%s'"
 msgstr "schema_cols: table_name \"%s\""
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:403
+#: providers/gda-sybase-server/gda-sybase-connection.c:409
 msgid "Could not allocate command structure"
 msgstr "Kunde inte allokera kommandostruktur"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:425
+#: providers/gda-sybase-server/gda-sybase-connection.c:431
 msgid "Could not allocate enough memory for query"
 msgstr "Kunde inte allokera tillräckligt med minne för fråga"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:439
+#: providers/gda-sybase-server/gda-sybase-connection.c:445
 msgid "Could not get recordset in schema_cols"
 msgstr "Kunde inte hämta postsamling i schema_cols"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:471
-#: providers/gda-sybase-server/gda-sybase-connection.c:548
+#: providers/gda-sybase-server/gda-sybase-connection.c:477
+#: providers/gda-sybase-server/gda-sybase-connection.c:554
 #, c-format
 msgid "schema_tables: table name = '%s'"
 msgstr "schema_tables: tabellnamn = \"%s\""
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:479
-#: providers/gda-sybase-server/gda-sybase-connection.c:556
+#: providers/gda-sybase-server/gda-sybase-connection.c:485
+#: providers/gda-sybase-server/gda-sybase-connection.c:562
 #, c-format
 msgid "schema_tables: table_schema = '%s'"
 msgstr "schema_tables: table_schema = \"%s\""
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:484
+#: providers/gda-sybase-server/gda-sybase-connection.c:490
 #, c-format
 msgid "schema_procedures: proc_catalog = '%s' UNUSED!\n"
 msgstr "schema_procedures: proc_catalog = \"%s\" OANVÄND!\n"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:488
+#: providers/gda-sybase-server/gda-sybase-connection.c:494
 #, c-format
 msgid "schema_procs: invalid constraint type %d"
 msgstr "schema_procs: ogiltig restriktionstyp %d"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:498
+#: providers/gda-sybase-server/gda-sybase-connection.c:504
 msgid "Could not allocate cmd structure"
 msgstr "Kunde inte allokera kommandostruktur"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:561
+#: providers/gda-sybase-server/gda-sybase-connection.c:567
 #, c-format
 msgid "schema_procedures: proc_catalog = '%s' UNUSED!"
 msgstr "schema_procedures: proc_catalog = \"%s\" OANVÄND!"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:565
+#: providers/gda-sybase-server/gda-sybase-connection.c:571
 #, c-format
 msgid "schema_tables: invalid constraint type %d"
 msgstr "schema_tables: ogiltig restriktionstyp %d"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:626
+#: providers/gda-sybase-server/gda-sybase-connection.c:632
 #, c-format
 msgid "Invalid or unsupported constraint type: %d"
 msgstr "Ogiltig eller ej stödd restriktionstyp: %d"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:667
+#: providers/gda-sybase-server/gda-sybase-connection.c:673
 msgid "Could not allocate Gda_ServerCommand"
 msgstr "Kunde inte allokera Gda_ServerCommand"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:697
-#: providers/gda-sybase-server/gda-sybase-connection.c:702
+#: providers/gda-sybase-server/gda-sybase-connection.c:703
+#: providers/gda-sybase-server/gda-sybase-connection.c:708
 #, c-format
 msgid "connection status: %x"
 msgstr "anslutningsstatus: %x"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:698
+#: providers/gda-sybase-server/gda-sybase-connection.c:704
 #, c-format
 msgid "return code: %x"
 msgstr "återvändskod: %x"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:735
+#: providers/gda-sybase-server/gda-sybase-connection.c:741
 msgid "attempting reconnection"
 msgstr "försöker att återansluta"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:872
+#: providers/gda-sybase-server/gda-sybase-connection.c:879
 #, c-format
-msgid "%sonnected to '%s'"
-msgstr "%s Anslöt till \"%s\""
+msgid "Reconnected to '%s'"
+msgstr "Återanslöt till \"%s\""
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:882
+#: providers/gda-sybase-server/gda-sybase-connection.c:881
+#, c-format
+msgid "Connected to %s"
+msgstr "Anslöt till %s"
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:889
 #, c-format
 msgid "Selected database '%s'"
 msgstr "Valde databasen \"%s\""
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:911
+#: providers/gda-sybase-server/gda-sybase-connection.c:918
 #, c-format
 msgid "%s: Could not allocate cmd structure"
 msgstr "%s: Kunde inte allokera kommandostruktur"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:920
+#: providers/gda-sybase-server/gda-sybase-connection.c:927
 #, c-format
 msgid "%s: Could not allocate memory for cmd string"
 msgstr "%s: Kunde inte allokera minne för kommandosträng"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:933
+#: providers/gda-sybase-server/gda-sybase-connection.c:940
 #, c-format
 msgid "%s: ct_command failed"
 msgstr "%s: ct_command misslyckades"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:942
+#: providers/gda-sybase-server/gda-sybase-connection.c:949
 #, c-format
 msgid "%s: sending command failed"
 msgstr "%s: skickande av kommando misslyckades"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:953
+#: providers/gda-sybase-server/gda-sybase-connection.c:960
 #, c-format
 msgid "%s: selecting database failed"
 msgstr "%s: val av databas misslyckades"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:971
+#: providers/gda-sybase-server/gda-sybase-connection.c:978
 #, c-format
 msgid "%s: use command failed"
 msgstr "%s: användningskommando misslyckades"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:998
+#: providers/gda-sybase-server/gda-sybase-connection.c:1005
 msgid "Could not allocate locale structure"
 msgstr "Kunde inte allokera lokalstruktur"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:1004
+#: providers/gda-sybase-server/gda-sybase-connection.c:1011
 #, c-format
 msgid "Could not set locale to '%s'"
 msgstr "Kunde inte sätta lokalen till \"%s\""
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:1010
+#: providers/gda-sybase-server/gda-sybase-connection.c:1017
 #, c-format
 msgid "Could not configure locale to be '%s'"
 msgstr "Kunde inte konfigurera lokalen till att vara \"%s\""
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:1015
+#: providers/gda-sybase-server/gda-sybase-connection.c:1022
 msgid "Could not drop locale structure"
 msgstr "Kunde inte kasta lokalstrukturen"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:1028
+#: providers/gda-sybase-server/gda-sybase-connection.c:1035
 #, c-format
 msgid "Fatal error: %s\n"
 msgstr "Fatalt fel: %s\n"
