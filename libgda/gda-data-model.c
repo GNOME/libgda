@@ -29,6 +29,9 @@
 struct _GdaDataModelPrivate {
 	gboolean notify_changes;
 	GHashTable *column_titles;
+
+	/* edition mode */
+	gboolean editing;
 };
 
 static void gda_data_model_class_init (GdaDataModelClass *klass);
@@ -37,6 +40,9 @@ static void gda_data_model_finalize   (GObject *object);
 
 enum {
 	CHANGED,
+	BEGIN_EDIT,
+	CANCEL_EDIT,
+	END_EDIT,
 	LAST_SIGNAL
 };
 
@@ -62,8 +68,36 @@ gda_data_model_class_init (GdaDataModelClass *klass)
                               NULL, NULL,
                               g_cclosure_marshal_VOID__VOID,
                               G_TYPE_NONE, 0);
+	gda_data_model_signals[BEGIN_EDIT] =
+		g_signal_new ("begin_edit",
+                              G_TYPE_FROM_CLASS (object_class),
+                              G_SIGNAL_RUN_LAST,
+                              G_STRUCT_OFFSET (GdaDataModelClass, begin_edit),
+                              NULL, NULL,
+                              g_cclosure_marshal_VOID__VOID,
+                              G_TYPE_NONE, 0);
+	gda_data_model_signals[CANCEL_EDIT] =
+		g_signal_new ("cancel_edit",
+                              G_TYPE_FROM_CLASS (object_class),
+                              G_SIGNAL_RUN_LAST,
+                              G_STRUCT_OFFSET (GdaDataModelClass, cancel_edit),
+                              NULL, NULL,
+                              g_cclosure_marshal_VOID__VOID,
+                              G_TYPE_NONE, 0);
+	gda_data_model_signals[END_EDIT] =
+		g_signal_new ("end_edit",
+                              G_TYPE_FROM_CLASS (object_class),
+                              G_SIGNAL_RUN_LAST,
+                              G_STRUCT_OFFSET (GdaDataModelClass, end_edit),
+                              NULL, NULL,
+                              g_cclosure_marshal_VOID__VOID,
+                              G_TYPE_NONE, 0);
 
 	object_class->finalize = gda_data_model_finalize;
+	klass->changed = NULL;
+	klass->begin_edit = NULL;
+	klass->cancel_edit = NULL;
+	klass->end_edit = NULL;
 	klass->get_n_rows = NULL;
 	klass->get_n_columns = NULL;
 	klass->describe_column = NULL;
@@ -78,6 +112,7 @@ gda_data_model_init (GdaDataModel *model, GdaDataModelClass *klass)
 	model->priv = g_new0 (GdaDataModelPrivate, 1);
 	model->priv->notify_changes = TRUE;
 	model->priv->column_titles = g_hash_table_new (g_str_hash, g_str_equal);
+	model->priv->editing = FALSE;
 }
 
 static void
@@ -323,6 +358,69 @@ gda_data_model_get_value_at (GdaDataModel *model, gint col, gint row)
 	g_return_val_if_fail (CLASS (model)->get_value_at != NULL, NULL);
 
 	return CLASS (model)->get_value_at (model, col, row);
+}
+
+/**
+ * gda_data_model_begin_edit
+ * @model: a #GdaDataModel object.
+ *
+ * Start edition of this data model. This function should be the
+ * first called when modifying the data model.
+ *
+ * Returns: TRUE on success, FALSE if there was an error.
+ */
+gboolean
+gda_data_model_begin_edit (GdaDataModel *model)
+{
+	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
+	g_return_val_if_fail (model->priv->editing == FALSE, FALSE);
+
+	model->priv->editing = TRUE;
+	g_signal_emit (G_OBJECT (model), gda_data_model_signals[BEGIN_EDIT], 0);
+
+	return model->priv->editing;
+}
+
+/**
+ * gda_data_model_cancel_edit
+ * @model: a #GdaDataModel object.
+ *
+ * Cancels edition of this data model. This means that all changes
+ * will be discarded, and the old data put back in the model.
+ *
+ * Returns: TRUE on success, FALSE if there was an error.
+ */
+gboolean
+gda_data_model_cancel_edit (GdaDataModel *model)
+{
+	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
+	g_return_val_if_fail (model->priv->editing, FALSE);
+
+	g_signal_emit (G_OBJECT (model), gda_data_model_signals[CANCEL_EDIT], 0);
+	model->priv->editing = FALSE;
+
+	return TRUE;
+}
+
+/**
+ * gda_data_model_end_edit
+ * @model: a #GdaDataModel object.
+ *
+ * Approves all modifications and send them to the underlying
+ * data source/store.
+ *
+ * Returns: TRUE on success, FALSE if there was an error.
+ */
+gboolean
+gda_data_model_end_edit (GdaDataModel *model)
+{
+	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
+	g_return_val_if_fail (model->priv->editing, FALSE);
+
+	g_signal_emit (G_OBJECT (model), gda_data_model_signals[END_EDIT], 0);
+	model->priv->editing = FALSE;
+
+	return TRUE;
 }
 
 static gchar *

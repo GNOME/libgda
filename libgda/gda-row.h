@@ -28,11 +28,13 @@
 
 G_BEGIN_DECLS
 
-typedef GList GdaRow; /* a GList of GdaField's */
+typedef struct _GdaRow GdaRow;
 typedef GList GdaRowAttributes; /* a GList of GdaFieldAttributes */
 
 GdaRow             *gda_row_new (gint count);
 void                gda_row_free (GdaRow *row);
+const gchar        *gda_row_get_id (GdaRow *row);
+void                gda_row_set_id (GdaRow *row, const gchar *id);
 GdaField           *gda_row_get_field (GdaRow *row, gint num);
 
 GdaRowAttributes   *gda_row_attributes_new (gint count);

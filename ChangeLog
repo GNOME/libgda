@@ -1,5 +1,19 @@
 2002-05-04  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* libgda/gda-row.[ch]: converted GdaRow to an opaque type, not
+	a GList.
+	(gda_row_get_id): new function.
+	(gda_row_set_id): new function.
+
+	* libgda/gda-data-model.[ch]: added new signals to this class,
+	"begin_edit", "end_edit" and "cancel_edit", for editing data models
+	returned by providers.
+	(gda_data_model_begin_edit): new function.
+	(gda_data_model_cancel_edit): new function.
+	(gda_data_model_end_edit): new function.
+
+2002-05-04  Rodrigo Moya <rodrigo@gnome-db.org>
+
 	* libgda/gda-row.[ch]: moved GdaField* stuff...
 	
 	* libgda/gda-field.[ch]: ...to here.

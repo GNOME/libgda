@@ -24,6 +24,11 @@
 #include <glib/gstrfuncs.h>
 #include <libgda/gda-row.h>
 
+struct _GdaRow {
+	gchar *id;
+	GList *fields;
+};
+
 /**
  * gda_row_new
  * @count: number of #GdaField in the new #GdaRow.
@@ -40,9 +45,11 @@ gda_row_new (gint count)
 
 	g_return_val_if_fail (count >= 0, NULL);
 
+	row = g_new0 (GdaRow, 1);
+	row->id = NULL;
 	for (i = 0; i < count; i++) {
 		GdaField *field = gda_field_new ();
-		row = g_list_append (row, field);
+		row->fields = g_list_append (row->fields, field);
 	}
 
 	return row;
@@ -59,8 +66,48 @@ gda_row_free (GdaRow *row)
 {
 	g_return_if_fail (row != NULL);
 
-	g_list_foreach (row, (GFunc) gda_field_free, NULL);
-	g_list_free (row);
+	g_free (row->id);
+	g_list_foreach (row->fields, (GFunc) gda_field_free, NULL);
+	g_list_free (row->fields);
+	g_free (row);
+}
+
+/**
+ * gda_row_get_id
+ * @row: a #GdaRow (which contains #GdaField).
+ *
+ * Return the unique identifier for this row. This identifier is
+ * assigned by the different providers, to uniquely identify
+ * rows returned to clients. If there is no ID, this means that
+ * the row has not been created by a provider, or that it the
+ * provider cannot identify it (ie, modifications to it won't
+ * take place into the database).
+ *
+ * Returns: the unique identifier for this row.
+ */
+const gchar *
+gda_row_get_id (GdaRow *row)
+{
+	g_return_val_if_fail (row != NULL, NULL);
+	return (const gchar *) row->id;
+}
+
+/**
+ * gda_row_set_id
+ * @row: A #GdaRow (which contains #GdaField).
+ * @id: New identifier for the row.
+ *
+ * Assign a new identifier to the given row. This function is
+ * usually called by providers.
+ */
+void
+gda_row_set_id (GdaRow *row, const gchar *id)
+{
+	g_return_if_fail (row != NULL);
+
+	if (row->id)
+		g_free (row->id);
+	row->id = g_strdup (id);
 }
 
 /**
@@ -80,7 +127,7 @@ gda_row_get_field (GdaRow *row, gint num)
 	g_return_val_if_fail (row != NULL, NULL);
 	g_return_val_if_fail (num >= 0, NULL);
 
-	l = g_list_nth (row, num);
+	l = g_list_nth (row->fields, num);
 	return l ? (GdaField *) l->data : NULL;
 }
 
