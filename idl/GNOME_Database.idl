@@ -9,6 +9,7 @@ module GNOME {
 		 * Basic types
 		 */
 		typedef any Value;
+		typedef sequence<Value> ValueList;
 
 		struct Parameter {
 			string name;
@@ -26,6 +27,7 @@ module GNOME {
 			TYPE_BOOLEAN,
 			TYPE_DATE,
 			TYPE_GEOMETRIC_POINT,
+			TYPE_LIST,
 			TYPE_TIME,
 			TYPE_TIMESTAMP,
 			TYPE_DOUBLE,
