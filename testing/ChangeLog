@@ -1,3 +1,10 @@
+2001-05-07  Reinhard Müller  <reinhard.mueller@bytewise.at>
+
+        * gda-test.c: Applied Margus Väli's patch to let the user select
+        the provider to use if more than one provider is installed
+
+        * gda-test.c: Changed coding style to K&R with 8 char indentation
+
 2000-11-10  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* moved gda-{sybase/tds/primebase}-test to noinst_PROGRAMS,
