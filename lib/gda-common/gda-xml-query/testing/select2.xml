@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE query SYSTEM "../gda-xml-query.dtd">
+
+<query>
+  <select>
+    <targetlist>
+      <table name="tab_a" id="t01"/>
+      <join type="inner" source="t01">
+        <table name="tab_b" id="t02">
+          <on>
+            <eq>
+              <field source="t01" name="fa"/>
+              <field source="t02" name="fb"/>
+            </eq>
+          </on>
+        </table>
+      </join>
+    </targetlist>
+    <valuelist>
+      <value id="v01">
+        <field source="t01" name="fa"/>
+      </value>
+      <value id="v02">
+        <field source="t01" name="fb"/>
+      </value>
+      <value id="v03">
+        <field source="t02" name="fc"/>
+      </value>
+    </valuelist>
+  </select>
+</query>
+
+

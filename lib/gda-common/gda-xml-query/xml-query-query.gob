@@ -1,0 +1,73 @@
+%at{
+/* XmlQuery: the xml query object
+ * Copyright (C) 2000 Gerhard Dieringer
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ */
+%}
+%h{
+
+#include "xml-query-bin.h"
+
+%}
+
+
+%{
+
+#include "utils.h"
+
+
+%}
+
+
+
+class Xml:Query:Query from Xml:Query:Bin {
+
+    public Xml:Query:Item *
+    new(void)
+    {
+        XmlQueryItem *query;
+
+        query = (XmlQueryItem *)(GET_NEW);
+        xml_query_item_set_tag(query,"query");
+
+       return query;
+    }
+
+
+    public Xml:Query:Item *
+    new_with_data(Xml:Query:Item *item)
+    {
+        XmlQueryItem *query;
+
+        query = xml_query_query_new();
+        xml_query_item_add(query,item);
+        return query;
+    }
+
+
+    override (Xml:Query:Item) gchar *
+    to_sql(Xml:Query:Item *parent)
+    {
+        XmlQueryBin *bin = XML_QUERY_BIN(parent);
+
+        return TO_SQL(xml_query_bin_get_child(bin));
+    }
+
+
+}
+
+

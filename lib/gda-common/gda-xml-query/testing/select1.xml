@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<!DOCTYPE query SYSTEM "../gda-xml-query.dtd">
+
+<query>
+  <select>
+    <targetlist>
+      <table name="tab_a"/>
+    </targetlist>
+    <valuelist>
+      <value id="v01">
+        <field name="a"/>
+      </value>
+      <value id="v02">
+        <field name="b"/>
+      </value>
+      <value id="v03">
+        <func name="sum" aggregate="yes">
+          <arglist>
+            <field name="c"/>
+        </arglist>
+        </func>
+      </value>
+      <value id="v04">
+        <const value="abc" type="char"/>
+      </value>
+    </valuelist>
+    <where>
+      <and>
+        <not>
+          <null>
+            <field name="x"/>
+          </null>
+        </not>
+        <ne>
+          <field name="a"/>
+          <field name="b"/>
+        </ne>
+      </and>
+    </where>
+    <having>
+      <gt>
+        <func name="sum" aggregate="yes">
+          <arglist>
+            <field name="c"/>
+          </arglist>
+        </func>
+        <const value="0" type="int"/>
+     </gt>
+    </having>
+    <group>
+      <valueref source="v01"/>
+      <valueref source="v02"/>
+      <valueref source="v04"/>
+    </group>
+    <order>
+      <column num="2"/>
+      <column num="1"/>
+    </order>
+  </select>
+</query>
+
+

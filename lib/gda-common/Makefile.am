@@ -1,5 +1,7 @@
 lib_LTLIBRARIES = libgda-common.la
 
+SUBDIRS = gda-xml-query
+
 INCLUDES = \
 	$(GDA_CLIENT_CFLAGS) \
 	$(GDA_PROVIDER_CFLAGS) \

@@ -1,0 +1,283 @@
+%at{
+/* XmlQuery: the xml query object
+ * Copyright (C) 2000 Gerhard Dieringer
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ */
+%}
+%h{
+
+#include "xml-query-item.h"
+
+
+%}
+
+
+
+class Xml:Query:Dual from Xml:Query:Item {
+    private XmlQueryItem  *left    = NULL   destroywith gtk_object_unref;
+    private XmlQueryItem  *right   = NULL   destroywith gtk_object_unref;
+
+
+
+    public Xml:Query:Item *
+    new(gchar *tag, gchar *sqlfmt, gchar *sqlop)
+    {
+	XmlQueryItem *dual;
+
+        dual = (XmlQueryItem *)GET_NEW;
+        xml_query_item_set_tag(dual,tag);
+        xml_query_item_set_sqlfmt(dual,sqlfmt);
+        xml_query_item_set_sqlop(dual,sqlop);
+
+	return dual;
+    }
+
+
+    public Xml:Query:Item *
+    new_with_data(gchar *tag, gchar *sqlfmt, gchar *sqlop,
+		  Xml:Query:Item *left, Xml:Query:Item *right)
+    {
+	XmlQueryItem *dual;
+
+	dual = xml_query_dual_new(tag,sqlfmt,sqlop);
+        xml_query_item_add(dual,left);
+        xml_query_item_add(dual,right);
+
+	return dual;
+    }
+
+
+    override (Xml:Query:Item) void
+    add(Xml:Query:Item *parent, Xml:Query:Item *child (check type))
+    {
+         XmlQueryDual *self = XML_QUERY_DUAL(parent);
+
+        if (self->_priv->left == NULL)
+        {
+            self->_priv->left = child;
+        }
+        else if (self->_priv->right == NULL)
+        {
+            self->_priv->right = child;
+        }
+        else {
+            g_warning("To many children in XmlQueryDual");
+            return;
+        }
+
+        xml_query_item_set_parent(child,parent);
+    }
+
+
+    public Xml:Query:Item *
+    get_left(self)
+    {
+        return self->_priv->left;
+    }
+
+
+    public Xml:Query:Item *
+    get_right(self)
+    {
+        return self->_priv->right;
+    }
+
+
+    override (Xml:Query:Item) xmlNode *
+    to_dom(Xml:Query:Item *parent, xmlNode *parNode)
+    {
+        Self *self = SELF(parent);
+        xmlNode *node;
+
+        node = PARENT_HANDLER(parent,parNode);
+        TO_DOM(self->_priv->left,node);
+        TO_DOM(self->_priv->right,node);
+
+        return node;
+    }
+
+    override (Xml:Query:Item) gchar *
+    to_sql(Xml:Query:Item *parent)
+    {
+         gchar *output, *left, *op, *right, *fmt;
+         XmlQueryDual *self = XML_QUERY_DUAL(parent);
+
+         left  = TO_SQL(self->_priv->left);
+         right = TO_SQL(self->_priv->right);
+
+         op  = xml_query_item_get_sqlop(parent);
+         fmt = xml_query_item_get_sqlfmt(parent);
+         if (op == NULL)
+	     output = g_strdup_printf(fmt,left,right);
+	 else
+	     output = g_strdup_printf(fmt,left,op,right);
+         g_free(left);
+         g_free(op);
+         g_free(right);
+
+         return output;
+    }
+
+
+    public XmlQueryItem *
+    new_eq(void)
+    {
+        return xml_query_dual_new("eq","(%s = %s)",NULL);
+    }
+
+
+    public XmlQueryItem *
+    new_eq_with_data(XmlQueryItem *left, XmlQueryItem *right)
+    {
+        return xml_query_dual_new_with_data("eq","(%s = %s)",NULL,left,right);
+    }
+
+
+    public XmlQueryItem *
+    new_ne(void)
+    {
+        return xml_query_dual_new("ne","(%s <> %s)",NULL);
+    }
+
+
+    public XmlQueryItem *
+    new_ne_with_data(XmlQueryItem *left, XmlQueryItem *right)
+    {
+        return xml_query_dual_new_with_data("ne","(%s <> %s)",NULL,left,right);
+    }
+
+
+    public XmlQueryItem *
+    new_lt(void)
+    {
+        return xml_query_dual_new("lt","(%s < %s)",NULL);
+    }
+
+
+    public XmlQueryItem *
+    new_lt_with_data(XmlQueryItem *left, XmlQueryItem *right)
+    {
+        return xml_query_dual_new_with_data("lt","(%s < %s)",NULL,left,right);
+    }
+
+
+    public XmlQueryItem *
+    new_le(void)
+    {
+        return xml_query_dual_new("le","(%s <= %s)",NULL);
+    }
+
+
+    public XmlQueryItem *
+    new_le_with_data(XmlQueryItem *left, XmlQueryItem *right)
+    {
+        return xml_query_dual_new_with_data("le","(%s <= %s)",NULL,left,right);
+    }
+
+
+    public XmlQueryItem *
+    new_gt(void)
+    {
+        return xml_query_dual_new("gt","(%s > %s)",NULL);
+    }
+
+
+    public XmlQueryItem *
+    new_gt_with_data(XmlQueryItem *left, XmlQueryItem *right)
+    {
+        return xml_query_dual_new_with_data("gt","(%s > %s)",NULL,left,right);
+    }
+
+
+    public XmlQueryItem *
+    new_ge(void)
+    {
+        return xml_query_dual_new("ge","(%s >= %s)",NULL);
+    }
+
+
+    public XmlQueryItem *
+    new_ge_with_data(XmlQueryItem *left, XmlQueryItem *right)
+    {
+        return xml_query_dual_new_with_data("ge","(%s >= %s)",NULL,left,right);
+    }
+
+
+    public XmlQueryItem *
+    new_like(void)
+    {
+        return xml_query_dual_new("like","(%s like %s)",NULL);
+    }
+
+
+    public XmlQueryItem *
+    new_like_with_data(XmlQueryItem *left, XmlQueryItem *right)
+    {
+        return xml_query_dual_new_with_data("like","(%s like %s)",
+                                            NULL,left,right);
+    }
+
+
+    public XmlQueryItem *
+    new_in(void)
+    {
+        return xml_query_dual_new("in","(%s in %s)",NULL);
+    }
+
+
+    public XmlQueryItem *
+    new_in_with_data(XmlQueryItem *left, XmlQueryItem *right)
+    {
+        return xml_query_dual_new_with_data("in","(%s in %s)",NULL,left,right);
+    }
+
+
+    public XmlQueryItem *
+    new_set(void)
+    {
+        return xml_query_dual_new("set","%s = %s",NULL);
+    }
+
+
+    public XmlQueryItem *
+    new_set_with_data(XmlQueryItem *left, XmlQueryItem *right)
+    {
+        return xml_query_dual_new_with_data("set","%s = %s",NULL,left,right);
+    }
+
+
+    override (Xml:Query:Item) Xml:Query:Item *
+    find_id(Xml:Query:Item *parent, gchar *id)
+    {
+        XmlQueryItem *item;
+        Self         *self = SELF(parent);
+
+        item = PARENT_HANDLER(parent,id);
+        if (item != NULL)
+            return item;
+
+        item = xml_query_item_find_id(xml_query_dual_get_left(self),id);
+        if (item != NULL)
+            return item;
+
+        return xml_query_item_find_id(xml_query_dual_get_right(self),id);
+    }
+
+
+
+}
+

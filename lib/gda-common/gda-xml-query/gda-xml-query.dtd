@@ -1,0 +1,251 @@
+<!--      xml-query.dtd
+          Copyright (C) 2000 Vivien Malerba
+                        and  Gerhard Dieringer
+ 
+  This library is free software; you can redistribute it and/or
+  modify it under the terms of the GNU Library General Public
+  License as published by the Free Software Foundation; either
+  version 2 of the License, or (at your option) any later version.
+ 
+  This library is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  Library General Public License for more details.
+ 
+  You should have received a copy of the GNU Library General Public
+  License along with this library; if not, write to the
+  Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+  Boston, MA 02111-1307, USA.
+ 
+-->
+
+<!ENTITY  % trailer "union|unionall|intersect|minus|order">
+<!ENTITY  % simplevalue "const|field|func">
+<!ENTITY  % boolop "and|or|not">
+<!ENTITY  % arithop "eq|ne|lt|le|gt|ge">
+<!ENTITY  % sqlop "null|like|between|in|exists">
+<!ENTITY  % datatype "struct|array|type">
+
+<!ELEMENT query (select|insert|update|delete|create|drop)>
+<!ATTLIST query
+          id ID #IMPLIED
+>
+
+<!ELEMENT select (targetlist?,valuelist?,where?,having?,group?,(%trailer;)?)>
+
+<!ELEMENT insert (target,dest?,(sourcelist|query))>
+
+<!ELEMENT update (target,setlist,where?)>
+
+<!ELEMENT delete (target,where?)>
+
+
+<!ELEMENT targetlist (table|view|join)+>
+
+<!ELEMENT target     (table|view)>
+
+<!ELEMENT union     (query)>
+
+<!ELEMENT unionall  (query)>
+
+<!ELEMENT intersect (query)>
+
+<!ELEMENT minus     (query)>
+
+<!ELEMENT dest (field+)>
+
+<!ELEMENT setlist (set+)>
+
+<!ELEMENT set (field,(%simplevalue;))>
+
+<!ELEMENT sourcelist ((%simplevalue;)+)>
+
+<!ELEMENT valuelist (value+)>
+
+<!ELEMENT value (%simplevalue;)>
+<!ATTLIST value
+          id    ID     #IMPLIED
+>
+
+<!ELEMENT where (%boolop;|%arithop;|%sqlop;)>
+
+<!ELEMENT having (%boolop;|%arithop;|%sqlop;)>
+
+<!ELEMENT group (valueref+)>
+
+<!ELEMENT valueref EMPTY>
+<!ATTLIST valueref
+          source   IDREF   #REQUIRED
+>
+
+<!ELEMENT order (column+)>
+
+<!ELEMENT table (on?)>
+<!ATTLIST table
+          id      ID       #IMPLIED
+          name    NMTOKEN  #REQUIRED
+>
+
+<!ELEMENT view (on?)>
+<!ATTLIST view
+          id      ID       #IMPLIED
+          name    NMTOKEN  #REQUIRED
+>
+
+<!ELEMENT join (table|view)>
+<!ATTLIST join
+          type (inner|left|right) "inner"
+          source  IDREF #REQUIRED
+>
+
+<!ELEMENT on (%boolop;|%arithop;)>
+
+
+<!ELEMENT field EMPTY>
+<!ATTLIST field
+          source IDREF   #IMPLIED
+          name   NMTOKEN #REQUIRED
+          alias  NMTOKEN #IMPLIED
+>
+
+<!ELEMENT func (arglist?)>
+<!ATTLIST func 
+          name  NMTOKEN #REQUIRED
+          alias NMTOKEN #IMPLIED
+	  aggregate (yes|no) "no"
+>
+
+<!ELEMENT arglist (field|const|func)+>
+
+
+<!ELEMENT column EMPTY>
+<!ATTLIST column num  NMTOKEN #REQUIRED
+          order (asc|desc) "asc"
+>
+
+<!ELEMENT const EMPTY>
+<!ATTLIST const
+          value CDATA   #IMPLIED
+          alias NMTOKEN #IMPLIED
+          type  NMTOKEN #REQUIRED
+          null (yes|no) "no"
+>
+
+<!ELEMENT and (%boolop;|%arithop;|%sqlop;)+>
+
+<!ELEMENT or (%boolop;|%arithop;|%sqlop;)+>
+
+<!ELEMENT not (%boolop;|%arithop;|%sqlop;)>
+
+<!ELEMENT eq ((%simplevalue;),(%simplevalue;|query))>
+
+<!ELEMENT ne ((%simplevalue;),(%simplevalue;|query))>
+
+<!ELEMENT lt ((%simplevalue;),(%simplevalue;|query))>
+
+<!ELEMENT le ((%simplevalue;),(%simplevalue;|query))>
+
+<!ELEMENT gt ((%simplevalue;),(%simplevalue;|query))>
+
+<!ELEMENT ge ((%simplevalue;),(%simplevalue;|query))>
+
+<!ELEMENT null (%simplevalue;)>
+
+<!ELEMENT like ((%simplevalue;),(%simplevalue;|query))>
+
+<!ELEMENT in (field,query)>
+
+<!ELEMENT exists (query)>
+
+
+<!-- not sure, if we support it
+<!ELEMENT between ((%simplevalue;),(%simplevalue;),(%simplevalue;))>
+-->
+
+<!--
+************************************************************
+-->
+
+<!ELEMENT create (tabledef|viewdef|sequence|indexdef)>
+
+<!ELEMENT drop   (table|view|sequence|index)>
+
+
+
+<!--
+The following elements should be moved to the database DTD
+-->
+
+<!ELEMENT tabledef (fielddef+,primary?,foreign*)?>
+<!ATTLIST tabledef
+          id      ID       #IMPLIED
+          name    NMTOKEN  #REQUIRED
+          temp (yes|no) "no"
+>
+
+<!ELEMENT viewdef (query)>
+<!ATTLIST viewdef 
+          id      ID       #IMPLIED
+          name    NMTOKEN  #REQUIRED
+>
+
+<!ELEMENT fielddef (%datatype;)>
+<!ATTLIST fielddef
+          id   ID      #IMPLIED
+          name NMTOKEN #REQUIRED
+          notnull (yes|no) "no"
+>
+
+<!ELEMENT primary EMPTY>
+<!ATTLIST primary
+          key IDREFS #REQUIRED
+>
+
+<!ELEMENT foreign EMPTY>
+<!ATTLIST foreign
+          key   IDREFS   #REQUIRED
+          table NMTOKEN  #REQUIRED
+          ref   NMTOKENS #REQUIRED
+>
+
+<!ELEMENT struct (element+)>
+
+<!ELEMENT element (%datatype;)>
+<!ATTLIST element 
+          name NMTOKEN #REQUIRED
+>
+
+<!ELEMENT array (%datatype;)>
+<!ATTLIST array
+          size NMTOKENS #REQUIRED
+>
+
+<!ELEMENT type EMPTY>
+<!ATTLIST type 
+          name NMTOKEN  #REQUIRED
+          size NMTOKENS #IMPLIED
+>
+
+<!ELEMENT sequence (property*)>
+<!ATTLIST sequence
+          name  NMTOKEN #REQUIRED
+>
+
+<!ELEMENT property EMPTY>
+<!ATTLIST property
+          name  NMTOKEN #REQUIRED
+	  value NMTOKEN #REQUIRED
+>
+
+<!ELEMENT indexdef EMPTY>
+<!ATTLIST indexdef
+          name    NMTOKEN  #REQUIRED
+          table   NMTOKEN  #REQUIRED
+          columns NMTOKENS #REQUIRED
+          unique  (yes|no) "no"
+>
+
+<!ELEMENT index EMPTY>
+<!ATTLIST index
+          name    NMTOKEN  #REQUIRED
+>

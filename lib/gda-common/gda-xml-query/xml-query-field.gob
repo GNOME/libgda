@@ -1,0 +1,85 @@
+%at{
+/* XmlQuery: the xml query object
+ * Copyright (C) 2000 Gerhard Dieringer
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ */
+%}
+%h{
+
+#include "xml-query-atom.h"
+
+%}
+
+
+
+
+
+class Xml:Query:Field from Xml:Query:Atom {
+
+    public Xml:Query:Item *
+    new(void)
+    {
+        XmlQueryItem  *field;
+
+        field = (XmlQueryItem *)(GET_NEW);
+        xml_query_item_set_tag(field,"field");
+
+        return field;
+    }
+
+
+    public Xml:Query:Item *
+    new_with_data(gchar *source, gchar *name, gchar *alias)
+    {
+        XmlQueryItem  *field;
+
+        field = xml_query_field_new();
+        if (source != NULL)
+            xml_query_item_set_attrib(field,"source",source);
+        if (name != NULL)
+            xml_query_item_set_attrib(field,"name",name);
+        if (alias != NULL)
+            xml_query_item_set_attrib(field,"alias",alias);
+
+        return field;
+    }
+
+
+
+    override (Xml:Query:Item) gchar *
+    to_sql(Xml:Query:Item *parent)
+    {
+         gchar *output, *source, *name, *alias;
+
+         source = xml_query_item_get_attrib(parent,"source");
+         name = xml_query_item_get_attrib(parent,"name");
+         alias = xml_query_item_get_attrib(parent,"alias");
+
+         source = (*source == 0) ? g_strdup("")
+                      : g_strdup_printf("%s.",source);
+         alias = (*alias == 0) ? g_strdup("")
+                      : g_strdup_printf(" as %s",alias);
+         output = g_strdup_printf("%s%s%s",source,name,alias);
+
+         g_free(source);
+         g_free(alias);
+
+         return output;
+    }
+
+
+}

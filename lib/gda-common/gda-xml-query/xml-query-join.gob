@@ -1,0 +1,79 @@
+%at{
+/* XmlQuery: the xml query object
+ * Copyright (C) 2000 Gerhard Dieringer
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ */
+%}
+%h{
+
+#include "xml-query-bin.h"
+
+%}
+
+
+
+class Xml:Query:Join from Xml:Query:Bin {
+
+    public Xml:Query:Item *
+    new(void)
+    {
+        XmlQueryItem *join;
+
+        join = (XmlQueryItem *)(GET_NEW);
+        xml_query_item_set_tag(join,"join");
+
+       return join;
+    }
+
+
+    public Xml:Query:Item *
+    new_with_data(Xml:Query:Item *target, 
+             Xml:Query:Item *cond, gchar *type)
+    {
+        XmlQueryItem *join;
+        gchar        *idref;
+
+        join = xml_query_join_new();
+        xml_query_item_add(join,cond);
+        xml_query_item_set_attrib(join,"type",type);
+        idref = xml_query_item_get_attrib(target,"id");
+        xml_query_item_set_attrib(join,"source",idref);
+
+        return join;
+    }
+
+
+    override (Xml:Query:Item) gchar *
+    to_sql(Xml:Query:Item *parent)
+    {
+        XmlQueryBin *self = XML_QUERY_BIN(parent);
+        gchar *output, *child, *fmt, *type;
+        
+        type = xml_query_item_get_attrib(parent,"type");
+        type = (type == NULL) ? "" : type;
+        child = TO_SQL(xml_query_bin_get_child(self));
+
+        fmt =  "%s join %s";
+        output = g_strdup_printf(fmt,type,child);
+
+        g_free(child);
+
+        return output;
+    }
+
+
+}

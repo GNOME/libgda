@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!DOCTYPE query SYSTEM "../gda-xml-query.dtd">
+
+<query>
+  <insert>
+    <target>
+      <table name="tab_a"/>
+    </target>
+    <dest>
+      <field name="a"/>
+      <field name="b"/>
+      <field name="c"/>
+    </dest>
+    <sourcelist>
+      <const value="1" type="int" null="no"/>
+      <func name="f" aggregate="no">
+        <arglist>
+          <const value="1" type="int" null="no"/>
+          <const value="x" type="char" null="no"/>
+        </arglist>
+      </func>
+      <const value="abc" type="char" null="no"/>
+    </sourcelist>
+  </insert>
+</query>

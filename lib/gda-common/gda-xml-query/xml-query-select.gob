@@ -1,0 +1,279 @@
+%at{
+/* XmlQuery: the xml query object
+ * Copyright (C) 2000 Gerhard Dieringer
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ */
+%}
+%h{
+
+#include "xml-query-dml.h"
+
+%}
+
+
+%{
+
+
+#include "xml-query-dml-private.h"
+#include "utils.h"
+#include "xml-query-list.h"
+#include "xml-query-dual.h"
+#include "xml-query-target.h"
+#include "xml-query-field.h"
+#include "xml-query-const.h"
+#include "xml-query-func.h"
+#include "xml-query-value.h"
+#include "xml-query-join.h"
+#include "xml-query-column.h"
+
+
+%}
+
+class Xml:Query:Select from Xml:Query:Dml {
+
+    public Xml:Query:Item *
+    new(void)
+    {
+        XmlQueryItem *select;
+
+        select = (XmlQueryItem *)(GET_NEW);
+        xml_query_item_set_tag(select,"select");
+
+        return select;
+    }
+
+
+    override (Xml:Query:Item) void
+    add(Xml:Query:Item *parent, Xml:Query:Item *child (check type))
+    {
+        XmlQueryDml *dml = XML_QUERY_DML(parent);
+        gchar *childtag = xml_query_item_get_tag(child);
+
+        if (!strcmp(childtag,"targetlist")) {
+	    if (dml->_priv->target != NULL)
+		gtk_object_unref(GTK_OBJECT(dml->_priv->target));
+            dml->_priv->target = child;
+        } else if (!strcmp(childtag,"valuelist")) {
+	    if (dml->_priv->valuelist != NULL)
+		gtk_object_unref(GTK_OBJECT(dml->_priv->valuelist));
+            dml->_priv->valuelist = child;
+        } else if (!strcmp(childtag,"where")) {
+	    if (dml->_priv->where != NULL)
+		gtk_object_unref(GTK_OBJECT(dml->_priv->where));
+            dml->_priv->where = child;
+        } else if (!strcmp(childtag,"having")) {
+	    if (dml->_priv->having != NULL)
+		gtk_object_unref(GTK_OBJECT(dml->_priv->having));
+            dml->_priv->having = child;
+        } else if (!strcmp(childtag,"group")) {
+	    if (dml->_priv->group != NULL)
+		gtk_object_unref(GTK_OBJECT(dml->_priv->group));
+            dml->_priv->group = child;
+        } else if (!strcmp(childtag,"union") ||
+                   !strcmp(childtag,"unionall") ||
+                   !strcmp(childtag,"intersect") ||
+                   !strcmp(childtag,"minus") ||
+                   !strcmp(childtag,"order")) {
+	    if (dml->_priv->trailer != NULL)
+		gtk_object_unref(GTK_OBJECT(dml->_priv->trailer));
+            dml->_priv->trailer = child;
+        } else {
+            g_warning("Invalid objecttype in select\n");
+        }
+
+        xml_query_item_set_parent(child,parent);
+    }
+
+
+    private Xml:Query:Item *
+    add_value(self, Xml:Query:Item *valueitem)
+    {
+        XmlQueryItem   *value;
+        XmlQueryDml    *dml = XML_QUERY_DML(self);
+        gchar          *id;
+
+        if (dml->_priv->valuelist == NULL)
+            dml->_priv->valuelist = xml_query_list_new_valuelist();
+
+        id = gensym("v");
+        value = xml_query_value_new_with_data(id);
+        g_free(id);
+        xml_query_item_add(value,valueitem);
+        xml_query_item_add(dml->_priv->valuelist,value);
+
+        return value;
+    }
+
+
+    private void
+    add_group(self, Xml:Query:Item *group)
+    {
+        XmlQueryDml    *dml = XML_QUERY_DML(self);
+
+	if (dml->_priv->group == NULL)
+            dml->_priv->group = xml_query_list_new_group();
+        xml_query_item_add(dml->_priv->group,group);
+    }
+
+
+    override (Xml:Query:Dml) gchar *
+    add_table_from_text(Xml:Query:Dml *parent, 
+                        gchar *name, Xml:Query:Item *join)
+    {
+        XmlQueryItem   *table;
+        gchar          *id;
+
+        id = gensym("t");
+        if (parent->_priv->target == NULL)
+            parent->_priv->target = xml_query_list_new_targetlist();
+        table = xml_query_target_new_table_with_data(id,name,join);
+        xml_query_item_add(parent->_priv->target,table);
+	return id;
+    }
+
+
+    override (Xml:Query:Dml) gchar *
+    add_view_from_text(Xml:Query:Dml *parent, 
+                       gchar *name, Xml:Query:Item *join)
+    {
+        XmlQueryItem   *view;
+        gchar          *id;
+
+        id = gensym("v");
+        if (parent->_priv->target == NULL)
+            parent->_priv->target = xml_query_list_new_targetlist();
+        view = xml_query_target_new_view_with_data(id,name,join);
+        xml_query_item_add(parent->_priv->target,view);
+
+        return id;
+    }
+
+
+    override (Xml:Query:Dml) XmlQueryItem *
+    add_field_from_text(Xml:Query:Dml *parent, 
+                        gchar *id (check null),
+                        gchar *name, gchar *alias, gboolean group)
+    {
+        XmlQueryItem   *field, *value;
+
+        field = xml_query_field_new_with_data(id,name,alias);
+        value = xml_query_select_add_value(SELF(parent),field);
+	if (group) {
+            
+	}
+
+	return value;
+    }
+
+
+    override (Xml:Query:Dml) Xml:Query:Item *
+    add_const_from_text(Xml:Query:Dml *parent,
+                        gchar *value, gchar *type, gboolean null)
+    {
+        XmlQueryItem   *it_const, *it_value;
+        gchar          *null_strg = (null) ? "yes" : "no";
+
+        it_const  = xml_query_const_new_with_data(value,NULL,type,null_strg);
+        it_value = xml_query_select_add_value(SELF(parent),it_const);
+
+	return it_value;
+    }
+
+
+    override (Xml:Query:Dml) void
+    add_func(Xml:Query:Dml *parent, Xml:Query:Item *func)
+    {
+        xml_query_select_add_value(SELF(parent),func);
+    }
+
+
+    override (Xml:Query:Dml) void
+    add_group_condition(Xml:Query:Dml *parent, 
+                        Xml:Query:Item *cond, gchar *type)
+    {
+        XmlQueryItem  *having, *list;
+        XmlQueryBin   *bin;
+        gchar *tag, *fmt;        
+
+        if (parent->_priv->having == NULL) {
+            parent->_priv->having = xml_query_bin_new_having_with_data(cond);
+            return;
+        }
+        bin   = XML_QUERY_BIN(parent->_priv->having);
+        having = xml_query_bin_get_child(bin);
+        tag   = xml_query_item_get_tag(XML_QUERY_ITEM(having));
+
+        if (!strcmp(tag,type))
+            xml_query_item_add(having,cond);
+        else {
+            fmt = g_strdup_printf(" %s ",type);
+            list = xml_query_list_new(type,"(%s)",fmt);
+            g_free(fmt);
+            xml_query_item_add(list,having);
+            xml_query_item_add(list,cond);
+            gtk_object_ref(GTK_OBJECT(having));
+            xml_query_item_add(XML_QUERY_ITEM(bin),list);
+            gtk_object_unref(GTK_OBJECT(having));
+        }
+    }
+
+
+    override (Xml:Query:Dml) void
+    add_order(Xml:Query:Dml *parent, gint col, gboolean asc)
+    {
+        XmlQueryDml    *dml = XML_QUERY_DML(parent);
+        XmlQueryItem   *column;
+
+        if (dml->_priv->trailer == NULL)
+            dml->_priv->trailer = xml_query_list_new_order();
+        if (!XML_IS_QUERY_LIST(dml->_priv->trailer))
+            return;
+
+        column = xml_query_column_new_with_data(col,asc);
+        xml_query_item_add(dml->_priv->trailer,column);
+    }
+
+
+    override (Xml:Query:Item) gchar *
+    to_sql(Xml:Query:Item *parent)
+    {
+        XmlQueryDml *dml = XML_QUERY_DML(parent);
+        gchar *output, *target, *valuelist, *where, 
+              *having, *group, *trailer;
+
+        target     = TO_SQL(dml->_priv->target);
+        valuelist  = TO_SQL(dml->_priv->valuelist);
+        where      = TO_SQL(dml->_priv->where);
+        having     = TO_SQL(dml->_priv->having);
+        group      = TO_SQL(dml->_priv->group);
+        trailer    = TO_SQL(dml->_priv->trailer);
+
+        output = g_strdup_printf("select %s %s %s %s %s %s",
+                                   valuelist,target,
+                                   where,having,group,trailer);
+        g_free(target);
+        g_free(valuelist);
+        g_free(where);
+        g_free(having);
+        g_free(group);
+        g_free(trailer);
+
+        return output;
+    }
+
+
+}

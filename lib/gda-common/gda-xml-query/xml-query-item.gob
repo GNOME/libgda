@@ -1,0 +1,303 @@
+%at{
+/* XmlQuery: the xml query object
+ * Copyright (C) 2000 Gerhard Dieringer
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ */
+%}
+%h{
+
+#define TO_DOM(_o_,_n_) if (_o_ != NULL) xml_query_item_to_dom(_o_,_n_)
+#define TO_SQL(_o_) (_o_ == NULL) ? g_strdup("") : xml_query_item_to_sql(_o_)
+
+#include <tree.h>
+#include <parser.h>
+
+%}
+
+
+%{
+
+#include "utils.h"
+
+static void
+attr_to_dom(gchar *key, gchar *value, xmlNode *node);
+
+static void
+destroy_attrlist(GHashTable *hashtab);
+
+static void
+destroy_idlist(GHashTable *hashtab);
+
+static void
+destroy_reflist(GHashTable *hashtab);
+
+
+%}
+
+
+class Xml:Query:Item from Gtk:Object {
+    private gchar           *tag        = NULL destroywith g_free;
+    private gchar           *sqlfmt     = NULL destroywith g_free;
+    private gchar           *sqlop      = NULL destroywith g_free;
+    private GHashTable      *attrlist   = NULL destroywith destroy_attrlist;
+    private GHashTable      *idlist     = NULL destroywith destroy_idlist;
+    private GHashTable      *reflist    = NULL destroywith destroy_reflist;
+    private Xml:Query:Item  *parent     = NULL destroywith gtk_object_unref;
+
+    /* no new method because it's an abstract class */
+
+    init(self)
+    {
+        self->_priv->attrlist = g_hash_table_new(g_str_hash,g_str_equal);
+    }
+
+
+    public void
+    set_attrib(self, gchar *attrib, gchar *value)
+    {
+        gchar *oldval, *oldkey;
+
+        if (g_hash_table_lookup_extended(self->_priv->attrlist,
+					 attrib,
+					 (gpointer *)&oldkey,
+					 (gpointer *)&oldval))
+        {
+            g_hash_table_remove(self->_priv->attrlist,attrib);
+            g_free(oldval);
+            g_free(oldkey);
+        }
+        g_hash_table_insert(self->_priv->attrlist,
+                            g_strdup(attrib),g_strdup(value));
+    }
+    
+
+    public Xml:Query:Item *
+    get_parent(self)
+    {
+        return self->_priv->parent;
+    }
+
+
+    public void
+    set_parent(self, Xml:Query:Item *parent)
+    {
+        if (self->_priv->parent != NULL)
+            gtk_object_unref(GTK_OBJECT(self->_priv->parent));
+        self->_priv->parent = parent;
+        gtk_object_ref(GTK_OBJECT(parent));
+    }
+
+
+    public gchar *
+    get_attrib(self, gchar *attrib)
+    {
+        gchar *value;
+
+        value = (gchar *)g_hash_table_lookup(self->_priv->attrlist,attrib);
+        if (value == NULL)
+            value = "";
+        return value;
+    }
+
+    
+    virtual xmlNode *
+    to_dom(self, xmlNode *parNode)
+    {
+        xmlNode *node;
+        xmlDoc  *doc;
+
+        if (parNode == NULL) {
+            doc = xmlNewDoc("1.0");
+            xmlCreateIntSubset(doc,"query",NULL,
+                               "gda-xml-query.dtd");
+            node = xmlNewDocNode(doc,NULL,(xmlChar *)self->_priv->tag,NULL);
+            xmlDocSetRootElement(doc,node);
+        } else {
+            node = xmlNewChild(parNode,NULL,(xmlChar *)self->_priv->tag,NULL);
+        }
+
+        g_hash_table_foreach(self->_priv->attrlist,(GHFunc)attr_to_dom,node);
+
+        return node;
+    }
+
+
+    virtual gchar *
+    to_sql(self);
+
+
+    virtual void
+    add(self, XmlQueryItem *child);
+
+
+    public void
+    set_tag(self, gchar *tag)
+    {
+        g_free(self->_priv->tag);
+        self->_priv->tag = g_strdup(tag);
+    }
+
+
+    public gchar *
+    get_tag(self)
+    {
+        return self->_priv->tag;
+    }
+
+
+    public void
+    set_sqlfmt(self, gchar *sqlfmt)
+    {
+        g_free(self->_priv->sqlfmt);
+        self->_priv->sqlfmt = g_strdup(sqlfmt);
+    }
+
+
+    public gchar *
+    get_sqlfmt(self)
+    {
+        return self->_priv->sqlfmt;
+    }
+
+
+    public void
+    set_sqlop(self, gchar *sqlop)
+    {
+        g_free(self->_priv->sqlop);
+        self->_priv->sqlop = g_strdup(sqlop);
+    }
+
+
+    public gchar *
+    get_sqlop(self)
+    {
+        return self->_priv->sqlop;
+    }
+
+
+    public Xml:Query:Item *
+    find_root(self)
+    {
+        XmlQueryItem *item;
+
+        item = self->_priv->parent;
+        if (item == NULL)
+            return self;
+        return xml_query_item_find_root(item);
+    }
+
+
+    virtual Xml:Query:Item *
+    find_id(self, gchar *id)
+    {
+        if (self->_priv->idlist == NULL)
+            return NULL;
+        return g_hash_table_lookup(self->_priv->idlist,id);
+    }
+
+    virtual Xml:Query:Item *
+    find_ref(self, gchar *ref)
+    {
+        if (self->_priv->reflist == NULL)
+            return NULL;
+        return g_hash_table_lookup(self->_priv->reflist,ref);
+    }
+
+
+    public void
+    add_id(self, gchar *id (check null))
+    {
+        XmlQueryItem *root;
+
+        root = xml_query_item_find_root(self);
+        if (root->_priv->idlist == NULL)
+            root->_priv->idlist = g_hash_table_new(g_str_hash,g_str_equal);
+        g_hash_table_insert(root->_priv->idlist,g_strdup(id),self);
+    }
+
+
+    public void
+    add_ref(self, gchar *ref (check null))
+    {
+        XmlQueryItem *root, *item;
+
+        root = xml_query_item_find_root(self);
+        item = xml_query_item_find_id(root,ref);
+        if (item == NULL) {
+            g_warning("Item with id `%s' not found\n",ref);
+            return;
+        }
+        if (self->_priv->reflist == NULL)
+            self->_priv->reflist = g_hash_table_new(g_str_hash,g_str_equal);
+        g_hash_table_insert(self->_priv->reflist,g_strdup(ref),item);
+        gtk_object_ref(GTK_OBJECT(item));
+    }
+
+
+    public Xml:Query:Item *
+    get_ref(self, gchar *ref (check null))
+    {
+	XmlQueryItem *item;
+
+        if (self->_priv->reflist == NULL)
+            item = NULL;
+	else
+	    item = g_hash_table_lookup(self->_priv->reflist,ref);        
+
+        return item;
+    }
+
+
+}
+
+
+%{
+
+static void
+attr_to_dom(gchar *key, gchar *value, xmlNode *node)
+{
+    xmlSetProp(node,key,value);
+}
+
+
+static void
+destroy_attrlist(GHashTable *hashtab)
+{
+    g_hash_table_foreach_remove(hashtab,(GHRFunc)destroy_hash_pair,g_free);
+    g_hash_table_destroy(hashtab);
+}
+
+
+static void
+destroy_idlist(GHashTable *hashtab)
+{
+    g_hash_table_foreach_remove(hashtab,(GHRFunc)destroy_hash_pair,NULL);
+    g_hash_table_destroy(hashtab);
+}
+
+
+static void
+destroy_reflist(GHashTable *hashtab)
+{
+    g_hash_table_foreach_remove(hashtab,(GHRFunc)destroy_hash_pair,
+                                gtk_object_unref);
+    g_hash_table_destroy(hashtab);
+}
+
+
+
+%}

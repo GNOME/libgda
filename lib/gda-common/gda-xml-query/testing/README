@@ -1,0 +1,20 @@
+The program xmlquery can be used to test the library:
+
+xmlquery (x|s) (i|u|d|s|r) [filename]
+
+first arg:
+ x output in XML format
+ s output in SQL format
+
+
+second arg:
+ i construct query (insert) with API calls
+ u construct query (update) with API calls
+ d construct query (delete) with API calls
+ s construct query (select) with API calls
+ r read query in XML format from file
+
+note:
+
+xmlquery x r filename is a rather expensive form of
+cat filename

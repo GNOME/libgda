@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE query SYSTEM "../gda-xml-query.dtd">
+
+<query>
+  <delete>
+    <target>
+      <table name="tab_a"/>
+    </target>
+    <where>
+      <and>
+        <eq>
+          <field name="x"/>
+          <const value="a" type="char" null="no"/>
+        </eq>
+        <or>
+          <eq>
+            <field name="y"/>
+            <const value="b" type="char" null="no"/>
+          </eq>
+          <eq>
+            <field name="z"/>
+            <const value="c" type="char" null="no"/>
+          </eq>
+        </or>
+      </and>
+    </where>
+  </delete>
+</query>
+
+

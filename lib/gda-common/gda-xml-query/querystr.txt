@@ -1,0 +1,38 @@
+Query-Structure
+
+
+Xml:Query:Item
+    |
+    +-- Xml:Query:Atom                          
+    |       |
+    |       +-- Xml:Query:Field
+    |       |
+    |       +-- Xml:Query:Const
+    |       |
+    |       +-- Xml:Query:ValueRef
+    |
+    +-- Xml:Query:Bin
+    |       |
+    |       +-- Xml:Query:Func
+    |       |
+    |       +-- Xml:Query:Value
+    |       |
+    |       +-- Xml:Query:Join
+    |       |
+    |       +-- Xml:Query:Query
+    |       |
+    |       +-- Xml:Query:Target
+    |
+    +-- Xml:Query:Dual
+    |
+    +-- Xml:Query:List
+    |
+    +-- Xml:Query::Dml
+    |       |
+    |       +-- Xml:Query:Select
+    |       |
+    |       +-- Xml:Query:Insert
+    |       |
+    |       +-- Xml:Query:Update
+    |       |
+    |       +-- Xml:Query:Delete
