@@ -63,6 +63,7 @@ libgda_common_2_la_SOURCES = \
 	gda-quark-list.c \
 	gda-value.c
 
+libgda_common_2_la_LDFLAGS = -version-info $(GDA_CURRENT):$(GDA_REVISION):$(GDA_AGE)
 libgda_common_2_la_LIBADD=\
 	$(GDA_CLIENT_LIBS) 
 

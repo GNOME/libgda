@@ -31,6 +31,7 @@ libgda_clientcpp_la_SOURCES = \
 	gdaRecordset.cpp \
 	gdaValue.cpp
 
+libgda_clientcpp_la_LDFLAGS = -version-info $(GDA_CURRENT):$(GDA_REVISION):$(GDA_AGE)
 libgda_clientcpp_la_LIBADD = \
 	$(GDA_CLIENT_LIBS)
 

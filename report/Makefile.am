@@ -11,11 +11,12 @@ lib_LTLIBRARIES = libgda-report.la
 gda_report_headers = \
 	gda-report-client.h \
 	gda-report.h
-	
+
 libgda_report_la_SOURCES = \
 	$(gda_report_headers) \
 	gda-report-client.c
 
+libgda_report_la_LDFLAGS = -version-info $(GDA_CURRENT):$(GDA_REVISION):$(GDA_AGE)
 libgda_report_la_LIBADD = \
 	$(GDA_CLIENT_LIBS)
 

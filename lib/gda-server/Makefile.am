@@ -15,6 +15,7 @@ libgda_server_2_la_SOURCES = \
 	gda-server-connection.c \
 	gda-server-provider.c \
 	gda-server.c 
+libgda_server_2_la_LDFLAGS = -version-info $(GDA_CURRENT):$(GDA_REVISION):$(GDA_AGE)
 libgda_server_2_la_LIBADD = -lpopt
 
 gdaincludedir=$(includedir)/libgda-$(VERSION)/gda-server

@@ -14,6 +14,7 @@ libgda_client_2_la_SOURCES = \
 	$(gda_client_headers) \
 	gda-client.c \
 	gda-connection.c
+libgda_client_2_la_LDFLAGS = -version-info $(GDA_CURRENT):$(GDA_REVISION):$(GDA_AGE)
 libgda_client_2_la_LIBADD =
 
 gdaincludedir=$(includedir)/libgda-$(VERSION)/gda-client

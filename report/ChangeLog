@@ -1,3 +1,7 @@
+2001-10-29  Akira TAGOH <tagoh@gnome-db.org>
+
+	* Makefile.am: Added library age.
+
 2001-09-01  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-report-client.[ch]: converted to GObject
