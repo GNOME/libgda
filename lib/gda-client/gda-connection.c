@@ -21,6 +21,8 @@
 #include "config.h"
 #include "gda-connection.h"
 #include "gda-command.h"
+#include "gda-config.h"
+#include "gda-corba.h"
 
 #ifndef HAVE_GOBJECT
 #  include <gtk/gtksignal.h>
@@ -333,6 +335,48 @@ gda_connection_new (CORBA_ORB orb)
 	return cnc;
 }
 
+/**
+ * gda_connection_new_from_dsn
+ * @dsn_name: Data source name
+ * @username: User name
+ * @password: Password
+ *
+ * Creates a #GdaConnection object from the configuration stored for the
+ * given data source.
+ *
+ * Returns: an #GdaConnection object already connected to the underlying
+ * database.
+ */
+GdaConnection *
+gda_connection_new_from_dsn (const gchar *dsn_name,
+                             const gchar *username,
+                             const gchar *password)
+{
+	GdaDsn *dsn;
+	GdaConnection *cnc;
+
+	g_return_val_if_fail (dsn_name != NULL, NULL);
+
+	/* find the data source in the configuration */
+	dsn = gda_dsn_find_by_name (dsn_name);
+	if (!dsn)
+		return NULL;
+
+	cnc = gda_connection_new (gda_corba_get_orb ());
+	gda_connection_set_provider (cnc, GDA_DSN_PROVIDER (dsn));
+	if (gda_connection_open (cnc,
+	                         GDA_DSN_DSN (dsn),
+	                         username,
+                                 password) != 0) {
+		gda_connection_free (cnc);
+		cnc = NULL;
+	}
+
+	gda_dsn_free (dsn);
+
+	return cnc;
+}
+
 #ifndef HAVE_GOBJECT
 static void
 gda_connection_destroy (GtkObject *object, gpointer user_data)
@@ -491,7 +535,7 @@ gda_connection_set_default_db (GdaConnection* cnc, gchar* dsn)
  * Returns: 0 on success, -1 on error
  */
 gint
-gda_connection_open (GdaConnection* cnc, gchar* dsn, gchar* user, gchar* pwd)
+gda_connection_open (GdaConnection* cnc, const gchar* dsn, const gchar* user, const gchar* pwd)
 {
 	gchar*            db_to_use;
 	gint              rc;
@@ -504,7 +548,7 @@ gda_connection_open (GdaConnection* cnc, gchar* dsn, gchar* user, gchar* pwd)
 	if (!dsn)
 		db_to_use = cnc->default_db;
 	else
-		db_to_use = dsn;
+		db_to_use = (gchar *) dsn;
 	if (!db_to_use) {
 		GdaError* e = gda_error_new();
 		

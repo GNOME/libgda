@@ -109,12 +109,18 @@ guint              gda_connection_get_type            (void);
 #endif
 
 GdaConnection*     gda_connection_new                 (CORBA_ORB orb);
+GdaConnection*     gda_connection_new_from_dsn        (const gchar *dsn_name,
+                                                       const gchar *username,
+                                                       const gchar *password);
 void               gda_connection_free                (GdaConnection* cnc);
 void               gda_connection_set_provider        (GdaConnection* cnc, gchar* name);
 const gchar*       gda_connection_get_provider        (GdaConnection* cnc);
 gboolean           gda_connection_supports            (GdaConnection* cnc, GDA_Connection_Feature feature);
 void               gda_connection_set_default_db      (GdaConnection* cnc, gchar* dsn);
-gint               gda_connection_open                (GdaConnection* cnc, gchar* dsn, gchar* user,gchar* pwd );
+gint               gda_connection_open                (GdaConnection* cnc,
+                                                       const gchar* dsn,
+                                                       const gchar* user,
+                                                       const gchar* pwd);
 void               gda_connection_close               (GdaConnection* cnc);
 GdaRecordset*      gda_connection_open_schema         (GdaConnection* cnc,
                                                        GDA_Connection_QType t, ...);
