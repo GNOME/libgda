@@ -98,7 +98,7 @@ gda_field_attributes_copy (GdaFieldAttributes *fa)
 	fa_copy->auto_increment_start = fa->auto_increment_start;
 	fa_copy->auto_increment_step = fa->auto_increment_step;
 	fa_copy->position = fa->position;
-	fa_copy->default_value = (fa_copy->default_value ? gda_value_copy (fa->default_value) : 0);
+	fa_copy->default_value = (fa->default_value ? gda_value_copy (fa->default_value) : 0);
 
 	return fa_copy;
 }

@@ -1,3 +1,8 @@
+2004-06-02  Murray Cumming  <murrayc@murrayc.com>
+
+	* libgda/gda-field.c: gda_field_attributes_copy(): Really copy the
+	default_value.
+
 2004-06-01  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	Released 1.1.3
