@@ -239,25 +239,6 @@ GDA_IS_SERVER_PROVIDER_CLASS
 </SECTION>
 
 <SECTION>
-<FILE>gda-server-recordset-model</FILE>
-GdaServerRecordsetModelPrivate
-<TITLE>GdaServerRecordsetModel</TITLE>
-gda_server_recordset_model_new
-gda_server_recordset_model_set_field_defined_size
-gda_server_recordset_model_set_field_name
-gda_server_recordset_model_set_field_scale
-gda_server_recordset_model_set_field_gdatype
-gda_server_recordset_model_append_row
-<SUBSECTION Standard>
-GDA_SERVER_RECORDSET_MODEL
-GDA_IS_SERVER_RECORDSET_MODEL
-GDA_TYPE_SERVER_RECORDSET_MODEL
-gda_server_recordset_model_get_type
-GDA_SERVER_RECORDSET_MODEL_CLASS
-GDA_IS_SERVER_RECORDSET_MODEL_CLASS
-</SECTION>
-
-<SECTION>
 <FILE>gda-server-recordset</FILE>
 GdaServerRecordsetPrivate
 <TITLE>GdaServerRecordset</TITLE>
@@ -727,6 +708,25 @@ GDA_XQL_VALUEREF_GET_CLASS
 </SECTION>
 
 <SECTION>
+<FILE>gda-server-recordset-model</FILE>
+GdaServerRecordsetModelPrivate
+<TITLE>GdaServerRecordsetModel</TITLE>
+gda_server_recordset_model_new
+gda_server_recordset_model_set_field_defined_size
+gda_server_recordset_model_set_field_name
+gda_server_recordset_model_set_field_scale
+gda_server_recordset_model_set_field_gdatype
+gda_server_recordset_model_append_row
+<SUBSECTION Standard>
+GDA_SERVER_RECORDSET_MODEL
+GDA_IS_SERVER_RECORDSET_MODEL
+GDA_TYPE_SERVER_RECORDSET_MODEL
+gda_server_recordset_model_get_type
+GDA_SERVER_RECORDSET_MODEL_CLASS
+GDA_IS_SERVER_RECORDSET_MODEL_CLASS
+</SECTION>
+
+<SECTION>
 <FILE>gda-report-client</FILE>
 GdaReportClientPrivate
 <TITLE>GdaReportClient</TITLE>
@@ -739,20 +739,6 @@ GDA_TYPE_REPORT_CLIENT
 gda_report_client_get_type
 GDA_REPORT_CLIENT_CLASS
 GDA_IS_REPORT_CLIENT_CLASS
-</SECTION>
-
-<SECTION>
-<FILE>gda-report-datasource</FILE>
-GdaReportDatasourcePrivate
-<TITLE>GdaReportDatasource</TITLE>
-gda_report_datasource_new
-<SUBSECTION Standard>
-GDA_REPORT_DATASOURCE
-GDA_IS_REPORT_DATASOURCE
-GDA_TYPE_REPORT_DATASOURCE
-gda_report_datasource_get_type
-GDA_REPORT_DATASOURCE_CLASS
-GDA_IS_REPORT_DATASOURCE_CLASS
 </SECTION>
 
 <SECTION>
@@ -769,6 +755,20 @@ GDA_TYPE_REPORT_DOCUMENT
 gda_report_document_get_type
 GDA_REPORT_DOCUMENT_CLASS
 GDA_IS_REPORT_DOCUMENT_CLASS
+</SECTION>
+
+<SECTION>
+<FILE>gda-report-datasource</FILE>
+GdaReportDatasourcePrivate
+<TITLE>GdaReportDatasource</TITLE>
+gda_report_datasource_new
+<SUBSECTION Standard>
+GDA_REPORT_DATASOURCE
+GDA_IS_REPORT_DATASOURCE
+GDA_TYPE_REPORT_DATASOURCE
+gda_report_datasource_get_type
+GDA_REPORT_DATASOURCE_CLASS
+GDA_IS_REPORT_DATASOURCE_CLASS
 </SECTION>
 
 <SECTION>
@@ -871,6 +871,12 @@ gda_quark_list_find
 </SECTION>
 
 <SECTION>
+<FILE>gda-util</FILE>
+gda_file_load
+gda_file_save
+</SECTION>
+
+<SECTION>
 <FILE>gda-row</FILE>
 GdaRow
 GdaRowAttributes
@@ -937,9 +943,21 @@ gda_field_stringify
 </SECTION>
 
 <SECTION>
-<FILE>gda-util</FILE>
-gda_file_load
-gda_file_save
+<FILE>gda-xql-utils</FILE>
+gda_xql_gensym
+gda_xql_destroy_hash_pair
+gda_xql_dom_to_xml
+gda_xql_dom_to_sql
+gda_xql_new_node
+gda_xql_new_attr
+</SECTION>
+
+<SECTION>
+<FILE>libgda</FILE>
+gda_init
+GdaInitFunc
+gda_main_run
+gda_main_quit
 </SECTION>
 
 <SECTION>
@@ -1016,24 +1034,6 @@ gda_value_set_timestamp
 gda_value_get_tinyint
 gda_value_set_tinyint
 gda_value_stringify
-</SECTION>
-
-<SECTION>
-<FILE>gda-xql-utils</FILE>
-gda_xql_gensym
-gda_xql_destroy_hash_pair
-gda_xql_dom_to_xml
-gda_xql_dom_to_sql
-gda_xql_new_node
-gda_xql_new_attr
-</SECTION>
-
-<SECTION>
-<FILE>libgda</FILE>
-gda_init
-GdaInitFunc
-gda_main_run
-gda_main_quit
 </SECTION>
 
 <SECTION>
