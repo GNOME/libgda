@@ -381,6 +381,7 @@ process_sql_commands (GList *reclist, GdaConnection *cnc,
 			PGresult *pg_res;
 			GdaDataModel *recset;
 			gint status;
+			gint i;
 
 			pg_res = PQexec(pconn, arr[n]);
 			if (pg_res == NULL) {
@@ -400,6 +401,10 @@ process_sql_commands (GList *reclist, GdaConnection *cnc,
 				if (GDA_IS_DATA_MODEL (recset)) {
 					gda_data_model_set_command_text (recset, arr[n]);
 					gda_data_model_set_command_type (recset, GDA_COMMAND_TYPE_SQL);
+					for (i = PQnfields (pg_res) - 1; i >= 0; i--)
+						gda_data_model_set_column_title (recset, i, 
+									PQfname (pg_res, i));
+
 					reclist = g_list_append (reclist, recset);
 				}
 			}
@@ -581,6 +586,8 @@ get_postgres_tables (GdaConnection *cnc, GdaParameterList *params)
 
 	recset = GDA_DATA_MODEL (reclist->data);
 	g_list_free (reclist);
+	// Set it here instead of the SQL query to allow i18n
+	gda_data_model_set_column_title (recset, 0, _("Tables"));
 
 	return recset;
 }
@@ -619,7 +626,7 @@ get_postgres_types (GdaConnection *cnc, GdaParameterList *params)
 
 	/* create the recordset */
 	recset = GDA_DATA_MODEL_ARRAY (gda_data_model_array_new (1));
-	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 0, _("Type"));
+	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 0, _("Types"));
 
 	/* fill the recordset */
 	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE);
@@ -649,6 +656,8 @@ get_postgres_views (GdaConnection *cnc, GdaParameterList *params)
 
 	recset = GDA_DATA_MODEL (reclist->data);
 	g_list_free (reclist);
+	// Set it here instead of the SQL query to allow i18n
+	gda_data_model_set_column_title (recset, 0, _("Views"));
 
 	return recset;
 }
@@ -672,6 +681,8 @@ get_postgres_indexes (GdaConnection *cnc, GdaParameterList *params)
 
 	recset = GDA_DATA_MODEL (reclist->data);
 	g_list_free (reclist);
+	// Set it here instead of the SQL query to allow i18n
+	gda_data_model_set_column_title (recset, 0, _("Indexes"));
 
 	return recset;
 }
@@ -696,6 +707,8 @@ get_postgres_aggregates (GdaConnection *cnc, GdaParameterList *params)
 
 	recset = GDA_DATA_MODEL (reclist->data);
 	g_list_free (reclist);
+	// Set it here instead of the SQL query to allow i18n
+	gda_data_model_set_column_title (recset, 0, _("Aggregates"));
 
 	return recset;
 }
@@ -719,6 +732,8 @@ get_postgres_triggers (GdaConnection *cnc, GdaParameterList *params)
 
 	recset = GDA_DATA_MODEL (reclist->data);
 	g_list_free (reclist);
+	// Set it here instead of the SQL query to allow i18n
+	gda_data_model_set_column_title (recset, 0, _("Triggers"));
 
 	return recset;
 }
@@ -727,8 +742,6 @@ static GdaDataModelArray *
 gda_postgres_init_md_recset (GdaConnection *cnc)
 {
 	GdaDataModelArray *recset;
-	//GdaValueType data_type;
-	//gint defined_size;
 	gint i;
 	GdaPostgresColData cols[8] = {
 		{ N_("Field name")	, GDA_VALUE_TYPE_STRING  },
@@ -742,16 +755,8 @@ gda_postgres_init_md_recset (GdaConnection *cnc)
 		};
 
 	recset = GDA_DATA_MODEL_ARRAY (gda_data_model_array_new (sizeof cols / sizeof cols[0]));
-	for (i = 0; i < sizeof cols / sizeof cols[0]; i++) {
-		//data_type = cols[i].data_type;
-		//defined_size =  (data_type == GDA_VALUE_TYPE_STRING) ? NAMEDATALEN : 
-		//		(data_type == GDA_VALUE_TYPE_INTEGER) ? sizeof(gint) : 1;
-
-		//gda_server_recordset_model_set_field_defined_size (recset, i, defined_size);
+	for (i = 0; i < sizeof cols / sizeof cols[0]; i++)
 		gda_data_model_set_column_title (GDA_DATA_MODEL (recset), i, _(cols[i].col_name));
-		//gda_server_recordset_model_set_field_scale (recset, i, 0);
-		//gda_server_recordset_model_set_field_gdatype (recset, i, data_type);
-	}
 
 	return recset;
 }
@@ -1081,6 +1086,8 @@ get_postgres_databases (GdaConnection *cnc, GdaParameterList *params)
 
 	recset = GDA_DATA_MODEL (reclist->data);
 	g_list_free (reclist);
+	// Set it here instead of the SQL query to allow i18n
+	gda_data_model_set_column_title (recset, 0, _("Databases"));
 
 	return recset;
 }
@@ -1104,6 +1111,8 @@ get_postgres_users (GdaConnection *cnc, GdaParameterList *params)
 
 	recset = GDA_DATA_MODEL (reclist->data);
 	g_list_free (reclist);
+	// Set it here instead of the SQL query to allow i18n
+	gda_data_model_set_column_title (recset, 0, _("Users"));
 
 	return recset;
 }
@@ -1130,6 +1139,8 @@ get_postgres_sequences (GdaConnection *cnc, GdaParameterList *params)
 
 	recset = GDA_DATA_MODEL (reclist->data);
 	g_list_free (reclist);
+	// Set it here instead of the SQL query to allow i18n
+	gda_data_model_set_column_title (recset, 0, _("Sequences"));
 
 	return recset;
 }

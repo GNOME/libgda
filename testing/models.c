@@ -84,15 +84,14 @@ display_recordset_data (GdaDataModel *model)
 	for (r = 0; r < rows; r++) {
 		g_print ("\tRow %02d -------\n", r);
 		for (c = 0; c < cols; c++) {
-			GdaValue *value;
+			const GdaValue *value;
 			gchar *strvalue;
 			const gchar *colname;
 
 			colname = gda_data_model_get_column_title (model, c);
-			value = (GdaValue *) gda_data_model_get_value_at (model, c, r);
+			value = gda_data_model_get_value_at (model, c, r);
 			strvalue = gda_value_stringify (value);
-			g_print ("\t\tColumn %02d name: %s\n", 
-					c, colname);
+			g_print ("\t\tColumn %02d name: %s\n", c, colname);
 			g_print ("\t\t         value: ('%s')\n", strvalue);
 			g_free (strvalue);
 		}
@@ -113,10 +112,10 @@ display_data_model (GdaDataModel *model)
 
 	for (r = 0; r < rows; r++) {
 		for (c = 0; c < cols; c++) {
-			GdaValue *value;
+			const GdaValue *value;
 			gchar *str;
 
-			value = (GdaValue *) gda_data_model_get_value_at (model, c, r);
+			value = gda_data_model_get_value_at (model, c, r);
 			str = gda_value_stringify (value);
 			g_print ("\tColumn %d - Row %d: %s\n", c, r, str);
 			g_free (str);

@@ -29,52 +29,109 @@
 #include "gda-postgres.h"
 #include "gda-postgres-recordset.h"
 
-#define OBJECT_DATA_RECSET_HANDLE "GDA_Postgres_RecsetHandle"
+#ifdef PARENT_TYPE
+#undef PARENT_TYPE
+#endif
 
-typedef struct {
+#define PARENT_TYPE GDA_TYPE_DATA_MODEL_ARRAY
+
+struct _GdaPostgresRecordsetPrivate {
 	PGresult *pg_res;
-	GdaConnection *gda_conn;
+	GdaConnection *cnc;
 
 	gint ntypes;
 	GdaPostgresTypeOid *type_data;
 	GHashTable *h_table;
-} GdaPostgresRecordsetPrivate;
+};
+
+static void gda_postgres_recordset_class_init (GdaPostgresRecordsetClass *klass);
+static void gda_postgres_recordset_init       (GdaPostgresRecordset *recset,
+					       GdaPostgresRecordsetClass *klass);
+static void gda_postgres_recordset_finalize   (GObject *object);
+static const GdaValue *get_value_at_func      (GdaDataModel *model, gint col, gint row);
+static GdaFieldAttributes *describe_func      (GdaDataModel *model, gint col);
+static gint get_n_rows_func 		      (GdaDataModel *model);
+static gint get_n_columns_func 		      (GdaDataModel *model);
+
+static GObjectClass *parent_class = NULL;
 
 /*
  * Private functions
  */
 
+/*
+ * Object init and finalize
+ */
 static void
-free_postgres_res (gpointer data)
+gda_postgres_recordset_init (GdaPostgresRecordset *recset,
+			     GdaPostgresRecordsetClass *klass)
 {
-	GdaPostgresRecordsetPrivate *priv_data = (GdaPostgresRecordsetPrivate *) data;
+	g_return_if_fail (GDA_IS_POSTGRES_RECORDSET (recset));
 
-	g_return_if_fail (priv_data != NULL);
-
-	PQclear (priv_data->pg_res);
-	g_free (priv_data);
+	recset->priv = g_new0 (GdaPostgresRecordsetPrivate, 1);
 }
+
+static void
+gda_postgres_recordset_class_init (GdaPostgresRecordsetClass *klass)
+{
+	GObjectClass *object_class = G_OBJECT_CLASS (klass);
+	GdaDataModelClass *model_class = GDA_DATA_MODEL_CLASS (klass);
+
+	parent_class = g_type_class_peek_parent (klass);
+
+	object_class->finalize = gda_postgres_recordset_finalize;
+	model_class->get_n_rows = get_n_rows_func;
+	model_class->get_n_columns = get_n_columns_func;
+	model_class->describe_column = describe_func;
+	model_class->get_value_at = get_value_at_func;
+}
+
+static void
+gda_postgres_recordset_finalize (GObject * object)
+{
+	GdaPostgresRecordset *recset = (GdaPostgresRecordset *) object;
+
+	g_return_if_fail (GDA_IS_POSTGRES_RECORDSET (recset));
+
+	if (recset->priv->pg_res != NULL) {
+		PQclear (recset->priv->pg_res);
+		recset->priv->pg_res = NULL;
+	}
+
+	g_free (recset->priv);
+	recset->priv = NULL;
+
+	parent_class->finalize (object);
+}
+
+/*
+ * Overrides
+ */
 
 static const GdaValue *
 get_value_at_func (GdaDataModel *model, gint col, gint row)
 {
+	GdaPostgresRecordset *recset = (GdaPostgresRecordset *) model;
 	GdaPostgresRecordsetPrivate *priv_data;
 	gint field_count;
 	gint row_count;
 	PGresult *pg_res;
+	gint i;
+	GList *row_list = NULL;
 	GdaValue *value;
-	gchar *thevalue;
-	GdaValueType ftype;
-	gboolean isNull;
 
-	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
-	priv_data = g_object_get_data (G_OBJECT (model), OBJECT_DATA_RECSET_HANDLE);
-	g_return_val_if_fail (priv_data != NULL, 0);
+	g_return_val_if_fail (GDA_IS_POSTGRES_RECORDSET (recset), NULL);
+	g_return_val_if_fail (recset->priv != NULL, 0);
+	
+	value = (GdaValue *) GDA_DATA_MODEL_CLASS (parent_class)->get_value_at (model, col, row);
+	if (value != NULL)
+		return value;
 
+	priv_data = recset->priv;
 	pg_res = priv_data->pg_res;
 	if (!pg_res) {
-		gda_connection_add_error_string (priv_data->gda_conn,
-						_("Invalid PostgreSQL handle"));
+		gda_connection_add_error_string (priv_data->cnc,
+						 _("Invalid PostgreSQL handle"));
 		return NULL;
 	}
 
@@ -85,34 +142,55 @@ get_value_at_func (GdaDataModel *model, gint col, gint row)
 		return NULL; // For the last row don't add an error.
 
 	if (row < 0 || row > row_count) {
-		gda_connection_add_error_string (priv_data->gda_conn,
+		gda_connection_add_error_string (priv_data->cnc,
 						_("Row number out of range"));
 		return NULL;
 	}
 
-	if (field_count < 0 || col > field_count) {
-		gda_connection_add_error_string (priv_data->gda_conn,
+	if (field_count < 0 || col >= field_count) {
+		gda_connection_add_error_string (priv_data->cnc,
 						_("Column number out of range"));
 		return NULL;
 	}
 
-	thevalue = PQgetvalue(pg_res, row, col);
+	for (i = 0; i < field_count; i++) {
+		gchar *thevalue;
+		GdaValueType ftype;
+		gboolean isNull;
 
-	ftype = gda_postgres_type_oid_to_gda (priv_data->type_data,
-					      priv_data->ntypes, 
-					      PQftype (pg_res, col));
-	isNull = *thevalue != '\0' ? FALSE : PQgetisnull (pg_res, row, col);
+		thevalue = PQgetvalue(pg_res, row, i);
 
-	value = gda_value_new_null ();
-	gda_postgres_set_value (value, PQfname (pg_res, col), ftype,
-			 	thevalue, PQfsize (pg_res, col), isNull);
+		ftype = gda_postgres_type_oid_to_gda (priv_data->type_data,
+						      priv_data->ntypes, 
+						      PQftype (pg_res, i));
 
-	return value;
+		isNull = *thevalue != '\0' ? FALSE : PQgetisnull (pg_res, row, i);
+		thevalue = PQgetvalue(pg_res, row, i);
+
+		ftype = gda_postgres_type_oid_to_gda (priv_data->type_data,
+						      priv_data->ntypes, 
+						      PQftype (pg_res, i));
+
+		value = gda_value_new_null ();
+		gda_postgres_set_value (value, PQfname (pg_res, i), ftype,
+					thevalue, PQfsize (pg_res, i), isNull);
+
+		row_list = g_list_append (row_list, value);
+	}
+
+	if (row_list == NULL)
+		return NULL;
+
+	gda_data_model_append_row (GDA_DATA_MODEL (model), row_list);
+	g_list_foreach (row_list, (GFunc) gda_value_free, NULL);
+
+	return GDA_DATA_MODEL_CLASS (parent_class)->get_value_at (model, col, row);
 }
 
 static GdaFieldAttributes *
 describe_func (GdaDataModel *model, gint col)
 {
+	GdaPostgresRecordset *recset = (GdaPostgresRecordset *) model;
 	GdaPostgresRecordsetPrivate *priv_data;
 	PGresult *pg_res;
 	gint field_count;
@@ -120,20 +198,20 @@ describe_func (GdaDataModel *model, gint col)
 	gint scale;
 	GdaFieldAttributes *field_attrs;
 
-	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
-	priv_data = g_object_get_data (G_OBJECT (model), OBJECT_DATA_RECSET_HANDLE);
-	g_return_val_if_fail (priv_data != NULL, 0);
+	g_return_val_if_fail (GDA_IS_POSTGRES_RECORDSET (recset), NULL);
+	g_return_val_if_fail (recset->priv != NULL, 0);
 
+	priv_data = recset->priv;
 	pg_res = priv_data->pg_res;
 	if (!pg_res) {
-		gda_connection_add_error_string (priv_data->gda_conn,
+		gda_connection_add_error_string (priv_data->cnc,
 						_("Invalid PostgreSQL handle"));
 		return NULL;
 	}
 
 	field_count = PQnfields (pg_res);
 	if (field_count >= col){
-		gda_connection_add_error_string (priv_data->gda_conn,
+		gda_connection_add_error_string (priv_data->cnc,
 						_("Column out of range"));
 		return NULL;
 	}
@@ -164,13 +242,14 @@ describe_func (GdaDataModel *model, gint col)
 static gint
 get_n_columns_func (GdaDataModel *model)
 {
+	GdaPostgresRecordset *recset = (GdaPostgresRecordset *) model;
 	GdaPostgresRecordsetPrivate *priv_data;
 	PGresult *pg_res;
 
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), 0);
-	priv_data = g_object_get_data (G_OBJECT (model), OBJECT_DATA_RECSET_HANDLE);
-	g_return_val_if_fail (priv_data != NULL, 0);
+	g_return_val_if_fail (recset->priv != NULL, 0);
 
+	priv_data = recset->priv;
 	pg_res = priv_data->pg_res;
 	if (!pg_res)
 		return 0;
@@ -181,13 +260,14 @@ get_n_columns_func (GdaDataModel *model)
 static gint
 get_n_rows_func (GdaDataModel *model)
 {
+	GdaPostgresRecordset *recset = (GdaPostgresRecordset *) model;
 	GdaPostgresRecordsetPrivate *priv_data;
 	PGresult *pg_res;
 
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), 0);
-	priv_data = g_object_get_data (G_OBJECT (model), OBJECT_DATA_RECSET_HANDLE);
-	g_return_val_if_fail (priv_data != NULL, 0);
+	g_return_val_if_fail (recset->priv != NULL, 0);
 
+	priv_data = recset->priv;
 	pg_res = priv_data->pg_res;
 	if (!pg_res)
 		return 0;
@@ -199,12 +279,32 @@ get_n_rows_func (GdaDataModel *model)
  * Public functions
  */
 
+GType
+gda_postgres_recordset_get_type (void)
+{
+	static GType type = 0;
+
+	if (!type) {
+		static const GTypeInfo info = {
+			sizeof (GdaPostgresRecordsetClass),
+			(GBaseInitFunc) NULL,
+			(GBaseFinalizeFunc) NULL,
+			(GClassInitFunc) gda_postgres_recordset_class_init,
+			NULL,
+			NULL,
+			sizeof (GdaPostgresRecordset),
+			0,
+			(GInstanceInitFunc) gda_postgres_recordset_init
+		};
+		type = g_type_register_static (PARENT_TYPE, "GdaPostgresRecordset", &info, 0);
+	}
+	return type;
+}
+
 GdaDataModel *
 gda_postgres_recordset_new (GdaConnection *cnc, PGresult *pg_res)
 {
-	GdaDataModel *model;
-	GdaDataModelClass *klass;
-	GdaPostgresRecordsetPrivate *priv_data;
+	GdaPostgresRecordset *model;
 	GdaPostgresConnectionData *cnc_priv_data;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
@@ -212,28 +312,15 @@ gda_postgres_recordset_new (GdaConnection *cnc, PGresult *pg_res)
 
 	cnc_priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE);
 
-	priv_data = g_new (GdaPostgresRecordsetPrivate, 1);
-	priv_data->pg_res = pg_res;
-	priv_data->gda_conn = cnc;
-	priv_data->ntypes = cnc_priv_data->ntypes;
-	priv_data->type_data = cnc_priv_data->type_data;
-	priv_data->h_table = cnc_priv_data->h_table;
+	model = g_object_new (GDA_TYPE_POSTGRES_RECORDSET, NULL);
+	model->priv->pg_res = pg_res;
+	model->priv->cnc = cnc;
+	model->priv->ntypes = cnc_priv_data->ntypes;
+	model->priv->type_data = cnc_priv_data->type_data;
+	model->priv->h_table = cnc_priv_data->h_table;
+	gda_data_model_array_set_n_columns (GDA_DATA_MODEL_ARRAY (model),
+					    PQnfields (pg_res));
 
-	model = g_object_new (GDA_TYPE_DATA_MODEL, NULL);
-	klass = GDA_DATA_MODEL_CLASS (G_OBJECT_GET_CLASS (model));
-
-	klass->changed = NULL;
-	klass->begin_edit = NULL;
-	klass->cancel_edit = NULL;
-	klass->end_edit = NULL;
-	klass->get_n_rows = get_n_rows_func;
-	klass->get_n_columns = get_n_columns_func;
-	klass->describe_column = describe_func;
-	klass->get_value_at = get_value_at_func;
-
-	g_object_set_data_full (G_OBJECT (model), OBJECT_DATA_RECSET_HANDLE,
-				priv_data, (GDestroyNotify) free_postgres_res);
-
-	return model;
+	return GDA_DATA_MODEL (model);
 }
 

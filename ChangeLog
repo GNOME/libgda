@@ -1,3 +1,13 @@
+2002-05-10  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
+	* providers/postgres/gda-postgres-provider.c: set the column titles
+	for the recordsets.
+
+	* providers/postgres/gda-postgres-recordset.[ch]: made it an object
+	derived from GdaDataModelArray.
+
+	* testing/models.c: GdaValue's from a data model are const.
+
 2002-05-09  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* providers/mysql/gda-mysql-recordset.[ch]: converted to a

@@ -32,8 +32,29 @@
 
 G_BEGIN_DECLS
 
+#define GDA_TYPE_POSTGRES_RECORDSET            (gda_postgres_recordset_get_type())
+#define GDA_POSTGRES_RECORDSET(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_POSTGRES_RECORDSET, GdaPostgresRecordset))
+#define GDA_POSTGRES_RECORDSET_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_POSTGRES_RECORDSET, GdaPostgresRecordsetClass))
+#define GDA_IS_POSTGRES_RECORDSET(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_POSTGRES_RECORDSET))
+#define GDA_IS_POSTGRES_RECORDSET_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GDA_TYPE_POSTGRES_RECORDSET))
+
+typedef struct _GdaPostgresRecordset        GdaPostgresRecordset;
+typedef struct _GdaPostgresRecordsetClass   GdaPostgresRecordsetClass;
+typedef struct _GdaPostgresRecordsetPrivate GdaPostgresRecordsetPrivate;
+
+struct _GdaPostgresRecordset {
+	GdaDataModelArray model;
+	GdaPostgresRecordsetPrivate *priv;
+};
+
+struct _GdaPostgresRecordsetClass {
+	GdaDataModelArrayClass parent_class;
+};
+
+GType          gda_postgres_recordset_get_type (void);
 GdaDataModel *gda_postgres_recordset_new (GdaConnection *cnc, PGresult *pgres);
 
 G_END_DECLS
 
 #endif
+
