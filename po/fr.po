@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda 0.2.4\n"
-"POT-Creation-Date: 2002-01-13 02:32+0100\n"
+"POT-Creation-Date: 2002-01-27 01:13+0100\n"
 "PO-Revision-Date: 2001-02-13 12:43+0100\n"
 "Last-Translator: Christophe Merlet (RedFox) <redfox@eikonex.org>\n"
 "Language-Team: GNOME French Team <gnomefr@gnomefr.traduc.org>\n"
@@ -13,50 +13,50 @@ msgstr ""
 "Content-Type: text/plain; charset=ISO-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: libgda/gda-client.c:200 libgda/gda-client.c:294
+#: libgda/gda-client.c:200 libgda/gda-client.c:310 libgda/gda-connection.c:213
 #, fuzzy, c-format
 msgid "Data source %s not found in configuration"
 msgstr ""
 "La base de données « %s » n'a pas été trouvé dans la configuration système"
 
-#: libgda/gda-client.c:221
+#: libgda/gda-client.c:237
 #, fuzzy, c-format
 msgid "Could not activate object %s"
 msgstr "Ne peut activer le moteur de rapport"
 
-#: libgda/gda-client.c:239
+#: libgda/gda-client.c:255
 #, fuzzy
 msgid "Could not create connection component"
 msgstr "ne peut ouvrir de connexion sur %s"
 
-#: libgda/gda-config.c:515
+#: libgda/gda-config.c:508
 #, fuzzy
 msgid "Could not query CORBA components"
 msgstr "Ne peut ouvrir l'usine CORBA"
 
-#: libgda/gda-config.c:622
+#: libgda/gda-config.c:615
 #, fuzzy
 msgid "Could not query CORBA providers"
 msgstr "Ne peut ouvrir l'usine CORBA"
 
-#: libgda/gda-config.c:835
+#: libgda/gda-config.c:865
 msgid "Name"
 msgstr "Nom"
 
-#: libgda/gda-config.c:836
+#: libgda/gda-config.c:866
 msgid "Provider"
 msgstr "Fournisseur"
 
-#: libgda/gda-config.c:837
+#: libgda/gda-config.c:867
 #, fuzzy
 msgid "Connection string"
 msgstr "La connexion semble morte"
 
-#: libgda/gda-config.c:838
+#: libgda/gda-config.c:868
 msgid "Description"
 msgstr "Description"
 
-#: libgda/gda-config.c:839
+#: libgda/gda-config.c:869
 msgid "Username"
 msgstr "Nom d'Utilisateur"
 
@@ -78,16 +78,6 @@ msgstr "Tentative d'initialiser un client déjà initialisé"
 msgid "Could not initialize Bonobo"
 msgstr "Ne peut initialiser ct_diag()"
 
-#: libgda/gda-server.c:109
-#, c-format
-msgid "Don't know how to create components with IID %s"
-msgstr ""
-
-#: libgda/gda-server.c:116
-#, fuzzy, c-format
-msgid "Could not create component of type %s"
-msgstr "ne peut allouer le champ"
-
 #: libgda/gda-server-connection.c:90
 msgid "Could not duplicate client object. Client won't get notifications"
 msgstr ""
@@ -97,51 +87,52 @@ msgstr ""
 msgid "Could not notify client about action %d"
 msgstr "Ne peut obtenir le message du client n° %d"
 
-#: libgda/gda-server-recordset.c:204
+#: libgda/gda-server-recordset.c:207
 msgid "No implementation for the fetch() method found"
 msgstr ""
 
-#: libgda/gda-value.c:602
+#: libgda/gda-server.c:108
+#, c-format
+msgid "Don't know how to create components with IID %s"
+msgstr ""
+
+#: libgda/gda-server.c:122
+#, fuzzy, c-format
+msgid "Could not create component of type %s"
+msgstr "ne peut allouer le champ"
+
+#: libgda/gda-value.c:926
 msgid "TRUE"
 msgstr "VRAI"
 
-#: libgda/gda-value.c:604
+#: libgda/gda-value.c:928
 msgid "FALSE"
 msgstr "FAUX"
 
-#: libgda/gda-xml-database.c:162
+#: libgda/gda-xml-database.c:164
 #, fuzzy, c-format
 msgid "Could not load file at %s"
 msgstr "Ne peut définir la locale pour « %s »"
 
-#: libgda/gda-xml-database.c:173
+#: libgda/gda-xml-database.c:175
 #, fuzzy, c-format
 msgid "Could not parse file at %s"
 msgstr "Ne peut définir la locale pour « %s »"
 
-#: libgda/gda-xml-database.c:183
+#: libgda/gda-xml-database.c:185
 #, c-format
 msgid "Bad formed document at %s"
 msgstr ""
 
-#: libgda/gda-xml-database.c:258
+#: libgda/gda-xml-database.c:260
 #, c-format
 msgid "table %s already exists"
 msgstr "la table %s existe déjà"
 
-#: libgda/gda-xml-database.c:440
+#: libgda/gda-xml-database.c:442
 #, c-format
 msgid "%p is not a valid table"
 msgstr "%p n'est pas une table valide"
-
-#: providers/default/gda-default-provider.c:141
-msgid ""
-"A full path must be specified on the connection string to open a database."
-msgstr ""
-
-#: providers/default/gda-default-provider.c:199
-msgid "Invalid DEFAULT handle"
-msgstr ""
 
 #: providers/default/GNOME_Database_Provider_Default.server.in.h:1
 #, fuzzy
@@ -153,30 +144,31 @@ msgstr "ne peut ouvrir de connexion sur %s"
 msgid "GDA Default Datasource Access"
 msgstr "Propriétées du Serveur GDA"
 
-#: providers/default/main.c:47
+#: providers/default/gda-default-provider.c:141
+msgid ""
+"A full path must be specified on the connection string to open a database."
+msgstr ""
+
+#: providers/default/gda-default-provider.c:199
+#: providers/default/gda-default-recordset.c:59
+msgid "Invalid DEFAULT handle"
+msgstr ""
+
+#: providers/default/gda-default-recordset.c:70
+#: providers/mysql/gda-mysql-recordset.c:76
+#: providers/postgres/gda-postgres-recordset.c:70
+msgid "Row number out of range"
+msgstr ""
+
+#: providers/default/gda-default-recordset.c:110
+#, fuzzy
+msgid "Invalid Default handle"
+msgstr "Valeur par défaut"
+
+#: providers/default/main.c:48
 #, fuzzy
 msgid "Could not initiate Default component factory"
 msgstr "Ne peut enregistrer l'implémentation du fournisseur de courrier"
-
-#: providers/mysql/gda-mysql-provider.c:173
-#, fuzzy
-msgid ""
-"You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
-msgstr ""
-"%s:%d: Vous ne pouvez fournir un UNIX_SOCKET si vous fournissez aussi un "
-"HOTE ou un PORT. Veuillez supprimer l'UNIX_SOCKET, ou supprimer les options "
-"HOTE et PORT"
-
-#: providers/mysql/gda-mysql-provider.c:244
-#: providers/mysql/gda-mysql-provider.c:323
-#: providers/mysql/gda-mysql-provider.c:352
-#: providers/mysql/gda-mysql-provider.c:381
-msgid "Invalid MYSQL handle"
-msgstr ""
-
-#: providers/mysql/gda-mysql-provider.c:460
-msgid "Type"
-msgstr "Type"
 
 #: providers/mysql/GNOME_Database_Provider_MySQL.server.in.h:1
 #, fuzzy
@@ -187,10 +179,106 @@ msgstr "Propriétées du Serveur GDA"
 msgid "MySQL component factory"
 msgstr ""
 
-#: providers/mysql/main.c:48
+#: providers/mysql/gda-mysql-provider.c:175
+#, fuzzy
+msgid ""
+"You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
+msgstr ""
+"%s:%d: Vous ne pouvez fournir un UNIX_SOCKET si vous fournissez aussi un "
+"HOTE ou un PORT. Veuillez supprimer l'UNIX_SOCKET, ou supprimer les options "
+"HOTE et PORT"
+
+#: providers/mysql/gda-mysql-provider.c:246
+#: providers/mysql/gda-mysql-provider.c:326
+#: providers/mysql/gda-mysql-provider.c:355
+#: providers/mysql/gda-mysql-provider.c:384
+msgid "Invalid MYSQL handle"
+msgstr ""
+
+#: providers/mysql/gda-mysql-provider.c:463
+#: providers/postgres/gda-postgres-provider.c:568
+msgid "Type"
+msgstr "Type"
+
+#: providers/mysql/gda-mysql-recordset.c:63
+#: providers/mysql/gda-mysql-recordset.c:170
+msgid "Invalid MySQL handle"
+msgstr ""
+
+#: providers/mysql/main.c:49
 #, fuzzy
 msgid "Could not initiate MySQL component factory"
 msgstr "Ne peut enregistrer l'implémentation du fournisseur MySQL"
+
+#: providers/oracle/GNOME_Database_Provider_Oracle.server.in.h:1
+#, fuzzy
+msgid "GDA Datasource Access for Oracle"
+msgstr "Propriétées du Serveur GDA"
+
+#: providers/oracle/GNOME_Database_Provider_Oracle.server.in.h:2
+#, fuzzy
+msgid "Oracle component factory"
+msgstr "ne peut ouvrir de connexion sur %s"
+
+#: providers/oracle/gda-oracle-connection.c:77
+#, fuzzy
+msgid "Could not initialize Oracle environment"
+msgstr "Ne peut initialiser ct_diag()"
+
+#: providers/oracle/gda-oracle-connection.c:87
+#, fuzzy
+msgid "Could not initialize Oracle error handler"
+msgstr "Ne peut initialiser ct_diag()"
+
+#: providers/oracle/gda-oracle-connection.c:98
+#, fuzzy
+msgid "Could not initialize Oracle server handle"
+msgstr "Ne peut initialiser cs_diag()"
+
+#: providers/oracle/gda-oracle-connection.c:109
+#, fuzzy
+msgid "Could not initialize Oracle service context"
+msgstr "Ne peut initialiser cs_diag()"
+
+#: providers/oracle/main.c:46
+#, fuzzy
+msgid "Could not initiate Oracle component factory"
+msgstr "Ne peut ouvrir l'usine CORBA"
+
+#: providers/oracle/main.c:70
+#, fuzzy
+msgid "Could not initialize OCI library"
+msgstr "Ne peut initialiser ct_diag()"
+
+#: providers/postgres/GNOME_Database_Provider_Postgres.server.in.h:1
+#, fuzzy
+msgid "GDA Datasource Access for Postgres"
+msgstr "Propriétées du serveur source GDA"
+
+#: providers/postgres/GNOME_Database_Provider_Postgres.server.in.h:2
+#, fuzzy
+msgid "Postgres component factory"
+msgstr "ne peut ouvrir de connexion sur %s"
+
+#: providers/postgres/gda-postgres-provider.c:317
+#: providers/postgres/gda-postgres-provider.c:455
+#: providers/postgres/gda-postgres-recordset.c:59
+#: providers/postgres/gda-postgres-recordset.c:110
+msgid "Invalid PostgreSQL handle"
+msgstr ""
+
+#: providers/postgres/main.c:49
+#, fuzzy
+msgid "Could not initiate PostgreSQL component factory"
+msgstr "Ne peut enregistrer l'implémentation du fournisseur MySQL"
+
+#: providers/postgres/utils.c:39
+msgid "NO DESCRIPTION"
+msgstr ""
+
+#: providers/postgres/utils.c:44
+msgid "Not available"
+msgstr "Non disponible"
 
 #: providers/sybase/GNOME_Database_Provider_Sybase.server.in.h:1
 #, fuzzy
@@ -281,13 +369,190 @@ msgid ""
 "\t%s"
 msgstr ""
 
-#: providers/sybase/main.c:49
+#: providers/sybase/main.c:50
 #, fuzzy
 msgid "Could not initiate Sybase component factory"
 msgstr "Ne peut ouvrir l'usine CORBA"
 
-#~ msgid "Data source %s not found"
-#~ msgstr "Sources de données %s non trouvée"
+#: report/GNOME_Database_Report.server.in.h:1
+#, fuzzy
+msgid "GDA Report engine"
+msgstr "Moteur de rapport distribué GDA"
+
+#: report/GNOME_Database_Report.server.in.h:2
+msgid "GDA Report engine factory"
+msgstr ""
+
+#: report/gda-report-engine.c:67 report/libgda-report/gda-report-client.c:195
+#: report/libgda-report/gda-report-client.c:209
+#, fuzzy, c-format
+msgid "CORBA exception: %s"
+msgstr "Exception de l'utilisateur CORBA : %s"
+
+#: report/gda-report-engine.c:105
+#, fuzzy
+msgid "Could not create global GDA client"
+msgstr "ne peut ouvrir de connexion sur %s"
+
+#: report/job.c:43
+#, fuzzy
+msgid "Could not parse XML report"
+msgstr "Ne peut définir la locale pour « %s »"
+
+#: report/libgda-report/gda-report-client.c:141
+#, fuzzy
+msgid "Could not activate report engine"
+msgstr "Ne peut activer le moteur de rapport"
+
+#: report/libgda-report/gda-report-client.c:182
+#, fuzzy
+msgid "Could not create BonoboStreamMem object"
+msgstr "ne peut ouvrir de connexion sur %s"
+
+#: report/libgda-report/gda-report-document.c:137
+#, fuzzy
+msgid "Could not parse XML document"
+msgstr "Ne peut définir la locale pour « %s »"
+
+#: report/libgda-report/gda-report-document.c:162
+#, fuzzy, c-format
+msgid "Could not get file from %s"
+msgstr "Ne peut définir la locale pour « %s »"
+
+#: report/main.c:47
+#, fuzzy
+msgid "Could not initiate Report component factory"
+msgstr "Ne peut enregistrer l'implémentation du fournisseur de courrier"
+
+#: testing/client.c:37
+msgid "\t\tNONE\n"
+msgstr ""
+
+#: testing/client.c:76
+#, c-format
+msgid "** ERROR: could not open connection to %s\n"
+msgstr ""
+
+#. show provider features
+#: testing/client.c:81
+msgid "\tProvider capabilities...\n"
+msgstr ""
+
+#: testing/client.c:82
+#, fuzzy, c-format
+msgid "\t\tTransactions: %s\n"
+msgstr "Transaction commencée"
+
+#: testing/client.c:84
+msgid "Supported"
+msgstr ""
+
+#: testing/client.c:84
+msgid "Not supported"
+msgstr ""
+
+#. show connection schemas
+#: testing/client.c:87
+#, fuzzy
+msgid "Stored procedures"
+msgstr "Procédures"
+
+#: testing/client.c:88
+#, fuzzy
+msgid "Connection Tables"
+msgstr "La connexion semble morte"
+
+#: testing/client.c:89
+msgid "Available types"
+msgstr ""
+
+#: testing/client.c:90
+msgid "Views"
+msgstr "Vues"
+
+#: testing/client.c:91
+#, fuzzy
+msgid "Indexes"
+msgstr "Indéxé"
+
+#. test transactions
+#: testing/client.c:94 testing/client.c:102
+msgid "\tStarting transaction..."
+msgstr ""
+
+#: testing/client.c:96 testing/client.c:100 testing/client.c:104
+#: testing/client.c:108
+#, fuzzy
+msgid "Error"
+msgstr "erreur"
+
+#: testing/client.c:98
+msgid "\tFinishing transaction..."
+msgstr ""
+
+#: testing/client.c:106
+msgid "\tRolling back transaction..."
+msgstr ""
+
+#: testing/client.c:127
+msgid "Testing GDA client API"
+msgstr ""
+
+#: testing/client.c:136
+msgid "** ERROR: gda_config_get_data_source_list returned a NULL item\n"
+msgstr ""
+
+#: testing/client.c:140
+#, fuzzy, c-format
+msgid " Data source = %s, User = %s\n"
+msgstr "Sources de données %s non trouvée"
+
+#: testing/config.c:84
+msgid "** ERROR: gda_config_get_provider_list returned a NULL item\n"
+msgstr ""
+
+#: testing/config.c:88
+#, fuzzy, c-format
+msgid " Provider = %s\n"
+msgstr "Fournisseur Inconnu %s"
+
+#: testing/config.c:89
+#, fuzzy, c-format
+msgid "\tlocation = %s\n"
+msgstr "Localisation"
+
+#: testing/config.c:90
+#, c-format
+msgid "\ttype = %s\n"
+msgstr ""
+
+#: testing/config.c:93
+#, fuzzy, c-format
+msgid "\tdescription = %s\n"
+msgstr "Description"
+
+#: testing/config.c:95
+msgid "\trepo_ids ="
+msgstr ""
+
+#: testing/config.c:102
+#, fuzzy, c-format
+msgid "\tusername = %s\n"
+msgstr "nom d'utilisateur"
+
+#: testing/config.c:103
+#, c-format
+msgid "\thostname = %s\n"
+msgstr ""
+
+#: testing/config.c:104
+#, c-format
+msgid "\tdomain = %s\n"
+msgstr ""
+
+#: testing/config.c:106
+msgid "\tgda_params ="
+msgstr ""
 
 #~ msgid "CORBA System exception: %s"
 #~ msgstr "Exception du système CORBA : %s"
@@ -342,9 +607,6 @@ msgstr "Ne peut ouvrir l'usine CORBA"
 #~ msgid "CORBA system exception %s"
 #~ msgstr "Exception du système CORBA %s"
 
-#~ msgid "CORBA user exception: %s"
-#~ msgstr "Exception de l'utilisateur CORBA : %s"
-
 #, fuzzy
 #~ msgid "Unknown schema type"
 #~ msgstr "Type ORACLE %ld inconnu"
@@ -355,12 +617,6 @@ msgstr "Ne peut ouvrir l'usine CORBA"
 
 #~ msgid "error '%s' at %s"
 #~ msgstr "erreur « %s » à %s"
-
-#~ msgid "Not available"
-#~ msgstr "Non disponible"
-
-#~ msgid "error"
-#~ msgstr "erreur"
 
 #~ msgid "Could not register LDAP provider implementation"
 #~ msgstr "Ne peut enregistrer l'implémentation du serveur LDAP"
@@ -438,10 +694,6 @@ msgstr "Ne peut ouvrir l'usine CORBA"
 #~ msgid "Could not register ODBC provider implementation"
 #~ msgstr "Ne peut enregistrer l'implémentation du fournisseur ODBC"
 
-#, fuzzy
-#~ msgid "GDA Datasource Access for Oracle"
-#~ msgstr "Propriétées du Serveur GDA"
-
 #~ msgid "Could not allocate statement handle"
 #~ msgstr "Ne peut allouer de statement handle"
 
@@ -471,10 +723,6 @@ msgstr "Ne peut ouvrir l'usine CORBA"
 
 #~ msgid "Could not register ORACLE provider implementation"
 #~ msgstr "Ne peut enregistrer l'implémentation du fournisseur ORACLE"
-
-#, fuzzy
-#~ msgid "GDA Datasource Access for Postgres"
-#~ msgstr "Propriétées du serveur source GDA"
 
 #~ msgid "postgres_recset is NULL"
 #~ msgstr "postgres_recset est NULL"
@@ -617,9 +865,6 @@ msgstr "Ne peut ouvrir l'usine CORBA"
 
 #~ msgid "cs_diag() initialized"
 #~ msgstr "cs_diag() initialisé"
-
-#~ msgid "Could not initialize cs_diag()"
-#~ msgstr "Ne peut initialiser cs_diag()"
 
 #~ msgid "ct_diag() initialized"
 #~ msgstr "ct_diag() initialisé"
@@ -810,9 +1055,6 @@ msgstr "Ne peut ouvrir l'usine CORBA"
 #~ msgid "CORBA exception unloading report engine: %s"
 #~ msgstr "Exception CORBA durant le déchargement du moteur de rapport : %s"
 
-#~ msgid "GDA Distributed Report Engine"
-#~ msgstr "Moteur de rapport distribué GDA"
-
 #~ msgid "Received signal %d, shutting down."
 #~ msgstr "Réception du signal %d, extinction."
 
@@ -868,9 +1110,6 @@ msgstr "Ne peut ouvrir l'usine CORBA"
 
 #~ msgid "DATABASE"
 #~ msgstr "BASE-DE-DONNÉES"
-
-#~ msgid "user name"
-#~ msgstr "nom d'utilisateur"
 
 #~ msgid "USER-NAME"
 #~ msgstr "NOM-D-UTILISATEUR"
@@ -976,9 +1215,6 @@ msgstr "Ne peut ouvrir l'usine CORBA"
 
 #~ msgid "Connecting..."
 #~ msgstr "Connexion en cours..."
-
-#~ msgid "Transaction started"
-#~ msgstr "Transaction commencée"
 
 #~ msgid "New"
 #~ msgstr "Nouveau"
@@ -1149,9 +1385,6 @@ msgstr "Ne peut ouvrir l'usine CORBA"
 
 #~ msgid "Objects"
 #~ msgstr "Objets"
-
-#~ msgid "Views"
-#~ msgstr "Vues"
 
 #~ msgid "Log"
 #~ msgstr "Historique"
@@ -1412,9 +1645,6 @@ msgstr "Ne peut ouvrir l'usine CORBA"
 #~ msgid "Print buffer"
 #~ msgstr "Imprimer le tampon courant"
 
-#~ msgid "Procedures"
-#~ msgstr "Procédures"
-
 #~ msgid "Data"
 #~ msgstr "Données"
 
@@ -1423,9 +1653,6 @@ msgstr "Ne peut ouvrir l'usine CORBA"
 
 #~ msgid "Shared Library"
 #~ msgstr "Bibliothèque Partagée"
-
-#~ msgid "Location"
-#~ msgstr "Localisation"
 
 #~ msgid "GDA Server Location"
 #~ msgstr "Localisation du serveur GDA"
@@ -1593,9 +1820,6 @@ msgstr "Ne peut ouvrir l'usine CORBA"
 #~ msgid "Select all rows"
 #~ msgstr "Sélectionner toutes les lignes"
 
-#~ msgid "Unknown Provider %s"
-#~ msgstr "Fournisseur Inconnu %s"
-
 #~ msgid "database provider"
 #~ msgstr "fournisseur de la base de données"
 
@@ -1614,9 +1838,6 @@ msgstr "Ne peut ouvrir l'usine CORBA"
 #~ msgid "Inputmask"
 #~ msgstr "Masque de saisie"
 
-#~ msgid "Default Value"
-#~ msgstr "Valeur par défaut"
-
 #~ msgid "Label"
 #~ msgstr "Label"
 
@@ -1628,9 +1849,6 @@ msgstr "Ne peut ouvrir l'usine CORBA"
 
 #~ msgid "Allow empty string"
 #~ msgstr "Authoriser les chaines vides"
-
-#~ msgid "Indexed"
-#~ msgstr "Indéxé"
 
 #~ msgid "Date/Time Type"
 #~ msgstr "Type de Date/Heure"

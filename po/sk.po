@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda 0.3.1\n"
-"POT-Creation-Date: 2002-01-22 19:02+0100\n"
+"POT-Creation-Date: 2002-01-27 01:13+0100\n"
 "PO-Revision-Date: 2002-01-22 19:09CET\n"
 "Last-Translator: Stanislav Visnovsky <visnovsky@nenya.ms.mff.cuni.cz>\n"
 "Language-Team: Slovak <sk-i18n@lists.linux.sk>\n"
@@ -14,45 +14,45 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: KBabel 0.9.6\n"
 
-#: libgda/gda-client.c:200 libgda/gda-client.c:294
+#: libgda/gda-client.c:200 libgda/gda-client.c:310 libgda/gda-connection.c:213
 #, c-format
 msgid "Data source %s not found in configuration"
 msgstr "Zdroj dát %s nebol nájdený v konfigurácii"
 
-#: libgda/gda-client.c:221
+#: libgda/gda-client.c:237
 #, c-format
 msgid "Could not activate object %s"
 msgstr "Nie je aktivovať objekt %s"
 
-#: libgda/gda-client.c:239
+#: libgda/gda-client.c:255
 msgid "Could not create connection component"
 msgstr "Nie je možné vytvoriť komponent pre spojenie"
 
-#: libgda/gda-config.c:513
+#: libgda/gda-config.c:508
 msgid "Could not query CORBA components"
 msgstr "Nie je možné získať komponenty CORBA"
 
-#: libgda/gda-config.c:620
+#: libgda/gda-config.c:615
 msgid "Could not query CORBA providers"
 msgstr "Nie je možné získať poskytovateľov CORBA"
 
-#: libgda/gda-config.c:833
+#: libgda/gda-config.c:865
 msgid "Name"
 msgstr "Meno"
 
-#: libgda/gda-config.c:834
+#: libgda/gda-config.c:866
 msgid "Provider"
 msgstr "Poskytovateľ"
 
-#: libgda/gda-config.c:835
+#: libgda/gda-config.c:867
 msgid "Connection string"
 msgstr "Reťazec spojenia"
 
-#: libgda/gda-config.c:836
+#: libgda/gda-config.c:868
 msgid "Description"
 msgstr "Popis"
 
-#: libgda/gda-config.c:837
+#: libgda/gda-config.c:869
 msgid "Username"
 msgstr "Meno používateľa"
 
@@ -75,7 +75,8 @@ msgstr "Nie je možné inicializovať Bonobo"
 
 #: libgda/gda-server-connection.c:90
 msgid "Could not duplicate client object. Client won't get notifications"
-msgstr "Nie je možné duplikovať klientský objekt. Klient nebude dostávať upozornenia"
+msgstr ""
+"Nie je možné duplikovať klientský objekt. Klient nebude dostávať upozornenia"
 
 #: libgda/gda-server-connection.c:440
 #, c-format
@@ -138,7 +139,8 @@ msgid "GDA Default Datasource Access"
 msgstr "GDA štandardný prístup k zdroju dát"
 
 #: providers/default/gda-default-provider.c:141
-msgid "A full path must be specified on the connection string to open a database."
+msgid ""
+"A full path must be specified on the connection string to open a database."
 msgstr "Pre otvorenie databáze musíte zadať celú cestu v reťazci spojenia."
 
 #: providers/default/gda-default-provider.c:199
@@ -158,7 +160,8 @@ msgstr "Neplatný handle Default"
 
 #: providers/default/main.c:48
 msgid "Could not initiate Default component factory"
-msgstr "Nie je možné inicializovať vytváracie rozhranie pre štandardný komponent"
+msgstr ""
+"Nie je možné inicializovať vytváracie rozhranie pre štandardný komponent"
 
 #: providers/mysql/GNOME_Database_Provider_MySQL.server.in.h:1
 msgid "GDA Datasource Access for MySQL"
@@ -169,8 +172,10 @@ msgid "MySQL component factory"
 msgstr "Vytváracie rozhranie komponentu pre MySQL"
 
 #: providers/mysql/gda-mysql-provider.c:175
-msgid "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
-msgstr "Nemôžete poskytovať UNIX_SOCKET ak tiež poskytujete HOSTITEĽ alebo a PORT."
+msgid ""
+"You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
+msgstr ""
+"Nemôžete poskytovať UNIX_SOCKET ak tiež poskytujete HOSTITEĽ alebo a PORT."
 
 #: providers/mysql/gda-mysql-provider.c:246
 #: providers/mysql/gda-mysql-provider.c:326
@@ -242,7 +247,8 @@ msgstr "Neplatný handle PostgreSQL"
 
 #: providers/postgres/main.c:49
 msgid "Could not initiate PostgreSQL component factory"
-msgstr "Nie je možné inicializovať vytváracie rozhranie pre komponent PostreSQL"
+msgstr ""
+"Nie je možné inicializovať vytváracie rozhranie pre komponent PostreSQL"
 
 #: providers/postgres/utils.c:39
 msgid "NO DESCRIPTION"
@@ -370,14 +376,20 @@ msgstr "Nie je aktivovať stroj pre reporty"
 msgid "Could not create BonoboStreamMem object"
 msgstr "Nie je možné vytvoriť objekt BonoboStreamMem"
 
-#: report/libgda-report/gda-report-document.c:145
+#: report/libgda-report/gda-report-document.c:137
+#, fuzzy
+msgid "Could not parse XML document"
+msgstr "Nie je možné spracovať XML report"
+
+#: report/libgda-report/gda-report-document.c:162
 #, c-format
 msgid "Could not get file from %s"
 msgstr "Nie je možné získať súbor z %s"
 
 #: report/main.c:47
 msgid "Could not initiate Report component factory"
-msgstr "Nie je možné inicializovať vytváracie rozhranie pre komponent pre reporty"
+msgstr ""
+"Nie je možné inicializovať vytváracie rozhranie pre komponent pre reporty"
 
 #: testing/client.c:37
 msgid "\t\tNONE\n"
@@ -504,4 +516,3 @@ msgstr "\tdoména = %s\n"
 #: testing/config.c:106
 msgid "\tgda_params ="
 msgstr "\tgda_params ="
-

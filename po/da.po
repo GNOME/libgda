@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: GNOME db/CVS\n"
-"POT-Creation-Date: 2002-01-13 02:32+0100\n"
+"POT-Creation-Date: 2002-01-27 01:13+0100\n"
 "PO-Revision-Date: 2001-10-08 11:50+02:00\n"
 "Last-Translator: Keld Simonsen <keld@dkuug.dk>\n"
 "Language-Team: Danish <dansk@klid.dk>\n"
@@ -14,49 +14,49 @@ msgstr ""
 "Content-Type: text/plain; charset=ISO-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: libgda/gda-client.c:200 libgda/gda-client.c:294
+#: libgda/gda-client.c:200 libgda/gda-client.c:310 libgda/gda-connection.c:213
 #, fuzzy, c-format
 msgid "Data source %s not found in configuration"
 msgstr "Database '%s' ikke fundet i systemkonfiguration"
 
-#: libgda/gda-client.c:221
+#: libgda/gda-client.c:237
 #, fuzzy, c-format
 msgid "Could not activate object %s"
 msgstr "Kunne ikke oprette fil %s"
 
-#: libgda/gda-client.c:239
+#: libgda/gda-client.c:255
 #, fuzzy
 msgid "Could not create connection component"
 msgstr "Kunne ikke åbne forbindelse til '%s'"
 
-#: libgda/gda-config.c:515
+#: libgda/gda-config.c:508
 #, fuzzy
 msgid "Could not query CORBA components"
 msgstr "Kunne ikke åbne CORBA fabrik"
 
-#: libgda/gda-config.c:622
+#: libgda/gda-config.c:615
 #, fuzzy
 msgid "Could not query CORBA providers"
 msgstr "Kunne ikke åbne CORBA fabrik"
 
-#: libgda/gda-config.c:835
+#: libgda/gda-config.c:865
 msgid "Name"
 msgstr ""
 
-#: libgda/gda-config.c:836
+#: libgda/gda-config.c:866
 msgid "Provider"
 msgstr ""
 
-#: libgda/gda-config.c:837
+#: libgda/gda-config.c:867
 #, fuzzy
 msgid "Connection string"
 msgstr "Opkoblingen er ved at blive lukket"
 
-#: libgda/gda-config.c:838
+#: libgda/gda-config.c:868
 msgid "Description"
 msgstr ""
 
-#: libgda/gda-config.c:839
+#: libgda/gda-config.c:869
 msgid "Username"
 msgstr ""
 
@@ -77,16 +77,6 @@ msgstr "Forsøg på at initiere en allerede initieret klient"
 msgid "Could not initialize Bonobo"
 msgstr "Kunne ikke initiere Bonobo"
 
-#: libgda/gda-server.c:109
-#, c-format
-msgid "Don't know how to create components with IID %s"
-msgstr ""
-
-#: libgda/gda-server.c:116
-#, fuzzy, c-format
-msgid "Could not create component of type %s"
-msgstr "Kunne ikke oprette fil %s"
-
 #: libgda/gda-server-connection.c:90
 msgid "Could not duplicate client object. Client won't get notifications"
 msgstr ""
@@ -96,51 +86,52 @@ msgstr ""
 msgid "Could not notify client about action %d"
 msgstr "Kunne ikke hente klientbesked # %d"
 
-#: libgda/gda-server-recordset.c:204
+#: libgda/gda-server-recordset.c:207
 msgid "No implementation for the fetch() method found"
 msgstr ""
 
-#: libgda/gda-value.c:602
+#: libgda/gda-server.c:108
+#, c-format
+msgid "Don't know how to create components with IID %s"
+msgstr ""
+
+#: libgda/gda-server.c:122
+#, fuzzy, c-format
+msgid "Could not create component of type %s"
+msgstr "Kunne ikke oprette fil %s"
+
+#: libgda/gda-value.c:926
 msgid "TRUE"
 msgstr "TRUE"
 
-#: libgda/gda-value.c:604
+#: libgda/gda-value.c:928
 msgid "FALSE"
 msgstr "FALSE"
 
-#: libgda/gda-xml-database.c:162
+#: libgda/gda-xml-database.c:164
 #, fuzzy, c-format
 msgid "Could not load file at %s"
 msgstr "Kunne ikke åbne fil %s"
 
-#: libgda/gda-xml-database.c:173
+#: libgda/gda-xml-database.c:175
 #, fuzzy, c-format
 msgid "Could not parse file at %s"
 msgstr "Kunne ikke åbne fil %s"
 
-#: libgda/gda-xml-database.c:183
+#: libgda/gda-xml-database.c:185
 #, fuzzy, c-format
 msgid "Bad formed document at %s"
 msgstr "fejludformet dokument"
 
-#: libgda/gda-xml-database.c:258
+#: libgda/gda-xml-database.c:260
 #, c-format
 msgid "table %s already exists"
 msgstr "tabel %s eksisterer allerede"
 
-#: libgda/gda-xml-database.c:440
+#: libgda/gda-xml-database.c:442
 #, c-format
 msgid "%p is not a valid table"
 msgstr "%p er ikke en gyldig tabel"
-
-#: providers/default/gda-default-provider.c:141
-msgid ""
-"A full path must be specified on the connection string to open a database."
-msgstr ""
-
-#: providers/default/gda-default-provider.c:199
-msgid "Invalid DEFAULT handle"
-msgstr ""
 
 #: providers/default/GNOME_Database_Provider_Default.server.in.h:1
 #, fuzzy
@@ -151,30 +142,30 @@ msgstr "Standard-udbyder opkoblingsfabrik"
 msgid "GDA Default Datasource Access"
 msgstr "GDA forvalgt datakildeadgang"
 
-#: providers/default/main.c:47
+#: providers/default/gda-default-provider.c:141
+msgid ""
+"A full path must be specified on the connection string to open a database."
+msgstr ""
+
+#: providers/default/gda-default-provider.c:199
+#: providers/default/gda-default-recordset.c:59
+msgid "Invalid DEFAULT handle"
+msgstr ""
+
+#: providers/default/gda-default-recordset.c:70
+#: providers/mysql/gda-mysql-recordset.c:76
+#: providers/postgres/gda-postgres-recordset.c:70
+msgid "Row number out of range"
+msgstr ""
+
+#: providers/default/gda-default-recordset.c:110
+msgid "Invalid Default handle"
+msgstr ""
+
+#: providers/default/main.c:48
 #, fuzzy
 msgid "Could not initiate Default component factory"
 msgstr "Kunne ikke registrere implementation for standard-udbyder"
-
-#: providers/mysql/gda-mysql-provider.c:173
-#, fuzzy
-msgid ""
-"You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
-msgstr ""
-"Du kan ikke tilbyde en UNIX_SOCKET hvis du også tilbyder enten en VÆRT eller "
-"en PORT. Venligst fjern UNIX_SOCKET, eller fjern både VÆRT og PORT "
-"alternativerne."
-
-#: providers/mysql/gda-mysql-provider.c:244
-#: providers/mysql/gda-mysql-provider.c:323
-#: providers/mysql/gda-mysql-provider.c:352
-#: providers/mysql/gda-mysql-provider.c:381
-msgid "Invalid MYSQL handle"
-msgstr ""
-
-#: providers/mysql/gda-mysql-provider.c:460
-msgid "Type"
-msgstr ""
 
 #: providers/mysql/GNOME_Database_Provider_MySQL.server.in.h:1
 msgid "GDA Datasource Access for MySQL"
@@ -185,10 +176,104 @@ msgstr "GDA datakildeadgang for MySQL"
 msgid "MySQL component factory"
 msgstr "MySQL-udbyder opkoblingsfabrik"
 
-#: providers/mysql/main.c:48
+#: providers/mysql/gda-mysql-provider.c:175
+#, fuzzy
+msgid ""
+"You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
+msgstr ""
+"Du kan ikke tilbyde en UNIX_SOCKET hvis du også tilbyder enten en VÆRT eller "
+"en PORT. Venligst fjern UNIX_SOCKET, eller fjern både VÆRT og PORT "
+"alternativerne."
+
+#: providers/mysql/gda-mysql-provider.c:246
+#: providers/mysql/gda-mysql-provider.c:326
+#: providers/mysql/gda-mysql-provider.c:355
+#: providers/mysql/gda-mysql-provider.c:384
+msgid "Invalid MYSQL handle"
+msgstr ""
+
+#: providers/mysql/gda-mysql-provider.c:463
+#: providers/postgres/gda-postgres-provider.c:568
+msgid "Type"
+msgstr ""
+
+#: providers/mysql/gda-mysql-recordset.c:63
+#: providers/mysql/gda-mysql-recordset.c:170
+msgid "Invalid MySQL handle"
+msgstr ""
+
+#: providers/mysql/main.c:49
 #, fuzzy
 msgid "Could not initiate MySQL component factory"
 msgstr "Kunne ikke registrere MySQL-udbyder implementation"
+
+#: providers/oracle/GNOME_Database_Provider_Oracle.server.in.h:1
+msgid "GDA Datasource Access for Oracle"
+msgstr "GDA datakildeadgang for Oracle"
+
+#: providers/oracle/GNOME_Database_Provider_Oracle.server.in.h:2
+#, fuzzy
+msgid "Oracle component factory"
+msgstr "Sybase-udbyder opkoblingsfabrik"
+
+#: providers/oracle/gda-oracle-connection.c:77
+#, fuzzy
+msgid "Could not initialize Oracle environment"
+msgstr "Kunne ikke initiere Bonobo"
+
+#: providers/oracle/gda-oracle-connection.c:87
+#, fuzzy
+msgid "Could not initialize Oracle error handler"
+msgstr "Kunne ikke initiere Bonobo"
+
+#: providers/oracle/gda-oracle-connection.c:98
+#, fuzzy
+msgid "Could not initialize Oracle server handle"
+msgstr "Kunne ikke initiere cs_diag()"
+
+#: providers/oracle/gda-oracle-connection.c:109
+#, fuzzy
+msgid "Could not initialize Oracle service context"
+msgstr "Kunne ikke initiere cs_diag()"
+
+#: providers/oracle/main.c:46
+#, fuzzy
+msgid "Could not initiate Oracle component factory"
+msgstr "Kunne ikke åbne CORBA fabrik"
+
+#: providers/oracle/main.c:70
+#, fuzzy
+msgid "Could not initialize OCI library"
+msgstr "Kunne ikke initiere Bonobo"
+
+#: providers/postgres/GNOME_Database_Provider_Postgres.server.in.h:1
+msgid "GDA Datasource Access for Postgres"
+msgstr "GDA datakildeadgang for Postgres"
+
+#: providers/postgres/GNOME_Database_Provider_Postgres.server.in.h:2
+#, fuzzy
+msgid "Postgres component factory"
+msgstr "Sybase-udbyder opkoblingsfabrik"
+
+#: providers/postgres/gda-postgres-provider.c:317
+#: providers/postgres/gda-postgres-provider.c:455
+#: providers/postgres/gda-postgres-recordset.c:59
+#: providers/postgres/gda-postgres-recordset.c:110
+msgid "Invalid PostgreSQL handle"
+msgstr ""
+
+#: providers/postgres/main.c:49
+#, fuzzy
+msgid "Could not initiate PostgreSQL component factory"
+msgstr "Kunne ikke registrere MySQL-udbyder implementation"
+
+#: providers/postgres/utils.c:39
+msgid "NO DESCRIPTION"
+msgstr ""
+
+#: providers/postgres/utils.c:44
+msgid "Not available"
+msgstr "Ikke tilgængelig"
 
 #: providers/sybase/GNOME_Database_Provider_Sybase.server.in.h:1
 msgid "GDA Datasource Access for Sybase"
@@ -276,13 +361,188 @@ msgid ""
 "\t%s"
 msgstr ""
 
-#: providers/sybase/main.c:49
+#: providers/sybase/main.c:50
 #, fuzzy
 msgid "Could not initiate Sybase component factory"
 msgstr "Kunne ikke åbne CORBA fabrik"
 
-#~ msgid "Data source %s not found"
-#~ msgstr "Datakilde %s ikke fundet"
+#: report/GNOME_Database_Report.server.in.h:1
+msgid "GDA Report engine"
+msgstr ""
+
+#: report/GNOME_Database_Report.server.in.h:2
+#, fuzzy
+msgid "GDA Report engine factory"
+msgstr "LDAP-udbyder opkoblingsfabrik"
+
+#: report/gda-report-engine.c:67 report/libgda-report/gda-report-client.c:195
+#: report/libgda-report/gda-report-client.c:209
+#, fuzzy, c-format
+msgid "CORBA exception: %s"
+msgstr "CORBA bruger undtagelse %s"
+
+#: report/gda-report-engine.c:105
+#, fuzzy
+msgid "Could not create global GDA client"
+msgstr "Kunne ikke åbne forbindelse til '%s'"
+
+#: report/job.c:43
+#, fuzzy
+msgid "Could not parse XML report"
+msgstr "Kunne ikke åbne fil %s"
+
+#: report/libgda-report/gda-report-client.c:141
+#, fuzzy
+msgid "Could not activate report engine"
+msgstr "Kunne ikke oprette fil %s"
+
+#: report/libgda-report/gda-report-client.c:182
+#, fuzzy
+msgid "Could not create BonoboStreamMem object"
+msgstr "Kunne ikke åbne forbindelse til '%s'"
+
+#: report/libgda-report/gda-report-document.c:137
+#, fuzzy
+msgid "Could not parse XML document"
+msgstr "Kunne ikke åbne fil %s"
+
+#: report/libgda-report/gda-report-document.c:162
+#, fuzzy, c-format
+msgid "Could not get file from %s"
+msgstr "Kunne ikke åbne fil %s"
+
+#: report/main.c:47
+#, fuzzy
+msgid "Could not initiate Report component factory"
+msgstr "Kunne ikke registrere implementation for standard-udbyder"
+
+#: testing/client.c:37
+msgid "\t\tNONE\n"
+msgstr ""
+
+#: testing/client.c:76
+#, c-format
+msgid "** ERROR: could not open connection to %s\n"
+msgstr ""
+
+#. show provider features
+#: testing/client.c:81
+msgid "\tProvider capabilities...\n"
+msgstr ""
+
+#: testing/client.c:82
+#, c-format
+msgid "\t\tTransactions: %s\n"
+msgstr ""
+
+#: testing/client.c:84
+msgid "Supported"
+msgstr ""
+
+#: testing/client.c:84
+msgid "Not supported"
+msgstr ""
+
+#. show connection schemas
+#: testing/client.c:87
+msgid "Stored procedures"
+msgstr ""
+
+#: testing/client.c:88
+#, fuzzy
+msgid "Connection Tables"
+msgstr "Opkoblingen er ved at blive lukket"
+
+#: testing/client.c:89
+msgid "Available types"
+msgstr ""
+
+#: testing/client.c:90
+msgid "Views"
+msgstr ""
+
+#: testing/client.c:91
+msgid "Indexes"
+msgstr ""
+
+#. test transactions
+#: testing/client.c:94 testing/client.c:102
+msgid "\tStarting transaction..."
+msgstr ""
+
+#: testing/client.c:96 testing/client.c:100 testing/client.c:104
+#: testing/client.c:108
+#, fuzzy
+msgid "Error"
+msgstr "fejl"
+
+#: testing/client.c:98
+msgid "\tFinishing transaction..."
+msgstr ""
+
+#: testing/client.c:106
+msgid "\tRolling back transaction..."
+msgstr ""
+
+#: testing/client.c:127
+msgid "Testing GDA client API"
+msgstr ""
+
+#: testing/client.c:136
+msgid "** ERROR: gda_config_get_data_source_list returned a NULL item\n"
+msgstr ""
+
+#: testing/client.c:140
+#, fuzzy, c-format
+msgid " Data source = %s, User = %s\n"
+msgstr "Datakilde %s ikke fundet"
+
+#: testing/config.c:84
+msgid "** ERROR: gda_config_get_provider_list returned a NULL item\n"
+msgstr ""
+
+#: testing/config.c:88
+#, c-format
+msgid " Provider = %s\n"
+msgstr ""
+
+#: testing/config.c:89
+#, c-format
+msgid "\tlocation = %s\n"
+msgstr ""
+
+#: testing/config.c:90
+#, c-format
+msgid "\ttype = %s\n"
+msgstr ""
+
+#: testing/config.c:93
+#, c-format
+msgid "\tdescription = %s\n"
+msgstr ""
+
+#: testing/config.c:95
+msgid "\trepo_ids ="
+msgstr ""
+
+#: testing/config.c:102
+#, c-format
+msgid "\tusername = %s\n"
+msgstr ""
+
+#: testing/config.c:103
+#, c-format
+msgid "\thostname = %s\n"
+msgstr ""
+
+#: testing/config.c:104
+#, c-format
+msgid "\tdomain = %s\n"
+msgstr ""
+
+#: testing/config.c:106
+msgid "\tgda_params ="
+msgstr ""
 
 #~ msgid "[GDA Client Library]"
 #~ msgstr "[GDA klientbibliotek]"
@@ -353,9 +613,6 @@ msgstr "Kunne ikke åbne CORBA fabrik"
 #~ msgid "CORBA system exception %s"
 #~ msgstr "CORBA system undtagelse %s"
 
-#~ msgid "CORBA user exception: %s"
-#~ msgstr "CORBA bruger undtagelse %s"
-
 #~ msgid "You must specify a directory for the database to be stored"
 #~ msgstr "Du skal specificere et katalog for lagring af databasen"
 
@@ -365,17 +622,8 @@ msgstr "Kunne ikke åbne CORBA fabrik"
 #~ msgid "GDA Datasource Access for LDAP"
 #~ msgstr "GDA datakildeadgang for LDAP"
 
-#~ msgid "LDAP provider connection factory"
-#~ msgstr "LDAP-udbyder opkoblingsfabrik"
-
 #~ msgid "error '%s' at %s"
 #~ msgstr "Fejl %s ved %s"
-
-#~ msgid "Not available"
-#~ msgstr "Ikke tilgængelig"
-
-#~ msgid "error"
-#~ msgstr "fejl"
 
 #~ msgid "Could not register LDAP provider implementation"
 #~ msgstr "Kunne ikke registrere LDAP-udbyder implementation"
@@ -465,9 +713,6 @@ msgstr "Kunne ikke åbne CORBA fabrik"
 #~ msgid "Could not register ODBC provider implementation"
 #~ msgstr "Kunne ikke registrere ODBC udbyderimplementation"
 
-#~ msgid "GDA Datasource Access for Oracle"
-#~ msgstr "GDA datakildeadgang for Oracle"
-
 #~ msgid "Oracle provider connection factory"
 #~ msgstr "Oracle-udbyder opkoblingsfabrik"
 
@@ -500,9 +745,6 @@ msgstr "Kunne ikke åbne CORBA fabrik"
 
 #~ msgid "Could not register ORACLE provider implementation"
 #~ msgstr "Kunne ikke registrere ORACLE udbyderimplementation"
-
-#~ msgid "GDA Datasource Access for Postgres"
-#~ msgstr "GDA datakildeadgang for Postgres"
 
 #~ msgid "Postgres provider connection factory"
 #~ msgstr "Postgres-udbyder opkoblingsfabrik"
@@ -645,9 +887,6 @@ msgstr "Kunne ikke åbne CORBA fabrik"
 
 #~ msgid "cs_diag() initialized"
 #~ msgstr "cs_dialog() initieret"
-
-#~ msgid "Could not initialize cs_diag()"
-#~ msgstr "Kunne ikke initiere cs_diag()"
 
 #~ msgid "ct_diag() initialized"
 #~ msgstr "ct_diag() initieret"

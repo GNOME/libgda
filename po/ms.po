@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda HEAD\n"
-"POT-Creation-Date: 2002-01-23 05:46+0800\n"
+"POT-Creation-Date: 2002-01-27 01:13+0100\n"
 "PO-Revision-Date: 2002-01-23 05:47+0800\n"
 "Last-Translator: Hasbullah Bin Pit <sebol@ikhlas.com>\n"
 "Language-Team: Bahasa Melayu <gabai-penyumbang@lists.sourceforge.net>\n"
@@ -12,45 +12,45 @@ msgstr ""
 "Content-Type: text/plain; charset=ISO-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: libgda/gda-client.c:200 libgda/gda-client.c:294
+#: libgda/gda-client.c:200 libgda/gda-client.c:310 libgda/gda-connection.c:213
 #, c-format
 msgid "Data source %s not found in configuration"
 msgstr "Sumber data &s tidak dijumpai pada konfigurasi"
 
-#: libgda/gda-client.c:221
+#: libgda/gda-client.c:237
 #, c-format
 msgid "Could not activate object %s"
 msgstr "Tak dapat menghidupkan objek %s"
 
-#: libgda/gda-client.c:239
+#: libgda/gda-client.c:255
 msgid "Could not create connection component"
 msgstr "Tak dapat mencipta komponen sambungan"
 
-#: libgda/gda-config.c:513
+#: libgda/gda-config.c:508
 msgid "Could not query CORBA components"
 msgstr "Tak dapat kueri komponen CORBA"
 
-#: libgda/gda-config.c:620
+#: libgda/gda-config.c:615
 msgid "Could not query CORBA providers"
 msgstr "Tak dpaat kueri pembekal CORBA"
 
-#: libgda/gda-config.c:833
+#: libgda/gda-config.c:865
 msgid "Name"
 msgstr "Nama"
 
-#: libgda/gda-config.c:834
+#: libgda/gda-config.c:866
 msgid "Provider"
 msgstr "Pembekal"
 
-#: libgda/gda-config.c:835
+#: libgda/gda-config.c:867
 msgid "Connection string"
 msgstr "Rentetan Sambungan"
 
-#: libgda/gda-config.c:836
+#: libgda/gda-config.c:868
 msgid "Description"
 msgstr "Huraian"
 
-#: libgda/gda-config.c:837
+#: libgda/gda-config.c:869
 msgid "Username"
 msgstr "Namapengguna"
 
@@ -374,7 +374,12 @@ msgstr "Tak dapat mengaktifkan jentera laporan"
 msgid "Could not create BonoboStreamMem object"
 msgstr "Tak dapat mencipta objek BonoboStreamMem"
 
-#: report/libgda-report/gda-report-document.c:145
+#: report/libgda-report/gda-report-document.c:137
+#, fuzzy
+msgid "Could not parse XML document"
+msgstr "Tak dapat menghantar laporan XML"
+
+#: report/libgda-report/gda-report-document.c:162
 #, c-format
 msgid "Could not get file from %s"
 msgstr "Gagal mendapatkan fail daripada %s"
@@ -508,4 +513,3 @@ msgstr "\tdomain = %s\n"
 #: testing/config.c:106
 msgid "\tgda_params ="
 msgstr "\tgda_params ="
-

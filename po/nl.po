@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Libgda CVS\n"
-"POT-Creation-Date: 2002-01-13 02:32+0100\n"
+"POT-Creation-Date: 2002-01-27 01:13+0100\n"
 "PO-Revision-Date: 2000-11-05 12:36+0100\n"
 "Last-Translator: Almer S. Tigelaar <almer1@dds.nl>\n"
 "Language-Team: Dutch <nl@li.org>\n"
@@ -13,49 +13,49 @@ msgstr ""
 "Content-Type: text/plain; charset=iso-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: libgda/gda-client.c:200 libgda/gda-client.c:294
+#: libgda/gda-client.c:200 libgda/gda-client.c:310 libgda/gda-connection.c:213
 #, fuzzy, c-format
 msgid "Data source %s not found in configuration"
 msgstr "Databank '%s' niet gevonden in systeemconfiguratie"
 
-#: libgda/gda-client.c:221
+#: libgda/gda-client.c:237
 #, fuzzy, c-format
 msgid "Could not activate object %s"
 msgstr "Kon rapporteer engine niet activeren"
 
-#: libgda/gda-client.c:239
+#: libgda/gda-client.c:255
 #, fuzzy
 msgid "Could not create connection component"
 msgstr "Kon verbinding naar %s niet openen"
 
-#: libgda/gda-config.c:515
+#: libgda/gda-config.c:508
 #, fuzzy
 msgid "Could not query CORBA components"
 msgstr "Kon 'CORBA factory' niet openen"
 
-#: libgda/gda-config.c:622
+#: libgda/gda-config.c:615
 #, fuzzy
 msgid "Could not query CORBA providers"
 msgstr "Kon 'CORBA factory' niet openen"
 
-#: libgda/gda-config.c:835
+#: libgda/gda-config.c:865
 msgid "Name"
 msgstr ""
 
-#: libgda/gda-config.c:836
+#: libgda/gda-config.c:866
 msgid "Provider"
 msgstr ""
 
-#: libgda/gda-config.c:837
+#: libgda/gda-config.c:867
 #, fuzzy
 msgid "Connection string"
 msgstr "Het lijkt erop dat de verbinding dood is"
 
-#: libgda/gda-config.c:838
+#: libgda/gda-config.c:868
 msgid "Description"
 msgstr ""
 
-#: libgda/gda-config.c:839
+#: libgda/gda-config.c:869
 #, fuzzy
 msgid "Username"
 msgstr "gebruikersnaam"
@@ -78,16 +78,6 @@ msgstr "Poging om een reeds geinitializeerde client opnieuw te initializeren"
 msgid "Could not initialize Bonobo"
 msgstr "Kon ct_diag() niet initializeren"
 
-#: libgda/gda-server.c:109
-#, c-format
-msgid "Don't know how to create components with IID %s"
-msgstr ""
-
-#: libgda/gda-server.c:116
-#, fuzzy, c-format
-msgid "Could not create component of type %s"
-msgstr "kon veld niet toewijzen"
-
 #: libgda/gda-server-connection.c:90
 msgid "Could not duplicate client object. Client won't get notifications"
 msgstr ""
@@ -97,51 +87,52 @@ msgstr ""
 msgid "Could not notify client about action %d"
 msgstr "Kon # %d client berichten niet ophalen"
 
-#: libgda/gda-server-recordset.c:204
+#: libgda/gda-server-recordset.c:207
 msgid "No implementation for the fetch() method found"
 msgstr ""
 
-#: libgda/gda-value.c:602
+#: libgda/gda-server.c:108
+#, c-format
+msgid "Don't know how to create components with IID %s"
+msgstr ""
+
+#: libgda/gda-server.c:122
+#, fuzzy, c-format
+msgid "Could not create component of type %s"
+msgstr "kon veld niet toewijzen"
+
+#: libgda/gda-value.c:926
 msgid "TRUE"
 msgstr "WAAR"
 
-#: libgda/gda-value.c:604
+#: libgda/gda-value.c:928
 msgid "FALSE"
 msgstr "ONWAAR"
 
-#: libgda/gda-xml-database.c:162
+#: libgda/gda-xml-database.c:164
 #, fuzzy, c-format
 msgid "Could not load file at %s"
 msgstr "Kon lokale instellingen niet veranderen naar '%s'"
 
-#: libgda/gda-xml-database.c:173
+#: libgda/gda-xml-database.c:175
 #, fuzzy, c-format
 msgid "Could not parse file at %s"
 msgstr "Kon lokale instellingen niet veranderen naar '%s'"
 
-#: libgda/gda-xml-database.c:183
+#: libgda/gda-xml-database.c:185
 #, c-format
 msgid "Bad formed document at %s"
 msgstr ""
 
-#: libgda/gda-xml-database.c:258
+#: libgda/gda-xml-database.c:260
 #, c-format
 msgid "table %s already exists"
 msgstr "tabel %s bestaat al"
 
-#: libgda/gda-xml-database.c:440
+#: libgda/gda-xml-database.c:442
 #, c-format
 msgid "%p is not a valid table"
 msgstr "%p is geen geldige tabel"
-
-#: providers/default/gda-default-provider.c:141
-msgid ""
-"A full path must be specified on the connection string to open a database."
-msgstr ""
-
-#: providers/default/gda-default-provider.c:199
-msgid "Invalid DEFAULT handle"
-msgstr ""
 
 #: providers/default/GNOME_Database_Provider_Default.server.in.h:1
 #, fuzzy
@@ -152,29 +143,30 @@ msgstr "Kon verbinding naar %s niet openen"
 msgid "GDA Default Datasource Access"
 msgstr ""
 
-#: providers/default/main.c:47
+#: providers/default/gda-default-provider.c:141
+msgid ""
+"A full path must be specified on the connection string to open a database."
+msgstr ""
+
+#: providers/default/gda-default-provider.c:199
+#: providers/default/gda-default-recordset.c:59
+msgid "Invalid DEFAULT handle"
+msgstr ""
+
+#: providers/default/gda-default-recordset.c:70
+#: providers/mysql/gda-mysql-recordset.c:76
+#: providers/postgres/gda-postgres-recordset.c:70
+msgid "Row number out of range"
+msgstr ""
+
+#: providers/default/gda-default-recordset.c:110
+msgid "Invalid Default handle"
+msgstr ""
+
+#: providers/default/main.c:48
 #, fuzzy
 msgid "Could not initiate Default component factory"
 msgstr "Kon Mail provider implementatie niet registreren"
-
-#: providers/mysql/gda-mysql-provider.c:173
-#, fuzzy
-msgid ""
-"You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
-msgstr ""
-"%s:%d: Je kunt geen UNIX_SOCKET geven als je ook een HOST of POORT geeft. "
-"Verwijder de UNIX_SOCKET of verwijder zowel de HOST als POORT opties"
-
-#: providers/mysql/gda-mysql-provider.c:244
-#: providers/mysql/gda-mysql-provider.c:323
-#: providers/mysql/gda-mysql-provider.c:352
-#: providers/mysql/gda-mysql-provider.c:381
-msgid "Invalid MYSQL handle"
-msgstr ""
-
-#: providers/mysql/gda-mysql-provider.c:460
-msgid "Type"
-msgstr ""
 
 #: providers/mysql/GNOME_Database_Provider_MySQL.server.in.h:1
 msgid "GDA Datasource Access for MySQL"
@@ -184,10 +176,103 @@ msgstr ""
 msgid "MySQL component factory"
 msgstr ""
 
-#: providers/mysql/main.c:48
+#: providers/mysql/gda-mysql-provider.c:175
+#, fuzzy
+msgid ""
+"You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
+msgstr ""
+"%s:%d: Je kunt geen UNIX_SOCKET geven als je ook een HOST of POORT geeft. "
+"Verwijder de UNIX_SOCKET of verwijder zowel de HOST als POORT opties"
+
+#: providers/mysql/gda-mysql-provider.c:246
+#: providers/mysql/gda-mysql-provider.c:326
+#: providers/mysql/gda-mysql-provider.c:355
+#: providers/mysql/gda-mysql-provider.c:384
+msgid "Invalid MYSQL handle"
+msgstr ""
+
+#: providers/mysql/gda-mysql-provider.c:463
+#: providers/postgres/gda-postgres-provider.c:568
+msgid "Type"
+msgstr ""
+
+#: providers/mysql/gda-mysql-recordset.c:63
+#: providers/mysql/gda-mysql-recordset.c:170
+msgid "Invalid MySQL handle"
+msgstr ""
+
+#: providers/mysql/main.c:49
 #, fuzzy
 msgid "Could not initiate MySQL component factory"
 msgstr "Kon MySQL provider implementatie niet registreren"
+
+#: providers/oracle/GNOME_Database_Provider_Oracle.server.in.h:1
+msgid "GDA Datasource Access for Oracle"
+msgstr ""
+
+#: providers/oracle/GNOME_Database_Provider_Oracle.server.in.h:2
+#, fuzzy
+msgid "Oracle component factory"
+msgstr "Kon verbinding naar %s niet openen"
+
+#: providers/oracle/gda-oracle-connection.c:77
+#, fuzzy
+msgid "Could not initialize Oracle environment"
+msgstr "Kon ct_diag() niet initializeren"
+
+#: providers/oracle/gda-oracle-connection.c:87
+#, fuzzy
+msgid "Could not initialize Oracle error handler"
+msgstr "Kon ct_diag() niet initializeren"
+
+#: providers/oracle/gda-oracle-connection.c:98
+#, fuzzy
+msgid "Could not initialize Oracle server handle"
+msgstr "Kon cs_diag() niet initializeren"
+
+#: providers/oracle/gda-oracle-connection.c:109
+#, fuzzy
+msgid "Could not initialize Oracle service context"
+msgstr "Kon cs_diag() niet initializeren"
+
+#: providers/oracle/main.c:46
+#, fuzzy
+msgid "Could not initiate Oracle component factory"
+msgstr "Kon 'CORBA factory' niet openen"
+
+#: providers/oracle/main.c:70
+#, fuzzy
+msgid "Could not initialize OCI library"
+msgstr "Kon ct_diag() niet initializeren"
+
+#: providers/postgres/GNOME_Database_Provider_Postgres.server.in.h:1
+msgid "GDA Datasource Access for Postgres"
+msgstr ""
+
+#: providers/postgres/GNOME_Database_Provider_Postgres.server.in.h:2
+#, fuzzy
+msgid "Postgres component factory"
+msgstr "Kon verbinding naar %s niet openen"
+
+#: providers/postgres/gda-postgres-provider.c:317
+#: providers/postgres/gda-postgres-provider.c:455
+#: providers/postgres/gda-postgres-recordset.c:59
+#: providers/postgres/gda-postgres-recordset.c:110
+msgid "Invalid PostgreSQL handle"
+msgstr ""
+
+#: providers/postgres/main.c:49
+#, fuzzy
+msgid "Could not initiate PostgreSQL component factory"
+msgstr "Kon MySQL provider implementatie niet registreren"
+
+#: providers/postgres/utils.c:39
+msgid "NO DESCRIPTION"
+msgstr ""
+
+#: providers/postgres/utils.c:44
+msgid "Not available"
+msgstr "Niet beschikbaar"
 
 #: providers/sybase/GNOME_Database_Provider_Sybase.server.in.h:1
 msgid "GDA Datasource Access for Sybase"
@@ -274,13 +359,187 @@ msgid ""
 "\t%s"
 msgstr ""
 
-#: providers/sybase/main.c:49
+#: providers/sybase/main.c:50
 #, fuzzy
 msgid "Could not initiate Sybase component factory"
 msgstr "Kon 'CORBA factory' niet openen"
 
-#~ msgid "Data source %s not found"
-#~ msgstr "Gegevensbron %s kon niet worden gevonden"
+#: report/GNOME_Database_Report.server.in.h:1
+msgid "GDA Report engine"
+msgstr ""
+
+#: report/GNOME_Database_Report.server.in.h:2
+msgid "GDA Report engine factory"
+msgstr ""
+
+#: report/gda-report-engine.c:67 report/libgda-report/gda-report-client.c:195
+#: report/libgda-report/gda-report-client.c:209
+#, fuzzy, c-format
+msgid "CORBA exception: %s"
+msgstr "CORBA gebruikers uitzondering: %s"
+
+#: report/gda-report-engine.c:105
+#, fuzzy
+msgid "Could not create global GDA client"
+msgstr "Kon verbinding naar %s niet openen"
+
+#: report/job.c:43
+#, fuzzy
+msgid "Could not parse XML report"
+msgstr "Kon lokale instellingen niet veranderen naar '%s'"
+
+#: report/libgda-report/gda-report-client.c:141
+#, fuzzy
+msgid "Could not activate report engine"
+msgstr "Kon rapporteer engine niet activeren"
+
+#: report/libgda-report/gda-report-client.c:182
+#, fuzzy
+msgid "Could not create BonoboStreamMem object"
+msgstr "Kon verbinding naar %s niet openen"
+
+#: report/libgda-report/gda-report-document.c:137
+#, fuzzy
+msgid "Could not parse XML document"
+msgstr "Kon lokale instellingen niet veranderen naar '%s'"
+
+#: report/libgda-report/gda-report-document.c:162
+#, fuzzy, c-format
+msgid "Could not get file from %s"
+msgstr "Kon lokale instellingen niet veranderen naar '%s'"
+
+#: report/main.c:47
+#, fuzzy
+msgid "Could not initiate Report component factory"
+msgstr "Kon Mail provider implementatie niet registreren"
+
+#: testing/client.c:37
+msgid "\t\tNONE\n"
+msgstr ""
+
+#: testing/client.c:76
+#, c-format
+msgid "** ERROR: could not open connection to %s\n"
+msgstr ""
+
+#. show provider features
+#: testing/client.c:81
+msgid "\tProvider capabilities...\n"
+msgstr ""
+
+#: testing/client.c:82
+#, c-format
+msgid "\t\tTransactions: %s\n"
+msgstr ""
+
+#: testing/client.c:84
+msgid "Supported"
+msgstr ""
+
+#: testing/client.c:84
+msgid "Not supported"
+msgstr ""
+
+#. show connection schemas
+#: testing/client.c:87
+msgid "Stored procedures"
+msgstr ""
+
+#: testing/client.c:88
+#, fuzzy
+msgid "Connection Tables"
+msgstr "Het lijkt erop dat de verbinding dood is"
+
+#: testing/client.c:89
+msgid "Available types"
+msgstr ""
+
+#: testing/client.c:90
+msgid "Views"
+msgstr ""
+
+#: testing/client.c:91
+msgid "Indexes"
+msgstr ""
+
+#. test transactions
+#: testing/client.c:94 testing/client.c:102
+msgid "\tStarting transaction..."
+msgstr ""
+
+#: testing/client.c:96 testing/client.c:100 testing/client.c:104
+#: testing/client.c:108
+#, fuzzy
+msgid "Error"
+msgstr "fout"
+
+#: testing/client.c:98
+msgid "\tFinishing transaction..."
+msgstr ""
+
+#: testing/client.c:106
+msgid "\tRolling back transaction..."
+msgstr ""
+
+#: testing/client.c:127
+msgid "Testing GDA client API"
+msgstr ""
+
+#: testing/client.c:136
+msgid "** ERROR: gda_config_get_data_source_list returned a NULL item\n"
+msgstr ""
+
+#: testing/client.c:140
+#, fuzzy, c-format
+msgid " Data source = %s, User = %s\n"
+msgstr "Gegevensbron %s kon niet worden gevonden"
+
+#: testing/config.c:84
+msgid "** ERROR: gda_config_get_provider_list returned a NULL item\n"
+msgstr ""
+
+#: testing/config.c:88
+#, c-format
+msgid " Provider = %s\n"
+msgstr ""
+
+#: testing/config.c:89
+#, c-format
+msgid "\tlocation = %s\n"
+msgstr ""
+
+#: testing/config.c:90
+#, c-format
+msgid "\ttype = %s\n"
+msgstr ""
+
+#: testing/config.c:93
+#, c-format
+msgid "\tdescription = %s\n"
+msgstr ""
+
+#: testing/config.c:95
+msgid "\trepo_ids ="
+msgstr ""
+
+#: testing/config.c:102
+#, fuzzy, c-format
+msgid "\tusername = %s\n"
+msgstr "gebruikersnaam"
+
+#: testing/config.c:103
+#, c-format
+msgid "\thostname = %s\n"
+msgstr ""
+
+#: testing/config.c:104
+#, c-format
+msgid "\tdomain = %s\n"
+msgstr ""
+
+#: testing/config.c:106
+msgid "\tgda_params ="
+msgstr ""
 
 #~ msgid "CORBA System exception: %s"
 #~ msgstr "CORBA Systeem uitzonderings: %s"
@@ -336,21 +595,12 @@ msgstr "Kon 'CORBA factory' niet openen"
 #~ msgid "CORBA system exception %s"
 #~ msgstr "CORBA systeem uitzondering %s"
 
-#~ msgid "CORBA user exception: %s"
-#~ msgstr "CORBA gebruikers uitzondering: %s"
-
 #, fuzzy
 #~ msgid "Unknown schema type"
 #~ msgstr "Onbekend ORACLE type %ld"
 
 #~ msgid "error '%s' at %s"
 #~ msgstr "fout '%s' bij %s"
-
-#~ msgid "Not available"
-#~ msgstr "Niet beschikbaar"
-
-#~ msgid "error"
-#~ msgstr "fout"
 
 #~ msgid "Could not register LDAP provider implementation"
 #~ msgstr "Kon LDAP provider implementatie niet registreren"
@@ -584,9 +834,6 @@ msgstr "Kon 'CORBA factory' niet openen"
 
 #~ msgid "cs_diag() initialized"
 #~ msgstr "cd_diag() geinitializeerd"
-
-#~ msgid "Could not initialize cs_diag()"
-#~ msgstr "Kon cs_diag() niet initializeren"
 
 #~ msgid "ct_diag() initialized"
 #~ msgstr "ct_diag() geinitializeerd"

@@ -8,7 +8,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2002-01-27 01:39+0100\n"
+"POT-Creation-Date: 2002-01-27 01:13+0100\n"
 "PO-Revision-Date: 2002-01-27 01:39+0100\n"
 "Last-Translator: Christian Rose <menthos@menthos.com>\n"
 "Language-Team: Swedish <sv@li.org>\n"
@@ -141,7 +141,6 @@ msgid "GDA Default Datasource Access"
 msgstr "Standardåtkomst för GDA-datakällor"
 
 #: providers/default/gda-default-provider.c:141
-#: providers/sqlite/gda-sqlite-provider.c:152
 msgid ""
 "A full path must be specified on the connection string to open a database."
 msgstr ""
@@ -156,7 +155,6 @@ msgstr "Ogiltigt DEFAULT-handtag"
 #: providers/default/gda-default-recordset.c:70
 #: providers/mysql/gda-mysql-recordset.c:76
 #: providers/postgres/gda-postgres-recordset.c:70
-#: providers/sqlite/gda-sqlite-recordset.c:74
 msgid "Row number out of range"
 msgstr "Radnummer utanför intervallet"
 
@@ -262,27 +260,6 @@ msgstr "INGEN BESKRIVNING"
 #: providers/postgres/utils.c:44
 msgid "Not available"
 msgstr "Inte tillgänglig"
-
-#: providers/sqlite/GNOME_Database_Provider_SQLite.server.in.h:1
-msgid "GDA SQLite Datasource Access"
-msgstr "Åtkomst för GDA SQLite-datakällor"
-
-#: providers/sqlite/GNOME_Database_Provider_SQLite.server.in.h:2
-msgid "SQLite component factory"
-msgstr "SQLite-komponentfabrik"
-
-#: providers/sqlite/gda-sqlite-provider.c:211
-#: providers/sqlite/gda-sqlite-recordset.c:63
-msgid "Invalid SQLITE handle"
-msgstr "Ogiltigt SQLITE-handtag"
-
-#: providers/sqlite/gda-sqlite-recordset.c:114
-msgid "Invalid Sqlite handle"
-msgstr "Ogiltigt Sqlite-handtag"
-
-#: providers/sqlite/main.c:54
-msgid "Could not initiate Sqlite component factory"
-msgstr "Kunde inte initiera Sqlite-komponentfabrik"
 
 #: providers/sybase/GNOME_Database_Provider_Sybase.server.in.h:1
 msgid "GDA Datasource Access for Sybase"
@@ -540,6 +517,21 @@ msgstr "\tdomän = %s\n"
 #: testing/config.c:106
 msgid "\tgda_params ="
 msgstr "\tgda_params ="
+
+#~ msgid "GDA SQLite Datasource Access"
+#~ msgstr "Åtkomst för GDA SQLite-datakällor"
+
+#~ msgid "SQLite component factory"
+#~ msgstr "SQLite-komponentfabrik"
+
+#~ msgid "Invalid SQLITE handle"
+#~ msgstr "Ogiltigt SQLITE-handtag"
+
+#~ msgid "Invalid Sqlite handle"
+#~ msgstr "Ogiltigt Sqlite-handtag"
+
+#~ msgid "Could not initiate Sqlite component factory"
+#~ msgstr "Kunde inte initiera Sqlite-komponentfabrik"
 
 #~ msgid "[GDA Client Library]"
 #~ msgstr "[GDA-klientbibliotek]"

@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda VERSION\n"
-"POT-Creation-Date: 2002-01-13 02:32+0100\n"
+"POT-Creation-Date: 2002-01-27 01:13+0100\n"
 "PO-Revision-Date: 2000-12-14 14:34+01:00\n"
 "Last-Translator: Emese Kovacs <emese@gnome.hu>\n"
 "Language-Team: Hungarian <hu@gnome.hu>\n"
@@ -13,49 +13,49 @@ msgstr ""
 "Content-Type: text/plain; charset=ISO-8859-2\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: libgda/gda-client.c:200 libgda/gda-client.c:294
+#: libgda/gda-client.c:200 libgda/gda-client.c:310 libgda/gda-connection.c:213
 #, fuzzy, c-format
 msgid "Data source %s not found in configuration"
 msgstr "A GDA konfigurációban nem találtam adatforrást"
 
-#: libgda/gda-client.c:221
+#: libgda/gda-client.c:237
 #, fuzzy, c-format
 msgid "Could not activate object %s"
 msgstr "Nem tudom a %s nevû objektumt elérni"
 
-#: libgda/gda-client.c:239
+#: libgda/gda-client.c:255
 #, fuzzy
 msgid "Could not create connection component"
 msgstr "Nem tudok DSN konfigurációs komponenst készíteni"
 
-#: libgda/gda-config.c:515
+#: libgda/gda-config.c:508
 #, fuzzy
 msgid "Could not query CORBA components"
 msgstr "Nem tudom a %s komponenst elindítani"
 
-#: libgda/gda-config.c:622
+#: libgda/gda-config.c:615
 #, fuzzy
 msgid "Could not query CORBA providers"
 msgstr "Nem tudom megnyitni a CORBA factory-t"
 
-#: libgda/gda-config.c:835
+#: libgda/gda-config.c:865
 msgid "Name"
 msgstr "Név"
 
-#: libgda/gda-config.c:836
+#: libgda/gda-config.c:866
 msgid "Provider"
 msgstr "GDA Szerver"
 
-#: libgda/gda-config.c:837
+#: libgda/gda-config.c:867
 #, fuzzy
 msgid "Connection string"
 msgstr "Úgy tûnik a kapcsolat megszakadt"
 
-#: libgda/gda-config.c:838
+#: libgda/gda-config.c:868
 msgid "Description"
 msgstr "Leírás"
 
-#: libgda/gda-config.c:839
+#: libgda/gda-config.c:869
 msgid "Username"
 msgstr "Felhasználónév"
 
@@ -76,18 +76,6 @@ msgstr "Próbálkozás a már egyszer inicializált kliens inicializálására"
 msgid "Could not initialize Bonobo"
 msgstr "Nem tudom a Bonobo-t elindítani"
 
-#: libgda/gda-server.c:109
-#, c-format
-msgid "Don't know how to create components with IID %s"
-msgstr ""
-
-#: libgda/gda-server.c:116
-#, fuzzy, c-format
-msgid "Could not create component of type %s"
-msgstr ""
-"Nem tudom megnyitni\n"
-"a %s nevû fájlt"
-
 #: libgda/gda-server-connection.c:90
 msgid "Could not duplicate client object. Client won't get notifications"
 msgstr ""
@@ -97,55 +85,58 @@ msgstr ""
 msgid "Could not notify client about action %d"
 msgstr "Nem tudtam megkapni a következõ kliensüzenetet: %d"
 
-#: libgda/gda-server-recordset.c:204
+#: libgda/gda-server-recordset.c:207
 msgid "No implementation for the fetch() method found"
 msgstr ""
 
-#: libgda/gda-value.c:602
+#: libgda/gda-server.c:108
+#, c-format
+msgid "Don't know how to create components with IID %s"
+msgstr ""
+
+#: libgda/gda-server.c:122
+#, fuzzy, c-format
+msgid "Could not create component of type %s"
+msgstr ""
+"Nem tudom megnyitni\n"
+"a %s nevû fájlt"
+
+#: libgda/gda-value.c:926
 msgid "TRUE"
 msgstr "IGAZ"
 
-#: libgda/gda-value.c:604
+#: libgda/gda-value.c:928
 msgid "FALSE"
 msgstr "HAMIS"
 
-#: libgda/gda-xml-database.c:162
+#: libgda/gda-xml-database.c:164
 #, fuzzy, c-format
 msgid "Could not load file at %s"
 msgstr ""
 "Nem tudom megnyitni\n"
 "a %s nevû fájlt"
 
-#: libgda/gda-xml-database.c:173
+#: libgda/gda-xml-database.c:175
 #, fuzzy, c-format
 msgid "Could not parse file at %s"
 msgstr ""
 "Nem tudom megnyitni\n"
 "a %s nevû fájlt"
 
-#: libgda/gda-xml-database.c:183
+#: libgda/gda-xml-database.c:185
 #, fuzzy, c-format
 msgid "Bad formed document at %s"
 msgstr "A következõ dokumentumra ugrik"
 
-#: libgda/gda-xml-database.c:258
+#: libgda/gda-xml-database.c:260
 #, c-format
 msgid "table %s already exists"
 msgstr "a %s tábla már létezik"
 
-#: libgda/gda-xml-database.c:440
+#: libgda/gda-xml-database.c:442
 #, c-format
 msgid "%p is not a valid table"
 msgstr "A következõ nem érvényes táblanév: %p"
-
-#: providers/default/gda-default-provider.c:141
-msgid ""
-"A full path must be specified on the connection string to open a database."
-msgstr ""
-
-#: providers/default/gda-default-provider.c:199
-msgid "Invalid DEFAULT handle"
-msgstr ""
 
 #: providers/default/GNOME_Database_Provider_Default.server.in.h:1
 #, fuzzy
@@ -157,29 +148,30 @@ msgstr "Nem tudom regisztrálni vezérlõ factory-t"
 msgid "GDA Default Datasource Access"
 msgstr "GDA adatforrás"
 
-#: providers/default/main.c:47
+#: providers/default/gda-default-provider.c:141
+msgid ""
+"A full path must be specified on the connection string to open a database."
+msgstr ""
+
+#: providers/default/gda-default-provider.c:199
+#: providers/default/gda-default-recordset.c:59
+msgid "Invalid DEFAULT handle"
+msgstr ""
+
+#: providers/default/gda-default-recordset.c:70
+#: providers/mysql/gda-mysql-recordset.c:76
+#: providers/postgres/gda-postgres-recordset.c:70
+msgid "Row number out of range"
+msgstr ""
+
+#: providers/default/gda-default-recordset.c:110
+msgid "Invalid Default handle"
+msgstr ""
+
+#: providers/default/main.c:48
 #, fuzzy
 msgid "Could not initiate Default component factory"
 msgstr "Nem tudom a %s komponenst elindítani"
-
-#: providers/mysql/gda-mysql-provider.c:173
-#, fuzzy
-msgid ""
-"You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
-msgstr ""
-"%s:%d: Nem adhatsz meg UNIX_SOCKET-et, ha HOST-ot vagy PORT-ot megadsz. "
-"Kérlek töröld a UNIX_SOCKET-et, vagy töröld mind a HOST és a PORT opciókat."
-
-#: providers/mysql/gda-mysql-provider.c:244
-#: providers/mysql/gda-mysql-provider.c:323
-#: providers/mysql/gda-mysql-provider.c:352
-#: providers/mysql/gda-mysql-provider.c:381
-msgid "Invalid MYSQL handle"
-msgstr ""
-
-#: providers/mysql/gda-mysql-provider.c:460
-msgid "Type"
-msgstr "Típus"
 
 #: providers/mysql/GNOME_Database_Provider_MySQL.server.in.h:1
 #, fuzzy
@@ -190,10 +182,105 @@ msgstr "GDA adatforrás"
 msgid "MySQL component factory"
 msgstr ""
 
-#: providers/mysql/main.c:48
+#: providers/mysql/gda-mysql-provider.c:175
+#, fuzzy
+msgid ""
+"You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
+msgstr ""
+"%s:%d: Nem adhatsz meg UNIX_SOCKET-et, ha HOST-ot vagy PORT-ot megadsz. "
+"Kérlek töröld a UNIX_SOCKET-et, vagy töröld mind a HOST és a PORT opciókat."
+
+#: providers/mysql/gda-mysql-provider.c:246
+#: providers/mysql/gda-mysql-provider.c:326
+#: providers/mysql/gda-mysql-provider.c:355
+#: providers/mysql/gda-mysql-provider.c:384
+msgid "Invalid MYSQL handle"
+msgstr ""
+
+#: providers/mysql/gda-mysql-provider.c:463
+#: providers/postgres/gda-postgres-provider.c:568
+msgid "Type"
+msgstr "Típus"
+
+#: providers/mysql/gda-mysql-recordset.c:63
+#: providers/mysql/gda-mysql-recordset.c:170
+msgid "Invalid MySQL handle"
+msgstr ""
+
+#: providers/mysql/main.c:49
 #, fuzzy
 msgid "Could not initiate MySQL component factory"
 msgstr "Nem tudom a %s komponenst elindítani"
+
+#: providers/oracle/GNOME_Database_Provider_Oracle.server.in.h:1
+#, fuzzy
+msgid "GDA Datasource Access for Oracle"
+msgstr "GDA adatforrás"
+
+#: providers/oracle/GNOME_Database_Provider_Oracle.server.in.h:2
+#, fuzzy
+msgid "Oracle component factory"
+msgstr "Nem tudom regisztrálni vezérlõ factory-t"
+
+#: providers/oracle/gda-oracle-connection.c:77
+#, fuzzy
+msgid "Could not initialize Oracle environment"
+msgstr "Nem tudom a Bonobo-t elindítani"
+
+#: providers/oracle/gda-oracle-connection.c:87
+#, fuzzy
+msgid "Could not initialize Oracle error handler"
+msgstr "Nem tudom a Bonobo-t elindítani"
+
+#: providers/oracle/gda-oracle-connection.c:98
+#, fuzzy
+msgid "Could not initialize Oracle server handle"
+msgstr "cs_diag() inicializálása sikertelen"
+
+#: providers/oracle/gda-oracle-connection.c:109
+#, fuzzy
+msgid "Could not initialize Oracle service context"
+msgstr "Nem tudom a CORBA névkiszolgáló objektumot megkapni"
+
+#: providers/oracle/main.c:46
+#, fuzzy
+msgid "Could not initiate Oracle component factory"
+msgstr "Nem tudom a %s komponenst elindítani"
+
+#: providers/oracle/main.c:70
+#, fuzzy
+msgid "Could not initialize OCI library"
+msgstr "Nem tudom a Bonobo-t elindítani"
+
+#: providers/postgres/GNOME_Database_Provider_Postgres.server.in.h:1
+#, fuzzy
+msgid "GDA Datasource Access for Postgres"
+msgstr "GDA adatforrás"
+
+#: providers/postgres/GNOME_Database_Provider_Postgres.server.in.h:2
+#, fuzzy
+msgid "Postgres component factory"
+msgstr "Nem tudom regisztrálni vezérlõ factory-t"
+
+#: providers/postgres/gda-postgres-provider.c:317
+#: providers/postgres/gda-postgres-provider.c:455
+#: providers/postgres/gda-postgres-recordset.c:59
+#: providers/postgres/gda-postgres-recordset.c:110
+msgid "Invalid PostgreSQL handle"
+msgstr ""
+
+#: providers/postgres/main.c:49
+#, fuzzy
+msgid "Could not initiate PostgreSQL component factory"
+msgstr "Nem tudom a %s komponenst elindítani"
+
+#: providers/postgres/utils.c:39
+msgid "NO DESCRIPTION"
+msgstr ""
+
+#: providers/postgres/utils.c:44
+msgid "Not available"
+msgstr "Nem elérhetõ"
 
 #: providers/sybase/GNOME_Database_Provider_Sybase.server.in.h:1
 #, fuzzy
@@ -283,16 +370,199 @@ msgid ""
 "\t%s"
 msgstr ""
 
-#: providers/sybase/main.c:49
+#: providers/sybase/main.c:50
 #, fuzzy
 msgid "Could not initiate Sybase component factory"
 msgstr "Nem tudom a %s komponenst elindítani"
 
-#~ msgid "could not open connection to %s"
-#~ msgstr "a kapcsolatfelvétel nem sikerült ezzel: '%s'"
+#: report/GNOME_Database_Report.server.in.h:1
+msgid "GDA Report engine"
+msgstr ""
 
-#~ msgid "Data source %s not found"
-#~ msgstr "%s adatforrást nem találtam"
+#: report/GNOME_Database_Report.server.in.h:2
+#, fuzzy
+msgid "GDA Report engine factory"
+msgstr "DSN a kapcsolathoz"
+
+#: report/gda-report-engine.c:67 report/libgda-report/gda-report-client.c:195
+#: report/libgda-report/gda-report-client.c:209
+#, fuzzy, c-format
+msgid "CORBA exception: %s"
+msgstr "CORBA felhasználói kivétel: %s"
+
+#: report/gda-report-engine.c:105
+#, fuzzy
+msgid "Could not create global GDA client"
+msgstr "Nem tudok DSN konfigurációs komponenst készíteni"
+
+#: report/job.c:43
+#, fuzzy
+msgid "Could not parse XML report"
+msgstr ""
+"Nem tudom megnyitni\n"
+"a %s nevû fájlt"
+
+#: report/libgda-report/gda-report-client.c:141
+msgid "Could not activate report engine"
+msgstr "Nem tudtam a report engine-t aktivalni"
+
+#: report/libgda-report/gda-report-client.c:182
+#, fuzzy
+msgid "Could not create BonoboStreamMem object"
+msgstr "Nem tudok GnomeDbControl-t készíteni"
+
+#: report/libgda-report/gda-report-document.c:137
+#, fuzzy
+msgid "Could not parse XML document"
+msgstr ""
+"Nem tudom megnyitni\n"
+"a %s nevû fájlt"
+
+#: report/libgda-report/gda-report-document.c:162
+#, fuzzy, c-format
+msgid "Could not get file from %s"
+msgstr ""
+"Nem tudom megnyitni\n"
+"a %s nevû fájlt"
+
+#: report/main.c:47
+#, fuzzy
+msgid "Could not initiate Report component factory"
+msgstr "Nem tudom a %s komponenst elindítani"
+
+#: testing/client.c:37
+msgid "\t\tNONE\n"
+msgstr ""
+
+#: testing/client.c:76
+#, fuzzy, c-format
+msgid "** ERROR: could not open connection to %s\n"
+msgstr "a kapcsolatfelvétel nem sikerült ezzel: '%s'"
+
+#. show provider features
+#: testing/client.c:81
+#, fuzzy
+msgid "\tProvider capabilities...\n"
+msgstr "Beállítások..."
+
+#: testing/client.c:82
+#, fuzzy, c-format
+msgid "\t\tTransactions: %s\n"
+msgstr "Tranzakciók"
+
+#: testing/client.c:84
+msgid "Supported"
+msgstr ""
+
+#: testing/client.c:84
+msgid "Not supported"
+msgstr ""
+
+#. show connection schemas
+#: testing/client.c:87
+#, fuzzy
+msgid "Stored procedures"
+msgstr "Letárolt eljárások"
+
+#: testing/client.c:88
+#, fuzzy
+msgid "Connection Tables"
+msgstr "Úgy tûnik a kapcsolat megszakadt"
+
+#: testing/client.c:89
+#, fuzzy
+msgid "Available types"
+msgstr "Elérhetõ adatbázisok"
+
+#: testing/client.c:90
+msgid "Views"
+msgstr "Nézetek"
+
+#: testing/client.c:91
+msgid "Indexes"
+msgstr "Indexek"
+
+#. test transactions
+#: testing/client.c:94 testing/client.c:102
+#, fuzzy
+msgid "\tStarting transaction..."
+msgstr "Tranzakció kezdése"
+
+#: testing/client.c:96 testing/client.c:100 testing/client.c:104
+#: testing/client.c:108
+#, fuzzy
+msgid "Error"
+msgstr "hiba"
+
+#: testing/client.c:98
+#, fuzzy
+msgid "\tFinishing transaction..."
+msgstr "Tranzakció kezdése"
+
+#: testing/client.c:106
+#, fuzzy
+msgid "\tRolling back transaction..."
+msgstr "A rollback nem sikerült"
+
+#: testing/client.c:127
+msgid "Testing GDA client API"
+msgstr ""
+
+#: testing/client.c:136
+msgid "** ERROR: gda_config_get_data_source_list returned a NULL item\n"
+msgstr ""
+
+#: testing/client.c:140
+#, fuzzy, c-format
+msgid " Data source = %s, User = %s\n"
+msgstr "%s adatforrást nem találtam"
+
+#: testing/config.c:84
+msgid "** ERROR: gda_config_get_provider_list returned a NULL item\n"
+msgstr ""
+
+#: testing/config.c:88
+#, fuzzy, c-format
+msgid " Provider = %s\n"
+msgstr "Szolgáltatók"
+
+#: testing/config.c:89
+#, fuzzy, c-format
+msgid "\tlocation = %s\n"
+msgstr "Hely"
+
+#: testing/config.c:90
+#, c-format
+msgid "\ttype = %s\n"
+msgstr ""
+
+#: testing/config.c:93
+#, fuzzy, c-format
+msgid "\tdescription = %s\n"
+msgstr "Leírás"
+
+#: testing/config.c:95
+msgid "\trepo_ids ="
+msgstr ""
+
+#: testing/config.c:102
+#, fuzzy, c-format
+msgid "\tusername = %s\n"
+msgstr "felhasználó név"
+
+#: testing/config.c:103
+#, c-format
+msgid "\thostname = %s\n"
+msgstr ""
+
+#: testing/config.c:104
+#, c-format
+msgid "\tdomain = %s\n"
+msgstr ""
+
+#: testing/config.c:106
+msgid "\tgda_params ="
+msgstr ""
 
 #~ msgid "Database '%s' not found in system configuration"
 #~ msgstr "A '%s' adatbázis nem található a konfigurációban"
@@ -354,9 +624,6 @@ msgstr "Nem tudom a %s komponenst elindítani"
 #~ msgid "CORBA system exception %s"
 #~ msgstr "CORBA renszer kivétel: %s"
 
-#~ msgid "CORBA user exception: %s"
-#~ msgstr "CORBA felhasználói kivétel: %s"
-
 #, fuzzy
 #~ msgid "You must specify a directory for the database to be stored"
 #~ msgstr "Meg kellene adnod egy fájlt betöltéshez"
@@ -375,12 +642,6 @@ msgstr "Nem tudom a %s komponenst elindítani"
 
 #~ msgid "error '%s' at %s"
 #~ msgstr "'%s' hiba: %s"
-
-#~ msgid "Not available"
-#~ msgstr "Nem elérhetõ"
-
-#~ msgid "error"
-#~ msgstr "hiba"
 
 #~ msgid "Could not register LDAP provider implementation"
 #~ msgstr "Nem sikerült LDAP szolgáltatót regisztrálni"
@@ -467,10 +728,6 @@ msgstr "Nem tudom a %s komponenst elindítani"
 #~ msgid "Could not register ODBC provider implementation"
 #~ msgstr "Nem tudom regisztrálni az ODBC szolgáltatót"
 
-#, fuzzy
-#~ msgid "GDA Datasource Access for Oracle"
-#~ msgstr "GDA adatforrás"
-
 #~ msgid "Could not allocate statement handle"
 #~ msgstr "Nem sikerült álláskezelõt allokálni"
 
@@ -500,10 +757,6 @@ msgstr "Nem tudom a %s komponenst elindítani"
 
 #~ msgid "Could not register ORACLE provider implementation"
 #~ msgstr "Nem tudom regisztrálni az ORACLE szolgáltatót"
-
-#, fuzzy
-#~ msgid "GDA Datasource Access for Postgres"
-#~ msgstr "GDA adatforrás"
 
 #, fuzzy
 #~ msgid "Postgres provider connection factory"
@@ -641,9 +894,6 @@ msgstr "Nem tudom a %s komponenst elindítani"
 #~ msgid "cs_diag() initialized"
 #~ msgstr "cs_diag() inicializálva"
 
-#~ msgid "Could not initialize cs_diag()"
-#~ msgstr "cs_diag() inicializálása sikertelen"
-
 #~ msgid "ct_diag() initialized"
 #~ msgstr "ct_diag() inicializálva"
 
@@ -775,10 +1025,6 @@ msgstr "Nem tudom a %s komponenst elindítani"
 #~ msgstr "GDA adatforrás"
 
 #, fuzzy
-#~ msgid "TDS provider connection factory"
-#~ msgstr "DSN a kapcsolathoz"
-
-#, fuzzy
 #~ msgid "Not enough memory for tds_Connection"
 #~ msgstr "Nincs elég memória a következõhöz: sybase_Connection"
 
@@ -849,9 +1095,6 @@ msgstr "Nem tudom a %s komponenst elindítani"
 #~ "Az OAF inicializálása sikertelen: küldj hibajelentést az OAF "
 #~ "karbantartójának"
 
-#~ msgid "Could not activate report engine"
-#~ msgstr "Nem tudtam a report engine-t aktivalni"
-
 #~ msgid ""
 #~ "Another instance of the report engine is already registered with OAF. "
 #~ "Exiting..."
@@ -893,9 +1136,6 @@ msgstr "Nem tudom a %s komponenst elindítani"
 
 #~ msgid "DATABASE"
 #~ msgstr "ADATBÁZIS"
-
-#~ msgid "user name"
-#~ msgstr "felhasználó név"
 
 #~ msgid "USER-NAME"
 #~ msgstr "FELHASZNÁLÓ"
@@ -949,9 +1189,6 @@ msgstr "Nem tudom a %s komponenst elindítani"
 
 #~ msgid "Tables"
 #~ msgstr "Táblák"
-
-#~ msgid "Views"
-#~ msgstr "Nézetek"
 
 #~ msgid "Procedures"
 #~ msgstr "Eljárások"
@@ -1281,9 +1518,6 @@ msgstr "Nem tudom a %s komponenst elindítani"
 #~ msgid "Save current project"
 #~ msgstr "Jelenlegi projekt mentése"
 
-#~ msgid "Properties..."
-#~ msgstr "Beállítások..."
-
 #~ msgid "View project properties"
 #~ msgstr "Projekt tulajdonságai"
 
@@ -1343,9 +1577,6 @@ msgstr "Nem tudom a %s komponenst elindítani"
 
 #~ msgid "Unable to execute '%s'"
 #~ msgstr "Nem tudom végrehajtani: '%s'"
-
-#~ msgid "Location"
-#~ msgstr "Hely"
 
 #~ msgid "Execute"
 #~ msgstr "Indít"
@@ -1560,12 +1791,6 @@ msgstr "Nem tudom a %s komponenst elindítani"
 #~ msgid "SQL Sub-Selects"
 #~ msgstr "SQL Sub-select-ek"
 
-#~ msgid "Stored Procedures"
-#~ msgstr "Letárolt eljárások"
-
-#~ msgid "Transactions"
-#~ msgstr "Tranzakciók"
-
 #~ msgid "Triggers"
 #~ msgstr "Triggerek"
 
@@ -1618,9 +1843,6 @@ msgstr "Nem tudom a %s komponenst elindítani"
 
 #~ msgid "Rollback executed successfully"
 #~ msgstr "A rollback végrehajtódott"
-
-#~ msgid "Rollback transaction failed"
-#~ msgstr "A rollback nem sikerült"
 
 #~ msgid "Connection Properties"
 #~ msgstr "Kapcsolódási beállítások"
@@ -1714,9 +1936,6 @@ msgstr "Nem tudom a %s komponenst elindítani"
 
 #~ msgid "Browse database"
 #~ msgstr "Böngészés az adatbázisban"
-
-#~ msgid "Begin transaction"
-#~ msgstr "Tranzakció kezdése"
 
 #~ msgid "Commit"
 #~ msgstr "Érvényesít"
@@ -1865,9 +2084,6 @@ msgstr "Nem tudom a %s komponenst elindítani"
 #~ msgid "The GNOME-DB development environment"
 #~ msgstr "A GNOME-DB fejlesztõ felület"
 
-#~ msgid "Providers"
-#~ msgstr "Szolgáltatók"
-
 #~ msgid "View provider log"
 #~ msgstr "Szolgáltató napló megtekintése"
 
@@ -1882,12 +2098,6 @@ msgstr "Nem tudom a %s komponenst elindítani"
 
 #~ msgid "Comments"
 #~ msgstr "Megjegyzések"
-
-#~ msgid "Could not create GnomeDbControl"
-#~ msgstr "Nem tudok GnomeDbControl-t készíteni"
-
-#~ msgid "Available databases"
-#~ msgstr "Elérhetõ adatbázisok"
 
 #~ msgid "Drop"
 #~ msgstr "Eldob"
@@ -1927,9 +2137,6 @@ msgstr "Nem tudom a %s komponenst elindítani"
 
 #~ msgid "Access rigths"
 #~ msgstr "Elérési jogok"
-
-#~ msgid "Indexes"
-#~ msgstr "Indexek"
 
 #~ msgid "All users rights"
 #~ msgstr "Minden felhasználói jog"
@@ -2020,9 +2227,6 @@ msgstr "Nem tudom a %s komponenst elindítani"
 
 #~ msgid "%s: text = '%s'"
 #~ msgstr "%s: text = '%s'"
-
-#~ msgid "Could not get CORBA name service object"
-#~ msgstr "Nem tudom a CORBA névkiszolgáló objektumot megkapni"
 
 #~ msgid "Refresh all"
 #~ msgstr "Mindent frissít"
