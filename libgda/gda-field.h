@@ -52,6 +52,7 @@ typedef struct {
 } GdaField;
 
 GdaFieldAttributes *gda_field_attributes_new (void);
+GdaFieldAttributes *gda_field_attributes_copy (GdaFieldAttributes *fa);
 void                gda_field_attributes_free (GdaFieldAttributes *fa);
 glong               gda_field_attributes_get_defined_size (GdaFieldAttributes *fa);
 void                gda_field_attributes_set_defined_size (GdaFieldAttributes *fa, glong size);

@@ -117,7 +117,7 @@ libgda_2_la_SOURCES = \
 	gda-xql-update.c
 
 libgda_2_la_LDFLAGS = -version-info $(GDA_CURRENT):$(GDA_REVISION):$(GDA_AGE)
-libgda_2_la_LIBADD = $(LIBGDA_LIBS) 
+libgda_2_la_LIBADD = $(LIBGDA_LIBS) $(top_builddir)/libsql/libgdasql.la
 
 gdaincludedir=$(includedir)/libgda
 gdainclude_HEADERS=$(gda_headers)

@@ -25,6 +25,7 @@
 
 #include <glib/ghash.h>
 #include <glib/glist.h>
+#include <libgda/gda-parameter.h>
 #include <libgda/gda-row.h>
 
 G_BEGIN_DECLS
@@ -33,6 +34,12 @@ const gchar *gda_type_to_string (GdaValueType type);
 GdaValueType gda_type_from_string (const gchar *str);
 
 GList       *gda_string_hash_to_list (GHashTable *hash_table);
+
+/*
+ * SQL parsing utilities
+ */
+
+gchar *gda_sql_replace_placeholders (const gchar *sql, GdaParameterList *params);
 
 /*
  * File management utility functions

@@ -1,3 +1,10 @@
+2002-10-02  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* libgda/gda-field.[ch] (gda_field_attributes_copy): new function.
+
+	* libgda/gda-select.[ch]: modified to accept a list of data models
+	and to work with SQL commands and not expressions.
+
 2002-10-01  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* tools/Makefile.am: autoconf does not support EXTRA_DIST to be

@@ -21,7 +21,7 @@
  */
 
 #include <glib/gdataset.h>
-#include <glib/gscanner.h>
+#include <libsql/sql_parser.h>
 #include <libgda/gda-intl.h>
 #include <libgda/gda-log.h>
 #include <libgda/gda-select.h>
@@ -30,29 +30,10 @@
 
 #define PARENT_TYPE GDA_TYPE_DATA_MODEL_ARRAY
 
-typedef enum {
-	GDA_SELECT_TOKEN_AND = G_TOKEN_LAST,
-	GDA_SELECT_TOKEN_OR,
-	GDA_SELECT_TOKEN_LAST
-} GdaSelectTokenType;
-
-typedef enum {
-	GDA_SELECT_CONDITION_INVALID,
-	GDA_SELECT_CONDITION_EQUAL,
-	GDA_SELECT_CONDITION_LESS_THAN,
-	GDA_SELECT_CONDITION_GREATER_THAN
-} GdaSelectConditionType;
-
-typedef struct {
-	gchar *field_name;
-	GdaSelectConditionType type;
-	GdaValue *value;
-} GdaSelectCondition;
-
 struct _GdaSelectPrivate {
-	GdaDataModel *source_model;
-	gchar *expression;
-	GScanner *scanner;
+	GList *field_descriptions;
+	GList *source_models;
+	gchar *sql;
 };
 
 static void gda_select_class_init (GdaSelectClass *klass);
@@ -60,203 +41,10 @@ static void gda_select_init       (GdaSelect *sel, GdaSelectClass *klass);
 static void gda_select_finalize   (GObject *object);
 
 static GObjectClass *parent_class = NULL;
-static const struct {
-	gchar *name;
-	guint token;
-} symbols[] = {
-	{ "and", GDA_SELECT_TOKEN_AND },
-	{ "or", GDA_SELECT_TOKEN_OR }
-};
 
 /*
  * Private functions
  */
-
-static void
-free_condition (gpointer data)
-{
-	GdaSelectCondition *cond = (GdaSelectCondition *) data;
-
-	g_free (cond->field_name);
-	gda_value_free (cond->value);
-	g_free (cond);
-}
-
-static gboolean
-fill_data (GdaSelect *sel)
-{
-	gboolean done;
-	gboolean res;
-	GList *conditions;
-	GdaSelectCondition *cond;
-
-	g_return_val_if_fail (GDA_IS_SELECT (sel), FALSE);
-	g_return_val_if_fail (GDA_IS_DATA_MODEL (sel->priv->source_model), FALSE);
-
-	g_scanner_input_text (sel->priv->scanner,
-			      sel->priv->expression,
-			      strlen (sel->priv->expression));
-
-	/* prepare the list of conditions */
-	done = FALSE;
-	conditions = NULL;
-	cond = NULL;
-	res = FALSE;
-
-	while (!done) {
-		int token;
-
-		token = g_scanner_get_next_token (sel->priv->scanner);
-		switch (token) {
-
-		case G_TOKEN_INT :
-			if (cond && !cond->value) {
-				gint val = g_scanner_cur_value (sel->priv->scanner).v_int;
-				cond->value = gda_value_new_integer (val);
-
-				conditions = g_list_append (conditions, cond);
-				cond = NULL;
-			} else {
-				gda_log_error (_("Unexpected integer value"));
-				done = TRUE;
-			}
-			break;
-
-		case G_TOKEN_FLOAT :
-			if (cond && !cond->value) {
-				gfloat val = g_scanner_cur_value (sel->priv->scanner).v_float;
-				cond->value = gda_value_new_single (val);
-				conditions = g_list_append (conditions, cond);
-				cond = NULL;
-			} else {
-				gda_log_error (_("Unexpected float value"));
-				done = TRUE;
-			}
-			break;
-
-		case G_TOKEN_CHAR :
-			if (cond && !cond->value) {
-				cond->value = gda_value_new_tinyint (g_scanner_cur_value(sel->priv->scanner).v_char);
-				conditions = g_list_append (conditions, cond);
-				cond = NULL;
-			} else {
-				gda_log_error (_("Unexpected integer value"));
-				done = TRUE;
-			}
-			break;
-
-		case G_TOKEN_STRING :
-			if (cond && !cond->value) {
-				cond->value = gda_value_new_string (
-					g_scanner_cur_value (sel->priv->scanner).v_string);
-				conditions = g_list_append (conditions, cond);
-				cond = NULL;
-			} else {
-				gda_log_error (_("Unexpected string value"));
-				done = TRUE;
-			}
-			break;
-
-		case '=' :
-			if (cond && !cond->value
-			    && cond->type == GDA_SELECT_CONDITION_INVALID) {
-				cond->type = GDA_SELECT_CONDITION_EQUAL;
-			}
-			else {
-				gda_log_error (_("Unexpected symbol '='"));
-				done = TRUE;
-			}
-			break;
-
-		case '<' :
-			if (cond && !cond->value
-			    && cond->type == GDA_SELECT_CONDITION_INVALID) {
-				cond->type = GDA_SELECT_CONDITION_LESS_THAN;
-			}
-			else {
-				gda_log_error (_("Unexpected symbol '<'"));
-				done = TRUE;
-			}
-			break;
-
-		case '>' :
-			if (cond && !cond->value
-			    && cond->type == GDA_SELECT_CONDITION_INVALID) {
-				cond->type = GDA_SELECT_CONDITION_GREATER_THAN;
-			}
-			else {
-				gda_log_error (_("Unexpected symbol '>'"));
-				done = TRUE;
-			}
-			break;
-
-		case '-' :
-			token = g_scanner_get_next_token (sel->priv->scanner);
-			if (token == G_TOKEN_INT) {
-				if (cond && !cond->value) {
-					gint val = g_scanner_cur_value (sel->priv->scanner).v_int;
-					cond->value = gda_value_new_integer (-val);
-					conditions = g_list_append (conditions, cond);
-					cond = NULL;
-				} else {
-					gda_log_error (_("Unexpected integer value"));
-					done = TRUE;
-				}
-			} else if (token == G_TOKEN_FLOAT) {
-				if (cond && !cond->value) {
-					gfloat val = g_scanner_cur_value (sel->priv->scanner).v_float;
-					cond->value = gda_value_new_single (-val);
-					conditions = g_list_append (conditions, cond);
-					cond = NULL;
-				} else {
-					gda_log_error (_("Unexpected float value"));
-					done = TRUE;
-				}
-			} else {
-				gda_log_error (_("Found a non-numeric value after a '-' sign"));
-				done = TRUE;
-			}
-			break;
-
-		case G_TOKEN_SYMBOL :
-			break;
-
-		case G_TOKEN_IDENTIFIER :
-			if (!cond) {
-				gchar *ident = g_scanner_cur_value (sel->priv->scanner).v_identifier;
-
-				cond = g_new0 (GdaSelectCondition, 1);
-				cond->field_name = g_strdup (ident);
-				cond->type = GDA_SELECT_CONDITION_INVALID;
-			} else {
-				gda_log_error (_("Unexpected identifier"));
-				done = TRUE;
-			}
-			break;
-
-		case G_TOKEN_EOF :
-			done = TRUE;
-			res = TRUE;
-			break;
-		}
-	}
-
-	if (res) {
-		gint rows, r;
-		const GdaRow *fields;
-
-		rows = gda_data_model_get_n_rows (sel->priv->source_model);
-		for (r = 0; r < rows; r++) {
-			fields = gda_data_model_get_row (sel->priv->source_model, r);
-		}
-	}
-
-	/* free memory */
-	g_list_foreach (conditions, (GFunc) free_condition, NULL);
-	g_list_free (conditions);
-
-	return res;
-}
 
 /*
  * GdaSelect class implementation
@@ -265,12 +53,17 @@ fill_data (GdaSelect *sel)
 static GdaFieldAttributes *
 gda_select_describe_column (GdaDataModel *model, gint col)
 {
+	GList *l;
 	GdaSelect *sel = (GdaSelect *) model;
 
 	g_return_val_if_fail (GDA_IS_SELECT (sel), NULL);
-	g_return_val_if_fail (GDA_IS_DATA_MODEL (sel->priv->source_model), NULL);
+	g_return_val_if_fail (sel->priv->field_descriptions != NULL, NULL);
 
-	return gda_data_model_describe_column (sel->priv->source_model, col);
+	l = g_list_nth (sel->priv->field_descriptions, col);
+	if (!l)
+		return NULL;
+
+	return gda_field_attributes_copy ((GdaFieldAttributes *) l->data);
 }
 
 static const GdaRow *
@@ -292,9 +85,8 @@ gda_select_is_editable (GdaDataModel *model)
 	GdaSelect *sel = (GdaSelect *) model;
 
 	g_return_val_if_fail (GDA_IS_SELECT (sel), FALSE);
-	g_return_val_if_fail (GDA_IS_DATA_MODEL (sel->priv->source_model), FALSE);
 
-	return gda_data_model_is_editable (sel->priv->source_model);
+	return FALSE;
 }
 
 static const GdaRow *
@@ -304,17 +96,8 @@ gda_select_append_row (GdaDataModel *model, const GList *values)
 	GdaSelect *sel = (GdaSelect *) model;
 
 	g_return_val_if_fail (GDA_IS_SELECT (sel), NULL);
-	g_return_val_if_fail (GDA_IS_DATA_MODEL (sel->priv->source_model), NULL);
 
-	/* add the row to the source data model */
-	row = gda_data_model_append_row (sel->priv->source_model, values);
-	if (!row)
-		return NULL;
-
-	/* re-fill the select object from the source data model */
-	fill_data (sel);
-	
-	return row;
+	return NULL;
 }
 
 static void
@@ -343,37 +126,36 @@ gda_select_init (GdaSelect *sel, GdaSelectClass *klass)
 
 	/* allocate internal structure */
 	sel->priv = g_new0 (GdaSelectPrivate, 1);
-	sel->priv->source_model = NULL;
-	sel->priv->expression = NULL;
-
-	/* initialize the scanner */
-	sel->priv->scanner = g_scanner_new (NULL);
-	for (i = 0; i < G_N_ELEMENTS (symbols); i++) {
-		g_scanner_scope_add_symbol (sel->priv->scanner, 0, symbols[i].name,
-					    GINT_TO_POINTER (symbols[i].token));
-	}
+	sel->priv->field_descriptions = NULL;
+	sel->priv->source_models = NULL;
+	sel->priv->sql = NULL;
 }
 
 static void
 gda_select_finalize (GObject *object)
 {
+	GList *l;
 	GdaSelect *sel = (GdaSelect *) object;
 
 	g_return_if_fail (GDA_IS_SELECT (sel));
 
 	/* free memory */
-	if (sel->priv->source_model) {
-		g_object_unref (G_OBJECT (sel->priv->source_model));
-		sel->priv->source_model = NULL;
+	if (sel->priv->field_descriptions) {
+		g_list_foreach (sel->priv->field_descriptions, (GFunc) gda_field_attributes_free, NULL);
+		g_list_free (sel->priv->field_descriptions);
+		sel->priv->field_descriptions = NULL;
 	}
 
-	if (sel->priv->expression) {
-		g_free (sel->priv->expression);
-		sel->priv->expression = NULL;
+	if (sel->priv->source_models) {
+		g_list_foreach (sel->priv->source_models, (GFunc) g_object_unref, NULL);
+		g_list_free (sel->priv->source_models);
+		sel->priv->source_models = NULL;
 	}
 
-	g_scanner_destroy (sel->priv->scanner);
-	sel->priv->scanner = NULL;
+	if (sel->priv->sql) {
+		g_free (sel->priv->sql);
+		sel->priv->sql = NULL;
+	}
 
 	g_free (sel->priv);
 	sel->priv = NULL;
@@ -408,7 +190,7 @@ gda_select_get_type (void)
  * gda_select_new
  *
  * Create a new #GdaSelect object, which allows programs to filter
- * #GdaDataModel's based on a given expression.
+ * #GdaDataModel's based on a given SQL SELECT command..
  *
  * A #GdaSelect is just another #GdaDataModel-based class, so it
  * can be used in the same way any other data model class is.
@@ -425,46 +207,22 @@ gda_select_new (void)
 }
 
 /**
- * gda_select_set_source
+ * gda_select_set_sql
  * @sel: a #GdaSelect object.
- * @source: a #GdaDataModel to use as source.
+ * @sql: the SQL command to be used for filtering rows.
  *
- * Associate a data model with the given #GdaSelect object to
- * be used as source of data when executing the selection.
- */
-void
-gda_select_set_source (GdaSelect *sel, GdaDataModel *source)
-{
-	g_return_if_fail (GDA_IS_SELECT (sel));
-
-	if (GDA_IS_DATA_MODEL (sel->priv->source_model)) {
-		g_object_unref (G_OBJECT (sel->priv->source_model));
-		sel->priv->source_model = NULL;
-	}
-
-	if (GDA_IS_DATA_MODEL (source)) {
-		g_object_ref (G_OBJECT (source));
-		sel->priv->source_model = source;
-	}
-}
-
-/**
- * gda_select_set_expression
- * @sel: a #GdaSelect object.
- * @expression: the expression to be used for filtering rows.
- *
- * Set the expression to be used on the given #GdaSelect object
+ * Set the SQL command to be used on the given #GdaSelect object
  * for filtering rows from the source data model (which is
  * set with #gda_select_set_source).
  */
 void
-gda_select_set_expression (GdaSelect *sel, const gchar *expression)
+gda_select_set_sql (GdaSelect *sel, const gchar *sql)
 {
 	g_return_if_fail (GDA_IS_SELECT (sel));
 
-	if (sel->priv->expression)
-		g_free (sel->priv->expression);
-	sel->priv->expression = g_strdup (expression);
+	if (sel->priv->sql)
+		g_free (sel->priv->sql);
+	sel->priv->sql = g_strdup (sql);
 }
 
 /**
@@ -472,8 +230,8 @@ gda_select_set_expression (GdaSelect *sel, const gchar *expression)
  * @sel: a #GdaSelect object.
  *
  * Run the query and fill in the #GdaSelect object with the
- * rows that matched the expression (which can be set with
- * #gda_select_set_expression) associated with this #GdaSelect
+ * rows that matched the SQL command (which can be set with
+ * #gda_select_set_sql) associated with this #GdaSelect
  * object.
  *
  * After calling this function, if everything is successful,
@@ -486,8 +244,9 @@ gboolean
 gda_select_run (GdaSelect *sel)
 {
 	g_return_val_if_fail (GDA_IS_SELECT (sel), FALSE);
-	g_return_val_if_fail (GDA_IS_DATA_MODEL (sel->priv->source_model), FALSE);
+	g_return_val_if_fail (GDA_IS_DATA_MODEL (sel->priv->source_models), FALSE);
 
 	gda_data_model_array_clear (GDA_DATA_MODEL_ARRAY (sel));
-	return fill_data (sel);
+	/* FIXME */
+	return NULL;
 }

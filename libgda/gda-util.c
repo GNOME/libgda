@@ -27,6 +27,7 @@
 #include <glib/gfileutils.h>
 #include <glib/gmessages.h>
 #include <glib/gstrfuncs.h>
+#include <libsql/sql_parser.h>
 #include <libgda/gda-intl.h>
 #include <libgda/gda-log.h>
 #include <libgda/gda-util.h>
@@ -114,6 +115,39 @@ gda_string_hash_to_list (GHashTable *hash_table)
 
         g_hash_table_foreach (hash_table, (GHFunc) add_string_key_to_list, &list);
         return list;
+}
+
+/**
+ * gda_sql_replace_placeholders
+ * @sql: A SQL command containing placeholders for values.
+ * @params: List of values for the placeholders.
+ *
+ * Replaces the placeholders (:name) in the given SQL command with
+ * the values from the #GdaParameterList specified as the @params
+ * argument.
+ *
+ * Returns: the SQL string with all placeholders replaced, or NULL
+ * on error. On success, the returned string must be freed by the caller
+ * when no longer needed.
+ */
+gchar *
+gda_sql_replace_placeholders (const gchar *sql, GdaParameterList *params)
+{
+	GString *str;
+	sql_statement *sql_stmt;
+
+	g_return_val_if_fail (sql != NULL, NULL);
+
+	/* parse the string */
+	sql_stmt = sql_parse (sql);
+	if (!sql_stmt) {
+		gda_log_error (_("Could not parse SQL command '%s'"), sql);
+		return NULL;
+	}
+
+	/* FIXME */
+
+	return NULL;
 }
 
 /**

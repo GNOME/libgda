@@ -52,6 +52,34 @@ gda_field_attributes_new (void)
 }
 
 /**
+ * gda_field_attributes_copy
+ */
+GdaFieldAttributes *
+gda_field_attributes_copy (GdaFieldAttributes *fa)
+{
+	GdaFieldAttributes *fa_copy;
+
+	g_return_val_if_fail (fa != NULL, NULL);
+
+	fa_copy = gda_field_attributes_new ();
+	fa_copy->defined_size = fa->defined_size;
+	fa_copy->name = g_strdup (fa->name);
+	fa_copy->table = g_strdup (fa->table);
+	fa_copy->caption = g_strdup (fa->caption);
+	fa_copy->scale = fa->scale;
+	fa_copy->gda_type = fa->gda_type;
+	fa_copy->allow_null = fa->allow_null;
+	fa_copy->primary_key = fa->primary_key;
+	fa_copy->unique_key = fa->unique_key;
+	fa_copy->references = g_strdup (fa->references);
+	fa_copy->auto_increment = fa->auto_increment;
+	fa_copy->auto_increment_start = fa->auto_increment_start;
+	fa_copy->auto_increment_step = fa->auto_increment_step;
+
+	return fa_copy;
+}
+
+/**
  * gda_field_attributes_free
  */
 void
