@@ -1,3 +1,8 @@
+2001-03-14  Michael Meeks  <michael@ximian.com>
+
+	* testing/Makefile.am: Staticaly link against the built
+	library.
+
 2001-03-05  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* Makefile.am: do not install libxmlquery, make it a private

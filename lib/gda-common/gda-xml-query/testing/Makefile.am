@@ -4,6 +4,6 @@ bin_PROGRAMS = xmlquery
 
 xmlquery_SOURCES = xmlquery.c
 
-xmlquery_LDADD = $(GTK_LIBS) $(XML_LIBS) -L../.libs -lxmlquery
+xmlquery_LDADD = $(GTK_LIBS) $(XML_LIBS) ../libxmlquery.a
 
 
