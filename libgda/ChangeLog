@@ -1,3 +1,13 @@
+2001-12-08  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-data-model.c (gda_config_set_column_title): new function, since
+	the column titles will be managed by the abstract class
+	(gda_data_model_get_column_title): implemented
+	(gda_data_model_thaw): implemented
+
+	* gda-config.c (gda_config_get_data_source_model): new function,
+	to get the list of installed data sources as a GdaDataModel
+
 2001-12-02  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-client.c (gda_client_get_connection_list): new function

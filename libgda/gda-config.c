@@ -21,6 +21,7 @@
  */
 
 #include <libgda/gda-config.h>
+#include <libgda/gda-data-model-array.h>
 #include <libgda/gda-log.h>
 #include <bonobo-activation/bonobo-activation.h>
 #include <bonobo-activation/bonobo-activation-server-info.h>
@@ -833,4 +834,44 @@ gda_config_free_data_source_list (GList *list)
 		list = g_list_remove (list, info);
 		gda_config_free_data_source_info (info);
 	}
+}
+
+/**
+ * gda_config_get_data_source_model
+ */
+GdaDataModel *
+gda_config_get_data_source_model (void)
+{
+	GList *dsn_list;
+	GList *l;
+	GdaDataModel *model;
+
+	model = gda_data_model_array_new (5);
+	gda_data_model_set_column_title (model, 0, _("Name"));
+	gda_data_model_set_column_title (model, 1, _("Provider"));
+	gda_data_model_set_column_title (model, 2, _("Connection string"));
+	gda_data_model_set_column_title (model, 3, _("Description"));
+	gda_data_model_set_column_title (model, 4, _("Username"));
+	
+	/* convert the returned GList into a GdaDataModelArray */
+	dsn_list = gda_config_get_data_source_list ();
+	for (l = dsn_list; l != NULL; l = l->next) {
+		GList *value_list = NULL;
+		GdaDataSourceInfo *dsn_info = (GdaDataSourceInfo *) l->data;
+
+		g_assert (dsn_info != NULL);
+
+		value_list = g_list_append (value_list, gda_value_new_string (dsn_info->name));
+		value_list = g_list_append (value_list, gda_value_new_string (dsn_info->provider));
+		value_list = g_list_append (value_list, gda_value_new_string (dsn_info->cnc_string));
+		value_list = g_list_append (value_list, gda_value_new_string (dsn_info->description));
+		value_list = g_list_append (value_list, gda_value_new_string (dsn_info->username));
+
+		gda_data_model_array_append_row (GDA_DATA_MODEL_ARRAY (model), value_list);
+	}
+	
+	/* free memory */
+	gda_config_free_data_source_list (dsn_list);
+	
+	return model;
 }

@@ -28,6 +28,7 @@
 
 struct _GdaDataModelPrivate {
 	gboolean notify_changes;
+	GHashTable *column_titles;
 };
 
 static void gda_data_model_class_init (GdaDataModelClass *klass);
@@ -65,7 +66,6 @@ gda_data_model_class_init (GdaDataModelClass *klass)
 	object_class->finalize = gda_data_model_finalize;
 	klass->get_n_rows = NULL;
 	klass->get_n_columns = NULL;
-	klass->get_column_title = NULL;
 	klass->get_value_at = NULL;
 }
 
@@ -76,6 +76,13 @@ gda_data_model_init (GdaDataModel *model, GdaDataModelClass *klass)
 
 	model->priv = g_new0 (GdaDataModelPrivate, 1);
 	model->priv->notify_changes = TRUE;
+	model->priv->column_titles = g_hash_table_new (g_int_hash, g_int_equal);
+}
+
+static void
+free_hash_string (gpointer key, gpointer value, gpointer user_data)
+{
+	g_free (value);
 }
 
 static void
@@ -86,6 +93,9 @@ gda_data_model_finalize (GObject *object)
 	g_return_if_fail (GDA_IS_DATA_MODEL (model));
 
 	/* free memory */
+	g_hash_table_foreach (model->priv->column_titles, (GHFunc) free_hash_string, NULL);
+	g_hash_table_destroy (model->priv->column_titles);
+
 	g_free (model->priv);
 	model->priv = NULL;
 
@@ -163,6 +173,8 @@ gda_data_model_freeze (GdaDataModel *model)
 void
 gda_data_model_thaw (GdaDataModel *model)
 {
+	g_return_if_fail (GDA_IS_DATA_MODEL (model));
+	model->priv->notify_changes = TRUE;
 }
 
 /**
@@ -205,7 +217,46 @@ gda_data_model_get_n_columns (GdaDataModel *model)
 const gchar *
 gda_data_model_get_column_title (GdaDataModel *model, gint col)
 {
-	return "FIXME";
+	gint n_cols;
+	gchar *title;
+
+	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
+
+	n_cols = gda_data_model_get_n_columns (model);
+	if (col < n_cols && col >= 0)
+		title = g_hash_table_lookup (model->priv->column_titles, &col);
+	else
+		title = "";
+
+	return (const gchar *) title;
+}
+
+/**
+ * gda_data_model_set_column_title
+ * @model: a #GdaDataModel object.
+ * @col: column number
+ * @title: title for the given column.
+ */
+void
+gda_data_model_set_column_title (GdaDataModel *model, gint col, const gchar *title)
+{
+	gint n_cols;
+
+	g_return_if_fail (GDA_IS_DATA_MODEL (model));
+
+	n_cols = gda_data_model_get_n_columns (model);
+	if (col >= 0 && col < n_cols) {
+		gpointer orig_key;
+		gpointer orig_value;
+
+		if (g_hash_table_lookup_extended (model->priv->column_titles, &col,
+			&orig_key, &orig_value)) {
+			g_hash_table_remove (model->priv->column_titles, &col);
+			g_free (orig_value);
+		}
+
+		g_hash_table_insert (model->priv->column_titles, &col, g_strdup (title));
+	}
 }
 
 /**

@@ -24,6 +24,7 @@
 #  define __gda_config_h__
 
 #include <glib/gmacros.h>
+#include <libgda/gda-data-model.h>
 #include <libgda/gda-parameter.h>
 
 G_BEGIN_DECLS
@@ -80,8 +81,9 @@ typedef struct {
 	GdaParameterList *properties;
 } GdaComponentInfo;
 
-GList *gda_config_get_component_list (const gchar *query);
-void   gda_config_free_component_list (GList *list);
+GList        *gda_config_get_component_list (const gchar *query);
+void          gda_config_free_component_list (GList *list);
+GdaDataModel *gda_config_get_component_data_model (const gchar *query);
 
 typedef struct {
 	gchar *id;
@@ -115,6 +117,7 @@ GdaDataSourceInfo *gda_config_find_data_source (const gchar *name);
 GdaDataSourceInfo *gda_config_copy_data_source_info (GdaDataSourceInfo *info);
 void               gda_config_free_data_source_info (GdaDataSourceInfo *info);
 void               gda_config_free_data_source_list (GList *list);
+GdaDataModel      *gda_config_get_data_source_model (void);
 
 G_END_DECLS
 
