@@ -82,6 +82,7 @@ gdouble                  gda_field_get_double_value (GdaField *field);
 void                     gda_field_set_double_value (GdaField *field, gdouble value);
 gint                     gda_field_get_integer_value (GdaField *field);
 void                     gda_field_set_integer_value (GdaField *field, gint value);
+void                     gda_field_set_null_value (GdaField *field);
 gfloat                   gda_field_get_single_value (GdaField *field);
 void                     gda_field_set_single_value (GdaField *field, gfloat value);
 gshort                   gda_field_get_smallint_value (GdaField *field);
@@ -98,6 +99,12 @@ void                     gda_field_set_tinyint_value (GdaField *field, gchar val
 void                     gda_field_copy_to_corba (GdaField *field, GNOME_Database_Field *corba_field);
 void                     gda_field_copy_to_corba_attributes (GdaField *field,
 							     GNOME_Database_FieldAttributes *attrs);
+
+/*
+ * Backwards compatible functions. DON'T USE IN NEW CODE
+ */
+gpointer                 gda_field_get_user_data (GdaField *field);
+void                     gda_field_set_user_data (GdaField *field, gpointer user_data);
 
 G_END_DECLS
 

@@ -28,6 +28,7 @@
 
 struct _GdaFieldPrivate {
 	GNOME_Database_Field *corba_field;
+	gpointer user_data;
 };
 
 static void gda_field_class_init (GdaFieldClass *klass);
@@ -422,6 +423,14 @@ gda_field_set_integer_value (GdaField *field, gint value)
 }
 
 /**
+ * gda_field_set_null_value
+ */
+void
+gda_field_set_null_value (GdaField *field)
+{
+}
+
+/**
  * gda_field_get_single_value
  */
 gfloat
@@ -604,4 +613,24 @@ gda_field_copy_to_corba_attributes (GdaField *field,
 	attrs->gdaType = field->priv->corba_field->attributes.gdaType;
 	attrs->cType = field->priv->corba_field->attributes.cType;
 	attrs->nativeType = field->priv->corba_field->attributes.nativeType;
+}
+
+/**
+ * gda_field_get_user_data
+ */
+gpointer
+gda_field_get_user_data (GdaField *field)
+{
+	g_return_val_if_fail (GDA_IS_FIELD (field), NULL);
+	return field->priv->user_data;
+}
+
+/**
+ * gda_field_set_user_data
+ */
+void
+gda_field_set_user_data (GdaField *field, gpointer user_data)
+{
+	g_return_if_fail (GDA_IS_FIELD (field));
+	field->priv->user_data = user_data;
 }

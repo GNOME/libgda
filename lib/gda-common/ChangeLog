@@ -1,3 +1,8 @@
+2001-08-31  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-field.[ch] (gda_field_get_user_data, gda_field_set_user_data):
+	new functions for backwards compatibility
+	
 2001-08-28  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-value.[ch]: new files to make it easier to manage
@@ -209,7 +214,7 @@
 	* gda-xml-query/Makefile.am: make libxmlquery a private library,
 	for the moment
 
-2001-02-18  Carlos Perell)Bó Marín <carlos@gnome-db.org>
+2001-02-18  Carlos Perells Marmn <carlos@gnome-db.org>
 
 	* Makefile.am: Removed all the references to gda-xml-query.*
 	* gda-common.h: Updated to the new xml-query
@@ -228,7 +233,7 @@
 	* gda-config.[ch]: added gda_config_has_key function, for
 	checking for the existence of a given key
 
-2000-11-01  Reinhard M)Büller  <reinhard.mueller@bitsmart.com>
+2000-11-01  Reinhard M|ller  <reinhard.mueller@bitsmart.com>
 
 	* gda-xml-file.h: removed directory part from gnome-xml includes
 	because the directory is already given from xml-config
