@@ -971,7 +971,6 @@ gda_connection_add_single_error (GdaConnection * cnc, GdaError * error)
 	error_list = g_list_append (error_list, error);
 	gtk_signal_emit (GTK_OBJECT (cnc),
 	                 gda_connection_signals[CONNECTION_ERROR], error_list);
-	gda_error_list_free (error_list);
 }
 
 void

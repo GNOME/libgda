@@ -1,3 +1,10 @@
+2002-01-16  Waldemar Zurowski  <bilbo@pwr.wroc.pl>
+
+	* gda-connection.c (gda_connection_add_single_error):
+	removed freeing of error_list, as it is already connected
+	with connection object. This leaded to serious problem in
+	gnome_db_error_show.
+
 2001-12-06  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-field.h: gda_field_get_actual_size renamed to
