@@ -590,6 +590,8 @@ providers/oracle/Makefile
 providers/postgres/Makefile
 providers/sqlite/Makefile
 providers/sybase/Makefile
+report/Makefile
+report/libgda-report/Makefile
 tools/Makefile
 testing/Makefile
 doc/Makefile

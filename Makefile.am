@@ -3,6 +3,7 @@ SUBDIRS = \
 	idl \
 	libgda \
 	providers \
+	report \
 	tools \
 	testing \
 	data \

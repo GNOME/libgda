@@ -23,7 +23,6 @@
 #if !defined(__gda_report_h__)
 #  define __gda_report_h__
 
-#include <libgda-report/gda-report-client.h>
 #include <libgda-report/gda-report-document.h>
 
 #endif

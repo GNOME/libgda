@@ -20,12 +20,6 @@ Functions for accesing #GdaRow.
 </para>
 
 
-<!-- ##### TYPEDEF GdaRowAttributes ##### -->
-<para>
-
-</para>
-
-
 <!-- ##### FUNCTION gda_row_new ##### -->
 <para>
 
@@ -61,7 +55,7 @@ Functions for accesing #GdaRow.
 @id: 
 
 
-<!-- ##### FUNCTION gda_row_get_field ##### -->
+<!-- ##### FUNCTION gda_row_get_value ##### -->
 <para>
 
 </para>
@@ -71,39 +65,12 @@ Functions for accesing #GdaRow.
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_row_attributes_new ##### -->
+<!-- ##### FUNCTION gda_row_get_length ##### -->
 <para>
 
 </para>
 
-@count: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_row_attributes_free ##### -->
-<para>
-
-</para>
-
-@attrs: 
-
-
-<!-- ##### FUNCTION gda_row_attributes_get_length ##### -->
-<para>
-
-</para>
-
-@attrs: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_row_attributes_get_field ##### -->
-<para>
-
-</para>
-
-@attrs: 
-@num: 
+@row: 
 @Returns: 
 
 

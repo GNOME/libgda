@@ -1,5 +1,21 @@
 2002-05-14  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* Makefile.am:
+	* configure.in: re-activated report directory.
+
+	* report/Makefile.am:
+	* report/*.[ch]: removed the CORBA engine. We'll start simple, or
+	we'll never start :-)
+
+	* report/libgda-report/Makefile.am: don't build CORBA files.
+
+	* report/libgda-report/gda-report-datasource.[ch]:
+	* report/libgda-report/gda-report-client.[ch]: removed.
+
+	* doc/C/*: updated for changes in API files.
+
+2002-05-14  Rodrigo Moya <rodrigo@gnome-db.org>
+
 	* providers/mdb/*: started MDB provider (based on MDB Tools).
 
 	* configure.in:

@@ -21,10 +21,10 @@
  */
 
 #include <config.h>
+#include <libgda/gda-intl.h>
 #include <libgda/gda-log.h>
 #include <libgda/gda-util.h>
 #include <libgda-report/gda-report-document.h>
-#include <bonobo/bonobo-i18n.h>
 
 #define PARENT_TYPE GDA_TYPE_XML_DOCUMENT
 
