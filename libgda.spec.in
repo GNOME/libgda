@@ -280,7 +280,7 @@ rm -rf %{buildroot}
 %{_libdir}/*.so.*
 %dir %{_libdir}/libgda
 %dir %{_libdir}/libgda/providers
-%{_libdir}/libgda/providers/libgda-default.so
+%{_libdir}/libgda/providers/libgda-xml.so
 %{_mandir}/man1/*
 %{_mandir}/man5/*
 
