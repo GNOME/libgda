@@ -1,3 +1,8 @@
+2001-07-27  Abel Cheung  <maddog@linux.org.hk>
+
+	* POTFILES.in: Remove non-existant files to let libgda.pot build
+	  successfully, and add more files into POTFILES.in for translation.
+
 2001-06-01  Christian Rose  <menthos@menthos.com>
 
 	* sv.po: Updated Swedish translation.
