@@ -27,6 +27,7 @@
 #endif
 
 #include <gda-server.h>
+#include "build_sqlite/sqlite.h"
 
 #ifdef ENABLE_NLS
 #  include <libintl.h>
@@ -46,16 +47,18 @@
 /*
  * Per-object specific structures
  */
-typedef struct
-{
+typedef struct {
+	sqlite *sqlite;
 } DEFAULT_Connection;
 
-typedef struct
-{
+typedef struct {
 } DEFAULT_Command;
 
-typedef struct
-{
+typedef struct {
+	gint number_of_cols;
+	gint number_of_rows;
+	gchar **data;
+	gulong position;
 } DEFAULT_Recordset;
 
 /*

@@ -57,9 +57,6 @@ static GdaServerImplFunctions server_impl_functions = {
 gint
 main (gint argc, gchar *argv[])
 {
-	CORBA_Environment ev;
-	CORBA_ORB         orb;
-
 	/* initialize CORBA stuff */
 	gda_server_init("gda-default-srv", VERSION, argc, argv);
 

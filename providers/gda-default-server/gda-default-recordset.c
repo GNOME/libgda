@@ -32,25 +32,118 @@ gda_default_recordset_new (GdaServerRecordset *recset)
 	return TRUE;
 }
 
+static void
+fill_field_values (GdaServerRecordset *recset, gulong pos)
+{
+	gint n;
+	DEFAULT_Recordset *default_recset;
+
+	g_return_if_fail(recset != NULL);
+
+	default_recset = (DEFAULT_Recordset *) gda_server_recordset_get_user_data(recset);
+	if (default_recset) {
+		/* fill in the information about each field */
+		for (n = 0; n < default_recset->number_of_cols; n++) {
+			GList *node;
+			GdaServerField *field;
+
+			node = g_list_nth(gda_server_recordset_get_fields(recset), n);
+			field = node != NULL ? (GdaServerField *) node->data : NULL;
+			if (field) {
+				gulong row_to_fetch;
+
+				/* all data are returned as strings */
+				row_to_fetch = ((pos + 1) * default_recset->number_of_cols) + n;
+				gda_server_field_set_varchar(field, default_recset->data[row_to_fetch]);
+			}
+		}
+
+		default_recset->position = pos;
+	}
+}
+
 gint
 gda_default_recordset_move_next (GdaServerRecordset *recset)
 {
+	DEFAULT_Recordset *default_recset;
+
+	g_return_val_if_fail(recset != NULL, -1);
+
+	default_recset = (DEFAULT_Recordset *) gda_server_recordset_get_user_data(recset);
+	if (default_recset) {
+		gint pos = default_recset->position + 1;
+
+		if (pos < default_recset->number_of_rows) {
+			fill_field_values(recset, pos);
+			return 0;
+		}
+		else {
+			gda_server_recordset_set_at_begin(recset, FALSE);
+			gda_server_recordset_set_at_end(recset, TRUE);
+			return 1;
+		}
+	}
+
+	return -1;
 }
 
 gint
 gda_default_recordset_move_prev (GdaServerRecordset *recset)
 {
-  return -1;
+	DEFAULT_Recordset *default_recset;
+
+	g_return_val_if_fail(recset != NULL, -1);
+
+	default_recset = (DEFAULT_Recordset *) gda_server_recordset_get_user_data(recset);
+	if (default_recset) {
+		gint pos = default_recset->position - 1;
+
+		if (pos >= 0) {
+			fill_field_values(recset, pos);
+			return 0;
+		}
+		else {
+			gda_server_recordset_set_at_begin(recset, TRUE);
+			return 1;
+		}
+	}
+
+	return -1;
 }
 
 gint
 gda_default_recordset_close (GdaServerRecordset *recset)
 {
+	DEFAULT_Recordset *default_recset;
+
+	g_return_if_fail(recset != NULL);
+
+	default_recset = (DEFAULT_Recordset *) gda_server_recordset_get_user_data(recset);
+	if (default_recset) {
+		if (default_recset->data) {
+			sqlite_free_table(default_recset->data);
+			default_recset->data = NULL;
+		}
+		default_recset->number_of_cols = 0;
+		default_recset->number_of_rows = 0;
+		default_recset->position = -1;
+	}
 }
 
 void
 gda_default_recordset_free (GdaServerRecordset *recset)
 {
+	DEFAULT_Recordset *default_recset;
+
+	g_return_if_fail(recset != NULL);
+
+	default_recset = (DEFAULT_Recordset *) gda_server_recordset_get_user_data(recset);
+	if (default_recset) {
+		if (default_recset->data)
+			sqlite_free_table(default_recset->data);
+		g_free((gpointer) default_recset);
+		gda_server_recordset_set_user_data(recset, NULL);
+	}
 }
 
 

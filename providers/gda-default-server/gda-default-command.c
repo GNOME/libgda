@@ -36,11 +36,85 @@ gda_default_command_new (GdaServerCommand *cmd)
 
 GdaServerRecordset *
 gda_default_command_execute (GdaServerCommand *cmd,
-                           GdaServerError *error,
-                           const GDA_CmdParameterSeq *params,
-                           gulong *affected,
-                           gulong options)
+							 GdaServerError *error,
+							 const GDA_CmdParameterSeq *params,
+							 gulong *affected,
+							 gulong options)
 {
+	gchar *cmd_string = NULL;
+	GdaServerConnection *cnc;
+	GdaServerRecordset *recset = NULL;
+	DEFAULT_Connection *default_cnc;
+	DEFAULT_Recordset *default_recset;
+
+	g_return_val_if_fail(cmd != NULL, NULL);
+
+	cnc = gda_server_command_get_connection(cmd);
+	if (cnc) {
+		default_cnc = (DEFAULT_Connection *) gda_server_connection_get_user_data(cnc);
+		if (default_cnc) {
+			gchar *errmsg = NULL;
+
+			/* create recordset to be returned */
+			recset = gda_server_recordset_new(cnc);
+			default_recset = (DEFAULT_Recordset *) gda_server_recordset_get_user_data(recset);
+			if (!default_recset) {
+				gda_server_recordset_free(recset);
+				return NULL;
+			}
+
+			switch (gda_server_command_get_type(cmd)) {
+			case GDA_COMMAND_TYPE_TEXT :
+				cmd_string = g_strdup(gda_server_command_get_text(cmd));
+				break;
+			case GDA_COMMAND_TYPE_TABLE :
+				cmd_string = g_strdup_printf("SELECT * FROM %s",
+											 gda_server_command_get_text(cmd));
+				break;
+			default :
+				cmd_string = NULL;
+			}
+
+			/* execute the command */
+			if (!sqlite_get_table(default_cnc->sqlite,
+								 cmd_string,
+								 &default_recset->data,
+								 &default_recset->number_of_rows,
+								 &default_recset->number_of_cols,
+								 &errmsg)) {
+				default_recset->position = -1;
+				gda_server_recordset_set_at_begin(recset, TRUE);
+				gda_server_recordset_set_at_end(recset, FALSE);
+				if (affected)
+					*affected = default_recset->number_of_rows;
+
+				/* add all information about the fields */
+				if (default_recset->data) {
+					gint n;
+
+					for (n = 0; n < default_recset->number_of_cols; n++) {
+						GdaServerField *field = gda_server_field_new();
+						gda_server_field_set_name(field, default_recset->data[n]);
+						gda_server_field_set_scale(field, 0);
+						gda_server_field_set_actual_length(field, strlen(default_recset->data[n]));
+						gda_server_field_set_defined_length(field, strlen(default_recset->data[n]));
+						gda_server_recordset_add_field(recset, field);
+					}
+				}
+			}
+			else {
+				gda_server_connection_add_error_string(cnc, errmsg);
+				gda_server_recordset_free(recset);
+				recset = NULL;
+			}
+
+			/* free memory */
+			if (cmd_string) g_free((gpointer) cmd_string);
+			if (errmsg) free(errmsg);
+		}
+	}
+
+	return recset;
 }
 
 void

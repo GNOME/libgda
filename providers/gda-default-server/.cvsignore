@@ -7,3 +7,4 @@ libgda-default.a
 gda-default-srv
 .deps
 .libs
+build_sqlite

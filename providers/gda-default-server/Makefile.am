@@ -13,7 +13,8 @@ gda_default_srv_LDADD = \
 	$(top_builddir)/lib/gda-common/libgda-common.la \
 	$(top_builddir)/lib/gda-server/libgda-server.la \
 	$(top_builddir)/providers/gda-default-server/libgda-default.a \
-	$(top_builddir)/providers/gda-default-server/libsqlite.a
+	$(top_builddir)/providers/gda-default-server/libsqlite.a \
+	-lgdbm
 
 libgda_default_a_SOURCES = \
 	gda-default-command.c \
@@ -22,13 +23,15 @@ libgda_default_a_SOURCES = \
 	gda-default.h
 
 build_sqlite:
-	mkdir build_sqlite
-
-$(top_builddir)/providers/gda-default-server/libsqlite.a: build_sqlite
+	mkdir build_sqlite && \
 	cd build_sqlite && \
 	../sqlite/configure && \
-	make && \
-	cp libsqlite.a ../libsqlite.a
+	make
+
+gda-default.h: build_sqlite
+
+$(top_builddir)/providers/gda-default-server/libsqlite.a: build_sqlite
+	cp build_sqlite/libsqlite.a libsqlite.a
 
 oafdir=$(GDA_oafdir)
 

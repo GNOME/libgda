@@ -1,5 +1,7 @@
 2001-04-28  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* implemented first working version of the GDA default
+	provider
 	* imported libsqlite (http://www.hwaci.com/sw/sqlite/) into
 	our source tree, until it is oficially released
 

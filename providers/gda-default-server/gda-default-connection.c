@@ -45,12 +45,13 @@ gboolean
 gda_default_connection_new (GdaServerConnection *cnc)
 {
 	static gboolean     initialized = FALSE;
-	DEFAULT_Connection* default_cnc;
+	DEFAULT_Connection *default_cnc;
 	
 	/* initialize schema functions */
 	if (!initialized) {
 		schema_ops[GDA_Connection_GDCN_SCHEMA_TABLES] = schema_tables;
 		schema_ops[GDA_Connection_GDCN_SCHEMA_COLS] = schema_columns;
+		initialized = TRUE;
 	}
 	
 	default_cnc = g_new0(DEFAULT_Connection, 1);
@@ -60,8 +61,8 @@ gda_default_connection_new (GdaServerConnection *cnc)
 }
 
 static gchar*
-get_value (gchar* ptr)
-{
+get_value (gchar *ptr)
+{  
 	while (*ptr && *ptr != '=') ptr++;
 	if (!*ptr)
 		return 0;
@@ -80,38 +81,144 @@ gda_default_connection_open (GdaServerConnection *cnc,
 							 const gchar *user,
 							 const gchar *password)
 {
+	DEFAULT_Connection *default_cnc;
+	gint retval = -1;
+
 	g_return_val_if_fail(cnc != NULL, -1);
 	g_return_val_if_fail(dsn != NULL, -1);
 
-	return -1;
+	default_cnc = (DEFAULT_Connection *) gda_server_connection_get_user_data(cnc);
+	if (default_cnc) {
+		gchar **arr;
+		gchar *t_dir = NULL;
+
+		/* parse connection string */
+		arr = g_strsplit(dsn, ";", 0);
+		if (arr) {
+			gint n = 0;
+
+			while (arr[n]) {
+				if (!strncasecmp(arr[n], "DIRECTORY", strlen("DIRECTORY")))
+					t_dir = get_value(arr[n]);
+				n++;
+			}
+			g_strfreev(arr);
+		}
+
+		if (t_dir) {
+			gchar *errmsg = NULL;
+
+			/* open the database */
+			default_cnc->sqlite = sqlite_open(t_dir, 0666, &errmsg);
+			if (default_cnc->sqlite) {
+				retval = 0;
+			}
+			else
+				gda_server_connection_add_error_string(cnc, errmsg);
+
+			/* free memory */
+			g_free((gpointer) t_dir);
+			if (errmsg)
+				free(errmsg); /* must use free() for this pointer */
+		}
+		else
+			gda_server_connection_add_error_string(cnc, _("You must specify a directory for the database to be stored"));
+	}
+
+	return retval;
 }
 
 void
 gda_default_connection_close (GdaServerConnection *cnc)
 {
+	DEFAULT_Connection *default_cnc;
+
+	g_return_if_fail(cnc != NULL);
+
+	default_cnc = (DEFAULT_Connection *) gda_server_connection_get_user_data(cnc);
+	if (default_cnc) {
+		if (default_cnc->sqlite) {
+			sqlite_close(default_cnc->sqlite);
+			default_cnc->sqlite = NULL;
+		}
+	}
 }
 
 gint
 gda_default_connection_begin_transaction (GdaServerConnection *cnc)
 {
+	DEFAULT_Connection *default_cnc;
+	gint retval = -1;
+
+	g_return_val_if_fail(cnc != NULL, -1);
+
+	default_cnc = (DEFAULT_Connection *) gda_server_connection_get_user_data(cnc);
+	if (default_cnc) {
+		gchar *errmsg = NULL;
+
+		if (!sqlite_exec(default_cnc->sqlite, "BEGIN", NULL, NULL, &errmsg))
+			retval = 0;
+		else
+			gda_server_connection_add_error_string(cnc, errmsg);
+
+		if (errmsg)
+			free(errmsg);
+	}
+	return retval;
 }
 
 gint
 gda_default_connection_commit_transaction (GdaServerConnection *cnc)
 {
+	DEFAULT_Connection *default_cnc;
+	gint retval = -1;
+
+	g_return_val_if_fail(cnc != NULL, -1);
+
+	default_cnc = (DEFAULT_Connection *) gda_server_connection_get_user_data(cnc);
+	if (default_cnc) {
+		gchar *errmsg = NULL;
+
+		if (!sqlite_exec(default_cnc->sqlite, "COMMIT", NULL, NULL, &errmsg))
+			retval = 0;
+		else
+			gda_server_connection_add_error_string(cnc, errmsg);
+
+		if (errmsg)
+			free(errmsg);
+	}
+	return retval;
 }
 
 gint
 gda_default_connection_rollback_transaction (GdaServerConnection *cnc)
 {
+	DEFAULT_Connection *default_cnc;
+	gint retval = -1;
+
+	g_return_val_if_fail(cnc != NULL, -1);
+
+	default_cnc = (DEFAULT_Connection *) gda_server_connection_get_user_data(cnc);
+	if (default_cnc) {
+		gchar *errmsg = NULL;
+
+		if (!sqlite_exec(default_cnc->sqlite, "ROLLBACK", NULL, NULL, &errmsg))
+			retval = 0;
+		else
+			gda_server_connection_add_error_string(cnc, errmsg);
+
+		if (errmsg)
+			free(errmsg);
+	}
+	return retval;
 }
 
 GdaServerRecordset *
 gda_default_connection_open_schema (GdaServerConnection *cnc,
-                                  GdaServerError *error,
-                                  GDA_Connection_QType t,
-                                  GDA_Connection_Constraint *constraints,
-                                  gint length)
+									GdaServerError *error,
+									GDA_Connection_QType t,
+									GDA_Connection_Constraint *constraints,
+									gint length)
 {
 	schema_ops_fn fn;
 	
@@ -147,23 +254,24 @@ gda_default_connection_stop_logging (GdaServerConnection *cnc)
 
 gchar *
 gda_default_connection_create_table (GdaServerConnection *cnc,
-                                   GDA_RowAttributes *columns)
+									 GDA_RowAttributes *columns)
 {
   return NULL;
 }
 
 gboolean
 gda_default_connection_supports (GdaServerConnection *cnc,
-                               GDA_Connection_Feature feature)
+								 GDA_Connection_Feature feature)
 {
 	g_return_val_if_fail(cnc != NULL, FALSE);
 	
 	switch (feature) {
-		case GDA_Connection_FEATURE_SQL :
-		case GDA_Connection_FEATURE_XML_QUERIES :
-			return TRUE;
-		default :
-			return FALSE;
+	case GDA_Connection_FEATURE_SQL :
+	case GDA_Connection_FEATURE_XML_QUERIES :
+	case GDA_Connection_FEATURE_TRANSACTIONS :
+		return TRUE;
+	default :
+		return FALSE;
 	}
 
 	return FALSE; /* not supported or know nothing about it */
@@ -227,6 +335,7 @@ schema_tables (GdaServerError *error,
                GDA_Connection_Constraint *constraints,
                gint length)
 {
+	return NULL;
 }
 
 static GdaServerRecordset *
@@ -235,4 +344,5 @@ schema_columns (GdaServerError *error,
                 GDA_Connection_Constraint *constraints,
                 gint length)
 {
+	return NULL;
 }
