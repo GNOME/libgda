@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2001-12-05 12:47+0200\n"
+"POT-Creation-Date: 2001-12-28 16:55+0200\n"
 "PO-Revision-Date: 1999-11-17 10:06+0200\n"
 "Last-Translator: Yuri Syrota <rasta@renome.rovno.ua>\n"
 "Language-Team: Ukrainian <uk@li.org>\n"
@@ -13,27 +13,54 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8-bit\n"
 
-#: libgda/gda-client.c:175 libgda/gda-client.c:268
+#: libgda/gda-client.c:200 libgda/gda-client.c:294
 #, c-format
 msgid "Data source %s not found in configuration"
-msgstr "Джерела даних \"%s\" не знайдено у конфіґурації"
+msgstr ""
+"Джерела даних \"%s\" не знайдено у "
+"конфіґурації"
 
-#: libgda/gda-client.c:196
+#: libgda/gda-client.c:221
 #, c-format
 msgid "Could not activate object %s"
 msgstr "Не вдалося активувати об'єкт %s"
 
-#: libgda/gda-client.c:214
+#: libgda/gda-client.c:239
 msgid "Could not create connection component"
-msgstr "Не вдалося створити компонент з'єднання"
+msgstr ""
+"Не вдалося створити компонент з'єднання"
 
-#: libgda/gda-config.c:529
+#: libgda/gda-config.c:515
 msgid "Could not query CORBA components"
-msgstr "Не вдалось зробити запит на отримання компонент CORBA"
+msgstr ""
+"Не вдалось зробити запит на отримання "
+"компонент CORBA"
 
-#: libgda/gda-config.c:636
+#: libgda/gda-config.c:622
 msgid "Could not query CORBA providers"
-msgstr "Не вдалось зробити запит на отримання надавачів CORBA"
+msgstr ""
+"Не вдалось зробити запит на отримання "
+"постачальників CORBA"
+
+#: libgda/gda-config.c:835
+msgid "Name"
+msgstr "Назва"
+
+#: libgda/gda-config.c:836
+msgid "Provider"
+msgstr "Постачальник"
+
+#: libgda/gda-config.c:837
+msgid "Connection string"
+msgstr "Рядок з'єднання"
+
+#: libgda/gda-config.c:838
+msgid "Description"
+msgstr "Опис"
+
+#: libgda/gda-config.c:839
+msgid "Username"
+msgstr "Користувач"
 
 #: libgda/gda-error.c:127
 #, c-format
@@ -46,69 +73,188 @@ msgstr "Невідоме розширення CORBA для з'єднання"
 
 #: libgda/gda-init.c:44
 msgid "Attempt to initialize an already initialized client"
-msgstr "Спроба ініціалізувати вже ініціалізованого клієнта"
+msgstr ""
+"Спроба ініціалізувати вже "
+"ініціалізованого клієнта"
 
 #: libgda/gda-init.c:56
 msgid "Could not initialize Bonobo"
 msgstr "Не вдалося ініціалізувати Bonobo"
 
-#: libgda/gda-server.c:105
+#: libgda/gda-server.c:95
 #, c-format
 msgid "Don't know how to create components with IID %s"
 msgstr "Невідомо як створити компоненти з IID %s"
 
-#: libgda/gda-server.c:112
+#: libgda/gda-server.c:102
 #, c-format
 msgid "Could not create component of type %s"
 msgstr "Не вдалося створити компонент типу %s"
 
-#: libgda/gda-server-connection.c:92
+#: libgda/gda-server-connection.c:90
 msgid "Could not duplicate client object. Client won't get notifications"
-msgstr "Не вдалося здублювати клієнтський об'єкт. Клієнт не отримуватиме сповіщень."
+msgstr ""
+"Не вдалося здублювати клієнтський об'єкт. "
+"Клієнт не отримуватиме сповіщень."
 
-#: libgda/gda-server-connection.c:402
+#: libgda/gda-server-connection.c:440
 #, c-format
 msgid "Could not notify client about action %d"
-msgstr "Не вдалося сповістити клієнта про дію %d"
+msgstr ""
+"Не вдалося сповістити клієнта про дію %d"
 
-#: libgda/gda-value.c:501
+#: libgda/gda-server-recordset.c:204
+msgid "No implementation for the fetch() method found"
+msgstr "Не знайдено реалізації метода fetch()"
+
+#: libgda/gda-value.c:573
 msgid "TRUE"
 msgstr "ІСТИНА"
 
-#: libgda/gda-value.c:503
+#: libgda/gda-value.c:575
 msgid "FALSE"
 msgstr "ХИБНІСТЬ"
 
-#: libgda/gda-xml-database.c:166
-msgid "bad formed document"
-msgstr "невірно сформований документ"
+#: libgda/gda-xml-database.c:162
+#, c-format
+msgid "Could not load file at %s"
+msgstr "Не вдалося завантажити файл на %s"
 
-#: libgda/gda-xml-database.c:268
+#: libgda/gda-xml-database.c:173
+#, c-format
+msgid "Could not parse file at %s"
+msgstr "Не вдалося проаналізувати файл на %s"
+
+#: libgda/gda-xml-database.c:183
+#, c-format
+msgid "Bad formed document at %s"
+msgstr "Невірно сформований документ на %s"
+
+#: libgda/gda-xml-database.c:258
 #, c-format
 msgid "table %s already exists"
 msgstr "таблиця %s вже існує"
 
-#: libgda/gda-xml-database.c:450
+#: libgda/gda-xml-database.c:440
 #, c-format
 msgid "%p is not a valid table"
 msgstr "%p не є вірною таблицею"
 
-#: providers/default/gda-default-provider.c:140
+#: providers/default/gda-default-provider.c:141
 msgid ""
 "A full path must be specified on the connection string to open a database."
 msgstr ""
-"У рядку з'єднання з відкритою базою даних необхідно вказати повний шлях."
+"У рядку з'єднання з відкритою базою даних "
+"необхідно вказати повний шлях."
+
+#: providers/default/gda-default-provider.c:199
+msgid "Invalid DEFAULT handle"
+msgstr ""
 
 #: providers/default/main.c:47
 msgid "Could not initiate Default component factory"
-msgstr "Не вдалося ініціювати типову фабрику компонентів"
+msgstr ""
+"Не вдалося ініціювати типову фабрику "
+"компонентів"
 
-#: providers/mysql/gda-mysql-provider.c:150
+#: providers/mysql/gda-mysql-provider.c:171
 msgid ""
 "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
 msgstr ""
-"Ви не можете вказати UNIX_SOCKET, якщо ви вже вказали ХОСТ чи ПОРТ."
+"Ви не можете вказати UNIX_SOCKET, якщо ви вже "
+"вказали ХОСТ чи ПОРТ."
+
+#: providers/mysql/gda-mysql-provider.c:242
+#: providers/mysql/gda-mysql-provider.c:321
+#: providers/mysql/gda-mysql-provider.c:350
+#: providers/mysql/gda-mysql-provider.c:379
+msgid "Invalid MYSQL handle"
+msgstr ""
 
 #: providers/mysql/main.c:48
 msgid "Could not initiate MySQL component factory"
-msgstr "Не вдалося ініціювати фабрику копонентів MySQL"
+msgstr ""
+"Не вдалося ініціювати фабрику копонентів "
+"MySQL"
+
+#: providers/sybase/gda-sybase-error.c:137
+msgid "ct_diag 1 failed in sybase_check_clientmsg"
+msgstr ""
+
+#: providers/sybase/gda-sybase-error.c:159
+#: providers/sybase/gda-sybase-error.c:197
+msgid "ct_diag 2 failed in sybase_check_clientmsg"
+msgstr ""
+
+#: providers/sybase/gda-sybase-error.c:167
+#: providers/sybase/gda-sybase-error.c:376
+msgid "Client Message: "
+msgstr "Клієнтське повідомлення: "
+
+#: providers/sybase/gda-sybase-error.c:178
+#: providers/sybase/gda-sybase-error.c:387
+msgid "Informational Client  Message: "
+msgstr ""
+
+#: providers/sybase/gda-sybase-error.c:239
+msgid "ct_diag 1 failed in sybase_check_servermsg"
+msgstr ""
+
+#: providers/sybase/gda-sybase-error.c:261
+#: providers/sybase/gda-sybase-error.c:304
+msgid "ct_diag 2 failed in sybase_check_servermsg"
+msgstr ""
+
+#: providers/sybase/gda-sybase-error.c:274
+msgid "Server Message: "
+msgstr "Серверне повідомлення: "
+
+#: providers/sybase/gda-sybase-error.c:285
+msgid "Informational Server  Message: "
+msgstr "Інформаційне серверне повідомлення: "
+
+#: providers/sybase/gda-sybase-error.c:346
+msgid "cs_diag 1 failed in sybase_check_clientmsg"
+msgstr ""
+
+#: providers/sybase/gda-sybase-error.c:368
+#: providers/sybase/gda-sybase-error.c:406
+msgid "cs_diag 2 failed in sybase_check_clientmsg"
+msgstr ""
+
+#: providers/sybase/gda-sybase-error.c:429
+msgid "SYB"
+msgstr ""
+
+#: providers/sybase/gda-sybase-error.c:431
+msgid "severity"
+msgstr "важливість"
+
+#: providers/sybase/gda-sybase-error.c:433
+msgid "number"
+msgstr "число"
+
+#: providers/sybase/gda-sybase-error.c:435
+msgid "origin"
+msgstr "джерело"
+
+#: providers/sybase/gda-sybase-error.c:437
+msgid "layer"
+msgstr "шар"
+
+#: providers/sybase/gda-sybase-error.c:444
+#, c-format
+msgid ""
+"\n"
+"\tOperating system error number(%ld):\n"
+"\t%s"
+msgstr ""
+"\n"
+"\tНомер помилка операційної системи (%ld):\n"
+"\t%s"
+
+#: providers/sybase/main.c:49
+msgid "Could not initiate Sybase component factory"
+msgstr ""
+"Не вдалося ініціювати фабрику копонентів "
+"Sybase"
