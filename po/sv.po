@@ -8,8 +8,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2002-03-07 00:28+0100\n"
-"PO-Revision-Date: 2002-03-02 00:15+0100\n"
+"POT-Creation-Date: 2002-03-07 01:58+0100\n"
+"PO-Revision-Date: 2002-03-07 01:57+0100\n"
 "Last-Translator: Christian Rose <menthos@menthos.com>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -99,6 +99,11 @@ msgstr "Kunde inte notifiera klienten om åtgärden %d"
 msgid "No implementation for the fetch() method found"
 msgstr "Ingen implementation för fetch()-metoden hittades"
 
+#: libgda/gda-table.c:229
+#, c-format
+msgid "There is already a field called %s"
+msgstr "Det finns redan ett fält med namnet %s"
+
 #: libgda/gda-value.c:926
 msgid "TRUE"
 msgstr "SANT"
@@ -118,29 +123,27 @@ msgid "Could not parse file at %s"
 msgstr "Kunde inte tolka filen vid %s"
 
 #: libgda/gda-xml-database.c:232 libgda/gda-xml-database.c:249
-#, fuzzy, c-format
+#, c-format
 msgid "Invalid XML database file '%s'"
-msgstr "Valde databasen \"%s\""
+msgstr "Ogiltig XML-databasfil \"%s\""
 
 #: libgda/gda-xml-database.c:293 libgda/gda-xml-database.c:333
-#, fuzzy, c-format
+#, c-format
 msgid "Table %s already exists"
-msgstr "tabellen %s finns redan"
+msgstr "Tabellen %s finns redan"
 
 #: libgda/gda-xml-database.c:327
-#, fuzzy
 msgid "Invalid node"
-msgstr "Ogiltigt MYSQL-handtag"
+msgstr "Ogiltig nod"
 
 #: libgda/gda-xml-database.c:358
 #, c-format
 msgid "Duplicated <data> node for table %s"
-msgstr ""
+msgstr "Duplicerad <data>-nod för tabellen %s"
 
 #: libgda/gda-xml-database.c:365
-#, fuzzy
 msgid "Invalid XML node"
-msgstr "Ogiltigt MYSQL-handtag"
+msgstr "Ogiltig XML-nod"
 
 #: providers/default/gda-default-provider.c:139
 #: providers/sqlite/gda-sqlite-provider.c:152
