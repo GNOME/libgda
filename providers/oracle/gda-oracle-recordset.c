@@ -605,10 +605,8 @@ gda_oracle_recordset_finalize (GObject *object)
 	recset->priv->rows = NULL;
 
 	g_list_foreach (priv_data->ora_values, (GFunc) gda_oracle_free_values, NULL);
-
 	if (priv_data->hstmt)
 		OCIHandleFree ((dvoid *) priv_data->hstmt, OCI_HTYPE_STMT);
-
 	parent_class->finalize (object);
 }
 

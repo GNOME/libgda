@@ -201,7 +201,7 @@ gda_oracle_provider_open_connection (GdaServerProvider *provider,
 
         g_assert (priv_data != NULL);
         /* initialize Oracle */
-	result = OCIInitialize ((ub4) OCI_DEFAULT,
+	result = OCIInitialize ((ub4) OCI_THREADED,
 				(dvoid *) 0,
 				(dvoid * (*)(dvoid *, size_t)) 0,
 				(dvoid * (*)(dvoid *, dvoid *, size_t)) 0,
@@ -1332,7 +1332,10 @@ get_oracle_index_data (GdaConnection *cnc, const gchar *owner, const gchar *tbln
 	nrows = gda_data_model_get_n_rows (recset);
 
 	if (nrows == 0)
+	{
+		g_object_unref(recset);		
 		return NULL;
+	}
 
 	index_data = g_new0 (GdaOracleIndexData, 1);
 	references = g_string_new ("");
@@ -1391,7 +1394,7 @@ get_oracle_index_data (GdaConnection *cnc, const gchar *owner, const gchar *tbln
 			colname = g_string_new (newcolname->str);
 		}
 	}
-	g_free (recset);
+	g_object_unref(recset);
 	return h_table;
 }
 
