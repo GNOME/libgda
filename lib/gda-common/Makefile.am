@@ -20,6 +20,7 @@ libgda_common_la_SOURCES = \
 	$(gda_common_headers) \
 	gda-config.c \
 	gda-corba.c \
+	gda-init.c \
 	gda-log.c \
 	gda-thread.c \
 	gda-xml-database.c \

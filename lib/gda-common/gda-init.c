@@ -15,29 +15,26 @@
  * License along with this library; if not, write to the Free
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
+ 
+#include "gda-common.h"
+#include <gnome.h> // rremove!!!!!
 
-#if !defined(__gda_common_h__)
-#  define __gda_common_h__
-
-/*
- * This is the main header file for the libgda-common library
+/**
+ * gda_init
  */
+void
+gda_init (const gchar *app_id, const gchar *version, gint nargs, gchar *args[])
+{
+  static gboolean initialized = FALSE;
 
-#if defined(HAVE_CONFIG_H)
-#  include <config.h>
-#endif
-#include <orb/orb.h>
-#include <gnome.h>
-#include <liboaf/liboaf.h>
+  if (initialized)
+    {
+      gda_log_error(_("Attempt to initialize an already initialized client"));
+      return;
+    }
 
-#include <gda-corba.h>
-#include <gda-log.h>
-#include <gda-config.h>
-#include <gda-thread.h>
-#include <gda-xml-file.h>
-#include <gda-xml-database.h>
-#include <gda-xml-query.h>
-
-void gda_init (const gchar *app_id, const gchar *version, gint nargs, gchar *args[]);
-
-#endif
+  /* FIXME: replace the GNOME call */
+  gnome_init_with_popt_table(app_id, version, nargs, args, oaf_popt_options, 0, NULL);
+  oaf_init(nargs, args);
+  initialized = TRUE;
+}

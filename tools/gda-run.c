@@ -84,14 +84,8 @@ main (int argc, char *argv[])
   gchar*     real_dsn = 0;
 
   /* initialization */
-  CORBA_exception_init(&ev);
-#if defined(USING_OAF)
-  orb = oaf_init(argc, argv);
-#else
-  orb = gnome_CORBA_init_with_popt_table("gda-run", VERSION, &argc, argv, options,
-                                         0, 0, 0, &ev);
-#endif
-  Exception(&ev);
+  gda_init("gda-run", VERSION, &argc, argv);
+  orb = gda_corba_get_orb();
 
   /* check parameters */
   if (!datasource || !file) usage();
