@@ -125,6 +125,7 @@ void               gda_config_save_data_source (const gchar *name,
 						const gchar *cnc_string,
 						const gchar *description,
 						const gchar *username);
+void               gda_config_remove_data_source (const gchar *name);
 
 /*
  * GDA configuration sections/keys

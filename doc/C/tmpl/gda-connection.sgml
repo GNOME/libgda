@@ -35,10 +35,12 @@ GdaConnection
 
 @client: 
 @corba_cnc: 
-@cnc_string: 
+@dsn: 
 @username: 
 @password: 
 @Returns: 
+<!-- # Unused Parameters # -->
+@cnc_string: 
 
 
 <!-- ##### FUNCTION gda_connection_close ##### -->
@@ -66,15 +68,6 @@ GdaConnection
 
 @cnc: 
 @client: 
-
-
-<!-- ##### FUNCTION gda_connection_get_string ##### -->
-<para>
-
-</para>
-
-@cnc: 
-@Returns: 
 
 
 <!-- ##### FUNCTION gda_connection_get_username ##### -->
@@ -176,9 +169,12 @@ GdaConnection
 
 </para>
 
+@GDA_CONNECTION_SCHEMA_AGGREGATES: 
+@GDA_CONNECTION_SCHEMA_FIELDS: 
 @GDA_CONNECTION_SCHEMA_INDEXES: 
 @GDA_CONNECTION_SCHEMA_PROCEDURES: 
 @GDA_CONNECTION_SCHEMA_TABLES: 
+@GDA_CONNECTION_SCHEMA_TRIGGERS: 
 @GDA_CONNECTION_SCHEMA_TYPES: 
 @GDA_CONNECTION_SCHEMA_VIEWS: 
 

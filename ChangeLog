@@ -2,6 +2,12 @@
 
 	* libgda/gda-config.c (gda_config_add_listener): pass correctly the
 	user_data pointer, to avoid the crash in bug #72818.
+	(gda_config_save_data_source): added documentation.
+	(gda_config_remove_data_source): new function.
+
+	* configure.in:
+	* doc/C/Makefile.am: disabled 'es' and 'pt_BR' documentation until
+	they are fixed.
 
 2002-03-02  Rodrigo Moya <rodrigo@gnome-db.org>
 

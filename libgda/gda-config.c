@@ -896,6 +896,14 @@ gda_config_get_data_source_model (void)
 
 /**
  * gda_config_save_data_source
+ * @name: Name for the data source to be saved.
+ * @provider: Provider ID for the new data source.
+ * @cnc_string: Connection string for the new data source.
+ * @description: Description for the new data source.
+ * @username: User name for the new data source.
+ *
+ * Adds a new data source (or update an existing one) to the GDA
+ * configuration, based on the parameters given.
  */
 void
 gda_config_save_data_source (const gchar *name,
@@ -934,4 +942,22 @@ gda_config_save_data_source (const gchar *name,
 		gda_config_set_string (tmp, username);
 		g_free (tmp);
 	}
+}
+
+/**
+ * gda_config_remove_data_source
+ * @name: Name for the data source to be removed.
+ *
+ * Removes the given data source from the GDA configuration.
+ */
+void
+gda_config_remove_data_source (const gchar *name)
+{
+	gchar *dir;
+
+	g_return_if_fail (name != NULL);
+
+	dir = g_strdup_printf ("%s/%s", GDA_CONFIG_SECTION_DATASOURCES, name);
+	gda_config_remove_section (dir);
+	g_free (dir);
 }

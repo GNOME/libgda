@@ -575,9 +575,7 @@ report/idl/Makefile
 report/libgda-report/Makefile
 testing/Makefile
 doc/Makefile
-doc/es/Makefile
 doc/C/Makefile
-doc/pt_BR/Makefile
 data/Makefile
 stamp.h
 ])
