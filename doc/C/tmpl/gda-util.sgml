@@ -1,0 +1,38 @@
+<!-- ##### SECTION Title ##### -->
+gda-util
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION gda_file_load ##### -->
+<para>
+
+</para>
+
+@uri: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_file_save ##### -->
+<para>
+
+</para>
+
+@uri: 
+@buffer: 
+@len: 
+@Returns: 
+
+

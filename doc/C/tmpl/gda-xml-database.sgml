@@ -28,6 +28,15 @@ GdaXmlDatabase
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_xml_database_new_from_uri ##### -->
+<para>
+
+</para>
+
+@uri: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_xml_database_changed ##### -->
 <para>
 

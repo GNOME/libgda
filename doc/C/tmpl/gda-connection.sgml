@@ -154,3 +154,41 @@ GdaConnection
 @Returns: 
 
 
+<!-- ##### ENUM GdaConnectionFeature ##### -->
+<para>
+
+</para>
+
+@GDA_CONNECTION_FEATURE_TRANSACTIONS: 
+
+<!-- ##### FUNCTION gda_connection_supports ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@feature: 
+@Returns: 
+
+
+<!-- ##### ENUM GdaConnectionSchema ##### -->
+<para>
+
+</para>
+
+@GDA_CONNECTION_SCHEMA_PROCEDURES: 
+@GDA_CONNECTION_SCHEMA_TABLES: 
+@GDA_CONNECTION_SCHEMA_TYPES: 
+@GDA_CONNECTION_SCHEMA_VIEWS: 
+
+<!-- ##### FUNCTION gda_connection_get_schema ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@schema: 
+@params: 
+@Returns: 
+
+

@@ -1,0 +1,50 @@
+<!-- ##### SECTION Title ##### -->
+GdaReportDocument
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### STRUCT GdaReportDocumentPrivate ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION gda_report_document_new ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_document_new_from_string ##### -->
+<para>
+
+</para>
+
+@xml: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_document_new_from_uri ##### -->
+<para>
+
+</para>
+
+@uri: 
+@Returns: 
+
+

@@ -59,3 +59,30 @@ GdaServerRecordset
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_server_recordset_set_connection ##### -->
+<para>
+
+</para>
+
+@recset: 
+@cnc: 
+
+
+<!-- ##### FUNCTION gda_server_recordset_set_fetch_func ##### -->
+<para>
+
+</para>
+
+@recset: 
+@func: 
+
+
+<!-- ##### FUNCTION gda_server_recordset_set_describe_func ##### -->
+<para>
+
+</para>
+
+@recset: 
+@func: 
+
+

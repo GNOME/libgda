@@ -88,3 +88,26 @@ GdaServerProvider
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_server_provider_supports ##### -->
+<para>
+
+</para>
+
+@provider: 
+@cnc: 
+@feature: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_server_provider_get_schema ##### -->
+<para>
+
+</para>
+
+@provider: 
+@cnc: 
+@schema: 
+@params: 
+@Returns: 
+
+

@@ -1,3 +1,9 @@
+2001-12-30  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* libgda-docs.sgml: added GdaServerRecordsetModel
+
+	* tmpl/gda-server-recordset-model.sgml: added new file
+
 2001-12-24  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* libgda-docs.sgml: added GdaReportDocument section
