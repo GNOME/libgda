@@ -29,7 +29,7 @@ module GDA {
 		readonly attribute any contents;
 		
 		ReportStreamChunk readChunk (in long start, in long size);
-		long writeChunk (in any data, in long size);
+		long writeChunk (in ReportStreamChunk data, in long size);
 	};
 	
 	/*
