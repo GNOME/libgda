@@ -65,3 +65,12 @@ Quark lists (lists of KEY=VALUE's)
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_quark_list_remove ##### -->
+<para>
+
+</para>
+
+@qlist: 
+@name: 
+
+

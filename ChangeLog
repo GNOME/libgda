@@ -1,5 +1,8 @@
 2002-06-16  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* libgda/gda-parameter.[ch] (gda_parameter_list_get_names): new
+	function to get the names of all parameters in the parameter list.
+
 	* libgda/gda-command.[ch] (gda_command_get_transaction):
 	(gda_command_set_transaction): new functions.
 	(gda_command_new): initialize new member.

@@ -204,6 +204,33 @@ gda_parameter_list_add_parameter (GdaParameterList *plist, GdaParameter *param)
 	g_hash_table_insert (plist->hash, g_strdup (name), param);
 }
 
+static void
+get_names_cb (gpointer key, gpointer value, gpointer user_data)
+{
+	GList **list = (GList **) user_data;
+	*list = g_list_append (*list, key);
+}
+
+/**
+ * gda_parameter_list_get_names
+ * @plist: a #GdaParameterList.
+ *
+ * Get the names of all parameters in the parameter list.
+ *
+ * Returns: a GList containing the names of the parameters. After
+ * using it, you should free this list by calling g_list_free.
+ */
+GList *
+gda_parameter_list_get_names (GdaParameterList *plist)
+{
+	GList *list = NULL;
+
+	g_return_val_if_fail (plist != NULL, NULL);
+
+	g_hash_table_foreach (plist->hash, get_names_cb, &list);
+	return list;
+}
+
 /**
  * gda_parameter_list_find
  */

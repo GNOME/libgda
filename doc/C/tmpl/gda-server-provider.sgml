@@ -53,6 +53,17 @@ Base class for implementing new providers
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_server_provider_change_database ##### -->
+<para>
+
+</para>
+
+@provider: 
+@cnc: 
+@name: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_server_provider_create_database ##### -->
 <para>
 
@@ -94,8 +105,10 @@ Base class for implementing new providers
 
 @provider: 
 @cnc: 
-@trans_id: 
+@xaction: 
 @Returns: 
+<!-- # Unused Parameters # -->
+@trans_id: 
 
 
 <!-- ##### FUNCTION gda_server_provider_commit_transaction ##### -->
@@ -105,8 +118,10 @@ Base class for implementing new providers
 
 @provider: 
 @cnc: 
-@trans_id: 
+@xaction: 
 @Returns: 
+<!-- # Unused Parameters # -->
+@trans_id: 
 
 
 <!-- ##### FUNCTION gda_server_provider_rollback_transaction ##### -->
@@ -116,8 +131,10 @@ Base class for implementing new providers
 
 @provider: 
 @cnc: 
-@trans_id: 
+@xaction: 
 @Returns: 
+<!-- # Unused Parameters # -->
+@trans_id: 
 
 
 <!-- ##### FUNCTION gda_server_provider_supports ##### -->

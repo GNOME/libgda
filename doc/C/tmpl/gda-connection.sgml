@@ -14,6 +14,12 @@ Management of connections to data sources
 
 </para>
 
+<!-- ##### STRUCT GdaConnectionPrivate ##### -->
+<para>
+
+</para>
+
+
 <!-- ##### STRUCT GdaServerProvider ##### -->
 <para>
 
@@ -21,12 +27,6 @@ Management of connections to data sources
 
 @object: 
 @priv: 
-
-<!-- ##### STRUCT GdaConnectionPrivate ##### -->
-<para>
-
-</para>
-
 
 <!-- ##### STRUCT GdaClient ##### -->
 <para>
@@ -170,6 +170,16 @@ Management of connections to data sources
 @error_list: 
 
 
+<!-- ##### FUNCTION gda_connection_change_database ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@name: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_connection_create_database ##### -->
 <para>
 
@@ -229,8 +239,10 @@ Management of connections to data sources
 </para>
 
 @cnc: 
-@id: 
+@xaction: 
 @Returns: 
+<!-- # Unused Parameters # -->
+@id: 
 
 
 <!-- ##### FUNCTION gda_connection_commit_transaction ##### -->
@@ -239,8 +251,10 @@ Management of connections to data sources
 </para>
 
 @cnc: 
-@id: 
+@xaction: 
 @Returns: 
+<!-- # Unused Parameters # -->
+@id: 
 
 
 <!-- ##### FUNCTION gda_connection_rollback_transaction ##### -->
@@ -249,8 +263,10 @@ Management of connections to data sources
 </para>
 
 @cnc: 
-@id: 
+@xaction: 
 @Returns: 
+<!-- # Unused Parameters # -->
+@id: 
 
 
 <!-- ##### ENUM GdaConnectionFeature ##### -->
@@ -289,6 +305,7 @@ Management of connections to data sources
 @GDA_CONNECTION_SCHEMA_DATABASES: 
 @GDA_CONNECTION_SCHEMA_FIELDS: 
 @GDA_CONNECTION_SCHEMA_INDEXES: 
+@GDA_CONNECTION_SCHEMA_PARENT_TABLES: 
 @GDA_CONNECTION_SCHEMA_PROCEDURES: 
 @GDA_CONNECTION_SCHEMA_SEQUENCES: 
 @GDA_CONNECTION_SCHEMA_TABLES: 

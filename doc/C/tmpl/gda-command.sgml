@@ -130,3 +130,21 @@ table names.
 @options: 
 
 
+<!-- ##### FUNCTION gda_command_get_transaction ##### -->
+<para>
+
+</para>
+
+@cmd: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_command_set_transaction ##### -->
+<para>
+
+</para>
+
+@cmd: 
+@xaction: 
+
+

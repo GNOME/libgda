@@ -22,6 +22,24 @@ to any data, get a newly allocated copy of the data.
 
 </para>
 
+<!-- ##### MACRO gda_value_get_type ##### -->
+<para>
+
+</para>
+
+@value: 
+
+
+<!-- ##### MACRO gda_value_isa ##### -->
+<para>
+
+</para>
+
+@value: 
+@type: 
+@Returns: 
+
+
 <!-- ##### MACRO TIMEZONE_INVALID ##### -->
 <para>
 
@@ -253,16 +271,6 @@ to any data, get a newly allocated copy of the data.
 </para>
 
 @value: 
-
-
-<!-- ##### FUNCTION gda_value_isa ##### -->
-<para>
-
-</para>
-
-@value: 
-@type: 
-@Returns: 
 
 
 <!-- ##### FUNCTION gda_value_is_null ##### -->

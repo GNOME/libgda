@@ -43,8 +43,8 @@ GDA_IS_CLIENT_CLASS
 
 <SECTION>
 <FILE>gda-connection</FILE>
-GdaServerProvider
 GdaConnectionPrivate
+GdaServerProvider
 GdaClient
 <TITLE>GdaConnection</TITLE>
 gda_connection_new
@@ -61,6 +61,7 @@ gda_connection_get_password
 gda_connection_add_error
 gda_connection_add_error_string
 gda_connection_add_error_list
+gda_connection_change_database
 gda_connection_create_database
 gda_connection_drop_database
 gda_connection_execute_command
@@ -245,6 +246,7 @@ GdaServerProviderPrivate
 gda_server_provider_open_connection
 gda_server_provider_close_connection
 gda_server_provider_get_database
+gda_server_provider_change_database
 gda_server_provider_create_database
 gda_server_provider_drop_database
 gda_server_provider_execute_command
@@ -823,6 +825,8 @@ gda_command_get_command_type
 gda_command_set_command_type
 gda_command_get_options
 gda_command_set_options
+gda_command_get_transaction
+gda_command_set_transaction
 </SECTION>
 
 <SECTION>
@@ -917,6 +921,7 @@ GdaParameterList
 gda_parameter_list_new
 gda_parameter_list_free
 gda_parameter_list_add_parameter
+gda_parameter_list_get_names
 gda_parameter_list_find
 gda_parameter_list_clear
 gda_parameter_list_get_length
@@ -930,6 +935,7 @@ gda_quark_list_new_from_string
 gda_quark_list_free
 gda_quark_list_add_from_string
 gda_quark_list_find
+gda_quark_list_remove
 </SECTION>
 
 <SECTION>
@@ -955,6 +961,8 @@ gda_file_save
 
 <SECTION>
 <FILE>gda-value</FILE>
+gda_value_get_type
+gda_value_isa
 TIMEZONE_INVALID
 GdaValueType
 GdaDate
@@ -982,7 +990,6 @@ gda_value_new_timestamp
 gda_value_new_tinyint
 gda_value_new_from_string
 gda_value_free
-gda_value_isa
 gda_value_is_null
 gda_value_copy
 gda_value_get_bigint
