@@ -8,8 +8,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2002-12-21 20:39+0100\n"
-"PO-Revision-Date: 2002-12-21 20:40+0100\n"
+"POT-Creation-Date: 2002-12-27 00:54+0100\n"
+"PO-Revision-Date: 2002-12-27 00:54+0100\n"
 "Last-Translator: Christian Rose <menthos@menthos.com>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -43,6 +43,7 @@ msgstr "Temporär datakälla skapad av libgda. Ta inte bort den"
 #: libgda/gda-config.c:1322 providers/default/gda-default-provider.c:556
 #: providers/default/gda-default-provider.c:576
 #: providers/default/gda-default-provider.c:613
+#: providers/mdb/gda-mdb-provider.c:358
 #: providers/mysql/gda-mysql-provider.c:663
 #: providers/mysql/gda-mysql-provider.c:847
 #: providers/oracle/gda-oracle-provider.c:1031
@@ -413,23 +414,49 @@ msgstr "Ogiltigt transaktionshandtag"
 msgid "GDA provider for Interbase/Firebird databases"
 msgstr "GDA-leverantör för Interbase/Firebird-databaser"
 
-#: providers/mdb/gda-mdb-provider.c:188
+#: providers/mdb/gda-mdb-provider.c:203
 msgid "A database FILENAME must be specified in the connection_string"
 msgstr "En databas FILNAMN måste anges i anslutningssträngen"
 
-#: providers/mdb/gda-mdb-provider.c:197
+#: providers/mdb/gda-mdb-provider.c:212
+#: providers/xbase/gda-xbase-provider.c:224
 #, c-format
 msgid "Could not open file %s"
 msgstr "Kunde inte öppna filen %s"
 
-#: providers/mdb/gda-mdb-provider.c:219 providers/mdb/gda-mdb-provider.c:247
-#: providers/mdb/gda-mdb-provider.c:348
+#: providers/mdb/gda-mdb-provider.c:234 providers/mdb/gda-mdb-provider.c:262
+#: providers/mdb/gda-mdb-provider.c:410
 msgid "Invalid MDB handle"
 msgstr "Ogiltigt MDB-handtag"
 
-#: providers/mdb/gda-mdb-provider.c:313
-msgid "Table Name"
-msgstr "Tabellnamn"
+#: providers/mdb/gda-mdb-provider.c:359
+#: providers/mysql/gda-mysql-provider.c:848
+#: providers/mysql/gda-mysql-provider.c:930
+#: providers/oracle/gda-oracle-provider.c:1530
+#: providers/postgres/gda-postgres-provider.c:830
+#: providers/postgres/gda-postgres-provider.c:1100
+#: providers/postgres/gda-postgres-provider.c:1119
+#: providers/postgres/gda-postgres-provider.c:1179
+#: providers/postgres/gda-postgres-provider.c:1296
+#: providers/postgres/gda-postgres-provider.c:1831
+#: providers/sqlite/gda-sqlite-provider.c:747
+#: providers/sybase/gda-sybase-provider.c:906
+msgid "Owner"
+msgstr "Ägare"
+
+#: providers/mdb/gda-mdb-provider.c:360
+#: providers/mysql/gda-mysql-provider.c:849
+#: providers/mysql/gda-mysql-provider.c:931
+#: providers/oracle/gda-oracle-provider.c:1530
+#: providers/postgres/gda-postgres-provider.c:831
+#: providers/postgres/gda-postgres-provider.c:1120
+#: providers/postgres/gda-postgres-provider.c:1180
+#: providers/postgres/gda-postgres-provider.c:1297
+#: providers/postgres/gda-postgres-provider.c:1832
+#: providers/sqlite/gda-sqlite-provider.c:748
+#: providers/sybase/gda-sybase-provider.c:908
+msgid "Comments"
+msgstr "Kommentarer"
 
 #: providers/mdb/libmain.c:34
 msgid "GDA provider for MS Access files"
@@ -459,33 +486,6 @@ msgstr "Ogiltigt MySQL-handtag"
 #: providers/mysql/gda-mysql-provider.c:590
 msgid "Invalid MYSQL handle"
 msgstr "Ogiltigt MYSQL-handtag"
-
-#: providers/mysql/gda-mysql-provider.c:848
-#: providers/mysql/gda-mysql-provider.c:930
-#: providers/oracle/gda-oracle-provider.c:1530
-#: providers/postgres/gda-postgres-provider.c:830
-#: providers/postgres/gda-postgres-provider.c:1100
-#: providers/postgres/gda-postgres-provider.c:1119
-#: providers/postgres/gda-postgres-provider.c:1179
-#: providers/postgres/gda-postgres-provider.c:1296
-#: providers/postgres/gda-postgres-provider.c:1831
-#: providers/sqlite/gda-sqlite-provider.c:747
-#: providers/sybase/gda-sybase-provider.c:906
-msgid "Owner"
-msgstr "Ägare"
-
-#: providers/mysql/gda-mysql-provider.c:849
-#: providers/mysql/gda-mysql-provider.c:931
-#: providers/oracle/gda-oracle-provider.c:1530
-#: providers/postgres/gda-postgres-provider.c:831
-#: providers/postgres/gda-postgres-provider.c:1120
-#: providers/postgres/gda-postgres-provider.c:1180
-#: providers/postgres/gda-postgres-provider.c:1297
-#: providers/postgres/gda-postgres-provider.c:1832
-#: providers/sqlite/gda-sqlite-provider.c:748
-#: providers/sybase/gda-sybase-provider.c:908
-msgid "Comments"
-msgstr "Kommentarer"
 
 #: providers/mysql/gda-mysql-provider.c:929
 #: providers/oracle/gda-oracle-provider.c:1629
@@ -717,13 +717,13 @@ msgstr "Kunde inte få tag i nullbart attribut för Oracle-fält"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/oracle/gda-oracle-provider.c:1491
-#: providers/postgres/gda-postgres-provider.c:1789 testing/client.c:129
+#: providers/postgres/gda-postgres-provider.c:1789 testing/client.c:133
 msgid "Users"
 msgstr "Användare"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/oracle/gda-oracle-provider.c:1717
-#: providers/postgres/gda-postgres-provider.c:1218 testing/client.c:127
+#: providers/postgres/gda-postgres-provider.c:1218 testing/client.c:131
 msgid "Indexes"
 msgstr "Index"
 
@@ -731,17 +731,17 @@ msgstr "Index"
 msgid "Procedures"
 msgstr "Procedurer"
 
-#: providers/oracle/gda-oracle-provider.c:1725 testing/client.c:130
+#: providers/oracle/gda-oracle-provider.c:1725 testing/client.c:134
 msgid "Sequences"
 msgstr "Sekvenser"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/oracle/gda-oracle-provider.c:1732
-#: providers/postgres/gda-postgres-provider.c:1335 testing/client.c:131
+#: providers/postgres/gda-postgres-provider.c:1335 testing/client.c:135
 msgid "Triggers"
 msgstr "Utlösare"
 
-#: providers/oracle/gda-oracle-provider.c:1736 testing/client.c:126
+#: providers/oracle/gda-oracle-provider.c:1736 testing/client.c:130
 msgid "Views"
 msgstr "Vyer"
 
@@ -862,7 +862,7 @@ msgid "InType"
 msgstr "Intyp"
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:1754 testing/client.c:122
+#: providers/postgres/gda-postgres-provider.c:1754 testing/client.c:126
 msgid "Databases"
 msgstr "Databaser"
 
@@ -1207,16 +1207,16 @@ msgstr "%d meddelanden hämtades."
 msgid "Operation not possible, connection busy."
 msgstr "Åtgärden är inte möjlig, anslutningen upptagen."
 
-#: providers/xbase/gda-xbase-provider.c:185
-msgid "Either FILENAME or DIRECTORY can be specified, but not both"
-msgstr "Antingen anges FILNAMN eller KATALOG, men inte båda"
+#: providers/xbase/gda-xbase-provider.c:186
+msgid "Either FILENAME or DIRECTORY can be specified, but not both or neither"
+msgstr "Antingen anges FILNAMN eller KATALOG, men inte båda eller ingen"
 
-#: providers/xbase/gda-xbase-provider.c:205
+#: providers/xbase/gda-xbase-provider.c:233
 msgid "Either FILENAME or DIRECTORY must be specified in the connection string"
 msgstr "FILNAMN eller KATALOG måste anges i anslutningssträngen"
 
-#: providers/xbase/gda-xbase-provider.c:234
-#: providers/xbase/gda-xbase-provider.c:352
+#: providers/xbase/gda-xbase-provider.c:262
+#: providers/xbase/gda-xbase-provider.c:380
 msgid "Invalid Xbase handle"
 msgstr "Ogiltigt Xbase-handtag"
 
@@ -1255,14 +1255,14 @@ msgstr "\t\tAggregat: %s\n"
 #: testing/client.c:90 testing/client.c:93 testing/client.c:96
 #: testing/client.c:99 testing/client.c:102 testing/client.c:105
 #: testing/client.c:108 testing/client.c:111 testing/client.c:114
-#: testing/client.c:117
+#: testing/client.c:117 testing/client.c:120
 msgid "Supported"
 msgstr "Stöds"
 
 #: testing/client.c:90 testing/client.c:93 testing/client.c:96
 #: testing/client.c:99 testing/client.c:102 testing/client.c:105
 #: testing/client.c:108 testing/client.c:111 testing/client.c:114
-#: testing/client.c:117
+#: testing/client.c:117 testing/client.c:120
 msgid "Not supported"
 msgstr "Stöds inte"
 
@@ -1273,46 +1273,51 @@ msgstr "\t\tIndex: %s\n"
 
 #: testing/client.c:94
 #, c-format
+msgid "\t\tNamespaces: %s\n"
+msgstr "\t\tNamnutrymmen: %s\n"
+
+#: testing/client.c:97
+#, c-format
 msgid "\t\tProcedures: %s\n"
 msgstr "\t\tProcedurer: %s\n"
 
-#: testing/client.c:97
+#: testing/client.c:100
 #, c-format
 msgid "\t\tSequences: %s\n"
 msgstr "\t\tSekvenser: %s\n"
 
-#: testing/client.c:100
+#: testing/client.c:103
 #, c-format
 msgid "\t\tSQL: %s\n"
 msgstr "\t\tSQL: %s\n"
 
-#: testing/client.c:103
+#: testing/client.c:106
 #, c-format
 msgid "\t\tTransactions: %s\n"
 msgstr "\t\tTransaktioner: %s\n"
 
-#: testing/client.c:106
+#: testing/client.c:109
 #, c-format
 msgid "\t\tTriggers: %s\n"
 msgstr "\t\tUtlösare: %s\n"
 
-#: testing/client.c:109
+#: testing/client.c:112
 #, c-format
 msgid "\t\tUsers: %s\n"
 msgstr "\t\tAnvändare: %s\n"
 
-#: testing/client.c:112
+#: testing/client.c:115
 #, c-format
 msgid "\t\tViews: %s\n"
 msgstr "\t\tVyer: %s\n"
 
-#: testing/client.c:115
+#: testing/client.c:118
 #, c-format
 msgid "\t\tXML queries: %s\n"
 msgstr "\t\tXML-frågor: %s\n"
 
 #. show connection schemas
-#: testing/client.c:120
+#: testing/client.c:123
 #, c-format
 msgid ""
 "\n"
@@ -1323,48 +1328,56 @@ msgstr ""
 "\tLeverantör rapporterar version: %s\n"
 "\n"
 
-#: testing/client.c:123
+#: testing/client.c:125
+msgid "Namespaces"
+msgstr "Namnutrymmen"
+
+#: testing/client.c:127
 msgid "Stored procedures"
 msgstr "Lagrade procedurer"
 
-#: testing/client.c:124
+#: testing/client.c:128
 msgid "Connection Tables"
 msgstr "Anslutningstabeller"
 
-#: testing/client.c:125
+#: testing/client.c:129
 msgid "Available types"
 msgstr "Tillgängliga typer"
 
-#: testing/client.c:128
+#: testing/client.c:132
 msgid "Aggregates"
 msgstr "Aggregat"
 
-#: testing/client.c:136 testing/client.c:144
+#: testing/client.c:136
+msgid "Languages"
+msgstr "Språk"
+
+#: testing/client.c:141 testing/client.c:149
 msgid "\tStarting transaction..."
 msgstr "\tStartar transaktion..."
 
-#: testing/client.c:138 testing/client.c:142 testing/client.c:146
-#: testing/client.c:150
+#: testing/client.c:143 testing/client.c:147 testing/client.c:151
+#: testing/client.c:155
 msgid "Error"
 msgstr "Fel"
 
-#: testing/client.c:140
+#: testing/client.c:145
 msgid "\tFinishing transaction..."
 msgstr "\tSlutförde transaktion..."
 
-#: testing/client.c:148
+#: testing/client.c:153
 msgid "\tRolling back transaction..."
 msgstr "\tÅterställer transaktion..."
 
-#: testing/client.c:176
+#: testing/client.c:181
 msgid "Testing GDA client API"
 msgstr "Testar GDA-klient-API"
 
-#: testing/client.c:185
+#: testing/client.c:190
 msgid "** ERROR: gda_config_get_data_source_list returned a NULL item\n"
 msgstr "** FEL: gda_config_get_data_source_list returnerade ett NULL-objekt\n"
 
-#: testing/client.c:189
+#: testing/client.c:194
 #, c-format
 msgid " Data source = %s, User = %s\n"
 msgstr " Datakälla = %s, användare = %s\n"
@@ -1391,6 +1404,12 @@ msgstr "\tbeskrivning = %s\n"
 #: testing/config.c:93
 msgid "\tgda_params ="
 msgstr "\tgda_params ="
+
+#~ msgid "Language"
+#~ msgstr "Språk"
+
+#~ msgid "Table Name"
+#~ msgstr "Tabellnamn"
 
 #~ msgid "%s returned CS_CMD_FAIL"
 #~ msgstr "%s returnerade CS_CMD_FAIL"
