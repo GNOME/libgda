@@ -1,0 +1,515 @@
+# simplified chinese translation for libgda.
+# Copyright (C) 2002 Free Software Foundation, Inc.
+# He Qiangqiang <carton@linux.net.cn>, 2002
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: libgda\n"
+"POT-Creation-Date: 2002-03-22 12:20+0800\n"
+"PO-Revision-Date: 2002-03-25 22:35+0800\n"
+"Last-Translator: He Qiangqiang <carton@linux.net.cn>\n"
+"Language-Team: zh_CN <i18n-translation@lists.linux.net.cn>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: libgda/gda-client.c:198 libgda/gda-client.c:308 libgda/gda-connection.c:213
+#, c-format
+msgid "Data source %s not found in configuration"
+msgstr "无法在配置中找到数据源 %s"
+
+#: libgda/gda-client.c:235
+#, c-format
+msgid "Could not activate object %s"
+msgstr "无法激活对象 %s"
+
+#: libgda/gda-client.c:253
+msgid "Could not create connection component"
+msgstr "无法创建连接组件"
+
+#: libgda/gda-config.c:512
+msgid "Could not query CORBA components"
+msgstr "无法查询 CORBA 组件"
+
+#: libgda/gda-config.c:619
+msgid "Could not query CORBA providers"
+msgstr "无法查询 CORBA 提供者"
+
+#: libgda/gda-config.c:869 providers/default/gda-default-provider.c:331
+msgid "Name"
+msgstr "名称"
+
+#: libgda/gda-config.c:870
+msgid "Provider"
+msgstr "提供者"
+
+#: libgda/gda-config.c:871
+msgid "Connection string"
+msgstr "连接字符串"
+
+#: libgda/gda-config.c:872
+msgid "Description"
+msgstr "描述"
+
+#: libgda/gda-config.c:873
+msgid "Username"
+msgstr "用户名"
+
+#: libgda/gda-error.c:127
+#, c-format
+msgid "%s: An Error occured in the CORBA system."
+msgstr "%s：CORBA 系统出错。"
+
+#: libgda/gda-error.c:156
+msgid "Unknown CORBA exception for connection"
+msgstr "未知的 CORBA 连接异常"
+
+#: libgda/gda-init.c:44
+msgid "Attempt to initialize an already initialized client"
+msgstr "试图初始化一个已初始化的客户端"
+
+#: libgda/gda-init.c:56
+msgid "Could not initialize Bonobo"
+msgstr "无法初始化 Bonobo"
+
+#: libgda/gda-server.c:108
+#, c-format
+msgid "Don't know how to create components with IID %s"
+msgstr "不知道如何创建 IID 为 %s 的组件"
+
+#: libgda/gda-server.c:122
+#, c-format
+msgid "Could not create component of type %s"
+msgstr "无法创建类型为 %s 的组件"
+
+#: libgda/gda-server-connection.c:90
+msgid "Could not duplicate client object. Client won't get notifications"
+msgstr "无法复制客户对象。客户程序将不会得到通知"
+
+#: libgda/gda-server-connection.c:445
+#, c-format
+msgid "Could not notify client about action %d"
+msgstr "无法通知客户程序关于动作 %d 的消息"
+
+#: libgda/gda-server-recordset.c:207
+msgid "No implementation for the fetch() method found"
+msgstr "未找到 fetch() 方法的实现"
+
+#: libgda/gda-table.c:229
+#, c-format
+msgid "There is already a field called %s"
+msgstr "已有一个名为 %s 的字段"
+
+#: libgda/gda-value.c:981
+msgid "TRUE"
+msgstr "真"
+
+#: libgda/gda-value.c:983
+msgid "FALSE"
+msgstr "假"
+
+#: libgda/gda-xml-database.c:225
+#, c-format
+msgid "Could not load file at %s"
+msgstr "无法加载文件于 %s"
+
+#: libgda/gda-xml-database.c:234
+#, c-format
+msgid "Could not parse file at %s"
+msgstr "无法解析文件于 %s"
+
+#: libgda/gda-xml-database.c:244
+#, c-format
+msgid "Invalid XML database file '%s'"
+msgstr "无效的 XML 数据库文件“%s”"
+
+#: libgda/gda-xml-database.c:413 libgda/gda-xml-database.c:454
+#, c-format
+msgid "Table %s already exists"
+msgstr "已经存在表 %s "
+
+#: libgda/gda-xml-database.c:447
+msgid "Invalid node"
+msgstr "无效节点"
+
+#: libgda/gda-xml-database.c:479
+#, c-format
+msgid "Duplicated <data> node for table %s"
+msgstr "表 %s 中存在重复的 <data> 节点"
+
+#: libgda/gda-xml-database.c:486
+msgid "Invalid XML node"
+msgstr "无效的 XML 节点"
+
+#: providers/default/gda-default-provider.c:159
+#: providers/sqlite/gda-sqlite-provider.c:152
+msgid ""
+"A full path must be specified on the connection string to open a database."
+msgstr "要打开一个数据库，必须在连接字符串中指定完整路径。"
+
+#: providers/default/gda-default-provider.c:386
+#: providers/mysql/gda-mysql-provider.c:464
+#: providers/postgres/gda-postgres-provider.c:613
+msgid "Type"
+msgstr "类型"
+
+#: providers/default/GNOME_Database_Provider_Default.server.in.h:1
+msgid "Default component factory"
+msgstr "默认组件工厂"
+
+#: providers/default/GNOME_Database_Provider_Default.server.in.h:2
+msgid "GDA Default Datasource Access"
+msgstr "GDA 默认数据源访问"
+
+#: providers/default/main.c:48
+msgid "Could not initiate Default component factory"
+msgstr "无法初始化默认组件工厂"
+
+#: providers/mysql/gda-mysql-provider.c:175
+msgid ""
+"You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
+msgstr "如果您已经给出了主机或端口，您就无法再给出 UNIX_SOCKET。"
+
+#: providers/mysql/gda-mysql-provider.c:246
+#: providers/mysql/gda-mysql-provider.c:326
+#: providers/mysql/gda-mysql-provider.c:355
+#: providers/mysql/gda-mysql-provider.c:384
+msgid "Invalid MYSQL handle"
+msgstr "无效的 MYSQL 句柄"
+
+#: providers/mysql/gda-mysql-recordset.c:63
+#: providers/mysql/gda-mysql-recordset.c:170
+msgid "Invalid MySQL handle"
+msgstr "无效的 MySQL 句柄"
+
+#: providers/mysql/gda-mysql-recordset.c:76
+#: providers/postgres/gda-postgres-recordset.c:84
+#: providers/sqlite/gda-sqlite-recordset.c:74
+msgid "Row number out of range"
+msgstr "行数超出范围"
+
+#: providers/mysql/GNOME_Database_Provider_MySQL.server.in.h:1
+msgid "GDA Datasource Access for MySQL"
+msgstr "MySQL 的 GDA 数据源访问"
+
+#: providers/mysql/GNOME_Database_Provider_MySQL.server.in.h:2
+msgid "MySQL component factory"
+msgstr "MySQL 组件工厂"
+
+#: providers/mysql/main.c:49
+msgid "Could not initiate MySQL component factory"
+msgstr "无法初始化 MySQL 组件工厂"
+
+#: providers/odbc/GNOME_Database_Provider_ODBC.server.in.h:1
+msgid "GDA Datasource Access for ODBC"
+msgstr "ODBC 的 GDA 数据源访问"
+
+#: providers/odbc/GNOME_Database_Provider_ODBC.server.in.h:2
+msgid "ODBC component factory"
+msgstr "ODBC 组件工厂"
+
+#: providers/odbc/main.c:49
+msgid "Could not initiate ODBC component factory"
+msgstr "无法初始化 ODBC 组件工厂"
+
+#: providers/oracle/gda-oracle-connection.c:77
+msgid "Could not initialize Oracle environment"
+msgstr "无法初始化 Oracle 环境"
+
+#: providers/oracle/gda-oracle-connection.c:87
+msgid "Could not initialize Oracle error handler"
+msgstr "无法初始化 Oracle 错误处理程序"
+
+#: providers/oracle/gda-oracle-connection.c:98
+msgid "Could not initialize Oracle server handle"
+msgstr "无法初始化 Oracle 服务器句柄"
+
+#: providers/oracle/gda-oracle-connection.c:109
+msgid "Could not initialize Oracle service context"
+msgstr "无法初始化 Oracle 服务上下文"
+
+#: providers/oracle/GNOME_Database_Provider_Oracle.server.in.h:1
+msgid "GDA Datasource Access for Oracle"
+msgstr "Oracle 的 GDA 数据源访问"
+
+#: providers/oracle/GNOME_Database_Provider_Oracle.server.in.h:2
+msgid "Oracle component factory"
+msgstr "Oracle 组件工厂"
+
+#: providers/oracle/main.c:46
+msgid "Could not initiate Oracle component factory"
+msgstr "无法初始化 Oracle 组件工厂"
+
+#: providers/oracle/main.c:70
+msgid "Could not initialize OCI library"
+msgstr "无法初始化 OCI 库"
+
+#: providers/postgres/gda-postgres-provider.c:360
+#: providers/postgres/gda-postgres-provider.c:498
+#: providers/postgres/gda-postgres-recordset.c:71
+#: providers/postgres/gda-postgres-recordset.c:128
+msgid "Invalid PostgreSQL handle"
+msgstr "无效的 PostgreSQL 句柄"
+
+#: providers/postgres/gda-postgres-provider.c:724
+msgid "Field name"
+msgstr "字段名"
+
+#: providers/postgres/gda-postgres-provider.c:725
+msgid "Data type"
+msgstr "数据类型"
+
+#: providers/postgres/gda-postgres-provider.c:726
+msgid "Size"
+msgstr "大小"
+
+#: providers/postgres/gda-postgres-provider.c:727
+msgid "Scale"
+msgstr ""
+
+#: providers/postgres/gda-postgres-provider.c:728
+msgid "Not null?"
+msgstr "Not null?"
+
+#: providers/postgres/gda-postgres-provider.c:729
+msgid "Primary key?"
+msgstr "主键？"
+
+#: providers/postgres/gda-postgres-provider.c:730
+msgid "Unique index?"
+msgstr "唯一索引？"
+
+#: providers/postgres/gda-postgres-provider.c:731
+msgid "References"
+msgstr "引用"
+
+#: providers/postgres/GNOME_Database_Provider_Postgres.server.in.h:1
+msgid "GDA Datasource Access for Postgres"
+msgstr "Postgres 的 GDA 数据源访问"
+
+#: providers/postgres/GNOME_Database_Provider_Postgres.server.in.h:2
+msgid "Postgres component factory"
+msgstr "Postgres 组件工厂"
+
+#: providers/postgres/main.c:49
+msgid "Could not initiate PostgreSQL component factory"
+msgstr "无法初始化 PostgreSQL 组件工厂"
+
+#: providers/postgres/utils.c:39
+msgid "NO DESCRIPTION"
+msgstr "没有描述"
+
+#: providers/postgres/utils.c:44
+msgid "Not available"
+msgstr "不可用"
+
+#: providers/sqlite/gda-sqlite-provider.c:211
+#: providers/sqlite/gda-sqlite-recordset.c:63
+msgid "Invalid SQLITE handle"
+msgstr "无效的 SQLITE 句柄"
+
+#: providers/sqlite/gda-sqlite-recordset.c:114
+msgid "Invalid Sqlite handle"
+msgstr "无效的 Sqlite 句柄"
+
+#: providers/sqlite/GNOME_Database_Provider_SQLite.server.in.h:1
+msgid "GDA SQLite Datasource Access"
+msgstr "SQLite 的 GDA  数据源访问"
+
+#: providers/sqlite/GNOME_Database_Provider_SQLite.server.in.h:2
+msgid "SQLite component factory"
+msgstr "SQLite 组件工厂"
+
+#: providers/sqlite/main.c:54
+msgid "Could not initiate Sqlite component factory"
+msgstr "无法初始化 Sqlite 组件工厂"
+
+#: providers/sybase/GNOME_Database_Provider_Sybase.server.in.h:1
+msgid "GDA Datasource Access for Sybase"
+msgstr "Sybase 的 GDA 数据源访问"
+
+#: providers/sybase/GNOME_Database_Provider_Sybase.server.in.h:2
+msgid "Sybase component factory"
+msgstr "Sybase 组件工厂"
+
+#: providers/sybase/main.c:50
+msgid "Could not initiate Sybase component factory"
+msgstr "无法初始化 Sybase 组件工厂"
+
+#: report/gda-report-engine.c:67 report/libgda-report/gda-report-client.c:195
+#: report/libgda-report/gda-report-client.c:209
+#, c-format
+msgid "CORBA exception: %s"
+msgstr "CORBA 异常：%s"
+
+#: report/gda-report-engine.c:105
+msgid "Could not create global GDA client"
+msgstr "无法创建全局 GDA 客户程序"
+
+#: report/GNOME_Database_Report.server.in.h:1
+msgid "GDA Report engine"
+msgstr "GDA 报告引擎"
+
+#: report/GNOME_Database_Report.server.in.h:2
+msgid "GDA Report engine factory"
+msgstr "GDA 报告引擎工厂"
+
+#: report/job.c:43
+msgid "Could not parse XML report"
+msgstr "无法解析 XML 报告"
+
+#: report/libgda-report/gda-report-client.c:141
+msgid "Could not activate report engine"
+msgstr "无法激活报告引擎"
+
+#: report/libgda-report/gda-report-client.c:182
+msgid "Could not create BonoboStreamMem object"
+msgstr "无法创建 BonoboStreamMem 对象"
+
+#: report/libgda-report/gda-report-document.c:137
+msgid "Could not parse XML document"
+msgstr "无法解析 XML 文档"
+
+#: report/libgda-report/gda-report-document.c:162
+#, c-format
+msgid "Could not get file from %s"
+msgstr "无法从 %s 中获得文件"
+
+#: report/main.c:47
+msgid "Could not initiate Report component factory"
+msgstr "无法初始化报告组件工厂"
+
+#: testing/client.c:37
+msgid "\t\tNONE\n"
+msgstr "\t\t无\n"
+
+#: testing/client.c:76
+#, c-format
+msgid "** ERROR: could not open connection to %s\n"
+msgstr "** 错误：无法打开与 %s 的连接\n"
+
+#. show provider features
+#: testing/client.c:81
+msgid "\tProvider capabilities...\n"
+msgstr "\t提供者能力...\n"
+
+#: testing/client.c:82
+#, c-format
+msgid "\t\tTransactions: %s\n"
+msgstr "\t\t事务：%s\n"
+
+#: testing/client.c:84
+msgid "Supported"
+msgstr "支持"
+
+#: testing/client.c:84
+msgid "Not supported"
+msgstr "不支持"
+
+#. show connection schemas
+#: testing/client.c:87
+#, fuzzy
+msgid "Stored procedures"
+msgstr "已保存的过程"
+
+#: testing/client.c:88
+msgid "Connection Tables"
+msgstr "连接表"
+
+#: testing/client.c:89
+msgid "Available types"
+msgstr "可用类型"
+
+#: testing/client.c:90
+msgid "Views"
+msgstr "视图"
+
+#: testing/client.c:91
+msgid "Indexes"
+msgstr "索引"
+
+#: testing/client.c:92
+msgid "Aggregates"
+msgstr "聚合"
+
+#: testing/client.c:93
+msgid "Triggers"
+msgstr "触发器"
+
+#. test transactions
+#: testing/client.c:96 testing/client.c:104
+msgid "\tStarting transaction..."
+msgstr "\t开始事务..."
+
+#: testing/client.c:98 testing/client.c:102 testing/client.c:106
+#: testing/client.c:110
+msgid "Error"
+msgstr "错误"
+
+#: testing/client.c:100
+msgid "\tFinishing transaction..."
+msgstr "\t结束事务..."
+
+#: testing/client.c:108
+msgid "\tRolling back transaction..."
+msgstr "\t回滚事务..."
+
+#: testing/client.c:129
+msgid "Testing GDA client API"
+msgstr "正在测试 GDA 客户程序 API"
+
+#: testing/client.c:138
+msgid "** ERROR: gda_config_get_data_source_list returned a NULL item\n"
+msgstr "** 错误：gda_config_get_data_source_list 返回 NULL 项\n"
+
+#: testing/client.c:142
+#, c-format
+msgid " Data source = %s, User = %s\n"
+msgstr " 数据源 = %s，用户 = %s\n"
+
+#: testing/config.c:84
+msgid "** ERROR: gda_config_get_provider_list returned a NULL item\n"
+msgstr "** 错误：gda_config_get_provider_list 返回 NULL 项\n"
+
+#: testing/config.c:88
+#, c-format
+msgid " Provider = %s\n"
+msgstr " 提供者 = %s\n"
+
+#: testing/config.c:89
+#, c-format
+msgid "\tlocation = %s\n"
+msgstr "\t位置 = %s\n"
+
+#: testing/config.c:90
+#, c-format
+msgid "\ttype = %s\n"
+msgstr "\t类型 = %s\n"
+
+#: testing/config.c:93
+#, c-format
+msgid "\tdescription = %s\n"
+msgstr "\t描述 = %s\n"
+
+#: testing/config.c:95
+msgid "\trepo_ids ="
+msgstr "\trepo_ids ="
+
+#: testing/config.c:102
+#, c-format
+msgid "\tusername = %s\n"
+msgstr "\t用户名 = %s\n"
+
+#: testing/config.c:103
+#, c-format
+msgid "\thostname = %s\n"
+msgstr "\t主机名 = %s\n"
+
+#: testing/config.c:104
+#, c-format
+msgid "\tdomain = %s\n"
+msgstr "\t域 = %s\n"
+
+#: testing/config.c:106
+msgid "\tgda_params ="
+msgstr "\tgda_params ="
