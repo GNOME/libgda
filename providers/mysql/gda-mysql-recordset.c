@@ -41,8 +41,9 @@ static GObjectClass *parent_class = NULL;
  * Private functions
  */
 
-void
-fill_gda_value (GdaValue *gda_value, enum enum_field_types type, gchar *value, unsigned long length)
+static void
+fill_gda_value (GdaValue *gda_value, enum enum_field_types type, gchar *value,
+		unsigned long length, gboolean is_unsigned)
 {
 	if (!value) {
 		gda_value_set_null (gda_value);
@@ -58,17 +59,25 @@ fill_gda_value (GdaValue *gda_value, enum enum_field_types type, gchar *value, u
 		gda_value_set_single (gda_value, atof (value));
 		break;
 	case FIELD_TYPE_LONG :
+		if (is_unsigned)
+			gda_value_set_uinteger (gda_value, atol (value));
 	case FIELD_TYPE_YEAR :
 		gda_value_set_integer (gda_value, atol (value));
 		break;
 	case FIELD_TYPE_LONGLONG :
 	case FIELD_TYPE_INT24 :
+		if (is_unsigned)
+			gda_value_set_biguint (gda_value, atoll (value));
 		gda_value_set_bigint (gda_value, atoll (value));
 		break;
 	case FIELD_TYPE_SHORT :
+		if (is_unsigned)
+			gda_value_set_smalluint (gda_value, atoi (value));
 		gda_value_set_smallint (gda_value, atoi (value));
 		break;
 	case FIELD_TYPE_TINY :
+		if (is_unsigned)
+			gda_value_set_tinyuint (gda_value, atoi (value));
 		gda_value_set_tinyint (gda_value, atoi (value));
 		break;
 	case FIELD_TYPE_TINY_BLOB :
@@ -142,9 +151,10 @@ fetch_row (GdaMysqlRecordset *recset, gulong rownum)
 
 	for (i = 0; i < field_count; i++) {
 		fill_gda_value ((GdaValue*) gda_row_get_value (row, i),
-			    mysql_fields[i].type,
-			    mysql_row[i],
-			    mysql_lengths[i]);
+				mysql_fields[i].type,
+				mysql_row[i],
+				mysql_lengths[i],
+				mysql_fields[i].flags & UNSIGNED_FLAG);
 	}
 
 	return row;
@@ -210,7 +220,8 @@ gda_mysql_recordset_describe_column (GdaDataModel *model, gint col)
 	gda_field_attributes_set_table (attrs, mysql_field->table);
 	/* gda_field_attributes_set_caption(attrs, ); */
 	gda_field_attributes_set_scale (attrs, mysql_field->decimals);
-	gda_field_attributes_set_gdatype (attrs, gda_mysql_type_to_gda (mysql_field->type));
+	gda_field_attributes_set_gdatype (attrs, gda_mysql_type_to_gda (mysql_field->type,
+									mysql_field->flags & UNSIGNED_FLAG));
 	gda_field_attributes_set_allow_null (attrs, !IS_NOT_NULL (mysql_field->flags));
 	gda_field_attributes_set_primary_key (attrs, IS_PRI_KEY (mysql_field->flags));
 	gda_field_attributes_set_unique_key (attrs, mysql_field->flags & UNIQUE_KEY_FLAG);

@@ -46,7 +46,7 @@ gda_mysql_make_error (MYSQL *handle)
 }
 
 GdaValueType
-gda_mysql_type_to_gda (enum enum_field_types mysql_type)
+gda_mysql_type_to_gda (enum enum_field_types mysql_type, gboolean is_unsigned)
 {
 	switch (mysql_type) {
 	case FIELD_TYPE_DATE :
@@ -57,12 +57,18 @@ gda_mysql_type_to_gda (enum enum_field_types mysql_type)
 	case FIELD_TYPE_FLOAT :
 		return GDA_VALUE_TYPE_SINGLE;
 	case FIELD_TYPE_LONG :
+		if (is_unsigned)
+			return GDA_VALUE_TYPE_UINTEGER;
 	case FIELD_TYPE_YEAR :
 		return GDA_VALUE_TYPE_INTEGER;
 	case FIELD_TYPE_LONGLONG :
 	case FIELD_TYPE_INT24 :
+		if (is_unsigned)
+			return GDA_VALUE_TYPE_BIGUINT;
 		return GDA_VALUE_TYPE_BIGINT;
 	case FIELD_TYPE_SHORT :
+		if (is_unsigned)
+			return GDA_VALUE_TYPE_SMALLUINT;
 		return GDA_VALUE_TYPE_SMALLINT;
 	case FIELD_TYPE_TIME :
 		return GDA_VALUE_TYPE_TIME;
@@ -70,6 +76,8 @@ gda_mysql_type_to_gda (enum enum_field_types mysql_type)
 	case FIELD_TYPE_DATETIME :
 		return GDA_VALUE_TYPE_TIMESTAMP;
 	case FIELD_TYPE_TINY :
+		if (is_unsigned)
+			return GDA_VALUE_TYPE_TINYUINT;
 		return GDA_VALUE_TYPE_TINYINT;
 	case FIELD_TYPE_TINY_BLOB :
 	case FIELD_TYPE_MEDIUM_BLOB :

@@ -219,7 +219,7 @@ fi
 AM_CONDITIONAL(ODBC, test x$odbcdir != x)
 
 dnl Test for MySQL
-try_mysql=false
+try_mysql=true
 AC_ARG_WITH(mysql,
 [  --with-mysql=<directory>	use mysql backend in <directory>],[
 if test $withval = no

@@ -1,6 +1,23 @@
+2004-06-06  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* providers/mysql/utils.c (gda_mysql_type_to_gda): added an
+	'is_unsigned' argument and return signed/unsigned types
+	approppriately.
+
+	* providers/mysql/gda-mysql-recordset.c (fill_gda_value): made
+	it static, to fix some warnings. Added 'is_unsigned' argument
+	and set signed/unsigned values approppriately.
+	(gda_mysql_recordset_describe_column): update for
+	gda_mysql_type_to_gda() changes.
+	(fetch_row): update for fill_gda_value() changes.
+
+	* providers/mysql/gda-mysql.h: updated function prototype.
+
 2004-06-05  Vivien Malerba <malerba@gnome-db.org>
-	* libsql/parser.y & libsql/lexer.l: added a special keyword '##', which can be used for parameters when 
-	  no value is provided, such as "SELECT name FROM users WHERE id=##".
+
+	* libsql/parser.y & libsql/lexer.l: added a special keyword '##',
+	which can be used for parameters when no value is provided, such
+	as "SELECT name FROM users WHERE id=##".
 
 2004-06-03  Rodrigo Moya <rodrigo@gnome-db.org>
 
