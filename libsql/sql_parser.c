@@ -602,16 +602,13 @@ sql_condition_stringify(sql_condition * cond)
 	case SQL_similar:
 	case SQL_not:
 	case SQL_like:
-		retval =
-		    memsql_strappend_free(sql_field_stringify(cond->d.pair.left),
-		                          memsql_strdup(" "));
-		retval =
-		    memsql_strappend_free(retval,
-		                          sql_condition_op_stringify(cond->op));
+		retval = memsql_strappend_free(sql_field_stringify(
+				cond->d.pair.left), memsql_strdup(" "));
+		retval = memsql_strappend_free(retval, 
+				sql_condition_op_stringify(cond->op));
 		retval = memsql_strappend_free(retval, memsql_strdup(" "));
-		retval =
-		    memsql_strappend_free(retval,
-		                          sql_field_stringify(cond->d.pair.right));
+		retval =  memsql_strappend_free(retval,sql_field_stringify(
+					cond->d.pair.right));
 		break;
 
 	case SQL_between:
@@ -633,6 +630,61 @@ sql_condition_stringify(sql_condition * cond)
 		fprintf(stderr, "Invalid condition type: %d\n", cond->op);
 		retval = NULL;
 		}
+
+	return retval;
+	}
+
+
+static char *
+sql_logic_op_stringify(sql_logic_operator op)
+	{
+	switch (op)
+		{
+	case SQL_and:
+		return memsql_strdup("and");
+	case SQL_or:
+		return memsql_strdup("or");
+	default:
+		fprintf(stderr, "invalid logic op: %d", op);
+		}
+	return NULL;
+	}
+
+static char *
+sql_where_stringify(sql_where * where)
+	{
+	char *retval = NULL;
+
+	if (!where)
+		return NULL;
+
+	switch (where->type)
+		{
+	case SQL_single:
+		retval = sql_condition_stringify(where->d.single);
+		break;
+
+	case SQL_negated:
+		retval =
+		    memsql_strappend_free(memsql_strdup("not "),
+		                          sql_where_stringify(where->d.negated));
+		break;
+
+	case SQL_pair:
+		retval =
+		    memsql_strappend_free(sql_where_stringify(where->d.pair.left),
+		                          memsql_strdup(" "));
+		retval =
+		    memsql_strappend_free(retval,
+		                          sql_logic_op_stringify(where->d.pair.op));
+		retval = memsql_strappend_free(retval, memsql_strdup(" "));
+		retval =
+		    memsql_strappend_free(retval,
+		                          sql_where_stringify(where->d.pair.right));
+		}
+
+	retval = memsql_strappend_free(memsql_strdup("("), retval);
+	retval = memsql_strappend_free(retval, memsql_strdup(")"));
 
 	return retval;
 	}
@@ -707,65 +759,9 @@ sql_table_stringify(sql_table * table)
 	if (table->join_cond)
 		{
 		retval = memsql_strappend_free(retval, memsql_strdup(" on "));
-		retval = memsql_strappend_free(retval,
-		                               sql_condition_stringify((sql_condition
-		                                                        *) table->
-		                                                       join_cond));
+		retval = memsql_strappend_free(retval, 
+			sql_where_stringify((sql_where*)table->join_cond));
 		}
-
-	return retval;
-	}
-
-static char *
-sql_logic_op_stringify(sql_logic_operator op)
-	{
-	switch (op)
-		{
-	case SQL_and:
-		return memsql_strdup("and");
-	case SQL_or:
-		return memsql_strdup("or");
-	default:
-		fprintf(stderr, "invalid logic op: %d", op);
-		}
-	return NULL;
-	}
-
-static char *
-sql_where_stringify(sql_where * where)
-	{
-	char *retval = NULL;
-
-	if (!where)
-		return NULL;
-
-	switch (where->type)
-		{
-	case SQL_single:
-		retval = sql_condition_stringify(where->d.single);
-		break;
-
-	case SQL_negated:
-		retval =
-		    memsql_strappend_free(memsql_strdup("not "),
-		                          sql_where_stringify(where->d.negated));
-		break;
-
-	case SQL_pair:
-		retval =
-		    memsql_strappend_free(sql_where_stringify(where->d.pair.left),
-		                          memsql_strdup(" "));
-		retval =
-		    memsql_strappend_free(retval,
-		                          sql_logic_op_stringify(where->d.pair.op));
-		retval = memsql_strappend_free(retval, memsql_strdup(" "));
-		retval =
-		    memsql_strappend_free(retval,
-		                          sql_where_stringify(where->d.pair.right));
-		}
-
-	retval = memsql_strappend_free(memsql_strdup("("), retval);
-	retval = memsql_strappend_free(retval, memsql_strdup(")"));
 
 	return retval;
 	}
@@ -777,18 +773,19 @@ sql_insert_stringify(sql_insert_statement * insert)
 	GList *walk;
 
 	result = memsql_strdup("insert into ");
-	result = memsql_strappend_free(result, sql_table_stringify(insert->table));
+	result = memsql_strappend_free(result, 
+			sql_table_stringify(insert->table));
 
 	if (insert->fields)
 		{
 		result = memsql_strappend_free(result, memsql_strdup(" ("));
 		for (walk = insert->fields; walk != NULL; walk = walk->next)
 			{
-			result =
-			    memsql_strappend_free(result,
-			                          sql_field_stringify(walk->data));
+			result = memsql_strappend_free(result,
+			         sql_field_stringify(walk->data));
 			if (walk->next)
-				result = memsql_strappend_free(result, memsql_strdup(", "));
+				result = memsql_strappend_free(result, 
+				memsql_strdup(", "));
 			}
 		result = memsql_strappend_free(result, memsql_strdup(")"));
 		}
@@ -797,10 +794,11 @@ sql_insert_stringify(sql_insert_statement * insert)
 
 	for (walk = insert->values; walk != NULL; walk = walk->next)
 		{
-		result =
-		    memsql_strappend_free(result, sql_field_stringify(walk->data));
+		result = memsql_strappend_free(result, 
+				sql_field_stringify(walk->data));
 		if (walk->next)
-			result = memsql_strappend_free(result, memsql_strdup(", "));
+			result = memsql_strappend_free(result, 
+				memsql_strdup(", "));
 		}
 
 	result = memsql_strappend_free(result, memsql_strdup(")"));
@@ -819,34 +817,44 @@ sql_select_stringify(sql_select_statement * select)
 	char *group;
 	char *temp;
 	GList *walk;
+	sql_table *nexttable;
 	sql_order_field *orderfield;
 
 	result = memsql_strdup("select ");
 
 	if (select->distinct)
-		result = memsql_strappend_free(result, memsql_strdup("distinct "));
+		result = memsql_strappend_free(result, 
+				memsql_strdup("distinct "));
 
 	fields = NULL;
 	for (walk = select->fields; walk != NULL; walk = walk->next)
 		{
 		temp = sql_field_stringify(walk->data);
 		fields = memsql_strappend_free(fields, temp);
-
 		if (walk->next)
-			fields = memsql_strappend_free(fields, memsql_strdup(", "));
-
+			fields = memsql_strappend_free(fields, 
+					memsql_strdup(", "));
 		}
 
 	result = memsql_strappend_free(result, fields);
 	result = memsql_strappend_free(result, memsql_strdup(" from "));
-
+	/* Build the from statement part */
 	tables = NULL;
 	for (walk = select->from; walk != NULL; walk = walk->next)
 		{
 		temp = sql_table_stringify(walk->data);
 		tables = memsql_strappend_free(tables, temp);
 		if (walk->next)
-			tables = memsql_strappend_free(tables, memsql_strdup(", "));
+			{
+			nexttable = walk->next->data;
+			/* If its not a join add a , into sql statement */
+			if (nexttable->join_type == SQL_cross_join)
+			{
+				printf("Adding tables , \n\n\n");
+				tables = memsql_strappend_free(tables, 
+					memsql_strdup(", "));
+			}
+			}
 		}
 
 	result = memsql_strappend_free(result, tables);
@@ -871,9 +879,11 @@ sql_select_stringify(sql_select_statement * select)
 			                              sql_field_name_stringify
 			                              (orderfield->name));
 			if (orderfield->order_type == SQL_desc)
-				order = memsql_strappend_free(order, memsql_strdup(" desc "));
+				order = memsql_strappend_free(order, 
+						memsql_strdup(" desc "));
 			if (walk->next)
-				order = memsql_strappend_free(order, memsql_strdup(", "));
+				order = memsql_strappend_free(order, 
+						memsql_strdup(", "));
 			}
 		}
 	else
