@@ -27,6 +27,10 @@
 #include <sqlext.h>
 #include <gda-server.h>
 
+#ifndef SQL_SUCCEEDED
+#define SQL_SUCCEEDED(x) (x == SQL_SUCCESS)
+#endif
+
 /*
  * Per-object specific structures
  */

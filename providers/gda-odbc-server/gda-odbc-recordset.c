@@ -18,6 +18,10 @@
 
 #include "gda-odbc.h"
 
+#ifndef SQL_NO_DATA
+#define SQL_NO_DATA SQL_NO_DATA_FOUND
+#endif
+
 int map_cols( ODBC_Recordset *odbc_recset, int col )
 {
     if ( odbc_recset -> mapped_cols )
@@ -228,9 +232,9 @@ fill_field_values (Gda_ServerRecordset *recset, ODBC_Recordset *odbc_recset)
         case SQL_DATE:
           {
               rc = SQLGetData( odbc_recset->hstmt, map_cols( odbc_recset, i ) + 1, 
-                      SQL_C_DATE, &field->value->_u.dbd, sizeof( SQL_TIME_STRUCT ), &len );
+                      SQL_C_DATE, &field->value->_u.dbd, sizeof( TIME_STRUCT ), &len );
               gda_server_field_set_actual_length((Gda_ServerField *) node->data, 
-                      sizeof( SQL_DATE_STRUCT ));
+                      sizeof( DATE_STRUCT ));
               field->value->_d = GDA_TypeDbDate;
           }
           break;
@@ -238,9 +242,9 @@ fill_field_values (Gda_ServerRecordset *recset, ODBC_Recordset *odbc_recset)
         case SQL_TIME:
           {
               rc = SQLGetData( odbc_recset->hstmt, map_cols( odbc_recset, i ) + 1, 
-                      SQL_C_TIME, &field->value->_u.dbt, sizeof( SQL_TIME_STRUCT ), &len );
+                      SQL_C_TIME, &field->value->_u.dbt, sizeof( TIME_STRUCT ), &len );
               gda_server_field_set_actual_length((Gda_ServerField *) node->data, 
-                      sizeof( SQL_TIME_STRUCT ));
+                      sizeof( TIME_STRUCT ));
               field->value->_d = GDA_TypeDbTime;
           }
           break;
@@ -248,9 +252,9 @@ fill_field_values (Gda_ServerRecordset *recset, ODBC_Recordset *odbc_recset)
         case SQL_TIMESTAMP:
           {
               rc = SQLGetData( odbc_recset->hstmt, map_cols( odbc_recset, 1 ) + 1, 
-                      SQL_C_TIMESTAMP, &field->value->_u.dbtstamp, sizeof( SQL_TIMESTAMP_STRUCT ), &len );
+                      SQL_C_TIMESTAMP, &field->value->_u.dbtstamp, sizeof( TIMESTAMP_STRUCT ), &len );
               gda_server_field_set_actual_length((Gda_ServerField *) node->data, 
-                      sizeof( SQL_TIMESTAMP_STRUCT ));
+                      sizeof( TIMESTAMP_STRUCT ));
               field->value->_d = GDA_TypeDbTimestamp;
           }
           break;
@@ -340,7 +344,7 @@ gda_odbc_recordset_move_prev (Gda_ServerRecordset *recset)
 #if (ODBCVER >= 0x0300)
     rc = SQLFetchScroll( odbc_recset->hstmt, SQL_FETCH_PRIOR, 0 );
 #else
-    rc = SQLExtendedFetch( odbc_recset->hstmt, SQL_FETCH_PRIOR, 0, NULL );
+    rc = SQLExtendedFetch( odbc_recset->hstmt, SQL_FETCH_PRIOR, 0, NULL, NULL );
 #endif 
 
     if ( rc == SQL_NO_DATA )

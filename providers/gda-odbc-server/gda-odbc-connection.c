@@ -183,7 +183,7 @@ gda_odbc_connection_begin_transaction (Gda_ServerConnection *cnc)
 #if (ODBCVER >= 0x0300)
     rc = SQLSetConnectAttr( od_cnc->hdbc, SQL_ATTR_AUTOCOMMIT, SQL_AUTOCOMMIT_OFF, 0 );
 #else
-    rc = SQLSetConnectOption( od_cnc->hdbc, SQL_AUTOCOMMIT, SQL_AUTOCOMMIT_OFF, 0 );
+    rc = SQLSetConnectOption( od_cnc->hdbc, SQL_AUTOCOMMIT, SQL_AUTOCOMMIT_OFF );
 #endif
     if ( SQL_SUCCEEDED( rc ))
     {
@@ -300,7 +300,7 @@ gda_odbc_connection_start_logging (Gda_ServerConnection *cnc,
 #if (ODBCVER >= 0x0300)
     rc = SQLSetConnectAttr( od_cnc->hdbc, SQL_ATTR_TRACE, (SQLPOINTER)SQL_OPT_TRACE_ON, 0 );
 #else
-    rc = SQLSetConnectOption( od_cnc->hdbc, SQL_TRACE, (SQLPOINTER)SQL_OPT_TRACE_ON, 0 );
+    rc = SQLSetConnectOption( od_cnc->hdbc, SQL_OPT_TRACE, (SQLPOINTER)SQL_OPT_TRACE_ON );
 #endif
     if ( SQL_SUCCEEDED( rc ))
     {
@@ -332,7 +332,7 @@ gda_odbc_connection_stop_logging (Gda_ServerConnection *cnc)
 #if (ODBCVER >= 0x0300)
     rc = SQLSetConnectAttr( od_cnc->hdbc, SQL_ATTR_TRACE, SQL_OPT_TRACE_OFF, 0 );
 #else
-    rc = SQLSetConnectOption( od_cnc->hdbc, SQL_TRACE, SQL_OPT_TRACE_OFF, 0 );
+    rc = SQLSetConnectOption( od_cnc->hdbc, SQL_OPT_TRACE, SQL_OPT_TRACE_OFF );
 #endif
     if ( SQL_SUCCEEDED( rc ))
     {
@@ -474,7 +474,7 @@ gda_odbc_connection_get_gda_type (Gda_ServerConnection *cnc, gulong sql_type)
 
 #if (ODBCVER >= 0x0300)
     case SQL_TYPE_TIMESTAMP:
-#else
+#endif
     case SQL_TIMESTAMP:
       return GDA_TypeDbTimestamp;
   }
