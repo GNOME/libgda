@@ -1,3 +1,9 @@
+2002-03-22  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* libgda/gda-data-model.[ch] (gda_data_model_to_comma_separated):
+	(gda_data_model_to_tab_separated):
+	(gda_data_model_to_xml): new utility functions.
+
 2002-03-22  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
 	* providers/postgres/gda-postgres-recordset.c (fetch_func): don't add

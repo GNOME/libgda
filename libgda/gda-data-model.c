@@ -324,3 +324,75 @@ gda_data_model_get_value_at (GdaDataModel *model, gint col, gint row)
 
 	return CLASS (model)->get_value_at (model, col, row);
 }
+
+static gchar *
+export_to_separated (GdaDataModel *model, gchar sep)
+{
+	GString *str;
+	gchar *retval;
+	gint cols, c, rows, r;
+
+	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
+
+	str = g_string_new ("");
+	cols = gda_data_model_get_n_columns (model);
+	rows = gda_data_model_get_n_rows (model);
+
+	for (r = 0; r < rows; r++) {
+		if (r > 0)
+			str = g_string_append_c (str, '\n');
+
+		for (c = 0; c < cols; c++) {
+			GdaValue *value;
+			gchar *txt;
+
+			value = gda_data_model_get_value_at (model, c, r);
+			txt = gda_value_stringify (value);
+			if (c > 0)
+				str = g_string_append_c (str, sep);
+			str = g_string_append_c (str, '"');
+			str = g_string_append (str, txt);
+			str = g_string_append_c (str, '"');
+
+			g_free (txt);
+		}
+	}
+
+	retval = str->str;
+	g_string_free (str, FALSE);
+
+	return retval;
+}
+
+/**
+ * gda_data_model_to_comma_separated
+ * @model: a #GdaDataModel object.
+ *
+ * Convert the given model into a comma-separated series of rows.
+ *
+ * Returns: the representation of the model. You should free this
+ * string when you no longer need it.
+ */
+gchar *
+gda_data_model_to_comma_separated (GdaDataModel *model)
+{
+	return export_to_separated (model, ',');
+}
+
+/**
+ * gda_data_model_to_tab_separated
+ */
+gchar *
+gda_data_model_to_tab_separated (GdaDataModel *model)
+{
+	return export_to_separated (model, '\t');
+}
+
+/**
+ * gda_data_model_to_xml
+ */
+gchar *
+gda_data_model_to_xml (GdaDataModel *model, gboolean standalone)
+{
+	return NULL;
+}
