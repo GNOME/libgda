@@ -145,6 +145,10 @@ module GNOME {
 		 */
 		typedef string TransactionId;
 
+		enum Feature {
+			FEATURE_TRANSACTIONS
+		};
+
 		interface Connection : Bonobo::Unknown {
 			/* opening/closing connections */
 			boolean open (in Client client,
@@ -162,6 +166,9 @@ module GNOME {
 			boolean beginTransaction (in TransactionId id) raises (DriverError);
 			boolean commitTransaction (in TransactionId id) raises (DriverError);
 			boolean rollbackTransaction (in TransactionId id) raises (DriverError);
+
+			/* information about the connection */
+			boolean supports (in Feature feature);
 		};
 
 		/*

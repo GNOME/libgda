@@ -1,3 +1,9 @@
+2001-12-22  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* GNOME_Database.idl: added supports method to ::Connection, method
+	for getting information about supported features in a give database
+	connection
+
 2001-12-18  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* GNOME_Database.idl: added getRowCount method to ::Recordset
