@@ -1,5 +1,10 @@
 2002-06-02  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
+	* libgda/gda-config.c: little fixes in gda_config_save_data_source
+	(cut&paste errors).
+
+2002-06-02  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
 	* configure.in: check for headers needed by gda-config-tool.
 
 	* tools/Makefile.am: don't try to build gda-config-tool if needed 
