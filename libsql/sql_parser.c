@@ -1490,7 +1490,7 @@ sql_statement_get_wherejoin_rec(sql_where * where, GList **retlist)
 	return 0;
 	}
 
-static gint
+/*static gint
 sql_statement_get_where_ontable(sql_where * where, gchar * ontable,
                                 GList ** leftfield, GList ** rightfield,
                                 sql_condition_operator * condopr)
@@ -1517,7 +1517,7 @@ sql_statement_get_where_ontable(sql_where * where, gchar * ontable,
 	*rightfield = NULL;
 	return -1;
 	}
-
+*/
 /**
  * 
  * Assigns values to @wherelist. This list has to
@@ -1560,43 +1560,6 @@ sql_statement_free_wherejoin(GList **wherelist)
 	*wherelist = NULL;
 	}
 
-/* This code has been made obsolete and should be deleted */
-#if 0
-gint
-sql_statement_get_wherejoin_a(sql_statement * statement,
-                            gchar * ontable, GList ** returnedwherelist)
-	{
-	sql_where *where;
-	sql_select_statement *select;
-	sql_wherelist *wherelist;
-
-	wherelist = g_malloc0(sizeof(sql_wherelist));
-
-	g_assert(statement);
-
-	if (statement->type != SQL_select)
-		{
-		fprintf(stderr, "Invalid statement type: %d", statement->type);
-		return -1;
-		}
-	select = statement->statement;
-	/* Check for a where statement */
-	where = sql_statement_searchwhere_rec(select->where, ontable);
-	if (where)
-		{
-		if (where->type == SQL_single)
-			if (!sql_statement_get_where_ontable
-			        (where, ontable, &wherelist->leftfield, &wherelist->rightfield,
-			         &wherelist->condopr))
-				return 0;
-		}
-	returnwherelist = g_list_append(returnwherelist, wherelist);
-
-	/* Check for a join */
-	return -1;
-	}
-#endif
-
 /* Tests sql wherejoin code extraction. Damn gcc bug with having to define void */
 gint
 sql_statement_test_wherejoin(void)
@@ -1613,3 +1576,42 @@ sql_statement_test_wherejoin(void)
 	sql_destroy(statement);
 	return 0;
 	}
+void
+sql_statement_get_wherejoin_components(
+	sql_wherejoin *wherejoin, char **table, char **field, 
+	char leftside)
+        {
+	g_assert(wherejoin);
+	*table = NULL;
+	*field = NULL;
+	
+	if (leftside)
+	     {		
+	     if (g_list_length(wherejoin->leftfield) == 2)
+		  {
+		  *table = (char*)wherejoin->leftfield->data;
+		  *field = (char*)wherejoin->leftfield->next->data;
+		  }
+	     else
+		  {
+	          *table = NULL;
+		  *field = (char*)wherejoin->leftfield->data;
+		  }
+	     }
+	else
+	     {		
+	     if (g_list_length(wherejoin->rightfield) == 2)
+		  {
+		  *table = (char*)wherejoin->rightfield->data;
+		  *field = (char*)wherejoin->rightfield->next->data;
+		  }
+	     else
+		  {
+	          *table = NULL;
+		  *field = (char*)wherejoin->rightfield->data;
+		  }
+	     }
+	       
+	}
+
+    

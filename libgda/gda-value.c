@@ -2034,7 +2034,8 @@ gda_value_set_from_value (GdaValue *value, const GdaValue *from)
  * table:
  *
  * Returns: a string formatted according to the printf() style indicated in
- * the preceding table.
+ * the preceding table.  Free the value with a g_free() when you've finished
+ * using it. 
  */
 gchar *
 gda_value_stringify (GdaValue *value)

@@ -322,5 +322,8 @@ char *sql_statement_get_first_table (sql_statement * statement);
 GList *sql_statement_get_wherejoin (sql_statement * statement);
 void sql_statement_free_wherejoin(GList **wherelist);
 gint sql_statement_test_wherejoin(void);
+void sql_statement_get_wherejoin_components(
+	sql_wherejoin *wherejoin, char **table, char **field, 
+        char leftside);
 
 #endif /* SQL_PARSER_H */

@@ -1,9 +1,14 @@
-2004-09-09 21:21  Dru <andru@treshna.com>
+2004-09-14 Dru <andru@treshna.com>
+	* libgda/gda-value.c: Improved documentation.
+	* libsql/sql_parser.c: Added support function for helping
+	  decode the where statements. Removed some obsolete code.
+
+2004-09-09 Dru <andru@treshna.com>
 
         * sql_parser.c: When getting a list of where statements it will
           return the join's as well now.
 
-2004-09-09 18:47  Dru <andru@treshna.com>
+2004-09-09 Dru <andru@treshna.com>
 
         * .cvsignore, Makefile.am, sql_parse_test.c, sql_parser.c,
           sql_parser.h, sql_parser_test.c: Added function to get a list of
