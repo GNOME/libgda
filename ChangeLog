@@ -401,7 +401,6 @@
 	* don't use C++ comment in C sources/headers. it breaks the
 	  compilation with -ansi option. (#105037)
 
->>>>>>> 1.494
 2003-02-01  Steve Fosdick <gnomedb@pelvoux.demon.co.uk>
 
 	* providers/oracle/gda-oracle-provider.c (gda_oracle_init_md_recset,

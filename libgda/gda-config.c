@@ -1417,6 +1417,27 @@ gda_config_save_data_source (const gchar *name,
 }
 
 /**
+ * gda_config_save_data_source_info
+ * @dsn_info: A #GdaDataSourceInfo structure.
+ *
+ * Save a data source in the libgda configuration given a
+ * #GdaDataSourceInfo structure containing all the information
+ * about the data source.
+ */
+void
+gda_config_save_data_source_info (GdaDataSourceInfo *dsn_info)
+{
+	g_return_if_fail (dsn_info != NULL);
+
+	gda_config_save_data_source (dsn_info->name,
+				     dsn_info->provider,
+				     dsn_info->cnc_string,
+				     dsn_info->description,
+				     dsn_info->username,
+				     dsn_info->password);
+}
+
+/**
  * gda_config_remove_data_source
  * @name: Name for the data source to be removed.
  *

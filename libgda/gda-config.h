@@ -100,6 +100,7 @@ void               gda_config_save_data_source (const gchar *name,
 						const gchar *description,
 						const gchar *username,
 						const gchar *password);
+void               gda_config_save_data_source_info (GdaDataSourceInfo *dsn_info);
 void               gda_config_remove_data_source (const gchar *name);
 
 /*
