@@ -894,7 +894,8 @@ gda_connection_supports (GdaConnection *cnc, GdaConnectionFeature feature)
  *
  * The list of parameters is specific to each schema type.
  *
- * Returns: a #GdaDataModel containing the data required.
+ * Returns: a #GdaDataModel containing the data required. The caller is responsible
+ * of freeing the returned model.
  */
 GdaDataModel *
 gda_connection_get_schema (GdaConnection *cnc,
