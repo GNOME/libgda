@@ -1664,10 +1664,10 @@ gda_value_stringify (GdaValue *value)
 		retval = g_strdup_printf ("%d", gda_value_get_tinyint (value));
 		break;
 	case GDA_VALUE_TYPE_SINGLE:
-		retval = g_strdup_printf ("%f", gda_value_get_single (value));
+		retval = g_strdup_printf ("%.2f", gda_value_get_single (value));
 		break;
 	case GDA_VALUE_TYPE_DOUBLE:
-		retval = g_strdup_printf ("%f", gda_value_get_double (value));
+		retval = g_strdup_printf ("%.2f", gda_value_get_double (value));
 		break;
 	case GDA_VALUE_TYPE_TIME:
 		gdatime = gda_value_get_time (value);

@@ -1,3 +1,8 @@
+2003-01-26  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* libgda/gda-value.c (gda_value_stringify): use a fixed number of
+	decimal positions for float/double numbers.
+
 2003-01-26  Christian Neumair <chris@gnome-de.org>
 
 	* providers/default/libmain.c (plugin_get_name): Marked "Default" for
