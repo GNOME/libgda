@@ -235,8 +235,7 @@ gda_parameter_list_clear (GdaParameterList *plist)
 guint
 gda_parameter_list_get_length (GdaParameterList *plist)
 {
-	g_return_val_if_fail (plist != NULL, -0);
-	return g_hash_table_size (plist->hash);
+	return plist ? g_hash_table_size (plist->hash) : 0;
 }
 
 /**
