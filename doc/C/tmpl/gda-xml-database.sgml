@@ -45,6 +45,43 @@ GdaXmlDatabase
 @xmldb: 
 
 
+<!-- ##### FUNCTION gda_xml_database_reload ##### -->
+<para>
+
+</para>
+
+@xmldb: 
+
+
+<!-- ##### FUNCTION gda_xml_database_save ##### -->
+<para>
+
+</para>
+
+@xmldb: 
+@uri: 
+@Returns: 
+<!-- # Unused Parameters # -->
+@filename: 
+
+
+<!-- ##### FUNCTION gda_xml_database_get_tables ##### -->
+<para>
+
+</para>
+
+@xmldb: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_xml_database_free_table_list ##### -->
+<para>
+
+</para>
+
+@list: 
+
+
 <!-- ##### FUNCTION gda_xml_database_new_table ##### -->
 <para>
 

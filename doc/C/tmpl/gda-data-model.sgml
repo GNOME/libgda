@@ -62,6 +62,16 @@ GdaDataModel
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_data_model_describe_column ##### -->
+<para>
+
+</para>
+
+@model: 
+@col: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_data_model_get_column_title ##### -->
 <para>
 

@@ -9,12 +9,10 @@ GdaTable
 
 </para>
 
-
 <!-- ##### SECTION See_Also ##### -->
 <para>
 
 </para>
-
 
 <!-- ##### STRUCT GdaTablePrivate ##### -->
 <para>
@@ -29,5 +27,33 @@ GdaTable
 
 @name: 
 @Returns: 
+
+
+<!-- ##### FUNCTION gda_table_new_from_model ##### -->
+<para>
+
+</para>
+
+@name: 
+@model: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_table_add_field ##### -->
+<para>
+
+</para>
+
+@table: 
+@fa: 
+
+
+<!-- ##### FUNCTION gda_table_add_data_from_model ##### -->
+<para>
+
+</para>
+
+@table: 
+@model: 
 
 

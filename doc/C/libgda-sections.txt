@@ -117,6 +117,7 @@ gda_data_model_freeze
 gda_data_model_thaw
 gda_data_model_get_n_rows
 gda_data_model_get_n_columns
+gda_data_model_describe_column
 gda_data_model_get_column_title
 gda_data_model_set_column_title
 gda_data_model_get_value_at
@@ -288,6 +289,10 @@ GdaXmlDatabasePrivate
 gda_xml_database_new
 gda_xml_database_new_from_uri
 gda_xml_database_changed
+gda_xml_database_reload
+gda_xml_database_save
+gda_xml_database_get_tables
+gda_xml_database_free_table_list
 gda_xml_database_new_table
 gda_xml_database_new_table_from_node
 <SUBSECTION Standard>
@@ -713,6 +718,9 @@ GDA_IS_SERVER_RECORDSET_MODEL_CLASS
 GdaTablePrivate
 <TITLE>GdaTable</TITLE>
 gda_table_new
+gda_table_new_from_model
+gda_table_add_field
+gda_table_add_data_from_model
 <SUBSECTION Standard>
 GDA_TABLE
 GDA_IS_TABLE
@@ -846,6 +854,7 @@ gda_log_clean_entry
 <FILE>gda-parameter</FILE>
 GdaParameter
 gda_parameter_new
+gda_parameter_new_string
 gda_parameter_free
 gda_parameter_get_name
 gda_parameter_set_name
@@ -899,6 +908,8 @@ gda_row_get_field
 gda_row_attributes_new
 gda_row_attributes_free
 gda_row_attributes_get_field
+gda_field_attributes_new
+gda_field_attributes_free
 gda_field_attributes_get_defined_size
 gda_field_attributes_set_defined_size
 gda_field_attributes_get_name
@@ -941,6 +952,8 @@ gda_field_set_integer_value
 gda_field_get_list_value
 gda_field_set_list_value
 gda_field_set_null_value
+gda_field_get_numeric_value
+gda_field_set_numeric_value
 gda_field_get_single_value
 gda_field_set_single_value
 gda_field_get_smallint_value
@@ -972,8 +985,9 @@ TIMEZONE_INVALID
 GdaValue
 GdaValueList
 GdaValueType
-GdaGeometricPoint
 GdaDate
+GdaGeometricPoint
+GdaNumeric
 GdaTime
 GdaTimestamp
 GDA_VALUE_TYPE_NULL
@@ -985,6 +999,7 @@ GDA_VALUE_TYPE_DOUBLE
 GDA_VALUE_TYPE_GEOMETRIC_POINT
 GDA_VALUE_TYPE_INTEGER
 GDA_VALUE_TYPE_LIST
+GDA_VALUE_TYPE_NUMERIC
 GDA_VALUE_TYPE_SINGLE
 GDA_VALUE_TYPE_SMALLINT
 GDA_VALUE_TYPE_STRING
@@ -1000,6 +1015,7 @@ gda_value_new_double
 gda_value_new_geometric_point
 gda_value_new_integer
 gda_value_new_list
+gda_value_new_numeric
 gda_value_new_single
 gda_value_new_smallint
 gda_value_new_string
@@ -1027,6 +1043,8 @@ gda_value_set_integer
 gda_value_get_list
 gda_value_set_list
 gda_value_set_null
+gda_value_get_numeric
+gda_value_set_numeric
 gda_value_get_single
 gda_value_set_single
 gda_value_get_smallint

@@ -30,6 +30,16 @@ gda-parameter
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_parameter_new_string ##### -->
+<para>
+
+</para>
+
+@name: 
+@value: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_parameter_free ##### -->
 <para>
 
