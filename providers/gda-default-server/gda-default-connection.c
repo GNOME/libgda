@@ -343,7 +343,48 @@ schema_tables (GdaServerError *error,
                GDA_Connection_Constraint *constraints,
                gint length)
 {
-	return NULL;
+	GString *query;
+	GdaServerRecordset *recset = NULL;
+	GdaServerCommand *cmd = NULL;
+	GDA_Connection_Constraint* ptr;
+	gint cnt;
+	gulong affected;
+
+	query = g_string_new("SELECT name FROM sqlite_master WHERE type = 'table'");
+
+	/* process constraints */
+	ptr = constraints;
+	for (cnt = 0; cnt < length && ptr != NULL; cnt++) {
+		switch (ptr->ctype) {
+		case GDA_Connection_EXTRA_INFO :
+			break;
+		case GDA_Connection_OBJECT_NAME :
+			query = g_string_append(query, " AND name = '");
+			query = g_string_append(query, ptr->value);
+			query = g_string_append(query, "'");
+			break;
+		case GDA_Connection_OBJECT_SCHEMA :
+			break;
+		case GDA_Connection_OBJECT_CATALOG :
+			break;
+		default :
+			gda_server_error_set_description(error, "Invalid constraint type");
+			g_string_free(query, TRUE);
+			break;
+		}
+	}
+
+	/* build the command object */
+	cmd = gda_server_command_new(cnc);
+	gda_server_command_set_text(cmd, query->str);
+
+	g_string_free(query, TRUE);
+
+	/* execute the command */
+	recset = gda_server_command_execute(cmd, error, NULL, &affected, 0);
+	gda_server_command_free(cmd);
+
+	return recset;
 }
 
 static GdaServerRecordset *
