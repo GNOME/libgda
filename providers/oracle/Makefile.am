@@ -2,7 +2,8 @@ providerdir=$(prefix)/lib/libgda/providers
 provider_LTLIBRARIES = libgda-oracle.la
 
 INCLUDES = \
-	-I. \
+	-I$(top_builddir) \
+	-I$(top_srcdir) \
 	$(LIBGDA_CFLAGS) \
 	$(ORACLE_CFLAGS)
 
