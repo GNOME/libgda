@@ -1,3 +1,7 @@
+2001-04-09  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-config.c (gda_config_remove_section): implemented
+
 2001-04-01  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-config.h: use "/apps" prefix for all GConf stuff

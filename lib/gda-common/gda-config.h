@@ -81,10 +81,10 @@ typedef struct _GdaProvider
 
 GdaProvider* gda_provider_new          (void);
 GdaProvider* gda_provider_copy         (GdaProvider*);
-void          gda_provider_free         (GdaProvider*);
+void         gda_provider_free         (GdaProvider*);
 
-GList*        gda_provider_list         (void);
-void          gda_provider_free_list    (GList* list);
+GList*       gda_provider_list         (void);
+void         gda_provider_free_list    (GList* list);
 GdaProvider* gda_provider_find_by_name (const gchar* provider);
 
 /*
@@ -114,9 +114,9 @@ typedef struct _GdaDsn
 
 #define  gda_dsn_new() g_new0(GdaDsn, 1)
 void     gda_dsn_free            (GdaDsn *dsn);
-GdaDsn* gda_dsn_copy            (GdaDsn *dsn);
+GdaDsn*  gda_dsn_copy            (GdaDsn *dsn);
 
-GdaDsn* gda_dsn_find_by_name    (const gchar *dsn_name);
+GdaDsn*  gda_dsn_find_by_name    (const gchar *dsn_name);
 void     gda_dsn_set_name        (GdaDsn *dsn, const gchar *name);
 void     gda_dsn_set_provider    (GdaDsn *dsn, const gchar *provider);
 void     gda_dsn_set_dsn         (GdaDsn *dsn, const gchar *dsn_str);
