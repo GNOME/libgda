@@ -1,3 +1,7 @@
+2001-11-03  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* common/Makefile.am: added BONOBO_IDL_DIR for IDL compilation
+
 2001-11-02  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* Makefile.am:

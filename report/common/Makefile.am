@@ -14,7 +14,7 @@ BUILT_SOURCES = \
 CLEANFILES += $(BUILT_SOURCES) gda-report.dtd
 
 $(BUILT_SOURCES): $(top_builddir)/report/idl/GNOME_Database_Report.idl
-	orbit-idl -I$(BONOBO_ACTIVATION_IDL_DIR) $(top_builddir)/report/idl/GNOME_Database_Report.idl
+	orbit-idl -I$(BONOBO_ACTIVATION_IDL_DIR) -I$(BONOBO_IDL_DIR) $(top_builddir)/report/idl/GNOME_Database_Report.idl
 
 gda_report_headers = \
 	GNOME_Database_Report.h
