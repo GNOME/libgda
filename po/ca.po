@@ -1,40 +1,41 @@
 # Catalan translation of libgda.
-# Copyright Â© 2003 Free Software Foundation, Inc.
+# Copyright © 2003, 2004 Free Software Foundation, Inc.
 # This file is distributed under the same license as the libgda package.
-# Aleix Badia i Bosch <abadia@ica.es>, 2003.
+# Aleix Badia i Bosch <abadia@ica.es>, 2003, 2004.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-01-17 00:08+0100\n"
-"PO-Revision-Date: 2003-08-31 21:50+0200\n"
+"POT-Creation-Date: 2004-01-25 18:25+0100\n"
+"PO-Revision-Date: 2004-01-25 17:42GMT\n"
 "Last-Translator: Aleix Badia i Bosch <abadia@ica.es>\n"
 "Language-Team: Catalan <tradgnome@softcatala.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 0.9.5\n"
 
-#: libgda/gda-client.c:312 libgda/gda-client.c:517 libgda/gda-connection.c:218
+#: libgda/gda-client.c:312 libgda/gda-client.c:518 libgda/gda-connection.c:218
 #, c-format
 msgid "Data source %s not found in configuration"
 msgstr "L'origen de dades %s no s'ha trobat a la configuració "
 
-#: libgda/gda-client.c:339
+#: libgda/gda-client.c:340
 #, c-format
 msgid "Could not find provider %s in the current setup"
 msgstr "No s'ha pogut trobar el proveïdor %s a la configuració actual"
 
-#: libgda/gda-client.c:369
+#: libgda/gda-client.c:370
 #, c-format
 msgid "Provider %s does not implement entry function"
 msgstr "El proveïdor %s no implementa la funció d'inserció"
 
-#: libgda/gda-client.c:379
+#: libgda/gda-client.c:380
 msgid "Could not create GdaServerProvider object from plugin"
 msgstr "No s'ha pogut crear l'objecte GdaServerProvider del connector"
 
-#: libgda/gda-client.c:444
+#: libgda/gda-client.c:445
 msgid "Temporary data source created by libgda. Don't remove it"
 msgstr "Font de dades temporal creada per libgda. No l'elimineu"
 
@@ -240,7 +241,6 @@ msgstr "Ha fallat l'assignació de context del tds."
 
 #: providers/freetds/gda-freetds-provider.c:275
 #: providers/freetds/gda-freetds-provider.c:277
-#, fuzzy
 msgid "Allocating tds socket failed."
 msgstr "Ha fallat l'assignació de context del tds."
 
@@ -739,9 +739,9 @@ msgstr "No s'ha pogut analitzar l'ordre '%s'"
 #. parsing went fine, but there is no result
 #. (e.g. because of an invalid column name)
 #: providers/mdb/gda-mdb-provider.c:744
-#, fuzzy, c-format
+#, c-format
 msgid "Got no result for '%s' command"
-msgstr "No s'ha pogut analitzar l'ordre '%s'"
+msgstr "No s'ha obtingut cap resultat per l'ordre '%s'"
 
 #: providers/mdb/gda-mdb-table.c:48 providers/xml/gda-xml-provider.c:519
 #, c-format
