@@ -1,4 +1,10 @@
-2005-02-28   Jorge Bernal "Koke" <koke@amedias.org>
+2005-02-28  Caolan McNamara <caolanm@redhat.com>
+
+	Fixes #166286
+
+	* providers/*/Makefile.am: use $libdir instead of $prefix/lib.
+
+2005-02-28  Jorge Bernal "Koke" <koke@amedias.org>
 
 	Fixes 162856
 
