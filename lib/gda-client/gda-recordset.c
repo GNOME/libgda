@@ -2,19 +2,20 @@
  * Copyright (C) 1998,1999 Michael Lausch
  * Copyright (C) 1999 Rodrigo Moya
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public
- * License as published by the Free Software Foundation; either
- * version 2 of the License, or (at your option) any later version.
+ * This Library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public License as
+ *  published by the Free Software Foundation; either version 2 of the
+ * License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * The Gnome Library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Library General Public License for more details.
  *
  * You should have received a copy of the GNU Library General Public
- * License along with this library; if not, write to the Free
- * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ * License along with the Gnome Library; see the file COPYING.LIB.  If not,
+ * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
  */
 
 #include "config.h"
@@ -52,46 +53,6 @@ static gulong fetch_and_dont_store     (Gda_Recordset* rs, gint count, gpointer 
 /* per default fetch 64 rows at a time */
 #define GDA_DEFAULT_CACHESIZE 64
 
-#ifndef HAVE_GOBJECT
-static void
-gda_recset_value_changed (GtkAdjustment* adj)
-{
-  Gda_Recordset* rs = GDA_RECORDSET(adj);
-  gint           offset;
-
-  if (adj->value < 1.0)
-    adj->value = 1.0;
-  
-  if (adj->value == G_MAXFLOAT)
-    offset = G_MAXINT;
-  else
-    offset = adj->value - rs->current_index;
-
-  if (rs->cursor_type == GDA_OPEN_FWDONLY && offset < 0)
-    return;
-
-  if (offset == 0)
-    {
-      g_print("\toffset == 0, No action taken\n");
-      return;
-    }
-  g_print("\toffset = %d\n", (gint)offset);
-    
-  if (rs->cursor_location == GDA_USE_CLIENT_CURSOR)
-    fetch_and_store(rs, offset, 0);
-  else
-    fetch_and_dont_store(rs, offset, 0);
-
-  adj->value = rs->current_index;
-
-  g_print("\tnew adjustment value = %g\n", adj->value);
-  if (gda_recordset_eof(rs))
-    {
-      adj->upper = adj->value;
-    }
-}
-#endif
-
 static void
 gda_recordset_real_error (Gda_Recordset *rs, GList *error_list)
 {
@@ -116,15 +77,15 @@ gda_recordset_get_type (void)
       GTypeInfo info =
       {
         sizeof (Gda_RecordsetClass),               /* class_size */
-	NULL,                                      /* base_init */
-	NULL,                                      /* base_finalize */
+        NULL,                                      /* base_init */
+        NULL,                                      /* base_finalize */
         (GClassInitFunc) gda_recordset_class_init, /* class_init */
-	NULL,                                      /* class_finalize */
-	NULL,                                      /* class_data */
+        NULL,                                      /* class_finalize */
+        NULL,                                      /* class_data */
         sizeof (Gda_Recordset),                    /* instance_size */
-	0,                                         /* n_preallocs */
+        0,                                         /* n_preallocs */
         (GInstanceInitFunc) gda_recordset_init,    /* instance_init */
-	NULL,                                      /* value_table */
+        NULL,                                      /* value_table */
       };
       type = g_type_register_static (G_TYPE_OBJECT, "Gda_Recordset", &info);
     }
@@ -148,7 +109,7 @@ gda_recordset_get_type (void)
         (GtkArgSetFunc) NULL,
         (GtkArgSetFunc) NULL
       };
-      gda_recordset_type = gtk_type_unique(gtk_adjustment_get_type(),
+      gda_recordset_type = gtk_type_unique(gtk_object_get_type(),
                                            &gda_recordset_info);
     }
   return (gda_recordset_type);
@@ -173,8 +134,7 @@ typedef void (*GtkSignal_NONE__INT_POINTER)(GtkObject,
 static void
 gda_recordset_class_init (Gda_RecordsetClass *klass)
 {
-  GtkObjectClass       *object_class = (GtkObjectClass *) klass;
-  GtkAdjustmentClass*   adjustment_class = (GtkAdjustmentClass*)klass;
+  GtkObjectClass* object_class = (GtkObjectClass *) klass;
   
   gda_recordset_signals[RECORDSET_ERROR] = gtk_signal_new("error", 
 							  GTK_RUN_LAST,
@@ -202,7 +162,6 @@ gda_recordset_class_init (Gda_RecordsetClass *klass)
   klass->error = gda_recordset_real_error;
   klass->eof   = 0;
   klass->bof   = 0;
-  adjustment_class->value_changed = gda_recset_value_changed;
 }
 #endif
 
@@ -233,12 +192,6 @@ gda_recordset_init (Gda_Recordset *rs)
   rs->cursor_location  = GDA_USE_CLIENT_CURSOR;
   rs->cursor_type      = GDA_OPEN_FWDONLY;
   rs->name             = 0;
-  
-#ifndef HAVE_GOBJECT
-  GTK_ADJUSTMENT(rs)->upper = G_MAXFLOAT;
-  GTK_ADJUSTMENT(rs)->lower = 1;
-  GTK_ADJUSTMENT(rs)->value = 0;
-#endif
 }
 
 static void
@@ -357,17 +310,17 @@ gda_recordset_close (Gda_Recordset* rs)
  * If this function returns %TRUE any of the functions which actually returns
  * the value of a field an error is returned because the cursor
  * doesn't point to a row. 
- * Returns: 1 if the cursor is beyond the first record or the
- * recordset is empty, 0 otherwise.
+ * Returns: TRUE if the cursor is beyond the first record or the
+ * recordset is empty, FALSE otherwise.
  */
-gint
+gboolean
 gda_recordset_bof(Gda_Recordset* rs)
 {
   g_return_val_if_fail(IS_GDA_RECORDSET(rs), 0);
   
   if (!rs->open || !rs->current_row || rs->bof)
-    return 1;
-  return 0;
+    return TRUE;
+  return FALSE;
 }
 
 /**
@@ -379,17 +332,17 @@ gda_recordset_bof(Gda_Recordset* rs)
  * If this function returns %TRUE any of the functions which actually returns
  * the value of a field an error is returned because the cursor
  * doesn't point to a row. 
- * Returns: 1 if the cursor is after the last record or the
- * recordset is empty, 0 otherwise.
+ * Returns: TRUE if the cursor is after the last record or the
+ * recordset is empty, FALSE otherwise.
  */
-gint
+gboolean
 gda_recordset_eof (Gda_Recordset* rs)
 {
   g_return_val_if_fail(IS_GDA_RECORDSET(rs), 0);
   
   if (!rs->open || rs->eof)
-    return 1;
-  return 0;
+    return TRUE;
+  return FALSE;
 }
 
 static gulong
@@ -540,7 +493,6 @@ gda_recordset_move (Gda_Recordset* rs, gint count, gpointer bookmark)
   g_return_val_if_fail(rs->corba_rs != NULL, GDA_RECORDSET_INVALID_POSITION);
   g_return_val_if_fail(rs->open, GDA_RECORDSET_INVALID_POSITION);
 
-#ifdef HAVE_GOBJECT
   if (rs->cursor_type == GDA_OPEN_FWDONLY && count < 0)
     return rs->current_index;
 
@@ -549,11 +501,7 @@ gda_recordset_move (Gda_Recordset* rs, gint count, gpointer bookmark)
     
   if (rs->cursor_location == GDA_USE_CLIENT_CURSOR)
     fetch_and_store(rs, count, 0);
-  else
-    fetch_and_dont_store(rs, count, 0);
-#else
-  gtk_adjustment_set_value(GTK_ADJUSTMENT(rs), rs->current_index + count);
-#endif
+  else fetch_and_dont_store(rs, count, 0);
   return rs->current_index;
 }
 
@@ -585,7 +533,7 @@ gda_recordset_move_first (Gda_Recordset* rs)
       rs->eof = 0;
       return 0;
     }
-  g_error("gda_recordset_move_first for server based cursor NIY");
+  gda_log_error("gda_recordset_move_first for server based cursor NIY");
   return GDA_RECORDSET_INVALID_POSITION;
 
 }
@@ -624,7 +572,7 @@ gda_recordset_move_last (Gda_Recordset* rs)
           pos++;
         }
     }
-  g_error("gda_recordset_move_first for server based cursor NIY");
+  gda_log_error("gda_recordset_move_first for server based cursor NIY");
   return GDA_RECORDSET_INVALID_POSITION;
 }
 
@@ -734,13 +682,9 @@ gda_recordset_field_name (Gda_Recordset* rs, gchar* name)
 
 /**
  * gda_recordset_rowsize:
- *
  * @rs: the recordset
  *
  * Returns the number of fields in a row of the current recordset
- *
- * Returns: the number of rows in the recordset or
- * 0 if there was an error.
  */
 gint
 gda_recordset_rowsize (Gda_Recordset* rs)
@@ -807,7 +751,7 @@ gda_recordset_get_connection (Gda_Recordset* rs)
   g_return_val_if_fail(IS_GDA_RECORDSET(rs), 0);
   
   if (!rs->open)
-    return 0;
+    return NULL;
   return rs->cnc;
 }
 
@@ -1008,7 +952,6 @@ gda_recordset_get_cursortype(Gda_Recordset* rs)
   g_return_val_if_fail(IS_GDA_RECORDSET(rs), -1);
   return rs->cursor_type;
 }
-
 
 /**
  * gda_recordset_set_cursortype:

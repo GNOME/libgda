@@ -1,3 +1,8 @@
+2000-11-06	Rodrigo Moya <rodrigo@linuxave.net>
+
+	* replaced GtkAdjustment with plain GtkObject in Gda_Recordset
+	* added correct license notice to some source files
+
 2000-11-05	Rodrigo Moya <rodrigo@linuxave.net>
 
 	* adapted to new IDL file names (gda -> GDA)

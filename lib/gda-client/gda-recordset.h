@@ -1,20 +1,21 @@
 /* GDA client libary
  * Copyright (C) 1998,1999 Michael Lausch
- * Copyright (C) 2000 Rodrigo Moya
+ * Copyright (C) 1999 Rodrigo Moya
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public
- * License as published by the Free Software Foundation; either
- * version 2 of the License, or (at your option) any later version.
+ * This Library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public License as
+ *  published by the Free Software Foundation; either version 2 of the
+ * License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * The Gnome Library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Library General Public License for more details.
  *
  * You should have received a copy of the GNU Library General Public
- * License along with this library; if not, write to the Free
- * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ * License along with the Gnome Library; see the file COPYING.LIB.  If not,
+ * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
  */
 
 #ifndef __gda_recordset_h__
@@ -73,7 +74,7 @@ struct _Gda_Recordset
 #ifdef HAVE_GOBJECT
   GObject            object;
 #else
-  GtkAdjustment      object;
+  GtkObject          object;
 #endif
   Gda_Command*       external_cmd;
   Gda_Command*       internal_cmd;	/* used for cmd object
@@ -127,8 +128,8 @@ void                 gda_recordset_get_name       (Gda_Recordset* rs, gchar* nam
 void                 gda_recordset_close          (Gda_Recordset* rs);
 Gda_Field*           gda_recordset_field_name     (Gda_Recordset* rs, gchar* name);
 Gda_Field*           gda_recordset_field_idx      (Gda_Recordset* rs, gint   idx);
-gint                 gda_recordset_bof            (Gda_Recordset* rs);
-gint                 gda_recordset_eof            (Gda_Recordset* rs);
+gboolean             gda_recordset_bof            (Gda_Recordset* rs);
+gboolean             gda_recordset_eof            (Gda_Recordset* rs);
 gulong               gda_recordset_move           (Gda_Recordset* rs, 
                                                    gint count, 
                                                    gpointer bookmark);
