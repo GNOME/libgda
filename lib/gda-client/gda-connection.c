@@ -125,6 +125,7 @@ gda_connection_get_type (void)
 		};
 		type = gtk_type_unique (gtk_object_get_type (), &info);
 	}
+
 	return type;
 }
 #endif
