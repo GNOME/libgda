@@ -1,5 +1,5 @@
-<!doctype book PUBLIC "-//Davenport//DTD DocBook V3.0//EN" [
-
+<!doctype book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+     "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd" [
 <!ENTITY LIBGDA          "<application>libgda</application>">
 <!ENTITY GNOMEDB         "<application>GNOME-DB</application>">
 <!ENTITY igalia          '<emphasis><ulink url="http://www.igalia.com">Igalia, S.L.</ulink></emphasis>'>
