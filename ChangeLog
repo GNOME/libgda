@@ -1,3 +1,11 @@
+2004-08-02  Jeronimo Albi <jeronimoalbi@yahoo.com.ar>
+
+	* providers/firebird/gda-firebird-provider.c:
+	(gda_firebird_provider_drop_database): Corrected to drop requested
+	database.
+	(gda_firebird_provider_get_schema, gda_firebird_provider_supports):
+	Added support for GDA_CONNECTION_SCHEMA_AGGREGATES.
+
 2004-08-18  José María Casanova Crespo <jmcasanova@igalia.com>
 
 	* libgda/gda-connection.[ch] (gda_connection_clear_error_list):

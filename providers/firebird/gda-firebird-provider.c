@@ -22,10 +22,10 @@
 
 #include <libgda/gda-intl.h>
 #include <libgda/gda-data-model-array.h>
+#include <glib/gprintf.h>
+#include <string.h>
 #include "gda-firebird-provider.h"
 #include "gda-firebird-recordset.h"
-#include <string.h>
-#include <glib/gprintf.h>
 
 static void 		gda_firebird_provider_class_init (GdaFirebirdProviderClass *klass);
 static void 		gda_firebird_provider_init (GdaFirebirdProvider *provider,
@@ -73,7 +73,6 @@ static GdaDataModel	*gda_firebird_provider_get_schema (GdaServerProvider *provid
 							   GdaConnection *cnc,
 							   GdaConnectionSchema schema,
 							   GdaParameterList *params);
-
 
 static GObjectClass *parent_class = NULL;
 
@@ -421,9 +420,9 @@ fb_set_index_field_metadata (GdaConnection *cnc,
 		sql = g_strdup_printf (
 				"SELECT A.RDB$FIELD_NAME, I.RDB$UNIQUE_FLAG, B.RDB$CONSTRAINT_TYPE "
 				"FROM RDB$INDEX_SEGMENTS A, RDB$RELATION_CONSTRAINTS B, RDB$INDICES I "
-				"WHERE ((B.RDB$CONSTRAINT_TYPE = 'PRIMARY KEY') OR (I.RDB$UNIQUE_FLAG = 1)) "
-				"AND (A.RDB$INDEX_NAME = B.RDB$INDEX_NAME) AND (B.RDB$RELATION_NAME = '%s') "
-				"AND (A.RDB$INDEX_NAME = I.RDB$INDEX_NAME) "
+				"WHERE ((B.RDB$CONSTRAINT_TYPE IN('PRIMARY KEY','UNIQUE','FOREIGN KEY')) "
+				"OR (I.RDB$UNIQUE_FLAG = 1)) AND (A.RDB$INDEX_NAME = B.RDB$INDEX_NAME) "
+				"AND (B.RDB$RELATION_NAME = '%s') AND (A.RDB$INDEX_NAME = I.RDB$INDEX_NAME) "
 				"ORDER BY A.RDB$FIELD_POSITION",
 				table_name);
 		command = gda_command_new (sql, GDA_COMMAND_TYPE_SQL, GDA_COMMAND_OPTION_STOP_ON_ERRORS);
@@ -681,6 +680,92 @@ fb_get_fields_metadata (GdaConnection *cnc,
 	return GDA_DATA_MODEL (recset);
 }
 
+static void
+fb_add_aggregate_row (GdaDataModelArray *recset,
+		      const gchar *str,
+		      const gchar *comments)
+{
+	GList *list;
+
+	g_return_if_fail (GDA_IS_DATA_MODEL_ARRAY (recset));
+
+	/* 1st the name */
+	list = g_list_append (NULL, gda_value_new_string (str));
+	/* 2nd the unique id */
+	list = g_list_append (list, gda_value_new_string (str));
+	/* 3rd the owner */
+	list = g_list_append (list, gda_value_new_string (NULL));
+	/* 4th the comments */ 
+	list = g_list_append (list, gda_value_new_string (comments));
+	/* 5th the return type */
+	list = g_list_append (list, gda_value_new_string (_("UNKNOWN")));
+	/* 6th the argument type */
+	list = g_list_append (list, gda_value_new_string (_("UNKNOWN")));
+	/* 7th the SQL definition */
+	list = g_list_append (list, gda_value_new_string (NULL));
+
+	gda_data_model_append_row (GDA_DATA_MODEL (recset), list);
+
+	g_list_foreach (list, (GFunc) gda_value_free, NULL);
+	g_list_free (list);
+}
+
+static GdaDataModel *
+fb_get_aggregates (GdaConnection *cnc,
+		   GdaParameterList *params)
+{
+	GdaDataModelArray *recset;
+
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+
+	/* Create recordset */
+	recset = (GdaDataModelArray *) gda_data_model_array_new (7);
+	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 0, _("Name"));
+	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 1, _("ID"));
+	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 2, _("Owner"));
+	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 3, _("Comments"));
+	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 4, _("Return type"));
+	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 5, _("Args types"));
+	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 6, _("SQL"));
+
+	/* Fill recordset */
+	/*FIXME: Add user defined fuctions (Stored in systables) and set parameters */
+	fb_add_aggregate_row (recset, "abs", "comments");
+	fb_add_aggregate_row (recset, "acos","comments");
+	fb_add_aggregate_row (recset, "ascii_char", "comments");
+	fb_add_aggregate_row (recset, "ascii_val", "comments");
+	fb_add_aggregate_row (recset, "asin", "comments");
+	fb_add_aggregate_row (recset, "atan", "comments");
+	fb_add_aggregate_row (recset, "atan2", "comments");
+	fb_add_aggregate_row (recset, "bin_and", "comments");
+	fb_add_aggregate_row (recset, "bin_or", "comments");
+	fb_add_aggregate_row (recset, "bin_xor", "comments");
+	fb_add_aggregate_row (recset, "ceiling", "comments");
+	fb_add_aggregate_row (recset, "cos", "comments");
+	fb_add_aggregate_row (recset, "cosh", "comments");
+	fb_add_aggregate_row (recset, "cot", "comments");
+	fb_add_aggregate_row (recset, "div", "comments");
+	fb_add_aggregate_row (recset, "floor", "comments");
+	fb_add_aggregate_row (recset, "ln", "comments");
+	fb_add_aggregate_row (recset, "log", "comments");
+	fb_add_aggregate_row (recset, "log10", "comments");
+	fb_add_aggregate_row (recset, "lower", "comments");
+	fb_add_aggregate_row (recset, "ltrim", "comments");
+	fb_add_aggregate_row (recset, "mod", "comments");
+	fb_add_aggregate_row (recset, "pi", "comments");
+	fb_add_aggregate_row (recset, "rand", "comments");
+	fb_add_aggregate_row (recset, "rtrim", "comments");
+	fb_add_aggregate_row (recset, "sign", "comments");
+	fb_add_aggregate_row (recset, "sin", "comments");
+	fb_add_aggregate_row (recset, "sinh", "comments");
+	fb_add_aggregate_row (recset, "sqrt", "comments");
+	fb_add_aggregate_row (recset, "strlen", "comments");
+	fb_add_aggregate_row (recset, "substr", "comments");
+	fb_add_aggregate_row (recset, "tan", "comments");
+	fb_add_aggregate_row (recset, "tanh", "comments");	
+
+	return GDA_DATA_MODEL (recset);
+}
 
 /*
  *  fb_sqlerror_get_description
@@ -979,7 +1064,7 @@ gda_firebird_provider_create_database (GdaServerProvider *provider,
 	gda_quark_list_free (params);
 	
 	/* we need to detach from the newly created database */
-	isc_detach_database (fcnc->status, &(fcnc->handle));
+	isc_detach_database (fcnc->status, &fdb);
 
 	return TRUE;
 }
@@ -1024,14 +1109,33 @@ gda_firebird_provider_drop_database (GdaServerProvider *provider,
 				     GdaConnection *cnc,
 				     const gchar *name)
 {
+	GdaFirebirdConnection *fcnc;
+	isc_db_handle db_handle = NULL;
+	
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (name != NULL, FALSE);
+
+	/* Get current firebird connection */
+	fcnc = g_object_get_data (G_OBJECT (cnc), CONNECTION_DATA);
+	if (!fcnc) {
+		gda_connection_add_error_string (cnc, _("Invalid Firebird handle"));
+		return FALSE;
+	}
 	
-	/* Connection must be open for database drop */	
-	if (gda_connection_is_open (cnc))
-		return (! gda_firebird_provider_run_sql (NULL, cnc, NULL, "DROP DATABASE"));
+	/* Make connection to database */
+	if (isc_attach_database (fcnc->status, strlen (name), (gchar *) name, &(db_handle),
+				 fcnc->dpb_length, fcnc->dpb_buffer)) {
+		gda_firebird_connection_make_error (cnc, 0);
+		return FALSE;
+	}
 	
-	return FALSE;
+	/* Drop database */
+	if (isc_drop_database (fcnc->status, &(db_handle))) {
+		gda_firebird_connection_make_error (cnc, 0);
+		return FALSE;
+	}
+	
+	return TRUE;
 }
 
 /* execute_command handler for the GdaFirebirdProvider class */
@@ -1191,13 +1295,13 @@ gda_firebird_provider_supports (GdaServerProvider *provider,
 		case GDA_CONNECTION_FEATURE_VIEWS:
 		case GDA_CONNECTION_FEATURE_SQL:
 		case GDA_CONNECTION_FEATURE_TRANSACTIONS:
+		case GDA_CONNECTION_FEATURE_AGGREGATES:
 			return TRUE;
 		case GDA_CONNECTION_FEATURE_TRIGGERS:
 		case GDA_CONNECTION_FEATURE_INDEXES:
 		case GDA_CONNECTION_FEATURE_PROCEDURES:
 		case GDA_CONNECTION_FEATURE_USERS:
 		case GDA_CONNECTION_FEATURE_BLOBS:
-		case GDA_CONNECTION_FEATURE_AGGREGATES:
 		default: 
 			break;
 	}
@@ -1224,18 +1328,21 @@ gda_firebird_provider_get_schema (GdaServerProvider *provider,
 			return fb_get_tables (cnc, params, TRUE);
 		case GDA_CONNECTION_SCHEMA_FIELDS:
 			return fb_get_fields_metadata (cnc, params);
+		case GDA_CONNECTION_SCHEMA_AGGREGATES:
+			return fb_get_aggregates (cnc, params);
 /*		case GDA_CONNECTION_SCHEMA_INDEXES:
 			return get_firebird_indexes (cnc, params);
 		case GDA_CONNECTION_SCHEMA_PROCEDURES:
 			return get_firebird_procedures (cnc, params);
-		case GDA_CONNECTION_SCHEMA_TRIGGERS:
-			return get_firebird_triggers (cnc, params);
 		case GDA_CONNECTION_SCHEMA_USERS:
-			return get_firebird_users (cnc, params);*/
+			return get_firebird_users (cnc, params);
+		case GDA_CONNECTION_SCHEMA_TRIGGERS:
+			return get_firebird_triggers (cnc, params);*/
 		default:
 			break;
 	}
 
 	return NULL;
 }
+
 

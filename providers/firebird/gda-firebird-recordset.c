@@ -23,9 +23,8 @@
 
 #include "gda-firebird-recordset.h"
 #include "gda-firebird-provider.h"
-#include "libgda/gda-quark-list.h"
+#include <libgda/gda-quark-list.h>
 #include <libgda/gda-intl.h>
-
 #include <glib/gprintf.h>
 #include <string.h>
 #include <math.h>
@@ -262,7 +261,9 @@ fb_sql_get_statement_type (GdaFirebirdConnection *fcnc,
 			   GdaFirebirdRecordset *recset)
 {
 	int length;
-	char type_item[] = { isc_info_sql_stmt_type };
+	char type_item[] = { 
+		isc_info_sql_stmt_type
+	};
 	char buffer[8];
                                                                                                                             
 	g_return_val_if_fail (GDA_IS_FIREBIRD_RECORDSET (recset), -1);
@@ -297,12 +298,15 @@ fb_sql_affected_rows (GdaFirebirdConnection *fcnc,
 	/* This code should work for non SELECT statements like UPDATE, DELETE and other alike */
 	gchar buffer[33], *p_buffer, item;
 	gint length, res_val;
-	gchar type_item[] = { isc_info_sql_records };
+	gchar type_item[] = {
+		isc_info_sql_records
+	};
 
 	g_return_val_if_fail (GDA_IS_FIREBIRD_RECORDSET (recset), 0);
 
 	if (! isc_dsql_sql_info (fcnc->status, &(recset->priv->sql_handle), sizeof(type_item), type_item, 
 			       sizeof(buffer), buffer)) {
+	
 		for (p_buffer = buffer; *p_buffer != isc_info_end; ) {
 			item = *p_buffer++;
 			length = isc_vax_integer (p_buffer, 2);
