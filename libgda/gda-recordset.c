@@ -58,13 +58,16 @@ static GObjectClass *parent_class = NULL;
 static gint
 gda_recordset_get_n_rows (GdaDataModel *model)
 {
+	gint n;
 	GdaRecordset *recset = (GdaRecordset *) model;
 
 	g_return_val_if_fail (GDA_IS_RECORDSET (recset), -1);
 
-	/* FIXME: implement */
+	n = 0;
+	while (gda_data_model_get_value_at (GDA_DATA_MODEL (recset), 0, n))
+		n++;
 
-	return 0;
+	return n;
 }
 
 static gint
@@ -74,9 +77,7 @@ gda_recordset_get_n_columns (GdaDataModel *model)
 
 	g_return_val_if_fail (GDA_IS_RECORDSET (recset), -1);
 
-	/* FIXME: implement */
-
-	return 0;
+	return gda_row_attributes_get_length (recset->priv->attributes);
 }
 
 static GdaFieldAttributes *
@@ -87,14 +88,13 @@ gda_recordset_describe_column (GdaDataModel *model, gint col)
 	g_return_val_if_fail (GDA_IS_RECORDSET (recset), NULL);
 	g_return_val_if_fail (recset->priv->attributes != NULL, NULL);
 
-	return NULL; /* FIXME: */
+	return gda_row_attributes_get_field (recset->priv->attributes, col);
 }
 
 static const GdaValue *
 gda_recordset_get_value_at (GdaDataModel *model, gint col, gint row)
 {
 	gint fetched_count;
-	gint total_count;
 	gint i;
 	GdaRecordset *recset = (GdaRecordset *) model;
 
@@ -105,34 +105,29 @@ gda_recordset_get_value_at (GdaDataModel *model, gint col, gint row)
 	if (row < fetched_count)
 		return GDA_DATA_MODEL_CLASS (parent_class)->get_value_at (model, col, row);
 
-	/* it's not been fetched, so fetch data */
-	total_count = gda_data_model_get_n_rows (model);
-	if (row >= total_count)
-		return NULL;
-
 	for (i = fetched_count; i <= row; i++) {
 		GdaRow *row_data;
+		GList *value_list = NULL;
+		GList *l;
 
 		row_data = recset->priv->fetch_func (recset, i, recset->priv->user_data);
-		if (row_data) {
-			GList *value_list = NULL;
-			GList *l;
+		if (!row_data)
+			break;
 
-			for (l = row_data; l != NULL; l = l->next) {
-				GdaValue *value;
-				GdaField *field;
+		for (l = row_data; l != NULL; l = l->next) {
+			GdaValue *value;
+			GdaField *field;
 
-				field = gda_row_get_field (row_data, i);
-				value = gda_field_get_value (field);
-				value_list = g_list_append (value_list, value);
-			}
-
-			gda_data_model_array_append_row (GDA_DATA_MODEL_ARRAY (recset),
-							 (const GList *) value_list);
-
-			gda_row_free (row_data);
-			g_list_free (value_list);
+			field = gda_row_get_field (row_data, i);
+			value = gda_field_get_value (field);
+			value_list = g_list_append (value_list, value);
 		}
+
+		gda_data_model_array_append_row (GDA_DATA_MODEL_ARRAY (recset),
+						 (const GList *) value_list);
+
+		gda_row_free (row_data);
+		g_list_free (value_list);
 	}
 
 	return GDA_DATA_MODEL_CLASS (parent_class)->get_value_at (model, col, row);
