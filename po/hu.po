@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda VERSION\n"
-"POT-Creation-Date: 2001-11-22 14:07+0100\n"
+"POT-Creation-Date: 2002-01-17 02:13+0100\n"
 "PO-Revision-Date: 2000-12-14 14:34+01:00\n"
 "Last-Translator: Emese Kovacs <emese@gnome.hu>\n"
 "Language-Team: Hungarian <hu@gnome.hu>\n"

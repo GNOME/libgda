@@ -3357,14 +3357,6 @@
 @cnc: 
 @flags: 
 
-<!-- ##### FUNCTION gda_field_actual_size ##### -->
-<para>
-
-</para>
-
-@f: 
-@Returns: 
-
 <!-- ##### MACRO gda_field_bigint ##### -->
 <para>
 

@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda CVS-20011213\n"
-"POT-Creation-Date: 2001-12-13 20:32+0900\n"
+"POT-Creation-Date: 2002-01-17 02:13+0100\n"
 "PO-Revision-Date: 2001-12-13 20:47+0900\n"
 "Last-Translator: Akira TAGOH <tagoh@gnome.gr.jp>\n"
 "Language-Team: Japanese <translation@gnome.gr.jp>\n"
@@ -381,7 +381,10 @@ msgstr "MySQLプロバイダ接続ファクトリ"
 msgid ""
 "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a "
 "PORT. Please remove the UNIX_SOCKET, or remove both the HOST and PORT options"
-msgstr "UNIX_SOCKET を提供することが出来ません. HOST または PORT のどちらかを提供するなら, UNIX_SOCKET を削除するか, HOST と PORT の両方のオプションを削除してください"
+msgstr ""
+"UNIX_SOCKET を提供することが出来ません. HOST または PORT のどちらかを提供する"
+"なら, UNIX_SOCKET を削除するか, HOST と PORT の両方のオプションを削除してくだ"
+"さい"
 
 #: providers/gda-mysql-server/gda-mysql-connection.c:191
 #, c-format
@@ -717,7 +720,9 @@ msgstr "メッセージ数を取得することが出来ませんでした"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:356
 msgid "ct_diag failed, Could not get # of client messages(1)"
-msgstr "ct_diagは失敗しました，クライアントメッセージ数を取得することが出来ませんでした(1)"
+msgstr ""
+"ct_diagは失敗しました，クライアントメッセージ数を取得することが出来ませんでし"
+"た(1)"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:381
 msgid "Could not get client msg #"
@@ -732,7 +737,9 @@ msgstr "クライアントメッセージ:"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:424
 msgid "ct_diag failed, Could not get # of client messages(2)"
-msgstr "ct_diagは失敗しました，クライアントメッセージ数を取得することが出来ませんでした(2)"
+msgstr ""
+"ct_diagは失敗しました，クライアントメッセージ数を取得することが出来ませんでし"
+"た(2)"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:442
 msgid "Could not clear client messages"
