@@ -8,8 +8,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2001-11-22 14:07+0100\n"
-"PO-Revision-Date: 2001-11-05 01:08+0100\n"
+"POT-Creation-Date: 2001-11-27 04:17+0100\n"
+"PO-Revision-Date: 2001-11-27 04:29+0100\n"
 "Last-Translator: Christian Rose <menthos@menthos.com>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -721,41 +721,35 @@ msgid "Could not get # of messages"
 msgstr "Kunde inte hämta antalet meddelanden"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:356
-#, fuzzy
 msgid "ct_diag failed, Could not get # of client messages(1)"
-msgstr "Kunde inte hämta antalet klientmeddelanden"
+msgstr "ct_diag misslyckades, kunde inte hämta antalet klientmeddelanden(1)"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:381
-#, fuzzy
 msgid "Could not get client msg #"
-msgstr "Kunde inte hämta klientmeddelande nummer %d"
+msgstr "Kunde inte hämta klientmeddelande nummer"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:394
 #: providers/gda-sybase-server/gda-sybase-error.c:396
 #: providers/gda-sybase-server/gda-sybase-error.c:688
 #: providers/gda-sybase-server/gda-sybase-error.c:690
-#, fuzzy
 msgid "Client Message:"
 msgstr "Klientmeddelande:"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:424
-#, fuzzy
 msgid "ct_diag failed, Could not get # of client messages(2)"
-msgstr "Kunde inte hämta antalet klientmeddelanden"
+msgstr "ct_diag misslyckades, kunde inte hämta antalet klientmeddelanden(2)"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:442
 msgid "Could not clear client messages"
 msgstr "Kunde inte tömma klientmeddelanden"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:486
-#, fuzzy
 msgid "Could not get # of server messages(1)"
-msgstr "Kunde inte hämta antalet servermeddelanden"
+msgstr "Kunde inte hämta antalet servermeddelanden(1)"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:510
-#, fuzzy
 msgid "Could not get server msg #"
-msgstr "Kunde inte hämta servermeddelande nummer %d"
+msgstr "Kunde inte hämta servermeddelande nummer"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:570
 msgid "Could not get # of server messages"
@@ -780,14 +774,12 @@ msgid "Fetching %d cslib message"
 msgstr "Hämtar %d cslib-meddelande"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:672
-#, fuzzy
 msgid "Could not get cslib msg #"
-msgstr "Kunde inte hämta cslib-meddelande nummer %d"
+msgstr "Kunde inte hämta cslib-meddelande nummer"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:711
-#, fuzzy
 msgid "Could not get # of cslib messages(2)"
-msgstr "Kunde inte hämta antalet cslib-meddelanden"
+msgstr "Kunde inte hämta antalet cslib-meddelanden(2)"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:729
 msgid "Could not clear cslib messages"
@@ -795,23 +787,23 @@ msgstr "Kunde inte tömma cslib-meddelanden"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:761
 msgid "SYB"
-msgstr ""
+msgstr "SYB"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:763
 msgid "severity"
-msgstr ""
+msgstr "allvarlighet"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:765
 msgid "number"
-msgstr ""
+msgstr "nummer"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:767
 msgid "origin"
-msgstr ""
+msgstr "ursprung"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:769
 msgid "layer"
-msgstr ""
+msgstr "lager"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:776
 #, c-format
@@ -820,6 +812,9 @@ msgid ""
 "\tOperating system error number(%ld):\n"
 "\t%s"
 msgstr ""
+"\n"
+"\tOperativsystemsfel nummer (%ld):\n"
+"\t%s"
 
 #: providers/gda-sybase-server/gda-sybase-recordset.c:219
 #: providers/gda-tds-server/gda-tds-recordset.c:199
