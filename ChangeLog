@@ -1,3 +1,20 @@
+2002-11-25  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* providers/xbase/gda-xbase-provider.[ch]: implementation of the
+	GdaServerProvider-based class for the XBase provider.
+
+	* providers/xbase/gda-xbase-database.[ch]: implementation of
+	DBF file access.
+
+	* providers/libmain.c: GModule functions for provider.
+
+	* providers/xbase/Makefile.am: setup for new xbase provider.
+
+	* providers/Makefile.am: added xbase directory to SUBDIRS.
+
+	* configure.in: added providers/xbase directory and test for XBase
+	headers and libraries.
+
 2002-11-12  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	Fixes #96810

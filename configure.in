@@ -563,6 +563,45 @@ fi
 
 AM_CONDITIONAL(INTERBASE, test x$interbasedir != x)
 
+dnl Test for Xbase
+try_xbase=true
+AC_ARG_WITH(xbase,
+[  --with-xbase=<directory>     use Xbase files in <directory>],[
+if test $withval = no
+then
+	try_xbase=false
+elif test $withval = yes
+then
+	dir="/usr/local"
+else
+	dir=$withval
+fi
+])
+if test $try_xbase = true
+then
+	AC_MSG_CHECKING(for Xbase files)
+	xbasedir=""
+	for d in $dir /usr /usr/local /opt/xbase
+	do
+		if test -f $d/include/xbase.h
+		then
+			AC_MSG_RESULT(found Xbase in $d)
+			xbasedir=$d
+			break
+		fi
+	done
+	if test x$xbasedir = x
+	then
+		AC_MSG_WARN(Xbase backend not used)
+	else
+		XBASE_CFLAGS=-I${xbasedir}/include
+		XBASE_LIBS="-L${xbasedir}/lib -lxdb"
+		AC_DEFINE(HAVE_XBASE)
+	fi
+fi
+
+AM_CONDITIONAL(XBASE, test x$xbasedir != x)
+
 dnl Test for sqlite
 try_sqlite=true
 AC_ARG_WITH(sqlite,
@@ -696,6 +735,8 @@ AC_SUBST(CAMEL_LIBS)
 AC_SUBST(CAMEL_CFLAGS)
 AC_SUBST(SQLITE_LIBS)
 AC_SUBST(SQLITE_CFLAGS)
+AC_SUBST(XBASE_LIBS)
+AC_SUBST(XBASE_CFLAGS)
 
 AC_OUTPUT([
 Makefile
@@ -717,6 +758,7 @@ providers/oracle/Makefile
 providers/postgres/Makefile
 providers/sqlite/Makefile
 providers/sybase/Makefile
+providers/xbase/Makefile
 report/Makefile
 report/gda-report.dtd
 report/libgda-report/Makefile
@@ -745,4 +787,5 @@ echo "      Oracle = `if test x$oracledir != x; then echo yes; else echo no; fi`
 echo "      PostgreSQL = `if test x$postgresdir != x; then echo yes; else echo no; fi`"
 echo "      SQLite = `if test x$sqlitedir != x; then echo yes; else echo no; fi`"
 echo "      Sybase = `if test x$sybasedir != x; then echo yes; else echo no; fi`"
+echo "      xBase (dBase, Clipper, FoxPro) = `if test x$xbasedir != x; then echo yes; else echo no; fi`"
 echo ""
