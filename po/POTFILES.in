@@ -29,4 +29,7 @@ providers/mysql/gda-mysql-provider.c
 providers/mysql/GNOME_Database_Provider_MySQL.server.in
 providers/mysql/main.c
 providers/mysql/utils.c
+providers/sybase/GNOME_Database_Provider_Sybase.server.in
+providers/sybase/gda-sybase-error.c
+providers/sybase/main.c
 tools/gda-run.c
