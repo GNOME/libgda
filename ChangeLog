@@ -1,3 +1,16 @@
+2005-03-24  Bas Driessen <bas.driessen@xobas.com>
+
+	* providers/postgres/gda-postgres-recordset.c
+	(gda_postgres_recordset_remove_row):
+	Renamed some forgotten gda_field_attributes_...
+	functions to gda_column_... Further use " for
+	column names in 'WHERE' part of query.
+
+	* providers/mysql/gda-mysql-recordset.c
+	(gda_mysql_recordset_remove_row):
+	Renamed some forgotten gda_field_attributes_...
+	functions to gda_column_...
+
 2005-03-23  Bas Driessen <bas.driessen@xobas.com>
 
 	* providers/postgres/gda-postgres-recordset.c

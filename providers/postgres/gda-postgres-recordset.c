@@ -352,11 +352,11 @@ gda_postgres_recordset_remove_row (GdaDataModelBase *model, const GdaRow *row)
 		gchar *curval = gda_value_stringify (gda_row_get_value ((GdaRow *) row, colnum));
 
 		/* unique column: we will use it as an index */
-		if (gda_field_attributes_get_primary_key (attrs) ||
-		    gda_field_attributes_get_unique_key (attrs))
+		if (gda_column_get_primary_key (attrs) ||
+		    gda_column_get_unique_key (attrs))
 		{
 			/* fills the 'where' part of the update command */
-			tmp = g_strdup_printf ("AND %s = '%s' ",
+			tmp = g_strdup_printf ("AND \"%s\" = '%s' ",
 					       column_name,
 					       curval);
 			query_where = g_strconcat (query_where, tmp, NULL);
@@ -365,7 +365,7 @@ gda_postgres_recordset_remove_row (GdaDataModelBase *model, const GdaRow *row)
 		}
 
 		g_free (curval);
-		gda_field_attributes_free (attrs);
+		gda_column_free (attrs);
 	}
 
 	if (uk == 0) {

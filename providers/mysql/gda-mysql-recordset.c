@@ -622,8 +622,8 @@ gda_mysql_recordset_remove_row (GdaDataModelBase *model, const GdaRow *row)
 		);
 
 		/* unique column: we will use it as an index */
-		if (gda_field_attributes_get_primary_key (attrs) ||
-		    gda_field_attributes_get_unique_key (attrs))
+		if (gda_column_get_primary_key (attrs) ||
+		    gda_column_get_unique_key (attrs))
 		{
 			/* fills the 'where' part of the update command */
 			if (colnum != 0)
@@ -639,7 +639,7 @@ gda_mysql_recordset_remove_row (GdaDataModelBase *model, const GdaRow *row)
 		}
 
 		g_free (curval);
-		gda_field_attributes_free (attrs);
+		gda_column_free (attrs);
 	}
 
 	if (uk == 0) {
