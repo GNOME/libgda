@@ -36,7 +36,6 @@ typedef struct _GdaServerImplFunctions GdaServerImplFunctions;
 #include <gda-error.h>
 #include <gda-server-connection.h>
 #include <gda-server-command.h>
-#include <gda-server-field.h>
 #include <gda-server-recordset.h>
 #include <gda-server-error.h>
 
