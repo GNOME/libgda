@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda 0.3.1\n"
-"POT-Creation-Date: 2001-08-19 17:43+0200\n"
-"PO-Revision-Date: 2001-08-19 17:48CET\n"
+"POT-Creation-Date: 2001-09-03 13:43+0200\n"
+"PO-Revision-Date: 2001-09-03 13:44CET\n"
 "Last-Translator: Stanislav Visnovsky <visnovsky@nenya.ms.mff.cuni.cz>\n"
 "Language-Team: Slovak <sk-i18n@lists.linux.sk>\n"
 "MIME-Version: 1.0\n"
@@ -14,44 +14,28 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: KBabel 0.9.5\n"
 
-#: lib/gda-client/gda-connection-pool.c:268
+#: lib/gda-client/gda-connection-pool.c:256
 #, c-format
 msgid "could not open connection to %s"
 msgstr "nie je možné otvoriť spojenie s %s"
 
-#: lib/gda-client/gda-connection-pool.c:281
+#: lib/gda-client/gda-connection-pool.c:268
 #, c-format
 msgid "Data source %s not found"
 msgstr "Zdroj dát %s nenájdený"
 
-#: lib/gda-client/gda-connection.c:447
+#: lib/gda-client/gda-connection.c:427
 #, c-format
 msgid "Database '%s' not found in system configuration"
 msgstr "Databáza '%s' nebola nájdená v systémovej konfigurácii"
 
-#: lib/gda-client/gda-connection.c:451 lib/gda-client/gda-connection.c:468
+#: lib/gda-client/gda-connection.c:430 lib/gda-client/gda-connection.c:446
 msgid "[GDA Client Library]"
 msgstr "[klientská knižnice GDA]"
 
-#: lib/gda-client/gda-connection.c:467
+#: lib/gda-client/gda-connection.c:445
 msgid "Could not open CORBA factory"
 msgstr "Nie je možné otvoriť CORBA factory"
-
-#: lib/gda-client/gda-field.c:230
-msgid "<NULL>"
-msgstr "<NULL>"
-
-#: lib/gda-client/gda-field.c:235 lib/gda-client/gda-field.c:238
-msgid "<Unknown GDA Type(NULL)>"
-msgstr "<Neznámy GDA Typ(NULL)>"
-
-#: lib/gda-client/gda-field.c:251
-msgid "TRUE"
-msgstr "TRUE"
-
-#: lib/gda-client/gda-field.c:253
-msgid "FALSE"
-msgstr "FALSE"
 
 #: lib/gda-common/gda-corba.c:73
 #, c-format
@@ -83,7 +67,7 @@ msgstr "Neznáma výnimka CORBA pre spojenie"
 msgid "Attempt to initialize an already initialized client"
 msgstr "Pokus o inicializáciu už inicializovaného klienta"
 
-#: lib/gda-common/gda-init.c:44 lib/gda-server/gda-server-init.c:121
+#: lib/gda-common/gda-init.c:44 lib/gda-server/gda-server-init.c:118
 msgid "Could not initialize Bonobo"
 msgstr "Nie je možné inicializovať Bonobo"
 
@@ -92,17 +76,13 @@ msgid "Saving log...x"
 msgstr "Ukladám záznam...x"
 
 #. compose message
-#: lib/gda-common/gda-log.c:68
+#: lib/gda-common/gda-log.c:67
 msgid "ERROR: "
 msgstr "CHYBA: "
 
-#: lib/gda-common/gda-log.c:68
+#: lib/gda-common/gda-log.c:67
 msgid "MESSAGE: "
 msgstr "SPRÁVA: "
-
-#: lib/gda-common/gda-thread.c:168
-msgid "thread is already running"
-msgstr "vlákno už beží"
 
 #: lib/gda-common/gda-util.c:113
 #, c-format
@@ -114,34 +94,34 @@ msgstr "Nie je možné otvoriť súbor %s"
 msgid "Could not create file %s"
 msgstr "Nie je možné vytvoriť súbor %s"
 
-#: lib/gda-common/gda-xml-database.c:166
+#: lib/gda-common/gda-xml-database.c:168
 msgid "bad formed document"
 msgstr "neplatný dokument"
 
-#: lib/gda-common/gda-xml-database.c:267
+#: lib/gda-common/gda-xml-database.c:270
 #, c-format
 msgid "table %s already exists"
 msgstr "tabuľka %s už existuje"
 
-#: lib/gda-common/gda-xml-database.c:449
+#: lib/gda-common/gda-xml-database.c:452
 #, c-format
 msgid "%p is not a valid table"
 msgstr "%p nie je platná tabuľka"
 
-#: lib/gda-common/gda-xml-item.c:385
+#: lib/gda-common/gda-xml-item.c:371
 #, c-format
 msgid "Item with id %s not found"
 msgstr "Položka s id %s nenájdená"
 
-#: lib/gda-server/gda-server-connection.c:404
+#: lib/gda-server/gda-server-connection.c:392
 msgid "Connection being closed"
 msgstr "Spojenie zatvorené"
 
-#: lib/gda-server/gda-server-connection.c:407
+#: lib/gda-server/gda-server-connection.c:394
 msgid "This connection is being closed, so all listeners are released"
 msgstr "Toto spojenie sa zatvára, takže by všetci klienti mali byť uvolnení"
 
-#: lib/gda-server/gda-server-error.c:41
+#: lib/gda-server/gda-server-connection.c:817
 msgid "Could not get pointer to server implementation"
 msgstr "Nie je možné získať ukazateľ na implementáciu serveru"
 
@@ -155,17 +135,40 @@ msgstr "Zachytený signál %d, vypínam"
 msgid "Received signal %d. Ignoring"
 msgstr "Zachytený signál %d. Ignorujem"
 
-#: lib/gda-server/gda-server-init.c:104
+#: lib/gda-server/gda-server-init.c:102
 msgid "Attempt to initialize an already initialized provider"
 msgstr "Pokus o inicializáciu už inicializovaného poskytovateľa"
 
-#: lib/gda-server/gda-server-recordset.c:52
-#: lib/gda-server/gda-server-recordset.c:60
-#: lib/gda-server/gda-server-recordset.c:100
-#: lib/gda-server/gda-server-recordset.c:108
+#: lib/gda-server/gda-server-recordset.c:53
+#: lib/gda-server/gda-server-recordset.c:61
+#: lib/gda-server/gda-server-recordset.c:101
+#: lib/gda-server/gda-server-recordset.c:110
 #, c-format
 msgid "%s not implemented"
 msgstr "%s nie je implementované"
+
+#: lib/gda-server/gda-server.c:130
+#, c-format
+msgid "Starting provider %s with no implementation functions"
+msgstr "Spúšťam poskytovateľa %s bez implementačných funkcií"
+
+#: lib/gda-server/gda-server.c:214
+#, c-format
+msgid "CORBA system exception %s"
+msgstr "Systémová výnimka CORBA %s"
+
+#: lib/gda-server/gda-server.c:218
+#, c-format
+msgid "CORBA user exception: %s"
+msgstr "Systémová výnimka CORBA %s"
+
+#: providers/gda-default-server/GNOME_GDA_Provider_Default.oaf.in.h:1
+msgid "Default provider connection factory"
+msgstr "Vytváracie rozhranie spojenia pre štandardného poskytovateľa"
+
+#: providers/gda-default-server/GNOME_GDA_Provider_Default.oaf.in.h:2
+msgid "GDA Default Datasource Access"
+msgstr "GDA štandardný prístup k zdroju dát"
 
 #: providers/gda-default-server/gda-default-connection.c:127
 msgid "You must specify a directory for the database to be stored"
@@ -174,7 +177,7 @@ msgstr "Musíte zadať priečinok, kde má byť uložená databáza"
 #: providers/gda-default-server/gda-default-connection.c:235
 #: providers/gda-mysql-server/gda-mysql-connection.c:282
 #: providers/gda-oracle-server/gda-oracle-connection.c:334
-#: providers/gda-postgres-server/gda-postgres-connection.c:486
+#: providers/gda-postgres-server/gda-postgres-connection.c:487
 msgid "Unknown schema type"
 msgstr "Neznámy typ schémy"
 
@@ -197,7 +200,7 @@ msgstr "Vytváracie rozhranie spojenia pre poskytovateľa LDAP"
 #: providers/gda-odbc-server/gda-odbc-connection.c:624
 #: providers/gda-odbc-server/gda-odbc-connection.c:657
 #: providers/gda-oracle-server/gda-oracle-connection.c:479
-#: providers/gda-postgres-server/gda-postgres-connection.c:767
+#: providers/gda-postgres-server/gda-postgres-connection.c:768
 #: providers/gda-sybase-server/gda-sybase-error.c:127
 #: providers/gda-tds-server/gda-tds-error.c:123
 #, c-format
@@ -216,8 +219,8 @@ msgstr "chyba '%s' v %s"
 #: providers/gda-odbc-server/gda-odbc-connection.c:661
 #: providers/gda-oracle-server/gda-oracle-connection.c:484
 #: providers/gda-oracle-server/gda-oracle-connection.c:485
-#: providers/gda-postgres-server/gda-postgres-connection.c:775
 #: providers/gda-postgres-server/gda-postgres-connection.c:776
+#: providers/gda-postgres-server/gda-postgres-connection.c:777
 #: providers/gda-primebase-server/gda-primebase-connection.c:375
 #: providers/gda-primebase-server/gda-primebase-connection.c:376
 #: providers/gda-sybase-server/gda-sybase-error.c:136
@@ -232,7 +235,7 @@ msgstr "Nie je k dispozícii"
 #: providers/gda-mdb-server/gda-mdb-connection.c:378
 #: providers/gda-mysql-server/gda-mysql-connection.c:493
 #: providers/gda-oracle-server/gda-oracle-connection.c:486
-#: providers/gda-postgres-server/gda-postgres-connection.c:777
+#: providers/gda-postgres-server/gda-postgres-connection.c:778
 #: providers/gda-primebase-server/gda-primebase-connection.c:377
 #: providers/gda-sybase-server/gda-sybase-error.c:138
 #: providers/gda-tds-server/gda-tds-error.c:134
@@ -290,7 +293,7 @@ msgstr "Vytváracie rozhranie spojenia pre poskytovateľa MDB"
 
 #. execute command
 #: providers/gda-mdb-server/gda-mdb-command.c:86
-#: providers/gda-mysql-server/gda-mysql-command.c:144
+#: providers/gda-mysql-server/gda-mysql-command.c:126
 #: providers/gda-sybase-server/gda-sybase-command.c:141
 #: providers/gda-tds-server/gda-tds-command.c:120
 #, c-format
@@ -298,7 +301,7 @@ msgid "executing command '%s'"
 msgstr "vykonávam príkaz '%s'"
 
 #: providers/gda-mdb-server/gda-mdb-command.c:88
-#: providers/gda-mysql-server/gda-mysql-command.c:149
+#: providers/gda-mysql-server/gda-mysql-command.c:131
 #, c-format
 msgid "info '%s'"
 msgstr "info '%s'"
@@ -353,9 +356,8 @@ msgid ""
 "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a "
 "PORT. Please remove the UNIX_SOCKET, or remove both the HOST and PORT options"
 msgstr ""
-"Nemôžete poskytovať UNIX_SOCKET ak tiež poskytujete HOSTITEĽ alebo a "
-"PORT. Prosím, odstráňte UNIX_SOCKET, alebo odstráňte obidve voľby HOSTITEĽ a "
-"PORT"
+"Nemôžete poskytovať UNIX_SOCKET ak tiež poskytujete HOSTITEĽ alebo a PORT. "
+"Prosím, odstráňte UNIX_SOCKET, alebo odstráňte obidve voľby HOSTITEĽ a PORT"
 
 #: providers/gda-mysql-server/gda-mysql-connection.c:190
 #, c-format
@@ -458,8 +460,8 @@ msgstr "GDA prístup k zdroju dát pre Postgres"
 msgid "Postgres provider connection factory"
 msgstr "Vytváracie rozhranie spojenia pre poskytovateľa Postgres"
 
-#: providers/gda-postgres-server/gda-postgres-connection.c:888
-#: providers/gda-postgres-server/gda-postgres-connection.c:1005
+#: providers/gda-postgres-server/gda-postgres-connection.c:889
+#: providers/gda-postgres-server/gda-postgres-connection.c:1006
 msgid "postgres_recset is NULL"
 msgstr "postgres_recset je NULL"
 
