@@ -4,7 +4,7 @@ IDL_FILES = \
 	GDA_Command.idl \
 	GDA_Parameter.idl \
 	GDA_Recordset.idl \
-	GDA_Fieldx.idl \
+	GDA_Field.idl \
 	GDA_Error.idl
 
 EXTRA_DIST = \
