@@ -8,8 +8,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2003-04-10 12:43+0200\n"
-"PO-Revision-Date: 2003-04-10 12:44+0200\n"
+"POT-Creation-Date: 2003-04-14 12:55+0200\n"
+"PO-Revision-Date: 2003-04-14 12:57+0200\n"
 "Last-Translator: Christian Rose <menthos@menthos.com>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -1491,7 +1491,7 @@ msgstr ") Meddelande: "
 
 #: providers/sybase/utils.c:245
 msgid "Sybase OpenClient Msg: severity("
-msgstr ""
+msgstr "Sybase OpenClient-meddelande: allvarlighet("
 
 #: providers/sybase/utils.c:247
 msgid "), number("
@@ -1554,6 +1554,8 @@ msgstr ""
 msgid ""
 "an error occured when calling ct_diag attempting to retrieve a client message"
 msgstr ""
+"ett fel inträffade vid anrop av ct_diag vid försök att hämta ett "
+"klientmeddelande"
 
 #: providers/sybase/utils.c:476
 msgid "Layer"
@@ -1837,6 +1839,9 @@ msgstr "Objekt med ID %s är inte en etikett"
 #, c-format
 msgid "Item with ID %s is not a repfield"
 msgstr "Objekt med ID %s är inte ett repfält"
+
+#~ msgid "severity"
+#~ msgstr "allvarlighet"
 
 #~ msgid "OS Error:("
 #~ msgstr "OS-fel:("
