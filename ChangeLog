@@ -1,3 +1,8 @@
+2002-03-22  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
+	* providers/postgres/gda-postgres-recordset.c (fetch_func): don't add
+	an error in the connection if they request the last row + 1.
+
 2002-03-21  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* providers/default/gda-default-provider.c (get_types): implemented

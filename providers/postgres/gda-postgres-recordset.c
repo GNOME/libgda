@@ -72,11 +72,13 @@ fetch_func (GdaServerRecordset *recset, gulong rownum)
 		return NULL;
 	}
 
-	/* move to the corresponding row */
 	row_count = PQntuples (pg_res);
 	field_count = PQnfields (pg_res);
 
-	if (rownum < 0 || rownum >= row_count) {
+	if (rownum == row_count)
+		return NULL; // For the last row don't add an error.
+
+	if (rownum < 0 || rownum > row_count) {
 		gda_server_connection_add_error_string (
 			gda_server_recordset_get_connection (recset),
 			_("Row number out of range"));
