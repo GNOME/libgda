@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 2.0\n"
-"POT-Creation-Date: 2002-03-12 01:28+0000\n"
+"POT-Creation-Date: 2002-03-07 00:28+0100\n"
 "PO-Revision-Date: 2002-03-12 01:30+0000\n"
 "Last-Translator: Duarte Loreto <happyguy_pt@hotmail.com>\n"
 "Language-Team: Portuguese <gnome_pt@yahoogroups.com>\n"
@@ -94,11 +94,6 @@ msgstr "Incapaz de notificar cliente sobre a acção %d"
 #: libgda/gda-server-recordset.c:207
 msgid "No implementation for the fetch() method found"
 msgstr "Nenhuma implementação encontrada para o métido fetch()"
-
-#: libgda/gda-table.c:229
-#, c-format
-msgid "There is already a field called %s"
-msgstr "Já existe um campo chamado %s"
 
 #: libgda/gda-value.c:926
 msgid "TRUE"
@@ -482,6 +477,9 @@ msgstr "\tdomínio = %s\n"
 #: testing/config.c:106
 msgid "\tgda_params ="
 msgstr "\tgda_params ="
+
+#~ msgid "There is already a field called %s"
+#~ msgstr "Já existe um campo chamado %s"
 
 #~ msgid "Bad formed document at %s"
 #~ msgstr "Documento mal formado em %s"
