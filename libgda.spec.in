@@ -14,7 +14,7 @@ Version:	%ver
 Release: 	%rel
 Copyright: 	GPL
 Group: 		Applications/Databases
-Source:		ftp://ftp.gnome.org/pub/GNOME/sources/gnome-db/%{name}-%{ver}.tar.gz
+Source:		ftp://ftp.gnome-db.org/pub/gnome-db/sources/%{ver}/%{name}-%{ver}.tar.gz
 BuildRoot: 	/var/tmp/%{name}-%{ver}-root
 URL: 		http://www.gnome-db.org
 DocDir: 	%{prefix}/doc
