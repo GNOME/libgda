@@ -21,8 +21,8 @@
 #define __gda_report_h__
 
 #include <gnome.h>
-#include "gda-xml-file.h"
-#include "gda-xml-query.h"
+#include <gda-xml-file.h>
+#include <gda-xml-query.h>
 
 BEGIN_GNOME_DECLS
 
@@ -35,16 +35,26 @@ typedef struct _Gda_ReportClass Gda_ReportClass;
 
 typedef enum {
   /* ident for the tags */
+  GDA_REPORT_REPORT_ELEMENT_LIST,
+  GDA_REPORT_QUERY,
+  GDA_REPORT_REPORT_DATA,
+  GDA_REPORT_PAGE_HEADER,
+  GDA_REPORT_PAGE_FOOTER,
   GDA_REPORT_LINE,
   GDA_REPORT_LABEL,
   GDA_REPORT_SPECIAL,
-  GDA_REPORT_CALCULATEDFIELD,
-  GDA_REPORT_FIELD,
-  GDA_REPORT_REPORTHEADER_TREE,
-  GDA_REPORT_PAGEHEADER_TREE,
-  GDA_REPORT_DETAIL_TREE,
-  GDA_REPORT_PAGEFOOTER_TREE,
-  GDA_REPORT_REPORTFOOTER_TREE,
+  GDA_REPORT_REPFIELD,
+  GDA_REPORT_PICTURE,
+  GDA_REPORT_GROUP_HEADER,
+  GDA_REPORT_DETAIL,
+  GDA_REPORT_GROUP_FOOTER,  
+  GDA_REPORT_REPORT_HEADER,
+  GDA_REPORT_PAGE_HEADER_LIST,
+  GDA_REPORT_DATA_HEADER,
+  GDA_REPORT_DATA_LIST,
+  GDA_REPORT_DATA_FOOTER,
+  GDA_REPORT_PAGE_FOOTER_LIST,
+  GDA_REPORT_REPORT_FOOTER,
   GDA_REPORT_UNKNOWN
 } Gda_ReportTag;
 
@@ -55,9 +65,11 @@ struct _Gda_Report
 
   gchar                   *id;
   xmlNodePtr               ReportHeader;
-  xmlNodePtr               PageHeader;
-  xmlNodePtr               Detail;
-  xmlNodePtr               PageFooter;
+  xmlNodePtr               PageHeaderList;
+  xmlNodePtr               DataHeader;
+  xmlNodePtr               DataList;
+  xmlNodePtr               DataFooter;
+  xmlNodePtr               PageFooterList;
   xmlNodePtr               ReportFooter;
 };
 

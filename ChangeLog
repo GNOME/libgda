@@ -1,3 +1,7 @@
+03/09/2000	Carlos Perelló Marín <carlos@hispalinux.es>
+
+	* updated the gda-report.[ch] for the new DTD
+
 02/09/2000	Akira TAGOH <at@ue-spacy.com>
 
 	* configure.in: deleted an USING_OLD_OAF judgment by the same version.

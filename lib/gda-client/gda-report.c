@@ -23,7 +23,7 @@
  * xmlValidateElement()
  */
 
-#include "gda-report.h"
+#include <gda-report.h>
 #define GDA_REPORT_DTD_FILE DTDINSTALLDIR"/gda-report.dtd"
 
 static void gda_report_class_init (Gda_ReportClass *klass);
@@ -57,10 +57,13 @@ gda_report_init (Gda_Report *object)
 
   object->id = NULL;
   object->ReportHeader = NULL;
-  object->PageHeader = NULL;
-  object->Detail = NULL;
-  object->PageFooter = NULL;
+  object->PageHeaderList = NULL;
+  object->DataHeader = NULL;
+  object->DataList = NULL;
+  object->DataFooter = NULL;
+  object->PageFooterList = NULL;
   object->ReportFooter = NULL;
+
 }
 
 GtkType
@@ -72,16 +75,16 @@ gda_report_get_type (void)
     {
       GtkTypeInfo gda_report_object_info =
       {
-	"Gda_Report",
-	sizeof (Gda_Report),
-	sizeof (Gda_ReportClass),
-	(GtkClassInitFunc) gda_report_class_init,
-	(GtkObjectInitFunc) gda_report_init,
-	(GtkArgSetFunc) NULL,
-	(GtkArgGetFunc) NULL
+  "Gda_Report",
+  sizeof (Gda_Report),
+  sizeof (Gda_ReportClass),
+  (GtkClassInitFunc) gda_report_class_init,
+  (GtkObjectInitFunc) gda_report_init,
+  (GtkArgSetFunc) NULL,
+  (GtkArgGetFunc) NULL
       };
       gda_report_object_type = gtk_type_unique (gda_xml_file_get_type (),
-					       &gda_report_object_info);
+                 &gda_report_object_info);
     }
   return gda_report_object_type;
 }
@@ -103,9 +106,11 @@ gda_report_new (const gchar *id)
 
   root = xmlfile->root;
   object->ReportHeader = xmlNewChild(root, NULL, "ReportHeader", NULL);
-  object->PageHeader = xmlNewChild(root, NULL, "PageHeader", NULL);;
-  object->Detail = xmlNewChild(root, NULL, "Detail", NULL);;
-  object->PageFooter = xmlNewChild(root, NULL, "PageFooter", NULL);;
+  object->PageHeaderList = xmlNewChild(root, NULL, "PageHeaderList", NULL);
+  object->DataHeader = xmlNewChild(root, NULL, "DataHeader", NULL);
+  object->DataList = xmlNewChild(root, NULL, "DataList", NULL);
+  object->DataFooter = xmlNewChild(root, NULL, "DataFooter", NULL);
+  object->PageFooterList = xmlNewChild(root, NULL, "PageFooterList", NULL);
   object->ReportFooter = xmlNewChild(root, NULL, "ReportFooter", NULL);;
 
   if (id)
@@ -115,11 +120,14 @@ gda_report_new (const gchar *id)
     }
   /* DTD */
   GDA_XML_FILE(object)->dtd = xmlCreateIntSubset(GDA_XML_FILE(object)->doc, 
-						 "report", NULL, 
-						 GDA_REPORT_DTD_FILE);
+             "report", NULL, 
+             GDA_REPORT_DTD_FILE);
 
   return object;
 }
+
+
+
 
 Gda_Report*  gda_report_new_from_file(const gchar *filename)
 {
@@ -134,28 +142,32 @@ Gda_Report*  gda_report_new_from_file(const gchar *filename)
     {
       xmlNodePtr node;
       GDA_XML_FILE(object)->root = 
-	xmlDocGetRootElement(GDA_XML_FILE(object)->doc);
+  xmlDocGetRootElement(GDA_XML_FILE(object)->doc);
       node = GDA_XML_FILE(object)->root->childs;
       while (node)
-	{
-	  if (!strcmp(node->name, "ReportHeader"))
-	    object->ReportHeader = node;
-	  if (!strcmp(node->name, "PageHeader"))
-	    object->PageHeader = node;
-	  if (!strcmp(node->name, "Detail"))
-	    object->Detail = node;
-	  if (!strcmp(node->name, "PageFooter"))
-	    object->PageFooter = node;
-	  if (!strcmp(node->name, "ReportFooter"))
-	    object->ReportFooter = node;
-	  node = node->next;
-	}
+  {
+    if (!strcmp(node->name, "ReportHeader"))
+      object->ReportHeader = node;
+    if (!strcmp(node->name, "PageHeaderList"))
+      object->PageHeaderList = node;
+    if (!strcmp(node->name, "DataHeader"))
+      object->DataHeader = node;
+    if (!strcmp(node->name, "DataList"))
+      object->DataList = node;
+    if (!strcmp(node->name, "DataFooter"))
+      object->DataFooter = node;
+    if (!strcmp(node->name, "PageFooterList"))
+      object->PageFooterList = node;
+    if (!strcmp(node->name, "ReportFooter"))
+      object->ReportFooter = node;
+    node = node->next;
+  }
     }
 
   /* DTD */
   GDA_XML_FILE(object)->dtd = xmlCreateIntSubset(GDA_XML_FILE(object)->doc, 
-						 "report", NULL, 
-						 GDA_REPORT_DTD_FILE);
+             "report", NULL, 
+             GDA_REPORT_DTD_FILE);
 
   return object;
 }
@@ -186,24 +198,28 @@ Gda_Report*  gda_report_new_from_node(const xmlNodePtr node)
       fobject->root = xmlDocGetRootElement(fobject->doc);
       node = fobject->root->childs;
       while (node)
-	{
-	  if (!strcmp(node->name, "ReportHeader"))
-	    object->ReportHeader = node;
-	  if (!strcmp(node->name, "PageHeader"))
-	    object->PageHeader = node;
-	  if (!strcmp(node->name, "Detail"))
-	    object->Detail = node;
-	  if (!strcmp(node->name, "PageFooter"))
-	    object->PageFooter = node;
-	  if (!strcmp(node->name, "ReportFooter"))
-	    object->ReportFooter = node;
-	  node = node->next;
-	}
+        {
+          if (!strcmp(node->name, "ReportHeader"))
+            object->ReportHeader = node;
+          if (!strcmp(node->name, "PageHeaderList"))
+            object->PageHeaderList = node;
+          if (!strcmp(node->name, "DataHeader"))
+            object->DataHeader = node;
+          if (!strcmp(node->name, "DataList"))
+            object->DataList = node;
+          if (!strcmp(node->name, "DataFooter"))
+             object->DataFooter = node;
+           if (!strcmp(node->name, "PageFooterList"))
+            object->PageFooterList = node;
+          if (!strcmp(node->name, "ReportFooter"))
+            object->ReportFooter = node;
+          node = node->next;
+        }
     }
 
   /* DTD */
   fobject->dtd = xmlCreateIntSubset(fobject->doc, "report", NULL, 
-				    GDA_REPORT_DTD_FILE);
+            GDA_REPORT_DTD_FILE);
   
 
   return object;
@@ -226,119 +242,309 @@ gda_report_destroy (Gda_Report *object)
 }
 
 
-xmlNodePtr gda_report_add(Gda_Report *q, Gda_ReportTag location, ...)
-{
-  va_list ap;
-  gboolean error=FALSE;
-  xmlNodePtr node=NULL, nnode;
-  gchar *name;
-  Gda_Report *nq;
-  Gda_ReportTag nop;
+xmlNodePtr gda_report_add(Gda_Report *r, Gda_ReportTag location, ...) {
+va_list ap;
+gboolean error=FALSE;
+xmlNodePtr node=NULL, nnode;
+gchar *value;
+Gda_Report *nr;
+Gda_ReportTag nlocation;
 
   va_start(ap, location);
+ 
+  if ((location == GDA_REPORT_REPORT_HEADER) || (location == GDA_REPORT_PAGE_HEADER_LIST) ||
+      (location == GDA_REPORT_DATA_HEADER) || (location == GDA_REPORT_DATA_LIST) ||
+      (location == GDA_REPORT_DATA_FOOTER) || (location == GDA_REPORT_PAGE_FOOTER_LIST) ||
+      (location == GDA_REPORT_REPORT_FOOTER)) {
+    nlocation = va_arg(ap, Gda_ReportTag);
+    switch (nlocation) {
+      case GDA_REPORT_REPORT_ELEMENT_LIST:
+        node = xmlNewNode(NULL, "reportelementlist");
+        break;
+      case GDA_REPORT_QUERY:
+        node = xmlNewNode(NULL, "query");
+        /* TODO */
+        break;
+      case GDA_REPORT_REPORT_DATA:
+        node = xmlNewNode(NULL, "reportdata");
+        break;
+      default:
+        break;
+    }
 
-  if ((location == GDA_REPORT_REPORTHEADER_TREE) || (location == GDA_REPORT_PAGEHEADER_TREE) ||
-      (location == GDA_REPORT_DETAIL_TREE) || (location == GDA_REPORT_PAGEFOOTER_TREE) || (location == GDA_REPORT_REPORTFOOTER_TREE))
-    {
-      nop = va_arg(ap, Gda_ReportTag);
-	/* All the instructions to construct the node aren't updated,
-	 they are from gda-xml-quey files. They are wrong at this context */
-      switch (nop)
-	{
-	case GDA_REPORT_LINE:
-	  node = xmlNewNode(NULL, "line");
-	  name = va_arg(ap, gchar *);
-	  xmlNodeSetContent(node, name);
-	  break;
-	case GDA_REPORT_LABEL:
-	  node = xmlNewNode(NULL, "label");
-	  name = va_arg(ap, gchar *);
-	  xmlNodeSetContent(node, name);
-	  break;
-	case GDA_REPORT_SPECIAL:
-	  node = xmlNewNode(NULL, "special");
-	  name = va_arg(ap, gchar *);
-	  xmlNodeSetContent(node, name);
-	  break;
-	case GDA_REPORT_CALCULATEDFIELD:
-	  node = xmlNewNode(NULL, "calculatedfield");
-	  name = va_arg(ap, gchar *);
-	  xmlNewProp(node, "source", name);
-	  name = va_arg(ap, gchar *);
-	  xmlNewProp(node, "name", name);
-	  break;
-	case GDA_REPORT_FIELD:
-	  node = xmlNewNode(NULL, "field");
-	  name = va_arg(ap, gchar *);
-	  xmlNewProp(node, "source", name);
-	  break;
-	default:
-	  break;
-	}
-
-      /* where to put the new node ? */
-      if (node)
-	switch (location)
-	  {
-	  case GDA_REPORT_REPORTHEADER_TREE:
-	    if ((nop == GDA_REPORT_LINE) || (nop == GDA_REPORT_LABEL) ||
-	        (nop == GDA_REPORT_SPECIAL) || (nop == GDA_REPORT_CALCULATEDFIELD))
-	      xmlAddChild(q->ReportHeader, node);
-	    else
-	      error = TRUE;
-	    break;
-	    
-	  case GDA_REPORT_PAGEHEADER_TREE:
-	    if ((nop == GDA_REPORT_LINE) || (nop == GDA_REPORT_LABEL) ||
-	        (nop == GDA_REPORT_SPECIAL) || (nop == GDA_REPORT_CALCULATEDFIELD))
-	      xmlAddChild(q->PageHeader, node);
-	    else
-	      error = TRUE;
-	    break;
-	    
-	  case GDA_REPORT_DETAIL_TREE:
-	    if ((nop == GDA_REPORT_LINE) || (nop == GDA_REPORT_LABEL) || (nop == GDA_REPORT_SPECIAL)
-		|| (nop == GDA_REPORT_CALCULATEDFIELD) || (nop == GDA_REPORT_FIELD))
-	      xmlAddChild(q->Detail, node);
-	    else
-	      error = TRUE;
-	    break;
-	    
-	  case GDA_REPORT_PAGEFOOTER_TREE:
-	    if ((nop == GDA_REPORT_LINE) || (nop == GDA_REPORT_LABEL) ||
-	        (nop == GDA_REPORT_SPECIAL) || (nop == GDA_REPORT_CALCULATEDFIELD))
-	      xmlAddChild(q->PageFooter, node);
-	    else
-	      error = TRUE;
-	    break;
-
-	  case GDA_REPORT_REPORTFOOTER_TREE:
-	    if ((nop == GDA_REPORT_LINE) || (nop == GDA_REPORT_LABEL) ||
-	        (nop == GDA_REPORT_SPECIAL) || (nop == GDA_REPORT_CALCULATEDFIELD))
-	      xmlAddChild(q->ReportFooter, node);
-	    else
-	      error = TRUE;
-	    break;
-
-	  default: 
-	    error = TRUE;
-	    break;
-	  }
-      else
-	error = TRUE;
+    /* where to put the new node ? */
+    if (node)
+      switch (location) {
+        case GDA_REPORT_REPORT_HEADER:
+          if ((nlocation == GDA_REPORT_QUERY) || (nlocation == GDA_REPORT_REPORT_ELEMENT_LIST))
+            xmlAddChild(r->ReportHeader, node);
+          else
+            error = TRUE;
+          break;
+        case GDA_REPORT_PAGE_HEADER_LIST:
+          if ((nlocation == GDA_REPORT_QUERY) || (nlocation == GDA_REPORT_REPORT_ELEMENT_LIST))
+            xmlAddChild(r->PageHeaderList, node);
+          else
+            error = TRUE;
+          break;
+        case GDA_REPORT_DATA_HEADER:
+          if ((nlocation == GDA_REPORT_QUERY) || (nlocation == GDA_REPORT_REPORT_ELEMENT_LIST))
+            xmlAddChild(r->DataHeader, node);
+          else
+            error = TRUE;
+          break;
+        case GDA_REPORT_DATA_LIST:
+          if ((nlocation == GDA_REPORT_REPORT_DATA))
+            xmlAddChild(r->DataList, node);
+          else
+            error = TRUE;
+          break;
+        case GDA_REPORT_DATA_FOOTER:
+          if ((nlocation == GDA_REPORT_QUERY) || (nlocation == GDA_REPORT_REPORT_ELEMENT_LIST))
+            xmlAddChild(r->DataFooter, node);
+          else
+            error = TRUE;
+          break;
+        case GDA_REPORT_PAGE_FOOTER_LIST:
+          if ((nlocation == GDA_REPORT_QUERY) || (nlocation == GDA_REPORT_REPORT_ELEMENT_LIST))
+            xmlAddChild(r->PageFooterList, node);
+          else
+            error = TRUE;
+          break;
+        case GDA_REPORT_REPORT_FOOTER:
+          if ((nlocation == GDA_REPORT_QUERY) || (nlocation == GDA_REPORT_REPORT_ELEMENT_LIST))
+            xmlAddChild(r->ReportFooter, node);
+          else
+            error = TRUE;
+          break;
+        default: 
+          error = TRUE;
+          break;
+      }
+    else
+      error = TRUE;
     }
   else /* other kind of tags */
-    error = TRUE;
+    switch (nlocation) {
+      case GDA_REPORT_LINE:
+        node = xmlNewNode(NULL, "line");
+        value = va_arg(ap, gchar * );
+        xmlNewProp(node, "x1", value);
+        value = va_arg(ap, gchar * );
+        xmlNewProp(node, "y1", value);
+        value = va_arg(ap, gchar * );
+        xmlNewProp(node, "x2", value);        
+        value = va_arg(ap, gchar * );
+        xmlNewProp(node, "y2", value);
+        value = va_arg(ap, gchar * );
+        xmlNewProp(node, "linewidth", value);
+        value = va_arg(ap, gchar * );
+        xmlNewProp(node, "lineheight", value);
+        value = va_arg(ap, gchar * );
+        xmlNewProp(node, "linecolor", value);
+        value = va_arg(ap, gchar * );
+        xmlNewProp(node, "linestyle", value);
+        break;
+      case GDA_REPORT_LABEL:
+        node = xmlNewNode(NULL, "label");
+        value = va_arg(ap, gchar * );
+        xmlNewProp(node, "text", value);
+        value = va_arg(ap, gchar * );
+        xmlNewProp(node, "x", value);
+        value = va_arg(ap, gchar * );
+        xmlNewProp(node, "y", value);
+        value = va_arg(ap, gchar * );
+        xmlNewProp(node, "width", value);
+        value = va_arg(ap, gchar * );
+        xmlNewProp(node, "height", value);
+        value = va_arg(ap, gchar * );
+        xmlNewProp(node, "bgcolor", value);
+        value = va_arg(ap, gchar * );
+        xmlNewProp(node, "fgcolor", value);
+        value = va_arg(ap, gchar * );
+        xmlNewProp(node, "bordercolor", value);
+        value = va_arg(ap, gchar * );
+        xmlNewProp(node, "borderwidth", value);
+        value = va_arg(ap, gchar * );
+        xmlNewProp(node, "borderstyle", value);
+        value = va_arg(ap, gchar * );
+        xmlNewProp(node, "fontfamily", value);
+        value = va_arg(ap, gchar * );
+        xmlNewProp(node, "fontsize", value);
+        value = va_arg(ap, gchar * );
+        xmlNewProp(node, "fontweigth", value);
+        value = va_arg(ap, gchar * );
+        xmlNewProp(node, "fontitalic", value);
+        value = va_arg(ap, gchar * );
+        xmlNewProp(node, "halignment", value);
+        value = va_arg(ap, gchar * );
+        xmlNewProp(node, "valignment", value);
+        value = va_arg(ap, gchar * );
+        xmlNewProp(node, "wordwrap", value);
+        break;
+      case GDA_REPORT_SPECIAL:
+        node = xmlNewNode(NULL, "special");
+        value = va_arg(ap, gchar * );
+        xmlNewProp(node, "text", value);
+        value = va_arg(ap, gchar * );
+        xmlNewProp(node, "x", value);
+        value = va_arg(ap, gchar * );
+        xmlNewProp(node, "y", value);
+        value = va_arg(ap, gchar * );
+        xmlNewProp(node, "width", value);
+        value = va_arg(ap, gchar * );
+        xmlNewProp(node, "height", value);
+        value = va_arg(ap, gchar * );
+        xmlNewProp(node, "bgcolor", value);
+        value = va_arg(ap, gchar * );
+        xmlNewProp(node, "fgcolor", value);
+        value = va_arg(ap, gchar * );
+        xmlNewProp(node, "bordercolor", value);
+        value = va_arg(ap, gchar * );
+        xmlNewProp(node, "borderwidth", value);
+        value = va_arg(ap, gchar * );
+        xmlNewProp(node, "borderstyle", value);
+        value = va_arg(ap, gchar * );
+        xmlNewProp(node, "fontfamily", value);
+        value = va_arg(ap, gchar * );
+        xmlNewProp(node, "fontsize", value);
+        value = va_arg(ap, gchar * );
+        xmlNewProp(node, "fontweigth", value);
+        value = va_arg(ap, gchar * );
+        xmlNewProp(node, "fontitalic", value);
+        value = va_arg(ap, gchar * );
+        xmlNewProp(node, "halignment", value);
+        value = va_arg(ap, gchar * );
+        xmlNewProp(node, "valignment", value);
+        value = va_arg(ap, gchar * );
+        xmlNewProp(node, "wordwrap", value);
+        value = va_arg(ap, gchar * );
+        xmlNewProp(node, "dateformat", value);
+        break;
+      case GDA_REPORT_REPFIELD:
+        node = xmlNewNode(NULL, "repfield");
+        value = va_arg(ap, gchar * );
+        xmlNewProp(node, "query", value);
+        value = va_arg(ap, gchar * );
+        xmlNewProp(node, "value", value);
+        value = va_arg(ap, gchar * );
+        xmlNewProp(node, "x", value);
+        value = va_arg(ap, gchar * );
+        xmlNewProp(node, "y", value);
+        value = va_arg(ap, gchar * );
+        xmlNewProp(node, "width", value);
+        value = va_arg(ap, gchar * );
+        xmlNewProp(node, "height", value);
+        value = va_arg(ap, gchar * );
+        xmlNewProp(node, "bgcolor", value);
+        value = va_arg(ap, gchar * );
+        xmlNewProp(node, "fgcolor", value);
+        value = va_arg(ap, gchar * );
+        xmlNewProp(node, "bordercolor", value);
+        value = va_arg(ap, gchar * );
+        xmlNewProp(node, "borderwidth", value);
+        value = va_arg(ap, gchar * );
+        xmlNewProp(node, "borderstyle", value);
+        value = va_arg(ap, gchar * );
+        xmlNewProp(node, "fontfamily", value);
+        value = va_arg(ap, gchar * );
+        xmlNewProp(node, "fontsize", value);
+        value = va_arg(ap, gchar * );
+        xmlNewProp(node, "fontweigth", value);
+        value = va_arg(ap, gchar * );
+        xmlNewProp(node, "fontitalic", value);
+        value = va_arg(ap, gchar * );
+        xmlNewProp(node, "halignment", value);
+        value = va_arg(ap, gchar * );
+        xmlNewProp(node, "valignment", value);
+        value = va_arg(ap, gchar * );
+        xmlNewProp(node, "wordwrap", value);
+        value = va_arg(ap, gchar * );
+        xmlNewProp(node, "dateformat", value);
+        value = va_arg(ap, gchar * );
+        xmlNewProp(node, "precision", value);
+        value = va_arg(ap, gchar * );
+        xmlNewProp(node, "currency", value);
+        value = va_arg(ap, gchar * );
+        xmlNewProp(node, "negvaluecolor", value);
+        value = va_arg(ap, gchar * );
+        xmlNewProp(node, "commaseparator", value);
+        break;
+      case GDA_REPORT_PICTURE:
+        node = xmlNewNode(NULL, "picture");
+        value = va_arg(ap, gchar * );
+        xmlNewProp(node, "x", value);
+        value = va_arg(ap, gchar * );
+        xmlNewProp(node, "y", value);
+        value = va_arg(ap, gchar * );
+        xmlNewProp(node, "width", value);
+        value = va_arg(ap, gchar * );
+        xmlNewProp(node, "height", value);
+        value = va_arg(ap, gchar * );
+        xmlNewProp(node, "size", value);
+        value = va_arg(ap, gchar * );
+        xmlNewProp(node, "aspecratio", value);
+        value = va_arg(ap, gchar * );
+        xmlNewProp(node, "format", value);
+        value = va_arg(ap, gchar * );
+        xmlNewProp(node, "source", value);
+        value = va_arg(ap, gchar * );
+        xmlNewProp(node, "data", value);
+        break;
+      case GDA_REPORT_PAGE_HEADER:
+        node = xmlNewNode(NULL, "pageheader");
+        value = va_arg(ap, gchar * );
+        xmlNewProp(node, "height", value);
+        value = va_arg(ap, gchar * );
+        xmlNewProp(node, "positionfreq", value);
+        value = va_arg(ap, gchar * );
+        xmlNewProp(node, "pagefreq", value);
+        break;
+      case GDA_REPORT_PAGE_FOOTER:
+        node = xmlNewNode(NULL, "pagefooter");
+        value = va_arg(ap, gchar * );
+        xmlNewProp(node, "height", value);
+        value = va_arg(ap, gchar * );
+        xmlNewProp(node, "positionfreq", value);
+        value = va_arg(ap, gchar * );
+        xmlNewProp(node, "pagefreq", value);
+        break;
+      case GDA_REPORT_DETAIL:
+        node = xmlNewNode(NULL, "detail");
+        value = va_arg(ap, gchar * );
+        xmlNewProp(node, "height", value);
+        break;
+      case GDA_REPORT_GROUP_HEADER:
+        node = xmlNewNode(NULL, "groupheader");
+        value = va_arg(ap, gchar * );
+        xmlNewProp(node, "height", value);
+        value = va_arg(ap, gchar * );
+        xmlNewProp(node, "newpage", value);
+        break;
+      case GDA_REPORT_GROUP_FOOTER:
+        node = xmlNewNode(NULL, "groupfooter");
+        value = va_arg(ap, gchar * );
+        xmlNewProp(node, "height", value);
+        value = va_arg(ap, gchar * );
+        xmlNewProp(node, "newpage", value);
+        break;
+      default:
+        error = TRUE;
+        break;
+    }
+  if (!error) {
+	  nnode = va_arg(ap, xmlNodePtr);
+	  if (nnode)
+	    xmlAddChild(nnode, node);
+	}
   
   va_end(ap);
-  if (error)
-    {
-      if (node)
-	xmlFreeNode(node);
-      g_warning("Unknown requested operation or error in operation");
-      return NULL;
-    }
-  else
+  if (error) {
+    if (node)
+      xmlFreeNode(node);
+    g_warning("Unknown requested operation or error in operation");
+    return NULL;
+  } else
     return node;
 }
 
@@ -354,7 +560,7 @@ void gda_report_node_add_child(xmlNodePtr node, xmlNodePtr child)
 }
 
 void gda_report_set_attribute(xmlNodePtr node, const gchar *attname,
-					  const gchar *value)
+                               const gchar *value)
 {
   if (node && attname && *attname)
     xmlSetProp(node, (xmlChar *) attname, (xmlChar *) value);
@@ -368,7 +574,7 @@ void gda_report_set_id(Gda_Report *q, xmlNodePtr node, const gchar *value)
     ptr = xmlSetProp(node, "id", (xmlChar *) value);
   if (ptr)
     xmlAddID(GDA_XML_FILE(q)->context, GDA_XML_FILE(q)->doc,
-	     (xmlChar *) value, ptr);
+       (xmlChar *) value, ptr);
 }
 
 gchar* gda_report_get_attribute(xmlNodePtr node, const gchar *attname)
@@ -379,71 +585,99 @@ gchar* gda_report_get_attribute(xmlNodePtr node, const gchar *attname)
     return NULL;
 }
 
-Gda_ReportTag gda_report_get_tag(xmlNodePtr node)
-{
-  gboolean found=FALSE;
-  Gda_ReportTag retval=GDA_REPORT_UNKNOWN;
+Gda_ReportTag gda_report_get_tag(xmlNodePtr node) {
+gboolean found=FALSE;
+Gda_ReportTag retval=GDA_REPORT_UNKNOWN;
 
-
-  if (!found && !strcmp(node->name, "line"))
-    {
-      retval = GDA_REPORT_LINE;
-      found = TRUE;
-    }
-  if (!found && !strcmp(node->name, "label"))
-    {
-      retval = GDA_REPORT_LABEL;
-      found = TRUE;
-    }
-  if (!found && !strcmp(node->name, "special"))
-    {
-      retval = GDA_REPORT_SPECIAL;
-      found = TRUE;
-    }
-  if (!found && !strcmp(node->name, "calculatedfield"))
-    {
-      retval = GDA_REPORT_CALCULATEDFIELD;
-      found = TRUE;
-    }
-  if (!found && !strcmp(node->name, "field"))
-    {
-      retval = GDA_REPORT_FIELD;
-      found = TRUE;
-    }
+  if (!found && !strcmp(node->name, "reportelementlist")) {
+    retval = GDA_REPORT_REPORT_ELEMENT_LIST;
+    found = TRUE;
+  }
+  if (!found && !strcmp(node->name, "query")) {
+    retval = GDA_REPORT_QUERY;
+    found = TRUE;
+  }
+  if (!found && !strcmp(node->name, "reportdata")) {
+    retval = GDA_REPORT_REPORT_DATA;
+    found = TRUE;
+  }
+  if (!found && !strcmp(node->name, "pageheader")) {
+    retval = GDA_REPORT_PAGE_HEADER;
+    found = TRUE;
+  }
+  if (!found && !strcmp(node->name, "pagefooter")) {
+    retval = GDA_REPORT_PAGE_FOOTER;
+    found = TRUE;
+  }
+  if (!found && !strcmp(node->name, "line")) {
+    retval = GDA_REPORT_LINE;
+    found = TRUE;
+  }
+  if (!found && !strcmp(node->name, "label")) {
+    retval = GDA_REPORT_LABEL;
+    found = TRUE;
+  }
+  if (!found && !strcmp(node->name, "special")) {
+    retval = GDA_REPORT_SPECIAL;
+    found = TRUE;
+  }
+  if (!found && !strcmp(node->name, "repfield")) {
+    retval = GDA_REPORT_REPFIELD;
+    found = TRUE;
+  }
+  if (!found && !strcmp(node->name, "picture")) {
+    retval = GDA_REPORT_PICTURE;
+    found = TRUE;
+  }
+  if (!found && !strcmp(node->name, "groupheader")) {
+    retval = GDA_REPORT_GROUP_HEADER;
+    found = TRUE;
+  }
+  if (!found && !strcmp(node->name, "detail")) {
+    retval = GDA_REPORT_DETAIL;
+    found = TRUE;
+  }
+  if (!found && !strcmp(node->name, "groupfooter")) {
+    retval = GDA_REPORT_GROUP_FOOTER;
+    found = TRUE;
+  }
 
   /* main big tags */
-  if (!found && !strcmp(node->name, "ReportHeader"))
-    {
-      retval = GDA_REPORT_REPORTHEADER_TREE;
-      found = TRUE;
-    }
-  if (!found && !strcmp(node->name, "PageHeader"))
-    {
-      retval = GDA_REPORT_PAGEHEADER_TREE;
-      found = TRUE;
-    }
-  if (!found && !strcmp(node->name, "Detail"))
-    {
-      retval = GDA_REPORT_DETAIL_TREE;
-      found = TRUE;
-    }
-  if (!found && !strcmp(node->name, "PageFooter"))
-    {
-      retval = GDA_REPORT_PAGEFOOTER_TREE;
-      found = TRUE;
-    }
-  if (!found && !strcmp(node->name, "ReportFooter"))
-    {
-      retval = GDA_REPORT_REPORTFOOTER_TREE;
-      found = TRUE;
-    }
+  if (!found && !strcmp(node->name, "ReportHeader")) {
+    retval = GDA_REPORT_REPORT_HEADER;
+    found = TRUE;
+  }
+  if (!found && !strcmp(node->name, "PageHeaderList")) {
+    retval = GDA_REPORT_PAGE_HEADER_LIST;
+    found = TRUE;
+  }
+  if (!found && !strcmp(node->name, "DataHeader")) {
+    retval = GDA_REPORT_DATA_HEADER;
+    found = TRUE;
+  }
+  if (!found && !strcmp(node->name, "DataList")) {
+    retval = GDA_REPORT_DATA_LIST;
+    found = TRUE;
+  }
+    if (!found && !strcmp(node->name, "DataFooter")) {
+    retval = GDA_REPORT_DATA_FOOTER;
+    found = TRUE;
+  }
+  if (!found && !strcmp(node->name, "PageFooterList")) {
+    retval = GDA_REPORT_PAGE_FOOTER_LIST;
+    found = TRUE;
+  }
+/*  if (!found && !strcmp(node->name, "ReportFooter")) {
+    retval = GDA_REPORT_REPORT_FOOTER;
+    found = TRUE;
+  }*/
 
   return retval;
 }
 
 xmlNodePtr gda_report_find_tag (xmlNodePtr parent, 
-						Gda_ReportTag tag,
-						xmlNodePtr last_child)
+            Gda_ReportTag tag,
+            xmlNodePtr last_child)
 {
   xmlNodePtr retval=NULL, childs;
 
@@ -454,8 +688,8 @@ xmlNodePtr gda_report_find_tag (xmlNodePtr parent,
 
   while (childs && !retval)
     {
-      if (gda_report_get_tag(childs) == tag)
-	retval = childs;
+    if (gda_report_get_tag(childs) == tag)
+  retval = childs;
       childs = childs->next;
     }
  

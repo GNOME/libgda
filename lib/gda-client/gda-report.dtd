@@ -1,9 +1,12 @@
-<!-- gda-xml-report.dtd
+<!-- gda-report.dtd
      Copyright (C) 2000 Carlos Perello Marin
                         Gerhard Dieringer
+
+     Based on the Mutiny Bay Software's
+     reportviewer's DTD (http://www.mutinybaysoftware.com)
 -->
 
-<!ENTITY % query SYSTEM "/home/gmd/xml/dtd/gda-xml-query.dtd">
+<!ENTITY % query SYSTEM "/usr/share/libgda/dtd/gda-xml-query.dtd">
 %query;
 
 
@@ -14,8 +17,7 @@
 <!ENTITY % halignment      "standard|left|center|right">
 <!ENTITY % valignment      "top|center|bottom">
 
-
-<!ELEMENT report (reportheader?, pageheaderlist?, dataheader?,  reportdata?, 
+<!ELEMENT report (reportheader?, pageheaderlist?, dataheader?,  datalist?, 
                   datafooter?,   pagefooterlist?, reportfooter?)>
 <!ATTLIST report
   pagesize        (A3|A4|A5|A6|B3|B4|B5|B6|letter|legal|executive) "A4"
@@ -90,6 +92,7 @@
 <!-- the dataheader/-footer ist like a groupheader/-footer for a virtuell group,
      that contains all the data
 -->
+<!ELEMENT datalist (reportdata+)>
 
 <!ELEMENT dataheader (query?,reportelementlist)>
 <!ATTLIST dataheader 
@@ -142,11 +145,12 @@
 
 <!ELEMENT line EMPTY>
 <!ATTLIST line 
-  x1   		NMTOKEN            #REQUIRED
+  x1   		      NMTOKEN            #REQUIRED
   y1            NMTOKEN            #REQUIRED
   x2            NMTOKEN            #REQUIRED
   y2            NMTOKEN            #REQUIRED
   linewidth     NMTOKEN            #IMPLIED
+  lineheight    NMTOKEN            #IMPLIED
   linecolor     NMTOKENS           #IMPLIED
   linestyle     (%linestyle;)      #IMPLIED
 >
