@@ -1,3 +1,29 @@
+libgda 0.99.0, 2003-09-10
+-------------------------
+
+ - Fixed typo to build the freetds correctly (tagoh)
+ - Added gda_config_save_data_source_info function (rodrigo)
+ - Manage correctly non-SELECT statements in MySQL provider (gonzalo, csilles)
+ - Added Blob API (juan-mariano, gonzalo)
+ - Fixed many issues with GdaXmlDatabase (philippe, rodrigo)
+ - Fixed leaks in PostgreSQL provider (gonzalo)
+ - Added more API documentation (rodrigo)
+ - Added missing SQL support in XML provider (rodrigo)
+ - Updated translations:
+        - ca (jordim)
+        - cs (mitr)
+	- de (cneumair)
+        - es (pablodc)
+        - fi (pvirtane)
+        - fr (redfox)
+	- it (marcoc)
+	- no (kmaraas)
+	- pl (aflinta)
+	- pt (dnloreto)
+	- sl (minmax)
+	- sr (danilo)
+	- sv (menthos)
+
 libgda 0.91.0, 2003-08-06
 -------------------------
 
