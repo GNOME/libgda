@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2001-06-15 22:11+0200\n"
+"POT-Creation-Date: 2001-05-02 04:19+0200\n"
 "PO-Revision-Date: 2000-11-13 19:36+0100\n"
 "Last-Translator: Andraz Tori <andraz.tori1@guest.arnes.si>\n"
 "Language-Team: Slovenian <sl@li.org>\n"
@@ -23,22 +23,22 @@ msgstr "ne morem odpreti povezave z %s"
 msgid "Data source %s not found"
 msgstr "Vir podatkov %s ni bil najden"
 
-#: lib/gda-client/gda-connection.c:228 lib/gda-client/gda-error.c:179
+#: lib/gda-client/gda-connection.c:231 lib/gda-client/gda-error.c:179
 #, c-format
 msgid "%s: The server didn't respond."
 msgstr "%s: Stre¾nik se ni odzval."
 
-#: lib/gda-client/gda-connection.c:232 lib/gda-client/gda-error.c:183
+#: lib/gda-client/gda-connection.c:235 lib/gda-client/gda-error.c:183
 #, c-format
 msgid "%s: An Error occured in the CORBA system."
 msgstr "%s: V sistemu CORBA se je zgodila napaka."
 
-#: lib/gda-client/gda-connection.c:511
+#: lib/gda-client/gda-connection.c:508
 #, c-format
 msgid "Database '%s' not found in system configuration"
 msgstr "Zbirka podatkov '%s' ni bila najdena v nastavitvah sistema"
 
-#: lib/gda-client/gda-connection.c:526
+#: lib/gda-client/gda-connection.c:523
 msgid "Could not open CORBA factory"
 msgstr "Ne morem odpreti CORBA tovarne"
 
@@ -58,16 +58,16 @@ msgstr "RESNIÈNO"
 msgid "FALSE"
 msgstr "NERESNIÈNO"
 
-#: lib/gda-common/gda-corba.c:75
+#: lib/gda-common/gda-corba.c:73
 #, c-format
 msgid "CORBA System exception: %s"
 msgstr "Izjema v sistemu CORBA: %s"
 
-#: lib/gda-common/gda-corba.c:105
+#: lib/gda-common/gda-corba.c:102
 msgid "True"
 msgstr "Resnièno"
 
-#: lib/gda-common/gda-corba.c:105
+#: lib/gda-common/gda-corba.c:102
 msgid "False"
 msgstr "Neresnièno"
 
@@ -106,14 +106,14 @@ msgstr "%p ni veljavna tabela"
 msgid "Could not get pointer to server implementation"
 msgstr "Ne morem dobiti kazalca do implementacije stre¾nika"
 
-#: lib/gda-server/gda-server-impl-connection.c:124
-#: lib/gda-server/gda-server-impl-connection.c:133
-#: lib/gda-server/gda-server-impl-connection.c:140
-#: lib/gda-server/gda-server-impl-connection.c:149
-#: lib/gda-server/gda-server-impl-connection.c:156
-#: lib/gda-server/gda-server-impl-connection.c:165
-#: lib/gda-server/gda-server-impl-connection.c:172
-#: lib/gda-server/gda-server-impl-connection.c:181
+#: lib/gda-server/gda-server-impl-connection.c:125
+#: lib/gda-server/gda-server-impl-connection.c:134
+#: lib/gda-server/gda-server-impl-connection.c:141
+#: lib/gda-server/gda-server-impl-connection.c:150
+#: lib/gda-server/gda-server-impl-connection.c:157
+#: lib/gda-server/gda-server-impl-connection.c:166
+#: lib/gda-server/gda-server-impl-connection.c:173
+#: lib/gda-server/gda-server-impl-connection.c:182
 #: lib/gda-server/gda-server-impl-recordset.c:126
 #: lib/gda-server/gda-server-impl-recordset.c:135
 #: lib/gda-server/gda-server-impl-recordset.c:142
@@ -139,7 +139,7 @@ msgstr "Ne morem dobiti kazalca do implementacije stre¾nika"
 msgid "%s not implemented"
 msgstr "%s ni pimplementiran"
 
-#: lib/gda-server/gda-server-impl-connection.c:275
+#: lib/gda-server/gda-server-impl-connection.c:272
 #, c-format
 msgid "impl_GDA_Connection_open: opening connection with DSN: %s"
 msgstr "impl_GDA_Connection_open: odpiram povezavo z DSN: %s"
@@ -149,37 +149,37 @@ msgstr "impl_GDA_Connection_open: odpiram povezavo z DSN: %s"
 msgid "%s: an error ocurred while fetching data"
 msgstr "%s: med pobiranjem podatkov se je zgodila napaka"
 
-#: lib/gda-server/gda-server-impl.c:197
+#: lib/gda-server/gda-server-impl.c:188
 #, c-format
 msgid "Starting provider %s with no implementation functions"
 msgstr "Poganjam nuditelja %s brez implementiranih funkcij"
 
-#: lib/gda-server/gda-server-impl.c:223
+#: lib/gda-server/gda-server-impl.c:214
 #: report/server/gda-report-server-main.c:113
 msgid ""
 "OAF doesn't know about our IID; indicates broken installation. Exiting..."
 msgstr "OAF ne ve za na¹ IID; to ka¾e na pokvarjeno namestitev. Zakljuèujem..."
 
-#: lib/gda-server/gda-server-impl.c:226
+#: lib/gda-server/gda-server-impl.c:217
 msgid ""
 "Another instance of this provider is already registered with OAF. Exiting..."
 msgstr "Ena in¹tanca tega nuditelja je ¾e registrirana pri OAF. Zakljuèujem..."
 
-#: lib/gda-server/gda-server-impl.c:229
+#: lib/gda-server/gda-server-impl.c:220
 msgid "Unknown error registering this provider with OAF. Exiting"
 msgstr "Neznana napaka ob registraciji tega nuditelja pri OAF. Zakljuèujem"
 
-#: lib/gda-server/gda-server-impl.c:233
+#: lib/gda-server/gda-server-impl.c:224
 #, c-format
 msgid "Registered with ID = %s"
 msgstr "Registriran z ID = %s"
 
-#: lib/gda-server/gda-server-impl.c:312
+#: lib/gda-server/gda-server-impl.c:300
 #, c-format
 msgid "CORBA system exception %s"
 msgstr "Izjema v sistemu CORBA: %s"
 
-#: lib/gda-server/gda-server-impl.c:315
+#: lib/gda-server/gda-server-impl.c:303
 #, c-format
 msgid "CORBA user exception: %s"
 msgstr "Uporabni¹ka CORBA izjema: %s"
@@ -209,7 +209,7 @@ msgstr "Dostop GDA do vira podatkov za LDAP"
 #: providers/gda-odbc-server/gda-odbc-connection.c:621
 #: providers/gda-odbc-server/gda-odbc-connection.c:654
 #: providers/gda-oracle-server/gda-oracle-connection.c:438
-#: providers/gda-postgres-server/gda-postgres-connection.c:743
+#: providers/gda-postgres-server/gda-postgres-connection.c:790
 #: providers/gda-sybase-server/gda-sybase-error.c:115
 #: providers/gda-tds-server/gda-tds-error.c:114
 #, c-format
@@ -230,8 +230,8 @@ msgstr "napaka '%s' pri %s"
 #: providers/gda-odbc-server/gda-odbc-connection.c:657
 #: providers/gda-oracle-server/gda-oracle-connection.c:443
 #: providers/gda-oracle-server/gda-oracle-connection.c:444
-#: providers/gda-postgres-server/gda-postgres-connection.c:750
-#: providers/gda-postgres-server/gda-postgres-connection.c:751
+#: providers/gda-postgres-server/gda-postgres-connection.c:797
+#: providers/gda-postgres-server/gda-postgres-connection.c:798
 #: providers/gda-primebase-server/gda-primebase-connection.c:363
 #: providers/gda-primebase-server/gda-primebase-connection.c:364
 #: providers/gda-sybase-server/gda-sybase-error.c:124
@@ -246,7 +246,7 @@ msgstr "Ni na voljo"
 #: providers/gda-mdb-server/gda-mdb-connection.c:378
 #: providers/gda-mysql-server/gda-mysql-connection.c:376
 #: providers/gda-oracle-server/gda-oracle-connection.c:445
-#: providers/gda-postgres-server/gda-postgres-connection.c:752
+#: providers/gda-postgres-server/gda-postgres-connection.c:799
 #: providers/gda-primebase-server/gda-primebase-connection.c:365
 #: providers/gda-sybase-server/gda-sybase-error.c:126
 #: providers/gda-tds-server/gda-tds-error.c:125
@@ -278,7 +278,7 @@ msgstr "Dostop GDA do vira podatkov za Po¹to"
 #: providers/gda-mdb-server/gda-mdb-connection.c:224
 #: providers/gda-mysql-server/gda-mysql-connection.c:239
 #: providers/gda-oracle-server/gda-oracle-connection.c:295
-#: providers/gda-postgres-server/gda-postgres-connection.c:477
+#: providers/gda-postgres-server/gda-postgres-connection.c:511
 #: providers/gda-sybase-server/gda-sybase-connection.c:283
 #: providers/gda-tds-server/gda-tds-connection.c:288
 #, c-format
@@ -431,8 +431,8 @@ msgstr "Nisem mogel registrirati implementacije nuditelja ORACLE"
 msgid "GDA Datasource Access for Postgres"
 msgstr "Dostop GDA do vira podatkov za Postgres"
 
-#: providers/gda-postgres-server/gda-postgres-connection.c:849
-#: providers/gda-postgres-server/gda-postgres-connection.c:957
+#: providers/gda-postgres-server/gda-postgres-connection.c:899
+#: providers/gda-postgres-server/gda-postgres-connection.c:1011
 msgid "postgres_recset is NULL"
 msgstr "postgres_recset je NULA"
 
