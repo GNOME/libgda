@@ -1,3 +1,9 @@
+2003-08-01  Carlos Perelló Marín <carlos@pemas.net>
+
+	* bindings/Makefile.am, bindings/.cvsignore: Removed so we can nuke
+	this directory.
+	* README: Removed teh bindings directory reference.
+
 2003-08-01  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
 	* libsql/sql_parser.h: compilation used to fail in some cases.

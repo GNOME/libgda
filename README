@@ -41,7 +41,6 @@ You can get all these packages from ftp.gnome.org.
 
 Subdirectories
 --------------
-bindings: language bindings for other languages than C
 doc: the libgda api documentation
 idl: CORBA idl files
 intl: the gettext package needed for internationalization
