@@ -1,3 +1,8 @@
+2004-08-06  Szalai Ferenc <szferi@einstein.ki.iif.hu>
+
+	* libgda/gda-row.c (gda_row_set_number): set the GdaRow's to $number,
+	not to 0.
+
 2004-08-01  Jeronimo Albi <jeronimoalbi@yahoo.com.ar>
 
 	* providers/firebird/gda-firebird-provider.c:
