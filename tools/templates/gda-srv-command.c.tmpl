@@ -26,24 +26,36 @@
  * Public functions
  */
 gboolean
-gda_<provider-name>_command_new (Gda_ServerCommand *cmd)
-{
-  return TRUE;
+gda_<provider-name>_command_new (Gda_ServerCommand *cmd) {
+	return TRUE;
 }
 
 Gda_ServerRecordset *
 gda_<provider-name>_command_execute (Gda_ServerCommand *cmd,
                                      Gda_ServerError *error,
-			             const GDA_CmdParameterSeq *params,
-			             gulong *affected,
-			             gulong options)
-{
-  Gda_ServerRecordset* recset = NULL;
-
-  return recset;
+                                     const GDA_CmdParameterSeq *params,
+                                     gulong *affected,
+                                     gulong options) {
+	Gda_ServerRecordset* recset = NULL;
+	
+	switch (gda_server_command_get_type(cmd)) {
+		case GDA_COMMAND_TYPE_TEXT :
+			/* TODO: execute [SQL] command and return recordset */
+			break;
+		case GDA_COMMAND_TYPE_TABLE :
+			/* TODO: return the contents of table named in the command */
+			break;
+		case GDA_COMMAND_TYPE_STOREDPROCEDURE :
+			/* TODO: execute specified procedure */
+			break;
+		case GDA_COMMAND_TYPE_FILE :
+			/* TODO: read commands from given file */
+			break;
+	}
+	return recset;
 }
 
 void
-gda_<provider-name>_command_free (Gda_ServerCommand *cmd)
-{
+gda_<provider-name>_command_free (Gda_ServerCommand *cmd) {
+	/* TODO: free all the data you allocated for this command */
 }

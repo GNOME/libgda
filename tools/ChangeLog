@@ -1,3 +1,8 @@
+2001-01-01	Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-buildserver.in: fixed auto* macros expansion
+	* templates/*: updated to recent changes in libgda-server API
+
 2000-11-15	Rodrigo Moya <rodrigo@linuxave.net>
 
 	* fixed gda-config script
