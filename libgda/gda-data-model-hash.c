@@ -46,6 +46,13 @@ static GObjectClass *parent_class = NULL;
  */
 
 static gint
+gda_data_model_hash_get_n_rows (GdaDataModel *model)
+{
+	g_return_val_if_fail (GDA_IS_DATA_MODEL_HASH (model), -1);
+	return g_hash_table_size (GDA_DATA_MODEL_HASH (model)->priv->rows);
+}
+
+static gint
 gda_data_model_hash_get_n_columns (GdaDataModel *model)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_HASH (model), -1);
@@ -116,6 +123,7 @@ gda_data_model_hash_class_init (GdaDataModelHashClass *klass)
 	parent_class = g_type_class_peek_parent (klass);
 
 	object_class->finalize = gda_data_model_hash_finalize;
+	model_class->get_n_rows = gda_data_model_hash_get_n_rows;
 	model_class->get_n_columns = gda_data_model_hash_get_n_columns;
 	model_class->describe_column = gda_data_model_hash_describe_column;
 	model_class->get_row = gda_data_model_hash_get_row;

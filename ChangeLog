@@ -1,3 +1,9 @@
+2004-10-14  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/gda-data-model-hash.c (gda_data_model_hash_get_n_rows): added
+	missing class method implementation.
+	(gda_data_model_hash_class_init): ditto.
+
 2004-10-13  Alan Knowles <alan@akbkhome.com>
 
 	* libgda/gda-config.c:
