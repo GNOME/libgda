@@ -20,22 +20,42 @@
 #  define __gda_server_impl_h__
 
 #include <glib.h>
-#include <gtk/gtk.h>
+
+#ifdef HAVE_GOBJECT
+#  include <glib-object.h>
+#else
+#  include <gtk/gtk.h>
+#endif
+
 #include <orb/orbit.h>
 #include <liboaf/liboaf.h>
 #include <gda.h>
 #include <gda-common.h>
 
-BEGIN_GNOME_DECLS
+#if defined(__cplusplus)
+extern "C" {
+#endif
 
 typedef struct _Gda_ServerImpl      Gda_ServerImpl;
 typedef struct _Gda_ServerImplClass Gda_ServerImplClass;
 
 #define GDA_TYPE_SERVER_IMPL            (gda_server_impl_get_type())
-#define GDA_SERVER_IMPL(obj)            GTK_CHECK_CAST(obj, GDA_TYPE_SERVER_IMPL, Gda_ServerImpl)
-#define GDA_SERVER_IMPL_CLASS(klass)    GTK_CHECK_CLASS_CAST(klass, GDA_TYPE_SERVER_IMPL, Gda_ServerImplClass)
-#define IS_GDA_SERVER_IMPL(obj)         GTK_CHECK_TYPE(obj, GDA_TYPE_SERVER_IMPL)
-#define IS_GDA_SERVER_IMPL_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_SERVER_IMPL))
+
+#ifdef HAVE_GOBJECT
+#  define GDA_SERVER_IMPL(obj) \
+         G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_SERVER_IMPL, Gda_ServerImpl)
+#  define GDA_SERVER_IMPL_CLASS(klass) \
+     G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_SERVER_IMPL, Gda_ServerImplClass)
+#  define IS_GDA_SERVER_IMPL(obj) \
+          G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_SERVER_IMPL)
+#  define IS_GDA_SERVER_IMPL_CLASS(klass) \
+          G_TYPE_CHECK_CLASS_TYPE (klass, GDA_TYPE_SERVER_IMPL)
+#else
+#  define GDA_SERVER_IMPL(obj)            GTK_CHECK_CAST(obj, GDA_TYPE_SERVER_IMPL, Gda_ServerImpl)
+#  define GDA_SERVER_IMPL_CLASS(klass)    GTK_CHECK_CLASS_CAST(klass, GDA_TYPE_SERVER_IMPL, Gda_ServerImplClass)
+#  define IS_GDA_SERVER_IMPL(obj)         GTK_CHECK_TYPE(obj, GDA_TYPE_SERVER_IMPL)
+#  define IS_GDA_SERVER_IMPL_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_SERVER_IMPL))
+#endif
 
 typedef struct _Gda_ServerImplFunctions Gda_ServerImplFunctions;
 
@@ -302,7 +322,11 @@ void             gda_server_error_make             (Gda_ServerError *error,
  */
 struct _Gda_ServerImpl
 {
+#ifdef HAVE_GOBJECT
+  GObject                 object;
+#else
   GtkObject               object;
+#endif
   CORBA_Object            connection_factory_obj;
   PortableServer_POA      root_poa;
   CORBA_Environment*      ev;
@@ -314,10 +338,20 @@ struct _Gda_ServerImpl
 
 struct _Gda_ServerImplClass
 {
+#ifdef HAVE_GOBJECT
+  GObjectClass  parent_class;
+  GObjectClass *parent;
+#else
   GtkObjectClass parent_class;
+#endif
 };
 
+#ifdef HAVE_GOBJECT
+GType           gda_server_impl_get_type (void);
+#else
 GtkType         gda_server_impl_get_type (void);
+#endif
+
 Gda_ServerImpl* gda_server_impl_new      (const gchar *name, Gda_ServerImplFunctions *functions);
 Gda_ServerImpl* gda_server_impl_find     (const gchar *id);
 void            gda_server_impl_start    (Gda_ServerImpl *server_impl);
@@ -330,7 +364,9 @@ void            gda_server_impl_stop     (Gda_ServerImpl *server_impl);
 gint       gda_server_impl_exception         (CORBA_Environment *ev);
 GDA_Error* gda_server_impl_make_error_buffer (Gda_ServerConnection *cnc);
 
-END_GNOME_DECLS
+#if defined(__cplusplus)
+}
+#endif
 
 #include <gda-server-impl-factory.h>
 #include <gda-server-impl-connection.h>

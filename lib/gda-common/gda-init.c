@@ -19,7 +19,6 @@
 #include "config.h"
 /* FIXME: This should really have it's own header file */
 #include "gda-common.h"
-#include <gnome.h> // rremove!!!!!
 
 #ifdef HAVE_GOBJECT
 #  include <glib-object.h>

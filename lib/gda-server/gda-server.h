@@ -23,23 +23,8 @@
  * This is the main header file for the libgda-server library
  */
 
-#if defined(HAVE_CONFIG_H)
-#  include <config.h>
-#endif
-
-#include <orb/orbit.h>
-#include <gnome.h>
-#include <liboaf/liboaf.h>
-
-#include <gda.h>
-#include <gda-common.h>
 #include <gda-server-impl.h>
 
 void gda_server_init (const gchar *app_id, const gchar *version, gint nargs, gchar *args[]);
 
 #endif
-
-
-
-
-

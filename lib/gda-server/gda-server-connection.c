@@ -16,7 +16,8 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include <gda-server-impl.h>
+#include "config.h"
+#include "gda-server-impl.h"
 
 static void
 free_error_list (GList *list)

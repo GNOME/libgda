@@ -16,27 +16,45 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include "config.h"
 #include "gda-server.h"
 
-static void gda_server_impl_init       (Gda_ServerImpl *server_impl);
-static void gda_server_impl_class_init (Gda_ServerImplClass *klass);
+#ifdef ENABLE_NLS
+#  include <libintl.h>
+#  define _(String) gettext (String)
+#  define N_(String) (String)
+#else
+/* Stubs that do something close enough.  */
+#  define textdomain(String)
+#  define gettext(String) (String)
+#  define dgettext(Domain,Message) (Message)
+#  define dcgettext(Domain,Message,Type) (Message)
+#  define bindtextdomain(Domain,Directory)
+#  define _(String) (String)
+#  define N_(String) (String)
+#endif
 
+#ifdef HAVE_GOBJECT
+static void gda_server_impl_finalize (GObject *object);
+#else
 static void gda_server_impl_destroy    (Gda_ServerImpl *server_impl);
+#endif
 
 static GList* server_list = NULL;
 
 /*
  * Private functions
  */
+#ifdef HAVE_GOBJECT
 static void
-gda_server_impl_init (Gda_ServerImpl *server_impl)
+gda_server_impl_class_init (Gda_ServerImplClass *klass, gpointer data)
 {
-  g_return_if_fail(IS_GDA_SERVER_IMPL(server_impl));
+  GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
-  server_impl->name = NULL;
-  memset((void *) &server_impl->functions, 0, sizeof(Gda_ServerImplFunctions));
+  object_class->finalize = &gda_server_impl_finalize;
+  klass->parent = g_type_class_peek_parent (klass);
 }
-
+#else
 static void
 gda_server_impl_class_init (Gda_ServerImplClass *klass)
 {
@@ -44,7 +62,36 @@ gda_server_impl_class_init (Gda_ServerImplClass *klass)
 
   object_class->destroy = gda_server_impl_destroy;
 }
+#endif
 
+#ifdef HAVE_GOBJECT
+static void
+gda_server_impl_init (Gda_ServerImpl *server_impl, Gda_ServerImplClass *klass)
+#else
+static void
+gda_server_impl_init (Gda_ServerImpl *server_impl)
+#endif
+{
+  g_return_if_fail(IS_GDA_SERVER_IMPL(server_impl));
+
+  server_impl->name = NULL;
+  memset((void *) &server_impl->functions, 0, sizeof(Gda_ServerImplFunctions));
+}
+
+#ifdef HAVE_GOBJECT
+static void
+gda_server_impl_finalize (GObject *object)
+{
+  Gda_ServerImpl *server_impl = GDA_SERVER_IMPL (object);
+  Gda_ServerImplClass *klass =
+    G_TYPE_INSTANCE_GET_CLASS (object, GDA_SERVER_IMPL_CLASS,
+                               Gda_ServerImplClass);
+
+  if (server_impl->name)
+    g_free ((gpointer) server_impl->name);
+  klass->parent->finalize (object);
+}
+#else
 static void
 gda_server_impl_destroy (Gda_ServerImpl *server_impl)
 {
@@ -52,7 +99,33 @@ gda_server_impl_destroy (Gda_ServerImpl *server_impl)
 
   if (server_impl->name) g_free((gpointer) server_impl->name);
 }
+#endif
 
+#ifdef HAVE_GOBJECT
+GType
+gda_server_impl_get_type (void)
+{
+  static GType type = 0;
+  if (!type)
+    {
+      GTypeInfo info =
+      {
+	sizeof (Gda_ServerImplClass),                /* class_size */
+        NULL,                                        /* base_init */
+        NULL,                                        /* base_finalize */
+	(GClassInitFunc) gda_server_impl_class_init, /* class_init */
+        NULL,                                        /* class_finalize */
+        NULL,                                        /* class_data */
+	sizeof (Gda_ServerImpl),                     /* instance_size */
+        0,                                           /* n_preallocs */
+	(GInstanceInitFunc) gda_server_impl_init,    /* instance_init */
+        NULL,                                        /* value_table */
+      };
+      type = g_type_register_static (G_TYPE_OBJECT, "Gda_ServerImpl", &info);
+    }
+  return (type);
+}
+#else
 GtkType
 gda_server_impl_get_type (void)
 {
@@ -74,6 +147,7 @@ gda_server_impl_get_type (void)
     }
   return type;
 }
+#endif
 
 /**
  * gda_server_impl_new
@@ -102,7 +176,11 @@ gda_server_impl_new (const gchar *name, Gda_ServerImplFunctions *functions)
   if (server_impl) return server_impl;
 
   /* create provider instance */
+#ifdef HAVE_GOBJECT
+  server_impl = GDA_SERVER_IMPL (g_object_new (GDA_TYPE_SERVER_IMPL, NULL));
+#else
   server_impl = GDA_SERVER_IMPL(gtk_type_new(gda_server_impl_get_type()));
+#endif
   server_impl->name = g_strdup(name);
   g_set_prgname(server_impl->name);
   if (functions)
