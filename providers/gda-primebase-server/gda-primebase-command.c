@@ -85,6 +85,7 @@ gda_primebase_command_execute (Gda_ServerCommand *cmd,
       sql_cmd = gda_server_connection_xml2sql(cnc, sql_cmd);
       // FIXME: Need to handle possible conversion errors when xml2sql is ready
       if (!sql_cmd) {
+        gda_server_error_make(error, recset, cnc, __PRETTY_FUNCTION__);
         return NULL;
       }
       break;
@@ -100,6 +101,7 @@ gda_primebase_command_execute (Gda_ServerCommand *cmd,
       pcnc->hstmt = PBIExecute(pcnc->sid, sql_cmd, PB_NTS, PB_EXECUTE_NOW,
                                affected, NULL, NULL);
 		if (pcnc->hstmt == PB_ERROR) {
+        gda_server_error_make(error, recset, cnc, __PRETTY_FUNCTION__);
         return NULL;
       }
       return NULL;
