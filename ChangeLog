@@ -1,3 +1,18 @@
+2002-06-17  Carlos Perelló Marín <carlos@gnome-db.org>
+
+	* doc/C/tmpl/gda-command.sgml: Automatic update.
+	* doc/C/tmpl/gda-parameter.sgml: ditto.
+	* doc/C/tmpl/gda-report-document.sgml: ditto.
+	* doc/C/tmpl/gda-value.sgml: ditto.
+	* providers/sqlite/Makefile.am: Added utils.c
+	* providers/sqlite/gda-sqlite-provider.c: Updated to the new
+	architecture. It's not finished... Based on postgresql provider.
+	* providers/sqlite/gda-sqlite-recordset.c: ditto.
+	* providers/sqlite/gda-sqlite-recordset.h: ditto.
+	* providers/sqlite/gda-sqlite.h: ditto.
+	* providers/sqlite/libmain.c: ditto.
+	* providers/sqlite/utils.c: Added for help funtions
+  
 2002-06-16  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* providers/sqlite/Makefile.am: added missing INCLUDES.
