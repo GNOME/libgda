@@ -37,6 +37,24 @@ GdaXmlDatabase
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_xml_database_get_name ##### -->
+<para>
+
+</para>
+
+@xmldb: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_xml_database_set_name ##### -->
+<para>
+
+</para>
+
+@xmldb: 
+@name: 
+
+
 <!-- ##### FUNCTION gda_xml_database_get_uri ##### -->
 <para>
 
@@ -117,6 +135,18 @@ GdaXmlDatabase
 
 @xmldb: 
 @name: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_xml_database_new_table_from_model ##### -->
+<para>
+
+</para>
+
+@xmldb: 
+@name: 
+@model: 
+@add_data: 
 @Returns: 
 
 

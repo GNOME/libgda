@@ -36,14 +36,6 @@ GdaExport
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_export_free ##### -->
-<para>
-
-</para>
-
-@exp: 
-
-
 <!-- ##### FUNCTION gda_export_get_tables ##### -->
 <para>
 

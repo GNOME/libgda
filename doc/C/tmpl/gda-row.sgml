@@ -223,6 +223,60 @@ Functions for accesing #GdaRow.
 @allow: 
 
 
+<!-- ##### FUNCTION gda_field_attributes_get_primary_key ##### -->
+<para>
+
+</para>
+
+@fa: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_field_attributes_set_primary_key ##### -->
+<para>
+
+</para>
+
+@fa: 
+@pk: 
+
+
+<!-- ##### FUNCTION gda_field_attributes_get_unique_key ##### -->
+<para>
+
+</para>
+
+@fa: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_field_attributes_set_unique_key ##### -->
+<para>
+
+</para>
+
+@fa: 
+@uk: 
+
+
+<!-- ##### FUNCTION gda_field_attributes_get_references ##### -->
+<para>
+
+</para>
+
+@fa: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_field_attributes_set_references ##### -->
+<para>
+
+</para>
+
+@fa: 
+@ref: 
+
+
 <!-- ##### FUNCTION gda_field_get_actual_size ##### -->
 <para>
 
@@ -329,6 +383,60 @@ Functions for accesing #GdaRow.
 
 @field: 
 @allow: 
+
+
+<!-- ##### FUNCTION gda_field_get_primary_key ##### -->
+<para>
+
+</para>
+
+@field: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_field_set_primary_key ##### -->
+<para>
+
+</para>
+
+@field: 
+@pk: 
+
+
+<!-- ##### FUNCTION gda_field_get_unique_key ##### -->
+<para>
+
+</para>
+
+@field: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_field_set_unique_key ##### -->
+<para>
+
+</para>
+
+@field: 
+@uk: 
+
+
+<!-- ##### FUNCTION gda_field_get_references ##### -->
+<para>
+
+</para>
+
+@field: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_field_set_references ##### -->
+<para>
+
+</para>
+
+@field: 
+@ref: 
 
 
 <!-- ##### FUNCTION gda_field_is_null ##### -->

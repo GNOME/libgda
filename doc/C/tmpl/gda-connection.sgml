@@ -153,6 +153,17 @@ GdaConnection
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_connection_execute_single_command ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@cmd: 
+@params: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_connection_begin_transaction ##### -->
 <para>
 
@@ -206,12 +217,15 @@ GdaConnection
 </para>
 
 @GDA_CONNECTION_SCHEMA_AGGREGATES: 
+@GDA_CONNECTION_SCHEMA_DATABASES: 
 @GDA_CONNECTION_SCHEMA_FIELDS: 
 @GDA_CONNECTION_SCHEMA_INDEXES: 
 @GDA_CONNECTION_SCHEMA_PROCEDURES: 
+@GDA_CONNECTION_SCHEMA_SEQUENCES: 
 @GDA_CONNECTION_SCHEMA_TABLES: 
 @GDA_CONNECTION_SCHEMA_TRIGGERS: 
 @GDA_CONNECTION_SCHEMA_TYPES: 
+@GDA_CONNECTION_SCHEMA_USERS: 
 @GDA_CONNECTION_SCHEMA_VIEWS: 
 
 <!-- ##### FUNCTION gda_connection_get_schema ##### -->

@@ -58,6 +58,7 @@ gda_connection_get_password
 gda_connection_add_error
 gda_connection_add_error_list
 gda_connection_execute_command
+gda_connection_execute_single_command
 gda_connection_begin_transaction
 gda_connection_commit_transaction
 gda_connection_rollback_transaction
@@ -168,7 +169,6 @@ GdaExportPrivate
 <TITLE>GdaExport</TITLE>
 GdaExportFlags
 gda_export_new
-gda_export_free
 gda_export_get_tables
 gda_export_get_selected_tables
 gda_export_select_table
@@ -292,6 +292,8 @@ GdaXmlDatabasePrivate
 <TITLE>GdaXmlDatabase</TITLE>
 gda_xml_database_new
 gda_xml_database_new_from_uri
+gda_xml_database_get_name
+gda_xml_database_set_name
 gda_xml_database_get_uri
 gda_xml_database_set_uri
 gda_xml_database_changed
@@ -301,6 +303,7 @@ gda_xml_database_get_tables
 gda_xml_database_free_table_list
 gda_xml_database_find_table
 gda_xml_database_new_table
+gda_xml_database_new_table_from_model
 gda_xml_database_new_table_from_node
 <SUBSECTION Standard>
 GDA_XML_DATABASE
@@ -900,6 +903,7 @@ gda_main_quit
 <FILE>gda-util</FILE>
 gda_type_to_string
 gda_type_from_string
+gda_string_hash_to_list
 gda_file_load
 gda_file_save
 </SECTION>
@@ -929,6 +933,12 @@ gda_field_attributes_get_gdatype
 gda_field_attributes_set_gdatype
 gda_field_attributes_get_allow_null
 gda_field_attributes_set_allow_null
+gda_field_attributes_get_primary_key
+gda_field_attributes_set_primary_key
+gda_field_attributes_get_unique_key
+gda_field_attributes_set_unique_key
+gda_field_attributes_get_references
+gda_field_attributes_set_references
 gda_field_get_actual_size
 gda_field_set_actual_size
 gda_field_get_defined_size
@@ -941,6 +951,12 @@ gda_field_get_gdatype
 gda_field_set_gdatype
 gda_field_get_allow_null
 gda_field_set_allow_null
+gda_field_get_primary_key
+gda_field_set_primary_key
+gda_field_get_unique_key
+gda_field_set_unique_key
+gda_field_get_references
+gda_field_set_references
 gda_field_is_null
 gda_field_get_value
 gda_field_set_value

@@ -32,6 +32,15 @@ gda-util
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_string_hash_to_list ##### -->
+<para>
+
+</para>
+
+@hash_table: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_file_load ##### -->
 <para>
 
