@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GNOME db/CVS\n"
 "POT-Creation-Date: 2000-04-02 23:42+0200\n"
-"PO-Revision-Date: 2000-09-27 01:50+02:00\n"
+"PO-Revision-Date: 2000-10-02 01:50+02:00\n"
 "Last-Translator: Keld Simonsen <keld@dkuug.dk>\n"
 "Language-Team: Danish <dansk@klid.dk>\n"
 "MIME-Version: 1.0\n"
@@ -66,6 +66,11 @@ msgstr "Sand"
 #: lib/gda-common/gda-corba.c:72
 msgid "False"
 msgstr "Falsk"
+
+#: lib/gda-common/gda-corba.c:119
+#, c-format
+msgid "CORBA System exception: %s"
+msgstr "CORBA system undtagelse: %s"
 
 #: lib/gda-common/gda-log.c:29
 msgid "Saving log...x"
@@ -418,7 +423,7 @@ msgstr "Forbindelsen ser ud til at være død"
 
 #: providers/gda-sybase-server/gda-sybase-command.c:127
 msgid "Filling command structure failed\n"
-msgstr ""
+msgstr "Udfyldelse af kommandostruktur mislykkedes\n"
 
 #: providers/gda-sybase-server/gda-sybase-command.c:139
 msgid "sending cmd failed"
@@ -426,15 +431,15 @@ msgstr "Sender cmd mislykkedes"
 
 #: providers/gda-sybase-server/gda-sybase-command.c:146
 msgid "Allocating recordset failed"
-msgstr ""
+msgstr "Allokering af postsæt mislykkedes"
 
 #: providers/gda-sybase-server/gda-sybase-command.c:156
 msgid "Getting recordset userdata failed"
-msgstr ""
+msgstr "Hentning af postsæt brugerdata mislykkedes"
 
 #: providers/gda-sybase-server/gda-sybase-command.c:212
 msgid "Command execution finished, all results processed"
-msgstr ""
+msgstr "Kommandoudførsel afsluttet, alle resultater behandlet"
 
 #: providers/gda-sybase-server/gda-sybase-command.c:216
 msgid "Command failed"
@@ -442,46 +447,46 @@ msgstr "Kommando mislykkedes"
 
 #: providers/gda-sybase-server/gda-sybase-command.c:220
 msgid "Execution of resultless command succeeded"
-msgstr ""
+msgstr "Udførsel af resultatløs kommando lykkedes"
 
 #: providers/gda-sybase-server/gda-sybase-command.c:236
 #, c-format
 msgid "ct_results() returned %x"
-msgstr ""
+msgstr "ct_results() returnerede %x"
 
 #: providers/gda-sybase-server/gda-sybase-command.c:246
 msgid "No further results, command completly succeeded."
-msgstr ""
+msgstr "Ingen yderligere resultater, kommando lykkedes helt."
 
 #: providers/gda-sybase-server/gda-sybase-command.c:250
 msgid "An error occured during command execution."
-msgstr ""
+msgstr "EN fejl skete ved udførsel af kommando."
 
 #: providers/gda-sybase-server/gda-sybase-command.c:257
 msgid "Cmd execution returned unknown result, may be an error"
-msgstr ""
+msgstr "Kommandoudførsel returnerede ukendt resultat, kan være en fejl"
 
 #: providers/gda-sybase-server/gda-sybase-command.c:270
 msgid "No data returned, freeing recordset structure"
-msgstr ""
+msgstr "Ingen data returneret, frigiver postsæt-struktur"
 
 #: providers/gda-sybase-server/gda-sybase-command.c:301
 #: providers/gda-sybase-server/gda-sybase-command.c:313
 msgid "Freeing command structure failed"
-msgstr ""
+msgstr "Frigivning af postsæt-struktur mislykkedes"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:123
 msgid "Error allocating error structure"
-msgstr ""
+msgstr "Fejl ved allokering af fejl-struktur"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:131
 msgid "Not enough memory for sybase_Connection"
-msgstr ""
+msgstr "Ikke nok hukommelse for sybase_Connection"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:387
 #, c-format
 msgid "schema_cols: table_name '%s'"
-msgstr ""
+msgstr "schema_cols: table_name '%s'"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:403
 msgid "Could not allocate command structure"
@@ -867,1193 +872,1193 @@ msgstr "%s: fejlkonfigureret DSN indgang"
 msgid "%s: data source '%s' not found\n"
 msgstr "%s: datakilde '%s' ikke fundet\n"
 
-msgid "Object Name"
-msgstr "Objektnavn"
+#~ msgid "Object Name"
+#~ msgstr "Objektnavn"
 
-msgid "0 rows"
-msgstr "0 rækker"
+#~ msgid "0 rows"
+#~ msgstr "0 rækker"
 
-msgid "%d rows"
-msgstr "%d rækker"
+#~ msgid "%d rows"
+#~ msgstr "%d rækker"
 
-msgid "Tables"
-msgstr "Tabeller"
+#~ msgid "Tables"
+#~ msgstr "Tabeller"
 
-msgid "Views"
-msgstr "Visninger"
+#~ msgid "Views"
+#~ msgstr "Visninger"
 
-msgid "Procedures"
-msgstr "Procedurer"
+#~ msgid "Procedures"
+#~ msgstr "Procedurer"
 
-msgid "Types"
-msgstr "Typer"
+#~ msgid "Types"
+#~ msgstr "Typer"
 
-msgid "Aggregates"
-msgstr "Totalsumme"
+#~ msgid "Aggregates"
+#~ msgstr "Totalsumme"
 
-msgid "Data"
-msgstr "Data"
+#~ msgid "Data"
+#~ msgstr "Data"
 
-msgid "Remove"
-msgstr "Fjern"
+#~ msgid "Remove"
+#~ msgstr "Fjern"
 
-msgid "Extra Info"
-msgstr "Ekstra info"
+#~ msgid "Extra Info"
+#~ msgstr "Ekstra info"
 
-msgid "GDA Name"
-msgstr "GDA-navn"
+#~ msgid "GDA Name"
+#~ msgstr "GDA-navn"
 
-msgid "Provider"
-msgstr "Udbyder"
+#~ msgid "Provider"
+#~ msgstr "Udbyder"
 
-msgid "DSN"
-msgstr "DSN"
+#~ msgid "DSN"
+#~ msgstr "DSN"
 
-msgid "Description"
-msgstr "Beskrivelse"
+#~ msgid "Description"
+#~ msgstr "Beskrivelse"
 
-msgid "Username"
-msgstr "Brugernavn"
+#~ msgid "Username"
+#~ msgstr "Brugernavn"
 
-msgid "Config"
-msgstr "Konfigurér"
+#~ msgid "Config"
+#~ msgstr "Konfigurér"
 
-msgid "Global"
-msgstr "Global"
+#~ msgid "Global"
+#~ msgstr "Global"
 
-msgid "Error while saving configuration!"
-msgstr "Fejl ved gemning af indstillinger!"
+#~ msgid "Error while saving configuration!"
+#~ msgstr "Fejl ved gemning af indstillinger!"
 
-msgid "Data source has no name!"
-msgstr "Datakilde har intet navn!"
+#~ msgid "Data source has no name!"
+#~ msgstr "Datakilde har intet navn!"
 
-msgid "Error %d of %d"
-msgstr "Fejl %d af %d"
+#~ msgid "Error %d of %d"
+#~ msgstr "Fejl %d af %d"
 
-msgid "Show Help"
-msgstr "Vis hjælp"
+#~ msgid "Show Help"
+#~ msgstr "Vis hjælp"
 
-msgid "Source"
-msgstr "Datakilde"
+#~ msgid "Source"
+#~ msgstr "Datakilde"
 
-msgid "sqlstate"
-msgstr "sqlstate"
+#~ msgid "sqlstate"
+#~ msgstr "sqlstate"
 
-msgid "Error 0 of 0"
-msgstr "Fejl 0 af 0"
+#~ msgid "Error 0 of 0"
+#~ msgstr "Fejl 0 af 0"
 
-msgid "Record View"
-msgstr "Post-visning"
+#~ msgid "Record View"
+#~ msgstr "Post-visning"
 
-msgid "Copy"
-msgstr "Kopiér"
+#~ msgid "Copy"
+#~ msgstr "Kopiér"
 
-msgid "Copy selection to clipboard"
-msgstr "Kopiér markeret tekst til klipbord"
+#~ msgid "Copy selection to clipboard"
+#~ msgstr "Kopiér markeret tekst til klipbord"
 
-msgid "Select all"
-msgstr "Markér alt"
+#~ msgid "Select all"
+#~ msgstr "Markér alt"
 
-msgid "Select all rows"
-msgstr "Vælg alle rækker"
+#~ msgid "Select all rows"
+#~ msgstr "Vælg alle rækker"
 
-msgid "Clear selection"
-msgstr "Fjern markering"
+#~ msgid "Clear selection"
+#~ msgstr "Fjern markering"
 
-msgid "Clear all selected rows"
-msgstr "Ryd alle valgte rækker"
+#~ msgid "Clear all selected rows"
+#~ msgstr "Ryd alle valgte rækker"
 
-msgid "Record view..."
-msgstr "Post-visning..."
+#~ msgid "Record view..."
+#~ msgstr "Post-visning..."
 
-msgid "View recordset record-by-record"
-msgstr "Se postsæt post-for-post"
+#~ msgid "View recordset record-by-record"
+#~ msgstr "Se postsæt post-for-post"
 
-msgid "Refresh grid"
-msgstr "Genopfrisk gitter"
+#~ msgid "Refresh grid"
+#~ msgstr "Genopfrisk gitter"
 
-msgid "Refresh grid contents"
-msgstr "Genopfrisk gitterindhold"
+#~ msgid "Refresh grid contents"
+#~ msgstr "Genopfrisk gitterindhold"
 
-msgid "Print grid"
-msgstr "Udskriv gitter"
+#~ msgid "Print grid"
+#~ msgstr "Udskriv gitter"
 
-msgid "Print grid contents"
-msgstr "Udskriv gitterindhold"
+#~ msgid "Print grid contents"
+#~ msgstr "Udskriv gitterindhold"
 
-msgid "Show column titles"
-msgstr "Vis kolonnetitler"
+#~ msgid "Show column titles"
+#~ msgstr "Vis kolonnetitler"
 
-msgid "Hide columns"
-msgstr "Skjul kolonner"
+#~ msgid "Hide columns"
+#~ msgstr "Skjul kolonner"
 
-msgid "Hide column titles"
-msgstr "Skjul kolonnetitler"
+#~ msgid "Hide column titles"
+#~ msgstr "Skjul kolonnetitler"
 
-msgid "Entry %d of %d"
-msgstr "Indgang %d af %d"
+#~ msgid "Entry %d of %d"
+#~ msgstr "Indgang %d af %d"
 
-msgid "Date"
-msgstr "Dato"
+#~ msgid "Date"
+#~ msgstr "Dato"
 
-msgid "Time"
-msgstr "Tid"
+#~ msgid "Time"
+#~ msgstr "Tid"
 
-msgid "Message"
-msgstr "Besked"
+#~ msgid "Message"
+#~ msgstr "Besked"
 
-msgid "Log Entry"
-msgstr "Log indgang"
+#~ msgid "Log Entry"
+#~ msgstr "Log indgang"
 
-msgid "No datasource '%s' defined in your GDA configuration file"
-msgstr "Ingen datakilde '%s' defineret i din GDA konfigurationsfil"
+#~ msgid "No datasource '%s' defined in your GDA configuration file"
+#~ msgstr "Ingen datakilde '%s' defineret i din GDA konfigurationsfil"
 
-msgid "User Name"
-msgstr "Brugernavn"
+#~ msgid "User Name"
+#~ msgstr "Brugernavn"
 
-msgid "GDA Datasource"
-msgstr "GDA datakilde"
+#~ msgid "GDA Datasource"
+#~ msgstr "GDA datakilde"
 
-msgid "Password"
-msgstr "Adgangskode"
+#~ msgid "Password"
+#~ msgstr "Adgangskode"
 
-msgid "Last Connections"
-msgstr "Sidste forbindelser"
+#~ msgid "Last Connections"
+#~ msgstr "Sidste forbindelser"
 
-msgid "Data Source Name"
-msgstr "Datakildenavn"
+#~ msgid "Data Source Name"
+#~ msgstr "Datakildenavn"
 
-msgid "User name to use for the connection"
-msgstr "Brugernavn til brug for forbindelsen"
+#~ msgid "User name to use for the connection"
+#~ msgstr "Brugernavn til brug for forbindelsen"
 
-msgid "Password to authenticate user"
-msgstr "Adgangskode til bekræftelse af bruger"
+#~ msgid "Password to authenticate user"
+#~ msgstr "Adgangskode til bekræftelse af bruger"
 
-msgid "To open/close the connection"
-msgstr "For at åbne eller lukke forbindelsen"
+#~ msgid "To open/close the connection"
+#~ msgstr "For at åbne eller lukke forbindelsen"
 
-msgid "Error Viewer"
-msgstr "Fejlviser"
+#~ msgid "Error Viewer"
+#~ msgstr "Fejlviser"
 
-msgid "Could not initialize %s component"
-msgstr "Kunne ikke initialisere komponenten %s"
+#~ msgid "Could not initialize %s component"
+#~ msgstr "Kunne ikke initialisere komponenten %s"
 
-msgid "Font to be used for the grid"
-msgstr "Skrifttype der skal bruges til gitteret"
+#~ msgid "Font to be used for the grid"
+#~ msgstr "Skrifttype der skal bruges til gitteret"
 
-msgid "Could not initialize Bonobo"
-msgstr "Kunne ikke initialisere Bonobo"
+#~ msgid "Could not initialize Bonobo"
+#~ msgstr "Kunne ikke initialisere Bonobo"
 
-msgid "View requested to be activated but there is already an active view"
-msgstr "Fremviser ønsket aktiveret, men der er allerede en aktiv fremviser"
+#~ msgid "View requested to be activated but there is already an active view"
+#~ msgstr "Fremviser ønsket aktiveret, men der er allerede en aktiv fremviser"
 
-msgid "Ready"
-msgstr "Klar"
+#~ msgid "Ready"
+#~ msgstr "Klar"
 
-msgid "Could not bind object %s"
-msgstr "Kunne ikke binde objekt %s"
+#~ msgid "Could not bind object %s"
+#~ msgstr "Kunne ikke binde objekt %s"
 
-msgid "Unable to activate object %s"
-msgstr "Kunne ikke aktivere objekt %s"
+#~ msgid "Unable to activate object %s"
+#~ msgstr "Kunne ikke aktivere objekt %s"
 
-msgid "Could not register control factory"
-msgstr "Kunne ikke register kontrolfabrik"
+#~ msgid "Could not register control factory"
+#~ msgstr "Kunne ikke register kontrolfabrik"
 
-msgid "control has no property bag"
-msgstr "Kontrol har ingen egenskabs-sæk"
+#~ msgid "control has no property bag"
+#~ msgstr "Kontrol har ingen egenskabs-sæk"
 
-msgid "property %s not found"
-msgstr "egenskab %s ikke fundet"
+#~ msgid "property %s not found"
+#~ msgstr "egenskab %s ikke fundet"
 
-msgid "Factory %s already existing"
-msgstr "Fabrik %s eksisterer allerede"
+#~ msgid "Factory %s already existing"
+#~ msgstr "Fabrik %s eksisterer allerede"
 
-msgid "Could not register %s factory"
-msgstr "Kunne ikke registrere fabrik %s"
+#~ msgid "Could not register %s factory"
+#~ msgstr "Kunne ikke registrere fabrik %s"
 
-msgid "GNOME-DB Builder"
-msgstr "GNOME-DB-opbygger"
+#~ msgid "GNOME-DB Builder"
+#~ msgstr "GNOME-DB-opbygger"
 
-msgid "Connected to %s"
-msgstr "Forbundet med %s"
+#~ msgid "Connected to %s"
+#~ msgstr "Forbundet med %s"
 
-msgid "Disconnected from database"
-msgstr "Koblet fra database"
+#~ msgid "Disconnected from database"
+#~ msgstr "Koblet fra database"
 
-msgid "Database Browser"
-msgstr "Databaselæser"
+#~ msgid "Database Browser"
+#~ msgstr "Databaselæser"
 
-msgid "There are no open connections"
-msgstr "Der er ingen åbne forbindelser"
+#~ msgid "There are no open connections"
+#~ msgstr "Der er ingen åbne forbindelser"
 
-msgid "Back"
-msgstr "Tilbage"
+#~ msgid "Back"
+#~ msgstr "Tilbage"
 
-msgid "Go to previous document"
-msgstr "Gå til forrige dokument"
+#~ msgid "Go to previous document"
+#~ msgstr "Gå til forrige dokument"
 
-msgid "Forward"
-msgstr "Frem"
+#~ msgid "Forward"
+#~ msgstr "Frem"
 
-msgid "Go to next document"
-msgstr "Gå til næste dokument"
+#~ msgid "Go to next document"
+#~ msgstr "Gå til næste dokument"
 
-msgid "Home"
-msgstr "Hjem"
+#~ msgid "Home"
+#~ msgstr "Hjem"
 
-msgid "Go to table of contents"
-msgstr "Gå til indholdsfortegnelse"
+#~ msgid "Go to table of contents"
+#~ msgstr "Gå til indholdsfortegnelse"
 
-msgid "Help"
-msgstr "Hjælp"
+#~ msgid "Help"
+#~ msgstr "Hjælp"
 
-msgid "Screen"
-msgstr "Skærm"
+#~ msgid "Screen"
+#~ msgstr "Skærm"
 
-msgid "New screen"
-msgstr "Ny skærm"
+#~ msgid "New screen"
+#~ msgstr "Ny skærm"
 
-msgid "Report"
-msgstr "Rapport"
+#~ msgid "Report"
+#~ msgstr "Rapport"
 
-msgid "New report"
-msgstr "Ny rapport"
+#~ msgid "New report"
+#~ msgstr "Ny rapport"
 
-msgid "Server"
-msgstr "Server"
+#~ msgid "Server"
+#~ msgstr "Server"
 
-msgid "New server"
-msgstr "Ny server"
+#~ msgid "New server"
+#~ msgstr "Ny server"
 
-msgid "Repository"
-msgstr "Repositorium"
+#~ msgid "Repository"
+#~ msgstr "Repositorium"
 
-msgid "New repository"
-msgstr "Nyt repositorium"
+#~ msgid "New repository"
+#~ msgstr "Nyt repositorium"
 
-msgid "Open existing screen"
-msgstr "Åbn eksisterende skærm"
+#~ msgid "Open existing screen"
+#~ msgstr "Åbn eksisterende skærm"
 
-msgid "Open existing report"
-msgstr "Åbn eksisterende rapport"
+#~ msgid "Open existing report"
+#~ msgstr "Åbn eksisterende rapport"
 
-msgid "Open existing server"
-msgstr "Åbn eksisterende server"
+#~ msgid "Open existing server"
+#~ msgstr "Åbn eksisterende server"
 
-msgid "Open existing repository"
-msgstr "Åbn et eksisterende repositorie"
+#~ msgid "Open existing repository"
+#~ msgstr "Åbn et eksisterende repositorie"
 
-msgid "Connect..."
-msgstr "Forbinder..."
+#~ msgid "Connect..."
+#~ msgstr "Forbinder..."
 
-msgid "Connect to database"
-msgstr "Forbind med database"
+#~ msgid "Connect to database"
+#~ msgstr "Forbind med database"
 
-msgid "Disconnect"
-msgstr "Afbryd forbindelse"
+#~ msgid "Disconnect"
+#~ msgstr "Afbryd forbindelse"
 
-msgid "Close database connection"
-msgstr "Luk database-forbindelse"
+#~ msgid "Close database connection"
+#~ msgstr "Luk database-forbindelse"
 
-msgid "Browse"
-msgstr "Browse"
+#~ msgid "Browse"
+#~ msgstr "Browse"
 
-msgid "Open database browser"
-msgstr "Åbn databaselæser"
+#~ msgid "Open database browser"
+#~ msgstr "Åbn databaselæser"
 
-msgid "Import objects"
-msgstr "Importér objekter"
+#~ msgid "Import objects"
+#~ msgstr "Importér objekter"
 
-msgid "Import database objects into repository"
-msgstr "Importér databaseobjekter ind i repositorium"
+#~ msgid "Import database objects into repository"
+#~ msgstr "Importér databaseobjekter ind i repositorium"
 
-msgid "New"
-msgstr "Ny"
+#~ msgid "New"
+#~ msgstr "Ny"
 
-msgid "Open"
-msgstr "Åbn"
+#~ msgid "Open"
+#~ msgstr "Åbn"
 
-msgid "Close"
-msgstr "Luk"
+#~ msgid "Close"
+#~ msgstr "Luk"
 
-msgid "Close current window"
-msgstr "Luk nuværende vindue"
+#~ msgid "Close current window"
+#~ msgstr "Luk nuværende vindue"
 
-msgid "Close all"
-msgstr "Luk alle"
+#~ msgid "Close all"
+#~ msgstr "Luk alle"
 
-msgid "Close all open windows"
-msgstr "Luk alle åbne vinduer"
+#~ msgid "Close all open windows"
+#~ msgstr "Luk alle åbne vinduer"
 
-msgid "Quit"
-msgstr "Afslut"
+#~ msgid "Quit"
+#~ msgstr "Afslut"
 
-msgid "Exit application"
-msgstr "Afslut applikation"
+#~ msgid "Exit application"
+#~ msgstr "Afslut applikation"
 
-msgid "Undo"
-msgstr "Fortryd"
+#~ msgid "Undo"
+#~ msgstr "Fortryd"
 
-msgid "Undo last action"
-msgstr "Fortryd sidste handling"
+#~ msgid "Undo last action"
+#~ msgstr "Fortryd sidste handling"
 
-msgid "Redo"
-msgstr "Genopret"
+#~ msgid "Redo"
+#~ msgstr "Genopret"
 
-msgid "Revert last undone action"
-msgstr "Forkast sidste fortrudte handling"
+#~ msgid "Revert last undone action"
+#~ msgstr "Forkast sidste fortrudte handling"
 
-msgid "Cut"
-msgstr "Klip"
+#~ msgid "Cut"
+#~ msgstr "Klip"
 
-msgid "Cut selected text/item"
-msgstr "Klip ud valgt tekst/opføring"
+#~ msgid "Cut selected text/item"
+#~ msgstr "Klip ud valgt tekst/opføring"
 
-msgid "Copy selected text/item to the clipboard"
-msgstr "Kopiér valgt tekst/opføring til klippebordet"
+#~ msgid "Copy selected text/item to the clipboard"
+#~ msgstr "Kopiér valgt tekst/opføring til klippebordet"
 
-msgid "Paste"
-msgstr "Indsæt"
+#~ msgid "Paste"
+#~ msgstr "Indsæt"
 
-msgid "Paste clipboard contents"
-msgstr "Indsæt indholdet af klippebordet"
+#~ msgid "Paste clipboard contents"
+#~ msgstr "Indsæt indholdet af klippebordet"
 
-msgid "Delete"
-msgstr "Slet"
+#~ msgid "Delete"
+#~ msgstr "Slet"
 
-msgid "Delete selected text/item"
-msgstr "Slet valgt tekst/opføring"
+#~ msgid "Delete selected text/item"
+#~ msgstr "Slet valgt tekst/opføring"
 
-msgid "New project"
-msgstr "Nyt projekt"
+#~ msgid "New project"
+#~ msgstr "Nyt projekt"
 
-msgid "Create a new project"
-msgstr "Opret et nyt projekt"
+#~ msgid "Create a new project"
+#~ msgstr "Opret et nyt projekt"
 
-msgid "Open project"
-msgstr "Åbn projekt"
+#~ msgid "Open project"
+#~ msgstr "Åbn projekt"
 
-msgid "Open an existing project"
-msgstr "Åbn et eksisterende projekt"
+#~ msgid "Open an existing project"
+#~ msgstr "Åbn et eksisterende projekt"
 
-msgid "Save project"
-msgstr "Gem projekt"
+#~ msgid "Save project"
+#~ msgstr "Gem projekt"
 
-msgid "Save current project"
-msgstr "Gem aktivt projekt"
+#~ msgid "Save current project"
+#~ msgstr "Gem aktivt projekt"
 
-msgid "Properties..."
-msgstr "Egenskaber..."
+#~ msgid "Properties..."
+#~ msgstr "Egenskaber..."
 
-msgid "View project properties"
-msgstr "Vis egenskaber for projekt"
+#~ msgid "View project properties"
+#~ msgstr "Vis egenskaber for projekt"
 
-msgid "GNOME-DB Front End"
-msgstr "GNOME-DB front-end"
+#~ msgid "GNOME-DB Front End"
+#~ msgstr "GNOME-DB front-end"
 
-msgid "The GNOME-DB front end"
-msgstr "GNOME-DB front-enden"
+#~ msgid "The GNOME-DB front end"
+#~ msgstr "GNOME-DB front-enden"
 
-msgid "SQL Front End"
-msgstr "SGL-brugerflade"
+#~ msgid "SQL Front End"
+#~ msgstr "SGL-brugerflade"
 
-msgid "The SQL front end"
-msgstr "SGL-brugerfladen"
+#~ msgid "The SQL front end"
+#~ msgstr "SGL-brugerfladen"
 
-msgid "GNOME-DB Manager"
-msgstr "GNOME-DB-håndtering"
+#~ msgid "GNOME-DB Manager"
+#~ msgstr "GNOME-DB-håndtering"
 
-msgid "The GNOME-DB configuration tool"
-msgstr "GNOME-DB-konfigurationsværktøj"
+#~ msgid "The GNOME-DB configuration tool"
+#~ msgstr "GNOME-DB-konfigurationsværktøj"
 
-msgid "About gnome-db..."
-msgstr "Om gnome-db..."
+#~ msgid "About gnome-db..."
+#~ msgstr "Om gnome-db..."
 
-msgid "About this program"
-msgstr "Om dette program"
+#~ msgid "About this program"
+#~ msgstr "Om dette program"
 
-msgid "Submit bug report"
-msgstr "Afsend fejlrapport"
+#~ msgid "Submit bug report"
+#~ msgstr "Afsend fejlrapport"
 
-msgid "Edit"
-msgstr "Redigér"
+#~ msgid "Edit"
+#~ msgstr "Redigér"
 
-msgid "Project"
-msgstr "Projekt"
+#~ msgid "Project"
+#~ msgstr "Projekt"
 
-msgid "Database"
-msgstr "Database"
+#~ msgid "Database"
+#~ msgstr "Database"
 
-msgid "Tools"
-msgstr "Værktøjer"
+#~ msgid "Tools"
+#~ msgstr "Værktøjer"
 
-msgid "New Screen/Report"
-msgstr "Ny skærm/rapport"
+#~ msgid "New Screen/Report"
+#~ msgstr "Ny skærm/rapport"
 
-msgid "Open Screen/Report"
-msgstr "Åbn skærm/rapport"
+#~ msgid "Open Screen/Report"
+#~ msgstr "Åbn skærm/rapport"
 
-msgid "Preferences"
-msgstr "Indstillinger"
+#~ msgid "Preferences"
+#~ msgstr "Indstillinger"
 
-msgid "Configure user preferences"
-msgstr "Indstil brugeropsætning"
+#~ msgid "Configure user preferences"
+#~ msgstr "Indstil brugeropsætning"
 
-msgid "Could not initialize Bonobo\n"
-msgstr "Kunne ikke initialisere Bonobo\n"
+#~ msgid "Could not initialize Bonobo\n"
+#~ msgstr "Kunne ikke initialisere Bonobo\n"
 
-msgid "Unable to execute '%s'"
-msgstr "Kunne ikke udføre '%s'"
+#~ msgid "Unable to execute '%s'"
+#~ msgstr "Kunne ikke udføre '%s'"
 
-msgid "Location"
-msgstr "Sted"
+#~ msgid "Location"
+#~ msgstr "Sted"
 
-msgid "Execute"
-msgstr "Kør"
+#~ msgid "Execute"
+#~ msgstr "Kør"
 
-msgid "Execute batch file"
-msgstr "Udfør skript-fil"
+#~ msgid "Execute batch file"
+#~ msgstr "Udfør skript-fil"
 
-msgid "Open file"
-msgstr "Åbn fil"
+#~ msgid "Open file"
+#~ msgstr "Åbn fil"
 
-msgid "Save"
-msgstr "Gem"
+#~ msgid "Save"
+#~ msgstr "Gem"
 
-msgid "Save file"
-msgstr "Gem fil"
+#~ msgid "Save file"
+#~ msgstr "Gem fil"
 
-msgid "Clear"
-msgstr "Ryd"
+#~ msgid "Clear"
+#~ msgstr "Ryd"
 
-msgid "Clear command list"
-msgstr "Ryd kommandoliste"
+#~ msgid "Clear command list"
+#~ msgstr "Ryd kommandoliste"
 
-msgid ""
-"Could not open file\n"
-"'%s'"
-msgstr ""
-"Kunne ikke åbne fil\n"
-"'%s'"
+#~ msgid ""
+#~ "Could not open file\n"
+#~ "'%s'"
+#~ msgstr ""
+#~ "Kunne ikke åbne fil\n"
+#~ "'%s'"
 
-msgid "No command selected"
-msgstr "Ingen kommando er valgt"
+#~ msgid "No command selected"
+#~ msgstr "Ingen kommando er valgt"
 
-msgid "Command"
-msgstr "Kommando"
+#~ msgid "Command"
+#~ msgstr "Kommando"
 
-msgid "Enter command text"
-msgstr "Indtast kommandotekst"
+#~ msgid "Enter command text"
+#~ msgstr "Indtast kommandotekst"
 
-msgid "Insert at current position"
-msgstr "Indsæt ved nuværende placering"
+#~ msgid "Insert at current position"
+#~ msgstr "Indsæt ved nuværende placering"
 
-msgid "Open File"
-msgstr "Åbn fil"
+#~ msgid "Open File"
+#~ msgstr "Åbn fil"
 
-msgid "Command separators"
-msgstr "Kommandoadskillere"
+#~ msgid "Command separators"
+#~ msgstr "Kommandoadskillere"
 
-msgid "Append to current file"
-msgstr "Føj til nuværende fil"
+#~ msgid "Append to current file"
+#~ msgstr "Føj til nuværende fil"
 
-msgid "You must specify a file to be loaded"
-msgstr "Du skal angive en fil der skal indlæses"
+#~ msgid "You must specify a file to be loaded"
+#~ msgstr "Du skal angive en fil der skal indlæses"
 
-msgid "You must specifiy the characters used as command separators"
-msgstr "Du skal angive de tegn der skal bruges til at adskille kommandoer"
+#~ msgid "You must specifiy the characters used as command separators"
+#~ msgstr "Du skal angive de tegn der skal bruges til at adskille kommandoer"
 
-msgid "Add"
-msgstr "Tilføj"
+#~ msgid "Add"
+#~ msgstr "Tilføj"
 
-msgid "Up"
-msgstr "Op"
+#~ msgid "Up"
+#~ msgstr "Op"
 
-msgid "Down"
-msgstr "Ned"
+#~ msgid "Down"
+#~ msgstr "Ned"
 
-msgid "Options"
-msgstr "Opsætning"
+#~ msgid "Options"
+#~ msgstr "Opsætning"
 
-msgid "Transaction Mode"
-msgstr "Transaktionsmodus"
+#~ msgid "Transaction Mode"
+#~ msgstr "Transaktionsmodus"
 
-msgid "Send as XML"
-msgstr "Send som XML"
+#~ msgid "Send as XML"
+#~ msgstr "Send som XML"
 
-msgid "Batch"
-msgstr "Gruppe"
+#~ msgid "Batch"
+#~ msgstr "Gruppe"
 
-msgid "Connecting..."
-msgstr "Forbinder..."
+#~ msgid "Connecting..."
+#~ msgstr "Forbinder..."
 
-msgid "Configuration file saved"
-msgstr "Konfigurationsfil gemt"
+#~ msgid "Configuration file saved"
+#~ msgstr "Konfigurationsfil gemt"
 
-msgid "Add Environment Variable"
-msgstr "Tilføj miljøvariabel"
+#~ msgid "Add Environment Variable"
+#~ msgstr "Tilføj miljøvariabel"
 
-msgid "Name"
-msgstr "Navn"
+#~ msgid "Name"
+#~ msgstr "Navn"
 
-msgid "Value"
-msgstr "Værdi"
+#~ msgid "Value"
+#~ msgstr "Værdi"
 
-msgid "Editor Font"
-msgstr "Redigeringsskrift"
+#~ msgid "Editor Font"
+#~ msgstr "Redigeringsskrift"
 
-msgid "Tab Position"
-msgstr "Tab-placering"
+#~ msgid "Tab Position"
+#~ msgstr "Tab-placering"
 
-msgid "Top"
-msgstr "Top"
+#~ msgid "Top"
+#~ msgstr "Top"
 
-msgid "Bottom"
-msgstr "Bund"
+#~ msgid "Bottom"
+#~ msgstr "Bund"
 
-msgid "Left"
-msgstr "Venstre"
+#~ msgid "Left"
+#~ msgstr "Venstre"
 
-msgid "Right"
-msgstr "Højre"
+#~ msgid "Right"
+#~ msgstr "Højre"
 
-msgid "Grid"
-msgstr "Gitter"
+#~ msgid "Grid"
+#~ msgstr "Gitter"
 
-msgid "Font"
-msgstr "Skrifttype"
+#~ msgid "Font"
+#~ msgstr "Skrifttype"
 
-msgid "Foreground Color"
-msgstr "Forgrundsfarve"
+#~ msgid "Foreground Color"
+#~ msgstr "Forgrundsfarve"
 
-msgid "Background Color"
-msgstr "Baggrundsfarve"
+#~ msgid "Background Color"
+#~ msgstr "Baggrundsfarve"
 
-msgid "Show row numbers"
-msgstr "Vis rækkenumre"
+#~ msgid "Show row numbers"
+#~ msgstr "Vis rækkenumre"
 
-msgid "User Interface"
-msgstr "Brugerflade"
+#~ msgid "User Interface"
+#~ msgstr "Brugerflade"
 
-msgid "Environment"
-msgstr "Miljø"
+#~ msgid "Environment"
+#~ msgstr "Miljø"
 
-msgid "GDA"
-msgstr "GDA"
+#~ msgid "GDA"
+#~ msgstr "GDA"
 
-msgid "SQL"
-msgstr "SQL"
+#~ msgid "SQL"
+#~ msgstr "SQL"
 
-msgid "SQL Window"
-msgstr "SQL-vindue"
+#~ msgid "SQL Window"
+#~ msgstr "SQL-vindue"
 
-msgid "Batch commands window"
-msgstr "Batchkommandoer vindue"
+#~ msgid "Batch commands window"
+#~ msgstr "Batchkommandoer vindue"
 
-msgid "Queries"
-msgstr "Forespørgsler"
+#~ msgid "Queries"
+#~ msgstr "Forespørgsler"
 
-msgid "Query designer"
-msgstr "Forespørg designer"
+#~ msgid "Query designer"
+#~ msgstr "Forespørg designer"
 
-msgid "Browser"
-msgstr "Browser"
+#~ msgid "Browser"
+#~ msgstr "Browser"
 
-msgid "Browse Database"
-msgstr "Browse database"
+#~ msgid "Browse Database"
+#~ msgstr "Browse database"
 
-msgid "Export"
-msgstr "Eksportér"
+#~ msgid "Export"
+#~ msgstr "Eksportér"
 
-msgid "Export database"
-msgstr "Eksportér database"
+#~ msgid "Export database"
+#~ msgstr "Eksportér database"
 
-msgid "Import"
-msgstr "Importér"
+#~ msgid "Import"
+#~ msgstr "Importér"
 
-msgid "Import data into current database"
-msgstr "Importér data ind i nuværende database"
+#~ msgid "Import data into current database"
+#~ msgstr "Importér data ind i nuværende database"
 
-msgid "Close connection"
-msgstr "Luk forbindelse"
+#~ msgid "Close connection"
+#~ msgstr "Luk forbindelse"
 
-msgid "Execute current command"
-msgstr "Udfør aktuelle kommando"
+#~ msgid "Execute current command"
+#~ msgstr "Udfør aktuelle kommando"
 
-msgid "Select"
-msgstr "Vælg"
+#~ msgid "Select"
+#~ msgstr "Vælg"
 
-msgid "Select from previous commands"
-msgstr "Vælg fra tidligere kommandoer"
+#~ msgid "Select from previous commands"
+#~ msgstr "Vælg fra tidligere kommandoer"
 
-msgid "Load file into buffer"
-msgstr "Indlæs fil i buffer"
+#~ msgid "Load file into buffer"
+#~ msgstr "Indlæs fil i buffer"
 
-msgid "Save current file"
-msgstr "Gem nuværende fil"
+#~ msgid "Save current file"
+#~ msgstr "Gem nuværende fil"
 
-msgid "Cut selected text"
-msgstr "Udklip markeret tekst"
+#~ msgid "Cut selected text"
+#~ msgstr "Udklip markeret tekst"
 
-msgid "Copy selected text"
-msgstr "Kopier valgt tekst"
+#~ msgid "Copy selected text"
+#~ msgstr "Kopier valgt tekst"
 
-msgid "Clear window contents"
-msgstr "Ryd vinduesindhold"
+#~ msgid "Clear window contents"
+#~ msgstr "Ryd vinduesindhold"
 
-msgid "Start"
-msgstr "Start"
+#~ msgid "Start"
+#~ msgstr "Start"
 
-msgid "Start export"
-msgstr "Start eksport"
+#~ msgid "Start export"
+#~ msgstr "Start eksport"
 
-msgid "Clear all fields"
-msgstr "Ryd alle felter"
+#~ msgid "Clear all fields"
+#~ msgstr "Ryd alle felter"
 
-msgid "Select all objects in database"
-msgstr "Markér alle objekter i database"
+#~ msgid "Select all objects in database"
+#~ msgstr "Markér alle objekter i database"
 
-msgid "Unselect"
-msgstr "Vælg bort"
+#~ msgid "Unselect"
+#~ msgstr "Vælg bort"
 
-msgid "Clear object selection"
-msgstr "Fjern objektmarkering"
+#~ msgid "Clear object selection"
+#~ msgstr "Fjern objektmarkering"
 
-msgid "Foreign keys"
-msgstr "Fremmede nøgler"
+#~ msgid "Foreign keys"
+#~ msgstr "Fremmede nøgler"
 
-msgid "Object Identifiers"
-msgstr "Objektidentificering"
+#~ msgid "Object Identifiers"
+#~ msgstr "Objektidentificering"
 
-msgid "Object Inheritance"
-msgstr "Objektarv"
+#~ msgid "Object Inheritance"
+#~ msgstr "Objektarv"
 
-msgid "Sequences"
-msgstr "Sekvenser"
+#~ msgid "Sequences"
+#~ msgstr "Sekvenser"
 
-msgid "SQL (Standard)"
-msgstr "SQL (standard)"
+#~ msgid "SQL (Standard)"
+#~ msgstr "SQL (standard)"
 
-msgid "SQL Sub-Selects"
-msgstr "SQL sub-selects"
+#~ msgid "SQL Sub-Selects"
+#~ msgstr "SQL sub-selects"
 
-msgid "Stored Procedures"
-msgstr "Gemte procedurer"
+#~ msgid "Stored Procedures"
+#~ msgstr "Gemte procedurer"
 
-msgid "Transactions"
-msgstr "Transaktioner"
+#~ msgid "Transactions"
+#~ msgstr "Transaktioner"
 
-msgid "Triggers"
-msgstr "Triggere"
+#~ msgid "Triggers"
+#~ msgstr "Triggere"
 
-msgid "XML Queries"
-msgstr "XML-forespørgsler"
+#~ msgid "XML Queries"
+#~ msgstr "XML-forespørgsler"
 
-msgid "File name"
-msgstr "Filnavn"
+#~ msgid "File name"
+#~ msgstr "Filnavn"
 
-msgid "Row %d - %d rows selected"
-msgstr "Række %d - %d rækker valgt"
+#~ msgid "Row %d - %d rows selected"
+#~ msgstr "Række %d - %d rækker valgt"
 
-msgid "Select file"
-msgstr "Vælg fil"
+#~ msgid "Select file"
+#~ msgstr "Vælg fil"
 
-msgid ""
-"Error reading from file\n"
-"'%s'"
-msgstr ""
-"Fejl ved læsning af fil\n"
-"'%s'"
+#~ msgid ""
+#~ "Error reading from file\n"
+#~ "'%s'"
+#~ msgstr ""
+#~ "Fejl ved læsning af fil\n"
+#~ "'%s'"
 
-msgid "Command succeeded"
-msgstr "Kommando lykkedes"
+#~ msgid "Command succeeded"
+#~ msgstr "Kommando lykkedes"
 
-msgid ""
-"Error writing to file\n"
-"'%s'"
-msgstr ""
-"Fejl ved skrivning af fil\n"
-"'%s'"
+#~ msgid ""
+#~ "Error writing to file\n"
+#~ "'%s'"
+#~ msgstr ""
+#~ "Fejl ved skrivning af fil\n"
+#~ "'%s'"
 
-msgid "Select Command"
-msgstr "Vælg kommando"
+#~ msgid "Select Command"
+#~ msgstr "Vælg kommando"
 
-msgid "Transaction started"
-msgstr "Transaktion begyndt"
+#~ msgid "Transaction started"
+#~ msgstr "Transaktion begyndt"
 
-msgid "Begin transaction failed"
-msgstr "Begynd-transaktion fejlede"
+#~ msgid "Begin transaction failed"
+#~ msgstr "Begynd-transaktion fejlede"
 
-msgid "Data source does not support transactions"
-msgstr "Datakilde understøtter ikke transaktioner"
+#~ msgid "Data source does not support transactions"
+#~ msgstr "Datakilde understøtter ikke transaktioner"
 
-msgid "Commit executed successfully"
-msgstr "Indlæggelse af data fuldført"
+#~ msgid "Commit executed successfully"
+#~ msgstr "Indlæggelse af data fuldført"
 
-msgid "Commit transaction failed"
-msgstr "Indlæg transaktion"
+#~ msgid "Commit transaction failed"
+#~ msgstr "Indlæg transaktion"
 
-msgid "Rollback executed successfully"
-msgstr "Rollback fuldført"
+#~ msgid "Rollback executed successfully"
+#~ msgstr "Rollback fuldført"
 
-msgid "Rollback transaction failed"
-msgstr "Rollback-transaktion fejlede"
+#~ msgid "Rollback transaction failed"
+#~ msgstr "Rollback-transaktion fejlede"
 
-msgid "Connection Properties"
-msgstr "Forbindelsesegenskaber"
+#~ msgid "Connection Properties"
+#~ msgstr "Forbindelsesegenskaber"
 
-msgid "Properties"
-msgstr "Egenskaber"
+#~ msgid "Properties"
+#~ msgstr "Egenskaber"
 
-msgid "Command Timeout"
-msgstr "Kommandotidsudløb"
+#~ msgid "Command Timeout"
+#~ msgstr "Kommandotidsudløb"
 
-msgid "Connect Timeout"
-msgstr "Forbindelsestidsudløb"
+#~ msgid "Connect Timeout"
+#~ msgstr "Forbindelsestidsudløb"
 
-msgid "Trace File"
-msgstr "Tracefil"
+#~ msgid "Trace File"
+#~ msgstr "Tracefil"
 
-msgid "View"
-msgstr "Vis"
+#~ msgid "View"
+#~ msgstr "Vis"
 
-msgid "Version"
-msgstr "Version"
+#~ msgid "Version"
+#~ msgstr "Version"
 
-msgid "Provider Features"
-msgstr "Udbydertilbud"
+#~ msgid "Provider Features"
+#~ msgstr "Udbydertilbud"
 
-msgid "New database design"
-msgstr "Nyt databasedesign"
+#~ msgid "New database design"
+#~ msgstr "Nyt databasedesign"
 
-msgid "Open database design"
-msgstr "Åbn databasedesign"
+#~ msgid "Open database design"
+#~ msgstr "Åbn databasedesign"
 
-msgid "Clear all entries"
-msgstr "Ryd alle indgange"
+#~ msgid "Clear all entries"
+#~ msgstr "Ryd alle indgange"
 
-msgid "Close designer window"
-msgstr "Luk designer vindue"
+#~ msgid "Close designer window"
+#~ msgstr "Luk designer vindue"
 
-msgid "Select XML file"
-msgstr "Vælg XML fil"
+#~ msgid "Select XML file"
+#~ msgstr "Vælg XML fil"
 
-msgid "Designer"
-msgstr "Designer"
+#~ msgid "Designer"
+#~ msgstr "Designer"
 
-msgid "Data sources"
-msgstr "Datakilder"
+#~ msgid "Data sources"
+#~ msgstr "Datakilder"
 
-msgid "Apply"
-msgstr "Anvend"
+#~ msgid "Apply"
+#~ msgstr "Anvend"
 
-msgid "View selected entry"
-msgstr "Vis markeret tekst"
+#~ msgid "View selected entry"
+#~ msgstr "Vis markeret tekst"
 
-msgid "Clear log file"
-msgstr "Ryd logfil"
+#~ msgid "Clear log file"
+#~ msgstr "Ryd logfil"
 
-msgid "Refresh"
-msgstr "Genopfrisk"
+#~ msgid "Refresh"
+#~ msgstr "Genopfrisk"
 
-msgid "Refresh log viewer"
-msgstr "Genopfrisk logfremviser"
+#~ msgid "Refresh log viewer"
+#~ msgstr "Genopfrisk logfremviser"
 
-msgid "Close log window"
-msgstr "Luk log-vinduer"
+#~ msgid "Close log window"
+#~ msgstr "Luk log-vinduer"
 
-msgid "Error loading file '%s'"
-msgstr "Fejl ved indlæsning af fil '%s'"
+#~ msgid "Error loading file '%s'"
+#~ msgstr "Fejl ved indlæsning af fil '%s'"
 
-msgid "Logs"
-msgstr "logger"
+#~ msgid "Logs"
+#~ msgstr "logger"
 
-msgid "Open Connection..."
-msgstr "Åbn forbindelse..."
+#~ msgid "Open Connection..."
+#~ msgstr "Åbn forbindelse..."
 
-msgid "Open a connection to a data source"
-msgstr "Åbn forbindelses til en datakilde"
+#~ msgid "Open a connection to a data source"
+#~ msgstr "Åbn forbindelses til en datakilde"
 
-msgid "Close current connection"
-msgstr "Luk nuværende forbindelse"
+#~ msgid "Close current connection"
+#~ msgstr "Luk nuværende forbindelse"
 
-msgid "Disconnect all"
-msgstr "Afbryd alt"
+#~ msgid "Disconnect all"
+#~ msgstr "Afbryd alt"
 
-msgid "Close all connections"
-msgstr "Luk alle forbindelser"
+#~ msgid "Close all connections"
+#~ msgstr "Luk alle forbindelser"
 
-msgid "SQL window"
-msgstr "SQL-vindue"
+#~ msgid "SQL window"
+#~ msgstr "SQL-vindue"
 
-msgid "Query Designer"
-msgstr "Forespørg Designer"
+#~ msgid "Query Designer"
+#~ msgstr "Forespørg Designer"
 
-msgid "Browse database"
-msgstr "Browse database"
+#~ msgid "Browse database"
+#~ msgstr "Browse database"
 
-msgid "Begin transaction"
-msgstr "Begynd transaktion"
+#~ msgid "Begin transaction"
+#~ msgstr "Begynd transaktion"
 
-msgid "Commit"
-msgstr "Commit"
+#~ msgid "Commit"
+#~ msgstr "Commit"
 
-msgid "Commit transaction"
-msgstr "Bekræft transaktion"
+#~ msgid "Commit transaction"
+#~ msgstr "Bekræft transaktion"
 
-msgid "Rollback"
-msgstr "Rollback"
+#~ msgid "Rollback"
+#~ msgstr "Rollback"
 
-msgid "Discard all changes"
-msgstr "Forkast alle ændringer"
+#~ msgid "Discard all changes"
+#~ msgstr "Forkast alle ændringer"
 
-msgid "View connection properties"
-msgstr "Vis forbindelsesegenskaber"
+#~ msgid "View connection properties"
+#~ msgstr "Vis forbindelsesegenskaber"
 
-msgid "Configure"
-msgstr "Konfigurér"
+#~ msgid "Configure"
+#~ msgstr "Konfigurér"
 
-msgid "Configure underlying database"
-msgstr "Konfigurér underliggende database"
+#~ msgid "Configure underlying database"
+#~ msgstr "Konfigurér underliggende database"
 
-msgid "View logs"
-msgstr "Se logger"
+#~ msgid "View logs"
+#~ msgstr "Se logger"
 
-msgid "View the different logs"
-msgstr "Vis de forskellige logger"
+#~ msgid "View the different logs"
+#~ msgstr "Vis de forskellige logger"
 
-msgid "Database designer"
-msgstr "Databasedesigner"
+#~ msgid "Database designer"
+#~ msgstr "Databasedesigner"
 
-msgid "Open the database designer"
-msgstr "Åbn databasedesigner"
+#~ msgid "Open the database designer"
+#~ msgstr "Åbn databasedesigner"
 
-msgid "Service control"
-msgstr "Kontrol af tjeneste"
+#~ msgid "Service control"
+#~ msgstr "Kontrol af tjeneste"
 
-msgid "View service activity"
-msgstr "Vis aktivitet for tjeneste"
+#~ msgid "View service activity"
+#~ msgstr "Vis aktivitet for tjeneste"
 
-msgid "The GNOME-DB Development Environment"
-msgstr "GNOME-DB-udviklingsmiljøet"
+#~ msgid "The GNOME-DB Development Environment"
+#~ msgstr "GNOME-DB-udviklingsmiljøet"
 
-msgid "Preferences..."
-msgstr "Indstillinger..."
+#~ msgid "Preferences..."
+#~ msgstr "Indstillinger..."
 
-msgid "Data sources..."
-msgstr "Datakilder..."
+#~ msgid "Data sources..."
+#~ msgstr "Datakilder..."
 
-msgid "Configure GDA data sources"
-msgstr "Konfigurér GDA datakilder"
+#~ msgid "Configure GDA data sources"
+#~ msgstr "Konfigurér GDA datakilder"
 
-msgid "Save options"
-msgstr "Gem indstillinger"
+#~ msgid "Save options"
+#~ msgstr "Gem indstillinger"
 
-msgid "Save current configuration"
-msgstr "Gem nuværende indstillinger"
+#~ msgid "Save current configuration"
+#~ msgstr "Gem nuværende indstillinger"
 
-msgid "Connect"
-msgstr "Forbind"
+#~ msgid "Connect"
+#~ msgstr "Forbind"
 
-msgid "Exit Application"
-msgstr "Afslut applikation"
+#~ msgid "Exit Application"
+#~ msgstr "Afslut applikation"
 
-msgid "Activate"
-msgstr "Aktivér"
+#~ msgid "Activate"
+#~ msgstr "Aktivér"
 
-msgid "Activate selected service"
-msgstr "Aktivér valgte tjeneste"
+#~ msgid "Activate selected service"
+#~ msgstr "Aktivér valgte tjeneste"
 
-msgid "Stop"
-msgstr "Stop"
+#~ msgid "Stop"
+#~ msgstr "Stop"
 
-msgid "Stop selected service"
-msgstr "Stop valgte tjeneste"
+#~ msgid "Stop selected service"
+#~ msgstr "Stop valgte tjeneste"
 
-msgid "Refresh service list"
-msgstr "Genopfrisk tjeneste-liste"
+#~ msgid "Refresh service list"
+#~ msgstr "Genopfrisk tjeneste-liste"
 
-msgid ""
-"Could not find any installed services. Either you don't have\n"
-"any services installed or I don't know the path to find them.\n"
-"In either case, please check your GNOME-DB installation."
-msgstr ""
-"Kunne ikke finde nogen installerede tjenester. Enten har du ikke nogen\n"
-"tjenester installeret, eller også kender jeg ikke stien til at finde\n"
-"dem. I begge tilfælde bedes du venligst tjekke din GNOME-DB installation."
+#~ msgid ""
+#~ "Could not find any installed services. Either you don't have\n"
+#~ "any services installed or I don't know the path to find them.\n"
+#~ "In either case, please check your GNOME-DB installation."
+#~ msgstr ""
+#~ "Kunne ikke finde nogen installerede tjenester. Enten har du ikke nogen\n"
+#~ "tjenester installeret, eller også kender jeg ikke stien til at finde\n"
+#~ "dem. I begge tilfælde bedes du venligst tjekke din GNOME-DB installation."
 
-msgid "Service '%s' activated"
-msgstr "Tjeneste '%s' aktiveret"
+#~ msgid "Service '%s' activated"
+#~ msgstr "Tjeneste '%s' aktiveret"
 
-msgid "Repo ID"
-msgstr "Repo ID"
+#~ msgid "Repo ID"
+#~ msgstr "Repo ID"
 
-msgid "Type"
-msgstr "Type"
+#~ msgid "Type"
+#~ msgstr "Type"
 
-msgid "Service Control"
-msgstr "Kontrol af tjeneste"
+#~ msgid "Service Control"
+#~ msgstr "Kontrol af tjeneste"
 
-msgid "Could not create DSN config component"
-msgstr "Kunne ikke oprette DSN konfigureringskomponent"
+#~ msgid "Could not create DSN config component"
+#~ msgstr "Kunne ikke oprette DSN konfigureringskomponent"
 
-msgid "Select config component"
-msgstr "Vælg konfigurations-komponent"
+#~ msgid "Select config component"
+#~ msgstr "Vælg konfigurations-komponent"
 
-msgid "Add new data source"
-msgstr "Tilføj ny datakilde"
+#~ msgid "Add new data source"
+#~ msgstr "Tilføj ny datakilde"
 
-msgid "Edit selected data source"
-msgstr "Redigér valgte datakilde"
+#~ msgid "Edit selected data source"
+#~ msgstr "Redigér valgte datakilde"
 
-msgid "Remove selected data source"
-msgstr "Fjern valgte datakilde"
+#~ msgid "Remove selected data source"
+#~ msgstr "Fjern valgte datakilde"
 
-msgid "Browse selected data source"
-msgstr "Læs i valgte datakilde"
+#~ msgid "Browse selected data source"
+#~ msgstr "Læs i valgte datakilde"
 
-msgid "Data Source"
-msgstr "Datakilde"
+#~ msgid "Data Source"
+#~ msgstr "Datakilde"
 
-msgid "Browse Data Source"
-msgstr "Læs i datakilde"
+#~ msgid "Browse Data Source"
+#~ msgstr "Læs i datakilde"
 
-msgid "could not load browser control"
-msgstr "Kunne ikke indlæse læserkontrol"
+#~ msgid "could not load browser control"
+#~ msgstr "Kunne ikke indlæse læserkontrol"
 
-msgid "Load config component"
-msgstr "Indlæs konfigurerings-komponent"
+#~ msgid "Load config component"
+#~ msgstr "Indlæs konfigurerings-komponent"
 
-msgid "Module"
-msgstr "Modul"
+#~ msgid "Module"
+#~ msgstr "Modul"
 
-msgid "Users"
-msgstr "Brugere"
+#~ msgid "Users"
+#~ msgstr "Brugere"
 
-msgid "User access rights"
-msgstr "Brugers adgangsrettigheder"
+#~ msgid "User access rights"
+#~ msgstr "Brugers adgangsrettigheder"
 
-msgid "All"
-msgstr "Alt"
+#~ msgid "All"
+#~ msgstr "Alt"
 
-msgid "Data source not found in GDA configuration"
-msgstr "Datakilde ikke fundet i GDA konfiguration"
+#~ msgid "Data source not found in GDA configuration"
+#~ msgstr "Datakilde ikke fundet i GDA konfiguration"
 
-msgid "Data Sources"
-msgstr "Datakilder"
+#~ msgid "Data Sources"
+#~ msgstr "Datakilder"
 
-msgid "Database browser"
-msgstr "Databaselæser"
+#~ msgid "Database browser"
+#~ msgstr "Databaselæser"
 
-msgid "Open the database browser"
-msgstr "Åbn databaselæser"
+#~ msgid "Open the database browser"
+#~ msgstr "Åbn databaselæser"
 
-msgid "The GNOME-DB development environment"
-msgstr "GNOME-DB-udviklingsmiljøet"
+#~ msgid "The GNOME-DB development environment"
+#~ msgstr "GNOME-DB-udviklingsmiljøet"
 
-msgid "Providers"
-msgstr "Udbydere"
+#~ msgid "Providers"
+#~ msgstr "Udbydere"
 
-msgid "Configure GDA providers"
-msgstr "Konfigurér GDA datakilder"
+#~ msgid "Configure GDA providers"
+#~ msgstr "Konfigurér GDA datakilder"
 
-msgid "Components"
-msgstr "Kommentarer"
+#~ msgid "Components"
+#~ msgstr "Kommentarer"
 
-msgid "Configure GNOME-DB components"
-msgstr "Indlæs konfigurerings-komponent"
+#~ msgid "Configure GNOME-DB components"
+#~ msgstr "Indlæs konfigurerings-komponent"
 
-msgid "View provider log"
-msgstr "Vis udbyder logfiler"
+#~ msgid "View provider log"
+#~ msgstr "Vis udbyder logfiler"
 
-msgid "Install a new GDA provider"
-msgstr "Installér en ny GDA udbyder"
+#~ msgid "Install a new GDA provider"
+#~ msgstr "Installér en ny GDA udbyder"
 
-msgid "Edit selected provider"
-msgstr "Redigér valgte udbyder"
+#~ msgid "Edit selected provider"
+#~ msgstr "Redigér valgte udbyder"
 
-msgid "Remove selected provider"
-msgstr "Slet valgte udbyder"
+#~ msgid "Remove selected provider"
+#~ msgstr "Slet valgte udbyder"
 
-msgid "Comments"
-msgstr "Kommentarer"
+#~ msgid "Comments"
+#~ msgstr "Kommentarer"
 
-msgid "Could not create GnomeDbControl"
-msgstr "Kunne ikke oprette GnomeDbControl"
+#~ msgid "Could not create GnomeDbControl"
+#~ msgstr "Kunne ikke oprette GnomeDbControl"
 
-msgid "Available databases"
-msgstr "Tilgængelige databaser"
+#~ msgid "Available databases"
+#~ msgstr "Tilgængelige databaser"
 
-msgid "Drop"
-msgstr "Slip"
+#~ msgid "Drop"
+#~ msgstr "Slip"
 
-msgid "Database name"
-msgstr "Databasenavn"
+#~ msgid "Database name"
+#~ msgstr "Databasenavn"
 
-msgid "Owner"
-msgstr "Ejer"
+#~ msgid "Owner"
+#~ msgstr "Ejer"
 
-msgid "new instance %p created"
-msgstr "nyt element %p oprettet"
+#~ msgid "new instance %p created"
+#~ msgstr "nyt element %p oprettet"
 
-msgid "DSN for the connection"
-msgstr "DSN for forbindelsen"
+#~ msgid "DSN for the connection"
+#~ msgstr "DSN for forbindelsen"
 
-msgid "User identity"
-msgstr "Bruger identitet"
+#~ msgid "User identity"
+#~ msgstr "Bruger identitet"
 
-msgid "User passord"
-msgstr "Bruger adgangskode"
+#~ msgid "User passord"
+#~ msgstr "Bruger adgangskode"
 
-msgid "Show/hide the user id"
-msgstr "Vis/skjul bruger id"
+#~ msgid "Show/hide the user id"
+#~ msgstr "Vis/skjul bruger id"
 
-msgid "Give it TRUE to reset/start the component"
-msgstr "Sæt til SAND for at genstarte/ eller starte komponenten"
+#~ msgid "Give it TRUE to reset/start the component"
+#~ msgstr "Sæt til SAND for at genstarte/ eller starte komponenten"
 
-msgid "User name setting"
-msgstr "Indstilling af brugernavn"
+#~ msgid "User name setting"
+#~ msgstr "Indstilling af brugernavn"
 
-msgid "Group name setting"
-msgstr "Indstilling af gruppenavn"
+#~ msgid "Group name setting"
+#~ msgstr "Indstilling af gruppenavn"
 
-msgid "Object type setting"
-msgstr "Indstilling af objekttype"
+#~ msgid "Object type setting"
+#~ msgstr "Indstilling af objekttype"
 
-msgid "Object name setting"
-msgstr "Indstilling af objektnavn"
+#~ msgid "Object name setting"
+#~ msgstr "Indstilling af objektnavn"
 
-msgid "Access rigths"
-msgstr "Adgangsrettigheder"
+#~ msgid "Access rigths"
+#~ msgstr "Adgangsrettigheder"
 
-msgid "Indexes"
-msgstr "Indekser"
+#~ msgid "Indexes"
+#~ msgstr "Indekser"
 
-msgid "All users rights"
-msgstr "Alle bruger rettigheder"
+#~ msgid "All users rights"
+#~ msgstr "Alle bruger rettigheder"
 
-msgid "Groups rights"
-msgstr "Gruppe-rettigheder"
+#~ msgid "Groups rights"
+#~ msgstr "Gruppe-rettigheder"
 
-msgid "Group:"
-msgstr "Gruppe:"
+#~ msgid "Group:"
+#~ msgstr "Gruppe:"
 
-msgid "Individual users rights"
-msgstr "Individuelle bruger-rettigheder"
+#~ msgid "Individual users rights"
+#~ msgstr "Individuelle bruger-rettigheder"
 
-msgid "User:"
-msgstr "Bruger:"
+#~ msgid "User:"
+#~ msgstr "Bruger:"
 
-msgid "Insert"
-msgstr "Indsæt"
+#~ msgid "Insert"
+#~ msgstr "Indsæt"
 
-msgid "Update/Delete"
-msgstr "opdatér/slet"
+#~ msgid "Update/Delete"
+#~ msgstr "opdatér/slet"
 
-msgid "Rule"
-msgstr "Regel"
+#~ msgid "Rule"
+#~ msgstr "Regel"
 
-msgid "Table"
-msgstr "Tabel"
+#~ msgid "Table"
+#~ msgstr "Tabel"
 
-msgid "Sequence"
-msgstr "Sekvens"
+#~ msgid "Sequence"
+#~ msgstr "Sekvens"
 
-msgid "Index"
-msgstr "Indeks"
+#~ msgid "Index"
+#~ msgstr "Indeks"
 
-msgid "Name:"
-msgstr "Navn:"
+#~ msgid "Name:"
+#~ msgstr "Navn:"
 
-msgid "Password:"
-msgstr "Adgangskode:"
+#~ msgid "Password:"
+#~ msgstr "Adgangskode:"
 
-msgid "Could not instantiate the gnome-db-control"
-msgstr "Kunne ikke initialisere gnome-db-control"
+#~ msgid "Could not instantiate the gnome-db-control"
+#~ msgstr "Kunne ikke initialisere gnome-db-control"
 
-msgid "Group(s)"
-msgstr "Gruppe(r)"
+#~ msgid "Group(s)"
+#~ msgstr "Gruppe(r)"
 
-msgid "Create DB"
-msgstr "Opret DB"
+#~ msgid "Create DB"
+#~ msgstr "Opret DB"
 
-msgid "Create users"
-msgstr "Opret brugere"
+#~ msgid "Create users"
+#~ msgstr "Opret brugere"
 
-msgid "Valid until"
-msgstr "Gyldig til"
+#~ msgid "Valid until"
+#~ msgstr "Gyldig til"
 
-msgid "Known database users"
-msgstr "Kendte databasebrugere"
+#~ msgid "Known database users"
+#~ msgstr "Kendte databasebrugere"
 
-msgid "Save as new user"
-msgstr "Gem som ny bruger"
+#~ msgid "Save as new user"
+#~ msgstr "Gem som ny bruger"
 
-msgid "Save modified user"
-msgstr "Gem ændret bruger"
+#~ msgid "Save modified user"
+#~ msgstr "Gem ændret bruger"
 
-msgid "Delete user"
-msgstr "Slet bruger"
+#~ msgid "Delete user"
+#~ msgstr "Slet bruger"
 
-msgid "Yes"
-msgstr "Ja"
+#~ msgid "Yes"
+#~ msgstr "Ja"
 
-msgid "No"
-msgstr "Nej"
+#~ msgid "No"
+#~ msgstr "Nej"
 
-msgid "UI Test 3 Error"
-msgstr "UI test 3 fejl"
+#~ msgid "UI Test 3 Error"
+#~ msgstr "UI test 3 fejl"
 
-msgid "Record %8.0f"
-msgstr "Post %8.0f"
+#~ msgid "Record %8.0f"
+#~ msgstr "Post %8.0f"
 
-msgid "We could not load the glade interface description! (%s)"
-msgstr "Vi kunne ikke indlæse 'glade's grænseflade-beskrivelse! (%s)"
+#~ msgid "We could not load the glade interface description! (%s)"
+#~ msgstr "Vi kunne ikke indlæse 'glade's grænseflade-beskrivelse! (%s)"
 
-msgid "Select the table name"
-msgstr "Vælg tabelnavn"
+#~ msgid "Select the table name"
+#~ msgstr "Vælg tabelnavn"
 
-msgid "Could not get CORBA name service object"
-msgstr "Kunne ikke få CORBA navnetjeneste-objekt"
+#~ msgid "Could not get CORBA name service object"
+#~ msgstr "Kunne ikke få CORBA navnetjeneste-objekt"
 
-msgid "Refresh all"
-msgstr "Genopfrisk alt"
+#~ msgid "Refresh all"
+#~ msgstr "Genopfrisk alt"
 
-msgid "Ok"
-msgstr "Ok"
+#~ msgid "Ok"
+#~ msgstr "Ok"
 
-msgid "GNOME-DB Controls browser"
-msgstr "GNOME-DB Kontrol-læser"
+#~ msgid "GNOME-DB Controls browser"
+#~ msgstr "GNOME-DB Kontrol-læser"
 
-msgid "New control"
-msgstr "Ny kontrol"
+#~ msgid "New control"
+#~ msgstr "Ny kontrol"
 
-msgid "Close control"
-msgstr "Luk kontrol"
+#~ msgid "Close control"
+#~ msgstr "Luk kontrol"
 
-msgid "Controls"
-msgstr "Kontroller"
+#~ msgid "Controls"
+#~ msgstr "Kontroller"
 
-msgid "Control settings"
-msgstr "Kontrol-indstillinger"
+#~ msgid "Control settings"
+#~ msgstr "Kontrol-indstillinger"
 
-msgid "database provider"
-msgstr "Databaseudbyder"
+#~ msgid "database provider"
+#~ msgstr "Databaseudbyder"
 
-msgid "PROVIDER"
-msgstr "UDBYDER"
+#~ msgid "PROVIDER"
+#~ msgstr "UDBYDER"
 
-msgid "table"
-msgstr "Tabel"
+#~ msgid "table"
+#~ msgstr "Tabel"
 
-msgid "TABLENAME"
-msgstr "TABELNAVN"
+#~ msgid "TABLENAME"
+#~ msgstr "TABELNAVN"
 
-msgid "TABLE NAME"
-msgstr "TABELNAVN"
+#~ msgid "TABLE NAME"
+#~ msgstr "TABELNAVN"
 
-msgid "Logging in"
-msgstr "Logger ind"
+#~ msgid "Logging in"
+#~ msgstr "Logger ind"
 
 #~ msgid "Select Color"
 #~ msgstr "Vælg farve"
