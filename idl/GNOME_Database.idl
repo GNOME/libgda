@@ -25,6 +25,7 @@ module GNOME {
 			TYPE_BINARY,
 			TYPE_BOOLEAN,
 			TYPE_DATE,
+			TYPE_GEOMETRIC_POINT,
 			TYPE_TIME,
 			TYPE_TIMESTAMP,
 			TYPE_DOUBLE,
@@ -36,7 +37,7 @@ module GNOME {
 			TYPE_UNKNOWN
 		};
 
-		struct Date{
+		struct Date {
 			short year;
 			unsigned short month;
 			unsigned short day;
@@ -54,6 +55,10 @@ module GNOME {
 			unsigned short minute;
 			unsigned short second;
 			unsigned long  fraction;
+		};
+		struct GeometricPoint {
+			double x;
+			double y;
 		};
 
 		/*
