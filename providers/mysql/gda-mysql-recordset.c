@@ -64,6 +64,8 @@ fetch_func (GdaServerRecordset *recset, gulong rownum)
 
 	/* move to the corresponding row */
 	row_count = mysql_num_rows (mysql_res);
+	if (row_count == 0)
+		return NULL;
 	field_count = mysql_num_fields (mysql_res);
 
 	if (rownum < 0 || rownum >= row_count) {
@@ -141,6 +143,8 @@ fetch_func (GdaServerRecordset *recset, gulong rownum)
 		case FIELD_TYPE_SET : /* FIXME */
 			gda_field_set_string_value (field, thevalue);
 			break;
+		default :
+			gda_field_set_string_value (field, thevalue);
 		}
 	}
 
