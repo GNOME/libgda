@@ -1,3 +1,15 @@
+2001-07-08  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-xml-query/*: moved some files into the libgda-common directory
+	itself, with some changes:
+		- XmlQueryItem is now GdaXmlItem
+		- XmlQueryBin is now GdaXmlBinItem
+		- XmlQueryList is now GdaXmlListItem
+		- XmlQueryAtom is now GdaXmlAtomItem
+		- XmlQueryColumn is now GdaXqlColumn
+
+	* gda-xql.h: new file
+
 2001-07-07  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-listener.[ch]: implementation of the GDA::Listener CORBA

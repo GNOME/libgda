@@ -23,79 +23,84 @@
 #include "gda-xml-util.h"
 
 /**
- * gda_xml_util_get_children
- * @parent: The parent node
- *
- * Return a #xmlNodePtr containing all the children nodes for
- * the given XML node
+ * gda_xml_util_gensym
  */
-xmlNodePtr
-gda_xml_util_get_children (xmlNodePtr parent)
+gchar *
+gda_xml_util_gensym (const gchar *sym)
 {
-	g_return_val_if_fail (parent != NULL, NULL);
-	return parent->xmlChildrenNode;
+	static gint count = 0;
+
+	return g_strdup_printf ("%s%d", sym, ++count);
 }
 
 /**
- * gda_xml_util_get_root_children
+ * gda_xml_util_dom_to_xml
  */
-xmlNodePtr
-gda_xml_util_get_root_children (xmlDocPtr doc)
+gchar *
+gda_xml_util_dom_to_xml (xmlNodePtr node, gboolean freedoc)
 {
-	return gda_xml_util_get_children (xmlDocGetRootElement (doc));
+	xmlDocPtr doc;
+	gchar *buffer;
+	gint size;
+
+	g_return_val_if_fail (node != NULL, NULL);
+
+	doc = node->doc;
+	xmlDocDumpMemory (doc, (xmlChar **) &buffer, &size);
+	if (freedoc)
+		xmlFreeDoc (doc);
+
+	return buffer;
 }
 
 /**
- * gda_xml_util_get_child_by_name
+ * gda_xml_util_dom_to_sql
+ */
+gchar *
+gda_xml_util_dom_to_sql (xmlNodePtr node, gboolean freedoc)
+{
+	/* FIXME: see gda-xml-query/utils.c (xml_query_dom_to_sql) */
+}
+
+/**
+ * gda_xml_util_new_node
  */
 xmlNodePtr
-gda_xml_util_get_child_by_name (xmlNodePtr parent, const gchar *name)
+gda_xml_util_new_node (const gchar *tag, xmlNodePtr parent_node)
 {
-	xmlNodePtr child;
+	xmlNodePtr node;
+	xmlDocPtr doc;
+	xmlParseInputBuffer *input;
 
-	g_return_val_if_fail (parent != NULL, NULL);
+	if (parent_node == NULL) {
+		doc = xmlNewDoc ("1.0");
+		doc->extSubset = xmlIOParseDTD (NULL, input, XML_CHAR_ENCODING_NONE);
 
-	for (child = gda_xml_util_get_children (parent);
-	     child != NULL;
-	     child = child->next) {
-		if (strcmp (child->name, name) == 0)
-			return child;
+		node = xmlNewDocNode (doc, NULL, (xmlChar *) tag, NULL);
+		xmlDocSetRootElement (doc, node);
 	}
+	else
+		node = xmlNewChild (parent_node, NULL, (xmlChar *) tag, NULL);
 
-	return NULL;
+	return node;
 }
 
 /**
- * gda_xml_util_remove_node
+ * gda_xml_util_new_attr
  */
 void
-gda_xml_util_remove_node (xmlNodePtr node)
+gda_xml_util_new_attr (gchar *key, gchar *value, xmlNodePtr node)
 {
+	xmlAttr *attr;
+	xmlDocPtr doc;
+
 	g_return_if_fail (node != NULL);
-	g_return_if_fail (node->doc != NULL);
-	g_return_if_fail (node->parent != NULL);
-        g_return_if_fail (node->doc->xmlRootNode != node);
 
-	if (node->prev == NULL) {
-                g_assert (node->parent->xmlChildrenNode == node);
-                node->parent->xmlChildrenNode = node->next;
-        }
-	else {
-                g_assert (node->parent->xmlChildrenNode != node);
-                node->prev->next = node->next;
-        }
+	doc = node->doc;
+	attr = xmlSetProp (node, key, value);
 
-        if (node->next == NULL) {
-                g_assert (node->parent->last == node);
-                node->parent->last = node->prev;
-        }
-	else {
-                g_assert (node->parent->last != node);
-                node->next->prev = node->prev;
-        }
-
-        node->doc = NULL;
-        node->parent = NULL;
-        node->next = NULL;
-        node->prev = NULL;
+	if (xmlIsID (doc, node, attr))
+		xmlAddID (NULL, doc, value, attr);
+	else if (xmlIsRef (doc, node, attr))
+		xmlAddRef (NULL, doc, value, attr);
 }

@@ -69,6 +69,18 @@ gda_util_hash_to_list (GHashTable *hash_table)
 }
 
 /**
+ * gda_util_destroy_hash_pair
+ */
+gboolean
+gda_util_destroy_hash_pair (gchar *key, gpointer value, GFreeFunc free_func)
+{
+	g_free (key);
+	if ((free_func != NULL) && (value != NULL))
+		free_func (value);
+	return TRUE;
+}
+
+/**
  * gda_util_load_file
  * @filename: file name
  *

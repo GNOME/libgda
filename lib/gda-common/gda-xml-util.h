@@ -31,13 +31,12 @@
 extern "C" {
 #endif
 
-#define    gda_xml_util_get_root_element(_doc_) xmlDocGetRootElement ((_doc_))
+gchar* gda_xml_util_gensym (const gchar *sym);
+gchar* gda_xml_util_dom_to_xml (xmlNodePtr node, gboolean freedoc);
+gchar* gda_xml_util_dom_to_sql (xmlNodePtr node, gboolean freedoc);
 
-xmlNodePtr gda_xml_util_get_children (xmlNodePtr parent);
-xmlNodePtr gda_xml_util_get_root_children (xmlDocPtr doc);
-xmlNodePtr gda_xml_util_get_child_by_name (xmlNodePtr parent,
-					   const gchar *name);
-void       gda_xml_util_remove_node (xmlNodePtr node);
+xmlNodePtr gda_xml_util_new_node (const gchar *tag, xmlNodePtr parent_node);
+void       gda_xml_util_new_attr (gchar *key, gchar *value, xmlNodePtr node);
 
 #if defined(__cplusplus)
 }

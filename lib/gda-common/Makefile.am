@@ -62,3 +62,7 @@ gdainclude_HEADERS=$(gda_common_headers)
 
 dist-hook:
 	cd $(distdir); rm -f $(BUILT_SOURCES)
+
+EXTRA_DIST = \
+	gda-xml-query.dtd \
+	gda-xml-query.xsl
