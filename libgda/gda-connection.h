@@ -93,6 +93,9 @@ void                 gda_connection_add_error_list (GdaConnection *cnc, GList *e
 gboolean             gda_connection_change_database (GdaConnection *cnc, const gchar *name);
 gboolean             gda_connection_create_database (GdaConnection *cnc, const gchar *name);
 gboolean             gda_connection_drop_database (GdaConnection *cnc, const gchar *name);
+gboolean             gda_connection_create_table (GdaConnection *cnc, const gchar *table_name,
+						  const GdaFieldAttributes *attributes[]);
+gboolean             gda_connection_drop_table (GdaConnection *cnc, const gchar *table_name);
 
 GList               *gda_connection_execute_command (GdaConnection *cnc,
 						     GdaCommand *cmd,

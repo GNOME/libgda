@@ -1,3 +1,8 @@
+2004-05-05  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* libgda/gda-connection.[ch] (gda_connection_create_table,
+	gda_connection_drop_table): new functions.
+
 2004-05-02  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* providers/xml/gda-xml-provider.c (get_types): added missing fields to

@@ -648,6 +648,44 @@ gda_connection_drop_database (GdaConnection *cnc, const gchar *name)
 }
 
 /**
+ * gda_connection_create_table
+ * @cnc: a #GdaConnection object.
+ * @table_name: name of the table to be created.
+ * @attributes: description of all fields for the new table.
+ *
+ * Creates a table on the given connection from the specified set of fields.
+ *
+ * Returns: %TRUE if successful, %FALSE otherwise.
+ */
+gboolean
+gda_connection_create_table (GdaConnection *cnc, const gchar *table_name, const GdaFieldAttributes *attributes[])
+{
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (table_name != NULL, FALSE);
+	g_return_val_if_fail (attributes != NULL, FALSE);
+
+	return gda_server_provider_create_table (cnc->priv->provider_obj, cnc, table_name, attributes);
+}
+
+/**
+ * gda_connection_drop_table
+ * @cnc: a #GdaConnection object.
+ * @table_name: name of the table to be removed
+ *
+ * Drops a table from the database.
+ *
+ * Returns: %TRUE if successful, %FALSE otherwise.
+ */
+gboolean
+gda_connection_drop_table (GdaConnection *cnc, const gchar *table_name)
+{
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (table_name != NULL, FALSE);
+
+	return gda_server_provider_drop_table (cnc->priv->provider_obj, cnc, table_name);
+}
+
+/**
  * gda_connection_execute_command
  * @cnc: a #GdaConnection object.
  * @cmd: a #GdaCommand.
