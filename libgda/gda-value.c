@@ -2093,7 +2093,7 @@ gda_value_stringify (const GdaValue *value)
  *
  * Compares two values of the same type.
  *
- * Returns: if both values have the same time, returns 0 if both contains
+ * Returns: if both values have the same type, returns 0 if both contain
  * the same value, an integer less than 0 if @value1 is less than @value2 or
  * an integer greater than 0 if @value1 is greater than @value2.
  */

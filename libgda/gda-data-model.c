@@ -858,7 +858,7 @@ gda_data_model_foreach (GdaDataModel *model,
  * Checks whether this data model is in updating mode or not. Updating
  * mode is set to %TRUE when @gda_data_model_begin_update has been
  * called successfully, and is not set back to %FALSE until either
- * @gda_data_model_cancel_updating or @gda_data_model_end_update have
+ * @gda_data_model_cancel_update or @gda_data_model_end_update have
  * been called.
  *
  * Returns: %TRUE if updating mode, %FALSE otherwise.

@@ -294,7 +294,7 @@ gda_export_new (GdaConnection * cnc)
  * @exp: a #GdaExport object.
  *
  * Returns a list of all tables that exist in the #GdaConnection
- * being used by the given #GdaExport object.. This function is 
+ * being used by the given #GdaExport object. This function is 
  * useful when you're building, for example, a list for the user 
  * to select which tables he/she wants in the export process.
  *

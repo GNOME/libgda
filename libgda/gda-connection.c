@@ -597,7 +597,7 @@ gda_connection_add_error_list (GdaConnection *cnc, GList *error_list)
  * @cnc: a #GdaConnection object.
  * @name: name of database to switch to.
  *
- * Change sthe current database for the given connection. This operation
+ * Changes the current database for the given connection. This operation
  * is not available in all providers.
  *
  * Returns: %TRUE if successful, %FALSE otherwise.
