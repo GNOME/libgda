@@ -1,4 +1,3 @@
-
 # Slovenian translation file for libgda.
 # Copyright (C) 2000 Free Software Foundation, Inc.
 # Andraz Tori <andraz.tori1@guest.arnes.si> 2000
@@ -6,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2000-11-13 19:36+0100\n"
+"POT-Creation-Date: 2001-01-20 23:31+0100\n"
 "PO-Revision-Date: 2000-11-13 19:36+0100\n"
 "Last-Translator: Andraz Tori <andraz.tori1@guest.arnes.si>\n"
 "Language-Team: Slovenian <sl@li.org>\n"
@@ -14,91 +13,91 @@ msgstr ""
 "Content-Type: text/plain; charset=iso8859-2\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: lib/gda-client/gda-connection-pool.c:266
+#: lib/gda-client/gda-connection-pool.c:267
 #, c-format
 msgid "could not open connection to %s"
 msgstr "ne morem odpreti povezave z %s"
 
-#: lib/gda-client/gda-connection-pool.c:279
+#: lib/gda-client/gda-connection-pool.c:280
 #, c-format
 msgid "Data source %s not found"
 msgstr "Vir podatkov %s ni bil najden"
 
-#: lib/gda-client/gda-connection.c:233 lib/gda-client/gda-error.c:178
+#: lib/gda-client/gda-connection.c:234 lib/gda-client/gda-error.c:179
 #, c-format
 msgid "%s: The server didn't respond."
 msgstr "%s: Stre¾nik se ni odzval."
 
-#: lib/gda-client/gda-connection.c:237 lib/gda-client/gda-error.c:182
+#: lib/gda-client/gda-connection.c:238 lib/gda-client/gda-error.c:183
 #, c-format
 msgid "%s: An Error occured in the CORBA system."
 msgstr "%s: V sistemu CORBA se je zgodila napaka."
 
-#: lib/gda-client/gda-connection.c:528
+#: lib/gda-client/gda-connection.c:493
 #, c-format
 msgid "Database '%s' not found in system configuration"
 msgstr "Zbirka podatkov '%s' ni bila najdena v nastavitvah sistema"
 
-#: lib/gda-client/gda-connection.c:544
+#: lib/gda-client/gda-connection.c:509
 msgid "Could not open CORBA factory"
 msgstr "Ne morem odpreti CORBA tovarne"
 
-#: lib/gda-client/gda-field.c:244
+#: lib/gda-client/gda-field.c:245
 msgid "<NULL>"
 msgstr "<NULA>"
 
-#: lib/gda-client/gda-field.c:250 lib/gda-client/gda-field.c:252
+#: lib/gda-client/gda-field.c:251 lib/gda-client/gda-field.c:253
 msgid "<Unknown GDA Type(NULL)>"
 msgstr "<Neznan GDA Tip(NULA)>"
 
-#: lib/gda-client/gda-field.c:265
+#: lib/gda-client/gda-field.c:266
 msgid "TRUE"
 msgstr "RESNIÈNO"
 
-#: lib/gda-client/gda-field.c:266
+#: lib/gda-client/gda-field.c:267
 msgid "FALSE"
 msgstr "NERESNIÈNO"
 
-#: lib/gda-common/gda-corba.c:76
+#: lib/gda-common/gda-corba.c:73
 #, c-format
 msgid "CORBA System exception: %s"
 msgstr "Izjema v sistemu CORBA: %s"
 
-#: lib/gda-common/gda-corba.c:109
+#: lib/gda-common/gda-corba.c:102
 msgid "True"
 msgstr "Resnièno"
 
-#: lib/gda-common/gda-corba.c:109
+#: lib/gda-common/gda-corba.c:102
 msgid "False"
 msgstr "Neresnièno"
 
-#: lib/gda-common/gda-init.c:58
+#: lib/gda-common/gda-init.c:59
 msgid "Attempt to initialize an already initialized client"
 msgstr "Poskus inicializacije ¾e inicializiranega odjemalca"
 
-#: lib/gda-common/gda-log.c:47
+#: lib/gda-common/gda-log.c:48
 msgid "Saving log...x"
 msgstr "Shranjujem dnevnik...x"
 
 #. compose message
-#: lib/gda-common/gda-log.c:68
+#: lib/gda-common/gda-log.c:69
 msgid "ERROR: "
 msgstr "NAPAKA: "
 
-#: lib/gda-common/gda-log.c:68
+#: lib/gda-common/gda-log.c:69
 msgid "MESSAGE: "
 msgstr "SPOROÈILO: "
 
-#: lib/gda-common/gda-thread.c:210
+#: lib/gda-common/gda-thread.c:211
 msgid "thread is already running"
 msgstr "nit ¾e teèe"
 
-#: lib/gda-common/gda-xml-database.c:281
+#: lib/gda-common/gda-xml-database.c:282
 #, c-format
 msgid "table %s already exists"
 msgstr "tabela %s ¾e obstaja"
 
-#: lib/gda-common/gda-xml-database.c:445
+#: lib/gda-common/gda-xml-database.c:446
 #, c-format
 msgid "%p is not a valid table"
 msgstr "%p ni veljavna tabela"
@@ -107,171 +106,162 @@ msgstr "%p ni veljavna tabela"
 msgid "Could not get pointer to server implementation"
 msgstr "Ne morem dobiti kazalca do implementacije stre¾nika"
 
-#: lib/gda-server/gda-server-impl-connection.c:122
-#: lib/gda-server/gda-server-impl-connection.c:131
-#: lib/gda-server/gda-server-impl-connection.c:138
-#: lib/gda-server/gda-server-impl-connection.c:147
-#: lib/gda-server/gda-server-impl-connection.c:154
-#: lib/gda-server/gda-server-impl-connection.c:163
-#: lib/gda-server/gda-server-impl-connection.c:170
-#: lib/gda-server/gda-server-impl-connection.c:179
-#: lib/gda-server/gda-server-impl-recordset.c:130
-#: lib/gda-server/gda-server-impl-recordset.c:139
-#: lib/gda-server/gda-server-impl-recordset.c:146
-#: lib/gda-server/gda-server-impl-recordset.c:161
-#: lib/gda-server/gda-server-impl-recordset.c:170
-#: lib/gda-server/gda-server-impl-recordset.c:177
-#: lib/gda-server/gda-server-impl-recordset.c:186
-#: lib/gda-server/gda-server-impl-recordset.c:193
-#: lib/gda-server/gda-server-impl-recordset.c:202
-#: lib/gda-server/gda-server-impl-recordset.c:209
-#: lib/gda-server/gda-server-impl-recordset.c:217
-#: lib/gda-server/gda-server-impl-recordset.c:226
-#: lib/gda-server/gda-server-impl-recordset.c:233
-#: lib/gda-server/gda-server-impl-recordset.c:241
-#: lib/gda-server/gda-server-impl-recordset.c:249
-#: lib/gda-server/gda-server-impl-recordset.c:291
-#: lib/gda-server/gda-server-impl-recordset.c:301
-#: lib/gda-server/gda-server-impl-recordset.c:309
-#: lib/gda-server/gda-server-impl-recordset.c:317
-#: lib/gda-server/gda-server-impl-recordset.c:325
-#: lib/gda-server/gda-server-impl-recordset.c:333
-#: lib/gda-server/gda-server-impl-recordset.c:342
-#: lib/gda-server/gda-server-impl-recordset.c:350
-#: lib/gda-server/gda-server-impl-recordset.c:358
+#: lib/gda-server/gda-server-impl-connection.c:123
+#: lib/gda-server/gda-server-impl-connection.c:132
+#: lib/gda-server/gda-server-impl-connection.c:139
+#: lib/gda-server/gda-server-impl-connection.c:148
+#: lib/gda-server/gda-server-impl-connection.c:155
+#: lib/gda-server/gda-server-impl-connection.c:164
+#: lib/gda-server/gda-server-impl-connection.c:171
+#: lib/gda-server/gda-server-impl-connection.c:180
+#: lib/gda-server/gda-server-impl-recordset.c:126
+#: lib/gda-server/gda-server-impl-recordset.c:135
+#: lib/gda-server/gda-server-impl-recordset.c:142
+#: lib/gda-server/gda-server-impl-recordset.c:157
+#: lib/gda-server/gda-server-impl-recordset.c:166
+#: lib/gda-server/gda-server-impl-recordset.c:173
+#: lib/gda-server/gda-server-impl-recordset.c:182
+#: lib/gda-server/gda-server-impl-recordset.c:189
+#: lib/gda-server/gda-server-impl-recordset.c:198
+#: lib/gda-server/gda-server-impl-recordset.c:205
+#: lib/gda-server/gda-server-impl-recordset.c:213
+#: lib/gda-server/gda-server-impl-recordset.c:222
+#: lib/gda-server/gda-server-impl-recordset.c:229
+#: lib/gda-server/gda-server-impl-recordset.c:237
+#: lib/gda-server/gda-server-impl-recordset.c:245
+#: lib/gda-server/gda-server-impl-recordset.c:273
+#: lib/gda-server/gda-server-impl-recordset.c:281
+#: lib/gda-server/gda-server-impl-recordset.c:289
+#: lib/gda-server/gda-server-impl-recordset.c:297
+#: lib/gda-server/gda-server-impl-recordset.c:305
+#: lib/gda-server/gda-server-impl-recordset.c:314
 #, c-format
 msgid "%s not implemented"
 msgstr "%s ni pimplementiran"
 
-#: lib/gda-server/gda-server-impl-connection.c:271
+#: lib/gda-server/gda-server-impl-connection.c:272
 #, c-format
 msgid "impl_GDA_Connection_open: opening connection with DSN: %s"
 msgstr "impl_GDA_Connection_open: odpiram povezavo z DSN: %s"
 
-#: lib/gda-server/gda-server-impl-recordset.c:257
-#: lib/gda-server/gda-server-impl-recordset.c:265
-#, c-format
-msgid "%s: not implemented"
-msgstr "%s: ni implementiran"
-
-#: lib/gda-server/gda-server-impl-recordset.c:451
+#: lib/gda-server/gda-server-impl-recordset.c:407
 #, c-format
 msgid "%s: an error ocurred while fetching data"
 msgstr "%s: med pobiranjem podatkov se je zgodila napaka"
 
-#: lib/gda-server/gda-server-impl-recordset.c:490
+#: lib/gda-server/gda-server-impl-recordset.c:446
 #, c-format
 msgid "%s: length = %d"
 msgstr "%s: dol¾ina = %d"
 
-#: lib/gda-server/gda-server-impl-recordset.c:503
+#: lib/gda-server/gda-server-impl-recordset.c:459
 #, c-format
 msgid "%s: sending field description for '%s'"
 msgstr "%s: po¹iljam opis polja za '%s'"
 
-#: lib/gda-server/gda-server-impl.c:194
+#: lib/gda-server/gda-server-impl.c:184
 #, c-format
 msgid "Starting provider %s with no implementation functions"
 msgstr "Poganjam nuditelja %s brez implementiranih funkcij"
 
-#: lib/gda-server/gda-server-impl.c:221
-#: report/server/gda-report-server-main.c:120
+#: lib/gda-server/gda-server-impl.c:210
+#: report/server/gda-report-server-main.c:113
 msgid ""
 "OAF doesn't know about our IID; indicates broken installation. Exiting..."
 msgstr "OAF ne ve za na¹ IID; to ka¾e na pokvarjeno namestitev. Zakljuèujem..."
 
-#: lib/gda-server/gda-server-impl.c:224
+#: lib/gda-server/gda-server-impl.c:213
 msgid ""
 "Another instance of this provider is already registered with OAF. Exiting..."
 msgstr "Ena in¹tanca tega nuditelja je ¾e registrirana pri OAF. Zakljuèujem..."
 
-#: lib/gda-server/gda-server-impl.c:227
+#: lib/gda-server/gda-server-impl.c:216
 msgid "Unknown error registering this provider with OAF. Exiting"
 msgstr "Neznana napaka ob registraciji tega nuditelja pri OAF. Zakljuèujem"
 
-#: lib/gda-server/gda-server-impl.c:231
+#: lib/gda-server/gda-server-impl.c:220
 #, c-format
 msgid "Registered with ID = %s"
 msgstr "Registriran z ID = %s"
 
-#: lib/gda-server/gda-server-impl.c:313
+#: lib/gda-server/gda-server-impl.c:296
 #, c-format
 msgid "CORBA system exception %s"
 msgstr "Sistemska CORBA izjema: %s"
 
-#: lib/gda-server/gda-server-impl.c:316
+#: lib/gda-server/gda-server-impl.c:299
 #, c-format
 msgid "CORBA user exception: %s"
 msgstr "Uporabni¹ka CORBA izjema: %s"
 
-#: lib/gda-server/gda-server-init.c:62 lib/gda-server/gda-server-init.c:68
+#: lib/gda-server/gda-server-init.c:63 lib/gda-server/gda-server-init.c:69
 #, c-format
 msgid "Received signal %d, shutting down"
 msgstr "Prejel signal %d, ustavljam se"
 
-#: lib/gda-server/gda-server-init.c:72
+#: lib/gda-server/gda-server-init.c:73
 #, c-format
 msgid "Received signal %d. Ignoring"
 msgstr "Prejel signal %d. Ignoriram"
 
-#: lib/gda-server/gda-server-init.c:122
+#: lib/gda-server/gda-server-init.c:123
 msgid "Attempt to initialize an already initialized provider"
 msgstr "Poskus inicializacije ¾e inicializiranega nuditelja"
 
-#: providers/gda-interbase-server/gda-interbase-connection.c:252
-#: providers/gda-ldap-server/gda-ldap-connection.c:263
-#: providers/gda-mdb-server/gda-mdb-connection.c:351
-#: providers/gda-mysql-server/gda-mysql-connection.c:378
-#: providers/gda-odbc-server/gda-odbc-connection.c:600
-#: providers/gda-odbc-server/gda-odbc-connection.c:633
-#: providers/gda-oracle-server/gda-oracle-connection.c:417
-#: providers/gda-postgres-server/gda-postgres-connection.c:771
-#: providers/gda-sybase-server/gda-sybase-error.c:106
+#: providers/gda-interbase-server/gda-interbase-connection.c:261
+#: providers/gda-ldap-server/gda-ldap-connection.c:272
+#: providers/gda-mdb-server/gda-mdb-connection.c:360
+#: providers/gda-mysql-server/gda-mysql-connection.c:387
+#: providers/gda-odbc-server/gda-odbc-connection.c:609
+#: providers/gda-odbc-server/gda-odbc-connection.c:642
+#: providers/gda-oracle-server/gda-oracle-connection.c:426
+#: providers/gda-postgres-server/gda-postgres-connection.c:779
+#: providers/gda-sybase-server/gda-sybase-error.c:109
 #, c-format
 msgid "error '%s' at %s"
 msgstr "napaka '%s' pri %s"
 
-#: providers/gda-interbase-server/gda-interbase-connection.c:257
-#: providers/gda-interbase-server/gda-interbase-connection.c:258
-#: providers/gda-ldap-server/gda-ldap-connection.c:268
-#: providers/gda-ldap-server/gda-ldap-connection.c:269
-#: providers/gda-mdb-server/gda-mdb-connection.c:355
-#: providers/gda-mdb-server/gda-mdb-connection.c:356
-#: providers/gda-mysql-server/gda-mysql-connection.c:382
-#: providers/gda-mysql-server/gda-mysql-connection.c:383
-#: providers/gda-odbc-server/gda-odbc-connection.c:602
-#: providers/gda-odbc-server/gda-odbc-connection.c:603
-#: providers/gda-odbc-server/gda-odbc-connection.c:635
-#: providers/gda-odbc-server/gda-odbc-connection.c:636
-#: providers/gda-oracle-server/gda-oracle-connection.c:422
-#: providers/gda-oracle-server/gda-oracle-connection.c:423
-#: providers/gda-postgres-server/gda-postgres-connection.c:778
-#: providers/gda-postgres-server/gda-postgres-connection.c:779
-#: providers/gda-sybase-server/gda-sybase-error.c:115
-#: providers/gda-sybase-server/gda-sybase-error.c:116
+#: providers/gda-interbase-server/gda-interbase-connection.c:266
+#: providers/gda-interbase-server/gda-interbase-connection.c:267
+#: providers/gda-ldap-server/gda-ldap-connection.c:277
+#: providers/gda-ldap-server/gda-ldap-connection.c:278
+#: providers/gda-mdb-server/gda-mdb-connection.c:364
+#: providers/gda-mdb-server/gda-mdb-connection.c:365
+#: providers/gda-mysql-server/gda-mysql-connection.c:391
+#: providers/gda-mysql-server/gda-mysql-connection.c:392
+#: providers/gda-odbc-server/gda-odbc-connection.c:611
+#: providers/gda-odbc-server/gda-odbc-connection.c:612
+#: providers/gda-odbc-server/gda-odbc-connection.c:644
+#: providers/gda-odbc-server/gda-odbc-connection.c:645
+#: providers/gda-oracle-server/gda-oracle-connection.c:431
+#: providers/gda-oracle-server/gda-oracle-connection.c:432
+#: providers/gda-postgres-server/gda-postgres-connection.c:786
+#: providers/gda-postgres-server/gda-postgres-connection.c:787
+#: providers/gda-sybase-server/gda-sybase-error.c:118
+#: providers/gda-sybase-server/gda-sybase-error.c:119
 msgid "Not available"
 msgstr "Ni na voljo"
 
-#: providers/gda-interbase-server/gda-interbase-connection.c:259
-#: providers/gda-ldap-server/gda-ldap-connection.c:270
-#: providers/gda-mdb-server/gda-mdb-connection.c:357
-#: providers/gda-mysql-server/gda-mysql-connection.c:384
-#: providers/gda-oracle-server/gda-oracle-connection.c:424
-#: providers/gda-postgres-server/gda-postgres-connection.c:780
-#: providers/gda-sybase-server/gda-sybase-error.c:117
+#: providers/gda-interbase-server/gda-interbase-connection.c:268
+#: providers/gda-ldap-server/gda-ldap-connection.c:279
+#: providers/gda-mdb-server/gda-mdb-connection.c:366
+#: providers/gda-mysql-server/gda-mysql-connection.c:393
+#: providers/gda-oracle-server/gda-oracle-connection.c:433
+#: providers/gda-postgres-server/gda-postgres-connection.c:788
+#: providers/gda-sybase-server/gda-sybase-error.c:120
 msgid "error"
 msgstr "napaka"
 
-#: providers/gda-ldap-server/main-ldap.c:68
+#: providers/gda-ldap-server/main-ldap.c:69
 msgid "Could not register LDAP provider implementation"
 msgstr "Nisem mogel registrirati implementacije nuditelja LDAP"
 
-#: providers/gda-interbase-server/gda-interbase-connection.c:251
+#: providers/gda-interbase-server/gda-interbase-connection.c:260
 #, c-format
 msgid "Error code %ld"
 msgstr "©ifra napake %ld"
 
-#: providers/gda-interbase-server/main-interbase.c:69
+#: providers/gda-interbase-server/main-interbase.c:70
 msgid "Could not register INTERBASE provider implementation"
 msgstr "Nisem mogel registrirati implementacije nuditelja INTERBASE"
 
@@ -280,12 +270,12 @@ msgstr "Nisem mogel registrirati implementacije nuditelja INTERBASE"
 #: providers/gda-mysql-server/gda-mysql-connection.c:251
 #: providers/gda-oracle-server/gda-oracle-connection.c:295
 #: providers/gda-postgres-server/gda-postgres-connection.c:511
-#: providers/gda-sybase-server/gda-sybase-connection.c:253
+#: providers/gda-sybase-server/gda-sybase-connection.c:269
 #, c-format
 msgid "Unhandled SCHEMA_QTYPE %d"
 msgstr "Neobravnavan SCHEMA_QTYPE %d"
 
-#: providers/gda-mail-server/main-mail.c:69
+#: providers/gda-mail-server/main-mail.c:70
 msgid "Could not register Mail provider implementation"
 msgstr "Nisem mogel registrirati implementacije nuditelja po¹te"
 
@@ -310,9 +300,9 @@ msgid ""
 "%s:%d: You cannot provide a UNIX_SOCKET if you also provide either a HOST or "
 "a PORT. Please remove the UNIX_SOCKET, or remove both the HOST and PORT "
 "options"
-msgstr "%s:%d: Ne morete navesti UNIX_SOCKET èe zraven navedete tudi HOST ali PORT. " 
+msgstr ""
+"%s:%d: Ne morete navesti UNIX_SOCKET èe zraven navedete tudi HOST ali PORT. "
 "Prosim odstranite UNIX_SOCKET, ali odstranite oba HOST in PORT"
-
 
 #: providers/gda-mdb-server/gda-mdb-connection.c:147
 #, c-format
@@ -324,19 +314,19 @@ msgstr "%s:%d: Navesti morate ime datoteke z zbirko podatkov MS Access"
 msgid "Opening connection with filename=%s, user=%s, password=%s"
 msgstr "Vzpostavljam povezavo z ime datoteke=%s, uporabnik=%s, geslo=%s"
 
-#: providers/gda-mdb-server/gda-mdb-connection.c:406
-#: providers/gda-mysql-server/gda-mysql-connection.c:433
+#: providers/gda-mdb-server/gda-mdb-connection.c:415
+#: providers/gda-mysql-server/gda-mysql-connection.c:442
 msgid "mysql_recset is NULL"
 msgstr "mysql_recset je NULA"
 
-#: providers/gda-mdb-server/gda-mdb-connection.c:448
-#: providers/gda-mysql-server/gda-mysql-connection.c:475
-#: providers/gda-sybase-server/gda-sybase-connection.c:407
+#: providers/gda-mdb-server/gda-mdb-connection.c:457
+#: providers/gda-mysql-server/gda-mysql-connection.c:484
+#: providers/gda-sybase-server/gda-sybase-connection.c:432
 msgid "No table name given for SCHEMA_COLS"
 msgstr "Ni podanega imena tabele za SCHEMA_COLS"
 
-#: providers/gda-mdb-server/main-mdb.c:69
-#: providers/gda-mysql-server/main-mysql.c:69
+#: providers/gda-mdb-server/main-mdb.c:70
+#: providers/gda-mysql-server/main-mysql.c:70
 msgid "Could not register MySQL provider implementation"
 msgstr "Nisem mogel registrirati implementacije nuditelja MySQL"
 
@@ -354,28 +344,28 @@ msgstr ""
 msgid "gda_odbc_connection_open_schema: Unhandled SCHEMA_QTYPE %d\n"
 msgstr "gda_odbc_connection_open_schema: Obravnavan SCHEMA_QTYPE %d\n"
 
-#: providers/gda-odbc-server/gda-odbc-connection.c:617
-#: providers/gda-odbc-server/gda-odbc-connection.c:618
-#: providers/gda-odbc-server/gda-odbc-connection.c:619
-#: providers/gda-odbc-server/gda-odbc-connection.c:650
-#: providers/gda-odbc-server/gda-odbc-connection.c:651
-#: providers/gda-odbc-server/gda-odbc-connection.c:652
+#: providers/gda-odbc-server/gda-odbc-connection.c:626
+#: providers/gda-odbc-server/gda-odbc-connection.c:627
+#: providers/gda-odbc-server/gda-odbc-connection.c:628
+#: providers/gda-odbc-server/gda-odbc-connection.c:659
+#: providers/gda-odbc-server/gda-odbc-connection.c:660
+#: providers/gda-odbc-server/gda-odbc-connection.c:661
 msgid "no text"
 msgstr "ni besedila"
 
-#: providers/gda-odbc-server/main-odbc.c:68
+#: providers/gda-odbc-server/main-odbc.c:69
 msgid "Could not register ODBC provider implementation"
 msgstr "Nisem mogel registrirati implementacije nuditelja ODBC"
 
-#: providers/gda-oracle-server/gda-oracle-command.c:195
+#: providers/gda-oracle-server/gda-oracle-command.c:185
 msgid "Could not allocate statement handle"
 msgstr "Nisem mogel rezervirati obravnavalnika stavkov"
 
-#: providers/gda-oracle-server/gda-oracle-command.c:199
+#: providers/gda-oracle-server/gda-oracle-command.c:189
 msgid "command object being created without associated connection"
 msgstr "ukazni predmet ustvarjen brez ustrezne povezave"
 
-#: providers/gda-oracle-server/gda-oracle-command.c:226
+#: providers/gda-oracle-server/gda-oracle-command.c:220
 #, c-format
 msgid "Executing command '%s'"
 msgstr "Izvajam ukaz '%s'"
@@ -392,7 +382,7 @@ msgstr "napaka v OCIHandleAclloc() HTYPE_SERVER"
 msgid "error in OCIHandleAlloc() HTYPE_ERROR"
 msgstr "napaka v OCIHandleAclloc() HTYPE_ERROR"
 
-#: providers/gda-oracle-server/gda-oracle-connection.c:370
+#: providers/gda-oracle-server/gda-oracle-connection.c:379
 #, c-format
 msgid "Unknown ORACLE type %ld"
 msgstr "Neznan ORACLE-ov tip %ld"
@@ -405,16 +395,16 @@ msgstr "Neznan ORACLE-ov podatkovni tip v fill_field_values"
 msgid "recordset object being created without associated connection"
 msgstr "kartotehni predmet ustvarjen brez ustrezne povezave"
 
-#: providers/gda-oracle-server/main-oracle.c:68
+#: providers/gda-oracle-server/main-oracle.c:69
 msgid "Could not register ORACLE provider implementation"
 msgstr "Nisem mogel registrirati implementacije nuditelja ORACLE"
 
-#: providers/gda-postgres-server/gda-postgres-connection.c:880
-#: providers/gda-postgres-server/gda-postgres-connection.c:992
+#: providers/gda-postgres-server/gda-postgres-connection.c:888
+#: providers/gda-postgres-server/gda-postgres-connection.c:1000
 msgid "postgres_recset is NULL"
 msgstr "postgres_recset je NULA"
 
-#: providers/gda-postgres-server/main-postgres.c:68
+#: providers/gda-postgres-server/main-postgres.c:69
 msgid "Could not register PostgreSQL provider implementation"
 msgstr "Nisem mogel registrirati implementacije nuditelja PostzgreSQL"
 
@@ -476,294 +466,294 @@ msgstr "Ni vrnjenih podatkov, spro¹èam recordset strukturo"
 msgid "Freeing command structure failed"
 msgstr "Spro¹èanje ukazne strukture ni uspelo"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:133
+#: providers/gda-sybase-server/gda-sybase-connection.c:149
 msgid "Error allocating error structure"
 msgstr "Napaka ob rezervaciji strukture za napako"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:141
+#: providers/gda-sybase-server/gda-sybase-connection.c:157
 msgid "Not enough memory for sybase_Connection"
 msgstr "Ni dovolj pomnilnika za sybase_Connection"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:397
+#: providers/gda-sybase-server/gda-sybase-connection.c:422
 #, c-format
 msgid "schema_cols: table_name '%s'"
 msgstr "schema_cols: table_name '%s'"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:413
+#: providers/gda-sybase-server/gda-sybase-connection.c:438
 msgid "Could not allocate command structure"
 msgstr "Nisem mogel rezervirati ukazne strukture"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:435
+#: providers/gda-sybase-server/gda-sybase-connection.c:460
 msgid "Could not allocate enough memory for query"
 msgstr "Nisem mogel rezervirati poizvedbene strukture"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:449
+#: providers/gda-sybase-server/gda-sybase-connection.c:474
 msgid "Could not get recordset in schema_cols"
 msgstr "Nisem mogel dobiti recordset-a v schema_cols"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:481
-#: providers/gda-sybase-server/gda-sybase-connection.c:558
+#: providers/gda-sybase-server/gda-sybase-connection.c:506
+#: providers/gda-sybase-server/gda-sybase-connection.c:583
 #, c-format
 msgid "schema_tables: table name = '%s'"
 msgstr "schema_tables: ime tabele = '%s'"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:489
-#: providers/gda-sybase-server/gda-sybase-connection.c:566
+#: providers/gda-sybase-server/gda-sybase-connection.c:514
+#: providers/gda-sybase-server/gda-sybase-connection.c:591
 #, c-format
 msgid "schema_tables: table_schema = '%s'"
 msgstr "scema_tables: tabele_schema = '%s'"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:494
+#: providers/gda-sybase-server/gda-sybase-connection.c:519
 #, c-format
 msgid "schema_procedures: proc_catalog = '%s' UNUSED!\n"
 msgstr "schema_procedures: proc_catalog = '%s' NEUPORABLJENO!\n"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:498
+#: providers/gda-sybase-server/gda-sybase-connection.c:523
 #, c-format
 msgid "schema_procs: invalid constraint type %d"
 msgstr "schema_procs: neveljaven tip omejitve %d"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:508
+#: providers/gda-sybase-server/gda-sybase-connection.c:533
 msgid "Could not allocate cmd structure"
 msgstr "Nisem mogel rezervirat ukazne strukture"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:571
+#: providers/gda-sybase-server/gda-sybase-connection.c:596
 #, c-format
 msgid "schema_procedures: proc_catalog = '%s' UNUSED!"
 msgstr "schema_procedures: proc_catalog = '%s' NEUPORABLJEN!"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:575
+#: providers/gda-sybase-server/gda-sybase-connection.c:600
 #, c-format
 msgid "schema_tables: invalid constraint type %d"
 msgstr "schema_tables: neveljaven tip omejitve %d"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:636
+#: providers/gda-sybase-server/gda-sybase-connection.c:661
 #, c-format
 msgid "Invalid or unsupported constraint type: %d"
 msgstr "Neveljaven ali nepodprt tip omejitve: %d"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:677
+#: providers/gda-sybase-server/gda-sybase-connection.c:702
 msgid "Could not allocate Gda_ServerCommand"
 msgstr "Nisem mogel rezervirati Gda_ServerCommand"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:707
-#: providers/gda-sybase-server/gda-sybase-connection.c:712
+#: providers/gda-sybase-server/gda-sybase-connection.c:732
+#: providers/gda-sybase-server/gda-sybase-connection.c:737
 #, c-format
 msgid "connection status: %x"
 msgstr "stanje povezave: %x"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:708
+#: providers/gda-sybase-server/gda-sybase-connection.c:733
 #, c-format
 msgid "return code: %x"
 msgstr "vrnjena vrednost: %x"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:745
+#: providers/gda-sybase-server/gda-sybase-connection.c:770
 msgid "attempting reconnection"
 msgstr "posku¹am se znova povezati"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:884
+#: providers/gda-sybase-server/gda-sybase-connection.c:909
 #, c-format
 msgid "Reconnected to '%s'"
 msgstr "Znova povezan z '%s'"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:886
+#: providers/gda-sybase-server/gda-sybase-connection.c:911
 #, c-format
 msgid "Connected to %s"
 msgstr "Povezan z %s"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:894
+#: providers/gda-sybase-server/gda-sybase-connection.c:919
 #, c-format
 msgid "Selected database '%s'"
 msgstr "Izbrana zbirka podatkov '%s'"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:923
+#: providers/gda-sybase-server/gda-sybase-connection.c:948
 #, c-format
 msgid "%s: Could not allocate cmd structure"
 msgstr "%s: Nisem mogel rezervirati ukazne strukture"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:932
+#: providers/gda-sybase-server/gda-sybase-connection.c:957
 #, c-format
 msgid "%s: Could not allocate memory for cmd string"
 msgstr "%s: Nisem mogel rezervirati pomnilnika za ukazni niz"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:945
+#: providers/gda-sybase-server/gda-sybase-connection.c:970
 #, c-format
 msgid "%s: ct_command failed"
 msgstr "%s: ct_command ni uspela"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:954
+#: providers/gda-sybase-server/gda-sybase-connection.c:979
 #, c-format
 msgid "%s: sending command failed"
 msgstr "%s: po¹iljanje ukaza ni uspelo"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:965
+#: providers/gda-sybase-server/gda-sybase-connection.c:990
 #, c-format
 msgid "%s: selecting database failed"
 msgstr "%s: izbiranje zbirke podatkov ni uspelo"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:983
+#: providers/gda-sybase-server/gda-sybase-connection.c:1008
 #, c-format
 msgid "%s: use command failed"
 msgstr "%s: \"use\" ukaz ni uspel"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:1010
+#: providers/gda-sybase-server/gda-sybase-connection.c:1035
 msgid "Could not allocate locale structure"
 msgstr "Nisem mogel rezervirati strukture locale"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:1016
+#: providers/gda-sybase-server/gda-sybase-connection.c:1041
 #, c-format
 msgid "Could not set locale to '%s'"
 msgstr "Nisem mogel nastaviti locale na '%s'"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:1022
+#: providers/gda-sybase-server/gda-sybase-connection.c:1047
 #, c-format
 msgid "Could not configure locale to be '%s'"
 msgstr "Nisem mogel nastaviti locale, da bi bil '%s'"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:1027
+#: providers/gda-sybase-server/gda-sybase-connection.c:1052
 msgid "Could not drop locale structure"
 msgstr "Nisem mogel spustiti strukture locale"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:1040
+#: providers/gda-sybase-server/gda-sybase-connection.c:1065
 #, c-format
 msgid "Fatal error: %s\n"
 msgstr "Usodna napaka: %s\n"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:62
+#: providers/gda-sybase-server/gda-sybase-error.c:65
 #, c-format
 msgid "gda_sybase_error_make(%p,%p,%p,%p)"
 msgstr "gda_sybase_error_make(%p,%p,%p,%p)"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:71
+#: providers/gda-sybase-server/gda-sybase-error.c:74
 #, c-format
 msgid "No error flag ist set, though %s is called. This may be a bug."
-msgstr "Nobena zastavica napake ni postavljena kljub klicu %s. To je lahko hro¹è."
+msgstr ""
+"Nobena zastavica napake ni postavljena kljub klicu %s. To je lahko hro¹è."
 
-#: providers/gda-sybase-server/gda-sybase-error.c:135
+#: providers/gda-sybase-server/gda-sybase-error.c:138
 msgid "cs_diag() initialized"
 msgstr "cs_diag() inicializiran"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:138
+#: providers/gda-sybase-server/gda-sybase-error.c:141
 msgid "Could not initialize cs_diag()"
 msgstr "Nisem mogel inicializirati cs_diag()"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:145
+#: providers/gda-sybase-server/gda-sybase-error.c:148
 msgid "ct_diag() initialized"
 msgstr "ct_diag() inicializiran"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:148
+#: providers/gda-sybase-server/gda-sybase-error.c:151
 msgid "Could not initialize ct_diag()"
 msgstr "Nisem mogel inicializirati ct_diag()"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:182
+#: providers/gda-sybase-server/gda-sybase-error.c:185
 #, c-format
 msgid "%s could not find server implementation"
 msgstr "%s nisem na¹el implementacije stre>nika"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:188
+#: providers/gda-sybase-server/gda-sybase-error.c:191
 #, c-format
 msgid "%s could not get cnc userdata"
 msgstr "%s ne more dobit cnc podatkov uporabnika"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:200
+#: providers/gda-sybase-server/gda-sybase-error.c:203
 msgid "Could not get # of messages"
 msgstr "Nisem uspel dobiti ¹tevila sporoèil"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:205
+#: providers/gda-sybase-server/gda-sybase-error.c:208
 #, c-format
 msgid "%d ctlib messages to fetch"
-msgstr "%d ctlib sporoèil za prenos"
+msgstr "%d sporoèil ctlib za prenos"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:207
+#: providers/gda-sybase-server/gda-sybase-error.c:210
 #, c-format
 msgid "%d ctlib message to fetch"
-msgstr "%d ctlib sporoèil za prenos"
+msgstr "%d sporoèil ctlib za prenos"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:243
+#: providers/gda-sybase-server/gda-sybase-error.c:246
 msgid "error is nullpointer in gda_sybase_messages_handle"
 msgstr "napaka je nièni kazalec v gda_sybase_messages_handle"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:268
-#: providers/gda-sybase-server/gda-sybase-error.c:335
-#: providers/gda-sybase-server/gda-sybase-error.c:378
+#: providers/gda-sybase-server/gda-sybase-error.c:271
+#: providers/gda-sybase-server/gda-sybase-error.c:338
+#: providers/gda-sybase-server/gda-sybase-error.c:381
 msgid "Could not get # of server messages"
 msgstr "Nisem mogel dobiti ¹tevila stre¾nikovih sporoèil"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:276
+#: providers/gda-sybase-server/gda-sybase-error.c:279
 #, c-format
 msgid "Fetching %d client messages"
 msgstr "Dobivam %d odjemalèevih sporoèil"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:278
+#: providers/gda-sybase-server/gda-sybase-error.c:281
 #, c-format
 msgid "Fetching %d client message"
 msgstr "Dobivam %d odjemalèevo sporoèilo"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:287
+#: providers/gda-sybase-server/gda-sybase-error.c:290
 #, c-format
 msgid "Could not get client msg # %d"
 msgstr "Nisem mogel dobiti odjemalèevega sporoèila ¹tevilka %d"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:303
+#: providers/gda-sybase-server/gda-sybase-error.c:306
 msgid "Could not get # of client messages"
 msgstr "Nisem mogel dobiti ¹tevila odjemalèevih sporoèil"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:311
+#: providers/gda-sybase-server/gda-sybase-error.c:314
 msgid "Could not clear client messages"
 msgstr "Nisem mogel poèistiti odjemalèevih sporoèil"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:343
+#: providers/gda-sybase-server/gda-sybase-error.c:346
 #, c-format
 msgid "Fetching %d server messages"
 msgstr "Dobivam %d stre¾nikovih sporoèil"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:345
+#: providers/gda-sybase-server/gda-sybase-error.c:348
 #, c-format
 msgid "Fetching %d server message"
 msgstr "Dobivam %d stre¾nikovo sporoèilo"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:354
+#: providers/gda-sybase-server/gda-sybase-error.c:357
 #, c-format
 msgid "Could not get server msg # %d"
 msgstr "Nisem mogel dobiti stre¾nikovega sporoèila ¹tevilka %d"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:386
+#: providers/gda-sybase-server/gda-sybase-error.c:389
 msgid "Could not clear server messages"
 msgstr "Nisem mogel poèistiti stre¾nikovih sporoèil"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:408
-#: providers/gda-sybase-server/gda-sybase-error.c:444
+#: providers/gda-sybase-server/gda-sybase-error.c:411
+#: providers/gda-sybase-server/gda-sybase-error.c:447
 msgid "Could not get # of cslib messages"
-msgstr "Nisem mogel dobiti ¹tevila cslib sporoèil"
+msgstr "Nisem mogel dobiti ¹tevila sporoèil cslib"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:416
+#: providers/gda-sybase-server/gda-sybase-error.c:419
 #, c-format
 msgid "Fetching %d cslib messages"
-msgstr "Dobivam %d cslib sporoèil"
+msgstr "Dobivam %d sporoèil cslib"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:418
-#, c-format
-msgid "Fetchong %d cslib message"
-msgstr "Dobivam %d cslib sporoèilo"
+#: providers/gda-sybase-server/gda-sybase-error.c:421
+msgid "Fetching %d cslib message"
+msgstr "Dobivam %d sporoèilo cslib"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:428
+#: providers/gda-sybase-server/gda-sybase-error.c:431
 #, c-format
 msgid "Could not get cslib msg # %d"
-msgstr "Nisem mogel dobiti cslib sporoèila ¹tevilka %d"
+msgstr "Nisem mogel dobiti sporoèila cslib ¹tevilka %d"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:452
+#: providers/gda-sybase-server/gda-sybase-error.c:455
 msgid "Could not clear cslib messages"
-msgstr "Nisem mogel poèistiti cslib sporoèil"
+msgstr "Nisem mogel poèistiti sporoèil cslib"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:584
+#: providers/gda-sybase-server/gda-sybase-error.c:587
 msgid "Server message:"
 msgstr "Sporoèilo stre¾nika:"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:593
+#: providers/gda-sybase-server/gda-sybase-error.c:596
 msgid "Client message:"
 msgstr "Sporoèilo odjemalca:"
 
-#: providers/gda-sybase-server/gda-sybase-error.c:600
+#: providers/gda-sybase-server/gda-sybase-error.c:603
 msgid "CS-Library error:"
 msgstr "Napaka knji¾nice CS:"
 
@@ -832,100 +822,97 @@ msgstr "zaznan neveljaven tip, prekinjam"
 msgid "could not allocate field"
 msgstr "nisem mogel rezervirati polja"
 
-#: providers/gda-sybase-server/main-sybase.c:73
+#: providers/gda-sybase-server/main-sybase.c:74
 msgid "Could not register gda-sybase provider implementation"
 msgstr "Nisem mogel registrirati implementacije nuditelja gda-sybase"
 
-#: report/gda-report-engine.c:86
+#: report/gda-report-engine.c:207
 #, c-format
 msgid "CORBA exception unloading report engine: %s"
 msgstr "Izjema CORBA med spro¹èanjem ustvarjalca poroèil: %s"
 
-#: report/server/gda-report-server-main.c:43
-#: report/server/gda-report-server-main.c:50
+#: report/server/gda-report-server-main.c:41
+#: report/server/gda-report-server-main.c:48
 #, c-format
 msgid "Received signal %d, shutting down."
 msgstr "Prejel signal %d, ustavljam se"
 
-#: report/server/gda-report-server-main.c:54
+#: report/server/gda-report-server-main.c:52
 #, c-format
 msgid "Received signal %d, shutting down cleanly"
 msgstr "Prejel signal %d, ustavljam se po pravilih"
 
-#: report/server/gda-report-server-main.c:96
+#: report/server/gda-report-server-main.c:92
 msgid "Failed to initialize OAF: please mail bug report to OAF maintainers"
-msgstr "Nisem uspel inicializirati OAFa: prosim po¹ljite poroèilo o hro¹èu vzdr¾evalcem OAFa"
+msgstr ""
+"Nisem uspel inicializirati OAFa: prosim po¹ljite poroèilo o hro¹èu "
+"vzdr¾evalcem OAFa"
 
-#: report/server/gda-report-server-main.c:106
+#: report/server/gda-report-server-main.c:101
 msgid "Could not activate report engine"
 msgstr "Nisem uspel aktivirati ustvarjalca poroèil"
 
-#: report/server/gda-report-server-main.c:123
+#: report/server/gda-report-server-main.c:116
 msgid ""
 "Another instance of the report engine is already registered with OAF. "
 "Exiting..."
 msgstr ""
-"Ena in¹tanca ustvarjalca poroèil je ¾e registrirana pri OAFu."
-"Zakljuèujem..."
+"Ena in¹tanca ustvarjalca poroèil je ¾e registrirana pri OAFu.Zakljuèujem..."
 
-#: report/server/gda-report-server-main.c:126
+#: report/server/gda-report-server-main.c:119
 msgid "Unknown error registering report engine with OAF. Exiting"
-msgstr "Neznana napaka ob registiranju ustvarjalca poroèil pri OAFu. Zakljuèujem"
+msgstr ""
+"Neznana napaka ob registiranju ustvarjalca poroèil pri OAFu. Zakljuèujem"
 
-#: report/server/gda-report-server-main.c:130
+#: report/server/gda-report-server-main.c:123
 #, c-format
 msgid "Registered report engine with ID = %s"
 msgstr "Ustvarjalec poroèil registiran z ID = %s"
 
-#: tools/gda-run.c:30
+#: tools/gda-run.c:34
 msgid "database name"
 msgstr "ime zbirke podatkov"
 
-#: tools/gda-run.c:30
+#: tools/gda-run.c:34
 msgid "DATABASE"
 msgstr "ZBIRKA PODATKOV"
 
-#: tools/gda-run.c:31
+#: tools/gda-run.c:35
 msgid "user name"
 msgstr "uporabni¹ko ime"
 
-#: tools/gda-run.c:31
+#: tools/gda-run.c:35
 msgid "USER-NAME"
 msgstr "UPORABNI©KO IME"
 
-#: tools/gda-run.c:32
+#: tools/gda-run.c:36
 msgid "password"
 msgstr "geslo"
 
-#: tools/gda-run.c:32
+#: tools/gda-run.c:36
 msgid "PASSWORD"
 msgstr "GESLO"
 
-#: tools/gda-run.c:33
+#: tools/gda-run.c:37
 msgid "file name"
 msgstr "ime datoteke"
 
-#: tools/gda-run.c:33
+#: tools/gda-run.c:37
 msgid "FILE-NAME"
 msgstr "IME-DATOTEKE"
 
-#: tools/gda-run.c:105
+#: tools/gda-run.c:109
 #, c-format
 msgid "%s: misconfigured DSN entry"
 msgstr "%s: napaèno nastavljen DSN vpis"
 
-#: tools/gda-run.c:120
+#: tools/gda-run.c:124
 #, c-format
 msgid "%s: data source '%s' not found\n"
 msgstr "%s: vir podatkov '%s' ni bil najden\n"
 
+#~ msgid "%s: not implemented"
+#~ msgstr "%s: ni implementiran"
 
-# Smart report:
-# Total untranslated messages in file: 178 
-# Translations made:
-# full: 5
-# smart: 0
-# cond: 17
-# total: 22 ; distinct: 19
-
-
+#~ msgid "Fetchong %d cslib message"
+#~ msgstr "Dobivam %d cslib sporoèilo"
