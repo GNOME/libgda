@@ -1,3 +1,8 @@
+2001-03-10  Carlos Perelló Marín <carlos@gnome-db.org>
+
+        * updated.sh: Removed because don't run correctly in all
+          situations, please use xml-i18n-update directly.
+
 2001-02-14  Akira TAGOH  <tagoh@gnome-db.org>
 
 	* ja.po: Updated Japanese translation.
