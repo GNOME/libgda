@@ -5,14 +5,14 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda 0.2.9\n"
-"POT-Creation-Date: 2001-11-22 14:07+0100\n"
-"PO-Revision-Date: 2001-11-11 12:58CET\n"
+"POT-Creation-Date: 2001-12-13 16:48+0100\n"
+"PO-Revision-Date: 2001-12-13 16:57CET\n"
 "Last-Translator: Stanislav Visnovsky <visnovsky@nenya.ms.mff.cuni.cz>\n"
 "Language-Team: Slovak <sk-i18n@lists.linux.sk>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: KBabel 0.9.5\n"
+"X-Generator: KBabel 0.9.6\n"
 
 #: lib/gda-client/gda-connection-pool.c:268
 #, c-format
@@ -719,41 +719,35 @@ msgid "Could not get # of messages"
 msgstr "Nie je možné získať počet správ"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:356
-#, fuzzy
 msgid "ct_diag failed, Could not get # of client messages(1)"
-msgstr "Nie je možné získať počet správ klienta"
+msgstr "ct_diag zlyhalo, Nie je možné získať počet správ klienta (1)"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:381
-#, fuzzy
 msgid "Could not get client msg #"
-msgstr "Nie je možné získať počet správ klienta %d"
+msgstr "Nie je možné získať počet správ klienta"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:394
 #: providers/gda-sybase-server/gda-sybase-error.c:396
 #: providers/gda-sybase-server/gda-sybase-error.c:688
 #: providers/gda-sybase-server/gda-sybase-error.c:690
-#, fuzzy
 msgid "Client Message:"
 msgstr "Správa klienta:"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:424
-#, fuzzy
 msgid "ct_diag failed, Could not get # of client messages(2)"
-msgstr "Nie je možné získať počet správ klienta"
+msgstr "ct_diag zlyhalo, Nie je možné získať počet správ klienta (2)"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:442
 msgid "Could not clear client messages"
 msgstr "Nie je možné vymazať správy klienta"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:486
-#, fuzzy
 msgid "Could not get # of server messages(1)"
-msgstr "Nie je možné získať počet správ serveru"
+msgstr "Nie je možné získať počet správ serveru (1)"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:510
-#, fuzzy
 msgid "Could not get server msg #"
-msgstr "Nie je možné získať počet správ serveru %d"
+msgstr "Nie je možné získať počet správ serveru"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:570
 msgid "Could not get # of server messages"
@@ -778,14 +772,12 @@ msgid "Fetching %d cslib message"
 msgstr "Získavam %d správu cslib"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:672
-#, fuzzy
 msgid "Could not get cslib msg #"
-msgstr "Nie je možné získať počet správ cslib %d"
+msgstr "Nie je možné získať počet správ cslib"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:711
-#, fuzzy
 msgid "Could not get # of cslib messages(2)"
-msgstr "Nie je možné získať počet správ cslib"
+msgstr "Nie je možné získať počet správ cslib (2)"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:729
 msgid "Could not clear cslib messages"
@@ -793,23 +785,23 @@ msgstr "Nie je možné vymazať správy cslib"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:761
 msgid "SYB"
-msgstr ""
+msgstr "SYB"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:763
 msgid "severity"
-msgstr ""
+msgstr "dôležitosť"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:765
 msgid "number"
-msgstr ""
+msgstr "počet"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:767
 msgid "origin"
-msgstr ""
+msgstr "pôvod"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:769
 msgid "layer"
-msgstr ""
+msgstr "vrstva"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:776
 #, c-format
@@ -818,6 +810,9 @@ msgid ""
 "\tOperating system error number(%ld):\n"
 "\t%s"
 msgstr ""
+"\n"
+"\tČíslo chyby operačného systému (%ld):\n"
+"\t%s"
 
 #: providers/gda-sybase-server/gda-sybase-recordset.c:219
 #: providers/gda-tds-server/gda-tds-recordset.c:199
@@ -1033,26 +1028,3 @@ msgstr "%s: zdroj dát '%s' nenájdený\n"
 msgid "Could not register <PROVIDER-NAME> provider implementation"
 msgstr "Nie je možné registrovať implementáciu <PROVIDER-NAME> poskytovateľa"
 
-#~ msgid "gda_sybase_error_make(%p,%p,%p,%p)"
-#~ msgstr "gda_sybase_error_make(%p,%p,%p,%p)"
-
-#~ msgid "%d ctlib messages to fetch"
-#~ msgstr "%d ctlib správ pre získanie"
-
-#~ msgid "%d ctlib message to fetch"
-#~ msgstr "%d ctlib správa pre získanie"
-
-#~ msgid "error is nullpointer in gda_sybase_messages_handle"
-#~ msgstr "chyba je null v gda_sybase_messages_handle"
-
-#~ msgid "Fetching %d client messages"
-#~ msgstr "Získavam %d správ klienta"
-
-#~ msgid "Fetching %d client message"
-#~ msgstr "Získavam %d správu klienta"
-
-#~ msgid "Fetching %d server messages"
-#~ msgstr "Získavam %d správ serveru"
-
-#~ msgid "Fetching %d server message"
-#~ msgstr "Získavam %d správu serveru"
