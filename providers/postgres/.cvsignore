@@ -1,2 +1,8 @@
 Makefile
 Makefile.in
+GNOME_Database_Provider_Postgres.server
+*.o
+*.lo
+gda-postgres-srv-2
+.deps
+.libs

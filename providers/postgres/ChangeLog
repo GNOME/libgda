@@ -1,0 +1,23 @@
+2001-12-19  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* GNOME_Database_Provider_Postgres.server.in: fixed gda_params
+	attribute, which was copied from MySQL, so was invalid
+
+	* Makefile.am: added '-2' suffix to executable name
+
+2001-12-18  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
+	* gda-postgres.h: Initial version
+	* gda-postgres-provider.h: Initial version
+	* gda-postgres-provider.c: Initial version
+	* gda-postgres-recordset.c: Initial version
+	* gda-postgres-recordset.h: Initial version
+	* GNOME_Database_Provider_Postgres.server.in: Initial version
+	* Changelog: Initial version
+	* main.c: Initial version
+	* Makefile.am: Initial version
+	* utils.c: Initial version
+
+	Based heavily upon the work by Rodrigo in the MySQL provider and
+	Vivien in the gnome-1-x PostgreSQL provider.
+
