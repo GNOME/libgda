@@ -4,6 +4,10 @@
 
         * providers/sybase/*: first working release of new sybase-provider,
         supporting rowresults and schemas
+	* providers/freetds/*: config.h include fix and schema fixes
+	* testing/sybase-test{c,h}, testing/client.c, testing/Makefile.am:
+	added sybase tests
+	* testing/client.c: fixed open_connection to use configured password
         * configure.in: activated sybase provider, fixed libraries
 
 2002-11-12  Rodrigo Moya <rodrigo@gnome-db.org>
