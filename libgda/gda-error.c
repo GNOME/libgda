@@ -204,7 +204,7 @@ gda_error_set_description (GdaError *error, const gchar *description)
  *
  * Returns: @error's number. 
  */
-const glong
+glong
 gda_error_get_number (GdaError * error)
 {
 	g_return_val_if_fail (GDA_IS_ERROR (error), -1);

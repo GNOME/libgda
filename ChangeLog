@@ -1,3 +1,8 @@
+2003-12-19  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* libgda/gda-error.[ch] (gda_error_get_number): removed 'const' from
+	function's return type.
+
 2003-12-17  Laurent Sansonetti <lrz@gnome.org>
 
 	* providers/bdb/gda-bdb.h:
