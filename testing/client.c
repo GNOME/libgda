@@ -55,8 +55,12 @@ show_schema (GdaConnection *cnc, GdaConnectionSchema schema, const gchar *label)
 
 			value = gda_data_model_get_value_at (model, c, r);
 			str = gda_value_stringify ((GdaValue *) value);
-			g_print ("\t%s", str);
-			g_free (str);
+			if (str) {
+				g_print ("\t%s", str);
+				g_free (str);
+			} else {
+				g_print("\t??NULL??");
+			}
 		}
 		g_print ("\n");
 	}

@@ -33,6 +33,10 @@
 #include <libxml/parser.h>
 #include <sys/stat.h>
 
+#ifdef LIBGDA_WIN32
+#include <io.h>
+#endif
+
 #define LIBGDA_USER_CONFIG_DIR G_DIR_SEPARATOR_S ".libgda"
 #define LIBGDA_USER_CONFIG_FILE LIBGDA_USER_CONFIG_DIR G_DIR_SEPARATOR_S \
 				"config"
@@ -233,7 +237,10 @@ get_config_client ()
 			g_free (full_file);
 
 		}
-
+		if (!g_get_home_dir ()) {
+			/* this can occur on win98, and maybe other win32 platforms */
+			return config_client;
+		}
 		user_config = g_strdup_printf ("%s%s", g_get_home_dir (),
 						LIBGDA_USER_CONFIG_FILE);
 		if (g_file_get_contents (user_config, &full_file, &len, NULL)){
@@ -247,7 +254,11 @@ get_config_client ()
 				dirpath = g_strdup_printf ("%s%s", g_get_home_dir (),
 								LIBGDA_USER_CONFIG_DIR);
 				if (!g_file_test (dirpath, G_FILE_TEST_IS_DIR)){
+#ifdef LIBGDA_WIN32
+					if (mkdir (dirpath))
+#else
 					if (mkdir (dirpath, 0700))
+#endif
 						g_warning ("Error creating directory %s", dirpath);
 				}
 
