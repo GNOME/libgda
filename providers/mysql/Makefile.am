@@ -1,11 +1,11 @@
-bin_PROGRAMS = gda-mysql-srv
+bin_PROGRAMS = gda-mysql-srv-2
 
 INCLUDES = \
 	-I. \
 	$(LIBGDA_CFLAGS) \
 	$(MYSQL_CFLAGS)
 
-gda_mysql_srv_SOURCES = \
+gda_mysql_srv_2_SOURCES = \
 	gda-mysql-provider.c \
 	gda-mysql-provider.h \
 	gda-mysql-recordset.c \
@@ -13,7 +13,7 @@ gda_mysql_srv_SOURCES = \
 	gda-mysql.h \
 	main.c \
 	utils.c
-gda_mysql_srv_LDADD = \
+gda_mysql_srv_2_LDADD = \
 	$(LIBGDA_LIBS) \
 	$(top_builddir)/libgda/libgda-2.la \
 	$(MYSQL_LIBS)

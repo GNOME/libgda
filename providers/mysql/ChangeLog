@@ -1,5 +1,9 @@
 2001-12-18  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* Makefile.am:
+	* GNOME_Database_Provider_MySQL.server.in: added '-2' suffix
+	to executable name
+
 	* gda-mysql-recordset.c (fetch_func): implemented
 	(describe_func): implemented
 
