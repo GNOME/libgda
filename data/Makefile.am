@@ -7,4 +7,5 @@ xml_DATA    = 	gda-xml-query.dtd 	\
 		gda-xml-query.xsl
 
 EXTRA_DIST = \
-	$(config_DATA)
+	$(config_DATA) \
+	$(xml_DATA)
