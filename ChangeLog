@@ -1,5 +1,10 @@
 2003-09-01  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* providers/xml/gda-xml-provider.c: killed warnings.
+	(process_sql_commands): added missing implementation.
+
+2003-09-01  Rodrigo Moya <rodrigo@gnome-db.org>
+
 	* doc/C/tmpl/*.sgml:
 	* libgda/gda-parameter.c:
 	* libgda/gda-quark-list.c: added more inline documentation.
