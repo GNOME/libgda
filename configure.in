@@ -276,45 +276,54 @@ fi
 AM_CONDITIONAL(TDS, test x$freetdsdir != x)
 
 dnl Test for Sybase
-dnl AC_ARG_WITH(sybase,
-dnl --with-sybase=<directory>     use SyBASE backend in <directory>,[
-dnl if test $withval != yes
-dnl then
-dnl 	dir=$withval
-dnl else
-dnl 	dir="/opt2/sybase"
-dnl fi
-dnl AC_MSG_CHECKING(for Sybase files)
-dnl sybasedir=""
-dnl for d in $dir /usr/local/sybase /opt/sybase /opt/packages/sybase /opt/sybase-11.9.2
-dnl do
-dnl	if test -f $d/include/ctpublic.h
-dnl	then
-dnl		AC_MSG_RESULT(found Sybase in $d)
-dnl		sybasedir=$d
-dnl		break
-dnl	fi
-dnl done
-dnl if test x$sybasedir = x
-dnl then
-dnl 	AC_MSG_WARN(Sybase backend not used)
-dnl else
-dnl 	SYBASE_CFLAGS=-I${sybasedir}/include
-dnl 	SYBASE_LIBS="-L${sybasedir}/lib"
-dnl 	AC_MSG_CHECKING(for Sybase target host system type)
-dnl 	AC_MSG_RESULT($host)
-dnl 	case "$host" in
-dnl 	*linux*) sybase_ctlibs="-lct -lcs -lsybtcl -lcomn -lintl"
-dnl 		sybase_blklibs="-lblk $SYBASE_CTLIBS"
-dnl 		SYBASE_LIBS="${SYBASE_LIBS} ${sybase_ctlibs} ${sybase_blklibs)"
-dnl 		AC_DEFINE(HAVE_SYBASE)
-dnl 		;;
-dnl 	*) AC_MSG_WARN(this host type is unsupported; sybase backend not used)
-dnl 		sybasedir=""
-dnl 		;;
-dnl 	esac
-dnl fi
-dnl ])
+AC_ARG_WITH(sybase,
+--with-sybase=<directory>        use Sybase backend in <directory>,[
+AC_MSG_CHECKING(for Sybase files)
+if test $withval != yes
+then
+	dir=$withval
+else
+	dir="/opt2/sybase"
+fi
+sybasedir=""
+for d in $dir /usr/local/sybase /opt/sybase /opt/packages/sybase
+do
+	if test -f "$d/include/ctpublic.h"
+	then
+		AC_MSG_RESULT(found Sybase in $d)
+		sybasedir="$d"
+		break
+	fi
+	for v in 11.9.2 11.0.3.3
+	do
+		if test -f "$d-$v/include/ctpublic.h"
+		then
+			AC_MSG_RESULT(found Sybase in $d-$v)
+			sybasedir="$d-$v"
+			break
+		fi
+	done
+done
+if test x$sybasedir = x
+then
+	AC_MSG_WARN(Sybase backend not used)
+else
+	SYBASE_CFLAGS="-I${sybasedir}/include"
+	SYBASE_LIBS="-L${sybasedir}/lib"
+	AC_MSG_CHECKING(for Sybase host system type)
+	AC_MSG_RESULT($host)
+	case "$host" in
+		*linux*) sybase_ctlibs="-lct -lcs -lsybtcl -lcomn -lintl"
+			sybase_blklibs="-lblk ${sybase_ctlibs}"
+			SYBASE_LIBS="${SYBASE_LIBS} ${sybase_ctlibs} ${sybase_blklibs}"
+			AC_DEFINE(HAVE_SYBASE)
+			;;
+		*) AC_MSG_WARN(this host type is unsupported; sybase backend not used)
+			sybasedir=""
+			;;
+	esac
+fi
+])
 
 AM_CONDITIONAL(SYBASE, test x$sybasedir != x)
 
