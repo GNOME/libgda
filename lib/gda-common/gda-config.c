@@ -470,7 +470,7 @@ gda_provider_list (void)
 			retval = g_list_append(retval, (gpointer) provider);
 		}
 
-		/* FIXME: free servlist */
+		CORBA_free (servlist);
 	}
 	CORBA_exception_free(&ev);
 

@@ -1,3 +1,8 @@
+2001-06-26  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-config.c (gda_provider_list): CORBA_free the list returned
+	by oaf_query
+
 2001-06-13  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-util.c (gda_util_hash_to_list): added new function for converting
