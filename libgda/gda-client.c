@@ -27,6 +27,7 @@
 #include <libgda/gda-config.h>
 #include <libgda/gda-intl.h>
 #include <libgda/gda-log.h>
+#include <libgda/gda-server-provider.h>
 #include <string.h>
 #include "gda-marshal.h"
 
@@ -86,6 +87,20 @@ emit_client_error (GdaClient *client, GdaConnection *cnc, const gchar *format, .
 	g_signal_emit (G_OBJECT (client), gda_client_signals[ERROR], 0, cnc, list);
 }
 
+static void
+free_hash_provider (gpointer key, gpointer value, gpointer user_data)
+{
+	gchar *iid = (gchar *) key;
+	LoadedProvider *prv = (LoadedProvider *) value;
+
+	g_free (iid);
+	if (prv) {
+		g_object_unref (G_OBJECT (prv->provider));
+		g_module_close (prv->handle);
+		g_free (prv);
+	}
+}
+
 /*
  * Callbacks
  */
@@ -109,6 +124,42 @@ cnc_weak_cb (gpointer user_data, GObject *object)
 	g_return_if_fail (GDA_IS_CLIENT (client));
 
 	client->priv->connections = g_list_remove (client->priv->connections, cnc);
+}
+
+typedef struct {
+	GdaClient *client;
+	GdaServerProvider *provider;
+	gboolean already_removed;
+} prv_weak_cb_data;
+
+static void
+remove_provider_in_hash (gpointer key, gpointer value, gpointer user_data)
+{
+	gchar *provider_id = key;
+	LoadedProvider *prv = value;
+	prv_weak_cb_data *cb_data = user_data;
+
+	if (prv == cb_data->provider && !cb_data->already_removed) {
+		g_hash_table_remove (cb_data->client->priv->providers, key);
+		free_hash_provider (key, value, NULL);
+		cb_data->already_removed = TRUE;
+	}
+}
+
+static void
+provider_weak_cb (gpointer user_data, GObject *object)
+{
+	prv_weak_cb_data cb_data;
+	GdaServerProvider *provider = (GdaServerProvider *) object;
+	GdaClient *client = (GdaClient *) user_data;
+
+	g_return_if_fail (GDA_IS_SERVER_PROVIDER (provider));
+	g_return_if_fail (GDA_IS_CLIENT (client));
+
+	cb_data.client = client;
+	cb_data.provider = provider;
+	cb_data.already_removed = FALSE;
+	g_hash_table_foreach (client->priv->providers, (GHFunc) remove_provider_in_hash, &cb_data);
 }
 
 /*
@@ -142,20 +193,6 @@ gda_client_init (GdaClient *client, GdaClientClass *klass)
 	client->priv = g_new0 (GdaClientPrivate, 1);
 	client->priv->providers = g_hash_table_new (g_str_hash, g_str_equal);
 	client->priv->connections = NULL;
-}
-
-static void
-free_hash_provider (gpointer key, gpointer value, gpointer user_data)
-{
-	gchar *iid = (gchar *) key;
-	LoadedProvider *prv = (LoadedProvider *) value;
-
-	g_free (iid);
-	if (prv) {
-		g_object_unref (G_OBJECT (prv->provider));
-		g_module_close (prv->handle);
-		g_free (prv);
-	}
 }
 
 static void
@@ -292,6 +329,8 @@ gda_client_open_connection (GdaClient *client,
 			return NULL;
 		}
 
+		g_module_make_resident (prv->handle);
+
 		g_module_symbol (prv->handle, "plugin_get_name",
 				 (gpointer) &prv->plugin_get_name);
 		g_module_symbol (prv->handle, "plugin_get_description",
@@ -320,6 +359,7 @@ gda_client_open_connection (GdaClient *client,
 		}
 
 		g_object_ref (G_OBJECT (prv->provider));
+		g_object_weak_ref (G_OBJECT (prv->provider), (GWeakNotify) provider_weak_cb, client);
 		g_hash_table_insert (client->priv->providers,
 				     g_strdup (dsn_info->provider),
 				     prv);
