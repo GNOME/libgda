@@ -43,6 +43,9 @@ static gboolean gda_sqlite_provider_open_connection (GdaServerProvider *provider
 						     const gchar *password);
 static gboolean gda_sqlite_provider_close_connection (GdaServerProvider *provider,
 						      GdaConnection *cnc);
+static gboolean gda_sqlite_provider_create_database (GdaServerProvider *provider,
+						     GdaConnection *cnc,
+						     const gchar *name);
 static GList *gda_sqlite_provider_execute_command (GdaServerProvider *provider,
 						   GdaConnection *cnc,
 						   GdaCommand *cmd,
@@ -77,6 +80,7 @@ gda_sqlite_provider_class_init (GdaSqliteProviderClass *klass)
 	object_class->finalize = gda_sqlite_provider_finalize;
 	provider_class->open_connection = gda_sqlite_provider_open_connection;
 	provider_class->close_connection = gda_sqlite_provider_close_connection;
+	provider_class->create_database = gda_sqlite_provider_create_database;
 	provider_class->execute_command = gda_sqlite_provider_execute_command;
 	provider_class->begin_transaction = gda_sqlite_provider_begin_transaction;
 	provider_class->commit_transaction = gda_sqlite_provider_commit_transaction;
@@ -268,6 +272,20 @@ process_sql_commands (GList *reclist, GdaConnection *cnc,
 	return reclist;
 }
 
+/* create_database handler for the GdaSqliteProvider class */
+static gboolean
+gda_sqlite_provider_create_database (GdaServerProvider *provider,
+				     GdaConnection *cnc,
+				     const gchar *name)
+{
+	GdaSqliteProvider *sqlite_prv = (GdaSqliteProvider *) provider;
+
+	g_return_val_if_fail (GDA_IS_SQLITE_PROVIDER (sqlite_prv), FALSE);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+
+	gda_connection_add_error_string (cnc, _("Only one database per connection is allowed"));
+	return FALSE;
+}
 
 /* execute_command handler for the GdaSqliteProvider class */
 static GList *

@@ -42,6 +42,10 @@ static gboolean gda_postgres_provider_open_connection (GdaServerProvider *provid
 static gboolean gda_postgres_provider_close_connection (GdaServerProvider *provider,
 							GdaConnection *cnc);
 
+static gboolean gda_postgres_provider_create_database (GdaServerProvider *provider,
+						       GdaConnection *cnc,
+						       const gchar *name);
+
 static GList *gda_postgres_provider_execute_command (GdaServerProvider *provider,
 						     GdaConnection *cnc,
 						     GdaCommand *cmd,
@@ -110,6 +114,7 @@ gda_postgres_provider_class_init (GdaPostgresProviderClass *klass)
 	object_class->finalize = gda_postgres_provider_finalize;
 	provider_class->open_connection = gda_postgres_provider_open_connection;
 	provider_class->close_connection = gda_postgres_provider_close_connection;
+	provider_class->create_database = gda_postgres_provider_create_database;
 	provider_class->execute_command = gda_postgres_provider_execute_command;
 	provider_class->begin_transaction = gda_postgres_provider_begin_transaction;
 	provider_class->commit_transaction = gda_postgres_provider_commit_transaction;
@@ -426,6 +431,27 @@ process_sql_commands (GList *reclist, GdaConnection *cnc,
 	return reclist;
 }
 
+/* create_database handler for the GdaPostgresProvider class */
+static gboolean
+gda_postgres_provider_create_database (GdaServerProvider *provider,
+				       GdaConnection *cnc,
+				       const gchar *name)
+{
+	gboolean retval;
+	gchar *sql;
+
+	GdaPostgresProvider *pg_prv = (GdaPostgresProvider *) provider;
+
+	g_return_val_if_fail (GDA_IS_POSTGRES_PROVIDER (pg_prv), FALSE);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+
+	sql = g_strdup_printf ("CREATE DATABASE %s", name);
+	retval = gda_postgres_provider_single_command (pg_prv, cnc, sql);
+	g_free (sql);
+
+	return retval;
+}
+
 /* execute_command handler for the GdaPostgresProvider class */
 static GList *
 gda_postgres_provider_execute_command (GdaServerProvider *provider,
@@ -538,8 +564,15 @@ static gboolean gda_postgres_provider_supports (GdaServerProvider *provider,
 	g_return_val_if_fail (GDA_IS_POSTGRES_PROVIDER (pgprv), FALSE);
 
 	switch (feature) {
+	case GDA_CONNECTION_FEATURE_AGGREGATES :
+	case GDA_CONNECTION_FEATURE_INDEXES :
+	case GDA_CONNECTION_FEATURE_PROCEDURES :
+	case GDA_CONNECTION_FEATURE_SEQUENCES :
 	case GDA_CONNECTION_FEATURE_SQL :
 	case GDA_CONNECTION_FEATURE_TRANSACTIONS :
+	case GDA_CONNECTION_FEATURE_TRIGGERS :
+	case GDA_CONNECTION_FEATURE_USERS :
+	case GDA_CONNECTION_FEATURE_VIEWS :
 		return TRUE;
 	default :
 	}

@@ -45,6 +45,9 @@ static gboolean gda_mysql_provider_open_connection (GdaServerProvider *provider,
 						    const gchar *password);
 static gboolean gda_mysql_provider_close_connection (GdaServerProvider *provider,
 						     GdaConnection *cnc);
+static gboolean gda_mysql_provider_create_database (GdaServerProvider *provider,
+						    GdaConnection *cnc,
+						    const gchar *name);
 static GList *gda_mysql_provider_execute_command (GdaServerProvider *provider,
 						  GdaConnection *cnc,
 						  GdaCommand *cmd,
@@ -83,6 +86,7 @@ gda_mysql_provider_class_init (GdaMysqlProviderClass *klass)
 	object_class->finalize = gda_mysql_provider_finalize;
 	provider_class->open_connection = gda_mysql_provider_open_connection;
 	provider_class->close_connection = gda_mysql_provider_close_connection;
+	provider_class->create_database = gda_mysql_provider_create_database;
 	provider_class->execute_command = gda_mysql_provider_execute_command;
 	provider_class->begin_transaction = gda_mysql_provider_begin_transaction;
 	provider_class->commit_transaction = gda_mysql_provider_commit_transaction;
@@ -285,6 +289,39 @@ process_sql_commands (GList *reclist, GdaConnection *cnc, const gchar *sql)
 	return reclist;
 }
 
+/* create_database handler for the GdaMysqlProvider class */
+static gboolean
+gda_mysql_provider_create_database (GdaServerProvider *provider,
+				    GdaConnection *cnc,
+				    const gchar *name)
+{
+	gint rc;
+	MYSQL *mysql;
+	gchar *sql;
+	GdaMysqlProvider *myprv = (GdaMysqlProvider *) provider;
+
+	g_return_val_if_fail (GDA_IS_MYSQL_PROVIDER (myprv), FALSE);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (name != NULL, FALSE);
+
+	mysql = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_MYSQL_HANDLE);
+	if (!mysql) {
+		gda_connection_add_error_string (cnc, _("Invalid MYSQL handle"));
+		return FALSE;
+	}
+
+	sql = g_strdup_printf ("CREATE DATABASE %s", name);
+	rc = mysql_real_query (mysql, sql, strlen (sql));
+	g_free (sql);
+
+	if (rc != 0) {
+		gda_connection_add_error (cnc, gda_mysql_make_error (mysql));
+		return FALSE;
+	}
+
+	return TRUE;
+}
+
 /* execute_command handler for the GdaMysqlProvider class */
 static GList *
 gda_mysql_provider_execute_command (GdaServerProvider *provider,
@@ -410,6 +447,7 @@ gda_mysql_provider_supports (GdaServerProvider *provider,
 	g_return_val_if_fail (GDA_IS_MYSQL_PROVIDER (myprv), FALSE);
 
 	switch (feature) {
+	case GDA_CONNECTION_FEATURE_AGGREGATES :
 	case GDA_CONNECTION_FEATURE_SQL :
 	case GDA_CONNECTION_FEATURE_TRANSACTIONS :
 		return TRUE;

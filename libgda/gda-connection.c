@@ -474,6 +474,24 @@ gda_connection_add_error_list (GdaConnection *cnc, GList *error_list)
 }
 
 /**
+ * gda_connection_create_database
+ * @cnc: a #GdaConnection object.
+ * @name: database name.
+ *
+ * Create a new database named @name on the given connection.
+ *
+ * Returns: TRUE if successful, FALSE otherwise.
+ */
+gboolean
+gda_connection_create_database (GdaConnection *cnc, const gchar *name)
+{
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (name != NULL, FALSE);
+
+	return gda_server_provider_create_database (cnc->priv->provider_obj, cnc, name);
+}
+
+/**
  * gda_connection_execute_command
  * @cnc: a #GdaConnection object.
  * @cmd: a #GdaCommand.

@@ -50,8 +50,8 @@ struct _GdaSqliteRecordsetClass {
 	GdaDataModelClass parent_class;
 };
 
-GType         gda_sqlite_recordset_get_type (void);
-GdaDataModel *gda_sqlite_recordset_new (GdaConnection *cnc, SQLITE_Recordset *srecset);
+GType               gda_sqlite_recordset_get_type (void);
+GdaSqliteRecordset *gda_sqlite_recordset_new (GdaConnection *cnc, SQLITE_Recordset *srecset);
 
 G_END_DECLS
 

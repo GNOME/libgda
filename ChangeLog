@@ -1,3 +1,25 @@
+2002-05-15  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* libgda/gda-server-provider.[ch]: added create_database to
+	GdaServerProvider class. Also, added some documentation.
+
+	* libgda/gda-connection.h: added new set of GdaConnectionFeature
+	values, describing all the schemas we support, so that we can
+	query providers if they support the schemas.
+
+	* libgda/gda-connection.c (gda_connection_create_database):
+	new function.
+
+	* providers/default/gda-default-provider.c:
+	* providers/mysql/gda-mysql-provider.c:
+	* providers/sqlite/gda-sqlite-provider.c:
+	* providers/postgres/gda-postgres-provider.c: implemented
+	create_database method. Added support for new GdaConnectionFeature
+	values.
+
+	* providers/sqlite/gda-sqlite-recordset.[ch]: made
+	gda_sqlite_recordset_new return a GdaSqliteRecordset.
+
 2002-05-15  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
 	* doc/C/tmpl/gda-data-model-hash.sgml: added a few lines.

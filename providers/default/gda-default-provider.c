@@ -47,6 +47,9 @@ static gboolean gda_default_provider_open_connection (GdaServerProvider *provide
 						      const gchar *password);
 static gboolean gda_default_provider_close_connection (GdaServerProvider *provider,
 						       GdaConnection *cnc);
+static gboolean gda_default_provider_create_database (GdaServerProvider *provider,
+						      GdaConnection *cnc,
+						      const gchar *name);
 static GList *gda_default_provider_execute_command (GdaServerProvider *provider,
 						    GdaConnection *cnc,
 						    GdaCommand *cmd,
@@ -85,6 +88,7 @@ gda_default_provider_class_init (GdaDefaultProviderClass *klass)
 	object_class->finalize = gda_default_provider_finalize;
 	provider_class->open_connection = gda_default_provider_open_connection;
 	provider_class->close_connection = gda_default_provider_close_connection;
+	provider_class->create_database = gda_default_provider_create_database;
 	provider_class->execute_command = gda_default_provider_execute_command;
 	provider_class->begin_transaction = gda_default_provider_begin_transaction;
 	provider_class->commit_transaction = gda_default_provider_commit_transaction;
@@ -224,6 +228,20 @@ process_sql_commands (GList *reclist, GdaConnection *cnc, const gchar *sql)
 	return reclist;
 }
 
+/* create_database handler for the GdaDefaultProvider class */
+static gboolean
+gda_default_provider_create_database (GdaServerProvider *provider,
+				      GdaConnection *cnc,
+				      const gchar *name)
+{
+	GdaDefaultProvider *dfprv = (GdaDefaultProvider *) provider;
+
+	g_return_val_if_fail (GDA_IS_DEFAULT_PROVIDER (dfprv), FALSE);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+
+	gda_connection_add_error_string (cnc, _("Not Implemented"));
+	return FALSE;
+}
 
 /* execute_command handler for the GdaDefaultProvider class */
 static GList *

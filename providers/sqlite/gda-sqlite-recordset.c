@@ -268,7 +268,7 @@ gda_sqlite_recordset_get_type (void)
 	return type;
 }
 
-GdaDataModel *
+GdaSqliteRecordset *
 gda_sqlite_recordset_new (GdaConnection *cnc, SQLITE_Recordset *srecset)
 {
 	GdaSqliteRecordset *recset;
@@ -280,7 +280,7 @@ gda_sqlite_recordset_new (GdaConnection *cnc, SQLITE_Recordset *srecset)
 		recset = g_object_new (GDA_TYPE_SQLITE_RECORDSET, NULL);
 		recset->drecset = srecset;
 
-		return GDA_DATA_MODEL (recset);
+		return recset;
 	}
 
 	return NULL;

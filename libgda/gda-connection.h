@@ -78,6 +78,8 @@ void           gda_connection_add_error (GdaConnection *cnc, GdaError *error);
 void           gda_connection_add_error_string (GdaConnection *cnc, const gchar *str, ...);
 void           gda_connection_add_error_list (GdaConnection *cnc, GList *error_list);
 
+gboolean       gda_connection_create_database (GdaConnection *cnc, const gchar *name);
+
 GList         *gda_connection_execute_command (GdaConnection *cnc,
 					       GdaCommand *cmd,
 					       GdaParameterList *params);
@@ -90,8 +92,15 @@ gboolean       gda_connection_commit_transaction (GdaConnection *cnc, const gcha
 gboolean       gda_connection_rollback_transaction (GdaConnection *cnc, const gchar *id);
 
 typedef enum {
-	GDA_CONNECTION_FEATURE_TRANSACTIONS,
+	GDA_CONNECTION_FEATURE_AGGREGATES,
+	GDA_CONNECTION_FEATURE_INDEXES,
+	GDA_CONNECTION_FEATURE_PROCEDURES,
+	GDA_CONNECTION_FEATURE_SEQUENCES,
 	GDA_CONNECTION_FEATURE_SQL,
+	GDA_CONNECTION_FEATURE_TRANSACTIONS,
+	GDA_CONNECTION_FEATURE_TRIGGERS,
+	GDA_CONNECTION_FEATURE_USERS,
+	GDA_CONNECTION_FEATURE_VIEWS,
 	GDA_CONNECTION_FEATURE_XML_QUERIES
 } GdaConnectionFeature;
 
