@@ -1,3 +1,9 @@
+2001-11-02  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* Makefile.am:
+	* common/Makefile.am:
+	* engine/Makefile.am: fixed for new locations
+
 2001-10-29  Akira TAGOH <tagoh@gnome-db.org>
 
 	* Makefile.am: Added library age.

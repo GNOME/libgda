@@ -1,10 +1,11 @@
 SUBDIRS = idl common engine
 
 INCLUDES = \
-	-I$(top_builddir)/lib/gda-common \
-	-I$(top_builddir)/lib/gda-client \
+	-I$(top_srcdir) \
+	-I$(top_builddir) \
 	-I$(top_builddir)/report/common \
-	$(GDA_CLIENT_CFLAGS)
+	-I$(top_srcdir)/report/common \
+	$(LIBGDA_CFLAGS)
 
 lib_LTLIBRARIES = libgda-report.la
 
@@ -18,7 +19,7 @@ libgda_report_la_SOURCES = \
 
 libgda_report_la_LDFLAGS = -version-info $(GDA_CURRENT):$(GDA_REVISION):$(GDA_AGE)
 libgda_report_la_LIBADD = \
-	$(GDA_CLIENT_LIBS)
+	$(LIBGDA_LIBS)
 
 gdaincludedir=$(includedir)/gda
 gdainclude_HEADERS=$(gda_report_headers)

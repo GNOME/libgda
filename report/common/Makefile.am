@@ -1,7 +1,9 @@
 noinst_LTLIBRARIES = libgdareport-common.la
 
 INCLUDES = \
-	$(GDA_CLIENT_CFLAGS)
+	$(LIBGDA_CFLAGS) \
+	-I$(top_builddir) \
+	-I$(top_srcdir)
 
 BUILT_SOURCES = \
 	GNOME_Database_Report.h \
