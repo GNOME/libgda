@@ -101,8 +101,6 @@ fetch_func (GdaServerRecordset *recset, gulong rownum)
 		thevalue = mysql_row[i];
 
 		switch (mysql_fields[i].type) {
-		case FIELD_TYPE_DATE : /* FIXME */
-			break;
 		case FIELD_TYPE_DECIMAL :
 		case FIELD_TYPE_DOUBLE :
 			gda_field_set_double_value (field, atof (thevalue));
@@ -121,11 +119,6 @@ fetch_func (GdaServerRecordset *recset, gulong rownum)
 		case FIELD_TYPE_SHORT :
 			gda_field_set_smallint_value (field, atoi (thevalue));
 			break;
-		case FIELD_TYPE_TIME : /* FIXME */
-			break;
-		case FIELD_TYPE_TIMESTAMP :
-		case FIELD_TYPE_DATETIME : /* FIXME */
-			break;
 		case FIELD_TYPE_TINY :
 			gda_field_set_tinyint_value (field, atoi (thevalue));
 			break;
@@ -137,16 +130,20 @@ fetch_func (GdaServerRecordset *recset, gulong rownum)
 			break;
 		case FIELD_TYPE_VAR_STRING :
 		case FIELD_TYPE_STRING :
-			gda_field_set_string_value (field, thevalue);
+			gda_field_set_string_value (field, thevalue ? thevalue : "");
 			break;
+		case FIELD_TYPE_DATE :
 		case FIELD_TYPE_NULL :
 		case FIELD_TYPE_NEWDATE :
 		case FIELD_TYPE_ENUM :
+		case FIELD_TYPE_TIMESTAMP :
+		case FIELD_TYPE_DATETIME :
+		case FIELD_TYPE_TIME :
 		case FIELD_TYPE_SET : /* FIXME */
-			gda_field_set_string_value (field, thevalue);
+			gda_field_set_string_value (field, thevalue ? thevalue : "");
 			break;
 		default :
-			gda_field_set_string_value (field, thevalue);
+			gda_field_set_string_value (field, thevalue ? thevalue : "");
 		}
 	}
 

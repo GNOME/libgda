@@ -1,5 +1,8 @@
 2002-03-24  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* providers/mysql/gda-mysql-recordset.c (fetch_func): make sure
+	we don't pass over NULL or unitialized pointers to ORBit.
+
 	* providers/mysql/gda-mysql-provider.c (get_mysql_aggregates):
 	implemented SCHEMA_AGGREGATES.
 
