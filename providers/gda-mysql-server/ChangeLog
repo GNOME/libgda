@@ -1,0 +1,4 @@
+2000-10-21	Rodrigo Moya <rodrigo@linuxave.net>
+
+	* added missing <time.h>, which was left over after
+	the GNOME headers clean up

@@ -18,6 +18,7 @@
  */
 
 #include "gda-mysql.h"
+#include <time.h>
 
 /* private functions */
 /* Converting YYYY-MM-DD to struct tm */
