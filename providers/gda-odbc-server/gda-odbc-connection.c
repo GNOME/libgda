@@ -17,7 +17,7 @@
  */
 
 #include "gda-odbc.h"
-#include <gda.h>
+#include <GDA.h>
 #include <ctype.h>
 
 typedef Gda_ServerRecordset* (*schema_ops_fn)(Gda_ServerRecordset*,
