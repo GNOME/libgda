@@ -495,7 +495,7 @@ gda_xml_database_to_string (GdaXmlDatabase *xmldb)
 	doc = xmlNewDoc ("1.0");
 	root = xmlNewDocNode (doc, NULL, OBJECT_DATABASE, NULL);
 	xmlSetProp (root, PROPERTY_NAME, xmldb->priv->name);
-	xmlSetProp (root, PROPERTY_VERSION, xmldb->priv->name);
+	xmlSetProp (root, PROPERTY_VERSION, VERSION);
 	xmlDocSetRootElement (doc, root);
 
 	/* add tables */
