@@ -98,6 +98,8 @@ dnl Check for libxml
 AC_MSG_CHECKING(for libxml)
 if xml-config --libs > /dev/null 2>&1
 then
+	gda_xml_libs=`xml-config --libs`
+	gda_xml_cflags=`xml-config --cflags`
 	AC_MSG_RESULT(found)
 else
 	AC_MSG_ERROR(not found)
@@ -108,8 +110,8 @@ AC_MSG_CHECKING(for libxslt)
 if xslt-config --libs > /dev/null 2>&1
 then
 	AC_MSG_RESULT(found)
-	gda_xml_libs=`xslt-config --libs`
-	gda_xml_cflags=`xslt-config --cflags`
+	gda_xslt_libs=`xslt-config --libs`
+	gda_xslt_cflags=`xslt-config --cflags`
 else
 	AC_MSG_ERROR(not found)
 fi
@@ -657,8 +659,8 @@ GDA_CLIENT_LIBS="$gda_base_libs $gda_xml_libs $gda_gconf_libs $gda_oaf_libs"
 GDA_CLIENT_CFLAGS="$gda_base_cflags $gda_xml_cflags $gda_gconf_cflags $gda_oaf_cflags"
 GDA_PROVIDER_LIBS="$gda_base_libs $gda_xml_libs $gda_gconf_libs $gda_oaf_libs"
 GDA_PROVIDER_CFLAGS="$gda_base_cflags $gda_xml_cflags $gda_gconf_cflags $gda_oaf_cflags"
-XML_LIBS="$gda_xml_libs"
-XML_CFLAGS="$gda_xml_cflags"
+XML_LIBS="$gda_xslt_libs"
+XML_CFLAGS="$gda_xslt_cflags"
 
 AC_SUBST(GDA_CLIENT_LIBS)
 AC_SUBST(GDA_CLIENT_CFLAGS)

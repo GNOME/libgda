@@ -28,7 +28,9 @@ libgda_common_la_SOURCES = \
 	gda-xml-database.c \
 	gda-xml-file.c
 
-libgda_common_la_LIBADD=$(GDA_CLIENT_LIBS)
+libgda_common_la_LIBADD=\
+	$(GDA_CLIENT_LIBS) \
+	$(top_builddir)/lib/gda-common/gda-xml-query/libxmlquery.a
 
 gdaincludedir=$(includedir)/gda
 gdainclude_HEADERS=$(gda_common_headers)
