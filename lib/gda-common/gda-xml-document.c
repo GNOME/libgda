@@ -163,7 +163,7 @@ gda_xml_document_finalize (GObject *object)
 	xmlFreeDoc (xmldoc->doc);
 	xmldoc->doc = NULL;
 
-	parent_class = g_type_peek_class_parent (GDA_TYPE_XML_DOCUMENT);
+	parent_class = G_OBJECT_CLASS (g_type_peek_class_parent (GDA_TYPE_XML_DOCUMENT));
 	if (parent_class && parent_class->finalize)
 		parent_class->finalize (object);
 }
@@ -247,15 +247,15 @@ gda_xml_document_to_file (GdaXmlDocument * xmldoc, const gchar * filename)
 static void (gda_xml_document_error_def) (void *ctx, const char *msg, ...)
 {
 	g_print ("ERR SIG\n");
-	gtk_signal_emit (GTK_OBJECT (((xmlValidCtxtPtr) ctx)->userData),
-			 gda_xml_document_signals[GDA_XML_DOCUMENT_ERROR],
-			 msg);
+	g_signal_emit (G_OBJECT (((xmlValidCtxtPtr) ctx)->userData),
+		       gda_xml_document_signals[GDA_XML_DOCUMENT_ERROR],
+		       0, msg);
 }
 
 static void (gda_xml_document_warn_def) (void *ctx, const char *msg, ...)
 {
 	g_print ("WARN SIG\n");
-	gtk_signal_emit (GTK_OBJECT (((xmlValidCtxtPtr) ctx)->userData),
-			 gda_xml_document_signals[GDA_XML_DOCUMENT_ERROR],
-			 msg);
+	g_signal_emit (G_OBJECT (((xmlValidCtxtPtr) ctx)->userData),
+		       gda_xml_document_signals[GDA_XML_DOCUMENT_ERROR],
+		       0, msg);
 }

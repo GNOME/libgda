@@ -63,7 +63,7 @@ gda_xml_bin_item_finalize (GObject *object)
 	g_return_if_fail (GDA_IS_XML_BIN_ITEM (bin));
 
 	/* free memory */
-	gtk_object_unref (GTK_OBJECT (bin->priv->child));
+	g_object_unref (G_OBJECT (bin->priv->child));
 	g_free (bin->priv);
 
 	parent_class = g_type_peek_parent_class (GDA_TYPE_XML_ITEM);
@@ -143,9 +143,9 @@ gda_xml_bin_item_set_child (GdaXmlBinItem * bin, GdaXmlItem * child)
 	g_return_if_fail (GDA_IS_XML_ITEM (child));
 
 	if (bin->priv->child != NULL)
-		gtk_object_unref (GTK_OBJECT (bin->priv->child));
+		g_object_unref (G_OBJECT (bin->priv->child));
 	bin->priv->child = child;
-	gtk_object_ref (GTK_OBJECT (child));
+	g_object_ref (G_OBJECT (child));
 }
 
 /**
@@ -178,7 +178,7 @@ gda_xml_bin_item_to_dom (GdaXmlItem * item, xmlNodePtr parent_node)
 	g_return_val_if_fail (GDA_IS_XML_BIN_ITEM (bin), NULL);
 
 	/* call the parent class 'to_dom' handler */
-	item_class = gtk_type_class (GDA_TYPE_XML_ITEM);
+	item_class = GDA_XML_ITEM_CLASS (g_type_class_peek (GDA_TYPE_XML_ITEM));
 	if (item_class && item_class->to_dom) {
 		node = item_class->to_dom (item, parent_node);
 		gda_xml_item_to_dom (bin->priv->child, node);
@@ -200,7 +200,7 @@ gda_xml_bin_item_find_id (GdaXmlItem * item, const gchar * id)
 
 	g_return_val_if_fail (GDA_IS_XML_BIN_ITEM (bin), NULL);
 
-	item_class = g_type_class (GDA_TYPE_XML_ITEM);
+	item_class = GDA_XML_ITEM_CLASS (g_type_class_peek (GDA_TYPE_XML_ITEM));
 	if (item_class && item_class->find_id)
 		id_item = item_class->find_id (item, id);
 
