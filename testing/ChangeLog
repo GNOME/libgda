@@ -1,3 +1,8 @@
+2001-11-02  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* Makefile.am: removed non-existant _PROGRAMS, and fixed
+	s/GDA_CLIENT_/LIBGDA_
+
 2001-10-31  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-primebase-test.c:
