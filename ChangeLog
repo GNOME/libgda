@@ -1,5 +1,8 @@
 2002-05-19  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* testing/client.c (open_connection): added tests for all missing
+	GdaConnection's features.
+
 	* libgda/gda-row.[ch] (gda_row_new_from_list): new function.
 
 	* libgda/gda-data-model-hash.c (gda_data_model_hash_append_row):

@@ -81,8 +81,35 @@ open_connection (GdaClient *client,
 
 	/* show provider features */
 	g_print (_("\tProvider capabilities...\n"));
+	g_print (_("\t\tAggregates: %s\n"),
+		 gda_connection_supports (cnc, GDA_CONNECTION_FEATURE_AGGREGATES) ?
+		 _("Supported") : _("Not supported"));
+	g_print (_("\t\tIndexes: %s\n"),
+		 gda_connection_supports (cnc, GDA_CONNECTION_FEATURE_INDEXES) ?
+		 _("Supported") : _("Not supported"));
+	g_print (_("\t\tProcedures: %s\n"),
+		 gda_connection_supports (cnc, GDA_CONNECTION_FEATURE_PROCEDURES) ?
+		 _("Supported") : _("Not supported"));
+	g_print (_("\t\tSequences: %s\n"),
+		 gda_connection_supports (cnc, GDA_CONNECTION_FEATURE_SEQUENCES) ?
+		 _("Supported") : _("Not supported"));
+	g_print (_("\t\tSQL language: %s\n"),
+		 gda_connection_supports (cnc, GDA_CONNECTION_FEATURE_SQL) ?
+		 _("Supported") : _("Not supported"));
 	g_print (_("\t\tTransactions: %s\n"),
 		 gda_connection_supports (cnc, GDA_CONNECTION_FEATURE_TRANSACTIONS) ?
+		 _("Supported") : _("Not supported"));
+	g_print (_("\t\tTriggers: %s\n"),
+		 gda_connection_supports (cnc, GDA_CONNECTION_FEATURE_TRIGGERS) ?
+		 _("Supported") : _("Not supported"));
+	g_print (_("\t\tUsers: %s\n"),
+		 gda_connection_supports (cnc, GDA_CONNECTION_FEATURE_USERS) ?
+		 _("Supported") : _("Not supported"));
+	g_print (_("\t\tViews: %s\n"),
+		 gda_connection_supports (cnc, GDA_CONNECTION_FEATURE_VIEWS) ?
+		 _("Supported") : _("Not supported"));
+	g_print (_("\t\tXML queries: %s\n"),
+		 gda_connection_supports (cnc, GDA_CONNECTION_FEATURE_XML_QUERIES) ?
 		 _("Supported") : _("Not supported"));
 
 	/* show connection schemas */
