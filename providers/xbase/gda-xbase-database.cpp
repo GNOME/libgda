@@ -19,7 +19,7 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include <xdb/xbase.h>
+#include <xbase/xbase.h>
 #include "gda-xbase-database.h"
 #include "gda-xbase-provider.h"
 

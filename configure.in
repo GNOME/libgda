@@ -739,7 +739,7 @@ then
 	xbasedir=""
 	for d in $dir /usr /usr/local /opt/xbase
 	do
-		if test -f $d/include/xdb/xbase.h
+		if test -f $d/include/xbase/xbase.h
 		then
 			AC_MSG_RESULT(found Xbase in $d)
 			xbasedir=$d
@@ -751,7 +751,7 @@ then
 		AC_MSG_WARN(Xbase backend not used)
 	else
 		XBASE_CFLAGS=-I${xbasedir}/include
-		XBASE_LIBS="-L${xbasedir}/lib -lxdb"
+		XBASE_LIBS="-L${xbasedir}/lib -lxbase"
 		AC_DEFINE(HAVE_XBASE, 1, [Have Xbase])
 	fi
 fi
