@@ -34,16 +34,6 @@ module GNOME {
 		};
 
 		/*
-		 * The Connection struct contains all information
-		 * about an open connection
-		 */
-		struct Connection {
-			string cnc_str;
-			string username;
-			string password;
-		};
-
-		/*
 		 * The Recordset struct contains all information
 		 * about a set of rows returned by the underlying
 		 * provider as a result of executing a command
@@ -85,6 +75,9 @@ module GNOME {
 			CommandType type;
 			RecordsetList recordsets;
 		};
+		typedef sequence<Command> Command;
+
+		typedef string ConnectionId;
 
 		/*
 		 * The Provider interface is the CORBA interface to be
@@ -95,13 +88,15 @@ module GNOME {
 			string getVersion ();
 
 			/* basic operations */
-			Connection openConnection (in string cnc_string,
-						   in string username,
-						   in string password);
-			boolean closeConnection (in Connection cnc);
+			ConnectionId openConnection (in string cnc_string,
+						     in string username,
+						     in string password);
+			boolean closeConnection (in ConnectionId cnc);
 
 			/* command execution methods */
-			Command createCommand (in string text, CommandType type);
+			Command createCommand (in ConnectionId cnc,
+					       in string text,
+					       CommandType type);
 			boolean prepareCommand (inout Command cmd, in ParameterList plist);
 			RecordsetList executeCommand (inout Command cmd,
 						      in ParameterList plist);
