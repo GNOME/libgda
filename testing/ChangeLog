@@ -1,3 +1,9 @@
+2001-10-31  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-primebase-test.c:
+	* gda-sybase-test.c:
+	* gda-tds-test.c: removed, we just want a generic test suite
+
 2001-08-22  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-xmldb-test.c: new test program to test the GdaXmlDatabase
