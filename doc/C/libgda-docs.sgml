@@ -259,12 +259,13 @@
     <sect1 id="installation-introduction">
       <title>Introduction</title>
       <para>
-        On our web site, <ulink url="http://www.redhat.com" type="http">RedHat
-        </ulink> and <ulink url="http://www.debian.org" type="http">Debian
-        </ulink> packages are available, so you shouldn't have any problem
-        installing it. For a standard installation, there is are no further
-        steps, but, you'd better know configuration
-        options, just in case you come across a non-standard installation, or 
+        On our web site, <ulink url="http://www.redhat.com"
+        type="http">RedHat</ulink> and <ulink
+        url="http://www.debian.org" type="http">Debian</ulink>
+        packages are available, so you shouldn't have any problem
+        installing it. For a standard installation, there is are no
+        further steps, but, you'd better know configuration options,
+        just in case you come across a non-standard installation, or
         in case of problems during a standard installation.
       </para>
     </sect1>
@@ -277,13 +278,13 @@
       </para>
       <para>
         If you downloaded the source code (in a tarball), you must
-        compile the software. For doing so, once you have unpacked
+        compile the software. To do so, once you have unpacked
         the source tree, you must:
-        <screen>
-          <prompt>$</prompt><userinput>./configure</userinput>
-          <prompt>$</prompt><userinput>make</userinput>
-          <prompt>$</prompt><userinput>make install</userinput>
-        </screen>
+        <PROGRAMLISTING>
+          <prompt>$</prompt> <userinput>./configure</userinput>
+          <prompt>$</prompt> <userinput>make</userinput>
+          <prompt>$</prompt> <userinput>make install</userinput>
+        </PROGRAMLISTING>
       </para>
       <para>
         This will generate the makefiles for your specific platform,
@@ -583,7 +584,7 @@
         <para>
           The &XML; configuration file (<filename
 	  class="directory">~/.libgda/config</filename>) is not
-	  recommended to be modified by hand and, about our example, it is
+	  recommended to be modified by hand and, for our example, it is
 	  something like this:
         </para>
 	<programlisting>
