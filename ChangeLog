@@ -1,5 +1,6 @@
 2003-03-08  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* libgda/libgda.h:
 	* libgda/Makefile.am: don't install gda-export.h nor gda-log.h, those
 	should be internal files only.
 
