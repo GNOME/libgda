@@ -434,6 +434,33 @@ gda_connection_execute_command (GdaConnection *cnc,
 }
 
 /**
+ * gda_connection_execute_single_command
+ */
+GdaDataModel *
+gda_connection_execute_single_command (GdaConnection *cnc,
+				       GdaCommand *cmd,
+				       GdaParameterList *params)
+{
+	GList *reclist;
+	GdaDataModel *model;
+
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+	g_return_val_if_fail (cmd != NULL, NULL);
+
+	reclist = gda_connection_execute_command (cnc, cmd, params);
+	if (!reclist)
+		return NULL;
+
+	model = GDA_DATA_MODEL (reclist->data);
+	g_object_ref (G_OBJECT (model));
+
+	g_list_foreach (reclist, g_object_unref, NULL);
+	g_list_free (reclist);
+
+	return model;
+}
+
+/**
  * gda_connection_begin_transaction
  */
 gboolean

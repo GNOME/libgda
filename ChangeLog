@@ -1,3 +1,29 @@
+2002-04-02  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* libgda/gda-connection.c (gda_connection_execute_single_command): new
+	function for getting a single recordset from the server.
+
+	* libgda/gda-table.[ch] (gda_table_new_from_node): added 'add_data'
+	parameter, so that we can specify whether we want to add the model's
+	data to the table or not.
+
+	* libgda/gda-xml-database.[ch]
+	(gda_xml_database_new_table_from_model): new function.
+	(gda_xml_database_new_from_uri): get the database name from the XML
+	file.
+	(gda_xml_database_get_name):
+	(gda_xml_database_set_name): new functions.
+
+	* libgda/gda-export.c: made it compile on GNOME 2.
+
+	* libgda/Makefile.am:
+	* libgda/libgda.h: re-enabled GdaExport.
+
+	* libgda/gda-util.[ch] (gda_string_hash_to_list): new function.
+
+	* providers/default/gda-default-provider.c (get_databases):
+	implemented SCHEMA_DATABASES.
+
 2002-04-01  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
 	* libgda/gda-value.c (gda_value_isa): test type of value for NULL.

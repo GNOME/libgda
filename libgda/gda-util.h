@@ -30,6 +30,8 @@ G_BEGIN_DECLS
 const gchar *gda_type_to_string (GdaType type);
 GdaType      gda_type_from_string (const gchar *str);
 
+GList       *gda_string_hash_to_list (GHashTable *hash_table);
+
 /*
  * File management utility functions
  */

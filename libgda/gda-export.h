@@ -32,15 +32,15 @@ G_BEGIN_DECLS
  * The export object. Makes it easy to perform an export operation
  */
 
-typedef struct _GdaExport        GdaExport;
-typedef struct _GdaExportClass   GdaExportClass;
-typedef struct _GdaExportPrivate GdaExportPrivate;
-
 #define GDA_TYPE_EXPORT            (gda_export_get_type())
 #define GDA_EXPORT(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_EXPORT, GdaExport))
 #define GDA_EXPORT_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_EXPORT, GdaExportClass))
 #define GDA_IS_EXPORT(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_EXPORT))
 #define GDA_IS_EXPORT_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), GDA_TYPE_EXPORT))
+
+typedef struct _GdaExport        GdaExport;
+typedef struct _GdaExportClass   GdaExportClass;
+typedef struct _GdaExportPrivate GdaExportPrivate;
 
 struct _GdaExport {
 	GObject object;
@@ -50,14 +50,15 @@ struct _GdaExport {
 struct _GdaExportClass {
 	GObjectClass parent_class;
 
-	void (*object_selected) (GdaExport * exp,
-				 GNOME_Database_Connection_QType qtype,
-				 const gchar * name);
-	void (*object_unselected) (GdaExport * exp,
-				   GNOME_Database_Connection_QType qtype,
-				   const gchar * name);
-	void (*finished) (GdaExport *exp, GdaXmlDatabase *xmldb);
-	void (*cancelled) (GdaExport *exp);
+	/* signals */
+	void (* object_selected) (GdaExport * exp,
+				  GdaConnectionSchema schema,
+				  const gchar * name);
+	void (* object_unselected) (GdaExport * exp,
+				    GdaConnectionSchema schema,
+				    const gchar * name);
+	void (* finished) (GdaExport *exp, GdaXmlDatabase *xmldb);
+	void (* cancelled) (GdaExport *exp);
 };
 
 typedef enum {
@@ -66,20 +67,19 @@ typedef enum {
 
 GType          gda_export_get_type (void);
 
-GdaExport     *gda_export_new (GdaConnection * cnc);
-void           gda_export_free (GdaExport * exp);
+GdaExport     *gda_export_new (GdaConnection *cnc);
 
-GList         *gda_export_get_tables (GdaExport * exp);
-GList         *gda_export_get_selected_tables (GdaExport * exp);
-void           gda_export_select_table (GdaExport * exp, const gchar * table);
+GList         *gda_export_get_tables (GdaExport *exp);
+GList         *gda_export_get_selected_tables (GdaExport *exp);
+void           gda_export_select_table (GdaExport *exp, const gchar *table);
 void           gda_export_select_table_list (GdaExport *exp, GList *tables);
-void           gda_export_unselect_table (GdaExport * exp, const gchar * table);
+void           gda_export_unselect_table (GdaExport *exp, const gchar *table);
 
-void           gda_export_run (GdaExport * exp, GdaExportFlags flags);
-void           gda_export_stop (GdaExport * exp);
+void           gda_export_run (GdaExport *exp, GdaExportFlags flags);
+void           gda_export_stop (GdaExport *exp);
 
-GdaConnection *gda_export_get_connection (GdaExport * exp);
-void           gda_export_set_connection (GdaExport * exp, GdaConnection * cnc);
+GdaConnection *gda_export_get_connection (GdaExport *exp);
+void           gda_export_set_connection (GdaExport *exp, GdaConnection *cnc);
 
 G_END_DECLS
 

@@ -56,6 +56,8 @@ GType           gda_xml_database_get_type (void);
 GdaXmlDatabase *gda_xml_database_new (void);
 GdaXmlDatabase *gda_xml_database_new_from_uri (const gchar *uri);
 
+const gchar    *gda_xml_database_get_name (GdaXmlDatabase *xmldb);
+void            gda_xml_database_set_name (GdaXmlDatabase *xmldb, const gchar *name);
 const gchar    *gda_xml_database_get_uri (GdaXmlDatabase *xmldb);
 void            gda_xml_database_set_uri (GdaXmlDatabase *xmldb, const gchar *uri);
 void            gda_xml_database_changed (GdaXmlDatabase *xmldb);
@@ -66,6 +68,10 @@ GList          *gda_xml_database_get_tables (GdaXmlDatabase *xmldb);
 void            gda_xml_database_free_table_list (GList *list);
 GdaTable       *gda_xml_database_find_table (GdaXmlDatabase *xmldb, const gchar *name);
 GdaTable       *gda_xml_database_new_table (GdaXmlDatabase *xmldb, const gchar *name);
+GdaTable       *gda_xml_database_new_table_from_model (GdaXmlDatabase *xmldb, 
+						       const gchar *name,
+						       const GdaDataModel *model,
+						       gboolean add_data);
 GdaTable       *gda_xml_database_new_table_from_node (GdaXmlDatabase *xmldb,
 						      xmlNodePtr xmlnode);
 

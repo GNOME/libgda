@@ -49,7 +49,9 @@ struct _GdaTableClass {
 
 GType     gda_table_get_type (void);
 GdaTable *gda_table_new (const gchar *name);
-GdaTable *gda_table_new_from_model (const gchar *name, const GdaDataModel *model);
+GdaTable *gda_table_new_from_model (const gchar *name,
+				    const GdaDataModel *model,
+				    gboolean add_data);
 
 void      gda_table_add_field (GdaTable *table, const GdaFieldAttributes *fa);
 void      gda_table_add_data_from_model (GdaTable *table, const GdaDataModel *model);

@@ -79,6 +79,9 @@ void           gda_connection_add_error_list (GdaConnection *cnc, GList *error_l
 GList         *gda_connection_execute_command (GdaConnection *cnc,
 					       GdaCommand *cmd,
 					       GdaParameterList *params);
+GdaDataModel  *gda_connection_execute_single_command (GdaConnection *cnc,
+						      GdaCommand *cmd,
+						      GdaParameterList *params);
 
 gboolean       gda_connection_begin_transaction (GdaConnection *cnc, const gchar *id);
 gboolean       gda_connection_commit_transaction (GdaConnection *cnc, const gchar *id);

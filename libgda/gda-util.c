@@ -85,6 +85,29 @@ gda_type_from_string (const gchar *str)
 	return GDA_TYPE_UNKNOWN;
 }
 
+/* function called by g_hash_table_foreach to add items to a GList */
+static void
+add_string_key_to_list (gpointer key, gpointer value, gpointer user_data)
+{
+        GList **list = (GList **) user_data;
+
+        *list = g_list_append (*list, g_strdup (key));
+}
+
+/**
+ * gda_string_hash_to_list
+ */
+GList *
+gda_string_hash_to_list (GHashTable *hash_table)
+{
+	GList *list = NULL;
+
+        g_return_val_if_fail (hash_table != NULL, NULL);
+
+        g_hash_table_foreach (hash_table, (GHFunc) add_string_key_to_list, &list);
+        return list;
+}
+
 /**
  * gda_file_load
  * @uri: URI for the file to be loaded.

@@ -168,6 +168,7 @@ gda_table_new (const gchar *name)
  * gda_table_new_from_model
  * @name: Name for the new table.
  * @model: Model to create the table from.
+ * @add_data: Whether to add model's data or not.
  *
  * Create a #GdaTable object from the given #GdaDataModel. This
  * is very useful to maintain an in-memory copy of a given
@@ -177,7 +178,7 @@ gda_table_new (const gchar *name)
  * Returns: the newly created object.
  */
 GdaTable *
-gda_table_new_from_model (const gchar *name, const GdaDataModel *model)
+gda_table_new_from_model (const gchar *name, const GdaDataModel *model, gboolean add_data)
 {
 	GdaTable *table;
 	gint n;
@@ -200,7 +201,8 @@ gda_table_new_from_model (const gchar *name, const GdaDataModel *model)
 	}
 
 	/* add the data */
-	gda_table_add_data_from_model (table, model);
+	if (add_data)
+		gda_table_add_data_from_model (table, model);
 
 	return table;
 }

@@ -28,6 +28,7 @@
 
 struct _GdaXmlDatabasePrivate {
 	gchar *uri;
+	gchar *name;
 	GHashTable *tables;
 	GHashTable *views;
 	GHashTable *queries;
@@ -123,6 +124,7 @@ gda_xml_database_init (GdaXmlDatabase *xmldb, GdaXmlDatabaseClass *klass)
 	/* allocate private structure */
 	xmldb->priv = g_new0 (GdaXmlDatabasePrivate, 1);
 	xmldb->priv->uri = NULL;
+	xmldb->priv->name = NULL;
 	xmldb->priv->tables = g_hash_table_new (g_str_hash, g_str_equal);
 	xmldb->priv->views = g_hash_table_new (g_str_hash, g_str_equal);
 	xmldb->priv->queries = g_hash_table_new (g_str_hash, g_str_equal);
@@ -247,6 +249,7 @@ gda_xml_database_new_from_uri (const gchar *uri)
 		return NULL;
 	}
 
+	xmldb->priv->name = g_strdup (xmlGetProp (root, PROPERTY_NAME));
 	node = root->xmlChildrenNode;
 	while (node) {
 		xmlNodePtr children;
@@ -270,6 +273,36 @@ gda_xml_database_new_from_uri (const gchar *uri)
 	}
 
 	return xmldb;
+}
+
+/**
+ * gda_xml_database_get_name
+ * @xmldb: XML database.
+ *
+ * Return the name of the given XML database.
+ *
+ * Returns: the name of the database.
+ */
+const gchar *
+gda_xml_database_get_name (GdaXmlDatabase *xmldb)
+{
+	g_return_val_if_fail (GDA_IS_XML_DATABASE (xmldb), NULL);
+	return (const gchar *) xmldb->priv->name;
+}
+
+/**
+ * gda_xml_database_set_name
+ */
+void
+gda_xml_database_set_name (GdaXmlDatabase *xmldb, const gchar *name)
+{
+	g_return_if_fail (GDA_IS_XML_DATABASE (xmldb));
+
+	if (xmldb->priv->name)
+		g_free (xmldb->priv->name);
+	xmldb->priv->name = g_strdup (name);
+
+	gda_xml_database_changed (xmldb);
 }
 
 /**
@@ -435,6 +468,42 @@ gda_xml_database_new_table (GdaXmlDatabase *xmldb, const gchar *name)
 	}
 
 	table = gda_table_new (name);
+	g_hash_table_insert (xmldb->priv->tables, g_strdup (name), table);
+	gda_xml_database_changed (xmldb);
+
+	return table;
+}
+
+/**
+ * gda_xml_database_new_table_from_model
+ * @xmldb: XML database.
+ * @name: Name for the new table.
+ * @model: Model to create the table from.
+ * @add_data: Whether to add model's data or not.
+ *
+ * Create a new table in the given XML database from the given
+ * #GdaDataModel.
+ *
+ * Returns: a pointer to the newly created in-memory table.
+ */
+GdaTable *
+gda_xml_database_new_table_from_model (GdaXmlDatabase *xmldb,
+				       const gchar *name,
+				       const GdaDataModel *model,
+				       gboolean add_data)
+{
+	GdaTable *table;
+
+	g_return_val_if_fail (GDA_IS_XML_DATABASE (xmldb), NULL);
+	g_return_val_if_fail (name != NULL, NULL);
+	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
+
+	if (g_hash_table_lookup (xmldb->priv->tables, name)) {
+		gda_log_error (_("Table %s already exists"), name);
+		return NULL;
+	}
+
+	table = gda_table_new_from_model (name, model, add_data);
 	g_hash_table_insert (xmldb->priv->tables, g_strdup (name), table);
 	gda_xml_database_changed (xmldb);
 

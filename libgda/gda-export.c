@@ -22,7 +22,7 @@
 
 #include <config.h>
 #include <libgda/gda-export.h>
-#include <gobject/gsignal.h>
+#include <libgda/gda-util.h>
 
 struct _GdaExportPrivate {
 	GdaConnection *cnc;
@@ -34,6 +34,10 @@ struct _GdaExportPrivate {
 	GdaXmlDatabase *tmp_xmldb;
 };
 
+static void gda_export_class_init (GdaExportClass *klass);
+static void gda_export_init       (GdaExport *exp, GdaExportClass *klass);
+static void gda_export_finalize   (GObject *object);
+
 enum {
 	OBJECT_SELECTED,
 	OBJECT_UNSELECTED,
@@ -42,11 +46,8 @@ enum {
 	LAST_SIGNAL
 };
 
-static gint gda_export_signals[LAST_SIGNAL] = { 0, };
-
-static void gda_export_class_init (GdaExportClass * klass);
-static void gda_export_init       (GdaExport * exp, GdaExportClass *klass);
-static void gda_export_finalize   (GObject *object);
+static gint gda_export_signals[LAST_SIGNAL];
+static GObjectClass *parent_class = NULL;
 
 /*
  * Private functions
@@ -70,35 +71,27 @@ destroy_hash_table (GHashTable **hash_table)
 }
 
 static GList *
-get_object_list (GdaConnection * cnc,
-		 GNOME_Database_Connection_QType qtype)
+get_object_list (GdaConnection *cnc, GdaConnectionSchema schema)
 {
-	GdaRecordset *recset;
+	GdaDataModel *recset;
 	gint pos;
 	GList *list = NULL;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
 	/* retrieve list of tables from connection */
-	recset = gda_connection_open_schema (cnc,
-					     qtype,
-					     GNOME_Database_Connection_no_CONSTRAINT);
-	pos = gda_recordset_move (recset, 1, 0);
-	while (pos != GDA_RECORDSET_INVALID_POSITION &&
-	       !gda_recordset_eof (recset)) {
-		GdaField *field;
-		gchar *value;
+	recset = gda_connection_get_schema (cnc, schema, NULL);
 
-		field = gda_recordset_field_idx (recset, 0);
-		value = gda_field_stringify (field);
-		list = g_list_append (list, value);
+	for (pos = 0; pos < gda_data_model_get_n_rows (recset); pos++) {
+		GdaValue *value;
+		gchar *str;
 
-		g_free (value);
-
-		pos = gda_recordset_move (recset, 1, 0);
+		value = (GdaValue *) gda_data_model_get_value_at (recset, 0, pos);
+		str = gda_value_stringify (value);
+		list = g_list_append (list, str);
 	}
 
-	gda_recordset_free (recset);
+	g_object_unref (G_OBJECT (recset));
 
 	return list;
 }
@@ -112,8 +105,7 @@ run_export_cb (gpointer user_data)
 	GList *item;
 	gint num_found = 0;
 	GdaCommand *cmd;
-	GdaRecordset *recset;
-	gulong reccount;
+	GdaDataModel *recset;
 	GdaExport *exp = (GdaExport *) user_data;
 
 	g_return_val_if_fail (GDA_IS_EXPORT (exp), FALSE);
@@ -121,53 +113,31 @@ run_export_cb (gpointer user_data)
 	/* see if we've got tables to export */
 	item = g_list_first (exp->priv->tmp_tables);
 	if (item) {
-		GdaXmlDatabaseTable *xml_table;
-		GdaXmlDatabaseField *xml_field;
-		GdaField *gda_field;
-		gint cnt;
+		GdaTable *table;
 		gchar *name = (gchar *) item->data;
 
-		cmd = gda_command_new ();
-		gda_command_set_connection (cmd, exp->priv->cnc);
-		gda_command_set_cmd_type (cmd, GNOME_Database_COMMAND_TYPE_TABLE);
-		gda_command_set_text (cmd, name);
+		cmd = gda_command_new (name, GDA_COMMAND_TYPE_TABLE, 0);
 
-		recset = gda_command_execute (cmd, &reccount, NULL);
-		if (!GDA_IS_RECORDSET (recset)) {
-			gda_command_free (cmd);
+		recset = gda_connection_execute_single_command (exp->priv->cnc, cmd, NULL);
+		gda_command_free (cmd);
+		if (!GDA_IS_DATA_MODEL (recset)) {
 			gda_export_stop (exp);
 			return FALSE;
 		}
 
 		/* add the table to the database */
-		xml_table = gda_xml_database_table_new (exp->priv->tmp_xmldb,
-							(const gchar *) name);
-		/* FIXME: set table owner */
-
-		for (cnt = 0; cnt < gda_recordset_rowsize (recset); cnt++) {
-			gchar *type;
-
-			gda_field = gda_recordset_field_idx (recset, cnt);
-			type = gda_util_gdatype_to_string (gda_field_get_gdatype (gda_field));
-
-			xml_field = gda_xml_database_table_add_field (exp->priv->tmp_xmldb,
-								      xml_table,
-								      gda_field_get_name (gda_field));
-			gda_xml_database_field_set_gdatype (exp->priv->tmp_xmldb, xml_field, type);
-			gda_xml_database_field_set_size (exp->priv->tmp_xmldb, xml_field,
-							 gda_field_get_defined_size (gda_field));
-			gda_xml_database_field_set_scale (exp->priv->tmp_xmldb, xml_field,
-							  gda_field_get_scale (gda_field));
-
-		}
-
-		if (exp->priv->tmp_flags & GDA_EXPORT_FLAGS_TABLE_DATA) {
-			/* FIXME: export data */
+		table = gda_xml_database_new_table_from_model (
+			exp->priv->tmp_xmldb,
+			(const gchar *) name,
+			(const GdaDataModel *) recset,
+			exp->priv->tmp_flags & GDA_EXPORT_FLAGS_TABLE_DATA ? TRUE : FALSE);
+		if (!GDA_IS_TABLE (table)) {
+			gda_export_stop (exp);
+			return FALSE;
 		}
 
 		/* free memory */
-		gda_recordset_free (recset);
-		gda_command_free (cmd);
+		g_object_unref (G_OBJECT (recset));
 
 		exp->priv->tmp_tables = g_list_remove (exp->priv->tmp_tables, name);
 		g_free (name);
@@ -180,7 +150,7 @@ run_export_cb (gpointer user_data)
 		g_signal_emit (G_OBJECT (exp),
 			       gda_export_signals[FINISHED],
 			       0, exp->priv->tmp_xmldb);
-		gda_xml_database_free (exp->priv->tmp_xmldb);
+		g_object_unref (G_OBJECT (exp->priv->tmp_xmldb));
 		exp->priv->tmp_xmldb = NULL;
 
 		return FALSE;
@@ -193,9 +163,6 @@ run_export_cb (gpointer user_data)
  * GdaExport class implementation
  */
 
-/**
- * gda_export_get_type
- */
 GType
 gda_export_get_type (void)
 {
@@ -223,6 +190,11 @@ gda_export_class_init (GdaExportClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
+	parent_class = g_type_class_peek_parent (klass);
+
+	object_class->finalize = gda_export_finalize;
+
+	/* create class signals */
 	gda_export_signals[OBJECT_SELECTED] =
 		g_signal_new ("object_selected",
 			      G_TYPE_FROM_CLASS (object_class),
@@ -241,6 +213,14 @@ gda_export_class_init (GdaExportClass *klass)
 			      g_cclosure_marshal_VOID__UINT_POINTER,
 			      G_TYPE_NONE, 2,
 			      G_TYPE_INT, G_TYPE_STRING);
+	gda_export_signals[CANCELLED] =
+		g_signal_new ("finished",
+				G_TYPE_FROM_CLASS (object_class),
+			      G_SIGNAL_RUN_LAST,
+			      G_STRUCT_OFFSET (GdaExportClass, finished),
+			      NULL, NULL,
+			      g_cclosure_marshal_VOID__VOID,
+			      G_TYPE_NONE, 0);
 	gda_export_signals[FINISHED] =
 		g_signal_new ("finished",
 				G_TYPE_FROM_CLASS (object_class),
@@ -250,13 +230,13 @@ gda_export_class_init (GdaExportClass *klass)
 			      g_cclosure_marshal_VOID__POINTER,
 			      G_TYPE_NONE, 1,
 			      G_TYPE_POINTER);
-
-	object_class->finalize = gda_export_finalize;
 }
 
 static void
-gda_export_init (GdaExport * exp, GdaExportClass *klass)
+gda_export_init (GdaExport *exp, GdaExportClass *klass)
 {
+	g_return_if_fail (GDA_IS_EXPORT (exp));
+
 	exp->priv = g_new0 (GdaExportPrivate, 1);
 	exp->priv->selected_tables = g_hash_table_new (g_str_hash, g_str_equal);
 }
@@ -264,20 +244,20 @@ gda_export_init (GdaExport * exp, GdaExportClass *klass)
 static void
 gda_export_finalize (GObject *object)
 {
-	GObjectClass *parent_class;
 	GdaExport *exp = (GdaExport *) object;
 
 	g_return_if_fail (GDA_IS_EXPORT (exp));
 
 	destroy_hash_table (&exp->priv->selected_tables);
-	if (GDA_IS_CONNECTION (exp->priv->cnc))
-		gda_connection_free (exp->priv->cnc);
+	if (GDA_IS_CONNECTION (exp->priv->cnc)) {
+		g_object_unref (G_OBJECT (exp->priv->cnc));
+		exp->priv->cnc = NULL;
+	}
+
 	g_free (exp->priv);
 	exp->priv = NULL;
 
-	parent_class = G_OBJECT_CLASS (g_type_class_peek (G_TYPE_OBJECT));
-	if (parent_class && parent_class->finalize)
-		parent_class->finalize (object);
+	parent_class->finalize (object);
 }
 
 /**
@@ -303,18 +283,11 @@ gda_export_new (GdaConnection * cnc)
 {
 	GdaExport *exp;
 
-	exp = GDA_EXPORT (g_object_new (GDA_TYPE_EXPORT, NULL));
+	exp = g_object_new (GDA_TYPE_EXPORT, NULL);
 	if (GDA_IS_CONNECTION (cnc))
 		gda_export_set_connection (exp, cnc);
 
 	return exp;
-}
-
-void
-gda_export_free (GdaExport * exp)
-{
-	g_return_if_fail (GDA_IS_EXPORT (exp));
-	g_object_unref (G_OBJECT (exp));
 }
 
 /**
@@ -336,8 +309,7 @@ gda_export_get_tables (GdaExport * exp)
 	g_return_val_if_fail (GDA_IS_EXPORT (exp), NULL);
 	g_return_val_if_fail (exp->priv != NULL, NULL);
 
-	return get_object_list (exp->priv->cnc,
-				GNOME_Database_Connection_GDCN_SCHEMA_TABLES);
+	return get_object_list (exp->priv->cnc, GDA_CONNECTION_SCHEMA_TABLES);
 }
 
 /**
@@ -357,7 +329,7 @@ gda_export_get_selected_tables (GdaExport * exp)
 	g_return_val_if_fail (GDA_IS_EXPORT (exp), NULL);
 	g_return_val_if_fail (exp->priv != NULL, NULL);
 
-	return gda_util_hash_to_list (exp->priv->selected_tables);
+	return gda_string_hash_to_list (exp->priv->selected_tables);
 }
 
 /**
@@ -383,7 +355,7 @@ gda_export_select_table (GdaExport *exp, const gchar *table)
 		g_hash_table_insert (exp->priv->selected_tables, data, data);
 		g_signal_emit (G_OBJECT (exp),
 			       gda_export_signals[OBJECT_SELECTED], 0,
-			       GNOME_Database_Connection_GDCN_SCHEMA_TABLES,
+			       GDA_CONNECTION_SCHEMA_TABLES,
 			       table);
 	}
 }
@@ -430,7 +402,7 @@ gda_export_unselect_table (GdaExport *exp, const gchar *table)
 		g_free (data);
 		g_signal_emit (G_OBJECT (exp),
 			       gda_export_signals[OBJECT_UNSELECTED], 0,
-			       GNOME_Database_Connection_GDCN_SCHEMA_TABLES,
+			       GDA_CONNECTION_SCHEMA_TABLES,
 			       table);
 	}
 }
@@ -453,7 +425,7 @@ gda_export_run (GdaExport *exp, GdaExportFlags flags)
 
 	exp->priv->running = TRUE;
 	exp->priv->tmp_flags = flags;
-	exp->priv->tmp_tables = gda_util_hash_to_list (exp->priv->selected_tables);
+	exp->priv->tmp_tables = gda_string_hash_to_list (exp->priv->selected_tables);
 	exp->priv->tmp_xmldb = gda_xml_database_new ();
 
 	g_idle_add ((GSourceFunc) run_export_cb, exp);
@@ -474,8 +446,9 @@ gda_export_stop (GdaExport *exp)
 		g_list_free (exp->priv->tmp_tables);
 		exp->priv->tmp_tables = NULL;
 	}
-	gda_xml_database_free (exp->priv->tmp_xmldb);
 
+	g_object_unref (G_OBJECT (exp->priv->tmp_xmldb));
+	exp->priv->tmp_xmldb = NULL;
 	g_idle_remove_by_data (exp);
 
 	g_signal_emit (G_OBJECT (exp), gda_export_signals[CANCELLED], 0);
@@ -507,9 +480,10 @@ gda_export_set_connection (GdaExport *exp, GdaConnection * cnc)
 
 	/* unref the old GdaConnection */
 	if (GDA_IS_CONNECTION (exp->priv->cnc)) {
-		gda_connection_free (exp->priv->cnc);
+		g_object_unref (G_OBJECT (exp->priv->cnc));
 		exp->priv->cnc = NULL;
 	}
+
 	destroy_hash_table (&exp->priv->selected_tables);
 	exp->priv->selected_tables = g_hash_table_new (g_str_hash, g_str_equal);
 

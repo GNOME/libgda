@@ -406,6 +406,41 @@ get_table_fields (GdaServerConnection *cnc, GdaXmlDatabase *xmldb, GdaParameterL
 	return GDA_SERVER_RECORDSET (recset);
 }
 
+static void
+add_string_row (GdaServerRecordsetModel *recset, const gchar *str)
+{
+	GdaValue *value;
+	GList list;
+
+	g_return_if_fail (GDA_IS_SERVER_RECORDSET_MODEL (recset));
+	g_return_if_fail (str != NULL);
+
+	value = gda_value_new_string (str);
+	list.data = value;
+	list.next = NULL;
+	list.prev = NULL;
+
+	gda_server_recordset_model_append_row (recset, &list);
+
+	gda_value_free (value);
+}
+
+static GdaServerRecordset *
+get_databases (GdaServerConnection *cnc, GdaXmlDatabase *xmldb)
+{
+	GdaServerRecordsetModel *recset;
+
+	recset = GDA_SERVER_RECORDSET_MODEL (gda_server_recordset_model_new (cnc, 1));
+	gda_server_recordset_model_set_field_defined_size (recset, 0, 256);
+	gda_server_recordset_model_set_field_name (recset, 0, _("Name"));
+	gda_server_recordset_model_set_field_scale (recset, 0, 0);
+	gda_server_recordset_model_set_field_gdatype (recset, 0, GDA_TYPE_STRING);
+
+	add_string_row (recset, gda_xml_database_get_name (xmldb));
+
+	return recset;
+}
+
 static GdaServerRecordset *
 get_tables (GdaServerConnection *cnc, GdaXmlDatabase *xmldb)
 {
@@ -442,24 +477,6 @@ get_tables (GdaServerConnection *cnc, GdaXmlDatabase *xmldb)
 	}
 
 	return GDA_SERVER_RECORDSET (recset);
-}
-
-static void
-add_string_row (GdaServerRecordsetModel *recset, const gchar *str)
-{
-	GdaValue *value;
-	GList list;
-
-	g_return_if_fail (GDA_IS_SERVER_RECORDSET_MODEL (recset));
-
-	value = gda_value_new_string (str);
-	list.data = value;
-	list.next = NULL;
-	list.prev = NULL;
-
-	gda_server_recordset_model_append_row (recset, &list);
-
-	gda_value_free (value);
 }
 
 static GdaServerRecordset *
@@ -513,6 +530,8 @@ gda_default_provider_get_schema (GdaServerProvider *provider,
 		return NULL;
 
 	switch (schema) {
+	case GNOME_Database_Connection_SCHEMA_DATABASES :
+		return get_databases (cnc, xmldb);
 	case GNOME_Database_Connection_SCHEMA_FIELDS :
 		return get_table_fields (cnc, xmldb, params);
 	case GNOME_Database_Connection_SCHEMA_TABLES :
