@@ -3,13 +3,14 @@ Section: libs
 Priority: optional
 Maintainer: Akira TAGOH <at@ue-spacy.com>
 Standards-Version: 3.1.1
+Build-Depends: libgconf-dev, libbonobo-dev, liboaf-dev, libmysqlclient9-dev, postgresql-dev, libiodbc2-dev
 
 Package: libgda0
 Architecture: any
 Section: libs
 Priority: optional
 Depends: ${shlibs:Depends}
-Suggests: gda-mysql (= ${Source-Version}), gda-postgres (= ${Source-Version})
+Suggests: gda-mysql (= ${Source-Version}), gda-postgres (= ${Source-Version}), gda-odbc (= ${Source-Version})
 Replaces: libgda-dev
 Description: GNU Data Access library.
  GNU Data Access is an attempt to provide uniform access to
@@ -38,6 +39,14 @@ Priority: optional
 Depends: libgda0 (= ${Source-Version}), ${shlibs:Depends}
 Description: GDA backend server for PostgreSQL
  This package use PostgreSQL backend.
+
+Package: gda-odbc
+Architecture: any
+Section: misc
+Priority: optional
+Depends: libgda0 (= ${Source-Version}), ${shlibs:Depends}
+Description: GDA backend server for ODBC
+ This package use ODBC backend.
 
 Package: libgda-dev
 Architecture: any

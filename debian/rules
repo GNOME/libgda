@@ -13,8 +13,9 @@ configure-stamp:
 	dh_testdir
 	# Add here commands to configure the package.
 	./configure --prefix=/usr \
-	            --with-mysql=yes \
-	            --with-postgres=yes
+		    --with-mysql=yes \
+		    --with-postgres=yes \
+		    --with-odbc=yes
 
 	touch configure-stamp
 
@@ -73,6 +74,7 @@ binary-arch: build install
 	dh_undocumented -plibgda-dev gda-buildclient.1 gda-buildserver.1 gda-config.1 gda-run.1
 	dh_undocumented -pgda-mysql gda-mysql-srv.1
 	dh_undocumented -pgda-postgres gda-postgres-srv.1
+	dh_undocumented -pgda-odbc gda-odbc-srv.1
 	dh_installchangelogs ChangeLog
 	dh_link
 	dh_strip
