@@ -282,25 +282,50 @@ else
 fi
 ])
 freetdsdir=""
+freetdsvercheck=""
 if test $try_freetds = true
 then
 	AC_MSG_CHECKING(for freetds files)
 	for d in $dir /usr/local/freetds /usr /opt/freetds /opt/packages/freetds /opt/freetds-0.50
 	do
-		if test -f "$d/include/tds.h" -a -e "$d/lib/libtds.so"
+		if test -f "$d/include/tds.h" -a -e "$d/lib/libtds.so" -a -f "$d/include/tdsver.h"
 		then
 			AC_MSG_RESULT(found freetds in $d)
 			freetdsdir="$d"
 			break
 		fi
 	done
-	if test x$freetdsdir = x
+	if test "x$freetdsdir" = "x"
 	then
 		AC_MSG_WARN(tds backend not used)
 	else
-		FREETDS_CFLAGS="-I${freetdsdir}/include"
-		FREETDS_LIBS="-L${freetdsdir}/lib -ltds"
-		AC_DEFINE(HAVE_FREETDS)
+		AC_MSG_CHECKING(for freetds version)
+		freetdsvercheck="`grep \"^#define \(VERSION_NO \|TDS_VERSION_NO \)\" $freetdsdir/include/tdsver.h|sed 's|^.*"\(.*\)"|\1|'`"
+		if test "x$freetdsvercheck" = "x"
+		then
+			AC_MSG_WARN(freetds version check failed - backend not used)
+			freetdsdir=""
+		else
+			case "$freetdsvercheck" in
+				*v0.5*) AC_MSG_RESULT($freetdsvercheck - using v0.5x api)
+					AC_DEFINE(HAVE_FREETDS_VER0_5X)
+					FREETDS_CFLAGS="-I${freetdsdir}/include"
+					FREETDS_LIBS="-L${freetdsdir}/lib -ltds"
+					AC_DEFINE(HAVE_FREETDS)
+					;;
+				*v0.6*) AC_MSG_RESULT($freetdsvercheck - using v0.6x api)
+					AC_MSG_WARN($freetdsvercheck plugin may not load via dlopen)
+					AC_DEFINE(HAVE_FREETDS_VER0_6X)
+					FREETDS_CFLAGS="-I${freetdsdir}/include"
+					FREETDS_LIBS="-L${freetdsdir}/lib -ltds"
+					AC_DEFINE(HAVE_FREETDS)
+					;;
+				*)	AC_MSG_WARN($freetdsvercheck not supprted - backend not used)
+					freetdsdir=""
+					;;
+			esac
+					
+		fi	
 	fi
 fi
 

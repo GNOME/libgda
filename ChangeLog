@@ -1,3 +1,23 @@
+2002-10-13  Holger Thon <holger.thon@gnome-db.org>
+
+	* providers/freetds/gda-freetds-provider.h: added TDS_CONTEXT (v0.60)
+	to GdaFreeTDSConnectionData struct
+	
+	* providers/freetds/gda-freetds-provider.c: added v0.60 api,
+	fixed compile warnings (unused enums vals in switches),
+	fixed change_database to work within connection_open(),
+	corrected typecast in execute_cmd(),
+	completed error messages in internal execute_cmd()
+	
+	* providers/freetds/gda-freetds-recordset.c: added parameter
+	GdaFreeTDSConnectionData * to set_gdavalue
+	
+	* providers/freetds/gda-freetds-types.{c,h}: added parameter
+	GdaFreeTDSConnectionData * to set_gdavalue,
+	added v0.60 api
+	
+	* acconfig.h, configure.in: added version check for freetds provider
+
 2002-10-12  Alfons <alfons@proteus.demon.nl>
 
 	* libgda/gda-select.c (gda_select_run): use sql_destroy instead of
