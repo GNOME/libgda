@@ -77,13 +77,13 @@ component_destroyed_cb (GObject *object, gpointer user_data)
 		BonoboObject *lcomp = BONOBO_OBJECT (l->data);
 
 		if (lcomp == comp) {
-			server->priv->clients = g_list_remove (
-				server->priv->clients, lcomp);
+			server->priv->clients = g_list_remove (server->priv->clients, lcomp);
 			if (!server->priv->clients) {
 				g_signal_emit (G_OBJECT (server),
 					       gda_server_signals[LAST_CLIENT_GONE],
 					       0);
 			}
+			break;
 		}
 	}
 }
