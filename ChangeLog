@@ -2,9 +2,12 @@
 
 	* libgda/gda-recordset.c: 
 	(gda_recordset_get_value_at): fixed little bug.
+
 	* libgda/Makefile.am:
 	* libgda/gda-config.c: reimplemented configuration stuff without
 	using gconf.
+
+	* configure.in: removed gconf stuff.
 
 
 2002-04-27  Rodrigo Moya <rodrigo@gnome-db.org>

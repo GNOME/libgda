@@ -60,12 +60,6 @@ ALL_LINGUAS="ca da de el es fi fr ga gl hu it ja ms nl no pl pt pt_BR ru sk sl s
 AM_GLIB_GNU_GETTEXT
 
 dnl ******************************
-dnl GConf schemas
-dnl ******************************
-AC_PATH_PROG(GCONFTOOL, gconftool-2)
-AM_GCONF_SOURCE_2
-
-dnl ******************************
 dnl Checks for libraries
 dnl ******************************
 GNOME_COMPILE_WARNINGS(maximum)
@@ -75,7 +69,7 @@ AC_SUBST(CFLAGS)
 AC_SUBST(CPPFLAGS)
 AC_SUBST(LDFLAGS)
 
-PKG_CHECK_MODULES(LIBGDA, glib-2.0 >= 2.0.0 gobject-2.0 >= 2.0.0 gthread-2.0 >= 2.0.0 gmodule-2.0 >= 2.0.0 libxml-2.0 gconf-2.0 >= 1.1.8 libxslt >= 1.0.9 gnome-vfs-2.0)
+PKG_CHECK_MODULES(LIBGDA, glib-2.0 >= 2.0.0 gobject-2.0 >= 2.0.0 gthread-2.0 >= 2.0.0 gmodule-2.0 >= 2.0.0 libxml-2.0 libxslt >= 1.0.9 gnome-vfs-2.0)
 AC_SUBST(LIBGDA_CFLAGS)
 AC_SUBST(LIBGDA_LIBS)
 
