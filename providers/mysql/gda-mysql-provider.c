@@ -26,6 +26,7 @@
 #include <libgda/gda-data-model-array.h>
 #include <libgda/gda-intl.h>
 #include <stdlib.h>
+#include <string.h>
 #include "gda-mysql.h"
 #include "gda-mysql-recordset.h"
 
