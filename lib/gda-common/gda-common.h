@@ -31,7 +31,6 @@
 #include <gda-listener.h>
 #include <gda-log.h>
 #include <gda-quark-list.h>
-#include <gda-thread.h>
 #include <gda-util.h>
 #include <gda-xml-document.h>
 #include <gda-xml-database.h>

@@ -20,18 +20,16 @@
 #if !defined(__gda_xml_database_h__)
 #  define __gda_xml_database_h__
 
-#include <glib.h>
-#include <gtk/gtkobject.h>
 #include <gda-common-defs.h>
 #include <gda-xml-document.h>
 
 G_BEGIN_DECLS
 
 #define GDA_TYPE_XML_DATABASE            (gda_xml_database_get_type())
-#define GDA_XML_DATABASE(obj)            GTK_CHECK_CAST(obj, GDA_TYPE_XML_DATABASE, GdaXmlDatabase)
-#define GDA_XML_DATABASE_CLASS(klass)    GTK_CHECK_CLASS_CAST(klass, GDA_TYPE_XML_DATABASE, GdaXmlDatabaseClass)
-#define GDA_IS_XML_DATABASE(obj)         GTK_CHECK_TYPE(obj, GDA_TYPE_XML_DATABASE)
-#define GDA_IS_XML_DATABASE_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_XML_DATABASE))
+#define GDA_XML_DATABASE(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_XML_DATABASE, GdaXmlDatabase))
+#define GDA_XML_DATABASE_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_XML_DATABASE, GdaXmlDatabaseClass))
+#define GDA_IS_XML_DATABASE(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_XML_DATABASE))
+#define GDA_IS_XML_DATABASE_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GDA_TYPE_XML_DATABASE))
 
 typedef struct _GdaXmlDatabase        GdaXmlDatabase;
 typedef struct _GdaXmlDatabaseClass   GdaXmlDatabaseClass;
@@ -49,7 +47,7 @@ struct _GdaXmlDatabaseClass {
 	void (*changed) (GdaXmlDatabase * xmldb);
 };
 
-GtkType gda_xml_database_get_type (void);
+GType           gda_xml_database_get_type (void);
 
 GdaXmlDatabase *gda_xml_database_new (void);
 GdaXmlDatabase *gda_xml_database_new_from_file (const gchar *filename);

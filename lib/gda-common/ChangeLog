@@ -1,3 +1,12 @@
+2001-08-20  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-thread.[ch]: removed, since they're useless in GLib 2.0
+
+	* gda-xml-item.[ch]:
+	* gda-xml-bin-item.[ch]:
+	* gda-xml-database.[ch]:
+	* gda-xml-atom-item.[ch]: switched to GObject
+
 2001-08-19  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-listener.[ch]: switched to GObject

@@ -32,7 +32,6 @@ gda_common_headers = \
 	gda-listener.h \
 	gda-log.h \
 	gda-quark-list.h \
-	gda-thread.h \
 	gda-util.h \
 	gda-xml-atom-item.h \
 	gda-xml-bin-item.h \
@@ -58,7 +57,6 @@ libgda_common_2_la_SOURCES = \
 	gda-listener.c \
 	gda-log.c \
 	gda-quark-list.c \
-	gda-thread.c \
 	gda-util.c \
 	gda-xml-atom-item.c \
 	gda-xml-bin-item.c \

@@ -20,7 +20,7 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include <gtk/gtksignal.h>
+#include <gobject/gsignal.h>
 #include "config.h"
 #include "gda-common-private.h"
 #include "gda-xml-database.h"
@@ -46,8 +46,8 @@ struct _GdaXmlDatabasePrivate {
 #define PROPERTY_SIZE    "size"
 
 static void gda_xml_database_class_init (GdaXmlDatabaseClass *klass);
-static void gda_xml_database_init       (GdaXmlDatabase *xmldb);
-static void gda_xml_database_destroy    (GtkObject *object);
+static void gda_xml_database_init       (GdaXmlDatabase *xmldb, GdaXmlDatabaseClass *klass);
+static void gda_xml_database_finalize   (GObject *object);
 
 /*
  * GdaXmlDatabase object signals
@@ -68,31 +68,29 @@ gda_xml_database_class_init (GdaXmlDatabaseClass * klass)
 	GtkObjectClass *object_class = GTK_OBJECT_CLASS (klass);
 
 	xmldb_signals[GDA_XML_DATABASE_CHANGED] =
-		gtk_signal_new ("changed",
-				GTK_RUN_FIRST,
-				object_class->type,
-				GTK_SIGNAL_OFFSET (GdaXmlDatabaseClass,
-						   changed),
-				gtk_signal_default_marshaller, GTK_TYPE_NONE,
-				0);
-	gtk_object_class_add_signals (object_class, xmldb_signals,
-				      GDA_XML_DATABASE_LAST_SIGNAL);
+		g_signal_new ("changed",
+			      G_TYPE_FROM_CLASS (object_class),
+			      G_SIGNAL_RUN_LAST,
+			      G_STRUCT_OFFSET (GdaXmlDatabaseClass, changed),
+			      NULL, NULL,
+			      g_cclosure_marshal_VOID__VOID,
+			      G_TYPE_NONE, 0);
 
-	object_class->destroy = gda_xml_database_destroy;
+	object_class->finalize = gda_xml_database_finalize;
 	klass->changed = NULL;
 }
 
 static void
-gda_xml_database_init (GdaXmlDatabase * xmldb)
+gda_xml_database_init (GdaXmlDatabase *xmldb, GdaXmlDatabaseClass *klass)
 {
 	xmldb->priv = g_new (GdaXmlDatabasePrivate, 1);
 	xmldb->priv->tables = NULL;
 }
 
 static void
-gda_xml_database_destroy (GtkObject *object)
+gda_xml_database_finalize (GObject *object)
 {
-	GtkObjectClass *parent_class;
+	GObjectClass *parent_class;
 	GdaXmlDatabase *xmldb = (GdaXmlDatabase *) object;
 
 	g_return_if_fail (GDA_IS_XML_DATABASE (xmldb));
@@ -101,27 +99,31 @@ gda_xml_database_destroy (GtkObject *object)
 	g_free (xmldb->priv);
 	xmldb->priv = NULL;
 
-	parent_class = gtk_type_class (GDA_TYPE_XML_DOCUMENT);
-	if (parent_class && parent_class->destroy)
-		parent_class->destroy (object);
+	parent_class = g_type_peek_class_parent (GDA_TYPE_XML_DATABASE);
+	if (parent_class && parent_class->finalize)
+		parent_class->finalize (object);
 }
 
-GtkType
+GType
 gda_xml_database_get_type (void)
 {
-	static GtkType type = 0;
+	static GType type = 0;
 
 	if (!type) {
-		GtkTypeInfo info = {
-			"GdaXmlDatabase",
-			sizeof (GdaXmlDatabase),
+		static const GTypeInfo info = {
 			sizeof (GdaXmlDatabaseClass),
-			(GtkClassInitFunc) gda_xml_database_class_init,
-			(GtkObjectInitFunc) gda_xml_database_init,
-			(GtkArgSetFunc) NULL,
-			(GtkArgSetFunc) NULL
+			(GBaseInitFunc) NULL,
+			(GBaseFinalizeFunc) NULL,
+			(GClassInitFunc) gda_xml_database_class_init,
+			NULL,
+			NULL,
+			sizeof (GdaXmlDatabase),
+			0,
+			(GInstanceInitFunc) gda_xml_database_init
 		};
-		type = gtk_type_unique (gda_xml_document_get_type (), &info);
+		type = g_type_register_static (GDA_TYPE_XML_DOCUMENT,
+					       "GdaXmlDatabase",
+					       &info, 0);
 	}
 	return type;
 }
@@ -138,7 +140,7 @@ gda_xml_database_new (void)
 {
 	GdaXmlDatabase *xmldb;
 
-	xmldb = GDA_XML_DATABASE (gtk_type_new (GDA_TYPE_XML_DATABASE));
+	xmldb = GDA_XML_DATABASE (g_object_new (GDA_TYPE_XML_DATABASE, NULL));
 	gda_xml_document_construct (GDA_XML_DOCUMENT (xmldb), OBJECT_DATABASE);
 
 	return xmldb;
@@ -152,7 +154,7 @@ gda_xml_database_new_from_file (const gchar * filename)
 {
 	GdaXmlDatabase *xmldb;
 
-	xmldb = GDA_XML_DATABASE (gtk_type_new (GDA_TYPE_XML_DATABASE));
+	xmldb = GDA_XML_DATABASE (g_object_new (GDA_TYPE_XML_DATABASE, NULL));
 
 	GDA_XML_DOCUMENT (xmldb)->doc = xmlParseFile (filename);
 	if (GDA_XML_DOCUMENT (xmldb)->doc) {
@@ -185,7 +187,7 @@ void
 gda_xml_database_free (GdaXmlDatabase * xmldb)
 {
 	g_return_if_fail (GDA_IS_XML_DATABASE (xmldb));
-	gtk_object_unref (GTK_OBJECT (xmldb));
+	g_object_unref (G_OBJECT (xmldb));
 }
 
 /**
@@ -212,8 +214,8 @@ void
 gda_xml_database_changed (GdaXmlDatabase * xmldb)
 {
 	g_return_if_fail (GDA_IS_XML_DATABASE (xmldb));
-	gtk_signal_emit (GTK_OBJECT (xmldb),
-			 xmldb_signals[GDA_XML_DATABASE_CHANGED]);
+	g_signal_emit (GTK_OBJECT (xmldb),
+		       xmldb_signals[GDA_XML_DATABASE_CHANGED]);
 }
 
 /**

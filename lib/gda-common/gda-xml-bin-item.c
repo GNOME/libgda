@@ -24,14 +24,13 @@
 #include "config.h"
 #include "gda-xml-bin-item.h"
 
-struct _GdaXmlBinItemPrivate
-{
+struct _GdaXmlBinItemPrivate {
 	GdaXmlItem *child;
 };
 
-static void gda_xml_bin_item_class_init (GdaXmlBinItemClass * klass);
-static void gda_xml_bin_item_init (GdaXmlBinItem * bin);
-static void gda_xml_bin_item_destroy (GtkObject * object);
+static void gda_xml_bin_item_class_init (GdaXmlBinItemClass *klass);
+static void gda_xml_bin_item_init       (GdaXmlBinItem *bin, GdaXmlBinItemClass *klass);
+static void gda_xml_bin_item_finalize   (GObject *object);
 
 /*
  * GdaXmlBinItem class implementation
@@ -39,26 +38,26 @@ static void gda_xml_bin_item_destroy (GtkObject * object);
 static void
 gda_xml_bin_item_class_init (GdaXmlBinItemClass * klass)
 {
-	GtkObjectClass *object_class = GTK_OBJECT_CLASS (klass);
+	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 	GdaXmlItemClass *item_class = GDA_XML_ITEM_CLASS (klass);
 
-	object_class->destroy = gda_xml_bin_item_destroy;
+	object_class->finalize = gda_xml_bin_item_finalize;
 	item_class->add = gda_xml_bin_item_add;
 	item_class->to_dom = gda_xml_bin_item_to_dom;
 	item_class->find_id = gda_xml_bin_item_find_id;
 }
 
 static void
-gda_xml_bin_item_init (GdaXmlBinItem * bin)
+gda_xml_bin_item_init (GdaXmlBinItem *bin, GdaXmlBinItemClass *klass)
 {
 	bin->priv = g_new (GdaXmlBinItemPrivate, 1);
 	bin->priv->child = NULL;
 }
 
 static void
-gda_xml_bin_item_destroy (GtkObject * object)
+gda_xml_bin_item_finalize (GObject *object)
 {
-	GtkObjectClass *parent_class;
+	GObjectClass *parent_class;
 	GdaXmlBinItem *bin = (GdaXmlBinItem *) object;
 
 	g_return_if_fail (GDA_IS_XML_BIN_ITEM (bin));
@@ -67,29 +66,32 @@ gda_xml_bin_item_destroy (GtkObject * object)
 	gtk_object_unref (GTK_OBJECT (bin->priv->child));
 	g_free (bin->priv);
 
-	parent_class = gtk_type_class (GDA_TYPE_XML_ITEM);
-	if (parent_class && parent_class->destroy)
-		parent_class->destroy (object);
+	parent_class = g_type_peek_parent_class (GDA_TYPE_XML_ITEM);
+	if (parent_class && parent_class->finalize)
+		parent_class->finalize (object);
 }
 
-GtkType
+GType
 gda_xml_bin_item_get_type (void)
 {
-	static GtkType type = 0;
+	static GType type = 0;
 
 	if (!type) {
-		GtkTypeInfo info = {
-			"GdaXmlBinItem",
-			sizeof (GdaXmlBinItem),
+		static const GTypeInfo info = {
 			sizeof (GdaXmlBinItemClass),
-			(GtkClassInitFunc) gda_xml_bin_item_class_init,
-			(GtkObjectInitFunc) gda_xml_bin_item_init,
-			(GtkArgSetFunc) NULL,
-			(GtkArgSetFunc) NULL
+			(GBaseInitFunc) NULL,
+			(GBaseFinalizeFunc) NULL,
+			(GClassInitFunc) gda_xml_bin_item_class_init,
+			NULL,
+			NULL,
+			sizeof (GdaXmlBinItem),
+			0,
+			(GInstanceInitFunc) gda_xml_bin_item_init
 		};
-		type = gtk_type_unique (gda_xml_item_get_type (), &info);
+		type = g_type_register_static (GDA_TYPE_XML_ITEM,
+					       "GdaXmlBinItem",
+					       &info, 0);
 	}
-
 	return type;
 }
 
@@ -101,7 +103,7 @@ gda_xml_bin_item_new (const gchar * tag)
 {
 	GdaXmlItem *bin;
 
-	bin = GDA_XML_ITEM (gtk_type_new (GDA_TYPE_XML_BIN_ITEM));
+	bin = GDA_XML_ITEM (g_object_new (GDA_TYPE_XML_BIN_ITEM, NULL));
 	gda_xml_item_set_tag (bin, tag);
 
 	return bin;
@@ -157,7 +159,7 @@ gda_xml_bin_item_add (GdaXmlItem * item, GdaXmlItem * child)
 	g_return_if_fail (GDA_IS_XML_BIN_ITEM (bin));
 
 	if (bin->priv->child != NULL)
-		gtk_object_unref (GTK_OBJECT (bin->priv->child));
+		g_object_unref (G_OBJECT (bin->priv->child));
 	bin->priv->child = child;
 
 	gda_xml_item_set_parent (child, item);
@@ -198,7 +200,7 @@ gda_xml_bin_item_find_id (GdaXmlItem * item, const gchar * id)
 
 	g_return_val_if_fail (GDA_IS_XML_BIN_ITEM (bin), NULL);
 
-	item_class = gtk_type_class (GDA_TYPE_XML_ITEM);
+	item_class = g_type_class (GDA_TYPE_XML_ITEM);
 	if (item_class && item_class->find_id)
 		id_item = item_class->find_id (item, id);
 

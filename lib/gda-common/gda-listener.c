@@ -22,6 +22,7 @@
 
 #include <gobject/gsignal.h>
 #include <gobject/gmarshal.h>
+#include <bonobo/bonobo-marshal.h>
 #include "gda-listener.h"
 
 #define PARENT_TYPE BONOBO_X_OBJECT_TYPE
@@ -78,7 +79,7 @@ gda_listener_class_init (GdaListenerClass * klass)
 			      G_SIGNAL_RUN_LAST,
 			      G_STRUCT_OFFSET (GdaListenerClass, notify_action),
 			      NULL, NULL,
-			      g_cclosure_marshal_VOID__POINTER_INT_POINTER,
+			      bonobo_marshal_VOID__POINTER_INT_POINTER,
 			      G_TYPE_NONE, 3, G_TYPE_INT,
 			      G_TYPE_POINTER, G_TYPE_POINTER);
 

@@ -30,10 +30,10 @@
 G_BEGIN_DECLS
 
 #define GDA_TYPE_XML_BIN_ITEM            (gda_xml_bin_item_get_type ())
-#define GDA_XML_BIN_ITEM(obj)            GTK_CHECK_CAST(obj, GDA_TYPE_XML_BIN_ITEM, GdaXmlBinItem)
-#define GDA_XML_BIN_ITEM_CLASS(klass)    GTK_CHECK_CLASS_CAST(klass, GDA_TYPE_XML_BIN_ITEM, GdaXmlBinItemClass)
-#define GDA_IS_XML_BIN_ITEM(obj)         GTK_CHECK_TYPE(obj, GDA_TYPE_XML_BIN_ITEM)
-#define GDA_IS_XML_BIN_ITEM_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_XML_BIN_ITEM))
+#define GDA_XML_BIN_ITEM(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_XML_BIN_ITEM, GdaXmlBinItem))
+#define GDA_XML_BIN_ITEM_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_XML_BIN_ITEM, GdaXmlBinItemClass))
+#define GDA_IS_XML_BIN_ITEM(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_XML_BIN_ITEM))
+#define GDA_IS_XML_BIN_ITEM_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GDA_TYPE_XML_BIN_ITEM))
 
 typedef struct _GdaXmlBinItem GdaXmlBinItem;
 typedef struct _GdaXmlBinItemClass GdaXmlBinItemClass;
@@ -48,17 +48,17 @@ struct _GdaXmlBinItemClass {
 	GdaXmlItemClass parent_class;
 };
 
-GtkType gda_xml_bin_item_get_type (void);
+GType       gda_xml_bin_item_get_type (void);
 GdaXmlItem *gda_xml_bin_item_new (const gchar * tag);
 GdaXmlItem *gda_xml_bin_item_new_with_data (const gchar * tag,
 					    GdaXmlItem * child);
 
 GdaXmlItem *gda_xml_bin_item_get_child (GdaXmlBinItem * bin);
-void gda_xml_bin_item_set_child (GdaXmlBinItem * bin,
-				 GdaXmlItem * child);
-void gda_xml_bin_item_add (GdaXmlItem * item, GdaXmlItem * child);
-xmlNodePtr gda_xml_bin_item_to_dom (GdaXmlItem * item,
-				    xmlNodePtr parent_node);
+void        gda_xml_bin_item_set_child (GdaXmlBinItem * bin,
+					GdaXmlItem * child);
+void        gda_xml_bin_item_add (GdaXmlItem * item, GdaXmlItem * child);
+xmlNodePtr  gda_xml_bin_item_to_dom (GdaXmlItem * item,
+				     xmlNodePtr parent_node);
 GdaXmlItem *gda_xml_bin_item_find_id (GdaXmlItem * item,
 				      const gchar * id);
 
