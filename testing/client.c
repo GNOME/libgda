@@ -91,6 +91,9 @@ open_connection (GdaClient *client,
 	g_print (_("\t\tIndexes: %s\n"),
 		 gda_connection_supports (cnc, GDA_CONNECTION_FEATURE_INDEXES) ?
 		 _("Supported") : _("Not supported"));
+	g_print (_("\t\tNamespaces: %s\n"),
+		 gda_connection_supports (cnc, GDA_CONNECTION_FEATURE_NAMESPACES) ?
+		 _("Supported") : _("Not supported"));
 	g_print (_("\t\tProcedures: %s\n"),
 		 gda_connection_supports (cnc, GDA_CONNECTION_FEATURE_PROCEDURES) ?
 		 _("Supported") : _("Not supported"));
@@ -119,6 +122,7 @@ open_connection (GdaClient *client,
 	/* show connection schemas */
 	g_print (_("\n\tProvider reports version: %s\n\n"),
 			gda_connection_get_server_version (cnc));
+	show_schema (cnc, GDA_CONNECTION_SCHEMA_NAMESPACES, _("Namespaces"));
 	show_schema (cnc, GDA_CONNECTION_SCHEMA_DATABASES, _("Databases"));
 	show_schema (cnc, GDA_CONNECTION_SCHEMA_PROCEDURES, _("Stored procedures"));
 	show_schema (cnc, GDA_CONNECTION_SCHEMA_TABLES, _("Connection Tables"));
@@ -129,6 +133,7 @@ open_connection (GdaClient *client,
 	show_schema (cnc, GDA_CONNECTION_SCHEMA_USERS, _("Users"));
 	show_schema (cnc, GDA_CONNECTION_SCHEMA_SEQUENCES, _("Sequences"));
 	show_schema (cnc, GDA_CONNECTION_SCHEMA_TRIGGERS, _("Triggers"));
+	show_schema (cnc, GDA_CONNECTION_SCHEMA_LANGUAGES, _("Languages"));
 
 	/* test transactions */
 	xaction = gda_transaction_new (NULL);
