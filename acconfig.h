@@ -10,6 +10,7 @@
 #undef HAVE_LDAP
 #undef HAVE_MDB
 #undef HAVE_ORACLE
+#undef HAVE_TDS
 #undef HAVE_SYBASE
 #undef SYBASE_DEBUG
 #undef HAVE_POSTGRES
