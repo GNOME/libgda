@@ -88,8 +88,8 @@ then
 	AC_MSG_WARN(ODBC backend not used)
 else
 	AC_DEFINE(HAVE_ODBC)
-	ODBC_CFLAGS=-I${odbcdir}/include
-	ODBC_LIBS="-L${odbcdir}/lib $odbclib"
+	ODBC_CFLAGS="-I${odbcdir}/include"
+	ODBC_LIBS="-L${odbcdir}/lib ${odbclib}"
 fi
 ])
 
@@ -139,6 +139,7 @@ else
 	if test -f ${mysqldir}/lib${mysqllibdir_suffix}/libmystrings.a
 	then
 		MYSQL_LIBS="${MYSQL_LIBS} -lmystrings"
+	fi
 fi
 ])
 
@@ -189,47 +190,45 @@ fi
 AM_CONDITIONAL(POSTGRES, test x$postgresdir != x)
 
 dnl Test for Sybase
-AC_ARG_WITH(sybase,
---with-sybase=<directory>     use SyBASE backend in <directory>,[
-if test $withval != yes
-then
-	dir=$withval
-else
-	dir="/opt2/sybase"
-fi
-AC_MSG_CHECKING(for Sybase files)
-sybasedir=""
-for d in $dir /usr/local/sybase /opt/sybase /opt/packages/sybase /opt/sybase-11.9.2
-do
-	if test -f $d/include/ctpublic.h
-	then
-		AC_MSG_RESULT(found Sybase in $d)
-		sybasedir=$d
-		break
-	fi
-done
-if test x$sybasedir = x
-then
-	AC_MSG_WARN(Sybase backend not used)
-else
-	SYBASE_CFLAGS=-I${sybasedir}/include
-	SYBASE_LIBS="-L${sybasedir}/lib"
-	AC_MSG_CHECKING(for Sybase target host system type)
-	AC_MSG_RESULT($host)
-	case "$host" in
-		*linux*)
-			sybase_ctlibs="-lct -lcs -lsybtcl -lcomn -lintl"
-			sybase_blklibs="-lblk $SYBASE_CTLIBS"
-			SYBASE_LIBS="${SYBASE_LIBS} ${sybase_ctlibs} ${sybase_blklibs)"
-			AC_DEFINE(HAVE_SYBASE)
-			;;
-		*)
-			AC_MSG_WARN(this host type is unsupported; sybase backend not used)
-			sybasedir=""
-			;;
-	esac
-fi
-])
+dnl AC_ARG_WITH(sybase,
+dnl --with-sybase=<directory>     use SyBASE backend in <directory>,[
+dnl if test $withval != yes
+dnl then
+dnl 	dir=$withval
+dnl else
+dnl 	dir="/opt2/sybase"
+dnl fi
+dnl AC_MSG_CHECKING(for Sybase files)
+dnl sybasedir=""
+dnl for d in $dir /usr/local/sybase /opt/sybase /opt/packages/sybase /opt/sybase-11.9.2
+dnl do
+dnl	if test -f $d/include/ctpublic.h
+dnl	then
+dnl		AC_MSG_RESULT(found Sybase in $d)
+dnl		sybasedir=$d
+dnl		break
+dnl	fi
+dnl done
+dnl if test x$sybasedir = x
+dnl then
+dnl 	AC_MSG_WARN(Sybase backend not used)
+dnl else
+dnl 	SYBASE_CFLAGS=-I${sybasedir}/include
+dnl 	SYBASE_LIBS="-L${sybasedir}/lib"
+dnl 	AC_MSG_CHECKING(for Sybase target host system type)
+dnl 	AC_MSG_RESULT($host)
+dnl 	case "$host" in
+dnl 	*linux*) sybase_ctlibs="-lct -lcs -lsybtcl -lcomn -lintl"
+dnl 		sybase_blklibs="-lblk $SYBASE_CTLIBS"
+dnl 		SYBASE_LIBS="${SYBASE_LIBS} ${sybase_ctlibs} ${sybase_blklibs)"
+dnl 		AC_DEFINE(HAVE_SYBASE)
+dnl 		;;
+dnl 	*) AC_MSG_WARN(this host type is unsupported; sybase backend not used)
+dnl 		sybasedir=""
+dnl 		;;
+dnl 	esac
+dnl fi
+dnl ])
 
 AM_CONDITIONAL(SYBASE, test x$sybasedir != x)
 
@@ -331,11 +330,11 @@ fi
 AC_MSG_CHECKING(for ORACLE installation)
 for d in $dir $ORACLE_HOME /opt/oracle
 do
-   if test -f $d/lib/libclntsh.so
-   then
+	if test -f $d/lib/libclntsh.so
+	then
 		AC_MSG_RESULT(found ORACLE in $d)
 		oracledir=$d
-	break
+		break
 	fi
 done
 if test x$oracledir = x
@@ -366,11 +365,11 @@ fi
 AC_MSG_CHECKING(for INTERBASE installation)
 for d in $dir /usr/local/interbase /usr/local /usr /opt/interbase
 do
-   if test -f $d/include/ibase.h
-   then
+	if test -f $d/include/ibase.h
+	then
 		AC_MSG_RESULT(found INTERBASE in $d)
 		interbasedir=$d
-	break
+		break
 	fi
 done
 if test x$interbasedir = x
@@ -397,11 +396,11 @@ fi
 AC_MSG_CHECKING(for MDB installation)
 for d in $dir /usr/local/mdbtools /usr/local /usr /opt/mdbtools
 do
-   if test -f $d/include/mdbtools.h
-   then
+	if test -f $d/include/mdbtools.h
+	then
 		AC_MSG_RESULT(found MDB in $d)
 		mdbdir=$d
-	break
+		break
 	fi
 done
 if test x$mdbdir = x
