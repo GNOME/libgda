@@ -40,6 +40,7 @@ static void gda_default_provider_init       (GdaDefaultProvider *provider,
 					     GdaDefaultProviderClass *klass);
 static void gda_default_provider_finalize   (GObject *object);
 
+static const gchar *gda_default_provider_get_version (GdaServerProvider *provider);
 static gboolean gda_default_provider_open_connection (GdaServerProvider *provider,
 						      GdaConnection *cnc,
 						      GdaQuarkList *params,
@@ -47,6 +48,8 @@ static gboolean gda_default_provider_open_connection (GdaServerProvider *provide
 						      const gchar *password);
 static gboolean gda_default_provider_close_connection (GdaServerProvider *provider,
 						       GdaConnection *cnc);
+static const gchar *gda_default_provider_get_server_version (GdaServerProvider *provider,
+							     GdaConnection *cnc);
 static gboolean gda_default_provider_create_database (GdaServerProvider *provider,
 						      GdaConnection *cnc,
 						      const gchar *name);
@@ -86,8 +89,10 @@ gda_default_provider_class_init (GdaDefaultProviderClass *klass)
 	parent_class = g_type_class_peek_parent (klass);
 
 	object_class->finalize = gda_default_provider_finalize;
+	provider_class->get_version = gda_default_provider_get_version;
 	provider_class->open_connection = gda_default_provider_open_connection;
 	provider_class->close_connection = gda_default_provider_close_connection;
+	provider_class->get_server_version = gda_default_provider_get_server_version;
 	provider_class->create_database = gda_default_provider_create_database;
 	provider_class->execute_command = gda_default_provider_execute_command;
 	provider_class->begin_transaction = gda_default_provider_begin_transaction;
@@ -149,6 +154,16 @@ gda_default_provider_new (void)
 	return GDA_SERVER_PROVIDER (provider);
 }
 
+/* get_version handler for the GdaDefaultProvider class */
+static const gchar *
+gda_default_provider_get_version (GdaServerProvider *provider)
+{
+	GdaDefaultProvider *dfprv = (GdaDefaultProvider *) provider;
+
+	g_return_val_if_fail (GDA_IS_DEFAULT_PROVIDER (dfprv), NULL);
+	return VERSION;
+}
+
 /* open_connection handler for the GdaDefaultProvider class */
 static gboolean
 gda_default_provider_open_connection (GdaServerProvider *provider,
@@ -206,6 +221,18 @@ gda_default_provider_close_connection (GdaServerProvider *provider,
 	g_object_set_data (G_OBJECT (cnc), OBJECT_DATA_DEFAULT_HANDLE, NULL);
 
 	return TRUE;
+}
+
+/* get_server_version handler for the GdaDefaultProvider class */
+static const gchar *
+gda_default_provider_get_server_version (GdaServerProvider *provider, GdaConnection *cnc)
+{
+	GdaDefaultProvider *dfprv = (GdaDefaultProvider *) provider;
+
+	g_return_val_if_fail (GDA_IS_DEFAULT_PROVIDER (dfprv), NULL);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+
+	return VERSION; // FIXME
 }
 
 static GList *
