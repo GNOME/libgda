@@ -44,6 +44,8 @@ libgda_server_la_SOURCES = \
 	gda-server-impl.c \
 	gda-server-init.c \
 	gda-server-recordset.c \
+	gda-builtin-res.c \
+	gda-builtin-res.h \
 	$(gda_server_headers)
 libgda_server_la_LIBADD = -lpopt
 
