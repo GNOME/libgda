@@ -122,7 +122,7 @@ gda_data_model_array_append_row (GdaDataModel *model, const GList *values)
 	if (row) {
 		g_ptr_array_add (GDA_DATA_MODEL_ARRAY (model)->priv->rows, row);
 		gda_row_set_number (row, GDA_DATA_MODEL_ARRAY (model)->priv->rows->len - 1);
-		gda_data_model_row_inserted (model, GDA_DATA_MODEL_ARRAY (model)->priv->rows->len);
+		gda_data_model_row_inserted (model, GDA_DATA_MODEL_ARRAY (model)->priv->rows->len - 1);
 	}
 
 	return (const GdaRow *) row;
