@@ -20,7 +20,7 @@ gda_corba_built_files = \
 	GNOME_Database.h
 
 $(gda_corba_built_files): $(IDLFILES) $(ORBIT_IDL)
-	$(ORBIT_IDL) -I$(top_builddir)/idl -I$(BONOBO_ACTIVATION_IDL_DIR) $(top_builddir)/idl/GNOME_Database.idl
+	$(ORBIT_IDL) -I$(top_builddir)/idl -I$(BONOBO_ACTIVATION_IDL_DIR) -I$(BONOBO_IDL_DIR) $(top_builddir)/idl/GNOME_Database.idl
 
 gda_marshal_built_files = gda-marshal.h gda-marshal.c
 

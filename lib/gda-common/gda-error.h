@@ -67,7 +67,7 @@ void          gda_error_set_number (GdaError *error, glong number);
 const gchar  *gda_error_get_source (GdaError *error);
 void          gda_error_set_source (GdaError *error, const gchar *source);
 const gchar  *gda_error_get_sqlstate (GdaError *error);
-void          gda_error_set_sqlstate (GdaError *error,<const gchar *sqlstate);
+void          gda_error_set_sqlstate (GdaError *error, const gchar *sqlstate);
 
 G_END_DECLS
 

@@ -1,5 +1,7 @@
 2001-10-27  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* Makefile.am: use the BONOBO_IDL_DIR variable for orbit-idl
+
 	* gda-command.[ch]: moved from the client library, as it can
 	be shared for clients and providers
 
