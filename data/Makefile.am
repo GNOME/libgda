@@ -5,3 +5,6 @@ config_DATA = config
 xmldir = $(datadir)/libgda/xml
 xml_DATA    = 	gda-xml-query.dtd 	\
 		gda-xml-query.xsl
+
+EXTRA_DIST = \
+	$(config_DATA)
