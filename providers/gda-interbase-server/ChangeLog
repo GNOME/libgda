@@ -1,0 +1,4 @@
+2001-05-16  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* GNOME_GDA_Provider_InterBase.oaf.in: added "gda_params"
+	OAF attribute
