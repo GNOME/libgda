@@ -228,11 +228,7 @@ get_corba_connection (Gda_Connection* cnc)
   factory = g_hash_table_lookup(factories, cnc->provider);
   if (!factory)
     {
-#if defined(USING_OAF)
       factory = oaf_activate_from_id(cnc->provider, 0, NULL, &ev);
-#else
-      factory = goad_server_activate_with_id(NULL, cnc->provider, 0, NULL);
-#endif
       g_hash_table_insert(factories, cnc->provider, factory);
     }
   if (!factory) return -1;
@@ -1045,7 +1041,7 @@ gda_connection_get_cursor_location (Gda_Connection *cnc)
   CORBA_exception_init(&ev);
   cursor = GDA_Connection__get_cursor(cnc->connection, &ev);
   if (gda_connection_corba_exception(cnc, &ev) == 0) return (cursor);
-  return (-1);
+  return -1;
 }
 
 void

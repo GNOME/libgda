@@ -23,11 +23,7 @@
  * This is the main header file for the libgda-server library
  */
 #include <orb/orbit.h>
-#if defined(USING_OAF)
-#  include <liboaf/liboaf.h>
-#else
-#  include <libgnorba/gnorba.h>
-#endif
+#include <liboaf/liboaf.h>
 
 #include <gda.h>
 #include <gda-common.h>
