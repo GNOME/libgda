@@ -1,13 +1,15 @@
 # Libgda Dutch Translation.
 # Copyright (C) 2000 Free Software Foundation, Inc.
 # Almer S. Tigelaar <almer1@dds.nl>, 2000.
+# Arjan Timmerman <arjan@kwando-tech.nl>
+# Jan-Willem Harmanny <jwharmanny@hotmail.com>, 2002.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: Libgda CVS\n"
-"POT-Creation-Date: 2003-01-28 01:43+0100\n"
+"POT-Creation-Date: 2003-01-28 05:44+0100\n"
 "PO-Revision-Date: 2002-03-09 19:16+0100\n"
-"Last-Translator: Arjan Timmerman <arjan@kwando-tech.nl>\n"
+"Last-Translator: Jan-Willem Harmanny <jwharmanny@hotmail.com>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -16,31 +18,30 @@ msgstr ""
 #: libgda/gda-client.c:300 libgda/gda-client.c:502 libgda/gda-connection.c:218
 #, c-format
 msgid "Data source %s not found in configuration"
-msgstr "Databron '%s' niet gevonden in configuratie"
+msgstr "Gegevensbron '%s' niet gevonden in configuratie"
 
 #: libgda/gda-client.c:325
 #, c-format
 msgid "Could not find provider %s in the current setup"
-msgstr ""
+msgstr "Kan leverancier %s niet in de huidige setup vinden"
 
 #: libgda/gda-client.c:354
 #, c-format
 msgid "Provider %s does not implement entry function"
-msgstr ""
+msgstr "Provider %s heeft geen entry functie geïmplementeerd"
 
 #: libgda/gda-client.c:364
-#, fuzzy
 msgid "Could not create GdaServerProvider object from plugin"
-msgstr "Kon verbinding naar %s niet openen"
+msgstr "Kan geen GdaServerProvider object aanmaken vanuit plugin"
 
 #: libgda/gda-client.c:429
 msgid "Temporary data source created by libgda. Don't remove it"
-msgstr ""
+msgstr "Tijdelijke gegevensbron, aangemaakt door libgda. Niet verwijderen"
 
 #: libgda/gda-config.c:1072
-#, fuzzy, c-format
+#, c-format
 msgid "Error: %s"
-msgstr "fout"
+msgstr "Fout: %s"
 
 #. gda_server_recordset_model_set_field_defined_size (recset, 0, 256);
 #: libgda/gda-config.c:1322 providers/default/gda-default-provider.c:555
@@ -73,54 +74,54 @@ msgstr "Omschrijving"
 
 #: libgda/gda-config.c:1326
 msgid "Username"
-msgstr "gebruikersnaam"
+msgstr "Gebruikersnaam"
 
 #: libgda/gda-config.c:1327
 msgid "Password"
-msgstr ""
+msgstr "Wachtwoord"
 
 #: libgda/gda-data-model.c:686
 #, c-format
 msgid "Data model %p is not editable"
-msgstr ""
+msgstr "Gegevensmodel %p kan niet worden bewerkt"
 
 #: libgda/gda-init.c:48
 msgid "Attempt to initialize an already initialized client"
-msgstr "Poging om een reeds geinitializeerde client opnieuw te initializeren"
+msgstr "Poging om een reeds geïnitialiseerde client opnieuw te initialiseren"
 
 #: libgda/gda-init.c:59
 msgid "libgda needs GModule. Finishing..."
-msgstr ""
+msgstr "libgda heeft GModule nodig. Afsluiten..."
 
 #: libgda/gda-select.c:315
-#, fuzzy, c-format
+#, c-format
 msgid "Could not parse SQL string '%s'"
-msgstr "Kreeg een ontledingsfout in bestand bij %s"
+msgstr "Kan SQL string '%s' niet ontleden"
 
 #: libgda/gda-select.c:319
 #, c-format
 msgid "SQL command is not a SELECT (is '%s'"
-msgstr ""
+msgstr "SQL commando is geen SELECT (is '%s'"
 
 #: libgda/gda-table.c:286
 #, c-format
 msgid "There is already a field called %s"
-msgstr "Er is al een veld genoemd %s"
+msgstr "Er is al een veld genaamd %s"
 
 #: libgda/gda-util.c:144
-#, fuzzy, c-format
+#, c-format
 msgid "Could not parse SQL command '%s'"
-msgstr "Kreeg een ontledingsfout in bestand bij %s"
+msgstr "Kan commando '%s' niet ontleden"
 
 #: libgda/gda-util.c:177
 #, c-format
 msgid "Error while reading %s: %s"
-msgstr ""
+msgstr "Fout tijdens lezen van %s: %s"
 
 #: libgda/gda-util.c:203
-#, fuzzy, c-format
+#, c-format
 msgid "Could not create file %s"
-msgstr "Kreeg een ontledingsfout in bestand bij %s"
+msgstr "Kan bestand %s niet aanmaken"
 
 #: libgda/gda-value.c:1650
 msgid "TRUE"
@@ -133,36 +134,35 @@ msgstr "ONWAAR"
 #: libgda/gda-value.c:1712
 #, c-format
 msgid "(GObject of type '%s'"
-msgstr ""
+msgstr "(GObject van type '%s'"
 
 #: libgda/gda-value.c:1715
 msgid "NULL GObject"
-msgstr ""
+msgstr "NULL Gobject"
 
 #: libgda/gda-xml-database.c:235
 #, c-format
 msgid "Could not load file at %s"
-msgstr "Kon bestand niet laden op '%s'"
+msgstr "Kan bestand niet lezen bij %s"
 
 #: libgda/gda-xml-database.c:244
 #, c-format
 msgid "Could not parse file at %s"
-msgstr "Kreeg een ontledingsfout in bestand bij %s"
+msgstr "Kan bestand niet ontleden bij %s"
 
 #: libgda/gda-xml-database.c:254
-#, fuzzy, c-format
+#, c-format
 msgid "Invalid XML database file '%s'"
-msgstr "Geselecteerde databank '%s'"
+msgstr "Ongeldig XML database bestand '%s'"
 
 #: libgda/gda-xml-database.c:434
-#, fuzzy, c-format
+#, c-format
 msgid "Could not create a XML node from table %s"
-msgstr "Kreeg een ontledingsfout in bestand bij %s"
+msgstr "Kan geen XML knooppunt van tabel %s aanmaken"
 
 #: libgda/gda-xml-database.c:452
-#, fuzzy
 msgid "Could not dump XML file to memory"
-msgstr "Kon bestand niet laden op '%s'"
+msgstr "Kan XML bestand niet uit het geheugen genereren"
 
 #: libgda/gda-xml-database.c:545 libgda/gda-xml-database.c:581
 #: libgda/gda-xml-database.c:624
@@ -171,38 +171,35 @@ msgid "Table %s already exists"
 msgstr "Tabel %s bestaat al"
 
 #: libgda/gda-xml-database.c:617
-#, fuzzy
 msgid "Invalid node"
-msgstr "Ongeldige "
+msgstr "Ongeldig knooppunt"
 
 #: libgda/gda-xml-database.c:659
 #, c-format
 msgid "Duplicated <data> node for table %s"
-msgstr ""
+msgstr "Dubbel <data> knooppunt voor tabel %s"
 
 #: libgda/gda-xml-database.c:666
-#, fuzzy
 msgid "Invalid XML node"
-msgstr "Ongeldige MYSQL handeling"
+msgstr "Ongeldige XML knooppunt"
 
 #: providers/default/gda-default-provider.c:190
 #: providers/sqlite/gda-sqlite-provider.c:198
 msgid ""
 "A full path must be specified on the connection string to open a database."
 msgstr ""
-"Een volledige pad moet gespecificeerd worden op de connectie string om een "
+"Een volledig pad moet gespecificeerd worden op de connectie string om een "
 "database te openen."
 
 #: providers/default/gda-default-provider.c:252
 #: providers/default/gda-default-provider.c:267
 #: providers/default/gda-default-provider.c:294
-#, fuzzy
 msgid "Invalid internal handle"
-msgstr "Ongeldige Sqlite handeling"
+msgstr "Ongeldige interne handle"
 
 #: providers/default/gda-default-provider.c:333
 msgid "Not Implemented"
-msgstr ""
+msgstr "Niet geïmplementeerd"
 
 #: providers/default/gda-default-provider.c:454
 #: providers/mdb/gda-mdb-provider.c:490
@@ -212,7 +209,7 @@ msgstr ""
 #: providers/postgres/gda-postgres-provider.c:1351
 #: providers/sqlite/gda-sqlite-provider.c:622
 msgid "Field name"
-msgstr ""
+msgstr "Veld naam"
 
 #: providers/default/gda-default-provider.c:455
 #: providers/mdb/gda-mdb-provider.c:491
@@ -222,7 +219,7 @@ msgstr ""
 #: providers/postgres/gda-postgres-provider.c:1352
 #: providers/sqlite/gda-sqlite-provider.c:623
 msgid "Data type"
-msgstr ""
+msgstr "Gegevens type"
 
 #: providers/default/gda-default-provider.c:456
 #: providers/mdb/gda-mdb-provider.c:492
@@ -232,7 +229,7 @@ msgstr ""
 #: providers/postgres/gda-postgres-provider.c:1353
 #: providers/sqlite/gda-sqlite-provider.c:624
 msgid "Size"
-msgstr ""
+msgstr "Formaat"
 
 #: providers/default/gda-default-provider.c:457
 #: providers/mdb/gda-mdb-provider.c:493
@@ -242,7 +239,7 @@ msgstr ""
 #: providers/postgres/gda-postgres-provider.c:1354
 #: providers/sqlite/gda-sqlite-provider.c:625
 msgid "Scale"
-msgstr ""
+msgstr "Schaal"
 
 #: providers/default/gda-default-provider.c:458
 #: providers/mdb/gda-mdb-provider.c:494
@@ -252,7 +249,7 @@ msgstr ""
 #: providers/postgres/gda-postgres-provider.c:1355
 #: providers/sqlite/gda-sqlite-provider.c:626
 msgid "Not null?"
-msgstr ""
+msgstr "Niet nul?"
 
 #: providers/default/gda-default-provider.c:459
 #: providers/mdb/gda-mdb-provider.c:495
@@ -262,7 +259,7 @@ msgstr ""
 #: providers/postgres/gda-postgres-provider.c:1356
 #: providers/sqlite/gda-sqlite-provider.c:627
 msgid "Primary key?"
-msgstr ""
+msgstr "Primaire sleutel?"
 
 #: providers/default/gda-default-provider.c:460
 #: providers/mdb/gda-mdb-provider.c:496
@@ -272,7 +269,7 @@ msgstr ""
 #: providers/postgres/gda-postgres-provider.c:1357
 #: providers/sqlite/gda-sqlite-provider.c:628
 msgid "Unique index?"
-msgstr ""
+msgstr "Unieke index?"
 
 #: providers/default/gda-default-provider.c:461
 #: providers/mdb/gda-mdb-provider.c:497
@@ -282,36 +279,34 @@ msgstr ""
 #: providers/postgres/gda-postgres-provider.c:1358
 #: providers/sqlite/gda-sqlite-provider.c:629
 msgid "References"
-msgstr ""
+msgstr "Referenties"
 
 #: providers/default/gda-default-provider.c:471
 #: providers/default/gda-default-provider.c:477
-#, fuzzy
 msgid "Invalid argument"
-msgstr "Ongeldige "
+msgstr "Ongeldig argument"
 
 #: providers/default/gda-default-provider.c:484
 #: providers/mdb/gda-mdb-table.c:48
 #, c-format
 msgid "Table %s not found"
-msgstr ""
+msgstr "Tabel %s niet gevonden"
 
 #: providers/default/gda-default-provider.c:509
-#, fuzzy
 msgid "Could not get description for column"
-msgstr "Kon component van connectie niet maken"
+msgstr "Kan de omschrijving voor deze kolom niet vinden"
 
 #: providers/default/libmain.c:33
 msgid "Default"
-msgstr ""
+msgstr "Standaard"
 
 #: providers/default/libmain.c:39
 msgid "Default provider, based on XML"
-msgstr ""
+msgstr "Standaard leverancier, gebaseerd op XML"
 
 #: providers/firebird/gda-firebird-provider.c:187
 msgid "No database specified"
-msgstr ""
+msgstr "Geen database gespecificeerd"
 
 #: providers/firebird/gda-firebird-provider.c:234
 #: providers/firebird/gda-firebird-provider.c:261
@@ -322,64 +317,63 @@ msgstr ""
 #: providers/firebird/gda-firebird-provider.c:447
 #: providers/firebird/gda-firebird-provider.c:485
 #: providers/firebird/gda-firebird-provider.c:539
-#, fuzzy
 msgid "Invalid Firebird handle"
-msgstr "Ongeldige Sqlite handeling"
+msgstr "Ongeldige Firebird handle"
 
 #: providers/firebird/gda-firebird-provider.c:453
 #: providers/firebird/gda-firebird-provider.c:491
-#, fuzzy
 msgid "Invalid transaction handle"
-msgstr "Ongeldige Sqlite handeling"
+msgstr "Ongeldige transactie handle"
 
 #: providers/firebird/libmain.c:39
-#, fuzzy
 msgid "Provider for FireBird databases"
-msgstr "GDA SQLite Gegevensbron Toegang"
+msgstr "Leverancier voor FireBird databases"
 
 #: providers/freetds/gda-freetds-provider.c:195
 msgid ""
 "Connection aborted. You must provide at least a host, username and password "
 "using DSN 'QUERY=;USER=;PASSWORD='."
 msgstr ""
+"Verbinding afgebroken. U dient minstens een host, gebruikersnaam, en "
+"wachtwoord op te geven met DSN 'QUERY=;USER=;PASSWORD='."
 
 #: providers/freetds/gda-freetds-provider.c:208
 msgid "Error creating message container."
-msgstr ""
+msgstr "Fout bij aanmaken van bericht container"
 
 #: providers/freetds/gda-freetds-provider.c:215
 msgid "Error creating error container."
-msgstr ""
+msgstr "Fout bij aanmaken van fout container"
 
 #: providers/freetds/gda-freetds-provider.c:253
 #: providers/freetds/gda-freetds-provider.c:255
 msgid "Allocating tds context failed."
-msgstr ""
+msgstr "Toewijzen van tds context mislukt."
 
 #: providers/freetds/gda-freetds-provider.c:271
 #: providers/freetds/gda-freetds-provider.c:273
 msgid "Establishing connection failed."
-msgstr ""
+msgstr "Verbinding maken is mislukt."
 
 #: providers/freetds/gda-freetds-provider.c:285
 #: providers/freetds/gda-freetds-provider.c:286
 msgid "Failed getting connection info."
-msgstr ""
+msgstr "Kan geen verbinding info ophalen."
 
 #: providers/freetds/gda-freetds-provider.c:766
 #: providers/freetds/gda-freetds-provider.c:767
 msgid "Query did not succeed in execute_cmd()."
-msgstr ""
+msgstr "Query kon niet succesvol execute_cmd() uitvoeren."
 
 #: providers/freetds/gda-freetds-provider.c:776
 #: providers/freetds/gda-freetds-provider.c:778
 msgid "Unexpected result tokens in execute_cmd()."
-msgstr ""
+msgstr "Onverwachte resultaat tokens in execute_cmd()."
 
 #: providers/freetds/gda-freetds-provider.c:786
 #: providers/freetds/gda-freetds-provider.c:787
 msgid "Unexpected return in execute_cmd()."
-msgstr ""
+msgstr "Onverwachte return in execute_cmd()."
 
 #: providers/freetds/gda-freetds-provider.c:1021
 #, c-format
@@ -387,6 +381,8 @@ msgid ""
 "Msg %d, Level %d, State %d, Server %s, Line %d\n"
 "%s\n"
 msgstr ""
+"Msg %d, Level %d, Status %d, Server %s, Regel %d\n"
+"%s\n"
 
 #: providers/freetds/gda-freetds-provider.c:1040 providers/freetds/utils.c:44
 #: providers/oracle/utils.c:71 providers/postgres/utils.c:51
@@ -396,24 +392,23 @@ msgstr "Niet beschikbaar"
 
 #: providers/freetds/gda-freetds-recordset.c:360
 msgid "Error processing result rows.\n"
-msgstr ""
+msgstr "Fout bij verwerken van resultaat rijen.\n"
 
 #: providers/freetds/gda-freetds-recordset.c:367
 msgid "Unexpected freetds return code in tds_process_row_tokens().\n"
-msgstr ""
+msgstr "Onverwachte freetds return code in tds_process_row_tokens().\n"
 
 #: providers/freetds/gda-freetds-recordset.c:377
 msgid "Error processing results.\n"
-msgstr ""
+msgstr "Fout bij verwerken van de resultaten.\n"
 
 #: providers/freetds/gda-freetds-recordset.c:384
 msgid "Unexpected freetds return code in tds_process_result_tokens\n"
-msgstr ""
+msgstr "Onverwachte freetds return code in tds_process_result_tokens\n"
 
 #: providers/freetds/libmain.c:39
-#, fuzzy
 msgid "Provider for TDS-based databases (using FreeTDS)"
-msgstr "GDA SQLite Gegevensbron Toegang"
+msgstr "Leverancier voor TDS-gebaseerde databases (gebruikmakend van FreeTDS)"
 
 #: providers/freetds/utils.c:40 providers/oracle/utils.c:66
 #: providers/postgres/utils.c:46 providers/sybase/utils.c:166
@@ -422,34 +417,32 @@ msgstr "GEEN OMSCHRIJVING"
 
 #: providers/ibmdb2/gda-ibmdb2-provider.c:141
 #: providers/ibmdb2/gda-ibmdb2-provider.c:153
-#, fuzzy
 msgid "Could not allocate environment handle."
-msgstr "Kon cs_diag() niet initializeren"
+msgstr "Kan omgeving handle niet toewijzen."
 
 #: providers/ibmdb2/gda-ibmdb2-provider.c:164
-#, fuzzy
 msgid "Could not set autocommit to off.\n"
-msgstr "Kon het bestand %s niet verkrijgen"
+msgstr "Kan de automatische synchronisatie niet uitschakelen.\n"
 
 #: providers/ibmdb2/gda-ibmdb2-provider.c:178
-#, fuzzy
 msgid "Could not allocate environment handle.\n"
-msgstr "Kon cs_diag() niet initializeren"
+msgstr "Kan omgeving handle niet toewijzen.\n"
 
 #. GetInfo is needed for obtaining database name
 #. is needed for tables schema
 #: providers/ibmdb2/gda-ibmdb2-provider.c:190
 msgid "SQLGetInfo is unsupported. Hence IBM DB2 Provider will not work.\n"
 msgstr ""
+"SQLGetInfo wordt niet ondersteund. Daardoor zal de IBM DB2 Provider niet "
+"werken.\n"
 
 #: providers/ibmdb2/gda-ibmdb2-provider.c:204
 msgid "SQLGetFunctions gave unexpected return. Connection terminated.\n"
-msgstr ""
+msgstr "SQLGetFunctions gaf een onverwachte return. Verbinding afgebroken.\n"
 
 #: providers/ibmdb2/libmain.c:39
-#, fuzzy
 msgid "Provider for IBMDB2 databases"
-msgstr "GDA SQLite Gegevensbron Toegang"
+msgstr "Leverancier voor IBMDB2 databases"
 
 #: providers/ldap/gda-ldap-provider.c:257
 #: providers/ldap/gda-ldap-provider.c:490
@@ -458,9 +451,8 @@ msgstr "GDA SQLite Gegevensbron Toegang"
 #: providers/ldap/gda-ldap-provider.c:587
 #: providers/ldap/gda-ldap-recordset.c:58
 #: providers/ldap/gda-ldap-recordset.c:176
-#, fuzzy
 msgid "Invalid LDAP handle"
-msgstr "Ongeldige MySQL handeling"
+msgstr "Ongeldige LDAP handle"
 
 #: providers/ldap/gda-ldap-provider.c:328 providers/mdb/gda-mdb-provider.c:548
 #: providers/mdb/gda-mdb-provider.c:595 providers/mdb/gda-mdb-provider.c:655
@@ -482,7 +474,7 @@ msgstr "Ongeldige MySQL handeling"
 #: providers/sqlite/gda-sqlite-provider.c:752
 #: providers/sybase/gda-sybase-provider.c:905
 msgid "Owner"
-msgstr ""
+msgstr "Eigenaar"
 
 #: providers/ldap/gda-ldap-provider.c:329 providers/mdb/gda-mdb-provider.c:549
 #: providers/mdb/gda-mdb-provider.c:596 providers/mdb/gda-mdb-provider.c:656
@@ -501,7 +493,7 @@ msgstr ""
 #: providers/sqlite/gda-sqlite-provider.c:753
 #: providers/sybase/gda-sybase-provider.c:907
 msgid "Comments"
-msgstr ""
+msgstr "Commentaar"
 
 #. gda_server_recordset_model_set_field_defined_size (recset, 0, 32);
 #: providers/ldap/gda-ldap-provider.c:423
@@ -527,50 +519,45 @@ msgstr "Rij nummer buiten bereik"
 #: providers/mysql/gda-mysql-recordset.c:288
 #: providers/oracle/gda-oracle-recordset.c:466
 msgid "Attempt to insert a row with an invalid number of columns"
-msgstr ""
+msgstr "Poging tot invoegen van een rij met een ongeldig aantal kolommen"
 
 #: providers/ldap/gda-ldap-recordset.c:298
 #: providers/mysql/gda-mysql-recordset.c:303
 #: providers/oracle/gda-oracle-recordset.c:481
-#, fuzzy
 msgid "Could not retrieve column's information"
-msgstr "Kon component van connectie niet maken"
+msgstr "Kan kolominformatie niet verkrijgen"
 
 #: providers/ldap/gda-ldap-recordset.c:316
 #: providers/mysql/gda-mysql-recordset.c:321
 #: providers/oracle/gda-oracle-recordset.c:499
-#, fuzzy
 msgid "Could not retrieve column's value"
-msgstr "Kon het bestand %s niet verkrijgen"
+msgstr "Kan kolomwaarde niet verkrijgen"
 
 #: providers/ldap/libmain.c:42
 msgid "Provider for LDAP directory"
-msgstr ""
+msgstr "Leverancier voor LDAP directory"
 
 #: providers/mdb/gda-mdb-provider.c:205
-#, fuzzy
 msgid "A database FILENAME must be specified in the connection_string"
 msgstr ""
-"Een volledige pad moet gespecificeerd worden op de connectie string om een "
-"database te openen."
+"Een database BESTANDSNAAM moet worden gespecificeerd in de connection_string"
 
 #: providers/mdb/gda-mdb-provider.c:214
 #: providers/xbase/gda-xbase-provider.c:223
-#, fuzzy, c-format
+#, c-format
 msgid "Could not open file %s"
-msgstr "Kreeg een ontledingsfout in bestand bij %s"
+msgstr "Kan bestand %s niet openen"
 
 #: providers/mdb/gda-mdb-provider.c:238 providers/mdb/gda-mdb-provider.c:268
 #: providers/mdb/gda-mdb-provider.c:290 providers/mdb/gda-mdb-provider.c:342
 #: providers/mdb/gda-mdb-provider.c:690 providers/mdb/gda-mdb-provider.c:726
-#, fuzzy
 msgid "Invalid MDB handle"
-msgstr "Ongeldige MySQL handeling"
+msgstr "Ongeldige MDB handle"
 
 #: providers/mdb/gda-mdb-provider.c:404 providers/mdb/gda-mdb-provider.c:414
 #: providers/mdb/gda-mdb-provider.c:424
 msgid "Transactions not supported in MDB provider"
-msgstr ""
+msgstr "Transacties worden niet ondersteund in de MDB leverancier"
 
 #: providers/mdb/gda-mdb-provider.c:498
 #: providers/mysql/gda-mysql-provider.c:1077
@@ -578,38 +565,36 @@ msgstr ""
 #: providers/postgres/gda-postgres-provider.c:1359
 #: providers/sqlite/gda-sqlite-provider.c:630
 msgid "Default value"
-msgstr ""
+msgstr "Standaard waarde"
 
 #: providers/mdb/gda-mdb-provider.c:546
 #: providers/odbc/gda-odbc-provider.c:1030
 #: providers/postgres/gda-postgres-provider.c:833
-#, fuzzy
 msgid "Procedure"
-msgstr "Opgeslagen procedures"
+msgstr "Procedures"
 
 #: providers/mdb/gda-mdb-provider.c:547
 #: providers/mysql/gda-mysql-provider.c:702
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #: providers/mdb/gda-mdb-provider.c:550
 #: providers/mysql/gda-mysql-provider.c:705
 #: providers/odbc/gda-odbc-provider.c:1034
 #: providers/postgres/gda-postgres-provider.c:837
 msgid "Return type"
-msgstr ""
+msgstr "Return type"
 
 #: providers/mdb/gda-mdb-provider.c:551
 msgid "# of args"
-msgstr ""
+msgstr "aantal args"
 
 #: providers/mdb/gda-mdb-provider.c:552
 #: providers/mysql/gda-mysql-provider.c:706
 #: providers/odbc/gda-odbc-provider.c:1036
 #: providers/postgres/gda-postgres-provider.c:839
-#, fuzzy
 msgid "Args types"
-msgstr "Aggregaten"
+msgstr "Args typen"
 
 #: providers/mdb/gda-mdb-provider.c:553
 #: providers/odbc/gda-odbc-provider.c:1037
@@ -621,80 +606,76 @@ msgstr "Aggregaten"
 #: providers/postgres/gda-postgres-provider.c:1186
 #: providers/postgres/gda-postgres-provider.c:1305
 #: providers/postgres/gda-postgres-provider.c:1847
-#, fuzzy
 msgid "Definition"
-msgstr "Omschrijving"
+msgstr "Definitie"
 
 #: providers/mdb/gda-mdb-provider.c:657
-#, fuzzy
 msgid "GDA Type"
-msgstr "Type"
+msgstr "GDA Type"
 
 #: providers/mdb/gda-mdb-provider.c:659
 msgid "Boolean type"
-msgstr ""
+msgstr "Boolean type"
 
 #: providers/mdb/gda-mdb-provider.c:660
 msgid "1-byte integers"
-msgstr ""
+msgstr "1-byte integers"
 
 #: providers/mdb/gda-mdb-provider.c:661
 msgid "Double precision values"
-msgstr ""
+msgstr "Dubbele precisie waarden"
 
 #: providers/mdb/gda-mdb-provider.c:662
 msgid "Single precision values"
-msgstr ""
+msgstr "Enkele precisie waarden"
 
 #: providers/mdb/gda-mdb-provider.c:663
 msgid "32-bit integers"
-msgstr ""
+msgstr "32-bit integers"
 
 #: providers/mdb/gda-mdb-provider.c:664
 msgid "64-bit integers"
-msgstr ""
+msgstr "64-bit integers"
 
 #: providers/mdb/gda-mdb-provider.c:665
 msgid "Variable length character strings"
-msgstr ""
+msgstr "Karakterstrings van variabele lengte"
 
 #: providers/mdb/gda-mdb-provider.c:666
 msgid "Money amounts"
-msgstr ""
+msgstr "Hoeveelheden geld"
 
 #: providers/mdb/gda-mdb-provider.c:667
 msgid "OLE object"
-msgstr ""
+msgstr "OLE object"
 
 #: providers/mdb/gda-mdb-provider.c:668
 msgid "FIXME"
-msgstr ""
+msgstr "FIXME"
 
 #: providers/mdb/gda-mdb-provider.c:669
 msgid "Date/time value"
-msgstr ""
+msgstr "Datum/tijd waarde"
 
 #: providers/mdb/gda-mdb-provider.c:670
 msgid "Character strings"
-msgstr ""
+msgstr "Karakter strings"
 
 #. end unsafe
 #: providers/mdb/gda-mdb-provider.c:737
-#, fuzzy, c-format
+#, c-format
 msgid "Could not parse '%s' command"
-msgstr "Kreeg een ontledingsfout in bestand bij %s"
+msgstr "Kan commando '%s' niet ontleden"
 
 #: providers/mdb/libmain.c:36
 msgid "Provider for Microsoft Access files"
-msgstr ""
+msgstr "Leverancier voor Microsoft Access bestanden"
 
 #: providers/mysql/gda-mysql-provider.c:218
-#, fuzzy
 msgid ""
 "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
 msgstr ""
-"%s:%d: Je kunt geen UNIX_SOCKET geven als je ook een HOST of POORT geeft. "
-"Verwijder de UNIX_SOCKET of verwijder zowel de HOST als POORT opties"
+"U kunt geen UNIX_SOCKET opgeven als u ook al een HOST of een PORT opgeeft."
 
 #: providers/mysql/gda-mysql-provider.c:294
 #: providers/mysql/gda-mysql-provider.c:1085
@@ -722,11 +703,11 @@ msgstr "Ongeldige MYSQL handeling"
 #: providers/oracle/gda-oracle-provider.c:965
 #: providers/sqlite/gda-sqlite-provider.c:472
 msgid "Transactions are not supported in read-only mode"
-msgstr ""
+msgstr "Transacties worden niet ondersteund in alleen-lezen modus"
 
 #: providers/mysql/gda-mysql-provider.c:707
 msgid "SQL"
-msgstr ""
+msgstr "SQL"
 
 #: providers/mysql/gda-mysql-provider.c:974
 #: providers/odbc/gda-odbc-provider.c:1257
@@ -734,21 +715,20 @@ msgstr ""
 #: providers/sqlite/gda-sqlite-provider.c:754
 #: providers/sybase/gda-sybase-provider.c:909
 msgid "GDA type"
-msgstr ""
+msgstr "GDA type"
 
 #: providers/mysql/gda-mysql-provider.c:1094
 #: providers/mysql/gda-mysql-provider.c:1102
 msgid "Table name is needed but none specified in parameter list"
-msgstr ""
+msgstr "Tabelnaam is benodigd maar niet gespecificeerd in parameter lijst"
 
 #: providers/mysql/libmain.c:41
-#, fuzzy
 msgid "Provider for MySQL databases"
-msgstr "GDA SQLite Gegevensbron Toegang"
+msgstr "Leverancier voor MySQL databases"
 
 #: providers/odbc/gda-odbc-provider.c:183
 msgid "Unable to SQLAllocEnv()..."
-msgstr ""
+msgstr "SQLAllocEnv() mislukt..."
 
 #: providers/odbc/gda-odbc-provider.c:433
 #: providers/odbc/gda-odbc-provider.c:453
@@ -756,31 +736,29 @@ msgstr ""
 #: providers/odbc/gda-odbc-provider.c:513
 #: providers/odbc/gda-odbc-provider.c:544
 #: providers/odbc/gda-odbc-provider.c:574
-#, fuzzy
 msgid "Invalid Odbc handle"
-msgstr "Ongeldige Sqlite handeling"
+msgstr "Ongeldige Odbc handle"
 
 #: providers/odbc/gda-odbc-provider.c:1031
 #: providers/postgres/gda-postgres-provider.c:834
 #: providers/postgres/gda-postgres-provider.c:1300
 msgid "Id"
-msgstr ""
+msgstr "Id"
 
 #: providers/odbc/gda-odbc-provider.c:1035
 #: providers/postgres/gda-postgres-provider.c:838
 msgid "Nb args"
-msgstr ""
+msgstr "Nb args"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/odbc/gda-odbc-provider.c:1140
 #: providers/postgres/gda-postgres-provider.c:1104
 #: providers/postgres/gda-postgres-provider.c:1899
 msgid "Table"
-msgstr ""
+msgstr "Tabel"
 
 #: providers/odbc/gda-odbc-provider.c:1296
 #: providers/oracle/gda-oracle-provider.c:1750 testing/client.c:129
-#, fuzzy
 msgid "Views"
 msgstr "Aanzichten"
 
@@ -789,72 +767,59 @@ msgstr "Aanzichten"
 #: providers/postgres/gda-postgres-provider.c:1844
 #: providers/postgres/gda-postgres-provider.c:1900
 msgid "Sequence"
-msgstr ""
+msgstr "Rij"
 
 #: providers/odbc/libmain.c:41
-#, fuzzy
 msgid "Provider for ODBC data sources"
-msgstr "GDA SQLite Gegevensbron Toegang"
+msgstr "Leverancier voor ODBC gegevensbronnen"
 
 #: providers/oracle/gda-oracle-provider.c:204
-#, fuzzy
 msgid "Could not initialize Oracle"
-msgstr "Kon Oracle Omgeving niet initializeren"
+msgstr "Kan Oracle niet initializeren"
 
 #: providers/oracle/gda-oracle-provider.c:215
-#, fuzzy
 msgid "Could not initialize the Oracle environment"
-msgstr "Kon Oracle Omgeving niet initializeren"
+msgstr "Kan de Oracle omgeving niet initializeren"
 
 #: providers/oracle/gda-oracle-provider.c:227
-#, fuzzy
 msgid "Could not allocate the Oracle service handle"
-msgstr "Kon cs_diag() niet initializeren"
+msgstr "Kan de Oracle service handle niet toewijzen"
 
 #: providers/oracle/gda-oracle-provider.c:237
-#, fuzzy
 msgid "Could not allocate the Oracle error handle"
-msgstr "Kon ct_diag() niet initializeren"
+msgstr "Kan de Oracle foutafhandeling niet toewijzen"
 
 #: providers/oracle/gda-oracle-provider.c:249
-#, fuzzy
 msgid "Could not allocate the Oracle server handle"
-msgstr "Kon cs_diag() niet initializeren"
+msgstr "Kan de Oracle server handle niet toewijzen"
 
 #: providers/oracle/gda-oracle-provider.c:262
-#, fuzzy
 msgid "Could not allocate the Oracle session handle"
-msgstr "Kon ct_diag() niet initializeren"
+msgstr "Kon de Oracle sessie handle niet toewijzen"
 
 #: providers/oracle/gda-oracle-provider.c:292
-#, fuzzy
 msgid "Could not attach to the Oracle server"
-msgstr "Kon cs_diag() niet initializeren"
+msgstr "Kon de Oracle server niet aankoppelen"
 
 #: providers/oracle/gda-oracle-provider.c:308
-#, fuzzy
 msgid "Could not set the Oracle server attribute in the service context"
-msgstr "Kon cs_diag() niet initializeren"
+msgstr "Kan het Oracle server attribuut niet in de service context instellen"
 
 #: providers/oracle/gda-oracle-provider.c:324
-#, fuzzy
 msgid "Could not set the Oracle username attribute"
-msgstr "Kon cs_diag() niet initializeren"
+msgstr "Kan het Oracle gebruikersnaam attribuut niet instellen"
 
 #: providers/oracle/gda-oracle-provider.c:340
-#, fuzzy
 msgid "Could not set the Oracle password attribute"
-msgstr "Kon 'CORBA factory' niet openen"
+msgstr "Kan het Oracle wachtwoord attribuut niet instellen"
 
 #: providers/oracle/gda-oracle-provider.c:355
-#, fuzzy
 msgid "Could not begin the Oracle session"
-msgstr "Kon Oracle Omgeving niet initializeren"
+msgstr "Kan de Oracle sessie niet beginnen"
 
 #: providers/oracle/gda-oracle-provider.c:373
-#, fuzzy
 msgid "Could not set the Oracle session attribute in the service context"
-msgstr "Kon cs_diag() niet initializeren"
+msgstr "Kan het Oracle sessie attribuut niet in de service context instellen"
 
 #: providers/oracle/gda-oracle-provider.c:443
 #: providers/oracle/gda-oracle-provider.c:475
@@ -869,146 +834,121 @@ msgstr "Kon cs_diag() niet initializeren"
 #: providers/oracle/gda-oracle-recordset.c:165
 #: providers/oracle/gda-oracle-recordset.c:387
 #: providers/oracle/gda-oracle-recordset.c:588
-#, fuzzy
 msgid "Invalid Oracle handle"
-msgstr "Ongeldige Sqlite handeling"
+msgstr "Ongeldige Oracle handeling"
 
 #: providers/oracle/gda-oracle-provider.c:486
-#, fuzzy
 msgid "Could not allocate the Oracle statement handle"
-msgstr "Kon cs_diag() niet initializeren"
+msgstr "Kan de Oracle statement handle niet toewijzen"
 
 #: providers/oracle/gda-oracle-provider.c:497
-#, fuzzy
 msgid "Could not prepare the Oracle statement"
-msgstr "Kon Oracle Omgeving niet initializeren"
+msgstr "Kan het Oracle statement niet klaarmaken"
 
 #: providers/oracle/gda-oracle-provider.c:529
-#, fuzzy
 msgid "Could not bind the Oracle statement parameter"
-msgstr "Kon 'CORBA factory' niet openen"
+msgstr "Kan de Oracle statement parameter niet binden"
 
 #: providers/oracle/gda-oracle-provider.c:574
-#, fuzzy
 msgid "Could not get the Oracle statement type"
-msgstr "Kon 'CORBA factory' niet openen"
+msgstr "Kan het Oracle statement type niet verkrijgen"
 
 #: providers/oracle/gda-oracle-provider.c:592
-#, fuzzy
 msgid "Could not execute the Oracle statement"
-msgstr "Kon Oracle Omgeving niet initializeren"
+msgstr "Kan het Oracle statement niet uitvoeren"
 
 #: providers/oracle/gda-oracle-provider.c:605
 msgid "Could not get the number of columns in the result set"
-msgstr ""
+msgstr "Kan het aantal kolommen van het resultaat niet verkrijgen"
 
 #: providers/oracle/gda-oracle-provider.c:622
 msgid "Could not get the parameter descripter in the result set"
-msgstr ""
+msgstr "Kan de parameter omschrijving niet uit het resultaat verkrijgen"
 
 #: providers/oracle/gda-oracle-provider.c:634
-#, fuzzy
 msgid "Could not get the column name in the result set"
-msgstr "Kon het bestand %s niet verkrijgen"
+msgstr "Kan de kolomnaam niet uit het resultaat verkrijgen"
 
 #: providers/oracle/gda-oracle-provider.c:780
 #: providers/oracle/gda-oracle-provider.c:861
 #: providers/oracle/gda-oracle-provider.c:916
 #: providers/oracle/gda-oracle-provider.c:977
-#, fuzzy
 msgid "Could not attach the transaction to the service context"
-msgstr "Kon cs_diag() niet initializeren"
+msgstr "Kan de transactie niet aan de service-context koppelen"
 
 #: providers/oracle/gda-oracle-provider.c:835
-#, fuzzy
 msgid "Could not allocate the Oracle transaction handle"
-msgstr "Kon ct_diag() niet initializeren"
+msgstr "Kan de Oracle transactie handle niet toewijzen"
 
 #: providers/oracle/gda-oracle-provider.c:847
-#, fuzzy
 msgid "Could not set the Oracle transaction name"
-msgstr "Kon Oracle Omgeving niet initializeren"
+msgstr "Kan de Oracle transactie naam niet instellen"
 
 #: providers/oracle/gda-oracle-provider.c:872
-#, fuzzy
 msgid "Could not start the Oracle transaction"
-msgstr "Kon 'CORBA factory' niet openen"
+msgstr "Kan de Oracle transactie niet starten"
 
 #: providers/oracle/gda-oracle-provider.c:925
-#, fuzzy
 msgid "Could not prepare the transaction to commit"
-msgstr "Kon component van connectie niet maken"
+msgstr "Kan de transactie niet klaarmaken voor versturen"
 
 #: providers/oracle/gda-oracle-provider.c:933
-#, fuzzy
 msgid "Could not commit the Oracle transaction"
-msgstr "Kon 'CORBA factory' niet openen"
+msgstr "Kan de Oracle transactie niet versturen"
 
 #: providers/oracle/gda-oracle-provider.c:984
-#, fuzzy
 msgid "Could not rollback the Oracle transaction"
-msgstr "Kon 'CORBA factory' niet openen"
+msgstr "Kan de Oracle transactie niet terugdraaien"
 
 #: providers/oracle/gda-oracle-provider.c:1273
-#, fuzzy
 msgid "Could not allocate the Oracle describe handle"
-msgstr "Kon cs_diag() niet initializeren"
+msgstr "Kan de Oracle omschrijving handle niet toewijzen"
 
 #: providers/oracle/gda-oracle-provider.c:1286
-#, fuzzy
 msgid "Could not describe the Oracle table"
-msgstr "Kon het bestand %s niet verkrijgen"
+msgstr "Kan de Oracle tabel niet omschrijven"
 
 #: providers/oracle/gda-oracle-provider.c:1299
-#, fuzzy
 msgid "Could not get the Oracle parameter handle"
-msgstr "Kon cs_diag() niet initializeren"
+msgstr "Kan de Oracle parameter handle niet verkrijgen"
 
 #: providers/oracle/gda-oracle-provider.c:1312
-#, fuzzy
 msgid "Could not get the number of columns in the table"
-msgstr "Kon het bestand %s niet verkrijgen"
+msgstr "Kan het aantal kolommen van de tabel niet verkrijgen"
 
 #: providers/oracle/gda-oracle-provider.c:1324
-#, fuzzy
 msgid "Could not get the column list"
-msgstr "Kon het bestand %s niet verkrijgen"
+msgstr "Kan de kolommenlijst niet verkrijgen"
 
 #: providers/oracle/gda-oracle-provider.c:1353
-#, fuzzy
 msgid "Could not get the Oracle column handle"
-msgstr "Kon ct_diag() niet initializeren"
+msgstr "Kan de Oracle kolom handle niet verkrijgen"
 
 #: providers/oracle/gda-oracle-provider.c:1366
-#, fuzzy
 msgid "Could not get the Oracle field name"
-msgstr "Kon Oracle Omgeving niet initializeren"
+msgstr "Kan de Oracle veldnaam niet verkrijgen"
 
 #: providers/oracle/gda-oracle-provider.c:1387
-#, fuzzy
 msgid "Could not get the Oracle field data type"
-msgstr "Kon 'CORBA factory' niet openen"
+msgstr "Kan het datatype van het Oracle veld niet verkrijgen"
 
 #: providers/oracle/gda-oracle-provider.c:1405
-#, fuzzy
 msgid "Could not get the Oracle field defined size"
-msgstr "Kon het bestand %s niet verkrijgen"
+msgstr "Kan het gedefinieerde formaat van het Oracle veld niet verkrijgen"
 
 #: providers/oracle/gda-oracle-provider.c:1422
-#, fuzzy
 msgid "Could not get the Oracle field scale"
-msgstr "Kon cs_diag() niet initializeren"
+msgstr "Kan de Oracle veld schaal niet verkrijgen"
 
 #: providers/oracle/gda-oracle-provider.c:1439
 msgid "Could not get the Oracle field nullable attribute"
-msgstr ""
+msgstr "Kan het nul-attribuut van het Oracle veld niet verkrijgen"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/oracle/gda-oracle-provider.c:1505
 #: providers/postgres/gda-postgres-provider.c:1803 testing/client.c:132
-#, fuzzy
 msgid "Users"
-msgstr "gebruikersnaam"
+msgstr "Gebruikers"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/oracle/gda-oracle-provider.c:1731
@@ -1017,86 +957,71 @@ msgid "Indexes"
 msgstr "Indexen"
 
 #: providers/oracle/gda-oracle-provider.c:1735
-#, fuzzy
 msgid "Procedures"
-msgstr "Opgeslagen procedures"
+msgstr "Procedures"
 
 #: providers/oracle/gda-oracle-provider.c:1739 testing/client.c:133
 msgid "Sequences"
-msgstr ""
+msgstr "Rijen"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/oracle/gda-oracle-provider.c:1746
 #: providers/postgres/gda-postgres-provider.c:1340 testing/client.c:134
-#, fuzzy
 msgid "Triggers"
-msgstr "Schakelaars"
+msgstr "Triggers"
 
 #: providers/oracle/gda-oracle-recordset.c:72
-#, fuzzy
 msgid "Could not get the Oracle parameter"
-msgstr "Kon Oracle Omgeving niet initializeren"
+msgstr "Kan de Oracle parameter niet verkrijgen"
 
 #: providers/oracle/gda-oracle-recordset.c:82
-#, fuzzy
 msgid "Could not get the parameter defined size"
-msgstr "Kreeg een ontledingsfout in bestand bij %s"
+msgstr "Kan het parameter gedefinieerde formaat niet verkrijgen"
 
 #: providers/oracle/gda-oracle-recordset.c:95
-#, fuzzy
 msgid "Could not get the parameter data type"
-msgstr "Kon component van het type %s niet creeren"
+msgstr "Kan het parameter gegevenstype niet verkrijgen"
 
 #: providers/oracle/gda-oracle-recordset.c:126
-#, fuzzy
 msgid "Could not define by position"
-msgstr "Kon bestand niet laden op '%s'"
+msgstr "Kan niet definiëren volgens positie"
 
 #: providers/oracle/gda-oracle-recordset.c:171
 #: providers/postgres/gda-postgres-recordset.c:264
-#, fuzzy
 msgid "Column out of range"
-msgstr "Rij nummer buiten bereik"
+msgstr "Kolom buiten bereik"
 
 #: providers/oracle/gda-oracle-recordset.c:183
-#, fuzzy
 msgid "Could not get the Oracle parameter information"
-msgstr "Kon component van connectie niet maken"
+msgstr "Kan de Oracle parameter informatie niet verkrijgen"
 
 #: providers/oracle/gda-oracle-recordset.c:193
-#, fuzzy
 msgid "Could not get the Oracle column name"
-msgstr "Kon het bestand %s niet verkrijgen"
+msgstr "Kan de Oracle kolomnaam niet verkrijgen"
 
 #: providers/oracle/gda-oracle-recordset.c:208
-#, fuzzy
 msgid "Could not get the Oracle column data type"
-msgstr "Kon 'CORBA factory' niet openen"
+msgstr "Kan het Oracle kolom gegevenstype niet verkrijgen"
 
 #: providers/oracle/gda-oracle-recordset.c:220
-#, fuzzy
 msgid "Could not get the Oracle column scale"
-msgstr "Kon het bestand %s niet verkrijgen"
+msgstr "Kan de Oracle kolom schaal niet verkrijgen"
 
 #: providers/oracle/gda-oracle-recordset.c:232
-#, fuzzy
 msgid "Could not get the Oracle column nullable attribute"
-msgstr "Kon 'CORBA factory' niet openen"
+msgstr "Kan het nul-attribuut van de Oracle-kolom niet verkrijgen"
 
 #: providers/oracle/gda-oracle-recordset.c:244
-#, fuzzy
 msgid "Could not get the Oracle defined size"
-msgstr "Kon het bestand %s niet verkrijgen"
+msgstr "Kan het Oracle gedefinieerde formaat niet verkrijgen"
 
 #: providers/oracle/gda-oracle-recordset.c:352
-#, fuzzy
 msgid "Could not fetch a row"
-msgstr "Kon het bestand %s niet verkrijgen"
+msgstr "Kan een rij niet ophalen"
 
 #: providers/oracle/libmain.c:34
-#, fuzzy
 msgid "Provider for Oracle databases"
-msgstr "GDA SQLite Gegevensbron Toegang"
+msgstr "Leverancier voor Oracle databases"
 
 #: providers/postgres/gda-postgres-provider.c:553
 #: providers/postgres/gda-postgres-provider.c:570
@@ -1105,57 +1030,50 @@ msgstr "GDA SQLite Gegevensbron Toegang"
 #: providers/postgres/gda-postgres-recordset.c:176
 #: providers/postgres/gda-postgres-recordset.c:216
 #: providers/postgres/gda-postgres-recordset.c:258
-#, fuzzy
 msgid "Invalid PostgreSQL handle"
 msgstr "Ongeldige PostgreSQL handeling"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/postgres/gda-postgres-provider.c:1183
-#, fuzzy
 msgid "View"
-msgstr "Aanzichten"
+msgstr "Beeld"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/postgres/gda-postgres-provider.c:1299
-#, fuzzy
 msgid "Aggregate"
-msgstr "Aggregaten"
+msgstr "Aggregate"
 
 #: providers/postgres/gda-postgres-provider.c:1303
-#, fuzzy
 msgid "OutType"
-msgstr "Type"
+msgstr "OutType"
 
 #: providers/postgres/gda-postgres-provider.c:1304
-#, fuzzy
 msgid "InType"
-msgstr "Type"
+msgstr "InType"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/postgres/gda-postgres-provider.c:1768 testing/client.c:125
 msgid "Databases"
-msgstr ""
+msgstr "Databases"
 
 #: providers/postgres/gda-postgres-recordset.c:231
 #: providers/sqlite/gda-sqlite-recordset.c:210
 #: providers/sqlite/gda-sqlite-recordset.c:242
-#, fuzzy
 msgid "Column number out of range"
-msgstr "Rij nummer buiten bereik"
+msgstr "Kolom nummer buiten bereik"
 
 #: providers/postgres/gda-postgres-recordset.c:354
 #, c-format
 msgid "Tuples:\"%s\""
-msgstr ""
+msgstr "Tupels:\"%s\""
 
 #: providers/postgres/libmain.c:41
-#, fuzzy
 msgid "Provider for PostgreSQL databases"
-msgstr "GDA SQLite Gegevensbron Toegang"
+msgstr "Leverancier voor PostgreSQL databases"
 
 #: providers/sqlite/gda-sqlite-provider.c:220
 msgid "Could not set empty_result_callbacks SQLite option"
-msgstr ""
+msgstr "Kan SQLite optie empty_result_callbacks niet instellen"
 
 #: providers/sqlite/gda-sqlite-provider.c:243
 #: providers/sqlite/gda-sqlite-provider.c:343
@@ -1164,9 +1082,8 @@ msgstr ""
 #: providers/sqlite/gda-sqlite-recordset.c:156
 #: providers/sqlite/gda-sqlite-recordset.c:195
 #: providers/sqlite/gda-sqlite-recordset.c:236
-#, fuzzy
 msgid "Invalid SQLite handle"
-msgstr "Ongeldige Sqlite handeling"
+msgstr "Ongeldige SQLite handeling"
 
 #: providers/sqlite/gda-sqlite-provider.c:265
 msgid "Invalid SQLITE handle"
@@ -1175,252 +1092,245 @@ msgstr "Ongeldige SQLITE handeling"
 #: providers/sqlite/gda-sqlite-provider.c:361
 #: providers/sqlite/gda-sqlite-provider.c:376
 msgid "Only one database per connection is allowed"
-msgstr ""
+msgstr "Slechts één database per verbinding is toegestaan"
 
 #: providers/sqlite/gda-sqlite-provider.c:390
 msgid "To remove a SQLite database you should remove the database file by hand"
 msgstr ""
+"Om een SQLite database te verwijderen, moet u handmatig het databse bestand "
+"verwijderen"
 
 #: providers/sqlite/gda-sqlite-provider.c:664
-#, fuzzy
 msgid "Could not retrieve information for field"
-msgstr "Kon component van connectie niet maken"
+msgstr "Kan veldinformatie niet verkrijgen"
 
 #: providers/sqlite/libmain.c:41
-#, fuzzy
 msgid "Provider for SQLite databases"
-msgstr "GDA SQLite Gegevensbron Toegang"
+msgstr "Leverancier voor SQLite databases"
 
 #. the logic to connect to the database
 #: providers/sybase/gda-sybase-provider.c:250
-#, fuzzy
 msgid "about to open connection"
-msgstr "** FOUT: kon de connectie naar %s niet openen\n"
+msgstr "bezig met voorbereiden van de verbinding"
 
 #: providers/sybase/gda-sybase-provider.c:276
 msgid "Out of memory. Allocating connection structure failed."
-msgstr ""
+msgstr "Geheugen is vol. Toewijzen van verbindingsstructuur is mislukt."
 
 #: providers/sybase/gda-sybase-provider.c:288
 msgid "Context allocated."
-msgstr ""
+msgstr "Context toegewezen."
 
 #: providers/sybase/gda-sybase-provider.c:295
 msgid "Client library initialized."
-msgstr ""
+msgstr "Client bibliotheek geïnitialiseerd."
 
 #: providers/sybase/gda-sybase-provider.c:321
 #, c-format
 msgid "Locale set to '%s'."
-msgstr ""
+msgstr "Taaldefinitie ingesteld op '%s'."
 
 #: providers/sybase/gda-sybase-provider.c:336
-#, fuzzy
 msgid "Could not initialize cslib callback"
-msgstr "Kon OCI Bibliotheek niet initializeren"
+msgstr "Kan cslib callback niet initialiseren"
 
 #: providers/sybase/gda-sybase-provider.c:340
 msgid "CS-lib callback initialized."
-msgstr ""
+msgstr "CS-lib callback geïnitialiseerd."
 
 #: providers/sybase/gda-sybase-provider.c:346
-#, fuzzy
 msgid "Could not initialize ct-client callback"
-msgstr "Kon Oracle Omgeving niet initializeren"
+msgstr "Kan ct-client callback niet initialiseren"
 
 #: providers/sybase/gda-sybase-provider.c:350
 msgid "CT-Client callback initialized."
-msgstr ""
+msgstr "CT-Client callback geïnitialiseerd."
 
 #: providers/sybase/gda-sybase-provider.c:357
-#, fuzzy
 msgid "Could not initialize ct-server callback"
-msgstr "Kon Oracle Omgeving niet initializeren"
+msgstr "Kan ct-server callback niet initialiseren"
 
 #: providers/sybase/gda-sybase-provider.c:361
 msgid "CT-Server callback initialized."
-msgstr ""
+msgstr "CT-Server callback geïnitialiseerd."
 
 #: providers/sybase/gda-sybase-provider.c:369
-#, fuzzy
 msgid "Connection allocated."
-msgstr "Connectie Tabellen"
+msgstr "Verbinding toegewezen."
 
 #: providers/sybase/gda-sybase-provider.c:409
 msgid "Appname set."
-msgstr ""
+msgstr "Appname ingesteld."
 
 #: providers/sybase/gda-sybase-provider.c:422
-#, fuzzy
 msgid "Username set."
-msgstr "gebruikersnaam"
+msgstr "Gebruikersnaam ingesteld."
 
 #: providers/sybase/gda-sybase-provider.c:436
 msgid "Password set."
-msgstr ""
+msgstr "Wachtwoord ingesteld."
 
 #: providers/sybase/gda-sybase-provider.c:448
 msgid "Empty password set."
-msgstr ""
+msgstr "Leeg wachtwoord ingesteld."
 
 #: providers/sybase/gda-sybase-provider.c:458
 msgid "Connected."
-msgstr ""
+msgstr "Verbonden."
 
 #: providers/sybase/gda-sybase-provider.c:476
 msgid "Finally connected."
-msgstr ""
+msgstr "Eindelijk verbonden."
 
 #: providers/sybase/gda-sybase-provider.c:610
 msgid ""
 "Cmd structure already in use. Command will not be executed because of "
 "blocked connection."
 msgstr ""
+"Cmd structuur is al in gebruik. Commando zal niet worden uitgevoerd omdat de "
+"verbinding is geblokkeerd."
 
 #: providers/sybase/gda-sybase-provider.c:624
 #, c-format
 msgid "Failed allocating a command structure in %s()"
-msgstr ""
+msgstr "Commando structuur toewijzen mislukt in %s()"
 
 #: providers/sybase/gda-sybase-provider.c:635
-#, fuzzy
 msgid "Could not prepare command structure."
-msgstr "Kreeg een ontledingsfout in bestand bij %s"
+msgstr "Kan de commando structuur niet klaarmaken."
 
 #: providers/sybase/gda-sybase-provider.c:644
 msgid "Sending sql-command failed."
-msgstr ""
+msgstr "Verzenden van sql-commando mislukt."
 
 #: providers/sybase/gda-sybase-provider.c:713
 msgid "Failed dropping command structure."
-msgstr ""
+msgstr "Verwijderen van commando structuur is mislukt."
 
 #: providers/sybase/gda-sybase-provider.c:743
 #, c-format
 msgid "Command structure already in use. %s failed."
-msgstr ""
+msgstr "Commando structuur is al in gebruik. %s mislukt."
 
 #: providers/sybase/gda-sybase-provider.c:751
 #: providers/sybase/gda-sybase-provider.c:855
-#, fuzzy
 msgid "Could not allocate command structure."
-msgstr "Kon cs_diag() niet initializeren"
+msgstr "Kan commandostructuur niet toewijzen."
 
 #: providers/sybase/gda-sybase-provider.c:759
-#, fuzzy, c-format
+#, c-format
 msgid "Could not prepare command structure with %s."
-msgstr "Kreeg een ontledingsfout in bestand bij %s"
+msgstr "Kan commando structuur niet klaarmaken met %s."
 
 #: providers/sybase/gda-sybase-provider.c:768
 msgid "Sending command failed."
-msgstr ""
+msgstr "Verzenden van commando is mislukt."
 
 #: providers/sybase/gda-sybase-provider.c:792
 #: providers/sybase/gda-sybase-provider.c:808
 #: providers/sybase/gda-sybase-provider.c:818
 #, c-format
 msgid "%s: %s failed"
-msgstr ""
+msgstr "%s: %s mislukt"
 
 #: providers/sybase/gda-sybase-provider.c:853
 #, c-format
 msgid ""
 "Connection already in use. Could not allocate command structure in %s()."
 msgstr ""
+"Verbinding al in gebruik. Kan commando structuur niet toewijzen in %s()."
 
 #: providers/sybase/gda-sybase-provider.c:866
 #, c-format
 msgid "Failed dropping command structure in %s()."
-msgstr ""
+msgstr "Verwijderen van commando structuur in %s() is mislukt."
 
 #: providers/sybase/gda-sybase-recordset.c:314
-#, fuzzy
 msgid "Could not allocate datamodel. No results will be returned."
-msgstr "Kon cs_diag() niet initializeren"
+msgstr ""
+"Kan gegevensmodel niet toewijzen. Er zullen geen resultaten worden geleverd."
 
 #: providers/sybase/gda-sybase-recordset.c:317
 msgid "ct_cancel() failed."
-msgstr ""
+msgstr "ct_cancel() mislukt."
 
 #: providers/sybase/gda-sybase-recordset.c:329
 #, c-format
 msgid "%s failed while processing a row result."
-msgstr ""
+msgstr "%s mislukt tijdens verwerken van een rij resultaat."
 
 #: providers/sybase/gda-sybase-recordset.c:336
 #, c-format
 msgid "%s returned <= 0 columns."
-msgstr ""
+msgstr "%s leverde <= 0 kolommen op."
 
 #: providers/sybase/gda-sybase-recordset.c:356
-#, fuzzy
 msgid "Could not allocate structure for column metainformation."
-msgstr "Kon component van connectie niet maken"
+msgstr "Kan de structuur voor kolom metainformatie niet toewijzen."
 
 #: providers/sybase/gda-sybase-recordset.c:360
-#, fuzzy, c-format
+#, c-format
 msgid "Could not call %s while processing row resultset."
-msgstr "Kon het bestand %s niet verkrijgen"
+msgstr "Kan %s niet aanroepen tijdens het verwerken van rij resultaten."
 
 #: providers/sybase/gda-sybase-recordset.c:378
 #: providers/sybase/gda-sybase-recordset.c:397
-#, fuzzy, c-format
+#, c-format
 msgid "Could not run %s on column %d"
-msgstr "Kreeg een ontledingsfout in bestand bij %s"
+msgstr "Kan %s niet uitvoeren op kolom %d"
 
 #: providers/sybase/gda-sybase-recordset.c:386
-#, fuzzy, c-format
+#, c-format
 msgid "Could not allocate data placeholder for column %d"
-msgstr "Kon ct_diag() niet initializeren"
+msgstr "Kan gegevens plaatshouder niet toewijzen voor kolom %d"
 
 #: providers/sybase/gda-sybase-recordset.c:415
-#, fuzzy, c-format
+#, c-format
 msgid "Could not run %s to cancel processing row resultset."
-msgstr "Kon het bestand %s niet verkrijgen"
+msgstr ""
+"Kan %s niet uitvoeren om de verwerking van rij resultaten te annuleren."
 
 #: providers/sybase/gda-sybase-recordset.c:430
 #, c-format
 msgid "%s failed on row %d"
-msgstr ""
+msgstr "%s mislukt op rij %d"
 
 #: providers/sybase/gda-sybase-recordset.c:456
 #, c-format
 msgid "%s terminated with unexpected return code."
-msgstr ""
+msgstr "%s afgebroken met onverwachte return code."
 
 #: providers/sybase/gda-sybase-recordset.c:530
 #, c-format
 msgid "%s returned %s"
-msgstr ""
+msgstr "%s leverde %s"
 
 #: providers/sybase/gda-sybase-types.c:94
 #: providers/sybase/gda-sybase-types.c:97
 msgid "Attempt setting a nonnullable field to null."
-msgstr ""
+msgstr "Probeert een nonnullable veld op null te zetten."
 
 #: providers/sybase/gda-sybase-types.c:208
 #, c-format
 msgid "cslib cannot convert type %d"
-msgstr ""
+msgstr "cslib kan type %d niet converteren"
 
 #: providers/sybase/gda-sybase-types.c:223
 #, c-format
 msgid "data conversion failed for type %d"
-msgstr ""
+msgstr "gegevens conversie mislukt voor type %d"
 
 #: providers/sybase/libmain.c:40
-#, fuzzy
 msgid "Provider for sybase databases (using OpenClient)"
-msgstr "GDA SQLite Gegevensbron Toegang"
+msgstr "Leverancier voor Sybase databases (gebruikmakend van OpenClient)"
 
 #: providers/sybase/main.c:51
-#, fuzzy
 msgid "Could not initiate Sybase component factory"
-msgstr "Kon 'CORBA factory' niet openen"
+msgstr "Kan Sybase component factory niet initialiseren"
 
 #: providers/sybase/utils.c:37
 msgid "Call: csmsg callback"
-msgstr ""
+msgstr "Call: csmsg callback"
 
 #: providers/sybase/utils.c:42
 #, c-format
@@ -1429,15 +1339,18 @@ msgid ""
 "\tseverity(%ld) layer(%ld) origin (%ld) number(%ld)\n"
 "\t%s"
 msgstr ""
+"CS-Library fout:\n"
+"\tseverity(%ld) layer(%ld) origin (%ld) number(%ld)\n"
+"\t%s"
 
 #: providers/sybase/utils.c:49
 #, c-format
 msgid "OS error: %s"
-msgstr ""
+msgstr "OS fout: %s"
 
 #: providers/sybase/utils.c:59
 msgid "Call: Client callback."
-msgstr ""
+msgstr "Call: Client callback."
 
 #: providers/sybase/utils.c:64
 #, c-format
@@ -1446,10 +1359,13 @@ msgid ""
 "\tseverity(%ld) layer(%ld) origin (%ld) number(%ld)\n"
 "\t%s"
 msgstr ""
+"CT-Client fout:\n"
+"\tseverity(%ld) layer(%ld) origin (%ld) number(%ld)\n"
+"\t%s"
 
 #: providers/sybase/utils.c:79
 msgid "Call: server callback"
-msgstr ""
+msgstr "Call: server callback."
 
 #: providers/sybase/utils.c:84
 #, c-format
@@ -1457,113 +1373,113 @@ msgid ""
 "CT-Server message:\n"
 "\tnumber(%ld) severity(%ld) state(%ld) line(%ld)"
 msgstr ""
+"CT-Server bericht:\n"
+"\tnumber(%ld) severity(%ld) state(%ld) line(%ld)"
 
 #: providers/sybase/utils.c:89
-#, fuzzy, c-format
+#, c-format
 msgid "\tServer name: %s\n"
-msgstr "\tgebruikersnaam = %s\n"
+msgstr "\tGebruikersnaam: %s\n"
 
 #: providers/sybase/utils.c:92
-#, fuzzy, c-format
+#, c-format
 msgid "\tProcedure name: %s\n"
-msgstr "Opgeslagen procedures"
+msgstr "Procedurenaam: %s\n"
 
 #: providers/sybase/utils.c:130
 msgid "ct_diag() failed determining # of client messages."
-msgstr ""
+msgstr "ct_diag() mislukt bij bepalen van het aantal client berichten."
 
 #: providers/sybase/utils.c:138
 #, c-format
 msgid "%d messages fetched."
-msgstr ""
+msgstr "%d berichten opgehaald."
 
 #: providers/sybase/utils.c:152
 msgid "Operation not possible, connection busy."
-msgstr ""
+msgstr "Bewerking niet mogelijk, verbinding is bezig."
 
 #: providers/xbase/gda-xbase-provider.c:185
 msgid "Either FILENAME or DIRECTORY can be specified, but not both or neither"
 msgstr ""
+"Specificeer een FILENAME of een DIRECTORY, maar niet allebei of geeneen."
 
 #: providers/xbase/gda-xbase-provider.c:232
-#, fuzzy
 msgid "Either FILENAME or DIRECTORY must be specified in the connection string"
 msgstr ""
-"Een volledige pad moet gespecificeerd worden op de connectie string om een "
-"database te openen."
+"Een FILENAME of DIRECTORY moet worden gespecificeerd in de verbinding string"
 
 #: providers/xbase/gda-xbase-provider.c:261
 #: providers/xbase/gda-xbase-provider.c:379
-#, fuzzy
 msgid "Invalid Xbase handle"
-msgstr "Ongeldige Sqlite handeling"
+msgstr "Ongeldige Xbase handeling"
 
 #: providers/xbase/libmain.c:39
-#, fuzzy
 msgid "Provider for Xbase databases"
-msgstr "GDA SQLite Gegevensbron Toegang"
+msgstr "Leverancier voor Xbase databases"
 
 #: report/libgda-report/gda-report-document.c:161
-#, fuzzy
 msgid "Could not parse XML document"
-msgstr "Kon lokale instellingen niet veranderen naar '%s'"
+msgstr "Kan XML document niet ontleden"
 
 #: report/libgda-report/gda-report-document.c:171
 msgid "XML document is not valid"
-msgstr ""
+msgstr "XML document is niet geldig"
 
 #: report/libgda-report/gda-report-document.c:195
 #, c-format
 msgid "Could not get file from %s"
-msgstr "Kon het bestand %s niet verkrijgen"
+msgstr "Kon bestand niet van %s verkrijgen"
 
 #: report/libgda-report/gda-report-item.c:276
 msgid "Error setting parent -> child relation"
-msgstr ""
+msgstr "Fout bij het instellen van ouder -> kind relatie"
 
 #: report/libgda-report/gda-report-item.c:375
 #, c-format
 msgid "Error setting value %s to attribute %s of item %s"
-msgstr ""
+msgstr "Fout bij het instellen van waarde %s voor attribuut %s van item %s"
 
 #: report/libgda-report/gda-report-valid.c:130
-#, fuzzy, c-format
+#, c-format
 msgid "could not get DTD from %s"
-msgstr "Kon het bestand %s niet verkrijgen"
+msgstr "Kan DTA niet van %s verkrijgen"
 
 #: report/libgda-report/gda-report-valid.c:231
 #, c-format
 msgid "Error validating element %s"
-msgstr ""
+msgstr "Fout bij valideren van element %s"
 
 #: report/libgda-report/gda-report-valid.c:269
 #, c-format
 msgid "No declaration for attribute %s of element %s\n"
-msgstr ""
+msgstr "Geen declaratie van attribuut %s van element %s\n"
 
 #: report/libgda-report/gda-report-valid.c:283
 #, c-format
 msgid "Value \"%s\" for attribute %s of %s is not among the enumerated set\n"
 msgstr ""
+"Waarde \"%s\" van attribuut %s van %s is geen onderdeel van de "
+"opsommingsreeks\n"
 
 #: testing/client.c:41
 msgid "\t\tNONE\n"
-msgstr "\t\tNONE\n"
+msgstr "\t\tGEEN\n"
 
 #: testing/client.c:81
 #, c-format
 msgid "** ERROR: could not open connection to %s\n"
-msgstr "** FOUT: kon de connectie naar %s niet openen\n"
+msgstr "** FOUT: kon de verbinding naar %s niet openen\n"
 
 #. show provider features
 #: testing/client.c:86
 msgid "\tProvider capabilities...\n"
-msgstr "\tLeverancier mogelijkheid...\n"
+msgstr "\tProvider mogelijkheden...\n"
 
 #: testing/client.c:87
-#, fuzzy, c-format
+#, c-format
 msgid "\t\tAggregates: %s\n"
-msgstr "Aggregaten"
+msgstr "\t\tAggregates: %s\n"
 
 #: testing/client.c:89 testing/client.c:92 testing/client.c:95
 #: testing/client.c:98 testing/client.c:101 testing/client.c:104
@@ -1580,58 +1496,54 @@ msgid "Not supported"
 msgstr "Niet ondersteund"
 
 #: testing/client.c:90
-#, fuzzy, c-format
+#, c-format
 msgid "\t\tIndexes: %s\n"
-msgstr "Indexen"
+msgstr "\t\tIndexen: %s\n"
 
 #: testing/client.c:93
-#, fuzzy, c-format
+#, c-format
 msgid "\t\tNamespaces: %s\n"
-msgstr ""
-"\t\tOverdrachten: %s\n"
-"\t\n"
+msgstr "\t\tNamespaces: %s\n"
 
 #: testing/client.c:96
 #, c-format
 msgid "\t\tProcedures: %s\n"
-msgstr ""
+msgstr "\t\tProcedures: %s\n"
 
 #: testing/client.c:99
 #, c-format
 msgid "\t\tSequences: %s\n"
-msgstr ""
+msgstr "\t\tRijen: %s\n"
 
 #: testing/client.c:102
 #, c-format
 msgid "\t\tSQL: %s\n"
-msgstr ""
+msgstr "\t\tSQL: %s\n"
 
 #: testing/client.c:105
 #, c-format
 msgid "\t\tTransactions: %s\n"
-msgstr ""
-"\t\tOverdrachten: %s\n"
-"\t\n"
+msgstr "\t\tTransacties: %s\n"
 
 #: testing/client.c:108
-#, fuzzy, c-format
+#, c-format
 msgid "\t\tTriggers: %s\n"
-msgstr "Schakelaars"
+msgstr "\t\tTriggers: %s\n"
 
 #: testing/client.c:111
 #, c-format
 msgid "\t\tUsers: %s\n"
-msgstr ""
+msgstr "\t\tGebruikers: %s\n"
 
 #: testing/client.c:114
 #, c-format
 msgid "\t\tViews: %s\n"
-msgstr ""
+msgstr "\t\tAanzichten: %s\n"
 
 #: testing/client.c:117
 #, c-format
 msgid "\t\tXML queries: %s\n"
-msgstr ""
+msgstr "\t\tXML queries: %s\n"
 
 #. show connection schemas
 #: testing/client.c:122
@@ -1641,10 +1553,13 @@ msgid ""
 "\tProvider reports version: %s\n"
 "\n"
 msgstr ""
+"\n"
+"\tProvider rapporteert versie: %s\n"
+"\n"
 
 #: testing/client.c:124
 msgid "Namespaces"
-msgstr ""
+msgstr "Namespaces"
 
 #: testing/client.c:126
 msgid "Stored procedures"
@@ -1652,11 +1567,11 @@ msgstr "Opgeslagen procedures"
 
 #: testing/client.c:127
 msgid "Connection Tables"
-msgstr "Connectie Tabellen"
+msgstr "Connectie tabellen"
 
 #: testing/client.c:128
 msgid "Available types"
-msgstr "Beschikbare type s"
+msgstr "Beschikbare types"
 
 #: testing/client.c:131
 msgid "Aggregates"
@@ -1664,7 +1579,7 @@ msgstr "Aggregaten"
 
 #: testing/client.c:135
 msgid "Languages"
-msgstr ""
+msgstr "Talen"
 
 #: testing/client.c:140 testing/client.c:148
 msgid "\tStarting transaction..."
@@ -1673,7 +1588,7 @@ msgstr "\tStarten van transactie..."
 #: testing/client.c:142 testing/client.c:146 testing/client.c:150
 #: testing/client.c:154
 msgid "Error"
-msgstr "fout"
+msgstr "Fout"
 
 #: testing/client.c:144
 msgid "\tFinishing transaction..."
@@ -1684,14 +1599,12 @@ msgid "\tRolling back transaction..."
 msgstr "\tTerugdraaien van transactie..."
 
 #: testing/client.c:180
-#, fuzzy
 msgid "Testing GDA client API"
-msgstr "Bezig met testen van GDA client API"
+msgstr "Testen van GDA client API"
 
 #: testing/client.c:189
-#, fuzzy
 msgid "** ERROR: gda_config_get_data_source_list returned a NULL item\n"
-msgstr "** FOUT: gda_config_get_data_source_list gaf terug een NULL voorwerp\n"
+msgstr "** FOUT: gda_config_get_data_source_list leverde een NULL item op\n"
 
 #: testing/client.c:193
 #, c-format
@@ -1699,9 +1612,8 @@ msgid " Data source = %s, User = %s\n"
 msgstr "Gegevensbron = %s, Gebruiker = %s\n"
 
 #: testing/config.c:84
-#, fuzzy
 msgid "** ERROR: gda_config_get_provider_list returned a NULL item\n"
-msgstr "** FOUT: gda_config_get_provider_list gaf terug een NULL voorwerp\n"
+msgstr "** FOUT: gda_config_get_provider_list leverde een NULL item op\n"
 
 #: testing/config.c:88
 #, c-format
@@ -1711,9 +1623,7 @@ msgstr " Leverancier = %s\n"
 #: testing/config.c:89
 #, c-format
 msgid "\tlocation = %s\n"
-msgstr ""
-"\tplaats = %s\n"
-"\t\n"
+msgstr "\tplaats = %s\n"
 
 #: testing/config.c:90
 #, c-format
@@ -1730,7 +1640,7 @@ msgstr "\tgda_params ="
 #: report/libgda-report/gda-report-item-reportheader.c:171
 #, c-format
 msgid "An element with ID %s already exists in the report"
-msgstr ""
+msgstr "Een element met ID %s bestaat al in het rapport"
 
 #: report/libgda-report/gda-report-item-pagefooter.c:196
 #: report/libgda-report/gda-report-item-pageheader.c:185
@@ -1738,7 +1648,7 @@ msgstr ""
 #: report/libgda-report/gda-report-item-reportheader.c:196
 #, c-format
 msgid "Item with ID %s is not a label"
-msgstr ""
+msgstr "Item met ID %s is geen label"
 
 #: report/libgda-report/gda-report-item-pagefooter.c:224
 #: report/libgda-report/gda-report-item-pageheader.c:214
@@ -1746,163 +1656,146 @@ msgstr ""
 #: report/libgda-report/gda-report-item-reportheader.c:224
 #, c-format
 msgid "Item with ID %s is not a repfield"
+msgstr "Item met ID %s is geen repfield"
+
+msgid "Types"
+msgstr "Types"
+
+msgid "Precision"
+msgstr "Precisie"
+
+msgid "GDA provider for IBMDB2"
+msgstr "GDA leverancier voor IBMDB2"
+
+msgid "Could not load %s provider"
+msgstr "Kan leverancier %s niet laden"
+
+msgid "Could not load report file at %s"
+msgstr "Kan rapport bestand in %s niet laden"
+
+msgid "Could not parse report file at %s"
+msgstr "Kan rapport bestand in %s niet ontleden"
+
+msgid "Invalid report file '%s'"
+msgstr "Ongeldig rapport bestand '%s'"
+
+msgid "CORBA exception: %s"
+msgstr "CORBA uitzondering: %s"
+
+msgid "Could not create global GDA client"
+msgstr "Kan globale GDA client niet aanmaken"
+
+msgid "GDA Report engine"
+msgstr "GDA Rapport engine"
+
+msgid "GDA Report engine factory"
+msgstr "GDA Rapport engine factory"
+
+msgid "Could not parse XML report"
+msgstr "Kan XML rapport niet ontleden"
+
+msgid "Could not activate report engine"
+msgstr "Kan rapporteer engine niet activeren"
+
+msgid "Could not initiate Report component factory"
+msgstr "Kan Rapport component fabriek niet initialiseren"
+
+msgid "Could not activate object %s"
+msgstr "Kan object %s niet activeren"
+
+msgid "%s: An Error occured in the CORBA system."
+msgstr "%s: Een fout is opgetreden in het CORBA systeem."
+
+msgid "Unknown CORBA exception for connection"
+msgstr "Onbekende CORBA uitzondering voor verbinding"
+
+msgid "Could not initialize Bonobo"
+msgstr "Kan Bonono niet initializeren"
+
+msgid "Don't know how to create components with IID %s"
+msgstr "Weet niet hoe componenten te creeren met IID %s"
+
+msgid "Could not duplicate client object. Client won't get notifications"
 msgstr ""
+"Kan client object niet dupliceren. Client zal geen kennisgeving ontvangen"
 
-#, fuzzy
-#~ msgid "Types"
-#~ msgstr "Type"
+msgid "Could not notify client about action %d"
+msgstr "Kan client niet informeren over de aktie %d"
 
-#, fuzzy
-#~ msgid "Precision"
-#~ msgstr "Omschrijving"
+msgid "No implementation for the fetch() method found"
+msgstr "Geen implementatie van de fetch() methode gevonden"
 
-#, fuzzy
-#~ msgid "GDA provider for IBMDB2"
-#~ msgstr "GDA SQLite Gegevensbron Toegang"
+msgid "Default component factory"
+msgstr "Standaard component factory"
 
-#, fuzzy
-#~ msgid "Could not load %s provider"
-#~ msgstr "Kon 'CORBA factory' niet openen"
+msgid "GDA Default Datasource Access"
+msgstr "GDA Standaard Gegevensbron Toegang"
 
-#, fuzzy
-#~ msgid "Could not load report file at %s"
-#~ msgstr "Kon bestand niet laden op '%s'"
+msgid "Could not initiate Default component factory"
+msgstr "Kan Standaard component factory niet initialiseren"
 
-#, fuzzy
-#~ msgid "Could not parse report file at %s"
-#~ msgstr "Kreeg een ontledingsfout in bestand bij %s"
+msgid "GDA Datasource Access for MySQL"
+msgstr "GDA Gegevensbron Toegang voor MySQL"
 
-#, fuzzy
-#~ msgid "Invalid report file '%s'"
-#~ msgstr "Geselecteerde databank '%s'"
+msgid "MySQL component factory"
+msgstr "MySQL component factory"
 
-#~ msgid "CORBA exception: %s"
-#~ msgstr "CORBA uitzondering: %s"
+msgid "Could not initiate MySQL component factory"
+msgstr "Kan MySQL component factory niet initialiseren"
 
-#, fuzzy
-#~ msgid "Could not create global GDA client"
-#~ msgstr "Kon verbinding naar %s niet openen"
+msgid "GDA Datasource Access for ODBC"
+msgstr "GDA Gegevensbron toegang voor ODBC"
 
-#~ msgid "GDA Report engine"
-#~ msgstr "GDA Meldings motor"
+msgid "ODBC component factory"
+msgstr "ODBC component factory"
 
-#~ msgid "GDA Report engine factory"
-#~ msgstr "GDA Meldings motor fabriek"
+msgid "Could not initiate ODBC component factory"
+msgstr "Kan ODBC component factory niet initialiseren"
 
-#, fuzzy
-#~ msgid "Could not parse XML report"
-#~ msgstr "Kon lokale instellingen niet veranderen naar '%s'"
+msgid "GDA Datasource Access for Oracle"
+msgstr "GDA Gegevensbron toegang voor Oracle"
 
-#~ msgid "Could not activate report engine"
-#~ msgstr "Kon rapporteer machine niet activeren"
+msgid "Oracle component factory"
+msgstr "Oracle component factory"
 
-#, fuzzy
-#~ msgid "Could not initiate Report component factory"
-#~ msgstr "Kon Mail provider implementatie niet registreren"
+msgid "GDA Datasource Access for Postgres"
+msgstr "GDA Gegevensbron toegang voor Postgres"
 
-#~ msgid "Could not activate object %s"
-#~ msgstr "Kon object niet activeren %s"
+msgid "Postgres component factory"
+msgstr "Postgres component factory"
 
-#~ msgid "%s: An Error occured in the CORBA system."
-#~ msgstr "%s: Een fout is opgetreden in het CORBA systeem."
+msgid "Could not initiate PostgreSQL component factory"
+msgstr "Kan PostgreSQL component factory niet initialiseren"
 
-#~ msgid "Unknown CORBA exception for connection"
-#~ msgstr "Onbekende CORBA uitzondering voor connectie"
+msgid "SQLite component factory"
+msgstr "SQLite component factory"
 
-#~ msgid "Could not initialize Bonobo"
-#~ msgstr "Kon Bonono niet initializeren"
+msgid "Could not initiate Sqlite component factory"
+msgstr "Kan Sqlite component factory niet initialiseren"
 
-#~ msgid "Don't know how to create components with IID %s"
-#~ msgstr "Weet niet hoe componenten te creeren met IID %s"
+msgid "GDA Datasource Access for Sybase"
+msgstr "GDA Gegevensbron Toegang voor Sybase"
 
-#~ msgid "Could not duplicate client object. Client won't get notifications"
-#~ msgstr ""
-#~ "Kon client object niet kopieren. Client zal geen kennisgeving ontvangen"
+msgid "Sybase component factory"
+msgstr "Sybase component factory"
 
-#~ msgid "Could not notify client about action %d"
-#~ msgstr "Kon client niet informeren over de aktie %d"
+msgid "\ttype = %s\n"
+msgstr "\ttype = %s\n"
 
-#~ msgid "No implementation for the fetch() method found"
-#~ msgstr "Geen uitvoering van fetch() methode gevonden"
+msgid "\trepo_ids ="
+msgstr "\trepo_ids ="
 
-#, fuzzy
-#~ msgid "Default component factory"
-#~ msgstr "Standaard componenten fabriek"
+msgid "\thostname = %s\n"
+msgstr "\thostname = %s\n"
 
-#, fuzzy
-#~ msgid "GDA Default Datasource Access"
-#~ msgstr "GDA Standaar Gegevensbron Toegang"
+msgid "\tdomain = %s\n"
+msgstr "\tdomein = %s\n"
 
-#, fuzzy
-#~ msgid "Could not initiate Default component factory"
-#~ msgstr "Kon Mail provider implementatie niet registreren"
+#~ msgid "MESSAGE: %s"
+#~ msgstr "BERICHT: %s"
 
-#, fuzzy
-#~ msgid "GDA Datasource Access for MySQL"
-#~ msgstr "GDA Gegevensbron toegang voor MySQL"
+#~ msgid "ERROR: %s"
+#~ msgstr "FOUT: %s"
 
-#~ msgid "MySQL component factory"
-#~ msgstr "MySQL onderdelen fabriek"
-
-#, fuzzy
-#~ msgid "Could not initiate MySQL component factory"
-#~ msgstr "Kon MySQL provider implementatie niet registreren"
-
-#, fuzzy
-#~ msgid "GDA Datasource Access for ODBC"
-#~ msgstr "GDA Gegevensbron toegang voor ODBC"
-
-#, fuzzy
-#~ msgid "ODBC component factory"
-#~ msgstr "Kon verbinding naar %s niet openen"
-
-#, fuzzy
-#~ msgid "Could not initiate ODBC component factory"
-#~ msgstr "Kon 'CORBA factory' niet openen"
-
-#, fuzzy
-#~ msgid "GDA Datasource Access for Oracle"
-#~ msgstr "GDA Gegevensbron toegang voor Oracle"
-
-#, fuzzy
-#~ msgid "Oracle component factory"
-#~ msgstr "Kon verbinding naar %s niet openen"
-
-#, fuzzy
-#~ msgid "GDA Datasource Access for Postgres"
-#~ msgstr "GDA Gegevensbron toegang voor Postgres"
-
-#, fuzzy
-#~ msgid "Postgres component factory"
-#~ msgstr "Kon verbinding naar %s niet openen"
-
-#, fuzzy
-#~ msgid "Could not initiate PostgreSQL component factory"
-#~ msgstr "Kon MySQL provider implementatie niet registreren"
-
-#, fuzzy
-#~ msgid "SQLite component factory"
-#~ msgstr "Kon verbinding naar %s niet openen"
-
-#, fuzzy
-#~ msgid "Could not initiate Sqlite component factory"
-#~ msgstr "Kon 'CORBA factory' niet openen"
-
-#, fuzzy
-#~ msgid "GDA Datasource Access for Sybase"
-#~ msgstr "GDA Gegevensbron Toegang voor Sybase"
-
-#~ msgid "Sybase component factory"
-#~ msgstr "Sybase ondelen fabriek"
-
-#~ msgid "\ttype = %s\n"
-#~ msgstr "\ttype = %s\n"
-
-#~ msgid "\trepo_ids ="
-#~ msgstr "\trepo_ids ="
-
-#~ msgid "\thostname = %s\n"
-#~ msgstr "\thostname = %s\n"
-
-#~ msgid "\tdomain = %s\n"
-#~ msgstr "\tdomein = %s\n"
+#~ msgid "Invalid Interbase handle"
+#~ msgstr "Ongeldige Interbase handle"
