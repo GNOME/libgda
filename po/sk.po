@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda 0.2.2\n"
-"POT-Creation-Date: 2001-02-05 13:59+0100\n"
+"POT-Creation-Date: 2001-02-09 15:27+0100\n"
 "PO-Revision-Date: 2001-02-05 14:02CET\n"
 "Last-Translator: Stanislav Visnovsky <visnovsky@nenya.ms.mff.cuni.cz>\n"
 "Language-Team: Slovak <sk-i18n@rak.isternet.sk>\n"
@@ -167,11 +167,13 @@ msgstr "Spú¹»am poskytovateµa %s bez implementaèných funkcií"
 
 #: lib/gda-server/gda-server-impl.c:210
 #: report/server/gda-report-server-main.c:113
-msgid "OAF doesn't know about our IID; indicates broken installation. Exiting..."
+msgid ""
+"OAF doesn't know about our IID; indicates broken installation. Exiting..."
 msgstr "OAF nepozná na¹e IID, asi po¹kodená in¹talácia. Konèím..."
 
 #: lib/gda-server/gda-server-impl.c:213
-msgid "Another instance of this provider is already registered with OAF. Exiting..."
+msgid ""
+"Another instance of this provider is already registered with OAF. Exiting..."
 msgstr "Iná in¹tancia tohoto poskytovateµa je u¾ registrovaná u OAF. Konèím..."
 
 #: lib/gda-server/gda-server-impl.c:216
@@ -1024,7 +1026,8 @@ msgstr "Zachytený signál %d, èisto vypínam."
 
 #: report/server/gda-report-server-main.c:92
 msgid "Failed to initialize OAF: please mail bug report to OAF maintainers"
-msgstr "Nepodarilo sa inicializova» OAF: prosím, odo¹lite správu o chybe správcom OAF"
+msgstr ""
+"Nepodarilo sa inicializova» OAF: prosím, odo¹lite správu o chybe správcom OAF"
 
 #: report/server/gda-report-server-main.c:101
 msgid "Could not activate report engine"
@@ -1086,4 +1089,3 @@ msgstr "%s: chyba v konfigurácii polo¾ky DSN"
 #, c-format
 msgid "%s: data source '%s' not found\n"
 msgstr "%s: zdroj dát '%s' nenájdený\n"
-
