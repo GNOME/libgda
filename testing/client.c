@@ -82,6 +82,7 @@ open_connection (GdaClient *client,
 
 	/* show connection schemas */
 	show_schema (cnc, GDA_CONNECTION_SCHEMA_TABLES, "Connection Tables");
+	show_schema (cnc, GDA_CONNECTION_SCHEMA_TYPES, "Available types");
 
 	/* test transactions */
 	g_print ("\tStarting transaction...");

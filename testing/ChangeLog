@@ -1,3 +1,7 @@
+2001-12-30  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* client.c (show_schemas): added types schema
+
 2001-12-28  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* client.c (show_schemas): new function for showing database schema
