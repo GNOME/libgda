@@ -4,7 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda 0\n"
-"POT-Creation-Date: 2004-02-01 17:10+0100\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2004-02-08 21:30+0100\n"
 "PO-Revision-Date: 2004-02-05 23:50+CET\n"
 "Last-Translator: auto\n"
 "Language-Team: Croatian <lokalizacija@linux.hr>\n"
@@ -96,6 +97,7 @@ msgid "Password"
 msgstr "Lozinka"
 
 #: libgda/gda-data-model.c:889
+#, c-format
 msgid "Data model %p is not updatable"
 msgstr ""
 
@@ -231,8 +233,8 @@ msgid ""
 "Connection aborted. You must provide at least a host, username and password "
 "using DSN 'QUERY=;USER=;PASSWORD='."
 msgstr ""
-"Konekcija prekinuta. Najmanje morate obezbjediti ime domaćina, korisničko ime "
-"i lozinku koristeći DSN 'QUERY=;USER=;PASSWORD='."
+"Konekcija prekinuta. Najmanje morate obezbjediti ime domaćina, korisničko "
+"ime i lozinku koristeći DSN 'QUERY=;USER=;PASSWORD='."
 
 #: providers/freetds/gda-freetds-provider.c:210
 msgid "Error creating message container."
@@ -289,9 +291,9 @@ msgstr ""
 "Poruka %d, Nivo %d, Stanje %d, Server %s, Linija %d\n"
 "%s\n"
 
-#: providers/bdb/utils.c:36 providers/freetds/gda-freetds-provider.c:1079
-#: providers/freetds/utils.c:44 providers/oracle/utils.c:74
-#: providers/postgres/utils.c:53 providers/sybase/gda-sybase-provider.c:765
+#: providers/freetds/gda-freetds-provider.c:1079 providers/freetds/utils.c:44
+#: providers/oracle/utils.c:74 providers/postgres/utils.c:53
+#: providers/sybase/gda-sybase-provider.c:765
 #: providers/sybase/gda-sybase-recordset.c:512
 #: providers/sybase/gda-sybase-recordset.c:534
 #: providers/sybase/gda-sybase-recordset.c:593 providers/sybase/utils.c:205
@@ -301,7 +303,7 @@ msgstr ""
 #: providers/sybase/utils.c:385 providers/sybase/utils.c:411
 #: providers/sybase/utils.c:445 providers/sybase/utils.c:462
 #: providers/sybase/utils.c:485 providers/sybase/utils.c:501
-#: providers/sybase/utils.c:539
+#: providers/sybase/utils.c:539 providers/bdb/utils.c:36
 msgid "Not available"
 msgstr "Nije dostupno"
 
@@ -335,7 +337,7 @@ msgid "Could not allocate environment handle.\n"
 msgstr "Ne može dodijeliti oznaku okruženja.\n"
 
 #. GetInfo is needed for obtaining database name
-#.  is needed for tables schema
+#. is needed for tables schema
 #: providers/ibmdb2/gda-ibmdb2-provider.c:211
 msgid "SQLGetInfo is unsupported. Hence IBM DB2 Provider will not work.\n"
 msgstr "SQLGetInfo nije podržan. IBM DB2 Posrednik neće raditi.\n"
@@ -501,13 +503,13 @@ msgstr "Posrednik za IBMDB2 baze podataka"
 msgid "Invalid LDAP handle"
 msgstr "Neispravna LDAP oznaka"
 
-#: providers/bdb/gda-bdb-recordset.c:111
 #: providers/ldap/gda-ldap-recordset.c:69
 #: providers/mysql/gda-mysql-recordset.c:130
 #: providers/postgres/gda-postgres-recordset.c:193
 #: providers/postgres/gda-postgres-recordset.c:357
 #: providers/sqlite/gda-sqlite-recordset.c:165
 #: providers/sqlite/gda-sqlite-recordset.c:204
+#: providers/bdb/gda-bdb-recordset.c:111
 msgid "Row number out of range"
 msgstr "Broj reda izvan okvira"
 
@@ -742,8 +744,9 @@ msgid "Could not parse '%s' command"
 msgstr "Ne može obraditi naredbu '%s'"
 
 #. parsing went fine, but there is no result
-#.  (e.g. because of an invalid column name)
+#. (e.g. because of an invalid column name)
 #: providers/mdb/gda-mdb-provider.c:744
+#, c-format
 msgid "Got no result for '%s' command"
 msgstr "Nisam dobio rezultat naredbe '%s'"
 
@@ -807,8 +810,10 @@ msgid "Row number out of bounds"
 msgstr "Broj reda van granica"
 
 #: providers/mysql/gda-mysql-provider.c:219
-msgid "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
-msgstr "Vi nemožete obezbediti UNIX_SOCKET ako ne obezbediti i domaćina ili port."
+msgid ""
+"You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
+msgstr ""
+"Vi nemožete obezbediti UNIX_SOCKET ako ne obezbediti i domaćina ili port."
 
 #: providers/mysql/gda-mysql-provider.c:295
 #: providers/mysql/gda-mysql-provider.c:1085
@@ -1204,10 +1209,10 @@ msgstr ""
 msgid "Model doesn't have any non-unique values to update."
 msgstr ""
 
-#: providers/bdb/gda-bdb-recordset.c:166
 #: providers/postgres/gda-postgres-recordset.c:363
 #: providers/sqlite/gda-sqlite-recordset.c:210
 #: providers/sqlite/gda-sqlite-recordset.c:242
+#: providers/bdb/gda-bdb-recordset.c:166
 msgid "Column number out of range"
 msgstr "Broj stupaca izvan okvira"
 
@@ -1221,8 +1226,10 @@ msgid "Provider for PostgreSQL databases"
 msgstr "Posrednik za PostgreSQL baze podataka"
 
 #: providers/sqlite/gda-sqlite-provider.c:199
-msgid "A full path must be specified on the connection string to open a database."
-msgstr """Puna putanja mora biti određena na nizu znakova konekcije da otvori bazu "
+msgid ""
+"A full path must be specified on the connection string to open a database."
+msgstr ""
+"Puna putanja mora biti određena na nizu znakova konekcije da otvori bazu "
 "podataka."
 
 #: providers/sqlite/gda-sqlite-provider.c:223
@@ -1250,7 +1257,8 @@ msgstr "Samo jedna baza podataka je dozvoljena po konekciji"
 
 #: providers/sqlite/gda-sqlite-provider.c:389
 msgid "To remove a SQLite database you should remove the database file by hand"
-msgstr """DA uklonite SQLite bazu podataka treba da ručno uklonite datoteke baze "
+msgstr ""
+"DA uklonite SQLite bazu podataka treba da ručno uklonite datoteke baze "
 "podataka"
 
 #: providers/sqlite/gda-sqlite-provider.c:663
@@ -1298,9 +1306,9 @@ msgstr "Neuspelo slanje SQL naredbe."
 msgid "GDA_IS_SYBASE_RECORDSET != TRUE"
 msgstr "GDA_IS_SYBASE_RECORDSET != ISTINITO"
 
-#. when you execute a stored procedure through openclient, this 
-#.  part of the result set loop is where you fetch the return status
-#.  of the executed stored procedure.  You fetch it like a CS_ROW_RESULT
+#. when you execute a stored procedure through openclient, this
+#. part of the result set loop is where you fetch the return status
+#. of the executed stored procedure.  You fetch it like a CS_ROW_RESULT
 #: providers/sybase/gda-sybase-provider.c:712
 msgid "CS_STATUS_RESULT!"
 msgstr "CS_STATUS_RESULT!"
@@ -1545,8 +1553,10 @@ msgid "call to cs_diag failed when attempting to the amount of client messages"
 msgstr "Poziv cs_diag nije uspio pri pokušaju da vrednuje poruke klijenta"
 
 #: providers/sybase/utils.c:220
-msgid "an error occured when calling cs_diag attempting to retrieve a client message"
-msgstr "Dogodila se greška kada poziv cs_diag pokušava da opet nađe poruku klijenta"
+msgid ""
+"an error occured when calling cs_diag attempting to retrieve a client message"
+msgstr ""
+"Dogodila se greška kada poziv cs_diag pokušava da opet nađe poruku klijenta"
 
 #: providers/sybase/utils.c:230
 msgid "OS_Error:("
@@ -1557,6 +1567,7 @@ msgid ") Message: "
 msgstr ") Poruka: "
 
 #: providers/sybase/utils.c:244
+#, c-format
 msgid ""
 "Sybase OpenClient Msg: severity(%ld), number(%ld), origin(%ld), layer(%ld): %"
 "s"
@@ -1571,8 +1582,10 @@ msgid "call to ct_diag failed when attempting to the amount of server messages"
 msgstr "Poziv ct_diag nije uspio pri pokušaju da vrednuje poruke servera"
 
 #: providers/sybase/utils.c:330
-msgid "an error occured when calling ct_diag attempting to retrieve a server message"
-msgstr "Dogodila se greška kada poziv ct_diag pokušava da opet nađe poruku servera"
+msgid ""
+"an error occured when calling ct_diag attempting to retrieve a server message"
+msgstr ""
+"Dogodila se greška kada poziv ct_diag pokušava da opet nađe poruku servera"
 
 #: providers/sybase/utils.c:342
 msgid "Server:"
@@ -1603,8 +1616,10 @@ msgid "call to ct_diag failed when attempting to the amount of client messages"
 msgstr "Poziv ct_diag nije uspio pri pokušaju da vrednuje poruke klijenta"
 
 #: providers/sybase/utils.c:459
-msgid "an error occured when calling ct_diag attempting to retrieve a client message"
-msgstr "Dogodila se greška kada poziv ct_diag pokušava da opet nađe poruku klijenta"
+msgid ""
+"an error occured when calling ct_diag attempting to retrieve a client message"
+msgstr ""
+"Dogodila se greška kada poziv ct_diag pokušava da opet nađe poruku klijenta"
 
 #: providers/sybase/utils.c:472
 msgid "Layer"
@@ -1750,7 +1765,9 @@ msgstr "Nema definicije za atribut %s od elementa %s\n"
 #: report/libgda-report/gda-report-valid.c:283
 #, c-format
 msgid "Value \"%s\" for attribute %s of %s is not among the enumerated set\n"
-msgstr "Vrijednost \"%s\" za osobinu %s od %s nije u okviru enumerisanog postavljanja\n"
+msgstr ""
+"Vrijednost \"%s\" za osobinu %s od %s nije u okviru enumerisanog "
+"postavljanja\n"
 
 #: testing/client.c:42
 msgid "\t\tNONE\n"
@@ -1949,4 +1966,3 @@ msgstr ""
 #: providers/bdb/libmain.c:39
 msgid "Provider for Berkeley databases"
 msgstr ""
-

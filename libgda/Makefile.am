@@ -26,9 +26,7 @@ gda_headers = \
 	gda-data-model-hash.h \
 	gda-data-model-list.h \
 	gda-error.h \
-	gda-export.h \
 	gda-field.h \
-	gda-log.h \
 	gda-parameter.h \
 	gda-quark-list.h \
 	gda-row.h \
@@ -77,10 +75,12 @@ libgda_sources =  \
 	gda-data-model-list.c \
 	gda-error.c \
 	gda-export.c \
+	gda-export.h \
 	gda-field.c \
 	gda-init.c \
 	gda-intl.h \
 	gda-log.c \
+	gda-log.h \
 	gda-parameter.c \
 	gda-quark-list.c \
 	gda-row.c \
