@@ -1,0 +1,1852 @@
+# Serbian translation of libgda
+# Courtesy of Prevod.org team (http://www.prevod.org/) -- 2003.
+# 
+# This file is distributed under the same license as the libgda package.
+# 
+# Maintainer: Дејан Матијевић <dejan@ns.sympatico.ca>
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: libgda\n"
+"POT-Creation-Date: 2003-05-28 10:45+0200\n"
+"PO-Revision-Date: 2003-05-25 18:42-0400\n"
+"Last-Translator: Дејан Матијевић <dejan@ns.sympatico.ca>\n"
+"Language-Team: Serbian (sr) <serbiangnome-lista@nongnu.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: libgda/gda-client.c:309 libgda/gda-client.c:511 libgda/gda-connection.c:218
+#, c-format
+msgid "Data source %s not found in configuration"
+msgstr "Извор података %s није нађен у подешавању"
+
+#: libgda/gda-client.c:334
+#, c-format
+msgid "Could not find provider %s in the current setup"
+msgstr "Неможе да наћи посредника %s u текућем подешавању"
+
+#: libgda/gda-client.c:363
+#, c-format
+msgid "Provider %s does not implement entry function"
+msgstr "Посредник %s не извршава улазну функцију"
+
+#: libgda/gda-client.c:373
+msgid "Could not create GdaServerProvider object from plugin"
+msgstr "Немогуће направити GdaServerProvider објекат из прикључка"
+
+#: libgda/gda-client.c:438
+msgid "Temporary data source created by libgda. Don't remove it"
+msgstr "Привремени извор података направила libgda. Немојте га уклонити"
+
+#: libgda/gda-config.c:1073
+#, c-format
+msgid "Error: %s"
+msgstr "Грешка: %s"
+
+#. gda_server_recordset_model_set_field_defined_size (recset, 0, 256);
+#: libgda/gda-config.c:1323 providers/default/gda-default-provider.c:557
+#: providers/default/gda-default-provider.c:577
+#: providers/default/gda-default-provider.c:616
+#: providers/ldap/gda-ldap-provider.c:327 providers/mdb/gda-mdb-provider.c:457
+#: providers/mdb/gda-mdb-provider.c:594 providers/mdb/gda-mdb-provider.c:654
+#: providers/mysql/gda-mysql-provider.c:701
+#: providers/mysql/gda-mysql-provider.c:889
+#: providers/odbc/gda-odbc-provider.c:733
+#: providers/odbc/gda-odbc-provider.c:789
+#: providers/oracle/gda-oracle-provider.c:1890
+#: providers/oracle/gda-oracle-provider.c:1907
+#: providers/oracle/gda-oracle-provider.c:1952
+#: providers/oracle/gda-oracle-provider.c:1969
+msgid "Name"
+msgstr "Име"
+
+#: libgda/gda-config.c:1324
+msgid "Provider"
+msgstr "Посредник"
+
+#: libgda/gda-config.c:1325
+msgid "Connection string"
+msgstr "Низ конекције"
+
+#: libgda/gda-config.c:1326 providers/ibmdb2/gda-ibmdb2-provider.c:863
+#: providers/ibmdb2/gda-ibmdb2-provider.c:892
+#: providers/ibmdb2/gda-ibmdb2-provider.c:920
+#: providers/ibmdb2/gda-ibmdb2-provider.c:1001
+#: providers/odbc/gda-odbc-provider.c:1142
+#: providers/odbc/gda-odbc-provider.c:1298
+#: providers/postgres/gda-postgres-provider.c:1107
+msgid "Description"
+msgstr "Опис"
+
+#: libgda/gda-config.c:1327
+msgid "Username"
+msgstr "Корисничко име"
+
+#: libgda/gda-config.c:1328
+msgid "Password"
+msgstr "Лозинка"
+
+#: libgda/gda-data-model.c:686
+#, c-format
+msgid "Data model %p is not editable"
+msgstr "Модел података %p није измењив"
+
+#: libgda/gda-init.c:48
+msgid "Attempt to initialize an already initialized client"
+msgstr "Покушава да започне веч започетог клијента"
+
+#: libgda/gda-init.c:59
+msgid "libgda needs GModule. Finishing..."
+msgstr "libgda треба GModule. Завршавање..."
+
+#: libgda/gda-select.c:315
+#, c-format
+msgid "Could not parse SQL string '%s'"
+msgstr "Нисам могао да обрадим SQL низ знакова '%s'"
+
+#: libgda/gda-select.c:319
+#, c-format
+msgid "SQL command is not a SELECT (is '%s'"
+msgstr "SQL команда није SELECT (is '%s'"
+
+#: libgda/gda-table.c:286
+#, c-format
+msgid "There is already a field called %s"
+msgstr "Веч постоји поље звано %s"
+
+#: libgda/gda-util.c:144
+#, c-format
+msgid "Could not parse SQL command '%s'"
+msgstr "Нисам могао да обрадим SQL наредбу '%s'"
+
+#: libgda/gda-util.c:177
+#, c-format
+msgid "Error while reading %s: %s"
+msgstr "Грешка при читању %s: %s"
+
+#: libgda/gda-util.c:203
+#, c-format
+msgid "Could not create file %s"
+msgstr "Не може да креира даtoteku %s"
+
+#: libgda/gda-value.c:1650
+msgid "TRUE"
+msgstr "Јесте"
+
+#: libgda/gda-value.c:1652
+msgid "FALSE"
+msgstr "Није"
+
+#: libgda/gda-value.c:1712
+#, c-format
+msgid "(GObject of type '%s'"
+msgstr "(GObject типа '%s'"
+
+#: libgda/gda-value.c:1715
+msgid "NULL GObject"
+msgstr "Непостојећи GObject"
+
+#: libgda/gda-xml-database.c:235
+#, c-format
+msgid "Could not load file at %s"
+msgstr "Неможе да натовари датотеку на %s"
+
+#: libgda/gda-xml-database.c:244
+#, c-format
+msgid "Could not parse file at %s"
+msgstr "Нисам могао да обрадим датотеку на %s"
+
+#: libgda/gda-xml-database.c:254
+#, c-format
+msgid "Invalid XML database file '%s'"
+msgstr "Погрешан XML датотека базе података '%s'"
+
+#: libgda/gda-xml-database.c:436
+#, c-format
+msgid "Could not create a XML node from table %s"
+msgstr "Неможе да направи XML чвориште од табеле %s"
+
+#: libgda/gda-xml-database.c:454
+msgid "Could not dump XML file to memory"
+msgstr "Неможе да складишти XML датотеку у меморију"
+
+#: libgda/gda-xml-database.c:547 libgda/gda-xml-database.c:583
+#: libgda/gda-xml-database.c:626
+#, c-format
+msgid "Table %s already exists"
+msgstr "Табела %s већ постоји"
+
+#: libgda/gda-xml-database.c:619
+msgid "Invalid node"
+msgstr "Погрешно чвориште"
+
+#: libgda/gda-xml-database.c:661
+#, c-format
+msgid "Duplicated <data> node for table %s"
+msgstr "Дуплирано <подаци> чвориште од табеле %s"
+
+#: libgda/gda-xml-database.c:668
+msgid "Invalid XML node"
+msgstr "Погрешан XML чвориште"
+
+#: providers/default/gda-default-provider.c:190
+#: providers/sqlite/gda-sqlite-provider.c:198
+msgid ""
+"A full path must be specified on the connection string to open a database."
+msgstr ""
+"Пуна путања мора бити одређена на низу знакова конекције да отвори базу "
+"података."
+
+#: providers/default/gda-default-provider.c:252
+#: providers/default/gda-default-provider.c:267
+#: providers/default/gda-default-provider.c:294
+msgid "Invalid internal handle"
+msgstr "Погрешана унутрашња ручка"
+
+#: providers/default/gda-default-provider.c:333
+msgid "Not Implemented"
+msgstr "Није примењено"
+
+#: providers/default/gda-default-provider.c:454
+#: providers/mdb/gda-mdb-provider.c:490
+#: providers/mysql/gda-mysql-provider.c:1069
+#: providers/odbc/gda-odbc-provider.c:914
+#: providers/oracle/gda-oracle-provider.c:1248
+#: providers/postgres/gda-postgres-provider.c:1352
+#: providers/sqlite/gda-sqlite-provider.c:622
+msgid "Field name"
+msgstr "Назив поља"
+
+#: providers/default/gda-default-provider.c:455
+#: providers/mdb/gda-mdb-provider.c:491
+#: providers/mysql/gda-mysql-provider.c:1070
+#: providers/odbc/gda-odbc-provider.c:915
+#: providers/oracle/gda-oracle-provider.c:1249
+#: providers/postgres/gda-postgres-provider.c:1353
+#: providers/sqlite/gda-sqlite-provider.c:623
+msgid "Data type"
+msgstr "Врста податка"
+
+#: providers/default/gda-default-provider.c:456
+#: providers/mdb/gda-mdb-provider.c:492
+#: providers/mysql/gda-mysql-provider.c:1071
+#: providers/odbc/gda-odbc-provider.c:916
+#: providers/oracle/gda-oracle-provider.c:1250
+#: providers/postgres/gda-postgres-provider.c:1354
+#: providers/sqlite/gda-sqlite-provider.c:624
+msgid "Size"
+msgstr "Величина"
+
+#: providers/default/gda-default-provider.c:457
+#: providers/mdb/gda-mdb-provider.c:493
+#: providers/mysql/gda-mysql-provider.c:1072
+#: providers/odbc/gda-odbc-provider.c:917
+#: providers/oracle/gda-oracle-provider.c:1251
+#: providers/postgres/gda-postgres-provider.c:1355
+#: providers/sqlite/gda-sqlite-provider.c:625
+msgid "Scale"
+msgstr "Размера"
+
+#: providers/default/gda-default-provider.c:458
+#: providers/mdb/gda-mdb-provider.c:494
+#: providers/mysql/gda-mysql-provider.c:1073
+#: providers/odbc/gda-odbc-provider.c:918
+#: providers/oracle/gda-oracle-provider.c:1252
+#: providers/postgres/gda-postgres-provider.c:1356
+#: providers/sqlite/gda-sqlite-provider.c:626
+msgid "Not null?"
+msgstr "Није нул?"
+
+#: providers/default/gda-default-provider.c:459
+#: providers/mdb/gda-mdb-provider.c:495
+#: providers/mysql/gda-mysql-provider.c:1074
+#: providers/odbc/gda-odbc-provider.c:919
+#: providers/oracle/gda-oracle-provider.c:1253
+#: providers/postgres/gda-postgres-provider.c:1357
+#: providers/sqlite/gda-sqlite-provider.c:627
+msgid "Primary key?"
+msgstr "Основни кљућ?"
+
+#: providers/default/gda-default-provider.c:460
+#: providers/mdb/gda-mdb-provider.c:496
+#: providers/mysql/gda-mysql-provider.c:1075
+#: providers/odbc/gda-odbc-provider.c:920
+#: providers/oracle/gda-oracle-provider.c:1254
+#: providers/postgres/gda-postgres-provider.c:1358
+#: providers/sqlite/gda-sqlite-provider.c:628
+msgid "Unique index?"
+msgstr "Уникатни индекс?"
+
+#: providers/default/gda-default-provider.c:461
+#: providers/mdb/gda-mdb-provider.c:497
+#: providers/mysql/gda-mysql-provider.c:1076
+#: providers/odbc/gda-odbc-provider.c:921
+#: providers/oracle/gda-oracle-provider.c:1255
+#: providers/postgres/gda-postgres-provider.c:1359
+#: providers/sqlite/gda-sqlite-provider.c:629
+msgid "References"
+msgstr "Препоруке"
+
+#: providers/default/gda-default-provider.c:471
+#: providers/default/gda-default-provider.c:477
+msgid "Invalid argument"
+msgstr "Погрешан агргумнт"
+
+#: providers/default/gda-default-provider.c:484
+#: providers/mdb/gda-mdb-table.c:48
+#, c-format
+msgid "Table %s not found"
+msgstr "Табела %s није нађена"
+
+#: providers/default/gda-default-provider.c:511
+msgid "Could not get description for column"
+msgstr "Неможе да добије опис за колону"
+
+#: providers/default/libmain.c:33
+msgid "Default"
+msgstr "Подразумевано"
+
+#: providers/default/libmain.c:39
+msgid "Default provider, based on XML"
+msgstr "Подразумеван посредник, базиран на XML"
+
+#: providers/firebird/gda-firebird-provider.c:187
+msgid "No database specified"
+msgstr "Ниједна база података није наведена"
+
+#: providers/firebird/gda-firebird-provider.c:234
+#: providers/firebird/gda-firebird-provider.c:261
+#: providers/firebird/gda-firebird-provider.c:279
+#: providers/firebird/gda-firebird-provider.c:313
+#: providers/firebird/gda-firebird-provider.c:368
+#: providers/firebird/gda-firebird-provider.c:413
+#: providers/firebird/gda-firebird-provider.c:447
+#: providers/firebird/gda-firebird-provider.c:485
+#: providers/firebird/gda-firebird-provider.c:539
+msgid "Invalid Firebird handle"
+msgstr "Погрешан Firebird ручка"
+
+#: providers/firebird/gda-firebird-provider.c:453
+#: providers/firebird/gda-firebird-provider.c:491
+msgid "Invalid transaction handle"
+msgstr "Погрешна трансакцијска ручка"
+
+#: providers/firebird/libmain.c:39
+msgid "Provider for FireBird databases"
+msgstr "Посредник за FireBird базе података"
+
+#: providers/freetds/gda-freetds-provider.c:197
+msgid ""
+"Connection aborted. You must provide at least a host, username and password "
+"using DSN 'QUERY=;USER=;PASSWORD='."
+msgstr ""
+"Конекција прекинута. Најмање морате обезбедити име домаћина, корисничко име "
+"и лозинку користећи DSN 'QUERY=;USER=;PASSWORD='."
+
+#: providers/freetds/gda-freetds-provider.c:210
+msgid "Error creating message container."
+msgstr "Грешка при прављењу контејнера за поруке."
+
+#: providers/freetds/gda-freetds-provider.c:217
+msgid "Error creating error container."
+msgstr "Грешка при прављењу контејнера за грешке."
+
+#: providers/freetds/gda-freetds-provider.c:255
+#: providers/freetds/gda-freetds-provider.c:257
+msgid "Allocating tds context failed."
+msgstr "Обезбеђивање додатног tds није успело."
+
+#: providers/freetds/gda-freetds-provider.c:275
+#: providers/freetds/gda-freetds-provider.c:277
+msgid "Establishing connection failed."
+msgstr "Успостављање конекције неуспело."
+
+#: providers/freetds/gda-freetds-provider.c:291
+#: providers/freetds/gda-freetds-provider.c:292
+msgid "Failed getting connection info."
+msgstr "Није успео да добије информације о конекцији."
+
+#: providers/freetds/gda-freetds-provider.c:781
+#: providers/freetds/gda-freetds-provider.c:782
+msgid "Query did not succeed in execute_cmd()."
+msgstr "Потражња није успела у execute_cmd()."
+
+#: providers/freetds/gda-freetds-provider.c:795
+#: providers/freetds/gda-freetds-provider.c:797
+msgid "Unexpected result tokens in execute_cmd()."
+msgstr "Неочекивани сигнал резултата у execute_cmd()."
+
+#: providers/freetds/gda-freetds-provider.c:805
+#: providers/freetds/gda-freetds-provider.c:806
+msgid "Unexpected return in execute_cmd()."
+msgstr "Неочекиван повратак у execute_cmd()."
+
+#: providers/freetds/gda-freetds-provider.c:1043
+#, c-format
+msgid ""
+"Msg %d, Level %d, State %d, Server %s, Line %d\n"
+"%s\n"
+msgstr ""
+"Порука %d, Ниво %d, Стање %d, Сервер %s, Линија %d\n"
+"%s\n"
+
+#: providers/freetds/gda-freetds-provider.c:1062 providers/freetds/utils.c:44
+#: providers/oracle/utils.c:74 providers/postgres/utils.c:51
+#: providers/sybase/gda-sybase-provider.c:765
+#: providers/sybase/gda-sybase-recordset.c:512
+#: providers/sybase/gda-sybase-recordset.c:534
+#: providers/sybase/gda-sybase-recordset.c:593 providers/sybase/utils.c:205
+#: providers/sybase/utils.c:223 providers/sybase/utils.c:239
+#: providers/sybase/utils.c:259 providers/sybase/utils.c:279
+#: providers/sybase/utils.c:320 providers/sybase/utils.c:337
+#: providers/sybase/utils.c:389 providers/sybase/utils.c:415
+#: providers/sybase/utils.c:449 providers/sybase/utils.c:466
+#: providers/sybase/utils.c:489 providers/sybase/utils.c:505
+#: providers/sybase/utils.c:543
+msgid "Not available"
+msgstr "Недоступан"
+
+#: providers/freetds/gda-freetds-recordset.c:376
+msgid "Error processing result rows.\n"
+msgstr "Грешка при обради резултата реда.\n"
+
+#: providers/freetds/gda-freetds-recordset.c:383
+msgid "Unexpected freetds return code in tds_process_row_tokens().\n"
+msgstr "Неочекивани freetds повратни код у tds_process_row_tokens().\n"
+
+#: providers/freetds/gda-freetds-recordset.c:393
+msgid "Error processing results.\n"
+msgstr "Грешка при обрађивању резултата.\n"
+
+#: providers/freetds/gda-freetds-recordset.c:400
+msgid "Unexpected freetds return code in tds_process_result_tokens\n"
+msgstr "Неочекивани freetds повратни код у tds_process_result_tokens\n"
+
+#: providers/freetds/libmain.c:39
+msgid "Provider for TDS-based databases (using FreeTDS)"
+msgstr "Посредник за TDS базиране базе података (користећи FreeTDS)"
+
+#: providers/freetds/utils.c:40 providers/oracle/utils.c:67
+#: providers/postgres/utils.c:46 providers/sybase/utils.c:538
+msgid "NO DESCRIPTION"
+msgstr "Без описа"
+
+#: providers/ibmdb2/gda-ibmdb2-provider.c:152
+msgid "Could not allocate environment handle.\n"
+msgstr "Номоже да обезбедити ручку окружења.\n"
+
+#. GetInfo is needed for obtaining database name
+#. is needed for tables schema
+#: providers/ibmdb2/gda-ibmdb2-provider.c:211
+msgid "SQLGetInfo is unsupported. Hence IBM DB2 Provider will not work.\n"
+msgstr "SQLGetInfo није подржан. IBM DB2 Посредник неће радити.\n"
+
+#: providers/ibmdb2/gda-ibmdb2-provider.c:450
+#: providers/ibmdb2/gda-ibmdb2-provider.c:580
+#: providers/ibmdb2/gda-ibmdb2-provider.c:688
+#: providers/ibmdb2/gda-ibmdb2-provider.c:763
+msgid "Invalid IBM DB2 handle"
+msgstr "Погрешна IBM DB2 ручка"
+
+#: providers/ibmdb2/gda-ibmdb2-provider.c:741
+msgid "Function"
+msgstr "Функције"
+
+#: providers/ibmdb2/gda-ibmdb2-provider.c:742
+#: providers/ibmdb2/gda-ibmdb2-provider.c:832
+#: providers/ibmdb2/gda-ibmdb2-provider.c:861
+#: providers/ibmdb2/gda-ibmdb2-provider.c:891
+#: providers/ibmdb2/gda-ibmdb2-provider.c:919
+#: providers/ibmdb2/gda-ibmdb2-provider.c:947
+#: providers/ibmdb2/gda-ibmdb2-provider.c:1000
+#: providers/ldap/gda-ldap-provider.c:328 providers/mdb/gda-mdb-provider.c:548
+#: providers/mdb/gda-mdb-provider.c:595 providers/mdb/gda-mdb-provider.c:655
+#: providers/mysql/gda-mysql-provider.c:703
+#: providers/mysql/gda-mysql-provider.c:890
+#: providers/mysql/gda-mysql-provider.c:972
+#: providers/odbc/gda-odbc-provider.c:1032
+#: providers/odbc/gda-odbc-provider.c:1141
+#: providers/odbc/gda-odbc-provider.c:1255
+#: providers/odbc/gda-odbc-provider.c:1297
+#: providers/odbc/gda-odbc-provider.c:1349
+#: providers/oracle/gda-oracle-provider.c:1154
+#: providers/oracle/gda-oracle-provider.c:1890
+#: providers/oracle/gda-oracle-provider.c:1908
+#: providers/oracle/gda-oracle-provider.c:1952
+#: providers/oracle/gda-oracle-provider.c:1970
+#: providers/oracle/gda-oracle-provider.c:2093
+#: providers/postgres/gda-postgres-provider.c:836
+#: providers/postgres/gda-postgres-provider.c:1106
+#: providers/postgres/gda-postgres-provider.c:1125
+#: providers/postgres/gda-postgres-provider.c:1185
+#: providers/postgres/gda-postgres-provider.c:1302
+#: providers/postgres/gda-postgres-provider.c:1935
+#: providers/sqlite/gda-sqlite-provider.c:752
+#: providers/sybase/gda-sybase-provider.c:1098
+msgid "Owner"
+msgstr "Власник"
+
+#: providers/ibmdb2/gda-ibmdb2-provider.c:777
+msgid "Database"
+msgstr "База података"
+
+#: providers/ibmdb2/gda-ibmdb2-provider.c:831
+msgid "Index"
+msgstr "Индекс"
+
+#. Set it here instead of the SQL query to allow i18n
+#: providers/ibmdb2/gda-ibmdb2-provider.c:833
+#: providers/ibmdb2/gda-ibmdb2-provider.c:890
+#: providers/ibmdb2/gda-ibmdb2-provider.c:999
+#: providers/odbc/gda-odbc-provider.c:1140
+#: providers/postgres/gda-postgres-provider.c:1105
+#: providers/postgres/gda-postgres-provider.c:1989
+msgid "Table"
+msgstr "Табела"
+
+#: providers/ibmdb2/gda-ibmdb2-provider.c:860
+#: providers/mdb/gda-mdb-provider.c:546
+#: providers/odbc/gda-odbc-provider.c:1030
+#: providers/postgres/gda-postgres-provider.c:834
+msgid "Procedure"
+msgstr "Процедура"
+
+#: providers/ibmdb2/gda-ibmdb2-provider.c:862
+msgid "Language"
+msgstr "Језик"
+
+#: providers/ibmdb2/gda-ibmdb2-provider.c:893
+#: providers/ibmdb2/gda-ibmdb2-provider.c:921
+#: providers/ibmdb2/gda-ibmdb2-provider.c:1002
+msgid "SQL Definition"
+msgstr "SQL дефиниција"
+
+#. Set it here instead of the SQL query to allow i18n
+#: providers/ibmdb2/gda-ibmdb2-provider.c:918
+#: providers/oracle/gda-oracle-provider.c:2186
+#: providers/postgres/gda-postgres-provider.c:1341 testing/client.c:135
+msgid "Triggers"
+msgstr "Окидачи"
+
+#. gda_server_recordset_model_set_field_defined_size (recset, 0, 32);
+#: providers/ibmdb2/gda-ibmdb2-provider.c:946
+#: providers/ldap/gda-ldap-provider.c:423
+#: providers/mysql/gda-mysql-provider.c:971
+#: providers/odbc/gda-odbc-provider.c:1254
+#: providers/oracle/gda-oracle-provider.c:2092
+#: providers/postgres/gda-postgres-provider.c:1124
+#: providers/sqlite/gda-sqlite-provider.c:751
+#: providers/sybase/gda-sybase-provider.c:1096
+msgid "Type"
+msgstr "Тип"
+
+#: providers/ibmdb2/gda-ibmdb2-provider.c:948
+#: providers/ldap/gda-ldap-provider.c:329 providers/mdb/gda-mdb-provider.c:549
+#: providers/mdb/gda-mdb-provider.c:596 providers/mdb/gda-mdb-provider.c:656
+#: providers/mysql/gda-mysql-provider.c:704
+#: providers/mysql/gda-mysql-provider.c:891
+#: providers/mysql/gda-mysql-provider.c:973
+#: providers/odbc/gda-odbc-provider.c:1033
+#: providers/odbc/gda-odbc-provider.c:1256
+#: providers/odbc/gda-odbc-provider.c:1350
+#: providers/oracle/gda-oracle-provider.c:1155
+#: providers/oracle/gda-oracle-provider.c:1890
+#: providers/oracle/gda-oracle-provider.c:1909
+#: providers/oracle/gda-oracle-provider.c:1952
+#: providers/oracle/gda-oracle-provider.c:1971
+#: providers/oracle/gda-oracle-provider.c:2094
+#: providers/postgres/gda-postgres-provider.c:837
+#: providers/postgres/gda-postgres-provider.c:1126
+#: providers/postgres/gda-postgres-provider.c:1186
+#: providers/postgres/gda-postgres-provider.c:1303
+#: providers/postgres/gda-postgres-provider.c:1936
+#: providers/sqlite/gda-sqlite-provider.c:753
+#: providers/sybase/gda-sybase-provider.c:1100
+msgid "Comments"
+msgstr "Коментари"
+
+#: providers/ibmdb2/gda-ibmdb2-provider.c:949
+#: providers/mysql/gda-mysql-provider.c:974
+#: providers/odbc/gda-odbc-provider.c:1257
+#: providers/oracle/gda-oracle-provider.c:2094
+#: providers/postgres/gda-postgres-provider.c:1127
+#: providers/sqlite/gda-sqlite-provider.c:754
+#: providers/sybase/gda-sybase-provider.c:1102
+msgid "GDA type"
+msgstr "GDA тип"
+
+#. Set it here instead of the SQL query to allow i18n
+#: providers/ibmdb2/gda-ibmdb2-provider.c:974
+#: providers/oracle/gda-oracle-provider.c:1822
+#: providers/postgres/gda-postgres-provider.c:1893 testing/client.c:133
+msgid "Users"
+msgstr "Корисници"
+
+#: providers/ibmdb2/libmain.c:39
+msgid "Provider for IBMDB2 databases"
+msgstr "Посредник за IBMDB2 базе података"
+
+#: providers/ldap/gda-ldap-provider.c:257
+#: providers/ldap/gda-ldap-provider.c:490
+#: providers/ldap/gda-ldap-provider.c:519
+#: providers/ldap/gda-ldap-provider.c:548
+#: providers/ldap/gda-ldap-provider.c:587
+#: providers/ldap/gda-ldap-recordset.c:58
+#: providers/ldap/gda-ldap-recordset.c:176
+msgid "Invalid LDAP handle"
+msgstr "Погрешна LDAP ручка"
+
+#: providers/ldap/gda-ldap-recordset.c:69
+#: providers/mysql/gda-mysql-recordset.c:69
+#: providers/postgres/gda-postgres-recordset.c:185
+#: providers/postgres/gda-postgres-recordset.c:225
+#: providers/sqlite/gda-sqlite-recordset.c:165
+#: providers/sqlite/gda-sqlite-recordset.c:204
+msgid "Row number out of range"
+msgstr "Број реда изван оквира"
+
+#: providers/ldap/gda-ldap-recordset.c:283
+#: providers/mysql/gda-mysql-recordset.c:288
+#: providers/oracle/gda-oracle-recordset.c:469
+msgid "Attempt to insert a row with an invalid number of columns"
+msgstr "Покушај да се убаци ред са погрешним бројем колона"
+
+#: providers/ldap/gda-ldap-recordset.c:298
+#: providers/mysql/gda-mysql-recordset.c:303
+#: providers/oracle/gda-oracle-recordset.c:484
+msgid "Could not retrieve column's information"
+msgstr "Номоже да добије информације о колони"
+
+#: providers/ldap/gda-ldap-recordset.c:316
+#: providers/mysql/gda-mysql-recordset.c:321
+#: providers/oracle/gda-oracle-recordset.c:502
+msgid "Could not retrieve column's value"
+msgstr "Не може да добије вредност колоне"
+
+#: providers/ldap/libmain.c:42
+msgid "Provider for LDAP directory"
+msgstr "Посредник за LDAP dиректоријум"
+
+#: providers/mdb/gda-mdb-provider.c:205
+msgid "A database FILENAME must be specified in the connection_string"
+msgstr "Име датотеке базе података мора бити одређено у низу знакова конекције"
+
+#: providers/mdb/gda-mdb-provider.c:214
+#: providers/xbase/gda-xbase-provider.c:223
+#, c-format
+msgid "Could not open file %s"
+msgstr "Не може да отвори датотеку %s"
+
+#: providers/mdb/gda-mdb-provider.c:238 providers/mdb/gda-mdb-provider.c:268
+#: providers/mdb/gda-mdb-provider.c:290 providers/mdb/gda-mdb-provider.c:342
+#: providers/mdb/gda-mdb-provider.c:690 providers/mdb/gda-mdb-provider.c:726
+msgid "Invalid MDB handle"
+msgstr "Погрешна MDB ручка"
+
+#: providers/mdb/gda-mdb-provider.c:404 providers/mdb/gda-mdb-provider.c:414
+#: providers/mdb/gda-mdb-provider.c:424
+msgid "Transactions not supported in MDB provider"
+msgstr "Трансакција није подрзана у MDB посреднику"
+
+#: providers/mdb/gda-mdb-provider.c:498
+#: providers/mysql/gda-mysql-provider.c:1077
+#: providers/odbc/gda-odbc-provider.c:922
+#: providers/oracle/gda-oracle-provider.c:1256
+#: providers/postgres/gda-postgres-provider.c:1360
+#: providers/sqlite/gda-sqlite-provider.c:630
+msgid "Default value"
+msgstr "Уобичајена вредност"
+
+#: providers/mdb/gda-mdb-provider.c:547
+#: providers/mysql/gda-mysql-provider.c:702
+msgid "ID"
+msgstr "ID"
+
+#: providers/mdb/gda-mdb-provider.c:550
+#: providers/mysql/gda-mysql-provider.c:705
+#: providers/odbc/gda-odbc-provider.c:1034
+#: providers/postgres/gda-postgres-provider.c:838
+msgid "Return type"
+msgstr "Повратни тип"
+
+#: providers/mdb/gda-mdb-provider.c:551
+msgid "# of args"
+msgstr "# од args"
+
+#: providers/mdb/gda-mdb-provider.c:552
+#: providers/mysql/gda-mysql-provider.c:706
+#: providers/odbc/gda-odbc-provider.c:1036
+#: providers/postgres/gda-postgres-provider.c:840
+msgid "Args types"
+msgstr "Args тип"
+
+#: providers/mdb/gda-mdb-provider.c:553
+#: providers/odbc/gda-odbc-provider.c:1037
+#: providers/odbc/gda-odbc-provider.c:1143
+#: providers/odbc/gda-odbc-provider.c:1299
+#: providers/odbc/gda-odbc-provider.c:1351
+#: providers/oracle/gda-oracle-provider.c:1158
+#: providers/postgres/gda-postgres-provider.c:841
+#: providers/postgres/gda-postgres-provider.c:1108
+#: providers/postgres/gda-postgres-provider.c:1187
+#: providers/postgres/gda-postgres-provider.c:1306
+#: providers/postgres/gda-postgres-provider.c:1937
+msgid "Definition"
+msgstr "Дефиниција"
+
+#: providers/mdb/gda-mdb-provider.c:657
+msgid "GDA Type"
+msgstr "GDA тип"
+
+#: providers/mdb/gda-mdb-provider.c:659
+msgid "Boolean type"
+msgstr "Тип Буловог оператора"
+
+#: providers/mdb/gda-mdb-provider.c:660
+msgid "1-byte integers"
+msgstr "1-бајт цели број"
+
+#: providers/mdb/gda-mdb-provider.c:661
+msgid "Double precision values"
+msgstr "Двострука прцизна вредност"
+
+#: providers/mdb/gda-mdb-provider.c:662
+msgid "Single precision values"
+msgstr "Једнострука прецизна вредност"
+
+#: providers/mdb/gda-mdb-provider.c:663
+msgid "32-bit integers"
+msgstr "32-битни цели број"
+
+#: providers/mdb/gda-mdb-provider.c:664
+msgid "64-bit integers"
+msgstr "64-битни цели број"
+
+#: providers/mdb/gda-mdb-provider.c:665
+msgid "Variable length character strings"
+msgstr "Низ знакова промењиве дужине"
+
+#: providers/mdb/gda-mdb-provider.c:666
+msgid "Money amounts"
+msgstr "Износ новца"
+
+#: providers/mdb/gda-mdb-provider.c:667
+msgid "OLE object"
+msgstr "OLE објекат"
+
+#: providers/mdb/gda-mdb-provider.c:668
+#, fuzzy
+msgid "FIXME"
+msgstr "FIXME"
+
+#: providers/mdb/gda-mdb-provider.c:669
+msgid "Date/time value"
+msgstr "Тренутни датум и време"
+
+#: providers/mdb/gda-mdb-provider.c:670
+msgid "Character strings"
+msgstr "Низ знакова"
+
+#. end unsafe
+#: providers/mdb/gda-mdb-provider.c:737
+#, c-format
+msgid "Could not parse '%s' command"
+msgstr "Нисам могао да обрадим наредбу '%s'"
+
+#: providers/mdb/libmain.c:36
+msgid "Provider for Microsoft Access files"
+msgstr "Посредник за Microsoft Access датотеке"
+
+#: providers/mysql/gda-mysql-provider.c:218
+msgid ""
+"You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
+msgstr ""
+"Ви неможете обезбедити UNIX_SOCKET ако не обезбедити и домаћина или порт."
+
+#: providers/mysql/gda-mysql-provider.c:294
+#: providers/mysql/gda-mysql-provider.c:1085
+#: providers/mysql/gda-mysql-recordset.c:58
+#: providers/mysql/gda-mysql-recordset.c:174
+msgid "Invalid MySQL handle"
+msgstr "Погрешна MySQL ручка"
+
+#: providers/mysql/gda-mysql-provider.c:310
+#: providers/mysql/gda-mysql-provider.c:380
+#: providers/mysql/gda-mysql-provider.c:403
+#: providers/mysql/gda-mysql-provider.c:434
+#: providers/mysql/gda-mysql-provider.c:466
+#: providers/mysql/gda-mysql-provider.c:534
+#: providers/mysql/gda-mysql-provider.c:591
+#: providers/mysql/gda-mysql-provider.c:624
+msgid "Invalid MYSQL handle"
+msgstr "Погрешна MYSQL ручка"
+
+#: providers/mysql/gda-mysql-provider.c:539
+#: providers/mysql/gda-mysql-provider.c:596
+#: providers/mysql/gda-mysql-provider.c:629
+#: providers/oracle/gda-oracle-provider.c:857
+#: providers/oracle/gda-oracle-provider.c:939
+#: providers/oracle/gda-oracle-provider.c:1000
+#: providers/sqlite/gda-sqlite-provider.c:472
+msgid "Transactions are not supported in read-only mode"
+msgstr "Трансакције нису подржане у моду само за читање"
+
+#: providers/mysql/gda-mysql-provider.c:707
+#: providers/oracle/gda-oracle-provider.c:1910
+#: providers/oracle/gda-oracle-provider.c:1972
+msgid "SQL"
+msgstr "SQL"
+
+#: providers/mysql/gda-mysql-provider.c:1094
+#: providers/mysql/gda-mysql-provider.c:1102
+msgid "Table name is needed but none specified in parameter list"
+msgstr "Име табеле је неопходно али није одређено у листи параметара"
+
+#: providers/mysql/libmain.c:41
+msgid "Provider for MySQL databases"
+msgstr "Посредник за MySQL базе података"
+
+#: providers/odbc/gda-odbc-provider.c:183
+msgid "Unable to SQLAllocEnv()..."
+msgstr "Не може да SQLAllocEnv()..."
+
+#: providers/odbc/gda-odbc-provider.c:433
+#: providers/odbc/gda-odbc-provider.c:453
+#: providers/odbc/gda-odbc-provider.c:483
+#: providers/odbc/gda-odbc-provider.c:513
+#: providers/odbc/gda-odbc-provider.c:544
+#: providers/odbc/gda-odbc-provider.c:574
+msgid "Invalid Odbc handle"
+msgstr "Погрешна Odbc ручка"
+
+#: providers/odbc/gda-odbc-provider.c:1031
+#: providers/oracle/gda-oracle-provider.c:1153
+#: providers/postgres/gda-postgres-provider.c:835
+#: providers/postgres/gda-postgres-provider.c:1301
+msgid "Id"
+msgstr "ID"
+
+#: providers/odbc/gda-odbc-provider.c:1035
+#: providers/postgres/gda-postgres-provider.c:839
+msgid "Nb args"
+msgstr "Nb args"
+
+#: providers/odbc/gda-odbc-provider.c:1296
+#: providers/oracle/gda-oracle-provider.c:2190 testing/client.c:130
+msgid "Views"
+msgstr "Прегледи"
+
+#. Set it here instead of the SQL query to allow i18n
+#: providers/odbc/gda-odbc-provider.c:1348
+#: providers/postgres/gda-postgres-provider.c:1934
+#: providers/postgres/gda-postgres-provider.c:1990
+msgid "Sequence"
+msgstr "Секвенца"
+
+#: providers/odbc/libmain.c:41
+msgid "Provider for ODBC data sources"
+msgstr "Посредник за ODBC извор података"
+
+#: providers/oracle/gda-oracle-provider.c:196
+msgid "No TNS name supplied"
+msgstr "TNS назив није достављено"
+
+#: providers/oracle/gda-oracle-provider.c:212
+msgid "Could not initialize Oracle"
+msgstr "Не успело покретање Oracle"
+
+#: providers/oracle/gda-oracle-provider.c:223
+msgid "Could not initialize the Oracle environment"
+msgstr "Не може да започне Oracle окружење"
+
+#: providers/oracle/gda-oracle-provider.c:234
+msgid "Could not allocate the Oracle service handle"
+msgstr "Номоже да обезбеди Oracle сервис ручку"
+
+#: providers/oracle/gda-oracle-provider.c:244
+msgid "Could not allocate the Oracle error handle"
+msgstr "Номоже да обезбеди Oracle грешка ручку"
+
+#: providers/oracle/gda-oracle-provider.c:256
+msgid "Could not allocate the Oracle server handle"
+msgstr "Номоже да обезбеди Oracle сервер ручку"
+
+#: providers/oracle/gda-oracle-provider.c:269
+msgid "Could not allocate the Oracle session handle"
+msgstr "Номоже да обезбеди Oracle сеанса ручку"
+
+#: providers/oracle/gda-oracle-provider.c:299
+msgid "Could not attach to the Oracle server"
+msgstr "Неможе да се припоји на Oracle сервер"
+
+#: providers/oracle/gda-oracle-provider.c:315
+msgid "Could not set the Oracle server attribute in the service context"
+msgstr "Неможе да подеси Oracle особине сервера у додатном сервису"
+
+#: providers/oracle/gda-oracle-provider.c:331
+msgid "Could not set the Oracle username attribute"
+msgstr "Номоже да подеси Oracle особине корисничког имена"
+
+#: providers/oracle/gda-oracle-provider.c:347
+msgid "Could not set the Oracle password attribute"
+msgstr "Номоже да подеси Oracle особине лозинке"
+
+#: providers/oracle/gda-oracle-provider.c:362
+msgid "Could not begin the Oracle session"
+msgstr "Не може да почне Oracle сеансу"
+
+#: providers/oracle/gda-oracle-provider.c:380
+msgid "Could not set the Oracle session attribute in the service context"
+msgstr "Неможе да подеси Oracle особине сеансе у додатном сервису"
+
+#: providers/oracle/gda-oracle-provider.c:466
+#: providers/oracle/gda-oracle-provider.c:498
+#: providers/oracle/gda-oracle-provider.c:573
+#: providers/oracle/gda-oracle-provider.c:722
+#: providers/oracle/gda-oracle-provider.c:745
+#: providers/oracle/gda-oracle-provider.c:768
+#: providers/oracle/gda-oracle-provider.c:798
+#: providers/oracle/gda-oracle-provider.c:852
+#: providers/oracle/gda-oracle-provider.c:934
+#: providers/oracle/gda-oracle-provider.c:995
+#: providers/oracle/gda-oracle-provider.c:1142
+#: providers/oracle/gda-oracle-recordset.c:167
+#: providers/oracle/gda-oracle-recordset.c:390
+#: providers/oracle/gda-oracle-recordset.c:591
+msgid "Invalid Oracle handle"
+msgstr "Погрешна Oracle ручка"
+
+#: providers/oracle/gda-oracle-provider.c:509
+msgid "Could not allocate the Oracle statement handle"
+msgstr "Номоже да обезбеди Oracle констатација ручку"
+
+#: providers/oracle/gda-oracle-provider.c:520
+msgid "Could not prepare the Oracle statement"
+msgstr "Номоже да припреми Oracle констатацију"
+
+#: providers/oracle/gda-oracle-provider.c:552
+msgid "Could not bind the Oracle statement parameter"
+msgstr "Номоже да веже Oracle параметар констатације"
+
+#: providers/oracle/gda-oracle-provider.c:598
+msgid "Could not get the Oracle statement type"
+msgstr "Номоже да добије Oracle тип констатације"
+
+#: providers/oracle/gda-oracle-provider.c:610
+msgid "Could not set the Oracle statement pre-fetch row count"
+msgstr "Неможе да подеси Oracle  констатацију pre-fetch број реда"
+
+#: providers/oracle/gda-oracle-provider.c:627
+msgid "Could not execute the Oracle statement"
+msgstr "Номоже да изврши Oracle констатацију"
+
+#: providers/oracle/gda-oracle-provider.c:640
+msgid "Could not get the number of columns in the result set"
+msgstr "Неможе да добије број колоне у постављеном резултату"
+
+#: providers/oracle/gda-oracle-provider.c:657
+msgid "Could not get the parameter descripter in the result set"
+msgstr "Неможе да добије дескриптер параметара у постављеном резултату"
+
+#: providers/oracle/gda-oracle-provider.c:669
+msgid "Could not get the column name in the result set"
+msgstr "Неможе да добије име колоне у постављеном резултату"
+
+#: providers/oracle/gda-oracle-provider.c:815
+#: providers/oracle/gda-oracle-provider.c:896
+#: providers/oracle/gda-oracle-provider.c:951
+#: providers/oracle/gda-oracle-provider.c:1012
+msgid "Could not attach the transaction to the service context"
+msgstr "Неможе да припоји трансакцију у додатном сервису"
+
+#: providers/oracle/gda-oracle-provider.c:870
+msgid "Could not allocate the Oracle transaction handle"
+msgstr "Номоже да обезбеди Oracle ручку трансакције"
+
+#: providers/oracle/gda-oracle-provider.c:882
+msgid "Could not set the Oracle transaction name"
+msgstr "Номоже да подеси Oracle име трансакције"
+
+#: providers/oracle/gda-oracle-provider.c:907
+msgid "Could not start the Oracle transaction"
+msgstr "Номоже да покрене Oracle трансакцију"
+
+#: providers/oracle/gda-oracle-provider.c:960
+msgid "Could not prepare the transaction to commit"
+msgstr "Неможе да припреми трансакцију да пошаље"
+
+#: providers/oracle/gda-oracle-provider.c:968
+msgid "Could not commit the Oracle transaction"
+msgstr "Номоже да пошаље Oracle трансакцију"
+
+#: providers/oracle/gda-oracle-provider.c:1019
+msgid "Could not rollback the Oracle transaction"
+msgstr "Номоже да врати у претходно стање Oracle трансакцију"
+
+#. Set it here instead of the SQL query to allow i18n
+#: providers/oracle/gda-oracle-provider.c:1152
+#: providers/postgres/gda-postgres-provider.c:1300
+msgid "Aggregate"
+msgstr "Сакупити"
+
+#: providers/oracle/gda-oracle-provider.c:1156
+#: providers/postgres/gda-postgres-provider.c:1304
+msgid "OutType"
+msgstr "Тип споља (OutType)"
+
+#: providers/oracle/gda-oracle-provider.c:1157
+#: providers/postgres/gda-postgres-provider.c:1305
+msgid "InType"
+msgstr "Тип унутра (InType)"
+
+#: providers/oracle/gda-oracle-provider.c:1438
+msgid "Could not allocate the Oracle describe handle"
+msgstr "Номоже да обезбеди Oracle ручку описа"
+
+#: providers/oracle/gda-oracle-provider.c:1448
+msgid "Could not set describe handle attribute"
+msgstr "Номоже да подеси опис ручку особине"
+
+#: providers/oracle/gda-oracle-provider.c:1475
+#: providers/oracle/gda-oracle-provider.c:1580
+msgid "Could not describe the Oracle table"
+msgstr "Номоже да опише Oracle табелу"
+
+#: providers/oracle/gda-oracle-provider.c:1490
+#: providers/oracle/gda-oracle-provider.c:1593
+msgid "Could not get the Oracle parameter handle"
+msgstr "Номоже да добије Oracle ручку параметра"
+
+#: providers/oracle/gda-oracle-provider.c:1505
+msgid "Could not get described object type"
+msgstr "Номоже да добије Oracle тип објекта"
+
+#: providers/oracle/gda-oracle-provider.c:1520
+msgid "Could not get synonym referred-to schema"
+msgstr "Неможе да добије синоним приписан шеми"
+
+#: providers/oracle/gda-oracle-provider.c:1533
+msgid "Could not get synonym referred-to name"
+msgstr "Неможе да добије синоним приписан имену"
+
+#: providers/oracle/gda-oracle-provider.c:1546
+msgid "Could not get synonym referred-to dblink"
+msgstr "Неможе да добије синоним приписан dblink"
+
+#: providers/oracle/gda-oracle-provider.c:1608
+msgid "Could not get the number of columns in the table"
+msgstr "Неможе да добије број колона у табели"
+
+#: providers/oracle/gda-oracle-provider.c:1622
+msgid "Could not get the column list"
+msgstr "Неможе да добије листу колона"
+
+#: providers/oracle/gda-oracle-provider.c:1653
+msgid "Could not get the Oracle column handle"
+msgstr "Номоже да добије Oracle ручку колоне"
+
+#: providers/oracle/gda-oracle-provider.c:1668
+msgid "Could not get the Oracle field name"
+msgstr "Номоже да добије Oracle име поља"
+
+#: providers/oracle/gda-oracle-provider.c:1690
+msgid "Could not get the Oracle field data type"
+msgstr "Неможе да добије Oracle тип података поља"
+
+#: providers/oracle/gda-oracle-provider.c:1710
+msgid "Could not get the Oracle field defined size"
+msgstr "Неможе да добије Oracle одређену велићину поља"
+
+#: providers/oracle/gda-oracle-provider.c:1729
+msgid "Could not get the Oracle field scale"
+msgstr "Номоже да добије Oracle размерник поља"
+
+#: providers/oracle/gda-oracle-provider.c:1748
+msgid "Could not get the Oracle field nullable attribute"
+msgstr "Неможе да добије Oracle нул особину поља"
+
+#. Set it here instead of the SQL query to allow i18n
+#: providers/oracle/gda-oracle-provider.c:2174
+#: providers/postgres/gda-postgres-provider.c:1224 testing/client.c:131
+msgid "Indexes"
+msgstr "Индекси"
+
+#: providers/oracle/gda-oracle-provider.c:2177
+msgid "Procedures"
+msgstr "Процедуре"
+
+#: providers/oracle/gda-oracle-provider.c:2180 testing/client.c:134
+msgid "Sequences"
+msgstr "Секвенце"
+
+#: providers/oracle/gda-oracle-recordset.c:72
+msgid "Could not get the Oracle parameter"
+msgstr "Номоже да добије Oracle параметар"
+
+#: providers/oracle/gda-oracle-recordset.c:82
+msgid "Could not get the parameter defined size"
+msgstr "Номоже да добије параметат одрећене величине"
+
+#: providers/oracle/gda-oracle-recordset.c:95
+msgid "Could not get the parameter data type"
+msgstr "Номоже да добије параметар типа података"
+
+#: providers/oracle/gda-oracle-recordset.c:128
+msgid "Could not define by position"
+msgstr "Неможе да одреди из позиције"
+
+#: providers/oracle/gda-oracle-recordset.c:173
+#: providers/postgres/gda-postgres-recordset.c:264
+msgid "Column out of range"
+msgstr "Колона изван оквира"
+
+#: providers/oracle/gda-oracle-recordset.c:185
+msgid "Could not get the Oracle parameter information"
+msgstr "Номоже да добије Oracle информацију параметра"
+
+#: providers/oracle/gda-oracle-recordset.c:195
+msgid "Could not get the Oracle column name"
+msgstr "Номоже да добије Oracle име колоне"
+
+#: providers/oracle/gda-oracle-recordset.c:210
+msgid "Could not get the Oracle column data type"
+msgstr "Неможе да добије Oracle тип података поља"
+
+#: providers/oracle/gda-oracle-recordset.c:222
+msgid "Could not get the Oracle column scale"
+msgstr "Неможе да добије Oracle размеру колоне"
+
+#: providers/oracle/gda-oracle-recordset.c:234
+msgid "Could not get the Oracle column nullable attribute"
+msgstr "Неможе да добије Oracle нул особину колоне"
+
+#: providers/oracle/gda-oracle-recordset.c:246
+msgid "Could not get the Oracle defined size"
+msgstr "Номоже да добије Oracle одрећену величину"
+
+#: providers/oracle/gda-oracle-recordset.c:355
+msgid "Could not fetch a row"
+msgstr "Не може да добави ред"
+
+#: providers/oracle/libmain.c:34
+msgid "Provider for Oracle databases"
+msgstr "Посредник за Oracle базе података"
+
+#: providers/postgres/gda-postgres-provider.c:554
+#: providers/postgres/gda-postgres-provider.c:571
+#: providers/postgres/gda-postgres-provider.c:642
+#: providers/postgres/gda-postgres-provider.c:777
+#: providers/postgres/gda-postgres-recordset.c:176
+#: providers/postgres/gda-postgres-recordset.c:216
+#: providers/postgres/gda-postgres-recordset.c:258
+msgid "Invalid PostgreSQL handle"
+msgstr "Погрешна PostgreSQL ручка"
+
+#. Set it here instead of the SQL query to allow i18n
+#: providers/postgres/gda-postgres-provider.c:1184
+msgid "View"
+msgstr "Поглед"
+
+#. Set it here instead of the SQL query to allow i18n
+#: providers/postgres/gda-postgres-provider.c:1858 testing/client.c:126
+msgid "Databases"
+msgstr "Базе података"
+
+#: providers/postgres/gda-postgres-recordset.c:231
+#: providers/sqlite/gda-sqlite-recordset.c:210
+#: providers/sqlite/gda-sqlite-recordset.c:242
+msgid "Column number out of range"
+msgstr "Број колоне изван оквира"
+
+#: providers/postgres/gda-postgres-recordset.c:354
+#, c-format
+msgid "Tuples:\"%s\""
+msgstr "Место:\"%s\""
+
+#: providers/postgres/libmain.c:41
+msgid "Provider for PostgreSQL databases"
+msgstr "Посредник за PostgreSQL базе података"
+
+#: providers/sqlite/gda-sqlite-provider.c:220
+msgid "Could not set empty_result_callbacks SQLite option"
+msgstr "Неможе да постави опцију empty_result_callbacks SQLite"
+
+#: providers/sqlite/gda-sqlite-provider.c:243
+#: providers/sqlite/gda-sqlite-provider.c:343
+#: providers/sqlite/gda-sqlite-provider.c:554
+#: providers/sqlite/gda-sqlite-provider.c:719
+#: providers/sqlite/gda-sqlite-recordset.c:156
+#: providers/sqlite/gda-sqlite-recordset.c:195
+#: providers/sqlite/gda-sqlite-recordset.c:236
+msgid "Invalid SQLite handle"
+msgstr "Погрешана SQLite ручка"
+
+#: providers/sqlite/gda-sqlite-provider.c:265
+msgid "Invalid SQLITE handle"
+msgstr "Погрешна SQLITE ручка"
+
+#: providers/sqlite/gda-sqlite-provider.c:361
+#: providers/sqlite/gda-sqlite-provider.c:376
+msgid "Only one database per connection is allowed"
+msgstr "Само једна база података је дозвољена по конекцији"
+
+#: providers/sqlite/gda-sqlite-provider.c:390
+msgid "To remove a SQLite database you should remove the database file by hand"
+msgstr ""
+"ДА уклоните SQLite базу података треба да ручно уклоните датотеке базе "
+"података"
+
+#: providers/sqlite/gda-sqlite-provider.c:664
+msgid "Could not retrieve information for field"
+msgstr "Не може опет доћи до података о пољу"
+
+#: providers/sqlite/libmain.c:41
+msgid "Provider for SQLite databases"
+msgstr "Посредник за SQLite базе података"
+
+#: providers/sybase/gda-sybase-provider.c:291
+msgid "Out of memory. Allocating connection structure failed."
+msgstr "Изван меморије. Обезбеђивање структуре конекције није успело."
+
+#: providers/sybase/gda-sybase-provider.c:336
+#, c-format
+msgid "Locale set to '%s'."
+msgstr "Локал подешен на '%s'."
+
+#: providers/sybase/gda-sybase-provider.c:642
+msgid ""
+"Cmd structure already in use. Command will not be executed because of "
+"blocked connection."
+msgstr ""
+"Cmd структура већ у употреби. Наредба неће бити извршена зато што је "
+"блокирана конекција."
+
+#: providers/sybase/gda-sybase-provider.c:656
+#, c-format
+msgid "Failed allocating a command structure in %s()"
+msgstr "Није успело обезбеђивање структуре наредбе у %s()"
+
+#: providers/sybase/gda-sybase-provider.c:670
+msgid "Could not prepare command structure."
+msgstr "Номоже да припреми структуру наредбе."
+
+#: providers/sybase/gda-sybase-provider.c:680
+msgid "Sending sql-command failed."
+msgstr "Неуспело слање SQL наредбе."
+
+#: providers/sybase/gda-sybase-provider.c:706
+#: providers/sybase/gda-sybase-provider.c:724
+#: providers/sybase/gda-sybase-provider.c:790
+#: providers/sybase/gda-sybase-provider.c:811
+msgid "GDA_IS_SYBASE_RECORDSET != TRUE"
+msgstr "GDA_IS_SYBASE_RECORDSET != ISTINITO"
+
+#. when you execute a stored procedure through openclient, this 
+#. part of the result set loop is where you fetch the return status
+#. of the executed stored procedure.  You fetch it like a CS_ROW_RESULT
+#: providers/sybase/gda-sybase-provider.c:712
+msgid "CS_STATUS_RESULT!"
+msgstr "CS_STATUS_RESULT!"
+
+#: providers/sybase/gda-sybase-provider.c:734
+msgid "Hit unsupported result type"
+msgstr "Неподржана врста резултата"
+
+#: providers/sybase/gda-sybase-provider.c:762
+msgid ""
+"an error occured when calling ct_diag attempting to test if there is a "
+"server message for resultset"
+msgstr ""
+"Догодила се грешка када позив ct_diag покушава да тестира да ли постоји "
+"порука сервера за постављени резултат"
+
+#: providers/sybase/gda-sybase-provider.c:793
+#, c-format
+msgid "%s returned %s"
+msgstr "%s вратило %s"
+
+#: providers/sybase/gda-sybase-provider.c:820
+msgid "Failed dropping command structure."
+msgstr "Неуспело отпуштање структуре наредбе."
+
+#: providers/sybase/gda-sybase-provider.c:850
+#, c-format
+msgid "Command structure already in use. %s failed."
+msgstr "Структура команда већ у употреби. %s није успело."
+
+#: providers/sybase/gda-sybase-provider.c:858
+msgid "Could not allocate command structure."
+msgstr "Номоже да додели структуру наредбе."
+
+#: providers/sybase/gda-sybase-provider.c:867
+#, c-format
+msgid "Could not prepare command structure with %s."
+msgstr "Неможе да припреми структуру команде са %s"
+
+#: providers/sybase/gda-sybase-provider.c:877
+msgid "Sending command failed."
+msgstr "Слање наредбе није успело."
+
+#: providers/sybase/gda-sybase-provider.c:902
+#: providers/sybase/gda-sybase-provider.c:919
+#: providers/sybase/gda-sybase-provider.c:930
+#, c-format
+msgid "%s: %s failed"
+msgstr "%s: %s није успело"
+
+#: providers/sybase/gda-sybase-provider.c:974
+msgid "could not allocate cmd structure to find current database."
+msgstr "Неможе да додели cmd структуру да нађе тренутну базу податада."
+
+#: providers/sybase/gda-sybase-provider.c:985
+msgid "could not execute command to get current database."
+msgstr "Неможе да да изврши наредбу да добије тренутну базу података."
+
+#: providers/sybase/gda-sybase-provider.c:993
+msgid "could not send command to get current database."
+msgstr "Неможе да пошаље наредбу да добије тренутну базу података."
+
+#: providers/sybase/gda-sybase-provider.c:1016
+msgid "could not bind variable to get current database."
+msgstr "Неможе да веже промењиву да добије тренутну базу података."
+
+#: providers/sybase/gda-sybase-provider.c:1029
+#: providers/sybase/gda-sybase-provider.c:1044
+msgid "could not fetch data to find current database."
+msgstr "Неможе да додели cmd структуру да нађе тренутну базу податада."
+
+#: providers/sybase/gda-sybase-provider.c:1058
+msgid "could not drop cmd structure to find current database."
+msgstr "Неможе да додели cmd структуру да нађе тренутну базу податада."
+
+#: providers/sybase/gda-sybase-recordset.c:315
+msgid "Could not allocate datamodel. No results will be returned."
+msgstr "Неможе да додели модел података. Ниједа резултат неће бити врећен."
+
+#: providers/sybase/gda-sybase-recordset.c:318
+msgid "ct_cancel() failed."
+msgstr "ct_cancel() није успело."
+
+#: providers/sybase/gda-sybase-recordset.c:331
+#, c-format
+msgid "%s failed while processing a row result."
+msgstr "%s Није успео при обради постављеног резултата реда."
+
+#: providers/sybase/gda-sybase-recordset.c:339
+#, c-format
+msgid "%s returned <= 0 columns."
+msgstr "%s вратило <= 0 колона."
+
+#: providers/sybase/gda-sybase-recordset.c:359
+#: providers/sybase/gda-sybase-recordset.c:549
+msgid "Could not allocate structure for column metainformation."
+msgstr "Неможе да додели сруктуру за колонине мета информације."
+
+#: providers/sybase/gda-sybase-recordset.c:363
+#: providers/sybase/gda-sybase-recordset.c:553
+#, c-format
+msgid "Could not call %s while processing row resultset."
+msgstr "Неможе да зове %s док обрађује постављени резултат реда."
+
+#: providers/sybase/gda-sybase-recordset.c:382
+#: providers/sybase/gda-sybase-recordset.c:403
+#, c-format
+msgid "Could not run %s on column %d"
+msgstr "Неможе да покрене %s за колону %d"
+
+#: providers/sybase/gda-sybase-recordset.c:391
+#, c-format
+msgid "Could not allocate data placeholder for column %d"
+msgstr "Неможе да да додели носилац положаја података за колону %d"
+
+#: providers/sybase/gda-sybase-recordset.c:422
+#, c-format
+msgid "Could not run %s to cancel processing row resultset."
+msgstr "Неможе да покрене %s да поништи обраду постављеног резултата реда."
+
+#: providers/sybase/gda-sybase-recordset.c:438
+#, c-format
+msgid "%s failed on row %d"
+msgstr "%s није успело за ред %d"
+
+#: providers/sybase/gda-sybase-recordset.c:465
+#, c-format
+msgid "%s terminated with unexpected return code."
+msgstr "%s прекинуто са неочекиваним повратним кодом."
+
+#: providers/sybase/gda-sybase-recordset.c:509
+msgid ""
+"an error occured when calling ct_diag attempting to retrieve a server "
+"message count for resultset"
+msgstr ""
+"Догодила се грешка када позив ct_diag покушава да обезбеди поруку сервера "
+"рачунату као постављени резултат"
+
+#: providers/sybase/gda-sybase-recordset.c:518
+msgid "attempting to make recordset and msg count != 1 !"
+msgstr "Покушава да направи постављен запис и msg count != 1 !"
+
+#: providers/sybase/gda-sybase-recordset.c:531
+msgid ""
+"an error occured when calling ct_diag attempting to retrieve a server "
+"message for recordset"
+msgstr ""
+"Догодила се грешка када позив ct_diag покушава да опет нађе поруку сервера "
+"за постављени резултат"
+
+#: providers/sybase/gda-sybase-recordset.c:590 providers/sybase/utils.c:412
+msgid "call to ct_diag failed when attempting to clear the server messages"
+msgstr "Позив ct_diag није успео при покушају да обрише поруке сервера"
+
+#: providers/sybase/gda-sybase-types.c:94
+#: providers/sybase/gda-sybase-types.c:97
+msgid "Attempt setting a nonnullable field to null."
+msgstr "Покушај подешавања не нул поља на нул."
+
+#: providers/sybase/gda-sybase-types.c:208
+#, c-format
+msgid "cslib cannot convert type %d"
+msgstr "cslib не може претворити тип %d"
+
+#: providers/sybase/gda-sybase-types.c:223
+#, c-format
+msgid "data conversion failed for type %d"
+msgstr "Претварање података није успело за тип %d"
+
+#: providers/sybase/libmain.c:40
+msgid "GDA provider for sybase databases (using OpenClient)"
+msgstr "GDA посредник за Ѕybase базе података (користећи OpenClient)"
+
+#: providers/sybase/main.c:52
+msgid "Could not initiate Sybase component factory"
+msgstr "Неможе да покрене Sybase фабрику компонената"
+
+#: providers/sybase/utils.c:48
+msgid "Call: csmsg callback"
+msgstr "Зови: csmsg опозов."
+
+#: providers/sybase/utils.c:53
+#, c-format
+msgid ""
+"CS-Library error:\n"
+"\tseverity(%ld) layer(%ld) origin (%ld) number(%ld)\n"
+"\t%s"
+msgstr ""
+"CS-Library грешка:\n"
+"\tозбиљност(%ld) ниво(%ld) порекло (%ld) број(%ld)\n"
+"\t%s"
+
+#: providers/sybase/utils.c:60
+#, c-format
+msgid "OS error: %s"
+msgstr "Грешка ОС: %s"
+
+#: providers/sybase/utils.c:70
+msgid "Call: Client callback."
+msgstr "Зови: Клијент опозов."
+
+#: providers/sybase/utils.c:75
+#, c-format
+msgid ""
+"CT-Client error:\n"
+"\tseverity(%ld) layer(%ld) origin (%ld) number(%ld)\n"
+"\t%s"
+msgstr ""
+"CT-Client грешка:\n"
+"\tозбиљност(%ld) ниво(%ld) порекло (%ld) број(%ld)\n"
+"\t%s"
+
+#: providers/sybase/utils.c:90
+msgid "Call: server callback"
+msgstr "Зови: Сервер опозов."
+
+#: providers/sybase/utils.c:95
+#, c-format
+msgid ""
+"CT-Server message:\n"
+"\tnumber(%ld) severity(%ld) state(%ld) line(%ld)"
+msgstr ""
+"CT-Server порука:\n"
+"\tброј(%ld) озбиљност(%ld) стање(%ld) линија(%ld)"
+
+#: providers/sybase/utils.c:100
+#, c-format
+msgid "\tServer name: %s\n"
+msgstr "\tИме сервера: %s\n"
+
+#: providers/sybase/utils.c:103
+#, c-format
+msgid "\tProcedure name: %s\n"
+msgstr "\tИме процедуре: %s\n"
+
+#: providers/sybase/utils.c:147
+msgid "ct_diag() failed determining # of client messages."
+msgstr "ct_diag() није успео у одрђивању # од порука клијента."
+
+#: providers/sybase/utils.c:202
+msgid "call to cs_diag failed when attempting to the amount of client messages"
+msgstr "Позив cs_diag није успео при покушају да вреднује поруке клијента"
+
+#: providers/sybase/utils.c:220
+msgid ""
+"an error occured when calling cs_diag attempting to retrieve a client message"
+msgstr ""
+"Догодила се грешка када позив cs_diag покушава да опет нађе поруку клијента"
+
+#: providers/sybase/utils.c:230
+msgid "OS_Error:("
+msgstr "Грешка ОС:("
+
+#: providers/sybase/utils.c:232
+msgid ") Message: "
+msgstr ") Порука:"
+
+#: providers/sybase/utils.c:245
+msgid "Sybase OpenClient Msg: severity("
+msgstr "Sybase OpenClient Msg: severity("
+
+#: providers/sybase/utils.c:247
+msgid "), number("
+msgstr "), број("
+
+#: providers/sybase/utils.c:249
+msgid "), origin("
+msgstr "), порекло("
+
+#: providers/sybase/utils.c:251
+msgid "), layer("
+msgstr "), ниво("
+
+#: providers/sybase/utils.c:276
+msgid "call to cs_diag failed when attempting to clear the client messages"
+msgstr "Позив cs_diag није успео при покушају да обрише поруке клијента"
+
+#: providers/sybase/utils.c:317
+msgid "call to ct_diag failed when attempting to the amount of server messages"
+msgstr "Позив ct_diag није успео при покушају да вреднује поруке сервера"
+
+#: providers/sybase/utils.c:334
+msgid ""
+"an error occured when calling ct_diag attempting to retrieve a server message"
+msgstr ""
+"Догодила се грешка када позив ct_diag покушава да опет нађе поруку сервера"
+
+#: providers/sybase/utils.c:346
+msgid "Server:"
+msgstr "Сервер:"
+
+#: providers/sybase/utils.c:350
+msgid "Stored Procedure:"
+msgstr "Чуване процедуре:"
+
+#: providers/sybase/utils.c:354
+msgid "Number"
+msgstr "Број"
+
+#: providers/sybase/utils.c:357 providers/sybase/utils.c:474
+msgid "Severity"
+msgstr "Озбиљност"
+
+#: providers/sybase/utils.c:360
+msgid "State"
+msgstr "Стање"
+
+#: providers/sybase/utils.c:363
+msgid "Line"
+msgstr "Линија"
+
+#: providers/sybase/utils.c:446
+msgid "call to ct_diag failed when attempting to the amount of client messages"
+msgstr "Позив ct_diag није успео при покушају да вреднује поруке клијента"
+
+#: providers/sybase/utils.c:463
+msgid ""
+"an error occured when calling ct_diag attempting to retrieve a client message"
+msgstr ""
+"Догодила се грешка када позив ct_diag покушава да опет нађе поруку клијента"
+
+#: providers/sybase/utils.c:476
+msgid "Layer"
+msgstr "Ниво"
+
+#: providers/sybase/utils.c:478
+msgid "Origin"
+msgstr "Порекло"
+
+#: providers/sybase/utils.c:480
+msgid "Message Number"
+msgstr "Број поруке"
+
+#: providers/sybase/utils.c:502
+msgid "call to ct_diag failed when attempting to clear the client messages"
+msgstr "Позив ct_diag није успео при покушају да обрише поруке клијента"
+
+#: providers/sybase/utils.c:523
+msgid "Operation not possible, connection busy."
+msgstr "Операција није могућа, заузета конекција."
+
+#: providers/xbase/gda-xbase-provider.c:185
+msgid "Either FILENAME or DIRECTORY can be specified, but not both or neither"
+msgstr ""
+"Свеједно име ДАТОТЕКА или ДИРЕКТОРИЈУМ могу бити одређени, али не и обоје"
+
+#: providers/xbase/gda-xbase-provider.c:232
+msgid "Either FILENAME or DIRECTORY must be specified in the connection string"
+msgstr ""
+"Свеједно име ДАТОТЕКАили ДИРЕКТОРИЈУМ могу бити одређени у низу знакова "
+"конекције"
+
+#: providers/xbase/gda-xbase-provider.c:261
+#: providers/xbase/gda-xbase-provider.c:379
+msgid "Invalid Xbase handle"
+msgstr "Погрешна Xbase ручка"
+
+#: providers/xbase/libmain.c:39
+msgid "Provider for Xbase (dBase, FoxPro, etc) files"
+msgstr "Посредник за Xbase (dBase, FoxPro итд.) датотеке"
+
+#: report/libgda-report/gda-report-document.c:171
+msgid "Could not parse XML document"
+msgstr "Неможе да обради XML документ"
+
+#: report/libgda-report/gda-report-document.c:181
+msgid "XML document is not valid"
+msgstr "XML документ није исправан"
+
+#: report/libgda-report/gda-report-document.c:208
+#, c-format
+msgid "Could not get file from %s"
+msgstr "Не може да добије датотеку од %s"
+
+#: report/libgda-report/gda-report-item.c:276
+msgid "Error setting parent -> child relation"
+msgstr "Грешка при подешавању родитељ -> дете односа"
+
+#: report/libgda-report/gda-report-item.c:375
+#, c-format
+msgid "Error setting value %s to attribute %s of item %s"
+msgstr "Грешка при подешавању вредности %s за особину %s од ставке %s"
+
+#: report/libgda-report/gda-report-valid.c:130
+#, c-format
+msgid "could not get DTD from %s"
+msgstr "Не може да добије DTD од %s"
+
+#: report/libgda-report/gda-report-valid.c:231
+#, c-format
+msgid "Error validating element %s"
+msgstr "Грешка при провери елемента %s"
+
+#: report/libgda-report/gda-report-valid.c:269
+#, c-format
+msgid "No declaration for attribute %s of element %s\n"
+msgstr "Нема дефиниције за атрибут %s od елементa %s\n"
+
+#: report/libgda-report/gda-report-valid.c:283
+#, c-format
+msgid "Value \"%s\" for attribute %s of %s is not among the enumerated set\n"
+msgstr ""
+"Вредност \"%s\" за особину %s од %s није у оквиру енумерисаног постављања\n"
+
+#: testing/client.c:42
+msgid "\t\tNONE\n"
+msgstr "\t\tНИЈЕДАН\n"
+
+#: testing/client.c:82
+#, c-format
+msgid "** ERROR: could not open connection to %s\n"
+msgstr "** ГРЕШКА: немогуће отворити конекцију до %s\n"
+
+#. show provider features
+#: testing/client.c:87
+msgid "\tProvider capabilities...\n"
+msgstr "\tМогућности посредника...\n"
+
+#: testing/client.c:88
+#, c-format
+msgid "\t\tAggregates: %s\n"
+msgstr "\t\tСкупине: %s\n"
+
+#: testing/client.c:90 testing/client.c:93 testing/client.c:96
+#: testing/client.c:99 testing/client.c:102 testing/client.c:105
+#: testing/client.c:108 testing/client.c:111 testing/client.c:114
+#: testing/client.c:117 testing/client.c:120
+msgid "Supported"
+msgstr "Подржан"
+
+#: testing/client.c:90 testing/client.c:93 testing/client.c:96
+#: testing/client.c:99 testing/client.c:102 testing/client.c:105
+#: testing/client.c:108 testing/client.c:111 testing/client.c:114
+#: testing/client.c:117 testing/client.c:120
+msgid "Not supported"
+msgstr "Није подржан"
+
+#: testing/client.c:91
+#, c-format
+msgid "\t\tIndexes: %s\n"
+msgstr "\t\tИндекси: %s\n"
+
+#: testing/client.c:94
+#, c-format
+msgid "\t\tNamespaces: %s\n"
+msgstr "\t\tПростори за име: %s\n"
+
+#: testing/client.c:97
+#, c-format
+msgid "\t\tProcedures: %s\n"
+msgstr "\t\tПроцедуре: %s\n"
+
+#: testing/client.c:100
+#, c-format
+msgid "\t\tSequences: %s\n"
+msgstr "\t\tСеквенце: %s\n"
+
+#: testing/client.c:103
+#, c-format
+msgid "\t\tSQL: %s\n"
+msgstr "\t\tSQL: %s\n"
+
+#: testing/client.c:106
+#, c-format
+msgid "\t\tTransactions: %s\n"
+msgstr "\t\tТрансакције: %s\n"
+
+#: testing/client.c:109
+#, c-format
+msgid "\t\tTriggers: %s\n"
+msgstr "\t\tОкидачи: %s\n"
+
+#: testing/client.c:112
+#, c-format
+msgid "\t\tUsers: %s\n"
+msgstr "\t\tКорисници: %s\n"
+
+#: testing/client.c:115
+#, c-format
+msgid "\t\tViews: %s\n"
+msgstr "\t\tПогледи: %s\n"
+
+#: testing/client.c:118
+#, c-format
+msgid "\t\tXML queries: %s\n"
+msgstr "\t\tXML потражње: %s\n"
+
+#. show connection schemas
+#: testing/client.c:123
+#, c-format
+msgid ""
+"\n"
+"\tProvider reports version: %s\n"
+"\n"
+msgstr ""
+"\n"
+"\tПосредник извештава верзију: %s\n"
+"\n"
+
+#: testing/client.c:125
+msgid "Namespaces"
+msgstr "Простори за име"
+
+#: testing/client.c:127
+msgid "Stored procedures"
+msgstr "Чуване процедуре"
+
+#: testing/client.c:128
+msgid "Connection Tables"
+msgstr "Табела конекција"
+
+#: testing/client.c:129
+msgid "Available types"
+msgstr "Доступни типови"
+
+#: testing/client.c:132
+msgid "Aggregates"
+msgstr "Скупине"
+
+#: testing/client.c:136
+msgid "Languages"
+msgstr "Језици"
+
+#: testing/client.c:141 testing/client.c:149
+msgid "\tStarting transaction..."
+msgstr "\tПочетна трансакција..."
+
+#: testing/client.c:143 testing/client.c:147 testing/client.c:151
+#: testing/client.c:155
+msgid "Error"
+msgstr "Грешка"
+
+#: testing/client.c:145
+msgid "\tFinishing transaction..."
+msgstr "\tЗавршна трансакција..."
+
+#: testing/client.c:153
+msgid "\tRolling back transaction..."
+msgstr "\tВратити трансакцију у претходно стање..."
+
+#: testing/client.c:184
+msgid "Testing GDA client API"
+msgstr "Тестирање GDA клијент API"
+
+#: testing/client.c:193
+msgid "** ERROR: gda_config_get_data_source_list returned a NULL item\n"
+msgstr "** ГРЕШКА: gda_config_get_data_source_list вратио нул ставку\n"
+
+#: testing/client.c:197
+#, c-format
+msgid " Data source = %s, User = %s\n"
+msgstr "Извор података = %s, Корисник = %s\n"
+
+#: testing/config.c:84
+msgid "** ERROR: gda_config_get_provider_list returned a NULL item\n"
+msgstr "** ГРЕШКА: gda_config_get_provider_list вратио нул ставку\n"
+
+#: testing/config.c:88
+#, c-format
+msgid " Provider = %s\n"
+msgstr " Посредник = %s\n"
+
+#: testing/config.c:89
+#, c-format
+msgid "\tlocation = %s\n"
+msgstr "\tлокација = %s\n"
+
+#: testing/config.c:90
+#, c-format
+msgid "\tdescription = %s\n"
+msgstr "\tопис = %s\n"
+
+#: testing/config.c:92
+msgid "\tgda_params ="
+msgstr "\tgda_params ="
+
+#: report/libgda-report/gda-report-item-detail.c:160
+#: report/libgda-report/gda-report-item-pagefooter.c:171
+#: report/libgda-report/gda-report-item-pageheader.c:160
+#: report/libgda-report/gda-report-item-report.c:155
+#: report/libgda-report/gda-report-item-reportfooter.c:172
+#: report/libgda-report/gda-report-item-reportheader.c:171
+#, c-format
+msgid "An element with ID %s already exists in the report"
+msgstr "Елемент са ID %s већ постоји у репорту"
+
+#: report/libgda-report/gda-report-item-detail.c:185
+#: report/libgda-report/gda-report-item-pagefooter.c:196
+#: report/libgda-report/gda-report-item-pageheader.c:185
+#: report/libgda-report/gda-report-item-report.c:711
+#: report/libgda-report/gda-report-item-reportfooter.c:197
+#: report/libgda-report/gda-report-item-reportheader.c:196
+#, c-format
+msgid "Item with ID %s is not a label"
+msgstr "Ставка са ID %s није обележена"
+
+#: report/libgda-report/gda-report-item-detail.c:214
+#: report/libgda-report/gda-report-item-pagefooter.c:224
+#: report/libgda-report/gda-report-item-pageheader.c:214
+#: report/libgda-report/gda-report-item-report.c:739
+#: report/libgda-report/gda-report-item-reportfooter.c:225
+#: report/libgda-report/gda-report-item-reportheader.c:224
+#, c-format
+msgid "Item with ID %s is not a repfield"
+msgstr "Ставка са ID %s није repfield"
