@@ -171,6 +171,16 @@ Management of connections to data sources
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_connection_drop_database ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@name: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_connection_execute_command ##### -->
 <para>
 

@@ -1,3 +1,18 @@
+2002-05-21  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* libgda/gda-server-provider.[ch]: added drop_database virtual
+	method to GdaServerProvider class.
+	(gda_server_provider_class_init): initialize new class member.
+	(gda_server_provider_drop_database): new proxy function.
+
+	* libgda/gda-connection.[ch] (gda_connection_drop_database): new
+	function.
+
+	* providers/mysql/gda-mysql-provider.c
+	(gda_mysql_provider_drop_database):
+	* providers/postgres/gda-postgres-provider.c
+	(gda_postgres_provider_drop_database): implemented new method.
+
 2002-05-20  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* libgda/gda-xml-connection.[ch]: new class for managing

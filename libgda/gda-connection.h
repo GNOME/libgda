@@ -79,6 +79,7 @@ void           gda_connection_add_error_string (GdaConnection *cnc, const gchar 
 void           gda_connection_add_error_list (GdaConnection *cnc, GList *error_list);
 
 gboolean       gda_connection_create_database (GdaConnection *cnc, const gchar *name);
+gboolean       gda_connection_drop_database (GdaConnection *cnc, const gchar *name);
 
 GList         *gda_connection_execute_command (GdaConnection *cnc,
 					       GdaCommand *cmd,

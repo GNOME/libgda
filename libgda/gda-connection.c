@@ -492,6 +492,24 @@ gda_connection_create_database (GdaConnection *cnc, const gchar *name)
 }
 
 /**
+ * gda_connection_drop_database
+ * @cnc: a #GdaConnection object.
+ * @name: database name.
+ *
+ * Drop a database from the given connection.
+ *
+ * Returns: TRUE if successful, FALSE otherwise.
+ */
+gboolean
+gda_connection_drop_database (GdaConnection *cnc, const gchar *name)
+{
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (name != NULL, FALSE);
+
+	return gda_server_provider_drop_database (cnc->priv->provider_obj, cnc, name);
+}
+
+/**
  * gda_connection_execute_command
  * @cnc: a #GdaConnection object.
  * @cmd: a #GdaCommand.
