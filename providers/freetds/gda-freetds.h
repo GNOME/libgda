@@ -41,7 +41,7 @@ G_BEGIN_DECLS
  * Utility functions
  */
 
-GdaError *gda_freetds_make_error (gchar *message);
+GdaError *gda_freetds_make_error (TDSSOCKET *tds, const gchar *message);
 gchar **gda_freetds_split_commandlist(const gchar *cmdlist);
 	
 

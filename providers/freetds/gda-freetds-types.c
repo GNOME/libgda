@@ -36,6 +36,8 @@ gda_freetds_get_value_type (TDSCOLINFO *col)
 	g_return_val_if_fail (col != NULL, GDA_VALUE_TYPE_UNKNOWN);
 
 	switch (col->column_type) {
+		case SYBBIT:
+			return GDA_VALUE_TYPE_BOOLEAN;
 		case SYBCHAR:
 		case SYBNVARCHAR:
 		case SYBVARCHAR:
@@ -54,7 +56,14 @@ gda_freetds_get_value_type (TDSCOLINFO *col)
 			return GDA_VALUE_TYPE_TINYINT;
 		case SYBINTN:
 			if (col->column_size == 1) {
+				return GDA_VALUE_TYPE_TINYINT;
+			} else if (col->column_size == 2) {
+				return GDA_VALUE_TYPE_SMALLINT;
+			} else if (col->column_size == 4) {
+				return GDA_VALUE_TYPE_INTEGER;
+			} else if (col->column_size == 8) {
 			}
+			break;
 		default:
 			return GDA_VALUE_TYPE_STRING;
 	}
@@ -78,6 +87,9 @@ gda_freetds_set_gdavalue (GdaValue *field, gchar *val, TDSCOLINFO *col)
 		gda_value_set_null (field);
 	} else {
 		switch (col->column_type) {
+			case SYBBIT:
+				gda_value_set_boolean (field, (gboolean) (*(TDS_TINYINT *) val));
+				break;
 			case SYBCHAR:
 			case SYBNVARCHAR:
 			case SYBVARCHAR:
@@ -96,11 +108,21 @@ gda_freetds_set_gdavalue (GdaValue *field, gchar *val, TDSCOLINFO *col)
 				gda_value_set_smallint (field, *(TDS_SMALLINT *) val);
 				break;
 			case SYBINT1:
-				gda_value_set_tinyint (field, *(TDS_TINYINT *) val);
+				gda_value_set_tinyint (field, (gchar) (*(TDS_TINYINT *) val));
 				break;
 			case SYBINTN:
 				if (col->column_size == 1) {
+					gda_value_set_tinyint (field,
+					                       (gchar) (*(TDS_TINYINT *) val));
+				} else if (col->column_size == 2) {
+					gda_value_set_smallint (field,
+					                        *(TDS_SMALLINT *) val);
+				} else if (col->column_size == 4) {
+					gda_value_set_integer (field,
+					                        *(TDS_INT *) val);
+				} else if (col->column_size == 8) {
 				}
+				break;
 			default:
 				if (col->column_size > max_size) {
 					col_size = max_size + 1;

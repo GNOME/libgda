@@ -25,10 +25,11 @@
 #include <glib.h>
 #include <stdlib.h>
 #include <string.h>
+#include <tds.h>
 #include "gda-freetds.h"
 
 GdaError *
-gda_freetds_make_error (gchar *message)
+gda_freetds_make_error (TDSSOCKET *tds, const gchar *message)
 {
 	GdaError *error;
 

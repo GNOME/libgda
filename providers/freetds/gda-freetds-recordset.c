@@ -313,6 +313,7 @@ GdaDataModel
 {
 	GdaFreeTDSConnectionData *tds_cnc = NULL;
 	GdaFreeTDSRecordset *recset = NULL;
+	TDSCOLINFO *col = NULL;
 	GdaRow *row = NULL;
 	GdaError *error = NULL;
 	gboolean columns_set = FALSE;
@@ -338,7 +339,7 @@ GdaDataModel
 				columns_set = TRUE;
 				recset->priv->colcnt = recset->priv->res->num_cols;
 				for (i = 0; i < recset->priv->colcnt; i++) {
-					TDSCOLINFO *col = gda_freetds_dup_tdscolinfo (recset->priv->res->columns[i]);
+					col = gda_freetds_dup_tdscolinfo (recset->priv->res->columns[i]);
 					g_ptr_array_add (recset->priv->columns,
 					                 col);
 				}
@@ -351,10 +352,18 @@ GdaDataModel
 			}
 		}
 		if (tds_cnc->rc == TDS_FAIL) {
-			error = gda_freetds_make_error("tds_process_row_tokens() returned TDS_FAIL\n");
+			error = gda_freetds_make_error(tds_cnc->socket,
+			                               _("tds_process_row_tokens() returned TDS_FAIL\n"));
 			gda_connection_add_error (cnc, error);
 			recset->priv->rc = TDS_FAIL;
 
+		}
+	}
+	for (i = 0; i < recset->priv->columns->len; i++) {
+		col = g_ptr_array_index (recset->priv->columns, i);
+		if (col) {
+			gda_data_model_set_column_title (GDA_DATA_MODEL (recset),
+			                                 i, col->column_name);
 		}
 	}
 
