@@ -1,3 +1,8 @@
+2003-07-11  Frederic Crozat  <fcrozat@mandrakesoft.com>
+
+	* configure.in:
+	Fixes compilation for x86-64 platform
+
 2003-07-06  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	Fixes #116758
