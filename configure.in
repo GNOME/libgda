@@ -816,7 +816,9 @@ AM_CONDITIONAL(BUILD_CONFIG_TOOL,
 		      ! "x$READLINE_LIB" = "x" -a \
 		      ! "x$HISTORY_LIB" = "x" -a \
 		      ! "x$POPT_LIB" = "x")) 
+AM_CONDITIONAL(BUILD_RUN_TOOL, test ! "x$POPT_LIB" = "x")
 AC_SUBST(BUILD_CONFIG_TOOL)
+AC_SUBST(BUILD_RUN_TOOL)
 
 dnl ******************************
 dnl Variables

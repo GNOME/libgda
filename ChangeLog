@@ -1,3 +1,11 @@
+2003-07-06  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	Fixes #116758
+
+	* configure.in: conditionally define BUILD_RUN_TOOL if popt is found.
+
+	* tools/Makefile.am: build gda-run conditionally.
+
 2003-07-05  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* libgda/gda-xml-database.[ch] (gda_xml_database_get_version):

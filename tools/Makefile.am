@@ -6,7 +6,13 @@ else
 CONFIG_TOOL=
 endif
 
-bin_PROGRAMS = gda-run $(CONFIG_TOOL)
+if BUILD_RUN_TOOL
+RUN_TOOL=gda-run
+else
+RUN_TOOL=
+endif
+
+bin_PROGRAMS = $(RUN_TOOL) $(CONFIG_TOOL)
 
 INCLUDES = \
 	-I$(top_srcdir) \
