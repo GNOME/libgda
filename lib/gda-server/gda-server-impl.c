@@ -199,11 +199,7 @@ gda_server_impl_start (Gda_ServerImpl *server_impl)
   gda_server_impl_exception(server_impl->ev);
 
   server_impl->is_running = TRUE;
-#if defined(USING_OAF)
   CORBA_ORB_run(oaf_orb_get(), server_impl->ev);
-#else
-  CORBA_ORB_run(gnome_CORBA_ORB(), server_impl->ev);
-#endif
 }
 
 /**
@@ -218,12 +214,8 @@ gda_server_impl_stop (Gda_ServerImpl *server_impl)
   g_return_if_fail(IS_GDA_SERVER_IMPL(server_impl));
   g_return_if_fail(server_impl->is_running);
 
-#if defined(USING_OAF)
   CORBA_ORB_shutdown(oaf_orb_get(), TRUE, server_impl->ev);
   oaf_active_server_unregister("IID", server_impl->connection_factory_obj);
-#else
-  CORBA_ORB_shutdown(gnome_CORBA_ORB(), TRUE, server_impl->ev);
-#endif
   server_impl->is_running = FALSE;
 }
 

@@ -42,11 +42,7 @@
 CORBA_ORB
 gda_corba_get_orb (void)
 {
-#if defined(USING_OAF)
   return oaf_orb_get();
-#else
-  return gnome_CORBA_ORB();
-#endif
 }
 
 /**
@@ -57,12 +53,8 @@ gda_corba_get_orb (void)
 CORBA_Object
 gda_corba_get_name_service (void)
 {
-#if defined(USING_OAF)
   CORBA_Environment ev;
   return oaf_name_service_get(&ev);
-#else
-  return gnome_name_service_get();
-#endif
 }
 
 gchar *

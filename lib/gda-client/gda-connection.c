@@ -19,11 +19,7 @@
 
 #include <gnome.h>
 #include <gda.h>
-#if defined(USING_OAF)
-#  include <liboaf/liboaf.h>
-#else
-#  include <libgnorba/gnorba.h>
-#endif
+#include <liboaf/liboaf.h>
 #include <gtk/gtkmarshal.h>
 
 #include <gda-client.h>
