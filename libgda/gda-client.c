@@ -262,7 +262,12 @@ gda_client_open_connection (GdaClient *client,
 	}
 
 	/* try to find provider in our hash table */
-	prv = g_hash_table_lookup (client->priv->providers, dsn_info->provider);
+	prv = NULL;
+	if (dsn_info->provider != NULL)
+		prv = g_hash_table_lookup (client->priv->providers, dsn_info->provider);
+	else
+		g_warning ("Provider is null!");
+	
 	if (!prv) {
 		GdaProviderInfo *prv_info;
 
