@@ -1,3 +1,8 @@
+2001-10-28  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* libgda-client.pc.in:
+	* libgda-server.pc.in: adapted to new header files installation
+
 2001-10-27  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* configure.in: added BONOBO_IDL_DIR variable, needed for IDL
