@@ -2,7 +2,5 @@
 *.o
 .deps
 .libs
-GNOME_Database_Provider_FreeTDS.server
 Makefile
 Makefile.in
-gda-freetds-srv-2
