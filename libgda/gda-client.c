@@ -324,11 +324,40 @@ gda_client_open_connection_from_string (GdaClient *client,
 					const gchar *provider_id,
 					const gchar *cnc_string)
 {
+	GdaDataSourceInfo *dsn_info;
+	gchar *str;
+	GdaConnection *cnc;
+	static gint count = 0;
+
 	g_return_val_if_fail (GDA_IS_CLIENT (client), NULL);
 	g_return_val_if_fail (provider_id != NULL, NULL);
 
-	// FIXME ------
-	return NULL;
+	/* create a temporary DSNInfo */
+	dsn_info = g_new (GdaDataSourceInfo, 1);
+	dsn_info->name = g_strdup_printf ("GDA-Temporary-Data-Source-%d", count++);
+	dsn_info->provider = g_strdup (provider_id);
+	dsn_info->cnc_string = g_strdup (cnc_string);
+	dsn_info->description = g_strdup (_("Temporary data source created by libgda. Don't remove it"));
+	dsn_info->username = NULL;
+	dsn_info->password = NULL;
+
+	gda_config_save_data_source (dsn_info->name,
+				     dsn_info->provider,
+				     dsn_info->cnc_string,
+				     dsn_info->description,
+				     dsn_info->username,
+				     dsn_info->password);
+
+	/* open the connection */
+	cnc = gda_client_open_connection (client, dsn_info->name,
+					  dsn_info->username,
+					  dsn_info->password);
+
+	/* free memory */
+	gda_config_remove_data_source (dsn_info->name);
+	gda_config_free_data_source_info (dsn_info);
+
+	return cnc;
 }
 
 /**

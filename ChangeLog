@@ -1,5 +1,19 @@
 2002-06-04  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* libgda/gda-quark-list.[ch] (gda_quark_list_remove): new function.
+
+	* libgda/gda-connection.c (gda_connection_new): remove entries
+	we managed from the parameter list, so that providers dont' have
+	to parse it again.
+
+	* libgda/gda-server-provider.c (gda_server_provider_open_connection):
+	likewise.
+
+	* libgda/gda-client.c (gda_client_open_connection_from_string):
+	new function. Fixes #81592.
+
+2002-06-04  Rodrigo Moya <rodrigo@gnome-db.org>
+
 	* configure.in: check for all providers unless --without-* arguments
 	are used.
 

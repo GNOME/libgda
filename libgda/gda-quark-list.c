@@ -59,7 +59,7 @@ gda_quark_list_new (void)
  * gda_quark_list_new_from_string
  */
 GdaQuarkList *
-gda_quark_list_new_from_string (const gchar * string)
+gda_quark_list_new_from_string (const gchar *string)
 {
 	GdaQuarkList *qlist;
 
@@ -73,7 +73,7 @@ gda_quark_list_new_from_string (const gchar * string)
  * gda_quark_list_free
  */
 void
-gda_quark_list_free (GdaQuarkList * qlist)
+gda_quark_list_free (GdaQuarkList *qlist)
 {
 	g_return_if_fail (qlist != NULL);
 
@@ -89,8 +89,9 @@ gda_quark_list_free (GdaQuarkList * qlist)
  * gda_quark_list_add_from_string
  */
 void
-gda_quark_list_add_from_string (GdaQuarkList * qlist,
-				const gchar * string, gboolean cleanup)
+gda_quark_list_add_from_string (GdaQuarkList *qlist,
+				const gchar *string,
+				gboolean cleanup)
 {
 	gchar **arr;
 
@@ -125,7 +126,7 @@ gda_quark_list_add_from_string (GdaQuarkList * qlist,
  * gda_quark_list_find
  */
 const gchar *
-gda_quark_list_find (GdaQuarkList * qlist, const gchar * name)
+gda_quark_list_find (GdaQuarkList *qlist, const gchar *name)
 {
 	gchar *value;
 
@@ -134,4 +135,28 @@ gda_quark_list_find (GdaQuarkList * qlist, const gchar * name)
 
 	value = g_hash_table_lookup (qlist->hash_table, name);
 	return (const gchar *) value;
+}
+
+/**
+ * gda_quark_list_remove
+ * @qlist: a #GdaQuarkList structure.
+ * @name: an entry name.
+ *
+ * Remove an entry from the #GdaQuarkList, given its name.
+ */
+void
+gda_quark_list_remove (GdaQuarkList *qlist, const gchar *name)
+{
+	gpointer orig_key;
+	gpointer orig_value;
+
+	g_return_if_fail (qlist != NULL);
+	g_return_if_fail (name != NULL);
+
+	if (g_hash_table_lookup_extended (qlist->hash_table, name,
+					  &orig_key, &orig_value)) {
+		g_hash_table_remove (qlist->hash_table, name);
+		g_free (orig_key);
+		g_free (orig_value);
+	}
 }

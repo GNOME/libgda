@@ -217,8 +217,11 @@ gda_connection_new (GdaClient *client,
 	else {
 		if (dsn_info->username)
 			real_username = dsn_info->username;
-		else
+		else {
 			real_username = gda_quark_list_find (params, "USERNAME");
+			if (real_username)
+				gda_quark_list_remove (params, "USERNAME");
+		}
 	}
 
 	if (password)
@@ -226,8 +229,11 @@ gda_connection_new (GdaClient *client,
 	else {
 		if (dsn_info->password)
 			real_password = dsn_info->password;
-		else
+		else {
 			real_password = gda_quark_list_find (params, "PASSWORD");
+			if (real_password)
+				gda_quark_list_remove (params, "PASSWORD");
+		}
 	}
 
 	/* create the connection object */

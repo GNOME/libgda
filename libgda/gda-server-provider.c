@@ -143,7 +143,11 @@ gda_server_provider_open_connection (GdaServerProvider *provider,
 
 	/* check if POOLING is specified */
 	pooling = gda_quark_list_find (params, "POOLING");
-	if (pooling && !strcmp (pooling, "1")) {
+	if (pooling) {
+		if (!strcmp (pooling, "1")) {
+		}
+
+		gda_quark_list_remove (params, "POOLING");
 	}
 
 	retcode = CLASS (provider)->open_connection (provider, cnc, params, username, password);
