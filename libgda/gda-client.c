@@ -627,7 +627,7 @@ gda_client_notify_error_event (GdaClient *client, GdaConnection *cnc, GdaError *
 	g_return_if_fail (error != NULL);
 
 	params = gda_parameter_list_new ();
-	gda_parameter_list_add_parameter (params, gda_parameter_new_gobject ("error", error));
+	gda_parameter_list_add_parameter (params, gda_parameter_new_gobject ("error", G_OBJECT (error)));
 	gda_client_notify_event (client, cnc, GDA_CLIENT_EVENT_ERROR, params);
 
 	gda_parameter_list_free (params);
@@ -686,7 +686,7 @@ gda_client_notify_transaction_started_event (GdaClient *client, GdaConnection *c
 	g_return_if_fail (GDA_IS_TRANSACTION (xaction));
 
 	params = gda_parameter_list_new ();
-	gda_parameter_list_add_parameter (params, gda_parameter_new_gobject ("transaction", xaction));
+	gda_parameter_list_add_parameter (params, gda_parameter_new_gobject ("transaction", G_OBJECT (xaction)));
 	gda_client_notify_event (client, cnc, GDA_CLIENT_EVENT_TRANSACTION_STARTED, params);
 
 	gda_parameter_list_free (params);
@@ -711,7 +711,7 @@ gda_client_notify_transaction_committed_event (GdaClient *client, GdaConnection 
 	g_return_if_fail (GDA_IS_TRANSACTION (xaction));
 
 	params = gda_parameter_list_new ();
-	gda_parameter_list_add_parameter (params, gda_parameter_new_gobject ("transaction", xaction));
+	gda_parameter_list_add_parameter (params, gda_parameter_new_gobject ("transaction", G_OBJECT (xaction)));
 	gda_client_notify_event (client, cnc, GDA_CLIENT_EVENT_TRANSACTION_COMMITTED, params);
 
 	gda_parameter_list_free (params);
@@ -736,7 +736,7 @@ gda_client_notify_transaction_cancelled_event (GdaClient *client, GdaConnection 
 	g_return_if_fail (GDA_IS_TRANSACTION (xaction));
 
 	params = gda_parameter_list_new ();
-	gda_parameter_list_add_parameter (params, gda_parameter_new_gobject ("transaction", xaction));
+	gda_parameter_list_add_parameter (params, gda_parameter_new_gobject ("transaction", G_OBJECT (xaction)));
 	gda_client_notify_event (client, cnc, GDA_CLIENT_EVENT_TRANSACTION_CANCELLED, params);
 
 	gda_parameter_list_free (params);
