@@ -163,8 +163,7 @@ gda_data_model_list_new_from_string_list (const GList *list)
 		if (str) {
 			GdaValue *value;
 
-			value = gda_value_new ();
-			gda_value_set_string (value, (const gchar *) str);
+			value = gda_value_new_string ((const gchar *) str);
 			gda_data_model_list_append_value (GDA_DATA_MODEL_LIST (model), value);
 			gda_value_free (value);
 		}

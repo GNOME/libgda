@@ -29,9 +29,37 @@
 
 G_BEGIN_DECLS
 
-typedef GNOME_Database_Value GdaValue;
+typedef CORBA_any      GdaValue;
+typedef CORBA_TypeCode GdaValueType;
 
-GdaValue     *gda_value_new (void);
+#define GDA_VALUE_TYPE_NULL      TC_null
+#define GDA_VALUE_TYPE_BIGINT    TC_CORBA_long_long
+#define	GDA_VALUE_TYPE_BINARY    TC_null /* FIXME */
+#define GDA_VALUE_TYPE_BOOLEAN   TC_CORBA_boolean
+#define GDA_VALUE_TYPE_DATE      TC_GNOME_Database_Date
+#define GDA_VALUE_TYPE_DOUBLE    TC_CORBA_double
+#define GDA_VALUE_TYPE_INTEGER   TC_CORBA_long
+#define GDA_VALUE_TYPE_SINGLE    TC_CORBA_float
+#define GDA_VALUE_TYPE_SMALLINT  TC_CORBA_short
+#define GDA_VALUE_TYPE_STRING    TC_CORBA_string
+#define GDA_VALUE_TYPE_TIME      TC_GNOME_Database_Time
+#define GDA_VALUE_TYPE_TIMESTAMP TC_GNOME_Database_Timestamp
+#define GDA_VALUE_TYPE_TINYINT   TC_CORBA_char
+
+GdaValue     *gda_value_new_null (void);
+GdaValue     *gda_value_new_bigint (long long val);
+GdaValue     *gda_value_new_binary (gconstpointer val);
+GdaValue     *gda_value_new_boolean (gboolean val);
+GdaValue     *gda_value_new_date (GDate *val);
+GdaValue     *gda_value_new_double (gdouble val);
+GdaValue     *gda_value_new_integer (gint val);
+GdaValue     *gda_value_new_single (gfloat val);
+GdaValue     *gda_value_new_smallint (gshort val);
+GdaValue     *gda_value_new_string (const gchar *val);
+GdaValue     *gda_value_new_time (GTime val);
+GdaValue     *gda_value_new_timestamp (time_t val);
+GdaValue     *gda_value_new_tinyint (gchar val);
+
 void          gda_value_free (GdaValue *value);
 
 GdaValue     *gda_value_copy (GdaValue *value);

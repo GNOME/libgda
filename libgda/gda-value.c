@@ -27,19 +27,99 @@
 #include <libgda/gda-value.h>
 
 /**
- * gda_value_new
- *
- * Create a new #GdaValue object.
- *
- * Returns: a pointer to the newly allocated object.
+ * gda_value_new_null
  */
 GdaValue *
-gda_value_new (void)
+gda_value_new_null (void)
+{
+	return bonobo_arg_new (GDA_VALUE_TYPE_NULL);
+}
+
+GdaValue *
+gda_value_new_bigint (long long val)
+{
+	return bonobo_arg_new_from (GDA_VALUE_TYPE_BIGINT, (gconstpointer) &val);
+}
+
+GdaValue *
+gda_value_new_binary (gconstpointer val)
+{
+	return NULL;
+}
+
+GdaValue *
+gda_value_new_boolean (gboolean val)
+{
+	return bonobo_arg_new_from (GDA_VALUE_TYPE_BOOLEAN, (gconstpointer) &val);
+}
+
+GdaValue *
+gda_value_new_date (GDate *val)
 {
 	GdaValue *value;
 
-	value = bonobo_arg_new (TC_CORBA_string);
+	value = bonobo_arg_new (GDA_VALUE_TYPE_DATE);
+	gda_value_set_date (value, val);
+
 	return value;
+}
+
+GdaValue *
+gda_value_new_double (gdouble val)
+{
+	return bonobo_arg_new_from (GDA_VALUE_TYPE_DOUBLE, (gconstpointer) &val);
+}
+
+GdaValue *
+gda_value_new_integer (gint val)
+{
+	return bonobo_arg_new_from (GDA_VALUE_TYPE_INTEGER, (gconstpointer) &val);
+}
+
+GdaValue *
+gda_value_new_single (gfloat val)
+{
+	return bonobo_arg_new_from (GDA_VALUE_TYPE_SINGLE, (gconstpointer) &val);
+}
+
+GdaValue *
+gda_value_new_smallint (gshort val)
+{
+	return bonobo_arg_new_from (GDA_VALUE_TYPE_SMALLINT, (gconstpointer) &val);
+}
+
+GdaValue *
+gda_value_new_string (const gchar *val)
+{
+	return bonobo_arg_new_from (GDA_VALUE_TYPE_STRING, (gconstpointer) &val);
+}
+
+GdaValue *
+gda_value_new_time (GTime val)
+{
+	GdaValue *value;
+
+	value = bonobo_arg_new (GDA_VALUE_TYPE_TIME);
+	gda_value_set_time (value, val);
+
+	return value;
+}
+
+GdaValue *
+gda_value_new_timestamp (time_t val)
+{
+	GdaValue *value;
+
+	value = bonobo_arg_new (GDA_VALUE_TYPE_TIMESTAMP);
+	gda_value_set_timestamp (value, val);
+
+	return value;
+}
+
+GdaValue *
+gda_value_new_tinyint (gchar val)
+{
+	return bonobo_arg_new_from (GDA_VALUE_TYPE_TINYINT, (gconstpointer) &val);
 }
 
 /**
@@ -79,11 +159,6 @@ void
 gda_value_set_bigint (GdaValue *value, long long val)
 {
 	g_return_if_fail (value != NULL);
-
-	CORBA_Object_release ((CORBA_Object) value->_type, NULL);
-
-	value->_type = (CORBA_TypeCode) CORBA_Object_duplicate (
-		(CORBA_Object) BONOBO_ARG_LONGLONG, NULL);
 	if (value->_value)
 		CORBA_free (value->_value);
 	value->_value = ORBit_copy_value (&val, BONOBO_ARG_LONGLONG);
@@ -409,33 +484,35 @@ gda_value_stringify (GdaValue *value)
 
 	g_return_val_if_fail (value != NULL, NULL);
 
-	if (bonobo_arg_type_is_equal (BONOBO_ARG_LONGLONG, value->_type, NULL))
+	if (bonobo_arg_type_is_equal (GDA_VALUE_TYPE_BIGINT, value->_type, NULL))
 		retval = g_strdup_printf ("%ld", gda_value_get_bigint (value));
-	else if (bonobo_arg_type_is_equal (BONOBO_ARG_BOOLEAN, value->_type, NULL)) {
+	else if (bonobo_arg_type_is_equal (GDA_VALUE_TYPE_BOOLEAN, value->_type, NULL)) {
 		if (gda_value_get_boolean (value))
 			retval = g_strdup (_("TRUE"));
 		else
 			retval = g_strdup (_("FALSE"));
 	}
-	else if (bonobo_arg_type_is_equal (TC_CORBA_string, value->_type, NULL))
+	else if (bonobo_arg_type_is_equal (GDA_VALUE_TYPE_STRING, value->_type, NULL))
 		retval = g_strdup (gda_value_get_string (value));
-	else if (bonobo_arg_type_is_equal (BONOBO_ARG_LONG, value->_type, NULL))
+	else if (bonobo_arg_type_is_equal (GDA_VALUE_TYPE_INTEGER, value->_type, NULL))
 		retval = g_strdup_printf ("%d", gda_value_get_integer (value));
-	else if (bonobo_arg_type_is_equal (BONOBO_ARG_SHORT, value->_type, NULL))
+	else if (bonobo_arg_type_is_equal (GDA_VALUE_TYPE_SMALLINT, value->_type, NULL))
 		retval = g_strdup_printf ("%d", gda_value_get_smallint (value));
-	else if (bonobo_arg_type_is_equal (BONOBO_ARG_FLOAT, value->_type, NULL))
+	else if (bonobo_arg_type_is_equal (GDA_VALUE_TYPE_SINGLE, value->_type, NULL))
 		retval = g_strdup_printf ("%f", gda_value_get_single (value));
-	else if (bonobo_arg_type_is_equal (BONOBO_ARG_DOUBLE, value->_type, NULL))
+	else if (bonobo_arg_type_is_equal (GDA_VALUE_TYPE_DOUBLE, value->_type, NULL))
 		retval = g_strdup_printf ("%f", gda_value_get_double (value));
-	else if (bonobo_arg_type_is_equal (TC_GNOME_Database_Time, value->_type, NULL)) {
+	else if (bonobo_arg_type_is_equal (GDA_VALUE_TYPE_TIME, value->_type, NULL)) {
 	}
-	else if (bonobo_arg_type_is_equal (TC_GNOME_Database_Date, value->_type, NULL)) {
+	else if (bonobo_arg_type_is_equal (GDA_VALUE_TYPE_DATE, value->_type, NULL)) {
 	}
-	else if (bonobo_arg_type_is_equal (TC_GNOME_Database_Timestamp, value->_type, NULL)) {
+	else if (bonobo_arg_type_is_equal (GDA_VALUE_TYPE_TIMESTAMP, value->_type, NULL)) {
 		/* FIXME: implement, and add all missing ones */
 	}
+	else if (bonobo_arg_type_is_equal (GDA_VALUE_TYPE_NULL, value->_type, NULL))
+		retval = g_strdup ("NULL");
 	else
-		retval = g_strdup (_("<Unknown Type(NULL)>"));
+		retval = g_strdup ("");
         	
 	return retval;
 }

@@ -1,5 +1,23 @@
 2001-11-06  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* gda-value.h: added GdaValueType enumeration, which wraps the
+	CORBA typecodes
+
+	* gda-value.c (gda_value_new): removed function
+	(gda_value_new_null): new function
+	(gda_value_new_bigint): new function
+	(gda_value_new_binary): new function
+	(gda_value_new_boolean): new function
+	(gda_value_new_date): new function
+	(gda_value_new_double): new function
+	(gda_value_new_integer): new function
+	(gda_value_new_single): new function
+	(gda_value_new_smallint): new funtion
+	(gda_value_new_string): new function
+	(gda_value_new_time): new function
+	(gda_value_new_timestamp): new function
+	(gda_value_new_tinyint): new function
+
 	* gda-data-model.[ch] (gda_data_model_freeze):
 	(gda_data_model_thaw): new functions for disabling/enabling
 	notifications on changes
