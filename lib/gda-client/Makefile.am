@@ -12,7 +12,6 @@ gda_client_headers = \
 	gda-connection-pool.h \
 	gda-connection.h \
 	gda-export.h \
-	gda-field.h \
 	gda-recordset.h \
 	gda-value.h \
 	gda-client.h 
@@ -24,7 +23,6 @@ libgda_client_2_la_SOURCES = \
 	gda-connection-pool.c \
 	gda-connection.c \
 	gda-export.c \
-	gda-field.c \
 	gda-recordset.c 
 libgda_client_2_la_LIBADD =
 

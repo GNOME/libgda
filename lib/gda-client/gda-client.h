@@ -26,7 +26,6 @@
 #include <gda-connection-pool.h>
 #include <gda-command.h>
 #include <gda-recordset.h>
-#include <gda-field.h>
 #include <gda-error.h>
 #include <gda-batch.h>
 #include <gda-export.h>
