@@ -148,6 +148,9 @@ gda_mysql_recordset_get_n_rows (GdaDataModel *model)
 	GdaMysqlRecordset *recset = (GdaMysqlRecordset *) model;
 
 	g_return_val_if_fail (GDA_IS_MYSQL_RECORDSET (recset), -1);
+	if (recset->mysql_res == NULL)
+		return recset->affected_rows;
+
 	return mysql_num_rows (recset->mysql_res);
 }
 
@@ -437,17 +440,21 @@ gda_mysql_recordset_get_type (void)
 }
 
 GdaMysqlRecordset *
-gda_mysql_recordset_new (GdaConnection *cnc, MYSQL_RES *mysql_res)
+gda_mysql_recordset_new (GdaConnection *cnc, MYSQL_RES *mysql_res, MYSQL *mysql)
 {
 	GdaMysqlRecordset *recset;
 	MYSQL_FIELD *mysql_fields;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
-	g_return_val_if_fail (mysql_res != NULL, NULL);
+	g_return_val_if_fail (mysql_res != NULL || mysql != NULL, NULL);
 
 	recset = g_object_new (GDA_TYPE_MYSQL_RECORDSET, NULL);
 	recset->cnc = cnc;
 	recset->mysql_res = mysql_res;
+	if (mysql_res == NULL) {
+		recset->affected_rows = mysql_affected_rows (mysql);
+		return recset;
+	}
 
 	mysql_fields = mysql_fetch_fields (recset->mysql_res);
 	if (mysql_fields != NULL) {

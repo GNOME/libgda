@@ -1,3 +1,16 @@
+2003-08-15  Gonzalo Paniagua Javier <gonzalo@ximian.com>
+
+	* providers/mysql/gda-mysql-provider.c: pass the MYSQL pointer to the
+	new recordset.
+
+	* providers/mysql/gda-mysql-recordset.c: if mysql_res is NULL, it was
+	a non-query: store the number of affected rows.
+	
+	* providers/mysql/gda-mysql-recordset.h: gda_mysql_recordset_new has a
+	new parameter. Added 'affected_rows' field.
+
+	Fixes bug #119912.
+
 2003-08-13  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* libgda/gda-config.[ch] (gda_config_save_data_source_info):

@@ -44,6 +44,7 @@ struct _GdaMysqlRecordset {
 	GPtrArray *rows;
 	GdaConnection *cnc;
 	MYSQL_RES *mysql_res;
+	gint affected_rows; /* when mysql_res is NULL, get_n_rows returns this number */
 };
 
 struct _GdaMysqlRecordsetClass {
@@ -51,7 +52,7 @@ struct _GdaMysqlRecordsetClass {
 };
 
 GType              gda_mysql_recordset_get_type (void);
-GdaMysqlRecordset *gda_mysql_recordset_new (GdaConnection *cnc, MYSQL_RES *mysql_res);
+GdaMysqlRecordset *gda_mysql_recordset_new (GdaConnection *cnc, MYSQL_RES *mysql_res, MYSQL *mysql);
 
 G_END_DECLS
 

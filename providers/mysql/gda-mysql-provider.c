@@ -348,7 +348,7 @@ process_sql_commands (GList *reclist, GdaConnection *cnc, const gchar *sql)
 			}
 
 			mysql_res = mysql_store_result (mysql);
-			recset = gda_mysql_recordset_new (cnc, mysql_res);
+			recset = gda_mysql_recordset_new (cnc, mysql_res, mysql);
 			if (GDA_IS_MYSQL_RECORDSET (recset)) {
 				gda_data_model_set_command_text (recset, arr[n]);
 				gda_data_model_set_command_type (recset, GDA_COMMAND_TYPE_SQL);
