@@ -1,3 +1,7 @@
+2005-02-18  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* libsql/Makefile.am: use LDFLAGS only.
+
 2005-02-17  Álvaro Peña  <alvaropg@telefonica.net>
 
 	* libgda/gda-xml-database.[ch]: added gda_xml_database_remove_table()
