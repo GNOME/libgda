@@ -4,9 +4,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: libgda CVS-20010407\n"
-"POT-Creation-Date: 2001-11-22 14:07+0100\n"
-"PO-Revision-Date: 2001-04-07 12:45+0900\n"
+"Project-Id-Version: libgda CVS-20011213\n"
+"POT-Creation-Date: 2001-12-13 20:32+0900\n"
+"PO-Revision-Date: 2001-12-13 20:47+0900\n"
 "Last-Translator: Akira TAGOH <tagoh@gnome.gr.jp>\n"
 "Language-Team: Japanese <translation@gnome.gr.jp>\n"
 "MIME-Version: 1.0\n"
@@ -30,7 +30,7 @@ msgstr "データベース '%s' はシステム設定から見つかりませんでした"
 
 #: lib/gda-client/gda-connection.c:453 lib/gda-client/gda-connection.c:470
 msgid "[GDA Client Library]"
-msgstr ""
+msgstr "[GDAクライアントライブラリ]"
 
 #: lib/gda-client/gda-connection.c:469
 msgid "Could not open CORBA factory"
@@ -47,14 +47,12 @@ msgid "<Unknown GDA Type(NULL)>"
 msgstr "<未知の GDA タイプ(NULL)>"
 
 #: lib/gda-client/gda-field.c:264
-#, fuzzy
 msgid "true"
-msgstr "True"
+msgstr "はい"
 
 #: lib/gda-client/gda-field.c:266
-#, fuzzy
 msgid "false"
-msgstr "False"
+msgstr "いいえ"
 
 #: lib/gda-common/gda-corba.c:88
 #, c-format
@@ -63,11 +61,11 @@ msgstr "CORBA システム例外: %s"
 
 #: lib/gda-common/gda-corba.c:123
 msgid "True"
-msgstr "True"
+msgstr "はい"
 
 #: lib/gda-common/gda-corba.c:124
 msgid "False"
-msgstr "False"
+msgstr "いいえ"
 
 #: lib/gda-common/gda-error.c:128
 #, c-format
@@ -80,22 +78,20 @@ msgid "%s: An Error occured in the CORBA system."
 msgstr "%s: CORBA システムでエラーが発生しました"
 
 #: lib/gda-common/gda-error.c:152
-#, fuzzy
 msgid "[CORBA User Exception]"
-msgstr "CORBA ユーザ例外: %s"
+msgstr "[CORBA ユーザ例外]"
 
 #: lib/gda-common/gda-error.c:201
 msgid "Unknown CORBA exception for connection"
-msgstr ""
+msgstr "接続で不明なCORBA例外が発生しました"
 
 #: lib/gda-common/gda-init.c:55
 msgid "Attempt to initialize an already initialized client"
 msgstr "初期化を試みましたがすでにクライアントは初期化されています"
 
 #: lib/gda-common/gda-init.c:64 lib/gda-server/gda-server-init.c:121
-#, fuzzy
 msgid "Could not initialize Bonobo"
-msgstr "ct_diag() を初期化することが出来ませんでした"
+msgstr "Bonoboを初期化することが出来ませんでした"
 
 #: lib/gda-common/gda-log.c:48
 msgid "Saving log...x"
@@ -115,18 +111,18 @@ msgid "thread is already running"
 msgstr "スレッドはすでに実行中です"
 
 #: lib/gda-common/gda-util.c:113
-#, fuzzy, c-format
+#, c-format
 msgid "Could not open file %s"
-msgstr "'%s' にロケールを設定することが出来ませんでした"
+msgstr "ファイル %s を開くことが出来ませんでした"
 
 #: lib/gda-common/gda-util.c:138
-#, fuzzy, c-format
+#, c-format
 msgid "Could not create file %s"
-msgstr "フィールドを割り当てることが出来ませんでした"
+msgstr "ファイル %s を作成することが出来ませんでした"
 
 #: lib/gda-common/gda-xml-database.c:166
 msgid "bad formed document"
-msgstr ""
+msgstr "悪い形式のドキュメントです"
 
 #: lib/gda-common/gda-xml-database.c:267
 #, c-format
@@ -139,18 +135,17 @@ msgid "%p is not a valid table"
 msgstr "%p は有効なテーブルではありません"
 
 #: lib/gda-common/gda-xml-item.c:386
-#, fuzzy, c-format
+#, c-format
 msgid "Item with id %s not found"
-msgstr "データソース %s は見つかりませんでした"
+msgstr "ID %s のアイテムは見つかりませんでした"
 
 #: lib/gda-server/gda-server-connection.c:404
-#, fuzzy
 msgid "Connection being closed"
-msgstr "接続は切れたようです"
+msgstr "接続を切断します"
 
 #: lib/gda-server/gda-server-connection.c:407
 msgid "This connection is being closed, so all listeners are released"
-msgstr ""
+msgstr "この接続は切断されます，よってすべてのリスナーは開放されます"
 
 #: lib/gda-server/gda-server-error.c:41
 msgid "Could not get pointer to server implementation"
@@ -194,31 +189,27 @@ msgid "CORBA user exception: %s"
 msgstr "CORBA ユーザ例外: %s"
 
 #: providers/gda-default-server/GNOME_GDA_Provider_Default.oaf.in.h:1
-#, fuzzy
 msgid "Default provider connection factory"
-msgstr "%s へ接続することが出来ませんでした"
+msgstr "デフォルトプロバイダ接続ファクトリ"
 
 #: providers/gda-default-server/GNOME_GDA_Provider_Default.oaf.in.h:2
-#, fuzzy
 msgid "GDA Default Datasource Access"
-msgstr "ODBC用のGDAデータソースアクセス"
+msgstr "GDAデフォルトデータソースアクセス"
 
 #: providers/gda-default-server/gda-default-connection.c:127
 msgid "You must specify a directory for the database to be stored"
-msgstr ""
+msgstr "データベースを保存させるディレクトリを指定しなければなりません"
 
 #: providers/gda-default-server/gda-default-connection.c:235
 #: providers/gda-mysql-server/gda-mysql-connection.c:283
 #: providers/gda-oracle-server/gda-oracle-connection.c:334
 #: providers/gda-postgres-server/gda-postgres-connection.c:486
-#, fuzzy
 msgid "Unknown schema type"
-msgstr "未知の ORACLE タイプ %ld です"
+msgstr "不明なスキーマタイプです"
 
 #: providers/gda-default-server/main-default.c:70
-#, fuzzy
 msgid "Could not register Default provider implementation"
-msgstr "メールプロバイダの実装を登録することが出来ませんでした"
+msgstr "デフォルトプロバイダの実装を登録することが出来ませんでした"
 
 #: providers/gda-ldap-server/GNOME_GDA_Provider_LDAP.oaf.in.h:1
 msgid "GDA Datasource Access for LDAP"
@@ -226,7 +217,7 @@ msgstr "LDAP用のGDAデータソースアクセス"
 
 #: providers/gda-ldap-server/GNOME_GDA_Provider_LDAP.oaf.in.h:2
 msgid "LDAP provider connection factory"
-msgstr ""
+msgstr "LDAPプロバイダ接続ファクトリ"
 
 #: providers/gda-interbase-server/gda-interbase-connection.c:331
 #: providers/gda-ldap-server/gda-ldap-connection.c:293
@@ -287,12 +278,12 @@ msgstr "Interbase用のGDAデータソースアクセス"
 
 #: providers/gda-interbase-server/GNOME_GDA_Provider_InterBase.oaf.in.h:2
 msgid "InterBase provider connection factory"
-msgstr ""
+msgstr "InterBaseプロバイダ接続ファクトリ"
 
 #: providers/gda-interbase-server/gda-interbase-connection.c:327
-#, fuzzy, c-format
+#, c-format
 msgid "Error code %ld (%s)"
-msgstr "エラーコード %ld"
+msgstr "エラーコード %ld (%s)"
 
 #: providers/gda-interbase-server/main-interbase.c:74
 msgid "Could not register INTERBASE provider implementation"
@@ -304,7 +295,7 @@ msgstr "Mail用のGDAデータソースアクセス"
 
 #: providers/gda-mail-server/GNOME_GDA_Provider_Mail.oaf.in.h:2
 msgid "Mail provider connection factory"
-msgstr ""
+msgstr "メールプロバイダ接続ファクトリ"
 
 #: providers/gda-mail-server/gda-mail-connection.c:107
 #: providers/gda-mdb-server/gda-mdb-connection.c:224
@@ -324,7 +315,7 @@ msgstr "MDB (MS Access)ファイル用のGDAデータソースアクセス"
 
 #: providers/gda-mdb-server/GNOME_GDA_Provider_MDB.oaf.in.h:2
 msgid "MDB provider connection factory"
-msgstr ""
+msgstr "MDBプロバイダ接続ファクトリ"
 
 #. execute command
 #: providers/gda-mdb-server/gda-mdb-command.c:86
@@ -384,17 +375,13 @@ msgstr "MySQL用のGDAデータソースアクセス"
 
 #: providers/gda-mysql-server/GNOME_GDA_Provider_MySQL.oaf.in.h:2
 msgid "MySQL provider connection factory"
-msgstr ""
+msgstr "MySQLプロバイダ接続ファクトリ"
 
 #: providers/gda-mysql-server/gda-mysql-connection.c:175
-#, fuzzy
 msgid ""
 "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a "
 "PORT. Please remove the UNIX_SOCKET, or remove both the HOST and PORT options"
-msgstr ""
-"%s:%d: UNIX_SOCKET を提供することが出来ません. HOST または PORT のどちらかを"
-"提供するなら, UNIX_SOCKET を削除するか, HOST と PORT の両方のオプションを削除"
-"してください"
+msgstr "UNIX_SOCKET を提供することが出来ません. HOST または PORT のどちらかを提供するなら, UNIX_SOCKET を削除するか, HOST と PORT の両方のオプションを削除してください"
 
 #: providers/gda-mysql-server/gda-mysql-connection.c:191
 #, c-format
@@ -407,11 +394,11 @@ msgstr ""
 
 #: providers/gda-mysql-server/gda-mysql-connection.c:623
 msgid "Unknown"
-msgstr ""
+msgstr "不明"
 
 #: providers/gda-mysql-server/gda-mysql-connection.c:656
 msgid "No MYSQL_Connection for GdaServerConnection"
-msgstr ""
+msgstr "GdaServerConnectionのためのMYSQL_Connectionがありません"
 
 #: providers/gda-odbc-server/GNOME_GDA_Provider_ODBC.oaf.in.h:1
 msgid "GDA Datasource Access for ODBC"
@@ -419,7 +406,7 @@ msgstr "ODBC用のGDAデータソースアクセス"
 
 #: providers/gda-odbc-server/GNOME_GDA_Provider_ODBC.oaf.in.h:2
 msgid "ODBC provider connection factory"
-msgstr ""
+msgstr "ODBCプロバイダ接続ファクトリ"
 
 #: providers/gda-odbc-server/gda-odbc-connection.c:277
 #, c-format
@@ -445,7 +432,7 @@ msgstr "Oracle用のGDAデータソースアクセス"
 
 #: providers/gda-oracle-server/GNOME_GDA_Provider_Oracle.oaf.in.h:2
 msgid "Oracle provider connection factory"
-msgstr ""
+msgstr "Oracleプロバイダ接続ファクトリ"
 
 #: providers/gda-oracle-server/gda-oracle-command.c:191
 msgid "Could not allocate statement handle"
@@ -495,7 +482,7 @@ msgstr "Postgres用のGDAデータソースアクセス"
 
 #: providers/gda-postgres-server/GNOME_GDA_Provider_Postgres.oaf.in.h:2
 msgid "Postgres provider connection factory"
-msgstr ""
+msgstr "PostgreSQLプロバイダ接続ファクトリ"
 
 #: providers/gda-postgres-server/gda-postgres-connection.c:888
 #: providers/gda-postgres-server/gda-postgres-connection.c:1005
@@ -512,7 +499,7 @@ msgstr "Sybase用のGDAデータソースアクセス"
 
 #: providers/gda-sybase-server/GNOME_GDA_Provider_Sybase.oaf.in.h:2
 msgid "Sybase provider connection factory"
-msgstr ""
+msgstr "Sybaseプロバイダ接続ファクトリ"
 
 #.      gda_server_error_make(error, 0, cnc, "connection seems to be dead");
 #: providers/gda-sybase-server/gda-sybase-command.c:160
@@ -547,9 +534,8 @@ msgid "Freeing command structure failed"
 msgstr "コマンド構造体の開放に失敗しました"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:182
-#, fuzzy
 msgid "Not enough memory for sybase_Connection"
-msgstr "primebase_Error 構造体のための十分なメモリがありません"
+msgstr "sybase_Connectionのための十分なメモリがありません"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:483
 #: providers/gda-tds-server/gda-tds-connection.c:442
@@ -730,41 +716,35 @@ msgid "Could not get # of messages"
 msgstr "メッセージ数を取得することが出来ませんでした"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:356
-#, fuzzy
 msgid "ct_diag failed, Could not get # of client messages(1)"
-msgstr "クライアントメッセージ数を取得することが出来ませんでした"
+msgstr "ct_diagは失敗しました，クライアントメッセージ数を取得することが出来ませんでした(1)"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:381
-#, fuzzy
 msgid "Could not get client msg #"
-msgstr "クライアントメッセージ番号 %d を取得することが出来ませんでした"
+msgstr "クライアントメッセージ番号を取得することが出来ませんでした"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:394
 #: providers/gda-sybase-server/gda-sybase-error.c:396
 #: providers/gda-sybase-server/gda-sybase-error.c:688
 #: providers/gda-sybase-server/gda-sybase-error.c:690
-#, fuzzy
 msgid "Client Message:"
 msgstr "クライアントメッセージ:"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:424
-#, fuzzy
 msgid "ct_diag failed, Could not get # of client messages(2)"
-msgstr "クライアントメッセージ数を取得することが出来ませんでした"
+msgstr "ct_diagは失敗しました，クライアントメッセージ数を取得することが出来ませんでした(2)"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:442
 msgid "Could not clear client messages"
 msgstr "クライアントメッセージを消去することが出来ませんでした"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:486
-#, fuzzy
 msgid "Could not get # of server messages(1)"
-msgstr "サーバメッセージ数を取得することが出来ませんでした"
+msgstr "サーバメッセージ数を取得することが出来ませんでした(1)"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:510
-#, fuzzy
 msgid "Could not get server msg #"
-msgstr "サーバメッセージ番号 %d を取得することが出来ませんでした"
+msgstr "サーバメッセージ番号を取得することが出来ませんでした"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:570
 msgid "Could not get # of server messages"
@@ -789,14 +769,12 @@ msgid "Fetching %d cslib message"
 msgstr "%d 個の cslib メッセージを取得してします"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:672
-#, fuzzy
 msgid "Could not get cslib msg #"
-msgstr "cslib メッセージ番号 %d を取得することが出来ませんでした"
+msgstr "cslib メッセージ番号を取得することが出来ませんでした"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:711
-#, fuzzy
 msgid "Could not get # of cslib messages(2)"
-msgstr "cslib メッセージ数を取得することが出来ませんでした"
+msgstr "cslib メッセージ数を取得することが出来ませんでした(2)"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:729
 msgid "Could not clear cslib messages"
@@ -804,23 +782,23 @@ msgstr "cslib メッセージを消去することが出来ませんでした"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:761
 msgid "SYB"
-msgstr ""
+msgstr "SYB"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:763
 msgid "severity"
-msgstr ""
+msgstr "重大性"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:765
 msgid "number"
-msgstr ""
+msgstr "番号"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:767
 msgid "origin"
-msgstr ""
+msgstr "原因"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:769
 msgid "layer"
-msgstr ""
+msgstr "レイヤ"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:776
 #, c-format
@@ -829,6 +807,9 @@ msgid ""
 "\tOperating system error number(%ld):\n"
 "\t%s"
 msgstr ""
+"\n"
+"OSエラー番号(%ld):\n"
+"\t%s"
 
 #: providers/gda-sybase-server/gda-sybase-recordset.c:219
 #: providers/gda-tds-server/gda-tds-recordset.c:199
@@ -949,7 +930,7 @@ msgstr "Sybase/MS SQL用のGDAデータソースアクセス"
 
 #: providers/gda-tds-server/GNOME_GDA_Provider_TDS.oaf.in.h:2
 msgid "TDS provider connection factory"
-msgstr ""
+msgstr "TDSプロバイダ接続ファクトリ"
 
 #: providers/gda-tds-server/gda-tds-command.c:135
 msgid "Filling command structure failed\n"
@@ -988,9 +969,8 @@ msgid "No data returned, freeing recordset structure"
 msgstr "データが返されません, レコードセット構造体を開放しています"
 
 #: providers/gda-tds-server/gda-tds-connection.c:165
-#, fuzzy
 msgid "Not enough memory for tds_Connection"
-msgstr "primebase_Error 構造体のための十分なメモリがありません"
+msgstr "tds_Connectionのための十分なメモリがありません"
 
 #. Fixme: replace "dummy" with buf when CS_GET CS_SERVERNAME works
 #: providers/gda-tds-server/gda-tds-connection.c:893
@@ -1042,136 +1022,5 @@ msgid "%s: data source '%s' not found\n"
 msgstr "%s: データソース '%s' は見つかりませんでした\n"
 
 #: tools/templates/main-srv.c.tmpl:60
-#, fuzzy
 msgid "Could not register <PROVIDER-NAME> provider implementation"
-msgstr "PRIMEBASE プロバイダの実装を登録することが出来ませんでした"
-
-#~ msgid "gda_sybase_error_make(%p,%p,%p,%p)"
-#~ msgstr "gda_sybase_error_make(%p,%p,%p,%p)"
-
-#~ msgid "%d ctlib messages to fetch"
-#~ msgstr "%d 個の ctlib メッセージを取得しました"
-
-#~ msgid "%d ctlib message to fetch"
-#~ msgstr "%d 個の ctlib メッセージを取得しました"
-
-#~ msgid "error is nullpointer in gda_sybase_messages_handle"
-#~ msgstr "gda_sybase_messages_handle の NULL ポインタはエラーです"
-
-#~ msgid "Fetching %d client messages"
-#~ msgstr "%d 個のクライアントメッセージを取得しています"
-
-#~ msgid "Fetching %d client message"
-#~ msgstr "%d 個のクライアントメッセージを取得しています"
-
-#~ msgid "Fetching %d server messages"
-#~ msgstr "%d 個のサーバメッセージを取得しています"
-
-#~ msgid "Fetching %d server message"
-#~ msgstr "%d 個のサーバメッセージを取得しています"
-
-#~ msgid "TRUE"
-#~ msgstr "TRUE"
-
-#~ msgid "FALSE"
-#~ msgstr "FALSE"
-
-#~ msgid "impl_GDA_Connection_open: opening connection with DSN: %s"
-#~ msgstr "impl_GDA_Connection_open: DSN '%s' で接続を開いています"
-
-#~ msgid "%s: an error ocurred while fetching data"
-#~ msgstr "%s: データ取得中にエラーが発生しました"
-
-#~ msgid ""
-#~ "OAF doesn't know about our IID; indicates broken installation. Exiting..."
-#~ msgstr ""
-#~ "OAF は IID について知りません; インストールが失敗しているかもれません. 終"
-#~ "了します..."
-
-#~ msgid ""
-#~ "Another instance of this provider is already registered with OAF. "
-#~ "Exiting..."
-#~ msgstr ""
-#~ "このプロバイダの別のインスタンスはすでに OAF が登録しています. 終了しま"
-#~ "す..."
-
-#~ msgid "Unknown error registering this provider with OAF. Exiting"
-#~ msgstr ""
-#~ "OAF がこのプロバイダを登録中に未知のエラーが発生しました. 終了します"
-
-#~ msgid "Registered with ID = %s"
-#~ msgstr "ID = %s で登録しました"
-
-#~ msgid "CORBA exception unloading report engine: %s"
-#~ msgstr "CORBA 例外はレポートエンジンを取り外しています: %s"
-
-#~ msgid "GDA Distributed Report Engine"
-#~ msgstr "GDA分配レポートエンジン"
-
-#~ msgid "Received signal %d, shutting down."
-#~ msgstr "シグナル %d を受信しました, 終了します"
-
-#~ msgid "Received signal %d, shutting down cleanly"
-#~ msgstr "シグナル %d を受信しました, きれいに終了します"
-
-#~ msgid "Failed to initialize OAF: please mail bug report to OAF maintainers"
-#~ msgstr "OAF の初期化に失敗: OAF メンテナへ不具合報告をメールしてください"
-
-#~ msgid "Could not activate report engine"
-#~ msgstr "レポートエンジンを始動させることが出来ませんでした"
-
-#~ msgid ""
-#~ "Another instance of the report engine is already registered with OAF. "
-#~ "Exiting..."
-#~ msgstr ""
-#~ "レポートエンジンの別のインスタンスはすでに OAF が登録しています. 終了しま"
-#~ "す..."
-
-#~ msgid "Unknown error registering report engine with OAF. Exiting"
-#~ msgstr ""
-#~ "OAF がレポートエンジンを登録中に未知のエラーが発生しました. 終了します"
-
-#~ msgid "Registered report engine with ID = %s"
-#~ msgstr "ID = %s でレポートエンジンを登録しました"
-
-#~ msgid "%s: length = %d"
-#~ msgstr "%s: 長さ = %d"
-
-#~ msgid "%s: sending field description for '%s'"
-#~ msgstr "%s: '%s' のためのフィールドの記述を送信中"
-
-#~ msgid "schema_tables: table name = '%s'"
-#~ msgstr "schema_tables: テーブル名 = '%s'"
-
-#~ msgid "schema_tables: table_schema = '%s'"
-#~ msgstr "schema_tables: table_schema = '%s'"
-
-#~ msgid "schema_procedures: proc_catalog = '%s' UNUSED!\n"
-#~ msgstr "schema_procedures: proc_catalog = %s' は使っていません!\n"
-
-#~ msgid "schema_procedures: proc_catalog = '%s' UNUSED!"
-#~ msgstr "schema_procedures: proc_catalog = '%s' は使っていません!"
-
-#~ msgid "database name"
-#~ msgstr "データベース名"
-
-#~ msgid "DATABASE"
-#~ msgstr "DATABASE"
-
-#~ msgid "user name"
-#~ msgstr "ユーザ名"
-
-#~ msgid "USER-NAME"
-#~ msgstr "USER-NAME"
-
-#~ msgid "password"
-#~ msgstr "パスワード"
-
-#~ msgid "PASSWORD"
-#~ msgstr "PASSWORD"
-
-#~ msgid "file name"
-#~ msgstr "ファイル名"
-
-#~ msgid "FILE-NAME"
-#~ msgstr "FILE-NAME"
+msgstr "<PROVIDER-NAME> プロバイダの実装を登録することが出来ませんでした"
