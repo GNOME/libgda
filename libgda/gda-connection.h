@@ -25,6 +25,7 @@
 #  define __gda_connection_h__
 
 #include <libgda/gda-command.h>
+#include <libgda/gda-data-model.h>
 #include <libgda/gda-error.h>
 #include <libgda/gda-parameter.h>
 
@@ -85,6 +86,14 @@ typedef enum {
 } GdaConnectionFeature;
 
 gboolean       gda_connection_supports (GdaConnection *cnc, GdaConnectionFeature feature);
+
+typedef enum {
+	GDA_CONNECTION_SCHEMA_TABLES = GNOME_Database_Connection_SCHEMA_TABLES
+} GdaConnectionSchema;
+
+GdaDataModel *gda_connection_get_schema (GdaConnection *cnc,
+					 GdaConnectionSchema schema,
+					 GdaParameterList *params);
 
 G_END_DECLS
 

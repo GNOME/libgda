@@ -26,6 +26,7 @@
 #include <libgda/gda-command.h>
 #include <libgda/gda-quark-list.h>
 #include <libgda/gda-server-connection.h>
+#include <libgda/gda-server-recordset.h>
 #include <bonobo/bonobo-xobject.h>
 
 G_BEGIN_DECLS
@@ -78,6 +79,11 @@ struct _GdaServerProviderClass {
 	gboolean (* supports) (GdaServerProvider *provider,
 			       GdaServerConnection *cnc,
 			       GNOME_Database_Feature feature);
+
+	GdaServerRecordset * (* get_schema) (GdaServerProvider *provider,
+					     GdaServerConnection *cnc,
+					     GNOME_Database_Connection_Schema schema,
+					     GdaParameterList *params);
 };
 
 GType    gda_server_provider_get_type (void);
@@ -107,6 +113,11 @@ gboolean gda_server_provider_rollback_transaction (GdaServerProvider *provider,
 gboolean gda_server_provider_supports (GdaServerProvider *provider,
 				       GdaServerConnection *cnc,
 				       GNOME_Database_Feature feature);
+
+GdaServerRecordset *gda_server_provider_get_schema (GdaServerProvider *provider,
+						    GdaServerConnection *cnc,
+						    GNOME_Database_Connection_Schema schema,
+						    GdaParameterList *params);
 
 G_END_DECLS
 

@@ -83,6 +83,7 @@ gda_server_provider_class_init (GdaServerProviderClass *klass)
 	klass->commit_transaction = NULL;
 	klass->rollback_transaction = NULL;
 	klass->supports = NULL;
+	klass->get_schema = NULL;
 
 	/* set the epv */
 	epv = &klass->epv;
@@ -257,4 +258,19 @@ gda_server_provider_supports (GdaServerProvider *provider,
 	g_return_val_if_fail (CLASS (provider)->supports != NULL, FALSE);
 
 	return CLASS (provider)->supports (provider, cnc, feature);
+}
+
+/**
+ * gda_server_provider_get_schema
+ */
+GdaServerRecordset *
+gda_server_provider_get_schema (GdaServerProvider *provider,
+				GdaServerConnection *cnc,
+				GNOME_Database_Connection_Schema schema,
+				GdaParameterList *params)
+{
+	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
+	g_return_val_if_fail (CLASS (provider)->get_schema != NULL, NULL);
+
+	return CLASS (provider)->get_schema (provider, cnc, schema, params);
 }

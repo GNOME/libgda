@@ -266,6 +266,30 @@ impl_Connection_supports (PortableServer_Servant servant,
 	return result;
 }
 
+static GNOME_Database_Recordset
+impl_Connection_getSchema (PortableServer_Servant servant,
+			   const GNOME_Database_Connection_Schema schema,
+			   const GNOME_Database_ParameterList *params,
+			   CORBA_Environment *ev)
+{
+	GdaServerRecordset *recset;
+	GdaParameterList *plist;
+	GdaServerConnection *cnc = (GdaServerConnection *) bonobo_x_object (servant);
+
+	bonobo_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), CORBA_OBJECT_NIL, ev);
+
+	plist = gda_parameter_list_new_from_corba (params);
+	recset = gda_server_provider_get_schema (cnc->priv->provider, cnc, schema, plist);
+	gda_parameter_list_free (plist);
+
+	if (!GDA_IS_SERVER_RECORDSET (recset)) {
+		gda_error_list_to_exception (cnc->priv->errors, ev);
+		return CORBA_OBJECT_NIL;
+	}
+
+	return bonobo_object_corba_objref (BONOBO_OBJECT (recset));
+}
+
 /*
  * GdaServerConnection class implementation
  */
@@ -289,6 +313,7 @@ gda_server_connection_class_init (GdaServerConnectionClass *klass)
 	epv->commitTransaction = (gpointer) impl_Connection_commitTransaction;
 	epv->rollbackTransaction = (gpointer) impl_Connection_rollbackTransaction;
 	epv->supports = (gpointer) impl_Connection_supports;
+	epv->getSchema = (gpointer) impl_Connection_getSchema;
 }
 
 static void

@@ -472,3 +472,40 @@ gda_connection_supports (GdaConnection *cnc, GdaConnectionFeature feature)
 
 	return corba_res;
 }
+
+/**
+ * gda_connection_get_schema
+ */
+GdaDataModel *
+gda_connection_get_schema (GdaConnection *cnc,
+			   GdaConnectionSchema schema,
+			   GdaParameterList *params)
+{
+	GNOME_Database_ParameterList *corba_params;
+	GNOME_Database_Recordset corba_recset;
+	GdaRecordset *recset;
+	CORBA_Environment ev;
+
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+
+	corba_params = gda_parameter_list_to_corba (params);
+
+	/* call the CORBA method */
+	CORBA_exception_init (&ev);
+
+	corba_recset = GNOME_Database_Connection_getSchema (cnc->priv->corba_cnc,
+							    schema,
+							    corba_params,
+							    &ev);
+	CORBA_free (corba_params);
+
+	if (BONOBO_EX (&ev)) {
+		gda_connection_add_error_list (cnc, gda_error_list_from_exception (&ev));
+		CORBA_exception_free (&ev);
+		return FALSE;
+	}
+
+	recset = gda_recordset_new (cnc, corba_recset);
+
+	return GDA_DATA_MODEL (recset);
+}
