@@ -2,6 +2,7 @@
 gda-row
 
 <!-- ##### SECTION Short_Description ##### -->
+Functions for accesing #GdaRow.
 
 
 <!-- ##### SECTION Long_Description ##### -->

@@ -3,7 +3,10 @@
 	* libgda-docs.sgml: added parameter information to the providers
 	configuration section.
 
-	* tmpl/gda-value.sgml: added long and short description.
+	* tmpl/gda-value.sgml: added long and short description. Little
+	changes to the table of type and string representations.
+
+	* tmpl/gda-row.sgml: added short description.
 
 2002-01-14  Rodrigo Moya <rodrigo@gnome-db.org>
 
