@@ -10,7 +10,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2003-03-09 19:39+0100\n"
+"POT-Creation-Date: 2003-04-04 12:29+0200\n"
 "PO-Revision-Date: 2003-03-04 12:18-0300\n"
 "Last-Translator: Pablo Gonzalo del Campo <pablodc@bigfoot.com>\n"
 "Language-Team: Spanish <traductores@es.gnome.org>\n"
@@ -196,8 +196,7 @@ msgstr "Nodo XML inválido"
 
 #: providers/default/gda-default-provider.c:190
 #: providers/sqlite/gda-sqlite-provider.c:198
-msgid ""
-"A full path must be specified on the connection string to open a database."
+msgid "A full path must be specified on the connection string to open a database."
 msgstr ""
 "Una ruta completa debe ser especificada en la cadena de conexión para abrir "
 "la base de datos."
@@ -397,7 +396,17 @@ msgstr ""
 
 #: providers/freetds/gda-freetds-provider.c:1062 providers/freetds/utils.c:44
 #: providers/oracle/utils.c:71 providers/postgres/utils.c:51
-#: providers/sybase/utils.c:171
+#: providers/sybase/gda-sybase-provider.c:765
+#: providers/sybase/gda-sybase-recordset.c:512
+#: providers/sybase/gda-sybase-recordset.c:534
+#: providers/sybase/gda-sybase-recordset.c:593 providers/sybase/utils.c:205
+#: providers/sybase/utils.c:223 providers/sybase/utils.c:239
+#: providers/sybase/utils.c:259 providers/sybase/utils.c:279
+#: providers/sybase/utils.c:320 providers/sybase/utils.c:337
+#: providers/sybase/utils.c:389 providers/sybase/utils.c:415
+#: providers/sybase/utils.c:449 providers/sybase/utils.c:466
+#: providers/sybase/utils.c:489 providers/sybase/utils.c:505
+#: providers/sybase/utils.c:543
 msgid "Not available"
 msgstr "No está disponible"
 
@@ -422,7 +431,7 @@ msgid "Provider for TDS-based databases (using FreeTDS)"
 msgstr "Proveedor para bases de datos basadas en TDS (usando FreeTDS)"
 
 #: providers/freetds/utils.c:40 providers/oracle/utils.c:66
-#: providers/postgres/utils.c:46 providers/sybase/utils.c:166
+#: providers/postgres/utils.c:46 providers/sybase/utils.c:538
 msgid "NO DESCRIPTION"
 msgstr "SIN DESCRIPCIÓN"
 
@@ -477,7 +486,7 @@ msgstr "Función"
 #: providers/postgres/gda-postgres-provider.c:1301
 #: providers/postgres/gda-postgres-provider.c:1845
 #: providers/sqlite/gda-sqlite-provider.c:752
-#: providers/sybase/gda-sybase-provider.c:909
+#: providers/sybase/gda-sybase-provider.c:1098
 msgid "Owner"
 msgstr "Propietario"
 
@@ -531,7 +540,7 @@ msgstr "Disparadores"
 #: providers/oracle/gda-oracle-provider.c:2012
 #: providers/postgres/gda-postgres-provider.c:1123
 #: providers/sqlite/gda-sqlite-provider.c:751
-#: providers/sybase/gda-sybase-provider.c:907
+#: providers/sybase/gda-sybase-provider.c:1096
 msgid "Type"
 msgstr "Tipo"
 
@@ -554,7 +563,7 @@ msgstr "Tipo"
 #: providers/postgres/gda-postgres-provider.c:1302
 #: providers/postgres/gda-postgres-provider.c:1846
 #: providers/sqlite/gda-sqlite-provider.c:753
-#: providers/sybase/gda-sybase-provider.c:911
+#: providers/sybase/gda-sybase-provider.c:1100
 msgid "Comments"
 msgstr "Comentarios"
 
@@ -563,7 +572,7 @@ msgstr "Comentarios"
 #: providers/odbc/gda-odbc-provider.c:1257
 #: providers/postgres/gda-postgres-provider.c:1126
 #: providers/sqlite/gda-sqlite-provider.c:754
-#: providers/sybase/gda-sybase-provider.c:913
+#: providers/sybase/gda-sybase-provider.c:1102
 msgid "GDA type"
 msgstr "Tipo de GDA"
 
@@ -621,9 +630,7 @@ msgstr "Proveedor para directorio LDAP"
 
 #: providers/mdb/gda-mdb-provider.c:205
 msgid "A database FILENAME must be specified in the connection_string"
-msgstr ""
-"Debe especificarse en la cadena de conexión el nombre del archivo de la base "
-"de datos"
+msgstr "Debe e_specificarse en la cadena de conexión el nombre del archivo de la base de datos"
 
 #: providers/mdb/gda-mdb-provider.c:214
 #: providers/xbase/gda-xbase-provider.c:223
@@ -750,10 +757,8 @@ msgid "Provider for Microsoft Access files"
 msgstr "Proveedor para archivos de Microsoft Access"
 
 #: providers/mysql/gda-mysql-provider.c:218
-msgid ""
-"You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
-msgstr ""
-"No puede proveer un UNIX_SOCKET si al mismo tiempo provee un HOST o un PORT."
+msgid "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
+msgstr "No puede proveer un UNIX_SOCKET si al mismo tiempo provee un HOST o un PORT."
 
 #: providers/mysql/gda-mysql-provider.c:294
 #: providers/mysql/gda-mysql-provider.c:1085
@@ -936,8 +941,7 @@ msgstr "No se ha podido ejecutar la sentencia de Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:628
 msgid "Could not get the number of columns in the result set"
-msgstr ""
-"No se ha podido obtener la cantidad de columnas en el conjunto de resultado"
+msgstr "No se ha podido obtener la cantidad de columnas en el conjunto de resultado"
 
 #: providers/oracle/gda-oracle-provider.c:645
 msgid "Could not get the parameter descripter in the result set"
@@ -947,8 +951,7 @@ msgstr ""
 
 #: providers/oracle/gda-oracle-provider.c:657
 msgid "Could not get the column name in the result set"
-msgstr ""
-"No se ha podido obtener el nombre de la columna en el conjunto de resultado"
+msgstr "No se ha podido obtener el nombre de la columna en el conjunto de resultado"
 
 #: providers/oracle/gda-oracle-provider.c:803
 #: providers/oracle/gda-oracle-provider.c:884
@@ -1199,81 +1202,16 @@ msgstr "No se ha podido recuperar información del campo"
 msgid "Provider for SQLite databases"
 msgstr "Proveedor para bases de datos SQLite"
 
-#. the logic to connect to the database
-#: providers/sybase/gda-sybase-provider.c:251
-msgid "about to open connection"
-msgstr "a punto de abrir la conexión"
-
-#: providers/sybase/gda-sybase-provider.c:277
+#: providers/sybase/gda-sybase-provider.c:291
 msgid "Out of memory. Allocating connection structure failed."
 msgstr "Sin memoria. Ha fallado la asignación de la estructura de conexión."
 
-#: providers/sybase/gda-sybase-provider.c:289
-msgid "Context allocated."
-msgstr "Contexto asignado."
-
-#: providers/sybase/gda-sybase-provider.c:296
-msgid "Client library initialized."
-msgstr "Biblioteca del cliente inicializada."
-
-#: providers/sybase/gda-sybase-provider.c:322
+#: providers/sybase/gda-sybase-provider.c:336
 #, c-format
 msgid "Locale set to '%s'."
 msgstr "Localización definida como «%s»."
 
-#: providers/sybase/gda-sybase-provider.c:337
-msgid "Could not initialize cslib callback"
-msgstr "No se pudo inicializar la llamada reversa de cslib"
-
-#: providers/sybase/gda-sybase-provider.c:341
-msgid "CS-lib callback initialized."
-msgstr "Llamada reversa de CS-lib inicializada."
-
-#: providers/sybase/gda-sybase-provider.c:347
-msgid "Could not initialize ct-client callback"
-msgstr "No se ha podido inicializar la llamada reversa de ct-client"
-
-#: providers/sybase/gda-sybase-provider.c:351
-msgid "CT-Client callback initialized."
-msgstr "Llamada reversa de CT-Client inicializada."
-
-#: providers/sybase/gda-sybase-provider.c:358
-msgid "Could not initialize ct-server callback"
-msgstr "No se ha podido inicializar la llamada reversa de ct-server"
-
-#: providers/sybase/gda-sybase-provider.c:362
-msgid "CT-Server callback initialized."
-msgstr "Llamada reversa de CT-Server inicializada."
-
-#: providers/sybase/gda-sybase-provider.c:370
-msgid "Connection allocated."
-msgstr "Conexión asignada."
-
-#: providers/sybase/gda-sybase-provider.c:410
-msgid "Appname set."
-msgstr "Nombre de aplicación definido."
-
-#: providers/sybase/gda-sybase-provider.c:423
-msgid "Username set."
-msgstr "Usuario definido."
-
-#: providers/sybase/gda-sybase-provider.c:437
-msgid "Password set."
-msgstr "Contraseña definida."
-
-#: providers/sybase/gda-sybase-provider.c:449
-msgid "Empty password set."
-msgstr "Contraseña en blanco definida."
-
-#: providers/sybase/gda-sybase-provider.c:459
-msgid "Connected."
-msgstr "Conectado."
-
-#: providers/sybase/gda-sybase-provider.c:477
-msgid "Finally connected."
-msgstr "Finalmente conectado."
-
-#: providers/sybase/gda-sybase-provider.c:611
+#: providers/sybase/gda-sybase-provider.c:642
 msgid ""
 "Cmd structure already in use. Command will not be executed because of "
 "blocked connection."
@@ -1281,72 +1219,113 @@ msgstr ""
 "La estructura de comandos ya esta en uso. El comando no será ejecutado "
 "debido a la conexión bloqueada."
 
-#: providers/sybase/gda-sybase-provider.c:626
+#: providers/sybase/gda-sybase-provider.c:656
 #, c-format
 msgid "Failed allocating a command structure in %s()"
 msgstr "Ha fallado la asignación de una estructura de comandos en %s()"
 
-#: providers/sybase/gda-sybase-provider.c:637
+#: providers/sybase/gda-sybase-provider.c:670
 msgid "Could not prepare command structure."
 msgstr "No se ha podido preparar la estructura de comando."
 
-#: providers/sybase/gda-sybase-provider.c:646
+#: providers/sybase/gda-sybase-provider.c:680
 msgid "Sending sql-command failed."
 msgstr "Ha fallado el envío del comando sql."
 
-#: providers/sybase/gda-sybase-provider.c:717
+#: providers/sybase/gda-sybase-provider.c:706
+#: providers/sybase/gda-sybase-provider.c:724
+#: providers/sybase/gda-sybase-provider.c:790
+#: providers/sybase/gda-sybase-provider.c:811
+msgid "GDA_IS_SYBASE_RECORDSET != TRUE"
+msgstr "GDA_IS_SYBASE_RECORDSET != TRUE"
+
+#. when you execute a stored procedure through openclient, this
+#. part of the result set loop is where you fetch the return status
+#. of the executed stored procedure.  You fetch it like a CS_ROW_RESULT
+#: providers/sybase/gda-sybase-provider.c:712
+msgid "CS_STATUS_RESULT!"
+msgstr "CS_STATUS_RESULT!"
+
+#: providers/sybase/gda-sybase-provider.c:734
+msgid "Hit unsupported result type"
+msgstr "Se obtuvo un tipo de resultado no soportado"
+
+#: providers/sybase/gda-sybase-provider.c:762
+msgid ""
+"an error occured when calling ct_diag attempting to test if there is a "
+"server message for resultset"
+msgstr ""
+"ha ocurrido un error cuando en la llamada a ct_diag cuando intentaba probar si "
+"hay un mensaje del servidor para el conjunto de resultados"
+
+#: providers/sybase/gda-sybase-provider.c:793
+#, c-format
+msgid "%s returned %s"
+msgstr "%s ha devuelto %s"
+
+#: providers/sybase/gda-sybase-provider.c:820
 msgid "Failed dropping command structure."
 msgstr "Ha fallado la liberación de la estructura de comandos."
 
-#: providers/sybase/gda-sybase-provider.c:747
+#: providers/sybase/gda-sybase-provider.c:850
 #, c-format
 msgid "Command structure already in use. %s failed."
 msgstr "La estructura de comando ya esta en uso. Ha fallado %s."
 
-#: providers/sybase/gda-sybase-provider.c:755
-#: providers/sybase/gda-sybase-provider.c:859
+#: providers/sybase/gda-sybase-provider.c:858
 msgid "Could not allocate command structure."
 msgstr "No se ha podido asignar la estructura de comando."
 
-#: providers/sybase/gda-sybase-provider.c:763
+#: providers/sybase/gda-sybase-provider.c:867
 #, c-format
 msgid "Could not prepare command structure with %s."
 msgstr "No se ha podido preparar la estructura de comando con %s."
 
-#: providers/sybase/gda-sybase-provider.c:772
+#: providers/sybase/gda-sybase-provider.c:877
 msgid "Sending command failed."
 msgstr "Ha fallado el envío del comando."
 
-#: providers/sybase/gda-sybase-provider.c:796
-#: providers/sybase/gda-sybase-provider.c:812
-#: providers/sybase/gda-sybase-provider.c:822
+#: providers/sybase/gda-sybase-provider.c:902
+#: providers/sybase/gda-sybase-provider.c:919
+#: providers/sybase/gda-sybase-provider.c:930
 #, c-format
 msgid "%s: %s failed"
 msgstr "%s: %s ha fallado"
 
-#: providers/sybase/gda-sybase-provider.c:857
-#, c-format
-msgid ""
-"Connection already in use. Could not allocate command structure in %s()."
-msgstr ""
-"La conexión ya esta siendo usada. No se ha podido asignar la estructura de "
-"comando en %s()"
+#: providers/sybase/gda-sybase-provider.c:974
+msgid "could not allocate cmd structure to find current database."
+msgstr "No se ha podido asignar la estructura de comando para buscar la base de datos actual."
 
-#: providers/sybase/gda-sybase-provider.c:870
-#, c-format
-msgid "Failed dropping command structure in %s()."
-msgstr "Ha fallado la liberación de la estructura de comando en %s()."
+#: providers/sybase/gda-sybase-provider.c:985
+msgid "could not execute command to get current database."
+msgstr "No se ha podido ejecutar el comando para obtener la base de datos actual."
 
-#: providers/sybase/gda-sybase-recordset.c:317
+#: providers/sybase/gda-sybase-provider.c:993
+msgid "could not send command to get current database."
+msgstr "No se ha podido enviar el comando para obtener la base de datos actual."
+
+#: providers/sybase/gda-sybase-provider.c:1016
+msgid "could not bind variable to get current database."
+msgstr "No se ha podido asignar la variable para obtener la base de datos actual."
+
+#: providers/sybase/gda-sybase-provider.c:1029
+#: providers/sybase/gda-sybase-provider.c:1044
+msgid "could not fetch data to find current database."
+msgstr "No se ha podido obtener datos para buscar la base de datos actual"
+
+#: providers/sybase/gda-sybase-provider.c:1058
+msgid "could not drop cmd structure to find current database."
+msgstr "No se ha podido borrar la estructura de comando para buscar la base de datos actual."
+
+#: providers/sybase/gda-sybase-recordset.c:315
 msgid "Could not allocate datamodel. No results will be returned."
-msgstr ""
-"No se ha podido asignar el modelo de datos. No se devolverán los resultados."
+msgstr "No se ha podido asignar el modelo de datos. No se devolverán los resultados."
 
-#: providers/sybase/gda-sybase-recordset.c:320
+#: providers/sybase/gda-sybase-recordset.c:318
 msgid "ct_cancel() failed."
-msgstr "Ha fallado ct_cancel()."
+msgstr "ct_cancel() ha fallado."
 
-#: providers/sybase/gda-sybase-recordset.c:332
+#: providers/sybase/gda-sybase-recordset.c:331
 #, c-format
 msgid "%s failed while processing a row result."
 msgstr "%s ha fallado mientras se procesaba un resultado de fila."
@@ -1357,78 +1336,98 @@ msgid "%s returned <= 0 columns."
 msgstr "%s ha devuelto <= 0 columnas."
 
 #: providers/sybase/gda-sybase-recordset.c:359
+#: providers/sybase/gda-sybase-recordset.c:549
 msgid "Could not allocate structure for column metainformation."
-msgstr ""
-"No se ha podido asignar la estructura para la metainformación de la columna."
+msgstr "No se ha podido asignar la estructura para la metainformación de la columna."
 
 #: providers/sybase/gda-sybase-recordset.c:363
+#: providers/sybase/gda-sybase-recordset.c:553
 #, c-format
 msgid "Could not call %s while processing row resultset."
 msgstr ""
 "No se ha podido llamar a %s mientras se procesaba el conjunto de resultado "
 "de la fila."
 
-#: providers/sybase/gda-sybase-recordset.c:384
+#: providers/sybase/gda-sybase-recordset.c:382
 #: providers/sybase/gda-sybase-recordset.c:403
 #, c-format
 msgid "Could not run %s on column %d"
 msgstr "No se ha podido ejecutar %s en al columna %d"
 
-#: providers/sybase/gda-sybase-recordset.c:392
+#: providers/sybase/gda-sybase-recordset.c:391
 #, c-format
 msgid "Could not allocate data placeholder for column %d"
 msgstr "No se ha podido asignar el contenedor de datos para la columna %d"
 
-#: providers/sybase/gda-sybase-recordset.c:421
+#: providers/sybase/gda-sybase-recordset.c:422
 #, c-format
 msgid "Could not run %s to cancel processing row resultset."
 msgstr ""
 "No se ha podido ejecutar %s para cancelar el procesamiento del conjunto de "
 "resultados de la fila."
 
-#: providers/sybase/gda-sybase-recordset.c:436
+#: providers/sybase/gda-sybase-recordset.c:438
 #, c-format
 msgid "%s failed on row %d"
 msgstr "%s ha fallado en la fila %d"
 
-#: providers/sybase/gda-sybase-recordset.c:463
+#: providers/sybase/gda-sybase-recordset.c:465
 #, c-format
 msgid "%s terminated with unexpected return code."
 msgstr "%s ha terminado con un código de retorno inesperado."
 
-#: providers/sybase/gda-sybase-recordset.c:540
-#, c-format
-msgid "%s returned %s"
-msgstr "%s ha devuelto %s"
+#: providers/sybase/gda-sybase-recordset.c:509
+msgid ""
+"an error occured when calling ct_diag attempting to retrieve a server "
+"message count for resultset"
+msgstr ""
+"ha ocurrido un error en la llamada a ct_diag cuando intentaba recuperar un mensaje "
+"de contar del servidor para el conjunto de resultados"
 
+#: providers/sybase/gda-sybase-recordset.c:518
+msgid "attempting to make recordset and msg count != 1 !"
+msgstr "se esta intentando crear un conjunto de registros y la cuenta de msg != 1"
+
+#: providers/sybase/gda-sybase-recordset.c:531
+msgid ""
+"an error occured when calling ct_diag attempting to retrieve a server "
+"message for recordset"
+msgstr ""
+"ha ocurrido un error en la llamada a ct_diag cuando intentaba recuperar un "
+"mensaje del servidor para un conjunto de registros"
+
+#: providers/sybase/gda-sybase-recordset.c:590 providers/sybase/utils.c:412
+msgid "call to ct_diag failed when attempting to clear the server messages"
+msgstr "la llamada a ct_diag ha fallado cuando se intentaba limpiar los mensajes del servidor"
+
+#: providers/sybase/gda-sybase-types.c:94
 #: providers/sybase/gda-sybase-types.c:97
-#: providers/sybase/gda-sybase-types.c:100
 msgid "Attempt setting a nonnullable field to null."
 msgstr "Intento de asignación de un nulo a un campo no nulo."
 
-#: providers/sybase/gda-sybase-types.c:217
+#: providers/sybase/gda-sybase-types.c:208
 #, c-format
 msgid "cslib cannot convert type %d"
 msgstr "cslib no puede convertir el tipo %d"
 
-#: providers/sybase/gda-sybase-types.c:232
+#: providers/sybase/gda-sybase-types.c:223
 #, c-format
 msgid "data conversion failed for type %d"
 msgstr "la conversión de datos ha fallado por el tipo %d"
 
 #: providers/sybase/libmain.c:40
-msgid "Provider for sybase databases (using OpenClient)"
-msgstr "Proveedor para bases de datos sybase (usando OpenClient)"
+msgid "GDA provider for sybase databases (using OpenClient)"
+msgstr "Proveedor GDA para bases de datos sybase (usando OpenClient)"
 
-#: providers/sybase/main.c:51
+#: providers/sybase/main.c:52
 msgid "Could not initiate Sybase component factory"
 msgstr "No se ha podido inicializar el origen de componente Sybase"
 
-#: providers/sybase/utils.c:37
+#: providers/sybase/utils.c:48
 msgid "Call: csmsg callback"
 msgstr "Llamada: llamada reversa a csmsg"
 
-#: providers/sybase/utils.c:42
+#: providers/sybase/utils.c:53
 #, c-format
 msgid ""
 "CS-Library error:\n"
@@ -1439,16 +1438,16 @@ msgstr ""
 "7\tseveridad(%ld) capa(%ld) origen (%ld) número(%ld)\n"
 "\t%s"
 
-#: providers/sybase/utils.c:49
+#: providers/sybase/utils.c:60
 #, c-format
 msgid "OS error: %s"
 msgstr "Error del SO: %s"
 
-#: providers/sybase/utils.c:59
+#: providers/sybase/utils.c:70
 msgid "Call: Client callback."
 msgstr "Llamada: Llamada reversa del cliente."
 
-#: providers/sybase/utils.c:64
+#: providers/sybase/utils.c:75
 #, c-format
 msgid ""
 "CT-Client error:\n"
@@ -1459,11 +1458,11 @@ msgstr ""
 "\tseveridad(%ld) capa(%ld) origen (%ld) número(%ld)\n"
 "\t%s"
 
-#: providers/sybase/utils.c:79
+#: providers/sybase/utils.c:90
 msgid "Call: server callback"
 msgstr "Llamada: Llamada reversa del servidor"
 
-#: providers/sybase/utils.c:84
+#: providers/sybase/utils.c:95
 #, c-format
 msgid ""
 "CT-Server message:\n"
@@ -1472,26 +1471,113 @@ msgstr ""
 "Mensaje de CT-Server:\n"
 "\tnúmero(%ld) severidad(%ld) estado(%ld) línea(%ld)"
 
-#: providers/sybase/utils.c:89
+#: providers/sybase/utils.c:100
 #, c-format
 msgid "\tServer name: %s\n"
 msgstr "\tServidor: %s\n"
 
-#: providers/sybase/utils.c:92
+#: providers/sybase/utils.c:103
 #, c-format
 msgid "\tProcedure name: %s\n"
 msgstr "\tProcedimiento: %s\n"
 
-#: providers/sybase/utils.c:130
+#: providers/sybase/utils.c:147
 msgid "ct_diag() failed determining # of client messages."
-msgstr "ct_diag ha fallado al determinar el número de mensajes del cliente."
+msgstr "ct_diag() ha fallado al determinar el número de mensajes del cliente."
 
-#: providers/sybase/utils.c:138
-#, c-format
-msgid "%d messages fetched."
-msgstr "%d mensajes recogidos."
+#: providers/sybase/utils.c:202
+msgid "call to cs_diag failed when attempting to the amount of client messages"
+msgstr "la llamada a ct_diag ha fallado cuando se intentaba obtener la cantidad de mensajes del cliente"
 
-#: providers/sybase/utils.c:152
+#: providers/sybase/utils.c:220
+msgid "an error occured when calling cs_diag attempting to retrieve a client message"
+msgstr "ha ocurrido un error al llamar a cs_diag cuando intentaba recuperara un mensaje del cliente"
+
+#: providers/sybase/utils.c:230
+msgid "OS_Error:("
+msgstr "Error_OS :("
+
+#: providers/sybase/utils.c:232
+msgid ") Message: "
+msgstr ") Mensaje: "
+
+#: providers/sybase/utils.c:245
+msgid "Sybase OpenClient Msg: severity("
+msgstr "Msj de OpenClient de Sybase: severidad("
+
+#: providers/sybase/utils.c:247
+msgid "), number("
+msgstr "), número("
+
+#: providers/sybase/utils.c:249
+msgid "), origin("
+msgstr "), origen("
+
+#: providers/sybase/utils.c:251
+msgid "), layer("
+msgstr "), capa("
+
+#: providers/sybase/utils.c:276
+msgid "call to cs_diag failed when attempting to clear the client messages"
+msgstr "la llamada a ct_diag ha fallado cuando se intentaba limpiar los mensajes del cliente"
+
+#: providers/sybase/utils.c:317
+msgid "call to ct_diag failed when attempting to the amount of server messages"
+msgstr "la llamada a ct_diag ha fallado cuando intentaba obtener la cantidad de mensajes del servidor"
+
+#: providers/sybase/utils.c:334
+msgid "an error occured when calling ct_diag attempting to retrieve a server message"
+msgstr "ha ocurrido un error al llamar a ct_diag cuando se intentaba recuperar un mensaje del servidor"
+
+#: providers/sybase/utils.c:346
+msgid "Server:"
+msgstr "Servidor:"
+
+#: providers/sybase/utils.c:350
+msgid "Stored Procedure:"
+msgstr "Procedimiento almacenado:"
+
+#: providers/sybase/utils.c:354
+msgid "Number"
+msgstr "Número"
+
+#: providers/sybase/utils.c:357 providers/sybase/utils.c:474
+msgid "Severity"
+msgstr "Severidad"
+
+#: providers/sybase/utils.c:360
+msgid "State"
+msgstr "Estado"
+
+#: providers/sybase/utils.c:363
+msgid "Line"
+msgstr "Línea"
+
+#: providers/sybase/utils.c:446
+msgid "call to ct_diag failed when attempting to the amount of client messages"
+msgstr "La llamada a ct_diag ha fallado cuando se intentaba obtener la cantidad de mensajes del cliente"
+
+#: providers/sybase/utils.c:463
+msgid "an error occured when calling ct_diag attempting to retrieve a client message"
+msgstr "ha ocurrido un error al llamar a ct_diag cuando se intentaba recuperar un mensaje del cliente"
+
+#: providers/sybase/utils.c:476
+msgid "Layer"
+msgstr "Capa"
+
+#: providers/sybase/utils.c:478
+msgid "Origin"
+msgstr "Origen"
+
+#: providers/sybase/utils.c:480
+msgid "Message Number"
+msgstr "Número de mensaje"
+
+#: providers/sybase/utils.c:502
+msgid "call to ct_diag failed when attempting to clear the client messages"
+msgstr "la llamada a ct_diag ha fallado cuando se intentaba limpiar los mensajes del cliente"
+
+#: providers/sybase/utils.c:523
 msgid "Operation not possible, connection busy."
 msgstr "No es posible realizar la operación, conexión ocupada."
 
@@ -1503,8 +1589,7 @@ msgstr ""
 
 #: providers/xbase/gda-xbase-provider.c:232
 msgid "Either FILENAME or DIRECTORY must be specified in the connection string"
-msgstr ""
-"Deben especificarse el ARCHIVO o el DIRECTORIO en la cadena de conexión"
+msgstr "Deben especificarse el ARCHIVO o el DIRECTORIO en la cadena de conexión"
 
 #: providers/xbase/gda-xbase-provider.c:261
 #: providers/xbase/gda-xbase-provider.c:379
@@ -1512,8 +1597,8 @@ msgid "Invalid Xbase handle"
 msgstr "Manejador de Xbase inválido"
 
 #: providers/xbase/libmain.c:39
-msgid "Provider for Xbase databases"
-msgstr "Proveedor para bases de datos Xbase"
+msgid "Provider for Xbase (dBase, FoxPro, etc) files"
+msgstr "Proveedor para archivos Xbase (dBase, FoxPro, etc)"
 
 #: report/libgda-report/gda-report-document.c:171
 msgid "Could not parse XML document"
@@ -1763,6 +1848,66 @@ msgstr "El elemento con el ID %s no es una etiqueta"
 msgid "Item with ID %s is not a repfield"
 msgstr "El elemento con el ID %s no es un repfield"
 
+#~ msgid "about to open connection"
+#~ msgstr "a punto de abrir la conexión"
+
+#~ msgid "Context allocated."
+#~ msgstr "Contexto asignado."
+
+#~ msgid "Client library initialized."
+#~ msgstr "Biblioteca del cliente inicializada."
+
+#~ msgid "Could not initialize cslib callback"
+#~ msgstr "No se pudo inicializar la llamada reversa de cslib"
+
+#~ msgid "CS-lib callback initialized."
+#~ msgstr "Llamada reversa de CS-lib inicializada."
+
+#~ msgid "Could not initialize ct-client callback"
+#~ msgstr "No se ha podido inicializar la llamada reversa de ct-client"
+
+#~ msgid "CT-Client callback initialized."
+#~ msgstr "Llamada reversa de CT-Client inicializada."
+
+#~ msgid "Could not initialize ct-server callback"
+#~ msgstr "No se ha podido inicializar la llamada reversa de ct-server"
+
+#~ msgid "CT-Server callback initialized."
+#~ msgstr "Llamada reversa de CT-Server inicializada."
+
+#~ msgid "Connection allocated."
+#~ msgstr "Conexión asignada."
+
+#~ msgid "Appname set."
+#~ msgstr "Nombre de aplicación definido."
+
+#~ msgid "Username set."
+#~ msgstr "Usuario definido."
+
+#~ msgid "Password set."
+#~ msgstr "Contraseña definida."
+
+#~ msgid "Empty password set."
+#~ msgstr "Contraseña en blanco definida."
+
+#~ msgid "Connected."
+#~ msgstr "Conectado."
+
+#~ msgid "Finally connected."
+#~ msgstr "Finalmente conectado."
+
+#~ msgid ""
+#~ "Connection already in use. Could not allocate command structure in %s()."
+#~ msgstr ""
+#~ "La conexión ya esta siendo usada. No se ha podido asignar la estructura "
+#~ "de comando en %s()"
+
+#~ msgid "Failed dropping command structure in %s()."
+#~ msgstr "Ha fallado la liberación de la estructura de comando en %s()."
+
+#~ msgid "%d messages fetched."
+#~ msgstr "%d mensajes recogidos."
+
 #~ msgid "Could not allocate environment handle."
 #~ msgstr "No se ha podido asignar el manejador de ambiente."
 
@@ -1992,3 +2137,4 @@ msgstr "El elemento con el ID %s no es un repfield"
 
 #~ msgid "\tdomain = %s\n"
 #~ msgstr "\tdominio = %s\n"
+
