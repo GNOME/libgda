@@ -1,3 +1,8 @@
+2004-08-08  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* POTFILES.in: added gda-firebird-recordset.c, as noted by Marcel 
+	Telka <marcel@telka.sk>
+
 2004-08-04  David Lodge <dave@cirt.net>
 
 	* en_GB.po: Updated British English translation.
