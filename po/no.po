@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-db 0.0.91\n"
-"POT-Creation-Date: 2002-02-10 20:00+0100\n"
-"PO-Revision-Date: 2002-02-10 11:43+0100\n"
+"POT-Creation-Date: 2002-03-03 09:50+0100\n"
+"PO-Revision-Date: 2002-03-03 09:50+0100\n"
 "Last-Translator: Kjartan Maraas <kmaraas@online.no>\n"
 "Language-Team: Norwegian <no@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -27,31 +27,31 @@ msgstr "Kunne ikke aktivere objekt %s"
 msgid "Could not create connection component"
 msgstr "kunne ikke opprette forbindelseskomponent"
 
-#: libgda/gda-config.c:508
+#: libgda/gda-config.c:511
 msgid "Could not query CORBA components"
 msgstr "Kunne ikke spørre CORBA-komponenter"
 
-#: libgda/gda-config.c:615
+#: libgda/gda-config.c:618
 msgid "Could not query CORBA providers"
 msgstr "Kunne ikke spørre CORBA-tilbydere"
 
-#: libgda/gda-config.c:865
+#: libgda/gda-config.c:868
 msgid "Name"
 msgstr "Navn"
 
-#: libgda/gda-config.c:866
+#: libgda/gda-config.c:869
 msgid "Provider"
 msgstr "Tilbyder"
 
-#: libgda/gda-config.c:867
+#: libgda/gda-config.c:870
 msgid "Connection string"
 msgstr "Tilkoblingsstreng"
 
-#: libgda/gda-config.c:868
+#: libgda/gda-config.c:871
 msgid "Description"
 msgstr "Beskrivelse"
 
-#: libgda/gda-config.c:869
+#: libgda/gda-config.c:872
 msgid "Username"
 msgstr "Brukernavn"
 
@@ -291,82 +291,6 @@ msgstr "SQLite komponentfactory"
 msgid "Could not initiate Sqlite component factory"
 msgstr "Kunne ikke initiere Sqlite komponentfactory"
 
-#: providers/sybase/gda-sybase-error.c:137
-msgid "ct_diag 1 failed in sybase_check_clientmsg"
-msgstr "ct_diag 1 feilet i sybase_check_clientmsg"
-
-#: providers/sybase/gda-sybase-error.c:159
-#: providers/sybase/gda-sybase-error.c:197
-msgid "ct_diag 2 failed in sybase_check_clientmsg"
-msgstr "ct_diag 2 feilet i sybase_check_clientmsg"
-
-#: providers/sybase/gda-sybase-error.c:167
-#: providers/sybase/gda-sybase-error.c:376
-msgid "Client Message: "
-msgstr "Klientmelding: "
-
-#: providers/sybase/gda-sybase-error.c:178
-#: providers/sybase/gda-sybase-error.c:387
-msgid "Informational Client  Message: "
-msgstr "Informativ klientmelding: "
-
-#: providers/sybase/gda-sybase-error.c:239
-msgid "ct_diag 1 failed in sybase_check_servermsg"
-msgstr "ct_diag 1 feilet i sybase_check_servermsg"
-
-#: providers/sybase/gda-sybase-error.c:261
-#: providers/sybase/gda-sybase-error.c:304
-msgid "ct_diag 2 failed in sybase_check_servermsg"
-msgstr "ct_diag 2 feilet i sybase_check_servermsg"
-
-#: providers/sybase/gda-sybase-error.c:274
-msgid "Server Message: "
-msgstr "Tjenermelding: "
-
-#: providers/sybase/gda-sybase-error.c:285
-msgid "Informational Server  Message: "
-msgstr "Informativ tjenermelding: "
-
-#: providers/sybase/gda-sybase-error.c:346
-msgid "cs_diag 1 failed in sybase_check_clientmsg"
-msgstr "cs_diag 1 feilet i sybase_check_clientmsg"
-
-#: providers/sybase/gda-sybase-error.c:368
-#: providers/sybase/gda-sybase-error.c:406
-msgid "cs_diag 2 failed in sybase_check_clientmsg"
-msgstr "cs_diag 2 feilet i sybase_check_clientmsg"
-
-#: providers/sybase/gda-sybase-error.c:429
-msgid "SYB"
-msgstr "SYB"
-
-#: providers/sybase/gda-sybase-error.c:431
-msgid "severity"
-msgstr "kritikalitet"
-
-#: providers/sybase/gda-sybase-error.c:433
-msgid "number"
-msgstr "antall"
-
-#: providers/sybase/gda-sybase-error.c:435
-msgid "origin"
-msgstr "opprinnelse"
-
-#: providers/sybase/gda-sybase-error.c:437
-msgid "layer"
-msgstr "lag"
-
-#: providers/sybase/gda-sybase-error.c:444
-#, c-format
-msgid ""
-"\n"
-"\tOperating system error number(%ld):\n"
-"\t%s"
-msgstr ""
-"\n"
-"\tFeilnummer fra operativsystemet(%ld):\n"
-"\t%s"
-
 #: providers/sybase/GNOME_Database_Provider_Sybase.server.in.h:1
 msgid "GDA Datasource Access for Sybase"
 msgstr "GDA datakildeaksess for Sybase"
@@ -470,34 +394,42 @@ msgstr "Visninger"
 msgid "Indexes"
 msgstr "Indekser"
 
+#: testing/client.c:92
+msgid "Aggregates"
+msgstr "Aggregater"
+
+#: testing/client.c:93
+msgid "Triggers"
+msgstr "Utløsere"
+
 #. test transactions
-#: testing/client.c:94 testing/client.c:102
+#: testing/client.c:96 testing/client.c:104
 msgid "\tStarting transaction..."
 msgstr "\tStarter transaksjon..."
 
-#: testing/client.c:96 testing/client.c:100 testing/client.c:104
-#: testing/client.c:108
+#: testing/client.c:98 testing/client.c:102 testing/client.c:106
+#: testing/client.c:110
 msgid "Error"
 msgstr "Feil"
 
-#: testing/client.c:98
+#: testing/client.c:100
 msgid "\tFinishing transaction..."
 msgstr "\tAvslutter transaksjon..."
 
-#: testing/client.c:106
+#: testing/client.c:108
 msgid "\tRolling back transaction..."
 msgstr "\tLegger tilbake transaksjon..."
 
-#: testing/client.c:127
+#: testing/client.c:129
 msgid "Testing GDA client API"
 msgstr "Tester GDA-klient API"
 
-#: testing/client.c:136
+#: testing/client.c:138
 msgid "** ERROR: gda_config_get_data_source_list returned a NULL item\n"
 msgstr ""
 "** FEIL: gda_config_get_data_source_list returnerte en NULL-oppføring\n"
 
-#: testing/client.c:140
+#: testing/client.c:142
 #, c-format
 msgid " Data source = %s, User = %s\n"
 msgstr " Datakilde = %s, Bruker = %s\n"
@@ -548,3 +480,57 @@ msgstr "\tdomene = %s\n"
 #: testing/config.c:106
 msgid "\tgda_params ="
 msgstr "\tgda_parametere ="
+
+#~ msgid "ct_diag 1 failed in sybase_check_clientmsg"
+#~ msgstr "ct_diag 1 feilet i sybase_check_clientmsg"
+
+#~ msgid "ct_diag 2 failed in sybase_check_clientmsg"
+#~ msgstr "ct_diag 2 feilet i sybase_check_clientmsg"
+
+#~ msgid "Client Message: "
+#~ msgstr "Klientmelding: "
+
+#~ msgid "Informational Client  Message: "
+#~ msgstr "Informativ klientmelding: "
+
+#~ msgid "ct_diag 1 failed in sybase_check_servermsg"
+#~ msgstr "ct_diag 1 feilet i sybase_check_servermsg"
+
+#~ msgid "ct_diag 2 failed in sybase_check_servermsg"
+#~ msgstr "ct_diag 2 feilet i sybase_check_servermsg"
+
+#~ msgid "Server Message: "
+#~ msgstr "Tjenermelding: "
+
+#~ msgid "Informational Server  Message: "
+#~ msgstr "Informativ tjenermelding: "
+
+#~ msgid "cs_diag 1 failed in sybase_check_clientmsg"
+#~ msgstr "cs_diag 1 feilet i sybase_check_clientmsg"
+
+#~ msgid "cs_diag 2 failed in sybase_check_clientmsg"
+#~ msgstr "cs_diag 2 feilet i sybase_check_clientmsg"
+
+#~ msgid "SYB"
+#~ msgstr "SYB"
+
+#~ msgid "severity"
+#~ msgstr "kritikalitet"
+
+#~ msgid "number"
+#~ msgstr "antall"
+
+#~ msgid "origin"
+#~ msgstr "opprinnelse"
+
+#~ msgid "layer"
+#~ msgstr "lag"
+
+#~ msgid ""
+#~ "\n"
+#~ "\tOperating system error number(%ld):\n"
+#~ "\t%s"
+#~ msgstr ""
+#~ "\n"
+#~ "\tFeilnummer fra operativsystemet(%ld):\n"
+#~ "\t%s"
