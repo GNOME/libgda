@@ -1,3 +1,9 @@
+2005-02-07  Bas Driessen <bas.driessen@xobas.com>
+
+	* providers/postgres/gda-postgres-provider.c
+	(gda_postgres_provider_begin_transaction):
+	remove debug g_message lines.
+
 2005-02-06  Bas Driessen <bas.driessen@xobas.com>
 
 	* providers/mysql/gda-mysql-provider.c

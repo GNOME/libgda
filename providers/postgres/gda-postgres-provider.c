@@ -1165,7 +1165,6 @@ gda_postgres_provider_begin_transaction (GdaServerProvider *provider,
 		switch (gda_transaction_get_isolation_level (xaction)) {
 		case GDA_TRANSACTION_ISOLATION_READ_COMMITTED :
 		        isolation_level = g_strconcat ("SET TRANSACTION ISOLATION LEVEL READ COMMITTED ", write_option, NULL);
-			g_message ("Begin transaction read committed");
 		        break;
 		case GDA_TRANSACTION_ISOLATION_READ_UNCOMMITTED :
 		        gda_connection_add_error_string (cnc, _("Transactions are not supported in read uncommitted isolation level"));
@@ -1175,7 +1174,6 @@ gda_postgres_provider_begin_transaction (GdaServerProvider *provider,
 		        return FALSE;
 		case GDA_TRANSACTION_ISOLATION_SERIALIZABLE :
 		        isolation_level = g_strconcat ("SET TRANSACTION ISOLATION LEVEL SERIALIZABLE ", write_option, NULL);
-			g_message ("Begin transaction serializable");
 		        break;
 		default: 
 		        isolation_level = NULL;
@@ -1185,7 +1183,6 @@ gda_postgres_provider_begin_transaction (GdaServerProvider *provider,
 	result = gda_postgres_provider_single_command (pg_prv, cnc, "BEGIN"); 
 	if (result&&isolation_level != NULL) {
 	        result=gda_postgres_provider_single_command (pg_prv, cnc, isolation_level) ;
-		g_message (isolation_level);
 	} 
 	g_free(isolation_level);
 
