@@ -1,3 +1,11 @@
+2000-09-20  Kjartan Maraas  <kmaraas@gnome.org>
+
+	* no.po: Updated Norwegian translation.
+	
+2000-09-25  Akira TAGOH <tagoh@gnome.gr.jp>
+
+	* POTFILES.in: not implement python binding.
+
 2000-10-08  Akira TAGOH  <tagoh@gnome.gr.jp>
 
 	* ja.po: Added Japanese translation.
@@ -18,11 +26,13 @@
 
 	* de.po: Updated German translation
 
+>>>>>>> 1.8
 2000-09-28  Jesus Bravo Alvarez  <jba@pobox.com>
 
 	* gl.po: Updated Galician translation.
 
 2000-09-25	Akira TAGOH <tagoh@gnome.gr.jp>
+>>>>>>> 1.3
 
-* POTFILES.in: not implement python binding.
-
+	* *: Fix up things after the split
+	

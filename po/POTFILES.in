@@ -7,6 +7,7 @@ lib/gda-client/gda-field.c
 lib/gda-client/gda-recordset.c
 lib/gda-common/gda-config.c
 lib/gda-common/gda-corba.c
+lib/gda-common/gda-init.c
 lib/gda-common/gda-log.c
 lib/gda-common/gda-thread.c
 lib/gda-common/gda-xml-database.c
@@ -60,4 +61,6 @@ providers/gda-sybase-server/gda-sybase-error.c
 providers/gda-sybase-server/gda-sybase-recordset.c
 providers/gda-sybase-server/gda-sybase-types.c
 providers/gda-sybase-server/main-sybase.c
+report/gda-report-engine.c
+report/server/gda-report-server-main.c
 tools/gda-run.c

@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-db 0.0.91\n"
-"POT-Creation-Date: 2000-09-28 14:22+0200\n"
-"PO-Revision-Date: 2000-09-21 16:41+02:00\n"
+"POT-Creation-Date: 2000-10-08 21:47+0200\n"
+"PO-Revision-Date: 2000-10-08 21:51+02:00\n"
 "Last-Translator: Kjartan Maraas <kmaraas@online.no>\n"
 "Language-Team: Norwegian <no@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -33,12 +33,12 @@ msgstr "%s: Tjeneren svarte ikke."
 msgid "%s: An Error occured in the CORBA system."
 msgstr "%s: En feil oppsto i CORBA-systemet."
 
-#: lib/gda-client/gda-connection.c:457
+#: lib/gda-client/gda-connection.c:453
 #, c-format
 msgid "Database '%s' not found in system configuration"
 msgstr "Database '%s' ble ikke funnet i systemets konfigurasjon"
 
-#: lib/gda-client/gda-connection.c:473
+#: lib/gda-client/gda-connection.c:469
 msgid "Could not open CORBA factory"
 msgstr "Kunne ikke åpne CORBA factory"
 
@@ -58,13 +58,22 @@ msgstr "SANN"
 msgid "FALSE"
 msgstr "USANN"
 
-#: lib/gda-common/gda-corba.c:74 lib/gda-common/gda-corba.c:125
+#: lib/gda-common/gda-corba.c:72
 msgid "True"
 msgstr "Sann"
 
-#: lib/gda-common/gda-corba.c:74 lib/gda-common/gda-corba.c:125
+#: lib/gda-common/gda-corba.c:72
 msgid "False"
 msgstr "Usann"
+
+#: lib/gda-common/gda-corba.c:119
+#, c-format
+msgid "CORBA System exception: %s"
+msgstr "CORBA-systemunntak: %s"
+
+#: lib/gda-common/gda-init.c:32
+msgid "Attempt to initialize an already initialized client"
+msgstr "Forsøk på å initiere en allerede initiert klient"
 
 #: lib/gda-common/gda-log.c:29
 msgid "Saving log...x"
@@ -165,6 +174,7 @@ msgid "Starting provider %s with no implementation functions"
 msgstr "Starter tilbyder %s uten implemenasjonsfunksjoner"
 
 #: lib/gda-server/gda-server-impl.c:141
+#: report/server/gda-report-server-main.c:120
 msgid ""
 "OAF doesn't know about our IID; indicates broken installation. Exiting..."
 msgstr ""
@@ -217,7 +227,7 @@ msgstr "Forsøk på å initiere en allerede initiert tilbyder"
 #: providers/gda-odbc-server/gda-odbc-connection.c:600
 #: providers/gda-odbc-server/gda-odbc-connection.c:633
 #: providers/gda-oracle-server/gda-oracle-connection.c:417
-#: providers/gda-postgres-server/gda-postgres-connection.c:752
+#: providers/gda-postgres-server/gda-postgres-connection.c:771
 #: providers/gda-sybase-server/gda-sybase-error.c:106
 #, c-format
 msgid "error '%s' at %s"
@@ -237,8 +247,8 @@ msgstr "feil '%s' ved %s"
 #: providers/gda-odbc-server/gda-odbc-connection.c:636
 #: providers/gda-oracle-server/gda-oracle-connection.c:422
 #: providers/gda-oracle-server/gda-oracle-connection.c:423
-#: providers/gda-postgres-server/gda-postgres-connection.c:759
-#: providers/gda-postgres-server/gda-postgres-connection.c:760
+#: providers/gda-postgres-server/gda-postgres-connection.c:778
+#: providers/gda-postgres-server/gda-postgres-connection.c:779
 #: providers/gda-sybase-server/gda-sybase-error.c:115
 #: providers/gda-sybase-server/gda-sybase-error.c:116
 msgid "Not available"
@@ -249,12 +259,12 @@ msgstr "Ikke tilgjengelig"
 #: providers/gda-mdb-server/gda-mdb-connection.c:357
 #: providers/gda-mysql-server/gda-mysql-connection.c:384
 #: providers/gda-oracle-server/gda-oracle-connection.c:424
-#: providers/gda-postgres-server/gda-postgres-connection.c:761
+#: providers/gda-postgres-server/gda-postgres-connection.c:780
 #: providers/gda-sybase-server/gda-sybase-error.c:117
 msgid "error"
 msgstr "feil"
 
-#: providers/gda-ldap-server/main-ldap.c:75
+#: providers/gda-ldap-server/main-ldap.c:68
 msgid "Could not register LDAP provider implementation"
 msgstr "Kunne ikke registrere LDAP tilbyderimplementasjon"
 
@@ -263,7 +273,7 @@ msgstr "Kunne ikke registrere LDAP tilbyderimplementasjon"
 msgid "Error code %ld"
 msgstr "Feilkode %ld"
 
-#: providers/gda-interbase-server/main-interbase.c:75
+#: providers/gda-interbase-server/main-interbase.c:69
 msgid "Could not register INTERBASE provider implementation"
 msgstr "Kunne ikke registrere INTERBASE tilbyderimplementasjon"
 
@@ -271,20 +281,20 @@ msgstr "Kunne ikke registrere INTERBASE tilbyderimplementasjon"
 #: providers/gda-mdb-server/gda-mdb-connection.c:224
 #: providers/gda-mysql-server/gda-mysql-connection.c:251
 #: providers/gda-oracle-server/gda-oracle-connection.c:295
-#: providers/gda-postgres-server/gda-postgres-connection.c:498
-#: providers/gda-sybase-server/gda-sybase-connection.c:243
+#: providers/gda-postgres-server/gda-postgres-connection.c:511
+#: providers/gda-sybase-server/gda-sybase-connection.c:253
 #, c-format
 msgid "Unhandled SCHEMA_QTYPE %d"
 msgstr "Uhåndtert SCHEMA_QTYPE %d"
 
-#: providers/gda-mail-server/main-mail.c:76
+#: providers/gda-mail-server/main-mail.c:69
 msgid "Could not register Mail provider implementation"
 msgstr "Kunne ikke registrere Mail tilbyderimplementasjon"
 
 #. execute command
 #: providers/gda-mdb-server/gda-mdb-command.c:86
 #: providers/gda-mysql-server/gda-mysql-command.c:87
-#: providers/gda-sybase-server/gda-sybase-command.c:112
+#: providers/gda-sybase-server/gda-sybase-command.c:116
 #, c-format
 msgid "executing command '%s'"
 msgstr "kjører kommando '%s'"
@@ -324,23 +334,22 @@ msgstr "mysql_recent er NULL"
 
 #: providers/gda-mdb-server/gda-mdb-connection.c:448
 #: providers/gda-mysql-server/gda-mysql-connection.c:475
-#: providers/gda-sybase-server/gda-sybase-connection.c:397
+#: providers/gda-sybase-server/gda-sybase-connection.c:407
 msgid "No table name given for SCHEMA_COLS"
 msgstr "Ingen tabellnavn oppgitt for SCHEMA_COLS"
 
-#: providers/gda-mdb-server/main-mdb.c:76
-#: providers/gda-mysql-server/main-mysql.c:76
+#: providers/gda-mdb-server/main-mdb.c:69
+#: providers/gda-mysql-server/main-mysql.c:69
 msgid "Could not register MySQL provider implementation"
 msgstr "Kunne ikke registrere MySQL tilbyderimplementasjon"
 
 #: providers/gda-mysql-server/gda-mysql-connection.c:162
 #, c-format
 msgid ""
-"Opening connection with user=%s, password=%s, host=%shost=%s, port=%s, "
+"Opening connection with user=%s, password=%s, host=%s, port=%s, "
 "unix_socket=%s"
 msgstr ""
-"Åpner forbindelse med bruker=%s, passord=%s, vert=%svert=%s, port=%s,\n"
-"unix_socket=%s"
+"Åpner forbindelse med bruker=%s, passord=%s, vert=%s, port=%s,unix_socket=%s"
 
 #: providers/gda-odbc-server/gda-odbc-connection.c:280
 #, c-format
@@ -356,7 +365,7 @@ msgstr "gda_odbc_connection_open_schema: Uhåndtert SCHEMA_QTYPE %d\n"
 msgid "no text"
 msgstr "ingen tekst"
 
-#: providers/gda-odbc-server/main-odbc.c:75
+#: providers/gda-odbc-server/main-odbc.c:68
 msgid "Could not register ODBC provider implementation"
 msgstr "Kunne ikke registrere ODBC tilbyderimplementasjon"
 
@@ -398,221 +407,226 @@ msgstr "Ukjent ORACLE datatype i fill_field_values"
 msgid "recordset object being created without associated connection"
 msgstr "postobjektet opprettes uten assosiert forbindelse"
 
-#: providers/gda-oracle-server/main-oracle.c:75
+#: providers/gda-oracle-server/main-oracle.c:68
 msgid "Could not register ORACLE provider implementation"
 msgstr "Kunne ikke registrere ORACLE tilbyderimplementasjon"
 
-#: providers/gda-postgres-server/gda-postgres-connection.c:861
-#: providers/gda-postgres-server/gda-postgres-connection.c:973
+#: providers/gda-postgres-server/gda-postgres-connection.c:880
+#: providers/gda-postgres-server/gda-postgres-connection.c:992
 msgid "postgres_recset is NULL"
 msgstr "postgres_recset er NULL"
 
-#: providers/gda-postgres-server/main-postgres.c:75
+#: providers/gda-postgres-server/main-postgres.c:68
 msgid "Could not register PostgreSQL provider implementation"
 msgstr "Kunne ikke registrere PostgreSQL tilbyderimplementasjon"
 
-#: providers/gda-sybase-server/gda-sybase-command.c:107
+#: providers/gda-sybase-server/gda-sybase-command.c:111
 msgid "Connection seems to be dead"
-msgstr ""
+msgstr "Tilkoblingen ser ut til å være død"
 
-#: providers/gda-sybase-server/gda-sybase-command.c:127
+#: providers/gda-sybase-server/gda-sybase-command.c:131
 msgid "Filling command structure failed\n"
-msgstr ""
+msgstr "Utfylling av kommandostrukturen feilet\n"
 
-#: providers/gda-sybase-server/gda-sybase-command.c:139
+#: providers/gda-sybase-server/gda-sybase-command.c:143
 msgid "sending cmd failed"
-msgstr ""
+msgstr "sending av kommando feilet"
 
-#: providers/gda-sybase-server/gda-sybase-command.c:146
+#: providers/gda-sybase-server/gda-sybase-command.c:150
 msgid "Allocating recordset failed"
-msgstr ""
+msgstr "Allokering av postsett feilet"
 
-#: providers/gda-sybase-server/gda-sybase-command.c:156
+#: providers/gda-sybase-server/gda-sybase-command.c:160
 msgid "Getting recordset userdata failed"
-msgstr ""
+msgstr "Henting av brukerdata i postsett feilet"
 
-#: providers/gda-sybase-server/gda-sybase-command.c:212
+#: providers/gda-sybase-server/gda-sybase-command.c:218
 msgid "Command execution finished, all results processed"
-msgstr ""
+msgstr "Kommandokjøring fullført, alle resultater behandlet"
 
-#: providers/gda-sybase-server/gda-sybase-command.c:216
+#: providers/gda-sybase-server/gda-sybase-command.c:222
 msgid "Command failed"
 msgstr "Kommando feilet"
 
-#: providers/gda-sybase-server/gda-sybase-command.c:220
+#: providers/gda-sybase-server/gda-sybase-command.c:226
 msgid "Execution of resultless command succeeded"
-msgstr ""
+msgstr "Kjøring av resultatløs kommando fullført"
 
-#: providers/gda-sybase-server/gda-sybase-command.c:236
+#: providers/gda-sybase-server/gda-sybase-command.c:242
 #, c-format
 msgid "ct_results() returned %x"
-msgstr ""
+msgstr "ct_results() returnerte %x"
 
-#: providers/gda-sybase-server/gda-sybase-command.c:246
+#: providers/gda-sybase-server/gda-sybase-command.c:252
 msgid "No further results, command completly succeeded."
-msgstr ""
+msgstr "Ingen flere resultater, kommando fullført."
 
-#: providers/gda-sybase-server/gda-sybase-command.c:250
+#: providers/gda-sybase-server/gda-sybase-command.c:256
 msgid "An error occured during command execution."
-msgstr ""
+msgstr "En file oppstod under kommandokjøring."
 
-#: providers/gda-sybase-server/gda-sybase-command.c:257
+#: providers/gda-sybase-server/gda-sybase-command.c:263
 msgid "Cmd execution returned unknown result, may be an error"
-msgstr ""
+msgstr "Kommandokjøring returnerte et ukjent resultat, kan være en feil"
 
-#: providers/gda-sybase-server/gda-sybase-command.c:270
+#: providers/gda-sybase-server/gda-sybase-command.c:276
 msgid "No data returned, freeing recordset structure"
-msgstr ""
+msgstr "Ingen data returnert, frigjør postsett-strukturen"
 
-#: providers/gda-sybase-server/gda-sybase-command.c:301
-#: providers/gda-sybase-server/gda-sybase-command.c:313
+#: providers/gda-sybase-server/gda-sybase-command.c:307
+#: providers/gda-sybase-server/gda-sybase-command.c:319
 msgid "Freeing command structure failed"
-msgstr ""
+msgstr "Frigjøring av kommandostrukturen feilet"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:123
+#: providers/gda-sybase-server/gda-sybase-connection.c:133
 msgid "Error allocating error structure"
-msgstr ""
+msgstr "Feil under allokering av feilstrukturen"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:131
+#: providers/gda-sybase-server/gda-sybase-connection.c:141
 msgid "Not enough memory for sybase_Connection"
-msgstr ""
+msgstr "Ikke nok minne for sybase_Connection"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:387
+#: providers/gda-sybase-server/gda-sybase-connection.c:397
 #, c-format
 msgid "schema_cols: table_name '%s'"
-msgstr ""
+msgstr "schema_cols: table_name '%s'"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:403
+#: providers/gda-sybase-server/gda-sybase-connection.c:413
 msgid "Could not allocate command structure"
 msgstr "Kunne ikke allokere kommandostruktur"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:425
+#: providers/gda-sybase-server/gda-sybase-connection.c:435
 msgid "Could not allocate enough memory for query"
 msgstr "Kunne ikke allokere nok minne for spørring"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:439
+#: providers/gda-sybase-server/gda-sybase-connection.c:449
 msgid "Could not get recordset in schema_cols"
 msgstr "Kunne ikke hente postsett i schema_cols"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:471
-#: providers/gda-sybase-server/gda-sybase-connection.c:548
+#: providers/gda-sybase-server/gda-sybase-connection.c:481
+#: providers/gda-sybase-server/gda-sybase-connection.c:558
 #, c-format
 msgid "schema_tables: table name = '%s'"
 msgstr "schema_tables: tabellnavn = '%s'"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:479
-#: providers/gda-sybase-server/gda-sybase-connection.c:556
+#: providers/gda-sybase-server/gda-sybase-connection.c:489
+#: providers/gda-sybase-server/gda-sybase-connection.c:566
 #, c-format
 msgid "schema_tables: table_schema = '%s'"
 msgstr "schema_tables: table_schema = '%s'"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:484
+#: providers/gda-sybase-server/gda-sybase-connection.c:494
 #, c-format
 msgid "schema_procedures: proc_catalog = '%s' UNUSED!\n"
 msgstr "schema_procedures: proc_catalog = '%s' UBRUKT!\n"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:488
+#: providers/gda-sybase-server/gda-sybase-connection.c:498
 #, c-format
 msgid "schema_procs: invalid constraint type %d"
 msgstr "schema_procs: ugyldig begrensningstype %d"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:498
+#: providers/gda-sybase-server/gda-sybase-connection.c:508
 msgid "Could not allocate cmd structure"
 msgstr "Kunne ikke allokere kommandostruktur"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:561
+#: providers/gda-sybase-server/gda-sybase-connection.c:571
 #, c-format
 msgid "schema_procedures: proc_catalog = '%s' UNUSED!"
 msgstr "schema_procedures: proc_catalog = '%s' UBRUKT!"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:565
+#: providers/gda-sybase-server/gda-sybase-connection.c:575
 #, c-format
 msgid "schema_tables: invalid constraint type %d"
 msgstr "schema_tables: ugyldig begrensningstype %d"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:626
+#: providers/gda-sybase-server/gda-sybase-connection.c:636
 #, c-format
 msgid "Invalid or unsupported constraint type: %d"
 msgstr "Ugyldig eller ikke støttet begrensningstype: %d"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:667
+#: providers/gda-sybase-server/gda-sybase-connection.c:677
 msgid "Could not allocate Gda_ServerCommand"
 msgstr "Kunne ikke allokere Gda_ServerCommand"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:697
-#: providers/gda-sybase-server/gda-sybase-connection.c:702
+#: providers/gda-sybase-server/gda-sybase-connection.c:707
+#: providers/gda-sybase-server/gda-sybase-connection.c:712
 #, c-format
 msgid "connection status: %x"
 msgstr "tilkoblingsstatus: %x"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:698
+#: providers/gda-sybase-server/gda-sybase-connection.c:708
 #, c-format
 msgid "return code: %x"
 msgstr "returkode: %x"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:735
+#: providers/gda-sybase-server/gda-sybase-connection.c:745
 msgid "attempting reconnection"
 msgstr "forsøker tilkobling på nytt"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:872
+#: providers/gda-sybase-server/gda-sybase-connection.c:884
 #, c-format
-msgid "%sonnected to '%s'"
-msgstr "%soblet til '%s'"
+msgid "Reconnected to '%s'"
+msgstr "Koblet til '%s' på nytt"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:882
+#: providers/gda-sybase-server/gda-sybase-connection.c:886
+#, c-format
+msgid "Connected to %s"
+msgstr "Koblet til %s"
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:894
 #, c-format
 msgid "Selected database '%s'"
 msgstr "Valgte database '%s'"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:911
+#: providers/gda-sybase-server/gda-sybase-connection.c:923
 #, c-format
 msgid "%s: Could not allocate cmd structure"
 msgstr "%s: Kunne ikke allokere kommandostruktur"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:920
+#: providers/gda-sybase-server/gda-sybase-connection.c:932
 #, c-format
 msgid "%s: Could not allocate memory for cmd string"
 msgstr "%s: Kunne ikke allokere minne for kommandostreng"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:933
+#: providers/gda-sybase-server/gda-sybase-connection.c:945
 #, c-format
 msgid "%s: ct_command failed"
 msgstr "%s: ct_command feilet"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:942
+#: providers/gda-sybase-server/gda-sybase-connection.c:954
 #, c-format
 msgid "%s: sending command failed"
 msgstr "%s: sendingskommando feilet"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:953
+#: providers/gda-sybase-server/gda-sybase-connection.c:965
 #, c-format
 msgid "%s: selecting database failed"
 msgstr "%s: valg av database feilet"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:971
+#: providers/gda-sybase-server/gda-sybase-connection.c:983
 #, c-format
 msgid "%s: use command failed"
 msgstr "%s: brukskommando feilet"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:998
+#: providers/gda-sybase-server/gda-sybase-connection.c:1010
 msgid "Could not allocate locale structure"
 msgstr "Kunne ikke allokere locale-struktur"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:1004
+#: providers/gda-sybase-server/gda-sybase-connection.c:1016
 #, c-format
 msgid "Could not set locale to '%s'"
 msgstr "Kunne ikke sette locale til '%s'"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:1010
+#: providers/gda-sybase-server/gda-sybase-connection.c:1022
 #, c-format
 msgid "Could not configure locale to be '%s'"
 msgstr "Kunne ikke konfigurere locale til å være '%s'"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:1015
+#: providers/gda-sybase-server/gda-sybase-connection.c:1027
 msgid "Could not drop locale structure"
 msgstr "Kunne ikke hoppe over locale-struktur"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:1028
+#: providers/gda-sybase-server/gda-sybase-connection.c:1040
 #, c-format
 msgid "Fatal error: %s\n"
 msgstr "Fatal feil: %s\n"
@@ -755,74 +769,113 @@ msgstr "Klientmelding:"
 msgid "CS-Library error:"
 msgstr "CS-bibliotek feil:"
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:148
+#: providers/gda-sybase-server/gda-sybase-recordset.c:152
 #, c-format
 msgid "fetch error at row %d"
 msgstr "feil i henting ved rad %d"
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:155
+#: providers/gda-sybase-server/gda-sybase-recordset.c:159
 #, c-format
 msgid "CS_END_DATA on row %d; canceling"
 msgstr "CS_END_DATA på rad %d; avbryter"
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:164
+#: providers/gda-sybase-server/gda-sybase-recordset.c:168
 #, c-format
 msgid "%s: Error (%d)"
 msgstr "%s: Feil (%d)"
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:339
+#: providers/gda-sybase-server/gda-sybase-recordset.c:343
 msgid "Failed fetching # of columns"
 msgstr "Henting av # kolonner feilet"
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:345
+#: providers/gda-sybase-server/gda-sybase-recordset.c:349
 #, c-format
 msgid "Counted %d columns"
 msgstr "Talt %d kolonner"
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:352
+#: providers/gda-sybase-server/gda-sybase-recordset.c:356
 #, c-format
 msgid "%s could not allocate datafmt info"
 msgstr "%s kunne ikke allokere info om dataformat"
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:362
+#: providers/gda-sybase-server/gda-sybase-recordset.c:366
 #, c-format
 msgid "%s could not allocate data fields"
 msgstr "%s kunne ikke allokere datafelt"
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:380
+#: providers/gda-sybase-server/gda-sybase-recordset.c:384
 #, c-format
 msgid "ct_describe on col # %d"
 msgstr "ct_describe ved kolonne # %d"
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:387
+#: providers/gda-sybase-server/gda-sybase-recordset.c:391
 #, c-format
 msgid "ct_describe on col # %d failed"
 msgstr "ct_describe ved kolonne # %d feilet"
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:393
+#: providers/gda-sybase-server/gda-sybase-recordset.c:397
 #, c-format
 msgid "ct_describe(%d): '%s', %d (%s)"
 msgstr "ct_describe(%d): '%s', %d (%s)"
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:402
+#: providers/gda-sybase-server/gda-sybase-recordset.c:406
 msgid "could not allocate data holder"
 msgstr "Kunne ikke allokere databeholder"
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:412
+#: providers/gda-sybase-server/gda-sybase-recordset.c:416
 msgid "could not ct_bind data holder to column"
 msgstr "kunne ikke ct_bind() databeholder til kolonne"
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:419
+#: providers/gda-sybase-server/gda-sybase-recordset.c:423
 msgid "illegal type detected, aborting"
 msgstr "ugyldig type funnet, avbryter"
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:425
+#: providers/gda-sybase-server/gda-sybase-recordset.c:429
 msgid "could not allocate field"
 msgstr "Kunne ikke allokere felt"
 
-#: providers/gda-sybase-server/main-sybase.c:80
+#: providers/gda-sybase-server/main-sybase.c:73
 msgid "Could not register gda-sybase provider implementation"
 msgstr "Kunne ikke registrere gda-sybase tilbyderimplementasjon"
+
+#: report/gda-report-engine.c:71
+#, c-format
+msgid "CORBA exception unloading report engine: %s"
+msgstr "CORBA-unntak ved frigjøring av rapportmotoren: %s"
+
+#: report/server/gda-report-server-main.c:43
+#: report/server/gda-report-server-main.c:50
+#, c-format
+msgid "Received signal %d, shutting down."
+msgstr "Mottok signal %d, stenger ned."
+
+#: report/server/gda-report-server-main.c:54
+#, c-format
+msgid "Received signal %d, shutting down cleanly"
+msgstr "Mottok signal %d, stenger ned uten feil"
+
+#: report/server/gda-report-server-main.c:96
+msgid "Failed to initialize OAF: please mail bug report to OAF maintainers"
+msgstr "Feil under initiering av OAF: vennligst send feilrapporter til dem som vedlikeholder OAF"
+
+#: report/server/gda-report-server-main.c:106
+msgid "Could not activate report engine"
+msgstr "Kunne ikke aktivere rapportmotoren"
+
+#: report/server/gda-report-server-main.c:123
+msgid ""
+"Another instance of the report engine is already registered with OAF. "
+"Exiting..."
+msgstr "En annen instans av denne motoren er allerede registrert med OAF. Avslutter..."
+
+#: report/server/gda-report-server-main.c:126
+msgid "Unknown error registering report engine with OAF. Exiting"
+msgstr "Ukjent feil under registrering av rapportmotoren i OAF. Avslutter"
+
+#: report/server/gda-report-server-main.c:130
+#, c-format
+msgid "Registered report engine with ID = %s"
+msgstr "Registrerte rapportmotoren med ID = %s"
 
 #: tools/gda-run.c:29
 msgid "database name"
@@ -856,1202 +909,12 @@ msgstr "filnavn"
 msgid "FILE-NAME"
 msgstr "FILNAVN"
 
-#: tools/gda-run.c:110
+#: tools/gda-run.c:104
 #, c-format
 msgid "%s: misconfigured DSN entry"
 msgstr "%s: feilkonfigurert DSN-oppføring"
 
-#: tools/gda-run.c:125
+#: tools/gda-run.c:119
 #, c-format
 msgid "%s: data source '%s' not found\n"
 msgstr "%s: datakilde '%s' ble ikke funnet\n"
-
-#~ msgid "Object Name"
-#~ msgstr "Objektnavn"
-
-#~ msgid "0 rows"
-#~ msgstr "0 rader"
-
-#~ msgid "%d rows"
-#~ msgstr "%d rader"
-
-#~ msgid "Tables"
-#~ msgstr "Tabeller"
-
-#~ msgid "Views"
-#~ msgstr "Visninger"
-
-#~ msgid "Procedures"
-#~ msgstr "Prosedyrer"
-
-#~ msgid "Types"
-#~ msgstr "Typer"
-
-#~ msgid "Aggregates"
-#~ msgstr "Aggregater"
-
-#~ msgid "Data"
-#~ msgstr "Data"
-
-#~ msgid "Remove"
-#~ msgstr "Fjern"
-
-#~ msgid "Extra Info"
-#~ msgstr "Ekstra informasjon"
-
-#~ msgid "GDA Name"
-#~ msgstr "GDA-navn"
-
-#~ msgid "Provider"
-#~ msgstr "Tilbyder"
-
-#~ msgid "DSN"
-#~ msgstr "DSN"
-
-#~ msgid "Description"
-#~ msgstr "Beskrivelse"
-
-#~ msgid "Username"
-#~ msgstr "Brukernavn"
-
-#~ msgid "Config"
-#~ msgstr "Konfigurasjon"
-
-#~ msgid "Global"
-#~ msgstr "Global"
-
-#~ msgid "Error while saving configuration!"
-#~ msgstr "Feil under lagring av konfigurasjonen!"
-
-#~ msgid "Data source has no name!"
-#~ msgstr "Datakilden har ikke navn!"
-
-#~ msgid "Error %d of %d"
-#~ msgstr "Feil %d av %d"
-
-#~ msgid "Show Help"
-#~ msgstr "Vis hjelp"
-
-#~ msgid "Source"
-#~ msgstr "Kilde"
-
-#~ msgid "sqlstate"
-#~ msgstr "sql-status"
-
-#~ msgid "Error 0 of 0"
-#~ msgstr "Feil 0 av 0"
-
-#~ msgid "Record View"
-#~ msgstr "Ta opp visning"
-
-#~ msgid "Copy"
-#~ msgstr "Kopier"
-
-#~ msgid "Copy selection to clipboard"
-#~ msgstr "Kopier utvalg til utklippstavlen"
-
-#~ msgid "Select all"
-#~ msgstr "Velg alt"
-
-#~ msgid "Select all rows"
-#~ msgstr "Velg alle rader"
-
-#~ msgid "Clear selection"
-#~ msgstr "Nullstill utvalg"
-
-#~ msgid "Clear all selected rows"
-#~ msgstr "Nullstill alle valgte rader"
-
-#~ msgid "Record view..."
-#~ msgstr "Ta opp visning..."
-
-#~ msgid "View recordset record-by-record"
-#~ msgstr "Vis post-settet post for post"
-
-#~ msgid "Refresh grid"
-#~ msgstr "Oppfrisk rutenett"
-
-#~ msgid "Refresh grid contents"
-#~ msgstr "Oppfrisk rutenettets innhold"
-
-#~ msgid "Print grid"
-#~ msgstr "Skriv ut rutenettet"
-
-#~ msgid "Print grid contents"
-#~ msgstr "Skriv ut rutenettets innhold"
-
-#~ msgid "Show column titles"
-#~ msgstr "Vis kolonnetitler"
-
-#~ msgid "Hide columns"
-#~ msgstr "Skjul kolonner"
-
-#~ msgid "Hide column titles"
-#~ msgstr "Skjul kolonnetitler"
-
-#~ msgid "Entry %d of %d"
-#~ msgstr "Oppføring %d av %d"
-
-#~ msgid "Date"
-#~ msgstr "Dato"
-
-#~ msgid "Time"
-#~ msgstr "Tid"
-
-#~ msgid "Message"
-#~ msgstr "Melding"
-
-#~ msgid "Log Entry"
-#~ msgstr "Loggoppføring"
-
-#~ msgid "No datasource '%s' defined in your GDA configuration file"
-#~ msgstr "Ingen datakilde '%s' definert i din GDA konfigurasjonsfil"
-
-#~ msgid "User Name"
-#~ msgstr "Brukernavn"
-
-#~ msgid "GDA Datasource"
-#~ msgstr "GDA datakilde"
-
-#~ msgid "Password"
-#~ msgstr "Passord"
-
-#~ msgid "Last Connections"
-#~ msgstr "Siste forbindelser"
-
-#~ msgid "Data Source Name"
-#~ msgstr "Datakildens navn"
-
-#~ msgid "User name to use for the connection"
-#~ msgstr "Brukernavn som skal brukes for denne forbindelsen"
-
-#~ msgid "Password to authenticate user"
-#~ msgstr "Passord for autentisering av bruker"
-
-#~ msgid "To open/close the connection"
-#~ msgstr "Åpne/lukke forbindelsen"
-
-#~ msgid "Error Viewer"
-#~ msgstr "Feilvisning"
-
-#~ msgid "Could not initialize %s component"
-#~ msgstr "Kunne ikke initialisere %s komponenten"
-
-#~ msgid "Font to be used for the grid"
-#~ msgstr "Skrifttype som skal brukes for rutenettet"
-
-#~ msgid "Could not initialize Bonobo"
-#~ msgstr "Kunne ikke initialisere Bonobo"
-
-#~ msgid "View requested to be activated but there is already an active view"
-#~ msgstr ""
-#~ "Visning forespurt aktivert, men det finnes allerede en aktiv visning"
-
-#~ msgid "Ready"
-#~ msgstr "Klar"
-
-#~ msgid "Could not bind object %s"
-#~ msgstr "Kunne ikke binde objekt %s"
-
-#~ msgid "Unable to activate object %s"
-#~ msgstr "Kunne ikke aktivere objekt %s"
-
-#~ msgid "Could not register control factory"
-#~ msgstr "Kunne ikke registrere kontroll-factory"
-
-#~ msgid "control has no property bag"
-#~ msgstr "kontrollen har ingen lagring for egenskaper"
-
-#~ msgid "property %s not found"
-#~ msgstr "egenskap %s ble ikke funnet"
-
-#~ msgid "Factory %s already existing"
-#~ msgstr "Factory %s eksisterer allerede"
-
-#~ msgid "Could not register %s factory"
-#~ msgstr "Kunne ikke registrere factory %s"
-
-#~ msgid "GNOME-DB Builder"
-#~ msgstr "GNOME-DB builder"
-
-#~ msgid "Connected to %s"
-#~ msgstr "Koblet til %s"
-
-#~ msgid "Disconnected from database"
-#~ msgstr "Koblet fra databasen"
-
-#~ msgid "Database Browser"
-#~ msgstr "Databaseleser"
-
-#~ msgid "There are no open connections"
-#~ msgstr "Ingen åpne forbindelser"
-
-#~ msgid "Back"
-#~ msgstr "Tilbake"
-
-#~ msgid "Go to previous document"
-#~ msgstr "Gå til forrige dokument"
-
-#~ msgid "Forward"
-#~ msgstr "Fremover"
-
-#~ msgid "Go to next document"
-#~ msgstr "Gå til neste dokument"
-
-#~ msgid "Home"
-#~ msgstr "Hjem"
-
-#~ msgid "Go to table of contents"
-#~ msgstr "Gå til innholdsfortegnelsen"
-
-#~ msgid "Help"
-#~ msgstr "Hjelp"
-
-#~ msgid "Screen"
-#~ msgstr "Skjerm"
-
-#~ msgid "New screen"
-#~ msgstr "Ny skjerm"
-
-#~ msgid "Report"
-#~ msgstr "Rapport"
-
-#~ msgid "New report"
-#~ msgstr "Ny rapport"
-
-#~ msgid "Server"
-#~ msgstr "Tjener"
-
-#~ msgid "New server"
-#~ msgstr "Ny tjener"
-
-#~ msgid "Repository"
-#~ msgstr "Lagringsplass"
-
-#~ msgid "New repository"
-#~ msgstr "Ny lagringsplass"
-
-#~ msgid "Open existing screen"
-#~ msgstr "Åpne eksisterende skjerm"
-
-#~ msgid "Open existing report"
-#~ msgstr "Åpne eksisterende rapport"
-
-#~ msgid "Open existing server"
-#~ msgstr "Åpne eksisterende tjener"
-
-#~ msgid "Open existing repository"
-#~ msgstr "Åpne eksisterende lager"
-
-#~ msgid "Connect..."
-#~ msgstr "Koble til..."
-
-#~ msgid "Connect to database"
-#~ msgstr "Koble til database"
-
-#~ msgid "Disconnect"
-#~ msgstr "Koble fra"
-
-#~ msgid "Close database connection"
-#~ msgstr "Lukk databaseforbindelsen"
-
-#~ msgid "Browse"
-#~ msgstr "Bla gjennom"
-
-#~ msgid "Open database browser"
-#~ msgstr "Åpne databaseleser"
-
-#~ msgid "Import objects"
-#~ msgstr "Importer objekter"
-
-#~ msgid "Import database objects into repository"
-#~ msgstr "Importer databaseobjekter til lageret"
-
-#~ msgid "New"
-#~ msgstr "Ny"
-
-#~ msgid "Open"
-#~ msgstr "Åpne"
-
-#~ msgid "Close"
-#~ msgstr "Lukk"
-
-#~ msgid "Close current window"
-#~ msgstr "Lukk aktivt vindu"
-
-#~ msgid "Close all"
-#~ msgstr "Lukk alle"
-
-#~ msgid "Close all open windows"
-#~ msgstr "Lukk alle åpne vinduer"
-
-#~ msgid "Quit"
-#~ msgstr "Avslutt"
-
-#~ msgid "Exit application"
-#~ msgstr "Avslutt applikasjonen"
-
-#~ msgid "Undo"
-#~ msgstr "Angre"
-
-#~ msgid "Undo last action"
-#~ msgstr "Angre siste handling"
-
-#~ msgid "Redo"
-#~ msgstr "Gjenopprett"
-
-#~ msgid "Revert last undone action"
-#~ msgstr "Forkast siste angrede handling"
-
-#~ msgid "Cut"
-#~ msgstr "Klipp ut"
-
-#~ msgid "Cut selected text/item"
-#~ msgstr "Klipp ut valgt tekst/oppføring"
-
-#~ msgid "Copy selected text/item to the clipboard"
-#~ msgstr "Kopier valgt tekst/oppføring til utklippstavlen"
-
-#~ msgid "Paste"
-#~ msgstr "Lim inn"
-
-#~ msgid "Paste clipboard contents"
-#~ msgstr "Lim inn innholdet av utklippstavlen"
-
-#~ msgid "Delete"
-#~ msgstr "Slett"
-
-#~ msgid "Delete selected text/item"
-#~ msgstr "Slett valgt tekst/oppføring"
-
-#~ msgid "New project"
-#~ msgstr "Nytt prosjekt"
-
-#~ msgid "Create a new project"
-#~ msgstr "Opprett et nytt prosjekt"
-
-#~ msgid "Open project"
-#~ msgstr "Åpne prosjekt"
-
-#~ msgid "Open an existing project"
-#~ msgstr "Åpne et eksisterende prosjekt"
-
-#~ msgid "Save project"
-#~ msgstr "Lagre prosjekt"
-
-#~ msgid "Save current project"
-#~ msgstr "Lagre aktivt prosjekt"
-
-#~ msgid "Properties..."
-#~ msgstr "Egenskaper..."
-
-#~ msgid "View project properties"
-#~ msgstr "Vis egenskaper for prosjekt"
-
-#~ msgid "GNOME-DB Front End"
-#~ msgstr "GNOME-DB front"
-
-#~ msgid "The GNOME-DB front end"
-#~ msgstr "GNOME-DB front"
-
-#~ msgid "SQL Front End"
-#~ msgstr "SQL front"
-
-#~ msgid "The SQL front end"
-#~ msgstr "SQL fronten"
-
-#~ msgid "GNOME-DB Manager"
-#~ msgstr "GNOME-DB håndterer"
-
-#~ msgid "The GNOME-DB configuration tool"
-#~ msgstr "GNOME-DB konfigurasjonsverktøy"
-
-#~ msgid "About gnome-db..."
-#~ msgstr "Om gnome-db..."
-
-#~ msgid "About this program"
-#~ msgstr "Om dette programmet"
-
-#~ msgid "Submit bug report"
-#~ msgstr "Send feilrapport"
-
-#~ msgid "Edit"
-#~ msgstr "Rediger"
-
-#~ msgid "Project"
-#~ msgstr "Prosjekt"
-
-#~ msgid "Database"
-#~ msgstr "Database"
-
-#~ msgid "Tools"
-#~ msgstr "Verktøy"
-
-#~ msgid "New Screen/Report"
-#~ msgstr "Ny skjerm/rapport"
-
-#~ msgid "Open Screen/Report"
-#~ msgstr "Åpne skjerm/rapport"
-
-#~ msgid "Preferences"
-#~ msgstr "Preferanser"
-
-#~ msgid "Configure user preferences"
-#~ msgstr "Konfigurer brukerens preferanser"
-
-#~ msgid "Could not initialize Bonobo\n"
-#~ msgstr "Kunne ikke initialisere Bonobo\n"
-
-#~ msgid "Unable to execute '%s'"
-#~ msgstr "Kunne ikke kjøre '%s'"
-
-#~ msgid "Location"
-#~ msgstr "Plassering"
-
-#~ msgid "Execute"
-#~ msgstr "Kjør"
-
-#~ msgid "Execute batch file"
-#~ msgstr "Kjør stegvis fil"
-
-#~ msgid "Open file"
-#~ msgstr "Åpne fil"
-
-#~ msgid "Save"
-#~ msgstr "Lagre"
-
-#~ msgid "Save file"
-#~ msgstr "Lagre fil"
-
-#~ msgid "Clear"
-#~ msgstr "Tøm"
-
-#~ msgid "Clear command list"
-#~ msgstr "Tøm kommandolisten"
-
-#~ msgid ""
-#~ "Could not open file\n"
-#~ "'%s'"
-#~ msgstr ""
-#~ "Kunne ikke åpne fil\n"
-#~ "'%s'"
-
-#~ msgid "No command selected"
-#~ msgstr "Ingen kommando valgt"
-
-#~ msgid "Command"
-#~ msgstr "Kommando"
-
-#~ msgid "Enter command text"
-#~ msgstr "Skriv inn kommandotekst"
-
-#~ msgid "Insert at current position"
-#~ msgstr "Sett inn i aktiv posisjon"
-
-#~ msgid "Open File"
-#~ msgstr "Åpne fil"
-
-#~ msgid "Command separators"
-#~ msgstr "Kommandoseparatorer"
-
-#~ msgid "Append to current file"
-#~ msgstr "Legg til i aktiv fil"
-
-#~ msgid "You must specify a file to be loaded"
-#~ msgstr "Du må spesifisere fil som skal leses inn"
-
-#~ msgid "You must specifiy the characters used as command separators"
-#~ msgstr ""
-#~ "Du må spesifisere hvilke tegn som skal brukes som kommandoseparatorer"
-
-#~ msgid "Add"
-#~ msgstr "Legg til"
-
-#~ msgid "Up"
-#~ msgstr "Opp"
-
-#~ msgid "Down"
-#~ msgstr "Ned"
-
-#~ msgid "Options"
-#~ msgstr "Alternativer"
-
-#~ msgid "Transaction Mode"
-#~ msgstr "Transaksjonsmodus"
-
-#~ msgid "Send as XML"
-#~ msgstr "Send som XML"
-
-#~ msgid "Batch"
-#~ msgstr "Gruppe"
-
-#~ msgid "Connecting..."
-#~ msgstr "Kobler til..."
-
-#~ msgid "Configuration file saved"
-#~ msgstr "Konfigurasjonsfil lagret"
-
-#~ msgid "Add Environment Variable"
-#~ msgstr "Legg til miljøvariabel"
-
-#~ msgid "Name"
-#~ msgstr "Navn"
-
-#~ msgid "Value"
-#~ msgstr "Verdi"
-
-#~ msgid "Editor Font"
-#~ msgstr "Skrifttype for editor"
-
-#~ msgid "Tab Position"
-#~ msgstr "Tabulatorposisjon"
-
-#~ msgid "Top"
-#~ msgstr "Øverst"
-
-#~ msgid "Bottom"
-#~ msgstr "Nederst"
-
-#~ msgid "Left"
-#~ msgstr "Venstre"
-
-#~ msgid "Right"
-#~ msgstr "Høyre"
-
-#~ msgid "Grid"
-#~ msgstr "Rutenett"
-
-#~ msgid "Font"
-#~ msgstr "Skrifttype"
-
-#~ msgid "Foreground Color"
-#~ msgstr "Forgrunnsfarge"
-
-#~ msgid "Background Color"
-#~ msgstr "Bakgrunnsfarge"
-
-#~ msgid "Show row numbers"
-#~ msgstr "Vis radnummer"
-
-#~ msgid "User Interface"
-#~ msgstr "Brukergrensesnitt"
-
-#~ msgid "Environment"
-#~ msgstr "Miljø"
-
-#~ msgid "GDA"
-#~ msgstr "GDA"
-
-#~ msgid "SQL"
-#~ msgstr "SQL"
-
-#~ msgid "SQL Window"
-#~ msgstr "SQL-vindu"
-
-#~ msgid "Batch commands window"
-#~ msgstr "Batchkommando vindu"
-
-#~ msgid "Queries"
-#~ msgstr "Spørringer"
-
-#~ msgid "Query designer"
-#~ msgstr "Utforming av spørringer"
-
-#~ msgid "Browser"
-#~ msgstr "Leser"
-
-#~ msgid "Browse Database"
-#~ msgstr "Bla gjennom database"
-
-#~ msgid "Export"
-#~ msgstr "Eksporter"
-
-#~ msgid "Export database"
-#~ msgstr "Eksportér data"
-
-#~ msgid "Import"
-#~ msgstr "Importer"
-
-#~ msgid "Import data into current database"
-#~ msgstr "Importér data inn i databasen"
-
-#~ msgid "Close connection"
-#~ msgstr "Lukk forbindelse"
-
-#~ msgid "Execute current command"
-#~ msgstr "Kjør aktiv kommando"
-
-#~ msgid "Select"
-#~ msgstr "Velg"
-
-#~ msgid "Select from previous commands"
-#~ msgstr "Velg fra tidligere kommandoer"
-
-#~ msgid "Load file into buffer"
-#~ msgstr "Les fil inn i buffer"
-
-#~ msgid "Save current file"
-#~ msgstr "Lagre aktiv fil"
-
-#~ msgid "Cut selected text"
-#~ msgstr "Klipp ut valgt tekst"
-
-#~ msgid "Copy selected text"
-#~ msgstr "Kopier valgt tekst"
-
-#~ msgid "Clear window contents"
-#~ msgstr "Tøm vindusinnholdet"
-
-#~ msgid "Start"
-#~ msgstr "Start"
-
-#~ msgid "Start export"
-#~ msgstr "Start eksport"
-
-#~ msgid "Clear all fields"
-#~ msgstr "Tøm alle felt"
-
-#~ msgid "Select all objects in database"
-#~ msgstr "Velg alle objekter i databasen"
-
-#~ msgid "Unselect"
-#~ msgstr "Velg bort"
-
-#~ msgid "Clear object selection"
-#~ msgstr "Blank ut objektvalg"
-
-#~ msgid "Foreign keys"
-#~ msgstr "Fremmede nøkler"
-
-#~ msgid "Object Identifiers"
-#~ msgstr "Objektidentifikatorer"
-
-#~ msgid "Object Inheritance"
-#~ msgstr "Objektarv"
-
-#~ msgid "Sequences"
-#~ msgstr "Sekvenser"
-
-#~ msgid "SQL (Standard)"
-#~ msgstr "SQL (standard)"
-
-#~ msgid "SQL Sub-Selects"
-#~ msgstr "SQL sub-selects"
-
-#~ msgid "Stored Procedures"
-#~ msgstr "Lagrede prosedyrer"
-
-#~ msgid "Transactions"
-#~ msgstr "Transaksjoner"
-
-#~ msgid "Triggers"
-#~ msgstr "Triggere"
-
-#~ msgid "XML Queries"
-#~ msgstr "XML-spørringer"
-
-#~ msgid "File name"
-#~ msgstr "Filnavn"
-
-#~ msgid "Row %d - %d rows selected"
-#~ msgstr "Rad %d - %d rader valgt"
-
-#~ msgid "Select file"
-#~ msgstr "Velg fil"
-
-#~ msgid ""
-#~ "Error reading from file\n"
-#~ "'%s'"
-#~ msgstr ""
-#~ "Feil under lesing fra fil\n"
-#~ "'%s'"
-
-#~ msgid "Command succeeded"
-#~ msgstr "Kommando fullført"
-
-#~ msgid ""
-#~ "Error writing to file\n"
-#~ "'%s'"
-#~ msgstr ""
-#~ "Feil under skriving til fil\n"
-#~ "'%s'"
-
-#~ msgid "Select Command"
-#~ msgstr "Velg kommando"
-
-#~ msgid "Transaction started"
-#~ msgstr "Transaksjon startet"
-
-#~ msgid "Begin transaction failed"
-#~ msgstr "Begynn transaksjon feilet"
-
-#~ msgid "Data source does not support transactions"
-#~ msgstr "Datakilde støtter ikke transaksjoner"
-
-#~ msgid "Commit executed successfully"
-#~ msgstr "Innlegging av data fullført"
-
-#~ msgid "Commit transaction failed"
-#~ msgstr "Legg inn transaksjon"
-
-#~ msgid "Rollback executed successfully"
-#~ msgstr "Rollback fullført"
-
-#~ msgid "Rollback transaction failed"
-#~ msgstr "Rollback-transaksjon feilet"
-
-#~ msgid "Connection Properties"
-#~ msgstr "Egenskaper for forbindelse"
-
-#~ msgid "Properties"
-#~ msgstr "Egenskaper"
-
-#~ msgid "Command Timeout"
-#~ msgstr "Tidsavbrudd for kommando"
-
-#~ msgid "Connect Timeout"
-#~ msgstr "Tidsavbrudd for tilkobling"
-
-#~ msgid "Trace File"
-#~ msgstr "Spor-fil"
-
-#~ msgid "View"
-#~ msgstr "Vis"
-
-#~ msgid "Version"
-#~ msgstr "Versjon"
-
-#~ msgid "Provider Features"
-#~ msgstr "Tilbyderfunksjoner"
-
-#~ msgid "New database design"
-#~ msgstr "Ny databaseutforming"
-
-#~ msgid "Open database design"
-#~ msgstr "Åpne databaseutforming"
-
-#~ msgid "Clear all entries"
-#~ msgstr "Tøm alle felt"
-
-#~ msgid "Close designer window"
-#~ msgstr "Lukk utformingsvindu"
-
-#~ msgid "Select XML file"
-#~ msgstr "Velg XML-fil"
-
-#~ msgid "Designer"
-#~ msgstr "Designer"
-
-#~ msgid "Data sources"
-#~ msgstr "Datakilder"
-
-#~ msgid "Apply"
-#~ msgstr "Bruk"
-
-#~ msgid "View selected entry"
-#~ msgstr "Vis valgt oppføring"
-
-#~ msgid "Clear log file"
-#~ msgstr "Tøm loggfil"
-
-#~ msgid "Refresh"
-#~ msgstr "Oppfrisk"
-
-#~ msgid "Refresh log viewer"
-#~ msgstr "Oppfrisk loggvisning"
-
-#~ msgid "Close log window"
-#~ msgstr "Lukk loggvindu"
-
-#~ msgid "Error loading file '%s'"
-#~ msgstr "Feil under lasting av fil '%s'"
-
-#~ msgid "Logs"
-#~ msgstr "Logger"
-
-#~ msgid "Open Connection..."
-#~ msgstr "Åpne forbindelse..."
-
-#~ msgid "Open a connection to a data source"
-#~ msgstr "Åpne en forbindelse til en datakilde"
-
-#~ msgid "Close current connection"
-#~ msgstr "Lukk aktiv forbindelse"
-
-#~ msgid "Disconnect all"
-#~ msgstr "Koble fra alle"
-
-#~ msgid "Close all connections"
-#~ msgstr "Lukk alle forbindelser"
-
-#~ msgid "SQL window"
-#~ msgstr "SQL-vindu"
-
-#~ msgid "Query Designer"
-#~ msgstr "Utforming av spørringer"
-
-#~ msgid "Browse database"
-#~ msgstr "Bla gjennom database"
-
-#~ msgid "Begin transaction"
-#~ msgstr "Begynn transaksjon"
-
-#~ msgid "Commit"
-#~ msgstr "Send"
-
-#~ msgid "Commit transaction"
-#~ msgstr "Legg inn transaksjon"
-
-#~ msgid "Rollback"
-#~ msgstr "Rollback"
-
-#~ msgid "Discard all changes"
-#~ msgstr "Forkast alle endringer"
-
-#~ msgid "View connection properties"
-#~ msgstr "Vis egenskaper for forbindelsen"
-
-#~ msgid "Configure"
-#~ msgstr "Konfigurer"
-
-#~ msgid "Configure underlying database"
-#~ msgstr "Konfigurer underliggende database"
-
-#~ msgid "View logs"
-#~ msgstr "Vis logger"
-
-#~ msgid "View the different logs"
-#~ msgstr "Vis de forskjellige loggene"
-
-#~ msgid "Database designer"
-#~ msgstr "Databaseutforming"
-
-#~ msgid "Open the database designer"
-#~ msgstr "Åpne database-utforming"
-
-#~ msgid "Service control"
-#~ msgstr "Tjenestekontroll"
-
-#~ msgid "View service activity"
-#~ msgstr "Se serviceaktivitet"
-
-#~ msgid "The GNOME-DB Development Environment"
-#~ msgstr "GNOME-DB utviklingsmiljøet"
-
-#~ msgid "Preferences..."
-#~ msgstr "Preferanser..."
-
-#~ msgid "Data sources..."
-#~ msgstr "Datakilder..."
-
-#~ msgid "Configure GDA data sources"
-#~ msgstr "Konfigurer GDA datakilder"
-
-#~ msgid "Save options"
-#~ msgstr "Lagre alternativer"
-
-#~ msgid "Save current configuration"
-#~ msgstr "Lagre aktiv konfigurasjon"
-
-#~ msgid "Connect"
-#~ msgstr "Koble til"
-
-#~ msgid "Exit Application"
-#~ msgstr "Avslutt applikasjonen"
-
-#~ msgid "Activate"
-#~ msgstr "Aktiver"
-
-#~ msgid "Activate selected service"
-#~ msgstr "Aktiver valgt tjeneste"
-
-#~ msgid "Stop"
-#~ msgstr "Stopp"
-
-#~ msgid "Stop selected service"
-#~ msgstr "Stopp valgt tjeneste"
-
-#~ msgid "Refresh service list"
-#~ msgstr "Oppfrisk tjenesteliste"
-
-#~ msgid ""
-#~ "Could not find any installed services. Either you don't have\n"
-#~ "any services installed or I don't know the path to find them.\n"
-#~ "In either case, please check your GNOME-DB installation."
-#~ msgstr ""
-#~ "Kunne ikke finne noen installerte tjenester. Enten har du ingen\n"
-#~ "tjenester installert, eller så finnes ikke stien til dem.\n"
-#~ "Uansett, sjekk din GNOME-DB installasjon."
-
-#~ msgid "Service '%s' activated"
-#~ msgstr "Tjeneste '%s' aktivert"
-
-#~ msgid "Repo ID"
-#~ msgstr "Lager-ID"
-
-#~ msgid "Type"
-#~ msgstr "Type"
-
-#~ msgid "Service Control"
-#~ msgstr "Tjenestekontroll"
-
-#~ msgid "Could not create DSN config component"
-#~ msgstr "Kunne ikke opprette DSN konfigurasjonskomponent"
-
-#~ msgid "Select config component"
-#~ msgstr "Velg konfigurasjonskomponent"
-
-#~ msgid "Add new data source"
-#~ msgstr "Legg til ny datakilde"
-
-#~ msgid "Edit selected data source"
-#~ msgstr "Rediger valgt datakilde"
-
-#~ msgid "Remove selected data source"
-#~ msgstr "Fjern valgt datakilde"
-
-#~ msgid "Browse selected data source"
-#~ msgstr "Bla gjennom valgt datakilde"
-
-#~ msgid "Data Source"
-#~ msgstr "Datakilde"
-
-#~ msgid "Browse Data Source"
-#~ msgstr "Bla gjennom datakilde"
-
-#~ msgid "could not load browser control"
-#~ msgstr "kunne ikke laste kontroll for leser"
-
-#~ msgid "Load config component"
-#~ msgstr "Last konfigurasjonskomponent"
-
-#~ msgid "Module"
-#~ msgstr "Modul"
-
-#~ msgid "Users"
-#~ msgstr "Brukere"
-
-#~ msgid "User access rights"
-#~ msgstr "Brukers tilgangsrettigheter"
-
-#~ msgid "All"
-#~ msgstr "Alle"
-
-#~ msgid "Data source not found in GDA configuration"
-#~ msgstr "Datakilde ikke funnet i GDA-konfigurasjon"
-
-#~ msgid "Data Sources"
-#~ msgstr "Datakilder"
-
-#~ msgid "Database browser"
-#~ msgstr "Databaseleser"
-
-#~ msgid "Open the database browser"
-#~ msgstr "Åpne databaseleseren"
-
-#~ msgid "The GNOME-DB development environment"
-#~ msgstr "GNOME-DB utviklingsmiljøet"
-
-#~ msgid "Providers"
-#~ msgstr "Tilbydere"
-
-#~ msgid "Configure GDA providers"
-#~ msgstr "Konfigurér GDA-tilbydere"
-
-#~ msgid "Components"
-#~ msgstr "Komponenter"
-
-#~ msgid "Configure GNOME-DB components"
-#~ msgstr "Konfigurér GNOME-DB-komponenter"
-
-#~ msgid "View provider log"
-#~ msgstr "Vis tilbyderlogg"
-
-#~ msgid "Install a new GDA provider"
-#~ msgstr "Installer en ny GDA-tilbyder"
-
-#~ msgid "Edit selected provider"
-#~ msgstr "Rediger valgt tilbyder"
-
-#~ msgid "Remove selected provider"
-#~ msgstr "Fjern valgt tilbyder"
-
-#~ msgid "Comments"
-#~ msgstr "Kommentarer"
-
-#~ msgid "Could not create GnomeDbControl"
-#~ msgstr "Kunne ikke opprette GnomeDbControl"
-
-#~ msgid "Available databases"
-#~ msgstr "Tilgjengelige databaser"
-
-#~ msgid "Drop"
-#~ msgstr "Slipp"
-
-#~ msgid "Database name"
-#~ msgstr "Databasenavn"
-
-#~ msgid "Owner"
-#~ msgstr "Eier"
-
-#~ msgid "new instance %p created"
-#~ msgstr "ny instans %p opprettet"
-
-#~ msgid "DSN for the connection"
-#~ msgstr "Forbindelsens DSN"
-
-#~ msgid "User identity"
-#~ msgstr "Brukeridentitet"
-
-#~ msgid "User passord"
-#~ msgstr "Brukers passord"
-
-#~ msgid "Show/hide the user id"
-#~ msgstr "Vis/skjul bruker-id"
-
-#~ msgid "Give it TRUE to reset/start the component"
-#~ msgstr "Oppgi SANN for å nullstille/starte komponenten"
-
-#~ msgid "User name setting"
-#~ msgstr "Innstillinger for brukernavn"
-
-#~ msgid "Group name setting"
-#~ msgstr "Innstillinger for gruppenavn"
-
-#~ msgid "Object type setting"
-#~ msgstr "Innstillinger for objekttype"
-
-#~ msgid "Object name setting"
-#~ msgstr "Innstillinger for objektnavn"
-
-#~ msgid "Access rigths"
-#~ msgstr "Tilgangsrettigheter"
-
-#~ msgid "Indexes"
-#~ msgstr "Indekser"
-
-#~ msgid "All users rights"
-#~ msgstr "Alle brukerrettigheter"
-
-#~ msgid "Groups rights"
-#~ msgstr "Grupperettigheter"
-
-#~ msgid "Group:"
-#~ msgstr "Gruppe:"
-
-#~ msgid "Individual users rights"
-#~ msgstr "Individuelle brukerrettigheter"
-
-#~ msgid "User:"
-#~ msgstr "Bruker:"
-
-#~ msgid "Insert"
-#~ msgstr "Sett inn"
-
-#~ msgid "Update/Delete"
-#~ msgstr "Oppdater/slett"
-
-#~ msgid "Rule"
-#~ msgstr "Regel"
-
-#~ msgid "Table"
-#~ msgstr "Tabell"
-
-#~ msgid "Sequence"
-#~ msgstr "Sekvens"
-
-#~ msgid "Index"
-#~ msgstr "Indeks"
-
-#~ msgid "Name:"
-#~ msgstr "Navn:"
-
-#~ msgid "Password:"
-#~ msgstr "Passord:"
-
-#~ msgid "Could not instantiate the gnome-db-control"
-#~ msgstr "Kunne ikke instansiere gnome-db-control"
-
-#~ msgid "Group(s)"
-#~ msgstr "Gruppe(r)"
-
-#~ msgid "Create DB"
-#~ msgstr "Opprett database"
-
-#~ msgid "Create users"
-#~ msgstr "Opprett brukere"
-
-#~ msgid "Valid until"
-#~ msgstr "Gyldig til"
-
-#~ msgid "Known database users"
-#~ msgstr "Kjente databasebrukere"
-
-#~ msgid "Save as new user"
-#~ msgstr "Lagre som ny bruker"
-
-#~ msgid "Save modified user"
-#~ msgstr "Lagre endret bruker"
-
-#~ msgid "Delete user"
-#~ msgstr "Slett bruker"
-
-#~ msgid "Yes"
-#~ msgstr "Ja"
-
-#~ msgid "No"
-#~ msgstr "Nei"
-
-#~ msgid "UI Test 3 Error"
-#~ msgstr "UI Test 3 feil"
-
-#~ msgid "Record %8.0f"
-#~ msgstr "Post %8.0f"
-
-#~ msgid "We could not load the glade interface description! (%s)"
-#~ msgstr "Kunne ikke laste glade grensesnittbeksrivelsen! (%s)"
-
-#~ msgid "Select the table name"
-#~ msgstr "Velg tabellnavn"
-
-#~ msgid "Could not get CORBA name service object"
-#~ msgstr "Kunne ikke hente CORBA navnetjenesteobjekt"
-
-#~ msgid "Refresh all"
-#~ msgstr "Oppfrisk alle"
-
-#~ msgid "Ok"
-#~ msgstr "Ok"
-
-#~ msgid "GNOME-DB Controls browser"
-#~ msgstr "GNOME-DB kontroll-leser"
-
-#~ msgid "New control"
-#~ msgstr "Ny kontroll"
-
-#~ msgid "Close control"
-#~ msgstr "Lukk kontroll"
-
-#~ msgid "Controls"
-#~ msgstr "Kontroller"
-
-#~ msgid "Control settings"
-#~ msgstr "Innstillinger for kontroll"
-
-#~ msgid "database provider"
-#~ msgstr "databasedetilbyder"
-
-#~ msgid "PROVIDER"
-#~ msgstr "TILBYDER"
-
-#~ msgid "table"
-#~ msgstr "tabell"
-
-#~ msgid "TABLENAME"
-#~ msgstr "TABELLNAVN"
-
-#~ msgid "TABLE NAME"
-#~ msgstr "TABELL NAVN"
-
-#~ msgid "Logging in"
-#~ msgstr "Logger inn"
