@@ -78,7 +78,7 @@ static const GdaRow *
 gda_data_model_hash_append_row (GdaDataModel *model, const GList *values)
 {
 	GdaRow *row;
-	gint cols;
+	gint cols, rownum;
 
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_HASH (model), NULL);
 	g_return_val_if_fail (values != NULL, NULL);
@@ -89,13 +89,17 @@ gda_data_model_hash_append_row (GdaDataModel *model, const GList *values)
 
 	/* create the GdaRow to add */
 	row = gda_row_new_from_list (model, values);
+
+	/* get the new row number */
+	rownum = gda_data_model_get_n_rows (model);
+
 	if (row) {
 		gda_data_model_hash_insert_row (
 			GDA_DATA_MODEL_HASH (model),
-			g_hash_table_size (GDA_DATA_MODEL_HASH (model)->priv->rows),
+			rownum,
 			row);
-		gda_row_set_number (row, g_hash_table_size (GDA_DATA_MODEL_HASH (model)->priv->rows) - 1);
-		gda_data_model_row_inserted (model, g_hash_table_size (GDA_DATA_MODEL_HASH (model)->priv->rows) - 1);
+		gda_row_set_number (row, rownum);
+		gda_data_model_row_inserted (model, rownum);
 		gda_data_model_changed (model);
 	}
 

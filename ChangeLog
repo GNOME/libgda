@@ -1,3 +1,8 @@
+2005-01-07  Bas Driessen <bas.driessen@xobas.com>
+
+	* libgda/gda-data-model-hash.c (gda_data_model_hash_append_row):
+	set row number of appended row.
+
 2004-12-29  Aaron Gaudio <prothonotar@tarnation.dyndns.org>
 
 	* libgda.spec.in: fixed includedir.
