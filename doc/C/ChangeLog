@@ -1,3 +1,7 @@
+2001-09-04  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* reference/*: added a reference to the new GdaDataModel class
+
 2001-08-22  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* reference/*: moved GdaField documentation to libgda-common section

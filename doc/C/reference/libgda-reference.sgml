@@ -7,6 +7,7 @@
 <!ENTITY libgda-common-h SYSTEM "libgda-common/sgml/gda-common.sgml">
 <!ENTITY libgda-config-h SYSTEM "libgda-common/sgml/gda-config.sgml">
 <!ENTITY libgda-corba-h SYSTEM "libgda-common/sgml/gda-corba.sgml">
+<!ENTITY libgda-data-model-h SYSTEM "libgda-common/sgml/gda-data-model.sgml">
 <!ENTITY libgda-error-h SYSTEM "libgda-common/sgml/gda-error.sgml">
 <!ENTITY libgda-field-h SYSTEM "libgda-common/sgml/gda-field.sgml">
 <!ENTITY libgda-listener-h SYSTEM "libgda-common/sgml/gda-listener.sgml">

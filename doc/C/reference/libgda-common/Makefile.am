@@ -32,6 +32,8 @@ SOURCE_FILES = \
 	$(top_builddir)/lib/gda-common/gda-config.h \
 	$(top_builddir)/lib/gda-common/gda-corba.c \
 	$(top_builddir)/lib/gda-common/gda-corba.h \
+	$(top_builddir)/lib/gda-common/gda-data-model.c \
+	$(top_builddir)/lib/gda-common/gda-data-model.h \
 	$(top_builddir)/lib/gda-common/gda-error.c \
 	$(top_builddir)/lib/gda-common/gda-error.h \
 	$(top_builddir)/lib/gda-common/gda-field.c \

@@ -14,6 +14,7 @@
 	&libgda-common-h;
 	&libgda-config-h;
 	&libgda-corba-h;
+	&libgda-data-model-h;
 	&libgda-error-h;
 	&libgda-field-h;
 	&libgda-listener-h;
