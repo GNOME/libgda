@@ -33,12 +33,11 @@ gda_primebase_command_new (Gda_ServerCommand *cmd)
   g_return_val_if_fail(cmd != NULL, FALSE);
 
   pcmd = g_new0(primebase_Command, 1);
-  if (!pcmd) {
-    return FALSE;
+  if (pcmd) {
+    gda_server_command_set_user_data(cmd, (gpointer) pcmd);
+	 return TRUE;
   }
-
-  gda_server_command_set_user_data(cmd, (gpointer) pcmd);
-  return TRUE;
+  return FALSE;
 }
 
 Gda_ServerRecordset *
@@ -55,7 +54,6 @@ gda_primebase_command_execute (Gda_ServerCommand *cmd,
   primebase_Recordset  *prset = NULL;
   gchar                *sql_cmd = NULL;
   gchar                *ptr     = NULL;
-  GDA_CommandType      cmd_type     = GDA_COMMAND_TYPE_TEXT;
   gint                 cmd_pos      = 0;
   gint                 cmd_len      = 0;
   gint                 cmd_frac_len = 0;
@@ -72,49 +70,65 @@ gda_primebase_command_execute (Gda_ServerCommand *cmd,
   cmd_len = strlen(sql_cmd);
   ptr = sql_cmd;
 
-  cmd_type = gda_server_command_get_type(cmd);
-  switch (cmd_type) {
-    case GDA_COMMAND_TYPE_FILE:
-//      sql_cmd = gda_primebase_connection_loadfile(pcnc, sql_cmd);
-      // FIXME: Error handling for failing reading commands from file
-//      if (!sql_cmd) {
-        return NULL;
-//      }
-      break;
-	 case GDA_COMMAND_TYPE_XML:
-      sql_cmd = gda_server_connection_xml2sql(cnc, sql_cmd);
-      // FIXME: Need to handle possible conversion errors when xml2sql is ready
-      if (!sql_cmd) {
-        return NULL;
-      }
-      break;
-	 default:
-      break;
+  // Send command with packages of maximum size to the server
+  do {
+	 cmd_frac_len = (cmd_len - cmd_pos > MAX_DALSIZE) ? MAX_DALSIZE
+                                                     : (cmd_len - cmd_pos);
+	 
+    pcnc->state = CLSend(pcnc->sid, ptr, cmd_frac_len);
+
+    ptr     += cmd_frac_len;
+    cmd_pos += cmd_frac_len;
+  } while ((cmd_pos < cmd_len) || (pcnc->state != A_OK));
+
+  // Break on error
+  if (pcnc->state != A_OK) {
+    pcnc->state = CLBreak(pcnc->sid, 0);
+	 return NULL;
   }
-  
-  switch(cmd_type) {
-    case GDA_COMMAND_TYPE_STOREDPROCEDURE:
-      return NULL;
-      break;
-    case GDA_COMMAND_TYPE_TEXT:
-      pcnc->hstmt = PBIExecute(pcnc->sid, sql_cmd, PB_NTS, PB_EXECUTE_NOW,
-                               affected, NULL, NULL);
-		if (pcnc->hstmt == PB_ERROR) {
+
+  // Start execution of previously sent DAL cmd
+  pcnc->state = CLExec(pcnc->sid);
+
+  if (pcnc->state != A_OK) {
+    pcnc->state = CLBreak(pcnc->sid, 0);
+    return NULL;
+  }
+
+  // CLExec() is asynchronous, 
+  // but if it returns A_OK we assume that the server executes the query
+
+  // Wait for execution to complete
+  // FIXME: This is ugly... ;-)
+  while ((pcnc->state = CLState(pcnc->sid)) == A_EXEC);
+
+  switch (pcnc->state) {
+    case A_VALUE:
+    case A_NULL: // Data or null data is ready for fetch
+      recset = gda_server_recordset_new(cnc);
+		if (!recset) {
+        gda_log_error(_("Allocating recordset failed"));
+        pcnc->state = CLBreak(pcnc->sid, 0);
         return NULL;
       }
-      return NULL;
+      prset = (primebase_Recordset *) gda_server_recordset_get_user_data(recset);
+      if (!prset) {
+        gda_server_recordset_free(recset);
+        gda_log_error(_("Getting recordset userdata failed"));
+        pcnc->state = CLBreak(pcnc->sid, 0);
+        return NULL;
+      }
+//		gda_primebase_init_recset_fields(error, recset, prset);
+		return recset;
       break;
-    case GDA_COMMAND_TYPE_TABLE:
-      return NULL;
+    case A_READY:
       break;
-    case GDA_COMMAND_TYPE_TABLEDIRECT:
-      return NULL;
-      break;
+    case A_ERROR:
     default:
-      return NULL;
-		break;
+      gda_log_message(_("An error occured."));
+      pcnc->state = CLBreak(pcnc->sid, 0);
   }
-  
+
   return recset;
 }
 

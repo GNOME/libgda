@@ -1,0 +1,9 @@
+2000-12-03  Holger Thon <holger.thon@gnome-db.org>
+
+	* Added gda-primebase-server to Makefiles
+	* Completed code for connection to server
+	* Started on FEATURE_SQL part
+
+2000-11-27	Holger Thon <holger.thon@gnome-db.org>
+
+	* Added gda-primebase-server

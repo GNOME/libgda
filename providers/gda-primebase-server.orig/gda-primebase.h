@@ -24,8 +24,8 @@
 #endif
 
 #include <gda-server.h>
-#include <pbapi.h>
-#define PRIMEBASE_DEBUG 1
+#include <dalapi.h>
+#include <daltypes.h>
 
 #ifdef ENABLE_NLS
 #  include <libintl.h>
@@ -43,7 +43,7 @@
 #endif
 
 #define MAX_DALSIZE (32L * 1024L)
-#define GDA_PRIMEBASE_TYPE_CNT 23
+#define GDA_PRIMEBASE_TYPE_CNT 27
 
 /*
  * Per-object specific structures
@@ -57,11 +57,10 @@ typedef struct
 
 typedef struct
 {
-  PBConnInfo info;
   long sid;   // The connections' session id
   long snum;  // The current session number active of the connection
 
-  gshort hstmt;
+  gint state;
 
   gchar *host;
   gchar *db;

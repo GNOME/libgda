@@ -1,0 +1,10 @@
+Makefile
+Makefile.in
+*.oaf
+*.o
+*.lo
+*.la
+libgda-primebase
+gda-primebase-srv
+.deps
+.libs

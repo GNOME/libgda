@@ -35,38 +35,44 @@ static void
                                       const gchar *dsn);
 
 static const primebase_Types gda_primebase_type_list[GDA_PRIMEBASE_TYPE_CNT] = {
-  { "TINYINT",    PB_TINYINT,   GDA_TypeSmallint }, //  8-bit
-  { "SMALLINT",   PB_SMINT,     GDA_TypeSmallint }, // 16-bit
-  { "SMINT",      PB_SMINT,     GDA_TypeSmallint }, // 16-bit
-  { "INTEGER",    PB_INTEGER,   GDA_TypeInteger  }, // 32-bit
-  { "INT",        PB_INTEGER,   GDA_TypeInteger  }, // 32-bit   ( 5)
+  { "TINYINT",    A_TINYINT,   GDA_TypeSmallint }, //  8-bit
+  { "SMALLINT",   A_SMINT,     GDA_TypeSmallint }, // 16-bit
+  { "SMINT",      A_SMINT,     GDA_TypeSmallint }, // 16-bit
+  { "INTEGER",    A_INTEGER,   GDA_TypeInteger  }, // 32-bit
+  { "INT",        A_INTEGER,   GDA_TypeInteger  }, // 32-bit   ( 5)
   
-  { "DECIMAL",    PB_DECIMAL,   GDA_TypeDecimal     },
-  { "MONEY",      PB_MONEY,     GDA_TypeCurrency    },
+  { "DECIMAL",    A_DECIMAL,   GDA_TypeDecimal     },
+  { "MONEY",      A_MONEY,     GDA_TypeCurrency    },
 
-  { "SMALLFLOAT", PB_SMFLOAT,   GDA_TypeSingle      }, //  4-byte
-  { "SMFLOAT",    PB_SMFLOAT,   GDA_TypeSingle      }, //  4-byte
-  { "REAL",       PB_SMFLOAT,   GDA_TypeSingle      }, //  4-byte  (10)
-  { "FLOAT",      PB_FLOAT,     GDA_TypeDouble      }, //  8-byte
+  { "SMALLFLOAT", A_SMFLOAT,   GDA_TypeSingle      }, //  4-byte
+  { "SMFLOAT",    A_SMFLOAT,   GDA_TypeSingle      }, //  4-byte
+  { "REAL",       A_SMFLOAT,   GDA_TypeSingle      }, //  4-byte  (10)
+  { "FLOAT",      A_FLOAT,     GDA_TypeDouble      }, //  8-byte
+  /* Just on 68k macs */
+  { "REAL10",     A_FLOAT10,   GDA_TypeDouble      }, // 10-byte
+  { "REAL12",     A_FLOAT12,   GDA_TypeDouble      }, // 12-byte
 
-  // What is on $maybe?
-  { "BOOLEAN",    PB_BOOLEAN,   GDA_TypeBoolean     },
+  /* What's on $maybe? */
+  { "BOOLEAN",    A_BOOLEAN,   GDA_TypeBoolean     },
   
-  { "DATE",       PB_DATE,      GDA_TypeDbDate      }, //          (15)
-  { "TIME",       PB_TIME,      GDA_TypeDbTime      },
-  { "TIMESTAMP",  PB_TIMESTAMP, GDA_TypeDbTimestamp },
-  { "DATETIME",   PB_TIMESTAMP, GDA_TypeDbTimestamp },
+  { "DATE",       A_DATE,      GDA_TypeDbDate      }, //          (15)
+  { "TIME",       A_TIME,      GDA_TypeDbTime      },
+  { "TIMESTAMP",  A_TIMESTAMP, GDA_TypeDbTimestamp },
+  { "DATETIME",   A_TIMESTAMP, GDA_TypeDbTimestamp },
 
-  { "CHAR",       PB_CHAR,      GDA_TypeChar        },
-  { "VARCHAR",    PB_VCHAR,     GDA_TypeVarchar     }, //          (20)
+  { "CHAR",       A_CHAR,      GDA_TypeChar        },
+  { "VARCHAR",    A_VARCHAR,   GDA_TypeVarchar     }, //          (20)
   
-  { "BINARY",     PB_BIN,       GDA_TypeVarbin      },
-  { "BIN",        PB_BIN,       GDA_TypeVarbin      },
-  { "VARBINARY",  PB_VBIN,      GDA_TypeVarbin      },
-  { "VARBIN",     PB_VBIN,      GDA_TypeVarbin      },
+  { "BINARY",     A_BIN,       GDA_TypeVarbin      },
+  { "BIN",        A_BIN,       GDA_TypeVarbin      },
+  { "VARBINARY",  A_VARBIN,    GDA_TypeVarbin      },
+  { "VARBIN",     A_VARBIN,    GDA_TypeVarbin      },
 
+  { "GENERIC",    A_GENERIC,   GDA_TypeVarchar     },
+  { "OBJNAME",    A_OBJNAME,   GDA_TypeVarchar     },
+  
   // This should ALWAYS be the LAST entry
-  { NULL,         PBI_USER_TYPE,GDA_TypeNull        }
+  { NULL,         A_GENERIC,   GDA_TypeNull        }
 };
 
 
@@ -76,8 +82,7 @@ gda_primebase_connection_new (Gda_ServerConnection *cnc)
   static gboolean initialized;
   gint   i = 0;
   primebase_Connection *pcnc = NULL;
-
-  // Clear schema ops array
+  
   if (!initialized) {
     for (i=GDA_Connection_GDCN_SCHEMA_AGGREGATES;
          i<= GDA_Connection_GDCN_SCHEMA_LAST;
@@ -85,32 +90,10 @@ gda_primebase_connection_new (Gda_ServerConnection *cnc)
       schema_ops[i] = NULL;
     }
   }
-
+  
   pcnc = g_new0(primebase_Connection, 1);
   g_return_val_if_fail(pcnc != NULL, FALSE);
   gda_server_connection_set_user_data(cnc, (gpointer) pcnc);
-
-  if (!initialized) {
-    // Initialize PBI API
-#ifdef PRIMEBASE_DEBUG
-    i = PBIInit(1);
-#else
-    i = PBIInit(0);
-#endif
-
-    if (i == PB_ERROR) {
-      g_free((gpointer) pcnc);
-      return FALSE;
-    }
-
-    // Initiate api-logging
-#ifdef PRIMEBASE_DEBUG
-    // FIXME: Change logname to a userdefined value
-    PBISetLogName("~/gda-primebase.log");
-//	 PBITrace(long session_id, 1);
-#endif
-	 initialized = TRUE;
-  }
   
   return TRUE;
 }
@@ -123,17 +106,15 @@ gda_primebase_connection_open (Gda_ServerConnection *cnc,
 {
   primebase_Connection *pcnc = NULL;
   primebase_Error      *perr = NULL;
-  long                 psid = 0;
+  long                  psid = 0;
   gchar                *t_user = NULL; // DSN user override
   gchar                *t_pass = NULL; // DSN pass override
   gchar                *t_copt = NULL; // DSN connection options
   gchar                *c_user = NULL; // CONINFO user
   gchar                *c_pass = NULL; // CONINFO pass
   gchar                *c_copt = NULL; // CONINFO connection options
-  short                hstmt;
-  
   int                  status;
-  long                 s_id;
+  long                 s_num, s_id, vid, start, state;
   char                 network[255];
 
 
@@ -148,32 +129,25 @@ gda_primebase_connection_open (Gda_ServerConnection *cnc,
   t_user = (gchar *) gda_server_connection_get_username(cnc);
   t_pass = (gchar *) gda_server_connection_get_password(cnc);
   
-  // FIXME: Implement PB_OPEN_SERVER Connections
-  // FIXME: Perhaps PB_SHM Connections also make sense
-  // Connect to the server via tcp
-  hstmt = PBIConnect(&s_id, pcnc->host, PB_DATA_SERVER, PB_TCP, "PB_TCP",
-                     t_user, t_pass, pcnc->db);
-  pcnc->sid = s_id;
-  if (hstmt == PB_ERROR) {
-    gda_log_message(_("Could not connect to '%s@%s:%s' with connparm '%s'"),
-                    t_user, pcnc->host, pcnc->db, pcnc->connparm);
-    return -1;
-  }
-  gda_log_message(_("%2ld: Connected to '%s@%s:%s' with connparm: '%s'"),
-                  pcnc->sid, t_user, pcnc->host, pcnc->db, pcnc->connparm);
-
-  // Collect information about the connection we just made
-  hstmt = PBIConnectionInfo(s_id, &pcnc->info);
-  if (hstmt == PB_ERROR) {
-    gda_log_message(_("Could not get PBIConnectionInfo(), disconnecting"));
-	 PBIDisconnect(pcnc->sid);
+  if (CLInit(&pcnc->sid, pcnc->host,
+             t_user, t_pass, pcnc->connparm
+            ) == A_OK
+     ) {
+    pcnc->snum = CLGetSn(pcnc->sid);
+    gda_log_message(_("%2ld: Connected to '%s@%s' with connparm: '%s'"),
+                    pcnc->sid, t_user, pcnc->host, pcnc->connparm);
+	 status = CLConInfo(0, pcnc->snum, &s_id, &vid,
+                       pcnc->host, c_user, network, pcnc->connparm,
+                       &start, &state);
+    gda_log_message(_("%2ld: ConInfo: %s@%s, Client API v%x, status: %x"),
+                    pcnc->sid, t_user, pcnc->host, vid, status);
+  } else {
+    gda_log_error(_("Could not connect to '%s'"), pcnc->host);
+	 perr = gda_primebase_get_error(pcnc->sid, TRUE);
+	 gda_primebase_free_error(perr);
+	 CLEnd(pcnc->sid);
 	 return -1;
   }
-  gda_log_message(_("%2ld: ConInfo: '%s@%s', Cl v%x, Srv '%s' v%x, Brand '%s'"),
-                  pcnc->sid, t_user, pcnc->host, pcnc->info.client_version,
-                  pcnc->info.server_name, pcnc->info.server_version,
-                  pcnc->info.server_brand);
-  
   return 0;
 }
 
@@ -185,9 +159,8 @@ gda_primebase_connection_close (Gda_ServerConnection *cnc)
   g_return_if_fail(cnc != NULL);
   pcnc = (primebase_Connection *) gda_server_connection_get_user_data(cnc);
   g_return_if_fail(pcnc != NULL);
-
-  // Disconnect from the server
-  PBIDisconnect(pcnc->sid);
+  
+  CLEnd(pcnc->sid);
 }
 
 gint
@@ -231,34 +204,13 @@ gint
 gda_primebase_connection_start_logging (Gda_ServerConnection *cnc,
 				   const gchar *filename)
 {
-  primebase_Connection *pcnc = NULL;
-  
-  g_return_val_if_fail(cnc != NULL, -1);
-  pcnc = (primebase_Connection *) gda_server_connection_get_user_data(cnc);
-  g_return_val_if_fail(pcnc != NULL, -1);
-  
-//  g_return_val_if_fail(filename != NULL, -1);
-
-  // Note that a NULL value wouldl NOT initiate tracing
-  
-  PBISetLogName(filename);
-  PBITrace(pcnc->sid, 1);
-
-  return 1;
+  return -1;
 }
 
 gint
 gda_primebase_connection_stop_logging (Gda_ServerConnection *cnc)
 {
-  primebase_Connection *pcnc = NULL;
-
-  g_return_val_if_fail(cnc != NULL, -1);
-  pcnc = (primebase_Connection *) gda_server_connection_get_user_data(cnc);
-  g_return_val_if_fail(pcnc != NULL, -1);
-
-  PBITrace(pcnc->sid, 0);
-  
-  return 1;
+  return -1;
 }
 
 gchar *
@@ -339,7 +291,7 @@ gda_primebase_error_make (Gda_ServerError *error,
 {
   primebase_Connection *pcnc  = NULL;
   primebase_Recordset  *prset = NULL;
-  long perr, serr;
+  long perr, serr, snum;
   gchar msg[256];
   gchar *errtxt;
 
@@ -347,23 +299,23 @@ gda_primebase_error_make (Gda_ServerError *error,
 
   if (pcnc) {
 //    prset = gda_server_recordset_get_user_data(recset);
-    // Did we get any error data?
-
-    PBIGetError(pcnc->sid, &perr, &serr, msg, 256);
-    errtxt = g_strdup_printf("%2ld: ERROR: %ld (%ld) : %s.",
-                             pcnc->sid, perr, serr, msg);
-    if (errtxt) {
-      gda_server_error_set_description(error, errtxt);
-      g_free((gpointer) errtxt);
-    } else {
-      gda_server_error_set_description(error, msg);
+    if (CLGetErr(pcnc->sid, &perr, &serr, NULL, NULL, msg) == A_OK)	{
+      snum = CLGetSn(pcnc->sid);
+      errtxt = g_strdup_printf("%2ld: ERROR: %ld (%ld) : %s.",
+                               snum, perr, serr, msg);
+		if (errtxt) {
+        gda_server_error_set_description(error, errtxt);
+		  g_free((gpointer) errtxt);
+		} else {
+        gda_server_error_set_description(error, msg);
+      }
+		gda_server_error_set_number(error, perr);
+      gda_server_error_set_source(error, "[gda-primebase]");
+      gda_server_error_set_help_file(error, _("Not available"));
+      gda_server_error_set_help_context(error, _("Not available"));
+      gda_server_error_set_sqlstate(error, _("error"));
+      gda_server_error_set_native(error, gda_server_error_get_description(error));
     }
-    gda_server_error_set_number(error, perr);
-    gda_server_error_set_source(error, "[gda-primebase]");
-    gda_server_error_set_help_file(error, _("Not available"));
-    gda_server_error_set_help_context(error, _("Not available"));
-    gda_server_error_set_sqlstate(error, _("error"));
-    gda_server_error_set_native(error, gda_server_error_get_description(error));
   }
 }
 
@@ -376,14 +328,18 @@ gda_primebase_get_error(long sid, gboolean log)
     gda_log_message(_("Not enough memory for primebase_Error structure."));
 	 return NULL;
   }
- 
-  PBIGetError(sid, &perr->perr, &perr->serr, perr->msg, 256);
-  perr->snum = sid;
-  if (log) {
-    gda_log_message(_("%2ld: ERROR: %ld (%ld) : %s.\n"),
-                    perr->snum, perr->perr, perr->serr, perr->msg);
+  if (CLGetErr(sid, &perr->perr, &perr->serr, NULL, NULL, perr->msg
+              ) == A_OK
+     ) {
+    perr->snum = CLGetSn(sid);
+	 if (log) {
+      gda_log_message(_("%2ld: ERROR: %ld (%ld) : %s.\n"),
+                      perr->snum, perr->perr, perr->serr, perr->msg);
+    }
+	 return perr;
   }
-  return perr;
+  gda_primebase_free_error(perr);
+  return NULL;
 }
 
 void gda_primebase_free_error(primebase_Error *perr)
