@@ -8,15 +8,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2003-08-19 00:50+0300\n"
-"PO-Revision-Date: 2003-08-20 06:03+0300\n"
+"POT-Creation-Date: 2003-09-03 10:10+0300\n"
+"PO-Revision-Date: 2003-09-03 10:03+0300\n"
 "Last-Translator: Tommi Vainikainen <Tommi.Vainikainen@iki.fi>\n"
 "Language-Team: Finnish <gnome-fi-laatu@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: libgda/gda-client.c:312 libgda/gda-client.c:515 libgda/gda-connection.c:218
+#: libgda/gda-client.c:312 libgda/gda-client.c:516 libgda/gda-connection.c:218
 #, c-format
 msgid "Data source %s not found in configuration"
 msgstr "Asetuksista ei löydy tietolähdettä %s"
@@ -26,16 +26,16 @@ msgstr "Asetuksista ei löydy tietolähdettä %s"
 msgid "Could not find provider %s in the current setup"
 msgstr "Nykyisistä asetuksista ei löydy tarjoajaa %s"
 
-#: libgda/gda-client.c:368
+#: libgda/gda-client.c:369
 #, c-format
 msgid "Provider %s does not implement entry function"
 msgstr "Tarjoaja %s ei toteuta merkintätoimintoa"
 
-#: libgda/gda-client.c:378
+#: libgda/gda-client.c:379
 msgid "Could not create GdaServerProvider object from plugin"
 msgstr "GdaServerProvider-oliota ei voida luoda liitännäisestä"
 
-#: libgda/gda-client.c:442
+#: libgda/gda-client.c:443
 msgid "Temporary data source created by libgda. Don't remove it"
 msgstr "Tilapäinen libgda:n luoma tietolähde. Älä poista tätä"
 
@@ -74,7 +74,7 @@ msgstr "Yhteysmerkkijono"
 #: providers/ibmdb2/gda-ibmdb2-provider.c:1001
 #: providers/odbc/gda-odbc-provider.c:1142
 #: providers/odbc/gda-odbc-provider.c:1298
-#: providers/postgres/gda-postgres-provider.c:1115
+#: providers/postgres/gda-postgres-provider.c:1118
 msgid "Description"
 msgstr "Kuvaus"
 
@@ -86,7 +86,7 @@ msgstr "Käyttäjätunnus"
 msgid "Password"
 msgstr "Salasana"
 
-#: libgda/gda-data-model.c:686
+#: libgda/gda-data-model.c:687
 #, c-format
 msgid "Data model %p is not editable"
 msgstr "Tietomallia %p ei voi muokata"
@@ -129,65 +129,69 @@ msgstr "Virhe luettaessa tiedostoa %s: %s"
 msgid "Could not create file %s"
 msgstr "Ei voi luoda tiedostoa %s"
 
-#: libgda/gda-value.c:1974
+#: libgda/gda-value.c:1982
 msgid "TRUE"
 msgstr "TOSI"
 
-#: libgda/gda-value.c:1976
+#: libgda/gda-value.c:1984
 msgid "FALSE"
 msgstr "EPÄTOSI"
 
-#: libgda/gda-value.c:2045
+#: libgda/gda-value.c:2053
 #, c-format
 msgid "(GObject of type '%s'"
 msgstr "(tyypin GObject \"%s\""
 
-#: libgda/gda-value.c:2048
+#: libgda/gda-value.c:2056
 msgid "NULL GObject"
 msgstr "TYHJÄ GObject"
 
-#: libgda/gda-xml-database.c:263
+#: libgda/gda-xml-database.c:271
 #, c-format
 msgid "Could not load file at %s"
 msgstr "Tiedostoa osoitteesta %s ei voi ladata"
 
-#: libgda/gda-xml-database.c:272
+#: libgda/gda-xml-database.c:280
 #, c-format
 msgid "Could not parse file at %s"
 msgstr "Tiedostoa osoitteessa %s ei voi jäsentää"
 
-#: libgda/gda-xml-database.c:282
+#: libgda/gda-xml-database.c:290
 #, c-format
 msgid "Invalid XML database file '%s'"
 msgstr "Kelvoton XML-tietokanta tiedostossa \"%s\""
 
-#: libgda/gda-xml-database.c:508
+#: libgda/gda-xml-database.c:536
 #, c-format
 msgid "Could not create a XML node from table %s"
 msgstr "XML-solmua ei voi luoda taulusta %s"
 
-#: libgda/gda-xml-database.c:526
+#: libgda/gda-xml-database.c:554
 msgid "Could not dump XML file to memory"
 msgstr "XML-tiedostoa ei voi vedostaa muistiin"
 
-#: libgda/gda-xml-database.c:619 libgda/gda-xml-database.c:656
-#: libgda/gda-xml-database.c:700
+#: libgda/gda-xml-database.c:647 libgda/gda-xml-database.c:684
+#: libgda/gda-xml-database.c:728
 #, c-format
 msgid "Table %s already exists"
 msgstr "Taulu %s on jo olemassa"
 
-#: libgda/gda-xml-database.c:693
+#: libgda/gda-xml-database.c:721
 msgid "Invalid node"
 msgstr "Kelvoton solmu"
 
-#: libgda/gda-xml-database.c:735
+#: libgda/gda-xml-database.c:763
 #, c-format
 msgid "Duplicated <data> node for table %s"
 msgstr "Kaksoiskappale <data>-solmulla taulussa %s"
 
-#: libgda/gda-xml-database.c:742
+#: libgda/gda-xml-database.c:770
 msgid "Invalid XML node"
 msgstr "Kelvoton XML-solmu"
+
+#: libgda/gda-xml-database.c:779
+msgid "Could not add the data from the XML node"
+msgstr "Ei voitu lisätä tietoa XML-solmusta"
 
 #: providers/firebird/gda-firebird-provider.c:187
 msgid "No database specified"
@@ -218,7 +222,9 @@ msgstr "Tarjoaja FireBird-tietokannoille"
 msgid ""
 "Connection aborted. You must provide at least a host, username and password "
 "using DSN 'QUERY=;USER=;PASSWORD='."
-msgstr "Yhteys katkaistu. Täytyy antaa ainakin isäntänimi, käyttäjätunnus ja salasana käyttäen DSN \"QUERY=;USER=;PASSWORD=\"."
+msgstr ""
+"Yhteys katkaistu. Täytyy antaa ainakin isäntänimi, käyttäjätunnus ja "
+"salasana käyttäen DSN \"QUERY=;USER=;PASSWORD=\"."
 
 #: providers/freetds/gda-freetds-provider.c:210
 msgid "Error creating message container."
@@ -354,12 +360,12 @@ msgstr "Funktio"
 #: providers/oracle/gda-oracle-provider.c:1955
 #: providers/oracle/gda-oracle-provider.c:1973
 #: providers/oracle/gda-oracle-provider.c:2096
-#: providers/postgres/gda-postgres-provider.c:844
-#: providers/postgres/gda-postgres-provider.c:1114
-#: providers/postgres/gda-postgres-provider.c:1133
-#: providers/postgres/gda-postgres-provider.c:1193
-#: providers/postgres/gda-postgres-provider.c:1310
-#: providers/postgres/gda-postgres-provider.c:1943
+#: providers/postgres/gda-postgres-provider.c:847
+#: providers/postgres/gda-postgres-provider.c:1117
+#: providers/postgres/gda-postgres-provider.c:1136
+#: providers/postgres/gda-postgres-provider.c:1196
+#: providers/postgres/gda-postgres-provider.c:1313
+#: providers/postgres/gda-postgres-provider.c:1946
 #: providers/sqlite/gda-sqlite-provider.c:752
 #: providers/sybase/gda-sybase-provider.c:1098
 msgid "Owner"
@@ -378,15 +384,15 @@ msgstr "Hakemisto"
 #: providers/ibmdb2/gda-ibmdb2-provider.c:890
 #: providers/ibmdb2/gda-ibmdb2-provider.c:999
 #: providers/odbc/gda-odbc-provider.c:1140
-#: providers/postgres/gda-postgres-provider.c:1113
-#: providers/postgres/gda-postgres-provider.c:1997
+#: providers/postgres/gda-postgres-provider.c:1116
+#: providers/postgres/gda-postgres-provider.c:2000
 msgid "Table"
 msgstr "Taulu"
 
 #: providers/ibmdb2/gda-ibmdb2-provider.c:860
 #: providers/mdb/gda-mdb-provider.c:546
 #: providers/odbc/gda-odbc-provider.c:1030
-#: providers/postgres/gda-postgres-provider.c:842
+#: providers/postgres/gda-postgres-provider.c:845
 msgid "Procedure"
 msgstr "Toimintosarja"
 
@@ -403,7 +409,7 @@ msgstr "SQL-määritelmä"
 #. Set it here instead of the SQL query to allow i18n
 #: providers/ibmdb2/gda-ibmdb2-provider.c:918
 #: providers/oracle/gda-oracle-provider.c:2189
-#: providers/postgres/gda-postgres-provider.c:1349 testing/client.c:138
+#: providers/postgres/gda-postgres-provider.c:1352 testing/client.c:139
 msgid "Triggers"
 msgstr "Liipaisimet"
 
@@ -413,7 +419,7 @@ msgstr "Liipaisimet"
 #: providers/mysql/gda-mysql-provider.c:971
 #: providers/odbc/gda-odbc-provider.c:1254
 #: providers/oracle/gda-oracle-provider.c:2095
-#: providers/postgres/gda-postgres-provider.c:1132
+#: providers/postgres/gda-postgres-provider.c:1135
 #: providers/sqlite/gda-sqlite-provider.c:751
 #: providers/sybase/gda-sybase-provider.c:1096
 msgid "Type"
@@ -436,11 +442,11 @@ msgstr "Tyyppi"
 #: providers/oracle/gda-oracle-provider.c:1955
 #: providers/oracle/gda-oracle-provider.c:1974
 #: providers/oracle/gda-oracle-provider.c:2097
-#: providers/postgres/gda-postgres-provider.c:845
-#: providers/postgres/gda-postgres-provider.c:1134
-#: providers/postgres/gda-postgres-provider.c:1194
-#: providers/postgres/gda-postgres-provider.c:1311
-#: providers/postgres/gda-postgres-provider.c:1944
+#: providers/postgres/gda-postgres-provider.c:848
+#: providers/postgres/gda-postgres-provider.c:1137
+#: providers/postgres/gda-postgres-provider.c:1197
+#: providers/postgres/gda-postgres-provider.c:1314
+#: providers/postgres/gda-postgres-provider.c:1947
 #: providers/sqlite/gda-sqlite-provider.c:753
 #: providers/sybase/gda-sybase-provider.c:1100
 msgid "Comments"
@@ -451,7 +457,7 @@ msgstr "Kommentit"
 #: providers/mysql/gda-mysql-provider.c:974
 #: providers/odbc/gda-odbc-provider.c:1257
 #: providers/oracle/gda-oracle-provider.c:2097
-#: providers/postgres/gda-postgres-provider.c:1135
+#: providers/postgres/gda-postgres-provider.c:1138
 #: providers/sqlite/gda-sqlite-provider.c:754
 #: providers/sybase/gda-sybase-provider.c:1102
 msgid "GDA type"
@@ -460,7 +466,7 @@ msgstr "GDA-tyyppi"
 #. Set it here instead of the SQL query to allow i18n
 #: providers/ibmdb2/gda-ibmdb2-provider.c:974
 #: providers/oracle/gda-oracle-provider.c:1825
-#: providers/postgres/gda-postgres-provider.c:1901 testing/client.c:136
+#: providers/postgres/gda-postgres-provider.c:1904 testing/client.c:137
 msgid "Users"
 msgstr "Käyttäjät"
 
@@ -489,21 +495,21 @@ msgstr "Rivinumero yli rajojen"
 
 #: providers/ldap/gda-ldap-recordset.c:283
 #: providers/msql/gda-msql-recordset.c:227
-#: providers/mysql/gda-mysql-recordset.c:291
+#: providers/mysql/gda-mysql-recordset.c:294
 #: providers/oracle/gda-oracle-recordset.c:469
 msgid "Attempt to insert a row with an invalid number of columns"
 msgstr "Yritys lisätä rivi, jossa on väärä määrä sarakkeita"
 
 #: providers/ldap/gda-ldap-recordset.c:298
 #: providers/msql/gda-msql-recordset.c:239
-#: providers/mysql/gda-mysql-recordset.c:306
+#: providers/mysql/gda-mysql-recordset.c:309
 #: providers/oracle/gda-oracle-recordset.c:484
 msgid "Could not retrieve column's information"
 msgstr "Ei saa sarakkeiden tietoja"
 
 #: providers/ldap/gda-ldap-recordset.c:316
 #: providers/msql/gda-msql-recordset.c:253
-#: providers/mysql/gda-mysql-recordset.c:324
+#: providers/mysql/gda-mysql-recordset.c:327
 #: providers/oracle/gda-oracle-recordset.c:502
 msgid "Could not retrieve column's value"
 msgstr "Ei saa sarakkeiden arvoja"
@@ -537,7 +543,7 @@ msgstr "MBD-tarjoaja ei tue transaktioita"
 #: providers/mysql/gda-mysql-provider.c:1069
 #: providers/odbc/gda-odbc-provider.c:914
 #: providers/oracle/gda-oracle-provider.c:1248
-#: providers/postgres/gda-postgres-provider.c:1360
+#: providers/postgres/gda-postgres-provider.c:1363
 #: providers/sqlite/gda-sqlite-provider.c:622
 #: providers/xml/gda-xml-provider.c:464
 msgid "Field name"
@@ -547,7 +553,7 @@ msgstr "Kentän nimi"
 #: providers/mysql/gda-mysql-provider.c:1070
 #: providers/odbc/gda-odbc-provider.c:915
 #: providers/oracle/gda-oracle-provider.c:1249
-#: providers/postgres/gda-postgres-provider.c:1361
+#: providers/postgres/gda-postgres-provider.c:1364
 #: providers/sqlite/gda-sqlite-provider.c:623
 #: providers/xml/gda-xml-provider.c:465
 msgid "Data type"
@@ -557,7 +563,7 @@ msgstr "Tietotyyppi"
 #: providers/mysql/gda-mysql-provider.c:1071
 #: providers/odbc/gda-odbc-provider.c:916
 #: providers/oracle/gda-oracle-provider.c:1250
-#: providers/postgres/gda-postgres-provider.c:1362
+#: providers/postgres/gda-postgres-provider.c:1365
 #: providers/sqlite/gda-sqlite-provider.c:624
 #: providers/xml/gda-xml-provider.c:466
 msgid "Size"
@@ -567,7 +573,7 @@ msgstr "Koko"
 #: providers/mysql/gda-mysql-provider.c:1072
 #: providers/odbc/gda-odbc-provider.c:917
 #: providers/oracle/gda-oracle-provider.c:1251
-#: providers/postgres/gda-postgres-provider.c:1363
+#: providers/postgres/gda-postgres-provider.c:1366
 #: providers/sqlite/gda-sqlite-provider.c:625
 #: providers/xml/gda-xml-provider.c:467
 msgid "Scale"
@@ -577,7 +583,7 @@ msgstr "Asteikko"
 #: providers/mysql/gda-mysql-provider.c:1073
 #: providers/odbc/gda-odbc-provider.c:918
 #: providers/oracle/gda-oracle-provider.c:1252
-#: providers/postgres/gda-postgres-provider.c:1364
+#: providers/postgres/gda-postgres-provider.c:1367
 #: providers/sqlite/gda-sqlite-provider.c:626
 #: providers/xml/gda-xml-provider.c:468
 msgid "Not null?"
@@ -587,7 +593,7 @@ msgstr "Ei tyhjä?"
 #: providers/mysql/gda-mysql-provider.c:1074
 #: providers/odbc/gda-odbc-provider.c:919
 #: providers/oracle/gda-oracle-provider.c:1253
-#: providers/postgres/gda-postgres-provider.c:1365
+#: providers/postgres/gda-postgres-provider.c:1368
 #: providers/sqlite/gda-sqlite-provider.c:627
 #: providers/xml/gda-xml-provider.c:469
 msgid "Primary key?"
@@ -597,7 +603,7 @@ msgstr "Ensisijainen avain?"
 #: providers/mysql/gda-mysql-provider.c:1075
 #: providers/odbc/gda-odbc-provider.c:920
 #: providers/oracle/gda-oracle-provider.c:1254
-#: providers/postgres/gda-postgres-provider.c:1366
+#: providers/postgres/gda-postgres-provider.c:1369
 #: providers/sqlite/gda-sqlite-provider.c:628
 #: providers/xml/gda-xml-provider.c:470
 msgid "Unique index?"
@@ -607,7 +613,7 @@ msgstr "Uniikkihakemisto?"
 #: providers/mysql/gda-mysql-provider.c:1076
 #: providers/odbc/gda-odbc-provider.c:921
 #: providers/oracle/gda-oracle-provider.c:1255
-#: providers/postgres/gda-postgres-provider.c:1367
+#: providers/postgres/gda-postgres-provider.c:1370
 #: providers/sqlite/gda-sqlite-provider.c:629
 #: providers/xml/gda-xml-provider.c:471
 msgid "References"
@@ -617,7 +623,7 @@ msgstr "Viittaukset"
 #: providers/mysql/gda-mysql-provider.c:1077
 #: providers/odbc/gda-odbc-provider.c:922
 #: providers/oracle/gda-oracle-provider.c:1256
-#: providers/postgres/gda-postgres-provider.c:1368
+#: providers/postgres/gda-postgres-provider.c:1371
 #: providers/sqlite/gda-sqlite-provider.c:630
 msgid "Default value"
 msgstr "Oletusarvo"
@@ -630,7 +636,7 @@ msgstr "ID"
 #: providers/mdb/gda-mdb-provider.c:550
 #: providers/mysql/gda-mysql-provider.c:705
 #: providers/odbc/gda-odbc-provider.c:1034
-#: providers/postgres/gda-postgres-provider.c:846
+#: providers/postgres/gda-postgres-provider.c:849
 msgid "Return type"
 msgstr "Paluutyyppi"
 
@@ -641,7 +647,7 @@ msgstr "arg-määrä"
 #: providers/mdb/gda-mdb-provider.c:552
 #: providers/mysql/gda-mysql-provider.c:706
 #: providers/odbc/gda-odbc-provider.c:1036
-#: providers/postgres/gda-postgres-provider.c:848
+#: providers/postgres/gda-postgres-provider.c:851
 msgid "Args types"
 msgstr "Arg-tyypit"
 
@@ -651,11 +657,11 @@ msgstr "Arg-tyypit"
 #: providers/odbc/gda-odbc-provider.c:1299
 #: providers/odbc/gda-odbc-provider.c:1351
 #: providers/oracle/gda-oracle-provider.c:1158
-#: providers/postgres/gda-postgres-provider.c:849
-#: providers/postgres/gda-postgres-provider.c:1116
-#: providers/postgres/gda-postgres-provider.c:1195
-#: providers/postgres/gda-postgres-provider.c:1314
-#: providers/postgres/gda-postgres-provider.c:1945
+#: providers/postgres/gda-postgres-provider.c:852
+#: providers/postgres/gda-postgres-provider.c:1119
+#: providers/postgres/gda-postgres-provider.c:1198
+#: providers/postgres/gda-postgres-provider.c:1317
+#: providers/postgres/gda-postgres-provider.c:1948
 msgid "Definition"
 msgstr "Määritelmä"
 
@@ -778,14 +784,13 @@ msgstr "Rivinumero yli rajojen"
 
 #: providers/mysql/gda-mysql-provider.c:218
 msgid ""
-"You cannot provide a UNIX_SOCKET if you also provide either a HOST or a "
-"PORT."
+"You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
 msgstr "UNIX_SOCKETia ei voi antaa, jos joko HOST tai PORT on jo annettu."
 
 #: providers/mysql/gda-mysql-provider.c:294
 #: providers/mysql/gda-mysql-provider.c:1085
 #: providers/mysql/gda-mysql-recordset.c:58
-#: providers/mysql/gda-mysql-recordset.c:177
+#: providers/mysql/gda-mysql-recordset.c:180
 msgid "Invalid MySQL handle"
 msgstr "Kelvoton MySQL-kahva"
 
@@ -835,25 +840,25 @@ msgstr "Kelvoton Odbc-kahva"
 
 #: providers/odbc/gda-odbc-provider.c:1031
 #: providers/oracle/gda-oracle-provider.c:1153
-#: providers/postgres/gda-postgres-provider.c:843
-#: providers/postgres/gda-postgres-provider.c:1309
+#: providers/postgres/gda-postgres-provider.c:846
+#: providers/postgres/gda-postgres-provider.c:1312
 msgid "Id"
 msgstr "Tunniste"
 
 #: providers/odbc/gda-odbc-provider.c:1035
-#: providers/postgres/gda-postgres-provider.c:847
+#: providers/postgres/gda-postgres-provider.c:850
 msgid "Nb args"
 msgstr "Arg-määrä"
 
 #: providers/odbc/gda-odbc-provider.c:1296
-#: providers/oracle/gda-oracle-provider.c:2193 testing/client.c:133
+#: providers/oracle/gda-oracle-provider.c:2193 testing/client.c:134
 msgid "Views"
 msgstr "Näkymät"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/odbc/gda-odbc-provider.c:1348
-#: providers/postgres/gda-postgres-provider.c:1942
-#: providers/postgres/gda-postgres-provider.c:1998
+#: providers/postgres/gda-postgres-provider.c:1945
+#: providers/postgres/gda-postgres-provider.c:2001
 msgid "Sequence"
 msgstr "Sekvenssi"
 
@@ -999,17 +1004,17 @@ msgstr "Oracle-transaktiota ei voi peruuttaa"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/oracle/gda-oracle-provider.c:1152
-#: providers/postgres/gda-postgres-provider.c:1308
+#: providers/postgres/gda-postgres-provider.c:1311
 msgid "Aggregate"
 msgstr "Kooste"
 
 #: providers/oracle/gda-oracle-provider.c:1156
-#: providers/postgres/gda-postgres-provider.c:1312
+#: providers/postgres/gda-postgres-provider.c:1315
 msgid "OutType"
 msgstr "UlosTyyppi"
 
 #: providers/oracle/gda-oracle-provider.c:1157
-#: providers/postgres/gda-postgres-provider.c:1313
+#: providers/postgres/gda-postgres-provider.c:1316
 msgid "InType"
 msgstr "SisäänTyyppi"
 
@@ -1081,7 +1086,7 @@ msgstr "Oracle-kentän nollattavuusmäärettä ei saa"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/oracle/gda-oracle-provider.c:2177
-#: providers/postgres/gda-postgres-provider.c:1232 testing/client.c:134
+#: providers/postgres/gda-postgres-provider.c:1235 testing/client.c:135
 msgid "Indexes"
 msgstr "Hakemistot"
 
@@ -1089,7 +1094,7 @@ msgstr "Hakemistot"
 msgid "Procedures"
 msgstr "Toimintosarjat"
 
-#: providers/oracle/gda-oracle-provider.c:2183 testing/client.c:137
+#: providers/oracle/gda-oracle-provider.c:2183 testing/client.c:138
 msgid "Sequences"
 msgstr "Sekvenssit"
 
@@ -1146,10 +1151,10 @@ msgstr "Riviä ei voi noutaa"
 msgid "Provider for Oracle databases"
 msgstr "Tarjoaja Oracle-tietokannoille"
 
-#: providers/postgres/gda-postgres-provider.c:561
-#: providers/postgres/gda-postgres-provider.c:578
-#: providers/postgres/gda-postgres-provider.c:649
-#: providers/postgres/gda-postgres-provider.c:784
+#: providers/postgres/gda-postgres-provider.c:564
+#: providers/postgres/gda-postgres-provider.c:581
+#: providers/postgres/gda-postgres-provider.c:652
+#: providers/postgres/gda-postgres-provider.c:787
 #: providers/postgres/gda-postgres-recordset.c:180
 #: providers/postgres/gda-postgres-recordset.c:220
 #: providers/postgres/gda-postgres-recordset.c:262
@@ -1158,12 +1163,12 @@ msgid "Invalid PostgreSQL handle"
 msgstr "Kelvoton PostgreSQL-kahva"
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:1192
+#: providers/postgres/gda-postgres-provider.c:1195
 msgid "View"
 msgstr "Näkymä"
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:1866 testing/client.c:129
+#: providers/postgres/gda-postgres-provider.c:1869 testing/client.c:130
 msgid "Databases"
 msgstr "Tietokannat"
 
@@ -1185,7 +1190,8 @@ msgstr "Tarjoaja PostgreSQL-tietokannoille"
 #: providers/sqlite/gda-sqlite-provider.c:198
 msgid ""
 "A full path must be specified on the connection string to open a database."
-msgstr "Koko polku täytyy määrittää yhteysmerkkijonossa tietokannan avaamiseksi"
+msgstr ""
+"Koko polku täytyy määrittää yhteysmerkkijonossa tietokannan avaamiseksi"
 
 #: providers/sqlite/gda-sqlite-provider.c:220
 msgid "Could not set empty_result_callbacks SQLite option"
@@ -1211,8 +1217,7 @@ msgid "Only one database per connection is allowed"
 msgstr "Vain yksi tietokanta yhteyttä kohti sallitaan"
 
 #: providers/sqlite/gda-sqlite-provider.c:390
-msgid ""
-"To remove a SQLite database you should remove the database file by hand"
+msgid "To remove a SQLite database you should remove the database file by hand"
 msgstr "SQLite-tietokanta poistetaan poistamalla tietokantatiedosto käsin"
 
 #: providers/sqlite/gda-sqlite-provider.c:664
@@ -1236,7 +1241,8 @@ msgstr "Maa-asetustoksi asetettu \"%s\"."
 msgid ""
 "Cmd structure already in use. Command will not be executed because of "
 "blocked connection."
-msgstr "Kmntorakenne on jo käytössä. Komentoa ei suoriteta, koska yhteys on tukossa."
+msgstr ""
+"Kmntorakenne on jo käytössä. Komentoa ei suoriteta, koska yhteys on tukossa."
 
 #: providers/sybase/gda-sybase-provider.c:656
 #, c-format
@@ -1273,7 +1279,9 @@ msgstr "Osuttiin tukemattomaan tulostyyppiin"
 msgid ""
 "an error occured when calling ct_diag attempting to test if there is a "
 "server message for resultset"
-msgstr "Kutsuttaessa ct_diag:ia yritettäessä kokeilla onko tulosjoukolle palvelinviestiä tapahtui virhe"
+msgstr ""
+"Kutsuttaessa ct_diag:ia yritettäessä kokeilla onko tulosjoukolle "
+"palvelinviestiä tapahtui virhe"
 
 #: providers/sybase/gda-sybase-provider.c:793
 #, c-format
@@ -1393,7 +1401,9 @@ msgstr "%s päättyi odottamattomalla paluukoodilla."
 msgid ""
 "an error occured when calling ct_diag attempting to retrieve a server "
 "message count for resultset"
-msgstr "Virhe tapahtui kutsuttaessa ct_diag yritettäessä hakea palvelinviestimäärää tulosjoukolle"
+msgstr ""
+"Virhe tapahtui kutsuttaessa ct_diag yritettäessä hakea palvelinviestimäärää "
+"tulosjoukolle"
 
 #: providers/sybase/gda-sybase-recordset.c:518
 msgid "attempting to make recordset and msg count != 1 !"
@@ -1403,7 +1413,9 @@ msgstr "yritetään tehdä tulosjoukko ja viestimäärä != 1 !"
 msgid ""
 "an error occured when calling ct_diag attempting to retrieve a server "
 "message for recordset"
-msgstr "virhe tapahtui kutsuttaessa ct_diag yritettäessä hakea palvelinviestiä tulosjoukolle"
+msgstr ""
+"virhe tapahtui kutsuttaessa ct_diag yritettäessä hakea palvelinviestiä "
+"tulosjoukolle"
 
 #: providers/sybase/gda-sybase-recordset.c:590 providers/sybase/utils.c:412
 msgid "call to ct_diag failed when attempting to clear the server messages"
@@ -1495,14 +1507,13 @@ msgid "ct_diag() failed determining # of client messages."
 msgstr "ct_diag() epäonnistui määritettäessä asiakasviestien määrää."
 
 #: providers/sybase/utils.c:202
-msgid ""
-"call to cs_diag failed when attempting to the amount of client messages"
-msgstr "kutsu cs_diag epäonnistui yritettäessä määrittää asiakasviestien määrää"
+msgid "call to cs_diag failed when attempting to the amount of client messages"
+msgstr ""
+"kutsu cs_diag epäonnistui yritettäessä määrittää asiakasviestien määrää"
 
 #: providers/sybase/utils.c:220
 msgid ""
-"an error occured when calling cs_diag attempting to retrieve a client "
-"message"
+"an error occured when calling cs_diag attempting to retrieve a client message"
 msgstr "virhe tapahtui kutsuttaessa cs_diag yritettäessä hakea asiakasviestiä"
 
 #: providers/sybase/utils.c:230
@@ -1534,14 +1545,13 @@ msgid "call to cs_diag failed when attempting to clear the client messages"
 msgstr "kutsu cs_diag epäonnistui yritettäessä tyhjentää asiakasviestejä"
 
 #: providers/sybase/utils.c:317
-msgid ""
-"call to ct_diag failed when attempting to the amount of server messages"
-msgstr "kutsu ct_diag epäonnistui yritettäessä määrittää palvelinviestien määrää"
+msgid "call to ct_diag failed when attempting to the amount of server messages"
+msgstr ""
+"kutsu ct_diag epäonnistui yritettäessä määrittää palvelinviestien määrää"
 
 #: providers/sybase/utils.c:334
 msgid ""
-"an error occured when calling ct_diag attempting to retrieve a server "
-"message"
+"an error occured when calling ct_diag attempting to retrieve a server message"
 msgstr "virhe tapahtui kutsuttaessa ct_diag yritettäessä hakea palvelinviestiä"
 
 #: providers/sybase/utils.c:346
@@ -1569,14 +1579,12 @@ msgid "Line"
 msgstr "Rivi"
 
 #: providers/sybase/utils.c:446
-msgid ""
-"call to ct_diag failed when attempting to the amount of client messages"
+msgid "call to ct_diag failed when attempting to the amount of client messages"
 msgstr "kutsu ct_diag epäonnistui yritettäessä laskea asiakasviestien määrää"
 
 #: providers/sybase/utils.c:463
 msgid ""
-"an error occured when calling ct_diag attempting to retrieve a client "
-"message"
+"an error occured when calling ct_diag attempting to retrieve a client message"
 msgstr "virhe tapahtui kutsuttaessa ct_diag yritettäessä hakea asiakasviestiä"
 
 #: providers/sybase/utils.c:476
@@ -1601,11 +1609,12 @@ msgstr "Toiminto ei mahdollinen, yhteys varattu."
 
 #: providers/xbase/gda-xbase-provider.c:185
 msgid "Either FILENAME or DIRECTORY can be specified, but not both or neither"
-msgstr "Joko TIEDOSTONIMI tai HAKEMISTO voidaan määrittää, mutta ei molempia tai ei kumpaakaan"
+msgstr ""
+"Joko TIEDOSTONIMI tai HAKEMISTO voidaan määrittää, mutta ei molempia tai ei "
+"kumpaakaan"
 
 #: providers/xbase/gda-xbase-provider.c:232
-msgid ""
-"Either FILENAME or DIRECTORY must be specified in the connection string"
+msgid "Either FILENAME or DIRECTORY must be specified in the connection string"
 msgstr "Joko TIEDOSTONIMI tai HAKEMISTO täytyy määrittää yhteysmerkkijonossa"
 
 #: providers/xbase/gda-xbase-provider.c:261
@@ -1621,7 +1630,9 @@ msgstr "Tarjoaja Xbase-tiedostoille (dBase, FoxPro, jne.)"
 msgid ""
 "A full path must be specified on the connection string to open a database on "
 "the XML provider."
-msgstr "Koko polku täytyy määrittää yhteysmerkkijonossa tietokannan avaamiseksi XML-tarjoajalla."
+msgstr ""
+"Koko polku täytyy määrittää yhteysmerkkijonossa tietokannan avaamiseksi XML-"
+"tarjoajalla."
 
 #: providers/xml/gda-xml-provider.c:221 providers/xml/gda-xml-provider.c:243
 msgid "Invalid XML handle"
@@ -1728,149 +1739,152 @@ msgstr "Arvo \"%1$s\" alkion %3$s määreelle %2$s ei ole luetellussa joukossa\n
 msgid "\t\tNONE\n"
 msgstr "\t\tEIMITÄÄN\n"
 
-#: testing/client.c:82
+#: testing/client.c:83
 #, c-format
 msgid "** ERROR: could not open connection to %s\n"
 msgstr "** VIRHE: ei voi avata yhteyttä kohteeseen %s\n"
 
 #. show provider features
-#: testing/client.c:87
+#: testing/client.c:88
 msgid "\tProvider capabilities...\n"
 msgstr "\tTarjoajan kyvyt...\n"
 
-#: testing/client.c:88
+#: testing/client.c:89
 #, c-format
 msgid "\t\tAggregates: %s\n"
 msgstr "\t\tKoosteet: %s\n"
 
-#: testing/client.c:90 testing/client.c:93 testing/client.c:96
-#: testing/client.c:99 testing/client.c:102 testing/client.c:105
-#: testing/client.c:108 testing/client.c:111 testing/client.c:114
-#: testing/client.c:117 testing/client.c:120 testing/client.c:123
+#: testing/client.c:91 testing/client.c:94 testing/client.c:97
+#: testing/client.c:100 testing/client.c:103 testing/client.c:106
+#: testing/client.c:109 testing/client.c:112 testing/client.c:115
+#: testing/client.c:118 testing/client.c:121 testing/client.c:124
 msgid "Supported"
 msgstr "Tuettu"
 
-#: testing/client.c:90 testing/client.c:93 testing/client.c:96
-#: testing/client.c:99 testing/client.c:102 testing/client.c:105
-#: testing/client.c:108 testing/client.c:111 testing/client.c:114
-#: testing/client.c:117 testing/client.c:120 testing/client.c:123
+#: testing/client.c:91 testing/client.c:94 testing/client.c:97
+#: testing/client.c:100 testing/client.c:103 testing/client.c:106
+#: testing/client.c:109 testing/client.c:112 testing/client.c:115
+#: testing/client.c:118 testing/client.c:121 testing/client.c:124
 msgid "Not supported"
 msgstr "Ei tuettu"
 
-#: testing/client.c:91
+#: testing/client.c:92
 #, c-format
 msgid "\t\tIndexes: %s\n"
 msgstr "\t\tHakemistot: %s\n"
 
-#: testing/client.c:94
+#: testing/client.c:95
 #, c-format
 msgid "\t\tNamespaces: %s\n"
 msgstr "\t\tNimiavaruudet: %s\n"
 
-#: testing/client.c:97
+#: testing/client.c:98
 #, c-format
 msgid "\t\tProcedures: %s\n"
 msgstr "\t\tToimintosarjat: %s\n"
 
-#: testing/client.c:100
+#: testing/client.c:101
 #, c-format
 msgid "\t\tSequences: %s\n"
 msgstr "\t\tSekvenssit: %s\n"
 
-#: testing/client.c:103
+#: testing/client.c:104
 #, c-format
 msgid "\t\tSQL: %s\n"
 msgstr "\t\tSQL: %s\n"
 
-#: testing/client.c:106
+#: testing/client.c:107
 #, c-format
 msgid "\t\tTransactions: %s\n"
 msgstr "\t\tTransaktiot: %s\n"
 
-#: testing/client.c:109
+#: testing/client.c:110
 #, c-format
 msgid "\t\tTriggers: %s\n"
 msgstr "\t\tLiipaisimet: %s\n"
 
-#: testing/client.c:112
+#: testing/client.c:113
 #, c-format
 msgid "\t\tUsers: %s\n"
 msgstr "\t\tKäyttäjät: %s\n"
 
-#: testing/client.c:115
+#: testing/client.c:116
 #, c-format
 msgid "\t\tViews: %s\n"
 msgstr "\t\tNäkymät: %s\n"
 
-#: testing/client.c:118
+#: testing/client.c:119
 #, c-format
 msgid "\t\tXML queries: %s\n"
 msgstr "\t\tXML-kyselyt: %s\n"
 
-#: testing/client.c:121
+#: testing/client.c:122
 #, c-format
 msgid "\t\tBLOBs: %s\n"
 msgstr "\t\tBLOBit: %s\n"
 
 #. show connection schemas
-#: testing/client.c:126
+#: testing/client.c:127
 #, c-format
 msgid ""
 "\n"
 "\tProvider reports version: %s\n"
 "\n"
-msgstr "\n\tTarjoaja ilmoittaa version: %s\n\n"
+msgstr ""
+"\n"
+"\tTarjoaja ilmoittaa version: %s\n"
+"\n"
 
-#: testing/client.c:128
+#: testing/client.c:129
 msgid "Namespaces"
 msgstr "Nimiavaruudet"
 
-#: testing/client.c:130
+#: testing/client.c:131
 msgid "Stored procedures"
 msgstr "Tallennetut toimintosarjat"
 
-#: testing/client.c:131
+#: testing/client.c:132
 msgid "Connection Tables"
 msgstr "Yhteystaulut"
 
-#: testing/client.c:132
+#: testing/client.c:133
 msgid "Available types"
 msgstr "Käytettävissäolevat tyypit"
 
-#: testing/client.c:135
+#: testing/client.c:136
 msgid "Aggregates"
 msgstr "Koosteet"
 
-#: testing/client.c:139
+#: testing/client.c:140
 msgid "Languages"
 msgstr "Kielet"
 
-#: testing/client.c:144 testing/client.c:152
+#: testing/client.c:145 testing/client.c:153
 msgid "\tStarting transaction..."
 msgstr "\tAloitetaan transaktio..."
 
-#: testing/client.c:146 testing/client.c:150 testing/client.c:154
-#: testing/client.c:158
+#: testing/client.c:147 testing/client.c:151 testing/client.c:155
+#: testing/client.c:159
 msgid "Error"
 msgstr "Virhe"
 
-#: testing/client.c:148
+#: testing/client.c:149
 msgid "\tFinishing transaction..."
 msgstr "\tPäätetään transaktio..."
 
-#: testing/client.c:156
+#: testing/client.c:157
 msgid "\tRolling back transaction..."
 msgstr "\tPeruutetaan transaktio takaisin..."
 
-#: testing/client.c:187
+#: testing/client.c:188
 msgid "Testing GDA client API"
 msgstr "Kokeillaan GDA-asiakasrajapintaa"
 
-#: testing/client.c:196
+#: testing/client.c:197
 msgid "** ERROR: gda_config_get_data_source_list returned a NULL item\n"
 msgstr "** VIRHE: gda_config_get_data_source_list palautti NULL-esineen\n"
 
-#: testing/client.c:200
+#: testing/client.c:201
 #, c-format
 msgid " Data source = %s, User = %s\n"
 msgstr "Datalähde = %s, Käyttäjä = %s\n"
@@ -1897,5 +1911,3 @@ msgstr "\tkuvaus = %s\n"
 #: testing/config.c:92
 msgid "\tgda_params ="
 msgstr "\tgda_parametrit ="
-
-
