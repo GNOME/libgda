@@ -8,6 +8,9 @@
 	</oaf_attribute>
 	<oaf_attribute name="description" type="string"
 	               value="GDA Datasource Access for Oracle"/>
+	<oaf_attribute name="gda_params" type="stringv">
+		<item value="DATABASE"/>
+	</oaf_attribute>
 </oaf_server>
 
 </oaf_info>

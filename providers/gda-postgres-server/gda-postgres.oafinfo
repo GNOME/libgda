@@ -8,6 +8,15 @@
 	</oaf_attribute>
 	<oaf_attribute name="description" type="string"
 	               value="GDA Datasource Access for Postgres"/>
+	<oaf_attribute name="gda_params" type="stringv">
+		<item value="HOST"/>
+		<item value="DATABASE"/>
+		<item value="PORT"/>
+		<item value="OPTIONS"/>
+		<item value="TTY"/>
+		<item value="LOGIN"/>
+		<item value="PASSWORD"/>
+	</oaf_attribute>
 </oaf_server>
 
 </oaf_info>

@@ -8,6 +8,15 @@
 	</oaf_attribute>
 	<oaf_attribute name="description" type="string"
 	               value="GDA Datasource Access for MySQL"/>
+	<oaf_attribute name="gda_params" type="stringv">
+		<item value="HOST"/>
+		<item value="DATABASE"/>
+		<item value="USERNAME"/>
+		<item value="PASSWORD"/>
+		<item value="PORT"/>
+		<item value="UNIX_SOCKET"/>
+		<item value="FLAGS"/>
+	</oaf_attribute>
 </oaf_server>
 
 </oaf_info>
