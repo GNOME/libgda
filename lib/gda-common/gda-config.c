@@ -957,3 +957,66 @@ gda_dsn_free_list (GList *list)
 	}
 }
 
+/**
+ * gda_config_save_last_connection
+ */
+void
+gda_config_save_last_connection (const gchar *gda_name, const gchar *username)
+{
+	gboolean added = FALSE;
+	gint cnt;
+	GList *l;
+	GdaDsn *dsn;
+	static GList *last_connections = NULL;
+
+	g_return_if_fail (gda_name != NULL);
+
+	for (cnt = 1;
+	     cnt <= gda_config_get_int (GDA_CONFIG_KEY_MAX_LAST_CONNECTIONS);
+	     cnt++) {
+		gchar *str, *data;
+
+		str = g_strdup_printf ("%s/Connection%d", GDA_CONFIG_SECTION_LAST_CONNECTIONS, cnt);
+		data = gda_config_get_string (str);
+		g_free (str);
+		if (data != NULL) {
+			str = g_strdup (data);
+			if (!strcmp (str, gda_name) && !added) {
+				last_connections = g_list_prepend (last_connections, str);
+				added = TRUE;
+			}
+			else if (!added)
+				last_connections = g_list_append (last_connections, str);
+		}
+	}
+
+	/* fix the length of the saved last connections */
+	if (!added) {
+		last_connections = g_list_prepend (last_connections, g_strdup (gda_name));
+	}
+	if (g_list_length (last_connections) >
+	    gda_config_get_int (GDA_CONFIG_KEY_MAX_LAST_CONNECTIONS)) {
+		gchar *str;
+
+		l = g_list_last (last_connections);
+
+		str = (gchar *) l->data;
+		last_connections = g_list_remove (last_connections, str);
+		g_free (str);
+	}
+
+	/* now, save the last connections to the configuration */
+	for (cnt = 1, l = g_list_first (last_connections);
+	     cnt <= gda_config_get_int (GDA_CONFIG_KEY_MAX_LAST_CONNECTIONS) && l != NULL;
+	     cnt++, l = g_list_next (l)) {
+		gchar *str = g_strdup_printf ("%s/Connection%d", GDA_CONFIG_SECTION_LAST_CONNECTIONS, cnt);
+
+		gda_config_set_string (str, (gchar *) l->data);
+	}
+
+	dsn = gda_dsn_find_by_name (gda_name);
+	if (dsn != NULL) {
+		gda_dsn_set_username (dsn, username);
+		gda_dsn_save (dsn);
+	}
+}

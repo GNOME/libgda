@@ -26,9 +26,11 @@
 extern "C" {
 #endif
 
-#define GDA_CONFIG_SECTION_DATASOURCES "/apps/gda/Datasources"
-#define GDA_CONFIG_SECTION_LOG         "/apps/gda/Log"
+#define GDA_CONFIG_SECTION_DATASOURCES       "/apps/gda/Datasources"
+#define GDA_CONFIG_SECTION_LAST_CONNECTIONS  "/apps/gda/LastConnections"
+#define GDA_CONFIG_SECTION_LOG               "/apps/gda/Log"
 
+#define GDA_CONFIG_KEY_MAX_LAST_CONNECTIONS  "/apps/gda/MaxLastConnections"
 /*
  * Configuration system access
  */
@@ -128,6 +130,12 @@ gboolean gda_dsn_remove          (GdaDsn *dsn);
 
 GList*   gda_dsn_list            (void);
 void     gda_dsn_free_list       (GList *list);
+
+/*
+ * Private functions
+ */
+void     gda_config_save_last_connection (const gchar *gda_name,
+					  const gchar *username);
 
 #if defined(__cplusplus)
 }
