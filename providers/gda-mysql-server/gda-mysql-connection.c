@@ -18,6 +18,7 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include "gda-quark-list.h"
 #include "gda-mysql.h"
 #include <ctype.h>
 
@@ -88,21 +89,6 @@ gda_mysql_connection_new (GdaServerConnection *cnc)
 	return TRUE;
 }
 
-static gchar*
-get_value (gchar* ptr)
-{
-	while (*ptr && *ptr != '=') ptr++;
-	if (!*ptr)
-		return 0;
-	ptr++;
-	if (!*ptr)
-		return 0;
-
-	while (*ptr && isspace(*ptr)) ptr++;
-
-	return (g_strdup(ptr));
-}
-
 gint
 gda_mysql_connection_open (GdaServerConnection *cnc,
                            const gchar *dsn,
@@ -110,8 +96,6 @@ gda_mysql_connection_open (GdaServerConnection *cnc,
                            const gchar *password)
 {
 	MYSQL_Connection* mysql_cnc;
-	gchar*            ptr_s;
-	gchar*            ptr_e;
 	MYSQL*            rc;
 	gchar*            t_host = NULL;
 	gchar*            t_db = NULL;
@@ -120,6 +104,7 @@ gda_mysql_connection_open (GdaServerConnection *cnc,
 	gchar*            t_port = NULL;
 	gchar*            t_unix_socket = NULL;
 	gchar*            t_flags = NULL;
+	GdaQuarkList*     qlist;
 #if MYSQL_VERSION_ID < 32200
 	gint              err;
 #endif
@@ -129,61 +114,44 @@ gda_mysql_connection_open (GdaServerConnection *cnc,
 	mysql_cnc = (MYSQL_Connection *) gda_server_connection_get_user_data(cnc);
 	if (mysql_cnc) {
 		/* parse connection string */
-		ptr_s = (gchar *) dsn;
-		while (ptr_s && *ptr_s) {
-			ptr_e = strchr(ptr_s, ';');
-			
-			if (ptr_e)
-				*ptr_e = '\0';
-			if (strncasecmp(ptr_s, "HOST", strlen("HOST")) == 0)
-				t_host = get_value(ptr_s);
-			else if (strncasecmp(ptr_s, "DATABASE", strlen("DATABASE")) == 0)
-				t_db = get_value(ptr_s);
-			else if (strncasecmp(ptr_s, "USERNAME", strlen("USERNAME")) == 0)
-				t_user = get_value(ptr_s);
-			else if (strncasecmp(ptr_s, "PASSWORD", strlen("PASSWORD")) == 0)
-				t_password = get_value(ptr_s);
-			else if (strncasecmp(ptr_s, "PORT", strlen("PORT")) == 0)
-				t_port = get_value(ptr_s);
-			else if (strncasecmp(ptr_s, "UNIX_SOCKET", strlen("UNIX_SOCKET")) == 0)
-				t_unix_socket = get_value(ptr_s);
-			else if (strncasecmp(ptr_s, "FLAGS", strlen("FLAGS")) == 0)
-				t_flags = get_value(ptr_s);
+		qlist = gda_quark_list_new_from_string (dsn);
 
-			ptr_s = ptr_e;
-			if (ptr_s)
-				ptr_s++;
-		}
+		t_host = gda_quark_list_find (qlist, "HOST");
+		t_db = gda_quark_list_find (qlist, "DATABASE");
+		t_user = gda_quark_list_find (qlist, "USERNAME");
+		t_password = gda_quark_list_find (qlist, "PASSWORD");
+		t_port = gda_quark_list_find (qlist, "PORT");
+		t_unix_socket = gda_quark_list_find (qlist, "UNIX_SOCKET");
+		t_flags = gda_quark_list_find (qlist, "FLAGS");
 
 		/* okay, now let's copy the overriding user and/or password if applicable */
-		if (user) {
-			if (t_user) g_free((gpointer) t_user);
-			t_user = g_strdup(user);
-		}
-		if (password) {
-			if (t_password) g_free((gpointer) t_password);
-			t_password = g_strdup(password);
-		}
+		if (user)
+			t_user = user;
+		if (password)
+			t_password = password;
 
 		/* we can't have both a host/pair AND a unix_socket */
 		/* if both are provided, error out now... */
 		if ((t_host || t_port) && t_unix_socket) {
-			gda_log_error(_("%s:%d: You cannot provide a UNIX_SOCKET if you also provide"
-			                " either a HOST or a PORT. Please remove the UNIX_SOCKET, or"
-			                " remove both the HOST and PORT options"),
-			                __FILE__, __LINE__);
+			gda_server_connection_add_error_string (
+				cnc, _("You cannot provide a UNIX_SOCKET if you also provide"
+				       " either a HOST or a PORT. Please remove the UNIX_SOCKET, or"
+				       " remove both the HOST and PORT options"));
+			gda_quark_list_free (qlist);
 			return -1;
 		}
 
 		/* set the default of localhost:3306 if neither is provided */
 		if (!t_unix_socket) {
-			if (!t_port) t_port = g_strdup("3306");
-			if (!t_host) t_host = g_strdup("localhost");
+			if (!t_port)
+				t_port = "3306";
+			if (!t_host)
+				t_host = "localhost";
 		}
 
 		gda_log_message(_("Opening connection with user=%s, password=%s, "
 		                  "host=%s, port=%s, unix_socket=%s"), t_user, t_password,
-		                  t_host, t_port, t_unix_socket);
+				t_host, t_port, t_unix_socket);
 		mysql_cnc->mysql = g_new0(MYSQL, 1);
 
 		rc = mysql_real_connect(mysql_cnc->mysql,
@@ -198,27 +166,24 @@ gda_mysql_connection_open (GdaServerConnection *cnc,
 		                        t_flags ? atoi(t_flags) : 0);
 		if (!rc) {
 			gda_server_error_make(gda_error_new(), 0, cnc, __PRETTY_FUNCTION__);
+			gda_quark_list_free (qlist);
 			return -1;
 		}
 #if MYSQL_VERSION_ID < 32200
 		err = mysql_select_db(mysql_cnc->mysql, t_db);
 		if (err != 0) {
 			gda_server_error_make(gda_error_new(), 0, cnc, __PRETTY_FUNCTION__);
+			gda_quark_list_free (qlist);
 			return -1;
 		}
 #endif
 
 		/* free memory */
-		g_free((gpointer) t_host);
-		g_free((gpointer) t_db);
-		g_free((gpointer) t_user);
-		g_free((gpointer) t_password);
-		g_free((gpointer) t_port);
-		g_free((gpointer) t_unix_socket);
-		g_free((gpointer) t_flags);
+		gda_quark_list_free (qlist);
 
 		return 0;
 	}
+
 	return -1;
 }
 
@@ -232,9 +197,9 @@ gda_mysql_connection_close (GdaServerConnection *cnc)
 	mysql_cnc = (MYSQL_Connection *) gda_server_connection_get_user_data(cnc);
 	if (mysql_cnc) {
 	        if (mysql_cnc->mysql) {
-		        mysql_close(mysql_cnc->mysql);
-			mysql_cnc->mysql=NULL;
-			mysql_cnc->types_array=NULL;
+		        mysql_close (mysql_cnc->mysql);
+			mysql_cnc->mysql = NULL;
+			mysql_cnc->types_array = NULL;
 		}
 	}
 }
@@ -271,7 +236,11 @@ gda_mysql_connection_open_schema (GdaServerConnection *cnc,
 	fn = schema_ops[(gint) t];
 	if (fn)
 		return fn(error, cnc, constraints, length);
-	else gda_log_error(_("Unhandled SCHEMA_QTYPE %d"), (gint) t);
+
+	/* we don't support this schema type */
+	gda_server_error_make (error, NULL, cnc, __PRETTY_FUNCTION__);
+	gda_error_set_description (error, _("Unknown schema type"));
+
 	return NULL;
 }
 
