@@ -1,4 +1,4 @@
-2003-12-14  Laurent Sansonetti <lrz@gnome.org
+2003-12-14  Laurent Sansonetti <lrz@gnome.org>
 
 	* libgda/gda-connection.c, libgda/gda-data-model.c
 	* libgda/gda-export.c, libgda/gda-value.c:
