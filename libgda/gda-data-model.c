@@ -280,12 +280,18 @@ gda_data_model_describe_column (GdaDataModel *model, gint col)
 
 	fa = CLASS (model)->describe_column (model, col);
 	if (!fa) {
+		const GdaValue *value;
 		/* we generate a basic FieldAttributes structure */
 		fa = gda_field_attributes_new ();
 		gda_field_attributes_set_defined_size (fa, 0);
 		gda_field_attributes_set_name (fa, gda_data_model_get_column_title (model, col));
 		gda_field_attributes_set_scale (fa, 0);
-		gda_field_attributes_set_gdatype (fa, GDA_VALUE_TYPE_STRING);
+		value = gda_data_model_get_value_at (model, col, 0);
+		if (value == NULL)
+			gda_field_attributes_set_gdatype (fa, GDA_VALUE_TYPE_STRING);
+		else
+			gda_field_attributes_set_gdatype (fa, gda_value_get_type (value));
+
 		gda_field_attributes_set_allow_null (fa, TRUE);
 	}
 

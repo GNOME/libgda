@@ -1,3 +1,15 @@
+2002-06-07  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
+	* libgda/gda-data-model.c:
+	(describe_column): try to set the type of the column if possible when
+	generating a default GdaFieldAttributes.
+
+	* libgda/gda-value.c:
+	(gda_value_isa): removed.
+	(gda_value_stringify): use a switch.
+
+	* libgda/gda-value.h: added macro gda_value_get_type and gda_value_isa.
+
 2002-06-06  Tim Coleman <tim@timcoleman.com>
 
 	* providers/oracle/*: first working version of the Oracle provider

@@ -4,6 +4,7 @@
  * AUTHORS:
  *	Michael Lausch <michael@lausch.at>
  *	Rodrigo Moya <rodrigo@gnome-db.org>
+ *	Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -531,7 +532,7 @@ gda_value_new_tinyint (gchar val)
  * Make a new #GdaValue of type @type from its string representation.
  *
  * Returns: The newly created #GdaValue or NULL if the string representation
- * cannot be converted to the specified @type;
+ * cannot be converted to the specified @type.
  */
 GdaValue *
 gda_value_new_from_string (const gchar *as_string, GdaValueType type)
@@ -561,23 +562,6 @@ gda_value_free (GdaValue *value)
 
 	clear_value (value);
 	g_free (value);
-}
-
-/**
- * gda_value_isa
- * @value: a value whose type is to be tested.
- * @type: a type to test for.
- *
- * Test if a given @value is of type @type.
- *
- * Returns: a boolean that says whether or not @value is of type @type.
- * If @value is NULL it returns FALSE.
- */
-gboolean
-gda_value_isa (const GdaValue *value, GdaValueType type)
-{
-	g_return_val_if_fail (value != NULL, FALSE);
-	return value->type == type;
 }
 
 /**
@@ -1310,31 +1294,44 @@ gda_value_set_from_value (GdaValue *value, const GdaValue *from)
 gchar *
 gda_value_stringify (GdaValue *value)
 {
+	const GdaTime *gdatime;
+	const GdaDate *gdadate;
+	const GdaTimestamp *timestamp;
+	const GdaGeometricPoint *point;
+	const GdaValueList *list;
+	const GdaNumeric *numeric;
+	GList *l;
+	GString *str = NULL;
 	gchar *retval = NULL;
 
 	g_return_val_if_fail (value != NULL, NULL);
 
-	if (gda_value_isa (value, GDA_VALUE_TYPE_BIGINT))
+	switch (value->type){
+	case GDA_VALUE_TYPE_BIGINT:
 		retval = g_strdup_printf ("%lld", gda_value_get_bigint (value));
-	else if (gda_value_isa (value, GDA_VALUE_TYPE_BOOLEAN)) {
+		break;
+	case GDA_VALUE_TYPE_BOOLEAN:
 		if (gda_value_get_boolean (value))
 			retval = g_strdup (_("TRUE"));
 		else
 			retval = g_strdup (_("FALSE"));
-	}
-	else if (gda_value_isa (value, GDA_VALUE_TYPE_STRING))
+		break;
+	case GDA_VALUE_TYPE_STRING:
 		retval = g_strdup (gda_value_get_string (value));
-	else if (gda_value_isa (value, GDA_VALUE_TYPE_INTEGER))
+		break;
+	case GDA_VALUE_TYPE_INTEGER:
 		retval = g_strdup_printf ("%d", gda_value_get_integer (value));
-	else if (gda_value_isa (value, GDA_VALUE_TYPE_SMALLINT))
+		break;
+	case GDA_VALUE_TYPE_SMALLINT:
 		retval = g_strdup_printf ("%d", gda_value_get_smallint (value));
-	else if (gda_value_isa (value, GDA_VALUE_TYPE_SINGLE))
+		break;
+	case GDA_VALUE_TYPE_SINGLE:
 		retval = g_strdup_printf ("%f", gda_value_get_single (value));
-	else if (gda_value_isa (value, GDA_VALUE_TYPE_DOUBLE))
+		break;
+	case GDA_VALUE_TYPE_DOUBLE:
 		retval = g_strdup_printf ("%f", gda_value_get_double (value));
-	else if (gda_value_isa (value, GDA_VALUE_TYPE_TIME)) {
-		const GdaTime *gdatime;
-
+		break;
+	case GDA_VALUE_TYPE_TIME:
 		gdatime = gda_value_get_time (value);
 		retval = g_strdup_printf (gdatime->timezone == TIMEZONE_INVALID ?
 					  "%02u:%02u:%02u" : "%02u:%02u:%02u%+03d", 
@@ -1342,19 +1339,15 @@ gda_value_stringify (GdaValue *value)
 					  gdatime->minute,
 					  gdatime->second,
 					  gdatime->timezone / 3600);
-	}
-	else if (gda_value_isa (value, GDA_VALUE_TYPE_DATE)) {
-		const GdaDate *gdadate;
-
+		break;
+	case GDA_VALUE_TYPE_DATE:
 		gdadate = gda_value_get_date (value);
 		retval = g_strdup_printf ("%04u-%02u-%02u",
 					  gdadate->year,
 					  gdadate->month,
 					  gdadate->day);
-	}
-	else if (gda_value_isa (value, GDA_VALUE_TYPE_TIMESTAMP)) {
-		const GdaTimestamp *timestamp;
-
+		break;
+	case GDA_VALUE_TYPE_TIMESTAMP:
 		timestamp = gda_value_get_timestamp (value);
 		retval = g_strdup_printf (timestamp->timezone == TIMEZONE_INVALID ?
 					  "%04u-%02u-%02u %02u:%02u:%02u.%03d" :
@@ -1367,22 +1360,16 @@ gda_value_stringify (GdaValue *value)
 					  timestamp->second,
 					  timestamp->fraction,
 					  timestamp->timezone/3600);
-	}
-	else if (gda_value_isa (value, GDA_VALUE_TYPE_GEOMETRIC_POINT)) {
-		const GdaGeometricPoint *point;
-
+		break;
+	case GDA_VALUE_TYPE_GEOMETRIC_POINT:
 		point = gda_value_get_geometric_point (value);
 		retval = g_strdup_printf ("(%.*g,%.*g)",
 					  DBL_DIG,
 					  point->x,
 					  DBL_DIG,
 					  point->y);
-	}
-	else if (gda_value_isa (value, GDA_VALUE_TYPE_LIST)) {
-		const GdaValueList *list;
-		GList *l;
-		GString *str = NULL;
-
+		break;
+	case GDA_VALUE_TYPE_LIST:
 		list = gda_value_get_list (value);
 		for (l = (GList *) list; l != NULL; l = l->next) {
 			gchar *s;
@@ -1408,17 +1395,17 @@ gda_value_stringify (GdaValue *value)
 		}
 		else
 			retval = g_strdup ("");
-	}
-	else if (gda_value_isa (value, GDA_VALUE_TYPE_NUMERIC)) {
-		const GdaNumeric *numeric;
-
+		break;
+	case GDA_VALUE_TYPE_NUMERIC:
 		numeric = gda_value_get_numeric (value);
 		retval = g_strdup (numeric->number);
-	}
-	else if (gda_value_isa (value, GDA_VALUE_TYPE_NULL))
+		break;
+	case GDA_VALUE_TYPE_NULL:
 		retval = g_strdup ("NULL");
-	else
+		break;
+	default:
 		retval = g_strdup ("");
+	}
         	
 	return retval;
 }
@@ -1513,5 +1500,4 @@ gda_value_compare (const GdaValue *value1, const GdaValue *value2)
 
 	return retval;
 }
-
 
