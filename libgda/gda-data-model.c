@@ -165,7 +165,7 @@ gda_data_model_get_n_columns (GdaDataModel *model)
  * position, or NULL on error (out-of-bound position, etc). The
  * returned value should be freed with #gda_value_free
  */
-GdaValue *
+const GdaValue *
 gda_data_model_get_value_at (GdaDataModel *model, gint col, gint row)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);

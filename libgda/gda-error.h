@@ -25,7 +25,7 @@
 #  define __gda_error_h__
 
 #include <glib/gmacros.h>
-#include <gda-common/GNOME_Database.h>
+#include <libgda/GNOME_Database.h>
 
 G_BEGIN_DECLS
 

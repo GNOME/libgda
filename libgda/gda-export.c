@@ -20,9 +20,8 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include "config.h"
-#include "gda-export.h"
-#include "gda-util.h"
+#include <config.h>
+#include <libgda/gda-export.h>
 #include <gobject/gsignal.h>
 
 struct _GdaExportPrivate {

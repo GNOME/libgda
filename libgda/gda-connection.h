@@ -24,11 +24,17 @@
 #if !defined(__gda_connection_h__)
 #  define __gda_connection_h__
 
-#include <gda-command.h>
-#include <gda-error.h>
-#include <glib/gmacros.h>
+#include <libgda/gda-command.h>
+#include <libgda/gda-error.h>
+#include <libgda/gda-parameter.h>
 
 G_BEGIN_DECLS
+
+#define GDA_TYPE_CONNECTION            (gda_connection_get_type())
+#define GDA_CONNECTION(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_CONNECTION, GdaConnection))
+#define GDA_CONNECTION_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_CONNECTION, GdaConnectionClass))
+#define GDA_IS_CONNECTION(obj)         (G_TYPE_CHECK_INSTANCE_TYPE(obj, GDA_TYPE_CONNECTION))
+#define GDA_IS_CONNECTION_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), GDA_TYPE_CONNECTION))
 
 typedef struct _GdaConnection        GdaConnection;
 typedef struct _GdaConnectionClass   GdaConnectionClass;
@@ -45,31 +51,31 @@ struct _GdaConnectionClass {
 	GObjectClass object_class;
 };
 
-GType             gda_connection_get_type (void);
-GdaConnection    *gda_connection_new (GdaClient *client,
-				      GNOME_Database_Connection corba_cnc,
-				      const gchar *cnc_string,
-				      const gchar *username,
-				      const gchar *password);
-gboolean          gda_connection_close (GdaConnection *cnc);
+GType          gda_connection_get_type (void);
+GdaConnection *gda_connection_new (GdaClient *client,
+				   GNOME_Database_Connection corba_cnc,
+				   const gchar *cnc_string,
+				   const gchar *username,
+				   const gchar *password);
+gboolean       gda_connection_close (GdaConnection *cnc);
 
-GdaClient        *gda_connection_get_client (GdaConnection *cnc);
-void              gda_connection_set_client (GdaConnection *cnc, GdaClient *client);
+GdaClient     *gda_connection_get_client (GdaConnection *cnc);
+void           gda_connection_set_client (GdaConnection *cnc, GdaClient *client);
 
-const gchar      *gda_connection_get_string (GdaConnection *cnc);
-const gchar      *gda_connection_get_username (GdaConnection *cnc);
-const gchar      *gda_connection_get_password (GdaConnection *cnc);
+const gchar   *gda_connection_get_string (GdaConnection *cnc);
+const gchar   *gda_connection_get_username (GdaConnection *cnc);
+const gchar   *gda_connection_get_password (GdaConnection *cnc);
 
-void              gda_connection_add_error (GdaConnection *cnc, GdaError *error);
-void              gda_connection_add_error_list (GdaConnection *cnc, GList *error_list);
+void          gda_connection_add_error (GdaConnection *cnc, GdaError *error);
+void          gda_connection_add_error_list (GdaConnection *cnc, GList *error_list);
 
-GdaRecordsetList *gda_connection_execute_command (GdaConnection *cnc,
-						  GdaCommand *cmd,
-						  GdaParameterList *params);
+GList        *gda_connection_execute_command (GdaConnection *cnc,
+					      GdaCommand *cmd,
+					      GdaParameterList *params);
 
-gboolean          gda_connection_begin_transaction (GdaConnection *cnc, const gchar *id);
-gboolean          gda_connection_commit_transaction (GdaConnection *cnc, const gchar *id);
-gboolean          gda_connection_rollback_transaction (GdaConnection *cnc, const gchar *id);
+gboolean      gda_connection_begin_transaction (GdaConnection *cnc, const gchar *id);
+gboolean      gda_connection_commit_transaction (GdaConnection *cnc, const gchar *id);
+gboolean      gda_connection_rollback_transaction (GdaConnection *cnc, const gchar *id);
 
 G_END_DECLS
 

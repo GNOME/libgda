@@ -21,8 +21,9 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include "gda-error.h"
-#include "GNOME_Database.h"
+#include <libgda/gda-error.h>
+#include <libgda/GNOME_Database.h>
+#include <bonobo/bonobo-i18n.h>
 
 struct _GdaErrorPrivate {
 	gchar *description;
@@ -128,16 +129,7 @@ gda_error_list_from_exception (CORBA_Environment *ev)
 		break;
 	}
 	case CORBA_USER_EXCEPTION:{
-		if (strcmp (CORBA_exception_id (ev), ex_GNOME_Database_NotSupported) == 0) {
-			GNOME_Database_NotSupported *not_supported_error;
-
-			not_supported_error = (GNOME_Database_NotSupported *) &ev->_any;
-			error = gda_error_new ();
-			gda_error_set_source (error, _("[CORBA User Exception]"));
-			gda_error_set_description (error, not_supported_error->errormsg);
-			all_errors = g_list_append (all_errors, error);
-		}
-		else if (strcmp (CORBA_exception_id (ev), ex_GNOME_Database_DriverError) == 0) {
+		if (strcmp (CORBA_exception_id (ev), ex_GNOME_Database_DriverError) == 0) {
 			GNOME_Database_ErrorSeq error_sequence =
 				((GNOME_Database_DriverError *) &ev->_any)->errors;
 			gint idx;

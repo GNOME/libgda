@@ -37,3 +37,4 @@
 #include <libgda/gda-recordset.h>
 #include <libgda/gda-server.h>
 #include <libgda/gda-value.h>
+#include <libgda/gda-xml-database.h>

@@ -31,7 +31,7 @@ gda-marshal.c: gda-marshal.list $(GLIB_GENMARSHAL)
 	$(GLIB_GENMARSHAL) $< --body --prefix=gda_marshal > $@
 
 gda_headers = \
-	gda-batch.h \
+	GNOME_Database.h \
 	gda-client.h \
 	gda-command.h \
 	gda-config.h \
@@ -50,7 +50,8 @@ gda_headers = \
 	gda-server-provider.h \
 	gda-server-recordset.h \
 	gda-value.h \
-	GNOME_Database.h \
+	gda-xml-database.h \
+	gda-xml-document.h \
 	libgda.h
 
 $(libgda_2_la_OBJECTS): $(gda_marshal_built_files)
@@ -60,7 +61,6 @@ libgda_2_la_SOURCES = \
 	GNOME_Database-common.c \
 	GNOME_Database-skels.c \
 	GNOME_Database-stubs.c \
-	gda-batch.c \
 	gda-client.c \
 	gda-command.c \
 	gda-config.c \
@@ -79,7 +79,9 @@ libgda_2_la_SOURCES = \
 	gda-server-connection.c \
 	gda-server-provider.c \
 	gda-server-recordset.c \
-	gda-value.c
+	gda-value.c \
+	gda-xml-database.c \
+	gda-xml-document.c
 
 libgda_2_la_LDFLAGS = -version-info $(GDA_CURRENT):$(GDA_REVISION):$(GDA_AGE)
 libgda_2_la_LIBADD = $(LIBGDA_LIBS) 

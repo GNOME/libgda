@@ -68,12 +68,11 @@ gda_connection_init (GdaConnection *cnc, GdaConnectionClass *klass)
 	cnc->priv = g_new0 (GdaConnectionPrivate, 1);
 	cnc->priv->client = NULL;
 	cnc->priv->corba_cnc = CORBA_OBJECT_NIL;
-	cnc->priv->id = NULL;
 	cnc->priv->cnc_string = NULL;
 	cnc->priv->username = NULL;
 	cnc->priv->password = NULL;
 	cnc->priv->is_open = FALSE;
-	cnc->priv->errors = NULL;
+	cnc->priv->error_list = NULL;
 }
 
 static void
@@ -96,7 +95,6 @@ gda_connection_finalize (GObject *object)
 		cnc->priv->corba_cnc = CORBA_OBJECT_NIL;
 	}
 
-	g_free (cnc->priv->id);
 	g_free (cnc->priv->cnc_string);
 	g_free (cnc->priv->username);
 	g_free (cnc->priv->password);
@@ -164,6 +162,7 @@ gda_connection_new (GdaClient *client,
 	CORBA_exception_init (&ev);
 
 	corba_res = GNOME_Database_Connection_open (
+		cnc->priv->corba_cnc,
 		bonobo_object_corba_objref (BONOBO_OBJECT (cnc->priv->client)),
 		(const CORBA_char *) cnc->priv->cnc_string,
 		(const CORBA_char *) cnc->priv->username,
@@ -283,7 +282,7 @@ gda_connection_add_error_list (GdaConnection *cnc, GList *error_list)
 /**
  * gda_connection_execute_command
  */
-GdaRecordsetList *
+GList *
 gda_connection_execute_command (GdaConnection *cnc,
 				GdaCommand *cmd,
 				GdaParameterList *params)

@@ -1,4 +1,4 @@
-/* GDA client library
+/* GDA library
  * Copyright (C) 1998-2001 The Free Software Foundation
  *
  * AUTHORS:
@@ -30,12 +30,18 @@
 
 G_BEGIN_DECLS
 
+#define GDA_TYPE_CLIENT            (gda_client_get_type())
+#define GDA_CLIENT(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_CLIENT, GdaClient))
+#define GDA_CLIENT_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_CLIENT, GdaClientClass))
+#define GDA_IS_CLIENT(obj)         (G_TYPE_CHECK_INSTANCE_TYPE(obj, GDA_TYPE_CLIENT))
+#define GDA_IS_CLIENT_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), GDA_TYPE_CLIENT))
+
 typedef struct _GdaClientClass   GdaClientClass;
 typedef struct _GdaClientPrivate GdaClientPrivate;
 
 struct _GdaClient {
 	BonoboXObject object;
-	GdaClientPrivate;
+	GdaClientPrivate *priv;
 };
 
 struct _GdaClientClass {

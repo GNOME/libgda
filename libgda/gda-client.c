@@ -135,7 +135,7 @@ GdaClient *
 gda_client_new (const gchar *iid)
 {
 	GdaClient *client;
-	CORBA_environment ev;
+	CORBA_Environment ev;
 
 	g_return_val_if_fail (iid != NULL, NULL);
 
@@ -177,7 +177,7 @@ gda_client_open_connection (GdaClient *client,
 
 	/* search for the connection in our private list */
 	for (l = client->priv->connections; l; l = l->next) {
-		gchar *tmp_str, *tmp_usr, *tpm_pwd;
+		gchar *tmp_str, *tmp_usr, *tmp_pwd;
 
 		cnc = GDA_CONNECTION (l->data);
 		tmp_str = gda_connection_get_string (cnc);

@@ -21,8 +21,7 @@
 #if !defined(__gda_batch_h__)
 #  define __gda_batch_h__
 
-#include <gda-common-defs.h>
-#include <gda-connection.h>
+#include <libgda/gda-connection.h>
 
 G_BEGIN_DECLS
 

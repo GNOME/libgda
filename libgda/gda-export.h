@@ -23,9 +23,8 @@
 #if !defined(__gda_export_h__)
 #  define __gda_export_h__ 1
 
-#include <gda-common-defs.h>
-#include <gda-connection.h>
-#include <gda-xml-database.h>
+#include <libgda/gda-connection.h>
+#include <libgda/gda-xml-database.h>
 
 G_BEGIN_DECLS
 
