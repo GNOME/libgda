@@ -1608,6 +1608,7 @@ GdaValueList
 GdaValue
 gda_value_new_null
 gda_value_new_bigint
+gda_value_new_biguint
 gda_value_new_binary
 gda_value_new_boolean
 gda_value_new_date
@@ -1620,12 +1621,15 @@ gda_value_new_money
 gda_value_new_numeric
 gda_value_new_single
 gda_value_new_smallint
+gda_value_new_smalluint
 gda_value_new_string
 gda_value_new_time
 gda_value_new_timestamp
 gda_value_new_timestamp_from_timet
 gda_value_new_tinyint
+gda_value_new_tinyuint
 gda_value_new_type
+gda_value_new_uinteger
 gda_value_new_from_string
 gda_value_new_from_xml
 gda_value_free
@@ -1636,6 +1640,8 @@ gda_value_is_number
 gda_value_copy
 gda_value_get_bigint
 gda_value_set_bigint
+gda_value_get_biguint
+gda_value_set_biguint
 gda_value_get_binary
 gda_value_set_binary
 gda_value_get_boolean
@@ -1661,6 +1667,8 @@ gda_value_get_single
 gda_value_set_single
 gda_value_get_smallint
 gda_value_set_smallint
+gda_value_get_smalluint
+gda_value_set_smalluint
 gda_value_get_string
 gda_value_set_string
 gda_value_get_time
@@ -1669,6 +1677,10 @@ gda_value_get_timestamp
 gda_value_set_timestamp
 gda_value_get_tinyint
 gda_value_set_tinyint
+gda_value_get_tinyuint
+gda_value_set_tinyuint
+gda_value_get_uinteger
+gda_value_set_uinteger
 gda_value_get_vtype
 gda_value_set_vtype
 gda_value_set_from_string

@@ -6,7 +6,14 @@ Management of connections to data sources
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
-
+  The #GdaConnection class offers access to all operations involving an
+  opened connection to a database. #GdaConnection objects are obtained
+  via the #GdaClient class.
+</para>
+<para>
+  Once obtained, applications can use #GdaConnection to execute commands,
+  run transactions, and get information about all objects stored in the
+  underlying database.
 </para>
 
 <!-- ##### SECTION See_Also ##### -->

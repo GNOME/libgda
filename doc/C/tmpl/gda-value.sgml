@@ -28,6 +28,7 @@ gda-value
 
 @GDA_VALUE_TYPE_NULL: 
 @GDA_VALUE_TYPE_BIGINT: 
+@GDA_VALUE_TYPE_BIGUINT: 
 @GDA_VALUE_TYPE_BINARY: 
 @GDA_VALUE_TYPE_BOOLEAN: 
 @GDA_VALUE_TYPE_DATE: 
@@ -40,11 +41,14 @@ gda-value
 @GDA_VALUE_TYPE_NUMERIC: 
 @GDA_VALUE_TYPE_SINGLE: 
 @GDA_VALUE_TYPE_SMALLINT: 
+@GDA_VALUE_TYPE_SMALLUINT: 
 @GDA_VALUE_TYPE_STRING: 
 @GDA_VALUE_TYPE_TIME: 
 @GDA_VALUE_TYPE_TIMESTAMP: 
 @GDA_VALUE_TYPE_TINYINT: 
+@GDA_VALUE_TYPE_TINYUINT: 
 @GDA_VALUE_TYPE_TYPE: 
+@GDA_VALUE_TYPE_UINTEGER: 
 @GDA_VALUE_TYPE_UNKNOWN: 
 
 <!-- ##### TYPEDEF GdaDate ##### -->
@@ -104,6 +108,15 @@ gda-value
 
 
 <!-- ##### FUNCTION gda_value_new_bigint ##### -->
+<para>
+
+</para>
+
+@val: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_value_new_biguint ##### -->
 <para>
 
 </para>
@@ -221,6 +234,15 @@ gda-value
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_value_new_smalluint ##### -->
+<para>
+
+</para>
+
+@val: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_value_new_string ##### -->
 <para>
 
@@ -266,7 +288,25 @@ gda-value
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_value_new_tinyuint ##### -->
+<para>
+
+</para>
+
+@val: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_value_new_type ##### -->
+<para>
+
+</para>
+
+@val: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_value_new_uinteger ##### -->
 <para>
 
 </para>
@@ -357,6 +397,24 @@ gda-value
 
 
 <!-- ##### FUNCTION gda_value_set_bigint ##### -->
+<para>
+
+</para>
+
+@value: 
+@val: 
+
+
+<!-- ##### FUNCTION gda_value_get_biguint ##### -->
+<para>
+
+</para>
+
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_value_set_biguint ##### -->
 <para>
 
 </para>
@@ -591,6 +649,24 @@ gda-value
 @val: 
 
 
+<!-- ##### FUNCTION gda_value_get_smalluint ##### -->
+<para>
+
+</para>
+
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_value_set_smalluint ##### -->
+<para>
+
+</para>
+
+@value: 
+@val: 
+
+
 <!-- ##### FUNCTION gda_value_get_string ##### -->
 <para>
 
@@ -655,6 +731,42 @@ gda-value
 
 
 <!-- ##### FUNCTION gda_value_set_tinyint ##### -->
+<para>
+
+</para>
+
+@value: 
+@val: 
+
+
+<!-- ##### FUNCTION gda_value_get_tinyuint ##### -->
+<para>
+
+</para>
+
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_value_set_tinyuint ##### -->
+<para>
+
+</para>
+
+@value: 
+@val: 
+
+
+<!-- ##### FUNCTION gda_value_get_uinteger ##### -->
+<para>
+
+</para>
+
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_value_set_uinteger ##### -->
 <para>
 
 </para>

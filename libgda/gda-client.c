@@ -282,10 +282,13 @@ gda_client_new (void)
  * @password: password for @username.
  * @options: Options for the connection.
  *
- * Establish a connection to a data source.
+ * Establish a connection to a data source. The connection will be opened
+ * if no identical connection is available in the #GdaClient connection pool,
+ * and re-used if available. If you dont want to share the connection,
+ * specify #GDA_CONNECTION_OPTIONS_DONT_SHARE as one of the flags in
+ * the @options parameter.
  *
- * This function is the most common way of opening database connections with
- * libgda.
+ * This function is the way of opening database connections with libgda.
  *
  * Returns: the opened connection if successful, %NULL if there is
  * an error.
@@ -311,11 +314,13 @@ gda_client_open_connection (GdaClient *client,
 	}
 
 	/* search for the connection in our private list */
-	cnc = gda_client_find_connection (client, dsn, username, password);
-	if (cnc) {
-		g_object_ref (G_OBJECT (cnc));
-		gda_client_notify_connection_opened_event (client, cnc);
-		return cnc;
+	if (! (options & GDA_CONNECTION_OPTIONS_DONT_SHARE)) {
+		cnc = gda_client_find_connection (client, dsn, username, password);
+		if (cnc) {
+			g_object_ref (G_OBJECT (cnc));
+			gda_client_notify_connection_opened_event (client, cnc);
+			return cnc;
+		}
 	}
 
 	/* try to find provider in our hash table */
@@ -410,9 +415,8 @@ gda_client_open_connection (GdaClient *client,
  *
  * Open a connection given a provider ID and a connection string. This
  * allows applications to open connections without having to create
- * a data source in the configuration.  The format of @cnc_string is
+ * a data source in the configuration. The format of @cnc_string is
  * similar to postgresql and mysql connection strings.
- * 
  *
  * Returns: the opened connection if successful, NULL if there is
  * an error.
@@ -463,7 +467,7 @@ gda_client_open_connection_from_string (GdaClient *client,
  * gda_client_get_connection_list
  * @client: a #GdaClient object.
  *
- * Get the list of all open connections in the given #GdaClient.
+ * Get the list of all open connections in the given #GdaClient object.
  * The GList returned is an internal pointer, so DON'T TRY TO
  * FREE IT.
  *

@@ -1002,23 +1002,6 @@ gda_value_get_bigint (GdaValue *value)
 }
 
 /**
- * gda_value_get_biguint
- * @value: a #GdaValue whose value we want to get.
- *
- * Gets the value stored in @value.
- * 
- * Returns: the value contained in @value.
- */
-guint64
-gda_value_get_biguint (GdaValue *value)
-{
-	g_return_val_if_fail (value != NULL, -1);
-	g_return_val_if_fail (gda_value_isa (value, GDA_VALUE_TYPE_BIGUINT), -1);
-	return value->value.v_biguint;
-}
-
-
-/**
  * gda_value_set_bigint
  * @value: a #GdaValue that will store @val.
  * @val: value to be stored in @value.
@@ -1033,6 +1016,22 @@ gda_value_set_bigint (GdaValue *value, gint64 val)
 	clear_value (value);
 	value->type = GDA_VALUE_TYPE_BIGINT;
 	value->value.v_bigint = val;
+}
+
+/**
+ * gda_value_get_biguint
+ * @value: a #GdaValue whose value we want to get.
+ *
+ * Gets the value stored in @value.
+ * 
+ * Returns: the value contained in @value.
+ */
+guint64
+gda_value_get_biguint (GdaValue *value)
+{
+	g_return_val_if_fail (value != NULL, -1);
+	g_return_val_if_fail (gda_value_isa (value, GDA_VALUE_TYPE_BIGUINT), -1);
+	return value->value.v_biguint;
 }
 
 /**
@@ -1283,22 +1282,6 @@ gda_value_get_integer (GdaValue *value)
 }
 
 /**
- * gda_value_get_uinteger
- * @value: a #GdaValue whose value we want to get.
- *
- * Gets the value stored in @value.
- * 
- * Returns: the value contained in @value.
- */
-guint
-gda_value_get_uinteger (GdaValue *value)
-{
-	g_return_val_if_fail (value != NULL, -1);
-	g_return_val_if_fail (gda_value_isa (value, GDA_VALUE_TYPE_UINTEGER), -1);
-	return value->value.v_uinteger;
-}
-
-/**
  * gda_value_set_integer
  * @value: a #GdaValue that will store @val.
  * @val: value to be stored in @value.
@@ -1313,23 +1296,6 @@ gda_value_set_integer (GdaValue *value, gint val)
 	clear_value (value);
 	value->type = GDA_VALUE_TYPE_INTEGER;
 	value->value.v_integer = val;
-}
-
-/**
- * gda_value_set_uinteger
- * @value: a #GdaValue that will store @val.
- * @val: value to be stored in @value.
- *
- * Stores @val into @value.
- */
-void
-gda_value_set_uinteger (GdaValue *value, guint val)
-{
-	g_return_if_fail (value != NULL);
-
-	clear_value (value);
-	value->type = GDA_VALUE_TYPE_UINTEGER;
-	value->value.v_uinteger = val;
 }
 
 /**
@@ -1500,22 +1466,6 @@ gda_value_get_smallint (GdaValue *value)
 }
 
 /**
- * gda_value_get_smalluint
- * @value: a #GdaValue whose value we want to get.
- *
- * Gets the value stored in @value.
- * 
- * Returns: the value contained in @value.
- */
-gushort
-gda_value_get_smalluint (GdaValue *value)
-{
-	g_return_val_if_fail (value != NULL, -1);
-	g_return_val_if_fail (gda_value_isa (value, GDA_VALUE_TYPE_SMALLUINT), -1);
-	return value->value.v_smalluint;
-}
-
-/**
  * gda_value_set_smallint
  * @value: a #GdaValue that will store @val.
  * @val: value to be stored in @value.
@@ -1530,6 +1480,22 @@ gda_value_set_smallint (GdaValue *value, gshort val)
 	clear_value (value);
 	value->type = GDA_VALUE_TYPE_SMALLINT;
 	value->value.v_smallint = val;
+}
+
+/**
+ * gda_value_get_smalluint
+ * @value: a #GdaValue whose value we want to get.
+ *
+ * Gets the value stored in @value.
+ * 
+ * Returns: the value contained in @value.
+ */
+gushort
+gda_value_get_smalluint (GdaValue *value)
+{
+	g_return_val_if_fail (value != NULL, -1);
+	g_return_val_if_fail (gda_value_isa (value, GDA_VALUE_TYPE_SMALLUINT), -1);
+	return value->value.v_smalluint;
 }
 
 /**
@@ -1677,22 +1643,6 @@ gda_value_get_tinyint (GdaValue *value)
 }
 
 /**
- * gda_value_get_tinyuint
- * @value: a #GdaValue whose value we want to get.
- *
- * Gets the value stored in @value.
- * 
- * Returns: the value contained in @value.
- */
-guchar
-gda_value_get_tinyuint (GdaValue *value)
-{
-	g_return_val_if_fail (value != NULL, -1);
-	g_return_val_if_fail (gda_value_isa (value, GDA_VALUE_TYPE_TINYUINT), -1);
-	return value->value.v_tinyuint;
-}
-
-/**
  * gda_value_set_tinyint
  * @value: a #GdaValue that will store @val.
  * @val: value to be stored in @value.
@@ -1710,6 +1660,22 @@ gda_value_set_tinyint (GdaValue *value, gchar val)
 }
 
 /**
+ * gda_value_get_tinyuint
+ * @value: a #GdaValue whose value we want to get.
+ *
+ * Gets the value stored in @value.
+ * 
+ * Returns: the value contained in @value.
+ */
+guchar
+gda_value_get_tinyuint (GdaValue *value)
+{
+	g_return_val_if_fail (value != NULL, -1);
+	g_return_val_if_fail (gda_value_isa (value, GDA_VALUE_TYPE_TINYUINT), -1);
+	return value->value.v_tinyuint;
+}
+
+/**
  * gda_value_set_tinyuint
  * @value: a #GdaValue that will store @val.
  * @val: value to be stored in @value.
@@ -1724,6 +1690,39 @@ gda_value_set_tinyuint (GdaValue *value, guchar val)
 	clear_value (value);
 	value->type = GDA_VALUE_TYPE_TINYUINT;
 	value->value.v_tinyuint = val;
+}
+
+/**
+ * gda_value_get_uinteger
+ * @value: a #GdaValue whose value we want to get.
+ *
+ * Gets the value stored in @value.
+ * 
+ * Returns: the value contained in @value.
+ */
+guint
+gda_value_get_uinteger (GdaValue *value)
+{
+	g_return_val_if_fail (value != NULL, -1);
+	g_return_val_if_fail (gda_value_isa (value, GDA_VALUE_TYPE_UINTEGER), -1);
+	return value->value.v_uinteger;
+}
+
+/**
+ * gda_value_set_uinteger
+ * @value: a #GdaValue that will store @val.
+ * @val: value to be stored in @value.
+ *
+ * Stores @val into @value.
+ */
+void
+gda_value_set_uinteger (GdaValue *value, guint val)
+{
+	g_return_if_fail (value != NULL);
+
+	clear_value (value);
+	value->type = GDA_VALUE_TYPE_UINTEGER;
+	value->value.v_uinteger = val;
 }
 
 /**
@@ -2098,9 +2097,6 @@ gda_value_compare (const GdaValue *value1, const GdaValue *value2)
 	case GDA_VALUE_TYPE_INTEGER :
 		retval = value1->value.v_integer - value2->value.v_integer;
 		break;
-        case GDA_VALUE_TYPE_UINTEGER :
-                retval = value1->value.v_integer - value2->value.v_integer;
-                break;
 	case GDA_VALUE_TYPE_LIST :
 		retval = 0;
 		for (l1 = value1->value.v_list, l2 = value2->value.v_list; 
@@ -2154,6 +2150,9 @@ gda_value_compare (const GdaValue *value1, const GdaValue *value2)
 	case GDA_VALUE_TYPE_TYPE :
 		retval = value1->value.v_type == value2->value.v_type ? 0 : -1;
 		break;
+	case GDA_VALUE_TYPE_UINTEGER :
+                retval = value1->value.v_integer - value2->value.v_integer;
+                break;
 	default :
 		/* FIXME */
 		retval = -1;

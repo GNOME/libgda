@@ -60,7 +60,8 @@ struct _GdaConnectionClass {
 GType          gda_connection_get_type (void);
 
 typedef enum {
-	GDA_CONNECTION_OPTIONS_READ_ONLY = 1 << 0
+	GDA_CONNECTION_OPTIONS_READ_ONLY = 1 << 0,
+	GDA_CONNECTION_OPTIONS_DONT_SHARE = 2 << 0
 } GdaConnectionOptions;
 
 GdaConnection       *gda_connection_new (GdaClient *client,

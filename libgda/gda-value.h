@@ -37,6 +37,7 @@ G_BEGIN_DECLS
 typedef enum {
 	GDA_VALUE_TYPE_NULL,
 	GDA_VALUE_TYPE_BIGINT,
+	GDA_VALUE_TYPE_BIGUINT,
 	GDA_VALUE_TYPE_BINARY,
 	GDA_VALUE_TYPE_BOOLEAN,
 	GDA_VALUE_TYPE_DATE,
@@ -49,15 +50,14 @@ typedef enum {
 	GDA_VALUE_TYPE_NUMERIC,
 	GDA_VALUE_TYPE_SINGLE,
 	GDA_VALUE_TYPE_SMALLINT,
+	GDA_VALUE_TYPE_SMALLUINT,
 	GDA_VALUE_TYPE_STRING,
 	GDA_VALUE_TYPE_TIME,
 	GDA_VALUE_TYPE_TIMESTAMP,
 	GDA_VALUE_TYPE_TINYINT,
+	GDA_VALUE_TYPE_TINYUINT,
 	GDA_VALUE_TYPE_TYPE,
-        GDA_VALUE_TYPE_TINYUINT,
-        GDA_VALUE_TYPE_SMALLUINT,
         GDA_VALUE_TYPE_UINTEGER,
-        GDA_VALUE_TYPE_BIGUINT,
 	GDA_VALUE_TYPE_UNKNOWN
 } GdaValueType;
 
@@ -114,7 +114,6 @@ typedef struct {
 		GdaGeometricPoint v_point;
 		GObject *v_gobj;
 		gint v_integer;
- 	        guint v_uinteger;
 		GdaValueList *v_list;
 		GdaMoney v_money;
 		GdaNumeric v_numeric;
@@ -127,6 +126,7 @@ typedef struct {
 		gchar v_tinyint;
  	        guchar v_tinyuint;
 		GdaValueType v_type;
+		guint v_uinteger;
 	} value;
 	glong binary_length;
 } GdaValue;
@@ -141,7 +141,6 @@ GdaValue     *gda_value_new_double (gdouble val);
 GdaValue     *gda_value_new_geometric_point (const GdaGeometricPoint *val);
 GdaValue     *gda_value_new_gobject (const GObject *val);
 GdaValue     *gda_value_new_integer (gint val);
-GdaValue     *gda_value_new_uinteger(guint val);
 GdaValue     *gda_value_new_list (const GdaValueList *val);
 GdaValue     *gda_value_new_money (const GdaMoney *val);
 GdaValue     *gda_value_new_numeric (const GdaNumeric *val);
@@ -155,6 +154,7 @@ GdaValue     *gda_value_new_timestamp_from_timet (time_t val);
 GdaValue     *gda_value_new_tinyint (gchar val);
 GdaValue     *gda_value_new_tinyuint (guchar val);
 GdaValue     *gda_value_new_type (GdaValueType val);
+GdaValue     *gda_value_new_uinteger(guint val);
 GdaValue     *gda_value_new_from_string (const gchar *as_string,
 					 GdaValueType type);
 GdaValue     *gda_value_new_from_xml (const xmlNodePtr node);
@@ -185,8 +185,6 @@ const GObject *gda_value_get_gobject (GdaValue *value);
 void          gda_value_set_gobject (GdaValue *value, const GObject *val);
 gint          gda_value_get_integer (GdaValue *value);
 void          gda_value_set_integer (GdaValue *value, gint val);
-guint         gda_value_get_uinteger (GdaValue *value);
-void          gda_value_set_uinteger (GdaValue *value, guint val);
 const GdaValueList *gda_value_get_list (GdaValue *value);
 void          gda_value_set_list (GdaValue *value, const GdaValueList *val);
 void          gda_value_set_null (GdaValue *value);
@@ -210,6 +208,8 @@ gchar         gda_value_get_tinyint (GdaValue *value);
 void          gda_value_set_tinyint (GdaValue *value, gchar val);
 guchar        gda_value_get_tinyuint (GdaValue *value);
 void          gda_value_set_tinyuint (GdaValue *value, guchar val);
+guint         gda_value_get_uinteger (GdaValue *value);
+void          gda_value_set_uinteger (GdaValue *value, guint val);
 GdaValueType  gda_value_get_vtype (GdaValue *value);
 void          gda_value_set_vtype (GdaValue *value, GdaValueType type);
 gboolean      gda_value_set_from_string (GdaValue *value, 

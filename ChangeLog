@@ -1,3 +1,19 @@
+2003-06-22  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* libgda/gda-value.[ch]: keep alphabetical sort.
+
+	* libgda/gda-connection.h: added GDA_CONNECTION_OPTIONS_DONT_SHARE
+	connection option.
+
+	* libgda/gda-client.c: added more documentation.
+	(gda_client_open_connection): if GDA_CONNECTION_OPTIONS_DONT_SHARE is
+	specified in the connection options, don't reuse connections.
+
+	* doc/C/tmpl/gda-client.sgml:
+	* doc/C/tmpl/gda-command.sgml:
+	* doc/C/tmpl/gda-config.sgml:
+	* doc/C/tmpl/gda-connection.sgml: added more documentation.
+
 2003-06-13  Guntupalli Karunakar  <karunakar@freedomink.org>
 
 	* configure.in: Added "ml" in ALL_LINGUAS.
