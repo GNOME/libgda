@@ -191,6 +191,7 @@ fill_field_values (Gda_ServerRecordset *recset, ODBC_Recordset *odbc_recset)
               gda_server_field_set_double(field, cv);
           }
 
+#if (ODBCVER >= 0x0300)
         case SQL_TYPE_DATE:
         case SQL_DATE:
           {
@@ -223,6 +224,37 @@ fill_field_values (Gda_ServerRecordset *recset, ODBC_Recordset *odbc_recset)
               field->value->_d = GDA_TypeDbTimestamp;
           }
           break;
+#else
+        case SQL_DATE:
+          {
+              rc = SQLGetData( odbc_recset->hstmt, map_cols( odbc_recset, i ) + 1, 
+                      SQL_C_DATE, &field->value->_u.dbd, sizeof( SQL_TIME_STRUCT ), &len );
+              gda_server_field_set_actual_length((Gda_ServerField *) node->data, 
+                      sizeof( SQL_DATE_STRUCT ));
+              field->value->_d = GDA_TypeDbDate;
+          }
+          break;
+
+        case SQL_TIME:
+          {
+              rc = SQLGetData( odbc_recset->hstmt, map_cols( odbc_recset, i ) + 1, 
+                      SQL_C_TIME, &field->value->_u.dbt, sizeof( SQL_TIME_STRUCT ), &len );
+              gda_server_field_set_actual_length((Gda_ServerField *) node->data, 
+                      sizeof( SQL_TIME_STRUCT ));
+              field->value->_d = GDA_TypeDbTime;
+          }
+          break;
+
+        case SQL_TIMESTAMP:
+          {
+              rc = SQLGetData( odbc_recset->hstmt, map_cols( odbc_recset, 1 ) + 1, 
+                      SQL_C_TIMESTAMP, &field->value->_u.dbtstamp, sizeof( SQL_TIMESTAMP_STRUCT ), &len );
+              gda_server_field_set_actual_length((Gda_ServerField *) node->data, 
+                      sizeof( SQL_TIMESTAMP_STRUCT ));
+              field->value->_d = GDA_TypeDbTimestamp;
+          }
+          break;
+#endif
 
         default:
         case SQL_CHAR:
@@ -305,7 +337,11 @@ gda_odbc_recordset_move_prev (Gda_ServerRecordset *recset)
   {
     SQLRETURN rc;
 
+#if (ODBCVER >= 0x0300)
     rc = SQLFetchScroll( odbc_recset->hstmt, SQL_FETCH_PRIOR, 0 );
+#else
+    rc = SQLExtendedFetch( odbc_recset->hstmt, SQL_FETCH_PRIOR, 0, NULL );
+#endif 
 
     if ( rc == SQL_NO_DATA )
     {

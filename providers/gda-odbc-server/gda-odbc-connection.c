@@ -180,7 +180,11 @@ gda_odbc_connection_begin_transaction (Gda_ServerConnection *cnc)
   {
     SQLRETURN rc;
 
+#if (ODBCVER >= 0x0300)
     rc = SQLSetConnectAttr( od_cnc->hdbc, SQL_ATTR_AUTOCOMMIT, SQL_AUTOCOMMIT_OFF, 0 );
+#else
+    rc = SQLSetConnectOption( od_cnc->hdbc, SQL_AUTOCOMMIT, SQL_AUTOCOMMIT_OFF, 0 );
+#endif
     if ( SQL_SUCCEEDED( rc ))
     {
         return 0;
@@ -293,7 +297,11 @@ gda_odbc_connection_start_logging (Gda_ServerConnection *cnc,
   {
     SQLRETURN rc;
 
+#if (ODBCVER >= 0x0300)
     rc = SQLSetConnectAttr( od_cnc->hdbc, SQL_ATTR_TRACE, (SQLPOINTER)SQL_OPT_TRACE_ON, 0 );
+#else
+    rc = SQLSetConnectOption( od_cnc->hdbc, SQL_TRACE, (SQLPOINTER)SQL_OPT_TRACE_ON, 0 );
+#endif
     if ( SQL_SUCCEEDED( rc ))
     {
         return 0;
@@ -321,7 +329,11 @@ gda_odbc_connection_stop_logging (Gda_ServerConnection *cnc)
   {
     SQLRETURN rc;
 
+#if (ODBCVER >= 0x0300)
     rc = SQLSetConnectAttr( od_cnc->hdbc, SQL_ATTR_TRACE, SQL_OPT_TRACE_OFF, 0 );
+#else
+    rc = SQLSetConnectOption( od_cnc->hdbc, SQL_TRACE, SQL_OPT_TRACE_OFF, 0 );
+#endif
     if ( SQL_SUCCEEDED( rc ))
     {
         return 0;
@@ -448,15 +460,21 @@ gda_odbc_connection_get_gda_type (Gda_ServerConnection *cnc, gulong sql_type)
     case SQL_DOUBLE:
       return GDA_TypeDouble;
 
+#if (ODBCVER >= 0x0300)
     case SQL_TYPE_DATE:
+#endif
     case SQL_DATE:
       return GDA_TypeDbDate;
 
+#if (ODBCVER >= 0x0300)
     case SQL_TYPE_TIME:
+#endif
     case SQL_TIME:
       return GDA_TypeDbTime;
 
+#if (ODBCVER >= 0x0300)
     case SQL_TYPE_TIMESTAMP:
+#else
     case SQL_TIMESTAMP:
       return GDA_TypeDbTimestamp;
   }
@@ -514,13 +532,25 @@ gda_odbc_connection_get_c_type (Gda_ServerConnection *cnc, GDA_ValueType type)
       return SQL_C_DOUBLE;
 
     case GDA_TypeDbDate:
+#if (ODBCVER >= 0x0300)
       return SQL_C_TYPE_DATE;
+#else
+      return SQL_C_DATE;
+#endif
 
     case GDA_TypeDbTime:
+#if (ODBCVER >= 0x0300)
       return SQL_C_TYPE_TIME;
+#else
+      return SQL_C_TIME;
+#endif
 
     case GDA_TypeDbTimestamp:
+#if (ODBCVER >= 0x0300)
       return SQL_C_TYPE_TIMESTAMP;
+#else
+      return SQL_C_TIMESTAMP;
+#endif
 
     default:
       return SQL_C_CHAR;
