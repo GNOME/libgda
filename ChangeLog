@@ -1,5 +1,7 @@
 2003-01-15  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* libgda/gda-log.c: use syslog for log messages.
+
 	* providers/mdb/gda-mdb-provider.c (gda_mdb_provider_get_database):
 	implemented.
 	(gda_mdb_provider_begin_transaction, gda_mdb_provider_commit_transaction,

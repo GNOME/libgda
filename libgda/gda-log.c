@@ -20,12 +20,16 @@
 #include <config.h>
 #include <stdarg.h>
 #include <stdio.h>
+#include <syslog.h>
 #include <time.h>
 #include <glib/gmessages.h>
+#include <glib/gstrfuncs.h>
+#include <glib/gutils.h>
 #include <libgda/gda-intl.h>
 #include <libgda/gda-log.h>
 
 static gboolean log_enabled = TRUE;
+static gboolean log_opened = FALSE;
 
 /*
  * Private functions
@@ -40,6 +44,10 @@ void
 gda_log_enable (void)
 {
 	log_enabled = TRUE;
+	if (!log_opened) {
+		openlog (g_get_prgname (), LOG_CONS | LOG_NOWAIT | LOG_PID, LOG_USER);
+		log_opened = TRUE;
+	}
 }
 
 /**
@@ -49,6 +57,10 @@ void
 gda_log_disable (void)
 {
 	log_enabled = FALSE;
+	if (log_opened) {
+		closelog ();
+		log_opened = FALSE;
+	}
 }
 
 /**
@@ -74,12 +86,18 @@ gda_log_message (const gchar *format, ...)
 
 	g_return_if_fail (format != NULL);
 
+	if (!log_enabled)
+		return;
+
+	if (!log_opened)
+		gda_log_enable ();
+
 	/* build the message string */
 	va_start (args, format);
 	msg = g_strdup_vprintf (format, args);
 	va_end (args);
 
-	g_message (_("MESSAGE: %s"), msg);
+	syslog (LOG_USER | LOG_INFO, msg);
 	g_free (msg);
 }
 
@@ -94,12 +112,18 @@ gda_log_error (const gchar * format, ...)
 
 	g_return_if_fail (format != NULL);
 
+	if (!log_enabled)
+		return;
+
+	if (!log_opened)
+		gda_log_enable ();
+
 	/* build the message string */
 	va_start (args, format);
 	msg = g_strdup_vprintf (format, args);
 	va_end (args);
 
-	g_message (_("ERROR: %s"), msg);
+	syslog (LOG_USER | LOG_ERR, msg);
 	g_free (msg);
 }
 
