@@ -76,6 +76,7 @@ gda_server_provider_class_init (GdaServerProviderClass *klass)
 	klass->supports = NULL;
 	klass->get_schema = NULL;
 	klass->create_blob = _gda_server_provider_create_blob;
+	klass->escape_string = NULL;
 }
 
 static void
@@ -563,3 +564,29 @@ gda_server_provider_create_blob (GdaServerProvider *provider,
 	return CLASS (provider)->create_blob (provider, cnc, blob);
 }
 
+/**
+ * gda_server_provider_escape_string
+ * @provider: a server provider.
+ * @cnc: a #GdaConnection object.
+ * @gchar: to
+ * @gchar: from
+ * @unsigned long: length (of from string)
+ *
+ * Natively escapes string with \ slashes etc.
+ *
+ * Returns: %FALSE if the database does not support escaping.?
+ */
+gboolean
+gda_server_provider_escape_string (GdaServerProvider *provider,
+				   GdaConnection *cnc,
+				   gchar *from,
+				   const gchar *to,
+				   unsigned long length)
+{
+	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), FALSE);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (from != NULL, FALSE);
+	g_return_val_if_fail (to != NULL, FALSE);
+
+	return CLASS (provider)->escape_string (provider, cnc, from, to, length);
+}

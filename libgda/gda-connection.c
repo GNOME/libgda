@@ -980,3 +980,29 @@ gda_connection_create_blob (GdaConnection *cnc, GdaBlob *blob)
 	return gda_server_provider_create_blob (cnc->priv->provider_obj, cnc, blob);
 }
 
+
+/**
+ * gda_connection_escape_string
+ * @cnc: a #GdaConnection object.
+ * @gchar: to
+ * @gchar: from
+ * @unsigned long: length (of from string)
+ *
+ * Natively escapes string with \ slashes etc.
+ *
+ * Returns: %FALSE if the database does not support escaping.?
+ */
+gboolean
+gda_connection_escape_string (GdaConnection *cnc,
+			      gchar *from,
+			      const gchar *to,
+			      unsigned long length)
+{
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+	g_return_val_if_fail (from != NULL, NULL);
+	g_return_val_if_fail (to != NULL, NULL);	
+
+	/* execute the command on the provider */
+	return gda_server_provider_escape_string (cnc->priv->provider_obj,
+						  cnc, from, to, length);
+}

@@ -113,6 +113,14 @@ struct _GdaServerProviderClass {
 	gboolean (* create_blob) (GdaServerProvider *provider,
 				  GdaConnection *cnc,
 				  GdaBlob *blob);
+	
+	gboolean (* escape_string) (GdaServerProvider *provider,
+				    GdaConnection *cnc,
+				    gchar *to,
+				    const gchar *from,
+				    unsigned long length);
+				  
+				  
 };
 
 GType    gda_server_provider_get_type (void);
@@ -176,6 +184,13 @@ GdaDataModel *gda_server_provider_get_schema (GdaServerProvider *provider,
 gboolean gda_server_provider_create_blob (GdaServerProvider *provider,
 					  GdaConnection *cnc,
 					  GdaBlob *blob);
+
+gboolean gda_server_provider_escape_string (GdaServerProvider *provider,
+					    GdaConnection *cnc,
+					    gchar *to,
+					    const gchar *from,
+					    unsigned long length);			  
+	
 
 G_END_DECLS
 

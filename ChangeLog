@@ -1,3 +1,21 @@
+2004-08-17  Alan Knowles <alan@akbkhome.com>
+
+	* libgda/gda-connection.[ch] (gda_connection_escape_string):
+	new function.
+
+	* libgda/gda-server-provider.[ch]: added escape_string virtual method.
+	(gda_server_provider_escape_string): new function.
+
+	* providers/mysql/gda-mysql-provider.c
+	(gda_mysql_provider_escape_string): implemented new GdaServerProvider's
+	virtual method.
+	(gda_mysql_provider_class_init): set pointer to new method's
+	implementation.
+
+	* providers/postgres/gda-postgres-provider.c
+	(gda_postgres_provider_escape_string, gda_postgres_provider_class_init):
+	likewise.
+
 2004-08-17  Caolan McNamara <caolanm@redhat.com>
 
 	Fixes #150232

@@ -2096,8 +2096,6 @@ static gboolean gda_postgres_provider_create_blob (GdaServerProvider *provider,
 	return gda_postgres_blob_create (blob, cnc);
 }
 
-
-
 gboolean
 gda_postgres_provider_escape_string (GdaServerProvider *provider,
 				     GdaConnection *cnc,
