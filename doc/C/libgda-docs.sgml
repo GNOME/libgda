@@ -644,7 +644,7 @@
             </para>
             <programlisting>
             gda_config_save_data_source ("foo_ds", "PostgreSQL", "DATABASE=foo_db",
-                                         "description of foo_ds", "foo_username, "foo_password");
+                                         "description of foo_ds", "foo_username", "foo_password");
             gda_config_save_data_source ("other_foo_ds", "MySQL", "DATABASE=other_foo_db,HOST=db.foo.com",
                                          "description of other_foo_ds", "foo", NULL);
             </programlisting>

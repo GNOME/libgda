@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda release-1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-08-04 20:50+0100\n"
+"POT-Creation-Date: 2004-08-08 20:17+0200\n"
 "PO-Revision-Date: 2004-05-03 21:37-0400\n"
 "Last-Translator: David Lodge <dave@cirt.net>\n"
 "Language-Team: English/GB <en@li.org>\n"
@@ -215,7 +215,7 @@ msgstr "Parse error near `%s'"
 msgid "Syntax error near `%s'"
 msgstr "Syntax error near `%s'"
 
-#: libsql/sql_parser.c:361
+#: libsql/sql_parser.c:371
 msgid "Empty query to parse"
 msgstr "Empty query to parse"
 
@@ -428,6 +428,8 @@ msgstr "Table name is needed but none specified in parameter list"
 #: providers/firebird/gda-firebird-provider.c:1086
 #: providers/firebird/gda-firebird-provider.c:1120
 #: providers/firebird/gda-firebird-provider.c:1158
+#: providers/firebird/gda-firebird-recordset.c:724
+#: providers/firebird/gda-firebird-recordset.c:926
 msgid "Invalid Firebird handle"
 msgstr "Invalid Firebird handle"
 
@@ -439,6 +441,27 @@ msgstr "No database specified"
 #: providers/firebird/gda-firebird-provider.c:1164
 msgid "Invalid transaction handle"
 msgstr "Invalid transaction handle"
+
+#: providers/firebird/gda-firebird-recordset.c:380
+#: providers/firebird/gda-firebird-recordset.c:420
+msgid "Statement already prepared."
+msgstr ""
+
+#: providers/firebird/gda-firebird-recordset.c:384
+msgid "Transaction not initialized."
+msgstr ""
+
+#: providers/firebird/gda-firebird-recordset.c:489
+msgid "Firebird's ARRAY datatype not supported yet !\n"
+msgstr ""
+
+#: providers/firebird/gda-firebird-recordset.c:494
+msgid "Firebird's BLOB datatype not supported yet !\n"
+msgstr ""
+
+#: providers/firebird/gda-firebird-recordset.c:595
+msgid "Unknown Firebird's field value !\n"
+msgstr ""
 
 #: providers/firebird/libmain.c:40
 msgid "Provider for Firebird databases"
