@@ -1,28 +1,4 @@
 <SECTION>
-<FILE>gda-batch</FILE>
-<TITLE>GdaBatch</TITLE>
-gda_batch_new
-gda_batch_free
-gda_batch_load_file
-gda_batch_add_command
-gda_batch_clear
-gda_batch_start
-gda_batch_stop
-gda_batch_is_running
-gda_batch_get_connection
-gda_batch_set_connection
-gda_batch_get_transaction_mode
-gda_batch_set_transaction_mode
-<SUBSECTION Standard>
-GDA_BATCH
-GDA_IS_BATCH
-GDA_TYPE_BATCH
-gda_batch_get_type
-GDA_BATCH_CLASS
-GDA_IS_BATCH_CLASS
-</SECTION>
-
-<SECTION>
 <FILE>gda-client</FILE>
 GdaClientEvent
 GdaClientPrivate
@@ -356,6 +332,8 @@ gda_xml_database_new
 gda_xml_database_new_from_uri
 gda_xml_database_get_name
 gda_xml_database_set_name
+gda_xml_database_get_version
+gda_xml_database_set_version
 gda_xml_database_get_uri
 gda_xml_database_set_uri
 gda_xml_database_changed

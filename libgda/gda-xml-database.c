@@ -102,6 +102,20 @@ process_views_node (GdaXmlDatabase *xmldb, xmlNodePtr children)
 }
 
 /*
+ * Callbacks
+ */
+
+static void
+table_changed_cb (GdaDataModel *model, gpointer user_data)
+{
+	GdaXmlDatabase *xmldb = (GdaXmlDatabase *) user_data;
+
+	g_return_if_fail (GDA_IS_XML_DATABASE (xmldb));
+
+	gda_xml_database_changed (xmldb);
+}
+
+/*
  * GdaXmlDatabase class interface
  */
 
@@ -144,6 +158,7 @@ static gboolean
 remove_table_hash (gpointer key, gpointer value, gpointer user_data)
 {
 	g_free (key);
+	g_signal_handlers_disconnect_by_func (G_OBJECT (value), table_changed_cb, user_data);
 	g_object_unref (G_OBJECT (value));
 	return TRUE;
 }
@@ -171,7 +186,7 @@ gda_xml_database_finalize (GObject *object)
 		xmldb->priv->version = NULL;
 	}
 
-	g_hash_table_foreach_remove (xmldb->priv->tables, remove_table_hash, NULL);
+	g_hash_table_foreach_remove (xmldb->priv->tables, remove_table_hash, xmldb);
 	g_hash_table_destroy (xmldb->priv->tables);
 	xmldb->priv->tables = NULL;
 
@@ -606,6 +621,7 @@ gda_xml_database_new_table (GdaXmlDatabase *xmldb, const gchar *name)
 	}
 
 	table = gda_table_new (name);
+	g_signal_connect (G_OBJECT (table), "changed", G_CALLBACK (table_changed_cb), xmldb);
 	g_hash_table_insert (xmldb->priv->tables, g_strdup (name), table);
 	gda_xml_database_changed (xmldb);
 
@@ -642,6 +658,7 @@ gda_xml_database_new_table_from_model (GdaXmlDatabase *xmldb,
 	}
 
 	table = gda_table_new_from_model (name, model, add_data);
+	g_signal_connect (G_OBJECT (table), "changed", G_CALLBACK (table_changed_cb), xmldb);
 	if (GDA_IS_TABLE (table)) {
 		g_hash_table_insert (xmldb->priv->tables, g_strdup (name), table);
 		gda_xml_database_changed (xmldb);
@@ -732,6 +749,7 @@ gda_xml_database_new_table_from_node (GdaXmlDatabase *xmldb, xmlNodePtr node)
 
 	/* add the table to the XML database object */
 	g_hash_table_insert (xmldb->priv->tables, g_strdup (name), table);
+	g_signal_connect (G_OBJECT (table), "changed", G_CALLBACK (table_changed_cb), xmldb);
 	gda_xml_database_changed (xmldb);
 
 	return table;

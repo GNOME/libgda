@@ -1,3 +1,17 @@
+2003-07-27  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* libgda/gda-xml-database.c (gda_xml_database_new_table,
+	 gda_xml_database_new_table_from_model,
+	 gda_xml_database_new_table_from_node): connect to "changed"
+	signal on the tables.
+	(table_changed_cb): propagate the "changed" signal to the
+	GdaXmlDatabase object.
+	(remove_table_hash): disconnect from data models' signals.
+	(gda_xml_database_finalize): pass extra argument to remove_table_hash.
+
+	* doc/C/tmpl/gda-xml-database.sgml:
+	* libgda/gda-data-model.c: added some documentation.
+
 2003-07-24  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
 	* libgda/gda-value.[ch]: const'ified. Removed some warnings.

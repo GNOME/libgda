@@ -847,6 +847,12 @@ xml_set_int (xmlNodePtr node, const gchar *name, gint value)
 
 /**
  * gda_data_model_to_xml_node
+ * @model: A #GdaDataModel object.
+ * @name: Name to use for the XML resulting table.
+ *
+ * Convert a #GdaDataModel into a xmlNodePtr (as used in libxml).
+ *
+ * Returns: a xmlNodePtr representing the whole data model.
  */
 xmlNodePtr
 gda_data_model_to_xml_node (GdaDataModel *model, const gchar *name)

@@ -2,10 +2,12 @@
 <database name="sample" date="Wed Dec 22 13:19:07 1999">
   <tables>
     <table name="people">
-      <field name="name" size="64" scale="0" gdatype="GDA_TypeVarchar"/>
-      <field name="email" size="32" scale="0" gdatype="GDA_TypeVarchar"/>
+      <field name="name" size="64" scale="0" gdatype="GDA_TypeVarchar" position="0"/>
+      <field name="email" size="32" scale="0" gdatype="GDA_TypeVarchar" position="1"/>
       <data>
-        <row number="1">
+        <row number="0">
+	  <field position="0">Rodrigo Moya</field>
+	  <field position="1">rodrigo@gnome-db.org</field>
         </row>
       </data>
     </table>

@@ -49,6 +49,7 @@ Management of connections to data sources
 </para>
 
 @GDA_CONNECTION_OPTIONS_READ_ONLY: 
+@GDA_CONNECTION_OPTIONS_DONT_SHARE: 
 
 <!-- ##### FUNCTION gda_connection_new ##### -->
 <para>

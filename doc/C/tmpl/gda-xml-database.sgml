@@ -6,12 +6,19 @@ XML database representation (used for import/export and in the default provider)
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
-
+ The #GdaXmlDatabase class allows programs to manage databases in XML format
+ (the format used by libgda for importing/exporting databases). It contains
+ functions to easily manage those XML files.
+</para>
+<para>
+ With this set of functions, applications can bypass the normal libgda
+ operation mode (via #GdaClient to access data sources), and have a direct
+ access to the data in the XML file.
 </para>
 
 <!-- ##### SECTION See_Also ##### -->
 <para>
-
+ #GdaTable
 </para>
 
 <!-- ##### STRUCT GdaXmlDatabasePrivate ##### -->
@@ -53,6 +60,24 @@ XML database representation (used for import/export and in the default provider)
 
 @xmldb: 
 @name: 
+
+
+<!-- ##### FUNCTION gda_xml_database_get_version ##### -->
+<para>
+
+</para>
+
+@xmldb: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_xml_database_set_version ##### -->
+<para>
+
+</para>
+
+@xmldb: 
+@version: 
 
 
 <!-- ##### FUNCTION gda_xml_database_get_uri ##### -->
