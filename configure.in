@@ -296,23 +296,23 @@ else
 	dir="/opt/primebase/sdk"
 fi
 primebasedir=""
-AC_MSG_CHECKING(for PrimeBase SDK)
+AC_MSG_CHECKING(for PrimeBase SDK >= 4.0 Pre-final)
 for d in $dir /opt/primebase /usr/local/primebase
 do
-	if test -e ${d}/dalapi.h -a -e ${d}/libpbcl.a
+	if test -e ${d}/lib/libpbvm.so
 	then
-		primebasedir=${d}
-		PRIMEBASE_LIBS="-lm -lnsl -L$d -lpbcl"
-		PRIMEBASE_CFLAGS="-I${d}"
-		AC_DEFINE(HAVE_PRIMEBASE)
-		break
-	elif test -e ${d}/include/dalapi.h -a -e ${d}/lib/libpbcl.a
-	then
-		primebasedir=${d}
-		PRIMEBASE_LIBS="-lm -lnsl -L${d}/lib -lpbcl"
-		PRIMEBASE_CFLAGS="-I${d}/include"
-		AC_DEFINE(HAVE_PRIMEBASE)
-		break
+		for i in sdk include
+		do
+			if test -e ${d}/${i}/pbapi.h
+			then
+				primebasedir=${d}
+				PRIMEBASE_LIBS="-lm -lnsl -L${d}/lib -lpbvm"
+				PRIMEBASE_CFLAGS="-I${d}/${i}"
+				AC_DEFINE(HAVE_PRIMEBASE)
+				break
+			fi
+		done
+		
 	fi
 done
 if test x$primebasedir != x
