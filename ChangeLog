@@ -1,3 +1,12 @@
+2003-04-18  Steve Fosdick <gnomedb@pelvoux.demon.co.uk>
+
+	* libgda/providers/oracle/gda-oracle-provider.c: Fixed the
+	handling of usernames and password so that if the
+	username/password supplied at connection time is blank and so
+	is the username/password obtained from the DSN the provider will
+	try to connect to Oracle with a blank username/password rather
+	than crash from trying to dereference a NULL pointer.
+	
 2003-04-16  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* libsql/Makefile.am: don't use the same source files for the library

@@ -180,19 +180,27 @@ gda_oracle_provider_open_connection (GdaServerProvider *provider,
 				    const gchar *username,
 				    const gchar *password)
 {
-        gchar *ora_tnsname;
-	gchar *ora_username;
-	gchar *ora_password;
-	gint result;
+        gchar *tnsname;
+	gint  result;
 
         GdaOracleProvider *ora_prv = (GdaOracleProvider *) provider;
 	GdaOracleConnectionData *priv_data;
+	g_log("gda-oracle", G_LOG_LEVEL_DEBUG, "open_connection called");
 
 	g_return_val_if_fail (GDA_IS_ORACLE_PROVIDER (ora_prv), FALSE);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 
+	/* check we have a TNS name to connect to */
+
+	if ((tnsname = gda_quark_list_find (params, "TNSNAME")) == NULL) {
+		gda_connection_add_error_string (cnc, 
+		        _("No TNS name supplied"));
+		return FALSE;
+	}
+
 	priv_data = g_new0 (GdaOracleConnectionData, 1);
 
+        g_assert (priv_data != NULL);
         /* initialize Oracle */
 	result = OCIInitialize ((ub4) OCI_DEFAULT,
 				(dvoid *) 0,
@@ -200,12 +208,13 @@ gda_oracle_provider_open_connection (GdaServerProvider *provider,
 				(dvoid * (*)(dvoid *, dvoid *, size_t)) 0,
 				(void (*)(dvoid *, dvoid *)) 0);
 
-	if (result != OCI_SUCCESS) { 
+	if (result != OCI_SUCCESS) {
 		gda_connection_add_error_string (cnc, 
 			_("Could not initialize Oracle"));
 		return FALSE;
 	}
-
+	g_log("gda-oracle", G_LOG_LEVEL_DEBUG, "open_connection(1)");
+	
 	/* initialize the Oracle environment */
 	result = OCIEnvInit ((OCIEnv **) & priv_data->henv, 
 				(ub4) OCI_DEFAULT, 
@@ -216,6 +225,7 @@ gda_oracle_provider_open_connection (GdaServerProvider *provider,
 			_("Could not initialize the Oracle environment"));
 		return FALSE;
 	}
+	g_log("gda-oracle", G_LOG_LEVEL_DEBUG, "open_connection(2)");
 
 
 	/* create the service context */
@@ -227,6 +237,7 @@ gda_oracle_provider_open_connection (GdaServerProvider *provider,
 	if (!gda_oracle_check_result (result, cnc, priv_data, OCI_HTYPE_ENV,
 			_("Could not allocate the Oracle service handle")))
 		return FALSE;
+	g_log("gda-oracle", G_LOG_LEVEL_DEBUG, "open_connection(3)");
 
 	/* create the error handle */
 	result = OCIHandleAlloc ((dvoid *) priv_data->henv, 
@@ -239,6 +250,7 @@ gda_oracle_provider_open_connection (GdaServerProvider *provider,
 		OCIHandleFree ((dvoid *) priv_data->hservice, OCI_HTYPE_SVCCTX);
 		return FALSE;
 	}
+	g_log("gda-oracle", G_LOG_LEVEL_DEBUG, "open_connection(4)");
 			
 	/* we use the Multiple Sessions/Connections OCI paradigm for this server */
 	result = OCIHandleAlloc ((dvoid *) priv_data->henv,
@@ -252,6 +264,7 @@ gda_oracle_provider_open_connection (GdaServerProvider *provider,
 		OCIHandleFree ((dvoid *) priv_data->hservice, OCI_HTYPE_SVCCTX);
 		return FALSE;
 	}
+	g_log("gda-oracle", G_LOG_LEVEL_DEBUG, "open_connection(5)");
 
 	/* create the session handle */
 	result = OCIHandleAlloc ((dvoid *) priv_data->henv,
@@ -266,28 +279,29 @@ gda_oracle_provider_open_connection (GdaServerProvider *provider,
 		OCIHandleFree ((dvoid *) priv_data->hservice, OCI_HTYPE_SVCCTX);
 		return FALSE;
 	}
+	g_log("gda-oracle", G_LOG_LEVEL_DEBUG, "open_connection(6)");
 
 	/* if the username isn't provided, try to find it in the DSN */
-	if (strlen(username) > 0)
-		ora_username = username;
-	else
-		ora_username = gda_quark_list_find (params, "USER");
 
-	/* if the username isn't provided, try to find it in the DSN */
-	if (strlen(password) > 0)
-		ora_password = password;
-	else
-		ora_password = gda_quark_list_find (params, "PASSWORD");
+	if (username == NULL || *username == '\0') {
+		username = gda_quark_list_find (params, "USER");
+		if (username == NULL)
+			username="";
+	}
 
+	/* if the password isn't provided, try to find it in the DSN */
+	if (password == NULL || *password == '\0') {
+		password = gda_quark_list_find (params, "PASSWORD");
+		if (password == NULL)
+			password="";
+	}
 
-	ora_tnsname = gda_quark_list_find (params, "TNSNAME");
-        g_assert (priv_data != NULL);
 
         /* attach to Oracle server */
 	result = OCIServerAttach (priv_data->hserver,
 				priv_data->herr,
-				(text *) ora_tnsname,
-				(ub4) strlen (ora_tnsname),
+				(text *) tnsname,
+				(ub4) strlen (tnsname),
 				OCI_DEFAULT);
 	if (!gda_oracle_check_result (result, cnc, priv_data, OCI_HTYPE_ERROR,
 			_("Could not attach to the Oracle server"))) {
@@ -297,6 +311,7 @@ gda_oracle_provider_open_connection (GdaServerProvider *provider,
 		OCIHandleFree ((dvoid *) priv_data->hservice, OCI_HTYPE_SVCCTX);
 		return FALSE;
 	}
+	g_log("gda-oracle", G_LOG_LEVEL_DEBUG, "open_connection(7)");
 
 	/* set the server attribute in the service context */
 	result = OCIAttrSet ((dvoid *) priv_data->hservice, 
@@ -313,12 +328,14 @@ gda_oracle_provider_open_connection (GdaServerProvider *provider,
 		OCIHandleFree ((dvoid *) priv_data->hservice, OCI_HTYPE_SVCCTX);
 		return FALSE;
 	}
+	g_log("gda-oracle", G_LOG_LEVEL_DEBUG, "open_connection(8)");
+	g_log("gda-oracle", G_LOG_LEVEL_DEBUG, "username='%s'", username);
 	
 	/* set the username attribute */
 	result = OCIAttrSet ((dvoid *) priv_data->hsession, 
 				(ub4) OCI_HTYPE_SESSION, 
-				(dvoid *) ora_username,
-				(ub4) strlen (ora_username), 
+				(dvoid *) username,
+				(ub4) strlen (username),
 				(ub4) OCI_ATTR_USERNAME,
 				priv_data->herr);
 	if (!gda_oracle_check_result (result, cnc, priv_data, OCI_HTYPE_ERROR,
@@ -329,12 +346,13 @@ gda_oracle_provider_open_connection (GdaServerProvider *provider,
 		OCIHandleFree ((dvoid *) priv_data->hservice, OCI_HTYPE_SVCCTX);
 		return FALSE;
 	}
+	g_log("gda-oracle", G_LOG_LEVEL_DEBUG, "open_connection(9)");
 
 	/* set the password attribute */
 	result = OCIAttrSet ((dvoid *) priv_data->hsession, 
 				(ub4) OCI_HTYPE_SESSION, 
-				(dvoid *) ora_password,
-				(ub4) strlen (ora_password), 
+				(dvoid *) password,
+				(ub4) strlen (password), 
 				(ub4) OCI_ATTR_PASSWORD,
 				priv_data->herr);
 	if (!gda_oracle_check_result (result, cnc, priv_data, OCI_HTYPE_ERROR,
@@ -345,6 +363,7 @@ gda_oracle_provider_open_connection (GdaServerProvider *provider,
 		OCIHandleFree ((dvoid *) priv_data->hservice, OCI_HTYPE_SVCCTX);
 		return FALSE;
 	}
+	g_log("gda-oracle", G_LOG_LEVEL_DEBUG, "open_connection(10)");
 
 	/* begin the session */
 	result = OCISessionBegin (priv_data->hservice,
@@ -362,6 +381,7 @@ gda_oracle_provider_open_connection (GdaServerProvider *provider,
 		priv_data->hsession = NULL;
 		return FALSE;
 	}
+	g_log("gda-oracle", G_LOG_LEVEL_DEBUG, "open_connection(11)");
 
 	/* set the session attribute in the service context */
 	result = OCIAttrSet ((dvoid *) priv_data->hservice,
@@ -380,13 +400,14 @@ gda_oracle_provider_open_connection (GdaServerProvider *provider,
 		return FALSE;
 	}
 
-	priv_data->schema = g_ascii_strup(ora_username, -1);
+	priv_data->schema = g_ascii_strup(username, -1);
 	priv_data->tables = NULL;
 	priv_data->views = NULL;
 	
 	/* attach the oracle connection data to the gda connection object */
 	g_object_set_data (G_OBJECT (cnc), OBJECT_DATA_ORACLE_HANDLE, priv_data);
 
+	g_log("gda-oracle", G_LOG_LEVEL_DEBUG, "open connection success");
 	return TRUE;
 }
 
