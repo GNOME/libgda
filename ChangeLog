@@ -1,3 +1,21 @@
+2003-11-12  Paisa Seeluangsawat <paisa@users.sf.net>
+	
+	* libgda/gda-blob.c:
+	* libgda/gda-connection.c:
+	* libgda/gda-log.c:
+	* libgda/gda-select.[ch]:
+	* libgda/gda-util.c:
+	trivial fixes to stop some compiler warnings (gcc 3.2.2)
+
+	* libgda/gda-row.c:
+	(gda_row_new_from_list): updated doc comment.
+
+	* libgda/gda-data-model.c: updated a doc comment.
+	(gda_data_model_foreach): stop the loop when user function returns
+	  FALSE (as advertised in the spec).  No longer clones the GdaRows
+	  sent to user's callback.
+
+
 2003-11-12  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
 	* libgda/gda-value.c: fixed gda_value_copy for GdaNumeric. Patch by
