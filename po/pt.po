@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 2.4\n"
-"Report-Msgid-Bugs-To: Duarte Loreto <happyguy_pt@hotmail.com>\n"
-"POT-Creation-Date: 2003-11-13 21:39+0000\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2003-11-30 12:21+0100\n"
 "PO-Revision-Date: 2003-11-13 21:40+0000\n"
 "Last-Translator: Duarte Loreto <happyguy_pt@hotmail.com>\n"
 "Language-Team: Portuguese <gnome_pt@yahoogroups.com>\n"
@@ -85,7 +85,7 @@ msgstr "Utilizador"
 msgid "Password"
 msgstr "Senha"
 
-#: libgda/gda-data-model.c:698
+#: libgda/gda-data-model.c:721
 #, c-format
 msgid "Data model %p is not editable"
 msgstr "Modelo de dados %p não é editável"
@@ -494,8 +494,8 @@ msgstr "Handle LDAP inválida"
 
 #: providers/ldap/gda-ldap-recordset.c:69
 #: providers/mysql/gda-mysql-recordset.c:69
-#: providers/postgres/gda-postgres-recordset.c:193
-#: providers/postgres/gda-postgres-recordset.c:357
+#: providers/postgres/gda-postgres-recordset.c:189
+#: providers/postgres/gda-postgres-recordset.c:229
 #: providers/sqlite/gda-sqlite-recordset.c:165
 #: providers/sqlite/gda-sqlite-recordset.c:204
 msgid "Row number out of range"
@@ -730,6 +730,13 @@ msgstr "Expressões caracteres"
 #: providers/mdb/gda-mdb-provider.c:737
 #, c-format
 msgid "Could not parse '%s' command"
+msgstr "Incapaz de parsear comando '%s'"
+
+#. parsing went fine, but there is no result
+#. (e.g. because of an invalid column name)
+#: providers/mdb/gda-mdb-provider.c:744
+#, fuzzy, c-format
+msgid "Got no result for '%s' command"
 msgstr "Incapaz de parsear comando '%s'"
 
 #: providers/mdb/gda-mdb-table.c:48 providers/xml/gda-xml-provider.c:519
@@ -1132,7 +1139,7 @@ msgid "Could not define by position"
 msgstr "Incapaz de definir por posição"
 
 #: providers/oracle/gda-oracle-recordset.c:173
-#: providers/postgres/gda-postgres-recordset.c:476
+#: providers/postgres/gda-postgres-recordset.c:268
 msgid "Column out of range"
 msgstr "Coluna fora do limite"
 
@@ -1172,9 +1179,9 @@ msgstr "Fornecedor para bases de dados Oracle"
 #: providers/postgres/gda-postgres-provider.c:581
 #: providers/postgres/gda-postgres-provider.c:652
 #: providers/postgres/gda-postgres-provider.c:787
-#: providers/postgres/gda-postgres-recordset.c:184
-#: providers/postgres/gda-postgres-recordset.c:348
-#: providers/postgres/gda-postgres-recordset.c:470
+#: providers/postgres/gda-postgres-recordset.c:180
+#: providers/postgres/gda-postgres-recordset.c:220
+#: providers/postgres/gda-postgres-recordset.c:262
 #: providers/postgres/utils.c:178
 msgid "Invalid PostgreSQL handle"
 msgstr "Handle PostgreSQL inválida"
@@ -1189,29 +1196,13 @@ msgstr "Vista"
 msgid "Databases"
 msgstr "Bases de dados"
 
-#: providers/postgres/gda-postgres-recordset.c:228
-msgid "Given row doesn't belong to the model."
-msgstr "Linha indicada não pertence ao modelo."
-
 #: providers/postgres/gda-postgres-recordset.c:235
-msgid "Table name could not be guessed."
-msgstr "Nome de tabela não pode ser deduzido."
-
-#: providers/postgres/gda-postgres-recordset.c:287
-msgid "Model doesn't have at least one non-modified unique key."
-msgstr "Modelo não possui pelo menos uma chave única inalterada."
-
-#: providers/postgres/gda-postgres-recordset.c:291
-msgid "Model doesn't have any non-unique values to update."
-msgstr "Modelo não possui quaisquer valores não-únicos a actualizar."
-
-#: providers/postgres/gda-postgres-recordset.c:363
 #: providers/sqlite/gda-sqlite-recordset.c:210
 #: providers/sqlite/gda-sqlite-recordset.c:242
 msgid "Column number out of range"
 msgstr "Número de coluna fora do limite"
 
-#: providers/postgres/gda-postgres-recordset.c:581
+#: providers/postgres/gda-postgres-recordset.c:358
 #, c-format
 msgid "Tuples:\"%s\""
 msgstr "Tuples:\"%s\""
@@ -1951,6 +1942,18 @@ msgstr "\tdescrição = %s\n"
 #: testing/config.c:92
 msgid "\tgda_params ="
 msgstr "\tgda_params ="
+
+#~ msgid "Given row doesn't belong to the model."
+#~ msgstr "Linha indicada não pertence ao modelo."
+
+#~ msgid "Table name could not be guessed."
+#~ msgstr "Nome de tabela não pode ser deduzido."
+
+#~ msgid "Model doesn't have at least one non-modified unique key."
+#~ msgstr "Modelo não possui pelo menos uma chave única inalterada."
+
+#~ msgid "Model doesn't have any non-unique values to update."
+#~ msgstr "Modelo não possui quaisquer valores não-únicos a actualizar."
 
 #~ msgid "Default"
 #~ msgstr "Omissão"

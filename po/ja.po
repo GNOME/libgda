@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda release-1-0-branch\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2003-11-23 19:47+0900\n"
+"POT-Creation-Date: 2003-11-30 12:21+0100\n"
 "PO-Revision-Date: 2003-11-20 22:15+0900\n"
 "Last-Translator: Ryoichi INAGAKI <ryo1@bc.wakwak.com>\n"
 "Language-Team: Japanese <translation@gnome.gr.jp>\n"
@@ -85,7 +85,7 @@ msgstr "ユーザ名"
 msgid "Password"
 msgstr "パスワード"
 
-#: libgda/gda-data-model.c:698
+#: libgda/gda-data-model.c:721
 #, c-format
 msgid "Data model %p is not editable"
 msgstr "データモデル %p は編集できません"
@@ -730,6 +730,13 @@ msgstr "文字列"
 #: providers/mdb/gda-mdb-provider.c:737
 #, c-format
 msgid "Could not parse '%s' command"
+msgstr "コマンド '%s' を解析できませんでした"
+
+#. parsing went fine, but there is no result
+#. (e.g. because of an invalid column name)
+#: providers/mdb/gda-mdb-provider.c:744
+#, fuzzy, c-format
+msgid "Got no result for '%s' command"
 msgstr "コマンド '%s' を解析できませんでした"
 
 #: providers/mdb/gda-mdb-table.c:48 providers/xml/gda-xml-provider.c:519

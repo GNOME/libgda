@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda HEAD\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2003-11-28 15:26+0100\n"
+"POT-Creation-Date: 2003-11-30 12:21+0100\n"
 "PO-Revision-Date: 2003-11-28 18:04+0100\n"
 "Last-Translator: Miloslav Trmac <mitr@volny.cz>\n"
 "Language-Team: Czech <cs@li.org>\n"
@@ -86,7 +86,7 @@ msgstr "Uživatelské jméno"
 msgid "Password"
 msgstr "Heslo"
 
-#: libgda/gda-data-model.c:698
+#: libgda/gda-data-model.c:721
 #, c-format
 msgid "Data model %p is not editable"
 msgstr "Datový model %p nelze editovat"

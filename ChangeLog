@@ -1,3 +1,7 @@
+2003-11-30  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	Released 1.0,2
+
 2003-11-28  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
 	* libgda/gda-data-model.c: emit the row_updated, row_inserted,

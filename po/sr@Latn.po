@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2003-11-27 06:32+0100\n"
+"POT-Creation-Date: 2003-11-30 12:21+0100\n"
 "PO-Revision-Date: 2003-11-27 06:33+0100\n"
 "Last-Translator: Dejan Matijević <dejan@ns.sympatico.ca>\n"
 "Language-Team: Serbian (sr) <serbiangnome-lista@nongnu.org>\n"
@@ -87,7 +87,7 @@ msgstr "Korisničko ime"
 msgid "Password"
 msgstr "Lozinka"
 
-#: libgda/gda-data-model.c:698
+#: libgda/gda-data-model.c:721
 #, c-format
 msgid "Data model %p is not editable"
 msgstr "Model podataka %p nije izmenjiv"
@@ -1654,8 +1654,8 @@ msgid ""
 "A full path must be specified on the connection string to open a database on "
 "the XML provider."
 msgstr ""
-"Puna putanja mora biti navedena u tekstu za vezu radi otvoranja baze podataka "
-"od XML dobavljača."
+"Puna putanja mora biti navedena u tekstu za vezu radi otvoranja baze "
+"podataka od XML dobavljača."
 
 #: providers/xml/gda-xml-provider.c:222 providers/xml/gda-xml-provider.c:244
 msgid "Invalid XML handle"
