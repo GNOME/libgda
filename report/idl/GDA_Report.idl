@@ -24,10 +24,11 @@ module GDA {
 	/*
 	 * Report I/O operations
 	 */
+	typedef sequence<octet> ReportStreamChunk;
 	interface ReportStream {
 		readonly attribute any contents;
 		
-		any  readChunk (in long start, in long size);
+		ReportStreamChunk readChunk (in long start, in long size);
 		long writeChunk (in any data, in long size);
 	};
 	
