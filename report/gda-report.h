@@ -22,11 +22,13 @@
 #include <gda-common.h>
 #include <GDA_Report.h>
 
-#include <gda-report-engine.h>
-
 typedef enum
 {
+  GDA_REPORT_FLAGS_NONE,
 } Gda_ReportFlags;
+
+#include <gda-report-defs.h>
+#include <gda-report-engine.h>
 
 void gda_report_init ();
 

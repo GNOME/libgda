@@ -33,7 +33,7 @@ Gda_ReportEngine *
 gda_report_engine_load (void)
 {
   Gda_ReportEngine* engine;
-  CORBA_Exception   ev
+  CORBA_Environment ev;
   
   engine = g_new0(Gda_ReportEngine, 1);
   
@@ -68,7 +68,7 @@ gda_report_engine_unload (Gda_ReportEngine *engine)
   CORBA_Object_release(engine, &ev);
   if (!gda_corba_handle_exception(&ev))
     {
-      gda_log_error(_("CORBA exception unloading report engine: %s", CORBA_exception_id(&ev)));
+      gda_log_error(_("CORBA exception unloading report engine: %s"), CORBA_exception_id(&ev));
     }
   
   /* free all memory */

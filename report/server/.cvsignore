@@ -1,6 +1,6 @@
 Makefile
 Makefile.in
-gda-report
+gda-report-server
 .deps
 .libs
 *.o
