@@ -21,7 +21,8 @@
 #include "gda-server-impl.h"
 
 static void
-free_error_list (GList *list) {
+free_error_list (GList *list)
+{
 	GList* node;
 	
 	g_return_if_fail(list != NULL);
@@ -423,6 +424,11 @@ gda_server_connection_free (GdaServerConnection *cnc)
 		if (cnc->server_impl) {
 			cnc->server_impl->connections = g_list_remove(cnc->server_impl->connections,
 			                                              (gpointer) cnc);
+			if (!cnc->server_impl->connections) {
+				/* if no connections left, terminate */
+				gda_log_message("No connections left. Terminating");
+				gda_server_impl_stop(cnc->server_impl);
+			}
 		}
 		g_free((gpointer) cnc);
 	}

@@ -1,3 +1,9 @@
+2001-06-07  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-server-connection.c (gda_server_connection_free): call
+	gda_server_impl_stop if there are no more connections left,
+	thus not leaving the GDA providers processes running for ever
+
 2001-05-04  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-server-connection.c (gda_server_connection_add_error_string):
