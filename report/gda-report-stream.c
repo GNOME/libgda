@@ -135,10 +135,10 @@ gda_reportstream_class_init (Gda_ReportStreamClass* klass)
 							    GTK_SIGNAL_OFFSET(Gda_ReportStreamClass, error),
 							    gtk_marshal_NONE__POINTER,
 							    GTK_TYPE_NONE, 1, GTK_TYPE_POINTER);
-  gda_connection_signals[CONNECTION_WARNING] = gtk_signal_new("warning",
+  gda_reportstream_signals[REPORTSTREAM_WARNING] = gtk_signal_new("warning",
 							    GTK_RUN_LAST,
 							    object_class->type,
-							    GTK_SIGNAL_OFFSET(Gda_ConnectionClass, warning),
+							    GTK_SIGNAL_OFFSET(Gda_ReportStreamClass, warning),
 							    gtk_marshal_NONE__POINTER,
 							    GTK_TYPE_NONE, 1, GTK_TYPE_POINTER);
   gtk_object_class_add_signals(object_class, gda_reportstream_signals, LAST_SIGNAL);
