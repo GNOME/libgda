@@ -1,3 +1,8 @@
+2003-01-26  Christian Neumair <chris@gnome-de.org>
+
+	* providers/default/libmain.c (plugin_get_name): Marked "Default" for
+	translation.
+
 2003-01-26  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* libgda/gda-client.h: added new event types.

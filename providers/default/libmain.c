@@ -30,7 +30,7 @@ GdaServerProvider *plugin_create_provider (void);
 const gchar *
 plugin_get_name (void)
 {
-	return "Default";
+	return _("Default");
 }
 
 const gchar *
