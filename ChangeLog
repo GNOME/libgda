@@ -1,3 +1,9 @@
+2002-11-08  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	Fixes #97997
+	
+	* libgda.spec.in: removed obsolete requirements.
+
 2002-11-08  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
 	* libgda/gda-config.c: save/restore previous memory management functions
