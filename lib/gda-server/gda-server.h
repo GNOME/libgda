@@ -32,6 +32,7 @@ typedef struct _GdaServerClass GdaServerClass;
 typedef struct _GdaServerImplFunctions GdaServerImplFunctions;
 
 #include <GDA.h>
+#include <gda-common-defs.h>
 #include <gda-error.h>
 #include <gda-server-connection.h>
 #include <gda-server-command.h>
@@ -39,10 +40,7 @@ typedef struct _GdaServerImplFunctions GdaServerImplFunctions;
 #include <gda-server-recordset.h>
 #include <gda-server-error.h>
 
-#if defined(__cplusplus)
-extern "C"
-{
-#endif
+G_BEGIN_DECLS
 
 /*
  * The GdaServer class
@@ -62,128 +60,114 @@ extern "C"
 #define GDA_IS_SERVER_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_SERVER))
 #endif
 
-	struct _GdaServerImplFunctions
-	{
-		/* Connection interface */
-		gboolean (*connection_new) (GdaServerConnection * cnc);
-		gint (*connection_open) (GdaServerConnection * cnc,
-					 const gchar * dsn,
-					 const gchar * user,
-					 const gchar * password);
-		void (*connection_close) (GdaServerConnection * cnc);
-		  gint (*connection_begin_transaction) (GdaServerConnection *
-							cnc);
-		  gint (*connection_commit_transaction) (GdaServerConnection *
-							 cnc);
-		  gint (*connection_rollback_transaction) (GdaServerConnection
-							   * cnc);
-		GdaServerRecordset
-			*(*connection_open_schema) (GdaServerConnection * cnc,
-						    GdaError * error,
-						    GDA_Connection_QType t,
-						    GDA_Connection_Constraint
-						    * constraints,
-						    gint length);
-		  glong (*connection_modify_schema) (GdaServerConnection *
-						     cnc,
-						     GDA_Connection_QType t,
-						     GDA_Connection_Constraint
-						     * constraints,
-						     gint length);
-		  gint (*connection_start_logging) (GdaServerConnection * cnc,
-						    const gchar * filename);
-		  gint (*connection_stop_logging) (GdaServerConnection * cnc);
-		gchar *(*connection_create_table) (GdaServerConnection * cnc,
-						   GDA_RowAttributes *
-						   columns);
-		  gboolean (*connection_supports) (GdaServerConnection * cnc,
-						   GDA_Connection_Feature
-						   feature);
-		  GDA_ValueType (*connection_get_gda_type)
+struct _GdaServerImplFunctions {
+	/* Connection interface */
+	gboolean (*connection_new) (GdaServerConnection * cnc);
+	gint (*connection_open) (GdaServerConnection * cnc,
+				 const gchar * dsn,
+				 const gchar * user,
+				 const gchar * password);
+	void (*connection_close) (GdaServerConnection * cnc);
+	gint (*connection_begin_transaction) (GdaServerConnection *cnc);
+	gint (*connection_commit_transaction) (GdaServerConnection *cnc);
+	gint (*connection_rollback_transaction) (GdaServerConnection *cnc);
+	GdaServerRecordset *(*connection_open_schema) (GdaServerConnection * cnc,
+					    GdaError * error,
+					    GDA_Connection_QType t,
+					    GDA_Connection_Constraint *constraints,
+					    gint length);
+	glong (*connection_modify_schema) (GdaServerConnection *cnc,
+					     GDA_Connection_QType t,
+					     GDA_Connection_Constraint *constraints,
+					     gint length);
+	gint (*connection_start_logging) (GdaServerConnection * cnc,
+					    const gchar * filename);
+	gint (*connection_stop_logging) (GdaServerConnection * cnc);
+	gchar *(*connection_create_table) (GdaServerConnection * cnc,
+					   GDA_RowAttributes *columns);
+	gboolean (*connection_supports) (GdaServerConnection * cnc,
+					   GDA_Connection_Feature feature);
+	GDA_ValueType (*connection_get_gda_type)
 			(GdaServerConnection * cnc, gulong sql_type);
-		  gshort (*connection_get_c_type) (GdaServerConnection * cnc,
+	gshort (*connection_get_c_type) (GdaServerConnection * cnc,
 						   GDA_ValueType type);
-		gchar *(*connection_sql2xml) (GdaServerConnection * cnc,
+	gchar *(*connection_sql2xml) (GdaServerConnection * cnc,
 					      const gchar * sql);
-		gchar *(*connection_xml2sql) (GdaServerConnection * cnc,
+	gchar *(*connection_xml2sql) (GdaServerConnection * cnc,
 					      const gchar * xml);
-		void (*connection_free) (GdaServerConnection * cnc);
+	void (*connection_free) (GdaServerConnection * cnc);
 
-		/* Command interface */
-		  gboolean (*command_new) (GdaServerCommand * cmd);
-		GdaServerRecordset *(*command_execute) (GdaServerCommand *
+	/* Command interface */
+	gboolean (*command_new) (GdaServerCommand * cmd);
+	GdaServerRecordset *(*command_execute) (GdaServerCommand *
 							cmd, GdaError * error,
 							const
 							GDA_CmdParameterSeq *
 							params,
 							gulong * affected,
 							gulong options);
-		void (*command_free) (GdaServerCommand * cmd);
+	void (*command_free) (GdaServerCommand * cmd);
 
-		/* Recordset interface */
-		  gboolean (*recordset_new) (GdaServerRecordset * recset);
-		  gint (*recordset_move_next) (GdaServerRecordset * recset);
-		  gint (*recordset_move_prev) (GdaServerRecordset * recset);
-		  gint (*recordset_close) (GdaServerRecordset * recset);
-		void (*recordset_free) (GdaServerRecordset * recset);
+	/* Recordset interface */
+	gboolean (*recordset_new) (GdaServerRecordset * recset);
+	gint (*recordset_move_next) (GdaServerRecordset * recset);
+	gint (*recordset_move_prev) (GdaServerRecordset * recset);
+	gint (*recordset_close) (GdaServerRecordset * recset);
+	void (*recordset_free) (GdaServerRecordset * recset);
 
-		/* Error interface */
-		void (*error_make) (GdaError * error,
-				    GdaServerRecordset * recset,
-				    GdaServerConnection * cnc, gchar * where);
-	};
+	/* Error interface */
+	void (*error_make) (GdaError * error,
+			    GdaServerRecordset * recset,
+			    GdaServerConnection * cnc, gchar * where);
+};
 
-	struct _GdaServer
-	{
+struct _GdaServer {
 #ifdef HAVE_GOBJECT
-		GObject object;
+	GObject object;
 #else
-		GtkObject object;
+	GtkObject object;
 #endif
-		BonoboGenericFactory *connection_factory;
-		gchar *name;
-		GdaServerImplFunctions functions;
-		GList *connections;
-		gboolean is_running;
-	};
+	BonoboGenericFactory *connection_factory;
+	gchar *name;
+	GdaServerImplFunctions functions;
+	GList *connections;
+	gboolean is_running;
+};
 
-	struct _GdaServerClass
-	{
+struct _GdaServerClass {
 #ifdef HAVE_GOBJECT
-		GObjectClass parent_class;
-		GObjectClass *parent;
+	GObjectClass parent_class;
+	GObjectClass *parent;
 #else
-		GtkObjectClass parent_class;
+	GtkObjectClass parent_class;
 #endif
-	};
+};
 
 #ifdef HAVE_GOBJECT
-	GType gda_server_get_type (void);
+GType gda_server_get_type (void);
 #else
-	GtkType gda_server_get_type (void);
+GtkType gda_server_get_type (void);
 #endif
 
-	GdaServer *gda_server_new (const gchar * name,
-				   GdaServerImplFunctions * functions);
-	GdaServer *gda_server_find (const gchar * id);
-	void gda_server_start (GdaServer * server_impl);
-	void gda_server_stop (GdaServer * server_impl);
+GdaServer *gda_server_new (const gchar * name,
+			   GdaServerImplFunctions * functions);
+GdaServer *gda_server_find (const gchar * id);
+void gda_server_start (GdaServer * server_impl);
+void gda_server_stop (GdaServer * server_impl);
 
 #define    gda_server_is_running(_simpl_) ((_simpl_) ? (_simpl_)->is_running : FALSE)
 #define    gda_server_get_name(_simpl_) ((_simpl_) ? (_simpl_)->name : NULL)
 #define    gda_server_get_connections(_simpl_) ((_simpl_) ? (_simpl_)->connections : NULL)
 
 /* for private use */
-	gint gda_server_exception (CORBA_Environment * ev);
+gint gda_server_exception (CORBA_Environment * ev);
 
 /*
  * Initialization function
  */
-	void gda_server_init (const gchar * app_id, const gchar * version,
-			      gint nargs, gchar * args[]);
+void gda_server_init (const gchar * app_id, const gchar * version,
+		      gint nargs, gchar * args[]);
 
-#if defined(__cplusplus)
-}
-#endif
+G_END_DECLS
 
 #endif

@@ -21,18 +21,14 @@
 #  define __gda_server_error_h__
 
 #include <glib.h>
+#include <gda-common-defs.h>
 
-#if defined(__cplusplus)
-extern "C"
-{
-#endif
+G_BEGIN_DECLS
 
-	void gda_server_error_make (GdaError * error,
-				    GdaServerRecordset * recset,
-				    GdaServerConnection * cnc, gchar * where);
+void gda_server_error_make (GdaError * error,
+			    GdaServerRecordset * recset,
+			    GdaServerConnection * cnc, gchar * where);
 
-#if defined(__cplusplus)
-}
-#endif
+G_END_DECLS
 
 #endif

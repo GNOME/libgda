@@ -1,3 +1,7 @@
+2001-07-21  Rodrigo Moya <rodrigo@gnome-db.org>
+
+        * *.h: s/#if defined(__cplusplus).../G_BEGIN_END_DECLS
+
 2001-07-15  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-server-connection.c (impl_GDA_Connection_openSchema): removed
