@@ -2,7 +2,7 @@ Makefile
 Makefile.in
 *.o
 *.lo
-libgda-sybase.la
-gda-sybase-srv
+libgda-tds.la
+gda-tds-srv
 .deps
 .libs
