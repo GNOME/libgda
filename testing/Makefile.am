@@ -9,7 +9,9 @@ INCLUDES = \
 
 ## -------------------------------------------------------------------------
 
-bin_PROGRAMS = gda-test gda-primebase-test gda-sybase-test gda-tds-test
+bin_PROGRAMS = gda-test 
+
+noinst_PROGRAMS = gda-primebase-test gda-sybase-test gda-tds-test
 
 gda_test_SOURCES = \
 	gda-test.c
