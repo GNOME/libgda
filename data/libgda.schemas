@@ -16,7 +16,7 @@
     
     <schema>
       <applyto>/apps/libgda/Datasources</applyto>
-      <key>/schemas/apps/libgda/MaxLastConnections</key>
+      <key>/schemas/apps/libgda/Datasources</key>
       <owner>gnome</owner>
       <type>directory</type>
       <locale name="C">

@@ -76,12 +76,13 @@ gda_data_model_init (GdaDataModel *model, GdaDataModelClass *klass)
 
 	model->priv = g_new0 (GdaDataModelPrivate, 1);
 	model->priv->notify_changes = TRUE;
-	model->priv->column_titles = g_hash_table_new (g_int_hash, g_int_equal);
+	model->priv->column_titles = g_hash_table_new (g_str_hash, g_str_equal);
 }
 
 static void
 free_hash_string (gpointer key, gpointer value, gpointer user_data)
 {
+	g_free (key);
 	g_free (value);
 }
 
@@ -223,8 +224,11 @@ gda_data_model_get_column_title (GdaDataModel *model, gint col)
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
 
 	n_cols = gda_data_model_get_n_columns (model);
-	if (col < n_cols && col >= 0)
-		title = g_hash_table_lookup (model->priv->column_titles, &col);
+	if (col < n_cols && col >= 0) {
+		gchar *col_str = g_strdup_printf ("%d", col);
+		title = g_hash_table_lookup (model->priv->column_titles, col_str);
+		g_free (col_str);
+	}
 	else
 		title = "";
 
@@ -248,14 +252,17 @@ gda_data_model_set_column_title (GdaDataModel *model, gint col, const gchar *tit
 	if (col >= 0 && col < n_cols) {
 		gpointer orig_key;
 		gpointer orig_value;
+		gchar *col_str;
 
-		if (g_hash_table_lookup_extended (model->priv->column_titles, &col,
+		col_str = g_strdup_printf ("%d", col);
+		if (g_hash_table_lookup_extended (model->priv->column_titles, col_str,
 			&orig_key, &orig_value)) {
 			g_hash_table_remove (model->priv->column_titles, &col);
+			g_free (orig_key);
 			g_free (orig_value);
 		}
 
-		g_hash_table_insert (model->priv->column_titles, &col, g_strdup (title));
+		g_hash_table_insert (model->priv->column_titles, col_str, g_strdup (title));
 	}
 }
 
