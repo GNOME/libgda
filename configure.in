@@ -484,7 +484,6 @@ testing/Makefile
 doc/Makefile
 doc/es/Makefile
 doc/C/Makefile
-doc/C/reference/Makefile
 doc/pt_BR/Makefile
 data/Makefile
 stamp.h

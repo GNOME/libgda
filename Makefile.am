@@ -5,7 +5,8 @@ SUBDIRS = \
 	providers \
 	tools \
 	testing \
-	data
+	data \
+	doc
 
 dist-hook: libgda.spec
 	cp libgda.spec $(distdir)
