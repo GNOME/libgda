@@ -142,7 +142,7 @@ test_parent_tables (GdaConnection *cnc)
 		return;
 	}
 	g_print ("Parent table created.\n");
-	query ="create table gda_postgres_child (a2 integer) inherits (parent)";
+	query ="create table gda_postgres_child (a2 integer) inherits (gda_postgres_parent)";
 	if (execute_non_query (cnc, query) == FALSE){
 		g_print ("ERROR creating child table.\n");
 		return;
