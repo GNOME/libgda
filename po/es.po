@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-db\n"
-"POT-Creation-Date: 2000-08-04 12:18+0200\n"
+"POT-Creation-Date: 2000-11-22 22:23+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Ismael Olea <olea@hispafuentes.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
@@ -14,1886 +14,290 @@ msgstr ""
 "Content-Type: text/plain; charset=iso8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: gda-clnt-ui/gnome-db-browser.c:93
-msgid "Object Name"
-msgstr "Nombre del objeto"
-
-#: gda-clnt-ui/gnome-db-browser.c:112
-msgid "0 rows"
-msgstr "0 filas"
-
-#: gda-clnt-ui/gnome-db-browser.c:137 gda-fe/gda-fe-connection.c:404
-#, c-format
-msgid "%d rows"
-msgstr "%d filas"
-
-#: gda-clnt-ui/gnome-db-browser.c:432 gda-clnt-ui/gnome-db-designer.c:63
-#: gda-postgres-server/gda-postgres-config-ac.c:156
-msgid "Tables"
-msgstr "Tablas"
-
-#: gda-clnt-ui/gnome-db-browser.c:440 gda-clnt-ui/gnome-db-designer.c:72
-#: gda-fe/gda-fe-connection.c:135
-#: gda-postgres-server/gda-postgres-config-ac.c:162
-msgid "Views"
-msgstr "Vistas"
-
-#: gda-clnt-ui/gnome-db-browser.c:448
-msgid "Procedures"
-msgstr ""
-
-#: gda-clnt-ui/gnome-db-browser.c:456
-msgid "Types"
-msgstr "Tipos"
-
-#: gda-clnt-ui/gnome-db-browser.c:464
-msgid "Aggregates"
-msgstr ""
-
-#: gda-clnt-ui/gnome-db-browser.c:479
-msgid "Data"
-msgstr "Datos"
-
-#: gda-clnt-ui/gnome-db-browser.c:487 gda-fe/gda-fe-batch.c:421
-#: gda-fe/gda-fe-config.c:211 gda-fe/gda-fe-dsnconfig.c:158
-#: gda-manager/gda-mgr-gda.c:42 gda-manager/gda-mgr-providers.c:38
-msgid "Remove"
-msgstr ""
-
-#: gda-clnt-ui/gnome-db-browser.c:494
-msgid "Extra Info"
-msgstr ""
-
-#: gda-clnt-ui/gnome-db-dsn-config.c:52 gda-clnt-ui/gnome-db-login.c:223
-#: gda-fe/gda-fe-connection.c:840 gda-manager/gda-mgr-gda.c:297
-#: gda-manager/gda-mgr-gda.c:407
-msgid "GDA Name"
-msgstr "Nombre"
-
-#: gda-clnt-ui/gnome-db-dsn-config.c:60 gda-fe/gda-fe-connection.c:846
-#: gda-fe/gda-fe-log.c:155
-msgid "Provider"
-msgstr "Proveedor"
-
-#: gda-clnt-ui/gnome-db-dsn-config.c:80 gda-fe/gda-fe-connection.c:852
-msgid "DSN"
-msgstr "Cadena de conexión"
-
-#: gda-clnt-ui/gnome-db-dsn-config.c:88 gda-clnt-ui/gnome-db-error.c:171
-#: gda-fe/gda-fe-service.c:294 gda-fe/gda-fe-service.c:340
-#: gda-manager/gda-mgr-gda.c:407
-msgid "Description"
-msgstr "Descripción"
-
-#: gda-clnt-ui/gnome-db-dsn-config.c:96 gda-clnt-ui/gnome-db-login.c:241
-#: gda-manager/gda-mgr-gda.c:203 gda-manager/gda-mgr-gda.c:303
-msgid "Username"
-msgstr ""
-
-#: gda-clnt-ui/gnome-db-dsn-config.c:104 gda-manager/gda-mgr-gda.c:45
-msgid "Config"
-msgstr "Configuración"
-
-#: gda-clnt-ui/gnome-db-dsn-config.c:112 gda-manager/gda-mgr-gda.c:407
-msgid "Global"
-msgstr ""
-
-#: gda-clnt-ui/gnome-db-dsn-config.c:219
-msgid "Error while saving configuration!"
-msgstr "¡Se produjo un error al guardar la configuración!"
-
-#: gda-clnt-ui/gnome-db-dsn-config.c:222
-msgid "Data source has no name!"
-msgstr "¡La fuente de datos no tiene nombre!"
-
-#: gda-clnt-ui/gnome-db-error.c:101
-#, c-format
-msgid "Error %d of %d"
-msgstr "Error %d de %d"
-
-#: gda-clnt-ui/gnome-db-error.c:196
-msgid "Show Help"
-msgstr "Mostrar ayuda"
-
-#: gda-clnt-ui/gnome-db-error.c:202
-msgid "Source"
-msgstr "Fuente"
-
-#: gda-clnt-ui/gnome-db-error.c:211
-msgid "sqlstate"
-msgstr ""
-
-#: gda-clnt-ui/gnome-db-error.c:219
-msgid "Error 0 of 0"
-msgstr ""
-
-#: gda-clnt-ui/gnome-db-grid.c:147
-msgid "Record View"
-msgstr "Vista de registros"
-
-#: gda-clnt-ui/gnome-db-grid.c:168 gda-dev/gda-builder-main.c:114
-#: gda-fe/gda-fe-connection.c:84
-msgid "Copy"
-msgstr "Copiar"
-
-#: gda-clnt-ui/gnome-db-grid.c:168
-msgid "Copy selection to clipboard"
-msgstr "Copiar el texto seleccionado al portapapeles"
-
-#: gda-clnt-ui/gnome-db-grid.c:171 gda-fe/gda-fe-connection.c:103
-msgid "Select all"
-msgstr "Seleccione todo"
-
-#: gda-clnt-ui/gnome-db-grid.c:171
-msgid "Select all rows"
-msgstr "Seleccione todas las filas"
-
-#: gda-clnt-ui/gnome-db-grid.c:174
-msgid "Clear selection"
-msgstr "Vaciar selección"
-
-#: gda-clnt-ui/gnome-db-grid.c:174
-msgid "Clear all selected rows"
-msgstr "Limpiar todas las filas"
-
-#: gda-clnt-ui/gnome-db-grid.c:177
-msgid "Record view..."
-msgstr ""
-
-#: gda-clnt-ui/gnome-db-grid.c:177
-msgid "View recordset record-by-record"
-msgstr ""
-
-#: gda-clnt-ui/gnome-db-grid.c:181
-msgid "Refresh grid"
-msgstr "Refrescar rejilla"
-
-#: gda-clnt-ui/gnome-db-grid.c:181
-msgid "Refresh grid contents"
-msgstr "Refrescar contenidos de la rejilla"
-
-#: gda-clnt-ui/gnome-db-grid.c:184
-msgid "Print grid"
-msgstr "Imprimir rejilla"
-
-#: gda-clnt-ui/gnome-db-grid.c:184
-msgid "Print grid contents"
-msgstr "Imprimir los contenidos de la rejilla"
-
-#: gda-clnt-ui/gnome-db-grid.c:187 gda-fe/gda-fe-config.c:282
-msgid "Show columns"
-msgstr ""
-
-#: gda-clnt-ui/gnome-db-grid.c:187
-msgid "Show column titles"
-msgstr ""
-
-#: gda-clnt-ui/gnome-db-grid.c:190
-msgid "Hide columns"
-msgstr ""
-
-#: gda-clnt-ui/gnome-db-grid.c:190
-msgid "Hide column titles"
-msgstr ""
-
-#: gda-clnt-ui/gnome-db-log-viewer.c:88
-#, c-format
-msgid "Entry %d of %d"
-msgstr ""
-
-#. create entries
-#: gda-clnt-ui/gnome-db-log-viewer.c:154 gda-clnt-ui/gnome-db-log-viewer.c:322
-msgid "Date"
-msgstr "Fecha"
-
-#: gda-clnt-ui/gnome-db-log-viewer.c:154 gda-clnt-ui/gnome-db-log-viewer.c:328
-msgid "Time"
-msgstr ""
-
-#: gda-clnt-ui/gnome-db-log-viewer.c:154
-msgid "Message"
-msgstr ""
-
-#. create dialog
-#: gda-clnt-ui/gnome-db-log-viewer.c:307
-msgid "Log Entry"
-msgstr ""
-
-#: gda-clnt-ui/gnome-db-login.c:107 gda-clnt-ui/gnome-db-login.c:328
-#, c-format
-msgid "No datasource '%s' defined in your GDA configuration file"
-msgstr ""
-
-#: gda-clnt-ui/gnome-db-login.c:223
-msgid "User Name"
-msgstr "Nombre de usuario"
-
-#: gda-clnt-ui/gnome-db-login.c:231
-msgid "GDA Datasource"
-msgstr "Fuente de datos GDA"
-
-#: gda-clnt-ui/gnome-db-login.c:250 gda-manager/gda-mgr-gda.c:207
-#: gda-manager/gda-mgr-gda.c:308
-#: gda-postgres-server/gda-postgres-config-users.c:158
-msgid "Password"
-msgstr ""
-
-#: gda-clnt-ui/gnome-db-login.c:260
-msgid "Last Connections"
-msgstr "Últimas conexiones"
-
-#: gda-clnt/gda-connection-pool.c:169
+#: lib/gda-client/gda-connection-pool.c:266
 #, c-format
 msgid "could not open connection to %s"
 msgstr "No se pudo abrir la conexión a %s"
 
-#: gda-clnt/gda-connection-pool.c:180
+#: lib/gda-client/gda-connection-pool.c:279
 #, c-format
 msgid "Data source %s not found"
 msgstr "No se encontró la fuentes de datos %s"
 
-#: gda-clnt/gda-connection.c:166 gda-clnt/gda-error.c:116
+#: lib/gda-client/gda-connection.c:233 lib/gda-client/gda-error.c:178
 #, c-format
 msgid "%s: The server didn't respond."
 msgstr ""
 
-#: gda-clnt/gda-connection.c:170 gda-clnt/gda-error.c:120
+#: lib/gda-client/gda-connection.c:237 lib/gda-client/gda-error.c:182
 #, c-format
 msgid "%s: An Error occured in the CORBA system."
 msgstr ""
 
-#: gda-clnt/gda-connection.c:457
+#: lib/gda-client/gda-connection.c:528
 #, c-format
 msgid "Database '%s' not found in system configuration"
 msgstr ""
 
-#: gda-clnt/gda-connection.c:473
+#: lib/gda-client/gda-connection.c:544
 msgid "Could not open CORBA factory"
 msgstr ""
 
-#: gda-clnt/gda-field.c:187
+#: lib/gda-client/gda-field.c:244
 msgid "<NULL>"
 msgstr ""
 
-#: gda-clnt/gda-field.c:193 gda-clnt/gda-field.c:195
+#: lib/gda-client/gda-field.c:250 lib/gda-client/gda-field.c:252
 msgid "<Unknown GDA Type(NULL)>"
 msgstr ""
 
-#: gda-clnt/gda-field.c:208
+#: lib/gda-client/gda-field.c:265
 msgid "TRUE"
 msgstr "SI"
 
-#: gda-clnt/gda-field.c:209
+#: lib/gda-client/gda-field.c:266
 msgid "FALSE"
 msgstr "NO"
 
-#: gda-common/gda-log.c:29
+#: lib/gda-common/gda-corba.c:76
+#, c-format
+msgid "CORBA System exception: %s"
+msgstr ""
+
+#: lib/gda-common/gda-corba.c:109
+msgid "True"
+msgstr ""
+
+#: lib/gda-common/gda-corba.c:109
+#, fuzzy
+msgid "False"
+msgstr "Fichero"
+
+#: lib/gda-common/gda-init.c:58
+msgid "Attempt to initialize an already initialized client"
+msgstr ""
+
+#: lib/gda-common/gda-log.c:47
 msgid "Saving log...x"
 msgstr ""
 
 #. compose message
-#: gda-common/gda-log.c:50
+#: lib/gda-common/gda-log.c:68
 msgid "ERROR: "
 msgstr ""
 
-#: gda-common/gda-log.c:50
+#: lib/gda-common/gda-log.c:68
 msgid "MESSAGE: "
 msgstr ""
 
-#: gda-common/gda-thread.c:150
+#: lib/gda-common/gda-thread.c:210
 msgid "thread is already running"
 msgstr ""
 
-#: gda-common/gda-xml-database.c:156
+#: lib/gda-common/gda-xml-database.c:281
 #, c-format
 msgid "table %s already exists"
 msgstr ""
 
-#: gda-components/gda-components-browser.c:54
-msgid "Data Source Name"
-msgstr "Nombre de la fuente de datos (DSN)"
-
-#: gda-components/gda-components-browser.c:58
-msgid "User name to use for the connection"
-msgstr "Nombre de usuario para esta conexión"
-
-#: gda-components/gda-components-browser.c:62
-msgid "Password to authenticate user"
-msgstr ""
-
-#: gda-components/gda-components-browser.c:66
-msgid "To open/close the connection"
-msgstr "Abrir/cerrar todas las conexiones"
-
-#: gda-components/gda-components-connection.c:37
-#: gda-dev/gda-builder-database.c:31 gda-fe/gda-fe-connection.c:660
-msgid "Error Viewer"
-msgstr "Visor de errores"
-
-#: gda-components/gda-components-factory.c:62
-#, fuzzy, c-format
-msgid "Could not initialize %s component"
-msgstr "No pudo vaciarse el fichero %s"
-
-#: gda-components/gda-components-grid.c:42
-msgid "Font to be used for the grid"
-msgstr ""
-
-#: gda-components/gda-components-main.c:40
-#: gda-ldap-server/gda-ldap-config-main.c:43
-#: gda-mysql-server/gda-mysql-config-main.c:47
-#: gda-odbc-server/gda-odbc-config-main.c:54
-#: gda-postgres-server/gda-postgres-config-main.c:331
-#, fuzzy
-msgid "Could not initialize CORBA"
-msgstr "No pudo vaciarse el fichero %s"
-
-#: gda-components/gda-components-main.c:43
-#: gda-ldap-server/gda-ldap-config-main.c:34
-#: gda-ldap-server/gda-ldap-config-main.c:46
-#: gda-mysql-server/gda-mysql-config-main.c:53
-#: gda-odbc-server/gda-odbc-config-main.c:45
-#: gda-odbc-server/gda-odbc-config-main.c:57
-#: gda-postgres-server/gda-postgres-config-main.c:338
-#, fuzzy
-msgid "Could not initialize Bonobo"
-msgstr "No pudo vaciarse el fichero %s"
-
-#: gda-components/gnome-db-container.c:117
-msgid "View requested to be activated but there is already an active view"
-msgstr ""
-
-#: gda-components/gnome-db-container.c:252
-#: gda-components/gnome-db-container.c:298 gda-fe/gda-fe-callbacks.c:61
-#: gda-fe/gda-fe-connection.c:647 gda-fe/gda-fe-service.c:249
-#: gda-manager/gda-mgr-main.c:204
-msgid "Ready"
-msgstr "Listo"
-
-#: gda-components/gnome-db-container.c:420
-#, fuzzy, c-format
-msgid "Could not bind object %s"
-msgstr "No pudo cargarse el fichero %s"
-
-#: gda-components/gnome-db-container.c:448
-#, fuzzy, c-format
-msgid "Unable to activate object %s"
-msgstr "Imposible ejecutar '%s'"
-
-#: gda-components/gnome-db-control.c:237
+#: lib/gda-common/gda-xml-database.c:445
 #, c-format
-msgid "%s:%d: Could not create control widget"
+msgid "%p is not a valid table"
 msgstr ""
 
-#: gda-components/gnome-db-control.c:413
-#, fuzzy
-msgid "Could not register control factory"
-msgstr "No se pudo cambiar al directorio '%s'"
-
-#: gda-components/gnome-db-control.c:531
-msgid "control has no property bag"
+#: lib/gda-server/gda-server-error.c:185
+msgid "Could not get pointer to server implementation"
 msgstr ""
 
-#: gda-components/gnome-db-control.c:597
+#: lib/gda-server/gda-server-impl-connection.c:122
+#: lib/gda-server/gda-server-impl-connection.c:131
+#: lib/gda-server/gda-server-impl-connection.c:138
+#: lib/gda-server/gda-server-impl-connection.c:147
+#: lib/gda-server/gda-server-impl-connection.c:154
+#: lib/gda-server/gda-server-impl-connection.c:163
+#: lib/gda-server/gda-server-impl-connection.c:170
+#: lib/gda-server/gda-server-impl-connection.c:179
+#: lib/gda-server/gda-server-impl-recordset.c:125
+#: lib/gda-server/gda-server-impl-recordset.c:134
+#: lib/gda-server/gda-server-impl-recordset.c:141
+#: lib/gda-server/gda-server-impl-recordset.c:156
+#: lib/gda-server/gda-server-impl-recordset.c:165
+#: lib/gda-server/gda-server-impl-recordset.c:172
+#: lib/gda-server/gda-server-impl-recordset.c:181
+#: lib/gda-server/gda-server-impl-recordset.c:188
+#: lib/gda-server/gda-server-impl-recordset.c:197
+#: lib/gda-server/gda-server-impl-recordset.c:204
+#: lib/gda-server/gda-server-impl-recordset.c:212
+#: lib/gda-server/gda-server-impl-recordset.c:221
+#: lib/gda-server/gda-server-impl-recordset.c:228
+#: lib/gda-server/gda-server-impl-recordset.c:236
+#: lib/gda-server/gda-server-impl-recordset.c:244
+#: lib/gda-server/gda-server-impl-recordset.c:272
+#: lib/gda-server/gda-server-impl-recordset.c:280
+#: lib/gda-server/gda-server-impl-recordset.c:288
+#: lib/gda-server/gda-server-impl-recordset.c:296
+#: lib/gda-server/gda-server-impl-recordset.c:304
+#: lib/gda-server/gda-server-impl-recordset.c:313
 #, c-format
-msgid "property %s not found"
+msgid "%s not implemented"
 msgstr ""
 
-#: gda-components/gnome-db-factory.c:51
+#: lib/gda-server/gda-server-impl-connection.c:271
 #, c-format
-msgid "Factory %s already existing"
+msgid "impl_GDA_Connection_open: opening connection with DSN: %s"
 msgstr ""
 
-#: gda-components/gnome-db-factory.c:74
-#, fuzzy, c-format
-msgid "Could not register %s factory"
-msgstr "No pudo vaciarse el fichero %s"
-
-#: gda-dev/gda-builder-callbacks.c:24 gda-fe/gda-fe-main.c:96
-#: gda-manager/gda-mgr-main.c:54
-msgid "GNOME-DB Builder"
-msgstr ""
-
-#: gda-dev/gda-builder-database.c:58
+#: lib/gda-server/gda-server-impl-recordset.c:406
 #, c-format
-msgid "Connected to %s"
-msgstr "Conectado a %s"
-
-#: gda-dev/gda-builder-database.c:83 gda-fe/gda-fe-callbacks.c:129
-msgid "Open Connection"
-msgstr "Abrir Conexión"
-
-#: gda-dev/gda-builder-database.c:119
-msgid "Disconnected from database"
+msgid "%s: an error ocurred while fetching data"
 msgstr ""
 
-#: gda-dev/gda-builder-database.c:135
-#, fuzzy
-msgid "Database Browser"
-msgstr "Desieñador de Base de Datos"
-
-#: gda-dev/gda-builder-database.c:144
-#, fuzzy
-msgid "There are no open connections"
-msgstr "Abrir nueva conexión"
-
-#: gda-dev/gda-builder-help.c:25
-msgid "Back"
-msgstr ""
-
-#: gda-dev/gda-builder-help.c:25
-#, fuzzy
-msgid "Go to previous document"
-msgstr "Mover a la ventana anterior en la lista"
-
-#: gda-dev/gda-builder-help.c:28
-msgid "Forward"
-msgstr ""
-
-#: gda-dev/gda-builder-help.c:28
-#, fuzzy
-msgid "Go to next document"
-msgstr "Mover a la ventana siguiente en la lista"
-
-#: gda-dev/gda-builder-help.c:31
-msgid "Home"
-msgstr ""
-
-#: gda-dev/gda-builder-help.c:31
-#, fuzzy
-msgid "Go to table of contents"
-msgstr "Vaciar fichero"
-
-#: gda-dev/gda-builder-help.c:97 gda-dev/gda-builder-main.c:177
-#: gda-fe/gda-fe-main.c:132 gda-manager/gda-mgr-main.c:74
-msgid "Help"
-msgstr "Ayuda"
-
-#: gda-dev/gda-builder-help.c:120
-#, fuzzy, c-format
-msgid "Could not load file '%s'"
-msgstr "No pudo cargarse el fichero %s"
-
-#: gda-dev/gda-builder-main.c:37 gda-dev/gda-builder-main.c:53
-msgid "Screen"
-msgstr ""
-
-#: gda-dev/gda-builder-main.c:37
-msgid "New screen"
-msgstr ""
-
-#: gda-dev/gda-builder-main.c:40 gda-dev/gda-builder-main.c:56
-#, fuzzy
-msgid "Report"
-msgstr "Exportar"
-
-#: gda-dev/gda-builder-main.c:40
-msgid "New report"
-msgstr ""
-
-#: gda-dev/gda-builder-main.c:43 gda-dev/gda-builder-main.c:59
-#, fuzzy
-msgid "Server"
-msgstr "Guardar"
-
-#: gda-dev/gda-builder-main.c:43
-msgid "New server"
-msgstr ""
-
-#: gda-dev/gda-builder-main.c:46 gda-dev/gda-builder-main.c:62
-#, fuzzy
-msgid "Repository"
-msgstr "Identificador Repositorio"
-
-#: gda-dev/gda-builder-main.c:46
-#, fuzzy
-msgid "New repository"
-msgstr "Identificador Repositorio"
-
-#: gda-dev/gda-builder-main.c:53
-#, fuzzy
-msgid "Open existing screen"
-msgstr "Abrir archivo existente"
-
-#: gda-dev/gda-builder-main.c:56
-#, fuzzy
-msgid "Open existing report"
-msgstr "Abrir archivo existente"
-
-#: gda-dev/gda-builder-main.c:59
-#, fuzzy
-msgid "Open existing server"
-msgstr "Abrir archivo existente"
-
-#: gda-dev/gda-builder-main.c:62
-#, fuzzy
-msgid "Open existing repository"
-msgstr "Abrir archivo existente"
-
-#: gda-dev/gda-builder-main.c:69
-#, fuzzy
-msgid "Connect..."
-msgstr "Conectando..."
-
-#: gda-dev/gda-builder-main.c:69
-#, fuzzy
-msgid "Connect to database"
-msgstr "Conectado a %s"
-
-#: gda-dev/gda-builder-main.c:72 gda-fe/gda-fe-connection.c:58
-#: gda-fe/gda-fe-main.c:28
-msgid "Disconnect"
-msgstr "Desconectar"
-
-#: gda-dev/gda-builder-main.c:72
-#, fuzzy
-msgid "Close database connection"
-msgstr "Cerrar todas las conexiones"
-
-#: gda-dev/gda-builder-main.c:76 gda-manager/gda-mgr-gda.c:48
-#, fuzzy
-msgid "Browse"
-msgstr "%d filas"
-
-#: gda-dev/gda-builder-main.c:76
-#, fuzzy
-msgid "Open database browser"
-msgstr "Abrir base de datos del disco"
-
-#: gda-dev/gda-builder-main.c:79
-#, fuzzy
-msgid "Import objects"
-msgstr "Importar"
-
-#: gda-dev/gda-builder-main.c:79
-msgid "Import database objects into repository"
-msgstr ""
-
-#: gda-dev/gda-builder-main.c:86 gda-dev/gda-builder-main.c:184
-#: gda-fe/gda-fe-designer.c:29 gda-fe/gda-fe-dsnconfig.c:146
-#: gda-manager/gda-mgr-providers.c:32
-#: gda-mysql-server/gda-mysql-config-db.c:62
-msgid "New"
-msgstr "Nuevo"
-
-#: gda-dev/gda-builder-main.c:87 gda-dev/gda-builder-main.c:187
-#: gda-fe/gda-fe-batch.c:31 gda-fe/gda-fe-connection.c:71
-#: gda-fe/gda-fe-designer.c:32
-msgid "Open"
-msgstr "Abrir"
-
-#: gda-dev/gda-builder-main.c:88 gda-fe/gda-fe-designer.c:42
-#: gda-fe/gda-fe-log.c:43 gda-fe/gda-fe-service.c:50
-msgid "Close"
-msgstr "Cerrar"
-
-#: gda-dev/gda-builder-main.c:88
-#, fuzzy
-msgid "Close current window"
-msgstr "Cerrar fichero actual"
-
-#: gda-dev/gda-builder-main.c:91
-msgid "Close all"
-msgstr "Cerrar todas"
-
-#: gda-dev/gda-builder-main.c:91
-msgid "Close all open windows"
-msgstr "Cerrar todas las ventanas"
-
-#: gda-dev/gda-builder-main.c:97 gda-dev/gda-builder-main.c:195
-#: gda-fe/gda-fe-main.c:37 gda-fe/gda-fe-main.c:148
-#: gda-manager/gda-mgr-main.c:40 gda-manager/gda-mgr-main.c:85
-msgid "Quit"
-msgstr "Salir"
-
-#: gda-dev/gda-builder-main.c:97 gda-dev/gda-builder-main.c:195
-#: gda-fe/gda-fe-main.c:37 gda-manager/gda-mgr-main.c:40
-#: gda-manager/gda-mgr-main.c:85
-msgid "Exit application"
-msgstr "Salir de la aplicación"
-
-#: gda-dev/gda-builder-main.c:104
-#, fuzzy
-msgid "Undo"
-msgstr "Ventana"
-
-#: gda-dev/gda-builder-main.c:104
-#, fuzzy
-msgid "Undo last action"
-msgstr "Iniciar Transacción"
-
-#: gda-dev/gda-builder-main.c:107
-#, fuzzy
-msgid "Redo"
-msgstr "Listo"
-
-#: gda-dev/gda-builder-main.c:107
-msgid "Revert last undone action"
-msgstr ""
-
-#: gda-dev/gda-builder-main.c:111 gda-fe/gda-fe-connection.c:81
-msgid "Cut"
-msgstr "Cortar"
-
-#: gda-dev/gda-builder-main.c:111
-#, fuzzy
-msgid "Cut selected text/item"
-msgstr "Cortar texto seleccionado"
-
-#: gda-dev/gda-builder-main.c:114
-#, fuzzy
-msgid "Copy selected text/item to the clipboard"
-msgstr "Copiar texto seleccionado al portapapeles"
-
-#: gda-dev/gda-builder-main.c:117 gda-fe/gda-fe-connection.c:87
-msgid "Paste"
-msgstr "Pegar"
-
-#: gda-dev/gda-builder-main.c:117 gda-fe/gda-fe-connection.c:87
-#, fuzzy
-msgid "Paste clipboard contents"
-msgstr "Pegar contenido del portapapeles"
-
-#: gda-dev/gda-builder-main.c:120
-msgid "Delete"
-msgstr "Borrar"
-
-#: gda-dev/gda-builder-main.c:120
-#, fuzzy
-msgid "Delete selected text/item"
-msgstr "Cortar texto seleccionado"
-
-#: gda-dev/gda-builder-main.c:127
-msgid "New project"
-msgstr ""
-
-#: gda-dev/gda-builder-main.c:127
-#, fuzzy
-msgid "Create a new project"
-msgstr "Crear fichero vacío"
-
-#: gda-dev/gda-builder-main.c:130
-#, fuzzy
-msgid "Open project"
-msgstr "Abrir Conexión"
-
-#: gda-dev/gda-builder-main.c:130
-#, fuzzy
-msgid "Open an existing project"
-msgstr "Abrir archivo existente"
-
-#: gda-dev/gda-builder-main.c:133
-msgid "Save project"
-msgstr ""
-
-#: gda-dev/gda-builder-main.c:133
-#, fuzzy
-msgid "Save current project"
-msgstr "Guardar fichero actual"
-
-#: gda-dev/gda-builder-main.c:137
-#, fuzzy
-msgid "Properties..."
-msgstr "Propiedades"
-
-#: gda-dev/gda-builder-main.c:137
-#, fuzzy
-msgid "View project properties"
-msgstr "Nueva conexión..."
-
-#: gda-dev/gda-builder-main.c:145 gda-fe/gda-fe-callbacks.c:70
-#: gda-manager/gda-mgr-main.c:51
-msgid "GNOME-DB Front End"
-msgstr ""
-
-#: gda-dev/gda-builder-main.c:145 gda-manager/gda-mgr-main.c:51
-msgid "The GNOME-DB front end"
-msgstr ""
-
-#: gda-dev/gda-builder-main.c:149
-msgid "SQL Front End"
-msgstr ""
-
-#: gda-dev/gda-builder-main.c:149
-msgid "The SQL front end"
-msgstr ""
-
-#: gda-dev/gda-builder-main.c:153 gda-fe/gda-fe-main.c:93
-#: gda-manager/gda-mgr-callbacks.c:25
-msgid "GNOME-DB Manager"
-msgstr ""
-
-#: gda-dev/gda-builder-main.c:153 gda-fe/gda-fe-main.c:93
-#, fuzzy
-msgid "The GNOME-DB configuration tool"
-msgstr "Configuración del Driver"
-
-#: gda-dev/gda-builder-main.c:160 gda-fe/gda-fe-main.c:117
-#: gda-manager/gda-mgr-main.c:61
-msgid "About gnome-db..."
-msgstr "Acerca de..."
-
-#: gda-dev/gda-builder-main.c:160 gda-dev/gda-builder-main.c:164
-#: gda-fe/gda-fe-main.c:117 gda-fe/gda-fe-main.c:121
-#: gda-manager/gda-mgr-main.c:61 gda-manager/gda-mgr-main.c:65
-msgid "About this program"
-msgstr "Acerca de este programa"
-
-#: gda-dev/gda-builder-main.c:164 gda-fe/gda-fe-main.c:121
-#: gda-manager/gda-mgr-main.c:65
-msgid "Submit bug report"
-msgstr ""
-
-#: gda-dev/gda-builder-main.c:171 gda-fe/gda-fe-batch.c:316
-#: gda-fe/gda-fe-main.c:128 gda-manager/gda-mgr-main.c:72
-msgid "File"
-msgstr "Fichero"
-
-#: gda-dev/gda-builder-main.c:172 gda-fe/gda-fe-batch.c:413
-#: gda-manager/gda-mgr-gda.c:39 gda-manager/gda-mgr-providers.c:35
-#, fuzzy
-msgid "Edit"
-msgstr "Editor"
-
-#: gda-dev/gda-builder-main.c:173 gda-dev/gda-builder-main.c:175
-#: gda-dev/gda-builder-project.c:41
-msgid "Project"
-msgstr ""
-
-#: gda-dev/gda-builder-main.c:174 gda-fe/gda-fe-main.c:129
-#: gda-manager/gda-mgr-gda.c:321 gda-mysql-server/gda-mysql-config-main.c:82
-msgid "Database"
-msgstr "Base de Datos"
-
-#: gda-dev/gda-builder-main.c:176 gda-fe/gda-fe-main.c:130
-#: gda-manager/gda-mgr-main.c:73
-msgid "Tools"
-msgstr "Herramientas"
-
-#: gda-dev/gda-builder-main.c:184
-msgid "New Screen/Report"
-msgstr ""
-
-#: gda-dev/gda-builder-main.c:187
-msgid "Open Screen/Report"
-msgstr ""
-
-#. create dialog
-#: gda-dev/gda-builder-main.c:191 gda-fe/gda-fe-config.c:307
-#: gda-fe/gda-fe-main.c:144 gda-manager/gda-mgr-main.c:81
-msgid "Preferences"
-msgstr "Preferencias"
-
-#: gda-dev/gda-builder-main.c:191 gda-fe/gda-fe-main.c:103
-#: gda-fe/gda-fe-main.c:144 gda-manager/gda-mgr-main.c:81
-msgid "Configure user preferences"
-msgstr "Configurar preferencias"
-
-#: gda-dev/gda-builder-main.c:231 gda-fe/gda-fe-main.c:170
-#: gda-rolodex/gda-rolodex-main.c:125
-msgid "Could not initialize Bonobo\n"
-msgstr ""
-
-#: gda-dev/gda-builder-main.c:256 gda-fe/gda-fe-callbacks.c:200
-#: gda-manager/gda-mgr-callbacks.c:95
+#: lib/gda-server/gda-server-impl-recordset.c:445
 #, c-format
-msgid "Unable to execute '%s'"
-msgstr "Imposible ejecutar '%s'"
-
-#: gda-dev/gda-builder-project.c:46 gda-fe/gda-fe-service.c:350
-#: gda-manager/gda-mgr-providers.c:166
-msgid "Location"
-msgstr "Situación"
-
-#: gda-dev/gda-run.c:29 testing/gda-client-test1.c:31
-#: testing/gda-client-test10.c:31 testing/gda-client-test11.c:31
-#: testing/gda-client-test12.c:32 testing/gda-client-test13.c:32
-#: testing/gda-client-test14.c:31 testing/gda-client-test2.c:32
-#: testing/gda-client-test3.c:32 testing/gda-client-test4.c:30
-#: testing/gda-client-test5.c:32 testing/gda-client-test6.c:29
-#: testing/gda-client-test7.c:31 testing/gda-client-test8.c:32
-#: testing/gda-client-test9.c:31 testing/gda-ui-test1.c:33
-#: testing/gda-ui-test2.c:33 testing/gda-ui-test3.c:31
-#, fuzzy
-msgid "database name"
-msgstr "Desieñador de Base de Datos"
-
-#: gda-dev/gda-run.c:29 testing/gda-client-test1.c:31
-#: testing/gda-client-test10.c:31 testing/gda-client-test11.c:31
-#: testing/gda-client-test12.c:32 testing/gda-client-test13.c:32
-#: testing/gda-client-test14.c:31 testing/gda-client-test2.c:32
-#: testing/gda-client-test3.c:32 testing/gda-client-test4.c:30
-#: testing/gda-client-test5.c:32 testing/gda-client-test6.c:29
-#: testing/gda-client-test7.c:31 testing/gda-client-test8.c:32
-#: testing/gda-client-test9.c:31 testing/gda-ui-test1.c:33
-#: testing/gda-ui-test2.c:33 testing/gda-ui-test3.c:31
-msgid "DATABASE"
+msgid "%s: length = %d"
 msgstr ""
 
-#: gda-dev/gda-run.c:30 testing/gda-client-test1.c:32
-#: testing/gda-client-test10.c:32 testing/gda-client-test11.c:32
-#: testing/gda-client-test12.c:33 testing/gda-client-test13.c:33
-#: testing/gda-client-test14.c:32 testing/gda-client-test2.c:33
-#: testing/gda-client-test3.c:33 testing/gda-client-test4.c:31
-#: testing/gda-client-test5.c:33 testing/gda-client-test6.c:30
-#: testing/gda-client-test7.c:32 testing/gda-client-test8.c:33
-#: testing/gda-client-test9.c:32 testing/gda-ui-test1.c:34
-#: testing/gda-ui-test2.c:34 testing/gda-ui-test3.c:32
-#, fuzzy
-msgid "user name"
-msgstr "Fichero"
-
-#: gda-dev/gda-run.c:30 testing/gda-client-test1.c:32
-#: testing/gda-client-test10.c:32 testing/gda-client-test11.c:32
-#: testing/gda-client-test12.c:33 testing/gda-client-test13.c:33
-#: testing/gda-client-test14.c:32 testing/gda-client-test2.c:33
-#: testing/gda-client-test3.c:33 testing/gda-client-test4.c:31
-#: testing/gda-client-test5.c:33 testing/gda-client-test6.c:30
-#: testing/gda-client-test7.c:32 testing/gda-client-test8.c:33
-#: testing/gda-client-test9.c:32 testing/gda-ui-test1.c:34
-#: testing/gda-ui-test2.c:34 testing/gda-ui-test3.c:32
-msgid "USER-NAME"
-msgstr ""
-
-#: gda-dev/gda-run.c:31 testing/gda-client-test1.c:33
-#: testing/gda-client-test10.c:33 testing/gda-client-test11.c:33
-#: testing/gda-client-test12.c:34 testing/gda-client-test13.c:34
-#: testing/gda-client-test14.c:33 testing/gda-client-test2.c:34
-#: testing/gda-client-test3.c:34 testing/gda-client-test4.c:32
-#: testing/gda-client-test5.c:34 testing/gda-client-test6.c:31
-#: testing/gda-client-test7.c:33 testing/gda-client-test8.c:34
-#: testing/gda-client-test9.c:33 testing/gda-ui-test1.c:35
-#: testing/gda-ui-test2.c:35 testing/gda-ui-test3.c:33
-msgid "password"
-msgstr ""
-
-#: gda-dev/gda-run.c:31 testing/gda-client-test1.c:33
-#: testing/gda-client-test10.c:33 testing/gda-client-test11.c:33
-#: testing/gda-client-test12.c:34 testing/gda-client-test13.c:34
-#: testing/gda-client-test14.c:33 testing/gda-client-test2.c:34
-#: testing/gda-client-test3.c:34 testing/gda-client-test4.c:32
-#: testing/gda-client-test5.c:34 testing/gda-client-test6.c:31
-#: testing/gda-client-test7.c:33 testing/gda-client-test8.c:34
-#: testing/gda-client-test9.c:33 testing/gda-ui-test1.c:35
-#: testing/gda-ui-test2.c:35 testing/gda-ui-test3.c:33
-msgid "PASSWORD"
-msgstr ""
-
-#: gda-dev/gda-run.c:32
-#, fuzzy
-msgid "file name"
-msgstr "Fichero"
-
-#: gda-dev/gda-run.c:32
-msgid "FILE-NAME"
-msgstr ""
-
-#: gda-dev/gda-run.c:110
+#: lib/gda-server/gda-server-impl-recordset.c:458
 #, c-format
-msgid "%s: misconfigured DSN entry"
+msgid "%s: sending field description for '%s'"
 msgstr ""
 
-#: gda-dev/gda-run.c:125
+#: lib/gda-server/gda-server-impl.c:194
 #, c-format
-msgid "%s: data source '%s' not found\n"
+msgid "Starting provider %s with no implementation functions"
 msgstr ""
 
-#: gda-fe/gda-fe-batch.c:28 gda-fe/gda-fe-connection.c:65
-msgid "Execute"
-msgstr ""
-
-#: gda-fe/gda-fe-batch.c:28
-msgid "Execute batch file"
-msgstr ""
-
-#: gda-fe/gda-fe-batch.c:31
-#, fuzzy
-msgid "Open file"
-msgstr "Abrir Fichero"
-
-#: gda-fe/gda-fe-batch.c:34 gda-fe/gda-fe-connection.c:74
-#: gda-fe/gda-fe-designer.c:35
-msgid "Save"
-msgstr "Guardar"
-
-#: gda-fe/gda-fe-batch.c:34
-#, fuzzy
-msgid "Save file"
-msgstr "Guardar a fichero..."
-
-#: gda-fe/gda-fe-batch.c:37 gda-fe/gda-fe-connection.c:90
-#: gda-fe/gda-fe-connection.c:100 gda-fe/gda-fe-designer.c:38
-#: gda-fe/gda-fe-log.c:36
-msgid "Clear"
-msgstr "Limpiar"
-
-#: gda-fe/gda-fe-batch.c:37
-#, fuzzy
-msgid "Clear command list"
-msgstr "Tiempo de espera del comando"
-
-#: gda-fe/gda-fe-batch.c:94 gda-fe/gda-fe-connection.c:454
-#: gda-fe/gda-fe-connection.c:522
-#, fuzzy, c-format
+#: lib/gda-server/gda-server-impl.c:221
+#: report/server/gda-report-server-main.c:120
 msgid ""
-"Could not open file\n"
-"'%s'"
-msgstr "No pudo cargarse el fichero %s"
-
-#: gda-fe/gda-fe-batch.c:126
-#, fuzzy
-msgid "No command selected"
-msgstr "Comando '%s' completado"
-
-#. create dialog
-#: gda-fe/gda-fe-batch.c:134
-msgid "Command"
-msgstr "Comando"
-
-#: gda-fe/gda-fe-batch.c:145
-msgid "Enter command text"
+"OAF doesn't know about our IID; indicates broken installation. Exiting..."
 msgstr ""
 
-#: gda-fe/gda-fe-batch.c:160
-#, fuzzy
-msgid "Insert at current position"
-msgstr "Insertar fichero en posición actual"
-
-#. create dialog
-#: gda-fe/gda-fe-batch.c:300
-msgid "Open File"
-msgstr "Abrir Fichero"
-
-#: gda-fe/gda-fe-batch.c:311
-#, fuzzy
-msgid "Command separators"
-msgstr "Tiempo de espera del comando"
-
-#: gda-fe/gda-fe-batch.c:321
-#, fuzzy
-msgid "Append to current file"
-msgstr "Imprimir fichero actual"
-
-#: gda-fe/gda-fe-batch.c:340
-msgid "You must specify a file to be loaded"
-msgstr ""
-
-#: gda-fe/gda-fe-batch.c:342
-msgid "You must specifiy the characters used as command separators"
-msgstr ""
-
-#: gda-fe/gda-fe-batch.c:405 gda-fe/gda-fe-config.c:204
-#: gda-manager/gda-mgr-gda.c:36
-msgid "Add"
-msgstr ""
-
-#: gda-fe/gda-fe-batch.c:434
-msgid "Up"
-msgstr ""
-
-#: gda-fe/gda-fe-batch.c:442
-msgid "Down"
-msgstr ""
-
-#. create options area
-#: gda-fe/gda-fe-batch.c:451 gda-fe/gda-fe-main.c:131
-msgid "Options"
-msgstr "Opciones"
-
-#: gda-fe/gda-fe-batch.c:460
-#, fuzzy
-msgid "Transaction Mode"
-msgstr "Transacción iniciada"
-
-#: gda-fe/gda-fe-batch.c:465
-msgid "Send as XML"
-msgstr ""
-
-#: gda-fe/gda-fe-batch.c:471 gda-fe/gda-fe-connection.c:42
-#: gda-fe/gda-fe-main.c:47
-msgid "Batch"
-msgstr ""
-
-#: gda-fe/gda-fe-callbacks.c:49 gda-rolodex/gda-rolodex-callbacks.c:49
-#, fuzzy, c-format
-msgid "Connected to '%s'"
-msgstr "Conectado a %s"
-
-#: gda-fe/gda-fe-callbacks.c:146
-msgid "Connecting..."
-msgstr "Conectando..."
-
-#: gda-fe/gda-fe-callbacks.c:208
-#, fuzzy
-msgid "Configuration file saved"
-msgstr "Configuración del Driver"
-
-#. create the dialog box
-#: gda-fe/gda-fe-config.c:124
-msgid "Add Environment Variable"
-msgstr "Añadir variable de entorno"
-
-#. create fields
-#: gda-fe/gda-fe-config.c:135 gda-fe/gda-fe-config.c:186
-#: gda-fe/gda-fe-service.c:294 gda-fe/gda-fe-service.c:335
-#: gda-manager/gda-mgr-providers.c:166
-#: gda-postgres-server/gda-postgres-config-users.c:119
-#: gda-postgres-server/gda-postgres-config-users.c:152
-msgid "Name"
-msgstr "Nombre"
-
-#: gda-fe/gda-fe-config.c:145 gda-fe/gda-fe-config.c:186
-msgid "Value"
-msgstr ""
-
-#: gda-fe/gda-fe-config.c:240
-msgid "Editor Font"
-msgstr "Fuente del editor"
-
-#: gda-fe/gda-fe-config.c:245
-#, fuzzy
-msgid "Tab Position"
-msgstr "Posición de las pestañas"
-
-#: gda-fe/gda-fe-config.c:249
-msgid "Top"
-msgstr "Arriba"
-
-#: gda-fe/gda-fe-config.c:250
-msgid "Bottom"
-msgstr "Abajo"
-
-#: gda-fe/gda-fe-config.c:251
-msgid "Left"
-msgstr "Izquierda"
-
-#: gda-fe/gda-fe-config.c:252
-msgid "Right"
-msgstr "Derecha"
-
-#: gda-fe/gda-fe-config.c:257
-#, fuzzy
-msgid "Grid"
-msgstr "Fuente de la rejilla"
-
-#: gda-fe/gda-fe-config.c:267
-#, fuzzy
-msgid "Font"
-msgstr "Fuente de la rejilla"
-
-#: gda-fe/gda-fe-config.c:271
-msgid "Foreground Color"
-msgstr ""
-
-#: gda-fe/gda-fe-config.c:275
-msgid "Background Color"
-msgstr ""
-
-#: gda-fe/gda-fe-config.c:280
-msgid "Show row numbers"
-msgstr ""
-
-#: gda-fe/gda-fe-config.c:301
-msgid "User Interface"
-msgstr ""
-
-#: gda-fe/gda-fe-config.c:302
-msgid "Environment"
-msgstr ""
-
-#: gda-fe/gda-fe-config.c:303
-msgid "GDA"
-msgstr ""
-
-#: gda-fe/gda-fe-connection.c:39
-#, fuzzy
-msgid "SQL"
-msgstr "A SQL"
-
-#: gda-fe/gda-fe-connection.c:39 gda-fe/gda-fe-main.c:44
-#, fuzzy
-msgid "SQL Window"
-msgstr "Ventana"
-
-#: gda-fe/gda-fe-connection.c:42 gda-fe/gda-fe-main.c:47
-msgid "Batch commands window"
-msgstr ""
-
-#: gda-fe/gda-fe-connection.c:45
-msgid "Queries"
-msgstr ""
-
-#: gda-fe/gda-fe-connection.c:45 gda-fe/gda-fe-main.c:50
-#, fuzzy
-msgid "Query designer"
-msgstr "Diseñador"
-
-#: gda-fe/gda-fe-connection.c:48 gda-fe/gda-fe-connection.c:190
-#: gda-fe/gda-fe-main.c:53
-#, fuzzy
-msgid "Browser"
-msgstr "Navegador: %@%"
-
-#: gda-fe/gda-fe-connection.c:48
-#, fuzzy
-msgid "Browse Database"
-msgstr "Inspeccionar vistas"
-
-#: gda-fe/gda-fe-connection.c:51 gda-fe/gda-fe-connection.c:250
-#: gda-fe/gda-fe-main.c:56
-msgid "Export"
-msgstr "Exportar"
-
-#: gda-fe/gda-fe-connection.c:51 gda-fe/gda-fe-main.c:56
-#, fuzzy
-msgid "Export database"
-msgstr "Exportar"
-
-#: gda-fe/gda-fe-connection.c:54 gda-fe/gda-fe-connection.c:264
-#: gda-fe/gda-fe-main.c:59
-msgid "Import"
-msgstr "Importar"
-
-#: gda-fe/gda-fe-connection.c:54 gda-fe/gda-fe-main.c:59
-#, fuzzy
-msgid "Import data into current database"
-msgstr "Importar Datos a la Base de Datos"
-
-#: gda-fe/gda-fe-connection.c:58
-#, fuzzy
-msgid "Close connection"
-msgstr "Cerrar todas las conexiones"
-
-#: gda-fe/gda-fe-connection.c:65
-#, fuzzy
-msgid "Execute current command"
-msgstr "Ejecutar comando SQL"
-
-#: gda-fe/gda-fe-connection.c:68
-#: gda-postgres-server/gda-postgres-config-ac.c:292
-#, fuzzy
-msgid "Select"
-msgstr "Seleccione Fichero"
-
-#: gda-fe/gda-fe-connection.c:68
-msgid "Select from previous commands"
-msgstr ""
-
-#: gda-fe/gda-fe-connection.c:71
-#, fuzzy
-msgid "Load file into buffer"
-msgstr "Imprimir ventana"
-
-#: gda-fe/gda-fe-connection.c:74
-msgid "Save current file"
-msgstr "Guardar fichero actual"
-
-#: gda-fe/gda-fe-connection.c:81
-msgid "Cut selected text"
-msgstr "Cortar texto seleccionado"
-
-#: gda-fe/gda-fe-connection.c:84
-#, fuzzy
-msgid "Copy selected text"
-msgstr "Cortar texto seleccionado"
-
-#: gda-fe/gda-fe-connection.c:90
-#, fuzzy
-msgid "Clear window contents"
-msgstr "Vaciar fichero"
-
-#: gda-fe/gda-fe-connection.c:97
-msgid "Start"
-msgstr "Empezar"
-
-#: gda-fe/gda-fe-connection.c:97
-msgid "Start export"
-msgstr ""
-
-#: gda-fe/gda-fe-connection.c:100
-#, fuzzy
-msgid "Clear all fields"
-msgstr "Limpiar todas las entradas"
-
-#: gda-fe/gda-fe-connection.c:103
-msgid "Select all objects in database"
-msgstr ""
-
-#: gda-fe/gda-fe-connection.c:106
-msgid "Unselect"
-msgstr ""
-
-#: gda-fe/gda-fe-connection.c:106
-msgid "Clear object selection"
-msgstr ""
-
-#: gda-fe/gda-fe-connection.c:126
-msgid "Foreign keys"
-msgstr ""
-
-#: gda-fe/gda-fe-connection.c:127
-#, fuzzy
-msgid "Object Identifiers"
-msgstr "Lista de Objetos"
-
-#: gda-fe/gda-fe-connection.c:128
-#, fuzzy
-msgid "Object Inheritance"
-msgstr "Objetos"
-
-#: gda-fe/gda-fe-connection.c:129
-#: gda-postgres-server/gda-postgres-config-ac.c:168
-#, fuzzy
-msgid "Sequences"
-msgstr "Preferencias"
-
-#: gda-fe/gda-fe-connection.c:130
-msgid "SQL (Standard)"
-msgstr ""
-
-#: gda-fe/gda-fe-connection.c:131
-msgid "SQL Sub-Selects"
-msgstr ""
-
-#: gda-fe/gda-fe-connection.c:132
-msgid "Stored Procedures"
-msgstr ""
-
-#: gda-fe/gda-fe-connection.c:133
-#, fuzzy
-msgid "Transactions"
-msgstr "Transacción iniciada"
-
-#: gda-fe/gda-fe-connection.c:134
-msgid "Triggers"
-msgstr ""
-
-#: gda-fe/gda-fe-connection.c:136
-msgid "XML Queries"
-msgstr ""
-
-#: gda-fe/gda-fe-connection.c:226
-#, fuzzy
-msgid "File name"
-msgstr "Fichero"
-
-#: gda-fe/gda-fe-connection.c:414
-#, c-format
-msgid "Row %d - %d rows selected"
-msgstr ""
-
-#: gda-fe/gda-fe-connection.c:424 gda-fe/gda-fe-connection.c:504
-#, fuzzy
-msgid "Select file"
-msgstr "Seleccione Fichero"
-
-#: gda-fe/gda-fe-connection.c:444
-#, fuzzy, c-format
+#: lib/gda-server/gda-server-impl.c:224
 msgid ""
-"Error reading from file\n"
-"'%s'"
-msgstr "Error leyendo fichero %s"
-
-#: gda-fe/gda-fe-connection.c:485
-#, fuzzy
-msgid "Command succeeded"
-msgstr "Comando '%s' completado"
-
-#: gda-fe/gda-fe-connection.c:490
-#, fuzzy
-msgid "Command failed"
-msgstr "Comando"
-
-#: gda-fe/gda-fe-connection.c:519
-#, fuzzy, c-format
-msgid ""
-"Error writing to file\n"
-"'%s'"
-msgstr "Error escribiendo fichero %s"
-
-#. create dialog
-#: gda-fe/gda-fe-connection.c:543
-#, fuzzy
-msgid "Select Command"
-msgstr "Seleccionar comando SQL"
-
-#: gda-fe/gda-fe-connection.c:676
-msgid "Transaction started"
-msgstr "Transacción iniciada"
-
-#: gda-fe/gda-fe-connection.c:681
-#, fuzzy
-msgid "Begin transaction failed"
-msgstr "Iniciar Transacción"
-
-#: gda-fe/gda-fe-connection.c:687 gda-fe/gda-fe-connection.c:714
-#: gda-fe/gda-fe-connection.c:741
-msgid "Data source does not support transactions"
+"Another instance of this provider is already registered with OAF. Exiting..."
 msgstr ""
 
-#: gda-fe/gda-fe-connection.c:703
-#, fuzzy
-msgid "Commit executed successfully"
-msgstr "Commit ejecutado"
-
-#: gda-fe/gda-fe-connection.c:708
-#, fuzzy
-msgid "Commit transaction failed"
-msgstr "Comando"
-
-#: gda-fe/gda-fe-connection.c:730
-#, fuzzy
-msgid "Rollback executed successfully"
-msgstr "Rollback ejecutado"
-
-#: gda-fe/gda-fe-connection.c:735
-#, fuzzy
-msgid "Rollback transaction failed"
-msgstr "Transacción iniciada"
-
-#: gda-fe/gda-fe-connection.c:816 gda-manager/gda-mgr-container.c:181
-#, fuzzy, c-format
-msgid "Could not activate module %s"
-msgstr "No pudo vaciarse el fichero %s"
-
-#. create dialog
-#: gda-fe/gda-fe-connection.c:831 gda-fe/gda-fe-main.c:73
-msgid "Connection Properties"
-msgstr "Propiedades de la conexión"
-
-#. add detail frame
-#: gda-fe/gda-fe-connection.c:834 gda-fe/gda-fe-service.c:330
-#, fuzzy
-msgid "Properties"
-msgstr "Propiedades"
-
-#: gda-fe/gda-fe-connection.c:858
-#, fuzzy
-msgid "Command Timeout"
-msgstr "Tiempo de espera del comando"
-
-#: gda-fe/gda-fe-connection.c:865
-#, fuzzy
-msgid "Connect Timeout"
-msgstr "Tiempo de espera de la conexión"
-
-#: gda-fe/gda-fe-connection.c:872
-#, fuzzy
-msgid "Trace File"
-msgstr "Fichero de Trazas"
-
-#: gda-fe/gda-fe-connection.c:876 gda-fe/gda-fe-log.c:33
-#: gda-manager/gda-mgr-providers.c:45
-#: gda-postgres-server/gda-postgres-config-ac.c:1106
-#, fuzzy
-msgid "View"
-msgstr "Ver"
-
-#: gda-fe/gda-fe-connection.c:879
-#, fuzzy
-msgid "Version"
-msgstr "Descripción"
-
-#: gda-fe/gda-fe-connection.c:885
-#, fuzzy
-msgid "Provider Features"
-msgstr "Proveedor"
-
-#: gda-fe/gda-fe-designer.c:29
-#, fuzzy
-msgid "New database design"
-msgstr "Crear diseño de base de datos"
-
-#: gda-fe/gda-fe-designer.c:32
-#, fuzzy
-msgid "Open database design"
-msgstr "Abrir base de datos del disco"
-
-#: gda-fe/gda-fe-designer.c:35
-#, fuzzy
-msgid "Save database design"
-msgstr "Guardar diseño a disco"
-
-#: gda-fe/gda-fe-designer.c:38
-#, fuzzy
-msgid "Clear all entries"
-msgstr "Limpiar todas las entradas"
-
-#: gda-fe/gda-fe-designer.c:42
-#, fuzzy
-msgid "Close designer window"
-msgstr "Cerrar ventana activa"
-
-#: gda-fe/gda-fe-designer.c:74
-#, fuzzy
-msgid "Select XML file"
-msgstr "Seleccione Fichero"
-
-#: gda-fe/gda-fe-designer.c:96
-msgid "Designer"
-msgstr "Diseñador"
-
-#. create dialog
-#: gda-fe/gda-fe-dsnconfig.c:116
-#, fuzzy
-msgid "Data sources"
-msgstr "Fuentes de Datos..."
-
-#: gda-fe/gda-fe-dsnconfig.c:152
-msgid "Apply"
+#: lib/gda-server/gda-server-impl.c:227
+msgid "Unknown error registering this provider with OAF. Exiting"
 msgstr ""
 
-#: gda-fe/gda-fe-log.c:33 gda-manager/gda-mgr-providers.c:45
-#, fuzzy
-msgid "View selected entry"
-msgstr "Cortar texto seleccionado"
-
-#: gda-fe/gda-fe-log.c:36
-#, fuzzy
-msgid "Clear log file"
-msgstr "Limpiar todas las entradas"
-
-#: gda-fe/gda-fe-log.c:39 gda-fe/gda-fe-service.c:46
-msgid "Refresh"
-msgstr "Refrescar"
-
-#: gda-fe/gda-fe-log.c:39
-#, fuzzy
-msgid "Refresh log viewer"
-msgstr "Refrescar traza"
-
-#: gda-fe/gda-fe-log.c:43 gda-fe/gda-fe-service.c:50
-#, fuzzy
-msgid "Close log window"
-msgstr "Cerrar todas las ventanas"
-
-#: gda-fe/gda-fe-log.c:128
-#, fuzzy, c-format
-msgid "Error loading file '%s'"
-msgstr "Error leyendo fichero %s"
-
-#: gda-fe/gda-fe-log.c:169 gda-fe/gda-fe-main.c:140
-#: gda-manager/gda-mgr-providers.c:28
-#, fuzzy
-msgid "Logs"
-msgstr "Traza"
-
-#: gda-fe/gda-fe-main.c:25
-#, fuzzy
-msgid "Open Connection..."
-msgstr "Abrir conexión..."
-
-#: gda-fe/gda-fe-main.c:25 gda-fe/gda-fe-main.c:137
-#, fuzzy
-msgid "Open a connection to a data source"
-msgstr "Abrir Conexión"
-
-#: gda-fe/gda-fe-main.c:28
-msgid "Close current connection"
-msgstr "Cerrar conexión actual"
-
-#: gda-fe/gda-fe-main.c:31
-#, fuzzy
-msgid "Disconnect all"
-msgstr "Desconectar todos"
-
-#: gda-fe/gda-fe-main.c:31
-msgid "Close all connections"
-msgstr "Cerrar todas las conexiones"
-
-#: gda-fe/gda-fe-main.c:44
-#, fuzzy
-msgid "SQL window"
-msgstr "Limpiar ventana SQL"
-
-#: gda-fe/gda-fe-main.c:50
-#, fuzzy
-msgid "Query Designer"
-msgstr "Diseñador"
-
-#: gda-fe/gda-fe-main.c:53
-#, fuzzy
-msgid "Browse database"
-msgstr "Inspeccionar objetos de la base de datos"
-
-#: gda-fe/gda-fe-main.c:63
-#, fuzzy
-msgid "Begin transaction"
-msgstr "Iniciar Transacción"
-
-#: gda-fe/gda-fe-main.c:66
-msgid "Commit"
-msgstr "Commit"
-
-#: gda-fe/gda-fe-main.c:66
-#, fuzzy
-msgid "Commit transaction"
-msgstr "Iniciar Transacción"
-
-#: gda-fe/gda-fe-main.c:69
-msgid "Rollback"
-msgstr "Rollback"
-
-#: gda-fe/gda-fe-main.c:69
-msgid "Discard all changes"
-msgstr "Deshacer todos los cambios"
-
-#: gda-fe/gda-fe-main.c:73
-#, fuzzy
-msgid "View connection properties"
-msgstr "Nueva conexión..."
-
-#: gda-fe/gda-fe-main.c:76
-#, fuzzy
-msgid "Configure"
-msgstr "Configuración"
-
-#: gda-fe/gda-fe-main.c:76 gda-manager/gda-mgr-gda.c:45
-msgid "Configure underlying database"
-msgstr ""
-
-#: gda-fe/gda-fe-main.c:83 gda-fe/gda-fe-main.c:140
-#, fuzzy
-msgid "View logs"
-msgstr "Vistas"
-
-#: gda-fe/gda-fe-main.c:83
-msgid "View the different logs"
-msgstr ""
-
-#: gda-fe/gda-fe-main.c:86
-#, fuzzy
-msgid "Database designer"
-msgstr "Desieñador de Base de Datos"
-
-#: gda-fe/gda-fe-main.c:86
-#, fuzzy
-msgid "Open the database designer"
-msgstr "Abrir base de datos del disco"
-
-#: gda-fe/gda-fe-main.c:89
-msgid "Service control"
-msgstr ""
-
-#: gda-fe/gda-fe-main.c:89
-#, fuzzy
-msgid "View service activity"
-msgstr "Ver fichero de trazas del servidor"
-
-#: gda-fe/gda-fe-main.c:96
-msgid "The GNOME-DB Development Environment"
-msgstr ""
-
-#: gda-fe/gda-fe-main.c:103
-msgid "Preferences..."
-msgstr "Preferencias..."
-
-#: gda-fe/gda-fe-main.c:106
-#, fuzzy
-msgid "Data sources..."
-msgstr "Fuentes de Datos..."
-
-#: gda-fe/gda-fe-main.c:106 gda-manager/gda-mgr-main.c:165
-msgid "Configure GDA data sources"
-msgstr ""
-
-#: gda-fe/gda-fe-main.c:110
-#, fuzzy
-msgid "Save options"
-msgstr "Guardar Opciones"
-
-#: gda-fe/gda-fe-main.c:110
-msgid "Save current configuration"
-msgstr "Guardar configuración actual"
-
-#: gda-fe/gda-fe-main.c:137
-msgid "Connect"
-msgstr "Conectar"
-
-#: gda-fe/gda-fe-main.c:148
-#, fuzzy
-msgid "Exit Application"
-msgstr "Salir de la aplicación"
-
-#: gda-fe/gda-fe-service.c:40
-msgid "Activate"
-msgstr ""
-
-#: gda-fe/gda-fe-service.c:40
-#, fuzzy
-msgid "Activate selected service"
-msgstr "Empezar Operación Seleccionada"
-
-#: gda-fe/gda-fe-service.c:43
-msgid "Stop"
-msgstr ""
-
-#: gda-fe/gda-fe-service.c:43
-#, fuzzy
-msgid "Stop selected service"
-msgstr "Cortar texto seleccionado"
-
-#: gda-fe/gda-fe-service.c:46
-#, fuzzy
-msgid "Refresh service list"
-msgstr "Refrescar todas las listas"
-
-#: gda-fe/gda-fe-service.c:96
-msgid ""
-"Could not find any installed services. Either you don't have\n"
-"any services installed or I don't know the path to find them.\n"
-"In either case, please check your GNOME-DB installation."
-msgstr ""
-
-#: gda-fe/gda-fe-service.c:175
+#: lib/gda-server/gda-server-impl.c:231
 #, c-format
-msgid "Service '%s' activated"
+msgid "Registered with ID = %s"
 msgstr ""
 
-#: gda-fe/gda-fe-service.c:178
-#, fuzzy, c-format
-msgid "Could not activate service '%s'"
-msgstr "No pudo vaciarse el fichero %s"
-
-#: gda-fe/gda-fe-service.c:295
-#, fuzzy
-msgid "Repo ID"
-msgstr "Identificador Repositorio"
-
-#: gda-fe/gda-fe-service.c:345 gda-manager/gda-mgr-providers.c:166
-msgid "Type"
-msgstr "Tipo"
-
-#: gda-fe/gda-fe-service.c:363
-msgid "Service Control"
-msgstr ""
-
-#: gda-interbase-server/gda-interbase-connection.c:251
+#: lib/gda-server/gda-server-impl.c:313
 #, c-format
-msgid "Error code %ld"
+msgid "CORBA system exception %s"
 msgstr ""
 
-#: gda-interbase-server/gda-interbase-connection.c:252
-#: gda-ldap-server/gda-ldap-connection.c:263
-#: gda-mysql-server/gda-mysql-connection.c:378
-#: gda-odbc-server/gda-odbc-connection.c:570
-#: gda-odbc-server/gda-odbc-connection.c:603
-#: gda-oracle-server/gda-oracle-connection.c:417
-#: gda-postgres-server/gda-postgres-connection.c:615
+#: lib/gda-server/gda-server-impl.c:316
+#, c-format
+msgid "CORBA user exception: %s"
+msgstr ""
+
+#: lib/gda-server/gda-server-init.c:62 lib/gda-server/gda-server-init.c:68
+#, c-format
+msgid "Received signal %d, shutting down"
+msgstr ""
+
+#: lib/gda-server/gda-server-init.c:72
+#, c-format
+msgid "Received signal %d. Ignoring"
+msgstr ""
+
+#: lib/gda-server/gda-server-init.c:122
+msgid "Attempt to initialize an already initialized provider"
+msgstr ""
+
+#: providers/gda-interbase-server/gda-interbase-connection.c:252
+#: providers/gda-ldap-server/gda-ldap-connection.c:263
+#: providers/gda-mdb-server/gda-mdb-connection.c:351
+#: providers/gda-mysql-server/gda-mysql-connection.c:378
+#: providers/gda-odbc-server/gda-odbc-connection.c:600
+#: providers/gda-odbc-server/gda-odbc-connection.c:633
+#: providers/gda-oracle-server/gda-oracle-connection.c:417
+#: providers/gda-postgres-server/gda-postgres-connection.c:771
+#: providers/gda-sybase-server/gda-sybase-error.c:106
 #, c-format
 msgid "error '%s' at %s"
 msgstr ""
 
-#: gda-interbase-server/gda-interbase-connection.c:257
-#: gda-interbase-server/gda-interbase-connection.c:258
-#: gda-ldap-server/gda-ldap-connection.c:268
-#: gda-ldap-server/gda-ldap-connection.c:269
-#: gda-mysql-server/gda-mysql-connection.c:382
-#: gda-mysql-server/gda-mysql-connection.c:383
-#: gda-odbc-server/gda-odbc-connection.c:572
-#: gda-odbc-server/gda-odbc-connection.c:573
-#: gda-odbc-server/gda-odbc-connection.c:605
-#: gda-odbc-server/gda-odbc-connection.c:606
-#: gda-oracle-server/gda-oracle-connection.c:422
-#: gda-oracle-server/gda-oracle-connection.c:423
-#: gda-postgres-server/gda-postgres-connection.c:622
-#: gda-postgres-server/gda-postgres-connection.c:623
+#: providers/gda-interbase-server/gda-interbase-connection.c:257
+#: providers/gda-interbase-server/gda-interbase-connection.c:258
+#: providers/gda-ldap-server/gda-ldap-connection.c:268
+#: providers/gda-ldap-server/gda-ldap-connection.c:269
+#: providers/gda-mdb-server/gda-mdb-connection.c:355
+#: providers/gda-mdb-server/gda-mdb-connection.c:356
+#: providers/gda-mysql-server/gda-mysql-connection.c:382
+#: providers/gda-mysql-server/gda-mysql-connection.c:383
+#: providers/gda-odbc-server/gda-odbc-connection.c:602
+#: providers/gda-odbc-server/gda-odbc-connection.c:603
+#: providers/gda-odbc-server/gda-odbc-connection.c:635
+#: providers/gda-odbc-server/gda-odbc-connection.c:636
+#: providers/gda-oracle-server/gda-oracle-connection.c:422
+#: providers/gda-oracle-server/gda-oracle-connection.c:423
+#: providers/gda-postgres-server/gda-postgres-connection.c:778
+#: providers/gda-postgres-server/gda-postgres-connection.c:779
+#: providers/gda-sybase-server/gda-sybase-error.c:115
+#: providers/gda-sybase-server/gda-sybase-error.c:116
 msgid "Not available"
 msgstr ""
 
-#: gda-interbase-server/gda-interbase-connection.c:259
-#: gda-ldap-server/gda-ldap-connection.c:270
-#: gda-mysql-server/gda-mysql-connection.c:384
-#: gda-oracle-server/gda-oracle-connection.c:424
-#: gda-postgres-server/gda-postgres-connection.c:624
+#: providers/gda-interbase-server/gda-interbase-connection.c:259
+#: providers/gda-ldap-server/gda-ldap-connection.c:270
+#: providers/gda-mdb-server/gda-mdb-connection.c:357
+#: providers/gda-mysql-server/gda-mysql-connection.c:384
+#: providers/gda-oracle-server/gda-oracle-connection.c:424
+#: providers/gda-postgres-server/gda-postgres-connection.c:780
+#: providers/gda-sybase-server/gda-sybase-error.c:117
 msgid "error"
 msgstr ""
 
-#: gda-interbase-server/main-interbase.c:74
-msgid "Could not register INTERBASE provider implementation"
-msgstr ""
-
-#: gda-ldap-server/gda-ldap-config-main.c:60
-msgid "Could not create DSN config component"
-msgstr ""
-
-#: gda-ldap-server/main-ldap.c:74
+#: providers/gda-ldap-server/main-ldap.c:68
 msgid "Could not register LDAP provider implementation"
 msgstr ""
 
-#: gda-manager/gda-mgr-callbacks.c:65
-#: testing/controls_browser/gda-controls-browser.c:362
-msgid "Select config component"
+#: providers/gda-interbase-server/gda-interbase-connection.c:251
+#, c-format
+msgid "Error code %ld"
 msgstr ""
 
-#: gda-manager/gda-mgr-gda.c:36
-msgid "Add new data source"
+#: providers/gda-interbase-server/main-interbase.c:69
+msgid "Could not register INTERBASE provider implementation"
 msgstr ""
 
-#: gda-manager/gda-mgr-gda.c:39
-#, fuzzy
-msgid "Edit selected data source"
-msgstr "Exportar datos a fichero XML"
+#: providers/gda-mail-server/gda-mail-connection.c:108
+#: providers/gda-mdb-server/gda-mdb-connection.c:224
+#: providers/gda-mysql-server/gda-mysql-connection.c:251
+#: providers/gda-oracle-server/gda-oracle-connection.c:295
+#: providers/gda-postgres-server/gda-postgres-connection.c:511
+#: providers/gda-sybase-server/gda-sybase-connection.c:259
+#, c-format
+msgid "Unhandled SCHEMA_QTYPE %d"
+msgstr ""
 
-#: gda-manager/gda-mgr-gda.c:42
+#: providers/gda-mail-server/main-mail.c:69
 #, fuzzy
-msgid "Remove selected data source"
-msgstr "Exportar datos a fichero XML"
-
-#: gda-manager/gda-mgr-gda.c:48
-#, fuzzy
-msgid "Browse selected data source"
-msgstr "Exportar datos a fichero XML"
-
-#. create the dialog
-#: gda-manager/gda-mgr-gda.c:148
-#, fuzzy
-msgid "Data Source"
-msgstr "Fuentes de Datos..."
-
-#. create dialog for asking the user name and password
-#: gda-manager/gda-mgr-gda.c:193
-#, fuzzy
-msgid "Browse Data Source"
-msgstr "Fuentes de Datos..."
-
-#: gda-manager/gda-mgr-gda.c:258
-#, fuzzy
-msgid "could not load browser control"
+msgid "Could not register Mail provider implementation"
 msgstr "No se pudo cambiar al directorio '%s'"
 
-#. create the dialog
-#: gda-manager/gda-mgr-gda.c:288
-msgid "Load config component"
-msgstr ""
-
-#: gda-manager/gda-mgr-gda.c:313
-msgid "Module"
-msgstr ""
-
-#: gda-manager/gda-mgr-gda.c:324
-msgid "Users"
-msgstr ""
-
-#: gda-manager/gda-mgr-gda.c:328
-msgid "User access rights"
-msgstr ""
-
-#: gda-manager/gda-mgr-gda.c:336
-msgid "All"
-msgstr ""
-
-#: gda-manager/gda-mgr-gda.c:396
-#, fuzzy
-msgid "Data source not found in GDA configuration"
-msgstr "Guardar configuración actual"
-
-#: gda-manager/gda-mgr-gda.c:416 gda-manager/gda-mgr-main.c:164
-#, fuzzy
-msgid "Data Sources"
-msgstr "Fuentes de Datos..."
-
-#: gda-manager/gda-mgr-main.c:47
-#, fuzzy
-msgid "Database browser"
-msgstr "Desieñador de Base de Datos"
-
-#: gda-manager/gda-mgr-main.c:47
-#, fuzzy
-msgid "Open the database browser"
-msgstr "Abrir base de datos del disco"
-
-#: gda-manager/gda-mgr-main.c:54
-msgid "The GNOME-DB development environment"
-msgstr ""
-
-#: gda-manager/gda-mgr-main.c:170 gda-manager/gda-mgr-providers.c:174
-#, fuzzy
-msgid "Providers"
-msgstr "Proveedor"
-
-#: gda-manager/gda-mgr-main.c:171
-#, fuzzy
-msgid "Configure GDA providers"
-msgstr "Configurar preferencias"
-
-#: gda-manager/gda-mgr-main.c:176
-#, fuzzy
-msgid "Components"
-msgstr "Contenido"
-
-#: gda-manager/gda-mgr-main.c:177
-msgid "Configure GNOME-DB components"
-msgstr ""
-
-#: gda-manager/gda-mgr-providers.c:28
-#, fuzzy
-msgid "View provider log"
-msgstr "Ver ficheros de traza GDA"
-
-#: gda-manager/gda-mgr-providers.c:32
-msgid "Install a new GDA provider"
-msgstr ""
-
-#: gda-manager/gda-mgr-providers.c:35
-#, fuzzy
-msgid "Edit selected provider"
-msgstr "Cortar texto seleccionado"
-
-#: gda-manager/gda-mgr-providers.c:38
-msgid "Remove selected provider"
-msgstr ""
-
-#: gda-manager/gda-mgr-providers.c:166
-#, fuzzy
-msgid "Comments"
-msgstr "Contenido"
-
 #. execute command
-#: gda-mysql-server/gda-mysql-command.c:87
+#: providers/gda-mdb-server/gda-mdb-command.c:86
+#: providers/gda-mysql-server/gda-mysql-command.c:87
+#: providers/gda-sybase-server/gda-sybase-command.c:120
 #, fuzzy, c-format
 msgid "executing command '%s'"
 msgstr "Ejecutando '%s'"
 
-#: gda-mysql-server/gda-mysql-command.c:89
+#: providers/gda-mdb-server/gda-mdb-command.c:88
+#: providers/gda-mysql-server/gda-mysql-command.c:89
 #, fuzzy, c-format
 msgid "info '%s'"
 msgstr "Ejecutando '%s'"
 
-#: gda-mysql-server/gda-mysql-config-db.c:33
-#: gda-mysql-server/gda-mysql-config-main.c:63
-#: gda-odbc-server/gda-odbc-config-main.c:69
-msgid "Could not create GnomeDbControl"
-msgstr ""
-
-#: gda-mysql-server/gda-mysql-config-db.c:50
-msgid "Available databases"
-msgstr ""
-
-#: gda-mysql-server/gda-mysql-config-db.c:65
-msgid "Drop"
-msgstr ""
-
-#. create detail fields
-#: gda-mysql-server/gda-mysql-config-db.c:70
-#, fuzzy
-msgid "Database name"
-msgstr "Base de Datos"
-
-#: gda-mysql-server/gda-mysql-config-db.c:74
-#: gda-postgres-server/gda-postgres-config-ac.c:1100
-#: gda-postgres-server/gda-postgres-config-ac.c:1108
-#: gda-postgres-server/gda-postgres-config-ac.c:1116
-msgid "Owner"
-msgstr ""
-
-#: gda-mysql-server/gda-mysql-config-main.c:92
-#: gda-odbc-server/gda-odbc-config-main.c:89
-#, c-format
-msgid "new instance %p created"
-msgstr ""
-
-#: gda-mysql-server/gda-mysql-connection.c:148
+#: providers/gda-mdb-server/gda-mdb-connection.c:137
+#: providers/gda-mysql-server/gda-mysql-connection.c:148
 #, c-format
 msgid ""
 "%s:%d: You cannot provide a UNIX_SOCKET if you also provide either a HOST or "
@@ -1901,472 +305,1528 @@ msgid ""
 "options"
 msgstr ""
 
-#: gda-mysql-server/gda-mysql-connection.c:162
+#: providers/gda-mdb-server/gda-mdb-connection.c:147
 #, c-format
-msgid ""
-"Opening connection with user=%s, password=%s, host=%shost=%s, port=%s, "
-"unix_socket=%s"
+msgid "%s:%d: You must  provide the filename with the MS Access database"
 msgstr ""
 
-#: gda-mysql-server/gda-mysql-connection.c:251
-#: gda-oracle-server/gda-oracle-connection.c:295
-#: gda-postgres-server/gda-postgres-connection.c:379
+#: providers/gda-mdb-server/gda-mdb-connection.c:152
 #, c-format
-msgid "Unhandled SCHEMA_QTYPE %d"
+msgid "Opening connection with filename=%s, user=%s, password=%s"
 msgstr ""
 
-#: gda-mysql-server/gda-mysql-connection.c:433
+#: providers/gda-mdb-server/gda-mdb-connection.c:406
+#: providers/gda-mysql-server/gda-mysql-connection.c:433
 msgid "mysql_recset is NULL"
 msgstr ""
 
-#: gda-mysql-server/gda-mysql-connection.c:475
+#: providers/gda-mdb-server/gda-mdb-connection.c:448
+#: providers/gda-mysql-server/gda-mysql-connection.c:475
+#: providers/gda-sybase-server/gda-sybase-connection.c:413
 msgid "No table name given for SCHEMA_COLS"
 msgstr ""
 
-#: gda-mysql-server/main-mysql.c:75
+#: providers/gda-mdb-server/main-mdb.c:69
+#: providers/gda-mysql-server/main-mysql.c:69
 msgid "Could not register MySQL provider implementation"
 msgstr ""
 
-#: gda-odbc-server/gda-odbc-connection.c:276
+#: providers/gda-mysql-server/gda-mysql-connection.c:162
+#, c-format
+msgid ""
+"Opening connection with user=%s, password=%s, host=%s, port=%s, "
+"unix_socket=%s"
+msgstr ""
+
+#: providers/gda-odbc-server/gda-odbc-connection.c:280
 #, c-format
 msgid "gda_odbc_connection_open_schema: Unhandled SCHEMA_QTYPE %d\n"
 msgstr ""
 
-#: gda-odbc-server/gda-odbc-connection.c:587
-#: gda-odbc-server/gda-odbc-connection.c:588
-#: gda-odbc-server/gda-odbc-connection.c:589
-#: gda-odbc-server/gda-odbc-connection.c:620
-#: gda-odbc-server/gda-odbc-connection.c:621
-#: gda-odbc-server/gda-odbc-connection.c:622
+#: providers/gda-odbc-server/gda-odbc-connection.c:617
+#: providers/gda-odbc-server/gda-odbc-connection.c:618
+#: providers/gda-odbc-server/gda-odbc-connection.c:619
+#: providers/gda-odbc-server/gda-odbc-connection.c:650
+#: providers/gda-odbc-server/gda-odbc-connection.c:651
+#: providers/gda-odbc-server/gda-odbc-connection.c:652
 msgid "no text"
 msgstr ""
 
-#: gda-odbc-server/gda-odbc-main.c:74
+#: providers/gda-odbc-server/main-odbc.c:68
 msgid "Could not register ODBC provider implementation"
 msgstr ""
 
-#: gda-oracle-server/gda-oracle-command.c:195
+#: providers/gda-oracle-server/gda-oracle-command.c:195
 msgid "Could not allocate statement handle"
 msgstr ""
 
-#: gda-oracle-server/gda-oracle-command.c:199
+#: providers/gda-oracle-server/gda-oracle-command.c:199
 msgid "command object being created without associated connection"
 msgstr ""
 
-#: gda-oracle-server/gda-oracle-command.c:226
+#: providers/gda-oracle-server/gda-oracle-command.c:226
 #, fuzzy, c-format
 msgid "Executing command '%s'"
 msgstr "Ejecutando '%s'"
 
-#: gda-oracle-server/gda-oracle-connection.c:113
+#: providers/gda-oracle-server/gda-oracle-connection.c:113
 msgid "error in OCIHandleAlloc() HTYPE_SVCCTX"
 msgstr ""
 
-#: gda-oracle-server/gda-oracle-connection.c:116
+#: providers/gda-oracle-server/gda-oracle-connection.c:116
 msgid "error in OCIHandleAlloc() HTYPE_SERVER"
 msgstr ""
 
-#: gda-oracle-server/gda-oracle-connection.c:119
+#: providers/gda-oracle-server/gda-oracle-connection.c:119
 msgid "error in OCIHandleAlloc() HTYPE_ERROR"
 msgstr ""
 
-#: gda-oracle-server/gda-oracle-connection.c:370
+#: providers/gda-oracle-server/gda-oracle-connection.c:370
 #, c-format
 msgid "Unknown ORACLE type %ld"
 msgstr ""
 
-#: gda-oracle-server/gda-oracle-recordset.c:115
+#: providers/gda-oracle-server/gda-oracle-recordset.c:115
 msgid "Unknown ORACLE data type in fill_field_values"
 msgstr ""
 
-#: gda-oracle-server/gda-oracle-recordset.c:150
+#: providers/gda-oracle-server/gda-oracle-recordset.c:150
 msgid "recordset object being created without associated connection"
 msgstr ""
 
-#: gda-oracle-server/main-oracle.c:74
+#: providers/gda-oracle-server/main-oracle.c:68
 msgid "Could not register ORACLE provider implementation"
 msgstr ""
 
-#: gda-postgres-server/gda-postgres-config-ac.c:94
-#: gda-postgres-server/gda-postgres-config-main.c:163
-#: gda-postgres-server/gda-postgres-config-users.c:93
-#, fuzzy
-msgid "DSN for the connection"
-msgstr "Cerrar todas las conexiones"
-
-#: gda-postgres-server/gda-postgres-config-ac.c:98
-#: gda-postgres-server/gda-postgres-config-main.c:166
-#: gda-postgres-server/gda-postgres-config-main.c:279
-#: gda-postgres-server/gda-postgres-config-users.c:96
-msgid "User identity"
-msgstr ""
-
-#: gda-postgres-server/gda-postgres-config-ac.c:102
-#: gda-postgres-server/gda-postgres-config-main.c:169
-#: gda-postgres-server/gda-postgres-config-users.c:99
-msgid "User passord"
-msgstr ""
-
-#: gda-postgres-server/gda-postgres-config-ac.c:106
-#: gda-postgres-server/gda-postgres-config-main.c:172
-#: gda-postgres-server/gda-postgres-config-users.c:102
-msgid "Show/hide the user id"
-msgstr ""
-
-#: gda-postgres-server/gda-postgres-config-ac.c:110
-#: gda-postgres-server/gda-postgres-config-main.c:175
-#: gda-postgres-server/gda-postgres-config-users.c:105
-msgid "Give it TRUE to reset/start the component"
-msgstr ""
-
-#: gda-postgres-server/gda-postgres-config-ac.c:114
-#: gda-postgres-server/gda-postgres-config-users.c:108
-msgid "User name setting"
-msgstr ""
-
-#: gda-postgres-server/gda-postgres-config-ac.c:118
-msgid "Group name setting"
-msgstr ""
-
-#: gda-postgres-server/gda-postgres-config-ac.c:122
-#, fuzzy
-msgid "Object type setting"
-msgstr "Lista de Objetos"
-
-#: gda-postgres-server/gda-postgres-config-ac.c:126
-#, fuzzy
-msgid "Object name setting"
-msgstr "Objetos"
-
-#: gda-postgres-server/gda-postgres-config-ac.c:141
-msgid "Access rigths"
-msgstr ""
-
-#: gda-postgres-server/gda-postgres-config-ac.c:174
-msgid "Indexes"
-msgstr ""
-
-#: gda-postgres-server/gda-postgres-config-ac.c:206
-msgid "All users rights"
-msgstr ""
-
-#: gda-postgres-server/gda-postgres-config-ac.c:223
-msgid "Groups rights"
-msgstr ""
-
-#: gda-postgres-server/gda-postgres-config-ac.c:230
-msgid "Group:"
-msgstr ""
-
-#: gda-postgres-server/gda-postgres-config-ac.c:241
-msgid "Individual users rights"
-msgstr ""
-
-#: gda-postgres-server/gda-postgres-config-ac.c:248
-msgid "User:"
-msgstr ""
-
-#: gda-postgres-server/gda-postgres-config-ac.c:298
-#, fuzzy
-msgid "Insert"
-msgstr "Insertar fichero..."
-
-#: gda-postgres-server/gda-postgres-config-ac.c:304
-#, fuzzy
-msgid "Update/Delete"
-msgstr "Borrar"
-
-#: gda-postgres-server/gda-postgres-config-ac.c:310
-msgid "Rule"
-msgstr ""
-
-#: gda-postgres-server/gda-postgres-config-ac.c:1098
-#: gda-postgres-server/gda-postgres-config-ac.c:1125
-#, fuzzy
-msgid "Table"
-msgstr "Tablas"
-
-#: gda-postgres-server/gda-postgres-config-ac.c:1114
-msgid "Sequence"
-msgstr ""
-
-#: gda-postgres-server/gda-postgres-config-ac.c:1123
-msgid "Index"
-msgstr ""
-
-#: gda-postgres-server/gda-postgres-config-main.c:285
-#, fuzzy
-msgid "Name:"
-msgstr "Nombre"
-
-#: gda-postgres-server/gda-postgres-config-main.c:292
-msgid "Password:"
-msgstr ""
-
-#: gda-postgres-server/gda-postgres-config-main.c:358
-#: gda-postgres-server/gda-postgres-config-main.c:377
-#: gda-postgres-server/gda-postgres-config-main.c:397
-msgid "Could not instantiate the gnome-db-control"
-msgstr ""
-
-#: gda-postgres-server/gda-postgres-config-users.c:119
-#: gda-postgres-server/gda-postgres-config-users.c:121
-msgid "Group(s)"
-msgstr ""
-
-#: gda-postgres-server/gda-postgres-config-users.c:119
-#: gda-postgres-server/gda-postgres-config-users.c:165
-#, fuzzy
-msgid "Create DB"
-msgstr "Crear script"
-
-#: gda-postgres-server/gda-postgres-config-users.c:120
-#: gda-postgres-server/gda-postgres-config-users.c:171
-#, fuzzy
-msgid "Create users"
-msgstr "Crear script"
-
-#: gda-postgres-server/gda-postgres-config-users.c:120
-#: gda-postgres-server/gda-postgres-config-users.c:177
-msgid "Valid until"
-msgstr ""
-
-#: gda-postgres-server/gda-postgres-config-users.c:125
-#, fuzzy
-msgid "Known database users"
-msgstr "Inspeccionar objetos de la base de datos"
-
-#: gda-postgres-server/gda-postgres-config-users.c:208
-msgid "Save as new user"
-msgstr ""
-
-#: gda-postgres-server/gda-postgres-config-users.c:213
-msgid "Save modified user"
-msgstr ""
-
-#: gda-postgres-server/gda-postgres-config-users.c:218
-#, fuzzy
-msgid "Delete user"
-msgstr "Borrar"
-
-#: gda-postgres-server/gda-postgres-config-users.c:436
-#: gda-postgres-server/gda-postgres-config-users.c:440
-msgid "Yes"
-msgstr ""
-
-#: gda-postgres-server/gda-postgres-config-users.c:438
-#: gda-postgres-server/gda-postgres-config-users.c:442
-msgid "No"
-msgstr ""
-
-#: gda-postgres-server/gda-postgres-connection.c:724
-#: gda-postgres-server/gda-postgres-connection.c:836
+#: providers/gda-postgres-server/gda-postgres-connection.c:880
+#: providers/gda-postgres-server/gda-postgres-connection.c:992
 msgid "postgres_recset is NULL"
 msgstr ""
 
-#: gda-postgres-server/main-postgres.c:74
+#: providers/gda-postgres-server/main-postgres.c:68
 msgid "Could not register PostgreSQL provider implementation"
 msgstr ""
 
-#: gda-rolodex/gda-rolodex-callbacks.c:28 testing/gda-ui-test3.c:52
-msgid "UI Test 3 Error"
+#: providers/gda-sybase-server/gda-sybase-command.c:115
+msgid "Connection seems to be dead"
 msgstr ""
 
-#: gda-rolodex/gda-rolodex-main.c:91
-#, c-format
-msgid "Record %8.0f"
+#: providers/gda-sybase-server/gda-sybase-command.c:135
+msgid "Filling command structure failed\n"
 msgstr ""
 
-#: gda-rolodex/gda-rolodex-main.c:278
-#, c-format
-msgid "We could not load the glade interface description! (%s)"
+#: providers/gda-sybase-server/gda-sybase-command.c:147
+msgid "sending cmd failed"
 msgstr ""
 
-#: gda-rolodex/gda-rolodex-main.c:309
+#: providers/gda-sybase-server/gda-sybase-command.c:154
+msgid "Allocating recordset failed"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-command.c:164
+msgid "Getting recordset userdata failed"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-command.c:222
+msgid "Command execution finished, all results processed"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-command.c:226
 #, fuzzy
-msgid "Select the table name"
-msgstr "Guardar fichero con otro nombre"
+msgid "Command failed"
+msgstr "Comando"
 
-#: gda-srv/gda-server-error.c:169
-msgid "Could not get pointer to server implementation"
+#: providers/gda-sybase-server/gda-sybase-command.c:230
+msgid "Execution of resultless command succeeded"
 msgstr ""
 
-#: gda-srv/gda-server-impl-connection.c:106
-#: gda-srv/gda-server-impl-connection.c:115
-#: gda-srv/gda-server-impl-connection.c:122
-#: gda-srv/gda-server-impl-connection.c:131
-#: gda-srv/gda-server-impl-connection.c:138
-#: gda-srv/gda-server-impl-connection.c:147
-#: gda-srv/gda-server-impl-connection.c:154
-#: gda-srv/gda-server-impl-connection.c:163
-#: gda-srv/gda-server-impl-recordset.c:113
-#: gda-srv/gda-server-impl-recordset.c:122
-#: gda-srv/gda-server-impl-recordset.c:129
-#: gda-srv/gda-server-impl-recordset.c:144
-#: gda-srv/gda-server-impl-recordset.c:153
-#: gda-srv/gda-server-impl-recordset.c:160
-#: gda-srv/gda-server-impl-recordset.c:169
-#: gda-srv/gda-server-impl-recordset.c:176
-#: gda-srv/gda-server-impl-recordset.c:185
-#: gda-srv/gda-server-impl-recordset.c:192
-#: gda-srv/gda-server-impl-recordset.c:200
-#: gda-srv/gda-server-impl-recordset.c:209
-#: gda-srv/gda-server-impl-recordset.c:216
-#: gda-srv/gda-server-impl-recordset.c:224
-#: gda-srv/gda-server-impl-recordset.c:232
-#: gda-srv/gda-server-impl-recordset.c:274
-#: gda-srv/gda-server-impl-recordset.c:284
-#: gda-srv/gda-server-impl-recordset.c:292
-#: gda-srv/gda-server-impl-recordset.c:300
-#: gda-srv/gda-server-impl-recordset.c:308
-#: gda-srv/gda-server-impl-recordset.c:316
-#: gda-srv/gda-server-impl-recordset.c:325
-#: gda-srv/gda-server-impl-recordset.c:333
-#: gda-srv/gda-server-impl-recordset.c:341
+#: providers/gda-sybase-server/gda-sybase-command.c:246
 #, c-format
-msgid "%s not implemented"
+msgid "ct_results() returned %x"
 msgstr ""
 
-#: gda-srv/gda-server-impl-connection.c:255
+#: providers/gda-sybase-server/gda-sybase-command.c:256
+msgid "No further results, command completly succeeded."
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-command.c:260
+msgid "An error occured during command execution."
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-command.c:267
+msgid "Cmd execution returned unknown result, may be an error"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-command.c:280
+msgid "No data returned, freeing recordset structure"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-command.c:311
+#: providers/gda-sybase-server/gda-sybase-command.c:323
+msgid "Freeing command structure failed"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:139
+msgid "Error allocating error structure"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:147
+msgid "Not enough memory for sybase_Connection"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:403
 #, c-format
-msgid "impl_GDA_Connection_open: opening connection with DSN: %s"
+msgid "schema_cols: table_name '%s'"
 msgstr ""
 
-#: gda-srv/gda-server-impl-recordset.c:240
-#: gda-srv/gda-server-impl-recordset.c:248
+#: providers/gda-sybase-server/gda-sybase-connection.c:419
+#, fuzzy
+msgid "Could not allocate command structure"
+msgstr "No pudo vaciarse el fichero %s"
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:441
+msgid "Could not allocate enough memory for query"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:455
+msgid "Could not get recordset in schema_cols"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:487
+#: providers/gda-sybase-server/gda-sybase-connection.c:564
 #, c-format
-msgid "%s: not implemented"
+msgid "schema_tables: table name = '%s'"
 msgstr ""
 
-#: gda-srv/gda-server-impl-recordset.c:434
+#: providers/gda-sybase-server/gda-sybase-connection.c:495
+#: providers/gda-sybase-server/gda-sybase-connection.c:572
 #, c-format
-msgid "%s: an error ocurred while fetching data"
+msgid "schema_tables: table_schema = '%s'"
 msgstr ""
 
-#: gda-srv/gda-server-impl-recordset.c:473
+#: providers/gda-sybase-server/gda-sybase-connection.c:500
 #, c-format
-msgid "%s: length = %d"
+msgid "schema_procedures: proc_catalog = '%s' UNUSED!\n"
 msgstr ""
 
-#: gda-srv/gda-server-impl-recordset.c:486
+#: providers/gda-sybase-server/gda-sybase-connection.c:504
 #, c-format
-msgid "%s: sending field description for '%s'"
+msgid "schema_procs: invalid constraint type %d"
 msgstr ""
 
-#: gda-srv/gda-server-impl.c:118
+#: providers/gda-sybase-server/gda-sybase-connection.c:514
+#, fuzzy
+msgid "Could not allocate cmd structure"
+msgstr "No pudo vaciarse el fichero %s"
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:577
 #, c-format
-msgid "Starting provider %s with no implementation functions"
+msgid "schema_procedures: proc_catalog = '%s' UNUSED!"
 msgstr ""
 
-#: gda-srv/gda-server-impl.c:150
+#: providers/gda-sybase-server/gda-sybase-connection.c:581
+#, c-format
+msgid "schema_tables: invalid constraint type %d"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:642
+#, c-format
+msgid "Invalid or unsupported constraint type: %d"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:683
+msgid "Could not allocate Gda_ServerCommand"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:713
+#: providers/gda-sybase-server/gda-sybase-connection.c:718
+#, c-format
+msgid "connection status: %x"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:714
+#, c-format
+msgid "return code: %x"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:751
+#, fuzzy
+msgid "attempting reconnection"
+msgstr "Abrir Conexión"
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:890
+#, fuzzy, c-format
+msgid "Reconnected to '%s'"
+msgstr "Conectado a %s"
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:892
+#, c-format
+msgid "Connected to %s"
+msgstr "Conectado a %s"
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:900
+#, fuzzy, c-format
+msgid "Selected database '%s'"
+msgstr "Guardar diseño a disco"
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:929
+#, fuzzy, c-format
+msgid "%s: Could not allocate cmd structure"
+msgstr "No pudo vaciarse el fichero %s"
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:938
+#, c-format
+msgid "%s: Could not allocate memory for cmd string"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:951
+#, fuzzy, c-format
+msgid "%s: ct_command failed"
+msgstr "Comando"
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:960
+#, fuzzy, c-format
+msgid "%s: sending command failed"
+msgstr "Comando"
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:971
+#, c-format
+msgid "%s: selecting database failed"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:989
+#, fuzzy, c-format
+msgid "%s: use command failed"
+msgstr "Comando"
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:1016
+#, fuzzy
+msgid "Could not allocate locale structure"
+msgstr "No pudo vaciarse el fichero %s"
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:1022
+#, fuzzy, c-format
+msgid "Could not set locale to '%s'"
+msgstr "No pudo cargarse el fichero %s"
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:1028
+#, fuzzy, c-format
+msgid "Could not configure locale to be '%s'"
+msgstr "No pudo cargarse el fichero %s"
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:1033
+#, fuzzy
+msgid "Could not drop locale structure"
+msgstr "No pudo cargarse el fichero %s"
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:1046
+#, c-format
+msgid "Fatal error: %s\n"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:62
+#, c-format
+msgid "gda_sybase_error_make(%p,%p,%p,%p)"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:71
+#, c-format
+msgid "No error flag ist set, though %s is called. This may be a bug."
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:135
+msgid "cs_diag() initialized"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:138
+#, fuzzy
+msgid "Could not initialize cs_diag()"
+msgstr "No pudo vaciarse el fichero %s"
+
+#: providers/gda-sybase-server/gda-sybase-error.c:145
+msgid "ct_diag() initialized"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:148
+#, fuzzy
+msgid "Could not initialize ct_diag()"
+msgstr "No pudo vaciarse el fichero %s"
+
+#: providers/gda-sybase-server/gda-sybase-error.c:182
+#, c-format
+msgid "%s could not find server implementation"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:188
+#, c-format
+msgid "%s could not get cnc userdata"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:200
+msgid "Could not get # of messages"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:205
+#, c-format
+msgid "%d ctlib messages to fetch"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:207
+#, c-format
+msgid "%d ctlib message to fetch"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:243
+msgid "error is nullpointer in gda_sybase_messages_handle"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:268
+#: providers/gda-sybase-server/gda-sybase-error.c:335
+#: providers/gda-sybase-server/gda-sybase-error.c:378
+msgid "Could not get # of server messages"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:276
+#, c-format
+msgid "Fetching %d client messages"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:278
+#, c-format
+msgid "Fetching %d client message"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:287
+#, c-format
+msgid "Could not get client msg # %d"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:303
+msgid "Could not get # of client messages"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:311
+#, fuzzy
+msgid "Could not clear client messages"
+msgstr "No pudo cargarse el fichero %s"
+
+#: providers/gda-sybase-server/gda-sybase-error.c:343
+#, c-format
+msgid "Fetching %d server messages"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:345
+#, c-format
+msgid "Fetching %d server message"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:354
+#, fuzzy, c-format
+msgid "Could not get server msg # %d"
+msgstr "No pudo vaciarse el fichero %s"
+
+#: providers/gda-sybase-server/gda-sybase-error.c:386
+#, fuzzy
+msgid "Could not clear server messages"
+msgstr "No pudo vaciarse el fichero %s"
+
+#: providers/gda-sybase-server/gda-sybase-error.c:408
+#: providers/gda-sybase-server/gda-sybase-error.c:444
+msgid "Could not get # of cslib messages"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:416
+#, c-format
+msgid "Fetching %d cslib messages"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:418
+#, c-format
+msgid "Fetchong %d cslib message"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:428
+#, c-format
+msgid "Could not get cslib msg # %d"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:452
+msgid "Could not clear cslib messages"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:584
+msgid "Server message:"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:593
+msgid "Client message:"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:600
+msgid "CS-Library error:"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-recordset.c:152
+#, c-format
+msgid "fetch error at row %d"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-recordset.c:159
+#, c-format
+msgid "CS_END_DATA on row %d; canceling"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-recordset.c:168
+#, c-format
+msgid "%s: Error (%d)"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-recordset.c:343
+msgid "Failed fetching # of columns"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-recordset.c:349
+#, c-format
+msgid "Counted %d columns"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-recordset.c:356
+#, c-format
+msgid "%s could not allocate datafmt info"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-recordset.c:366
+#, fuzzy, c-format
+msgid "%s could not allocate data fields"
+msgstr "No pudo cargarse el fichero %s"
+
+#: providers/gda-sybase-server/gda-sybase-recordset.c:384
+#, c-format
+msgid "ct_describe on col # %d"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-recordset.c:391
+#, c-format
+msgid "ct_describe on col # %d failed"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-recordset.c:397
+#, c-format
+msgid "ct_describe(%d): '%s', %d (%s)"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-recordset.c:406
+#, fuzzy
+msgid "could not allocate data holder"
+msgstr "No pudo vaciarse el fichero %s"
+
+#: providers/gda-sybase-server/gda-sybase-recordset.c:416
+msgid "could not ct_bind data holder to column"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-recordset.c:423
+msgid "illegal type detected, aborting"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-recordset.c:429
+#, fuzzy
+msgid "could not allocate field"
+msgstr "No pudo cargarse el fichero %s"
+
+#: providers/gda-sybase-server/main-sybase.c:73
+msgid "Could not register gda-sybase provider implementation"
+msgstr ""
+
+#: report/gda-report-engine.c:87
+#, c-format
+msgid "CORBA exception unloading report engine: %s"
+msgstr ""
+
+#: report/server/gda-report-server-main.c:43
+#: report/server/gda-report-server-main.c:50
+#, c-format
+msgid "Received signal %d, shutting down."
+msgstr ""
+
+#: report/server/gda-report-server-main.c:54
+#, c-format
+msgid "Received signal %d, shutting down cleanly"
+msgstr ""
+
+#: report/server/gda-report-server-main.c:96
+msgid "Failed to initialize OAF: please mail bug report to OAF maintainers"
+msgstr ""
+
+#: report/server/gda-report-server-main.c:106
+#, fuzzy
+msgid "Could not activate report engine"
+msgstr "No pudo vaciarse el fichero %s"
+
+#: report/server/gda-report-server-main.c:123
 msgid ""
-"OAF doesn't know about our IID; indicates broken installation. Exiting..."
+"Another instance of the report engine is already registered with OAF. "
+"Exiting..."
 msgstr ""
 
-#: gda-srv/gda-server-impl.c:153
-msgid ""
-"Another instance of this provider is already registered with OAF. Exiting..."
+#: report/server/gda-report-server-main.c:126
+msgid "Unknown error registering report engine with OAF. Exiting"
 msgstr ""
 
-#: gda-srv/gda-server-impl.c:156
-msgid "Unknown error registering this provider with OAF. Exiting"
-msgstr ""
-
-#: gda-srv/gda-server-impl.c:163
-msgid "Could not get CORBA name service object"
-msgstr ""
-
-#: gda-srv/gda-server-impl.c:170
+#: report/server/gda-report-server-main.c:130
 #, c-format
-msgid "Registered with ID = %s"
+msgid "Registered report engine with ID = %s"
 msgstr ""
 
-#: gda-srv/gda-server-impl.c:260
-#, c-format
-msgid "CORBA system exception %s"
-msgstr ""
-
-#: gda-srv/gda-server-impl.c:263
-#, c-format
-msgid "CORBA user exception: %s"
-msgstr ""
-
-#: testing/controls_browser/gda-controls-browser.c:272
+#: tools/gda-run.c:34
 #, fuzzy
-msgid "Refresh all"
-msgstr "Refrescar traza"
-
-#: testing/controls_browser/gda-controls-browser.c:272
-msgid "Ok"
-msgstr "Aceptar"
-
-#: testing/controls_browser/gda-controls-browser.c:390
-msgid "GNOME-DB Controls browser"
-msgstr ""
-
-#: testing/controls_browser/gda-controls-browser.c:410
-#, fuzzy
-msgid "New control"
-msgstr "Nueva tabla"
-
-#: testing/controls_browser/gda-controls-browser.c:417
-#, fuzzy
-msgid "Close control"
-msgstr "Cerrar todas las conexiones"
-
-#: testing/controls_browser/gda-controls-browser.c:430
-#, fuzzy
-msgid "Controls"
-msgstr "Contenido"
-
-#: testing/controls_browser/gda-controls-browser.c:465
-msgid "Control settings"
-msgstr ""
-
-#: testing/gda-client-test1.c:30 testing/gda-client-test10.c:30
-#: testing/gda-client-test11.c:30 testing/gda-client-test12.c:31
-#: testing/gda-client-test13.c:31 testing/gda-client-test14.c:30
-#: testing/gda-client-test2.c:31 testing/gda-client-test3.c:31
-#: testing/gda-client-test4.c:29 testing/gda-client-test5.c:31
-#: testing/gda-client-test6.c:28 testing/gda-client-test7.c:30
-#: testing/gda-client-test8.c:31 testing/gda-client-test9.c:30
-#: testing/gda-ui-test1.c:32 testing/gda-ui-test2.c:32
-#: testing/gda-ui-test3.c:30
-#, fuzzy
-msgid "database provider"
+msgid "database name"
 msgstr "Desieñador de Base de Datos"
 
-#: testing/gda-client-test1.c:30 testing/gda-client-test10.c:30
-#: testing/gda-client-test11.c:30 testing/gda-client-test12.c:31
-#: testing/gda-client-test13.c:31 testing/gda-client-test14.c:30
-#: testing/gda-client-test2.c:31 testing/gda-client-test3.c:31
-#: testing/gda-client-test4.c:29 testing/gda-client-test5.c:31
-#: testing/gda-client-test6.c:28 testing/gda-client-test7.c:30
-#: testing/gda-client-test8.c:31 testing/gda-client-test9.c:30
-#: testing/gda-ui-test1.c:32 testing/gda-ui-test2.c:32
-#: testing/gda-ui-test3.c:30
-msgid "PROVIDER"
+#: tools/gda-run.c:34
+msgid "DATABASE"
 msgstr ""
 
-#: testing/gda-client-test12.c:35 testing/gda-client-test13.c:35
-#: testing/gda-client-test4.c:33 testing/gda-client-test5.c:35
-#: testing/gda-client-test6.c:32
+#: tools/gda-run.c:35
 #, fuzzy
-msgid "table"
-msgstr "Tablas"
+msgid "user name"
+msgstr "Fichero"
 
-#: testing/gda-client-test12.c:35 testing/gda-client-test13.c:35
-#: testing/gda-client-test4.c:33 testing/gda-client-test6.c:32
-#, fuzzy
-msgid "TABLENAME"
-msgstr "TABLAS"
-
-#: testing/gda-client-test5.c:35
-#, fuzzy
-msgid "TABLE NAME"
-msgstr "TABLAS"
-
-#: testing/gda-ui-test3.c:97
-msgid "Logging in"
+#: tools/gda-run.c:35
+msgid "USER-NAME"
 msgstr ""
 
+#: tools/gda-run.c:36
+msgid "password"
+msgstr ""
+
+#: tools/gda-run.c:36
+msgid "PASSWORD"
+msgstr ""
+
+#: tools/gda-run.c:37
+#, fuzzy
+msgid "file name"
+msgstr "Fichero"
+
+#: tools/gda-run.c:37
+msgid "FILE-NAME"
+msgstr ""
+
+#: tools/gda-run.c:109
+#, c-format
+msgid "%s: misconfigured DSN entry"
+msgstr ""
+
+#: tools/gda-run.c:124
+#, c-format
+msgid "%s: data source '%s' not found\n"
+msgstr ""
+
+#~ msgid "Object Name"
+#~ msgstr "Nombre del objeto"
+
+#~ msgid "0 rows"
+#~ msgstr "0 filas"
+
+#~ msgid "%d rows"
+#~ msgstr "%d filas"
+
+#~ msgid "Tables"
+#~ msgstr "Tablas"
+
+#~ msgid "Views"
+#~ msgstr "Vistas"
+
+#~ msgid "Types"
+#~ msgstr "Tipos"
+
+#~ msgid "Data"
+#~ msgstr "Datos"
+
+#~ msgid "GDA Name"
+#~ msgstr "Nombre"
+
+#~ msgid "Provider"
+#~ msgstr "Proveedor"
+
+#~ msgid "DSN"
+#~ msgstr "Cadena de conexión"
+
+#~ msgid "Description"
+#~ msgstr "Descripción"
+
+#~ msgid "Config"
+#~ msgstr "Configuración"
+
+#~ msgid "Error while saving configuration!"
+#~ msgstr "¡Se produjo un error al guardar la configuración!"
+
+#~ msgid "Data source has no name!"
+#~ msgstr "¡La fuente de datos no tiene nombre!"
+
+#~ msgid "Error %d of %d"
+#~ msgstr "Error %d de %d"
+
+#~ msgid "Show Help"
+#~ msgstr "Mostrar ayuda"
+
+#~ msgid "Source"
+#~ msgstr "Fuente"
+
+#~ msgid "Record View"
+#~ msgstr "Vista de registros"
+
+#~ msgid "Copy"
+#~ msgstr "Copiar"
+
+#~ msgid "Copy selection to clipboard"
+#~ msgstr "Copiar el texto seleccionado al portapapeles"
+
+#~ msgid "Select all"
+#~ msgstr "Seleccione todo"
+
+#~ msgid "Select all rows"
+#~ msgstr "Seleccione todas las filas"
+
+#~ msgid "Clear selection"
+#~ msgstr "Vaciar selección"
+
+#~ msgid "Clear all selected rows"
+#~ msgstr "Limpiar todas las filas"
+
+#~ msgid "Refresh grid"
+#~ msgstr "Refrescar rejilla"
+
+#~ msgid "Refresh grid contents"
+#~ msgstr "Refrescar contenidos de la rejilla"
+
+#~ msgid "Print grid"
+#~ msgstr "Imprimir rejilla"
+
+#~ msgid "Print grid contents"
+#~ msgstr "Imprimir los contenidos de la rejilla"
+
+#~ msgid "Date"
+#~ msgstr "Fecha"
+
+#~ msgid "User Name"
+#~ msgstr "Nombre de usuario"
+
+#~ msgid "GDA Datasource"
+#~ msgstr "Fuente de datos GDA"
+
+#~ msgid "Last Connections"
+#~ msgstr "Últimas conexiones"
+
+#~ msgid "Data Source Name"
+#~ msgstr "Nombre de la fuente de datos (DSN)"
+
+#~ msgid "User name to use for the connection"
+#~ msgstr "Nombre de usuario para esta conexión"
+
+#~ msgid "To open/close the connection"
+#~ msgstr "Abrir/cerrar todas las conexiones"
+
+#~ msgid "Error Viewer"
+#~ msgstr "Visor de errores"
+
+#, fuzzy
+#~ msgid "Could not initialize %s component"
+#~ msgstr "No pudo vaciarse el fichero %s"
+
+#, fuzzy
+#~ msgid "Could not initialize Bonobo"
+#~ msgstr "No pudo vaciarse el fichero %s"
+
+#~ msgid "Ready"
+#~ msgstr "Listo"
+
+#, fuzzy
+#~ msgid "Could not bind object %s"
+#~ msgstr "No pudo cargarse el fichero %s"
+
+#, fuzzy
+#~ msgid "Unable to activate object %s"
+#~ msgstr "Imposible ejecutar '%s'"
+
+#, fuzzy
+#~ msgid "Could not register %s factory"
+#~ msgstr "No pudo vaciarse el fichero %s"
+
+#, fuzzy
+#~ msgid "Database Browser"
+#~ msgstr "Desieñador de Base de Datos"
+
+#, fuzzy
+#~ msgid "There are no open connections"
+#~ msgstr "Abrir nueva conexión"
+
+#, fuzzy
+#~ msgid "Go to previous document"
+#~ msgstr "Mover a la ventana anterior en la lista"
+
+#, fuzzy
+#~ msgid "Go to next document"
+#~ msgstr "Mover a la ventana siguiente en la lista"
+
+#, fuzzy
+#~ msgid "Go to table of contents"
+#~ msgstr "Vaciar fichero"
+
+#~ msgid "Help"
+#~ msgstr "Ayuda"
+
+#, fuzzy
+#~ msgid "Report"
+#~ msgstr "Exportar"
+
+#, fuzzy
+#~ msgid "Server"
+#~ msgstr "Guardar"
+
+#, fuzzy
+#~ msgid "Repository"
+#~ msgstr "Identificador Repositorio"
+
+#, fuzzy
+#~ msgid "New repository"
+#~ msgstr "Identificador Repositorio"
+
+#, fuzzy
+#~ msgid "Open existing screen"
+#~ msgstr "Abrir archivo existente"
+
+#, fuzzy
+#~ msgid "Open existing report"
+#~ msgstr "Abrir archivo existente"
+
+#, fuzzy
+#~ msgid "Open existing server"
+#~ msgstr "Abrir archivo existente"
+
+#, fuzzy
+#~ msgid "Open existing repository"
+#~ msgstr "Abrir archivo existente"
+
+#, fuzzy
+#~ msgid "Connect..."
+#~ msgstr "Conectando..."
+
+#, fuzzy
+#~ msgid "Connect to database"
+#~ msgstr "Conectado a %s"
+
+#~ msgid "Disconnect"
+#~ msgstr "Desconectar"
+
+#, fuzzy
+#~ msgid "Close database connection"
+#~ msgstr "Cerrar todas las conexiones"
+
+#, fuzzy
+#~ msgid "Browse"
+#~ msgstr "%d filas"
+
+#, fuzzy
+#~ msgid "Open database browser"
+#~ msgstr "Abrir base de datos del disco"
+
+#, fuzzy
+#~ msgid "Import objects"
+#~ msgstr "Importar"
+
+#~ msgid "New"
+#~ msgstr "Nuevo"
+
+#~ msgid "Open"
+#~ msgstr "Abrir"
+
+#~ msgid "Close"
+#~ msgstr "Cerrar"
+
+#, fuzzy
+#~ msgid "Close current window"
+#~ msgstr "Cerrar fichero actual"
+
+#~ msgid "Close all"
+#~ msgstr "Cerrar todas"
+
+#~ msgid "Close all open windows"
+#~ msgstr "Cerrar todas las ventanas"
+
+#~ msgid "Quit"
+#~ msgstr "Salir"
+
+#~ msgid "Exit application"
+#~ msgstr "Salir de la aplicación"
+
+#, fuzzy
+#~ msgid "Undo"
+#~ msgstr "Ventana"
+
+#, fuzzy
+#~ msgid "Undo last action"
+#~ msgstr "Iniciar Transacción"
+
+#, fuzzy
+#~ msgid "Redo"
+#~ msgstr "Listo"
+
+#~ msgid "Cut"
+#~ msgstr "Cortar"
+
+#, fuzzy
+#~ msgid "Cut selected text/item"
+#~ msgstr "Cortar texto seleccionado"
+
+#, fuzzy
+#~ msgid "Copy selected text/item to the clipboard"
+#~ msgstr "Copiar texto seleccionado al portapapeles"
+
+#~ msgid "Paste"
+#~ msgstr "Pegar"
+
+#, fuzzy
+#~ msgid "Paste clipboard contents"
+#~ msgstr "Pegar contenido del portapapeles"
+
+#~ msgid "Delete"
+#~ msgstr "Borrar"
+
+#, fuzzy
+#~ msgid "Delete selected text/item"
+#~ msgstr "Cortar texto seleccionado"
+
+#, fuzzy
+#~ msgid "Create a new project"
+#~ msgstr "Crear fichero vacío"
+
+#, fuzzy
+#~ msgid "Open project"
+#~ msgstr "Abrir Conexión"
+
+#, fuzzy
+#~ msgid "Open an existing project"
+#~ msgstr "Abrir archivo existente"
+
+#, fuzzy
+#~ msgid "Save current project"
+#~ msgstr "Guardar fichero actual"
+
+#, fuzzy
+#~ msgid "Properties..."
+#~ msgstr "Propiedades"
+
+#, fuzzy
+#~ msgid "View project properties"
+#~ msgstr "Nueva conexión..."
+
+#, fuzzy
+#~ msgid "The GNOME-DB configuration tool"
+#~ msgstr "Configuración del Driver"
+
+#~ msgid "About gnome-db..."
+#~ msgstr "Acerca de..."
+
+#~ msgid "About this program"
+#~ msgstr "Acerca de este programa"
+
+#, fuzzy
+#~ msgid "Edit"
+#~ msgstr "Editor"
+
+#~ msgid "Database"
+#~ msgstr "Base de Datos"
+
+#~ msgid "Tools"
+#~ msgstr "Herramientas"
+
+#~ msgid "Preferences"
+#~ msgstr "Preferencias"
+
+#~ msgid "Configure user preferences"
+#~ msgstr "Configurar preferencias"
+
+#~ msgid "Unable to execute '%s'"
+#~ msgstr "Imposible ejecutar '%s'"
+
+#~ msgid "Location"
+#~ msgstr "Situación"
+
+#, fuzzy
+#~ msgid "Open file"
+#~ msgstr "Abrir Fichero"
+
+#~ msgid "Save"
+#~ msgstr "Guardar"
+
+#, fuzzy
+#~ msgid "Save file"
+#~ msgstr "Guardar a fichero..."
+
+#~ msgid "Clear"
+#~ msgstr "Limpiar"
+
+#, fuzzy
+#~ msgid "Clear command list"
+#~ msgstr "Tiempo de espera del comando"
+
+#, fuzzy
+#~ msgid ""
+#~ "Could not open file\n"
+#~ "'%s'"
+#~ msgstr "No pudo cargarse el fichero %s"
+
+#, fuzzy
+#~ msgid "No command selected"
+#~ msgstr "Comando '%s' completado"
+
+#~ msgid "Command"
+#~ msgstr "Comando"
+
+#, fuzzy
+#~ msgid "Insert at current position"
+#~ msgstr "Insertar fichero en posición actual"
+
+#~ msgid "Open File"
+#~ msgstr "Abrir Fichero"
+
+#, fuzzy
+#~ msgid "Command separators"
+#~ msgstr "Tiempo de espera del comando"
+
+#, fuzzy
+#~ msgid "Append to current file"
+#~ msgstr "Imprimir fichero actual"
+
+#~ msgid "Options"
+#~ msgstr "Opciones"
+
+#, fuzzy
+#~ msgid "Transaction Mode"
+#~ msgstr "Transacción iniciada"
+
+#~ msgid "Connecting..."
+#~ msgstr "Conectando..."
+
+#, fuzzy
+#~ msgid "Configuration file saved"
+#~ msgstr "Configuración del Driver"
+
+#~ msgid "Add Environment Variable"
+#~ msgstr "Añadir variable de entorno"
+
+#~ msgid "Name"
+#~ msgstr "Nombre"
+
+#~ msgid "Editor Font"
+#~ msgstr "Fuente del editor"
+
+#, fuzzy
+#~ msgid "Tab Position"
+#~ msgstr "Posición de las pestañas"
+
+#~ msgid "Top"
+#~ msgstr "Arriba"
+
+#~ msgid "Bottom"
+#~ msgstr "Abajo"
+
+#~ msgid "Left"
+#~ msgstr "Izquierda"
+
+#~ msgid "Right"
+#~ msgstr "Derecha"
+
+#, fuzzy
+#~ msgid "Grid"
+#~ msgstr "Fuente de la rejilla"
+
+#, fuzzy
+#~ msgid "Font"
+#~ msgstr "Fuente de la rejilla"
+
+#, fuzzy
+#~ msgid "SQL"
+#~ msgstr "A SQL"
+
+#, fuzzy
+#~ msgid "SQL Window"
+#~ msgstr "Ventana"
+
+#, fuzzy
+#~ msgid "Query designer"
+#~ msgstr "Diseñador"
+
+#, fuzzy
+#~ msgid "Browser"
+#~ msgstr "Navegador: %@%"
+
+#, fuzzy
+#~ msgid "Browse Database"
+#~ msgstr "Inspeccionar vistas"
+
+#~ msgid "Export"
+#~ msgstr "Exportar"
+
+#, fuzzy
+#~ msgid "Export database"
+#~ msgstr "Exportar"
+
+#~ msgid "Import"
+#~ msgstr "Importar"
+
+#, fuzzy
+#~ msgid "Import data into current database"
+#~ msgstr "Importar Datos a la Base de Datos"
+
+#, fuzzy
+#~ msgid "Close connection"
+#~ msgstr "Cerrar todas las conexiones"
+
+#, fuzzy
+#~ msgid "Execute current command"
+#~ msgstr "Ejecutar comando SQL"
+
+#, fuzzy
+#~ msgid "Select"
+#~ msgstr "Seleccione Fichero"
+
+#, fuzzy
+#~ msgid "Load file into buffer"
+#~ msgstr "Imprimir ventana"
+
+#~ msgid "Save current file"
+#~ msgstr "Guardar fichero actual"
+
+#~ msgid "Cut selected text"
+#~ msgstr "Cortar texto seleccionado"
+
+#, fuzzy
+#~ msgid "Copy selected text"
+#~ msgstr "Cortar texto seleccionado"
+
+#, fuzzy
+#~ msgid "Clear window contents"
+#~ msgstr "Vaciar fichero"
+
+#~ msgid "Start"
+#~ msgstr "Empezar"
+
+#, fuzzy
+#~ msgid "Clear all fields"
+#~ msgstr "Limpiar todas las entradas"
+
+#, fuzzy
+#~ msgid "Object Identifiers"
+#~ msgstr "Lista de Objetos"
+
+#, fuzzy
+#~ msgid "Object Inheritance"
+#~ msgstr "Objetos"
+
+#, fuzzy
+#~ msgid "Sequences"
+#~ msgstr "Preferencias"
+
+#, fuzzy
+#~ msgid "Transactions"
+#~ msgstr "Transacción iniciada"
+
+#, fuzzy
+#~ msgid "File name"
+#~ msgstr "Fichero"
+
+#, fuzzy
+#~ msgid "Select file"
+#~ msgstr "Seleccione Fichero"
+
+#, fuzzy
+#~ msgid ""
+#~ "Error reading from file\n"
+#~ "'%s'"
+#~ msgstr "Error leyendo fichero %s"
+
+#, fuzzy
+#~ msgid "Command succeeded"
+#~ msgstr "Comando '%s' completado"
+
+#, fuzzy
+#~ msgid ""
+#~ "Error writing to file\n"
+#~ "'%s'"
+#~ msgstr "Error escribiendo fichero %s"
+
+#, fuzzy
+#~ msgid "Select Command"
+#~ msgstr "Seleccionar comando SQL"
+
+#~ msgid "Transaction started"
+#~ msgstr "Transacción iniciada"
+
+#, fuzzy
+#~ msgid "Begin transaction failed"
+#~ msgstr "Iniciar Transacción"
+
+#, fuzzy
+#~ msgid "Commit executed successfully"
+#~ msgstr "Commit ejecutado"
+
+#, fuzzy
+#~ msgid "Commit transaction failed"
+#~ msgstr "Comando"
+
+#, fuzzy
+#~ msgid "Rollback executed successfully"
+#~ msgstr "Rollback ejecutado"
+
+#, fuzzy
+#~ msgid "Rollback transaction failed"
+#~ msgstr "Transacción iniciada"
+
+#~ msgid "Connection Properties"
+#~ msgstr "Propiedades de la conexión"
+
+#, fuzzy
+#~ msgid "Properties"
+#~ msgstr "Propiedades"
+
+#, fuzzy
+#~ msgid "Command Timeout"
+#~ msgstr "Tiempo de espera del comando"
+
+#, fuzzy
+#~ msgid "Connect Timeout"
+#~ msgstr "Tiempo de espera de la conexión"
+
+#, fuzzy
+#~ msgid "Trace File"
+#~ msgstr "Fichero de Trazas"
+
+#, fuzzy
+#~ msgid "View"
+#~ msgstr "Ver"
+
+#, fuzzy
+#~ msgid "Version"
+#~ msgstr "Descripción"
+
+#, fuzzy
+#~ msgid "Provider Features"
+#~ msgstr "Proveedor"
+
+#, fuzzy
+#~ msgid "New database design"
+#~ msgstr "Crear diseño de base de datos"
+
+#, fuzzy
+#~ msgid "Open database design"
+#~ msgstr "Abrir base de datos del disco"
+
+#, fuzzy
+#~ msgid "Clear all entries"
+#~ msgstr "Limpiar todas las entradas"
+
+#, fuzzy
+#~ msgid "Close designer window"
+#~ msgstr "Cerrar ventana activa"
+
+#, fuzzy
+#~ msgid "Select XML file"
+#~ msgstr "Seleccione Fichero"
+
+#~ msgid "Designer"
+#~ msgstr "Diseñador"
+
+#, fuzzy
+#~ msgid "Data sources"
+#~ msgstr "Fuentes de Datos..."
+
+#, fuzzy
+#~ msgid "View selected entry"
+#~ msgstr "Cortar texto seleccionado"
+
+#, fuzzy
+#~ msgid "Clear log file"
+#~ msgstr "Limpiar todas las entradas"
+
+#~ msgid "Refresh"
+#~ msgstr "Refrescar"
+
+#, fuzzy
+#~ msgid "Refresh log viewer"
+#~ msgstr "Refrescar traza"
+
+#, fuzzy
+#~ msgid "Close log window"
+#~ msgstr "Cerrar todas las ventanas"
+
+#, fuzzy
+#~ msgid "Error loading file '%s'"
+#~ msgstr "Error leyendo fichero %s"
+
+#, fuzzy
+#~ msgid "Logs"
+#~ msgstr "Traza"
+
+#, fuzzy
+#~ msgid "Open Connection..."
+#~ msgstr "Abrir conexión..."
+
+#, fuzzy
+#~ msgid "Open a connection to a data source"
+#~ msgstr "Abrir Conexión"
+
+#~ msgid "Close current connection"
+#~ msgstr "Cerrar conexión actual"
+
+#, fuzzy
+#~ msgid "Disconnect all"
+#~ msgstr "Desconectar todos"
+
+#~ msgid "Close all connections"
+#~ msgstr "Cerrar todas las conexiones"
+
+#, fuzzy
+#~ msgid "SQL window"
+#~ msgstr "Limpiar ventana SQL"
+
+#, fuzzy
+#~ msgid "Query Designer"
+#~ msgstr "Diseñador"
+
+#, fuzzy
+#~ msgid "Browse database"
+#~ msgstr "Inspeccionar objetos de la base de datos"
+
+#, fuzzy
+#~ msgid "Begin transaction"
+#~ msgstr "Iniciar Transacción"
+
+#~ msgid "Commit"
+#~ msgstr "Commit"
+
+#, fuzzy
+#~ msgid "Commit transaction"
+#~ msgstr "Iniciar Transacción"
+
+#~ msgid "Rollback"
+#~ msgstr "Rollback"
+
+#~ msgid "Discard all changes"
+#~ msgstr "Deshacer todos los cambios"
+
+#, fuzzy
+#~ msgid "View connection properties"
+#~ msgstr "Nueva conexión..."
+
+#, fuzzy
+#~ msgid "Configure"
+#~ msgstr "Configuración"
+
+#, fuzzy
+#~ msgid "View logs"
+#~ msgstr "Vistas"
+
+#, fuzzy
+#~ msgid "Database designer"
+#~ msgstr "Desieñador de Base de Datos"
+
+#, fuzzy
+#~ msgid "Open the database designer"
+#~ msgstr "Abrir base de datos del disco"
+
+#, fuzzy
+#~ msgid "View service activity"
+#~ msgstr "Ver fichero de trazas del servidor"
+
+#~ msgid "Preferences..."
+#~ msgstr "Preferencias..."
+
+#, fuzzy
+#~ msgid "Data sources..."
+#~ msgstr "Fuentes de Datos..."
+
+#, fuzzy
+#~ msgid "Save options"
+#~ msgstr "Guardar Opciones"
+
+#~ msgid "Save current configuration"
+#~ msgstr "Guardar configuración actual"
+
+#~ msgid "Connect"
+#~ msgstr "Conectar"
+
+#, fuzzy
+#~ msgid "Exit Application"
+#~ msgstr "Salir de la aplicación"
+
+#, fuzzy
+#~ msgid "Activate selected service"
+#~ msgstr "Empezar Operación Seleccionada"
+
+#, fuzzy
+#~ msgid "Stop selected service"
+#~ msgstr "Cortar texto seleccionado"
+
+#, fuzzy
+#~ msgid "Refresh service list"
+#~ msgstr "Refrescar todas las listas"
+
+#, fuzzy
+#~ msgid "Repo ID"
+#~ msgstr "Identificador Repositorio"
+
+#~ msgid "Type"
+#~ msgstr "Tipo"
+
+#, fuzzy
+#~ msgid "Edit selected data source"
+#~ msgstr "Exportar datos a fichero XML"
+
+#, fuzzy
+#~ msgid "Remove selected data source"
+#~ msgstr "Exportar datos a fichero XML"
+
+#, fuzzy
+#~ msgid "Browse selected data source"
+#~ msgstr "Exportar datos a fichero XML"
+
+#, fuzzy
+#~ msgid "Data Source"
+#~ msgstr "Fuentes de Datos..."
+
+#, fuzzy
+#~ msgid "Browse Data Source"
+#~ msgstr "Fuentes de Datos..."
+
+#, fuzzy
+#~ msgid "could not load browser control"
+#~ msgstr "No se pudo cambiar al directorio '%s'"
+
+#, fuzzy
+#~ msgid "Data source not found in GDA configuration"
+#~ msgstr "Guardar configuración actual"
+
+#, fuzzy
+#~ msgid "Data Sources"
+#~ msgstr "Fuentes de Datos..."
+
+#, fuzzy
+#~ msgid "Database browser"
+#~ msgstr "Desieñador de Base de Datos"
+
+#, fuzzy
+#~ msgid "Open the database browser"
+#~ msgstr "Abrir base de datos del disco"
+
+#, fuzzy
+#~ msgid "Providers"
+#~ msgstr "Proveedor"
+
+#, fuzzy
+#~ msgid "Configure GDA providers"
+#~ msgstr "Configurar preferencias"
+
+#, fuzzy
+#~ msgid "Components"
+#~ msgstr "Contenido"
+
+#, fuzzy
+#~ msgid "View provider log"
+#~ msgstr "Ver ficheros de traza GDA"
+
+#, fuzzy
+#~ msgid "Edit selected provider"
+#~ msgstr "Cortar texto seleccionado"
+
+#, fuzzy
+#~ msgid "Comments"
+#~ msgstr "Contenido"
+
+#, fuzzy
+#~ msgid "Database name"
+#~ msgstr "Base de Datos"
+
+#, fuzzy
+#~ msgid "DSN for the connection"
+#~ msgstr "Cerrar todas las conexiones"
+
+#, fuzzy
+#~ msgid "Object type setting"
+#~ msgstr "Lista de Objetos"
+
+#, fuzzy
+#~ msgid "Object name setting"
+#~ msgstr "Objetos"
+
+#, fuzzy
+#~ msgid "Insert"
+#~ msgstr "Insertar fichero..."
+
+#, fuzzy
+#~ msgid "Update/Delete"
+#~ msgstr "Borrar"
+
+#, fuzzy
+#~ msgid "Table"
+#~ msgstr "Tablas"
+
+#, fuzzy
+#~ msgid "Name:"
+#~ msgstr "Nombre"
+
+#, fuzzy
+#~ msgid "Create DB"
+#~ msgstr "Crear script"
+
+#, fuzzy
+#~ msgid "Create users"
+#~ msgstr "Crear script"
+
+#, fuzzy
+#~ msgid "Known database users"
+#~ msgstr "Inspeccionar objetos de la base de datos"
+
+#, fuzzy
+#~ msgid "Delete user"
+#~ msgstr "Borrar"
+
+#, fuzzy
+#~ msgid "Select the table name"
+#~ msgstr "Guardar fichero con otro nombre"
+
+#, fuzzy
+#~ msgid "Refresh all"
+#~ msgstr "Refrescar traza"
+
+#~ msgid "Ok"
+#~ msgstr "Aceptar"
+
+#, fuzzy
+#~ msgid "New control"
+#~ msgstr "Nueva tabla"
+
+#, fuzzy
+#~ msgid "Close control"
+#~ msgstr "Cerrar todas las conexiones"
+
+#, fuzzy
+#~ msgid "Controls"
+#~ msgstr "Contenido"
+
+#, fuzzy
+#~ msgid "database provider"
+#~ msgstr "Desieñador de Base de Datos"
+
+#, fuzzy
+#~ msgid "table"
+#~ msgstr "Tablas"
+
+#, fuzzy
+#~ msgid "TABLENAME"
+#~ msgstr "TABLAS"
+
+#, fuzzy
+#~ msgid "TABLE NAME"
+#~ msgstr "TABLAS"

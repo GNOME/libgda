@@ -18,6 +18,10 @@
 
 #include <gda-client.h>
 #include <popt.h>
+#include <config.h>
+
+#define _(s)  (s)
+#define N_(s) (s)
 
 static CORBA_ORB         orb;
 static CORBA_Environment ev;
@@ -26,13 +30,13 @@ static gchar*            datasource = 0;
 static gchar*            username = 0;
 static gchar*            password = 0;
 static gchar*            file = 0;
-static struct poptOption options[] = {
-  { "dsn", 'd', POPT_ARG_STRING, &datasource, 0, N_("database name"), N_("DATABASE")},
-  { "user",     'u', POPT_ARG_STRING, &username, 0, N_("user name"), N_("USER-NAME")},
-  { "password", 'p', POPT_ARG_STRING, &password, 0, N_("password"), N_("PASSWORD")},
-  { "file",     'f', POPT_ARG_STRING, &file,     0, N_("file name"), N_("FILE-NAME")},
-  {0, 0, 0, 0, 0, 0, 0}
-};
+//static struct poptOption options[] = {
+//  { "dsn", 'd', POPT_ARG_STRING, &datasource, 0, N_("database name"), N_("DATABASE")},
+//  { "user",     'u', POPT_ARG_STRING, &username, 0, N_("user name"), N_("USER-NAME")},
+//  { "password", 'p', POPT_ARG_STRING, &password, 0, N_("password"), N_("PASSWORD")},
+//  { "file",     'f', POPT_ARG_STRING, &file,     0, N_("file name"), N_("FILE-NAME")},
+//  {0, 0, 0, 0, 0, 0, 0}
+//};
 
 void
 Exception (CORBA_Environment *ev)

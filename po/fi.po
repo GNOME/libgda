@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2000-11-12 09:24+0100\n"
+"POT-Creation-Date: 2000-11-22 22:23+0100\n"
 "PO-Revision-Date: 2000-11-12 19:00+0100\n"
 "Last-Translator: Markku Verkkoniemi <myv@iki.fi>\n"
 "Language-Team: Finnish <fi@li.org>\n"
@@ -171,7 +171,7 @@ msgid ""
 "OAF doesn't know about our IID; indicates broken installation. Exiting..."
 msgstr ""
 "OAF ei tiedä mitään IID:stämme; kertoo asennuksen olevan rikki. Lopettaa..."
- 
+
 #: lib/gda-server/gda-server-impl.c:224
 msgid ""
 "Another instance of this provider is already registered with OAF. Exiting..."
@@ -180,8 +180,7 @@ msgstr ""
 
 #: lib/gda-server/gda-server-impl.c:227
 msgid "Unknown error registering this provider with OAF. Exiting"
-msgstr ""
-"Tuntematon virhe tätä tuottajaa OAF:ään rekisteröidessä. Lopettaa"
+msgstr "Tuntematon virhe tätä tuottajaa OAF:ään rekisteröidessä. Lopettaa"
 
 #: lib/gda-server/gda-server-impl.c:231
 #, c-format
@@ -274,7 +273,7 @@ msgstr "INTERBASE-tuottajatoteutusta ei voi rekisteröidä"
 #: providers/gda-mysql-server/gda-mysql-connection.c:251
 #: providers/gda-oracle-server/gda-oracle-connection.c:295
 #: providers/gda-postgres-server/gda-postgres-connection.c:511
-#: providers/gda-sybase-server/gda-sybase-connection.c:253
+#: providers/gda-sybase-server/gda-sybase-connection.c:259
 #, c-format
 msgid "Unhandled SCHEMA_QTYPE %d"
 msgstr "Käsittelemätön SCHEMA_QTYPE %d"
@@ -325,7 +324,7 @@ msgstr "mysql_recset on NULL"
 
 #: providers/gda-mdb-server/gda-mdb-connection.c:448
 #: providers/gda-mysql-server/gda-mysql-connection.c:475
-#: providers/gda-sybase-server/gda-sybase-connection.c:407
+#: providers/gda-sybase-server/gda-sybase-connection.c:413
 msgid "No table name given for SCHEMA_COLS"
 msgstr "SCHEMA_COLS:ille ei taulunimeä"
 
@@ -470,155 +469,155 @@ msgstr "Dataa ei palaudu, vapautetaan tulosjoukkorakenne"
 msgid "Freeing command structure failed"
 msgstr "Komentorakenteen vapautus ei onnistu"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:133
+#: providers/gda-sybase-server/gda-sybase-connection.c:139
 msgid "Error allocating error structure"
 msgstr "Virherakenteen varauksessa virhe"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:141
+#: providers/gda-sybase-server/gda-sybase-connection.c:147
 msgid "Not enough memory for sybase_Connection"
 msgstr "sybase_Connectionille ei riittävästi muistia"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:397
+#: providers/gda-sybase-server/gda-sybase-connection.c:403
 #, c-format
 msgid "schema_cols: table_name '%s'"
 msgstr "schema_cols: taulunimi \"%s\""
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:413
+#: providers/gda-sybase-server/gda-sybase-connection.c:419
 msgid "Could not allocate command structure"
 msgstr "Komentorakennetta ei voi varata"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:435
+#: providers/gda-sybase-server/gda-sybase-connection.c:441
 msgid "Could not allocate enough memory for query"
 msgstr "Kyselylle riittävää muistia ei voi varata"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:449
+#: providers/gda-sybase-server/gda-sybase-connection.c:455
 msgid "Could not get recordset in schema_cols"
 msgstr "schema_cols:issa ei saa tulosjoukkoa"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:481
-#: providers/gda-sybase-server/gda-sybase-connection.c:558
+#: providers/gda-sybase-server/gda-sybase-connection.c:487
+#: providers/gda-sybase-server/gda-sybase-connection.c:564
 #, c-format
 msgid "schema_tables: table name = '%s'"
 msgstr "schema_tables: taulunimi = \"%s\""
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:489
-#: providers/gda-sybase-server/gda-sybase-connection.c:566
+#: providers/gda-sybase-server/gda-sybase-connection.c:495
+#: providers/gda-sybase-server/gda-sybase-connection.c:572
 #, c-format
 msgid "schema_tables: table_schema = '%s'"
 msgstr "schema_tables: table_schema = \"%s\""
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:494
+#: providers/gda-sybase-server/gda-sybase-connection.c:500
 #, c-format
 msgid "schema_procedures: proc_catalog = '%s' UNUSED!\n"
 msgstr "schema_procedures: proc_catalog = \"%s\" EI KÄYTÖSSÄ!\n"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:498
+#: providers/gda-sybase-server/gda-sybase-connection.c:504
 #, c-format
 msgid "schema_procs: invalid constraint type %d"
 msgstr "schema_procs: rajoitetyyppi %d ei voimassa"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:508
+#: providers/gda-sybase-server/gda-sybase-connection.c:514
 msgid "Could not allocate cmd structure"
 msgstr "Komentorakennetta ei voi varata"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:571
+#: providers/gda-sybase-server/gda-sybase-connection.c:577
 #, c-format
 msgid "schema_procedures: proc_catalog = '%s' UNUSED!"
 msgstr "schema_procedures: proc_catalog = \"%s\" EI KÄYTÖSSÄ!"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:575
+#: providers/gda-sybase-server/gda-sybase-connection.c:581
 #, c-format
 msgid "schema_tables: invalid constraint type %d"
 msgstr "schema_tables: rajoitetyyppi %d ei voimassa"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:636
+#: providers/gda-sybase-server/gda-sybase-connection.c:642
 #, c-format
 msgid "Invalid or unsupported constraint type: %d"
 msgstr "Rajoitetyyppi: %d ei voimassa tai tuettu"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:677
+#: providers/gda-sybase-server/gda-sybase-connection.c:683
 msgid "Could not allocate Gda_ServerCommand"
 msgstr "Gda_ServerCommandia ei voi varata"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:707
-#: providers/gda-sybase-server/gda-sybase-connection.c:712
+#: providers/gda-sybase-server/gda-sybase-connection.c:713
+#: providers/gda-sybase-server/gda-sybase-connection.c:718
 #, c-format
 msgid "connection status: %x"
 msgstr "yhteystila: %x"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:708
+#: providers/gda-sybase-server/gda-sybase-connection.c:714
 #, c-format
 msgid "return code: %x"
 msgstr "paluukoodi: %x"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:745
+#: providers/gda-sybase-server/gda-sybase-connection.c:751
 msgid "attempting reconnection"
 msgstr "yhteyttä yritetään uudelleen"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:884
+#: providers/gda-sybase-server/gda-sybase-connection.c:890
 #, c-format
 msgid "Reconnected to '%s'"
 msgstr "Yhteys uudelleen paikkaan \"%s\""
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:886
+#: providers/gda-sybase-server/gda-sybase-connection.c:892
 #, c-format
 msgid "Connected to %s"
 msgstr "Yhteys paikkaan %s"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:894
+#: providers/gda-sybase-server/gda-sybase-connection.c:900
 #, c-format
 msgid "Selected database '%s'"
 msgstr "Tietokanta \"%s\" valittu"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:923
+#: providers/gda-sybase-server/gda-sybase-connection.c:929
 #, c-format
 msgid "%s: Could not allocate cmd structure"
 msgstr "%s: Komentorakennetta ei voi varata"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:932
+#: providers/gda-sybase-server/gda-sybase-connection.c:938
 #, c-format
 msgid "%s: Could not allocate memory for cmd string"
 msgstr "%s: Komentomerkkijonolle ei voi varata muistia"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:945
+#: providers/gda-sybase-server/gda-sybase-connection.c:951
 #, c-format
 msgid "%s: ct_command failed"
 msgstr "%s: ct_command ei onnistu"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:954
+#: providers/gda-sybase-server/gda-sybase-connection.c:960
 #, c-format
 msgid "%s: sending command failed"
 msgstr "%s: komennon lähetys ei onnistu"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:965
+#: providers/gda-sybase-server/gda-sybase-connection.c:971
 #, c-format
 msgid "%s: selecting database failed"
 msgstr "%s: tietokannan valinta ei onnistu"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:983
+#: providers/gda-sybase-server/gda-sybase-connection.c:989
 #, c-format
 msgid "%s: use command failed"
 msgstr "%s: käyttökomento ei onnistu"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:1010
+#: providers/gda-sybase-server/gda-sybase-connection.c:1016
 msgid "Could not allocate locale structure"
 msgstr "locale-rakennetta ei voi varata"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:1016
+#: providers/gda-sybase-server/gda-sybase-connection.c:1022
 #, c-format
 msgid "Could not set locale to '%s'"
 msgstr "localea ei voi asettaa \"%s\":ksi"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:1022
+#: providers/gda-sybase-server/gda-sybase-connection.c:1028
 #, c-format
 msgid "Could not configure locale to be '%s'"
 msgstr "localen asetusta ei voi muuttaa \"%s\":ksi"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:1027
+#: providers/gda-sybase-server/gda-sybase-connection.c:1033
 msgid "Could not drop locale structure"
 msgstr "locale-rakennetta ei voi poistaa"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:1040
+#: providers/gda-sybase-server/gda-sybase-connection.c:1046
 #, c-format
 msgid "Fatal error: %s\n"
 msgstr "Vakava virhe: %s\n"
@@ -859,8 +858,7 @@ msgid ""
 "Another instance of the report engine is already registered with OAF. "
 "Exiting..."
 msgstr ""
-"Raporttikoneen toinen ilmentymä on jo rekisteröity OAF:ään. "
-"Lopettaa..."
+"Raporttikoneen toinen ilmentymä on jo rekisteröity OAF:ään. Lopettaa..."
 
 #: report/server/gda-report-server-main.c:126
 msgid "Unknown error registering report engine with OAF. Exiting"
@@ -871,65 +869,44 @@ msgstr "Tuntematon virhe rekisteröidessä raporttikonetta OAF:ään. Lopettaa"
 msgid "Registered report engine with ID = %s"
 msgstr "Rekisteröity raporttikone, ID = %s"
 
-#: tools/gda-run.c:30
+#: tools/gda-run.c:34
 msgid "database name"
 msgstr "tietokantanimi"
 
-#: tools/gda-run.c:30
+#: tools/gda-run.c:34
 msgid "DATABASE"
 msgstr "TIETOKANTA"
 
-#: tools/gda-run.c:31
+#: tools/gda-run.c:35
 msgid "user name"
 msgstr "käyttäjätunnus"
 
-#: tools/gda-run.c:31
+#: tools/gda-run.c:35
 msgid "USER-NAME"
 msgstr "KÄYTTÄJÄTUNNUS"
 
-#: tools/gda-run.c:32
+#: tools/gda-run.c:36
 msgid "password"
 msgstr "salasana"
 
-#: tools/gda-run.c:32
+#: tools/gda-run.c:36
 msgid "PASSWORD"
 msgstr "SALASANA"
 
-#: tools/gda-run.c:33
+#: tools/gda-run.c:37
 msgid "file name"
 msgstr "tiedostonimi"
 
-#: tools/gda-run.c:33
+#: tools/gda-run.c:37
 msgid "FILE-NAME"
 msgstr "TIEDOSTONIMI"
 
-#: tools/gda-run.c:105
+#: tools/gda-run.c:109
 #, c-format
 msgid "%s: misconfigured DSN entry"
 msgstr "%s: DSN-kohta väärin asetettu"
 
-#: tools/gda-run.c:120
+#: tools/gda-run.c:124
 #, c-format
 msgid "%s: data source '%s' not found\n"
 msgstr "%s: datalähdettä \"%s\" ei löydy\n"
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

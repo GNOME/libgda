@@ -105,25 +105,6 @@ GNU Data Access is an attempt to provide uniform access to
 
  This package includes the GDA MySQL provider
 
-%package -n gda-oracle
-Summary: GDA Oracle Provider
-Group:		Applications/Databases
-Requires:	%name = %{PACKAGE_VERSION}
-
-%description -n gda-oracle
-GNU Data Access is an attempt to provide uniform access to
- different kinds of data sources (databases, information
- servers, mail spools, etc).
- It is a complete architecture that provides all you need to
- access your data.
- .
- libgda was part of the GNOME-DB project
- (http://www.gnome.org/projects/gnome-db), but has been
- separated from it to allow non-GNOME applications to be
- developed based on it.
-
- This package includes the GDA Pracle provider
- 
 %changelog
 * Sat Sep 2 2000 Rodrigo Moya <rodrigo@linuxave.net>
 - Initial spec imported from old GNOME-DB spec
@@ -216,9 +197,3 @@ fi
 %{prefix}/lib/libgda-mysql.so*
 %{prefix}/share/oaf/gda-mysql.oafinfo
 
-%files -n gda-oracle
-%defattr(-, root, root)
-
-%{prefix}/bin/gda-oracle-srv
-%{prefix}/lib/libgda-oracle.so*
-%{prefix}/share/oaf/gda-oracle.oafinfo
