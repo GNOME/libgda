@@ -1,5 +1,7 @@
 2001-11-02  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* Makefile.am: added gda-log.[ch] to list of SOURCES
+
 	* gda-server.c (factory_callback): add all created componentes to
 	our private list, and connect to their "destroy" signal, so that we
 	can keep track of all components, and terminate when there are no

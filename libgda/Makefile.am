@@ -41,6 +41,7 @@ gda_headers = \
 	gda-data-model-list.h \
 	gda-error.h \
 	gda-field.h \
+	gda-log.h \
 	gda-parameter.h \
 	gda-quark-list.h \
 	gda-recordset.h \
@@ -71,6 +72,7 @@ libgda_2_la_SOURCES = \
 	gda-error.c \
 	gda-field.c \
 	gda-init.c \
+	gda-log.c \
 	gda-parameter.c \
 	gda-quark-list.c \
 	gda-recordset.c \
