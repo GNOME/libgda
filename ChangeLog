@@ -1,5 +1,12 @@
 2002-11-12  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	Fixes #96810
+
+	* providers/oracle/gda-oracle-provider.c (get_oracle_tables): added
+	missing commas to SQL command.
+
+2002-11-12  Rodrigo Moya <rodrigo@gnome-db.org>
+
 	* data/Makefile.am: EXTRA_DIST XML data.
 
 2002-11-09  Rodrigo Moya <rodrigo@gnome-db.org>
