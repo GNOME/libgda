@@ -1,44 +1,46 @@
 # Copyright (C) 1999-2002 Free Software Foundation, Inc.
 # Valek Filippov <frob@df.ru>, 1999-2002.
+# Dmitry G. Mastrukov <dmitry@taurussoft.org>, 2002
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda-2\n"
-"POT-Creation-Date: 2002-07-07 23:22+0200\n"
-"PO-Revision-Date: 2002-03-18 21:59+03:00\n"
-"Last-Translator: Valek Filippov <frob@df.ru>\n"
+"POT-Creation-Date: 2002-08-14 12:41+0400\n"
+"PO-Revision-Date: 2002-08-14 14:23+0400\n"
+"Last-Translator: Dmitry G. Mastrukov <dmitry@taurussoft.org>\n"
 "Language-Team: Russian <gnome-cyr@gnome.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=koi8-r\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8-bit\n"
 
 #: libgda/gda-client.c:226 libgda/gda-client.c:413 libgda/gda-connection.c:214
 #, c-format
 msgid "Data source %s not found in configuration"
-msgstr "Источник данных %s не найден в конфигурации"
+msgstr "п≤я│я┌п╬я┤п╫п╦п╨ п╢п╟п╫п╫я▀я┘ %s п╫п╣ п╫п╟п╧п╢п╣п╫ п╡ п╨п╬п╫я└п╦пЁя┐я─п╟я├п╦п╦"
 
 #: libgda/gda-client.c:244
 #, c-format
 msgid "Provider %s is not installed"
-msgstr ""
+msgstr "п÷я─п╬п╡п╟п╧п╢п╣я─ %s п╫п╣ я┐я│я┌п╟п╫п╬п╡п╩п╣п╫"
 
 #: libgda/gda-client.c:253
-#, fuzzy, c-format
+#, c-format
 msgid "Could not load %s provider"
-msgstr "Не удалось запросить провайдеров COBRA"
+msgstr "п²п╣ я┐п╢п╟п╩п╬я│я▄ п╥п╟пЁя─я┐п╥п╦я┌я▄ п©я─п╬п╡п╟п╧п╢п╣я─ %s"
 
 #: libgda/gda-client.c:269
 #, c-format
 msgid "Provider %s does not implement entry point"
-msgstr ""
+msgstr "п÷я─п╬п╡п╟п╧п╢п╣я─ %s п╫п╣ п©я─п╣п╢п╬я│я┌п╟п╡п╩я▐п╣я┌ я┌п╬я┤п╨я┐ п╡я┘п╬п╢п╟"
 
 #: libgda/gda-client.c:278
 msgid "Creation of GdaServerProvider failed"
-msgstr ""
+msgstr "п║п╠п╬п╧ п©я─п╦ я│п╬п╥п╢п╟п╫п╦п╦ GdaServerProvider"
 
 #: libgda/gda-client.c:341
 msgid "Temporary data source created by libgda. Don't remove it"
 msgstr ""
+"п▓я─п╣п╪п╣п╫п╫я▀п╧ п╦я│я┌п╬я┤п╫п╦п╨ п╠п╟п╥я▀ п╢п╟п╫п╫я▀я┘, я│п╬п╥п╢п╟п╫п╫я▀п╧ п╠п╦п╠п╩п╦п╬я┌п╣п╨п╬п╧ libgda. п²п╣ я┐п╢п╟п╩я▐п╧я┌п╣ п╣пЁп╬"
 
 #. gda_server_recordset_model_set_field_defined_size (recset, 0, 256);
 #: libgda/gda-config.c:1268 providers/default/gda-default-provider.c:463
@@ -47,262 +49,276 @@ msgstr ""
 #: providers/mysql/gda-mysql-provider.c:584
 #: providers/oracle/gda-oracle-provider.c:999
 msgid "Name"
-msgstr "Название"
+msgstr "п²п╟п╦п╪п╣п╫п╬п╡п╟п╫п╦п╣"
 
 #: libgda/gda-config.c:1269
 msgid "Provider"
-msgstr "Провайдер"
+msgstr "п÷я─п╬п╡п╟п╧п╢п╣я─"
 
 #: libgda/gda-config.c:1270
 msgid "Connection string"
-msgstr "Строка соединения"
+msgstr "п║я┌я─п╬п╨п╟ я│п╬п╣п╢п╦п╫п╣п╫п╦я▐"
 
 #: libgda/gda-config.c:1271
 msgid "Description"
-msgstr "Описание"
+msgstr "п·п©п╦я│п╟п╫п╦п╣"
 
 #: libgda/gda-config.c:1272
 msgid "Username"
-msgstr "Имя пользователя"
+msgstr "п≤п╪я▐ п©п╬п╩я▄п╥п╬п╡п╟я┌п╣п╩я▐"
 
 #: libgda/gda-config.c:1273
 msgid "Password"
-msgstr ""
+msgstr "п÷п╟я─п╬п╩я▄"
 
-#: libgda/gda-data-model.c:589
+#: libgda/gda-data-model.c:607
 #, c-format
 msgid "Data model %p is not editable"
-msgstr ""
+msgstr "п°п╬п╢п╣п╩я▄ п╢п╟п╫п╫я▀я┘ %p п╫п╣я─п╣п╢п╟п╨я┌п╦я─я┐п╣п╪п╟"
 
 #: libgda/gda-init.c:49
 msgid "Attempt to initialize an already initialized client"
-msgstr "Попытка инициализировать уже инициализированного клиента"
+msgstr "п÷п╬п©я▀я┌п╨п╟ п╦п╫п╦я├п╦п╟п╩п╦п╥п╦я─п╬п╡п╟я┌я▄ я┐п╤п╣ п╦п╫п╦я├п╦п╟п╩п╦п╥п╦я─п╬п╡п╟п╫п╫п╬пЁп╬ п╨п╩п╦п╣п╫я┌п╟"
 
 #: libgda/gda-init.c:60
 msgid "libgda needs GModule. Finishing..."
-msgstr ""
+msgstr "п▒п╦п╠п╩п╦п╬я┌п╣п╨п╟ libgda п╫я┐п╤п╢п╟п╣я┌я│я▐ п╡ GModule. п≈п╟п╡п╣я─я┬п╣п╫п╦п╣ я─п╟п╠п╬я┌я▀..."
+
+#: libgda/gda-init.c:64
+msgid "libgda successfully initialized"
+msgstr "п▒п╦п╠п╩п╦п╬я┌п╣п╨п╟ libgda я┐я│п©п╣я┬п╫п╬ п╦п╫п╦я├п╦п╟п╩п╦п╥п╦я─п╬п╡п╟п╫п╟"
 
 #: libgda/gda-log.c:82
 #, c-format
 msgid "MESSAGE: %s"
-msgstr ""
+msgstr "п║п·п·п▒п╘п∙п²п≤п∙: s"
 
 #: libgda/gda-log.c:101
 #, c-format
 msgid "ERROR: %s"
-msgstr ""
+msgstr "п·я┬п╦п╠п╨п╟: %s"
 
 #: libgda/gda-select.c:119 libgda/gda-select.c:142 libgda/gda-select.c:201
 msgid "Unexpected integer value"
-msgstr ""
+msgstr "п²п╣п╬п╤п╦п╢п╟п╫п╫п╬п╣ я├п╣п╩п╬п╣ п╥п╫п╟я┤п╣п╫п╦п╣"
 
 #: libgda/gda-select.c:131 libgda/gda-select.c:211
 msgid "Unexpected float value"
-msgstr ""
+msgstr "п²п╣п╬п╤п╦п╢п╟п╫п╫п╬п╣ п╥п╫п╟я┤п╣п╫п╦п╣ я│ п©п╩п╟п╡п╟я▌я┴п╣п╧ я┌п╬я┤п╨п╬п╧"
 
 #: libgda/gda-select.c:154
 msgid "Unexpected string value"
-msgstr ""
+msgstr "п²п╣п╬п╤п╦п╢п╟п╫п╫п╬п╣ я│я┌я─п╬п╨п╬п╡п╬п╣ п╥п╫п╟я┤п╣п╫п╦п╣"
 
 #: libgda/gda-select.c:165
 msgid "Unexpected symbol '='"
-msgstr ""
+msgstr "п²п╣п╬п╤п╦п╢п╟п╫п╫я▀п╧ я│п╦п╪п╡п╬п╩ \"=\""
 
 #: libgda/gda-select.c:176
 msgid "Unexpected symbol '<'"
-msgstr ""
+msgstr "п²п╣п╬п╤п╦п╢п╟п╫п╫я▀п╧ я│п╦п╪п╡п╬п╩ \"<\""
 
 #: libgda/gda-select.c:187
 msgid "Unexpected symbol '>'"
-msgstr ""
+msgstr "п²п╣п╬п╤п╦п╢п╟п╫п╫я▀п╧ я│п╦п╪п╡п╬п╩ \">\""
 
 #: libgda/gda-select.c:215
 msgid "Found a non-numeric value after a '-' sign"
-msgstr ""
+msgstr "п·п╠п╫п╟я─я┐п╤п╣п╫п╬ п╫п╣я┤п╦я│п╩п╬п╡п╬п╣ п╥п╫п╟я┤п╣п╫п╦п╣ п©п╬я│п╩п╣ п╥п╫п╟п╨п╟ \"-\""
 
 #: libgda/gda-select.c:231
 msgid "Unexpected identifier"
-msgstr ""
+msgstr "п²п╣п╬п╤п╦п╢п╟п╫п╫я▀п╧ п╦п╢п╣п╫я┌п╦я└п╦п╨п╟я┌п╬я─"
 
 #: libgda/gda-table.c:234
 #, c-format
 msgid "There is already a field called %s"
-msgstr "Уже есть поле с названием %s"
+msgstr "пёп╤п╣ п╣я│я┌я▄ п©п╬п╩п╣ я│ п╫п╟п╥п╡п╟п╫п╦п╣п╪ %s"
 
 #: libgda/gda-util.c:143
 #, c-format
 msgid "Error while reading %s: %s"
-msgstr ""
+msgstr "п·я┬п╦п╠п╨п╟ п©я─п╦ я┤я┌п╣п╫п╦п╦ %s: %s"
 
 # fe/fe_editor.c:175 fe/fe_editor.c:212
 #: libgda/gda-util.c:169
-#, fuzzy, c-format
+#, c-format
 msgid "Could not create file %s"
-msgstr "Не удалось проанализировать файл %s"
+msgstr "п²п╣ я┐п╢п╟п╩п╬я│я▄ я│п╬п╥п╢п╟я┌я▄ я└п╟п╧п╩ %s"
 
 # gda-clnt/gda-field.c:117
-#: libgda/gda-value.c:1315
+#: libgda/gda-value.c:1346
 msgid "TRUE"
-msgstr "ИСТИНА"
+msgstr "п≤п║п╒п≤п²п²п·"
 
 # gda-clnt/gda-field.c:119
-#: libgda/gda-value.c:1317
+#: libgda/gda-value.c:1348
 msgid "FALSE"
-msgstr "ЛОЖЬ"
+msgstr "п⌡п·п√п²п·"
 
 # fe/fe_editor.c:175 fe/fe_editor.c:212
 #: libgda/gda-xml-database.c:229
 #, c-format
 msgid "Could not load file at %s"
-msgstr "Не удалось загрузить файл %s"
+msgstr "п²п╣ я┐п╢п╟п╩п╬я│я▄ п╥п╟пЁя─я┐п╥п╦я┌я▄ я└п╟п╧п╩ %s"
 
 # fe/fe_editor.c:175 fe/fe_editor.c:212
 #: libgda/gda-xml-database.c:238
 #, c-format
 msgid "Could not parse file at %s"
-msgstr "Не удалось проанализировать файл %s"
+msgstr "п²п╣ я┐п╢п╟п╩п╬я│я▄ я─п╟п╥п╬п╠я─п╟я┌я▄ я└п╟п╧п╩ %s"
 
 #: libgda/gda-xml-database.c:248
 #, c-format
 msgid "Invalid XML database file '%s'"
-msgstr "Неправильный файл базы данных XML \"%s\""
+msgstr "п²п╣п╢п╬п©я┐я│я┌п╦п╪я▀п╧ я└п╟п╧п╩ п╠п╟п╥я▀ п╢п╟п╫п╫я▀я┘  \"%s\" п╡ я└п╬я─п╪п╟я┌п╣ XML"
 
 #: libgda/gda-xml-database.c:467 libgda/gda-xml-database.c:503
 #: libgda/gda-xml-database.c:544
 #, c-format
 msgid "Table %s already exists"
-msgstr "Таблица %s уже существует"
+msgstr "п╒п╟п╠п╩п╦я├п╟ %s я┐п╤п╣ я│я┐я┴п╣я│я┌п╡я┐п╣я┌"
 
 #: libgda/gda-xml-database.c:537
 msgid "Invalid node"
-msgstr "Неправильный узел"
+msgstr "п²п╣п╢п╬п©я┐я│я┌п╦п╪я▀п╧ я┐п╥п╣п╩"
 
 #: libgda/gda-xml-database.c:569
 #, c-format
 msgid "Duplicated <data> node for table %s"
-msgstr "Дублированный узел <data> для таблицы %s"
+msgstr "п÷п╬п╡я┌п╬я─я▐я▌я┴п╦п╧я│я▐ я┐п╥п╣п╩ <data> п╢п╩я▐ я┌п╟п╠п╩п╦я├я▀ %s"
 
 #: libgda/gda-xml-database.c:576
 msgid "Invalid XML node"
-msgstr "Неправильный узел XML"
+msgstr "п²п╣п╢п╬п©я┐я│я┌п╦п╪я▀п╧ я┐п╥п╣п╩ XML"
 
 #: providers/default/gda-default-provider.c:173
 #: providers/sqlite/gda-sqlite-provider.c:186
 msgid ""
 "A full path must be specified on the connection string to open a database."
 msgstr ""
-"В строке соединения должен быть указан полный путь для открытия базы данных."
+"п▓ я│я┌я─п╬п╨п╣ я│п╬п╣п╢п╦п╫п╣п╫п╦я▐ п╢п╬п╩п╤п╣п╫ п╠я▀я┌я▄ я┐п╨п╟п╥п╟п╫ п©п╬п╩п╫я▀п╧ п©я┐я┌я▄ п╢п╩я▐ п╬я┌п╨я─я▀я┌п╦я▐ п╠п╟п╥я▀ п╢п╟п╫п╫я▀я┘."
 
 #: providers/default/gda-default-provider.c:242
 msgid "Not Implemented"
-msgstr ""
+msgstr "п²п╣ я─п╣п╟п╩п╦п╥п╬п╡п╟п╫п╬"
 
 #: providers/default/gda-default-provider.c:361
-#: providers/mysql/gda-mysql-provider.c:873
+#: providers/mysql/gda-mysql-provider.c:941
 #: providers/oracle/gda-oracle-provider.c:1056
-#: providers/postgres/gda-postgres-provider.c:829
+#: providers/postgres/gda-postgres-provider.c:835
 msgid "Field name"
-msgstr "Название поля"
+msgstr "п²п╟п╥п╡п╟п╫п╦п╣ п©п╬п╩я▐"
 
 #: providers/default/gda-default-provider.c:362
-#: providers/mysql/gda-mysql-provider.c:874
+#: providers/mysql/gda-mysql-provider.c:942
 #: providers/oracle/gda-oracle-provider.c:1057
-#: providers/postgres/gda-postgres-provider.c:830
+#: providers/postgres/gda-postgres-provider.c:836
 msgid "Data type"
-msgstr "Тип данных"
+msgstr "п╒п╦п© п╢п╟п╫п╫я▀я┘"
 
 #: providers/default/gda-default-provider.c:363
-#: providers/mysql/gda-mysql-provider.c:875
+#: providers/mysql/gda-mysql-provider.c:943
 #: providers/oracle/gda-oracle-provider.c:1058
-#: providers/postgres/gda-postgres-provider.c:831
+#: providers/postgres/gda-postgres-provider.c:837
 msgid "Size"
-msgstr "Размер"
+msgstr "п═п╟п╥п╪п╣я─"
 
 #: providers/default/gda-default-provider.c:364
-#: providers/mysql/gda-mysql-provider.c:876
+#: providers/mysql/gda-mysql-provider.c:944
 #: providers/oracle/gda-oracle-provider.c:1059
-#: providers/postgres/gda-postgres-provider.c:832
+#: providers/postgres/gda-postgres-provider.c:838
 msgid "Scale"
-msgstr "Масштаб"
+msgstr "п°п╟я│я┬я┌п╟п╠"
 
 #: providers/default/gda-default-provider.c:365
-#: providers/mysql/gda-mysql-provider.c:877
+#: providers/mysql/gda-mysql-provider.c:945
 #: providers/oracle/gda-oracle-provider.c:1060
-#: providers/postgres/gda-postgres-provider.c:833
+#: providers/postgres/gda-postgres-provider.c:839
 msgid "Not null?"
-msgstr "Не null?"
+msgstr "п²п╣ п╫я┐п╩п╣п╡п╬п╣?"
 
 #: providers/default/gda-default-provider.c:366
-#: providers/mysql/gda-mysql-provider.c:878
+#: providers/mysql/gda-mysql-provider.c:946
 #: providers/oracle/gda-oracle-provider.c:1061
-#: providers/postgres/gda-postgres-provider.c:834
+#: providers/postgres/gda-postgres-provider.c:840
 msgid "Primary key?"
-msgstr "Первичный ключ?"
+msgstr "п÷п╣я─п╡п╦я┤п╫я▀п╧ п╨п╩я▌я┤?"
 
 #: providers/default/gda-default-provider.c:367
-#: providers/mysql/gda-mysql-provider.c:879
+#: providers/mysql/gda-mysql-provider.c:947
 #: providers/oracle/gda-oracle-provider.c:1062
-#: providers/postgres/gda-postgres-provider.c:835
+#: providers/postgres/gda-postgres-provider.c:841
 msgid "Unique index?"
-msgstr "Уникальный индекс?"
+msgstr "пёп╫п╦п╨п╟п╩я▄п╫я▀п╧ п╦п╫п╢п╣п╨я│?"
 
 #: providers/default/gda-default-provider.c:368
-#: providers/mysql/gda-mysql-provider.c:880
+#: providers/mysql/gda-mysql-provider.c:948
 #: providers/oracle/gda-oracle-provider.c:1063
-#: providers/postgres/gda-postgres-provider.c:836
+#: providers/postgres/gda-postgres-provider.c:842
 msgid "References"
-msgstr "Ссылки"
+msgstr "п║я│я▀п╩п╨п╦"
 
 #: providers/default/gda-default-provider.c:378
 #: providers/default/gda-default-provider.c:384
-#, fuzzy
 msgid "Invalid argument"
-msgstr "Неправильный узел"
+msgstr "п²п╣п╢п╬п©я┐я│я┌п╦п╪я▀п╧ п╟я─пЁя┐п╪п╣п╫я┌"
 
 #: providers/default/gda-default-provider.c:391
 #, c-format
 msgid "Table %s not found"
-msgstr ""
+msgstr "п╒п╟п╠п╩п╦я├п╟ %s п╫п╣ п╫п╟п╧п╢п╣п╫п╟"
 
 # fe/fe_editor.c:175 fe/fe_editor.c:212
 #: providers/default/gda-default-provider.c:416
-#, fuzzy
 msgid "Could not get description for column"
-msgstr "Не удалось создать компонент соединения"
+msgstr "п²п╣ я┐п╢п╟п╩п╬я│я▄ п©п╬п╩я┐я┤п╦я┌я▄ п╬п©п╦я│п╟п╫п╦п╣ п╢п╩я▐ я│я┌п╬п╩п╠я├п╟"
 
 #: providers/default/libmain.c:39
 msgid "GDA default provider, based on the libgda XML format"
-msgstr ""
+msgstr "п≤я│я┘п╬п╢п╫я▀п╧ п©я─п╬п╡п╟п╧п╢п╣я─ п╠п╦п╠п╩п╦п╬я┌п╣п╨п╦ GDA, п╬я│п╫п╬п╡п╟п╫п╫я▀п╧ п╫п╟ я└п╬я─п╪п╟я┌п╣ XML"
+
+#: providers/freetds/libmain.c:39
+msgid "GDA provider for TDS-based databases (using FreeTDS)"
+msgstr "п÷я─п╬п╡п╟п╧п╢п╣я─ GDA п╢п╩я▐ п╢п╬я│я┌я┐п©п╟ п╠п╟п╥п╟п╪ п╢п╟п╫п╫я▀я┘ TDS (п╦я│п©п╬п╩я▄п╥я┐я▐ FreeTDS)"
+
+#: providers/freetds/utils.c:41 providers/oracle/utils.c:67
+#: providers/postgres/utils.c:47
+msgid "NO DESCRIPTION"
+msgstr "п²п∙п╒ п·п÷п≤п║п░п²п≤п╞"
+
+#: providers/freetds/utils.c:45 providers/oracle/utils.c:72
+#: providers/postgres/utils.c:52
+msgid "Not available"
+msgstr "п²п╣ п╢п╬я│я┌я┐п©п╫п╬"
 
 #: providers/mdb/gda-mdb-provider.c:176
-#, fuzzy
 msgid "A database FILENAME must be specified in the connection_string"
 msgstr ""
-"В строке соединения должен быть указан полный путь для открытия базы данных."
+"п▓ я│я┌я─п╬п╨п╣ я│п╬п╣п╢п╦п╫п╣п╫п╦я▐ п╢п╬п╩п╤п╫п╬ п╠я▀я┌я▄ я┐п╨п╟п╥п╟п╫п╬ п╫п╟п╦п╪п╣п╫п╬п╡п╟п╫п╦п╣ п╠п╟п╥я▀ п╢п╟п╫п╫я▀я┘."
 
 # fe/fe_editor.c:175 fe/fe_editor.c:212
 #: providers/mdb/gda-mdb-provider.c:184
-#, fuzzy, c-format
+#, c-format
 msgid "Could not open file %s"
-msgstr "Не удалось проанализировать файл %s"
+msgstr "п²п╣ я┐п╢п╟п╩п╬я│я▄ п╬я┌п╨я─я▀я┌я▄ я└п╟п╧п╩ %s"
 
 #: providers/mdb/gda-mdb-provider.c:206 providers/mdb/gda-mdb-provider.c:308
-#, fuzzy
 msgid "Invalid MDB handle"
-msgstr "Неправильный обработчик MySQL"
+msgstr "п²п╣п╢п╬п©я┐я│я┌п╦п╪я▀п╧ п╬п╠я─п╟п╠п╬я┌я┤п╦п╨ MDB"
 
 #: providers/mdb/gda-mdb-provider.c:273
 msgid "Table Name"
-msgstr ""
+msgstr "п²п╟п╦п╪п╣п╫п╬п╡п╟п╫п╦п╣ я┌п╟п╠п╩п╦я├я▀"
 
 #: providers/mdb/libmain.c:34
 msgid "GDA provider for MS Access files"
-msgstr ""
+msgstr "п÷я─п╬п╡п╟п╧п╢п╣я─ GDA п╢п╩я▐ п╢п╬я│я┌я┐п©п╟ п╨ я└п╟п╧п╩п╟п╪ п╡ я└п╬я─п╪п╟я┌п╣ MS Access"
 
 #: providers/mysql/gda-mysql-provider.c:198
 msgid ""
 "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
-msgstr "Нельзя указывать UNIX_SOCKET, если также указаны Хост или Порт."
+msgstr "п²п╣п╩я▄п╥я▐ я┐п╨п╟п╥я▀п╡п╟я┌я▄ UNIX_SOCKET, п╣я│п╩п╦ я┌п╟п╨п╤п╣ я┐п╨п╟п╥п╟п╫я▀ HOST п╦п╩п╦ PORT."
 
 #: providers/mysql/gda-mysql-provider.c:269
 #: providers/mysql/gda-mysql-provider.c:319
@@ -313,24 +329,40 @@ msgstr "Нельзя указывать UNIX_SOCKET, если также указаны Хост или Порт."
 #: providers/mysql/gda-mysql-provider.c:494
 #: providers/mysql/gda-mysql-provider.c:522
 msgid "Invalid MYSQL handle"
-msgstr "Неправильный обработчик MySQL"
+msgstr "п²п╣п╢п╬п©я┐я│я┌п╦п╪я▀п╧ п╬п╠я─п╟п╠п╬я┌я┤п╦п╨ MySQL"
 
-#. gda_server_recordset_model_set_field_defined_size (recset, 0, 32);
-#: providers/mysql/gda-mysql-provider.c:775
+#. 2nd, the owner
+#: providers/mysql/gda-mysql-provider.c:779
+msgid "Unknown"
+msgstr "п²п╣п╦п╥п╡п╣я│я┌п╫я▀п╧"
+
+#: providers/mysql/gda-mysql-provider.c:846
 #: providers/oracle/gda-oracle-provider.c:1563
 msgid "Type"
-msgstr "Тип"
+msgstr "п╒п╦п©"
 
-#: providers/mysql/gda-mysql-provider.c:888
+#: providers/mysql/gda-mysql-provider.c:847
+msgid "Owner"
+msgstr "п▓п╩п╟п╢п╣п╩п╣я├"
+
+#: providers/mysql/gda-mysql-provider.c:848
+msgid "Comments"
+msgstr "п п╬п╪п╪п╣п╫я┌п╟я─п╦п╦"
+
+#: providers/mysql/gda-mysql-provider.c:849
+msgid "GDA type"
+msgstr "п╒п╦п© GDA"
+
+#: providers/mysql/gda-mysql-provider.c:956
 #: providers/mysql/gda-mysql-recordset.c:58
 #: providers/mysql/gda-mysql-recordset.c:174
 msgid "Invalid MySQL handle"
-msgstr "Неправильный обработчик MySQL"
+msgstr "п²п╣п╢п╬п©я┐я│я┌п╦п╪я▀п╧ п╬п╠я─п╟п╠п╬я┌я┤п╦п╨ MySQL"
 
-#: providers/mysql/gda-mysql-provider.c:897
-#: providers/mysql/gda-mysql-provider.c:905
+#: providers/mysql/gda-mysql-provider.c:965
+#: providers/mysql/gda-mysql-provider.c:973
 msgid "You need to specify the name of the table"
-msgstr ""
+msgstr "п²п╣п╬п╠я┘п╬п╢п╦п╪п╬ я┐п╨п╟п╥п╟я┌я▄ п╫п╟п╦п╪п╣п╫п╬п╡п╟п╫п╦п╣ я┌п╟п╠п╩п╦я├я▀"
 
 #: providers/mysql/gda-mysql-recordset.c:69
 #: providers/postgres/gda-postgres-recordset.c:184
@@ -338,95 +370,80 @@ msgstr ""
 #: providers/sqlite/gda-sqlite-recordset.c:168
 #: providers/sqlite/gda-sqlite-recordset.c:207
 msgid "Row number out of range"
-msgstr "Номер строки вне диапазона"
+msgstr "п²п╬п╪п╣я─ я│я┌я─п╬п╨п╦ п╡п╫п╣ п╢п╦п╟п©п╟п╥п╬п╫п╟"
 
-#: providers/mysql/gda-mysql-recordset.c:281
+#: providers/mysql/gda-mysql-recordset.c:283
 #: providers/oracle/gda-oracle-recordset.c:467
 msgid "Attempt to insert a row with an invalid number of columns"
-msgstr ""
+msgstr "п÷п╬п©я▀я┌п╨п╟ п╡я│я┌п╟п╡п╦я┌я▄ п╥п╟п©п╦я│я▄ я│ п╫п╣п╢п╬п©я┐я│я┌п╦п╪я▀п╪ я┤п╦я│п╩п╬п╪ я│я┌п╬п╩п╠я├п╬п╡"
 
 # fe/fe_editor.c:175 fe/fe_editor.c:212
-#: providers/mysql/gda-mysql-recordset.c:296
+#: providers/mysql/gda-mysql-recordset.c:298
 #: providers/oracle/gda-oracle-recordset.c:482
-#, fuzzy
 msgid "Could not retrieve column's information"
-msgstr "Не удалось создать компонент соединения"
+msgstr "п²п╣ я┐п╢п╟п╩п╬я│я▄ п╦п╥п╡п╩п╣я┤я▄ п╦п╫я└п╬я─п╪п╟я├п╦я▌ п╬ я│я┌п╬п╩п╠я├п╣"
 
 # fe/fe_editor.c:175 fe/fe_editor.c:212
-#: providers/mysql/gda-mysql-recordset.c:314
+#: providers/mysql/gda-mysql-recordset.c:316
 #: providers/oracle/gda-oracle-recordset.c:500
-#, fuzzy
 msgid "Could not retrieve column's value"
-msgstr "Не удалось открыть указанный файл"
+msgstr "п²п╣ я┐п╢п╟п╩п╬я│я▄ п╦п╥п╡п╩п╣я┤я▄ п╥п╫п╟я┤п╣п╫п╦п╣ я│я┌п╬п╩п╠я├п╟"
 
 #: providers/mysql/libmain.c:36
 msgid "GDA provider for MySQL databases"
-msgstr ""
+msgstr "п÷я─п╬п╡п╟п╧п╢п╣я─ GDA п╢п╩я▐ п╢п╬я│я┌я┐п©п╟ п╨ п╠п╟п╥п╟п╪ п╢п╟п╫п╫я▀я┘ MySQL"
 
 #: providers/odbc/libmain.c:36
-#, fuzzy
 msgid "GDA bridge to ODBC data sources"
-msgstr "GDA доступ к источнику данных SQLite"
+msgstr "п°п╬я│я┌ GDA п╢п╩я▐ п╢п╬я│я┌я┐п©п╟ п╨ п╦я│я┌п╬я┤п╫п╦п╨п╟п╪ п╢п╟п╫п╫я▀я┘ ODBC"
 
 #: providers/oracle/gda-oracle-provider.c:193
-#, fuzzy
 msgid "Could not initialize Oracle"
-msgstr "Не удалось инициализировать среду Oracle"
+msgstr "п²п╣ я┐п╢п╟п╩п╬я│я▄ п╦п╫п╦я├п╦п╟п╩п╦п╥п╦я─п╬п╡п╟я┌я▄ Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:204
-#, fuzzy
 msgid "Could not initialize the Oracle environment"
-msgstr "Не удалось инициализировать среду Oracle"
+msgstr "п²п╣ я┐п╢п╟п╩п╬я│я▄ п╦п╫п╦я├п╦п╟п╩п╦п╥п╦я─п╬п╡п╟я┌я▄ я│я─п╣п╢я┐ Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:216
-#, fuzzy
 msgid "Could not allocate the Oracle service handle"
-msgstr "Не удалось инициализировать обработчик сервера Oracle"
+msgstr "п²п╣ я┐п╢п╟п╩п╬я│я▄ я─п╟п╥п╪п╣я│я┌п╦я┌я▄ п╬п╠я─п╟п╠п╬я┌я┤п╦п╨ я│п╣я─п╡п╣я─п╟ Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:226
-#, fuzzy
 msgid "Could not allocate the Oracle error handle"
-msgstr "Не удалось инициализировать обработчик ошибок Oracle"
+msgstr "п²п╣ я┐п╢п╟п╩п╬я│я▄ я─п╟п╥п╪п╣я│я┌п╦я┌я▄ п╬п╠я─п╟п╠п╬я┌я┤п╦п╨ п╬я┬п╦п╠п╬п╨ Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:238
-#, fuzzy
 msgid "Could not allocate the Oracle server handle"
-msgstr "Не удалось инициализировать обработчик сервера Oracle"
+msgstr "п²п╣ я┐п╢п╟п╩п╬я│я▄ я─п╟п╥п╪п╣я│я┌п╦я┌я▄ п╬п╠я─п╟п╠п╬я┌я┤п╦п╨ я│п╣я─п╡п╣я─п╟ Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:251
-#, fuzzy
 msgid "Could not allocate the Oracle session handle"
-msgstr "Не удалось инициализировать обработчик ошибок Oracle"
+msgstr "п²п╣ я┐п╢п╟п╩п╬я│я▄ я─п╟п╥п╪п╣я│я┌п╦я┌я▄ п╬п╠я─п╟п╠п╬я┌я┤п╦п╨ я│п╣п╟п╫я│п╟ Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:281
-#, fuzzy
 msgid "Could not attach to the Oracle server"
-msgstr "Не удалось инициализировать обработчик сервера Oracle"
+msgstr "п²п╣ я┐п╢п╟п╩п╬я│я▄ п©п╬п╢я│п╬п╣п╢п╦п╫п╦я┌я▄я│я▐ п╨ я│п╣я─п╡п╣я─я┐ Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:297
-#, fuzzy
 msgid "Could not set the Oracle server attribute in the service context"
-msgstr "Не удалось инициализировать контекст сервиса Oracle"
+msgstr "п²п╣ я┐п╢п╟п╩п╬я│я▄ п╦п╫п╦я├п╦п╟п╩п╦п╥п╦я─п╬п╡п╟я┌я▄ п╟я┌я─п╦п╠я┐п╦я┌ я│п╣я─п╡п╣я─п╟ п╡ п╨п╬п╫я┌п╣п╨я│я┌п╣ я│п╣я─п╡п╦я│п╟ Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:313
-#, fuzzy
 msgid "Could not set the Oracle username attribute"
-msgstr "Не удалось инициализировать обработчик сервера Oracle"
+msgstr "п²п╣ я┐п╢п╟п╩п╬я│я▄ я┐я│я┌п╟п╫п╬п╡п╦я┌я▄ п╟я┌я─п╦п╠я┐я┌ п╦п╪п╣п╫п╦ п©п╬п╩я▄п╥п╬п╡п╟я┌п╣п╩я▐ Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:329
-#, fuzzy
 msgid "Could not set the Oracle password attribute"
-msgstr "Не удалось инициализировать фабрику компонента Oracle"
+msgstr "п²п╣ я┐п╢п╟п╩п╬я│я▄ я┐я│я┌п╟п╫п╬п╡п╦я┌я▄ п╟я┌я─п╦п╠я┐я┌ п©п╟я─п╬п╩я▐ Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:344
-#, fuzzy
 msgid "Could not begin the Oracle session"
-msgstr "Не удалось инициализировать среду Oracle"
+msgstr "п²п╣ я┐п╢п╟п╩п╬я│я▄ п╫п╟я┤п╟я┌я▄ я│п╣п╟п╫я│ Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:362
-#, fuzzy
 msgid "Could not set the Oracle session attribute in the service context"
-msgstr "Не удалось инициализировать контекст сервиса Oracle"
+msgstr "п²п╣ я┐п╢п╟п╩п╬я│я▄ я┐я│я┌п╟п╫п╬п╡п╦я┌я▄ п╟я┌я─п╦п╠я┐я┌ я│п╣п╟п╫я│п╟ п╡ п╨п╬п╫я┌п╣п╨я│я┌п╣ я│п╣я─п╡п╦я│п╟ Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:444
 #: providers/oracle/gda-oracle-provider.c:518
@@ -440,626 +457,578 @@ msgstr "Не удалось инициализировать контекст сервиса Oracle"
 #: providers/oracle/gda-oracle-recordset.c:166
 #: providers/oracle/gda-oracle-recordset.c:388
 #: providers/oracle/gda-oracle-recordset.c:589
-#, fuzzy
 msgid "Invalid Oracle handle"
-msgstr "Неправильный обработчик SQLite"
+msgstr "п²п╣п╢п╬п©я┐я│я┌п╦п╪я▀п╧ п╬п╠я─п╟п╠п╬я┌я┤п╦п╨ Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:455
-#, fuzzy
 msgid "Could not allocate the Oracle statement handle"
-msgstr "Не удалось инициализировать обработчик сервера Oracle"
+msgstr "п²п╣ я┐п╢п╟п╩п╬я│я▄ я─п╟п╥п╪п╣я│я┌п╦я┌я▄ п╬п╠я─п╟п╠п╬я┌я┤п╦п╨ п╡я▀я─п╟п╤п╣п╫п╦п╧ Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:466
-#, fuzzy
 msgid "Could not prepare the Oracle statement"
-msgstr "Не удалось инициализировать среду Oracle"
+msgstr "п²п╣ я┐п╢п╟п╩п╬я│я▄ п©п╬п╢пЁп╬п╢п╬п╡п╦я┌я▄ п╡я▀я─п╟п╤п╣п╫п╦п╣ Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:498
-#, fuzzy
 msgid "Could not bind the Oracle statement parameter"
-msgstr "Не удалось инициализировать фабрику компонента Oracle"
+msgstr "п²п╣ я┐п╢п╟п╩п╬я│я▄ я│п╡я▐п╥п╟я┌я▄ п©п╟я─п╟п╪п╣я┌я─ п╡я▀я─п╟п╤п╣п╫п╦я▐ Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:543
-#, fuzzy
 msgid "Could not get the Oracle statement type"
-msgstr "Не удалось инициализировать фабрику компонента Oracle"
+msgstr "п²п╣ я┐п╢п╟п╩п╬я│я▄ я┌п╦п© п╡я▀я─п╟п╤п╣п╫п╦я▐ Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:561
-#, fuzzy
 msgid "Could not execute the Oracle statement"
-msgstr "Не удалось инициализировать среду Oracle"
+msgstr "п²п╣ я┐п╢п╟п╩п╬я│я▄ п╡я▀п©п╬п╩п╫п╦я┌я▄ п╡я▀я─п╟п╤п╣п╫п╦п╣ Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:574
 msgid "Could not get the number of columns in the result set"
-msgstr ""
+msgstr "п²п╣ я┐п╢п╟п╩п╬я│я▄ п©п╬п╩я┐я┤п╦я┌я▄ я┤п╦я│п╩п╬ я│я┌п╬п╩я▌я├п╬п╡ п╡ я─п╣п╥я┐п╩я▄я┌п╦я─я┐я▌я┴п╣п╪ п╫п╟п╠п╬я─п╣"
 
 #: providers/oracle/gda-oracle-provider.c:591
 msgid "Could not get the parameter descripter in the result set"
-msgstr ""
+msgstr "п²п╣ я┐п╢п╟п╩п╬я│я▄ п©п╬п╩я┐я┤п╦я┌я▄ п╬п©п╦я│п╟я┌п╣п╩я▄ п©п╟я─п╟п╪п╣я┌я─п╟ п╡ я─п╣п╥я┐п╩я▄я┌п╦я─я┐я▌я┴п╣п╪ п╫п╟п╠п╬я─п╣"
 
 # fe/fe_editor.c:175 fe/fe_editor.c:212
 #: providers/oracle/gda-oracle-provider.c:603
-#, fuzzy
 msgid "Could not get the column name in the result set"
-msgstr "Не удалось открыть указанный файл"
+msgstr "п²п╣ я┐п╢п╟п╩п╬я│я▄ п©п╬п╩я┐я┤п╦я┌я▄ п╫п╟п╦п╪п╣п╫п╬п╡п╟п╫п╦п╣ я│я┌п╬п╩п╠я├п╟ п╡ я─п╣п╥я┐п╩я▄я┌п╦я─я┐я▌я┴п╣п╪ п╫п╟п╠п╬я─п╣"
 
 #: providers/oracle/gda-oracle-provider.c:749
 #: providers/oracle/gda-oracle-provider.c:825
 #: providers/oracle/gda-oracle-provider.c:875
 #: providers/oracle/gda-oracle-provider.c:931
-#, fuzzy
 msgid "Could not attach the transaction to the service context"
-msgstr "Не удалось инициализировать контекст сервиса Oracle"
+msgstr "п²п╣ я┐п╢п╟п╩п╬я│я▄ п©я─п╦я│п╬п╣п╢п╦п╫п╦я┌я▄ я┌я─п╟п╫п╥п╟п╨я├п╦я▌ п╨ п╨п╬п╫я┌п╣п╨я│я┌я┐ я│п╣я─п╡п╦я│п╟"
 
 #: providers/oracle/gda-oracle-provider.c:799
-#, fuzzy
 msgid "Could not allocate the Oracle transaction handle"
-msgstr "Не удалось инициализировать обработчик ошибок Oracle"
+msgstr "п²п╣ я┐п╢п╟п╩п╬я│я▄ я─п╟п╥п╪п╣я│я┌п╦я┌я▄ п╬п╠я─п╟п╠п╬я┌я┤п╦п╨ я┌я─п╟п╫п╥п╟п╨я├п╦п╧ Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:811
-#, fuzzy
 msgid "Could not set the Oracle transaction name"
-msgstr "Не удалось инициализировать среду Oracle"
+msgstr "п²п╣ я┐п╢п╟п╩п╬я│я▄ я┐я│я┌п╟п╫п╬п╡п╦я┌я▄ п╫п╟п╦п╪п╣п╫п╬п╡п╟п╫п╦п╣ я┌я─п╟п╫п╥п╟п╨я├п╦п╦ Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:836
-#, fuzzy
 msgid "Could not start the Oracle transaction"
-msgstr "Не удалось инициализировать фабрику компонента Oracle"
+msgstr "п²п╣ я┐п╢п╟п╩п╬я│я▄ п╫п╟я┤п╟я┌я▄ я┌я─п╟п╫п╥п╟п╨я├п╦я▌ Oracle"
 
 # fe/fe_editor.c:175 fe/fe_editor.c:212
 #: providers/oracle/gda-oracle-provider.c:884
-#, fuzzy
 msgid "Could not prepare the transaction to commit"
-msgstr "Не удалось создать компонент соединения"
+msgstr "п²п╣ я┐п╢п╟п╩п╬я│я▄ п©п╬п╢пЁп╬я┌п╬п╡п╦я┌я▄ я┌я─п╟п╫п╥п╟п╨я├п╦я▌ п╨ я│п╬п╡п╣я─я┬п╣п╫п╦я▌"
 
 #: providers/oracle/gda-oracle-provider.c:892
-#, fuzzy
 msgid "Could not commit the Oracle transaction"
-msgstr "Не удалось инициализировать фабрику компонента Oracle"
+msgstr "п²п╣ я┐п╢п╟п╩п╬я│я▄ я│п╬п╡п╣я─я┬п╦я┌я▄ я┌я─п╟п╫п╥п╟п╨я├п╦я▌ Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:938
-#, fuzzy
 msgid "Could not rollback the Oracle transaction"
-msgstr "Не удалось инициализировать фабрику компонента Oracle"
+msgstr "п²п╣ я┐п╢п╟п╩п╬я│я▄ п╬я┌п╨п╟я┌п╦я┌я▄ я┌я─п╟п╫п╥п╟п╨я├п╦я▌ Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:1227
-#, fuzzy
 msgid "Could not allocate the Oracle describe handle"
-msgstr "Не удалось инициализировать обработчик сервера Oracle"
+msgstr "п²п╣ я┐п╢п╟п╩п╬я│я▄ я─п╟п╥п╪п╣я│я┌п╦я┌я▄ п╬п╠я─п╟п╠п╬я┌я┤п╦п╨ п╬п©п╦я│п╟п╫п╦я▐ Oracle"
 
 # fe/fe_editor.c:175 fe/fe_editor.c:212
 #: providers/oracle/gda-oracle-provider.c:1240
-#, fuzzy
 msgid "Could not describe the Oracle table"
-msgstr "Не удалось открыть указанный файл"
+msgstr "п²п╣ я┐п╢п╟п╩п╬я│я▄ п╬п©п╦я│п╟я┌я▄ я┌п╟п╠п╩п╦я├я┐ Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:1253
-#, fuzzy
 msgid "Could not get the Oracle parameter handle"
-msgstr "Не удалось инициализировать обработчик сервера Oracle"
+msgstr "п²п╣ я┐п╢п╟п╩п╬я│я▄ п©п╬п╩я┐я┤п╦я┌я▄ п╬п╠я─п╟п╠п╬я┌я┤п╦п╨ п©п╟я─п╟п╪п╣я┌я─п╟ Oracle"
 
 # fe/fe_editor.c:175 fe/fe_editor.c:212
 #: providers/oracle/gda-oracle-provider.c:1266
-#, fuzzy
 msgid "Could not get the number of columns in the table"
-msgstr "Не удалось открыть указанный файл"
+msgstr "п²п╣ я┐п╢п╟п╩п╬я│я▄ п©п╬п╩я┐я┤п╦я┌я▄ я┤п╦я│п╩п╬ я│я┌п╬п╩п╠я├п╬п╡ п╡ я┌п╟п╠п╩п╦я├п╣"
 
 # fe/fe_editor.c:175 fe/fe_editor.c:212
 #: providers/oracle/gda-oracle-provider.c:1278
-#, fuzzy
 msgid "Could not get the column list"
-msgstr "Не удалось получить файл с %s"
+msgstr "п²п╣ я┐п╢п╟п╩п╬я│я▄ п©п╬п╩я┐я┤п╦я┌я▄ я│п©п╦я│п╬п╨ я│я┌п╬п╩п╠я├п╬п╡"
 
 #: providers/oracle/gda-oracle-provider.c:1307
-#, fuzzy
 msgid "Could not get the Oracle column handle"
-msgstr "Не удалось инициализировать обработчик ошибок Oracle"
+msgstr "п²п╣ я┐п╢п╟п╩п╬я│я▄ п©п╬п╩я┐я┤п╦я┌я▄ п╬п╠я─п╟п╠п╬я┌я┤п╦п╨ я│я┌п╬п╩п╠я├п╬п╡ Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:1320
-#, fuzzy
 msgid "Could not get the Oracle field name"
-msgstr "Не удалось инициализировать среду Oracle"
+msgstr "п²п╣ я┐п╢п╟п╩п╬я│я▄ п©п╬п╩я┐я┤п╦я┌я▄ п╫п╟п╦п╪п╣п╫п╬п╡п╟п╫п╦п╣ п©п╬п╩я▐ Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:1341
-#, fuzzy
 msgid "Could not get the Oracle field data type"
-msgstr "Не удалось инициализировать фабрику компонента Oracle"
+msgstr "п²п╣ я┐п╢п╟п╩п╬я│я▄ п©п╬п╩я┐я┤п╦я┌я▄ я┌п╦п© п╢п╟п╫п╫я▀я┘ п©п╬п╩я▐ Oracle"
 
 # fe/fe_editor.c:175 fe/fe_editor.c:212
 #: providers/oracle/gda-oracle-provider.c:1359
-#, fuzzy
 msgid "Could not get the Oracle field defined size"
-msgstr "Не удалось получить файл с %s"
+msgstr "п²п╣ я┐п╢п╟п╩п╬я│я▄ п©п╬п╩я┐я┤п╦я┌я▄ п╬п©я─п╣п╢п╣п╩я▒п╫п╫я▀п╧ п╢п╩я▐ п©п╬п╩я▐ я─п╟п╥п╪п╣я─ Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:1376
-#, fuzzy
 msgid "Could not get the Oracle field scale"
-msgstr "Не удалось инициализировать обработчик сервера Oracle"
+msgstr "п²п╣ я┐п╢п╟п╩п╬я│я▄ п©п╬п╩я┐я┤п╦я┌я▄ п╪п╟я│я┬я┌п╟п╠ п©п╬п╩я▐ Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:1393
 msgid "Could not get the Oracle field nullable attribute"
-msgstr ""
+msgstr "п²п╣ я┐п╢п╟п╩п╬я│я▄ п©п╬п╩я┐я┤п╦я┌я▄ п╟я┌я─п╦п╠я┐я┌ п╫п╣п╫я┐п╩я▒п╡п╬я│я┌п╦ п©п╬п╩я▐ Oracle"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/oracle/gda-oracle-provider.c:1459
-#: providers/postgres/gda-postgres-provider.c:1197 testing/client.c:123
-#, fuzzy
+#: providers/postgres/gda-postgres-provider.c:1203 testing/client.c:125
 msgid "Users"
-msgstr "Имя пользователя"
+msgstr "п÷п╬п╩я▄п╥п╬п╡п╟я┌п╣п╩п╦"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/oracle/gda-oracle-provider.c:1651
-#: providers/postgres/gda-postgres-provider.c:767 testing/client.c:121
+#: providers/postgres/gda-postgres-provider.c:773 testing/client.c:123
 msgid "Indexes"
-msgstr "Индексы"
+msgstr "п≤п╫п╢п╣п╨я│я▀"
 
 #: providers/oracle/gda-oracle-provider.c:1655
-#, fuzzy
 msgid "Procedures"
-msgstr "Сохранённые процедуры"
+msgstr "п╔я─п╟п╫п╦п╪я▀п╣ п©я─п╬я├п╣п╢я┐я─я▀"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/oracle/gda-oracle-provider.c:1659
-#: providers/postgres/gda-postgres-provider.c:1225 testing/client.c:124
-#, fuzzy
+#: providers/postgres/gda-postgres-provider.c:1231 testing/client.c:126
 msgid "Sequences"
-msgstr "Ссылки"
+msgstr "п÷п╬я│п╩п╣п╢п╬п╡п╟я┌п╣п╩я▄п╫п╬я│я┌п╦"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/oracle/gda-oracle-provider.c:1663
-#: providers/postgres/gda-postgres-provider.c:672
+#: providers/postgres/gda-postgres-provider.c:678
 msgid "Tables"
-msgstr ""
+msgstr "п╒п╟п╠п╩п╦я├я▀"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/oracle/gda-oracle-provider.c:1667
-#: providers/postgres/gda-postgres-provider.c:818 testing/client.c:125
+#: providers/postgres/gda-postgres-provider.c:824 testing/client.c:127
 msgid "Triggers"
-msgstr "Триггеры"
+msgstr "п╒я─п╦пЁпЁп╣я─я▀"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/oracle/gda-oracle-provider.c:1671
-#: providers/postgres/gda-postgres-provider.c:742 testing/client.c:120
+#: providers/postgres/gda-postgres-provider.c:748 testing/client.c:122
 msgid "Views"
-msgstr "Окна"
+msgstr "п÷я─п╣п╢я│я┌п╟п╡п╩п╣п╫п╦я▐"
 
 #: providers/oracle/gda-oracle-recordset.c:73
-#, fuzzy
 msgid "Could not get the Oracle parameter"
-msgstr "Не удалось инициализировать среду Oracle"
+msgstr "п²п╣ я┐п╢п╟п╩п╬я│я▄ п©п╬п╩я┐я┤п╦я┌я▄ п©п╟я─п╟п╪п╣я┌я─ Oracle"
 
 # fe/fe_editor.c:175 fe/fe_editor.c:212
 #: providers/oracle/gda-oracle-recordset.c:83
-#, fuzzy
 msgid "Could not get the parameter defined size"
-msgstr "Не удалось проанализировать файл %s"
+msgstr "п²п╣ я┐п╢п╟п╩п╬я│я▄ п©п╬п╩я┐я┤п╦я┌я▄ п╬п©я─п╣п╢п╣п╩я▒п╫п╫я▀п╧ п╢п╩я▐ п©п╟я─п╟п╪п╣я┌я─п╟ я─п╟п╥п╪п╣я─"
 
 # fe/fe_log.c:92
 #: providers/oracle/gda-oracle-recordset.c:96
-#, fuzzy
 msgid "Could not get the parameter data type"
-msgstr "Невозможно создать компонент типа %s"
+msgstr "п²п╣ я┐п╢п╟п╩п╬я│я▄ п©п╬п╩я┐я┤п╦я┌я▄ я┌п╦п© п╢п╟п╫п╫я▀я┘ п©п╟я─п╟п╪п╣я┌я─п╟"
 
 # fe/fe_editor.c:175 fe/fe_editor.c:212
 #: providers/oracle/gda-oracle-recordset.c:127
-#, fuzzy
 msgid "Could not define by position"
-msgstr "Не удалось загрузить файл %s"
+msgstr "п²п╣ я┐п╢п╟п╩п╬я│я▄ п╬п©я─п╣п╢п╣п╩п╦я┌я▄ п©п╬ п©п╬п╥п╦я├п╦п╦"
 
 #: providers/oracle/gda-oracle-recordset.c:172
 #: providers/postgres/gda-postgres-recordset.c:263
-#, fuzzy
 msgid "Column out of range"
-msgstr "Номер строки вне диапазона"
+msgstr "п║я┌п╬п╩п╠п╣я├ п╡п╫п╣ п╢п╦п╟п©п╟п╥п╬п╫п╟"
 
 # fe/fe_editor.c:175 fe/fe_editor.c:212
 #: providers/oracle/gda-oracle-recordset.c:184
-#, fuzzy
 msgid "Could not get the Oracle parameter information"
-msgstr "Не удалось создать компонент соединения"
+msgstr "п²п╣ я┐п╢п╟п╩п╬я│я▄ п©п╬п╩я┐я┤п╦я┌я▄ п╦п╫я└п╬я─п╪п╟я├п╦я▌ п╬ п©п╟я─п╟п╪п╣я┌я─п╣ Oracle"
 
 # fe/fe_editor.c:175 fe/fe_editor.c:212
 #: providers/oracle/gda-oracle-recordset.c:194
-#, fuzzy
 msgid "Could not get the Oracle column name"
-msgstr "Не удалось открыть указанный файл"
+msgstr "п²п╣ я┐п╢п╟п╩п╬я│я▄ п©п╬п╩я┐я┤п╦я┌я▄ п╦п╪я▐ я│я┌п╬п╩п╠я├п╟ Oracle"
 
 #: providers/oracle/gda-oracle-recordset.c:209
-#, fuzzy
 msgid "Could not get the Oracle column data type"
-msgstr "Не удалось инициализировать фабрику компонента Oracle"
+msgstr "п²п╣ я┐п╢п╟п╩п╬я│я▄ п©п╬п╩я┐я┤п╦я┌я▄ я┌п╦п© п╢п╟п╫п╫я▀я┘ я│я┌п╬п╩п╠я├п╟ Oracle"
 
 # fe/fe_editor.c:175 fe/fe_editor.c:212
 #: providers/oracle/gda-oracle-recordset.c:221
-#, fuzzy
 msgid "Could not get the Oracle column scale"
-msgstr "Не удалось открыть указанный файл"
+msgstr "п²п╣ я┐п╢п╟п╩п╬я│я▄ п©п╬п╩я┐я┤п╦я┌я▄ п╪п╟я│я┬я┌п╟п╠ я│я┌п╬п╩п╠я├п╟ Oracle"
 
 #: providers/oracle/gda-oracle-recordset.c:233
-#, fuzzy
 msgid "Could not get the Oracle column nullable attribute"
-msgstr "Не удалось инициализировать фабрику компонента Oracle"
+msgstr "п²п╣ я┐п╢п╟п╩п╬я│я▄ п©п╬п╩я┐я┤п╦я┌я▄ п╟я┌я─п╦п╠я┐я┌ п╫я┐п╩я▒п╡п╬я│я┌п╦ я│я┌п╬п╩п╠я├п╟ Oracle"
 
 # fe/fe_editor.c:175 fe/fe_editor.c:212
 #: providers/oracle/gda-oracle-recordset.c:245
-#, fuzzy
 msgid "Could not get the Oracle defined size"
-msgstr "Не удалось получить файл с %s"
+msgstr "п²п╣ я┐п╢п╟п╩п╬я│я▄ п©п╬п╩я┐я┤п╦я┌я▄ п©п╬я─п╣п╢п╣п╩я▒п╫п╫я▀п╧ я─п╟п╥п╪п╣я─ Oracle"
 
 # fe/fe_editor.c:175 fe/fe_editor.c:212
 #: providers/oracle/gda-oracle-recordset.c:353
-#, fuzzy
 msgid "Could not fetch a row"
-msgstr "Не удалось получить файл с %s"
+msgstr "п²п╣ я┐п╢п╟п╩п╬я│я▄ п╦п╥п╡п╩п╣я┤я▄ п╥п╟п©п╦я│я▄"
 
 #: providers/oracle/libmain.c:34
-#, fuzzy
 msgid "GDA provider for Oracle databases"
-msgstr "GDA доступ к источнику данных SQLite"
+msgstr "п÷я─п╬п╡п╟п╧п╢п╣я─ GDA п╢п╩я▐ п╢п╬я│я┌я┐п©п╟ п╠п╟п╥п╟п╪ п╢п╟п╫п╫я▀я┘ Oracle"
 
-#: providers/oracle/utils.c:67 providers/postgres/utils.c:47
-msgid "NO DESCRIPTION"
-msgstr "НЕТ ОПИСАНИЯ"
-
-#: providers/oracle/utils.c:72 providers/postgres/utils.c:52
-msgid "Not available"
-msgstr "Не доступно"
-
-#: providers/postgres/gda-postgres-provider.c:382
-#: providers/postgres/gda-postgres-provider.c:453
-#: providers/postgres/gda-postgres-provider.c:587
+#: providers/postgres/gda-postgres-provider.c:388
+#: providers/postgres/gda-postgres-provider.c:459
+#: providers/postgres/gda-postgres-provider.c:593
 #: providers/postgres/gda-postgres-recordset.c:175
 #: providers/postgres/gda-postgres-recordset.c:215
 #: providers/postgres/gda-postgres-recordset.c:257
 msgid "Invalid PostgreSQL handle"
-msgstr "Неправильный обработчик PostgreSQL"
+msgstr "п²п╣п╢п╬п©я┐я│я┌п╦п╪я▀п╧ п╬п╠я─п╟п╠п╬я┌я┤п╦п╨ PostgreSQL"
 
-#: providers/postgres/gda-postgres-provider.c:711
-#, fuzzy
+#: providers/postgres/gda-postgres-provider.c:717
 msgid "Types"
-msgstr "Тип"
+msgstr "п╒п╦п©я▀"
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:793 testing/client.c:122
+#: providers/postgres/gda-postgres-provider.c:799 testing/client.c:124
 msgid "Aggregates"
-msgstr "Агрегаты"
+msgstr "п░пЁя─п╣пЁп╟я┌я▀"
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:1172 testing/client.c:116
+#: providers/postgres/gda-postgres-provider.c:1178 testing/client.c:118
 msgid "Databases"
-msgstr ""
+msgstr "п▒п╟п╥я▀ п╢п╟п╫п╫я▀я┘"
 
-#: providers/postgres/gda-postgres-provider.c:1265
-#, fuzzy
+#: providers/postgres/gda-postgres-provider.c:1271
 msgid "Table name"
-msgstr "Название поля"
+msgstr "п²п╟п╦п╪п╣п╫п╬п╡п╟п╫п╦п╣ я┌п╟п╠п╩п╦я├я▀"
 
-#: providers/postgres/gda-postgres-provider.c:1266
-#, fuzzy
+#: providers/postgres/gda-postgres-provider.c:1272
 msgid "Sequence"
-msgstr "Ссылки"
+msgstr "п÷п╬я│п╩п╣п╢п╬п╡п╟я┌п╣п╩я▄п╫п╬я│я┌я▄"
 
 #: providers/postgres/gda-postgres-recordset.c:230
 #: providers/sqlite/gda-sqlite-recordset.c:213
 #: providers/sqlite/gda-sqlite-recordset.c:245
-#, fuzzy
 msgid "Column number out of range"
-msgstr "Номер строки вне диапазона"
+msgstr "п²п╬п╪п╣я─ я│я┌п╬п╩п╠я├п╟ п╡п╫п╣ п╢п╦п╟п©п╟п╥п╬п╫п╟"
+
+#: providers/postgres/gda-postgres-recordset.c:353
+#, c-format
+msgid "Tuples:\"%s\""
+msgstr "п■п╟п╫п╫я▀п╣: \"%s\""
 
 #: providers/postgres/libmain.c:41
 msgid "GDA provider for PostgreSQL databases"
-msgstr ""
+msgstr "п÷я─п╬п╡п╟п╧п╢п╣я─ GDA п╢п╩я▐ п╢п╬я│я┌я┐п©п╟ п╨ п╠п╟п╥п╟п╪ п╢п╟п╫п╫я▀я┘ PostgreSQL"
 
 #: providers/sqlite/gda-sqlite-provider.c:246
 msgid "Invalid SQLITE handle"
-msgstr "Неправильный обработчик SQLite"
+msgstr "п²п╣п╢п╬п©я┐я│я┌п╦п╪я▀п╧ п╬п╠я─п╟п╠п╬я┌я┤п╦п╨ SQLITE"
 
 #: providers/sqlite/gda-sqlite-provider.c:314
 #: providers/sqlite/gda-sqlite-provider.c:449
 #: providers/sqlite/gda-sqlite-recordset.c:159
 #: providers/sqlite/gda-sqlite-recordset.c:198
 #: providers/sqlite/gda-sqlite-recordset.c:239
-#, fuzzy
 msgid "Invalid SQLite handle"
-msgstr "Неправильный обработчик SQLite"
+msgstr "п²п╣п╢п╬п©я┐я│я┌п╦п╪я▀п╧ п╬п╠я─п╟п╠п╬я┌я┤п╦п╨ SQLite"
 
 #: providers/sqlite/gda-sqlite-provider.c:332
 msgid "Only one database per connection is allowed"
-msgstr ""
+msgstr "п■п╬п©я┐я│я┌п╦п╪п╟ я┌п╬п╩я▄п╨п╬ п╬п╢п╫п╟ п╠п╟п╥п╟ п╢п╟п╫п╫я▀я┘ п╫п╟ я│п╬п╣п╢п╦п╫п╣п╫п╦п╣"
 
 #: providers/sqlite/gda-sqlite-provider.c:346
 msgid "To remove a SQLite database you should remove the database file by hand"
-msgstr ""
+msgstr "п■п╩я▐ я┐п╢п╟п╩п╣п╫п╦я▐ п╠п╟п╥я▀ п╢п╟п╫п╫я▀я┘ SQLite я│п╩п╣п╢я┐п╣я┌ п╡я─я┐я┤п╫я┐я▌ я┐п╢п╟п╩п╦я┌я▄ я└п╟п╧п╩ п╠п╟п╥я▀ п╢п╟п╫п╫я▀я┘"
 
 #: providers/sqlite/libmain.c:41
 msgid "GDA provider for SQLite databases"
-msgstr ""
+msgstr "п÷я─п╬п╡п╟п╧п╢п╣я─ GDA п╢п╩я▐ п╢п╬я│я┌я┐п©п╟ п╨ п╠п╟п╥п╟п╪ п╢п╟п╫п╫я▀я┘ SQLite"
 
 #: providers/sybase/main.c:52
 msgid "Could not initiate Sybase component factory"
-msgstr "Не удалось инициализировать фабрику компонента Sybase"
+msgstr "п²п╣ я┐п╢п╟п╩п╬я│я▄ п╦п╫п╦я├п╦п╟п╩п╦п╥п╦я─п╬п╡п╟я┌я▄ я└п╟п╠я─п╦п╨я┐ п╨п╬п╪п©п╬п╫п╣п╫я┌п╟ Sybase"
 
 # fe/fe_editor.c:175 fe/fe_editor.c:212
 #: report/libgda-report/gda-report-document.c:166
 msgid "Could not parse XML document"
-msgstr "Не удалось проанализировать документ XML"
+msgstr "п²п╣ я┐п╢п╟п╩п╬я│я▄ я─п╟п╥п╬п╠я─п╟я┌я▄ п╢п╬п╨я┐п╪п╣п╫я┌ XML"
 
 # fe/fe_editor.c:175 fe/fe_editor.c:212
 #: report/libgda-report/gda-report-document.c:191
 #, c-format
 msgid "Could not get file from %s"
-msgstr "Не удалось получить файл с %s"
+msgstr "п²п╣ я┐п╢п╟п╩п╬я│я▄ п©п╬п╩я┐я┤п╦я┌я▄ я└п╟п╧п╩ я│ %s"
 
-#: testing/client.c:39
+#: testing/client.c:41
 msgid "\t\tNONE\n"
-msgstr "\t\tНЕТ\n"
+msgstr "\t\tп²п∙п╒\n"
 
-#: testing/client.c:78
+#: testing/client.c:80
 #, c-format
 msgid "** ERROR: could not open connection to %s\n"
-msgstr "** ОШИБКА: невозможно открыть соединение с %s\n"
+msgstr "** п·п╗п≤п▒п п░: п╫п╣ я┐п╢п╟п╩п╬я│я▄ п╬я┌п╨я─я▀я┌я▄ я│п╬п╣п╢п╦п╫п╣п╫п╦п╣ я│ %s\n"
 
 #. show provider features
-#: testing/client.c:83
+#: testing/client.c:85
 msgid "\tProvider capabilities...\n"
-msgstr "\tВозможности провайдера...\n"
+msgstr "\tп▓п╬п╥п╪п╬п╤п╫п╬я│я┌п╦ п©я─п╬п╡п╟п╧п╢п╣я─п╟...\n"
 
-#: testing/client.c:84
-#, fuzzy, c-format
+#: testing/client.c:86
+#, c-format
 msgid "\t\tAggregates: %s\n"
-msgstr "Агрегаты"
+msgstr "\t\tп░пЁя─п╣пЁп╟я┌я▀: %s\n"
 
-#: testing/client.c:86 testing/client.c:89 testing/client.c:92
-#: testing/client.c:95 testing/client.c:98 testing/client.c:101
-#: testing/client.c:104 testing/client.c:107 testing/client.c:110
-#: testing/client.c:113
+#: testing/client.c:88 testing/client.c:91 testing/client.c:94
+#: testing/client.c:97 testing/client.c:100 testing/client.c:103
+#: testing/client.c:106 testing/client.c:109 testing/client.c:112
+#: testing/client.c:115
 msgid "Supported"
-msgstr "Поддерживается"
+msgstr "п÷п╬п╢п╢п╣я─п╤п╦п╡п╟п╣я┌я│я▐"
 
-#: testing/client.c:86 testing/client.c:89 testing/client.c:92
-#: testing/client.c:95 testing/client.c:98 testing/client.c:101
-#: testing/client.c:104 testing/client.c:107 testing/client.c:110
-#: testing/client.c:113
+#: testing/client.c:88 testing/client.c:91 testing/client.c:94
+#: testing/client.c:97 testing/client.c:100 testing/client.c:103
+#: testing/client.c:106 testing/client.c:109 testing/client.c:112
+#: testing/client.c:115
 msgid "Not supported"
-msgstr "Не поддерживается"
+msgstr "п²п╣ п©п╬п╢п╢п╣я─п╤п╦п╡п╟п╣я┌я│я▐"
 
-#: testing/client.c:87
-#, fuzzy, c-format
+#: testing/client.c:89
+#, c-format
 msgid "\t\tIndexes: %s\n"
-msgstr "Индексы"
+msgstr "\t\tп≤п╫п╢п╣п╨я│я▀: %s\n"
 
-#: testing/client.c:90
+#: testing/client.c:92
 #, c-format
 msgid "\t\tProcedures: %s\n"
-msgstr ""
+msgstr "\t\tп╔я─п╟п╫п╦п╪я▀п╣ п©я─п╬я├п╣п╢я┐я─я▀: %s\n"
 
-#: testing/client.c:93
-#, fuzzy, c-format
+#: testing/client.c:95
+#, c-format
 msgid "\t\tSequences: %s\n"
-msgstr "Ссылки"
+msgstr "\t\tп÷п╬я│п╩п╣п╢п╬п╡п╟я┌п╣п╩я▄п╫п╬я│я┌п╦: %s\n"
 
-#: testing/client.c:96
-#, fuzzy, c-format
+#: testing/client.c:98
+#, c-format
 msgid "\t\tSQL: %s\n"
-msgstr "Ссылки"
+msgstr "\t\tп▓я▀я─п╟п╤п╣п╫п╦п╣ SQL: %s\n"
 
-#: testing/client.c:99
+#: testing/client.c:101
 #, c-format
 msgid "\t\tTransactions: %s\n"
-msgstr "\t\tТранзакции: %s\n"
+msgstr "\t\tп╒я─п╟п╫п╥п╟п╨я├п╦п╦: %s\n"
 
-#: testing/client.c:102
-#, fuzzy, c-format
+#: testing/client.c:104
+#, c-format
 msgid "\t\tTriggers: %s\n"
-msgstr "Триггеры"
+msgstr "\t\tп╒я─п╦пЁпЁп╣я─я▀: %s\n"
 
-#: testing/client.c:105
+#: testing/client.c:107
 #, c-format
 msgid "\t\tUsers: %s\n"
-msgstr ""
+msgstr "\t\tп÷п╬п╩я▄п╥п╬п╡п╟я┌п╣п╩п╦: %s\n"
 
-#: testing/client.c:108
+#: testing/client.c:110
 #, c-format
 msgid "\t\tViews: %s\n"
-msgstr ""
+msgstr "\t\tп÷я─п╣п╢я│я┌п╟п╡п╩п╣п╫п╦я▐: %s\n"
 
-#: testing/client.c:111
+#: testing/client.c:113
 #, c-format
 msgid "\t\tXML queries: %s\n"
-msgstr ""
-
-#: testing/client.c:117
-msgid "Stored procedures"
-msgstr "Сохранённые процедуры"
-
-#: testing/client.c:118
-msgid "Connection Tables"
-msgstr "Таблица соединений"
+msgstr "\t\tп≈п╟п©я─п╬я│я▀ п╡ я└п╬я─п╪п╟я┌п╣ XML: %s\n"
 
 #: testing/client.c:119
+msgid "Stored procedures"
+msgstr "п╔я─п╟п╫п╦п╪я▀п╣ п©я─п╬я├п╣п╢я┐я─я▀"
+
+#: testing/client.c:120
+msgid "Connection Tables"
+msgstr "п╒п╟п╠п╩п╦я├я▀ я│п╬п╣п╢п╦п╫п╣п╫п╦п╧"
+
+#: testing/client.c:121
 msgid "Available types"
-msgstr "Доступные типы"
+msgstr "п■п╬я│я┌я┐п©п╫я▀п╣ я┌п╦п©я▀"
 
 #. test transactions
-#: testing/client.c:128 testing/client.c:136
+#: testing/client.c:130 testing/client.c:138
 msgid "\tStarting transaction..."
-msgstr "\tНачало транзакции..."
+msgstr "\tп²п╟я┤п╟п╩п╬ я┌я─п╟п╫п╥п╟п╨я├п╦п╦..."
 
-#: testing/client.c:130 testing/client.c:134 testing/client.c:138
-#: testing/client.c:142
+#: testing/client.c:132 testing/client.c:136 testing/client.c:140
+#: testing/client.c:144
 msgid "Error"
-msgstr "Ошибка"
+msgstr "п·я┬п╦п╠п╨п╟"
 
-#: testing/client.c:132
+#: testing/client.c:134
 msgid "\tFinishing transaction..."
-msgstr "\tЗавершение транзакции..."
+msgstr "\tп≈п╟п╡п╣я─я┬п╣п╫п╦п╣ я┌я─п╟п╫п╥п╟п╨я├п╦п╦..."
 
-#: testing/client.c:140
+#: testing/client.c:142
 msgid "\tRolling back transaction..."
-msgstr "\tОткат транзакции..."
+msgstr "\tп·я┌п╨п╟я┌ я┌я─п╟п╫п╥п╟п╨я├п╦п╦..."
 
-#: testing/client.c:162
+#: testing/client.c:166
 msgid "Testing GDA client API"
-msgstr "Проверка API клиента GDA"
+msgstr "п÷я─п╬п╡п╣я─п╨п╟ API п╨п╩п╦п╣п╫я┌п╟ GDA"
 
-#: testing/client.c:171
+#: testing/client.c:175
 msgid "** ERROR: gda_config_get_data_source_list returned a NULL item\n"
-msgstr "** ОШИБКА: gda_config_get_data_source_list возвратил NULL\n"
+msgstr "** п·п╗п≤п▒п п░: gda_config_get_data_source_list п╡п╬п╥п╡я─п╟я┌п╦п╩ NULL\n"
 
 # fe/fe_main.c:205
-#: testing/client.c:175
+#: testing/client.c:179
 #, c-format
 msgid " Data source = %s, User = %s\n"
-msgstr "Источник данных = %s, Пользователь = %s\n"
+msgstr "п≤я│я┌п╬я┤п╫п╦п╨ п╢п╟п╫п╫я▀я┘ = %s, п÷п╬п╩я▄п╥п╬п╡п╟я┌п╣п╩я▄ = %s\n"
 
 #: testing/config.c:85
 msgid "** ERROR: gda_config_get_provider_list returned a NULL item\n"
-msgstr "** ОШИБКА: gda_config_get_provider_list возвратил NULL\n"
+msgstr "** п·п╗п≤п▒п п░: gda_config_get_provider_list п╡п╬п╥п╡я─п╟я┌п╦п╩ NULL\n"
 
 #: testing/config.c:89
 #, c-format
 msgid " Provider = %s\n"
-msgstr " Провайдер = %s\n"
+msgstr " п÷я─п╬п╡п╟п╧п╢п╣я─ = %s\n"
 
 #: testing/config.c:90
 #, c-format
 msgid "\tlocation = %s\n"
-msgstr "\t положение = %s\n"
+msgstr "\tп°п╣я│я┌п╬п©п╬п╩п╬п╤п╣п╫п╦п╣ = %s\n"
 
 #: testing/config.c:91
 #, c-format
 msgid "\tdescription = %s\n"
-msgstr "\tописание = %s\n"
+msgstr "\tп╬п©п╦я│п╟п╫п╦п╣ = %s\n"
 
 #: testing/config.c:93
 msgid "\tgda_params ="
-msgstr "\tпараметры gda ="
+msgstr "\tп©п╟я─п╟п╪п╣я┌я─я▀ gda ="
 
 #~ msgid "Could not initialize OCI library"
-#~ msgstr "Не удалось инициализировать библиотеку OCI"
+#~ msgstr "п²п╣ я┐п╢п╟п╩п╬я│я▄ п╦п╫п╦я├п╦п╟п╩п╦п╥п╦я─п╬п╡п╟я┌я▄ п╠п╦п╠п╩п╦п╬я┌п╣п╨я┐ OCI"
 
 #~ msgid "CORBA exception: %s"
-#~ msgstr "Исключение CORBA: %s"
+#~ msgstr "п≤я│п╨п╩я▌я┤п╣п╫п╦п╣ CORBA: %s"
 
 # fe/fe_editor.c:175 fe/fe_editor.c:212
 #~ msgid "Could not create global GDA client"
-#~ msgstr "Не удалось создать глобального клиента GDA"
+#~ msgstr "п²п╣ я┐п╢п╟п╩п╬я│я▄ я│п╬п╥п╢п╟я┌я▄ пЁп╩п╬п╠п╟п╩я▄п╫п╬пЁп╬ п╨п╩п╦п╣п╫я┌п╟ GDA"
 
 #~ msgid "GDA Report engine"
-#~ msgstr "Система создания отчётов GDA"
+#~ msgstr "п║п╦я│я┌п╣п╪п╟ я│п╬п╥п╢п╟п╫п╦я▐ п╬я┌я┤я▒я┌п╬п╡ GDA"
 
 #~ msgid "GDA Report engine factory"
-#~ msgstr "Фабрика системы создания отчётов GDA"
+#~ msgstr "п╓п╟п╠я─п╦п╨п╟ я│п╦я│я┌п╣п╪я▀ я│п╬п╥п╢п╟п╫п╦я▐ п╬я┌я┤я▒я┌п╬п╡ GDA"
 
 # fe/fe_editor.c:175 fe/fe_editor.c:212
 #~ msgid "Could not parse XML report"
-#~ msgstr "Не удалось проанализировать отчёт XML"
+#~ msgstr "п²п╣ я┐п╢п╟п╩п╬я│я▄ п©я─п╬п╟п╫п╟п╩п╦п╥п╦я─п╬п╡п╟я┌я▄ п╬я┌я┤я▒я┌ XML"
 
 # fe/fe_log.c:92
 #~ msgid "Could not activate report engine"
-#~ msgstr "Не удалось активировать систему создания отчётов"
+#~ msgstr "п²п╣ я┐п╢п╟п╩п╬я│я▄ п╟п╨я┌п╦п╡п╦я─п╬п╡п╟я┌я▄ я│п╦я│я┌п╣п╪я┐ я│п╬п╥п╢п╟п╫п╦я▐ п╬я┌я┤я▒я┌п╬п╡"
 
 # fe/fe_editor.c:175 fe/fe_editor.c:212
 #~ msgid "Could not create BonoboStreamMem object"
-#~ msgstr "Не удалось создать объект BonoboStreamMem"
+#~ msgstr "п²п╣ я┐п╢п╟п╩п╬я│я▄ я│п╬п╥п╢п╟я┌я▄ п╬п╠я┼п╣п╨я┌ BonoboStreamMem"
 
 #~ msgid "Could not initiate Report component factory"
-#~ msgstr "Не удалось инициализировать фабрику компонента создания отчётов"
+#~ msgstr "п²п╣ я┐п╢п╟п╩п╬я│я▄ п╦п╫п╦я├п╦п╟п╩п╦п╥п╦я─п╬п╡п╟я┌я▄ я└п╟п╠я─п╦п╨я┐ п╨п╬п╪п©п╬п╫п╣п╫я┌п╟ я│п╬п╥п╢п╟п╫п╦я▐ п╬я┌я┤я▒я┌п╬п╡"
 
 # fe/fe_log.c:92
 #~ msgid "Could not activate object %s"
-#~ msgstr "Не удалось активировать объект %s"
+#~ msgstr "п²п╣ я┐п╢п╟п╩п╬я│я▄ п╟п╨я┌п╦п╡п╦я─п╬п╡п╟я┌я▄ п╬п╠я┼п╣п╨я┌ %s"
 
 #~ msgid "Could not query CORBA components"
-#~ msgstr "Не удалось запросить компоненты COBRA"
+#~ msgstr "п²п╣ я┐п╢п╟п╩п╬я│я▄ п╥п╟п©я─п╬я│п╦я┌я▄ п╨п╬п╪п©п╬п╫п╣п╫я┌я▀ COBRA"
 
 #~ msgid "%s: An Error occured in the CORBA system."
-#~ msgstr "%s: Возникла ошибка в системе CORBA."
+#~ msgstr "%s: п▓п╬п╥п╫п╦п╨п╩п╟ п╬я┬п╦п╠п╨п╟ п╡ я│п╦я│я┌п╣п╪п╣ CORBA."
 
 #~ msgid "Unknown CORBA exception for connection"
-#~ msgstr "Неизвестное исключение для соединения CORBA"
+#~ msgstr "п²п╣п╦п╥п╡п╣я│я┌п╫п╬п╣ п╦я│п╨п╩я▌я┤п╣п╫п╦п╣ п╢п╩я▐ я│п╬п╣п╢п╦п╫п╣п╫п╦я▐ CORBA"
 
 #~ msgid "Could not initialize Bonobo"
-#~ msgstr "Не удалось инициализировать Bonobo"
+#~ msgstr "п²п╣ я┐п╢п╟п╩п╬я│я▄ п╦п╫п╦я├п╦п╟п╩п╦п╥п╦я─п╬п╡п╟я┌я▄ Bonobo"
 
 #~ msgid "Don't know how to create components with IID %s"
-#~ msgstr "Нет информации о том, как создавать компоненты с IID %s"
+#~ msgstr "п²п╣я┌ п╦п╫я└п╬я─п╪п╟я├п╦п╦ п╬ я┌п╬п╪, п╨п╟п╨ я│п╬п╥п╢п╟п╡п╟я┌я▄ п╨п╬п╪п©п╬п╫п╣п╫я┌я▀ я│ IID %s"
 
 #~ msgid "Could not duplicate client object. Client won't get notifications"
 #~ msgstr ""
-#~ "Не удалось создать копию объекта клиента. Клиент не получит извещение."
+#~ "п²п╣ я┐п╢п╟п╩п╬я│я▄ я│п╬п╥п╢п╟я┌я▄ п╨п╬п©п╦я▌ п╬п╠я┼п╣п╨я┌п╟ п╨п╩п╦п╣п╫я┌п╟. п п╩п╦п╣п╫я┌ п╫п╣ п©п╬п╩я┐я┤п╦я┌ п╦п╥п╡п╣я┴п╣п╫п╦п╣."
 
 #~ msgid "Could not notify client about action %d"
-#~ msgstr "Не удалось известить клиента о действии %d"
+#~ msgstr "п²п╣ я┐п╢п╟п╩п╬я│я▄ п╦п╥п╡п╣я│я┌п╦я┌я▄ п╨п╩п╦п╣п╫я┌п╟ п╬ п╢п╣п╧я│я┌п╡п╦п╦ %d"
 
 #~ msgid "No implementation for the fetch() method found"
-#~ msgstr "Не найдено реализации для метода fetch()"
+#~ msgstr "п²п╣ п╫п╟п╧п╢п╣п╫п╬ я─п╣п╟п╩п╦п╥п╟я├п╦п╦ п╢п╩я▐ п╪п╣я┌п╬п╢п╟ fetch()"
 
 #~ msgid "Default component factory"
-#~ msgstr "Фабрику компонента используемого по умолчанию"
+#~ msgstr "п╓п╟п╠я─п╦п╨я┐ п╨п╬п╪п©п╬п╫п╣п╫я┌п╟ п╦я│п©п╬п╩я▄п╥я┐п╣п╪п╬пЁп╬ п©п╬ я┐п╪п╬п╩я┤п╟п╫п╦я▌"
 
 #~ msgid "GDA Default Datasource Access"
-#~ msgstr "GDA доступ к источнику данных по умолчанию"
+#~ msgstr "GDA п╢п╬я│я┌я┐п© п╨ п╦я│я┌п╬я┤п╫п╦п╨я┐ п╢п╟п╫п╫я▀я┘ п©п╬ я┐п╪п╬п╩я┤п╟п╫п╦я▌"
 
 #~ msgid "Could not initiate Default component factory"
-#~ msgstr "Не удалось инициализировать фабрику компонента Default"
+#~ msgstr "п²п╣ я┐п╢п╟п╩п╬я│я▄ п╦п╫п╦я├п╦п╟п╩п╦п╥п╦я─п╬п╡п╟я┌я▄ я└п╟п╠я─п╦п╨я┐ п╨п╬п╪п©п╬п╫п╣п╫я┌п╟ Default"
 
 #~ msgid "GDA Datasource Access for MySQL"
-#~ msgstr "GDA доступ к источнику данных для MySQL"
+#~ msgstr "GDA п╢п╬я│я┌я┐п© п╨ п╦я│я┌п╬я┤п╫п╦п╨я┐ п╢п╟п╫п╫я▀я┘ п╢п╩я▐ MySQL"
 
 #~ msgid "MySQL component factory"
-#~ msgstr "Фабрика компонента MySQL"
+#~ msgstr "п╓п╟п╠я─п╦п╨п╟ п╨п╬п╪п©п╬п╫п╣п╫я┌п╟ MySQL"
 
 #~ msgid "Could not initiate MySQL component factory"
-#~ msgstr "Не удалось инициализировать фабрику компонента MySQL"
+#~ msgstr "п²п╣ я┐п╢п╟п╩п╬я│я▄ п╦п╫п╦я├п╦п╟п╩п╦п╥п╦я─п╬п╡п╟я┌я▄ я└п╟п╠я─п╦п╨я┐ п╨п╬п╪п©п╬п╫п╣п╫я┌п╟ MySQL"
 
 #~ msgid "GDA Datasource Access for ODBC"
-#~ msgstr "GDA доступ к источнику данных для ODBC"
+#~ msgstr "GDA п╢п╬я│я┌я┐п© п╨ п╦я│я┌п╬я┤п╫п╦п╨я┐ п╢п╟п╫п╫я▀я┘ п╢п╩я▐ ODBC"
 
 #~ msgid "ODBC component factory"
-#~ msgstr "Фабрика компонента ODBC"
+#~ msgstr "п╓п╟п╠я─п╦п╨п╟ п╨п╬п╪п©п╬п╫п╣п╫я┌п╟ ODBC"
 
 #~ msgid "Could not initiate ODBC component factory"
-#~ msgstr "Не удалось инициализировать фабрику компонента ODBC"
+#~ msgstr "п²п╣ я┐п╢п╟п╩п╬я│я▄ п╦п╫п╦я├п╦п╟п╩п╦п╥п╦я─п╬п╡п╟я┌я▄ я└п╟п╠я─п╦п╨я┐ п╨п╬п╪п©п╬п╫п╣п╫я┌п╟ ODBC"
 
 #~ msgid "GDA Datasource Access for Oracle"
-#~ msgstr "GDA доступ к источнику данных для Oracle"
+#~ msgstr "GDA п╢п╬я│я┌я┐п© п╨ п╦я│я┌п╬я┤п╫п╦п╨я┐ п╢п╟п╫п╫я▀я┘ п╢п╩я▐ Oracle"
 
 #~ msgid "Oracle component factory"
-#~ msgstr "Фабрика компонента Oracle"
+#~ msgstr "п╓п╟п╠я─п╦п╨п╟ п╨п╬п╪п©п╬п╫п╣п╫я┌п╟ Oracle"
 
 #~ msgid "GDA Datasource Access for Postgres"
-#~ msgstr "GDA доступ к источнику данных для Postgres"
+#~ msgstr "GDA п╢п╬я│я┌я┐п© п╨ п╦я│я┌п╬я┤п╫п╦п╨я┐ п╢п╟п╫п╫я▀я┘ п╢п╩я▐ Postgres"
 
 #~ msgid "Postgres component factory"
-#~ msgstr "Фабрика компонента Postgres"
+#~ msgstr "п╓п╟п╠я─п╦п╨п╟ п╨п╬п╪п©п╬п╫п╣п╫я┌п╟ Postgres"
 
 #~ msgid "Could not initiate PostgreSQL component factory"
-#~ msgstr "Не удалось инициализировать фабрику компонента PostgreSQL"
+#~ msgstr "п²п╣ я┐п╢п╟п╩п╬я│я▄ п╦п╫п╦я├п╦п╟п╩п╦п╥п╦я─п╬п╡п╟я┌я▄ я└п╟п╠я─п╦п╨я┐ п╨п╬п╪п©п╬п╫п╣п╫я┌п╟ PostgreSQL"
 
 #~ msgid "SQLite component factory"
-#~ msgstr "Фабрика компонента SQLite"
+#~ msgstr "п╓п╟п╠я─п╦п╨п╟ п╨п╬п╪п©п╬п╫п╣п╫я┌п╟ SQLite"
 
 #~ msgid "Could not initiate Sqlite component factory"
-#~ msgstr "Не удалось инициализировать фабрику компонента SQLite"
+#~ msgstr "п²п╣ я┐п╢п╟п╩п╬я│я▄ п╦п╫п╦я├п╦п╟п╩п╦п╥п╦я─п╬п╡п╟я┌я▄ я└п╟п╠я─п╦п╨я┐ п╨п╬п╪п©п╬п╫п╣п╫я┌п╟ SQLite"
 
 #~ msgid "GDA Datasource Access for Sybase"
-#~ msgstr "GDA доступ к источнику данных для Sybase"
+#~ msgstr "GDA п╢п╬я│я┌я┐п© п╨ п╦я│я┌п╬я┤п╫п╦п╨я┐ п╢п╟п╫п╫я▀я┘ п╢п╩я▐ Sybase"
 
 #~ msgid "Sybase component factory"
-#~ msgstr "Фабрика компонента Sybase"
+#~ msgstr "п╓п╟п╠я─п╦п╨п╟ п╨п╬п╪п©п╬п╫п╣п╫я┌п╟ Sybase"
 
 #~ msgid "\ttype = %s\n"
-#~ msgstr "\tтип = %s\n"
+#~ msgstr "\tя┌п╦п© = %s\n"
 
 #~ msgid "\trepo_ids ="
-#~ msgstr "\tID депозитария ="
+#~ msgstr "\tID п╢п╣п©п╬п╥п╦я┌п╟я─п╦я▐ ="
 
 #~ msgid "\tusername = %s\n"
-#~ msgstr "\tимя пользователя = %s\n"
+#~ msgstr "\tп╦п╪я▐ п©п╬п╩я▄п╥п╬п╡п╟я┌п╣п╩я▐ = %s\n"
 
 #~ msgid "\thostname = %s\n"
-#~ msgstr "\tимя хоста = %s\n"
+#~ msgstr "\tп╦п╪я▐ я┘п╬я│я┌п╟ = %s\n"
 
 #~ msgid "\tdomain = %s\n"
-#~ msgstr "\tдомен = %s\n"
+#~ msgstr "\tп╢п╬п╪п╣п╫ = %s\n"
