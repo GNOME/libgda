@@ -21,15 +21,14 @@
 #define __gda_report_stream_h__
 
 #include <glib.h>
+#include <orb/orbit.h>
+#include <gda-error.h>
 
 #ifdef HAVE_GOBJECT
 #  include <glib-object.h>
 #else
 #  include <gtk/gtk.h>
 #endif
-
-#include <orb/orbit.h>
-#include <gda-error.h>
 
 #if defined(__cplusplus)
 extern "C" {
