@@ -1,3 +1,8 @@
+2003-11-29  Laurent Sansonetti <lrz@gnome.org>
+
+	* providers/bdb/*.c:
+	Fixes compilation problems with Berkeley DB 4.x.
+
 2003-11-28  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
 	* libgda/gda-data-model.c: emit the row_updated, row_inserted,

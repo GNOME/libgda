@@ -226,7 +226,12 @@ gda_bdb_recordset_new (GdaConnection *cnc, DB *dbp)
 					   OBJECT_DATA_BDB_HANDLE);
 
 	/* get the number of records in the database */
-	ret = dbp->stat (dbp, &statp, NULL, 0);
+	ret = dbp->stat (dbp,
+			 &statp,
+#if DB_VERSION_MAJOR < 4
+			 NULL,
+#endif
+			 0);
 	if (ret != 0) {
 		gda_connection_add_error (cnc, gda_bdb_make_error (ret));
 		return NULL;

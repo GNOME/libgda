@@ -27,12 +27,17 @@ static void
 create_db (const gchar *filename)
 {
 	DB *dbp;
-	int i;
+	int ret, i;
 	
 	g_assert (db_create (&dbp, NULL, 0) == 0);
 	g_assert (dbp->set_flags (dbp, DB_RECNUM) == 0);
-	g_assert (dbp->open (dbp, filename, NULL, DB_BTREE,
-			     DB_CREATE|DB_TRUNCATE, 0) == 0);
+	ret = dbp->open (dbp, 
+#if DB_VERSION_MAJOR >= 4
+			 NULL,
+#endif
+			 filename, NULL, DB_BTREE,
+			 DB_CREATE|DB_TRUNCATE, 0);
+	g_assert (ret == 0);
 
 	for (i = 0; i < MAXNUMBERS; i++) {
 		DBT key, data;

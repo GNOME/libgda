@@ -165,7 +165,12 @@ gda_bdb_provider_open_connection (GdaServerProvider *provider,
 		gda_connection_add_error (cnc, gda_bdb_make_error (ret));
 		return FALSE;
 	}
-	ret = dbp->open (dbp, bdb_file, bdb_db, 
+	ret = dbp->open (dbp, 
+#if DB_VERSION_MAJOR >= 4
+			 NULL,
+#endif
+			 bdb_file,
+			 bdb_db, 
 		   	 DB_UNKNOWN, 	/* autodetect DBTYPE */
 			 0, 0);
 	if (ret != 0) {
