@@ -43,6 +43,7 @@ static const gchar *prompt_config = "config> ";
 static gboolean config_file_g_free = FALSE;
 static gchar *config_file;
 static cmd *commands;
+gboolean changed_config = FALSE;
 static GList *config_data;
 static GList *current_section;
 
@@ -222,7 +223,6 @@ typedef struct {
 } gda_config_entry;
 
 typedef struct {
-	gboolean modified;
 	gchar *path;
 	GList *entries;
 } gda_config_section;
@@ -261,7 +261,7 @@ config_read_entries (xmlNodePtr cur)
 
 			list = g_list_append (list, entry);
 		} else {
-			g_warning ("'entry' expected, got '%s'. Ignoring...", 
+			g_warning ("'entry' expected, got '%s'. Ignoring...\n", 
 				   cur->name);
 		}
 		cur = cur->next;
@@ -560,6 +560,7 @@ config_add_section (const gchar *line)
 	config_data = g_list_append (config_data, section);
 	current_section = g_list_last (config_data);
 	g_print ("Added section '%s' and selected it.\n", section_name);
+	changed_config = TRUE;
 
 	return CMD_OK;
 }
@@ -618,7 +619,7 @@ config_remove_section (const gchar *line)
 			delete = g_list_nth (config_data, (gint) value);
 			if (delete == NULL || **endptr != '\0'){
 				g_print ("Error: section '%s' not found or "
-					 "section number out of range.",
+					 "section number out of range.\n",
 					section_name);
 				g_free (section_name);
 				return CMD_ERROR;
@@ -639,6 +640,7 @@ config_remove_section (const gchar *line)
 		current_section = NULL;
 
 	g_free (section_name);
+	changed_config = TRUE;
 	return CMD_OK;
 }
 
@@ -652,8 +654,10 @@ get_quoted_string (const gchar *prompt)
 		if (str == NULL)
 			return NULL;
 		if (unquote (str) == FALSE){
-			if (*str == '\0')
+			if (*str == '\0'){
+				g_free (str);
 				return NULL;
+			}
 
 			g_print ("Don't forget the quotes!\n");
 			g_free (str);
@@ -761,6 +765,7 @@ config_add_entry (const gchar *line)
 	section = current_section->data;
 	section->entries = g_list_append (section->entries, entry);
 	g_print ("Added new entry.\n");
+	changed_config = TRUE;
 
 	return CMD_OK;
 }
@@ -827,6 +832,7 @@ config_remove_entry (const gchar *line)
 	free_entry (entry, NULL);
 	section->entries = g_list_remove (section->entries, entry);
 	g_free (entry_name);
+	changed_config = TRUE;
 	return CMD_OK;
 }
 
@@ -880,11 +886,101 @@ config_edit_entry (const gchar *line)
 		}
 	}
 
+	g_free (entry_name);
 	entry = get_entry (entries->data);
 	g_print (((entry == NULL) ? "No changes made.\n" :
 				    "Entry changed.\n"));
+	if (entry != NULL)
+		changed_config = TRUE;
 
 	return CMD_OK;
+}
+
+static void
+add_xml_entry (xmlNodePtr parent, gda_config_entry *entry)
+{
+	xmlNodePtr new_node;
+
+	new_node = xmlNewTextChild (parent, NULL, "entry", NULL);
+	xmlSetProp (new_node, "name", entry->name);
+	xmlSetProp (new_node, "type", entry->type);
+	xmlSetProp (new_node, "value", entry->value);
+}
+
+static xmlNodePtr
+add_xml_section (xmlNodePtr parent, gda_config_section *section)
+{
+	xmlNodePtr new_node;
+
+	new_node = xmlNewTextChild (parent, NULL, "section", NULL);
+	xmlSetProp (new_node, "path", section->path);
+	return new_node;
+}
+
+static CmdResult
+write_config_file (const gchar *file)
+{
+	xmlDocPtr doc;
+	xmlNodePtr root;
+	xmlNodePtr xml_section;
+	GList *ls; /* List of sections */
+	GList *le; /* List of entries */
+	gda_config_section *section;
+	gda_config_entry *entry;
+
+	doc = xmlNewDoc ("1.0");
+	g_return_val_if_fail (doc != NULL, CMD_ERROR);
+	root = xmlNewDocNode (doc, NULL, "libgda-config", NULL);
+	xmlDocSetRootElement (doc, root);
+	for (ls = config_data; ls; ls = ls->next){
+		section = ls->data;
+		if (section == NULL)
+			continue;
+
+		xml_section = add_xml_section (root, section);
+		for (le = section->entries; le; le = le->next){
+			entry = le->data;
+			if (entry == NULL)
+				continue;
+
+			add_xml_entry (xml_section, le->data);
+		}
+	}
+
+	if (xmlSaveFormatFile (file, doc, TRUE) == -1){
+		g_print ("Error: could not save data to '%s'.\n", file);
+		xmlFreeDoc (doc);
+		return CMD_ERROR;
+	}
+
+	changed_config = FALSE;
+	xmlFreeDoc (doc);
+	g_print ("Saved configuration to '%s'.\n", file);
+
+	return CMD_OK;
+}
+
+static CmdResult
+config_write (const gchar *line)
+{
+	gchar *file;
+	CmdResult result;
+
+	file = g_strstrip (g_strdup (line));
+	if (*file == '\0'){
+		g_free (file);
+		if (changed_config == FALSE){
+			g_print ("No changes made.\n");
+			return CMD_OK;
+		}
+		result = write_config_file (config_file);
+	}
+	else {
+		result = write_config_file (file);
+		g_free (file);
+	}
+
+	return result;
 }
 
 /*
@@ -932,21 +1028,34 @@ mode_config (const gchar *unused)
 				"by name or number. "
 				"Entry name should be double quoted.",
 		 config_edit_entry},
+		{ "write", "Writes the in-memory configuration to file. "
+			   "If no file name given, it will write to the "
+			   "default config file or the one specified in "
+			   "the command line.",
+		 config_write},
 		{"quit", "Back to gda mode.", cmd_quit},
 		{ NULL, NULL, NULL }
 	};
 
 	if (!config_load_file (config_file)){
-		g_print ("Warning: file '%s' not found or not readable.\n",
+		g_print ("File '%s' not found or not readable. You "
+			 "are going to start a new configuration.\n",
 			 config_file);
 	}
 
 	current_section = NULL;
 	old_commands = commands;
 	commands = mode_config_commands;
-	result = process_commands (prompt_config);
+	do {
+		result = process_commands (prompt_config);
+		if (!changed_config)
+			break;
+		if (yes_or_no ("lose the changes made to the configuration"))
+			break;
+	} while (1);
 	g_list_foreach (config_data, free_section, NULL);
 	g_list_free (config_data);
+	config_data = NULL;
 	commands = old_commands;
 	return result;
 }

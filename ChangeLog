@@ -1,3 +1,8 @@
+2002-06-02  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
+	* tools/gda-config-tool.c: added support for writing the configuration
+	to a file.
+
 2002-06-02  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* tools/Makefile.am: build gda-config-tool only if all needed
