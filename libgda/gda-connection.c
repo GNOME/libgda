@@ -196,8 +196,8 @@ gda_connection_new (GdaClient *client,
 	GdaConnection *cnc;
 	GdaDataSourceInfo *dsn_info;
 	GdaQuarkList *params;
-	const char *real_username;
-	const char *real_password;
+	const char *real_username = NULL;
+	const char *real_password = NULL;
 
 	g_return_val_if_fail (GDA_IS_CLIENT (client), NULL);
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
@@ -209,7 +209,7 @@ gda_connection_new (GdaClient *client,
 		return NULL;
 	}
 
-	params = gda_quark_list_new_from_string (cnc->priv->cnc_string);
+	params = gda_quark_list_new_from_string (dsn_info->cnc_string);
 
 	/* retrieve correct username/password */
 	if (username)

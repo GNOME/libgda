@@ -1,3 +1,8 @@
+2002-06-03  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* libgda/gda-connection.c (gda_connection_new): use the correct
+	pointers, or it'll crash.
+
 2002-06-03  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
 	* libgda/gda-config.[ch]: 
