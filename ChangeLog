@@ -1,3 +1,7 @@
+2001-11-05  Fatih Demir <kabalak@gtranslator.org>
+
+	* configure.in: Added "tr" to the languages list.
+
 2001-11-04  Carlos Perelló Marín <carlos@gnome-db.org>
 
 	* libgda/gda-init.c: Added the call to bind_textdomain_codeset
