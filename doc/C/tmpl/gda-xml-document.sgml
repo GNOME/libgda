@@ -32,14 +32,6 @@ GdaXmlDocument
 @root_doc: 
 
 
-<!-- ##### FUNCTION gda_xml_document_free ##### -->
-<para>
-
-</para>
-
-@xmldoc: 
-
-
 <!-- ##### FUNCTION gda_xml_document_get_compress_mode ##### -->
 <para>
 
@@ -64,8 +56,10 @@ GdaXmlDocument
 </para>
 
 @xmldoc: 
-@filename: 
+@uri: 
 @Returns: 
+<!-- # Unused Parameters # -->
+@filename: 
 
 
 <!-- ##### FUNCTION gda_xml_document_stringify ##### -->
