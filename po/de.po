@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda 0.90.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2003-07-09 21:07+0200\n"
-"PO-Revision-Date: 2003-07-09 21:08+0200\n"
+"POT-Creation-Date: 2003-07-12 18:57+0200\n"
+"PO-Revision-Date: 2003-07-12 18:57+0200\n"
 "Last-Translator: Christian Neumair <chris@gnome-de.org>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -1114,7 +1114,7 @@ msgstr "Die Orcale-Feldskalierung konnte nicht empfangen werden"
 
 #: providers/oracle/gda-oracle-provider.c:1751
 msgid "Could not get the Oracle field nullable attribute"
-msgstr "Das Oracle «nulltable»-Attribut konnte nicht empfangen werden"
+msgstr "Das Oracle-Feldattribut »nullable« konnte nicht empfangen werden"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/oracle/gda-oracle-provider.c:2177
@@ -1173,7 +1173,7 @@ msgstr "Die Oracle-Spaltenskalierung konnte nicht empfangen werden"
 
 #: providers/oracle/gda-oracle-recordset.c:234
 msgid "Could not get the Oracle column nullable attribute"
-msgstr "Das Orcale «column nulltable»-Attribut konnte nicht empfangen werden"
+msgstr "Das Orcale-Spaltenattribut »nullable« konnte nicht empfangen werden"
 
 #: providers/oracle/gda-oracle-recordset.c:246
 msgid "Could not get the Oracle defined size"
