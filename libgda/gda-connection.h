@@ -68,6 +68,8 @@ GdaClient     *gda_connection_get_client (GdaConnection *cnc);
 void           gda_connection_set_client (GdaConnection *cnc, GdaClient *client);
 
 const gchar   *gda_connection_get_dsn (GdaConnection *cnc);
+const gchar   *gda_connection_get_cnc_string (GdaConnection *cnc);
+const gchar   *gda_connection_get_provider (GdaConnection *cnc);
 const gchar   *gda_connection_get_username (GdaConnection *cnc);
 const gchar   *gda_connection_get_password (GdaConnection *cnc);
 

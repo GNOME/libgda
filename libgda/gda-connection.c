@@ -35,6 +35,8 @@ struct _GdaConnectionPrivate {
 	GdaClient *client;
 	GNOME_Database_Connection corba_cnc;
 	gchar *dsn;
+	gchar *cnc_string;
+	gchar *provider;
 	gchar *username;
 	gchar *password;
 	gboolean is_open;
@@ -102,6 +104,8 @@ gda_connection_init (GdaConnection *cnc, GdaConnectionClass *klass)
 	cnc->priv->client = NULL;
 	cnc->priv->corba_cnc = CORBA_OBJECT_NIL;
 	cnc->priv->dsn = NULL;
+	cnc->priv->cnc_string = NULL;
+	cnc->priv->provider = NULL;
 	cnc->priv->username = NULL;
 	cnc->priv->password = NULL;
 	cnc->priv->is_open = FALSE;
@@ -133,6 +137,8 @@ gda_connection_finalize (GObject *object)
 	}
 
 	g_free (cnc->priv->dsn);
+	g_free (cnc->priv->cnc_string);
+	g_free (cnc->priv->provider);
 	g_free (cnc->priv->username);
 	g_free (cnc->priv->password);
 
@@ -213,8 +219,12 @@ gda_connection_new (GdaClient *client,
 	gda_connection_set_client (cnc, client);
 	cnc->priv->corba_cnc = corba_cnc;
 	cnc->priv->dsn = g_strdup (dsn);
+	cnc->priv->cnc_string = g_strdup (dsn_info->cnc_string);
+	cnc->priv->provider = g_strdup (dsn_info->provider);
 	cnc->priv->username = g_strdup (username);
 	cnc->priv->password = g_strdup (password);
+
+	gda_config_free_data_source_info (dsn_info);
 
 	/* try to open the connection */
 	CORBA_exception_init (&ev);
@@ -222,10 +232,9 @@ gda_connection_new (GdaClient *client,
 	corba_res = GNOME_Database_Connection_open (
 		cnc->priv->corba_cnc,
 		bonobo_object_corba_objref (BONOBO_OBJECT (cnc->priv->client)),
-		(const CORBA_char *) dsn_info->cnc_string,
+		(const CORBA_char *) cnc->priv->cnc_string,
 		(const CORBA_char *) cnc->priv->username,
 		(const CORBA_char *) cnc->priv->password, &ev);
-	gda_config_free_data_source_info (dsn_info);
 
 	if (!corba_res || BONOBO_EX (&ev)) {
 		gda_connection_add_error_list (cnc, gda_error_list_from_exception (&ev));
@@ -293,6 +302,26 @@ gda_connection_get_dsn (GdaConnection *cnc)
 {
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	return (const gchar *) cnc->priv->dsn;
+}
+
+/**
+ * gda_connection_get_cnc_string
+ */
+const gchar *
+gda_connection_get_cnc_string (GdaConnection *cnc)
+{
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+	return (const gchar *) cnc->priv->cnc_string;
+}
+
+/**
+ * gda_connection_get_provider
+ */
+const gchar *
+gda_connection_get_provider (GdaConnection *cnc)
+{
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+	return (const gchar *) cnc->priv->provider;
 }
 
 /**

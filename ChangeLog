@@ -1,3 +1,10 @@
+2002-01-26  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* libgda/gda-connection.c (gda_connection_get_cnc_string):
+	(gda_connection_get_provider): new functions.
+	(gda_connection_new): initialize new private members.
+	(gda_connection_finalize): free new private members.
+
 2002-01-25  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* libgda/gda-connection.[ch] (gda_connection_new): use the GDA dsn
