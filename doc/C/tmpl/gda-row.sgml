@@ -46,6 +46,24 @@ Functions for accesing #GdaRow.
 @row: 
 
 
+<!-- ##### FUNCTION gda_row_get_number ##### -->
+<para>
+
+</para>
+
+@row: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_row_set_number ##### -->
+<para>
+
+</para>
+
+@row: 
+@number: 
+
+
 <!-- ##### FUNCTION gda_row_get_id ##### -->
 <para>
 

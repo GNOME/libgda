@@ -1,5 +1,16 @@
 2003-01-09  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	Fixes #78847
+
+	* libgda/gda-connection.c (gda_connection_get_options): added missing
+	function.
+
+	* providers/mysql/gda-mysql-provider.c (process_sql_commands): added
+	ugly hack to avoid execution of modification commands on read-only
+	connections.
+
+2003-01-09  Rodrigo Moya <rodrigo@gnome-db.org>
+
 	* libgda/gda-client.c (gda_client_open_connection): made all GModule's
 	we load resident, to avoid registration problems with types defined in
 	them.

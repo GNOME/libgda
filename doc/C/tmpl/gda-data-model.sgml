@@ -28,6 +28,33 @@ Basic data model class
 @model: 
 
 
+<!-- ##### FUNCTION gda_data_model_row_inserted ##### -->
+<para>
+
+</para>
+
+@model: 
+@row: 
+
+
+<!-- ##### FUNCTION gda_data_model_row_updated ##### -->
+<para>
+
+</para>
+
+@model: 
+@row: 
+
+
+<!-- ##### FUNCTION gda_data_model_row_removed ##### -->
+<para>
+
+</para>
+
+@model: 
+@row: 
+
+
 <!-- ##### FUNCTION gda_data_model_freeze ##### -->
 <para>
 

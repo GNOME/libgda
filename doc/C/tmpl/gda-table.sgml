@@ -40,6 +40,24 @@ An in-memory representation of a database table
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_table_get_name ##### -->
+<para>
+
+</para>
+
+@table: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_table_set_name ##### -->
+<para>
+
+</para>
+
+@table: 
+@name: 
+
+
 <!-- ##### FUNCTION gda_table_add_field ##### -->
 <para>
 

@@ -50,11 +50,13 @@ GdaConnectionPrivate
 GdaServerProvider
 GdaClient
 <TITLE>GdaConnection</TITLE>
+GdaConnectionOptions
 gda_connection_new
 gda_connection_close
 gda_connection_is_open
 gda_connection_get_client
 gda_connection_set_client
+gda_connection_get_options
 gda_connection_get_server_version
 gda_connection_get_database
 gda_connection_get_dsn
@@ -144,6 +146,9 @@ GDA_IS_DATA_MODEL_LIST_CLASS
 GdaDataModelPrivate
 <TITLE>GdaDataModel</TITLE>
 gda_data_model_changed
+gda_data_model_row_inserted
+gda_data_model_row_updated
+gda_data_model_row_removed
 gda_data_model_freeze
 gda_data_model_thaw
 gda_data_model_get_n_rows
@@ -280,6 +285,8 @@ GdaTablePrivate
 <TITLE>GdaTable</TITLE>
 gda_table_new
 gda_table_new_from_model
+gda_table_get_name
+gda_table_set_name
 gda_table_add_field
 gda_table_add_data_from_model
 <SUBSECTION Standard>
@@ -963,6 +970,8 @@ GdaRow
 gda_row_new
 gda_row_new_from_list
 gda_row_free
+gda_row_get_number
+gda_row_set_number
 gda_row_get_id
 gda_row_set_id
 gda_row_get_value

@@ -300,12 +300,15 @@ process_sql_commands (GList *reclist, GdaConnection *cnc, const gchar *sql)
 {
 	MYSQL *mysql;
 	gchar **arr;
+	GdaConnectionOptions options;
 
 	mysql = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_MYSQL_HANDLE);
 	if (!mysql) {
 		gda_connection_add_error_string (cnc, _("Invalid MYSQL handle"));
 		return NULL;
 	}
+
+	options = gda_connection_get_options (cnc);
 
 	/* parse SQL string, which can contain several commands, separated by ';' */
 	arr = g_strsplit (sql, ";", 0);
@@ -317,6 +320,24 @@ process_sql_commands (GList *reclist, GdaConnection *cnc, const gchar *sql)
 			MYSQL_RES *mysql_res;
 			GdaMysqlRecordset *recset;
 
+			/* if the connection is in read-only mode, just allow SELECT,
+			   SHOW commands */
+			if (options & GDA_CONNECTION_OPTIONS_READ_ONLY) {
+				gchar *s;
+
+				/* FIXME: maybe there's a better way of doing this? */
+				s = g_strstrip (g_strdup (arr[n]));
+				if (g_ascii_strncasecmp (s, "select", strlen ("select")) &&
+				    g_ascii_strncasecmp (s, "show", strlen ("show"))) {
+					gda_connection_add_error_string (
+						cnc, "Command '%s' cannot be executed in read-only mode", arr[n]);
+					break;
+				}
+
+				g_free (s);
+			}
+
+			/* execute the command on the server */
 			rc = mysql_real_query (mysql, arr[n], strlen (arr[n]));
 			if (rc != 0) {
 				gda_connection_add_error (cnc, gda_mysql_make_error (mysql));

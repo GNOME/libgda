@@ -354,6 +354,21 @@ gda_connection_set_client (GdaConnection *cnc, GdaClient *client)
 }
 
 /**
+ * gda_connection_get_options
+ * @cnc: a #GdaConnection object.
+ *
+ * Get the #GdaConnectionOptions used to open this connection.
+ *
+ + Returns: the connection options.
+*/
+GdaConnectionOptions
+gda_connection_get_options (GdaConnection *cnc)
+{
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), -1);
+	return cnc->priv->options;
+}
+
+/**
  * gda_connection_get_server_version
  * @cnc: A #GdaConnection object.
  *

@@ -38,6 +38,7 @@ Database client access
 @dsn: 
 @username: 
 @password: 
+@options: 
 @Returns: 
 
 
@@ -49,6 +50,7 @@ Database client access
 @client: 
 @provider_id: 
 @cnc_string: 
+@options: 
 @Returns: 
 
 
