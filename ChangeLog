@@ -1,3 +1,7 @@
+2003-03-03  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* report/Makefile.am: added DTD_FILES to EXTRA_DIST.
+
 2003-02-23  Santi Camps <santi@gnome-db.org>
 
 	* libgda/report/Makefile.am: new dtd added
