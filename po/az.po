@@ -1,0 +1,130 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Free Software Foundation, Inc.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2001-11-10 07:55-0500\n"
+"PO-Revision-Date: 2001-12-14 16:37GMT+0200\n"
+"Last-Translator: Vasif İsmayıloğlu MD <azerb_linux@hotmail.com>\n"
+"Language-Team: Azerbaijani Turkic <linuxaz@azerimail.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 0.9.5\n"
+
+#: libgda/gda-client.c:176
+#, c-format
+msgid "Data source %s not found in configuration"
+msgstr "%s verilən mənbəyi qurğuda tapıla bilmədi"
+
+#: libgda/gda-client.c:208
+#, c-format
+msgid "Could not activate object %s"
+msgstr "%s cismi fəallaşdırıla bilmədi"
+
+#: libgda/gda-client.c:226
+msgid "Could not create connection component"
+msgstr "Bağlantı komponenti yaradıla bimədi"
+
+#: libgda/gda-config.c:524
+msgid "Could not query CORBA components"
+msgstr "CORBA komponenetləri soraqlana bilmədi"
+
+#: libgda/gda-config.c:629
+msgid "Could not query CORBA providers"
+msgstr "CORBA cidmətçiləri soraqlana bilmədi"
+
+#: libgda/gda-error.c:127
+#, c-format
+msgid "%s: An Error occured in the CORBA system."
+msgstr "%s: CORBA sistemində Xəta tapıldı."
+
+#: libgda/gda-error.c:156
+msgid "Unknown CORBA exception for connection"
+msgstr "Bağlantı üçün namə'lum CORBA estisnası"
+
+#: libgda/gda-init.c:44
+msgid "Attempt to initialize an already initialized client"
+msgstr "Onsuz da hazırlanmış alıcını hazırlamağa cəhd et"
+
+#: libgda/gda-init.c:56
+msgid "Could not initialize Bonobo"
+msgstr "Bonobonu başlada bilmədim"
+
+#: libgda/gda-server.c:105
+#, c-format
+msgid "Don't know how to create components with IID %s"
+msgstr "%s IID-li komponentlərin necə yaradılacağını bilmirəm"
+
+#: libgda/gda-server.c:112
+#, c-format
+msgid "Could not create component of type %s"
+msgstr "%s növündə komponentin necə yaradılacağını bilmirəm"
+
+#: libgda/gda-server-connection.c:86
+msgid "Could not duplicate client object. Client won't get notifications"
+msgstr "Alıcı cismi cütlənə bilmirt. Alıcı elanları almayacaqdır"
+
+#: libgda/gda-server-connection.c:360
+#, c-format
+msgid "Could not notify client about action %d"
+msgstr "Alıcıya %d gedişi elan edilə bilmir"
+
+#: libgda/gda-value.c:501
+msgid "TRUE"
+msgstr "DOĞRU"
+
+#: libgda/gda-value.c:503
+msgid "FALSE"
+msgstr "YANLIŞ"
+
+#: libgda/gda-xml-database.c:167
+msgid "bad formed document"
+msgstr "səhv quraşdırlmış sənəd"
+
+#: libgda/gda-xml-database.c:269
+#, c-format
+msgid "table %s already exists"
+msgstr "%s cədvəli onsuz da mövcuddur"
+
+#: libgda/gda-xml-database.c:451
+#, c-format
+msgid "%p is not a valid table"
+msgstr "%p hökmlü cədvəl deyildir"
+
+#: providers/default/gda-default-provider.c:131
+msgid "A full path must be specified on the connection string to open a database."
+msgstr ""
+"Verilənlər bazasının açılmağı üçün bağlantı qatarı tam "
+"cığır adı müəyyənləşdirilməlidir."
+
+#: providers/default/GNOME_Database_Provider_Default.server.in.h:1
+msgid "Default component factory"
+msgstr "Əsas komponent emalatxanası"
+
+#: providers/default/GNOME_Database_Provider_Default.server.in.h:2
+msgid "GDA Default Datasource Access"
+msgstr "GDA Əsas Verilənlər Mənbəyi Yetişilməsi"
+
+#: providers/default/main.c:47
+msgid "Could not initiate Default component factory"
+msgstr "Əsas komponenet emalatxanasl hazırlana bilmədi"
+
+#: providers/mysql/gda-mysql-provider.c:150
+msgid "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
+msgstr "Ya QOVŞAQ ya da QAPI müəyyənləşdirirsinizsə UNIX_SOCKET müəyyənləşdirə bilməzsiniz"
+
+#: providers/mysql/GNOME_Database_Provider_MySQL.server.in.h:1
+msgid "GDA Datasource Access for MySQL"
+msgstr "MySQL üçün GDA Verilənlər Mənbəyi Yetişilməsi"
+
+#: providers/mysql/GNOME_Database_Provider_MySQL.server.in.h:2
+msgid "MySQL component factory"
+msgstr "MySQL komponent emalatxanası"
+
+#: providers/mysql/main.c:48
+msgid "Could not initiate MySQL component factory"
+msgstr "MySQL komponent emalatxanası hazırlana bilmədi"
+
