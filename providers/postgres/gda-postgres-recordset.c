@@ -1,11 +1,12 @@
 /* GDA Postgres provider
- * Copyright (C) 1998 - 2004 The GNOME Foundation
+ * Copyright (C) 1998 - 2005 The GNOME Foundation
  *
  * AUTHORS:
  *      Michael Lausch <michael@lausch.at>
  *	Rodrigo Moya <rodrigo@gnome-db.org>
  *      Vivien Malerba <malerba@gnome-db.org>
  *      Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+ *      Bas Driessen <bas.driessen@xobas.com>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -58,6 +59,7 @@ static GdaDataModelColumnAttributes *gda_postgres_recordset_describe    (GdaData
 static gint gda_postgres_recordset_get_n_rows 		      (GdaDataModelBase *model);
 static const GdaRow *gda_postgres_recordset_get_row 	      (GdaDataModelBase *model, gint rownum);
 static const GdaRow *gda_postgres_recordset_append_row        (GdaDataModelBase *model, const GList *values);
+static gboolean gda_postgres_recordset_remove_row 	      (GdaDataModelBase *model, const GdaRow *row);
 static gboolean gda_postgres_recordset_update_row 	      (GdaDataModelBase *model, const GdaRow *row);
 
 static GObjectClass *parent_class = NULL;
@@ -92,6 +94,7 @@ gda_postgres_recordset_class_init (GdaPostgresRecordsetClass *klass)
 	model_class->get_value_at = gda_postgres_recordset_get_value_at;
 	model_class->get_row = gda_postgres_recordset_get_row;
 	model_class->append_row = gda_postgres_recordset_append_row;
+	model_class->remove_row = gda_postgres_recordset_remove_row;
 	model_class->update_row = gda_postgres_recordset_update_row;
 }
 
@@ -178,7 +181,7 @@ gda_postgres_recordset_get_row (GdaDataModelBase *model, gint row)
 	g_return_val_if_fail (GDA_IS_POSTGRES_RECORDSET (recset), NULL);
 	g_return_val_if_fail (recset->priv != NULL, 0);
 
-	row_list = (GdaRow *) gda_data_model_hash_get_row (model, row);
+	row_list = (GdaRow *) GDA_DATA_MODEL_BASE_CLASS (parent_class)->get_row (model, row);
 	if (row_list != NULL)
 		return (const GdaRow *)row_list;
 
@@ -312,9 +315,112 @@ gda_postgres_recordset_append_row (GdaDataModelBase *model, const GList *values)
 	else
 		gda_connection_add_error (priv_data->cnc,
 					  gda_postgres_make_error (pg_conn, NULL));
+
+	/* append row in hash table */
 	row = GDA_DATA_MODEL_BASE_CLASS (parent_class)->append_row (model, values);
 
 	return row;
+}
+
+static gboolean
+gda_postgres_recordset_remove_row (GdaDataModelBase *model, const GdaRow *row)
+{
+	GdaPostgresRecordset *recset = (GdaPostgresRecordset *) model;
+	GdaPostgresRecordsetPrivate *priv_data;
+	gint colnum, uk, i;
+	PGresult *pg_res, *pg_rm_res;
+	gchar *query, *query_where, *tmp;
+	GdaPostgresConnectionData *cnc_priv_data;
+	PGconn *pg_conn;
+	gboolean status = FALSE;
+	GdaValue *value;
+
+	g_return_val_if_fail (GDA_IS_POSTGRES_RECORDSET (recset), FALSE);
+	g_return_val_if_fail (recset->priv != NULL, FALSE);
+	g_return_val_if_fail (row != NULL, FALSE);
+
+	priv_data = recset->priv;
+	pg_res = priv_data->pg_res;
+	cnc_priv_data = g_object_get_data (G_OBJECT (priv_data->cnc),
+					   OBJECT_DATA_POSTGRES_HANDLE);
+	pg_conn = cnc_priv_data->pconn;
+
+	/* checks if the given row belongs to the given model */
+	if (gda_row_get_model ((GdaRow *) row) != GDA_DATA_MODEL (model)) {
+		gda_connection_add_error_string (priv_data->cnc,
+						_("Given row doesn't belong to the model."));
+		return FALSE;
+	}
+
+	/* checks if the table name has been guessed */
+	if (priv_data->table_name == NULL) {
+		gda_connection_add_error_string (priv_data->cnc,
+						_("Table name could not be guessed."));
+		return FALSE;
+	}
+
+	query_where = g_strdup ("WHERE TRUE ");
+
+	for (colnum = uk = 0;
+	     colnum != gda_data_model_get_n_columns (GDA_DATA_MODEL(model));
+	     colnum++)
+	{
+		GdaDataModelColumnAttributes *attrs = gda_data_model_describe_column (GDA_DATA_MODEL(model), colnum);
+		const gchar *column_name = PQfname (pg_res, colnum);
+		gchar *curval = gda_value_stringify (gda_row_get_value ((GdaRow *) row, colnum));
+
+		/* unique column: we will use it as an index */
+		if (gda_field_attributes_get_primary_key (attrs) ||
+		    gda_field_attributes_get_unique_key (attrs))
+		{
+			/* fills the 'where' part of the update command */
+			tmp = g_strdup_printf ("AND %s = '%s' ",
+					       column_name,
+					       curval);
+			query_where = g_strconcat (query_where, tmp, NULL);
+			g_free (tmp);
+			uk++;
+		}
+
+		g_free (curval);
+		gda_field_attributes_free (attrs);
+	}
+
+	if (uk == 0) {
+		gda_connection_add_error_string (priv_data->cnc,
+						_("Model doesn't have at least one unique key."));
+	}
+	else {
+		/* build the delete command */
+		query = g_strdup_printf ("DELETE FROM %s %s",
+					 priv_data->table_name,
+					 query_where);
+
+		/* remove the row */
+		pg_rm_res = PQexec (pg_conn, query);
+		g_free (query);
+
+		if (pg_rm_res != NULL) {
+			/* removal ok! */
+			if (PQresultStatus (pg_rm_res) == PGRES_COMMAND_OK)
+				status = TRUE;
+			else
+				gda_connection_add_error (priv_data->cnc,
+							  gda_postgres_make_error (pg_conn, pg_rm_res));
+			PQclear (pg_rm_res);
+		}
+		else
+			gda_connection_add_error (priv_data->cnc,
+						  gda_postgres_make_error (pg_conn, NULL));
+	}
+
+	g_free (query_where);
+
+	/* remove entry from data model */
+	if (status == TRUE)
+		status = GDA_DATA_MODEL_BASE_CLASS (parent_class)->remove_row (model, row);
+
+	return status;
 }
 
 static gboolean
@@ -654,7 +760,12 @@ gda_postgres_recordset_get_n_rows (GdaDataModelBase *model)
 	g_return_val_if_fail (recset->priv != NULL, 0);
 
 	parent_row_num = GDA_DATA_MODEL_BASE_CLASS (parent_class)->get_n_rows (model);
-	return MAX(recset->priv->nrows, parent_row_num);
+
+	/* if not initialized return number of PQ Tuples */
+	if (parent_row_num < 0)
+		return recset->priv->nrows;
+	else
+		return parent_row_num;
 }
 
 /*

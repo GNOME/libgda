@@ -1,10 +1,11 @@
 /* GDA library
- * Copyright (C) 1998 - 2004 The GNOME Foundation.
+ * Copyright (C) 1998 - 2005 The GNOME Foundation.
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
  *	Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
  *      Vivien Malerba <malerba@gnome-db.org>
+ *	Bas Driessen <bas.driessen@xobas.com>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -33,6 +34,10 @@ struct _GdaDataModelHashPrivate {
 
 	/* the hash of rows, each item is a GdaRow */
 	GHashTable *rows;
+	gint number_of_hash_table_rows;
+
+	/* the mapping of a row to hash table entry */
+	GArray *row_map;
 };
 
 static void gda_data_model_hash_class_init (GdaDataModelHashClass *klass);
@@ -50,7 +55,11 @@ static gint
 gda_data_model_hash_get_n_rows (GdaDataModelBase *model)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_HASH (model), -1);
-	return g_hash_table_size (GDA_DATA_MODEL_HASH (model)->priv->rows);
+
+	if (GDA_DATA_MODEL_HASH (model)->priv->row_map == NULL)
+		return -1;
+	else
+		return GDA_DATA_MODEL_HASH (model)->priv->row_map->len;
 }
 
 static gint
@@ -63,10 +72,15 @@ gda_data_model_hash_get_n_columns (GdaDataModelBase *model)
 static const GdaRow *
 gda_data_model_hash_get_row (GdaDataModelBase *model, gint row)
 {
+	gint hash_entry;
+
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_HASH (model), NULL);
 
+	/* get row according mapping */
+	hash_entry = g_array_index (GDA_DATA_MODEL_HASH (model)->priv->row_map, gint, row);
+
 	return (const GdaRow *) g_hash_table_lookup (GDA_DATA_MODEL_HASH (model)->priv->rows,
-						     GINT_TO_POINTER (row));
+						     GINT_TO_POINTER (hash_entry));
 }
 
 static const GdaValue *
@@ -102,7 +116,7 @@ static const GdaRow *
 gda_data_model_hash_append_row (GdaDataModelBase *model, const GList *values)
 {
 	GdaRow *row;
-	gint cols, rownum;
+	gint cols, rownum_hash_new, rownum_array_new;
 
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_HASH (model), NULL);
 	g_return_val_if_fail (values != NULL, NULL);
@@ -114,17 +128,27 @@ gda_data_model_hash_append_row (GdaDataModelBase *model, const GList *values)
 	/* create the GdaRow to add */
 	row = gda_row_new_from_list (GDA_DATA_MODEL (model), values);
 
-	/* get the new row number */
-	rownum = gda_data_model_get_n_rows (GDA_DATA_MODEL (model));
+	/* get the new hash and array row number */
+	rownum_hash_new = GDA_DATA_MODEL_HASH (model)->priv->number_of_hash_table_rows;
+	rownum_array_new = GDA_DATA_MODEL_HASH (model)->priv->row_map->len;
 
 	if (row) {
 		gda_data_model_hash_insert_row (
 			GDA_DATA_MODEL_HASH (model),
-			rownum,
+			rownum_hash_new,
 			row);
 
-		gda_row_set_number (row, rownum);
-		gda_data_model_row_inserted (GDA_DATA_MODEL (model), rownum);
+		gda_row_set_number (row, rownum_array_new);
+
+		/* Append row number in row mapping array */
+		g_array_append_val (GDA_DATA_MODEL_HASH (model)->priv->row_map, rownum_hash_new);
+
+		/* emit update signals */
+		gda_data_model_row_inserted (GDA_DATA_MODEL (model), rownum_array_new);
+		gda_data_model_changed (GDA_DATA_MODEL (model));
+
+		/* increment the number of entries in the hash table */
+		GDA_DATA_MODEL_HASH (model)->priv->number_of_hash_table_rows++;
 	}
 
 	return row;
@@ -133,8 +157,37 @@ gda_data_model_hash_append_row (GdaDataModelBase *model, const GList *values)
 static gboolean
 gda_data_model_hash_remove_row (GdaDataModelBase *model, const GdaRow *row)
 {
+	gint i, cols, rownum;
+	GdaValue *value;
+
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_HASH (model), FALSE);
-	return FALSE;
+	g_return_val_if_fail (row != NULL, FALSE);
+
+	cols = GDA_DATA_MODEL_HASH (model)->priv->number_of_columns;
+
+	for (i=0; i<cols; i++) {
+		value = (GdaValue *) gda_row_get_value ((GdaRow *) row, i);
+		gda_value_set_string (value, "NULL");
+	}
+
+	rownum = gda_row_get_number ((GdaRow *) row);
+
+	/* renumber following rows */
+	for (i=(rownum+1); i<GDA_DATA_MODEL_HASH (model)->priv->row_map->len; i++) 
+		gda_row_set_number ((GdaRow *) gda_data_model_get_row (GDA_DATA_MODEL (model), i), (i-1));
+
+	/* tag the row as being removed */	
+	gda_row_set_id ((GdaRow *) row, "R");
+	gda_row_set_number ((GdaRow *) row, -1);
+
+	/* remove entry from array */
+	g_array_remove_index (GDA_DATA_MODEL_HASH (model)->priv->row_map, rownum);
+
+	/* emit updated signals */
+	gda_data_model_row_removed (GDA_DATA_MODEL (model), gda_row_get_number ((GdaRow *) row));
+	gda_data_model_changed (GDA_DATA_MODEL (model));
+	
+	return TRUE;
 }
 
 static void
@@ -170,7 +223,9 @@ gda_data_model_hash_init (GdaDataModelHash *model, GdaDataModelHashClass *klass)
 	/* allocate internal structure */
 	model->priv = g_new0 (GdaDataModelHashPrivate, 1);
 	model->priv->number_of_columns = 0;
+	model->priv->number_of_hash_table_rows = 0;
 	model->priv->rows = NULL;
+	model->priv->row_map = NULL;
 }
 
 static void
@@ -183,6 +238,8 @@ gda_data_model_hash_finalize (GObject *object)
 	/* free memory */
 	g_hash_table_destroy (model->priv->rows);
 	model->priv->rows = NULL;
+
+	g_array_free (model->priv->row_map, TRUE);
 
 	g_free (model->priv);
 	model->priv = NULL;
@@ -303,6 +360,8 @@ gda_data_model_hash_set_n_columns (GdaDataModelHash *model, gint cols)
 void
 gda_data_model_hash_clear (GdaDataModelHash *model)
 {
+	gint i;
+
 	g_return_if_fail (GDA_IS_DATA_MODEL_HASH (model));
 
 	if (model->priv->rows != NULL)
@@ -310,5 +369,23 @@ gda_data_model_hash_clear (GdaDataModelHash *model)
 	model->priv->rows = g_hash_table_new_full (g_direct_hash,
 						   g_direct_equal,
 						   NULL, free_hash);
+
+	/* free array if exists */
+	if (model->priv->row_map != NULL)
+	{
+		g_array_free (model->priv->row_map, TRUE);
+		model->priv->row_map = NULL;
+	}
+
+	/* get number of entries in data model */
+	model->priv->number_of_hash_table_rows = gda_data_model_get_n_rows (GDA_DATA_MODEL (model));
+
+	/* create row mapping array */
+	model->priv->row_map = g_array_new (FALSE, FALSE, sizeof (gint));
+
+        /* Initialize row mapping array */
+        for (i = 0; i < model->priv->number_of_hash_table_rows; i++)
+                g_array_append_val (model->priv->row_map, i);
+
 }
 
