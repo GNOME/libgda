@@ -1,3 +1,7 @@
+2001-02-19  Valek Filippov <frob@df.ru>
+
+	* ru.po: Updated russian translation.
+
 2001-02-18  Carlos Perelló Marín <carlos@gnome-db.org>
 
 	* POTFILES.in: Removed lib/gda-common/gda-xml-query.c

@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-db\n"
-"POT-Creation-Date: 2000-11-30 14:13+0300\n"
-"PO-Revision-Date: 2000-11-30 14:26+03:00\n"
+"POT-Creation-Date: 2001-02-19 12:17+0300\n"
+"PO-Revision-Date: 2001-02-19 12:30+03:00\n"
 "Last-Translator: Valek Filippov <frob@df.ru>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -456,7 +456,7 @@ msgstr "Выполнение \"безрезультатной\" команды прошло успешно"
 #: providers/gda-sybase-server/gda-sybase-command.c:246
 #, c-format
 msgid "ct_results() returned %x"
-msgstr ""
+msgstr "ct_results() вернуло %x"
 
 #: providers/gda-sybase-server/gda-sybase-command.c:256
 msgid "No further results, command completly succeeded."
@@ -468,11 +468,12 @@ msgstr "При выполнении команды возникла ошибка."
 
 #: providers/gda-sybase-server/gda-sybase-command.c:267
 msgid "Cmd execution returned unknown result, may be an error"
-msgstr "Выполнение команды привело к неизвестному результату, возможно к ошибке"
+msgstr ""
+"Выполнение команды привело к неизвестному результату, возможно к ошибке"
 
 #: providers/gda-sybase-server/gda-sybase-command.c:280
 msgid "No data returned, freeing recordset structure"
-msgstr ""
+msgstr "Данные не были возвращены, освобаждается структура записи"
 
 #: providers/gda-sybase-server/gda-sybase-command.c:311
 #: providers/gda-sybase-server/gda-sybase-command.c:323
@@ -490,7 +491,7 @@ msgstr "Недостаточно памяти для выполнения sybase_Соединения"
 #: providers/gda-sybase-server/gda-sybase-connection.c:403
 #, c-format
 msgid "schema_cols: table_name '%s'"
-msgstr ""
+msgstr "schema_cols: название таблицы \"%s\""
 
 # fe/fe_log.c:92
 #: providers/gda-sybase-server/gda-sybase-connection.c:419
@@ -510,13 +511,13 @@ msgstr ""
 #: providers/gda-sybase-server/gda-sybase-connection.c:564
 #, c-format
 msgid "schema_tables: table name = '%s'"
-msgstr ""
+msgstr "schema_tables: название таблицы = \"%s\""
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:495
 #: providers/gda-sybase-server/gda-sybase-connection.c:572
 #, c-format
 msgid "schema_tables: table_schema = '%s'"
-msgstr ""
+msgstr "schema_tables: table_schema = \"%s\""
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:500
 #, c-format
@@ -526,7 +527,7 @@ msgstr ""
 #: providers/gda-sybase-server/gda-sybase-connection.c:504
 #, c-format
 msgid "schema_procs: invalid constraint type %d"
-msgstr ""
+msgstr "schema_procs: недопустимый тип ограничения %d"
 
 # fe/fe_log.c:92
 #: providers/gda-sybase-server/gda-sybase-connection.c:514
@@ -541,7 +542,7 @@ msgstr ""
 #: providers/gda-sybase-server/gda-sybase-connection.c:581
 #, c-format
 msgid "schema_tables: invalid constraint type %d"
-msgstr ""
+msgstr "schema_tables: недопустимый тип ограничения %d"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:642
 #, c-format
@@ -686,7 +687,7 @@ msgstr ""
 
 #: providers/gda-sybase-server/gda-sybase-error.c:200
 msgid "Could not get # of messages"
-msgstr "Не удалось получит число сообщений"
+msgstr "Не удалось получить число сообщений"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:205
 #, c-format
@@ -815,9 +816,9 @@ msgstr "Подсчитано %d столбцов"
 
 # fe/fe_log.c:92
 #: providers/gda-sybase-server/gda-sybase-recordset.c:356
-#, fuzzy, c-format
+#, c-format
 msgid "%s could not allocate datafmt info"
-msgstr "Не удалось получить обработчик утверждения"
+msgstr "%s Не удалось получить информацию о формате данных"
 
 # fe/fe_log.c:92
 #: providers/gda-sybase-server/gda-sybase-recordset.c:366
@@ -828,23 +829,22 @@ msgstr "%s Не удалось получить поля данных"
 #: providers/gda-sybase-server/gda-sybase-recordset.c:384
 #, c-format
 msgid "ct_describe on col # %d"
-msgstr ""
+msgstr "ct_describe на столбце # %d"
 
 #: providers/gda-sybase-server/gda-sybase-recordset.c:391
 #, c-format
 msgid "ct_describe on col # %d failed"
-msgstr ""
+msgstr "сбой ct_describe на столбце # %d"
 
 #: providers/gda-sybase-server/gda-sybase-recordset.c:397
 #, c-format
 msgid "ct_describe(%d): '%s', %d (%s)"
-msgstr ""
+msgstr "ct_describe(%d): \"%s\", %d (%s)"
 
 # fe/fe_log.c:92
 #: providers/gda-sybase-server/gda-sybase-recordset.c:406
-#, fuzzy
 msgid "could not allocate data holder"
-msgstr "Не удалось получить обработчик утверждения"
+msgstr "не удалось получить место для хранения данных"
 
 #: providers/gda-sybase-server/gda-sybase-recordset.c:416
 msgid "could not ct_bind data holder to column"
@@ -866,7 +866,7 @@ msgstr "Не удалось зарегистрировать реализацию провайдера gda-sybase"
 #: report/gda-report-engine.c:87
 #, c-format
 msgid "CORBA exception unloading report engine: %s"
-msgstr ""
+msgstr "Исключение CORBA при выгрузке процессора отчетов: %s"
 
 #: report/server/gda-report-server-main.c:43
 #: report/server/gda-report-server-main.c:50
@@ -881,30 +881,33 @@ msgstr "Получен сигнал %d, чистое выключение"
 
 #: report/server/gda-report-server-main.c:96
 msgid "Failed to initialize OAF: please mail bug report to OAF maintainers"
-msgstr "Сбой инициализации OAF: пожалуйста, отправьте сообщение об ошибке разработчикам OAF"
+msgstr ""
+"Сбой инициализации OAF: пожалуйста, отправьте сообщение об ошибке "
+"разработчикам OAF"
 
 # fe/fe_log.c:92
 #: report/server/gda-report-server-main.c:106
-#, fuzzy
 msgid "Could not activate report engine"
-msgstr "Не удалось активировать сервис %s"
+msgstr "Не удалось активировать процессор отчетов"
 
 #: report/server/gda-report-server-main.c:123
-#, fuzzy
 msgid ""
 "Another instance of the report engine is already registered with OAF. "
 "Exiting..."
-msgstr "Другой экземпляр этого провайдера уже зарегистрирован в OAF. Выход..."
+msgstr ""
+"Другой экземпляр процессора отчетов уже зарегистрирован в OAF. \n"
+"Выход..."
 
 #: report/server/gda-report-server-main.c:126
-#, fuzzy
 msgid "Unknown error registering report engine with OAF. Exiting"
-msgstr "Неизвестная ошибка регистрации этого провайдера в OAF. Выход"
+msgstr ""
+"Неизвестная ошибка регистрации процессора отчетов в OAF. \n"
+"Выход"
 
 #: report/server/gda-report-server-main.c:130
-#, fuzzy, c-format
+#, c-format
 msgid "Registered report engine with ID = %s"
-msgstr "Зарегистрировано с идентификатором = %s"
+msgstr "Зарегистрирован процессор отчетов с идентификатором = %s"
 
 # fe/fe_main.c:186
 #: tools/gda-run.c:30
