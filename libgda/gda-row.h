@@ -33,18 +33,18 @@ typedef struct _GdaRow GdaRow;
 
 #define GDA_TYPE_ROW (gda_row_get_type())
 
-GType                    gda_row_get_type (void);
-GdaRow                  *gda_row_new (GdaDataModel *model, gint count);
-GdaRow                  *gda_row_new_from_list (GdaDataModel *model, const GList *values);
-GdaRow                  *gda_row_copy (GdaRow *row);
-void                     gda_row_free (GdaRow *row);
-GdaDataModel            *gda_row_get_model (GdaRow *row);
-gint                     gda_row_get_number (GdaRow *row);
-void                     gda_row_set_number (GdaRow *row, gint number);
-const gchar             *gda_row_get_id (GdaRow *row);
-void                     gda_row_set_id (GdaRow *row, const gchar *id);
-G_CONST_RETURN GdaValue *gda_row_get_value (GdaRow *row, gint num);
-gint                     gda_row_get_length (GdaRow *row);
+GType         gda_row_get_type (void);
+GdaRow       *gda_row_new (GdaDataModel *model, gint count);
+GdaRow       *gda_row_new_from_list (GdaDataModel *model, const GList *values);
+GdaRow       *gda_row_copy (GdaRow *row);
+void          gda_row_free (GdaRow *row);
+GdaDataModel *gda_row_get_model (GdaRow *row);
+gint          gda_row_get_number (GdaRow *row);
+void          gda_row_set_number (GdaRow *row, gint number);
+const gchar  *gda_row_get_id (GdaRow *row);
+void          gda_row_set_id (GdaRow *row, const gchar *id);
+GdaValue     *gda_row_get_value (GdaRow *row, gint num);
+gint          gda_row_get_length (GdaRow *row);
 
 G_END_DECLS
 

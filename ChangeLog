@@ -1,5 +1,6 @@
 2004-01-24  Paisa  Seeluangsawat <paisa@users.sf.net>
 
+	* libgda/gda-row.[ch]:
 	* libgda/gda-value.[ch]: removed useless const in arguments.
 
 2004-01-15  Nikolai Weibull <ruby-gnome2-devel-en-list@pcppopper.org>
