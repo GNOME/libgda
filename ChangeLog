@@ -2,6 +2,8 @@
 
 	* configure.in: Added check for sybase OCli in OCS subdir
 
+	* providers/sybase/libmain.c: added LOCALE parameter
+
 	* providers/sybase/gda-sybase-provider.c: added provider_new,
 	shortened open_connection by gda_sybase_connection_data_free,
 	added LOCALE parameter, added debug messages, finished 
