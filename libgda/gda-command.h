@@ -54,7 +54,7 @@ typedef struct {
 } GdaCommand;
 
 GdaCommand       *gda_command_new (const gchar *text, GdaCommandType type,
-				GdaCommandOptions options);
+				   GdaCommandOptions options);
 void              gda_command_free (GdaCommand *cmd);
 
 const gchar      *gda_command_get_text (GdaCommand *cmd);

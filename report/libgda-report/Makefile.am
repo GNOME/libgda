@@ -17,7 +17,7 @@ libgda_report_2_la_SOURCES = \
 	gda-report-document.c
 
 libgda_report_2_la_LDFLAGS = -version-info $(GDA_CURRENT):$(GDA_REVISION):$(GDA_AGE)
-libgda_report_2_la_LIBADD = $(LIBGDA_LIBS)
+libgda_report_2_la_LIBADD = $(LIBGDA_LIBS) $(top_builddir)/libgda/libgda-2.la
 
 gdareportincludedir=$(includedir)/libgda-report
 gdareportinclude_HEADERS=$(gda_report_headers)

@@ -1,4 +1,10 @@
+2002-08-23  Margus Väli <mvali@hot.ee>
+
+	* report/libgda-report/Makefile.am: link libgda-report with libgda-2,
+	for cygwin compilation.
+
 2002-08-22  Vivien Malerba <malerba@gnome-db.org>
+
 	* libgda-docs.sgml: updated the schemas
 	* providers/postgres/gda-postgres-provider.c: set the schemas in sync
 	with the docs
