@@ -1,6 +1,6 @@
 # Note that this is NOT a relocatable package
 # defaults for redhat
-%define name	@PACKAGE@
+%define name	gda-odbc
 %define ver	@VERSION@
 %define prefix     /usr
 %define sysconfdir /etc
@@ -14,7 +14,7 @@ Version:	%ver
 Release: 	%rel
 Copyright: 	GPL
 Group: 		Applications/Databases
-Source:		ftp://ftp.gnome.org/pub/GNOME/sources/gnome-db/%{name}-%{ver}.tar.gz
+Source:		ftp://ftp.gnome.org/pub/GNOME/sources/gnome-db/libgda-%{ver}.tar.gz
 BuildRoot: 	/var/tmp/%{name}-%{ver}-root
 URL: 		http://www.gnome.org/projects/gnome-db/
 DocDir: 	%{prefix}/doc
