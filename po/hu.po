@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda VERSION\n"
 "POT-Creation-Date: 2000-12-14 14:33+0100\n"
-"PO-Revision-Date: 2001-01-24 15:15+0100\n"
+"PO-Revision-Date: 2000-12-14 14:34+01:00\n"
 "Last-Translator: Emese Kovacs <emese@gnome.hu>\n"
 "Language-Team: Hungarian <hu@gnome.hu>\n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,7 @@ msgstr ""
 #: lib/gda-client/gda-connection-pool.c:267
 #, c-format
 msgid "could not open connection to %s"
-msgstr "nem tudok kapcsolódni: '%s'"
+msgstr "a kapcsolatfelvétel nem sikerült ezzel: '%s'"
 
 #: lib/gda-client/gda-connection-pool.c:280
 #, c-format
@@ -26,7 +26,7 @@ msgstr "%s adatforrást nem találtam"
 #: lib/gda-client/gda-connection.c:234 lib/gda-client/gda-error.c:179
 #, c-format
 msgid "%s: The server didn't respond."
-msgstr "%s: A kiszolgáló nem válaszol."
+msgstr "%s: A szerver nem válaszol."
 
 #: lib/gda-client/gda-connection.c:238 lib/gda-client/gda-error.c:183
 #, c-format
@@ -104,7 +104,7 @@ msgstr "A következõ nem érvényes táblanév: %p"
 
 #: lib/gda-server/gda-server-error.c:185
 msgid "Could not get pointer to server implementation"
-msgstr "Nem kapom meg a mutatót a kiszolgálóra"
+msgstr "Nem kapom meg a mutatót a szerverre"
 
 #: lib/gda-server/gda-server-impl-connection.c:123
 #: lib/gda-server/gda-server-impl-connection.c:132
@@ -258,7 +258,7 @@ msgstr "hiba"
 
 #: providers/gda-ldap-server/main-ldap.c:69
 msgid "Could not register LDAP provider implementation"
-msgstr "Nem tudok LDAP szolgáltatót regisztrálni"
+msgstr "Nem sikerült LDAP szolgáltatót regisztrálni"
 
 #: providers/gda-interbase-server/gda-interbase-connection.c:260
 #, c-format
@@ -267,7 +267,7 @@ msgstr "A hiba kódja %ld"
 
 #: providers/gda-interbase-server/main-interbase.c:70
 msgid "Could not register INTERBASE provider implementation"
-msgstr "Nem tudok INTERBASE szolgáltatót regisztrálni"
+msgstr "Nem sikerült INTERBASE szolgáltatót regisztrálni"
 
 #: providers/gda-mail-server/gda-mail-connection.c:108
 #: providers/gda-mdb-server/gda-mdb-connection.c:224
@@ -306,7 +306,7 @@ msgid ""
 "options"
 msgstr ""
 "%s:%d: Nem adhatsz meg UNIX_SOCKET-et, ha HOST-ot vagy PORT-ot megadsz. "
-"Kérlek töröld a UNIX_SOCKET-et, vagy töröld mind a HOST és a PORT beállításokat."
+"Kérlek töröld a UNIX_SOCKET-et, vagy töröld mind a HOST és a PORT opciókat."
 
 #: providers/gda-mdb-server/gda-mdb-connection.c:147
 #, c-format
@@ -362,7 +362,7 @@ msgstr "Nem tudom regisztrálni az ODBC szolgáltatót"
 
 #: providers/gda-oracle-server/gda-oracle-command.c:195
 msgid "Could not allocate statement handle"
-msgstr "Nem tudok álláskezelõt allokálni"
+msgstr "Nem sikerült álláskezelõt allokálni"
 
 #: providers/gda-oracle-server/gda-oracle-command.c:199
 msgid "command object being created without associated connection"
@@ -486,11 +486,11 @@ msgstr "schema_cols: table_name '%s'"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:438
 msgid "Could not allocate command structure"
-msgstr "Nem tudok parancs struktúrát allokálni"
+msgstr "Nem sikerült parancs struktúrát allokálni"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:460
 msgid "Could not allocate enough memory for query"
-msgstr "Nem tudok elég memóriát allokálni a lekérdezéshez"
+msgstr "Nem sikerült elég memóriát allokálni a lekérdezéshez"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:474
 msgid "Could not get recordset in schema_cols"
@@ -520,7 +520,7 @@ msgstr ""
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:533
 msgid "Could not allocate cmd structure"
-msgstr "Nem tudok cmd struktúrát allokálni"
+msgstr "Nem sikerült cmd struktúrát allokálni"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:596
 #, c-format
@@ -653,7 +653,7 @@ msgstr "ct_diag() inicializálása sikertelen"
 #: providers/gda-sybase-server/gda-sybase-error.c:185
 #, c-format
 msgid "%s could not find server implementation"
-msgstr "%s nem kapta meg a mutatót a kiszolgálóra"
+msgstr "%s nem kapta meg a mutatót a szerverre"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:191
 #, c-format
@@ -1122,7 +1122,7 @@ msgstr "%s: a '%s' adatforrást nem találom\n"
 #~ msgstr "A rácsnál használatos betûtípus"
 
 #~ msgid "Could not initialize Bonobo"
-#~ msgstr "A Bonobo inicializálása nem sikerült"
+#~ msgstr "Nem tudom a Bonobo-t elindítani"
 
 #~ msgid "View requested to be activated but there is already an active view"
 #~ msgstr ""
@@ -1201,7 +1201,7 @@ msgstr "%s: a '%s' adatforrást nem találom\n"
 #~ msgstr "Szerver"
 
 #~ msgid "New server"
-#~ msgstr "Új kiszolgáló"
+#~ msgstr "Új szerver"
 
 #~ msgid "Repository"
 #~ msgstr "Repository"
@@ -1216,7 +1216,7 @@ msgstr "%s: a '%s' adatforrást nem találom\n"
 #~ msgstr "Meglévõ jelentés megnyitása"
 
 #~ msgid "Open existing server"
-#~ msgstr "Meglévõ kiszolgáló megnyitása"
+#~ msgstr "Meglévõ szerver megnyitása"
 
 #~ msgid "Open existing repository"
 #~ msgstr "Meglévõ repository megnyitása"
