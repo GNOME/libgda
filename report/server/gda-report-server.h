@@ -19,6 +19,7 @@
 #if !defined(__gda_report_server_h__)
 #  define __gda_report_server_h__
 
+#include "config.h"
 #include <gda-common.h>
 #include <gda-report-defs.h>
 #include <gda-report-server-cache.h>
