@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda CVS-20010407\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2003-09-11 00:35+0200\n"
+"POT-Creation-Date: 2003-10-12 14:54+0200\n"
 "PO-Revision-Date: 2001-04-07 12:45+0900\n"
 "Last-Translator: Akira TAGOH <tagoh@gnome.gr.jp>\n"
 "Language-Team: Japanese <translation@gnome.gr.jp>\n"
@@ -237,46 +237,55 @@ msgstr ""
 msgid "Error creating error container."
 msgstr ""
 
-#: providers/freetds/gda-freetds-provider.c:255
-#: providers/freetds/gda-freetds-provider.c:257
+#: providers/freetds/gda-freetds-provider.c:258
+#: providers/freetds/gda-freetds-provider.c:260
 #, fuzzy
 msgid "Allocating tds context failed."
 msgstr "レコードセットの割り当てに失敗しました"
 
 #: providers/freetds/gda-freetds-provider.c:275
 #: providers/freetds/gda-freetds-provider.c:277
+#, fuzzy
+msgid "Allocating tds socket failed."
+msgstr "レコードセットの割り当てに失敗しました"
+
+#. gda_freetds_free_connection_data (tds_cnc);
+#: providers/freetds/gda-freetds-provider.c:283
+#: providers/freetds/gda-freetds-provider.c:285
+#: providers/freetds/gda-freetds-provider.c:292
+#: providers/freetds/gda-freetds-provider.c:294
 msgid "Establishing connection failed."
 msgstr ""
 
-#: providers/freetds/gda-freetds-provider.c:291
-#: providers/freetds/gda-freetds-provider.c:292
+#: providers/freetds/gda-freetds-provider.c:308
+#: providers/freetds/gda-freetds-provider.c:309
 #, fuzzy
 msgid "Failed getting connection info."
 msgstr "再接続を試みています"
 
-#: providers/freetds/gda-freetds-provider.c:781
-#: providers/freetds/gda-freetds-provider.c:782
+#: providers/freetds/gda-freetds-provider.c:798
+#: providers/freetds/gda-freetds-provider.c:799
 msgid "Query did not succeed in execute_cmd()."
 msgstr ""
 
-#: providers/freetds/gda-freetds-provider.c:795
-#: providers/freetds/gda-freetds-provider.c:797
+#: providers/freetds/gda-freetds-provider.c:812
+#: providers/freetds/gda-freetds-provider.c:814
 msgid "Unexpected result tokens in execute_cmd()."
 msgstr ""
 
-#: providers/freetds/gda-freetds-provider.c:805
-#: providers/freetds/gda-freetds-provider.c:806
+#: providers/freetds/gda-freetds-provider.c:822
+#: providers/freetds/gda-freetds-provider.c:823
 msgid "Unexpected return in execute_cmd()."
 msgstr ""
 
-#: providers/freetds/gda-freetds-provider.c:1043
+#: providers/freetds/gda-freetds-provider.c:1060
 #, c-format
 msgid ""
 "Msg %d, Level %d, State %d, Server %s, Line %d\n"
 "%s\n"
 msgstr ""
 
-#: providers/freetds/gda-freetds-provider.c:1062 providers/freetds/utils.c:44
+#: providers/freetds/gda-freetds-provider.c:1079 providers/freetds/utils.c:44
 #: providers/oracle/utils.c:74 providers/postgres/utils.c:53
 #: providers/sybase/gda-sybase-provider.c:765
 #: providers/sybase/gda-sybase-recordset.c:512
@@ -504,14 +513,14 @@ msgid "Row number out of range"
 msgstr ""
 
 #: providers/ldap/gda-ldap-recordset.c:283
-#: providers/msql/gda-msql-recordset.c:227
+#: providers/msql/gda-msql-recordset.c:229
 #: providers/mysql/gda-mysql-recordset.c:294
 #: providers/oracle/gda-oracle-recordset.c:469
 msgid "Attempt to insert a row with an invalid number of columns"
 msgstr ""
 
 #: providers/ldap/gda-ldap-recordset.c:298
-#: providers/msql/gda-msql-recordset.c:239
+#: providers/msql/gda-msql-recordset.c:241
 #: providers/mysql/gda-mysql-recordset.c:309
 #: providers/oracle/gda-oracle-recordset.c:484
 #, fuzzy
@@ -519,7 +528,7 @@ msgid "Could not retrieve column's information"
 msgstr "%s へ接続することが出来ませんでした"
 
 #: providers/ldap/gda-ldap-recordset.c:316
-#: providers/msql/gda-msql-recordset.c:253
+#: providers/msql/gda-msql-recordset.c:255
 #: providers/mysql/gda-mysql-recordset.c:327
 #: providers/oracle/gda-oracle-recordset.c:502
 #, fuzzy
@@ -757,7 +766,7 @@ msgstr "MDB (MS Access)ファイル用のGDAデータソースアクセス"
 #: providers/msql/gda-msql-provider.c:293
 #: providers/msql/gda-msql-provider.c:551
 #: providers/msql/gda-msql-recordset.c:50
-#: providers/msql/gda-msql-recordset.c:138
+#: providers/msql/gda-msql-recordset.c:140
 #, fuzzy
 msgid "Invalid mSQL handle"
 msgstr "データベース '%s' を選択しました"
@@ -889,7 +898,7 @@ msgstr ""
 #: providers/odbc/libmain.c:41
 #, fuzzy
 msgid "Provider for ODBC data sources"
-msgstr "ODBC用のGDAデータソースアクセス"
+msgstr "MDB (MS Access)ファイル用のGDAデータソースアクセス"
 
 #: providers/oracle/gda-oracle-provider.c:196
 msgid "No TNS name supplied"
@@ -898,27 +907,27 @@ msgstr ""
 #: providers/oracle/gda-oracle-provider.c:212
 #, fuzzy
 msgid "Could not initialize Oracle"
-msgstr "ct_diag() を初期化することが出来ませんでした"
+msgstr "'%s' にロケールを設定することが出来ませんでした"
 
 #: providers/oracle/gda-oracle-provider.c:223
 #, fuzzy
 msgid "Could not initialize the Oracle environment"
-msgstr "ct_diag() を初期化することが出来ませんでした"
+msgstr "ステートメントハンドルを割り当てることが出来ませんでした"
 
 #: providers/oracle/gda-oracle-provider.c:234
 #, fuzzy
 msgid "Could not allocate the Oracle service handle"
-msgstr "cs_diag() を初期化することが出来ませんでした"
+msgstr "ステートメントハンドルを割り当てることが出来ませんでした"
 
 #: providers/oracle/gda-oracle-provider.c:244
 #, fuzzy
 msgid "Could not allocate the Oracle error handle"
-msgstr "ct_diag() を初期化することが出来ませんでした"
+msgstr "ステートメントハンドルを割り当てることが出来ませんでした"
 
 #: providers/oracle/gda-oracle-provider.c:256
 #, fuzzy
 msgid "Could not allocate the Oracle server handle"
-msgstr "cs_diag() を初期化することが出来ませんでした"
+msgstr "ステートメントハンドルを割り当てることが出来ませんでした"
 
 #: providers/oracle/gda-oracle-provider.c:269
 #, fuzzy
@@ -926,34 +935,29 @@ msgid "Could not allocate the Oracle session handle"
 msgstr "ステートメントハンドルを割り当てることが出来ませんでした"
 
 #: providers/oracle/gda-oracle-provider.c:299
-#, fuzzy
 msgid "Could not attach to the Oracle server"
-msgstr "cs_diag() を初期化することが出来ませんでした"
+msgstr ""
 
 #: providers/oracle/gda-oracle-provider.c:315
-#, fuzzy
 msgid "Could not set the Oracle server attribute in the service context"
-msgstr "cs_diag() を初期化することが出来ませんでした"
+msgstr ""
 
 #: providers/oracle/gda-oracle-provider.c:331
-#, fuzzy
 msgid "Could not set the Oracle username attribute"
-msgstr "cs_diag() を初期化することが出来ませんでした"
+msgstr ""
 
 #: providers/oracle/gda-oracle-provider.c:347
-#, fuzzy
 msgid "Could not set the Oracle password attribute"
-msgstr "CORBA ファクトリを開くことが出来ませんでした"
+msgstr ""
 
 #: providers/oracle/gda-oracle-provider.c:362
 #, fuzzy
 msgid "Could not begin the Oracle session"
-msgstr "ct_diag() を初期化することが出来ませんでした"
+msgstr "'%s' にロケールを設定することが出来ませんでした"
 
 #: providers/oracle/gda-oracle-provider.c:380
-#, fuzzy
 msgid "Could not set the Oracle session attribute in the service context"
-msgstr "cs_diag() を初期化することが出来ませんでした"
+msgstr ""
 
 #: providers/oracle/gda-oracle-provider.c:466
 #: providers/oracle/gda-oracle-provider.c:498
@@ -969,8 +973,9 @@ msgstr "cs_diag() を初期化することが出来ませんでした"
 #: providers/oracle/gda-oracle-recordset.c:167
 #: providers/oracle/gda-oracle-recordset.c:390
 #: providers/oracle/gda-oracle-recordset.c:591
+#, fuzzy
 msgid "Invalid Oracle handle"
-msgstr ""
+msgstr "データベース '%s' を選択しました"
 
 #: providers/oracle/gda-oracle-provider.c:509
 #, fuzzy
@@ -980,27 +985,24 @@ msgstr "ステートメントハンドルを割り当てることが出来ませ
 #: providers/oracle/gda-oracle-provider.c:520
 #, fuzzy
 msgid "Could not prepare the Oracle statement"
-msgstr "ct_diag() を初期化することが出来ませんでした"
+msgstr "'%s' にロケールを設定することが出来ませんでした"
 
 #: providers/oracle/gda-oracle-provider.c:552
-#, fuzzy
 msgid "Could not bind the Oracle statement parameter"
-msgstr "CORBA ファクトリを開くことが出来ませんでした"
+msgstr ""
 
 #: providers/oracle/gda-oracle-provider.c:598
-#, fuzzy
 msgid "Could not get the Oracle statement type"
-msgstr "CORBA ファクトリを開くことが出来ませんでした"
+msgstr ""
 
 #: providers/oracle/gda-oracle-provider.c:610
-#, fuzzy
 msgid "Could not set the Oracle statement pre-fetch row count"
-msgstr "CORBA ファクトリを開くことが出来ませんでした"
+msgstr ""
 
 #: providers/oracle/gda-oracle-provider.c:627
 #, fuzzy
 msgid "Could not execute the Oracle statement"
-msgstr "ct_diag() を初期化することが出来ませんでした"
+msgstr "'%s' にロケールを設定することが出来ませんでした"
 
 #: providers/oracle/gda-oracle-provider.c:640
 #, fuzzy
@@ -1008,21 +1010,21 @@ msgid "Could not get the number of columns in the result set"
 msgstr "クライアントメッセージ数を取得することが出来ませんでした"
 
 #: providers/oracle/gda-oracle-provider.c:657
+#, fuzzy
 msgid "Could not get the parameter descripter in the result set"
-msgstr ""
+msgstr "クライアントメッセージ数を取得することが出来ませんでした"
 
 #: providers/oracle/gda-oracle-provider.c:669
 #, fuzzy
 msgid "Could not get the column name in the result set"
-msgstr "クライアントメッセージ数を取得することが出来ませんでした"
+msgstr "サーバメッセージを消去することが出来ませんでした"
 
 #: providers/oracle/gda-oracle-provider.c:815
 #: providers/oracle/gda-oracle-provider.c:896
 #: providers/oracle/gda-oracle-provider.c:951
 #: providers/oracle/gda-oracle-provider.c:1012
-#, fuzzy
 msgid "Could not attach the transaction to the service context"
-msgstr "cs_diag() を初期化することが出来ませんでした"
+msgstr ""
 
 #: providers/oracle/gda-oracle-provider.c:870
 #, fuzzy
@@ -1030,29 +1032,24 @@ msgid "Could not allocate the Oracle transaction handle"
 msgstr "ステートメントハンドルを割り当てることが出来ませんでした"
 
 #: providers/oracle/gda-oracle-provider.c:882
-#, fuzzy
 msgid "Could not set the Oracle transaction name"
-msgstr "ct_diag() を初期化することが出来ませんでした"
+msgstr ""
 
 #: providers/oracle/gda-oracle-provider.c:907
-#, fuzzy
 msgid "Could not start the Oracle transaction"
-msgstr "CORBA ファクトリを開くことが出来ませんでした"
+msgstr ""
 
 #: providers/oracle/gda-oracle-provider.c:960
-#, fuzzy
 msgid "Could not prepare the transaction to commit"
-msgstr "%s へ接続することが出来ませんでした"
+msgstr ""
 
 #: providers/oracle/gda-oracle-provider.c:968
-#, fuzzy
 msgid "Could not commit the Oracle transaction"
-msgstr "CORBA ファクトリを開くことが出来ませんでした"
+msgstr ""
 
 #: providers/oracle/gda-oracle-provider.c:1019
-#, fuzzy
 msgid "Could not rollback the Oracle transaction"
-msgstr "ロケール構造体を割り当てることが出来ませんでした"
+msgstr ""
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/oracle/gda-oracle-provider.c:1152
@@ -1076,9 +1073,8 @@ msgid "Could not allocate the Oracle describe handle"
 msgstr "ステートメントハンドルを割り当てることが出来ませんでした"
 
 #: providers/oracle/gda-oracle-provider.c:1451
-#, fuzzy
 msgid "Could not set describe handle attribute"
-msgstr "CORBA ファクトリを開くことが出来ませんでした"
+msgstr ""
 
 #: providers/oracle/gda-oracle-provider.c:1478
 #: providers/oracle/gda-oracle-provider.c:1583
@@ -1090,27 +1086,24 @@ msgstr "サーバメッセージを消去することが出来ませんでした
 #: providers/oracle/gda-oracle-provider.c:1596
 #, fuzzy
 msgid "Could not get the Oracle parameter handle"
-msgstr "cs_diag() を初期化することが出来ませんでした"
+msgstr "ステートメントハンドルを割り当てることが出来ませんでした"
 
 #: providers/oracle/gda-oracle-provider.c:1508
 #, fuzzy
 msgid "Could not get described object type"
-msgstr "CORBA ファクトリを開くことが出来ませんでした"
+msgstr "GdaServerCommand の割り当てることが出来ませんでした"
 
 #: providers/oracle/gda-oracle-provider.c:1523
-#, fuzzy
 msgid "Could not get synonym referred-to schema"
-msgstr "schema_cols からレコードセットを取得することが出来ませんでした"
+msgstr ""
 
 #: providers/oracle/gda-oracle-provider.c:1536
-#, fuzzy
 msgid "Could not get synonym referred-to name"
-msgstr "ct_diag() を初期化することが出来ませんでした"
+msgstr ""
 
 #: providers/oracle/gda-oracle-provider.c:1549
-#, fuzzy
 msgid "Could not get synonym referred-to dblink"
-msgstr "%s へ接続することが出来ませんでした"
+msgstr ""
 
 #: providers/oracle/gda-oracle-provider.c:1611
 #, fuzzy
@@ -1120,32 +1113,31 @@ msgstr "サーバメッセージを消去することが出来ませんでした
 #: providers/oracle/gda-oracle-provider.c:1625
 #, fuzzy
 msgid "Could not get the column list"
-msgstr "'%s' にロケールを設定することが出来ませんでした"
+msgstr "サーバメッセージを消去することが出来ませんでした"
 
 #: providers/oracle/gda-oracle-provider.c:1656
 #, fuzzy
 msgid "Could not get the Oracle column handle"
-msgstr "ct_diag() を初期化することが出来ませんでした"
+msgstr "サーバメッセージを消去することが出来ませんでした"
 
 #: providers/oracle/gda-oracle-provider.c:1671
 #, fuzzy
 msgid "Could not get the Oracle field name"
-msgstr "ct_diag() を初期化することが出来ませんでした"
+msgstr "'%s' にロケールを設定することが出来ませんでした"
 
 #: providers/oracle/gda-oracle-provider.c:1693
 #, fuzzy
 msgid "Could not get the Oracle field data type"
-msgstr "CORBA ファクトリを開くことが出来ませんでした"
+msgstr "'%s' にロケールを設定することが出来ませんでした"
 
 #: providers/oracle/gda-oracle-provider.c:1713
-#, fuzzy
 msgid "Could not get the Oracle field defined size"
-msgstr "'%s' にロケールを設定することが出来ませんでした"
+msgstr ""
 
 #: providers/oracle/gda-oracle-provider.c:1732
 #, fuzzy
 msgid "Could not get the Oracle field scale"
-msgstr "クライアントメッセージ数を取得することが出来ませんでした"
+msgstr "'%s' にロケールを設定することが出来ませんでした"
 
 #: providers/oracle/gda-oracle-provider.c:1751
 msgid "Could not get the Oracle field nullable attribute"
@@ -1166,9 +1158,8 @@ msgid "Sequences"
 msgstr ""
 
 #: providers/oracle/gda-oracle-recordset.c:72
-#, fuzzy
 msgid "Could not get the Oracle parameter"
-msgstr "ct_diag() を初期化することが出来ませんでした"
+msgstr ""
 
 #: providers/oracle/gda-oracle-recordset.c:82
 #, fuzzy
@@ -1178,7 +1169,7 @@ msgstr "'%s' にロケールを設定することが出来ませんでした"
 #: providers/oracle/gda-oracle-recordset.c:95
 #, fuzzy
 msgid "Could not get the parameter data type"
-msgstr "フィールドを割り当てることが出来ませんでした"
+msgstr "'%s' にロケールを設定することが出来ませんでした"
 
 #: providers/oracle/gda-oracle-recordset.c:128
 #, fuzzy
@@ -1203,7 +1194,7 @@ msgstr "サーバメッセージを消去することが出来ませんでした
 #: providers/oracle/gda-oracle-recordset.c:210
 #, fuzzy
 msgid "Could not get the Oracle column data type"
-msgstr "CORBA ファクトリを開くことが出来ませんでした"
+msgstr "サーバメッセージを消去することが出来ませんでした"
 
 #: providers/oracle/gda-oracle-recordset.c:222
 #, fuzzy
@@ -1213,7 +1204,7 @@ msgstr "サーバメッセージを消去することが出来ませんでした
 #: providers/oracle/gda-oracle-recordset.c:234
 #, fuzzy
 msgid "Could not get the Oracle column nullable attribute"
-msgstr "CORBA ファクトリを開くことが出来ませんでした"
+msgstr "サーバメッセージを消去することが出来ませんでした"
 
 #: providers/oracle/gda-oracle-recordset.c:246
 #, fuzzy
@@ -1238,8 +1229,9 @@ msgstr "MDB (MS Access)ファイル用のGDAデータソースアクセス"
 #: providers/postgres/gda-postgres-recordset.c:220
 #: providers/postgres/gda-postgres-recordset.c:262
 #: providers/postgres/utils.c:178
+#, fuzzy
 msgid "Invalid PostgreSQL handle"
-msgstr ""
+msgstr "データベース '%s' を選択しました"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/postgres/gda-postgres-provider.c:1195
@@ -1284,12 +1276,14 @@ msgstr ""
 #: providers/sqlite/gda-sqlite-recordset.c:156
 #: providers/sqlite/gda-sqlite-recordset.c:195
 #: providers/sqlite/gda-sqlite-recordset.c:236
+#, fuzzy
 msgid "Invalid SQLite handle"
-msgstr ""
+msgstr "データベース '%s' を選択しました"
 
 #: providers/sqlite/gda-sqlite-provider.c:265
+#, fuzzy
 msgid "Invalid SQLITE handle"
-msgstr ""
+msgstr "データベース '%s' を選択しました"
 
 #: providers/sqlite/gda-sqlite-provider.c:361
 #: providers/sqlite/gda-sqlite-provider.c:376
@@ -1326,19 +1320,18 @@ msgid ""
 msgstr ""
 
 #: providers/sybase/gda-sybase-provider.c:656
-#, fuzzy, c-format
+#, c-format
 msgid "Failed allocating a command structure in %s()"
-msgstr "コマンド構造体の充填に失敗しました\n"
+msgstr ""
 
 #: providers/sybase/gda-sybase-provider.c:670
 #, fuzzy
 msgid "Could not prepare command structure."
-msgstr "コマンド構造体を割り当てることが出来ませんでした"
+msgstr "'%s' にロケールを設定することが出来ませんでした"
 
 #: providers/sybase/gda-sybase-provider.c:680
-#, fuzzy
 msgid "Sending sql-command failed."
-msgstr "%s: コマンドの送信は失敗しました"
+msgstr ""
 
 #: providers/sybase/gda-sybase-provider.c:706
 #: providers/sybase/gda-sybase-provider.c:724
@@ -1355,9 +1348,8 @@ msgid "CS_STATUS_RESULT!"
 msgstr ""
 
 #: providers/sybase/gda-sybase-provider.c:734
-#, fuzzy
 msgid "Hit unsupported result type"
-msgstr "制約タイプは無効またはサポートしていません: %d"
+msgstr ""
 
 #: providers/sybase/gda-sybase-provider.c:762
 msgid ""
@@ -1366,56 +1358,51 @@ msgid ""
 msgstr ""
 
 #: providers/sybase/gda-sybase-provider.c:793
-#, fuzzy, c-format
+#, c-format
 msgid "%s returned %s"
-msgstr "ct_results() は %x を返しました"
+msgstr ""
 
 #: providers/sybase/gda-sybase-provider.c:820
-#, fuzzy
 msgid "Failed dropping command structure."
-msgstr "コマンド構造体の充填に失敗しました\n"
+msgstr ""
 
 #: providers/sybase/gda-sybase-provider.c:850
-#, fuzzy, c-format
+#, c-format
 msgid "Command structure already in use. %s failed."
-msgstr "コマンド構造体の開放に失敗しました"
+msgstr ""
 
 #: providers/sybase/gda-sybase-provider.c:858
 #, fuzzy
 msgid "Could not allocate command structure."
-msgstr "コマンド構造体を割り当てることが出来ませんでした"
+msgstr "ステートメントハンドルを割り当てることが出来ませんでした"
 
 #: providers/sybase/gda-sybase-provider.c:867
 #, fuzzy, c-format
 msgid "Could not prepare command structure with %s."
-msgstr "コマンド構造体を割り当てることが出来ませんでした"
+msgstr "'%s' にロケールを設定することが出来ませんでした"
 
 #: providers/sybase/gda-sybase-provider.c:877
-#, fuzzy
 msgid "Sending command failed."
-msgstr "%s: コマンドの送信は失敗しました"
+msgstr ""
 
 #: providers/sybase/gda-sybase-provider.c:902
 #: providers/sybase/gda-sybase-provider.c:919
 #: providers/sybase/gda-sybase-provider.c:930
-#, fuzzy, c-format
+#, c-format
 msgid "%s: %s failed"
-msgstr "%s: ユーザコマンドは失敗しました"
+msgstr ""
 
 #: providers/sybase/gda-sybase-provider.c:974
-#, fuzzy
 msgid "could not allocate cmd structure to find current database."
-msgstr "コマンド構造体を割り当てることが出来ませんでした"
+msgstr ""
 
 #: providers/sybase/gda-sybase-provider.c:985
-#, fuzzy
 msgid "could not execute command to get current database."
-msgstr "コマンド構造体を割り当てることが出来ませんでした"
+msgstr ""
 
 #: providers/sybase/gda-sybase-provider.c:993
-#, fuzzy
 msgid "could not send command to get current database."
-msgstr "コマンド構造体を割り当てることが出来ませんでした"
+msgstr ""
 
 #: providers/sybase/gda-sybase-provider.c:1016
 #, fuzzy
@@ -1428,19 +1415,16 @@ msgid "could not fetch data to find current database."
 msgstr ""
 
 #: providers/sybase/gda-sybase-provider.c:1058
-#, fuzzy
 msgid "could not drop cmd structure to find current database."
-msgstr "コマンド構造体を割り当てることが出来ませんでした"
+msgstr ""
 
 #: providers/sybase/gda-sybase-recordset.c:315
-#, fuzzy
 msgid "Could not allocate datamodel. No results will be returned."
-msgstr "コマンド構造体を割り当てることが出来ませんでした"
+msgstr ""
 
 #: providers/sybase/gda-sybase-recordset.c:318
-#, fuzzy
 msgid "ct_cancel() failed."
-msgstr "%s: ct_command は失敗しました"
+msgstr ""
 
 #: providers/sybase/gda-sybase-recordset.c:331
 #, c-format
@@ -1448,9 +1432,9 @@ msgid "%s failed while processing a row result."
 msgstr ""
 
 #: providers/sybase/gda-sybase-recordset.c:339
-#, fuzzy, c-format
+#, c-format
 msgid "%s returned <= 0 columns."
-msgstr "%d カラムをカウントしました"
+msgstr ""
 
 #: providers/sybase/gda-sybase-recordset.c:359
 #: providers/sybase/gda-sybase-recordset.c:549
@@ -1460,9 +1444,9 @@ msgstr "%s へ接続することが出来ませんでした"
 
 #: providers/sybase/gda-sybase-recordset.c:363
 #: providers/sybase/gda-sybase-recordset.c:553
-#, fuzzy, c-format
+#, c-format
 msgid "Could not call %s while processing row resultset."
-msgstr "クライアントメッセージ数を取得することが出来ませんでした"
+msgstr ""
 
 #: providers/sybase/gda-sybase-recordset.c:382
 #: providers/sybase/gda-sybase-recordset.c:403
@@ -1473,12 +1457,12 @@ msgstr "'%s' にロケールを設定することが出来ませんでした"
 #: providers/sybase/gda-sybase-recordset.c:391
 #, fuzzy, c-format
 msgid "Could not allocate data placeholder for column %d"
-msgstr "データホルダーを割り当てることが出来ませんでした"
+msgstr "'%s' にロケールを設定することが出来ませんでした"
 
 #: providers/sybase/gda-sybase-recordset.c:422
-#, fuzzy, c-format
+#, c-format
 msgid "Could not run %s to cancel processing row resultset."
-msgstr "クライアントメッセージ数を取得することが出来ませんでした"
+msgstr ""
 
 #: providers/sybase/gda-sybase-recordset.c:438
 #, c-format
@@ -1531,9 +1515,8 @@ msgid "GDA provider for sybase databases (using OpenClient)"
 msgstr "MDB (MS Access)ファイル用のGDAデータソースアクセス"
 
 #: providers/sybase/main.c:52
-#, fuzzy
 msgid "Could not initiate Sybase component factory"
-msgstr "CORBA ファクトリを開くことが出来ませんでした"
+msgstr ""
 
 #: providers/sybase/utils.c:48
 msgid "Call: csmsg callback"
@@ -1550,7 +1533,7 @@ msgstr ""
 #: providers/sybase/utils.c:60
 #, fuzzy, c-format
 msgid "OS error: %s"
-msgstr "致命的なエラー: %s\n"
+msgstr "エラー"
 
 #: providers/sybase/utils.c:70
 msgid "Call: Client callback."
@@ -1576,14 +1559,14 @@ msgid ""
 msgstr ""
 
 #: providers/sybase/utils.c:100
-#, fuzzy, c-format
+#, c-format
 msgid "\tServer name: %s\n"
-msgstr "ユーザ名"
+msgstr ""
 
 #: providers/sybase/utils.c:103
-#, fuzzy, c-format
+#, c-format
 msgid "\tProcedure name: %s\n"
-msgstr "ユーザ名"
+msgstr ""
 
 #: providers/sybase/utils.c:147
 msgid "ct_diag() failed determining # of client messages."
@@ -1604,9 +1587,8 @@ msgid "OS_Error:("
 msgstr "エラー"
 
 #: providers/sybase/utils.c:232
-#, fuzzy
 msgid ") Message: "
-msgstr "サーバメッセージ:"
+msgstr ""
 
 #: providers/sybase/utils.c:245
 msgid "Sybase OpenClient Msg: severity("
@@ -1638,9 +1620,8 @@ msgid ""
 msgstr ""
 
 #: providers/sybase/utils.c:346
-#, fuzzy
 msgid "Server:"
-msgstr "サーバメッセージ:"
+msgstr ""
 
 #: providers/sybase/utils.c:350
 msgid "Stored Procedure:"
@@ -1707,9 +1688,8 @@ msgid "Invalid Xbase handle"
 msgstr "データベース '%s' を選択しました"
 
 #: providers/xbase/libmain.c:39
-#, fuzzy
 msgid "Provider for Xbase (dBase, FoxPro, etc) files"
-msgstr "MDB (MS Access)ファイル用のGDAデータソースアクセス"
+msgstr ""
 
 #: providers/xml/gda-xml-provider.c:191
 msgid ""
@@ -1724,13 +1704,13 @@ msgstr "データベース '%s' を選択しました"
 
 #: providers/xml/gda-xml-provider.c:263 providers/xml/gda-xml-provider.c:278
 #: providers/xml/gda-xml-provider.c:329
+#, fuzzy
 msgid "Invalid internal handle"
-msgstr ""
+msgstr "データベース '%s' を選択しました"
 
 #: providers/xml/gda-xml-provider.c:368
-#, fuzzy
 msgid "Not Implemented"
-msgstr "%s は実装されていません"
+msgstr ""
 
 #: providers/xml/gda-xml-provider.c:506 providers/xml/gda-xml-provider.c:512
 msgid "Invalid argument"
@@ -1739,7 +1719,7 @@ msgstr ""
 #: providers/xml/gda-xml-provider.c:538
 #, fuzzy
 msgid "Could not get description for column"
-msgstr "%s へ接続することが出来ませんでした"
+msgstr "サーバメッセージを消去することが出来ませんでした"
 
 #: providers/xml/libmain.c:33
 msgid "XML"
@@ -1971,9 +1951,9 @@ msgid "** ERROR: gda_config_get_data_source_list returned a NULL item\n"
 msgstr ""
 
 #: testing/client.c:201
-#, fuzzy, c-format
+#, c-format
 msgid " Data source = %s, User = %s\n"
-msgstr "データソース %s は見つかりませんでした"
+msgstr ""
 
 #: testing/config.c:84
 msgid "** ERROR: gda_config_get_provider_list returned a NULL item\n"
@@ -1997,658 +1977,3 @@ msgstr ""
 #: testing/config.c:92
 msgid "\tgda_params ="
 msgstr ""
-
-#, fuzzy
-#~ msgid "Context allocated."
-#~ msgstr "フィールドを割り当てることが出来ませんでした"
-
-#, fuzzy
-#~ msgid "Client library initialized."
-#~ msgstr "ct_diag() を初期化しました"
-
-#, fuzzy
-#~ msgid "Could not initialize cslib callback"
-#~ msgstr "ct_diag() を初期化することが出来ませんでした"
-
-#, fuzzy
-#~ msgid "Could not initialize ct-client callback"
-#~ msgstr "ct_diag() を初期化することが出来ませんでした"
-
-#, fuzzy
-#~ msgid "Could not initialize ct-server callback"
-#~ msgstr "ct_diag() を初期化することが出来ませんでした"
-
-#, fuzzy
-#~ msgid "Connection allocated."
-#~ msgstr "接続は切れたようです"
-
-#, fuzzy
-#~ msgid "Username set."
-#~ msgstr "ユーザ名"
-
-#, fuzzy
-#~ msgid "Password set."
-#~ msgstr "パスワード"
-
-#, fuzzy
-#~ msgid "Connected."
-#~ msgstr "%s に接続完了"
-
-#, fuzzy
-#~ msgid ""
-#~ "Connection already in use. Could not allocate command structure in %s()."
-#~ msgstr "コマンド構造体を割り当てることが出来ませんでした"
-
-#, fuzzy
-#~ msgid "Failed dropping command structure in %s()."
-#~ msgstr "コマンド構造体の充填に失敗しました\n"
-
-#, fuzzy
-#~ msgid "%d messages fetched."
-#~ msgstr "%d 個の ctlib メッセージを取得しました"
-
-#, fuzzy
-#~ msgid "Could not allocate environment handle."
-#~ msgstr "ステートメントハンドルを割り当てることが出来ませんでした"
-
-#, fuzzy
-#~ msgid "Could not set autocommit to off.\n"
-#~ msgstr "'%s' にロケールを設定することが出来ませんでした"
-
-#, fuzzy
-#~ msgid "MESSAGE: %s"
-#~ msgstr "メッセージ: "
-
-#, fuzzy
-#~ msgid "ERROR: %s"
-#~ msgstr "エラー: "
-
-#, fuzzy
-#~ msgid "GDA provider for IBMDB2"
-#~ msgstr "MDB (MS Access)ファイル用のGDAデータソースアクセス"
-
-#, fuzzy
-#~ msgid "Could not load %s provider"
-#~ msgstr "CORBA ファクトリを開くことが出来ませんでした"
-
-#, fuzzy
-#~ msgid "Could not load report file at %s"
-#~ msgstr "'%s' にロケールを設定することが出来ませんでした"
-
-#, fuzzy
-#~ msgid "Could not parse report file at %s"
-#~ msgstr "'%s' にロケールを設定することが出来ませんでした"
-
-#, fuzzy
-#~ msgid "Invalid report file '%s'"
-#~ msgstr "データベース '%s' を選択しました"
-
-#, fuzzy
-#~ msgid "An error occurred during fetch"
-#~ msgstr "コマンド実行中にエラーが発生しました"
-
-#, fuzzy
-#~ msgid "CORBA exception: %s"
-#~ msgstr "CORBA ユーザ例外: %s"
-
-#, fuzzy
-#~ msgid "Could not create global GDA client"
-#~ msgstr "%s へ接続することが出来ませんでした"
-
-#, fuzzy
-#~ msgid "GDA Report engine"
-#~ msgstr "GDA分配レポートエンジン"
-
-#, fuzzy
-#~ msgid "Could not parse XML report"
-#~ msgstr "'%s' にロケールを設定することが出来ませんでした"
-
-#, fuzzy
-#~ msgid "Could not activate report engine"
-#~ msgstr "レポートエンジンを始動させることが出来ませんでした"
-
-#, fuzzy
-#~ msgid "Could not create BonoboStreamMem object"
-#~ msgstr "%s へ接続することが出来ませんでした"
-
-#, fuzzy
-#~ msgid "Could not initiate Report component factory"
-#~ msgstr "メールプロバイダの実装を登録することが出来ませんでした"
-
-#, fuzzy
-#~ msgid "Could not activate object %s"
-#~ msgstr "レポートエンジンを始動させることが出来ませんでした"
-
-#, fuzzy
-#~ msgid "Could not query CORBA components"
-#~ msgstr "CORBA ファクトリを開くことが出来ませんでした"
-
-#~ msgid "%s: An Error occured in the CORBA system."
-#~ msgstr "%s: CORBA システムでエラーが発生しました"
-
-#, fuzzy
-#~ msgid "Could not initialize Bonobo"
-#~ msgstr "ct_diag() を初期化することが出来ませんでした"
-
-#, fuzzy
-#~ msgid "Could not notify client about action %d"
-#~ msgstr "クライアントメッセージ番号 %d を取得することが出来ませんでした"
-
-#, fuzzy
-#~ msgid "Default component factory"
-#~ msgstr "%s へ接続することが出来ませんでした"
-
-#, fuzzy
-#~ msgid "GDA Default Datasource Access"
-#~ msgstr "ODBC用のGDAデータソースアクセス"
-
-#, fuzzy
-#~ msgid "Could not initiate Default component factory"
-#~ msgstr "メールプロバイダの実装を登録することが出来ませんでした"
-
-#~ msgid "GDA Datasource Access for MySQL"
-#~ msgstr "MySQL用のGDAデータソースアクセス"
-
-#, fuzzy
-#~ msgid "Could not initiate MySQL component factory"
-#~ msgstr "MySQL プロバイダの実装を登録することが出来ませんでした"
-
-#~ msgid "GDA Datasource Access for ODBC"
-#~ msgstr "ODBC用のGDAデータソースアクセス"
-
-#, fuzzy
-#~ msgid "ODBC component factory"
-#~ msgstr "%s へ接続することが出来ませんでした"
-
-#, fuzzy
-#~ msgid "Could not initiate ODBC component factory"
-#~ msgstr "CORBA ファクトリを開くことが出来ませんでした"
-
-#~ msgid "GDA Datasource Access for Oracle"
-#~ msgstr "Oracle用のGDAデータソースアクセス"
-
-#, fuzzy
-#~ msgid "Oracle component factory"
-#~ msgstr "%s へ接続することが出来ませんでした"
-
-#~ msgid "GDA Datasource Access for Postgres"
-#~ msgstr "Postgres用のGDAデータソースアクセス"
-
-#, fuzzy
-#~ msgid "Postgres component factory"
-#~ msgstr "%s へ接続することが出来ませんでした"
-
-#, fuzzy
-#~ msgid "Could not initiate PostgreSQL component factory"
-#~ msgstr "MySQL プロバイダの実装を登録することが出来ませんでした"
-
-#, fuzzy
-#~ msgid "NULL"
-#~ msgstr "<NULL>"
-
-#, fuzzy
-#~ msgid "Unknown type"
-#~ msgstr "未知の ORACLE タイプ %ld です"
-
-#, fuzzy
-#~ msgid "SQLite component factory"
-#~ msgstr "%s へ接続することが出来ませんでした"
-
-#, fuzzy
-#~ msgid "Could not initiate Sqlite component factory"
-#~ msgstr "CORBA ファクトリを開くことが出来ませんでした"
-
-#~ msgid "GDA Datasource Access for Sybase"
-#~ msgstr "Sybase用のGDAデータソースアクセス"
-
-#, fuzzy
-#~ msgid "Client Message: "
-#~ msgstr "クライアントメッセージ:"
-
-#, fuzzy
-#~ msgid "Informational Client  Message: "
-#~ msgstr "クライアントメッセージ:"
-
-#, fuzzy
-#~ msgid "Informational Server  Message: "
-#~ msgstr "サーバメッセージ:"
-
-#~ msgid "CORBA System exception: %s"
-#~ msgstr "CORBA システム例外: %s"
-
-#~ msgid "True"
-#~ msgstr "True"
-
-#, fuzzy
-#~ msgid "[CORBA User Exception]"
-#~ msgstr "CORBA ユーザ例外: %s"
-
-#~ msgid "<Unknown GDA Type(NULL)>"
-#~ msgstr "<未知の GDA タイプ(NULL)>"
-
-#~ msgid "Saving log...x"
-#~ msgstr "ログを保存中...x"
-
-#~ msgid "Could not get pointer to server implementation"
-#~ msgstr "サーバの実装へのポインタを取得することが出来ませんでした"
-
-#~ msgid "Received signal %d, shutting down"
-#~ msgstr "シグナル %d を受信しました, 終了します"
-
-#~ msgid "Received signal %d. Ignoring"
-#~ msgstr "シグナル %d を受信しました, 無視します"
-
-#~ msgid "Attempt to initialize an already initialized provider"
-#~ msgstr "初期化を試みましたがすでにプロバイダは初期化されています"
-
-#~ msgid "CORBA system exception %s"
-#~ msgstr "CORBA システム例外 %s"
-
-#~ msgid "GDA Datasource Access for LDAP"
-#~ msgstr "LDAP用のGDAデータソースアクセス"
-
-#~ msgid "error '%s' at %s"
-#~ msgstr "エラー '%s' が %s で発生しました"
-
-#~ msgid "Could not register LDAP provider implementation"
-#~ msgstr "LDAP プロバイダの実装を登録することが出来ませんでした"
-
-#~ msgid "GDA Datasource Access for Interbase"
-#~ msgstr "Interbase用のGDAデータソースアクセス"
-
-#~ msgid "Error code %ld"
-#~ msgstr "エラーコード %ld"
-
-#~ msgid "Could not register INTERBASE provider implementation"
-#~ msgstr "INTERBASE プロバイダの実装を登録することが出来ませんでした"
-
-#~ msgid "GDA Datasource Access for Mail"
-#~ msgstr "Mail用のGDAデータソースアクセス"
-
-#~ msgid "Unhandled SCHEMA_QTYPE %d"
-#~ msgstr "SCHEMA_QTYPE %d は扱えません"
-
-#~ msgid "Could not register Mail provider implementation"
-#~ msgstr "メールプロバイダの実装を登録することが出来ませんでした"
-
-#~ msgid "executing command '%s'"
-#~ msgstr "コマンド '%s' を実行しています"
-
-#~ msgid "info '%s'"
-#~ msgstr "情報 '%s'"
-
-#~ msgid ""
-#~ "%s:%d: You cannot provide a UNIX_SOCKET if you also provide either a HOST "
-#~ "or a PORT. Please remove the UNIX_SOCKET, or remove both the HOST and "
-#~ "PORT options"
-#~ msgstr ""
-#~ "%s:%d: UNIX_SOCKET を提供することが出来ません. HOST または PORT のどちらか"
-#~ "を提供するなら, UNIX_SOCKET を削除するか, HOST と PORT の両方のオプション"
-#~ "を削除してください"
-
-#~ msgid "%s:%d: You must  provide the filename with the MS Access database"
-#~ msgstr "%s:%d: MS Access データベースのファイル名を提供しなければなりません"
-
-#~ msgid "Opening connection with filename=%s, user=%s, password=%s"
-#~ msgstr "ファイル名=%s, ユーザ=%s, パスワード=%s で接続を開いています"
-
-#~ msgid "mysql_recset is NULL"
-#~ msgstr "mysql_recset は NULL です"
-
-#~ msgid "No table name given for SCHEMA_COLS"
-#~ msgstr "SCHEMA_COLS のためのテーブル名が与えられていません"
-
-#~ msgid ""
-#~ "Opening connection with user=%s, password=%s, host=%s, port=%s, "
-#~ "unix_socket=%s"
-#~ msgstr ""
-#~ "ユーザ=%s, パスワード=%s, ホスト=%s, ポート=%s, unix ソケット=%s で接続を"
-#~ "開いています"
-
-#~ msgid "gda_odbc_connection_open_schema: Unhandled SCHEMA_QTYPE %d\n"
-#~ msgstr "gda_odbc_connection_open_schema: SCHEMA_QTYPE %d は扱えません\n"
-
-#~ msgid "no text"
-#~ msgstr "テキストがありません"
-
-#~ msgid "Could not register ODBC provider implementation"
-#~ msgstr "ODBC プロバイダの実装を登録することが出来ませんでした"
-
-#~ msgid "command object being created without associated connection"
-#~ msgstr "コマンドオブジェクトは接続なしで作成しました"
-
-#~ msgid "Executing command '%s'"
-#~ msgstr "コマンド '%s' を実行しています"
-
-#~ msgid "error in OCIHandleAlloc() HTYPE_SVCCTX"
-#~ msgstr "OCIHandleAlloc() HTYPE_SVCCTX でエラーが発生しました"
-
-#~ msgid "error in OCIHandleAlloc() HTYPE_SERVER"
-#~ msgstr "OCIHandleAlloc() HTYPE_SERVER でエラーが発生しました"
-
-#~ msgid "error in OCIHandleAlloc() HTYPE_ERROR"
-#~ msgstr "OCIHandleAlloc() HTYPE_ERROR でエラーが発生しました"
-
-#~ msgid "Unknown ORACLE type %ld"
-#~ msgstr "未知の ORACLE タイプ %ld です"
-
-#~ msgid "Unknown ORACLE data type in fill_field_values"
-#~ msgstr "fill_field_values に未知の ORACLE データタイプがあります"
-
-#~ msgid "recordset object being created without associated connection"
-#~ msgstr "レコードセットオブジェクトは接続なしで作成しました"
-
-#~ msgid "Could not register ORACLE provider implementation"
-#~ msgstr "ORACLE プロバイダの実装を登録することが出来ませんでした"
-
-#~ msgid "postgres_recset is NULL"
-#~ msgstr "postgres_recset は NULL です"
-
-#~ msgid "Could not register PostgreSQL provider implementation"
-#~ msgstr "PostgreSQL プロバイダの実装を登録することが出来ませんでした"
-
-#~ msgid "Connection seems to be dead"
-#~ msgstr "接続は切れたようです"
-
-#~ msgid "sending cmd failed"
-#~ msgstr "コマンドの送信に失敗しました"
-
-#~ msgid "Getting recordset userdata failed"
-#~ msgstr "レコードセットのユーザデータの取得に失敗しました"
-
-#~ msgid "Command execution finished, all results processed"
-#~ msgstr "コマンドの実行は完了しました, すべての結果を処理しました"
-
-#~ msgid "Command failed"
-#~ msgstr "コマンドは失敗しました"
-
-#~ msgid "Execution of resultless command succeeded"
-#~ msgstr "結果のない実行コマンドは成功しました"
-
-#~ msgid "No further results, command completly succeeded."
-#~ msgstr "深刻な結果はありません, コマンドは完全に成功しました"
-
-#~ msgid "Cmd execution returned unknown result, may be an error"
-#~ msgstr "コマンド実行は未知の結果を返しました, エラーかもしれません"
-
-#~ msgid "No data returned, freeing recordset structure"
-#~ msgstr "データが返されません, レコードセット構造体を開放しています"
-
-#, fuzzy
-#~ msgid "Not enough memory for sybase_Connection"
-#~ msgstr "primebase_Error 構造体のための十分なメモリがありません"
-
-#~ msgid "schema_cols: table_name '%s'"
-#~ msgstr "schema_cols: table_name '%s'"
-
-#~ msgid "Could not allocate enough memory for query"
-#~ msgstr "クエリのための十分なメモリを割り当てることが出来ませんでした"
-
-#~ msgid "schema_procs: invalid constraint type %d"
-#~ msgstr "schema_procs: 制約タイプ %d は無効です"
-
-#~ msgid "schema_tables: invalid constraint type %d"
-#~ msgstr "schema_tables: 制約タイプ %d は無効です"
-
-#~ msgid "connection status: %x"
-#~ msgstr "接続状況: %x"
-
-#~ msgid "return code: %x"
-#~ msgstr "戻り値: %x"
-
-#~ msgid "Reconnected to '%s'"
-#~ msgstr "'%s' へ再接続しました"
-
-#~ msgid "%s: Could not allocate cmd structure"
-#~ msgstr "%s: コマンド構造体を割り当てることが出来ませんでした"
-
-#~ msgid "%s: Could not allocate memory for cmd string"
-#~ msgstr "%s: コマンド文字列のためのメモリを割り当てることが出来ませんでした"
-
-#~ msgid "%s: selecting database failed"
-#~ msgstr "%s: データベースの選択に失敗しました"
-
-#~ msgid "Could not configure locale to be '%s'"
-#~ msgstr "'%s' にロケールを設定することが出来ませんでした"
-
-#~ msgid "Could not drop locale structure"
-#~ msgstr "ロケール構造体をドロップすることが出来ませんでした"
-
-#~ msgid "gda_sybase_error_make(%p,%p,%p,%p)"
-#~ msgstr "gda_sybase_error_make(%p,%p,%p,%p)"
-
-#~ msgid "No error flag ist set, though %s is called. This may be a bug."
-#~ msgstr ""
-#~ "%s が呼ばれたにもかかわらずエラーフラグが設定されていません. これは不具合"
-#~ "かもしれません"
-
-#~ msgid "cs_diag() initialized"
-#~ msgstr "cs_diag() を初期化しました"
-
-#~ msgid "Could not initialize ct_diag()"
-#~ msgstr "ct_diag() を初期化することが出来ませんでした"
-
-#~ msgid "%s could not find server implementation"
-#~ msgstr "%s をサーバの実装から見付けることが出来ませんでした"
-
-#~ msgid "%s could not get cnc userdata"
-#~ msgstr "%s は cnc ユーザデータを取得することが出来ませんでした"
-
-#~ msgid "Could not get # of messages"
-#~ msgstr "メッセージ数を取得することが出来ませんでした"
-
-#~ msgid "%d ctlib message to fetch"
-#~ msgstr "%d 個の ctlib メッセージを取得しました"
-
-#~ msgid "error is nullpointer in gda_sybase_messages_handle"
-#~ msgstr "gda_sybase_messages_handle の NULL ポインタはエラーです"
-
-#~ msgid "Could not get # of server messages"
-#~ msgstr "サーバメッセージ数を取得することが出来ませんでした"
-
-#~ msgid "Fetching %d client messages"
-#~ msgstr "%d 個のクライアントメッセージを取得しています"
-
-#~ msgid "Fetching %d client message"
-#~ msgstr "%d 個のクライアントメッセージを取得しています"
-
-#~ msgid "Could not clear client messages"
-#~ msgstr "クライアントメッセージを消去することが出来ませんでした"
-
-#~ msgid "Fetching %d server messages"
-#~ msgstr "%d 個のサーバメッセージを取得しています"
-
-#~ msgid "Fetching %d server message"
-#~ msgstr "%d 個のサーバメッセージを取得しています"
-
-#~ msgid "Could not get server msg # %d"
-#~ msgstr "サーバメッセージ番号 %d を取得することが出来ませんでした"
-
-#~ msgid "Could not get # of cslib messages"
-#~ msgstr "cslib メッセージ数を取得することが出来ませんでした"
-
-#~ msgid "Fetching %d cslib messages"
-#~ msgstr "%d 個の cslib メッセージを取得してします"
-
-#~ msgid "Fetching %d cslib message"
-#~ msgstr "%d 個の cslib メッセージを取得してします"
-
-#~ msgid "Could not get cslib msg # %d"
-#~ msgstr "cslib メッセージ番号 %d を取得することが出来ませんでした"
-
-#~ msgid "Could not clear cslib messages"
-#~ msgstr "cslib メッセージを消去することが出来ませんでした"
-
-#~ msgid "CS-Library error:"
-#~ msgstr "CS-Library エラー:"
-
-#~ msgid "fetch error at row %d"
-#~ msgstr "%d 列目の取得でエラーが発生しました"
-
-#~ msgid "CS_END_DATA on row %d; canceling"
-#~ msgstr "%d 列目で CS_END_DATA; キャンセル中"
-
-#~ msgid "%s: Error (%d)"
-#~ msgstr "%s: エラー (%d)"
-
-#~ msgid "Failed fetching # of columns"
-#~ msgstr "カラム数の取得に失敗しました"
-
-#~ msgid "%s could not allocate data fields"
-#~ msgstr "%s はデータフィールドを割り当てることが出来ませんでした"
-
-#~ msgid "ct_describe on col # %d"
-#~ msgstr "カラム番号 %d で ct_describe します"
-
-#~ msgid "ct_describe on col # %d failed"
-#~ msgstr "カラム番号 %d で ct_describe に失敗しました"
-
-#~ msgid "ct_describe(%d): '%s', %d (%s)"
-#~ msgstr "ct_describe(%d): '%s', %d (%s)"
-
-#~ msgid "could not ct_bind data holder to column"
-#~ msgstr "カラムにデータホルダーを ct_bind することが出来ませんでした"
-
-#~ msgid "illegal type detected, aborting"
-#~ msgstr "不当なタイプを検出しました, 中止しています"
-
-#~ msgid "Could not register gda-sybase provider implementation"
-#~ msgstr "gda-sybase プロバイダの実装を登録することが出来ませんでした"
-
-#~ msgid "GDA Datasource Access for primebase"
-#~ msgstr "primebase用のGDAデータソースアクセス"
-
-#~ msgid "Could not connect to '%s@%s:%s' with connparm '%s'"
-#~ msgstr "'%s@%s:%s'へ接続パラメータ '%s'で接続することが出来ませんでした"
-
-#~ msgid "%2ld: Connected to '%s@%s:%s' with connparm: '%s'"
-#~ msgstr "%2ld: '%s@%s:%s'へ接続パラメータ '%s'で接続しました"
-
-#~ msgid "Could not get PBIConnectionInfo(), disconnecting"
-#~ msgstr "PBIConnectionInfo() を得ることが出来ませんでした, 切断しています"
-
-#~ msgid "%2ld: ConInfo: '%s@%s', Cl v%x, Srv '%s' v%x, Brand '%s'"
-#~ msgstr "%2ld: ConInfo: '%s@%s', Cl v%x, Srv '%s' v%x, Brand '%s'"
-
-#~ msgid "Not enough memory for primebase_Error structure."
-#~ msgstr "primebase_Error 構造体のための十分なメモリがありません"
-
-#~ msgid "%2ld: ERROR: %ld (%ld) : %s.\n"
-#~ msgstr "%2ld: エラー: %ld (%ld) : %s.\n"
-
-#~ msgid "Could not register PRIMEBASE provider implementation"
-#~ msgstr "PRIMEBASE プロバイダの実装を登録することが出来ませんでした"
-
-#~ msgid "GDA Datasource Access for Sybase/MS SQL"
-#~ msgstr "Sybase/MS SQL用のGDAデータソースアクセス"
-
-#, fuzzy
-#~ msgid "Not enough memory for tds_Connection"
-#~ msgstr "primebase_Error 構造体のための十分なメモリがありません"
-
-#~ msgid "Reconnected to %s"
-#~ msgstr "'%s' へ再接続しました"
-
-#~ msgid "gda_tds_error_make(%p,%p,%p,%p)"
-#~ msgstr "gda_tds_error_make(%p,%p,%p,%p)"
-
-#~ msgid "Could not register gda-tds provider implementation"
-#~ msgstr "gda-tds プロバイダの実装を登録することが出来ませんでした"
-
-#~ msgid "%s: misconfigured DSN entry"
-#~ msgstr "%s: DSN エントリの設定ミスです"
-
-#~ msgid "%s: data source '%s' not found\n"
-#~ msgstr "%s: データソース '%s' は見つかりませんでした\n"
-
-#, fuzzy
-#~ msgid "Could not register <PROVIDER-NAME> provider implementation"
-#~ msgstr "PRIMEBASE プロバイダの実装を登録することが出来ませんでした"
-
-#~ msgid "%s: The server didn't respond."
-#~ msgstr "%s: サーバは応答しませんでした"
-
-#~ msgid "thread is already running"
-#~ msgstr "スレッドはすでに実行中です"
-
-#~ msgid "impl_GDA_Connection_open: opening connection with DSN: %s"
-#~ msgstr "impl_GDA_Connection_open: DSN '%s' で接続を開いています"
-
-#~ msgid "%s: an error ocurred while fetching data"
-#~ msgstr "%s: データ取得中にエラーが発生しました"
-
-#~ msgid ""
-#~ "OAF doesn't know about our IID; indicates broken installation. Exiting..."
-#~ msgstr ""
-#~ "OAF は IID について知りません; インストールが失敗しているかもれません. 終"
-#~ "了します..."
-
-#~ msgid ""
-#~ "Another instance of this provider is already registered with OAF. "
-#~ "Exiting..."
-#~ msgstr ""
-#~ "このプロバイダの別のインスタンスはすでに OAF が登録しています. 終了しま"
-#~ "す..."
-
-#~ msgid "Unknown error registering this provider with OAF. Exiting"
-#~ msgstr ""
-#~ "OAF がこのプロバイダを登録中に未知のエラーが発生しました. 終了します"
-
-#~ msgid "Registered with ID = %s"
-#~ msgstr "ID = %s で登録しました"
-
-#~ msgid "CORBA exception unloading report engine: %s"
-#~ msgstr "CORBA 例外はレポートエンジンを取り外しています: %s"
-
-#~ msgid "Received signal %d, shutting down."
-#~ msgstr "シグナル %d を受信しました, 終了します"
-
-#~ msgid "Received signal %d, shutting down cleanly"
-#~ msgstr "シグナル %d を受信しました, きれいに終了します"
-
-#~ msgid "Failed to initialize OAF: please mail bug report to OAF maintainers"
-#~ msgstr "OAF の初期化に失敗: OAF メンテナへ不具合報告をメールしてください"
-
-#~ msgid ""
-#~ "Another instance of the report engine is already registered with OAF. "
-#~ "Exiting..."
-#~ msgstr ""
-#~ "レポートエンジンの別のインスタンスはすでに OAF が登録しています. 終了しま"
-#~ "す..."
-
-#~ msgid "Unknown error registering report engine with OAF. Exiting"
-#~ msgstr ""
-#~ "OAF がレポートエンジンを登録中に未知のエラーが発生しました. 終了します"
-
-#~ msgid "Registered report engine with ID = %s"
-#~ msgstr "ID = %s でレポートエンジンを登録しました"
-
-#~ msgid "%s: length = %d"
-#~ msgstr "%s: 長さ = %d"
-
-#~ msgid "%s: sending field description for '%s'"
-#~ msgstr "%s: '%s' のためのフィールドの記述を送信中"
-
-#~ msgid "schema_tables: table name = '%s'"
-#~ msgstr "schema_tables: テーブル名 = '%s'"
-
-#~ msgid "schema_tables: table_schema = '%s'"
-#~ msgstr "schema_tables: table_schema = '%s'"
-
-#~ msgid "schema_procedures: proc_catalog = '%s' UNUSED!\n"
-#~ msgstr "schema_procedures: proc_catalog = %s' は使っていません!\n"
-
-#~ msgid "schema_procedures: proc_catalog = '%s' UNUSED!"
-#~ msgstr "schema_procedures: proc_catalog = '%s' は使っていません!"
-
-#~ msgid "DATABASE"
-#~ msgstr "DATABASE"
-
-#~ msgid "USER-NAME"
-#~ msgstr "USER-NAME"
-
-#~ msgid "PASSWORD"
-#~ msgstr "PASSWORD"
-
-#~ msgid "FILE-NAME"
-#~ msgstr "FILE-NAME"

@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda.release-1-0-branch.sk\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2003-09-23 13:02+0200\n"
+"POT-Creation-Date: 2003-10-12 14:54+0200\n"
 "PO-Revision-Date: 2003-09-24 09:16+0200\n"
 "Last-Translator: Stanislav Visnovsky <visnovsky@kde.org>\n"
 "Language-Team: Slovak <sk-i18n@linux.sk>\n"
@@ -535,7 +535,8 @@ msgstr "Poskytovateµ pre adresár LDAP"
 
 #: providers/mdb/gda-mdb-provider.c:205
 msgid "A database FILENAME must be specified in the connection_string"
-msgstr "Pre otvorenie databáze FILENAME musíte zada» celú cestu v re»azci spojenia."
+msgstr ""
+"Pre otvorenie databáze FILENAME musíte zada» celú cestu v re»azci spojenia."
 
 #: providers/mdb/gda-mdb-provider.c:214
 #: providers/xbase/gda-xbase-provider.c:223
@@ -798,8 +799,10 @@ msgid "Row number out of bounds"
 msgstr "Poèet riadkov mimo rozsah"
 
 #: providers/mysql/gda-mysql-provider.c:218
-msgid "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
-msgstr "Nemô¾ete poskytova» UNIX_SOCKET ak tie¾ poskytujete HOSTITE¥ alebo a PORT."
+msgid ""
+"You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
+msgstr ""
+"Nemô¾ete poskytova» UNIX_SOCKET ak tie¾ poskytujete HOSTITE¥ alebo a PORT."
 
 #: providers/mysql/gda-mysql-provider.c:294
 #: providers/mysql/gda-mysql-provider.c:1085
@@ -1202,7 +1205,8 @@ msgid "Provider for PostgreSQL databases"
 msgstr "Poskytovateµ pre databáze PostgreSQL"
 
 #: providers/sqlite/gda-sqlite-provider.c:198
-msgid "A full path must be specified on the connection string to open a database."
+msgid ""
+"A full path must be specified on the connection string to open a database."
 msgstr "Pre otvorenie databáze musíte zada» celú cestu v re»azci spojenia."
 
 #: providers/sqlite/gda-sqlite-provider.c:220
@@ -1292,7 +1296,9 @@ msgstr "Nájdený nepodporovaný typ výsledku"
 msgid ""
 "an error occured when calling ct_diag attempting to test if there is a "
 "server message for resultset"
-msgstr "volanie ct_diag zlyhalo pri testovaní, èi existuje správa serveru pre recordset"
+msgstr ""
+"volanie ct_diag zlyhalo pri testovaní, èi existuje správa serveru pre "
+"recordset"
 
 #: providers/sybase/gda-sybase-provider.c:793
 #, c-format
@@ -1330,7 +1336,8 @@ msgstr "%s: %s zlyhalo"
 
 #: providers/sybase/gda-sybase-provider.c:974
 msgid "could not allocate cmd structure to find current database."
-msgstr "nie je mo¾né alokova» ¹truktúru pre príkaz pre nájdenie aktuálnej databáze."
+msgstr ""
+"nie je mo¾né alokova» ¹truktúru pre príkaz pre nájdenie aktuálnej databáze."
 
 #: providers/sybase/gda-sybase-provider.c:985
 msgid "could not execute command to get current database."
@@ -1351,7 +1358,9 @@ msgstr "nie je mo¾né získa» dáta pre nájdenie aktuálnej databáze."
 
 #: providers/sybase/gda-sybase-provider.c:1058
 msgid "could not drop cmd structure to find current database."
-msgstr "nie je mo¾né odstráni» ¹truktúru príkazu pomocou pre nájdenie aktuálnej databáze."
+msgstr ""
+"nie je mo¾né odstráni» ¹truktúru príkazu pomocou pre nájdenie aktuálnej "
+"databáze."
 
 #: providers/sybase/gda-sybase-recordset.c:315
 msgid "Could not allocate datamodel. No results will be returned."
@@ -1518,7 +1527,8 @@ msgid "call to cs_diag failed when attempting to the amount of client messages"
 msgstr "volanie cs_diag zlyhalo pri zis»ovaní poètu správ klienta"
 
 #: providers/sybase/utils.c:220
-msgid "an error occured when calling cs_diag attempting to retrieve a client message"
+msgid ""
+"an error occured when calling cs_diag attempting to retrieve a client message"
 msgstr "volanie cs_diag zlyhalo pri získaní správy klienta"
 
 #: providers/sybase/utils.c:230
@@ -1554,7 +1564,8 @@ msgid "call to ct_diag failed when attempting to the amount of server messages"
 msgstr "volanie ct_diag() zlyhalo pri urèovaní poètu správ serveru"
 
 #: providers/sybase/utils.c:334
-msgid "an error occured when calling ct_diag attempting to retrieve a server message"
+msgid ""
+"an error occured when calling ct_diag attempting to retrieve a server message"
 msgstr "nastala chyba pri volaní ct_diag pri pokuse o získanie správy serveru"
 
 #: providers/sybase/utils.c:346
@@ -1586,7 +1597,8 @@ msgid "call to ct_diag failed when attempting to the amount of client messages"
 msgstr "volanie ct_diag() zlyhalo pri urèovaní poètu správ klienta"
 
 #: providers/sybase/utils.c:463
-msgid "an error occured when calling ct_diag attempting to retrieve a client message"
+msgid ""
+"an error occured when calling ct_diag attempting to retrieve a client message"
 msgstr "nastala chyba pri volaní ct_diag pri pokuse o získanie správy klienta"
 
 #: providers/sybase/utils.c:476
@@ -1911,4 +1923,3 @@ msgstr "\tpopis = %s\n"
 #: testing/config.c:92
 msgid "\tgda_params ="
 msgstr "\tgda_params ="
-

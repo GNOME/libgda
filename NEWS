@@ -11,6 +11,7 @@ libgda 1.0.1, 2003-10-13
  - Fixed #117202: adapted to API changes in tds_connect (seth)
  - Fixed #121403: freed memory being used (rodrigo)
  - Fixed #123342: crash on exit in Gnumeric (rodrigo)
+ - Added missing documentation for GdaBlob (rodrigo)
  - Updated translations:
         - cs (miroslav)
 	- fi (pauli)
