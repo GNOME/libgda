@@ -1,6 +1,7 @@
 if BUILD_CONFIG_TOOL
 CONFIG_TOOL=gda-config-tool
-man_MANS = gda-config-tool.1
+man_MANS = gda-config-tool.1 \
+           gda-config.5
 else
 CONFIG_TOOL=
 endif
@@ -26,4 +27,4 @@ gda_config_tool_LDADD = \
 	$(LIBGDA_LIBS) \
 	$(top_builddir)/libgda/libgda-2.la
 
-EXTRA_DIST = gda-config-tool.1
+EXTRA_DIST = gda-config-tool.1 gda-config.5
