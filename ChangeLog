@@ -1,4 +1,9 @@
 2004-04-23  Murray Cumming  <murrayc@murrayc.com>
+	* providers/postgres/gda-postgres-recordset.c (guess_table_name):
+	Copy the table_name before freeing the struct, not after, to fix
+	an occasional crash. Thanks valgrind.
+
+2004-04-23  Murray Cumming  <murrayc@murrayc.com>
 
 	* libgda/gda-client.c (gda_client_open_connection_from_string): 
 	Added documentation about the cnc_string format.

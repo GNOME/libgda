@@ -398,12 +398,12 @@ static gchar *guess_table_name (GdaPostgresRecordset *recset)
 		pg_name_res = PQexec (pg_conn, query);
 		if (pg_name_res != NULL) {
 			if (PQntuples (pg_name_res) == 1)
-				table_name = PQgetvalue (pg_name_res, 0, 0);
+				table_name = g_strdup (PQgetvalue (pg_name_res, 0, 0));
 			PQclear (pg_name_res);
 		}
 		g_free (query);
 	}
-	return table_name != NULL ? g_strdup (table_name) : NULL;
+	return table_name;
 }
 
 /* Checks if the given column number of the given data model
