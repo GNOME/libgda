@@ -1,0 +1,84 @@
+libgda 0.8.103, 2002-02-10
+--------------------------
+
+ - Fixed building of providers when the --without flags is
+   used in autogen.sh/configure (rodrigo)
+ - Started port of ODBC provider (rodrigo)
+ - Fixed leak in PostgreSQL provider (rodrigo)
+ - Started extension of IDL interfaces/support for triggers,
+   rules and other objects (rodrigo)
+ - Support new FEATURE's in ::supports method in all
+   available providers (rodrigo)
+ - Updated translations:
+ 	- sk (stano)
+	- da (olau)
+	- fr (redfox)
+	- no (kmaraas)
+
+
+libgda 0.8.102, 2002-01-30
+--------------------------
+
+ - replaced BonoboXObject with BonoboObject (gonzalo)
+ - fixed IDL compilation (rodrigo)
+ - fixed termination of factories, for not leaving them
+   around when no more connections are open (rodrigo)
+ - added more API documentation (gonzalo)
+ - added new ValueList type, so that we can store lists of
+   values in our CORBA_any's (rodrigo)
+ - extended database test suite (gonzalo)
+ - 'constified' all public functions (gonzalo)
+ - removed SQLite sources from tree and create separated
+   gda-sqlite-provider (carlos)
+ - added CommandOption parameter to executeCommand method
+   in the IDL interface (gonzalo)
+ - added index schema (gonzalo)
+ - added getCommandType and getCommandText methods to the
+   ::Recordset IDL interface (gonzalo)
+ - implemented gda_connection_is_open function (cleber)
+ - made the GdaConnection object deal directly with data source
+   names, and not with connection strings (rodrigo)
+ - added new GdaConnection's accessor functions (rodrigo)
+ - fixed connection pools dealing with dead objects (rodrigo)
+ - fixed POTFILES.in/skip files (menthos)
+ - updated translations:
+ 	- no (kmaraas)
+	- ms (sebol)
+	- sk (stano)
+	- sv (menthos)
+	- sl (minmax)
+
+
+libgda 0.8.101, 2002-01-13
+--------------------------
+
+ - fixed Spanish and Brazilian Portuguese manuals, to make use of the
+   correct DTD and installation directory (Rodrigo, baddog)
+ - get types from the system tables and not from a hard-coded list in
+   the PostgreSQL provider (Gonzalo)
+ - fully support NULL values for GdaValue's and GdaField's (Rodrigo)
+ - added API functions for adding new data sources (Rodrigo)
+ - removed useless gda-build{client|server} scripts (Rodrigo)
+ - fixed constness of arguments/return values all around (Gonzalo)
+ - extended test suite with PostgreSQL specific tests (Gonzalo)
+ - added support for NAMEOID and Time types in PostgreSQL provider (Gonzalo)
+ - added timezone support to Time and Timestamp types (Gonzalo)
+ - Updated translations:
+ 	- sk (stano)
+
+
+libgda 0.8.100, 2002-01-06
+--------------------------
+
+ - added support for more schemas (VIEWS, TYPES, PROCEDURES) in
+   the IDL interfaces (Rodrigo)
+ - added GdaServerRecordsetModel class, which makes it easier for
+   providers to create recordsets out of static data (files,
+   in-memory data, etc) (Rodrigo)
+ - added support for GeometricPoint data type (Gonzalo)
+ - implemented TYPES schema for MySQL (Rodrigo)
+ - made PostgreSQL provider 100% supported (Gonzalo)
+ - extended test suite with new connection tests (Gonzalo)
+ - fixed #67242 orbit-idl not generating files when IDL changes (Gonzalo)
+ - fixed lost-counter in data retrieval (Gonzalo)
+ 
