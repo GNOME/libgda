@@ -1,6 +1,7 @@
 /* GNOME DB MySQL Provider
  * Copyright (C) 1998 Michael Lausch
  * Copyright (C) 2000 Rodrigo Moya
+ * Copyright (C) 2001 Vivien Malerba
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -30,23 +31,41 @@ gda_mysql_init_recset_fields (GdaServerRecordset *recset, MYSQL_Recordset *mysql
 	
 	g_return_if_fail(recset != NULL);
 	g_return_if_fail(mysql_recset != NULL);
-	g_return_if_fail(mysql_recset->mysql_res != NULL);
+	g_return_if_fail((mysql_recset->mysql_res != NULL) || 
+			 (mysql_recset->btin_res != NULL));
 	
-	max_fieldidx = mysql_num_fields(mysql_recset->mysql_res);
-	for (fieldidx = 0; fieldidx < max_fieldidx; fieldidx++) {
-		MYSQL_FIELD*     mysql_field;
-		GdaServerField* field;
+	if (mysql_recset->mysql_res) {
+	        max_fieldidx = mysql_num_fields(mysql_recset->mysql_res);
+		for (fieldidx = 0; fieldidx < max_fieldidx; fieldidx++) {
+		        MYSQL_FIELD*     mysql_field;
+			GdaServerField* field;
 		
-		mysql_field = mysql_fetch_field(mysql_recset->mysql_res);
-		field = gda_server_field_new();
-		gda_server_field_set_name(field, mysql_field->name);
-		gda_server_field_set_sql_type(field, mysql_field->type);
-		gda_server_field_set_scale(field, mysql_field->decimals);
-		gda_server_field_set_actual_length(field, mysql_field->length);
-		gda_server_field_set_defined_length(field, mysql_field->max_length);
-		gda_server_field_set_user_data(field, (gpointer) mysql_field);
+			mysql_field = mysql_fetch_field(mysql_recset->mysql_res);
+			field = gda_server_field_new();
+			gda_server_field_set_name(field, mysql_field->name);
+			gda_server_field_set_sql_type(field, mysql_field->type);
+			gda_server_field_set_scale(field, mysql_field->decimals);
+			gda_server_field_set_actual_length(field, mysql_field->length);
+			gda_server_field_set_defined_length(field, mysql_field->max_length);
+			gda_server_field_set_user_data(field, (gpointer) mysql_field);
+			
+			gda_server_recordset_add_field(recset, field);
+		}
+	}
+	else { /* we use the builtin result */
+	        max_fieldidx = GdaBuiltin_Result_get_nbfields(mysql_recset->btin_res);
+		for (fieldidx = 0; fieldidx < max_fieldidx; fieldidx++) {
+			GdaServerField* field;
 		
-		gda_server_recordset_add_field(recset, field);
+			field = gda_server_field_new();
+			gda_server_field_set_name(field, 
+						  GdaBuiltin_Result_get_fname
+						  (mysql_recset->btin_res, fieldidx));
+			gda_server_field_set_sql_type(field, 
+						      GdaBuiltin_Result_get_ftype
+						      (mysql_recset->btin_res, fieldidx));
+			gda_server_recordset_add_field(recset, field);
+		}
 	}
 }
 
@@ -121,6 +140,27 @@ gda_mysql_command_execute (GdaServerCommand *cmd,
 		}
 	}
 	
+	return recset;
+}
+
+GdaServerRecordset *
+gda_mysql_command_build_recset_with_builtin (GdaServerConnection *cnc,
+					     GdaBuiltin_Result *res,
+					     gulong *affected)
+{
+  	GdaServerRecordset *recset;
+	MYSQL_Recordset  *myset;
+
+	recset = gda_server_recordset_new(cnc);
+	myset = (MYSQL_Recordset *) 
+		gda_server_recordset_get_user_data(recset);
+	myset->mysql_res = NULL;
+	myset->btin_res = res;
+	gda_server_recordset_set_at_begin(recset, TRUE);
+	gda_server_recordset_set_at_end(recset, FALSE);
+	myset->pos = 0;
+	*affected = GdaBuiltin_Result_get_nbtuples(res);
+	gda_mysql_init_recset_fields(recset, myset);
 	return recset;
 }
 

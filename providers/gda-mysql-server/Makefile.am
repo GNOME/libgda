@@ -20,7 +20,7 @@ libgda_mysql_a_SOURCES = \
 	gda-mysql-command.c \
 	gda-mysql-connection.c \
 	gda-mysql-recordset.c \
-	gda-mysql.h
+	gda-mysql.h 
 
 oafdir=$(GDA_oafdir)
 
