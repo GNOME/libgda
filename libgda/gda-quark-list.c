@@ -30,6 +30,17 @@ struct _GdaQuarkList {
 	GHashTable *hash_table;
 };
 
+GType gda_quark_list_get_type (void)
+{
+	static GType our_type = 0;
+
+	if (our_type == 0)
+		our_type = g_boxed_type_register_static ("GdaQuarkList",
+			(GBoxedCopyFunc) gda_quark_list_copy,
+			(GBoxedFreeFunc) gda_quark_list_free);
+	return our_type;
+}
+
 /*
  * Private functions
  */
@@ -39,6 +50,14 @@ free_hash_pair (gpointer key, gpointer value, gpointer user_data)
 {
 	g_free (key);
 	g_free (value);
+}
+
+static void
+copy_hash_pair (gpointer key, gpointer value, gpointer user_data)
+{
+	g_hash_table_insert ((GHashTable *) user_data,
+			     g_strdup ((const char *) key),
+			     g_strdup ((const char *) value));
 }
 
 /**
@@ -112,6 +131,29 @@ gda_quark_list_free (GdaQuarkList *qlist)
 	g_hash_table_destroy (qlist->hash_table);
 
 	g_free (qlist);
+}
+
+
+/**
+ * gda_quark_list_copy
+ * @qlist: quark_list to get a copy from.
+ *
+ * Creates a new #GdaQuarkList from an existing one.
+ * 
+ * Returns: a newly allocated #GdaQuarkList with a copy of the data in @qlist.
+ */
+GdaQuarkList *
+gda_quark_list_copy (GdaQuarkList *qlist)
+{
+	GdaQuarkList *new_qlist;
+
+	g_return_val_if_fail (qlist != NULL, NULL);
+	
+	new_qlist = gda_quark_list_new ();
+	g_hash_table_foreach (qlist->hash_table,
+			      copy_hash_pair,
+			      new_qlist->hash_table);
+	return new_qlist;
 }
 
 /**

@@ -30,6 +30,30 @@ struct _GdaParameterList {
 	GHashTable *hash;
 };
 
+GType
+gda_parameter_get_type (void)
+{
+	static GType our_type = 0;
+
+	if (our_type == 0)
+		our_type = g_boxed_type_register_static ("GdaParameter",
+			(GBoxedCopyFunc) gda_parameter_copy,
+			(GBoxedFreeFunc) gda_parameter_free);
+	return our_type;
+}
+
+GType
+gda_parameter_list_get_type (void)
+{
+	static GType our_type = 0;
+
+	if (our_type == 0)
+		our_type = g_boxed_type_register_static ("GdaParameterList",
+			(GBoxedCopyFunc) gda_parameter_list_copy,
+			(GBoxedFreeFunc) gda_parameter_list_free);
+	return our_type;
+}
+
 /*
  * Private functions
  */
@@ -177,6 +201,22 @@ gda_parameter_free (GdaParameter *param)
 }
 
 /**
+ * gda_parameter_copy
+ * @param: parameter to get a copy from.
+ *
+ * Creates a new #GdaParameter from an existing one.
+ * 
+ * Returns: a newly allocated #GdaParameter with a copy of the data in @param.
+ */
+GdaParameter *
+gda_parameter_copy (GdaParameter *param)
+{
+	g_return_val_if_fail (param != NULL, NULL);
+	return gda_parameter_new_from_value (gda_parameter_get_name (param),
+					     gda_parameter_get_value (param));
+}
+
+/**
  * gda_parameter_get_name
  * @param: a #GdaParameter object.
  *
@@ -266,6 +306,35 @@ gda_parameter_list_free (GdaParameterList *plist)
 	g_hash_table_destroy (plist->hash);
 
 	g_free (plist);
+}
+
+/**
+ * gda_parameter_list_copy
+ * @plist: parameter list to get a copy from.
+ *
+ * Creates a new #GdaParameterList from an existing one.
+ * 
+ * Returns: a newly allocated #GdaParameterList with a copy of the data in @plist.
+ */
+GdaParameterList *
+gda_parameter_list_copy (GdaParameterList *plist)
+{
+	GdaParameterList *new_list;
+	GList *node, *names;
+	
+	g_return_val_if_fail (plist != NULL, NULL);
+
+	new_list = gda_parameter_list_new ();
+	names = gda_parameter_list_get_names (plist);
+	for (node = g_list_first (names);
+	     node != NULL;
+	     node = g_list_next (node)) {
+		GdaParameter *param = gda_parameter_list_find (plist, (const gchar *)node->data);
+		if (param != NULL) /* normally should always be non-null... */
+			gda_parameter_list_add_parameter (new_list, param);
+	}
+	g_list_free (names);
+	return new_list;
 }
 
 /**

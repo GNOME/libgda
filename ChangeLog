@@ -1,3 +1,15 @@
+2003-11-11  Laurent Sansonetti <laurent@datarescue.be>
+
+	* libgda/gda-command.[ch] (gda_command_get_type, gda_command_copy):
+	* libgda/gda-field.[ch] (gda_field_attributes_get_type):
+	* libgda/gda-parameter.[ch] (gda_parameter_get_type, gda_parameter_copy,
+	gda_parameter_list_get_type, gda_parameter_list_copy):
+	* libgda/gda-quark-list.[ch] (gda_quark_list_get_type, 
+	gda_quark_list_copy):
+	* libgda/gda-row.[ch] (gda_row_get_type, gda_row_copy):
+	* libgda/gda-value.[ch] (gda_value_get_gtype):
+	Added missing *_get_type and *_copy functions.
+
 2003-11-03  Jonathan Blandford <jrb@redhat.com>
 
 	* libsql/lexer.l: #undef L_SET, since it might be defined when
@@ -5,7 +17,7 @@
 
 2003-10-27  Laurent Sansonetti <laurent@datarescue.be>
 
-	* libgda/gda-config.[c.h] (gda_config_get_provider_model):
+	* libgda/gda-config.[ch] (gda_config_get_provider_model):
 	New function.
 
 2003-10-26  Laurent Sansonetti <laurent@datarescue.be>

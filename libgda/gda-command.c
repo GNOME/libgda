@@ -25,6 +25,18 @@
 #include <glib/gstrfuncs.h>
 #include <libgda/gda-command.h>
 
+GType
+gda_command_get_type (void)
+{
+	static GType our_type = 0;
+
+	if (our_type == 0)
+		our_type = g_boxed_type_register_static ("GdaCommand",
+			(GBoxedCopyFunc) gda_command_copy,
+			(GBoxedFreeFunc) gda_command_free);
+	return our_type;
+}
+
 /**
  * gda_command_new
  * @text: the text of the command.
@@ -75,6 +87,26 @@ gda_command_free (GdaCommand *cmd)
 	}
 
 	g_free (cmd);
+}
+
+/**
+ * gda_command_copy
+ * @cmd: command to get a copy from.
+ *
+ * Creates a new #GdaCommand from an existing one.
+ * 
+ * Returns: a newly allocated #GdaCommand with a copy of the data in @cmd.
+ */
+GdaCommand *
+gda_command_copy (GdaCommand *cmd)
+{
+	g_return_val_if_fail (cmd != NULL, NULL);
+	GdaCommand *new_cmd = gda_command_new (gda_command_get_text (cmd),
+					       gda_command_get_command_type (cmd),
+					       gda_command_get_options (cmd));
+	gda_command_set_transaction (new_cmd,
+				     gda_command_get_transaction (cmd));
+	return new_cmd;
 }
 
 /**
@@ -218,3 +250,4 @@ gda_command_set_transaction (GdaCommand *cmd, GdaTransaction *xaction)
 	else
 		cmd->xaction = NULL;
 }
+
