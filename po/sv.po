@@ -8,8 +8,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2001-12-15 16:56+0100\n"
-"PO-Revision-Date: 2001-12-15 16:56+0100\n"
+"POT-Creation-Date: 2001-12-19 21:11+0100\n"
+"PO-Revision-Date: 2001-12-19 21:11+0100\n"
 "Last-Translator: Christian Rose <menthos@menthos.com>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -90,10 +90,14 @@ msgid "Could not duplicate client object. Client won't get notifications"
 msgstr ""
 "Kunde inte duplicera klientobjekt. Klienten kommer inte att få notifieringar"
 
-#: libgda/gda-server-connection.c:412
+#: libgda/gda-server-connection.c:405
 #, c-format
 msgid "Could not notify client about action %d"
 msgstr "Kunde inte notifiera klienten om åtgärden %d"
+
+#: libgda/gda-server-recordset.c:206
+msgid "No implementation for the fetch() method found"
+msgstr "Ingen implementation för fetch()-metoden hittades"
 
 #: libgda/gda-value.c:501
 msgid "TRUE"
@@ -136,12 +140,16 @@ msgstr "Standardåtkomst för GDA-datakällor"
 msgid "Could not initiate Default component factory"
 msgstr "Kunde inte initiera standardkomponentfabrik"
 
-#: providers/mysql/gda-mysql-provider.c:150
+#: providers/mysql/gda-mysql-provider.c:153
 msgid ""
 "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
 msgstr ""
 "Du kan inte ange en UNIX_SOCKET om du också anger antingen en HOST eller en "
 "PORT."
+
+#: providers/mysql/gda-mysql-provider.c:224
+msgid "Invalid MYSQL handle"
+msgstr "Ogiltigt MYSQL-handtag"
 
 #: providers/mysql/GNOME_Database_Provider_MySQL.server.in.h:1
 msgid "GDA Datasource Access for MySQL"
@@ -154,6 +162,94 @@ msgstr "MySQL-komponentfabrik"
 #: providers/mysql/main.c:48
 msgid "Could not initiate MySQL component factory"
 msgstr "Kunde inte initiera MySQL-komponentfabrik"
+
+#: providers/sybase/GNOME_Database_Provider_Sybase.server.in.h:1
+msgid "GDA Datasource Access for Sybase"
+msgstr "GDA-datakälleåtkomst för Sybase"
+
+#: providers/sybase/GNOME_Database_Provider_Sybase.server.in.h:2
+msgid "Sybase component factory"
+msgstr "Sybase-komponentfabrik"
+
+#: providers/sybase/gda-sybase-error.c:137
+msgid "ct_diag 1 failed in sybase_check_clientmsg"
+msgstr "ct_diag 1 misslyckades i sybase_check_clientmsg"
+
+#: providers/sybase/gda-sybase-error.c:159
+#: providers/sybase/gda-sybase-error.c:197
+msgid "ct_diag 2 failed in sybase_check_clientmsg"
+msgstr "ct_diag 2 misslyckades i sybase_check_clientmsg"
+
+#: providers/sybase/gda-sybase-error.c:167
+#: providers/sybase/gda-sybase-error.c:376
+msgid "Client Message: "
+msgstr "Klientmeddelande: "
+
+#: providers/sybase/gda-sybase-error.c:178
+#: providers/sybase/gda-sybase-error.c:387
+msgid "Informational Client  Message: "
+msgstr "Informativt klientmeddelande: "
+
+#: providers/sybase/gda-sybase-error.c:239
+msgid "ct_diag 1 failed in sybase_check_servermsg"
+msgstr "ct_diag 1 misslyckades i sybase_check_servermsg"
+
+#: providers/sybase/gda-sybase-error.c:261
+#: providers/sybase/gda-sybase-error.c:304
+msgid "ct_diag 2 failed in sybase_check_servermsg"
+msgstr "ct_diag 2 misslyckades i sybase_check_servermsg"
+
+#: providers/sybase/gda-sybase-error.c:274
+msgid "Server Message: "
+msgstr "Servermeddelande: "
+
+#: providers/sybase/gda-sybase-error.c:285
+msgid "Informational Server  Message: "
+msgstr "Informativt servermeddelande: "
+
+#: providers/sybase/gda-sybase-error.c:346
+msgid "cs_diag 1 failed in sybase_check_clientmsg"
+msgstr "cs_diag 1 misslyckades i sybase_check_clientmsg"
+
+#: providers/sybase/gda-sybase-error.c:368
+#: providers/sybase/gda-sybase-error.c:406
+msgid "cs_diag 2 failed in sybase_check_clientmsg"
+msgstr "cs_diag 2 misslyckades i sybase_check_clientmsg"
+
+#: providers/sybase/gda-sybase-error.c:429
+msgid "SYB"
+msgstr "SYB"
+
+#: providers/sybase/gda-sybase-error.c:431
+msgid "severity"
+msgstr "allvarlighet"
+
+#: providers/sybase/gda-sybase-error.c:433
+msgid "number"
+msgstr "nummer"
+
+#: providers/sybase/gda-sybase-error.c:435
+msgid "origin"
+msgstr "ursprung"
+
+#: providers/sybase/gda-sybase-error.c:437
+msgid "layer"
+msgstr "lager"
+
+#: providers/sybase/gda-sybase-error.c:444
+#, c-format
+msgid ""
+"\n"
+"\tOperating system error number(%ld):\n"
+"\t%s"
+msgstr ""
+"\n"
+"\tOperativsystemsfel nummer (%ld):\n"
+"\t%s"
+
+#: providers/sybase/main.c:49
+msgid "Could not initiate Sybase component factory"
+msgstr "Kunde inte initiera Sybase-komponentfabrik"
 
 #~ msgid "Data source %s not found"
 #~ msgstr "Datakällan %s kunde inte hittas"
@@ -390,9 +486,6 @@ msgstr "Kunde inte initiera MySQL-komponentfabrik"
 #~ msgid "Could not register PostgreSQL provider implementation"
 #~ msgstr "Kunde inte registrera PostgreSQL-leverantörsinformation"
 
-#~ msgid "GDA Datasource Access for Sybase"
-#~ msgstr "GDA-datakälleåtkomst för Sybase"
-
 #~ msgid "Sybase provider connection factory"
 #~ msgstr "Fabrik för Sybase-leverantörsanslutning"
 
@@ -516,9 +609,6 @@ msgstr "Kunde inte initiera MySQL-komponentfabrik"
 #~ msgid "ct_diag failed, Could not get # of client messages(1)"
 #~ msgstr "ct_diag misslyckades, kunde inte hämta antalet klientmeddelanden(1)"
 
-#~ msgid "Client Message:"
-#~ msgstr "Klientmeddelande:"
-
 #~ msgid "ct_diag failed, Could not get # of client messages(2)"
 #~ msgstr "ct_diag misslyckades, kunde inte hämta antalet klientmeddelanden(2)"
 
@@ -554,30 +644,6 @@ msgstr "Kunde inte initiera MySQL-komponentfabrik"
 
 #~ msgid "Could not clear cslib messages"
 #~ msgstr "Kunde inte tömma cslib-meddelanden"
-
-#~ msgid "SYB"
-#~ msgstr "SYB"
-
-#~ msgid "severity"
-#~ msgstr "allvarlighet"
-
-#~ msgid "number"
-#~ msgstr "nummer"
-
-#~ msgid "origin"
-#~ msgstr "ursprung"
-
-#~ msgid "layer"
-#~ msgstr "lager"
-
-#~ msgid ""
-#~ "\n"
-#~ "\tOperating system error number(%ld):\n"
-#~ "\t%s"
-#~ msgstr ""
-#~ "\n"
-#~ "\tOperativsystemsfel nummer (%ld):\n"
-#~ "\t%s"
 
 #~ msgid "fetch error at row %d"
 #~ msgstr "hämtningsfel på rad %d"
@@ -693,9 +759,6 @@ msgstr "Kunde inte initiera MySQL-komponentfabrik"
 #~ msgid "No error flag ist set, though %s is called. This may be a bug."
 #~ msgstr ""
 #~ "Ingen felflagga är satt, trots att %s är anropat. Detta kan vara en bugg."
-
-#~ msgid "Server message:"
-#~ msgstr "Servermeddelande:"
 
 #~ msgid "Client message:"
 #~ msgstr "Klientmeddelande:"
