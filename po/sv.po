@@ -8,8 +8,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2002-12-27 00:54+0100\n"
-"PO-Revision-Date: 2002-12-27 00:54+0100\n"
+"POT-Creation-Date: 2002-12-27 10:52+0100\n"
+"PO-Revision-Date: 2002-12-27 10:52+0100\n"
 "Last-Translator: Christian Rose <menthos@menthos.com>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -43,7 +43,7 @@ msgstr "Temporär datakälla skapad av libgda. Ta inte bort den"
 #: libgda/gda-config.c:1322 providers/default/gda-default-provider.c:556
 #: providers/default/gda-default-provider.c:576
 #: providers/default/gda-default-provider.c:613
-#: providers/mdb/gda-mdb-provider.c:358
+#: providers/mdb/gda-mdb-provider.c:358 providers/mdb/gda-mdb-provider.c:421
 #: providers/mysql/gda-mysql-provider.c:663
 #: providers/mysql/gda-mysql-provider.c:847
 #: providers/oracle/gda-oracle-provider.c:1031
@@ -425,11 +425,11 @@ msgid "Could not open file %s"
 msgstr "Kunde inte öppna filen %s"
 
 #: providers/mdb/gda-mdb-provider.c:234 providers/mdb/gda-mdb-provider.c:262
-#: providers/mdb/gda-mdb-provider.c:410
+#: providers/mdb/gda-mdb-provider.c:457
 msgid "Invalid MDB handle"
 msgstr "Ogiltigt MDB-handtag"
 
-#: providers/mdb/gda-mdb-provider.c:359
+#: providers/mdb/gda-mdb-provider.c:359 providers/mdb/gda-mdb-provider.c:422
 #: providers/mysql/gda-mysql-provider.c:848
 #: providers/mysql/gda-mysql-provider.c:930
 #: providers/oracle/gda-oracle-provider.c:1530
@@ -444,7 +444,7 @@ msgstr "Ogiltigt MDB-handtag"
 msgid "Owner"
 msgstr "Ägare"
 
-#: providers/mdb/gda-mdb-provider.c:360
+#: providers/mdb/gda-mdb-provider.c:360 providers/mdb/gda-mdb-provider.c:423
 #: providers/mysql/gda-mysql-provider.c:849
 #: providers/mysql/gda-mysql-provider.c:931
 #: providers/oracle/gda-oracle-provider.c:1530
@@ -457,6 +457,58 @@ msgstr "Ägare"
 #: providers/sybase/gda-sybase-provider.c:908
 msgid "Comments"
 msgstr "Kommentarer"
+
+#: providers/mdb/gda-mdb-provider.c:424
+msgid "GDA Type"
+msgstr "GDA-typ"
+
+#: providers/mdb/gda-mdb-provider.c:426
+msgid "Boolean type"
+msgstr "Boolesk typ"
+
+#: providers/mdb/gda-mdb-provider.c:427
+msgid "1-byte integers"
+msgstr "1-byteheltal"
+
+#: providers/mdb/gda-mdb-provider.c:428
+msgid "Double precision values"
+msgstr "Dubbelprecisionsvärden"
+
+#: providers/mdb/gda-mdb-provider.c:429
+msgid "Single precision values"
+msgstr "Enkelprecisionsvärden"
+
+#: providers/mdb/gda-mdb-provider.c:430
+msgid "32-bit integers"
+msgstr "32-bitars heltal"
+
+#: providers/mdb/gda-mdb-provider.c:431
+msgid "64-bit integers"
+msgstr "64-bitars heltal"
+
+#: providers/mdb/gda-mdb-provider.c:432
+msgid "Variable length character strings"
+msgstr "Teckensträngar av variabel längd"
+
+#: providers/mdb/gda-mdb-provider.c:433
+msgid "Money amounts"
+msgstr "Valutamängder"
+
+#: providers/mdb/gda-mdb-provider.c:434
+msgid "OLE object"
+msgstr "OLE-objekt"
+
+#: providers/mdb/gda-mdb-provider.c:435
+msgid "FIXME"
+msgstr "FIXME"
+
+#: providers/mdb/gda-mdb-provider.c:436
+msgid "Date/time value"
+msgstr "Datum-/tidsvärde"
+
+#: providers/mdb/gda-mdb-provider.c:437
+msgid "Character strings"
+msgstr "Teckensträngar"
 
 #: providers/mdb/libmain.c:34
 msgid "GDA provider for MS Access files"
