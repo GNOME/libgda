@@ -62,6 +62,33 @@ gda_parameter_new (const gchar *name, GdaValueType type)
 }
 
 /**
+ * gda_parameter_new_string
+ * @name: name for the parameter being created.
+ * @value: string value.
+ *
+ * Create a new #GdaParameter from a string.
+ *
+ * Returns: the newly created #GdaParameter.
+ */
+GdaParameter *
+gda_parameter_new_string (const gchar *name, const gchar *value)
+{
+	GdaParameter *param;
+
+	g_return_val_if_fail (name != NULL, NULL);
+	g_return_val_if_fail (value != NULL, NULL);
+
+	param = Bonobo_Pair__alloc ();
+	gda_parameter_set_name (param, name);
+	CORBA_any_set_release (&param->value, TRUE);
+	param->value._type = (GdaValueType) CORBA_Object_duplicate (
+		(CORBA_Object) GDA_VALUE_TYPE_STRING, NULL);
+	param->value._value = ORBit_copy_value (&value, GDA_VALUE_TYPE_STRING);
+
+	return param;
+}
+
+/**
  * gda_parameter_free
  * @param: the #GdaParameter to be freed.
  */
@@ -237,6 +264,26 @@ gda_parameter_list_get_length (GdaParameterList *plist)
 	return plist ? g_hash_table_size (plist->hash) : 0;
 }
 
+typedef struct {
+	gint current;
+	Bonobo_PropertySet *corba_list;
+} tocorba_data_t;
+
+static void
+add_param (gpointer key, gpointer value, gpointer user_data)
+{
+	GdaParameter *param = (GdaParameter *) value;
+	tocorba_data_t *tocorba = (tocorba_data_t *) user_data;
+
+	g_return_if_fail (param != NULL);
+	g_return_if_fail (tocorba != NULL);
+
+	tocorba->corba_list->_buffer[tocorba->current].name = CORBA_string_dup (key);
+	CORBA_any__copy (&tocorba->corba_list->_buffer[tocorba->current].value, &param->value);
+
+	tocorba->current++;
+}
+
 /**
  * gda_parameter_list_to_corba
  */
@@ -245,6 +292,7 @@ gda_parameter_list_to_corba (GdaParameterList *plist)
 {
 	Bonobo_PropertySet *corba_list;
 	gint length;
+	tocorba_data_t tocorba;
 
 	length = gda_parameter_list_get_length (plist);
 
@@ -252,7 +300,12 @@ gda_parameter_list_to_corba (GdaParameterList *plist)
 	CORBA_sequence_set_release (corba_list, TRUE);
 	corba_list->_buffer = Bonobo_PropertySet_allocbuf (length);
 
-	/* FIXME: put all parameters in 'params' into the CORBA sequence */
+	if (length > 0) {
+		/* put all parameters into the CORBA sequence */
+		tocorba.current = 0;
+		tocorba.corba_list = corba_list;
+		g_hash_table_foreach (plist->hash, (GHFunc) add_param, &tocorba);
+	}
 
 	return corba_list;
 }

@@ -31,6 +31,7 @@ G_BEGIN_DECLS
 typedef Bonobo_Pair GdaParameter;
 
 GdaParameter *gda_parameter_new (const gchar *name, GdaValueType type);
+GdaParameter *gda_parameter_new_string (const gchar *name, const gchar *value);
 void          gda_parameter_free (GdaParameter *param);
 const gchar  *gda_parameter_get_name (GdaParameter *param);
 void          gda_parameter_set_name (GdaParameter *param, const gchar *name);
@@ -43,9 +44,9 @@ GdaParameterList   *gda_parameter_list_new (void);
 GdaParameterList   *gda_parameter_list_new_from_corba (Bonobo_PropertySet *corba_list);
 void                gda_parameter_list_free (GdaParameterList *plist);
 void                gda_parameter_list_add_parameter (GdaParameterList *plist,
-						GdaParameter *param);
+						      GdaParameter *param);
 GdaParameter       *gda_parameter_list_find (GdaParameterList *plist,
-				       const gchar *name);
+					     const gchar *name);
 void                gda_parameter_list_clear (GdaParameterList *plist);
 guint               gda_parameter_list_get_length (GdaParameterList *plist);
 

@@ -1,5 +1,10 @@
 2002-03-18  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* libgda/gda-parameter.[ch] (gda_parameter_new_string): new function.
+	(gda_parameter_list_to_corba): finished implementation.
+
+2002-03-18  Rodrigo Moya <rodrigo@gnome-db.org>
+
 	* providers/default/GNOME_Database_Provider_Default.server.in: use
 	URI instead of FILENAME, since we'll be able to support remote files.
 
