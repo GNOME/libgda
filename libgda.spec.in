@@ -20,23 +20,12 @@ Group:            System Environment/Libraries
 License:          LGPL
 BuildRoot:        %{_tmppath}/%{name}-%{version}-root
 BuildRequires:    pkgconfig >= 0.8
-Requires:         ORBit2 >= 2.3.91
 Requires:         glib2 >= 1.3.10
-Requires:         bonobo-activation >= 0.7.0
-Requires:         libbonobo
 Requires:         libxml2
-Requires:         GConf2
 Requires:         libxslt >= 1.0.9
-Requires:         gnome-vfs2
-Prereq:           GConf2
-BuildRequires:    ORBit2-devel >= 2.3.91
 BuildRequires:    glib2-devel >= 1.3.10
-BuildRequires:    bonobo-activation-devel >= 0.7.0
-BuildRequires:    libbonobo-devel
 BuildRequires:    libxml2-devel
-BuildRequires:    GConf2-devel
 BuildRequires:    libxslt-devel >= 1.0.9
-BuildRequires:    gnome-vfs2-devel
 BuildRequires:    ncurses-devel
 
 %if %{FREETDS}
