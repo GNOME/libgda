@@ -58,19 +58,19 @@ write_to_log (const gchar *str, gboolean error)
       t = time(NULL);
       now = localtime(&t);
       if (now)
-	{
-	  config_entry = g_strdup_printf("=/tmp/%s.log=/%04d-%02d-%02d/%02d:%02d:%02d.%ld",
-					 g_get_prgname(),
-					 now->tm_year + 1900,
-					 now->tm_mon + 1,
-					 now->tm_mday,
-					 now->tm_hour,
-					 now->tm_min,
-					 now->tm_sec,
-					 clock());
-	  gnome_config_set_string(config_entry, msg);
-	  g_free((gpointer) config_entry);
-	}
+        {
+          config_entry = g_strdup_printf("/gda/log/%s/%04d-%02d-%02d/%02d:%02d:%02d.%ld",
+                                         g_get_prgname(),
+                                         now->tm_year + 1900,
+                                         now->tm_mon + 1,
+                                         now->tm_mday,
+                                         now->tm_hour,
+                                         now->tm_min,
+                                         now->tm_sec,
+                                         clock());
+          gda_config_set_string(config_entry, msg);
+          g_free((gpointer) config_entry);
+        }
     }
   g_warning(msg);
   g_free((gpointer) msg);
@@ -142,4 +142,15 @@ gda_log_error (const gchar *format, ...)
   va_end(args);
 
   write_to_log(buffer, TRUE);
+}
+
+/**
+ * gda_log_clean_all
+ * @prgname: program name
+ *
+ * Clear the entire log for the given program
+ */
+void
+gda_log_clean_all (const gchar *prgname)
+{
 }

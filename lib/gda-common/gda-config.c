@@ -17,6 +17,21 @@
  */
 
 #include "gda-common.h"
+#if defined(USING_GCONF)
+#  include <gconf/gconf.h>
+
+static GConfEngine* conf_engine = NULL;
+
+static GConfEngine *
+get_conf_engine (void)
+{
+  if (!conf_engine)
+    {
+      conf_engine = gconf_engine_new();
+    }
+  return conf_engine;
+}
+#endif
 
 /**
  * gda_config_get_string
@@ -26,6 +41,7 @@ gchar *
 gda_config_get_string (const gchar *path)
 {
 #if defined(USING_GCONF)
+  return gconf_get_string(get_conf_engine(), path, NULL);
 #else
   return gnome_config_get_string(path);
 #endif
@@ -39,6 +55,7 @@ gint
 gda_config_get_int (const gchar *path)
 {
 #if defined(USING_GCONF)
+  return gconf_get_int(get_conf_engine(), path, NULL);
 #else
   return gnome_config_get_int(path);
 #endif
@@ -52,6 +69,7 @@ gdouble
 gda_config_get_float (const gchar *path)
 {
 #if defined(USING_GCONF)
+  return gconf_get_float(get_conf_engine(), path, NULL);
 #else
   return gnome_config_get_float(path);
 #endif
@@ -65,6 +83,7 @@ gboolean
 gda_config_get_boolean (const gchar *path)
 {
 #if defined(USING_GCONF)
+  return gconf_get_bool(get_conf_engine(), path, NULL);
 #else
   return gnome_config_get_bool(path);
 #endif
@@ -79,6 +98,7 @@ void
 gda_config_set_string (const gchar *path, const gchar *new_value)
 {
 #if defined(USING_GCONF)
+  gconf_set_string(get_conf_engine(), path, new_value, NULL);
 #else
   gnome_config_set_string(path, new_value);
 #endif
@@ -93,6 +113,7 @@ void
 gda_config_set_int (const gchar *path, gint new_value)
 {
 #if defined(USING_GCONF)
+  gconf_set_int(get_conf_engine(), path, new_value, NULL);
 #else
   gnome_config_set_int(path, new_value);
 #endif
@@ -107,6 +128,7 @@ void
 gda_config_set_float (const gchar *path, gdouble new_value)
 {
 #if defined(USING_GCONF)
+  gconf_set_float(get_conf_engine(), path, new_value, NULL);
 #else
   gnome_config_set_float(path, new_value);
 #endif
@@ -121,8 +143,40 @@ void
 gda_config_set_boolean (const gchar *path, gboolean new_value)
 {
 #if defined(USING_GCONF)
+  gconf_set_bool(get_conf_engine(), path, new_value, NULL);
 #else
   gnome_config_set_bool(path, new_value);
+#endif
+}
+
+/**
+ * gda_config_remove_section
+ * @path: path to the configuration section
+ *
+ * Remove the given section from the configuration database
+ */
+void
+gda_config_remove_section (const gchar *path)
+{
+#if defined(USING_GCONF)
+#else
+  gnome_config_clean_section(path);
+#endif
+}
+
+/**
+ * gda_config_remove_key
+ * @path: path to the configuration entry
+ *
+ * Remove the given entry from the configuration database
+ */
+void
+gda_config_remove_key (const gchar *path)
+{
+#if defined(USING_GCONF)
+  gconf_unset(get_conf_engine(), path, NULL);
+#else
+  gnome_config_clean_key(path);
 #endif
 }
 
@@ -137,6 +191,7 @@ gboolean
 gda_config_has_section (const gchar *path)
 {
 #if defined(USING_GCONF)
+  return gconf_dir_exists(get_conf_engine(), path, NULL);
 #else
   return gnome_config_has_section(path);
 #endif
@@ -151,6 +206,8 @@ void
 gda_config_commit (void)
 {
 #if defined(USING_GCONF)
+  /* FIXME: is that correct? */
+  gconf_suggest_sync(get_conf_engine(), NULL);
 #else
   gnome_config_sync();
 #endif
@@ -165,9 +222,73 @@ void
 gda_config_rollback (void)
 {
 #if defined(USING_GCONF)
+  /* FIXME: how to do it? */
 #else
   gnome_config_drop_all();
 #endif
+}
+
+/**
+ * gda_config_list_sections
+ * @path: path for root dir
+ *
+ * Return a GList containing the names of all the sections available
+ * under the given root directory.
+ *
+ * To free the returned value, you can use @gda_config_free_list
+ */
+GList *
+gda_config_list_sections (const gchar *path)
+{
+  GList*   ret = NULL;
+#if defined(USING_GCONF)
+  GSList*  slist;
+#else
+  gpointer iterator;
+  gchar*   key = NULL;
+  gchar*   name = NULL;
+#endif
+
+  g_return_val_if_fail(path != NULL, NULL);
+  
+#if defined(USING_GCONF)
+  slist = gconf_all_dirs(get_conf_engine(), path, NULL);
+  if (slist)
+    {
+      GSList* node;
+      
+      for (node = slist; node != NULL; node = g_slist_next(node))
+        {
+          ret = g_list_append(ret, node->data);
+        }
+      g_slist_free(slist);
+    }
+#else
+  iterator = gnome_config_init_iterator_sections(path);
+  while ((iterator = gnome_config_iterator_next(iterator, &key, &name)))
+    {
+      ret = g_list_append(ret, g_strdup(key));
+    }
+#endif
+  return ret;
+}
+
+/**
+ * gda_config_free_list
+ * @list: list to be freed
+ *
+ * Free all memory used by the given GList, which must be the return value
+ * from either @gda_config_list_sections and @gda_config_list_keys
+ */
+void
+gda_config_free_list (GList *list)
+{
+  while (list != NULL)
+    {
+      gchar* str = (gchar *) list->data;
+      list = g_list_remove(list, (gpointer) str);
+      g_free((gpointer) str);
+    }
 }
 
 /**
@@ -532,9 +653,9 @@ gda_list_datasources (void)
     {
       Gda_Dsn* dsn = (Gda_Dsn *) node->data;
       if (dsn)
-	{
-	  res = g_list_append(res, g_strdup(GDA_DSN_GDA_NAME(dsn)));
-	}
+        {
+          res = g_list_append(res, g_strdup(GDA_DSN_GDA_NAME(dsn)));
+        }
       node = g_list_next(node);
     }
   gda_dsn_free_list(dsns);
@@ -560,9 +681,9 @@ gda_list_datasources_for_provider (gchar* provider)
     {
       Gda_Dsn* dsn = (Gda_Dsn *) node->data;
       if (dsn && !strcmp(GDA_DSN_PROVIDER(dsn), provider))
-	{
-	  res = g_list_append(res, g_strdup(GDA_DSN_GDA_NAME(dsn)));
-	}
+        {
+          res = g_list_append(res, g_strdup(GDA_DSN_GDA_NAME(dsn)));
+        }
       node = g_list_next(node);
     }
   gda_dsn_free_list(dsns);

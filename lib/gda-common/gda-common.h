@@ -28,11 +28,7 @@
 #endif
 #include <orb/orb.h>
 #include <gnome.h>
-#if defined(USING_OAF)
-#  include <liboaf/liboaf.h>
-#else
-#  include <libgnorba/gnorba.h>
-#endif
+#include <liboaf/liboaf.h>
 #include <gtk/gtk.h>
 
 #include <gda-corba.h>

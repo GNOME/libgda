@@ -20,11 +20,7 @@
 #  define __gda_config_h__
 
 #include <glib.h>
-#if defined(USING_OAF)
-#  include <liboaf/liboaf.h>
-#else
-#  include <libgnorba/gnorba.h>
-#endif
+#include <liboaf/liboaf.h>
 
 #if defined(__cplusplus)
 extern "C" {
@@ -33,20 +29,25 @@ extern "C" {
 /*
  * Configuration system access
  */
-gchar*   gda_config_get_string  (const gchar *path);
-gint     gda_config_get_int     (const gchar *path);
-gdouble  gda_config_get_float   (const gchar *path);
-gboolean gda_config_get_boolean (const gchar *path);
-void     gda_config_set_string  (const gchar *path, const gchar *new_value);
-void     gda_config_set_int     (const gchar *path, gint new_value);
-void     gda_config_set_float   (const gchar *path, gdouble new_value);
-void     gda_config_set_boolean (const gchar *path, gboolean new_value);
+gchar*   gda_config_get_string     (const gchar *path);
+gint     gda_config_get_int        (const gchar *path);
+gdouble  gda_config_get_float      (const gchar *path);
+gboolean gda_config_get_boolean    (const gchar *path);
+void     gda_config_set_string     (const gchar *path, const gchar *new_value);
+void     gda_config_set_int        (const gchar *path, gint new_value);
+void     gda_config_set_float      (const gchar *path, gdouble new_value);
+void     gda_config_set_boolean    (const gchar *path, gboolean new_value);
 
-gboolean gda_config_has_section (const gchar *path);
-void     gda_config_commit      (void);
-void     gda_config_rollback    (void);
+void     gda_config_remove_section (const gchar *path);
+void     gda_config_remove_key     (const gchar *path);
 
-/* FIXME: missing functions for iterating a config section */
+gboolean gda_config_has_section    (const gchar *path);
+void     gda_config_commit         (void);
+void     gda_config_rollback       (void);
+
+GList*   gda_config_list_sections  (const gchar *path);
+GList*   gda_config_list_keys      (const gchar *path);
+void     gda_config_free_list      (GList *list);
 
 /*
  * Providers
@@ -88,13 +89,13 @@ typedef struct _Gda_Provider
 #define GDA_PROVIDER_DB_CONFIG(srv)         ((srv) ? (srv)->db_config : 0)
 #define GDA_PROVIDER_DSN_CONFIG(srv)        ((srv) ? (srv)->dsn_config : 0)
 
-Gda_Provider* gda_provider_new                    (void);
-Gda_Provider* gda_provider_copy                   (Gda_Provider*);
-void          gda_provider_free                   (Gda_Provider*);
+Gda_Provider* gda_provider_new          (void);
+Gda_Provider* gda_provider_copy         (Gda_Provider*);
+void          gda_provider_free         (Gda_Provider*);
 
-GList*        gda_provider_list                   (void);
-void          gda_provider_free_list              (GList* list);
-Gda_Provider* gda_provider_find_by_name           (const gchar* provider);
+GList*        gda_provider_list         (void);
+void          gda_provider_free_list    (GList* list);
+Gda_Provider* gda_provider_find_by_name (const gchar* provider);
 
 /*
  * Data sources
@@ -125,8 +126,8 @@ typedef struct _Gda_Dsn
 #define GDA_DSN_CONFIG(dsn)      ((dsn) ? (dsn)->config : 0)
 #define GDA_DSN_IS_GLOBAL(dsn)   ((dsn) ? (dsn)->is_global : FALSE)
 
-#define gda_dsn_new() g_new0(Gda_Dsn, 1)
-void    gda_dsn_free            (Gda_Dsn *dsn);
+#define  gda_dsn_new() g_new0(Gda_Dsn, 1)
+void     gda_dsn_free            (Gda_Dsn *dsn);
 
 Gda_Dsn* gda_dsn_find_by_name    (const gchar *dsn_name);
 void     gda_dsn_set_name        (Gda_Dsn *dsn, const gchar *name);
