@@ -1,3 +1,8 @@
+2001-03-14  Carlos Perelló Marín <carlos@gnome-db.org>
+
+	* es.po: Updated Spanish translation by Antonio
+	  de la Torre <adltorre@terra.es>
+
 2001-03-10  Carlos Perelló Marín <carlos@gnome-db.org>
 
         * updated.sh: Removed because don't run correctly in all
