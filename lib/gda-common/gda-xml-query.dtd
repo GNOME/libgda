@@ -1,0 +1,196 @@
+<!--      gda-xml-query.dtd
+          Copyright (C) 2000 Vivien Malerba
+          
+          modified July 2000 Gerhard Dieringer
+-->
+
+<!ENTITY  % trailer "union|unionall|intersect|minus|sort">
+<!ENTITY  % simplevalue "const|field|func">
+<!ENTITY  % boolop "and|or|not">
+<!ENTITY  % arithop "eq|ne|lt|le|gt|ge">
+<!ENTITY  % sqlop "null|like|between|in|exists">
+<!ENTITY  % datatype "struct|array|type">
+
+<!ELEMENT query (select|insert|update|delete|create|drop)>
+<!ATTLIST query
+          id NMTOKEN #IMPLIED>
+
+<!ELEMENT select (sources?, joins*, values?, qual?, (%trailer;)?)>
+
+<!ELEMENT insert (target, dest?, (values|query))>
+
+<!ELEMENT update (target, sources?, joins*, (set|setlist), qual?)>
+
+<!ELEMENT delete (target, qual?)>
+
+
+<!ELEMENT target (table|view)>
+
+<!ELEMENT union     (query)>
+
+<!ELEMENT unionall  (query)>
+
+<!ELEMENT intersect (query)>
+
+<!ELEMENT minus     (query)>
+
+<!ELEMENT dest (field+)>
+
+<!ELEMENT setlist (set+)>
+
+<!ELEMENT set (field,(%simplevalue;))>
+
+<!ELEMENT sources (table|view)*>
+
+<!ELEMENT joins (%boolop;|%arithop;)*>
+<!ATTLIST joins
+          type (inner|left|right) "inner"
+          left  IDREF #REQUIRED
+          right IDREF #REQUIRED>
+
+<!ELEMENT values (%simplevalue;|query)+>
+
+<!ELEMENT qual (%boolop;|%arithop;|%sqlop;)*>
+
+<!ELEMENT sort (column)+>
+
+<!ELEMENT table EMPTY>
+<!ATTLIST table
+          id      ID       #IMPLIED
+          name    NMTOKEN  #REQUIRED
+          temp (yes|no) "no">
+
+<!ELEMENT view EMPTY>
+<!ATTLIST view
+          id      ID       #IMPLIED
+          name    NMTOKEN  #REQUIRED>
+
+<!ELEMENT field EMPTY>
+<!ATTLIST field
+          source IDREF   #REQUIRED
+          name   NMTOKEN #REQUIRED
+          alias  NMTOKEN #IMPLIED
+          group (yes|no) "no">
+
+<!ELEMENT func (field|const|func)*>
+<!ATTLIST func 
+          name  NMTOKEN #REQUIRED
+          alias NMTOKEN #IMPLIED
+	  aggregate (yes|no) "no">
+
+<!ELEMENT column EMPTY>
+<!ATTLIST column num  NMTOKEN #REQUIRED
+                 order (asc|desc) "asc">
+
+<!ELEMENT const EMPTY>
+<!ATTLIST const
+          value CDATA   #IMPLIED
+          alias NMTOKEN #IMPLIED
+          type  NMTOKEN #REQUIRED
+          null (yes|no) "no">
+
+<!ELEMENT and (%boolop;|%arithop;|%sqlop;)+>
+
+<!ELEMENT or (%boolop;|%arithop;|%sqlop;)+>
+
+<!ELEMENT not (%boolop;|%arithop;|%sqlop;)>
+
+<!ELEMENT eq ((%simplevalue;),(%simplevalue;|query))>
+
+<!ELEMENT ne ((%simplevalue;),(%simplevalue;|query))>
+
+<!ELEMENT lt ((%simplevalue;),(%simplevalue;|query))>
+
+<!ELEMENT le ((%simplevalue;),(%simplevalue;|query))>
+
+<!ELEMENT gt ((%simplevalue;),(%simplevalue;|query))>
+
+<!ELEMENT ge ((%simplevalue;),(%simplevalue;|query))>
+
+<!ELEMENT null (%simplevalue;)>
+
+<!ELEMENT like ((%simplevalue;),(%simplevalue;|query))>
+
+<!ELEMENT between ((%simplevalue;),(%simplevalue;),(%simplevalue;))>
+
+<!ELEMENT in (field,query)>
+
+<!ELEMENT exists (query)>
+
+
+<!--
+************************************************************
+-->
+
+<!ELEMENT create (tabledef|viewdef|sequence|indexdef)>
+
+<!ELEMENT drop   (table|view|sequence|index)>
+
+
+
+<!--
+The following elements should be moved to the database DTD
+-->
+
+<!ELEMENT tabledef (fielddef+,primary?,foreign*)?>
+<!ATTLIST tabledef
+          id      ID       #IMPLIED
+          name    NMTOKEN  #REQUIRED
+          temp (yes|no) "no">
+
+<!ELEMENT viewdef (query)>
+<!ATTLIST viewdef 
+          id      ID       #IMPLIED
+          name    NMTOKEN  #REQUIRED>
+
+<!ELEMENT fielddef (%datatype;)>
+<!ATTLIST fielddef
+          id   ID      #IMPLIED
+          name NMTOKEN #REQUIRED
+          notnull (yes|no) "no">
+
+<!ELEMENT primary EMPTY>
+<!ATTLIST primary
+          key IDREFS #REQUIRED>
+
+<!ELEMENT foreign EMPTY>
+<!ATTLIST foreign
+          key   IDREFS   #REQUIRED
+          table NMTOKEN  #REQUIRED
+          ref   NMTOKENS #REQUIRED>
+
+<!ELEMENT struct (element+)>
+
+<!ELEMENT element (%datatype;)>
+<!ATTLIST element 
+          name NMTOKEN #REQUIRED>
+
+<!ELEMENT array (%datatype;)>
+<!ATTLIST array
+          size NMTOKENS #REQUIRED>
+
+<!ELEMENT type EMPTY>
+<!ATTLIST type 
+          name NMTOKEN  #REQUIRED
+          size NMTOKENS #IMPLIED>
+
+<!ELEMENT sequence (property*)>
+<!ATTLIST sequence
+          name  NMTOKEN #REQUIRED>
+
+<!ELEMENT property EMPTY>
+<!ATTLIST property
+          name  NMTOKEN #REQUIRED
+	  value NMTOKEN #REQUIRED>
+
+<!ELEMENT indexdef EMPTY>
+<!ATTLIST indexdef
+          name    NMTOKEN  #REQUIRED
+          table   NMTOKEN  #REQUIRED
+          columns NMTOKENS #REQUIRED
+          unique  (yes|no) "no">
+
+<!ELEMENT index EMPTY>
+<!ATTLIST index
+          name    NMTOKEN  #REQUIRED>
+

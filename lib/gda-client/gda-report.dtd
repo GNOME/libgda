@@ -1,0 +1,158 @@
+<!-- gda-report.dtd
+-->
+
+<!ENTITY % query SYSTEM "gda-xml-query.dtd">
+%query;
+
+
+<!ENTITY % reportelement   "line|label|special|repfield">
+<!ENTITY % printfrequency  "first|every|last">
+<!ENTITY % linestyle       "none|solid|dash|dot|dashdot|dashdotdot">
+<!ENTITY % fontweight      "light|normal|semibold|bold|black">
+<!ENTITY % halignment      "standard|left|center|right">
+<!ENTITY % valignment      "top|center|bottom">
+
+<!ELEMENT report (reportheader?, pageheader?, reportdata?, 
+                                 pagefooter?, reportfooter?)>
+<!ATTLIST report
+  pagesize      (A3|A4|A5|A6|B3|B4|B5|B6|letter|legal|executive) "A4"
+  orientation   (portrait|landscape) "portrait"
+  topmargin     NMTOKEN    #REQUIRED
+  bottommargin  NMTOKEN    #REQUIRED
+  leftmargin    NMTOKEN    #REQUIRED
+  rightmargin   NMTOKEN    #REQUIRED
+>
+
+
+<!ELEMENT reportheader (query?,(%reportelement;)*)>
+<!ATTLIST reportheader 
+  height        NMTOKEN    #REQUIRED
+>
+
+	
+<!ELEMENT pageheader (query?,(%reportelement;)*)>
+<!ATTLIST pageheader 
+  height        NMTOKEN   #REQUIRED
+  frequency     (%printfrequency;) "every"
+>
+
+
+<!ELEMENT pagefooter (query?,(%reportelement;)*)>
+<!ATTLIST pagefooter 
+  height        NMTOKEN            #REQUIRED
+  frequency     (%printfrequency;) "every"
+>
+
+
+<!ELEMENT reportfooter (query?,(%reportelement;)*)>
+<!ATTLIST reportfooter 
+  height        NMTOKEN    #REQUIRED
+>
+
+
+<!ELEMENT reportdata (detail|(groupheader,reportdata,groupfooter))>
+
+
+<!ELEMENT detail (query?,(%reportelement;)*)>
+<!ATTLIST detail 
+  height        NMTOKEN   #REQUIRED
+>
+
+
+<!ELEMENT groupheader (query?,(%reportelement;)*)>
+<!ATTLIST groupheader 
+  height        NMTOKEN   #REQUIRED
+  newpage       (yes|no)  "no"
+>
+
+
+<!ELEMENT groupfooter (query?,(%reportelement;)*)>
+<!ATTLIST groupfooter 
+  height        NMTOKEN   #REQUIRED
+  newpage       (yes|no)  "no"
+>
+
+
+<!ELEMENT line EMPTY>
+<!ATTLIST line 
+  x1   		NMTOKEN        #REQUIRED
+  y1            NMTOKEN        #REQUIRED
+  x2            NMTOKEN        #REQUIRED
+  y2            NMTOKEN        #REQUIRED
+  linewidth     NMTOKEN        #REQUIRED
+  linecolor     NMTOKENS       #REQUIRED
+  linestyle     (%linestyle;)  "solid"
+>
+
+
+<!ELEMENT label EMPTY>
+<!ATTLIST label 
+  text          CDATA           #REQUIRED
+  x             NMTOKEN         #REQUIRED
+  y             NMTOKEN         #REQUIRED
+  width         NMTOKEN         #REQUIRED
+  height        NMTOKEN         #REQUIRED
+  bgcolor       NMTOKENS        #REQUIRED
+  fgcolor       NMTOKENS        #REQUIRED
+  bordercolor   NMTOKENS        #REQUIRED
+  borderwidth   NMTOKEN         #REQUIRED
+  borderstyle   (%linestyle;)   "none"
+  fontfamily    NMTOKEN         #REQUIRED
+  fontsize      NMTOKEN         #REQUIRED
+  fontweight    (%fontweight;)  "normal"
+  fontitalic    (yes|no)        "no"
+  halignment    (%halignment;)  "standard"
+  valignment    (%valignment;)  "center"
+  wordwrap      (yes|no)        "no"
+>
+
+
+<!ELEMENT repfield EMPTY>
+<!ATTLIST repfield
+  source          IDREF           #REQUIRED 
+  x               NMTOKEN         #REQUIRED
+  y               NMTOKEN         #REQUIRED
+  width           NMTOKEN         #REQUIRED
+  height          NMTOKEN         #REQUIRED
+  bgcolor         NMTOKENS        #REQUIRED
+  fgcolor         NMTOKENS        #REQUIRED
+  bordercolor     NMTOKENS        #REQUIRED
+  borderwidth     NMTOKEN         #REQUIRED
+  borderstyle     (%linestyle;)   "none"
+  fontfamily      NMTOKEN         #REQUIRED
+  fontsize        NMTOKEN         #REQUIRED
+  fontweight      (%fontweight;)  "normal"
+  fontitalic      (yes|no)        "no"
+  halignment      (%halignment;)  "standard"
+  valignment      (%halignment;)  "standard"
+  wordwrap        (yes|no)        "no"
+  datatype        NMTOKEN         #REQUIRED
+  dateformat      CDATA           #IMPLIED
+  precision       NMTOKEN         #IMPLIED
+  currency        CDATA           #IMPLIED
+  negvaluecolor   NMTOKENS        #REQUIRED
+  commaseparator  (yes|no)        "no"
+>
+
+
+<!ELEMENT special EMPTY>
+<!ATTLIST special
+  type            (currdate|pagenum)  #REQUIRED 
+  x               NMTOKEN             #REQUIRED
+  y               NMTOKEN             #REQUIRED
+  width           NMTOKEN             #REQUIRED
+  height          NMTOKEN             #REQUIRED
+  bgcolor         NMTOKENS            #REQUIRED
+  fgcolor         NMTOKENS            #REQUIRED
+  bordercolor     NMTOKENS            #REQUIRED
+  borderwidth     NMTOKEN             #REQUIRED
+  borderstyle     (%linestyle;)       "none"
+  fontfamily      NMTOKEN             #REQUIRED
+  fontsize        NMTOKEN             #REQUIRED
+  fontweight      (%fontweight;)      "normal"
+  fontitalic      (yes|no)            "no"
+  halignment      (%halignment;)      "standard"
+  valignment      (%halignment;)      "standard"
+  wordwrap        (yes|no)            "no"
+  dateformat      CDATA               #REQUIRED
+>

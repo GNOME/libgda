@@ -3,7 +3,8 @@ lib_LTLIBRARIES = libgda-common.la
 INCLUDES = \
 	$(GDA_CLIENT_CFLAGS) \
 	$(GDA_PROVIDER_CFLAGS) \
-	-I.
+	-I. \
+	-DDTDINSTALLDIR=\""$(datadir)/gda/dtd"\"
 
 gda_common_headers = \
 	gda-config.h \
@@ -29,3 +30,9 @@ libgda_common_la_LIBADD =
 
 gdaincludedir=$(includedir)/gda
 gdainclude_HEADERS=$(gda_common_headers)
+
+DTD_FILES = gda-xml-query.dtd
+dtddir=$(datadir)/gda/dtd
+dtd_DATA=$(DTD_FILES)
+
+EXTRA_DIST = $(DTD_FILES)

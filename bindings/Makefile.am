@@ -1,1 +1,1 @@
-SUBDIRS = c++ python pascal
+SUBDIRS = c++

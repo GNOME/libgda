@@ -43,5 +43,3 @@
 #include <gda-xml-database.h>
 
 #endif
-
-
