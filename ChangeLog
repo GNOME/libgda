@@ -1,3 +1,10 @@
+2003-08-26  Philippe CHARLIER <p.charlier@chello.be>
+
+	* libgda/gda-value.c (gda_value_new_from_xml): the type is stored in
+	the "gdatype" property, not "type".
+
+	* libgda/gda-data-model.c (add_xml_row): fixed typo in call to strcmp().
+
 2003-08-25  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* libgda/gda-xml-database.c (gda_xml_database_new_table_from_node):

@@ -936,7 +936,7 @@ add_xml_row (GdaDataModel *model, xmlNodePtr xml_row)
 		gint pos;
 		GdaValue *value;
 
-		if (!strcmp (xml_field->name, "value"))
+		if (strcmp (xml_field->name, "value"))
 			continue;
 
 		pos = atoi (xmlGetProp (xml_field, "position"));
