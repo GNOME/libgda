@@ -207,18 +207,6 @@ gda_connection_init (GdaConnection* cnc)
 	cnc->is_open = FALSE;
 }
 
-static guint
-hash_id_hash (gconstpointer data)
-{
-	return (guint)data;
-}
-
-static gint
-guint_id_guint (gconstpointer d1, gconstpointer d2)
-{
-	return d1 < d2 ? -1 : d1 == d2 ? 0 : 1;
-}
-
 gint
 gda_connection_corba_exception (GdaConnection* cnc, CORBA_Environment* ev)
 {
@@ -227,61 +215,61 @@ gda_connection_corba_exception (GdaConnection* cnc, CORBA_Environment* ev)
 	g_return_val_if_fail(ev != 0, -1);
 	
 	switch (ev->_major) {
-		case CORBA_NO_EXCEPTION:
-			return 0;
-		case CORBA_SYSTEM_EXCEPTION: {
-			CORBA_SystemException* sysexc;
+	case CORBA_NO_EXCEPTION:
+		return 0;
+	case CORBA_SYSTEM_EXCEPTION: {
+		CORBA_SystemException* sysexc;
+		
+		sysexc = CORBA_exception_value(ev);
+		error = gda_error_new();
+		error->source = g_strdup("[CORBA System Exception]");
+		switch(sysexc->minor) {
+		case ex_CORBA_COMM_FAILURE:
+			error->description = g_strdup_printf(_("%s: The server didn't respond."),
+							     CORBA_exception_id(ev));
+			break;
+		default:
+			error->description = g_strdup_printf(_("%s: An Error occured in the CORBA system."),
+							     CORBA_exception_id(ev));
+			break;
+		}
+		gda_connection_add_single_error(cnc, error);
+		return -1;
+	}
+	case CORBA_USER_EXCEPTION:
+		if (strcmp(CORBA_exception_id(ev), ex_GDA_NotSupported) == 0) {
+			GDA_NotSupported* not_supported_error;
 			
-			sysexc = CORBA_exception_value(ev);
+			not_supported_error = (GDA_NotSupported*)ev->_params;
 			error = gda_error_new();
-			error->source = g_strdup("[CORBA System Exception]");
-			switch(sysexc->minor) {
-				case ex_CORBA_COMM_FAILURE:
-					error->description = g_strdup_printf(_("%s: The server didn't respond."),
-					                                     CORBA_exception_id(ev));
-					break;
-				default:
-					error->description = g_strdup_printf(_("%s: An Error occured in the CORBA system."),
-					                                     CORBA_exception_id(ev));
-					break;
-			}
+			error->source = g_strdup("[CORBA User Exception]");
+			error->description = g_strdup(not_supported_error->errormsg);
 			gda_connection_add_single_error(cnc, error);
 			return -1;
 		}
-		case CORBA_USER_EXCEPTION:
-			if (strcmp(CORBA_exception_id(ev), ex_GDA_NotSupported) == 0) {
-				GDA_NotSupported* not_supported_error;
+		if (strcmp(CORBA_exception_id(ev), ex_GDA_DriverError) == 0) {
+			GDA_ErrorSeq  error_sequence = ((GDA_DriverError*)ev->_params)->errors;
+			gint          idx;
 				
-				not_supported_error = (GDA_NotSupported*)ev->_params;
+			for (idx = 0; idx < error_sequence._length; idx++) {
+				GDA_Error* gda_error = &error_sequence._buffer[idx];
+				
 				error = gda_error_new();
-				error->source = g_strdup("[CORBA User Exception]");
-				error->description = g_strdup(not_supported_error->errormsg);
+				if (gda_error->source)
+					error->source = g_strdup(gda_error->source);
+				error->number = gda_error->number;
+				if (gda_error->sqlstate)
+					error->sqlstate = g_strdup(gda_error->sqlstate);
+				if (gda_error->nativeMsg)
+					error->nativeMsg = g_strdup(gda_error->nativeMsg);
+				if (gda_error->description)
+					error->description = g_strdup(gda_error->description);
 				gda_connection_add_single_error(cnc, error);
-				return -1;
 			}
-			if (strcmp(CORBA_exception_id(ev), ex_GDA_DriverError) == 0) {
-				GDA_ErrorSeq  error_sequence = ((GDA_DriverError*)ev->_params)->errors;
-				gint          idx;
-				
-				for (idx = 0; idx < error_sequence._length; idx++) {
-					GDA_Error* gda_error = &error_sequence._buffer[idx];
-					
-					error = gda_error_new();
-					if (gda_error->source)
-						error->source = g_strdup(gda_error->source);
-					error->number = gda_error->number;
-					if (gda_error->sqlstate)
-						error->sqlstate = g_strdup(gda_error->sqlstate);
-					if (gda_error->nativeMsg)
-						error->nativeMsg = g_strdup(gda_error->nativeMsg);
-					if (gda_error->description)
-						error->description = g_strdup(gda_error->description);
-					gda_connection_add_single_error(cnc, error);
-				}
-			}
-			return -1;
-		default:
-			g_error("Unknown CORBA exception for connection");
+		}
+		return -1;
+	default:
+		g_error("Unknown CORBA exception for connection");
 	}
 	return 0;
 }
@@ -294,20 +282,27 @@ get_corba_connection (GdaConnection* cnc)
 	
 	CORBA_exception_init(&ev);
 
+	g_return_val_if_fail (IS_GDA_CONNECTION (cnc), -1);
+	g_return_val_if_fail (cnc->provider != NULL, -1);
+
 	/* get the connection factory */
 	if (!factories)
-		factories = g_hash_table_new(hash_id_hash, guint_id_guint);
+		factories = g_hash_table_new(g_str_hash, g_str_equal);
+
 	factory = g_hash_table_lookup(factories, cnc->provider);
 	if (!factory) {
 		factory = oaf_activate_from_id(cnc->provider, 0, NULL, &ev);
+		if (factory == CORBA_OBJECT_NIL ||
+		    gda_connection_corba_exception(cnc, &ev)) {
+			return -1;
+		}
 		g_hash_table_insert(factories, cnc->provider, factory);
 	}
-	if (!factory) return -1;
 
 	/* create the connection */
 	cnc->connection = GDA_ConnectionFactory_create_connection(factory, cnc->provider, &ev);
 	if (CORBA_Object_is_nil(cnc->connection, &ev) ||
-        gda_connection_corba_exception(cnc, &ev)) {
+	    gda_connection_corba_exception(cnc, &ev)) {
 		return -1;
 	}
 

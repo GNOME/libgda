@@ -1,3 +1,8 @@
+2001-06-15  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-connection.c (get_corba_connection): use g_str_hash and
+	g_str_equal for the GHashTable
+
 2001-06-14  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-export.c (gda_export_free): added missing function
