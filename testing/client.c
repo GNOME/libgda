@@ -30,18 +30,18 @@ show_schema (GdaConnection *cnc, GdaConnectionSchema schema, const gchar *label)
 	gint r, c;
 	gint row_count, col_count;
 
-	g_print ("\t\t%s\n", label);
+	g_print ("\t%s\n", label);
 
 	model = gda_connection_get_schema (cnc, schema, NULL);
 	if (!GDA_IS_DATA_MODEL (model)) {
-		g_print ("\t\t\tNONE\n");
+		g_print ("\t\tNONE\n");
 		return;
 	}
 
 	row_count = gda_data_model_get_n_rows (model);
 	col_count = gda_data_model_get_n_columns (model);
 	for (r = 0; r < row_count; r++) {
-		g_print ("\t\t");
+		g_print ("\t");
 		for (c = 0; c < col_count; c++) {
 			GdaValue *value;
 			gchar *str;
