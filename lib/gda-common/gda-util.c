@@ -138,3 +138,52 @@ gda_util_save_file (const gchar * filename, const gchar * text)
 		g_warning (_("Could not create file %s"), filename);
 	return FALSE;
 }
+
+static gchar *gda_types[GNOME_Database_TypeLastValue];
+
+static void
+initialize_types_array (void)
+{
+	static gboolean initialized = FALSE;
+
+	if (initialized)
+		return;
+
+	gda_types[GNOME_Database_TypeNull] = "<NULL>";
+	gda_types[GNOME_Database_TypeBigint] = "bigint";
+	gda_types[GNOME_Database_TypeBinary] = "blob";
+	gda_types[GNOME_Database_TypeBoolean] = "boolean";
+	gda_types[GNOME_Database_TypeBstr] = "bstr";
+	gda_types[GNOME_Database_TypeChar] = "char";
+	gda_types[GNOME_Database_TypeCurrency] = "currency";
+	gda_types[GNOME_Database_TypeDate] = "date";
+	gda_types[GNOME_Database_TypeTime] = "time";
+	gda_types[GNOME_Database_TypeTimestamp] = "timestamp";	
+	gda_types[GNOME_Database_TypeDecimal] = "decimal";
+	gda_types[GNOME_Database_TypeDouble] = "double";
+	gda_types[GNOME_Database_TypeInteger] = "integer";
+	gda_types[GNOME_Database_TypeLongvarbin] = "longvarbin";
+	gda_types[GNOME_Database_TypeLongvarchar] = "longvarchar";
+	gda_types[GNOME_Database_TypeNumeric] = "numeric";
+	gda_types[GNOME_Database_TypeSingle] = "single";
+	gda_types[GNOME_Database_TypeSmallint] = "smallint";
+	gda_types[GNOME_Database_TypeTinyint] = "tinyint";
+	gda_types[GNOME_Database_TypeVarchar] = "varchar";
+	gda_types[GNOME_Database_TypeVarbin] = "varbin";
+}
+
+/**
+ * gda_fieldtype_to_string
+ */
+const gchar *
+gda_util_gdatype_to_string (GNOME_Database_ValueType type)
+{
+	initialize_types_array ();
+
+	if (type >= GNOME_Database_TypeNull &&
+	    type <= GNOME_Database_TypeLastValue) {
+		return (const gchar *) gda_types[type];
+	}
+
+	return NULL;
+}

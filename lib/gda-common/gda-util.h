@@ -25,13 +25,16 @@
 
 G_BEGIN_DECLS
 
-GList *gda_util_hash_to_list (GHashTable * hash_table);
+GList   *gda_util_hash_to_list (GHashTable * hash_table);
 gboolean gda_util_destroy_hash_pair (gchar * key, gpointer value,
 				     GFreeFunc free_func);
 
-gchar *gda_util_load_file (const gchar * filename);
+gchar   *gda_util_load_file (const gchar * filename);
 gboolean gda_util_save_file (const gchar * filename,
 			     const gchar * text);
+
+/* strings for GDA types */
+const gchar *gda_util_gdatype_to_string (GNOME_Database_ValueType type);
 
 G_END_DECLS
 
