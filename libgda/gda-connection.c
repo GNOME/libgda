@@ -515,6 +515,25 @@ gda_connection_add_error_list (GdaConnection *cnc, GList *error_list)
 }
 
 /**
+ * gda_connection_change_database
+ * @cnc: a #GdaConnection object.
+ * @name: name of database to switch to.
+ *
+ * Change the current database for the given connection. This operation
+ * is not available in all providers.
+ *
+ * Returns: TRUE if successful, FALSE otherwise.
+ */
+gboolean
+gda_connection_change_database (GdaConnection *cnc, const gchar *name)
+{
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (name != NULL, FALSE);
+
+	return gda_server_provider_change_database (cnc->priv->provider_obj, cnc, name);
+}
+
+/**
  * gda_connection_create_database
  * @cnc: a #GdaConnection object.
  * @name: database name.

@@ -20,7 +20,7 @@
  */
 
 #include <config.h>
-#include <bonobo/bonobo-i18n.h>
+#include <libgda/gda-intl.h>
 #include "gda-oracle-connection.h"
 
 typedef struct {

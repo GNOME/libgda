@@ -53,6 +53,7 @@ gda_server_provider_class_init (GdaServerProviderClass *klass)
 	klass->open_connection = NULL;
 	klass->close_connection = NULL;
 	klass->get_database = NULL;
+	klass->change_database = NULL;
 	klass->create_database = NULL;
 	klass->drop_database = NULL;
 	klass->execute_command = NULL;
@@ -201,6 +202,30 @@ gda_server_provider_get_database (GdaServerProvider *provider,
 	g_return_val_if_fail (CLASS (provider)->get_database != NULL, NULL);
 
 	return CLASS (provider)->get_database (provider, cnc);
+}
+
+/**
+ * gda_server_provider_change_database
+ * @provider: a #GdaServerProvider object.
+ * @cnc: a #GdaConnection object.
+ * @name: database name.
+ *
+ * Proxy the call to the change_database method on the
+ " #GdaServerProvider class to the corresponding provider.
+ *
+ * Returns: TRUE if successful, FALSE otherwise.
+ */
+gboolean
+gda_server_provider_change_database (GdaServerProvider *provider,
+				     GdaConnection *cnc,
+				     const gchar *name)
+{
+	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), FALSE);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (name != NULL, FALSE);
+	g_return_val_if_fail (CLASS (provider)->change_database != NULL, FALSE);
+
+	return CLASS (provider)->change_database (provider, cnc, name);
 }
 
 /**

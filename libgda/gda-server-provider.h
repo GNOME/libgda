@@ -62,6 +62,9 @@ struct _GdaServerProviderClass {
 
 	const gchar * (* get_database) (GdaServerProvider *provider,
 					GdaConnection *cnc);
+	gboolean (* change_database) (GdaServerProvider *provider,
+				      GdaConnection *cnc,
+				      const gchar *name);
 	gboolean (* create_database) (GdaServerProvider *provider,
 				      GdaConnection *cnc,
 				      const gchar *name);
@@ -105,6 +108,9 @@ gboolean gda_server_provider_close_connection (GdaServerProvider *provider,
 
 const gchar *gda_server_provider_get_database (GdaServerProvider *provider,
 					       GdaConnection *cnc);
+gboolean gda_server_provider_change_database (GdaServerProvider *provider,
+					      GdaConnection *cnc,
+					      const gchar *name);
 gboolean gda_server_provider_create_database (GdaServerProvider *provider,
 					      GdaConnection *cnc,
 					      const gchar *name);

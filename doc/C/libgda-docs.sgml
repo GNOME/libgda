@@ -798,9 +798,15 @@
 	  </para>
 	</listitem>
 	<listitem>
+	  <para>change_database</para>
+	  <para>
+	    Change the database being used in the active connection.
+	  </para>
+	</listitem>
+	<listitem>
 	   <para>create_database</para>
 	   <para>
-	   Creates a new database whose name is received in a parameter.	
+	    Creates a new database whose name is received in a parameter.	
 	   </para>
 	</listitem>
 	<listitem>

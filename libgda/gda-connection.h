@@ -37,11 +37,11 @@ G_BEGIN_DECLS
 #define GDA_IS_CONNECTION(obj)         (G_TYPE_CHECK_INSTANCE_TYPE(obj, GDA_TYPE_CONNECTION))
 #define GDA_IS_CONNECTION_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), GDA_TYPE_CONNECTION))
 
-typedef struct _GdaServerProvider    GdaServerProvider;
 typedef struct _GdaConnection        GdaConnection;
 typedef struct _GdaConnectionClass   GdaConnectionClass;
 typedef struct _GdaConnectionPrivate GdaConnectionPrivate;
 
+typedef struct _GdaServerProvider    GdaServerProvider; /* defined in gda-server-provider.h */
 typedef struct _GdaClient GdaClient; /* defined in gda-client.h */
 typedef struct _GdaTransaction GdaTransaction; /* defined in gda-transaction.h */
 
@@ -80,6 +80,7 @@ void           gda_connection_add_error (GdaConnection *cnc, GdaError *error);
 void           gda_connection_add_error_string (GdaConnection *cnc, const gchar *str, ...);
 void           gda_connection_add_error_list (GdaConnection *cnc, GList *error_list);
 
+gboolean       gda_connection_change_database (GdaConnection *cnc, const gchar *name);
 gboolean       gda_connection_create_database (GdaConnection *cnc, const gchar *name);
 gboolean       gda_connection_drop_database (GdaConnection *cnc, const gchar *name);
 

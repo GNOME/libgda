@@ -22,23 +22,23 @@
 #if !defined(__gda_oracle_connection_h__)
 #  define __gda_oracle_connection_h__
 
-#include <libgda/gda-server-connection.h>
+#include <libgda/gda-connection.h>
 
 G_BEGIN_DECLS
 
-gboolean gda_oracle_connection_initialize (GdaServerConnection *cnc);
-gboolean gda_oracle_connection_open (GdaServerConnection *cnc,
+gboolean gda_oracle_connection_initialize (GdaConnection *cnc);
+gboolean gda_oracle_connection_open (GdaConnection *cnc,
 				     const gchar *database,
 				     const gchar *username,
 				     const gchar *password);
-gboolean gda_oracle_connection_close (GdaServerConnection *cnc);
-gboolesn gda_oracle_connection_begin_transaction (GdaServerConnection *cnc,
+gboolean gda_oracle_connection_close (GdaConnection *cnc);
+gboolean gda_oracle_connection_begin_transaction (GdaConnection *cnc,
 						  const gchar *trans_id);
-gboolean gda_oracle_connection_commit_transaction (GdaServerConnection *cnc,
+gboolean gda_oracle_connection_commit_transaction (GdaConnection *cnc,
 						   const gchar *trans_id);
-gboolean gda_oracle_connection_rollback_transaction (GdaServerConnection *cnc,
+gboolean gda_oracle_connection_rollback_transaction (GdaConnection *cnc,
 						     const gchar *trans_id);
-void     gda_oracle_connection_make_error (GdaServerConnection *cnc);
+void     gda_oracle_connection_make_error (GdaConnection *cnc);
 
 G_END_DECLS
 
