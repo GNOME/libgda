@@ -24,7 +24,7 @@
 #include <libgda/gda-intl.h>
 #include <stdlib.h>
 #include "gda-freetds.h"
-#include "gda-freetds-recordset.h"
+//#include "gda-freetds-recordset.h"
 
 #define PARENT_TYPE GDA_TYPE_SERVER_PROVIDER
 
@@ -107,7 +107,8 @@ static const gchar
 
 static gboolean
 gda_freetds_provider_change_database (GdaServerProvider *provider,
-                                      GdaConnection *cnc)
+                                      GdaConnection *cnc,
+                                      const gchar *name)
 {
 	return FALSE;
 }
@@ -223,6 +224,7 @@ gda_freetds_provider_finalize (GObject *object)
 // Public functions                                                       
 /////////////////////////////////////////////////////////////////////////////
 
+GType
 gda_freetds_provider_get_type (void)
 {
         static GType type = 0;

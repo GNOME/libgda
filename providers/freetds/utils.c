@@ -34,7 +34,7 @@ gda_freetds_make_error (gchar *message)
 	error = gda_error_new ();
 	if (error) {
 		if (message) {
-			gda_error_set_description (error, message)
+			gda_error_set_description (error, message);
 		} else {
 			gda_error_set_description (error, _("NO DESCRIPTION"));
 		}

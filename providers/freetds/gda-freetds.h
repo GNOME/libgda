@@ -29,7 +29,7 @@
 #include <libgda/gda-intl.h>
 #include <libgda/gda-server-provider.h>
 #include "gda-freetds-provider.h"
-#include "gda-freetds-recordset.h"
+//#include "gda-freetds-recordset.h"
 
 #include <tds.h>
 
