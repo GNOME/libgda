@@ -7,7 +7,7 @@ INCLUDES = \
 	-I$(top_builddir)/lib/gda-common \
 	-DDTDINSTALLDIR=\""$(datadir)/gda/dtd"\"
 
-BUILT_SOURCES = gda-stubs.c gda-common.c gda.h
+BUILT_SOURCES = GDA-stubs.c GDA-common.c GDA.h
 CLEANFILES += $(BUILT_SOURCES)
 IDL_FILES = \
 	$(top_builddir)/idl/GDA.idl \
