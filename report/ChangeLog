@@ -1,3 +1,10 @@
+2001-12-22  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* common/*:
+	* engine/*: removed for restructuration
+
+	* libgda-report/: new directory to contain the report library
+
 2001-11-03  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* common/Makefile.am: added BONOBO_IDL_DIR for IDL compilation
