@@ -339,9 +339,17 @@ gda_mdb_provider_rollback_transaction (GdaServerProvider *provider,
 /* supports handler for the GdaMdbProvider class */
 static gboolean
 gda_mdb_provider_supports (GdaServerProvider *provider,
-			     GdaConnection *cnc,
-			     GdaConnectionFeature feature)
+			   GdaConnection *cnc,
+			   GdaConnectionFeature feature)
 {
+	g_return_val_if_fail (GDA_IS_MDB_PROVIDER (provider), FALSE);
+
+	switch (feature) {
+	case GDA_CONNECTION_FEATURE_PROCEDURES :
+	case GDA_CONNECTION_FEATURE_SQL :
+		return TRUE;
+	}
+
 	return FALSE;
 }
 
