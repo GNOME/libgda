@@ -1,4 +1,4 @@
-/* GDA report libary
+/* GDA report engine
  * Copyright (C) 1998-2001 The Free Software Foundation
  *
  * AUTHORS:
@@ -20,37 +20,16 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include <libgda-report/gda-report-datasource.h>
+#if !defined(__report_engine_job_h__)
+#  define __report_engine_job_h__
 
-#define PARENT_TYPE BONOBO_X_OBJECT_TYPE
+#include <libgda/gda-parameter.h>
+#include "gda-report-engine.h"
+#include "gda-report-output.h"
 
-static void gda_report_datasource_class_init (GdaReportDatasourceClass *klass);
-static void gda_report_datasource_init       (GdaReportDatasource *source,
-					      GdaReportDatasourceClass *klass);
-static void gda_report_datasource_finalize   (GObject *object);
+GdaReportOutput *engine_job_process_report (GdaReportEngine *engine,
+					    const gchar *xml,
+					    GdaParameterList *params,
+					    CORBA_Environment *ev);
 
-static GObjectClass *parent_class = NULL;
-
-/*
- * CORBA methods implementation
- */
-
-/*
- * GdaReportDatasource class implementation
- */
-
-static void
-gda_report_datasource_class_init (GdaReportDatasourceClass *klass)
-{
-}
-
-static void
-gda_report_datasource_init (GdaReportDatasource *source,
-			     GdaReportDatasourceClass *klass)
-{
-}
-
-static void
-gda_report_datasource_finalize (GObject *object)
-{
-}
+#endif

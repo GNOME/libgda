@@ -1,3 +1,17 @@
+2001-12-27  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* idl/GNOME_Database_Report.idl: added ::Output interface, and made
+	the runDocument method return that, so that we can make async
+	retrieval of the reports
+
+	* gda-report-engine.c (impl_ReportEngine_runDocument): implemented
+
+	* gda-report-output.[ch]: implementation of the ::Output interface
+
+	* job.[ch]: new files for processing reports
+	(engine_job_process_report): function for processing the XML reports
+	sent out by clients
+
 2001-12-26  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-report-engine.[ch] (gda_report_engine_get_gda_client): new

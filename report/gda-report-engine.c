@@ -41,15 +41,38 @@ static GdaClient *db_client = NULL;
  * CORBA methods implementation
  */
 
-static Bonobo_Stream
+static GNOME_Database_Report_Output
 impl_ReportEngine_runDocument (PortableServer_Servant servant,
 			       const Bonobo_Stream xml,
 			       const GNOME_Database_ParameterList *params,
 			       CORBA_Environment *ev)
 {
+	CORBA_long res;
+	gchar *body;
+	GNOME_Database_Report_Output output;
+	GdaParameterList *plist;
 	GdaReportEngine *engine = bonobo_x_object (servant);
 
 	bonobo_return_val_if_fail (GDA_IS_REPORT_ENGINE (engine), CORBA_OBJECT_NIL, ev);
+	bonobo_return_val_if_fail (xml != CORBA_OBJECT_NIL, CORBA_OBJECT_NIL, ev);
+
+	/* read the report file from the stream */
+	res = bonobo_stream_client_read_string (xml, &body, ev);
+	if (BONOBO_EX (ev) || res == -1) {
+		gda_log_error (_("CORBA exception: %s"),
+			       bonobo_exception_get_text (ev));
+		return CORBA_OBJECT_NIL;
+	}
+
+	/* process the report file */
+	plist = gda_parameter_list_new_from_corba (params);
+	output = engine_job_process_report (engine, body, plist, ev);
+
+	g_free (body);
+	gda_parameter_list_free (plist);
+
+	return BONOBO_IS_OBJECT (output) ? 
+		bonobo_object_corba_objref (BONOBO_OBJECT (output)) : CORBA_OBJECT_NIL;
 }
 
 /*

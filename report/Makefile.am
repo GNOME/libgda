@@ -12,6 +12,10 @@ bin_PROGRAMS = gda-report-engine
 gda_report_engine_SOURCES = \
 	gda-report-engine.c \
 	gda-report-engine.h \
+	gda-report-output.c \
+	gda-report-output.h \
+	job.c \
+	job.h \
 	main.c
 
 gda_report_engine_LDADD = \

@@ -1,4 +1,4 @@
-/* GDA report libary
+/* GDA report engine
  * Copyright (C) 1998-2001 The Free Software Foundation
  *
  * AUTHORS:
@@ -20,37 +20,27 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include <libgda-report/gda-report-datasource.h>
+#include <libgda-report/gda-report-document.h>
+#include <bonobo/bonobo-exception.h>
+#include <bonobo/bonobo-i18n.h>
+#include "job.h"
 
-#define PARENT_TYPE BONOBO_X_OBJECT_TYPE
-
-static void gda_report_datasource_class_init (GdaReportDatasourceClass *klass);
-static void gda_report_datasource_init       (GdaReportDatasource *source,
-					      GdaReportDatasourceClass *klass);
-static void gda_report_datasource_finalize   (GObject *object);
-
-static GObjectClass *parent_class = NULL;
-
-/*
- * CORBA methods implementation
- */
-
-/*
- * GdaReportDatasource class implementation
- */
-
-static void
-gda_report_datasource_class_init (GdaReportDatasourceClass *klass)
+GdaReportOutput *
+engine_job_process_report (GdaReportEngine *engine,
+			   const gchar *xml,
+			   GdaParameterList *params,
+			   CORBA_Environment *ev)
 {
-}
+	GdaReportDocument *document;
 
-static void
-gda_report_datasource_init (GdaReportDatasource *source,
-			     GdaReportDatasourceClass *klass)
-{
-}
+	bonobo_return_val_if_fail (GDA_IS_REPORT_ENGINE (engine), NULL, ev);
+	bonobo_return_val_if_fail (xml != NULL, NULL, ev);
 
-static void
-gda_report_datasource_finalize (GObject *object)
-{
+	/* parse the document */
+	document = gda_report_document_new_from_string (xml);
+	if (GDA_IS_REPORT_DOCUMENT (document)) {
+		bonobo_exception_general_error_set (
+			ev, NULL, _("Could not parse XML report"));
+		return CORBA_OBJECT_NIL;
+	}
 }
