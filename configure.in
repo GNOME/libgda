@@ -6,12 +6,6 @@ AM_INIT_AUTOMAKE(libgda,0.3.1)
 
 AM_MAINTAINER_MODE
 
-if test -z "$CERTIFIED_GNOMIE";
-then
-	echo "You need a GNOME 2 environment to compile libgda HEAD"
-	exit 1
-fi
-
 AM_PROG_XML_I18N_TOOLS
 
 GNOME_COMMON_INIT
