@@ -6,12 +6,11 @@
 
 2002-01-03  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
-	* gda-row.[ch]:
-	* gda-value.[ch]: added support for GdaGeometricPoint type
+	* Changelog: fix little mistake.
 
-	* gda-server-connection.c (gda_server_connection_free_error_list): 
-	Test if the error list is NULL to avoid failing assertion in
-	gda_error_list_free().
+	* gda-row.[ch]:
+	* gda-value.[ch]:
+	Added support for GeometricPoint data type.	
 
 2002-01-02  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
@@ -20,6 +19,7 @@
 
 	* Makefile.am: s/IDLFILES/IDL_FILES, so that ORBit-generated files
 	are regenerated when the IDL files change
+
 	* gda-server-connection.c (gda_server_connection_free_error_list): 
 	Test if the error list is NULL to avoid failing assertion in
 	gda_error_list_free().
