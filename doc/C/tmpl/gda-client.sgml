@@ -134,6 +134,15 @@ Database client access
 @cnc: 
 
 
+<!-- ##### FUNCTION gda_client_notify_connection_closed_event ##### -->
+<para>
+
+</para>
+
+@client: 
+@cnc: 
+
+
 <!-- ##### FUNCTION gda_client_notify_transaction_started_event ##### -->
 <para>
 

@@ -2,70 +2,32 @@
 gda-blob
 
 <!-- ##### SECTION Short_Description ##### -->
-BLOB (Binary Large OBject) handling functions.
+
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
-BLOBs are large block of data stored in a database. They are commonly used
-to store data files such as audio, images, ...
-</para>
-<para>
-If you get a GdaBlob from a #GdaValue or
-<programlisting>
-gda_connection_supports (cnc, GDA_CONNECTION_FEATURE_BLOBS);
-</programlisting>
-returns TRUE, the provider you are using supports BLOBs.
-</para>
-<para>
-If you want to create a new blob, use <link linkend="GDA-CONNECTION-CREATE-BLOB">gda_connection_create_blob</link>.
-</para>
-<para>
-And here goes a sample on how to write to a newly created BLOB:
-<programlisting>
 
-/* Returns the number of bytes written */
-gint
-write_to_new_blob (GdaConnection *cnc, void *buffer, int length)
-{
-	GdaBlob *blob;
-	gint nbytes;
-	
-	blob = g_new0 (GdaBlob, 1);
-	if (!gda_connection_create_blob (cnc, blob)) {
-		g_free (blob);
-		return false;
-	}
-
-	gda_blob_write (blob, buffer, length, &amp;nbytes));
-	gda_blob_close (blob);
-	gda_blob_free_data (blob);
-	g_free (blob);
-
-	/* if gda_blob_write fails, this will be -1 */
-	return nbytes;
-}
-
-</programlisting>
 </para>
+
 
 <!-- ##### SECTION See_Also ##### -->
 <para>
 
 </para>
 
+
 <!-- ##### ENUM GdaBlobMode ##### -->
 <para>
-Access modes.
+
 </para>
 
-@GDA_BLOB_MODE_READ: read-only.
-@GDA_BLOB_MODE_WRITE: write-only.
-@GDA_BLOB_MODE_RDWR: read / write.
+@GDA_BLOB_MODE_READ: 
+@GDA_BLOB_MODE_WRITE: 
+@GDA_BLOB_MODE_RDWR: 
 
 <!-- ##### STRUCT GdaBlob ##### -->
 <para>
-The only user-serviceable field in this structure is @user_data. The rest
-are used by the provider or libgda itself.
+
 </para>
 
 @open: 

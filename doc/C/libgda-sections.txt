@@ -12,6 +12,7 @@ gda_client_close_all_connections
 gda_client_notify_event
 gda_client_notify_error_event
 gda_client_notify_connection_opened_event
+gda_client_notify_connection_closed_event
 gda_client_notify_transaction_started_event
 gda_client_notify_transaction_committed_event
 gda_client_notify_transaction_cancelled_event
@@ -1549,6 +1550,7 @@ gda_quark_list_free
 gda_quark_list_add_from_string
 gda_quark_list_find
 gda_quark_list_remove
+gda_quark_list_clear
 </SECTION>
 
 <SECTION>
@@ -1692,6 +1694,30 @@ gda_init
 GdaInitFunc
 gda_main_run
 gda_main_quit
+</SECTION>
+
+<SECTION>
+<FILE>gda-enum-types</FILE>
+gda_blob_mode_get_type
+GDA_TYPE_BLOB_MODE
+gda_client_event_get_type
+GDA_TYPE_CLIENT_EVENT
+gda_command_options_get_type
+GDA_TYPE_COMMAND_OPTIONS
+gda_command_type_get_type
+GDA_TYPE_COMMAND_TYPE
+gda_connection_options_get_type
+GDA_TYPE_CONNECTION_OPTIONS
+gda_connection_feature_get_type
+GDA_TYPE_CONNECTION_FEATURE
+gda_connection_schema_get_type
+GDA_TYPE_CONNECTION_SCHEMA
+gda_export_flags_get_type
+GDA_TYPE_EXPORT_FLAGS
+gda_transaction_isolation_get_type
+GDA_TYPE_TRANSACTION_ISOLATION
+gda_value_type_get_type
+GDA_TYPE_VALUE_TYPE
 </SECTION>
 
 <SECTION>

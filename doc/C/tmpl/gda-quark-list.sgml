@@ -75,3 +75,11 @@ Quark lists (lists of KEY=VALUE's)
 @name: 
 
 
+<!-- ##### FUNCTION gda_quark_list_clear ##### -->
+<para>
+
+</para>
+
+@qlist: 
+
+
