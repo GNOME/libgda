@@ -24,7 +24,7 @@
 #if !defined(__gda_transaction_h__)
 #  define __gda_transaction_h__
 
-#include <libgda/gda-connection.h>
+#include <glib-object.h>
 
 G_BEGIN_DECLS
 
@@ -34,6 +34,7 @@ G_BEGIN_DECLS
 #define GDA_IS_TRANSACTION(obj)         (G_TYPE_CHECK_INSTANCE_TYPE(obj, GDA_TYPE_TRANSACTION))
 #define GDA_IS_TRANSACTION_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), GDA_TYPE_TRANSACTION))
 
+typedef struct _GdaTransaction        GdaTransaction;
 typedef struct _GdaTransactionClass   GdaTransactionClass;
 typedef struct _GdaTransactionPrivate GdaTransactionPrivate;
 

@@ -28,6 +28,7 @@
 #include <libgda/gda-data-model.h>
 #include <libgda/gda-error.h>
 #include <libgda/gda-parameter.h>
+#include <libgda/gda-transaction.h>
 
 G_BEGIN_DECLS
 
@@ -43,7 +44,6 @@ typedef struct _GdaConnectionPrivate GdaConnectionPrivate;
 
 typedef struct _GdaServerProvider    GdaServerProvider; /* defined in gda-server-provider.h */
 typedef struct _GdaClient GdaClient; /* defined in gda-client.h */
-typedef struct _GdaTransaction GdaTransaction; /* defined in gda-transaction.h */
 
 struct _GdaConnection {
 	GObject object;

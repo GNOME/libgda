@@ -47,6 +47,8 @@ gda_command_new (const gchar *text, GdaCommandType type, GdaCommandOptions optio
 	cmd = g_new0 (GdaCommand, 1);
 	gda_command_set_text (cmd, text);
 	gda_command_set_command_type (cmd, type);
+	cmd->xaction = NULL;
+
 	cmd->options = GDA_COMMAND_OPTION_BAD_OPTION;
 	gda_command_set_options (cmd, options);
 	if (cmd->options == GDA_COMMAND_OPTION_BAD_OPTION)
@@ -67,6 +69,11 @@ gda_command_free (GdaCommand *cmd)
 	g_return_if_fail (cmd != NULL);
 
 	g_free (cmd->text);
+	if (GDA_IS_TRANSACTION (cmd->xaction)) {
+		g_object_unref (G_OBJECT (cmd->xaction));
+		cmd->xaction = NULL;
+	}
+
 	g_free (cmd);
 }
 
@@ -172,4 +179,42 @@ gda_command_set_options (GdaCommand *cmd, GdaCommandOptions options)
 		return;	// Conflicting options!
 
 	cmd->options = options;
+}
+
+/**
+ * gda_command_get_transaction
+ * @cmd: a #GdaCommand.
+ *
+ * Get the #GdaTransaction associated with the given #GdaCommand.
+ *
+ * Returns: the transaction for the command.
+ */
+GdaTransaction *
+gda_command_get_transaction (GdaCommand *cmd)
+{
+	g_return_val_if_fail (cmd != NULL, NULL);
+	return cmd->xaction;
+}
+
+/**
+ * gda_command_set_transaction
+ * @cmd: a #GdaCommand.
+ * @xaction: a #GdaTransaction object.
+ *
+ * Set the #GdaTransaction associated with the given #GdaCommand.
+ */
+void
+gda_command_set_transaction (GdaCommand *cmd, GdaTransaction *xaction)
+{
+	g_return_if_fail (cmd != NULL);
+
+	if (GDA_IS_TRANSACTION (cmd->xaction))
+		g_object_unref (G_OBJECT (cmd->xaction));
+
+	if (GDA_IS_TRANSACTION (xaction)) {
+		g_object_ref (G_OBJECT (xaction));
+		cmd->xaction = xaction;
+	}
+	else
+		cmd->xaction = NULL;
 }

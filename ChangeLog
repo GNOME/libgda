@@ -1,3 +1,13 @@
+2002-06-16  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* libgda/gda-command.[ch] (gda_command_get_transaction):
+	(gda_command_set_transaction): new functions.
+	(gda_command_new): initialize new member.
+	(gda_command_free): unref internal GdaTransaction.
+
+	* libgda/gda-connection.h:
+	* libgda/gda-transaction.h: fixed headers.
+
 2002-06-08  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
 	* tools/gda-config-tool.c: added command line options that make

@@ -25,6 +25,7 @@
 
 #include <glib/gmacros.h>
 #include <glib/gtypes.h>
+#include <libgda/gda-transaction.h>
 
 G_BEGIN_DECLS
 
@@ -49,18 +50,21 @@ typedef struct {
 	gchar *text;
 	GdaCommandType type;
 	GdaCommandOptions options;
+	GdaTransaction *xaction;
 } GdaCommand;
 
-GdaCommand    *gda_command_new (const gchar *text, GdaCommandType type,
+GdaCommand       *gda_command_new (const gchar *text, GdaCommandType type,
 				GdaCommandOptions options);
-void           gda_command_free (GdaCommand *cmd);
+void              gda_command_free (GdaCommand *cmd);
 
-const gchar   *gda_command_get_text (GdaCommand *cmd);
-void           gda_command_set_text (GdaCommand *cmd, const gchar *text);
-GdaCommandType gda_command_get_command_type (GdaCommand *cmd);
-void           gda_command_set_command_type (GdaCommand *cmd, GdaCommandType type);
+const gchar      *gda_command_get_text (GdaCommand *cmd);
+void              gda_command_set_text (GdaCommand *cmd, const gchar *text);
+GdaCommandType    gda_command_get_command_type (GdaCommand *cmd);
+void              gda_command_set_command_type (GdaCommand *cmd, GdaCommandType type);
 GdaCommandOptions gda_command_get_options (GdaCommand *cmd);
-void           gda_command_set_options (GdaCommand *cmd, GdaCommandOptions options);
+void              gda_command_set_options (GdaCommand *cmd, GdaCommandOptions options);
+GdaTransaction   *gda_command_get_transaction (GdaCommand *cmd);
+void              gda_command_set_transaction (GdaCommand *cmd, GdaTransaction *xaction);
 
 G_END_DECLS
 
