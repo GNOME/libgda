@@ -13,13 +13,13 @@
 
 <!ELEMENT query (select|insert|update|delete|create|drop)>
 <!ATTLIST query
-          id NMTOKEN #IMPLIED>
+          id ID #IMPLIED>
 
-<!ELEMENT select (sources?, joins*, values?, qual?, (%trailer;)?)>
+<!ELEMENT select (sources?, joinlist?, valuelist?, qual?, (%trailer;)?)>
 
-<!ELEMENT insert (target, dest?, (values|query))>
+<!ELEMENT insert (target, dest?, (valuelist|query))>
 
-<!ELEMENT update (target, sources?, joins*, (set|setlist), qual?)>
+<!ELEMENT update (target, sources?, joinlist?, (set|setlist), qual?)>
 
 <!ELEMENT delete (target, qual?)>
 
@@ -42,13 +42,21 @@
 
 <!ELEMENT sources (table|view)*>
 
-<!ELEMENT joins (%boolop;|%arithop;)*>
-<!ATTLIST joins
+<!ELEMENT joinlist (join)+>
+
+
+<!ELEMENT join (%boolop;|%arithop;)*>
+<!ATTLIST join
           type (inner|left|right) "inner"
           left  IDREF #REQUIRED
           right IDREF #REQUIRED>
 
-<!ELEMENT values (%simplevalue;|query)+>
+<!ELEMENT valuelist (value)+>
+
+<!ELEMENT value (%simplevalue;|query)>
+<!ATTLIST value
+          id    ID     #IMPLIED>
+
 
 <!ELEMENT qual (%boolop;|%arithop;|%sqlop;)*>
 
@@ -132,7 +140,7 @@
 The following elements should be moved to the database DTD
 -->
 
-<!ELEMENT tabledef (fielddef+,primary?,foreign*)?>
+<!ELEMENT tabledef (fielddef+,primary?,foreignlist?)>
 <!ATTLIST tabledef
           id      ID       #IMPLIED
           name    NMTOKEN  #REQUIRED
@@ -152,6 +160,9 @@ The following elements should be moved to the database DTD
 <!ELEMENT primary EMPTY>
 <!ATTLIST primary
           key IDREFS #REQUIRED>
+
+
+<!ELEMENT foreignlist (foreign+)>
 
 <!ELEMENT foreign EMPTY>
 <!ATTLIST foreign
@@ -193,4 +204,3 @@ The following elements should be moved to the database DTD
 <!ELEMENT index EMPTY>
 <!ATTLIST index
           name    NMTOKEN  #REQUIRED>
-
