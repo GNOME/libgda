@@ -28,10 +28,11 @@
 
 struct _GdaConnectionPrivate {
 	GdaClient *client;
-	gchar *id;
+	GNOME_Database_Connection corba_cnc;
 	gchar *cnc_string;
 	gchar *username;
 	gchar *password;
+	gboolean is_open;
 };
 
 static void gda_connection_class_init (GdaConnectionClass *klass);
@@ -65,10 +66,12 @@ gda_connection_init (GdaConnection *cnc, GdaConnectionClass *klass)
 
 	cnc->priv = g_new0 (GdaConnectionPrivate, 1);
 	cnc->priv->client = NULL;
+	cnc->priv->corba_cnc = CORBA_OBJECT_NIL;
 	cnc->priv->id = NULL;
 	cnc->priv->cnc_string = NULL;
 	cnc->priv->username = NULL;
 	cnc->priv->password = NULL;
+	cnc->priv->is_open = FALSE;
 }
 
 static void
@@ -79,8 +82,17 @@ gda_connection_finalize (GObject *object)
 	g_return_if_fail (GDA_IS_CONNECTION (cnc));
 
 	/* free memory */
-	gda_client_remove_connection (cnc->priv->client, cnc);
-	g_object_unref (G_OBJECT (cnc->priv->client));
+	if (cnc->priv->is_open) {
+		CORBA_Environment ev;
+
+		/* close the connection to the provider */
+		CORBA_exception_init (&ev);
+		GNOME_Database_Connection_close (cnc->priv->corba_cnc, &ev);
+		CORBA_Object_release (cnc->priv->corba_cnc, &ev);
+		CORBA_exception_free (&ev);
+
+		cnc->priv->corba_cnc = CORBA_OBJECT_NIL;
+	}
 
 	g_free (cnc->priv->id);
 	g_free (cnc->priv->cnc_string);
@@ -123,24 +135,55 @@ gda_connection_get_type (void)
  */
 GdaConnection *
 gda_connection_new (GdaClient *client,
-		    const gchar *id,
+		    GNOME_Database_Connection corba_cnc,
 		    const gchar *cnc_string,
 		    const gchar *username,
 		    const gchar *password)
 {
 	GdaConnection *cnc;
+	CORBA_Environment ev;
+	CORBA_boolean corba_res;
 
 	g_return_val_if_fail (GDA_IS_CLIENT (client), NULL);
+	g_return_val_if_fail (corba_cnc != CORBA_OBJECT_NIL, NULL);
 
 	cnc = g_object_new (GDA_TYPE_CONNECTION, NULL);
 
 	gda_connection_set_client (cnc, client);
-	cnc->priv->id = g_strdup (id);
+	cnc->priv->corba_cnc = corba_cnc;
 	cnc->priv->cnc_string = g_strdup (cnc_string);
 	cnc->priv->username = g_strdup (username);
 	cnc->priv->password = g_strdup (password);
 
+	/* try to open the connection */
+	CORBA_exception_init (&ev);
+
+	corba_res = GNOME_Database_Connection_open (
+		bonobo_object_corba_objref (BONOBO_OBJECT (cnc->priv->client)),
+		(const CORBA_char *) cnc->priv->cnc_string,
+		(const CORBA_char *) cnc->priv->username,
+		(const CORBA_char *) cnc->priv->password, &ev);
+	if (!corba_res || BONOBO_EX (&ev)) {
+		CORBA_exception_free (&ev);
+		g_object_unref (G_OBJECT (cnc));
+		return NULL;
+	}
+
+	cnc->priv->is_open = TRUE;
+
 	return cnc;
+}
+
+/**
+ * gda_connection_close
+ */
+gboolean
+gda_connection_close (GdaConnection *cnc)
+{
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+
+	g_object_unref (G_OBJECT (cnc));
+	return TRUE;
 }
 
 /**
@@ -162,22 +205,39 @@ gda_connection_set_client (GdaConnection *cnc, GdaClient *client)
 	g_return_if_fail (GDA_IS_CONNECTION (cnc));
 	g_return_if_fail (GDA_IS_CLIENT (client));
 
-	if (cnc->priv->client) {
-		gda_client_remove_connection (cnc->priv->client, cnc);
-		g_object_unref (G_OBJECT (cnc->priv->client));
-	}
-
-	g_object_ref (G_OBJECT (client));
 	cnc->priv->client = client;
-	gda_client_add_connection (cnc->priv->client, cnc);
 }
 
 /**
- * gda_connection_close
+ * gda_connection_get_string
+ * @cnc: A #GdaConnection object
+ *
+ * Returns the connection string used to open the given connection
+ * object.
  */
-gboolean
-gda_connection_close (GdaConnection *cnc)
+const gchar *
+gda_connection_get_string (GdaConnection *cnc)
 {
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-	return gda_client_close_connection (cnc->priv->client, cnc);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+	return (const gchar *) cnc->priv->cnc_string;
+}
+
+/**
+ * gda_connection_get_username
+ */
+const gchar *
+gda_connection_get_username (GdaConnection *cnc)
+{
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+	return (const gchar *) cnc->priv->username;
+}
+
+/**
+ * gda_connection_get_password
+ */
+const gchar *
+gda_connection_get_password (GdaConnection *cnc)
+{
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+	return (const gchar *) cnc->priv->password;
 }

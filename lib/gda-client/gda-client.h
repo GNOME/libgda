@@ -55,9 +55,6 @@ GdaConnection *gda_client_open_connection (GdaClient *client,
 					   const gchar *cnc_string,
 					   const gchar *username,
 					   const gchar *password);
-gboolean       gda_client_close_connection (GdaClient *client, GdaConnection *cnc);
-void           gda_client_add_connection (GdaClient *client, GdaConnection *cnc);
-void           gda_client_remove_connection (GdaClient *client, GdaConnection *cnc);
 
 G_END_DECLS
 

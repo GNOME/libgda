@@ -1,3 +1,17 @@
+2001-10-27  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-connection.[ch] (gda_connection_get_string):
+	(gda_connection_get_username):
+	(gda_connection_get_password): new functions
+	(gda_connection_new): changed signature, to get a CORBA_Object
+	from which to create the GObject-based class. This functions will
+	not be supposed to be used by app developers; they should use
+	gda_client_open_connection instead.
+
+	* gda-client.c (gda_client_open_connection): implemented.
+	Also, removed all connection-related functions to the GdaConnection
+	class
+
 2001-10-12  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-client.[ch]: make it implement the GNOME::Database::Client

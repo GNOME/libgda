@@ -107,11 +107,14 @@ gda_client_finalize (GObject *object)
 	/* free memory */
 	if (client->priv->iid != NULL)
 		g_free (client->priv->iid);
-	if (client->priv->corba_provider != NULL)
+	if (client->priv->corba_provider != NULL) {
 		CORBA_object_release (client->priv->corba_provider);
+		client->priv->corba_provider = NULL;
+	}
 
-	g_list_foreach (client->priv->connections, g_object_unref, NULL);
+	g_list_foreach (client->priv->connections, gda_connection_close, NULL);
 	g_list_free (client->priv->connections);
+	client->priv->connections = NULL;
 
 	g_free (client->priv);
 	client->priv = NULL;
@@ -165,51 +168,52 @@ gda_client_open_connection (GdaClient *client,
 			    const gchar *username,
 			    const gchar *password)
 {
+	GList *l;
+	GdaConnection *cnc;
+	GNOME_Database_Connection corba_cnc;
+	CORBA_Environment ev;
+
 	g_return_val_if_fail (GDA_IS_CLIENT (client), NULL);
 
 	/* search for the connection in our private list */
-}
+	for (l = client->priv->connections; l; l = l->next) {
+		gchar *tmp_str, *tmp_usr, *tpm_pwd;
 
-/**
- * gda_client_close_connection
- */
-gboolean
-gda_client_close_connection (GdaClient *client, GdaConnection *cnc)
-{
-}
+		cnc = GDA_CONNECTION (l->data);
+		tmp_str = gda_connection_get_string (cnc);
+		tmp_usr = gda_connection_get_username (cnc);
+		tmp_pwd = gda_connection_get_password (cnc);
 
-/**
- * gda_client_add_connection
- */
-void
-gda_client_add_connection (GdaClient *client, GdaConnection *cnc)
-{
-	GList *l;
-
-	g_return_if_fail (GDA_IS_CLIENT (client));
-	g_return_if_fail (GDA_IS_CONNECTION (cnc));
-
-	/* look if we already have this connection stored */
-	for (l = g_list_first (client->priv->connections); l; l = l->next) {
-		GdaConnection *lcnc = GDA_CONNECTION (l->data);
-		if (lcnc == cnc)
-			return;
+		if (((!tmp_str && !cnc_string) || !strcmp (tmp_str, cnc_string)) &&
+		    ((!tmp_usr && !username) || !strcmp (tmp_usr, username)) &&
+		    ((!tmp_pwd && !password) || !strcmp (tmp_pwd, password))) {
+			g_object_ref (G_OBJECT (cnc));
+			return cnc;
+		}
 	}
 
+	/* not found, so create a new connection object */
+	CORBA_exception_init (&ev);
+
+	corba_cnc = GNOME_Database_Provider_createConnection (
+		client->priv->corba_provider, &ev);
+	if (BONOBO_EX (&ev)) {
+		CORBA_exception_free (&ev);
+		gda_log_error (_("Could not create connection component"));
+		return NULL;
+	}
+
+	CORBA_exception_free (&ev);
+
+	cnc = gda_connection_new (client, corba_cnc, cnc_string, username, password);
+	if (!GDA_IS_CONNECTION (cnc))
+		return NULL;
+
+	/* add list to our private list */
 	client->priv->connections = g_list_append (client->priv->connections, cnc);
 	g_signal_connect (G_OBJECT (cnc), "finalize",
 			  G_CALLBACK (connection_finalized_cb), client);
+
+	return cnc;
 }
 
-/**
- * gda_client_remove_connection
- */
-void
-gda_client_remove_connection (GdaClient *client, GdaConnection *cnc)
-{
-	g_return_if_fail (GDA_IS_CLIENT (client));
-	g_return_if_fail (GDA_IS_CONNECTION (cnc));
-
-	client->priv->connections = g_list_remove (client->priv->connections, cnc);
-	g_signal_disconnect_by_data (G_OBJECT (cnc), client);
-}
