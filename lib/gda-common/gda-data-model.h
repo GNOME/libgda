@@ -47,6 +47,7 @@ struct _GdaDataModelClass {
 	GObjectClass parent_class;
 
 	/* signals */
+	void (* changed) (GdaDataModel *model);
 
 	/* virtual methods to be implemented by subclasses */
 };

@@ -59,6 +59,8 @@ void          gda_value_set_timestamp (GdaValue *value, time_t val);
 gchar         gda_value_get_tinyint (GdaValue *value);
 void          gda_value_set_tinyint (GdaValue *value, gchar val);
 
+gchar        *gda_value_stringify (GdaValue *value);
+
 G_END_DECLS
 
 #endif
