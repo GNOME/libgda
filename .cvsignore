@@ -1,3 +1,4 @@
+ABOUT-NLS
 intl
 aclocal.m4
 config.guess
@@ -15,6 +16,7 @@ config.cache
 libtool
 config.status
 stamp-h
+stamp-h1
 libgda.spec
 stamp.h
 xml-i18n-update
