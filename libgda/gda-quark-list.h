@@ -39,6 +39,7 @@ void          gda_quark_list_add_from_string (GdaQuarkList *qlist,
 					      gboolean cleanup);
 const gchar  *gda_quark_list_find (GdaQuarkList *qlist, const gchar *name);
 void          gda_quark_list_remove (GdaQuarkList *qlist, const gchar *name);
+void          gda_quark_list_clear (GdaQuarkList *qlist);
 
 G_END_DECLS
 
