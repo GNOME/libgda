@@ -124,6 +124,21 @@ Data values
 @type: 
 @binary_length: 
 
+<!-- ##### MACRO GDA_TYPE_VALUE ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION gda_value_get_gtype ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_value_new_null ##### -->
 <para>
 

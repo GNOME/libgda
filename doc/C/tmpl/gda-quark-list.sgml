@@ -21,6 +21,21 @@ Quark lists (lists of KEY=VALUE's)
 </para>
 
 
+<!-- ##### MACRO GDA_TYPE_QUARK_LIST ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION gda_quark_list_get_type ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_quark_list_new ##### -->
 <para>
 
@@ -35,6 +50,15 @@ Quark lists (lists of KEY=VALUE's)
 </para>
 
 @string: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_quark_list_copy ##### -->
+<para>
+
+</para>
+
+@qlist: 
 @Returns: 
 
 

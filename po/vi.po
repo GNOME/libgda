@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-04-26 13:19+0200\n"
+"POT-Creation-Date: 2004-06-01 01:37+0200\n"
 "PO-Revision-Date: 2002-10-20 20:03+0700\n"
 "Last-Translator: pclouds <pclouds@gmx.net>\n"
 "Language-Team: GnomeVI <gnomevi-list@lists.sourceforge.net>\n"
@@ -43,8 +43,8 @@ msgstr "Lỗi"
 
 #: libgda/gda-config.c:1194 providers/odbc/gda-odbc-provider.c:1137
 #: providers/oracle/gda-oracle-provider.c:1153
-#: providers/postgres/gda-postgres-provider.c:846
-#: providers/postgres/gda-postgres-provider.c:1312
+#: providers/postgres/gda-postgres-provider.c:881
+#: providers/postgres/gda-postgres-provider.c:1347
 msgid "Id"
 msgstr "Id"
 
@@ -60,15 +60,15 @@ msgstr "\tvị trí = %s\n"
 #: providers/ibmdb2/gda-ibmdb2-provider.c:1001
 #: providers/odbc/gda-odbc-provider.c:1248
 #: providers/odbc/gda-odbc-provider.c:1404
-#: providers/postgres/gda-postgres-provider.c:1118
+#: providers/postgres/gda-postgres-provider.c:1153
 msgid "Description"
 msgstr "Mô tả"
 
 #: libgda/gda-config.c:1452 providers/ldap/gda-ldap-provider.c:327
 #: providers/mdb/gda-mdb-provider.c:457 providers/mdb/gda-mdb-provider.c:594
 #: providers/mdb/gda-mdb-provider.c:654 providers/msql/gda-msql-provider.c:448
-#: providers/mysql/gda-mysql-provider.c:701
-#: providers/mysql/gda-mysql-provider.c:889
+#: providers/mysql/gda-mysql-provider.c:726
+#: providers/mysql/gda-mysql-provider.c:914
 #: providers/odbc/gda-odbc-provider.c:768
 #: providers/odbc/gda-odbc-provider.c:824
 #: providers/oracle/gda-oracle-provider.c:1893
@@ -76,7 +76,6 @@ msgstr "Mô tả"
 #: providers/oracle/gda-oracle-provider.c:1955
 #: providers/oracle/gda-oracle-provider.c:1972
 #: providers/xml/gda-xml-provider.c:584 providers/xml/gda-xml-provider.c:603
-#: providers/xml/gda-xml-provider.c:637
 msgid "Name"
 msgstr "Tên"
 
@@ -124,17 +123,17 @@ msgstr "Lệnh SQL không phải là SELECT (là '%s'"
 msgid "There is already a field called %s"
 msgstr "Đã có trường tên là %s rồi"
 
-#: libgda/gda-util.c:153
+#: libgda/gda-util.c:173
 #, c-format
 msgid "Could not parse SQL command '%s'"
 msgstr "Không thể phân tích chuỗi SQL '%s'"
 
-#: libgda/gda-util.c:186
+#: libgda/gda-util.c:206
 #, c-format
 msgid "Error while reading %s: %s"
 msgstr "Lỗi đọc %s: %s"
 
-#: libgda/gda-util.c:212
+#: libgda/gda-util.c:232
 #, c-format
 msgid "Could not create file %s"
 msgstr "Không thể tạo tập tin %s"
@@ -386,9 +385,9 @@ msgstr ""
 #: providers/mdb/gda-mdb-provider.c:595 providers/mdb/gda-mdb-provider.c:655
 #: providers/msql/gda-msql-provider.c:449
 #: providers/msql/gda-msql-provider.c:487
-#: providers/mysql/gda-mysql-provider.c:703
-#: providers/mysql/gda-mysql-provider.c:890
-#: providers/mysql/gda-mysql-provider.c:972
+#: providers/mysql/gda-mysql-provider.c:728
+#: providers/mysql/gda-mysql-provider.c:915
+#: providers/mysql/gda-mysql-provider.c:997
 #: providers/odbc/gda-odbc-provider.c:1025
 #: providers/odbc/gda-odbc-provider.c:1138
 #: providers/odbc/gda-odbc-provider.c:1247
@@ -401,14 +400,15 @@ msgstr ""
 #: providers/oracle/gda-oracle-provider.c:1955
 #: providers/oracle/gda-oracle-provider.c:1973
 #: providers/oracle/gda-oracle-provider.c:2096
-#: providers/postgres/gda-postgres-provider.c:847
-#: providers/postgres/gda-postgres-provider.c:1117
-#: providers/postgres/gda-postgres-provider.c:1136
-#: providers/postgres/gda-postgres-provider.c:1196
-#: providers/postgres/gda-postgres-provider.c:1313
-#: providers/postgres/gda-postgres-provider.c:1946
+#: providers/postgres/gda-postgres-provider.c:882
+#: providers/postgres/gda-postgres-provider.c:1152
+#: providers/postgres/gda-postgres-provider.c:1171
+#: providers/postgres/gda-postgres-provider.c:1231
+#: providers/postgres/gda-postgres-provider.c:1348
+#: providers/postgres/gda-postgres-provider.c:1981
 #: providers/sqlite/gda-sqlite-provider.c:788
 #: providers/sybase/gda-sybase-provider.c:1098
+#: providers/xml/gda-xml-provider.c:656
 msgid "Owner"
 msgstr "Sở hữu"
 
@@ -427,15 +427,15 @@ msgstr "Index"
 #: providers/ibmdb2/gda-ibmdb2-provider.c:890
 #: providers/ibmdb2/gda-ibmdb2-provider.c:999
 #: providers/odbc/gda-odbc-provider.c:1246
-#: providers/postgres/gda-postgres-provider.c:1116
-#: providers/postgres/gda-postgres-provider.c:2000
+#: providers/postgres/gda-postgres-provider.c:1151
+#: providers/postgres/gda-postgres-provider.c:2035
 msgid "Table"
 msgstr "Bảng"
 
 #: providers/ibmdb2/gda-ibmdb2-provider.c:860
 #: providers/mdb/gda-mdb-provider.c:546
 #: providers/odbc/gda-odbc-provider.c:1136
-#: providers/postgres/gda-postgres-provider.c:845
+#: providers/postgres/gda-postgres-provider.c:880
 msgid "Procedure"
 msgstr "Thủ tục"
 
@@ -453,19 +453,21 @@ msgstr "Định nghĩa"
 #. Set it here instead of the SQL query to allow i18n
 #: providers/ibmdb2/gda-ibmdb2-provider.c:918
 #: providers/oracle/gda-oracle-provider.c:2189
-#: providers/postgres/gda-postgres-provider.c:1352 testing/client.c:139
+#: providers/postgres/gda-postgres-provider.c:1387 testing/client.c:139
 msgid "Triggers"
 msgstr "Trigger"
 
 #. gda_server_recordset_model_set_field_defined_size (recset, 0, 32);
 #: providers/ibmdb2/gda-ibmdb2-provider.c:946
 #: providers/ldap/gda-ldap-provider.c:423
-#: providers/mysql/gda-mysql-provider.c:971
+#: providers/mysql/gda-mysql-provider.c:996
 #: providers/odbc/gda-odbc-provider.c:1360
 #: providers/oracle/gda-oracle-provider.c:2095
-#: providers/postgres/gda-postgres-provider.c:1135
+#: providers/postgres/gda-postgres-provider.c:1170
 #: providers/sqlite/gda-sqlite-provider.c:787
 #: providers/sybase/gda-sybase-provider.c:1096
+#: providers/xml/gda-xml-provider.c:654 providers/xml/gda-xml-provider.c:655
+#: providers/xml/gda-xml-provider.c:680
 msgid "Type"
 msgstr "Kiểu"
 
@@ -474,9 +476,9 @@ msgstr "Kiểu"
 #: providers/mdb/gda-mdb-provider.c:596 providers/mdb/gda-mdb-provider.c:656
 #: providers/msql/gda-msql-provider.c:450
 #: providers/msql/gda-msql-provider.c:488
-#: providers/mysql/gda-mysql-provider.c:704
-#: providers/mysql/gda-mysql-provider.c:891
-#: providers/mysql/gda-mysql-provider.c:973
+#: providers/mysql/gda-mysql-provider.c:729
+#: providers/mysql/gda-mysql-provider.c:916
+#: providers/mysql/gda-mysql-provider.c:998
 #: providers/odbc/gda-odbc-provider.c:1139
 #: providers/odbc/gda-odbc-provider.c:1362
 #: providers/odbc/gda-odbc-provider.c:1456
@@ -486,31 +488,33 @@ msgstr "Kiểu"
 #: providers/oracle/gda-oracle-provider.c:1955
 #: providers/oracle/gda-oracle-provider.c:1974
 #: providers/oracle/gda-oracle-provider.c:2097
-#: providers/postgres/gda-postgres-provider.c:848
-#: providers/postgres/gda-postgres-provider.c:1137
-#: providers/postgres/gda-postgres-provider.c:1197
-#: providers/postgres/gda-postgres-provider.c:1314
-#: providers/postgres/gda-postgres-provider.c:1947
+#: providers/postgres/gda-postgres-provider.c:883
+#: providers/postgres/gda-postgres-provider.c:1172
+#: providers/postgres/gda-postgres-provider.c:1232
+#: providers/postgres/gda-postgres-provider.c:1349
+#: providers/postgres/gda-postgres-provider.c:1982
 #: providers/sqlite/gda-sqlite-provider.c:789
 #: providers/sybase/gda-sybase-provider.c:1100
+#: providers/xml/gda-xml-provider.c:657
 msgid "Comments"
 msgstr "Ghi chú"
 
 #: providers/ibmdb2/gda-ibmdb2-provider.c:949
 #: providers/msql/gda-msql-provider.c:489
-#: providers/mysql/gda-mysql-provider.c:974
+#: providers/mysql/gda-mysql-provider.c:999
 #: providers/odbc/gda-odbc-provider.c:1363
 #: providers/oracle/gda-oracle-provider.c:2097
-#: providers/postgres/gda-postgres-provider.c:1138
+#: providers/postgres/gda-postgres-provider.c:1173
 #: providers/sqlite/gda-sqlite-provider.c:790
 #: providers/sybase/gda-sybase-provider.c:1102
+#: providers/xml/gda-xml-provider.c:658
 msgid "GDA type"
 msgstr "Kiểu GDA"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/ibmdb2/gda-ibmdb2-provider.c:974
 #: providers/oracle/gda-oracle-provider.c:1825
-#: providers/postgres/gda-postgres-provider.c:1904 testing/client.c:137
+#: providers/postgres/gda-postgres-provider.c:1939 testing/client.c:137
 msgid "Users"
 msgstr "Người dùng"
 
@@ -596,103 +600,103 @@ msgid "Transactions not supported in MDB provider"
 msgstr ""
 
 #: providers/mdb/gda-mdb-provider.c:490
-#: providers/mysql/gda-mysql-provider.c:1069
+#: providers/mysql/gda-mysql-provider.c:1094
 #: providers/odbc/gda-odbc-provider.c:949
 #: providers/oracle/gda-oracle-provider.c:1248
-#: providers/postgres/gda-postgres-provider.c:1363
+#: providers/postgres/gda-postgres-provider.c:1398
 #: providers/sqlite/gda-sqlite-provider.c:658
 #: providers/xml/gda-xml-provider.c:489
 msgid "Field name"
 msgstr "Tên trường"
 
 #: providers/mdb/gda-mdb-provider.c:491 providers/msql/gda-msql-provider.c:537
-#: providers/mysql/gda-mysql-provider.c:1070
+#: providers/mysql/gda-mysql-provider.c:1095
 #: providers/odbc/gda-odbc-provider.c:950
 #: providers/oracle/gda-oracle-provider.c:1249
-#: providers/postgres/gda-postgres-provider.c:1364
+#: providers/postgres/gda-postgres-provider.c:1399
 #: providers/sqlite/gda-sqlite-provider.c:659
 #: providers/xml/gda-xml-provider.c:490
 msgid "Data type"
 msgstr "Kiểu dữ liệu"
 
 #: providers/mdb/gda-mdb-provider.c:492 providers/msql/gda-msql-provider.c:538
-#: providers/mysql/gda-mysql-provider.c:1071
+#: providers/mysql/gda-mysql-provider.c:1096
 #: providers/odbc/gda-odbc-provider.c:951
 #: providers/oracle/gda-oracle-provider.c:1250
-#: providers/postgres/gda-postgres-provider.c:1365
+#: providers/postgres/gda-postgres-provider.c:1400
 #: providers/sqlite/gda-sqlite-provider.c:660
 #: providers/xml/gda-xml-provider.c:491
 msgid "Size"
 msgstr "Kích thước"
 
 #: providers/mdb/gda-mdb-provider.c:493 providers/msql/gda-msql-provider.c:539
-#: providers/mysql/gda-mysql-provider.c:1072
+#: providers/mysql/gda-mysql-provider.c:1097
 #: providers/odbc/gda-odbc-provider.c:952
 #: providers/oracle/gda-oracle-provider.c:1251
-#: providers/postgres/gda-postgres-provider.c:1366
+#: providers/postgres/gda-postgres-provider.c:1401
 #: providers/sqlite/gda-sqlite-provider.c:661
 #: providers/xml/gda-xml-provider.c:492
 msgid "Scale"
 msgstr "Co dãn"
 
 #: providers/mdb/gda-mdb-provider.c:494
-#: providers/mysql/gda-mysql-provider.c:1073
+#: providers/mysql/gda-mysql-provider.c:1098
 #: providers/odbc/gda-odbc-provider.c:953
 #: providers/oracle/gda-oracle-provider.c:1252
-#: providers/postgres/gda-postgres-provider.c:1367
+#: providers/postgres/gda-postgres-provider.c:1402
 #: providers/sqlite/gda-sqlite-provider.c:662
 #: providers/xml/gda-xml-provider.c:493
 msgid "Not null?"
 msgstr "Không null?"
 
 #: providers/mdb/gda-mdb-provider.c:495 providers/msql/gda-msql-provider.c:541
-#: providers/mysql/gda-mysql-provider.c:1074
+#: providers/mysql/gda-mysql-provider.c:1099
 #: providers/odbc/gda-odbc-provider.c:954
 #: providers/oracle/gda-oracle-provider.c:1253
-#: providers/postgres/gda-postgres-provider.c:1368
+#: providers/postgres/gda-postgres-provider.c:1403
 #: providers/sqlite/gda-sqlite-provider.c:663
 #: providers/xml/gda-xml-provider.c:494
 msgid "Primary key?"
 msgstr "Khóa chính?"
 
 #: providers/mdb/gda-mdb-provider.c:496 providers/msql/gda-msql-provider.c:542
-#: providers/mysql/gda-mysql-provider.c:1075
+#: providers/mysql/gda-mysql-provider.c:1100
 #: providers/odbc/gda-odbc-provider.c:955
 #: providers/oracle/gda-oracle-provider.c:1254
-#: providers/postgres/gda-postgres-provider.c:1369
+#: providers/postgres/gda-postgres-provider.c:1404
 #: providers/sqlite/gda-sqlite-provider.c:664
 #: providers/xml/gda-xml-provider.c:495
 msgid "Unique index?"
 msgstr "Index duy nhất?"
 
 #: providers/mdb/gda-mdb-provider.c:497 providers/msql/gda-msql-provider.c:543
-#: providers/mysql/gda-mysql-provider.c:1076
+#: providers/mysql/gda-mysql-provider.c:1101
 #: providers/odbc/gda-odbc-provider.c:956
 #: providers/oracle/gda-oracle-provider.c:1255
-#: providers/postgres/gda-postgres-provider.c:1370
+#: providers/postgres/gda-postgres-provider.c:1405
 #: providers/sqlite/gda-sqlite-provider.c:665
 #: providers/xml/gda-xml-provider.c:496
 msgid "References"
 msgstr "Tham chiếu"
 
 #: providers/mdb/gda-mdb-provider.c:498 providers/msql/gda-msql-provider.c:544
-#: providers/mysql/gda-mysql-provider.c:1077
+#: providers/mysql/gda-mysql-provider.c:1102
 #: providers/odbc/gda-odbc-provider.c:957
 #: providers/oracle/gda-oracle-provider.c:1256
-#: providers/postgres/gda-postgres-provider.c:1371
+#: providers/postgres/gda-postgres-provider.c:1406
 #: providers/sqlite/gda-sqlite-provider.c:666
 msgid "Default value"
 msgstr "Giá trị mặc định"
 
 #: providers/mdb/gda-mdb-provider.c:547
-#: providers/mysql/gda-mysql-provider.c:702
+#: providers/mysql/gda-mysql-provider.c:727
 msgid "ID"
 msgstr ""
 
 #: providers/mdb/gda-mdb-provider.c:550
-#: providers/mysql/gda-mysql-provider.c:705
+#: providers/mysql/gda-mysql-provider.c:730
 #: providers/odbc/gda-odbc-provider.c:1140
-#: providers/postgres/gda-postgres-provider.c:849
+#: providers/postgres/gda-postgres-provider.c:884
 msgid "Return type"
 msgstr "Kiểu trả về"
 
@@ -701,9 +705,9 @@ msgid "# of args"
 msgstr ""
 
 #: providers/mdb/gda-mdb-provider.c:552
-#: providers/mysql/gda-mysql-provider.c:706
+#: providers/mysql/gda-mysql-provider.c:731
 #: providers/odbc/gda-odbc-provider.c:1142
-#: providers/postgres/gda-postgres-provider.c:851
+#: providers/postgres/gda-postgres-provider.c:886
 msgid "Args types"
 msgstr ""
 
@@ -713,11 +717,11 @@ msgstr ""
 #: providers/odbc/gda-odbc-provider.c:1405
 #: providers/odbc/gda-odbc-provider.c:1457
 #: providers/oracle/gda-oracle-provider.c:1158
-#: providers/postgres/gda-postgres-provider.c:852
-#: providers/postgres/gda-postgres-provider.c:1119
-#: providers/postgres/gda-postgres-provider.c:1198
-#: providers/postgres/gda-postgres-provider.c:1317
-#: providers/postgres/gda-postgres-provider.c:1948
+#: providers/postgres/gda-postgres-provider.c:887
+#: providers/postgres/gda-postgres-provider.c:1154
+#: providers/postgres/gda-postgres-provider.c:1233
+#: providers/postgres/gda-postgres-provider.c:1352
+#: providers/postgres/gda-postgres-provider.c:1983
 msgid "Definition"
 msgstr "Định nghĩa"
 
@@ -844,8 +848,8 @@ msgstr "Không null?"
 
 #: providers/msql/gda-msql-provider.c:557
 #: providers/msql/gda-msql-provider.c:563
-#: providers/mysql/gda-mysql-provider.c:1094
-#: providers/mysql/gda-mysql-provider.c:1102
+#: providers/mysql/gda-mysql-provider.c:1119
+#: providers/mysql/gda-mysql-provider.c:1127
 msgid "Table name is needed but none specified in parameter list"
 msgstr "Cần tên bảng nhưng chưa được xác định trong danh sách tham số"
 
@@ -854,34 +858,35 @@ msgstr "Cần tên bảng nhưng chưa được xác định trong danh sách th
 msgid "Row number out of bounds"
 msgstr "Số hàng vượt ngoài phạm vi"
 
-#: providers/mysql/gda-mysql-provider.c:219
+#: providers/mysql/gda-mysql-provider.c:223
 msgid ""
 "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
 msgstr ""
 "Bạn không thể dùng UNIX_SOCKET nếu đã cung cấp hoặc là máy chủ hoặc là số "
 "cổng."
 
-#: providers/mysql/gda-mysql-provider.c:295
-#: providers/mysql/gda-mysql-provider.c:1085
+#: providers/mysql/gda-mysql-provider.c:299
+#: providers/mysql/gda-mysql-provider.c:1110
 #: providers/mysql/gda-mysql-recordset.c:119
 #: providers/mysql/gda-mysql-recordset.c:192
 msgid "Invalid MySQL handle"
 msgstr "Handle MySQL không hợp lệ"
 
-#: providers/mysql/gda-mysql-provider.c:311
-#: providers/mysql/gda-mysql-provider.c:381
-#: providers/mysql/gda-mysql-provider.c:404
-#: providers/mysql/gda-mysql-provider.c:435
-#: providers/mysql/gda-mysql-provider.c:467
-#: providers/mysql/gda-mysql-provider.c:535
-#: providers/mysql/gda-mysql-provider.c:592
-#: providers/mysql/gda-mysql-provider.c:625
+#: providers/mysql/gda-mysql-provider.c:315
+#: providers/mysql/gda-mysql-provider.c:385
+#: providers/mysql/gda-mysql-provider.c:408
+#: providers/mysql/gda-mysql-provider.c:439
+#: providers/mysql/gda-mysql-provider.c:471
+#: providers/mysql/gda-mysql-provider.c:537
+#: providers/mysql/gda-mysql-provider.c:560
+#: providers/mysql/gda-mysql-provider.c:617
+#: providers/mysql/gda-mysql-provider.c:650
 msgid "Invalid MYSQL handle"
 msgstr "Handle MYSQL không hợp lệ"
 
-#: providers/mysql/gda-mysql-provider.c:540
-#: providers/mysql/gda-mysql-provider.c:597
-#: providers/mysql/gda-mysql-provider.c:630
+#: providers/mysql/gda-mysql-provider.c:565
+#: providers/mysql/gda-mysql-provider.c:622
+#: providers/mysql/gda-mysql-provider.c:655
 #: providers/oracle/gda-oracle-provider.c:857
 #: providers/oracle/gda-oracle-provider.c:939
 #: providers/oracle/gda-oracle-provider.c:1000
@@ -889,7 +894,7 @@ msgstr "Handle MYSQL không hợp lệ"
 msgid "Transactions are not supported in read-only mode"
 msgstr ""
 
-#: providers/mysql/gda-mysql-provider.c:707
+#: providers/mysql/gda-mysql-provider.c:732
 #: providers/oracle/gda-oracle-provider.c:1913
 #: providers/oracle/gda-oracle-provider.c:1975
 msgid "SQL"
@@ -915,7 +920,7 @@ msgid "Invalid Odbc handle"
 msgstr "Handle Oracle không hợp lệ"
 
 #: providers/odbc/gda-odbc-provider.c:1141
-#: providers/postgres/gda-postgres-provider.c:850
+#: providers/postgres/gda-postgres-provider.c:885
 msgid "Nb args"
 msgstr ""
 
@@ -926,8 +931,8 @@ msgstr "View"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/odbc/gda-odbc-provider.c:1454
-#: providers/postgres/gda-postgres-provider.c:1945
-#: providers/postgres/gda-postgres-provider.c:2001
+#: providers/postgres/gda-postgres-provider.c:1980
+#: providers/postgres/gda-postgres-provider.c:2036
 msgid "Sequence"
 msgstr ""
 
@@ -1075,17 +1080,17 @@ msgstr ""
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/oracle/gda-oracle-provider.c:1152
-#: providers/postgres/gda-postgres-provider.c:1311
+#: providers/postgres/gda-postgres-provider.c:1346
 msgid "Aggregate"
 msgstr ""
 
 #: providers/oracle/gda-oracle-provider.c:1156
-#: providers/postgres/gda-postgres-provider.c:1315
+#: providers/postgres/gda-postgres-provider.c:1350
 msgid "OutType"
 msgstr ""
 
 #: providers/oracle/gda-oracle-provider.c:1157
-#: providers/postgres/gda-postgres-provider.c:1316
+#: providers/postgres/gda-postgres-provider.c:1351
 msgid "InType"
 msgstr ""
 
@@ -1162,7 +1167,7 @@ msgstr "Không thể lấy trường thuộc tính có-thể-null của Oracle"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/oracle/gda-oracle-provider.c:2177
-#: providers/postgres/gda-postgres-provider.c:1235 testing/client.c:135
+#: providers/postgres/gda-postgres-provider.c:1270 testing/client.c:135
 msgid "Indexes"
 msgstr "Index"
 
@@ -1228,10 +1233,11 @@ msgstr "Không thể lấy hàng"
 msgid "Provider for Oracle databases"
 msgstr "Bộ cung cấp GDA cho cơ sở dữ liệu Oracle"
 
-#: providers/postgres/gda-postgres-provider.c:564
-#: providers/postgres/gda-postgres-provider.c:581
-#: providers/postgres/gda-postgres-provider.c:652
-#: providers/postgres/gda-postgres-provider.c:787
+#: providers/postgres/gda-postgres-provider.c:568
+#: providers/postgres/gda-postgres-provider.c:585
+#: providers/postgres/gda-postgres-provider.c:656
+#: providers/postgres/gda-postgres-provider.c:755
+#: providers/postgres/gda-postgres-provider.c:822
 #: providers/postgres/gda-postgres-recordset.c:184
 #: providers/postgres/gda-postgres-recordset.c:348
 #: providers/postgres/gda-postgres-recordset.c:470
@@ -1240,12 +1246,12 @@ msgid "Invalid PostgreSQL handle"
 msgstr "Handle PostgreSQL không hợp lệ"
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:1195
+#: providers/postgres/gda-postgres-provider.c:1230
 msgid "View"
 msgstr "View"
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:1869 testing/client.c:130
+#: providers/postgres/gda-postgres-provider.c:1904 testing/client.c:130
 msgid "Databases"
 msgstr "Cơ sở dữ liệu"
 
@@ -1741,6 +1747,94 @@ msgstr "Đối số không hợp lệ"
 msgid "Could not get description for column"
 msgstr "Không thể lấy mô tả cột"
 
+#. fill the recordset
+#: providers/xml/gda-xml-provider.c:661
+msgid "Big integer"
+msgstr ""
+
+#: providers/xml/gda-xml-provider.c:662
+msgid "Big unsigned integer"
+msgstr ""
+
+#: providers/xml/gda-xml-provider.c:663
+msgid "Binary"
+msgstr ""
+
+#: providers/xml/gda-xml-provider.c:664
+#, fuzzy
+msgid "Boolean"
+msgstr "Kiểu trả về"
+
+#: providers/xml/gda-xml-provider.c:665
+#, fuzzy
+msgid "Date"
+msgstr "Co dãn"
+
+#: providers/xml/gda-xml-provider.c:666
+#, fuzzy
+msgid "Double precision"
+msgstr "Độ chính xác"
+
+#: providers/xml/gda-xml-provider.c:667
+msgid "Integer"
+msgstr ""
+
+#: providers/xml/gda-xml-provider.c:668
+msgid "List"
+msgstr ""
+
+#: providers/xml/gda-xml-provider.c:669
+msgid "Money"
+msgstr ""
+
+#: providers/xml/gda-xml-provider.c:670
+#, fuzzy
+msgid "Numeric"
+msgstr "Tên"
+
+#: providers/xml/gda-xml-provider.c:671
+msgid "Point"
+msgstr ""
+
+#: providers/xml/gda-xml-provider.c:672
+#, fuzzy
+msgid "Single precision"
+msgstr "Độ chính xác"
+
+#: providers/xml/gda-xml-provider.c:673
+msgid "Small integer"
+msgstr ""
+
+#: providers/xml/gda-xml-provider.c:674
+msgid "Small unsigned integer"
+msgstr ""
+
+#: providers/xml/gda-xml-provider.c:675
+msgid "String"
+msgstr ""
+
+#: providers/xml/gda-xml-provider.c:676
+#, fuzzy
+msgid "Time"
+msgstr "Bảng"
+
+#: providers/xml/gda-xml-provider.c:677
+msgid "Timestamp"
+msgstr ""
+
+#: providers/xml/gda-xml-provider.c:678
+msgid "Tiny integer"
+msgstr ""
+
+#: providers/xml/gda-xml-provider.c:679
+msgid "Tiny unsigned integer"
+msgstr ""
+
+#: providers/xml/gda-xml-provider.c:681
+#, fuzzy
+msgid "Unsigned integer"
+msgstr "Giá trị nguyên bất thường"
+
 #: providers/xml/libmain.c:33
 msgid "XML"
 msgstr ""
@@ -2087,9 +2181,6 @@ msgstr "Bộ cung cấp GDA cho cơ sở dữ liệu Oracle"
 #~ msgid "Data Type"
 #~ msgstr "Kiểu dữ liệu"
 
-#~ msgid "Precision"
-#~ msgstr "Độ chính xác"
-
 #~ msgid "Identity"
 #~ msgstr "Thực thể"
 
@@ -2113,9 +2204,6 @@ msgstr "Bộ cung cấp GDA cho cơ sở dữ liệu Oracle"
 
 #~ msgid "Creation of GdaServerProvider failed"
 #~ msgstr "Việc tạo GdaServerProvider thất bại"
-
-#~ msgid "Unexpected integer value"
-#~ msgstr "Giá trị nguyên bất thường"
 
 #~ msgid "Unexpected float value"
 #~ msgstr "Giá trị thực bất thường"

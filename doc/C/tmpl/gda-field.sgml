@@ -44,6 +44,21 @@ Management of database fields
 @value: 
 @attributes: 
 
+<!-- ##### MACRO GDA_TYPE_FIELD_ATTRIBUTES ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION gda_field_attributes_get_type ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_field_attributes_new ##### -->
 <para>
 
@@ -67,6 +82,16 @@ Management of database fields
 </para>
 
 @fa: 
+
+
+<!-- ##### FUNCTION gda_field_attributes_equal ##### -->
+<para>
+
+</para>
+
+@lhs: 
+@rhs: 
+@Returns: 
 
 
 <!-- ##### FUNCTION gda_field_attributes_get_defined_size ##### -->
@@ -285,5 +310,23 @@ Management of database fields
 
 @fa: 
 @position: 
+
+
+<!-- ##### FUNCTION gda_field_attributes_get_default_value ##### -->
+<para>
+
+</para>
+
+@fa: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_field_attributes_set_default_value ##### -->
+<para>
+
+</para>
+
+@fa: 
+@default_value: 
 
 

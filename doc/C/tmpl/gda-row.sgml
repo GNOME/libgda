@@ -28,6 +28,21 @@ Functions for accessing #GdaRow
 </para>
 
 
+<!-- ##### MACRO GDA_TYPE_ROW ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION gda_row_get_type ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_row_new ##### -->
 <para>
 
@@ -45,6 +60,15 @@ Functions for accessing #GdaRow
 
 @model: 
 @values: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_row_copy ##### -->
+<para>
+
+</para>
+
+@row: 
 @Returns: 
 
 

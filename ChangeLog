@@ -1,3 +1,9 @@
+2004-06-01  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* configure.in: fixed checks for gtk-doc.
+
+	* doc/C/libgda-docs.sgml: fixes for xsltproc.
+
 2004-05-31  Jürg Billeter <j@bitron.ch>
 
 	* libgda/gda-util.c:

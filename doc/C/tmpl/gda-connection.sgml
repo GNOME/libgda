@@ -234,6 +234,27 @@ Management of connections to data sources
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_connection_create_table ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@table_name: 
+@attributes: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_connection_drop_table ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@table_name: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_connection_execute_command ##### -->
 <para>
 
@@ -242,6 +263,16 @@ Management of connections to data sources
 @cnc: 
 @cmd: 
 @params: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_connection_get_last_insert_id ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@recset: 
 @Returns: 
 
 

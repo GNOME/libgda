@@ -105,6 +105,29 @@ Base class for implementing new providers
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_server_provider_create_table ##### -->
+<para>
+
+</para>
+
+@provider: 
+@cnc: 
+@table_name: 
+@attributes: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_server_provider_drop_table ##### -->
+<para>
+
+</para>
+
+@provider: 
+@cnc: 
+@table_name: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_server_provider_execute_command ##### -->
 <para>
 
@@ -114,6 +137,17 @@ Base class for implementing new providers
 @cnc: 
 @cmd: 
 @params: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_server_provider_get_last_insert_id ##### -->
+<para>
+
+</para>
+
+@provider: 
+@cnc: 
+@recset: 
 @Returns: 
 
 

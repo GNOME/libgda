@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda HEAD\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-05-03 04:15+0200\n"
+"POT-Creation-Date: 2004-06-01 01:37+0200\n"
 "PO-Revision-Date: 2004-05-03 15:16+0200\n"
 "Last-Translator: Miloslav Trmac <mitr@volny.cz>\n"
 "Language-Team: Czech <cs@li.org>\n"
@@ -126,17 +126,17 @@ msgstr "Příkaz SQL není typu SELECT (je '%s'"
 msgid "There is already a field called %s"
 msgstr "Pole nazvané %s již existuje"
 
-#: libgda/gda-util.c:153
+#: libgda/gda-util.c:173
 #, c-format
 msgid "Could not parse SQL command '%s'"
 msgstr "Nelze zpracovat příkaz SQL '%s'"
 
-#: libgda/gda-util.c:186
+#: libgda/gda-util.c:206
 #, c-format
 msgid "Error while reading %s: %s"
 msgstr "Chyba při čtení %s: %s"
 
-#: libgda/gda-util.c:212
+#: libgda/gda-util.c:232
 #, c-format
 msgid "Could not create file %s"
 msgstr "Nelze vytvořit soubor %s"

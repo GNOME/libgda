@@ -1,4 +1,5 @@
-<!doctype book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+<?xml version="1.0"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
      "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd" [
 <!ENTITY LIBGDA          "<application>libgda</application>">
 <!ENTITY GNOMEDB         "<application>GNOME-DB</application>">
@@ -26,7 +27,7 @@
 <!ENTITY GDADATAMODEL    "<xref linkend='libgda-GdaDataModel'>">
 <!ENTITY GDADATAMODELARRAY "<xref linkend='libgda-GdaDataModelArray'>">
 <!ENTITY GDADATAMODELHASH "<xref linkend='libgda-GdaDataModelHash'>">
-<!ENTITY fullexample SYSTEM "examples/full_example.c" CDATA linespecific>
+<!ENTITY fullexample SYSTEM "examples/full_example.c">
 <!ENTITY migration.sgml SYSTEM "migration.sgml">
 <!ENTITY libgda-blob SYSTEM "sgml/gda-blob.sgml">
 <!ENTITY libgda-client SYSTEM "sgml/gda-client.sgml">
@@ -173,7 +174,7 @@
         Free Documentation License</citetitle></link>, Version 1.1 or any later
         version published by the Free Software Foundation with no Invariant
         Sections, no Front-Cover Texts, and no Back-Cover Texts.  A copy of the
-        license can be found in <xref linkend="fdl">.
+        license can be found in <xref linkend="fdl">the appendix</xref>.
       </para>
       <para>
         Many of the names used by companies to distinguish their products and
@@ -541,11 +542,11 @@
 	  
 	  <programlistingco>
 	    <areaspec>
-	      <area id="provider" coords="2">
-	      <area id="dsn" coords="3">
-              <area id="description" coords="4">
-	      <area id="username" coords="5">
-	      <area id="password" coords="6">
+	      <area id="provider" coords="2"/>
+	      <area id="dsn" coords="3"/>
+              <area id="description" coords="4"/>
+	      <area id="username" coords="5"/>
+	      <area id="password" coords="6"/>
             </areaspec>
 	    <programlisting>
 	      [sales]
@@ -692,8 +693,8 @@
             </para>
             <PROGRAMLISTINGCO>
               <AREASPEC UNITS="LINECOLUMN">
-                <AREA ID="gda-config-get-data-source-list-1" COORDS="8 1">
-                <AREA ID="gda-config-get-data-source-list-2" COORDS="21 1">
+                <AREA ID="gda-config-get-data-source-list-1" COORDS="8 1"/>
+                <AREA ID="gda-config-get-data-source-list-2" COORDS="21 1"/>
               </AREASPEC>
               <programlisting>
               void
@@ -744,8 +745,8 @@
             </para>
             <PROGRAMLISTINGCO>
               <AREASPEC UNITS="LINECOLUMN">
-                <AREA ID="gda-config-get-provider-list-1" COORDS="8 1">
-                <AREA ID="gda-config-get-provider-list-2" COORDS="19 1">
+                <AREA ID="gda-config-get-provider-list-1" COORDS="8 1"/>
+                <AREA ID="gda-config-get-provider-list-2" COORDS="19 1"/>
               </AREASPEC>
               <programlisting>
               void
@@ -792,7 +793,7 @@
 	  <title>Default provider</title>
 	  <para>
 	    The &GDA; default provider is always installed 
-            with &LIBGDA, which means that you've got always a default
+            with &LIBGDA;, which means that you've got always a default
 	    database system available for you. To connect to a default 
             provider's database, you only need to specify, in the &DSN; string,
             a string of the form "URI=/path/to/the/database/file". When
@@ -1073,11 +1074,11 @@
       </para>
       <PROGRAMLISTINGCO>
         <AREASPEC UNITS="LINECOLUMN">
-          <AREA ID="connecting-1" COORDS="10 1">
-          <AREA ID="connecting-2" COORDS="13 1">
-	  <AREA ID="connecting-3" COORDS="24 1">
-	  <AREA ID="connecting-4" COORDS="26 1">
-</AREASPEC>
+          <AREA ID="connecting-1" COORDS="10 1"/>
+          <AREA ID="connecting-2" COORDS="13 1"/>
+	  <AREA ID="connecting-3" COORDS="24 1"/>
+	  <AREA ID="connecting-4" COORDS="26 1"/>
+	</AREASPEC>
         <programlisting>
           void
           do_stuff ()
@@ -1122,7 +1123,7 @@
               <LINK LINKEND="installation-client">creating the data source</LINK>. However, you
               can specify them if you want.
             </para>
-          </callout>
+          </CALLOUT>
           <CALLOUT AREAREFS="connecting-3">
             <para>
               It's a good practice to close connections when you finish using them. It
@@ -1131,12 +1132,12 @@
               execution. This function frees the <LINK LINKEND="libgda-GdaConnection">GdaConnection</LINK>
               objects attached to the <LINK LINKEND="libgda-GdaClient">GdaClient</LINK>.
             </para>
-          </callout>
+          </CALLOUT>
           <CALLOUT AREAREFS="connecting-4">
             <para>
               When finishing with the client, I have to free it.
             </para>
-          </callout>
+          </CALLOUT>
         </CALLOUTLIST>
       </PROGRAMLISTINGCO>
     </sect1>
@@ -1160,8 +1161,8 @@
         </para>
         <PROGRAMLISTINGCO>
           <AREASPEC UNITS="LINECOLUMN">
-            <AREA ID="GdaCommandOptions-1" COORDS="2 1">
-            <AREA ID="GdaCommandOptions-2" COORDS="3 1">
+            <AREA ID="GdaCommandOptions-1" COORDS="2 1"/>
+            <AREA ID="GdaCommandOptions-2" COORDS="3 1"/>
           </AREASPEC>
           <programlisting>
           typedef enum {
@@ -1181,7 +1182,7 @@
               <para>
                 Stops when finding and error and doesn't return data models.
               </para>
-            </callout>
+            </CALLOUT>
           </CALLOUTLIST>
         </PROGRAMLISTINGCO>
         <para>
@@ -1189,9 +1190,9 @@
         </para>
         <PROGRAMLISTINGCO>
           <AREASPEC UNITS="LINECOLUMN">
-            <AREA ID="gda-command-new-1" COORDS="7 1">
-            <AREA ID="gda-command-new-2" COORDS="8 1">
-            <AREA ID="gda-command-new-3" COORDS="10 1">
+            <AREA ID="gda-command-new-1" COORDS="7 1"/>
+            <AREA ID="gda-command-new-2" COORDS="8 1"/>
+            <AREA ID="gda-command-new-3" COORDS="10 1"/>
           </AREASPEC>
           <programlisting>
           gint
@@ -1218,12 +1219,12 @@
               <para>
                 We will see it <LINK LINKEND="making-queries">later</LINK>.
               </para>
-            </callout>
+            </CALLOUT>
             <CALLOUT AREAREFS="gda-command-new-3">
               <para>
                 It is a good practice to free the commands.
               </para>
-            </callout>
+            </CALLOUT>
           </CALLOUTLIST>
         </PROGRAMLISTINGCO>
       </sect2>
@@ -1276,8 +1277,8 @@
         </para>
         <PROGRAMLISTINGCO>
           <AREASPEC UNITS="LINECOLUMN">
-            <AREA ID="normal-query-1" COORDS="13 1">
-            <AREA ID="normal-query-2" COORDS="15 1">
+            <AREA ID="normal-query-1" COORDS="13 1"/>
+            <AREA ID="normal-query-2" COORDS="15 1"/>
           </AREASPEC>
           <programlisting>
           gboolean
@@ -1392,9 +1393,9 @@
         </para>
         <PROGRAMLISTINGCO>
           <AREASPEC UNITS="LINECOLUMN">
-            <AREA ID="data-model-1-1" COORDS="8 1">
-            <AREA ID="data-model-1-2" COORDS="13 1">
-            <AREA ID="data-model-1-3" COORDS="18 1">
+            <AREA ID="data-model-1-1" COORDS="8 1"/>
+            <AREA ID="data-model-1-2" COORDS="13 1"/>
+            <AREA ID="data-model-1-3" COORDS="18 1"/>
           </AREASPEC>
           <programlisting>
           void
@@ -1404,14 +1405,14 @@
             gint column_id;
             GdaValue *value;
           
-            for (column_id = 0; column_id < gda_data_model_get_n_columns (dm);
+            for (column_id = 0; column_id &lt; gda_data_model_get_n_columns (dm);
                  column_id++)
               g_print("%s\t",gda_data_model_get_column_title (dm, column_id));
             g_print("\n");
           
-            for (row_id = 0; row_id < gda_data_model_get_n_rows (dm); row_id++)
+            for (row_id = 0; row_id &lt; gda_data_model_get_n_rows (dm); row_id++)
               {
-                for (column_id = 0; column_id < gda_data_model_get_n_columns (dm);
+                for (column_id = 0; column_id &lt; gda_data_model_get_n_columns (dm);
                      column_id++)
                   {
                     value =
@@ -1455,9 +1456,9 @@
         </para>
         <PROGRAMLISTINGCO>
           <AREASPEC UNITS="LINECOLUMN">
-            <AREA ID="data-model-2-1" COORDS="10 1">
-            <AREA ID="data-model-2-2" COORDS="15 1">
-            <AREA ID="data-model-2-3" COORDS="18 1">
+            <AREA ID="data-model-2-1" COORDS="10 1"/>
+            <AREA ID="data-model-2-2" COORDS="15 1"/>
+            <AREA ID="data-model-2-3" COORDS="18 1"/>
           </AREASPEC>
           <programlisting>
             <ANCHOR ID="show_table2">
@@ -1469,17 +1470,15 @@
             GdaValue *value;
             GdaRow *row;
           
-            for (column_id = 0; column_id < gda_data_model_get_n_columns (dm);
+            for (column_id = 0; column_id &lt; gda_data_model_get_n_columns (dm);
                  column_id++)
               g_print("%s\t",gda_data_model_get_column_title (dm, column_id));
             g_print("\n");
           
-            for (row_id = 0; row_id < gda_data_model_get_n_rows (dm); row_id++)
-              {
+            for (row_id = 0; row_id &lt; gda_data_model_get_n_rows (dm); row_id++) {
                 row = (GdaRow *) gda_data_model_get_row (dm, row_id);
-                for (column_id = 0; column_id < gda_data_model_get_n_columns (dm);
-                     column_id++)
-                  {
+                for (column_id = 0; column_id &lt; gda_data_model_get_n_columns (dm);
+                     column_id++) {
                     value = gda_row_get_value (row, column_id);
                     string=gda_value_stringify (value);
                     g_print ("%s\t", string);
@@ -1488,6 +1487,7 @@
                 g_print ("\n");
               }
           }
+	    </ANCHOR>
           </programlisting>
           <CALLOUTLIST>
             <CALLOUT AREAREFS="data-model-2-1">
@@ -1565,10 +1565,10 @@
       </para>
       <PROGRAMLISTINGCO>
         <AREASPEC UNITS="LINECOLUMN">
-          <AREA ID="gda-value-1" COORDS="10 1">
-          <AREA ID="gda-value-2" COORDS="15 1">
-          <AREA ID="gda-value-3" COORDS="18 1">
-          <AREA ID="gda-value-4" COORDS="22 1">
+          <AREA ID="gda-value-1" COORDS="10 1"/>
+          <AREA ID="gda-value-2" COORDS="15 1"/>
+          <AREA ID="gda-value-3" COORDS="18 1"/>
+          <AREA ID="gda-value-4" COORDS="22 1"/>
         </AREASPEC>
         <programlisting>
         void
@@ -1580,17 +1580,15 @@
           GdaRow *row;
           gchar *string;
         
-          for (column_id = 0; column_id < gda_data_model_get_n_columns (dm);
+          for (column_id = 0; column_id &lt; gda_data_model_get_n_columns (dm);
                column_id++)
             g_print("%s\t",gda_data_model_get_column_title (dm, column_id));
           g_print("\n");
         
-          for (row_id = 0; row_id < gda_data_model_get_n_rows (dm); row_id++)
-            {
+          for (row_id = 0; row_id &lt; gda_data_model_get_n_rows (dm); row_id++) {
               row = (GdaRow *) gda_data_model_get_row (dm, row_id);
-              for (column_id = 0; column_id < gda_data_model_get_n_columns (dm);
-                   column_id++)
-                {
+              for (column_id = 0; column_id &lt; gda_data_model_get_n_columns (dm);
+                   column_id++) {
                   value = gda_row_get_value (row, column_id);
                   string=gda_value_stringify (value);
                   g_print ("%s\t", string);
@@ -1691,13 +1689,13 @@
       </para>
       <PROGRAMLISTINGCO>
         <AREASPEC UNITS="LINECOLUMN">
-          <AREA ID="transactions-1" COORDS="6 1">
-          <AREA ID="transactions-1a" COORDS="7 1">
-          <AREA ID="transactions-2" COORDS="9 1">
-          <AREA ID="transactions-3" COORDS="16 1">
-          <AREA ID="transactions-4" COORDS="29 1">
-          <AREA ID="transactions-5" COORDS="30 1">
-          <AREA ID="transactions-6" COORDS="55 1">
+          <AREA ID="transactions-1" COORDS="6 1"/>
+          <AREA ID="transactions-1a" COORDS="7 1"/>
+          <AREA ID="transactions-2" COORDS="9 1"/>
+          <AREA ID="transactions-3" COORDS="16 1"/>
+          <AREA ID="transactions-4" COORDS="29 1"/>
+          <AREA ID="transactions-5" COORDS="30 1"/>
+          <AREA ID="transactions-6" COORDS="55 1"/>
         </AREASPEC>
         <programlisting>
         void process_accounts(GdaConnection *connection)
@@ -1841,8 +1839,8 @@
     </para>
     <PROGRAMLISTINGCO>
       <AREASPEC UNITS="LINECOLUMN">
-        <AREA ID="errors-1" COORDS="8 1">
-        <AREA ID="errors-2" COORDS="10 1">
+        <AREA ID="errors-1" COORDS="8 1"/>
+        <AREA ID="errors-2" COORDS="10 1"/>
       </AREASPEC>
       <programlisting>
       gboolean

@@ -195,6 +195,38 @@ Access/Management of libgda configuration
 @description: 
 @gda_params: 
 
+<!-- ##### MACRO GDA_TYPE_PROVIDER_INFO ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION gda_provider_info_get_type ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_provider_info_copy ##### -->
+<para>
+
+</para>
+
+@src: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_provider_info_free ##### -->
+<para>
+
+</para>
+
+@provider_info: 
+
+
 <!-- ##### FUNCTION gda_config_get_provider_list ##### -->
 <para>
 
@@ -220,6 +252,14 @@ Access/Management of libgda configuration
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_config_get_provider_model ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
 <!-- ##### STRUCT GdaDataSourceInfo ##### -->
 <para>
 
@@ -232,20 +272,18 @@ Access/Management of libgda configuration
 @username: 
 @password: 
 
-<!-- ##### FUNCTION gda_config_get_data_source_list ##### -->
+<!-- ##### MACRO GDA_TYPE_DATA_SOURCE_INFO ##### -->
 <para>
 
 </para>
 
-@Returns: 
 
 
-<!-- ##### FUNCTION gda_config_find_data_source ##### -->
+<!-- ##### FUNCTION gda_data_source_info_get_type ##### -->
 <para>
 
 </para>
 
-@name: 
 @Returns: 
 
 
@@ -264,6 +302,23 @@ Access/Management of libgda configuration
 </para>
 
 @info: 
+
+
+<!-- ##### FUNCTION gda_config_get_data_source_list ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_config_find_data_source ##### -->
+<para>
+
+</para>
+
+@name: 
+@Returns: 
 
 
 <!-- ##### FUNCTION gda_config_free_data_source_list ##### -->

@@ -23,6 +23,21 @@ Management of parameters
 @name: 
 @value: 
 
+<!-- ##### MACRO GDA_TYPE_PARAMETER ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION gda_parameter_get_type ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_parameter_new_from_value ##### -->
 <para>
 
@@ -70,6 +85,15 @@ Management of parameters
 
 @name: 
 @value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_parameter_copy ##### -->
+<para>
+
+</para>
+
+@param: 
 @Returns: 
 
 
@@ -123,6 +147,21 @@ Management of parameters
 </para>
 
 
+<!-- ##### MACRO GDA_TYPE_PARAMETER_LIST ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION gda_parameter_list_get_type ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_parameter_list_new ##### -->
 <para>
 
@@ -137,6 +176,15 @@ Management of parameters
 </para>
 
 @plist: 
+
+
+<!-- ##### FUNCTION gda_parameter_list_copy ##### -->
+<para>
+
+</para>
+
+@plist: 
+@Returns: 
 
 
 <!-- ##### FUNCTION gda_parameter_list_add_parameter ##### -->

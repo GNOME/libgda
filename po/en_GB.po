@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda release-1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-05-03 21:36-0400\n"
+"POT-Creation-Date: 2004-06-01 01:37+0200\n"
 "PO-Revision-Date: 2004-05-03 21:37-0400\n"
 "Last-Translator: David Lodge <dave@cirt.net>\n"
 "Language-Team: English/GB <en@li.org>\n"
@@ -126,17 +126,17 @@ msgstr "SQL command is not a SELECT (is '%s'"
 msgid "There is already a field called %s"
 msgstr "There is already a field called %s"
 
-#: libgda/gda-util.c:153
+#: libgda/gda-util.c:173
 #, c-format
 msgid "Could not parse SQL command '%s'"
 msgstr "Could not parse SQL command '%s'"
 
-#: libgda/gda-util.c:186
+#: libgda/gda-util.c:206
 #, c-format
 msgid "Error while reading %s: %s"
 msgstr "Error while reading %s: %s"
 
-#: libgda/gda-util.c:212
+#: libgda/gda-util.c:232
 #, c-format
 msgid "Could not create file %s"
 msgstr "Could not create file %s"
