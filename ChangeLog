@@ -1,3 +1,7 @@
+2002-05-09  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* libgda/gda-data-model.[ch] (gda_data_model_foreach): new function.
+
 2002-05-09  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
 	* libgda/gda-data-model.c: use integers as key of hash table. Fixed

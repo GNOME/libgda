@@ -75,6 +75,14 @@ const gchar        *gda_data_model_get_column_title (GdaDataModel *model, gint c
 void                gda_data_model_set_column_title (GdaDataModel *model, gint col, const gchar *title);
 const GdaValue     *gda_data_model_get_value_at (GdaDataModel *model, gint col, gint row);
 
+typedef gboolean (* GdaDataModelForeachFunc) (GdaDataModel *model,
+					      GdaRow *row,
+					      gpointer user_data);
+
+void                gda_data_model_foreach (GdaDataModel *model,
+					    GdaDataModelForeachFunc func,
+					    gpointer user_data);
+
 gboolean            gda_data_model_begin_edit (GdaDataModel *model);
 gboolean            gda_data_model_cancel_edit (GdaDataModel *model);
 gboolean            gda_data_model_end_edit (GdaDataModel *model);
@@ -83,10 +91,11 @@ gchar              *gda_data_model_to_comma_separated (GdaDataModel *model);
 gchar              *gda_data_model_to_tab_separated (GdaDataModel *model);
 gchar              *gda_data_model_to_xml (GdaDataModel *model, gboolean standalone);
 
-const gchar   *gda_data_model_get_command_text (GdaDataModel *recset);
-void           gda_data_model_set_command_text (GdaDataModel *recset, const gchar *txt);
-GdaCommandType gda_data_model_get_command_type (GdaDataModel *recset);
-void           gda_data_model_set_command_type (GdaDataModel *recset, GdaCommandType type);
+const gchar        *gda_data_model_get_command_text (GdaDataModel *recset);
+void                gda_data_model_set_command_text (GdaDataModel *recset, const gchar *txt);
+GdaCommandType      gda_data_model_get_command_type (GdaDataModel *recset);
+void                gda_data_model_set_command_type (GdaDataModel *recset,
+						     GdaCommandType type);
 
 G_END_DECLS
 

@@ -46,6 +46,7 @@ sentences.
 @GDA_COMMAND_TYPE_PROCEDURE: 
 @GDA_COMMAND_TYPE_TABLE: the text of the command is composed of zero or more
 table names.
+@GDA_COMMAND_TYPE_SCHEMA: 
 @GDA_COMMAND_TYPE_INVALID: 
 
 <!-- ##### TYPEDEF GdaCommand ##### -->

@@ -14,7 +14,7 @@ Functions for accesing #GdaRow.
 
 </para>
 
-<!-- ##### TYPEDEF GdaRow ##### -->
+<!-- ##### STRUCT GdaRow ##### -->
 <para>
 
 </para>
@@ -41,6 +41,24 @@ Functions for accesing #GdaRow.
 </para>
 
 @row: 
+
+
+<!-- ##### FUNCTION gda_row_get_id ##### -->
+<para>
+
+</para>
+
+@row: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_row_set_id ##### -->
+<para>
+
+</para>
+
+@row: 
+@id: 
 
 
 <!-- ##### FUNCTION gda_row_get_field ##### -->

@@ -360,6 +360,73 @@ gda_data_model_get_value_at (GdaDataModel *model, gint col, gint row)
 }
 
 /**
+ * gda_data_model_foreach
+ * @model: a #GdaDataModel object.
+ * @func: callback function.
+ * @user_data: context data for the callback function.
+ *
+ * Call the specified callback function for each row in the data model.
+ * This will just traverse all rows, and call the given callback
+ * function for each of them.
+ *
+ * The callback function must have the following form:
+ *
+ *      gboolean foreach_func (GdaDataModel *model, GdaRow *row, gpointer user_data)
+ *
+ * where "row" would be the row being read, and "user_data" the parameter
+ * specified in @user_data in the call to gda_data_model_foreach.
+ * This callback function can return FALSE to stop the processing. If it
+ * returns TRUE, processing will continue until no rows remain.
+ */
+void
+gda_data_model_foreach (GdaDataModel *model,
+			GdaDataModelForeachFunc func,
+			gpointer user_data)
+{
+	gint cols;
+	gint rows;
+	gint c, r;
+	GdaRow *row;
+
+	g_return_if_fail (GDA_IS_DATA_MODEL (model));
+	g_return_if_fail (func != NULL);
+
+	rows = gda_data_model_get_n_rows (model);
+	cols = gda_data_model_get_n_columns (model);
+
+	for (r = 0; r < rows; r++) {
+		row = gda_row_new (cols);
+		for (c = 0; c < cols; c++) {
+			GdaField *field;
+			GdaFieldAttributes *fa;
+			GdaValue *value;
+
+			field = gda_row_get_field (row, c);
+			fa = gda_data_model_describe_column (model, c);
+
+			gda_field_set_defined_size (field, gda_field_attributes_get_defined_size (fa));
+			gda_field_set_name (field, gda_field_attributes_get_name (fa));
+			gda_field_set_caption (field, gda_field_attributes_get_caption (fa));
+			gda_field_set_scale (field, gda_field_attributes_get_scale (fa));
+			gda_field_set_gdatype (field, gda_field_attributes_get_gdatype (fa));
+			gda_field_set_allow_null (field, gda_field_attributes_get_allow_null (fa));
+			gda_field_set_primary_key (field, gda_field_attributes_get_primary_key (fa));
+			gda_field_set_unique_key (field, gda_field_attributes_get_unique_key (fa));
+			gda_field_set_references (field, gda_field_attributes_get_references (fa));
+
+			gda_field_set_value (field, gda_data_model_get_value_at (model, c, r));
+
+			gda_field_attributes_free (fa);
+		}
+
+		/* call the callback function */
+		func (model, row, user_data);
+
+		gda_row_free (row);
+	}
+}
+
+/**
  * gda_data_model_begin_edit
  * @model: a #GdaDataModel object.
  *
