@@ -1,3 +1,8 @@
+2003-10-26  Laurent Sansonetti <laurent@datarescue.be>
+
+	* libgda/gda-data-model.c (gda_data_model_to_xml):
+	Implemented the standalone=FALSE case.
+
 2003-10-19  Laurent Sansonetti <laurent@datarescue.be>
 
 	* doc/C/examples/full_example.c:

@@ -829,17 +829,21 @@ gda_data_model_to_tab_separated (GdaDataModel *model)
 gchar *
 gda_data_model_to_xml (GdaDataModel *model, gboolean standalone)
 {
-	xmlDocPtr xml_doc;
-	xmlNodePtr xml_root, xml_node, xml_tables;
-	gchar *xml = NULL;
 	xmlChar *xml_contents;
+	xmlNodePtr xml_node;
+	gchar *xml;
 	gint size;
 
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
 
 	xml_node = gda_data_model_to_xml_node (model, "exported_model");
+
 	if (standalone) {
+		xmlDocPtr xml_doc;
+		xmlNodePtr xml_root, xml_tables;
+	
 		xml_doc = xmlNewDoc ("1.0");
+		
 		xml_root = xmlNewDocNode (xml_doc, NULL, "database", NULL);
 		xmlDocSetRootElement (xml_doc, xml_root);
 
@@ -848,7 +852,15 @@ gda_data_model_to_xml (GdaDataModel *model, gboolean standalone)
 
 		xmlDocDumpMemory (xml_doc, &xml_contents, &size);
 		xmlFreeDoc (xml_doc);
-
+		
+		xml = g_strdup (xml_contents);
+		xmlFree (xml_contents);
+	}
+	else {
+		xmlBufferPtr xml_buf = xmlBufferCreate ();
+		xmlNodeDump (xml_buf, NULL, xml_node, 0, 0); 
+		xml_contents = (xmlChar *) xmlBufferContent (xml_buf);
+		xmlBufferFree (xml_buf);
 		xml = g_strdup (xml_contents);
 	}
 
