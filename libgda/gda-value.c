@@ -589,6 +589,21 @@ gda_value_free (GdaValue *value)
 }
 
 /**
+ * gda_value_get_type
+ * @value: value to get the type from.
+ *
+ * Retrieve the type of the given value.
+ *
+ * Returns: the #GdaValueType of the value.
+ */
+GdaValueType
+gda_value_get_type (GdaValue *value)
+{
+	g_return_val_if_fail (value != NULL, GDA_VALUE_TYPE_UNKNOWN);
+	return value->type;
+}
+
+/**
  * gda_value_is_null
  * @value: value to test.
  *

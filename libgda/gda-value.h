@@ -29,9 +29,6 @@
 
 G_BEGIN_DECLS
 
-#define gda_value_get_type(value) (value->type)
-#define gda_value_isa(value,type) (gda_value_get_type (value) == type)
-
 #define TIMEZONE_INVALID (2*12*60*60)
 
 typedef enum {
@@ -135,6 +132,8 @@ GdaValue     *gda_value_new_from_string (const gchar *as_string,
 
 void          gda_value_free (GdaValue *value);
 
+GdaValueType  gda_value_get_type (GdaValue *value);
+#define       gda_value_isa(value,type) (gda_value_get_type (value) == type)
 gboolean      gda_value_is_null (GdaValue *value);
 GdaValue     *gda_value_copy (const GdaValue *value);
 

@@ -20,6 +20,15 @@ Base class for implementing new providers
 </para>
 
 
+<!-- ##### FUNCTION gda_server_provider_get_version ##### -->
+<para>
+
+</para>
+
+@provider: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_server_provider_open_connection ##### -->
 <para>
 
@@ -34,6 +43,16 @@ Base class for implementing new providers
 
 
 <!-- ##### FUNCTION gda_server_provider_close_connection ##### -->
+<para>
+
+</para>
+
+@provider: 
+@cnc: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_server_provider_get_server_version ##### -->
 <para>
 
 </para>

@@ -14,23 +14,6 @@ gda-value
 
 </para>
 
-<!-- ##### MACRO gda_value_get_type ##### -->
-<para>
-
-</para>
-
-@value: 
-
-
-<!-- ##### MACRO gda_value_isa ##### -->
-<para>
-
-</para>
-
-@value: 
-@type: 
-
-
 <!-- ##### MACRO TIMEZONE_INVALID ##### -->
 <para>
 
@@ -247,6 +230,15 @@ gda-value
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_value_new_type ##### -->
+<para>
+
+</para>
+
+@val: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_value_new_from_string ##### -->
 <para>
 
@@ -263,6 +255,24 @@ gda-value
 </para>
 
 @value: 
+
+
+<!-- ##### FUNCTION gda_value_get_type ##### -->
+<para>
+
+</para>
+
+@value: 
+@Returns: 
+
+
+<!-- ##### MACRO gda_value_isa ##### -->
+<para>
+
+</para>
+
+@value: 
+@type: 
 
 
 <!-- ##### FUNCTION gda_value_is_null ##### -->
@@ -560,6 +570,24 @@ gda-value
 
 @value: 
 @val: 
+
+
+<!-- ##### FUNCTION gda_value_get_vtype ##### -->
+<para>
+
+</para>
+
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_value_set_vtype ##### -->
+<para>
+
+</para>
+
+@value: 
+@type: 
 
 
 <!-- ##### FUNCTION gda_value_set_from_string ##### -->

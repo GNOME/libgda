@@ -52,6 +52,7 @@ gda_connection_close
 gda_connection_is_open
 gda_connection_get_client
 gda_connection_set_client
+gda_connection_get_server_version
 gda_connection_get_database
 gda_connection_get_dsn
 gda_connection_get_cnc_string
@@ -246,8 +247,10 @@ GDA_IS_SELECT_CLASS
 <FILE>gda-server-provider</FILE>
 GdaServerProviderPrivate
 <TITLE>GdaServerProvider</TITLE>
+gda_server_provider_get_version
 gda_server_provider_open_connection
 gda_server_provider_close_connection
+gda_server_provider_get_server_version
 gda_server_provider_get_database
 gda_server_provider_change_database
 gda_server_provider_create_database
@@ -965,8 +968,6 @@ gda_file_save
 
 <SECTION>
 <FILE>gda-value</FILE>
-gda_value_get_type
-gda_value_isa
 TIMEZONE_INVALID
 GdaValueType
 GdaDate
@@ -992,8 +993,11 @@ gda_value_new_string
 gda_value_new_time
 gda_value_new_timestamp
 gda_value_new_tinyint
+gda_value_new_type
 gda_value_new_from_string
 gda_value_free
+gda_value_get_type
+gda_value_isa
 gda_value_is_null
 gda_value_copy
 gda_value_get_bigint
@@ -1027,6 +1031,8 @@ gda_value_get_timestamp
 gda_value_set_timestamp
 gda_value_get_tinyint
 gda_value_set_tinyint
+gda_value_get_vtype
+gda_value_set_vtype
 gda_value_set_from_string
 gda_value_set_from_value
 gda_value_compare
