@@ -12,6 +12,7 @@ GDA_Report.h GDA_Report-common.c GDA_Report-stubs.c: $(top_builddir)/report/idl/
 gda_report_headers = \
 	gda-report-defs.h \
 	gda-report-engine.h \
+	gda-report-stream.h \
 	gda-report.h
 
 libgda_report_la_SOURCES = \
@@ -19,6 +20,7 @@ libgda_report_la_SOURCES = \
 	GDA_Report-common.c \
 	GDA_Report-stubs.c \
 	gda-report-engine.c \
+	gda-report-stream.c \
 	$(gda_report_headers)
 libgda_report_la_LIBADD = \
 	$(GDA_CLIENT_LIBS)

@@ -1,3 +1,8 @@
+2000-11-12	Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* moved the 2 files that were in the client/ subdirectory
+	to its correct place
+
 2000-11-05	Rodrigo Moya <rodrigo@linuxave.net>
 
 	* removed some attributes from the IDL interfaces and
