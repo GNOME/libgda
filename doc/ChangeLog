@@ -1,4 +1,9 @@
-2000-10-30	Rodrigo Moya <rodrigo@linuxave.net>
+2002-01-05  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* es/libgda.sgml:
+	pt_BR/libgda.sgml: fixed DOCTYPE
+
+2000-10-30  Rodrigo Moya <rodrigo@linuxave.net>
 
 	* added Brazilian Portuguese translation by
 	Cleber Rodrigues Rosa Junior (<cleberrrjr@bol.com.br>)

@@ -1,5 +1,5 @@
-<?xml version='1.0'?>
-<!DOCTYPE book PUBLIC "-//Davenport//DTD DocBook V3.0//EN" [
+<!doctype book PUBLIC "-//Davenport//DTD DocBook V3.0//EN" [
+
 <!entity Libgda "<application>libgda</application>">
 <!entity gda-gda-common SYSTEM "gda-common.sgml">
 <!entity gda-gda-clnt SYSTEM "gda-clnt.sgml">
