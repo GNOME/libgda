@@ -1,0 +1,10 @@
+Makefile
+Makefile.in
+.deps
+.libs
+*.o
+*.lo
+gda-run
+gda-config
+gda-buildserver
+gda-buildclient

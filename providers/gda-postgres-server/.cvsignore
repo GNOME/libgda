@@ -6,3 +6,4 @@ libgda-postgres.la
 gda-postgres-srv
 .deps
 .libs
+gda-postgres.spec

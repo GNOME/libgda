@@ -1,7 +1,7 @@
-*.o
-*.lo
 Makefile
 Makefile.in
+*.o
+*.lo
+gda-test
 .deps
 .libs
-libgda-common.la

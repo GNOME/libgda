@@ -9,3 +9,4 @@ gda.h
 gda-common.c
 gda-skels.c
 gda-stubs.c
+gda-report.dtd

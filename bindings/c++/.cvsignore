@@ -1,7 +1,7 @@
-*.o
-*.lo
 Makefile
 Makefile.in
 .deps
 .libs
-libgda-common.la
+*.o
+*.lo
+libgda-clientcpp.la

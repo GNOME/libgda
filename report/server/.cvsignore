@@ -1,7 +1,7 @@
-*.o
-*.lo
 Makefile
 Makefile.in
+gda-report
 .deps
 .libs
-libgda-common.la
+*.o
+*.lo

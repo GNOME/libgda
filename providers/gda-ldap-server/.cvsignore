@@ -2,8 +2,7 @@ Makefile
 Makefile.in
 *.o
 *.lo
-libgda-odbc.la
-gda-odbc-srv
+libgda-ldap.la
+gda-ldap-srv
 .deps
 .libs
-gda-odbc.spec

@@ -6,3 +6,4 @@ libgda-mysql.la
 gda-mysql-srv
 .deps
 .libs
+gda-mysql.spec
