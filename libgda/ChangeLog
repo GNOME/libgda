@@ -1,3 +1,7 @@
+2001-11-04  Carlos Perelló Marín <carlos@gnome-db.org>
+
+	* gda-init.c, Makefile.am: Adapted to use GLIB_GETTEXT.
+
 2001-11-04  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-client.[ch]: don't make it an object attached to a specific

@@ -3,7 +3,8 @@ lib_LTLIBRARIES = libgda-2.la
 INCLUDES = \
 	$(LIBGDA_CFLAGS) \
 	-I$(top_srcdir) \
-	-I$(top_builddir)
+	-I$(top_builddir) \
+	-DLIBGDA_LOCALEDIR=\""$(gnomelocaledir)"\"
 
 BUILT_SOURCES = \
 	GNOME_Database-skels.c

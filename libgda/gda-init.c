@@ -16,6 +16,9 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
  * Boston, MA 02111-1307, USA.
  */
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
 
 #include <bonobo-activation/bonobo-activation.h>
 #include <bonobo/bonobo-i18n.h>
@@ -37,6 +40,8 @@ gda_init (const gchar *app_id, const gchar *version, gint nargs, gchar *args[])
 {
 	static gboolean initialized = FALSE;
 
+	bindtextdomain (GETTEXT_PACKAGE, LIBGDA_LOCALEDIR);
+	
 	if (initialized) {
 		gda_log_error (_("Attempt to initialize an already initialized client"));
 		return;
