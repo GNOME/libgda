@@ -1,5 +1,10 @@
 2004-08-18  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* libgda/gda-client.c (gda_client_find_connection): use the correct
+	dsn/username/password when searching the connection.
+
+2004-08-18  Rodrigo Moya <rodrigo@gnome-db.org>
+
 	* libgda/gda-client.c (gda_client_find_connection): fixed to not
 	crash on strcmp().
 

@@ -544,9 +544,9 @@ gda_client_find_connection (GdaClient *client,
 		const gchar *tmp_dsn, *tmp_usr, *tmp_pwd;
 
 		cnc = GDA_CONNECTION (l->data);
-		tmp_dsn = gda_connection_get_dsn (cnc);
-		tmp_usr = gda_connection_get_username (cnc);
-		tmp_pwd = gda_connection_get_password (cnc);
+		tmp_dsn = dsn ? dsn : gda_connection_get_dsn (cnc);
+		tmp_usr = username ? username : gda_connection_get_username (cnc);
+		tmp_pwd = password ? password : gda_connection_get_password (cnc);
 
 		if (!strcmp (tmp_dsn ? tmp_dsn : "", dsn_info->name ? dsn_info->name : "")
 		    && !strcmp (tmp_usr ? tmp_usr : "", username ? username : "")
