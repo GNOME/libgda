@@ -2,15 +2,24 @@
 gda-value
 
 <!-- ##### SECTION Short_Description ##### -->
+Functions for accesing #GdaValue.
 
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
+A #GdaValue holds the data for a (row, column) retrieved from a query to a
+database backend. The function provided here can get/set the data contained in
+it, obtain information about the type, get a string representation of the
+value...
+
+The functions gda_value_set_*() and gda_value_new_*() that receive a pointer
+to any data, get a newly allocated copy of the data.
 
 </para>
 
 <!-- ##### SECTION See_Also ##### -->
 <para>
+#GdaRow
 
 </para>
 

@@ -533,7 +533,7 @@
             with &LIBGDA, which means that you've got always a default
 	    database system available for you. To connect to a default 
             provider's database, you only need to specify, in the &DSN; string,
-            a string of the form "DIRECTORY=/directory/for/the/database". When
+            a string of the form "FILENAME=/directory/for/the/database". When
             you	first connect to the new data source, the &GDA; default 
             provider will create the database, in the directory you specified
             in the &DSN; string, if it does not exist.
@@ -576,16 +576,66 @@
 	       <listitem>
 	         <para>
 	           HOST: name of the host where
-		   the database server is running
+		   the database server is running. If it begins with a slash
+		   then the protocol used is Unix-domain instead of TCP/IP and
+		   its value is the name of the directory where the file is
+		   stord. By default: /tmp.
 		 </para>
                </listitem>
 	       <listitem>
 		 <para>
-		   DATABASE: name of the database
-		   you want to access
+		   HOSTADDR: IP of the host where the database server is
+		   running (avoids DNS lookup). If this option has a value,
+		   TCP/IP communications is used.
+
+		   If neither a host name or host address is specified, the
+		   connection will be stablished using a local Unix domain
+		   socket.
 		 </para>
 	       </listitem>
+	       <listitem>
+	         <para>
+	           PORT: Port number or socket filename extension for
+		   Unix-domain connections.
+		 </para>
+               </listitem>
+	       <listitem>
+		 <para>
+		   DATABASE: name of the database you want to access. This one
+		   is called 'dbname' in the &PGSQL; documentation.
+		 </para>
+	       </listitem>
+	       <listitem>
+	         <para>
+	           USER: user name to connect as.
+		 </para>
+               </listitem>
+	       <listitem>
+	         <para>
+	           PASSWORD: password if the connection requires it.
+		 </para>
+               </listitem>
+	       <listitem>
+	         <para>
+	           OPTIONS: trace/debug options to be sent to the server.
+		 </para>
+               </listitem>
+	       <listitem>
+	         <para>
+	           TTY: a file or tty for optional debug output from the
+		   backend.
+		 </para>
+               </listitem>
+	       <listitem>
+	         <para>
+	           REQUIRESSL: set to '1' to force SSL connection to the
+		   backend. Set to '0' to negotiate with server.
+		 </para>
+               </listitem>
 	     </itemizedlist>
+	     The description of the parameters is almost copied from the
+	     &PGSQL; documentation. Refer to it for details on how some
+	     environment variables can also set these parameters.
 	   </para>
 	 </sect3>
         <sect3 id="installation-provider-mysql">
@@ -598,8 +648,84 @@
 	  <para>
 	    It accepts the following arguments in the &DSN;
 	    string:	
+	     <itemizedlist>
+	       <listitem>
+	         <para>
+	           HOST:
+		 </para>
+               </listitem>
+	       <listitem>
+	         <para>
+	           DATABASE:
+		 </para>
+               </listitem>
+	       <listitem>
+	         <para>
+	           USERNAME:
+		 </para>
+               </listitem>
+	       <listitem>
+	         <para>
+	           PASSWORD:
+		 </para>
+               </listitem>
+	       <listitem>
+	         <para>
+	           PORT:
+		 </para>
+               </listitem>
+	       <listitem>
+	         <para>
+	           UNIX_SOCKET:
+		 </para>
+               </listitem>
+	       <listitem>
+	         <para>
+	           FLAGS:
+		 </para>
+               </listitem>
+	     </itemizedlist>
 	  </para>
         </sect3>
+	<sect3 id="installation-provider-sybase">
+	  <title>&SYBASE; Provider</title>
+	  <para>
+	    To use the &GDA; &SYBASE; provider, you'll need
+	    the <application>gda-sybase</application> package.	
+	  </para>
+	  <para>
+	    The &SYBASE; provider accepts the following
+	    arguments in the &GDA; data source's &DSN; string:
+	     <itemizedlist>
+	       <listitem>
+	         <para>
+		   HOST: name of the host where the database server is
+		   running.
+		   </para>
+               </listitem>
+	       <listitem>
+	         <para>
+	           USERNAME: user name to connect as.
+		 </para>
+               </listitem>
+	       <listitem>
+	         <para>
+	           APPNAME:
+		 </para>
+               </listitem>
+	       <listitem>
+	         <para>
+	           PASSWORD: password if the connection requires it.
+		 </para>
+               </listitem>
+	       <listitem>
+		 <para>
+		   DATABASE:
+		 </para>
+	       </listitem>
+	     </itemizedlist>
+	   </para>
+	 </sect3>
       </sect2>
     </sect1>
   </chapter>
