@@ -549,6 +549,7 @@ macros/Makefile
 po/Makefile.in
 doc/Makefile
 doc/C/Makefile
+doc/pt_BR/Makefile
 intl/Makefile
 idl/Makefile
 lib/Makefile
