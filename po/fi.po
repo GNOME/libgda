@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-07-22 12:24+0200\n"
-"PO-Revision-Date: 2003-08-20 06:03+0300\n"
+"POT-Creation-Date: 2004-07-23 19:06+0300\n"
+"PO-Revision-Date: 2004-07-23 19:12+0300\n"
 "Last-Translator: Tommi Vainikainen <Tommi.Vainikainen@iki.fi>\n"
 "Language-Team: Finnish <gnome-fi-laatu@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -52,9 +52,8 @@ msgid "Id"
 msgstr "Tunniste"
 
 #: libgda/gda-config.c:1195
-#, fuzzy
 msgid "Location"
-msgstr "Funktio"
+msgstr "Sijainti"
 
 #: libgda/gda-config.c:1196 libgda/gda-config.c:1455
 #: providers/ibmdb2/gda-ibmdb2-provider.c:863
@@ -99,9 +98,9 @@ msgid "Password"
 msgstr "Salasana"
 
 #: libgda/gda-data-model.c:880
-#, fuzzy, c-format
+#, c-format
 msgid "Data model %p is not updatable"
-msgstr "Tietomallia %p ei voi muokata"
+msgstr "Tietomallia %p ei voi päivittää"
 
 #: libgda/gda-init.c:47
 msgid "Attempt to initialize an already initialized client"
@@ -171,7 +170,7 @@ msgstr "Tiedostoa osoitteessa %s ei voi jäsentää"
 #: libgda/gda-xml-database.c:298
 #, c-format
 msgid "Invalid XML database file '%s'"
-msgstr "Kelvoton XML-tietokanta tiedostossa \"%s\""
+msgstr "Virheellinen XML-tietokanta tiedostossa \"%s\""
 
 #: libgda/gda-xml-database.c:541
 #, c-format
@@ -190,7 +189,7 @@ msgstr "Taulu %s on jo olemassa"
 
 #: libgda/gda-xml-database.c:724
 msgid "Invalid node"
-msgstr "Kelvoton solmu"
+msgstr "Virheellinen solmu"
 
 #: libgda/gda-xml-database.c:766
 #, c-format
@@ -199,26 +198,25 @@ msgstr "Kaksoiskappale <data>-solmulla taulussa %s"
 
 #: libgda/gda-xml-database.c:773
 msgid "Invalid XML node"
-msgstr "Kelvoton XML-solmu"
+msgstr "Virheellinen XML-solmu"
 
 #: libgda/gda-xml-database.c:782
-#, fuzzy
 msgid "Could not add the data from the XML node"
-msgstr "Oracle-parametrikahvaa ei saa"
+msgstr "XML-solmusta ei voitu lisätä tietoa"
 
 #: libsql/sql_parser.c:59
 #, c-format
 msgid "Parse error near `%s'"
-msgstr ""
+msgstr "Jäsennysvirhe \"%s\" lähistöllä"
 
 #: libsql/sql_parser.c:61
 #, c-format
 msgid "Syntax error near `%s'"
-msgstr ""
+msgstr "Syntaksivirhe \"%s\" lähistöllä"
 
 #: libsql/sql_parser.c:361
 msgid "Empty query to parse"
-msgstr ""
+msgstr "Tyhjä kysely jäsennettäväksi"
 
 #: providers/firebird/gda-firebird-provider.c:187
 msgid "No database specified"
@@ -234,12 +232,12 @@ msgstr "Tietokantaa ei määritetty"
 #: providers/firebird/gda-firebird-provider.c:485
 #: providers/firebird/gda-firebird-provider.c:539
 msgid "Invalid Firebird handle"
-msgstr "Kelvoton Firebird-kahva"
+msgstr "Virheellinen Firebird-kahva"
 
 #: providers/firebird/gda-firebird-provider.c:453
 #: providers/firebird/gda-firebird-provider.c:491
 msgid "Invalid transaction handle"
-msgstr "Kelvoton transaktiokahva"
+msgstr "Virheellinen transaktiokahva"
 
 #: providers/firebird/libmain.c:39
 msgid "Provider for FireBird databases"
@@ -268,9 +266,8 @@ msgstr "tds-kontekstin varaus epäonnistui."
 
 #: providers/freetds/gda-freetds-provider.c:275
 #: providers/freetds/gda-freetds-provider.c:277
-#, fuzzy
 msgid "Allocating tds socket failed."
-msgstr "tds-kontekstin varaus epäonnistui."
+msgstr "tds-pistokkeen varaus epäonnistui."
 
 #. gda_freetds_free_connection_data (tds_cnc);
 #: providers/freetds/gda-freetds-provider.c:283
@@ -365,7 +362,7 @@ msgstr "SQLGetInfoa ei tueta. Siispä IBM DB2 -tarjoaja ei toimi.\n"
 #: providers/ibmdb2/gda-ibmdb2-provider.c:688
 #: providers/ibmdb2/gda-ibmdb2-provider.c:763
 msgid "Invalid IBM DB2 handle"
-msgstr "Kelvoton IBM DB2 -kahva"
+msgstr "Virheellinen IBM DB2 -kahva"
 
 #: providers/ibmdb2/gda-ibmdb2-provider.c:741
 msgid "Function"
@@ -513,13 +510,12 @@ msgid "Users"
 msgstr "Käyttäjät"
 
 #: providers/ibmdb2/gda-ibmdb2-types.c:154
-#, fuzzy
 msgid "[BLOB unsupported]"
-msgstr "Ei tuettu"
+msgstr "[BLOB ei tuettu]"
 
 #: providers/ibmdb2/gda-ibmdb2-types.c:157
 msgid "[Unsupported data]"
-msgstr ""
+msgstr "[Ei-tuettua tietoa]"
 
 #: providers/ibmdb2/libmain.c:39
 msgid "Provider for IBMDB2 databases"
@@ -533,7 +529,7 @@ msgstr "Tarjoaja IBMDB2-tietokannoille"
 #: providers/ldap/gda-ldap-recordset.c:58
 #: providers/ldap/gda-ldap-recordset.c:176
 msgid "Invalid LDAP handle"
-msgstr "Kelvoton LDAP-kahva"
+msgstr "Virheellinen LDAP-kahva"
 
 #: providers/ldap/gda-ldap-recordset.c:69
 #: providers/mysql/gda-mysql-recordset.c:139
@@ -584,7 +580,7 @@ msgstr "Tiedostoa %s ei voi avata"
 #: providers/mdb/gda-mdb-provider.c:290 providers/mdb/gda-mdb-provider.c:342
 #: providers/mdb/gda-mdb-provider.c:690 providers/mdb/gda-mdb-provider.c:726
 msgid "Invalid MDB handle"
-msgstr "Kelvoton MDB-kahva"
+msgstr "Virheellinen MDB-kahva"
 
 #: providers/mdb/gda-mdb-provider.c:404 providers/mdb/gda-mdb-provider.c:414
 #: providers/mdb/gda-mdb-provider.c:424
@@ -778,9 +774,9 @@ msgstr "Komentoa \"%s\" ei voi jäsentää"
 #. parsing went fine, but there is no result
 #. (e.g. because of an invalid column name)
 #: providers/mdb/gda-mdb-provider.c:744
-#, fuzzy, c-format
+#, c-format
 msgid "Got no result for '%s' command"
-msgstr "Komentoa \"%s\" ei voi jäsentää"
+msgstr "Komennolta \"%s\" ei saatu tulosta"
 
 #: providers/mdb/gda-mdb-table.c:48 providers/xml/gda-xml-provider.c:519
 #, c-format
@@ -802,7 +798,7 @@ msgstr "Tarjoaja Hughes Technologiesin mSQL-tietokannoille"
 #: providers/msql/gda-msql-recordset.c:50
 #: providers/msql/gda-msql-recordset.c:140
 msgid "Invalid mSQL handle"
-msgstr "Kelvoton mSQL-kahva"
+msgstr "Virheellinen mSQL-kahva"
 
 #: providers/msql/gda-msql-provider.c:318
 msgid "mSQL allows database creation only through the msqladmin tool."
@@ -851,7 +847,7 @@ msgstr "UNIX_SOCKETia ei voi antaa, jos joko HOST tai PORT on jo annettu."
 #: providers/mysql/gda-mysql-recordset.c:128
 #: providers/mysql/gda-mysql-recordset.c:202
 msgid "Invalid MySQL handle"
-msgstr "Kelvoton MySQL-kahva"
+msgstr "Virheellinen MySQL-kahva"
 
 #: providers/mysql/gda-mysql-provider.c:315
 #: providers/mysql/gda-mysql-provider.c:385
@@ -863,7 +859,7 @@ msgstr "Kelvoton MySQL-kahva"
 #: providers/mysql/gda-mysql-provider.c:617
 #: providers/mysql/gda-mysql-provider.c:650
 msgid "Invalid MYSQL handle"
-msgstr "Kelvoton MySQL-kahva"
+msgstr "Virheellinen MySQL-kahva"
 
 #: providers/mysql/gda-mysql-provider.c:565
 #: providers/mysql/gda-mysql-provider.c:622
@@ -896,7 +892,7 @@ msgstr "SQLAllocEnv() ei onnistu..."
 #: providers/odbc/gda-odbc-provider.c:562
 #: providers/odbc/gda-odbc-provider.c:592
 msgid "Invalid Odbc handle"
-msgstr "Kelvoton Odbc-kahva"
+msgstr "Virheellinen Odbc-kahva"
 
 #: providers/odbc/gda-odbc-provider.c:1141
 #: providers/postgres/gda-postgres-provider.c:885
@@ -986,7 +982,7 @@ msgstr "Palvelukontekstissa ei voi asettaa Oracle-istuntomäärettä"
 #: providers/oracle/gda-oracle-recordset.c:390
 #: providers/oracle/gda-oracle-recordset.c:591
 msgid "Invalid Oracle handle"
-msgstr "Kelvoton Oracle-kahva"
+msgstr "Virheellinen Oracle-kahva"
 
 #: providers/oracle/gda-oracle-provider.c:509
 msgid "Could not allocate the Oracle statement handle"
@@ -1214,7 +1210,7 @@ msgstr "Tarjoaja Oracle-tietokannoille"
 #: providers/postgres/gda-postgres-recordset.c:470
 #: providers/postgres/utils.c:178
 msgid "Invalid PostgreSQL handle"
-msgstr "Kelvoton PostgreSQL-kahva"
+msgstr "Virheellinen PostgreSQL-kahva"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/postgres/gda-postgres-provider.c:1230
@@ -1228,19 +1224,19 @@ msgstr "Tietokannat"
 
 #: providers/postgres/gda-postgres-recordset.c:228
 msgid "Given row doesn't belong to the model."
-msgstr ""
+msgstr "Annettu rivi ei kuulu malliin."
 
 #: providers/postgres/gda-postgres-recordset.c:235
 msgid "Table name could not be guessed."
-msgstr ""
+msgstr "Taulun nimeä ei voitu arvata."
 
 #: providers/postgres/gda-postgres-recordset.c:287
 msgid "Model doesn't have at least one non-modified unique key."
-msgstr ""
+msgstr "Mallissa ei ole vähintään yhtä muokkaamatonta uniikkia avainta."
 
 #: providers/postgres/gda-postgres-recordset.c:291
 msgid "Model doesn't have any non-unique values to update."
-msgstr ""
+msgstr "Mallissa ei ole ei-uniikkeja arvoja päivitettäväksi."
 
 #: providers/postgres/gda-postgres-recordset.c:363
 #: providers/sqlite/gda-sqlite-recordset.c:210
@@ -1276,11 +1272,11 @@ msgstr "SQLite-valitsinta empty_result_callbacks ei voi asettaa"
 #: providers/sqlite/gda-sqlite-recordset.c:195
 #: providers/sqlite/gda-sqlite-recordset.c:236
 msgid "Invalid SQLite handle"
-msgstr "Kelvoton SQLite-kahva"
+msgstr "Virheellinen SQLite-kahva"
 
 #: providers/sqlite/gda-sqlite-provider.c:300
 msgid "Invalid SQLITE handle"
-msgstr "Kelvoton SQLite-kahva"
+msgstr "Virheellinen SQLite-kahva"
 
 #: providers/sqlite/gda-sqlite-provider.c:397
 #: providers/sqlite/gda-sqlite-provider.c:412
@@ -1596,14 +1592,11 @@ msgid ") Message: "
 msgstr ") Viesti: "
 
 #: providers/sybase/utils.c:244
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Sybase OpenClient Msg: severity(%ld), number(%ld), origin(%ld), layer(%ld): %"
 "s"
-msgstr ""
-"CT-Asiakasvirhe:\n"
-"\tvakavuus(%ld) taso(%ld) alkuperä (%ld) numero(%ld)\n"
-"\t%s"
+msgstr "Sybase-OpenClient-viesti: vakavuus(%ld), numero(%ld), alkuperä (%ld), taso(%ld): %s"
 
 #: providers/sybase/utils.c:272
 msgid "call to cs_diag failed when attempting to clear the client messages"
@@ -1685,7 +1678,7 @@ msgstr "Joko TIEDOSTONIMI tai HAKEMISTO täytyy määrittää yhteysmerkkijonoss
 #: providers/xbase/gda-xbase-provider.c:261
 #: providers/xbase/gda-xbase-provider.c:379
 msgid "Invalid Xbase handle"
-msgstr "Kelvoton Xbase-kahva"
+msgstr "Virheellinen Xbase-kahva"
 
 #: providers/xbase/libmain.c:39
 msgid "Provider for Xbase (dBase, FoxPro, etc) files"
@@ -1701,12 +1694,12 @@ msgstr ""
 
 #: providers/xml/gda-xml-provider.c:222 providers/xml/gda-xml-provider.c:244
 msgid "Invalid XML handle"
-msgstr "Kelvoton XML-kahva"
+msgstr "Virheellinen XML-kahva"
 
 #: providers/xml/gda-xml-provider.c:263 providers/xml/gda-xml-provider.c:278
 #: providers/xml/gda-xml-provider.c:329
 msgid "Invalid internal handle"
-msgstr "Kelvoton sisäinen kahva"
+msgstr "Virheellinen sisäinen kahva"
 
 #: providers/xml/gda-xml-provider.c:368
 msgid "Not Implemented"
@@ -1714,7 +1707,7 @@ msgstr "Ei toteutettu"
 
 #: providers/xml/gda-xml-provider.c:506 providers/xml/gda-xml-provider.c:512
 msgid "Invalid argument"
-msgstr "Kelvoton argumentti"
+msgstr "Virheellinen argumentti"
 
 #: providers/xml/gda-xml-provider.c:538
 msgid "Could not get description for column"
@@ -1722,92 +1715,84 @@ msgstr "Sarakkeelle ei saa kuvausta"
 
 #. fill the recordset
 #: providers/xml/gda-xml-provider.c:661
-#, fuzzy
 msgid "Big integer"
-msgstr "64-bittinen kokonaisluku"
+msgstr "Suuri kokonaisluku"
 
 #: providers/xml/gda-xml-provider.c:662
 msgid "Big unsigned integer"
-msgstr ""
+msgstr "Suuri etumerkitön kokonaisluku"
 
 #: providers/xml/gda-xml-provider.c:663
 msgid "Binary"
-msgstr ""
+msgstr "Binääri"
 
 #: providers/xml/gda-xml-provider.c:664
-#, fuzzy
 msgid "Boolean"
-msgstr "Totuusarvotyyppi"
+msgstr "Totuusarvo"
 
 #: providers/xml/gda-xml-provider.c:665
-#, fuzzy
 msgid "Date"
-msgstr "Tila"
+msgstr "Päiväys"
 
 #: providers/xml/gda-xml-provider.c:666
-#, fuzzy
 msgid "Double precision"
-msgstr "Kaksoistarkkuusarvot"
+msgstr "Kaksoistarkkuus"
 
 #: providers/xml/gda-xml-provider.c:667
 msgid "Integer"
-msgstr ""
+msgstr "Kokonaisluku"
 
 #: providers/xml/gda-xml-provider.c:668
 msgid "List"
-msgstr ""
+msgstr "Lista"
 
 #: providers/xml/gda-xml-provider.c:669
 msgid "Money"
-msgstr ""
+msgstr "Raha"
 
 #: providers/xml/gda-xml-provider.c:670
-#, fuzzy
 msgid "Numeric"
-msgstr "Numero"
+msgstr "Numeerinen"
 
 #: providers/xml/gda-xml-provider.c:671
 msgid "Point"
-msgstr ""
+msgstr "Piste"
 
 #: providers/xml/gda-xml-provider.c:672
-#, fuzzy
 msgid "Single precision"
-msgstr "Yksitarkkuusarvot"
+msgstr "Yksitarkkuus"
 
 #: providers/xml/gda-xml-provider.c:673
 msgid "Small integer"
-msgstr ""
+msgstr "Pieni kokonaisluku"
 
 #: providers/xml/gda-xml-provider.c:674
 msgid "Small unsigned integer"
-msgstr ""
+msgstr "Pieni etumerkitön kokonaisluku"
 
 #: providers/xml/gda-xml-provider.c:675
 msgid "String"
-msgstr ""
+msgstr "Merkkijono"
 
 #: providers/xml/gda-xml-provider.c:676
-#, fuzzy
 msgid "Time"
-msgstr "Nimi"
+msgstr "Aika"
 
 #: providers/xml/gda-xml-provider.c:677
 msgid "Timestamp"
-msgstr ""
+msgstr "Aikaleima"
 
 #: providers/xml/gda-xml-provider.c:678
-#, fuzzy
 msgid "Tiny integer"
-msgstr "64-bittinen kokonaisluku"
+msgstr "Erittäin pieni kokonaisluku"
 
 #: providers/xml/gda-xml-provider.c:679
 msgid "Tiny unsigned integer"
-msgstr ""
+msgstr "Erittäin pieni etumerkitön kokonaisluku"
 
 #: providers/xml/gda-xml-provider.c:681
 msgid "Unsigned integer"
-msgstr ""
+msgstr "Etumerkitön kokonaisluku"
 
 #: providers/xml/libmain.c:33
 msgid "XML"
@@ -2067,29 +2052,25 @@ msgid "\tgda_params ="
 msgstr "\tgda_parametrit ="
 
 #: providers/bdb/gda-bdb-provider.c:154
-#, fuzzy
 msgid "The FILE parameter is not defined in the connection string."
-msgstr "Tietokannan TIEDOSTONIMI täytyy määrittää yhteysmerkkijonossa"
+msgstr "TIEDOSTONIMI-parametriä ei määritetty yhteysmerkkijonossa."
 
 #: providers/bdb/gda-bdb-provider.c:185
 msgid "-"
-msgstr ""
+msgstr "-"
 
 #: providers/bdb/gda-bdb-provider.c:242 providers/bdb/gda-bdb-provider.c:263
 #: providers/bdb/gda-bdb-provider.c:286
-#, fuzzy
 msgid "Invalid BDB handle"
-msgstr "Kelvoton MDB-kahva"
+msgstr "Virheellinen BDB-kahva"
 
 #: providers/bdb/gda-bdb-recordset.c:242
-#, fuzzy
 msgid "Database is empty"
-msgstr "Tietokannat"
+msgstr "Tietokanta on tyhjä"
 
 #: providers/bdb/libmain.c:39
-#, fuzzy
 msgid "Provider for Berkeley databases"
-msgstr "Tarjoaja Oracle-tietokannoille"
+msgstr "Tarjoaja Berkeley-tietokannoille"
 
 #~ msgid "Sybase OpenClient Msg: severity("
 #~ msgstr "Sybase-OpenClient-viesti: vakavuus("
