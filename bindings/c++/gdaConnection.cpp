@@ -109,7 +109,7 @@ void Connection::addSingleError(Error* error) {
 }
 
 void Connection::addErrorlist(ErrorList* list) {
-	gda_connection_add_errorlist(_gda_connection,list->errors());
+	gda_connection_add_error_list(_gda_connection,list->errors());
 }
 
 gboolean Connection::isOpen() {

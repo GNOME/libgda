@@ -22,6 +22,13 @@
  */
 
 // $Log$
+// Revision 1.10  2001/07/05 22:42:35  rodrigo
+// 2001-07-06  Rodrigo Moya <rodrigo@gnome-db.org>
+//
+// 	* merged libgda-client's GdaError and libgda-server's GdaServerError
+// 	into libgda-common's GdaError, as both classes were exactly the
+// 	same and are useful for both clients and providers
+//
 // Revision 1.9  2001/04/07 08:49:31  rodrigo
 // 2001-04-07  Rodrigo Moya <rodrigo@gnome-db.org>
 //
@@ -73,7 +80,7 @@
 #include "gda-sybase.h"
 #include "ctype.h"
 
-typedef GdaServerRecordset* (*schema_ops_fn)(GdaServerError *,
+typedef GdaServerRecordset* (*schema_ops_fn)(GdaError *,
                                               GdaServerConnection *,
                                               GDA_Connection_Constraint *,
                                               gint);
@@ -84,22 +91,22 @@ schema_ops_fn schema_ops[GDA_Connection_GDCN_SCHEMA_LAST] = {
 
 // schema definitions
 static GdaServerRecordset*
-schema_cols (GdaServerError *,
+schema_cols (GdaError *,
 	     GdaServerConnection *,
 	     GDA_Connection_Constraint *,
 	     gint);
 static GdaServerRecordset*
-schema_procs(GdaServerError *,
+schema_procs(GdaError *,
 	     GdaServerConnection *,
 	     GDA_Connection_Constraint *,
 	     gint);
 static GdaServerRecordset*
-schema_tables (GdaServerError *,
+schema_tables (GdaError *,
 	       GdaServerConnection *,
 	       GDA_Connection_Constraint *,
 	       gint);
 static GdaServerRecordset*
-schema_types (GdaServerError *,
+schema_types (GdaError *,
 	      GdaServerConnection *,
 	      GDA_Connection_Constraint *,
 	      gint);
@@ -157,7 +164,7 @@ gda_sybase_connection_new(GdaServerConnection *cnc)
     gda_sybase_connection_clear_user_data(cnc, TRUE);
     
     // Further initialization, bail out on error
-    //		scnc->error = gda_server_error_new();
+    //		scnc->error = gda_error_new();
     //		if (!scnc->error) {
     //			g_free((gpointer) scnc);
     //			gda_log_error(_("Error allocating error structure"));
@@ -267,7 +274,7 @@ gda_sybase_connection_rollback_transaction(GdaServerConnection *cnc)
 
 GdaServerRecordset *
 gda_sybase_connection_open_schema (GdaServerConnection *cnc,
-				   GdaServerError *error,
+				   GdaError *error,
 				   GDA_Connection_QType t,
 				   GDA_Connection_Constraint *constraints,
 				   gint length)

@@ -21,7 +21,7 @@
 #include "gda-postgres.h"
 #include <ctype.h>
 
-typedef GdaServerRecordset* (*schema_ops_fn)(GdaServerError *,
+typedef GdaServerRecordset* (*schema_ops_fn)(GdaError *,
 											 GdaServerConnection *,
 											 GDA_Connection_Constraint *,
 											 gint );
@@ -257,7 +257,7 @@ gda_postgres_connection_open (GdaServerConnection *cnc,
 		fprintf(stderr, "gda_postgres_connection_open(): DSN=%s\n\tpc=%p and "
 				"pq_conn=%p\n", dsn, pc, pc->pq_conn);
 		if (PQstatus(pc->pq_conn) != CONNECTION_OK) {
-			gda_server_error_make(gda_server_error_new(), NULL, cnc, 
+			gda_server_error_make(gda_error_new(), NULL, cnc, 
 								  __PRETTY_FUNCTION__);
 			return (-1);
 		}
@@ -299,7 +299,7 @@ gda_postgres_connection_open (GdaServerConnection *cnc,
 				if (res) 
 					PQclear(res);
 				pc->types_array = NULL;
-				gda_server_error_make(gda_server_error_new(), 0, cnc, 
+				gda_server_error_make(gda_error_new(), 0, cnc, 
 									  __PRETTY_FUNCTION__);
 				return (-1);
 			}
@@ -461,7 +461,7 @@ gda_postgres_connection_rollback_transaction (GdaServerConnection *cnc)
 /* schemas */
 GdaServerRecordset *
 gda_postgres_connection_open_schema (GdaServerConnection *cnc,
-                                     GdaServerError *error,
+                                     GdaError *error,
                                      GDA_Connection_QType t,
                                      GDA_Connection_Constraint *constraints,
                                      gint length)
@@ -716,7 +716,7 @@ gda_postgres_connection_free (GdaServerConnection *cnc)
 
 
 void
-gda_postgres_error_make (GdaServerError *error,
+gda_postgres_error_make (GdaError *error,
 						 GdaServerRecordset *recset, /* can be NULL! */
 						 GdaServerConnection *cnc,
 						 gchar *where)
@@ -731,26 +731,26 @@ gda_postgres_error_make (GdaServerError *error,
 	if (pc) {
 		pr = gda_server_recordset_get_user_data(recset);
 		if (pr && pr->pq_data)
-			gda_server_error_set_description(error, 
+			gda_error_set_description(error, 
 											 PQresultErrorMessage(pr->pq_data));
 		else {
 			if (pc->pq_conn)
-				gda_server_error_set_description(error, 
+				gda_error_set_description(error, 
 												 PQerrorMessage(pc->pq_conn));
 			else
-				gda_server_error_set_description(error, "NO DESCRIPTION");
+				gda_error_set_description(error, "NO DESCRIPTION");
 		}
 		gda_log_error(_("error '%s' at %s"), 
-					  gda_server_error_get_description(error), where);
+					  gda_error_get_description(error), where);
 		if (pr && pr->pq_data)
-			gda_server_error_set_number(error, PQresultStatus(pr->pq_data));
+			gda_error_set_number(error, PQresultStatus(pr->pq_data));
 		else
-			gda_server_error_set_number(error, 0);
-		gda_server_error_set_source(error, "[gda-postgres]");
-		gda_server_error_set_help_file(error, _("Not available"));
-		gda_server_error_set_help_context(error, _("Not available"));
-		gda_server_error_set_sqlstate(error, _("error"));
-		gda_server_error_set_native(error, gda_server_error_get_description(error));
+			gda_error_set_number(error, 0);
+		gda_error_set_source(error, "[gda-postgres]");
+		gda_error_set_help_url(error, _("Not available"));
+		gda_error_set_help_context(error, _("Not available"));
+		gda_error_set_sqlstate(error, _("error"));
+		gda_error_set_native(error, gda_error_get_description(error));
     }
 }
 
@@ -758,7 +758,7 @@ gda_postgres_error_make (GdaServerError *error,
  * Schema functions
  */
 static GdaServerRecordset *
-schema_tables (GdaServerError *error,
+schema_tables (GdaError *error,
                GdaServerConnection *cnc,
                GDA_Connection_Constraint *constraint,
                gint length)
@@ -846,14 +846,14 @@ schema_tables (GdaServerError *error,
     }
 
 	if (!recset)
-		gda_server_error_set_description(error, _("postgres_recset is NULL"));
+		gda_error_set_description(error, _("postgres_recset is NULL"));
 	return (recset);
 }
 
 
 
 static GdaServerRecordset *
-schema_columns (GdaServerError *error,
+schema_columns (GdaError *error,
                 GdaServerConnection *cnc, 
 				GDA_Connection_Constraint *constraint,
                 gint length)
@@ -954,13 +954,13 @@ schema_columns (GdaServerError *error,
 		add_replacement_function(recset, repl, "bool");
     }
 	else
-		gda_server_error_set_description(error, _("postgres_recset is NULL"));
+		gda_error_set_description(error, _("postgres_recset is NULL"));
 	return (recset);
 }
 
 
 static GdaServerRecordset *
-schema_tab_parents (GdaServerError *error,
+schema_tab_parents (GdaError *error,
 					GdaServerConnection *cnc,
 					GDA_Connection_Constraint *constraint,
 					gint length)
@@ -1036,7 +1036,7 @@ schema_tab_parents (GdaServerError *error,
 
 
 static GdaServerRecordset *
-schema_procedures (GdaServerError *error,
+schema_procedures (GdaError *error,
                    GdaServerConnection *cnc,
                    GDA_Connection_Constraint *constraint,
                    gint length)
@@ -1340,7 +1340,7 @@ schema_procedures (GdaServerError *error,
 }
 
 static GdaServerRecordset *
-schema_proc_params (GdaServerError *error,
+schema_proc_params (GdaError *error,
 					GdaServerConnection *cnc,
 					GDA_Connection_Constraint *constraint,
 					gint length)
@@ -1440,7 +1440,7 @@ schema_proc_params (GdaServerError *error,
 
 /* Updated to work with Postgres 7.0.x */
 static GdaServerRecordset *
-schema_aggregates (GdaServerError *error,
+schema_aggregates (GdaError *error,
                    GdaServerConnection *cnc,
                    GDA_Connection_Constraint *constraint,
                    gint length)
@@ -1556,7 +1556,7 @@ schema_aggregates (GdaServerError *error,
 
 
 static GdaServerRecordset *
-schema_sequences (GdaServerError *error,
+schema_sequences (GdaError *error,
 				  GdaServerConnection *cnc,
 				  GDA_Connection_Constraint *constraint,
 				  gint length)
@@ -1642,7 +1642,7 @@ schema_sequences (GdaServerError *error,
 }
 
 static GdaServerRecordset *
-schema_types (GdaServerError *error,
+schema_types (GdaError *error,
               GdaServerConnection *cnc,
               GDA_Connection_Constraint *constraint,
               gint length)
@@ -1745,7 +1745,7 @@ schema_types (GdaServerError *error,
 
 
 static GdaServerRecordset *
-schema_views (GdaServerError *error,
+schema_views (GdaError *error,
               GdaServerConnection *cnc,
               GDA_Connection_Constraint *constraint,
               gint length)
@@ -1860,7 +1860,7 @@ execute_command (GdaServerConnection *cnc, gchar *cmd)
 			}
 			if (rc != 0)
 				PQclear(rc);
-			gda_server_error_make(gda_server_error_new(), 0, cnc, __PRETTY_FUNCTION__);
+			gda_server_error_make(gda_error_new(), 0, cnc, __PRETTY_FUNCTION__);
 		}
     }
 	return (-1);

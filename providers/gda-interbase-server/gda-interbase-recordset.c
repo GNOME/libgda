@@ -171,7 +171,7 @@ gda_interbase_recordset_move_next (GdaServerRecordset *recset)
 	      gda_server_recordset_set_at_end(recset, TRUE);
 	      return 1;
 	    }
-	  gda_server_error_make(gda_server_error_new(), recset, recset->cnc, __PRETTY_FUNCTION__);
+	  gda_server_error_make(gda_error_new(), recset, recset->cnc, __PRETTY_FUNCTION__);
 	}
     }
   return -1;

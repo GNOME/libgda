@@ -58,7 +58,7 @@ int die(GdaConnection * cnc)
 	errors = gda_connection_get_errors(cnc);
 	for (node = g_list_first(errors); node; node = g_list_next(node)) {
 		error = (GdaError *) node->data;
-		g_print("%s\n", gda_error_description(error));
+		g_print("%s\n", gda_error_get_description(error));
 	}
 	gda_error_list_free(errors);
 	exit(1);

@@ -31,6 +31,7 @@ typedef struct _GdaServerClass         GdaServerClass;
 typedef struct _GdaServerImplFunctions GdaServerImplFunctions;
 
 #include <GDA.h>
+#include <gda-error.h>
 #include <gda-server-connection.h>
 #include <gda-server-command.h>
 #include <gda-server-field.h>
@@ -71,7 +72,7 @@ struct _GdaServerImplFunctions {
 	gint                (*connection_commit_transaction)(GdaServerConnection *cnc);
 	gint                (*connection_rollback_transaction)(GdaServerConnection *cnc);
 	GdaServerRecordset* (*connection_open_schema)(GdaServerConnection *cnc,
-						      GdaServerError *error,
+						      GdaError *error,
 						      GDA_Connection_QType t,
 						      GDA_Connection_Constraint *constraints,
 						      gint length);
@@ -95,7 +96,7 @@ struct _GdaServerImplFunctions {
 	/* Command interface */
 	gboolean            (*command_new)(GdaServerCommand *cmd);
 	GdaServerRecordset* (*command_execute)(GdaServerCommand *cmd,
-					       GdaServerError *error,
+					       GdaError *error,
 					       const GDA_CmdParameterSeq *params,
 					       gulong *affected,
 					       gulong options);
@@ -109,7 +110,7 @@ struct _GdaServerImplFunctions {
 	void     (*recordset_free)     (GdaServerRecordset *recset);
 	
 	/* Error interface */
-	void (*error_make)(GdaServerError *error,
+	void (*error_make)(GdaError *error,
 	                   GdaServerRecordset *recset,
 	                   GdaServerConnection *cnc,
 	                   gchar *where);
@@ -155,8 +156,7 @@ void       gda_server_stop     (GdaServer *server_impl);
 #define    gda_server_get_connections(_simpl_) ((_simpl_) ? (_simpl_)->connections : NULL)
 
 /* for private use */
-gint       gda_server_exception         (CORBA_Environment *ev);
-GDA_Error* gda_server_make_error_buffer (GdaServerConnection *cnc);
+gint       gda_server_exception (CORBA_Environment *ev);
 
 /*
  * Initialization function

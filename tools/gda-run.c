@@ -67,7 +67,7 @@ cnc_error_cb (GdaConnection *cnc, GList *errors, gpointer data)
       GdaError* err = GDA_ERROR(node->data);
       if (err)
         {
-          fprintf(stderr, "%s: error: %s\n", g_get_prgname(), gda_error_description(err));
+          fprintf(stderr, "%s: error: %s\n", g_get_prgname(), gda_error_get_description(err));
         }
       node = g_list_next(node);
     }

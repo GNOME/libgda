@@ -17,7 +17,7 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include "config.h"
+#include "gda-error.h"
 #include "gda-server.h"
 #include "gda-server-private.h"
 
@@ -177,11 +177,7 @@ GDA_ErrorSeq *
 impl_GDA_Connection__get_errors (impl_POA_GDA_Connection * servant,
 				 CORBA_Environment * ev)
 {
-	GDA_ErrorSeq* rc = GDA_ErrorSeq__alloc();
-
-	rc->_length = 0;
-	rc->_buffer = gda_server_make_error_buffer(servant->cnc);
-	return rc;
+	return gda_error_list_to_corba_seq (servant->cnc->errors);
 }
 
 CORBA_long
@@ -266,19 +262,8 @@ impl_GDA_Connection_open (impl_POA_GDA_Connection * servant,
 	if (!servant->cnc)
 		return -1;
 
-	if (gda_server_connection_open(servant->cnc, dsn, user, passwd) != 0) {
-		GDA_DriverError* exception = GDA_DriverError__alloc();
-
-		if (servant->cnc != NULL && servant->cnc->errors != NULL) {
-			exception->errors._length = g_list_length(servant->cnc->errors);
-			exception->errors._buffer = gda_server_make_error_buffer(servant->cnc);
-		}
-		else
-			exception->errors._length = 0;
-		exception->realcommand = CORBA_string_dup(__PRETTY_FUNCTION__);
-		CORBA_exception_set(ev, CORBA_USER_EXCEPTION, ex_GDA_DriverError, exception);
-		return -1;
-	}
+	if (gda_server_connection_open(servant->cnc, dsn, user, passwd) != 0)
+		gda_error_list_to_exception (servant->cnc->errors, ev);
 
 	return 0;
 }
@@ -290,23 +275,20 @@ impl_GDA_Connection_openSchema (impl_POA_GDA_Connection * servant,
 				CORBA_Environment * ev)
 {
 	GdaServerConnection* cnc = servant->cnc;
-	GDA_Recordset             new_recset;
+	GDA_Recordset        new_recset;
 	GdaServerRecordset*  recset;
-	GdaServerError       e;
+	GdaServer            e;
 
 	memset(&e, '\0', sizeof(e));
 	if ((recset = gda_server_connection_open_schema(cnc, &e, t,
 							constraints->_buffer,
 							constraints->_length)) == 0) {
-		GDA_DriverError* exception = GDA_DriverError__alloc();
-		exception->errors._length = g_list_length(servant->cnc->errors);
-		exception->errors._buffer = gda_server_make_error_buffer(servant->cnc);
-		exception->realcommand = CORBA_string_dup(__PRETTY_FUNCTION__);
-		CORBA_exception_set(ev, CORBA_USER_EXCEPTION, ex_GDA_DriverError, exception);
+		gda_error_list_to_exception (cnc->errors, ev);
 		return CORBA_OBJECT_NIL;
-    }
+	}
 	new_recset = impl_GDA_Recordset__create(servant->poa, recset, ev);
 	gda_server_exception(ev);
+
 	return new_recset;
 }
 
@@ -319,14 +301,10 @@ impl_GDA_Connection_modifySchema (impl_POA_GDA_Connection * servant,
 	GdaServerConnection* cnc = servant->cnc;
 
 	if (gda_server_connection_modify_schema(cnc, t, constraints->_buffer, constraints->_length)
-		!= 0) {
-		GDA_DriverError* exception = GDA_DriverError__alloc();
-		exception->errors._length = g_list_length(servant->cnc->errors);
-		exception->errors._buffer = gda_server_make_error_buffer(servant->cnc);
-		exception->realcommand = CORBA_string_dup(__PRETTY_FUNCTION__);
-		CORBA_exception_set(ev, CORBA_USER_EXCEPTION, ex_GDA_DriverError, exception);
+	    != 0) {
+		gda_error_list_to_exception (cnc->errors, ev);
 		return -1;
-    }
+	}
 	if (!gda_server_exception(ev))
 		return -1;
   
@@ -344,8 +322,9 @@ impl_GDA_Connection_createCommand (impl_POA_GDA_Connection * servant,
 	if (gda_server_exception(ev)) {
 		gda_server_command_free(cmd);
 		return CORBA_OBJECT_NIL;
-    }
+	}
 	cmd->cnc = servant->cnc;
+
 	return retval;
 }
 
@@ -373,9 +352,10 @@ impl_GDA_Connection_startLogging (impl_POA_GDA_Connection * servant,
 	GdaServerConnection *cnc = servant->cnc;
 
 	if (gda_server_connection_start_logging(cnc, filename) != -1)
-		return (0);
-	gda_server_error_make(gda_server_error_new(), NULL, cnc, __PRETTY_FUNCTION__);
-	return (-1);
+		return 0;
+	gda_error_list_to_exception (cnc->errors, ev);
+
+	return -1;
 }
 
 CORBA_long
@@ -385,8 +365,9 @@ impl_GDA_Connection_stopLogging (impl_POA_GDA_Connection * servant,
 	GdaServerConnection *cnc = servant->cnc;
 
 	if (gda_server_connection_stop_logging(cnc) != -1)
-		return (0);
-	gda_server_error_make(gda_server_error_new(), NULL, cnc, __PRETTY_FUNCTION__);
+		return 0;
+	gda_error_list_to_exception (cnc->errors, ev);
+
 	return (-1);
 }
 
@@ -437,9 +418,9 @@ free_error_list (GList *list)
 	g_return_if_fail(list != NULL);
 	
 	while ((node = g_list_first(list))) {
-		GdaServerError* error = (GdaServerError *) node->data;
+		GdaError* error = (GdaError *) node->data;
 		list = g_list_remove(list, (gpointer) error);
-		gda_server_error_free(error);
+		gda_error_free(error);
 	}
 }
 
@@ -550,7 +531,7 @@ gda_server_connection_rollback_transaction (GdaServerConnection *cnc)
  */
 GdaServerRecordset *
 gda_server_connection_open_schema (GdaServerConnection *cnc,
-                                   GdaServerError *error,
+                                   GdaError *error,
                                    GDA_Connection_QType t,
                                    GDA_Connection_Constraint *constraints,
                                    gint length)
@@ -758,7 +739,7 @@ gda_server_connection_set_password (GdaServerConnection *cnc, const gchar *passw
  * gda_server_connection_add_error
  */
 void
-gda_server_connection_add_error (GdaServerConnection *cnc, GdaServerError *error)
+gda_server_connection_add_error (GdaServerConnection *cnc, GdaError *error)
 {
 	g_return_if_fail(cnc != NULL);
 	g_return_if_fail(error != NULL);
@@ -776,15 +757,15 @@ gda_server_connection_add_error (GdaServerConnection *cnc, GdaServerError *error
 void
 gda_server_connection_add_error_string (GdaServerConnection *cnc, const gchar *msg)
 {
-	GdaServerError* error;
+	GdaError* error;
 	
 	g_return_if_fail(cnc != NULL);
 	g_return_if_fail(msg != NULL);
 	
-	error = gda_server_error_new();
+	error = gda_error_new();
 	gda_server_error_make(error, NULL, cnc, __PRETTY_FUNCTION__);
-	gda_server_error_set_description(error, msg);
-	gda_server_error_set_native(error, msg);
+	gda_error_set_description(error, msg);
+	gda_error_set_native(error, msg);
 
 	cnc->errors = g_list_append(cnc->errors, (gpointer) error);
 }

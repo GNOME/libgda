@@ -181,8 +181,8 @@ void
 impl_GDA_Command__set_text (impl_POA_GDA_Command * servant,
                             CORBA_char * value,
                             CORBA_Environment * ev) {
-	g_return_if_fail(!CORBA_Object_is_nil(servant, ev));
-	gda_server_command_set_text(servant->cmd, (const gchar *) value);
+	g_return_if_fail (!CORBA_Object_is_nil(servant, ev));
+	gda_server_command_set_text (servant->cmd, (const gchar *) value);
 }
 
 GDA_CommandType
@@ -207,30 +207,20 @@ impl_GDA_Command_open (impl_POA_GDA_Command * servant,
                        GDA_LockType lt,
                        CORBA_unsigned_long * affected,
                        CORBA_Environment * ev) {
-	GDA_Recordset        retval;
+	GDA_Recordset       retval;
 	GdaServerRecordset* recset;
-	GdaServerError*     error;
-	gulong               laffected = 0;
+	GdaError*           error;
+	gulong              laffected = 0;
 	
-	error = gda_server_error_new();
+	error = gda_error_new();
 	recset = gda_server_command_execute(servant->cmd, error, param, &laffected, 0);
 	if (!recset) {
-		if (error->description) {
-			GDA_DriverError* exception = GDA_DriverError__alloc();
-			exception->errors._length = 1;
-			exception->errors._buffer = CORBA_sequence_GDA_Error_allocbuf(1);
-			exception->errors._buffer[0].description = CORBA_string_dup(error->description);
-			exception->errors._buffer[0].number      = error->number;
-			exception->errors._buffer[0].source      = CORBA_string_dup(error->source);
-			exception->errors._buffer[0].sqlstate    = CORBA_string_dup(error->sqlstate);
-			exception->errors._buffer[0].nativeMsg   = CORBA_string_dup(error->native);
-			exception->realcommand = CORBA_string_dup("<Unknown>");
-			CORBA_exception_set(ev, CORBA_USER_EXCEPTION, ex_GDA_DriverError, exception);
-		}
-		gda_server_error_free(error);
+		if (error->description)
+			gda_error_to_exception (error, ev);
+		gda_error_free(error);
 		return CORBA_OBJECT_NIL;
 	}
-	gda_server_error_free(error);
+	gda_error_free(error);
 	if (affected) *affected = laffected;
 	retval = impl_GDA_Recordset__create(servant->poa, recset, ev);
 	gda_server_exception(ev);
@@ -360,7 +350,7 @@ gda_server_command_free (GdaServerCommand *cmd)
  */
 GdaServerRecordset *
 gda_server_command_execute (GdaServerCommand *cmd,
-                            GdaServerError *error,
+                            GdaError *error,
                             const GDA_CmdParameterSeq *params,
                             gulong *affected,
                             gulong options)

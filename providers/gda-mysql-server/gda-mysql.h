@@ -125,7 +125,7 @@ gint gda_mysql_connection_begin_transaction (GdaServerConnection *cnc);
 gint gda_mysql_connection_commit_transaction (GdaServerConnection *cnc);
 gint gda_mysql_connection_rollback_transaction (GdaServerConnection *cnc);
 GdaServerRecordset* gda_mysql_connection_open_schema (GdaServerConnection *cnc,
-						       GdaServerError *error,
+						       GdaError *error,
 						       GDA_Connection_QType t,
 						       GDA_Connection_Constraint *constraints,
 						       gint length);
@@ -150,7 +150,7 @@ void gda_mysql_connection_free (GdaServerConnection *cnc);
 
 gboolean gda_mysql_command_new (GdaServerCommand *cmd);
 GdaServerRecordset* gda_mysql_command_execute (GdaServerCommand *cmd,
-						GdaServerError *error,
+						GdaError *error,
 						const GDA_CmdParameterSeq *params,
 						gulong *affected,
 						gulong options);
@@ -162,7 +162,7 @@ gint     gda_mysql_recordset_move_prev (GdaServerRecordset *recset);
 gint     gda_mysql_recordset_close     (GdaServerRecordset *recset);
 void     gda_mysql_recordset_free      (GdaServerRecordset *recset);
 
-void gda_mysql_error_make (GdaServerError *error,
+void gda_mysql_error_make (GdaError *error,
 			   GdaServerRecordset *recset,
 			   GdaServerConnection *cnc,
 			   gchar *where);

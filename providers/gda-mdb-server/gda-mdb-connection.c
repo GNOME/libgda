@@ -19,16 +19,16 @@
 #include "mdbtools.h"
 #include <ctype.h>
 
-typedef GdaServerRecordset* (*schema_ops_fn)(GdaServerError *,
+typedef GdaServerRecordset* (*schema_ops_fn)(GdaError *,
 					      GdaServerConnection *,
 					      GDA_Connection_Constraint *,
 					      gint );
 
-static GdaServerRecordset* schema_tables (GdaServerError *error,
+static GdaServerRecordset* schema_tables (GdaError *error,
 					   GdaServerConnection *cnc,
 					   GDA_Connection_Constraint *constraints,
 					   gint length);
-static GdaServerRecordset* schema_columns (GdaServerError *error,
+static GdaServerRecordset* schema_columns (GdaError *error,
 					    GdaServerConnection *cnc,
 					    GDA_Connection_Constraint *constraints,
 					    gint length);
@@ -157,7 +157,7 @@ gda_mdb_connection_open (GdaServerConnection *cnc,
       mdb_cnc = mdb_open(t_filename);
       if (!mdb_cnc)
 	{
-	  gda_server_error_make(gda_server_error_new(), 0, cnc, __PRETTY_FUNCTION__);
+	  gda_server_error_make(gda_error_new(), 0, cnc, __PRETTY_FUNCTION__);
 	  return -1;
 	}
 
@@ -209,7 +209,7 @@ gda_mysql_connection_rollback_transaction (GdaServerConnection *cnc)
 
 GdaServerRecordset *
 gda_mysql_connection_open_schema (GdaServerConnection *cnc,
-				 GdaServerError *error,
+				 GdaError *error,
 				 GDA_Connection_QType t,
 				 GDA_Connection_Constraint *constraints,
 				 gint length)
@@ -356,7 +356,7 @@ gda_mysql_connection_free (GdaServerConnection *cnc)
 }
 
 void
-gda_mysql_error_make (GdaServerError *error,
+gda_mysql_error_make (GdaError *error,
 		      GdaServerRecordset *recset,
 		      GdaServerConnection *cnc,
 		      gchar *where)
@@ -368,15 +368,15 @@ gda_mysql_error_make (GdaServerError *error,
   mysql_cnc = (MYSQL_Connection *) gda_server_connection_get_user_data(cnc);
   if (mysql_cnc)
     {
-      gda_server_error_set_description(error, mysql_error(mysql_cnc->mysql));
+      gda_error_set_description(error, mysql_error(mysql_cnc->mysql));
       gda_log_error(_("error '%s' at %s"), gda_server_error_get_description(error), where);
 
-      gda_server_error_set_number(error, mysql_errno(mysql_cnc->mysql));
-      gda_server_error_set_source(error, "[gda-mysql]");
-      gda_server_error_set_help_file(error, _("Not available"));
-      gda_server_error_set_help_context(error, _("Not available"));
-      gda_server_error_set_sqlstate(error, _("error"));
-      gda_server_error_set_native(error, gda_server_error_get_description(error));
+      gda_error_set_number(error, mysql_errno(mysql_cnc->mysql));
+      gda_error_set_source(error, "[gda-mysql]");
+      gda_error_set_help_url(error, "http://www.mysql.org/");
+      gda_error_set_help_context(error, _("Not available"));
+      gda_error_set_sqlstate(error, _("error"));
+      gda_error_set_native(error, gda_server_error_get_description(error));
     }
 }
 
@@ -384,7 +384,7 @@ gda_mysql_error_make (GdaServerError *error,
  * Schema functions
  */
 static GdaServerRecordset *
-schema_tables (GdaServerError *error,
+schema_tables (GdaError *error,
 	       GdaServerConnection *cnc,
 	       GDA_Connection_Constraint *constraints,
 	       gint length)
@@ -424,12 +424,12 @@ schema_tables (GdaServerError *error,
 	}
       else gda_server_error_make(error, 0, cnc, __PRETTY_FUNCTION__);
     }
-  else gda_server_error_set_description(error, _("mysql_recset is NULL"));
+  else gda_error_set_description(error, _("mysql_recset is NULL"));
   return NULL;
 }
 
 static GdaServerRecordset *
-schema_columns (GdaServerError *error,
+schema_columns (GdaError *error,
 	       GdaServerConnection *cnc,
 	       GDA_Connection_Constraint *constraints,
 	       gint length)
@@ -466,6 +466,6 @@ schema_columns (GdaServerError *error,
       if (recset) return recset;
       else gda_server_error_make(error, NULL, cnc, __PRETTY_FUNCTION__);
     }
-  else gda_server_error_set_description(error, _("No table name given for SCHEMA_COLS"));
+  else gda_error_set_description(error, _("No table name given for SCHEMA_COLS"));
   return NULL;
 }

@@ -312,37 +312,3 @@ gda_server_exception (CORBA_Environment *ev)
 	return 0;
 }
 
-GDA_Error *
-gda_server_make_error_buffer (GdaServerConnection *cnc)
-{
-	gint       idx;
-	GList*     ptr;
-	GDA_Error* rc;
-	
-	g_return_val_if_fail(cnc != NULL, CORBA_OBJECT_NIL);
-	
-	rc  = CORBA_sequence_GDA_Error_allocbuf(g_list_length(cnc->errors));
-	idx = 0;
-	ptr = cnc->errors;
-	
-	while (ptr) {
-		GdaServerError* e = (GdaServerError *) ptr->data;
-		
-		rc[idx].description = CORBA_string_dup(e->description);
-		rc[idx].number = e->number;
-		rc[idx].source = CORBA_string_dup(e->source);
-#if 0
-		rc->_buffer[idx].helpfile = CORBA_string_dup(e->helpfile);
-		rc->_buffer[idx].helpctxt = CORBA_string_dup(e->helpctxt);
-#endif
-		rc[idx].sqlstate = CORBA_string_dup(e->sqlstate);
-		rc[idx].nativeMsg   = CORBA_string_dup(e->native);
-		gda_server_error_free(e);
-		ptr = g_list_next(ptr);
-		idx++;
-	}
-	g_list_free(cnc->errors);
-	cnc->errors = NULL;
-	return rc;
-}
-

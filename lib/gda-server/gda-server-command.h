@@ -21,6 +21,7 @@
 #  define __gda_server_command_h__
 
 #include <GDA.h>
+#include <gda-error.h>
 #include <gda-server-connection.h>
 
 #if defined(__cplusplus)
@@ -49,7 +50,7 @@ void                 gda_server_command_set_user_data (GdaServerCommand *cmd,
                                                         gpointer user_data);
 void                 gda_server_command_free (GdaServerCommand *cmd);
 GdaServerRecordset*  gda_server_command_execute (GdaServerCommand *cmd,
-                                                  GdaServerError *error,
+                                                  GdaError *error,
                                                   const GDA_CmdParameterSeq *params,
                                                   gulong *affected,
                                                   gulong options);

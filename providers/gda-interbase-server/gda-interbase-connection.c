@@ -40,7 +40,7 @@ gda_interbase_connection_open (GdaServerConnection *cnc,
                                const gchar *password)
 {
   INTERBASE_Connection* ib_cnc;
-  GdaServerError*  error;
+  GdaError*  error;
 
   g_return_val_if_fail(cnc != NULL, -1);
 
@@ -53,7 +53,7 @@ gda_interbase_connection_open (GdaServerConnection *cnc,
         }
       
       /* return error to client */
-      error = gda_server_error_new();
+      error = gda_error_new();
       gda_server_error_make(error, 0, cnc, __PRETTY_FUNCTION__);
     }
   return -1;
@@ -88,7 +88,7 @@ gda_interbase_connection_begin_transaction (GdaServerConnection *cnc)
 	{
 	  if (isc_start_transaction(ib_cnc->status, &ib_cnc->trans, 1, &ib_cnc->db, 0, NULL))
 	    {
-	      gda_server_error_make(gda_server_error_new(), 0, cnc, __PRETTY_FUNCTION__);
+	      gda_server_error_make(gda_error_new(), 0, cnc, __PRETTY_FUNCTION__);
 	      return -1;
 	    }
 	}
@@ -110,7 +110,7 @@ gda_interbase_connection_commit_transaction (GdaServerConnection *cnc)
       if (ib_cnc->trans)
 	{
 	  if (isc_commit_transaction(ib_cnc->status, &ib_cnc->trans) == 0) return 0;
-	  else gda_server_error_make(gda_server_error_new(), 0, cnc, __PRETTY_FUNCTION__);
+	  else gda_server_error_make(gda_error_new(), 0, cnc, __PRETTY_FUNCTION__);
 	}
       else return 0;
     }
@@ -130,7 +130,7 @@ gda_interbase_connection_rollback_transaction (GdaServerConnection *cnc)
       if (ib_cnc->trans)
 	{
 	  if (isc_rollback_transaction(ib_cnc->status, &ib_cnc->trans) == 0) return 0;
-	  else gda_server_error_make(gda_server_error_new(), 0, cnc, __PRETTY_FUNCTION__);
+	  else gda_server_error_make(gda_error_new(), 0, cnc, __PRETTY_FUNCTION__);
 	}
       else return 0;
     }
@@ -139,7 +139,7 @@ gda_interbase_connection_rollback_transaction (GdaServerConnection *cnc)
 
 GdaServerRecordset *
 gda_interbase_connection_open_schema (GdaServerConnection *cnc,
-                                      GdaServerError *error,
+                                      GdaError *error,
                                       GDA_Connection_QType t,
                                       GDA_Connection_Constraint *constraints,
                                       gint length)
@@ -258,7 +258,7 @@ gda_interbase_connection_free (GdaServerConnection *cnc)
 }
 
 void
-gda_interbase_error_make (GdaServerError *error,
+gda_interbase_error_make (GdaError *error,
                           GdaServerRecordset *recset,
                           GdaServerConnection *cnc,
                           gchar *where)
@@ -272,13 +272,13 @@ gda_interbase_error_make (GdaServerError *error,
       err_msg = g_strdup_printf(_("Error code %ld"), isc_sqlcode(ib_cnc->status));
       gda_log_error(_("error '%s' at %s"), err_msg, where);
 
-      gda_server_error_set_description(error, err_msg);
-      gda_server_error_set_number(error, isc_sqlcode(ib_cnc->status));
-      gda_server_error_set_source(error, "[gda-interbase]");
-      gda_server_error_set_help_file(error, _("Not available"));
-      gda_server_error_set_help_context(error, _("Not available"));
-      gda_server_error_set_sqlstate(error, _("error"));
-      gda_server_error_set_native(error, err_msg);
+      gda_error_set_description(error, err_msg);
+      gda_error_set_number(error, isc_sqlcode(ib_cnc->status));
+      gda_error_set_source(error, "[gda-interbase]");
+      gda_error_set_help_url(error, "http://www.interbase.org/");
+      gda_error_set_help_context(error, _("Not available"));
+      gda_error_set_sqlstate(error, _("error"));
+      gda_error_set_native(error, err_msg);
 
       g_free((gpointer) err_msg);
       isc_print_sqlerror(isc_sqlcode(ib_cnc), ib_cnc->status);

@@ -22,6 +22,13 @@
  */
 
 // $Log$
+// Revision 1.6  2001/07/05 22:42:35  rodrigo
+// 2001-07-06  Rodrigo Moya <rodrigo@gnome-db.org>
+//
+// 	* merged libgda-client's GdaError and libgda-server's GdaServerError
+// 	into libgda-common's GdaError, as both classes were exactly the
+// 	same and are useful for both clients and providers
+//
 // Revision 1.5  2001/04/07 08:49:31  rodrigo
 // 2001-04-07  Rodrigo Moya <rodrigo@gnome-db.org>
 //
@@ -96,7 +103,7 @@ gda_sybase_command_new (GdaServerCommand *cmd)
 
 GdaServerRecordset *
 gda_sybase_command_execute (GdaServerCommand *cmd,
-                            GdaServerError *error,
+                            GdaError *error,
                             const GDA_CmdParameterSeq *params,
                             gulong *affected,
                             gulong options)

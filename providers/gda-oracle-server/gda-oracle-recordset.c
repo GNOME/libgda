@@ -180,7 +180,7 @@ gda_oracle_recordset_move_next (GdaServerRecordset *recset)
 	  return 1;
 	}
     }
-  gda_server_error_make(gda_server_error_new(),
+  gda_server_error_make(gda_error_new(),
 			0,
 			gda_server_recordset_get_connection(recset),
 			__PRETTY_FUNCTION__);
@@ -216,7 +216,7 @@ gda_oracle_recordset_move_prev (GdaServerRecordset *recset)
 	  return 1;
 	}
     }
-  gda_server_error_make(gda_server_error_new(),
+  gda_server_error_make(gda_error_new(),
 			0,
 			gda_server_recordset_get_connection(recset),
 			__PRETTY_FUNCTION__);

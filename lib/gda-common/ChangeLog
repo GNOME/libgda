@@ -1,3 +1,7 @@
+2001-07-05  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-error.[ch]: moved here from the libgda-client library
+
 2001-07-04  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-config.h: GDA_CONFIG_SECTION_LAST_CONNECTIONS moved from

@@ -207,7 +207,7 @@ gda_odbc_command_new (GdaServerCommand *cmd)
 
 GdaServerRecordset *
 gda_odbc_command_execute (GdaServerCommand *cmd,
-			  GdaServerError *error,
+			  GdaError *error,
 			  const GDA_CmdParameterSeq *params,
 			  gulong *affected,
 			  gulong options)
@@ -239,7 +239,7 @@ gda_odbc_command_execute (GdaServerCommand *cmd,
           rc = SQLAllocStmt( od_cnc->hdbc, &odbc_recset->hstmt );
           if( !SQL_SUCCEEDED( rc ))
           {
-            error = gda_server_error_new();
+            error = gda_error_new();
             gda_server_error_make(error, recset, cnc, __PRETTY_FUNCTION__);
 
             return NULL;
@@ -252,7 +252,7 @@ gda_odbc_command_execute (GdaServerCommand *cmd,
 
           if( !SQL_SUCCEEDED( rc ))
           {
-            error = gda_server_error_new();
+            error = gda_error_new();
             gda_server_error_make(error, recset, cnc, __PRETTY_FUNCTION__);
 
             SQLFreeStmt( odbc_recset->hstmt, SQL_DROP );
@@ -265,7 +265,7 @@ gda_odbc_command_execute (GdaServerCommand *cmd,
           rc = SQLNumParams(odbc_recset->hstmt, &nparams);
           if ( !SQL_SUCCEEDED( rc ))
           {
-            error = gda_server_error_new();
+            error = gda_error_new();
             gda_server_error_make(error, recset, cnc, __PRETTY_FUNCTION__);
 
             SQLFreeStmt( odbc_recset->hstmt, SQL_DROP );
@@ -297,7 +297,7 @@ gda_odbc_command_execute (GdaServerCommand *cmd,
             odbc_recset -> sizes = malloc( nparams * sizeof( SQLINTEGER ));
             if ( !odbc_recset -> sizes )
             {
-              error = gda_server_error_new();
+              error = gda_error_new();
               gda_server_error_make(error, recset, cnc, __PRETTY_FUNCTION__);
 
               SQLFreeStmt( odbc_recset->hstmt, SQL_DROP );
@@ -333,7 +333,7 @@ gda_odbc_command_execute (GdaServerCommand *cmd,
 
 	          if ( !SQL_SUCCEEDED( rc ))
 	          {
-                error = gda_server_error_new();
+                error = gda_error_new();
                 gda_server_error_make(error, recset, cnc, __PRETTY_FUNCTION__);
 
                 SQLFreeStmt( odbc_recset->hstmt, SQL_DROP );
@@ -358,7 +358,7 @@ gda_odbc_command_execute (GdaServerCommand *cmd,
 	  
 	          if ( !SQL_SUCCEEDED( rc ))
 	          {
-                error = gda_server_error_new();
+                error = gda_error_new();
                 gda_server_error_make(error, recset, cnc, __PRETTY_FUNCTION__);
 
                 SQLFreeStmt( odbc_recset->hstmt, SQL_DROP );
@@ -374,7 +374,7 @@ gda_odbc_command_execute (GdaServerCommand *cmd,
 
           if( !SQL_SUCCEEDED( rc ))
           {
-            error = gda_server_error_new();
+            error = gda_error_new();
             gda_server_error_make(error, recset, cnc, __PRETTY_FUNCTION__);
 
             SQLFreeStmt( odbc_recset->hstmt, SQL_DROP );

@@ -18,7 +18,7 @@
 
 #include "gda-primebase.h"
 
-typedef GdaServerRecordset* (*schema_ops_fn)(GdaServerError *,
+typedef GdaServerRecordset* (*schema_ops_fn)(GdaError *,
                                               GdaServerConnection *,
                                               GDA_Connection_Constraint *,
                                               gint);
@@ -183,7 +183,7 @@ gda_primebase_connection_rollback_transaction (GdaServerConnection *cnc)
 
 GdaServerRecordset *
 gda_primebase_connection_open_schema (GdaServerConnection *cnc,
-				 GdaServerError *error,
+				 GdaError *error,
 				 GDA_Connection_QType t,
 				 GDA_Connection_Constraint *constraints,
 				 gint length)
@@ -284,7 +284,7 @@ gda_primebase_connection_free (GdaServerConnection *cnc)
 }
 
 void
-gda_primebase_error_make (GdaServerError *error,
+gda_primebase_error_make (GdaError *error,
                           GdaServerRecordset *recset,
                           GdaServerConnection *cnc,
                           gchar *where)
@@ -304,17 +304,17 @@ gda_primebase_error_make (GdaServerError *error,
       errtxt = g_strdup_printf("%2ld: ERROR: %ld (%ld) : %s.",
                                snum, perr, serr, msg);
 		if (errtxt) {
-        gda_server_error_set_description(error, errtxt);
+        gda_error_set_description(error, errtxt);
 		  g_free((gpointer) errtxt);
 		} else {
-        gda_server_error_set_description(error, msg);
+        gda_error_set_description(error, msg);
       }
-		gda_server_error_set_number(error, perr);
-      gda_server_error_set_source(error, "[gda-primebase]");
-      gda_server_error_set_help_file(error, _("Not available"));
-      gda_server_error_set_help_context(error, _("Not available"));
-      gda_server_error_set_sqlstate(error, _("error"));
-      gda_server_error_set_native(error, gda_server_error_get_description(error));
+		gda_error_set_number(error, perr);
+      gda_error_set_source(error, "[gda-primebase]");
+      gda_error_set_help_url(error, _("Not available"));
+      gda_error_set_help_context(error, _("Not available"));
+      gda_error_set_sqlstate(error, _("error"));
+      gda_error_set_native(error, gda_server_error_get_description(error));
     }
   }
 }

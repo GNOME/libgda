@@ -36,7 +36,7 @@ gda_default_command_new (GdaServerCommand *cmd)
 
 GdaServerRecordset *
 gda_default_command_execute (GdaServerCommand *cmd,
-							 GdaServerError *error,
+							 GdaError *error,
 							 const GDA_CmdParameterSeq *params,
 							 gulong *affected,
 							 gulong options)
@@ -104,7 +104,7 @@ gda_default_command_execute (GdaServerCommand *cmd,
 			}
 			else {
 				gda_server_error_make(error, NULL, cnc, __PRETTY_FUNCTION__);
-				gda_server_error_set_description(error, errmsg);
+				gda_error_set_description(error, errmsg);
 				gda_server_recordset_free(recset);
 				recset = NULL;
 			}

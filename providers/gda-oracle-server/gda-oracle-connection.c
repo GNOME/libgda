@@ -19,24 +19,24 @@
 
 #include "gda-oracle.h"
 
-typedef GdaServerRecordset* (*schema_ops_fn)(GdaServerError *,
+typedef GdaServerRecordset* (*schema_ops_fn)(GdaError *,
 					      GdaServerConnection *,
 					      GDA_Connection_Constraint *constraints,
 					      gint length);
 
-static GdaServerRecordset* schema_columns (GdaServerError *error,
+static GdaServerRecordset* schema_columns (GdaError *error,
 					    GdaServerConnection *cnc,
 					    GDA_Connection_Constraint *constraints,
 					    gint length);
-static GdaServerRecordset* schema_procedures (GdaServerError *error,
+static GdaServerRecordset* schema_procedures (GdaError *error,
 					       GdaServerConnection *cnc,
 					       GDA_Connection_Constraint *constraints,
 					       gint length);
-static GdaServerRecordset* schema_tables (GdaServerError *error,
+static GdaServerRecordset* schema_tables (GdaError *error,
 					   GdaServerConnection *cnc,
 					   GDA_Connection_Constraint *constraints,
 					   gint length);
-static GdaServerRecordset* schema_views (GdaServerError *error,
+static GdaServerRecordset* schema_views (GdaError *error,
 					  GdaServerConnection *cnc,
 					  GDA_Connection_Constraint *constraints,
 					  gint length);
@@ -78,7 +78,7 @@ gda_oracle_connection_new (GdaServerConnection *cnc)
                                         (dvoid* (*)(dvoid*, dvoid*, size_t)) 0,
                                         (void (*)(dvoid*, dvoid*)) 0))
         {
-	  gda_server_error_make(gda_server_error_new(), 0, cnc, __PRETTY_FUNCTION__);
+	  gda_server_error_make(gda_error_new(), 0, cnc, __PRETTY_FUNCTION__);
           return FALSE;
         }
       initialize_schema_ops();
@@ -131,7 +131,7 @@ gda_oracle_connection_open (GdaServerConnection *cnc,
 			    const gchar *password)
 {
   ORACLE_Connection* ora_cnc;
-  GdaServerError*   error;
+  GdaError*          error;
 
   g_return_val_if_fail(cnc != NULL, -1);
 
@@ -188,7 +188,7 @@ gda_oracle_connection_open (GdaServerConnection *cnc,
 	}
 
       /* return error to client */
-      error = gda_server_error_new();
+      error = gda_error_new();
       gda_server_error_make(error, 0, cnc, __PRETTY_FUNCTION__);
     }
   return -1;
@@ -216,7 +216,7 @@ gda_oracle_connection_close (GdaServerConnection *cnc)
 	  OCIHandleFree((dvoid *) ora_cnc->herr, OCI_HTYPE_ERROR);
 	  OCIHandleFree((dvoid *) ora_cnc->henv, OCI_HTYPE_ENV);
 	}
-      else gda_server_error_make(gda_server_error_new(), NULL, cnc, __PRETTY_FUNCTION__);
+      else gda_server_error_make(gda_error_new(), NULL, cnc, __PRETTY_FUNCTION__);
     }
 }
 
@@ -235,7 +235,7 @@ gda_oracle_connection_begin_transaction (GdaServerConnection *cnc)
 	{
 	  return 0;
 	}
-      gda_server_error_make(gda_server_error_new(), 0, cnc, __PRETTY_FUNCTION__);
+      gda_server_error_make(gda_error_new(), 0, cnc, __PRETTY_FUNCTION__);
     }
   return -1;
 }
@@ -254,7 +254,7 @@ gda_oracle_connection_commit_transaction (GdaServerConnection *cnc)
 	{
 	  return 0;
 	}
-      gda_server_error_make(gda_server_error_new(), 0, cnc, __PRETTY_FUNCTION__);
+      gda_server_error_make(gda_error_new(), 0, cnc, __PRETTY_FUNCTION__);
     }
   return -1;
 }
@@ -273,14 +273,14 @@ gda_oracle_connection_rollback_transaction (GdaServerConnection *cnc)
 	{
 	  return 0;
 	}
-      gda_server_error_make(gda_server_error_new(), 0, cnc, __PRETTY_FUNCTION__);
+      gda_server_error_make(gda_error_new(), 0, cnc, __PRETTY_FUNCTION__);
     }
   return -1;
 }
 
 GdaServerRecordset *
 gda_oracle_connection_open_schema (GdaServerConnection *cnc,
-				   GdaServerError *error,
+				   GdaError *error,
 				   GDA_Connection_QType t,
 				   GDA_Connection_Constraint *constraints,
 				   gint length)
@@ -419,7 +419,7 @@ gda_oracle_connection_free (GdaServerConnection *cnc)
 }
 
 void
-gda_oracle_error_make (GdaServerError *error,
+gda_oracle_error_make (GdaError *error,
 		     GdaServerRecordset *recset,
 		     GdaServerConnection *cnc,
 		     gchar *where)
@@ -437,18 +437,18 @@ gda_oracle_error_make (GdaServerError *error,
 		(text *) err_msg, (ub4) sizeof(err_msg), OCI_HTYPE_ERROR);
       gda_log_error(_("error '%s' at %s"), err_msg, where);
 
-      gda_server_error_set_description(error, err_msg);
-      gda_server_error_set_number(error, errcode);
-      gda_server_error_set_source(error, "[gda-oracle]");
-      gda_server_error_set_help_file(error, _("Not available"));
-      gda_server_error_set_help_context(error, _("Not available"));
-      gda_server_error_set_sqlstate(error, _("error"));
-      gda_server_error_set_native(error, err_msg);
+      gda_error_set_description(error, err_msg);
+      gda_error_set_number(error, errcode);
+      gda_error_set_source(error, "[gda-oracle]");
+      gda_error_set_help_url(error, _("Not available"));
+      gda_error_set_help_context(error, _("Not available"));
+      gda_error_set_sqlstate(error, _("error"));
+      gda_error_set_native(error, err_msg);
     }
 }
 
 static GdaServerRecordset *
-schema_columns (GdaServerError *error,
+schema_columns (GdaError *error,
 		GdaServerConnection *cnc,
 		GDA_Connection_Constraint *constraint,
 		gint length)
@@ -496,7 +496,7 @@ schema_columns (GdaServerError *error,
 }
 
 static GdaServerRecordset *
-schema_procedures (GdaServerError *error,
+schema_procedures (GdaError *error,
 		   GdaServerConnection *cnc,
 		   GDA_Connection_Constraint *constraints,
 		   gint length)
@@ -566,7 +566,7 @@ schema_procedures (GdaServerError *error,
 }
 
 static GdaServerRecordset *
-schema_tables (GdaServerError *error,
+schema_tables (GdaError *error,
 	       GdaServerConnection *cnc,
 	       GDA_Connection_Constraint *constraints,
 	       gint length)
@@ -649,7 +649,7 @@ schema_tables (GdaServerError *error,
 }
 
 static GdaServerRecordset *
-schema_views (GdaServerError *error,
+schema_views (GdaError *error,
 	      GdaServerConnection *cnc,
 	      GDA_Connection_Constraint *constraints,
 	      gint length)

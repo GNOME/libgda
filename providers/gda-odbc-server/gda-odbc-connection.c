@@ -98,7 +98,7 @@ gda_odbc_connection_open (GdaServerConnection *cnc,
 			  const gchar *password)
 {
   ODBC_Connection* od_cnc;
-  GdaServerError* error;
+  GdaError* error;
   SQLRETURN rc;
 
   g_return_val_if_fail(cnc != NULL, -1);
@@ -110,14 +110,14 @@ gda_odbc_connection_open (GdaServerConnection *cnc,
       rc = SQLAllocEnv(&od_cnc->henv);
       if (!SQL_SUCCEEDED( rc ))
       {
-	    gda_server_error_make(gda_server_error_new(), NULL, cnc, __PRETTY_FUNCTION__);
+	    gda_server_error_make(gda_error_new(), NULL, cnc, __PRETTY_FUNCTION__);
         return -1;
       }
 
       rc = SQLAllocConnect(od_cnc->henv, &od_cnc->hdbc);
       if (!SQL_SUCCEEDED( rc ))
       {
-	    gda_server_error_make(gda_server_error_new(), NULL, cnc, __PRETTY_FUNCTION__);
+	    gda_server_error_make(gda_error_new(), NULL, cnc, __PRETTY_FUNCTION__);
         SQLFreeEnv(od_cnc->henv);
         return -1;
       }
@@ -133,7 +133,7 @@ gda_odbc_connection_open (GdaServerConnection *cnc,
 
       if (!SQL_SUCCEEDED( rc ))
       {
-        error = gda_server_error_new();
+        error = gda_error_new();
         gda_server_error_make(error, 0, cnc, __PRETTY_FUNCTION__);
 
         SQLFreeConnect(od_cnc->hdbc);
@@ -191,7 +191,7 @@ gda_odbc_connection_begin_transaction (GdaServerConnection *cnc)
     }
     else
     {
-        gda_server_error_make(gda_server_error_new(), NULL, cnc, __PRETTY_FUNCTION__);
+        gda_server_error_make(gda_error_new(), NULL, cnc, __PRETTY_FUNCTION__);
         return -1;
     }
   }
@@ -219,7 +219,7 @@ gda_odbc_connection_commit_transaction (GdaServerConnection *cnc)
     }
     else
     {
-        gda_server_error_make(gda_server_error_new(), NULL, cnc, __PRETTY_FUNCTION__);
+        gda_server_error_make(gda_error_new(), NULL, cnc, __PRETTY_FUNCTION__);
         return -1;
     }
   }
@@ -247,7 +247,7 @@ gda_odbc_connection_rollback_transaction (GdaServerConnection *cnc)
     }
     else
     {
-        gda_server_error_make(gda_server_error_new(), NULL, cnc, __PRETTY_FUNCTION__);
+        gda_server_error_make(gda_error_new(), NULL, cnc, __PRETTY_FUNCTION__);
         return -1;
     }
   }
@@ -257,7 +257,7 @@ gda_odbc_connection_rollback_transaction (GdaServerConnection *cnc)
 
 GdaServerRecordset *
 gda_odbc_connection_open_schema (GdaServerConnection *cnc,
-				 GdaServerError *error,
+				 GdaError *error,
 				 GDA_Connection_QType t,
 				 GDA_Connection_Constraint *constraints,
 				 gint length)
@@ -317,7 +317,7 @@ gda_odbc_connection_start_logging (GdaServerConnection *cnc,
     }
     else
     {
-        gda_server_error_make(gda_server_error_new(), NULL, cnc, __PRETTY_FUNCTION__);
+        gda_server_error_make(gda_error_new(), NULL, cnc, __PRETTY_FUNCTION__);
         return -1;
     }
   }
@@ -349,7 +349,7 @@ gda_odbc_connection_stop_logging (GdaServerConnection *cnc)
     }
     else
     {
-        gda_server_error_make(gda_server_error_new(), NULL, cnc, __PRETTY_FUNCTION__);
+        gda_server_error_make(gda_error_new(), NULL, cnc, __PRETTY_FUNCTION__);
         return -1;
     }
   }
@@ -389,7 +389,7 @@ gda_odbc_connection_supports (GdaServerConnection *cnc,
           else
               return TRUE;
       }
-      else gda_server_error_make(gda_server_error_new(), NULL, cnc, __PRETTY_FUNCTION__);
+      else gda_server_error_make(gda_error_new(), NULL, cnc, __PRETTY_FUNCTION__);
     }
   }
   else if (feature == GDA_Connection_FEATURE_PROCS) 
@@ -410,7 +410,7 @@ gda_odbc_connection_supports (GdaServerConnection *cnc,
           else
               return FALSE;
       }
-      else gda_server_error_make(gda_server_error_new(), NULL, cnc, __PRETTY_FUNCTION__);
+      else gda_server_error_make(gda_error_new(), NULL, cnc, __PRETTY_FUNCTION__);
     }
   }
   return FALSE; /* not supported or know nothing about it */
@@ -594,7 +594,7 @@ gda_odbc_connection_free (GdaServerConnection *cnc)
 }
 
 void
-gda_odbc_error_make (GdaServerError *error,
+gda_odbc_error_make (GdaError *error,
 		     GdaServerRecordset *recset,
 		     GdaServerConnection *cnc,
 		     gchar *where)
@@ -619,26 +619,26 @@ gda_odbc_error_make (GdaServerError *error,
                   sqlstate, &native, err_msg, sizeof( err_msg ), &len );
 
           gda_log_error(_("error '%s' at %s"), err_msg, where);
-          gda_server_error_set_source(error, "[gda-odbc]");
-          gda_server_error_set_help_file(error, _("Not available"));
-          gda_server_error_set_help_context(error, _("Not available"));
+          gda_error_set_source(error, "[gda-odbc]");
+          gda_error_set_help_url(error, _("Not available"));
+          gda_error_set_help_context(error, _("Not available"));
           if ( SQL_SUCCEEDED( rc ))
           {
             char sznative[ 20 ];
             
-            gda_server_error_set_description(error, err_msg);
-            gda_server_error_set_sqlstate(error, sqlstate);
+            gda_error_set_description(error, err_msg);
+            gda_error_set_sqlstate(error, sqlstate);
 
             sprintf( sznative, "%d", (int) native );
-            gda_server_error_set_native(error, sznative);
-            gda_server_error_set_number(error, native);
+            gda_error_set_native(error, sznative);
+            gda_error_set_number(error, native);
           }
           else
           {
-            gda_server_error_set_description(error, _("no text"));
-            gda_server_error_set_sqlstate(error, _("no text"));
-            gda_server_error_set_native(error, _("no text"));
-            gda_server_error_set_number(error, 0);
+            gda_error_set_description(error, _("no text"));
+            gda_error_set_sqlstate(error, _("no text"));
+            gda_error_set_native(error, _("no text"));
+            gda_error_set_number(error, 0);
           }
         }
       else
@@ -652,26 +652,26 @@ gda_odbc_error_make (GdaServerError *error,
                   sqlstate, &native, err_msg, sizeof( err_msg ), &len );
 
           gda_log_error(_("error '%s' at %s"), err_msg, where);
-          gda_server_error_set_source(error, "[gda-odbc]");
-          gda_server_error_set_help_file(error, _("Not available"));
-          gda_server_error_set_help_context(error, _("Not available"));
+          gda_error_set_source(error, "[gda-odbc]");
+          gda_error_set_help_url(error, _("Not available"));
+          gda_error_set_help_context(error, _("Not available"));
           if ( SQL_SUCCEEDED( rc ))
           {
             char sznative[ 20 ];
             
-            gda_server_error_set_description(error, err_msg);
-            gda_server_error_set_sqlstate(error, sqlstate);
+            gda_error_set_description(error, err_msg);
+            gda_error_set_sqlstate(error, sqlstate);
 
             sprintf( sznative, "%d", (int) native );
-            gda_server_error_set_native(error, sznative);
-            gda_server_error_set_number(error, native);
+            gda_error_set_native(error, sznative);
+            gda_error_set_number(error, native);
           }
           else
           {
-            gda_server_error_set_description(error, _("no text"));
-            gda_server_error_set_sqlstate(error, _("no text"));
-            gda_server_error_set_native(error, _("no text"));
-            gda_server_error_set_number(error, 0);
+            gda_error_set_description(error, _("no text"));
+            gda_error_set_sqlstate(error, _("no text"));
+            gda_error_set_native(error, _("no text"));
+            gda_error_set_number(error, 0);
           }
         }
     }
@@ -682,14 +682,14 @@ static GdaServerRecordset*  schema_tables(GdaServerRecordset*  recset,
 					  GDA_Connection_Constraint* constraints,
 					  gint length)
 {
-  ODBC_Recordset*   odbc_recset;
-  ODBC_Connection*  od_cnc;
-  SQLRETURN         rc;
-  GdaServerError*  error;
-  gchar*            table_qualifier = NULL;
-  gchar*            table_owner     = NULL;
-  gchar*            table_name      = NULL;
-  gchar*            table_type      = "TABLE";
+  ODBC_Recordset*  odbc_recset;
+  ODBC_Connection* od_cnc;
+  SQLRETURN        rc;
+  GdaError*        error;
+  gchar*           table_qualifier = NULL;
+  gchar*           table_owner     = NULL;
+  gchar*           table_name      = NULL;
+  gchar*           table_type      = "TABLE";
 
   g_return_val_if_fail( recset != NULL, NULL );
   g_return_val_if_fail( cnc != NULL, NULL );
@@ -703,7 +703,7 @@ static GdaServerRecordset*  schema_tables(GdaServerRecordset*  recset,
   rc = SQLAllocStmt( od_cnc->hdbc, &odbc_recset->hstmt );
   if( !SQL_SUCCEEDED( rc ))
   {
-    error = gda_server_error_new();
+    error = gda_error_new();
     gda_server_error_make(error, recset, cnc, __PRETTY_FUNCTION__);
     gda_server_recordset_free(recset);
 
@@ -751,7 +751,7 @@ static GdaServerRecordset*  schema_tables(GdaServerRecordset*  recset,
 
   if( !SQL_SUCCEEDED( rc ))
   {
-    error = gda_server_error_new();
+    error = gda_error_new();
     gda_server_error_make(error, recset, cnc, __PRETTY_FUNCTION__);
 
     SQLFreeStmt( odbc_recset->hstmt, SQL_DROP );
@@ -769,14 +769,14 @@ static GdaServerRecordset*  schema_columns(GdaServerRecordset*  recset,
 					 GDA_Connection_Constraint* constraints,
 					 gint length)
 {
-  ODBC_Recordset*   odbc_recset;
-  ODBC_Connection*  od_cnc;
-  SQLRETURN         rc;
-  GdaServerError*  error;
-  gchar*            table_qualifier = NULL;
-  gchar*            table_owner     = NULL;
-  gchar*            table_name      = NULL;
-  gchar*            column_name     = NULL;
+  ODBC_Recordset*  odbc_recset;
+  ODBC_Connection* od_cnc;
+  SQLRETURN        rc;
+  GdaError*        error;
+  gchar*           table_qualifier = NULL;
+  gchar*           table_owner     = NULL;
+  gchar*           table_name      = NULL;
+  gchar*           column_name     = NULL;
 
   g_return_val_if_fail( recset != NULL, NULL );
   g_return_val_if_fail( cnc != NULL, NULL );
@@ -790,7 +790,7 @@ static GdaServerRecordset*  schema_columns(GdaServerRecordset*  recset,
   rc = SQLAllocStmt( od_cnc->hdbc, &odbc_recset->hstmt );
   if( !SQL_SUCCEEDED( rc ))
   {
-    error = gda_server_error_new();
+    error = gda_error_new();
     gda_server_error_make(error, recset, cnc, __PRETTY_FUNCTION__);
     gda_server_recordset_free(recset);
 
@@ -844,7 +844,7 @@ static GdaServerRecordset*  schema_columns(GdaServerRecordset*  recset,
 
   if( !SQL_SUCCEEDED( rc ))
   {
-    error = gda_server_error_new();
+    error = gda_error_new();
     gda_server_error_make(error, recset, cnc, __PRETTY_FUNCTION__);
 
     SQLFreeStmt( odbc_recset->hstmt, SQL_DROP );
@@ -862,10 +862,10 @@ static GdaServerRecordset*  schema_types(GdaServerRecordset*   recset,
 					 GDA_Connection_Constraint*  constraint,
 					 gint length)
 {
-  ODBC_Recordset*   odbc_recset;
-  ODBC_Connection*  od_cnc;
-  SQLRETURN         rc;
-  GdaServerError*  error;
+  ODBC_Recordset*  odbc_recset;
+  ODBC_Connection* od_cnc;
+  SQLRETURN        rc;
+  GdaError*        error;
 
   g_return_val_if_fail( recset != NULL, NULL );
   g_return_val_if_fail( cnc != NULL, NULL );
@@ -879,7 +879,7 @@ static GdaServerRecordset*  schema_types(GdaServerRecordset*   recset,
   rc = SQLAllocStmt( od_cnc->hdbc, &odbc_recset->hstmt );
   if( !SQL_SUCCEEDED( rc ))
   {
-    error = gda_server_error_new();
+    error = gda_error_new();
     gda_server_error_make(error, recset, cnc, __PRETTY_FUNCTION__);
     gda_server_recordset_free(recset);
 
@@ -894,7 +894,7 @@ static GdaServerRecordset*  schema_types(GdaServerRecordset*   recset,
 
   if( !SQL_SUCCEEDED( rc ))
   {
-    error = gda_server_error_new();
+    error = gda_error_new();
     gda_server_error_make(error, recset, cnc, __PRETTY_FUNCTION__);
 
     SQLFreeStmt( odbc_recset->hstmt, SQL_DROP );
@@ -912,10 +912,10 @@ static GdaServerRecordset*  schema_views(GdaServerRecordset* recset,
 					 GDA_Connection_Constraint* constraint,
 					 gint length)
 {
-  ODBC_Recordset*   odbc_recset;
-  ODBC_Connection*  od_cnc;
-  SQLRETURN         rc;
-  GdaServerError*  error;
+  ODBC_Recordset*  odbc_recset;
+  ODBC_Connection* od_cnc;
+  SQLRETURN        rc;
+  GdaError*        error;
 
   g_return_val_if_fail( recset != NULL, NULL );
   g_return_val_if_fail( cnc != NULL, NULL );
@@ -929,7 +929,7 @@ static GdaServerRecordset*  schema_views(GdaServerRecordset* recset,
   rc = SQLAllocStmt( od_cnc->hdbc, &odbc_recset->hstmt );
   if( !SQL_SUCCEEDED( rc ))
   {
-    error = gda_server_error_new();
+    error = gda_error_new();
     gda_server_error_make(error, recset, cnc, __PRETTY_FUNCTION__);
     gda_server_recordset_free(recset);
 
@@ -950,7 +950,7 @@ static GdaServerRecordset*  schema_views(GdaServerRecordset* recset,
 
   if( !SQL_SUCCEEDED( rc ))
   {
-    error = gda_server_error_new();
+    error = gda_error_new();
     gda_server_error_make(error, recset, cnc, __PRETTY_FUNCTION__);
 
     SQLFreeStmt( odbc_recset->hstmt, SQL_DROP );
@@ -968,10 +968,10 @@ static GdaServerRecordset*  schema_indexes(GdaServerRecordset* recset,
 					 GDA_Connection_Constraint* constraint,
 					 gint length)
 {
-  ODBC_Recordset*   odbc_recset;
-  ODBC_Connection*  od_cnc;
-  SQLRETURN         rc;
-  GdaServerError*  error;
+  ODBC_Recordset*  odbc_recset;
+  ODBC_Connection* od_cnc;
+  SQLRETURN        rc;
+  GdaError*        error;
 
   g_return_val_if_fail( recset != NULL, NULL );
   g_return_val_if_fail( cnc != NULL, NULL );
@@ -985,7 +985,7 @@ static GdaServerRecordset*  schema_indexes(GdaServerRecordset* recset,
   rc = SQLAllocStmt( od_cnc->hdbc, &odbc_recset->hstmt );
   if( !SQL_SUCCEEDED( rc ))
   {
-    error = gda_server_error_new();
+    error = gda_error_new();
     gda_server_error_make(error, recset, cnc, __PRETTY_FUNCTION__);
     gda_server_recordset_free(recset);
 
@@ -1003,7 +1003,7 @@ static GdaServerRecordset*  schema_indexes(GdaServerRecordset* recset,
 
   if( !SQL_SUCCEEDED( rc ))
   {
-    error = gda_server_error_new();
+    error = gda_error_new();
     gda_server_error_make(error, recset, cnc, __PRETTY_FUNCTION__);
 
     SQLFreeStmt( odbc_recset->hstmt, SQL_DROP );
@@ -1021,10 +1021,10 @@ static GdaServerRecordset*  schema_procedures(GdaServerRecordset* recset,
 					 GDA_Connection_Constraint* constraint,
 					 gint length)
 {
-  ODBC_Recordset*   odbc_recset;
-  ODBC_Connection*  od_cnc;
-  SQLRETURN         rc;
-  GdaServerError*  error;
+  ODBC_Recordset*  odbc_recset;
+  ODBC_Connection* od_cnc;
+  SQLRETURN        rc;
+  GdaError*        error;
 
   g_return_val_if_fail( recset != NULL, NULL );
   g_return_val_if_fail( cnc != NULL, NULL );
@@ -1038,7 +1038,7 @@ static GdaServerRecordset*  schema_procedures(GdaServerRecordset* recset,
   rc = SQLAllocStmt( od_cnc->hdbc, &odbc_recset->hstmt );
   if( !SQL_SUCCEEDED( rc ))
   {
-    error = gda_server_error_new();
+    error = gda_error_new();
     gda_server_error_make(error, recset, cnc, __PRETTY_FUNCTION__);
     gda_server_recordset_free(recset);
 
@@ -1056,7 +1056,7 @@ static GdaServerRecordset*  schema_procedures(GdaServerRecordset* recset,
 
   if( !SQL_SUCCEEDED( rc ))
   {
-    error = gda_server_error_new();
+    error = gda_error_new();
     gda_server_error_make(error, recset, cnc, __PRETTY_FUNCTION__);
 
     SQLFreeStmt( odbc_recset->hstmt, SQL_DROP );

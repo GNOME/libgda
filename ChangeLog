@@ -1,3 +1,9 @@
+2001-07-06  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* merged libgda-client's GdaError and libgda-server's GdaServerError
+	into libgda-common's GdaError, as both classes were exactly the
+	same and are useful for both clients and providers
+
 2001-07-05  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* lib/gda-client/Makefile.am:

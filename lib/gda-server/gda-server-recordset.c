@@ -379,7 +379,7 @@ impl_GDA_Recordset_fetch (impl_POA_GDA_Recordset * servant,
 
 		gda_log_error(_("%s: an error ocurred while fetching data"), __PRETTY_FUNCTION__);
 		exception->errors._length = g_list_length(cnc->errors);
-		exception->errors._buffer = gda_server_make_error_buffer(cnc);
+		exception->errors._buffer = gda_error_list_to_corba_seq(cnc->errors);
 		exception->realcommand = CORBA_string_dup("Fetch");
 		CORBA_exception_set(ev, CORBA_USER_EXCEPTION, ex_GDA_DriverError, exception);
 		return chunk;

@@ -22,6 +22,7 @@
 
 typedef struct _GdaServerConnection GdaServerConnection;
 
+#include <gda-error.h>
 #include <gda-server-recordset.h>
 #include <gda-server-error.h>
 
@@ -51,7 +52,7 @@ gchar*               gda_server_connection_get_password (GdaServerConnection *cn
 void                 gda_server_connection_set_password (GdaServerConnection *cnc,
                                                           const gchar *password);
 void                 gda_server_connection_add_error (GdaServerConnection *cnc,
-						      GdaServerError *error);
+						      GdaError *error);
 void                 gda_server_connection_add_error_string (GdaServerConnection *cnc,
                                                               const gchar *msg);
 gpointer             gda_server_connection_get_user_data (GdaServerConnection *cnc);
@@ -67,7 +68,7 @@ gint                 gda_server_connection_begin_transaction (GdaServerConnectio
 gint                 gda_server_connection_commit_transaction (GdaServerConnection *cnc);
 gint                 gda_server_connection_rollback_transaction (GdaServerConnection *cnc);
 GdaServerRecordset*  gda_server_connection_open_schema (GdaServerConnection *cnc,
-                                                         GdaServerError *error,
+                                                         GdaError *error,
                                                          GDA_Connection_QType t,
                                                          GDA_Connection_Constraint *constraints,
                                                          gint length);

@@ -28,7 +28,7 @@ static GdaServerRecordset *
 init_recordset_fields (GdaServerRecordset *recset,
                        ORACLE_Recordset *ora_recset,
                        ORACLE_Command *ora_cmd,
-                       GdaServerError *error) {
+                       GdaError *error) {
 	g_return_val_if_fail(recset != NULL, recset);
 	g_return_val_if_fail(ora_recset != NULL, recset);
 	g_return_val_if_fail(ora_cmd != NULL, recset);
@@ -177,12 +177,12 @@ gda_oracle_command_new (GdaServerCommand *cmd) {
 		                                  OCI_HTYPE_STMT,
 		                                  (size_t) 0,
 		                                  (dvoid **) NULL)) {
-			GdaServerError* error = gda_server_error_new();
+			GdaError* error = gda_error_new();
 			gda_server_error_make(error,
 			                      0,
 			                      gda_server_command_get_connection(cmd),
 			                      __PRETTY_FUNCTION__);
-			gda_server_error_set_description(error, _("Could not allocate statement handle"));
+			gda_error_set_description(error, _("Could not allocate statement handle"));
 			return FALSE;
 		}
 	}
@@ -192,7 +192,7 @@ gda_oracle_command_new (GdaServerCommand *cmd) {
 
 GdaServerRecordset *
 gda_oracle_command_execute (GdaServerCommand *cmd,
-                            GdaServerError *error,
+                            GdaError *error,
                             const GDA_CmdParameterSeq *params,
                             gulong *affected,
                             gulong options) {

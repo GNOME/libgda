@@ -28,7 +28,7 @@
 using namespace gda;
 
 ErrorList::ErrorList(CORBA_Environment* ev) {
-	_errors = gda_errors_from_exception(ev);
+	_errors = gda_error_list_from_exception(ev);
 }
 
 ErrorList::ErrorList(GList *errorList) {

@@ -61,7 +61,7 @@ gda_mdb_command_new (GdaServerCommand *cmd)
 
 GdaServerRecordset *
 gda_mdb_command_execute (GdaServerCommand *cmd,
-			   GdaServerError *error,
+			   GdaError *error,
 			   const GDA_CmdParameterSeq *params,
 			   gulong *affected,
 			   gulong options)

@@ -42,7 +42,7 @@ init_recordset_fields (GdaServerRecordset *recset,
 		
 		/* re-describe statement */
 		if (isc_dsql_describe(ib_cnc->status, &ib_recset->ib_cmd, 1, ib_recset->sqlda)) {
-			gda_server_error_make(gda_server_error_new(), NULL, cnc, __PRETTY_FUNCTION__);
+			gda_server_error_make(gda_error_new(), NULL, cnc, __PRETTY_FUNCTION__);
 			return;
 		}
 		num_cols = ib_recset->sqlda->sqld;
@@ -81,14 +81,14 @@ gda_interbase_command_new (GdaServerCommand *cmd) {
 			return TRUE;
 		}
 		
-		gda_server_error_make(gda_server_error_new(), 0, cmd->cnc, __PRETTY_FUNCTION__);
+		gda_server_error_make(gda_error_new(), 0, cmd->cnc, __PRETTY_FUNCTION__);
 	}
 	return FALSE;
 }
 
 GdaServerRecordset *
 gda_interbase_command_execute (GdaServerCommand *cmd,
-                               GdaServerError *error,
+                               GdaError *error,
                                const GDA_CmdParameterSeq *params,
                                gulong *affected,
                                gulong options) {
@@ -114,7 +114,7 @@ gda_interbase_command_execute (GdaServerCommand *cmd,
 					
 					/* initialize stuff */
 					if (affected) *affected = 0;
-					if (!error) error = gda_server_error_new();
+					if (!error) error = gda_error_new();
 					recset = gda_server_recordset_new(cmd->cnc);
 					ib_recset = (INTERBASE_Recordset *) gda_server_recordset_get_user_data(recset);
 					if (ib_recset) {
@@ -158,7 +158,7 @@ gda_interbase_command_free (GdaServerCommand *cmd) {
 		isc_stmt_handle stmt = (isc_stmt_handle) gda_server_command_get_user_data(cmd);
 		if (stmt) {
 			if (isc_dsql_free_statement(ib_cnc->status, &stmt, DSQL_close))
-				gda_server_error_make(gda_server_error_new(), 0, cmd->cnc, __PRETTY_FUNCTION__);
+				gda_server_error_make(gda_error_new(), 0, cmd->cnc, __PRETTY_FUNCTION__);
 		}
 	}
 }

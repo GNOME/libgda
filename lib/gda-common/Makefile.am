@@ -24,6 +24,7 @@ GDA-skels.c GDA-stubs.c GDA-common.c GDA.h: $(IDLFILES) $(ORBIT_IDL)
 gda_common_headers = \
 	gda-config.h \
 	gda-corba.h \
+	gda-error.h \
 	gda-log.h \
 	gda-thread.h \
 	gda-util.h \
@@ -39,6 +40,7 @@ libgda_common_la_SOURCES = \
 	GDA-stubs.c \
 	gda-config.c \
 	gda-corba.c \
+	gda-error.c \
 	gda-init.c \
 	gda-log.c \
 	gda-thread.c \

@@ -1,5 +1,7 @@
 2001-07-05  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* gda-error.[ch]: moved to libgda-common
+
 	* gda-command.c (gda_command_destroy): properly destroy GtkObject's
 
 2001-07-04  Rodrigo Moya <rodrigo@gnome-db.org>

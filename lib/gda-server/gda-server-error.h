@@ -26,32 +26,10 @@
 extern "C" {
 #endif
 
-typedef struct {
-	gchar* description;
-	glong  number;
-	gchar* source;
-	gchar* helpfile;
-	gchar* helpctxt;
-	gchar* sqlstate;
-	gchar* native;
-} GdaServerError;
-
-GdaServerError* gda_server_error_new              (void);
-gchar*          gda_server_error_get_description  (GdaServerError *error);
-void            gda_server_error_set_description  (GdaServerError *error, const gchar *description);
-glong           gda_server_error_get_number       (GdaServerError *error);
-void            gda_server_error_set_number       (GdaServerError *error, glong number);
-void            gda_server_error_set_source       (GdaServerError *error, const gchar *source);
-void            gda_server_error_set_help_file    (GdaServerError *error, const gchar *helpfile);
-void            gda_server_error_set_help_context (GdaServerError *error, const gchar *helpctxt);
-void            gda_server_error_set_sqlstate     (GdaServerError *error, const gchar *sqlstate);
-void            gda_server_error_set_native       (GdaServerError *error, const gchar *native);
-void            gda_server_error_free             (GdaServerError *error);
-
-void            gda_server_error_make             (GdaServerError *error,
-						   GdaServerRecordset *recset,
-						   GdaServerConnection *cnc,
-						   gchar *where);
+void gda_server_error_make (GdaError *error,
+			    GdaServerRecordset *recset,
+			    GdaServerConnection *cnc,
+			    gchar *where);
 
 #if defined(__cplusplus)
 }

@@ -43,31 +43,31 @@ void Error::setCStruct(GdaError *e) {
 
 
 const gchar* Error::description() {
-	return gda_error_description(_gda_error);
+	return gda_error_get_description(_gda_error);
 }
 
 const glong Error::number() {
-	return gda_error_number(_gda_error);
+	return gda_error_get_number(_gda_error);
 }
 
 const gchar* Error::source() {
-	return gda_error_source(_gda_error);
+	return gda_error_get_source(_gda_error);
 }
 
 const gchar* Error::helpurl() {
-	return gda_error_helpurl(_gda_error);
+	return gda_error_get_help_url(_gda_error);
 }
 
 const gchar* Error::sqlstate() {
-	return gda_error_sqlstate(_gda_error);
+	return gda_error_get_sqlstate(_gda_error);
 }
 
 const gchar* Error::nativeMsg() {
-	return gda_error_nativeMsg(_gda_error);
+	return gda_error_get_native(_gda_error);
 }
 
 const gchar* Error::realcommand() {
-	return gda_error_realcommand(_gda_error);
+	return gda_error_get_real_command(_gda_error);
 }
 
 							     

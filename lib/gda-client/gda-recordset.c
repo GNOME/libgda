@@ -66,7 +66,7 @@ gda_recordset_real_error (GdaRecordset *rs, GList *error_list)
 	g_return_if_fail(GDA_IS_CONNECTION(cnc));
 	
 	if ((cnc = gda_recordset_get_connection(rs))) {
-		gda_connection_add_errorlist(cnc, error_list);
+		gda_connection_add_error_list(cnc, error_list);
 	}
 }
 
@@ -437,22 +437,22 @@ fetch_and_dont_store(GdaRecordset* rs, gint count, gpointer bookmark)
 	
 	CORBA_exception_init(&ev);
 	GDA_Recordset_moveFirst(rs->corba_rs, &ev);
-	error_list = gda_errors_from_exception(&ev);
+	error_list = gda_error_list_from_exception(&ev);
 	if (error_list) {
-		gda_connection_add_errorlist(rs->cnc, error_list);
+		gda_connection_add_error_list(rs->cnc, error_list);
 		return GDA_RECORDSET_INVALID_POSITION;
 	}
 	
 	GDA_Recordset_move(rs->corba_rs, current_idx-1, 0, &ev);
-	error_list = gda_errors_from_exception(&ev);
+	error_list = gda_error_list_from_exception(&ev);
 	if (error_list) {
-		gda_connection_add_errorlist(rs->cnc, error_list);
+		gda_connection_add_error_list(rs->cnc, error_list);
 		return GDA_RECORDSET_INVALID_POSITION;
 	}
 	chunk = GDA_Recordset_fetch(rs->corba_rs, count, &ev);
-	error_list = gda_errors_from_exception(&ev);
+	error_list = gda_error_list_from_exception(&ev);
 	if (error_list) {
-		gda_connection_add_errorlist(rs->cnc, error_list);
+		gda_connection_add_error_list(rs->cnc, error_list);
 		return GDA_RECORDSET_INVALID_POSITION;
 	}
 	
@@ -802,23 +802,23 @@ gda_recordset_open (GdaRecordset* rs,
 	rs->cnc = cmd->connection;
 	rs->corba_rs = GDA_Command_open(cmd->command, corba_parameters,
 	                                cursor_type, lock_type, &affected, &ev);
-	error_list = gda_errors_from_exception(&ev);
+	error_list = gda_error_list_from_exception(&ev);
 	if (error_list) {
 		rs->corba_rs = 0;
-		gda_connection_add_errorlist(rs->cnc, error_list);
+		gda_connection_add_error_list(rs->cnc, error_list);
 		return -1;
 	}
 	
 	if (CORBA_Object_is_nil(rs->corba_rs, &ev)) {
-		error_list = gda_errors_from_exception(&ev);
-		if (error_list) gda_connection_add_errorlist(rs->cnc, error_list);
+		error_list = gda_error_list_from_exception(&ev);
+		if (error_list) gda_connection_add_error_list(rs->cnc, error_list);
 		rs->field_attributes = NULL;
 		return -1;
 	}
 	else rs->field_attributes = GDA_Recordset_describe(rs->corba_rs, &ev);
-	error_list = gda_errors_from_exception(&ev);
+	error_list = gda_error_list_from_exception(&ev);
 	if (error_list) {
-		gda_connection_add_errorlist(rs->cnc, error_list);
+		gda_connection_add_error_list(rs->cnc, error_list);
 		return -1;
 	}
 	rs->open = 1;

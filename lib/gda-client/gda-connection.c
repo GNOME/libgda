@@ -212,68 +212,13 @@ gda_connection_init (GdaConnection* cnc)
 gint
 gda_connection_corba_exception (GdaConnection* cnc, CORBA_Environment* ev)
 {
-	GdaError* error;
-	
-	g_return_val_if_fail(ev != 0, -1);
-	
-	switch (ev->_major) {
-	case CORBA_NO_EXCEPTION:
-		return 0;
-	case CORBA_SYSTEM_EXCEPTION: {
-		CORBA_SystemException* sysexc;
-		
-		sysexc = CORBA_exception_value(ev);
-		error = gda_error_new();
-		error->source = g_strdup("[CORBA System Exception]");
-		switch(sysexc->minor) {
-		case ex_CORBA_COMM_FAILURE:
-			error->description = g_strdup_printf(_("%s: The server didn't respond."),
-							     CORBA_exception_id(ev));
-			break;
-		default:
-			error->description = g_strdup_printf(_("%s: An Error occured in the CORBA system."),
-							     CORBA_exception_id(ev));
-			break;
-		}
-		gda_connection_add_single_error(cnc, error);
-		return -1;
-	}
-	case CORBA_USER_EXCEPTION:
-		if (strcmp(CORBA_exception_id(ev), ex_GDA_NotSupported) == 0) {
-			GDA_NotSupported* not_supported_error;
-			
-			not_supported_error = (GDA_NotSupported*)ev->_params;
-			error = gda_error_new();
-			error->source = g_strdup("[CORBA User Exception]");
-			error->description = g_strdup(not_supported_error->errormsg);
-			gda_connection_add_single_error(cnc, error);
-			return -1;
-		}
-		if (strcmp(CORBA_exception_id(ev), ex_GDA_DriverError) == 0) {
-			GDA_ErrorSeq  error_sequence = ((GDA_DriverError*)ev->_params)->errors;
-			gint          idx;
-				
-			for (idx = 0; idx < error_sequence._length; idx++) {
-				GDA_Error* gda_error = &error_sequence._buffer[idx];
-				
-				error = gda_error_new();
-				if (gda_error->source)
-					error->source = g_strdup(gda_error->source);
-				error->number = gda_error->number;
-				if (gda_error->sqlstate)
-					error->sqlstate = g_strdup(gda_error->sqlstate);
-				if (gda_error->nativeMsg)
-					error->nativeMsg = g_strdup(gda_error->nativeMsg);
-				if (gda_error->description)
-					error->description = g_strdup(gda_error->description);
-				gda_connection_add_single_error(cnc, error);
-			}
-		}
-		return -1;
-	default:
-		g_error("Unknown CORBA exception for connection");
-	}
-	return 0;
+	GList *error_list;
+
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), -1);
+	g_return_val_if_fail (ev != NULL, -1);
+
+	error_list = gda_error_list_from_exception (ev);
+	gda_connection_add_error_list (cnc, error_list);
 }
 
 static int
@@ -550,12 +495,16 @@ gda_connection_open (GdaConnection* cnc, const gchar* dsn, const gchar* user, co
 	else
 		db_to_use = (gchar *) dsn;
 	if (!db_to_use) {
+		gchar *str;
 		GdaError* e = gda_error_new();
 		
-		e->description = g_strdup_printf(_("Database '%s' not found in system configuration"), dsn);
-		e->source = g_strdup("[GDA Client Library]");
-		e->nativeMsg = g_strdup(e->description);
+		str = g_strdup_printf (_("Database '%s' not found in system configuration"), dsn);
+		gda_error_set_description (e, str);
+
+		gda_error_set_source (e, _("[GDA Client Library]"));
+		gda_error_set_native (e, str);
 		gda_connection_add_single_error(cnc, e);
+		g_free (str);
 		return -1;
 	}
 
@@ -567,9 +516,9 @@ gda_connection_open (GdaConnection* cnc, const gchar* dsn, const gchar* user, co
 	if (get_corba_connection(cnc) < 0) {
 		GdaError* e = gda_error_new();
 		
-		e->description = g_strdup(_("Could not open CORBA factory"));
-		e->source = g_strdup("[GDA Client Library]");
-		e->nativeMsg = g_strdup(e->description);
+		gda_error_set_description (e, _("Could not open CORBA factory"));
+		gda_error_set_source (e, _("[GDA Client Library]"));
+		gda_error_set_native (e, e->description);
 		gda_connection_add_single_error(cnc, e);
 		return -1;
 	}
@@ -833,13 +782,13 @@ gda_connection_get_errors (GdaConnection* cnc)
 		gda_connection_corba_exception(cnc, &ev);
 		for (idx = 0; idx < remote_errors->_length; idx++) {
 			GdaError* e;
+
 			e = gda_error_new();
-			e->description = g_strdup(remote_errors->_buffer[idx].description);
-			e->number      = remote_errors->_buffer[idx].number;
-			e->source      = g_strdup(remote_errors->_buffer[idx].source);
-			e->helpurl = 0;
-			e->sqlstate    = g_strdup(remote_errors->_buffer[idx].sqlstate);
-			e->nativeMsg   = g_strdup(remote_errors->_buffer[idx].nativeMsg);
+			gda_error_set_description (e, remote_errors->_buffer[idx].description);
+			gda_error_set_number (e, remote_errors->_buffer[idx].number);
+			gda_error_set_source (e, remote_errors->_buffer[idx].source);
+			gda_error_set_sqlstate (e, remote_errors->_buffer[idx].sqlstate);
+			gda_error_set_native (e, remote_errors->_buffer[idx].nativeMsg);
 			gda_connection_add_single_error(cnc, e);
 		}
 		CORBA_free(remote_errors);
@@ -1050,7 +999,7 @@ gda_connection_add_single_error (GdaConnection* cnc, GdaError* error)
 }
 
 void
-gda_connection_add_errorlist (GdaConnection* cnc, GList* errors)
+gda_connection_add_error_list (GdaConnection* cnc, GList* errors)
 {
 	g_return_if_fail(GDA_IS_CONNECTION(cnc));
 	g_return_if_fail(errors != 0);

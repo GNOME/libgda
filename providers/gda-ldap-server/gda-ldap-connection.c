@@ -52,7 +52,7 @@ gda_ldap_connection_open (GdaServerConnection *cnc,
 			  const gchar *password)
 {
   LDAP_Connection*     ld_cnc;
-  GdaServerError* error;
+  GdaError* error;
   gchar*               ptr_s;
   gchar*               ptr_e;
 
@@ -108,7 +108,7 @@ gda_ldap_connection_open (GdaServerConnection *cnc,
 	}
       
       /* return error to client */
-      error = gda_server_error_new();
+      error = gda_error_new();
       gda_server_error_make(error, 0, cnc, __PRETTY_FUNCTION__);
     }
   return -1;
@@ -173,7 +173,7 @@ gda_ldap_connection_rollback_transaction (GdaServerConnection *cnc)
 
 GdaServerRecordset *
 gda_ldap_connection_open_schema (GdaServerConnection *cnc,
-				 GdaServerError *error,
+				 GdaError *error,
 				 GDA_Connection_QType t,
 				 GDA_Connection_Constraint *constraints,
 				 gint length)
@@ -269,7 +269,7 @@ gda_ldap_connection_free (GdaServerConnection *cnc)
 }
 
 void
-gda_ldap_error_make (GdaServerError *error,
+gda_ldap_error_make (GdaError *error,
 		     GdaServerRecordset *recset,
 		     GdaServerConnection *cnc,
 		     gchar *where)
@@ -283,13 +283,13 @@ gda_ldap_error_make (GdaServerError *error,
       err_msg = ldap_err2string(ld_cnc->ldap->ld_errno);
       gda_log_error(_("error '%s' at %s"), err_msg, where);
 
-      gda_server_error_set_description(error, err_msg);
-      gda_server_error_set_number(error, ld_cnc->ldap->ld_errno);
-      gda_server_error_set_source(error, "[gda-ldap]");
-      gda_server_error_set_help_file(error, _("Not available"));
-      gda_server_error_set_help_context(error, _("Not available"));
-      gda_server_error_set_sqlstate(error, _("error"));
-      gda_server_error_set_native(error, err_msg);
+      gda_error_set_description(error, err_msg);
+      gda_error_set_number(error, ld_cnc->ldap->ld_errno);
+      gda_error_set_source(error, "[gda-ldap]");
+      gda_error_set_help_url(error, _("Not available"));
+      gda_error_set_help_context(error, _("Not available"));
+      gda_error_set_sqlstate(error, _("error"));
+      gda_error_set_native(error, err_msg);
     }
 }
 

@@ -22,16 +22,16 @@
 #include "gda-default.h"
 #include <ctype.h>
 
-typedef GdaServerRecordset* (*schema_ops_fn)(GdaServerError *,
+typedef GdaServerRecordset* (*schema_ops_fn)(GdaError *,
                                               GdaServerConnection *,
                                               GDA_Connection_Constraint *,
                                               gint );
 
-static GdaServerRecordset* schema_tables (GdaServerError *error,
+static GdaServerRecordset* schema_tables (GdaError *error,
                                            GdaServerConnection *cnc,
                                            GDA_Connection_Constraint *constraints,
                                            gint length);
-static GdaServerRecordset* schema_columns (GdaServerError *error,
+static GdaServerRecordset* schema_columns (GdaError *error,
                                             GdaServerConnection *cnc,
                                             GDA_Connection_Constraint *constraints,
                                             gint length);
@@ -215,7 +215,7 @@ gda_default_connection_rollback_transaction (GdaServerConnection *cnc)
 
 GdaServerRecordset *
 gda_default_connection_open_schema (GdaServerConnection *cnc,
-									GdaServerError *error,
+									GdaError *error,
 									GDA_Connection_QType t,
 									GDA_Connection_Constraint *constraints,
 									gint length)
@@ -320,25 +320,25 @@ gda_default_connection_free (GdaServerConnection *cnc)
 }
 
 void
-gda_default_error_make (GdaServerError *error,
+gda_default_error_make (GdaError *error,
 						GdaServerRecordset *recset,
 						GdaServerConnection *cnc,
 						gchar *where)
 {
 	g_return_if_fail(error != NULL);
 
-	gda_server_error_set_source(error, "[gda-default]");
-	gda_server_error_set_help_file(error, "(null)");
-	gda_server_error_set_help_context(error, "(null)");
-	gda_server_error_set_sqlstate(error, where);
-	gda_server_error_set_native(error, where);
+	gda_error_set_source(error, "[gda-default]");
+	gda_error_set_help_url(error, "(null)");
+	gda_error_set_help_context(error, "(null)");
+	gda_error_set_sqlstate(error, where);
+	gda_error_set_native(error, where);
 }
 
 /*
  * Schema functions
  */
 static GdaServerRecordset *
-schema_tables (GdaServerError *error,
+schema_tables (GdaError *error,
                GdaServerConnection *cnc,
                GDA_Connection_Constraint *constraints,
                gint length)
@@ -368,7 +368,7 @@ schema_tables (GdaServerError *error,
 		case GDA_Connection_OBJECT_CATALOG :
 			break;
 		default :
-			gda_server_error_set_description(error, "Invalid constraint type");
+			gda_error_set_description(error, "Invalid constraint type");
 			g_string_free(query, TRUE);
 			break;
 		}
@@ -388,7 +388,7 @@ schema_tables (GdaServerError *error,
 }
 
 static GdaServerRecordset *
-schema_columns (GdaServerError *error,
+schema_columns (GdaError *error,
                 GdaServerConnection *cnc,
                 GDA_Connection_Constraint *constraints,
                 gint length)

@@ -140,7 +140,7 @@ gchar*             gda_connection_create_recordset    (GdaConnection* cnc, GdaRe
 
 gint               gda_connection_corba_exception     (GdaConnection* cnc, CORBA_Environment* ev);
 void               gda_connection_add_single_error    (GdaConnection* cnc, GdaError* error);
-void               gda_connection_add_errorlist       (GdaConnection* cnc, GList* list);
+void               gda_connection_add_error_list      (GdaConnection* cnc, GList* list);
 
 #define            gda_connection_is_open(cnc)        ((cnc) ? GDA_CONNECTION(cnc)->is_open : FALSE)
 #define            gda_connection_get_dsn(cnc)        ((cnc) ? GDA_CONNECTION(cnc)->database : 0)
