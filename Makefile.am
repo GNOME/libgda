@@ -2,7 +2,6 @@ SUBDIRS = \
 	po \
 	idl \
 	lib \
-	bindings \
 	providers \
 	tools \
 	report \

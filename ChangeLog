@@ -1,5 +1,8 @@
 2001-10-31  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* Makefile.am: removed bindings from SUBDIRS. Those will need
+	a good bit of work when refactoring is completed
+
 	* configure.in: added GConf to list of libraries
 
 2001-10-29  Akira TAGOH <tagoh@gnome-db.org>

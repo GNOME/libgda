@@ -464,8 +464,6 @@ lib/Makefile
 lib/gda-common/Makefile
 lib/gda-client/Makefile
 lib/gda-server/Makefile
-bindings/Makefile
-bindings/c++/Makefile
 providers/Makefile
 providers/gda-default-server/Makefile
 providers/gda-odbc-server/Makefile
