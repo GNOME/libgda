@@ -56,6 +56,8 @@ GType           gda_xml_database_get_type (void);
 GdaXmlDatabase *gda_xml_database_new (void);
 GdaXmlDatabase *gda_xml_database_new_from_uri (const gchar *uri);
 
+const gchar    *gda_xml_database_get_uri (GdaXmlDatabase *xmldb);
+void            gda_xml_database_set_uri (GdaXmlDatabase *xmldb, const gchar *uri);
 void            gda_xml_database_changed (GdaXmlDatabase *xmldb);
 void            gda_xml_database_reload (GdaXmlDatabase *xmldb);
 gboolean        gda_xml_database_save (GdaXmlDatabase *xmldb, const gchar *uri);

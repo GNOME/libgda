@@ -1,3 +1,14 @@
+2002-03-21  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* providers/default/gda-default-provider.c (get_types): implemented
+	SCHEMA_TYPES schema.
+	(gda_default_provider_open_connection): don't fail if the file does
+	not exist. Just create an empty database.
+
+	* libgda/gda-xml-database.[ch] (gda_xml_database_get_uri):
+	(gda_xml_database_set_uri): new functions.
+	Added support for queries in the XML database format.
+
 2002-03-20  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* libgda/gda-client.c (gda_client_finalize): call g_object_unref for

@@ -30,16 +30,18 @@ struct _GdaXmlDatabasePrivate {
 	gchar *uri;
 	GHashTable *tables;
 	GHashTable *views;
+	GHashTable *queries;
 };
 
-#define OBJECT_DATABASE    "database"
-#define OBJECT_DATA        "data"
-#define OBJECT_FIELD       "field"
-#define OBJECT_ROW         "row"
-#define OBJECT_TABLE       "table"
-#define OBJECT_TABLES_NODE "tables"
-#define OBJECT_VIEW        "view"
-#define OBJECT_VIEWS_NODE  "views"
+#define OBJECT_DATABASE     "database"
+#define OBJECT_DATA         "data"
+#define OBJECT_FIELD        "field"
+#define OBJECT_QUERIES_NODE "queries"
+#define OBJECT_ROW          "row"
+#define OBJECT_TABLE        "table"
+#define OBJECT_TABLES_NODE  "tables"
+#define OBJECT_VIEW         "view"
+#define OBJECT_VIEWS_NODE   "views"
 
 #define PROPERTY_ALLOW_NULL "isnull"
 #define PROPERTY_GDATYPE    "gdatype"
@@ -66,6 +68,11 @@ static GObjectClass *parent_class = NULL;
 /*
  * Private functions
  */
+
+static void
+process_queries_node (GdaXmlDatabase *xmldb, xmlNodePtr children)
+{
+}
 
 static void
 process_tables_node (GdaXmlDatabase *xmldb, xmlNodePtr children)
@@ -118,6 +125,7 @@ gda_xml_database_init (GdaXmlDatabase *xmldb, GdaXmlDatabaseClass *klass)
 	xmldb->priv->uri = NULL;
 	xmldb->priv->tables = g_hash_table_new (g_str_hash, g_str_equal);
 	xmldb->priv->views = g_hash_table_new (g_str_hash, g_str_equal);
+	xmldb->priv->queries = g_hash_table_new (g_str_hash, g_str_equal);
 }
 
 static void
@@ -146,6 +154,9 @@ gda_xml_database_finalize (GObject *object)
 
 	g_hash_table_destroy (xmldb->priv->views);
 	xmldb->priv->views = NULL;
+
+	g_hash_table_destroy (xmldb->priv->queries);
+	xmldb->priv->queries = NULL;
 
 	g_free (xmldb->priv);
 	xmldb->priv = NULL;
@@ -246,6 +257,8 @@ gda_xml_database_new_from_uri (const gchar *uri)
 			process_tables_node (xmldb, children);
 		else if (!strcmp (node->name, OBJECT_VIEWS_NODE))
 			process_views_node (xmldb, children);
+		else if (!strcmp (node->name, OBJECT_QUERIES_NODE))
+			process_queries_node (xmldb, children);
 		else {
 			//gda_log_error (_("Invalid XML database file '%s'"), uri);
 			//g_object_unref (G_OBJECT (xmldb));
@@ -256,6 +269,37 @@ gda_xml_database_new_from_uri (const gchar *uri)
 	}
 
 	return xmldb;
+}
+
+/**
+ * gda_xml_database_get_uri
+ * @xmldb: XML database.
+ *
+ * Return the URI associated with the given XML database. This URI will
+ * be used when saving the XML database (#gda_xml_database_save) and no
+ * URI is given.
+ *
+ * Returns: the URI for the XML database.
+ */
+const gchar *
+gda_xml_database_get_uri (GdaXmlDatabase *xmldb)
+{
+	g_return_val_if_fail (GDA_IS_XML_DATABASE (xmldb), NULL);
+	return xmldb->priv->uri;
+}
+
+/**
+ * gda_xml_database_set_uri
+ * @xmldb: XML database.
+ */
+void
+gda_xml_database_set_uri (GdaXmlDatabase *xmldb, const gchar *uri)
+{
+	g_return_if_fail (GDA_IS_XML_DATABASE (xmldb));
+
+	if (xmldb->priv->uri)
+		g_free (xmldb->priv->uri);
+	xmldb->priv->uri = g_strdup (uri);
 }
 
 /**

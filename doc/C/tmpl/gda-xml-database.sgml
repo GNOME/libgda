@@ -37,6 +37,24 @@ GdaXmlDatabase
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_xml_database_get_uri ##### -->
+<para>
+
+</para>
+
+@xmldb: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_xml_database_set_uri ##### -->
+<para>
+
+</para>
+
+@xmldb: 
+@uri: 
+
+
 <!-- ##### FUNCTION gda_xml_database_changed ##### -->
 <para>
 

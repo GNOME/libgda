@@ -61,3 +61,11 @@ GdaClient
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_client_close_all_connections ##### -->
+<para>
+
+</para>
+
+@client: 
+
+

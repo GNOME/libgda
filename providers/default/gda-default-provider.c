@@ -164,8 +164,8 @@ gda_default_provider_open_connection (GdaServerProvider *provider,
 	/* open the given filename */
 	xmldb = gda_xml_database_new_from_uri ((const gchar *) t_uri);
 	if (!xmldb) {
-		gda_server_connection_add_error_string (cnc, _("Could not open given file"));
-		return FALSE;
+		xmldb = gda_xml_database_new ();
+		gda_xml_database_set_uri (xmldb, t_uri);
 	}
 
 	g_object_set_data (G_OBJECT (cnc), OBJECT_DATA_DEFAULT_HANDLE, xmldb);
@@ -355,6 +355,58 @@ get_tables (GdaServerConnection *cnc, GdaXmlDatabase *xmldb)
 	return GDA_SERVER_RECORDSET (recset);
 }
 
+static void
+add_string_row (GdaServerRecordsetModel *recset, const gchar *str)
+{
+	GdaValue *value;
+	GList list;
+
+	g_return_if_fail (GDA_IS_SERVER_RECORDSET_MODEL (recset));
+
+	value = gda_value_new_string (str);
+	list.data = value;
+	list.next = NULL;
+	list.prev = NULL;
+
+	gda_server_recordset_model_append_row (recset, &list);
+
+	gda_value_free (value);
+}
+
+static GdaServerRecordset *
+get_types (GdaServerConnection *cnc)
+{
+	GdaServerRecordsetModel *recset;
+
+	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), NULL);
+
+	/* create the recordset */
+	recset = (GdaServerRecordsetModel *) gda_server_recordset_model_new (cnc, 1);
+	gda_server_recordset_model_set_field_defined_size (recset, 0, 32);
+	gda_server_recordset_model_set_field_name (recset, 0, _("Type"));
+	gda_server_recordset_model_set_field_scale (recset, 0, 0);
+	gda_server_recordset_model_set_field_gdatype (recset, 0, GDA_TYPE_STRING);
+
+	/* fill the recordset */
+	add_string_row (recset, "bigint");
+	add_string_row (recset, "binary");
+	add_string_row (recset, "boolean");
+	add_string_row (recset, "date");
+	add_string_row (recset, "double");
+	add_string_row (recset, "integer");
+	add_string_row (recset, "list");
+	add_string_row (recset, "numeric");
+	add_string_row (recset, "point");
+	add_string_row (recset, "single");
+	add_string_row (recset, "smallint");
+	add_string_row (recset, "string");
+	add_string_row (recset, "time");
+	add_string_row (recset, "timestamp");
+	add_string_row (recset, "tinyint");
+
+	return GDA_SERVER_RECORDSET (recset);
+}
+
 /* get_schema handler for the GdaDefaultProvider class */
 static GdaServerRecordset *
 gda_default_provider_get_schema (GdaServerProvider *provider,
@@ -374,6 +426,8 @@ gda_default_provider_get_schema (GdaServerProvider *provider,
 	switch (schema) {
 	case GNOME_Database_Connection_SCHEMA_TABLES :
 		return get_tables (cnc, xmldb);
+	case GNOME_Database_Connection_SCHEMA_TYPES :
+		return get_types (cnc);
 	default :
 	}
 

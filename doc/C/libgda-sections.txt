@@ -30,6 +30,7 @@ gda_client_new
 gda_client_open_connection
 gda_client_get_connection_list
 gda_client_find_connection
+gda_client_close_all_connections
 <SUBSECTION Standard>
 GDA_CLIENT
 GDA_IS_CLIENT
@@ -288,6 +289,8 @@ GdaXmlDatabasePrivate
 <TITLE>GdaXmlDatabase</TITLE>
 gda_xml_database_new
 gda_xml_database_new_from_uri
+gda_xml_database_get_uri
+gda_xml_database_set_uri
 gda_xml_database_changed
 gda_xml_database_reload
 gda_xml_database_save
