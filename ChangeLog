@@ -1,3 +1,9 @@
+2005-02-18  Caolan McNamara <caolanm@redhat.com>
+
+	Fixes #167700
+
+	* libsql/Makefile.am: set version-info on libgdasql.
+
 2005-02-10  Álvaro Peña  <alvaropg@telefonica.net>
 
 	* libgda/gda-data-model-array.c:
