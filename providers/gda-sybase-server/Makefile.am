@@ -5,14 +5,16 @@ INCLUDES = \
 	-I. \
 	$(GDA_PROVIDER_CFLAGS) \
 	-I$(top_builddir)/lib/gda-common \
-	-I$(top_builddir)/lib/gda-server
+	-I$(top_builddir)/lib/gda-server \
+	$(SYBASE_CFLAGS)
 
 gda_sybase_srv_SOURCES = main-sybase.c
 gda_sybase_srv_LDADD = \
 	$(GDA_PROVIDER_LIBS) \
 	$(top_builddir)/lib/gda-common/libgda-common.la \
 	$(top_builddir)/lib/gda-server/libgda-server.la \
-	$(top_builddir)/providers/gda-sybase-server/libgda-sybase.la
+	$(top_builddir)/providers/gda-sybase-server/libgda-sybase.la \
+	$(SYBASE_LIBS)
 
 libgda_sybase_la_SOURCES = \
 	gda-sybase-command.c \

@@ -5,14 +5,16 @@ INCLUDES = \
 	-I. \
 	$(GDA_PROVIDER_CFLAGS) \
 	-I$(top_builddir)/lib/gda-common \
-	-I$(top_builddir)/lib/gda-server
+	-I$(top_builddir)/lib/gda-server \
+	$(INTERBASE_CFLAGS)
 
 gda_interbase_srv_SOURCES = main-interbase.c
 gda_interbase_srv_LDADD = \
 	$(GDA_PROVIDER_LIBS) \
 	$(top_builddir)/lib/gda-common/libgda-common.la \
 	$(top_builddir)/lib/gda-server/libgda-server.la \
-	$(top_builddir)/providers/gda-interbase/libgda-interbase.la
+	$(top_builddir)/providers/gda-interbase-server/libgda-interbase.la \
+	$(INTERBASE_LIBS)
 
 libgda_interbase_la_SOURCES = \
 	gda-interbase-command.c \
