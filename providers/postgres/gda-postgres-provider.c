@@ -88,7 +88,12 @@ static GdaDataModel *gda_postgres_provider_get_schema (GdaServerProvider *provid
 static gboolean gda_postgres_provider_create_blob (GdaServerProvider *provider,
 						   GdaConnection *cnc,
 						   GdaBlob *blob);
-
+static gboolean gda_postgres_provider_escape_string (GdaServerProvider *provider,
+						     GdaConnection *cnc,
+						     gchar *from,
+						     const gchar *to,
+						     unsigned long length);
+				 		 
 typedef struct {
 	gchar *col_name;
 	GdaValueType data_type;
@@ -141,6 +146,7 @@ gda_postgres_provider_class_init (GdaPostgresProviderClass *klass)
 	provider_class->supports = gda_postgres_provider_supports;
 	provider_class->get_schema = gda_postgres_provider_get_schema;
 	provider_class->create_blob = gda_postgres_provider_create_blob;
+	provider_class->escape_string = gda_postgres_provider_escape_string;
 }
 
 static void
@@ -2090,3 +2096,19 @@ static gboolean gda_postgres_provider_create_blob (GdaServerProvider *provider,
 	return gda_postgres_blob_create (blob, cnc);
 }
 
+
+
+gboolean
+gda_postgres_provider_escape_string (GdaServerProvider *provider,
+				     GdaConnection *cnc,
+				     gchar *from,
+				     const gchar *to,
+				     unsigned long length)
+{
+	g_return_val_if_fail (GDA_IS_MYSQL_PROVIDER (provider), FALSE);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (from != NULL, FALSE);
+	g_return_val_if_fail (to != NULL, FALSE);
+
+	return (unsigned long)  PQescapeString (to, (const char *) from, (size_t) length);
+}
