@@ -1,5 +1,5 @@
-idl_files=GDA_Report.idl
+idldir = $(datadir)/idl
+idl_DATA= \
+	GNOME_Database_Report.idl
 
-EXTRA_DIST = $(idl_files)
-
-all:
+EXTRA_DIST = $(idl_DATA)
