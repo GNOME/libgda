@@ -1,5 +1,7 @@
 2001-10-10  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* gda-server-connection.[ch]: re-added
+
 	* gda-server-provider.c (gda_server_provider_open_connection): impl
 	(gda_server_provider_close_connection): impl
 
