@@ -120,7 +120,7 @@ gda_xml_item_finalize (GObject *object)
 	g_free (item->priv);
 	item->priv = NULL;
 
-	parent_class = G_OBJECT_CLASS (g_type_peek_class_parent (G_TYPE_OBJECT));
+	parent_class = G_OBJECT_CLASS (g_type_class_peek (G_TYPE_OBJECT));
 	if (parent_class && parent_class->finalize)
 		parent_class->finalize (object);
 }

@@ -163,7 +163,7 @@ gda_xml_document_finalize (GObject *object)
 	xmlFreeDoc (xmldoc->doc);
 	xmldoc->doc = NULL;
 
-	parent_class = G_OBJECT_CLASS (g_type_peek_class_parent (GDA_TYPE_XML_DOCUMENT));
+	parent_class = G_OBJECT_CLASS (g_type_class_peek (G_TYPE_OBJECT));
 	if (parent_class && parent_class->finalize)
 		parent_class->finalize (object);
 }

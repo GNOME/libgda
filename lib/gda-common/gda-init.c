@@ -43,5 +43,64 @@ gda_init (const gchar * app_id, const gchar * version, gint nargs,
 	if (!bonobo_init (gda_corba_get_orb (), NULL, NULL))
 		g_error (_("Could not initialize Bonobo"));
 
+	bonobo_activate ();
+
 	initialized = TRUE;
+}
+
+typedef struct {
+	GdaInitFunc init_func;
+	gpointer user_data;
+} InitCbData;
+
+static gboolean
+idle_cb (gpointer user_data)
+{
+	InitCbData *cb_data = (InitCbData *) user_data;
+
+	g_return_val_if_fail (cb_data != NULL, FALSE);
+
+	if (cb_data->init_func)
+		cb_data->init_func (cb_data->user_data);
+
+	g_free (cb_data);
+
+	return FALSE;
+}
+
+/**
+ * gda_main_run
+ * @init_func: function to be called when everything has been initialized
+ * @user_data: data to be passed to the init function
+ *
+ * Runs the GDA main loop, which is nothing more than the Bonobo main
+ * loop, but with internally added stuff specific for applications using
+ * libgda.
+ *
+ * You can specify a function to be called after everything has been correctly
+ * initialized (that is, for initializing your own stuff).
+ */
+void
+gda_main_run (GdaInitFunc init_func, gpointer user_data)
+{
+	if (init_func) {
+		InitCbData *cb_data;
+
+		cb_data = g_new (InitCbData, 1);
+		cb_data->init_func = init_func;
+		cb_data->user_data = user_data;
+
+		g_idle_add ((GSourceFunc) idle_cb, cb_data);
+	}
+
+	bonobo_main ();
+}
+
+/**
+ * gda_main_quit
+ */
+void
+gda_main_quit (void)
+{
+	bonobo_main_quit ();
 }

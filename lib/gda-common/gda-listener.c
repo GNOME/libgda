@@ -108,7 +108,7 @@ gda_listener_finalize (GObject * object)
 	/* free memory */
 	g_free (listener->priv);
 
-	parent_class = g_type_peek_class_parent (BONOBO_X_OBJECT_TYPE);
+	parent_class = g_type_class_peek (BONOBO_X_OBJECT_TYPE);
 	if (parent_class && parent_class->finalize)
 		parent_class->finalize (object);
 }

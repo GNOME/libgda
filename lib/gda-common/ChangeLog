@@ -1,5 +1,7 @@
 2001-08-22  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* gda-init.c (gda_main_run, gda_main_quit): new functions
+
 	* gda-xml-database.c: cleaned up all remaining GTK stuff
 
 	* gda-xml-document.[ch]: switched to GObject

@@ -21,6 +21,7 @@
 #include <string.h>
 #include <bonobo-activation/bonobo-activation.h>
 #include <bonobo-config/bonobo-config-database.h>
+#include <bonobo/bonobo-exception.h>
 #include <bonobo/bonobo-moniker-util.h>
 #include <bonobo/bonobo-listener.h>
 #include <bonobo/bonobo-property-bag-client.h>

@@ -76,7 +76,7 @@ gda_xml_list_item_finalize (GObject *object)
 	unref_list (list_item->priv->list);
 	g_free (list_item->priv);
 
-	parent_class = G_OBJECT_CLASS (g_type_peek_class_parent (GDA_TYPE_XML_LIST_ITEM));
+	parent_class = G_OBJECT_CLASS (g_type_class_peek (GDA_TYPE_XML_ITEM));
 	if (parent_class && parent_class->finalize)
 		parent_class->finalize (object);
 }
@@ -146,7 +146,7 @@ gda_xml_list_item_to_dom (GdaXmlItem * item, xmlNodePtr parent_node)
 
 	g_return_val_if_fail (GDA_IS_XML_LIST_ITEM (list_item), NULL);
 
-	item_class = GDA_XML_ITEM_CLASS (g_type_peek_class_parent (GDA_TYPE_XML_LIST_ITEM));
+	item_class = GDA_XML_ITEM_CLASS (g_type_class_peek (GDA_TYPE_XML_ITEM));
 	if (item_class && item_class->to_dom) {
 		node = item_class->to_dom (item, parent_node);
 		g_slist_foreach (list_item->priv->list,
@@ -169,7 +169,7 @@ gda_xml_list_item_find_id (GdaXmlItem * item, const gchar * id)
 
 	g_return_val_if_fail (GDA_IS_XML_LIST_ITEM (list_item), NULL);
 
-	item_class = GDA_XML_ITEM_CLASS (g_type_peek_class_parent (GDA_TYPE_XML_LIST_ITEM));
+	item_class = GDA_XML_ITEM_CLASS (g_type_class_peek (GDA_TYPE_XML_ITEM));
 	if (item_class && item_class->find_id) {
 		id_item = item_class->find_id (item, id);
 		if (id_item != NULL)

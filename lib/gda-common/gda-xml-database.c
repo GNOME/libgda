@@ -99,7 +99,7 @@ gda_xml_database_finalize (GObject *object)
 	g_free (xmldb->priv);
 	xmldb->priv = NULL;
 
-	parent_class = G_OBJECT_CLASS (g_type_peek_class_parent (GDA_TYPE_XML_DATABASE));
+	parent_class = G_OBJECT_CLASS (g_type_class_peek (GDA_TYPE_XML_DOCUMENT));
 	if (parent_class && parent_class->finalize)
 		parent_class->finalize (object);
 }
