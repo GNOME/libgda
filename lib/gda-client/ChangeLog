@@ -1,3 +1,7 @@
+2000-11-24	Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* added correct license notices (LGPL) to source files
+
 2000-11-06	Rodrigo Moya <rodrigo@linuxave.net>
 
 	* replaced GtkAdjustment with plain GtkObject in Gda_Recordset
