@@ -1,3 +1,7 @@
+2002-12-16  Christian Neumair  <chris@gnome-de.org>
+
+	* providers/sybase/gda-sybase-provider.c: Fixed typo.
+
 2002-12-16  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	Should fix #101046
