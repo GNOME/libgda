@@ -14,13 +14,50 @@ gda-value
 
 </para>
 
+<!-- ##### MACRO TIMEZONE_INVALID ##### -->
+<para>
+
+</para>
+
+
+
 <!-- ##### TYPEDEF GdaValue ##### -->
 <para>
 
 </para>
 
 
+<!-- ##### TYPEDEF GdaValueList ##### -->
+<para>
+
+</para>
+
+
 <!-- ##### TYPEDEF GdaValueType ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### TYPEDEF GdaGeometricPoint ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### TYPEDEF GdaDate ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### TYPEDEF GdaTime ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### TYPEDEF GdaTimestamp ##### -->
 <para>
 
 </para>
@@ -68,7 +105,21 @@ gda-value
 
 
 
+<!-- ##### MACRO GDA_VALUE_TYPE_GEOMETRIC_POINT ##### -->
+<para>
+
+</para>
+
+
+
 <!-- ##### MACRO GDA_VALUE_TYPE_INTEGER ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO GDA_VALUE_TYPE_LIST ##### -->
 <para>
 
 </para>
@@ -170,7 +221,25 @@ gda-value
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_value_new_geometric_point ##### -->
+<para>
+
+</para>
+
+@val: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_value_new_integer ##### -->
+<para>
+
+</para>
+
+@val: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_value_new_list ##### -->
 <para>
 
 </para>
@@ -248,6 +317,15 @@ gda-value
 
 @value: 
 @type: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_value_is_null ##### -->
+<para>
+
+</para>
+
+@value: 
 @Returns: 
 
 
@@ -342,6 +420,24 @@ gda-value
 @val: 
 
 
+<!-- ##### FUNCTION gda_value_get_geometric_point ##### -->
+<para>
+
+</para>
+
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_value_set_geometric_point ##### -->
+<para>
+
+</para>
+
+@value: 
+@val: 
+
+
 <!-- ##### FUNCTION gda_value_get_integer ##### -->
 <para>
 
@@ -358,6 +454,32 @@ gda-value
 
 @value: 
 @val: 
+
+
+<!-- ##### FUNCTION gda_value_get_list ##### -->
+<para>
+
+</para>
+
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_value_set_list ##### -->
+<para>
+
+</para>
+
+@value: 
+@val: 
+
+
+<!-- ##### FUNCTION gda_value_set_null ##### -->
+<para>
+
+</para>
+
+@value: 
 
 
 <!-- ##### FUNCTION gda_value_get_single ##### -->
@@ -518,6 +640,9 @@ gda-value
 </row>
 <row>
 <entry>#GDA_VALUE_TYPE_NULL</entry><entry>"NULL"</entry>
+</row>
+<row>
+<entry>#GDA_VALUE_TYPE_LIST</entry><entry>{ "%s", "%s"... }</entry>
 </row>
 <row>
 <entry>Not in the list</entry><entry>""</entry>

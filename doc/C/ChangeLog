@@ -1,3 +1,8 @@
+2002-01-14  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* tmpl/gda-value.sgml: added information for GDA_VALUE_TYPE_LIST
+	conversions in gda_value_stringify
+
 2002-01-14  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
 	* libgda-docs.sgml: removed warning in line 484.
