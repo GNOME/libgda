@@ -1,3 +1,8 @@
+2003-11-28  Laurent Sansonetti <lrz@gnome.org>
+
+	* libgda/gda-connection.c (gda_connection_begin_transaction):
+	Fixes a typo in the comment.
+
 2003-11-26  Filip Van Raemdonck <mechanix@debian.org>
 
         * providers/mdb/gda-mdb-provider.c (gda_mdb_provider_execute_sql):
