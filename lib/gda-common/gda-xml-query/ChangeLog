@@ -1,3 +1,8 @@
+2001-03-05  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* Makefile.am: do not install libxmlquery, make it a private
+	library
+
 2001-02-18  Carlos Perelló Marín <carlos@gnome-db.org>
 
 	* Makefile.am: Solved some dependencies problems
