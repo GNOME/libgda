@@ -260,6 +260,15 @@ gda_connection_new (GdaClient *client,
 	if (!gda_server_provider_open_connection (provider, cnc, params,
 						  cnc->priv->username,
 						  cnc->priv->password)) {
+		GList *errors_copy;
+
+		errors_copy = gda_error_list_copy (gda_connection_get_errors (cnc));
+		/* emit the "error" signal on the GdaClient, since
+		   that's the only way we can notify it of errors */
+		if (errors_copy) {
+			g_signal_emit_by_name (G_OBJECT (client), "error",
+					       0, cnc, errors_copy);
+		}
 		gda_quark_list_free (params);
 		g_object_unref (G_OBJECT (cnc));
 		return NULL;
