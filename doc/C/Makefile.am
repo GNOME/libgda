@@ -13,10 +13,10 @@ DOC_MAIN_SGML_FILE=$(DOC_MODULE)-docs.sgml
 DOC_SOURCE_DIR=../../libgda
 
 # Extra options to supply to gtkdoc-scan.
-SCAN_OPTIONS=--source-dir=../../report/libgda-report
+SCAN_OPTIONS=
 
 # Extra options to supply to gtkdoc-mkdb.
-MKDB_OPTIONS=--source-dir=../../report/libgda-report
+MKDB_OPTIONS=
 
 # Extra options to supply to gtkdoc-fixref.
 FIXXREF_OPTIONS=

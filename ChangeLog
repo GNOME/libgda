@@ -1,5 +1,8 @@
 2002-05-02  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* doc/C/Makefile.am: don't include libgda-report, as it's not
+	included in the build.
+
 	* testing/Makefile.am:
 	* tools/Makefile.am:
 	* providers/default/Makefile.am: added missing -I's to INCLUDES.
