@@ -1,3 +1,10 @@
+2002-05-07  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
+	* libgda/gda-config.c: added writing configuration file support.
+
+	* libgda/gda-row.c (gda_row_get_attributes_length): allow NULL
+	parameter for empty rows.
+
 2002-05-04  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* libgda/gda-row.[ch]: converted GdaRow to an opaque type, not
