@@ -46,6 +46,43 @@ static gboolean gda_sybase_provider_open_connection (GdaServerProvider *provider
 static gboolean gda_sybase_provider_close_connection (GdaServerProvider *provider,
 						      GdaConnection *cnc);
 
+
+static gboolean gda_sybase_provider_begin_transaction (GdaServerProvider *provider,
+                                                       GdaConnection *cnc,
+                                                       GdaTransaction *xaction);
+static gboolean gda_sybase_provider_change_database (GdaServerProvider *provider,
+                                                     GdaConnection *cnc,
+                                                     const gchar *name);
+static gboolean gda_sybase_provider_commit_transaction (GdaServerProvider *provider,
+                                                        GdaConnection *cnc,
+                                                        GdaTransaction *xaction);
+static gboolean gda_sybase_provider_create_database (GdaServerProvider *provider,
+                                                     GdaConnection *cnc,
+                                                     const gchar *name);
+static gboolean gda_sybase_provider_drop_database (GdaServerProvider *provider,
+                                                   GdaConnection *cnc,
+                                                   const gchar *name);
+static GList *gda_sybase_provider_execute_command (GdaServerProvider *provider,
+                                                   GdaConnection *cnc,
+                                                   GdaCommand *cmd,
+                                                   GdaParameterList *params);
+static const gchar *gda_sybase_provider_get_database (GdaServerProvider *provider,
+                                                      GdaConnection *cnc);
+static GdaDataModel *gda_sybase_provider_get_schema (GdaServerProvider *provider,
+                                                     GdaConnection *cnc,
+                                                     GdaConnectionSchema schema,
+                                                     GdaParameterList *params);
+static const gchar *gda_sybase_provider_get_server_version (GdaServerProvider *provider,
+                                        GdaConnection *cnc);
+static const gchar *gda_sybase_provider_get_version (GdaServerProvider *provider);
+static gboolean gda_sybase_provider_rollback_transaction (GdaServerProvider *provider,
+                                                          GdaConnection *cnc,
+                                                          GdaTransaction *xaction);
+static gboolean gda_sybase_provider_supports (GdaServerProvider *provider,
+                                              GdaConnection *cnc,
+                                              GdaConnectionFeature feature);
+
+
 static GObjectClass *parent_class = NULL;
 
 /*
@@ -61,18 +98,28 @@ gda_sybase_provider_class_init (GdaSybaseProviderClass *klass)
 	parent_class = g_type_class_peek_parent (klass);
 
 	object_class->finalize = gda_sybase_provider_finalize;
-	provider_class->open_connection = gda_sybase_provider_open_connection;
+	
+	provider_class->begin_transaction = gda_sybase_provider_begin_transaction;
+	provider_class->change_database = gda_sybase_provider_change_database;
 	provider_class->close_connection = gda_sybase_provider_close_connection;
-	provider_class->begin_transaction = NULL;
-	provider_class->commit_transaction = NULL;
-	provider_class->rollback_transaction = NULL;
+	provider_class->commit_transaction = gda_sybase_provider_commit_transaction;
+	provider_class->create_database = gda_sybase_provider_create_database;
+	provider_class->drop_database = gda_sybase_provider_drop_database;
+	provider_class->execute_command = gda_sybase_provider_execute_command;
+	provider_class->get_database = gda_sybase_provider_get_database;
+	provider_class->get_schema = gda_sybase_provider_get_schema;
+	provider_class->get_server_version = gda_sybase_provider_get_server_version;
+	provider_class->get_version = gda_sybase_provider_get_version;
+	provider_class->open_connection = gda_sybase_provider_open_connection;
+	provider_class->rollback_transaction = gda_sybase_provider_rollback_transaction;
+	provider_class->supports = gda_sybase_provider_supports;
 }
 
 static void
 gda_sybase_provider_init (GdaSybaseProvider *myprv, 
 			  GdaSybaseProviderClass *klass)
 {
-
+	setlocale (LC_ALL, "");
 }
 
 static void
@@ -121,10 +168,10 @@ gda_sybase_provider_open_connection (GdaServerProvider *provider,
 		
 	sybase_connection *sconn;
 	CS_RETCODE ret;
-	gchar *t_host = NULL;
-	gchar *t_db = NULL;
-	gchar *t_user = NULL;
-	gchar *t_password = NULL;		
+	const gchar *t_host = NULL;
+	const gchar *t_db = NULL;
+	const gchar *t_user = NULL;
+	const gchar *t_password = NULL;		
 	CS_CHAR buf[500];
 		
 	/* the logic to connect to the database */
@@ -142,10 +189,14 @@ gda_sybase_provider_open_connection (GdaServerProvider *provider,
 	else
 		t_password = gda_quark_list_find (params, "PASSWORD");
 
+	t_db = gda_quark_list_find (params, "DATABASE");
+	t_host = gda_quark_list_find (params, "HOSTNAME");
+	if (!t_host)
+		t_host = gda_quark_list_find (params, "HOST");
 
-	sybase_debug_msg("username password");
-	sybase_debug_msg(t_user);
-	sybase_debug_msg(t_password);
+	sybase_debug_msg ("username: '%s', password '%s'",
+	                  (t_user != NULL) ? t_user : "(NULL)",
+	                  (t_password != NULL) ? t_password : "(NULL)");
 
 	sconn = g_new(sybase_connection,1);
 	sconn->context = NULL;
@@ -232,7 +283,6 @@ gda_sybase_provider_open_connection (GdaServerProvider *provider,
 	}						
 
 
-
 	ret = ct_con_props(sconn->connection, 
 			   CS_SET, 
 			   CS_USERNAME, 
@@ -305,7 +355,7 @@ gda_sybase_provider_open_connection (GdaServerProvider *provider,
 		}
 		return FALSE;
 	}						
-	return TRUE;
+//	return TRUE;
 
 	g_object_set_data (G_OBJECT (cnc), OBJECT_DATA_SYBASE_HANDLE, sconn);
 
@@ -330,6 +380,103 @@ gda_sybase_provider_close_connection (GdaServerProvider *provider,
 		cs_ctx_drop (sconn->context);
 		sconn->context = NULL;
 	}
+	g_free (sconn);
+	sconn = NULL;
 	g_object_set_data (G_OBJECT (cnc), OBJECT_DATA_SYBASE_HANDLE, NULL);
 	return TRUE;
 }
+
+static gboolean
+gda_sybase_provider_begin_transaction(GdaServerProvider *provider,
+                                      GdaConnection *cnc,
+                                      GdaTransaction *xaction)
+{
+	return FALSE;
+}
+
+static gboolean
+gda_sybase_provider_change_database (GdaServerProvider *provider,
+                                     GdaConnection *cnc,
+                                     const gchar *name)
+{
+	return FALSE;
+}
+
+static gboolean 
+gda_sybase_provider_commit_transaction (GdaServerProvider *provider,
+                                        GdaConnection *cnc,
+                                        GdaTransaction *xaction)
+{
+	return FALSE;
+}
+
+static gboolean 
+gda_sybase_provider_create_database (GdaServerProvider *provider,
+                                     GdaConnection *cnc,
+                                     const gchar *name)
+{
+	return FALSE;
+}
+
+static gboolean 
+gda_sybase_provider_drop_database (GdaServerProvider *provider,
+                                   GdaConnection *cnc,
+                                   const gchar *name)
+{
+	return FALSE;
+}
+
+static GList *
+gda_sybase_provider_execute_command (GdaServerProvider *provider,
+                                     GdaConnection *cnc,
+                                     GdaCommand *cmd,
+                                     GdaParameterList *params)
+{
+	return NULL;
+}
+
+static const gchar *
+gda_sybase_provider_get_database (GdaServerProvider *provider,
+                                  GdaConnection *cnc)
+{
+	return NULL;
+}
+
+static GdaDataModel *
+gda_sybase_provider_get_schema (GdaServerProvider *provider,
+                                GdaConnection *cnc,
+                                GdaConnectionSchema schema,
+                                GdaParameterList *params)
+{
+	return NULL;
+}
+
+static const gchar *
+gda_sybase_provider_get_server_version (GdaServerProvider *provider,
+                                        GdaConnection *cnc)
+{
+	return NULL;
+}
+
+static const gchar *
+gda_sybase_provider_get_version (GdaServerProvider *provider)
+{
+	return NULL;
+}
+
+static gboolean 
+gda_sybase_provider_rollback_transaction (GdaServerProvider *provider,
+                                          GdaConnection *cnc,
+                                          GdaTransaction *xaction)
+{
+	return FALSE;
+}
+
+static gboolean 
+gda_sybase_provider_supports (GdaServerProvider *provider,
+                              GdaConnection *cnc,
+                              GdaConnectionFeature feature)
+{
+	return FALSE;
+}
+

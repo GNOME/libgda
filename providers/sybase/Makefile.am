@@ -11,7 +11,6 @@ libgda_sybase_la_SOURCES = \
 	gda-sybase-provider.c \
 	gda-sybase-provider.h \
 	gda-sybase.h \
-	gda-tds-schemas.h \
 	libmain.c \
 	utils.c
 

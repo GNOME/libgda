@@ -41,6 +41,9 @@
 
 #include "gda-sybase-provider.h"
 
+// share schema queries with freetds provider
+#include "../freetds/gda-tds-schemas.h"
+
 #define GDA_SYBASE_PROVIDER_ID		"GDA sybase provider"
 
 G_BEGIN_DECLS
@@ -82,10 +85,9 @@ gchar *sprintf_clientmsg(const gchar *,
 
 gchar *sprintf_servermsg(const gchar *,
 																									CS_SERVERMSG *);
-
-void sybase_debug_msg(gchar *);
-
 */
+void sybase_debug_msg(gchar *fmt, ...);
+
 
 G_END_DECLS
 

@@ -1,3 +1,16 @@
+2002-10-30  Holger Thon <holger.thon@gnome-db.org>
+
+	* configure.in: added library collision check against freetds ct,
+	added lookup for ase 12.5 sybase dir, added SYBASE_DIR variable
+
+	* providers/sybase/Makefile.am: removed gda-tds-schemas.h
+	
+	* providers/sybase/gda-sybase-provider.c: added dummy provider
+	functions
+
+	* providers/sybase/gda-sybase.h,
+	providers/sybase/utils.c: added sybase_debug_msg()
+
 2002-10-29  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* libgda/gda-connection.[ch] (gda_connection_new): added
