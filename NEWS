@@ -1,3 +1,33 @@
+libgda 0.8.191, 2002-05-24
+--------------------------
+
+ - Added framework for editable data models (rodrigo)
+ - Made MySQL data models editable (rodrigo)
+ - Extended data model API (rodrigo)
+ - Fixed configuration file write support (gonzalo)
+ - Removed obsolete GdaRecordset class (gonzalo)
+ - Removed obsolete GdaField class (gonzalo)
+ - Added GDA_COMMAND_TYPE_SCHEMA (gonzalo)
+ - Added GdaDataModelHash class (gonzalo)
+ - More API documentation (gonzalo, rodrigo)
+ - Removed unneeded dependencies from libgda.pc (rodrigo)
+ - Added support for creating and droping databases
+   in the providers' API (rodrigo)
+ - Added new connection features (rodrigo)
+ - Extended GdaValue API (gonzalo)
+ - Added GdaSelect class, for doing SELECT's on data
+   models (rodrigo)
+ - Extended test suite (gonzalo, rodrigo)
+ - Added GdaXmlConnection class (rodrigo)
+ - Updated translations:
+        - da (olau)
+      	- es (pablodc)
+	- fr (redfox)
+	- no (kmaraas)
+	- pt (dnloreto)
+	- sk (stano)
+	- vi (pablo)
+
 libgda 0.8.190, 2002-05-04
 --------------------------
 
