@@ -23,6 +23,7 @@
 
 #include "gda-firebird-recordset.h"
 #include "gda-firebird-provider.h"
+#include "gda-firebird-blob.h"
 #include <libgda/gda-quark-list.h>
 #include <libgda/gda-intl.h>
 #include <glib/gprintf.h>
@@ -283,46 +284,6 @@ fb_sql_get_statement_type (GdaFirebirdConnection *fcnc,
 
 
 /*
- *
- *  fb_sql_affected_rows
- *
- *  Gets SELECT statement affected rows
- *
- *  Returns: Number of affected rows, or 0 if failed
- */
-static gint
-fb_sql_affected_rows (GdaFirebirdConnection *fcnc,
-		      GdaFirebirdRecordset *recset)
-{
-	/* FIXME: This code should work but for some reason allways returns 0 affected rows    */
-	/* This code should work for non SELECT statements like UPDATE, DELETE and other alike */
-	gchar buffer[33], *p_buffer, item;
-	gint length, res_val;
-	gchar type_item[] = {
-		isc_info_sql_records
-	};
-
-	g_return_val_if_fail (GDA_IS_FIREBIRD_RECORDSET (recset), 0);
-
-	if (! isc_dsql_sql_info (fcnc->status, &(recset->priv->sql_handle), sizeof(type_item), type_item, 
-			       sizeof(buffer), buffer)) {
-	
-		for (p_buffer = buffer; *p_buffer != isc_info_end; ) {
-			item = *p_buffer++;
-			length = isc_vax_integer (p_buffer, 2);
-			p_buffer += 2;
-			res_val = isc_vax_integer (p_buffer, length);
-			p_buffer += length;
-			if (item == isc_info_req_select_count)
-				return res_val;
-		}
-	}
-		
-	return 0;
-}
-
-
-/*
  *  fb_sql_prepare
  *
  *  Prepares an unprepared statement
@@ -416,7 +377,8 @@ fb_sql_unprepare (GdaFirebirdConnection *fcnc,
 		fb_sql_result_free (recset->priv->sql_result);
 
 		/* Free cursors */
-		isc_dsql_free_statement (fcnc->status, &(recset->priv->sql_handle), DSQL_drop);
+		if (recset->priv->sql_handle)
+			isc_dsql_free_statement (fcnc->status, &(recset->priv->sql_handle), DSQL_drop);
 		
 		return TRUE;
 	}
@@ -470,6 +432,7 @@ fb_gda_value_fill (GdaValue *gda_value,
 	GdaTime a_time;
 	GdaDate a_date;
 	GdaTimestamp a_times;
+	GdaBlob *blob = NULL;
 	struct tm *a_date_time;
 	gpointer tmp_big, field_data;
 	struct vary *var_text;
@@ -495,8 +458,9 @@ fb_gda_value_fill (GdaValue *gda_value,
 			break;
 		case SQL_BLOB:
 		case SQL_BLOB+1:
-			g_print (_("Firebird's BLOB datatype not supported yet!\n"));
-			gda_value_set_null (gda_value);		
+			blob = gda_firebird_blob_new (recset->priv->cnc);
+			gda_firebird_blob_set_id (blob, (const ISC_QUAD *) field_data);
+			gda_value_set_blob (gda_value, (const GdaBlob *) blob);
 			break;
 		case SQL_TIMESTAMP:
 		case SQL_TIMESTAMP+1:

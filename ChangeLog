@@ -1,3 +1,10 @@
+2004-09-02  Jeronimo Albi <jeronimoalbi@yahoo.com.ar>
+	
+	* providers/firebird/gda-firebird-blob.c: New File.
+	* providers/firebird/gda-firebird-blob.h: New File.
+	* providers/firebird/gda-firebird-recordset.c: Added read support
+	  for blob data type.
+
 2004-09-01  Alan Knowles <alan@akbkhome.com>
 
 	* providers/mysql/gda-mysql-provider.c (get_mysql_types): updated

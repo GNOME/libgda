@@ -75,6 +75,7 @@ static GdaDataModel	*gda_firebird_provider_get_schema (GdaServerProvider *provid
 							   GdaConnectionSchema schema,
 							   GdaParameterList *params);
 
+
 static GObjectClass *parent_class = NULL;
 
 /*
@@ -1150,7 +1151,7 @@ gda_firebird_provider_execute_command (GdaServerProvider *provider,
 	xaction = gda_command_get_transaction (cmd);
 	if (!GDA_IS_TRANSACTION (xaction))
 		xaction = gda_transaction_new ("local_tr");
-
+	
 	/* Get transaction handle */
 	ftr = g_object_get_data (G_OBJECT (xaction), TRANSACTION_DATA);
 	
@@ -1174,9 +1175,11 @@ gda_firebird_provider_execute_command (GdaServerProvider *provider,
 	}
 
 	/* Commit transaction if it was not started directly by programmer */
-	if (commit_tr)
+	if (commit_tr) {
 		gda_firebird_provider_commit_transaction (provider, cnc, xaction);
-
+		g_object_unref (xaction);
+	}
+	
 	return reclist;
 }
 
