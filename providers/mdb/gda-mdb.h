@@ -24,7 +24,6 @@
 #  define __gda_mdb_h__
 
 #include <glib/gmacros.h>
-#include <config.h>
 #include <libgda/gda-connection.h>
 #include <libgda/gda-server-provider.h>
 #include <libgda/gda-intl.h>

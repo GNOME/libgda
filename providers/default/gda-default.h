@@ -24,7 +24,6 @@
 #if !defined(__gda_default_h__)
 #  define __gda_default_h__
 
-#include <config.h>
 #include <glib/gmacros.h>
 #include <libgda/gda-intl.h>
 #include <libgda/gda-xml-database.h>

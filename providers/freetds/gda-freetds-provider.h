@@ -23,7 +23,6 @@
 #  define __gda_freetds_provider_h__
 
 #if defined(HAVE_CONFIG_H)
-#  include <config.h>
 #endif
 
 #include <libgda/gda-server-provider.h>

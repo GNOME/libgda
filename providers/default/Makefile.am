@@ -2,9 +2,9 @@ providerdir=$(prefix)/lib/libgda/providers
 provider_LTLIBRARIES = libgda-default.la
 
 INCLUDES = \
-	$(LIBGDA_CFLAGS) \
 	-I$(top_srcdir) \
-	-I$(top_builddir)
+	-I$(top_builddir) \
+	$(LIBGDA_CFLAGS)
 
 libgda_default_la_SOURCES = \
 	gda-default-provider.c \

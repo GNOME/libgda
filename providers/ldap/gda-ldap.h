@@ -27,7 +27,6 @@
 #  define __gda_ldap_h__
 
 #include <glib/gmacros.h>
-#include <config.h>
 #include <libgda/gda-connection.h>
 #include <libgda/gda-server-provider.h>
 #include <libgda/gda-intl.h>

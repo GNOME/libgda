@@ -21,7 +21,6 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include <config.h>
 #include <stdlib.h>
 #include <libgda/gda-data-model-array.h>
 #include <libgda/gda-intl.h>

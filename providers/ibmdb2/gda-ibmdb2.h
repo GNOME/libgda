@@ -22,7 +22,6 @@
 #  define __gda_ibmdb2_h__
 
 #if defined(HAVE_CONFIG_H)
-#  include <config.h>
 #endif
 
 #include <glib/gmacros.h>

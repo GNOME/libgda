@@ -1,3 +1,85 @@
+2003-01-16  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
+	* configure.in: removed config.h.
+
+	* libgda/gda-batch.c:
+	* libgda/gda-client.c:
+	* libgda/gda-config.c:
+	* libgda/gda-connection.c:
+	* libgda/gda-error.c:
+	* libgda/gda-export.c:
+	* libgda/gda-init.c:
+	* libgda/gda-log.c:
+	* libgda/gda-server-provider.c:
+	* libgda/gda-table.c:
+	* libgda/gda-value.c:
+	* libgda/gda-xml-database.c:
+	* providers/default/gda-default-provider.c:
+	* providers/default/gda-default.h:
+	* providers/firebird/gda-firebird-provider.c:
+	* providers/freetds/gda-freetds-message.c:
+	* providers/freetds/gda-freetds-message.h:
+	* providers/freetds/gda-freetds-provider.c:
+	* providers/freetds/gda-freetds-provider.h:
+	* providers/freetds/gda-freetds-recordset.c:
+	* providers/freetds/gda-freetds-types.c:
+	* providers/freetds/gda-freetds-types.h:
+	* providers/freetds/gda-freetds.h:
+	* providers/freetds/gda-tds-schemas.h:
+	* providers/freetds/utils.c:
+	* providers/ibmdb2/gda-ibmdb2-provider.c:
+	* providers/ibmdb2/gda-ibmdb2.h:
+	* providers/ibmdb2/utils.c:
+	* providers/ldap/gda-ldap-provider.c:
+	* providers/ldap/gda-ldap-recordset.c:
+	* providers/ldap/gda-ldap.h:
+	* providers/mdb/gda-mdb-provider.c:
+	* providers/mdb/gda-mdb-table.c:
+	* providers/mdb/gda-mdb.h:
+	* providers/mysql/gda-mysql-provider.c:
+	* providers/mysql/gda-mysql-recordset.c:
+	* providers/mysql/gda-mysql.h:
+	* providers/odbc/gda-odbc.h:
+	* providers/oracle/gda-oracle-provider.c:
+	* providers/oracle/gda-oracle-recordset.c:
+	* providers/oracle/gda-oracle.h:
+	* providers/oracle/utils.c:
+	* providers/postgres/gda-postgres-provider.c:
+	* providers/postgres/gda-postgres-recordset.c:
+	* providers/postgres/gda-postgres.h:
+	* providers/postgres/utils.c:
+	* providers/sqlite/gda-sqlite-provider.c:
+	* providers/sqlite/gda-sqlite-recordset.c:
+	* providers/sqlite/utils.c:
+	* providers/sybase/gda-sybase-provider.c:
+	* providers/sybase/gda-sybase-provider.h:
+	* providers/sybase/gda-sybase-recordset.c:
+	* providers/sybase/gda-sybase-schemas.h:
+	* providers/sybase/gda-sybase-types.c:
+	* providers/sybase/gda-sybase-types.h:
+	* providers/sybase/gda-sybase.h:
+	* providers/sybase/main.c:
+	* providers/sybase/utils.c:
+	* providers/xbase/gda-xbase-provider.c:
+	* report/libgda-report/gda-report-document.c:
+	* report/libgda-report/gda-report-item-report.c:
+	* report/libgda-report/gda-report-item-reportheader.c:
+	* report/libgda-report/gda-report-item.c:
+	* report/libgda-report/gda-report-types.c:
+	* report/libgda-report/gda-report-valid.c:
+	* testing/client.c:
+	* testing/config.c:
+	* testing/gda-test.c:
+	* tools/gda-run.c: removed config.h.
+
+	* tools/Makefile.am:
+	* providers/default/Makefile.am:
+	* report/testing/Makefile.am:
+	* testing/Makefile.am:
+	* providers/oracle/Makefile.am:
+	* providers/ldap/Makefile.am: $(top_srcdir) and $(top_buildir) are now
+	teh first ones in INCLUDE.
+
 2003-01-15  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* libgda/gda-client.c (gda_client_class_init): use G_TYPE_INT instead

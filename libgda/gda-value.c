@@ -24,7 +24,6 @@
 
 #include <string.h>
 #include <stdlib.h>
-#include <config.h>
 #include <time.h>
 #include <glib/gdate.h>
 #include <glib/gmessages.h>
