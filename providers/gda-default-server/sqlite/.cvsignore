@@ -1,0 +1,9 @@
+Makefile
+Makefile.in
+.deps
+.libs
+lemon
+parse.out
+stamp-parser
+parse.c
+parse.h

@@ -1,3 +1,9 @@
+2001-10-11  Carlos Perelló Marín <carlos@gnome-db.org>
+
+	* sqlite/*
+	* Makefile.am: Imported the sqlite 2.0.2. This version need an update
+	of the old database, I will prepare a program to do the update soon.
+
 2001-10-10  Carlos Perelló Marín <carlos@gnome-db.org>
 
 	* Makefile.am: Fixed the sqlite.h build problem.

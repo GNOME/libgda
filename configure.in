@@ -12,6 +12,7 @@ dnl
 AC_ISC_POSIX
 AC_PROG_CC
 AC_PROG_CXX
+AC_PROG_YACC
 AC_STDC_HEADERS
 AC_ARG_PROGRAM
 AM_PROG_LIBTOOL
@@ -659,6 +660,7 @@ bindings/Makefile
 bindings/c++/Makefile
 providers/Makefile
 providers/gda-default-server/Makefile
+providers/gda-default-server/sqlite/Makefile
 providers/gda-odbc-server/Makefile
 providers/gda-mysql-server/Makefile
 providers/gda-postgres-server/Makefile
