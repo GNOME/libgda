@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda.HEAD.nl\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-06-08 00:08+0200\n"
+"POT-Creation-Date: 2004-07-07 04:45+0200\n"
 "PO-Revision-Date: 2003-03-14 19:15+0100\n"
 "Last-Translator: Jan-Willem Harmanny <jwharmanny@hotmail.com>\n"
 "Language-Team: Dutch <nl@li.org>\n"
@@ -52,9 +52,8 @@ msgid "Id"
 msgstr "Id"
 
 #: libgda/gda-config.c:1195
-#, fuzzy
 msgid "Location"
-msgstr "Functie"
+msgstr "Locatie"
 
 #: libgda/gda-config.c:1196 libgda/gda-config.c:1455
 #: providers/ibmdb2/gda-ibmdb2-provider.c:863
@@ -99,9 +98,9 @@ msgid "Password"
 msgstr "Wachtwoord"
 
 #: libgda/gda-data-model.c:880
-#, fuzzy, c-format
+#, c-format
 msgid "Data model %p is not updatable"
-msgstr "Gegevensmodel %p kan niet worden bewerkt"
+msgstr "Gegevensmodel %p kan niet worden bijgewerkt"
 
 #: libgda/gda-init.c:47
 msgid "Attempt to initialize an already initialized client"
@@ -141,20 +140,20 @@ msgstr "Fout tijdens lezen van %s: %s"
 msgid "Could not create file %s"
 msgstr "Kan bestand %s niet aanmaken"
 
-#: libgda/gda-value.c:1961
+#: libgda/gda-value.c:2069
 msgid "TRUE"
 msgstr "WAAR"
 
-#: libgda/gda-value.c:1963
+#: libgda/gda-value.c:2071
 msgid "FALSE"
 msgstr "ONWAAR"
 
-#: libgda/gda-value.c:2032
+#: libgda/gda-value.c:2140
 #, c-format
 msgid "(GObject of type '%s'"
 msgstr "(GObject van type '%s'"
 
-#: libgda/gda-value.c:2035
+#: libgda/gda-value.c:2143
 msgid "NULL GObject"
 msgstr "NULL Gobject"
 
@@ -202,23 +201,22 @@ msgid "Invalid XML node"
 msgstr "Ongeldige XML knooppunt"
 
 #: libgda/gda-xml-database.c:782
-#, fuzzy
 msgid "Could not add the data from the XML node"
-msgstr "Kan de Oracle parameter handle niet verkrijgen"
+msgstr "Kan de gegevens van de XML node niet toevoegen"
 
 #: libsql/sql_parser.c:59
 #, c-format
 msgid "Parse error near `%s'"
-msgstr ""
+msgstr "Fout bij ontleden van `%s'"
 
 #: libsql/sql_parser.c:61
 #, c-format
 msgid "Syntax error near `%s'"
-msgstr ""
+msgstr "Syntaxis fout bij `%s'"
 
-#: libsql/sql_parser.c:358
+#: libsql/sql_parser.c:361
 msgid "Empty query to parse"
-msgstr ""
+msgstr "Lege query om te ontleden"
 
 #: providers/firebird/gda-firebird-provider.c:187
 msgid "No database specified"
@@ -268,9 +266,8 @@ msgstr "Toewijzen van tds context mislukt."
 
 #: providers/freetds/gda-freetds-provider.c:275
 #: providers/freetds/gda-freetds-provider.c:277
-#, fuzzy
 msgid "Allocating tds socket failed."
-msgstr "Toewijzen van tds context mislukt."
+msgstr "Toewijzen van tds socket mislukt."
 
 #. gda_freetds_free_connection_data (tds_cnc);
 #: providers/freetds/gda-freetds-provider.c:283
@@ -515,13 +512,12 @@ msgid "Users"
 msgstr "Gebruikers"
 
 #: providers/ibmdb2/gda-ibmdb2-types.c:154
-#, fuzzy
 msgid "[BLOB unsupported]"
-msgstr "Niet ondersteund"
+msgstr "[BLOB niet ondersteund]"
 
 #: providers/ibmdb2/gda-ibmdb2-types.c:157
 msgid "[Unsupported data]"
-msgstr ""
+msgstr "[Niet-ondersteunde gegevens]"
 
 #: providers/ibmdb2/libmain.c:39
 msgid "Provider for IBMDB2 databases"
@@ -781,9 +777,9 @@ msgstr "Kan commando '%s' niet ontleden"
 #. parsing went fine, but there is no result
 #. (e.g. because of an invalid column name)
 #: providers/mdb/gda-mdb-provider.c:744
-#, fuzzy, c-format
+#, c-format
 msgid "Got no result for '%s' command"
-msgstr "Kan commando '%s' niet ontleden"
+msgstr "Geen resultaten voor commando '%s'"
 
 #: providers/mdb/gda-mdb-table.c:48 providers/xml/gda-xml-provider.c:519
 #, c-format
@@ -1235,19 +1231,19 @@ msgstr "Databases"
 
 #: providers/postgres/gda-postgres-recordset.c:228
 msgid "Given row doesn't belong to the model."
-msgstr ""
+msgstr "Gegeven rij hoort niet thuis in het model."
 
 #: providers/postgres/gda-postgres-recordset.c:235
 msgid "Table name could not be guessed."
-msgstr ""
+msgstr "Tabelnaam kan niet worden geraden."
 
 #: providers/postgres/gda-postgres-recordset.c:287
 msgid "Model doesn't have at least one non-modified unique key."
-msgstr ""
+msgstr "Model heeft niet minstens een onaangepaste unieke sleutel."
 
 #: providers/postgres/gda-postgres-recordset.c:291
 msgid "Model doesn't have any non-unique values to update."
-msgstr ""
+msgstr "Model heeft geen niet-unieke waarden om bij te werken."
 
 #: providers/postgres/gda-postgres-recordset.c:363
 #: providers/sqlite/gda-sqlite-recordset.c:210
@@ -1612,14 +1608,13 @@ msgid ") Message: "
 msgstr ") Bericht:"
 
 #: providers/sybase/utils.c:244
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Sybase OpenClient Msg: severity(%ld), number(%ld), origin(%ld), layer(%ld): %"
 "s"
 msgstr ""
-"CT-Client fout:\n"
-"\tseverity(%ld) layer(%ld) origin (%ld) number(%ld)\n"
-"\t%s"
+"Sybase OpenClient Bericht: severity(%ld), number(%ld), origin(%ld), "
+"layer(%ld): %s"
 
 #: providers/sybase/utils.c:272
 msgid "call to cs_diag failed when attempting to clear the client messages"
@@ -1743,92 +1738,84 @@ msgstr "Kan de omschrijving voor deze kolom niet vinden"
 
 #. fill the recordset
 #: providers/xml/gda-xml-provider.c:661
-#, fuzzy
 msgid "Big integer"
-msgstr "64-bit integers"
+msgstr "Big integer"
 
 #: providers/xml/gda-xml-provider.c:662
 msgid "Big unsigned integer"
-msgstr ""
+msgstr "Big unsigned integer"
 
 #: providers/xml/gda-xml-provider.c:663
 msgid "Binary"
-msgstr ""
+msgstr "Binair"
 
 #: providers/xml/gda-xml-provider.c:664
-#, fuzzy
 msgid "Boolean"
-msgstr "Boolean type"
+msgstr "Boolean"
 
 #: providers/xml/gda-xml-provider.c:665
-#, fuzzy
 msgid "Date"
-msgstr "Schatus"
+msgstr "Datum"
 
 #: providers/xml/gda-xml-provider.c:666
-#, fuzzy
 msgid "Double precision"
-msgstr "Dubbele precisie waarden"
+msgstr "Dubbele precisie"
 
 #: providers/xml/gda-xml-provider.c:667
 msgid "Integer"
-msgstr ""
+msgstr "Integer"
 
 #: providers/xml/gda-xml-provider.c:668
 msgid "List"
-msgstr ""
+msgstr "Lijst"
 
 #: providers/xml/gda-xml-provider.c:669
 msgid "Money"
-msgstr ""
+msgstr "Geld"
 
 #: providers/xml/gda-xml-provider.c:670
-#, fuzzy
 msgid "Numeric"
-msgstr "Nummer"
+msgstr "Numeriek"
 
 #: providers/xml/gda-xml-provider.c:671
 msgid "Point"
-msgstr ""
+msgstr "Punt"
 
 #: providers/xml/gda-xml-provider.c:672
-#, fuzzy
 msgid "Single precision"
-msgstr "Enkele precisie waarden"
+msgstr "Enkele precisie"
 
 #: providers/xml/gda-xml-provider.c:673
 msgid "Small integer"
-msgstr ""
+msgstr "Small integer"
 
 #: providers/xml/gda-xml-provider.c:674
 msgid "Small unsigned integer"
-msgstr ""
+msgstr "Small unsigned integer"
 
 #: providers/xml/gda-xml-provider.c:675
 msgid "String"
-msgstr ""
+msgstr "String"
 
 #: providers/xml/gda-xml-provider.c:676
-#, fuzzy
 msgid "Time"
-msgstr "Titel"
+msgstr "Tijd"
 
 #: providers/xml/gda-xml-provider.c:677
 msgid "Timestamp"
-msgstr ""
+msgstr "Tijdstempel"
 
 #: providers/xml/gda-xml-provider.c:678
-#, fuzzy
 msgid "Tiny integer"
-msgstr "64-bit integers"
+msgstr "Tiny integer"
 
 #: providers/xml/gda-xml-provider.c:679
 msgid "Tiny unsigned integer"
-msgstr ""
+msgstr "Tiny unsigned integer"
 
 #: providers/xml/gda-xml-provider.c:681
 msgid "Unsigned integer"
-msgstr ""
+msgstr "Unsigned integer"
 
 #: providers/xml/libmain.c:33
 msgid "XML"
@@ -1996,9 +1983,9 @@ msgid "\t\tXML queries: %s\n"
 msgstr "\t\tXML queries: %s\n"
 
 #: testing/client.c:122
-#, fuzzy, c-format
+#, c-format
 msgid "\t\tBLOBs: %s\n"
-msgstr "\t\tSQL: %s\n"
+msgstr "\t\tBLOBs: %s\n"
 
 #. show connection schemas
 #: testing/client.c:127
@@ -2090,30 +2077,25 @@ msgid "\tgda_params ="
 msgstr "\tgda_params ="
 
 #: providers/bdb/gda-bdb-provider.c:154
-#, fuzzy
 msgid "The FILE parameter is not defined in the connection string."
-msgstr ""
-"Een database BESTANDSNAAM moet worden gespecificeerd in de connection_string"
+msgstr "De FILE parameter is niet gedefinieerd in de connectie string."
 
 #: providers/bdb/gda-bdb-provider.c:185
 msgid "-"
-msgstr ""
+msgstr "-"
 
 #: providers/bdb/gda-bdb-provider.c:242 providers/bdb/gda-bdb-provider.c:263
 #: providers/bdb/gda-bdb-provider.c:286
-#, fuzzy
 msgid "Invalid BDB handle"
-msgstr "Ongeldige MDB handle"
+msgstr "Ongeldige BDB handle"
 
 #: providers/bdb/gda-bdb-recordset.c:242
-#, fuzzy
 msgid "Database is empty"
-msgstr "Databases"
+msgstr "Database is leeg"
 
 #: providers/bdb/libmain.c:39
-#, fuzzy
 msgid "Provider for Berkeley databases"
-msgstr "Leverancier voor Oracle databases"
+msgstr "Leverancier voor Berkeley databases"
 
 #~ msgid "Sybase OpenClient Msg: severity("
 #~ msgstr "Sybase OpenClient Msg: severity("
