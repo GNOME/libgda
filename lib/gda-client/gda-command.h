@@ -1,6 +1,6 @@
 /* GDA client libary
  * Copyright (C) 1998,1999 Michael Lausch
- * Copyright (C) 2000 Rodrigo Moya
+ * Copyright (C) 2000-2001 Rodrigo Moya
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -18,13 +18,11 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#ifndef __gda_command_h__
-#define __gda_command_h__ 1
+#if !defined(__gda_command_h__)
+#  define __gda_command_h__
 
-#include <glib.h>
-#include <gtk/gtkobject.h>
-#include <orb/orbit.h>
-#include <GDA.h>
+#include <orbit/orbit.h>
+#include <GNOME_Database.h>
 #include <gda-common-defs.h>
 
 G_BEGIN_DECLS
@@ -33,52 +31,52 @@ G_BEGIN_DECLS
  * datasource specific operations.
  */
 
-typedef struct _GdaCommand GdaCommand;
+typedef struct _GdaCommand      GdaCommand;
 typedef struct _GdaCommandClass GdaCommandClass;
 
 #include <gda-recordset.h>	/* these two need the definitions above */
 #include <gda-connection.h>
 
 #define GDA_TYPE_COMMAND            (gda_command_get_type())
-#define GDA_COMMAND(obj)            GTK_CHECK_CAST(obj, GDA_TYPE_COMMAND, GdaCommand)
-#define GDA_COMMAND_CLASS(klass)    GTK_CHECK_CLASS_CAST(klass, GDA_TYPE_COMMAND, GdaCommandClass)
-#define GDA_IS_COMMAND(obj)         GTK_CHECK_TYPE(obj, GDA_TYPE_COMMAND)
-#define GDA_IS_COMMAND_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_COMMAND))
+#define GDA_COMMAND(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_COMMAND, GdaCommand))
+#define GDA_COMMAND_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_COMMAND, GdaCommandClass))
+#define GDA_IS_COMMAND(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_COMMAND))
+#define GDA_IS_COMMAND_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GDA_TYPE_COMMAND))
 
 struct _GdaCommand {
-	GtkObject object;
+	GObject object;
 
 	CORBA_Object command;
 	CORBA_ORB orb;
 	GdaConnection *connection;
 	gchar *text;
-	GDA_CommandType type;
+	GNOME_Database_CommandType type;
 	GList *parameters;
 	gboolean text_pending;
 	gboolean type_pending;
 };
 
 struct _GdaCommandClass {
-	GtkObjectClass parent_class;
+	GObjectClass parent_class;
 };
 
-guint gda_command_get_type (void);
+GType           gda_command_get_type (void);
 
-GdaCommand *gda_command_new (void);
-void gda_command_free (GdaCommand * cmd);
-GdaConnection *gda_command_get_connection (GdaCommand * cmd);
-void gda_command_set_connection (GdaCommand * cmd,
-				 GdaConnection * cnc);
-gchar *gda_command_get_text (GdaCommand * cmd);
-void gda_command_set_text (GdaCommand * cmd, gchar * text);
-GDA_CommandType gda_command_get_cmd_type (GdaCommand * cmd);
-void gda_command_set_cmd_type (GdaCommand * cmd,
-			       GDA_CommandType type);
-GdaRecordset *gda_command_execute (GdaCommand * cmd,
-				   gulong * reccount, gulong flags);
-void gda_command_create_parameter (GdaCommand * cmd, gchar * name,
-				   GDA_ParameterDirection inout,
-				   GDA_Value * value);
+GdaCommand     *gda_command_new (void);
+void            gda_command_free (GdaCommand * cmd);
+GdaConnection  *gda_command_get_connection (GdaCommand * cmd);
+void            gda_command_set_connection (GdaCommand * cmd,
+					    GdaConnection * cnc);
+gchar          *gda_command_get_text (GdaCommand * cmd);
+void            gda_command_set_text (GdaCommand * cmd, gchar * text);
+GNOME_Database_CommandType gda_command_get_cmd_type (GdaCommand * cmd);
+void            gda_command_set_cmd_type (GdaCommand * cmd,
+					  GNOME_Database_CommandType type);
+GdaRecordset   *gda_command_execute (GdaCommand * cmd,
+				     gulong * reccount, gulong flags);
+void            gda_command_create_parameter (GdaCommand * cmd, gchar * name,
+					      GNOME_Database_ParameterDirection inout,
+					      GNOME_Database_Value * value);
 
 G_END_DECLS
 

@@ -21,8 +21,6 @@
 #if !defined(__gda_connection_pool_h__)
 #  define __gda_connection_pool_h__
 
-#include <glib.h>
-#include <gtk/gtkobject.h>
 #include <gda-common-defs.h>
 #include <gda-connection.h>
 
@@ -31,37 +29,37 @@ G_BEGIN_DECLS
 typedef struct _GdaConnectionPool GdaConnectionPool;
 typedef struct _GdaConnectionPoolClass GdaConnectionPoolClass;
 
-#define GDA_TYPE_CONNECTION_POOL            (gda_connection_pool_get_type())
-#  define GDA_CONNECTION_POOL(obj)            GTK_CHECK_CAST(obj, GDA_TYPE_CONNECTION_POOL, GdaConnectionPool)
-#  define GDA_CONNECTION_POOL_CLASS(klass)    GTK_CHECK_CLASS_CAST(klass, GDA_TYPE_CONNECTION_POOL, GdaConnectionPoolClass)
-#  define GDA_IS_CONNECTION_POOL(obj)         GTK_CHECK_TYPE(obj, GDA_TYPE_CONNECTION_POOL)
-#  define GDA_IS_CONNECTION_POOL_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_CONNECTION_POOL))
+#define GDA_TYPE_CONNECTION_POOL              (gda_connection_pool_get_type())
+#define GDA_CONNECTION_POOL(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_CONNECTION_POOL, GdaConnectionPool))
+#define GDA_CONNECTION_POOL_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_CONNECTION_POOL, GdaConnectionPoolClass))
+#define GDA_IS_CONNECTION_POOL(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_CONNECTION_POOL))
+#define GDA_IS_CONNECTION_POOL_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GDA_TYPE_CONNECTION_POOL))
 
 struct _GdaConnectionPool {
-	GtkObject object;
+	GObject object;
 	GList *connections;
 };
 
 struct _GdaConnectionPoolClass {
-	GtkObjectClass parent_class;
+	GObjectClass parent_class;
 
 	/* signals */
 	void (*open) (GdaConnectionPool * pool, GdaConnection * cnc);
 	void (*error) (GdaConnectionPool * pool, GdaConnection * cnc, GList *error_list);
 };
 
-GtkType gda_connection_pool_get_type (void);
+GType              gda_connection_pool_get_type (void);
 
 GdaConnectionPool *gda_connection_pool_new (void);
-void gda_connection_pool_free (GdaConnectionPool * pool);
+void               gda_connection_pool_free (GdaConnectionPool * pool);
 
-GdaConnection *gda_connection_pool_open_connection (GdaConnectionPool *pool,
-						    const gchar *gda_name,
-						    const gchar *username,
-						    const gchar *password);
-void gda_connection_pool_close_connection (GdaConnectionPool * pool,
-					   GdaConnection * cnc);
-void gda_connection_pool_close_all (GdaConnectionPool * pool);
+GdaConnection     *gda_connection_pool_open_connection (GdaConnectionPool *pool,
+							const gchar *gda_name,
+							const gchar *username,
+							const gchar *password);
+void               gda_connection_pool_close_connection (GdaConnectionPool * pool,
+							 GdaConnection * cnc);
+void               gda_connection_pool_close_all (GdaConnectionPool * pool);
 
 typedef void (*GdaConnectionPoolForeachFunc) (GdaConnectionPool *pool,
 					      GdaConnection * cnc,
@@ -70,9 +68,9 @@ typedef void (*GdaConnectionPoolForeachFunc) (GdaConnectionPool *pool,
 					      const gchar * password,
 					      gpointer user_data);
 
-void gda_connection_pool_foreach (GdaConnectionPool * pool,
-				  GdaConnectionPoolForeachFunc func,
-				  gpointer user_data);
+void               gda_connection_pool_foreach (GdaConnectionPool * pool,
+						GdaConnectionPoolForeachFunc func,
+						gpointer user_data);
 
 G_END_DECLS
 

@@ -1,6 +1,6 @@
 /* GDA client libary
  * Copyright (C) 1998,1999 Michael Lausch
- * Copyright (C) 1999,2000 Rodrigo Moya
+ * Copyright (C) 1999-2001 Rodrigo Moya
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -21,11 +21,10 @@
 #include "config.h"
 #include "gda-batch.h"
 #include <stdio.h>
-#include <gtk/gtksignal.h>
+#include <gobject/gsignal.h>
 
 /* GdaBatch object signals */
-enum
-{
+enum {
 	GDA_BATCH_BEGIN_TRANSACTION,
 	GDA_BATCH_COMMIT_TRANSACTION,
 	GDA_BATCH_ROLLBACK_TRANSACTION,
@@ -34,84 +33,100 @@ enum
 };
 static gint gda_batch_signals[GDA_BATCH_LAST_SIGNAL] = { 0, };
 
-static void gda_batch_class_init (GdaBatchClass * klass);
-static void gda_batch_init (GdaBatch * job);
+static void gda_batch_class_init (GdaBatchClass *klass);
+static void gda_batch_init       (GdaBatch *job, GdaBatchClass *klass);
+static void gda_batch_finalize   (GObject *object);
 
-guint
+GType
 gda_batch_get_type (void)
 {
-	static guint gda_batch_type = 0;
+	static GType type = 0;
 
-	if (!gda_batch_type) {
-		GtkTypeInfo gda_batch_info = {
-			"GdaBatch",
-			sizeof (GdaBatch),
+	if (!type) {
+		static const GTypeInfo info = {
 			sizeof (GdaBatchClass),
-			(GtkClassInitFunc) gda_batch_class_init,
-			(GtkObjectInitFunc) gda_batch_init,
-			(GtkArgSetFunc) NULL,
-			(GtkArgSetFunc) NULL,
+			(GBaseInitFunc) NULL,
+			(GBaseFinalizeFunc) NULL,
+			(GClassInitFunc) gda_batch_class_init,
+			NULL,
+			NULL,
+			sizeof (GdaBatch),
+			0,
+			(GInstanceInitFunc) gda_batch_init
 		};
-		gda_batch_type =
-			gtk_type_unique (gtk_object_get_type (),
-					 &gda_batch_info);
+		type = g_type_register_static (G_TYPE_OBJECT, "GdaBatch", &info, 0);
 	}
-	return gda_batch_type;
+	return type;
 }
 
 static void
-gda_batch_class_init (GdaBatchClass * klass)
+gda_batch_class_init (GdaBatchClass *klass)
 {
-	GtkObjectClass *object_class;
-
-	object_class = (GtkObjectClass *) klass;
+	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
 	gda_batch_signals[GDA_BATCH_BEGIN_TRANSACTION] =
-		gtk_signal_new ("begin_transaction",
-				GTK_RUN_LAST,
-				object_class->type,
-				GTK_SIGNAL_OFFSET (GdaBatchClass,
-						   begin_transaction),
-				gtk_signal_default_marshaller, GTK_TYPE_NONE,
-				0);
+		g_signal_new ("begin_transaction",
+			      G_TYPE_FROM_CLASS (object_class),
+			      G_SIGNAL_RUN_LAST,
+			      G_STRUCT_OFFSET (GdaBatchClass, begin_transaction),
+			      NULL, NULL,
+			      g_cclosure_marshal_VOID__VOID,
+			      G_TYPE_NONE, 0);
 	gda_batch_signals[GDA_BATCH_COMMIT_TRANSACTION] =
-		gtk_signal_new ("commit_transaction", GTK_RUN_LAST,
-				object_class->type,
-				GTK_SIGNAL_OFFSET (GdaBatchClass,
-						   commit_transaction),
-				gtk_signal_default_marshaller, GTK_TYPE_NONE,
-				0);
+		g_signal_new ("commit_transaction",
+			      G_TYPE_FROM_CLASS (object_class),
+			      G_SIGNAL_RUN_LAST,
+			      G_STRUCT_OFFSET (GdaBatchClass, commit_transaction),
+			      NULL, NULL,
+			      g_cclosure_marshal_VOID__VOID,
+			      G_TYPE_NONE, 0);
 	gda_batch_signals[GDA_BATCH_ROLLBACK_TRANSACTION] =
-		gtk_signal_new ("rollback_transaction", GTK_RUN_LAST,
-				object_class->type,
-				GTK_SIGNAL_OFFSET (GdaBatchClass,
-						   rollback_transaction),
-				gtk_signal_default_marshaller, GTK_TYPE_NONE,
-				0);
+		g_signal_new ("rollback_transaction",
+			      G_TYPE_FROM_CLASS (object_class),
+			      G_SIGNAL_RUN_LAST,
+			      G_STRUCT_OFFSET (GdaBatchClass, rollback_transaction),
+			      NULL, NULL,
+			      g_cclosure_marshal_VOID__VOID,
+			      G_TYPE_NONE, 0);
 	gda_batch_signals[GDA_BATCH_EXECUTE_COMMAND] =
-		gtk_signal_new ("execute_command", GTK_RUN_LAST,
-				object_class->type,
-				GTK_SIGNAL_OFFSET (GdaBatchClass,
-						   execute_command),
-				gtk_marshal_NONE__POINTER, GTK_TYPE_NONE, 1,
-				GTK_TYPE_STRING);
-	gtk_object_class_add_signals (object_class, gda_batch_signals,
-				      GDA_BATCH_LAST_SIGNAL);
+		g_signal_new ("execute_command",
+			      G_TYPE_FROM_CLASS (object_class),
+			      G_SIGNAL_RUN_LAST,
+			      G_STRUCT_OFFSET (GdaBatchClass, execute_command),
+			      NULL, NULL,
+			      g_cclosure_marshal_VOID__STRING,
+			      G_TYPE_NONE, 1, G_TYPE_STRING);
 
+	object_class->finalize = gda_batch_finalize;
 	klass->begin_transaction = 0;
 	klass->commit_transaction = 0;
 	klass->rollback_transaction = 0;
 }
 
 static void
-gda_batch_init (GdaBatch * job)
+gda_batch_init (GdaBatch *job, GdaBatchClass *klass)
 {
 	g_return_if_fail (GDA_IS_BATCH (job));
 
-	job->cnc = 0;
+	job->cnc = NULL;
 	job->transaction_mode = TRUE;
 	job->is_running = FALSE;
-	job->commands = 0;
+	job->commands = NULL;
+}
+
+static void
+gda_batch_finalize (GObject *object)
+{
+	GObjectClass *parent_class;
+	GdaBatch *job = (GdaBatch *) object;
+
+	g_return_if_fail (GDA_IS_BATCH (job));
+
+	gda_batch_clear (job);
+
+	parent_class = G_OBJECT_CLASS (g_type_class_peek (G_TYPE_OBJECT));
+	if (parent_class && parent_class->finalize)
+		parent_class->finalize (object);
 }
 
 /**
@@ -132,7 +147,7 @@ gda_batch_init (GdaBatch * job)
 GdaBatch *
 gda_batch_new (void)
 {
-	return GDA_BATCH (gtk_type_new (gda_batch_get_type ()));
+	return GDA_BATCH (g_object_new (GDA_TYPE_BATCH, NULL));
 }
 
 /**
@@ -145,9 +160,7 @@ void
 gda_batch_free (GdaBatch * job)
 {
 	g_return_if_fail (GDA_IS_BATCH (job));
-
-	gda_batch_clear (job);
-	gtk_object_unref (GTK_OBJECT (job));
+	g_object_unref (G_OBJECT (job));
 }
 
 /**
@@ -206,6 +219,7 @@ gda_batch_load_file (GdaBatch * job, const gchar * filename, gboolean clean)
 	}
 	else
 		g_warning ("error opening %s", filename);
+
 	return FALSE;
 }
 
@@ -240,7 +254,9 @@ gda_batch_clear (GdaBatch * job)
 {
 	g_return_if_fail (GDA_IS_BATCH (job));
 
-	job->cnc = 0;
+	if (GDA_IS_CONNECTION (job->cnc))
+		gda_connection_free (job->cnc);
+	job->cnc = NULL;
 	job->is_running = FALSE;
 
 	g_list_foreach (job->commands, g_free, 0);
@@ -275,15 +291,15 @@ gda_batch_start (GdaBatch * job)
 
 	/* start transaction if in transaction mode */
 	if (job->transaction_mode &&
-	    gda_connection_supports (job->cnc,
-				     GDA_Connection_FEATURE_TRANSACTIONS)) {
+	    gda_connection_supports (
+		    job->cnc,
+		    GNOME_Database_Connection_FEATURE_TRANSACTIONS)) {
 		if (gda_connection_begin_transaction (job->cnc) == -1) {
 			/* FIXME: emit "error" signal */
 			return FALSE;
 		}
-		gtk_signal_emit (GTK_OBJECT (job),
-				 gda_batch_signals
-				 [GDA_BATCH_BEGIN_TRANSACTION]);
+		g_signal_emit (G_OBJECT (job),
+			       gda_batch_signals[GDA_BATCH_BEGIN_TRANSACTION], 0);
 	}
 
 	/* traverse list of commands */
@@ -295,9 +311,9 @@ gda_batch_start (GdaBatch * job)
 			gulong reccount;
 
 			/* execute command */
-			gtk_signal_emit (GTK_OBJECT (job),
-					 gda_batch_signals
-					 [GDA_BATCH_EXECUTE_COMMAND], cmd);
+			gtk_signal_emit (G_OBJECT (job),
+					 gda_batch_signals[GDA_BATCH_EXECUTE_COMMAND],
+					 0, cmd);
 			recset = gda_connection_execute (job->cnc, cmd,
 							 &reccount, 0);
 			if (recset) {
@@ -306,15 +322,14 @@ gda_batch_start (GdaBatch * job)
 			else {
 				/* FIXME: emit "error" signal */
 				if (job->transaction_mode &&
-				    gda_connection_supports (job->cnc,
-							     GDA_Connection_FEATURE_TRANSACTIONS))
-				{
+				    gda_connection_supports (
+					    job->cnc,
+					    GNOME_Database_Connection_FEATURE_TRANSACTIONS)) {
 					/* rollback transaction */
-					gda_connection_rollback_transaction
-						(job->cnc);
-					gtk_signal_emit (GTK_OBJECT (job),
-							 gda_batch_signals
-							 [GDA_BATCH_ROLLBACK_TRANSACTION]);
+					gda_connection_rollback_transaction (job->cnc);
+					g_signal_emit (G_OBJECT (job),
+						       gda_batch_signals[GDA_BATCH_ROLLBACK_TRANSACTION],
+						       0);
 					return FALSE;
 				}
 			}
@@ -323,16 +338,17 @@ gda_batch_start (GdaBatch * job)
 	}
 
 	if (job->transaction_mode &&
-	    gda_connection_supports (job->cnc,
-				     GDA_Connection_FEATURE_TRANSACTIONS)) {
+	    gda_connection_supports (
+		    job->cnc,
+		    GNOME_Database_Connection_FEATURE_TRANSACTIONS)) {
 		if (gda_connection_commit_transaction (job->cnc) == -1) {
 			/* FIXME: emit "error" signal */
 			return FALSE;
 		}
-		gtk_signal_emit (GTK_OBJECT (job),
-				 gda_batch_signals
-				 [GDA_BATCH_COMMIT_TRANSACTION]);
+		g_signal_emit (G_OBJECT (job),
+			       gda_batch_signals[GDA_BATCH_COMMIT_TRANSACTION], 0);
 	}
+
 	job->is_running = FALSE;
 	return TRUE;
 }
@@ -391,6 +407,11 @@ void
 gda_batch_set_connection (GdaBatch * job, GdaConnection * cnc)
 {
 	g_return_if_fail (GDA_IS_BATCH (job));
+
+	if (GDA_IS_CONNECTION (job->cnc))
+		gda_connection_free (job->cnc);
+
+	g_object_ref (G_OBJECT (cnc));
 	job->cnc = cnc;
 }
 

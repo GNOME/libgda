@@ -1,3 +1,12 @@
+2001-08-27  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-recordset.[ch]:
+	* gda-command.[ch]:
+	* gda-connection-pool.[ch]:
+	* gda-connection.[ch]:
+	* gda-export.[ch]:
+	* gda-batch.[ch]: switched to GObject
+
 2001-08-22  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-recordset.c (gda_recordset_to_array): add this function from

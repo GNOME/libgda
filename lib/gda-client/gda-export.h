@@ -23,8 +23,6 @@
 #if !defined(__gda_export_h__)
 #  define __gda_export_h__ 1
 
-#include <glib.h>
-#include <gtk/gtkobject.h>
 #include <gda-common-defs.h>
 #include <gda-connection.h>
 #include <gda-xml-database.h>
@@ -40,24 +38,24 @@ typedef struct _GdaExportClass   GdaExportClass;
 typedef struct _GdaExportPrivate GdaExportPrivate;
 
 #define GDA_TYPE_EXPORT            (gda_export_get_type())
-#define GDA_EXPORT(obj)            GTK_CHECK_CAST(obj, GDA_TYPE_EXPORT, GdaExport)
-#define GDA_EXPORT_CLASS(klass)    GTK_CHECK_CLASS_CAST(klass, GDA_TYPE_EXPORT, GdaExportClass)
-#define GDA_IS_EXPORT(obj)         GTK_CHECK_TYPE(obj, GDA_TYPE_EXPORT)
-#define GDA_IS_EXPORT_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_EXPORT))
+#define GDA_EXPORT(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_EXPORT, GdaExport))
+#define GDA_EXPORT_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_EXPORT, GdaExportClass))
+#define GDA_IS_EXPORT(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_EXPORT))
+#define GDA_IS_EXPORT_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), GDA_TYPE_EXPORT))
 
 struct _GdaExport {
-	GtkObject object;
+	GObject object;
 	GdaExportPrivate *priv;
 };
 
 struct _GdaExportClass {
-	GtkObjectClass parent_class;
+	GObjectClass parent_class;
 
 	void (*object_selected) (GdaExport * exp,
-				 GDA_Connection_QType qtype,
+				 GNOME_Database_Connection_QType qtype,
 				 const gchar * name);
 	void (*object_unselected) (GdaExport * exp,
-				   GDA_Connection_QType qtype,
+				   GNOME_Database_Connection_QType qtype,
 				   const gchar * name);
 	void (*finished) (GdaExport *exp, GdaXmlDatabase *xmldb);
 	void (*cancelled) (GdaExport *exp);
@@ -67,7 +65,7 @@ typedef enum {
 	GDA_EXPORT_FLAGS_TABLE_DATA = 1
 } GdaExportFlags;
 
-GtkType        gda_export_get_type (void);
+GType          gda_export_get_type (void);
 
 GdaExport     *gda_export_new (GdaConnection * cnc);
 void           gda_export_free (GdaExport * exp);

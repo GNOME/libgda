@@ -23,8 +23,7 @@
 
 #include "config.h"
 #include "gda-recordset.h"
-
-#include <gtk/gtksignal.h>
+#include <gobject/gsignal.h>
 
 enum {
 	RECORDSET_ERROR,
@@ -37,8 +36,8 @@ enum {
 static gint gda_recordset_signals[LAST_SIGNAL] = { 0, };
 
 static void gda_recordset_class_init (GdaRecordsetClass *);
-static void gda_recordset_init (GdaRecordset *);
-static void gda_recordset_destroy (GtkObject * object, gpointer user_data);
+static void gda_recordset_init       (GdaRecordset *, GdaRecordsetClass *);
+static void gda_recordset_finalize   (GObject * object);
 
 static void gda_recordset_real_error (GdaRecordset *, GList *);
 static gulong fetch_and_store (GdaRecordset * rs, gint count,
@@ -66,80 +65,75 @@ gda_recordset_real_error (GdaRecordset * rs, GList * error_list)
 	}
 }
 
-guint
+GType
 gda_recordset_get_type (void)
 {
-	static guint gda_recordset_type = 0;
+	static GType type = 0;
 
-	if (!gda_recordset_type) {
-		GtkTypeInfo gda_recordset_info = {
-			"GdaRecordset",
-			sizeof (GdaRecordset),
+	if (!type) {
+		static const GTypeInfo info = {
 			sizeof (GdaRecordsetClass),
-			(GtkClassInitFunc) gda_recordset_class_init,
-			(GtkObjectInitFunc) gda_recordset_init,
-			(GtkArgSetFunc) NULL,
-			(GtkArgSetFunc) NULL
+			(GBaseInitFunc) NULL,
+			(GBaseFinalizeFunc) NULL,
+			(GClassInitFunc) gda_recordset_class_init,
+			NULL,
+			NULL,
+			sizeof (GdaRecordset),
+			0,
+			(GInstanceInitFunc) gda_recordset_init
 		};
-		gda_recordset_type =
-			gtk_type_unique (gtk_object_get_type (),
-					 &gda_recordset_info);
+		type = g_type_register_static (G_TYPE_OBJECT, "GdaRecordset", &info, 0);
 	}
-	return (gda_recordset_type);
+	return type;
 }
-
-typedef void (*GtkSignal_NONE__INT_POINTER) (GtkObject,
-					     guint arg1,
-					     gpointer arg2,
-					     gpointer user_data);
 
 static void
 gda_recordset_class_init (GdaRecordsetClass * klass)
 {
-	GtkObjectClass *object_class = (GtkObjectClass *) klass;
+	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
 	gda_recordset_signals[RECORDSET_ERROR] =
-		gtk_signal_new ("error",
-				GTK_RUN_LAST,
-				object_class->type,
-				GTK_SIGNAL_OFFSET (GdaRecordsetClass, error),
-				gtk_marshal_NONE__POINTER,
-				GTK_TYPE_NONE, 1, GTK_TYPE_POINTER);
+		g_signal_new ("error",
+			      G_TYPE_FROM_CLASS (object_class),
+			      G_SIGNAL_RUN_LAST,
+			      G_STRUCT_OFFSET (GdaRecordsetClass, error),
+			      NULL, NULL,
+			      g_cclosure_marshal_VOID__POINTER,
+			      G_TYPE_NONE, 1, G_TYPE_POINTER);
 	gda_recordset_signals[RECORDSET_EOF] =
-		gtk_signal_new ("eof",
-				GTK_RUN_LAST,
-				object_class->type,
-				GTK_SIGNAL_OFFSET (GdaRecordsetClass, eof),
-				gtk_signal_default_marshaller,
-				GTK_TYPE_NONE, 0);
+		g_signal_new ("eof",
+			      G_TYPE_FROM_CLASS (object_class),
+			      G_SIGNAL_RUN_LAST,
+			      G_STRUCT_OFFSET (GdaRecordsetClass, eof),
+			      NULL, NULL,
+			      g_cclosure_marshal_VOID__VOID,
+			      G_TYPE_NONE, 0);
 	gda_recordset_signals[RECORDSET_BOF] =
-		gtk_signal_new ("bof",
-				GTK_RUN_LAST,
-				object_class->type,
-				GTK_SIGNAL_OFFSET (GdaRecordsetClass, bof),
-				gtk_signal_default_marshaller,
-				GTK_TYPE_NONE, 0);
+		g_signal_new ("bof",
+			      G_TYPE_FROM_CLASS (object_class),
+			      G_SIGNAL_RUN_LAST,
+			      G_STRUCT_OFFSET (GdaRecordsetClass, bof),
+			      NULL, NULL,
+			      g_cclosure_marshal_VOID__VOID,
+			      G_TYPE_NONE, 0);
 	gda_recordset_signals[RECORDSET_ROW_CHANGED] =
-		gtk_signal_new ("row_changed",
-				GTK_RUN_LAST,
-				object_class->type,
-				GTK_SIGNAL_OFFSET (GdaRecordsetClass,
-						   row_changed),
-				gtk_signal_default_marshaller, GTK_TYPE_NONE,
-				0);
-
-	gtk_object_class_add_signals (object_class, gda_recordset_signals,
-				      LAST_SIGNAL);
+		g_signal_new ("row_changed",
+			      G_TYPE_FROM_CLASS (object_class),
+			      G_SIGNAL_RUN_LAST,
+			      G_STRUCT_OFFSET (GdaRecordsetClass, row_changed),
+			      NULL, NULL,
+			      g_cclosure_marshal_VOID__VOID,
+			      G_TYPE_NONE, 0);
 
 	klass->error = gda_recordset_real_error;
 	klass->eof = NULL;
 	klass->bof = NULL;
 	klass->row_changed = NULL;
-	object_class->destroy = gda_recordset_destroy;
+	object_class->finalize = gda_recordset_finalize;
 }
 
 static void
-gda_recordset_init (GdaRecordset * rs)
+gda_recordset_init (GdaRecordset *rs, GdaRecordsetClass *klass)
 {
 	rs->external_cmd = 0;
 	rs->internal_cmd = 0;
@@ -157,34 +151,35 @@ gda_recordset_init (GdaRecordset * rs)
 	rs->eof = 1;
 	rs->bof = 1;
 	rs->readonly = 1;
-	rs->cursor_location = GDA_USE_CLIENT_CURSOR;
-	rs->cursor_type = GDA_OPEN_FWDONLY;
+	rs->cursor_location = GNOME_Database_USE_CLIENT_CURSOR;
+	rs->cursor_type = GNOME_Database_OPEN_FWDONLY;
 	rs->name = 0;
 }
 
 static void
-gda_recordset_destroy (GtkObject * object, gpointer user_data)
+gda_recordset_finalize (GObject * object)
 {
 	GdaRecordset *rs = (GdaRecordset *) object;
-	GtkObjectClass *parent_class;
+	GObjectClass *parent_class;
 
 	g_return_if_fail (GDA_IS_RECORDSET (rs));
 
 	if (rs->open)
 		gda_recordset_close (rs);
-	if (rs->internal_cmd) {
+	if (GDA_IS_CONNECTION (rs->cnc))
+		gda_connection_free (rs->cnc);
+	if (rs->internal_cmd)
 		gda_command_free (rs->internal_cmd);
-	}
 
-	parent_class = gtk_type_class (gtk_object_get_type ());
-	if (parent_class && parent_class->destroy)
-		parent_class->destroy (object);
+	parent_class = G_OBJECT_CLASS (g_type_class_peek (G_TYPE_OBJECT));
+	if (parent_class && parent_class->finalize)
+		parent_class->finalize (object);
 }
 
 static void
 free_chunks (GList * chunks)
 {
-	GDA_Row *row;
+	GNOME_Database_Row *row;
 	GList *ptr;
 
 	ptr = chunks;
@@ -195,10 +190,10 @@ free_chunks (GList * chunks)
 	}
 }
 
-static GDA_Row *
+static GNOME_Database_Row *
 row_by_idx (GdaRecordset * rs, gint idx)
 {
-	GDA_Recordset_Chunk *chunk;
+	GNOME_Database_Recordset_Chunk *chunk;
 
 	if (idx <= 0 || idx > g_list_length (rs->chunks))
 		return 0;
@@ -217,7 +212,7 @@ row_by_idx (GdaRecordset * rs, gint idx)
 GdaRecordset *
 gda_recordset_new (void)
 {
-	return GDA_RECORDSET (gtk_type_new (gda_recordset_get_type ()));
+	return GDA_RECORDSET (g_object_new (GDA_TYPE_RECORDSET));
 }
 
 /**
@@ -232,8 +227,7 @@ void
 gda_recordset_free (GdaRecordset * rs)
 {
 	g_return_if_fail (GDA_IS_RECORDSET (rs));
-
-	gtk_object_unref (GTK_OBJECT (rs));
+	g_object_unref (G_OBJECT (rs));
 }
 
 /**
@@ -260,7 +254,7 @@ gda_recordset_close (GdaRecordset * rs)
 		return;
 	rs->open = 0;
 	if (rs->corba_rs) {
-		GDA_Recordset_close (rs->corba_rs, &ev);
+		GNOME_Database_Recordset_close (rs->corba_rs, &ev);
 		gda_connection_corba_exception (rs->cnc, &ev);
 	}
 	rs->corba_rs = CORBA_OBJECT_NIL;
@@ -317,7 +311,7 @@ gda_recordset_eof (GdaRecordset * rs)
 static gulong
 fetch_and_store (GdaRecordset * rs, gint count, gpointer bookmark)
 {
-	GDA_Recordset_Chunk *chunk;
+	GNOME_Database_Recordset_Chunk *chunk;
 	gulong current_idx;
 	CORBA_Environment ev;
 	gint current_count;
@@ -344,7 +338,7 @@ fetch_and_store (GdaRecordset * rs, gint count, gpointer bookmark)
 	/* going forward. We have to fetch it from the provider */
 	CORBA_exception_init (&ev);
 	for (current_count = 0; current_count < count; current_count++) {
-		chunk = GDA_Recordset_fetch (rs->corba_rs, 1, &ev);
+		chunk = GNOME_Database_Recordset_fetch (rs->corba_rs, 1, &ev);
 		if (gda_connection_corba_exception (rs->cnc, &ev)) {
 			/* An error */
 			return rs->current_index;
@@ -374,7 +368,7 @@ fetch_and_store (GdaRecordset * rs, gint count, gpointer bookmark)
 static gulong
 fetch_and_dont_store (GdaRecordset * rs, gint count, gpointer bookmark)
 {
-	GDA_Recordset_Chunk *chunk;
+	GNOME_Database_Recordset_Chunk *chunk;
 	gulong current_idx;
 	CORBA_Environment ev;
 	GList *error_list;
@@ -385,20 +379,20 @@ fetch_and_dont_store (GdaRecordset * rs, gint count, gpointer bookmark)
 		return GDA_RECORDSET_INVALID_POSITION;
 
 	CORBA_exception_init (&ev);
-	GDA_Recordset_moveFirst (rs->corba_rs, &ev);
+	GNOME_Database_Recordset_moveFirst (rs->corba_rs, &ev);
 	error_list = gda_error_list_from_exception (&ev);
 	if (error_list) {
 		gda_connection_add_error_list (rs->cnc, error_list);
 		return GDA_RECORDSET_INVALID_POSITION;
 	}
 
-	//GDA_Recordset_move (rs->corba_rs, current_idx - 1, 0, &ev);
+	//GNOME_Database_Recordset_move (rs->corba_rs, current_idx - 1, 0, &ev);
 	//error_list = gda_error_list_from_exception (&ev);
 	//if (error_list) {
 	//gda_connection_add_error_list (rs->cnc, error_list);
 	//return GDA_RECORDSET_INVALID_POSITION;
 	//}
-	chunk = GDA_Recordset_fetch (rs->corba_rs, count, &ev);
+	chunk = GNOME_Database_Recordset_fetch (rs->corba_rs, count, &ev);
 	error_list = gda_error_list_from_exception (&ev);
 	if (error_list) {
 		gda_connection_add_error_list (rs->cnc, error_list);
@@ -451,20 +445,20 @@ gda_recordset_move (GdaRecordset * rs, gint count, gpointer bookmark)
 	g_return_val_if_fail (rs->corba_rs != NULL, GDA_RECORDSET_INVALID_POSITION);
 	g_return_val_if_fail (rs->open, GDA_RECORDSET_INVALID_POSITION);
 
-	if (rs->cursor_type == GDA_OPEN_FWDONLY && count < 0)
+	if (rs->cursor_type == GNOME_Database_OPEN_FWDONLY && count < 0)
 		return rs->current_index;
 
 	if (count == 0)
 		return rs->current_index;
 
-	if (rs->cursor_location == GDA_USE_CLIENT_CURSOR)
+	if (rs->cursor_location == GNOME_Database_USE_CLIENT_CURSOR)
 		fetch_and_store (rs, count, 0);
 	else
 		fetch_and_dont_store (rs, count, 0);
 
 	/* emit "row_changed" signal for data-bound widgets */
-	gtk_signal_emit (GTK_OBJECT (rs),
-			 gda_recordset_signals[RECORDSET_ROW_CHANGED]);
+	g_signal_emit (G_OBJECT (rs),
+		       gda_recordset_signals[RECORDSET_ROW_CHANGED], 0);
 	return rs->current_index;
 }
 
@@ -483,11 +477,10 @@ gda_recordset_move (GdaRecordset * rs, gint count, gpointer bookmark)
 gulong
 gda_recordset_move_first (GdaRecordset * rs)
 {
-	g_return_val_if_fail (GDA_IS_RECORDSET (rs),
-			      GDA_RECORDSET_INVALID_POSITION);
+	g_return_val_if_fail (GDA_IS_RECORDSET (rs), GDA_RECORDSET_INVALID_POSITION);
 
-	if (rs->cursor_location == GDA_USE_CLIENT_CURSOR) {
-		GDA_Recordset_Chunk *chunk;
+	if (rs->cursor_location == GNOME_Database_USE_CLIENT_CURSOR) {
+		GNOME_Database_Recordset_Chunk *chunk;
 		if (!rs->chunks)
 			return gda_recordset_move (rs, 1, 0);
 		rs->current_index = 1;
@@ -496,8 +489,7 @@ gda_recordset_move_first (GdaRecordset * rs)
 		rs->eof = 0;
 		return 0;
 	}
-	gda_log_error
-		("gda_recordset_move_first for server based cursor NIY");
+	gda_log_error ("gda_recordset_move_first for server based cursor NIY");
 	return GDA_RECORDSET_INVALID_POSITION;
 }
 
@@ -519,10 +511,9 @@ gda_recordset_move_last (GdaRecordset * rs)
 	gulong pos;
 	gulong rc;
 
-	g_return_val_if_fail (GDA_IS_RECORDSET (rs),
-			      GDA_RECORDSET_INVALID_POSITION);
+	g_return_val_if_fail (GDA_IS_RECORDSET (rs), GDA_RECORDSET_INVALID_POSITION);
 
-	if (rs->cursor_location == GDA_USE_CLIENT_CURSOR) {
+	if (rs->cursor_location == GNOME_Database_USE_CLIENT_CURSOR) {
 		pos = rs->current_index;
 		while (1) {
 			rc = gda_recordset_move (rs, 1, 0);
@@ -534,8 +525,7 @@ gda_recordset_move_last (GdaRecordset * rs)
 			pos++;
 		}
 	}
-	gda_log_error
-		("gda_recordset_move_first for server based cursor NIY");
+	gda_log_error ("gda_recordset_move_first for server based cursor NIY");
 	return GDA_RECORDSET_INVALID_POSITION;
 }
 
@@ -600,10 +590,9 @@ gda_recordset_field_idx (GdaRecordset * rs, gint idx)
 	rc = gda_field_new ();
 	rc->attributes = &rs->field_attributes->_buffer[idx];
 	if (rs->current_row) {
-		rc->real_value = &rs->current_row->_buffer[idx].realValue;
-		rc->shadow_value = &rs->current_row->_buffer[idx].shadowValue;
-		rc->original_value =
-			&rs->current_row->_buffer[idx].originalValue;
+		//rc->real_value = &rs->current_row->_buffer[idx].realValue;
+		//rc->shadow_value = &rs->current_row->_buffer[idx].shadowValue;
+		//rc->original_value = &rs->current_row->_buffer[idx].originalValue;
 	}
 	return rc;
 }
@@ -616,7 +605,6 @@ gda_recordset_field_idx (GdaRecordset * rs, gint idx)
  * the returned array is a GPtrArray, which in turn contains GdaField's
  * as its nodes. 
  **/
-
 GPtrArray *
 gda_recordset_to_array (GdaRecordset *rs)
 {
@@ -676,8 +664,7 @@ gda_recordset_field_name (GdaRecordset * rs, gchar * name)
 	}
 	rowsize = rs->field_attributes->_length;
 	for (idx = 0; idx < rowsize; idx++) {
-		if (strcasecmp (rs->field_attributes->_buffer[idx].name, name)
-		    == 0)
+		if (strcasecmp (rs->field_attributes->_buffer[idx].name, name) == 0)
 			return gda_recordset_field_idx (rs, idx);
 	}
 	return 0;
@@ -725,18 +712,20 @@ gda_recordset_affected_rows (GdaRecordset * rs)
  * This function must be called before any of the the
  * gda_recordset_open_txt() or gda_recordset_open_cmd() functions is
  * called.
- *
- * Returns: 0 if everyhting is okay, -1 on error
  */
-gint
+void
 gda_recordset_set_connection (GdaRecordset * rs, GdaConnection * cnc)
 {
-	g_return_val_if_fail (GDA_IS_RECORDSET (rs), -1);
+	g_return_if_fail (GDA_IS_RECORDSET (rs));
 
 	if (rs->open)
-		return -1;
+		return;
+
+	if (GDA_IS_CONNECTION (rs->cnc))
+		gda_connection_free (rs->cnc);
+
+	g_object_ref (G_OBJECT (cnc));
 	rs->cnc = cnc;
-	return 0;
 }
 
 /**
@@ -778,11 +767,12 @@ gda_recordset_get_connection (GdaRecordset * rs)
 gint
 gda_recordset_open (GdaRecordset * rs,
 		    GdaCommand * cmd,
-		    GDA_CursorType cursor_type,
-		    GDA_LockType lock_type, gulong options)
+		    GNOME_Database_CursorType cursor_type,
+		    GNOME_Database_LockType lock_type,
+		    gulong options)
 {
 	CORBA_Environment ev;
-	GDA_CmdParameterSeq *corba_parameters;
+	GNOME_Database_CmdParameterSeq *corba_parameters;
 	CORBA_long affected = 0;
 	GList *error_list;
 
@@ -795,9 +785,9 @@ gda_recordset_open (GdaRecordset * rs,
 	rs->lock_type = lock_type;
 	CORBA_exception_init (&ev);
 	rs->cnc = cmd->connection;
-	rs->corba_rs = GDA_Command_open (cmd->command, corba_parameters,
-					 cursor_type, lock_type, &affected,
-					 &ev);
+	rs->corba_rs = GNOME_Database_Command_open (cmd->command, corba_parameters,
+						    cursor_type, lock_type, &affected,
+						    &ev);
 	error_list = gda_error_list_from_exception (&ev);
 	if (error_list) {
 		rs->corba_rs = 0;
@@ -813,8 +803,7 @@ gda_recordset_open (GdaRecordset * rs,
 		return -1;
 	}
 	else
-		rs->field_attributes =
-			GDA_Recordset_describe (rs->corba_rs, &ev);
+		rs->field_attributes = GNOME_Database_Recordset_describe (rs->corba_rs, &ev);
 	error_list = gda_error_list_from_exception (&ev);
 	if (error_list) {
 		gda_connection_add_error_list (rs->cnc, error_list);
@@ -844,10 +833,10 @@ gda_recordset_open (GdaRecordset * rs,
  * Returns: 0 if everytrhing is okay, -1 on error
  */
 gint
-gda_recordset_open_txt (GdaRecordset * rs,
+gda_recordset_open_txt (GdaRecordset *rs,
 			gchar * txt,
-			GDA_CursorType cursor_type,
-			GDA_LockType lock_type, gulong options)
+			GNOME_Database_CursorType cursor_type,
+			GNOME_Database_LockType lock_type, gulong options)
 {
 	CORBA_Environment ev;
 	GdaCommand *cmd;
@@ -866,6 +855,7 @@ gda_recordset_open_txt (GdaRecordset * rs,
 	gda_command_set_text (cmd, txt);
 	rc = gda_recordset_open (rs, cmd, cursor_type, lock_type, options);
 	gda_command_free (cmd);
+
 	return rc;
 }
 
@@ -881,43 +871,33 @@ gda_recordset_add_field (GdaRecordset * rs, GdaField * field)
 	g_return_val_if_fail (field->attributes->name, -1);
 
 	if (rs->field_attributes) {
-		GDA_FieldAttributes *old;
+		GNOME_Database_FieldAttributes *old;
 		gint idx;
 
 		for (idx = 0; idx < rs->field_attributes->_length; idx++) {
-			if (strcasecmp
-			    (rs->field_attributes->_buffer[idx].name,
-			     field->attributes->name) == 0)
+			if (strcasecmp (rs->field_attributes->_buffer[idx].name,
+					field->attributes->name) == 0)
 				return -1;
 		}
 		rs->field_attributes->_length++;
 		old = rs->field_attributes->_buffer;
 		rs->field_attributes->_buffer =
-			CORBA_sequence_GDA_FieldAttributes_allocbuf (rs->
-								     field_attributes->
-								     _length);
+			CORBA_sequence_GNOME_Database_FieldAttributes_allocbuf (
+				rs->field_attributes->_length);
 		memcpy (rs->field_attributes->_buffer, old,
 			rs->field_attributes->_length - 1);
 	}
 	else {
 		rs->field_attributes->_length = 1;
 		rs->field_attributes->_buffer =
-			CORBA_sequence_GDA_FieldAttributes_allocbuf (rs->
-								     field_attributes->
-								     _length);
+			CORBA_sequence_GNOME_Database_FieldAttributes_allocbuf (
+				rs->field_attributes->_length);
 	}
-	rs->field_attributes->_buffer[rs->field_attributes->_length -
-				      1].definedSize =
-		field->attributes->definedSize;
-	rs->field_attributes->_buffer[rs->field_attributes->_length -
-				      1].name =
-		CORBA_string_dup (field->attributes->name);
-	rs->field_attributes->_buffer[rs->field_attributes->_length -
-				      1].scale = field->attributes->scale;
-	rs->field_attributes->_buffer[rs->field_attributes->_length -
-				      1].gdaType = field->attributes->gdaType;
-	rs->field_attributes->_buffer[rs->field_attributes->_length -
-				      1].cType = field->attributes->cType;
+	rs->field_attributes->_buffer[rs->field_attributes->_length - 1].definedSize = field->attributes->definedSize;
+	rs->field_attributes->_buffer[rs->field_attributes->_length - 1].name = CORBA_string_dup (field->attributes->name);
+	rs->field_attributes->_buffer[rs->field_attributes->_length - 1].scale = field->attributes->scale;
+	rs->field_attributes->_buffer[rs->field_attributes->_length - 1].gdaType = field->attributes->gdaType;
+	rs->field_attributes->_buffer[rs->field_attributes->_length - 1].cType = field->attributes->cType;
 	return 0;
 }
 
@@ -927,7 +907,7 @@ gda_recordset_add_field (GdaRecordset * rs, GdaField * field)
  *
  * Returns: the current value of the cursor location attribute
  */
-GDA_CursorLocation
+GNOME_Database_CursorLocation
 gda_recordset_get_cursorloc (GdaRecordset * rs)
 {
 	g_return_val_if_fail (GDA_IS_RECORDSET (rs), -1);
@@ -943,7 +923,7 @@ gda_recordset_get_cursorloc (GdaRecordset * rs)
  */
 
 void
-gda_recordset_set_cursorloc (GdaRecordset * rs, GDA_CursorLocation loc)
+gda_recordset_set_cursorloc (GdaRecordset * rs, GNOME_Database_CursorLocation loc)
 {
 	g_return_if_fail (GDA_IS_RECORDSET (rs));
 	rs->cursor_location = loc;
@@ -955,7 +935,7 @@ gda_recordset_set_cursorloc (GdaRecordset * rs, GDA_CursorLocation loc)
  *
  * Returns: the current value of the cursor type attriburte
  */
-GDA_CursorType
+GNOME_Database_CursorType
 gda_recordset_get_cursortype (GdaRecordset * rs)
 {
 	g_return_val_if_fail (GDA_IS_RECORDSET (rs), -1);
@@ -970,7 +950,7 @@ gda_recordset_get_cursortype (GdaRecordset * rs)
  * Set the cursor type attribute to @type.
  */
 void
-gda_recordset_set_cursortype (GdaRecordset * rs, GDA_CursorType type)
+gda_recordset_set_cursortype (GdaRecordset * rs, GNOME_Database_CursorType type)
 {
 	g_return_if_fail (GDA_IS_RECORDSET (rs));
 	rs->cursor_type = type;

@@ -21,34 +21,18 @@
 #include "config.h"
 #include "gda-connection-pool.h"
 #include "gda-common.h"
-#include "GDA.h"
-
-#include <gtk/gtksignal.h>
-
-#ifdef ENABLE_NLS
-#  include <libintl.h>
-#  define _(String) gettext (String)
-#  define N_(String) (String)
-#else
-/* Stubs that do something close enough. */
-#  define textdomain(String)
-#  define gettext(String) (String)
-#  define dgettext(Domain,Message) (Message)
-#  define dcgettext(Domain,Message,Type) (Message)
-#  define bindtextdomain(Domain,Directory)
-#  define _(String) (String)
-#  define N_(String) (String)
-#endif
+#include "GNOME_Database.h"
+#include <gobject/gsignal.h>
+#include <bonobo/bonobo-marshal.h>
 
 static void gda_connection_pool_class_init (GdaConnectionPoolClass * klass);
-static void gda_connection_pool_init (GdaConnectionPool * pool);
-static void gda_connection_pool_destroy (GdaConnectionPool * pool);
+static void gda_connection_pool_init       (GdaConnectionPool * pool, GdaConnectionPoolClass *klass);
+static void gda_connection_pool_finalize   (GObject *object);
 
 /*
  * GdaConnectionPool object signals
  */
-enum
-{
+enum {
 	OPEN,
 	ERROR,
 	LAST_SIGNAL
@@ -60,7 +44,7 @@ static gint gda_connection_pool_signals[LAST_SIGNAL] = { 0, };
  * Callbacks
  */
 static void
-connection_destroyed_cb (GtkObject * object, gpointer user_data)
+connection_destroyed_cb (GObject * object, gpointer user_data)
 {
 	GdaConnection *cnc = (GdaConnection *) object;
 	GdaConnectionPool *pool = (GdaConnectionPool *) user_data;
@@ -79,8 +63,8 @@ connection_error_cb (GdaConnection * cnc, GList * errors, gpointer user_data)
 	g_return_if_fail (GDA_IS_CONNECTION (cnc));
 	g_return_if_fail (GDA_IS_CONNECTION_POOL (pool));
 
-	gtk_signal_emit (GTK_OBJECT (pool),
-			 gda_connection_pool_signals[ERROR], cnc, errors);
+	g_signal_emit (G_OBJECT (pool),
+		       gda_connection_pool_signals[ERROR], 0, cnc, errors);
 }
 
 static void
@@ -91,8 +75,8 @@ connection_opened_cb (GdaConnection * cnc, gpointer user_data)
 	g_return_if_fail (GDA_IS_CONNECTION (cnc));
 	g_return_if_fail (GDA_IS_CONNECTION_POOL (pool));
 
-	gtk_signal_emit (GTK_OBJECT (pool),
-			 gda_connection_pool_signals[OPEN], cnc);
+	g_signal_emit (G_OBJECT (pool),
+		       gda_connection_pool_signals[OPEN], 0, cnc);
 }
 
 /*
@@ -101,56 +85,57 @@ connection_opened_cb (GdaConnection * cnc, gpointer user_data)
 static void
 gda_connection_pool_class_init (GdaConnectionPoolClass * klass)
 {
-	GtkObjectClass *object_class = GTK_OBJECT_CLASS (klass);
+	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
 	gda_connection_pool_signals[OPEN] =
-		gtk_signal_new ("open",
-				GTK_RUN_FIRST,
-				object_class->type,
-				GTK_SIGNAL_OFFSET (GdaConnectionPoolClass,
-						   open),
-				gtk_marshal_NONE__POINTER, GTK_TYPE_NONE, 1,
-				GTK_TYPE_POINTER);
+		g_signal_new ("open",
+			      G_TYPE_FROM_CLASS (object_class),
+			      G_SIGNAL_RUN_LAST,
+			      G_STRUCT_OFFSET (GdaConnectionPoolClass, open),
+			      NULL, NULL,
+			      g_cclosure_marshal_VOID__POINTER,
+			      G_TYPE_NONE, 1, G_TYPE_POINTER);
 	gda_connection_pool_signals[ERROR] =
-		gtk_signal_new ("error", GTK_RUN_FIRST, object_class->type,
-				GTK_SIGNAL_OFFSET (GdaConnectionPoolClass,
-						   error),
-				gtk_marshal_NONE__POINTER_POINTER,
-				GTK_TYPE_NONE, 2,
-				GTK_TYPE_POINTER, GTK_TYPE_POINTER);
-	gtk_object_class_add_signals (object_class,
-				      gda_connection_pool_signals,
-				      LAST_SIGNAL);
+		gtk_signal_new ("error",
+				G_TYPE_FROM_CLASS (object_class),
+				G_SIGNAL_RUN_LAST,
+				G_STRUCT_OFFSET (GdaConnectionPoolClass, error),
+				NULL, NULL,
+				bonobo_marshal_VOID__POINTER_POINTER,
+				G_TYPE_NONE, 2, G_TYPE_POINTER,
+				G_TYPE_POINTER);
 
-	object_class->destroy = gda_connection_pool_destroy;
+	object_class->finalize = gda_connection_pool_finalize;
 	klass->open = NULL;
 	klass->error = NULL;
 }
 
 static void
-gda_connection_pool_init (GdaConnectionPool * pool)
+gda_connection_pool_init (GdaConnectionPool *pool, GdaConnectionPoolClass *klass)
 {
 	g_return_if_fail (GDA_IS_CONNECTION_POOL (pool));
 
 	pool->connections = NULL;
 }
 
-GtkType
+GType
 gda_connection_pool_get_type (void)
 {
-	static GtkType type = 0;
+	static GType type = 0;
 
 	if (!type) {
-		GtkTypeInfo info = {
-			"GdaConnectionPool",
-			sizeof (GdaConnectionPool),
+		static const GTypeInfo info = {
 			sizeof (GdaConnectionPoolClass),
-			(GtkClassInitFunc) gda_connection_pool_class_init,
-			(GtkObjectInitFunc) gda_connection_pool_init,
-			(GtkArgSetFunc) NULL,
-			(GtkArgSetFunc) NULL
+			(GBaseInitFunc) NULL,
+			(GBaseFinalizeFunc) NULL,
+			(GClassInitFunc) gda_connection_pool_class_init,
+			NULL,
+			NULL,
+			sizeof (GdaConnectionPool),
+			0,
+			(GInstanceInitFunc) gda_connection_pool_init
 		};
-		type = gtk_type_unique (gtk_object_get_type (), &info);
+		type = g_type_register_static (G_TYPE_OBJECT, "GdaConnectionPool", &info, 0);
 	}
 	return type;
 }
@@ -165,14 +150,22 @@ gda_connection_pool_get_type (void)
 GdaConnectionPool *
 gda_connection_pool_new (void)
 {
-	return GDA_CONNECTION_POOL (gtk_type_new
-				    (gda_connection_pool_get_type ()));
+	return GDA_CONNECTION_POOL (gtk_object_new (GDA_TYPE_CONNECTION_POOL));
 }
 
 static void
-gda_connection_pool_destroy (GdaConnectionPool * pool)
+gda_connection_pool_finalize (GObject *object)
 {
+	GObjectClass *parent_class;
+	GdaConnectionPool *pool = (GdaConnectionPool *) object;
+
+	g_return_if_fail (GDA_IS_CONNECTION_POOL (pool));
+
 	gda_connection_pool_close_all (pool);
+
+	parent_class = G_OBJECT_CLASS (g_type_class_peek (G_TYPE_OBJECT));
+	if (parent_class && parent_class->finalize)
+		parent_class->finalize (object);
 }
 
 /**
@@ -182,7 +175,7 @@ void
 gda_connection_pool_free (GdaConnectionPool * pool)
 {
 	g_return_if_fail (GDA_IS_CONNECTION_POOL (pool));
-	gtk_object_unref (GTK_OBJECT (pool));
+	g_object_unref (G_OBJECT (pool));
 }
 
 /**
@@ -210,29 +203,25 @@ gda_connection_pool_open_connection (GdaConnectionPool * pool,
 	     node = g_list_next (node)) {
 		cnc = GDA_CONNECTION (node->data);
 		if (GDA_IS_CONNECTION (cnc)) {
-			dsn = (GdaDsn *)
-				gtk_object_get_data (GTK_OBJECT (cnc),
-						     "GDA_ConnectionPool_DSN");
+			dsn = (GdaDsn *) g_object_get_data (G_OBJECT (cnc),
+							    "GDA_ConnectionPool_DSN");
 			if (dsn) {
 				gchar *dsn_username;
 				gchar *dsn_password;
 
 				dsn_username = gda_connection_get_user (cnc);
-				dsn_password =
-					gda_connection_get_password (cnc);
-				if (!g_strcasecmp
-				    (gda_name, GDA_DSN_GDA_NAME (dsn))
+				dsn_password = gda_connection_get_password (cnc);
+				if (!g_strcasecmp (gda_name, GDA_DSN_GDA_NAME (dsn))
 				    && (!g_strcasecmp (username, dsn_username)
 					|| (!username && !dsn_username))
 				    && (!g_strcasecmp (password, dsn_password)
 					|| (!password && !dsn_password))) {
 					/* emit the open signal, for top-level uses */
-					gtk_signal_emit (GTK_OBJECT (pool),
-							 gda_connection_pool_signals
-							 [OPEN], cnc);
-					gtk_object_ref (GTK_OBJECT (cnc));
-					gda_config_save_last_connection
-						(gda_name, username);
+					g_signal_emit (GTK_OBJECT (pool),
+						       gda_connection_pool_signals[OPEN],
+						       0, cnc);
+					g_object_ref (G_OBJECT (cnc));
+					gda_config_save_last_connection (gda_name, username);
 
 					return cnc;
 				}
@@ -245,40 +234,39 @@ gda_connection_pool_open_connection (GdaConnectionPool * pool,
 	if (dsn) {
 		cnc = gda_connection_new (gda_corba_get_orb ());
 		gda_connection_set_provider (cnc, GDA_DSN_PROVIDER (dsn));
-		gtk_object_set_data (GTK_OBJECT (cnc),
-				     "GDA_ConnectionPool_DSN",
-				     (gpointer) dsn);
+		g_object_set_data (G_OBJECT (cnc),
+				   "GDA_ConnectionPool_DSN",
+				   (gpointer) dsn);
 
-		gtk_signal_connect (GTK_OBJECT (cnc),
-				    "open",
-				    GTK_SIGNAL_FUNC (connection_opened_cb),
-				    (gpointer) pool);
-		gtk_signal_connect (GTK_OBJECT (cnc),
-				    "destroy",
-				    GTK_SIGNAL_FUNC (connection_destroyed_cb),
-				    (gpointer) pool);
-		gtk_signal_connect (GTK_OBJECT (cnc),
-				    "error",
-				    GTK_SIGNAL_FUNC (connection_error_cb),
-				    (gpointer) pool);
+		g_signal_connect (GTK_OBJECT (cnc),
+				  "open",
+				  G_CALLBACK (connection_opened_cb),
+				  (gpointer) pool);
+		g_signal_connect (G_OBJECT (cnc),
+				  "destroy",
+				  G_CALLBACK (connection_destroyed_cb),
+				  (gpointer) pool);
+		g_signal_connect (G_OBJECT (cnc),
+				  "error",
+				  G_CALLBACK (connection_error_cb),
+				  (gpointer) pool);
 
 		/* open the connection */
-		if (gda_connection_open
-		    (cnc, GDA_DSN_DSN (dsn), username, password) != 0) {
+		if (gda_connection_open (cnc, GDA_DSN_DSN (dsn), username, password) != 0) {
 			g_warning (_("could not open connection to %s"),
 				   gda_name);
 			gda_connection_free (cnc);
 			return NULL;
 		}
 
-		pool->connections =
-			g_list_append (pool->connections, (gpointer) cnc);
+		pool->connections = g_list_append (pool->connections, (gpointer) cnc);
 		gda_config_save_last_connection (gda_name, username);
 
 		return cnc;
 	}
 	else
 		g_warning (_("Data source %s not found"), gda_name);
+
 	return NULL;
 }
 
@@ -311,7 +299,7 @@ gda_connection_pool_close_connection (GdaConnectionPool * pool,
 
 		if (tmp == cnc) {
 			/* found, unref the object */
-			gtk_object_unref (GTK_OBJECT (cnc));
+			g_object_unref (G_OBJECT (cnc));
 			break;
 		}
 	}
@@ -333,12 +321,10 @@ gda_connection_pool_close_all (GdaConnectionPool * pool)
 		GdaDsn *dsn;
 		GdaConnection *cnc = GDA_CONNECTION (node->data);
 
-		pool->connections =
-			g_list_remove (pool->connections, (gpointer) cnc);
+		pool->connections = g_list_remove (pool->connections, (gpointer) cnc);
 		if (GDA_IS_CONNECTION (cnc)) {
-			dsn = (GdaDsn *)
-				gtk_object_get_data (GTK_OBJECT (cnc),
-						     "GDA_ConnectionPool_DSN");
+			dsn = (GdaDsn *) g_object_get_data (G_OBJECT (cnc),
+							    "GDA_ConnectionPool_DSN");
 			if (dsn)
 				gda_dsn_free (dsn);
 			gda_connection_free (cnc);
@@ -366,9 +352,8 @@ gda_connection_pool_foreach (GdaConnectionPool * pool,
 		if (GDA_IS_CONNECTION (cnc)) {
 			GdaDsn *dsn;
 
-			dsn = (GdaDsn *)
-				gtk_object_get_data (GTK_OBJECT (cnc),
-						     "GDA_ConnectionPool_DSN");
+			dsn = (GdaDsn *) g_object_get_data (G_OBJECT (cnc),
+							    "GDA_ConnectionPool_DSN");
 			func (pool,
 			      cnc,
 			      GDA_DSN_GDA_NAME (dsn),

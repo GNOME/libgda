@@ -1,6 +1,6 @@
-/* GDA client libary
+/* GDA client library
  * Copyright (C) 1998,1999 Michael Lausch
- * Copyright (C) 1999 Rodrigo Moya
+ * Copyright (C) 1999-2001 Rodrigo Moya
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -18,13 +18,10 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#ifndef __gda_recordset_h__
-#define __gda_recordset_h__ 1
+#if !defined(__gda_recordset_h__)
+#  define __gda_recordset_h__
 
-#include <glib.h>
-#include <gtk/gtkobject.h>
-#include <orb/orbit.h>
-#include <GDA.h>
+#include <GNOME_Database.h>
 #include <gda-common-defs.h>
 #include <gda-field.h>
 
@@ -35,22 +32,22 @@ G_BEGIN_DECLS
  * objects. 
  */
 
-typedef struct _GdaRecordset GdaRecordset;
+typedef struct _GdaRecordset      GdaRecordset;
 typedef struct _GdaRecordsetClass GdaRecordsetClass;
 
 #include <gda-command.h>	/* These two need the definitions above */
 #include <gda-connection.h>
 
 #define GDA_TYPE_RECORDSET            (gda_recordset_get_type())
-#define GDA_RECORDSET(obj)            GTK_CHECK_CAST(obj, GDA_TYPE_RECORDSET, GdaRecordset)
-#define GDA_RECORDSET_CLASS(klass)    GTK_CHECK_CLASS_CAST(klass, GDA_TYPE_RECORDSET, GdaRecordsetClass)
-#define GDA_IS_RECORDSET(obj)         GTK_CHECK_TYPE(obj, GDA_TYPE_RECORDSET)
-#define GDA_IS_RECORDSET_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_RECORDSET))
+#define GDA_RECORDSET(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_RECORDSET, GdaRecordset))
+#define GDA_RECORDSET_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_RECORDSET, GdaRecordsetClass))
+#define GDA_IS_RECORDSET(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_RECORDSET))
+#define GDA_IS_RECORDSET_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GDA_TYPE_RECORDSET))
 
 #define GDA_RECORDSET_INVALID_POSITION 0xffffffff
 
 struct _GdaRecordset {
-	GtkObject object;
+	GObject object;
 
 	GdaCommand *external_cmd;
 	GdaCommand *internal_cmd;	/* used for cmd object
@@ -60,10 +57,12 @@ struct _GdaRecordset {
 	CORBA_ORB orb;
 	GList *chunks;
 	gint chunks_length;
-	GDA_Row *current_row;
-	GDA_RowAttributes *field_attributes;
+	GNOME_Database_Row *current_row;
+	GNOME_Database_RowAttributes *field_attributes;
+
 	/* current index(adjustment->value). 0 means invalid, 1 is the first record */
 	gulong current_index;
+
 	/* max index (adjustment->upper), 0 is invalid */
 	gulong max_index;
 	gulong affected_rows;
@@ -73,14 +72,14 @@ struct _GdaRecordset {
 	gint eof;
 	gint bof;
 	gint readonly;
-	GDA_CursorLocation cursor_location;
-	GDA_CursorType cursor_type;
-	GDA_LockType lock_type;
+	GNOME_Database_CursorLocation cursor_location;
+	GNOME_Database_CursorType cursor_type;
+	GNOME_Database_LockType lock_type;
 	gchar *name;
 };
 
 struct _GdaRecordsetClass {
-	GtkObjectClass parent_class;
+	GObjectClass parent_class;
 
 	void (*error) (GdaRecordset *, GList *);
 	void (*eof) (GdaRecordset *);
@@ -88,46 +87,48 @@ struct _GdaRecordsetClass {
 	void (*row_changed) (GdaRecordset *);
 };
 
-guint gda_recordset_get_type (void);
+GType         gda_recordset_get_type (void);
 
 GdaRecordset *gda_recordset_new (void);
-void gda_recordset_free (GdaRecordset * rs);
-void gda_recordset_set_name (GdaRecordset * rs, gchar * name);
-void gda_recordset_get_name (GdaRecordset * rs, gchar * name);
-void gda_recordset_close (GdaRecordset * rs);
-GdaField *gda_recordset_field_name (GdaRecordset * rs, gchar * name);
-GdaField *gda_recordset_field_idx (GdaRecordset * rs, gint idx);
-GPtrArray *gda_recordset_to_arrat (GdaRecordset *rs);
-gboolean gda_recordset_bof (GdaRecordset * rs);
-gboolean gda_recordset_eof (GdaRecordset * rs);
-gulong gda_recordset_move (GdaRecordset * rs,
-			   gint count, gpointer bookmark);
-gulong gda_recordset_move_first (GdaRecordset * rs);
-gulong gda_recordset_move_last (GdaRecordset * rs);
-gulong gda_recordset_move_next (GdaRecordset * rs);
-gulong gda_recordset_move_prev (GdaRecordset * rs);
-gint gda_recordset_rowsize (GdaRecordset * rs);
-gulong gda_recordset_affected_rows (GdaRecordset * rs);
-gint gda_recordset_open (GdaRecordset * rs,
-			 GdaCommand * cmd,
-			 GDA_CursorType cursor_type,
-			 GDA_LockType lock_type, gulong options);
-gint gda_recordset_open_txt (GdaRecordset * rs,
-			     gchar * txt,
-			     GDA_CursorType cursor_type,
-			     GDA_LockType lock_type, gulong options);
-gint gda_recordset_set_connection (GdaRecordset * rs,
-				   GdaConnection * cnc);
+void          gda_recordset_free (GdaRecordset * rs);
+void          gda_recordset_set_name (GdaRecordset * rs, gchar * name);
+void          gda_recordset_get_name (GdaRecordset * rs, gchar * name);
+void          gda_recordset_close (GdaRecordset * rs);
+GdaField     *gda_recordset_field_name (GdaRecordset * rs, gchar * name);
+GdaField     *gda_recordset_field_idx (GdaRecordset * rs, gint idx);
+GPtrArray    *gda_recordset_to_array (GdaRecordset *rs);
+gboolean      gda_recordset_bof (GdaRecordset * rs);
+gboolean      gda_recordset_eof (GdaRecordset * rs);
+gulong        gda_recordset_move (GdaRecordset * rs,
+				  gint count, gpointer bookmark);
+gulong        gda_recordset_move_first (GdaRecordset * rs);
+gulong        gda_recordset_move_last (GdaRecordset * rs);
+gulong        gda_recordset_move_next (GdaRecordset * rs);
+gulong        gda_recordset_move_prev (GdaRecordset * rs);
+gint          gda_recordset_rowsize (GdaRecordset * rs);
+gulong        gda_recordset_affected_rows (GdaRecordset * rs);
+gint          gda_recordset_open (GdaRecordset * rs,
+				  GdaCommand * cmd,
+				  GNOME_Database_CursorType cursor_type,
+				  GNOME_Database_LockType lock_type,
+				  gulong options);
+gint          gda_recordset_open_txt (GdaRecordset * rs,
+				      gchar * txt,
+				      GNOME_Database_CursorType cursor_type,
+				      GNOME_Database_LockType lock_type,
+				      gulong options);
+void          gda_recordset_set_connection (GdaRecordset * rs,
+					    GdaConnection * cnc);
 GdaConnection *gda_recordset_get_connection (GdaRecordset * rs);
-gint gda_recordset_add_field (GdaRecordset * rs, GdaField * field);
-gint gda_recordset_create (GdaRecordset * rs);
+gint          gda_recordset_add_field (GdaRecordset * rs, GdaField * field);
+gint          gda_recordset_create (GdaRecordset * rs);
 
-GDA_CursorLocation gda_recordset_get_cursorloc (GdaRecordset * rs);
-void gda_recordset_set_cursorloc (GdaRecordset * rs,
-				  GDA_CursorLocation loc);
-GDA_CursorType gda_recordset_get_cursortype (GdaRecordset * rs);
-void gda_recordset_set_cursortype (GdaRecordset * rs,
-				   GDA_CursorType type);
+GNOME_Database_CursorLocation gda_recordset_get_cursorloc (GdaRecordset * rs);
+void          gda_recordset_set_cursorloc (GdaRecordset * rs,
+					   GNOME_Database_CursorLocation loc);
+GNOME_Database_CursorType gda_recordset_get_cursortype (GdaRecordset * rs);
+void          gda_recordset_set_cursortype (GdaRecordset * rs,
+					    GNOME_Database_CursorType type);
 
 G_END_DECLS
 

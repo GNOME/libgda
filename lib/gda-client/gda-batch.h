@@ -18,13 +18,9 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#ifndef __gda_batch_h__
-#define __gda_batch_h__ 1
+#if !defined(__gda_batch_h__)
+#  define __gda_batch_h__
 
-#include <glib.h>
-#include <gtk/gtkobject.h>
-
-#include <orb/orbit.h>
 #include <gda-common-defs.h>
 #include <gda-connection.h>
 
@@ -39,13 +35,13 @@ typedef struct _GdaBatch GdaBatch;
 typedef struct _GdaBatchClass GdaBatchClass;
 
 #define GDA_TYPE_BATCH            (gda_batch_get_type())
-#define GDA_BATCH(obj)            GTK_CHECK_CAST(obj, GDA_TYPE_BATCH, GdaBatch)
-#define GDA_BATCH_CLASS(klass)    GTK_CHECK_CLASS_CAST(klass, GDA_TYPE_BATCH, GdaBatchClass)
-#define GDA_IS_BATCH(obj)         GTK_CHECK_TYPE(obj, GDA_TYPE_BATCH)
-#define GDA_IS_BATCH_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_BATCH))
+#define GDA_BATCH(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_BATCH, GdaBatch))
+#define GDA_BATCH_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_BATCH, GdaBatchClass))
+#define GDA_IS_BATCH(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_BATCH))
+#define GDA_IS_BATCH_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GDA_TYPE_BATCH))
 
 struct _GdaBatch {
-	GtkObject object;
+	GObject object;
 
 	GdaConnection *cnc;
 	gboolean transaction_mode;
@@ -54,7 +50,7 @@ struct _GdaBatch {
 };
 
 struct _GdaBatchClass {
-	GtkObjectClass parent_class;
+	GObjectClass parent_class;
 
 	void (*begin_transaction) (GdaBatch * job);
 	void (*commit_transaction) (GdaBatch * job);
@@ -62,24 +58,24 @@ struct _GdaBatchClass {
 	void (*execute_command) (GdaBatch * job, const gchar * cmd);
 };
 
-guint gda_batch_get_type (void);
+GType          gda_batch_get_type (void);
 
-GdaBatch *gda_batch_new (void);
-void gda_batch_free (GdaBatch * job);
+GdaBatch      *gda_batch_new (void);
+void           gda_batch_free (GdaBatch * job);
 
-gboolean gda_batch_load_file (GdaBatch * job, const gchar * filename,
-			      gboolean clean);
-void gda_batch_add_command (GdaBatch * job, const gchar * cmd);
-void gda_batch_clear (GdaBatch * job);
+gboolean       gda_batch_load_file (GdaBatch * job, const gchar * filename,
+				    gboolean clean);
+void           gda_batch_add_command (GdaBatch * job, const gchar * cmd);
+void           gda_batch_clear (GdaBatch * job);
 
-gboolean gda_batch_start (GdaBatch * job);
-void gda_batch_stop (GdaBatch * job);
-gboolean gda_batch_is_running (GdaBatch * job);
+gboolean       gda_batch_start (GdaBatch * job);
+void           gda_batch_stop (GdaBatch * job);
+gboolean       gda_batch_is_running (GdaBatch * job);
 
 GdaConnection *gda_batch_get_connection (GdaBatch * job);
-void gda_batch_set_connection (GdaBatch * job, GdaConnection * cnc);
-gboolean gda_batch_get_transaction_mode (GdaBatch * job);
-void gda_batch_set_transaction_mode (GdaBatch * job, gboolean mode);
+void           gda_batch_set_connection (GdaBatch * job, GdaConnection * cnc);
+gboolean       gda_batch_get_transaction_mode (GdaBatch * job);
+void           gda_batch_set_transaction_mode (GdaBatch * job, gboolean mode);
 
 G_END_DECLS
 
