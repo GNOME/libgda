@@ -1,5 +1,13 @@
 2004-10-10  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	Released 1.1.99.
+
+2004-10-10  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* libsql/Makefile.am: use $(top_builddir) for libgdasql.
+
+2004-10-10  Rodrigo Moya <rodrigo@gnome-db.org>
+
 	* libgda.pc.in:
 	* libsql/Makefile.am:
 	* libgda/Makefile.am:
