@@ -1,3 +1,15 @@
+2002-03-20  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
+	* libgda/gda-value.c (gda_value_stringify): added support for
+	GDA_TYPE_NUMERIC.
+	* providers/postgres/gda-postgres-provider.c: added support for
+	getting references. Changed some variable names.
+	* providers/postgres/utils.c: added support for GDA_TYPE_NUMERIC.
+	Removed some functions not used any more.
+	(gda_postgres_set_field_data): don't use g_new0/g_free unless
+	absolutely necessary. Don't set actual size as gda_field_set_*_value()
+	already does it.
+
 2002-03-19  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
 	* libgda/gda-parameter.c: include new file to remove warning.
