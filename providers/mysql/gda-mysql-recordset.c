@@ -71,14 +71,14 @@ fetch_row (GdaMysqlRecordset *recset, gulong rownum)
 	}
 
 	mysql_data_seek (recset->mysql_res, rownum);
-	row = gda_row_new (GDA_DATA_MODEL (recset), field_count);
-
 	lengths = recset->mysql_res->lengths;
 	mysql_fields = mysql_fetch_fields (recset->mysql_res);
 
 	mysql_row = mysql_fetch_row (recset->mysql_res);
 	if (!mysql_row)
 		return NULL;
+
+	row = gda_row_new (GDA_DATA_MODEL (recset), field_count);
 
 	for (i = 0; i < field_count; i++) {
 		GdaValue *field;
