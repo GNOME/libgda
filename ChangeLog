@@ -1,3 +1,7 @@
+2001-11-21  Carlos Perelló Marín <carlos@gnome-db.org>
+
+	* configure.in: Changed GETTEXT_PACKAGE from libgda-2.0 to libgda-2
+
 2001-11-20  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* configure.in: removed obsolete documentation directories
