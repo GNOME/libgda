@@ -1,3 +1,7 @@
+2004-04-08  Adam Weinberger  <adamw@gnome.org>
+
+	* configure.in: Added en_CA to ALL_LINGUAS.
+
 2004-04-05  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* libgda.spec.in: s/default/xml.
