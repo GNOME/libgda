@@ -29,11 +29,14 @@ AM_PROG_LIBTOOL
 ORBIT_IDL="`$PKG_CONFIG --variable=orbit_idl ORBit-2.0`"
 AC_SUBST(ORBIT_IDL)
 
+BONOBO_ACTIVATION_IDL_DIR="`$PKG_CONFIG --variable=idldir bonobo-activation-2.0`"
+AC_SUBST(BONOBO_ACTIVATION_IDL_DIR)
+
 dnl ******************************
 dnl Translations
 dnl ******************************
 ALL_LINGUAS="ca da de el es fi fr ga gl hu it ja nl no pl pt_BR ru sk sl sv uk"
-AM_GLIB_GNU_GETTEXT
+AM_GNOME2_GETTEXT
 
 dnl ******************************
 dnl Checks for libraries
@@ -42,11 +45,11 @@ AC_SUBST(CFLAGS)
 AC_SUBST(CPPFLAGS)
 AC_SUBST(LDFLAGS)
 
-PKG_CHECK_MODULES(GDA_CLIENT, ORBit-2.0 >= 2.3.91 glib-2.0 >= 1.3.1 gobject-2.0 >= 1.3.1 gthread-2.0 >= 1.3.1 bonobo-activation-2.0 >= 0.7.0 libxslt-2.0)
+PKG_CHECK_MODULES(GDA_CLIENT, ORBit-2.0 >= 2.3.91 glib-2.0 >= 1.3.1 gobject-2.0 >= 1.3.1 gthread-2.0 >= 1.3.1 bonobo-activation-2.0 >= 0.7.0 libxml-2.0)
 AC_SUBST(GDA_CLIENT_CFLAGS)
 AC_SUBST(GDA_CLIENT_LIBS)
 
-PKG_CHECK_MODULES(GDA_PROVIDER, ORBit-2.0 >= 2.3.91 glib-2.0 >= 1.3.1 gobject-2.0 >= 1.3.1 gthread-2.0 >= 1.3.1 bonobo-activation-2.0 >= 0.7.0 libxslt-2.0)
+PKG_CHECK_MODULES(GDA_PROVIDER, ORBit-2.0 >= 2.3.91 glib-2.0 >= 1.3.1 gobject-2.0 >= 1.3.1 gthread-2.0 >= 1.3.1 bonobo-activation-2.0 >= 0.7.0 libxml-2.0)
 AC_SUBST(GDA_PROVIDER_CFLAGS)
 AC_SUBST(GDA_PROVIDER_LIBS)
 

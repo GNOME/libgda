@@ -1,10 +1,11 @@
 /* -*- Mode: IDL; tab-width: 8; indent-tabs-mode: t; c-basic-offset: 8 -*- */
-#ifndef __gda__
-#define __gda__ 1
+#ifndef __GDA_idl__
+#define __GDA_idl__ 1
 
 #include "GDA_Error.idl"
 #include "GDA_Listener.idl"
 #include "GDA_Field.idl"
+#include "GDA_Parameter.idl"
 #include "GDA_Recordset.idl"
 #include "GDA_Command.idl"	
 #include "GDA_Error.idl"

@@ -1,7 +1,7 @@
 /* -*- Mode: IDL; tab-width: 8; indent-tabs-mode: t; c-basic-offset: 8 -*- */
 
-#ifndef __gda_field__
-#define __gda_field__ 1
+#ifndef __GDA_Field_idl__
+#define __GDA_Field_idl__ 1
 
 module GDA {
 	enum ValueType {
