@@ -1,3 +1,8 @@
+2003-03-30  Mike Wingert <wingert.3@osu.edu>
+
+	* providers/sybase/*: fix for compile problem, related to changes
+	in gda_row_new.
+
 2003-03-27  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* configure.in: fixed typo in FreeTDS CFLAGS.
