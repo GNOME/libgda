@@ -43,7 +43,7 @@ add_key_to_list (gpointer key, gpointer value, gpointer user_data)
 {
 	GList **list = (GList **) user_data;
 
-	*list = g_list_append (*list, key);
+	*list = g_list_append (*list, g_strdup (key));
 }
 
 /**
