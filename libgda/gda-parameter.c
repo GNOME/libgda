@@ -20,6 +20,9 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#define ORBIT2_INTERNAL_API
+#include <orbit/orb-core/orbit-object.h>
+#undef ORBIT2_INTERNAL_API
 #include "gda-parameter.h"
 
 struct _GdaParameterList {

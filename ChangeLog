@@ -1,3 +1,11 @@
+2002-03-19  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
+	* libgda/gda-parameter.c: include new file to remove warning.
+	* providers/postgres/gda-postgres-provider.c: fix a crash when a table
+	has no indexes for SCHEMA_FIELDS. Corrected defined size data for
+	SCHEMA_FIELDS.
+	* providers/postgres/utils.c: removed some TODO/FIXME lines.
+
 2002-03-19  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* libgda/gda-server-connection.c (impl_Connection_getSchema): if there
