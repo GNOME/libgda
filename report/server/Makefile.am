@@ -32,6 +32,6 @@ gda_report_server_LDADD = \
 	$(top_builddir)/lib/gda-client/libgda-client.la
 
 oafinfodir=$(GDA_oafinfodir)
-oafinfo_DATA=gda-report.oafinfo
+oafinfo_DATA=GNOME_GDA_Report.oafinfo
 
-EXTRA_DIST = gda-report.oafinfo
+EXTRA_DIST = GNOME_GDA_Report.oafinfo
