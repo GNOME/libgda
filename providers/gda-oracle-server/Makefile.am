@@ -25,4 +25,4 @@ libgda_oracle_la_SOURCES = \
 EXTRA_DIST = gda-oracle.oafinfo gda-oracle.spec.in
 
 oafinfodir=$(GDA_oafinfodir)
-oafinfo_DATA=gda-oracle.oafinfo
+oafinfo_DATA=GNOME_GDA_Provider_Oracle.oafinfo

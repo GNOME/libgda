@@ -25,4 +25,4 @@ libgda_primebase_la_SOURCES = \
 EXTRA_DIST = gda-primebase.oafinfo
 
 oafinfodir=$(GDA_oafinfodir)
-oafinfo_DATA=gda-primebase.oafinfo
+oafinfo_DATA=GNOME_GDA_Provider_Primebase.oafinfo

@@ -27,4 +27,4 @@ libgda_postgres_la_SOURCES = \
 EXTRA_DIST = gda-postgres.oafinfo gda-postgres.spec.in
 
 oafinfodir=$(GDA_oafinfodir)
-oafinfo_DATA=gda-postgres.oafinfo
+oafinfo_DATA=GNOME_GDA_Provider_Postgres.oafinfo

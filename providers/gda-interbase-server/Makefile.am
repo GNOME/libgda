@@ -25,4 +25,4 @@ libgda_interbase_la_SOURCES = \
 EXTRA_DIST = gda-interbase.oafinfo
 
 oafinfodir=$(GDA_oafinfodir)
-oafinfo_DATA=gda-interbase.oafinfo
+oafinfo_DATA=GNOME_GDA_Provider_InterBase.oafinfo

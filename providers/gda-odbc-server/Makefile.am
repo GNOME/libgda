@@ -25,4 +25,4 @@ libgda_odbc_la_SOURCES = \
 EXTRA_DIST = gda-odbc.oafinfo gda-odbc.spec.in
 
 oafinfodir=$(GDA_oafinfodir)
-oafinfo_DATA=gda-odbc.oafinfo
+oafinfo_DATA=GNOME_GDA_Provider_ODBC.oafinfo

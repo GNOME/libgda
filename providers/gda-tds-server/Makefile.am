@@ -32,4 +32,4 @@ libgda_tds_la_SOURCES = \
 EXTRA_DIST = gda-tds.oafinfo
 
 oafinfodir=$(GDA_oafinfodir)
-oafinfo_DATA=gda-tds.oafinfo
+oafinfo_DATA=GNOME_GDA_Provider_TDS.oafinfo

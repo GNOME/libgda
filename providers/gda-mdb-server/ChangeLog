@@ -1,0 +1,4 @@
+2000-12-17	Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* oafinfo re-namespacing: (gnomedb-* -> GNOME_DB_*)
+

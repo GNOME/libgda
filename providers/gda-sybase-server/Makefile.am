@@ -32,4 +32,4 @@ libgda_sybase_la_SOURCES = \
 EXTRA_DIST = gda-sybase.oafinfo
 
 oafinfodir=$(GDA_oafinfodir)
-oafinfo_DATA=gda-sybase.oafinfo
+oafinfo_DATA=GNOME_GDA_Provider_Sybase.oafinfo

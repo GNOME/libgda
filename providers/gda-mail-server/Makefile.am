@@ -24,4 +24,4 @@ libgda_mail_la_SOURCES = \
 EXTRA_DIST = gda-mail.oafinfo
 
 oafinfodir=$(GDA_oafinfodir)
-oafinfo_DATA=gda-mail.oafinfo
+oafinfo_DATA=GNOME_GDA_Provider_Mail.oafinfo

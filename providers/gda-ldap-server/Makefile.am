@@ -25,4 +25,4 @@ libgda_ldap_la_SOURCES = \
 EXTRA_DIST = gda-ldap.oafinfo
 
 oafinfodir=$(GDA_oafinfodir)
-oafinfo_DATA=gda-ldap.oafinfo
+oafinfo_DATA=GNOME_GDA_Provider_LDAP.oafinfo
