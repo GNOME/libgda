@@ -9,6 +9,7 @@ dnl
 dnl Checks for programs
 dnl
 AC_PROG_CC
+AC_ISC_POSIX
 AC_STDC_HEADERS
 AC_ARG_PROGRAM
 AM_PROG_LIBTOOL
@@ -419,6 +420,8 @@ dnl
 dnl Translations
 dnl
 ALL_LINGUAS="es"
+
+AM_GNU_GETTEXT
 
 dnl
 dnl Variables
