@@ -1,5 +1,7 @@
 2001-11-03  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* models.c: GDA data models test suite
+
 	* gda-test.c: re-started, to be more a test suite than a simple
 	test program
 

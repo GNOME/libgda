@@ -29,11 +29,12 @@
 G_BEGIN_DECLS
 
 #define DISPLAY_MESSAGE(_msg_) \
-        g_print ("=========================================\n"); \
+        g_print ("\n=========================================\n"); \
 	g_print ("= %s\n", _msg_); \
         g_print ("=========================================\n");
 
 void test_config (void);
+void test_models (void);
 
 G_END_DECLS
 

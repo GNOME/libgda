@@ -34,7 +34,7 @@ list_all_sections_and_keys (const gchar *root)
 
 	g_return_if_fail (root != NULL);
 
-	g_print (_("Section %s\n"), root);
+	g_print (" Section %s\n", root);
 
 	/* first, list all keys in this section */
 	keys = gda_config_list_keys (root);
@@ -81,29 +81,29 @@ list_all_providers (void)
 		GList *ll;
 
 		if (!info) {
-			g_print (_("** ERROR: gda_config_get_provider_list returned a NULL item"));
+			g_print (_("** ERROR: gda_config_get_provider_list returned a NULL item\n"));
 			gda_main_quit ();
 		}
 
-		g_print (_("\tProvider = %s\n"), info->id);
-		g_print (_("\t\tlocation = %s\n"), info->location);
-		g_print (_("\t\ttype = %s\n"),
+		g_print (_(" Provider = %s\n"), info->id);
+		g_print (_("\tlocation = %s\n"), info->location);
+		g_print (_("\ttype = %s\n"),
 			 info->type == GDA_COMPONENT_TYPE_EXE ? "exe" :
 			 info->type == GDA_COMPONENT_TYPE_SHLIB ? "shlib" : "");
-		g_print (_("\t\tdescription = %s\n"), info->description);
+		g_print (_("\tdescription = %s\n"), info->description);
 
-		g_print (_("\t\trepo_ids ="));
+		g_print (_("\trepo_ids ="));
 		for (ll = info->repo_ids; ll != NULL; ll = ll->next) {
 			if (ll->data != NULL)
 				g_print (" %s", (const gchar *) ll->data);
 		}
 		g_print ("\n");
 
-		g_print (_("\t\tusername = %s\n"), info->username);
-		g_print (_("\t\thostname = %s\n"), info->hostname);
-		g_print (_("\t\tdomain = %s\n"), info->domain);
+		g_print (_("\tusername = %s\n"), info->username);
+		g_print (_("\thostname = %s\n"), info->hostname);
+		g_print (_("\tdomain = %s\n"), info->domain);
 
-		g_print (_("\t\tgda_params ="));
+		g_print (_("\tgda_params ="));
 		for (ll = info->gda_params; ll != NULL; ll = ll->next) {
 			if (ll->data != NULL)
 				g_print (" %s", (const gchar *) ll->data);

@@ -10,6 +10,7 @@ noinst_PROGRAMS = \
 
 gda_test_SOURCES = \
 	config.c \
+	models.c \
 	gda-test.c \
 	gda-test.h
 gda_test_LDADD = \
