@@ -36,15 +36,6 @@ gboolean gda_log_is_enabled (void);
 void     gda_log_message (const gchar * format, ...);
 void     gda_log_error (const gchar * format, ...);
 
-/*
- * For application viewing the logs
- */
-void     gda_log_clean_all (const gchar *prgname);
-void     gda_log_clean_between (const gchar *prgname,
-				time_t from,
-				time_t to);
-void     gda_log_clean_entry (const gchar * prgname, const gchar * entry);
-
 G_END_DECLS
 
 #endif
