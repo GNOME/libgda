@@ -610,7 +610,7 @@ gda_value_new_from_xml (const gchar *xml)
 		return NULL;
 
 	node = xmlDocGetRootElement (xmldoc);
-	if (!node || (node && strcmp (node->name ? node->name : "", "value"))) {
+	if (!node || !node->name || strcmp (node->name, "value")) {
 		xmlFreeDoc (xmldoc);
 		return NULL;
 	}

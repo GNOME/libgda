@@ -1,3 +1,11 @@
+2002-09-15  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
+	* libgda/gda-init.c:
+	(gda_main_run): use g_main_loop_run.
+
+	* libgda/gda-value.c: 
+	(gda_value_new_from_xml): avoid compiler warning.
+
 2002-09-12  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* providers/mysql/gda-mysql-provider.c (add_aggregate_row): add

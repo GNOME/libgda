@@ -113,7 +113,7 @@ gda_main_run (GdaInitFunc init_func, gpointer user_data)
 	}
 
 	main_loop = g_main_loop_new (g_main_context_default (), FALSE);
-	g_main_run (main_loop);
+	g_main_loop_run (main_loop);
 }
 
 /**
