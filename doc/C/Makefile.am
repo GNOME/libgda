@@ -26,7 +26,11 @@ HFILE_GLOB=
 CFILE_GLOB=
 
 # Header files to ignore when scanning.
-IGNORE_HFILES=config.h acconfig.h
+IGNORE_HFILES=config.h \
+	acconfig.h \
+	GNOME_Database.h \
+	gda-marshal.h \
+	GNOME_Database_Report.h
 
 # Images to copy into HTML directory.
 HTML_IMAGES =
