@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
 "POT-Creation-Date: 2003-03-07 17:08+0200\n"
-"PO-Revision-Date: 2003-03-07 11:22--500\n"
+"PO-Revision-Date: 2003-03-07 11:30--500\n"
 "Last-Translator: Yuriy Syrota <yuri@renome.rovno.ua>\n"
 "Language-Team: Ukrainian <uk@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -103,7 +103,7 @@ msgstr "Спроба ініціалізувати вже ініціалізов�
 
 #: libgda/gda-init.c:59
 msgid "libgda needs GModule. Finishing..."
-msgstr ""
+msgstr "Для libgda потрібен GModule. Завершення..."
 
 #: libgda/gda-select.c:315
 #, c-format
@@ -355,17 +355,17 @@ msgstr ""
 #: providers/freetds/gda-freetds-provider.c:253
 #: providers/freetds/gda-freetds-provider.c:255
 msgid "Allocating tds context failed."
-msgstr ""
+msgstr "Не вдалось виділити контекст TDS."
 
 #: providers/freetds/gda-freetds-provider.c:271
 #: providers/freetds/gda-freetds-provider.c:273
 msgid "Establishing connection failed."
-msgstr ""
+msgstr "Не вдалось встановити з'єднання."
 
 #: providers/freetds/gda-freetds-provider.c:285
 #: providers/freetds/gda-freetds-provider.c:286
 msgid "Failed getting connection info."
-msgstr ""
+msgstr "Не вдалось отримати інформацію про з'єднання."
 
 #: providers/freetds/gda-freetds-provider.c:768
 #: providers/freetds/gda-freetds-provider.c:769
@@ -386,7 +386,8 @@ msgstr ""
 #, c-format
 msgid "Msg %d, Level %d, State %d, Server %s, Line %d\n"
 "%s\n"
-msgstr ""
+msgstr "Повідомлення: %d, рівень: %d, стан: %d, сервер: %s, рядок: %d\n"
+"%s\n"
 
 #: providers/freetds/gda-freetds-provider.c:1043
 #: providers/freetds/utils.c:44
@@ -407,7 +408,7 @@ msgstr ""
 
 #: providers/freetds/gda-freetds-recordset.c:379
 msgid "Error processing results.\n"
-msgstr ""
+msgstr "Помилка обробки результатів.\n"
 
 #: providers/freetds/gda-freetds-recordset.c:386
 msgid "Unexpected freetds return code in tds_process_result_tokens\n"
@@ -736,7 +737,7 @@ msgstr ""
 
 #: providers/mdb/gda-mdb-provider.c:667
 msgid "OLE object"
-msgstr ""
+msgstr "Об'єкт OLE"
 
 #: providers/mdb/gda-mdb-provider.c:668
 msgid "FIXME"
@@ -1218,7 +1219,7 @@ msgstr ""
 
 #: providers/sybase/gda-sybase-provider.c:296
 msgid "Client library initialized."
-msgstr ""
+msgstr "Ініціалізовано клієнтську бібліотеку."
 
 #: providers/sybase/gda-sybase-provider.c:322
 #, c-format
@@ -1288,9 +1289,8 @@ msgid "Failed allocating a command structure in %s()"
 msgstr ""
 
 #: providers/sybase/gda-sybase-provider.c:637
-#, fuzzy
 msgid "Could not prepare command structure."
-msgstr "Не вдалося проаналізувати файл на %s"
+msgstr "Не вдалось підготувати командну структуру."
 
 #: providers/sybase/gda-sybase-provider.c:646
 msgid "Sending sql-command failed."
@@ -1307,14 +1307,13 @@ msgstr ""
 
 #: providers/sybase/gda-sybase-provider.c:755
 #: providers/sybase/gda-sybase-provider.c:859
-#, fuzzy
 msgid "Could not allocate command structure."
-msgstr "Не вдалося ініціалізувати Bonobo"
+msgstr "Не вдалось виділити командну структуру."
 
 #: providers/sybase/gda-sybase-provider.c:763
-#, fuzzy, c-format
+#, c-format
 msgid "Could not prepare command structure with %s."
-msgstr "Не вдалося проаналізувати файл на %s"
+msgstr "Не вдалось підготувати командну структуру з %s."
 
 #: providers/sybase/gda-sybase-provider.c:772
 msgid "Sending command failed."
