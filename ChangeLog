@@ -1,3 +1,9 @@
+2003-10-01  Murray Cumming  <murrayc@usa.net>
+
+	* libgda/Makefile.am: Use glib-mkenums to generate
+	the get_type() functions for the libgda enums. The build file
+	stuff is based on the same stuff in pango.
+
 2003-10-01  Laurent Sansonetti <laurent@datarescue.be>
 
 	* libgda/doc/C/libgda-docs.sgml: fixed some typos and added
