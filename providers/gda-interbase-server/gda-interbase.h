@@ -48,7 +48,7 @@ typedef struct
 {
 	isc_db_handle db;
 	isc_tr_handle trans;
-	long status[20];
+	ISC_STATUS status[20];
 }
 INTERBASE_Connection;
 

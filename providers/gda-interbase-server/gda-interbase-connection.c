@@ -40,18 +40,33 @@ gda_interbase_connection_open (GdaServerConnection * cnc,
 {
 	INTERBASE_Connection *ib_cnc;
 	GdaError *error;
-
+	char dpb_buffer[256], *dpb;
+	short dpb_length;
+	
 	g_return_val_if_fail (cnc != NULL, -1);
 
 	ib_cnc = (INTERBASE_Connection *)
 		gda_server_connection_get_user_data (cnc);
+
+	ib_cnc->db = 0L;
+	dpb = dpb_buffer;
+	*dpb++ = isc_dpb_version1;
+	dpb_length = dpb - dpb_buffer;
+	dpb = dpb_buffer;
+
+	isc_expand_dpb(&dpb,&dpb_length,
+					isc_dpb_user_name,user,
+					isc_dpb_password, password,
+					NULL);
+
 	if (ib_cnc) {
 		if (!isc_attach_database
-		    (ib_cnc->status, 0, dsn, &ib_cnc->db, 0, NULL)) {
+		    (ib_cnc->status, strlen(dsn), (char *)dsn, &ib_cnc->db, dpb_length, dpb)) {
 			return 0;
 		}
 
 		/* return error to client */
+		
 		error = gda_error_new ();
 		gda_server_error_make (error, 0, cnc, __PRETTY_FUNCTION__);
 	}
@@ -155,7 +170,26 @@ gda_interbase_connection_open_schema (GdaServerConnection * cnc,
 				      GDA_Connection_Constraint * constraints,
 				      gint length)
 {
-	return NULL;
+	GdaServerCommand *cmd = NULL;
+	gchar *query = 		
+			"SELECT "
+			"A.RDB$RELATION_NAME Name, "
+			"A.RDB$DESCRIPTION Comments "
+			"FROM "
+			"RDB$RELATIONS A "
+			"WHERE (A.RDB$VIEW_SOURCE IS NULL)";
+
+
+	cmd = gda_server_command_new (cnc);
+	gda_server_command_set_text (cmd, query);
+
+	if (!error)
+		error = gda_error_new ();
+
+	/* execute the command */
+	return gda_server_command_execute (cmd, error, NULL, NULL, 0);
+
+//	return NULL;
 }
 
 glong
@@ -279,12 +313,21 @@ gda_interbase_error_make (GdaError * error,
 	gchar *err_msg;		/* FIXME: retireve error message from server */
 	INTERBASE_Connection *ib_cnc;
 
+	long * pvector;
+	char msg[512]; 
+
 	ib_cnc = (INTERBASE_Connection *)
 		gda_server_connection_get_user_data (cnc);
 	if (ib_cnc) {
+
+		pvector =ib_cnc->status; 
+		isc_interprete(msg,&pvector);
+
 		err_msg =
-			g_strdup_printf (_("Error code %ld"),
-					 isc_sqlcode (ib_cnc->status));
+			g_strdup_printf (_("Error code %ld (%s)"),
+					 isc_sqlcode (ib_cnc->status),msg);
+
+
 		gda_log_error (_("error '%s' at %s"), err_msg, where);
 
 		gda_error_set_description (error, err_msg);
@@ -296,6 +339,6 @@ gda_interbase_error_make (GdaError * error,
 		gda_error_set_native (error, err_msg);
 
 		g_free ((gpointer) err_msg);
-		isc_print_sqlerror (isc_sqlcode (ib_cnc), ib_cnc->status);
+//		isc_print_sqlerror (isc_sqlcode (ib_cnc), ib_cnc->status);
 	}
 }
