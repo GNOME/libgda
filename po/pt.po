@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.4.1\n"
-"POT-Creation-Date: 2001-11-22 14:07+0100\n"
-"PO-Revision-Date: 2001-11-01 22:54+0000\n"
+"POT-Creation-Date: 2001-11-25 03:06+0000\n"
+"PO-Revision-Date: 2001-11-25 03:06+0000\n"
 "Last-Translator: Duarte Loreto <happyguy_pt@hotmail.com>\n"
 "Language-Team: Portuguese <none@none.org>\n"
 "MIME-Version: 1.0\n"
@@ -718,41 +718,35 @@ msgid "Could not get # of messages"
 msgstr "Incapaz de obter nº de mensagens"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:356
-#, fuzzy
 msgid "ct_diag failed, Could not get # of client messages(1)"
-msgstr "Incapaz de obter nº de mensagens de cliente"
+msgstr "ct_diag failed, Incapaz de obter nº de mensagens de cliente(1)"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:381
-#, fuzzy
 msgid "Could not get client msg #"
-msgstr "Incapaz de obter mensagem de cliente nº %d"
+msgstr "Incapaz de obter mensagem de cliente nº"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:394
 #: providers/gda-sybase-server/gda-sybase-error.c:396
 #: providers/gda-sybase-server/gda-sybase-error.c:688
 #: providers/gda-sybase-server/gda-sybase-error.c:690
-#, fuzzy
 msgid "Client Message:"
-msgstr "Mensagem de cliente:"
+msgstr "Mensagem de Cliente:"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:424
-#, fuzzy
 msgid "ct_diag failed, Could not get # of client messages(2)"
-msgstr "Incapaz de obter nº de mensagens de cliente"
+msgstr "ct_diag failed, Incapaz de obter nº de mensagens de cliente(2)"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:442
 msgid "Could not clear client messages"
 msgstr "Incapaz de limpar mensagens de cliente"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:486
-#, fuzzy
 msgid "Could not get # of server messages(1)"
-msgstr "Incapaz de obter nº de mensagens de servidor"
+msgstr "Incapaz de obter nº de mensagens de servidor(1)"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:510
-#, fuzzy
 msgid "Could not get server msg #"
-msgstr "Incapaz de obter mensagem de servidor nº %d"
+msgstr "Incapaz de obter mensagem de servidor nº"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:570
 msgid "Could not get # of server messages"
@@ -777,14 +771,12 @@ msgid "Fetching %d cslib message"
 msgstr "A obter %d mensagem de cslib"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:672
-#, fuzzy
 msgid "Could not get cslib msg #"
-msgstr "Incapaz de obter mensagem de cslib nº %d"
+msgstr "Incapaz de obter mensagem de cslib nº"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:711
-#, fuzzy
 msgid "Could not get # of cslib messages(2)"
-msgstr "Incapaz de obter nº de mensagens cslib"
+msgstr "Incapaz de obter nº de mensagens cslib(2)"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:729
 msgid "Could not clear cslib messages"
@@ -792,23 +784,23 @@ msgstr "Incapaz de limpar mensagens de cslib"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:761
 msgid "SYB"
-msgstr ""
+msgstr "SYB"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:763
 msgid "severity"
-msgstr ""
+msgstr "gravidade"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:765
 msgid "number"
-msgstr ""
+msgstr "número"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:767
 msgid "origin"
-msgstr ""
+msgstr "origem"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:769
 msgid "layer"
-msgstr ""
+msgstr "camada"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:776
 #, c-format
@@ -817,6 +809,9 @@ msgid ""
 "\tOperating system error number(%ld):\n"
 "\t%s"
 msgstr ""
+"\n"
+"\tErro de sistema operativo número(%ld):\n"
+"\t%s"
 
 #: providers/gda-sybase-server/gda-sybase-recordset.c:219
 #: providers/gda-tds-server/gda-tds-recordset.c:199
