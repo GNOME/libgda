@@ -50,6 +50,8 @@ static gboolean gda_default_provider_close_connection (GdaServerProvider *provid
 						       GdaConnection *cnc);
 static const gchar *gda_default_provider_get_server_version (GdaServerProvider *provider,
 							     GdaConnection *cnc);
+static const gchar *gda_default_provider_get_database (GdaServerProvider *provider,
+						       GdaConnection *cnc);
 static gboolean gda_default_provider_create_database (GdaServerProvider *provider,
 						      GdaConnection *cnc,
 						      const gchar *name);
@@ -93,6 +95,7 @@ gda_default_provider_class_init (GdaDefaultProviderClass *klass)
 	provider_class->open_connection = gda_default_provider_open_connection;
 	provider_class->close_connection = gda_default_provider_close_connection;
 	provider_class->get_server_version = gda_default_provider_get_server_version;
+	provider_class->get_database = gda_default_provider_get_database;
 	provider_class->create_database = gda_default_provider_create_database;
 	provider_class->execute_command = gda_default_provider_execute_command;
 	provider_class->begin_transaction = gda_default_provider_begin_transaction;
@@ -233,6 +236,25 @@ gda_default_provider_get_server_version (GdaServerProvider *provider, GdaConnect
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
 	return VERSION; // FIXME
+}
+
+/* get_database handler for the GdaDefaultProvider class */
+static const gchar *
+gda_default_provider_get_database (GdaServerProvider *provider, GdaConnection *cnc)
+{
+	GdaXmlDatabase *xmldb;
+	GdaDefaultProvider *dfprv = (GdaDefaultProvider *) provider;
+
+	g_return_val_if_fail (GDA_IS_DEFAULT_PROVIDER (dfprv), NULL);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+
+	xmldb = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_DEFAULT_HANDLE);
+	if (!xmldb) {
+		gda_connection_add_error_string (cnc, _("Invalid internal handle"));
+		return NULL;
+	}
+
+	return gda_xml_database_get_name (xmldb);
 }
 
 static GList *

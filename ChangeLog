@@ -1,3 +1,8 @@
+2002-08-18  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* providers/default/gda-default-provider.c
+	(gda_default_provider_get_database): new class method.
+	
 2002-08-18  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
 	* providers/postgres/gda-postgres-provider.c: implemented
