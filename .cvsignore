@@ -16,6 +16,8 @@ libtool
 config.status
 stamp-h
 libgda.spec
+libgda-client.pc
+libgda-server.pc
 stamp.h
 xml-i18n-update
 xml-i18n-merge

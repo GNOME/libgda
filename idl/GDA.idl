@@ -2,33 +2,14 @@
 #ifndef __GDA_idl__
 #define __GDA_idl__ 1
 
-#include "GDA_Error.idl"
-#include "GDA_Listener.idl"
-#include "GDA_Field.idl"
-#include "GDA_Parameter.idl"
-#include "GDA_Recordset.idl"
-#include "GDA_Command.idl"	
-#include "GDA_Error.idl"
-#include "GDA_Connection.idl"
-
-module GDA {
-	
-	enum AffectedRows {
-		GDR_AFFECT_CURRENT,
-		GDR_AFFECT_GROUP,
-		GDR_AFFECT_ALL
-	};
-
-	enum IsolationLevel {
-		IL_UNSPECIFIED,
-		IL_CHAOS,
-		IL_BROWSE,
-		IL_READ_COMMITED,
-		IL_READ_INCOMMTED,
-		IL_READ_REPEATED,
-		IL_READ_SERIALIZABLE
-	};
-};
+#include <GDA_Error.idl>
+#include <GDA_Listener.idl>
+#include <GDA_Field.idl>
+#include <GDA_Parameter.idl>
+#include <GDA_Recordset.idl>
+#include <GDA_Command.idl>
+#include <GDA_Error.idl>
+#include <GDA_Connection.idl>
 
 #endif
 

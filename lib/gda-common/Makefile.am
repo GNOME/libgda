@@ -11,7 +11,7 @@ IDL_FILES = \
 	$(top_builddir)/idl/GDA_Command.idl \
 	$(top_builddir)/idl/GDA_Connection.idl \
 	$(top_builddir)/idl/GDA_Error.idl \
-	$(top_builddir)/idl/GDA_Fieldx.idl \
+	$(top_builddir)/idl/GDA_Field.idl \
 	$(top_builddir)/idl/GDA_Listener.idl \
 	$(top_builddir)/idl/GDA_Parameter.idl \
 	$(top_builddir)/idl/GDA_Recordset.idl
