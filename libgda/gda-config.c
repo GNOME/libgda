@@ -1087,6 +1087,11 @@ gda_config_get_data_source_list (void)
 		info->username = gda_config_get_string (tmp);
 		g_free (tmp);
 
+		/* get the password */
+		tmp = g_strdup_printf ("%s/%s/Password", GDA_CONFIG_SECTION_DATASOURCES, (char *) l->data);
+		info->password = gda_config_get_string (tmp);
+		g_free (tmp);
+
 		list = g_list_append (list, info);
 	}
 
@@ -1138,6 +1143,7 @@ gda_config_copy_data_source_info (GdaDataSourceInfo *src)
 	info->cnc_string = g_strdup (src->cnc_string);
 	info->description = g_strdup (src->description);
 	info->username = g_strdup (src->username);
+	info->password = g_strdup (src->password);
 
 	return info;
 }
@@ -1155,6 +1161,7 @@ gda_config_free_data_source_info (GdaDataSourceInfo *info)
 	g_free (info->cnc_string);
 	g_free (info->description);
 	g_free (info->username);
+	g_free (info->password);
 
 	g_free (info);
 }
@@ -1185,12 +1192,13 @@ gda_config_get_data_source_model (void)
 	GList *l;
 	GdaDataModel *model;
 
-	model = gda_data_model_array_new (5);
+	model = gda_data_model_array_new (6);
 	gda_data_model_set_column_title (model, 0, _("Name"));
 	gda_data_model_set_column_title (model, 1, _("Provider"));
 	gda_data_model_set_column_title (model, 2, _("Connection string"));
 	gda_data_model_set_column_title (model, 3, _("Description"));
 	gda_data_model_set_column_title (model, 4, _("Username"));
+	gda_data_model_set_column_title (model, 5, _("Password"));
 	
 	/* convert the returned GList into a GdaDataModelArray */
 	dsn_list = gda_config_get_data_source_list ();
@@ -1205,6 +1213,7 @@ gda_config_get_data_source_model (void)
 		value_list = g_list_append (value_list, gda_value_new_string (dsn_info->cnc_string));
 		value_list = g_list_append (value_list, gda_value_new_string (dsn_info->description));
 		value_list = g_list_append (value_list, gda_value_new_string (dsn_info->username));
+		value_list = g_list_append (value_list, gda_value_new_string ("******"));
 
 		gda_data_model_append_row (GDA_DATA_MODEL (model), value_list);
 	}
@@ -1222,6 +1231,7 @@ gda_config_get_data_source_model (void)
  * @cnc_string: Connection string for the new data source.
  * @description: Description for the new data source.
  * @username: User name for the new data source.
+ * @password: Password to use when authenticating @username.
  *
  * Adds a new data source (or update an existing one) to the GDA
  * configuration, based on the parameters given.
@@ -1231,7 +1241,8 @@ gda_config_save_data_source (const gchar *name,
 			     const gchar *provider,
 			     const gchar *cnc_string,
 			     const gchar *description,
-			     const gchar *username)
+			     const gchar *username,
+			     const gchar *password)
 {
 	gchar *tmp;
 
@@ -1245,22 +1256,29 @@ gda_config_save_data_source (const gchar *name,
 
 	/* set the connection string */
 	if (cnc_string) {
-		tmp = g_strdup_printf ("%s/%s/DSN", GDA_CONFIG_SECTION_DATASOURCES, cnc_string);
+		tmp = g_strdup_printf ("%s/%s/DSN", GDA_CONFIG_SECTION_DATASOURCES, name);
 		gda_config_set_string (tmp, cnc_string);
 		g_free (tmp);
 	}
 
 	/* set the description */
 	if (description) {
-		tmp = g_strdup_printf ("%s/%s/Description", GDA_CONFIG_SECTION_DATASOURCES, description);
+		tmp = g_strdup_printf ("%s/%s/Description", GDA_CONFIG_SECTION_DATASOURCES, name);
 		gda_config_set_string (tmp, description);
 		g_free (tmp);
 	}
 
 	/* set the username */
 	if (username) {
-		tmp = g_strdup_printf ("%s/%s/Username", GDA_CONFIG_SECTION_DATASOURCES, username);
+		tmp = g_strdup_printf ("%s/%s/Username", GDA_CONFIG_SECTION_DATASOURCES, name);
 		gda_config_set_string (tmp, username);
+		g_free (tmp);
+	}
+
+	/* set the password */
+	if (password) {
+		tmp = g_strdup_printf ("%s/%s/Password", GDA_CONFIG_SECTION_DATASOURCES, name);
+		gda_config_set_string (tmp, password);
 		g_free (tmp);
 	}
 }

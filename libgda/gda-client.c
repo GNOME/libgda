@@ -287,8 +287,7 @@ gda_client_open_connection (GdaClient *client,
 				     prv);
 	}
 
-	cnc = gda_connection_new (client, prv->provider, dsn,
-				  username ? username : "", password ? password : "");
+	cnc = gda_connection_new (client, prv->provider, dsn, username, password);
 
 	if (!GDA_IS_CONNECTION (cnc)) {
 		gda_config_free_data_source_info (dsn_info);

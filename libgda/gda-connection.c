@@ -196,6 +196,8 @@ gda_connection_new (GdaClient *client,
 	GdaConnection *cnc;
 	GdaDataSourceInfo *dsn_info;
 	GdaQuarkList *params;
+	const char *real_username;
+	const char *real_password;
 
 	g_return_val_if_fail (GDA_IS_CLIENT (client), NULL);
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
@@ -207,6 +209,28 @@ gda_connection_new (GdaClient *client,
 		return NULL;
 	}
 
+	params = gda_quark_list_new_from_string (cnc->priv->cnc_string);
+
+	/* retrieve correct username/password */
+	if (username)
+		real_username = username;
+	else {
+		if (dsn_info->username)
+			real_username = dsn_info->username;
+		else
+			real_username = gda_quark_list_find (params, "USERNAME");
+	}
+
+	if (password)
+		real_password = password;
+	else {
+		if (dsn_info->password)
+			real_password = dsn_info->password;
+		else
+			real_password = gda_quark_list_find (params, "PASSWORD");
+	}
+
+	/* create the connection object */
 	cnc = g_object_new (GDA_TYPE_CONNECTION, NULL);
 
 	gda_connection_set_client (cnc, client);
@@ -215,14 +239,15 @@ gda_connection_new (GdaClient *client,
 	cnc->priv->dsn = g_strdup (dsn);
 	cnc->priv->cnc_string = g_strdup (dsn_info->cnc_string);
 	cnc->priv->provider = g_strdup (dsn_info->provider);
-	cnc->priv->username = g_strdup (username);
-	cnc->priv->password = g_strdup (password);
+	cnc->priv->username = g_strdup (real_username);
+	cnc->priv->password = g_strdup (real_password);
 
 	gda_config_free_data_source_info (dsn_info);
 
 	/* try to open the connection */
-	params = gda_quark_list_new_from_string (cnc->priv->cnc_string);
-	if (!gda_server_provider_open_connection (provider, cnc, params, username, password)) {
+	if (!gda_server_provider_open_connection (provider, cnc, params,
+						  cnc->priv->username,
+						  cnc->priv->password)) {
 		gda_quark_list_free (params);
 		g_object_unref (G_OBJECT (cnc));
 		return NULL;

@@ -279,6 +279,7 @@ Access/Management of libgda configuration
 @cnc_string: 
 @description: 
 @username: 
+@password: 
 
 
 <!-- ##### FUNCTION gda_config_remove_data_source ##### -->

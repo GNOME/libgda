@@ -84,6 +84,7 @@ typedef struct {
 	gchar *cnc_string;
 	gchar *description;
 	gchar *username;
+	gchar *password;
 } GdaDataSourceInfo;
 
 GList             *gda_config_get_data_source_list (void);
@@ -96,7 +97,8 @@ void               gda_config_save_data_source (const gchar *name,
 						const gchar *provider,
 						const gchar *cnc_string,
 						const gchar *description,
-						const gchar *username);
+						const gchar *username,
+						const gchar *password);
 void               gda_config_remove_data_source (const gchar *name);
 
 /*

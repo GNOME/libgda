@@ -434,12 +434,16 @@
 	      <area id="provider" coords="2">
 	      <area id="dsn" coords="3">
               <area id="description" coords="4">
+	      <area id="username" coords="5">
+	      <area id="password" coords="6">
             </areaspec>
 	    <programlisting>
 	      [sales]
 	      Provider=MySQL
               DSN=DATABASE=test;HOST=localhost;PORT=1111
 	      Description=MySQL Test Database in native mode
+	      Username=username
+	      Password=password
 	    </programlisting>
 	    <calloutlist>
 	      <callout arearefs="provider">
@@ -457,12 +461,38 @@
 		  entry is interpreted by the providers is described 
 		  in the provider section.
 		</para>
+		<para>
+		  There are, though, a set of default properties that can
+		  be used for the connection string for all providers. Those
+		  are:
+		  <itemizedlist>
+		    <listitem>
+		      <para>USERNAME: user name to be used for authentication.</para>
+		    </listitem>
+		    <listitem>
+		      <para>PASSWORD: password to be used for authentication.</para>
+		    </listitem>
+		  </itemizedlist>
+		</para>
 	      </callout>
 	      <callout arearefs="description">
 		<para>
 		  The value of this entry is a short description of
 		  the datasource. It is here for convenience only
 		  and it is not used for any purpose.
+		</para>
+	      </callout>
+	      <callout arearefs="username">
+	        <para>
+		  The user name to be used when connecting to the database.
+		</para>
+	      </callout>
+	      <callout arearefs="password">
+	        <para>
+		  The password to be used when connecting to the database.
+		  This is stored in plain text, so be sure you restrict access
+		  to the configuration file (<filename>~/.libgda/config</filename>)
+		  to any &quot;dangerous&quot; users.
 		</para>
 	      </callout>
 	    </calloutlist>
