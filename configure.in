@@ -83,9 +83,16 @@ then
 fi
 
 # Bonobo checks
-AM_PATH_BONOBO(1.0,,AC_MSG_ERROR(Bonobo >= 1.0 is needed to compile GNOME-DB))
-gda_bonobo_cflags=`gnome-config --cflags bonobox`
-gda_bonobo_libs=`gnome-config --libs bonobox`
+AC_MSG_CHECKING(for Bonobo >= 1.0.x)
+if gnome-config --libs bonobox > /dev/null 2>&1
+then
+	AC_MSG_RESULT(found)
+	gda_bonobo_cflags=`gnome-config --cflags bonobox`
+	gda_bonobo_libs=`gnome-config --libs bonobox`
+else
+	AC_MSG_ERROR([
+*** Bonobo 1.0.x or later is necessary in order to build libgda.])
+fi
 
 dnl Check for libxml
 AC_MSG_CHECKING(for libxml)

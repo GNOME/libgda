@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda 0.2.9\n"
-"POT-Creation-Date: 2001-11-11 12:58+0100\n"
+"POT-Creation-Date: 2001-11-18 18:46+0100\n"
 "PO-Revision-Date: 2001-11-11 12:58CET\n"
 "Last-Translator: Stanislav Visnovsky <visnovsky@nenya.ms.mff.cuni.cz>\n"
 "Language-Team: Slovak <sk-i18n@lists.linux.sk>\n"
@@ -208,7 +208,7 @@ msgstr "Musíte zadať priečinok, kde má byť uložená databáza"
 msgid "Unknown schema type"
 msgstr "Neznámy typ schémy"
 
-#: providers/gda-default-server/main-default.c:69
+#: providers/gda-default-server/main-default.c:70
 msgid "Could not register Default provider implementation"
 msgstr "Nie je možné registrovať implementáciu štandardného poskytovateľa"
 
@@ -1033,4 +1033,3 @@ msgstr "%s: zdroj dát '%s' nenájdený\n"
 #: tools/templates/main-srv.c.tmpl:60
 msgid "Could not register <PROVIDER-NAME> provider implementation"
 msgstr "Nie je možné registrovať implementáciu <PROVIDER-NAME> poskytovateľa"
-

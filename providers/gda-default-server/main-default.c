@@ -65,8 +65,10 @@ main (gint argc, gchar *argv[])
 				  &server_impl_functions);
 	if (server_impl) {
 		gda_server_start(server_impl);
-    }
-	else gda_log_error(_("Could not register Default provider implementation"));
+	}
+	else
+		gda_log_error(_("Could not register Default provider implementation"));
+
 	return 0;
 }
 

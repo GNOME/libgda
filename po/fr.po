@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda 0.2.4\n"
-"POT-Creation-Date: 2001-10-10 23:26+0200\n"
+"POT-Creation-Date: 2001-11-18 18:46+0100\n"
 "PO-Revision-Date: 2001-02-13 12:43+0100\n"
 "Last-Translator: Christophe Merlet (RedFox) <redfox@eikonex.org>\n"
 "Language-Team: GNOME French Team <gnomefr@gnomefr.traduc.org>\n"
@@ -216,7 +216,7 @@ msgstr ""
 msgid "Unknown schema type"
 msgstr "Type ORACLE %ld inconnu"
 
-#: providers/gda-default-server/main-default.c:69
+#: providers/gda-default-server/main-default.c:70
 #, fuzzy
 msgid "Could not register Default provider implementation"
 msgstr "Ne peut enregistrer l'implémentation du fournisseur de courrier"
@@ -230,7 +230,7 @@ msgstr "Propriétées du Serveur GDA"
 msgid "LDAP provider connection factory"
 msgstr ""
 
-#: providers/gda-interbase-server/gda-interbase-connection.c:288
+#: providers/gda-interbase-server/gda-interbase-connection.c:331
 #: providers/gda-ldap-server/gda-ldap-connection.c:293
 #: providers/gda-mdb-server/gda-mdb-connection.c:372
 #: providers/gda-mysql-server/gda-mysql-connection.c:490
@@ -245,7 +245,7 @@ msgid "error '%s' at %s"
 msgstr "erreur « %s » à %s"
 
 #. gda_error_set_help_file (error, _("Not available"));
-#: providers/gda-interbase-server/gda-interbase-connection.c:294
+#: providers/gda-interbase-server/gda-interbase-connection.c:337
 #: providers/gda-ldap-server/gda-ldap-connection.c:298
 #: providers/gda-ldap-server/gda-ldap-connection.c:299
 #: providers/gda-mdb-server/gda-mdb-connection.c:377
@@ -267,7 +267,7 @@ msgstr "erreur « %s » à %s"
 msgid "Not available"
 msgstr "Non disponible"
 
-#: providers/gda-interbase-server/gda-interbase-connection.c:295
+#: providers/gda-interbase-server/gda-interbase-connection.c:338
 #: providers/gda-ldap-server/gda-ldap-connection.c:300
 #: providers/gda-mdb-server/gda-mdb-connection.c:378
 #: providers/gda-mysql-server/gda-mysql-connection.c:500
@@ -292,9 +292,9 @@ msgstr "Propriétées du serveur source GDA"
 msgid "InterBase provider connection factory"
 msgstr ""
 
-#: providers/gda-interbase-server/gda-interbase-connection.c:286
-#, c-format
-msgid "Error code %ld"
+#: providers/gda-interbase-server/gda-interbase-connection.c:327
+#, fuzzy, c-format
+msgid "Error code %ld (%s)"
 msgstr "Code d'erreur %ld"
 
 #: providers/gda-interbase-server/main-interbase.c:74

@@ -1,3 +1,7 @@
+2001-11-18  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* configure.in: fixed Bonobo check (fixes #60260)
+
 2001-10-28  Akira TAGOH <tagoh@gnome-db.org>
 
 	* configure.in: Added library ages variable.

@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.4.1\n"
-"POT-Creation-Date: 2001-11-01 06:15-0500\n"
+"POT-Creation-Date: 2001-11-18 18:46+0100\n"
 "PO-Revision-Date: 2001-11-01 22:54+0000\n"
 "Last-Translator: Duarte Loreto <happyguy_pt@hotmail.com>\n"
 "Language-Team: Portuguese <none@none.org>\n"
@@ -208,7 +208,7 @@ msgstr "Tem de especificar um directório onde armazenar base de dados"
 msgid "Unknown schema type"
 msgstr "Tipo de esquema desconhecido"
 
-#: providers/gda-default-server/main-default.c:69
+#: providers/gda-default-server/main-default.c:70
 msgid "Could not register Default provider implementation"
 msgstr "Incapaz de registar implementação do fornecedor de Defeito"
 

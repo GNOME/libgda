@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: GNOME db/CVS\n"
-"POT-Creation-Date: 2001-11-11 06:15-0500\n"
+"POT-Creation-Date: 2001-11-18 18:46+0100\n"
 "PO-Revision-Date: 2001-11-11 11:50+01:00\n"
 "Last-Translator: Keld Simonsen <keld@dkuug.dk>\n"
 "Language-Team: Danish <dansk@klid.dk>\n"
@@ -208,7 +208,7 @@ msgstr "Du skal specificere et katalog for lagring af databasen"
 msgid "Unknown schema type"
 msgstr "Ukendt skema-type"
 
-#: providers/gda-default-server/main-default.c:69
+#: providers/gda-default-server/main-default.c:70
 msgid "Could not register Default provider implementation"
 msgstr "Kunne ikke registrere implementation for standard-udbyder"
 

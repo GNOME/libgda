@@ -8,7 +8,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-db \n"
-"POT-Creation-Date: 2001-10-10 23:26+0200\n"
+"POT-Creation-Date: 2001-11-18 18:46+0100\n"
 "PO-Revision-Date: 2001-03-14 01:06+0100\n"
 "Last-Translator: Antonio de la Torre <adltorre@terra.es>\n"
 "Language-Team: Spanish <es@li.org>\n"
@@ -217,7 +217,7 @@ msgstr ""
 msgid "Unknown schema type"
 msgstr ""
 
-#: providers/gda-default-server/main-default.c:69
+#: providers/gda-default-server/main-default.c:70
 #, fuzzy
 msgid "Could not register Default provider implementation"
 msgstr "No"
@@ -230,7 +230,7 @@ msgstr ""
 msgid "LDAP provider connection factory"
 msgstr ""
 
-#: providers/gda-interbase-server/gda-interbase-connection.c:288
+#: providers/gda-interbase-server/gda-interbase-connection.c:331
 #: providers/gda-ldap-server/gda-ldap-connection.c:293
 #: providers/gda-mdb-server/gda-mdb-connection.c:372
 #: providers/gda-mysql-server/gda-mysql-connection.c:490
@@ -245,7 +245,7 @@ msgid "error '%s' at %s"
 msgstr ""
 
 #. gda_error_set_help_file (error, _("Not available"));
-#: providers/gda-interbase-server/gda-interbase-connection.c:294
+#: providers/gda-interbase-server/gda-interbase-connection.c:337
 #: providers/gda-ldap-server/gda-ldap-connection.c:298
 #: providers/gda-ldap-server/gda-ldap-connection.c:299
 #: providers/gda-mdb-server/gda-mdb-connection.c:377
@@ -268,7 +268,7 @@ msgstr ""
 msgid "Not available"
 msgstr "%p no es una tabla válida"
 
-#: providers/gda-interbase-server/gda-interbase-connection.c:295
+#: providers/gda-interbase-server/gda-interbase-connection.c:338
 #: providers/gda-ldap-server/gda-ldap-connection.c:300
 #: providers/gda-mdb-server/gda-mdb-connection.c:378
 #: providers/gda-mysql-server/gda-mysql-connection.c:500
@@ -293,9 +293,9 @@ msgstr ""
 msgid "InterBase provider connection factory"
 msgstr ""
 
-#: providers/gda-interbase-server/gda-interbase-connection.c:286
+#: providers/gda-interbase-server/gda-interbase-connection.c:327
 #, c-format
-msgid "Error code %ld"
+msgid "Error code %ld (%s)"
 msgstr ""
 
 #: providers/gda-interbase-server/main-interbase.c:74
