@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-db 0.0.91\n"
-"POT-Creation-Date: 2002-01-25 01:10+0100\n"
-"PO-Revision-Date: 2001-10-08 22:27+0200\n"
+"POT-Creation-Date: 2002-01-30 00:28+0100\n"
+"PO-Revision-Date: 2002-01-30 00:30+0100\n"
 "Last-Translator: Kjartan Maraas <kmaraas@online.no>\n"
 "Language-Team: Norwegian <no@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -281,9 +281,9 @@ msgid "InterBase provider connection factory"
 msgstr "InterBase tilbyder tilkoblingsfactory"
 
 #: providers/gda-interbase-server/gda-interbase-connection.c:327
-#, fuzzy, c-format
+#, c-format
 msgid "Error code %ld (%s)"
-msgstr "Feilkode %ld"
+msgstr "Feilkode %ld (%s)"
 
 #: providers/gda-interbase-server/main-interbase.c:74
 msgid "Could not register INTERBASE provider implementation"
@@ -718,41 +718,35 @@ msgid "Could not get # of messages"
 msgstr "Kunne ikke finne # meldinger"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:356
-#, fuzzy
 msgid "ct_diag failed, Could not get # of client messages(1)"
-msgstr "Kunne ikke hente # klientmeldinger"
+msgstr "ct_diag feilet. Kunne ikke hente # klientmeldinger(1)"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:381
-#, fuzzy
 msgid "Could not get client msg #"
-msgstr "Kunne ikke hente klientmelding # %d"
+msgstr "Kunne ikke hente klientmelding #"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:394
 #: providers/gda-sybase-server/gda-sybase-error.c:396
 #: providers/gda-sybase-server/gda-sybase-error.c:688
 #: providers/gda-sybase-server/gda-sybase-error.c:690
-#, fuzzy
 msgid "Client Message:"
 msgstr "Klientmelding:"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:424
-#, fuzzy
 msgid "ct_diag failed, Could not get # of client messages(2)"
-msgstr "Kunne ikke hente # klientmeldinger"
+msgstr "ct_diag feilet. Kunne ikke hente # klientmeldinger(2)"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:442
 msgid "Could not clear client messages"
 msgstr "Kunne ikke tømme klientmeldinger"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:486
-#, fuzzy
 msgid "Could not get # of server messages(1)"
-msgstr "Kunne ikke hente # tjenermeldinger"
+msgstr "Kunne ikke hente # tjenermeldinger(1)"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:510
-#, fuzzy
 msgid "Could not get server msg #"
-msgstr "Kunne ikke hente tjenermelding # %d"
+msgstr "Kunne ikke hente tjenermelding #"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:570
 msgid "Could not get # of server messages"
@@ -777,14 +771,12 @@ msgid "Fetching %d cslib message"
 msgstr "Henter %d cslib-melding"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:672
-#, fuzzy
 msgid "Could not get cslib msg #"
-msgstr "Kunne ikke hente cslib-melding # %d"
+msgstr "Kunne ikke hente cslib-melding #"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:711
-#, fuzzy
 msgid "Could not get # of cslib messages(2)"
-msgstr "Kunne ikke hente antall cslib-meldinger"
+msgstr "Kunne ikke hente # cslib-meldinger(2)"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:729
 msgid "Could not clear cslib messages"
@@ -792,23 +784,23 @@ msgstr "Kunne ikke fjerne cslib-meldinger"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:761
 msgid "SYB"
-msgstr ""
+msgstr "SYB"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:763
 msgid "severity"
-msgstr ""
+msgstr "alvorlighetsgrad"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:765
 msgid "number"
-msgstr ""
+msgstr "nummer"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:767
 msgid "origin"
-msgstr ""
+msgstr "opprinnelse"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:769
 msgid "layer"
-msgstr ""
+msgstr "lag"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:776
 #, c-format
@@ -817,6 +809,9 @@ msgid ""
 "\tOperating system error number(%ld):\n"
 "\t%s"
 msgstr ""
+"\n"
+"\tOperativsystemfeil nummer(%ld):\n"
+"\t%s"
 
 #: providers/gda-sybase-server/gda-sybase-recordset.c:219
 #: providers/gda-tds-server/gda-tds-recordset.c:199
