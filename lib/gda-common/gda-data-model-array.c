@@ -20,11 +20,17 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#include <glib/garray.h>
 #include "gda-data-model-array.h"
 
 #define PARENT_TYPE GDA_TYPE_DATA_MODEL
 
 struct _GdaDataModelArrayPrivate {
+	/* number of columns in each row */
+	gint number_of_columns;
+
+	/* the array of rows, each item is a GList of GdaValue's */
+	GPtrArray *rows;
 };
 
 static void gda_data_model_array_class_init (GdaDataModelArrayClass *klass);
@@ -38,8 +44,43 @@ static GObjectClass *parent_class = NULL;
  * GdaDataModelArray class implementation
  */
 
+static gint
+gda_data_model_array_get_n_rows (GdaDataModel *model)
+{
+	g_return_val_if_fail (GDA_IS_DATA_MODEL_ARRAY (model), -1);
+	return GDA_DATA_MODEL_ARRAY (model)->priv->rows->len;
+}
+
+static gint
+gda_data_model_array_get_n_columns (GdaDataModel *model)
+{
+	g_return_val_if_fail (GDA_IS_DATA_MODEL_ARRAY (model), -1);
+	return GDA_DATA_MODEL_ARRAY (model)->priv->number_of_columns;
+}
+
+static const GdaValue *
+gda_data_model_array_get_value_at (GdaDataModel *model, gint col, gint row)
+{
+	GList *fields;
+
+	g_return_val_if_fail (GDA_IS_DATA_MODEL_ARRAY (model), NULL);
+
+	if (row >= GDA_DATA_MODEL_ARRAY (model)->priv->rows->len)
+		return NULL;
+
+	fields = g_ptr_array_index (GDA_DATA_MODEL_ARRAY (model)->priv->rows, row);
+	if (fields != NULL) {
+		gint len = g_list_length (len);
+
+		if (col < len)
+			return (GdaValue *) g_list_nth (cols, col);
+	}
+
+	return NULL;
+}
+
 static void
-gda_data_model_array_class_init (GdaDataModelClass *klass)
+gda_data_model_array_class_init (GdaDataModelArrayClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 	GdaDataModelClass *model_class = GDA_DATA_MODEL_CLASS (klass);
@@ -59,6 +100,8 @@ gda_data_model_array_init (GdaDataModelArray *model, GdaDataModelArrayClass *kla
 
 	/* allocate internal structure */
 	model->priv = g_new0 (GdaDataModelArrayPrivate, 1);
+	model->priv->number_of_columns = 0;
+	model->priv->rows = g_ptr_array_new ();
 }
 
 static void
@@ -69,6 +112,9 @@ gda_data_model_array_finalize (GObject *object)
 	g_return_if_fail (GDA_IS_DATA_MODEL_ARRAY (model));
 
 	/* free memory */
+	gda_data_model_array_clear (model);
+	g_ptr_array_free (model->priv->rows, TRUE);
+
 	g_free (model->priv);
 	model->priv = NULL;
 
@@ -109,5 +155,24 @@ gda_data_model_array_new (gint cols)
 	GdaDataModel *model;
 
 	model = g_object_new (GDA_TYPE_DATA_MODEL_ARRAY, NULL);
+	model->priv->number_of_columns = cols;
 	return model;
+}
+
+/**
+ * gda_data_model_array_clear
+ */
+void
+gda_data_model_array_clear (GdaDataModelArray *model)
+{
+	g_return_if_fail (GDA_IS_DATA_MODEL_ARRAY (model));
+
+	while (model->priv->rows->len > 0) {
+		GList *cols = (GList *) g_ptr_array_index (model->priv->rows, 0);
+
+		if (cols != NULL)
+			g_list_foreach (cols, (GFunc) gda_value_free, NULL);
+		g_ptr_array_remove_index (model->priv->rows, 0);
+		g_list_free (cols);
+	}
 }

@@ -38,7 +38,7 @@ gdouble  gda_config_get_float (const gchar *path);
 gboolean gda_config_get_boolean (const gchar *path);
 void     gda_config_set_string (const gchar *path, const gchar *new_value);
 void     gda_config_set_int (const gchar *path, gint new_value);
-void     gda_config_set_float (const gchar *path, gfloat new_value);
+void     gda_config_set_float (const gchar *path, gdouble new_value);
 void     gda_config_set_boolean (const gchar *path, gboolean new_value);
 
 void     gda_config_remove_section (const gchar *path);

@@ -25,6 +25,7 @@
 #define PARENT_TYPE GDA_TYPE_DATA_MODEL
 
 struct _GdaDataModelListPrivate {
+	/* list of GdaValue's */
 	GList *value_list;
 };
 
@@ -53,7 +54,7 @@ gda_data_model_list_get_n_columns (GdaDataModel *model)
 	return 1;
 }
 
-static GdaValue *
+static const GdaValue *
 gda_data_model_list_get_value_at (GdaDataModel *model, gint col, gint row)
 {
 	gint count;
@@ -62,12 +63,12 @@ gda_data_model_list_get_value_at (GdaDataModel *model, gint col, gint row)
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_LIST (model), NULL);
 	g_return_val_if_fail (col != 0, NULL);
 
-	count = g_list_length (model->priv->value_list);
+	count = g_list_length (GDA_DATA_MODEL_LIST (model)->priv->value_list);
 	if (row > count)
 		return NULL;
 
-	value = g_list_nth (model->priv->value_list, row);
-	return gda_value_copy (value);
+	value = g_list_nth (GDA_DATA_MODEL_LIST (model)->priv->value_list, row);
+	return value;
 }
 
 static void

@@ -27,6 +27,12 @@
 
 G_BEGIN_DECLS
 
+#define GDA_TYPE_DATA_MODEL            (gda_data_model_get_type())
+#define GDA_DATA_MODEL(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_DATA_MODEL, GdaDataModel))
+#define GDA_DATA_MODEL_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_DATA_MODEL, GdaDataModelClass))
+#define GDA_IS_DATA_MODEL(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_DATA_MODEL))
+#define GDA_IS_DATA_MODEL_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GDA_TYPE_DATA_MODEL))
+
 typedef struct _GdaDataModel        GdaDataModel;
 typedef struct _GdaDataModelClass   GdaDataModelClass;
 
@@ -43,15 +49,15 @@ struct _GdaDataModelClass {
 	/* virtual methods */
 	gint (* get_n_rows) (GdaDataModel *model);
 	gint (* get_n_columns) (GdaDataModel *model);
-	GdaValue * (* get_value_at) (GdaDataModel *model, gint col, gint row);
+	const GdaValue * (* get_value_at) (GdaDataModel *model, gint col, gint row);
 };
 
-GType     gda_data_model_get_type (void);
+GType           gda_data_model_get_type (void);
 
-void      gda_data_model_changed (GdaDataModel *model);
-gint      gda_data_model_get_n_rows (GdaDataModel *model);
-gint      gda_data_model_get_n_columns (GdaDataModel *model);
-GdaValue *gda_data_model_get_value_at (GdaDataModel *model, gint col, gint row);
+void            gda_data_model_changed (GdaDataModel *model);
+gint            gda_data_model_get_n_rows (GdaDataModel *model);
+gint            gda_data_model_get_n_columns (GdaDataModel *model);
+const GdaValue *gda_data_model_get_value_at (GdaDataModel *model, gint col, gint row);
 
 G_END_DECLS
 

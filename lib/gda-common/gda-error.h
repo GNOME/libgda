@@ -24,7 +24,8 @@
 #if !defined(__gda_error_h__)
 #  define __gda_error_h__
 
-#include <gda-common-defs.h>
+#include <glib/gmacros.h>
+#include <gda-common/GNOME_Database.h>
 
 G_BEGIN_DECLS
 

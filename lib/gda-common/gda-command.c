@@ -53,7 +53,7 @@ gda_command_free (GdaCommand *cmd)
 const gchar *
 gda_command_get_text (GdaCommand *cmd)
 {
-	g_return_if_fail (cmd != NULL, NULL);
+	g_return_val_if_fail (cmd != NULL, NULL);
 	return (const gchar *) cmd->text;
 }
 

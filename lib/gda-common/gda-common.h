@@ -26,6 +26,8 @@
 #include <gda-common/gda-command.h>
 #include <gda-common/gda-config.h>
 #include <gda-common/gda-data-model.h>
+#include <gda-common/gda-data-model-array.h>
+#include <gda-common/gda-data-model-list.h>
 #include <gda-common/gda-listener.h>
 #include <gda-common/gda-parameter.h>
 #include <gda-common/gda-quark-list.h>

@@ -30,6 +30,12 @@ static void gda_data_model_class_init (GdaDataModelClass *klass);
 static void gda_data_model_init       (GdaDataModel *model, GdaDataModelClass *klass);
 static void gda_data_model_finalize   (GObject *object);
 
+enum {
+	CHANGED,
+	LAST_SIGNAL
+};
+
+static guint gda_data_model_signals[LAST_SIGNAL];
 static GObjectClass *parent_class = NULL;
 
 /*
@@ -42,6 +48,15 @@ gda_data_model_class_init (GdaDataModelClass *klass)
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
 	parent_class = g_type_class_peek_parent (klass);
+
+	gda_data_model_signals[CHANGED] =
+		g_signal_new ("changed",
+                              G_TYPE_FROM_CLASS (object_class),
+                              G_SIGNAL_RUN_LAST,
+                              G_STRUCT_OFFSET (GdaDataModelClass, changed),
+                              NULL, NULL,
+                              g_cclosure_marshal_VOID__VOID,
+                              G_TYPE_NONE, 0);
 
 	object_class->finalize = gda_data_model_finalize;
 	klass->get_n_rows = NULL;

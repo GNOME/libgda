@@ -22,13 +22,19 @@
 
 #include "gda-config.h"
 #include <bonobo-activation/bonobo-activation.h>
+#include <bonobo-activation/Bonobo_Activation_types.h>
 #include <bonobo/bonobo-exception.h>
 #include <gconf/gconf.h>
+#include <string.h>
 
 #define GDA_CONFIG_SECTION_DATASOURCES       "/apps/gda/Datasources"
 #define GDA_CONFIG_SECTION_LAST_CONNECTIONS  "/apps/gda/LastConnections"
 
 #define GDA_CONFIG_KEY_MAX_LAST_CONNECTIONS  "/apps/gda/MaxLastConnections"
+
+static GList *activation_property_to_list (Bonobo_ActivationProperty *prop);
+static GdaParameter *activation_property_to_parameter (Bonobo_ActivationProperty *prop);
+static gchar *activation_property_to_string (Bonobo_ActivationProperty *prop);
 
 static GConfEngine *conf_engine = NULL;
 
@@ -40,11 +46,12 @@ static GList *
 activation_property_to_list (Bonobo_ActivationProperty *prop)
 {
 	GList *list = NULL;
-	g_return_val_if_fail (prop != NULL);
 
-	if (prop->v._d == BONOBO_ACTIVATION_P_STRING)
-		list = g_list_append (g_strdup (prop->v._u.value_string));
-	else if (prop->v._d == BONOBO_ACTIVATION_P_STRINGV) {
+	g_return_val_if_fail (prop != NULL, NULL);
+
+	if (prop->v._d == Bonobo_ACTIVATION_P_STRING)
+		list = g_list_append (list, g_strdup (prop->v._u.value_string));
+	else if (prop->v._d == Bonobo_ACTIVATION_P_STRINGV) {
 		gint j;
 		Bonobo_StringList strlist = prop->v._u.value_stringv;
 
@@ -68,16 +75,16 @@ activation_property_to_parameter (Bonobo_ActivationProperty *prop)
 	value = gda_parameter_get_value (param);
 
 	switch (prop->v._d) {
-	case BONOBO_ACTIVATION_P_STRING :
+	case Bonobo_ACTIVATION_P_STRING :
 		gda_value_set_string (value, prop->v._u.value_string);
 		break;
-	case BONOBO_ACTIVATION_P_NUMBER :
+	case Bonobo_ACTIVATION_P_NUMBER :
 		gda_value_set_double (value, prop->v._u.value_number);
 		break;
-	case BONOBO_ACTIVATION_P_BOOLEAN :
+	case Bonobo_ACTIVATION_P_BOOLEAN :
 		gda_value_set_boolean (value, prop->v._u.value_boolean);
 		break;
-	case BONOBO_ACTIVATION_P_STRINGV :
+	case Bonobo_ACTIVATION_P_STRINGV :
 		str = activation_property_to_string (prop);
 		if (str) {
 			gda_value_set_string (value, str);
@@ -94,9 +101,9 @@ activation_property_to_string (Bonobo_ActivationProperty *prop)
 {
 	g_return_val_if_fail (prop != NULL, NULL);
 
-	if (prop->v._d == BONOBO_ACTIVATION_P_STRING)
+	if (prop->v._d == Bonobo_ACTIVATION_P_STRING)
 		return g_strdup (prop->v._u.value_string);
-	else if (prop->v._d == BONOBO_ACTIVATION_P_STRINGV) {
+	else if (prop->v._d == Bonobo_ACTIVATION_P_STRINGV) {
 		gint j;
 		GString *str = NULL;
 		Bonobo_StringList strlist = prop->v._u.value_stringv;
@@ -418,7 +425,7 @@ gda_config_get_component_list (const gchar *query)
 {
 	CORBA_Environment ev;
 	Bonobo_ServerInfoList *server_list;
-	gint n;
+	gint i;
 	GList *list = NULL;
 
 	CORBA_exception_init (&ev);
@@ -448,11 +455,11 @@ gda_config_get_component_list (const gchar *query)
 		comp_info->hostname = g_strdup (bonobo_info->hostname);
 		comp_info->domain = g_strdup (bonobo_info->domain);
 
-		if (!strcmp (bonobo_info->type, "exe"))
+		if (!strcmp (bonobo_info->server_type, "exe"))
 			comp_info->type = GDA_COMPONENT_TYPE_EXE;
-		else if (!strcmp (bonobo_info->type, "shlib"))
+		else if (!strcmp (bonobo_info->server_type, "shlib"))
 			comp_info->type = GDA_COMPONENT_TYPE_SHLIB;
-		else if (!strcmp (bonobo_info->type, "factory"))
+		else if (!strcmp (bonobo_info->server_type, "factory"))
 			comp_info->type = GDA_COMPONENT_TYPE_FACTORY;
 		else
 			comp_info->type = GDA_COMPONENT_TYPE_INVALID;
@@ -463,7 +470,7 @@ gda_config_get_component_list (const gchar *query)
 			GdaParameter *param;
 
 			param = activation_property_to_parameter (
-				bonobo_info->props._buffer[j]);
+				&bonobo_info->props._buffer[j]);
 			if (param != NULL) {
 				gda_parameter_list_add_parameter (
 					comp_info->properties, param);
@@ -521,7 +528,7 @@ gda_config_get_provider_list (void)
 {
 	CORBA_Environment ev;
 	Bonobo_ServerInfoList *server_list;
-	gint n;
+	gint i;
 	GList *list = NULL;
 
 	CORBA_exception_init (&ev);
@@ -553,11 +560,11 @@ gda_config_get_provider_list (void)
 		provider_info->gda_params = activation_property_to_list (
 			bonobo_server_info_prop_find (bonobo_info, "gda_params"));
 
-		if (!strcmp (bonobo_info->type, "exe"))
+		if (!strcmp (bonobo_info->server_type, "exe"))
 			provider_info->type = GDA_COMPONENT_TYPE_EXE;
-		else if (!strcmp (bonobo_info->type, "shlib"))
+		else if (!strcmp (bonobo_info->server_type, "shlib"))
 			provider_info->type = GDA_COMPONENT_TYPE_SHLIB;
-		else if (!strcmp (bonobo_info->type, "factory"))
+		else if (!strcmp (bonobo_info->server_type, "factory"))
 			provider_info->type = GDA_COMPONENT_TYPE_FACTORY;
 		else
 			provider_info->type = GDA_COMPONENT_TYPE_INVALID;
