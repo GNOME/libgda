@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2001-02-17 15:03+0100\n"
+"POT-Creation-Date: 2001-03-11 19:48+0100\n"
 "PO-Revision-Date: 2000-11-13 19:36+0100\n"
 "Last-Translator: Andraz Tori <andraz.tori1@guest.arnes.si>\n"
 "Language-Team: Slovenian <sl@li.org>\n"
@@ -242,8 +242,8 @@ msgstr "napaka '%s' pri %s"
 #: providers/gda-oracle-server/gda-oracle-connection.c:444
 #: providers/gda-postgres-server/gda-postgres-connection.c:797
 #: providers/gda-postgres-server/gda-postgres-connection.c:798
-#: providers/gda-primebase-server/gda-primebase-connection.c:314
-#: providers/gda-primebase-server/gda-primebase-connection.c:315
+#: providers/gda-primebase-server/gda-primebase-connection.c:363
+#: providers/gda-primebase-server/gda-primebase-connection.c:364
 #: providers/gda-sybase-server/gda-sybase-error.c:118
 #: providers/gda-sybase-server/gda-sybase-error.c:119
 #: providers/gda-tds-server/gda-tds-error.c:117
@@ -257,7 +257,7 @@ msgstr "Ni na voljo"
 #: providers/gda-mysql-server/gda-mysql-connection.c:405
 #: providers/gda-oracle-server/gda-oracle-connection.c:445
 #: providers/gda-postgres-server/gda-postgres-connection.c:799
-#: providers/gda-primebase-server/gda-primebase-connection.c:316
+#: providers/gda-primebase-server/gda-primebase-connection.c:365
 #: providers/gda-sybase-server/gda-sybase-error.c:120
 #: providers/gda-tds-server/gda-tds-error.c:119
 msgid "error"
@@ -304,7 +304,7 @@ msgstr "Dostop GDA do vira podatkov za datoteke MDB (MS Access)"
 #. execute command
 #: providers/gda-mdb-server/gda-mdb-command.c:86
 #: providers/gda-mysql-server/gda-mysql-command.c:87
-#: providers/gda-sybase-server/gda-sybase-command.c:120
+#: providers/gda-sybase-server/gda-sybase-command.c:126
 #: providers/gda-tds-server/gda-tds-command.c:114
 #, c-format
 msgid "executing command '%s'"
@@ -452,76 +452,74 @@ msgstr "Nisem mogel registrirati implementacije nuditelja PostzgreSQL"
 msgid "GDA Datasource Access for Sybase"
 msgstr "Dostop GDA do vira podatkov Sybase"
 
-#: providers/gda-sybase-server/gda-sybase-command.c:115
+#: providers/gda-sybase-server/gda-sybase-command.c:121
 #: providers/gda-tds-server/gda-tds-command.c:110
 msgid "Connection seems to be dead"
 msgstr "Povezava izgleda mrtva"
 
-#: providers/gda-sybase-server/gda-sybase-command.c:135
+#: providers/gda-sybase-server/gda-sybase-command.c:140
 #: providers/gda-tds-server/gda-tds-command.c:125
 msgid "Filling command structure failed\n"
 msgstr "Polnjenje ukazne strukture ni uspelo\n"
 
-#: providers/gda-sybase-server/gda-sybase-command.c:147
+#: providers/gda-sybase-server/gda-sybase-command.c:152
 #: providers/gda-tds-server/gda-tds-command.c:133
 msgid "sending cmd failed"
 msgstr "po9iljanje ukaza ni uspelo"
 
-#: providers/gda-primebase-server/gda-primebase-command.c:110
-#: providers/gda-sybase-server/gda-sybase-command.c:154
+#: providers/gda-sybase-server/gda-sybase-command.c:159
 #: providers/gda-tds-server/gda-tds-command.c:140
 msgid "Allocating recordset failed"
 msgstr "Rezerviranje recordset-a ni uspelo"
 
-#: providers/gda-primebase-server/gda-primebase-command.c:117
-#: providers/gda-sybase-server/gda-sybase-command.c:164
+#: providers/gda-sybase-server/gda-sybase-command.c:169
 #: providers/gda-tds-server/gda-tds-command.c:148
 msgid "Getting recordset userdata failed"
 msgstr "Dobivanje recordset uporabni¹kih podatkov ni uspelo"
 
-#: providers/gda-sybase-server/gda-sybase-command.c:222
+#: providers/gda-sybase-server/gda-sybase-command.c:227
 #: providers/gda-tds-server/gda-tds-command.c:201
 msgid "Command execution finished, all results processed"
 msgstr "Izvajanje ukaza je bilo konhano, vsi rezultati so obdelani"
 
-#: providers/gda-sybase-server/gda-sybase-command.c:226
+#: providers/gda-sybase-server/gda-sybase-command.c:231
 #: providers/gda-tds-server/gda-tds-command.c:205
 msgid "Command failed"
 msgstr "Ukaz ni uspel"
 
-#: providers/gda-sybase-server/gda-sybase-command.c:230
+#: providers/gda-sybase-server/gda-sybase-command.c:235
 #: providers/gda-tds-server/gda-tds-command.c:209
 msgid "Execution of resultless command succeeded"
 msgstr "Izvedba ukaza brez rezultatov je uspela"
 
-#: providers/gda-sybase-server/gda-sybase-command.c:246
+#: providers/gda-sybase-server/gda-sybase-command.c:251
 #: providers/gda-tds-server/gda-tds-command.c:225
 #, c-format
 msgid "ct_results() returned %x"
 msgstr "ct_results() je vrnila %x"
 
-#: providers/gda-sybase-server/gda-sybase-command.c:256
+#: providers/gda-sybase-server/gda-sybase-command.c:261
 #: providers/gda-tds-server/gda-tds-command.c:235
 msgid "No further results, command completly succeeded."
 msgstr "Ni nadalnjih rezultatov, ukaz uspe¹no zakljuèen."
 
-#: providers/gda-sybase-server/gda-sybase-command.c:260
+#: providers/gda-sybase-server/gda-sybase-command.c:265
 #: providers/gda-tds-server/gda-tds-command.c:239
 msgid "An error occured during command execution."
 msgstr "Ob izvajanju ukaza se je zgudila napaka."
 
-#: providers/gda-sybase-server/gda-sybase-command.c:267
+#: providers/gda-sybase-server/gda-sybase-command.c:272
 #: providers/gda-tds-server/gda-tds-command.c:243
 msgid "Cmd execution returned unknown result, may be an error"
 msgstr "Izvedba ukaza je vrnila neznan rezultat, to je lahko napaka"
 
-#: providers/gda-sybase-server/gda-sybase-command.c:280
+#: providers/gda-sybase-server/gda-sybase-command.c:285
 #: providers/gda-tds-server/gda-tds-command.c:253
 msgid "No data returned, freeing recordset structure"
 msgstr "Ni vrnjenih podatkov, spro¹èam recordset strukturo"
 
-#: providers/gda-sybase-server/gda-sybase-command.c:311
-#: providers/gda-sybase-server/gda-sybase-command.c:323
+#: providers/gda-sybase-server/gda-sybase-command.c:316
+#: providers/gda-sybase-server/gda-sybase-command.c:328
 #: providers/gda-tds-server/gda-tds-command.c:283
 #: providers/gda-tds-server/gda-tds-command.c:291
 msgid "Freeing command structure failed"
@@ -932,38 +930,30 @@ msgstr "Nisem mogel registrirati implementacije nuditelja gda-sybase"
 msgid "GDA Datasource Access for primebase"
 msgstr "Dostop GDA do vira podatkov za primebase"
 
-#: providers/gda-primebase-server/gda-primebase-command.c:128
-msgid "An error occured."
-msgstr "Pojavila se je napaka."
+#: providers/gda-primebase-server/gda-primebase-connection.c:158
+msgid "Could not connect to '%s@%s:%s' with connparm '%s'"
+msgstr "Nisem se mogel povezati z '%s@%s:%s' s parametri povezave: '%s'"
 
-#: providers/gda-primebase-server/gda-primebase-connection.c:137
-#, c-format
-msgid "%2ld: Connected to '%s@%s' with connparm: '%s'"
-msgstr "%2ld: Povezan z '%s@%s' s parametri povezave: '%s'"
+#: providers/gda-primebase-server/gda-primebase-connection.c:162
+msgid "%2ld: Connected to '%s@%s:%s' with connparm: '%s'"
+msgstr "%2ld: Povezan z '%s@%s:%s' s parametri povezave: '%s'"
 
-#: providers/gda-primebase-server/gda-primebase-connection.c:142
-#, c-format
-msgid "%2ld: ConInfo: %s@%s, Client API v%x, status: %x"
-msgstr ""
-"%2ld: Podatki povezave: %s@%s, programski vmesnik odjemalca v%x, stanje: %x"
+#: providers/gda-primebase-server/gda-primebase-connection.c:168
+msgid "Could not get PBIConnectionInfo(), disconnecting"
+msgstr "Nisem mogel dobiti PBIConnectionInfo(), odklapljam se"
 
-#: providers/gda-primebase-server/gda-primebase-connection.c:145
-#, c-format
-msgid "Could not connect to '%s'"
-msgstr "Ne se povezati z '%s'"
+#: providers/gda-primebase-server/gda-primebase-connection.c:172
+msgid "%2ld: ConInfo: '%s@%s', Cl v%x, Srv '%s' v%x, Brand '%s'"
+msgstr "%2ld: Podatki povezave: %s@%s, odjemalec v%x, stre¾nik '%s' v%x, znamka '%s'"
 
-#: providers/gda-primebase-server/gda-primebase-connection.c:328
+#: providers/gda-primebase-server/gda-primebase-connection.c:376
 msgid "Not enough memory for primebase_Error structure."
 msgstr "Ni dovolj pomnilnika za strukturo primebase_Error."
 
-#: providers/gda-primebase-server/gda-primebase-connection.c:336
+#: providers/gda-primebase-server/gda-primebase-connection.c:383
 #, c-format
 msgid "%2ld: ERROR: %ld (%ld) : %s.\n"
 msgstr "%2ld: NAPAKA: %ld (%ld) : %s.\n"
-
-#: providers/gda-primebase-server/gda-primebase-recordset.c:190
-msgid "No according field found"
-msgstr "Ustrezno polje ni bilo najdeno"
 
 #: providers/gda-primebase-server/main-primebase.c:70
 msgid "Could not register PRIMEBASE provider implementation"
@@ -1075,6 +1065,15 @@ msgstr "%s: napaèno nastavljen DSN vpis"
 #, c-format
 msgid "%s: data source '%s' not found\n"
 msgstr "%s: vir podatkov '%s' ni bil najden\n"
+
+#~ msgid "An error occured."
+#~ msgstr "Pojavila se je napaka."
+
+#~ msgid "Could not connect to '%s'"
+#~ msgstr "Ne se povezati z '%s'"
+
+#~ msgid "No according field found"
+#~ msgstr "Ustrezno polje ni bilo najdeno"
 
 #~ msgid "Error allocating error structure"
 #~ msgstr "Napaka ob rezervaciji strukture za napako"
