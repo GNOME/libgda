@@ -94,10 +94,11 @@ gda_odbc_make_error( SQLHANDLE env,
  * don't need any of the ODBC 3 bits
  */
 
-void gda_odbc_emit_error ( GdaConnection *cnc,
-				SQLHANDLE env, 
-				SQLHANDLE con, 
-				SQLHANDLE stmt )
+void
+gda_odbc_emit_error ( GdaConnection *cnc,
+			SQLHANDLE env, 
+			SQLHANDLE con, 
+			SQLHANDLE stmt )
 {
 	GdaError *error;
 	GList *list = NULL;

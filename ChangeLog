@@ -1,5 +1,11 @@
 2004-01-12  Jon Willeke <willeke@users.sourceforge.net>
 
+	Fixes #131252
+
+	* providers/odbc/utils.c (gda_odbc_emit_error): style fixes.
+
+2004-01-12  Jon Willeke <willeke@users.sourceforge.net>
+
 	Fixes #131251
 
 	* providers/odbc/gda-odbc-provider.c
