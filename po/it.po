@@ -1500,7 +1500,6 @@ msgstr "\tNome server: %s\n"
 msgid "\tProcedure name: %s\n"
 msgstr ""
 "\tNome procedura: %s\n"
-" "
 
 #: providers/sybase/utils.c:147
 msgid "ct_diag() failed determining # of client messages."
