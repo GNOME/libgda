@@ -84,6 +84,9 @@ clear_value (GdaValue *value)
 		g_free (value->value.v_numeric.number);
 		value->value.v_numeric.number = NULL;
 		break;
+	case GDA_VALUE_TYPE_TYPE :
+		value->value.v_type = GDA_VALUE_TYPE_NULL;
+		break;
 	default :
 		break;
 	}
@@ -1484,7 +1487,7 @@ gda_value_get_list (GdaValue *value)
 void
 gda_value_set_list (GdaValue *value, const GdaValueList *val)
 {
-	GList *values;
+	const GList *values;
 	g_return_if_fail (value != NULL);
 	g_return_if_fail (val != NULL);
 

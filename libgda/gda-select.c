@@ -251,7 +251,7 @@ gda_select_add_source (GdaSelect *sel, const gchar *name, GdaDataModel *source)
 			  G_CALLBACK (data_model_changed_cb), sel);
 
 	g_object_ref (G_OBJECT (source));
-	g_hash_table_insert (sel->priv->source_models, g_strdup (name), source);
+	g_hash_table_insert (sel->priv->source_models, g_strdup (name), (gpointer) source);
 
 	sel->priv->changed = TRUE;
 }
@@ -349,7 +349,7 @@ populate_from_single_table (GdaSelect *sel, const gchar *table_name, GList *sql_
 			}
 		}
 
-		GDA_DATA_MODEL_CLASS (parent_class)->append_row (sel, value_list);
+		GDA_DATA_MODEL_CLASS (parent_class)->append_row (GDA_DATA_MODEL (sel), value_list);
 
 		g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
 		g_list_free (value_list);

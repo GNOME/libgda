@@ -77,7 +77,7 @@ free_hash_param (gpointer key, gpointer value, gpointer user_data)
  * Returns: the newly created #GdaParameter.
  */
 GdaParameter *
-gda_parameter_new_from_value (const gchar *name, GdaValue *value)
+gda_parameter_new_from_value (const gchar *name, const GdaValue *value)
 {
 	GdaParameter *param;
 
@@ -308,7 +308,7 @@ gda_parameter_list_free (GdaParameterList *plist)
 {
 	g_return_if_fail (plist != NULL);
 
-	g_hash_table_foreach (plist->hash, free_hash_param, NULL);
+	g_hash_table_foreach (plist->hash, (GHFunc) free_hash_param, NULL);
 	g_hash_table_destroy (plist->hash);
 
 	g_free (plist);

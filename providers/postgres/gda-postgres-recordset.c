@@ -56,6 +56,7 @@ static const GdaValue *gda_postgres_recordset_get_value_at    (GdaDataModel *mod
 static GdaFieldAttributes *gda_postgres_recordset_describe    (GdaDataModel *model, gint col);
 static gint gda_postgres_recordset_get_n_rows 		      (GdaDataModel *model);
 static const GdaRow *gda_postgres_recordset_get_row 	      (GdaDataModel *model, gint rownum);
+static const GdaRow *gda_postgres_recordset_append_row        (GdaDataModel *model, const GList *values);
 static gboolean gda_postgres_recordset_update_row 	      (GdaDataModel *model, const GdaRow *row);
 
 static GObjectClass *parent_class = NULL;
@@ -89,6 +90,7 @@ gda_postgres_recordset_class_init (GdaPostgresRecordsetClass *klass)
 	model_class->describe_column = gda_postgres_recordset_describe;
 	model_class->get_value_at = gda_postgres_recordset_get_value_at;
 	model_class->get_row = gda_postgres_recordset_get_row;
+	model_class->append_row = gda_postgres_recordset_append_row;
 	model_class->update_row = gda_postgres_recordset_update_row;
 }
 
@@ -200,6 +202,116 @@ gda_postgres_recordset_get_row (GdaDataModel *model, gint row)
 					row, row_list);
 
 	return (const GdaRow *) row_list;
+}
+
+static const GdaRow *
+gda_postgres_recordset_append_row (GdaDataModel *model, const GList *values)
+{
+	GdaPostgresRecordset *recset = (GdaPostgresRecordset *) model;
+	GdaPostgresRecordsetPrivate *priv_data;
+	GString *sql;
+	gint cols, i;
+	GList *l;
+	PGresult *pg_res;
+	GdaPostgresConnectionData *cnc_priv_data;
+	PGconn *pg_conn;
+	const GdaRow *row;
+
+	g_return_val_if_fail (GDA_IS_POSTGRES_RECORDSET (recset), NULL);
+	g_return_val_if_fail (values != NULL, NULL);
+	g_return_val_if_fail (gda_data_model_is_updatable (model), NULL);
+	//g_return_val_if_fail (gda_data_model_hash_changed (model), NULL);
+	g_return_val_if_fail (recset->priv != NULL, NULL);
+	priv_data = recset->priv;
+	pg_res = priv_data->pg_res;
+	cnc_priv_data = g_object_get_data (G_OBJECT (priv_data->cnc),
+					   OBJECT_DATA_POSTGRES_HANDLE);
+	pg_conn = cnc_priv_data->pconn;
+
+	/* checks if the table name has been guessed */
+	if (priv_data->table_name == NULL) {
+		gda_connection_add_error_string (priv_data->cnc,
+						 _("Table name could not be guessed."));
+		return NULL;
+	}
+
+	cols = gda_data_model_get_n_columns (model);
+	if (cols != g_list_length ((GList *) values)) {
+		gda_connection_add_error_string (
+			priv_data->cnc,
+			_("Attempt to insert a row with an invalid number of columns"));
+		return NULL;
+	}
+
+	/* Prepare the SQL command */
+	sql = g_string_new ("INSERT INTO ");
+	g_string_append_printf (sql, "%s(",
+				priv_data->table_name);
+	for (i = 0; i < cols; i++) {
+		GdaFieldAttributes *fa;
+
+		fa = gda_data_model_describe_column (model, i);
+		if (!fa) {
+			gda_connection_add_error_string (
+				priv_data->cnc,
+				_("Could not retrieve column's information"));
+			g_string_free (sql, TRUE);
+			return NULL;
+		}
+
+		if (i != 0)
+			sql = g_string_append (sql, ", ");
+		sql = g_string_append (sql, gda_field_attributes_get_name (fa));
+	}
+	sql = g_string_append (sql, ") VALUES (");
+
+	for (l = (GList *) values, i = 0; i < cols; i++, l = g_list_next (l)) {
+		gchar *val_str;
+		const GdaValue *val = (const GdaValue *) l->data;
+	
+		if (!val) {
+			gda_connection_add_error_string (
+				priv_data->cnc,
+				_("Could not retrieve column's value"));
+			g_string_free (sql, TRUE);
+			return NULL;
+		}
+
+		if (i != 0)
+			sql = g_string_append (sql, ", ");
+		val_str = gda_postgres_value_to_sql_string ((GdaValue *)val);
+		if (val_str == NULL) {
+			gda_connection_add_error_string (
+				priv_data->cnc,
+				_("Could not retrieve column's value"));
+			g_string_free (sql, TRUE);
+			return NULL;
+		}
+		sql = g_string_append (sql, val_str);
+		g_free (val_str);
+	}
+	sql = g_string_append (sql, ")");
+
+	/* execute the SQL query */
+	pg_res = PQexec (pg_conn, sql->str);
+	g_string_free (sql, TRUE);
+
+	if (pg_res != NULL) {
+		/* update ok! */
+		if (PQresultStatus (pg_res) != PGRES_COMMAND_OK) {
+			gda_connection_add_error (priv_data->cnc,
+						  gda_postgres_make_error (pg_conn, pg_res));
+			PQclear (pg_res);
+			return NULL;
+		}
+		PQclear (pg_res);
+	}
+	else
+		gda_connection_add_error (priv_data->cnc,
+					  gda_postgres_make_error (pg_conn, NULL));
+	row = GDA_DATA_MODEL_CLASS (parent_class)->append_row (model, values);
+
+	return row;
 }
 
 static gboolean
@@ -323,6 +435,10 @@ gda_postgres_recordset_update_row (GdaDataModel *model, const GdaRow *row)
 	
 	g_free (query_set);
 	g_free (query_where);
+
+	if (status == TRUE)
+               status = GDA_DATA_MODEL_CLASS (parent_class)->update_row (model, row);
+
 	return status;
 }
 
@@ -526,12 +642,14 @@ gda_postgres_recordset_describe (GdaDataModel *model, gint col)
 static gint
 gda_postgres_recordset_get_n_rows (GdaDataModel *model)
 {
+	gint parent_row_num;
 	GdaPostgresRecordset *recset = (GdaPostgresRecordset *) model;
 
 	g_return_val_if_fail (GDA_IS_POSTGRES_RECORDSET (model), 0);
 	g_return_val_if_fail (recset->priv != NULL, 0);
 
-	return recset->priv->nrows;
+	parent_row_num = GDA_DATA_MODEL_CLASS (parent_class)->get_n_rows (model);
+	return MAX(recset->priv->nrows, parent_row_num);
 }
 
 /*

@@ -398,7 +398,7 @@ get_ldap_tables (GdaConnection *cnc, GdaParameterList *params)
 						gda_data_model_append_row (GDA_DATA_MODEL (recset), value_list);
 						/*printf ("%s\n", oc->oc_names[j]);*/
 
-						g_list_foreach (value_list, gda_value_free, NULL);
+						g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
 						g_list_free (value_list);
 					}
 				}

@@ -271,7 +271,7 @@ gda_connection_new (GdaClient *client,
 	if (!gda_server_provider_open_connection (provider, cnc, params,
 						  cnc->priv->username,
 						  cnc->priv->password)) {
-		GList *errors_copy;
+		const GList *errors_copy;
 
 		errors_copy = gda_connection_get_errors (cnc);
 		/* notify the GdaClient of the error, since
@@ -280,7 +280,7 @@ gda_connection_new (GdaClient *client,
 		if (errors_copy) {
 			GList *l;
 
-			for (l = errors_copy; l != NULL; l = l->next)
+			for (l = (GList *) errors_copy; l != NULL; l = l->next)
 				gda_client_notify_error_event (client, cnc, GDA_ERROR (l->data));
 		}
 		gda_quark_list_free (params);
@@ -1021,9 +1021,9 @@ gda_connection_escape_string (GdaConnection *cnc,
 			      const gchar *from,
 			      gchar *to)
 {
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
-	g_return_val_if_fail (from != NULL, NULL);
-	g_return_val_if_fail (to != NULL, NULL);	
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (from != NULL, FALSE);
+	g_return_val_if_fail (to != NULL, FALSE);
 
 	/* execute the command on the provider */
 	return gda_server_provider_escape_string (cnc->priv->provider_obj, cnc, from, to);

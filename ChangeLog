@@ -1,3 +1,58 @@
+2004-09-25  Szalai Ferenc <szferi@einstein.ki.iif.hu>
+
+	* libgda/gda-connection.c (gda_connection_new): use const where needed.
+	(gda_connection_escape_string): return correct values.
+
+	* libgda/gda-data-model-array.c (gda_data_model_array_update_row):
+	use const where needed.
+	(gda_data_model_array_append_column, gda_data_model_array_update_column,
+	gda_data_model_array_remove_column): added missing return statement.
+
+	* libgda/gda-data-model.c (export_to_separated,
+	gda_data_model_to_xml_node): fixed warnings.
+
+	* libgda/gda-error.c (gda_error_list_copy): fixed warnings.
+
+	* libgda/gda-parameter.[ch] (gda_parameter_new_from_value): added
+	'const' to the @value argument.
+	(gda_parameter_list_free): fixed warning.
+
+	* libgda/gda-select.c (gda_select_add_source): fixed warning.
+	(populate_from_single_table): fixed warning.
+
+	* libgda/gda-value.c (clear_value): added case for TYPE types.
+	(gda_value_set_list): fixed warning.
+
+	* libgda/gda-xml-database.c (gda_xml_database_new_table_from_node):
+	set the field attributes' caption as a string, not as an integer.
+
+	* libgda/libgda.h: included gda-log.h.
+
+	* providers/ldap/gda-ldap-provider.c (get_ldap_tables): fixed warning.
+
+	* providers/ldap/libmain.c: added missing function prototypes.
+
+	* providers/mysql/gda-mysql-provider.c
+	(gda_mysql_provider_get_last_insert_id, add_aggreagate_row): fixed
+	warning.
+
+	* providers/postgres/gda-postgres-recordset.c
+	(gda_postgres_recordset_append_row): implemented new data model's
+	method.
+	(gda_postgres_recordset_class_init): set new method.
+	(gda_postgres_recordset_update_row): update the underlying array data
+	model when the update in the database goes well.
+	(gda_postgres_recordset_get_n_rows): check the number of items in the
+	underlying array data model, and return the MAX.
+
+	* providers/postgres/gda-postgres.h: added missing prototype.
+
+	* providers/postgres/utils.c (gda_postgres_type_oid_to_gda): fixed
+	warning.
+	(gda_postgres_value_to_sql_string): new function.
+
+	* report/libgda-report/gda-report-document.c: added missing #include.
+
 2004-09-25  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* configure.in: removed obsolete GNOME_COMPILE_WARNINGS macro.

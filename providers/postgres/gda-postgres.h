@@ -60,6 +60,7 @@ GdaValueType gda_postgres_type_name_to_gda (GHashTable *h_table,
 					    const gchar *name);
 
 const gchar *gda_data_type_to_string (GdaValueType type);
+gchar *gda_postgres_value_to_sql_string (GdaValue *value);
 
 G_END_DECLS
 

@@ -146,7 +146,7 @@ gda_error_list_copy (const GList * errors)
 	GList *l;
 	GList *new_list;
 
-	new_list = g_list_copy (errors);
+	new_list = g_list_copy ((GList *) errors);
 	for (l = new_list; l; l = l->next)
 		g_object_ref (G_OBJECT (l->data));
 

@@ -156,7 +156,7 @@ gda_data_model_array_update_row (GdaDataModel *model, const GdaRow *row)
 	for (i = 0; i < priv->rows->len; i++) {
 		if (priv->rows->pdata[i] == row) {
 			gda_row_free (priv->rows->pdata[i]);
-			priv->rows->pdata[i] = gda_row_copy (row);
+			priv->rows->pdata[i] = gda_row_copy ((GdaRow *) row);
 			gda_data_model_row_updated (model, i);
 
 			return TRUE;
@@ -171,6 +171,8 @@ gda_data_model_array_append_column (GdaDataModel *model, const GdaFieldAttribute
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_ARRAY (model), FALSE);
 	g_return_val_if_fail (attrs != NULL, FALSE);
+
+	return FALSE;
 }
 
 static gboolean
@@ -178,12 +180,16 @@ gda_data_model_array_update_column (GdaDataModel *model, gint col, const GdaFiel
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_ARRAY (model), FALSE);
 	g_return_val_if_fail (attrs != NULL, FALSE);
+
+	return FALSE;
 }
 
 static gboolean
 gda_data_model_array_remove_column (GdaDataModel *model, gint col)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_ARRAY (model), FALSE);
+
+	return FALSE;
 }
 
 static void

@@ -543,7 +543,7 @@ gda_mysql_provider_get_last_insert_id (GdaServerProvider *provider,
 		return NULL;
 	}
 
-	return g_strdup_printf ("%ul", mysql_insert_id (mysql));
+	return g_strdup_printf ("%ld", (unsigned long int ) mysql_insert_id (mysql));
 }
 
 /* begin_transaction handler for the GdaMysqlProvider class */
@@ -715,7 +715,7 @@ add_aggregate_row (GdaDataModelArray *recset, const gchar *str, const gchar *com
 
 	gda_data_model_append_row (GDA_DATA_MODEL (recset), list);
 
-	g_list_foreach (list, gda_value_free, NULL);
+	g_list_foreach (list, (GFunc) gda_value_free, NULL);
 	g_list_free (list);
 }
 

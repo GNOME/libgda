@@ -949,10 +949,10 @@ export_to_separated (GdaDataModel *model, gchar sep)
 			str = g_string_append_c (str, '\n');
 
 		for (c = 0; c < cols; c++) {
-			const GdaValue *value;
+			GdaValue *value;
 			gchar *txt;
 
-			value = gda_data_model_get_value_at (model, c, r);
+			value = (GdaValue *) gda_data_model_get_value_at (model, c, r);
 			if (gda_value_get_type (value) == GDA_VALUE_TYPE_BOOLEAN)
 				txt = g_strdup (gda_value_get_boolean (value) ? "TRUE" : "FALSE");
 			else
@@ -1127,10 +1127,10 @@ gda_data_model_to_xml_node (GdaDataModel *model, const gchar *name)
 			row = xmlNewChild (data, NULL, "row", NULL);
 			xml_set_int (row, "position", r);
 			for (c = 0; c < cols; c++) {
-				const GdaValue *value;
+				GdaValue *value;
 				gchar *str;
 
-				value = gda_data_model_get_value_at (model, c, r);
+				value = (GdaValue *) gda_data_model_get_value_at (model, c, r);
 				if (gda_value_get_type (value) == GDA_VALUE_TYPE_BOOLEAN)
 					str = g_strdup (gda_value_get_boolean (value) ? "TRUE" : "FALSE");
 				else

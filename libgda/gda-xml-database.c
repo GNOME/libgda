@@ -755,7 +755,7 @@ gda_xml_database_new_table_from_node (GdaXmlDatabase *xmldb, xmlNodePtr node)
 			gda_field_attributes_set_references (
 				fa, xmlGetProp (children, PROPERTY_REFERENCES));
 			gda_field_attributes_set_caption (
-				fa, atoi (xmlGetProp (children, PROPERTY_CAPTION)));
+				fa, xmlGetProp (children, PROPERTY_CAPTION));
 			gda_field_attributes_set_auto_increment (
 				fa, atoi (xmlGetProp (children, PROPERTY_AUTO)));
 

@@ -38,7 +38,7 @@ struct _GdaParameter {
 #define GDA_TYPE_PARAMETER (gda_parameter_get_type())
 
 GType           gda_parameter_get_type (void);
-GdaParameter   *gda_parameter_new_from_value (const gchar *name, GdaValue *value);
+GdaParameter   *gda_parameter_new_from_value (const gchar *name, const GdaValue *value);
 GdaParameter   *gda_parameter_new_boolean (const gchar *name, gboolean value);
 GdaParameter   *gda_parameter_new_double (const gchar *name, gdouble value);
 GdaParameter   *gda_parameter_new_gobject (const gchar *name, const GObject *value);
