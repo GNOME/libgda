@@ -1002,6 +1002,7 @@ gda_value_free
 gda_value_get_type
 gda_value_isa
 gda_value_is_null
+gda_value_is_number
 gda_value_copy
 gda_value_get_bigint
 gda_value_set_bigint

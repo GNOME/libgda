@@ -626,6 +626,35 @@ gda_value_is_null (GdaValue *value)
 }
 
 /**
+ * gda_value_is_number
+ * @value: a #GdaValue.
+ *
+ * Get whether the value stored in the given #GdaValue is of
+ * numeric type or not.
+ *
+ * Returns: TRUE if a number, FALSE otherwise.
+ */
+gboolean
+gda_value_is_number (GdaValue *value)
+{
+	g_return_val_if_fail (value != NULL, FALSE);
+
+	switch (value->type) {
+	case GDA_VALUE_TYPE_BIGINT :
+	case GDA_VALUE_TYPE_DOUBLE :
+	case GDA_VALUE_TYPE_INTEGER :
+	case GDA_VALUE_TYPE_NUMERIC :
+	case GDA_VALUE_TYPE_SINGLE :
+	case GDA_VALUE_TYPE_SMALLINT :
+	case GDA_VALUE_TYPE_TINYINT :
+		return TRUE;
+	default :
+	}
+
+	return FALSE;
+}
+
+/**
  * gda_value_copy
  * @value: value to get a copy from.
  *

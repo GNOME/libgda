@@ -166,7 +166,7 @@ gda_mysql_recordset_describe_column (GdaDataModel *model, gint col)
 {
 	gint field_count;
 	GdaFieldAttributes *attrs;
-	MYSQL_FIELD *mysql_fields;
+	MYSQL_FIELD *mysql_field;
 	GdaMysqlRecordset *recset = (GdaMysqlRecordset *) model;
 
 	g_return_val_if_fail (GDA_IS_MYSQL_RECORDSET (recset), NULL);
@@ -183,17 +183,22 @@ gda_mysql_recordset_describe_column (GdaDataModel *model, gint col)
 
 	attrs = gda_field_attributes_new ();
 
-	mysql_fields = mysql_fetch_fields (recset->mysql_res);
-	if (!mysql_fields) {
+	mysql_field = mysql_fetch_field_direct (recset->mysql_res, col);
+	if (!mysql_field) {
 		gda_field_attributes_free (attrs);
 		return NULL;
 	}
 
-	if (mysql_fields[col].name)
-		gda_field_attributes_set_name (attrs, mysql_fields[col].name);
-	gda_field_attributes_set_defined_size (attrs, mysql_fields[col].max_length);
-	gda_field_attributes_set_scale (attrs, mysql_fields[col].decimals);
-	gda_field_attributes_set_gdatype (attrs, gda_mysql_type_to_gda (mysql_fields[col].type));
+	if (mysql_field->name)
+		gda_field_attributes_set_name (attrs, mysql_field->name);
+	gda_field_attributes_set_defined_size (attrs, mysql_field->length);
+	gda_field_attributes_set_table (attrs, mysql_field->table);
+	gda_field_attributes_set_scale (attrs, mysql_field->decimals);
+	gda_field_attributes_set_gdatype (attrs, gda_mysql_type_to_gda (mysql_field->type));
+	gda_field_attributes_set_allow_null (attrs, !IS_NOT_NULL (mysql_field->flags));
+	gda_field_attributes_set_primary_key (attrs, IS_PRI_KEY (mysql_field->flags));
+	gda_field_attributes_set_unique_key (attrs, mysql_field->flags & UNIQUE_KEY_FLAG);
+	gda_field_attributes_set_auto_increment (attrs, mysql_field->flags & AUTO_INCREMENT_FLAG);
 
 	return attrs;
 }

@@ -396,6 +396,7 @@ gda_mysql_provider_create_database (GdaServerProvider *provider,
 				    const gchar *name)
 {
 	gint rc;
+	gchar *sql;
 	MYSQL *mysql;
 	GdaMysqlProvider *myprv = (GdaMysqlProvider *) provider;
 
@@ -409,7 +410,9 @@ gda_mysql_provider_create_database (GdaServerProvider *provider,
 		return FALSE;
 	}
 
-	rc = mysql_create_db (mysql, name);
+	sql = g_strdup_printf ("CREATE DATABASE %s", name);
+	rc = mysql_query (mysql, sql);
+	g_free (sql);
 	if (rc != 0) {
 		gda_connection_add_error (cnc, gda_mysql_make_error (mysql));
 		return FALSE;
@@ -425,6 +428,7 @@ gda_mysql_provider_drop_database (GdaServerProvider *provider,
 				  const gchar *name)
 {
 	gint rc;
+	gchar *sql;
 	MYSQL *mysql;
 	GdaMysqlProvider *myprv = (GdaMysqlProvider *) provider;
 
@@ -438,7 +442,9 @@ gda_mysql_provider_drop_database (GdaServerProvider *provider,
 		return FALSE;
 	}
 
-	rc = mysql_drop_db (mysql, name);
+	sql = g_strdup_printf ("DROP DATABASE %s", name);
+	rc = mysql_query (mysql, sql);
+	g_free (sql);
 	if (rc != 0) {
 		gda_connection_add_error (cnc, gda_mysql_make_error (mysql));
 		return FALSE;

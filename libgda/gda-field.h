@@ -32,6 +32,7 @@ G_BEGIN_DECLS
 typedef struct {
 	gint defined_size;
 	gchar *name;
+	gchar *table;
 	gchar *caption;
 	gint scale;
 	GdaValueType gda_type;
@@ -56,6 +57,8 @@ glong               gda_field_attributes_get_defined_size (GdaFieldAttributes *f
 void                gda_field_attributes_set_defined_size (GdaFieldAttributes *fa, glong size);
 const gchar        *gda_field_attributes_get_name (GdaFieldAttributes *fa);
 void                gda_field_attributes_set_name (GdaFieldAttributes *fa, const gchar *name);
+const gchar        *gda_field_attributes_get_table (GdaFieldAttributes *fa);
+void                gda_field_attributes_set_table (GdaFieldAttributes *fa, const gchar *table);
 const gchar        *gda_field_attributes_get_caption (GdaFieldAttributes *fa);
 void                gda_field_attributes_set_caption (GdaFieldAttributes *fa, const gchar *caption);
 glong               gda_field_attributes_get_scale (GdaFieldAttributes *fa);
@@ -71,6 +74,9 @@ gboolean            gda_field_attributes_get_unique_key (GdaFieldAttributes *fa)
 void                gda_field_attributes_set_unique_key (GdaFieldAttributes *fa, gboolean uk);
 const gchar        *gda_field_attributes_get_references (GdaFieldAttributes *fa);
 void                gda_field_attributes_set_references (GdaFieldAttributes *fa, const gchar *ref);
+gboolean            gda_field_attributes_get_auto_increment (GdaFieldAttributes *fa);
+void                gda_field_attributes_set_auto_increment (GdaFieldAttributes *fa,
+							     gboolean is_auto);
 
 G_END_DECLS
 

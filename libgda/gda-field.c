@@ -36,6 +36,7 @@ gda_field_attributes_new (void)
 	fa = g_new0 (GdaFieldAttributes, 1);
 	fa->defined_size = 0;
 	fa->name = NULL;
+	fa->table = NULL;
 	fa->caption = NULL;
 	fa->scale = 0;
 	fa->gda_type = GDA_VALUE_TYPE_NULL;
@@ -59,6 +60,7 @@ gda_field_attributes_free (GdaFieldAttributes *fa)
 	g_return_if_fail (fa != NULL);
 
 	g_free (fa->name);
+	g_free (fa->table);
 	g_free (fa->caption);
 	g_free (fa->references);
 	g_free (fa);
@@ -120,6 +122,38 @@ gda_field_attributes_set_name (GdaFieldAttributes *fa, const gchar *name)
 	if (fa->name != NULL)
 		g_free (fa->name);
 	fa->name = g_strdup (name);
+}
+
+/**
+ * gda_field_attributes_get_table
+ * @fa: a #GdaFieldAttributes.
+ *
+ * Get the table to which this field belongs.
+ *
+ * Returns: the name of the table.
+ */
+const gchar *
+gda_field_attributes_get_table (GdaFieldAttributes *fa)
+{
+	g_return_val_if_fail (fa != NULL, NULL);
+	return fa->table;;
+}
+
+/**
+ * gda_field_attributes_set_table
+ * @fa: a #GdaFieldAttributes.
+ * @table: table name.
+ *
+ * Set the name of the table to which the given field belongs.
+ */
+void
+gda_field_attributes_set_table (GdaFieldAttributes *fa, const gchar *table)
+{
+	g_return_if_fail (fa != NULL);
+
+	if (fa->table != NULL)
+		g_free (fa->table);
+	fa->table = g_strdup (table);
 }
 
 /**
@@ -294,3 +328,32 @@ gda_field_attributes_set_references (GdaFieldAttributes *fa, const gchar *ref)
 		fa->references = g_strdup (ref);
 }
 
+/**
+ * gda_field_attributes_get_auto_increment
+ * @fa: a #GdaFieldAttributes.
+ *
+ * Get whether the given field is an auto incremented one.
+ *
+ * Returns: TRUE or FALSE.
+ */
+gboolean
+gda_field_attributes_get_auto_increment (GdaFieldAttributes *fa)
+{
+	g_return_val_if_fail (fa != NULL, FALSE);
+	return fa->auto_increment;
+}
+
+/**
+ * gda_field_attributes_set_auto_increment
+ * @fa: a #GdaFieldAttributes.
+ * @is_auto: auto increment status.
+ *
+ * Set the auto increment flag for the given field.
+ */
+void
+gda_field_attributes_set_auto_increment (GdaFieldAttributes *fa,
+					 gboolean is_auto)
+{
+	g_return_if_fail (fa != NULL);
+	fa->auto_increment = is_auto;
+}

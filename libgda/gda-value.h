@@ -136,6 +136,7 @@ void          gda_value_free (GdaValue *value);
 GdaValueType  gda_value_get_type (GdaValue *value);
 #define       gda_value_isa(value,type) (gda_value_get_type (value) == type)
 gboolean      gda_value_is_null (GdaValue *value);
+gboolean      gda_value_is_number (GdaValue *value);
 GdaValue     *gda_value_copy (const GdaValue *value);
 
 gint64        gda_value_get_bigint (GdaValue *value);

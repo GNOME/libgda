@@ -285,6 +285,15 @@ gda-value
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_value_is_number ##### -->
+<para>
+
+</para>
+
+@value: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_value_copy ##### -->
 <para>
 
