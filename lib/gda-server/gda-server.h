@@ -23,6 +23,7 @@
  * This is the main header file for the libgda-server library
  */
 #include <orb/orbit.h>
+#include <gnome.h>
 #include <liboaf/liboaf.h>
 
 #include <gda.h>
