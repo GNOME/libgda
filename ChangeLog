@@ -1,3 +1,10 @@
+2002-06-05  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* libgda/gda-connection.h: added PARENT_TABLES schema.
+
+	* providers/mysql/gda-mysql-provider.c
+	(gda_mysql_provider_change_database): implemented new class method.
+
 2002-06-03  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
 	* gda-config.c: don't write mtime, muser.
