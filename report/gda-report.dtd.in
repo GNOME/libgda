@@ -1,12 +1,13 @@
 <!-- gda-report.dtd
      Copyright (C) 2000-2002 Carlos Perello Marin <carlos@gnome-db.org>
                              Gerhard Dieringer
+			     Santi Camps <scamps@users.sourceforge.net>
 
      Based on the Mutiny Bay Software's
      reportviewer's DTD (http://www.mutinybaysoftware.com)
 -->
 
-<!ENTITY % query SYSTEM "@dtddir@/gda-xml-query.dtd">
+<!ENTITY % query SYSTEM "@prefix@/share/libgda/xml/gda-xml-query.dtd">
 %query;
 
 
@@ -18,7 +19,7 @@
 <!ENTITY % halignment      "standard|left|center|right">
 <!ENTITY % valignment      "top|center|bottom">
 
-<!ELEMENT report (reportheader?, pageheaderlist?, dataheader?,  datalist?, 
+<!ELEMENT report (query?, reportheader?, pageheaderlist?, dataheader?,  datalist?, 
                   datafooter?,   pagefooterlist?, reportfooter?)>
 <!ATTLIST report
   reportstyle     (form|list)       "list"
@@ -51,9 +52,7 @@
   linestyle       (%linestyle;)     "solid"
 >
 
-<!ELEMENT reportelementlist   (%reportelement;)+>
-
-<!ELEMENT reportheader (reportelementlist)>
+<!ELEMENT reportheader ((%reportelement;)+)>
 <!ATTLIST reportheader 
   active          (yes|no)          "yes"
   visible         (yes|no)          "yes"
@@ -82,7 +81,7 @@
 >
 
 
-<!ELEMENT reportfooter (reportelementlist)>
+<!ELEMENT reportfooter ((%reportelement;)+)>
 <!ATTLIST reportfooter 
   active          (yes|no)          "yes"
   visible         (yes|no)          "yes"
@@ -117,7 +116,7 @@
 
 <!ELEMENT pageheaderlist (pageheader+)>
 
-<!ELEMENT pageheader (reportelementlist)>
+<!ELEMENT pageheader ((%reportelement;)+)>
 <!ATTLIST pageheader 
   active          (yes|no)          "yes"
   visible         (yes|no)          "yes"
@@ -149,7 +148,7 @@
 
 <!ELEMENT pagefooterlist (pagefooter+)>
 
-<!ELEMENT pagefooter (reportelementlist)>
+<!ELEMENT pagefooter ((%reportelement;)+)>
 <!ATTLIST pagefooter 
   active          (yes|no)          "yes"
   visible         (yes|no)          "yes"
@@ -182,7 +181,7 @@
 <!-- the dataheader/-footer ist like a groupheader/-footer for a virtuell group,
      that contains all the data
 -->
-<!ELEMENT dataheader (reportelementlist)>
+<!ELEMENT dataheader ((%reportelement;)+)>
 <!ATTLIST dataheader 
   active          (yes|no)          "yes"
   visible         (yes|no)          "yes"
@@ -210,7 +209,7 @@
 >
 
 
-<!ELEMENT datafooter (reportelementlist)>
+<!ELEMENT datafooter ((%reportelement;)+)>
 <!ATTLIST datafooter 
   active          (yes|no)          "yes"
   visible         (yes|no)          "yes"
@@ -243,7 +242,7 @@
 <!ELEMENT reportdata (detail|(groupheader?,reportdata,groupfooter?))>
 
 
-<!ELEMENT detail (reportelementlist)>
+<!ELEMENT detail ((%reportelement;)+)>
 <!ATTLIST detail 
   active          (yes|no)          "yes"
   visible         (yes|no)          "yes"
@@ -271,7 +270,7 @@
 >
 
 
-<!ELEMENT groupheader (reportelementlist)>
+<!ELEMENT groupheader ((%reportelement;)+)>
 <!ATTLIST groupheader 
   active          (yes|no)          "yes"
   visible         (yes|no)          "yes"
@@ -301,7 +300,7 @@
 >
 
 
-<!ELEMENT groupfooter (reportelementlist)>
+<!ELEMENT groupfooter ((%reportelement;)+)>
 <!ATTLIST groupfooter 
   active          (yes|no)          "yes"
   visible         (yes|no)          "yes"

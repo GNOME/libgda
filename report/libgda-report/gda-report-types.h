@@ -3,6 +3,7 @@
  *
  * AUTHORS:
  *	Carlos Perelló Marín <carlos@gnome-db.org>
+ *	Santi Camps <scamps@users.sourceforge.net>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -23,71 +24,30 @@
 #if !defined(__gda_report_types_h__)
 #  define __gda_report_types_h__
 
-typedef enum {
-        GDA_REPORT_STYLE_FORM,
-	GDA_REPORT_STYLE_LIST
-} GdaReportStyle;
+typedef struct _GdaReportColor GdaReportColor;
+typedef struct _GdaReportColorPrivate GdaReportColorPrivate;
+typedef struct _GdaReportNumber GdaReportNumber;
+typedef struct _GdaReportNumberPrivate GdaReportNumberPrivate;
 
-/* FIXME: This one should come from the available papers not a fixed value */
-typedef enum {
-	GDA_REPORT_PAGE_SIZE_A3,
-	GDA_REPORT_PAGE_SIZE_A4,
-	GDA_REPORT_PAGE_SIZE_A5,
-	GDA_REPORT_PAGE_SIZE_A6,
-	GDA_REPORT_PAGE_SIZE_B3,
-	GDA_REPORT_PAGE_SIZE_B4,
-	GDA_REPORT_PAGE_SIZE_B5,
-	GDA_REPORT_PAGE_SIZE_B6,
-	GDA_REPORT_PAGE_SIZE_LETTER,
-	GDA_REPORT_PAGE_SIZE_LEGAL,
-	GDA_REPORT_PAGE_SIZE_EXECUTIVE
-} GdaReportPageSize;
+struct _GdaReportColor {
+	GdaReportColorPrivate *priv;
+};
 
-typedef enum {
-	GDA_REPORT_ORIENTATION_PORTRAIT,
-	GDA_REPORT_ORIENTATION_LANDSCAPE
-} GdaReportOrientation;
+struct _GdaReportNumber {
+	GdaReportNumberPrivate *priv;
+};
 
-typedef enum {
-	GDA_REPORT_UNITS_INCH,
-	GDA_REPORT_UNITS_CM,
-	GDA_REPORT_UNITS_PT
-} GdaReportUnits;
 
-typedef enum {
-	GDA_REPORT_LINE_STYLE_NONE,
-	GDA_REPORT_LINE_STYLE_SOLID,
-	GDA_REPORT_LINE_STYLE_DASH,
-	GDA_REPORT_LINE_STYLE_DOT,
-	GDA_REPORT_LINE_STYLE_DASH_DOT,
-	GDA_REPORT_LINE_STYLE_DASH_DOT_DOT
-} GdaReportLineStyle;
+GdaReportColor *gda_report_types_color_new (guint8 red, guint8 blue, guint8 yellow);
 
-typedef enum {
-	GDA_REPORT_FONT_WEIGHT_LIGHT,
-	GDA_REPORT_FONT_WEIGHT_NORMAL,
-	GDA_REPORT_FONT_WEIGHT_SEMIBOLD,
-	GDA_REPORT_FONT_WEIGHT_BOLD,
-	GDA_REPORT_FONT_WEIGHT_BLACK
-} GdaReportFontWeight;
+gchar *gda_report_types_color_to_value (GdaReportColor *color);
 
-typedef enum {
-	GDA_REPORT_H_ALIGNMENT_STANDAR,
-	GDA_REPORT_H_ALIGNMENT_LEFT,
-	GDA_REPORT_H_ALIGNMENT_CENTER,
-	GDA_REPORT_H_ALIGNMENT_RIGHT
-} GdaReportHAlignment;
+GdaReportColor *gda_report_types_value_to_color (gchar *value);
 
-typedef enum {
-	GDA_REPORT_V_ALIGNMENT_TOP,
-	GDA_REPORT_V_ALIGNMENT_CENTER,
-	GDA_REPORT_V_ALIGNMENT_BOTTOM
-} GdaReportVAlignment;
+GdaReportNumber *gda_report_types_number_new (gdouble value);
 
-typedef struct {
-	guint8 red;
-	guint8 blue;
-	guint8 yellow;
-} GdaReportColor;
+gchar *gda_report_types_number_to_value (GdaReportNumber *number);
+
+GdaReportNumber *gda_report_types_value_to_number (gchar *value);
 
 #endif

@@ -3,6 +3,7 @@
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
+ *	Santi Camps <scamps@users.sourceforge.net>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -24,5 +25,10 @@
 #  define __gda_report_h__
 
 #include <libgda-report/gda-report-document.h>
+#include <libgda-report/gda-report-valid.h>
+#include <libgda-report/gda-report-types.h>
+#include <libgda-report/gda-report-item.h>
+#include <libgda-report/gda-report-item-report.h>
+#include <libgda-report/gda-report-item-reportheader.h>
 
 #endif
