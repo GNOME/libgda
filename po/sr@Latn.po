@@ -8,14 +8,14 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2003-08-06 00:17+0200\n"
+"POT-Creation-Date: 2003-08-13 04:20+0200\n"
 "PO-Revision-Date: 2003-05-25 18:42-0400\n"
 "Last-Translator: Dejan Matijević <dejan@ns.sympatico.ca>\n"
 "Language-Team: Serbian (sr) <serbiangnome-lista@nongnu.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Report-Msgid-Bugs-To: \n"
 
 #: libgda/gda-client.c:312 libgda/gda-client.c:515 libgda/gda-connection.c:218
 #, c-format
@@ -25,7 +25,7 @@ msgstr "Izvor podataka %s nije nađen u podešavanju"
 #: libgda/gda-client.c:339
 #, c-format
 msgid "Could not find provider %s in the current setup"
-msgstr "Nemože da naći posrednika %s u tekućem podešavanju"
+msgstr "Ne može da naći posrednika %s u tekućem podešavanju"
 
 #: libgda/gda-client.c:368
 #, c-format
@@ -150,7 +150,7 @@ msgstr "Nepostojeći GObject"
 #: libgda/gda-xml-database.c:263
 #, c-format
 msgid "Could not load file at %s"
-msgstr "Nemože da natovari datoteku na %s"
+msgstr "Ne može da natovari datoteku na %s"
 
 #: libgda/gda-xml-database.c:272
 #, c-format
@@ -165,11 +165,11 @@ msgstr "Pogrešan XML datoteka baze podataka '%s'"
 #: libgda/gda-xml-database.c:508
 #, c-format
 msgid "Could not create a XML node from table %s"
-msgstr "Nemože da napravi XML čvorište od tabele %s"
+msgstr "Ne može da napravi XML čvorište od tabele %s"
 
 #: libgda/gda-xml-database.c:526
 msgid "Could not dump XML file to memory"
-msgstr "Nemože da skladišti XML datoteku u memoriju"
+msgstr "Ne može da skladišti XML datoteku u memoriju"
 
 #: libgda/gda-xml-database.c:619 libgda/gda-xml-database.c:656
 #: libgda/gda-xml-database.c:700
@@ -204,12 +204,12 @@ msgstr "Nijedna baza podataka nije navedena"
 #: providers/firebird/gda-firebird-provider.c:485
 #: providers/firebird/gda-firebird-provider.c:539
 msgid "Invalid Firebird handle"
-msgstr "Pogrešan Firebird ručka"
+msgstr "Neispravna Firebird oznaka"
 
 #: providers/firebird/gda-firebird-provider.c:453
 #: providers/firebird/gda-firebird-provider.c:491
 msgid "Invalid transaction handle"
-msgstr "Pogrešna transakcijska ručka"
+msgstr "Neispravna oznaka transakcije"
 
 #: providers/firebird/libmain.c:39
 msgid "Provider for FireBird databases"
@@ -313,7 +313,7 @@ msgstr "Bez opisa"
 
 #: providers/ibmdb2/gda-ibmdb2-provider.c:152
 msgid "Could not allocate environment handle.\n"
-msgstr "Nomože da obezbediti ručku okruženja.\n"
+msgstr "Ne može da obezbedi oznaku okruženja.\n"
 
 #. GetInfo is needed for obtaining database name
 #. is needed for tables schema
@@ -326,7 +326,7 @@ msgstr "SQLGetInfo nije podržan. IBM DB2 Posrednik neće raditi.\n"
 #: providers/ibmdb2/gda-ibmdb2-provider.c:688
 #: providers/ibmdb2/gda-ibmdb2-provider.c:763
 msgid "Invalid IBM DB2 handle"
-msgstr "Pogrešna IBM DB2 ručka"
+msgstr "Neispravna IBM DB2 oznaka"
 
 #: providers/ibmdb2/gda-ibmdb2-provider.c:741
 msgid "Function"
@@ -479,7 +479,7 @@ msgstr "Posrednik za IBMDB2 baze podataka"
 #: providers/ldap/gda-ldap-recordset.c:58
 #: providers/ldap/gda-ldap-recordset.c:176
 msgid "Invalid LDAP handle"
-msgstr "Pogrešna LDAP ručka"
+msgstr "Neispravna LDAP oznaka"
 
 #: providers/ldap/gda-ldap-recordset.c:69
 #: providers/mysql/gda-mysql-recordset.c:69
@@ -502,7 +502,7 @@ msgstr "Pokušaj da se ubaci red sa pogrešnim brojem kolona"
 #: providers/mysql/gda-mysql-recordset.c:303
 #: providers/oracle/gda-oracle-recordset.c:484
 msgid "Could not retrieve column's information"
-msgstr "Nomože da dobije informacije o koloni"
+msgstr "Ne može da dobije informacije o koloni"
 
 #: providers/ldap/gda-ldap-recordset.c:316
 #: providers/msql/gda-msql-recordset.c:253
@@ -529,12 +529,12 @@ msgstr "Ne može da otvori datoteku %s"
 #: providers/mdb/gda-mdb-provider.c:290 providers/mdb/gda-mdb-provider.c:342
 #: providers/mdb/gda-mdb-provider.c:690 providers/mdb/gda-mdb-provider.c:726
 msgid "Invalid MDB handle"
-msgstr "Pogrešna MDB ručka"
+msgstr "Neispravna MDB oznaka"
 
 #: providers/mdb/gda-mdb-provider.c:404 providers/mdb/gda-mdb-provider.c:414
 #: providers/mdb/gda-mdb-provider.c:424
 msgid "Transactions not supported in MDB provider"
-msgstr "Transakcija nije podrzana u MDB posredniku"
+msgstr "Transakcija nije podržana u MDB posredniku"
 
 #: providers/mdb/gda-mdb-provider.c:490
 #: providers/mysql/gda-mysql-provider.c:1069
@@ -703,9 +703,8 @@ msgid "OLE object"
 msgstr "OLE objekat"
 
 #: providers/mdb/gda-mdb-provider.c:668
-#, fuzzy
 msgid "FIXME"
-msgstr "FIXME"
+msgstr "POPRAVI"
 
 #: providers/mdb/gda-mdb-provider.c:669
 msgid "Date/time value"
@@ -731,9 +730,8 @@ msgid "Provider for Microsoft Access files"
 msgstr "Posrednik za Microsoft Access datoteke"
 
 #: providers/msql/gda-msql-libmain.c:41
-#, fuzzy
 msgid "Provider for Hughes Technologies mSQL databases"
-msgstr "Posrednik za PostgreSQL baze podataka"
+msgstr "Posrednik za Hughes Technologies mSQL baze podataka"
 
 #: providers/msql/gda-msql-provider.c:230
 #: providers/msql/gda-msql-provider.c:273
@@ -741,36 +739,32 @@ msgstr "Posrednik za PostgreSQL baze podataka"
 #: providers/msql/gda-msql-provider.c:551
 #: providers/msql/gda-msql-recordset.c:50
 #: providers/msql/gda-msql-recordset.c:138
-#, fuzzy
 msgid "Invalid mSQL handle"
-msgstr "Pogrešna MySQL ručka"
+msgstr "Neispravna mSQL oznaka"
 
 #: providers/msql/gda-msql-provider.c:318
 msgid "mSQL allows database creation only through the msqladmin tool."
-msgstr ""
+msgstr "mSQL dopušta pravljenje baza samo pomoću alata msqladmin."
 
 #: providers/msql/gda-msql-provider.c:331
 msgid "mSQL allows database drops only through the msqladmin tool."
-msgstr ""
+msgstr "mSQL dopušta brisanje baza samo pomoću alata msqladmin."
 
 #: providers/msql/gda-msql-provider.c:376
 #: providers/msql/gda-msql-provider.c:389
 #: providers/msql/gda-msql-provider.c:402
 msgid "mSQL doesn't support transactions."
-msgstr ""
+msgstr "mSQL ne podržava transakcije."
 
 #: providers/msql/gda-msql-provider.c:486
-#, fuzzy
 msgid "Title"
-msgstr "Tabela"
+msgstr "Naslov"
 
 #: providers/msql/gda-msql-provider.c:536
-#, fuzzy
 msgid "Field Name"
 msgstr "Naziv polja"
 
 #: providers/msql/gda-msql-provider.c:540
-#, fuzzy
 msgid "Not null"
 msgstr "Nije nul?"
 
@@ -782,9 +776,8 @@ msgid "Table name is needed but none specified in parameter list"
 msgstr "Ime tabele je neophodno ali nije određeno u listi parametara"
 
 #: providers/msql/gda-msql-recordset.c:57
-#, fuzzy
 msgid "Row number out of bounds"
-msgstr "Broj reda izvan okvira"
+msgstr "Broj reda van granica"
 
 #: providers/mysql/gda-mysql-provider.c:218
 msgid ""
@@ -797,7 +790,7 @@ msgstr ""
 #: providers/mysql/gda-mysql-recordset.c:58
 #: providers/mysql/gda-mysql-recordset.c:174
 msgid "Invalid MySQL handle"
-msgstr "Pogrešna MySQL ručka"
+msgstr "Neispravna MySQL oznaka"
 
 #: providers/mysql/gda-mysql-provider.c:310
 #: providers/mysql/gda-mysql-provider.c:380
@@ -808,7 +801,7 @@ msgstr "Pogrešna MySQL ručka"
 #: providers/mysql/gda-mysql-provider.c:591
 #: providers/mysql/gda-mysql-provider.c:624
 msgid "Invalid MYSQL handle"
-msgstr "Pogrešna MYSQL ručka"
+msgstr "Neispravna MySQL oznaka"
 
 #: providers/mysql/gda-mysql-provider.c:539
 #: providers/mysql/gda-mysql-provider.c:596
@@ -841,7 +834,7 @@ msgstr "Ne može da SQLAllocEnv()..."
 #: providers/odbc/gda-odbc-provider.c:544
 #: providers/odbc/gda-odbc-provider.c:574
 msgid "Invalid Odbc handle"
-msgstr "Pogrešna Odbc ručka"
+msgstr "Neispravna Odbc oznaka"
 
 #: providers/odbc/gda-odbc-provider.c:1031
 #: providers/oracle/gda-oracle-provider.c:1153
@@ -885,35 +878,35 @@ msgstr "Ne može da započne Oracle okruženje"
 
 #: providers/oracle/gda-oracle-provider.c:234
 msgid "Could not allocate the Oracle service handle"
-msgstr "Nomože da obezbedi Oracle servis ručku"
+msgstr "Ne može da obezbedi Oracle servis oznaku"
 
 #: providers/oracle/gda-oracle-provider.c:244
 msgid "Could not allocate the Oracle error handle"
-msgstr "Nomože da obezbedi Oracle greška ručku"
+msgstr "Ne može da obezbedi Oracle greška oznaku"
 
 #: providers/oracle/gda-oracle-provider.c:256
 msgid "Could not allocate the Oracle server handle"
-msgstr "Nomože da obezbedi Oracle server ručku"
+msgstr "Ne može da obezbedi Oracle server oznaku"
 
 #: providers/oracle/gda-oracle-provider.c:269
 msgid "Could not allocate the Oracle session handle"
-msgstr "Nomože da obezbedi Oracle seansa ručku"
+msgstr "Ne može da obezbedi Oracle seansa oznaku"
 
 #: providers/oracle/gda-oracle-provider.c:299
 msgid "Could not attach to the Oracle server"
-msgstr "Nemože da se pripoji na Oracle server"
+msgstr "Ne može da se pripoji na Oracle server"
 
 #: providers/oracle/gda-oracle-provider.c:315
 msgid "Could not set the Oracle server attribute in the service context"
-msgstr "Nemože da podesi Oracle osobine servera u dodatnom servisu"
+msgstr "Ne može da podesi Oracle osobine servera u dodatnom servisu"
 
 #: providers/oracle/gda-oracle-provider.c:331
 msgid "Could not set the Oracle username attribute"
-msgstr "Nomože da podesi Oracle osobine korisničkog imena"
+msgstr "Ne može da podesi Oracle osobine korisničkog imena"
 
 #: providers/oracle/gda-oracle-provider.c:347
 msgid "Could not set the Oracle password attribute"
-msgstr "Nomože da podesi Oracle osobine lozinke"
+msgstr "Ne može da podesi Oracle osobine lozinke"
 
 #: providers/oracle/gda-oracle-provider.c:362
 msgid "Could not begin the Oracle session"
@@ -921,7 +914,7 @@ msgstr "Ne može da počne Oracle seansu"
 
 #: providers/oracle/gda-oracle-provider.c:380
 msgid "Could not set the Oracle session attribute in the service context"
-msgstr "Nemože da podesi Oracle osobine seanse u dodatnom servisu"
+msgstr "Ne može da podesi Oracle osobine seanse u dodatnom servisu"
 
 #: providers/oracle/gda-oracle-provider.c:466
 #: providers/oracle/gda-oracle-provider.c:498
@@ -942,70 +935,70 @@ msgstr "Pogrešna Oracle ručka"
 
 #: providers/oracle/gda-oracle-provider.c:509
 msgid "Could not allocate the Oracle statement handle"
-msgstr "Nomože da obezbedi Oracle konstatacija ručku"
+msgstr "Ne može da obezbedi Oracle konstatacija oznaku"
 
 #: providers/oracle/gda-oracle-provider.c:520
 msgid "Could not prepare the Oracle statement"
-msgstr "Nomože da pripremi Oracle konstataciju"
+msgstr "Ne može da pripremi Oracle konstataciju"
 
 #: providers/oracle/gda-oracle-provider.c:552
 msgid "Could not bind the Oracle statement parameter"
-msgstr "Nomože da veže Oracle parametar konstatacije"
+msgstr "Ne može da veže Oracle parametar konstatacije"
 
 #: providers/oracle/gda-oracle-provider.c:598
 msgid "Could not get the Oracle statement type"
-msgstr "Nomože da dobije Oracle tip konstatacije"
+msgstr "Ne može da dobije Oracle tip konstatacije"
 
 #: providers/oracle/gda-oracle-provider.c:610
 msgid "Could not set the Oracle statement pre-fetch row count"
-msgstr "Nemože da podesi Oracle  konstataciju pre-fetch broj reda"
+msgstr "Ne može da podesi Oracle  konstataciju pre-fetch broj reda"
 
 #: providers/oracle/gda-oracle-provider.c:627
 msgid "Could not execute the Oracle statement"
-msgstr "Nomože da izvrši Oracle konstataciju"
+msgstr "Ne može da izvrši Oracle konstataciju"
 
 #: providers/oracle/gda-oracle-provider.c:640
 msgid "Could not get the number of columns in the result set"
-msgstr "Nemože da dobije broj kolone u postavljenom rezultatu"
+msgstr "Ne može da dobije broj kolone u postavljenom rezultatu"
 
 #: providers/oracle/gda-oracle-provider.c:657
 msgid "Could not get the parameter descripter in the result set"
-msgstr "Nemože da dobije deskripter parametara u postavljenom rezultatu"
+msgstr "Ne može da dobije deskripter parametara u postavljenom rezultatu"
 
 #: providers/oracle/gda-oracle-provider.c:669
 msgid "Could not get the column name in the result set"
-msgstr "Nemože da dobije ime kolone u postavljenom rezultatu"
+msgstr "Ne može da dobije ime kolone u postavljenom rezultatu"
 
 #: providers/oracle/gda-oracle-provider.c:815
 #: providers/oracle/gda-oracle-provider.c:896
 #: providers/oracle/gda-oracle-provider.c:951
 #: providers/oracle/gda-oracle-provider.c:1012
 msgid "Could not attach the transaction to the service context"
-msgstr "Nemože da pripoji transakciju u dodatnom servisu"
+msgstr "Ne može da pripoji transakciju u dodatnom servisu"
 
 #: providers/oracle/gda-oracle-provider.c:870
 msgid "Could not allocate the Oracle transaction handle"
-msgstr "Nomože da obezbedi Oracle ručku transakcije"
+msgstr "Ne može da obezbedi Oracle oznaku transakcije"
 
 #: providers/oracle/gda-oracle-provider.c:882
 msgid "Could not set the Oracle transaction name"
-msgstr "Nomože da podesi Oracle ime transakcije"
+msgstr "Ne može da podesi Oracle ime transakcije"
 
 #: providers/oracle/gda-oracle-provider.c:907
 msgid "Could not start the Oracle transaction"
-msgstr "Nomože da pokrene Oracle transakciju"
+msgstr "Ne može da pokrene Oracle transakciju"
 
 #: providers/oracle/gda-oracle-provider.c:960
 msgid "Could not prepare the transaction to commit"
-msgstr "Nemože da pripremi transakciju da pošalje"
+msgstr "Ne može da pripremi transakciju da pošalje"
 
 #: providers/oracle/gda-oracle-provider.c:968
 msgid "Could not commit the Oracle transaction"
-msgstr "Nomože da pošalje Oracle transakciju"
+msgstr "Ne može da pošalje Oracle transakciju"
 
 #: providers/oracle/gda-oracle-provider.c:1019
 msgid "Could not rollback the Oracle transaction"
-msgstr "Nomože da vrati u prethodno stanje Oracle transakciju"
+msgstr "Ne može da vrati u prethodno stanje Oracle transakciju"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/oracle/gda-oracle-provider.c:1152
@@ -1025,69 +1018,69 @@ msgstr "Tip unutra (InType)"
 
 #: providers/oracle/gda-oracle-provider.c:1441
 msgid "Could not allocate the Oracle describe handle"
-msgstr "Nomože da obezbedi Oracle ručku opisa"
+msgstr "Ne može da obezbedi Oracle oznaku opisa"
 
 #: providers/oracle/gda-oracle-provider.c:1451
 msgid "Could not set describe handle attribute"
-msgstr "Nomože da podesi opis ručku osobine"
+msgstr "Ne može da podesi opis oznaku osobine"
 
 #: providers/oracle/gda-oracle-provider.c:1478
 #: providers/oracle/gda-oracle-provider.c:1583
 msgid "Could not describe the Oracle table"
-msgstr "Nomože da opiše Oracle tabelu"
+msgstr "Ne može da opiše Oracle tabelu"
 
 #: providers/oracle/gda-oracle-provider.c:1493
 #: providers/oracle/gda-oracle-provider.c:1596
 msgid "Could not get the Oracle parameter handle"
-msgstr "Nomože da dobije Oracle ručku parametra"
+msgstr "Ne može da dobije Oracle oznaku parametra"
 
 #: providers/oracle/gda-oracle-provider.c:1508
 msgid "Could not get described object type"
-msgstr "Nomože da dobije Oracle tip objekta"
+msgstr "Ne može da dobije Oracle tip objekta"
 
 #: providers/oracle/gda-oracle-provider.c:1523
 msgid "Could not get synonym referred-to schema"
-msgstr "Nemože da dobije sinonim pripisan šemi"
+msgstr "Ne može da dobije sinonim pripisan šemi"
 
 #: providers/oracle/gda-oracle-provider.c:1536
 msgid "Could not get synonym referred-to name"
-msgstr "Nemože da dobije sinonim pripisan imenu"
+msgstr "Ne može da dobije sinonim pripisan imenu"
 
 #: providers/oracle/gda-oracle-provider.c:1549
 msgid "Could not get synonym referred-to dblink"
-msgstr "Nemože da dobije sinonim pripisan dblink"
+msgstr "Ne može da dobije sinonim pripisan dblink"
 
 #: providers/oracle/gda-oracle-provider.c:1611
 msgid "Could not get the number of columns in the table"
-msgstr "Nemože da dobije broj kolona u tabeli"
+msgstr "Ne može da dobije broj kolona u tabeli"
 
 #: providers/oracle/gda-oracle-provider.c:1625
 msgid "Could not get the column list"
-msgstr "Nemože da dobije listu kolona"
+msgstr "Ne može da dobije listu kolona"
 
 #: providers/oracle/gda-oracle-provider.c:1656
 msgid "Could not get the Oracle column handle"
-msgstr "Nomože da dobije Oracle ručku kolone"
+msgstr "Ne može da dobije Oracle oznaku kolone"
 
 #: providers/oracle/gda-oracle-provider.c:1671
 msgid "Could not get the Oracle field name"
-msgstr "Nomože da dobije Oracle ime polja"
+msgstr "Ne može da dobije Oracle ime polja"
 
 #: providers/oracle/gda-oracle-provider.c:1693
 msgid "Could not get the Oracle field data type"
-msgstr "Nemože da dobije Oracle tip podataka polja"
+msgstr "Ne može da dobije Oracle tip podataka polja"
 
 #: providers/oracle/gda-oracle-provider.c:1713
 msgid "Could not get the Oracle field defined size"
-msgstr "Nemože da dobije Oracle određenu velićinu polja"
+msgstr "Ne može da dobije Oracle određenu velićinu polja"
 
 #: providers/oracle/gda-oracle-provider.c:1732
 msgid "Could not get the Oracle field scale"
-msgstr "Nomože da dobije Oracle razmernik polja"
+msgstr "Ne može da dobije Oracle razmernik polja"
 
 #: providers/oracle/gda-oracle-provider.c:1751
 msgid "Could not get the Oracle field nullable attribute"
-msgstr "Nemože da dobije Oracle nul osobinu polja"
+msgstr "Ne može da dobije Oracle nul osobinu polja"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/oracle/gda-oracle-provider.c:2177
@@ -1105,19 +1098,19 @@ msgstr "Sekvence"
 
 #: providers/oracle/gda-oracle-recordset.c:72
 msgid "Could not get the Oracle parameter"
-msgstr "Nomože da dobije Oracle parametar"
+msgstr "Ne može da dobije Oracle parametar"
 
 #: providers/oracle/gda-oracle-recordset.c:82
 msgid "Could not get the parameter defined size"
-msgstr "Nomože da dobije parametat odrećene veličine"
+msgstr "Ne može da dobije parametat odrećene veličine"
 
 #: providers/oracle/gda-oracle-recordset.c:95
 msgid "Could not get the parameter data type"
-msgstr "Nomože da dobije parametar tipa podataka"
+msgstr "Ne može da dobije parametar tipa podataka"
 
 #: providers/oracle/gda-oracle-recordset.c:128
 msgid "Could not define by position"
-msgstr "Nemože da odredi iz pozicije"
+msgstr "Ne može da odredi iz pozicije"
 
 #: providers/oracle/gda-oracle-recordset.c:173
 #: providers/postgres/gda-postgres-recordset.c:264
@@ -1126,27 +1119,27 @@ msgstr "Kolona izvan okvira"
 
 #: providers/oracle/gda-oracle-recordset.c:185
 msgid "Could not get the Oracle parameter information"
-msgstr "Nomože da dobije Oracle informaciju parametra"
+msgstr "Ne može da dobije Oracle informaciju parametra"
 
 #: providers/oracle/gda-oracle-recordset.c:195
 msgid "Could not get the Oracle column name"
-msgstr "Nomože da dobije Oracle ime kolone"
+msgstr "Ne može da dobije Oracle ime kolone"
 
 #: providers/oracle/gda-oracle-recordset.c:210
 msgid "Could not get the Oracle column data type"
-msgstr "Nemože da dobije Oracle tip podataka polja"
+msgstr "Ne može da dobije Oracle tip podataka polja"
 
 #: providers/oracle/gda-oracle-recordset.c:222
 msgid "Could not get the Oracle column scale"
-msgstr "Nemože da dobije Oracle razmeru kolone"
+msgstr "Ne može da dobije Oracle razmeru kolone"
 
 #: providers/oracle/gda-oracle-recordset.c:234
 msgid "Could not get the Oracle column nullable attribute"
-msgstr "Nemože da dobije Oracle nul osobinu kolone"
+msgstr "Ne može da dobije Oracle nul osobinu kolone"
 
 #: providers/oracle/gda-oracle-recordset.c:246
 msgid "Could not get the Oracle defined size"
-msgstr "Nomože da dobije Oracle odrećenu veličinu"
+msgstr "Ne može da dobije Oracle odrećenu veličinu"
 
 #: providers/oracle/gda-oracle-recordset.c:355
 msgid "Could not fetch a row"
@@ -1200,7 +1193,7 @@ msgstr ""
 
 #: providers/sqlite/gda-sqlite-provider.c:220
 msgid "Could not set empty_result_callbacks SQLite option"
-msgstr "Nemože da postavi opciju empty_result_callbacks SQLite"
+msgstr "Ne može da postavi opciju empty_result_callbacks SQLite"
 
 #: providers/sqlite/gda-sqlite-provider.c:243
 #: providers/sqlite/gda-sqlite-provider.c:343
@@ -1259,7 +1252,7 @@ msgstr "Nije uspelo obezbeđivanje strukture naredbe u %s()"
 
 #: providers/sybase/gda-sybase-provider.c:670
 msgid "Could not prepare command structure."
-msgstr "Nomože da pripremi strukturu naredbe."
+msgstr "Ne može da pripremi strukturu naredbe."
 
 #: providers/sybase/gda-sybase-provider.c:680
 msgid "Sending sql-command failed."
@@ -1307,12 +1300,12 @@ msgstr "Struktura komanda već u upotrebi. %s nije uspelo."
 
 #: providers/sybase/gda-sybase-provider.c:858
 msgid "Could not allocate command structure."
-msgstr "Nomože da dodeli strukturu naredbe."
+msgstr "Ne može da dodeli strukturu naredbe."
 
 #: providers/sybase/gda-sybase-provider.c:867
 #, c-format
 msgid "Could not prepare command structure with %s."
-msgstr "Nemože da pripremi strukturu komande sa %s"
+msgstr "Ne može da pripremi strukturu komande sa %s"
 
 #: providers/sybase/gda-sybase-provider.c:877
 msgid "Sending command failed."
@@ -1327,32 +1320,32 @@ msgstr "%s: %s nije uspelo"
 
 #: providers/sybase/gda-sybase-provider.c:974
 msgid "could not allocate cmd structure to find current database."
-msgstr "Nemože da dodeli cmd strukturu da nađe trenutnu bazu podatada."
+msgstr "Ne može da dodeli cmd strukturu da nađe trenutnu bazu podatada."
 
 #: providers/sybase/gda-sybase-provider.c:985
 msgid "could not execute command to get current database."
-msgstr "Nemože da da izvrši naredbu da dobije trenutnu bazu podataka."
+msgstr "Ne može da da izvrši naredbu da dobije trenutnu bazu podataka."
 
 #: providers/sybase/gda-sybase-provider.c:993
 msgid "could not send command to get current database."
-msgstr "Nemože da pošalje naredbu da dobije trenutnu bazu podataka."
+msgstr "Ne može da pošalje naredbu da dobije trenutnu bazu podataka."
 
 #: providers/sybase/gda-sybase-provider.c:1016
 msgid "could not bind variable to get current database."
-msgstr "Nemože da veže promenjivu da dobije trenutnu bazu podataka."
+msgstr "Ne može da veže promenjivu da dobije trenutnu bazu podataka."
 
 #: providers/sybase/gda-sybase-provider.c:1029
 #: providers/sybase/gda-sybase-provider.c:1044
 msgid "could not fetch data to find current database."
-msgstr "Nemože da dodeli cmd strukturu da nađe trenutnu bazu podatada."
+msgstr "Ne može da dodeli cmd strukturu da nađe trenutnu bazu podatada."
 
 #: providers/sybase/gda-sybase-provider.c:1058
 msgid "could not drop cmd structure to find current database."
-msgstr "Nemože da dodeli cmd strukturu da nađe trenutnu bazu podatada."
+msgstr "Ne može da dodeli cmd strukturu da nađe trenutnu bazu podatada."
 
 #: providers/sybase/gda-sybase-recordset.c:315
 msgid "Could not allocate datamodel. No results will be returned."
-msgstr "Nemože da dodeli model podataka. Nijeda rezultat neće biti vrećen."
+msgstr "Ne može da dodeli model podataka. Nijeda rezultat neće biti vrećen."
 
 #: providers/sybase/gda-sybase-recordset.c:318
 msgid "ct_cancel() failed."
@@ -1371,29 +1364,29 @@ msgstr "%s vratilo <= 0 kolona."
 #: providers/sybase/gda-sybase-recordset.c:359
 #: providers/sybase/gda-sybase-recordset.c:549
 msgid "Could not allocate structure for column metainformation."
-msgstr "Nemože da dodeli srukturu za kolonine meta informacije."
+msgstr "Ne može da dodeli srukturu za kolonine meta informacije."
 
 #: providers/sybase/gda-sybase-recordset.c:363
 #: providers/sybase/gda-sybase-recordset.c:553
 #, c-format
 msgid "Could not call %s while processing row resultset."
-msgstr "Nemože da zove %s dok obrađuje postavljeni rezultat reda."
+msgstr "Ne može da zove %s dok obrađuje postavljeni rezultat reda."
 
 #: providers/sybase/gda-sybase-recordset.c:382
 #: providers/sybase/gda-sybase-recordset.c:403
 #, c-format
 msgid "Could not run %s on column %d"
-msgstr "Nemože da pokrene %s za kolonu %d"
+msgstr "Ne može da pokrene %s za kolonu %d"
 
 #: providers/sybase/gda-sybase-recordset.c:391
 #, c-format
 msgid "Could not allocate data placeholder for column %d"
-msgstr "Nemože da da dodeli nosilac položaja podataka za kolonu %d"
+msgstr "Ne može da da dodeli nosilac položaja podataka za kolonu %d"
 
 #: providers/sybase/gda-sybase-recordset.c:422
 #, c-format
 msgid "Could not run %s to cancel processing row resultset."
-msgstr "Nemože da pokrene %s da poništi obradu postavljenog rezultata reda."
+msgstr "Ne može da pokrene %s da poništi obradu postavljenog rezultata reda."
 
 #: providers/sybase/gda-sybase-recordset.c:438
 #, c-format
@@ -1450,7 +1443,7 @@ msgstr "GDA posrednik za Ѕybase baze podataka (koristeći OpenClient)"
 
 #: providers/sybase/main.c:52
 msgid "Could not initiate Sybase component factory"
-msgstr "Nemože da pokrene Sybase fabriku komponenata"
+msgstr "Ne može da pokrene Sybase fabriku komponenata"
 
 #: providers/sybase/utils.c:48
 msgid "Call: csmsg callback"
@@ -1637,23 +1630,21 @@ msgid "Provider for Xbase (dBase, FoxPro, etc) files"
 msgstr "Posrednik za Xbase (dBase, FoxPro itd.) datoteke"
 
 #: providers/xml/gda-xml-provider.c:190
-#, fuzzy
 msgid ""
 "A full path must be specified on the connection string to open a database on "
 "the XML provider."
 msgstr ""
-"Puna putanja mora biti određena na nizu znakova konekcije da otvori bazu "
-"podataka."
+"Puna putanja mora biti navedena u tekstu za vezu radi otvoranja baze podataka "
+"od XML dobavljača."
 
 #: providers/xml/gda-xml-provider.c:221 providers/xml/gda-xml-provider.c:243
-#, fuzzy
 msgid "Invalid XML handle"
-msgstr "Pogrešna MySQL ručka"
+msgstr "Neispravna XML oznaka"
 
 #: providers/xml/gda-xml-provider.c:262 providers/xml/gda-xml-provider.c:277
 #: providers/xml/gda-xml-provider.c:304
 msgid "Invalid internal handle"
-msgstr "Pogrešana unutrašnja ručka"
+msgstr "Pogrešna unutrašnja oznaka"
 
 #: providers/xml/gda-xml-provider.c:343
 msgid "Not Implemented"
@@ -1665,19 +1656,19 @@ msgstr "Pogrešan agrgumnt"
 
 #: providers/xml/gda-xml-provider.c:521
 msgid "Could not get description for column"
-msgstr "Nemože da dobije opis za kolonu"
+msgstr "Ne može da dobije opis za kolonu"
 
 #: providers/xml/libmain.c:33
 msgid "XML"
-msgstr ""
+msgstr "XML"
 
 #: providers/xml/libmain.c:39
 msgid "XML provider, based on the libgda XML database format"
-msgstr ""
+msgstr "XML dobavljač, zasnovan na libgda XML formatu baze podataka"
 
 #: report/libgda-report/gda-report-document.c:171
 msgid "Could not parse XML document"
-msgstr "Nemože da obradi XML dokument"
+msgstr "Ne može da obradi XML dokument"
 
 #: report/libgda-report/gda-report-document.c:181
 msgid "XML document is not valid"
