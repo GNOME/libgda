@@ -91,6 +91,14 @@ static GList* gda_freetds_provider_process_sql_commands(GList         *reclist,
                                                         GdaConnection *cnc,
                                                         const gchar   *sql);
 
+static gboolean tds_cbs_initialized = FALSE;
+extern int (*g_tds_msg_handler)();
+extern int (*g_tds_err_handler)();
+
+static int gda_freetds_provider_tds_handle_message (void *aStruct,
+                                                    const gboolean is_err_msg);
+static int gda_freetds_provider_tds_handle_info_msg (void *aStruct);
+static int gda_freetds_provider_tds_handle_err_msg (void *aStruct);
 
 static gboolean
 gda_freetds_provider_open_connection (GdaServerProvider *provider,
@@ -223,6 +231,7 @@ gda_freetds_provider_open_connection (GdaServerProvider *provider,
 	}
 
 	tds_cnc->rc = TDS_SUCCEED;
+	tds_set_parent (tds_cnc->socket, (void *) cnc);
 	g_object_set_data (G_OBJECT (cnc), OBJECT_DATA_FREETDS_HANDLE, tds_cnc);
 
 	return TRUE;
@@ -247,6 +256,7 @@ gda_freetds_provider_close_connection (GdaServerProvider *provider,
 		tds_cnc->config = NULL;
 	}
 	if (tds_cnc->socket) {
+		tds_set_parent (tds_cnc->socket, NULL);
 		tds_free_socket(tds_cnc->socket);
 		tds_cnc->socket = NULL;
 	}
@@ -591,6 +601,13 @@ gda_freetds_provider_class_init (GdaFreeTDSProviderClass *klass)
 	provider_class->rollback_transaction = gda_freetds_provider_rollback_transaction;
 	provider_class->supports = gda_freetds_provider_supports;
 	provider_class->get_schema = gda_freetds_provider_get_schema;
+
+	if (tds_cbs_initialized == FALSE) {
+		tds_cbs_initialized = TRUE;
+
+		g_tds_msg_handler = gda_freetds_provider_tds_handle_info_msg;
+		g_tds_err_handler = gda_freetds_provider_tds_handle_err_msg;
+	}
 }
 
 static void
@@ -608,6 +625,58 @@ gda_freetds_provider_finalize (GObject *object)
 
 	/* chain to parent class */
 	parent_class->finalize (object);
+}
+
+static int gda_freetds_provider_tds_handle_message (void *aStruct,
+                                                    const gboolean is_err_msg)
+{
+	TDSSOCKET *socket = (TDSSOCKET *) aStruct;
+	GdaConnection *cnc = NULL;
+	GdaError *error = NULL;
+	gchar *msg = NULL;
+
+	g_return_val_if_fail (socket != NULL, TDS_SUCCEED);
+	g_return_val_if_fail (socket->msg_info != NULL, TDS_SUCCEED);
+	cnc = (GdaConnection *) tds_get_parent (socket);
+	
+	// what if we cannot determine where the message belongs to?
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), TDS_SUCCEED);
+
+	msg = g_strdup_printf(_("Msg %d, Level %d, State %d, Server %s, Line %d\n%s\n"),
+	                      socket->msg_info->msg_number,
+	                      socket->msg_info->msg_level,
+	                      socket->msg_info->msg_state,
+	                      (socket->msg_info->server ? socket->msg_info->server : ""),
+	                      socket->msg_info->line_number,
+	                      socket->msg_info->message ? socket->msg_info->message : "");
+
+	// if errormessage, proceed
+	if (is_err_msg == TRUE) {
+		error = gda_error_new ();
+		gda_error_set_description (error, msg);
+		gda_error_set_number (error, socket->msg_info->msg_number);
+		gda_error_set_source (error, "gda-freetds");
+		gda_error_set_sqlstate (error, _("Not available"));
+
+		gda_connection_add_error (cnc, error);
+	}
+	
+	if (msg) {
+		g_free(msg);
+		msg = NULL;
+	}
+
+	return TDS_SUCCEED;
+}
+
+static int gda_freetds_provider_tds_handle_info_msg (void *aStruct)
+{
+	return gda_freetds_provider_tds_handle_message (aStruct, FALSE);
+}
+
+static int gda_freetds_provider_tds_handle_err_msg (void *aStruct)
+{
+	return gda_freetds_provider_tds_handle_message (aStruct, TRUE);
 }
 
 
