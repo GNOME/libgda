@@ -8,14 +8,14 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2003-07-03 16:39+0200\n"
-"PO-Revision-Date: 2003-06-06 11:06+0200\n"
+"POT-Creation-Date: 2003-07-08 07:20+0200\n"
+"PO-Revision-Date: 2003-07-08 07:21+0200\n"
 "Last-Translator: Christian Rose <menthos@menthos.com>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Report-Msgid-Bugs-To: \n"
 
 #: libgda/gda-client.c:312 libgda/gda-client.c:515 libgda/gda-connection.c:218
 #, c-format
@@ -46,12 +46,9 @@ msgid "Error: %s"
 msgstr "Fel: %s"
 
 #. gda_server_recordset_model_set_field_defined_size (recset, 0, 256);
-#: libgda/gda-config.c:1323 providers/default/gda-default-provider.c:557
-#: providers/default/gda-default-provider.c:577
-#: providers/default/gda-default-provider.c:616
-#: providers/ldap/gda-ldap-provider.c:327 providers/mdb/gda-mdb-provider.c:457
-#: providers/mdb/gda-mdb-provider.c:594 providers/mdb/gda-mdb-provider.c:654
-#: providers/msql/gda-msql-provider.c:448
+#: libgda/gda-config.c:1323 providers/ldap/gda-ldap-provider.c:327
+#: providers/mdb/gda-mdb-provider.c:457 providers/mdb/gda-mdb-provider.c:594
+#: providers/mdb/gda-mdb-provider.c:654 providers/msql/gda-msql-provider.c:448
 #: providers/mysql/gda-mysql-provider.c:701
 #: providers/mysql/gda-mysql-provider.c:889
 #: providers/odbc/gda-odbc-provider.c:733
@@ -60,6 +57,8 @@ msgstr "Fel: %s"
 #: providers/oracle/gda-oracle-provider.c:1910
 #: providers/oracle/gda-oracle-provider.c:1955
 #: providers/oracle/gda-oracle-provider.c:1972
+#: providers/xml/gda-xml-provider.c:567 providers/xml/gda-xml-provider.c:587
+#: providers/xml/gda-xml-provider.c:626
 msgid "Name"
 msgstr "Namn"
 
@@ -149,169 +148,48 @@ msgstr "(GObject av typen \"%s\""
 msgid "NULL GObject"
 msgstr "NULL-GObject"
 
-#: libgda/gda-xml-database.c:235
+#: libgda/gda-xml-database.c:248
 #, c-format
 msgid "Could not load file at %s"
 msgstr "Kunde inte läsa in filen vid %s"
 
-#: libgda/gda-xml-database.c:244
+#: libgda/gda-xml-database.c:257
 #, c-format
 msgid "Could not parse file at %s"
 msgstr "Kunde inte tolka filen vid %s"
 
-#: libgda/gda-xml-database.c:254
+#: libgda/gda-xml-database.c:267
 #, c-format
 msgid "Invalid XML database file '%s'"
 msgstr "Ogiltig XML-databasfil \"%s\""
 
-#: libgda/gda-xml-database.c:436
+#: libgda/gda-xml-database.c:493
 #, c-format
 msgid "Could not create a XML node from table %s"
 msgstr "Kunde inte skapa en XML-nod från tabellen %s"
 
-#: libgda/gda-xml-database.c:454
+#: libgda/gda-xml-database.c:511
 msgid "Could not dump XML file to memory"
 msgstr "Kunde inte dumpa XML-filen till minnet"
 
-#: libgda/gda-xml-database.c:547 libgda/gda-xml-database.c:583
-#: libgda/gda-xml-database.c:626
+#: libgda/gda-xml-database.c:604 libgda/gda-xml-database.c:640
+#: libgda/gda-xml-database.c:683
 #, c-format
 msgid "Table %s already exists"
 msgstr "Tabellen %s finns redan"
 
-#: libgda/gda-xml-database.c:619
+#: libgda/gda-xml-database.c:676
 msgid "Invalid node"
 msgstr "Ogiltig nod"
 
-#: libgda/gda-xml-database.c:661
+#: libgda/gda-xml-database.c:718
 #, c-format
 msgid "Duplicated <data> node for table %s"
 msgstr "Duplicerad <data>-nod för tabellen %s"
 
-#: libgda/gda-xml-database.c:668
+#: libgda/gda-xml-database.c:725
 msgid "Invalid XML node"
 msgstr "Ogiltig XML-nod"
-
-#: providers/default/gda-default-provider.c:190
-#: providers/sqlite/gda-sqlite-provider.c:198
-msgid ""
-"A full path must be specified on the connection string to open a database."
-msgstr ""
-"En fullständig sökväg måste anges i anslutningssträngen för att öppna en "
-"databas."
-
-#: providers/default/gda-default-provider.c:252
-#: providers/default/gda-default-provider.c:267
-#: providers/default/gda-default-provider.c:294
-msgid "Invalid internal handle"
-msgstr "Ogiltigt internt handtag"
-
-#: providers/default/gda-default-provider.c:333
-msgid "Not Implemented"
-msgstr "Inte implementerat"
-
-#: providers/default/gda-default-provider.c:454
-#: providers/mdb/gda-mdb-provider.c:490
-#: providers/mysql/gda-mysql-provider.c:1069
-#: providers/odbc/gda-odbc-provider.c:914
-#: providers/oracle/gda-oracle-provider.c:1248
-#: providers/postgres/gda-postgres-provider.c:1352
-#: providers/sqlite/gda-sqlite-provider.c:622
-msgid "Field name"
-msgstr "Fältnamn"
-
-#: providers/default/gda-default-provider.c:455
-#: providers/mdb/gda-mdb-provider.c:491 providers/msql/gda-msql-provider.c:537
-#: providers/mysql/gda-mysql-provider.c:1070
-#: providers/odbc/gda-odbc-provider.c:915
-#: providers/oracle/gda-oracle-provider.c:1249
-#: providers/postgres/gda-postgres-provider.c:1353
-#: providers/sqlite/gda-sqlite-provider.c:623
-msgid "Data type"
-msgstr "Datatyp"
-
-#: providers/default/gda-default-provider.c:456
-#: providers/mdb/gda-mdb-provider.c:492 providers/msql/gda-msql-provider.c:538
-#: providers/mysql/gda-mysql-provider.c:1071
-#: providers/odbc/gda-odbc-provider.c:916
-#: providers/oracle/gda-oracle-provider.c:1250
-#: providers/postgres/gda-postgres-provider.c:1354
-#: providers/sqlite/gda-sqlite-provider.c:624
-msgid "Size"
-msgstr "Storlek"
-
-#: providers/default/gda-default-provider.c:457
-#: providers/mdb/gda-mdb-provider.c:493 providers/msql/gda-msql-provider.c:539
-#: providers/mysql/gda-mysql-provider.c:1072
-#: providers/odbc/gda-odbc-provider.c:917
-#: providers/oracle/gda-oracle-provider.c:1251
-#: providers/postgres/gda-postgres-provider.c:1355
-#: providers/sqlite/gda-sqlite-provider.c:625
-msgid "Scale"
-msgstr "Skala"
-
-#: providers/default/gda-default-provider.c:458
-#: providers/mdb/gda-mdb-provider.c:494
-#: providers/mysql/gda-mysql-provider.c:1073
-#: providers/odbc/gda-odbc-provider.c:918
-#: providers/oracle/gda-oracle-provider.c:1252
-#: providers/postgres/gda-postgres-provider.c:1356
-#: providers/sqlite/gda-sqlite-provider.c:626
-msgid "Not null?"
-msgstr "Inte null?"
-
-#: providers/default/gda-default-provider.c:459
-#: providers/mdb/gda-mdb-provider.c:495 providers/msql/gda-msql-provider.c:541
-#: providers/mysql/gda-mysql-provider.c:1074
-#: providers/odbc/gda-odbc-provider.c:919
-#: providers/oracle/gda-oracle-provider.c:1253
-#: providers/postgres/gda-postgres-provider.c:1357
-#: providers/sqlite/gda-sqlite-provider.c:627
-msgid "Primary key?"
-msgstr "Primärnyckel?"
-
-#: providers/default/gda-default-provider.c:460
-#: providers/mdb/gda-mdb-provider.c:496 providers/msql/gda-msql-provider.c:542
-#: providers/mysql/gda-mysql-provider.c:1075
-#: providers/odbc/gda-odbc-provider.c:920
-#: providers/oracle/gda-oracle-provider.c:1254
-#: providers/postgres/gda-postgres-provider.c:1358
-#: providers/sqlite/gda-sqlite-provider.c:628
-msgid "Unique index?"
-msgstr "Unikt index?"
-
-#: providers/default/gda-default-provider.c:461
-#: providers/mdb/gda-mdb-provider.c:497 providers/msql/gda-msql-provider.c:543
-#: providers/mysql/gda-mysql-provider.c:1076
-#: providers/odbc/gda-odbc-provider.c:921
-#: providers/oracle/gda-oracle-provider.c:1255
-#: providers/postgres/gda-postgres-provider.c:1359
-#: providers/sqlite/gda-sqlite-provider.c:629
-msgid "References"
-msgstr "Referenser"
-
-#: providers/default/gda-default-provider.c:471
-#: providers/default/gda-default-provider.c:477
-msgid "Invalid argument"
-msgstr "Ogiltigt argument"
-
-#: providers/default/gda-default-provider.c:484
-#: providers/mdb/gda-mdb-table.c:48
-#, c-format
-msgid "Table %s not found"
-msgstr "Tabellen %s kunde inte hittas"
-
-#: providers/default/gda-default-provider.c:511
-msgid "Could not get description for column"
-msgstr "Kunde inte hämta beskrivningen för kolumnen"
-
-#: providers/default/libmain.c:33
-msgid "Default"
-msgstr "Standard"
-
-#: providers/default/libmain.c:39
-msgid "Default provider, based on XML"
-msgstr "Standardleverantör, baserad på XML"
 
 #: providers/firebird/gda-firebird-provider.c:187
 msgid "No database specified"
@@ -660,6 +538,86 @@ msgstr "Ogiltigt MDB-handtag"
 msgid "Transactions not supported in MDB provider"
 msgstr "Transaktioner stöds inte i MDB-leverantör"
 
+#: providers/mdb/gda-mdb-provider.c:490
+#: providers/mysql/gda-mysql-provider.c:1069
+#: providers/odbc/gda-odbc-provider.c:914
+#: providers/oracle/gda-oracle-provider.c:1248
+#: providers/postgres/gda-postgres-provider.c:1352
+#: providers/sqlite/gda-sqlite-provider.c:622
+#: providers/xml/gda-xml-provider.c:464
+msgid "Field name"
+msgstr "Fältnamn"
+
+#: providers/mdb/gda-mdb-provider.c:491 providers/msql/gda-msql-provider.c:537
+#: providers/mysql/gda-mysql-provider.c:1070
+#: providers/odbc/gda-odbc-provider.c:915
+#: providers/oracle/gda-oracle-provider.c:1249
+#: providers/postgres/gda-postgres-provider.c:1353
+#: providers/sqlite/gda-sqlite-provider.c:623
+#: providers/xml/gda-xml-provider.c:465
+msgid "Data type"
+msgstr "Datatyp"
+
+#: providers/mdb/gda-mdb-provider.c:492 providers/msql/gda-msql-provider.c:538
+#: providers/mysql/gda-mysql-provider.c:1071
+#: providers/odbc/gda-odbc-provider.c:916
+#: providers/oracle/gda-oracle-provider.c:1250
+#: providers/postgres/gda-postgres-provider.c:1354
+#: providers/sqlite/gda-sqlite-provider.c:624
+#: providers/xml/gda-xml-provider.c:466
+msgid "Size"
+msgstr "Storlek"
+
+#: providers/mdb/gda-mdb-provider.c:493 providers/msql/gda-msql-provider.c:539
+#: providers/mysql/gda-mysql-provider.c:1072
+#: providers/odbc/gda-odbc-provider.c:917
+#: providers/oracle/gda-oracle-provider.c:1251
+#: providers/postgres/gda-postgres-provider.c:1355
+#: providers/sqlite/gda-sqlite-provider.c:625
+#: providers/xml/gda-xml-provider.c:467
+msgid "Scale"
+msgstr "Skala"
+
+#: providers/mdb/gda-mdb-provider.c:494
+#: providers/mysql/gda-mysql-provider.c:1073
+#: providers/odbc/gda-odbc-provider.c:918
+#: providers/oracle/gda-oracle-provider.c:1252
+#: providers/postgres/gda-postgres-provider.c:1356
+#: providers/sqlite/gda-sqlite-provider.c:626
+#: providers/xml/gda-xml-provider.c:468
+msgid "Not null?"
+msgstr "Inte null?"
+
+#: providers/mdb/gda-mdb-provider.c:495 providers/msql/gda-msql-provider.c:541
+#: providers/mysql/gda-mysql-provider.c:1074
+#: providers/odbc/gda-odbc-provider.c:919
+#: providers/oracle/gda-oracle-provider.c:1253
+#: providers/postgres/gda-postgres-provider.c:1357
+#: providers/sqlite/gda-sqlite-provider.c:627
+#: providers/xml/gda-xml-provider.c:469
+msgid "Primary key?"
+msgstr "Primärnyckel?"
+
+#: providers/mdb/gda-mdb-provider.c:496 providers/msql/gda-msql-provider.c:542
+#: providers/mysql/gda-mysql-provider.c:1075
+#: providers/odbc/gda-odbc-provider.c:920
+#: providers/oracle/gda-oracle-provider.c:1254
+#: providers/postgres/gda-postgres-provider.c:1358
+#: providers/sqlite/gda-sqlite-provider.c:628
+#: providers/xml/gda-xml-provider.c:470
+msgid "Unique index?"
+msgstr "Unikt index?"
+
+#: providers/mdb/gda-mdb-provider.c:497 providers/msql/gda-msql-provider.c:543
+#: providers/mysql/gda-mysql-provider.c:1076
+#: providers/odbc/gda-odbc-provider.c:921
+#: providers/oracle/gda-oracle-provider.c:1255
+#: providers/postgres/gda-postgres-provider.c:1359
+#: providers/sqlite/gda-sqlite-provider.c:629
+#: providers/xml/gda-xml-provider.c:471
+msgid "References"
+msgstr "Referenser"
+
 #: providers/mdb/gda-mdb-provider.c:498 providers/msql/gda-msql-provider.c:544
 #: providers/mysql/gda-mysql-provider.c:1077
 #: providers/odbc/gda-odbc-provider.c:922
@@ -763,6 +721,11 @@ msgstr "Teckensträngar"
 #, c-format
 msgid "Could not parse '%s' command"
 msgstr "Kunde inte tolka kommandot \"%s\""
+
+#: providers/mdb/gda-mdb-table.c:48 providers/xml/gda-xml-provider.c:494
+#, c-format
+msgid "Table %s not found"
+msgstr "Tabellen %s kunde inte hittas"
 
 #: providers/mdb/libmain.c:36
 msgid "Provider for Microsoft Access files"
@@ -1225,6 +1188,13 @@ msgstr "Tupler:\"%s\""
 msgid "Provider for PostgreSQL databases"
 msgstr "Leverantör för PostgreSQL-databaser"
 
+#: providers/sqlite/gda-sqlite-provider.c:198
+msgid ""
+"A full path must be specified on the connection string to open a database."
+msgstr ""
+"En fullständig sökväg måste anges i anslutningssträngen för att öppna en "
+"databas."
+
 #: providers/sqlite/gda-sqlite-provider.c:220
 msgid "Could not set empty_result_callbacks SQLite option"
 msgstr "Kunde inte ställa in SQLite-alternativet empty_result_callbacks"
@@ -1665,6 +1635,43 @@ msgstr "Ogiltigt Xbase-handtag"
 msgid "Provider for Xbase (dBase, FoxPro, etc) files"
 msgstr "Leverantör för Xbase-filer (dBase, FoxPro, osv)"
 
+#: providers/xml/gda-xml-provider.c:190
+msgid ""
+"A full path must be specified on the connection string to open a database on "
+"the XML provider."
+msgstr ""
+"En fullständig sökväg måste anges i anslutningssträngen för att öppna en "
+"databas på XML-leverantören."
+
+#: providers/xml/gda-xml-provider.c:221 providers/xml/gda-xml-provider.c:243
+msgid "Invalid XML handle"
+msgstr "Ogiltigt XML-handtag"
+
+#: providers/xml/gda-xml-provider.c:262 providers/xml/gda-xml-provider.c:277
+#: providers/xml/gda-xml-provider.c:304
+msgid "Invalid internal handle"
+msgstr "Ogiltigt internt handtag"
+
+#: providers/xml/gda-xml-provider.c:343
+msgid "Not Implemented"
+msgstr "Inte implementerat"
+
+#: providers/xml/gda-xml-provider.c:481 providers/xml/gda-xml-provider.c:487
+msgid "Invalid argument"
+msgstr "Ogiltigt argument"
+
+#: providers/xml/gda-xml-provider.c:521
+msgid "Could not get description for column"
+msgstr "Kunde inte hämta beskrivningen för kolumnen"
+
+#: providers/xml/libmain.c:33
+msgid "XML"
+msgstr "XML"
+
+#: providers/xml/libmain.c:39
+msgid "XML provider, based on the libgda XML database format"
+msgstr "XML-leverantör, baserad på libgda XML-databasformatet"
+
 #: report/libgda-report/gda-report-document.c:171
 msgid "Could not parse XML document"
 msgstr "Kunde inte tolka XML-dokument"
@@ -1909,6 +1916,12 @@ msgstr "\tbeskrivning = %s\n"
 #: testing/config.c:92
 msgid "\tgda_params ="
 msgstr "\tgda_params ="
+
+#~ msgid "Default"
+#~ msgstr "Standard"
+
+#~ msgid "Default provider, based on XML"
+#~ msgstr "Standardleverantör, baserad på XML"
 
 #~ msgid "severity"
 #~ msgstr "allvarlighet"
