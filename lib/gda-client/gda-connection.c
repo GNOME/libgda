@@ -488,7 +488,7 @@ gda_connection_open (Gda_Connection* cnc, gchar* dsn, gchar* user, gchar* pwd)
       || rc < 0)
     {
       CORBA_SystemException* sysexc = CORBA_exception_value(&ev);
-      if (sysexc->completed != CORBA_COMPLETED_NO)
+      if (sysexc && sysexc->completed != CORBA_COMPLETED_NO)
         {
           GDA_Connection_close(cnc->connection, &ev);
           CORBA_Object_release(cnc->connection, &ev);
