@@ -1,9 +1,28 @@
-2002-11-01  Cleber Rodrigues <cleber@gnome-db.org>
+2002-11-05  Holger Thon <holger.thon@gnome-db.org>
+
+	* configure.in: Added check for sybase OCli in OCS subdir
+
+	* providers/sybase/gda-sybase-provider.c: added provider_new,
+	shortened open_connection by gda_sybase_connection_data_free,
+	added LOCALE parameter, added debug messages, finished 
+	open_connection
+
+	* providers/sybase/gda-sybase.h, providers/sybase/utils.c:
+	added ocli message callbacks for displaying errors,
+	fixed sybase_debug_msg()
+
+	* providers/sybase/gda-sybase-provider.h:
+	added CS_GDA_VERSION (define for latest detectable cs version)
+
+	* testing/client.c(test_client): fixed connection to be opened
+	with password of GdaDataSourceInfo instead of empty pwd ("")
+
+2002-11-01  Cleber Rodrigues <cleber@gnome-db.org>
 
 	* providers/mysql/gda-mysql-provider.c: added missing mysql_init()
 	on the initialization of the connection structure.
 
-2002-10-31  Holger Thon <holger.thon@gnome-db.org>
+2002-11-01  Holger Thon <holger.thon@gnome-db.org>
 
 	* providers/freetds/gda-freetds-provider.c:
 	setting datamodel column titles of schemas moved to gda-tds-schemas.h

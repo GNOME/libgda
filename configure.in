@@ -412,6 +412,11 @@ then
 				AC_MSG_RESULT(found Sybase in $d-$v)
 				sybasedir="$d-$v"
 				break
+			elif test -f "$d-$v/OCS/include/ctpublic.h"
+			then
+				AC_MSG_RESULT(found Sybase in $d-$v)
+				sybasedir="$d-$v/OCS"
+				break
 			fi
 		done
 	done
