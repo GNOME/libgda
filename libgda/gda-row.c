@@ -178,7 +178,6 @@ gda_row_attributes_free (GdaRowAttributes *attrs)
 gint
 gda_row_attributes_get_length (GdaRowAttributes *attrs)
 {
-	g_return_val_if_fail (attrs != NULL, 0);
 	return g_list_length (attrs);
 }
 

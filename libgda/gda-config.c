@@ -299,6 +299,71 @@ free_section (gpointer data, gpointer user_data)
 	g_free (section);
 }
 
+static void
+add_xml_entry (xmlNodePtr parent, gda_config_entry *entry)
+{
+	xmlNodePtr new_node;
+
+	new_node = xmlNewTextChild (parent, NULL, "entry", NULL);
+	xmlSetProp (new_node, "name", entry->name ? entry->name : "");
+	xmlSetProp (new_node, "type", entry->type ? entry->type : "");
+	xmlSetProp (new_node, "value", entry->value ? entry->value : "");
+}
+
+static xmlNodePtr
+add_xml_section (xmlNodePtr parent, gda_config_section *section)
+{
+	xmlNodePtr new_node;
+
+	new_node = xmlNewTextChild (parent, NULL, "section", NULL);
+	xmlSetProp (new_node, "path", section->path ? section->path : "");
+	return new_node;
+}
+
+static void
+write_config_file ()
+{
+	gda_config_client *cfg_client;
+	xmlDocPtr doc;
+	xmlNodePtr root;
+	xmlNodePtr xml_section;
+	GList *ls; /* List of sections */
+	GList *le; /* List of entries */
+	gda_config_section *section;
+	gda_config_entry *entry;
+	gchar *user_config;
+
+	cfg_client = get_config_client ();
+	g_return_if_fail (cfg_client->user != NULL);
+
+	doc = xmlNewDoc ("1.0");
+	g_return_if_fail (doc != NULL);
+	root = xmlNewDocNode (doc, NULL, "libgda-config", NULL);
+	for (ls = cfg_client->user; ls; ls = ls->next){
+		section = ls->data;
+		if (section == NULL)
+			continue;
+
+		xml_section = add_xml_section (root, section);
+		for (le = section->entries; le; le = le->next){
+			entry = le->data;
+			if (entry == NULL)
+				continue;
+
+			add_xml_entry (xml_section, le->data);
+		}
+	}
+
+	user_config = g_strdup_printf ("%s%s", g_get_home_dir (),
+					LIBGDA_USER_CONFIG_FILE);
+	if (xmlSaveFormatFile (user_config, doc, TRUE) == -1){
+		g_warning ("Error saving config data to %s", user_config);
+	}
+
+	g_free (user_config);
+	xmlFreeDoc (doc);
+}
+
 /*
  * Public functions
  */
@@ -446,6 +511,7 @@ gda_config_set_string (const gchar *path, const gchar *new_value)
 		entry->value = g_strdup (new_value);
 	}
 
+	write_config_file ();
 	do_notify (path);
 }
 
@@ -489,6 +555,7 @@ gda_config_set_int (const gchar *path, gint new_value)
 		entry->value = g_strdup_printf ("%d", new_value);
 	}
 
+	write_config_file ();
 	do_notify (path);
 }
 
@@ -532,6 +599,7 @@ gda_config_set_float (const gchar * path, gdouble new_value)
 		entry->value = g_strdup_printf ("%f", new_value);
 	}
 
+	write_config_file ();
 	do_notify (path);
 }
 
@@ -575,6 +643,7 @@ gda_config_set_boolean (const gchar *path, gboolean new_value)
 		entry->value = g_strdup_printf ("%d", new_value);
 	}
 
+	write_config_file ();
 	do_notify (path);
 }
 
@@ -601,6 +670,7 @@ gda_config_remove_section (const gchar *path)
 
 	cfg_client->user = g_list_remove (cfg_client->user, section);
 	free_section (section, NULL);
+	write_config_file ();
 	do_notify (path);
 }
 
@@ -647,6 +717,7 @@ gda_config_remove_key (const gchar *path)
 	if (entry != NULL){
 		section->entries = g_list_remove (section->entries, entry);
 		free_entry (entry, NULL);
+		write_config_file ();
 		do_notify (path);
 	}
 }
