@@ -142,6 +142,30 @@ gda_data_model_array_remove_row (GdaDataModel *model, const GdaRow *row)
 	return FALSE;
 }
 
+static gboolean
+gda_data_model_array_update_row (GdaDataModel *model, const GdaRow *row)
+{
+	gint i;
+	GdaDataModelArrayPrivate *priv;
+
+	g_return_val_if_fail (GDA_IS_DATA_MODEL_ARRAY (model), FALSE);
+	g_return_val_if_fail (row != NULL, FALSE);
+
+	priv = GDA_DATA_MODEL_ARRAY (model)->priv;
+
+	for (i = 0; i < priv->rows->len; i++) {
+		if (priv->rows->pdata[i] == row) {
+			gda_row_free (priv->rows->pdata[i]);
+			priv->rows->pdata[i] = gda_row_copy (row);
+			gda_data_model_row_updated (model, i);
+
+			return TRUE;
+		}
+	}
+
+	return FALSE; /* row not found in this data model */
+}
+
 static void
 gda_data_model_array_class_init (GdaDataModelArrayClass *klass)
 {
@@ -159,7 +183,7 @@ gda_data_model_array_class_init (GdaDataModelArrayClass *klass)
 	model_class->is_updatable = gda_data_model_array_is_updatable;
 	model_class->append_row = gda_data_model_array_append_row;
 	model_class->remove_row = gda_data_model_array_remove_row;
-	model_class->update_row = NULL;
+	model_class->update_row = gda_data_model_array_update_row;
 }
 
 static void

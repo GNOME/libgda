@@ -800,7 +800,7 @@ gda_data_model_update_column (GdaDataModel *model, const GdaFieldAttributes *col
 	gboolean result;
 
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
-	g_return_val_if_fail (CLASS (model)->update_row != NULL, FALSE);
+	g_return_val_if_fail (CLASS (model)->update_column != NULL, FALSE);
 	g_return_val_if_fail (col != NULL, FALSE);
 
 	result = CLASS (model)->update_column (model, col);
