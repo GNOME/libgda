@@ -1,3 +1,11 @@
+2002-01-24  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-connection.c (gda_connection_real_error):
+	(gda_connection_real_warning): removed useless signal handlers
+	(gda_connection_add_single_error): re-added the call to free
+	the error list.
+	This really fixes freezing problems with error lists.
+
 2002-01-16  Waldemar Zurowski  <bilbo@pwr.wroc.pl>
 
 	* gda-connection.c (gda_connection_add_single_error):

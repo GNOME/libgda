@@ -60,24 +60,7 @@ static void gda_connection_class_init (GdaConnectionClass * klass);
 static void gda_connection_init (GdaConnection * cnc);
 static void gda_connection_destroy (GtkObject * object, gpointer user_data);
 
-static void gda_connection_real_error (GdaConnection * cnc, GList *);
-static void gda_connection_real_warning (GdaConnection * cnc, GList *);
 static int get_corba_connection (GdaConnection * cnc);
-
-static void
-gda_connection_real_error (GdaConnection * cnc, GList * errors)
-{
-	g_print ("%s: %d: %s called\n", __FILE__, __LINE__,
-		 __PRETTY_FUNCTION__);
-	cnc->errors_head = g_list_concat (cnc->errors_head, errors);
-}
-
-static void
-gda_connection_real_warning (GdaConnection * cnc, GList * warnings)
-{
-	g_print ("%s: %d: %s called\n", __FILE__, __LINE__,
-		 __PRETTY_FUNCTION__);
-}
 
 GtkType
 gda_connection_get_type (void)
@@ -138,8 +121,8 @@ gda_connection_class_init (GdaConnectionClass * klass)
 				      LAST_SIGNAL);
 
 	object_class->destroy = (void (*)(GtkObject *))gda_connection_destroy;
-	klass->error = gda_connection_real_error;
-	klass->warning = gda_connection_real_warning;
+	klass->error = NULL;
+	klass->warning = NULL;
 	klass->close = NULL;
 	klass->open = NULL;
 }
@@ -170,6 +153,7 @@ gda_connection_corba_exception (GdaConnection * cnc, CORBA_Environment * ev)
 	error_list = gda_error_list_from_exception (ev);
 	if (error_list) {
 		gda_connection_add_error_list (cnc, error_list);
+		gda_error_list_free (error_list);
 		return -1;
 	}
 
@@ -971,6 +955,7 @@ gda_connection_add_single_error (GdaConnection * cnc, GdaError * error)
 	error_list = g_list_append (error_list, error);
 	gtk_signal_emit (GTK_OBJECT (cnc),
 	                 gda_connection_signals[CONNECTION_ERROR], error_list);
+	gda_error_list_free (error_list);
 }
 
 void
