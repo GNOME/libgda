@@ -490,12 +490,12 @@ fb_gda_value_fill (GdaValue *gda_value,
 	switch (field_type) {
 		case SQL_ARRAY:
 		case SQL_ARRAY+1:
-			g_print (_("Firebird's ARRAY datatype not supported yet !\n"));
+			g_print (_("Firebird's ARRAY datatype not supported yet!\n"));
 			gda_value_set_null (gda_value);		
 			break;
 		case SQL_BLOB:
 		case SQL_BLOB+1:
-			g_print (_("Firebird's BLOB datatype not supported yet !\n"));
+			g_print (_("Firebird's BLOB datatype not supported yet!\n"));
 			gda_value_set_null (gda_value);		
 			break;
 		case SQL_TIMESTAMP:
@@ -598,7 +598,7 @@ fb_gda_value_fill (GdaValue *gda_value,
 			gda_value_set_double (gda_value, *((gdouble *) field_data));
 			break;
 		default:
-			g_print (_("Unknown Firebird's field value !\n"));
+			g_print (_("Unknown Firebird's field value!\n"));
 
 			gda_value_set_null (gda_value);
 			break;
