@@ -305,7 +305,7 @@ gda_oracle_value_to_sql_string (GdaValue *value)
 }
 
 GdaOracleValue *
-gda_value_to_oracle_value (GdaValue *value)
+gda_value_to_oracle_value (const GdaValue *value)
 {
 	GdaOracleValue *ora_value;
 	gchar *val_str;

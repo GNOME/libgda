@@ -180,7 +180,7 @@ gda_oracle_provider_open_connection (GdaServerProvider *provider,
 				    const gchar *username,
 				    const gchar *password)
 {
-        gchar *tnsname;
+        const gchar *tnsname;
 	gint  result;
 
         GdaOracleProvider *ora_prv = (GdaOracleProvider *) provider;
@@ -389,6 +389,8 @@ gda_oracle_provider_open_connection (GdaServerProvider *provider,
 	priv_data->schema = g_ascii_strup(username, -1);
 	priv_data->tables = NULL;
 	priv_data->views = NULL;
+	priv_data->aggregates = NULL;
+	priv_data->procedures = NULL;
 	
 	/* attach the oracle connection data to the gda connection object */
 	g_object_set_data (G_OBJECT (cnc), OBJECT_DATA_ORACLE_HANDLE, priv_data);
@@ -434,12 +436,16 @@ gda_oracle_provider_close_connection (GdaServerProvider *provider, GdaConnection
 	if (priv_data->henv)
 		OCIHandleFree ((dvoid *) priv_data->henv, OCI_HTYPE_ENV);
 	if (priv_data->schema)
-	    g_free(priv_data->schema);
+		g_free(priv_data->schema);
 	if (priv_data->tables)
-	    g_tree_destroy(priv_data->tables);
+		g_tree_destroy(priv_data->tables);
 	if (priv_data->views)
-	    g_tree_destroy(priv_data->views);
-							
+		g_tree_destroy(priv_data->views);
+	if (priv_data->aggregates)
+		g_tree_destroy(priv_data->aggregates);
+	if (priv_data->procedures)
+		g_tree_destroy(priv_data->procedures);
+
 	g_free (priv_data);
 	g_object_set_data (G_OBJECT (cnc), OBJECT_DATA_ORACLE_HANDLE, NULL);
 
@@ -834,7 +840,7 @@ gda_oracle_provider_begin_transaction (GdaServerProvider *provider,
 	GdaOracleConnectionData *priv_data;
 	GdaOracleProvider *ora_prv = (GdaOracleProvider *) provider;
 	GdaOracleTransaction *ora_xaction;
-	gchar *xaction_name;
+	const gchar *xaction_name;
 	gint result;
 
 	g_return_val_if_fail (GDA_IS_ORACLE_PROVIDER (ora_prv), FALSE);
@@ -1044,80 +1050,124 @@ gda_oracle_provider_supports (GdaServerProvider *provider,
 	return FALSE;
 }
 
-static void
-add_string_row (GdaDataModelArray *recset, const gchar *str)
+typedef struct
 {
-	GdaValue *value;
-	GList list;
+	const gchar *name;
+	const gchar *uid;
+	const gchar *args;
+} gda_oracle_aggregate_t;
 
-	g_return_if_fail (GDA_IS_DATA_MODEL_ARRAY (recset));
+static gda_oracle_aggregate_t aggregate_tab[] =
+{
+	{ "AVG",             "SYS_AGG01", "NUMBER"        },
+	{ "CORR",            "SYS_AGG02", "NUMBER NUMBER" },
+	{ "COUNT",           "SYS_AGG03", "-"             },
+	{ "COVAR_POP",       "SYS_AGG04", "NUMBER NUMBER" },
+	{ "COVAR_SAMP",      "SYS_AGG05", "NUMBER NUMBER" },
+	{ "CUME_DIST",       "SYS_AGG06", "NUMBER"        },
+	{ "DENSE_RANK",      "SYS_AGG07", "NUMBER"        },
+	{ "GROUP_ID",        "SYS_AGG08", ""              },
+	{ "GROUPING",        "SYS_AGG09", "-"             },
+	{ "GROUPING_ID",     "SYS_AGG10", "-"             },
+	{ "MAX",             "SYS_AGG11", "NUMBER"        },
+	{ "MIN",             "SYS_AGG12", "NUMBER"        },
+	{ "PERCENTILE_CONT", "SYS_AGG13", "NUMBER"        },
+	{ "PERCENTILE_DISC", "SYS_AGG14", "NUMBER"        },
+	{ "PERCENT_RANK",    "SYS_AGG15", "NUMBER"        },
+	{ "RANK",            "SYS_AGG16", "NUMBER"        },
+	{ "REGR_SLOPE",      "SYS_AGG17", "NUMBER NUMBER" },
+	{ "REGR_INTERCEPT",  "SYS_AGG18", "NUMBER NUMBER" },
+	{ "REGR_COUNT",      "SYS_AGG19", "NUMBER NUMBER" },
+	{ "REGR_R2",         "SYS_AGG20", "NUMBER NUMBER" },
+	{ "REGR_AVGX",       "SYS_AGG21", "NUMBER NUMBER" },
+	{ "REGR_AVGY",       "SYS_AGG22", "NUMBER NUMBER" },
+	{ "REGR_SXX",        "SYS_AGG23", "NUMBER NUMBER" },
+	{ "REGR_SYY",        "SYS_AGG24", "NUMBER NUMBER" },
+	{ "REGR_SXY",        "SYS_AGG25", "NUMBER NUMBER" },
+	{ "STDDEV",          "SYS_AGG26", "NUMBER"        },
+	{ "STDDEV_POP",      "SYS_AGG27", "NUMBER"        },
+	{ "STDDEV_SAMP",     "SYS_AGG28", "NUMBER"        },
+	{ "SUM",             "SYS_AGG29", "NUMBER"        },
+	{ "VAR_POP",         "SYS_AGG30", "NUMBER"        },
+	{ "VAR_SAMP",        "SYS_AGG31", "NUMBER"        },
+	{ "VARIANCE",        "SYS_AGG32", "NUMBER"        }
+};
+static const gda_oracle_aggregate_t
+*aggregate_end = aggregate_tab + (sizeof(aggregate_tab)/sizeof(gda_oracle_aggregate_t));
 
-	value = gda_value_new_string (str);
-	list.data = value;
-	list.next = NULL;
-	list.prev = NULL;
+static GTree *
+build_aggregate_tree (void)
+{
+	GTree *tree;
+	const gda_oracle_aggregate_t *ptr;
 
-	gda_data_model_append_row (GDA_DATA_MODEL (recset), &list);
+	tree = g_tree_new((GCompareFunc)strcmp);
+	for (ptr = aggregate_tab; ptr < aggregate_end; ptr++)
+		g_tree_insert(tree, (gpointer)ptr->name, (gpointer)ptr);
+	return tree;
+}
 
-	gda_value_free (value);
+static gboolean
+aggregate_foreach (gpointer key, gpointer value, gpointer data)
+{
+	gda_oracle_aggregate_t *ptr = value;
+	GList *list = NULL;
+	GList *listp;
+	list = g_list_append(list, gda_value_new_string(ptr->name));
+	list = g_list_append(list, gda_value_new_string(ptr->uid));
+	list = g_list_append(list, gda_value_new_string("SYS"));
+	list = g_list_append(list, gda_value_new_string(""));
+	list = g_list_append(list, gda_value_new_string("NUMBER"));
+	list = g_list_append(list, gda_value_new_string(ptr->args));
+	list = g_list_append(list, gda_value_new_string(""));
+	gda_data_model_append_row (GDA_DATA_MODEL(data), list);
+	for (listp = list; listp; listp = listp->next)
+		gda_value_free(listp->data);
+	g_list_free(list);
+	return FALSE;
 }
 
 static GdaDataModel *
 get_oracle_aggregates (GdaConnection *cnc, GdaParameterList *params)
 {
+	GdaOracleConnectionData *priv_data;
 	GdaDataModelArray *recset;
+	GdaParameter *par = NULL;
+	gchar *name, *uc_name;
+	gda_oracle_aggregate_t *row;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_ORACLE_HANDLE);
+	if (!priv_data) {
+		gda_connection_add_error_string (cnc, _("Invalid Oracle handle"));
+		return NULL;
+	}
 
+	/* if necessary build the GTree of aggregates. */
+	if (priv_data->aggregates == NULL)
+		priv_data->aggregates = build_aggregate_tree();
+	
 	/* create the recordset */
-	recset = (GdaDataModelArray *) gda_data_model_array_new (1);
-	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 0, _("Name"));
+	recset = (GdaDataModelArray *) gda_data_model_array_new (7);
+	gda_data_model_set_column_title (recset, 0, _("Aggregate"));
+	gda_data_model_set_column_title (recset, 1, _("Id"));
+	gda_data_model_set_column_title (recset, 2, _("Owner"));
+	gda_data_model_set_column_title (recset, 3, _("Comments"));
+	gda_data_model_set_column_title (recset, 4, _("OutType"));
+	gda_data_model_set_column_title (recset, 5, _("InType"));
+	gda_data_model_set_column_title (recset, 6, _("Definition"));
 
-	/* fill the recordset */
-	add_string_row (recset, "abs");
-	add_string_row (recset, "acos");
-	add_string_row (recset, "ascii");
-	add_string_row (recset, "asin");
-	add_string_row (recset, "atan");
-	add_string_row (recset, "atan2");
-	add_string_row (recset, "ceil");
-	add_string_row (recset, "concat");
-	add_string_row (recset, "cos");
-	add_string_row (recset, "cosh");
-	add_string_row (recset, "count");
-	add_string_row (recset, "decode");
-	add_string_row (recset, "exp");
-	add_string_row (recset, "floor");
-	add_string_row (recset, "greatest");
-	add_string_row (recset, "instr");
-	add_string_row (recset, "least");
-	add_string_row (recset, "length");
-	add_string_row (recset, "ln");
-	add_string_row (recset, "log");
-	add_string_row (recset, "lower");
-	add_string_row (recset, "lpad");
-	add_string_row (recset, "ltrim");
-	add_string_row (recset, "max");
-	add_string_row (recset, "min");
-	add_string_row (recset, "mod");
-	add_string_row (recset, "power");
-	add_string_row (recset, "replace");	
-	add_string_row (recset, "reverse");
-	add_string_row (recset, "round");
-	add_string_row (recset, "rpad");
-	add_string_row (recset, "rtrim");
-	add_string_row (recset, "sign");
-	add_string_row (recset, "sinh");
-	add_string_row (recset, "sqrt");
-	add_string_row (recset, "substr");
-	add_string_row (recset, "sysdate");
-	add_string_row (recset, "tanh");
-	add_string_row (recset, "to_char");
-	add_string_row (recset, "to_date");
-	add_string_row (recset, "trim");
-	add_string_row (recset, "trunc");
-	add_string_row (recset, "upper");
-	add_string_row (recset, "user");
+	if (params)
+		par = gda_parameter_list_find (params, "name");
+	if (par) {
+		name = (gchar *)gda_value_get_string ((GdaValue *) gda_parameter_get_value (par));
+		uc_name = g_ascii_strup(name, -1);
+		if ((row = g_tree_lookup(priv_data->aggregates, uc_name)))
+			aggregate_foreach(uc_name, row, recset);
+		g_free(uc_name);
+		g_free(name);
+	} else
+		g_tree_foreach(priv_data->aggregates, aggregate_foreach, recset);
 
 	return GDA_DATA_MODEL (recset);
 }
@@ -1143,8 +1193,8 @@ gda_oracle_table_tree(GdaConnection *cnc)
 	return NULL;
     recset = reclist->data;
     priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_ORACLE_HANDLE);
-    tree = g_tree_new(strcmp);
-    for (i = 0; (row = gda_data_model_get_row(recset, i)); i++) {
+    tree = g_tree_new((GCompareFunc)strcmp);
+    for (i = 0; (row = (GdaRow *)gda_data_model_get_row(recset, i)); i++) {
 	value = gda_row_get_value(row, 0);
 	name = gda_value_stringify (value);
 	value = gda_row_get_value(row, 1);
@@ -1179,8 +1229,8 @@ gda_oracle_view_tree(GdaConnection *cnc)
 	return NULL;
     recset = reclist->data;
     priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_ORACLE_HANDLE);
-    tree = g_tree_new(strcmp);
-    for (i = 0; (row = gda_data_model_get_row(recset, i)); i++) {
+    tree = g_tree_new((GCompareFunc)strcmp);
+    for (i = 0; (row = (GdaRow *)gda_data_model_get_row(recset, i)); i++) {
 	value = gda_row_get_value(row, 0);
 	name = gda_value_stringify (value);
 	g_tree_insert(tree, name, priv_data->schema);
@@ -1287,13 +1337,13 @@ get_oracle_index_data (GdaConnection *cnc, const gchar *owner, const gchar *tbln
 	index_data = g_new0 (GdaOracleIndexData, 1);
 	references = g_string_new ("");
 
-	value = gda_data_model_get_value_at (recset, 0, 0);
+	value = (GdaValue *)gda_data_model_get_value_at (recset, 0, 0);
 	colname = g_string_right_trim (g_string_new (gda_value_get_string (value)));
 
 	for (i = 0; i < nrows; i += 1) {
 		gchar *constraint_type = "";
 
-		value = gda_data_model_get_value_at (recset, 1, i);
+		value = (GdaValue *)gda_data_model_get_value_at (recset, 1, i);
 		if (!value)
 			continue;
 		if (gda_value_is_null (value))
@@ -1304,14 +1354,14 @@ get_oracle_index_data (GdaConnection *cnc, const gchar *owner, const gchar *tbln
 		if (!strcmp (constraint_type, "P"))
 			index_data->primary_key = TRUE;
 
-		value = gda_data_model_get_value_at (recset, 2, i);
+		value = (GdaValue *)gda_data_model_get_value_at (recset, 2, i);
 		if (value) 
 			if (!gda_value_is_null (value))
 				if (!strcmp (gda_value_get_string (value), "UNIQUE"))  
 					index_data->unique = TRUE;
 
 		if (!strcmp (constraint_type, "R")) {
-			value = gda_data_model_get_value_at (recset, 3, i);
+			value = (GdaValue *)gda_data_model_get_value_at (recset, 3, i);
 			if (value)
 				if (!gda_value_is_null (value)) {
 					if (references->len > 0) 
@@ -1326,7 +1376,7 @@ get_oracle_index_data (GdaConnection *cnc, const gchar *owner, const gchar *tbln
 			break;
 		}
 
-		value = gda_data_model_get_value_at (recset, 0, i+1);
+		value = (GdaValue *)gda_data_model_get_value_at (recset, 0, i+1);
 		newcolname = g_string_right_trim (g_string_new (gda_value_get_string (value)));
 
 		if (strcmp (colname->str, newcolname->str)) {
@@ -1406,7 +1456,7 @@ gda_oracle_fill_md_data (const gchar *tblname,
 		owner = g_tree_lookup(priv_data->views, upc_tblname);
 	g_free(upc_tblname);
 	if (owner == NULL) {
-		fq_tblname = tblname;
+		fq_tblname = (gchar *)tblname;
 		owner = priv_data->schema;
 	}
 	else
@@ -1842,7 +1892,7 @@ get_oracle_tables (GdaConnection *cnc, GdaParameterList *params)
 
 	reclist = process_sql_commands (NULL, cnc, sql, NULL, 
 					GDA_COMMAND_OPTION_STOP_ON_ERRORS);
-	g_free(upc_namespace);
+	g_free((gpointer)upc_namespace);
 	g_free (sql);
 
 	if (!reclist)
@@ -1904,7 +1954,7 @@ get_oracle_views (GdaConnection *cnc, GdaParameterList *params)
 
 	reclist = process_sql_commands (NULL, cnc, sql, NULL, 
 					GDA_COMMAND_OPTION_STOP_ON_ERRORS);
-	g_free(upc_namespace);
+	g_free((gpointer)upc_namespace);
 	g_free (sql);
 
 	if (!reclist)
@@ -2104,7 +2154,6 @@ gda_oracle_provider_get_schema (GdaServerProvider *provider,
 {
 	GdaDataModel *recset;
 
-	g_log("gda-oracle", G_LOG_LEVEL_DEBUG, "get_schema(%d)", schema);
 	switch (schema) {
 	case GDA_CONNECTION_SCHEMA_AGGREGATES :
 		recset = get_oracle_aggregates (cnc, params);

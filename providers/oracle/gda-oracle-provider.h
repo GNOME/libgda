@@ -53,6 +53,8 @@ typedef struct {
         gchar *schema;
         GTree *tables;
         GTree *views;
+	GTree *aggregates;
+	GTree *procedures;
 } GdaOracleConnectionData;
 
 typedef struct {
@@ -69,3 +71,9 @@ G_END_DECLS
 
 #endif
 
+/*
+  Local Variables:
+  mode:C
+  c-basic-offset: 8
+  End:
+*/

@@ -67,7 +67,7 @@ GdaValueType  oracle_sqltype_to_gda_type (const ub2 sqltype);
 
 gchar *oracle_sqltype_to_string (const ub2 sqltype);
 
-GdaOracleValue *gda_value_to_oracle_value (GdaValue *value);
+GdaOracleValue *gda_value_to_oracle_value (const GdaValue *value);
 
 gboolean gda_oracle_handle_error (gint result, 
 				  GdaConnection *cnc, 

@@ -1,3 +1,10 @@
+2003-04-27  Steve Fosdick  <gnomedb@pelvoux.demon.co.uk>
+
+	* Oracle Provider: fixed the recordset returned from
+	get_schema(GDA_CONNECTION_SCHEMA_AGGREGATES)
+
+	* Fixed some compiler warnings.
+
 2003-04-20  Bodo Pfelzer <Bodo.Pfelzer@epost.de>
 
 	* configure.in: fixed typo in MySQL library detection.
