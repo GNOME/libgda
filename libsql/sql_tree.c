@@ -64,6 +64,17 @@ sql_update_statement_build (sql_table *table, GList *set, sql_where *where)
 	return retval;
 }
 
+sql_delete_statement *
+sql_delete_statement_build (sql_table *table, sql_where *where)
+{
+  sql_delete_statement *retval;
+
+  retval = memsql_alloc (sizeof *retval);
+  retval->table = table;
+  retval->where = where;
+
+  return retval;
+}
 
 sql_field_item *
 sql_field_build_function(gchar* funcname, GList* funcarglist)

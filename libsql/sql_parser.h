@@ -51,6 +51,13 @@ typedef struct
 	}
 sql_update_statement;
 
+typedef struct
+        {
+	  sql_table *table;
+	  sql_where *where;
+        }
+sql_delete_statement;
+
 typedef enum
 {
    SQL_name,

@@ -223,6 +223,21 @@ sql_display_update(int indent, sql_update_statement *update)
 
 	return 0;}
 
+static int
+sql_display_delete (int indent, sql_delete_statement *delete)
+{
+  output ("table:");
+  sql_display_table (indent + 1, delete->table);
+
+  if (delete->where)
+    {
+      output ("where:");
+      sql_display_where (indent + 1, delete->where);
+    }
+
+  return 0;
+}
+
 int
 sql_display(sql_statement * statement)
    {
@@ -242,7 +257,9 @@ sql_display(sql_statement * statement)
 	case SQL_update:
 		sql_display_update (indent + 1, statement->statement);
 		break;
-
+      case SQL_delete:
+	sql_display_delete (indent + 1, statement->statement);
+	break;
    default:
       fprintf(stderr, "Unknown statement type: %d", statement->type);
       }

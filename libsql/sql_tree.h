@@ -8,6 +8,7 @@ sql_select_statement *sql_select_statement_build(int distinct, GList * fields, G
       GList * order, GList * group);
 sql_insert_statement *sql_insert_statement_build(sql_table * table, GList *fields, GList * values);
 sql_update_statement *sql_update_statement_build(sql_table *table, GList *set, sql_where *where);
+sql_delete_statement *sql_delete_statement_build(sql_table *table, sql_where *where);
 sql_field_item *sql_field_item_build(GList * name);
 sql_field_item *sql_field_item_build_equation(sql_field_item * left, sql_field_item * right, sql_field_operator op);
 sql_field_item *sql_field_item_build_select(sql_select_statement * select);

@@ -22,7 +22,8 @@ char *string_buf_ptr;
 %%
 "select"	{return L_SELECT;}
 "insert"	{return L_INSERT;}
-"update" {return L_UPDATE;}
+"update"        {return L_UPDATE;}
+"delete"        {return L_DELETE;}
 "from"		{return L_FROM;}
 "where"		{return L_WHERE;}
 "order"		{return L_ORDER;}

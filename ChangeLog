@@ -1,3 +1,13 @@
+2003-07-24  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
+	* lexer.l:
+	* parser.y:
+	* sql_display.c:
+	* sql_parser.c:
+	* sql_parser.h:
+	* sql_tree.c:
+	* sql_tree.h: patch from rodrigo to add initial 'delete' support.
+
 2003-07-21  Juergen "George" Sawinski <jsaw@gmx.net>
 
 	* configure.in: added missing LDAP_CFLAGS.

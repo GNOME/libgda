@@ -34,8 +34,9 @@ sql_where *w;
 %token L_NOT L_AND L_OR
 %token L_MINUS L_PLUS L_TIMES L_DIV
 %token L_STRING
+%token L_DELETE
 
-%type <v> select_statement insert_statement update_statement
+%type <v> select_statement insert_statement update_statement delete_statement
 %type <str> L_IDENT opt_table_as L_STRING
 %type <list> fields_list tables_list field_name dotted_name opt_orderby opt_groupby opt_fields_list set_list
 %type <f> field
@@ -53,6 +54,7 @@ sql_where *w;
 statement: select_statement	{sql_result = sql_statement_build (SQL_select, $1);}
 	| insert_statement 	{sql_result = sql_statement_build (SQL_insert, $1);}
 	| update_statement	{sql_result = sql_statement_build (SQL_update, $1);}
+	| delete_statement	{sql_result = sql_statement_build (SQL_delete, $1);}
 	;
 	
 select_statement: L_SELECT opt_distinct fields_list L_FROM tables_list opt_where opt_orderby opt_groupby
@@ -66,6 +68,10 @@ insert_statement: L_INSERT L_INTO table opt_fields_list L_VALUES L_LBRACKET fiel
 update_statement: L_UPDATE table L_SET set_list opt_where
 			{$$ = sql_update_statement_build ($2, $4, $5);}
 			;
+
+delete_statement: L_DELETE L_FROM table opt_where
+			{$$ = sql_delete_statement_build ($3, $4);}
+		;
 
 set_list: set_item					{$$ = g_list_append (NULL, $1);}
 	| set_item L_COMMA set_list	{$$ = g_list_prepend ($3, $1);}

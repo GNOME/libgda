@@ -233,6 +233,16 @@ sql_destroy_update (sql_update_statement *update)
 	return 0;
 }
 
+static int
+sql_destroy_delete (sql_delete_statement *delete)
+{
+  sql_destroy_table (delete->table);
+  sql_destroy_where (delete->where);
+
+  memsql_free (delete);
+
+  return 0;
+}
 
 /**
  * sql_destroy:
@@ -257,10 +267,12 @@ sql_destroy(sql_statement * statement)
       sql_destroy_insert(statement->statement);
       break;
 
-	case SQL_update:
+      case SQL_update:
 		sql_destroy_update (statement->statement);
 		break;
-
+      case SQL_delete:
+	sql_destroy_delete (statement->statement);
+	break;
    default:
       fprintf(stderr, "Unknown statement type: %d\n", statement->type);
       }
@@ -691,6 +703,21 @@ sql_update_stringify (sql_update_statement *update)
 	return result;
 }
 
+static char *
+sql_delete_stringify (sql_delete_statement *delete)
+{
+  char *result;
+  
+  result = memsql_strappend_free (memsql_strdup ("delete from "), sql_table_stringify(delete->table));
+  if (delete->where)
+    {
+      result = memsql_strappend_free (result, memsql_strdup (" where "));
+      result = memsql_strappend_free (result, sql_where_stringify (delete->where));
+    }
+  
+  return result;
+}
+
 /**
  * sql_stringify:
  * 
@@ -723,7 +750,10 @@ sql_stringify(sql_statement * statement)
 		result = sql_update_stringify (statement->statement);
 		break;
 
-   default:
+      case SQL_delete:
+	result = sql_delete_stringify (statement->statement);
+	break;
+      default:
       fprintf(stderr, "Invalid statement type: %d\n", statement->type);
       }
 
