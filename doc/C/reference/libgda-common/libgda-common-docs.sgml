@@ -2,7 +2,11 @@
     <title>GDA Common Library API Reference</title>
     <partintro>
       <para>
-        The GDA common library
+        The GDA common library contains a set of functions which hide the low-level
+        implementation details, apart from offering convenience functions for some
+        tasks. The reason for hiding the low-level implementation details is to
+        allow an easy porting of the whole libgda architecture by only really porting
+        one library, in this case <programname>libgda-common</programname>.
       </para>
     </partintro>
 
