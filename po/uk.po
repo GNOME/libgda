@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2003-02-25 18:06+0200\n"
-"PO-Revision-Date: 2003-02-25 07:39--500\n"
+"POT-Creation-Date: 2003-03-07 17:08+0200\n"
+"PO-Revision-Date: 2003-03-07 08:06--500\n"
 "Last-Translator: Yuriy Syrota <yuri@renome.rovno.ua>\n"
 "Language-Team: Ukrainian <uk@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -205,9 +205,8 @@ msgstr "У рядку з'єднання з відкритою базою дан�
 #: providers/default/gda-default-provider.c:252
 #: providers/default/gda-default-provider.c:267
 #: providers/default/gda-default-provider.c:294
-#, fuzzy
 msgid "Invalid internal handle"
-msgstr "Неправильний XML-вузол"
+msgstr "Неправильний внутрішній логічний номер"
 
 #: providers/default/gda-default-provider.c:333
 msgid "Not Implemented"
@@ -329,15 +328,13 @@ msgstr "Не вказано бази даних"
 #: providers/firebird/gda-firebird-provider.c:447
 #: providers/firebird/gda-firebird-provider.c:485
 #: providers/firebird/gda-firebird-provider.c:539
-#, fuzzy
 msgid "Invalid Firebird handle"
-msgstr "Неправильний XML-вузол"
+msgstr "Неправильний логічний номер Firebird"
 
 #: providers/firebird/gda-firebird-provider.c:453
 #: providers/firebird/gda-firebird-provider.c:491
-#, fuzzy
 msgid "Invalid transaction handle"
-msgstr "Неправильний XML-вузол"
+msgstr "Неправильний логічний номер транзакції"
 
 #: providers/firebird/libmain.c:39
 msgid "Provider for FireBird databases"
@@ -428,9 +425,8 @@ msgid "NO DESCRIPTION"
 msgstr "НЕМАЄ ОПИСУ"
 
 #: providers/ibmdb2/gda-ibmdb2-provider.c:152
-#, fuzzy
 msgid "Could not allocate environment handle.\n"
-msgstr "Не вдалося ініціалізувати Bonobo"
+msgstr "Не вдалось виділити логічний номер середовища.\n"
 
 #. GetInfo is needed for obtaining database name
 #. is needed for tables schema
@@ -442,9 +438,8 @@ msgstr ""
 #: providers/ibmdb2/gda-ibmdb2-provider.c:581
 #: providers/ibmdb2/gda-ibmdb2-provider.c:689
 #: providers/ibmdb2/gda-ibmdb2-provider.c:764
-#, fuzzy
 msgid "Invalid IBM DB2 handle"
-msgstr "Неправильний XML-вузол"
+msgstr "Неправильний логічний номер IBM DB2"
 
 #: providers/ibmdb2/gda-ibmdb2-provider.c:742
 msgid "Function"
@@ -594,9 +589,8 @@ msgstr "Постачальник для баз даних IBM DB2"
 #: providers/ldap/gda-ldap-provider.c:587
 #: providers/ldap/gda-ldap-recordset.c:58
 #: providers/ldap/gda-ldap-recordset.c:176
-#, fuzzy
 msgid "Invalid LDAP handle"
-msgstr "Неправильний XML-вузол"
+msgstr "Неправильний логічний номер LDAP"
 
 #: providers/ldap/gda-ldap-recordset.c:69
 #: providers/mysql/gda-mysql-recordset.c:69
@@ -648,9 +642,8 @@ msgstr "Не вдалось відкрити файл \"%s\""
 #: providers/mdb/gda-mdb-provider.c:342
 #: providers/mdb/gda-mdb-provider.c:690
 #: providers/mdb/gda-mdb-provider.c:726
-#, fuzzy
 msgid "Invalid MDB handle"
-msgstr "Неправильний XML-вузол"
+msgstr "Неправильний логічний номер MDB"
 
 #: providers/mdb/gda-mdb-provider.c:404
 #: providers/mdb/gda-mdb-provider.c:414
@@ -860,64 +853,52 @@ msgid "Provider for ODBC data sources"
 msgstr "Постачальник для джерел даних ODBC"
 
 #: providers/oracle/gda-oracle-provider.c:205
-#, fuzzy
 msgid "Could not initialize Oracle"
-msgstr "Не вдалося ініціалізувати середовище Oracle"
+msgstr "Не вдалось ініціалізувати Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:216
-#, fuzzy
 msgid "Could not initialize the Oracle environment"
-msgstr "Не вдалося ініціалізувати середовище Oracle"
+msgstr "Не вдалось ініціалізувати середовище Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:228
-#, fuzzy
 msgid "Could not allocate the Oracle service handle"
-msgstr "Не вдалося ініціалізувати Bonobo"
+msgstr "Не вдалось виділити логічний номер служби Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:238
-#, fuzzy
 msgid "Could not allocate the Oracle error handle"
-msgstr "Не вдалося ініціалізувати обробника помилок Oracle"
+msgstr "Не вдалось виділити логічний номер помилки Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:250
-#, fuzzy
 msgid "Could not allocate the Oracle server handle"
-msgstr "Не вдалося ініціалізувати Bonobo"
+msgstr "Не вдалось виділити логічний номер сервера Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:263
-#, fuzzy
 msgid "Could not allocate the Oracle session handle"
-msgstr "Не вдалося ініціалізувати обробника помилок Oracle"
+msgstr "Не вдалось виділити логічний номер сеансу Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:293
-#, fuzzy
 msgid "Could not attach to the Oracle server"
-msgstr "Не вдалося ініціалізувати Bonobo"
+msgstr "Не вдалось з'єднатися з сервером Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:309
-#, fuzzy
 msgid "Could not set the Oracle server attribute in the service context"
-msgstr "Не вдалося ініціалізувати Bonobo"
+msgstr "Не вдалось встановити ознаку сервера Oracle в контексті служби"
 
 #: providers/oracle/gda-oracle-provider.c:325
-#, fuzzy
 msgid "Could not set the Oracle username attribute"
-msgstr "Не вдалося ініціалізувати Bonobo"
+msgstr "Не вдалось встановити ознаку назви користувача Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:341
-#, fuzzy
 msgid "Could not set the Oracle password attribute"
-msgstr "Не вдалося ініціювати фабрику копонентів Oracle"
+msgstr "Не вдалось встановити ознаку пароля Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:356
-#, fuzzy
 msgid "Could not begin the Oracle session"
-msgstr "Не вдалося ініціалізувати середовище Oracle"
+msgstr "Не вдалось розпочати сеанс Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:374
-#, fuzzy
 msgid "Could not set the Oracle session attribute in the service context"
-msgstr "Не вдалося ініціалізувати Bonobo"
+msgstr "Не вдалось встановити ознаку сеансу Oracle в контексті служби"
 
 #: providers/oracle/gda-oracle-provider.c:454
 #: providers/oracle/gda-oracle-provider.c:486
@@ -932,29 +913,24 @@ msgstr "Не вдалося ініціалізувати Bonobo"
 #: providers/oracle/gda-oracle-recordset.c:167
 #: providers/oracle/gda-oracle-recordset.c:390
 #: providers/oracle/gda-oracle-recordset.c:591
-#, fuzzy
 msgid "Invalid Oracle handle"
-msgstr "Неправильний XML-вузол"
+msgstr "Неправильний логічний номер Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:497
-#, fuzzy
 msgid "Could not allocate the Oracle statement handle"
-msgstr "Не вдалося ініціалізувати Bonobo"
+msgstr "Не вдалось виділити логічний номер виразу Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:508
-#, fuzzy
 msgid "Could not prepare the Oracle statement"
-msgstr "Не вдалося ініціалізувати середовище Oracle"
+msgstr "Не вдалось підготувати вираз Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:540
-#, fuzzy
 msgid "Could not bind the Oracle statement parameter"
-msgstr "Не вдалося ініціювати фабрику копонентів Oracle"
+msgstr "Не вдалось прив'язати параметр виразу Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:586
-#, fuzzy
 msgid "Could not get the Oracle statement type"
-msgstr "Не вдалося ініціювати фабрику копонентів Oracle"
+msgstr "Не вдалось отримати тип виразу Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:598
 #, fuzzy
@@ -1029,70 +1005,57 @@ msgstr "Не вдалося ініціювати фабрику копонент
 
 #: providers/oracle/gda-oracle-provider.c:1414
 #: providers/oracle/gda-oracle-provider.c:1519
-#, fuzzy
 msgid "Could not describe the Oracle table"
-msgstr "Не вдалося отримати файл з %s"
+msgstr "Не вдалось описати таблицю Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:1429
 #: providers/oracle/gda-oracle-provider.c:1532
-#, fuzzy
 msgid "Could not get the Oracle parameter handle"
-msgstr "Не вдалося ініціалізувати Bonobo"
+msgstr "Не вдалось отримати логічний номер параметра Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:1444
-#, fuzzy
 msgid "Could not get described object type"
-msgstr "Не вдалося ініціювати фабрику копонентів Oracle"
+msgstr "Не вдалось отримати описаний тип об'єкта"
 
 #: providers/oracle/gda-oracle-provider.c:1459
-#, fuzzy
 msgid "Could not get synonym referred-to schema"
-msgstr "Не вдалося ініціалізувати Bonobo"
+msgstr ""
 
 #: providers/oracle/gda-oracle-provider.c:1472
-#, fuzzy
 msgid "Could not get synonym referred-to name"
-msgstr "Не вдалося ініціалізувати середовище Oracle"
+msgstr ""
 
 #: providers/oracle/gda-oracle-provider.c:1485
-#, fuzzy
 msgid "Could not get synonym referred-to dblink"
-msgstr "Не вдалося отримати опис стовпчика"
+msgstr ""
 
 #: providers/oracle/gda-oracle-provider.c:1547
-#, fuzzy
 msgid "Could not get the number of columns in the table"
-msgstr "Не вдалося отримати файл з %s"
+msgstr "Не вдалось отримати кількість стовпчиків у таблиці"
 
 #: providers/oracle/gda-oracle-provider.c:1561
-#, fuzzy
 msgid "Could not get the column list"
-msgstr "Не вдалося отримати файл з %s"
+msgstr "Не вдалось отримати список стовпчиків"
 
 #: providers/oracle/gda-oracle-provider.c:1592
-#, fuzzy
 msgid "Could not get the Oracle column handle"
-msgstr "Не вдалося ініціалізувати обробника помилок Oracle"
+msgstr "Не вдалось отримати логічний номер стовпчика Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:1607
-#, fuzzy
 msgid "Could not get the Oracle field name"
-msgstr "Не вдалося ініціалізувати середовище Oracle"
+msgstr "Не вдалось отримати назву поля Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:1629
-#, fuzzy
 msgid "Could not get the Oracle field data type"
-msgstr "Не вдалося ініціювати фабрику копонентів Oracle"
+msgstr "Не вдалось отримати тип даних поля Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:1649
-#, fuzzy
 msgid "Could not get the Oracle field defined size"
-msgstr "Не вдалося отримати файл з %s"
+msgstr "Не вдалось отримати визначений розмір поля Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:1668
-#, fuzzy
 msgid "Could not get the Oracle field scale"
-msgstr "Не вдалося ініціалізувати Bonobo"
+msgstr "Не вдалось отримати масштаб поля Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:1687
 msgid "Could not get the Oracle field nullable attribute"
@@ -1115,24 +1078,20 @@ msgid "Sequences"
 msgstr "Послідовності"
 
 #: providers/oracle/gda-oracle-recordset.c:72
-#, fuzzy
 msgid "Could not get the Oracle parameter"
-msgstr "Не вдалося ініціалізувати середовище Oracle"
+msgstr "Не вдалось отримати пераметр Oracle"
 
 #: providers/oracle/gda-oracle-recordset.c:82
-#, fuzzy
 msgid "Could not get the parameter defined size"
-msgstr "Не вдалося проаналізувати файл на %s"
+msgstr "Не вдалось отримати визначений розмір параметра"
 
 #: providers/oracle/gda-oracle-recordset.c:95
-#, fuzzy
 msgid "Could not get the parameter data type"
-msgstr "Не вдалося створити компонент типу %s"
+msgstr "Не вдалось отримати тип даних параметра"
 
 #: providers/oracle/gda-oracle-recordset.c:128
-#, fuzzy
 msgid "Could not define by position"
-msgstr "Не вдалося завантажити файл на %s"
+msgstr "Не вдалось визначити за позицією"
 
 #: providers/oracle/gda-oracle-recordset.c:173
 #: providers/postgres/gda-postgres-recordset.c:264
@@ -1140,39 +1099,32 @@ msgid "Column out of range"
 msgstr ""
 
 #: providers/oracle/gda-oracle-recordset.c:185
-#, fuzzy
 msgid "Could not get the Oracle parameter information"
-msgstr "Не вдалося створити компонент з'єднання"
+msgstr "Не вдалось отримати інформацію про параметр Oracle"
 
 #: providers/oracle/gda-oracle-recordset.c:195
-#, fuzzy
 msgid "Could not get the Oracle column name"
-msgstr "Не вдалося отримати файл з %s"
+msgstr "Не вдалось отримати назву стовпчика Oracle"
 
 #: providers/oracle/gda-oracle-recordset.c:210
-#, fuzzy
 msgid "Could not get the Oracle column data type"
-msgstr "Не вдалося ініціювати фабрику копонентів Oracle"
+msgstr "Не вдалось отримати тип даних стовпчика Oracle"
 
 #: providers/oracle/gda-oracle-recordset.c:222
-#, fuzzy
 msgid "Could not get the Oracle column scale"
-msgstr "Не вдалося отримати файл з %s"
+msgstr "Не вдалось отримати масштаб стовпчика Oracle"
 
 #: providers/oracle/gda-oracle-recordset.c:234
-#, fuzzy
 msgid "Could not get the Oracle column nullable attribute"
-msgstr "Не вдалося ініціювати фабрику копонентів Oracle"
+msgstr "Не вдалось отримати ознаку порожності стовпчика Oracle"
 
 #: providers/oracle/gda-oracle-recordset.c:246
-#, fuzzy
 msgid "Could not get the Oracle defined size"
-msgstr "Не вдалося отримати файл з %s"
+msgstr "Не вдалось отримати визначений розмір Oracle"
 
 #: providers/oracle/gda-oracle-recordset.c:355
-#, fuzzy
 msgid "Could not fetch a row"
-msgstr "Не вдалося отримати файл з %s"
+msgstr "Не вдалось отримати запис"
 
 #: providers/oracle/libmain.c:34
 msgid "Provider for Oracle databases"
@@ -1186,7 +1138,7 @@ msgstr "Постачальник для баз даних Oracle"
 #: providers/postgres/gda-postgres-recordset.c:216
 #: providers/postgres/gda-postgres-recordset.c:258
 msgid "Invalid PostgreSQL handle"
-msgstr ""
+msgstr "Неправильний логічний номер PostgreSQL"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/postgres/gda-postgres-provider.c:1183
@@ -1199,14 +1151,12 @@ msgid "Aggregate"
 msgstr "Агрегат"
 
 #: providers/postgres/gda-postgres-provider.c:1303
-#, fuzzy
 msgid "OutType"
-msgstr "Тип"
+msgstr "Вихідний тип"
 
 #: providers/postgres/gda-postgres-provider.c:1304
-#, fuzzy
 msgid "InType"
-msgstr "Тип"
+msgstr "Вхідний тип"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/postgres/gda-postgres-provider.c:1768
@@ -1246,7 +1196,7 @@ msgstr "Неправильний XML-вузол"
 
 #: providers/sqlite/gda-sqlite-provider.c:265
 msgid "Invalid SQLITE handle"
-msgstr ""
+msgstr "Неправильний логічний номер SQLITE"
 
 #: providers/sqlite/gda-sqlite-provider.c:361
 #: providers/sqlite/gda-sqlite-provider.c:376
@@ -1560,9 +1510,8 @@ msgstr "У рядку з'єднання з відкритою базою дан�
 
 #: providers/xbase/gda-xbase-provider.c:261
 #: providers/xbase/gda-xbase-provider.c:379
-#, fuzzy
 msgid "Invalid Xbase handle"
-msgstr "Неправильний XML-вузол"
+msgstr "Неправильний логічний номер XBase"
 
 #: providers/xbase/libmain.c:39
 msgid "Provider for Xbase databases"
