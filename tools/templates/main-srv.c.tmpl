@@ -56,18 +56,10 @@ main (gint argc, gchar *argv[])
   CORBA_ORB         orb;
 
   /* initialize CORBA stuff */
-#if USING_OAF
-  oaf_init(argc, argv);
-  g_set_prgname("gda-<provider-name>-srv");
-#else
-  CORBA_exception_init(&ev);
-  orb = gnome_CORBA_init("gda-<provider-name>-srv", VERSION, &argc, argv,
-			 GNORBA_INIT_SERVER_FUNC, &ev);
-  gda_server_impl_exception(&ev);
-#endif
+  gda_server_init("gda-postgres-srv", VERSION, argc, argv);
 
   /* register the server implementation */
-  server_impl = gda_server_impl_new("gda-<provider-name>", &server_impl_functions);
+  server_impl = gda_server_impl_new("OAFIID:gda-<provider-name>:<uuid>", &server_impl_functions);
   if (server_impl)
     {
       gda_server_impl_start(server_impl);
