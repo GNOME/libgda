@@ -21,6 +21,8 @@
 
 enum
 {
+  REPORTSTREAM_ERROR,
+  REPORTSTREAM_WARNING,
   LAST_SIGNAL
 };
 
@@ -33,7 +35,22 @@ static void gda_reportstream_finalize (GObject *object);
 #endif
 
 static void    gda_reportstream_class_init    (Gda_ReportStreamClass* klass);
-static void    gda_reportstream_init          (Gda_ReportStream* rs);
+static void    gda_reportstream_init          (Gda_ReportStream* object);
+static void    gda_reportstream_real_error    (Gda_ReportStream* object, GList*);
+static void    gda_reportstream_real_warning  (Gda_ReportStream* object, GList*);
+
+static void
+gda_reportstream_real_error (Gda_ReportStream* object, GList* errors)
+{
+  g_print("%s: %d: %s called\n", __FILE__, __LINE__, __PRETTY_FUNCTION__);
+  object->errors_head = g_list_concat(object->errors_head, errors);
+}
+
+static void
+gda_reportstream_real_warning (Gda_ReportStream* object, GList* warnings)
+{
+  g_print("%s: %d: %s called\n", __FILE__, __LINE__, __PRETTY_FUNCTION__);
+}
 
 #ifdef HAVE_GOBJECT
 GType
@@ -100,6 +117,18 @@ gda_reportstream_class_init (Gda_ReportStreamClass* klass)
 {
   GtkObjectClass*   object_class = GTK_OBJECT_CLASS(klass);
   
+  gda_reportstream_signals[REPORTSTREAM_ERROR] = gtk_signal_new("error",
+							    GTK_RUN_FIRST,
+							    object_class->type,
+							    GTK_SIGNAL_OFFSET(Gda_ReportStreamClass, error),
+							    gtk_marshal_NONE__POINTER,
+							    GTK_TYPE_NONE, 1, GTK_TYPE_POINTER);
+  gda_connection_signals[CONNECTION_WARNING] = gtk_signal_new("warning",
+							    GTK_RUN_LAST,
+							    object_class->type,
+							    GTK_SIGNAL_OFFSET(Gda_ConnectionClass, warning),
+							    gtk_marshal_NONE__POINTER,
+							    GTK_TYPE_NONE, 1, GTK_TYPE_POINTER);
   gtk_object_class_add_signals(object_class, gda_reportstream_signals, LAST_SIGNAL);
 }
 #endif
@@ -112,4 +141,47 @@ gda_reportstream_init (Gda_ReportStream *object)
 #endif
 {
 	g_return_if_fail(GDA_REPORTSTREAM_IS_OBJECT(object));
+}
+
+gint
+gda_reportstream_corba_exception (Gda_ReportStream* object, CORBA_Environment* ev)
+{
+  Gda_Error* error;
+  
+  g_return_val_if_fail(ev != 0, -1);
+  
+  switch (ev->_major)
+    {
+    case CORBA_NO_EXCEPTION:
+      return 0;
+    case CORBA_SYSTEM_EXCEPTION:
+      {
+        CORBA_SystemException* sysexc;
+
+        sysexc = CORBA_exception_value(ev);
+        error = gda_error_new();
+        error->source = g_strdup("[CORBA System Exception]");
+        switch(sysexc->minor)
+          {
+          case ex_CORBA_COMM_FAILURE:
+            error->description = g_strdup_printf(_("%s: The server didn't respond."),
+                                                 CORBA_exception_id(ev));
+            break;
+          default:
+            error->description = g_strdup_printf(_("%s: An Error occured in the CORBA system."),
+						 CORBA_exception_id(ev));
+            break;
+          }
+        gda_reportstream_add_single_error(object, error);
+        return -1;
+      }
+    case CORBA_USER_EXCEPTION:
+      error = gda_error_new();
+      error->source = g_strdup("[CORBA User Exception]");
+	  gda_reportstream_add_single_error(object, error);
+      return -1;
+    default:
+      g_error("Unknown CORBA exception for connection");
+    }
+  return 0;
 }
