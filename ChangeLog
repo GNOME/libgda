@@ -1,5 +1,8 @@
 2003-11-28  Laurent Sansonetti <lrz@gnome.org>
 
+	* configure.in, providers/Makefile.am, providers/bdb/*:
+	Added Berkeley-DB provider (experimental).
+
 	* libgda/gda-connection.c (gda_connection_begin_transaction):
 	Fixes a typo in the comment.
 

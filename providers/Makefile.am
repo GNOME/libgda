@@ -1,3 +1,7 @@
+if BDB 
+GDA_BDB_SERVER=bdb
+endif
+
 if IBMDB2
 GDA_IBMDB2_SERVER=ibmdb2
 endif
@@ -51,6 +55,7 @@ GDA_LDAP_SERVER=ldap
 endif
 
 SUBDIRS = \
+	$(GDA_BDB_SERVER) \
 	$(GDA_FREETDS_SERVER) \
 	$(GDA_IBMDB2_SERVER) \
 	$(GDA_FIREBIRD_SERVER) \
