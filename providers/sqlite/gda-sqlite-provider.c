@@ -22,23 +22,30 @@
  */
 
 #include "gda-default.h"
+#include <libgda/gda-row.h>
+#include <libgda/gda-server-recordset.h>
 
 #define PARENT_TYPE GDA_TYPE_SERVER_PROVIDER
 
 #define OBJECT_DATA_DEFAULT_HANDLE "GDA_Default_DefaultHandle"
+#define OBJECT_DATA_DEFAULT_RECORDSET "GDA_Default_DefaultRecordset"
 
 static void gda_default_provider_class_init (GdaDefaultProviderClass *klass);
 static void gda_default_provider_init       (GdaDefaultProvider *provider,
-					   GdaDefaultProviderClass *klass);
+					     GdaDefaultProviderClass *klass);
 static void gda_default_provider_finalize   (GObject *object);
 
 static gboolean gda_default_provider_open_connection (GdaServerProvider *provider,
-						    GdaServerConnection *cnc,
-						    GdaQuarkList *params,
-						    const gchar *username,
-						    const gchar *password);
+						      GdaServerConnection *cnc,
+						      GdaQuarkList *params,
+						      const gchar *username,
+						      const gchar *password);
 static gboolean gda_default_provider_close_connection (GdaServerProvider *provider,
-						     GdaServerConnection *cnc);
+						       GdaServerConnection *cnc);
+static GList *gda_default_provider_execute_command (GdaServerProvider *provider,
+						    GdaServerConnection *cnc,
+						    GdaCommand *cmd,
+						    GdaParameterList *params);
 
 static GObjectClass *parent_class = NULL;
 
@@ -57,13 +64,15 @@ gda_default_provider_class_init (GdaDefaultProviderClass *klass)
 	object_class->finalize = gda_default_provider_finalize;
 	provider_class->open_connection = gda_default_provider_open_connection;
 	provider_class->close_connection = gda_default_provider_close_connection;
+	provider_class->execute_command = gda_default_provider_execute_command;
 	provider_class->begin_transaction = NULL;
 	provider_class->commit_transaction = NULL;
 	provider_class->rollback_transaction = NULL;
 }
 
 static void
-gda_default_provider_init (GdaDefaultProvider *myprv, GdaDefaultProviderClass *klass)
+gda_default_provider_init (GdaDefaultProvider *myprv,
+			   GdaDefaultProviderClass *klass)
 {
 }
 
@@ -107,10 +116,10 @@ gda_default_provider_get_type (void)
 /* open_connection handler for the GdaDefaultProvider class */
 static gboolean
 gda_default_provider_open_connection (GdaServerProvider *provider,
-				    GdaServerConnection *cnc,
-				    GdaQuarkList *params,
-				    const gchar *username,
-				    const gchar *password)
+				      GdaServerConnection *cnc,
+				      GdaQuarkList *params,
+				      const gchar *username,
+				      const gchar *password)
 {
 	const gchar *t_filename = NULL;
 	gchar *errmsg = NULL;
@@ -156,7 +165,8 @@ gda_default_provider_open_connection (GdaServerProvider *provider,
 
 /* close_connection handler for the GdaDefaultProvider class */
 static gboolean
-gda_default_provider_close_connection (GdaServerProvider *provider, GdaServerConnection *cnc)
+gda_default_provider_close_connection (GdaServerProvider *provider,
+				       GdaServerConnection *cnc)
 {
 	sqlite *sqlite;
 	
@@ -173,4 +183,92 @@ gda_default_provider_close_connection (GdaServerProvider *provider, GdaServerCon
 	g_object_set_data (G_OBJECT (cnc), OBJECT_DATA_DEFAULT_HANDLE, NULL);
 
 	return TRUE;
+}
+
+static GdaRow *
+gda_default_provider_fetch_func (GdaServerRecordset *recset, glong row)
+{
+	return NULL;
+}
+
+static GdaRowAttributes *
+gda_default_provider_describe_func (GdaServerRecordset *recset)
+{
+	return NULL;
+}
+
+/* execute_command handler for the GdaDefaultProvider class */
+static GList *
+gda_default_provider_execute_command (GdaServerProvider *provider,
+				      GdaServerConnection *cnc,
+				      GdaCommand *cmd,
+				      GdaParameterList *params)
+{
+	sqlite *sqlite;
+	GList  *list = NULL;
+	gchar  *cmd_string = NULL;
+	gchar  *errmsg = NULL;
+	GdaServerRecordset *recset = NULL;
+	DEFAULT_Recordset *drecset;
+	
+	GdaDefaultProvider *dfprv = (GdaDefaultProvider *) provider;
+
+	g_return_val_if_fail (GDA_IS_DEFAULT_PROVIDER (dfprv), NULL);
+	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), NULL);
+	g_return_val_if_fail (cmd != NULL, NULL);
+
+	sqlite = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_DEFAULT_HANDLE);
+	if (!sqlite)
+		return NULL;
+
+	switch (gda_command_get_command_type (cmd)) {
+		case GDA_COMMAND_TYPE_SQL:
+			cmd_string = g_strdup (gda_command_get_text (cmd));
+			break;
+		case GDA_COMMAND_TYPE_XML:
+			/* FIXME: Implement */
+			return NULL;
+		case GDA_COMMAND_TYPE_PROCEDURE:
+			/* FIXME: Implement */
+			return NULL;
+		case GDA_COMMAND_TYPE_TABLE:
+			cmd_string = g_strdup_printf ("SELECT * FROM %s",
+						      gda_command_get_text (cmd));
+			break;
+		case GDA_COMMAND_TYPE_INVALID:
+			return NULL;
+	}
+
+	drecset = g_new0 (DEFAULT_Recordset, 1);
+	
+	/* Execute the command */
+	if (sqlite_get_table (sqlite, cmd_string, &drecset->data,
+			      &drecset->nrows, &drecset->ncols,
+			      &errmsg) == SQLITE_OK) {
+
+		if (drecset->data) {
+
+			recset = gda_server_recordset_new (cnc,
+							   gda_default_provider_fetch_func,
+							   gda_default_provider_describe_func);
+			g_object_set_data (G_OBJECT (recset),
+					   OBJECT_DATA_DEFAULT_RECORDSET,
+					   drecset);
+			g_list_append (list, recset);
+			
+		}
+		
+	} else {
+		GdaError *error = gda_error_new ();
+		gda_error_set_description (error, errmsg);
+		gda_server_connection_add_error (cnc, error);
+		g_free (drecset);
+	}
+
+	if (cmd_string)
+		g_free (cmd_string);
+	if (errmsg)
+		free (errmsg);
+
+	return list;
 }

@@ -33,4 +33,11 @@
 
 #define GDA_DEFAULT_COMPONENT_FACTORY_ID "OAFIID:GNOME_Database_Default_ComponentFactory"
 #define GDA_DEFAULT_PROVIDER_ID          "OAFIID:GNOME_Database_Default_Provider"
+
+typedef struct {
+	gint ncols;
+	gint nrows;
+	gchar **data;
+} DEFAULT_Recordset;
+
 #endif
