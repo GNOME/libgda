@@ -9,8 +9,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2002-08-10 08:20+0200\n"
-"PO-Revision-Date: 2002-08-10 08:21+0200\n"
+"POT-Creation-Date: 2002-08-21 20:12+0200\n"
+"PO-Revision-Date: 2002-08-21 20:22+0200\n"
 "Last-Translator: GNOME PL Team <translators@gnome.pl>\n"
 "Language-Team: Polish <pl@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -199,6 +199,10 @@ msgstr ""
 "pełną ścieżkę."
 
 #: providers/default/gda-default-provider.c:1
+msgid "Invalid internal handle"
+msgstr "Niepoprawny wewnętrzny uchwyt"
+
+#: providers/default/gda-default-provider.c:1
 msgid "Not Implemented"
 msgstr "Niezaimplementowane"
 
@@ -217,6 +221,7 @@ msgid "Data type"
 msgstr "Typ danych"
 
 #: providers/default/gda-default-provider.c:1
+#: providers/freetds/gda-freetds-provider.c:1
 #: providers/mysql/gda-mysql-provider.c:1
 #: providers/oracle/gda-oracle-provider.c:1
 #: providers/postgres/gda-postgres-provider.c:1
@@ -224,6 +229,7 @@ msgid "Size"
 msgstr "Rozmiar"
 
 #: providers/default/gda-default-provider.c:1
+#: providers/freetds/gda-freetds-provider.c:1
 #: providers/mysql/gda-mysql-provider.c:1
 #: providers/oracle/gda-oracle-provider.c:1
 #: providers/postgres/gda-postgres-provider.c:1
@@ -277,6 +283,120 @@ msgstr "Nie można uzyskać opisu kolumny"
 msgid "GDA default provider, based on the libgda XML format"
 msgstr "Domyślny dostarczyciel GDA, oparty na formacie libgda XML"
 
+#: providers/freetds/gda-freetds-provider.c:1
+msgid ""
+"Connection aborted. You must provide at least a host, username and password "
+"using DSN 'QUERY=;USER=;PASSWORD='."
+msgstr ""
+"Przerwano połączenie. Należy podać co najmniej komputer, użytkownika i hasło "
+"przy użyciu DSN-a \"QUERY=;USER=;PASSWORD=\"."
+
+#: providers/freetds/gda-freetds-provider.c:1
+msgid "Error creating message container."
+msgstr "Błąd przy tworzeniu kontenera komunikatu."
+
+#: providers/freetds/gda-freetds-provider.c:1
+msgid "Error creating error container."
+msgstr "Błąd przy tworzeniu kontenera błędu."
+
+#: providers/freetds/gda-freetds-provider.c:1
+msgid "Establishing connection failed."
+msgstr "Nie można nawiązać połączenia."
+
+#: providers/freetds/gda-freetds-provider.c:1
+msgid "Failed getting connection info."
+msgstr "Błąd przy pobieraniu informacji o połączeniu."
+
+#: providers/freetds/gda-freetds-provider.c:1
+#: providers/oracle/gda-oracle-provider.c:1
+msgid "Procedures"
+msgstr "Procedury"
+
+#. Set it here instead of the SQL query to allow i18n
+#: providers/freetds/gda-freetds-provider.c:1
+#: providers/oracle/gda-oracle-provider.c:1
+#: providers/postgres/gda-postgres-provider.c:1
+msgid "Tables"
+msgstr "Tabele"
+
+#: providers/freetds/gda-freetds-provider.c:1
+#: providers/postgres/gda-postgres-provider.c:1
+msgid "Types"
+msgstr "Typy"
+
+#. Set it here instead of the SQL query to allow i18n
+#: providers/freetds/gda-freetds-provider.c:1
+#: providers/oracle/gda-oracle-provider.c:1
+#: providers/postgres/gda-postgres-provider.c:1 testing/client.c:1
+msgid "Users"
+msgstr "Użytkownicy"
+
+#. Set it here instead of the SQL query to allow i18n
+#: providers/freetds/gda-freetds-provider.c:1
+#: providers/oracle/gda-oracle-provider.c:1
+#: providers/postgres/gda-postgres-provider.c:1 testing/client.c:1
+msgid "Views"
+msgstr "Perspektywy"
+
+#: providers/freetds/gda-freetds-provider.c:1
+msgid "Field Name"
+msgstr "Nazwa pola"
+
+#: providers/freetds/gda-freetds-provider.c:1
+msgid "Data Type"
+msgstr "Typ danych"
+
+#: providers/freetds/gda-freetds-provider.c:1
+msgid "Precision"
+msgstr "Precyzja"
+
+#: providers/freetds/gda-freetds-provider.c:1
+msgid "Identity"
+msgstr "Tożsamość"
+
+#: providers/freetds/gda-freetds-provider.c:1
+msgid "Nullable"
+msgstr "Z pustą"
+
+#: providers/freetds/gda-freetds-provider.c:1
+msgid "Domain"
+msgstr "Dziedzina"
+
+#: providers/freetds/gda-freetds-provider.c:1
+msgid "Printfmt"
+msgstr "Format wyjścia"
+
+#: providers/freetds/gda-freetds-provider.c:1
+#, c-format
+msgid ""
+"Msg %d, Level %d, State %d, Server %s, Line %d\n"
+"%s\n"
+msgstr ""
+"Komunikat %d, Poziom %d, Stan %d, Serwer %s, Wiersz %d\n"
+"%s\n"
+
+#: providers/freetds/gda-freetds-provider.c:1 providers/freetds/utils.c:1
+#: providers/oracle/utils.c:1 providers/postgres/utils.c:1
+msgid "Not available"
+msgstr "Niedostępne"
+
+#: providers/freetds/gda-freetds-recordset.c:1
+msgid "Error processing result rows.\n"
+msgstr "Błąd przy przetwarzaniu wierszy wynikowych.\n"
+
+#: providers/freetds/gda-freetds-recordset.c:1
+msgid "Unexpected freetds return code in tds_process_row_tokens().\n"
+msgstr "Nieoczekiwany kod powrotu freetds w funkcji tds_process_row_tokens.\n"
+
+#: providers/freetds/gda-freetds-recordset.c:1
+msgid "Error processing results.\n"
+msgstr "Błąd przy przetwarzaniu wyników.\n"
+
+#: providers/freetds/gda-freetds-recordset.c:1
+msgid "Unexpected freetds return code in tds_process_result_tokens\n"
+msgstr ""
+"Nieoczekiwany kod powrotu freetds w funkcji tds_process_result_tokens.\n"
+
 #: providers/freetds/libmain.c:1
 msgid "GDA provider for TDS-based databases (using FreeTDS)"
 msgstr ""
@@ -287,10 +407,35 @@ msgstr ""
 msgid "NO DESCRIPTION"
 msgstr "BRAK OPISU"
 
-#: providers/freetds/utils.c:1 providers/oracle/utils.c:1
-#: providers/postgres/utils.c:1
-msgid "Not available"
-msgstr "Niedostępne"
+#: providers/ibmdb2/gda-ibmdb2-provider.c:1
+#: providers/ibmdb2/gda-ibmdb2-provider.c:1
+msgid "Could not allocate environment handle."
+msgstr "Nie można zaalokować uchwytu środowiska."
+
+#: providers/ibmdb2/gda-ibmdb2-provider.c:1
+msgid "Could not set autocommit to off.\n"
+msgstr "Nie można wyłączyć automatycznego zatwierdzania.\n"
+
+#: providers/ibmdb2/gda-ibmdb2-provider.c:1
+msgid "Could not allocate environment handle.\n"
+msgstr "Nie można zaalokować uchwytu środowiska.\n"
+
+#. GetInfo is needed for obtaining database name 
+#. is needed for tables schema
+#: providers/ibmdb2/gda-ibmdb2-provider.c:1
+msgid "SQLGetInfo is unsupported. Hence IBM DB2 Provider will not work.\n"
+msgstr ""
+"Funkcja SQLGetInfo nie jest obsługiwana. Dostarczyciel IBM DB2 nie może "
+"funkcjonować.\n"
+
+#: providers/ibmdb2/gda-ibmdb2-provider.c:1
+msgid "SQLGetFunctions gave unexpected return. Connection terminated.\n"
+msgstr ""
+"Funkcja SQLGetFunctions zwróciła nieoczekiwany wynik. Przerwano połączenie.\n"
+
+#: providers/ibmdb2/libmain.c:1
+msgid "GDA provider for IBMDB2"
+msgstr "Dostarczyciel GDA dla baz danych IBMDB2"
 
 #: providers/mdb/gda-mdb-provider.c:1
 msgid "A database FILENAME must be specified in the connection_string"
@@ -324,6 +469,13 @@ msgstr ""
 
 #: providers/mysql/gda-mysql-provider.c:1
 #: providers/mysql/gda-mysql-provider.c:1
+#: providers/mysql/gda-mysql-recordset.c:1
+#: providers/mysql/gda-mysql-recordset.c:1
+msgid "Invalid MySQL handle"
+msgstr "Niepoprawny uchwyt MySQL-a"
+
+#: providers/mysql/gda-mysql-provider.c:1
+#: providers/mysql/gda-mysql-provider.c:1
 #: providers/mysql/gda-mysql-provider.c:1
 #: providers/mysql/gda-mysql-provider.c:1
 #: providers/mysql/gda-mysql-provider.c:1
@@ -354,12 +506,6 @@ msgstr "Komentarze"
 #: providers/mysql/gda-mysql-provider.c:1
 msgid "GDA type"
 msgstr "Typ GDA"
-
-#: providers/mysql/gda-mysql-provider.c:1
-#: providers/mysql/gda-mysql-recordset.c:1
-#: providers/mysql/gda-mysql-recordset.c:1
-msgid "Invalid MySQL handle"
-msgstr "Niepoprawny uchwyt MySQL-a"
 
 #: providers/mysql/gda-mysql-provider.c:1
 #: providers/mysql/gda-mysql-provider.c:1
@@ -575,18 +721,8 @@ msgstr "Nie można pobrać atrybutu dopuszczania braku wartości pola Oracle'a"
 #. Set it here instead of the SQL query to allow i18n
 #: providers/oracle/gda-oracle-provider.c:1
 #: providers/postgres/gda-postgres-provider.c:1 testing/client.c:1
-msgid "Users"
-msgstr "Użytkownicy"
-
-#. Set it here instead of the SQL query to allow i18n
-#: providers/oracle/gda-oracle-provider.c:1
-#: providers/postgres/gda-postgres-provider.c:1 testing/client.c:1
 msgid "Indexes"
 msgstr "Indeksy"
-
-#: providers/oracle/gda-oracle-provider.c:1
-msgid "Procedures"
-msgstr "Procedury"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/oracle/gda-oracle-provider.c:1
@@ -596,21 +732,9 @@ msgstr "Sekwencje"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/oracle/gda-oracle-provider.c:1
-#: providers/postgres/gda-postgres-provider.c:1
-msgid "Tables"
-msgstr "Tabele"
-
-#. Set it here instead of the SQL query to allow i18n
-#: providers/oracle/gda-oracle-provider.c:1
 #: providers/postgres/gda-postgres-provider.c:1 testing/client.c:1
 msgid "Triggers"
 msgstr "Wyzwalacze"
-
-#. Set it here instead of the SQL query to allow i18n
-#: providers/oracle/gda-oracle-provider.c:1
-#: providers/postgres/gda-postgres-provider.c:1 testing/client.c:1
-msgid "Views"
-msgstr "Perspektywy"
 
 #: providers/oracle/gda-oracle-recordset.c:1
 msgid "Could not get the Oracle parameter"
@@ -670,15 +794,12 @@ msgstr "Dostarczyciel GDA dla baz danych Oracle"
 #: providers/postgres/gda-postgres-provider.c:1
 #: providers/postgres/gda-postgres-provider.c:1
 #: providers/postgres/gda-postgres-provider.c:1
+#: providers/postgres/gda-postgres-provider.c:1
 #: providers/postgres/gda-postgres-recordset.c:1
 #: providers/postgres/gda-postgres-recordset.c:1
 #: providers/postgres/gda-postgres-recordset.c:1
 msgid "Invalid PostgreSQL handle"
 msgstr "Niepoprawny uchwytu PostgreSQL-a"
-
-#: providers/postgres/gda-postgres-provider.c:1
-msgid "Types"
-msgstr "Typy"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/postgres/gda-postgres-provider.c:1 testing/client.c:1
@@ -828,6 +949,18 @@ msgstr "\t\tPerspektywy: %s\n"
 #, c-format
 msgid "\t\tXML queries: %s\n"
 msgstr "\t\tZapytania w XML-u: %s\n"
+
+#. show connection schemas
+#: testing/client.c:1
+#, c-format
+msgid ""
+"\n"
+"\tProvider reports version: %s\n"
+"\n"
+msgstr ""
+"\n"
+"\tWersja zgłaszana przez dostarczyciela: %s\n"
+"\n"
 
 #: testing/client.c:1
 msgid "Stored procedures"
