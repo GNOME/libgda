@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
 "POT-Creation-Date: 2002-04-11 23:03+0300\n"
-"PO-Revision-Date: 2002-04-11 23:01+0200\n"
+"PO-Revision-Date: 2002-04-12 00:08+0200\n"
 "Last-Translator: Yuriy Syrota <yuri@renome.rovno.ua>\n"
 "Language-Team: Ukrainian <uk@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -338,9 +338,8 @@ msgid "Could not parse XML report"
 msgstr "Не вдалося проаналізувати XML-звіт"
 
 #: report/libgda-report/gda-report-client.c:142
-#, fuzzy
 msgid "Could not activate report engine"
-msgstr "Не вдалося активувати об'єкт %s"
+msgstr "Не вдалося активувати механізм звітів"
 
 #: report/libgda-report/gda-report-client.c:183
 #, fuzzy
@@ -408,9 +407,8 @@ msgid "Stored procedures"
 msgstr "Збережені процедури"
 
 #: testing/client.c:91
-#, fuzzy
 msgid "Connection Tables"
-msgstr "Рядок з'єднання"
+msgstr "Таблиці з'єднання"
 
 #: testing/client.c:92
 msgid "Available types"
@@ -433,9 +431,8 @@ msgid "Users"
 msgstr "Користувачі"
 
 #: testing/client.c:97
-#, fuzzy
 msgid "Sequences"
-msgstr "Посилання"
+msgstr "Послідовності"
 
 #: testing/client.c:98
 msgid "Triggers"
