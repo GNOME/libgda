@@ -22,7 +22,9 @@
 #include <bonobo-activation/bonobo-activation.h>
 #include <bonobo-config/bonobo-config-database.h>
 #include <bonobo/bonobo-moniker-util.h>
+#include <bonobo/bonobo-listener.h>
 #include <bonobo/bonobo-property-bag-client.h>
+#include <bonobo/bonobo-event-source.h>
 #include "gda-config.h"
 #include "gda-corba.h"
 
@@ -268,6 +270,89 @@ gda_config_free_list (GList * list)
 		gchar *str = (gchar *) list->data;
 		list = g_list_remove (list, (gpointer) str);
 		g_free ((gpointer) str);
+	}
+}
+
+typedef struct {
+	GdaConfigListenerFunc func;
+	gpointer user_data;
+	glong listener_id;
+} ConfigListenerCbData;
+
+static GList *config_listeners = NULL;
+
+static void
+config_changed_cb (BonoboListener *listener,
+		   char *event_name,
+		   CORBA_any *any,
+		   CORBA_Environment *ev,
+		   gpointer user_data)
+{
+	ConfigListenerCbData *cb_data = (ConfigListenerCbData *) user_data;
+
+	g_return_if_fail (cb_data != NULL);
+	g_return_if_fail (cb_data->func != NULL);
+
+	cb_data->func (cb_data->user_data);
+}
+
+/**
+ * gda_config_add_listener
+ */
+glong
+gda_config_add_listener (GdaConfigListenerFunc func, gpointer user_data)
+{
+	ConfigListenerCbData *cb_data;
+	glong listener_id;
+	CORBA_Environment ev;
+
+	g_return_val_if_fail (func != NULL, -1);
+
+	cb_data = g_new0 (ConfigListenerCbData, 1);
+	cb_data->func = func;
+	cb_data->user_data = user_data;
+
+	CORBA_exception_init (&ev);
+	cb_data->listener_id = bonobo_event_source_client_add_listener (
+		get_conf_engine (), config_changed_cb, NULL, &ev, cb_data);
+
+	if (BONOBO_EX (&ev)) {
+		g_free (cb_data);
+		CORBA_exception_free (&ev);
+		return -1;
+	}
+
+	CORBA_exception_free (&ev);
+
+	config_listeners = g_list_append (config_listeners, cb_data);
+
+	return cb_data->listener_id;
+}
+
+/**
+ * gda_config_remove_listener
+ */
+void
+gda_config_remove_listener (glong listener_id)
+{
+	GList *node;
+
+	for (node = g_list_first (config_listeners); node; node = g_list_next (node)) {
+		ConfigListenerCbData *cb_data = (ConfigListenerCbData *) node->data;
+
+		if (cb_data && cb_data->listener_id == listener_id) {
+			CORBA_Environment ev;
+
+			CORBA_exception_init (&ev);
+			bonobo_event_source_client_remove_listener (
+				get_conf_engine (), cb_data->listener_id, &ev);
+			CORBA_exception_free (&ev);
+
+			config_listeners = g_list_remove (config_listeners, cb_data);
+			g_free (cb_data);
+
+			break;
+		}
 	}
 }
 

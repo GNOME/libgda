@@ -52,6 +52,11 @@ GList   *gda_config_list_sections (const gchar * path);
 GList   *gda_config_list_keys (const gchar * path);
 void     gda_config_free_list (GList * list);
 
+typedef void (* GdaConfigListenerFunc) (gpointer user_data);
+
+glong    gda_config_add_listener (GdaConfigListenerFunc func, gpointer user_data);
+void     gda_config_remove_listener (glong listener_id);
+
 /*
  * Providers
  */
