@@ -34,26 +34,33 @@ GdaError *gda_msql_make_error(int sock) {
   }
   gda_error_set_source(error,"gda-mSQL");
   gda_error_set_sqlstate(error,"Not available");
+  return error;
 }
 
 /*-------------------------------------------------------------------------*/
 
-GdaValueType gda_msql_type_to_gda(int msql_type) {
-  int msql_mapping[9][2] = {
-    {INT_TYPE,GDA_VALUE_TYPE_INTEGER},
-    {CHAR_TYPE,GDA_VALUE_TYPE_STRING},
-    {REAL_TYPE,GDA_VALUE_TYPE_DOUBLE},
-    {TEXT_TYPE,GDA_VALUE_TYPE_STRING},
-    {DATE_TYPE,GDA_VALUE_TYPE_DATE},
-    {UINT_TYPE,GDA_VALUE_TYPE_INTEGER},
-    {MONEY_TYPE,GDA_VALUE_TYPE_DOUBLE},
-    {TIME_TYPE,GDA_VALUE_TYPE_TIME},
-    {8,GDA_VALUE_TYPE_UNKNOWN}
-  };
-  int t_idx;
-
-  t_idx=((msql_type>0) && (msql_type<=LAST_REAL_TYPE)) ? msql_type-1 : 8;
-  return msql_mapping[t_idx][1];
+GdaValueType gda_msql_type_to_gda(int msql_type) { 
+  switch (msql_type) {
+    case INT_TYPE :   return GDA_VALUE_TYPE_INTEGER;
+    case CHAR_TYPE:   return GDA_VALUE_TYPE_STRING;
+    case REAL_TYPE:   return GDA_VALUE_TYPE_DOUBLE;
+    case TEXT_TYPE:   return GDA_VALUE_TYPE_STRING;
+    case DATE_TYPE:   return GDA_VALUE_TYPE_DATE;
+    case UINT_TYPE:   return GDA_VALUE_TYPE_UINTEGER;
+    case MONEY_TYPE:  return GDA_VALUE_TYPE_SINGLE;
+    case TIME_TYPE:   return GDA_VALUE_TYPE_TIME;
+#ifdef HAVE_MSQL3
+    case IPV4_TYPE:   return GDA_VALUE_TYPE_STRING;
+    case INT64_TYPE:  return GDA_VALUE_TYPE_BIGINT;
+    case UINT64_TYPE: return GDA_VALUE_TYPE_BIGUINT;
+    case INT8_TYPE:   return GDA_VALUE_TYPE_TINYINT;
+    case INT16_TYPE:  return GDA_VALUE_TYPE_SMALLINT;
+    case UINT8_TYPE:  return GDA_VALUE_TYPE_TINYUINT;
+    case UINT16_TYPE: return GDA_VALUE_TYPE_SMALLUINT;  
+#endif
+    default:;
+  }
+  return GDA_VALUE_TYPE_UNKNOWN;
 }
 
 /*-------------------------------------------------------------------------*/
@@ -68,10 +75,14 @@ gchar *gda_msql_value_to_sql_string(GdaValue *value) {
   switch (value->type) {
     case GDA_VALUE_TYPE_DOUBLE:
     case GDA_VALUE_TYPE_BIGINT:
+    case GDA_VALUE_TYPE_BIGUINT:
     case GDA_VALUE_TYPE_NUMERIC:
     case GDA_VALUE_TYPE_SINGLE:
     case GDA_VALUE_TYPE_SMALLINT:
+    case GDA_VALUE_TYPE_SMALLUINT:
     case GDA_VALUE_TYPE_TINYINT:
+    case GDA_VALUE_TYPE_TINYUINT:
+    case GDA_VALUE_TYPE_UINTEGER:
     case GDA_VALUE_TYPE_INTEGER: ret=g_strdup(val_str); break;
     default: ret=g_strdup_printf("\"%s\"",val_str);
   }

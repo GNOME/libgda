@@ -51,8 +51,8 @@ struct _GdaMsqlProviderClass {
 typedef struct _GdaMsqlProvider GdaMsqlProvider;
 typedef struct _GdaMsqlProviderClass GdaMsqlProviderClass;
 
-GType gda_msql_provider_get_type();
-GdaServerProvider *gda_msql_provider_new();
+GType gda_msql_provider_get_type(void);
+GdaServerProvider *gda_msql_provider_new(void);
 
 G_END_DECLS
 

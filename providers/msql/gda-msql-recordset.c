@@ -19,23 +19,6 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-
-/* TODO
- * ====
- *
- * gda_msql_recordset_describe_column()
- * ------------------------------------
- *
- * currently we assume scale 2 for the money type columns. it is to check
- * wether that information is reduntant, as mSQL doesn't store a scale in-
- * formations in the meta-data
- *
- * mSQL doesnt support auto-incrementting column specifications, therefore
- * we always set the auto_inc attribute of the column to FALSE. But mSQL 
- * supports sequences, therefore it should be considered to set the 
- * auto_increment attribute on columns that a sequence has been defined for.
- */
-
 #include <libgda/gda-intl.h>
 #include <stdlib.h>
 #include <string.h>
@@ -83,15 +66,40 @@ static GdaRow *fetch_row(GdaMsqlRecordset *rs,gulong rownum) {
     GdaValue *field;
     gchar    *s_val;
 
-    field=gda_row_get_value(row,i);
+    field=(GdaValue*)gda_row_get_value(row,i);
     s_val=msql_row[i];
     switch (msql_fields->field.type) {
-      case INT_TYPE:
-      case UINT_TYPE: gda_value_set_integer(field,(s_val) ? atoi(s_val) : 0);
+      case INT_TYPE:  gda_value_set_integer(field, (s_val) ? atol(s_val) : 0);
                       break;
-      case REAL_TYPE:
-      case MONEY_TYPE: gda_value_set_double(field,(s_val) ? atof(s_val) : 0.0);
+      case UINT_TYPE: gda_value_set_uinteger(field,
+                                            (s_val) ? (guint)atol(s_val) : 0);
+                      break;
+      case REAL_TYPE:  gda_value_set_double(field,(s_val) ? atof(s_val) : 0.0);
                        break;
+      case MONEY_TYPE :gda_value_set_single(field,(s_val) ? atof(s_val) : 0.0f);
+                       break;
+#ifdef HAVE_MSQL3
+      case IPV4_TYPE:  gda_value_set_string(field,(s_val) ? s_val : "");
+                       break;
+      case INT64_TYPE: gda_value_set_bigint(field,
+					   (s_val) ? (gint64)atof(s_val) : 0);
+                       break;
+      case UINT64_TYPE: gda_value_set_biguint(field,
+	  			    (s_val) ? (guint64)atof(s_val) : 0);
+                        break;
+      case INT16_TYPE:  gda_value_set_smallint(field,
+                                    (s_val) ? (gshort)atol(s_val) : 0);
+                        break;
+      case UINT16_TYPE: gda_value_set_smalluint(field,
+                                    (s_val) ? (gushort)atol(s_val) : 0);
+                        break;
+      case INT8_TYPE:   gda_value_set_tinyint(field,
+                                    (s_val) ? (gchar)atol(s_val) : 0);
+                        break;
+      case UINT8_TYPE:  gda_value_set_tinyuint(field,
+                                    (s_val) ? (guchar)atol(s_val) : 0);
+                        break;
+#endif
       default:
         gda_value_set_string(field,(s_val) ? s_val : "");
     }  
@@ -117,7 +125,7 @@ static gint gda_msql_recordset_numcols(GdaDataModel *model) {
   return msqlNumFields(rs->res);
 }
 
-#warning read TODO hints in gda-msql-recordset.c
+
 static GdaFieldAttributes 
 *gda_msql_recordset_describe_column(GdaDataModel *model,gint col) {
   gint                field_count;
@@ -316,7 +324,7 @@ static void gda_msql_recordset_finalize(GObject *object) {
   }
 }
 
-GType gda_msql_recordset_get_type() {
+GType gda_msql_recordset_get_type(void) {
   static GType type=0;
 
   if (!type) {

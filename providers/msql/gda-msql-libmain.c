@@ -24,20 +24,20 @@
 
 /*----[ Forwards ]----------------------------------------------------------*/
 
-const gchar       *plugin_get_name();
-const gchar       *plugin_get_description();
-GList             *plugin_get_connection_params();
-GdaServerProvider *plugin_create_provider();
+const gchar       *plugin_get_name(void);
+const gchar       *plugin_get_description(void);
+GList             *plugin_get_connection_params(void);
+GdaServerProvider *plugin_create_provider(void);
 
 /*--------------------------------------------------------------------------*/
 
-const gchar *plugin_get_name() {
+const gchar *plugin_get_name(void) {
   return "mSQL";
 }
 
 /*--------------------------------------------------------------------------*/
 
-const gchar *plugin_get_description() {
+const gchar *plugin_get_description(void) {
   return _("Provider for Hughes Technologies mSQL databases");
 }
 
@@ -53,6 +53,6 @@ GList *plugin_get_connection_params(void) {
 
 /*--------------------------------------------------------------------------*/
 
-GdaServerProvider *plugin_create_provider() {
+GdaServerProvider *plugin_create_provider(void) {
   return gda_msql_provider_new();
 }

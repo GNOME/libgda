@@ -25,7 +25,7 @@
 #include <string.h>
 #include "gda-msql.h"
 #include "gda-msql-recordset.h"
-#include "gda-msql-provider.h"
+/*#include "gda-msql-provider.h"*/
 
 #define PARENT_TYPE GDA_TYPE_SERVER_PROVIDER
 #define OBJECT_DATA_MSQL_HANDLE "GDA_mSQL_mSQLHandle"
@@ -116,7 +116,7 @@ gda_msql_provider_finalize(GObject *obj) {
   parent_class->finalize(obj);
 }
 
-GType gda_msql_provider_get_type() {
+GType gda_msql_provider_get_type(void) {
   static GType type=0;
   
   if (!type) {
@@ -133,7 +133,7 @@ GType gda_msql_provider_get_type() {
   return type;
 }
 
-GdaServerProvider *gda_msql_provider_new() {
+GdaServerProvider *gda_msql_provider_new(void) {
   GdaMsqlProvider *p;
 
   p=g_object_new(gda_msql_provider_get_type(),NULL);
@@ -173,8 +173,8 @@ static gboolean gda_msql_provider_open_connection(GdaServerProvider *p1,
   rc=msqlSelectDB(sock,(char*)_db);
   if (rc<0) {
     error=gda_msql_make_error(rc);
+    if (cnc) gda_connection_add_error(cnc,error);
     msqlClose(sock);
-    gda_connection_add_error(cnc,error);
     return FALSE;
   }
   sock_ptr=g_new0(gint,1);
@@ -184,7 +184,6 @@ static gboolean gda_msql_provider_open_connection(GdaServerProvider *p1,
   return TRUE;
 }
 
-#warning check wether sock_ptr needs to be released (leak)
 static gboolean gda_msql_provider_close_connection(GdaServerProvider *p1,
                                                    GdaConnection     *cnc) {
   gint *sock_ptr;
@@ -195,6 +194,10 @@ static gboolean gda_msql_provider_close_connection(GdaServerProvider *p1,
   sock_ptr=g_object_get_data(G_OBJECT(cnc),OBJECT_DATA_MSQL_HANDLE);
   if (!sock_ptr) return FALSE;
   msqlClose((int)*sock_ptr);
+  if (sock_ptr) {
+    free(sock_ptr);
+    sock_ptr=NULL;
+  }
   g_object_set_data(G_OBJECT(cnc),OBJECT_DATA_MSQL_HANDLE,NULL);
   return TRUE;
 }
@@ -218,7 +221,6 @@ static const gchar
 
 static GList *process_sql_commands(GList *rl,GdaConnection *cnc,
                                    const gchar *sql) {
-  m_result  *msql;
   gchar    **arr;
   gint      *sock;
   GdaConnectionOptions options;
@@ -246,8 +248,9 @@ static GList *process_sql_commands(GList *rl,GdaConnection *cnc,
       res=msqlStoreResult();
       rs=gda_msql_recordset_new(cnc,res,*sock);
       if (GDA_IS_MSQL_RECORDSET(rs)) {
-        gda_data_model_set_command_text(rs,arr[n]);
-        gda_data_model_set_command_type(rs,GDA_COMMAND_TYPE_SQL);
+        gda_data_model_set_command_text((GdaDataModel*)rs,arr[n]);
+        gda_data_model_set_command_type((GdaDataModel*)rs,
+                                        GDA_COMMAND_TYPE_SQL);
         rl=g_list_append(rl,rs);
       }
       ++n;
@@ -293,7 +296,7 @@ gda_msql_provider_change_database(GdaServerProvider *p,GdaConnection *cnc,
   dbname=g_object_get_data(G_OBJECT(cnc),OBJECT_DATA_MSQL_DBNAME);
   if (!dbname) return FALSE;
   if (!name) return FALSE;
-  rc=msqlSelectDB(*sock,name);
+  rc=msqlSelectDB(*sock,(char*)name);
   if (rc<0) {
     gda_connection_add_error(cnc,gda_msql_make_error(rc));
     return FALSE;
@@ -356,7 +359,7 @@ gda_msql_provider_execute_command(GdaServerProvider *p,
     }
     g_free(str);
     break;
-  default:
+  default:;
   }
   return rl;
 }
@@ -411,12 +414,13 @@ gda_msql_provider_supports(GdaServerProvider *p,
   case GDA_CONNECTION_FEATURE_AGGREGATES: return FALSE;
   case GDA_CONNECTION_FEATURE_SQL: return TRUE;
   case GDA_CONNECTION_FEATURE_TRANSACTIONS: return FALSE;
+  default:;
   }
   return FALSE;
 }
 
-static GdaDataModel *get_msql_databases(GdaConnection *cnc,GdaParameterList *params) {
-  GList *rl;
+static GdaDataModel 
+*get_msql_databases(GdaConnection *cnc,GdaParameterList *params) {
   gint  *sock_ptr;
   GdaMsqlRecordset *rs;
   m_result *res;
@@ -429,11 +433,10 @@ static GdaDataModel *get_msql_databases(GdaConnection *cnc,GdaParameterList *par
   return (rs) ? GDA_DATA_MODEL(rs) : NULL;
 }
 
-static GdaDataModel *get_msql_tables(GdaConnection *cnc,GdaParameterList *params) {
-  GList *rl;
+static GdaDataModel 
+*get_msql_tables(GdaConnection *cnc,GdaParameterList *params) {
   gint  *sock;
   m_row  row;
-  GdaMsqlRecordset *rs;
   GdaDataModelArray *model;
   m_result *res;
   
@@ -441,7 +444,7 @@ static GdaDataModel *get_msql_tables(GdaConnection *cnc,GdaParameterList *params
   sock=g_object_get_data(G_OBJECT(cnc),OBJECT_DATA_MSQL_HANDLE);
   if (!sock) return NULL;
   res=msqlListTables(*sock);
-  model=gda_data_model_array_new(4);
+  model=(GdaDataModelArray*)gda_data_model_array_new(4);
   gda_data_model_set_column_title(GDA_DATA_MODEL(model),0,_("Name"));
   gda_data_model_set_column_title(GDA_DATA_MODEL(model),1,_("Owner"));
   gda_data_model_set_column_title(GDA_DATA_MODEL(model),2,_("Comments"));
@@ -500,7 +503,6 @@ static GdaDataModel *get_msql_types(GdaConnection *cnc,GdaParameterList *params)
 
 static GList 
 *field_row_to_value_list(m_fdata *res) {
-  gchar **arr;
   GList  *value_list = NULL;
 
   g_return_val_if_fail(res!=NULL,NULL);
@@ -522,7 +524,7 @@ static GList
 static GdaDataModel 
 *get_table_fields(GdaConnection *cnc,GdaParameterList *params) {
   const gchar       *table_name;
-  gint              *sock,i,r;
+  gint              *sock,r;
   GdaParameter      *par;
   GdaDataModelArray *rs;
   m_fdata           *fields;
@@ -561,7 +563,7 @@ static GdaDataModel
     _("Table name is needed but none specified in parameter list"));
     return NULL;
   }
-  res=msqlListFields(*sock,table_name);
+  res=msqlListFields(*sock,(char*)table_name);
   if (!res) {
     gda_connection_add_error(cnc,gda_msql_make_error(*sock));
     return NULL;
@@ -607,6 +609,7 @@ static GdaDataModel
     return get_msql_tables(cnc,params);
   case GDA_CONNECTION_SCHEMA_TYPES:
     return get_msql_types(cnc,params);
+  default:;
   }
   return NULL;
 }
