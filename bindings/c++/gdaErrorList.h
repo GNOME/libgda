@@ -23,11 +23,11 @@
 
 namespace gda {
 
-class gdaErrorList {
+class ErrorList {
 	public:
-		gdaErrorList(CORBA_Environment* ev);
-		gdaErrorList(GList *errorList);
-		~gdaErrorList();
+		ErrorList(CORBA_Environment* ev);
+		ErrorList(GList *errorList);
+		~ErrorList();
 		
 		GList *getCStruct();
 		void setCStruct(GList *errorList);

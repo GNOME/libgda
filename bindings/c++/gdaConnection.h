@@ -24,7 +24,7 @@
 
 namespace gda {
 
-class gdaConnection {
+class Connection {
 	public:
 		Connection();
 		Connection(GdaConnection *a);

@@ -88,7 +88,7 @@ gint Connection::rollbackTransaction() {
 	return gda_connection_rollback_transaction(_gda_connection);
 }
 
-Recordset* gdaConnection::execute(gchar* txt, gulong* reccount, gulong flags) {
+Recordset* Connection::execute(gchar* txt, gulong* reccount, gulong flags) {
 	GdaRecordset *b = NULL;
 	Recordset *a = NULL;
 	b = gda_connection_execute(_gda_connection,txt,reccount,flags);

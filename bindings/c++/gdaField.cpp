@@ -47,12 +47,12 @@ bool Field::isNull() {
 }
 
 Value *Field::realValue() {
-	Value *v = new gdaValue(_gda_field->real_value);
+	Value *v = new Value(_gda_field->real_value);
 	return v;
 }
 
 Value *Field::origValue() {
-	Value *v = new gdaValue(_gda_field->original_value);
+	Value *v = new Value(_gda_field->original_value);
 	return v;
 }
 
