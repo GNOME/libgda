@@ -9,8 +9,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2002-04-05 23:32+0200\n"
-"PO-Revision-Date: 2002-04-05 23:33+0200\n"
+"POT-Creation-Date: 2002-04-26 01:28+0200\n"
+"PO-Revision-Date: 2002-04-26 01:29+0200\n"
 "Last-Translator: GNOME PL Team <translators@gnome.pl>\n"
 "Language-Team: Polish <pl@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -22,25 +22,9 @@ msgstr ""
 msgid "Data source %s not found in configuration"
 msgstr "Nie odnaleziono źródła danych \"%s\" w konfiguracji"
 
-#: libgda/gda-client.c:1
-#, c-format
-msgid "Could not activate object %s"
-msgstr "Nie można uaktywnić obiektu %s"
-
-# c-format
-#: libgda/gda-client.c:1
-msgid "Could not create connection component"
-msgstr "Nie można stworzyć obiektu połączenia"
-
-#: libgda/gda-config.c:1
-msgid "Could not query CORBA components"
-msgstr "Zapytanie o komponenty Corby nie powiodło się"
-
-#: libgda/gda-config.c:1
-msgid "Could not query CORBA providers"
-msgstr "Zapytanie o dostarczycieli corbowych nie powiodło się"
-
+#. gda_server_recordset_model_set_field_defined_size (recset, 0, 256);
 #: libgda/gda-config.c:1 providers/default/gda-default-provider.c:1
+#: providers/default/gda-default-provider.c:1
 #: providers/default/gda-default-provider.c:1
 #: providers/mysql/gda-mysql-provider.c:1
 msgid "Name"
@@ -62,47 +46,9 @@ msgstr "Opis"
 msgid "Username"
 msgstr "Nazwa użytkownika"
 
-#: libgda/gda-error.c:1
-#, c-format
-msgid "%s: An Error occured in the CORBA system."
-msgstr "%s: Wystąpił wyjątek Corby."
-
-#: libgda/gda-error.c:1
-msgid "Unknown CORBA exception for connection"
-msgstr "Nieznany wyjątek Corby przy połączeniu"
-
 #: libgda/gda-init.c:1
 msgid "Attempt to initialize an already initialized client"
 msgstr "Próba zainicjowania już zainicjowanego klienta"
-
-#: libgda/gda-init.c:1
-msgid "Could not initialize Bonobo"
-msgstr "Nie można zainicjować Bonobo"
-
-#: libgda/gda-server.c:1
-#, c-format
-msgid "Don't know how to create components with IID %s"
-msgstr "Brak informacji na temat stworzenia komponentu o IID %s"
-
-#: libgda/gda-server.c:1
-#, c-format
-msgid "Could not create component of type %s"
-msgstr "Nie można stworzyć komponentu typu %s"
-
-#: libgda/gda-server-connection.c:1
-msgid "Could not duplicate client object. Client won't get notifications"
-msgstr ""
-"Nie można zduplikować obiektu klienta. Klient nie będzie otrzymywał "
-"powiadomień."
-
-#: libgda/gda-server-connection.c:1
-#, c-format
-msgid "Could not notify client about action %d"
-msgstr "Nie można powiadomić klienta o operacji %d"
-
-#: libgda/gda-server-recordset.c:1
-msgid "No implementation for the fetch() method found"
-msgstr "Nie odnaleziono implementacji metody fetch()"
 
 #: libgda/gda-table.c:1
 #, c-format
@@ -222,12 +168,6 @@ msgstr "Nie odnaleziono tabeli %s"
 msgid "Could not get description for column"
 msgstr "Nie można uzyskać opisu kolumny"
 
-#: providers/default/gda-default-provider.c:1
-#: providers/mysql/gda-mysql-provider.c:1
-#: providers/postgres/gda-postgres-provider.c:1
-msgid "Type"
-msgstr "Typ"
-
 #: providers/default/GNOME_Database_Provider_Default.server.in.h:1
 msgid "Default component factory"
 msgstr "Generator domyślnych komponentów"
@@ -235,10 +175,6 @@ msgstr "Generator domyślnych komponentów"
 #: providers/default/GNOME_Database_Provider_Default.server.in.h:1
 msgid "GDA Default Datasource Access"
 msgstr "Domyślny dostęp do źródła danych GDA"
-
-#: providers/default/main.c:1
-msgid "Could not initiate Default component factory"
-msgstr "Nie można zainicjować generatora domyślnych komponentów"
 
 #: providers/mysql/gda-mysql-provider.c:1
 msgid ""
@@ -254,10 +190,22 @@ msgstr ""
 msgid "Invalid MYSQL handle"
 msgstr "Niepoprawny uchwyt MySQL-a"
 
+#. gda_server_recordset_model_set_field_defined_size (recset, 0, 32);
+#: providers/mysql/gda-mysql-provider.c:1
+#: providers/postgres/gda-postgres-provider.c:1
+msgid "Type"
+msgstr "Typ"
+
+#: providers/mysql/gda-mysql-provider.c:1
 #: providers/mysql/gda-mysql-recordset.c:1
 #: providers/mysql/gda-mysql-recordset.c:1
 msgid "Invalid MySQL handle"
 msgstr "Niepoprawny uchwyt MySQL-a"
+
+#: providers/mysql/gda-mysql-provider.c:1
+#: providers/mysql/gda-mysql-provider.c:1
+msgid "You need to specify the name of the table"
+msgstr "Należy podać nazwę tabeli"
 
 #: providers/mysql/gda-mysql-recordset.c:1
 #: providers/postgres/gda-postgres-recordset.c:1
@@ -273,10 +221,6 @@ msgstr "Dostęp do źródła danych GDA - MySQL"
 msgid "MySQL component factory"
 msgstr "Generator komponentów MySQL-a"
 
-#: providers/mysql/main.c:1
-msgid "Could not initiate MySQL component factory"
-msgstr "Nie można zainicjować generatora komponentów MySQL-a"
-
 #: providers/odbc/GNOME_Database_Provider_ODBC.server.in.h:1
 msgid "GDA Datasource Access for ODBC"
 msgstr "Dostęp do źródła danych GDA - ODBC"
@@ -284,10 +228,6 @@ msgstr "Dostęp do źródła danych GDA - ODBC"
 #: providers/odbc/GNOME_Database_Provider_ODBC.server.in.h:1
 msgid "ODBC component factory"
 msgstr "Generator komponenetów ODBC"
-
-#: providers/odbc/main.c:1
-msgid "Could not initiate ODBC component factory"
-msgstr "Nie można zainicjować generatora komponenetów ODBC"
 
 #: providers/oracle/gda-oracle-connection.c:1
 msgid "Could not initialize Oracle environment"
@@ -336,10 +276,6 @@ msgstr "Dostęp do źródła danych GDA - Postgres"
 msgid "Postgres component factory"
 msgstr "Generator komponenetów PostgreSQL-a"
 
-#: providers/postgres/main.c:1
-msgid "Could not initiate PostgreSQL component factory"
-msgstr "Nie można zainicjować generatora komponenetów PostgreSQL-a"
-
 #: providers/postgres/utils.c:1
 msgid "NO DESCRIPTION"
 msgstr "BRA OPISU"
@@ -364,10 +300,6 @@ msgstr "Dostęp do źródła danych GDA SQLite"
 #: providers/sqlite/GNOME_Database_Provider_SQLite.server.in.h:1
 msgid "SQLite component factory"
 msgstr "Generator komponenetów SQLite"
-
-#: providers/sqlite/main.c:1
-msgid "Could not initiate Sqlite component factory"
-msgstr "Nie można zainicjować generatora komponenetów SQLite"
 
 #: providers/sybase/GNOME_Database_Provider_Sybase.server.in.h:1
 msgid "GDA Datasource Access for Sybase"
@@ -538,11 +470,6 @@ msgstr " Dostarczyciel = %s\n"
 #, c-format
 msgid "\tlocation = %s\n"
 msgstr "\tpołożenie = %s\n"
-
-#: testing/config.c:1
-#, c-format
-msgid "\ttype = %s\n"
-msgstr "\ttyp = %s\n"
 
 #: testing/config.c:1
 #, c-format
