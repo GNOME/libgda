@@ -1,3 +1,23 @@
+2003-01-19  Santi Camps <santi@gnome-db.org>
+
+	* libgda/report/testing/gda-report-test.c: some new tests added
+	* libgda/report/libgda-report/Makefile.am: new sources added
+	* libgda/report/libgda-report/gda-report.h: new sources added
+	* libgda/report/libgda-report/gda-report-item-report.c:
+	  Set and get pageheaders and pagefooters 
+	  
+	* libgda/report/libgda-report/gda-report-item-report.c:
+	* libgda/report/libgda-report/gda-report-item-reportheader.c:
+	* libgda/report/libgda-report/gda-report-item-reportfooter.c:
+	* libgda/report/libgda-report/gda-report-types.c: 
+	  All constants for each item name moved to gda-report-types.c
+	
+	* libgda/report/libgda-report/gda-report-item-pageheader.[ch]:
+	  All attributes implemented
+	* libgda/report/libgda-report/gda-report-item-pagefooter.[ch]:
+	  All attributes implemented
+
+
 2003-01-19  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
 	* libgda/gda-client.c: use g_hash_table_foreach_remove instead of

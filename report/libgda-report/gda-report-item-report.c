@@ -24,9 +24,12 @@
 #include <libgda/gda-log.h>
 #include <libgda/gda-util.h>
 #include <libgda-report/gda-report-valid.h>
+#include <libgda-report/gda-report-item-reportheader.h>
+#include <libgda-report/gda-report-item-reportfooter.h>
+#include <libgda-report/gda-report-item-pageheader.h>
+#include <libgda-report/gda-report-item-pagefooter.h>
 #include <libgda-report/gda-report-item-report.h>
 
-#define ITEM_REPORT_NAME  "report"
 
 static void gda_report_item_report_class_init (GdaReportItemReportClass *
 					       klass);
@@ -136,8 +139,7 @@ gda_report_item_report_set_reportheader (GdaReportItem *report,
 	xmlNodePtr cur;
 
 	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT (report), FALSE);
-	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORTHEADER (header),
-			      FALSE);
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORTHEADER (header), FALSE);
 
 	cur = report->priv->node->children;
 	if (cur == NULL)
@@ -149,16 +151,14 @@ gda_report_item_report_set_reportheader (GdaReportItem *report,
 		if (!xmlNodeIsText (cur))
 		{
 			/* reportheader already exists, we will replace it */
-			if (g_ascii_strcasecmp (cur->name, "reportheader") == 0)
-				return gda_report_item_replace
-					(gda_report_item_new_from_dom (cur), header);
+			if (g_ascii_strcasecmp (cur->name, ITEM_REPORTHEADER_NAME) == 0)
+				return gda_report_item_replace (gda_report_item_new_from_dom (cur), header);
 
 			/* We want reportheader to be the next element to query, if it exists */
 			/* there is no reportheader, and query is previus to current node */
-			if ((g_ascii_strcasecmp (cur->name, "reportheader") != 0)
-			    && (g_ascii_strcasecmp (cur->name, "query") != 0))
-				return gda_report_item_add_previous
-					(gda_report_item_new_from_dom (cur), header);
+			if ((g_ascii_strcasecmp (cur->name, ITEM_REPORTHEADER_NAME) != 0)
+			    && (g_ascii_strcasecmp (cur->name, ITEM_QUERY_NAME) != 0))
+				return gda_report_item_add_previous (gda_report_item_new_from_dom (cur), header);
 		}
 		cur = cur->next;
 	}
@@ -176,7 +176,7 @@ gda_report_item_report_get_reportheader (GdaReportItem * item)
 
 	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT (item), NULL);
 	node = item->priv->node->children;
-	while ((node != NULL) && (g_ascii_strcasecmp (node->name, "reportheader") != 0))
+	while ((node != NULL) && (g_ascii_strcasecmp (node->name, ITEM_REPORTHEADER_NAME) != 0))
 		node = node->next;
 
 	if (node == NULL)
@@ -190,7 +190,7 @@ gda_report_item_report_get_reportheader (GdaReportItem * item)
 
 
 /*
- * gda_report_item_report_set_reporthfooter
+ * gda_report_item_report_set_reportfooter
  */
 gboolean
 gda_report_item_report_set_reportfooter (GdaReportItem *report,
@@ -206,7 +206,7 @@ gda_report_item_report_set_reportfooter (GdaReportItem *report,
 	{
 		while (xmlNodeIsText (cur)) cur = cur->prev;
 
-		if (g_ascii_strcasecmp (cur->name, "reportfooter") == 0)
+		if (g_ascii_strcasecmp (cur->name, ITEM_REPORTFOOTER_NAME) == 0)
 			/* reportfooter already exists, we will replace it */
 			return gda_report_item_replace (gda_report_item_new_from_dom (cur), footer);
 		else
@@ -233,7 +233,7 @@ gda_report_item_report_get_reportfooter (GdaReportItem *item)
 	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT (item), NULL);
 	
 	node = item->priv->node->last;
-	while ((node != NULL) && (g_ascii_strcasecmp (node->name, "reportfooter") != 0))
+	while ((node != NULL) && (g_ascii_strcasecmp (node->name, ITEM_REPORTFOOTER_NAME) != 0))
 		node = node->prev;
 
 	if (node == NULL)
@@ -243,6 +243,428 @@ gda_report_item_report_get_reportfooter (GdaReportItem *item)
 	}
 	else
 		return gda_report_item_reportfooter_new_from_dom (node);
+}
+
+
+/*
+ * gda_report_item_report_get_pageheaderlist_length
+ */
+gint 
+gda_report_item_report_get_pageheaderlist_length (GdaReportItem *report)
+{
+	gint 	   counter;
+	xmlNodePtr node;
+
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT (report), -1);
+	
+	counter = 0;
+	node    = report->priv->node->children;
+	
+	while (node != NULL) 
+	{
+		if (g_ascii_strcasecmp (node->name, ITEM_PAGEHEADERLIST_NAME) == 0) 
+		{
+			node = node->children;
+			while (node != NULL) 
+			{
+				if (g_ascii_strcasecmp (node->name, ITEM_PAGEHEADER_NAME) == 0) 
+					counter++;
+					
+				node = node->next;
+			}
+			return counter;
+		}
+		node = node->next;
+	}
+	return counter;
+}
+
+
+/**
+ * gda_report_item_report_set_nth_pageheader
+ * @report: the report where to set the pageheader
+ * @pageheader: the pageheader to be assigned
+ * @position: the position in the pageheaderlist. first position = 0
+ *
+ * Sets pageheader in the nth position of the pageheaderlist of report
+ * If position is greater than the last pageheader, the last position 
+ * will be assumed.  If a pageheader exists in position, it will 
+ * be replaced
+ *
+ * Returns: TRUE if all is ok, FALSE otherwise
+ **/
+gboolean 
+gda_report_item_report_set_nth_pageheader (GdaReportItem *report,
+					   GdaReportItem *pageheader,
+					   gint position)
+{
+	gint 	   counter;
+	xmlNodePtr node;
+	xmlNodePtr list;
+
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT (report), FALSE);
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM_PAGEHEADER (pageheader), FALSE);
+	g_return_val_if_fail (position >= 0, FALSE);
+	
+	counter = -1;
+	node    = report->priv->node->children;
+	
+	while (node != NULL) 
+	{
+		if (!xmlNodeIsText (node))
+		{		
+			if (g_ascii_strcasecmp (node->name, ITEM_PAGEHEADERLIST_NAME) == 0) 
+			{
+				list = node;
+				node = list->children;
+				while (node != NULL) 
+				{
+					if (g_ascii_strcasecmp (node->name, ITEM_PAGEHEADER_NAME) == 0)
+						counter++;
+				
+					/* There is a pageheader in current position, 
+					   it will be replaced for the new one */
+					if (counter == position) 
+						return gda_report_item_replace (
+							gda_report_item_new_from_dom (node), pageheader);
+					
+					node = node->next;
+				}
+				/* The new pageheader will be the last one */
+				return gda_report_item_add_child (gda_report_item_new_from_dom (list), pageheader);
+			}
+			
+			if ((g_ascii_strcasecmp (node->name, ITEM_PAGEHEADERLIST_NAME) != 0) &&
+			    (g_ascii_strcasecmp (node->name, ITEM_REPORTHEADER_NAME) != 0) &&
+			    (g_ascii_strcasecmp (node->name, ITEM_QUERY_NAME) != 0))
+			{
+				/* There is no pageheaderlist, we will create it here */
+				node = xmlAddPrevSibling (node, xmlNewNode (NULL, ITEM_PAGEHEADERLIST_NAME));
+				return gda_report_item_add_child (gda_report_item_new_from_dom (node), pageheader);
+			}			
+		}
+		node = node->next;
+	}
+	return FALSE;
+}
+
+
+/**
+ * gda_report_item_report_add_nth_pageheader
+ * @report: the report where to set the pageheader
+ * @pageheader: the pageheader to be assigned
+ * @position: the position in the pageheaderlist. first position = 0
+ *
+ * Sets pageheader in the nth position of the pageheaderlist of report
+ * If position is greater than the last pageheader, the last position 
+ * will be assumed.  If a pageheader exists in position, it will 
+ * be moved to next position
+ *
+ * Returns: TRUE if all is ok, FALSE otherwise
+ **/
+gboolean 
+gda_report_item_report_add_nth_pageheader (GdaReportItem *report,
+					   GdaReportItem *pageheader,
+					   gint position)
+{
+	gint 	   counter;
+	xmlNodePtr node;
+	xmlNodePtr list;
+
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT (report), FALSE);
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM_PAGEHEADER (pageheader), FALSE);
+	g_return_val_if_fail (position >= 0, FALSE);
+	
+	counter = -1;
+	node    = report->priv->node->children;
+	
+	while (node != NULL) 
+	{
+		if (!xmlNodeIsText (node))
+		{		
+			if (g_ascii_strcasecmp (node->name, ITEM_PAGEHEADERLIST_NAME) == 0) 
+			{
+				list = node;
+				node = list->children;
+				while (node != NULL) 
+				{
+					if (g_ascii_strcasecmp (node->name, ITEM_PAGEHEADER_NAME) == 0)
+						counter++;
+				
+					/* There is a pageheader in current position, 
+					   the new one will be inserted here */
+					if (counter == position)  
+						return gda_report_item_add_previous (
+							gda_report_item_new_from_dom (node), pageheader);
+					
+					node = node->next;
+				}
+				
+				/* The new pageheader will be the last one */
+				return gda_report_item_add_child (gda_report_item_new_from_dom (list), pageheader);
+			}
+			
+			if ((g_ascii_strcasecmp (node->name, ITEM_PAGEHEADERLIST_NAME) != 0) &&
+			    (g_ascii_strcasecmp (node->name, ITEM_REPORTHEADER_NAME) != 0) &&
+			    (g_ascii_strcasecmp (node->name, ITEM_QUERY_NAME) != 0))
+			{
+				/* There is no pageheaderlist, we will create it here */
+				node = xmlAddPrevSibling (node, xmlNewNode (NULL, ITEM_PAGEHEADERLIST_NAME));
+				return gda_report_item_add_child (gda_report_item_new_from_dom (node), pageheader);
+			}			
+		}
+		node = node->next;
+	}
+	return FALSE;
+}
+
+
+
+/*
+ * gda_report_item_report_get_nth_pageheader
+ */
+GdaReportItem *
+gda_report_item_report_get_nth_pageheader (GdaReportItem *report,
+					   gint position)
+{
+	gint 	   counter;
+	xmlNodePtr node;
+
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT (report), NULL);
+	g_return_val_if_fail (position >= 0, NULL);
+	
+	counter = -1;
+	node    = report->priv->node->children;
+	
+	while (node != NULL) 
+	{
+		if (g_ascii_strcasecmp (node->name, ITEM_PAGEHEADERLIST_NAME) == 0) 
+		{
+			node = node->children;
+			while (node != NULL) 
+			{
+				if (g_ascii_strcasecmp (node->name, ITEM_PAGEHEADER_NAME) == 0) 
+					counter++;
+				
+				if (counter == position) 
+					return gda_report_item_pageheader_new_from_dom (node);					
+				node = node->next;
+			}
+			return NULL;
+		}
+		node = node->next;
+	}
+	return NULL;
+}
+
+
+/*
+ * gda_report_item_report_get_pagefooterlist_length
+ */
+gint 
+gda_report_item_report_get_pagefooterlist_length (GdaReportItem *report)
+{
+	gint 	   counter;
+	xmlNodePtr node;
+
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT (report), -1);
+	
+	counter = 0;
+	node    = report->priv->node->last;
+	
+	while (node != NULL) 
+	{
+		if (g_ascii_strcasecmp (node->name, ITEM_PAGEFOOTERLIST_NAME) == 0) 
+		{
+			node = node->children;
+			while (node != NULL) 
+			{
+				if (g_ascii_strcasecmp (node->name, ITEM_PAGEFOOTER_NAME) == 0) 
+					counter++;
+					
+				node = node->next;
+			}
+			return counter;
+		}
+		node = node->prev;
+	}
+	return counter;
+}
+
+
+/**
+ * gda_report_item_report_set_nth_pagefooter
+ * @report: the report where to set the pagefooter
+ * @pagefooter: the pagefooter to be assigned
+ * @position: the position in the pagefooterlist. first position = 0
+ *
+ * Sets pagefooter in the nth position of the pagefooterlist of report
+ * If position is greater than the last pagefooter, the last position 
+ * will be assumed.  If a pagefooter exists in position, it will 
+ * be replaced
+ *
+ * Returns: TRUE if all is ok, FALSE otherwise
+ **/
+gboolean 
+gda_report_item_report_set_nth_pagefooter (GdaReportItem *report,
+					   GdaReportItem *pagefooter,
+					   gint position)
+{
+	gint 	   counter;
+	xmlNodePtr node;
+	xmlNodePtr list;
+
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT (report), FALSE);
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM_PAGEFOOTER (pagefooter), FALSE);
+	g_return_val_if_fail (position >= 0, FALSE);
+	
+	counter = -1;
+	node    = report->priv->node->last;
+	
+	while (node != NULL) 
+	{
+		if (!xmlNodeIsText (node))
+		{		
+			if (g_ascii_strcasecmp (node->name, ITEM_PAGEFOOTERLIST_NAME) == 0) 
+			{
+				list = node;
+				node = list->children;
+				while (node != NULL) 
+				{
+					if (g_ascii_strcasecmp (node->name, ITEM_PAGEFOOTER_NAME) == 0)
+						counter++;
+				
+					/* There is a pagefooter in current position, 
+					   it will be replaced for the new one */
+					if (counter == position) 
+						return gda_report_item_replace (
+							gda_report_item_new_from_dom (node), pagefooter);
+					
+					node = node->next;
+				}
+				/* The new pagefooter will be the last one */
+				return gda_report_item_add_child (gda_report_item_new_from_dom (list), pagefooter);
+			}
+			
+			if ((g_ascii_strcasecmp (node->name, ITEM_PAGEFOOTERLIST_NAME) != 0) &&
+			    (g_ascii_strcasecmp (node->name, ITEM_REPORTFOOTER_NAME) != 0))
+			{
+				/* There is no pagefooterlist, we will create it here */
+				node = xmlAddPrevSibling (node, xmlNewNode (NULL, ITEM_PAGEFOOTERLIST_NAME));
+				return gda_report_item_add_child (gda_report_item_new_from_dom (node), pagefooter);
+			}			
+		}
+		node = node->prev;
+	}
+	return FALSE;
+}
+
+
+/**
+ * gda_report_item_report_add_nth_pagefooter
+ * @report: the report where to set the pagefooter
+ * @pagefooter: the pagefooter to be assigned
+ * @position: the position in the pagefooterlist. first position = 0
+ *
+ * Sets pagefooter in the nth position of the pagefooterlist of report
+ * If position is greater than the last pagefooter, the last position 
+ * will be assumed.  If a pagefooter exists in position, it will 
+ * be moved to next position
+ *
+ * Returns: TRUE if all is ok, FALSE otherwise
+ **/
+gboolean 
+gda_report_item_report_add_nth_pagefooter (GdaReportItem *report,
+					   GdaReportItem *pagefooter,
+					   gint position)
+{
+	gint 	   counter;
+	xmlNodePtr node;
+	xmlNodePtr list;
+
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT (report), FALSE);
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM_PAGEFOOTER (pagefooter), FALSE);
+	g_return_val_if_fail (position >= 0, FALSE);
+	
+	counter = -1;
+	node    = report->priv->node->last;
+	
+	while (node != NULL) 
+	{
+		if (!xmlNodeIsText (node))
+		{		
+			if (g_ascii_strcasecmp (node->name, ITEM_PAGEFOOTERLIST_NAME) == 0) 
+			{
+				list = node;
+				node = list->children;
+				while (node != NULL) 
+				{
+					if (g_ascii_strcasecmp (node->name, ITEM_PAGEFOOTER_NAME) == 0)
+						counter++;
+				
+					/* There is a pagefooter in current position, 
+					   the new one will be inserted here */
+					if (counter == position)  
+						return gda_report_item_add_previous (
+							gda_report_item_new_from_dom (node), pagefooter);
+					
+					node = node->next;
+				}
+				
+				/* The new pagefooter will be the last one */
+				return gda_report_item_add_child (gda_report_item_new_from_dom (list), pagefooter);
+			}
+			
+			if ((g_ascii_strcasecmp (node->name, ITEM_PAGEFOOTERLIST_NAME) != 0) &&
+			    (g_ascii_strcasecmp (node->name, ITEM_REPORTFOOTER_NAME) != 0))
+			{
+				/* There is no pagefooterlist, we will create it here */
+				node = xmlAddPrevSibling (node, xmlNewNode (NULL, ITEM_PAGEFOOTERLIST_NAME));
+				return gda_report_item_add_child (gda_report_item_new_from_dom (node), pagefooter);
+			}			
+		}
+		node = node->prev;
+	}
+	return FALSE;
+}
+
+
+
+/*
+ * gda_report_item_report_get_nth_pagefooter
+ */
+GdaReportItem *
+gda_report_item_report_get_nth_pagefooter (GdaReportItem *report,
+					   gint position)
+{
+	gint 	   counter;
+	xmlNodePtr node;
+
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT (report), NULL);
+	g_return_val_if_fail (position >= 0, NULL);
+	
+	counter = -1;
+	node    = report->priv->node->last;
+	
+	while (node != NULL) 
+	{
+		if (g_ascii_strcasecmp (node->name, ITEM_PAGEFOOTERLIST_NAME) == 0) 
+		{
+			node = node->children;
+			while (node != NULL) 
+			{
+				if (g_ascii_strcasecmp (node->name, ITEM_PAGEFOOTER_NAME) == 0) 
+					counter++;
+				
+				if (counter == position) 
+					return gda_report_item_pagefooter_new_from_dom (node);					
+				node = node->next;
+			}
+			return NULL;
+		}
+		node = node->prev;
+	}
+	return NULL;
 }
 
 

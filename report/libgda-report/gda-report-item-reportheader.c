@@ -26,8 +26,6 @@
 #include <libgda-report/gda-report-valid.h>
 #include <libgda-report/gda-report-item-reportheader.h>
 
-#define ITEM_REPORTHEADER_NAME	"reportheader"
-
 static void gda_report_item_reportheader_class_init (GdaReportItemReportHeaderClass *klass);
 static void gda_report_item_reportheader_init       (GdaReportItemReportHeader *valid,
 					             GdaReportItemReportHeaderClass *klass);

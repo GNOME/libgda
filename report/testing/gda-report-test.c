@@ -30,6 +30,7 @@ void test_3 (void);
 void test_4 (void);
 void test_5 (void);
 void test_6 (void);
+void test_7 (void);
 
 
 int
@@ -44,6 +45,7 @@ main (int argc, char **argv)
 		g_print ("	4 -> Working with color attributes\n");
 		g_print ("	5 -> Setting a reportheader attribute\n");
 		g_print ("	6 -> Setting new reportheader and reportfooter\n");
+		g_print ("	7 -> Working with pageheaderlist\n");
 		return 0;
 	}
 	
@@ -54,6 +56,7 @@ main (int argc, char **argv)
 	if (g_ascii_strncasecmp(argv[1], "4", 1) == 0) test_4();
 	if (g_ascii_strncasecmp(argv[1], "5", 1) == 0) test_5();
 	if (g_ascii_strncasecmp(argv[1], "6", 1) == 0) test_6();
+	if (g_ascii_strncasecmp(argv[1], "7", 1) == 0) test_7();
 
 	return 0;
 }
@@ -288,5 +291,70 @@ test_6 (void)
 
 	g_print ("TEST: Saving results to test-6-result.xml\n");
 	gda_report_document_save_file ("test-6-result.xml", document);
+}
+
+
+
+void 
+test_7 (void) 
+{
+	GdaReportValid *validator;
+	GdaReportDocument  *document;
+	GdaReportItem *report;
+	GdaReportItem *pageheader;
+	GdaReportItem *pagefooter;
+	GdaReportColor *color;
+	GdaReportNumber *width;
+	GdaReportNumber *height;
+ 
+	validator = gda_report_valid_load ();
+	document = gda_report_document_new_from_uri ("valid-example.xml", validator);
+
+	report = gda_report_document_get_root_item (document);
+	if (report == NULL) 
+	{
+		g_print ("TEST: Can't get root node \n");
+		return;
+	}
+	
+	pageheader = gda_report_item_pageheader_new (validator);
+	if (pageheader == NULL)
+	{
+		g_print ("TEST: Can't create a pageheader \n");
+		return;
+	}
+	
+	g_print ("TEST: Setting pageheader bgcolor to 127 127 127\n"); 
+	color = gda_report_types_color_new (127, 127, 127);
+	if (!gda_report_item_pageheader_set_bgcolor (pageheader, color)) 
+		g_print ("TEST: Error during set\n");
+	
+	g_print ("TEST: We have %i pageheaders\n", 
+		gda_report_item_report_get_pageheaderlist_length(report));
+	
+	g_print ("TEST: Setting new pageheader to report\n"); 
+	if (!gda_report_item_report_add_nth_pageheader (report, pageheader, 0))
+		g_print ("TEST: Error during set\n");
+
+	g_print ("TEST: We have %i pageheaders\n", 
+		gda_report_item_report_get_pageheaderlist_length(report));
+	
+	g_print ("TEST: Setting pageheader linewidth to 1.75\n"); 
+	pageheader = gda_report_item_report_get_nth_pageheader (report, 1);
+	width = gda_report_types_number_new (1.75);
+	if (!gda_report_item_pageheader_set_linewidth (pageheader, width)) 
+		g_print ("TEST: Error during set\n");	
+
+	g_print ("TEST: We have %i pagefooters\n", 
+		gda_report_item_report_get_pagefooterlist_length(report));
+	
+	g_print ("TEST: Setting pagefooter height to 16\n"); 
+	pagefooter = gda_report_item_report_get_nth_pagefooter (report, 0);
+	height = gda_report_types_number_new (16);
+	if (!gda_report_item_pagefooter_set_height (pagefooter, height)) 
+		g_print ("TEST: Error during set\n");	
+
+	g_print ("TEST: Saving results to test-7-result.xml\n");
+	gda_report_document_save_file ("test-7-result.xml", document);
 }
 

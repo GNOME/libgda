@@ -17,6 +17,8 @@ gda_report_headers = \
 	gda-report-item-report.h \
 	gda-report-item-reportheader.h \
 	gda-report-item-reportfooter.h \
+	gda-report-item-pageheader.h \
+	gda-report-item-pagefooter.h \
 	gda-report.h
 
 libgda_report_2_la_SOURCES =	\
@@ -27,7 +29,10 @@ libgda_report_2_la_SOURCES =	\
 	gda-report-item.c	\
 	gda-report-item-report.c \
 	gda-report-item-reportheader.c \
-	gda-report-item-reportfooter.c
+	gda-report-item-reportfooter.c  \
+	gda-report-item-pageheader.c \
+	gda-report-item-pagefooter.c 
+	
 
 libgda_report_2_la_LDFLAGS = -version-info $(GDA_CURRENT):$(GDA_REVISION):$(GDA_AGE)
 libgda_report_2_la_LIBADD = $(LIBGDA_LIBS) $(top_builddir)/libgda/libgda-2.la

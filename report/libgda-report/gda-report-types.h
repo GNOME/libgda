@@ -24,6 +24,27 @@
 #if !defined(__gda_report_types_h__)
 #  define __gda_report_types_h__
 
+#define ITEM_REPORT_NAME  		"report"
+#define ITEM_QUERY_NAME  		"query"
+#define ITEM_REPORTHEADER_NAME		"reportheader"
+#define ITEM_REPORTFOOTER_NAME  	"reportfooter"
+#define ITEM_PAGEHEADERLIST_NAME	"pageheaderlist"
+#define ITEM_PAGEHEADER_NAME		"pageheader"
+#define ITEM_PAGEFOOTERLIST_NAME	"pagefooterlist"
+#define ITEM_PAGEFOOTER_NAME		"pagefooter"
+#define ITEM_DATAAHEADER_NAME		"dataheader"
+#define ITEM_DATAFOOTER_NAME		"datafooter"
+#define ITEM_DATALIST_NAME		"datalist"
+#define ITEM_DETAIL_NAME		"detail"
+#define ITEM_GROUPHEADER_NAME		"groupheader"
+#define ITEM_GROUPFOOTER_NAME		"groupfooter"
+#define ITEM_PICTURE_NAME		"picture"
+#define ITEM_LINE_NAME			"line"
+#define ITEM_LABEL_NAME			"label"
+#define ITEM_REPFIELD_NAME		"repfield"
+#define ITEM_SPECIAL_NAME		"special"
+
+
 typedef struct _GdaReportColor GdaReportColor;
 typedef struct _GdaReportColorPrivate GdaReportColorPrivate;
 typedef struct _GdaReportNumber GdaReportNumber;

@@ -26,9 +26,6 @@
 #include <glib-object.h>
 #include <libgda-report/gda-report-item.h>
 #include <libgda-report/gda-report-types.h>
-#include <libgda-report/gda-report-item-reportheader.h>
-#include <libgda-report/gda-report-item-reportfooter.h>
-
 
 G_BEGIN_DECLS
 
@@ -65,6 +62,32 @@ gboolean gda_report_item_report_set_reportfooter (GdaReportItem *report,
 						  GdaReportItem *footer);
 
 GdaReportItem *gda_report_item_report_get_reportfooter (GdaReportItem *item);
+
+gint gda_report_item_report_get_pageheaderlist_length (GdaReportItem *report);
+
+gboolean gda_report_item_report_set_nth_pageheader (GdaReportItem *report,
+						    GdaReportItem *pageheader,
+						    gint position);
+						    
+gboolean gda_report_item_report_add_nth_pageheader (GdaReportItem *report,
+						    GdaReportItem *pageheader,
+						    gint position);
+
+GdaReportItem *gda_report_item_report_get_nth_pageheader (GdaReportItem *report,
+							  gint position);
+
+gint gda_report_item_report_get_pagefooterlist_length (GdaReportItem *report);
+
+gboolean gda_report_item_report_set_nth_pagefooter (GdaReportItem *report,
+						    GdaReportItem *pagefooter,
+						    gint position);
+						    
+gboolean gda_report_item_report_add_nth_pagefooter (GdaReportItem *report,
+						    GdaReportItem *pagefooter,
+						    gint position);
+
+GdaReportItem *gda_report_item_report_get_nth_pagefooter (GdaReportItem *report,
+							  gint position);
 
 gboolean gda_report_item_report_set_reportstyle (GdaReportItem *item, 
 						const gchar* value);

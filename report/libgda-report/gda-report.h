@@ -31,5 +31,7 @@
 #include <libgda-report/gda-report-item-report.h>
 #include <libgda-report/gda-report-item-reportheader.h>
 #include <libgda-report/gda-report-item-reportfooter.h>
+#include <libgda-report/gda-report-item-pageheader.h>
+#include <libgda-report/gda-report-item-pagefooter.h>
 
 #endif

@@ -27,8 +27,6 @@
 #include <libgda-report/gda-report-valid.h>
 #include <libgda-report/gda-report-item-reportfooter.h>
 
-#define ITEM_REPORTFOOTER_NAME	"reportfooter"
-
 static void gda_report_item_reportfooter_class_init (GdaReportItemReportFooterClass *klass);
 static void gda_report_item_reportfooter_init       (GdaReportItemReportFooter *valid,
 					             GdaReportItemReportFooterClass *klass);
