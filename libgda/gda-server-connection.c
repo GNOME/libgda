@@ -132,9 +132,10 @@ impl_Connection_close (PortableServer_Servant servant,
 		return TRUE;
 
 	result = gda_server_provider_close_connection (cnc->priv->provider, cnc);
-	if (!result)
+	if (!result) {
 		gda_error_list_to_exception (cnc->priv->errors, ev);
-	gda_server_connection_free_error_list (cnc);
+		gda_server_connection_free_error_list (cnc);
+	}
 
 	return result;
 }
@@ -190,16 +191,16 @@ impl_Connection_beginTransaction (PortableServer_Servant servant,
 	bonobo_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), FALSE, ev);
 
 	result = gda_server_provider_begin_transaction (cnc->priv->provider, cnc, trans_id);
-	if (!result)
+	if (!result) {
 		gda_error_list_to_exception (cnc->priv->errors, ev);
+		gda_server_connection_free_error_list (cnc);
+	}
 	else {
 		gda_server_connection_notify_action (
 			cnc,
 			GNOME_Database_ACTION_TRANSACTION_STARTED,
 			NULL);
 	}
-
-	gda_server_connection_free_error_list (cnc);
 
 	return result;
 }
@@ -215,15 +216,16 @@ impl_Connection_commitTransaction (PortableServer_Servant servant,
 	bonobo_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), FALSE, ev);
 
 	result = gda_server_provider_commit_transaction (cnc->priv->provider, cnc, trans_id);
-	if (!result)
+	if (!result) {
 		gda_error_list_to_exception (cnc->priv->errors, ev);
+		gda_server_connection_free_error_list (cnc);
+	}
 	else {
 		gda_server_connection_notify_action (
 			cnc,
 			GNOME_Database_ACTION_TRANSACTION_FINISHED,
 			NULL);
 	}
-	gda_server_connection_free_error_list (cnc);
 
 	return result;
 }
@@ -239,15 +241,16 @@ impl_Connection_rollbackTransaction (PortableServer_Servant servant,
 	bonobo_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), FALSE, ev);
 
 	result = gda_server_provider_rollback_transaction (cnc->priv->provider, cnc, trans_id);
-	if (!result)
+	if (!result) {
 		gda_error_list_to_exception (cnc->priv->errors, ev);
+		gda_server_connection_free_error_list (cnc);
+	}
 	else {
 		gda_server_connection_notify_action (
 			cnc,
 			GNOME_Database_ACTION_TRANSACTION_ABORTED,
 			NULL);
 	}
-	gda_server_connection_free_error_list (cnc);
 
 	return result;
 }
@@ -285,6 +288,8 @@ impl_Connection_getSchema (PortableServer_Servant servant,
 	if (!GDA_IS_SERVER_RECORDSET (recset)) {
 		if (cnc->priv->errors != NULL) {
 			gda_error_list_to_exception (cnc->priv->errors, ev);
+			gda_server_connection_free_error_list (cnc);
+
 			return CORBA_OBJECT_NIL;
 		}
 

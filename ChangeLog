@@ -1,3 +1,15 @@
+2002-03-25  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* providers/mysql/gda-mysql-provider.c (get_table_fields): implemented
+	SCHEMA_FIELDS schema.
+
+	* libgda/gda-server-connection.c (impl_Connection_getSchema): clean
+	up error list after sending it to clients via the CORBA_Environment.
+	(impl_Connection_close): ditto.
+	(impl_Connection_beginTransaction): ditto.
+	(impl_Connection_commitTransaction): ditto.
+	(impl_Connection_rollbackTransaction): ditto.
+	
 2002-03-25  Wang Jian  <lark@linux.net.cn>
 
 	* configure.in: Added "zh_CN" to ALL_LINGUAS.
