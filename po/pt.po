@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.4.1\n"
-"POT-Creation-Date: 2001-10-13 06:19-0400\n"
+"POT-Creation-Date: 2001-10-10 23:26+0200\n"
 "PO-Revision-Date: 2001-10-14 02:54+0000\n"
 "Last-Translator: Duarte Loreto <happyguy_pt@hotmail.com>\n"
 "Language-Team: Portuguese <none@none.org>\n"
@@ -145,7 +145,8 @@ msgstr "Ligação a ser fechada"
 
 #: lib/gda-server/gda-server-connection.c:407
 msgid "This connection is being closed, so all listeners are released"
-msgstr "Esta ligação está a ser fechada, pelo que todos os listeners estão libertos"
+msgstr ""
+"Esta ligação está a ser fechada, pelo que todos os listeners estão libertos"
 
 #: lib/gda-server/gda-server-error.c:41
 msgid "Could not get pointer to server implementation"
@@ -389,7 +390,8 @@ msgstr ""
 msgid ""
 "Opening connection with user=%s, password=%s, host=%s, port=%s, unix_socket=%"
 "s"
-msgstr "A abrir ligação com utilizador=%s, senha=%s, servidor=%s, porto=%s, "
+msgstr ""
+"A abrir ligação com utilizador=%s, senha=%s, servidor=%s, porto=%s, "
 "unix_socket=%s"
 
 #: providers/gda-mysql-server/gda-mysql-connection.c:623
@@ -561,7 +563,8 @@ msgstr "Ocorreu um erro durante a execução do comando."
 #: providers/gda-sybase-server/gda-sybase-command.c:291
 #: providers/gda-tds-server/gda-tds-command.c:263
 msgid "Cmd execution returned unknown result, may be an error"
-msgstr "Execução do comando retornou resultado desconhecido, poderá ser um erro"
+msgstr ""
+"Execução do comando retornou resultado desconhecido, poderá ser um erro"
 
 #: providers/gda-sybase-server/gda-sybase-command.c:304
 #: providers/gda-tds-server/gda-tds-command.c:274
@@ -736,7 +739,9 @@ msgstr "gda_sybase_error_make(%p,%p,%p,%p)"
 #: providers/gda-tds-server/gda-tds-error.c:86
 #, c-format
 msgid "No error flag ist set, though %s is called. This may be a bug."
-msgstr "Nenhuma flag de erro está colocada, apesar de %s ser chamado. Isto pode ser um bug."
+msgstr ""
+"Nenhuma flag de erro está colocada, apesar de %s ser chamado. Isto pode ser "
+"um bug."
 
 #: providers/gda-sybase-server/gda-sybase-error.c:166
 msgid "cs_diag() initialized"

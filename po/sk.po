@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda 0.2.9\n"
-"POT-Creation-Date: 2001-10-14 16:03+0200\n"
+"POT-Creation-Date: 2001-10-10 23:26+0200\n"
 "PO-Revision-Date: 2001-10-14 16:04CET\n"
 "Last-Translator: Stanislav Visnovsky <visnovsky@nenya.ms.mff.cuni.cz>\n"
 "Language-Team: Slovak <sk-i18n@lists.linux.sk>\n"
@@ -1033,4 +1033,3 @@ msgstr "%s: zdroj dát '%s' nenájdený\n"
 #: tools/templates/main-srv.c.tmpl:60
 msgid "Could not register <PROVIDER-NAME> provider implementation"
 msgstr "Nie je možné registrovať implementáciu <PROVIDER-NAME> poskytovateľa"
-
