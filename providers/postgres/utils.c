@@ -122,10 +122,39 @@ make_timestamp (GdaTimestamp *timestamp, const gchar *value)
 	timestamp->minute = atoi (value);
 	value += 3;
 	timestamp->second = atoi (value);
-	value += 3;
-	timestamp->fraction = atol (value) * 10; /* I have only hundredths of second */
-	value += 3;
-	timestamp->timezone = atol (value) * 60 * 60;
+	value += 2;
+	if (*value != '.') {
+		timestamp->fraction = 0;
+	} else {
+		gint ndigits = 0;
+		gint64 fraction;
+
+		value++;
+		fraction = atol (value);
+		while (*value && *value != '+') {
+			value++;
+			ndigits++;
+		}
+
+		while (ndigits < 3) {
+			fraction *= 10;
+			ndigits++;
+		}
+
+		while (fraction > 0 && ndigits > 3) {
+			fraction /= 10;
+			ndigits--;
+		}
+		
+		timestamp->fraction = fraction;
+	}
+
+	if (*value != '+') {
+		timestamp->timezone = 0;
+	} else {
+		value++;
+		timestamp->timezone = atol (value) * 60 * 60;
+	}
 }
 
 void
