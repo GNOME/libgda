@@ -1,13 +1,29 @@
-if ODBC
-GDA_ODBC_SERVER=odbc
+if INTERBASE
+GDA_INTERBASE_SERVER=interbase
+endif
+
+if MDB
+GDA_MDB_SERVER=mdb
 endif
 
 if MYSQL
 GDA_MYSQL_SERVER=mysql
 endif
 
+if ODBC
+GDA_ODBC_SERVER=odbc
+endif
+
+if ORACLE
+GDA_ORACLE_SERVER=oracle
+endif
+
 if POSTGRES
 GDA_POSTGRES_SERVER=postgres
+endif
+
+if SQLITE
+GDA_SQLITE_SERVER=sqlite
 endif
 
 if SYBASE
@@ -18,25 +34,14 @@ if TDS
 GDA_TDS_SERVER=freetds
 endif
 
-if ORACLE
-GDA_ORACLE_SERVER=oracle
-endif
-
-if INTERBASE
-GDA_INTERBASE_SERVER=interbase
-endif
-
-if SQLITE
-GDA_SQLITE_SERVER=sqlite
-endif
-
 SUBDIRS = \
-	$(GDA_ODBC_SERVER) \
+	$(GDA_INTERBASE_SERVER) \
+	$(GDA_MDB_SERVER) \
 	$(GDA_MYSQL_SERVER) \
+	$(GDA_ODBC_SERVER) \
+	$(GDA_ORACLE_SERVER) \
 	$(GDA_POSTGRES_SERVER) \
+	$(GDA_SQLITE_SERVER) \
 	$(GDA_SYBASE_SERVER) \
 	$(GDA_TDS_SERVER) \
-	$(GDA_ORACLE_SERVER) \
-	$(GDA_INTERBASE_SERVER) \
-	$(GDA_SQLITE_SERVER) \
 	default

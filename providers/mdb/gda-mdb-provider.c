@@ -1,0 +1,317 @@
+/* GDA MDB provider
+ * Copyright (C) 1998-2002 The GNOME Foundation.
+ *
+ * AUTHORS:
+ *	Rodrigo Moya <rodrigo@gnome-db.org>
+ *
+ * This Library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public License as
+ * published by the Free Software Foundation; either version 2 of the
+ * License, or (at your option) any later version.
+ *
+ * This Library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this Library; see the file COPYING.LIB.  If not,
+ * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ */
+
+#include <config.h>
+#include <libgda/gda-data-model-array.h>
+#include <libgda/gda-data-model-list.h>
+#include <libgda/gda-intl.h>
+#include <stdlib.h>
+#include "gda-mdb.h"
+
+#define PARENT_TYPE GDA_TYPE_SERVER_PROVIDER
+
+#define OBJECT_DATA_MDB_HANDLE "GDA_Mdb_MdbHandle"
+
+static void gda_mdb_provider_class_init (GdaMdbProviderClass *klass);
+static void gda_mdb_provider_init       (GdaMdbProvider *provider,
+					   GdaMdbProviderClass *klass);
+static void gda_mdb_provider_finalize   (GObject *object);
+
+static gboolean gda_mdb_provider_open_connection (GdaServerProvider *provider,
+						    GdaConnection *cnc,
+						    GdaQuarkList *params,
+						    const gchar *username,
+						    const gchar *password);
+static gboolean gda_mdb_provider_close_connection (GdaServerProvider *provider,
+						     GdaConnection *cnc);
+static GList *gda_mdb_provider_execute_command (GdaServerProvider *provider,
+						  GdaConnection *cnc,
+						  GdaCommand *cmd,
+						  GdaParameterList *params);
+static gboolean gda_mdb_provider_begin_transaction (GdaServerProvider *provider,
+						      GdaConnection *cnc,
+						      const gchar *trans_id);
+static gboolean gda_mdb_provider_commit_transaction (GdaServerProvider *provider,
+						       GdaConnection *cnc,
+						       const gchar *trans_id);
+static gboolean gda_mdb_provider_rollback_transaction (GdaServerProvider *provider,
+							 GdaConnection *cnc,
+							 const gchar *trans_id);
+static gboolean gda_mdb_provider_supports (GdaServerProvider *provider,
+					     GdaConnection *cnc,
+					     GdaConnectionFeature feature);
+static GdaDataModel *gda_mdb_provider_get_schema (GdaServerProvider *provider,
+						    GdaConnection *cnc,
+						    GdaConnectionSchema schema,
+						    GdaParameterList *params);
+
+static GObjectClass *parent_class = NULL;
+static gint loaded_providers = 0;
+
+/*
+ * Private functions
+ */
+
+/*
+ * GdaMdbProvider class implementation
+ */
+
+static void
+gda_mdb_provider_class_init (GdaMdbProviderClass *klass)
+{
+	GObjectClass *object_class = G_OBJECT_CLASS (klass);
+	GdaServerProviderClass *provider_class = GDA_SERVER_PROVIDER_CLASS (klass);
+
+	parent_class = g_type_class_peek_parent (klass);
+
+	object_class->finalize = gda_mdb_provider_finalize;
+	provider_class->open_connection = gda_mdb_provider_open_connection;
+	provider_class->close_connection = gda_mdb_provider_close_connection;
+	provider_class->execute_command = gda_mdb_provider_execute_command;
+	provider_class->begin_transaction = gda_mdb_provider_begin_transaction;
+	provider_class->commit_transaction = gda_mdb_provider_commit_transaction;
+	provider_class->rollback_transaction = gda_mdb_provider_rollback_transaction;
+	provider_class->supports = gda_mdb_provider_supports;
+	provider_class->get_schema = gda_mdb_provider_get_schema;
+}
+
+static void
+gda_mdb_provider_init (GdaMdbProvider *myprv, GdaMdbProviderClass *klass)
+{
+}
+
+static void
+gda_mdb_provider_finalize (GObject *object)
+{
+	GdaMdbProvider *myprv = (GdaMdbProvider *) object;
+
+	g_return_if_fail (GDA_IS_MDB_PROVIDER (myprv));
+
+	/* chain to parent class */
+	parent_class->finalize (object);
+
+	/* call MDB exit function if there are no more providers */
+	loaded_providers--;
+	if (loaded_providers == 0)
+		mdb_exit ();
+}
+
+GType
+gda_mdb_provider_get_type (void)
+{
+	static GType type = 0;
+
+	if (!type) {
+		static GTypeInfo info = {
+			sizeof (GdaMdbProviderClass),
+			(GBaseInitFunc) NULL,
+			(GBaseFinalizeFunc) NULL,
+			(GClassInitFunc) gda_mdb_provider_class_init,
+			NULL, NULL,
+			sizeof (GdaMdbProvider),
+			0,
+			(GInstanceInitFunc) gda_mdb_provider_init
+		};
+		type = g_type_register_static (PARENT_TYPE, "GdaMdbProvider", &info, 0);
+	}
+
+	return type;
+}
+
+GdaServerProvider *
+gda_mdb_provider_new (void)
+{
+	static gboolean mdb_initialized = FALSE;
+	GdaMdbProvider *provider;
+
+	if (!mdb_initialized)
+		mdb_init ();
+
+	loaded_providers++;
+
+	provider = g_object_new (gda_mdb_provider_get_type (), NULL);
+	return GDA_SERVER_PROVIDER (provider);
+}
+
+/* open_connection handler for the GdaMdbProvider class */
+static gboolean
+gda_mdb_provider_open_connection (GdaServerProvider *provider,
+				  GdaConnection *cnc,
+				  GdaQuarkList *params,
+				  const gchar *username,
+				  const gchar *password)
+{
+	const gchar *filename;
+	GdaMdbConnection *mdb_cnc;
+	GdaMdbProvider *mdb_prv = (GdaMdbProvider *) provider;
+
+	g_return_val_if_fail (GDA_IS_MDB_PROVIDER (mdb_prv), FALSE);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+
+	/* look for parameters */
+	filename = gda_quark_list_find (params, "FILENAME");
+	if (!filename) {
+		gda_connection_add_error_string (
+			cnc,
+			_("A database FILENAME must be specified in the connection_string"));
+		return FALSE;
+	}
+
+	mdb_cnc = g_new0 (GdaMdbConnection, 1);
+	mdb_cnc->cnc = cnc;
+	mdb_cnc->mdb = mdb_open (filename);
+	if (!mdb_cnc->mdb) {
+		gda_connection_add_error_string (cnc, _("Could not open file %s"), filename);
+		g_free (mdb_cnc);
+		return FALSE;
+	}
+
+	g_object_set_data (G_OBJECT (cnc), OBJECT_DATA_MDB_HANDLE, mdb_cnc);
+
+	return TRUE;
+}
+
+/* close_connection handler for the GdaMdbProvider class */
+static gboolean
+gda_mdb_provider_close_connection (GdaServerProvider *provider, GdaConnection *cnc)
+{
+	GdaMdbConnection *mdb_cnc;
+	GdaMdbProvider *mdb_prv = (GdaMdbProvider *) provider;
+
+	g_return_val_if_fail (GDA_IS_MDB_PROVIDER (mdb_prv), FALSE);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+
+	mdb_cnc = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_MDB_HANDLE);
+	if (!mdb_cnc) {
+		gda_connection_add_error_string (cnc, _("Invalid MDB handle"));
+		return FALSE;
+	}
+
+	/* FIXME: close MDB database */
+	g_free (mdb_cnc);
+	g_object_set_data (G_OBJECT (cnc), OBJECT_DATA_MDB_HANDLE, NULL);
+
+	return TRUE;
+}
+
+/* execute_command handler for the GdaMdbProvider class */
+static GList *
+gda_mdb_provider_execute_command (GdaServerProvider *provider,
+				  GdaConnection *cnc,
+				  GdaCommand *cmd,
+				  GdaParameterList *params)
+{
+	return NULL;
+}
+
+/* begin_transaction handler for the GdaMdbProvider class */
+static gboolean
+gda_mdb_provider_begin_transaction (GdaServerProvider *provider,
+				      GdaConnection *cnc,
+				      const gchar *trans_id)
+{
+	return FALSE;
+}
+
+/* commit_transaction handler for the GdaMdbProvider class */
+static gboolean
+gda_mdb_provider_commit_transaction (GdaServerProvider *provider,
+				       GdaConnection *cnc,
+				       const gchar *trans_id)
+{
+	return FALSE;
+}
+
+/* rollback_transaction handler for the GdaMdbProvider class */
+static gboolean
+gda_mdb_provider_rollback_transaction (GdaServerProvider *provider,
+					 GdaConnection *cnc,
+					 const gchar *trans_id)
+{
+	return FALSE;
+}
+
+/* supports handler for the GdaMdbProvider class */
+static gboolean
+gda_mdb_provider_supports (GdaServerProvider *provider,
+			     GdaConnection *cnc,
+			     GdaConnectionFeature feature)
+{
+	return FALSE;
+}
+
+static GdaDataModel *
+get_mdb_tables (GdaMdbConnection *mdb_cnc)
+{
+	gint i;
+	GdaDataModelList *model;
+
+	g_return_val_if_fail (mdb_cnc != NULL, NULL);
+	g_return_val_if_fail (mdb_cnc->mdb != NULL, NULL);
+
+	model = (GdaDataModelList *) gda_data_model_list_new ();
+	gda_data_model_set_column_title (GDA_DATA_MODEL (model), 0, _("Table Name"));
+	for (i = 0; i < mdb_cnc->mdb->num_catalog; i++) {
+		GdaValue *value;
+		MdbCatalogEntry *entry;
+
+		entry = g_ptr_array_index (mdb_cnc->mdb->catalog, i);
+
+ 		/* if it's a table */
+		if (entry->object_type == MDB_TABLE) {
+			value = gda_value_new_string (entry->object_name);
+			gda_data_model_list_append_value (model, (const GdaValue *) value);
+			gda_value_free (value);
+		}
+	}
+
+	return GDA_DATA_MODEL (model);
+}
+
+/* get_schema handler for the GdaMdbProvider class */
+static GdaDataModel *
+gda_mdb_provider_get_schema (GdaServerProvider *provider,
+			     GdaConnection *cnc,
+			     GdaConnectionSchema schema,
+			     GdaParameterList *params)
+{
+	GdaMdbConnection *mdb_cnc;
+	GdaMdbProvider *mdb_prv = (GdaMdbProvider *) provider;
+
+	g_return_val_if_fail (GDA_IS_MDB_PROVIDER (mdb_prv), NULL);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+
+	mdb_cnc = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_MDB_HANDLE);
+	if (!mdb_cnc) {
+		gda_connection_add_error_string (cnc, _("Invalid MDB handle"));
+		return NULL;
+	}
+
+	switch (schema) {
+	case GDA_CONNECTION_SCHEMA_TABLES :
+		return get_mdb_tables (mdb_cnc);
+	default :
+		break;
+	}
+
+	return NULL;
+}

@@ -1,0 +1,7 @@
+Makefile
+Makefile.in
+*.o
+*.lo
+.deps
+.libs
+libgda-mdb.la
