@@ -1,5 +1,8 @@
-/* GDA Server Library
- * Copyright (C) 2000 Rodrigo Moya
+/* GDA server library
+ * Copyright (C) 1998-2001 The Free Software Foundation
+ *
+ * AUTHORS:
+ *	Rodrigo Moya <rodrigo@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -18,52 +21,157 @@
  */
 
 #include "gda-server.h"
-#include "gda-server-private.h"
-#include <gobject/gsignal.h>
-#include <bonobo-activation/bonobo-activation.h>
+#include <bonobo/bonobo-generic-factory.h>
 
-static void gda_server_class_init    (GdaServerClass *klass);
-static void gda_server_instance_init (GdaServer *server, GdaServerClass *klass);
-static void gda_server_finalize      (GObject * object);
+#define PARENT_TYPE G_TYPE_OBJECT
 
-static GList *server_list = NULL;
+struct _GdaServerPrivate {
+	BonoboGenericFactory *factory;
+	gchar *factory_id;
+	GHashTable *components;
+	GList *clients;
+};
+
+static void gda_server_class_init (GdaServerClass *klass);
+static void gda_server_init       (GdaServer *server, GdaServerClass *klass);
+static void gda_server_finalize   (GObject *object);
+
+enum {
+	LAST_COMPONENT_GONE,
+	LAST_CLIENT_GONE,
+	LAST_SIGNAL
+};
+
+static guint gda_server_signals[LAST_SIGNAL];
+static GObjectClass *parent_class = NULL;
 
 /*
  * Private functions
  */
-static void
-gda_server_class_init (GdaServerClass * klass)
-{
-	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
-	object_class->finalize = gda_server_finalize;
+static void
+remove_component_hash (gpointer key, gpointer value, gpointer user_data)
+{
+	g_free (key);
+	g_free (value);
+}
+
+/*
+ * Callbacks
+ */
+
+static BonoboObject *
+factory_callback (BonoboGenericFactory *factory,
+		  const char *component_id,
+		  gpointer closure)
+{
+	GType *ptype;
+	BonoboObject *object;
+	GdaServer *server = (GdaServer *) closure;
+
+	g_return_val_if_fail (GDA_IS_SERVER (server), NULL);
+
+	/* search the component in our hash table */
+	ptype = g_hash_table_lookup (server->priv->components, component_id);
+	if (!ptype) {
+		gda_log_error (_("Don't know how to create components with IID %s"), component_id);
+		return NULL;
+	}
+
+	/* create the new object */
+	object = g_object_new (*ptype, NULL);
+	if (!BONOBO_IS_OBJECT (object)) {
+		gda_log_error (_("Could not create component of type %s"), component_id);
+		return NULL;
+	}
+
+	g_signal_connect (G_OBJECT (object),
+			  "destroy",
+			  G_CALLBACK (object_destroyed_cb),
+			  server);
+	server->priv->clients = g_list_append (server->priv->clients, object);
+
+	return object;
 }
 
 static void
-gda_server_instance_init (GdaServer * server_impl, GdaServerClass *klass)
+component_destroyed_cb (GObject *object, gpointer user_data)
 {
-	g_return_if_fail (GDA_IS_SERVER (server_impl));
+	GList *l;
+	BonoboObject *comp;
+	GdaServer *server = (GdaServer *) user_data;
 
-	server_impl->name = NULL;
-	memset ((void *) &server_impl->functions, 0, sizeof (GdaServerImplFunctions));
+	g_return_if_fail (GDA_IS_SERVER (server));
+
+	comp = BONOBO_OBJECT (object);
+
+	for (l = g_list_first (server->priv->clients); l; l = l->next) {
+		BonoboObject *lcomp = BONOBO_OBJECT (l->data);
+
+		if (lcomp == comp) {
+			server->priv->clients = g_list_remove (
+				server->priv->clients, lcomp);
+			if (!server->priv->clients) {
+				g_signal_emit (G_OBJECT (server),
+					       gda_server_signals[LAST_CLIENT_GONE],
+					       0);
+			}
+		}
+	}
+}
+
+/*
+ * GdaServer class implementation
+ */
+
+static void
+gda_server_class_init (GdaServerClass *klass)
+{
+	GObjectClass *object_class = G_OBJECT_CLASS (klass);
+
+	parent_class = g_type_class_peek_parent (klass);
+
+	object_class->finalize = gda_server_finalize;
+	klass->last_component_gone = NULL;
+	klass->last_client_gone = NULL;
+}
+
+static void
+gda_server_init (GdaServer *server, GdaServerClass *klass)
+{
+	g_return_if_fail (GDA_IS_SERVER (server));
+
+	server->priv = g_new0 (GdaServerPrivate, 1);
+	server->priv->factory = NULL;
+	server->priv->factory_id = NULL;
+	server->priv->components = g_hash_table_new (g_str_hash, g_str_equal);
+	server->priv->clients = NULL;
 }
 
 static void
 gda_server_finalize (GObject *object)
 {
-	GObjectClass *parent_class;
-	GdaServer *server_impl = (GdaServer *) object;
+	GdaServer *server = (GdaServer *) object;
 
-	g_return_if_fail (GDA_IS_SERVER (server_impl));
+	g_return_if_fail (GDA_IS_SERVER (server));
 
-	server_list = g_list_remove (server_list, (gpointer) server_impl);
-	if (server_impl->name)
-		g_free ((gpointer) server_impl->name);
-	bonobo_object_unref (BONOBO_OBJECT (server_impl->connection_factory));
+	/* free memory */
+	if (server->priv->factory != NULL)
+		bonobo_object_unref (BONOBO_OBJECT (server->priv->factory));
+	if (server->priv->factory_id != NULL)
+		g_free (server->priv->factory_id);
 
-	parent_class = g_type_class_peek (G_TYPE_OBJECT);
-	if (parent_class && parent_class->finalize)
-		parent_class->finalize (object);
+	g_hash_table_foreach_remove (server->priv->components,
+				     (GHRFunc) remove_component_hash,
+				     NULL);
+	g_hash_table_destroy (server->priv->components);
+	g_list_free (server->priv->clients);
+
+	g_free (server->priv);
+	server->priv = NULL;
+
+	/* chain to parent class */
+	parent_class->finalize (object);
 }
 
 GType
@@ -72,154 +180,126 @@ gda_server_get_type (void)
 	static GType type = 0;
 
 	if (!type) {
-		static const GTypeInfo info = {
-			sizeof (GdaServerClass),
-			(GBaseInitFunc) NULL,
-			(GBaseFinalizeFunc) NULL,
-			(GClassInitFunc) gda_server_class_init,
-			NULL,
-			NULL,
-			sizeof (GdaServer),
-			0,
-			(GInstanceInitFunc) gda_server_instance_init
-		};
-		type = g_type_register_static (G_TYPE_OBJECT, "GdaServer", &info, 0);
+		if (type == 0) {
+			static GTypeInfo info = {
+				sizeof (GdaServerClass),
+				(GBaseInitFunc) NULL,
+				(GBaseFinalizeFunc) NULL,
+				(GClassInitFunc) gda_server_class_init,
+				NULL, NULL,
+				sizeof (GdaServer),
+				0,
+				(GInstanceInitFunc) gda_server_init
+			};
+			type = g_type_register_static (PARENT_TYPE, "GdaServer", &info, 0);
+		}
 	}
-	return type;
-}
 
-static BonoboObject *
-factory_function (BonoboGenericFactory * factory, void *closure)
-{
-	GdaServer *server_impl = (GdaServer *) closure;
-	return BONOBO_OBJECT (gda_server_connection_new (server_impl));
+	return type;
 }
 
 /**
  * gda_server_new
- * @name: name of the server
- * @functions: callback functions
+ * @factory_iid: IID of the factory for this server.
  *
- * Create a new GDA provider implementation object. This function initializes
- * all the needed CORBA stuff, registers the server in the system's object
- * directory, and initializes all internal data. After successful return,
- * you've got a ready-to-go GDA provider. To start it, use #gda_server_start
+ * Creates a new #GdaServer object, which is the main object you
+ * should create when creating new providers or other extension
+ * components.
+ *
+ * Returns: a newly allocated #GdaServer object.
  */
 GdaServer *
-gda_server_new (const gchar * name, GdaServerImplFunctions * functions)
+gda_server_new (const gchar *factory_iid)
 {
-	GdaServer *server_impl;
+	GdaServer *server;
 
-	g_return_val_if_fail (name != NULL, NULL);
+	g_return_val_if_fail (factory_iid != NULL);
 
-	/* look for an already running instance */
-	server_impl = gda_server_find (name);
-	if (server_impl)
-		return server_impl;
+	server = g_object_new (GDA_TYPE_SERVER, NULL);
 
-	/* create provider instance */
-	server_impl = GDA_SERVER (g_object_new (GDA_TYPE_SERVER, NULL));
-	server_impl->name = g_strdup (name);
-	g_set_prgname (server_impl->name);
-	if (functions) {
-		memcpy ((void *) &server_impl->functions,
-			(const void *) functions,
-			sizeof (GdaServerImplFunctions));
+	/* create the object factory for this server */
+	server->priv->factory_iid = g_strdup (factory_iid);
+	server->priv->factory = bonobo_generic_factory_new (
+		server->priv->factory_iid,
+		factory_callback,
+		server);
+	if (!BONOBO_IS_GENERIC_FACTORY (server->priv->factory)) {
+		g_object_unref (G_OBJECT (server));
+		return NULL;
 	}
-	else
-		gda_log_message (_("Starting provider %s with no implementation functions"),
-				 name);
 
-	server_impl->connections = NULL;
-	server_impl->is_running = FALSE;
-
-	/* create CORBA connection factory */
-	server_impl->connection_factory = bonobo_generic_factory_new (name, factory_function,
-								      server_impl);
-	bonobo_running_context_auto_exit_unref (
-		BONOBO_OBJECT (server_impl->connection_factory));
-	server_list = g_list_append (server_list, (gpointer) server_impl);
-
-	bonobo_activate ();
-
-	return server_impl;
+	return server;
 }
 
 /**
- * gda_server_find
- * @id: object id
+ * gda_server_register_component
+ * @server: a #GdaServer object.
+ * @iid: IID of the component to be registered.
+ * @type: type of the class for creating instances for the component
+ * being registered.
  *
- * Searches the list of loaded server implementations by object activation
- * identification
- */
-GdaServer *
-gda_server_find (const gchar * id)
-{
-	GList *node;
-
-	g_return_val_if_fail (id != NULL, NULL);
-
-	node = g_list_first (server_list);
-	while (node) {
-		GdaServer *server_impl = GDA_SERVER (node->data);
-		if (server_impl && !strcmp (server_impl->name, id))
-			return server_impl;
-		node = g_list_next (node);
-	}
-	return NULL;
-}
-
-/**
- * gda_server_start
- * @server_impl: server implementation
- *
- * Starts the given GDA provider
+ * Registers a component on the given #GdaServer object. If successfull,
+ * the server will be able to create instances of the component
+ * specified.
  */
 void
-gda_server_start (GdaServer * server_impl)
+gda_server_register_component (GdaServer *server,
+			       const gchar *iid,
+			       GType type)
 {
-	g_return_if_fail (server_impl != NULL);
-	g_return_if_fail (server_impl->is_running == FALSE);
+	gpointer orig_key;
+	gpointer value;
+	GType *ptype;
 
-	server_impl->is_running = TRUE;
-	bonobo_main ();
+	g_return_if_fail (GDA_IS_SERVER (server));
+	g_return_if_fail (iid != NULL);
+	g_return_if_fail (type > 0);
+
+	if (g_hash_table_lookup_extended (server->priv->components, iid,
+					  &orig_key, &value)) {
+		ptype = (GType *) ptype;
+
+		/* already exists, so replace the component information
+		   if it has changed */
+		if (*ptype == type)
+			return;
+
+		g_hash_table_remove (server->priv->components, orig_key);
+		g_free (orig_key);
+		g_free (value);
+	}
+
+	/* add the component to our hash table */
+	ptype = g_new0 (GType, 1);
+	*ptype = type;
+	g_hash_table_insert (server->priv->components, g_strdup (iid), ptype);
 }
 
 /**
- * gda_server_stop
- * @server_impl: server implementation
- *
- * Stops the given server implementation
+ * gda_server_unregister_component
  */
 void
-gda_server_stop (GdaServer * server_impl)
+gda_server_unregister_component (GdaServer *server, const char *iid)
 {
-	g_return_if_fail (GDA_IS_SERVER (server_impl));
-	g_return_if_fail (server_impl->is_running);
+	gpointer orig_key;
+	gpointer value;
+	GType *ptype;
 
-	bonobo_main_quit ();
-	server_impl->is_running = FALSE;
-}
+	g_return_if_fail (GDA_IS_SERVER (server));
+	g_return_if_fail (iid != NULL);
+	g_return_if_fail (type > 0);
 
-/*
- * Convenience functions
- */
-gint
-gda_server_exception (CORBA_Environment * ev)
-{
-	g_return_val_if_fail (ev != NULL, -1);
+	if (g_hash_table_lookup_extended (server->priv->components, iid,
+					  &orig_key, &value)) {
+		ptype = (GType *) ptype;
 
-	switch (ev->_major) {
-	case CORBA_SYSTEM_EXCEPTION:
-		gda_log_error (_("CORBA system exception %s"),
-			       CORBA_exception_id (ev));
-		return -1;
-	case CORBA_USER_EXCEPTION:
-		gda_log_error (_("CORBA user exception: %s"),
-			       CORBA_exception_id (ev));
-		return -1;
-	default:
-		break;
+		g_hash_table_remove (server->priv->components, orig_key);
+		g_free (orig_key);
+		g_free (value);
+
+		if (g_hash_table_size (server->priv->components) <= 0)
+			g_signal_emit (G_OBJECT (server),
+				       gda_server_signals[LAST_COMPONENT_GONE],
+				       0);
 	}
-	return 0;
 }

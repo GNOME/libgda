@@ -1,3 +1,15 @@
+2001-10-08  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-server-provider.[ch]: new class for the implementation of
+	GDA database providers
+
+2001-10-07  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-server.[ch]: refactored, to be flexible enough for all our
+	CORBA factory needs
+
+	* Makefile.am: install headers in version-based directory
+
 2001-08-22  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-server-error.[ch] (gda_server_error_make): moved to

@@ -6,22 +6,16 @@ INCLUDES = \
 
 gda_server_headers = \
 	gda-server-connection.h \
-	gda-server-command.h \
-	gda-server-recordset.h \
+	gda-server-provider.h \
 	gda-server.h 
 
 libgda_server_2_la_SOURCES = \
 	$(gda_server_headers) \
-	gda-server-private.h \
-	gda-server-command.c \
 	gda-server-connection.c \
-	gda-server-init.c \
-	gda-server-recordset.c \
-	gda-builtin-res.c \
-	gda-builtin-res.h \
+	gda-server-provider.c \
 	gda-server.c 
 libgda_server_2_la_LIBADD = -lpopt
 
-gdaincludedir=$(includedir)/gnome/2/gda
+gdaincludedir=$(includedir)/libgda-$(VERSION)/gda
 gdainclude_HEADERS=$(gda_server_headers)
 
