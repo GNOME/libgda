@@ -1,3 +1,27 @@
+libgda 1.0.1, 2003-10-13
+------------------------
+
+ - Fixed clearing of GdaQuarkList's (laurent)
+ - Added GType-registration for enums, needed for C++ bindings (murray)
+ - Fixed typos in documentation and added more information for
+   MySQL provider (laurent)
+ - Added missing prototype to gda-client.h (laurent)
+ - Fixed detection of mSQL libraries/headers (chris)
+ - Fixed mSQL provider handling on non-queries (chris)
+ - Fixed #117202: adapted to API changes in tds_connect (seth)
+ - Fixed #121403: freed memory being used (rodrigo)
+ - Fixed #123342: crash on exit in Gnumeric (rodrigo)
+ - Added missing documentation for GdaBlob (rodrigo)
+ - Updated translations:
+        - cs (miroslav)
+	- fi (pauli)
+	- fr (christophe)
+	- pt (duarte)
+	- sk (stanislav)
+        - sr (danilo)
+	- sr@Latn (danilo)
+	- sv (christian)
+
 libgda 1.0.0, 2003-09-14
 ------------------------
 
