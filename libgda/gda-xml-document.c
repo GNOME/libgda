@@ -23,7 +23,7 @@
 
 #include "config.h"
 #include "gda-xml-document.h"
-#include <gobject/gsignal.h>
+#include <glib-object.h>
 
 static void gda_xml_document_finalize (GObject * object);
 

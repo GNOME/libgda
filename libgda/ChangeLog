@@ -1,5 +1,6 @@
 2001-11-23  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* gda-xml-document.c:
 	* gda-recordset.c: include glib-object.h, not gobject/*.h
 
 	* gda-parameter.[ch] (gda_parameter_new): added a GdaValueType
