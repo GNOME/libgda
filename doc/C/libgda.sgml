@@ -1,5 +1,5 @@
-<?xml version='1.0'?>
-<!DOCTYPE book PUBLIC "-//GNOME//DTD DocBook PNG Variant V1.1//EN"[
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook V4.1//EN"[
+
 <!ENTITY LIBGDA          "<application>libgda</application>">
 <!ENTITY GNOMEDB         "<application>GNOME-DB</application>">
 <!ENTITY GDA-GDA-COMMON  SYSTEM "gda-common.sgml">
