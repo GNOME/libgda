@@ -68,11 +68,13 @@ static int intCompare(const void *pKey1, int n1, const void *pKey2, int n2){
 ** Hash and comparison functions when the mode is SQLITE_HASH_POINTER
 */
 static int ptrHash(const void *pKey, int nKey){
-  nKey = (int)pKey;
-  return nKey ^ (nKey<<8) ^ (nKey>>8);
+  uptr x = Addr(pKey);
+  return x ^ (x<<8) ^ (x>>8);
 }
 static int ptrCompare(const void *pKey1, int n1, const void *pKey2, int n2){
-  return ((int)pKey2) - (int)pKey1;
+  if( pKey1==pKey2 ) return 0;
+  if( pKey1<pKey2 ) return -1;
+  return 1;
 }
 
 /*
@@ -197,7 +199,7 @@ static HashElem *findElementGivenHash(
   return 0;
 }
 
-/* Remove a single entry from the pH given a pointer to that
+/* Remove a single entry from the hash table given a pointer to that
 ** element and a hash on the element's key.
 */
 static void removeElementGivenHash(
@@ -228,7 +230,7 @@ static void removeElementGivenHash(
 }
 
 /* Attempt to locate an element of the associative pH with a key
-** that matches "key".  Return the data for this element if it is
+** that matches pKey,nKey.  Return the data for this element if it is
 ** found, or NULL if no match is found.
 */
 void *sqliteHashFind(const Hash *pH, const void *pKey, int nKey){
@@ -245,19 +247,20 @@ void *sqliteHashFind(const Hash *pH, const void *pKey, int nKey){
   return elem ? elem->data : 0;
 }
 
-/* Insert an element into the pH.  The key will be "key" and
-** the data will be "data".
+/* Insert an element into the hash table pH.  The key is pKey,nKey
+** and the data is "data".
 **
-** If no pH element exists with a matching key, then a new
-** pH element is created.  The key is copied (using the copy
-** function of the key class) into the new element.  NULL is returned.
+** If no element exists with a matching key, then a new
+** element is created.  A copy of the key is made if the copyKey
+** flag is set.  NULL is returned.
 **
 ** If another element already exists with the same key, then the
 ** new data replaces the old data and the old data is returned.
-** The key is not copied in this instance.
+** The key is not copied in this instance.  If a malloc fails, then
+** new data is returned.
 **
 ** If the "data" parameter to this function is NULL, then the
-** element corresponding to "key" is removed from the pH.
+** element corresponding to "key" is removed from the hash table.
 */
 void *sqliteHashInsert(Hash *pH, void *pKey, int nKey, void *data){
   int hraw;             /* Raw hash value of the key */
@@ -284,12 +287,12 @@ void *sqliteHashInsert(Hash *pH, void *pKey, int nKey, void *data){
   }
   if( data==0 ) return 0;
   new_elem = (HashElem*)sqliteMalloc( sizeof(HashElem) );
-  if( new_elem==0 ) return 0;
+  if( new_elem==0 ) return data;
   if( pH->copyKey && pKey!=0 ){
     new_elem->pKey = sqliteMalloc( nKey );
     if( new_elem->pKey==0 ){
       sqliteFree(new_elem);
-      return 0;
+      return data;
     }
     memcpy((void*)new_elem->pKey, pKey, nKey);
   }else{
@@ -301,7 +304,7 @@ void *sqliteHashInsert(Hash *pH, void *pKey, int nKey, void *data){
   if( pH->htsize==0 ){
     pH->count = 0;
     sqliteFree(new_elem);
-    return 0;
+    return data;
   }
   if( pH->count > pH->htsize ){
     rehash(pH,pH->htsize*2);

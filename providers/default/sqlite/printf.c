@@ -656,7 +656,13 @@ static void mout(void *arg, char *zNewText, int nNewChar){
       pM->zText = sqliteMalloc(pM->nAlloc);
       if( pM->zText && pM->nChar ) memcpy(pM->zText,pM->zBase,pM->nChar);
     }else{
-      pM->zText = sqliteRealloc(pM->zText, pM->nAlloc);
+      char *z = sqliteRealloc(pM->zText, pM->nAlloc);
+      if( z==0 ){
+        sqliteFree(pM->zText);
+        pM->nChar = 0;
+        pM->nAlloc = 0;
+      }
+      pM->zText = z;
     }
   }
   if( pM->zText ){
@@ -690,6 +696,9 @@ char *sqlite_mprintf(const char *zFormat, ...){
     if( zNew ) strcpy(zNew,zBuf);
   }else{
     zNew = sqliteRealloc(sMprintf.zText,sMprintf.nChar+1);
+    if( zNew==0 ){
+      sqliteFree(sMprintf.zText);
+    }
   }
   return zNew;
 }
@@ -709,7 +718,11 @@ char *sqlite_vmprintf(const char *zFormat, va_list ap){
     sMprintf.zText = sqliteMalloc( strlen(zBuf)+1 );
     if( sMprintf.zText ) strcpy(sMprintf.zText,zBuf);
   }else{
-    sMprintf.zText = sqliteRealloc(sMprintf.zText,sMprintf.nChar+1);
+    char *z = sqliteRealloc(sMprintf.zText,sMprintf.nChar+1);
+    if( z==0 ){
+      sqliteFree(sMprintf.zText);
+    }
+    sMprintf.zText = z;
   }
   return sMprintf.zText;
 }
@@ -724,7 +737,7 @@ char *sqlite_vmprintf(const char *zFormat, va_list ap){
 */
 int sqlite_exec_printf(
   sqlite *db,                   /* An open database */
-  char *sqlFormat,              /* printf-style format string for the SQL */
+  const char *sqlFormat,        /* printf-style format string for the SQL */
   sqlite_callback xCallback,    /* Callback function */
   void *pArg,                   /* 1st argument to callback function */
   char **errmsg,                /* Error msg written here */
@@ -740,7 +753,7 @@ int sqlite_exec_printf(
 }
 int sqlite_exec_vprintf(
   sqlite *db,                   /* An open database */
-  char *sqlFormat,              /* printf-style format string for the SQL */
+  const char *sqlFormat,        /* printf-style format string for the SQL */
   sqlite_callback xCallback,    /* Callback function */
   void *pArg,                   /* 1st argument to callback function */
   char **errmsg,                /* Error msg written here */
@@ -756,7 +769,7 @@ int sqlite_exec_vprintf(
 }
 int sqlite_get_table_printf(
   sqlite *db,            /* An open database */
-  char *sqlFormat,       /* printf-style format string for the SQL */
+  const char *sqlFormat, /* printf-style format string for the SQL */
   char ***resultp,       /* Result written to a char *[]  that this points to */
   int *nrow,             /* Number of result rows written here */
   int *ncol,             /* Number of result columns written here */
@@ -773,7 +786,7 @@ int sqlite_get_table_printf(
 }
 int sqlite_get_table_vprintf(
   sqlite *db,            /* An open database */
-  char *sqlFormat,       /* printf-style format string for the SQL */
+  const char *sqlFormat, /* printf-style format string for the SQL */
   char ***resultp,       /* Result written to a char *[]  that this points to */
   int *nrow,             /* Number of result rows written here */
   int *ncolumn,          /* Number of result columns written here */

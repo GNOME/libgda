@@ -95,13 +95,31 @@ static int exprTableUsage(int base, Expr *p){
 }
 
 /*
+** Return TRUE if the given operator is one of the operators that is
+** allowed for an indexable WHERE clause.  The allowed operators are
+** "=", "<", ">", "<=", and ">=".
+*/
+static int allowedOp(int op){
+  switch( op ){
+    case TK_LT:
+    case TK_LE:
+    case TK_GT:
+    case TK_GE:
+    case TK_EQ:
+      return 1;
+    default:
+      return 0;
+  }
+}
+
+/*
 ** The input to this routine is an ExprInfo structure with only the
 ** "p" field filled in.  The job of this routine is to analyze the
 ** subexpression and populate all the other fields of the ExprInfo
 ** structure.
 **
 ** "base" is the cursor number (the value of the iTable field) that
-** corresponds to the first entyr in the table list.  This is the
+** corresponds to the first entry in the table list.  This is the
 ** same as pParse->nTab.
 */
 static void exprAnalyze(int base, ExprInfo *pInfo){
@@ -111,7 +129,7 @@ static void exprAnalyze(int base, ExprInfo *pInfo){
   pInfo->indexable = 0;
   pInfo->idxLeft = -1;
   pInfo->idxRight = -1;
-  if( pExpr->op==TK_EQ && (pInfo->prereqRight & pInfo->prereqLeft)==0 ){
+  if( allowedOp(pExpr->op) && (pInfo->prereqRight & pInfo->prereqLeft)==0 ){
     if( pExpr->pRight->op==TK_COLUMN ){
       pInfo->idxRight = pExpr->pRight->iTable - base;
       pInfo->indexable = 1;
@@ -147,17 +165,17 @@ WhereInfo *sqliteWhereBegin(
   int loopMask;        /* One bit set for each outer loop */
   int haveKey;         /* True if KEY is on the stack */
   int base;            /* First available index for OP_Open opcodes */
-  Index *aIdx[32];     /* Index to use on each nested loop.  */
+  int nCur;            /* Next unused cursor number */
   int aDirect[32];     /* If TRUE, then index this table using ROWID */
   ExprInfo aExpr[50];  /* The WHERE clause is divided into these expressions */
 
-  /* Allocate space for aOrder[]. */
+  /* Allocate space for aOrder[] and aiMem[]. */
   aOrder = sqliteMalloc( sizeof(int) * pTabList->nId );
 
   /* Allocate and initialize the WhereInfo structure that will become the
   ** return value.
   */
-  pWInfo = sqliteMalloc( sizeof(WhereInfo) );
+  pWInfo = sqliteMalloc( sizeof(WhereInfo) + pTabList->nId*sizeof(WhereLevel) );
   if( sqlite_malloc_failed ){
     sqliteFree(aOrder);
     sqliteFree(pWInfo);
@@ -166,6 +184,7 @@ WhereInfo *sqliteWhereBegin(
   pWInfo->pParse = pParse;
   pWInfo->pTabList = pTabList;
   base = pWInfo->base = pParse->nTab;
+  nCur = base + pTabList->nId;
 
   /* Split the WHERE clause into as many as 32 separate subexpressions
   ** where each subexpression is separated by an AND operator.  Any additional
@@ -197,8 +216,8 @@ WhereInfo *sqliteWhereBegin(
   }
 
   /* Figure out what index to use (if any) for each nested loop.
-  ** Make aIdx[i] point to the index to use for the i-th nested loop
-  ** where i==0 is the outer loop and i==pTabList->nId-1 is the inner
+  ** Make pWInfo->a[i].pIdx point to the index to use for the i-th nested
+  ** loop where i==0 is the outer loop and i==pTabList->nId-1 is the inner
   ** loop.  If the expression uses only the ROWID field, then set
   ** aDirect[i] to 1.
   **
@@ -206,12 +225,13 @@ WhereInfo *sqliteWhereBegin(
   ** first 32 tables are candidates for indices.
   */
   loopMask = 0;
-  for(i=0; i<pTabList->nId && i<ARRAYSIZE(aIdx); i++){
+  for(i=0; i<pTabList->nId && i<ARRAYSIZE(aDirect); i++){
     int j;
     int idx = aOrder[i];
     Table *pTab = pTabList->a[idx].pTab;
     Index *pIdx;
     Index *pBestIdx = 0;
+    int bestScore = 0;
 
     /* Check to see if there is an expression that uses only the
     ** ROWID field of this table.  If so, set aDirect[i] to 1.
@@ -232,22 +252,35 @@ WhereInfo *sqliteWhereBegin(
     }
     if( aDirect[i] ){
       loopMask |= 1<<idx;
-      aIdx[i] = 0;
+      pWInfo->a[i].pIdx = 0;
       continue;
     }
 
     /* Do a search for usable indices.  Leave pBestIdx pointing to
-    ** the most specific usable index.
+    ** the "best" index.  pBestIdx is left set to NULL if no indices
+    ** are usable.
     **
-    ** "Most specific" means that pBestIdx is the usable index that
-    ** has the largest value for nColumn.  A usable index is one for
-    ** which there are subexpressions to compute every column of the
-    ** index.
+    ** The best index is determined as follows.  For each of the
+    ** left-most terms that is fixed by an equality operator, add
+    ** 4 to the score.  The right-most term of the index may be
+    ** constrained by an inequality.  Add 1 if for an "x<..." constraint
+    ** and add 2 for an "x>..." constraint.  Chose the index that
+    ** gives the best score.
+    **
+    ** This scoring system is designed so that the score can later be
+    ** used to determine how the index is used.  If the score&3 is 0
+    ** then all constraints are equalities.  If score&1 is not 0 then
+    ** there is an inequality used as a termination key.  (ex: "x<...")
+    ** If score&2 is not 0 then there is an inequality used as the
+    ** start key.  (ex: "x>...");
     */
     for(pIdx=pTab->pIndex; pIdx; pIdx=pIdx->pNext){
-      int columnMask = 0;
+      int eqMask = 0;  /* Index columns covered by an x=... constraint */
+      int ltMask = 0;  /* Index columns covered by an x<... constraint */
+      int gtMask = 0;  /* Index columns covered by an x>... constraing */
+      int nEq, m, score;
 
-      if( pIdx->nColumn>32 ) continue;
+      if( pIdx->nColumn>32 ) continue;  /* Ignore indices too many columns */
       for(j=0; j<nExpr; j++){
         if( aExpr[j].idxLeft==idx 
              && (aExpr[j].prereqRight & loopMask)==aExpr[j].prereqRight ){
@@ -255,7 +288,27 @@ WhereInfo *sqliteWhereBegin(
           int k;
           for(k=0; k<pIdx->nColumn; k++){
             if( pIdx->aiColumn[k]==iColumn ){
-              columnMask |= 1<<k;
+              switch( aExpr[j].p->op ){
+                case TK_EQ: {
+                  eqMask |= 1<<k;
+                  break;
+                }
+                case TK_LE:
+                case TK_LT: {
+                  ltMask |= 1<<k;
+                  break;
+                }
+                case TK_GE:
+                case TK_GT: {
+                  gtMask |= 1<<k;
+                  break;
+                }
+                default: {
+                  /* CANT_HAPPEN */
+                  assert( 0 );
+                  break;
+                }
+              }
               break;
             }
           }
@@ -266,23 +319,54 @@ WhereInfo *sqliteWhereBegin(
           int k;
           for(k=0; k<pIdx->nColumn; k++){
             if( pIdx->aiColumn[k]==iColumn ){
-              columnMask |= 1<<k;
+              switch( aExpr[j].p->op ){
+                case TK_EQ: {
+                  eqMask |= 1<<k;
+                  break;
+                }
+                case TK_LE:
+                case TK_LT: {
+                  gtMask |= 1<<k;
+                  break;
+                }
+                case TK_GE:
+                case TK_GT: {
+                  ltMask |= 1<<k;
+                  break;
+                }
+                default: {
+                  /* CANT_HAPPEN */
+                  assert( 0 );
+                  break;
+                }
+              }
               break;
             }
           }
         }
       }
-      if( columnMask + 1 == (1<<pIdx->nColumn) ){
-        if( pBestIdx==0 || pBestIdx->nColumn<pIdx->nColumn ){
-          pBestIdx = pIdx;
-        }
+      for(nEq=0; nEq<pIdx->nColumn; nEq++){
+        m = (1<<(nEq+1))-1;
+        if( (m & eqMask)!=m ) break;
+      }
+      score = nEq*4;
+      m = 1<<nEq;
+      if( m & ltMask ) score++;
+      if( m & gtMask ) score+=2;
+      if( score>bestScore ){
+        pBestIdx = pIdx;
+        bestScore = score;
       }
     }
-    aIdx[i] = pBestIdx;
+    pWInfo->a[i].pIdx = pBestIdx;
+    pWInfo->a[i].score = bestScore;
     loopMask |= 1<<idx;
+    if( pBestIdx ){
+      pWInfo->a[i].iCur = nCur++;
+    }
   }
 
-  /* Open all tables in the pTabList and all indices in aIdx[].
+  /* Open all tables in the pTabList and all indices used by those tables.
   */
   for(i=0; i<pTabList->nId; i++){
     int openOp;
@@ -290,31 +374,32 @@ WhereInfo *sqliteWhereBegin(
 
     pTab = pTabList->a[i].pTab;
     openOp = pTab->isTemp ? OP_OpenAux : OP_Open;
-    sqliteVdbeAddOp(v, openOp, base+i, pTab->tnum, pTab->zName, 0);
+    sqliteVdbeAddOp(v, openOp, base+i, pTab->tnum);
+    sqliteVdbeChangeP3(v, -1, pTab->zName, P3_STATIC);
     if( i==0 && !pParse->schemaVerified &&
           (pParse->db->flags & SQLITE_InTrans)==0 ){
-      sqliteVdbeAddOp(v, OP_VerifyCookie, pParse->db->schema_cookie, 0, 0, 0);
+      sqliteVdbeAddOp(v, OP_VerifyCookie, pParse->db->schema_cookie, 0);
       pParse->schemaVerified = 1;
     }
-    if( i<ARRAYSIZE(aIdx) && aIdx[i]!=0 ){
-      sqliteVdbeAddOp(v, openOp, base+pTabList->nId+i, aIdx[i]->tnum,
-          aIdx[i]->zName, 0);
+    if( pWInfo->a[i].pIdx!=0 ){
+      sqliteVdbeAddOp(v, openOp, pWInfo->a[i].iCur, pWInfo->a[i].pIdx->tnum);
+      sqliteVdbeChangeP3(v, -1, pWInfo->a[i].pIdx->zName, P3_STATIC);
     }
   }
-  memcpy(pWInfo->aIdx, aIdx, sizeof(aIdx));
 
   /* Generate the code to do the search
   */
-  pWInfo->iBreak = brk = sqliteVdbeMakeLabel(v);
   loopMask = 0;
+  pWInfo->iBreak = sqliteVdbeMakeLabel(v);
   for(i=0; i<pTabList->nId; i++){
     int j, k;
     int idx = aOrder[i];
     int goDirect;
     Index *pIdx;
+    WhereLevel *pLevel = &pWInfo->a[i];
 
-    if( i<ARRAYSIZE(aIdx) ){
-      pIdx = aIdx[i];
+    if( i<ARRAYSIZE(aDirect) ){
+      pIdx = pLevel->pIdx;
       goDirect = aDirect[i];
     }else{
       pIdx = 0;
@@ -324,7 +409,6 @@ WhereInfo *sqliteWhereBegin(
     if( goDirect ){
       /* Case 1:  We can directly reference a single row using the ROWID field.
       */
-      cont = brk;
       for(k=0; k<nExpr; k++){
         if( aExpr[k].p==0 ) continue;
         if( aExpr[k].idxLeft==idx 
@@ -344,29 +428,41 @@ WhereInfo *sqliteWhereBegin(
           break;
         }
       }
-      sqliteVdbeAddOp(v, OP_AddImm, 0, 0, 0, 0);
+      sqliteVdbeAddOp(v, OP_AddImm, 0, 0);
+      brk = pLevel->brk = sqliteVdbeMakeLabel(v);
+      cont = pLevel->cont = brk;
       if( i==pTabList->nId-1 && pushKey ){
         haveKey = 1;
       }else{
-        sqliteVdbeAddOp(v, OP_NotFound, base+idx, brk, 0, 0);
+        sqliteVdbeAddOp(v, OP_NotFound, base+idx, brk);
         haveKey = 0;
       }
+      pLevel->op = OP_Noop;
     }else if( pIdx==0 ){
       /* Case 2:  There was no usable index.  We must do a complete
-      ** scan of the table.
+      **          scan of the entire database table.
       */
-      sqliteVdbeAddOp(v, OP_Rewind, base+idx, 0, 0, 0);
-      cont = sqliteVdbeMakeLabel(v);
-      sqliteVdbeAddOp(v, OP_Next, base+idx, brk, 0, cont);
+      int start;
+
+      brk = pLevel->brk = sqliteVdbeMakeLabel(v);
+      cont = pLevel->cont = sqliteVdbeMakeLabel(v);
+      sqliteVdbeAddOp(v, OP_Rewind, base+idx, brk);
+      start = sqliteVdbeCurrentAddr(v);
+      pLevel->op = OP_Next;
+      pLevel->p1 = base+idx;
+      pLevel->p2 = start;
       haveKey = 0;
-    }else{
-      /* Case 3:  We do have a usable index in pIdx.
+    }else if( pLevel->score%4==0 ){
+      /* Case 3:  All index constraints are equality operators.
       */
-      cont = sqliteVdbeMakeLabel(v);
-      for(j=0; j<pIdx->nColumn; j++){
+      int start;
+      int testOp;
+      int nColumn = pLevel->score/4;
+      for(j=0; j<nColumn; j++){
         for(k=0; k<nExpr; k++){
           if( aExpr[k].p==0 ) continue;
           if( aExpr[k].idxLeft==idx 
+             && aExpr[k].p->op==TK_EQ
              && (aExpr[k].prereqRight & loopMask)==aExpr[k].prereqRight 
              && aExpr[k].p->pLeft->iColumn==pIdx->aiColumn[j]
           ){
@@ -375,6 +471,7 @@ WhereInfo *sqliteWhereBegin(
             break;
           }
           if( aExpr[k].idxRight==idx 
+             && aExpr[k].p->op==TK_EQ
              && (aExpr[k].prereqLeft & loopMask)==aExpr[k].prereqLeft
              && aExpr[k].p->pRight->iColumn==pIdx->aiColumn[j]
           ){
@@ -384,15 +481,187 @@ WhereInfo *sqliteWhereBegin(
           }
         }
       }
-      sqliteVdbeAddOp(v, OP_MakeKey, pIdx->nColumn, 0, 0, 0);
-      sqliteVdbeAddOp(v, OP_BeginIdx, base+pTabList->nId+i, 0, 0, 0);
-      sqliteVdbeAddOp(v, OP_NextIdx, base+pTabList->nId+i, brk, 0, cont);
+      pLevel->iMem = pParse->nMem++;
+      brk = pLevel->brk = sqliteVdbeMakeLabel(v);
+      cont = pLevel->cont = sqliteVdbeMakeLabel(v);
+      sqliteVdbeAddOp(v, OP_MakeKey, nColumn, 0);
+      if( nColumn==pIdx->nColumn ){
+        sqliteVdbeAddOp(v, OP_MemStore, pLevel->iMem, 0);
+        testOp = OP_IdxGT;
+      }else{
+        sqliteVdbeAddOp(v, OP_Dup, 0, 0);
+        sqliteVdbeAddOp(v, OP_IncrKey, 0, 0);
+        sqliteVdbeAddOp(v, OP_MemStore, pLevel->iMem, 1);
+        testOp = OP_IdxGE;
+      }
+      sqliteVdbeAddOp(v, OP_MoveTo, pLevel->iCur, brk);
+      start = sqliteVdbeAddOp(v, OP_MemLoad, pLevel->iMem, 0);
+      sqliteVdbeAddOp(v, testOp, pLevel->iCur, brk);
+      sqliteVdbeAddOp(v, OP_IdxRecno, pLevel->iCur, 0);
       if( i==pTabList->nId-1 && pushKey ){
         haveKey = 1;
       }else{
-        sqliteVdbeAddOp(v, OP_MoveTo, base+idx, 0, 0, 0);
+        sqliteVdbeAddOp(v, OP_MoveTo, base+idx, 0);
         haveKey = 0;
       }
+      pLevel->op = OP_Next;
+      pLevel->p1 = pLevel->iCur;
+      pLevel->p2 = start;
+    }else{
+      /* Case 4: The contraints on the right-most index field are
+      **         inequalities.
+      */
+      int score = pLevel->score;
+      int nEqColumn = score/4;
+      int start;
+      int leFlag, geFlag;
+      int testOp;
+
+      /* Evaluate the equality constraints
+      */
+      for(j=0; j<nEqColumn; j++){
+        for(k=0; k<nExpr; k++){
+          if( aExpr[k].p==0 ) continue;
+          if( aExpr[k].idxLeft==idx 
+             && aExpr[k].p->op==TK_EQ
+             && (aExpr[k].prereqRight & loopMask)==aExpr[k].prereqRight 
+             && aExpr[k].p->pLeft->iColumn==pIdx->aiColumn[j]
+          ){
+            sqliteExprCode(pParse, aExpr[k].p->pRight);
+            aExpr[k].p = 0;
+            break;
+          }
+          if( aExpr[k].idxRight==idx 
+             && aExpr[k].p->op==TK_EQ
+             && (aExpr[k].prereqLeft & loopMask)==aExpr[k].prereqLeft
+             && aExpr[k].p->pRight->iColumn==pIdx->aiColumn[j]
+          ){
+            sqliteExprCode(pParse, aExpr[k].p->pLeft);
+            aExpr[k].p = 0;
+            break;
+          }
+        }
+      }
+
+      /* Duplicate the equality contraint values because they will all be
+      ** used twice: once to make the termination key and once to make the
+      ** start key.
+      */
+      for(j=0; j<nEqColumn; j++){
+        sqliteVdbeAddOp(v, OP_Dup, nEqColumn-1, 0);
+      }
+
+      /* Generate the termination key.  This is the key value that
+      ** will end the search.  There is no termination key if there
+      ** are no equality contraints and no "X<..." constraint.
+      */
+      if( (score & 1)!=0 ){
+        for(k=0; k<nExpr; k++){
+          Expr *pExpr = aExpr[k].p;
+          if( pExpr==0 ) continue;
+          if( aExpr[k].idxLeft==idx 
+             && (pExpr->op==TK_LT || pExpr->op==TK_LE)
+             && (aExpr[k].prereqRight & loopMask)==aExpr[k].prereqRight 
+             && pExpr->pLeft->iColumn==pIdx->aiColumn[j]
+          ){
+            sqliteExprCode(pParse, pExpr->pRight);
+            leFlag = pExpr->op==TK_LE;
+            aExpr[k].p = 0;
+            break;
+          }
+          if( aExpr[k].idxRight==idx 
+             && (pExpr->op==TK_GT || pExpr->op==TK_GE)
+             && (aExpr[k].prereqLeft & loopMask)==aExpr[k].prereqLeft
+             && pExpr->pRight->iColumn==pIdx->aiColumn[j]
+          ){
+            sqliteExprCode(pParse, pExpr->pLeft);
+            leFlag = pExpr->op==TK_GE;
+            aExpr[k].p = 0;
+            break;
+          }
+        }
+        testOp = OP_IdxGE;
+      }else{
+        testOp = nEqColumn>0 ? OP_IdxGE : OP_Noop;
+        leFlag = 1;
+      }
+      if( testOp!=OP_Noop ){
+        pLevel->iMem = pParse->nMem++;
+        sqliteVdbeAddOp(v, OP_MakeKey, nEqColumn + (score & 1), 0);
+        if( leFlag ){
+          sqliteVdbeAddOp(v, OP_IncrKey, 0, 0);
+        }
+        sqliteVdbeAddOp(v, OP_MemStore, pLevel->iMem, 1);
+      }
+
+      /* Generate the start key.  This is the key that defines the lower
+      ** bound on the search.  There is no start key if there are not
+      ** equality constraints and if there is no "X>..." constraint.  In
+      ** that case, generate a "Rewind" instruction in place of the
+      ** start key search.
+      */
+      if( (score & 2)!=0 ){
+        for(k=0; k<nExpr; k++){
+          Expr *pExpr = aExpr[k].p;
+          if( pExpr==0 ) continue;
+          if( aExpr[k].idxLeft==idx 
+             && (pExpr->op==TK_GT || pExpr->op==TK_GE)
+             && (aExpr[k].prereqRight & loopMask)==aExpr[k].prereqRight 
+             && pExpr->pLeft->iColumn==pIdx->aiColumn[j]
+          ){
+            sqliteExprCode(pParse, pExpr->pRight);
+            geFlag = pExpr->op==TK_GE;
+            aExpr[k].p = 0;
+            break;
+          }
+          if( aExpr[k].idxRight==idx 
+             && (pExpr->op==TK_LT || pExpr->op==TK_LE)
+             && (aExpr[k].prereqLeft & loopMask)==aExpr[k].prereqLeft
+             && pExpr->pRight->iColumn==pIdx->aiColumn[j]
+          ){
+            sqliteExprCode(pParse, pExpr->pLeft);
+            geFlag = pExpr->op==TK_LE;
+            aExpr[k].p = 0;
+            break;
+          }
+        }
+      }else{
+        geFlag = 1;
+      }
+      brk = pLevel->brk = sqliteVdbeMakeLabel(v);
+      cont = pLevel->cont = sqliteVdbeMakeLabel(v);
+      if( nEqColumn>0 || (score&2)!=0 ){
+        sqliteVdbeAddOp(v, OP_MakeKey, nEqColumn + ((score&2)!=0), 0);
+        if( !geFlag ){
+          sqliteVdbeAddOp(v, OP_IncrKey, 0, 0);
+        }
+        sqliteVdbeAddOp(v, OP_MoveTo, pLevel->iCur, brk);
+      }else{
+        sqliteVdbeAddOp(v, OP_Rewind, pLevel->iCur, brk);
+      }
+
+      /* Generate the the top of the loop.  If there is a termination
+      ** key we have to test for that key and abort at the top of the
+      ** loop.
+      */
+      start = sqliteVdbeCurrentAddr(v);
+      if( testOp!=OP_Noop ){
+        sqliteVdbeAddOp(v, OP_MemLoad, pLevel->iMem, 0);
+        sqliteVdbeAddOp(v, testOp, pLevel->iCur, brk);
+      }
+      sqliteVdbeAddOp(v, OP_IdxRecno, pLevel->iCur, 0);
+      if( i==pTabList->nId-1 && pushKey ){
+        haveKey = 1;
+      }else{
+        sqliteVdbeAddOp(v, OP_MoveTo, base+idx, 0);
+        haveKey = 0;
+      }
+
+      /* Record the instruction used to terminate the loop.
+      */
+      pLevel->op = OP_Next;
+      pLevel->p1 = pLevel->iCur;
+      pLevel->p2 = start;
     }
     loopMask |= 1<<idx;
 
@@ -405,7 +674,7 @@ WhereInfo *sqliteWhereBegin(
       if( (aExpr[j].prereqLeft & loopMask)!=aExpr[j].prereqLeft ) continue;
       if( haveKey ){
         haveKey = 0;
-        sqliteVdbeAddOp(v, OP_MoveTo, base+idx, 0, 0, 0);
+        sqliteVdbeAddOp(v, OP_MoveTo, base+idx, 0);
       }
       sqliteExprIfFalse(pParse, aExpr[j].p, cont);
       aExpr[j].p = 0;
@@ -414,7 +683,7 @@ WhereInfo *sqliteWhereBegin(
   }
   pWInfo->iContinue = cont;
   if( pushKey && !haveKey ){
-    sqliteVdbeAddOp(v, OP_Recno, base, 0, 0, 0);
+    sqliteVdbeAddOp(v, OP_Recno, base, 0);
   }
   sqliteFree(aOrder);
   return pWInfo;
@@ -426,19 +695,24 @@ WhereInfo *sqliteWhereBegin(
 void sqliteWhereEnd(WhereInfo *pWInfo){
   Vdbe *v = pWInfo->pParse->pVdbe;
   int i;
-  int brk = pWInfo->iBreak;
   int base = pWInfo->base;
+  WhereLevel *pLevel;
 
-  sqliteVdbeAddOp(v, OP_Goto, 0, pWInfo->iContinue, 0, 0);
-  for(i=0; i<pWInfo->pTabList->nId; i++){
-    sqliteVdbeAddOp(v, OP_Close, base+i, 0, 0, brk);
-    brk = 0;
-    if( i<ARRAYSIZE(pWInfo->aIdx) && pWInfo->aIdx[i]!=0 ){
-      sqliteVdbeAddOp(v, OP_Close, base+pWInfo->pTabList->nId+i, 0, 0, 0);
+  for(i=pWInfo->pTabList->nId-1; i>=0; i--){
+    pLevel = &pWInfo->a[i];
+    sqliteVdbeResolveLabel(v, pLevel->cont);
+    if( pLevel->op!=OP_Noop ){
+      sqliteVdbeAddOp(v, pLevel->op, pLevel->p1, pLevel->p2);
     }
+    sqliteVdbeResolveLabel(v, pLevel->brk);
   }
-  if( brk!=0 ){
-    sqliteVdbeAddOp(v, OP_Noop, 0, 0, 0, brk);
+  sqliteVdbeResolveLabel(v, pWInfo->iBreak);
+  for(i=0; i<pWInfo->pTabList->nId; i++){
+    pLevel = &pWInfo->a[i];
+    sqliteVdbeAddOp(v, OP_Close, base+i, 0);
+    if( pLevel->pIdx!=0 ){
+      sqliteVdbeAddOp(v, OP_Close, pLevel->iCur, 0);
+    }
   }
   sqliteFree(pWInfo);
   return;

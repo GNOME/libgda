@@ -110,7 +110,7 @@ void sqliteUpdate(
     }
   }
 
-  /* Allocate memory for the array apIdx[] and fill it pointers to every
+  /* Allocate memory for the array apIdx[] and fill it with pointers to every
   ** index that needs to be updated.  Indices only need updating if their
   ** key includes one of the columns named in pChanges.
   */
@@ -136,34 +136,39 @@ void sqliteUpdate(
   v = sqliteGetVdbe(pParse);
   if( v==0 ) goto update_cleanup;
   if( (db->flags & SQLITE_InTrans)==0 ){
-    sqliteVdbeAddOp(v, OP_Transaction, 0, 0, 0, 0);
-    sqliteVdbeAddOp(v, OP_VerifyCookie, db->schema_cookie, 0, 0, 0);
+    sqliteVdbeAddOp(v, OP_Transaction, 0, 0);
+    sqliteVdbeAddOp(v, OP_VerifyCookie, db->schema_cookie, 0);
     pParse->schemaVerified = 1;
   }
 
   /* Begin the database scan
   */
-  sqliteVdbeAddOp(v, OP_ListOpen, 0, 0, 0, 0);
   pWInfo = sqliteWhereBegin(pParse, pTabList, pWhere, 1);
   if( pWInfo==0 ) goto update_cleanup;
 
   /* Remember the index of every item to be updated.
   */
-  sqliteVdbeAddOp(v, OP_ListWrite, 0, 0, 0, 0);
+  sqliteVdbeAddOp(v, OP_ListWrite, 0, 0);
 
   /* End the database scan loop.
   */
   sqliteWhereEnd(pWInfo);
 
+  /* Initialize the count of updated rows
+  */
+  if( db->flags & SQLITE_CountRows ){
+    sqliteVdbeAddOp(v, OP_Integer, 0, 0);
+  }
+
   /* Rewind the list of records that need to be updated and
   ** open every index that needs updating.
   */
-  sqliteVdbeAddOp(v, OP_ListRewind, 0, 0, 0, 0);
+  sqliteVdbeAddOp(v, OP_ListRewind, 0, 0);
   base = pParse->nTab;
   openOp = pTab->isTemp ? OP_OpenWrAux : OP_OpenWrite;
-  sqliteVdbeAddOp(v, openOp, base, pTab->tnum, 0, 0);
+  sqliteVdbeAddOp(v, openOp, base, pTab->tnum);
   for(i=0; i<nIdx; i++){
-    sqliteVdbeAddOp(v, openOp, base+i+1, apIdx[i]->tnum, 0, 0);
+    sqliteVdbeAddOp(v, openOp, base+i+1, apIdx[i]->tnum);
   }
 
   /* Loop over every record that needs updating.  We have to load
@@ -172,28 +177,28 @@ void sqliteUpdate(
   ** Also, the old data is needed to delete the old index entires.
   */
   end = sqliteVdbeMakeLabel(v);
-  addr = sqliteVdbeAddOp(v, OP_ListRead, 0, end, 0, 0);
-  sqliteVdbeAddOp(v, OP_Dup, 0, 0, 0, 0);
-  sqliteVdbeAddOp(v, OP_MoveTo, base, 0, 0, 0);
+  addr = sqliteVdbeAddOp(v, OP_ListRead, 0, end);
+  sqliteVdbeAddOp(v, OP_Dup, 0, 0);
+  sqliteVdbeAddOp(v, OP_MoveTo, base, 0);
 
   /* Delete the old indices for the current record.
   */
   for(i=0; i<nIdx; i++){
-    sqliteVdbeAddOp(v, OP_Dup, 0, 0, 0, 0);
+    sqliteVdbeAddOp(v, OP_Dup, 0, 0);
     pIdx = apIdx[i];
     for(j=0; j<pIdx->nColumn; j++){
-      sqliteVdbeAddOp(v, OP_Column, base, pIdx->aiColumn[j], 0, 0);
+      sqliteVdbeAddOp(v, OP_Column, base, pIdx->aiColumn[j]);
     }
-    sqliteVdbeAddOp(v, OP_MakeIdxKey, pIdx->nColumn, 0, 0, 0);
-    sqliteVdbeAddOp(v, OP_DeleteIdx, base+i+1, 0, 0, 0);
+    sqliteVdbeAddOp(v, OP_MakeIdxKey, pIdx->nColumn, 0);
+    sqliteVdbeAddOp(v, OP_IdxDelete, base+i+1, 0);
   }
 
-  /* Compute a completely new data for this record.  
+  /* Compute new data for this record.  
   */
   for(i=0; i<pTab->nCol; i++){
     j = aXRef[i];
     if( j<0 ){
-      sqliteVdbeAddOp(v, OP_Column, base, i, 0, 0);
+      sqliteVdbeAddOp(v, OP_Column, base, i);
     }else{
       sqliteExprCode(pParse, pChanges->a[j].pExpr);
     }
@@ -202,27 +207,44 @@ void sqliteUpdate(
   /* Insert new index entries that correspond to the new data
   */
   for(i=0; i<nIdx; i++){
-    sqliteVdbeAddOp(v, OP_Dup, pTab->nCol, 0, 0, 0); /* The KEY */
+    sqliteVdbeAddOp(v, OP_Dup, pTab->nCol, 0); /* The KEY */
     pIdx = apIdx[i];
     for(j=0; j<pIdx->nColumn; j++){
-      sqliteVdbeAddOp(v, OP_Dup, j+pTab->nCol-pIdx->aiColumn[j], 0, 0, 0);
+      sqliteVdbeAddOp(v, OP_Dup, j+pTab->nCol-pIdx->aiColumn[j], 0);
     }
-    sqliteVdbeAddOp(v, OP_MakeIdxKey, pIdx->nColumn, 0, 0, 0);
-    sqliteVdbeAddOp(v, OP_PutIdx, base+i+1, pIdx->isUnique, 0, 0);
+    sqliteVdbeAddOp(v, OP_MakeIdxKey, pIdx->nColumn, 0);
+    sqliteVdbeAddOp(v, OP_IdxPut, base+i+1, pIdx->isUnique);
   }
 
   /* Write the new data back into the database.
   */
-  sqliteVdbeAddOp(v, OP_MakeRecord, pTab->nCol, 0, 0, 0);
-  sqliteVdbeAddOp(v, OP_Put, base, 0, 0, 0);
+  sqliteVdbeAddOp(v, OP_MakeRecord, pTab->nCol, 0);
+  sqliteVdbeAddOp(v, OP_Put, base, 0);
+
+  /* Increment the count of rows affected by the update
+  */
+  if( db->flags & SQLITE_CountRows ){
+    sqliteVdbeAddOp(v, OP_AddImm, 1, 0);
+  }
 
   /* Repeat the above with the next record to be updated, until
   ** all record selected by the WHERE clause have been updated.
   */
-  sqliteVdbeAddOp(v, OP_Goto, 0, addr, 0, 0);
-  sqliteVdbeAddOp(v, OP_ListClose, 0, 0, 0, end);
+  sqliteVdbeAddOp(v, OP_Goto, 0, addr);
+  sqliteVdbeResolveLabel(v, end);
+  sqliteVdbeAddOp(v, OP_ListReset, 0, 0);
   if( (db->flags & SQLITE_InTrans)==0 ){
-    sqliteVdbeAddOp(v, OP_Commit, 0, 0, 0, 0);
+    sqliteVdbeAddOp(v, OP_Commit, 0, 0);
+  }
+
+  /*
+  ** Return the number of rows that were changed.
+  */
+  if( db->flags & SQLITE_CountRows ){
+    sqliteVdbeAddOp(v, OP_ColumnCount, 1, 0);
+    sqliteVdbeAddOp(v, OP_ColumnName, 0, 0);
+    sqliteVdbeChangeP3(v, -1, "rows updated", P3_STATIC);
+    sqliteVdbeAddOp(v, OP_Callback, 1, 0);
   }
 
 update_cleanup:

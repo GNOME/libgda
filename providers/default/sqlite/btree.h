@@ -41,7 +41,8 @@ int sqliteBtreeFirst(BtCursor*, int *pRes);
 int sqliteBtreeNext(BtCursor*, int *pRes);
 int sqliteBtreeKeySize(BtCursor*, int *pSize);
 int sqliteBtreeKey(BtCursor*, int offset, int amt, char *zBuf);
-int sqliteBtreeKeyCompare(BtCursor*, const void *pKey, int nKey, int *pRes);
+int sqliteBtreeKeyCompare(BtCursor*, const void *pKey, int nKey,
+                          int nIgnore, int *pRes);
 int sqliteBtreeDataSize(BtCursor*, int *pSize);
 int sqliteBtreeData(BtCursor*, int offset, int amt, char *zBuf);
 int sqliteBtreeCloseCursor(BtCursor*);

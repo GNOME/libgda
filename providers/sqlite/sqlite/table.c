@@ -47,25 +47,27 @@ static int sqlite_get_table_cb(void *pArg, int nCol, char **argv, char **colv){
   /* Make sure there is enough space in p->azResult to hold everything
   ** we need to remember from this invocation of the callback.
   */
-  if( p->nRow==0 ){
-    p->nColumn = nCol;
+  if( p->nRow==0 && argv!=0 ){
     need = nCol*2;
   }else{
     need = nCol;
   }
   if( p->nData + need >= p->nAlloc ){
+    char **azNew;
     p->nAlloc = p->nAlloc*2 + need + 1;
-    p->azResult = realloc( p->azResult, sizeof(char*)*p->nAlloc );
-    if( p->azResult==0 ){
+    azNew = realloc( p->azResult, sizeof(char*)*p->nAlloc );
+    if( azNew==0 ){
       p->rc = SQLITE_NOMEM;
       return 1;
     }
+    p->azResult = azNew;
   }
 
   /* If this is the first row, then generate an extra row containing
   ** the names of all columns.
   */
   if( p->nRow==0 ){
+    p->nColumn = nCol;
     for(i=0; i<nCol; i++){
       if( colv[i]==0 ){
         z = 0;
@@ -83,20 +85,22 @@ static int sqlite_get_table_cb(void *pArg, int nCol, char **argv, char **colv){
 
   /* Copy over the row data
   */
-  for(i=0; i<nCol; i++){
-    if( argv[i]==0 ){
-      z = 0;
-    }else{
-      z = malloc( strlen(argv[i])+1 );
-      if( z==0 ){
-        p->rc = SQLITE_NOMEM;
-        return 1;
+  if( argv!=0 ){
+    for(i=0; i<nCol; i++){
+      if( argv[i]==0 ){
+        z = 0;
+      }else{
+        z = malloc( strlen(argv[i])+1 );
+        if( z==0 ){
+          p->rc = SQLITE_NOMEM;
+          return 1;
+        }
+        strcpy(z, argv[i]);
       }
-      strcpy(z, argv[i]);
+      p->azResult[p->nData++] = z;
     }
-    p->azResult[p->nData++] = z;
+    p->nRow++;
   }
-  p->nRow++;
   return 0;
 }
 
@@ -112,7 +116,7 @@ static int sqlite_get_table_cb(void *pArg, int nCol, char **argv, char **colv){
 */
 int sqlite_get_table(
   sqlite *db,                 /* The database on which the SQL executes */
-  char *zSql,                 /* The SQL to be executed */
+  const char *zSql,           /* The SQL to be executed */
   char ***pazResult,          /* Write the result table here */
   int *pnRow,                 /* Write the number of rows in the result here */
   int *pnColumn,              /* Write the number of columns of result here */
@@ -148,8 +152,13 @@ int sqlite_get_table(
     return rc;
   }
   if( res.nAlloc>res.nData ){
-    res.azResult = realloc( res.azResult, sizeof(char*)*(res.nData+1) );
-    if( res.azResult==0 ) return SQLITE_NOMEM;
+    char **azNew;
+    azNew = realloc( res.azResult, sizeof(char*)*(res.nData+1) );
+    if( res.azResult==0 ){
+      sqlite_free_table(&res.azResult[1]);
+      return SQLITE_NOMEM;
+    }
+    res.azResult = azNew;
   }
   *pazResult = &res.azResult[1];
   if( pnColumn ) *pnColumn = res.nColumn;

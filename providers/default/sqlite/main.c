@@ -63,7 +63,7 @@ static int sqliteOpenCb(void *pDb, int argc, char **argv, char **azColName){
         sParse.db = db;
         sParse.initFlag = 1;
         sParse.newTnum = atoi(argv[2]);
-        nErr = sqliteRunParser(&sParse, argv[3], 0);
+        sqliteRunParser(&sParse, argv[3], 0);
       }else{
         /* If the SQL column is blank it means this is an index that
         ** was created to be the PRIMARY KEY or to fulfill a UNIQUE
@@ -157,40 +157,37 @@ static int sqliteInit(sqlite *db, char **pzErrMsg){
   */
   static VdbeOp initProg[] = {
     { OP_Open,     0, 2,  0},
-    { OP_Rewind,   0, 0,  0},
-    { OP_Next,     0, 12, 0},           /* 2 */
-    { OP_Column,   0, 0,  0},
+    { OP_Rewind,   0, 31, 0},
+    { OP_Column,   0, 0,  0},           /* 2 */
     { OP_String,   0, 0,  "meta"},
-    { OP_Ne,       0, 2,  0},
+    { OP_Ne,       0, 10, 0},
     { OP_Column,   0, 0,  0},
     { OP_Column,   0, 1,  0},
     { OP_Column,   0, 3,  0},
     { OP_Column,   0, 4,  0},
     { OP_Callback, 4, 0,  0},
-    { OP_Goto,     0, 2,  0},
-    { OP_Rewind,   0, 0,  0},           /* 12 */
-    { OP_Next,     0, 23, 0},           /* 13 */
-    { OP_Column,   0, 0,  0},
+    { OP_Next,     0, 2,  0},           /* 10 */
+    { OP_Rewind,   0, 31, 0},           /* 11 */
+    { OP_Column,   0, 0,  0},           /* 12 */
     { OP_String,   0, 0,  "table"},
-    { OP_Ne,       0, 13, 0},
+    { OP_Ne,       0, 20, 0},
     { OP_Column,   0, 0,  0},
     { OP_Column,   0, 1,  0},
     { OP_Column,   0, 3,  0},
     { OP_Column,   0, 4,  0},
     { OP_Callback, 4, 0,  0},
-    { OP_Goto,     0, 13, 0},
-    { OP_Rewind,   0, 0,  0},           /* 23 */
-    { OP_Next,     0, 34, 0},           /* 24 */
-    { OP_Column,   0, 0,  0},
+    { OP_Next,     0, 12, 0},           /* 20 */
+    { OP_Rewind,   0, 31, 0},           /* 21 */
+    { OP_Column,   0, 0,  0},           /* 22 */
     { OP_String,   0, 0,  "index"},
-    { OP_Ne,       0, 24, 0},
+    { OP_Ne,       0, 30, 0},
     { OP_Column,   0, 0,  0},
     { OP_Column,   0, 1,  0},
     { OP_Column,   0, 3,  0},
     { OP_Column,   0, 4,  0},
     { OP_Callback, 4, 0,  0},
-    { OP_Goto,     0, 24, 0},
-    { OP_String,   0, 0,  "meta"},      /* 34 */
+    { OP_Next,     0, 22, 0},           /* 30 */
+    { OP_String,   0, 0,  "meta"},      /* 31 */
     { OP_String,   0, 0,  "schema-cookie"},
     { OP_String,   0, 0,  0},
     { OP_ReadCookie,0,0,  0},
@@ -204,7 +201,7 @@ static int sqliteInit(sqlite *db, char **pzErrMsg){
   */
   vdbe = sqliteVdbeCreate(db);
   if( vdbe==0 ){
-    sqliteSetString(pzErrMsg, "out of memory");
+    sqliteSetString(pzErrMsg, "out of memory", 0);
     return SQLITE_NOMEM;
   }
   sqliteVdbeAddOpList(vdbe, sizeof(initProg)/sizeof(initProg[0]), initProg);
@@ -268,7 +265,7 @@ sqlite *sqlite_open(const char *zFilename, int mode, char **pzErrMsg){
   if( db==0 ) goto no_mem_on_open;
   sqliteHashInit(&db->tblHash, SQLITE_HASH_STRING, 0);
   sqliteHashInit(&db->idxHash, SQLITE_HASH_STRING, 0);
-  db->nextRowid = sqliteRandomInteger(db);
+  db->nextRowid = sqliteRandomInteger();
   
   /* Open the backend database driver */
   rc = sqliteBtreeOpen(zFilename, mode, MAX_PAGES, &db->pBe);
@@ -291,6 +288,7 @@ sqlite *sqlite_open(const char *zFilename, int mode, char **pzErrMsg){
   /* Attempt to read the schema */
   rc = sqliteInit(db, pzErrMsg);
   if( sqlite_malloc_failed ){
+    sqlite_close(db);
     goto no_mem_on_open;
   }else if( rc!=SQLITE_OK && rc!=SQLITE_BUSY ){
     sqlite_close(db);
@@ -329,10 +327,21 @@ static void clearHashTable(sqlite *db, int preserveTemps){
     Table *pTab = sqliteHashData(pElem);
     if( preserveTemps && pTab->isTemp ){
       Index *pIdx;
-      sqliteHashInsert(&db->tblHash, pTab->zName, strlen(pTab->zName)+1, pTab);
+      int nName = strlen(pTab->zName);
+      Table *pOld = sqliteHashInsert(&db->tblHash, pTab->zName, nName+1, pTab);
+      if( pOld!=0 ){
+        assert( pOld==pTab );   /* Malloc failed on the HashInsert */
+        sqliteDeleteTable(db, pOld);
+        continue;
+      }
       for(pIdx=pTab->pIndex; pIdx; pIdx=pIdx->pNext){
         int n = strlen(pIdx->zName)+1;
-        sqliteHashInsert(&db->idxHash, pIdx->zName, n, pIdx);
+        Index *pOldIdx;
+        pOldIdx = sqliteHashInsert(&db->idxHash, pIdx->zName, n, pIdx);
+        if( pOld ){
+          assert( pOldIdx==pIdx );
+          sqliteUnlinkAndDeleteIndex(db, pOldIdx);
+        }
       }
     }else{
       sqliteDeleteTable(db, pTab);
@@ -416,7 +425,7 @@ int sqlite_complete(const char *zSql){
 */
 int sqlite_exec(
   sqlite *db,                 /* The database on which the SQL executes */
-  char *zSql,                 /* The SQL to be executed */
+  const char *zSql,           /* The SQL to be executed */
   sqlite_callback xCallback,  /* Invoke this callback routine */
   void *pArg,                 /* First argument to xCallback() */
   char **pzErrMsg             /* Write error messages here */
@@ -440,6 +449,10 @@ int sqlite_exec(
   if( sqlite_malloc_failed ){
     sqliteSetString(pzErrMsg, "out of memory", 0);
     sParse.rc = SQLITE_NOMEM;
+    sqliteBtreeRollback(db->pBe);
+    if( db->pBeTemp ) sqliteBtreeRollback(db->pBeTemp);
+    db->flags &= ~SQLITE_InTrans;
+    clearHashTable(db, 0);
   }
   sqliteStrRealloc(pzErrMsg);
   if( sParse.rc==SQLITE_SCHEMA ){
@@ -474,8 +487,8 @@ static int sqliteDefaultBusyCallback(
       break;
     }
   }
-  if( prior_delay + delay > timeout*1000 ){
-    delay = timeout*1000 - prior_delay;
+  if( prior_delay + delay > timeout ){
+    delay = timeout - prior_delay;
     if( delay<=0 ) return 0;
   }
   sqliteOsSleep(delay);

@@ -21,7 +21,7 @@
 /*
 ** The version of the SQLite library.
 */
-#define SQLITE_VERSION         "2.0.2"
+#define SQLITE_VERSION         "2.1.7"
 
 /*
 ** Make sure we can call this stuff from C++.
@@ -131,7 +131,7 @@ typedef int (*sqlite_callback)(void*,int,char**, char**);
 */
 int sqlite_exec(
   sqlite*,                      /* An open database */
-  char *sql,                    /* SQL to be executed */
+  const char *sql,              /* SQL to be executed */
   sqlite_callback,              /* Callback function */
   void *,                       /* 1st argument to callback function */
   char **errmsg                 /* Error msg written here */
@@ -165,7 +165,8 @@ int sqlite_exec(
 ** defined above, then this routine returns a constant text string which
 ** descripts (in English) the meaning of the return value.
 */
-const char *sqliteErrStr(int);
+const char *sqlite_error_string(int);
+#define sqliteErrStr sqlite_error_string  /* Legacy. Do not use in new code. */
 
 /* This function causes any pending database operation to abort and
 ** return at its earliest opportunity.  This routine is typically
@@ -264,7 +265,7 @@ void sqlite_busy_timeout(sqlite*, int ms);
 */
 int sqlite_get_table(
   sqlite*,               /* An open database */
-  char *sql,             /* SQL to be executed */
+  const char *sql,       /* SQL to be executed */
   char ***resultp,       /* Result written to a char *[]  that this points to */
   int *nrow,             /* Number of result rows written here */
   int *ncolumn,          /* Number of result columns written here */
@@ -316,7 +317,7 @@ void sqlite_free_table(char **result);
 */
 int sqlite_exec_printf(
   sqlite*,                      /* An open database */
-  char *sqlFormat,              /* printf-style format string for the SQL */
+  const char *sqlFormat,        /* printf-style format string for the SQL */
   sqlite_callback,              /* Callback function */
   void *,                       /* 1st argument to callback function */
   char **errmsg,                /* Error msg written here */
@@ -324,7 +325,7 @@ int sqlite_exec_printf(
 );
 int sqlite_exec_vprintf(
   sqlite*,                      /* An open database */
-  char *sqlFormat,              /* printf-style format string for the SQL */
+  const char *sqlFormat,        /* printf-style format string for the SQL */
   sqlite_callback,              /* Callback function */
   void *,                       /* 1st argument to callback function */
   char **errmsg,                /* Error msg written here */
@@ -332,7 +333,7 @@ int sqlite_exec_vprintf(
 );
 int sqlite_get_table_printf(
   sqlite*,               /* An open database */
-  char *sqlFormat,       /* printf-style format string for the SQL */
+  const char *sqlFormat, /* printf-style format string for the SQL */
   char ***resultp,       /* Result written to a char *[]  that this points to */
   int *nrow,             /* Number of result rows written here */
   int *ncolumn,          /* Number of result columns written here */
@@ -341,7 +342,7 @@ int sqlite_get_table_printf(
 );
 int sqlite_get_table_vprintf(
   sqlite*,               /* An open database */
-  char *sqlFormat,       /* printf-style format string for the SQL */
+  const char *sqlFormat, /* printf-style format string for the SQL */
   char ***resultp,       /* Result written to a char *[]  that this points to */
   int *nrow,             /* Number of result rows written here */
   int *ncolumn,          /* Number of result columns written here */

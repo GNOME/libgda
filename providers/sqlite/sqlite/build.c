@@ -72,7 +72,11 @@ void sqliteExec(Parse *pParse){
 Expr *sqliteExpr(int op, Expr *pLeft, Expr *pRight, Token *pToken){
   Expr *pNew;
   pNew = sqliteMalloc( sizeof(Expr) );
-  if( pNew==0 ) return 0;
+  if( pNew==0 ){
+    sqliteExprDelete(pLeft);
+    sqliteExprDelete(pRight);
+    return 0;
+  }
   pNew->op = op;
   pNew->pLeft = pLeft;
   pNew->pRight = pRight;
@@ -97,7 +101,7 @@ Expr *sqliteExpr(int op, Expr *pLeft, Expr *pRight, Token *pToken){
 void sqliteExprSpan(Expr *pExpr, Token *pLeft, Token *pRight){
   if( pExpr ){
     pExpr->span.z = pLeft->z;
-    pExpr->span.n = pRight->n + (int)pRight->z - (int)pLeft->z;
+    pExpr->span.n = pRight->n + Addr(pRight->z) - Addr(pLeft->z);
   }
 }
 
@@ -108,7 +112,10 @@ void sqliteExprSpan(Expr *pExpr, Token *pLeft, Token *pRight){
 Expr *sqliteExprFunction(ExprList *pList, Token *pToken){
   Expr *pNew;
   pNew = sqliteMalloc( sizeof(Expr) );
-  if( pNew==0 ) return 0;
+  if( pNew==0 ){
+    sqliteExprListDelete(pList);
+    return 0;
+  }
   pNew->op = TK_FUNCTION;
   pNew->pList = pList;
   if( pToken ){
@@ -172,7 +179,7 @@ static void sqliteDeleteIndex(sqlite *db, Index *pIndex){
 ** the index from the index hash table and free its memory
 ** structures.
 */
-static void sqliteUnlinkAndDeleteIndex(sqlite *db, Index *pIndex){
+void sqliteUnlinkAndDeleteIndex(sqlite *db, Index *pIndex){
   if( pIndex->pTable->pIndex==pIndex ){
     pIndex->pTable->pIndex = pIndex->pNext;
   }else{
@@ -411,7 +418,10 @@ void sqliteStartTable(Parse *pParse, Token *pStart, Token *pName, int isTemp){
     return;
   }
   pTable = sqliteMalloc( sizeof(Table) );
-  if( pTable==0 ) return;
+  if( pTable==0 ){
+    sqliteFree(zName);
+    return;
+  }
   pTable->zName = zName;
   pTable->nCol = 0;
   pTable->aCol = 0;
@@ -421,12 +431,13 @@ void sqliteStartTable(Parse *pParse, Token *pStart, Token *pName, int isTemp){
   pParse->pNewTable = pTable;
   if( !pParse->initFlag && (v = sqliteGetVdbe(pParse))!=0 ){
     if( (db->flags & SQLITE_InTrans)==0 ){
-      sqliteVdbeAddOp(v, OP_Transaction, 0, 0, 0, 0);
-      sqliteVdbeAddOp(v, OP_VerifyCookie, db->schema_cookie, 0, 0, 0);
+      sqliteVdbeAddOp(v, OP_Transaction, 0, 0);
+      sqliteVdbeAddOp(v, OP_VerifyCookie, db->schema_cookie, 0);
       pParse->schemaVerified = 1;
     }
     if( !isTemp ){
-      sqliteVdbeAddOp(v, OP_OpenWrite, 0, 2, MASTER_NAME, 0);
+      sqliteVdbeAddOp(v, OP_OpenWrite, 0, 2);
+      sqliteVdbeChangeP3(v, -1, MASTER_NAME, P3_STATIC);
     }
   }
 }
@@ -444,11 +455,10 @@ void sqliteAddColumn(Parse *pParse, Token *pName){
   char **pz;
   if( (p = pParse->pNewTable)==0 ) return;
   if( (p->nCol & 0x7)==0 ){
-    p->aCol = sqliteRealloc( p->aCol, (p->nCol+8)*sizeof(p->aCol[0]));
-    if( p->aCol==0 ){
-      p->nCol = 0;
-      return;
-    }
+    Column *aNew;
+    aNew = sqliteRealloc( p->aCol, (p->nCol+8)*sizeof(p->aCol[0]));
+    if( aNew==0 ) return;
+    p->aCol = aNew;
   }
   memset(&p->aCol[p->nCol], 0, sizeof(p->aCol[0]));
   pz = &p->aCol[p->nCol++].zName;
@@ -488,7 +498,7 @@ void sqliteAddColumnType(Parse *pParse, Token *pFirst, Token *pLast){
   i = p->nCol-1;
   if( i<0 ) return;
   pz = &p->aCol[i].zType;
-  n = pLast->n + ((int)pLast->z) - (int)pFirst->z;
+  n = pLast->n + Addr(pLast->z) - Addr(pFirst->z);
   sqliteSetNString(pz, pFirst->z, n, 0);
   z = *pz;
   if( z==0 ) return;
@@ -543,7 +553,7 @@ void sqliteAddDefaultValue(Parse *pParse, Token *pVal, int minusFlag){
 */
 static void changeCookie(sqlite *db){
   if( db->next_cookie==db->schema_cookie ){
-    db->next_cookie = db->schema_cookie + sqliteRandomByte(db) + 1;
+    db->next_cookie = db->schema_cookie + sqliteRandomByte() + 1;
     db->flags |= SQLITE_InternChanges;
   }
 }
@@ -575,7 +585,12 @@ void sqliteEndTable(Parse *pParse, Token *pEnd){
   */
   assert( pParse->nameClash==0 || pParse->initFlag==1 );
   if( pParse->explain==0 && pParse->nameClash==0 ){
-    sqliteHashInsert(&db->tblHash, p->zName, strlen(p->zName)+1, p);
+    Table *pOld;
+    pOld = sqliteHashInsert(&db->tblHash, p->zName, strlen(p->zName)+1, p);
+    if( pOld ){
+      assert( p==pOld );  /* Malloc must have failed */
+      return;
+    }
     pParse->pNewTable = 0;
     db->nTable++;
     db->flags |= SQLITE_InternChanges;
@@ -603,27 +618,30 @@ void sqliteEndTable(Parse *pParse, Token *pEnd){
 
     v = sqliteGetVdbe(pParse);
     if( v==0 ) return;
-    n = (int)pEnd->z - (int)pParse->sFirstToken.z + 1;
+    n = Addr(pEnd->z) - Addr(pParse->sFirstToken.z) + 1;
     if( !p->isTemp ){
-      sqliteVdbeAddOp(v, OP_NewRecno, 0, 0, 0, 0);
-      sqliteVdbeAddOp(v, OP_String, 0, 0, "table", 0);
-      sqliteVdbeAddOp(v, OP_String, 0, 0, p->zName, 0);
-      sqliteVdbeAddOp(v, OP_String, 0, 0, p->zName, 0);
+      sqliteVdbeAddOp(v, OP_NewRecno, 0, 0);
+      sqliteVdbeAddOp(v, OP_String, 0, 0);
+      sqliteVdbeChangeP3(v, -1, "table", P3_STATIC);
+      sqliteVdbeAddOp(v, OP_String, 0, 0);
+      sqliteVdbeChangeP3(v, -1, p->zName, P3_STATIC);
+      sqliteVdbeAddOp(v, OP_String, 0, 0);
+      sqliteVdbeChangeP3(v, -1, p->zName, P3_STATIC);
     }
-    addr = sqliteVdbeAddOp(v, OP_CreateTable, 0, 0, 0, 0);
-    sqliteVdbeChangeP3(v, addr, (char *)&p->tnum, -1);
+    addr = sqliteVdbeAddOp(v, OP_CreateTable, 0, p->isTemp);
+    sqliteVdbeChangeP3(v, addr, (char *)&p->tnum, P3_POINTER);
     p->tnum = 0;
     if( !p->isTemp ){
-      addr = sqliteVdbeAddOp(v, OP_String, 0, 0, 0, 0);
+      addr = sqliteVdbeAddOp(v, OP_String, 0, 0);
       sqliteVdbeChangeP3(v, addr, pParse->sFirstToken.z, n);
-      sqliteVdbeAddOp(v, OP_MakeRecord, 5, 0, 0, 0);
-      sqliteVdbeAddOp(v, OP_Put, 0, 0, 0, 0);
+      sqliteVdbeAddOp(v, OP_MakeRecord, 5, 0);
+      sqliteVdbeAddOp(v, OP_Put, 0, 0);
       changeCookie(db);
-      sqliteVdbeAddOp(v, OP_SetCookie, db->next_cookie, 0, 0, 0);
-      sqliteVdbeAddOp(v, OP_Close, 0, 0, 0, 0);
+      sqliteVdbeAddOp(v, OP_SetCookie, db->next_cookie, 0);
+      sqliteVdbeAddOp(v, OP_Close, 0, 0);
     }
     if( (db->flags & SQLITE_InTrans)==0 ){
-      sqliteVdbeAddOp(v, OP_Commit, 0, 0, 0, 0);
+      sqliteVdbeAddOp(v, OP_Commit, 0, 0);
     }
   }
 }
@@ -674,35 +692,35 @@ void sqliteDropTable(Parse *pParse, Token *pName){
   if( v ){
     static VdbeOp dropTable[] = {
       { OP_OpenWrite,  0, 2,        MASTER_NAME},
-      { OP_Rewind,     0, 0,        0},
+      { OP_Rewind,     0, ADDR(9),  0},
       { OP_String,     0, 0,        0}, /* 2 */
-      { OP_Next,       0, ADDR(9),  0}, /* 3 */
-      { OP_Dup,        0, 0,        0},
+      { OP_MemStore,   1, 1,        0},
+      { OP_MemLoad,    1, 0,        0}, /* 4 */
       { OP_Column,     0, 2,        0},
-      { OP_Ne,         0, ADDR(3),  0},
+      { OP_Ne,         0, ADDR(8),  0},
       { OP_Delete,     0, 0,        0},
-      { OP_Goto,       0, ADDR(3),  0},
+      { OP_Next,       0, ADDR(4),  0}, /* 8 */
       { OP_SetCookie,  0, 0,        0}, /* 9 */
       { OP_Close,      0, 0,        0},
     };
     Index *pIdx;
     if( (db->flags & SQLITE_InTrans)==0 ){
-      sqliteVdbeAddOp(v, OP_Transaction, 0, 0, 0, 0);
-      sqliteVdbeAddOp(v, OP_VerifyCookie, db->schema_cookie, 0, 0, 0);
+      sqliteVdbeAddOp(v, OP_Transaction, 0, 0);
+      sqliteVdbeAddOp(v, OP_VerifyCookie, db->schema_cookie, 0);
       pParse->schemaVerified = 1;
     }
     if( !pTable->isTemp ){
       base = sqliteVdbeAddOpList(v, ArraySize(dropTable), dropTable);
-      sqliteVdbeChangeP3(v, base+2, pTable->zName, 0);
+      sqliteVdbeChangeP3(v, base+2, pTable->zName, P3_STATIC);
       changeCookie(db);
       sqliteVdbeChangeP1(v, base+9, db->next_cookie);
     }
-    sqliteVdbeAddOp(v, OP_Destroy, pTable->tnum, pTable->isTemp, 0, 0);
+    sqliteVdbeAddOp(v, OP_Destroy, pTable->tnum, pTable->isTemp);
     for(pIdx=pTable->pIndex; pIdx; pIdx=pIdx->pNext){
-      sqliteVdbeAddOp(v, OP_Destroy, pIdx->tnum, pTable->isTemp, 0, 0);
+      sqliteVdbeAddOp(v, OP_Destroy, pIdx->tnum, pTable->isTemp);
     }
     if( (db->flags & SQLITE_InTrans)==0 ){
-      sqliteVdbeAddOp(v, OP_Commit, 0, 0, 0, 0);
+      sqliteVdbeAddOp(v, OP_Commit, 0, 0);
     }
   }
 
@@ -874,12 +892,18 @@ void sqliteCreateIndex(
   /* Link the new Index structure to its table and to the other
   ** in-memory database structures. 
   */
-  pIndex->pNext = pTab->pIndex;
-  pTab->pIndex = pIndex;
   if( !pParse->explain && !hideName ){
-    sqliteHashInsert(&db->idxHash, pIndex->zName, strlen(zName)+1, pIndex);
+    Index *p;
+    p = sqliteHashInsert(&db->idxHash, pIndex->zName, strlen(zName)+1, pIndex);
+    if( p ){
+      assert( p==pIndex );  /* Malloc must have failed */
+      sqliteFree(pIndex);
+      goto exit_create_index;
+    }
     db->flags |= SQLITE_InternChanges;
   }
+  pIndex->pNext = pTab->pIndex;
+  pTab->pIndex = pIndex;
 
   /* If the initFlag is 1 it means we are reading the SQL off the
   ** "sqlite_master" table on the disk.  So do not write to the disk
@@ -916,66 +940,68 @@ void sqliteCreateIndex(
     if( v==0 ) goto exit_create_index;
     if( pTable!=0 ){
       if( (db->flags & SQLITE_InTrans)==0 ){
-        sqliteVdbeAddOp(v, OP_Transaction, 0, 0, 0, 0);
-        sqliteVdbeAddOp(v, OP_VerifyCookie, db->schema_cookie, 0, 0, 0);
+        sqliteVdbeAddOp(v, OP_Transaction, 0, 0);
+        sqliteVdbeAddOp(v, OP_VerifyCookie, db->schema_cookie, 0);
         pParse->schemaVerified = 1;
       }
       if( !isTemp ){
-        sqliteVdbeAddOp(v, OP_OpenWrite, 0, 2, MASTER_NAME, 0);
+        sqliteVdbeAddOp(v, OP_OpenWrite, 0, 2);
+        sqliteVdbeChangeP3(v, -1, MASTER_NAME, P3_STATIC);
       }
     }
     if( !isTemp ){
-      sqliteVdbeAddOp(v, OP_NewRecno, 0, 0, 0, 0);
-      sqliteVdbeAddOp(v, OP_String, 0, 0, "index", 0);
-      sqliteVdbeAddOp(v, OP_String, 0, 0, pIndex->zName, 0);
-      sqliteVdbeAddOp(v, OP_String, 0, 0, pTab->zName, 0);
+      sqliteVdbeAddOp(v, OP_NewRecno, 0, 0);
+      sqliteVdbeAddOp(v, OP_String, 0, 0);
+      sqliteVdbeChangeP3(v, -1, "index", P3_STATIC);
+      sqliteVdbeAddOp(v, OP_String, 0, 0);
+      sqliteVdbeChangeP3(v, -1, pIndex->zName, P3_STATIC);
+      sqliteVdbeAddOp(v, OP_String, 0, 0);
+      sqliteVdbeChangeP3(v, -1, pTab->zName, P3_STATIC);
     }
-    addr = sqliteVdbeAddOp(v, OP_CreateIndex, 0, isTemp, 0, 0);
-    sqliteVdbeChangeP3(v, addr, (char*)&pIndex->tnum, -1);
+    addr = sqliteVdbeAddOp(v, OP_CreateIndex, 0, isTemp);
+    sqliteVdbeChangeP3(v, addr, (char*)&pIndex->tnum, P3_POINTER);
     pIndex->tnum = 0;
     if( pTable ){
       if( isTemp ){
-        sqliteVdbeAddOp(v, OP_OpenWrAux, 1, 0, 0, 0);
+        sqliteVdbeAddOp(v, OP_OpenWrAux, 1, 0);
       }else{
-        sqliteVdbeAddOp(v, OP_Dup, 0, 0, 0, 0);
-        sqliteVdbeAddOp(v, OP_OpenWrite, 1, 0, 0, 0);
+        sqliteVdbeAddOp(v, OP_Dup, 0, 0);
+        sqliteVdbeAddOp(v, OP_OpenWrite, 1, 0);
       }
     }
     if( !isTemp ){
-      addr = sqliteVdbeAddOp(v, OP_String, 0, 0, 0, 0);
+      addr = sqliteVdbeAddOp(v, OP_String, 0, 0);
       if( pStart && pEnd ){
-        n = (int)pEnd->z - (int)pStart->z + 1;
+        n = Addr(pEnd->z) - Addr(pStart->z) + 1;
         sqliteVdbeChangeP3(v, addr, pStart->z, n);
       }
-      sqliteVdbeAddOp(v, OP_MakeRecord, 5, 0, 0, 0);
-      sqliteVdbeAddOp(v, OP_Put, 0, 0, 0, 0);
+      sqliteVdbeAddOp(v, OP_MakeRecord, 5, 0);
+      sqliteVdbeAddOp(v, OP_Put, 0, 0);
     }
     if( pTable ){
-      sqliteVdbeAddOp(v, isTemp ? OP_OpenAux : OP_Open, 
-                      2, pTab->tnum, pTab->zName, 0);
-      lbl1 = sqliteVdbeMakeLabel(v);
+      sqliteVdbeAddOp(v, isTemp ? OP_OpenAux : OP_Open, 2, pTab->tnum);
+      sqliteVdbeChangeP3(v, -1, pTab->zName, P3_STATIC);
       lbl2 = sqliteVdbeMakeLabel(v);
-      sqliteVdbeAddOp(v, OP_Rewind, 2, 0, 0, 0);
-      sqliteVdbeAddOp(v, OP_Next, 2, lbl2, 0, lbl1);
-      sqliteVdbeAddOp(v, OP_Recno, 2, 0, 0, 0);
+      sqliteVdbeAddOp(v, OP_Rewind, 2, lbl2);
+      lbl1 = sqliteVdbeAddOp(v, OP_Recno, 2, 0);
       for(i=0; i<pIndex->nColumn; i++){
-        sqliteVdbeAddOp(v, OP_Column, 2, pIndex->aiColumn[i], 0, 0);
+        sqliteVdbeAddOp(v, OP_Column, 2, pIndex->aiColumn[i]);
       }
-      sqliteVdbeAddOp(v, OP_MakeIdxKey, pIndex->nColumn, 0, 0, 0);
-      sqliteVdbeAddOp(v, OP_PutIdx, 1, pIndex->isUnique, 0, 0);
-      sqliteVdbeAddOp(v, OP_Goto, 0, lbl1, 0, 0);
-      sqliteVdbeAddOp(v, OP_Noop, 0, 0, 0, lbl2);
-      sqliteVdbeAddOp(v, OP_Close, 2, 0, 0, 0);
-      sqliteVdbeAddOp(v, OP_Close, 1, 0, 0, 0);
+      sqliteVdbeAddOp(v, OP_MakeIdxKey, pIndex->nColumn, 0);
+      sqliteVdbeAddOp(v, OP_IdxPut, 1, pIndex->isUnique);
+      sqliteVdbeAddOp(v, OP_Next, 2, lbl1);
+      sqliteVdbeResolveLabel(v, lbl2);
+      sqliteVdbeAddOp(v, OP_Close, 2, 0);
+      sqliteVdbeAddOp(v, OP_Close, 1, 0);
     }
     if( pTable!=0 ){
       if( !isTemp ){
         changeCookie(db);
-        sqliteVdbeAddOp(v, OP_SetCookie, db->next_cookie, 0, 0, 0);
-        sqliteVdbeAddOp(v, OP_Close, 0, 0, 0, 0);
+        sqliteVdbeAddOp(v, OP_SetCookie, db->next_cookie, 0);
+        sqliteVdbeAddOp(v, OP_Close, 0, 0);
       }
       if( (db->flags & SQLITE_InTrans)==0 ){
-        sqliteVdbeAddOp(v, OP_Commit, 0, 0, 0, 0);
+        sqliteVdbeAddOp(v, OP_Commit, 0, 0);
       }
     }
   }
@@ -1013,34 +1039,35 @@ void sqliteDropIndex(Parse *pParse, Token *pName){
   if( v ){
     static VdbeOp dropIndex[] = {
       { OP_OpenWrite,  0, 2,       MASTER_NAME},
-      { OP_Rewind,     0, 0,       0}, 
+      { OP_Rewind,     0, ADDR(10),0}, 
       { OP_String,     0, 0,       0}, /* 2 */
-      { OP_Next,       0, ADDR(8), 0}, /* 3 */
-      { OP_Dup,        0, 0,       0},
+      { OP_MemStore,   1, 1,       0},
+      { OP_MemLoad,    1, 0,       0}, /* 4 */
       { OP_Column,     0, 1,       0},
-      { OP_Ne,         0, ADDR(3), 0},
-      { OP_Delete,     0, 0,       0},
-      { OP_Destroy,    0, 0,       0}, /* 8 */
-      { OP_SetCookie,  0, 0,       0}, /* 9 */
+      { OP_Eq,         0, ADDR(9), 0},
+      { OP_Next,       0, ADDR(4), 0},
+      { OP_Goto,       0, ADDR(10),0},
+      { OP_Delete,     0, 0,       0}, /* 9 */
+      { OP_SetCookie,  0, 0,       0}, /* 10 */
       { OP_Close,      0, 0,       0},
     };
     int base;
     Table *pTab = pIndex->pTable;
 
     if( (db->flags & SQLITE_InTrans)==0 ){
-      sqliteVdbeAddOp(v, OP_Transaction, 0, 0, 0, 0);
-      sqliteVdbeAddOp(v, OP_VerifyCookie, db->schema_cookie, 0, 0, 0);
+      sqliteVdbeAddOp(v, OP_Transaction, 0, 0);
+      sqliteVdbeAddOp(v, OP_VerifyCookie, db->schema_cookie, 0);
       pParse->schemaVerified = 1;
     }
     if( !pTab->isTemp ){
       base = sqliteVdbeAddOpList(v, ArraySize(dropIndex), dropIndex);
-      sqliteVdbeChangeP3(v, base+2, pIndex->zName, 0);
+      sqliteVdbeChangeP3(v, base+2, pIndex->zName, P3_STATIC);
       changeCookie(db);
-      sqliteVdbeChangeP1(v, base+9, db->next_cookie);
+      sqliteVdbeChangeP1(v, base+10, db->next_cookie);
     }
-    sqliteVdbeAddOp(v, OP_Destroy, pIndex->tnum, pTab->isTemp, 0, 0);
+    sqliteVdbeAddOp(v, OP_Destroy, pIndex->tnum, pTab->isTemp);
     if( (db->flags & SQLITE_InTrans)==0 ){
-      sqliteVdbeAddOp(v, OP_Commit, 0, 0, 0, 0);
+      sqliteVdbeAddOp(v, OP_Commit, 0, 0);
     }
   }
 
@@ -1061,22 +1088,29 @@ ExprList *sqliteExprListAppend(ExprList *pList, Expr *pExpr, Token *pName){
   int i;
   if( pList==0 ){
     pList = sqliteMalloc( sizeof(ExprList) );
-    if( pList==0 ) return 0;
+    if( pList==0 ){
+      sqliteExprDelete(pExpr);
+      return 0;
+    }
   }
   if( (pList->nExpr & 7)==0 ){
     int n = pList->nExpr + 8;
-    pList->a = sqliteRealloc(pList->a, n*sizeof(pList->a[0]));
-    if( pList->a==0 ){
-      pList->nExpr = 0;
+    struct ExprList_item *a;
+    a = sqliteRealloc(pList->a, n*sizeof(pList->a[0]));
+    if( a==0 ){
+      sqliteExprDelete(pExpr);
       return pList;
     }
+    pList->a = a;
   }
-  i = pList->nExpr++;
-  pList->a[i].pExpr = pExpr;
-  pList->a[i].zName = 0;
-  if( pName ){
-    sqliteSetNString(&pList->a[i].zName, pName->z, pName->n, 0);
-    sqliteDequote(pList->a[i].zName);
+  if( pExpr || pName ){
+    i = pList->nExpr++;
+    pList->a[i].pExpr = pExpr;
+    pList->a[i].zName = 0;
+    if( pName ){
+      sqliteSetNString(&pList->a[i].zName, pName->z, pName->n, 0);
+      sqliteDequote(pList->a[i].zName);
+    }
   }
   return pList;
 }
@@ -1107,12 +1141,13 @@ IdList *sqliteIdListAppend(IdList *pList, Token *pToken){
     if( pList==0 ) return 0;
   }
   if( (pList->nId & 7)==0 ){
-    pList->a = sqliteRealloc(pList->a, (pList->nId+8)*sizeof(pList->a[0]) );
-    if( pList->a==0 ){
-      pList->nId = 0;
+    struct IdList_item *a;
+    a = sqliteRealloc(pList->a, (pList->nId+8)*sizeof(pList->a[0]) );
+    if( a==0 ){
       sqliteIdListDelete(pList);
       return 0;
     }
+    pList->a = a;
   }
   memset(&pList->a[pList->nId], 0, sizeof(pList->a[0]));
   if( pToken ){
@@ -1205,49 +1240,52 @@ void sqliteCopy(
   if( v ){
     int openOp;
     if( (db->flags & SQLITE_InTrans)==0 ){
-      sqliteVdbeAddOp(v, OP_Transaction, 0, 0, 0, 0);
-      sqliteVdbeAddOp(v, OP_VerifyCookie, db->schema_cookie, 0, 0, 0);
+      sqliteVdbeAddOp(v, OP_Transaction, 0, 0);
+      sqliteVdbeAddOp(v, OP_VerifyCookie, db->schema_cookie, 0);
       pParse->schemaVerified = 1;
     }
-    addr = sqliteVdbeAddOp(v, OP_FileOpen, 0, 0, 0, 0);
+    addr = sqliteVdbeAddOp(v, OP_FileOpen, 0, 0);
     sqliteVdbeChangeP3(v, addr, pFilename->z, pFilename->n);
     sqliteVdbeDequoteP3(v, addr);
     openOp = pTab->isTemp ? OP_OpenWrAux : OP_OpenWrite;
-    sqliteVdbeAddOp(v, openOp, 0, pTab->tnum, pTab->zName, 0);
+    sqliteVdbeAddOp(v, openOp, 0, pTab->tnum);
+    sqliteVdbeChangeP3(v, -1, pTab->zName, P3_STATIC);
     for(i=1, pIdx=pTab->pIndex; pIdx; pIdx=pIdx->pNext, i++){
-      sqliteVdbeAddOp(v, openOp, i, pIdx->tnum, pIdx->zName, 0);
+      sqliteVdbeAddOp(v, openOp, i, pIdx->tnum);
+      sqliteVdbeChangeP3(v, -1, pIdx->zName, P3_STATIC);
     }
     end = sqliteVdbeMakeLabel(v);
-    addr = sqliteVdbeAddOp(v, OP_FileRead, pTab->nCol, end, 0, 0);
+    addr = sqliteVdbeAddOp(v, OP_FileRead, pTab->nCol, end);
     if( pDelimiter ){
       sqliteVdbeChangeP3(v, addr, pDelimiter->z, pDelimiter->n);
       sqliteVdbeDequoteP3(v, addr);
     }else{
       sqliteVdbeChangeP3(v, addr, "\t", 1);
     }
-    sqliteVdbeAddOp(v, OP_NewRecno, 0, 0, 0, 0);
+    sqliteVdbeAddOp(v, OP_NewRecno, 0, 0);
     if( pTab->pIndex ){
-      sqliteVdbeAddOp(v, OP_Dup, 0, 0, 0, 0);
+      sqliteVdbeAddOp(v, OP_Dup, 0, 0);
     }
     for(i=0; i<pTab->nCol; i++){
-      sqliteVdbeAddOp(v, OP_FileColumn, i, 0, 0, 0);
+      sqliteVdbeAddOp(v, OP_FileColumn, i, 0);
     }
-    sqliteVdbeAddOp(v, OP_MakeRecord, pTab->nCol, 0, 0, 0);
-    sqliteVdbeAddOp(v, OP_Put, 0, 0, 0, 0);
+    sqliteVdbeAddOp(v, OP_MakeRecord, pTab->nCol, 0);
+    sqliteVdbeAddOp(v, OP_Put, 0, 0);
     for(i=1, pIdx=pTab->pIndex; pIdx; pIdx=pIdx->pNext, i++){
       if( pIdx->pNext ){
-        sqliteVdbeAddOp(v, OP_Dup, 0, 0, 0, 0);
+        sqliteVdbeAddOp(v, OP_Dup, 0, 0);
       }
       for(j=0; j<pIdx->nColumn; j++){
-        sqliteVdbeAddOp(v, OP_FileColumn, pIdx->aiColumn[j], 0, 0, 0);
+        sqliteVdbeAddOp(v, OP_FileColumn, pIdx->aiColumn[j], 0);
       }
-      sqliteVdbeAddOp(v, OP_MakeIdxKey, pIdx->nColumn, 0, 0, 0);
-      sqliteVdbeAddOp(v, OP_PutIdx, i, pIdx->isUnique, 0, 0);
+      sqliteVdbeAddOp(v, OP_MakeIdxKey, pIdx->nColumn, 0);
+      sqliteVdbeAddOp(v, OP_IdxPut, i, pIdx->isUnique);
     }
-    sqliteVdbeAddOp(v, OP_Goto, 0, addr, 0, 0);
-    sqliteVdbeAddOp(v, OP_Noop, 0, 0, 0, end);
+    sqliteVdbeAddOp(v, OP_Goto, 0, addr);
+    sqliteVdbeResolveLabel(v, end);
+    sqliteVdbeAddOp(v, OP_Noop, 0, 0);
     if( (db->flags & SQLITE_InTrans)==0 ){
-      sqliteVdbeAddOp(v, OP_Commit, 0, 0, 0, 0);
+      sqliteVdbeAddOp(v, OP_Commit, 0, 0);
     }
   }
   
@@ -1280,26 +1318,29 @@ void sqliteVacuum(Parse *pParse, Token *pTableName){
   v = sqliteGetVdbe(pParse);
   if( v==0 ) goto vacuum_cleanup;
   if( (db->flags & SQLITE_InTrans)==0 ){
-    sqliteVdbeAddOp(v, OP_Transaction, 0, 0, 0, 0);
-    sqliteVdbeAddOp(v, OP_VerifyCookie, db->schema_cookie, 0, 0, 0);
+    sqliteVdbeAddOp(v, OP_Transaction, 0, 0);
+    sqliteVdbeAddOp(v, OP_VerifyCookie, db->schema_cookie, 0);
     pParse->schemaVerified = 1;
   }
   if( zName ){
-    sqliteVdbeAddOp(v, OP_Reorganize, 0, 0, zName, 0);
+    sqliteVdbeAddOp(v, OP_Reorganize, 0, 0);
+    sqliteVdbeChangeP3(v, -1, zName, strlen(zName));
   }else{
     Table *pTab;
     Index *pIdx;
     HashElem *pE;
     for(pE=sqliteHashFirst(&db->tblHash); pE; pE=sqliteHashNext(pE)){
       pTab = sqliteHashData(pE);
-      sqliteVdbeAddOp(v, OP_Reorganize, 0, 0, pTab->zName, 0);
+      sqliteVdbeAddOp(v, OP_Reorganize, 0, 0);
+      sqliteVdbeChangeP3(v, -1, pTab->zName, P3_STATIC);
       for(pIdx=pTab->pIndex; pIdx; pIdx=pIdx->pNext){
-        sqliteVdbeAddOp(v, OP_Reorganize, 0, 0, pIdx->zName, 0);
+        sqliteVdbeAddOp(v, OP_Reorganize, 0, 0);
+        sqliteVdbeChangeP3(v, -1, pIdx->zName, P3_STATIC);
       }
     }
   }
   if( (db->flags & SQLITE_InTrans)==0 ){
-    sqliteVdbeAddOp(v, OP_Commit, 0, 0, 0, 0);
+    sqliteVdbeAddOp(v, OP_Commit, 0, 0);
   }
 
 vacuum_cleanup:
@@ -1319,8 +1360,8 @@ void sqliteBeginTransaction(Parse *pParse){
   if( db->flags & SQLITE_InTrans ) return;
   v = sqliteGetVdbe(pParse);
   if( v ){
-    sqliteVdbeAddOp(v, OP_Transaction, 1, 0, 0, 0);
-    sqliteVdbeAddOp(v, OP_VerifyCookie, db->schema_cookie, 0, 0, 0);
+    sqliteVdbeAddOp(v, OP_Transaction, 1, 0);
+    sqliteVdbeAddOp(v, OP_VerifyCookie, db->schema_cookie, 0);
     pParse->schemaVerified = 1;
   }
   db->flags |= SQLITE_InTrans;
@@ -1338,7 +1379,7 @@ void sqliteCommitTransaction(Parse *pParse){
   if( (db->flags & SQLITE_InTrans)==0 ) return;
   v = sqliteGetVdbe(pParse);
   if( v ){
-    sqliteVdbeAddOp(v, OP_Commit, 0, 0, 0, 0);
+    sqliteVdbeAddOp(v, OP_Commit, 0, 0);
   }
   db->flags &= ~SQLITE_InTrans;
 }
@@ -1355,7 +1396,7 @@ void sqliteRollbackTransaction(Parse *pParse){
   if( (db->flags & SQLITE_InTrans)==0 ) return;
   v = sqliteGetVdbe(pParse);
   if( v ){
-    sqliteVdbeAddOp(v, OP_Rollback, 0, 0, 0, 0);
+    sqliteVdbeAddOp(v, OP_Rollback, 0, 0);
   }
   db->flags &= ~SQLITE_InTrans;
 }
@@ -1423,6 +1464,30 @@ void sqlitePragma(Parse *pParse, Token *pLeft, Token *pRight, int minusFlag){
     }
   }else
 
+  if( sqliteStrICmp(zLeft, "result_set_details")==0 ){
+    if( getBoolean(zRight) ){
+      db->flags |= SQLITE_ResultDetails;
+    }else{
+      db->flags &= ~SQLITE_ResultDetails;
+    }
+  }else
+
+  if( sqliteStrICmp(zLeft, "count_changes")==0 ){
+    if( getBoolean(zRight) ){
+      db->flags |= SQLITE_CountRows;
+    }else{
+      db->flags &= ~SQLITE_CountRows;
+    }
+  }else
+
+  if( sqliteStrICmp(zLeft, "empty_result_callbacks")==0 ){
+    if( getBoolean(zRight) ){
+      db->flags |= SQLITE_NullCallback;
+    }else{
+      db->flags &= ~SQLITE_NullCallback;
+    }
+  }else
+
   if( sqliteStrICmp(zLeft, "table_info")==0 ){
     Table *pTab;
     Vdbe *v;
@@ -1440,13 +1505,16 @@ void sqlitePragma(Parse *pParse, Token *pLeft, Token *pRight, int minusFlag){
       int i;
       sqliteVdbeAddOpList(v, ArraySize(tableInfoPreface), tableInfoPreface);
       for(i=0; i<pTab->nCol; i++){
-        sqliteVdbeAddOp(v, OP_Integer, i, 0, 0, 0);
-        sqliteVdbeAddOp(v, OP_String, 0, 0, pTab->aCol[i].zName, 0);
-        sqliteVdbeAddOp(v, OP_String, 0, 0, 
-           pTab->aCol[i].zType ? pTab->aCol[i].zType : "text", 0);
-        sqliteVdbeAddOp(v, OP_Integer, pTab->aCol[i].notNull, 0, 0, 0);
-        sqliteVdbeAddOp(v, OP_String, 0, 0, pTab->aCol[i].zDflt, 0);
-        sqliteVdbeAddOp(v, OP_Callback, 5, 0, 0, 0);
+        sqliteVdbeAddOp(v, OP_Integer, i, 0);
+        sqliteVdbeAddOp(v, OP_String, 0, 0);
+        sqliteVdbeChangeP3(v, -1, pTab->aCol[i].zName, P3_STATIC);
+        sqliteVdbeAddOp(v, OP_String, 0, 0);
+        sqliteVdbeChangeP3(v, -1, 
+           pTab->aCol[i].zType ? pTab->aCol[i].zType : "text", P3_STATIC);
+        sqliteVdbeAddOp(v, OP_Integer, pTab->aCol[i].notNull, 0);
+        sqliteVdbeAddOp(v, OP_String, 0, 0);
+        sqliteVdbeChangeP3(v, -1, pTab->aCol[i].zDflt, P3_STATIC);
+        sqliteVdbeAddOp(v, OP_Callback, 5, 0);
       }
     }
   }else
@@ -1468,11 +1536,43 @@ void sqlitePragma(Parse *pParse, Token *pLeft, Token *pRight, int minusFlag){
       pTab = pIdx->pTable;
       sqliteVdbeAddOpList(v, ArraySize(tableInfoPreface), tableInfoPreface);
       for(i=0; i<pIdx->nColumn; i++){
-        sqliteVdbeAddOp(v, OP_Integer, i, 0, 0, 0);
-        sqliteVdbeAddOp(v, OP_Integer, pIdx->aiColumn[i], 0, 0, 0);
-        sqliteVdbeAddOp(v, OP_String, 0, 0,
-            pTab->aCol[pIdx->aiColumn[i]].zName, 0);
-        sqliteVdbeAddOp(v, OP_Callback, 3, 0, 0, 0);
+        int cnum = pIdx->aiColumn[i];
+        sqliteVdbeAddOp(v, OP_Integer, i, 0);
+        sqliteVdbeAddOp(v, OP_Integer, cnum, 0);
+        sqliteVdbeAddOp(v, OP_String, 0, 0);
+        sqliteVdbeChangeP3(v, -1, pTab->aCol[cnum].zName, P3_STATIC);
+        sqliteVdbeAddOp(v, OP_Callback, 3, 0);
+      }
+    }
+  }else
+
+  if( sqliteStrICmp(zLeft, "index_list")==0 ){
+    Index *pIdx;
+    Table *pTab;
+    Vdbe *v;
+    pTab = sqliteFindTable(db, zRight);
+    if( pTab ){
+      v = sqliteGetVdbe(pParse);
+      pIdx = pTab->pIndex;
+    }
+    if( pTab && pIdx && v ){
+      int i = 0; 
+      static VdbeOp indexListPreface[] = {
+        { OP_ColumnCount, 3, 0,       0},
+        { OP_ColumnName,  0, 0,       "seq"},
+        { OP_ColumnName,  1, 0,       "name"},
+        { OP_ColumnName,  2, 0,       "unique"},
+      };
+
+      sqliteVdbeAddOpList(v, ArraySize(indexListPreface), indexListPreface);
+      while(pIdx){
+        sqliteVdbeAddOp(v, OP_Integer, i, 0);
+        sqliteVdbeAddOp(v, OP_String, 0, 0);
+        sqliteVdbeChangeP3(v, -1, pIdx->zName, P3_STATIC);
+        sqliteVdbeAddOp(v, OP_Integer, pIdx->isUnique, 0);
+        sqliteVdbeAddOp(v, OP_Callback, 3, 0);
+	++i;
+	pIdx = pIdx->pNext;
       }
     }
   }else

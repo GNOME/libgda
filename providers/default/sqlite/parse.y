@@ -28,6 +28,11 @@
 %include {
 #include "sqliteInt.h"
 #include "parse.h"
+
+/*
+** A structure for holding two integers
+*/
+struct twoint { int a,b; };
 }
 
 // These are extra tokens used by the lexer but never seen by the
@@ -96,6 +101,7 @@ id(A) ::= PRAGMA(X).     {A = X;}
 id(A) ::= CLUSTER(X).    {A = X;}
 id(A) ::= ID(X).         {A = X;}
 id(A) ::= TEMP(X).       {A = X;}
+id(A) ::= OFFSET(X).     {A = X;}
 
 // And "ids" is an identifer-or-string.
 //
@@ -179,8 +185,8 @@ joinop(A) ::= UNION ALL.  {A = TK_ALL;}
 joinop(A) ::= INTERSECT.  {A = TK_INTERSECT;}
 joinop(A) ::= EXCEPT.     {A = TK_EXCEPT;}
 oneselect(A) ::= SELECT distinct(D) selcollist(W) from(X) where_opt(Y)
-                 groupby_opt(P) having_opt(Q) orderby_opt(Z). {
-  A = sqliteSelectNew(W,X,Y,P,Q,Z,D);
+                 groupby_opt(P) having_opt(Q) orderby_opt(Z) limit_opt(L). {
+  A = sqliteSelectNew(W,X,Y,P,Q,Z,D,L.a,L.b);
 }
 
 // The "distinct" nonterminal is true (1) if the DISTINCT keyword is
@@ -259,6 +265,14 @@ groupby_opt(A) ::= GROUP BY exprlist(X).  {A = X;}
 having_opt(A) ::= .                {A = 0;}
 having_opt(A) ::= HAVING expr(X).  {A = X;}
 
+%type limit_opt {struct twoint}
+limit_opt(A) ::= .                  {A.a = -1; A.b = 0;}
+limit_opt(A) ::= LIMIT INTEGER(X).  {A.a = atoi(X.z); A.b = 0;}
+limit_opt(A) ::= LIMIT INTEGER(X) limit_sep INTEGER(Y). 
+                                    {A.a = atoi(X.z); A.b = atoi(Y.z);}
+limit_sep ::= OFFSET.
+limit_sep ::= COMMA.
+
 /////////////////////////// The DELETE statement /////////////////////////////
 //
 cmd ::= DELETE FROM ids(X) where_opt(Y).
@@ -329,10 +343,11 @@ inscollist(A) ::= ids(Y).                     {A = sqliteIdListAppend(0,&Y);}
 %right NOT.
 %left EQ NE ISNULL NOTNULL IS LIKE GLOB BETWEEN IN.
 %left GT GE LT LE.
+%left BITAND BITOR LSHIFT RSHIFT.
 %left PLUS MINUS.
-%left STAR SLASH.
+%left STAR SLASH REM.
 %left CONCAT.
-%right UMINUS.
+%right UMINUS BITNOT.
 
 %type expr {Expr*}
 %destructor expr {sqliteExprDelete($$);}
@@ -364,7 +379,11 @@ expr(A) ::= expr(X) LE expr(Y).    {A = sqliteExpr(TK_LE, X, Y, 0);}
 expr(A) ::= expr(X) GE expr(Y).    {A = sqliteExpr(TK_GE, X, Y, 0);}
 expr(A) ::= expr(X) NE expr(Y).    {A = sqliteExpr(TK_NE, X, Y, 0);}
 expr(A) ::= expr(X) EQ expr(Y).    {A = sqliteExpr(TK_EQ, X, Y, 0);}
-expr(A) ::= expr(X) LIKE expr(Y).  {A = sqliteExpr(TK_LIKE, X, Y, 0);}
+expr(A) ::= expr(X) BITAND expr(Y). {A = sqliteExpr(TK_BITAND, X, Y, 0);}
+expr(A) ::= expr(X) BITOR expr(Y).  {A = sqliteExpr(TK_BITOR, X, Y, 0);}
+expr(A) ::= expr(X) LSHIFT expr(Y). {A = sqliteExpr(TK_LSHIFT, X, Y, 0);}
+expr(A) ::= expr(X) RSHIFT expr(Y). {A = sqliteExpr(TK_RSHIFT, X, Y, 0);}
+expr(A) ::= expr(X) LIKE expr(Y).   {A = sqliteExpr(TK_LIKE, X, Y, 0);}
 expr(A) ::= expr(X) NOT LIKE expr(Y).  {
   A = sqliteExpr(TK_LIKE, X, Y, 0);
   A = sqliteExpr(TK_NOT, A, 0, 0);
@@ -380,6 +399,7 @@ expr(A) ::= expr(X) PLUS expr(Y).  {A = sqliteExpr(TK_PLUS, X, Y, 0);}
 expr(A) ::= expr(X) MINUS expr(Y). {A = sqliteExpr(TK_MINUS, X, Y, 0);}
 expr(A) ::= expr(X) STAR expr(Y).  {A = sqliteExpr(TK_STAR, X, Y, 0);}
 expr(A) ::= expr(X) SLASH expr(Y). {A = sqliteExpr(TK_SLASH, X, Y, 0);}
+expr(A) ::= expr(X) REM expr(Y).   {A = sqliteExpr(TK_REM, X, Y, 0);}
 expr(A) ::= expr(X) CONCAT expr(Y). {A = sqliteExpr(TK_CONCAT, X, Y, 0);}
 expr(A) ::= expr(X) ISNULL(E). {
   A = sqliteExpr(TK_ISNULL, X, 0, 0);
@@ -397,8 +417,16 @@ expr(A) ::= expr(X) NOT NULL(E). {
   A = sqliteExpr(TK_NOTNULL, X, 0, 0);
   sqliteExprSpan(A,&X->span,&E);
 }
+expr(A) ::= expr(X) IS NOT NULL(E). {
+  A = sqliteExpr(TK_NOTNULL, X, 0, 0);
+  sqliteExprSpan(A,&X->span,&E);
+}
 expr(A) ::= NOT(B) expr(X). {
   A = sqliteExpr(TK_NOT, X, 0, 0);
+  sqliteExprSpan(A,&B,&X->span);
+}
+expr(A) ::= BITNOT(B) expr(X). {
+  A = sqliteExpr(TK_BITNOT, X, 0, 0);
   sqliteExprSpan(A,&B,&X->span);
 }
 expr(A) ::= MINUS(B) expr(X). [UMINUS] {

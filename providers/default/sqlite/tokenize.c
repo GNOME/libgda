@@ -73,9 +73,11 @@ static Keyword aKeywordTable[] = {
   { "ISNULL",            0, TK_ISNULL,           0 },
   { "KEY",               0, TK_KEY,              0 },
   { "LIKE",              0, TK_LIKE,             0 },
+  { "LIMIT",             0, TK_LIMIT,            0 },
   { "NOT",               0, TK_NOT,              0 },
   { "NOTNULL",           0, TK_NOTNULL,          0 },
   { "NULL",              0, TK_NULL,             0 },
+  { "OFFSET",            0, TK_OFFSET,           0 },
   { "ON",                0, TK_ON,               0 },
   { "OR",                0, TK_OR,               0 },
   { "ORDER",             0, TK_ORDER,            0 },
@@ -138,12 +140,44 @@ static int sqliteKeywordCode(const char *z, int n){
   return TK_ID;
 }
 
+
+/*
+** If X is a character that can be used in an identifier then
+** isIdChar[X] will be 1.  Otherwise isIdChar[X] will be 0.
+**
+** In this implementation, an identifier can be a string of
+** alphabetic characters, digits, and "_" plus any character
+** with the high-order bit set.  The latter rule means that
+** any sequence of UTF-8 characters or characters taken from
+** an extended ISO8859 character set can form an identifier.
+*/
+static const char isIdChar[] = {
+/* x0 x1 x2 x3 x4 x5 x6 x7 x8 x9 xA xB xC xD xE xF */
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  /* 0x */
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  /* 1x */
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  /* 2x */
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0,  /* 3x */
+    0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,  /* 4x */
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1,  /* 5x */
+    0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,  /* 6x */
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0,  /* 7x */
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,  /* 8x */
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,  /* 9x */
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,  /* Ax */
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,  /* Bx */
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,  /* Cx */
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,  /* Dx */
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,  /* Ex */
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,  /* Fx */
+};
+
+
 /*
 ** Return the length of the token that begins at z[0].  Return
 ** -1 if the token is (or might be) incomplete.  Store the token
 ** type in *tokenType before returning.
 */
-int sqliteGetToken(const char *z, int *tokenType){
+static int sqliteGetToken(const unsigned char *z, int *tokenType){
   int i;
   switch( *z ){
     case ' ': case '\t': case '\n': case '\f': case '\r': {
@@ -185,6 +219,10 @@ int sqliteGetToken(const char *z, int *tokenType){
       *tokenType = TK_SLASH;
       return 1;
     }
+    case '%': {
+      *tokenType = TK_REM;
+      return 1;
+    }
     case '=': {
       *tokenType = TK_EQ;
       return 1 + (z[1]=='=');
@@ -196,6 +234,9 @@ int sqliteGetToken(const char *z, int *tokenType){
       }else if( z[1]=='>' ){
         *tokenType = TK_NE;
         return 2;
+      }else if( z[1]=='<' ){
+        *tokenType = TK_LSHIFT;
+        return 2;
       }else{
         *tokenType = TK_LT;
         return 1;
@@ -204,6 +245,9 @@ int sqliteGetToken(const char *z, int *tokenType){
     case '>': {
       if( z[1]=='=' ){
         *tokenType = TK_GE;
+        return 2;
+      }else if( z[1]=='>' ){
+        *tokenType = TK_RSHIFT;
         return 2;
       }else{
         *tokenType = TK_GT;
@@ -221,7 +265,7 @@ int sqliteGetToken(const char *z, int *tokenType){
     }
     case '|': {
       if( z[1]!='|' ){
-        *tokenType = TK_ILLEGAL;
+        *tokenType = TK_BITOR;
         return 1;
       }else{
         *tokenType = TK_CONCAT;
@@ -230,6 +274,14 @@ int sqliteGetToken(const char *z, int *tokenType){
     }
     case ',': {
       *tokenType = TK_COMMA;
+      return 1;
+    }
+    case '&': {
+      *tokenType = TK_BITAND;
+      return 1;
+    }
+    case '~': {
+      *tokenType = TK_BITNOT;
       return 1;
     }
     case '\'': case '"': {
@@ -276,22 +328,13 @@ int sqliteGetToken(const char *z, int *tokenType){
       }
       return i;
     }
-    case 'a': case 'b': case 'c': case 'd': case 'e': case 'f':
-    case 'g': case 'h': case 'i': case 'j': case 'k': case 'l':
-    case 'm': case 'n': case 'o': case 'p': case 'q': case 'r':
-    case 's': case 't': case 'u': case 'v': case 'w': case 'x':
-    case 'y': case 'z': case '_':
-    case 'A': case 'B': case 'C': case 'D': case 'E': case 'F':
-    case 'G': case 'H': case 'I': case 'J': case 'K': case 'L':
-    case 'M': case 'N': case 'O': case 'P': case 'Q': case 'R':
-    case 'S': case 'T': case 'U': case 'V': case 'W': case 'X':
-    case 'Y': case 'Z': {
-      for(i=1; z[i] && (isalnum(z[i]) || z[i]=='_'); i++){}
-      *tokenType = sqliteKeywordCode(z, i);
-      return i;
-    }
     default: {
-      break;
+      if( !isIdChar[*z] ){
+        break;
+      }
+      for(i=1; isIdChar[z[i]]; i++){}
+      *tokenType = sqliteKeywordCode((char*)z, i);
+      return i;
     }
   }
   *tokenType = TK_ILLEGAL;
@@ -305,16 +348,17 @@ int sqliteGetToken(const char *z, int *tokenType){
 ** memory obtained from malloc() and *pzErrMsg made to point to that
 ** error message.  Or maybe not.
 */
-int sqliteRunParser(Parse *pParse, char *zSql, char **pzErrMsg){
+int sqliteRunParser(Parse *pParse, const char *zSql, char **pzErrMsg){
   int nErr = 0;
   int i;
   void *pEngine;
   int once = 1;
+  sqlite *db = pParse->db;
   extern void *sqliteParserAlloc(void*(*)(int));
   extern void sqliteParserFree(void*, void(*)(void*));
   extern int sqliteParser(void*, int, Token, Parse*);
 
-  pParse->db->flags &= ~SQLITE_Interrupt;
+  db->flags &= ~SQLITE_Interrupt;
   pParse->rc = SQLITE_OK;
   i = 0;
   sqliteParseInfoReset(pParse);
@@ -326,13 +370,13 @@ int sqliteRunParser(Parse *pParse, char *zSql, char **pzErrMsg){
   while( sqlite_malloc_failed==0 && nErr==0 && i>=0 && zSql[i]!=0 ){
     int tokenType;
     
-    if( (pParse->db->flags & SQLITE_Interrupt)!=0 ){
+    if( (db->flags & SQLITE_Interrupt)!=0 ){
       pParse->rc = SQLITE_INTERRUPT;
       sqliteSetString(pzErrMsg, "interrupt", 0);
       break;
     }
     pParse->sLastToken.z = &zSql[i];
-    pParse->sLastToken.n = sqliteGetToken(&zSql[i], &tokenType);
+    pParse->sLastToken.n = sqliteGetToken((unsigned char*)&zSql[i], &tokenType);
     i += pParse->sLastToken.n;
     if( once ){
       pParse->sFirstToken = pParse->sLastToken;
@@ -360,13 +404,13 @@ int sqliteRunParser(Parse *pParse, char *zSql, char **pzErrMsg){
           sqliteFree(pParse->zErrMsg);
           pParse->zErrMsg = 0;
         }else if( pParse->rc!=SQLITE_OK ){
-          sqliteSetString(pzErrMsg, sqliteErrStr(pParse->rc), 0);
+          sqliteSetString(pzErrMsg, sqlite_error_string(pParse->rc), 0);
           nErr++;
         }
         break;
     }
   }
-  if( nErr==0 && (pParse->db->flags & SQLITE_Interrupt)==0 ){
+  if( nErr==0 && (db->flags & SQLITE_Interrupt)==0 ){
     sqliteParser(pEngine, 0, pParse->sLastToken, pParse);
     if( pParse->zErrMsg && pParse->sErrToken.z ){
        sqliteSetNString(pzErrMsg, "near \"", -1, 

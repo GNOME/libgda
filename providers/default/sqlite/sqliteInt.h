@@ -31,18 +31,47 @@
 #define TEMP_PAGES   25
 
 /*
-** Integers of known sizes.  These typedefs much change for architectures
-** where the sizes very.
+** Integers of known sizes.  These typedefs might change for architectures
+** where the sizes very.  Preprocessor macros are available so that the
+** types can be conveniently redefined at compile-type.  Like this:
+**
+**         cc '-DUINTPTR_TYPE=long long int' ...
 */
-typedef unsigned int u32;             /* 4-byte unsigned integer */
-typedef unsigned short int u16;       /* 2-byte unsigned integer */
-typedef unsigned char u8;             /* 1-byte unsigned integer */
+#ifndef UINT32_TYPE
+# define UINT32_TYPE unsigned int
+#endif
+#ifndef UINT16_TYPE
+# define UINT16_TYPE unsigned short int
+#endif
+#ifndef UINT8_TYPE
+# define UINT8_TYPE unsigned char
+#endif
+#ifndef INTPTR_TYPE
+# define INTPTR_TYPE int
+#endif
+typedef UINT32_TYPE u32;           /* 4-byte unsigned integer */
+typedef UINT16_TYPE u16;           /* 2-byte unsigned integer */
+typedef UINT8_TYPE u8;             /* 1-byte unsigned integer */
+typedef INTPTR_TYPE ptr;           /* Big enough to hold a pointer */
+typedef unsigned INTPTR_TYPE uptr; /* Big enough to hold a pointer */
+
+/*
+** This macro casts a pointer to an integer.  Useful for doing
+** pointer arithmetic.
+*/
+#define Addr(X)  ((uptr)X)
 
 /*
 ** The maximum number of bytes of data that can be put into a single
-** row of a single table.
+** row of a single table.  The upper bound on this limit is 16777215
+** bytes (or 16MB-1).  We have arbitrarily set the limit to just 1MB
+** here because the overflow page chain is inefficient for really big
+** records and we want to discourage people from thinking that 
+** multi-megabyte records are OK.  If your needs are different, you can
+** change this define and recompile to increase or decrease the record
+** size.
 */
-#define MAX_BYTES_PER_ROW  65535
+#define MAX_BYTES_PER_ROW  1048576
 
 /*
 ** If memory allocation problems are found, recompile with
@@ -117,6 +146,8 @@ extern int sqlite_iMallocFail;   /* Fail sqliteMalloc() after this many calls */
 #define FN_Fcnt       6
 #define FN_Length     7
 #define FN_Substr     8
+#define FN_Abs        9
+#define FN_Round      10
 
 /*
 ** Forward references to structures
@@ -131,6 +162,7 @@ typedef struct Parse Parse;
 typedef struct Token Token;
 typedef struct IdList IdList;
 typedef struct WhereInfo WhereInfo;
+typedef struct WhereLevel WhereLevel;
 typedef struct Select Select;
 typedef struct AggExpr AggExpr;
 
@@ -161,6 +193,12 @@ struct sqlite {
 #define SQLITE_InTrans        0x00000008  /* True if in a transaction */
 #define SQLITE_InternChanges  0x00000010  /* Uncommitted Hash table changes */
 #define SQLITE_FullColNames   0x00000020  /* Show full column names on SELECT */
+#define SQLITE_CountRows      0x00000040  /* Count rows changed by INSERT, */
+                                          /*   DELETE, or UPDATE and return */
+                                          /*   the count using a callback. */
+#define SQLITE_NullCallback   0x00000080  /* Invoke the callback once if the */
+                                          /*   result set is empty */
+#define SQLITE_ResultDetails  0x00000100  /* Details added to result set */
 
 /*
 ** Current file format version
@@ -230,8 +268,8 @@ struct Index {
 ** this structure.
 */
 struct Token {
-  char *z;      /* Text of the token.  Not NULL-terminated! */
-  int n;        /* Number of characters in this token */
+  const char *z;      /* Text of the token.  Not NULL-terminated! */
+  int n;              /* Number of characters in this token */
 };
 
 /*
@@ -262,7 +300,7 @@ struct Expr {
 */
 struct ExprList {
   int nExpr;             /* Number of expressions on the list */
-  struct {
+  struct ExprList_item {
     Expr *pExpr;           /* The list of expressions */
     char *zName;           /* Token associated with this expression */
     char sortOrder;        /* 1 for DESC or 0 for ASC */
@@ -276,13 +314,29 @@ struct ExprList {
 */
 struct IdList {
   int nId;         /* Number of identifiers on the list */
-  struct {
+  struct IdList_item {
     char *zName;      /* Text of the identifier. */
     char *zAlias;     /* The "B" part of a "A AS B" phrase.  zName is the "A" */
     int idx;          /* Index in some Table.aCol[] of a column named zName */
     Table *pTab;      /* An SQL table corresponding to zName */
     Select *pSelect;  /* A SELECT statement used in place of a table name */
   } *a;            /* One entry for each identifier on the list */
+};
+
+/*
+** For each nested loop in a WHERE clause implementation, the WhereInfo
+** structure contains a single instance of this structure.  This structure
+** is intended to be private the the where.c module and should not be
+** access or modified by other modules.
+*/
+struct WhereLevel {
+  int iMem;            /* Memory cell used by this level */
+  Index *pIdx;         /* Index used */
+  int iCur;            /* Cursor number used for this index */
+  int score;           /* How well this indexed scored */
+  int brk;             /* Jump here to break out of the loop */
+  int cont;            /* Jump here to continue with the next loop cycle */
+  int op, p1, p2;      /* Opcode used to terminate the loop */
 };
 
 /*
@@ -298,7 +352,8 @@ struct WhereInfo {
   int iContinue;       /* Jump here to continue with next record */
   int iBreak;          /* Jump here to break out of the loop */
   int base;            /* Index of first Open opcode */
-  Index *aIdx[32];     /* Indices used for each table */
+  int nLevel;          /* Number of nested loop */
+  WhereLevel a[1];     /* Information about each nest loop in the WHERE */
 };
 
 /*
@@ -315,6 +370,7 @@ struct Select {
   ExprList *pOrderBy;    /* The ORDER BY clause */
   int op;                /* One of: TK_UNION TK_ALL TK_INTERSECT TK_EXCEPT */
   Select *pPrior;        /* Prior select in a compound select statement */
+  int nLimit, nOffset;   /* LIMIT and OFFSET values.  -1 means not used */
 };
 
 /*
@@ -394,6 +450,7 @@ int sqliteStrNICmp(const char *, const char *, int);
 int sqliteHashNoCase(const char *, int);
 int sqliteCompare(const char *, const char *);
 int sqliteSortCompare(const char *, const char *);
+void sqliteRealToSortable(double r, char *);
 #ifdef MEMORY_DEBUG
   void *sqliteMalloc_(int,char*,int);
   void sqliteFree_(void*,char*,int);
@@ -407,11 +464,10 @@ int sqliteSortCompare(const char *, const char *);
   char *sqliteStrDup(const char*);
   char *sqliteStrNDup(const char*, int);
 #endif
-int sqliteGetToken(const char*, int *);
 void sqliteSetString(char **, const char *, ...);
 void sqliteSetNString(char **, ...);
 void sqliteDequote(char*);
-int sqliteRunParser(Parse*, char*, char **);
+int sqliteRunParser(Parse*, const char*, char **);
 void sqliteExec(Parse*);
 Expr *sqliteExpr(int, Expr*, Expr*, Token*);
 void sqliteExprSpan(Expr*,Token*,Token*);
@@ -437,7 +493,8 @@ void sqliteIdListDelete(IdList*);
 void sqliteCreateIndex(Parse*, Token*, Token*, IdList*, int, Token*, Token*);
 void sqliteDropIndex(Parse*, Token*);
 int sqliteSelect(Parse*, Select*, int, int);
-Select *sqliteSelectNew(ExprList*,IdList*,Expr*,ExprList*,Expr*,ExprList*,int);
+Select *sqliteSelectNew(ExprList*,IdList*,Expr*,ExprList*,Expr*,ExprList*,
+                        int,int,int);
 void sqliteSelectDelete(Select*);
 void sqliteDeleteFrom(Parse*, Token*, Expr*);
 void sqliteUpdate(Parse*, Token*, ExprList*, Expr*);
@@ -448,6 +505,7 @@ void sqliteExprIfTrue(Parse*, Expr*, int);
 void sqliteExprIfFalse(Parse*, Expr*, int);
 Table *sqliteFindTable(sqlite*,char*);
 Index *sqliteFindIndex(sqlite*,char*);
+void sqliteUnlinkAndDeleteIndex(sqlite*,Index*);
 void sqliteCopy(Parse*, Token*, Token*, Token*);
 void sqliteVacuum(Parse*, Token*);
 int sqliteGlobCompare(const unsigned char*,const unsigned char*);
@@ -461,8 +519,8 @@ void sqliteExprResolveInSelect(Parse*, Expr*);
 int sqliteExprAnalyzeAggregates(Parse*, Expr*);
 void sqliteParseInfoReset(Parse*);
 Vdbe *sqliteGetVdbe(Parse*);
-int sqliteRandomByte();
-int sqliteRandomInteger();
+int sqliteRandomByte(void);
+int sqliteRandomInteger(void);
 void sqliteBeginTransaction(Parse*);
 void sqliteCommitTransaction(Parse*);
 void sqliteRollbackTransaction(Parse*);

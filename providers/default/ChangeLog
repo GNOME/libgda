@@ -1,3 +1,7 @@
+2001-12-20  Carlos Perelló Marín <carlos@gnome-db.org>
+
+	* sqlite/*: Updated to 2.1.7 release.
+
 2001-12-17  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* Makefile.am:
