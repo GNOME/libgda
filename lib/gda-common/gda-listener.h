@@ -28,8 +28,8 @@
 
 G_BEGIN_DECLS
 
-typedef struct _GdaListener GdaListener;
-typedef struct _GdaListenerClass GdaListenerClass;
+typedef struct _GdaListener        GdaListener;
+typedef struct _GdaListenerClass   GdaListenerClass;
 typedef struct _GdaListenerPrivate GdaListenerPrivate;
 
 #define GDA_TYPE_LISTENER            (gda_listener_get_type ())

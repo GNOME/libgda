@@ -91,7 +91,9 @@ void                     gda_field_set_timestamp_value (GdaField *field, time_t 
 gchar                    gda_field_get_tinyint_value (GdaField *field);
 void                     gda_field_set_tinyint_value (GdaField *field, gchar value);
 
-GNOME_Database_Field    *gda_field_get_corba_field (GdaField *field);
+void                     gda_field_copy_to_corba (GdaField *field, GNOME_Database_Field *corba_field);
+void                     gda_field_copy_to_corba_attributes (GdaField *field,
+							     GNOME_Database_FieldAttributes *attrs);
 
 G_END_DECLS
 

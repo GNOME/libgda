@@ -84,7 +84,7 @@ gda_field_finalize (GObject *object)
 	g_free (field->priv);
 	field->priv = NULL;
 
-	parent_class = g_type_peek_parent_class (G_TYPE_OBJECT);
+	parent_class = G_OBJECT_CLASS (g_type_class_peek (G_TYPE_OBJECT));
 	if (parent_class && parent_class->finalize)
 		parent_class->finalize (object);
 }
@@ -262,7 +262,7 @@ long long
 gda_field_get_bigint_value (GdaField *field)
 {
 	g_return_val_if_fail (GDA_IS_FIELD (field), -1);
-	return BONOBO_ARG_GET_LONGLONG (field->priv->corba_field->value);
+	return BONOBO_ARG_GET_LONGLONG (&field->priv->corba_field->value);
 }
 
 /**
@@ -334,11 +334,10 @@ gda_field_get_date_value (GdaField *field)
 	GNOME_Database_Date *corba_date;
 
 	g_return_val_if_fail (GDA_IS_FIELD (field), NULL);
+	g_return_val_if_fail (
+		field->priv->corba_field->attributes.gdaType == GNOME_Database_TypeDate, NULL);
 
-	corba_date = BONOBO_ARG_GET_GENERAL (&field->priv->corba_field->value,
-					     TC_GNOME_Database_Date,
-					     GNOME_Database_Date,
-					     NULL);
+	corba_date = (GNOME_Database_Date *) field->priv->corba_field->value._value;
 	if (corba_date)
 		return g_date_new_dmy (corba_date->day, corba_date->month, corba_date->year);
 
@@ -525,11 +524,9 @@ gda_field_get_time_value (GdaField *field)
 	GNOME_Database_Time *corba_time;
 
 	g_return_val_if_fail (GDA_IS_FIELD (field), -1);
+	g_return_val_if_fail (field->priv->corba_field->attributes.gdaType == GNOME_Database_TypeTime, -1);
 
-	corba_time = BONOBO_ARG_GET_GENERAL (&field->priv->corba_field->value,
-					     TC_GNOME_Database_Time,
-					     GNOME_Database_Time,
-					     NULL);
+	corba_time = (GNOME_Database_Time *) field->priv->corba_field->value._value;
 	if (corba_time) {
 		struct tm stm;
 
@@ -559,20 +556,19 @@ gda_field_set_time_value (GdaField *field, GTime value)
 time_t
 gda_field_get_timestamp_value (GdaField *field)
 {
-	GNOME_Database_Timestamp corba_timet;
+	GNOME_Database_Timestamp *corba_timet;
 
 	g_return_val_if_fail (GDA_IS_FIELD (field), -1);
+	g_return_val_if_fail (
+		field->priv->corba_field->attributes.gdaType == GNOME_Database_TypeTimestamp, -1);
 
-	corba_timet = BONOBO_ARG_GET_GENERAL (&field->priv->corba_field->value,
-					      TC_GNOME_Database_Timestamp,
-					      GNOME_Database_Timestamp,
-					      NULL);
+	corba_timet = (GNOME_Database_Timestamp *) field->priv->corba_field->value._value;
 	if (corba_timet) {
 		struct tm stm;
 
 		stm.tm_year = corba_timet->year;
-		stm.tm_month = corba_timet->month;
-		stm.tm_day = corba_timet->day;
+		stm.tm_mon = corba_timet->month;
+		stm.tm_mday = corba_timet->day;
 		stm.tm_hour = corba_timet->hour;
 		stm.tm_min = corba_timet->minute;
 		stm.tm_sec = corba_timet->second;
@@ -594,13 +590,13 @@ gda_field_set_timestamp_value (GdaField *field, time_t value)
 
 	g_return_if_fail (GDA_IS_FIELD (field));
 
-	stm = localtime (value);
+	stm = localtime (&value);
 	if (!stm)
 		return;
 
 	corba_timet.year = stm->tm_year;
-	corba_timet.month = stm->tm_month;
-	corba_timet.day = stm->tm_day;
+	corba_timet.month = stm->tm_mon;
+	corba_timet.day = stm->tm_mday;
 	corba_timet.hour = stm->tm_hour;
 	corba_timet.minute = stm->tm_min;
 	corba_timet.second = stm->tm_sec;
@@ -642,4 +638,45 @@ gda_field_set_tinyint_value (GdaField *field, gchar value)
 		CORBA_free (field->priv->corba_field->value._value);
 
 	field->priv->corba_field->value._value = ORBit_copy_value (&value, BONOBO_ARG_CHAR);
+}
+
+/**
+ * gda_field_copy_to_corba
+ */
+void
+gda_field_copy_to_corba (GdaField *field, GNOME_Database_Field *corba_field)
+{
+	g_return_if_fail (GDA_IS_FIELD (field));
+	g_return_if_fail (corba_field != NULL);
+
+	corba_field->attributes.definedSize = field->priv->corba_field->attributes.definedSize;
+	corba_field->attributes->name = CORBA_string_dup (field->priv->corba_field->attributes.name);
+	corba_field->attributes->scale = field->priv->corba_field->attributes.scale;
+	corba_field->attributes->gdaType = field->priv->corba_field->attributes.gdaType;
+	corba_field->attributes->cType = field->priv->corba_field->attributes.cType;
+	corba_field->attributes->nativeType = field->priv->corba_field->attributes.nativeType;
+
+	corba_field->actualSize = field->priv->corba_field->actualSize;
+	corba_field->value._type = field->priv->corba_field->value._type;
+	corba_field->value._release = field->priv->corba_field->value._release;
+	corba_field->value._value = ORBit_copy_value (
+		field->priv->corba_field->value._value, corba_field->value._type);
+}
+
+/**
+ * gda_field_copy_to_corba_attributes
+ */
+void
+gda_field_copy_to_corba_attributes (GdaField *field,
+				    GNOME_Database_FieldAttributes *attrs)
+{
+	g_return_if_fail (GDA_IS_FIELD (field));
+	g_return_if_fail (attrs != NULL);
+
+	attrs->definedSize = field->priv->corba_field->attributes.definedSize;
+	attrs->name = CORBA_string_dup (field->priv->corba_field->attributes.name);
+	attrs->scale = field->priv->corba_field->attributes.scale;
+	attrs->gdaType = field->priv->corba_field->attributes.gdaType;
+	attrs->cType = field->priv->corba_field->attributes.cType;
+	attrs->nativeType = field->priv->corba_field->attributes.nativeType;
 }
