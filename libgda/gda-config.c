@@ -42,8 +42,8 @@ typedef struct {
     gchar *name;
     gchar *type;
     gchar *value;
-    gchar *mtime;
-    gchar *muser;
+    //gchar *mtime;
+    //gchar *muser;
 } gda_config_entry;
 
 typedef struct {
@@ -93,18 +93,19 @@ gda_config_read_entries (xmlNodePtr cur)
 				entry->value = g_strdup ("");
 			}
 
+			/*
 			entry->muser =  xmlGetProp(cur, "muser");
 			if (entry->value == NULL){
 				g_warning ("NULL 'muser' in an entry");
 				entry->muser = g_strdup ("");
 			}
-
+			
 			entry->mtime =  xmlGetProp(cur, "mtime");
 			if (entry->value == NULL){
 				g_warning ("NULL 'mtime' in an entry");
 				entry->mtime = g_strdup ("");
 			}
-
+			*/
 			list = g_list_append (list, entry);
 		} else {
 			g_warning ("'entry' expected, got '%s'. Ignoring...", 
@@ -328,8 +329,10 @@ add_xml_entry (xmlNodePtr parent, gda_config_entry *entry)
 	xmlSetProp (new_node, "name", entry->name);
 	xmlSetProp (new_node, "type", entry->type);
 	xmlSetProp (new_node, "value", entry->value);
+	/*
 	xmlSetProp (new_node, "mtime", entry->mtime);
 	xmlSetProp (new_node, "muser", entry->muser);
+	*/
 }
 
 static xmlNodePtr

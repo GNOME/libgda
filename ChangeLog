@@ -1,3 +1,7 @@
+2002-06-03  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
+	* gda-config.c: don't write mtime, muser.
+
 2002-06-04  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* libgda/gda-quark-list.[ch] (gda_quark_list_remove): new function.
