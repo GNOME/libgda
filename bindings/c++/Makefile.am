@@ -1,7 +1,6 @@
 lib_LTLIBRARIES = libgda-clientcpp.la
 
 INCLUDES = \
-	-I$(includedir) \
 	-I$(top_builddir)/lib/gda-common \
 	-I$(top_builddir)/lib/gda-client \
 	$(GDA_CLIENT_CFLAGS)
