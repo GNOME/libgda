@@ -8,7 +8,7 @@ PKG_NAME="GNU Data Access"
 
 (test -f $srcdir/configure.in \
   && test -d $srcdir/idl \
-  && test -f $srcdir/idl/gda.idl) || {
+  && test -f $srcdir/idl/GDA.idl) || {
     echo -n "**Error**: Directory "\`$srcdir\'" does not look like the"
     echo " top-level GDA directory"
     exit 1
