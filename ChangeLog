@@ -1,3 +1,7 @@
+02/09/2000	Akira TAGOH <at@ue-spacy.com>
+
+	* *.oafinfo: fixed that OAFIID was duplicated.
+
 08/08/2000	Rodrigo Moya <rodrigo@linuxave.net>
 
 	* made first version separated from GNOME-DB

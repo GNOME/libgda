@@ -9,11 +9,11 @@
 	<oaf_attribute name="description" type="string"
 	               value="GDA Datasource Access for Postgres"/>
 	<oaf_attribute name="gda-main-config" type="string"
-	               value="OAFIID:control:gda-postgres-config:b04e9dc2-1cc8-4027-8cf9-27dcb6a2a63f"/>
+	               value="OAFIID:control:gda-postgres-config:ea8b1d83-85df-41b6-bb60-1cfabea2a2b5"/>
 	<oaf_attribute name="gda-users-list-config" type="string"
-	               value="OAFIID:control:gda-postgres-users-list:b04e9dc2-1cc8-4027-8cf9-27dcb6a2a63f"/>
+	               value="OAFIID:control:gda-postgres-users-list:4926e09c-9ff5-4e1e-93a4-9df262036827"/>
 	<oaf_attribute name="gda-users-ac-config" type="string"
-	               value="OAFIID:control:gda-postgres-users-ac:b04e9dc2-1cc8-4027-8cf9-27dcb6a2a63f"/>
+	               value="OAFIID:control:gda-postgres-users-ac:cff0cf21-6ca4-448d-bc70-53c5deda71c1"/>
 </oaf_server>
 
 </oaf_info>
