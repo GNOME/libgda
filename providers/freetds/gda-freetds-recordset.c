@@ -328,13 +328,13 @@ GdaDataModel
 
 	recset->priv->cnc = cnc;
 	recset->priv->tds_cnc = tds_cnc;
-	recset->priv->res = tds_cnc->socket->res_info;
+	recset->priv->res = tds_cnc->tds->res_info;
 
-	while ((tds_cnc->rc = tds_process_result_tokens(tds_cnc->socket))
+	while ((tds_cnc->rc = tds_process_result_tokens(tds_cnc->tds))
 	       == TDS_SUCCEED) {
-		while ((tds_cnc->rc = tds_process_row_tokens(tds_cnc->socket))
+		while ((tds_cnc->rc = tds_process_row_tokens(tds_cnc->tds))
 		       == TDS_SUCCEED) {
-			recset->priv->res = tds_cnc->socket->res_info;
+			recset->priv->res = tds_cnc->tds->res_info;
 			if (columns_set == FALSE) {
 				columns_set = TRUE;
 				recset->priv->colcnt = recset->priv->res->num_cols;
@@ -352,7 +352,7 @@ GdaDataModel
 			}
 		}
 		if (tds_cnc->rc == TDS_FAIL) {
-			error = gda_freetds_make_error(tds_cnc->socket,
+			error = gda_freetds_make_error(tds_cnc->tds,
 			                               _("tds_process_row_tokens() returned TDS_FAIL\n"));
 			gda_connection_add_error (cnc, error);
 			recset->priv->rc = TDS_FAIL;

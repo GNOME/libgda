@@ -49,11 +49,11 @@ struct _GdaFreeTDSProviderClass {
 };
 
 typedef struct _GdaFreeTDSConnectionData GdaFreeTDSConnectionData;
-
 struct _GdaFreeTDSConnectionData {
 	gint          rc;
+	GPtrArray     *msg_arr;
 	TDSLOGIN      *login;
-	TDSSOCKET     *socket;
+	TDSSOCKET     *tds;
 	TDSCONFIGINFO *config;
 };
 

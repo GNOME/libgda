@@ -174,6 +174,14 @@ gda_freetds_provider_open_connection (GdaServerProvider *provider,
 	
 	tds_cnc = g_new0 (GdaFreeTDSConnectionData, 1);
 	g_return_val_if_fail(tds_cnc != NULL, FALSE);
+	tds_cnc->msg_arr = g_ptr_array_new ();
+
+	if (tds_cnc->msg_arr == NULL) {
+		g_free (tds_cnc);
+		tds_cnc = NULL;
+		gda_connection_add_error_string (cnc, _("Error creating message container."));
+		return FALSE;
+	}
 
 	// allocate login
 	tds_cnc->login = tds_alloc_login();
@@ -204,8 +212,8 @@ gda_freetds_provider_open_connection (GdaServerProvider *provider,
 	tds_set_packet(tds_cnc->login, 512);
 	
 	// establish connection
-	tds_cnc->socket = tds_connect(tds_cnc->login, NULL);
-	if (! tds_cnc->socket) {
+	tds_cnc->tds = tds_connect(tds_cnc->login, NULL);
+	if (! tds_cnc->tds) {
 		tds_free_login(tds_cnc->login);
 		tds_cnc->login = NULL;
 		g_free(tds_cnc);
@@ -216,13 +224,13 @@ gda_freetds_provider_open_connection (GdaServerProvider *provider,
 	}
 
 	// try to receive connection info for sanity check
-	tds_cnc->config = tds_get_config(tds_cnc->socket, tds_cnc->login);
+	tds_cnc->config = tds_get_config(tds_cnc->tds, tds_cnc->login);
 	if (! tds_cnc->config) {
-		error = gda_freetds_make_error (tds_cnc->socket, _("Failed getting connection info."));
+		error = gda_freetds_make_error (tds_cnc->tds, _("Failed getting connection info."));
 		gda_connection_add_error (cnc, error);
 
-		tds_free_socket(tds_cnc->socket);
-		tds_cnc->socket = NULL;
+		tds_free_socket(tds_cnc->tds);
+		tds_cnc->tds = NULL;
 		tds_free_login(tds_cnc->login);
 		tds_cnc->login = NULL;
 		g_free(tds_cnc);
@@ -231,7 +239,7 @@ gda_freetds_provider_open_connection (GdaServerProvider *provider,
 	}
 
 	tds_cnc->rc = TDS_SUCCEED;
-	tds_set_parent (tds_cnc->socket, (void *) cnc);
+	tds_set_parent (tds_cnc->tds, (void *) cnc);
 	g_object_set_data (G_OBJECT (cnc), OBJECT_DATA_FREETDS_HANDLE, tds_cnc);
 
 	return TRUE;
@@ -241,8 +249,9 @@ static gboolean
 gda_freetds_provider_close_connection (GdaServerProvider *provider,
                                        GdaConnection *cnc)
 {
-	GdaFreeTDSConnectionData *tds_cnc;
+	GdaFreeTDSConnectionData *tds_cnc = NULL;
 	GdaFreeTDSProvider *tds_provider = (GdaFreeTDSProvider *) provider;
+	GdaFreeTDSMessage *msg = NULL;
 
 	g_return_val_if_fail(GDA_IS_FREETDS_PROVIDER (tds_provider), FALSE);
 	g_return_val_if_fail(GDA_IS_CONNECTION (cnc), FALSE);
@@ -255,14 +264,27 @@ gda_freetds_provider_close_connection (GdaServerProvider *provider,
 		tds_free_config(tds_cnc->config);
 		tds_cnc->config = NULL;
 	}
-	if (tds_cnc->socket) {
-		tds_set_parent (tds_cnc->socket, NULL);
-		tds_free_socket(tds_cnc->socket);
-		tds_cnc->socket = NULL;
+	if (tds_cnc->tds) {
+		tds_set_parent (tds_cnc->tds, NULL);
+		tds_free_socket (tds_cnc->tds);
+		tds_cnc->tds = NULL;
 	}
 	if (tds_cnc->login) {
 		tds_free_login(tds_cnc->login);
 		tds_cnc->login = NULL;
+	}
+
+	if (tds_cnc->msg_arr) {
+		while (tds_cnc->msg_arr->len > 0) {
+			msg = (GdaFreeTDSMessage *) g_ptr_array_index (tds_cnc->msg_arr, 0);
+			if (msg != NULL) {
+				gda_freetds_message_free (msg);
+			}
+
+			g_ptr_array_remove_index (tds_cnc->msg_arr, 0);
+		}
+		g_ptr_array_free (tds_cnc->msg_arr, TRUE);
+		tds_cnc->msg_arr = NULL;
 	}
 	
 	g_free(tds_cnc);
@@ -288,7 +310,7 @@ static const gchar
 		tds_free_config(tds_cnc->config);
 		tds_cnc->config = NULL;
 	}
-	tds_cnc->config = tds_get_config(tds_cnc->socket, tds_cnc->login);
+	tds_cnc->config = tds_get_config(tds_cnc->tds, tds_cnc->login);
 	
 	return tds_cnc->config->database;
 }
@@ -443,12 +465,12 @@ gda_freetds_execute_query (GdaConnection *cnc, const gchar* sql)
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	tds_cnc = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_FREETDS_HANDLE);
 	g_return_val_if_fail (tds_cnc != NULL, NULL);
-	g_return_val_if_fail (tds_cnc->socket != NULL, NULL);
+	g_return_val_if_fail (tds_cnc->tds != NULL, NULL);
 
-	tds_cnc->rc = tds_submit_query(tds_cnc->socket, (gchar *) sql);
+	tds_cnc->rc = tds_submit_query(tds_cnc->tds, (gchar *) sql);
 
 	if (tds_cnc->rc != TDS_SUCCEED) {
-		error = gda_freetds_make_error (tds_cnc->socket, NULL);
+		error = gda_freetds_make_error (tds_cnc->tds, NULL);
 		gda_connection_add_error (cnc, error);
 		return NULL;
 	}
@@ -547,7 +569,7 @@ static GList* gda_freetds_provider_process_sql_commands(GList         *reclist,
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	tds_cnc = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_FREETDS_HANDLE);
 	g_return_val_if_fail (tds_cnc != NULL, NULL);
-	g_return_val_if_fail (tds_cnc->socket != NULL, NULL);
+	g_return_val_if_fail (tds_cnc->tds != NULL, NULL);
 
 //	arr = gda_freetds_split_commandlist(sql);
 	arr = g_strsplit (sql, ";", 0);
@@ -555,10 +577,10 @@ static GList* gda_freetds_provider_process_sql_commands(GList         *reclist,
 		gint n = 0;
 		while (arr[n]) {
 			GdaDataModel *recset;
-			tds_cnc->rc = tds_submit_query(tds_cnc->socket, arr[n]);
+			tds_cnc->rc = tds_submit_query(tds_cnc->tds, arr[n]);
 
 			if (tds_cnc->rc != TDS_SUCCEED) {
-				error = gda_freetds_make_error(tds_cnc->socket,
+				error = gda_freetds_make_error(tds_cnc->tds,
 						               NULL);
 				gda_connection_add_error (cnc, error);
 			}
@@ -630,33 +652,38 @@ gda_freetds_provider_finalize (GObject *object)
 static int gda_freetds_provider_tds_handle_message (void *aStruct,
                                                     const gboolean is_err_msg)
 {
-	TDSSOCKET *socket = (TDSSOCKET *) aStruct;
+	TDSSOCKET *tds = (TDSSOCKET *) aStruct;
 	GdaConnection *cnc = NULL;
 	GdaError *error = NULL;
 	gchar *msg = NULL;
 
-	g_return_val_if_fail (socket != NULL, TDS_SUCCEED);
-	g_return_val_if_fail (socket->msg_info != NULL, TDS_SUCCEED);
-	cnc = (GdaConnection *) tds_get_parent (socket);
+	g_return_val_if_fail (tds != NULL, TDS_SUCCEED);
+	g_return_val_if_fail (tds->msg_info != NULL, TDS_SUCCEED);
+	cnc = (GdaConnection *) tds_get_parent (tds);
 	
 	// what if we cannot determine where the message belongs to?
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), TDS_SUCCEED);
 
 	msg = g_strdup_printf(_("Msg %d, Level %d, State %d, Server %s, Line %d\n%s\n"),
-	                      socket->msg_info->msg_number,
-	                      socket->msg_info->msg_level,
-	                      socket->msg_info->msg_state,
-	                      (socket->msg_info->server ? socket->msg_info->server : ""),
-	                      socket->msg_info->line_number,
-	                      socket->msg_info->message ? socket->msg_info->message : "");
+	                      tds->msg_info->msg_number,
+	                      tds->msg_info->msg_level,
+	                      tds->msg_info->msg_state,
+	                      (tds->msg_info->server ? tds->msg_info->server : ""),
+	                      tds->msg_info->line_number,
+	                      tds->msg_info->message ? tds->msg_info->message : "");
 
 	// if errormessage, proceed
 	if (is_err_msg == TRUE) {
 		error = gda_error_new ();
 		gda_error_set_description (error, msg);
-		gda_error_set_number (error, socket->msg_info->msg_number);
+		gda_error_set_number (error, tds->msg_info->msg_number);
 		gda_error_set_source (error, "gda-freetds");
-		gda_error_set_sqlstate (error, _("Not available"));
+		if (tds->msg_info->sql_state != NULL) {
+			gda_error_set_sqlstate (error,
+			                        tds->msg_info->sql_state);
+		} else {
+			gda_error_set_sqlstate (error, _("Not available"));
+		}
 
 		gda_connection_add_error (cnc, error);
 	}

@@ -32,6 +32,7 @@
 #include "gda-freetds-provider.h"
 #include "gda-freetds-recordset.h"
 #include "gda-freetds-types.h"
+#include "gda-freetds-message.h"
 
 #define GDA_FREETDS_PROVIDER_ID          "GDA FreeTDS provider"
 
