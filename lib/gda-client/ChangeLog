@@ -1,3 +1,8 @@
+2001-06-20  Ernst Molitor <ernst.molitor@uni-bonn.de>
+
+	* gda-export.[ch]: rename variable 'export' to 'exp' to make
+	GCC 3.0 and C++ compilers happy
+
 2001-06-15  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-connection.c (get_corba_connection): use g_str_hash and

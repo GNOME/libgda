@@ -67,8 +67,8 @@ struct _GdaExportClass {
 	GtkObjectClass parent_class;
 #endif
 
-	void (*object_selected)   (GdaExport *export, GDA_Connection_QType qtype, const gchar *name);
-	void (*object_unselected) (GdaExport *export, GDA_Connection_QType qtype, const gchar *name);
+	void (*object_selected)   (GdaExport *exp, GDA_Connection_QType qtype, const gchar *name);
+	void (*object_unselected) (GdaExport *exp, GDA_Connection_QType qtype, const gchar *name);
 };
 
 #ifdef HAVE_GOBJECT
@@ -78,18 +78,18 @@ GtkType        gda_export_get_type       (void);
 #endif
 
 GdaExport*     gda_export_new                 (GdaConnection *cnc);
-void           gda_export_free                (GdaExport *export);
+void           gda_export_free                (GdaExport *exp);
 
-GList*         gda_export_get_tables          (GdaExport *);
-GList*         gda_export_get_selected_tables (GdaExport *export);
-void           gda_export_select_table        (GdaExport *export, const gchar *table);
-void           gda_export_unselect_table      (GdaExport *export, const gchar *table);
+GList*         gda_export_get_tables          (GdaExport *exp);
+GList*         gda_export_get_selected_tables (GdaExport *exp);
+void           gda_export_select_table        (GdaExport *exp, const gchar *table);
+void           gda_export_unselect_table      (GdaExport *exp, const gchar *table);
 
-void           gda_export_run                 (GdaExport *export);
-void           gda_export_stop                (GdaExport *export);
+void           gda_export_run                 (GdaExport *exp);
+void           gda_export_stop                (GdaExport *exp);
 
-GdaConnection* gda_export_get_connection      (GdaExport *export);
-void           gda_export_set_connection      (GdaExport *export, GdaConnection *cnc);
+GdaConnection* gda_export_get_connection      (GdaExport *exp);
+void           gda_export_set_connection      (GdaExport *exp, GdaConnection *cnc);
 
 #ifdef __cplusplus
 }

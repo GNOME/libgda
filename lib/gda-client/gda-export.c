@@ -41,7 +41,7 @@ enum {
 static gint gda_export_signals[LAST_SIGNAL] = { 0, };
 
 static void gda_export_class_init (GdaExportClass *klass);
-static void gda_export_init       (GdaExport *export);
+static void gda_export_init       (GdaExport *exp);
 static void gda_export_destroy    (GdaExport *destroy);
 
 /*
@@ -145,23 +145,23 @@ gda_export_class_init (GdaExportClass *klass)
 }
 
 static void
-gda_export_init (GdaExport *export)
+gda_export_init (GdaExport *exp)
 {
-	export->priv = g_new0 (GdaExportPrivate, 1);
+	exp->priv = g_new0 (GdaExportPrivate, 1);
 }
 
 static void
-gda_export_destroy (GdaExport *export)
+gda_export_destroy (GdaExport *exp)
 {
 	GtkObjectClass *parent_class;
 
-	destroy_hash_table (&export->priv->selected_tables);
+	destroy_hash_table (&exp->priv->selected_tables);
 
-	g_free (export->priv);
+	g_free (exp->priv);
 
 	parent_class = gtk_type_class (gtk_object_get_type ());
 	if (parent_class && parent_class->destroy)
-		parent_class->destroy (GTK_OBJECT (export));
+		parent_class->destroy (GTK_OBJECT (exp));
 }
 
 /**
@@ -185,24 +185,24 @@ gda_export_destroy (GdaExport *export)
 GdaExport *
 gda_export_new (GdaConnection *cnc)
 {
-	GdaExport *export;
+	GdaExport *exp;
 
-	export = GDA_EXPORT (gtk_type_new (gda_export_get_type ()));
+	exp = GDA_EXPORT (gtk_type_new (gda_export_get_type ()));
 	if (IS_GDA_CONNECTION (cnc))
-		gda_export_set_connection (export, cnc);
+		gda_export_set_connection (exp, cnc);
 
-	return export;
+	return exp;
 }
 
 void
-gda_export_free (GdaExport *export)
+gda_export_free (GdaExport *exp)
 {
-	g_return_if_fail (IS_GDA_EXPORT (export));
+	g_return_if_fail (IS_GDA_EXPORT (exp));
 
 #ifdef HAVE_GOBJECT
-	g_object_unref (export);
+	g_object_unref (exp);
 #else
-	gtk_object_unref (GTK_OBJECT (export));
+	gtk_object_unref (GTK_OBJECT (exp));
 #endif
 }
 
@@ -220,12 +220,12 @@ gda_export_free (GdaExport *export)
  * Returns: a GList containing the names of all the tables
  */
 GList *
-gda_export_get_tables (GdaExport *export)
+gda_export_get_tables (GdaExport *exp)
 {
-	g_return_val_if_fail (IS_GDA_EXPORT (export), NULL);
-	g_return_val_if_fail (export->priv != NULL, NULL);
+	g_return_val_if_fail (IS_GDA_EXPORT (exp), NULL);
+	g_return_val_if_fail (exp->priv != NULL, NULL);
 
-	return get_object_list (export->priv->cnc, GDA_Connection_GDCN_SCHEMA_TABLES);
+	return get_object_list (exp->priv->cnc, GDA_Connection_GDCN_SCHEMA_TABLES);
 }
 
 /**
@@ -240,12 +240,12 @@ gda_export_get_tables (GdaExport *export)
  * Returns: a #GList containing the names of the selected tables
  */
 GList *
-gda_export_get_selected_tables (GdaExport *export)
+gda_export_get_selected_tables (GdaExport *exp)
 {
-	g_return_val_if_fail (IS_GDA_EXPORT (export), NULL);
-	g_return_val_if_fail (export->priv != NULL, NULL);
+	g_return_val_if_fail (IS_GDA_EXPORT (exp), NULL);
+	g_return_val_if_fail (exp->priv != NULL, NULL);
 
-	return gda_util_hash_to_list (export->priv->selected_tables);
+	return gda_util_hash_to_list (exp->priv->selected_tables);
 }
 
 /**
@@ -256,19 +256,19 @@ gda_export_get_selected_tables (GdaExport *export)
  * Add the given table to the list of selected tables
  */
 void
-gda_export_select_table (GdaExport *export, const gchar *table)
+gda_export_select_table (GdaExport *exp, const gchar *table)
 {
 	gchar *data;
 
-	g_return_if_fail (IS_GDA_EXPORT (export));
+	g_return_if_fail (IS_GDA_EXPORT (exp));
 	g_return_if_fail (table != NULL);
 
-	data = g_hash_table_lookup (export->priv->selected_tables, (gconstpointer) table);
+	data = g_hash_table_lookup (exp->priv->selected_tables, (gconstpointer) table);
 	if (!data) {
 		data = (gpointer) g_strdup (table);
 
-		g_hash_table_insert (export->priv->selected_tables, data, data);
-		gtk_signal_emit (GTK_OBJECT (export),
+		g_hash_table_insert (exp->priv->selected_tables, data, data);
+		gtk_signal_emit (GTK_OBJECT (exp),
 				 gda_export_signals[OBJECT_SELECTED],
 				 GDA_Connection_GDCN_SCHEMA_TABLES,
 				 table);
@@ -283,17 +283,17 @@ gda_export_select_table (GdaExport *export, const gchar *table)
  * Remove the given table name from the list of selected tables
  */
 void
-gda_export_unselect_table (GdaExport *export, const gchar *table)
+gda_export_unselect_table (GdaExport *exp, const gchar *table)
 {
 	gchar *data;
 
-	g_return_if_fail (IS_GDA_EXPORT (export));
+	g_return_if_fail (IS_GDA_EXPORT (exp));
 	g_return_if_fail (table != NULL);
 
-	data = g_hash_table_lookup (export->priv->selected_tables, (gconstpointer) table);
+	data = g_hash_table_lookup (exp->priv->selected_tables, (gconstpointer) table);
 	if (data) {
-		g_hash_table_remove (export->priv->selected_tables, table);
-		gtk_signal_emit (GTK_OBJECT (export),
+		g_hash_table_remove (exp->priv->selected_tables, table);
+		gtk_signal_emit (GTK_OBJECT (exp),
 				 gda_export_signals[OBJECT_UNSELECTED],
 				 GDA_Connection_GDCN_SCHEMA_TABLES,
 				 table);
@@ -310,28 +310,28 @@ gda_export_unselect_table (GdaExport *export, const gchar *table)
  * Returns: the #GdaConnection object being used
  */
 GdaConnection *
-gda_export_get_connection (GdaExport *export)
+gda_export_get_connection (GdaExport *exp)
 {
-	g_return_val_if_fail (IS_GDA_EXPORT (export), NULL);
-	return export->priv->cnc;
+	g_return_val_if_fail (IS_GDA_EXPORT (exp), NULL);
+	return exp->priv->cnc;
 }
 
 /**
  * gda_export_set_connection
  */
 void
-gda_export_set_connection (GdaExport *export, GdaConnection *cnc)
+gda_export_set_connection (GdaExport *exp, GdaConnection *cnc)
 {
-	g_return_if_fail (IS_GDA_EXPORT (export));
+	g_return_if_fail (IS_GDA_EXPORT (exp));
 
 	/* unref the old GdaConnection */
-	if (IS_GDA_CONNECTION (export->priv->cnc)) {
-		gda_connection_free (export->priv->cnc);
-		export->priv->cnc = NULL;
+	if (IS_GDA_CONNECTION (exp->priv->cnc)) {
+		gda_connection_free (exp->priv->cnc);
+		exp->priv->cnc = NULL;
 	}
 
 	if (IS_GDA_CONNECTION (cnc)) {
-		export->priv->cnc = cnc;
-		gtk_object_ref (GTK_OBJECT (export->priv->cnc));
+		exp->priv->cnc = cnc;
+		gtk_object_ref (GTK_OBJECT (exp->priv->cnc));
 	}
 }
