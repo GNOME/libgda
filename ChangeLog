@@ -1,3 +1,12 @@
+2003-08-22  Philippe CHARLIER <p.charlier@chello.be>
+
+	* libgda/gda-xml-database.[ch] (gda_xml_database_set_version): removed
+	(gda_xml_database_get_user_version, gda_xml_databaase_set_user_version):
+	new functions to let applications have a specific version number.
+	(gda_xml_database_save): don't call gda_xml_database_set_version.
+	(gda_xml_database_init, gda_xml_database_finalize): manage the
+	'user_version private field.
+
 2003-08-16  Gonzalo Paniagua Javier <gonzalo@ximian.com>
 
 	* libgda/gda-blob.c:

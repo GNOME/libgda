@@ -58,8 +58,9 @@ GdaXmlDatabase *gda_xml_database_new_from_uri (const gchar *uri);
 
 const gchar    *gda_xml_database_get_name (GdaXmlDatabase *xmldb);
 void            gda_xml_database_set_name (GdaXmlDatabase *xmldb, const gchar *name);
+const gchar    *gda_xml_database_get_user_version (GdaXmlDatabase *xmldb);
+void            gda_xml_database_set_user_version (GdaXmlDatabase *xmldb, const gchar *user_version);
 const gchar    *gda_xml_database_get_version (GdaXmlDatabase *xmldb);
-void            gda_xml_database_set_version (GdaXmlDatabase *xmldb, const gchar *version);
 const gchar    *gda_xml_database_get_uri (GdaXmlDatabase *xmldb);
 void            gda_xml_database_set_uri (GdaXmlDatabase *xmldb, const gchar *uri);
 void            gda_xml_database_changed (GdaXmlDatabase *xmldb);

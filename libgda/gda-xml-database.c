@@ -29,6 +29,7 @@
 struct _GdaXmlDatabasePrivate {
 	gchar *uri;
 	gchar *name;
+	gchar *user_version;
 	gchar *version;
 	GHashTable *tables;
 	GHashTable *views;
@@ -45,18 +46,19 @@ struct _GdaXmlDatabasePrivate {
 #define OBJECT_VIEW         "view"
 #define OBJECT_VIEWS_NODE   "views"
 
-#define PROPERTY_ALLOW_NULL  "isnull"
-#define PROPERTY_AUTO        "auto_increment"
-#define PROPERTY_CAPTION     "caption"
-#define PROPERTY_GDATYPE     "gdatype"
-#define PROPERTY_NAME        "name"
-#define PROPERTY_OWNER       "owner"
-#define PROPERTY_PRIMARY_KEY "pkey"
-#define PROPERTY_REFERENCES  "references"
-#define PROPERTY_SCALE       "scale"
-#define PROPERTY_SIZE        "size"
-#define PROPERTY_UNIQUE_KEY  "unique"
-#define PROPERTY_VERSION     "version"
+#define PROPERTY_ALLOW_NULL   "isnull"
+#define PROPERTY_AUTO         "auto_increment"
+#define PROPERTY_CAPTION      "caption"
+#define PROPERTY_GDATYPE      "gdatype"
+#define PROPERTY_NAME         "name"
+#define PROPERTY_OWNER        "owner"
+#define PROPERTY_PRIMARY_KEY  "pkey"
+#define PROPERTY_REFERENCES   "references"
+#define PROPERTY_SCALE        "scale"
+#define PROPERTY_SIZE         "size"
+#define PROPERTY_UNIQUE_KEY   "unique"
+#define PROPERTY_VERSION      "version"
+#define PROPERTY_USER_VERSION "user_version"
 
 static void gda_xml_database_class_init (GdaXmlDatabaseClass *klass);
 static void gda_xml_database_init       (GdaXmlDatabase *xmldb, GdaXmlDatabaseClass *klass);
@@ -148,6 +150,7 @@ gda_xml_database_init (GdaXmlDatabase *xmldb, GdaXmlDatabaseClass *klass)
 	xmldb->priv = g_new0 (GdaXmlDatabasePrivate, 1);
 	xmldb->priv->uri = NULL;
 	xmldb->priv->name = NULL;
+	xmldb->priv->user_version = NULL;
 	xmldb->priv->version = NULL;
 	xmldb->priv->tables = g_hash_table_new (g_str_hash, g_str_equal);
 	xmldb->priv->views = g_hash_table_new (g_str_hash, g_str_equal);
@@ -179,6 +182,11 @@ gda_xml_database_finalize (GObject *object)
 	if (xmldb->priv->name) {
 		g_free (xmldb->priv->name);
 		xmldb->priv->name = NULL;
+	}
+
+	if (xmldb->priv->user_version) {
+		g_free (xmldb->priv->user_version);
+		xmldb->priv->user_version = NULL;
 	}
 
 	if (xmldb->priv->version) {
@@ -285,6 +293,7 @@ gda_xml_database_new_from_uri (const gchar *uri)
 	}
 
 	xmldb->priv->name = g_strdup (xmlGetProp (root, PROPERTY_NAME));
+	xmldb->priv->user_version = g_strdup  (xmlGetProp (root, PROPERTY_USER_VERSION));
 	xmldb->priv->version = g_strdup  (xmlGetProp (root, PROPERTY_VERSION));
 	node = root->xmlChildrenNode;
 	while (node) {
@@ -348,39 +357,58 @@ gda_xml_database_set_name (GdaXmlDatabase *xmldb, const gchar *name)
 }
 
 /**
+ * gda_xml_database_get_user_version
+ * @xmldb: XML database.
+ *
+ * Get the user defined version of the given #GdaXmlDatabase object.
+ *
+ * Returns: the database version defined by the user.
+ */
+const gchar *
+gda_xml_database_get_user_version (GdaXmlDatabase *xmldb)
+{
+	g_return_val_if_fail (GDA_IS_XML_DATABASE (xmldb), NULL);
+	return (const gchar *) xmldb->priv->user_version;
+}
+
+/**
+ * gda_xml_database_set_user_version
+ * @xmldb: XML database.
+ * @user_version: User defined Version string.
+ *
+ * Set the user defined version of the given XML database.
+ */
+void
+gda_xml_database_set_user_version (GdaXmlDatabase *xmldb, const gchar *user_version)
+{
+	g_return_if_fail (GDA_IS_XML_DATABASE (xmldb));
+	g_return_if_fail (user_version != NULL);
+
+	if (xmldb->priv->user_version)
+		g_free (xmldb->priv->user_version);
+	xmldb->priv->user_version = g_strdup (user_version);
+
+	gda_xml_database_changed (xmldb);
+}
+
+/**
  * gda_xml_database_get_version
  * @xmldb: XML database.
  *
- * Get the version of the given #GdaXmlDatabase object. This version is the
- * one that was used for saving the XML file last time it was saved.
+ * Get the version of libgda used to create the #GdaXmlDatabase object.
+ * This version is the one that was used for saving the XML file last 
+ * time it was saved. This value can only be "get" as it is an internal
+ * information related to the creation of the #GdaXmlDatabase object.
+ * To get the user defined database version, use the function
+ * gda_xml_database_get_user_version instead.
  *
- * Returns: the database version.
+ * Returns: the libgda version used to create the database.
  */
 const gchar *
 gda_xml_database_get_version (GdaXmlDatabase *xmldb)
 {
 	g_return_val_if_fail (GDA_IS_XML_DATABASE (xmldb), NULL);
 	return (const gchar *) xmldb->priv->version;
-}
-
-/**
- * gda_xml_database_set_version
- * @xmldb: XML database.
- * @version: Version string.
- *
- * Set the version of the given XML database.
- */
-void
-gda_xml_database_set_version (GdaXmlDatabase *xmldb, const gchar *version)
-{
-	g_return_if_fail (GDA_IS_XML_DATABASE (xmldb));
-	g_return_if_fail (version != NULL);
-
-	if (xmldb->priv->version)
-		g_free (xmldb->priv->version);
-	xmldb->priv->version = g_strdup (version);
-
-	gda_xml_database_changed (xmldb);
 }
 
 /**
@@ -457,7 +485,6 @@ gda_xml_database_save (GdaXmlDatabase *xmldb, const gchar *uri)
 
 	g_return_val_if_fail (GDA_IS_XML_DATABASE (xmldb), FALSE);
 
-	gda_xml_database_set_version (xmldb, VERSION);
 	xml = gda_xml_database_to_string (xmldb);
 	if (xml) {
 		result = gda_file_save (uri, xml, strlen (xml));
@@ -495,6 +522,7 @@ gda_xml_database_to_string (GdaXmlDatabase *xmldb)
 	doc = xmlNewDoc ("1.0");
 	root = xmlNewDocNode (doc, NULL, OBJECT_DATABASE, NULL);
 	xmlSetProp (root, PROPERTY_NAME, xmldb->priv->name);
+	xmlSetProp (root, PROPERTY_USER_VERSION, xmldb->priv->user_version);
 	xmlSetProp (root, PROPERTY_VERSION, VERSION);
 	xmlDocSetRootElement (doc, root);
 
