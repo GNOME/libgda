@@ -14,9 +14,9 @@ Version:	%ver
 Release: 	%rel
 Copyright: 	GPL
 Group: 		Applications/Databases
-Source:		ftp://ftp.gnome.org/pub/GNOME/sources/gnome-db/%{name}-%{ver}.tar.gz
+Source:		ftp://ftp.gnome-db.org/pub/gnome-db/sources/%{ver}/%{name}-%{ver}.tar.gz
 BuildRoot: 	/var/tmp/%{name}-%{ver}-root
-URL: 		http://www.gnome.org/projects/gnome-db/
+URL: 		http://www.gnome-db.org/
 DocDir: 	%{prefix}/doc
 
 %description
@@ -121,9 +121,9 @@ GNU Data Access is an attempt to provide uniform access to
 
 # Needed for snapshot releases.
 if [ ! -f configure ]; then
-  CFLAGS="$RPM_OPT_FLAGS" ./autogen.sh $ARCH_FLAGS --prefix=%{prefix} --sysconfdir=%{sysconfdir} --with-odbc=/opt/unixodbc --with-postgres=yes --with-mysql=yes
+  CFLAGS="$RPM_OPT_FLAGS" ./autogen.sh $ARCH_FLAGS --prefix=%{prefix} --sysconfdir=%{sysconfdir} --with-odbc=yes --with-postgres=yes --with-mysql=yes
 else
-  CFLAGS="$RPM_OPT_FLAGS" ./configure $ARCH_FLAGS --prefix=%{prefix} --sysconfdir=%{sysconfdir} --with-odbc=/opt/unixodbc --with-postgres=yes --with-mysql=yes
+  CFLAGS="$RPM_OPT_FLAGS" ./configure $ARCH_FLAGS --prefix=%{prefix} --sysconfdir=%{sysconfdir} --with-odbc=yes --with-postgres=yes --with-mysql=yes
 fi
 
 if [ "$SMP" != "" ]; then
