@@ -1,3 +1,15 @@
+2002-12-10  Holger Thon <holger.thon@gnome-db.org>
+
+	* providers/freetds/gda-tds-{schemas.h,types.c}:
+	* providers/freetds/gda-freetds-provider.[ch]: fixed types schema,
+	get_server_version
+	* providers/freetds/gda-freetds-recordset.c: fixed datamodel return
+	for queries without result
+	
+	* testing/freetds-test.c: activated freetds provider checks again
+	
+	* providers/sybase/gda-sybase-provider.c: null-length password fix
+
 2002-12-09  Holger Thon <holger.thon@gnome-db.org>
 
 	* providers/freetds/gda-tds-schemas.h: corrected users schema

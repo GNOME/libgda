@@ -178,7 +178,7 @@ gda_freetds_get_value_type (TDSCOLINFO *col)
 		case SYBDATETIME4:
 			return GDA_VALUE_TYPE_TIMESTAMP;
 		default:
-			return GDA_VALUE_TYPE_STRING;
+			return GDA_VALUE_TYPE_UNKNOWN;
 	}
 	
 	return GDA_VALUE_TYPE_UNKNOWN;

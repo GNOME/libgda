@@ -65,6 +65,7 @@ struct _GdaFreeTDSConnectionData {
 #endif
 	TDSSOCKET     *tds;       // connection handle
 	TDSCONFIGINFO *config;    // tds config struct
+	gchar         *server_version; // Server identifier string
 };
 
 GType              gda_freetds_provider_get_type (void);

@@ -123,16 +123,16 @@ do_freetds_test (GdaConnection *cnc)
 	g_print ("\tFreetTDS provider specific tests...\n");
 
 	/* Drops the gda_freetds_test table. Fail if not exists. */
-//	g_print ("\t\tDrop table: %s\n",
-//		 drop_table (cnc) ? "OK" : "Error (don't worry about this one)");
+	g_print ("\t\tDrop table: %s\n",
+		 drop_table (cnc) ? "OK" : "Error (don't worry about this one)");
 
 	/* Creates a table with all supported data types */
-//	g_print ("\t\tCreate table with all supported types: %s\n",
-//			create_table (cnc) ? "OK" : "Error");
+	g_print ("\t\tCreate table with all supported types: %s\n",
+			create_table (cnc) ? "OK" : "Error");
 
 	/* Inserts values */
-//	g_print ("\t\tInsert values for all known types: %s\n",
-//				 insert_data (cnc) ? "OK" : "Error");
+	g_print ("\t\tInsert values for all known types: %s\n",
+				 insert_data (cnc) ? "OK" : "Error");
 
 	/* Selects values */
 	list = select_data (cnc);

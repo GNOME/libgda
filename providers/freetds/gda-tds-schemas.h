@@ -160,7 +160,7 @@ G_BEGIN_DECLS
 		                                 _("GDA type")); \
 	}
 #define TDS_SCHEMA_TYPES \
-	"SELECT name, NULL, NULL, NULL " \
+	"SELECT name, uid, length, type " \
 	"  FROM systypes " \
 	" ORDER BY name"
 

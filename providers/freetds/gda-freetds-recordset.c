@@ -336,40 +336,41 @@ GdaDataModel
 
 	while ((tds_cnc->rc = tds_process_result_tokens(tds_cnc->tds))
 	       == TDS_SUCCEED) {
-		while ((tds_cnc->rc = tds_process_row_tokens(tds_cnc->tds))
-		       == TDS_SUCCEED) {
-			recset->priv->res = tds_cnc->tds->res_info;
-			if (columns_set == FALSE) {
-				columns_set = TRUE;
-				recset->priv->colcnt = recset->priv->res->num_cols;
-				for (i = 0; i < recset->priv->colcnt; i++) {
-					col = gda_freetds_dup_tdscolinfo (recset->priv->res->columns[i]);
-					g_ptr_array_add (recset->priv->columns,
-					                 col);
+		if (tds_cnc->tds->res_info->rows_exist) {
+			while ((tds_cnc->rc = tds_process_row_tokens(tds_cnc->tds))
+			       == TDS_SUCCEED) {
+				recset->priv->res = tds_cnc->tds->res_info;
+				if (columns_set == FALSE) {
+					columns_set = TRUE;
+					recset->priv->colcnt = recset->priv->res->num_cols;
+					for (i = 0; i < recset->priv->colcnt; i++) {
+						col = gda_freetds_dup_tdscolinfo (recset->priv->res->columns[i]);
+						g_ptr_array_add (recset->priv->columns,
+						                 col);
+					}
+				}
+
+				row = gda_freetds_get_current_row(recset);
+				if (row) {
+					g_ptr_array_add(recset->priv->rows, row);
+					recset->priv->rowcnt++;
 				}
 			}
-
-			row = gda_freetds_get_current_row(recset);
-			if (row) {
-				g_ptr_array_add(recset->priv->rows, row);
-				recset->priv->rowcnt++;
+			if (tds_cnc->rc == TDS_FAIL) {
+				error = gda_freetds_make_error(tds_cnc->tds,
+				                               _("Error processing result rows.\n"));
+				gda_connection_add_error (cnc, error);
+				g_object_unref (recset);
+				recset = NULL;
+				return NULL;
+			} else if (tds_cnc->rc != TDS_NO_MORE_ROWS) {
+				error = gda_freetds_make_error(tds_cnc->tds,
+				                               _("Unexpected freetds return code in tds_process_row_tokens().\n"));
+				gda_connection_add_error (cnc, error);
+				g_object_unref (recset);
+				recset = NULL;
+				return NULL;
 			}
-		}
-		if (tds_cnc->rc == TDS_FAIL) {
-			error = gda_freetds_make_error(tds_cnc->tds,
-			                               _("Error processing result rows.\n"));
-			gda_connection_add_error (cnc, error);
-			g_object_unref (recset);
-			recset = NULL;
-			return NULL;
-
-		} else if (tds_cnc->rc != TDS_NO_MORE_ROWS) {
-			error = gda_freetds_make_error(tds_cnc->tds,
-			                               _("Unexpected freetds return code in tds_process_row_tokens().\n"));
-			gda_connection_add_error (cnc, error);
-			g_object_unref (recset);
-			recset = NULL;
-			return NULL;
 		}
 	}
 	if (tds_cnc->rc == TDS_FAIL) {

@@ -315,6 +315,10 @@ gda_freetds_free_connection_data (GdaFreeTDSConnectionData *tds_cnc)
 
 	g_return_if_fail (tds_cnc != NULL);
 
+	if (tds_cnc->server_version) {
+		g_free (tds_cnc->server_version);
+		tds_cnc->server_version = NULL;
+	}
 	if (tds_cnc->config) {
 		tds_free_config(tds_cnc->config);
 		tds_cnc->config = NULL;
@@ -577,17 +581,29 @@ static const gchar
 {
 	GdaFreeTDSProvider *tds_prov = (GdaFreeTDSProvider *) provider;
 	GdaFreeTDSConnectionData *tds_cnc = NULL;
-	GdaDataModel *recset = NULL;
+	GdaDataModel *model = NULL;
 	
 	g_return_val_if_fail (GDA_IS_FREETDS_PROVIDER (tds_prov), NULL);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	tds_cnc = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_FREETDS_HANDLE);
 	g_return_val_if_fail (tds_cnc != NULL, NULL);
 
-//	recset = gda_freetds_execute_query (cnc, TDS_QUERY_SERVER_VERSION);
+	if (!tds_cnc->server_version) {
+		model = gda_freetds_execute_query (cnc, TDS_QUERY_SERVER_VERSION);
+		if (model) {
+			if ((gda_data_model_get_n_columns (model) == 1)
+			    && (gda_data_model_get_n_rows (model) == 1)) {
+				GdaValue *value;
 
-	// FIXME:
-	return NULL;
+				value = (GdaValue *) gda_data_model_get_value_at
+				                             (model, 0, 0);
+				tds_cnc->server_version = gda_value_stringify ((GdaValue *) value);
+			}
+			g_object_unref (model);
+		}
+	}
+
+	return (const gchar *) tds_cnc->server_version;
 }
 
 static const gchar
@@ -598,6 +614,73 @@ static const gchar
 	g_return_val_if_fail (GDA_IS_FREETDS_PROVIDER (tds_prov), NULL);
 
 	return VERSION;
+}
+
+static GdaDataModel
+*gda_freetds_provider_get_types (GdaConnection    *cnc,
+                                 GdaParameterList *params)
+{
+	GdaDataModel *model = NULL;
+	TDSCOLINFO col;
+	GdaValueType gda_type;
+	GdaValue     *value = NULL;
+	guint uid = 0;
+	gint i = 1;
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+
+	model = gda_freetds_execute_query (cnc, TDS_SCHEMA_TYPES);
+	TDS_FIXMODEL_SCHEMA_TYPES (model);
+
+	memset (&col, 0, sizeof (col));
+	
+	if (model) {
+		for (i = 0; i < gda_data_model_get_n_rows (model); i++) {
+			GdaRow *row = (GdaRow *) gda_data_model_get_row (model,
+			                                                 i);
+			
+			// first fix gda_type
+			if (row) {
+				value = gda_row_get_value (row, 2);
+				
+				if (gda_value_get_type (value) == GDA_VALUE_TYPE_INTEGER) {
+					col.column_size = gda_value_get_integer (value);
+				} else {
+					col.column_size = 0;
+				}
+				value = gda_row_get_value (row, 3);
+				if (gda_value_get_type (value) != GDA_VALUE_TYPE_TINYINT) {
+					col.column_type = SYBVARIANT;
+				} else {
+					col.column_type = gda_value_get_tinyint (value);
+				}
+				
+				gda_type = gda_freetds_get_value_type (&col);
+				// col 3: type -> clear and set
+				//   step 1: make sure value is cleared
+				gda_value_set_null (value);
+				memset (value, 0, sizeof(GdaValue));
+				//   step 2: set type of gdavalue
+				value->type = GDA_VALUE_TYPE_TYPE;
+				value->value.v_type = gda_type;
+				
+				// col 2: comment -> clear
+				value = gda_row_get_value (row, 2);
+				gda_value_set_string (value, "");
+				
+				// col 1: owner -> set
+				value = gda_row_get_value (row, 1);
+				// FIXME: use correct userid
+				uid = gda_value_get_integer (value);
+				if (uid <= 1) {
+					gda_value_set_string (value, "dbo");
+				} else {
+					gda_value_set_null (value);
+				}
+			}
+		}
+	}
+
+	return model;
 }
 
 static GdaDataModel
@@ -622,23 +705,18 @@ static GdaDataModel
 		case GDA_CONNECTION_SCHEMA_PROCEDURES:
 			recset = gda_freetds_execute_query (cnc, TDS_SCHEMA_PROCEDURES);
 			TDS_FIXMODEL_SCHEMA_PROCEDURES (recset)
-			g_free (query);
-			query = NULL;
 			
 			return recset;
 			break;
 		case GDA_CONNECTION_SCHEMA_TABLES:
 			recset = gda_freetds_execute_query (cnc, TDS_SCHEMA_TABLES);
 			TDS_FIXMODEL_SCHEMA_TABLES (recset)
-			g_free (query);
-			query = NULL;
 			
 			return recset;
 			break;
 		case GDA_CONNECTION_SCHEMA_TYPES:
-			recset = gda_freetds_execute_query (cnc, TDS_SCHEMA_TYPES);
-			TDS_FIXMODEL_SCHEMA_TYPES (recset)
-	
+			recset = gda_freetds_provider_get_types (cnc, params);
+
 			return recset;
 			break;
 		case GDA_CONNECTION_SCHEMA_USERS:
