@@ -1,3 +1,9 @@
+2004-06-24  Vivien Malerba <malerba@gnome-db.org>
+	* libsql/*: improved parsing of condition operators (added regex operators such as "~",
+	  "~*", etc and "SIMILAR TO", and modified the sql_condition structure to add a "negated"
+	  attributes for negated conditions and the sql_condition_operator enum for the new
+	  recognized operators.
+
 2004-06-10  Murray Cumming  <murrayc@murrayc.com>
 
 	* libgda/gda-value.[h|cc]: Add get_type(), copy(), and free() 
