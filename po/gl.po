@@ -10,7 +10,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2000-09-22 16:16+0200\n"
+"POT-Creation-Date: 2000-10-03 10:47+0200\n"
 "PO-Revision-Date: 2000-09-27 23:19+0200\n"
 "Last-Translator: Jesús Bravo Álvarez <jba@pobox.com>\n"
 "Language-Team: Galician <trasno@ceu.fi.udc.es>\n"
@@ -38,12 +38,12 @@ msgstr "%s: O servidor non respondeu."
 msgid "%s: An Error occured in the CORBA system."
 msgstr "%s: Ocorreu un erro no sistema CORBA."
 
-#: lib/gda-client/gda-connection.c:457
+#: lib/gda-client/gda-connection.c:453
 #, c-format
 msgid "Database '%s' not found in system configuration"
 msgstr "Base de datos '%s' non atopada na configuración do sistema"
 
-#: lib/gda-client/gda-connection.c:473
+#: lib/gda-client/gda-connection.c:469
 msgid "Could not open CORBA factory"
 msgstr "Non foi posible abri-la fábrica CORBA"
 
@@ -63,13 +63,18 @@ msgstr "CERTO"
 msgid "FALSE"
 msgstr "FALSO"
 
-#: lib/gda-common/gda-corba.c:74 lib/gda-common/gda-corba.c:125
+#: lib/gda-common/gda-corba.c:72
 msgid "True"
 msgstr "Certo"
 
-#: lib/gda-common/gda-corba.c:74 lib/gda-common/gda-corba.c:125
+#: lib/gda-common/gda-corba.c:72
 msgid "False"
 msgstr "Falso"
+
+#: lib/gda-common/gda-corba.c:119
+#, c-format
+msgid "CORBA System exception: %s"
+msgstr "Excepción de Sistema de CORBA: %s"
 
 #: lib/gda-common/gda-log.c:29
 msgid "Saving log...x"
@@ -220,7 +225,7 @@ msgstr "Tentouse inicializar un fornecedor xa inicializado"
 #: providers/gda-odbc-server/gda-odbc-connection.c:600
 #: providers/gda-odbc-server/gda-odbc-connection.c:633
 #: providers/gda-oracle-server/gda-oracle-connection.c:417
-#: providers/gda-postgres-server/gda-postgres-connection.c:752
+#: providers/gda-postgres-server/gda-postgres-connection.c:771
 #: providers/gda-sybase-server/gda-sybase-error.c:106
 #, c-format
 msgid "error '%s' at %s"
@@ -240,8 +245,8 @@ msgstr "erro '%s' en %s"
 #: providers/gda-odbc-server/gda-odbc-connection.c:636
 #: providers/gda-oracle-server/gda-oracle-connection.c:422
 #: providers/gda-oracle-server/gda-oracle-connection.c:423
-#: providers/gda-postgres-server/gda-postgres-connection.c:759
-#: providers/gda-postgres-server/gda-postgres-connection.c:760
+#: providers/gda-postgres-server/gda-postgres-connection.c:778
+#: providers/gda-postgres-server/gda-postgres-connection.c:779
 #: providers/gda-sybase-server/gda-sybase-error.c:115
 #: providers/gda-sybase-server/gda-sybase-error.c:116
 msgid "Not available"
@@ -252,7 +257,7 @@ msgstr "Non dispoñible"
 #: providers/gda-mdb-server/gda-mdb-connection.c:357
 #: providers/gda-mysql-server/gda-mysql-connection.c:384
 #: providers/gda-oracle-server/gda-oracle-connection.c:424
-#: providers/gda-postgres-server/gda-postgres-connection.c:761
+#: providers/gda-postgres-server/gda-postgres-connection.c:780
 #: providers/gda-sybase-server/gda-sybase-error.c:117
 msgid "error"
 msgstr "erro"
@@ -274,7 +279,7 @@ msgstr "Non foi posible rexistra-la implementación do fornecedor INTERBASE"
 #: providers/gda-mdb-server/gda-mdb-connection.c:224
 #: providers/gda-mysql-server/gda-mysql-connection.c:251
 #: providers/gda-oracle-server/gda-oracle-connection.c:295
-#: providers/gda-postgres-server/gda-postgres-connection.c:498
+#: providers/gda-postgres-server/gda-postgres-connection.c:511
 #: providers/gda-sybase-server/gda-sybase-connection.c:243
 #, c-format
 msgid "Unhandled SCHEMA_QTYPE %d"
@@ -404,8 +409,8 @@ msgstr "o obxecto recordset estase a crear sen ningunha conexión asociada"
 msgid "Could not register ORACLE provider implementation"
 msgstr "Non foi posible rexistra-la implementación do fornecedor ORACLE"
 
-#: providers/gda-postgres-server/gda-postgres-connection.c:861
-#: providers/gda-postgres-server/gda-postgres-connection.c:973
+#: providers/gda-postgres-server/gda-postgres-connection.c:880
+#: providers/gda-postgres-server/gda-postgres-connection.c:992
 msgid "postgres_recset is NULL"
 msgstr "postgres_recset é NULL"
 
@@ -862,12 +867,12 @@ msgstr "nome do ficheiro"
 msgid "FILE-NAME"
 msgstr "NOME-DO-FICHEIRO"
 
-#: tools/gda-run.c:110
+#: tools/gda-run.c:104
 #, c-format
 msgid "%s: misconfigured DSN entry"
 msgstr "%s: entrada DSN mal configurada"
 
-#: tools/gda-run.c:125
+#: tools/gda-run.c:119
 #, c-format
 msgid "%s: data source '%s' not found\n"
 msgstr "%s: fonte de datos '%s' non atopada\n"
