@@ -20,3 +20,5 @@ gda_test_LDADD = \
 	$(top_builddir)/lib/gda-client/libgda-client.la \
 	$(OAF_LIBS) \
 	$(GLIB_LIBS)
+
+EXTRA_DIST = sample_database.xml
