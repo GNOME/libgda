@@ -1,3 +1,7 @@
+2002-01-28  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
+	* ChangeLog: Removed some po related entries.
+
 2002-01-27  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* libgda/gda-config.[ch]: made GDA_CONFIG_* defines public, as they'll
@@ -67,14 +71,6 @@
 
 	* data/gda-xml-query.dtd:
 	* data/gda-xml-query.xsl: added from stable branch
-
-2002-01-22  Hasbullah Bin Pit <sebol@ikhlas.com>
-
-        * ms.po: Updated Malay Translation.
-
-2002-01-22  Christian Rose  <menthos@menthos.com>
-
-	* sv.po: Updated Swedish translation.
 
 2002-01-22  Rodrigo Moya <rodrigo@gnome-db.org>
 
@@ -635,10 +631,6 @@
 	* providers/default/sqlite/Makefile.am:
 	* report/libgda-report/Makefile.am: more changes to really
 	pass distcheck. 0.8.99 is ready
-
-2001-12-29  Duarte Loreto <happyguy_pt@hotmail.com>
-
-        * pt.po: Updated Portuguese translation.
 
 2001-12-29  Carlos Perelló Marín <carlos@gnome-db.org>
 
