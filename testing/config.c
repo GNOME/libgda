@@ -115,7 +115,7 @@ list_all_providers (void)
 }
 
 /* Lists configured data sources */
-void
+static void
 list_data_sources (void)
 {
 	GList *dsnlist;

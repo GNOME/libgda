@@ -9,6 +9,10 @@
 
 	* postgres-test.c: use the new function in models.c
 
+	* client.c:
+	* config.c:
+	* value.c: remove warnings.
+
 2002-01-12  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* Makefile.am: added models.h to _SOURCES for distcheck

@@ -36,7 +36,7 @@ stress_value (const gchar *type_str, GdaValue *value)
 
 	g_print ("\tNative value = ");
 	if (gda_value_isa (value, GDA_VALUE_TYPE_BIGINT))
-		g_print ("%ld\n", gda_value_get_bigint (value));
+		g_print ("%lld\n", gda_value_get_bigint (value));
 	else if (gda_value_isa (value, GDA_VALUE_TYPE_BOOLEAN))
 		g_print ("%d\n", gda_value_get_boolean (value));
 	else if (gda_value_isa (value, GDA_VALUE_TYPE_DOUBLE))

@@ -49,7 +49,7 @@ show_schema (GdaConnection *cnc, GdaConnectionSchema schema, const gchar *label)
 			gchar *str;
 
 			value = gda_data_model_get_value_at (model, c, r);
-			str = gda_value_stringify (value);
+			str = gda_value_stringify ((GdaValue *) value);
 			g_print ("\t%s", str);
 			g_free (str);
 		}
