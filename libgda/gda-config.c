@@ -400,12 +400,12 @@ gda_config_get_boolean (const gchar *path)
 
 	cfg_client = get_config_client ();
 
-	entry = gda_config_search_entry (cfg_client->user, path, "boolean");
+	entry = gda_config_search_entry (cfg_client->user, path, "bool");
 	if (entry == NULL)
-		entry = gda_config_search_entry (cfg_client->global, path, "boolean");
+		entry = gda_config_search_entry (cfg_client->global, path, "bool");
 
         return (entry != NULL && entry->value != NULL) ? 
-			(*(entry->value) - '0') : FALSE;
+			!strcmp (entry->value, "true") : FALSE;
 }
 
 /**
@@ -556,7 +556,7 @@ gda_config_set_boolean (const gchar *path, gboolean new_value)
 
 	new_value = new_value != 0 ? TRUE : FALSE;
 	cfg_client = get_config_client ();
-	entry = gda_config_search_entry (cfg_client->user, path, "boolean");
+	entry = gda_config_search_entry (cfg_client->user, path, "bool");
 	if (entry == NULL){
 		ptr_last_dash = strrchr (path, '/');
 		if (ptr_last_dash == NULL){
@@ -566,10 +566,9 @@ gda_config_set_boolean (const gchar *path, gboolean new_value)
 		last_dash = ptr_last_dash - path;
 		section_path = g_strdup (path);
 		section_path [last_dash] = '\0';
-		newstr = g_strdup_printf ("%d", new_value);
+		newstr = new_value == TRUE ? "true" : "false";
 		gda_config_add_entry (section_path, ptr_last_dash + 1, 
-						    "boolean", newstr);
-		g_free (newstr);
+						    "bool", newstr);
 		g_free (section_path);
 	} else {
 		g_free (entry->value);

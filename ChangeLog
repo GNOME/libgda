@@ -1,3 +1,7 @@
+2002-05-02  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
+	* libgda/gda-config.c: change "boolean" by "bool".
+
 2002-05-01  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* libgda/gda-row.c (gda_row_attributes_get_length): return 0 if
