@@ -379,7 +379,7 @@ gda_provider_list (void)
 	OAF_ServerInfoList* servlist;
 	CORBA_Environment   ev;
 	gint                i;
-	GdaProvider*         provider;
+	GdaProvider*        provider;
 
 	CORBA_exception_init(&ev);
 	servlist = oaf_query("repo_ids.has('IDL:GDA/ConnectionFactory:1.0')", NULL, &ev);
@@ -403,7 +403,7 @@ gda_provider_list (void)
 			if (dsn_params) {
 				gint    cnt = 0;
 				gchar** arr = g_strsplit(dsn_params, ";", 0);
-              
+
 				if (arr) {
 					while (arr[cnt] != NULL) {
 						provider->dsn_params = g_list_append(provider->dsn_params, g_strdup(arr[cnt]));
@@ -657,7 +657,6 @@ void
 gda_dsn_set_name (GdaDsn *dsn, const gchar *name)
 {
 	g_return_if_fail(dsn != NULL);
-	g_return_if_fail(name != NULL);
 
 	if (dsn->gda_name) g_free((gpointer) dsn->gda_name);
 	dsn->gda_name = g_strdup(name);
@@ -672,7 +671,6 @@ void
 gda_dsn_set_provider (GdaDsn *dsn, const gchar *provider)
 {
 	g_return_if_fail(dsn != NULL);
-	g_return_if_fail(provider != NULL);
 
 	/* FIXME: should check if the provider does exist */
 	if (dsn->provider) g_free((gpointer) dsn->provider);
@@ -688,7 +686,6 @@ void
 gda_dsn_set_dsn (GdaDsn *dsn, const gchar *dsn_str)
 {
 	g_return_if_fail(dsn != NULL);
-	g_return_if_fail(dsn_str != NULL);
 
 	if (dsn->dsn_str) g_free((gpointer) dsn->dsn_str);
 	dsn->dsn_str = g_strdup(dsn_str);
@@ -703,7 +700,6 @@ void
 gda_dsn_set_description (GdaDsn *dsn, const gchar *description)
 {
 	g_return_if_fail(dsn != NULL);
-	g_return_if_fail(description != NULL);
 
 	if (dsn->description) g_free((gpointer) dsn->description);
 	dsn->description = g_strdup(description);
@@ -718,7 +714,6 @@ void
 gda_dsn_set_username (GdaDsn *dsn, const gchar *username)
 {
 	g_return_if_fail(dsn != NULL);
-	g_return_if_fail(username != NULL);
 
 	if (dsn->username) g_free((gpointer) dsn->username);
 	dsn->username = g_strdup(username);
@@ -733,7 +728,6 @@ void
 gda_dsn_set_config (GdaDsn *dsn, const gchar *config)
 {
 	g_return_if_fail(dsn != NULL);
-	g_return_if_fail(config != NULL);
 
 	if (dsn->config) g_free((gpointer) dsn->config);
 	dsn->config = g_strdup(config);
@@ -773,23 +767,38 @@ gda_dsn_save (GdaDsn *dsn)
 		g_free((gpointer) tmp);
 
 		tmp = g_strdup_printf("%s/%s/Provider", config_prefix, dsn->gda_name);
-		gda_config_set_string(tmp, GDA_DSN_PROVIDER(dsn));
+		if (GDA_DSN_PROVIDER(dsn))
+			gda_config_set_string(tmp, GDA_DSN_PROVIDER(dsn));
+		else
+			gda_config_set_string(tmp, "");
 		g_free((gpointer) tmp);
 
 		tmp = g_strdup_printf("%s/%s/DSN", config_prefix, dsn->gda_name);
-		gda_config_set_string(tmp, GDA_DSN_DSN(dsn));
+		if (GDA_DSN_DSN(dsn))
+			gda_config_set_string(tmp, GDA_DSN_DSN(dsn));
+		else
+			gda_config_set_string(tmp, "");
 		g_free((gpointer) tmp);
 
 		tmp = g_strdup_printf("%s/%s/Description", config_prefix, dsn->gda_name);
-		gda_config_set_string(tmp, GDA_DSN_DESCRIPTION(dsn));
+		if (GDA_DSN_DESCRIPTION(dsn))
+			gda_config_set_string(tmp, GDA_DSN_DESCRIPTION(dsn));
+		else
+			gda_config_set_string(tmp, "");
 		g_free((gpointer) tmp);
 
 		tmp = g_strdup_printf("%s/%s/Username", config_prefix, dsn->gda_name);
-		gda_config_set_string(tmp, GDA_DSN_USERNAME(dsn));
+		if (GDA_DSN_USERNAME(dsn))
+			gda_config_set_string(tmp, GDA_DSN_USERNAME(dsn));
+		else
+			gda_config_set_string(tmp, "");
 		g_free((gpointer) tmp);
 
 		tmp = g_strdup_printf("%s/%s/Configurator", config_prefix, dsn->gda_name);
-		gda_config_set_string(tmp, GDA_DSN_CONFIG(dsn));
+		if (GDA_DSN_CONFIG(dsn))
+			gda_config_set_string(tmp, GDA_DSN_CONFIG(dsn));
+		else
+			gda_config_set_string(tmp, "");
 		g_free((gpointer) tmp);
 
 		gda_config_commit();

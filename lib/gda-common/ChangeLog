@@ -1,3 +1,7 @@
+2001-04-25  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-config.c (gda_dsn_save): check pointer before using them
+
 2001-04-09  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-config.c (gda_config_remove_section): implemented

@@ -93,32 +93,32 @@ gda_corba_get_oaf_attribute (CORBA_sequence_OAF_Property props, const gchar *nam
 	for (i = 0; i < props._length; i++) {
 		if (!g_strcasecmp(props._buffer[i].name, name)) {
 			switch (props._buffer[i].v._d) {
-				case OAF_P_STRING :
-					return g_strdup(props._buffer[i].v._u.value_string);
-				case OAF_P_NUMBER :
-					return g_strdup_printf("%f", props._buffer[i].v._u.value_number);
-				case OAF_P_BOOLEAN :
-					return g_strdup(props._buffer[i].v._u.value_boolean ?
-					                _("True") : _("False"));
-				case OAF_P_STRINGV : {
-					GNOME_stringlist strlist;
-					GString*         str = NULL;
-					
-					strlist = props._buffer[i].v._u.value_stringv;
-					for (j = 0; j < strlist._length; j++) {
-						if (!str)
-							str = g_string_new(strlist._buffer[j]);
-						else {
-							str = g_string_append(str, ";");
-							str = g_string_append(str, strlist._buffer[j]);
-						}
+			case OAF_P_STRING :
+				return g_strdup(props._buffer[i].v._u.value_string);
+			case OAF_P_NUMBER :
+				return g_strdup_printf("%f", props._buffer[i].v._u.value_number);
+			case OAF_P_BOOLEAN :
+				return g_strdup(props._buffer[i].v._u.value_boolean ?
+								_("True") : _("False"));
+			case OAF_P_STRINGV : {
+				GNOME_stringlist strlist;
+				GString*         str = NULL;
+
+				strlist = props._buffer[i].v._u.value_stringv;
+				for (j = 0; j < strlist._length; j++) {
+					if (!str)
+						str = g_string_new(strlist._buffer[j]);
+					else {
+						str = g_string_append(str, ";");
+						str = g_string_append(str, strlist._buffer[j]);
 					}
-					if (str) {
-						ret = g_strdup(str->str);
-						g_string_free(str, TRUE);
-					}
-					return ret;
 				}
+				if (str) {
+					ret = g_strdup(str->str);
+					g_string_free(str, TRUE);
+				}
+				return ret;
+			}
 			}
 		}
 	}

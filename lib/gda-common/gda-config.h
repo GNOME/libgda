@@ -56,52 +56,50 @@ void     gda_config_free_list      (GList *list);
 /*
  * Providers
  */
-typedef struct _GdaProvider
-{
-  gchar* name;
-  gchar* comment;
-  gchar* location;
-  gchar* repo_id;
-  gchar* type;
-  gchar* username;
-  gchar* hostname;
-  gchar* domain;
-  GList* dsn_params;
+typedef struct _GdaProvider {
+	gchar* name;
+	gchar* comment;
+	gchar* location;
+	gchar* repo_id;
+	gchar* type;
+	gchar* username;
+	gchar* hostname;
+	gchar* domain;
+	GList* dsn_params;
 } GdaProvider;
 
-#define GDA_PROVIDER_TYPE(srv)       ((srv) ? (srv)->type : 0)
-#define GDA_PROVIDER_NAME(srv)       ((srv) ? (srv)->name : 0)
-#define GDA_PROVIDER_COMMENT(srv)    ((srv) ? (srv)->comment : 0)
-#define GDA_PROVIDER_LOCATION(srv)   ((srv) ? (srv)->location : 0)
-#define GDA_PROVIDER_REPO_ID(srv)    ((srv) ? (srv)->repo_id : 0)
-#define GDA_PROVIDER_USERNAME(srv)   ((srv) ? (srv)->username : 0)
-#define GDA_PROVIDER_HOSTNAME(srv)   ((srv) ? (srv)->hostname : 0)
-#define GDA_PROVIDER_DOMAIN(srv)     ((srv) ? (srv)->domain : 0)
-#define GDA_PROVIDER_DSN_PARAMS(srv) ((srv) ? (srv)->dsn_params : 0)
+#define GDA_PROVIDER_TYPE(srv)       ((srv) ? (srv)->type : NULL)
+#define GDA_PROVIDER_NAME(srv)       ((srv) ? (srv)->name : NULL)
+#define GDA_PROVIDER_COMMENT(srv)    ((srv) ? (srv)->comment : NULL)
+#define GDA_PROVIDER_LOCATION(srv)   ((srv) ? (srv)->location : NULL)
+#define GDA_PROVIDER_REPO_ID(srv)    ((srv) ? (srv)->repo_id : NULL)
+#define GDA_PROVIDER_USERNAME(srv)   ((srv) ? (srv)->username : NULL)
+#define GDA_PROVIDER_HOSTNAME(srv)   ((srv) ? (srv)->hostname : NULL)
+#define GDA_PROVIDER_DOMAIN(srv)     ((srv) ? (srv)->domain : NULL)
+#define GDA_PROVIDER_DSN_PARAMS(srv) ((srv) ? (srv)->dsn_params : NULL)
 
 GdaProvider* gda_provider_new          (void);
-GdaProvider* gda_provider_copy         (GdaProvider*);
-void         gda_provider_free         (GdaProvider*);
+GdaProvider* gda_provider_copy         (GdaProvider *provider);
+void         gda_provider_free         (GdaProvider *provider);
 
 GList*       gda_provider_list         (void);
 void         gda_provider_free_list    (GList* list);
-GdaProvider* gda_provider_find_by_name (const gchar* provider);
+GdaProvider* gda_provider_find_by_name (const gchar* name);
 
 /*
  * Data sources
  */
 GList*      gda_list_datasources              (void);
-GList*      gda_list_datasources_for_provider (gchar* provider);
+GList*      gda_list_datasources_for_provider (gchar* name);
 
-typedef struct _GdaDsn
-{
-  gchar*   gda_name;
-  gchar*   provider;
-  gchar*   dsn_str;
-  gchar*   description;
-  gchar*   username;
-  gchar*   config;
-  gboolean is_global;
+typedef struct _GdaDsn {
+	gchar*   gda_name;
+	gchar*   provider;
+	gchar*   dsn_str;
+	gchar*   description;
+	gchar*   username;
+	gchar*   config;
+	gboolean is_global;
 } GdaDsn;
 
 #define GDA_DSN_GDA_NAME(dsn)    ((dsn) ? (dsn)->gda_name : 0)
