@@ -28,9 +28,6 @@ namespace gda
 	class Value;
 };
 
-extern "C"
-{
-#include "glib.h"
 #include "gda-client.h"
 
 #include "gda-batch.h"
@@ -39,7 +36,6 @@ extern "C"
 #include "gda-error.h"
 #include "gda-field.h"
 #include "gda-recordset.h"
-}
 
 #include "gdaBatch.h"
 #include "gdaCommand.h"
