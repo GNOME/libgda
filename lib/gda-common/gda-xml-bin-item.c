@@ -66,7 +66,7 @@ gda_xml_bin_item_finalize (GObject *object)
 	g_object_unref (G_OBJECT (bin->priv->child));
 	g_free (bin->priv);
 
-	parent_class = g_type_peek_parent_class (GDA_TYPE_XML_ITEM);
+	parent_class = g_type_class_peek_parent (GDA_TYPE_XML_ITEM);
 	if (parent_class && parent_class->finalize)
 		parent_class->finalize (object);
 }

@@ -22,6 +22,7 @@
 #  define __gda_field_h__
 
 #include <gda-common-defs.h>
+#include <gda-value.h>
 #include <GNOME_Database.h>
 
 G_BEGIN_DECLS
@@ -65,6 +66,9 @@ gint                     gda_field_get_ctype (GdaField *field);
 void                     gda_field_set_ctype (GdaField *field, gint type);
 gint                     gda_field_get_nativetype (GdaField *field);
 void                     gda_field_set_nativetype (GdaField *field, gint type);
+
+GdaValue                *gda_field_get_value (GdaField *field);
+void                     gda_field_set_value (GdaField *field, GdaValue *value);
 
 long long                gda_field_get_bigint_value (GdaField *field);
 void                     gda_field_set_bigint_value (GdaField *field, long long value);

@@ -46,7 +46,6 @@ static gboolean
 save_log_cb (gpointer user_data)
 {
 	g_print (_("Saving log...x"));
-	gda_config_commit ();
 	return TRUE;
 }
 

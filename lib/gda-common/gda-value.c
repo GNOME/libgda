@@ -248,7 +248,7 @@ gda_value_set_smallint (GdaValue *value, gshort val)
  * gda_value_get_string
  */
 const gchar *
-gda_field_get_string (GdaValue *value)
+gda_value_get_string (GdaValue *value)
 {
 	g_return_val_if_fail (value != NULL, NULL);
 	return BONOBO_ARG_GET_STRING (value);

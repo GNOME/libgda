@@ -46,14 +46,15 @@ fill_field_values (GdaServerRecordset *recset, gulong pos)
 		/* fill in the information about each field */
 		for (n = 0; n < default_recset->number_of_cols; n++) {
 			GList *node;
-			GdaServerField *field;
+			GdaField *field;
 
 			node = g_list_nth(gda_server_recordset_get_fields(recset), n);
-			field = node != NULL ? (GdaServerField *) node->data : NULL;
+			field = node != NULL ? (GdaField *) node->data : NULL;
 			if (field) {
 				/* all data are returned as strings */
 				col_to_fetch = ((pos + 1) * default_recset->number_of_cols) + n;
-				gda_server_field_set_varchar(field, default_recset->data[col_to_fetch]);
+				gda_field_set_string_value (
+					field, default_recset->data[col_to_fetch]);
 			}
 		}
 

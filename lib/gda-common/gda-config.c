@@ -997,7 +997,6 @@ gda_dsn_save (GdaDsn * dsn)
 			gda_config_set_string (tmp, "");
 		g_free ((gpointer) tmp);
 
-		gda_config_commit ();
 		g_free ((gpointer) config_prefix);
 		return TRUE;
 	}
@@ -1025,7 +1024,6 @@ gda_dsn_remove (GdaDsn * dsn)
 	tmp = g_strdup_printf ("%s/%s", GDA_CONFIG_SECTION_DATASOURCES,
 			       GDA_DSN_GDA_NAME (dsn));
 	gda_config_remove_section (tmp);
-	gda_config_commit ();
 	g_free ((gpointer) tmp);
 
 	return TRUE;

@@ -19,26 +19,26 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include "GDA.h"
+#include "GNOME_Database.h"
 #include "gda-server-private.h"
 #include "gda-default.h"
 #include <ctype.h>
 
 typedef GdaServerRecordset* (*schema_ops_fn)(GdaError *,
-                                              GdaServerConnection *,
-                                              GDA_Connection_Constraint *,
-                                              gint );
+					     GdaServerConnection *,
+					     GNOME_Database_Connection_Constraint *,
+					     gint );
 
 static GdaServerRecordset* schema_tables (GdaError *error,
 					  GdaServerConnection *cnc,
-					  GDA_Connection_Constraint *constraints,
+					  GNOME_Database_Connection_Constraint *constraints,
 					  gint length);
 static GdaServerRecordset* schema_columns (GdaError *error,
 					   GdaServerConnection *cnc,
-					   GDA_Connection_Constraint *constraints,
+					   GNOME_Database_Connection_Constraint *constraints,
 					   gint length);
 
-schema_ops_fn schema_ops[GDA_Connection_GDCN_SCHEMA_LAST] = { 0, };
+schema_ops_fn schema_ops[GNOME_Database_Connection_GDCN_SCHEMA_LAST] = { 0, };
 
 /*
  * Public functions
@@ -51,8 +51,8 @@ gda_default_connection_new (GdaServerConnection *cnc)
 	
 	/* initialize schema functions */
 	if (!initialized) {
-		schema_ops[GDA_Connection_GDCN_SCHEMA_TABLES] = schema_tables;
-		schema_ops[GDA_Connection_GDCN_SCHEMA_COLS] = schema_columns;
+		schema_ops[GNOME_Database_Connection_GDCN_SCHEMA_TABLES] = schema_tables;
+		schema_ops[GNOME_Database_Connection_GDCN_SCHEMA_COLS] = schema_columns;
 		initialized = TRUE;
 	}
 	
@@ -218,8 +218,8 @@ gda_default_connection_rollback_transaction (GdaServerConnection *cnc)
 GdaServerRecordset *
 gda_default_connection_open_schema (GdaServerConnection *cnc,
 				    GdaError *error,
-				    GDA_Connection_QType t,
-				    GDA_Connection_Constraint *constraints,
+				    GNOME_Database_Connection_QType t,
+				    GNOME_Database_Connection_Constraint *constraints,
 				    gint length)
 {
 	schema_ops_fn fn;
@@ -231,7 +231,7 @@ gda_default_connection_open_schema (GdaServerConnection *cnc,
 		return fn(error, cnc, constraints, length);
 
 	/* we don't support this schema type */
-	gda_server_error_make (error, NULL, cnc, __PRETTY_FUNCTION__);
+	gda_server_connection_make_error (error, NULL, cnc, __PRETTY_FUNCTION__);
 	gda_error_set_description (error, _("Unknown schema type"));
 
 	return NULL;
@@ -239,8 +239,8 @@ gda_default_connection_open_schema (GdaServerConnection *cnc,
 
 glong
 gda_default_connection_modify_schema (GdaServerConnection *cnc,
-				      GDA_Connection_QType t,
-				      GDA_Connection_Constraint *constraints,
+				      GNOME_Database_Connection_QType t,
+				      GNOME_Database_Connection_Constraint *constraints,
 				      gint length)
 {
 	return -1;
@@ -260,21 +260,21 @@ gda_default_connection_stop_logging (GdaServerConnection *cnc)
 
 gchar *
 gda_default_connection_create_table (GdaServerConnection *cnc,
-				     GDA_RowAttributes *columns)
+				     GNOME_Database_RowAttributes *columns)
 {
 	return NULL;
 }
 
 gboolean
 gda_default_connection_supports (GdaServerConnection *cnc,
-				 GDA_Connection_Feature feature)
+				 GNOME_Database_Connection_Feature feature)
 {
 	g_return_val_if_fail(cnc != NULL, FALSE);
 	
 	switch (feature) {
-	case GDA_Connection_FEATURE_SQL :
-	case GDA_Connection_FEATURE_XML_QUERIES :
-	case GDA_Connection_FEATURE_TRANSACTIONS :
+	case GNOME_Database_Connection_FEATURE_SQL :
+	case GNOME_Database_Connection_FEATURE_XML_QUERIES :
+	case GNOME_Database_Connection_FEATURE_TRANSACTIONS :
 		return TRUE;
 	default :
 		return FALSE;
@@ -283,14 +283,15 @@ gda_default_connection_supports (GdaServerConnection *cnc,
 	return FALSE; /* not supported or know nothing about it */
 }
 
-GDA_ValueType
+GNOME_Database_ValueType
 gda_default_connection_get_gda_type (GdaServerConnection *cnc, gulong sql_type)
 {
-	return GDA_TypeVarchar;
+	return GNOME_Database_TypeVarchar;
 }
 
 gshort
-gda_default_connection_get_c_type (GdaServerConnection *cnc, GDA_ValueType type)
+gda_default_connection_get_c_type (GdaServerConnection *cnc,
+				   GNOME_Database_ValueType type)
 {
 	g_return_val_if_fail(cnc != NULL, -1);
 	
@@ -346,13 +347,13 @@ gda_default_error_make (GdaError *error,
 static GdaServerRecordset *
 schema_tables (GdaError *error,
                GdaServerConnection *cnc,
-               GDA_Connection_Constraint *constraints,
+               GNOME_Database_Connection_Constraint *constraints,
                gint length)
 {
 	GString *query;
 	GdaServerRecordset *recset = NULL;
 	GdaServerCommand *cmd = NULL;
-	GDA_Connection_Constraint* ptr;
+	GNOME_Database_Connection_Constraint* ptr;
 	gint cnt;
 	gulong affected;
 
@@ -362,16 +363,16 @@ schema_tables (GdaError *error,
 	ptr = constraints;
 	for (cnt = 0; cnt < length && ptr != NULL; cnt++) {
 		switch (ptr->ctype) {
-		case GDA_Connection_EXTRA_INFO :
+		case GNOME_Database_Connection_EXTRA_INFO :
 			break;
-		case GDA_Connection_OBJECT_NAME :
+		case GNOME_Database_Connection_OBJECT_NAME :
 			query = g_string_append(query, " AND name = '");
 			query = g_string_append(query, ptr->value);
 			query = g_string_append(query, "'");
 			break;
-		case GDA_Connection_OBJECT_SCHEMA :
+		case GNOME_Database_Connection_OBJECT_SCHEMA :
 			break;
-		case GDA_Connection_OBJECT_CATALOG :
+		case GNOME_Database_Connection_OBJECT_CATALOG :
 			break;
 		default :
 			gda_error_set_description(error, "Invalid constraint type");
@@ -396,7 +397,7 @@ schema_tables (GdaError *error,
 static GdaServerRecordset *
 schema_columns (GdaError *error,
                 GdaServerConnection *cnc,
-                GDA_Connection_Constraint *constraints,
+                GNOME_Database_Connection_Constraint *constraints,
                 gint length)
 {
 	return NULL;

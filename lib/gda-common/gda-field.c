@@ -256,6 +256,33 @@ gda_field_set_nativetype (GdaField *field, gint type)
 }
 
 /**
+ * gda_field_get_value
+ */
+GdaValue *
+gda_field_get_value (GdaField *field)
+{
+	g_return_val_if_fail (GDA_IS_FIELD (field), NULL);
+	return &field->priv->corba_field->value;
+}
+
+/**
+ * gda_field_set_value
+ */
+void
+gda_field_set_value (GdaField *field, GdaValue *value)
+{
+	g_return_if_fail (GDA_IS_FIELD (field));
+	g_return_if_fail (value != NULL);
+
+	if (field->priv->corba_field->value._value)
+		CORBA_free (field->priv->corba_field->value._value);
+
+	field->priv->corba_field->value._type = value->_type;
+	field->priv->corba_field->value._release = value->_release;
+	field->priv->corba_field->value._value = ORBit_copy_value (value->_value, value->_type);
+}
+
+/**
  * gda_field_get_bigint_value
  */
 long long
@@ -316,7 +343,7 @@ gda_field_set_boolean_value (GdaField *field, gboolean value)
 	field->priv->corba_field->attributes.gdaType = GNOME_Database_TypeBoolean;
 	field->priv->corba_field->actualSize = sizeof (gboolean);
 
-	gda_field_set_boolean (&field->priv->corba_field->value, value);
+	gda_value_set_boolean (&field->priv->corba_field->value, value);
 }
 
 /**

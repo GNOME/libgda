@@ -140,8 +140,8 @@ void list_tables(GdaConnection * cnc)
 	g_print("\nopening table schema...\n");
 	rs =
 	    gda_connection_open_schema(cnc,
-				       GDA_Connection_GDCN_SCHEMA_TABLES,
-				       GDA_Connection_no_CONSTRAINT);
+				       GNOME_Database_Connection_GDCN_SCHEMA_TABLES,
+				       GNOME_Database_Connection_no_CONSTRAINT);
 	if (!rs)
 		die(cnc);
 	g_print("\nThis database has following tables:\n");

@@ -95,7 +95,6 @@ void
 gda_server_init (const gchar * app_id, const gchar * version, gint nargs,
 		 gchar * args[])
 {
-	extern struct poptOption oaf_popt_options[];
 	static gboolean initialized = FALSE;
 	poptContext pctx;
 
@@ -110,7 +109,7 @@ gda_server_init (const gchar * app_id, const gchar * version, gint nargs,
 	bonobo_activation_init (nargs, args);
 
 	/* process commands */
-	pctx = poptGetContext (app_id, nargs, args, oaf_popt_options, 0);
+	pctx = poptGetContext (app_id, nargs, args, bonobo_activation_popt_options, 0);
 	while (poptGetNextOpt (pctx) >= 0);
 	poptFreeContext (pctx);
 

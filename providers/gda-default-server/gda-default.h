@@ -29,21 +29,6 @@
 #include <gda-server.h>
 #include "build_sqlite/sqlite.h"
 
-#ifdef ENABLE_NLS
-#  include <libintl.h>
-#  define _(String) gettext (String)
-#  define N_(String) (String)
-#else
-/* Stubs that do something close enough.  */
-#  define textdomain(String)
-#  define gettext(String) (String)
-#  define dgettext(Domain,Message) (Message)
-#  define dcgettext(Domain,Message,Type) (Message)
-#  define bindtextdomain(Domain,Directory)
-#  define _(String) (String)
-#  define N_(String) (String)
-#endif
-
 /*
  * Per-object specific structures
  */
@@ -66,43 +51,44 @@ typedef struct {
  */
 gboolean gda_default_connection_new (GdaServerConnection *cnc);
 gint gda_default_connection_open (GdaServerConnection *cnc,
-								  const gchar *dsn,
-								  const gchar *user,
-								  const gchar *password);
+				  const gchar *dsn,
+				  const gchar *user,
+				  const gchar *password);
 void gda_default_connection_close (GdaServerConnection *cnc);
 gint gda_default_connection_begin_transaction (GdaServerConnection *cnc);
 gint gda_default_connection_commit_transaction (GdaServerConnection *cnc);
 gint gda_default_connection_rollback_transaction (GdaServerConnection *cnc);
-GdaServerRecordset* gda_default_connection_open_schema (GdaServerConnection *cnc,
-														GdaError *error,
-														GDA_Connection_QType t,
-														GDA_Connection_Constraint *constraints,
-														gint length);
+GdaServerRecordset* gda_default_connection_open_schema (
+	GdaServerConnection *cnc,
+	GdaError *error,
+	GNOME_Database_Connection_QType t,
+	GNOME_Database_Connection_Constraint *constraints,
+	gint length);
 glong gda_default_connection_modify_schema (GdaServerConnection *cnc,
-											GDA_Connection_QType t,
-											GDA_Connection_Constraint *constraints,
-											gint length);
+					    GNOME_Database_Connection_QType t,
+					    GNOME_Database_Connection_Constraint *constraints,
+					    gint length);
 gint gda_default_connection_start_logging (GdaServerConnection *cnc,
-										   const gchar *filename);
+					   const gchar *filename);
 gint gda_default_connection_stop_logging (GdaServerConnection *cnc);
 gchar* gda_default_connection_create_table (GdaServerConnection *cnc,
-											GDA_RowAttributes *columns);
+					    GNOME_Database_RowAttributes *columns);
 gboolean gda_default_connection_supports (GdaServerConnection *cnc,
-										  GDA_Connection_Feature feature);
-GDA_ValueType gda_default_connection_get_gda_type (GdaServerConnection *cnc,
-												   gulong sql_type);
+					  GNOME_Database_Connection_Feature feature);
+GNOME_Database_ValueType gda_default_connection_get_gda_type (
+	GdaServerConnection *cnc, gulong sql_type);
 gshort gda_default_connection_get_c_type (GdaServerConnection *cnc,
-										  GDA_ValueType type);
+					  GNOME_Database_ValueType type);
 gchar* gda_default_connection_sql2xml (GdaServerConnection *cnc, const gchar *sql);
 gchar* gda_default_connection_xml2sql (GdaServerConnection *cnc, const gchar *xml);
 void gda_default_connection_free (GdaServerConnection *cnc);
 
 gboolean gda_default_command_new (GdaServerCommand *cmd);
 GdaServerRecordset* gda_default_command_execute (GdaServerCommand *cmd,
-												 GdaError *error,
-												 const GDA_CmdParameterSeq *params,
-												 gulong *affected,
-												 gulong options);
+						 GdaError *error,
+						 const GNOME_Database_CmdParameterSeq *params,
+						 gulong *affected,
+						 gulong options);
 void gda_default_command_free (GdaServerCommand *cmd);
 
 gboolean gda_default_recordset_new       (GdaServerRecordset *recset);
@@ -112,8 +98,8 @@ gint     gda_default_recordset_close     (GdaServerRecordset *recset);
 void     gda_default_recordset_free      (GdaServerRecordset *recset);
 
 void gda_default_error_make (GdaError *error,
-							 GdaServerRecordset *recset,
-							 GdaServerConnection *cnc,
-							 gchar *where);
+			     GdaServerRecordset *recset,
+			     GdaServerConnection *cnc,
+			     gchar *where);
 
 #endif

@@ -36,10 +36,10 @@ gda_default_command_new (GdaServerCommand *cmd)
 
 GdaServerRecordset *
 gda_default_command_execute (GdaServerCommand *cmd,
-							 GdaError *error,
-							 const GDA_CmdParameterSeq *params,
-							 gulong *affected,
-							 gulong options)
+			     GdaError *error,
+			     const GNOME_Database_CmdParameterSeq *params,
+			     gulong *affected,
+			     gulong options)
 {
 	gchar *cmd_string = NULL;
 	GdaServerConnection *cnc;
@@ -64,12 +64,12 @@ gda_default_command_execute (GdaServerCommand *cmd,
 			}
 
 			switch (gda_server_command_get_cmd_type(cmd)) {
-			case GDA_COMMAND_TYPE_TEXT :
+			case GNOME_Database_COMMAND_TYPE_TEXT :
 				cmd_string = g_strdup(gda_server_command_get_text(cmd));
 				break;
-			case GDA_COMMAND_TYPE_TABLE :
+			case GNOME_Database_COMMAND_TYPE_TABLE :
 				cmd_string = g_strdup_printf("SELECT * FROM %s",
-											 gda_server_command_get_text(cmd));
+							     gda_server_command_get_text(cmd));
 				break;
 			default :
 				cmd_string = NULL;
@@ -93,17 +93,17 @@ gda_default_command_execute (GdaServerCommand *cmd,
 					gint n;
 
 					for (n = 0; n < default_recset->number_of_cols; n++) {
-						GdaServerField *field = gda_server_field_new();
-						gda_server_field_set_name(field, default_recset->data[n]);
-						gda_server_field_set_scale(field, 0);
-						gda_server_field_set_actual_length(field, strlen(default_recset->data[n]));
-						gda_server_field_set_defined_length(field, strlen(default_recset->data[n]));
+						GdaField *field = gda_field_new();
+						gda_field_set_name(field, default_recset->data[n]);
+						gda_field_set_scale(field, 0);
+						gda_field_set_actual_size(field, strlen(default_recset->data[n]));
+						gda_field_set_defined_size(field, strlen(default_recset->data[n]));
 						gda_server_recordset_add_field(recset, field);
 					}
 				}
 			}
 			else {
-				gda_server_error_make(error, NULL, cnc, __PRETTY_FUNCTION__);
+				gda_server_connection_make_error(error, NULL, cnc, __PRETTY_FUNCTION__);
 				gda_error_set_description(error, errmsg);
 				gda_server_recordset_free(recset);
 				recset = NULL;
