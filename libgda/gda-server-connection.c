@@ -407,7 +407,7 @@ gda_server_connection_notify_action (GdaServerConnection *cnc,
 			/* FIXME: put all parameters in 'params' into the CORBA sequence */
 
 			CORBA_exception_init (&ev);
-			//GNOME_Database_Client_notifyAction (client, action, corba_list, &ev);
+			GNOME_Database_Client_notifyAction (client, action, corba_list, &ev);
 			if (BONOBO_EX (&ev)) {
 				gda_log_error (_("Could not notify client about action %d"),
 					       action);
