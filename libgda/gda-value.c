@@ -186,10 +186,10 @@ gda_value_new_integer (gint val)
 GdaValue *
 gda_value_new_list (GdaValueList *val)
 {
-	g_return_val_if_fail (list != NULL, NULL);
+	g_return_val_if_fail (val != NULL, NULL);
 
 	return (GdaValue *) bonobo_arg_new_from (GDA_VALUE_TYPE_LIST,
-						 (gconstpointer) list);
+						 (gconstpointer) val);
 }
 
 /**
