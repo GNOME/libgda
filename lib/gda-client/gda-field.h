@@ -21,7 +21,7 @@
 #define __gda_field_h__ 1
 
 #include <gda.h>
-#include <gnome.h>
+#include <gtk/gtk.h>
 
 typedef struct _Gda_Field      Gda_Field;
 typedef struct _Gda_FieldClass Gda_FieldClass;

@@ -20,9 +20,8 @@
 #ifndef __gda_error_h__
 #define __gda_error_h__ 1
 
-#include <glib.h>
-#include <orb/orbit.h>
-#include <gda.h>
+#include <gtk/gtk.h>
+#include <orb/orb.h>
 
 /* The error object. Holds error messages resulting from CORBA exceptions
  * or server errors. 

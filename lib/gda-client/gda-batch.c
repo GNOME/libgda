@@ -18,6 +18,7 @@
  */
 
 #include <gda-batch.h>
+#include <stdio.h>
 
 /* Gda_Batch object signals */
 enum

@@ -24,7 +24,7 @@
 #  include <config.h>
 #endif
 #include <orb/orb.h>
-#include <gnome.h>
+#include <gtk/gtk.h>
 #include <liboaf/liboaf.h>
 
 #include <gda.h>

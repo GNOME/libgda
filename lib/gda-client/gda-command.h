@@ -20,6 +20,12 @@
 #ifndef __gda_command_h__
 #define __gda_command_h__ 1
 
+#include <gtk/gtk.h>
+
+#if defined(__cplusplus)
+extern "C" {
+#endif
+
 /* The command object. Holds and executes an SQL query or other,
  * datasource specific operations.
  */
@@ -66,5 +72,9 @@ void            gda_command_create_parameter (Gda_Command* cmd,
                                               GDA_Value* value);
 glong           gda_command_get_timeout      (Gda_Command* cmd);
 void            gda_command_set_timeout      (Gda_Command* cmd, glong timeout);
+
+#if defined(__cplusplus)
+}
+#endif
 
 #endif

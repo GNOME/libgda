@@ -1,0 +1,5 @@
+2000-10-20	Rodrigo Moya <rodrigo@linuxave.net>
+
+	* removed all gnome.h to leave things at 99.99999%
+	GNOME-independent. The only remaining thing is to use
+	the OAF ObjectFactory

@@ -22,7 +22,9 @@
 
 #include <gda-connection.h>
 
-BEGIN_GNOME_DECLS
+#if defined(__cplusplus)
+extern "C" {
+#endif
 
 typedef struct _Gda_ConnectionPool      Gda_ConnectionPool;
 typedef struct _Gda_ConnectionPoolClass Gda_ConnectionPoolClass;
@@ -58,6 +60,8 @@ Gda_Connection*     gda_connection_pool_open_connection (Gda_ConnectionPool *poo
 							 const gchar *password);
 void                gda_connection_pool_close_all       (Gda_ConnectionPool *pool);
 
-END_GNOME_DECLS
+#if defined(__cplusplus)
+}
+#endif
 
 #endif

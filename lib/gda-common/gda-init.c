@@ -15,15 +15,13 @@
  * License along with this library; if not, write to the Free
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
- 
-#define POPT_AUTOHELP // needed to have oaf_popt_options declared in liboaf.h
 
 #include "config.h"
 
 #ifdef HAVE_GOBJECT
 #  include <glib-object.h>
 #else
-#  include <gnome.h> // remove!!!!!
+#  include <gtk/gtk.h>
 #endif
 
 #include <liboaf/liboaf.h>
@@ -63,12 +61,11 @@ gda_init (const gchar *app_id, const gchar *version, gint nargs, gchar *args[])
       return;
     }
 
-#ifdef HAVE_GOBJECT
   g_set_prgname (app_id);
+#ifdef HAVE_GOBJECT
   g_type_init ();
 #else
-  /* FIXME: replace the GNOME call */
-  gnome_init_with_popt_table(app_id, version, nargs, args, oaf_popt_options, 0, NULL);
+  gtk_type_init();
 #endif
   oaf_init(nargs, args);
   initialized = TRUE;

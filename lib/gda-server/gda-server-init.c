@@ -22,7 +22,7 @@
 #ifdef HAVE_GOBJECT
 #  include <glib-object.h>
 #else
-#  include <gnome.h>
+#  include <popt.h>
 #endif
 
 #include <liboaf/liboaf.h>
@@ -116,7 +116,8 @@ initialize_signals (void)
 void
 gda_server_init (const gchar *app_id, const gchar *version, gint nargs, gchar *args[])
 {
-  static gboolean   initialized = FALSE;
+  static gboolean  initialized = FALSE;
+  poptContext      pctx;
 
   if (initialized)
     {
@@ -126,13 +127,18 @@ gda_server_init (const gchar *app_id, const gchar *version, gint nargs, gchar *a
 
   initialize_signals();
 
+  oaf_init(nargs, args);
+  
 #ifdef HAVE_GOBJECT
   g_set_prgname (app_id);
   g_type_init ();
 #else
-  /* FIXME: replace the GNOME call */
-  gnome_init_with_popt_table(app_id, version, nargs, args, oaf_popt_options, 0, NULL);
+  /* process commands */
+  pctx = poptGetContext(app_id, nargs, args, oaf_popt_options, 0);
+  while (poptGetNextOpt(pctx) >= 0) ;
+  poptFreeContext(pctx);
+  
+  gtk_type_init();
 #endif
-  oaf_init(nargs, args);
 }
 
