@@ -100,7 +100,7 @@ main (int argc, char *argv[])
                                                                           "RootPOA",
                                                                           &ev);
 
-  glb_engine = impl_GDA_ReportEngine__create(glb_the_poa, &ev);
+  glb_engine = impl_GDA_Report_Engine__create(glb_the_poa, &ev);
   if (CORBA_Object_is_nil(glb_engine, &ev))
     {
       gda_log_error(_("Could not activate report engine"));

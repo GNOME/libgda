@@ -34,9 +34,9 @@
 #  define N_(String) (String)
 #endif
 
-struct _Gda_ReportEngine
+struct _Gda_Report_Engine
 {
-  GDA_ReportEngine corba_engine;
+  GDA_Report_Engine corba_engine;
 };
 
 /**
@@ -45,13 +45,13 @@ struct _Gda_ReportEngine
  * Connect a client application to the report engine, as defined in the
  * system
  */
-Gda_ReportEngine *
+Gda_Report_Engine *
 gda_report_engine_load (void)
 {
-  Gda_ReportEngine* engine;
+  Gda_Report_Engine* engine;
   CORBA_Environment ev;
   
-  engine = g_new0(Gda_ReportEngine, 1);
+  engine = g_new0(Gda_Report_Engine, 1);
   
   /* activate CORBA object */
   CORBA_exception_init(&ev);
@@ -72,7 +72,7 @@ gda_report_engine_load (void)
  * gda_report_engine_unload
  */
 void
-gda_report_engine_unload (Gda_ReportEngine *engine)
+gda_report_engine_unload (Gda_Report_Engine *engine)
 {
   CORBA_Environment* ev;
   
@@ -95,16 +95,16 @@ gda_report_engine_unload (Gda_ReportEngine *engine)
  * gda_report_engine_query_reports
  */
 GList *
-gda_report_engine_query_reports (Gda_ReportEngine *engine, const gchar *condition, Gda_ReportFlags flags)
+gda_report_engine_query_reports (Gda_Report_Engine *engine, const gchar *condition, Gda_Report_Flags flags)
 {
   GList*            list = NULL;
   CORBA_Environment ev;
-  GDA_ReportList*   report_list;
+  GDA_Report_List*   report_list;
 
   g_return_val_if_fail(engine != NULL, NULL);
   
   CORBA_exception_init(&ev);
-  report_list = GDA_ReportEngine_queryReports(engine->corba_engine,
+  report_list = GDA_Report_Engine_queryReports(engine->corba_engine,
                                               (CORBA_char *) condition,
                                               flags,
                                               &ev);

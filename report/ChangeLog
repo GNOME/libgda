@@ -1,3 +1,16 @@
+2001-01-07	Carlos Perelló Marín <carlos@gnome-db.org>
+
+	* idl/GDA_Report.idl: Modified to separate the Report engine
+	  into its own namespace (GDA_Report_*).
+	* *.[ch] Updated to use the new IDL.
+	* Makefile.am: Added the options to remove the source files generated
+	  by the idl compiler.
+
+2001-01-05	Carlos Perelló Marín <carlos@gnome-db.org>
+
+	* gda-report-stream.[ch]: Updated to use the Gnome's
+	  codify style.
+
 2000-12-25	Carlos Perelló Marín <carlos@gnome-db.org>
 
 	* updated gda-report-stream.[ch] to make them compile again.

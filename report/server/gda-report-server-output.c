@@ -18,44 +18,44 @@
 
 #include <gda-report-server.h>
 
-static PortableServer_ServantBase__epv impl_GDA_ReportOutput_base_epv =
+static PortableServer_ServantBase__epv impl_GDA_Report_Output_base_epv =
 {
   NULL,			/* _private data */
   NULL,			/* finalize routine */
   NULL,			/* default_POA routine */
 };
-static POA_GDA_ReportOutput__epv impl_GDA_ReportOutput_epv =
+static POA_GDA_Report_Output__epv impl_GDA_Report_Output_epv =
 {
   NULL,			/* _private */
-  (gpointer) & impl_GDA_ReportOutput_convert,
+  (gpointer) & impl_GDA_Report_Output_convert,
 };
-static POA_GDA_ReportFormat__epv impl_GDA_ReportOutput_GDA_ReportFormat_epv =
+static POA_GDA_Report_Format__epv impl_GDA_Report_Output_GDA_Report_Format_epv =
 {
   NULL,			/* _private */
-  (gpointer) & impl_GDA_ReportFormat_getRootElement,
-  (gpointer) & impl_GDA_ReportFormat_getStream,
+  (gpointer) & impl_GDA_Report_Format_getRootElement,
+  (gpointer) & impl_GDA_Report_Format_getStream,
 };
-static POA_GDA_ReportOutput__vepv impl_GDA_ReportOutput_vepv =
+static POA_GDA_Report_Output__vepv impl_GDA_Report_Output_vepv =
 {
-  &impl_GDA_ReportOutput_base_epv,
-  &impl_GDA_ReportOutput_GDA_ReportFormat_epv,
-  &impl_GDA_ReportOutput_epv,
+  &impl_GDA_Report_Output_base_epv,
+  &impl_GDA_Report_Output_GDA_Report_Format_epv,
+  &impl_GDA_Report_Output_epv,
 };
 
 /*
  * Stub implementations
  */
-GDA_ReportOutput
-impl_GDA_ReportOutput__create (PortableServer_POA poa, CORBA_Environment * ev)
+GDA_Report_Output
+impl_GDA_Report_Output__create (PortableServer_POA poa, CORBA_Environment * ev)
 {
-  GDA_ReportOutput retval;
-  impl_POA_GDA_ReportOutput *newservant;
+  GDA_Report_Output retval;
+  impl_POA_GDA_Report_Output *newservant;
   PortableServer_ObjectId *objid;
 
-  newservant = g_new0(impl_POA_GDA_ReportOutput, 1);
-  newservant->servant.vepv = &impl_GDA_ReportOutput_vepv;
+  newservant = g_new0(impl_POA_GDA_Report_Output, 1);
+  newservant->servant.vepv = &impl_GDA_Report_Output_vepv;
   newservant->poa = poa;
-  POA_GDA_ReportOutput__init((PortableServer_Servant) newservant, ev);
+  POA_GDA_Report_Output__init((PortableServer_Servant) newservant, ev);
   objid = PortableServer_POA_activate_object(poa, newservant, ev);
   CORBA_free(objid);
   retval = PortableServer_POA_servant_to_reference(poa, newservant, ev);
@@ -64,7 +64,7 @@ impl_GDA_ReportOutput__create (PortableServer_POA poa, CORBA_Environment * ev)
 }
 
 void
-impl_GDA_ReportOutput__destroy (impl_POA_GDA_ReportOutput * servant, CORBA_Environment * ev)
+impl_GDA_Report_Output__destroy (impl_POA_GDA_Report_Output * servant, CORBA_Environment * ev)
 {
   PortableServer_ObjectId *objid;
 
@@ -72,12 +72,12 @@ impl_GDA_ReportOutput__destroy (impl_POA_GDA_ReportOutput * servant, CORBA_Envir
   PortableServer_POA_deactivate_object(servant->poa, objid, ev);
   CORBA_free(objid);
 
-  POA_GDA_ReportOutput__fini((PortableServer_Servant) servant, ev);
+  POA_GDA_Report_Output__fini((PortableServer_Servant) servant, ev);
   g_free(servant);
 }
 
-GDA_ReportStream
-impl_GDA_ReportOutput_convert (impl_POA_GDA_ReportOutput * servant,
+GDA_Report_Stream
+impl_GDA_Report_Output_convert (impl_POA_GDA_Report_Output * servant,
                                CORBA_char * format,
                                CORBA_long flags,
                                CORBA_Environment * ev)

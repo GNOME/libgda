@@ -18,40 +18,40 @@
 
 #include <gda-report-server.h>
 
-static PortableServer_ServantBase__epv impl_GDA_ReportStream_base_epv =
+static PortableServer_ServantBase__epv impl_GDA_Report_Stream_base_epv =
 {
   NULL,			/* _private data */
   NULL,			/* finalize routine */
   NULL,			/* default_POA routine */
 };
-static POA_GDA_ReportStream__epv impl_GDA_ReportStream_epv =
+static POA_GDA_Report_Stream__epv impl_GDA_Report_Stream_epv =
 {
   NULL,			/* _private */
-  (gpointer) & impl_GDA_ReportStream_readChunk,
-  (gpointer) & impl_GDA_ReportStream_writeChunk,
-  (gpointer) & impl_GDA_ReportStream_getLength,
+  (gpointer) & impl_GDA_Report_Stream_readChunk,
+  (gpointer) & impl_GDA_Report_Stream_writeChunk,
+  (gpointer) & impl_GDA_Report_Stream_getLength,
 };
 
-static POA_GDA_ReportStream__vepv impl_GDA_ReportStream_vepv =
+static POA_GDA_Report_Stream__vepv impl_GDA_Report_Stream_vepv =
 {
-  &impl_GDA_ReportStream_base_epv,
-  &impl_GDA_ReportStream_epv,
+  &impl_GDA_Report_Stream_base_epv,
+  &impl_GDA_Report_Stream_epv,
 };
 
 /*
  * Stub implementations
  */
-GDA_ReportStream
-impl_GDA_ReportStream__create (PortableServer_POA poa, CORBA_Environment * ev)
+GDA_Report_Stream
+impl_GDA_Report_Stream__create (PortableServer_POA poa, CORBA_Environment * ev)
 {
-  GDA_ReportStream retval;
-  impl_POA_GDA_ReportStream *newservant;
+  GDA_Report_Stream retval;
+  impl_POA_GDA_Report_Stream *newservant;
   PortableServer_ObjectId *objid;
 
-  newservant = g_new0(impl_POA_GDA_ReportStream, 1);
-  newservant->servant.vepv = &impl_GDA_ReportStream_vepv;
+  newservant = g_new0(impl_POA_GDA_Report_Stream, 1);
+  newservant->servant.vepv = &impl_GDA_Report_Stream_vepv;
   newservant->poa = poa;
-  POA_GDA_ReportStream__init((PortableServer_Servant) newservant, ev);
+  POA_GDA_Report_Stream__init((PortableServer_Servant) newservant, ev);
   objid = PortableServer_POA_activate_object(poa, newservant, ev);
   CORBA_free(objid);
   retval = PortableServer_POA_servant_to_reference(poa, newservant, ev);
@@ -60,7 +60,7 @@ impl_GDA_ReportStream__create (PortableServer_POA poa, CORBA_Environment * ev)
 }
 
 void
-impl_GDA_ReportStream__destroy (impl_POA_GDA_ReportStream *servant, CORBA_Environment *ev)
+impl_GDA_Report_Stream__destroy (impl_POA_GDA_Report_Stream *servant, CORBA_Environment *ev)
 {
   PortableServer_ObjectId *objid;
 
@@ -74,22 +74,22 @@ impl_GDA_ReportStream__destroy (impl_POA_GDA_ReportStream *servant, CORBA_Enviro
   PortableServer_POA_deactivate_object(servant->poa, objid, ev);
   CORBA_free(objid);
 
-  POA_GDA_ReportStream__fini((PortableServer_Servant) servant, ev);
+  POA_GDA_Report_Stream__fini((PortableServer_Servant) servant, ev);
   g_free(servant);
 }
 
-GDA_ReportStreamChunk *
-impl_GDA_ReportStream_readChunk (impl_POA_GDA_ReportStream * servant,
+GDA_Report_StreamChunk *
+impl_GDA_Report_Stream_readChunk (impl_POA_GDA_Report_Stream * servant,
                                  CORBA_long start,
                                  CORBA_long size,
                                  CORBA_Environment * ev)
 {
-  GDA_ReportStreamChunk *retval;
+  GDA_Report_StreamChunk *retval;
   
   g_return_val_if_fail(servant != NULL, CORBA_OBJECT_NIL);
   
   /* create returned data */
-  retval = GDA_ReportStreamChunk__alloc();
+  retval = GDA_Report_StreamChunk__alloc();
   if (servant->stream_data)
     {
       retval->_buffer = g_memdup(servant->stream_data->data, servant->stream_data->len);
@@ -100,8 +100,8 @@ impl_GDA_ReportStream_readChunk (impl_POA_GDA_ReportStream * servant,
 }
 
 CORBA_long
-impl_GDA_ReportStream_writeChunk (impl_POA_GDA_ReportStream * servant,
-                                  GDA_ReportStreamChunk * data,
+impl_GDA_Report_Stream_writeChunk (impl_POA_GDA_Report_Stream * servant,
+                                  GDA_Report_StreamChunk * data,
                                   CORBA_long size,
                                   CORBA_Environment * ev)
 {
@@ -120,7 +120,7 @@ impl_GDA_ReportStream_writeChunk (impl_POA_GDA_ReportStream * servant,
 }
 
 CORBA_long
-impl_GDA_ReportStream_getLength (impl_POA_GDA_ReportStream *servant, CORBA_Environment *ev)
+impl_GDA_Report_Stream_getLength (impl_POA_GDA_Report_Stream *servant, CORBA_Environment *ev)
 {
   g_return_val_if_fail(servant != NULL, -1);
   return servant->stream_data ? servant->stream_data->len : 0;
