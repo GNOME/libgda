@@ -1,3 +1,8 @@
+2002-01-23  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* data/gda-xml-query.dtd:
+	* data/gda-xml-query.xsl: added from stable branch
+
 2002-01-22  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* providers/sqlite/*: moved the default provider to this new
