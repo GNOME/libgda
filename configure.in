@@ -476,8 +476,6 @@ doc/Makefile
 doc/es/Makefile
 doc/C/Makefile
 doc/C/reference/Makefile
-doc/C/reference/libgda-common/Makefile
-doc/C/reference/libgda-client/Makefile
 doc/pt_BR/Makefile
 stamp.h
 ])
