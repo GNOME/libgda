@@ -1,5 +1,9 @@
 2003-10-12  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	Released 1.0.1
+
+2003-10-12  Rodrigo Moya <rodrigo@gnome-db.org>
+
 	* libgda/Makefile.am: fixed enum code generation.
 
 2003-10-11  Rodrigo Moya <rodrigo@gnome-db.org>
