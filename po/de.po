@@ -1,44 +1,42 @@
 # German po for libgda
 # Copyright (C) 2000, 2001 Free Software Foundation, Inc.
+# Christian Neumair <chris@gnome-de.org>, 2002.
 # Christian Meyer <chrisime@gnome.org>, 2000, 2001.
 # Kai Lahmann <kl@linuxfaqs.de>, 2000.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda HEAD\n"
-"POT-Creation-Date: 2002-09-24 11:34+0200\n"
-"PO-Revision-Date: 2002-09-24 11:33+0100\n"
+"POT-Creation-Date: 2002-09-26 15:35+0200\n"
+"PO-Revision-Date: 2002-09-26 15:34+0100\n"
 "Last-Translator: Christian Neumair <chris@gnome-de.org>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: libgda/gda-client.c:227 libgda/gda-client.c:414 libgda/gda-connection.c:214
+#: libgda/gda-client.c:254 libgda/gda-client.c:445 libgda/gda-connection.c:214
 #, c-format
 msgid "Data source %s not found in configuration"
 msgstr "Datenquelle %s nicht in der Konfiguration gefunden"
 
-#: libgda/gda-client.c:245
+#: libgda/gda-client.c:273
 #, c-format
-msgid "Provider %s is not installed"
-msgstr "Der Treiber %s ist nicht installiert"
+msgid "Could not find provider %s in the current setup"
+msgstr ""
+"Der Treiber %s konnte nicht in der aktuellen Konfiguration gefunden werden"
 
-#: libgda/gda-client.c:254
+#: libgda/gda-client.c:300
 #, c-format
-msgid "Could not load %s provider"
-msgstr "Das Laden des Treibers %s ist fehlgeschlagen"
+msgid "Provider %s does not implement entry function"
+msgstr "Treiber %s bietet keinen Einstiegspunkt"
 
-#: libgda/gda-client.c:270
-#, c-format
-msgid "Provider %s does not implement entry point"
-msgstr "Der Treiber %s bietet keinen Einstiegspunkt"
+#: libgda/gda-client.c:310
+msgid "Could not create GdaServerProvider object from plugin"
+msgstr ""
+"Das GdaServerProvider-Objekt aus dem Plugin konnte nicht erstellt werden"
 
-#: libgda/gda-client.c:279
-msgid "Creation of GdaServerProvider failed"
-msgstr "Der Aufruf des GdaServer-Treibers ist fehlgeschlagen"
-
-#: libgda/gda-client.c:342
+#: libgda/gda-client.c:373
 msgid "Temporary data source created by libgda. Don't remove it"
 msgstr "Eine von libgda erstellte temporäre Datenquelle. Nicht löschen"
 
