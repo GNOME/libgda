@@ -97,7 +97,7 @@ gda_ibmdb2_provider_open_connection (GdaServerProvider *provider,
 	gchar *db2_dsn = NULL;
 
 	const gchar *t_database = NULL;
-	const gchar *t_host = NULL;
+	const gchar *t_alias = NULL;
 	const gchar *t_user = NULL;
 	const gchar *t_password = NULL;
 
@@ -105,7 +105,7 @@ gda_ibmdb2_provider_open_connection (GdaServerProvider *provider,
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 
 	t_database = gda_quark_list_find (params, "DATABASE");
-	t_host = gda_quark_list_find (params, "HOST");
+	t_alias = gda_quark_list_find (params, "ALIAS");
 	t_user = gda_quark_list_find (params, "USER");
 	t_password = gda_quark_list_find (params, "PASSWORD");
 
@@ -114,10 +114,17 @@ gda_ibmdb2_provider_open_connection (GdaServerProvider *provider,
 	if (password)
 		t_password = password;
 
-	if ((t_host == NULL) || (t_user == NULL) || (t_password == NULL)) {
-		gda_connection_add_error_string (cnc, _("You must at least provide host, user and password to connect."));
-		return FALSE;
-	}
+	if (t_user == NULL)
+		t_user = "";
+	if (t_password == NULL)
+		t_password = "";
+	if (t_alias == NULL)
+		t_alias = "sample";
+	
+//	if ((t_host == NULL) || (t_user == NULL) || (t_password == NULL)) {
+//		gda_connection_add_error_string (cnc, _("You must at least provide host, user and password to connect."));
+//		return FALSE;
+//	}
 	
 	db2 = g_new0 (GdaIBMDB2ConnectionData, 1);
 	g_return_val_if_fail (db2 != NULL, FALSE);
@@ -151,7 +158,7 @@ gda_ibmdb2_provider_open_connection (GdaServerProvider *provider,
 		return FALSE;
 	}
 	db2->rc = SQLConnect (db2->hdbc,
-	                      (SQLCHAR *) t_host, SQL_NTS,
+	                      (SQLCHAR *) t_alias, SQL_NTS,
 	                      (SQLCHAR *) t_user, SQL_NTS,
 	                      (SQLCHAR *) t_password, SQL_NTS
 	                     );
@@ -204,6 +211,10 @@ gda_ibmdb2_provider_close_connection (GdaServerProvider *provider,
 	db2 = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_IBMDB2_HANDLE);
 	g_return_val_if_fail (db2 != NULL, FALSE);
 	
+	if (db2->database) {
+		g_free (db2->database);
+		db2->database = NULL;
+	}
 	// FIXME: error handling
 	db2->rc = SQLDisconnect (db2->hdbc);
 	db2->rc = SQLFreeHandle (SQL_HANDLE_DBC, db2->hdbc);

@@ -45,6 +45,7 @@ plugin_get_connection_params (void)
 	GList *list = NULL;
 
 	list = g_list_append (list, g_strdup ("DATABASE"));
+	list = g_list_append (list, g_strdup ("ALIAS"));
 	list = g_list_append (list, g_strdup ("HOST"));
 	list = g_list_append (list, g_strdup ("HOSTADDR"));
 	list = g_list_append (list, g_strdup ("OPTIONS"));
