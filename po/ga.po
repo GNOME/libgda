@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-db CVS\n"
-"POT-Creation-Date: 2001-09-04 02:39+0200\n"
+"POT-Creation-Date: 2001-12-29 00:08+0100\n"
 "PO-Revision-Date: 2000-03-13 18:23+0000\n"
 "Last-Translator:  Alastair McKinstry <mckinstry@computer.org>\n"
 "Language-Team: Irish <ga@li.org>\n"
@@ -13,1006 +13,259 @@ msgstr ""
 "Content-Type: text/plain; charset=iso-8859-1\n"
 "Content-Transfer-Encoding: 8-bit\n"
 
-#: lib/gda-client/gda-connection-pool.c:257
+#: libgda/gda-client.c:200 libgda/gda-client.c:294
 #, c-format
-msgid "could not open connection to %s"
+msgid "Data source %s not found in configuration"
 msgstr ""
 
-#: lib/gda-client/gda-connection-pool.c:269
+#: libgda/gda-client.c:221
 #, c-format
-msgid "Data source %s not found"
+msgid "Could not activate object %s"
 msgstr ""
 
-#: lib/gda-client/gda-connection.c:428
-#, c-format
-msgid "Database '%s' not found in system configuration"
+#: libgda/gda-client.c:239
+msgid "Could not create connection component"
 msgstr ""
 
-#: lib/gda-client/gda-connection.c:431 lib/gda-client/gda-connection.c:447
-msgid "[GDA Client Library]"
+#: libgda/gda-config.c:515
+msgid "Could not query CORBA components"
 msgstr ""
 
-#: lib/gda-client/gda-connection.c:446
-msgid "Could not open CORBA factory"
+#: libgda/gda-config.c:622
+msgid "Could not query CORBA providers"
 msgstr ""
 
-#: lib/gda-common/gda-corba.c:73
-#, c-format
-msgid "CORBA System exception: %s"
+#: libgda/gda-config.c:835
+msgid "Name"
+msgstr "Ainm"
+
+#: libgda/gda-config.c:836
+msgid "Provider"
 msgstr ""
 
-#: lib/gda-common/gda-corba.c:108
-msgid "True"
+#: libgda/gda-config.c:837
+msgid "Connection string"
 msgstr ""
 
-#: lib/gda-common/gda-corba.c:109
-#, fuzzy
-msgid "False"
-msgstr "Comhad"
+#: libgda/gda-config.c:838
+msgid "Description"
+msgstr ""
 
-#: lib/gda-common/gda-error.c:121
+#: libgda/gda-config.c:839
+msgid "Username"
+msgstr "Úsáidtheoir"
+
+#: libgda/gda-error.c:127
 #, c-format
 msgid "%s: An Error occured in the CORBA system."
 msgstr ""
 
-#: lib/gda-common/gda-error.c:132
-msgid "[CORBA User Exception]"
-msgstr ""
-
-#: lib/gda-common/gda-error.c:167
+#: libgda/gda-error.c:156
 msgid "Unknown CORBA exception for connection"
 msgstr ""
 
-#: lib/gda-common/gda-field.c:640
-msgid "<NULL>"
-msgstr ""
-
-#: lib/gda-common/gda-field.c:644
-msgid "<Unknown GDA Type(NULL)>"
-msgstr ""
-
-#: lib/gda-common/gda-field.c:651
-msgid "TRUE"
-msgstr ""
-
-#: lib/gda-common/gda-field.c:653
-msgid "FALSE"
-msgstr ""
-
-#: lib/gda-common/gda-init.c:35
+#: libgda/gda-init.c:44
 msgid "Attempt to initialize an already initialized client"
 msgstr ""
 
-#: lib/gda-common/gda-init.c:44 lib/gda-server/gda-server-init.c:118
+#: libgda/gda-init.c:56
 msgid "Could not initialize Bonobo"
 msgstr ""
 
-#: lib/gda-common/gda-log.c:48
-msgid "Saving log...x"
-msgstr ""
-
-#. compose message
-#: lib/gda-common/gda-log.c:67
-msgid "ERROR: "
-msgstr ""
-
-#: lib/gda-common/gda-log.c:67
-msgid "MESSAGE: "
-msgstr ""
-
-#: lib/gda-common/gda-util.c:113
+#: libgda/gda-server.c:95
 #, c-format
-msgid "Could not open file %s"
+msgid "Don't know how to create components with IID %s"
 msgstr ""
 
-#: lib/gda-common/gda-util.c:138
+#: libgda/gda-server.c:102
 #, c-format
-msgid "Could not create file %s"
+msgid "Could not create component of type %s"
 msgstr ""
 
-#: lib/gda-common/gda-xml-database.c:168
-msgid "bad formed document"
+#: libgda/gda-server-connection.c:90
+msgid "Could not duplicate client object. Client won't get notifications"
 msgstr ""
 
-#: lib/gda-common/gda-xml-database.c:270
+#: libgda/gda-server-connection.c:440
+#, c-format
+msgid "Could not notify client about action %d"
+msgstr ""
+
+#: libgda/gda-server-recordset.c:204
+msgid "No implementation for the fetch() method found"
+msgstr ""
+
+#: libgda/gda-value.c:573
+msgid "TRUE"
+msgstr ""
+
+#: libgda/gda-value.c:575
+msgid "FALSE"
+msgstr ""
+
+#: libgda/gda-xml-database.c:162
+#, c-format
+msgid "Could not load file at %s"
+msgstr ""
+
+#: libgda/gda-xml-database.c:173
+#, c-format
+msgid "Could not parse file at %s"
+msgstr ""
+
+#: libgda/gda-xml-database.c:183
+#, c-format
+msgid "Bad formed document at %s"
+msgstr ""
+
+#: libgda/gda-xml-database.c:258
 #, c-format
 msgid "table %s already exists"
 msgstr ""
 
-#: lib/gda-common/gda-xml-database.c:452
+#: libgda/gda-xml-database.c:440
 #, c-format
 msgid "%p is not a valid table"
 msgstr ""
 
-#: lib/gda-common/gda-xml-item.c:371
-#, c-format
-msgid "Item with id %s not found"
+#: providers/default/gda-default-provider.c:141
+msgid ""
+"A full path must be specified on the connection string to open a database."
 msgstr ""
 
-#: lib/gda-server/gda-server-connection.c:392
-msgid "Connection being closed"
+#: providers/default/gda-default-provider.c:199
+msgid "Invalid DEFAULT handle"
 msgstr ""
 
-#: lib/gda-server/gda-server-connection.c:394
-msgid "This connection is being closed, so all listeners are released"
+#: providers/default/GNOME_Database_Provider_Default.server.in.h:1
+msgid "Default component factory"
 msgstr ""
 
-#: lib/gda-server/gda-server-connection.c:817
-msgid "Could not get pointer to server implementation"
-msgstr ""
-
-#: lib/gda-server/gda-server-init.c:43 lib/gda-server/gda-server-init.c:49
-#, c-format
-msgid "Received signal %d, shutting down"
-msgstr ""
-
-#: lib/gda-server/gda-server-init.c:53
-#, c-format
-msgid "Received signal %d. Ignoring"
-msgstr ""
-
-#: lib/gda-server/gda-server-init.c:102
-msgid "Attempt to initialize an already initialized provider"
-msgstr ""
-
-#: lib/gda-server/gda-server-recordset.c:53
-#: lib/gda-server/gda-server-recordset.c:61
-#: lib/gda-server/gda-server-recordset.c:101
-#: lib/gda-server/gda-server-recordset.c:110
-#, c-format
-msgid "%s not implemented"
-msgstr ""
-
-#: lib/gda-server/gda-server.c:130
-#, c-format
-msgid "Starting provider %s with no implementation functions"
-msgstr ""
-
-#: lib/gda-server/gda-server.c:214
-#, c-format
-msgid "CORBA system exception %s"
-msgstr ""
-
-#: lib/gda-server/gda-server.c:218
-#, c-format
-msgid "CORBA user exception: %s"
-msgstr ""
-
-#: providers/gda-default-server/GNOME_Database_Provider_Default.server.in.h:1
-msgid "Default provider connection factory"
-msgstr ""
-
-#: providers/gda-default-server/GNOME_Database_Provider_Default.server.in.h:2
+#: providers/default/GNOME_Database_Provider_Default.server.in.h:2
 msgid "GDA Default Datasource Access"
 msgstr ""
 
-#: providers/gda-default-server/gda-default-connection.c:127
-msgid "You must specify a directory for the database to be stored"
+#: providers/default/main.c:47
+msgid "Could not initiate Default component factory"
 msgstr ""
 
-#: providers/gda-default-server/gda-default-connection.c:235
-#: providers/gda-mysql-server/gda-mysql-connection.c:282
-#: providers/gda-oracle-server/gda-oracle-connection.c:334
-#: providers/gda-postgres-server/gda-postgres-connection.c:487
-msgid "Unknown schema type"
-msgstr ""
-
-#: providers/gda-default-server/main-default.c:69
-msgid "Could not register Default provider implementation"
-msgstr ""
-
-#: providers/gda-ldap-server/GNOME_Database_Provider_LDAP.server.in.h:1
-msgid "GDA Datasource Access for LDAP"
-msgstr ""
-
-#: providers/gda-ldap-server/GNOME_Database_Provider_LDAP.server.in.h:2
-msgid "LDAP provider connection factory"
-msgstr ""
-
-#: providers/gda-interbase-server/gda-interbase-connection.c:288
-#: providers/gda-ldap-server/gda-ldap-connection.c:293
-#: providers/gda-mdb-server/gda-mdb-connection.c:372
-#: providers/gda-mysql-server/gda-mysql-connection.c:486
-#: providers/gda-odbc-server/gda-odbc-connection.c:624
-#: providers/gda-odbc-server/gda-odbc-connection.c:657
-#: providers/gda-oracle-server/gda-oracle-connection.c:479
-#: providers/gda-postgres-server/gda-postgres-connection.c:768
-#: providers/gda-sybase-server/gda-sybase-error.c:127
-#: providers/gda-tds-server/gda-tds-error.c:123
-#, c-format
-msgid "error '%s' at %s"
-msgstr ""
-
-#: providers/gda-interbase-server/gda-interbase-connection.c:294
-#: providers/gda-ldap-server/gda-ldap-connection.c:298
-#: providers/gda-ldap-server/gda-ldap-connection.c:299
-#: providers/gda-mdb-server/gda-mdb-connection.c:377
-#: providers/gda-mysql-server/gda-mysql-connection.c:491
-#: providers/gda-mysql-server/gda-mysql-connection.c:492
-#: providers/gda-odbc-server/gda-odbc-connection.c:626
-#: providers/gda-odbc-server/gda-odbc-connection.c:628
-#: providers/gda-odbc-server/gda-odbc-connection.c:659
-#: providers/gda-odbc-server/gda-odbc-connection.c:661
-#: providers/gda-oracle-server/gda-oracle-connection.c:484
-#: providers/gda-oracle-server/gda-oracle-connection.c:485
-#: providers/gda-postgres-server/gda-postgres-connection.c:776
-#: providers/gda-postgres-server/gda-postgres-connection.c:777
-#: providers/gda-primebase-server/gda-primebase-connection.c:375
-#: providers/gda-primebase-server/gda-primebase-connection.c:376
-#: providers/gda-sybase-server/gda-sybase-error.c:136
-#: providers/gda-sybase-server/gda-sybase-error.c:137
-#: providers/gda-tds-server/gda-tds-error.c:132
-#: providers/gda-tds-server/gda-tds-error.c:133
-msgid "Not available"
-msgstr ""
-
-#: providers/gda-interbase-server/gda-interbase-connection.c:295
-#: providers/gda-ldap-server/gda-ldap-connection.c:300
-#: providers/gda-mdb-server/gda-mdb-connection.c:378
-#: providers/gda-mysql-server/gda-mysql-connection.c:493
-#: providers/gda-oracle-server/gda-oracle-connection.c:486
-#: providers/gda-postgres-server/gda-postgres-connection.c:778
-#: providers/gda-primebase-server/gda-primebase-connection.c:377
-#: providers/gda-sybase-server/gda-sybase-error.c:138
-#: providers/gda-tds-server/gda-tds-error.c:134
-msgid "error"
-msgstr ""
-
-#: providers/gda-ldap-server/main-ldap.c:73
-msgid "Could not register LDAP provider implementation"
-msgstr ""
-
-#: providers/gda-interbase-server/GNOME_Database_Provider_InterBase.server.in.h:1
-msgid "GDA Datasource Access for Interbase"
-msgstr ""
-
-#: providers/gda-interbase-server/GNOME_Database_Provider_InterBase.server.in.h:2
-msgid "InterBase provider connection factory"
-msgstr ""
-
-#: providers/gda-interbase-server/gda-interbase-connection.c:286
-#, c-format
-msgid "Error code %ld"
-msgstr ""
-
-#: providers/gda-interbase-server/main-interbase.c:74
-msgid "Could not register INTERBASE provider implementation"
-msgstr ""
-
-#: providers/gda-mail-server/GNOME_Database_Provider_Mail.server.in.h:1
-msgid "GDA Datasource Access for Mail"
-msgstr ""
-
-#: providers/gda-mail-server/GNOME_Database_Provider_Mail.server.in.h:2
-msgid "Mail provider connection factory"
-msgstr ""
-
-#: providers/gda-mail-server/gda-mail-connection.c:107
-#: providers/gda-mdb-server/gda-mdb-connection.c:224
-#: providers/gda-sybase-server/gda-sybase-connection.c:285
-#: providers/gda-tds-server/gda-tds-connection.c:278
-#, c-format
-msgid "Unhandled SCHEMA_QTYPE %d"
-msgstr ""
-
-#: providers/gda-mail-server/main-mail.c:74
-msgid "Could not register Mail provider implementation"
-msgstr ""
-
-#: providers/gda-mdb-server/GNOME_Database_Provider_MDB.server.in.h:1
-msgid "GDA Datasource Access for MDB (MS Access) files"
-msgstr ""
-
-#: providers/gda-mdb-server/GNOME_Database_Provider_MDB.server.in.h:2
-msgid "MDB provider connection factory"
-msgstr ""
-
-#. execute command
-#: providers/gda-mdb-server/gda-mdb-command.c:86
-#: providers/gda-mysql-server/gda-mysql-command.c:126
-#: providers/gda-sybase-server/gda-sybase-command.c:141
-#: providers/gda-tds-server/gda-tds-command.c:120
-#, c-format
-msgid "executing command '%s'"
-msgstr ""
-
-#: providers/gda-mdb-server/gda-mdb-command.c:88
-#: providers/gda-mysql-server/gda-mysql-command.c:131
-#, fuzzy, c-format
-msgid "info '%s'"
-msgstr "Ag rith '%s'"
-
-#: providers/gda-mdb-server/gda-mdb-connection.c:137
-#, c-format
+#: providers/mysql/gda-mysql-provider.c:171
 msgid ""
-"%s:%d: You cannot provide a UNIX_SOCKET if you also provide either a HOST or "
-"a PORT. Please remove the UNIX_SOCKET, or remove both the HOST and PORT "
-"options"
+"You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
 msgstr ""
 
-#: providers/gda-mdb-server/gda-mdb-connection.c:147
-#, c-format
-msgid "%s:%d: You must  provide the filename with the MS Access database"
+#: providers/mysql/gda-mysql-provider.c:242
+#: providers/mysql/gda-mysql-provider.c:321
+#: providers/mysql/gda-mysql-provider.c:350
+#: providers/mysql/gda-mysql-provider.c:379
+msgid "Invalid MYSQL handle"
 msgstr ""
 
-#: providers/gda-mdb-server/gda-mdb-connection.c:152
-#, c-format
-msgid "Opening connection with filename=%s, user=%s, password=%s"
-msgstr ""
-
-#: providers/gda-mdb-server/gda-mdb-connection.c:427
-msgid "mysql_recset is NULL"
-msgstr ""
-
-#: providers/gda-mdb-server/gda-mdb-connection.c:469
-#: providers/gda-mysql-server/gda-mysql-connection.c:838
-#: providers/gda-sybase-server/gda-sybase-connection.c:464
-#: providers/gda-tds-server/gda-tds-connection.c:448
-msgid "No table name given for SCHEMA_COLS"
-msgstr ""
-
-#: providers/gda-mdb-server/main-mdb.c:72
-#: providers/gda-mysql-server/main-mysql.c:74
-msgid "Could not register MySQL provider implementation"
-msgstr ""
-
-#: providers/gda-mysql-server/GNOME_Database_Provider_MySQL.server.in.h:1
+#: providers/mysql/GNOME_Database_Provider_MySQL.server.in.h:1
 msgid "GDA Datasource Access for MySQL"
 msgstr ""
 
-#: providers/gda-mysql-server/GNOME_Database_Provider_MySQL.server.in.h:2
-msgid "MySQL provider connection factory"
+#: providers/mysql/GNOME_Database_Provider_MySQL.server.in.h:2
+msgid "MySQL component factory"
 msgstr ""
 
-#: providers/gda-mysql-server/gda-mysql-connection.c:174
-msgid ""
-"You cannot provide a UNIX_SOCKET if you also provide either a HOST or a "
-"PORT. Please remove the UNIX_SOCKET, or remove both the HOST and PORT options"
+#: providers/mysql/main.c:48
+msgid "Could not initiate MySQL component factory"
 msgstr ""
 
-#: providers/gda-mysql-server/gda-mysql-connection.c:190
-#, c-format
-msgid ""
-"Opening connection with user=%s, password=%s, host=%s, port=%s, unix_socket=%"
-"s"
-msgstr ""
-
-#: providers/gda-mysql-server/gda-mysql-connection.c:616
-msgid "Unknown"
-msgstr ""
-
-#: providers/gda-mysql-server/gda-mysql-connection.c:649
-msgid "No MYSQL_Connection for GdaServerConnection"
-msgstr ""
-
-#: providers/gda-odbc-server/GNOME_Database_Provider_ODBC.server.in.h:1
-msgid "GDA Datasource Access for ODBC"
-msgstr ""
-
-#: providers/gda-odbc-server/GNOME_Database_Provider_ODBC.server.in.h:2
-msgid "ODBC provider connection factory"
-msgstr ""
-
-#: providers/gda-odbc-server/gda-odbc-connection.c:277
-#, c-format
-msgid "gda_odbc_connection_open_schema: Unhandled SCHEMA_QTYPE %d\n"
-msgstr ""
-
-#: providers/gda-odbc-server/gda-odbc-connection.c:641
-#: providers/gda-odbc-server/gda-odbc-connection.c:642
-#: providers/gda-odbc-server/gda-odbc-connection.c:643
-#: providers/gda-odbc-server/gda-odbc-connection.c:674
-#: providers/gda-odbc-server/gda-odbc-connection.c:675
-#: providers/gda-odbc-server/gda-odbc-connection.c:676
-msgid "no text"
-msgstr ""
-
-#: providers/gda-odbc-server/main-odbc.c:73
-msgid "Could not register ODBC provider implementation"
-msgstr ""
-
-#: providers/gda-oracle-server/GNOME_Database_Provider_Oracle.server.in.h:1
-msgid "GDA Datasource Access for Oracle"
-msgstr ""
-
-#: providers/gda-oracle-server/GNOME_Database_Provider_Oracle.server.in.h:2
-msgid "Oracle provider connection factory"
-msgstr ""
-
-#: providers/gda-oracle-server/gda-oracle-command.c:191
-msgid "Could not allocate statement handle"
-msgstr ""
-
-#: providers/gda-oracle-server/gda-oracle-command.c:197
-msgid "command object being created without associated connection"
-msgstr ""
-
-#: providers/gda-oracle-server/gda-oracle-command.c:238
-#, c-format
-msgid "Executing command '%s'"
-msgstr ""
-
-#: providers/gda-oracle-server/gda-oracle-connection.c:117
-msgid "error in OCIHandleAlloc() HTYPE_SVCCTX"
-msgstr ""
-
-#: providers/gda-oracle-server/gda-oracle-connection.c:123
-msgid "error in OCIHandleAlloc() HTYPE_SERVER"
-msgstr ""
-
-#: providers/gda-oracle-server/gda-oracle-connection.c:129
-msgid "error in OCIHandleAlloc() HTYPE_ERROR"
-msgstr ""
-
-#: providers/gda-oracle-server/gda-oracle-connection.c:418
-#, c-format
-msgid "Unknown ORACLE type %ld"
-msgstr ""
-
-#: providers/gda-oracle-server/gda-oracle-recordset.c:118
-msgid "Unknown ORACLE data type in fill_field_values"
-msgstr ""
-
-#: providers/gda-oracle-server/gda-oracle-recordset.c:156
-msgid "recordset object being created without associated connection"
-msgstr ""
-
-#: providers/gda-oracle-server/main-oracle.c:69
-msgid "Could not register ORACLE provider implementation"
-msgstr ""
-
-#: providers/gda-postgres-server/GNOME_Database_Provider_Postgres.server.in.h:1
-msgid "GDA Datasource Access for Postgres"
-msgstr ""
-
-#: providers/gda-postgres-server/GNOME_Database_Provider_Postgres.server.in.h:2
-msgid "Postgres provider connection factory"
-msgstr ""
-
-#: providers/gda-postgres-server/gda-postgres-connection.c:889
-#: providers/gda-postgres-server/gda-postgres-connection.c:1006
-msgid "postgres_recset is NULL"
-msgstr ""
-
-#: providers/gda-postgres-server/main-postgres.c:71
-msgid "Could not register PostgreSQL provider implementation"
-msgstr ""
-
-#: providers/gda-sybase-server/GNOME_Database_Provider_Sybase.server.in.h:1
+#: providers/sybase/GNOME_Database_Provider_Sybase.server.in.h:1
 msgid "GDA Datasource Access for Sybase"
 msgstr ""
 
-#: providers/gda-sybase-server/GNOME_Database_Provider_Sybase.server.in.h:2
-msgid "Sybase provider connection factory"
+#: providers/sybase/GNOME_Database_Provider_Sybase.server.in.h:2
+msgid "Sybase component factory"
 msgstr ""
 
-#.      gda_server_error_make(error, 0, cnc, "connection seems to be dead");
-#: providers/gda-sybase-server/gda-sybase-command.c:136
-#: providers/gda-tds-server/gda-tds-command.c:116
-msgid "Connection seems to be dead"
+#: providers/sybase/gda-sybase-error.c:137
+msgid "ct_diag 1 failed in sybase_check_clientmsg"
 msgstr ""
 
-#: providers/gda-sybase-server/gda-sybase-command.c:153
-#: providers/gda-tds-server/gda-tds-command.c:130
-msgid "Filling command structure failed\n"
+#: providers/sybase/gda-sybase-error.c:159
+#: providers/sybase/gda-sybase-error.c:197
+msgid "ct_diag 2 failed in sybase_check_clientmsg"
 msgstr ""
 
-#: providers/gda-sybase-server/gda-sybase-command.c:162
-#: providers/gda-tds-server/gda-tds-command.c:137
-msgid "sending cmd failed"
+#: providers/sybase/gda-sybase-error.c:167
+#: providers/sybase/gda-sybase-error.c:376
+msgid "Client Message: "
 msgstr ""
 
-#: providers/gda-sybase-server/gda-sybase-command.c:169
-#: providers/gda-tds-server/gda-tds-command.c:144
-msgid "Allocating recordset failed"
+#: providers/sybase/gda-sybase-error.c:178
+#: providers/sybase/gda-sybase-error.c:387
+msgid "Informational Client  Message: "
 msgstr ""
 
-#: providers/gda-sybase-server/gda-sybase-command.c:181
-#: providers/gda-tds-server/gda-tds-command.c:153
-msgid "Getting recordset userdata failed"
+#: providers/sybase/gda-sybase-error.c:239
+msgid "ct_diag 1 failed in sybase_check_servermsg"
 msgstr ""
 
-#: providers/gda-sybase-server/gda-sybase-command.c:241
-#: providers/gda-tds-server/gda-tds-command.c:210
-msgid "Command execution finished, all results processed"
+#: providers/sybase/gda-sybase-error.c:261
+#: providers/sybase/gda-sybase-error.c:304
+msgid "ct_diag 2 failed in sybase_check_servermsg"
 msgstr ""
 
-#: providers/gda-sybase-server/gda-sybase-command.c:245
-#: providers/gda-tds-server/gda-tds-command.c:214
-msgid "Command failed"
+#: providers/sybase/gda-sybase-error.c:274
+msgid "Server Message: "
 msgstr ""
 
-#: providers/gda-sybase-server/gda-sybase-command.c:250
-#: providers/gda-tds-server/gda-tds-command.c:219
-msgid "Execution of resultless command succeeded"
+#: providers/sybase/gda-sybase-error.c:285
+msgid "Informational Server  Message: "
 msgstr ""
 
-#: providers/gda-sybase-server/gda-sybase-command.c:268
-#: providers/gda-tds-server/gda-tds-command.c:237
+#: providers/sybase/gda-sybase-error.c:346
+msgid "cs_diag 1 failed in sybase_check_clientmsg"
+msgstr ""
+
+#: providers/sybase/gda-sybase-error.c:368
+#: providers/sybase/gda-sybase-error.c:406
+msgid "cs_diag 2 failed in sybase_check_clientmsg"
+msgstr ""
+
+#: providers/sybase/gda-sybase-error.c:429
+msgid "SYB"
+msgstr ""
+
+#: providers/sybase/gda-sybase-error.c:431
+msgid "severity"
+msgstr ""
+
+#: providers/sybase/gda-sybase-error.c:433
+msgid "number"
+msgstr ""
+
+#: providers/sybase/gda-sybase-error.c:435
+msgid "origin"
+msgstr ""
+
+#: providers/sybase/gda-sybase-error.c:437
+#, fuzzy
+msgid "layer"
+msgstr "Glan"
+
+#: providers/sybase/gda-sybase-error.c:444
 #, c-format
-msgid "ct_results() returned %x"
+msgid ""
+"\n"
+"\tOperating system error number(%ld):\n"
+"\t%s"
 msgstr ""
 
-#: providers/gda-sybase-server/gda-sybase-command.c:280
-#: providers/gda-tds-server/gda-tds-command.c:249
-msgid "No further results, command completly succeeded."
+#: providers/sybase/main.c:49
+msgid "Could not initiate Sybase component factory"
 msgstr ""
 
-#: providers/gda-sybase-server/gda-sybase-command.c:285
-#: providers/gda-tds-server/gda-tds-command.c:254
-msgid "An error occured during command execution."
-msgstr ""
-
-#: providers/gda-sybase-server/gda-sybase-command.c:291
-#: providers/gda-tds-server/gda-tds-command.c:258
-msgid "Cmd execution returned unknown result, may be an error"
-msgstr ""
-
-#: providers/gda-sybase-server/gda-sybase-command.c:304
-#: providers/gda-tds-server/gda-tds-command.c:269
-msgid "No data returned, freeing recordset structure"
-msgstr ""
-
-#: providers/gda-sybase-server/gda-sybase-command.c:336
-#: providers/gda-sybase-server/gda-sybase-command.c:348
-#: providers/gda-tds-server/gda-tds-command.c:300
-#: providers/gda-tds-server/gda-tds-command.c:310
-msgid "Freeing command structure failed"
-msgstr ""
-
-#: providers/gda-sybase-server/gda-sybase-connection.c:171
-msgid "Not enough memory for sybase_Connection"
-msgstr ""
-
-#: providers/gda-sybase-server/gda-sybase-connection.c:453
-#: providers/gda-tds-server/gda-tds-connection.c:437
-#, c-format
-msgid "schema_cols: table_name '%s'"
-msgstr ""
-
-#: providers/gda-sybase-server/gda-sybase-connection.c:470
-#: providers/gda-tds-server/gda-tds-connection.c:454
-msgid "Could not allocate command structure"
-msgstr ""
-
-#: providers/gda-sybase-server/gda-sybase-connection.c:493
-#: providers/gda-tds-server/gda-tds-connection.c:477
-msgid "Could not allocate enough memory for query"
-msgstr ""
-
-#.          gda_server_error_make(error, NULL, cnc, __PRETTY_FUNCTION__);
-#: providers/gda-sybase-server/gda-sybase-connection.c:508
-#: providers/gda-tds-server/gda-tds-connection.c:492
-msgid "Could not get recordset in schema_cols"
-msgstr ""
-
-#: providers/gda-sybase-server/gda-sybase-connection.c:557
-#: providers/gda-tds-server/gda-tds-connection.c:541
-#, c-format
-msgid "schema_procs: invalid constraint type %d"
-msgstr ""
-
-#: providers/gda-sybase-server/gda-sybase-connection.c:567
-#: providers/gda-tds-server/gda-tds-connection.c:551
-msgid "Could not allocate cmd structure"
-msgstr ""
-
-#: providers/gda-sybase-server/gda-sybase-connection.c:633
-#: providers/gda-tds-server/gda-tds-connection.c:617
-#, c-format
-msgid "schema_tables: invalid constraint type %d"
-msgstr ""
-
-#: providers/gda-sybase-server/gda-sybase-connection.c:695
-#: providers/gda-tds-server/gda-tds-connection.c:679
-#, c-format
-msgid "Invalid or unsupported constraint type: %d"
-msgstr ""
-
-#: providers/gda-sybase-server/gda-sybase-connection.c:738
-#: providers/gda-tds-server/gda-tds-connection.c:722
-msgid "Could not allocate GdaServerCommand"
-msgstr ""
-
-#: providers/gda-sybase-server/gda-sybase-connection.c:769
-#: providers/gda-sybase-server/gda-sybase-connection.c:774
-#: providers/gda-tds-server/gda-tds-connection.c:752
-#: providers/gda-tds-server/gda-tds-connection.c:757
-#, c-format
-msgid "connection status: %x"
-msgstr ""
-
-#: providers/gda-sybase-server/gda-sybase-connection.c:770
-#: providers/gda-tds-server/gda-tds-connection.c:753
-#, c-format
-msgid "return code: %x"
-msgstr ""
-
-#: providers/gda-sybase-server/gda-sybase-connection.c:808
-#: providers/gda-tds-server/gda-tds-connection.c:788
-msgid "attempting reconnection"
-msgstr ""
-
-#: providers/gda-sybase-server/gda-sybase-connection.c:938
-#, c-format
-msgid "Reconnected to '%s'"
-msgstr ""
-
-#: providers/gda-sybase-server/gda-sybase-connection.c:940
-#: providers/gda-tds-server/gda-tds-connection.c:890
-#, c-format
-msgid "Connected to %s"
-msgstr ""
-
-#: providers/gda-sybase-server/gda-sybase-connection.c:952
-#: providers/gda-tds-server/gda-tds-connection.c:904
-#, c-format
-msgid "Selected database '%s'"
-msgstr ""
-
-#: providers/gda-sybase-server/gda-sybase-connection.c:981
-#: providers/gda-tds-server/gda-tds-connection.c:930
-#, c-format
-msgid "%s: Could not allocate cmd structure"
-msgstr ""
-
-#: providers/gda-sybase-server/gda-sybase-connection.c:990
-#: providers/gda-tds-server/gda-tds-connection.c:939
-#, c-format
-msgid "%s: Could not allocate memory for cmd string"
-msgstr ""
-
-#: providers/gda-sybase-server/gda-sybase-connection.c:999
-#: providers/gda-tds-server/gda-tds-connection.c:947
-#, c-format
-msgid "%s: ct_command failed"
-msgstr ""
-
-#: providers/gda-sybase-server/gda-sybase-connection.c:1010
-#: providers/gda-tds-server/gda-tds-connection.c:957
-#, c-format
-msgid "%s: sending command failed"
-msgstr ""
-
-#: providers/gda-sybase-server/gda-sybase-connection.c:1021
-#, c-format
-msgid "%s: selecting database failed"
-msgstr ""
-
-#: providers/gda-sybase-server/gda-sybase-connection.c:1038
-#, c-format
-msgid "%s: use command failed"
-msgstr ""
-
-#: providers/gda-sybase-server/gda-sybase-connection.c:1066
-#: providers/gda-tds-server/gda-tds-connection.c:1020
-msgid "Could not allocate locale structure"
-msgstr ""
-
-#: providers/gda-sybase-server/gda-sybase-connection.c:1072
-#: providers/gda-tds-server/gda-tds-connection.c:1026
-#, c-format
-msgid "Could not set locale to '%s'"
-msgstr ""
-
-#: providers/gda-sybase-server/gda-sybase-connection.c:1079
-#: providers/gda-tds-server/gda-tds-connection.c:1033
-#, c-format
-msgid "Could not configure locale to be '%s'"
-msgstr ""
-
-#: providers/gda-sybase-server/gda-sybase-connection.c:1085
-#: providers/gda-tds-server/gda-tds-connection.c:1039
-msgid "Could not drop locale structure"
-msgstr ""
-
-#: providers/gda-sybase-server/gda-sybase-connection.c:1099
-#: providers/gda-tds-server/gda-tds-connection.c:1052
-#, c-format
-msgid "Fatal error: %s\n"
-msgstr ""
-
-#: providers/gda-sybase-server/gda-sybase-error.c:73
-#, c-format
-msgid "gda_sybase_error_make(%p,%p,%p,%p)"
-msgstr ""
-
-#: providers/gda-sybase-server/gda-sybase-error.c:85
-#: providers/gda-tds-server/gda-tds-error.c:81
-#, c-format
-msgid "No error flag ist set, though %s is called. This may be a bug."
-msgstr ""
-
-#: providers/gda-sybase-server/gda-sybase-error.c:161
-msgid "cs_diag() initialized"
-msgstr ""
-
-#: providers/gda-sybase-server/gda-sybase-error.c:165
-msgid "Could not initialize cs_diag()"
-msgstr ""
-
-#: providers/gda-sybase-server/gda-sybase-error.c:175
-msgid "ct_diag() initialized"
-msgstr ""
-
-#: providers/gda-sybase-server/gda-sybase-error.c:179
-msgid "Could not initialize ct_diag()"
-msgstr ""
-
-#: providers/gda-sybase-server/gda-sybase-error.c:215
-#, c-format
-msgid "%s could not find server implementation"
-msgstr ""
-
-#: providers/gda-sybase-server/gda-sybase-error.c:222
-#, c-format
-msgid "%s could not get cnc userdata"
-msgstr ""
-
-#: providers/gda-sybase-server/gda-sybase-error.c:234
-msgid "Could not get # of messages"
-msgstr ""
-
-#: providers/gda-sybase-server/gda-sybase-error.c:241
-#, c-format
-msgid "%d ctlib messages to fetch"
-msgstr ""
-
-#: providers/gda-sybase-server/gda-sybase-error.c:246
-#, c-format
-msgid "%d ctlib message to fetch"
-msgstr ""
-
-#: providers/gda-sybase-server/gda-sybase-error.c:284
-msgid "error is nullpointer in gda_sybase_messages_handle"
-msgstr ""
-
-#: providers/gda-sybase-server/gda-sybase-error.c:310
-#: providers/gda-sybase-server/gda-sybase-error.c:382
-#: providers/gda-sybase-server/gda-sybase-error.c:429
-msgid "Could not get # of server messages"
-msgstr ""
-
-#: providers/gda-sybase-server/gda-sybase-error.c:318
-#, c-format
-msgid "Fetching %d client messages"
-msgstr ""
-
-#: providers/gda-sybase-server/gda-sybase-error.c:321
-#, c-format
-msgid "Fetching %d client message"
-msgstr ""
-
-#: providers/gda-sybase-server/gda-sybase-error.c:330
-#, c-format
-msgid "Could not get client msg # %d"
-msgstr ""
-
-#: providers/gda-sybase-server/gda-sybase-error.c:349
-msgid "Could not get # of client messages"
-msgstr ""
-
-#: providers/gda-sybase-server/gda-sybase-error.c:357
-msgid "Could not clear client messages"
-msgstr ""
-
-#: providers/gda-sybase-server/gda-sybase-error.c:390
-#, c-format
-msgid "Fetching %d server messages"
-msgstr ""
-
-#: providers/gda-sybase-server/gda-sybase-error.c:393
-#, c-format
-msgid "Fetching %d server message"
-msgstr ""
-
-#: providers/gda-sybase-server/gda-sybase-error.c:402
-#, c-format
-msgid "Could not get server msg # %d"
-msgstr ""
-
-#: providers/gda-sybase-server/gda-sybase-error.c:437
-msgid "Could not clear server messages"
-msgstr ""
-
-#: providers/gda-sybase-server/gda-sybase-error.c:459
-#: providers/gda-sybase-server/gda-sybase-error.c:499
-msgid "Could not get # of cslib messages"
-msgstr ""
-
-#: providers/gda-sybase-server/gda-sybase-error.c:467
-#, c-format
-msgid "Fetching %d cslib messages"
-msgstr ""
-
-#: providers/gda-sybase-server/gda-sybase-error.c:470
-#, c-format
-msgid "Fetching %d cslib message"
-msgstr ""
-
-#: providers/gda-sybase-server/gda-sybase-error.c:480
-#, c-format
-msgid "Could not get cslib msg # %d"
-msgstr ""
-
-#: providers/gda-sybase-server/gda-sybase-error.c:507
-msgid "Could not clear cslib messages"
-msgstr ""
-
-#: providers/gda-sybase-server/gda-sybase-error.c:641
-#: providers/gda-tds-server/gda-tds-error.c:269
-msgid "Server message:"
-msgstr ""
-
-#: providers/gda-sybase-server/gda-sybase-error.c:649
-#: providers/gda-tds-server/gda-tds-error.c:277
-msgid "Client message:"
-msgstr ""
-
-#: providers/gda-sybase-server/gda-sybase-error.c:656
-#: providers/gda-tds-server/gda-tds-error.c:284
-msgid "CS-Library error:"
-msgstr ""
-
-#: providers/gda-sybase-server/gda-sybase-recordset.c:198
-#: providers/gda-tds-server/gda-tds-recordset.c:194
-#, c-format
-msgid "fetch error at row %d"
-msgstr ""
-
-#: providers/gda-sybase-server/gda-sybase-recordset.c:205
-#: providers/gda-tds-server/gda-tds-recordset.c:201
-#, c-format
-msgid "CS_END_DATA on row %d; canceling"
-msgstr ""
-
-#: providers/gda-sybase-server/gda-sybase-recordset.c:213
-#: providers/gda-tds-server/gda-tds-recordset.c:208
-#, c-format
-msgid "%s: Error (%d)"
-msgstr ""
-
-#: providers/gda-sybase-server/gda-sybase-recordset.c:386
-#: providers/gda-tds-server/gda-tds-recordset.c:382
-msgid "Failed fetching # of columns"
-msgstr ""
-
-#: providers/gda-sybase-server/gda-sybase-recordset.c:393
-#: providers/gda-tds-server/gda-tds-recordset.c:390
-#, c-format
-msgid "Counted %d columns"
-msgstr ""
-
-#: providers/gda-sybase-server/gda-sybase-recordset.c:400
-#: providers/gda-tds-server/gda-tds-recordset.c:397
-#, c-format
-msgid "%s could not allocate datafmt info"
-msgstr ""
-
-#: providers/gda-sybase-server/gda-sybase-recordset.c:410
-#: providers/gda-tds-server/gda-tds-recordset.c:407
-#, c-format
-msgid "%s could not allocate data fields"
-msgstr ""
-
-#: providers/gda-sybase-server/gda-sybase-recordset.c:428
-#: providers/gda-tds-server/gda-tds-recordset.c:425
-#, c-format
-msgid "ct_describe on col # %d"
-msgstr ""
-
-#: providers/gda-sybase-server/gda-sybase-recordset.c:435
-#: providers/gda-tds-server/gda-tds-recordset.c:432
-#, c-format
-msgid "ct_describe on col # %d failed"
-msgstr ""
-
-#: providers/gda-sybase-server/gda-sybase-recordset.c:442
-#: providers/gda-tds-server/gda-tds-recordset.c:439
-#, c-format
-msgid "ct_describe(%d): '%s', %d (%s)"
-msgstr ""
-
-#: providers/gda-sybase-server/gda-sybase-recordset.c:454
-#: providers/gda-tds-server/gda-tds-recordset.c:450
-msgid "could not allocate data holder"
-msgstr ""
-
-#: providers/gda-sybase-server/gda-sybase-recordset.c:467
-#: providers/gda-tds-server/gda-tds-recordset.c:463
-msgid "could not ct_bind data holder to column"
-msgstr ""
-
-#: providers/gda-sybase-server/gda-sybase-recordset.c:474
-#: providers/gda-tds-server/gda-tds-recordset.c:470
-msgid "illegal type detected, aborting"
-msgstr ""
-
-#: providers/gda-sybase-server/gda-sybase-recordset.c:481
-#: providers/gda-tds-server/gda-tds-recordset.c:477
-msgid "could not allocate field"
-msgstr ""
-
-#: providers/gda-sybase-server/main-sybase.c:78
-msgid "Could not register gda-sybase provider implementation"
-msgstr ""
-
-#: providers/gda-primebase-server/GNOME_Database_Provider_Primebase.server.in.h:1
-msgid "GDA Datasource Access for primebase"
-msgstr ""
-
-#: providers/gda-primebase-server/gda-primebase-connection.c:157
-#, c-format
-msgid "Could not connect to '%s@%s:%s' with connparm '%s'"
-msgstr ""
-
-#: providers/gda-primebase-server/gda-primebase-connection.c:163
-#, c-format
-msgid "%2ld: Connected to '%s@%s:%s' with connparm: '%s'"
-msgstr ""
-
-#: providers/gda-primebase-server/gda-primebase-connection.c:171
-msgid "Could not get PBIConnectionInfo(), disconnecting"
-msgstr ""
-
-#: providers/gda-primebase-server/gda-primebase-connection.c:176
-#, c-format
-msgid "%2ld: ConInfo: '%s@%s', Cl v%x, Srv '%s' v%x, Brand '%s'"
-msgstr ""
+#, fuzzy
+#~ msgid "False"
+#~ msgstr "Comhad"
 
-#: providers/gda-primebase-server/gda-primebase-connection.c:390
-msgid "Not enough memory for primebase_Error structure."
-msgstr ""
-
-#: providers/gda-primebase-server/gda-primebase-connection.c:397
-#, c-format
-msgid "%2ld: ERROR: %ld (%ld) : %s.\n"
-msgstr ""
-
-#: providers/gda-primebase-server/main-primebase.c:73
-msgid "Could not register PRIMEBASE provider implementation"
-msgstr ""
-
-#: providers/gda-tds-server/GNOME_Database_Provider_TDS.server.in.h:1
-msgid "GDA Datasource Access for Sybase/MS SQL"
-msgstr ""
-
-#: providers/gda-tds-server/GNOME_Database_Provider_TDS.server.in.h:2
-msgid "TDS provider connection factory"
-msgstr ""
-
-#: providers/gda-tds-server/gda-tds-connection.c:160
-msgid "Not enough memory for tds_Connection"
-msgstr ""
-
-#. Fixme: replace "dummy" with buf when CS_GET CS_SERVERNAME works
-#: providers/gda-tds-server/gda-tds-connection.c:888
-#, c-format
-msgid "Reconnected to %s"
-msgstr ""
-
-#: providers/gda-tds-server/gda-tds-error.c:70
-#, c-format
-msgid "gda_tds_error_make(%p,%p,%p,%p)"
-msgstr ""
-
-#: providers/gda-tds-server/main-tds.c:78
-msgid "Could not register gda-tds provider implementation"
-msgstr ""
-
-#: tools/gda-run.c:102
-#, c-format
-msgid "%s: misconfigured DSN entry"
-msgstr ""
-
-#: tools/gda-run.c:116
-#, c-format
-msgid "%s: data source '%s' not found\n"
-msgstr ""
-
-#: tools/templates/main-srv.c.tmpl:60
-msgid "Could not register <PROVIDER-NAME> provider implementation"
-msgstr ""
+#, fuzzy
+#~ msgid "info '%s'"
+#~ msgstr "Ag rith '%s'"
 
 #~ msgid "Close"
 #~ msgstr "Dún"
@@ -1028,9 +281,6 @@ msgstr ""
 
 #~ msgid "Save As"
 #~ msgstr "Sábháil le"
-
-#~ msgid "Clear"
-#~ msgstr "Glan"
 
 #~ msgid "Value"
 #~ msgstr "Luach"
@@ -1058,9 +308,6 @@ msgstr ""
 
 #~ msgid "Right"
 #~ msgstr "Deis"
-
-#~ msgid "Name"
-#~ msgstr "Ainm"
 
 #~ msgid "Save As..."
 #~ msgstr "Sábháil Le..."
@@ -1118,9 +365,6 @@ msgstr ""
 
 #~ msgid "Find"
 #~ msgstr "Faigh"
-
-#~ msgid "Username"
-#~ msgstr "Úsáidtheoir"
 
 #~ msgid "File name"
 #~ msgstr "Ainm comhad"

@@ -1,2 +1,3 @@
 Makefile
 Makefile.in
+GNOME_Database_Provider_Oracle.server

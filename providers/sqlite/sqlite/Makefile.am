@@ -35,8 +35,8 @@ libsqlite_a_SOURCES = \
 	vdbe.h \
 	where.c
 
-stamp-parser: $(srcdir)/parse.y $(srcdir)/lemon
-	./lemon $(srcdir)/parse.y
+stamp-parser: parse.y lemon
+	$(builddir)/lemon $(builddir)/parse.y
 	touch $@
 
 parse.c: stamp-parser

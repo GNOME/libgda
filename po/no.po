@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-db 0.0.91\n"
-"POT-Creation-Date: 2001-12-17 17:17+0100\n"
+"POT-Creation-Date: 2001-12-29 00:08+0100\n"
 "PO-Revision-Date: 2001-12-17 17:19+0100\n"
 "Last-Translator: Kjartan Maraas <kmaraas@online.no>\n"
 "Language-Team: Norwegian <no@li.org>\n"
@@ -13,7 +13,7 @@ msgstr ""
 "Content-Type: text/plain; charset=iso-8859-1\n"
 "Content-Transfer-Encoding: 8-bit\n"
 
-#: libgda/gda-client.c:200 libgda/gda-client.c:295
+#: libgda/gda-client.c:200 libgda/gda-client.c:294
 #, c-format
 msgid "Data source %s not found in configuration"
 msgstr "Datakilde «%s» ble ikke funnet i konfigurasjonen"
@@ -72,52 +72,71 @@ msgstr "Forsøk på å initiere en allerede initiert klient"
 msgid "Could not initialize Bonobo"
 msgstr "Kunne ikke initiere Bonobo"
 
-#: libgda/gda-server.c:105
+#: libgda/gda-server.c:95
 #, c-format
 msgid "Don't know how to create components with IID %s"
 msgstr "Kan ikke opprette komponenter med IID %s"
 
-#: libgda/gda-server.c:112
+#: libgda/gda-server.c:102
 #, c-format
 msgid "Could not create component of type %s"
 msgstr "Kunne ikke opprette komponent av type %s"
 
-#: libgda/gda-server-connection.c:92
+#: libgda/gda-server-connection.c:90
 msgid "Could not duplicate client object. Client won't get notifications"
 msgstr "Kunne ikke duplisere klientobjekt. Klienter vil ikke motta meldinger"
 
-#: libgda/gda-server-connection.c:412
+#: libgda/gda-server-connection.c:440
 #, c-format
 msgid "Could not notify client about action %d"
 msgstr "Kunne ikke gi melding til klient om handling %d"
 
-#: libgda/gda-value.c:501
+#: libgda/gda-server-recordset.c:204
+msgid "No implementation for the fetch() method found"
+msgstr ""
+
+#: libgda/gda-value.c:573
 msgid "TRUE"
 msgstr "SANN"
 
-#: libgda/gda-value.c:503
+#: libgda/gda-value.c:575
 msgid "FALSE"
 msgstr "USANN"
 
-#: libgda/gda-xml-database.c:166
-msgid "bad formed document"
+#: libgda/gda-xml-database.c:162
+#, fuzzy, c-format
+msgid "Could not load file at %s"
+msgstr "Kunne ikke sette locale til '%s'"
+
+#: libgda/gda-xml-database.c:173
+#, fuzzy, c-format
+msgid "Could not parse file at %s"
+msgstr "Kunne ikke sette locale til '%s'"
+
+#: libgda/gda-xml-database.c:183
+#, fuzzy, c-format
+msgid "Bad formed document at %s"
 msgstr "dokument på ugyldig form"
 
-#: libgda/gda-xml-database.c:268
+#: libgda/gda-xml-database.c:258
 #, c-format
 msgid "table %s already exists"
 msgstr "tabell %s eksisterer allerede"
 
-#: libgda/gda-xml-database.c:450
+#: libgda/gda-xml-database.c:440
 #, c-format
 msgid "%p is not a valid table"
 msgstr "%p er ikke en gyldig tabell"
 
-#: providers/default/gda-default-provider.c:140
+#: providers/default/gda-default-provider.c:141
 msgid ""
 "A full path must be specified on the connection string to open a database."
 msgstr ""
 "En full sti må spesifiseres i tilkoblingsstrengen for å åpne en database."
+
+#: providers/default/gda-default-provider.c:199
+msgid "Invalid DEFAULT handle"
+msgstr ""
 
 #: providers/default/GNOME_Database_Provider_Default.server.in.h:1
 msgid "Default component factory"
@@ -131,12 +150,19 @@ msgstr "Forvalgt datakildeaksess for GDA"
 msgid "Could not initiate Default component factory"
 msgstr "Kunne ikke initiere forvalgt komponentfactory"
 
-#: providers/mysql/gda-mysql-provider.c:150
+#: providers/mysql/gda-mysql-provider.c:171
 msgid ""
 "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
 msgstr ""
 "Du kan ikke tilby en UNIX_SOCKET hvis du også tilbyr enten en VERT eller en "
 "PORT."
+
+#: providers/mysql/gda-mysql-provider.c:242
+#: providers/mysql/gda-mysql-provider.c:321
+#: providers/mysql/gda-mysql-provider.c:350
+#: providers/mysql/gda-mysql-provider.c:379
+msgid "Invalid MYSQL handle"
+msgstr ""
 
 #: providers/mysql/GNOME_Database_Provider_MySQL.server.in.h:1
 msgid "GDA Datasource Access for MySQL"
@@ -496,9 +522,6 @@ msgstr "Kunne ikke initiere Sybase komponentfactory"
 
 #~ msgid "Could not allocate locale structure"
 #~ msgstr "Kunne ikke allokere locale-struktur"
-
-#~ msgid "Could not set locale to '%s'"
-#~ msgstr "Kunne ikke sette locale til '%s'"
 
 #~ msgid "Could not configure locale to be '%s'"
 #~ msgstr "Kunne ikke konfigurere locale til å være '%s'"

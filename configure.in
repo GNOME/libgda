@@ -468,7 +468,10 @@ libgda/Makefile
 providers/Makefile
 providers/default/Makefile
 providers/default/sqlite/Makefile
+providers/freetds/Makefile
+providers/interbase/Makefile
 providers/mysql/Makefile
+providers/odbc/Makefile
 providers/oracle/Makefile
 providers/postgres/Makefile
 providers/sybase/Makefile

@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 2.0\n"
-"POT-Creation-Date: 2001-12-16 03:10+0000\n"
+"POT-Creation-Date: 2001-12-29 00:08+0100\n"
 "PO-Revision-Date: 2001-12-16 03:10+0000\n"
 "Last-Translator: Duarte Loreto <happyguy_pt@hotmail.com>\n"
 "Language-Team: Portuguese <none@none.org>\n"
@@ -13,7 +13,7 @@ msgstr ""
 "Content-Type: text/plain; charset=iso-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: libgda/gda-client.c:200 libgda/gda-client.c:295
+#: libgda/gda-client.c:200 libgda/gda-client.c:294
 #, c-format
 msgid "Data source %s not found in configuration"
 msgstr "Base de dados %s não encontrada na configuração"
@@ -72,52 +72,72 @@ msgstr "Tentativa de inicializar um cliente já inicializado"
 msgid "Could not initialize Bonobo"
 msgstr "Incapaz de inicializar Bonobo"
 
-#: libgda/gda-server.c:105
+#: libgda/gda-server.c:95
 #, c-format
 msgid "Don't know how to create components with IID %s"
 msgstr "Criação de componentes com IID %s desconhecida"
 
-#: libgda/gda-server.c:112
+#: libgda/gda-server.c:102
 #, c-format
 msgid "Could not create component of type %s"
 msgstr "Incapaz de criar componente do tipo %s"
 
-#: libgda/gda-server-connection.c:92
+#: libgda/gda-server-connection.c:90
 msgid "Could not duplicate client object. Client won't get notifications"
 msgstr "Incapaz de duplicar objecto cliente. Cliente não receberá notificações"
 
-#: libgda/gda-server-connection.c:412
+#: libgda/gda-server-connection.c:440
 #, c-format
 msgid "Could not notify client about action %d"
 msgstr "Incapaz de notificar cliente sobre a acção %d"
 
-#: libgda/gda-value.c:501
+#: libgda/gda-server-recordset.c:204
+msgid "No implementation for the fetch() method found"
+msgstr ""
+
+#: libgda/gda-value.c:573
 msgid "TRUE"
 msgstr "VERDADEIRO"
 
-#: libgda/gda-value.c:503
+#: libgda/gda-value.c:575
 msgid "FALSE"
 msgstr "FALSO"
 
-#: libgda/gda-xml-database.c:166
-msgid "bad formed document"
+#: libgda/gda-xml-database.c:162
+#, fuzzy, c-format
+msgid "Could not load file at %s"
+msgstr "Incapaz de activar objecto %s"
+
+#: libgda/gda-xml-database.c:173
+#, fuzzy, c-format
+msgid "Could not parse file at %s"
+msgstr "Incapaz de activar objecto %s"
+
+#: libgda/gda-xml-database.c:183
+#, fuzzy, c-format
+msgid "Bad formed document at %s"
 msgstr "documento mal formado"
 
-#: libgda/gda-xml-database.c:268
+#: libgda/gda-xml-database.c:258
 #, c-format
 msgid "table %s already exists"
 msgstr "tabela %s já existe"
 
-#: libgda/gda-xml-database.c:450
+#: libgda/gda-xml-database.c:440
 #, c-format
 msgid "%p is not a valid table"
 msgstr "%p não é uma tabela válida"
 
-#: providers/default/gda-default-provider.c:140
+#: providers/default/gda-default-provider.c:141
 msgid ""
 "A full path must be specified on the connection string to open a database."
 msgstr ""
-"Tem de ser indicado um caminho completo na expressão de ligação para abrir uma base de dados."
+"Tem de ser indicado um caminho completo na expressão de ligação para abrir "
+"uma base de dados."
+
+#: providers/default/gda-default-provider.c:199
+msgid "Invalid DEFAULT handle"
+msgstr ""
 
 #: providers/default/GNOME_Database_Provider_Default.server.in.h:1
 msgid "Default component factory"
@@ -131,11 +151,18 @@ msgstr "Acesso de Fonte de Dados de Defeito GDA"
 msgid "Could not initiate Default component factory"
 msgstr "Incapaz de inicializar fábrica de componentes de Defeito"
 
-#: providers/mysql/gda-mysql-provider.c:150
+#: providers/mysql/gda-mysql-provider.c:171
 msgid ""
 "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
 msgstr ""
 "Não pode indicar um UNIX_SOCKET se também indicar ou um SERVIDOR ou PORTO."
+
+#: providers/mysql/gda-mysql-provider.c:242
+#: providers/mysql/gda-mysql-provider.c:321
+#: providers/mysql/gda-mysql-provider.c:350
+#: providers/mysql/gda-mysql-provider.c:379
+msgid "Invalid MYSQL handle"
+msgstr ""
 
 #: providers/mysql/GNOME_Database_Provider_MySQL.server.in.h:1
 msgid "GDA Datasource Access for MySQL"
@@ -147,4 +174,92 @@ msgstr "Fábrica de componente MySQL"
 
 #: providers/mysql/main.c:48
 msgid "Could not initiate MySQL component factory"
+msgstr "Incapaz de inicializar fábrica de componente MySQL"
+
+#: providers/sybase/GNOME_Database_Provider_Sybase.server.in.h:1
+#, fuzzy
+msgid "GDA Datasource Access for Sybase"
+msgstr "Acesso a Fonte de Dados GDA para MySQL"
+
+#: providers/sybase/GNOME_Database_Provider_Sybase.server.in.h:2
+#, fuzzy
+msgid "Sybase component factory"
+msgstr "Fábrica de componente MySQL"
+
+#: providers/sybase/gda-sybase-error.c:137
+msgid "ct_diag 1 failed in sybase_check_clientmsg"
+msgstr ""
+
+#: providers/sybase/gda-sybase-error.c:159
+#: providers/sybase/gda-sybase-error.c:197
+msgid "ct_diag 2 failed in sybase_check_clientmsg"
+msgstr ""
+
+#: providers/sybase/gda-sybase-error.c:167
+#: providers/sybase/gda-sybase-error.c:376
+msgid "Client Message: "
+msgstr ""
+
+#: providers/sybase/gda-sybase-error.c:178
+#: providers/sybase/gda-sybase-error.c:387
+msgid "Informational Client  Message: "
+msgstr ""
+
+#: providers/sybase/gda-sybase-error.c:239
+msgid "ct_diag 1 failed in sybase_check_servermsg"
+msgstr ""
+
+#: providers/sybase/gda-sybase-error.c:261
+#: providers/sybase/gda-sybase-error.c:304
+msgid "ct_diag 2 failed in sybase_check_servermsg"
+msgstr ""
+
+#: providers/sybase/gda-sybase-error.c:274
+msgid "Server Message: "
+msgstr ""
+
+#: providers/sybase/gda-sybase-error.c:285
+msgid "Informational Server  Message: "
+msgstr ""
+
+#: providers/sybase/gda-sybase-error.c:346
+msgid "cs_diag 1 failed in sybase_check_clientmsg"
+msgstr ""
+
+#: providers/sybase/gda-sybase-error.c:368
+#: providers/sybase/gda-sybase-error.c:406
+msgid "cs_diag 2 failed in sybase_check_clientmsg"
+msgstr ""
+
+#: providers/sybase/gda-sybase-error.c:429
+msgid "SYB"
+msgstr ""
+
+#: providers/sybase/gda-sybase-error.c:431
+msgid "severity"
+msgstr ""
+
+#: providers/sybase/gda-sybase-error.c:433
+msgid "number"
+msgstr ""
+
+#: providers/sybase/gda-sybase-error.c:435
+msgid "origin"
+msgstr ""
+
+#: providers/sybase/gda-sybase-error.c:437
+msgid "layer"
+msgstr ""
+
+#: providers/sybase/gda-sybase-error.c:444
+#, c-format
+msgid ""
+"\n"
+"\tOperating system error number(%ld):\n"
+"\t%s"
+msgstr ""
+
+#: providers/sybase/main.c:49
+#, fuzzy
+msgid "Could not initiate Sybase component factory"
 msgstr "Incapaz de inicializar fábrica de componente MySQL"

@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: GNOME db/CVS\n"
-"POT-Creation-Date: 2001-12-28 18:51+0100\n"
+"POT-Creation-Date: 2001-12-29 00:08+0100\n"
 "PO-Revision-Date: 2001-10-08 11:50+02:00\n"
 "Last-Translator: Keld Simonsen <keld@dkuug.dk>\n"
 "Language-Team: Danish <dansk@klid.dk>\n"
