@@ -20,6 +20,13 @@
 #if !defined(__gda_common_defs_h__)
 #  define __gda_common_defs_h__
 
+#if defined(HAVE_GOBJECT)
+#  include <glib/gmacros.h>
+#  include <gobject/gobject.h>
+#else
+#  include <gtk/gtkobject.h>
+#endif
+
 #ifdef __cplusplus
 #  if !defined(G_BEGIN_DECLS)
 #    define G_BEGIN_DECLS extern "C" {
@@ -34,6 +41,25 @@
 #  if !defined(G_END_DECLS)
 #    define G_END_DECLS
 #  endif
+#endif
+
+/*
+ * Object system
+ */
+#if defined(HAVE_GOBJECT)
+#  define GdaType GType
+#  define GDA_OBJECT       G_OBJECT
+#  define GDA_OBJECT_CLASS G_OBJECT_CLASS
+
+#  define gda_object_unref g_object_unref
+#  define gda_object_ref   g_object_ref
+#else
+#  define GdaType GtkType
+#  define GDA_OBJECT       GTK_OBJECT
+#  define GDA_OBJECT_CLASS GTK_OBJECT_CLASS
+
+#  define gda_object_unref gtk_object_unref
+#  define gda_object_ref   gtk_object_ref
 #endif
 
 #endif
