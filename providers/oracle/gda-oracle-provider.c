@@ -2014,18 +2014,18 @@ typedef struct
 
 static const ora_native_type ora_type_tab[] =
 {
-	{ "BFILE",     GDA_VALUE_TYPE_STRING    },
-	{ "BLOB",      GDA_VALUE_TYPE_STRING    },
+	{ "BFILE",     GDA_VALUE_TYPE_BINARY    },
+	{ "BLOB",      GDA_VALUE_TYPE_BINARY    },
 	{ "CHAR",      GDA_VALUE_TYPE_STRING    },
 	{ "CLOB",      GDA_VALUE_TYPE_STRING    },
 	{ "DATE",      GDA_VALUE_TYPE_TIMESTAMP },
+	{ "NUMBER",    GDA_VALUE_TYPE_NUMERIC   },
 	{ "LONG",      GDA_VALUE_TYPE_STRING    },
-	{ "NCHAR",     GDA_VALUE_TYPE_STRING    },
-	{ "NCLOB",     GDA_VALUE_TYPE_STRING    },
-	{ "NUMERIC",   GDA_VALUE_TYPE_NUMERIC   },
-	{ "NVARCHAR2", GDA_VALUE_TYPE_STRING    },
+	{ "LONG RAW",  GDA_VALUE_TYPE_BINARY    },
+	{ "RAW",       GDA_VALUE_TYPE_BINARY    },
+	{ "ROWID",     GDA_VALUE_TYPE_STRING    },
 	{ "TIMESTAMP", GDA_VALUE_TYPE_TIMESTAMP },
-	{ "VARCHAR2",  GDA_VALUE_TYPE_STRING    },
+	{ "VARCHAR2",  GDA_VALUE_TYPE_STRING    }
 };
 static const ora_native_type *
 ora_type_end = ora_type_tab+sizeof(ora_type_tab)/sizeof(ora_native_type);
@@ -2104,6 +2104,7 @@ gda_oracle_provider_get_schema (GdaServerProvider *provider,
 {
 	GdaDataModel *recset;
 
+	g_log("gda-oracle", G_LOG_LEVEL_DEBUG, "get_schema(%d)", schema);
 	switch (schema) {
 	case GDA_CONNECTION_SCHEMA_AGGREGATES :
 		recset = get_oracle_aggregates (cnc, params);

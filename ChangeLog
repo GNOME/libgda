@@ -1,4 +1,9 @@
-2003-04-19  Steve Fosdick  <fozzy@pelvoux.demon.co.uk>
+2003-04-20  Steve Fosdick  <gnomedb@pelvoux.demon.co.uk>
+
+	* Oracle Provider: clean up type handling and add support for
+	GDA_VALUE_TYPE_TIMESTAMP.
+
+2003-04-19  Steve Fosdick  <gnomedb@pelvoux.demon.co.uk>
 
 	* libgda/providers/oracle/gda-oracle-provider.c: Fixed a bug where
 	the index data was not being correctly retreived including
