@@ -1,3 +1,7 @@
+2002-08-21 Vivien Malerba <malerba@gnome-db.org>
+	* providers/postgres/gda-postgres-provider.[hc]: modified some schemas
+	to more closely return sets as described in the documentation.
+
 2002-08-19  Ben Liblit  <liblit@acm.org>
 
 	* configure.in: assume that the readline library depends upon the

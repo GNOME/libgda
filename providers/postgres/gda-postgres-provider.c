@@ -225,9 +225,10 @@ get_connection_type_list (GdaPostgresConnectionData *priv_td)
 	gint nrows, i;
 
 	pg_res = PQexec (priv_td->pconn,
-			 "SELECT oid, typname FROM pg_type "
-			 "WHERE typrelid = 0 AND typname !~ '^_' "
-			 " AND  typname not in ('SET', 'cid', "
+			 "SELECT pg_type.oid, typname, usename, obj_description(pg_type.oid) "
+			 "FROM pg_type, pg_user "
+			 "WHERE typowner=usesysid AND typrelid = 0 AND typname !~ '^_' "
+			 " AND  typname not in ('SET', 'cid', 'oid', "
 			 "'int2vector', 'oidvector', 'regproc', "
 			 "'smgr', 'tid', 'unknown', 'xid') "
 			 "ORDER BY typname");
@@ -244,6 +245,8 @@ get_connection_type_list (GdaPostgresConnectionData *priv_td)
 		td[i].name = g_strdup (PQgetvalue (pg_res, i, 1));
 		td[i].oid = atoi (PQgetvalue (pg_res, i, 0));
 		td[i].type = postgres_name_to_gda_type (td[i].name);
+		td[i].comments = g_strdup (PQgetvalue (pg_res, i, 3));
+		td[i].owner = g_strdup (PQgetvalue (pg_res, i, 2));
 		g_hash_table_insert (h_table, td[i].name, &td[i].type);
 	}
 
@@ -673,24 +676,86 @@ static gboolean gda_postgres_provider_supports (GdaServerProvider *provider,
 	return FALSE;
 }
 
+static gint get_nb_args (const gchar *args)
+{
+	gint i = 0;
+	gchar *ptr = args;
+	while (*ptr) {
+		if (*ptr == ' ')
+			i++;
+		ptr++;
+	}
+
+	return i;
+}
+
 static GdaDataModel *
 get_postgres_procedures (GdaConnection *cnc, GdaParameterList *params)
 {
 	GList *reclist;
 	GdaDataModel *recset;
-
+	GSList *removed_rows, *list;
+	gint nbrows, i;
+	const GdaValue *val1, *val2;
+	gchar *str1, *str2;
+	
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
 	reclist = process_sql_commands (NULL, cnc, 
-					"SELECT proname FROM pg_proc ORDER BY proname",
+					"SELECT pg_proc.oid, proname, usename, obj_description (pg_proc.oid), typname, pronargs, oidvectortypes (proargtypes), prosrc "
+					"FROM pg_proc, pg_user, pg_type "
+					"WHERE pg_type.oid=prorettype AND usesysid=proowner AND "
+					"pg_type.oid in (SELECT ty.oid FROM pg_type ty WHERE ty.typrelid = 0 AND ty.typname !~ '^_' AND  ty.typname not in ('SET', 'cid', 'int2vector', 'oidvector', 'regproc', 'smgr', 'tid', 'unknown', 'xid', 'oid')) "
+					"AND proretset = 'f' AND ((pronargs != 0 AND oidvectortypes (proargtypes)!= '') OR pronargs=0) "
+					"ORDER BY proname, pronargs",
 					GDA_COMMAND_OPTION_STOP_ON_ERRORS);
 
 	if (!reclist)
 		return NULL;
 
+	/* Remove some of the rows we really don't want */
 	recset = GDA_DATA_MODEL (reclist->data);
 	g_list_free (reclist);
-
+	removed_rows = NULL;
+	nbrows = gda_data_model_get_n_rows (recset);
+	for (i=0; i< nbrows; i++) {
+		val1 = gda_data_model_get_value_at (recset, 6, i);
+		str1 = gda_value_stringify (val1);
+		
+		if (str1) {
+			gboolean removed = FALSE;
+			
+			val2 = gda_data_model_get_value_at (recset, 5, i);
+			str2 = gda_value_stringify (val2);
+			
+			if (str2) {
+				gint nb = get_nb_args (str1);
+				if (nb != atoi (str2)) {
+					removed_rows = g_slist_append (removed_rows, gda_data_model_get_row (recset, i));
+					removed = TRUE;
+				}
+				g_free (str2);
+			}
+			
+			if (!removed &&
+			    (strstr (str1, "SET") || strstr (str1, "cid") || strstr (str1, "int2vector") || strstr (str1, "oid") ||
+			     strstr (str1, "regproc") || strstr (str1, "smgr") || strstr (str1, "tid") || strstr (str1, "unknown") || strstr (str1, "xid"))) {
+				removed_rows = g_slist_append (removed_rows, gda_data_model_get_row (recset, i));
+				removed = TRUE;
+			}
+			g_free (str1);
+		}
+	}
+	
+	if (removed_rows) {
+		list = removed_rows;
+		while (list) {
+			gda_data_model_remove_row (recset, (GdaRow *)(list->data));
+			list = g_slist_next (list);
+		}
+		g_slist_free (removed_rows);
+	}
+		
 	return recset;
 }
 
@@ -704,8 +769,9 @@ get_postgres_tables (GdaConnection *cnc, GdaParameterList *params)
 
 	reclist = process_sql_commands (
 		NULL, cnc,
-		"SELECT relname FROM pg_class WHERE relkind = 'r' AND "
-		"relname !~ '^pg_' ORDER BY relname",
+		"SELECT relname, usename, obj_description(pg_class.oid), NULL "
+		"FROM pg_class, pg_user "
+		"WHERE usesysid=relowner AND relkind = 'r' AND relname !~ '^pg_' ORDER BY relname",
 		GDA_COMMAND_OPTION_STOP_ON_ERRORS);
 
 	if (!reclist)
@@ -713,12 +779,16 @@ get_postgres_tables (GdaConnection *cnc, GdaParameterList *params)
 
 	recset = GDA_DATA_MODEL (reclist->data);
 	g_list_free (reclist);
-	// Set it here instead of the SQL query to allow i18n
-	gda_data_model_set_column_title (recset, 0, _("Tables"));
+	/* Set it here instead of the SQL query to allow i18n */
+	gda_data_model_set_column_title (recset, 0, _("Table"));
+	gda_data_model_set_column_title (recset, 1, _("Owner"));
+	gda_data_model_set_column_title (recset, 2, _("Description"));
+	gda_data_model_set_column_title (recset, 3, _("Definition"));
 
 	return recset;
 }
 
+/* FIXME: to be removed */
 static void
 add_string_row (gpointer data, gpointer user_data)
 {
@@ -752,14 +822,29 @@ get_postgres_types (GdaConnection *cnc, GdaParameterList *params)
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
 	/* create the recordset */
-	recset = GDA_DATA_MODEL_ARRAY (gda_data_model_array_new (1));
+	recset = GDA_DATA_MODEL_ARRAY (gda_data_model_array_new (4));
 	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 0, _("Types"));
+	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 1, _("Owner"));
+	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 2, _("Comments"));
+	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 3, _("GDA type"));
 
 	/* fill the recordset */
 	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE);
 
-	for (i = 0; i < priv_data->ntypes; i++)
-		add_string_row (&priv_data->type_data[i], recset);
+	for (i = 0; i < priv_data->ntypes; i++) {
+		GList *value_list = NULL;
+
+		value_list = g_list_append (value_list, gda_value_new_string (priv_data->type_data[i].name));
+		value_list = g_list_append (value_list, gda_value_new_string (priv_data->type_data[i].owner));
+		value_list = g_list_append (value_list, gda_value_new_string (priv_data->type_data[i].comments));
+		value_list = g_list_append (value_list, gda_value_new_type (priv_data->type_data[i].type));
+
+		gda_data_model_append_row (GDA_DATA_MODEL (recset), value_list);
+
+		g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
+		g_list_free (value_list);
+	}
+		/*FIXME: to be removed add_string_row (&priv_data->type_data[i], recset);*/
 
 	return GDA_DATA_MODEL (recset);
 }
@@ -774,8 +859,9 @@ get_postgres_views (GdaConnection *cnc, GdaParameterList *params)
 
 	reclist = process_sql_commands (
 		NULL, cnc, 
-		"SELECT relname FROM pg_class WHERE relkind = 'v' AND "
-		"relname !~ '^pg_' ORDER BY relname",
+		"SELECT relname, usename, obj_description(pg_class.oid), NULL "
+		"FROM pg_class, pg_user "
+		"WHERE usesysid=relowner AND relkind = 'v' AND relname !~ '^pg_' ORDER BY relname",
 		GDA_COMMAND_OPTION_STOP_ON_ERRORS);
 
 	if (!reclist)
@@ -783,8 +869,11 @@ get_postgres_views (GdaConnection *cnc, GdaParameterList *params)
 
 	recset = GDA_DATA_MODEL (reclist->data);
 	g_list_free (reclist);
-	// Set it here instead of the SQL query to allow i18n
-	gda_data_model_set_column_title (recset, 0, _("Views"));
+	/* Set it here instead of the SQL query to allow i18n */
+	gda_data_model_set_column_title (recset, 0, _("View"));
+	gda_data_model_set_column_title (recset, 1, _("Owner"));
+	gda_data_model_set_column_title (recset, 2, _("Description"));
+	gda_data_model_set_column_title (recset, 3, _("Definition"));
 
 	return recset;
 }
@@ -824,9 +913,12 @@ get_postgres_aggregates (GdaConnection *cnc, GdaParameterList *params)
 
 	reclist = process_sql_commands (
 		NULL, cnc, 
-		"SELECT a.aggname || '(' || t.typname || ')' AS \"Name\" "
-		" FROM pg_aggregate a, pg_type t  WHERE a.aggbasetype = t.oid "
-		" ORDER BY a.aggname",
+		"(SELECT a.oid, a.aggname, usename, obj_description (a.oid), t1.typname, t2.typname "
+		"FROM pg_aggregate a, pg_type t1, pg_type t2, pg_user u "
+		"WHERE a.aggbasetype = t1.oid AND a.aggfinaltype = t2.oid AND u.usesysid=aggowner) UNION "
+		"(SELECT a.oid, a.aggname, usename, obj_description (a.oid), '-', t2.typname "
+		"FROM pg_aggregate a, pg_type t2, pg_user u "
+		"WHERE a.aggfinaltype = t2.oid AND u.usesysid=aggowner AND a.aggbasetype = 0) ORDER BY 2",
 		GDA_COMMAND_OPTION_STOP_ON_ERRORS);
 
 	if (!reclist)
@@ -834,8 +926,13 @@ get_postgres_aggregates (GdaConnection *cnc, GdaParameterList *params)
 
 	recset = GDA_DATA_MODEL (reclist->data);
 	g_list_free (reclist);
-	// Set it here instead of the SQL query to allow i18n
-	gda_data_model_set_column_title (recset, 0, _("Aggregates"));
+	/* Set it here instead of the SQL query to allow i18n */
+	gda_data_model_set_column_title (recset, 0, _("Id"));
+	gda_data_model_set_column_title (recset, 1, _("Aggregate"));
+	gda_data_model_set_column_title (recset, 2, _("Owner"));
+	gda_data_model_set_column_title (recset, 3, _("Comments"));
+	gda_data_model_set_column_title (recset, 4, _("InType"));
+	gda_data_model_set_column_title (recset, 5, _("OutType"));
 
 	return recset;
 }
@@ -1254,11 +1351,9 @@ get_postgres_sequences (GdaConnection *cnc, GdaParameterList *params)
 
 
 	reclist = process_sql_commands (NULL, cnc, 
-					"SELECT relname "
-					"FROM pg_class "
-					"WHERE relkind IN ('S','') "
-					"      AND relname !~ '^pg_' "
-					"ORDER BY 1",
+					"SELECT relname, usename, obj_description(pg_class.oid), NULL "
+					"FROM pg_class, pg_user "
+					"WHERE usesysid=relowner AND relkind = 'S' AND relname !~ '^pg_' ORDER BY relname",
 					GDA_COMMAND_OPTION_STOP_ON_ERRORS);
 
 	if (!reclist)
@@ -1266,8 +1361,11 @@ get_postgres_sequences (GdaConnection *cnc, GdaParameterList *params)
 
 	recset = GDA_DATA_MODEL (reclist->data);
 	g_list_free (reclist);
-	// Set it here instead of the SQL query to allow i18n
-	gda_data_model_set_column_title (recset, 0, _("Sequences"));
+	/* Set it here instead of the SQL query to allow i18n */
+	gda_data_model_set_column_title (recset, 0, _("Sequence"));
+	gda_data_model_set_column_title (recset, 1, _("Owner"));
+	gda_data_model_set_column_title (recset, 2, _("Description"));
+        gda_data_model_set_column_title (recset, 3, _("Definition"));
 
 	return recset;
 }

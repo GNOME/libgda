@@ -53,6 +53,8 @@ typedef struct {
 	gchar *name;
 	Oid oid;
 	GdaValueType type;
+	gchar *comments;
+	gchar *owner;
 } GdaPostgresTypeOid;
 
 typedef struct {
