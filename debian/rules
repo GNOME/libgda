@@ -10,6 +10,11 @@ export DH_COMPAT=1
 
 CTRL=debian/control
 NONFREE=debian/control-nonfree
+ifeq ($(shell ls -1 CVS), CVS)
+	configure="./configure"
+else
+	configure="./autogen.sh"
+endif
 
 add_flags=$(GDA_WITH_PRIMEBASE) $(GDA_WITH_SYBASE) $(GDA_WITH_TDS)
 
@@ -28,7 +33,7 @@ configure: control-stamp configure-stamp
 configure-stamp:
 	dh_testdir
 	# Add here commands to configure the package.
-	./configure --prefix=/usr \
+	$(configure) --prefix=/usr \
 		    --with-mysql=yes \
 		    --with-postgres=yes \
 		    --with-odbc=yes \
