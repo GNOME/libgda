@@ -49,6 +49,13 @@ open_connection (GdaClient *client,
 	res = gda_connection_commit_transaction (cnc, NULL);
 	g_print ("%s\n", res ? "OK" : "Error");
 
+	g_print ("\tStarting transaction...");
+	res = gda_connection_begin_transaction (cnc, NULL);
+	g_print ("%s\n", res ? "OK" : "Error");
+
+	g_print ("\tRolling back transaction...");
+	res = gda_connection_rollback_transaction (cnc, NULL);
+	g_print ("%s\n", res ? "OK" : "Error");
 	/* close the connection */
 	gda_connection_close (cnc);
 }

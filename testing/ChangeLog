@@ -1,3 +1,7 @@
+2001-11-20  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
+	* client.c: added rollback test.
+
 2001-11-07  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* models.c (test_array_model): GdaDataModelArray test
