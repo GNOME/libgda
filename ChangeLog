@@ -1,3 +1,7 @@
+2003-03-16  Roozbeh Pournader  <roozbeh@sharif.edu>
+
+	* configure.in: Added "fa" to ALL_LINGUAS.
+
 2003-03-12  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* providers/xbase/libmain.c (plugin_get_*): made name shorter
