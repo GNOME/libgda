@@ -103,7 +103,6 @@ gda_select_is_editable (GdaDataModel *model)
 static const GdaRow *
 gda_select_append_row (GdaDataModel *model, const GList *values)
 {
-	const GdaRow *row;
 	GdaSelect *sel = (GdaSelect *) model;
 
 	g_return_val_if_fail (GDA_IS_SELECT (sel), NULL);
@@ -131,8 +130,6 @@ gda_select_class_init (GdaSelectClass *klass)
 static void
 gda_select_init (GdaSelect *sel, GdaSelectClass *klass)
 {
-	gint i;
-
 	g_return_if_fail (GDA_IS_SELECT (sel));
 
 	/* allocate internal structure */
@@ -156,7 +153,6 @@ free_source_model (gpointer key, gpointer value, GdaSelect *sel)
 static void
 gda_select_finalize (GObject *object)
 {
-	GList *l;
 	GdaSelect *sel = (GdaSelect *) object;
 
 	g_return_if_fail (GDA_IS_SELECT (sel));
@@ -281,6 +277,85 @@ gda_select_set_sql (GdaSelect *sel, const gchar *sql)
 	sel->priv->changed = TRUE;
 }
 
+static void
+populate_from_single_table (GdaSelect *sel, const gchar *table_name, GList *sql_fields)
+{
+	gint rows, cols, r, c;
+	GdaDataModel *table;
+	GList *l;
+	gboolean all_fields = FALSE;
+
+	table = g_hash_table_lookup (sel->priv->source_models, table_name);
+	if (!table)
+		return;
+
+	cols = gda_data_model_get_n_columns (table);
+	rows = gda_data_model_get_n_rows (table);
+
+	/* check for '*' case */
+	if (g_list_length (sql_fields) == 1) {
+		if (!strcmp ((const char *) sql_fields->data, "*")) {
+			gda_data_model_array_set_n_columns (GDA_DATA_MODEL_ARRAY (sel), cols);
+			all_fields = TRUE;
+
+			for (c = 0; c < cols; c++) {
+				gda_data_model_set_column_title (
+					GDA_DATA_MODEL (sel), c,
+					gda_data_model_get_column_title (table, c));
+			}
+		} else {
+			gda_data_model_array_set_n_columns (GDA_DATA_MODEL_ARRAY (sel), 1);
+			gda_data_model_set_column_title (GDA_DATA_MODEL (sel), 0,
+							 (const gchar *) sql_fields->data);
+		}
+	} else {
+		for (c = 0; c < g_list_length (sql_fields); c++) {
+			l = g_list_nth (sql_fields, c);
+			gda_data_model_set_column_title (GDA_DATA_MODEL (sel), c,
+							 (const gchar *) l->data);
+		}
+	}
+
+	/* populate with the selected fields */
+	for (r = 0; r < rows; r++) {
+		GList *value_list = NULL;
+
+		for (c = 0; c < cols; c++) {
+			GdaFieldAttributes *fa;
+
+			fa = gda_data_model_describe_column (table, c);
+
+			if (all_fields) {
+				value_list = g_list_append (
+					value_list,
+					gda_value_copy (gda_data_model_get_value_at (table, c, r)));
+				if (r == 0) {
+					sel->priv->field_descriptions = g_list_append (
+						sel->priv->field_descriptions, fa);
+				}
+			} else {
+				for (l = sql_fields; l != NULL; l = l->next) {
+					if (!strcmp ((const char *) l->data, fa->name)) {
+						value_list = g_list_append (
+							value_list,
+							gda_value_copy (
+								gda_data_model_get_value_at (table, c, r)));
+						if (r == 0) {
+							sel->priv->field_descriptions = g_list_append (
+								sel->priv->field_descriptions, fa);
+						}
+					}
+				}
+			}
+		}
+
+		GDA_DATA_MODEL_CLASS (parent_class)->append_row (sel, value_list);
+
+		g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
+		g_list_free (value_list);
+	}
+}
+
 /**
  * gda_select_run
  * @sel: a #GdaSelect object.
@@ -300,14 +375,17 @@ gboolean
 gda_select_run (GdaSelect *sel)
 {
 	sql_statement *sqlst;
+	GList *tables;
 
 	g_return_val_if_fail (GDA_IS_SELECT (sel), FALSE);
-	g_return_val_if_fail (GDA_IS_DATA_MODEL (sel->priv->source_models), FALSE);
+	g_return_val_if_fail (sel->priv->source_models != NULL, FALSE);
 
 	if (!sel->priv->changed)
 		return sel->priv->run_result;
 
 	gda_data_model_array_clear (GDA_DATA_MODEL_ARRAY (sel));
+	g_list_foreach (sel->priv->field_descriptions, (GFunc) gda_field_attributes_free, NULL);
+	g_list_free (sel->priv->field_descriptions);
 
 	/* parse the SQL command */
 	sqlst = sql_parse (sel->priv->sql);
@@ -321,7 +399,24 @@ gda_select_run (GdaSelect *sel)
 		return FALSE;
 	}
 
-	/* FIXME */
+	/* FIXME: we only support a SELECT on a single table */
+	tables = sql_statement_get_tables (sqlst);
+	if (tables) {
+		if (g_list_length (tables) == 1) {
+			GList *fields;
+
+			fields = sql_statement_get_fields (sqlst);
+			populate_from_single_table (sel, (const gchar *) tables->data, fields);
+
+			g_list_foreach (fields, (GFunc) free, NULL);
+			g_list_free (fields);
+		} else
+			sel->priv->run_result = FALSE;
+
+		g_list_foreach (tables, (GFunc) free, NULL);
+		g_list_free (tables);
+	} else
+		sel->priv->run_result = FALSE;
 
 	sql_destroy (sqlst);
 	sel->priv->changed = FALSE;
