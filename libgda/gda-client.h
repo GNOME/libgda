@@ -90,7 +90,7 @@ void           gda_client_notify_event (GdaClient *client, GdaConnection *cnc,
 					GdaClientEvent event, GdaParameterList *params);
 void           gda_client_notify_error_event (GdaClient *client, GdaConnection *cnc, GdaError *error);
 void           gda_client_notify_connection_opened_event (GdaClient *client, GdaConnection *cnc);
-void           gda_client_notify_connection_closed_event (GdaClient*client, GdaConnection *cnc);
+void           gda_client_notify_connection_closed_event (GdaClient *client, GdaConnection *cnc);
 void           gda_client_notify_transaction_started_event (GdaClient *client,
 							    GdaConnection *cnc,
 							    GdaTransaction *xaction);
