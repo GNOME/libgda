@@ -1,4 +1,16 @@
+2004-08-17  Caolan McNamara <caolanm@redhat.com>
+
+	Fixes #150232
+
+	* libgda/gda-util.c (gda_type_to_string):
+	* providers/mysql/gda-mysql-provider.c
+	(gda_mysql_provider_execute_command, gda_mysql_provider_supports,
+	gda_mysql_provider_get_schema):
+	* providers/xml/gda-xml-provider.c (gda_xml_provider_get_schema):
+	more fixes for compilation with GCC 3.4.
+
 2004-08-16  Vivien Malerba <malerba@gnome-db.org>
+
 	* libsql/parser.y: bug fixed to allow the alias specification for any
 	  target in queries
 	* libsql/sql_tree.c: bug fixed with uninitialized allocated memory

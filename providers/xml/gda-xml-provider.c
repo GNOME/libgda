@@ -707,7 +707,7 @@ gda_xml_provider_get_schema (GdaServerProvider *provider,
 		return get_tables (cnc, xmldb);
 	case GDA_CONNECTION_SCHEMA_TYPES :
 		return get_types (cnc);
-	default : ;
+	default : break;
 	}
 
 	return NULL;
