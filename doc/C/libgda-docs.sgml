@@ -482,7 +482,7 @@
             </areaspec>
 	    <programlisting>
 	      [sales]
-	      Provider=OAFIID:GNOME_GDA_Provider_MySQL_ConnectionFactory
+	      Provider=OAFIID:GNOME_Database_Provider_MySQL_ComponentFactory
               DSN=DATABASE=test;HOST=localhost;PORT=1111
 	      Description=MySQL Test Database in native mode
 	      Configurator=None
