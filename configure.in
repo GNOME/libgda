@@ -698,6 +698,7 @@ providers/gda-oracle-server/gda-oracle.spec
 providers/gda-interbase-server/Makefile
 providers/gda-mdb-server/Makefile
 providers/gda-mail-server/Makefile
+providers/gda-bdb-server/Makefile
 tools/Makefile
 tools/gda-config
 tools/gda-buildserver
