@@ -771,6 +771,7 @@ gda_connection_begin_transaction (GdaConnection *cnc, GdaTransaction *xaction)
 	gboolean retval;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (GDA_IS_TRANSACTION (xaction), FALSE);
 
 	retval = gda_server_provider_begin_transaction (cnc->priv->provider_obj, cnc, xaction);
 	if (retval)
@@ -796,6 +797,7 @@ gda_connection_commit_transaction (GdaConnection *cnc, GdaTransaction *xaction)
 	gboolean retval;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (GDA_IS_TRANSACTION (xaction), FALSE);
 
 	retval = gda_server_provider_commit_transaction (cnc->priv->provider_obj, cnc, xaction);
 	if (retval)
@@ -822,6 +824,8 @@ gda_connection_rollback_transaction (GdaConnection *cnc, GdaTransaction *xaction
 	gboolean retval;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (GDA_IS_TRANSACTION (xaction), FALSE);
+
 	retval = gda_server_provider_rollback_transaction (cnc->priv->provider_obj, cnc, xaction);
 	if (retval)
 		gda_client_notify_transaction_cancelled_event (cnc->priv->client, cnc, xaction);

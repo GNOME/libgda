@@ -1,3 +1,8 @@
+2003-03-11  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
+	* libgda/gda-connection.c: check that xaction argument is a
+	GdaTransaction in begin/commit/rollback.
+
 2003-03-10  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
 	* providers/postgres/utils.c: fixes to timestamp parsing.
