@@ -166,7 +166,7 @@ gda_bdb_provider_open_connection (GdaServerProvider *provider,
 		return FALSE;
 	}
 	ret = dbp->open (dbp, 
-#if DB_VERSION_MAJOR >= 4
+#if BDB_VERSION >= 40124 
 			 NULL,
 #endif
 			 bdb_file,
@@ -183,10 +183,7 @@ gda_bdb_provider_open_connection (GdaServerProvider *provider,
 	priv_data->dbname = g_strdup_printf ("%s (%s)",
 		 	 		     bdb_file,
 			  	             bdb_db ? bdb_db : _("-"));
-	priv_data->dbver = g_strdup_printf ("%d.%d.%d",
-					    DB_VERSION_MAJOR,
-					    DB_VERSION_MINOR,
-					    DB_VERSION_PATCH);
+	priv_data->dbver = g_strdup (DB_VERSION_STRING);
 	priv_data->dbp = dbp;
 	g_object_set_data (G_OBJECT (cnc), OBJECT_DATA_BDB_HANDLE, priv_data);
 	g_free (bdb_file);

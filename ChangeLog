@@ -1,3 +1,13 @@
+2003-12-17  Laurent Sansonetti <lrz@gnome.org>
+
+	* providers/bdb/gda-bdb.h:
+	Introduced BDB_VERSION macro.
+
+	* providers/bdb/gda-bdb-provider.c:
+	* providers/bdb/gda-bdb-recordset.c:
+	- Fixed a compilation bug when using BDB < 4.1.24 ;
+	- get_server_version handler uses DB_VERSION_STRING.
+
 2003-12-14  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* configure.in: disable MySQL provider until we resolve the licensing

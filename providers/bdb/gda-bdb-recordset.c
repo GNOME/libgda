@@ -228,7 +228,7 @@ gda_bdb_recordset_new (GdaConnection *cnc, DB *dbp)
 	/* get the number of records in the database */
 	ret = dbp->stat (dbp,
 			 &statp,
-#if DB_VERSION_MAJOR < 4
+#if BDB_VERSION < 40000
 			 NULL,
 #endif
 			 0);
