@@ -1,3 +1,11 @@
+2005-03-18  Bas Driessen <bas.driessen@xobas.com>
+
+	* doc/C/Makefile.am: Fix noise autogen.sh by
+	changing the deprecated INCLUDES to AM_CPPFLAGS.
+
+	* gtk-doc.make: Update with latest from 
+	/usr/share/gtk-doc/data/gtk-doc.make.
+
 2005-03-05  Bas Driessen <bas.driessen@xobas.com>
 
 	* libgda/gda-data-model-base.c:
