@@ -1,3 +1,10 @@
+2001-07-27  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-report.h: main header file for the report library
+
+	* gda-report-client.[ch]: GdaReportClient class, to be used by
+	applications to connect to report engine
+
 2001-07-19  Carlos Perelló Marín <carlos@gnome-db.org>
 
 	* Makefile.am: Reverted the changes about IDL's name.

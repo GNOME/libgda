@@ -18,11 +18,14 @@ CLEANFILES += $(BUILT_SOURCES) gda-report.dtd
 $(BUILT_SOURCES): $(top_builddir)/report/idl/GDA_Report.idl
 	orbit-idl $(top_builddir)/report/idl/GDA_Report.idl
 
-gda_report_headers = 
+gda_report_headers = \
+	gda-report-client.h \
+	gda-report.h
 	
 libgda_report_la_SOURCES = \
 	$(BUILT_SOURCES) \
-	$(gda_report_headers)
+	$(gda_report_headers) \
+	gda-report-client.c
 
 libgda_report_la_LIBADD = \
 	$(GDA_CLIENT_LIBS)
