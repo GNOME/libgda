@@ -1,4 +1,11 @@
-2000-10-21	Rodrigo Moya <rodrigo@linuxave.net>
+2001-03-13  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-mysql-connection.c (gda_mysql_connection_supports): respond to more
+	values in the GDA_Connection_Feature parameter
+	* gda-mysql-command.c: added support for command_type in
+	gda_mysql_command_execute: fixes bug #51720
+
+2000-10-21  Rodrigo Moya <rodrigo@linuxave.net>
 
 	* added missing <time.h>, which was left over after
 	the GNOME headers clean up
