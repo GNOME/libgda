@@ -1,3 +1,7 @@
+2001-12-16  Duarte Loreto <happyguy_pt@hotmail.com>
+
+        * configure.in: Added Portuguese locale to ALL_LINGUAS.
+
 2001-12-11  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* configure.in: s/AM_GCONF_SOURCE2/AM_GCONF_SOURCE_2

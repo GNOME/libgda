@@ -1,0 +1,150 @@
+# libgda's Portuguese translation
+# Copyright (C) 1999-2001 Free Software Foundation, Inc.
+# Duarte Loreto <happyguy_pt@hotmail.com>, 2001
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: 2.0\n"
+"POT-Creation-Date: 2001-12-16 03:10+0000\n"
+"PO-Revision-Date: 2001-12-16 03:10+0000\n"
+"Last-Translator: Duarte Loreto <happyguy_pt@hotmail.com>\n"
+"Language-Team: Portuguese <none@none.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-1\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: libgda/gda-client.c:200 libgda/gda-client.c:295
+#, c-format
+msgid "Data source %s not found in configuration"
+msgstr "Base de dados %s não encontrada na configuração"
+
+#: libgda/gda-client.c:221
+#, c-format
+msgid "Could not activate object %s"
+msgstr "Incapaz de activar objecto %s"
+
+#: libgda/gda-client.c:239
+msgid "Could not create connection component"
+msgstr "Incapaz de criar componente de ligação"
+
+#: libgda/gda-config.c:515
+msgid "Could not query CORBA components"
+msgstr "Incapaz de questionar componentes CORBA"
+
+#: libgda/gda-config.c:622
+msgid "Could not query CORBA providers"
+msgstr "Incapaz de questionar fornecedores CORBA"
+
+#: libgda/gda-config.c:835
+msgid "Name"
+msgstr "Nome"
+
+#: libgda/gda-config.c:836
+msgid "Provider"
+msgstr "Fornecedor"
+
+#: libgda/gda-config.c:837
+msgid "Connection string"
+msgstr "Expressão de ligação"
+
+#: libgda/gda-config.c:838
+msgid "Description"
+msgstr "Descrição"
+
+#: libgda/gda-config.c:839
+msgid "Username"
+msgstr "Utilizador"
+
+#: libgda/gda-error.c:127
+#, c-format
+msgid "%s: An Error occured in the CORBA system."
+msgstr "%s: Ocorreu um erro no sistema CORBA."
+
+#: libgda/gda-error.c:156
+msgid "Unknown CORBA exception for connection"
+msgstr "Excepção para ligação CORBA desconhecida"
+
+#: libgda/gda-init.c:44
+msgid "Attempt to initialize an already initialized client"
+msgstr "Tentativa de inicializar um cliente já inicializado"
+
+#: libgda/gda-init.c:56
+msgid "Could not initialize Bonobo"
+msgstr "Incapaz de inicializar Bonobo"
+
+#: libgda/gda-server.c:105
+#, c-format
+msgid "Don't know how to create components with IID %s"
+msgstr "Criação de componentes com IID %s desconhecida"
+
+#: libgda/gda-server.c:112
+#, c-format
+msgid "Could not create component of type %s"
+msgstr "Incapaz de criar componente do tipo %s"
+
+#: libgda/gda-server-connection.c:92
+msgid "Could not duplicate client object. Client won't get notifications"
+msgstr "Incapaz de duplicar objecto cliente. Cliente não receberá notificações"
+
+#: libgda/gda-server-connection.c:412
+#, c-format
+msgid "Could not notify client about action %d"
+msgstr "Incapaz de notificar cliente sobre a acção %d"
+
+#: libgda/gda-value.c:501
+msgid "TRUE"
+msgstr "VERDADEIRO"
+
+#: libgda/gda-value.c:503
+msgid "FALSE"
+msgstr "FALSO"
+
+#: libgda/gda-xml-database.c:166
+msgid "bad formed document"
+msgstr "documento mal formado"
+
+#: libgda/gda-xml-database.c:268
+#, c-format
+msgid "table %s already exists"
+msgstr "tabela %s já existe"
+
+#: libgda/gda-xml-database.c:450
+#, c-format
+msgid "%p is not a valid table"
+msgstr "%p não é uma tabela válida"
+
+#: providers/default/gda-default-provider.c:140
+msgid ""
+"A full path must be specified on the connection string to open a database."
+msgstr ""
+"Tem de ser indicado um caminho completo na expressão de ligação para abrir uma base de dados."
+
+#: providers/default/GNOME_Database_Provider_Default.server.in.h:1
+msgid "Default component factory"
+msgstr "Fábrica de componentes de defeito"
+
+#: providers/default/GNOME_Database_Provider_Default.server.in.h:2
+msgid "GDA Default Datasource Access"
+msgstr "Acesso de Fonte de Dados de Defeito GDA"
+
+#: providers/default/main.c:47
+msgid "Could not initiate Default component factory"
+msgstr "Incapaz de inicializar fábrica de componentes de Defeito"
+
+#: providers/mysql/gda-mysql-provider.c:150
+msgid ""
+"You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
+msgstr ""
+"Não pode indicar um UNIX_SOCKET se também indicar ou um SERVIDOR ou PORTO."
+
+#: providers/mysql/GNOME_Database_Provider_MySQL.server.in.h:1
+msgid "GDA Datasource Access for MySQL"
+msgstr "Acesso a Fonte de Dados GDA para MySQL"
+
+#: providers/mysql/GNOME_Database_Provider_MySQL.server.in.h:2
+msgid "MySQL component factory"
+msgstr "Fábrica de componente MySQL"
+
+#: providers/mysql/main.c:48
+msgid "Could not initiate MySQL component factory"
+msgstr "Incapaz de inicializar fábrica de componente MySQL"
