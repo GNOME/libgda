@@ -1,3 +1,11 @@
+2005-02-01  Bas Driessen <bas.driessen@xobas.com>
+
+	* libgda/: introduced GdaDataModelColumnIndexAttributes to hold
+	index properties on column level.
+
+	* doc/C: added GdaDataModelColumnIndexAttributes to 
+	documentation.
+
 2005-01-31  Bas Driessen <bas.driessen@xobas.com>
 
 	* providers/mysql/gda-mysql-provider.c: added functions

@@ -42,7 +42,8 @@
 <!ENTITY libgda-data-model SYSTEM "xml/gda-data-model.xml">
 <!ENTITY libgda-error SYSTEM "xml/gda-error.xml">
 <!ENTITY libgda-export SYSTEM "xml/gda-export.xml">
-<!ENTITY libgda-field SYSTEM "xml/gda-field.xml">
+<!ENTITY libgda-column SYSTEM "xml/gda-column.xml">
+<!ENTITY libgda-column-index SYSTEM "xml/gda-column-index.xml">
 <!ENTITY libgda-init SYSTEM "xml/libgda.xml">
 <!ENTITY libgda-log SYSTEM "xml/gda-log.xml">
 <!ENTITY libgda-parameter SYSTEM "xml/gda-parameter.xml">
@@ -149,10 +150,17 @@
 	<contrib>Some examples
         </contrib>
       </author>
+      <author>
+        <firstname>Bas</firstname>
+        <surname>Driessen</surname>
+        <affiliation>
+          <address><email>bas.driessen@xobas.com</email></address>
+        </affiliation>
+      </author>
     </authorgroup>
     <date>1999 February</date>
     <copyright>
-      <year>1999-2003</year>
+      <year>1999-2005</year>
       <holder>The GNOME Foundation</holder>
     </copyright>
     <abstract>
@@ -2104,7 +2112,8 @@
     &libgda-data-model-hash;
     &libgda-data-model-list;
     &libgda-data-model-base;
-    &libgda-field;
+    &libgda-column;
+    &libgda-column-index;
     &libgda-row;
     &libgda-value;
     &libgda-error;
@@ -2370,7 +2379,7 @@
 	  <para>describe_column</para>
 	  <para>
 	    Returns information about a given column, in the form of
-	    a <link linkend="GdaFieldAttributes">GdaFieldAttributes</link>.
+	    a <link linkend="GdaDataModelColumnAttributes">GdaDataModelColumnAttributes</link>.
 	  </para>
 	</listitem>
 	<listitem>

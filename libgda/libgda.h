@@ -1,5 +1,5 @@
 /* GDA library
- * Copyright (C) 1998-2002 The GNOME Foundation.
+ * Copyright (C) 1998-2005 The GNOME Foundation.
  *
  * AUTHORS:
  *      Michael Lausch <michael@lausch.at>
@@ -35,6 +35,7 @@
 #include <libgda/gda-data-model-list.h>
 #include <libgda/gda-error.h>
 #include <libgda/gda-data-model-column-attributes.h>
+#include <libgda/gda-data-model-column-index-attributes.h>
 #include <libgda/gda-log.h>
 #include <libgda/gda-parameter.h>
 #include <libgda/gda-quark-list.h>

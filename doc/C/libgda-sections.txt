@@ -1502,10 +1502,10 @@ GDA_CONFIG_KEY_MAX_LAST_CONNECTIONS
 </SECTION>
 
 <SECTION>
-<FILE>gda-field</FILE>
-<TITLE>GdaField</TITLE>
+<FILE>gda-column</FILE>
+<TITLE>GdaColumn</TITLE>
 GdaDataModelColumnAttributes
-GdaField
+GdaColumn
 GDA_TYPE_DATA_MODEL_COLUMN_ATTRIVUTES
 gda_data_model_column_attributes_get_type
 gda_data_model_column_attributes_new
@@ -1538,6 +1538,27 @@ gda_data_model_column_attributes_get_position
 gda_data_model_column_attributes_set_position
 gda_data_model_column_attributes_get_default_value
 gda_data_model_column_attributes_set_default_value
+</SECTION>
+
+<SECTION>
+<FILE>gda-column-index</FILE>
+<TITLE>GdaColumnIndex</TITLE>
+GdaDataModelColumnIndexAttributes
+GdaColumnIndex
+GDA_TYPE_DATA_MODEL_COLUMN_INDEX_ATTRIBUTES
+gda_data_model_column_index_attributes_get_type
+gda_data_model_column_index_attributes_new
+gda_data_model_column_index_attributes_copy
+gda_data_model_column_index_attributes_free
+gda_data_model_column_index_attributes_equal
+gda_data_model_column_index_attributes_get_column_name
+gda_data_model_column_index_attributes_set_column_name
+gda_data_model_column_index_attributes_get_defined_size
+gda_data_model_column_index_attributes_set_defined_size
+gda_data_model_column_index_attributes_get_sorting
+gda_data_model_column_index_attributes_set_sorting
+gda_data_model_column_index_attributes_get_references
+gda_data_model_column_index_attributes_set_references
 </SECTION>
 
 <SECTION>
