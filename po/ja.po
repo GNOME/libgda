@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda CVS-20001008\n"
-"POT-Creation-Date: 2000-10-08 04:47+0900\n"
-"PO-Revision-Date: 2000-10-08 05:59+0900\n"
+"POT-Creation-Date: 2000-10-10 00:35+0900\n"
+"PO-Revision-Date: 2000-10-10 00:43+0900\n"
 "Last-Translator: Akira TAGOH <tagoh@gnome.gr.jp>\n"
 "Language-Team: Japanese <translation@gnome.gr.jp>\n"
 "MIME-Version: 1.0\n"
@@ -70,6 +70,10 @@ msgstr "False"
 #, c-format
 msgid "CORBA System exception: %s"
 msgstr "CORBA システム例外: %s"
+
+#: lib/gda-common/gda-init.c:32
+msgid "Attempt to initialize an already initialized client"
+msgstr "初期化を試みましたがすでにクライアントは初期化されています"
 
 #: lib/gda-common/gda-log.c:29
 msgid "Saving log...x"
@@ -170,6 +174,7 @@ msgid "Starting provider %s with no implementation functions"
 msgstr "未実装の機能をプロバイダ %s で開始しています"
 
 #: lib/gda-server/gda-server-impl.c:141
+#: report/server/gda-report-server-main.c:120
 msgid ""
 "OAF doesn't know about our IID; indicates broken installation. Exiting..."
 msgstr ""
@@ -180,12 +185,11 @@ msgstr ""
 msgid ""
 "Another instance of this provider is already registered with OAF. Exiting..."
 msgstr ""
-"このプロバイダの別のインスタンスはすでに OAF で登録されています. "
-"終了します..."
+"このプロバイダの別のインスタンスはすでに OAF が登録しています. 終了します..."
 
 #: lib/gda-server/gda-server-impl.c:147
 msgid "Unknown error registering this provider with OAF. Exiting"
-msgstr "OAF へこのプロバイダを登録中に未知のエラーが発生しました. 終了します"
+msgstr "OAF がこのプロバイダを登録中に未知のエラーが発生しました. 終了します"
 
 #: lib/gda-server/gda-server-impl.c:151
 #, c-format
@@ -342,7 +346,7 @@ msgstr "MySQL プロバイダの実装を登録することが出来ませんでした"
 #: providers/gda-mysql-server/gda-mysql-connection.c:162
 #, c-format
 msgid ""
-"Opening connection with user=%s, password=%s, host=%shost=%s, port=%s, "
+"Opening connection with user=%s, password=%s, host=%s, port=%s, "
 "unix_socket=%s"
 msgstr ""
 "ユーザ=%s, パスワード=%s, ホスト=%s, ポート=%s, unix ソケット=%s "
@@ -836,6 +840,47 @@ msgstr "フィールドを割り当てることが出来ませんでした"
 #: providers/gda-sybase-server/main-sybase.c:73
 msgid "Could not register gda-sybase provider implementation"
 msgstr "gda-sybase プロバイダの実装を登録することが出来ませんでした"
+
+#: report/gda-report-engine.c:71
+#, c-format
+msgid "CORBA exception unloading report engine: %s"
+msgstr "CORBA 例外はレポートエンジンを取り外しています: %s"
+
+#: report/server/gda-report-server-main.c:43
+#: report/server/gda-report-server-main.c:50
+#, c-format
+msgid "Received signal %d, shutting down."
+msgstr "シグナル %d を受信しました, 終了します"
+
+#: report/server/gda-report-server-main.c:54
+#, c-format
+msgid "Received signal %d, shutting down cleanly"
+msgstr "シグナル %d を受信しました, きれいに終了します"
+
+#: report/server/gda-report-server-main.c:96
+msgid "Failed to initialize OAF: please mail bug report to OAF maintainers"
+msgstr "OAF の初期化に失敗: OAF メンテナへ不具合報告をメールしてください"
+
+#: report/server/gda-report-server-main.c:106
+msgid "Could not activate report engine"
+msgstr "レポートエンジンを始動させることが出来ませんでした"
+
+#: report/server/gda-report-server-main.c:123
+msgid ""
+"Another instance of the report engine is already registered with OAF. "
+"Exiting..."
+msgstr ""
+"レポートエンジンの別のインスタンスはすでに OAF が登録しています. "
+"終了します..."
+
+#: report/server/gda-report-server-main.c:126
+msgid "Unknown error registering report engine with OAF. Exiting"
+msgstr "OAF がレポートエンジンを登録中に未知のエラーが発生しました. 終了します"
+
+#: report/server/gda-report-server-main.c:130
+#, c-format
+msgid "Registered report engine with ID = %s"
+msgstr "ID = %s でレポートエンジンを登録しました"
 
 #: tools/gda-run.c:29
 msgid "database name"
