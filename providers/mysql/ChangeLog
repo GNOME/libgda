@@ -1,3 +1,7 @@
+2001-11-04  Carlos Perelló Marín <carlos@gnome-db.org>
+
+	* Makefile.am: Removed lib/ references.
+
 2001-11-02  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* moved to new location, for not complicating more the

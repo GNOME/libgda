@@ -3,8 +3,6 @@ bin_PROGRAMS = gda-mysql-srv
 INCLUDES = \
 	-I. \
 	$(LIBGDA_CFLAGS) \
-	-I$(top_builddir)/lib \
-	-I$(top_srcdir)/lib \
 	$(MYSQL_CFLAGS)
 
 gda_mysql_srv_SOURCES = \
