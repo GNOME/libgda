@@ -75,7 +75,7 @@ test_client (void)
 		}
 
 		g_print (" Data source = %s, User = %s\n", info->name, info->username);
-		open_connection (client, info->name, info->username, NULL);
+		open_connection (client, info->name, info->username, "");
 	}
 
 	/* free memory */

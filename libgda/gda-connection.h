@@ -66,16 +66,16 @@ const gchar   *gda_connection_get_string (GdaConnection *cnc);
 const gchar   *gda_connection_get_username (GdaConnection *cnc);
 const gchar   *gda_connection_get_password (GdaConnection *cnc);
 
-void          gda_connection_add_error (GdaConnection *cnc, GdaError *error);
-void          gda_connection_add_error_list (GdaConnection *cnc, GList *error_list);
+void           gda_connection_add_error (GdaConnection *cnc, GdaError *error);
+void           gda_connection_add_error_list (GdaConnection *cnc, GList *error_list);
 
-GList        *gda_connection_execute_command (GdaConnection *cnc,
-					      GdaCommand *cmd,
-					      GdaParameterList *params);
+GList         *gda_connection_execute_command (GdaConnection *cnc,
+					       GdaCommand *cmd,
+					       GdaParameterList *params);
 
-gboolean      gda_connection_begin_transaction (GdaConnection *cnc, const gchar *id);
-gboolean      gda_connection_commit_transaction (GdaConnection *cnc, const gchar *id);
-gboolean      gda_connection_rollback_transaction (GdaConnection *cnc, const gchar *id);
+gboolean       gda_connection_begin_transaction (GdaConnection *cnc, const gchar *id);
+gboolean       gda_connection_commit_transaction (GdaConnection *cnc, const gchar *id);
+gboolean       gda_connection_rollback_transaction (GdaConnection *cnc, const gchar *id);
 
 G_END_DECLS
 
