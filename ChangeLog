@@ -6,6 +6,17 @@
 	* libgda/gda-value.c: 
 	(gda_value_new_from_xml): avoid compiler warning.
 
+2002-09-14  Holger Thon <holger.thon@gnome-db.org>
+
+	* providers/freetds/gda-freetds-provider.c: coding style corrections,
+	implemented change_database
+	
+	* providers/freetds/gda-freetds-provider.h: added database to freetds
+	connection handle
+	
+	* providers/freetds/gda-tds-schemas.h:
+	corrected databases schema
+
 2002-09-12  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* providers/mysql/gda-mysql-provider.c (add_aggregate_row): add
