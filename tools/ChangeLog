@@ -1,3 +1,9 @@
+2001-11-02  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* templates/*: removed, not needed anymore
+
+	* Makefile.am: adapted to new locations
+
 2001-08-31  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-run.c: remove all GTK related code
