@@ -1,3 +1,7 @@
+2001-11-01  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* fixed typo
+
 2001-10-27  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* GNOME_Database.idl: fixed
