@@ -30,6 +30,7 @@ providers/mdb/libmain.c
 providers/mysql/gda-mysql-provider.c
 providers/mysql/gda-mysql-recordset.c
 providers/mysql/libmain.c
+providers/odbc/gda-odbc-provider.c
 providers/odbc/libmain.c
 providers/oracle/gda-oracle-provider.c
 providers/oracle/gda-oracle-recordset.c
