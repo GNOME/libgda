@@ -463,6 +463,25 @@ gda_data_model_foreach (GdaDataModel *model,
 }
 
 /**
+ * gda_data_model_is_editing
+ * @model: a #GdaDataModel object.
+ *
+ * Check whether this data model is in editing mode or not. Editing
+ * mode is set to TRUE when @gda_data_model_begin_edit has been
+ * called successfully, and is not set back to FALSE until either
+ * @gda_data_model_cancel_edit or @gda_data_model_end_edit have
+ * been called.
+ *
+ * Returns: TRUE if editing mode, FALSE otherwise.
+ */
+gboolean
+gda_data_model_is_editing (GdaDataModel *model)
+{
+	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
+	return model->priv->editing;
+}
+
+/**
  * gda_data_model_begin_edit
  * @model: a #GdaDataModel object.
  *

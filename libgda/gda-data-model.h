@@ -89,6 +89,7 @@ void                gda_data_model_foreach (GdaDataModel *model,
 					    GdaDataModelForeachFunc func,
 					    gpointer user_data);
 
+gboolean            gda_data_model_is_editing (GdaDataModel *model);
 gboolean            gda_data_model_begin_edit (GdaDataModel *model);
 gboolean            gda_data_model_cancel_edit (GdaDataModel *model);
 gboolean            gda_data_model_end_edit (GdaDataModel *model);

@@ -1,5 +1,9 @@
 2002-05-09  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* libgda/gda-data-model.[ch] (gda_data_model_is_editing): new function
+
+2002-05-09  Rodrigo Moya <rodrigo@gnome-db.org>
+
 	* libgda/gda-data-model.[ch]: added "append_row" and "is_editable"
 	virtual methods.
 	(gda_data_model_class_init): initialize new members.
