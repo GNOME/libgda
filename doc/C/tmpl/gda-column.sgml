@@ -24,6 +24,7 @@ Management of #GdaDataModel column attributes
 @table: 
 @caption: 
 @scale: 
+@dbms_type: 
 @gda_type: 
 @allow_null: 
 @primary_key: 

@@ -1,8 +1,10 @@
 /* GDA library
- * Copyright (C) 1998-2002 The GNOME Foundation.
+ *
+ * Copyright (C) 1998 - 2005 The GNOME Foundation.
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
+ *      Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -27,9 +29,11 @@
 struct _GdaRow {
 	GdaDataModel *model;
 	gint          number;
-	gchar       *id;
-	GdaValue    *fields;
-	gint         nfields;
+	gchar        *id;
+
+	GdaValue     *fields;        /* GdaValue for each column */
+	gboolean     *is_default;    /* one gboolean for each column */
+	gint          nfields;
 };
 
 GType gda_row_get_type (void)
@@ -65,6 +69,7 @@ gda_row_new (GdaDataModel *model, gint count)
 	row->id = NULL;
 	row->nfields = count;
 	row->fields = g_new0 (GdaValue, count);
+	row->is_default = NULL;
 
 	return row;
 }
@@ -116,6 +121,8 @@ gda_row_free (GdaRow *row)
 	for (i = 0; i < row->nfields; i++)
 		gda_value_set_null (&row->fields [i]);
 	g_free (row->fields);
+	if (row->is_default)
+		g_free (row->is_default);
 	g_free (row);
 }
 
@@ -146,6 +153,11 @@ gda_row_copy (GdaRow *row)
 						  gda_value_copy (value));
 		else
 			gda_value_set_null (gda_row_get_value (new_row, i));
+	}
+	
+	if (row->is_default) {
+		new_row->is_default = g_new (gboolean, row->nfields);
+		*(new_row->is_default) = *(row->is_default);
 	}
 
 	return new_row;	
@@ -268,3 +280,42 @@ gda_row_get_length (GdaRow *row)
 	return row->nfields;
 }
 
+/**
+ * gda_row_set_default
+ * @row: a #GdaRow
+ * @num: field index
+ * @is_default:
+ *
+ * Instructs the @row that the value at column @num must be considered as a default value
+ */
+void
+gda_row_set_is_default (GdaRow *row, gint num, gboolean is_default)
+{
+	g_return_if_fail (row != NULL);
+	g_return_if_fail (num >= 0 && num < row->nfields);
+
+	if (! row->is_default)
+		row->is_default = g_new0 (gboolean, row->nfields);
+	row->is_default [num] = is_default;
+}
+
+/**
+ * gda_row_get_is_default
+ * @row: a #GdaRow
+ * @num: field index
+ *
+ * Tells if the value at column @num in @row must be considered as a default value
+ *
+ * Returns:
+ */
+gboolean
+gda_row_get_is_default (GdaRow *row, gint num)
+{
+	g_return_val_if_fail (row != NULL, FALSE);
+	g_return_val_if_fail (num >= 0 && num < row->nfields, FALSE);
+
+	if (row->is_default)
+		return row->is_default [num];
+	else
+		return FALSE;
+}

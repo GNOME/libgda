@@ -1662,6 +1662,8 @@ gda_row_get_id
 gda_row_set_id
 gda_row_get_value
 gda_row_get_length
+gda_row_set_is_default
+gda_row_get_is_default
 </SECTION>
 
 <SECTION>
