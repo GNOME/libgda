@@ -17,6 +17,7 @@ local_entities = \
 	libgda-common/sgml/gda-common.sgml \
 	libgda-common/sgml/gda-config.sgml \
 	libgda-common/sgml/gda-corba.sgml \
+	libgda-common/sgml/gda-error.sgml \
 	libgda-common/sgml/gda-log.sgml \
 	libgda-common/sgml/gda-thread.sgml \
 	libgda-common/sgml/gda-util.sgml \
@@ -27,7 +28,6 @@ local_entities = \
 	libgda-client/sgml/gda-command.sgml \
 	libgda-client/sgml/gda-connection-pool.sgml \
 	libgda-client/sgml/gda-connection.sgml \
-	libgda-client/sgml/gda-error.sgml \
 	libgda-client/sgml/gda-field.sgml \
 	libgda-client/sgml/gda-recordset.sgml \
 	libgda-client/sgml/gda-value.sgml
