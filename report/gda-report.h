@@ -16,19 +16,34 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#if !defined(__gda_report_h__)
-#  define __gda_report_h__
+#ifndef __gda_report_h__
+#define __gda_report_h__
 
 #include <gda-common.h>
 #include <GDA_Report.h>
 
-typedef enum
-{
-  GDA_REPORT_FLAGS_NONE,
+#ifdef ENABLE_NLS
+#  include <libintl.h>
+#  define _(String) gettext (String)
+#  define N_(String) (String)
+#else
+/* Stubs that do something close enough.  */
+#  define textdomain(String)
+#  define gettext(String) (String)
+#  define dgettext(Domain,Message) (Message)
+#  define dcgettext(Domain,Message,Type) (Message)
+#  define bindtextdomain(Domain,Directory)
+#  define _(String) (String)
+#  define N_(String) (String)
+#endif
+
+typedef enum {
+  GDA_REPORT_FLAGS_NONE
 } Gda_ReportFlags;
 
 #include <gda-report-defs.h>
 #include <gda-report-engine.h>
+//#include <gda-report-stream.h> FIXME: if i activate this the gda-report-engine.cdoesn't compile, Why?
 
 void gda_report_init ();
 

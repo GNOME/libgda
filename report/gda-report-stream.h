@@ -1,6 +1,6 @@
 /* libgda library
  *
- * Copyright (C) 2000 Carlos Perelló Marín <carlos@gnome-db.org>
+ * Copyright (C) 2000,2001 Carlos Perelló Marín <carlos@gnome-db.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU Library General Public License as
@@ -20,43 +20,22 @@
 #ifndef __gda_report_stream_h__
 #define __gda_report_stream_h__
 
-#include <glib.h>
-#include <orb/orbit.h>
-#include <gda-error.h>
-#include <GDA_Report.h>
+#include <gda-report.h>
 
 #ifdef HAVE_GOBJECT
-#  include <glib-object.h>
+#include <glib-object.h>
 #else
-#  include <gtk/gtk.h>
+#include <gtk/gtk.h>
 #endif
+
+#define GDA_REPORTSTREAM_NEXT	-1
 
 #if defined(__cplusplus)
 extern "C" {
 #endif
 
-/* Data Structures and Prototypes for the LibGDA Report Client
- * Library
- */
 typedef struct _Gda_ReportStream       Gda_ReportStream;
 typedef struct _Gda_ReportStreamClass  Gda_ReportStreamClass;
-
-#define GDA_TYPE_REPORTSTREAM          (gda_reportstream_get_type())
-#ifdef HAVE_GOBJECT
-#  define GDA_REPORTSTREAM(obj) \
-          G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_REPORTSTREAM, Gda_ReportStream)
-#  define GDA_REPORTSTREAM_CLASS(klass) \
-          G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_REPORTSTREAM, Gda_ReportStreamClass)
-#  define GDA_IS_REPORTSTREAM(obj) \
-          G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_REPORTSTREAM)
-#  define GDA_IS_REPORTSTREAM_CLASS(klass) \
-          GTK_CHECK_CLASS_TYPE ((klass), GDA_TYPE_REPORTSTREAM)
-#else
-#define GDA_REPORTSTREAM(obj)          GTK_CHECK_CAST(obj, GDA_TYPE_REPORTSTREAM, Gda_ReportStream)
-#define GDA_REPORTSTREAM_CLASS(klass)  GTK_CHECK_CLASS_CAST(klass, GDA_TYPE_REPORTSTREAM, GdaReportStreamClass)
-#define GDA_IS_REPORTSTREAM(obj)       GTK_CHECK_TYPE(obj, GDA_TYPE_REPORTSTREAM)
-#define GDA_IS_REPORTSTREAM_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_REPORTSTREAM))
-#endif
 
 struct _Gda_ReportStream {
 #ifdef HAVE_GOBJECT
@@ -64,10 +43,10 @@ struct _Gda_ReportStream {
 #else
 	GtkObject	object;
 #endif
-	CORBA_Object	reportstream;
-	CORBA_ORB	orb;
+	GDA_ReportStream  corba_reportstream;
+	Gda_ReportEngine* engine;
 	GList*		errors_head;
-	gint		seek;
+	gint32		seek;
 };
 
 struct _Gda_ReportStreamClass {
@@ -81,6 +60,23 @@ struct _Gda_ReportStreamClass {
 	void (* error)   (Gda_ReportStream* object, GList* errors);
 };
 
+#define GDA_TYPE_REPORTSTREAM          (gda_reportstream_get_type())
+#ifdef HAVE_GOBJECT
+#define GDA_REPORTSTREAM(obj) \
+		G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_REPORTSTREAM, Gda_ReportStream)
+#define GDA_REPORTSTREAM_CLASS(klass) \
+		G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_REPORTSTREAM, Gda_ReportStreamClass)
+#define GDA_IS_REPORTSTREAM(obj) \
+		G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_REPORTSTREAM)
+#define GDA_IS_REPORTSTREAM_CLASS(klass) \
+		G_TYPE_CHECK_CLASS_TYPE ((klass), GDA_TYPE_REPORTSTREAM)
+#else
+#define GDA_REPORTSTREAM(obj)          GTK_CHECK_CAST(obj, GDA_TYPE_REPORTSTREAM, Gda_ReportStream)
+#define GDA_REPORTSTREAM_CLASS(klass)  GTK_CHECK_CLASS_CAST(klass, GDA_TYPE_REPORTSTREAM, GdaReportStreamClass)
+#define GDA_IS_REPORTSTREAM(obj)       GTK_CHECK_TYPE(obj, GDA_TYPE_REPORTSTREAM)
+#define GDA_IS_REPORTSTREAM_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_REPORTSTREAM))
+#endif
+
 #ifdef HAVE_GOBJECT
 GType			gda_report_stream_get_type	(void);
 #else
@@ -90,11 +86,11 @@ GtkType			gda_report_stream_get_type	(void);
 Gda_ReportStream*	gda_report_stream_new		(Gda_ReportEngine* engine);
 void			gda_report_stream_free		(Gda_ReportStream* object);
 
-gint			gda_report_stream_readChunk	(Gda_ReportStream* object, gchar* data,
-							 gint start, gint size);
-gint			gda_report_stream_writeChunk	(Gda_ReportStream* object, gchar** data,
-							 gint size);
-gint			gda_report_stream_length		(Gda_ReportStream* object);
+gint32			gda_report_stream_readChunk	(Gda_ReportStream* object, guchar** data,
+							 gint32 start, gint32 size);
+gint32			gda_report_stream_writeChunk	(Gda_ReportStream* object, guchar* data,
+							 gint32 size);
+gint32			gda_report_stream_length	(Gda_ReportStream* object);
 
 #if defined(__cplusplus)
 }

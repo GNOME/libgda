@@ -8,7 +8,7 @@ INCLUDES = \
 lib_LTLIBRARIES = libgda-report.la
 
 BUILT_SOURCES = GDA_Report.h GDA_Report-common.c GDA_Report-stubs.c GDA_Report-skels.c
-CLEANFILES += $(BUILT_SOURCES)
+CLEANFILES += $(BUILT_SOURCES) gda-report.dtd
 
 $(BUILT_SOURCES): $(top_builddir)/report/idl/GDA_Report.idl
 	orbit-idl $(top_builddir)/report/idl/GDA_Report.idl
