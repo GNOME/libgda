@@ -33,6 +33,8 @@ struct _GdaParameterList {
 static void
 free_hash_param (gpointer key, gpointer value, gpointer user_data)
 {
+	g_free (key);
+	gda_parameter_free ((GdaParameter *) value);
 }
 
 /**
@@ -150,5 +152,44 @@ gda_parameter_list_free (GdaParameterList *plist)
 void
 gda_parameter_list_add_parameter (GdaParameterList *plist, GdaParameter *param)
 {
+	gpointer orig_key;
+	gpointer orig_value;
+	gchar *name;
+
 	g_return_if_fail (plist != NULL);
+	g_return_if_fail (param != NULL);
+
+	name = gda_parameter_get_name (param);
+
+	/* first look for the key in our list */
+	if (g_hash_table_lookup_extended (plist->hash, name, &orig_key, &orig_value)) {
+		g_hash_table_remove (plist->hash, name);
+		g_free (orig_key);
+		gda_parameter_free ((GdaParameter *) orig_value);
+	}
+
+	/* add the parameter to the list */
+	g_hash_table_insert (plist->hash, g_strdup (name), param);
+}
+
+/**
+ * gda_parameter_list_find
+ */
+GdaParameter *
+gda_parameter_list_find (GdaParameterList *plist, const gchar *name)
+{
+	g_return_val_if_fail (plist != NULL, NULL);
+	g_return_val_if_fail (name != NULL, NULL);
+
+	return g_hash_table_lookup (plist->hash, name);
+}
+
+/**
+ * gda_parameter_list_clear
+ */
+void
+gda_parameter_list_clear (GdaParameterList *plist)
+{
+	g_return_if_fail (plist != NULL);
+	g_hash_table_foreach_remove (plist->hash, (GHRFunc) free_hash_param, NULL);
 }
