@@ -1,3 +1,10 @@
+2001-02-11	Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* providers/gda-primebase-server/gda-primebase-connection.c,
+	providers/gda-tds-server/gda-tds-connection.c: removed some C++
+	comments, as the ones containing the ' character makes xgettext
+	complain (from Christian Rose's patch)
+
 2001-02-08	Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* libgda.spec.in: moved gda-run from libgda-devel to libgda
