@@ -1,3 +1,16 @@
+2002-05-19  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* libgda/gda-data-model.[ch]: added remove_row and update_row
+	virtual methods.
+	(gda_data_model_class_init): initialize new members.
+	(gda_data_model_remove_row): new function.
+	(gda_data_model_update_row): new function.
+
+2002-05-18  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* doc/C/Makefile.am: re-added libgda-report directory to gtk-doc
+	options.
+
 2002-05-17  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* libgda/gda-data-model-list.c:

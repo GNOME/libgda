@@ -64,6 +64,8 @@ struct _GdaDataModelClass {
 
 	gboolean (* is_editable) (GdaDataModel *model);
 	const GdaRow * (* append_row) (GdaDataModel *model, const GList *values);
+	gboolean (* remove_row) (GdaDataModel *model, const GdaRow *row);
+	gboolean (* update_row) (GdaDataModel *model, const GdaRow *row);
 };
 
 GType               gda_data_model_get_type (void);
@@ -83,6 +85,8 @@ const GdaValue     *gda_data_model_get_value_at (GdaDataModel *model, gint col, 
 
 gboolean            gda_data_model_is_editable (GdaDataModel *model);
 const GdaRow       *gda_data_model_append_row (GdaDataModel *model, const GList *values);
+gboolean            gda_data_model_remove_row (GdaDataModel *model, const GdaRow *row);
+gboolean            gda_data_model_update_row (GdaDataModel *model, const GdaRow *row);
 
 typedef gboolean (* GdaDataModelForeachFunc) (GdaDataModel *model,
 					      GdaRow *row,

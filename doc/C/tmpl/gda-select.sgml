@@ -9,12 +9,10 @@ GdaSelect
 
 </para>
 
-
 <!-- ##### SECTION See_Also ##### -->
 <para>
 
 </para>
-
 
 <!-- ##### STRUCT GdaSelectPrivate ##### -->
 <para>
@@ -27,6 +25,33 @@ GdaSelect
 
 </para>
 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_select_set_source ##### -->
+<para>
+
+</para>
+
+@sel: 
+@source: 
+
+
+<!-- ##### FUNCTION gda_select_set_expression ##### -->
+<para>
+
+</para>
+
+@sel: 
+@expression: 
+
+
+<!-- ##### FUNCTION gda_select_run ##### -->
+<para>
+
+</para>
+
+@sel: 
 @Returns: 
 
 

@@ -237,6 +237,16 @@ to any data, get a newly allocated copy of the data.
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_value_new_from_string ##### -->
+<para>
+
+</para>
+
+@as_string: 
+@type: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_value_free ##### -->
 <para>
 
@@ -550,6 +560,27 @@ to any data, get a newly allocated copy of the data.
 
 @value: 
 @val: 
+
+
+<!-- ##### FUNCTION gda_value_set_from_string ##### -->
+<para>
+
+</para>
+
+@value: 
+@as_string: 
+@type: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_value_compare ##### -->
+<para>
+
+</para>
+
+@value1: 
+@value2: 
+@Returns: 
 
 
 <!-- ##### FUNCTION gda_value_stringify ##### -->

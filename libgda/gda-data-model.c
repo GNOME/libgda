@@ -110,6 +110,8 @@ gda_data_model_class_init (GdaDataModelClass *klass)
 	klass->get_value_at = NULL;
 	klass->is_editable = NULL;
 	klass->append_row = NULL;
+	klass->remove_row = NULL;
+	klass->update_row = NULL;
 }
 
 static void
@@ -438,7 +440,7 @@ gda_data_model_is_editable (GdaDataModel *model)
 /**
  * gda_data_model_append_row
  * @model: a #GdaDataModel object.
- * @row: the row to add.
+ * @values: the row to add.
  *
  * Append a row to the given data model.
  *
@@ -451,6 +453,46 @@ gda_data_model_append_row (GdaDataModel *model, const GList *values)
 	g_return_val_if_fail (CLASS (model)->append_row != NULL, NULL);
 
 	return CLASS (model)->append_row (model, values);
+}
+
+/**
+ * gda_data_model_remove_row
+ * @model: a #GdaDataModel object.
+ * @row: the #GdaRow to be removed.
+ *
+ * Remove a row from the data model. This results in the underlying
+ * database row being removed in the database.
+ *
+ * Returns: TRUE if successful, FALSE otherwise.
+ */
+gboolean
+gda_data_model_remove_row (GdaDataModel *model, const GdaRow *row)
+{
+	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
+	g_return_val_if_fail (row != NULL, FALSE);
+	g_return_val_if_fail (CLASS (model)->remove_row != NULL, FALSE);
+
+	return CLASS (model)->remove_row (model, row);
+}
+
+/**
+ * gda_data_model_update_row
+ * @model: a #GdaDataModel object.
+ * @row: the #GdaRow to be updated.
+ *
+ * Update a row data model. This results in the underlying
+ * database row's values being changed.
+ *
+ * Returns: TRUE if successful, FALSE otherwise.
+ */
+gboolean
+gda_data_model_update_row (GdaDataModel *model, const GdaRow *row)
+{
+	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
+	g_return_val_if_fail (row != NULL, FALSE);
+	g_return_val_if_fail (CLASS (model)->update_row != NULL, FALSE);
+
+	return CLASS (model)->update_row (model, row);
 }
 
 /**
