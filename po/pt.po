@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 2.0\n"
-"POT-Creation-Date: 2002-07-07 23:22+0200\n"
-"PO-Revision-Date: 2002-06-17 23:40+0100\n"
+"POT-Creation-Date: 2002-08-15 01:49+0100\n"
+"PO-Revision-Date: 2002-08-15 01:59+0100\n"
 "Last-Translator: Duarte Loreto <happyguy_pt@hotmail.com>\n"
 "Language-Team: Portuguese <gnome_pt@yahoogroups.com>\n"
 "MIME-Version: 1.0\n"
@@ -70,7 +70,7 @@ msgstr "Utilizador"
 msgid "Password"
 msgstr "Senha"
 
-#: libgda/gda-data-model.c:589
+#: libgda/gda-data-model.c:607
 #, c-format
 msgid "Data model %p is not editable"
 msgstr "Modelo de dados %p não é editável"
@@ -82,6 +82,10 @@ msgstr "Tentativa de inicializar um cliente já inicializado"
 #: libgda/gda-init.c:60
 msgid "libgda needs GModule. Finishing..."
 msgstr "libgda necessita do GModule. A terminar..."
+
+#: libgda/gda-init.c:64
+msgid "libgda successfully initialized"
+msgstr "libgda inicializado com sucesso"
 
 #: libgda/gda-log.c:82
 #, c-format
@@ -140,11 +144,11 @@ msgstr "Erro ao ler %s: %s"
 msgid "Could not create file %s"
 msgstr "Incapaz de criar ficheiro %s"
 
-#: libgda/gda-value.c:1315
+#: libgda/gda-value.c:1359
 msgid "TRUE"
 msgstr "VERDADEIRO"
 
-#: libgda/gda-value.c:1317
+#: libgda/gda-value.c:1361
 msgid "FALSE"
 msgstr "FALSO"
 
@@ -195,58 +199,58 @@ msgid "Not Implemented"
 msgstr "Não Implementado"
 
 #: providers/default/gda-default-provider.c:361
-#: providers/mysql/gda-mysql-provider.c:873
+#: providers/mysql/gda-mysql-provider.c:941
 #: providers/oracle/gda-oracle-provider.c:1056
-#: providers/postgres/gda-postgres-provider.c:829
+#: providers/postgres/gda-postgres-provider.c:835
 msgid "Field name"
 msgstr "Nome campo"
 
 #: providers/default/gda-default-provider.c:362
-#: providers/mysql/gda-mysql-provider.c:874
+#: providers/mysql/gda-mysql-provider.c:942
 #: providers/oracle/gda-oracle-provider.c:1057
-#: providers/postgres/gda-postgres-provider.c:830
+#: providers/postgres/gda-postgres-provider.c:836
 msgid "Data type"
 msgstr "Tipo dados"
 
 #: providers/default/gda-default-provider.c:363
-#: providers/mysql/gda-mysql-provider.c:875
+#: providers/mysql/gda-mysql-provider.c:943
 #: providers/oracle/gda-oracle-provider.c:1058
-#: providers/postgres/gda-postgres-provider.c:831
+#: providers/postgres/gda-postgres-provider.c:837
 msgid "Size"
 msgstr "Tamanho"
 
 #: providers/default/gda-default-provider.c:364
-#: providers/mysql/gda-mysql-provider.c:876
+#: providers/mysql/gda-mysql-provider.c:944
 #: providers/oracle/gda-oracle-provider.c:1059
-#: providers/postgres/gda-postgres-provider.c:832
+#: providers/postgres/gda-postgres-provider.c:838
 msgid "Scale"
 msgstr "Escala"
 
 #: providers/default/gda-default-provider.c:365
-#: providers/mysql/gda-mysql-provider.c:877
+#: providers/mysql/gda-mysql-provider.c:945
 #: providers/oracle/gda-oracle-provider.c:1060
-#: providers/postgres/gda-postgres-provider.c:833
+#: providers/postgres/gda-postgres-provider.c:839
 msgid "Not null?"
 msgstr "Não nulo?"
 
 #: providers/default/gda-default-provider.c:366
-#: providers/mysql/gda-mysql-provider.c:878
+#: providers/mysql/gda-mysql-provider.c:946
 #: providers/oracle/gda-oracle-provider.c:1061
-#: providers/postgres/gda-postgres-provider.c:834
+#: providers/postgres/gda-postgres-provider.c:840
 msgid "Primary key?"
 msgstr "Chave primária?"
 
 #: providers/default/gda-default-provider.c:367
-#: providers/mysql/gda-mysql-provider.c:879
+#: providers/mysql/gda-mysql-provider.c:947
 #: providers/oracle/gda-oracle-provider.c:1062
-#: providers/postgres/gda-postgres-provider.c:835
+#: providers/postgres/gda-postgres-provider.c:841
 msgid "Unique index?"
 msgstr "Índice único?"
 
 #: providers/default/gda-default-provider.c:368
-#: providers/mysql/gda-mysql-provider.c:880
+#: providers/mysql/gda-mysql-provider.c:948
 #: providers/oracle/gda-oracle-provider.c:1063
-#: providers/postgres/gda-postgres-provider.c:836
+#: providers/postgres/gda-postgres-provider.c:842
 msgid "References"
 msgstr "Referências"
 
@@ -267,6 +271,20 @@ msgstr "Incapaz de obter descrição para coluna"
 #: providers/default/libmain.c:39
 msgid "GDA default provider, based on the libgda XML format"
 msgstr "Fornecedor por omissão GDA, baseado no formato XML libgda"
+
+#: providers/freetds/libmain.c:39
+msgid "GDA provider for TDS-based databases (using FreeTDS)"
+msgstr "Fornecedor GDA para bases de dados baseadas em TDS (utiliza FreeTDS)"
+
+#: providers/freetds/utils.c:41 providers/oracle/utils.c:67
+#: providers/postgres/utils.c:47
+msgid "NO DESCRIPTION"
+msgstr "SEM DESCRIÇÃO"
+
+#: providers/freetds/utils.c:45 providers/oracle/utils.c:72
+#: providers/postgres/utils.c:52
+msgid "Not available"
+msgstr "Indisponível"
 
 #: providers/mdb/gda-mdb-provider.c:176
 msgid "A database FILENAME must be specified in the connection_string"
@@ -307,20 +325,36 @@ msgstr ""
 msgid "Invalid MYSQL handle"
 msgstr "Handle MYSQL inválida"
 
-#. gda_server_recordset_model_set_field_defined_size (recset, 0, 32);
-#: providers/mysql/gda-mysql-provider.c:775
+#. 2nd, the owner
+#: providers/mysql/gda-mysql-provider.c:779
+msgid "Unknown"
+msgstr "Desconhecido"
+
+#: providers/mysql/gda-mysql-provider.c:846
 #: providers/oracle/gda-oracle-provider.c:1563
 msgid "Type"
 msgstr "Tipo"
 
-#: providers/mysql/gda-mysql-provider.c:888
+#: providers/mysql/gda-mysql-provider.c:847
+msgid "Owner"
+msgstr "Dono"
+
+#: providers/mysql/gda-mysql-provider.c:848
+msgid "Comments"
+msgstr "Comentários"
+
+#: providers/mysql/gda-mysql-provider.c:849
+msgid "GDA type"
+msgstr "Tipos GDA"
+
+#: providers/mysql/gda-mysql-provider.c:956
 #: providers/mysql/gda-mysql-recordset.c:58
 #: providers/mysql/gda-mysql-recordset.c:174
 msgid "Invalid MySQL handle"
 msgstr "Handle MySQL inválida"
 
-#: providers/mysql/gda-mysql-provider.c:897
-#: providers/mysql/gda-mysql-provider.c:905
+#: providers/mysql/gda-mysql-provider.c:965
+#: providers/mysql/gda-mysql-provider.c:973
 msgid "You need to specify the name of the table"
 msgstr "Tem de especificar o nome da tabela"
 
@@ -332,17 +366,17 @@ msgstr "Tem de especificar o nome da tabela"
 msgid "Row number out of range"
 msgstr "Número de linha fora do limite"
 
-#: providers/mysql/gda-mysql-recordset.c:281
+#: providers/mysql/gda-mysql-recordset.c:283
 #: providers/oracle/gda-oracle-recordset.c:467
 msgid "Attempt to insert a row with an invalid number of columns"
 msgstr "Tentativa de inserção de uma linha com um número inválido de colunas"
 
-#: providers/mysql/gda-mysql-recordset.c:296
+#: providers/mysql/gda-mysql-recordset.c:298
 #: providers/oracle/gda-oracle-recordset.c:482
 msgid "Could not retrieve column's information"
 msgstr "Incapaz de obter informação da coluna"
 
-#: providers/mysql/gda-mysql-recordset.c:314
+#: providers/mysql/gda-mysql-recordset.c:316
 #: providers/oracle/gda-oracle-recordset.c:500
 msgid "Could not retrieve column's value"
 msgstr "Incapaz de obter valor da coluna"
@@ -356,64 +390,52 @@ msgid "GDA bridge to ODBC data sources"
 msgstr "Ponte GDA para fontes de dados ODBC"
 
 #: providers/oracle/gda-oracle-provider.c:193
-#, fuzzy
 msgid "Could not initialize Oracle"
-msgstr "Incapaz de inicializar ambiente Oracle"
+msgstr "Incapaz de inicializar Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:204
-#, fuzzy
 msgid "Could not initialize the Oracle environment"
-msgstr "Incapaz de inicializar ambiente Oracle"
+msgstr "Incapaz de inicializar o ambiente Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:216
-#, fuzzy
 msgid "Could not allocate the Oracle service handle"
-msgstr "Incapaz de inicializar handle de servidor Oracle"
+msgstr "Incapaz de alocar handle do serviço Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:226
-#, fuzzy
 msgid "Could not allocate the Oracle error handle"
-msgstr "Incapaz de inicializar gestor de erros Oracle"
+msgstr "Incapaz de alocar handle de erros Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:238
-#, fuzzy
 msgid "Could not allocate the Oracle server handle"
-msgstr "Incapaz de inicializar handle de servidor Oracle"
+msgstr "Incapaz de alocar handle de servidor Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:251
-#, fuzzy
 msgid "Could not allocate the Oracle session handle"
-msgstr "Incapaz de inicializar gestor de erros Oracle"
+msgstr "Incapaz de alocar handle de sessão Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:281
-#, fuzzy
 msgid "Could not attach to the Oracle server"
-msgstr "Incapaz de inicializar handle de servidor Oracle"
+msgstr "Incapaz de se ligar ao servidor Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:297
-#, fuzzy
 msgid "Could not set the Oracle server attribute in the service context"
-msgstr "Incapaz de inicializar contexto de serviço Oracle"
+msgstr "Incapaz de definir o atributo de servidor Oracle no contexto do serviço"
 
 #: providers/oracle/gda-oracle-provider.c:313
-#, fuzzy
 msgid "Could not set the Oracle username attribute"
-msgstr "Incapaz de inicializar handle de servidor Oracle"
+msgstr "Incapaz de definir o atributo utilizador de Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:329
-#, fuzzy
 msgid "Could not set the Oracle password attribute"
-msgstr "Incapaz de inicializar fábrica de componente Oracle"
+msgstr "Incapaz de definir o atributo senha de Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:344
-#, fuzzy
 msgid "Could not begin the Oracle session"
-msgstr "Incapaz de inicializar ambiente Oracle"
+msgstr "Incapaz de inicializar sessão Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:362
-#, fuzzy
 msgid "Could not set the Oracle session attribute in the service context"
-msgstr "Incapaz de inicializar contexto de serviço Oracle"
+msgstr "Incapaz de definir o atributo de sessão Oracle no contexto do serviço"
 
 #: providers/oracle/gda-oracle-provider.c:444
 #: providers/oracle/gda-oracle-provider.c:518
@@ -427,200 +449,171 @@ msgstr "Incapaz de inicializar contexto de serviço Oracle"
 #: providers/oracle/gda-oracle-recordset.c:166
 #: providers/oracle/gda-oracle-recordset.c:388
 #: providers/oracle/gda-oracle-recordset.c:589
-#, fuzzy
 msgid "Invalid Oracle handle"
-msgstr "Handle Defeito inválida"
+msgstr "Handle Oracle inválida"
 
 #: providers/oracle/gda-oracle-provider.c:455
-#, fuzzy
 msgid "Could not allocate the Oracle statement handle"
-msgstr "Incapaz de inicializar handle de servidor Oracle"
+msgstr "Incapaz de alocar handle de query Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:466
-#, fuzzy
 msgid "Could not prepare the Oracle statement"
-msgstr "Incapaz de inicializar ambiente Oracle"
+msgstr "Incapaz de preparar a query Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:498
-#, fuzzy
 msgid "Could not bind the Oracle statement parameter"
-msgstr "Incapaz de inicializar fábrica de componente Oracle"
+msgstr "Incapaz de fazer bind do parâmetro de query Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:543
-#, fuzzy
 msgid "Could not get the Oracle statement type"
-msgstr "Incapaz de inicializar fábrica de componente Oracle"
+msgstr "Incapaz de obter o tipo de query Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:561
-#, fuzzy
 msgid "Could not execute the Oracle statement"
-msgstr "Incapaz de inicializar ambiente Oracle"
+msgstr "Incapaz de executar a query Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:574
 msgid "Could not get the number of columns in the result set"
-msgstr ""
+msgstr "Incapaz de obter o número de colunas no resultado"
 
 #: providers/oracle/gda-oracle-provider.c:591
 msgid "Could not get the parameter descripter in the result set"
-msgstr ""
+msgstr "Incapaz de obter o descritor de parâmetro no resultado"
 
 #: providers/oracle/gda-oracle-provider.c:603
-#, fuzzy
 msgid "Could not get the column name in the result set"
-msgstr "Incapaz de obter valor da coluna"
+msgstr "Incapaz de obter o nome da coluna no resultado"
 
 #: providers/oracle/gda-oracle-provider.c:749
 #: providers/oracle/gda-oracle-provider.c:825
 #: providers/oracle/gda-oracle-provider.c:875
 #: providers/oracle/gda-oracle-provider.c:931
-#, fuzzy
 msgid "Could not attach the transaction to the service context"
-msgstr "Incapaz de inicializar contexto de serviço Oracle"
+msgstr "Incapaz de anexar a transacção ao contexto de serviço"
 
 #: providers/oracle/gda-oracle-provider.c:799
-#, fuzzy
 msgid "Could not allocate the Oracle transaction handle"
-msgstr "Incapaz de inicializar gestor de erros Oracle"
+msgstr "Incapaz de alocar handle de transacção Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:811
-#, fuzzy
 msgid "Could not set the Oracle transaction name"
-msgstr "Incapaz de inicializar ambiente Oracle"
+msgstr "Incapaz de definir nome de transacção Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:836
-#, fuzzy
 msgid "Could not start the Oracle transaction"
-msgstr "Incapaz de inicializar fábrica de componente Oracle"
+msgstr "Incapaz de iniciar a transacção Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:884
-#, fuzzy
 msgid "Could not prepare the transaction to commit"
-msgstr "Incapaz de obter descrição para coluna"
+msgstr "Incapaz de preparar a transacção para efectuar commit"
 
 #: providers/oracle/gda-oracle-provider.c:892
-#, fuzzy
 msgid "Could not commit the Oracle transaction"
-msgstr "Incapaz de inicializar fábrica de componente Oracle"
+msgstr "Incapaz de executar o commit da transacção Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:938
-#, fuzzy
 msgid "Could not rollback the Oracle transaction"
-msgstr "Incapaz de inicializar fábrica de componente Oracle"
+msgstr "Incapaz de executar o rollback da transacção Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:1227
-#, fuzzy
 msgid "Could not allocate the Oracle describe handle"
-msgstr "Incapaz de inicializar handle de servidor Oracle"
+msgstr "Incapaz de alocar handle de descrição Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:1240
-#, fuzzy
 msgid "Could not describe the Oracle table"
-msgstr "Incapaz de obter valor da coluna"
+msgstr "Incapaz de descrever a tabela Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:1253
-#, fuzzy
 msgid "Could not get the Oracle parameter handle"
-msgstr "Incapaz de inicializar handle de servidor Oracle"
+msgstr "Incapaz de obter handle de parâmetro Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:1266
-#, fuzzy
 msgid "Could not get the number of columns in the table"
-msgstr "Incapaz de obter valor da coluna"
+msgstr "Incapaz de obter número de colunas na tabela"
 
 #: providers/oracle/gda-oracle-provider.c:1278
-#, fuzzy
 msgid "Could not get the column list"
-msgstr "Incapaz de obter ficheiro de %s"
+msgstr "Incapaz de obter lista de colunas"
 
 #: providers/oracle/gda-oracle-provider.c:1307
-#, fuzzy
 msgid "Could not get the Oracle column handle"
-msgstr "Incapaz de inicializar gestor de erros Oracle"
+msgstr "Incapaz de obter handle de coluna Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:1320
-#, fuzzy
 msgid "Could not get the Oracle field name"
-msgstr "Incapaz de inicializar ambiente Oracle"
+msgstr "Incapaz de obter nome de campo Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:1341
-#, fuzzy
 msgid "Could not get the Oracle field data type"
-msgstr "Incapaz de inicializar fábrica de componente Oracle"
+msgstr "Incapaz de obter tipo de dados do campo Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:1359
-#, fuzzy
 msgid "Could not get the Oracle field defined size"
-msgstr "Incapaz de obter ficheiro de %s"
+msgstr "Incapaz de obter definição de tamanho de campo Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:1376
-#, fuzzy
 msgid "Could not get the Oracle field scale"
-msgstr "Incapaz de inicializar handle de servidor Oracle"
+msgstr "Incapaz de obter escala de campo Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:1393
 msgid "Could not get the Oracle field nullable attribute"
-msgstr ""
+msgstr "Incapaz de obter atributo de nulificação de campo Oracle"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/oracle/gda-oracle-provider.c:1459
-#: providers/postgres/gda-postgres-provider.c:1197 testing/client.c:123
+#: providers/postgres/gda-postgres-provider.c:1203 testing/client.c:125
 msgid "Users"
 msgstr "Utilizadores"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/oracle/gda-oracle-provider.c:1651
-#: providers/postgres/gda-postgres-provider.c:767 testing/client.c:121
+#: providers/postgres/gda-postgres-provider.c:773 testing/client.c:123
 msgid "Indexes"
 msgstr "Índices"
 
 #: providers/oracle/gda-oracle-provider.c:1655
-#, fuzzy
 msgid "Procedures"
-msgstr "\t\tProcedimentos: %s\n"
+msgstr "Procedimentos"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/oracle/gda-oracle-provider.c:1659
-#: providers/postgres/gda-postgres-provider.c:1225 testing/client.c:124
+#: providers/postgres/gda-postgres-provider.c:1231 testing/client.c:126
 msgid "Sequences"
 msgstr "Sequências"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/oracle/gda-oracle-provider.c:1663
-#: providers/postgres/gda-postgres-provider.c:672
+#: providers/postgres/gda-postgres-provider.c:678
 msgid "Tables"
 msgstr "Tabelas"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/oracle/gda-oracle-provider.c:1667
-#: providers/postgres/gda-postgres-provider.c:818 testing/client.c:125
+#: providers/postgres/gda-postgres-provider.c:824 testing/client.c:127
 msgid "Triggers"
 msgstr "Triggers"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/oracle/gda-oracle-provider.c:1671
-#: providers/postgres/gda-postgres-provider.c:742 testing/client.c:120
+#: providers/postgres/gda-postgres-provider.c:748 testing/client.c:122
 msgid "Views"
 msgstr "Vistas"
 
 #: providers/oracle/gda-oracle-recordset.c:73
-#, fuzzy
 msgid "Could not get the Oracle parameter"
-msgstr "Incapaz de inicializar ambiente Oracle"
+msgstr "Incapaz de obter o parâmetro Oracle"
 
 #: providers/oracle/gda-oracle-recordset.c:83
-#, fuzzy
 msgid "Could not get the parameter defined size"
-msgstr "Incapaz de criar ficheiro %s"
+msgstr "Incapaz de o tamanho definido do parâmetro"
 
 #: providers/oracle/gda-oracle-recordset.c:96
-#, fuzzy
 msgid "Could not get the parameter data type"
-msgstr "Incapaz de criar componente do tipo %s"
+msgstr "Incapaz de obter o tipo de dados do parâmetro"
 
 #: providers/oracle/gda-oracle-recordset.c:127
-#, fuzzy
 msgid "Could not define by position"
-msgstr "Incapaz de ler ficheiro em %s"
+msgstr "Incapaz de definir por posição"
 
 #: providers/oracle/gda-oracle-recordset.c:172
 #: providers/postgres/gda-postgres-recordset.c:263
@@ -628,80 +621,65 @@ msgid "Column out of range"
 msgstr "Coluna fora do limite"
 
 #: providers/oracle/gda-oracle-recordset.c:184
-#, fuzzy
 msgid "Could not get the Oracle parameter information"
-msgstr "Incapaz de obter informação da coluna"
+msgstr "Incapaz de obter informação de parâmetro Oracle"
 
 #: providers/oracle/gda-oracle-recordset.c:194
-#, fuzzy
 msgid "Could not get the Oracle column name"
-msgstr "Incapaz de obter valor da coluna"
+msgstr "Incapaz de obter nome de coluna Oracle"
 
 #: providers/oracle/gda-oracle-recordset.c:209
-#, fuzzy
 msgid "Could not get the Oracle column data type"
-msgstr "Incapaz de inicializar fábrica de componente Oracle"
+msgstr "Incapaz de obter o tipo de dados da coluna Oracle"
 
 #: providers/oracle/gda-oracle-recordset.c:221
-#, fuzzy
 msgid "Could not get the Oracle column scale"
-msgstr "Incapaz de obter valor da coluna"
+msgstr "Incapaz de obter escala da coluna Oracle"
 
 #: providers/oracle/gda-oracle-recordset.c:233
-#, fuzzy
 msgid "Could not get the Oracle column nullable attribute"
-msgstr "Incapaz de inicializar fábrica de componente Oracle"
+msgstr "Incapaz de obter atributo de nulificação de coluna Oracle"
 
 #: providers/oracle/gda-oracle-recordset.c:245
-#, fuzzy
 msgid "Could not get the Oracle defined size"
-msgstr "Incapaz de obter ficheiro de %s"
+msgstr "Incapaz de obter o tamanho definido Oracle"
 
 #: providers/oracle/gda-oracle-recordset.c:353
-#, fuzzy
 msgid "Could not fetch a row"
-msgstr "Incapaz de obter ficheiro de %s"
+msgstr "Incapaz de trazer uma linha"
 
 #: providers/oracle/libmain.c:34
 msgid "GDA provider for Oracle databases"
 msgstr "Fornecedor GDA para bases de dados Oracle"
 
-#: providers/oracle/utils.c:67 providers/postgres/utils.c:47
-msgid "NO DESCRIPTION"
-msgstr "SEM DESCRIÇÃO"
-
-#: providers/oracle/utils.c:72 providers/postgres/utils.c:52
-msgid "Not available"
-msgstr "Indisponível"
-
-#: providers/postgres/gda-postgres-provider.c:382
-#: providers/postgres/gda-postgres-provider.c:453
-#: providers/postgres/gda-postgres-provider.c:587
+#: providers/postgres/gda-postgres-provider.c:388
+#: providers/postgres/gda-postgres-provider.c:459
+#: providers/postgres/gda-postgres-provider.c:593
 #: providers/postgres/gda-postgres-recordset.c:175
 #: providers/postgres/gda-postgres-recordset.c:215
 #: providers/postgres/gda-postgres-recordset.c:257
 msgid "Invalid PostgreSQL handle"
 msgstr "Handle PostgreSQL inválida"
 
-#: providers/postgres/gda-postgres-provider.c:711
+#: providers/postgres/gda-postgres-provider.c:717
 msgid "Types"
 msgstr "Tipos"
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:793 testing/client.c:122
+#: providers/postgres/gda-postgres-provider.c:799 testing/client.c:124
 msgid "Aggregates"
 msgstr "Agregados"
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:1172 testing/client.c:116
+#: providers/postgres/gda-postgres-provider.c:1178 testing/client.c:118
 msgid "Databases"
 msgstr "Bases de dados"
 
-#: providers/postgres/gda-postgres-provider.c:1265
+#: providers/postgres/gda-postgres-provider.c:1271
 msgid "Table name"
 msgstr "Nome tabela"
 
-#: providers/postgres/gda-postgres-provider.c:1266
+#: providers/postgres/gda-postgres-provider.c:1272
 msgid "Sequence"
 msgstr "Sequência"
 
@@ -710,6 +688,11 @@ msgstr "Sequência"
 #: providers/sqlite/gda-sqlite-recordset.c:245
 msgid "Column number out of range"
 msgstr "Número de coluna fora do limite"
+
+#: providers/postgres/gda-postgres-recordset.c:353
+#, c-format
+msgid "Tuples:\"%s\""
+msgstr "Tuples:\"%s\""
 
 #: providers/postgres/libmain.c:41
 msgid "GDA provider for PostgreSQL databases"
@@ -754,123 +737,123 @@ msgstr "Incapaz de parsear documento XML"
 msgid "Could not get file from %s"
 msgstr "Incapaz de obter ficheiro de %s"
 
-#: testing/client.c:39
+#: testing/client.c:41
 msgid "\t\tNONE\n"
 msgstr "\t\tNENHUM\n"
 
-#: testing/client.c:78
+#: testing/client.c:80
 #, c-format
 msgid "** ERROR: could not open connection to %s\n"
 msgstr "** ERRO: incapaz de abrir ligação a %s\n"
 
 #. show provider features
-#: testing/client.c:83
+#: testing/client.c:85
 msgid "\tProvider capabilities...\n"
 msgstr "\tCapacidades do fornecedor...\n"
 
-#: testing/client.c:84
+#: testing/client.c:86
 #, c-format
 msgid "\t\tAggregates: %s\n"
 msgstr "\t\tAgregados: %s\n"
 
-#: testing/client.c:86 testing/client.c:89 testing/client.c:92
-#: testing/client.c:95 testing/client.c:98 testing/client.c:101
-#: testing/client.c:104 testing/client.c:107 testing/client.c:110
-#: testing/client.c:113
+#: testing/client.c:88 testing/client.c:91 testing/client.c:94
+#: testing/client.c:97 testing/client.c:100 testing/client.c:103
+#: testing/client.c:106 testing/client.c:109 testing/client.c:112
+#: testing/client.c:115
 msgid "Supported"
 msgstr "Suportado"
 
-#: testing/client.c:86 testing/client.c:89 testing/client.c:92
-#: testing/client.c:95 testing/client.c:98 testing/client.c:101
-#: testing/client.c:104 testing/client.c:107 testing/client.c:110
-#: testing/client.c:113
+#: testing/client.c:88 testing/client.c:91 testing/client.c:94
+#: testing/client.c:97 testing/client.c:100 testing/client.c:103
+#: testing/client.c:106 testing/client.c:109 testing/client.c:112
+#: testing/client.c:115
 msgid "Not supported"
 msgstr "Não suportado"
 
-#: testing/client.c:87
+#: testing/client.c:89
 #, c-format
 msgid "\t\tIndexes: %s\n"
 msgstr "\t\tÍndices: %s\n"
 
-#: testing/client.c:90
+#: testing/client.c:92
 #, c-format
 msgid "\t\tProcedures: %s\n"
 msgstr "\t\tProcedimentos: %s\n"
 
-#: testing/client.c:93
+#: testing/client.c:95
 #, c-format
 msgid "\t\tSequences: %s\n"
 msgstr "\t\tSequências: %s\n"
 
-#: testing/client.c:96
-#, fuzzy, c-format
+#: testing/client.c:98
+#, c-format
 msgid "\t\tSQL: %s\n"
-msgstr "\t\tLinguagem SQL: %s\n"
+msgstr "\t\tSQL: %s\n"
 
-#: testing/client.c:99
+#: testing/client.c:101
 #, c-format
 msgid "\t\tTransactions: %s\n"
 msgstr "\t\tTransacções: %s\n"
 
-#: testing/client.c:102
+#: testing/client.c:104
 #, c-format
 msgid "\t\tTriggers: %s\n"
 msgstr "\t\tTriggers: %s\n"
 
-#: testing/client.c:105
+#: testing/client.c:107
 #, c-format
 msgid "\t\tUsers: %s\n"
 msgstr "\t\tUtilizadores: %s\n"
 
-#: testing/client.c:108
+#: testing/client.c:110
 #, c-format
 msgid "\t\tViews: %s\n"
 msgstr "\t\tVistas: %s\n"
 
-#: testing/client.c:111
+#: testing/client.c:113
 #, c-format
 msgid "\t\tXML queries: %s\n"
 msgstr "\t\tCondultas XML: %s\n"
 
-#: testing/client.c:117
+#: testing/client.c:119
 msgid "Stored procedures"
 msgstr "Procedimentos armazenados"
 
-#: testing/client.c:118
+#: testing/client.c:120
 msgid "Connection Tables"
 msgstr "Tabelas de Ligação"
 
-#: testing/client.c:119
+#: testing/client.c:121
 msgid "Available types"
 msgstr "Tipos disponíveis"
 
 #. test transactions
-#: testing/client.c:128 testing/client.c:136
+#: testing/client.c:130 testing/client.c:138
 msgid "\tStarting transaction..."
 msgstr "\tA iniciar transacção..."
 
-#: testing/client.c:130 testing/client.c:134 testing/client.c:138
-#: testing/client.c:142
+#: testing/client.c:132 testing/client.c:136 testing/client.c:140
+#: testing/client.c:144
 msgid "Error"
 msgstr "Erro"
 
-#: testing/client.c:132
+#: testing/client.c:134
 msgid "\tFinishing transaction..."
 msgstr "\tA terminar transacção..."
 
-#: testing/client.c:140
+#: testing/client.c:142
 msgid "\tRolling back transaction..."
 msgstr "\tA fazer rollback da transacção..."
 
-#: testing/client.c:162
+#: testing/client.c:166
 msgid "Testing GDA client API"
 msgstr "A testar API cliente do GDA"
 
-#: testing/client.c:171
+#: testing/client.c:175
 msgid "** ERROR: gda_config_get_data_source_list returned a NULL item\n"
 msgstr "** ERRO: gda_config_get_data_source_list devolveu um item NULL\n"
 
-#: testing/client.c:175
+#: testing/client.c:179
 #, c-format
 msgid " Data source = %s, User = %s\n"
 msgstr " Fonte de dados = %s, Utilizador = %s\n"
