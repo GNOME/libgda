@@ -26,3 +26,8 @@ xml-i18n-extract.in
 control-stamp
 configure-stamp
 build-stamp
+install-sh
+missing
+mkinstalldirs
+INSTALL
+
