@@ -4,18 +4,20 @@
 # Alexandre Folle de Menezes <afmenez@terra.com.br>, 2002-2003.
 # based on the translation to Portuguese (pt) by
 # Duarte Loreto <happyguy_pt@hotmail.com>, 2001, 2002
-#
+# Alexandre Folle de Menezes <afmenez@terra.com.br>, 2004.
+# Afonso Celso Medina <medina@maua.br>, 2004.
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: 2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-06-08 00:08+0200\n"
-"PO-Revision-Date: 2004-03-19 22:38-0300\n"
-"Last-Translator: Alexandre Folle de Menezes <afmenez@terra.com.br>\n"
-"Language-Team: Brazilian Portuguese <ldp-br@bazar.conectiva.com.br>\n"
+"POT-Creation-Date: 2004-07-07 04:45+0200\n"
+"PO-Revision-Date: 2004-07-07 12:56-0300\n"
+"Last-Translator: Afonso Celso Medina <medina@maua.br>\n"
+"Language-Team: Portuguese/Brazil\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
+"Content-Transfer-Encoding: 8bit"
 
 #: libgda/gda-client.c:312 libgda/gda-client.c:539 libgda/gda-connection.c:218
 #, c-format
@@ -53,9 +55,8 @@ msgid "Id"
 msgstr "Id"
 
 #: libgda/gda-config.c:1195
-#, fuzzy
 msgid "Location"
-msgstr "Função"
+msgstr "Localização"
 
 #: libgda/gda-config.c:1196 libgda/gda-config.c:1455
 #: providers/ibmdb2/gda-ibmdb2-provider.c:863
@@ -100,9 +101,9 @@ msgid "Password"
 msgstr "Senha"
 
 #: libgda/gda-data-model.c:880
-#, fuzzy, c-format
+#, c-format
 msgid "Data model %p is not updatable"
-msgstr "Modelo de dados %p não é editável"
+msgstr "O modelo de dados %p não é atualizável"
 
 #: libgda/gda-init.c:47
 msgid "Attempt to initialize an already initialized client"
@@ -142,20 +143,20 @@ msgstr "Erro ao ler %s: %s"
 msgid "Could not create file %s"
 msgstr "Impossível criar arquivo %s"
 
-#: libgda/gda-value.c:1961
+#: libgda/gda-value.c:2069
 msgid "TRUE"
 msgstr "VERDADEIRO"
 
-#: libgda/gda-value.c:1963
+#: libgda/gda-value.c:2071
 msgid "FALSE"
 msgstr "FALSO"
 
-#: libgda/gda-value.c:2032
+#: libgda/gda-value.c:2140
 #, c-format
 msgid "(GObject of type '%s'"
 msgstr "(GObject do tipo '%s'"
 
-#: libgda/gda-value.c:2035
+#: libgda/gda-value.c:2143
 msgid "NULL GObject"
 msgstr "GObject NULL"
 
@@ -209,16 +210,16 @@ msgstr "Impossível adicionar o dado a partir do nó XML"
 #: libsql/sql_parser.c:59
 #, c-format
 msgid "Parse error near `%s'"
-msgstr ""
+msgstr "Erro de processamento próximo a `%s'"
 
 #: libsql/sql_parser.c:61
 #, c-format
 msgid "Syntax error near `%s'"
-msgstr ""
+msgstr "Erro de sintaxe próximo a `%s'"
 
-#: libsql/sql_parser.c:358
+#: libsql/sql_parser.c:361
 msgid "Empty query to parse"
-msgstr ""
+msgstr "Pesquisa vazia para realizar o processamento"
 
 #: providers/firebird/gda-firebird-provider.c:187
 msgid "No database specified"
@@ -234,7 +235,7 @@ msgstr "Nenhum banco de dados especificado"
 #: providers/firebird/gda-firebird-provider.c:485
 #: providers/firebird/gda-firebird-provider.c:539
 msgid "Invalid Firebird handle"
-msgstr "Handle de Firebird inválida"
+msgstr "Handle do Firebird inválida"
 
 #: providers/firebird/gda-firebird-provider.c:453
 #: providers/firebird/gda-firebird-provider.c:491
@@ -357,8 +358,7 @@ msgstr "Impossível alocar handle de ambiente.\n"
 #. is needed for tables schema
 #: providers/ibmdb2/gda-ibmdb2-provider.c:211
 msgid "SQLGetInfo is unsupported. Hence IBM DB2 Provider will not work.\n"
-msgstr ""
-"SQLGetInfo não é suportado. Assim o Provedor IBM DB2 não irá funcionar.\n"
+msgstr "SQLGetInfo não é suportado. Assim o Provedor IBM DB2 não irá funcionar.\n"
 
 #: providers/ibmdb2/gda-ibmdb2-provider.c:450
 #: providers/ibmdb2/gda-ibmdb2-provider.c:580
@@ -513,13 +513,12 @@ msgid "Users"
 msgstr "Usuários"
 
 #: providers/ibmdb2/gda-ibmdb2-types.c:154
-#, fuzzy
 msgid "[BLOB unsupported]"
-msgstr "Não suportado"
+msgstr "[BLOB não suportado]"
 
 #: providers/ibmdb2/gda-ibmdb2-types.c:157
 msgid "[Unsupported data]"
-msgstr ""
+msgstr "[Dado não suportado]"
 
 #: providers/ibmdb2/libmain.c:39
 msgid "Provider for IBMDB2 databases"
@@ -572,8 +571,7 @@ msgstr "Provedor para diretório LDAP"
 
 #: providers/mdb/gda-mdb-provider.c:205
 msgid "A database FILENAME must be specified in the connection_string"
-msgstr ""
-"Um NOME DE ARQUIVO de banco de dados deve ser indicado na connection_string"
+msgstr "Um FILENAME deve ser indicado na connection_string"
 
 #: providers/mdb/gda-mdb-provider.c:214
 #: providers/xbase/gda-xbase-provider.c:223
@@ -602,7 +600,7 @@ msgstr "Transações não são suportadas no provedor MDB"
 #: providers/sqlite/gda-sqlite-provider.c:658
 #: providers/xml/gda-xml-provider.c:489
 msgid "Field name"
-msgstr "Nome campo"
+msgstr "Nome do campo"
 
 #: providers/mdb/gda-mdb-provider.c:491 providers/msql/gda-msql-provider.c:537
 #: providers/mysql/gda-mysql-provider.c:1095
@@ -612,7 +610,7 @@ msgstr "Nome campo"
 #: providers/sqlite/gda-sqlite-provider.c:659
 #: providers/xml/gda-xml-provider.c:490
 msgid "Data type"
-msgstr "Tipo dados"
+msgstr "Tipo de dados"
 
 #: providers/mdb/gda-mdb-provider.c:492 providers/msql/gda-msql-provider.c:538
 #: providers/mysql/gda-mysql-provider.c:1096
@@ -693,7 +691,7 @@ msgstr "ID"
 #: providers/odbc/gda-odbc-provider.c:1140
 #: providers/postgres/gda-postgres-provider.c:884
 msgid "Return type"
-msgstr "Tipo retorno"
+msgstr "Tipo de retorno"
 
 #: providers/mdb/gda-mdb-provider.c:551
 msgid "# of args"
@@ -704,7 +702,7 @@ msgstr "Nº de args"
 #: providers/odbc/gda-odbc-provider.c:1142
 #: providers/postgres/gda-postgres-provider.c:886
 msgid "Args types"
-msgstr "Tipo args"
+msgstr "Tipo de args"
 
 #: providers/mdb/gda-mdb-provider.c:553
 #: providers/odbc/gda-odbc-provider.c:1143
@@ -809,21 +807,19 @@ msgstr "Handle mSQL inválida"
 
 #: providers/msql/gda-msql-provider.c:318
 msgid "mSQL allows database creation only through the msqladmin tool."
-msgstr ""
-"mSQL permite a criação de banco de dados somente através da ferramenta "
+msgstr "O mSQL permite a criação de banco de dados somente através da ferramenta "
 "msqladmin."
 
 #: providers/msql/gda-msql-provider.c:331
 msgid "mSQL allows database drops only through the msqladmin tool."
-msgstr ""
-"mSQL permite o abandono do banco de dados somente através da ferramenta "
+msgstr "O mSQL permite o abandono do banco de dados somente através da ferramenta "
 "msqladmin."
 
 #: providers/msql/gda-msql-provider.c:376
 #: providers/msql/gda-msql-provider.c:389
 #: providers/msql/gda-msql-provider.c:402
 msgid "mSQL doesn't support transactions."
-msgstr "mSQL não suporta transações."
+msgstr "O mSQL não suporta transações."
 
 #: providers/msql/gda-msql-provider.c:486
 msgid "Title"
@@ -842,8 +838,7 @@ msgstr "Não nulo"
 #: providers/mysql/gda-mysql-provider.c:1119
 #: providers/mysql/gda-mysql-provider.c:1127
 msgid "Table name is needed but none specified in parameter list"
-msgstr ""
-"Nome de tabela é necessário mas nenhum foi especificado na lista de "
+msgstr "O nome da tabela é necessário mas nenhum foi especificado na lista de "
 "parâmetros"
 
 #: providers/msql/gda-msql-recordset.c:57
@@ -854,7 +849,8 @@ msgstr "Número da linha fora do limite"
 msgid ""
 "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
 msgstr ""
-"Não pode indicar um UNIX_SOCKET se também indicar ou um SERVIDOR ou PORTA."
+"Você não pode indicar um UNIX_SOCKET se também indicar ou um SERVIDOR "
+"ou uma PORTA."
 
 #: providers/mysql/gda-mysql-provider.c:299
 #: providers/mysql/gda-mysql-provider.c:1110
@@ -883,7 +879,7 @@ msgstr "Handle MYSQL inválida"
 #: providers/oracle/gda-oracle-provider.c:1000
 #: providers/sqlite/gda-sqlite-provider.c:508
 msgid "Transactions are not supported in read-only mode"
-msgstr "Transações não são suportadas no modo apenas-leitura"
+msgstr "Transações não são suportadas no modo de apenas leitura"
 
 #: providers/mysql/gda-mysql-provider.c:732
 #: providers/oracle/gda-oracle-provider.c:1913
@@ -963,8 +959,7 @@ msgstr "Impossível se ligar ao servidor Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:315
 msgid "Could not set the Oracle server attribute in the service context"
-msgstr ""
-"Impossível definir o atributo de servidor Oracle no contexto do serviço"
+msgstr "Impossível definir o atributo de servidor Oracle no contexto do serviço"
 
 #: providers/oracle/gda-oracle-provider.c:331
 msgid "Could not set the Oracle username attribute"
@@ -1001,15 +996,15 @@ msgstr "Handle Oracle inválida"
 
 #: providers/oracle/gda-oracle-provider.c:509
 msgid "Could not allocate the Oracle statement handle"
-msgstr "Impossível alocar handle de query Oracle"
+msgstr "Impossível alocar instrução handle do Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:520
 msgid "Could not prepare the Oracle statement"
-msgstr "Impossível preparar a query Oracle"
+msgstr "Impossível preparar a instrução do Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:552
 msgid "Could not bind the Oracle statement parameter"
-msgstr "Impossível fazer bind do parâmetro de query Oracle"
+msgstr "Impossível associar o parâmetro de instrução do Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:598
 msgid "Could not get the Oracle statement type"
@@ -1021,7 +1016,7 @@ msgstr "Impossivel definir a declaração Oracle 'pre-fetch row count'"
 
 #: providers/oracle/gda-oracle-provider.c:627
 msgid "Could not execute the Oracle statement"
-msgstr "Impossível executar a query Oracle"
+msgstr "Impossível executar a instrução Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:640
 msgid "Could not get the number of columns in the result set"
@@ -1044,11 +1039,11 @@ msgstr "Impossível anexar a transação ao contexto de serviço"
 
 #: providers/oracle/gda-oracle-provider.c:870
 msgid "Could not allocate the Oracle transaction handle"
-msgstr "Impossível alocar handle de transação Oracle"
+msgstr "Impossível alocar a handle de transação Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:882
 msgid "Could not set the Oracle transaction name"
-msgstr "Impossível definir nome de transação Oracle"
+msgstr "Impossível definir o nome de transação do Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:907
 msgid "Could not start the Oracle transaction"
@@ -1075,12 +1070,12 @@ msgstr "Agregado"
 #: providers/oracle/gda-oracle-provider.c:1156
 #: providers/postgres/gda-postgres-provider.c:1350
 msgid "OutType"
-msgstr "Tipo Saída"
+msgstr "OutType"
 
 #: providers/oracle/gda-oracle-provider.c:1157
 #: providers/postgres/gda-postgres-provider.c:1351
 msgid "InType"
-msgstr "Tipo Entrada"
+msgstr "InType"
 
 #: providers/oracle/gda-oracle-provider.c:1441
 msgid "Could not allocate the Oracle describe handle"
@@ -1201,15 +1196,15 @@ msgstr "Impossível obter escala da coluna Oracle"
 
 #: providers/oracle/gda-oracle-recordset.c:234
 msgid "Could not get the Oracle column nullable attribute"
-msgstr "Impossível obter atributo de nulificação de coluna Oracle"
+msgstr "Impossível obter atributo de coluna nullable do Oracle"
 
 #: providers/oracle/gda-oracle-recordset.c:246
 msgid "Could not get the Oracle defined size"
-msgstr "Impossível obter o tamanho definido Oracle"
+msgstr "Impossível obter o tamanho definido do Oracle"
 
 #: providers/oracle/gda-oracle-recordset.c:355
 msgid "Could not fetch a row"
-msgstr "Impossível trazer uma linha"
+msgstr "Impossível obter uma linha"
 
 #: providers/oracle/libmain.c:34
 msgid "Provider for Oracle databases"
@@ -1239,19 +1234,19 @@ msgstr "Bancos de dados"
 
 #: providers/postgres/gda-postgres-recordset.c:228
 msgid "Given row doesn't belong to the model."
-msgstr ""
+msgstr "A linha fornecida não pertence ao modelo."
 
 #: providers/postgres/gda-postgres-recordset.c:235
 msgid "Table name could not be guessed."
-msgstr ""
+msgstr "O nome da tabela não pôde ser identificado."
 
 #: providers/postgres/gda-postgres-recordset.c:287
 msgid "Model doesn't have at least one non-modified unique key."
-msgstr ""
+msgstr "O modelo não possui ao menos uma chave única não modificável."
 
 #: providers/postgres/gda-postgres-recordset.c:291
 msgid "Model doesn't have any non-unique values to update."
-msgstr ""
+msgstr "O modelo não possui nenhum valor não único para atualizar."
 
 #: providers/postgres/gda-postgres-recordset.c:363
 #: providers/sqlite/gda-sqlite-recordset.c:210
@@ -1301,13 +1296,12 @@ msgstr "É permitido apenas um banco de dados por conexão"
 
 #: providers/sqlite/gda-sqlite-provider.c:426
 msgid "To remove a SQLite database you should remove the database file by hand"
-msgstr ""
-"Para remover um banco de dados SQLite é necessário remover manualmente o "
+msgstr "Para remover um banco de dados SQLite é necessário remover manualmente o "
 "arquivo de banco de dados"
 
 #: providers/sqlite/gda-sqlite-provider.c:700
 msgid "Could not retrieve information for field"
-msgstr "Não pôde recuperar a informação para o campo"
+msgstr "Impossível recuperar a informação para o campo"
 
 #: providers/sqlite/libmain.c:41
 msgid "Provider for SQLite databases"
@@ -1315,19 +1309,19 @@ msgstr "Provedor para bancos de dados SQLite"
 
 #: providers/sybase/gda-sybase-provider.c:291
 msgid "Out of memory. Allocating connection structure failed."
-msgstr "Sem memória. A alocação da estrutura  de conexão falhou."
+msgstr "Sem memória. A alocação da estrutura de conexão falhou."
 
 #: providers/sybase/gda-sybase-provider.c:336
 #, c-format
 msgid "Locale set to '%s'."
-msgstr "Locale setado para '%s'."
+msgstr "Locale definido para '%s'."
 
 #: providers/sybase/gda-sybase-provider.c:642
 msgid ""
 "Cmd structure already in use. Command will not be executed because of "
 "blocked connection."
 msgstr ""
-"Estrutura cmd já está em uso. O comando não será executado por causa da "
+"Estrutura cmd já está em uso. O comando não será executado devido a "
 "conexão bloqueada."
 
 #: providers/sybase/gda-sybase-provider.c:656
@@ -1366,13 +1360,13 @@ msgid ""
 "an error occured when calling ct_diag attempting to test if there is a "
 "server message for resultset"
 msgstr ""
-"ocorreu um erro chamando ct_diag tentando testar a existência de uma "
+"ocorreu um erro chamando ct_diag ao testar a existência de uma "
 "mensagem de servidor para o conjunto resultados (resultset)"
 
 #: providers/sybase/gda-sybase-provider.c:793
 #, c-format
 msgid "%s returned %s"
-msgstr "%s returnou %s"
+msgstr "%s retornou %s"
 
 #: providers/sybase/gda-sybase-provider.c:820
 msgid "Failed dropping command structure."
@@ -1405,8 +1399,7 @@ msgstr "%s: %s falhou"
 
 #: providers/sybase/gda-sybase-provider.c:974
 msgid "could not allocate cmd structure to find current database."
-msgstr ""
-"impossível alocar estrutura de comandos para encontrar o banco de dados "
+msgstr "impossível alocar estrutura de comandos para encontrar o banco de dados "
 "atual."
 
 #: providers/sybase/gda-sybase-provider.c:985
@@ -1428,13 +1421,12 @@ msgstr "impossível buscar dados para encontrar o banco de dados atual."
 
 #: providers/sybase/gda-sybase-provider.c:1058
 msgid "could not drop cmd structure to find current database."
-msgstr ""
-"impossível descartar estrutura de comandos para encontrar o banco de dados "
+msgstr "impossível descartar estrutura de comandos para encontrar o banco de dados "
 "atual."
 
 #: providers/sybase/gda-sybase-recordset.c:315
 msgid "Could not allocate datamodel. No results will be returned."
-msgstr "Impossível alocar o modelo de dados.  Nenhum resultado será retornado."
+msgstr "Impossível alocar o modelo de dados. Nenhum resultado será retornado."
 
 #: providers/sybase/gda-sybase-recordset.c:318
 msgid "ct_cancel() failed."
@@ -1443,12 +1435,12 @@ msgstr "ct_cancel() falhou."
 #: providers/sybase/gda-sybase-recordset.c:331
 #, c-format
 msgid "%s failed while processing a row result."
-msgstr "%s falhou durante processamento de resultado de linha."
+msgstr "%s falha durante o processamento de resultado de linha."
 
 #: providers/sybase/gda-sybase-recordset.c:339
 #, c-format
 msgid "%s returned <= 0 columns."
-msgstr "%s returnou <= 0 colunas."
+msgstr "%s retornou <= 0 colunas."
 
 #: providers/sybase/gda-sybase-recordset.c:359
 #: providers/sybase/gda-sybase-recordset.c:549
@@ -1459,7 +1451,7 @@ msgstr "Impossível alocar estrutura para metainformação de coluna."
 #: providers/sybase/gda-sybase-recordset.c:553
 #, c-format
 msgid "Could not call %s while processing row resultset."
-msgstr "Impossível chamar %s durante processamento de resultset de linha."
+msgstr "Impossível chamar %s durante processamento do resultset de linha."
 
 #: providers/sybase/gda-sybase-recordset.c:382
 #: providers/sybase/gda-sybase-recordset.c:403
@@ -1475,18 +1467,17 @@ msgstr "Impossível alocar reserva de espaço para coluna %d"
 #: providers/sybase/gda-sybase-recordset.c:422
 #, c-format
 msgid "Could not run %s to cancel processing row resultset."
-msgstr ""
-"Impossível rodar %s para cancelar o processamento de resultset de linha."
+msgstr "Impossível rodar %s para cancelar o processamento do resultset de linha."
 
 #: providers/sybase/gda-sybase-recordset.c:438
 #, c-format
 msgid "%s failed on row %d"
-msgstr "%s falhou na linha %d"
+msgstr "%s falha na linha %d"
 
 #: providers/sybase/gda-sybase-recordset.c:465
 #, c-format
 msgid "%s terminated with unexpected return code."
-msgstr "%s terminou com código de retorno inesperado."
+msgstr "%s terminado com código de retorno inesperado."
 
 #: providers/sybase/gda-sybase-recordset.c:509
 msgid ""
@@ -1595,12 +1586,11 @@ msgstr "\tNome do Procedimento: %s\n"
 
 #: providers/sybase/utils.c:147
 msgid "ct_diag() failed determining # of client messages."
-msgstr "ct_diag() falhou determinando número de mensagens de clientes."
+msgstr "ct_diag() falhou determinando o número de mensagens dos clientes."
 
 #: providers/sybase/utils.c:202
 msgid "call to cs_diag failed when attempting to the amount of client messages"
-msgstr ""
-"chamada ao ct_diag() falhou determinando quantidade de mensagens de clientes"
+msgstr "chamada ao ct_diag() falhou ao determinar a quantidade de mensagens dos clientes"
 
 #: providers/sybase/utils.c:220
 msgid ""
@@ -1610,36 +1600,35 @@ msgstr ""
 
 #: providers/sybase/utils.c:230
 msgid "OS_Error:("
-msgstr "Erro_SO:("
+msgstr "OS_Error:("
 
 #: providers/sybase/utils.c:232
 msgid ") Message: "
 msgstr ") Mensagem: "
 
 #: providers/sybase/utils.c:244
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Sybase OpenClient Msg: severity(%ld), number(%ld), origin(%ld), layer(%ld): %"
 "s"
 msgstr ""
-"Erro no CT-Client:\n"
-"\tseveridade(%ld) camada(%ld) origem (%ld) número(%ld)\n"
-"\t%s"
+"Sybase OpenClient Msg: severidade(%ld), número(%ld), origem(%ld), camada(%ld): %"
+"s"
 
 #: providers/sybase/utils.c:272
 msgid "call to cs_diag failed when attempting to clear the client messages"
-msgstr "chamada ao cs_diag falhou tentando limpar as mensagens de clientes"
+msgstr "chamada ao cs_diag falhou tentando limpar as mensagens dos clientes"
 
 #: providers/sybase/utils.c:313
 msgid "call to ct_diag failed when attempting to the amount of server messages"
 msgstr ""
-"chamada ao ct_diag falhou determinando quantidade de mensagens de servidor"
+"chamada ao ct_diag falhou determinando quantidade de mensagens do servidor"
 
 #: providers/sybase/utils.c:330
 msgid ""
 "an error occured when calling ct_diag attempting to retrieve a server message"
 msgstr ""
-"ocorreu um erro chamando ct_diag tentando obter uma mensagem de servidor"
+"ocorreu um erro chamando ct_diag tentando obter uma mensagem do servidor"
 
 #: providers/sybase/utils.c:342
 msgid "Server:"
@@ -1667,14 +1656,13 @@ msgstr "Linha"
 
 #: providers/sybase/utils.c:442
 msgid "call to ct_diag failed when attempting to the amount of client messages"
-msgstr ""
-"chamada ao ct_diag falhou determinando quantidade de mensagens de clientes"
+msgstr "chamada ao ct_diag falhou ao determinar a quantidade de mensagens dos clientes"
 
 #: providers/sybase/utils.c:459
 msgid ""
 "an error occured when calling ct_diag attempting to retrieve a client message"
 msgstr ""
-"ocorreu um erro chamando ct_diag tentando obter uma mensagem de cliente"
+"ocorreu um erro chamando ct_diag ao tentar obter uma mensagem de cliente"
 
 #: providers/sybase/utils.c:472
 msgid "Layer"
@@ -1690,7 +1678,7 @@ msgstr "Número da Mensagem"
 
 #: providers/sybase/utils.c:498
 msgid "call to ct_diag failed when attempting to clear the client messages"
-msgstr "chamada ao ct_diag falhou tentando limpar as mensagens de clientes"
+msgstr "chamada ao ct_diag falhou ao tentar limpar as mensagens dos clientes"
 
 #: providers/sybase/utils.c:519
 msgid "Operation not possible, connection busy."
@@ -1699,13 +1687,13 @@ msgstr "Operação impossível, conexão ocupada."
 #: providers/xbase/gda-xbase-provider.c:185
 msgid "Either FILENAME or DIRECTORY can be specified, but not both or neither"
 msgstr ""
-"NOME DE ARQUIVO ou DIRETÓRIO podem ser especificados, mas não os dois ou "
+"FILENAME ou DIRECTORY podem ser especificados, mas não os dois ou "
 "nenhum"
 
 #: providers/xbase/gda-xbase-provider.c:232
 msgid "Either FILENAME or DIRECTORY must be specified in the connection string"
 msgstr ""
-"Um NOME DE ARQUIVO ou DIRETÓRIO deve ser especificado na string de conexão"
+"Um FILENAME ou DIRECTORY deve ser especificado na string de conexão"
 
 #: providers/xbase/gda-xbase-provider.c:261
 #: providers/xbase/gda-xbase-provider.c:379
@@ -1747,93 +1735,84 @@ msgstr "Impossível obter descrição para coluna"
 
 #. fill the recordset
 #: providers/xml/gda-xml-provider.c:661
-#, fuzzy
 msgid "Big integer"
-msgstr "Inteiros de 64 bits"
+msgstr "Inteiro grande"
 
 #: providers/xml/gda-xml-provider.c:662
 msgid "Big unsigned integer"
-msgstr ""
+msgstr "Inteiro sem sinal grande"
 
 #: providers/xml/gda-xml-provider.c:663
 msgid "Binary"
-msgstr ""
+msgstr "Binário"
 
 #: providers/xml/gda-xml-provider.c:664
-#, fuzzy
 msgid "Boolean"
-msgstr "Tipo booleano"
+msgstr "Booleano"
 
 #: providers/xml/gda-xml-provider.c:665
-#, fuzzy
 msgid "Date"
-msgstr "Estado"
+msgstr "Data"
 
 #: providers/xml/gda-xml-provider.c:666
-#, fuzzy
 msgid "Double precision"
-msgstr "Valores de precisão dupla"
+msgstr "Precisão dupla"
 
 #: providers/xml/gda-xml-provider.c:667
 msgid "Integer"
-msgstr ""
+msgstr "Inteiro"
 
 #: providers/xml/gda-xml-provider.c:668
 msgid "List"
-msgstr ""
+msgstr "Lista"
 
 #: providers/xml/gda-xml-provider.c:669
 msgid "Money"
-msgstr ""
+msgstr "Dinheiro"
 
 #: providers/xml/gda-xml-provider.c:670
-#, fuzzy
 msgid "Numeric"
-msgstr "Número"
+msgstr "Numérico"
 
 #: providers/xml/gda-xml-provider.c:671
-#, fuzzy
 msgid "Point"
-msgstr "Formato Impr."
+msgstr "Ponto"
 
 #: providers/xml/gda-xml-provider.c:672
-#, fuzzy
 msgid "Single precision"
-msgstr "Valores de precisão simples"
+msgstr "Precisão simples"
 
 #: providers/xml/gda-xml-provider.c:673
 msgid "Small integer"
-msgstr ""
+msgstr "Inteiro pequeno"
 
 #: providers/xml/gda-xml-provider.c:674
 msgid "Small unsigned integer"
-msgstr ""
+msgstr "Inteiro sem sinal pequeno"
 
 #: providers/xml/gda-xml-provider.c:675
 msgid "String"
-msgstr ""
+msgstr "Texto"
 
 #: providers/xml/gda-xml-provider.c:676
-#, fuzzy
 msgid "Time"
-msgstr "Título"
+msgstr "Tempo"
 
 #: providers/xml/gda-xml-provider.c:677
 msgid "Timestamp"
-msgstr ""
+msgstr "Marca de tempo"
 
 #: providers/xml/gda-xml-provider.c:678
-#, fuzzy
 msgid "Tiny integer"
-msgstr "Inteiros de 64 bits"
+msgstr "Inteiro tiny"
 
 #: providers/xml/gda-xml-provider.c:679
 msgid "Tiny unsigned integer"
-msgstr ""
+msgstr "Inteiro sem sinal tiny"
 
 #: providers/xml/gda-xml-provider.c:681
 msgid "Unsigned integer"
-msgstr ""
+msgstr "Inteiro sem sinal"
 
 #: providers/xml/libmain.c:33
 msgid "XML"
@@ -1845,7 +1824,7 @@ msgstr "Provedor XML, baseado no formato de banco de dados XML do libgda"
 
 #: report/libgda-report/gda-report-document.c:171
 msgid "Could not parse XML document"
-msgstr "Impossível analisar documento XML"
+msgstr "Impossível analisar o documento XML"
 
 #: report/libgda-report/gda-report-document.c:181
 msgid "XML document is not valid"
@@ -1913,8 +1892,7 @@ msgstr "Sem declaração para o atributo %s do elemento %s\n"
 #: report/libgda-report/gda-report-valid.c:283
 #, c-format
 msgid "Value \"%s\" for attribute %s of %s is not among the enumerated set\n"
-msgstr ""
-"Valor \"%s\" para o atributo %s de %s não está detro do conjunto enumerado\n"
+msgstr "Valor \"%s\" para o atributo %s de %s não está detro do conjunto enumerado\n"
 
 #: testing/client.c:42
 msgid "\t\tNONE\n"
@@ -2094,30 +2072,25 @@ msgid "\tgda_params ="
 msgstr "\tgda_params ="
 
 #: providers/bdb/gda-bdb-provider.c:154
-#, fuzzy
 msgid "The FILE parameter is not defined in the connection string."
-msgstr ""
-"Um NOME DE ARQUIVO de banco de dados deve ser indicado na connection_string"
+msgstr "O parâmetro FILE não foi definido na connection_string"
 
 #: providers/bdb/gda-bdb-provider.c:185
 msgid "-"
-msgstr ""
+msgstr "-"
 
 #: providers/bdb/gda-bdb-provider.c:242 providers/bdb/gda-bdb-provider.c:263
 #: providers/bdb/gda-bdb-provider.c:286
-#, fuzzy
 msgid "Invalid BDB handle"
-msgstr "Handle MDB inválida"
+msgstr "Handle BDB inválida"
 
 #: providers/bdb/gda-bdb-recordset.c:242
-#, fuzzy
 msgid "Database is empty"
-msgstr "Bancos de dados"
+msgstr "O bancos de dados está vazio"
 
 #: providers/bdb/libmain.c:39
-#, fuzzy
 msgid "Provider for Berkeley databases"
-msgstr "Provedor para bancos de dados Oracle"
+msgstr "Provedor para bancos de dados Berkeley"
 
 #~ msgid "Sybase OpenClient Msg: severity("
 #~ msgstr "Msg Sybase OpenClient: severidade("
