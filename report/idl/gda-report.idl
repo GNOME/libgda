@@ -19,6 +19,8 @@
 #ifndef __gda_report_idl__
 #define __gda_report_idl__
 
+#include <oaf-factory.idl>
+
 module GDA {
 	
 	/*
@@ -48,7 +50,7 @@ module GDA {
 			ElementList elem_list;
 		case PCDATA:
 			string contents;
-	}
+	};
 	interface ReportElement {
 		attribute string name;
 		attribute AttributeList attr_list;
@@ -109,7 +111,7 @@ module GDA {
 	/*
 	 * The report engine
 	 */
-	interface ReportEngine {
+	interface ReportEngine : GNOME::ObjectFactory {
 		ReportList queryReports (in string condition, in long flags);
 		Report     openReport (in string rep_name);
 		

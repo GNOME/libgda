@@ -1,1 +1,1 @@
-SUBDIRS = idl
+SUBDIRS = idl server
