@@ -1,3 +1,4 @@
+# translation of libgda.HEAD.es.po to Spanish
 # Libgda Spanish Translation
 # Copyright © 2002-2003 Free Software Foundation, Inc.
 # This file is distributed under the same license as the libgda package.
@@ -6,19 +7,20 @@
 # Carlos Perelló Marín <carlos@gnome-db.org>, 2001.
 # Antonio de la Torre <adltorre@terra.es>, 2001.
 # Pablo Gonzalo del Campo <pablodc@bigfoot.com>,2002-2003.
+# Francisco Javier F. Serrador <serrador@arrakis.es>, 2003
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: libgda\n"
+"Project-Id-Version: libgda.HEAD.es\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2003-06-08 20:20+0200\n"
-"PO-Revision-Date: 2003-03-04 12:18-0300\n"
-"Last-Translator: Pablo Gonzalo del Campo <pablodc@bigfoot.com>\n"
+"POT-Creation-Date: 2003-06-13 12:57+0200\n"
+"PO-Revision-Date: 2003-06-13 19:54+0000\n"
+"Last-Translator: Francisco Javier F. Serrador <serrador@arrakis.es>\n"
 "Language-Team: Spanish <traductores@es.gnome.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: KBabel 1.1\n"
+"X-Generator: KBabel 1.0.1\n"
 
 #: libgda/gda-client.c:309 libgda/gda-client.c:511 libgda/gda-connection.c:218
 #, c-format
@@ -197,8 +199,7 @@ msgstr "Nodo XML inválido"
 
 #: providers/default/gda-default-provider.c:190
 #: providers/sqlite/gda-sqlite-provider.c:198
-msgid ""
-"A full path must be specified on the connection string to open a database."
+msgid "A full path must be specified on the connection string to open a database."
 msgstr ""
 "Una ruta completa debe ser especificada en la cadena de conexión para abrir "
 "la base de datos."
@@ -775,9 +776,8 @@ msgid "Provider for Microsoft Access files"
 msgstr "Proveedor para archivos de Microsoft Access"
 
 #: providers/msql/gda-msql-libmain.c:41
-#, fuzzy
 msgid "Provider for Hughes Technologies mSQL databases"
-msgstr "Proveedor para bases de datos PostgreSQL"
+msgstr "Proveedor para bases de datos mSQL de Hughes Technologies"
 
 #: providers/msql/gda-msql-provider.c:228
 #: providers/msql/gda-msql-provider.c:270
@@ -785,37 +785,34 @@ msgstr "Proveedor para bases de datos PostgreSQL"
 #: providers/msql/gda-msql-provider.c:549
 #: providers/msql/gda-msql-recordset.c:67
 #: providers/msql/gda-msql-recordset.c:130
-#, fuzzy
 msgid "Invalid mSQL handle"
-msgstr "Manejador MySQL inválido"
+msgstr "Manejador mSQL inválido"
 
 #: providers/msql/gda-msql-provider.c:315
 msgid "mSQL allows database creation only through the msqladmin tool."
-msgstr ""
+msgstr "mSQL permite la creación de bases de datos sólo a través de la herramienta msqladmin"
 
 #: providers/msql/gda-msql-provider.c:328
 msgid "mSQL allows database drops only through the msqladmin tool."
-msgstr ""
+msgstr "mSQL permite drops en la base de datos sólo a través de la herramiente msqladmin."
 
 #: providers/msql/gda-msql-provider.c:373
 #: providers/msql/gda-msql-provider.c:386
 #: providers/msql/gda-msql-provider.c:399
 msgid "mSQL doesn't support transactions."
-msgstr ""
+msgstr "mSQL no soporta transacciones"
 
 #: providers/msql/gda-msql-provider.c:483
-#, fuzzy
 msgid "Title"
-msgstr "Tabla"
+msgstr "Título"
 
 #: providers/msql/gda-msql-provider.c:534
 msgid "Field Name"
 msgstr "Nombre del campo"
 
 #: providers/msql/gda-msql-provider.c:538
-#, fuzzy
 msgid "Not null"
-msgstr "¿No nulo?"
+msgstr "No nulo"
 
 #: providers/msql/gda-msql-provider.c:555
 #: providers/msql/gda-msql-provider.c:561
@@ -827,15 +824,12 @@ msgstr ""
 "lista de parámetros"
 
 #: providers/msql/gda-msql-recordset.c:74
-#, fuzzy
 msgid "Row number out of bounds"
 msgstr "Número de fila fuera de rango"
 
 #: providers/mysql/gda-mysql-provider.c:218
-msgid ""
-"You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
-msgstr ""
-"No puede proveer un UNIX_SOCKET si al mismo tiempo provee un HOST o un PORT."
+msgid "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
+msgstr "No puede proveer un UNIX_SOCKET si al mismo tiempo provee un HOST o un PORT."
 
 #: providers/mysql/gda-mysql-provider.c:294
 #: providers/mysql/gda-mysql-provider.c:1085
@@ -918,7 +912,7 @@ msgstr "Proveedor para fuentes de datos ODBC"
 
 #: providers/oracle/gda-oracle-provider.c:196
 msgid "No TNS name supplied"
-msgstr ""
+msgstr "No se ha suministrado un nombre TNS"
 
 #: providers/oracle/gda-oracle-provider.c:212
 msgid "Could not initialize Oracle"
@@ -1017,8 +1011,7 @@ msgstr "No se ha podido ejecutar la sentencia de Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:640
 msgid "Could not get the number of columns in the result set"
-msgstr ""
-"No se ha podido obtener la cantidad de columnas en el conjunto de resultado"
+msgstr "No se ha podido obtener la cantidad de columnas en el conjunto de resultado"
 
 #: providers/oracle/gda-oracle-provider.c:657
 msgid "Could not get the parameter descripter in the result set"
@@ -1028,8 +1021,7 @@ msgstr ""
 
 #: providers/oracle/gda-oracle-provider.c:669
 msgid "Could not get the column name in the result set"
-msgstr ""
-"No se ha podido obtener el nombre de la columna en el conjunto de resultado"
+msgstr "No se ha podido obtener el nombre de la columna en el conjunto de resultado"
 
 #: providers/oracle/gda-oracle-provider.c:815
 #: providers/oracle/gda-oracle-provider.c:896
@@ -1381,18 +1373,15 @@ msgstr ""
 
 #: providers/sybase/gda-sybase-provider.c:985
 msgid "could not execute command to get current database."
-msgstr ""
-"No se ha podido ejecutar el comando para obtener la base de datos actual."
+msgstr "No se ha podido ejecutar el comando para obtener la base de datos actual."
 
 #: providers/sybase/gda-sybase-provider.c:993
 msgid "could not send command to get current database."
-msgstr ""
-"No se ha podido enviar el comando para obtener la base de datos actual."
+msgstr "No se ha podido enviar el comando para obtener la base de datos actual."
 
 #: providers/sybase/gda-sybase-provider.c:1016
 msgid "could not bind variable to get current database."
-msgstr ""
-"No se ha podido asignar la variable para obtener la base de datos actual."
+msgstr "No se ha podido asignar la variable para obtener la base de datos actual."
 
 #: providers/sybase/gda-sybase-provider.c:1029
 #: providers/sybase/gda-sybase-provider.c:1044
@@ -1407,8 +1396,7 @@ msgstr ""
 
 #: providers/sybase/gda-sybase-recordset.c:315
 msgid "Could not allocate datamodel. No results will be returned."
-msgstr ""
-"No se ha podido asignar el modelo de datos. No se devolverán los resultados."
+msgstr "No se ha podido asignar el modelo de datos. No se devolverán los resultados."
 
 #: providers/sybase/gda-sybase-recordset.c:318
 msgid "ct_cancel() failed."
@@ -1427,8 +1415,7 @@ msgstr "%s ha devuelto <= 0 columnas."
 #: providers/sybase/gda-sybase-recordset.c:359
 #: providers/sybase/gda-sybase-recordset.c:549
 msgid "Could not allocate structure for column metainformation."
-msgstr ""
-"No se ha podido asignar la estructura para la metainformación de la columna."
+msgstr "No se ha podido asignar la estructura para la metainformación de la columna."
 
 #: providers/sybase/gda-sybase-recordset.c:363
 #: providers/sybase/gda-sybase-recordset.c:553
@@ -1476,8 +1463,7 @@ msgstr ""
 
 #: providers/sybase/gda-sybase-recordset.c:518
 msgid "attempting to make recordset and msg count != 1 !"
-msgstr ""
-"se esta intentando crear un conjunto de registros y la cuenta de msg != 1"
+msgstr "se esta intentando crear un conjunto de registros y la cuenta de msg != 1"
 
 #: providers/sybase/gda-sybase-recordset.c:531
 msgid ""
@@ -1585,8 +1571,7 @@ msgstr ""
 "mensajes del cliente"
 
 #: providers/sybase/utils.c:220
-msgid ""
-"an error occured when calling cs_diag attempting to retrieve a client message"
+msgid "an error occured when calling cs_diag attempting to retrieve a client message"
 msgstr ""
 "ha ocurrido un error al llamar a cs_diag cuando intentaba recuperara un "
 "mensaje del cliente"
@@ -1628,8 +1613,7 @@ msgstr ""
 "mensajes del servidor"
 
 #: providers/sybase/utils.c:334
-msgid ""
-"an error occured when calling ct_diag attempting to retrieve a server message"
+msgid "an error occured when calling ct_diag attempting to retrieve a server message"
 msgstr ""
 "ha ocurrido un error al llamar a ct_diag cuando se intentaba recuperar un "
 "mensaje del servidor"
@@ -1665,8 +1649,7 @@ msgstr ""
 "mensajes del cliente"
 
 #: providers/sybase/utils.c:463
-msgid ""
-"an error occured when calling ct_diag attempting to retrieve a client message"
+msgid "an error occured when calling ct_diag attempting to retrieve a client message"
 msgstr ""
 "ha ocurrido un error al llamar a ct_diag cuando se intentaba recuperar un "
 "mensaje del cliente"
@@ -1701,8 +1684,7 @@ msgstr ""
 
 #: providers/xbase/gda-xbase-provider.c:232
 msgid "Either FILENAME or DIRECTORY must be specified in the connection string"
-msgstr ""
-"Deben especificarse el ARCHIVO o el DIRECTORIO en la cadena de conexión"
+msgstr "Deben especificarse el ARCHIVO o el DIRECTORIO en la cadena de conexión"
 
 #: providers/xbase/gda-xbase-provider.c:261
 #: providers/xbase/gda-xbase-provider.c:379
@@ -2247,3 +2229,4 @@ msgstr "\tgda_params ="
 
 #~ msgid "\tdomain = %s\n"
 #~ msgstr "\tdominio = %s\n"
+
