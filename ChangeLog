@@ -1,3 +1,10 @@
+2001-12-09  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* configure.in: added all needed stuff for the installation of
+	the libgda GConf schemas
+
+	* Makefile.am: added 'data' directory to build process
+
 2001-12-05  mr mike <wingert.3@postbox.acs.ohio-state.edu>
 
 	* configure.in: re-added Sybase provider directory to build process
