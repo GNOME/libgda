@@ -40,8 +40,6 @@ class Xml:Query:Dual from Xml:Query:Item {
 
         dual = (XmlQueryItem *)GET_NEW;
         xml_query_item_set_tag(dual,tag);
-        xml_query_item_set_sqlfmt(dual,sqlfmt);
-        xml_query_item_set_sqlop(dual,sqlop);
 
 	return dual;
     }
@@ -108,28 +106,6 @@ class Xml:Query:Dual from Xml:Query:Item {
         TO_DOM(self->_priv->right,node);
 
         return node;
-    }
-
-    override (Xml:Query:Item) gchar *
-    to_sql(Xml:Query:Item *parent)
-    {
-         gchar *output, *left, *op, *right, *fmt;
-         XmlQueryDual *self = XML_QUERY_DUAL(parent);
-
-         left  = TO_SQL(self->_priv->left);
-         right = TO_SQL(self->_priv->right);
-
-         op  = xml_query_item_get_sqlop(parent);
-         fmt = xml_query_item_get_sqlfmt(parent);
-         if (op == NULL)
-	     output = g_strdup_printf(fmt,left,right);
-	 else
-	     output = g_strdup_printf(fmt,left,op,right);
-         g_free(left);
-         g_free(op);
-         g_free(right);
-
-         return output;
     }
 
 

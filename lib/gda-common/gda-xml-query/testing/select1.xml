@@ -1,22 +1,22 @@
 <?xml version="1.0"?>
-<!DOCTYPE query SYSTEM "../gda-xml-query.dtd">
+<!DOCTYPE query SYSTEM "xmlquery.dtd">
 
 <query>
   <select>
     <targetlist>
-      <table name="tab_a"/>
+      <target name="tab_a" id="t"/>
     </targetlist>
     <valuelist>
       <value id="v01">
-        <field name="a"/>
+        <field source="t" name="a"/>
       </value>
       <value id="v02">
-        <field name="b"/>
+        <field source="t" name="b"/>
       </value>
       <value id="v03">
         <func name="sum" aggregate="yes">
           <arglist>
-            <field name="c"/>
+            <field source="t" name="c"/>
         </arglist>
         </func>
       </value>
@@ -28,12 +28,12 @@
       <and>
         <not>
           <null>
-            <field name="x"/>
+            <field source="t" name="x"/>
           </null>
         </not>
         <ne>
-          <field name="a"/>
-          <field name="b"/>
+          <field source="t" name="a"/>
+          <field source="t" name="b"/>
         </ne>
       </and>
     </where>
@@ -41,7 +41,7 @@
       <gt>
         <func name="sum" aggregate="yes">
           <arglist>
-            <field name="c"/>
+            <field source="t" name="c"/>
           </arglist>
         </func>
         <const value="0" type="int"/>
@@ -53,8 +53,8 @@
       <valueref source="v04"/>
     </group>
     <order>
-      <column num="2"/>
-      <column num="1"/>
+      <valueref source="v02"/>
+      <valueref source="v01"/>
     </order>
   </select>
 </query>

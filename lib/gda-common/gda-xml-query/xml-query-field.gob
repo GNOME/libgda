@@ -25,9 +25,6 @@
 %}
 
 
-
-
-
 class Xml:Query:Field from Xml:Query:Atom {
 
     public Xml:Query:Item *
@@ -56,29 +53,6 @@ class Xml:Query:Field from Xml:Query:Atom {
             xml_query_item_set_attrib(field,"alias",alias);
 
         return field;
-    }
-
-
-
-    override (Xml:Query:Item) gchar *
-    to_sql(Xml:Query:Item *parent)
-    {
-         gchar *output, *source, *name, *alias;
-
-         source = xml_query_item_get_attrib(parent,"source");
-         name = xml_query_item_get_attrib(parent,"name");
-         alias = xml_query_item_get_attrib(parent,"alias");
-
-         source = (*source == 0) ? g_strdup("")
-                      : g_strdup_printf("%s.",source);
-         alias = (*alias == 0) ? g_strdup("")
-                      : g_strdup_printf(" as %s",alias);
-         output = g_strdup_printf("%s%s%s",source,name,alias);
-
-         g_free(source);
-         g_free(alias);
-
-         return output;
     }
 
 

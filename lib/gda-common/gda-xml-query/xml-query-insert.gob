@@ -141,23 +141,4 @@ class Xml:Query:Insert from Xml:Query:Dml {
     }
 
 
-    override (Xml:Query:Item) gchar *
-    to_sql(Xml:Query:Item *parent)
-    {
-        XmlQueryDml *dml = XML_QUERY_DML(parent);
-        gchar          *output, *target, *dest, *source;
-
-        target = TO_SQL(dml->_priv->target);
-        dest   = TO_SQL(dml->_priv->dest);
-        source = TO_SQL(dml->_priv->source);
-
-        output = g_strdup_printf("insert into %s %s %s",target,dest,source);
-
-        g_free(target);
-        g_free(dest);
-        g_free(source);
-
-        return output;
-    }
-
 }

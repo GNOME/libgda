@@ -60,36 +60,4 @@ class Xml:Query:Const from Xml:Query:Atom {
         return consta;
     }
 
-
-    override (Xml:Query:Item) gchar *
-    to_sql(Xml:Query:Item *parent)
-    {
-         gchar *output, *value, *alias, *type, *null;
-
-         type = xml_query_item_get_attrib(parent,"type");
-         null = xml_query_item_get_attrib(parent,"null");
-         value = xml_query_item_get_attrib(parent,"value");
-         alias = xml_query_item_get_attrib(parent,"alias");
-
-         if (*null == 'y')
-             value = g_strdup("null");
-         else if (!strcmp(type,"char") ||
-                  !strcmp(type,"varchar") ||
-                  !strcmp(type,"text"))
-             value = g_strdup_printf("'%s'",value);
-         else
-             value = g_strdup(value);
-
-         alias = (*alias == 0) ? g_strdup("")
-                      : g_strdup_printf(" as %s",alias);
-
-         output = g_strdup_printf("%s%s",value,alias);
-
-         g_free(value);
-         g_free(alias);
-
-         return output;
-    }
-
-
 }

@@ -38,13 +38,11 @@ class Xml:Query:List from Xml:Query:Item {
 
 
     public Xml:Query:Item *
-    new(gchar *tag, gchar *sqlfmt, gchar *sqlop)
+    new(gchar *tag)
     {
 	XmlQueryItem *list = (XmlQueryItem *)GET_NEW;
 
         xml_query_item_set_tag(list,tag);
-        xml_query_item_set_sqlfmt(list,sqlfmt);
-        xml_query_item_set_sqlop(list,sqlop);
 
 	return list;
     }
@@ -73,34 +71,6 @@ class Xml:Query:List from Xml:Query:Item {
     }
 
 
-    override (Xml:Query:Item) gchar *
-    to_sql(Xml:Query:Item *parent)
-    {
-        XmlQueryList *self = SELF(parent);
-        GSList       *list;
-        gchar        *output = g_strdup(""), *element, *buffer, 
-	             *delim = "", *fmt, *op;
-        
-        op = xml_query_item_get_sqlop(parent);
-
-        for (list = self->_priv->list; list != NULL; list = list->next) {
-            element = xml_query_item_to_sql(list->data);
-            buffer = g_strdup_printf("%s%s%s",output,delim,element);
-            delim = op;
-            g_free(output);
-            g_free(element);
-            output = buffer;
-        }
-	fmt = xml_query_item_get_sqlfmt(parent);
-        if (fmt != NULL) {
-            buffer = output;
-            output = g_strdup_printf(fmt,buffer);
-            g_free(buffer);
-        }
-        return output;
-    }
-
-
     public void
     unref_list(GSList *list)
     {
@@ -112,70 +82,77 @@ class Xml:Query:List from Xml:Query:Item {
     public XmlQueryItem *
     new_setlist(void)
     {
-        return xml_query_list_new("setlist","set %s",", ");
+        return xml_query_list_new("setlist");
     }
 
 
     public XmlQueryItem *
     new_sourcelist(void)
     {
-        return xml_query_list_new("sourcelist","values (%s)",", ");
+        return xml_query_list_new("sourcelist");
     }
 
 
     public XmlQueryItem *
     new_targetlist(void)
     {
-        return xml_query_list_new("targetlist","from %s"," ");
+        return xml_query_list_new("targetlist");
     }
 
 
     public XmlQueryItem *
     new_order(void)
     {
-        return xml_query_list_new("order","order by %s",", ");
+        return xml_query_list_new("order");
     }
 
 
     public XmlQueryItem *
     new_dest(void)
     {
-        return xml_query_list_new("dest","(%s)",", ");
+        return xml_query_list_new("dest");
     }
 
 
     public XmlQueryItem *
     new_arglist(void)
     {
-        return xml_query_list_new("arglist","(%s)",", ");
+        return xml_query_list_new("arglist");
     }
 
 
     public XmlQueryItem *
     new_valuelist(void)
     {
-        return xml_query_list_new("valuelist",NULL,", ");
+        return xml_query_list_new("valuelist");
+    }
+
+
+    public XmlQueryItem *
+    new_joinlist(void)
+    {
+        return xml_query_list_new("joinlist");
     }
 
 
     public XmlQueryItem *
     new_and(void)
     {
-        return xml_query_list_new("and","(%s)"," and ");
+        return xml_query_list_new("and");
     }
 
 
     public XmlQueryItem *
     new_or(void)
     {
-        return xml_query_list_new("or","(%s)"," or ");
+        return xml_query_list_new("or");
     }
 
 
     public XmlQueryItem *
     new_group(void)
     {
-        return xml_query_list_new("group","group by %s",", ");
+        return xml_query_list_new("group");
     }
 
     override (Xml:Query:Item) Xml:Query:Item *

@@ -20,16 +20,35 @@
 #define _UTILS_H_
 
 #include <glib.h>
-#include <tree.h>
-#include <parser.h>
+#include <libxml/tree.h>
+#include <libxml/parser.h>
+#include <libxml/xmlmemory.h>
+#include <libxslt/xslt.h>
+#include <libxslt/xsltInternals.h>
+#include <libxslt/transform.h>
+#include <libxslt/documents.h>
+#include <libxslt/xsltutils.h>
+
 
 extern gchar
-*gensym(gchar *sym);
+*xml_query_gensym(gchar *sym);
 
 extern gboolean
-destroy_hash_pair(gchar *key, gpointer *value, GFreeFunc func);
+xml_query_destroy_hash_pair(gchar *key, gpointer *value, GFreeFunc func);
 
 extern gchar *
-dom_to_xml(xmlNode *node, gboolean freedoc);
+xml_query_dom_to_xml(xmlNode *node, gboolean freedoc);
+
+extern gchar *
+xml_query_dom_to_sql(xmlNode *node, gboolean freedoc);
+
+xmlNode *
+xml_query_new_node(gchar *tag, xmlNode *parNode);
+
+
+void
+xml_query_new_attr(gchar *key, gchar *value, xmlNode *node);
+
 
 #endif /* _UTILS_H_ */
+

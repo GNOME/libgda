@@ -39,10 +39,7 @@
 
 <!ELEMENT delete (target,where?)>
 
-
-<!ELEMENT targetlist (table|view|join)+>
-
-<!ELEMENT target     (table|view)>
+<!ELEMENT targetlist (target,joinlist?)>
 
 <!ELEMENT union     (query)>
 
@@ -73,29 +70,25 @@
 
 <!ELEMENT group (valueref+)>
 
+<!ELEMENT order (valueref+)>
+
 <!ELEMENT valueref EMPTY>
 <!ATTLIST valueref
-          source   IDREF   #REQUIRED
+          source   IDREF       #REQUIRED
+          order    (asc|desc)  #IMPLIED
 >
 
-<!ELEMENT order (column+)>
-
-<!ELEMENT table (on?)>
-<!ATTLIST table
+<!ELEMENT target EMPTY>
+<!ATTLIST target
           id      ID       #IMPLIED
           name    NMTOKEN  #REQUIRED
 >
 
-<!ELEMENT view (on?)>
-<!ATTLIST view
-          id      ID       #IMPLIED
-          name    NMTOKEN  #REQUIRED
->
+<!ELEMENT joinlist (join+)>
 
-<!ELEMENT join (table|view)>
+<!ELEMENT join (target,on?)>
 <!ATTLIST join
-          type (inner|left|right) "inner"
-          source  IDREF #REQUIRED
+          type (inner|left|right|outer) "inner"
 >
 
 <!ELEMENT on (%boolop;|%arithop;)>
@@ -117,11 +110,6 @@
 
 <!ELEMENT arglist (field|const|func)+>
 
-
-<!ELEMENT column EMPTY>
-<!ATTLIST column num  NMTOKEN #REQUIRED
-          order (asc|desc) "asc"
->
 
 <!ELEMENT const EMPTY>
 <!ATTLIST const

@@ -109,7 +109,7 @@ class Xml:Query:Select from Xml:Query:Dml {
         if (dml->_priv->valuelist == NULL)
             dml->_priv->valuelist = xml_query_list_new_valuelist();
 
-        id = gensym("v");
+        id = xml_query_gensym("v");
         value = xml_query_value_new_with_data(id);
         g_free(id);
         xml_query_item_add(value,valueitem);
@@ -131,35 +131,18 @@ class Xml:Query:Select from Xml:Query:Dml {
 
 
     override (Xml:Query:Dml) gchar *
-    add_table_from_text(Xml:Query:Dml *parent, 
+    add_target_from_text(Xml:Query:Dml *parent, 
                         gchar *name, Xml:Query:Item *join)
     {
-        XmlQueryItem   *table;
+        XmlQueryItem   *target;
         gchar          *id;
 
-        id = gensym("t");
+        id = xml_query_gensym("t");
         if (parent->_priv->target == NULL)
             parent->_priv->target = xml_query_list_new_targetlist();
-        table = xml_query_target_new_table_with_data(id,name,join);
-        xml_query_item_add(parent->_priv->target,table);
+        target = xml_query_target_new_with_data(id,name,join);
+        xml_query_item_add(parent->_priv->target,target);
 	return id;
-    }
-
-
-    override (Xml:Query:Dml) gchar *
-    add_view_from_text(Xml:Query:Dml *parent, 
-                       gchar *name, Xml:Query:Item *join)
-    {
-        XmlQueryItem   *view;
-        gchar          *id;
-
-        id = gensym("v");
-        if (parent->_priv->target == NULL)
-            parent->_priv->target = xml_query_list_new_targetlist();
-        view = xml_query_target_new_view_with_data(id,name,join);
-        xml_query_item_add(parent->_priv->target,view);
-
-        return id;
     }
 
 
@@ -221,7 +204,7 @@ class Xml:Query:Select from Xml:Query:Dml {
             xml_query_item_add(having,cond);
         else {
             fmt = g_strdup_printf(" %s ",type);
-            list = xml_query_list_new(type,"(%s)",fmt);
+            list = xml_query_list_new(type);
             g_free(fmt);
             xml_query_item_add(list,having);
             xml_query_item_add(list,cond);
@@ -245,34 +228,6 @@ class Xml:Query:Select from Xml:Query:Dml {
 
         column = xml_query_column_new_with_data(col,asc);
         xml_query_item_add(dml->_priv->trailer,column);
-    }
-
-
-    override (Xml:Query:Item) gchar *
-    to_sql(Xml:Query:Item *parent)
-    {
-        XmlQueryDml *dml = XML_QUERY_DML(parent);
-        gchar *output, *target, *valuelist, *where, 
-              *having, *group, *trailer;
-
-        target     = TO_SQL(dml->_priv->target);
-        valuelist  = TO_SQL(dml->_priv->valuelist);
-        where      = TO_SQL(dml->_priv->where);
-        having     = TO_SQL(dml->_priv->having);
-        group      = TO_SQL(dml->_priv->group);
-        trailer    = TO_SQL(dml->_priv->trailer);
-
-        output = g_strdup_printf("select %s %s %s %s %s %s",
-                                   valuelist,target,
-                                   where,having,group,trailer);
-        g_free(target);
-        g_free(valuelist);
-        g_free(where);
-        g_free(having);
-        g_free(group);
-        g_free(trailer);
-
-        return output;
     }
 
 

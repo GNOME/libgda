@@ -41,12 +41,12 @@ class Xml:Query:Target from Xml:Query:Bin {
 
 
     public Xml:Query:Item *
-    new_with_data(gchar *tag, gchar *id, gchar *name, Xml:Query:Item *join)
+    new_with_data(gchar *id, gchar *name, Xml:Query:Item *join)
     {
         XmlQueryItem *target;
 
         target = (XmlQueryItem *)(GET_NEW);
-        xml_query_item_set_tag(target,tag);
+        xml_query_item_set_tag(target,"target");
         if (id != NULL) {
             xml_query_item_set_attrib(target,"id",id);
             xml_query_item_add_id(target,id);
@@ -58,68 +58,6 @@ class Xml:Query:Target from Xml:Query:Bin {
 
         return target;
     }
-
-
-
-    public Xml:Query:Item *
-    new_table(void)
-    {
-        XmlQueryItem *table;
-
-        table = xml_query_target_new();
-        xml_query_item_set_tag(table,"table");
-
-	return table;
-    }
-
-
-    public Xml:Query:Item *
-    new_table_with_data(gchar *id, gchar *name, Xml:Query:Item *join)
-    {
-	return xml_query_target_new_with_data("table",id,name,join);
-    }
-
-
-    public Xml:Query:Item *
-    new_view(void)
-    {
-        XmlQueryItem *view;
-
-        view = xml_query_target_new();
-        xml_query_item_set_tag(view,"view");
-
-	return view;
-    }
-
-
-    public Xml:Query:Item *
-    new_view_with_data(gchar *id, gchar *name, Xml:Query:Item *join)
-    {
-	return xml_query_target_new_with_data("view",id,name,join);
-    }
-
-
-
-
-
-    override (Xml:Query:Item) gchar *
-    to_sql(Xml:Query:Item *parent)
-    {
-         gchar        *output, *id, *name, *child;
-         XmlQueryBin  *bin = XML_QUERY_BIN(parent);
-
-         name = xml_query_item_get_attrib(parent,"name");
-         child = TO_SQL(xml_query_bin_get_child(bin));
-         id = xml_query_item_get_attrib(parent,"id");
-         if (*id != 0)
-             output = g_strdup_printf("%s as %s %s",name,id,child);
-         else
-             output = g_strdup_printf("%s %s",name,child);
-
-         g_free(child);
-         return output;
-    }
-
 
 }
 

@@ -45,8 +45,6 @@ class Xml:Query:Bin from Xml:Query:Item {
 
         bin = (XmlQueryItem *)GET_NEW;
         xml_query_item_set_tag(bin,tag);
-        xml_query_item_set_sqlfmt(bin,sqlfmt);
-        xml_query_item_set_sqlop(bin,sqlop);
 
 	return bin;
     }
@@ -104,25 +102,6 @@ class Xml:Query:Bin from Xml:Query:Item {
         TO_DOM(self->_priv->child,node);
 
         return node;
-    }
-
-    override (Xml:Query:Item) gchar *
-    to_sql(Xml:Query:Item *parent)
-    {
-        Self *self = SELF(parent);
-        gchar *output, *child, *fmt;
-        
-
-        fmt = xml_query_item_get_sqlfmt(parent);
-        child = TO_SQL(self->_priv->child);
-        if (fmt != NULL) {
-            output = g_strdup_printf(fmt,child);
-            g_free(child);
-        }
-	else
-	    output = child;
-
-        return output;
     }
 
 

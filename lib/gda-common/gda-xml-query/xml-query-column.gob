@@ -59,22 +59,5 @@ class Xml:Query:Column from Xml:Query:Atom {
         return column;
     }
 
-    override (Xml:Query:Item) gchar *
-    to_sql(Xml:Query:Item *parent)
-    {
-         gchar *output, *col, *asc;
-
-         col = xml_query_item_get_attrib(parent,"num");
-         asc = xml_query_item_get_attrib(parent,"order");
-
-         if (asc == NULL)
-             output = g_strdup(col);
-         else
-             output = g_strdup_printf("%s %s",col,asc);
-
-         return output;
-    }
-
-
 }
 

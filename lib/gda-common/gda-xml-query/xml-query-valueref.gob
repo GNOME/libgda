@@ -40,18 +40,5 @@ class Xml:Query:ValueRef from Xml:Query:Atom {
     }
 
 
-    override (Xml:Query:Item) gchar *
-    to_sql(Xml:Query:Item *parent)
-    {
-        XmlQueryItem *value;
-        gchar *source;
-
-	source = xml_query_item_get_attrib(parent,"source");
-        value = xml_query_item_get_ref(parent,source);
-
-        return TO_SQL(value);
-    }
-
-
 }
 

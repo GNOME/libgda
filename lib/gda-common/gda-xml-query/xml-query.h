@@ -22,9 +22,9 @@
 #include <gtk/gtk.h>
 
 
-#include <tree.h>
-#include <parser.h>
-
+#include <libxml/tree.h>
+#include <libxml/parser.h>
+#include <libxml/parserInternals.h>
 
 #include "xml-query-atom.h"
 #include "xml-query-bin.h"

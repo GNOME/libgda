@@ -49,7 +49,7 @@ class Xml:Query:Dml from Xml:Query:Item {
     /* no new method because it's an abstract class */
 
     virtual gchar *
-    add_table_from_text(self, gchar *name, Xml:Query:Item *join)
+    add_target_from_text(self, gchar *name, Xml:Query:Item *join)
     {
         XmlQueryItem   *table;
 
@@ -58,28 +58,10 @@ class Xml:Query:Dml from Xml:Query:Item {
                       xml_query_item_get_tag(XML_QUERY_ITEM(self)));
             return NULL;
         }
-        table = xml_query_target_new_table_with_data(NULL,name,join);
+        table = xml_query_target_new_with_data(NULL,name,join);
         self->_priv->target = table;
 /*        xml_query_item_add(self->_priv->target,table); */
          
-        return NULL;
-    }
-
-
-    virtual gchar *
-    add_view_from_text(self, gchar *name, Xml:Query:Item *join)
-    {
-        XmlQueryItem   *view;
-
-        if (self->_priv->target != NULL) {
-            g_warning("multible targets in %s",
-                      xml_query_item_get_tag(XML_QUERY_ITEM(self)));
-            return NULL;
-        }
-        view = xml_query_target_new_view_with_data(NULL,name,join);
-        self->_priv->target = view;
-/*        xml_query_item_add(self->_priv->target,view);*/
-
         return NULL;
     }
 
@@ -116,7 +98,7 @@ class Xml:Query:Dml from Xml:Query:Item {
             xml_query_item_add(where,cond);
         else {
             fmt = g_strdup_printf(" %s ",type);
-            list = xml_query_list_new(type,"(%s)",fmt);
+            list = xml_query_list_new(type);
             g_free(fmt);
             xml_query_item_add(list,where);
             xml_query_item_add(list,cond);
@@ -135,13 +117,13 @@ class Xml:Query:Dml from Xml:Query:Item {
         node = PARENT_HANDLER(parent,parNode);
         TO_DOM(self->_priv->target,node);
         TO_DOM(self->_priv->valuelist,node);
+        TO_DOM(self->_priv->setlist,node);
         TO_DOM(self->_priv->where,node);
         TO_DOM(self->_priv->having,node);
         TO_DOM(self->_priv->group,node);
         TO_DOM(self->_priv->trailer,node);
         TO_DOM(self->_priv->dest,node);
         TO_DOM(self->_priv->source,node);
-        TO_DOM(self->_priv->setlist,node);
 
         return node;
     }

@@ -1,11 +1,9 @@
 <?xml version="1.0"?>
-<!DOCTYPE query SYSTEM "../gda-xml-query.dtd">
+<!DOCTYPE query SYSTEM "xmlquery.dtd">
 
 <query>
   <insert>
-    <target>
-      <table name="tab_a"/>
-    </target>
+    <target name="tab_a"/>
     <dest>
       <field name="a"/>
       <field name="b"/>

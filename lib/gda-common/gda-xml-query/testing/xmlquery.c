@@ -38,8 +38,6 @@ main(gint ac, gchar *av[])
     XmlQueryItem *item;
     gchar        *item_string;
 
-    LIBXML_TEST_VERSION
-
     if (ac < 3)
         return 0;
 
@@ -67,15 +65,14 @@ main(gint ac, gchar *av[])
             return 0;
     }
 
+    node = xml_query_item_to_dom(item,NULL);
+
     switch(*(av[1])) {
         case 'x':
-            node = xml_query_item_to_dom(item,NULL);
-            item_string = dom_to_xml(node,TRUE);
+            item_string = xml_query_dom_to_xml(node,TRUE);
 	break;
         case 's':
-
-	    item_string = xml_query_item_to_sql(item);
-
+	    item_string = xml_query_dom_to_sql(node,TRUE);
 	break;
         default:
             return 0;
@@ -108,7 +105,7 @@ construct_insert(void)
     xml_query_func_add_field_from_text(XML_QUERY_FUNC(func),
 				       NULL, "x",NULL);
 
-    table = xml_query_dml_add_table_from_text(XML_QUERY_DML(insert),
+    table = xml_query_dml_add_target_from_text(XML_QUERY_DML(insert),
 						"tab_a",NULL);
     
 
@@ -151,7 +148,7 @@ construct_delete(void)
 
     delete = xml_query_delete_new();
 
-    table = xml_query_dml_add_table_from_text(XML_QUERY_DML(delete),
+    table = xml_query_dml_add_target_from_text(XML_QUERY_DML(delete),
 						"tab_a",NULL);
     
     left  = xml_query_field_new_with_data(NULL,"x",NULL);
@@ -195,7 +192,7 @@ construct_update(void)
 
     update = xml_query_update_new();
 
-    table = xml_query_dml_add_table_from_text(XML_QUERY_DML(update),
+    table = xml_query_dml_add_target_from_text(XML_QUERY_DML(update),
 						"tab_a",NULL);
     
     xml_query_dml_add_set_const(XML_QUERY_DML(update),
@@ -238,7 +235,7 @@ construct_select(void)
 
     select = xml_query_select_new();
 
-    table = xml_query_dml_add_table_from_text(XML_QUERY_DML(select),
+    table = xml_query_dml_add_target_from_text(XML_QUERY_DML(select),
                                               "tab_a",NULL);
     xml_query_dml_add_field_from_text(XML_QUERY_DML(select),
                                               table,"a",NULL,TRUE);

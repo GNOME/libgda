@@ -1,20 +1,21 @@
 <?xml version="1.0"?>
-<!DOCTYPE query SYSTEM "../gda-xml-query.dtd">
+<!DOCTYPE query SYSTEM "xmlquery.dtd">
 
 <query>
   <select>
     <targetlist>
-      <table name="tab_a" id="t01"/>
-      <join type="inner" source="t01">
-        <table name="tab_b" id="t02">
+      <target name="tab_a" id="t01"/>
+      <joinlist>
+        <join type="inner">
+          <target name="tab_b" id="t02"/>
           <on>
             <eq>
               <field source="t01" name="fa"/>
               <field source="t02" name="fb"/>
             </eq>
           </on>
-        </table>
-      </join>
+        </join>
+      </joinlist>
     </targetlist>
     <valuelist>
       <value id="v01">

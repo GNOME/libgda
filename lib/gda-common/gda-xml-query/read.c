@@ -35,8 +35,6 @@ typedef struct _ItemInfo ItemInfo;
 struct _ItemInfo {
     gchar *tag;
     gchar *class;
-    gchar *sqlfmt;
-    gchar *sqlop;
 };
 
 
@@ -69,10 +67,12 @@ proc_file(gchar *filename)
     xmlDoc *doc;
     XmlQueryItem *query;
 
-    xmlDoValidityCheckingDefaultValue = 1;
     if (nodeTable == NULL)
         init_node_table();
 
+    xmlKeepBlanksDefault(0);
+    xmlLoadExtDtdDefaultValue = 1;
+    xmlDoValidityCheckingDefaultValue = 1;
     doc = xmlParseFile(filename);
     if (doc == NULL) return NULL;
 
@@ -104,8 +104,8 @@ proc_node(xmlNode *node, XmlQueryItem *parent)
 
     if (node->properties)
         proc_attr(node->properties,item);
-    if (node->xmlChildrenNode)
-        proc_node(node->xmlChildrenNode,item);
+    if (node->children)
+        proc_node(node->children,item);
     if (node->next)
         proc_node(node->next,parent);
 
@@ -115,16 +115,15 @@ proc_node(xmlNode *node, XmlQueryItem *parent)
 
 void proc_attr(xmlAttr *attr, XmlQueryItem *item)
 {
-  gchar *aname = (gchar *)attr->name;
-#ifndef LIBXML_VERSION_STRING
-  gchar *avalue = (gchar *)attr->val->content;
-#else
-  gchar *avalue = (gchar *)attr->children->content;
-#endif
+    gint   atype;
+    gchar *aname = (gchar *)attr->name;
+    gchar *avalue = (gchar *)attr->children->content;
 
     xml_query_item_set_attrib(item,aname,avalue);
 
-    switch (attr->type) {
+    atype = attr->atype;
+
+    switch (atype) {
         case XML_ATTRIBUTE_ID:
             xml_query_item_add_id(item,avalue);
         break;
@@ -152,9 +151,6 @@ init_node_table(void)
     g_hash_table_insert(nodeTable,"const",      xml_query_const_new);
     g_hash_table_insert(nodeTable,"valueref",   xml_query_valueref_new);
     g_hash_table_insert(nodeTable,"column",     xml_query_column_new);
-
-    g_hash_table_insert(nodeTable,"table",      xml_query_target_new_table);
-    g_hash_table_insert(nodeTable,"view",       xml_query_target_new_view);
 
     g_hash_table_insert(nodeTable,"union",      xml_query_bin_new_union);
     g_hash_table_insert(nodeTable,"unionall",   xml_query_bin_new_unionall);
@@ -192,6 +188,7 @@ init_node_table(void)
     g_hash_table_insert(nodeTable,"sourcelist", xml_query_list_new_sourcelist);
     g_hash_table_insert(nodeTable,"targetlist", xml_query_list_new_targetlist);
     g_hash_table_insert(nodeTable,"valuelist",  xml_query_list_new_valuelist);
+    g_hash_table_insert(nodeTable,"joinlist",   xml_query_list_new_joinlist);
     g_hash_table_insert(nodeTable,"group",      xml_query_list_new_group);
 
     g_hash_table_insert(nodeTable,"select",     xml_query_select_new);

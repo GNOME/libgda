@@ -59,13 +59,17 @@ class Xml:Query:Query from Xml:Query:Bin {
     }
 
 
-    override (Xml:Query:Item) gchar *
-    to_sql(Xml:Query:Item *parent)
+    override (Xml:Query:Item) xmlNode *
+    to_dom(Xml:Query:Item *parent, xmlNode *parNode)
     {
-        XmlQueryBin *bin = XML_QUERY_BIN(parent);
+        xmlNode *node;
 
-        return TO_SQL(xml_query_bin_get_child(bin));
+        node = PARENT_HANDLER(parent,parNode);
+
+
+        return node;
     }
+
 
 
 }

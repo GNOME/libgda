@@ -1,11 +1,9 @@
 <?xml version="1.0"?>
-<!DOCTYPE query SYSTEM "../gda-xml-query.dtd">
+<!DOCTYPE query SYSTEM "xmlquery.dtd">
 
 <query>
   <delete>
-    <target>
-      <table name="tab_a"/>
-    </target>
+    <target name="tab_a"/>
     <where>
       <and>
         <eq>
@@ -17,10 +15,10 @@
             <field name="y"/>
             <const value="b" type="char" null="no"/>
           </eq>
-          <eq>
+          <ne>
             <field name="z"/>
             <const value="c" type="char" null="no"/>
-          </eq>
+          </ne>
         </or>
       </and>
     </where>

@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<!DOCTYPE query SYSTEM "xmlquery.dtd">
+
+<query>
+  <update>
+    <target name="tab_a"/>
+    <setlist>
+      <set>
+        <field name="x"/>
+        <const value="2" type="int" null="no"/>
+      </set>
+      <set>
+        <field name="a"/>
+        <const value="abc" type="char" null="no"/>
+      </set>
+    </setlist>
+    <where>
+      <null>
+        <field name="x"/>
+      </null>
+    </where>
+  </update>
+</query>
