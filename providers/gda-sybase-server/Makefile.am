@@ -29,7 +29,7 @@ libgda_sybase_a_SOURCES = \
 	gda-sybase-types.h \
 	gda-sybase.h
 
-oafdir=$(GDA_oafdir)
+oafdir=$(DESTDIR)$(GDA_oafdir)
 
 oaf_in_files = GNOME_GDA_Provider_Sybase.oaf.in
 oaf_DATA = $(oaf_in_files:.oaf.in=.oaf)

@@ -22,6 +22,11 @@
  */
 
 // $Log$
+// Revision 1.4.4.1  2001/09/16 20:12:39  rodrigo
+// 2001-09-16  Mike <wingert.3@postbox.acs.ohio-state.edu>
+//
+// 	* adapted to new GdaError API
+//
 // Revision 1.4  2001/07/18 23:05:42  vivien
 // Ran indent -br -i8 on the files
 //
@@ -357,7 +362,7 @@ gda_sybase_recordset_free (GdaServerRecordset * recset)
 }
 
 void
-gda_sybase_init_recset_fields (GdaServerError * err,
+gda_sybase_init_recset_fields (GdaError * err,
 			       GdaServerRecordset * recset,
 			       sybase_Recordset * srecset,
 			       CS_RETCODE result_type)

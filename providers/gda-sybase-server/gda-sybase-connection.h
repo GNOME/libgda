@@ -61,7 +61,7 @@ typedef struct _sybase_Connection
 	gboolean cs_diag;	// wether we can use cs_diag for cslib messages
 	gboolean ct_diag;	// wether we can use ct_diag for ctlib messages
 
-	GdaServerError *error;
+	GdaError *error;
 	sybase_Error serr;
 
 	gchar *database;
@@ -80,7 +80,7 @@ gint gda_sybase_connection_commit_transaction (GdaServerConnection * cnc);
 gint gda_sybase_connection_rollback_transaction (GdaServerConnection * cnc);
 GdaServerRecordset *gda_sybase_connection_open_schema (GdaServerConnection *
 						       cnc,
-						       GdaServerError * error,
+						       GdaError * error,
 						       GDA_Connection_QType t,
 						       GDA_Connection_Constraint
 						       * constraints,

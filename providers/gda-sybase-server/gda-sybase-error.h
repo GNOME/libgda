@@ -41,7 +41,7 @@
 
 gint gda_sybase_install_error_handlers (GdaServerConnection *);
 
-void gda_sybase_error_make (GdaServerError * error,
+void gda_sybase_error_make (GdaError * error,
 			    GdaServerRecordset * recset,
 			    GdaServerConnection * cnc, gchar * where);
 
@@ -50,12 +50,12 @@ void gda_sybase_cleanup (sybase_Connection *, CS_RETCODE, const gchar *);
 gboolean gda_sybase_messages_install (GdaServerConnection *);
 void gda_sybase_messages_uninstall (GdaServerConnection *);
 
-void sybase_chkerr (GdaServerError *,
+void sybase_chkerr (GdaError *,
 		    GdaServerRecordset *,
 		    GdaServerConnection *, GdaServerCommand *, gchar *);
 CS_RETCODE sybase_exec_chk (CS_RETCODE *,
 			    CS_RETCODE,
-			    GdaServerError *,
+			    GdaError *,
 			    GdaServerRecordset *,
 			    GdaServerConnection *,
 			    GdaServerCommand *, gchar *);
@@ -71,18 +71,18 @@ CS_RETCODE sybase_exec_chk (CS_RETCODE *,
 						 __PRETTY_FUNCTION__)
 #endif
 
-void gda_sybase_messages_handle (GdaServerError *,
+void gda_sybase_messages_handle (GdaError *,
 				 GdaServerRecordset *,
 				 GdaServerConnection *, gchar * where);
-void gda_sybase_messages_handle_clientmsg (GdaServerError *,
+void gda_sybase_messages_handle_clientmsg (GdaError *,
 					   GdaServerRecordset *,
 					   GdaServerConnection *,
 					   gchar * where);
-void gda_sybase_messages_handle_servermsg (GdaServerError *,
+void gda_sybase_messages_handle_servermsg (GdaError *,
 					   GdaServerRecordset *,
 					   GdaServerConnection *,
 					   gchar * where);
-void gda_sybase_messages_handle_csmsg (GdaServerError *,
+void gda_sybase_messages_handle_csmsg (GdaError *,
 				       GdaServerRecordset *,
 				       GdaServerConnection *, gchar * where);
 

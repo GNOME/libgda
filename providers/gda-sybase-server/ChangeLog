@@ -1,3 +1,7 @@
+2001-09-16  Mike <wingert.3@postbox.acs.ohio-state.edu>
+
+	* adapted to new GdaError API
+
 2000-12-14 Szabolcs Ban <shooby@gnome.hu>
 
 	* gda-sybase-error.c: s/Fetchong/Fetching/

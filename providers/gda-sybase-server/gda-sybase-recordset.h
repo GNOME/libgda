@@ -69,7 +69,7 @@ gint gda_sybase_recordset_move_prev (GdaServerRecordset *);
 gint gda_sybase_recordset_close (GdaServerRecordset *);
 void gda_sybase_recordset_free (GdaServerRecordset *);
 
-void gda_sybase_init_recset_fields (GdaServerError *,
+void gda_sybase_init_recset_fields (GdaError *,
 				    GdaServerRecordset *,
 				    sybase_Recordset *, CS_RETCODE);
 

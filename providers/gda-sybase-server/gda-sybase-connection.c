@@ -22,6 +22,11 @@
  */
 
 // $Log$
+// Revision 1.11.4.1  2001/09/16 20:12:39  rodrigo
+// 2001-09-16  Mike <wingert.3@postbox.acs.ohio-state.edu>
+//
+// 	* adapted to new GdaError API
+//
 // Revision 1.11  2001/07/18 23:05:42  vivien
 // Ran indent -br -i8 on the files
 //
@@ -429,7 +434,7 @@ gda_sybase_connection_clear_user_data (GdaServerConnection * cnc,
  */
 
 static GdaServerRecordset *
-schema_cols (GdaServerError * error,
+schema_cols (GdaError * error,
 	     GdaServerConnection * cnc,
 	     GDA_Connection_Constraint * constraints, gint length)
 {
@@ -512,7 +517,7 @@ schema_cols (GdaServerError * error,
 }
 
 static GdaServerRecordset *
-schema_procs (GdaServerError * error,
+schema_procs (GdaError * error,
 	      GdaServerConnection * cnc,
 	      GDA_Connection_Constraint * constraints, gint length)
 {
@@ -588,7 +593,7 @@ schema_procs (GdaServerError * error,
 }
 
 static GdaServerRecordset *
-schema_tables (GdaServerError * error,
+schema_tables (GdaError * error,
 	       GdaServerConnection * cnc,
 	       GDA_Connection_Constraint * constraints, gint length)
 {
@@ -664,7 +669,7 @@ schema_tables (GdaServerError * error,
 }
 
 static GdaServerRecordset *
-schema_types (GdaServerError * error,
+schema_types (GdaError * error,
 	      GdaServerConnection * cnc,
 	      GDA_Connection_Constraint * constraints, gint length)
 {

@@ -22,6 +22,11 @@
  */
 
 // $Log$
+// Revision 1.4.4.1  2001/09/16 20:12:39  rodrigo
+// 2001-09-16  Mike <wingert.3@postbox.acs.ohio-state.edu>
+//
+// 	* adapted to new GdaError API
+//
 // Revision 1.4  2001/07/18 23:05:42  vivien
 // Ran indent -br -i8 on the files
 //
@@ -62,7 +67,7 @@ GdaServerConnection *gda_sybase_callback_get_connection (const CS_CONTEXT *,
 							 *);
 
 void
-gda_sybase_error_make (GdaServerError * error,
+gda_sybase_error_make (GdaError * error,
 		       GdaServerRecordset * recset,
 		       GdaServerConnection * cnc, gchar * where)
 {
@@ -85,32 +90,32 @@ gda_sybase_error_make (GdaServerError * error,
 					 ("No error flag ist set, though %s "
 					  "is called. This may be a bug."),
 					 __PRETTY_FUNCTION__);
-		gda_server_error_set_description (error,
+		gda_error_set_description (error,
 						  (err_msg) ? err_msg :
 						  "Unknown error");
 	case SYBASE_ERR_SERVER:
 		err_msg = g_sprintf_servermsg ("Server Message:",
 					       &scnc->serr.server_msg);
-		gda_server_error_set_description (error,
+		gda_error_set_description (error,
 						  (err_msg) ? err_msg :
 						  "Server error");
 		break;
 	case SYBASE_ERR_CLIENT:
 		err_msg = g_sprintf_clientmsg ("Client Message:",
 					       &scnc->serr.client_msg);
-		gda_server_error_set_description (error,
+		gda_error_set_description (error,
 						  (err_msg) ? err_msg :
 						  "Client error");
 		break;
 	case SYBASE_ERR_CSLIB:
 		err_msg = g_sprintf_clientmsg ("CS-Lib Message:",
 					       &scnc->serr.cslib_msg);
-		gda_server_error_set_description (error,
+		gda_error_set_description (error,
 						  (err_msg) ? err_msg :
 						  "Cslib error");
 		break;
 	case SYBASE_ERR_USERDEF:
-		gda_server_error_set_description (error,
+		gda_error_set_description (error,
 						  (scnc->serr.
 						   udeferr_msg) ? scnc->serr.
 						  udeferr_msg :
@@ -120,24 +125,24 @@ gda_sybase_error_make (GdaServerError * error,
 		}
 		break;
 	default:
-		gda_server_error_set_description (error, "Unknown error");
+		gda_error_set_description (error, "Unknown error");
 		break;
 	}
 
 	gda_log_error (_("error '%s' at %s"),
-		       gda_server_error_get_description (error), where);
+		       gda_error_get_description (error), where);
 
 	if (err_msg) {
 		g_free ((gpointer) err_msg);
 	}
 
-	gda_server_error_set_number (error, 1);
-	gda_server_error_set_source (error, "[gda-sybase]");
-	gda_server_error_set_help_file (error, _("Not available"));
-	gda_server_error_set_help_context (error, _("Not available"));
-	gda_server_error_set_sqlstate (error, _("error"));
-	gda_server_error_set_native (error,
-				     gda_server_error_get_description
+	gda_error_set_number (error, 1);
+	gda_error_set_source (error, "[gda-sybase]");
+/*  	gda_error_set_help_file (error, _("Not available")); */
+	gda_error_set_help_context (error, _("Not available"));
+	gda_error_set_sqlstate (error, _("error"));
+	gda_error_set_native (error,
+				     gda_error_get_description
 				     (error));
 }
 
@@ -191,7 +196,7 @@ gda_sybase_messages_uninstall (GdaServerConnection * cnc)
 }
 
 void
-sybase_chkerr (GdaServerError * error,
+sybase_chkerr (GdaError * error,
 	       GdaServerRecordset * recset,
 	       GdaServerConnection * _cnc,
 	       GdaServerCommand * _cmd, gchar * where)
@@ -264,7 +269,7 @@ sybase_chkerr (GdaServerError * error,
 CS_RETCODE
 sybase_exec_chk (CS_RETCODE * retvar,
 		 CS_RETCODE retval,
-		 GdaServerError * err,
+		 GdaError * err,
 		 GdaServerRecordset * rec,
 		 GdaServerConnection * cnc,
 		 GdaServerCommand * cmd, gchar * where)
@@ -275,7 +280,7 @@ sybase_exec_chk (CS_RETCODE * retvar,
 }
 
 void
-gda_sybase_messages_handle (GdaServerError * error,
+gda_sybase_messages_handle (GdaError * error,
 			    GdaServerRecordset * recset,
 			    GdaServerConnection * cnc, gchar * where)
 {
@@ -288,7 +293,7 @@ gda_sybase_messages_handle (GdaServerError * error,
 }
 
 void
-gda_sybase_messages_handle_clientmsg (GdaServerError * error,
+gda_sybase_messages_handle_clientmsg (GdaError * error,
 				      GdaServerRecordset * recset,
 				      GdaServerConnection * cnc,
 				      gchar * where)
@@ -359,12 +364,12 @@ gda_sybase_messages_handle_clientmsg (GdaServerError * error,
 }
 
 void
-gda_sybase_messages_handle_servermsg (GdaServerError * error,
+gda_sybase_messages_handle_servermsg (GdaError * error,
 				      GdaServerRecordset * recset,
 				      GdaServerConnection * cnc,
 				      gchar * where)
 {
-	GdaServerError *serverr = error;
+	GdaError *serverr = error;
 	sybase_Connection *scnc = NULL;
 	CS_RETCODE ret = CS_SUCCEED;
 	CS_INT msgcur = 0;
@@ -439,7 +444,7 @@ gda_sybase_messages_handle_servermsg (GdaServerError * error,
 }
 
 void
-gda_sybase_messages_handle_csmsg (GdaServerError * error,
+gda_sybase_messages_handle_csmsg (GdaError * error,
 				  GdaServerRecordset * recset,
 				  GdaServerConnection * cnc, gchar * where)
 {
