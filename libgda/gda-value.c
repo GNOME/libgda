@@ -1376,10 +1376,17 @@ gda_value_get_list (const GdaValue *value)
 void
 gda_value_set_list (GdaValue *value, const GdaValueList *val)
 {
+	GList *values;
 	g_return_if_fail (value != NULL);
 	g_return_if_fail (val != NULL);
 
-	/* FIXME: implement */
+	clear_value (value);
+	value->type = GDA_VALUE_TYPE_LIST;
+	values = val;
+	while (values) {
+		value->value.v_list = g_list_append (value->value.v_list, gda_value_copy ((GdaValue *) (values->data)));
+		values = values->next;
+	}
 }
 
 /**
