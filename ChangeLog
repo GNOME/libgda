@@ -1,5 +1,9 @@
 2001-11-04  Carlos Perelló Marín <carlos@gnome-db.org>
 
+	* acconfig.h, configure.in: Adapted to use GLIB_GETTEXT
+
+2001-11-04  Carlos Perelló Marín <carlos@gnome-db.org>
+
 	* AUTHORS: I'm the mantainer for gda-default.
 
 2001-11-03  Carlos Perelló Marín <carlos@gnome-db.org>
