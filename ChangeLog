@@ -1,3 +1,7 @@
+2000-11-14	Rodrigo Moya <rodrigo@linuxave.net>
+
+	* added pt_BR translations by Cleber Rodrigues Rosa Junior
+
 2000-11-08	Rodrigo Moya <rodrigo@linuxave.net>
 
 	* idl/GDA_Recordset.idl, lib/gda-client/gda-recordset.[ch],
