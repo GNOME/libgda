@@ -224,7 +224,7 @@ gda_data_model_array_clear (GdaDataModelArray *model)
 	g_return_if_fail (GDA_IS_DATA_MODEL_ARRAY (model));
 
 	while (model->priv->rows->len > 0) {
-		GdaRow *row = (GList *) g_ptr_array_index (model->priv->rows, 0);
+		GdaRow *row = (GdaRow *) g_ptr_array_index (model->priv->rows, 0);
 
 		if (row != NULL)
 			gda_row_free (row);

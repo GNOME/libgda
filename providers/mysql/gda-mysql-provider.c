@@ -263,7 +263,7 @@ process_sql_commands (GList *reclist, GdaConnection *cnc, const gchar *sql)
 		while (arr[n]) {
 			gint rc;
 			MYSQL_RES *mysql_res;
-			GdaRecordset *recset;
+			GdaMysqlRecordset *recset;
 
 			rc = mysql_real_query (mysql, arr[n], strlen (arr[n]));
 			if (rc != 0) {
@@ -273,7 +273,7 @@ process_sql_commands (GList *reclist, GdaConnection *cnc, const gchar *sql)
 
 			mysql_res = mysql_store_result (mysql);
 			recset = gda_mysql_recordset_new (cnc, mysql_res);
-			if (GDA_IS_RECORDSET (recset))
+			if (GDA_IS_MYSQL_RECORDSET (recset))
 				reclist = g_list_append (reclist, recset);
 
 			n++;
@@ -596,7 +596,7 @@ static GdaDataModel *
 get_mysql_databases (GdaConnection *cnc, GdaParameterList *params)
 {
 	GList *reclist;
-	GdaRecordset *recset;
+	GdaMysqlRecordset *recset;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
@@ -604,7 +604,7 @@ get_mysql_databases (GdaConnection *cnc, GdaParameterList *params)
 	if (!reclist)
 		return NULL;
 
-	recset = GDA_RECORDSET (reclist->data);
+	recset = GDA_MYSQL_RECORDSET (reclist->data);
 	g_list_free (reclist);
 
 	return GDA_DATA_MODEL (recset);
@@ -614,7 +614,7 @@ static GdaDataModel *
 get_mysql_tables (GdaConnection *cnc, GdaParameterList *params)
 {
 	GList *reclist;
-	GdaRecordset *recset;
+	GdaMysqlRecordset *recset;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
@@ -622,7 +622,7 @@ get_mysql_tables (GdaConnection *cnc, GdaParameterList *params)
 	if (!reclist)
 		return NULL;
 
-	recset = GDA_RECORDSET (reclist->data);
+	recset = GDA_MYSQL_RECORDSET (reclist->data);
 	g_list_free (reclist);
 
 	return GDA_DATA_MODEL (recset);

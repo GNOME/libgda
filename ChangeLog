@@ -1,5 +1,11 @@
 2002-05-09  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* providers/mysql/gda-mysql-recordset.[ch]: converted to a
+	GdaDataModel-based class.
+
+	* providers/mysql/gda-mysql-provider.c: adapted to changes in
+	GdaMysqlRecordset.
+
 	* libgda/gda-data-model.[ch] (gda_data_model_is_editing): new function
 
 2002-05-09  Rodrigo Moya <rodrigo@gnome-db.org>

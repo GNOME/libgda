@@ -26,11 +26,32 @@
 #  define __gda_mysql_recordset_h__
 
 #include <libgda/gda-connection.h>
-#include <libgda/gda-recordset.h>
+#include <libgda/gda-data-model.h>
 
 G_BEGIN_DECLS
 
-GdaRecordset *gda_mysql_recordset_new (GdaConnection *cnc, MYSQL_RES *mysql_res);
+#define GDA_TYPE_MYSQL_RECORDSET            (gda_mysql_recordset_get_type())
+#define GDA_MYSQL_RECORDSET(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_MYSQL_RECORDSET, GdaMysqlRecordset))
+#define GDA_MYSQL_RECORDSET_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_MYSQL_RECORDSET, GdaMysqlRecordsetClass))
+#define GDA_IS_MYSQL_RECORDSET(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_MYSQL_RECORDSET))
+#define GDA_IS_MYSQL_RECORDSET_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GDA_TYPE_MYSQL_RECORDSET))
+
+typedef struct _GdaMysqlRecordset      GdaMysqlRecordset;
+typedef struct _GdaMysqlRecordsetClass GdaMysqlRecordsetClass;
+
+struct _GdaMysqlRecordset {
+	GdaDataModel model;
+	GPtrArray *rows;
+	GdaConnection *cnc;
+	MYSQL_RES *mysql_res;
+};
+
+struct _GdaMysqlRecordsetClass {
+	GdaDataModel parent_class;
+};
+
+GType              gda_mysql_recordset_get_type (void);
+GdaMysqlRecordset *gda_mysql_recordset_new (GdaConnection *cnc, MYSQL_RES *mysql_res);
 
 G_END_DECLS
 
