@@ -1,6 +1,6 @@
 2001-08-09  Rodrigo Moya <rodrigo@gnome-db.org>
 
-        * reference/Makefile.am: s/gda-xml-file/gda-xml-document
+	* reference/Makefile.am: s/gda-xml-file/gda-xml-document
 
 2001-07-31  Rodrigo Moya <rodrigo@gnome-db.org>
 
