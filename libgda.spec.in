@@ -149,9 +149,9 @@ This package includes the GDA Sybase provider.
 
 %build
 %if %{FREETDS}
-CONFIG="$CONFIG --with-freetds"
+CONFIG="$CONFIG --with-tds"
 %else
-CONFIG="$CONFIG --without-freetds"
+CONFIG="$CONFIG --without-tds"
 %endif
 
 %if %{IBMDB2}
@@ -287,6 +287,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Mar 11 2003 David Hollis <dhollis@davehollis.com>
+- Fix --with-tds & --without-tds to match what configure wants
+
 * Tue Jan 28 2003 Yanko Kaneti <yaneti@declera.com>
 - Remove the idl path
 - Include gda-config man page

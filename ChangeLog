@@ -1,3 +1,8 @@
+2003-03-12  David T Hollis <dhollis@davehollis.com>
+
+	* libgda.spec.in: Fix --with-tds & --without-tds to match what
+	configure wants
+
 2003-03-11  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
 	* libgda/gda-connection.c: check that xaction argument is a
