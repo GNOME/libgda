@@ -1,0 +1,124 @@
+<!-- ##### SECTION Title ##### -->
+GdaXmlConnection
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### STRUCT GdaXmlConnectionPrivate ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION gda_xml_connection_new ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_xml_connection_new_from_file ##### -->
+<para>
+
+</para>
+
+@filename: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_xml_connection_new_from_string ##### -->
+<para>
+
+</para>
+
+@string: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_xml_connection_set_from_file ##### -->
+<para>
+
+</para>
+
+@xmlcnc: 
+@filename: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_xml_connection_set_from_string ##### -->
+<para>
+
+</para>
+
+@xmlcnc: 
+@string: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_xml_connection_get_dsn ##### -->
+<para>
+
+</para>
+
+@xmlcnc: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_xml_connection_set_dsn ##### -->
+<para>
+
+</para>
+
+@xmlcnc: 
+@dsn: 
+
+
+<!-- ##### FUNCTION gda_xml_connection_get_username ##### -->
+<para>
+
+</para>
+
+@xmlcnc: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_xml_connection_set_username ##### -->
+<para>
+
+</para>
+
+@xmlcnc: 
+@username: 
+
+
+<!-- ##### FUNCTION gda_xml_connection_get_password ##### -->
+<para>
+
+</para>
+
+@xmlcnc: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_xml_connection_set_password ##### -->
+<para>
+
+</para>
+
+@xmlcnc: 
+@password: 
+
+
