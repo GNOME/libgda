@@ -1,3 +1,8 @@
+2002-07-10  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
+	* providers/postgres/gda-postgres-provider.c: set client encoding
+	for postgres to UNICODE. Thanks to Dmitry G. Mastrukov.
+
 2002-07-09  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* doc/C/libgda-docs.sgml: added documentation about the format of

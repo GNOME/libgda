@@ -326,6 +326,12 @@ gda_postgres_provider_open_connection (GdaServerProvider *provider,
 	pg_res = PQexec (pconn, "SET DATESTYLE TO 'ISO'");
 	PQclear (pg_res);
 
+	/*
+	 * Unicode is the default character set now
+	 */
+	pg_res = PQexec (pconn, "SET CLIENT_ENCODING TO 'UNICODE'");
+	PQclear (pg_res);
+
 	priv_data = g_new (GdaPostgresConnectionData, 1);
 	priv_data->pconn = pconn;
 	if (get_connection_type_list (priv_data) != 0) {
