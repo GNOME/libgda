@@ -2,19 +2,19 @@ bin_PROGRAMS = gda-sybase-srv
 lib_LTLIBRARIES = libgda-sybase.la
 
 INCLUDES = \
+	$(SYBASE_CFLAGS) \
 	-I. \
 	$(GDA_PROVIDER_CFLAGS) \
 	-I$(top_builddir)/lib/gda-common \
-	-I$(top_builddir)/lib/gda-server \
-	$(SYBASE_CFLAGS)
+	-I$(top_builddir)/lib/gda-server 
 
 gda_sybase_srv_SOURCES = main-sybase.c
 gda_sybase_srv_LDADD = \
+	$(SYBASE_LIBS) \
 	$(GDA_PROVIDER_LIBS) \
 	$(top_builddir)/lib/gda-common/libgda-common.la \
 	$(top_builddir)/lib/gda-server/libgda-server.la \
-	$(top_builddir)/providers/gda-sybase-server/libgda-sybase.la \
-	$(SYBASE_LIBS)
+	$(top_builddir)/providers/gda-sybase-server/libgda-sybase.la 
 
 libgda_sybase_la_SOURCES = \
 	gda-sybase-command.c \

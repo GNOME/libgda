@@ -1,4 +1,4 @@
-INCLUDES = -I$(top_srcdir) -I$(includedir) -I.. $(GTK_CFLAGS) $(XML_CFLAGS)
+INCLUDES = -I$(top_srcdir) -I.. -I$(includedir) $(GTK_CFLAGS) $(XML_CFLAGS)
 
 bin_PROGRAMS = xmlquery
 

@@ -312,7 +312,6 @@ do
 				break
 			fi
 		done
-		
 	fi
 done
 if test x$primebasedir != x
@@ -390,7 +389,7 @@ then
 	AC_MSG_WARN(Sybase backend not used)
 else
 	SYBASE_CFLAGS="-I${sybasedir}/include"
-	SYBASE_LIBS="-L${sybasedir}/lib"
+	SYBASE_LIBS="-lnsl -ldl -lm -L${sybasedir}/lib"
 	AC_MSG_CHECKING(for Sybase host system type)
 	AC_MSG_RESULT($host)
 	case "$host" in
