@@ -8,8 +8,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2002-07-11 01:16+0200\n"
-"PO-Revision-Date: 2002-07-11 01:17+0200\n"
+"POT-Creation-Date: 2002-08-08 17:29+0200\n"
+"PO-Revision-Date: 2002-08-08 17:30+0200\n"
 "Last-Translator: Christian Rose <menthos@menthos.com>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -73,7 +73,7 @@ msgstr "Användarnamn"
 msgid "Password"
 msgstr "Lösenord"
 
-#: libgda/gda-data-model.c:589
+#: libgda/gda-data-model.c:607
 #, c-format
 msgid "Data model %p is not editable"
 msgstr "Datamodellen %p är inte redigerbar"
@@ -85,6 +85,10 @@ msgstr "Försök att initiera en redan initierad klient"
 #: libgda/gda-init.c:60
 msgid "libgda needs GModule. Finishing..."
 msgstr "libgda behöver GModule. Avslutar..."
+
+#: libgda/gda-init.c:64
+msgid "libgda successfully initialized"
+msgstr "libgda initierades utan problem"
 
 #: libgda/gda-log.c:82
 #, c-format
@@ -271,6 +275,20 @@ msgstr "Kunde inte hämta beskrivningen för kolumnen"
 msgid "GDA default provider, based on the libgda XML format"
 msgstr "GDA-standardleverantör, baserad på libgdas XML-format"
 
+#: providers/freetds/libmain.c:39
+msgid "GDA provider for TDS-based databases (using FreeTDS)"
+msgstr "GDA-leverantör för TDS-baserade databaser (använder FreeTDS)"
+
+#: providers/freetds/utils.c:39 providers/oracle/utils.c:67
+#: providers/postgres/utils.c:47
+msgid "NO DESCRIPTION"
+msgstr "INGEN BESKRIVNING"
+
+#: providers/freetds/utils.c:43 providers/oracle/utils.c:72
+#: providers/postgres/utils.c:52
+msgid "Not available"
+msgstr "Inte tillgänglig"
+
 #: providers/mdb/gda-mdb-provider.c:176
 msgid "A database FILENAME must be specified in the connection_string"
 msgstr "En databas FILNAMN måste anges i anslutningssträngen"
@@ -351,17 +369,17 @@ msgstr "Du måste ange namnet på tabellen"
 msgid "Row number out of range"
 msgstr "Radnummer utanför intervallet"
 
-#: providers/mysql/gda-mysql-recordset.c:281
+#: providers/mysql/gda-mysql-recordset.c:283
 #: providers/oracle/gda-oracle-recordset.c:467
 msgid "Attempt to insert a row with an invalid number of columns"
 msgstr "Försök att infoga en rad med ett ogiltigt antal kolumner"
 
-#: providers/mysql/gda-mysql-recordset.c:296
+#: providers/mysql/gda-mysql-recordset.c:298
 #: providers/oracle/gda-oracle-recordset.c:482
 msgid "Could not retrieve column's information"
 msgstr "Kunde inte hämta kolumninformation"
 
-#: providers/mysql/gda-mysql-recordset.c:314
+#: providers/mysql/gda-mysql-recordset.c:316
 #: providers/oracle/gda-oracle-recordset.c:500
 msgid "Could not retrieve column's value"
 msgstr "Kunde inte hämta kolumnvärde"
@@ -636,14 +654,6 @@ msgstr "Kunde inte hämta en rad"
 #: providers/oracle/libmain.c:34
 msgid "GDA provider for Oracle databases"
 msgstr "GDA-leverantör för Oracle-databaser"
-
-#: providers/oracle/utils.c:67 providers/postgres/utils.c:47
-msgid "NO DESCRIPTION"
-msgstr "INGEN BESKRIVNING"
-
-#: providers/oracle/utils.c:72 providers/postgres/utils.c:52
-msgid "Not available"
-msgstr "Inte tillgänglig"
 
 #: providers/postgres/gda-postgres-provider.c:388
 #: providers/postgres/gda-postgres-provider.c:459
