@@ -1,3 +1,23 @@
+2002-08-25  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* libgda/gda-value.h: added a new field to GdaValue structure, for
+	storing the length of binary values.
+
+	* libgda/gda-value.c (gda_value_new_binary): added 'glong size' argument
+	to the function, and implemented it.
+	(gda_value_copy): implemented case for binary values.
+	(gda_value_set_from_value): likewise.
+	(gda_value_stringify): likewise.
+	(set_from_string): likewise.
+	(gda_value_get_binary): implemented.
+	(gda_value_set_binary): implemented.
+
+	* providers/mysql/gda-mysql-recordset.c (fetch_row): use max_length
+	field to determine the length of the BLOB values.
+
+	* doc/libgda-C.omf: removed this file, which is generated from
+	* libgda-C.omf.in.
+
 2002-08-24  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* providers/mysql/gda-mysql-provider.c

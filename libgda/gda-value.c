@@ -136,6 +136,9 @@ set_from_string (GdaValue *value, const gchar *as_string)
 			retval = TRUE;
 		}
 		break;
+	case GDA_VALUE_TYPE_BINARY :
+		gda_value_set_binary (value, as_string, strlen (as_string));
+		break;
 	case GDA_VALUE_TYPE_BIGINT :
 		/* Use g_strtod instead of strtoll */
 		dvalue = g_strtod (as_string, endptr);
@@ -215,7 +218,6 @@ set_from_string (GdaValue *value, const gchar *as_string)
 		value->value.v_type = gda_type_from_string (as_string);
 		break;
 	case GDA_VALUE_TYPE_LIST : //FIXME
-	case GDA_VALUE_TYPE_BINARY : //FIXME
 	default :
 		gda_value_set_string (value, as_string);
 		retval = TRUE;
@@ -269,15 +271,19 @@ gda_value_new_bigint (gint64 val)
  * gda_value_new_binary
  * @val: value to set for the new #GdaValue.
  *
- * NOT IMPLEMENTED YET!!!
  * Make a new #GdaValue of type #GDA_VALUE_TYPE_BINARY with value @val.
  *
  * Returns: The newly created #GdaValue.
  */
 GdaValue *
-gda_value_new_binary (gconstpointer val)
+gda_value_new_binary (gconstpointer val, glong size)
 {
-	return NULL;
+	GdaValue *value;
+
+	value = g_new0 (GdaValue, 1);
+	gda_value_set_binary (value, val, size);
+
+	return value;
 }
 
 /**
@@ -643,7 +649,9 @@ gda_value_copy (const GdaValue *value)
 		copy->value.v_bigint = value->value.v_bigint;
 		break;
 	case GDA_VALUE_TYPE_BINARY :
-		copy->value.v_binary = NULL; /* FIXME */
+		copy->value.v_binary = g_malloc0 (value->binary_length);
+		copy->binary_length = value->binary_length;
+		memcpy (copy->value.v_binary, value->value.v_binary, value->binary_length);
 		break;
 	case GDA_VALUE_TYPE_BOOLEAN :
 		copy->value.v_boolean = value->value.v_boolean;
@@ -737,16 +745,25 @@ gda_value_set_bigint (GdaValue *value, gint64 val)
 /**
  * gda_value_get_binary
  * @value: a #GdaValue whose value we want to get.
+ * @size: holder for length of data.
  *
- * NOT IMPLEMENTED YET!!!
  * Gets the value stored in @value.
  * 
  * Returns: the value contained in @value.
  */
 gconstpointer
-gda_value_get_binary (GdaValue *value)
+gda_value_get_binary (GdaValue *value, glong *size)
 {
-	return NULL;
+	gconstpointer val;
+
+	g_return_val_if_fail (value != NULL, NULL);
+	g_return_val_if_fail (gda_value_isa (value, GDA_VALUE_TYPE_BINARY), NULL);
+
+	val = value->value.v_binary;
+	if (size)
+		*size = value->binary_length;
+
+	return val;
 }
 
 /**
@@ -755,12 +772,18 @@ gda_value_get_binary (GdaValue *value)
  * @val: value to be stored in @value.
  * @size: the size of the memory pool pointed to by @val.
  *
- * NOT IMPLEMENTED YET!!!
  * Stores @val into @value.
  */
 void
 gda_value_set_binary (GdaValue *value, gconstpointer val, glong size)
 {
+	g_return_if_fail (value != NULL);
+
+	clear_value (value);
+	value->type = GDA_VALUE_TYPE_BINARY;
+	value->value.v_binary = g_malloc0 (size);
+	value->binary_length = size;
+	memcpy (value->value.v_binary, val, size);
 }
 
 /**
@@ -1310,7 +1333,7 @@ gda_value_set_from_value (GdaValue *value, const GdaValue *from)
 		gda_value_set_bigint (value, gda_value_get_bigint ((GdaValue *) from));
 		break;
 	case GDA_VALUE_TYPE_BINARY :
-		/* FIXME */
+		gda_value_set_binary (value, from->value.v_binary, from->binary_length);
 		break;
 	case GDA_VALUE_TYPE_BOOLEAN :
 		gda_value_set_boolean (value, gda_value_get_boolean ((GdaValue *) from));
@@ -1391,6 +1414,11 @@ gda_value_stringify (GdaValue *value)
 	switch (value->type){
 	case GDA_VALUE_TYPE_BIGINT:
 		retval = g_strdup_printf ("%lld", gda_value_get_bigint (value));
+		break;
+	case GDA_VALUE_TYPE_BINARY :
+		retval = g_malloc0 (value->binary_length + 1);
+		memcpy (retval, value->value.v_binary, value->binary_length);
+		retval[value->binary_length] = '\0';
 		break;
 	case GDA_VALUE_TYPE_BOOLEAN:
 		if (gda_value_get_boolean (value))
@@ -1524,7 +1552,7 @@ gda_value_compare (const GdaValue *value1, const GdaValue *value2)
 		break;
 	case GDA_VALUE_TYPE_BINARY :
 		//FIXME
-		retval = -1;
+		retval = 0;
 		break;
 	case GDA_VALUE_TYPE_BOOLEAN :
 		retval = value1->value.v_boolean - value2->value.v_boolean;

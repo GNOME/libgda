@@ -115,7 +115,7 @@ fetch_row (GdaMysqlRecordset *recset, gulong rownum)
 		case FIELD_TYPE_MEDIUM_BLOB :
 		case FIELD_TYPE_LONG_BLOB :
 		case FIELD_TYPE_BLOB :
-			gda_value_set_binary (field, thevalue, lengths[i]);
+			gda_value_set_binary (field, thevalue, mysql_fields[i].max_length);
 			break;
 		case FIELD_TYPE_VAR_STRING :
 		case FIELD_TYPE_STRING :

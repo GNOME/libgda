@@ -110,6 +110,7 @@ gda-value
 </para>
 
 @val: 
+@size: 
 @Returns: 
 
 
@@ -317,6 +318,7 @@ gda-value
 </para>
 
 @value: 
+@size: 
 @Returns: 
 
 

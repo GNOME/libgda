@@ -108,11 +108,12 @@ typedef struct {
 		gchar v_tinyint;
 		GdaValueType v_type;
 	} value;
+	glong binary_length;
 } GdaValue;
 
 GdaValue     *gda_value_new_null (void);
 GdaValue     *gda_value_new_bigint (gint64 val);
-GdaValue     *gda_value_new_binary (gconstpointer val);
+GdaValue     *gda_value_new_binary (gconstpointer val, glong size);
 GdaValue     *gda_value_new_boolean (gboolean val);
 GdaValue     *gda_value_new_date (const GdaDate *val);
 GdaValue     *gda_value_new_double (gdouble val);
@@ -139,7 +140,7 @@ GdaValue     *gda_value_copy (const GdaValue *value);
 
 gint64        gda_value_get_bigint (GdaValue *value);
 void          gda_value_set_bigint (GdaValue *value, gint64 val);
-gconstpointer gda_value_get_binary (GdaValue *value);
+gconstpointer gda_value_get_binary (GdaValue *value, glong *size);
 void          gda_value_set_binary (GdaValue *value, gconstpointer val, glong size);
 gboolean      gda_value_get_boolean (GdaValue *value);
 void          gda_value_set_boolean (GdaValue *value, gboolean val);
