@@ -1,3 +1,7 @@
+2000-10-09  Christian Meyer  <cm@ggtt.de>
+
+	* de.po: Updated German translation.
+	
 2000-10-08  Kjartan Maraas  <kmaraas@gnome.org>
 
 	* no.po: Updated Norwegian translation.
@@ -26,13 +30,11 @@
 
 	* de.po: Updated German translation
 
->>>>>>> 1.8
 2000-09-28  Jesus Bravo Alvarez  <jba@pobox.com>
 
 	* gl.po: Updated Galician translation.
 
-2000-09-25	Akira TAGOH <tagoh@gnome.gr.jp>
->>>>>>> 1.3
+2000-09-25  Akira TAGOH <tagoh@gnome.gr.jp>
 
 	* *: Fix up things after the split
 	

@@ -1,13 +1,14 @@
 # German po for libgda
 # Copyright (C) 2000 Free Software Foundation, Inc.
+# Christian Meyer <cm@ggtt.de>, 2000.
 # Kai Lahmann <kl@linuxfaqs.de>, 2000.
 msgid ""
 msgstr ""
-"Project-Id-Version: libgda   \n"
-"POT-Creation-Date: 2000-10-01 14:04+0200\n"
-"PO-Revision-Date: 2000-10-01 15:31+0200\n"
-"Last-Translator: Kai Lahmann <kl@linuxfaqs.de>\n"
-"Language-Team: German <gnome-de@gnome.org>\n"
+"Project-Id-Version: libgda    cvs\n"
+"POT-Creation-Date: 2000-10-09 11:15+0200\n"
+"PO-Revision-Date: 2000-10-09 11:15+0200\n"
+"Last-Translator: Christian Meyer <linux@chrisime.de>\n"
+"Language-Team: deutsch <gnome-de@gnome.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=iso-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -15,7 +16,7 @@ msgstr ""
 #: lib/gda-client/gda-connection-pool.c:169
 #, c-format
 msgid "could not open connection to %s"
-msgstr "konnte Vebindung zu %s nicht öffnen"
+msgstr "Vebindung zu %s konnte nicht geöffnet werden"
 
 #: lib/gda-client/gda-connection-pool.c:180
 #, c-format
@@ -35,11 +36,11 @@ msgstr "%s: Ein Fehler ist in dem CORBA-System aufgetreten."
 #: lib/gda-client/gda-connection.c:453
 #, c-format
 msgid "Database '%s' not found in system configuration"
-msgstr "Datenbank '%s' nicht in der System-Konfuguration gefunden"
+msgstr "Datenbank '%s' nicht in der Systemkonfiguration gefunden"
 
 #: lib/gda-client/gda-connection.c:469
 msgid "Could not open CORBA factory"
-msgstr "Konnte CORBA-Fabrik nicht öffnen"
+msgstr "CORBA-Einheit konnte nicht geöffnet werden"
 
 #: lib/gda-client/gda-field.c:187
 msgid "<NULL>"
@@ -68,11 +69,15 @@ msgstr "Falsch"
 #: lib/gda-common/gda-corba.c:119
 #, c-format
 msgid "CORBA System exception: %s"
-msgstr "CORBA-System-Fehler: %s"
+msgstr "CORBA-System-Ausnahmefehler: %s"
+
+#: lib/gda-common/gda-init.c:32
+msgid "Attempt to initialize an already initialized client"
+msgstr "Versuch, einen bereits initialisierten Client zu initialisieren"
 
 #: lib/gda-common/gda-log.c:29
 msgid "Saving log...x"
-msgstr "Speichere Log...x"
+msgstr "Log...x wird gespeichert"
 
 #. compose message
 #: lib/gda-common/gda-log.c:50
@@ -99,7 +104,7 @@ msgstr "%p ist keine gültige Tabelle"
 
 #: lib/gda-server/gda-server-error.c:169
 msgid "Could not get pointer to server implementation"
-msgstr "Konnte keinen Pointer auf die Server-Implementiertung setzen"
+msgstr "Pointer konnte nicht auf die Server-Implementiertung gesetzt werden"
 
 #: lib/gda-server/gda-server-impl-connection.c:106
 #: lib/gda-server/gda-server-impl-connection.c:115
@@ -140,7 +145,7 @@ msgstr "%s nicht implementiert"
 #: lib/gda-server/gda-server-impl-connection.c:255
 #, c-format
 msgid "impl_GDA_Connection_open: opening connection with DSN: %s"
-msgstr "impl_GDA_Connection_open: Öffne Verbindung mit DSN: %s"
+msgstr "impl_GDA_Connection_open: Verbindung mit DSN öffnen: %s"
 
 #: lib/gda-server/gda-server-impl-recordset.c:240
 #: lib/gda-server/gda-server-impl-recordset.c:248
@@ -161,29 +166,31 @@ msgstr "%s: Länge = %d"
 #: lib/gda-server/gda-server-impl-recordset.c:486
 #, c-format
 msgid "%s: sending field description for '%s'"
-msgstr "%s: Sende Feld-Beschreibung für '%s'"
+msgstr "%s: Feld-Beschreibung für '%s' wird gesendet"
 
 #: lib/gda-server/gda-server-impl.c:114
 #, c-format
 msgid "Starting provider %s with no implementation functions"
-msgstr "Starte Anbieter %s ohne Implementierungs-Funktionen"
+msgstr "Anbieter %s ohne Implementierungsfunktionen wird gestartet"
 
 #: lib/gda-server/gda-server-impl.c:141
+#: report/server/gda-report-server-main.c:120
 msgid ""
 "OAF doesn't know about our IID; indicates broken installation. Exiting..."
 msgstr ""
-"OAF weiß nicht über ihre IID; Deutet auf defekte Installation hin. Beende..."
+"OAF weiß nichts über ihre IID; Deutet auf defekte Installation hin. "
+"Abbruch..."
 
 #: lib/gda-server/gda-server-impl.c:144
 msgid ""
 "Another instance of this provider is already registered with OAF. Exiting..."
 msgstr ""
 "Eine andere Instalz dieses Anbieters ist bereits mit OAF registriert. "
-"Beende..."
+"Abbruch..."
 
 #: lib/gda-server/gda-server-impl.c:147
 msgid "Unknown error registering this provider with OAF. Exiting"
-msgstr "Unbekannter Fehler beim registrieren dieses Anbieters mit OAF. Beende"
+msgstr "Unbekannter Fehler beim Registrieren dieses Anbieters mit OAF. Abbruch"
 
 #: lib/gda-server/gda-server-impl.c:151
 #, c-format
@@ -193,7 +200,7 @@ msgstr "Registriert mit ID = %s"
 #: lib/gda-server/gda-server-impl.c:241
 #, c-format
 msgid "CORBA system exception %s"
-msgstr "CORBA-System-Fehler %s"
+msgstr "CORBA-System-Ausnahmefehler %s"
 
 #: lib/gda-server/gda-server-impl.c:244
 #, c-format
@@ -203,16 +210,16 @@ msgstr "CORBA Anwenderfehler: %s"
 #: lib/gda-server/gda-server-init.c:39 lib/gda-server/gda-server-init.c:45
 #, c-format
 msgid "Received signal %d, shutting down"
-msgstr "Erhiert Signal %d, schließe"
+msgstr "Signal %d wurde erhalten, Abbruch"
 
 #: lib/gda-server/gda-server-init.c:49
 #, c-format
 msgid "Received signal %d. Ignoring"
-msgstr "Erhiert Signal %d. Ignoriere"
+msgstr "Signal %d wurde erhalten. Wird ignoriert"
 
 #: lib/gda-server/gda-server-init.c:97
 msgid "Attempt to initialize an already initialized provider"
-msgstr "Versucht einen bereits initialisieren Anbieter zu initialisieren"
+msgstr "Versuch, einen bereits initialisierten Anbieter zu initialisieren"
 
 #: providers/gda-interbase-server/gda-interbase-connection.c:252
 #: providers/gda-ldap-server/gda-ldap-connection.c:263
@@ -258,7 +265,7 @@ msgstr "Nicht verfügbar"
 msgid "error"
 msgstr "Fehler"
 
-#: providers/gda-ldap-server/main-ldap.c:75
+#: providers/gda-ldap-server/main-ldap.c:68
 msgid "Could not register LDAP provider implementation"
 msgstr "LDAP-Anbieter Implementierung konnte nicht registriert werden"
 
@@ -267,7 +274,7 @@ msgstr "LDAP-Anbieter Implementierung konnte nicht registriert werden"
 msgid "Error code %ld"
 msgstr "Fehlercode %ld"
 
-#: providers/gda-interbase-server/main-interbase.c:75
+#: providers/gda-interbase-server/main-interbase.c:69
 msgid "Could not register INTERBASE provider implementation"
 msgstr "INTERBASE-Anbieter Implementierung konnte nicht registriert werden"
 
@@ -276,19 +283,19 @@ msgstr "INTERBASE-Anbieter Implementierung konnte nicht registriert werden"
 #: providers/gda-mysql-server/gda-mysql-connection.c:251
 #: providers/gda-oracle-server/gda-oracle-connection.c:295
 #: providers/gda-postgres-server/gda-postgres-connection.c:511
-#: providers/gda-sybase-server/gda-sybase-connection.c:243
+#: providers/gda-sybase-server/gda-sybase-connection.c:253
 #, c-format
 msgid "Unhandled SCHEMA_QTYPE %d"
 msgstr "Unbehandelter SCHEMA_QTYPE %d"
 
-#: providers/gda-mail-server/main-mail.c:76
+#: providers/gda-mail-server/main-mail.c:69
 msgid "Could not register Mail provider implementation"
 msgstr "Die Mail-Anbieter-Implementierung konnte nicht registriert werden"
 
 #. execute command
 #: providers/gda-mdb-server/gda-mdb-command.c:86
 #: providers/gda-mysql-server/gda-mysql-command.c:87
-#: providers/gda-sybase-server/gda-sybase-command.c:112
+#: providers/gda-sybase-server/gda-sybase-command.c:116
 #, c-format
 msgid "executing command '%s'"
 msgstr "Befehl '%s' ansgeführt"
@@ -308,7 +315,7 @@ msgid ""
 "options"
 msgstr ""
 "%s:%d: Sie konnen keinen UNIX_SOCKET anbieten, wenn Sie auch einen PORT und "
-"einen HOST angeben. Bitten entfernen Sie entweder die PORT- und die "
+"einen HOST angeben. Bitte entfernen Sie entweder die PORT- und die "
 "HOST-Optionen, oder entfernen Sie die UNIX_SOCKET-Optionen"
 
 #: providers/gda-mdb-server/gda-mdb-connection.c:147
@@ -319,7 +326,7 @@ msgstr "%s%d: Sie müssen einen Dateinamen für die MS Access Datenbank"
 #: providers/gda-mdb-server/gda-mdb-connection.c:152
 #, c-format
 msgid "Opening connection with filename=%s, user=%s, password=%s"
-msgstr "Öffne Verbindung mit Dateiname=%s, Benutzer=%s, Passwort=%s"
+msgstr "Verbindung mit Dateiname=%s, Benutzer=%s, Passwort=%s wird geöffnet"
 
 #: providers/gda-mdb-server/gda-mdb-connection.c:406
 #: providers/gda-mysql-server/gda-mysql-connection.c:433
@@ -328,23 +335,23 @@ msgstr "mysql_recset ist NULL"
 
 #: providers/gda-mdb-server/gda-mdb-connection.c:448
 #: providers/gda-mysql-server/gda-mysql-connection.c:475
-#: providers/gda-sybase-server/gda-sybase-connection.c:397
+#: providers/gda-sybase-server/gda-sybase-connection.c:407
 msgid "No table name given for SCHEMA_COLS"
 msgstr "Kein Tabellenname für SCHEMA_COLS angegeben"
 
-#: providers/gda-mdb-server/main-mdb.c:76
-#: providers/gda-mysql-server/main-mysql.c:76
+#: providers/gda-mdb-server/main-mdb.c:69
+#: providers/gda-mysql-server/main-mysql.c:69
 msgid "Could not register MySQL provider implementation"
 msgstr "Die MySQL-Anbieter-Implementierung kann nicht registriert werden"
 
 #: providers/gda-mysql-server/gda-mysql-connection.c:162
 #, c-format
 msgid ""
-"Opening connection with user=%s, password=%s, host=%shost=%s, port=%s, "
+"Opening connection with user=%s, password=%s, host=%s, port=%s, "
 "unix_socket=%s"
 msgstr ""
-"Öffne Verbindung mit Benutzer=%s, Passwort=%s, Rechner=%shost%s, Port=%s, "
-"Unix_Socket=%s"
+"Verbindung mit Benutzer=%s, Passwort=%s, Rechner=%shost%s, Port=%s, "
+"Unix_Socket=%s wird geöffnet"
 
 #: providers/gda-odbc-server/gda-odbc-connection.c:280
 #, c-format
@@ -360,22 +367,22 @@ msgstr "gda_odbc_connection_open_schema: Unhebandelter SCHEMA_QTYPE %d\n"
 msgid "no text"
 msgstr "Kein Text"
 
-#: providers/gda-odbc-server/main-odbc.c:75
+#: providers/gda-odbc-server/main-odbc.c:68
 msgid "Could not register ODBC provider implementation"
 msgstr "Die ODBC-Anbieter-Implementierung konnte nicht registriert werden"
 
 #: providers/gda-oracle-server/gda-oracle-command.c:195
 msgid "Could not allocate statement handle"
-msgstr ""
+msgstr "`Statement handle' konnte nicht erreicht werden"
 
 #: providers/gda-oracle-server/gda-oracle-command.c:199
 msgid "command object being created without associated connection"
-msgstr "Befehls-Objekt erstellt, ohne eine dazugehörige Verbindung zu haben"
+msgstr "Befehlsobjekt erstellt, ohne eine dazugehörige Verbindung zu haben"
 
 #: providers/gda-oracle-server/gda-oracle-command.c:226
 #, c-format
 msgid "Executing command '%s'"
-msgstr "Führt Befehl '%s' aus"
+msgstr "Befehl '%s' wird ausgeführt"
 
 #: providers/gda-oracle-server/gda-oracle-connection.c:113
 msgid "error in OCIHandleAlloc() HTYPE_SVCCTX"
@@ -402,7 +409,7 @@ msgstr "Unbekannter ORACLE Datentyp in fill_field_values"
 msgid "recordset object being created without associated connection"
 msgstr "Recordset-Objekt erstellt, ohne eine dazugehörige Verbindung zu haben"
 
-#: providers/gda-oracle-server/main-oracle.c:75
+#: providers/gda-oracle-server/main-oracle.c:68
 msgid "Could not register ORACLE provider implementation"
 msgstr "Die ORACLE-Anbieter-Implementiertung konnte nicht registriert werden"
 
@@ -411,216 +418,221 @@ msgstr "Die ORACLE-Anbieter-Implementiertung konnte nicht registriert werden"
 msgid "postgres_recset is NULL"
 msgstr "postgres_recset ist NULL"
 
-#: providers/gda-postgres-server/main-postgres.c:75
+#: providers/gda-postgres-server/main-postgres.c:68
 msgid "Could not register PostgreSQL provider implementation"
 msgstr ""
 "Die PostgreSQL-Anbieter-Implementiertung konnte nicht registriert werden"
 
-#: providers/gda-sybase-server/gda-sybase-command.c:107
+#: providers/gda-sybase-server/gda-sybase-command.c:111
 msgid "Connection seems to be dead"
-msgstr "Die Verbindung scheint tod zu sein"
+msgstr "Die Verbindung scheint tot zu sein"
 
-#: providers/gda-sybase-server/gda-sybase-command.c:127
+#: providers/gda-sybase-server/gda-sybase-command.c:131
 msgid "Filling command structure failed\n"
 msgstr "Füllen der Befehlsstruktur gescheitert\n"
 
-#: providers/gda-sybase-server/gda-sybase-command.c:139
+#: providers/gda-sybase-server/gda-sybase-command.c:143
 msgid "sending cmd failed"
 msgstr "Senden von cmd gescheitert"
 
-#: providers/gda-sybase-server/gda-sybase-command.c:146
+#: providers/gda-sybase-server/gda-sybase-command.c:150
 msgid "Allocating recordset failed"
 msgstr "Erreichen des Recordset gescheitert"
 
-#: providers/gda-sybase-server/gda-sybase-command.c:156
+#: providers/gda-sybase-server/gda-sybase-command.c:160
 msgid "Getting recordset userdata failed"
-msgstr "Erreichen der Recordset Benutzerdaten gescheitert"
+msgstr "Erreichen der Recordset-Benutzerdaten gescheitert"
 
-#: providers/gda-sybase-server/gda-sybase-command.c:212
+#: providers/gda-sybase-server/gda-sybase-command.c:218
 msgid "Command execution finished, all results processed"
-msgstr "Befehlsausführung beendet, alle Ergebnisse weitergeleitet"
+msgstr "Befehlsausführung beendet, alle Ergebnisse abgearbeitet"
 
-#: providers/gda-sybase-server/gda-sybase-command.c:216
+#: providers/gda-sybase-server/gda-sybase-command.c:222
 msgid "Command failed"
 msgstr "Befehl gescheitert"
 
-#: providers/gda-sybase-server/gda-sybase-command.c:220
+#: providers/gda-sybase-server/gda-sybase-command.c:226
 msgid "Execution of resultless command succeeded"
-msgstr "Ausführen des Ergebnisslosen Befehls gescheitert"
+msgstr "Ausführen des ergebnisslosen Befehls gescheitert"
 
-#: providers/gda-sybase-server/gda-sybase-command.c:236
+#: providers/gda-sybase-server/gda-sybase-command.c:242
 #, c-format
 msgid "ct_results() returned %x"
 msgstr "ct_results() gab %x zurück"
 
-#: providers/gda-sybase-server/gda-sybase-command.c:246
+#: providers/gda-sybase-server/gda-sybase-command.c:252
 msgid "No further results, command completly succeeded."
 msgstr "Keine weiteren Ergebnisse, Befehl erfolgreich beendet."
 
-#: providers/gda-sybase-server/gda-sybase-command.c:250
+#: providers/gda-sybase-server/gda-sybase-command.c:256
 msgid "An error occured during command execution."
 msgstr "Ein Fehler trat beim Ausführen des Befehls auf."
 
-#: providers/gda-sybase-server/gda-sybase-command.c:257
+#: providers/gda-sybase-server/gda-sybase-command.c:263
 msgid "Cmd execution returned unknown result, may be an error"
 msgstr ""
 "Ausführen des Befehls hat ein unbekanntes Ergebnis zurückgegeben, "
 "möglicherweise ein Fehler"
 
-#: providers/gda-sybase-server/gda-sybase-command.c:270
+#: providers/gda-sybase-server/gda-sybase-command.c:276
 msgid "No data returned, freeing recordset structure"
-msgstr "Kine Daten zurückgegeben, lösche die Struktur"
+msgstr "Keine Daten zurückgegeben, die Struktur wird gelöscht"
 
-#: providers/gda-sybase-server/gda-sybase-command.c:301
-#: providers/gda-sybase-server/gda-sybase-command.c:313
+#: providers/gda-sybase-server/gda-sybase-command.c:307
+#: providers/gda-sybase-server/gda-sybase-command.c:319
 msgid "Freeing command structure failed"
 msgstr "Löschen der Befehls-Struktur gescheitert"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:123
+#: providers/gda-sybase-server/gda-sybase-connection.c:133
 msgid "Error allocating error structure"
 msgstr "Fehler beim Erreichen der Fehlerstruktur"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:131
+#: providers/gda-sybase-server/gda-sybase-connection.c:141
 msgid "Not enough memory for sybase_Connection"
 msgstr "Nicht genug Speicher für sybase_Connection"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:387
+#: providers/gda-sybase-server/gda-sybase-connection.c:397
 #, c-format
 msgid "schema_cols: table_name '%s'"
 msgstr "schema_cols: table_name '%s'"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:403
+#: providers/gda-sybase-server/gda-sybase-connection.c:413
 msgid "Could not allocate command structure"
-msgstr "Konnte die Befehlsstruktur nicht erreichen"
+msgstr "Befehlsstruktur konnte nicht erreicht werden"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:425
+#: providers/gda-sybase-server/gda-sybase-connection.c:435
 msgid "Could not allocate enough memory for query"
 msgstr "Es konnte nicht genug Speicher für die Anfrage reserviert werden"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:439
+#: providers/gda-sybase-server/gda-sybase-connection.c:449
 msgid "Could not get recordset in schema_cols"
-msgstr "Konnte den Recordset in schema_cols nicht erreichen"
+msgstr "Recordset in schema_cols konnte nicht erreicht werden"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:471
-#: providers/gda-sybase-server/gda-sybase-connection.c:548
+#: providers/gda-sybase-server/gda-sybase-connection.c:481
+#: providers/gda-sybase-server/gda-sybase-connection.c:558
 #, c-format
 msgid "schema_tables: table name = '%s'"
 msgstr "schema_tables: Tabellenname = '%s'"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:479
-#: providers/gda-sybase-server/gda-sybase-connection.c:556
+#: providers/gda-sybase-server/gda-sybase-connection.c:489
+#: providers/gda-sybase-server/gda-sybase-connection.c:566
 #, c-format
 msgid "schema_tables: table_schema = '%s'"
 msgstr "schema_tables: table_schema = '%s'"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:484
+#: providers/gda-sybase-server/gda-sybase-connection.c:494
 #, c-format
 msgid "schema_procedures: proc_catalog = '%s' UNUSED!\n"
 msgstr "schema_procedures: proc_catalog = '%s' UNGENUTZT!\n"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:488
-#, c-format
+#: providers/gda-sybase-server/gda-sybase-connection.c:498
+#, fuzzy, c-format
 msgid "schema_procs: invalid constraint type %d"
 msgstr "schema_procs: Ungültiger Konstantentyp %d"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:498
+#: providers/gda-sybase-server/gda-sybase-connection.c:508
 msgid "Could not allocate cmd structure"
-msgstr "Die Befehls-Struktur konnte nicht erreicht werden"
+msgstr "Die Befehlsstruktur konnte nicht erreicht werden"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:561
+#: providers/gda-sybase-server/gda-sybase-connection.c:571
 #, c-format
 msgid "schema_procedures: proc_catalog = '%s' UNUSED!"
 msgstr "schema_procedures: proc_catalog = '%s' UNGENUTZT!"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:565
-#, c-format
+#: providers/gda-sybase-server/gda-sybase-connection.c:575
+#, fuzzy, c-format
 msgid "schema_tables: invalid constraint type %d"
 msgstr "schema_tables: Ungültiger Konstantentyp %d"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:626
-#, c-format
+#: providers/gda-sybase-server/gda-sybase-connection.c:636
+#, fuzzy, c-format
 msgid "Invalid or unsupported constraint type: %d"
 msgstr "Ungültiger oder nicht unterstützter Konstantentyp: %d"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:667
+#: providers/gda-sybase-server/gda-sybase-connection.c:677
 msgid "Could not allocate Gda_ServerCommand"
-msgstr "Konnte Gda_ServerCommand nicht erreichen"
+msgstr "Gda_ServerCommand konnte nicht erreicht werden"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:697
-#: providers/gda-sybase-server/gda-sybase-connection.c:702
+#: providers/gda-sybase-server/gda-sybase-connection.c:707
+#: providers/gda-sybase-server/gda-sybase-connection.c:712
 #, c-format
 msgid "connection status: %x"
 msgstr "Verbindungsstatus: %x"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:698
+#: providers/gda-sybase-server/gda-sybase-connection.c:708
 #, c-format
 msgid "return code: %x"
 msgstr "Rückgabewert: %x"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:735
+#: providers/gda-sybase-server/gda-sybase-connection.c:745
 msgid "attempting reconnection"
-msgstr "Versuche Wiederverbindung"
+msgstr "Verbindung wird erneut versucht"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:872
+#: providers/gda-sybase-server/gda-sybase-connection.c:884
 #, c-format
-msgid "%sonnected to '%s'"
-msgstr "%sVerbunden mit '%s'"
+msgid "Reconnected to '%s'"
+msgstr "Verbunden mit '%s'"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:882
+#: providers/gda-sybase-server/gda-sybase-connection.c:886
+#, c-format
+msgid "Connected to %s"
+msgstr "Verbunden mit '%s'"
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:894
 #, c-format
 msgid "Selected database '%s'"
-msgstr "Wählt Datenbank '%s'"
+msgstr "Gewählte Datenbank '%s'"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:911
+#: providers/gda-sybase-server/gda-sybase-connection.c:923
 #, c-format
 msgid "%s: Could not allocate cmd structure"
-msgstr "%s: Di Befehls-Struktur konnte nicht erreicht werden"
+msgstr "%s: Die Befehlsstruktur konnte nicht erreicht werden"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:920
+#: providers/gda-sybase-server/gda-sybase-connection.c:932
 #, c-format
 msgid "%s: Could not allocate memory for cmd string"
-msgstr "%s: Konnte keinen Speicher für den Befehlsstring erreichen"
+msgstr "%s: Speicher für den Befehlsstring konnte nicht alloziiert werden"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:933
+#: providers/gda-sybase-server/gda-sybase-connection.c:945
 #, c-format
 msgid "%s: ct_command failed"
 msgstr "%s: ct_command gescheitert"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:942
+#: providers/gda-sybase-server/gda-sybase-connection.c:954
 #, c-format
 msgid "%s: sending command failed"
 msgstr "%s: Senden des Befehls gescheitert"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:953
+#: providers/gda-sybase-server/gda-sybase-connection.c:965
 #, c-format
 msgid "%s: selecting database failed"
 msgstr "%s: Auswählen der Datenbank gescheitert"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:971
+#: providers/gda-sybase-server/gda-sybase-connection.c:983
 #, c-format
 msgid "%s: use command failed"
 msgstr "%s: use-Befehl gescheitert"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:998
+#: providers/gda-sybase-server/gda-sybase-connection.c:1010
 msgid "Could not allocate locale structure"
 msgstr "Die lokale Struktur kann nicht erreicht werden"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:1004
+#: providers/gda-sybase-server/gda-sybase-connection.c:1016
 #, c-format
 msgid "Could not set locale to '%s'"
-msgstr "lokale Struktur konnte nicht auf '%s' gesetzt werden"
+msgstr "Lokale Struktur konnte nicht auf '%s' gesetzt werden"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:1010
+#: providers/gda-sybase-server/gda-sybase-connection.c:1022
 #, c-format
 msgid "Could not configure locale to be '%s'"
 msgstr ""
 "Die lokale Struktur konnte nicht so eingestellt werden, dass sie '%s' ist"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:1015
+#: providers/gda-sybase-server/gda-sybase-connection.c:1027
 msgid "Could not drop locale structure"
-msgstr "Konnte die lokale Struktur nicht fallenlassen"
+msgstr "Die lokale Struktur konnte nicht gelöscht werden"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:1028
+#: providers/gda-sybase-server/gda-sybase-connection.c:1040
 #, c-format
 msgid "Fatal error: %s\n"
 msgstr "Schwerer Fehler: %s\n"
@@ -634,8 +646,8 @@ msgstr "gda_sybase_error_make(%p,%p,%p,%p)"
 #, c-format
 msgid "No error flag ist set, though %s is called. This may be a bug."
 msgstr ""
-"Kein Fehlercode angegeben, obwohl %s aufgerufen wurde. Die könnte ein Bug "
-"sein."
+"Kein Fehlercode angegeben, obwohl %s aufgerufen wurde. Dies könnte ein "
+"Fehler sein."
 
 #: providers/gda-sybase-server/gda-sybase-error.c:135
 msgid "cs_diag() initialized"
@@ -651,7 +663,7 @@ msgstr "ct_diag() initialisiert"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:148
 msgid "Could not initialize ct_diag()"
-msgstr " ct_diag()konnte nicht initialisiert werden"
+msgstr " ct_diag() konnte nicht initialisiert werden"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:182
 #, c-format
@@ -665,37 +677,37 @@ msgstr "%s konnte die cnc-Benutzerdaten nicht erhalten"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:200
 msgid "Could not get # of messages"
-msgstr "Die Zahl der Meldungen konnte nicht erhalten werden"
+msgstr "Die Anahl der Meldungen konnte nicht erhalten werden"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:205
 #, c-format
 msgid "%d ctlib messages to fetch"
-msgstr "%d ctlib-Meldungen zu Empfangen"
+msgstr "%d ctlib-Meldungen zu empfangen"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:207
 #, c-format
 msgid "%d ctlib message to fetch"
-msgstr "ctlib-Meldung %d zu Empfangen"
+msgstr "ctlib-Meldung %d zu empfangen"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:243
 msgid "error is nullpointer in gda_sybase_messages_handle"
-msgstr "Fehler ist nullpointer in gda_sybase_messages_handle"
+msgstr "Fehler ist Nullzeiger in gda_sybase_messages_handle"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:268
 #: providers/gda-sybase-server/gda-sybase-error.c:335
 #: providers/gda-sybase-server/gda-sybase-error.c:378
 msgid "Could not get # of server messages"
-msgstr "Die Zahl der Server-Meldungen konnte nicht erhalten werden"
+msgstr "Die Anzahl der Server-Meldungen konnte nicht erhalten werden"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:276
 #, c-format
 msgid "Fetching %d client messages"
-msgstr "Empfange %d Client-Meldungen"
+msgstr "%d Client-Meldungen werden geholt"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:278
 #, c-format
 msgid "Fetching %d client message"
-msgstr "Empfange Client-Meldung %d"
+msgstr "Client-Meldung %d wird geholt"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:287
 #, c-format
@@ -704,21 +716,21 @@ msgstr "Die Client-Meldungen %d konnte nicht empfangen werden"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:303
 msgid "Could not get # of client messages"
-msgstr "Die Zahl der Client-Meldungen konnte nicht ermittelt werden"
+msgstr "Die Anzahl der Client-Meldungen konnte nicht ermittelt werden"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:311
 msgid "Could not clear client messages"
-msgstr "Konnte die Client-Meldungen nicht löschen"
+msgstr "Client-Meldungen konnte nicht gelöscht werden"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:343
 #, c-format
 msgid "Fetching %d server messages"
-msgstr "Empfange %d Server-Meldungen"
+msgstr "%d Server-Meldungen werden geholt"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:345
 #, c-format
 msgid "Fetching %d server message"
-msgstr "Empfange Server-Mendung %d"
+msgstr "Server-Meldung %d werden geholt"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:354
 #, c-format
@@ -732,17 +744,17 @@ msgstr "Die Server-Meldungen konnte nicht gelöscht werden"
 #: providers/gda-sybase-server/gda-sybase-error.c:408
 #: providers/gda-sybase-server/gda-sybase-error.c:444
 msgid "Could not get # of cslib messages"
-msgstr "Die Zahl der cslib Meldungen konnte nicht empfangen werden"
+msgstr "Die Anzahl der cslib-Meldungen konnte nicht empfangen werden"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:416
 #, c-format
 msgid "Fetching %d cslib messages"
-msgstr "Empfage %d cslib-Meldungen"
+msgstr "%d cslib-Meldungen werden geholt"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:418
 #, c-format
 msgid "Fetchong %d cslib message"
-msgstr "Empfagne cslib-Meldung %d"
+msgstr "cslib-Meldung %d werden geholt"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:428
 #, c-format
@@ -765,75 +777,119 @@ msgstr "Client-Nachricht:"
 msgid "CS-Library error:"
 msgstr "CS-Bibliotheks-Fehler:"
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:148
+#: providers/gda-sybase-server/gda-sybase-recordset.c:152
 #, c-format
 msgid "fetch error at row %d"
-msgstr "Empfing Fehler in Zeile %d"
+msgstr "Fehler in Zeile %d "
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:155
+#: providers/gda-sybase-server/gda-sybase-recordset.c:159
 #, c-format
 msgid "CS_END_DATA on row %d; canceling"
-msgstr "CS_END_DATA in Zeile %d; breche ab"
+msgstr "CS_END_DATA in Zeile %d; Abbruch"
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:164
+#: providers/gda-sybase-server/gda-sybase-recordset.c:168
 #, c-format
 msgid "%s: Error (%d)"
 msgstr "%s: Fehler (%d)"
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:339
+#: providers/gda-sybase-server/gda-sybase-recordset.c:343
 msgid "Failed fetching # of columns"
-msgstr "Die Zahl der Spalten konnte nicht empfagen werden"
+msgstr "Die Anzahl der Spalten konnte nicht geholt werden"
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:345
+#: providers/gda-sybase-server/gda-sybase-recordset.c:349
 #, c-format
 msgid "Counted %d columns"
 msgstr "%d Spalten gezählt"
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:352
+#: providers/gda-sybase-server/gda-sybase-recordset.c:356
 #, c-format
 msgid "%s could not allocate datafmt info"
-msgstr ""
+msgstr "%s konnte `datafmt info' nicht erreichen"
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:362
+#: providers/gda-sybase-server/gda-sybase-recordset.c:366
 #, c-format
 msgid "%s could not allocate data fields"
 msgstr "%s konnte die Datenfelder nicht erreichen"
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:380
+#: providers/gda-sybase-server/gda-sybase-recordset.c:384
 #, c-format
 msgid "ct_describe on col # %d"
 msgstr "ct_describe in Zeile %d"
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:387
+#: providers/gda-sybase-server/gda-sybase-recordset.c:391
 #, c-format
 msgid "ct_describe on col # %d failed"
 msgstr "ct_describe in Zeile %d gescheitert"
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:393
+#: providers/gda-sybase-server/gda-sybase-recordset.c:397
 #, c-format
 msgid "ct_describe(%d): '%s', %d (%s)"
 msgstr "ct_describe(%d): '%s', %d (%s)"
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:402
+#: providers/gda-sybase-server/gda-sybase-recordset.c:406
 msgid "could not allocate data holder"
 msgstr "Der Datenhalter konnte nicht erreicht werden"
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:412
+#: providers/gda-sybase-server/gda-sybase-recordset.c:416
 msgid "could not ct_bind data holder to column"
-msgstr ""
+msgstr "`data holder' konnte nicht an Spalte gebunden (ct_bind) werden"
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:419
+#: providers/gda-sybase-server/gda-sybase-recordset.c:423
 msgid "illegal type detected, aborting"
-msgstr "Illegalen Typ entdeckt, breche ab"
+msgstr "Unzulässiger Typ entdeckt, Abbruch"
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:425
+#: providers/gda-sybase-server/gda-sybase-recordset.c:429
 msgid "could not allocate field"
 msgstr "Das Feld konnte nicht erreicht werden"
 
-#: providers/gda-sybase-server/main-sybase.c:80
+#: providers/gda-sybase-server/main-sybase.c:73
 msgid "Could not register gda-sybase provider implementation"
 msgstr ""
 "Die gda-sybase-Anbieter-Implementiertung konnte nicht registriert werden"
+
+#: report/gda-report-engine.c:71
+#, fuzzy, c-format
+msgid "CORBA exception unloading report engine: %s"
+msgstr "CORBA-Ausnahme, Berichtsmodul wird entfernt: %s"
+
+#: report/server/gda-report-server-main.c:43
+#: report/server/gda-report-server-main.c:50
+#, c-format
+msgid "Received signal %d, shutting down."
+msgstr "Signal %d wurde erhalten, Abbruch."
+
+#: report/server/gda-report-server-main.c:54
+#, c-format
+msgid "Received signal %d, shutting down cleanly"
+msgstr "Signal %d wurde erhalten, sauberer Herunterfahren"
+
+#: report/server/gda-report-server-main.c:96
+msgid "Failed to initialize OAF: please mail bug report to OAF maintainers"
+msgstr ""
+"OAF konnte nicht initialisiert werden: Bitte berichten Sie diesen Fehler an "
+"die OAF-Entwickler"
+
+#: report/server/gda-report-server-main.c:106
+#, fuzzy
+msgid "Could not activate report engine"
+msgstr "Die Server-Meldungen konnte nicht gelöscht werden"
+
+#: report/server/gda-report-server-main.c:123
+msgid ""
+"Another instance of the report engine is already registered with OAF. "
+"Exiting..."
+msgstr ""
+"Eine andere Instalz dieses Anbieters ist bereits mit OAF registriert. "
+"Beenden..."
+
+#: report/server/gda-report-server-main.c:126
+msgid "Unknown error registering report engine with OAF. Exiting"
+msgstr "Unbekannter Fehler beim Registrieren dieses Anbieters mit OAF. Beenden"
+
+#: report/server/gda-report-server-main.c:130
+#, c-format
+msgid "Registered report engine with ID = %s"
+msgstr "Berichtsmodul registriert mit ID = %s"
 
 #: tools/gda-run.c:29
 msgid "database name"
@@ -876,4 +932,3 @@ msgstr "%s: Fehlkonfigurierter DSN Eintrag"
 #, c-format
 msgid "%s: data source '%s' not found\n"
 msgstr "%s: Datenquelle '%s' nicht gefunden\n"
-
