@@ -8,7 +8,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-db \n"
-"POT-Creation-Date: 2001-10-04 18:53+0200\n"
+"POT-Creation-Date: 2001-10-10 22:17+0200\n"
 "PO-Revision-Date: 2001-03-14 01:06+0100\n"
 "Last-Translator: Antonio de la Torre <adltorre@terra.es>\n"
 "Language-Team: Spanish <es@li.org>\n"
@@ -39,22 +39,25 @@ msgstr ""
 msgid "Could not open CORBA factory"
 msgstr "No se ha podido abrir la \"factory\" de CORBA"
 
-#: lib/gda-client/gda-field.c:228 lib/gda-client/gda-field.c:285
-#: lib/gda-client/gda-field.c:294
+#: lib/gda-client/gda-field.c:243 lib/gda-client/gda-field.c:298
+#: lib/gda-client/gda-field.c:307
+#: providers/gda-mysql-server/gda-mysql-recordset.c:197
 msgid "<NULL>"
 msgstr "<VACÍO>"
 
-#: lib/gda-client/gda-field.c:233 lib/gda-client/gda-field.c:236
+#: lib/gda-client/gda-field.c:248 lib/gda-client/gda-field.c:251
 msgid "<Unknown GDA Type(NULL)>"
 msgstr "<Tipo GDA desconocido (VACÍO)>"
 
-#: lib/gda-client/gda-field.c:249
-msgid "TRUE"
-msgstr "SI"
+#: lib/gda-client/gda-field.c:264
+#, fuzzy
+msgid "true"
+msgstr "Verdad"
 
-#: lib/gda-client/gda-field.c:251
-msgid "FALSE"
-msgstr "NO"
+#: lib/gda-client/gda-field.c:266
+#, fuzzy
+msgid "false"
+msgstr "Falso"
 
 #: lib/gda-common/gda-corba.c:88
 #, c-format
@@ -1057,3 +1060,9 @@ msgstr "No se encontró la fuentes de datos %s"
 #, fuzzy
 msgid "Could not register <PROVIDER-NAME> provider implementation"
 msgstr "No"
+
+#~ msgid "TRUE"
+#~ msgstr "SI"
+
+#~ msgid "FALSE"
+#~ msgstr "NO"

@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda VERSION\n"
-"POT-Creation-Date: 2001-10-04 18:53+0200\n"
+"POT-Creation-Date: 2001-10-10 22:17+0200\n"
 "PO-Revision-Date: 2000-12-14 14:34+01:00\n"
 "Last-Translator: Emese Kovacs <emese@gnome.hu>\n"
 "Language-Team: Hungarian <hu@gnome.hu>\n"
@@ -36,22 +36,25 @@ msgstr ""
 msgid "Could not open CORBA factory"
 msgstr "Nem tudom megnyitni a CORBA factory-t"
 
-#: lib/gda-client/gda-field.c:228 lib/gda-client/gda-field.c:285
-#: lib/gda-client/gda-field.c:294
+#: lib/gda-client/gda-field.c:243 lib/gda-client/gda-field.c:298
+#: lib/gda-client/gda-field.c:307
+#: providers/gda-mysql-server/gda-mysql-recordset.c:197
 msgid "<NULL>"
 msgstr "<NULL>"
 
-#: lib/gda-client/gda-field.c:233 lib/gda-client/gda-field.c:236
+#: lib/gda-client/gda-field.c:248 lib/gda-client/gda-field.c:251
 msgid "<Unknown GDA Type(NULL)>"
 msgstr "<Ismeretlen GDA-típus(NULL)>"
 
-#: lib/gda-client/gda-field.c:249
-msgid "TRUE"
-msgstr "IGAZ"
+#: lib/gda-client/gda-field.c:264
+#, fuzzy
+msgid "true"
+msgstr "Igaz"
 
-#: lib/gda-client/gda-field.c:251
-msgid "FALSE"
-msgstr "HAMIS"
+#: lib/gda-client/gda-field.c:266
+#, fuzzy
+msgid "false"
+msgstr "Hamis"
 
 #: lib/gda-common/gda-corba.c:88
 #, c-format
@@ -1066,6 +1069,12 @@ msgstr "%s: a '%s' adatforrást nem találom\n"
 #, fuzzy
 msgid "Could not register <PROVIDER-NAME> provider implementation"
 msgstr "Nem sikerült INTERBASE szolgáltatót regisztrálni"
+
+#~ msgid "TRUE"
+#~ msgstr "IGAZ"
+
+#~ msgid "FALSE"
+#~ msgstr "HAMIS"
 
 #~ msgid "impl_GDA_Connection_open: opening connection with DSN: %s"
 #~ msgstr "impl_GDA_Connection_open: kapcsolat megnyitása DSN-el: %s"

@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2001-10-04 18:53+0200\n"
+"POT-Creation-Date: 2001-10-10 22:17+0200\n"
 "PO-Revision-Date: 1999-11-17 10:06+0200\n"
 "Last-Translator: Yuri Syrota <rasta@renome.rovno.ua>\n"
 "Language-Team: Ukrainian <uk@li.org>\n"
@@ -36,22 +36,25 @@ msgstr ""
 msgid "Could not open CORBA factory"
 msgstr "Не вдалось в╕дкрити фабрику CORBA"
 
-#: lib/gda-client/gda-field.c:228 lib/gda-client/gda-field.c:285
-#: lib/gda-client/gda-field.c:294
+#: lib/gda-client/gda-field.c:243 lib/gda-client/gda-field.c:298
+#: lib/gda-client/gda-field.c:307
+#: providers/gda-mysql-server/gda-mysql-recordset.c:197
 msgid "<NULL>"
 msgstr "<NULL>"
 
-#: lib/gda-client/gda-field.c:233 lib/gda-client/gda-field.c:236
+#: lib/gda-client/gda-field.c:248 lib/gda-client/gda-field.c:251
 msgid "<Unknown GDA Type(NULL)>"
 msgstr "<Нев╕домий тип GDA(NULL)>"
 
-#: lib/gda-client/gda-field.c:249
-msgid "TRUE"
-msgstr "╤СТИНА"
+#: lib/gda-client/gda-field.c:264
+#, fuzzy
+msgid "true"
+msgstr "╤стина"
 
-#: lib/gda-client/gda-field.c:251
-msgid "FALSE"
-msgstr "ХИБН╤СТЬ"
+#: lib/gda-client/gda-field.c:266
+#, fuzzy
+msgid "false"
+msgstr "Хибн╕сть"
 
 #: lib/gda-common/gda-corba.c:88
 #, c-format
@@ -1049,6 +1052,12 @@ msgstr "%s: джерела даних \"%s\" не знайдено\n"
 #, fuzzy
 msgid "Could not register <PROVIDER-NAME> provider implementation"
 msgstr "Не вдалося заре╓струвати реал╕зац╕ю постачальника INTERBASE"
+
+#~ msgid "TRUE"
+#~ msgstr "╤СТИНА"
+
+#~ msgid "FALSE"
+#~ msgstr "ХИБН╤СТЬ"
 
 #~ msgid "impl_GDA_Connection_open: opening connection with DSN: %s"
 #~ msgstr "impl_GDA_Connection_open: в╕дкривання з'╓днання з DSN: %s"

@@ -8,7 +8,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2001-10-04 18:53+0200\n"
+"POT-Creation-Date: 2001-10-10 22:17+0200\n"
 "PO-Revision-Date: 2001-10-03 18:44+0200\n"
 "Last-Translator: Christian Rose <menthos@menthos.com>\n"
 "Language-Team: Swedish <sv@li.org>\n"
@@ -39,22 +39,25 @@ msgstr "[GDA-klientbibliotek]"
 msgid "Could not open CORBA factory"
 msgstr "Kunde inte öppna CORBA-fabrik"
 
-#: lib/gda-client/gda-field.c:228 lib/gda-client/gda-field.c:285
-#: lib/gda-client/gda-field.c:294
+#: lib/gda-client/gda-field.c:243 lib/gda-client/gda-field.c:298
+#: lib/gda-client/gda-field.c:307
+#: providers/gda-mysql-server/gda-mysql-recordset.c:197
 msgid "<NULL>"
 msgstr "<NULL>"
 
-#: lib/gda-client/gda-field.c:233 lib/gda-client/gda-field.c:236
+#: lib/gda-client/gda-field.c:248 lib/gda-client/gda-field.c:251
 msgid "<Unknown GDA Type(NULL)>"
 msgstr "<Okänd GDA-typ(NULL)>"
 
-#: lib/gda-client/gda-field.c:249
-msgid "TRUE"
-msgstr "SANT"
+#: lib/gda-client/gda-field.c:264
+#, fuzzy
+msgid "true"
+msgstr "Sant"
 
-#: lib/gda-client/gda-field.c:251
-msgid "FALSE"
-msgstr "FALSKT"
+#: lib/gda-client/gda-field.c:266
+#, fuzzy
+msgid "false"
+msgstr "Falskt"
 
 #: lib/gda-common/gda-corba.c:88
 #, c-format
@@ -1034,6 +1037,12 @@ msgstr "%s: datakällan \"%s\" kunde inte hittas\n"
 #: tools/templates/main-srv.c.tmpl:60
 msgid "Could not register <PROVIDER-NAME> provider implementation"
 msgstr "Kunde inte registrera <LEVERANTÖRSNAMN>-leverantörsimplementation"
+
+#~ msgid "TRUE"
+#~ msgstr "SANT"
+
+#~ msgid "FALSE"
+#~ msgstr "FALSKT"
 
 #~ msgid "schema_tables: table name = '%s'"
 #~ msgstr "schema_tables: tabellnamn = \"%s\""

@@ -17,12 +17,12 @@ all:
 libgda.html: libgda/index.html
 	-cp libgda/index.html libgda.html
 
-libgda/libgda.html: $(SGML_FILES)
+libgda/index.html: $(SGML_FILES)
 	-db2html libgda.sgml
 
 ## when we make dist, we include the generated HTML so people don't
 ## have to have the docbook tools
-dist-hook:
+dist-hook: libgda.html
 	mkdir $(distdir)/libgda
 	-cp libgda/*.html libgda/*.css $(distdir)/libgda
 	-cp libgda.html $(distdir)

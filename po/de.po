@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda-0.2.3-cvs\n"
-"POT-Creation-Date: 2001-10-04 18:53+0200\n"
+"POT-Creation-Date: 2001-10-10 22:17+0200\n"
 "PO-Revision-Date: 2001-04-29 03:52+0200\n"
 "Last-Translator: Christian Meyer <chrisime@gnome.org>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
@@ -37,22 +37,25 @@ msgstr ""
 msgid "Could not open CORBA factory"
 msgstr "CORBA-Einheit konnte nicht geöffnet werden"
 
-#: lib/gda-client/gda-field.c:228 lib/gda-client/gda-field.c:285
-#: lib/gda-client/gda-field.c:294
+#: lib/gda-client/gda-field.c:243 lib/gda-client/gda-field.c:298
+#: lib/gda-client/gda-field.c:307
+#: providers/gda-mysql-server/gda-mysql-recordset.c:197
 msgid "<NULL>"
 msgstr "<NULL>"
 
-#: lib/gda-client/gda-field.c:233 lib/gda-client/gda-field.c:236
+#: lib/gda-client/gda-field.c:248 lib/gda-client/gda-field.c:251
 msgid "<Unknown GDA Type(NULL)>"
 msgstr "<Unbekannter GDA-Typ(NULL)>"
 
-#: lib/gda-client/gda-field.c:249
-msgid "TRUE"
-msgstr "WAHR"
+#: lib/gda-client/gda-field.c:264
+#, fuzzy
+msgid "true"
+msgstr "Wahr"
 
-#: lib/gda-client/gda-field.c:251
-msgid "FALSE"
-msgstr "FALSCH"
+#: lib/gda-client/gda-field.c:266
+#, fuzzy
+msgid "false"
+msgstr "Falsch"
 
 #: lib/gda-common/gda-corba.c:88
 #, c-format
@@ -1050,6 +1053,12 @@ msgstr "%s: Datenquelle '%s' nicht gefunden\n"
 #, fuzzy
 msgid "Could not register <PROVIDER-NAME> provider implementation"
 msgstr "PRIMEBASE-Anbieter Implementierung konnte nicht registriert werden"
+
+#~ msgid "TRUE"
+#~ msgstr "WAHR"
+
+#~ msgid "FALSE"
+#~ msgstr "FALSCH"
 
 #~ msgid "impl_GDA_Connection_open: opening connection with DSN: %s"
 #~ msgstr "impl_GDA_Connection_open: Verbindung mit DSN öffnen: %s"

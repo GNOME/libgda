@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-db 0.0.91\n"
-"POT-Creation-Date: 2001-10-04 18:53+0200\n"
+"POT-Creation-Date: 2001-10-10 22:17+0200\n"
 "PO-Revision-Date: 2000-02-12 19:29+0000\n"
 "Last-Translator: Simos Xenitellis <simos@hellug.gr>\n"
 "Language-Team: Greek <nls@tux.hellug.gr>\n"
@@ -39,25 +39,26 @@ msgid "Could not open CORBA factory"
 msgstr ""
 
 #
-#: lib/gda-client/gda-field.c:228 lib/gda-client/gda-field.c:285
-#: lib/gda-client/gda-field.c:294
+#: lib/gda-client/gda-field.c:243 lib/gda-client/gda-field.c:298
+#: lib/gda-client/gda-field.c:307
+#: providers/gda-mysql-server/gda-mysql-recordset.c:197
 msgid "<NULL>"
 msgstr "«ÊÅÍÏ»"
 
 #
-#: lib/gda-client/gda-field.c:233 lib/gda-client/gda-field.c:236
+#: lib/gda-client/gda-field.c:248 lib/gda-client/gda-field.c:251
 msgid "<Unknown GDA Type(NULL)>"
 msgstr "«¶ãíùóôïò Ôığïò GDA(ÊÅÍÏ)»"
 
-#
-#: lib/gda-client/gda-field.c:249
-msgid "TRUE"
-msgstr "ÁËÇÈÅÓ"
+#: lib/gda-client/gda-field.c:264
+msgid "true"
+msgstr ""
 
 #
-#: lib/gda-client/gda-field.c:251
-msgid "FALSE"
-msgstr "ØÅÕÄÅÓ"
+#: lib/gda-client/gda-field.c:266
+#, fuzzy
+msgid "false"
+msgstr "Áñ÷åßï"
 
 #: lib/gda-common/gda-corba.c:88
 #, c-format
@@ -1097,6 +1098,14 @@ msgstr ""
 #: tools/templates/main-srv.c.tmpl:60
 msgid "Could not register <PROVIDER-NAME> provider implementation"
 msgstr ""
+
+#
+#~ msgid "TRUE"
+#~ msgstr "ÁËÇÈÅÓ"
+
+#
+#~ msgid "FALSE"
+#~ msgstr "ØÅÕÄÅÓ"
 
 #
 #~ msgid "Create script"

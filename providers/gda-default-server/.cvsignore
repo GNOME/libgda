@@ -8,3 +8,4 @@ gda-default-srv
 .deps
 .libs
 build_sqlite
+sqlite.h

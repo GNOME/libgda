@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-db\n"
-"POT-Creation-Date: 2001-10-04 18:53+0200\n"
+"POT-Creation-Date: 2001-10-10 22:17+0200\n"
 "PO-Revision-Date: 2000-11-21 17:44-00:03\n"
 "Last-Translator: Ariel Bressan da Silva <ariel@conectiva.com.br>\n"
 "Language-Team: Brazilian Portuguese <ldp-br@bazar.conectiva.com.br>\n"
@@ -38,25 +38,26 @@ msgid "Could not open CORBA factory"
 msgstr "Não pôde abrir fábrica CORBA"
 
 # gda-clnt/gda-field.c:95
-#: lib/gda-client/gda-field.c:228 lib/gda-client/gda-field.c:285
-#: lib/gda-client/gda-field.c:294
+#: lib/gda-client/gda-field.c:243 lib/gda-client/gda-field.c:298
+#: lib/gda-client/gda-field.c:307
+#: providers/gda-mysql-server/gda-mysql-recordset.c:197
 msgid "<NULL>"
 msgstr "<NULL>"
 
 # gda-clnt/gda-field.c:101 gda-clnt/gda-field.c:103
-#: lib/gda-client/gda-field.c:233 lib/gda-client/gda-field.c:236
+#: lib/gda-client/gda-field.c:248 lib/gda-client/gda-field.c:251
 msgid "<Unknown GDA Type(NULL)>"
 msgstr "<GDA desconhecido digite(NULL)>"
 
-# gda-clnt/gda-field.c:117
-#: lib/gda-client/gda-field.c:249
-msgid "TRUE"
-msgstr "VERDADEIRO"
+#: lib/gda-client/gda-field.c:264
+#, fuzzy
+msgid "true"
+msgstr "Verdadeiro"
 
-# gda-clnt/gda-field.c:119
-#: lib/gda-client/gda-field.c:251
-msgid "FALSE"
-msgstr "FALSO"
+#: lib/gda-client/gda-field.c:266
+#, fuzzy
+msgid "false"
+msgstr "Falso"
 
 #: lib/gda-common/gda-corba.c:88
 #, c-format
@@ -1058,6 +1059,14 @@ msgstr "%s: fonte de dados '%s' não encontrada\n"
 #, fuzzy
 msgid "Could not register <PROVIDER-NAME> provider implementation"
 msgstr "Não pôde registrar implementação de provedor INTERBASE"
+
+# gda-clnt/gda-field.c:117
+#~ msgid "TRUE"
+#~ msgstr "VERDADEIRO"
+
+# gda-clnt/gda-field.c:119
+#~ msgid "FALSE"
+#~ msgstr "FALSO"
 
 #~ msgid "impl_GDA_Connection_open: opening connection with DSN: %s"
 #~ msgstr "impl_GDA_Connection_open: abrindo conexão com DSN: %s"

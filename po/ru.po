@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-db\n"
-"POT-Creation-Date: 2001-10-04 18:53+0200\n"
+"POT-Creation-Date: 2001-10-10 22:17+0200\n"
 "PO-Revision-Date: 2001-02-19 12:30+03:00\n"
 "Last-Translator: Valek Filippov <frob@df.ru>\n"
 "Language-Team: Russian <ru@li.org>\n"
@@ -38,25 +38,27 @@ msgid "Could not open CORBA factory"
 msgstr ""
 
 # gda-clnt/gda-field.c:95
-#: lib/gda-client/gda-field.c:228 lib/gda-client/gda-field.c:285
-#: lib/gda-client/gda-field.c:294
+#: lib/gda-client/gda-field.c:243 lib/gda-client/gda-field.c:298
+#: lib/gda-client/gda-field.c:307
+#: providers/gda-mysql-server/gda-mysql-recordset.c:197
 msgid "<NULL>"
 msgstr "<NULL>"
 
 # gda-clnt/gda-field.c:101 gda-clnt/gda-field.c:103
-#: lib/gda-client/gda-field.c:233 lib/gda-client/gda-field.c:236
+#: lib/gda-client/gda-field.c:248 lib/gda-client/gda-field.c:251
 msgid "<Unknown GDA Type(NULL)>"
 msgstr "<Неизвестный GDA тип(NULL)>"
 
-# gda-clnt/gda-field.c:117
-#: lib/gda-client/gda-field.c:249
-msgid "TRUE"
-msgstr "ИСТИНА"
+#: lib/gda-client/gda-field.c:264
+#, fuzzy
+msgid "true"
+msgstr "Истина"
 
-# gda-clnt/gda-field.c:119
-#: lib/gda-client/gda-field.c:251
-msgid "FALSE"
-msgstr "ЛОЖЬ"
+# fe/fe_main.c:249
+#: lib/gda-client/gda-field.c:266
+#, fuzzy
+msgid "false"
+msgstr "Ложь"
 
 #: lib/gda-common/gda-corba.c:88
 #, c-format
@@ -1081,6 +1083,14 @@ msgstr "%s: источник данных \"%s\" не найден\n"
 #, fuzzy
 msgid "Could not register <PROVIDER-NAME> provider implementation"
 msgstr "Не удалось зарегистрировать реализацию провайдера INTERBASE"
+
+# gda-clnt/gda-field.c:117
+#~ msgid "TRUE"
+#~ msgstr "ИСТИНА"
+
+# gda-clnt/gda-field.c:119
+#~ msgid "FALSE"
+#~ msgstr "ЛОЖЬ"
 
 #~ msgid "impl_GDA_Connection_open: opening connection with DSN: %s"
 #~ msgstr "impl_GDA_Connection_open: открытие соединения с DSN: %s"

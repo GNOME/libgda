@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda CVS-20010407\n"
-"POT-Creation-Date: 2001-10-04 18:53+0200\n"
+"POT-Creation-Date: 2001-10-10 22:17+0200\n"
 "PO-Revision-Date: 2001-04-07 12:45+0900\n"
 "Last-Translator: Akira TAGOH <tagoh@gnome.gr.jp>\n"
 "Language-Team: Japanese <translation@gnome.gr.jp>\n"
@@ -36,22 +36,25 @@ msgstr ""
 msgid "Could not open CORBA factory"
 msgstr "CORBA ファクトリを開くことが出来ませんでした"
 
-#: lib/gda-client/gda-field.c:228 lib/gda-client/gda-field.c:285
-#: lib/gda-client/gda-field.c:294
+#: lib/gda-client/gda-field.c:243 lib/gda-client/gda-field.c:298
+#: lib/gda-client/gda-field.c:307
+#: providers/gda-mysql-server/gda-mysql-recordset.c:197
 msgid "<NULL>"
 msgstr "<NULL>"
 
-#: lib/gda-client/gda-field.c:233 lib/gda-client/gda-field.c:236
+#: lib/gda-client/gda-field.c:248 lib/gda-client/gda-field.c:251
 msgid "<Unknown GDA Type(NULL)>"
 msgstr "<未知の GDA タイプ(NULL)>"
 
-#: lib/gda-client/gda-field.c:249
-msgid "TRUE"
-msgstr "TRUE"
+#: lib/gda-client/gda-field.c:264
+#, fuzzy
+msgid "true"
+msgstr "True"
 
-#: lib/gda-client/gda-field.c:251
-msgid "FALSE"
-msgstr "FALSE"
+#: lib/gda-client/gda-field.c:266
+#, fuzzy
+msgid "false"
+msgstr "False"
 
 #: lib/gda-common/gda-corba.c:88
 #, c-format
@@ -1043,6 +1046,12 @@ msgstr "%s: データソース '%s' は見つかりませんでした\n"
 #, fuzzy
 msgid "Could not register <PROVIDER-NAME> provider implementation"
 msgstr "PRIMEBASE プロバイダの実装を登録することが出来ませんでした"
+
+#~ msgid "TRUE"
+#~ msgstr "TRUE"
+
+#~ msgid "FALSE"
+#~ msgstr "FALSE"
 
 #~ msgid "impl_GDA_Connection_open: opening connection with DSN: %s"
 #~ msgstr "impl_GDA_Connection_open: DSN '%s' で接続を開いています"

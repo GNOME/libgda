@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda 0.2.9\n"
-"POT-Creation-Date: 2001-10-04 18:53+0200\n"
+"POT-Creation-Date: 2001-10-10 22:17+0200\n"
 "PO-Revision-Date: 2001-09-21 12:46CET\n"
 "Last-Translator: Stanislav Visnovsky <visnovsky@nenya.ms.mff.cuni.cz>\n"
 "Language-Team: Slovak <sk-i18n@lists.linux.sk>\n"
@@ -37,22 +37,25 @@ msgstr "[klientská knižnice GDA]"
 msgid "Could not open CORBA factory"
 msgstr "Nie je možné otvoriť CORBA factory"
 
-#: lib/gda-client/gda-field.c:228 lib/gda-client/gda-field.c:285
-#: lib/gda-client/gda-field.c:294
+#: lib/gda-client/gda-field.c:243 lib/gda-client/gda-field.c:298
+#: lib/gda-client/gda-field.c:307
+#: providers/gda-mysql-server/gda-mysql-recordset.c:197
 msgid "<NULL>"
 msgstr "<NULL>"
 
-#: lib/gda-client/gda-field.c:233 lib/gda-client/gda-field.c:236
+#: lib/gda-client/gda-field.c:248 lib/gda-client/gda-field.c:251
 msgid "<Unknown GDA Type(NULL)>"
 msgstr "<Neznámy GDA Typ(NULL)>"
 
-#: lib/gda-client/gda-field.c:249
-msgid "TRUE"
-msgstr "TRUE"
+#: lib/gda-client/gda-field.c:264
+#, fuzzy
+msgid "true"
+msgstr "True"
 
-#: lib/gda-client/gda-field.c:251
-msgid "FALSE"
-msgstr "FALSE"
+#: lib/gda-client/gda-field.c:266
+#, fuzzy
+msgid "false"
+msgstr "False"
 
 #: lib/gda-common/gda-corba.c:88
 #, c-format
@@ -1032,3 +1035,9 @@ msgstr "%s: zdroj dát '%s' nenájdený\n"
 #: tools/templates/main-srv.c.tmpl:60
 msgid "Could not register <PROVIDER-NAME> provider implementation"
 msgstr "Nie je možné registrovať implementáciu <PROVIDER-NAME> poskytovateľa"
+
+#~ msgid "TRUE"
+#~ msgstr "TRUE"
+
+#~ msgid "FALSE"
+#~ msgstr "FALSE"

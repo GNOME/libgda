@@ -32,4 +32,4 @@ install-sh
 missing
 mkinstalldirs
 INSTALL
-
+*.tar.gz
