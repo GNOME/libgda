@@ -72,8 +72,8 @@ struct _Gda_ReportStreamClass
 #else
   GtkObjectClass parent_class;
 #endif
-/*  void (* warning) (Gda_ReportStream *object, const char *msg);
-  void (* error)   (Gda_ReportStream *object, const char *msg);*/
+  void (* warning) (Gda_ReportStream *object, const char *msg);
+  void (* error)   (Gda_ReportStream *object, const char *msg);
 };
 
 #ifdef HAVE_GOBJECT
@@ -84,6 +84,8 @@ GtkType      gda_reportstream_get_type      (void);
 
 Gda_ReportStream*  gda_reportstream_new                 (CORBA_ORB orb);
 void               gda_reportstream_free                (Gda_ReportStream* object);
+
+gint               gda_reportstream_length              (Gda_ReportStream* object);
 
 #if defined(__cplusplus)
 }

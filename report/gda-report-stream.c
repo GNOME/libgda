@@ -31,13 +31,23 @@ enum
 static gint
 gda_reportstream_signals[LAST_SIGNAL] = {0, };
 
-
+/*
 #ifdef HAVE_GOBJECT
 static void gda_reportstream_finalize (GObject *object);
 #endif
+*/
 
+
+#ifdef HAVE_GOBJECT
+static void    gda_reportstream_class_init  (Gda_ReportStreamClass *klass,
+                                             gpointer data);
+static void    gda_reportstream_init        (Gda_ReportStream *object,
+                                             Gda_ReportStreamClass *klass);
+#else
 static void    gda_reportstream_class_init    (Gda_ReportStreamClass* klass);
 static void    gda_reportstream_init          (Gda_ReportStream* object);
+#endif
+
 static void    gda_reportstream_real_error    (Gda_ReportStream* object, GList*);
 static void    gda_reportstream_real_warning  (Gda_ReportStream* object, GList*);
 
@@ -45,6 +55,7 @@ static void
 gda_reportstream_real_error (Gda_ReportStream* object, GList* errors)
 {
   g_print("%s: %d: %s called\n", __FILE__, __LINE__, __PRETTY_FUNCTION__);
+  object->errors_head = g_list_concat(object->errors_head, errors);
 }
 
 static void
@@ -107,10 +118,10 @@ gda_reportstream_get_type (void)
 static void
 gda_reportstream_class_init (Gda_ReportStreamClass *klass, gpointer data)
 {
-  GObjectClass *object_class = G_OBJECT_CLASS (klass);
-
-  object_class->finalize = &gda_reportstream_finalize;
-  klass->parent = g_type_class_peek_parent (klass);
+  /* FIXME: No GObject signals yet */
+  klass->error = gda_reportstream_real_error;
+  klass->warning = gda_reportstream_real_warning;
+  
 }
 #else
 static void
@@ -118,21 +129,21 @@ gda_reportstream_class_init (Gda_ReportStreamClass* klass)
 {
   GtkObjectClass*   object_class = GTK_OBJECT_CLASS(klass);
   
-/*
   gda_reportstream_signals[REPORTSTREAM_ERROR] = gtk_signal_new("error",
 							    GTK_RUN_FIRST,
 							    object_class->type,
 							    GTK_SIGNAL_OFFSET(Gda_ReportStreamClass, error),
 							    gtk_marshal_NONE__POINTER,
 							    GTK_TYPE_NONE, 1, GTK_TYPE_POINTER);
-  gda_reportstream_signals[CONNECTION_WARNING] = gtk_signal_new("warning",
+  gda_connection_signals[CONNECTION_WARNING] = gtk_signal_new("warning",
 							    GTK_RUN_LAST,
 							    object_class->type,
-							    GTK_SIGNAL_OFFSET(Gda_ReportStreamClass, warning),
+							    GTK_SIGNAL_OFFSET(Gda_ConnectionClass, warning),
 							    gtk_marshal_NONE__POINTER,
 							    GTK_TYPE_NONE, 1, GTK_TYPE_POINTER);
   gtk_object_class_add_signals(object_class, gda_reportstream_signals, LAST_SIGNAL);
-*/
+  klass->error   = gda_reportstream_real_error;
+  klass->warning = gda_reportstream_real_warning;
 }
 #endif
 
@@ -146,3 +157,70 @@ gda_reportstream_init (Gda_ReportStream *object)
 	g_return_if_fail(GDA_REPORTSTREAM_IS_OBJECT(object));
 }
 
+gint
+gda_reportstream_corba_exception (Gda_ReportStream* object, CORBA_Environment* ev)
+{
+  Gda_Error* error;
+  
+  g_return_val_if_fail(ev != 0, -1);
+  
+  switch (ev->_major)
+    {
+    case CORBA_NO_EXCEPTION:
+      return 0;
+    case CORBA_SYSTEM_EXCEPTION:
+      {
+        CORBA_SystemException* sysexc;
+
+        sysexc = CORBA_exception_value(ev);
+        error = gda_error_new();
+        error->source = g_strdup("[CORBA System Exception]");
+        switch(sysexc->minor)
+          {
+          case ex_CORBA_COMM_FAILURE:
+            error->description = g_strdup_printf(_("%s: The server didn't respond."),
+                                                 CORBA_exception_id(ev));
+            break;
+          default:
+            error->description = g_strdup_printf(_("%s: An Error occured in the CORBA system."),
+						 CORBA_exception_id(ev));
+            break;
+          }
+        gda_reportstream_add_single_error(object, error);
+        return -1;
+      }
+    case CORBA_USER_EXCEPTION:
+      error = gda_error_new();
+      error->source = g_strdup("[CORBA User Exception]");
+	  gda_reportstream_add_single_error(object, error);
+      return -1;
+    default:
+      g_error("Unknown CORBA exception for reportstream");
+    }
+  return 0;
+}
+
+/**
+ * gda_reportstream_length:
+ *
+ * Gets the report stream's size in bytes.
+ *
+ * Returns: The size (in bytes) of the report stream, -1 if exists an error.
+ *
+ */
+gint
+gda_reportstream_length (Gda_ReportStream* object)
+{
+  CORBA_Environment       ev;
+  CORBA_long              size;
+  
+  g_return_val_if_fail(IS_GDA_REPORTSTREAM(object), 0);
+  
+  CORBA_exception_init(&ev);
+  size = GDA_ReportStream_getLength(object, &ev);
+  if (gda_reportstream_corba_exception(object, &ev))
+    return -1;
+  else
+    return size;
+  
+}

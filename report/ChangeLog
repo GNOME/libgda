@@ -1,3 +1,8 @@
+2000-12-24	Carlos Perelló Marín <carlos@gnome-db.org>
+
+	* updated & erased the client/'s files that Rodrigo
+	moves to its correct place.
+
 2000-11-12	Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* fixed gda-report-stream.[ch] to make them compile
