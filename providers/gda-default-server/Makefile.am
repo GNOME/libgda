@@ -22,17 +22,17 @@ libgda_default_a_SOURCES = \
 	gda-default-recordset.c \
 	gda-default.h
 
-build_sqlite:
-	mkdir build_sqlite && \
+sqlite:
+	mkdir -p build_sqlite && \
 	cd build_sqlite && \
 	../sqlite/configure && \
 	make
 
-gda-default-command.c: build_sqlite
+gda-default-command.c: libsqlite.a
 
-gda-default.h: build_sqlite
+gda-default.h: libsqlite.a
 
-$(top_builddir)/providers/gda-default-server/libsqlite.a: build_sqlite
+libsqlite.a: sqlite
 	cp build_sqlite/libsqlite.a libsqlite.a
 
 oafdir=$(GDA_oafdir)
