@@ -331,10 +331,10 @@ gda_xml_database_table_set_owner (Gda_XmlDatabase *xmldb, xmlNodePtr table, cons
 }
 
 /**
- * gda_xml_database_field_count
+ * gda_xml_database_table_field_count
  */
 gint
-gda_xml_database_field_count (Gda_XmlDatabase *xmldb, xmlNodePtr table)
+gda_xml_database_table_field_count (Gda_XmlDatabase *xmldb, xmlNodePtr table)
 {
   xmlNodePtr xmlnode;
   gint       cnt = 0;
