@@ -104,6 +104,7 @@ char *string_buf_ptr;
 ":type"		{return L_PTYPE;}
 ":isparam"	{return L_PISPARAM;}
 ":nullok"       {return L_PNULLOK;}
+"##"            {return L_UNSPECVAL;}
 
 \"		{string_buf_ptr = string_buf; BEGIN(TEXTUAL);}
 <TEXTUAL>\"              {BEGIN(INITIAL);

@@ -41,6 +41,7 @@ sql_order_field *of;
 
 %token L_LSBRACKET L_RSBRACKET
 %token L_PNAME L_PTYPE L_PISPARAM L_PDESCR L_PNULLOK
+%token L_UNSPECVAL
 
 %type <v> select_statement insert_statement update_statement delete_statement
 %type <str> L_IDENT L_STRING L_TEXTUAL
@@ -144,13 +145,6 @@ table:    L_IDENT                       {$$ = sql_table_build ($1); memsql_free 
         | L_LBRACKET table L_RBRACKET   {$$ = $2;}
         ;
 
-field: field_raw				{$$ = sql_field_build ($1);}
-	| field_raw L_AS L_IDENT		{$$ = sql_field_set_as (sql_field_build ($1), $3);}
-	| field_raw L_AS L_TEXTUAL      	{$$ = sql_field_set_as (sql_field_build ($1), $3);}
-	| field_raw param_spec			{$$ = sql_field_set_param_spec (sql_field_build ($1), $2);}
-	| field_raw param_spec L_AS L_IDENT     {$$ = sql_field_set_as (sql_field_set_param_spec (sql_field_build ($1), $2), $4);}
-	;
-
 dotted_name: L_IDENT                    {$$ = g_list_append (NULL, memsql_strdup ($1)); memsql_free ($1);}
         | L_IDENT L_DOT dotted_name     {$$ = g_list_prepend ($3, memsql_strdup ($1)); memsql_free ($1);}
 	| L_IDENT L_DOT L_TIMES		{$$ = g_list_append (NULL, memsql_strdup ($1)); memsql_free ($1);
@@ -161,6 +155,7 @@ field_name: dotted_name                 {$$ = $1;}
         | L_TIMES                       {$$ = g_list_append (NULL, memsql_strdup ("*"));}
         | L_NULL                        {$$ = g_list_append (NULL, memsql_strdup ("null"));}
         | L_STRING                      {$$ = g_list_append (NULL, $1);}
+	| L_UNSPECVAL                   {$$ = g_list_append (NULL, memsql_strdup (""));}
         ;
 
 
@@ -176,6 +171,13 @@ field_raw: field_name			{$$ = sql_field_item_build ($1);}
 	| L_LBRACKET field_raw L_RBRACKET	{$$ = $2;}
 	| L_IDENT L_LBRACKET fields_list L_RBRACKET	{$$ = sql_field_build_function($1, $3); }
         | L_IDENT L_LBRACKET L_RBRACKET     {$$ = sql_field_build_function($1, NULL); }
+	;
+
+field: field_raw                                {$$ = sql_field_build ($1);}
+        | field_raw L_AS L_IDENT                {$$ = sql_field_set_as (sql_field_build ($1), $3);}
+        | field_raw L_AS L_TEXTUAL              {$$ = sql_field_set_as (sql_field_build ($1), $3);}
+        | field_raw param_spec                  {$$ = sql_field_set_param_spec (sql_field_build ($1), $2);}
+        | field_raw param_spec L_AS L_IDENT     {$$ = sql_field_set_as (sql_field_set_param_spec (sql_field_build ($1), $2), $4);}
 	;
 
 where_list: where_item				{$$ = sql_where_build_single ($1);}
