@@ -1405,7 +1405,7 @@ int (*cmp)();
   char *ep;
   char *set[LISTSIZE];
   int i;
-  offset = (int)next - (int)list;
+  offset = (long)next - (long)list;
   for(i=0; i<LISTSIZE; i++) set[i] = 0;
   while( list ){
     ep = list;
@@ -1553,7 +1553,7 @@ FILE *err;
         if( *end ){
           if( err ){
             fprintf(err,"%sillegal character in floating-point argument.\n",emsg);
-            errline(i,((int)end)-(int)argv[i],err);
+            errline(i,((long)end)-(long)argv[i],err);
           }
           errcnt++;
         }
@@ -1564,7 +1564,7 @@ FILE *err;
         if( *end ){
           if( err ){
             fprintf(err,"%sillegal character in integer argument.\n",emsg);
-            errline(i,((int)end)-(int)argv[i],err);
+            errline(i,((long)end)-(long)argv[i],err);
           }
           errcnt++;
         }
@@ -2647,7 +2647,7 @@ struct lemon *lemp;
 
   cp = strrchr(lemp->filename,'.');
   if( cp ){
-    sprintf(buf,"%.*s.lt",(int)cp-(int)lemp->filename,lemp->filename);
+    sprintf(buf,"%.*s.lt",(long)cp-(long)lemp->filename,lemp->filename);
   }else{
     sprintf(buf,"%s.lt",lemp->filename);
   }

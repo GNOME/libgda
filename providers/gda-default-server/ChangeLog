@@ -1,3 +1,8 @@
+2001-08-03  gallatin@stat.duke.edu
+
+	* sqlite/tool/lemon.c: fixed int/long 64-bit pointer issues when
+	building on FreeBSD/Alpha. Fixes #58391
+
 2001-07-19  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-default-connection.c (schema_aggregates): new schema function
