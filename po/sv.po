@@ -1,15 +1,15 @@
 # Swedish translation of libgda.
-# Copyright (C) 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
+# Copyright (C) 1999, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
 # Andreas Hyden <a.hyden@cyberpoint.se>, 2000.
-# Christian Rose <menthos@menthos.com>, 2000, 2001, 2002.
+# Christian Rose <menthos@menthos.com>, 2000, 2001, 2002, 2003.
 #
 # $Id$
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2002-12-27 10:52+0100\n"
-"PO-Revision-Date: 2002-12-27 10:52+0100\n"
+"POT-Creation-Date: 2003-01-03 22:29+0100\n"
+"PO-Revision-Date: 2003-01-03 22:29+0100\n"
 "Last-Translator: Christian Rose <menthos@menthos.com>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -43,7 +43,7 @@ msgstr "Temporär datakälla skapad av libgda. Ta inte bort den"
 #: libgda/gda-config.c:1322 providers/default/gda-default-provider.c:556
 #: providers/default/gda-default-provider.c:576
 #: providers/default/gda-default-provider.c:613
-#: providers/mdb/gda-mdb-provider.c:358 providers/mdb/gda-mdb-provider.c:421
+#: providers/mdb/gda-mdb-provider.c:370 providers/mdb/gda-mdb-provider.c:430
 #: providers/mysql/gda-mysql-provider.c:663
 #: providers/mysql/gda-mysql-provider.c:847
 #: providers/oracle/gda-oracle-provider.c:1031
@@ -71,7 +71,7 @@ msgstr "Användarnamn"
 msgid "Password"
 msgstr "Lösenord"
 
-#: libgda/gda-data-model.c:683
+#: libgda/gda-data-model.c:685
 #, c-format
 msgid "Data model %p is not editable"
 msgstr "Datamodellen %p är inte redigerbar"
@@ -104,7 +104,7 @@ msgstr "Kunde inte tolka SQL-strängen \"%s\""
 msgid "SQL command is not a SELECT (is '%s'"
 msgstr "SQL-kommandot är inte ett SELECT (är \"%s\""
 
-#: libgda/gda-table.c:234
+#: libgda/gda-table.c:268
 #, c-format
 msgid "There is already a field called %s"
 msgstr "Det finns redan ett fält med namnet %s"
@@ -263,6 +263,7 @@ msgid "Invalid argument"
 msgstr "Ogiltigt argument"
 
 #: providers/default/gda-default-provider.c:485
+#: providers/mdb/gda-mdb-table.c:49
 #, c-format
 msgid "Table %s not found"
 msgstr "Tabellen %s kunde inte hittas"
@@ -274,6 +275,31 @@ msgstr "Kunde inte hämta beskrivningen för kolumnen"
 #: providers/default/libmain.c:39
 msgid "GDA default provider, based on the libgda XML format"
 msgstr "GDA-standardleverantör, baserad på libgdas XML-format"
+
+#: providers/firebird/gda-firebird-provider.c:188
+msgid "No database specified"
+msgstr "Ingen databas angiven"
+
+#: providers/firebird/gda-firebird-provider.c:235
+#: providers/firebird/gda-firebird-provider.c:262
+#: providers/firebird/gda-firebird-provider.c:280
+#: providers/firebird/gda-firebird-provider.c:314
+#: providers/firebird/gda-firebird-provider.c:369
+#: providers/firebird/gda-firebird-provider.c:414
+#: providers/firebird/gda-firebird-provider.c:448
+#: providers/firebird/gda-firebird-provider.c:486
+#: providers/firebird/gda-firebird-provider.c:540
+msgid "Invalid Firebird handle"
+msgstr "Ogiltigt Firebird-handtag"
+
+#: providers/firebird/gda-firebird-provider.c:454
+#: providers/firebird/gda-firebird-provider.c:492
+msgid "Invalid transaction handle"
+msgstr "Ogiltigt transaktionshandtag"
+
+#: providers/firebird/libmain.c:39
+msgid "GDA provider for FireBird databases"
+msgstr "GDA-leverantör för Firebird-databaser"
 
 #: providers/freetds/gda-freetds-provider.c:196
 msgid ""
@@ -389,31 +415,6 @@ msgstr "SQLGetFunctions gav oväntad retur. Anslutning avbruten.\n"
 msgid "GDA provider for IBMDB2"
 msgstr "GDA-leverantör för IBMDB2"
 
-#: providers/interbase/gda-interbase-provider.c:188
-msgid "No database specified"
-msgstr "Ingen databas angiven"
-
-#: providers/interbase/gda-interbase-provider.c:235
-#: providers/interbase/gda-interbase-provider.c:262
-#: providers/interbase/gda-interbase-provider.c:280
-#: providers/interbase/gda-interbase-provider.c:314
-#: providers/interbase/gda-interbase-provider.c:369
-#: providers/interbase/gda-interbase-provider.c:414
-#: providers/interbase/gda-interbase-provider.c:448
-#: providers/interbase/gda-interbase-provider.c:486
-#: providers/interbase/gda-interbase-provider.c:540
-msgid "Invalid Interbase handle"
-msgstr "Ogiltigt Interbase-handtag"
-
-#: providers/interbase/gda-interbase-provider.c:454
-#: providers/interbase/gda-interbase-provider.c:492
-msgid "Invalid transaction handle"
-msgstr "Ogiltigt transaktionshandtag"
-
-#: providers/interbase/libmain.c:39
-msgid "GDA provider for Interbase/Firebird databases"
-msgstr "GDA-leverantör för Interbase/Firebird-databaser"
-
 #: providers/mdb/gda-mdb-provider.c:203
 msgid "A database FILENAME must be specified in the connection_string"
 msgstr "En databas FILNAMN måste anges i anslutningssträngen"
@@ -424,12 +425,12 @@ msgstr "En databas FILNAMN måste anges i anslutningssträngen"
 msgid "Could not open file %s"
 msgstr "Kunde inte öppna filen %s"
 
-#: providers/mdb/gda-mdb-provider.c:234 providers/mdb/gda-mdb-provider.c:262
-#: providers/mdb/gda-mdb-provider.c:457
+#: providers/mdb/gda-mdb-provider.c:236 providers/mdb/gda-mdb-provider.c:266
+#: providers/mdb/gda-mdb-provider.c:466
 msgid "Invalid MDB handle"
 msgstr "Ogiltigt MDB-handtag"
 
-#: providers/mdb/gda-mdb-provider.c:359 providers/mdb/gda-mdb-provider.c:422
+#: providers/mdb/gda-mdb-provider.c:371 providers/mdb/gda-mdb-provider.c:431
 #: providers/mysql/gda-mysql-provider.c:848
 #: providers/mysql/gda-mysql-provider.c:930
 #: providers/oracle/gda-oracle-provider.c:1530
@@ -438,13 +439,13 @@ msgstr "Ogiltigt MDB-handtag"
 #: providers/postgres/gda-postgres-provider.c:1119
 #: providers/postgres/gda-postgres-provider.c:1179
 #: providers/postgres/gda-postgres-provider.c:1296
-#: providers/postgres/gda-postgres-provider.c:1831
+#: providers/postgres/gda-postgres-provider.c:1840
 #: providers/sqlite/gda-sqlite-provider.c:747
 #: providers/sybase/gda-sybase-provider.c:906
 msgid "Owner"
 msgstr "Ägare"
 
-#: providers/mdb/gda-mdb-provider.c:360 providers/mdb/gda-mdb-provider.c:423
+#: providers/mdb/gda-mdb-provider.c:372 providers/mdb/gda-mdb-provider.c:432
 #: providers/mysql/gda-mysql-provider.c:849
 #: providers/mysql/gda-mysql-provider.c:931
 #: providers/oracle/gda-oracle-provider.c:1530
@@ -452,61 +453,61 @@ msgstr "Ägare"
 #: providers/postgres/gda-postgres-provider.c:1120
 #: providers/postgres/gda-postgres-provider.c:1180
 #: providers/postgres/gda-postgres-provider.c:1297
-#: providers/postgres/gda-postgres-provider.c:1832
+#: providers/postgres/gda-postgres-provider.c:1841
 #: providers/sqlite/gda-sqlite-provider.c:748
 #: providers/sybase/gda-sybase-provider.c:908
 msgid "Comments"
 msgstr "Kommentarer"
 
-#: providers/mdb/gda-mdb-provider.c:424
+#: providers/mdb/gda-mdb-provider.c:433
 msgid "GDA Type"
 msgstr "GDA-typ"
 
-#: providers/mdb/gda-mdb-provider.c:426
+#: providers/mdb/gda-mdb-provider.c:435
 msgid "Boolean type"
 msgstr "Boolesk typ"
 
-#: providers/mdb/gda-mdb-provider.c:427
+#: providers/mdb/gda-mdb-provider.c:436
 msgid "1-byte integers"
 msgstr "1-byteheltal"
 
-#: providers/mdb/gda-mdb-provider.c:428
+#: providers/mdb/gda-mdb-provider.c:437
 msgid "Double precision values"
 msgstr "Dubbelprecisionsvärden"
 
-#: providers/mdb/gda-mdb-provider.c:429
+#: providers/mdb/gda-mdb-provider.c:438
 msgid "Single precision values"
 msgstr "Enkelprecisionsvärden"
 
-#: providers/mdb/gda-mdb-provider.c:430
+#: providers/mdb/gda-mdb-provider.c:439
 msgid "32-bit integers"
 msgstr "32-bitars heltal"
 
-#: providers/mdb/gda-mdb-provider.c:431
+#: providers/mdb/gda-mdb-provider.c:440
 msgid "64-bit integers"
 msgstr "64-bitars heltal"
 
-#: providers/mdb/gda-mdb-provider.c:432
+#: providers/mdb/gda-mdb-provider.c:441
 msgid "Variable length character strings"
 msgstr "Teckensträngar av variabel längd"
 
-#: providers/mdb/gda-mdb-provider.c:433
+#: providers/mdb/gda-mdb-provider.c:442
 msgid "Money amounts"
 msgstr "Valutamängder"
 
-#: providers/mdb/gda-mdb-provider.c:434
+#: providers/mdb/gda-mdb-provider.c:443
 msgid "OLE object"
 msgstr "OLE-objekt"
 
-#: providers/mdb/gda-mdb-provider.c:435
+#: providers/mdb/gda-mdb-provider.c:444
 msgid "FIXME"
 msgstr "FIXME"
 
-#: providers/mdb/gda-mdb-provider.c:436
+#: providers/mdb/gda-mdb-provider.c:445
 msgid "Date/time value"
 msgstr "Datum-/tidsvärde"
 
-#: providers/mdb/gda-mdb-provider.c:437
+#: providers/mdb/gda-mdb-provider.c:446
 msgid "Character strings"
 msgstr "Teckensträngar"
 
@@ -769,7 +770,7 @@ msgstr "Kunde inte få tag i nullbart attribut för Oracle-fält"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/oracle/gda-oracle-provider.c:1491
-#: providers/postgres/gda-postgres-provider.c:1789 testing/client.c:133
+#: providers/postgres/gda-postgres-provider.c:1798 testing/client.c:133
 msgid "Users"
 msgstr "Användare"
 
@@ -885,13 +886,13 @@ msgstr "Argumenttyper"
 #: providers/postgres/gda-postgres-provider.c:1102
 #: providers/postgres/gda-postgres-provider.c:1181
 #: providers/postgres/gda-postgres-provider.c:1300
-#: providers/postgres/gda-postgres-provider.c:1833
+#: providers/postgres/gda-postgres-provider.c:1842
 msgid "Definition"
 msgstr "Definition"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/postgres/gda-postgres-provider.c:1099
-#: providers/postgres/gda-postgres-provider.c:1885
+#: providers/postgres/gda-postgres-provider.c:1894
 msgid "Table"
 msgstr "Tabell"
 
@@ -914,13 +915,13 @@ msgid "InType"
 msgstr "Intyp"
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:1754 testing/client.c:126
+#: providers/postgres/gda-postgres-provider.c:1763 testing/client.c:126
 msgid "Databases"
 msgstr "Databaser"
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:1830
-#: providers/postgres/gda-postgres-provider.c:1886
+#: providers/postgres/gda-postgres-provider.c:1839
+#: providers/postgres/gda-postgres-provider.c:1895
 msgid "Sequence"
 msgstr "Sekvens"
 
@@ -1456,6 +1457,12 @@ msgstr "\tbeskrivning = %s\n"
 #: testing/config.c:93
 msgid "\tgda_params ="
 msgstr "\tgda_params ="
+
+#~ msgid "Invalid Interbase handle"
+#~ msgstr "Ogiltigt Interbase-handtag"
+
+#~ msgid "GDA provider for Interbase/Firebird databases"
+#~ msgstr "GDA-leverantör för Interbase/Firebird-databaser"
 
 #~ msgid "Language"
 #~ msgstr "Språk"

@@ -1,3 +1,5 @@
+# List of source files containing translatable strings.
+# Please keep this file sorted alphabetically.
 libgda/gda-client.c
 libgda/gda-config.c
 libgda/gda-connection.c
@@ -11,15 +13,16 @@ libgda/gda-value.c
 libgda/gda-xml-database.c
 providers/default/gda-default-provider.c
 providers/default/libmain.c
+providers/firebird/gda-firebird-provider.c
+providers/firebird/libmain.c
 providers/freetds/gda-freetds-provider.c
 providers/freetds/gda-freetds-recordset.c
 providers/freetds/libmain.c
 providers/freetds/utils.c
 providers/ibmdb2/gda-ibmdb2-provider.c
 providers/ibmdb2/libmain.c
-providers/firebird/gda-firebird-provider.c
-providers/firebird/libmain.c
 providers/mdb/gda-mdb-provider.c
+providers/mdb/gda-mdb-table.c
 providers/mdb/libmain.c
 providers/mysql/gda-mysql-provider.c
 providers/mysql/gda-mysql-recordset.c
