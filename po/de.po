@@ -1,17 +1,17 @@
 # German po for libgda
 # Copyright (C) 2000 Free Software Foundation, Inc.
-# Christian Meyer <cm@ggtt.de>, 2000.
+# Christian Meyer <cm@ggtt.de>, 2000, 2001.
 # Kai Lahmann <kl@linuxfaqs.de>, 2000.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda-0.2.3-cvs\n"
-"POT-Creation-Date: 2001-02-06 02:16+0100\n"
-"PO-Revision-Date: 2001-02-06 02:16+0100\n"
-"Last-Translator: Christian Meyer <cm@ggtt.de>\n"
+"POT-Creation-Date: 2001-02-12 22:30+0100\n"
+"PO-Revision-Date: 2001-02-12 22:29+0100\n"
+"Last-Translator: Christian Meyer <chrisime@gnome.org>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=iso-8859-1\n"
+"Content-Type: text/plain; charset=ISO-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: lib/gda-client/gda-connection-pool.c:267
@@ -78,16 +78,16 @@ msgstr "Versuch, einen bereits initialisierten Client zu initialisieren"
 
 #: lib/gda-common/gda-log.c:48
 msgid "Saving log...x"
-msgstr "Log...x wird gespeichert"
+msgstr "Protokoll wird gespeichert...x"
 
 #. compose message
 #: lib/gda-common/gda-log.c:69
 msgid "ERROR: "
-msgstr "Fehler:"
+msgstr "FEHLER:"
 
 #: lib/gda-common/gda-log.c:69
 msgid "MESSAGE: "
-msgstr "Meldung:"
+msgstr "MELDUNG:"
 
 #: lib/gda-common/gda-thread.c:211
 msgid "thread is already running"
@@ -105,7 +105,7 @@ msgstr "%p ist keine gültige Tabelle"
 
 #: lib/gda-server/gda-server-error.c:185
 msgid "Could not get pointer to server implementation"
-msgstr "Pointer konnte nicht auf die Server-Implementiertung gesetzt werden"
+msgstr "Zeiger konnte nicht auf die Server-Implementiertung gesetzt werden"
 
 #: lib/gda-server/gda-server-impl-connection.c:123
 #: lib/gda-server/gda-server-impl-connection.c:132
@@ -170,14 +170,14 @@ msgstr "Anbieter %s ohne Implementierungsfunktionen wird gestartet"
 msgid ""
 "OAF doesn't know about our IID; indicates broken installation. Exiting..."
 msgstr ""
-"OAF weiß nichts über ihre IID; Deutet auf defekte Installation hin. "
+"OAF weiß nichts über ihre IID. Das deutet auf defekte Installation hin. "
 "Abbruch..."
 
 #: lib/gda-server/gda-server-impl.c:213
 msgid ""
 "Another instance of this provider is already registered with OAF. Exiting..."
 msgstr ""
-"Eine andere Instalz dieses Anbieters ist bereits mit OAF registriert. "
+"Eine andere Instanz dieses Anbieters ist bereits mit OAF registriert. "
 "Abbruch..."
 
 #: lib/gda-server/gda-server-impl.c:216
@@ -202,12 +202,12 @@ msgstr "CORBA Anwenderfehler: %s"
 #: lib/gda-server/gda-server-init.c:63 lib/gda-server/gda-server-init.c:69
 #, c-format
 msgid "Received signal %d, shutting down"
-msgstr "Signal %d wurde erhalten, Abbruch"
+msgstr "Signal %d empfangen, Abbruch"
 
 #: lib/gda-server/gda-server-init.c:73
 #, c-format
 msgid "Received signal %d. Ignoring"
-msgstr "Signal %d wurde erhalten. Wird ignoriert"
+msgstr "Signal %d empfangen. Wird ignoriert"
 
 #: lib/gda-server/gda-server-init.c:123
 msgid "Attempt to initialize an already initialized provider"
@@ -501,7 +501,7 @@ msgstr "Befehl gescheitert"
 #: providers/gda-sybase-server/gda-sybase-command.c:230
 #: providers/gda-tds-server/gda-tds-command.c:209
 msgid "Execution of resultless command succeeded"
-msgstr "Ausführen des ergebnisslosen Befehls gescheitert"
+msgstr "Ausführen des ergebnislosen Befehls gescheitert"
 
 #: providers/gda-sybase-server/gda-sybase-command.c:246
 #: providers/gda-tds-server/gda-tds-command.c:225
@@ -536,7 +536,7 @@ msgstr "Keine Daten zurückgegeben, die Struktur wird gelöscht"
 #: providers/gda-tds-server/gda-tds-command.c:283
 #: providers/gda-tds-server/gda-tds-command.c:291
 msgid "Freeing command structure failed"
-msgstr "Löschen der Befehls-Struktur gescheitert"
+msgstr "Löschen der Befehlsstruktur gescheitert"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:149
 #: providers/gda-tds-server/gda-tds-connection.c:129
@@ -545,7 +545,7 @@ msgstr "Fehler beim Erreichen der Fehlerstruktur"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:157
 msgid "Not enough memory for sybase_Connection"
-msgstr "Nicht genug Speicher für sybase_Connection"
+msgstr "Nicht genug Speicher für sybase_Verbindung"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:422
 #: providers/gda-tds-server/gda-tds-connection.c:405
@@ -764,7 +764,7 @@ msgstr "%s konnte die cnc-Benutzerdaten nicht erhalten"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:203
 msgid "Could not get # of messages"
-msgstr "Die Anahl der Meldungen konnte nicht erhalten werden"
+msgstr "Die Anzahl der Meldungen konnte nicht erhalten werden"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:208
 #, c-format
@@ -957,7 +957,7 @@ msgstr "GDA Datasource Access for 'primebase'"
 
 #: providers/gda-primebase-server/gda-primebase-command.c:128
 msgid "An error occured."
-msgstr "Es ist ein Fehler aufgetreten"
+msgstr "Es ist ein Fehler aufgetreten."
 
 #: providers/gda-primebase-server/gda-primebase-connection.c:137
 #, c-format
@@ -967,7 +967,7 @@ msgstr "%2ld: Verbunden mit '%s@%s' mit Verb.Param.: '%s'"
 #: providers/gda-primebase-server/gda-primebase-connection.c:142
 #, c-format
 msgid "%2ld: ConInfo: %s@%s, Client API v%x, status: %x"
-msgstr "%sld: Verb.Info: %s@%s, Client API v%x, Status: %x"
+msgstr "%2ld: Verb.Info: %s@%s, Client API v%x, Status: %x"
 
 #: providers/gda-primebase-server/gda-primebase-connection.c:145
 #, c-format
@@ -1031,7 +1031,7 @@ msgstr "Signal %d wurde erhalten, Abbruch."
 #: report/server/gda-report-server-main.c:52
 #, c-format
 msgid "Received signal %d, shutting down cleanly"
-msgstr "Signal %d wurde erhalten, sauberer Herunterfahren"
+msgstr "Signal %d wurde erhalten, fehlerfreies Herunterfahren"
 
 #: report/server/gda-report-server-main.c:92
 msgid "Failed to initialize OAF: please mail bug report to OAF maintainers"
@@ -1041,7 +1041,7 @@ msgstr ""
 
 #: report/server/gda-report-server-main.c:101
 msgid "Could not activate report engine"
-msgstr "Die Berichts-Maschine konnte nicht aktiviert werden"
+msgstr "Die Berichtsmaschine konnte nicht aktiviert werden"
 
 #: report/server/gda-report-server-main.c:116
 msgid ""
