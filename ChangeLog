@@ -1,3 +1,17 @@
+2003-07-05  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* libgda/gda-xml-database.[ch] (gda_xml_database_get_version):
+	(gda_xml_database_set_version): new functions.
+	(gda_xml_database_new_from_uri): get the version number from the
+	"database" XML node.
+	(gda_xml_database_init): initialize "version" field.
+	(gda_xml_database_finalize): free new field.
+	(gda_xml_database_save): set the database version when saving.
+	(gda_xml_database_to_string): added missing properties and nodes.
+
+	* providers/xml/gda-xml-provider.c
+	(gda_xml_provider_get_server_version): implemented.
+
 2003-07-04  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* libgda/gda-batch.[ch]:

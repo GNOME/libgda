@@ -29,6 +29,7 @@
 struct _GdaXmlDatabasePrivate {
 	gchar *uri;
 	gchar *name;
+	gchar *version;
 	GHashTable *tables;
 	GHashTable *views;
 	GHashTable *queries;
@@ -55,6 +56,7 @@ struct _GdaXmlDatabasePrivate {
 #define PROPERTY_SCALE       "scale"
 #define PROPERTY_SIZE        "size"
 #define PROPERTY_UNIQUE_KEY  "unique"
+#define PROPERTY_VERSION     "version"
 
 static void gda_xml_database_class_init (GdaXmlDatabaseClass *klass);
 static void gda_xml_database_init       (GdaXmlDatabase *xmldb, GdaXmlDatabaseClass *klass);
@@ -132,6 +134,7 @@ gda_xml_database_init (GdaXmlDatabase *xmldb, GdaXmlDatabaseClass *klass)
 	xmldb->priv = g_new0 (GdaXmlDatabasePrivate, 1);
 	xmldb->priv->uri = NULL;
 	xmldb->priv->name = NULL;
+	xmldb->priv->version = NULL;
 	xmldb->priv->tables = g_hash_table_new (g_str_hash, g_str_equal);
 	xmldb->priv->views = g_hash_table_new (g_str_hash, g_str_equal);
 	xmldb->priv->queries = g_hash_table_new (g_str_hash, g_str_equal);
@@ -156,6 +159,16 @@ gda_xml_database_finalize (GObject *object)
 	if (xmldb->priv->uri) {
 		g_free (xmldb->priv->uri);
 		xmldb->priv->uri = NULL;
+	}
+
+	if (xmldb->priv->name) {
+		g_free (xmldb->priv->name);
+		xmldb->priv->name = NULL;
+	}
+
+	if (xmldb->priv->version) {
+		g_free (xmldb->priv->version);
+		xmldb->priv->version = NULL;
 	}
 
 	g_hash_table_foreach_remove (xmldb->priv->tables, remove_table_hash, NULL);
@@ -257,6 +270,7 @@ gda_xml_database_new_from_uri (const gchar *uri)
 	}
 
 	xmldb->priv->name = g_strdup (xmlGetProp (root, PROPERTY_NAME));
+	xmldb->priv->version = g_strdup  (xmlGetProp (root, PROPERTY_VERSION));
 	node = root->xmlChildrenNode;
 	while (node) {
 		xmlNodePtr children;
@@ -301,6 +315,10 @@ gda_xml_database_get_name (GdaXmlDatabase *xmldb)
 
 /**
  * gda_xml_database_set_name
+ * @xmldb: XML database.
+ * @name: new name for the database.
+ *
+ * Set the name of the given XML database object.
  */
 void
 gda_xml_database_set_name (GdaXmlDatabase *xmldb, const gchar *name)
@@ -310,6 +328,42 @@ gda_xml_database_set_name (GdaXmlDatabase *xmldb, const gchar *name)
 	if (xmldb->priv->name)
 		g_free (xmldb->priv->name);
 	xmldb->priv->name = g_strdup (name);
+
+	gda_xml_database_changed (xmldb);
+}
+
+/**
+ * gda_xml_database_get_version
+ * @xmldb: XML database.
+ *
+ * Get the version of the given #GdaXmlDatabase object. This version is the
+ * one that was used for saving the XML file last time it was saved.
+ *
+ * Returns: the database version.
+ */
+const gchar *
+gda_xml_database_get_version (GdaXmlDatabase *xmldb)
+{
+	g_return_val_if_fail (GDA_IS_XML_DATABASE (xmldb), NULL);
+	return (const gchar *) xmldb->priv->version;
+}
+
+/**
+ * gda_xml_database_set_version
+ * @xmldb: XML database.
+ * @version: Version string.
+ *
+ * Set the version of the given XML database.
+ */
+void
+gda_xml_database_set_version (GdaXmlDatabase *xmldb, const gchar *version)
+{
+	g_return_if_fail (GDA_IS_XML_DATABASE (xmldb));
+	g_return_if_fail (version != NULL);
+
+	if (xmldb->priv->version)
+		g_free (xmldb->priv->version);
+	xmldb->priv->version = g_strdup (version);
 
 	gda_xml_database_changed (xmldb);
 }
@@ -388,6 +442,7 @@ gda_xml_database_save (GdaXmlDatabase *xmldb, const gchar *uri)
 
 	g_return_val_if_fail (GDA_IS_XML_DATABASE (xmldb), FALSE);
 
+	gda_xml_database_set_version (xmldb, VERSION);
 	xml = gda_xml_database_to_string (xmldb);
 	if (xml) {
 		result = gda_file_save (uri, xml, strlen (xml));
@@ -424,6 +479,8 @@ gda_xml_database_to_string (GdaXmlDatabase *xmldb)
 	/* create the top node */
 	doc = xmlNewDoc ("1.0");
 	root = xmlNewDocNode (doc, NULL, OBJECT_DATABASE, NULL);
+	xmlSetProp (root, PROPERTY_NAME, xmldb->priv->name);
+	xmlSetProp (root, PROPERTY_VERSION, xmldb->priv->name);
 	xmlDocSetRootElement (doc, root);
 
 	/* add tables */
@@ -447,7 +504,7 @@ gda_xml_database_to_string (GdaXmlDatabase *xmldb)
 
 	gda_xml_database_free_table_list (list);
 
-	/* save to file */
+	/* save to memory */
 	xmlDocDumpMemory (doc, &xml, &size);
 	xmlFreeDoc (doc);
 	if (!xml) {

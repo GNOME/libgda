@@ -188,7 +188,8 @@ gda_xml_provider_open_connection (GdaServerProvider *provider,
 	if (!t_uri) {
 		gda_connection_add_error_string (cnc,
 						 _("A full path must be specified on the "
-						   "connection string to open a database."));
+						   "connection string to open a database "
+						   "on the XML provider."));
 		return FALSE;
 	}
 
@@ -207,17 +208,19 @@ gda_xml_provider_open_connection (GdaServerProvider *provider,
 /* close_connection handler for the GdaXmlProvider class */
 static gboolean
 gda_xml_provider_close_connection (GdaServerProvider *provider,
-				       GdaConnection *cnc)
+				   GdaConnection *cnc)
 {
 	GdaXmlDatabase *xmldb;
-	GdaXmlProvider *dfprv = (GdaXmlProvider *) provider;
+	GdaXmlProvider *xmlprv = (GdaXmlProvider *) provider;
 
-	g_return_val_if_fail (GDA_IS_XML_PROVIDER (dfprv), FALSE);
+	g_return_val_if_fail (GDA_IS_XML_PROVIDER (xmlprv), FALSE);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 
 	xmldb = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_XML_HANDLE);
-	if (!xmldb)
+	if (!xmldb) {
+		gda_connection_add_error_string (cnc, _("Invalid XML handle"));
 		return FALSE;
+	}
 
 	g_object_unref (G_OBJECT (xmldb));
 	g_object_set_data (G_OBJECT (cnc), OBJECT_DATA_XML_HANDLE, NULL);
@@ -229,12 +232,19 @@ gda_xml_provider_close_connection (GdaServerProvider *provider,
 static const gchar *
 gda_xml_provider_get_server_version (GdaServerProvider *provider, GdaConnection *cnc)
 {
-	GdaXmlProvider *dfprv = (GdaXmlProvider *) provider;
+	GdaXmlDatabase *xmldb;
+	GdaXmlProvider *xmlprv = (GdaXmlProvider *) provider;
 
-	g_return_val_if_fail (GDA_IS_XML_PROVIDER (dfprv), NULL);
+	g_return_val_if_fail (GDA_IS_XML_PROVIDER (xmlprv), NULL);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
-	return VERSION; /* FIXME */
+	xmldb = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_XML_HANDLE);
+	if (!xmldb) {
+		gda_connection_add_error_string (cnc, _("Invalid XML handle"));
+		return NULL;
+	}
+
+	return gda_xml_database_get_version (xmldb);
 }
 
 /* get_database handler for the GdaXmlProvider class */
@@ -373,8 +383,8 @@ gda_xml_provider_execute_command (GdaServerProvider *provider,
 /* begin_transaction handler for the GdaXmlProvider class */
 static gboolean
 gda_xml_provider_begin_transaction (GdaServerProvider *provider,
-					GdaConnection *cnc,
-					GdaTransaction *xaction)
+				    GdaConnection *cnc,
+				    GdaTransaction *xaction)
 {
 	GdaXmlDatabase *xmldb;
 	GdaXmlProvider *dfprv = (GdaXmlProvider *) provider;
