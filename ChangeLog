@@ -1,3 +1,7 @@
+2003-04-20  Bodo Pfelzer <Bodo.Pfelzer@epost.de>
+
+	* configure.in: fixed typo in MySQL library detection.
+
 2003-04-20  Steve Fosdick  <gnomedb@pelvoux.demon.co.uk>
 
 	* Oracle Provider: clean up type handling and add support for
