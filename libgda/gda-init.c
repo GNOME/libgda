@@ -41,6 +41,7 @@ gda_init (const gchar *app_id, const gchar *version, gint nargs, gchar *args[])
 	static gboolean initialized = FALSE;
 
 	bindtextdomain (GETTEXT_PACKAGE, LIBGDA_LOCALEDIR);
+	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
 	
 	if (initialized) {
 		gda_log_error (_("Attempt to initialize an already initialized client"));
