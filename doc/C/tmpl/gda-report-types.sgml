@@ -35,6 +35,13 @@ gda-report-types
 
 
 
+<!-- ##### MACRO ITEM_SQLQUERY_NAME ##### -->
+<para>
+
+</para>
+
+
+
 <!-- ##### MACRO ITEM_REPORTHEADER_NAME ##### -->
 <para>
 
@@ -215,6 +222,15 @@ gda-report-types
 </para>
 
 @value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_types_number_to_double ##### -->
+<para>
+
+</para>
+
+@number: 
 @Returns: 
 
 
