@@ -23,6 +23,7 @@
 #include <libxml/parser.h>
 #include <libgda/gda-util.h>
 #include <libgda/gda-xml-connection.h>
+#include <string.h>
 
 struct _GdaXmlConnectionPrivate {
 	gchar *dsn;

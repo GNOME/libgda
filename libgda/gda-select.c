@@ -26,6 +26,7 @@
 #include <libgda/gda-log.h>
 #include <libgda/gda-select.h>
 #include <libgda/gda-value.h>
+#include <string.h>
 
 #define PARENT_TYPE GDA_TYPE_DATA_MODEL_ARRAY
 

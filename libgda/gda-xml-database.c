@@ -25,6 +25,7 @@
 #include <libgda/gda-log.h>
 #include <libgda/gda-util.h>
 #include <libgda/gda-xml-database.h>
+#include <string.h>
 
 struct _GdaXmlDatabasePrivate {
 	gchar *uri;

@@ -25,6 +25,7 @@
 #include "gda-xml-document.h"
 #include <libgda/gda-util.h>
 #include <glib-object.h>
+#include <string.h>
 
 static void gda_xml_document_class_init (GdaXmlDocumentClass *klass);
 static void gda_xml_document_init       (GdaXmlDocument *xmldoc, GdaXmlDocumentClass *klass);

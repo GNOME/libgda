@@ -27,6 +27,7 @@
 #include "gda-xql-atom.h"
 #include "gda-xql-target.h"
 #include "gda-xql-join.h"
+#include <string.h>
 
 /* here are local prototypes */
 static void gda_xql_dml_init (GdaXqlDml *xqldml);

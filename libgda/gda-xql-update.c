@@ -31,6 +31,7 @@
 #include "gda-xql-const.h"
 #include "gda-xql-dual.h"
 #include "gda-xql-list.h"
+#include <string.h>
 
 static void gda_xql_update_init (GdaXqlUpdate *xqlupd);
 static void gda_xql_update_class_init (GdaXqlUpdateClass *klass);

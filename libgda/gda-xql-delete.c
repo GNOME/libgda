@@ -31,6 +31,7 @@
 #include "gda-xql-value.h"
 #include "gda-xql-const.h"
 #include "gda-xql-dual.h"
+#include <string.h>
 
 static void gda_xql_delete_init (GdaXqlDelete *xqldel);
 static void gda_xql_delete_class_init (GdaXqlDeleteClass *klass);

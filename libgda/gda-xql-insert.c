@@ -30,6 +30,7 @@
 #include "gda-xql-field.h"
 #include "gda-xql-value.h"
 #include "gda-xql-const.h"
+#include <string.h>
 
 static void gda_xql_insert_init (GdaXqlInsert *xqlins);
 static void gda_xql_insert_class_init (GdaXqlInsertClass *klass);

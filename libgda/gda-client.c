@@ -27,6 +27,7 @@
 #include <libgda/gda-config.h>
 #include <libgda/gda-intl.h>
 #include <libgda/gda-log.h>
+#include <string.h>
 #include "gda-marshal.h"
 
 #define PARENT_TYPE G_TYPE_OBJECT

@@ -25,6 +25,7 @@
 #include <libgda/gda-intl.h>
 #include <libgda/gda-data-model.h>
 #include <libgda/gda-log.h>
+#include <string.h>
 
 #define PARENT_TYPE G_TYPE_OBJECT
 #define CLASS(model) (GDA_DATA_MODEL_CLASS (G_OBJECT_GET_CLASS (model)))

@@ -32,6 +32,7 @@
 #include <glib/gstring.h>
 #include <libgda/gda-intl.h>
 #include <libgda/gda-value.h>
+#include <libgda/gda-util.h>
 
 /*
  * Private functions

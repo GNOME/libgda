@@ -34,6 +34,7 @@
 #include "gda-xql-join.h"
 #include "gda-xql-column.h"
 #include "gda-xql-item.h"
+#include <string.h>
 
 static void gda_xql_select_init (GdaXqlSelect *xqlsel);
 static void gda_xql_select_class_init (GdaXqlSelectClass *klass);

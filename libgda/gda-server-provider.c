@@ -23,6 +23,7 @@
 #include <config.h>
 #include <glib/gmessages.h>
 #include <libgda/gda-server-provider.h>
+#include <string.h>
 
 #define PARENT_TYPE G_TYPE_OBJECT
 #define CLASS(provider) (GDA_SERVER_PROVIDER_CLASS (G_OBJECT_GET_CLASS (provider)))
