@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-db 0.0.91\n"
-"POT-Creation-Date: 2002-03-07 00:28+0100\n"
-"PO-Revision-Date: 2002-03-03 09:50+0100\n"
+"POT-Creation-Date: 2002-03-12 19:02+0100\n"
+"PO-Revision-Date: 2002-03-12 19:03+0100\n"
 "Last-Translator: Kjartan Maraas <kmaraas@online.no>\n"
 "Language-Team: Norwegian <no@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -95,6 +95,11 @@ msgstr "Kunne ikke gi melding til klient om handling %d"
 msgid "No implementation for the fetch() method found"
 msgstr "Ingen implementasjon for fetch()-metoden funnet"
 
+#: libgda/gda-table.c:229
+#, c-format
+msgid "There is already a field called %s"
+msgstr "Et felt med navn %s finnes allerede"
+
 #: libgda/gda-value.c:926
 msgid "TRUE"
 msgstr "SANN"
@@ -116,27 +121,25 @@ msgstr "Kunne ikke tolke fil ved %s"
 #: libgda/gda-xml-database.c:232 libgda/gda-xml-database.c:249
 #, c-format
 msgid "Invalid XML database file '%s'"
-msgstr ""
+msgstr "Ugyldig XML-databasefil «%s»"
 
 #: libgda/gda-xml-database.c:293 libgda/gda-xml-database.c:333
-#, fuzzy, c-format
+#, c-format
 msgid "Table %s already exists"
-msgstr "tabell %s eksisterer allerede"
+msgstr "Tabell %s eksisterer allerede"
 
 #: libgda/gda-xml-database.c:327
-#, fuzzy
 msgid "Invalid node"
-msgstr "Ugyldig MYSQL-håndtak"
+msgstr "Ugyldig node"
 
 #: libgda/gda-xml-database.c:358
 #, c-format
 msgid "Duplicated <data> node for table %s"
-msgstr ""
+msgstr "Duplisert <data>-node for tabell %s"
 
 #: libgda/gda-xml-database.c:365
-#, fuzzy
 msgid "Invalid XML node"
-msgstr "Ugyldig MYSQL-håndtak"
+msgstr "Ugyldig XML-node"
 
 #: providers/default/gda-default-provider.c:139
 #: providers/sqlite/gda-sqlite-provider.c:152
