@@ -1,3 +1,7 @@
+2002-11-05  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
+	* libgda/gda-config.c: avoid "no DTD" message from libxml.
+
 2002-11-01  Cleber Rodrigues <cleber@gnome-db.org>
 
 	* providers/mysql/gda-mysql-provider.c: added missing mysql_init()

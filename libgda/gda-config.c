@@ -130,6 +130,9 @@ gda_config_parse_config_file (gchar *buffer, gint len)
 	g_return_val_if_fail (buffer != NULL, NULL);
 	g_return_val_if_fail (len != 0, NULL);
 
+	xmlDoValidityCheckingDefaultValue = FALSE;
+	xmlKeepBlanksDefault(0);
+
 	doc = xmlParseMemory (buffer, len);
 	if (doc == NULL){
 		g_warning ("File empty or not well-formed.");
