@@ -27,7 +27,7 @@
 <!ENTITY GDADATAMODELARRAY "<xref linkend='libgda-GdaDataModelArray'>">
 <!ENTITY GDADATAMODELHASH "<xref linkend='libgda-GdaDataModelHash'>">
 <!ENTITY fullexample SYSTEM "examples/full_example.c" CDATA linespecific>
-<!--<!entity migration.sgml system "migration.sgml">-->
+<!entity migration.sgml system "migration.sgml">
 <!ENTITY libgda-batch SYSTEM "sgml/gda-batch.sgml">
 <!ENTITY libgda-client SYSTEM "sgml/gda-client.sgml">
 <!ENTITY libgda-command SYSTEM "sgml/gda-command.sgml">
@@ -111,7 +111,7 @@
 	<affiliation>
 	  <address><email>zeroone@worldonline.co.za</email></address>
 	</affiliation>
-	<contrib>GDP compliancy, FDL, added markup, English and syntax
+	<contrib>GDP compliance, FDL, added mark-up, English and syntax
         </contrib>
       </author>
       <author>
@@ -121,7 +121,7 @@
           <orgname>&igalia;</orgname>
 	  <address><email>xrcalvar@igalia.com</email></address>
 	</affiliation>
-	<contrib>How to begin
+	<contrib>How to begin and migration formulae
         </contrib>
       </author>
       <author>
@@ -150,7 +150,7 @@
       </para>
       <para>
         This universality is obtained through the use of
-        an easily extensible plugin system as the mechanism for
+        an easily extensible plug-in system as the mechanism for
 	communication between the different components in the architecture.
       </para>
     </abstract>
@@ -185,9 +185,9 @@
       operating system on which the client is running. 
     </para>
     <para>
-      &SQL; itself is also not standardized enough, so that source
+      &SQL; itself is also not standardised enough, so that source
       compatibility can not be assured for all database servers. And for some
-      sort of servers, &SQL; is not even feasable (think about &LDAP;).
+      sort of servers, &SQL; is not even feasible (think about &LDAP;).
     </para>
     <para>
       &GDA; tries to tackle the &ODBC; problem and help you with the &SQL;
@@ -197,9 +197,9 @@
       to the database for special tasks.
     </para>
     <para>
-      GNOME Data Access (&GDA;) is defined as a set of plugin interfaces.
+      GNOME Data Access (&GDA;) is defined as a set of plug-in interfaces.
       The level of abstraction provided by &GDA; makes it possible to access
-      any kind of data source, provided that a plugin implementing 
+      any kind of data source, provided that a plug-in implementing 
       those interfaces and accessing this particular data source is
       written.
     </para>
@@ -234,14 +234,14 @@
   <chapter id="architecture">
     <title>&LIBGDA; architecture</title>
     <para>
-      &LIBGDA; is composed of three independant layers. The lower level is
-      covered by the &GDA; providers, which are plugins whose task is
+      &LIBGDA; is composed of three independent layers. The lower level is
+      covered by the &GDA; providers, which are plug-ins whose task is
       to map the <acronym>RDBMS</acronym>-specific &API; to the &GDA; model.
       That is, they are objects implementing the &GDA; interfaces.
     </para>
     <para>
-      Then, in a midlle layer, are the client libraries: an easy-to-use and
-      full featured library which offers access to all the architecure,
+      Then, in a middle layer, are the client libraries: an easy-to-use and
+      full featured library which offers access to all the architecture,
       also including several utility functions to help you on the development
       of applications based on &GDA;. This library, although targeted to client
       applications, also includes a set of helper classes and functions to help
@@ -471,14 +471,14 @@
         <para>
           Then, the next step is to configure the data sources you want
           available on your system. For doing this, you should, as for now, use
-          &GNOMEDB;, which is a frontend to &LIBGDA; for the 
+          &GNOMEDB;, which is a front-end to &LIBGDA; for the 
           <ulink url="http://www.gnome.org" type="http">GNOME project</ulink>.
           <footnote>
 	    <para>
 	      It would be a good idea to add a command-line tool for managing
               the configuration, as now, using <systemitem class="resource">
               GConf</systemitem>, is not a matter of hacking on a config text
-              file, as it was befofe with <function>gnome_config</function>.
+              file, as it was before with <function>gnome_config</function>.
               The &API; for doing so is already available in the <filename>
               libgda-common</filename>library, so it would be really easy.
               Volunteers?
@@ -525,14 +525,14 @@
 		<para>
     		  The provider for this database is the gda-mysql
 		  provider. The value of this entry is used as the
-		  object ID for the plugin activation.
+		  object ID for the plug-in activation.
 		</para>
 	      </callout>
 	      <callout arearefs="dsn">
 		<para>
 		  This is the most important entry. The value of
 		  this entry is the string sent to the provider so
-		  that it knows which datasouce to access. How this
+		  that it knows which datasource to access. How this
 		  entry is interpreted by the providers is described 
 		  in the provider section.
 		</para>
@@ -576,7 +576,7 @@
         <para>
           The &XML; configuration file (<filename
 	  class="directory">~/.libgda/config</filename>) is not
-	  recommended to be modificated by hand and, about our example, it is
+	  recommended to be modified by hand and, about our example, it is
 	  something like this:
         </para>
 	<programlisting>
@@ -615,6 +615,20 @@
               For more details about provider specific information see in the section about
               <LINK LINKEND="installation-provider">providers specific information</LINK>.
             </para>
+            <para>
+              There was a little bug<footnote>It can be fixed, but it
+              is better not to run the risk of it.</footnote>, and it
+	      is that <LINK
+	      LINKEND="gda-config-save-data-source">gda_config_save_data_source()</LINK> 
+              does not create the configuration directory <filename
+	      class="directory">~/.libgda</filename>, so you have to do
+	      it.
+            </para>
+            <para>
+              There is no problem about calling several times to this
+	      function because if you save an existing data source, it
+	      is replaced.
+            </para>
           </sect4>
           <sect4>
             <title>Removing data sources</title>
@@ -632,14 +646,14 @@
             </programlisting>
           </sect4>
           <sect4>
-            <title>Listing avaliable data sources</title>
+            <title>Listing available data sources</title>
             <para>
-                      To list avaliable data sources you must use the function <LINK
+                      To list available data sources you must use the function <LINK
               LINKEND="gda-config-get-data-source-list"><EMPHASIS>gda_config_get_data_source_list ()
               </EMPHASIS></LINK>
             </para>
             <para>
-              Here you see a function which lists the avaliable data sources.
+              Here you see a function which lists the available data sources.
             </para>
             <PROGRAMLISTINGCO>
               <AREASPEC UNITS="LINECOLUMN">
@@ -684,14 +698,14 @@
             </PROGRAMLISTINGCO>
           </sect4>
           <sect4>
-            <title>Listing avaliable providers</title>
+            <title>Listing available providers</title>
             <para>
-              To list the avaliable data sources you must use the function <LINK
+              To list the available data sources you must use the function <LINK
               LINKEND="gda-config-get-provider-list"><EMPHASIS>gda_config_get_provider_list ()
               </EMPHASIS></LINK>
             </para>
             <para>
-              Here you see a function which lists avaliable providers.
+              Here you see a function which lists available providers.
             </para>
             <PROGRAMLISTINGCO>
               <AREASPEC UNITS="LINECOLUMN">
@@ -793,7 +807,7 @@
 		   the database server is running. If it begins with a slash
 		   then the protocol used is Unix-domain instead of TCP/IP and
 		   its value is the name of the directory where the file is
-		   stord. By default: /tmp.
+		   stored. By default: /tmp.
 		 </para>
                </listitem>
 	       <listitem>
@@ -803,7 +817,7 @@
 		   TCP/IP communications is used.
 
 		   If neither a host name or host address is specified, the
-		   connection will be stablished using a local Unix domain
+		   connection will be established using a local Unix domain
 		   socket.
 		 </para>
 	       </listitem>
@@ -837,13 +851,13 @@
 	       <listitem>
 	         <para>
 	           TTY: a file or tty for optional debug output from the
-		   backend.
+		   back-end.
 		 </para>
                </listitem>
 	       <listitem>
 	         <para>
 	           REQUIRESSL: set to '1' to force SSL connection to the
-		   backend. Set to '0' to negotiate with server.
+		   back-end. Set to '0' to negotiate with server.
 		 </para>
                </listitem>
 	     </itemizedlist>
@@ -946,16 +960,16 @@
   <chapter ID="connecting">
     <title>Beginning</title>
     <sect1 ID="initializing">
-      <title>Initializing</title>
+      <title>Initialising</title>
       <para>
-        First of all you have to initialize the gda library, i.e. to call the
+        First of all you have to initialise the gda library, i.e. to call the
         <LINK LINKEND="gda-init"><EMPHASIS>gda_init ()</EMPHASIS></LINK> function.
       </para>
       <programlisting>
         gda_init ("TestGDA", "0.1", argc, argv);
       </programlisting>
       <para>
-        After initializing you can work as usual or make a function with the whole
+        After initialising you can work as usual or make a function with the whole
         stuff, calling <LINK LINKEND="gda-main-run">gda_main_run()</LINK>. Note that
         if you use this way you will need to call <LINK
         LINKEND="gda-main-quit">gda_main_quit()</LINK> in order to finish the program.
@@ -1244,7 +1258,7 @@
           <CALLOUTLIST>
             <CALLOUT AREAREFS="normal-query-1">
               <PARA>
-                Executes de query and obtains a list of <LINK LINKEND="data-model">data models</LINK>
+                Executes the query and obtains a list of <LINK LINKEND="data-model">data models</LINK>
               </PARA>
             </CALLOUT>
             <CALLOUT AREAREFS="normal-query-2">
@@ -1308,7 +1322,7 @@
         This functions are very easy to use, so let's see some clear 
         examples:
       </para>
-      <sect2>
+      <sect2 ID="data-model-table-access">
         <title>Example using direct cell access</title>
         <para>
           This function accesses the data model by directly accessing cells (using
@@ -1369,7 +1383,7 @@
           </CALLOUTLIST>
         </PROGRAMLISTINGCO>
       </sect2>
-      <sect2>
+      <sect2 ID="data-model-row-access">
         <title>Example using row access</title>
         <para>
           This function accesses the data model by accessing rows (using
@@ -1445,7 +1459,7 @@
         </PROGRAMLISTINGCO>
         
       </sect2>
-      <sect2>
+      <sect2 ID="data-model-free">
         <title>Freeing data models</title>
         <para>
           When you finish using data models you must free it, but GdaDataModel class
@@ -1733,10 +1747,7 @@
       LINKEND="libgda-GdaError">GdaError</LINK> class and obtain them with
       function <LINK
       LINKEND="gda-connection-get-errors"><EMPHASIS>gda_connection_get_errors()
-      </EMPHASIS></LINK><footnote>If you cannot see the link in <LINK
-      LINKEND="gda-connection-get-errors">gda_connection_get_errors()</LINK>,
-      it means that it is not included in the documentation yet.</footnote>
-      so let's see them and an example: 
+      </EMPHASIS></LINK> so let's see them and an example: 
     </para>
     <para>
       Here you see the functions to manage errors:
@@ -1803,12 +1814,210 @@
 <inlinegraphic entityref="fullexample"></inlinegraphic>
     </PROGRAMLISTING>
   </chapter>
-  <!--
   <chapter ID="migration">
-  <title>Some formulae for migration from old version</title>
-    &migration.sgml;
+    <title>Some formulae for migration from old version</title>
+    <sect1 ID="migration-compilation">
+      <title>Compiling and initialising</title>
+      <para>
+        To <LINK LINKEND="compiling">compile</LINK> you do not need to link
+        with many libraries and configure directories of headers files, only
+        capture the output of <EMPHASIS>pkg-config</EMPHASIS> as follows:
+        <PROGRAMLISTING>
+          <SYSTEMITEM CLASS="prompt">$</SYSTEMITEM> <USERINPUT> gcc -o main `pkg-config --cflags --libs libgda` main.c</USERINPUT>
+        </PROGRAMLISTING>
+      </para>
+      <para>
+        Further more, you only need to include one <LINK
+        LINKEND="installation-development">headers file</LINK> and it is:
+        <programlisting>
+    #include &lt;libgda/libgda.h&gt;
+        </programlisting>
+      </para>
+      <para>
+        As in the old version, you need to call <LINK
+        LINKEND="gda-init"><EMPHASIS>gda_init()</EMPHASIS></LINK> to
+        <LINK LINKEND="initializing">initialise</LINK> the library:
+        <programlisting>
+          gda_init ("TestGDA", "0.1", argc, argv);
+        </programlisting>
+      </para>
+    </sect1>
+    <sect1 ID="migration-configuration">
+      <title>Configuration and connections</title>
+      <para>
+        If you before created connections directly to data sources, you
+        will now use a <EMPHASIS>connections pool</EMPHASIS> and will be
+        necessary to <LINK LINKEND="installation-client">create the data
+        source</LINK> because you create connection using the data source
+        identifier.
+      </para>
+      <sect2 ID="migration-data-sources">
+        <title>Creating data sources</title>
+        <para>
+          You have two ways to do this, one of them is creating them using
+          some <LINK LINKEND="installation-client">utility of
+          &GNOMEDB;</LINK> or using <LINK
+          LINKEND="data-sources-API-functions">API functions</LINK>.
+          Remember the little <LINK
+          LINKEND="data-sources-API-functions">bug</LINK>.
+        </para>
+        <para>
+          There is no problem about calling several times to this
+          function because if you save an existing data source, it
+          is replaced, so it could be advisable<footnote>But you must think
+          of security if you distribute the source code because people would see
+          the passwords of your databases.</footnote> to save the data source
+          each time you want to create the connection.
+        </para>
+      </sect2>
+      <sect2 ID="migration-connections">
+        <title>Creating connections</title>
+        <para>
+          You can see <LINK LINKEND="connections">how to create a
+          connection</LINK> easily in a chapter above.
+        </para>
+      </sect2>
+    </sect1>
+    <sect1 ID="migration-executing-commands">
+      <title>Executing commands</title>
+      <sect2 ID="migration-creating-commands">
+        <title>Creating commands</title>
+        <para>
+          It can be made, more or less, as in the old version, using
+          <LINK LINKEND="gda-command-new">gda_command_new()</LINK>, but
+          now, this function needs a few parameters and, in this version,
+          you do not link a command to a connection, so you execute a
+          command in a connection as we'll see <LINK
+          LINKEND="migration-executing-non-queries">later</LINK>. You
+          can see how to create commands and examples about this <LINK
+          LINKEND="building-commands">here</LINK>.
+        </para>
+      </sect2>
+      <sect2 ID="migration-executing-non-queries">
+        <title>Executing <EMPHASIS>non queries</EMPHASIS></title>
+        <para>
+          <EMPHASIS>Non queries</EMPHASIS> are queries that do not return
+          data, as insertions, deletions, and so on. The function we use is
+          <LINK
+          LINKEND="gda-connection-execute-non-query">gda_connection_execute_non_query
+          ()</LINK> and returns the number of affected tuples or -1 in case
+          of error. <LINK LINKEND="making-queries">Here</LINK> you see an
+          example.
+        </para>
+        <para>
+          It is better not to execute more than one &SQL; sentence for each
+          command because the result can be unexpected.
+        </para>
+      </sect2>
+      <sect2 ID="migration-executing-normal-queries">
+        <title>Executing normal queries</title>
+        <para>
+          A normal query is a query that return data. This is made as a
+          <LINK LINKEND="libgda-GdaDataModel">data model</LINK>, analogous
+          to <EMPHASIS>GdaRecordset</EMPHASIS> in the old
+          version<footnote>Now you have a <LINK
+          LINKEND="libgda-provider-recordset">GdaRecordset</LINK> class,
+          but it is not recommended.</footnote>.
+        </para>
+        <para>
+          As you can see in the following example, the function we use to
+          obtain data from a &SQL; sentence is <LINK
+          LINKEND="gda-connection-execute-single-command">gda_connection_execute_single_command
+          ()</LINK> and needs the parameters of <LINK
+          LINKEND="migration-executing-non-queries">non queries</LINK>. The
+          difference is that now the function returns the <LINK
+          LINKEND="libgda-GdaDataModel">data model</LINK> or
+          <EMPHASIS>NULL</EMPHASIS> in case of error.
+        </para>
+        <para>
+          As in the case of <LINK
+          INKEND="gda-connection-execute-non-query">non queries</LINK>, you
+          must not use several semicolon-separated sentences, because you
+          have a special function to do this<footnote><LINK
+          LINKEND="gda-connection-execute-command">gda_connection_execute_command
+          ()</LINK></footnote>, but it is not recommended.
+        </para>
+      </sect2>
+    </sect1>
+    <sect1>
+      <title>Managing data</title>
+      <para>
+        As we have said before, data is obtained as <LINK
+        LINKEND="libgda-GdaDataModel">data models</LINK>. We can consider
+        it as a representation of the table.
+      </para>
+      <para>
+        We can access the table at <LINK
+        LINKEND="data-model-row-access">row level</LINK> or <LINK
+        LINKEND="data-model-table-access">table level</LINK>. We will focus
+        on <LINK LINKEND="data-model-row-access">row level</LINK> because
+        it is the most similar to the old version.
+      </para>
+      <para>
+        As you can see in the <LINK
+        LINKEND="data-model-row-access">example</LINK>, the access is made
+        with the <EMPHASIS>C</EMPHASIS> style using a
+        <literal>for</literal> to obtain data from rows and columns.
+      </para>
+      <para>
+        We talk about <LINK LINKEND="data-model-table-access">table
+        access</LINK> only saying that the access is made in a very similar
+        way. The only difference is that <LINK
+        LINKEND="gda-data-model-get-value-at">gda_data_model_get_value_at
+        ()</LINK> returns a <literal>const</literal> and we have not to
+        free it.
+      </para>
+      <sect2>
+        <title>Something important about data models</title>
+        <para>
+          As you can see viewing <LINK
+          LINKEND="libgda-GdaDataModel">GdaDataModel</LINK> class, it has
+          not a <LINK LINKEND="data-model-free">free</LINK> method, so we
+          have to free it using <literal>g_object_unref</literal>.
+        </para>
+        <para>
+          Theoretically, you could modify data models and dump changes over
+          the database, but it is not recommended because you might make
+          changes using &SQL;, so we consider data models not to be
+          modifiable.
+        </para>
+      <sect2>
+        <title>Accessing directly to columns</title>
+        <para>
+          There is not exist a function to access columns directly using
+          the column name, but you can obtain its index using <LINK
+          LINKEND="gda-data-model-get-column-position">gda_data_model_get_column_position
+          ()</LINK>, as you can see in this example:
+          <PROGRAMLISTING>
+          value=gda_row_get_value(row,
+              gda_data_model_get_column_position(data_model,"id_product"));
+          </PROGRAMLISTING>
+        </para>
+      </sect2>
+    </sect1>
+    <sect1>
+      <title>Managing errors</title>
+      <para>
+        There is a function very similar to the last version and you can
+        see a very clear <LINK LINKEND="managing-errors">example</LINK> in
+        the <LINK LINKEND="managing-errors">Managing errors section</LINK>.
+      </para>
+    </sect1>
+    <sect1>
+      <title>Managing transactions</title>
+      <para>
+        In the old version, to manage transactions was more simple but less
+        powerful. In the new version it is supposed that we can launch
+        several transactions over the same connection but some database
+        drivers, as	&PGSQL;, do not implement it, so we do not recommend
+        it. If you want to launch several transactions, you must open
+        several connections, but you can do it over the same
+        <EMPHASIS>pool</EMPHASIS>. You can see a clear <LINK
+        LINKEND="transactions">example</LINK> in the <LINK
+        LINKEND="transactions">Transactions section</LINK>.
+      </para>
+    </sect1>
   </chapter>
-  -->
   <chapter id="libgda-api">
     <title>&LIBGDA; API Reference</title>
     <para>
@@ -1876,7 +2085,7 @@
       <sect2 id="libgda-provider-open-connection">
 	<title>open_connection</title>
 	   <para>
-	   Sets up the connection to the database backend using the parameters
+	   Sets up the connection to the database back-end using the parameters
 	   received as arguments and returns a boolean TRUE if the connection
 	   is successfully established, otherwise FALSE.
 	</para>
@@ -1923,26 +2132,26 @@
       <sect2 id="libgda-provider-begin-transaction">
 	<title>begin_transaction</title>
 	<para>
-	  Initiates a transaction if the DB backend supports transactions.
+	  Initiates a transaction if the DB back-end supports transactions.
 	</para>
       </sect2>
       <sect2 id="libgda-provider-commit-transaction">
 	<title>commit_transaction</title>
 	<para>
-	  Commits a transaction if the DB backend supports transactions.
+	  Commits a transaction if the DB back-end supports transactions.
 	</para>
       </sect2>
       <sect2 id="libgda-provider-rollback-transaction">
 	<title>rollback_transaction</title>
 	<para>
-	  Rollback a transaction if the DB backend supports transactions.
+	  Rollback a transaction if the DB back-end supports transactions.
 	</para>
       </sect2>
       <sect2 id="libgda-provider-supports">
 	<title>supports</title>
 	<para>
 	  Tests if a given feature is supported by the provider and the
-	  DB backend. You can view the list of features in <filename>
+	  DB back-end. You can view the list of features in <filename>
 	  gda-connection.h</filename>, enumeration GdaConnectionFeature.
 	</para>
       </sect2>
