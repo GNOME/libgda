@@ -1,3 +1,10 @@
+2002-02-23  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* libgda/gda-config.c (gda_config_add_listener): we must call
+	gconf_client_add_dir for the directories to be watched out.
+
+	* libgda/gda-marshal.list: added VOID:POINTER,UINT.
+
 2002-02-22  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* libgda/gda-connection.h: #define GDA_CONNECTION_SCHEMA_TRIGGERS.

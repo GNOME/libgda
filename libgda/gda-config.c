@@ -457,12 +457,14 @@ gda_config_add_listener (const gchar *path, GdaConfigListenerFunc func, gpointer
 	listener_data->func = func;
 	listener_data->user_data = user_data;
 
-	listener_data->id = gconf_client_notify_add (get_conf_client (),
-						     path,
-						     (GConfClientNotifyFunc) config_listener_func,
-						     listener_data->user_data,
-						     (GFreeFunc) g_free,
-						     &err);
+	gconf_client_add_dir (get_conf_client (), path, GCONF_CLIENT_PRELOAD_NONE, NULL);
+	listener_data->id = gconf_client_notify_add (
+		get_conf_client (),
+		path,
+		(GConfClientNotifyFunc) config_listener_func,
+		listener_data->user_data,
+		(GFreeFunc) g_free,
+		&err);
 	if (listener_data->id == 0) {
 		g_free (listener_data);
 		return 0;
@@ -477,6 +479,7 @@ gda_config_add_listener (const gchar *path, GdaConfigListenerFunc func, gpointer
 void
 gda_config_remove_listener (guint id)
 {
+	/* FIXME: remove directory from GConf list of watched dirs */
 	gconf_client_notify_remove (get_conf_client (), id);
 }
 
