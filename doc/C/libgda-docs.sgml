@@ -27,6 +27,7 @@
 <!ENTITY libgda-config SYSTEM "sgml/gda-config.sgml">
 <!ENTITY libgda-connection SYSTEM "sgml/gda-connection.sgml">
 <!ENTITY libgda-data-model-array SYSTEM "sgml/gda-data-model-array.sgml">
+<!ENTITY libgda-data-model-hash SYSTEM "sgml/gda-data-model-hash.sgml">
 <!ENTITY libgda-data-model-list SYSTEM "sgml/gda-data-model-list.sgml">
 <!ENTITY libgda-data-model SYSTEM "sgml/gda-data-model.sgml">
 <!ENTITY libgda-error SYSTEM "sgml/gda-error.sgml">
@@ -740,6 +741,7 @@
     &libgda-config;
     &libgda-connection;
     &libgda-data-model-array;
+    &libgda-data-model-hash;
     &libgda-data-model-list;
     &libgda-data-model;
     &libgda-error;

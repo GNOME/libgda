@@ -143,6 +143,15 @@ GdaDataModel
 @user_data: 
 
 
+<!-- ##### FUNCTION gda_data_model_is_editing ##### -->
+<para>
+
+</para>
+
+@model: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_data_model_begin_edit ##### -->
 <para>
 

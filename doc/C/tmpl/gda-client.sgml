@@ -2,7 +2,7 @@
 GdaClient
 
 <!-- ##### SECTION Short_Description ##### -->
-
+Database client access
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
@@ -11,7 +11,7 @@ GdaClient
 
 <!-- ##### SECTION See_Also ##### -->
 <para>
-
+ #GdaConnection.
 </para>
 
 <!-- ##### STRUCT GdaClientPrivate ##### -->

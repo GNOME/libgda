@@ -1,3 +1,8 @@
+2002-05-13  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* doc/C/libgda-docs.sgml:
+	* doc/C/tmpl/gda-data-model-hash.sgml: added new API documentation.
+
 2002-05-13  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
 	* libgda/gda-data-model-hash.[ch]: implementation of new

@@ -1,0 +1,71 @@
+<!-- ##### SECTION Title ##### -->
+GdaDataModelHash
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### STRUCT GdaDataModelHashPrivate ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION gda_data_model_hash_new ##### -->
+<para>
+
+</para>
+
+@cols: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_model_hash_set_n_columns ##### -->
+<para>
+
+</para>
+
+@model: 
+@cols: 
+
+
+<!-- ##### FUNCTION gda_data_model_hash_clear ##### -->
+<para>
+
+</para>
+
+@model: 
+
+
+<!-- ##### FUNCTION gda_data_model_hash_get_value_at ##### -->
+<para>
+
+</para>
+
+@model: 
+@col: 
+@row: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_model_hash_insert_row ##### -->
+<para>
+
+</para>
+
+@model: 
+@rownum: 
+@values: 
+
+
