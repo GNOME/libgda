@@ -64,4 +64,4 @@ SUBDIRS = \
 	$(GDA_SYBASE_SERVER) \
 	$(GDA_XBASE_SERVER) \
 	$(GDA_LDAP_SERVER) \
-	default
+	xml

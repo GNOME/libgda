@@ -1,4 +1,4 @@
-/* GDA Default provider
+/* GDA Xml provider
  * Copyright (C) 1998-2002 The GNOME Foundation.
  *
  * AUTHORS:
@@ -22,9 +22,9 @@
  */
 
 #include <libgda/gda-intl.h>
-#include "gda-default-recordset.h"
+#include "gda-xml-recordset.h"
 
-#define OBJECT_DATA_RECSET_HANDLE "GDA_Default_RecsetHandle"
+#define OBJECT_DATA_RECSET_HANDLE "GDA_Xml_RecsetHandle"
 
 /*
  * Private functions
@@ -47,7 +47,7 @@ describe_func (GdaDataModel *recset)
  */
 
 GdaDataModel *
-gda_default_recordset_new (GdaConnection *cnc, DEFAULT_Recordset *drecset)
+gda_xml_recordset_new (GdaConnection *cnc, XML_Recordset *drecset)
 {
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (drecset != NULL, NULL);

@@ -1,4 +1,4 @@
-/* GDA Default provider
+/* GDA Xml provider
  * Copyright (C) 1998-2002 The GNOME Foundation.
  *
  * AUTHORS:
@@ -26,51 +26,51 @@
 #include <libgda/gda-intl.h>
 #include <libgda/gda-row.h>
 #include <libgda/gda-util.h>
-#include "gda-default.h"
-#include "gda-default-recordset.h"
+#include "gda-xml.h"
+#include "gda-xml-recordset.h"
 
 #define PARENT_TYPE GDA_TYPE_SERVER_PROVIDER
 
-#define OBJECT_DATA_DEFAULT_HANDLE "GDA_Default_DefaultHandle"
-#define OBJECT_DATA_DEFAULT_RECORDSET "GDA_Default_DefaultRecordset"
+#define OBJECT_DATA_XML_HANDLE "GDA_Xml_XmlHandle"
+#define OBJECT_DATA_XML_RECORDSET "GDA_Xml_XmlRecordset"
 
-static void gda_default_provider_class_init (GdaDefaultProviderClass *klass);
-static void gda_default_provider_init       (GdaDefaultProvider *provider,
-					     GdaDefaultProviderClass *klass);
-static void gda_default_provider_finalize   (GObject *object);
+static void gda_xml_provider_class_init (GdaXmlProviderClass *klass);
+static void gda_xml_provider_init       (GdaXmlProvider *provider,
+					     GdaXmlProviderClass *klass);
+static void gda_xml_provider_finalize   (GObject *object);
 
-static const gchar *gda_default_provider_get_version (GdaServerProvider *provider);
-static gboolean gda_default_provider_open_connection (GdaServerProvider *provider,
+static const gchar *gda_xml_provider_get_version (GdaServerProvider *provider);
+static gboolean gda_xml_provider_open_connection (GdaServerProvider *provider,
 						      GdaConnection *cnc,
 						      GdaQuarkList *params,
 						      const gchar *username,
 						      const gchar *password);
-static gboolean gda_default_provider_close_connection (GdaServerProvider *provider,
+static gboolean gda_xml_provider_close_connection (GdaServerProvider *provider,
 						       GdaConnection *cnc);
-static const gchar *gda_default_provider_get_server_version (GdaServerProvider *provider,
+static const gchar *gda_xml_provider_get_server_version (GdaServerProvider *provider,
 							     GdaConnection *cnc);
-static const gchar *gda_default_provider_get_database (GdaServerProvider *provider,
+static const gchar *gda_xml_provider_get_database (GdaServerProvider *provider,
 						       GdaConnection *cnc);
-static gboolean gda_default_provider_create_database (GdaServerProvider *provider,
+static gboolean gda_xml_provider_create_database (GdaServerProvider *provider,
 						      GdaConnection *cnc,
 						      const gchar *name);
-static GList *gda_default_provider_execute_command (GdaServerProvider *provider,
+static GList *gda_xml_provider_execute_command (GdaServerProvider *provider,
 						    GdaConnection *cnc,
 						    GdaCommand *cmd,
 						    GdaParameterList *params);
-static gboolean gda_default_provider_begin_transaction (GdaServerProvider *provider,
+static gboolean gda_xml_provider_begin_transaction (GdaServerProvider *provider,
 							GdaConnection *cnc,
 							GdaTransaction *xaction);
-static gboolean gda_default_provider_commit_transaction (GdaServerProvider *provider,
+static gboolean gda_xml_provider_commit_transaction (GdaServerProvider *provider,
 							 GdaConnection *cnc,
 							 GdaTransaction *xaction);
-static gboolean gda_default_provider_rollback_transaction (GdaServerProvider *provider,
+static gboolean gda_xml_provider_rollback_transaction (GdaServerProvider *provider,
 							   GdaConnection *cnc,
 							   GdaTransaction *xaction);
-static gboolean gda_default_provider_supports (GdaServerProvider *provider,
+static gboolean gda_xml_provider_supports (GdaServerProvider *provider,
 					       GdaConnection *cnc,
 					       GdaConnectionFeature feature);
-static GdaDataModel *gda_default_provider_get_schema (GdaServerProvider *provider,
+static GdaDataModel *gda_xml_provider_get_schema (GdaServerProvider *provider,
 						      GdaConnection *cnc,
 						      GdaConnectionSchema schema,
 						      GdaParameterList *params);
@@ -78,68 +78,68 @@ static GdaDataModel *gda_default_provider_get_schema (GdaServerProvider *provide
 static GObjectClass *parent_class = NULL;
 
 /*
- * GdaDefaultProvider class implementation
+ * GdaXmlProvider class implementation
  */
 
 static void
-gda_default_provider_class_init (GdaDefaultProviderClass *klass)
+gda_xml_provider_class_init (GdaXmlProviderClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 	GdaServerProviderClass *provider_class = GDA_SERVER_PROVIDER_CLASS (klass);
 
 	parent_class = g_type_class_peek_parent (klass);
 
-	object_class->finalize = gda_default_provider_finalize;
-	provider_class->get_version = gda_default_provider_get_version;
-	provider_class->open_connection = gda_default_provider_open_connection;
-	provider_class->close_connection = gda_default_provider_close_connection;
-	provider_class->get_server_version = gda_default_provider_get_server_version;
-	provider_class->get_database = gda_default_provider_get_database;
-	provider_class->create_database = gda_default_provider_create_database;
-	provider_class->execute_command = gda_default_provider_execute_command;
-	provider_class->begin_transaction = gda_default_provider_begin_transaction;
-	provider_class->commit_transaction = gda_default_provider_commit_transaction;
-	provider_class->rollback_transaction = gda_default_provider_rollback_transaction;
-	provider_class->supports = gda_default_provider_supports;
-	provider_class->get_schema = gda_default_provider_get_schema;
+	object_class->finalize = gda_xml_provider_finalize;
+	provider_class->get_version = gda_xml_provider_get_version;
+	provider_class->open_connection = gda_xml_provider_open_connection;
+	provider_class->close_connection = gda_xml_provider_close_connection;
+	provider_class->get_server_version = gda_xml_provider_get_server_version;
+	provider_class->get_database = gda_xml_provider_get_database;
+	provider_class->create_database = gda_xml_provider_create_database;
+	provider_class->execute_command = gda_xml_provider_execute_command;
+	provider_class->begin_transaction = gda_xml_provider_begin_transaction;
+	provider_class->commit_transaction = gda_xml_provider_commit_transaction;
+	provider_class->rollback_transaction = gda_xml_provider_rollback_transaction;
+	provider_class->supports = gda_xml_provider_supports;
+	provider_class->get_schema = gda_xml_provider_get_schema;
 }
 
 static void
-gda_default_provider_init (GdaDefaultProvider *myprv,
-			   GdaDefaultProviderClass *klass)
+gda_xml_provider_init (GdaXmlProvider *myprv,
+			   GdaXmlProviderClass *klass)
 {
 }
 
 static void
-gda_default_provider_finalize (GObject *object)
+gda_xml_provider_finalize (GObject *object)
 {
-	GdaDefaultProvider *dfprv = (GdaDefaultProvider *) object;
+	GdaXmlProvider *dfprv = (GdaXmlProvider *) object;
 
-	g_return_if_fail (GDA_IS_DEFAULT_PROVIDER (dfprv));
+	g_return_if_fail (GDA_IS_XML_PROVIDER (dfprv));
 
 	/* chain to parent class */
 	parent_class->finalize (object);
 }
 
 GType
-gda_default_provider_get_type (void)
+gda_xml_provider_get_type (void)
 {
 	static GType type = 0;
 
 	if (!type) {
 		if (type == 0) {
 			static GTypeInfo info = {
-				sizeof (GdaDefaultProviderClass),
+				sizeof (GdaXmlProviderClass),
 				(GBaseInitFunc) NULL,
 				(GBaseFinalizeFunc) NULL,
-				(GClassInitFunc) gda_default_provider_class_init,
+				(GClassInitFunc) gda_xml_provider_class_init,
 				NULL, NULL,
-				sizeof (GdaDefaultProvider),
+				sizeof (GdaXmlProvider),
 				0,
-				(GInstanceInitFunc) gda_default_provider_init
+				(GInstanceInitFunc) gda_xml_provider_init
 			};
 			type = g_type_register_static (PARENT_TYPE,
-						       "GdaDefaultProvider",
+						       "GdaXmlProvider",
 						       &info, 0);
 		}
 	}
@@ -148,27 +148,27 @@ gda_default_provider_get_type (void)
 }
 
 GdaServerProvider *
-gda_default_provider_new (void)
+gda_xml_provider_new (void)
 {
-	GdaDefaultProvider *provider;
+	GdaXmlProvider *provider;
 
-	provider = g_object_new (gda_default_provider_get_type (), NULL);
+	provider = g_object_new (gda_xml_provider_get_type (), NULL);
 	return GDA_SERVER_PROVIDER (provider);
 }
 
-/* get_version handler for the GdaDefaultProvider class */
+/* get_version handler for the GdaXmlProvider class */
 static const gchar *
-gda_default_provider_get_version (GdaServerProvider *provider)
+gda_xml_provider_get_version (GdaServerProvider *provider)
 {
-	GdaDefaultProvider *dfprv = (GdaDefaultProvider *) provider;
+	GdaXmlProvider *dfprv = (GdaXmlProvider *) provider;
 
-	g_return_val_if_fail (GDA_IS_DEFAULT_PROVIDER (dfprv), NULL);
+	g_return_val_if_fail (GDA_IS_XML_PROVIDER (dfprv), NULL);
 	return VERSION;
 }
 
-/* open_connection handler for the GdaDefaultProvider class */
+/* open_connection handler for the GdaXmlProvider class */
 static gboolean
-gda_default_provider_open_connection (GdaServerProvider *provider,
+gda_xml_provider_open_connection (GdaServerProvider *provider,
 				      GdaConnection *cnc,
 				      GdaQuarkList *params,
 				      const gchar *username,
@@ -177,9 +177,9 @@ gda_default_provider_open_connection (GdaServerProvider *provider,
 	const gchar *t_uri = NULL;
 	GdaXmlDatabase *xmldb;
 	
-	GdaDefaultProvider *dfprv = (GdaDefaultProvider *) provider;
+	GdaXmlProvider *dfprv = (GdaXmlProvider *) provider;
 
-	g_return_val_if_fail (GDA_IS_DEFAULT_PROVIDER (dfprv), FALSE);
+	g_return_val_if_fail (GDA_IS_XML_PROVIDER (dfprv), FALSE);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 
 	/* get all parameters received */
@@ -199,55 +199,55 @@ gda_default_provider_open_connection (GdaServerProvider *provider,
 		gda_xml_database_set_uri (xmldb, t_uri);
 	}
 
-	g_object_set_data (G_OBJECT (cnc), OBJECT_DATA_DEFAULT_HANDLE, xmldb);
+	g_object_set_data (G_OBJECT (cnc), OBJECT_DATA_XML_HANDLE, xmldb);
 	
 	return TRUE;
 }
 
-/* close_connection handler for the GdaDefaultProvider class */
+/* close_connection handler for the GdaXmlProvider class */
 static gboolean
-gda_default_provider_close_connection (GdaServerProvider *provider,
+gda_xml_provider_close_connection (GdaServerProvider *provider,
 				       GdaConnection *cnc)
 {
 	GdaXmlDatabase *xmldb;
-	GdaDefaultProvider *dfprv = (GdaDefaultProvider *) provider;
+	GdaXmlProvider *dfprv = (GdaXmlProvider *) provider;
 
-	g_return_val_if_fail (GDA_IS_DEFAULT_PROVIDER (dfprv), FALSE);
+	g_return_val_if_fail (GDA_IS_XML_PROVIDER (dfprv), FALSE);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 
-	xmldb = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_DEFAULT_HANDLE);
+	xmldb = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_XML_HANDLE);
 	if (!xmldb)
 		return FALSE;
 
 	g_object_unref (G_OBJECT (xmldb));
-	g_object_set_data (G_OBJECT (cnc), OBJECT_DATA_DEFAULT_HANDLE, NULL);
+	g_object_set_data (G_OBJECT (cnc), OBJECT_DATA_XML_HANDLE, NULL);
 
 	return TRUE;
 }
 
-/* get_server_version handler for the GdaDefaultProvider class */
+/* get_server_version handler for the GdaXmlProvider class */
 static const gchar *
-gda_default_provider_get_server_version (GdaServerProvider *provider, GdaConnection *cnc)
+gda_xml_provider_get_server_version (GdaServerProvider *provider, GdaConnection *cnc)
 {
-	GdaDefaultProvider *dfprv = (GdaDefaultProvider *) provider;
+	GdaXmlProvider *dfprv = (GdaXmlProvider *) provider;
 
-	g_return_val_if_fail (GDA_IS_DEFAULT_PROVIDER (dfprv), NULL);
+	g_return_val_if_fail (GDA_IS_XML_PROVIDER (dfprv), NULL);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
 	return VERSION; /* FIXME */
 }
 
-/* get_database handler for the GdaDefaultProvider class */
+/* get_database handler for the GdaXmlProvider class */
 static const gchar *
-gda_default_provider_get_database (GdaServerProvider *provider, GdaConnection *cnc)
+gda_xml_provider_get_database (GdaServerProvider *provider, GdaConnection *cnc)
 {
 	GdaXmlDatabase *xmldb;
-	GdaDefaultProvider *dfprv = (GdaDefaultProvider *) provider;
+	GdaXmlProvider *dfprv = (GdaXmlProvider *) provider;
 
-	g_return_val_if_fail (GDA_IS_DEFAULT_PROVIDER (dfprv), NULL);
+	g_return_val_if_fail (GDA_IS_XML_PROVIDER (dfprv), NULL);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
-	xmldb = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_DEFAULT_HANDLE);
+	xmldb = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_XML_HANDLE);
 	if (!xmldb) {
 		gda_connection_add_error_string (cnc, _("Invalid internal handle"));
 		return NULL;
@@ -262,7 +262,7 @@ process_sql_commands (GList *reclist, GdaConnection *cnc, const gchar *sql)
 	gchar **arr;
 	GdaXmlDatabase *xmldb;
 
-	xmldb = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_DEFAULT_HANDLE);
+	xmldb = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_XML_HANDLE);
 	if (!xmldb) {
 		gda_connection_add_error_string (cnc, _("Invalid internal handle"));
 		return reclist;
@@ -289,7 +289,7 @@ process_table_commands (GList *reclist, GdaConnection *cnc, const gchar *str)
 	gchar **arr;
 	GdaXmlDatabase *xmldb;
 
-	xmldb = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_DEFAULT_HANDLE);
+	xmldb = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_XML_HANDLE);
 	if (!xmldb) {
 		gda_connection_add_error_string (cnc, _("Invalid internal handle"));
 		return reclist;
@@ -319,32 +319,32 @@ process_table_commands (GList *reclist, GdaConnection *cnc, const gchar *str)
 	return reclist;
 }
 
-/* create_database handler for the GdaDefaultProvider class */
+/* create_database handler for the GdaXmlProvider class */
 static gboolean
-gda_default_provider_create_database (GdaServerProvider *provider,
+gda_xml_provider_create_database (GdaServerProvider *provider,
 				      GdaConnection *cnc,
 				      const gchar *name)
 {
-	GdaDefaultProvider *dfprv = (GdaDefaultProvider *) provider;
+	GdaXmlProvider *dfprv = (GdaXmlProvider *) provider;
 
-	g_return_val_if_fail (GDA_IS_DEFAULT_PROVIDER (dfprv), FALSE);
+	g_return_val_if_fail (GDA_IS_XML_PROVIDER (dfprv), FALSE);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 
 	gda_connection_add_error_string (cnc, _("Not Implemented"));
 	return FALSE;
 }
 
-/* execute_command handler for the GdaDefaultProvider class */
+/* execute_command handler for the GdaXmlProvider class */
 static GList *
-gda_default_provider_execute_command (GdaServerProvider *provider,
+gda_xml_provider_execute_command (GdaServerProvider *provider,
 				      GdaConnection *cnc,
 				      GdaCommand *cmd,
 				      GdaParameterList *params)
 {
 	GList *reclist = NULL;
-	GdaDefaultProvider *dfprv = (GdaDefaultProvider *) provider;
+	GdaXmlProvider *dfprv = (GdaXmlProvider *) provider;
 
-	g_return_val_if_fail (GDA_IS_DEFAULT_PROVIDER (dfprv), NULL);
+	g_return_val_if_fail (GDA_IS_XML_PROVIDER (dfprv), NULL);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (cmd != NULL, NULL);
 
@@ -370,54 +370,54 @@ gda_default_provider_execute_command (GdaServerProvider *provider,
 	return reclist;
 }
 
-/* begin_transaction handler for the GdaDefaultProvider class */
+/* begin_transaction handler for the GdaXmlProvider class */
 static gboolean
-gda_default_provider_begin_transaction (GdaServerProvider *provider,
+gda_xml_provider_begin_transaction (GdaServerProvider *provider,
 					GdaConnection *cnc,
 					GdaTransaction *xaction)
 {
 	GdaXmlDatabase *xmldb;
-	GdaDefaultProvider *dfprv = (GdaDefaultProvider *) provider;
+	GdaXmlProvider *dfprv = (GdaXmlProvider *) provider;
 
-	g_return_val_if_fail (GDA_IS_DEFAULT_PROVIDER (dfprv), FALSE);
+	g_return_val_if_fail (GDA_IS_XML_PROVIDER (dfprv), FALSE);
 
-	xmldb = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_DEFAULT_HANDLE);
+	xmldb = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_XML_HANDLE);
 	if (!xmldb)
 		return FALSE;
 
 	return gda_xml_database_save (xmldb, NULL);
 }
 
-/* commit_transaction handler for the GdaDefaultProvider class */
+/* commit_transaction handler for the GdaXmlProvider class */
 static gboolean
-gda_default_provider_commit_transaction (GdaServerProvider *provider,
+gda_xml_provider_commit_transaction (GdaServerProvider *provider,
 					 GdaConnection *cnc,
 					 GdaTransaction *xaction)
 {
 	GdaXmlDatabase *xmldb;
-	GdaDefaultProvider *dfprv = (GdaDefaultProvider *) provider;
+	GdaXmlProvider *dfprv = (GdaXmlProvider *) provider;
 
-	g_return_val_if_fail (GDA_IS_DEFAULT_PROVIDER (dfprv), FALSE);
+	g_return_val_if_fail (GDA_IS_XML_PROVIDER (dfprv), FALSE);
 
-	xmldb = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_DEFAULT_HANDLE);
+	xmldb = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_XML_HANDLE);
 	if (!xmldb)
 		return FALSE;
 
 	return gda_xml_database_save (xmldb, NULL);
 }
 
-/* rollback_transaction handler for the GdaDefaultProvider class */
+/* rollback_transaction handler for the GdaXmlProvider class */
 static gboolean
-gda_default_provider_rollback_transaction (GdaServerProvider *provider,
+gda_xml_provider_rollback_transaction (GdaServerProvider *provider,
 					   GdaConnection *cnc,
 					   GdaTransaction *xaction)
 {
 	GdaXmlDatabase *xmldb;
-	GdaDefaultProvider *dfprv = (GdaDefaultProvider *) provider;
+	GdaXmlProvider *dfprv = (GdaXmlProvider *) provider;
 
-	g_return_val_if_fail (GDA_IS_DEFAULT_PROVIDER (dfprv), FALSE);
+	g_return_val_if_fail (GDA_IS_XML_PROVIDER (dfprv), FALSE);
 
-	xmldb = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_DEFAULT_HANDLE);
+	xmldb = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_XML_HANDLE);
 	if (!xmldb)
 		return FALSE;
 
@@ -425,9 +425,9 @@ gda_default_provider_rollback_transaction (GdaServerProvider *provider,
 	return TRUE;
 }
 
-/* supports handler for the GdaDefaultProvider class */
+/* supports handler for the GdaXmlProvider class */
 static gboolean
-gda_default_provider_supports (GdaServerProvider *provider,
+gda_xml_provider_supports (GdaServerProvider *provider,
 			       GdaConnection *cnc,
 			       GdaConnectionFeature feature)
 {
@@ -639,19 +639,19 @@ get_types (GdaConnection *cnc)
 	return GDA_DATA_MODEL (recset);
 }
 
-/* get_schema handler for the GdaDefaultProvider class */
+/* get_schema handler for the GdaXmlProvider class */
 static GdaDataModel *
-gda_default_provider_get_schema (GdaServerProvider *provider,
+gda_xml_provider_get_schema (GdaServerProvider *provider,
 				 GdaConnection *cnc,
 				 GdaConnectionSchema schema,
 				 GdaParameterList *params)
 {
 	GdaXmlDatabase *xmldb;
-	GdaDefaultProvider *dfprv = (GdaDefaultProvider *) provider;
+	GdaXmlProvider *dfprv = (GdaXmlProvider *) provider;
 
-	g_return_val_if_fail (GDA_IS_DEFAULT_PROVIDER (dfprv), NULL);
+	g_return_val_if_fail (GDA_IS_XML_PROVIDER (dfprv), NULL);
 
-	xmldb = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_DEFAULT_HANDLE);
+	xmldb = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_XML_HANDLE);
 	if (!xmldb)
 		return NULL;
 

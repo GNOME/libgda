@@ -1,9 +1,9 @@
-/* GDA Default provider
+/* GDA Xml provider
  * Copyright (C) 1998-2002 The GNOME Foundation.
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
- *      Carlos Perelló Marín <carlos@gnome-db.org>
+ *	Carlos Perelló Marín <carlos@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -21,17 +21,17 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#if !defined(__gda_default_recordset_h__)
-#  define __gda_default_recordset_h__
+#if !defined(__gda_xml_h__)
+#  define __gda_xml_h__
 
-#include <libgda/gda-connection.h>
-#include <libgda/gda-data-model-array.h>
-#include "gda-default.h"
+#include <glib/gmacros.h>
+#include <libgda/gda-intl.h>
+#include <libgda/gda-xml-database.h>
+#include "gda-xml-provider.h"
 
-G_BEGIN_DECLS
+#define GDA_XML_PROVIDER_ID "GDA xml (XML-based) provider"
 
-GdaDataModel *gda_default_recordset_new (GdaConnection *cnc, DEFAULT_Recordset *drecset);
-
-G_END_DECLS
+typedef struct {
+} XML_Recordset;
 
 #endif

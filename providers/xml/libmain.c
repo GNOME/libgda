@@ -1,4 +1,4 @@
-/* GDA Default Provider
+/* GDA Xml Provider
  * Copyright (C) 1998-2002 The GNOME Foundation
  *
  * AUTHORS:
@@ -20,7 +20,7 @@
  */
 
 #include <libgda/gda-intl.h>
-#include "gda-default-provider.h"
+#include "gda-xml-provider.h"
 
 const gchar *plugin_get_name (void);
 const gchar *plugin_get_description (void);
@@ -30,13 +30,13 @@ GdaServerProvider *plugin_create_provider (void);
 const gchar *
 plugin_get_name (void)
 {
-	return _("Default");
+	return _("XML");
 }
 
 const gchar *
 plugin_get_description (void)
 {
-	return _("Default provider, based on XML");
+	return _("XML provider, based on the libgda XML database format");
 }
 
 GList *
@@ -52,5 +52,5 @@ plugin_get_connection_params (void)
 GdaServerProvider *
 plugin_create_provider (void)
 {
-	return gda_default_provider_new ();
+	return gda_xml_provider_new ();
 }

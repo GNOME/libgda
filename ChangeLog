@@ -1,3 +1,10 @@
+2003-07-04  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* configure.in:
+	* providers/Makefile.am:
+	* providers/default/*:
+	* providers/xml/*: renamed default provider to XML.
+
 2003-07-03  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	Released 0.90.0

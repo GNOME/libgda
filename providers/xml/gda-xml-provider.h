@@ -1,4 +1,4 @@
-/* GDA Default provider
+/* GDA Xml provider
  * Copyright (C) 1998-2002 The GNOME Foundation.
  *
  * AUTHORS:
@@ -21,32 +21,32 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#if !defined(__gda_default_provider_h__)
-#  define __gda_default_provider_h__
+#if !defined(__gda_xml_provider_h__)
+#  define __gda_xml_provider_h__
 
 #include <libgda/gda-server-provider.h>
 
 G_BEGIN_DECLS
 
-#define GDA_TYPE_DEFAULT_PROVIDER            (gda_default_provider_get_type())
-#define GDA_DEFAULT_PROVIDER(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_DEFAULT_PROVIDER, GdaDefaultProvider))
-#define GDA_DEFAULT_PROVIDER_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_DEFAULT_PROVIDER, GdaDefaultProviderClass))
-#define GDA_IS_DEFAULT_PROVIDER(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_DEFAULT_PROVIDER))
-#define GDA_IS_DEFAULT_PROVIDER_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GDA_TYPE_DEFAULT_PROVIDER))
+#define GDA_TYPE_XML_PROVIDER            (gda_xml_provider_get_type())
+#define GDA_XML_PROVIDER(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_XML_PROVIDER, GdaXmlProvider))
+#define GDA_XML_PROVIDER_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_XML_PROVIDER, GdaXmlProviderClass))
+#define GDA_IS_XML_PROVIDER(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_XML_PROVIDER))
+#define GDA_IS_XML_PROVIDER_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GDA_TYPE_XML_PROVIDER))
 
-typedef struct _GdaDefaultProvider      GdaDefaultProvider;
-typedef struct _GdaDefaultProviderClass GdaDefaultProviderClass;
+typedef struct _GdaXmlProvider      GdaXmlProvider;
+typedef struct _GdaXmlProviderClass GdaXmlProviderClass;
 
-struct _GdaDefaultProvider {
+struct _GdaXmlProvider {
 	GdaServerProvider provider;
 };
 
-struct _GdaDefaultProviderClass {
+struct _GdaXmlProviderClass {
 	GdaServerProviderClass parent_class;
 };
 
-GType              gda_default_provider_get_type (void);
-GdaServerProvider *gda_default_provider_new (void);
+GType              gda_xml_provider_get_type (void);
+GdaServerProvider *gda_xml_provider_new (void);
 
 G_END_DECLS
 

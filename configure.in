@@ -862,10 +862,10 @@ po/Makefile.in
 libsql/Makefile
 libgda/Makefile
 providers/Makefile
-providers/default/Makefile
-providers/ibmdb2/Makefile
 providers/freetds/Makefile
 providers/firebird/Makefile
+providers/ibmdb2/Makefile
+providers/ldap/Makefile
 providers/mdb/Makefile
 providers/mysql/Makefile
 providers/msql/Makefile
@@ -875,7 +875,7 @@ providers/postgres/Makefile
 providers/sqlite/Makefile
 providers/sybase/Makefile
 providers/xbase/Makefile
-providers/ldap/Makefile
+providers/xml/Makefile
 report/Makefile
 report/gda-report.dtd
 report/libgda-report/Makefile
@@ -894,7 +894,7 @@ echo ""
 echo " Configuration summary"
 echo "   Installation prefix = $prefix"
 echo "   Providers"
-echo "      Default (XML) = yes"
+echo "      XML = yes"
 echo "      FireBird = `if test x$firebirddir != x; then echo yes; else echo no; fi`"
 echo "      FreeTDS = `if test x$freetdsdir != x; then echo yes; else echo no; fi`"
 echo "      IBM DB2 = `if test x$ibmdb2dir != x; then echo yes; else echo no; fi`"
