@@ -1,3 +1,8 @@
+2004-10-15  Vivien Malerba <malerba@gnome-db.org>
+
+	* providers/mysql/gda-mysql-recordset.c (fill_gda_value): fixed
+	support for DATE, TIME, TIMESTAMP and DATETIME types.
+
 2004-10-14  Vivien Malerba <malerba@gnome-db.org>
 
 	* libgda/gda-data-model-hash.c (gda_data_model_hash_get_n_rows): added

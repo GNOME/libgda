@@ -94,17 +94,23 @@ fill_gda_value (GdaValue *gda_value, enum enum_field_types type, gchar *value,
 		gda_value_set_string (gda_value, value);
 		break;
 	case FIELD_TYPE_DATE :
+		gda_value_set_from_string (gda_value, value, GDA_VALUE_TYPE_DATE);
+		break;
+	case FIELD_TYPE_TIME :
+		gda_value_set_from_string (gda_value, value, GDA_VALUE_TYPE_TIME);
+		break;
+	case FIELD_TYPE_TIMESTAMP :
+	case FIELD_TYPE_DATETIME :
+		gda_value_set_from_string (gda_value, value, GDA_VALUE_TYPE_TIMESTAMP);
+		break;
 	case FIELD_TYPE_NULL :
 	case FIELD_TYPE_NEWDATE :
 	case FIELD_TYPE_ENUM :
-	case FIELD_TYPE_TIMESTAMP :
-	case FIELD_TYPE_DATETIME :
-	case FIELD_TYPE_TIME :
 	case FIELD_TYPE_SET : /* FIXME */
 		gda_value_set_string (gda_value, value);
 		break;
 	default :
-		g_printerr ("Unknown MySQL datatype.  This is fishy, but continueing anyway.\n");
+		g_printerr ("Unknown MySQL datatype.  This is fishy, but continuing anyway.\n");
 		gda_value_set_string (gda_value, value);
 	}
 }
