@@ -206,6 +206,31 @@ gda_config_list_sections (const gchar *path)
 }
 
 /**
+ * gda_config_list_keys
+ */
+GList *
+gda_config_list_keys (const gchar *path)
+{
+  GList*   ret = NULL;
+  GSList*  slist;
+
+  g_return_val_if_fail(path != NULL, NULL);
+  
+  slist = gconf_all_entries(get_conf_engine(), path, NULL);
+  if (slist)
+    {
+      GSList* node;
+      
+      for (node = slist; node != NULL; node = g_slist_next(node))
+        {
+          ret = g_list_append(ret, g_strdup(node->data));
+        }
+      g_slist_free(slist);
+    }
+  return ret;
+}
+
+/**
  * gda_config_free_list
  * @list: list to be freed
  *
@@ -718,7 +743,7 @@ gda_dsn_save (Gda_Dsn *dsn)
       g_free((gpointer) tmp);
 
       tmp = g_strdup_printf("%s/%s/Configurator", config_prefix, dsn->gda_name);
-      gnome_config_set_string(tmp, GDA_DSN_CONFIG(dsn));
+      gda_config_set_string(tmp, GDA_DSN_CONFIG(dsn));
       g_free((gpointer) tmp);
 
       gda_config_commit();

@@ -59,7 +59,8 @@ write_to_log (const gchar *str, gboolean error)
       now = localtime(&t);
       if (now)
         {
-          config_entry = g_strdup_printf("/gda/log/%s/%04d-%02d-%02d/%02d:%02d:%02d.%ld",
+          config_entry = g_strdup_printf("%s/%s/%04d-%02d-%02d/%02d:%02d:%02d.%ld",
+                                         GDA_CONFIG_SECTION_LOG,
                                          g_get_prgname(),
                                          now->tm_year + 1900,
                                          now->tm_mon + 1,
