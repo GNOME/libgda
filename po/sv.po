@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-04-16 22:49+0200\n"
+"POT-Creation-Date: 2004-04-26 13:19+0200\n"
 "PO-Revision-Date: 2004-04-16 22:49+0200\n"
 "Last-Translator: Christian Rose <menthos@menthos.com>\n"
 "Language-Team: Swedish <sv@li.org>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: libgda/gda-client.c:312 libgda/gda-client.c:535 libgda/gda-connection.c:218
+#: libgda/gda-client.c:312 libgda/gda-client.c:539 libgda/gda-connection.c:218
 #, c-format
 msgid "Data source %s not found in configuration"
 msgstr "Datakällan %s hittades inte i konfigurationen"
@@ -36,7 +36,7 @@ msgstr "%s-leverantören implementerar inte postfunktion"
 msgid "Could not create GdaServerProvider object from plugin"
 msgstr "Kunde inte skapa GdaServerProvider-objekt från insticksmodul"
 
-#: libgda/gda-client.c:461
+#: libgda/gda-client.c:465
 msgid "Temporary data source created by libgda. Don't remove it"
 msgstr "Temporär datakälla skapad av libgda. Ta inte bort den"
 
@@ -206,6 +206,20 @@ msgstr "Ogiltig XML-nod"
 msgid "Could not add the data from the XML node"
 msgstr "Kunde inte lägga till data från XML-noden"
 
+#: libsql/sql_parser.c:59
+#, c-format
+msgid "Parse error near `%s'"
+msgstr ""
+
+#: libsql/sql_parser.c:61
+#, c-format
+msgid "Syntax error near `%s'"
+msgstr ""
+
+#: libsql/sql_parser.c:358
+msgid "Empty query to parse"
+msgstr ""
+
 #: providers/firebird/gda-firebird-provider.c:187
 msgid "No database specified"
 msgstr "Ingen databas angiven"
@@ -310,19 +324,19 @@ msgstr ""
 msgid "Not available"
 msgstr "Inte tillgänglig"
 
-#: providers/freetds/gda-freetds-recordset.c:376
+#: providers/freetds/gda-freetds-recordset.c:377
 msgid "Error processing result rows.\n"
 msgstr "Fel vid behandling av resultatrad.\n"
 
-#: providers/freetds/gda-freetds-recordset.c:383
+#: providers/freetds/gda-freetds-recordset.c:384
 msgid "Unexpected freetds return code in tds_process_row_tokens().\n"
 msgstr "Oväntad freetds-returkod i tds_process_row_tokens().\n"
 
-#: providers/freetds/gda-freetds-recordset.c:393
+#: providers/freetds/gda-freetds-recordset.c:394
 msgid "Error processing results.\n"
 msgstr "Fel vid behandling av resultat.\n"
 
-#: providers/freetds/gda-freetds-recordset.c:400
+#: providers/freetds/gda-freetds-recordset.c:401
 msgid "Unexpected freetds return code in tds_process_result_tokens\n"
 msgstr "Oväntad freetds-returkod i tds_process_result_tokens\n"
 
@@ -492,6 +506,15 @@ msgstr "GDA-typ"
 #: providers/postgres/gda-postgres-provider.c:1904 testing/client.c:137
 msgid "Users"
 msgstr "Användare"
+
+#: providers/ibmdb2/gda-ibmdb2-types.c:154
+#, fuzzy
+msgid "[BLOB unsupported]"
+msgstr "Stöds inte"
+
+#: providers/ibmdb2/gda-ibmdb2-types.c:157
+msgid "[Unsupported data]"
+msgstr ""
 
 #: providers/ibmdb2/libmain.c:39
 msgid "Provider for IBMDB2 databases"

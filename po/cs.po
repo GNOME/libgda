@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda HEAD\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-04-21 04:17+0200\n"
+"POT-Creation-Date: 2004-04-26 13:19+0200\n"
 "PO-Revision-Date: 2004-04-21 15:08+0200\n"
 "Last-Translator: Miloslav Trmac <mitr@volny.cz>\n"
 "Language-Team: Czech <cs@li.org>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: libgda/gda-client.c:312 libgda/gda-client.c:535 libgda/gda-connection.c:218
+#: libgda/gda-client.c:312 libgda/gda-client.c:539 libgda/gda-connection.c:218
 #, c-format
 msgid "Data source %s not found in configuration"
 msgstr "Zdroj dat %s nebyl nalezen v nastavení"
@@ -36,7 +36,7 @@ msgstr "Poskytovatel %s neimplementuje vstupní funkci"
 msgid "Could not create GdaServerProvider object from plugin"
 msgstr "Ze zásuvného modulu nelze vytvořit objekt GdaServerProvider"
 
-#: libgda/gda-client.c:461
+#: libgda/gda-client.c:465
 msgid "Temporary data source created by libgda. Don't remove it"
 msgstr "Dočasný zdroj dat vytvořený programem libgda. Neodstraňujte."
 
@@ -1595,7 +1595,9 @@ msgstr ") Zpráva: "
 msgid ""
 "Sybase OpenClient Msg: severity(%ld), number(%ld), origin(%ld), layer(%ld): %"
 "s"
-msgstr "Zpráva Sybase  OpenClient: důležitost(%ld), číslo(%ld), vrstva(%ld), původ (%ld): %s"
+msgstr ""
+"Zpráva Sybase  OpenClient: důležitost(%ld), číslo(%ld), vrstva(%ld), původ (%"
+"ld): %s"
 
 #: providers/sybase/utils.c:272
 msgid "call to cs_diag failed when attempting to clear the client messages"

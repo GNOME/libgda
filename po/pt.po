@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 2.6\n"
-"Report-Msgid-Bugs-To: Duarte Loreto <happyguy_pt@hotmail.com>\n"
-"POT-Creation-Date: 2004-04-24 18:09+0100\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2004-04-26 13:19+0200\n"
 "PO-Revision-Date: 2004-04-24 19:20+0000\n"
 "Last-Translator: Duarte Loreto <happyguy_pt@hotmail.com>\n"
 "Language-Team: Portuguese <gnome_pt@yahoogroups.com>\n"
@@ -1007,8 +1007,8 @@ msgstr "Incapaz de obter o tipo de consulta Oracle"
 #: providers/oracle/gda-oracle-provider.c:610
 msgid "Could not set the Oracle statement pre-fetch row count"
 msgstr ""
-"Incapaz de definir a contagem de registos antes da obtenção da "
-"consulta Oracle"
+"Incapaz de definir a contagem de registos antes da obtenção da consulta "
+"Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:627
 msgid "Could not execute the Oracle statement"
@@ -1396,7 +1396,8 @@ msgstr "%s: %s falhou"
 #: providers/sybase/gda-sybase-provider.c:974
 msgid "could not allocate cmd structure to find current database."
 msgstr ""
-"incapaz de alocar a estrutura de comando para encontrar a base de dados actual."
+"incapaz de alocar a estrutura de comando para encontrar a base de dados "
+"actual."
 
 #: providers/sybase/gda-sybase-provider.c:985
 msgid "could not execute command to get current database."
@@ -1485,7 +1486,8 @@ msgstr ""
 
 #: providers/sybase/gda-sybase-recordset.c:518
 msgid "attempting to make recordset and msg count != 1 !"
-msgstr "ao tentar criar o conjunto de resultados e contagem de mensagens != 1 !"
+msgstr ""
+"ao tentar criar o conjunto de resultados e contagem de mensagens != 1 !"
 
 #: providers/sybase/gda-sybase-recordset.c:531
 msgid ""
@@ -1608,8 +1610,8 @@ msgid ""
 "Sybase OpenClient Msg: severity(%ld), number(%ld), origin(%ld), layer(%ld): %"
 "s"
 msgstr ""
-"Mensagem Sybase OpenClient: gravidade(%ld), número(%ld), origem (%ld), "
-"camada(%ld): %s"
+"Mensagem Sybase OpenClient: gravidade(%ld), número(%ld), origem (%ld), camada"
+"(%ld): %s"
 
 #: providers/sybase/utils.c:272
 msgid "call to cs_diag failed when attempting to clear the client messages"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-03-23 13:16+0100\n"
+"POT-Creation-Date: 2004-04-26 13:19+0200\n"
 "PO-Revision-Date: 2002-05-01 13:08+0900\n"
 "Last-Translator: Young-Ho, Cha <ganadist@chollian.net>\n"
 "Language-Team: Korean <gnome-kr-translation@lists.sourceforge.net>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: libgda/gda-client.c:312 libgda/gda-client.c:535 libgda/gda-connection.c:218
+#: libgda/gda-client.c:312 libgda/gda-client.c:539 libgda/gda-connection.c:218
 #, c-format
 msgid "Data source %s not found in configuration"
 msgstr "데이터 소스 %s는 설정에서 찾을 수 없습니다"
@@ -34,7 +34,7 @@ msgstr "제공자 %s 가 설치되지 않았습니다"
 msgid "Could not create GdaServerProvider object from plugin"
 msgstr ""
 
-#: libgda/gda-client.c:461
+#: libgda/gda-client.c:465
 msgid "Temporary data source created by libgda. Don't remove it"
 msgstr "임시 데이터 소스가 libgda에 의해 생성되었습니다. 지우지 않습니다"
 
@@ -207,6 +207,20 @@ msgstr "잘못된 XML 노드"
 msgid "Could not add the data from the XML node"
 msgstr "Oracle 서버 처리 초기화를 할 수 없습니다"
 
+#: libsql/sql_parser.c:59
+#, c-format
+msgid "Parse error near `%s'"
+msgstr ""
+
+#: libsql/sql_parser.c:61
+#, c-format
+msgid "Syntax error near `%s'"
+msgstr ""
+
+#: libsql/sql_parser.c:358
+msgid "Empty query to parse"
+msgstr ""
+
 #: providers/firebird/gda-firebird-provider.c:187
 msgid "No database specified"
 msgstr ""
@@ -311,19 +325,19 @@ msgstr ""
 msgid "Not available"
 msgstr "사용 불가"
 
-#: providers/freetds/gda-freetds-recordset.c:376
+#: providers/freetds/gda-freetds-recordset.c:377
 msgid "Error processing result rows.\n"
 msgstr ""
 
-#: providers/freetds/gda-freetds-recordset.c:383
+#: providers/freetds/gda-freetds-recordset.c:384
 msgid "Unexpected freetds return code in tds_process_row_tokens().\n"
 msgstr ""
 
-#: providers/freetds/gda-freetds-recordset.c:393
+#: providers/freetds/gda-freetds-recordset.c:394
 msgid "Error processing results.\n"
 msgstr ""
 
-#: providers/freetds/gda-freetds-recordset.c:400
+#: providers/freetds/gda-freetds-recordset.c:401
 msgid "Unexpected freetds return code in tds_process_result_tokens\n"
 msgstr ""
 
@@ -392,7 +406,7 @@ msgstr ""
 #: providers/postgres/gda-postgres-provider.c:1196
 #: providers/postgres/gda-postgres-provider.c:1313
 #: providers/postgres/gda-postgres-provider.c:1946
-#: providers/sqlite/gda-sqlite-provider.c:751
+#: providers/sqlite/gda-sqlite-provider.c:788
 #: providers/sybase/gda-sybase-provider.c:1098
 msgid "Owner"
 msgstr ""
@@ -451,7 +465,7 @@ msgstr "트리거"
 #: providers/odbc/gda-odbc-provider.c:1360
 #: providers/oracle/gda-oracle-provider.c:2095
 #: providers/postgres/gda-postgres-provider.c:1135
-#: providers/sqlite/gda-sqlite-provider.c:750
+#: providers/sqlite/gda-sqlite-provider.c:787
 #: providers/sybase/gda-sybase-provider.c:1096
 msgid "Type"
 msgstr "형식"
@@ -478,7 +492,7 @@ msgstr "형식"
 #: providers/postgres/gda-postgres-provider.c:1197
 #: providers/postgres/gda-postgres-provider.c:1314
 #: providers/postgres/gda-postgres-provider.c:1947
-#: providers/sqlite/gda-sqlite-provider.c:752
+#: providers/sqlite/gda-sqlite-provider.c:789
 #: providers/sybase/gda-sybase-provider.c:1100
 msgid "Comments"
 msgstr ""
@@ -489,7 +503,7 @@ msgstr ""
 #: providers/odbc/gda-odbc-provider.c:1363
 #: providers/oracle/gda-oracle-provider.c:2097
 #: providers/postgres/gda-postgres-provider.c:1138
-#: providers/sqlite/gda-sqlite-provider.c:753
+#: providers/sqlite/gda-sqlite-provider.c:790
 #: providers/sybase/gda-sybase-provider.c:1102
 #, fuzzy
 msgid "GDA type"
@@ -501,6 +515,15 @@ msgstr "데이터 형식"
 #: providers/postgres/gda-postgres-provider.c:1904 testing/client.c:137
 msgid "Users"
 msgstr "사용자"
+
+#: providers/ibmdb2/gda-ibmdb2-types.c:154
+#, fuzzy
+msgid "[BLOB unsupported]"
+msgstr "지원하지 않음"
+
+#: providers/ibmdb2/gda-ibmdb2-types.c:157
+msgid "[Unsupported data]"
+msgstr ""
 
 #: providers/ibmdb2/libmain.c:39
 #, fuzzy
@@ -579,7 +602,7 @@ msgstr ""
 #: providers/odbc/gda-odbc-provider.c:949
 #: providers/oracle/gda-oracle-provider.c:1248
 #: providers/postgres/gda-postgres-provider.c:1363
-#: providers/sqlite/gda-sqlite-provider.c:621
+#: providers/sqlite/gda-sqlite-provider.c:658
 #: providers/xml/gda-xml-provider.c:489
 msgid "Field name"
 msgstr "필드 이름"
@@ -589,7 +612,7 @@ msgstr "필드 이름"
 #: providers/odbc/gda-odbc-provider.c:950
 #: providers/oracle/gda-oracle-provider.c:1249
 #: providers/postgres/gda-postgres-provider.c:1364
-#: providers/sqlite/gda-sqlite-provider.c:622
+#: providers/sqlite/gda-sqlite-provider.c:659
 #: providers/xml/gda-xml-provider.c:490
 msgid "Data type"
 msgstr "데이터 형식"
@@ -599,7 +622,7 @@ msgstr "데이터 형식"
 #: providers/odbc/gda-odbc-provider.c:951
 #: providers/oracle/gda-oracle-provider.c:1250
 #: providers/postgres/gda-postgres-provider.c:1365
-#: providers/sqlite/gda-sqlite-provider.c:623
+#: providers/sqlite/gda-sqlite-provider.c:660
 #: providers/xml/gda-xml-provider.c:491
 msgid "Size"
 msgstr "크기"
@@ -609,7 +632,7 @@ msgstr "크기"
 #: providers/odbc/gda-odbc-provider.c:952
 #: providers/oracle/gda-oracle-provider.c:1251
 #: providers/postgres/gda-postgres-provider.c:1366
-#: providers/sqlite/gda-sqlite-provider.c:624
+#: providers/sqlite/gda-sqlite-provider.c:661
 #: providers/xml/gda-xml-provider.c:492
 msgid "Scale"
 msgstr "규모"
@@ -619,7 +642,7 @@ msgstr "규모"
 #: providers/odbc/gda-odbc-provider.c:953
 #: providers/oracle/gda-oracle-provider.c:1252
 #: providers/postgres/gda-postgres-provider.c:1367
-#: providers/sqlite/gda-sqlite-provider.c:625
+#: providers/sqlite/gda-sqlite-provider.c:662
 #: providers/xml/gda-xml-provider.c:493
 msgid "Not null?"
 msgstr "널 아님?"
@@ -629,7 +652,7 @@ msgstr "널 아님?"
 #: providers/odbc/gda-odbc-provider.c:954
 #: providers/oracle/gda-oracle-provider.c:1253
 #: providers/postgres/gda-postgres-provider.c:1368
-#: providers/sqlite/gda-sqlite-provider.c:626
+#: providers/sqlite/gda-sqlite-provider.c:663
 #: providers/xml/gda-xml-provider.c:494
 msgid "Primary key?"
 msgstr "기본 키?"
@@ -639,7 +662,7 @@ msgstr "기본 키?"
 #: providers/odbc/gda-odbc-provider.c:955
 #: providers/oracle/gda-oracle-provider.c:1254
 #: providers/postgres/gda-postgres-provider.c:1369
-#: providers/sqlite/gda-sqlite-provider.c:627
+#: providers/sqlite/gda-sqlite-provider.c:664
 #: providers/xml/gda-xml-provider.c:495
 msgid "Unique index?"
 msgstr "단일 색인?"
@@ -649,7 +672,7 @@ msgstr "단일 색인?"
 #: providers/odbc/gda-odbc-provider.c:956
 #: providers/oracle/gda-oracle-provider.c:1255
 #: providers/postgres/gda-postgres-provider.c:1370
-#: providers/sqlite/gda-sqlite-provider.c:628
+#: providers/sqlite/gda-sqlite-provider.c:665
 #: providers/xml/gda-xml-provider.c:496
 msgid "References"
 msgstr "참조"
@@ -659,7 +682,7 @@ msgstr "참조"
 #: providers/odbc/gda-odbc-provider.c:957
 #: providers/oracle/gda-oracle-provider.c:1256
 #: providers/postgres/gda-postgres-provider.c:1371
-#: providers/sqlite/gda-sqlite-provider.c:629
+#: providers/sqlite/gda-sqlite-provider.c:666
 msgid "Default value"
 msgstr ""
 
@@ -862,7 +885,7 @@ msgstr "잘못된 MYSQL 처리"
 #: providers/oracle/gda-oracle-provider.c:857
 #: providers/oracle/gda-oracle-provider.c:939
 #: providers/oracle/gda-oracle-provider.c:1000
-#: providers/sqlite/gda-sqlite-provider.c:471
+#: providers/sqlite/gda-sqlite-provider.c:508
 msgid "Transactions are not supported in read-only mode"
 msgstr ""
 
@@ -1317,9 +1340,9 @@ msgid "Could not set empty_result_callbacks SQLite option"
 msgstr ""
 
 #: providers/sqlite/gda-sqlite-provider.c:242
-#: providers/sqlite/gda-sqlite-provider.c:342
-#: providers/sqlite/gda-sqlite-provider.c:553
-#: providers/sqlite/gda-sqlite-provider.c:718
+#: providers/sqlite/gda-sqlite-provider.c:379
+#: providers/sqlite/gda-sqlite-provider.c:590
+#: providers/sqlite/gda-sqlite-provider.c:755
 #: providers/sqlite/gda-sqlite-recordset.c:156
 #: providers/sqlite/gda-sqlite-recordset.c:195
 #: providers/sqlite/gda-sqlite-recordset.c:236
@@ -1327,20 +1350,20 @@ msgstr ""
 msgid "Invalid SQLite handle"
 msgstr "잘못된 MYSQL 처리"
 
-#: providers/sqlite/gda-sqlite-provider.c:264
+#: providers/sqlite/gda-sqlite-provider.c:300
 msgid "Invalid SQLITE handle"
 msgstr "잘못된 SQLITE 처리"
 
-#: providers/sqlite/gda-sqlite-provider.c:360
-#: providers/sqlite/gda-sqlite-provider.c:375
+#: providers/sqlite/gda-sqlite-provider.c:397
+#: providers/sqlite/gda-sqlite-provider.c:412
 msgid "Only one database per connection is allowed"
 msgstr "연결마다 하나의 데이터베이스만 허용됩니다"
 
-#: providers/sqlite/gda-sqlite-provider.c:389
+#: providers/sqlite/gda-sqlite-provider.c:426
 msgid "To remove a SQLite database you should remove the database file by hand"
 msgstr ""
 
-#: providers/sqlite/gda-sqlite-provider.c:663
+#: providers/sqlite/gda-sqlite-provider.c:700
 #, fuzzy
 msgid "Could not retrieve information for field"
 msgstr "열에 대한 설명을 얻을 수 없습니다"

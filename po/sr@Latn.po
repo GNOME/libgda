@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-03-23 13:16+0100\n"
+"POT-Creation-Date: 2004-04-26 13:19+0200\n"
 "PO-Revision-Date: 2003-08-25 05:56+0200\n"
 "Last-Translator: Dejan Matijević <dejan@ns.sympatico.ca>\n"
 "Language-Team: Serbian (sr) <serbiangnome-lista@nongnu.org>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: libgda/gda-client.c:312 libgda/gda-client.c:535 libgda/gda-connection.c:218
+#: libgda/gda-client.c:312 libgda/gda-client.c:539 libgda/gda-connection.c:218
 #, c-format
 msgid "Data source %s not found in configuration"
 msgstr "Izvor podataka %s nije nađen u podešavanju"
@@ -36,7 +36,7 @@ msgstr "Posrednik %s ne izvršava ulaznu funkciju"
 msgid "Could not create GdaServerProvider object from plugin"
 msgstr "Nemoguće napraviti GdaServerProvider objekat iz priključka"
 
-#: libgda/gda-client.c:461
+#: libgda/gda-client.c:465
 msgid "Temporary data source created by libgda. Don't remove it"
 msgstr "Privremeni izvor podataka napravila libgda. Nemojte ga ukloniti"
 
@@ -207,6 +207,20 @@ msgstr "Pogrešan XML čvorište"
 msgid "Could not add the data from the XML node"
 msgstr "Ne može da doda podatke iz XML čvora"
 
+#: libsql/sql_parser.c:59
+#, c-format
+msgid "Parse error near `%s'"
+msgstr ""
+
+#: libsql/sql_parser.c:61
+#, c-format
+msgid "Syntax error near `%s'"
+msgstr ""
+
+#: libsql/sql_parser.c:358
+msgid "Empty query to parse"
+msgstr ""
+
 #: providers/firebird/gda-firebird-provider.c:187
 msgid "No database specified"
 msgstr "Nijedna baza podataka nije navedena"
@@ -312,19 +326,19 @@ msgstr ""
 msgid "Not available"
 msgstr "Nedostupan"
 
-#: providers/freetds/gda-freetds-recordset.c:376
+#: providers/freetds/gda-freetds-recordset.c:377
 msgid "Error processing result rows.\n"
 msgstr "Greška pri obradi rezultata reda.\n"
 
-#: providers/freetds/gda-freetds-recordset.c:383
+#: providers/freetds/gda-freetds-recordset.c:384
 msgid "Unexpected freetds return code in tds_process_row_tokens().\n"
 msgstr "Neočekivani freetds povratni kod u tds_process_row_tokens().\n"
 
-#: providers/freetds/gda-freetds-recordset.c:393
+#: providers/freetds/gda-freetds-recordset.c:394
 msgid "Error processing results.\n"
 msgstr "Greška pri obrađivanju rezultata.\n"
 
-#: providers/freetds/gda-freetds-recordset.c:400
+#: providers/freetds/gda-freetds-recordset.c:401
 msgid "Unexpected freetds return code in tds_process_result_tokens\n"
 msgstr "Neočekivani freetds povratni kod u tds_process_result_tokens\n"
 
@@ -390,7 +404,7 @@ msgstr "Funkcije"
 #: providers/postgres/gda-postgres-provider.c:1196
 #: providers/postgres/gda-postgres-provider.c:1313
 #: providers/postgres/gda-postgres-provider.c:1946
-#: providers/sqlite/gda-sqlite-provider.c:751
+#: providers/sqlite/gda-sqlite-provider.c:788
 #: providers/sybase/gda-sybase-provider.c:1098
 msgid "Owner"
 msgstr "Vlasnik"
@@ -444,7 +458,7 @@ msgstr "Okidači"
 #: providers/odbc/gda-odbc-provider.c:1360
 #: providers/oracle/gda-oracle-provider.c:2095
 #: providers/postgres/gda-postgres-provider.c:1135
-#: providers/sqlite/gda-sqlite-provider.c:750
+#: providers/sqlite/gda-sqlite-provider.c:787
 #: providers/sybase/gda-sybase-provider.c:1096
 msgid "Type"
 msgstr "Tip"
@@ -471,7 +485,7 @@ msgstr "Tip"
 #: providers/postgres/gda-postgres-provider.c:1197
 #: providers/postgres/gda-postgres-provider.c:1314
 #: providers/postgres/gda-postgres-provider.c:1947
-#: providers/sqlite/gda-sqlite-provider.c:752
+#: providers/sqlite/gda-sqlite-provider.c:789
 #: providers/sybase/gda-sybase-provider.c:1100
 msgid "Comments"
 msgstr "Komentari"
@@ -482,7 +496,7 @@ msgstr "Komentari"
 #: providers/odbc/gda-odbc-provider.c:1363
 #: providers/oracle/gda-oracle-provider.c:2097
 #: providers/postgres/gda-postgres-provider.c:1138
-#: providers/sqlite/gda-sqlite-provider.c:753
+#: providers/sqlite/gda-sqlite-provider.c:790
 #: providers/sybase/gda-sybase-provider.c:1102
 msgid "GDA type"
 msgstr "GDA tip"
@@ -493,6 +507,15 @@ msgstr "GDA tip"
 #: providers/postgres/gda-postgres-provider.c:1904 testing/client.c:137
 msgid "Users"
 msgstr "Korisnici"
+
+#: providers/ibmdb2/gda-ibmdb2-types.c:154
+#, fuzzy
+msgid "[BLOB unsupported]"
+msgstr "Nije podržan"
+
+#: providers/ibmdb2/gda-ibmdb2-types.c:157
+msgid "[Unsupported data]"
+msgstr ""
 
 #: providers/ibmdb2/libmain.c:39
 msgid "Provider for IBMDB2 databases"
@@ -569,7 +592,7 @@ msgstr "Transakcija nije podržana u MDB posredniku"
 #: providers/odbc/gda-odbc-provider.c:949
 #: providers/oracle/gda-oracle-provider.c:1248
 #: providers/postgres/gda-postgres-provider.c:1363
-#: providers/sqlite/gda-sqlite-provider.c:621
+#: providers/sqlite/gda-sqlite-provider.c:658
 #: providers/xml/gda-xml-provider.c:489
 msgid "Field name"
 msgstr "Naziv polja"
@@ -579,7 +602,7 @@ msgstr "Naziv polja"
 #: providers/odbc/gda-odbc-provider.c:950
 #: providers/oracle/gda-oracle-provider.c:1249
 #: providers/postgres/gda-postgres-provider.c:1364
-#: providers/sqlite/gda-sqlite-provider.c:622
+#: providers/sqlite/gda-sqlite-provider.c:659
 #: providers/xml/gda-xml-provider.c:490
 msgid "Data type"
 msgstr "Vrsta podatka"
@@ -589,7 +612,7 @@ msgstr "Vrsta podatka"
 #: providers/odbc/gda-odbc-provider.c:951
 #: providers/oracle/gda-oracle-provider.c:1250
 #: providers/postgres/gda-postgres-provider.c:1365
-#: providers/sqlite/gda-sqlite-provider.c:623
+#: providers/sqlite/gda-sqlite-provider.c:660
 #: providers/xml/gda-xml-provider.c:491
 msgid "Size"
 msgstr "Veličina"
@@ -599,7 +622,7 @@ msgstr "Veličina"
 #: providers/odbc/gda-odbc-provider.c:952
 #: providers/oracle/gda-oracle-provider.c:1251
 #: providers/postgres/gda-postgres-provider.c:1366
-#: providers/sqlite/gda-sqlite-provider.c:624
+#: providers/sqlite/gda-sqlite-provider.c:661
 #: providers/xml/gda-xml-provider.c:492
 msgid "Scale"
 msgstr "Razmera"
@@ -609,7 +632,7 @@ msgstr "Razmera"
 #: providers/odbc/gda-odbc-provider.c:953
 #: providers/oracle/gda-oracle-provider.c:1252
 #: providers/postgres/gda-postgres-provider.c:1367
-#: providers/sqlite/gda-sqlite-provider.c:625
+#: providers/sqlite/gda-sqlite-provider.c:662
 #: providers/xml/gda-xml-provider.c:493
 msgid "Not null?"
 msgstr "Nije nul?"
@@ -619,7 +642,7 @@ msgstr "Nije nul?"
 #: providers/odbc/gda-odbc-provider.c:954
 #: providers/oracle/gda-oracle-provider.c:1253
 #: providers/postgres/gda-postgres-provider.c:1368
-#: providers/sqlite/gda-sqlite-provider.c:626
+#: providers/sqlite/gda-sqlite-provider.c:663
 #: providers/xml/gda-xml-provider.c:494
 msgid "Primary key?"
 msgstr "Osnovni kljuć?"
@@ -629,7 +652,7 @@ msgstr "Osnovni kljuć?"
 #: providers/odbc/gda-odbc-provider.c:955
 #: providers/oracle/gda-oracle-provider.c:1254
 #: providers/postgres/gda-postgres-provider.c:1369
-#: providers/sqlite/gda-sqlite-provider.c:627
+#: providers/sqlite/gda-sqlite-provider.c:664
 #: providers/xml/gda-xml-provider.c:495
 msgid "Unique index?"
 msgstr "Unikatni indeks?"
@@ -639,7 +662,7 @@ msgstr "Unikatni indeks?"
 #: providers/odbc/gda-odbc-provider.c:956
 #: providers/oracle/gda-oracle-provider.c:1255
 #: providers/postgres/gda-postgres-provider.c:1370
-#: providers/sqlite/gda-sqlite-provider.c:628
+#: providers/sqlite/gda-sqlite-provider.c:665
 #: providers/xml/gda-xml-provider.c:496
 msgid "References"
 msgstr "Preporuke"
@@ -649,7 +672,7 @@ msgstr "Preporuke"
 #: providers/odbc/gda-odbc-provider.c:957
 #: providers/oracle/gda-oracle-provider.c:1256
 #: providers/postgres/gda-postgres-provider.c:1371
-#: providers/sqlite/gda-sqlite-provider.c:629
+#: providers/sqlite/gda-sqlite-provider.c:666
 msgid "Default value"
 msgstr "Uobičajena vrednost"
 
@@ -844,7 +867,7 @@ msgstr "Neispravna MySQL oznaka"
 #: providers/oracle/gda-oracle-provider.c:857
 #: providers/oracle/gda-oracle-provider.c:939
 #: providers/oracle/gda-oracle-provider.c:1000
-#: providers/sqlite/gda-sqlite-provider.c:471
+#: providers/sqlite/gda-sqlite-provider.c:508
 msgid "Transactions are not supported in read-only mode"
 msgstr "Transakcije nisu podržane u modu samo za čitanje"
 
@@ -1242,31 +1265,31 @@ msgid "Could not set empty_result_callbacks SQLite option"
 msgstr "Ne može da postavi opciju empty_result_callbacks SQLite"
 
 #: providers/sqlite/gda-sqlite-provider.c:242
-#: providers/sqlite/gda-sqlite-provider.c:342
-#: providers/sqlite/gda-sqlite-provider.c:553
-#: providers/sqlite/gda-sqlite-provider.c:718
+#: providers/sqlite/gda-sqlite-provider.c:379
+#: providers/sqlite/gda-sqlite-provider.c:590
+#: providers/sqlite/gda-sqlite-provider.c:755
 #: providers/sqlite/gda-sqlite-recordset.c:156
 #: providers/sqlite/gda-sqlite-recordset.c:195
 #: providers/sqlite/gda-sqlite-recordset.c:236
 msgid "Invalid SQLite handle"
 msgstr "Pogrešana SQLite ručka"
 
-#: providers/sqlite/gda-sqlite-provider.c:264
+#: providers/sqlite/gda-sqlite-provider.c:300
 msgid "Invalid SQLITE handle"
 msgstr "Pogrešna SQLITE ručka"
 
-#: providers/sqlite/gda-sqlite-provider.c:360
-#: providers/sqlite/gda-sqlite-provider.c:375
+#: providers/sqlite/gda-sqlite-provider.c:397
+#: providers/sqlite/gda-sqlite-provider.c:412
 msgid "Only one database per connection is allowed"
 msgstr "Samo jedna baza podataka je dozvoljena po konekciji"
 
-#: providers/sqlite/gda-sqlite-provider.c:389
+#: providers/sqlite/gda-sqlite-provider.c:426
 msgid "To remove a SQLite database you should remove the database file by hand"
 msgstr ""
 "DA uklonite SQLite bazu podataka treba da ručno uklonite datoteke baze "
 "podataka"
 
-#: providers/sqlite/gda-sqlite-provider.c:663
+#: providers/sqlite/gda-sqlite-provider.c:700
 msgid "Could not retrieve information for field"
 msgstr "Ne može opet doći do podataka o polju"
 
