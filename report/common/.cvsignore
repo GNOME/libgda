@@ -1,0 +1,11 @@
+.deps
+.libs
+GNOME_Database_Report-common.c
+GNOME_Database_Report-skels.c
+GNOME_Database_Report-stubs.c
+GNOME_Database_Report.h
+Makefile
+Makefile.in
+*.o
+*.lo
+libgdareport-common.la
