@@ -623,7 +623,7 @@ gda_sybase_provider_process_sql_commands(GList         *reclist,
 			scnc->ret = ct_cmd_alloc (scnc->connection, &scnc->cmd);
 			if (scnc->ret != CS_SUCCEED) {
 				sybase_debug_msg(_("Failed allocating a command structure in %s()"),
-				                 __PRETTY_FUNCTION__);
+				                 __FUNCTION__);
 				return NULL;
 			}
 
@@ -742,7 +742,7 @@ gda_sybase_execute_cmd (GdaConnection *cnc, const gchar *sql)
 	
 	if (scnc->cmd != NULL) {
 		error = gda_sybase_make_error (scnc, _("Command structure already in use. %s failed."),
-		                               __PRETTY_FUNCTION__);
+		                               __FUNCTION__);
 		gda_connection_add_error (cnc, error);
 		return FALSE;
 	}
@@ -817,7 +817,7 @@ gda_sybase_execute_cmd (GdaConnection *cnc, const gchar *sql)
 		if (scnc->ret != CS_SUCCEED) {
 			error = gda_sybase_make_error (scnc,
 			            _("%s: %s failed"),
-			            __PRETTY_FUNCTION__, "ct_cmd_drop()");
+			            __FUNCTION__, "ct_cmd_drop()");
 			gda_connection_add_error (cnc, error);
 			ret = FALSE;
 		} else {
@@ -851,7 +851,7 @@ gda_sybase_provider_get_database (GdaServerProvider *provider,
 	sconn->ret = ct_cmd_alloc (sconn->connection, &cmd);
 	if (sconn->ret != CS_SUCCEED) {
 		if (sconn->ret == CS_BUSY) {
-			sybase_debug_msg (_("Connection already in use. Could not allocatie command structure in %s()."), __PRETTY_FUNCTION__);
+			sybase_debug_msg (_("Connection already in use. Could not allocatie command structure in %s()."), __FUNCTION__);
 		} else {
 			sybase_debug_msg (_("Could not allocate command structure."));
 		}
@@ -865,7 +865,7 @@ gda_sybase_provider_get_database (GdaServerProvider *provider,
 	sconn->ret = ct_cmd_drop (cmd);
 	if (sconn->ret != CS_SUCCEED) {
 		sybase_debug_msg (_("Failed dropping command structure in %s()."),
-		                  __PRETTY_FUNCTION__);
+		                  __FUNCTION__);
 		return NULL;
 	}
 	cmd = NULL;
