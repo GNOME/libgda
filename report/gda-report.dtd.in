@@ -42,7 +42,7 @@
   valignment      (%valignment;)    "center"
   wordwrap        (yes|no)          "no"
   negvaluecolor   NMTOKENS          "255 0 0"
-  dateformat      CDATA             "dd.mm.yyyy"
+  dateformat      CDATA             "%d.%m.%Y"
   precision       NMTOKEN           "2"
   currency        CDATA             "EUR"
   commaseparator  (yes|no)          "no"
@@ -355,7 +355,6 @@
   x2              NMTOKEN           #REQUIRED
   y2              NMTOKEN           #REQUIRED
   linewidth       NMTOKEN           #IMPLIED
-  lineheight      NMTOKEN           #IMPLIED
   linecolor       NMTOKENS          #IMPLIED
   linestyle       (%linestyle;)     #IMPLIED
 >
@@ -419,13 +418,15 @@
 <!--
   The text attribute of element special is a format string which may contain some
   of the following functions:
-  \D  date in format dateformat
-  \d  day
-  \m  month
-  \y  year (yy)
-  \Y  year (yyyy)
-  \p  page number
-  \t  total number of pages
+  %D  date in format dateformat
+  %d  day
+  %m  month
+  %y  year (yy)
+  %Y  year (yyyy)
+  %p  page number
+  %t  total number of pages
+
+  The date related options could be used to specify the format of dateformat
 -->
 
 <!ELEMENT special EMPTY>
