@@ -1,3 +1,27 @@
+libgda 0.8.190, 2002-05-04
+--------------------------
+
+ - Removed CORBA dependencies in the core (rodrigo, gonzalo)
+ - Added more semantic information to FieldAttributes (rodrigo)
+ - Added new schemas: Databases, Users, Sequences (rodrigo)
+ - Implemented new schemas for PostgreSQL (gonzalo)
+ - Implemented Database schema for MySQL (rodrigo)
+ - Implemented Database schema for the XML provider (rodrigo)
+ - Fixed #74404 (gonzalo)
+ - Fixed error management (gonzalo)
+ - I18N fixes (chyla)
+ - New API functions for GdaConnection (rodrigo)
+ - New config system allowing global settings (gonzalo)
+ - Updated translations:
+   	- ko (cwryu)
+	- no (kmaraas)
+	- pl (chyla)
+	- pt (dnloreto)
+	- sk (stano)
+	- sl (minmax)
+	- sv (menthos)
+	- uk (rasta)
+
 libgda 0.8.105, 2002-03-26
 --------------------------
 
