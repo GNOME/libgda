@@ -493,7 +493,7 @@ gda_mysql_error_make (GdaError * error,
 		if (mysql_cnc->mysql)
 			gda_error_set_number (error, mysql_errno (mysql_cnc->mysql));
 		else 
-			gda_error_set_description(error, 0);
+			gda_error_set_number (error, 0);
 		gda_error_set_source (error, "[gda-mysql]");
 		gda_error_set_help_url (error, _("Not available"));
 		gda_error_set_help_context (error, _("Not available"));
