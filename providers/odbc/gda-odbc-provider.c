@@ -194,6 +194,16 @@ gda_odbc_provider_open_connection (GdaServerProvider *provider,
 		return FALSE;
 	}
 
+	/* set access mode */
+	if (gda_connection_get_options (cnc) & GDA_CONNECTION_OPTIONS_READ_ONLY) {
+		rc = SQLSetConnectOption (priv_data->hdbc, SQL_ACCESS_MODE, SQL_MODE_READ_ONLY);
+
+		if (!SQL_SUCCEEDED (rc)) {
+			gda_odbc_emit_error (cnc, priv_data->henv,
+						priv_data->hdbc, SQL_NULL_HANDLE );
+		}
+	}
+
 	/* open the connection */
 	rc = SQLConnect (priv_data->hdbc,
 			 (SQLCHAR *) odbc_string, SQL_NTS,

@@ -1,4 +1,12 @@
-2003-01-10  Jon Willeke <willeke@users.sourceforge.net>
+2004-01-12  Jon Willeke <willeke@users.sourceforge.net>
+
+	Fixes #131251
+
+	* providers/odbc/gda-odbc-provider.c
+	(gda_odbc_provider_open_connection): set ODBC connection to read-only
+	if GdaConnection is set so.
+
+2004-01-10  Jon Willeke <willeke@users.sourceforge.net>
 
 	Fixes #131046
 
