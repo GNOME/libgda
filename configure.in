@@ -795,7 +795,7 @@ then
 	sqlitedir=""
 	for d in $dir /usr /usr/local /opt/sqlite
 	do
-		if test -f $d/include/sqlite.h
+		if test -f $d/include/sqlite3.h
 		then
 			AC_MSG_RESULT(found sqlite in $d)
 			sqlitedir=$d
@@ -807,7 +807,7 @@ then
 		AC_MSG_WARN(sqlite backend not used)
 	else
 		SQLITE_CFLAGS=-I${sqlitedir}/include
-		SQLITE_LIBS="-L${sqlite}/lib -lsqlite"
+		SQLITE_LIBS="-L${sqlite}/lib -lsqlite3"
 		AC_DEFINE(HAVE_SQLITE, 1, [Have sqlite])
 	fi
 fi

@@ -1,3 +1,11 @@
+2005-02-28  Denis Fortin <denis.fortin@free.fr>
+
+	Fixes #167500
+
+	* configure.in: use sqlite3 when available.
+
+	* providers/sqlite/*: use sqlite3.
+
 2005-02-28  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	Fixes #129153

@@ -90,7 +90,7 @@ gda_sqlite_recordset_finalize (GObject *object)
 	g_return_if_fail (GDA_IS_SQLITE_RECORDSET (recset));
 
 	if (recset->priv->sres != NULL) {
-		sqlite_free_table (recset->priv->sres->data);
+		sqlite3_free_table (recset->priv->sres->data);
 		g_free (recset->priv->sres);
 		recset->priv->sres = NULL;
 	}
@@ -141,14 +141,14 @@ gda_sqlite_recordset_get_row (GdaDataModel *model, gint row)
 {
 	GdaSqliteRecordset *recset = (GdaSqliteRecordset *) model;
 	GdaSqliteRecordsetPrivate *priv_data;
-	const GdaRow *row_list;
+	GdaRow *row_list;
 
 	g_return_val_if_fail (GDA_IS_SQLITE_RECORDSET (recset), NULL);
 	g_return_val_if_fail (recset->priv != NULL, NULL);
 
-	row_list = GDA_DATA_MODEL_CLASS (model)->get_row (model, row);
+	row_list = (GdaRow *) GDA_DATA_MODEL_CLASS (parent_class)->get_row (model, row);
 	if (row_list != NULL)
-		return row_list;
+		return (const GdaRow *)row_list;
 
 	priv_data = recset->priv;
 	if (!priv_data->sres) {
@@ -166,9 +166,13 @@ gda_sqlite_recordset_get_row (GdaDataModel *model, gint row)
 		return NULL;
 	}
 	
-	row_list = get_row (model, priv_data, row);
 
-	return row_list;
+	row_list = get_row (model, priv_data, row);
+        gda_data_model_hash_insert_row (GDA_DATA_MODEL_HASH (model),
+                                        row, row_list);
+
+        return (const GdaRow *) row_list;
+
 }
 
 static const GdaValue *

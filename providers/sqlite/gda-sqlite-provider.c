@@ -183,7 +183,7 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider,
 				     const gchar *password)
 {
 	const gchar *t_filename = NULL;
-	gchar *errmsg = NULL;
+	gint errmsg;
 	SQLITEcnc *scnc;
 	GdaSqliteProvider *sqlite_prv = (GdaSqliteProvider *) provider;
 
@@ -203,13 +203,13 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider,
 
 	scnc = g_new0 (SQLITEcnc, 1);
 
-	scnc->connection = sqlite_open (t_filename, 0666, &errmsg);
+	errmsg = sqlite3_open (t_filename, &scnc->connection);
 	scnc->file = g_strdup (t_filename);
 
-	if (!scnc->connection) {
-		gda_connection_add_error_string (cnc, errmsg);
-		
-		free (errmsg); /* must use free () for this pointer */
+	if (errmsg != SQLITE_OK) {
+	     printf("error %s", sqlite3_errmsg(scnc->connection));
+		gda_connection_add_error_string (cnc, sqlite3_errmsg(scnc->connection));
+		sqlite3_close(scnc->connection);
 		g_free (scnc->file);
 		g_free (scnc);
 			
@@ -243,7 +243,7 @@ gda_sqlite_provider_close_connection (GdaServerProvider *provider,
 		return FALSE;
 	}
 
-	sqlite_close (scnc->connection);
+	sqlite3_close (scnc->connection);
 	g_free (scnc->file);
 	g_free (scnc);
 	g_object_set_data (G_OBJECT (cnc), OBJECT_DATA_SQLITE_HANDLE, NULL);
@@ -312,7 +312,7 @@ process_sql_commands (GList *reclist, GdaConnection *cnc,
 			gint status, i;
 
 			sres = g_new0 (SQLITEresult, 1);
-			status = sqlite_get_table (scnc->connection, arr[n],
+			status = sqlite3_get_table (scnc->connection, arr[n],
 						   &sres->data,
 						   &sres->nrows,
 						   &sres->ncols,
@@ -591,7 +591,7 @@ gda_sqlite_provider_single_command (const GdaSqliteProvider *provider,
 		return FALSE;
 	}
 	
-	status = sqlite_exec (scnc->connection, command, NULL, NULL, &errmsg);
+	status = sqlite3_exec (scnc->connection, command, NULL, NULL, &errmsg);
 	if (status == SQLITE_OK)
 		result = TRUE;
 	else {
