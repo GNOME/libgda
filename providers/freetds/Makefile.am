@@ -12,6 +12,8 @@ libgda_freetds_la_SOURCES = \
 	gda-freetds-provider.h \
 	gda-freetds-recordset.c \
 	gda-freetds-recordset.h \
+	gda-freetds-types.c \
+	gda-freetds-types.h \
 	gda-freetds.h \
 	libmain.c \
 	utils.c
