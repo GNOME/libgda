@@ -1,4 +1,10 @@
-2002-08-21 Vivien Malerba <malerba@gnome-db.org>
+2002-08-21  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* libgda.spec.in:
+	* Makefile.am: added missing lines in last Ben's patch.
+
+2002-08-21  Vivien Malerba <malerba@gnome-db.org>
+
 	* providers/postgres/gda-postgres-provider.[hc]: modified some schemas
 	to more closely return sets as described in the documentation.
 

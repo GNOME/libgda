@@ -2,6 +2,7 @@
 # defaults (and package names) are set for redhat 7.x
 # with postgres, mysql and odbc installed
 %define           FREETDS  0
+%define           IBMDB2   0
 %define           MYSQL    1
 %define           ODBC     1
 %define           ORACLE   0
