@@ -114,6 +114,34 @@ list_all_providers (void)
 	gda_config_free_provider_list (providers);
 }
 
+/* Lists configured data sources */
+void
+list_data_sources (void)
+{
+	GList *dsnlist;
+	GList *l;
+
+	DISPLAY_MESSAGE ("Testing data source configuration");
+
+	dsnlist = gda_config_get_data_source_list ();
+	for (l = dsnlist; l != NULL; l = l->next) {
+		GdaDataSourceInfo *info = (GdaDataSourceInfo *) l->data;
+
+		if (!info) {
+			g_print ("** ERROR: gda_config_get_data_source_list returned a NULL item\n");
+			gda_main_quit ();
+		}
+
+		g_print (" Data source = %s\n", info->name);
+		g_print ("\tprovider = %s\n", info->provider);
+		g_print ("\tcnc_string = %s\n", info->cnc_string);
+		g_print ("\tdescription = %s\n", info->description);
+		g_print ("\tusername = %s\n", info->username);
+	}
+
+	gda_config_free_data_source_list (dsnlist);
+}
+
 /* Main entry point for the configuration test suite */
 void
 test_config (void)
@@ -124,4 +152,7 @@ test_config (void)
 
 	/* test providers' info retrieval API */
 	list_all_providers ();
+
+	/* test data sources configuration API */
+	list_data_sources ();
 }
