@@ -46,18 +46,17 @@ free_srecset (gpointer data)
 }
 
 static GdaRow *
-fetch_func (GdaRecordset *recset, gulong rownum)
+fetch_func (GdaRecordset *recset, gulong rownum, gpointer user_data)
 {
 	GdaRow *row;
 	gint field_count;
 	gulong rowpos;
 	gint row_count;
 	gint i;
-	SQLITE_Recordset *drecset;
+	SQLITE_Recordset *drecset = user_data;
 
 	g_return_val_if_fail (GDA_IS_RECORDSET (recset), NULL);
 
-	drecset = g_object_get_data (G_OBJECT (recset), OBJECT_DATA_RECSET_HANDLE);
 	if (!drecset) {
 		gda_connection_add_error_string (
 			gda_recordset_get_connection (recset),
@@ -99,16 +98,15 @@ fetch_func (GdaRecordset *recset, gulong rownum)
 }
 
 static GdaRowAttributes *
-describe_func (GdaRecordset *recset)
+describe_func (GdaRecordset *recset, gpointer user_data)
 {
-	SQLITE_Recordset *drecset;
+	SQLITE_Recordset *drecset = user_data;
 	gint field_count;
 	gint i;
 	GdaRowAttributes *attrs;
 
 	g_return_val_if_fail (GDA_IS_RECORDSET (recset), NULL);
 
-	drecset = g_object_get_data (G_OBJECT (recset), OBJECT_DATA_RECSET_HANDLE);
 	if (!drecset) {
 		gda_connection_add_error_string (
 			gda_recordset_get_connection (recset),
@@ -147,7 +145,7 @@ gda_sqlite_recordset_new (GdaConnection *cnc, SQLITE_Recordset *srecset)
 	g_return_val_if_fail (srecset != NULL, NULL);
 
 	if (srecset->data) {
-		recset = gda_recordset_new (cnc, fetch_func, describe_func);
+		recset = gda_recordset_new (cnc, fetch_func, describe_func, srecset);
 		g_object_set_data_full (G_OBJECT (recset), OBJECT_DATA_RECSET_HANDLE,
 					srecset, (GDestroyNotify) free_srecset);
 		

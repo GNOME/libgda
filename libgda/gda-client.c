@@ -262,6 +262,7 @@ gda_client_open_connection (GdaClient *client,
 			return NULL;
 		}
 
+		g_object_ref (G_OBJECT (prv->provider));
 		g_hash_table_insert (client->priv->providers,
 				     g_strdup (dsn_info->provider),
 				     prv);

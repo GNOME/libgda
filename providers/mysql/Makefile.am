@@ -15,7 +15,7 @@ libgda_mysql_la_SOURCES = \
 	libmain.c \
 	utils.c
 libgda_mysql_la_LDFLAGS = -export-dynamic -module -avoid-version
-libgda_mysql_la_LBADD = \
+libgda_mysql_la_LIBADD = \
 	$(LIBGDA_LIBS) \
 	$(top_builddir)/libgda/libgda-2.la \
 	$(MYSQL_LIBS)

@@ -31,6 +31,7 @@ struct _GdaRecordsetPrivate {
 	GdaConnection *cnc;
 	GdaRecordsetFetchFunc fetch_func;
 	GdaRecordsetDescribeFunc describe_func;
+	gpointer user_data;
 	GdaRowAttributes *attributes;
 
 	gint row_count;
@@ -112,7 +113,7 @@ gda_recordset_get_value_at (GdaDataModel *model, gint col, gint row)
 	for (i = fetched_count; i <= row; i++) {
 		GdaRow *row_data;
 
-		row_data = recset->priv->fetch_func (recset, i);
+		row_data = recset->priv->fetch_func (recset, i, recset->priv->user_data);
 		if (row_data) {
 			GList *value_list = NULL;
 			GList *l;
@@ -225,7 +226,9 @@ gda_recordset_finalize (GObject * object)
 /**
  * gda_recordset_new
  * @cnc: a #GdaConnection to be associated with the new recordset.
- * @corba_recset: a GNOME_Database_Recordset object
+ * @fetch_func: Function to be called for fetching data.
+ * @desc_func: Function to be called for describing the data.
+ * @user_data: Data to be passed to the above functions.
  *
  * Allocates space for a new recordset.
  *
@@ -234,7 +237,8 @@ gda_recordset_finalize (GObject * object)
 GdaRecordset *
 gda_recordset_new (GdaConnection *cnc,
 		   GdaRecordsetFetchFunc fetch_func,
-		   GdaRecordsetDescribeFunc desc_func)
+		   GdaRecordsetDescribeFunc desc_func,
+		   gpointer user_data)
 {
 	GdaRecordset *recset;
 	gint i;
@@ -249,9 +253,10 @@ gda_recordset_new (GdaConnection *cnc,
 	recset->priv->cnc = cnc;
 	recset->priv->fetch_func = fetch_func;
 	recset->priv->describe_func = desc_func;
+	recset->priv->user_data = user_data;
 
 	/* get recordset description */
-	recset->priv->attributes = recset->priv->describe_func (recset);
+	recset->priv->attributes = recset->priv->describe_func (recset, recset->priv->user_data);
 	length = gda_row_attributes_get_length (recset->priv->attributes);
 
 	gda_data_model_array_set_n_columns (GDA_DATA_MODEL_ARRAY (recset), length);

@@ -49,13 +49,17 @@ struct _GdaRecordsetClass {
 	GdaDataModelArrayClass parent_class;
 };
 
-typedef GdaRow * (* GdaRecordsetFetchFunc) (GdaRecordset *recset, gulong rownum);
-typedef GdaRowAttributes * (* GdaRecordsetDescribeFunc) (GdaRecordset *recset);
+typedef GdaRow * (* GdaRecordsetFetchFunc) (GdaRecordset *recset,
+					    gulong rownum,
+					    gpointer user_data);
+typedef GdaRowAttributes * (* GdaRecordsetDescribeFunc) (GdaRecordset *recset,
+							 gpointer user_data);
 
 GType          gda_recordset_get_type (void);
 GdaRecordset  *gda_recordset_new (GdaConnection *cnc,
 				  GdaRecordsetFetchFunc fetch_func,
-				  GdaRecordsetDescribeFunc desc_func);
+				  GdaRecordsetDescribeFunc desc_func,
+				  gpointer user_data);
 GdaConnection *gda_recordset_get_connection (GdaRecordset *recset);
 const gchar   *gda_recordset_get_command_text (GdaRecordset *recset);
 void           gda_recordset_set_command_text (GdaRecordset *recset, const gchar *txt);

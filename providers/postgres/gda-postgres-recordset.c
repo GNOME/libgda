@@ -1,4 +1,4 @@
-/* GDA DB Postgres provider
+/* GDA Postgres provider
  * Copyright (C) 1998-2002 The GNOME Foundation
  *
  * AUTHORS:
@@ -53,9 +53,9 @@ free_postgres_res (gpointer data)
 }
 
 static GdaRow *
-fetch_func (GdaRecordset *recset, gulong rownum)
+fetch_func (GdaRecordset *recset, gulong rownum, gpointer user_data)
 {
-	GdaPostgresRecordsetPrivate *priv_data;
+	GdaPostgresRecordsetPrivate *priv_data = user_data;
 	GdaRow *row;
 	gint field_count;
 	gint row_count;
@@ -63,8 +63,8 @@ fetch_func (GdaRecordset *recset, gulong rownum)
 	PGresult *pg_res;
 
 	g_return_val_if_fail (GDA_IS_RECORDSET (recset), NULL);
+	g_return_val_if_fail (priv_data != NULL, NULL);
 
-	priv_data = g_object_get_data (G_OBJECT (recset), OBJECT_DATA_RECSET_HANDLE);
 	pg_res = priv_data->pg_res;
 	if (!pg_res) {
 		gda_connection_add_error_string (
@@ -110,17 +110,17 @@ fetch_func (GdaRecordset *recset, gulong rownum)
 }
 
 static GdaRowAttributes *
-describe_func (GdaRecordset *recset)
+describe_func (GdaRecordset *recset, gpointer user_data)
 {
-	GdaPostgresRecordsetPrivate *priv_data;
+	GdaPostgresRecordsetPrivate *priv_data = user_data;
 	PGresult *pg_res;
 	gint field_count;
 	gint i;
 	GdaRowAttributes *attrs;
 
 	g_return_val_if_fail (GDA_IS_RECORDSET (recset), NULL);
+	g_return_val_if_fail (priv_data != NULL, NULL);
 
-	priv_data = g_object_get_data (G_OBJECT (recset), OBJECT_DATA_RECSET_HANDLE);
 	pg_res = priv_data->pg_res;
 	if (!pg_res) {
 		gda_connection_add_error_string (
@@ -176,8 +176,6 @@ gda_postgres_recordset_new (GdaConnection *cnc, PGresult *pg_res)
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (pg_res != NULL, NULL);
 
-	recset = gda_recordset_new (cnc, fetch_func, describe_func);
-
 	cnc_priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE);
 
 	priv_data = g_new (GdaPostgresRecordsetPrivate, 1);
@@ -185,6 +183,8 @@ gda_postgres_recordset_new (GdaConnection *cnc, PGresult *pg_res)
 	priv_data->ntypes = cnc_priv_data->ntypes;
 	priv_data->type_data = cnc_priv_data->type_data;
 	priv_data->h_table = cnc_priv_data->h_table;
+
+	recset = gda_recordset_new (cnc, fetch_func, describe_func, priv_data);
 
 	g_object_set_data_full (G_OBJECT (recset), OBJECT_DATA_RECSET_HANDLE,
 				priv_data, (GDestroyNotify) free_postgres_res);

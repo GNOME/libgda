@@ -131,7 +131,7 @@ gda_sqlite_provider_new (void)
 {
 	GdaSqliteProvider *provider;
 
-	provider = g_object_new (gda_default_provider_get_type (), NULL);
+	provider = g_object_new (gda_sqlite_provider_get_type (), NULL);
 	return GDA_SERVER_PROVIDER (provider);
 }
 

@@ -22,6 +22,7 @@
 
 #include <config.h>
 #include <glib/gdir.h>
+#include <glib/gstrfuncs.h>
 #include <gmodule.h>
 #include <libgda/gda-config.h>
 #include <libgda/gda-data-model-array.h>
@@ -419,9 +420,16 @@ gda_config_get_provider_list (void)
 		GdaProviderInfo *info;
 		GModule *handle;
 		gchar *path;
+		gchar *ext;
 		const gchar * (* plugin_get_name) (void);
 		const gchar * (* plugin_get_description) (void);
 		GList * (* plugin_get_cnc_params) (void);
+
+		ext = g_strrstr (name, ".");
+		if (!ext)
+			continue;
+		if (strcmp (ext, ".so"))
+			continue;
 
 		path = g_build_path (G_DIR_SEPARATOR_S, LIBGDA_PLUGINDIR, name, NULL);
 		handle = g_module_open (path, G_MODULE_BIND_LAZY);

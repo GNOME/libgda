@@ -1,3 +1,18 @@
+2002-04-28  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* libgda/gda-config.c (gda_config_get_provider_list): only load
+	*real* plugins (.so files).
+
+	* libgda/gda-recordset.[ch] (gda_recordset_new): added extra
+	parameter, to be passed over to the callback functions.
+
+	* libgda/gda-client.c (gda_client_open_connection): g_object_ref the
+	providers we load, to always keep a copy in memory.
+
+	* providers/*/*: adapted to new changes in gda_recordset_new.
+
+	* providers/mysql/Makefile.am: fixed typo.
+
 2002-04-27  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* libgda/gda-server-recordset-model.[ch]: removed files I forgot to

@@ -44,7 +44,7 @@ free_mysql_res (gpointer data)
 }
 
 static GdaRow *
-fetch_func (GdaRecordset *recset, gulong rownum)
+fetch_func (GdaRecordset *recset, gulong rownum, gpointer user_data)
 {
 	GdaRow *row;
 	gint field_count;
@@ -52,12 +52,11 @@ fetch_func (GdaRecordset *recset, gulong rownum)
 	gint i;
 	unsigned long *lengths;
 	MYSQL_FIELD *mysql_fields;
-	MYSQL_RES *mysql_res;
+	MYSQL_RES *mysql_res = user_data;
 	MYSQL_ROW mysql_row;
 
 	g_return_val_if_fail (GDA_IS_RECORDSET (recset), NULL);
 
-	mysql_res = g_object_get_data (G_OBJECT (recset), OBJECT_DATA_RECSET_HANDLE);
 	if (!mysql_res) {
 		gda_connection_add_error_string (
 			gda_recordset_get_connection (recset),
@@ -152,16 +151,15 @@ fetch_func (GdaRecordset *recset, gulong rownum)
 }
 
 static GdaRowAttributes *
-describe_func (GdaRecordset *recset)
+describe_func (GdaRecordset *recset, gpointer user_data)
 {
-	MYSQL_RES *mysql_res;
+	MYSQL_RES *mysql_res = user_data;
 	gint field_count;
 	gint i;
 	GdaRowAttributes *attrs;
 
 	g_return_val_if_fail (GDA_IS_RECORDSET (recset), NULL);
 
-	mysql_res = g_object_get_data (G_OBJECT (recset), OBJECT_DATA_RECSET_HANDLE);
 	if (!mysql_res) {
 		gda_connection_add_error_string (
 			gda_recordset_get_connection (recset),
@@ -202,7 +200,7 @@ gda_mysql_recordset_new (GdaConnection *cnc, MYSQL_RES *mysql_res)
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (mysql_res != NULL, NULL);
 
-	recset = gda_recordset_new (cnc, fetch_func, describe_func);
+	recset = gda_recordset_new (cnc, fetch_func, describe_func, mysql_res);
 	g_object_set_data_full (G_OBJECT (recset), OBJECT_DATA_RECSET_HANDLE,
 				mysql_res, (GDestroyNotify) free_mysql_res);
 
