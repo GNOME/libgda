@@ -204,6 +204,14 @@ gda_client_init (GdaClient *client, GdaClientClass *klass)
 }
 
 static void
+remove_weak_ref (gpointer key, gpointer value, gpointer user_data)
+{
+	LoadedProvider *prv = (LoadedProvider *) value;
+
+	g_object_weak_unref (G_OBJECT (prv->provider), (GWeakNotify) provider_weak_cb, G_OBJECT (user_data));
+}
+
+static void
 gda_client_finalize (GObject *object)
 {
 	GdaClient *client = (GdaClient *) object;
@@ -213,6 +221,7 @@ gda_client_finalize (GObject *object)
 	/* free memory */
 	gda_client_close_all_connections (client);
 
+	g_hash_table_foreach (client->priv->providers, (GHFunc) remove_weak_ref, client);
 	g_hash_table_foreach (client->priv->providers, (GHFunc) free_hash_provider, NULL);
 	g_hash_table_destroy (client->priv->providers);
 	client->priv->providers = NULL;

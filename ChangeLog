@@ -1,3 +1,9 @@
+2003-01-31  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
+	* libgda/gda-client.c: unref the weak references to avoid hash table
+	corruption when unref on the provider (which ends up removing the
+	providers in the hash table while inside another g_hash_table_foreach).
+
 2003-01-31  Steve Fosdick <fozzy@pelvoux.demon.co.uk>
 
 	* providers/oracle/utils.c (gda_oracle_set_value): remove trailing
