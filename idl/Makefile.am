@@ -10,3 +10,6 @@ IDL_FILES = \
 
 EXTRA_DIST = \
 	$(IDL_FILES)
+
+idldir=$(prefix)/share/idl
+idl_DATA=$(IDL_FILES)
