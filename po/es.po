@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda.release-1-0-branch\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2003-11-30 12:21+0100\n"
-"PO-Revision-Date: 2003-11-14 04:25+0100\n"
+"POT-Creation-Date: 2003-12-27 19:33+0100\n"
+"PO-Revision-Date: 2003-12-27 19:33+0100\n"
 "Last-Translator: Francisco Javier F. Serrador <franciscojavier.fernandez."
 "serrador@hispalinux.es>\n"
 "Language-Team: Spanish <traductores@es.gnome.org>\n"
@@ -93,7 +93,7 @@ msgstr "Usuario"
 msgid "Password"
 msgstr "Contraseña"
 
-#: libgda/gda-data-model.c:721
+#: libgda/gda-data-model.c:711
 #, c-format
 msgid "Data model %p is not editable"
 msgstr "El modelo de datos %p no es editable"
@@ -745,9 +745,9 @@ msgstr "No se ha podido analizar el comando «%s»"
 #. parsing went fine, but there is no result
 #. (e.g. because of an invalid column name)
 #: providers/mdb/gda-mdb-provider.c:744
-#, fuzzy, c-format
+#, c-format
 msgid "Got no result for '%s' command"
-msgstr "No se ha podido analizar el comando «%s»"
+msgstr "No se ha obtenido ningún resultado para el comando «%s»"
 
 #: providers/mdb/gda-mdb-table.c:48 providers/xml/gda-xml-provider.c:519
 #, c-format
