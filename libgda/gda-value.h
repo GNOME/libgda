@@ -234,6 +234,14 @@ gint          gda_value_compare (GdaValue *value1,
 gchar        *gda_value_stringify (GdaValue *value);
 xmlNodePtr    gda_value_to_xml (GdaValue *value);
 
+GType         gda_money_get_type (void);
+GdaMoney* gda_money_copy (GdaMoney *src);
+void          gda_money_free (GdaMoney *money);
+
+GType         gda_numeric_get_type (void);
+GdaNumeric* gda_numeric_copy (GdaNumeric *src);
+void          gda_numeric_free (GdaNumeric *money);
+
 G_END_DECLS
 
 #endif

@@ -1,3 +1,9 @@
+2004-06-10  Murray Cumming  <murrayc@murrayc.com>
+
+	* libgda/gda-value.[h|cc]: Add get_type(), copy(), and free() 
+	functions for GdaMoney and GdaNumeric so that they are real boxed 
+	types.
+
 2004-06-07  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	Released 1.1.4.

@@ -546,6 +546,59 @@ gda_value_new_money (const GdaMoney *val)
 	return value;
 }
 
+GType
+gda_money_get_type (void)
+{
+	static GType our_type = 0;
+
+	if (our_type == 0)
+		our_type = g_boxed_type_register_static ("GdaMoney",
+			(GBoxedCopyFunc) gda_money_copy,
+			(GBoxedFreeFunc) gda_money_free);
+
+  return our_type;
+}
+
+/**
+ * gda_money_copy
+ * @src: source to get a copy from.
+ *
+ * Creates a new #GdaMoney structure from an existing one.
+
+ * Returns: a newly allocated #GdaMoney which contains a copy of
+ * information in @src.
+ */
+GdaMoney*
+gda_money_copy (GdaMoney *src)
+{
+	GdaMoney *copy = NULL;
+
+	g_return_val_if_fail (src != NULL, NULL);
+
+	copy = g_new0 (GdaMoney, 1);
+	copy->currency = g_strdup (src->currency);
+	copy->amount = src->amount;
+
+	return copy;
+}
+
+/**
+ * gda_money_free
+ * @provider_info: provider information to free.
+ *
+ * Deallocates all memory associated to the given #GdaProviderInfo.
+ */
+void
+gda_money_free (GdaMoney *money)
+{
+	g_return_if_fail (money != NULL);
+
+	g_free (money->currency);
+
+	g_free (money);
+}
+
+
 /**
  * gda_value_new_numeric
  * @val: value to set for the new #GdaValue.
@@ -564,6 +617,61 @@ gda_value_new_numeric (const GdaNumeric *val)
 
 	return value;
 }
+
+GType
+gda_numeric_get_type (void)
+{
+	static GType our_type = 0;
+
+	if (our_type == 0)
+		our_type = g_boxed_type_register_static ("GdaNumeric",
+			(GBoxedCopyFunc) gda_numeric_copy,
+			(GBoxedFreeFunc) gda_numeric_free);
+
+  return our_type;
+}
+
+/**
+ * gda_numeric_copy
+ * @src: source to get a copy from.
+ *
+ * Creates a new #GdaNumeric structure from an existing one.
+
+ * Returns: a newly allocated #GdaNumeric which contains a copy of
+ * information in @src.
+ */
+GdaNumeric*
+gda_numeric_copy (GdaNumeric *src)
+{
+	GdaNumeric *copy = NULL;
+
+	g_return_val_if_fail (src != NULL, NULL);
+
+	copy = g_new0 (GdaNumeric, 1);
+	copy->number = g_strdup (src->number);
+	copy->precision = src->precision;
+	copy->width = src->width;  
+
+	return copy;
+}
+
+/**
+ * gda_numeric_free
+ * @provider_info: provider information to free.
+ *
+ * Deallocates all memory associated to the given #GdaProviderInfo.
+ */
+void
+gda_numeric_free (GdaNumeric *numeric)
+{
+	g_return_if_fail (numeric != NULL);
+
+	g_free (numeric->number);
+
+	g_free (numeric);
+}
+
+
 
 /**
  * gda_value_new_single
