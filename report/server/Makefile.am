@@ -6,7 +6,10 @@ INCLUDES = \
 	-I$(top_builddir)/report \
 	$(GDA_CLIENT_CFLAGS)
 
-GDA_Report.h GDA_Report-common.c GDA_Report-skels.c: $(top_builddir)/report/idl/GDA_Report.idl
+BUILT_SOURCES = GDA_Report.h GDA_Report-common.c GDA_Report-stubs.c GDA_Report-skels.c
+CLEANFILES += $(BUILT_SOURCES)
+
+$(BUILT_SOURCES): $(top_builddir)/report/idl/GDA_Report.idl
 	$(ORBIT_IDL) $(top_builddir)/report/idl/GDA_Report.idl
 
 gda_report_server_SOURCES = \

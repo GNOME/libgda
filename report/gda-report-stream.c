@@ -31,12 +31,6 @@ enum
 static gint
 gda_reportstream_signals[LAST_SIGNAL] = {0, };
 
-/*
-#ifdef HAVE_GOBJECT
-static void gda_reportstream_finalize (GObject *object);
-#endif
-*/
-
 
 #ifdef HAVE_GOBJECT
 static void    gda_reportstream_class_init  (Gda_ReportStreamClass *klass,
@@ -157,47 +151,74 @@ gda_reportstream_init (Gda_ReportStream *object)
 	g_return_if_fail(GDA_REPORTSTREAM_IS_OBJECT(object));
 }
 
-gint
-gda_reportstream_corba_exception (Gda_ReportStream* object, CORBA_Environment* ev)
+/**
+ * gda_reportstream_new:
+ * @orb: the ORB
+ *
+ * Allocates space for a client reportstream object
+ *
+ * Returns: the pointer to the allocated object
+ */
+Gda_ReportStream*
+gda_reportstream_new (CORBA_ORB orb)
 {
-  Gda_Error* error;
-  
-  g_return_val_if_fail(ev != 0, -1);
-  
-  switch (ev->_major)
-    {
-    case CORBA_NO_EXCEPTION:
-      return 0;
-    case CORBA_SYSTEM_EXCEPTION:
-      {
-        CORBA_SystemException* sysexc;
+       Gda_ReportStream* object;
 
-        sysexc = CORBA_exception_value(ev);
-        error = gda_error_new();
-        error->source = g_strdup("[CORBA System Exception]");
-        switch(sysexc->minor)
-          {
-          case ex_CORBA_COMM_FAILURE:
-            error->description = g_strdup_printf(_("%s: The server didn't respond."),
-                                                 CORBA_exception_id(ev));
-            break;
-          default:
-            error->description = g_strdup_printf(_("%s: An Error occured in the CORBA system."),
-						 CORBA_exception_id(ev));
-            break;
-          }
-        gda_reportstream_add_single_error(object, error);
-        return -1;
-      }
-    case CORBA_USER_EXCEPTION:
-      error = gda_error_new();
-      error->source = g_strdup("[CORBA User Exception]");
-	  gda_reportstream_add_single_error(object, error);
-      return -1;
-    default:
-      g_error(_("Unknown CORBA exception for reportstream"));
-    }
-  return 0;
+       g_return_val_if_fail(orb != NULL, 0);
+
+#ifdef HAVE_GOBJECT
+       object = GDA_REPORTSTREAM (g_object_new (GDA_TYPE_REPORTSTREAM, NULL));
+#else
+       object = gtk_type_new(gda_reportstream_get_type());
+#endif
+       object->orb = orb;
+       return object;
+}
+
+/**
+ * gda_reportstream_free:
+ * @object: the reportstream
+ *
+ * If exists a reportstream object, the object is freed.
+ *
+ */
+void
+gda_reportstream_free (Gda_ReportStream* object)
+{
+       g_return_if_fail(IS_GDA_REPORTSTREAM(object));
+#ifdef HAVE_GOBJECT
+       g_object_unref (G_OBJECT (object));
+#else
+       gtk_object_destroy (GTK_OBJECT (object));
+#endif
+}
+
+/**
+ * gda_reportstream_readchunk:
+ * @start: The position where we must start to read.
+ * @size: The number of bytes we must read.
+ *
+ * Returns: The size (in bytes) of the report stream, -1 if exists an error.
+ *
+ */
+gint
+gda_reportstream_readChunk (Gda_ReportStream* object, gchar* data, gint start, gint size)
+{
+       
+}
+
+/**
+ * gda_reportstream_readchunk:
+ * @start: The position where we must start to read.
+ * @size: The number of bytes we must read.
+ *
+ * Returns: The size (in bytes) of the report stream, -1 if exists an error.
+ *
+ */
+gint
+gda_reportstream_writeChunk (Gda_ReportStream* object, gchar** data, gint size)
+{
+       
 }
 
 /**
@@ -218,9 +239,10 @@ gda_reportstream_length (Gda_ReportStream* object)
   
   CORBA_exception_init(&ev);
   size = GDA_ReportStream_getLength(object, &ev);
-  if (gda_reportstream_corba_exception(object, &ev))
+/*  if (gda_reportstream_corba_exception(object, &ev))
     return -1;
-  else
+  else*/
+	CORBA_exception_free(&ev);
     return size;
   
 }

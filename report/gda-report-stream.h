@@ -19,17 +19,18 @@
 
 #ifndef __gda_report_stream_h__
 #define __gda_report_stream_h__
-
+/*
 #include <glib.h>
 #include <orb/orbit.h>
 #include <gda-error.h>
+#include <GDA_Report.h>
 
 #ifdef HAVE_GOBJECT
 #  include <glib-object.h>
 #else
 #  include <gtk/gtk.h>
 #endif
-
+*/
 #if defined(__cplusplus)
 extern "C" {
 #endif
@@ -57,41 +58,43 @@ typedef struct _Gda_ReportStreamClass  Gda_ReportStreamClass;
 #define GDA_IS_REPORTSTREAM_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_REPORTSTREAM))
 #endif
 
-struct _Gda_ReportStream
-{
+struct _Gda_ReportStream {
 #ifdef HAVE_GOBJECT
-  GObject         object;
+	GObject		object;
 #else
-  GtkObject       object;
+	GtkObject	object;
 #endif
-  CORBA_Object  reportstream;
-  CORBA_ORB     orb;
-  GList*        errors_head;
-
+	CORBA_Object	reportstream;
+	CORBA_ORB	orb;
+	GList*		errors_head;
+	gint		seek;
 };
 
-struct _Gda_ReportStreamClass
-{
+struct _Gda_ReportStreamClass {
 #ifdef HAVE_GOBJECT
-  GObjectClass  parent_class;
-  GObjectClass *parent;
+	GObjectClass	parent_class;
+	GObjectClass	*parent;
 #else
-  GtkObjectClass parent_class;
+	GtkObjectClass	parent_class;
 #endif
-  void (* warning) (Gda_ReportStream* object, GList* errors);
-  void (* error)   (Gda_ReportStream* object, GList* errors);
+	void (* warning) (Gda_ReportStream* object, GList* errors);
+	void (* error)   (Gda_ReportStream* object, GList* errors);
 };
 
 #ifdef HAVE_GOBJECT
-GType        gda_reportstream_get_type      (void);
+GType			gda_report_stream_get_type	(void);
 #else
-GtkType      gda_reportstream_get_type      (void);
+GtkType			gda_report_stream_get_type	(void);
 #endif
 
-Gda_ReportStream*  gda_reportstream_new                 (CORBA_ORB orb);
-void               gda_reportstream_free                (Gda_ReportStream* object);
+Gda_ReportStream*	gda_report_stream_new		(CORBA_ORB orb);
+void			gda_report_stream_free		(Gda_ReportStream* object);
 
-gint               gda_reportstream_length              (Gda_ReportStream* object);
+gint			gda_report_stream_readChunk	(Gda_ReportStream* object, gchar* data,
+							 gint start, gint size);
+gint			gda_report_stream_writeChunk	(Gda_ReportStream* object, gchar** data,
+							 gint size);
+gint			gda_report_stream_length		(Gda_ReportStream* object);
 
 #if defined(__cplusplus)
 }
