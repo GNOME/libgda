@@ -393,11 +393,6 @@ impl_GDA_Recordset_fetch (impl_POA_GDA_Recordset * servant,
 	}
       rowidx++;
     } while (rowidx < count);
-  gda_log_message("%s: count = %d, rowidx = %d, fetchresult = %d\n",
-		  __PRETTY_FUNCTION__,
-		  count,
-		  rowidx,
-		  rc);
 
   if (rc < 0)
     {
@@ -443,7 +438,6 @@ impl_GDA_Recordset_describe (impl_POA_GDA_Recordset * servant,
 
   rc = GDA_RowAttributes__alloc();
   rc->_length = g_list_length(rs->fields);
-  gda_log_message(_("%s: length = %d"), __PRETTY_FUNCTION__, rc->_length);
   rc->_buffer = CORBA_sequence_GDA_FieldAttributes_allocbuf(rc->_length);
   rc->_maximum = 0;
 
@@ -456,9 +450,6 @@ impl_GDA_Recordset_describe (impl_POA_GDA_Recordset * servant,
       server_field = (GdaServerField *)(ptr->data);
 
       field->name = CORBA_string_dup(server_field->name);
-      gda_log_message(_("%s: sending field description for '%s'"),
-		      __PRETTY_FUNCTION__,
-		      field->name);
       field->definedSize = server_field->defined_length;
       field->scale = server_field->num_scale;
       field->gdaType = gda_server_connection_get_gda_type(rs->cnc,

@@ -1,3 +1,8 @@
+2001-04-28  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* libgda.spec.in: removed provider's libraries, which are
+	not installed anymore as part of the packages
+
 2001-04-25  Carlos Perelló Marín <carlos@gnome-db.org>
 
 	* Makefile.am: Disabled the report build.

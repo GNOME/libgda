@@ -54,7 +54,8 @@ static POA_GDA_ConnectionFactory__vepv impl_GDA_ConnectionFactory_vepv = {
  * Stub implementations
  */
 GDA_ConnectionFactory
-impl_GDA_ConnectionFactory__create(PortableServer_POA poa, CORBA_Environment * ev) {
+impl_GDA_ConnectionFactory__create(PortableServer_POA poa, CORBA_Environment * ev)
+{
 	GDA_ConnectionFactory retval;
 	impl_POA_GDA_ConnectionFactory *newservant;
 	PortableServer_ObjectId *objid;
@@ -72,7 +73,8 @@ impl_GDA_ConnectionFactory__create(PortableServer_POA poa, CORBA_Environment * e
 
 /* You shouldn't call this routine directly without first deactivating the servant... */
 void
-impl_GDA_ConnectionFactory__destroy (impl_POA_GDA_ConnectionFactory * servant, CORBA_Environment * ev) {
+impl_GDA_ConnectionFactory__destroy (impl_POA_GDA_ConnectionFactory * servant, CORBA_Environment * ev)
+{
 	PortableServer_ObjectId* objid;
 	
 	objid = PortableServer_POA_servant_to_id(servant->poa, servant, ev);
@@ -86,20 +88,23 @@ impl_GDA_ConnectionFactory__destroy (impl_POA_GDA_ConnectionFactory * servant, C
 CORBA_Object
 impl_GDA_ConnectionFactory_create_connection (impl_POA_GDA_ConnectionFactory * servant,
                                               CORBA_char * goad_id,
-                                              CORBA_Environment * ev) {
+                                              CORBA_Environment * ev)
+{
 	GDA_Connection new_connection;
 	
-	gda_log_message("%s: called\n", __PRETTY_FUNCTION__);
 	new_connection = impl_GDA_Connection__create(servant->poa, goad_id, ev);
-	gda_server_impl_exception(ev);
-	gda_log_message("%s: left\n", __PRETTY_FUNCTION__);
+	if (gda_server_impl_exception(ev)) {
+		CORBA_Object_release(new_connection, ev);
+		return CORBA_OBJECT_NIL;
+	}
 	return new_connection;
 }
 
 CORBA_boolean
 impl_GDA_ConnectionFactory_manufactures (impl_POA_GDA_ConnectionFactory *servant,
                                          CORBA_char *obj_id,
-                                         CORBA_Environment *ev) {
+                                         CORBA_Environment *ev)
+{
 	return FALSE;
 }
 
@@ -107,6 +112,7 @@ CORBA_Object
 impl_GDA_ConnectionFactory_create_object (impl_POA_GDA_ConnectionFactory * servant,
                                           CORBA_char * goad_id,
                                           GNOME_stringlist * params,
-                                          CORBA_Environment * ev) {
+                                          CORBA_Environment * ev)
+{
 	return impl_GDA_ConnectionFactory_create_connection(servant, goad_id, ev);
 }

@@ -41,7 +41,7 @@
 #  define N_(String) (String)
 #endif
 
-static GHashTable* factories = 0;
+static GHashTable* factories = NULL;
 
 enum {
 	CONNECTION_ERROR,
@@ -284,7 +284,8 @@ get_corba_connection (GdaConnection* cnc)
 	GDA_ConnectionFactory factory;
 	
 	CORBA_exception_init(&ev);
-	
+
+	/* get the connection factory */
 	if (!factories)
 		factories = g_hash_table_new(hash_id_hash, guint_id_guint);
 	factory = g_hash_table_lookup(factories, cnc->provider);
@@ -293,9 +294,15 @@ get_corba_connection (GdaConnection* cnc)
 		g_hash_table_insert(factories, cnc->provider, factory);
 	}
 	if (!factory) return -1;
+
+	/* create the connection */
 	cnc->connection = GDA_ConnectionFactory_create_connection(factory, cnc->provider, &ev);
-	if (CORBA_Object_is_nil(cnc->connection, &ev)) return -1;
-	return gda_connection_corba_exception(cnc, &ev);
+	if (CORBA_Object_is_nil(cnc->connection, &ev) ||
+        gda_connection_corba_exception(cnc, &ev)) {
+		return -1;
+	}
+
+	return 0;
 }
 
 /**
@@ -376,7 +383,7 @@ gda_connection_free (GdaConnection* cnc)
 #ifdef HAVE_GOBJECT
 	g_object_unref (G_OBJECT (cnc));
 #else
-	gtk_object_destroy (GTK_OBJECT (cnc));
+	gtk_object_unref (GTK_OBJECT (cnc));
 #endif
 }  
 
@@ -508,7 +515,7 @@ gda_connection_open (GdaConnection* cnc, gchar* dsn, gchar* user, gchar* pwd)
 	cnc->database = g_strdup(db_to_use);
 	cnc->user = g_strdup(user);
 	cnc->passwd = g_strdup(pwd);
-	
+
 	/* start CORBA connection */
 	if (get_corba_connection(cnc) < 0) {
 		GdaError* e = gda_error_new();
@@ -533,7 +540,7 @@ gda_connection_open (GdaConnection* cnc, gchar* dsn, gchar* user, gchar* pwd)
 		cnc->connection = CORBA_OBJECT_NIL;
 		return -1;
 	}
-	
+
 	cnc->is_open = 1;
 #ifndef HAVE_GOBJECT /* FIXME */
 	gtk_signal_emit(GTK_OBJECT(cnc), gda_connection_signals[CONNECTION_OPEN]);

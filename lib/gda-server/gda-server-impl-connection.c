@@ -295,10 +295,6 @@ impl_GDA_Connection_openSchema (impl_POA_GDA_Connection * servant,
   GdaServerRecordset*  recset;
   GdaServerError       e;
 
-  gda_log_message("impl_GDA_Connection_openSchema: constraints->_length = %d\n",
-		  constraints->_length);
-  gda_log_message("impl_GDA_Connection_openSchema: constraints->_maximum = %d\n",
-		  constraints->_maximum);
   memset(&e, '\0', sizeof(e));
   if ((recset = gda_server_connection_open_schema(cnc, &e, t,
 						  constraints->_buffer,
