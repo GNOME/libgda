@@ -102,7 +102,7 @@ gda_data_model_list_init (GdaDataModelList *list, GdaDataModelListClass *klass)
 {
 	/* allocate internal structure */
 	list->priv = g_new0 (GdaDataModelListPrivate, 1);
-	list->priv->rows = gda_data_model_array_new (1);
+	list->priv->rows = (GdaDataModelArray *) gda_data_model_array_new (1);
 }
 
 static void
@@ -191,10 +191,10 @@ gda_data_model_list_append_value (GdaDataModelList *model, const GdaValue *value
 	GList *values;
 	GdaRow *row;
 
-	g_return_if_fail (GDA_IS_DATA_MODEL_LIST (model));
-	g_return_if_fail (value != NULL);
+	g_return_val_if_fail (GDA_IS_DATA_MODEL_LIST (model), NULL);
+	g_return_val_if_fail (value != NULL, NULL);
 
-	values = g_list_append (NULL, value);
+	values = g_list_append (NULL, (GdaValue *) value);
 	row = gda_data_model_append_row (GDA_DATA_MODEL (model->priv->rows), values);
 	if (row)
 		gda_data_model_changed (GDA_DATA_MODEL (model));

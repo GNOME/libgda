@@ -78,10 +78,10 @@ gda_data_model_array_get_value_at (GdaDataModel *model, gint col, gint row)
 
 	fields = g_ptr_array_index (GDA_DATA_MODEL_ARRAY (model)->priv->rows, row);
 	if (fields != NULL) {
-		GdaField *field;
+		GdaValue *field;
 
-		field = gda_row_get_field (fields, col);
-		return (const GdaValue *) gda_field_get_value (field);
+		field = gda_row_get_value (fields, col);
+		return (const GdaValue *) field;
 	}
 
 	return NULL;
@@ -99,7 +99,7 @@ gda_data_model_array_append_row (GdaDataModel *model, const GList *values)
 {
 	gint len;
 	gint i;
-	GList *list = NULL;
+	const GList *l;
 	GdaRow *row = NULL;
 
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_ARRAY (model), NULL);
@@ -109,33 +109,17 @@ gda_data_model_array_append_row (GdaDataModel *model, const GList *values)
 	if (len != GDA_DATA_MODEL_ARRAY (model)->priv->number_of_columns)
 		return NULL;
 
+	l = values;
 	row = gda_row_new (len);
 	for (i = 0; i < len; i++) {
-		GList *l;
-		GdaField *field;
-		GdaFieldAttributes *fa;
+		GdaValue *field;
 
-		l = g_list_nth ((GList *) values, i);
 		if (!l)
 			return NULL;
 
-		field = gda_row_get_field (row, i);
-		fa = gda_data_model_describe_column (model, i);
-		if (!fa) {
-			gda_field_set_defined_size (field, gda_field_attributes_get_defined_size (fa));
-			gda_field_set_name (field, gda_field_attributes_get_name (fa));
-			gda_field_set_caption (field, gda_field_attributes_get_caption (fa));
-			gda_field_set_scale (field, gda_field_attributes_get_scale (fa));
-			gda_field_set_gdatype (field, gda_field_attributes_get_gdatype (fa));
-			gda_field_set_allow_null (field, gda_field_attributes_get_allow_null (fa));
-			gda_field_set_primary_key (field, gda_field_attributes_get_primary_key (fa));
-			gda_field_set_unique_key (field, gda_field_attributes_get_unique_key (fa));
-			gda_field_set_references (field, gda_field_attributes_get_references (fa));
-
-			gda_field_attributes_free (fa);
-		}
-
-		gda_field_set_value (field, (const GdaValue *) l->data);
+		field = gda_value_copy ((GdaValue *) l->data);
+		memcpy (gda_row_get_value (row, i), field, sizeof (GdaValue));
+		l = l->next;
 	}
 
 	g_ptr_array_add (GDA_DATA_MODEL_ARRAY (model)->priv->rows, row);

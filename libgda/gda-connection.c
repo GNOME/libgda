@@ -28,7 +28,6 @@
 #include <libgda/gda-connection.h>
 #include <libgda/gda-intl.h>
 #include <libgda/gda-log.h>
-#include <libgda/gda-recordset.h>
 #include <libgda/gda-server-provider.h>
 
 #define PARENT_TYPE G_TYPE_OBJECT

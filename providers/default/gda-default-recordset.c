@@ -31,13 +31,13 @@
  */
 
 static GdaRow *
-fetch_func (GdaRecordset *recset, gulong rownum)
+fetch_func (GdaDataModel *recset, gulong rownum)
 {
 	return NULL;
 }
 
-static GdaRowAttributes *
-describe_func (GdaRecordset *recset)
+static GdaFieldAttributes *
+describe_func (GdaDataModel *recset)
 {
 	return NULL;
 }
@@ -46,7 +46,7 @@ describe_func (GdaRecordset *recset)
  * Public functions
  */
 
-GdaRecordset *
+GdaDataModel *
 gda_default_recordset_new (GdaConnection *cnc, DEFAULT_Recordset *drecset)
 {
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);

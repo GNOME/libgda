@@ -142,11 +142,6 @@ gda_postgres_set_value (GdaValue *value,
 	GdaGeometricPoint point;
 	GdaNumeric numeric;
 
-	g_return_if_fail (value != NULL);
-	g_return_if_fail (thevalue != NULL);
-
-	//TODO: What do I do with BLOBs?
-
 	if (isNull){
 		gda_value_set_null (value);
 		return;

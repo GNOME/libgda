@@ -178,6 +178,14 @@ do_postgres_test (GdaConnection *cnc)
 	g_list_foreach (list, (GFunc) g_object_unref, NULL);
 	g_list_free (list);
 
+	/* Test random access speed */
+	list = select_data (cnc);
+
+	g_list_foreach (list, (GFunc) test_speed_random, NULL);
+	g_print ("-----------------\n");
+
+	g_list_foreach (list, (GFunc) g_object_unref, NULL);
+	g_list_free (list);
 	/* Clean up */
 	g_print ("\t\tDrop table: %s\n", drop_table (cnc) ? "OK" : "Error");
 }

@@ -26,14 +26,15 @@
 
 struct _GdaRow {
 	gchar *id;
-	GList *fields;
+	GdaValue *fields;
+	gint nfields;
 };
 
 /**
  * gda_row_new
- * @count: number of #GdaField in the new #GdaRow.
+ * @count: number of #GdaValue in the new #GdaRow.
  *
- * Creates a #GdaRow which can hold @count #GdaField.
+ * Creates a #GdaRow which can hold @count #GdaValue.
  *
  * Returns: the newly allocated #GdaRow.
  */
@@ -41,16 +42,13 @@ GdaRow *
 gda_row_new (gint count)
 {
 	GdaRow *row = NULL;
-	gint i;
 
 	g_return_val_if_fail (count >= 0, NULL);
 
 	row = g_new0 (GdaRow, 1);
 	row->id = NULL;
-	for (i = 0; i < count; i++) {
-		GdaField *field = gda_field_new ();
-		row->fields = g_list_append (row->fields, field);
-	}
+	row->nfields = count;
+	row->fields = g_new0 (GdaValue, count);
 
 	return row;
 }
@@ -64,17 +62,20 @@ gda_row_new (gint count)
 void
 gda_row_free (GdaRow *row)
 {
+	gint i;
+	
 	g_return_if_fail (row != NULL);
 
 	g_free (row->id);
-	g_list_foreach (row->fields, (GFunc) gda_field_free, NULL);
-	g_list_free (row->fields);
+	for (i = 0; i < row->nfields; i++)
+		gda_value_set_null (&row->fields [i]);
+	g_free (row->fields);
 	g_free (row);
 }
 
 /**
  * gda_row_get_id
- * @row: a #GdaRow (which contains #GdaField).
+ * @row: a #GdaRow (which contains #GdaValue).
  *
  * Return the unique identifier for this row. This identifier is
  * assigned by the different providers, to uniquely identify
@@ -94,7 +95,7 @@ gda_row_get_id (GdaRow *row)
 
 /**
  * gda_row_set_id
- * @row: A #GdaRow (which contains #GdaField).
+ * @row: A #GdaRow (which contains #GdaValue).
  * @id: New identifier for the row.
  *
  * Assign a new identifier to the given row. This function is
@@ -111,96 +112,33 @@ gda_row_set_id (GdaRow *row, const gchar *id)
 }
 
 /**
- * gda_row_get_field
- * @row: a #GdaRow (which contains #GdaField).
+ * gda_row_get_value
+ * @row: a #GdaRow (which contains #GdaValue).
  * @num: field index.
  *
- * Gets a pointer to a #GdaField stored in a #GdaRow.
+ * Gets a pointer to a #GdaValue stored in a #GdaRow.
  * 
- * Returns: a pointer to the #GdaField in the position @num of @row.
+ * Returns: a pointer to the #GdaValue in the position @num of @row.
  */
-GdaField *
-gda_row_get_field (GdaRow *row, gint num)
+GdaValue *
+gda_row_get_value (GdaRow *row, gint num)
 {
-	GList *l;
-
 	g_return_val_if_fail (row != NULL, NULL);
-	g_return_val_if_fail (num >= 0, NULL);
+	g_return_val_if_fail (num >= 0 && num < row->nfields, NULL);
 
-	l = g_list_nth (row->fields, num);
-	return l ? (GdaField *) l->data : NULL;
+	return &row->fields[num];
 }
 
 /**
- * gda_row_attributes_new
- * @count: number of #GdaRowAttributes to allocate.
+ * gda_row_get_length
+ * @row: a #GdaRow
  *
- * Creates a new #GdaRowAttributes which can hold up to @count attributes.
- *
- * Returns: a pointer to the newly allocated row attributes.
- */
-GdaRowAttributes *
-gda_row_attributes_new (gint count)
-{
-	GdaRowAttributes *attrs = NULL;
-	gint i;
-
-	g_return_val_if_fail (count >= 0, NULL);
-
-	for (i = 0; i < count; i++) {
-		GdaFieldAttributes *fa;
-
-		fa = gda_field_attributes_new ();
-		attrs = g_list_append (attrs, fa);
-	}
-
-	return attrs;
-}
-
-/**
- * gda_row_attributes_free
- * @attrs: a #GdaRowAttributes.
- *
- * Deallocates the memory associated with @attrs.
- */
-void
-gda_row_attributes_free (GdaRowAttributes *attrs)
-{
-	g_return_if_fail (attrs != NULL);
-
-	g_list_foreach (attrs, (GFunc) gda_field_attributes_free, NULL);
-	g_list_free (attrs);
-}
-
-/**
- * gda_row_attributes_get_length
+ * Gets the number of columns that the row has.
  */
 gint
-gda_row_attributes_get_length (GdaRowAttributes *attrs)
+gda_row_get_length (GdaRow *row)
 {
-	return g_list_length (attrs);
+	g_return_val_if_fail (row != NULL, 0);
+	return row->nfields;
 }
 
-/**
- * gda_row_attributes_get_field
- * @attrs: a #GdaRowAttributes.
- * @num: an index into @attrs.
- *
- * Returns: the @num'th @GdafieldAttributes in @attrs.
- */
-GdaFieldAttributes *
-gda_row_attributes_get_field (GdaRowAttributes *attrs, gint num)
-{
-	GList *l;
-	gint length;
-
-	g_return_val_if_fail (attrs != NULL, NULL);
-	g_return_val_if_fail (num >= 0, NULL);
-
-	length = g_list_length (attrs);
-	if (num < 0 || num >= length)
-		return NULL;
-
-	l = g_list_nth (attrs, num);
-	return l ? (GdaFieldAttributes *) l->data : NULL;
-}

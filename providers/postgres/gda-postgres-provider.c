@@ -24,6 +24,7 @@
 #include <config.h>
 #include <stdlib.h>
 #include <string.h>
+#include <libgda/gda-data-model-array.h>
 #include "gda-postgres.h"
 #include "gda-postgres-provider.h"
 

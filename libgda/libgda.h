@@ -31,6 +31,7 @@
 #include <libgda/gda-connection.h>
 #include <libgda/gda-data-model.h>
 #include <libgda/gda-data-model-array.h>
+#include <libgda/gda-data-model-hash.h>
 #include <libgda/gda-data-model-list.h>
 #include <libgda/gda-error.h>
 #include <libgda/gda-export.h>
@@ -38,7 +39,6 @@
 #include <libgda/gda-log.h>
 #include <libgda/gda-parameter.h>
 #include <libgda/gda-quark-list.h>
-#include <libgda/gda-recordset.h>
 #include <libgda/gda-row.h>
 #include <libgda/gda-table.h>
 #include <libgda/gda-util.h>

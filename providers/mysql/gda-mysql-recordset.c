@@ -81,49 +81,44 @@ fetch_row (GdaMysqlRecordset *recset, gulong rownum)
 		return NULL;
 
 	for (i = 0; i < field_count; i++) {
-		GdaField *field;
+		GdaValue *field;
 		gchar *thevalue;
 
-		field = gda_row_get_field (row, i);
-		gda_field_set_actual_size (field, lengths[i]);
-		gda_field_set_defined_size (field, mysql_fields[i].max_length);
-		gda_field_set_name (field, mysql_fields[i].name);
-		gda_field_set_scale (field, mysql_fields[i].decimals);
-		gda_field_set_gdatype (field, gda_mysql_type_to_gda (mysql_fields[i].type));
+		field = gda_row_get_value (row, i);
 
 		thevalue = mysql_row[i];
 
 		switch (mysql_fields[i].type) {
 		case FIELD_TYPE_DECIMAL :
 		case FIELD_TYPE_DOUBLE :
-			gda_field_set_double_value (field, atof (thevalue));
+			gda_value_set_double (field, atof (thevalue));
 			break;
 		case FIELD_TYPE_FLOAT :
-			gda_field_set_single_value (field, atof (thevalue));
+			gda_value_set_single (field, atof (thevalue));
 			break;
 		case FIELD_TYPE_LONG :
 		case FIELD_TYPE_YEAR :
-			gda_field_set_integer_value (field, atol (thevalue));
+			gda_value_set_integer (field, atol (thevalue));
 			break;
 		case FIELD_TYPE_LONGLONG :
 		case FIELD_TYPE_INT24 :
-			gda_field_set_bigint_value (field, atoll (thevalue));
+			gda_value_set_bigint (field, atoll (thevalue));
 			break;
 		case FIELD_TYPE_SHORT :
-			gda_field_set_smallint_value (field, atoi (thevalue));
+			gda_value_set_smallint (field, atoi (thevalue));
 			break;
 		case FIELD_TYPE_TINY :
-			gda_field_set_tinyint_value (field, atoi (thevalue));
+			gda_value_set_tinyint (field, atoi (thevalue));
 			break;
 		case FIELD_TYPE_TINY_BLOB :
 		case FIELD_TYPE_MEDIUM_BLOB :
 		case FIELD_TYPE_LONG_BLOB :
 		case FIELD_TYPE_BLOB :
-			gda_field_set_binary_value (field, thevalue, lengths[i]);
+			gda_value_set_binary (field, thevalue, lengths[i]);
 			break;
 		case FIELD_TYPE_VAR_STRING :
 		case FIELD_TYPE_STRING :
-			gda_field_set_string_value (field, thevalue ? thevalue : "");
+			gda_value_set_string (field, thevalue ? thevalue : "");
 			break;
 		case FIELD_TYPE_DATE :
 		case FIELD_TYPE_NULL :
@@ -133,10 +128,10 @@ fetch_row (GdaMysqlRecordset *recset, gulong rownum)
 		case FIELD_TYPE_DATETIME :
 		case FIELD_TYPE_TIME :
 		case FIELD_TYPE_SET : /* FIXME */
-			gda_field_set_string_value (field, thevalue ? thevalue : "");
+			gda_value_set_string (field, thevalue ? thevalue : "");
 			break;
 		default :
-			gda_field_set_string_value (field, thevalue ? thevalue : "");
+			gda_value_set_string (field, thevalue ? thevalue : "");
 		}
 	}
 
@@ -205,7 +200,7 @@ gda_mysql_recordset_get_value_at (GdaDataModel *model, gint col, gint row)
 	gint fetched_rows;
 	gint i;
 	GdaRow *fields = NULL;
-	GdaField *f;
+	GdaValue *f;
 	GdaMysqlRecordset *recset = (GdaMysqlRecordset *) model;
 
 	g_return_val_if_fail (GDA_IS_MYSQL_RECORDSET (recset), NULL);
@@ -223,8 +218,8 @@ gda_mysql_recordset_get_value_at (GdaDataModel *model, gint col, gint row)
 		if (!fields)
 			return NULL;
 
-		f = gda_row_get_field (fields, col);
-		return (const GdaValue *) gda_field_get_value (f);
+		f = gda_row_get_value (fields, col);
+		return (const GdaValue *) f;
 	}
 
 	gda_data_model_freeze (GDA_DATA_MODEL (recset));
@@ -239,9 +234,8 @@ gda_mysql_recordset_get_value_at (GdaDataModel *model, gint col, gint row)
 
 	gda_data_model_thaw (GDA_DATA_MODEL (recset));
 
-	f = gda_row_get_field (fields, col);
-
-	return (const GdaValue *) gda_field_get_value (f);
+	f = gda_row_get_value (fields, col);
+	return (const GdaValue *) f;
 }
 
 static gboolean

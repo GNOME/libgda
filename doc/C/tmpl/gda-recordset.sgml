@@ -52,6 +52,7 @@ GdaRecordset
 @user_data: 
 @Returns: 
 <!-- # Unused Parameters # -->
+@get_n_rows_func: 
 @corba_recset: 
 
 

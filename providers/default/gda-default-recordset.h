@@ -25,12 +25,12 @@
 #  define __gda_default_recordset_h__
 
 #include <libgda/gda-connection.h>
-#include <libgda/gda-recordset.h>
+#include <libgda/gda-data-model-array.h>
 #include "gda-default.h"
 
 G_BEGIN_DECLS
 
-GdaRecordset *gda_default_recordset_new (GdaConnection *cnc, DEFAULT_Recordset *drecset);
+GdaDataModel *gda_default_recordset_new (GdaConnection *cnc, DEFAULT_Recordset *drecset);
 
 G_END_DECLS
 

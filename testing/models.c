@@ -96,6 +96,41 @@ display_recordset_data (GdaDataModel *model)
 			g_free (strvalue);
 		}
 	}
+
+	/* Do it again. Just to measure the speed */
+	for (r = 0; r < rows; r++) {
+		for (c = 0; c < cols; c++) {
+			gda_data_model_get_column_title (model, c);
+		}
+	}
+}
+
+void
+test_speed_random (GdaDataModel *model)
+{
+	gint cols, rows;
+	gint i, c, r;
+	GRand *generator;
+	GTimer *timer;
+
+	cols = gda_data_model_get_n_columns (model);
+	rows = gda_data_model_get_n_rows (model);
+
+	g_print (" Testing access to values of data model %p, with %d columns and %d rows\n",
+		 model, cols, rows);
+
+	generator = g_rand_new ();
+	timer = g_timer_new ();
+	for (i = 0; i < 10000; i++) {
+		c = g_rand_int_range (generator, 0, cols);
+		r = g_rand_int_range (generator, 0, rows);
+		(void) gda_data_model_get_value_at (model, c, r);
+	}
+	g_timer_stop (timer);
+	g_print (" Elapsed time for fetching 10000 random values: %f\n",
+		 g_timer_elapsed (timer, NULL));
+	g_timer_destroy (timer);
+	g_rand_free (generator);
 }
 
 void

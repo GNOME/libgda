@@ -1,3 +1,44 @@
+2002-05-14  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
+	* libgda/Makefile.am: added gda-data-model-hash.[ch]. Removed
+	gda-recordset.[ch].
+
+	* libgda/gda-config.c: removed warning.
+
+	* libgda/libgda.h:
+	* libgda/gda-connection.c: removed gda-recordset.h.
+
+	* libgda/gda-data-model-array.c: use GdaValue instead of GdaField.
+	* libgda/gda-data-model-list.c:
+	* libgda/gda-data-model.c: Modified file.
+
+	* libgda/gda-field.[ch]: removed GdaRowField and GdaField.
+
+	* libgda/gda-row.[ch]: use GdaValue instead of GdaField. Removed
+	GdaRowField. Added gda_row_value () and gda_row_get_length ().
+
+	* libgda/gda-table.c: free field attributes.
+
+	* libgda/gda-table.h: changed gda-recordset.h by gda-data-model.h
+
+	* providers/default/gda-default-recordset.[ch]:
+	* providers/mysql/gda-mysql-recordset.c: use GdaDataModel instead of
+	GdaRecordset and GdaValue instead of GdaField.
+
+	* providers/postgres/gda-postgres-provider.c: include
+	gda-data-model-array.h.
+
+	* providers/postgres/gda-postgres-recordset.[ch]: implement
+	GdaDataModelHash instead of GdaDataModelArray.
+
+	* providers/postgres/utils.c: removed assertions.
+
+	* testing/client.c:
+	* testing/models.[ch]:
+	* testing/models.h:
+	* testing/postgres-test.c: added new test of random access to a data
+	model in postgres.
+
 2002-05-13  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* doc/C/libgda-docs.sgml:

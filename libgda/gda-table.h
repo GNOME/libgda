@@ -23,7 +23,7 @@
 #if !defined(__gda_table_h__)
 #  define __gda_table_h__
 
-#include <libgda/gda-recordset.h>
+#include <libgda/gda-data-model-array.h>
 #include <libgda/gda-row.h>
 
 G_BEGIN_DECLS

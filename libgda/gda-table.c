@@ -199,6 +199,7 @@ gda_table_new_from_model (const gchar *name, const GdaDataModel *model, gboolean
 
 		fa = gda_data_model_describe_column (GDA_DATA_MODEL (model), n);
 		gda_table_add_field (table, (const GdaFieldAttributes *) fa);
+		gda_field_attributes_free (fa);
 	}
 
 	/* add the data */

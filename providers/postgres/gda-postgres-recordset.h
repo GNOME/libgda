@@ -26,7 +26,7 @@
 #if !defined(__gda_postgres_recordset_h__)
 #  define __gda_postgres_recordset_h__
 
-#include <libgda/gda-data-model-array.h>
+#include <libgda/gda-data-model-hash.h>
 #include <libgda/gda-value.h>
 #include <libpq-fe.h>
 
@@ -43,12 +43,12 @@ typedef struct _GdaPostgresRecordsetClass   GdaPostgresRecordsetClass;
 typedef struct _GdaPostgresRecordsetPrivate GdaPostgresRecordsetPrivate;
 
 struct _GdaPostgresRecordset {
-	GdaDataModelArray model;
+	GdaDataModelHash model;
 	GdaPostgresRecordsetPrivate *priv;
 };
 
 struct _GdaPostgresRecordsetClass {
-	GdaDataModelArrayClass parent_class;
+	GdaDataModelHashClass parent_class;
 };
 
 GType          gda_postgres_recordset_get_type (void);

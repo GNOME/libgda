@@ -303,9 +303,12 @@ gda_data_model_get_column_title (GdaDataModel *model, gint col)
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
 
 	n_cols = gda_data_model_get_n_columns (model);
-	if (col < n_cols && col >= 0)
+	if (col < n_cols && col >= 0){
 		title = g_hash_table_lookup (model->priv->column_titles,
 					     GINT_TO_POINTER (col));
+		if (title == NULL)
+			title = "";
+	}
 	else
 		title = "";
 
@@ -434,25 +437,9 @@ gda_data_model_foreach (GdaDataModel *model,
 	for (r = 0; r < rows; r++) {
 		row = gda_row_new (cols);
 		for (c = 0; c < cols; c++) {
-			GdaField *field;
-			GdaFieldAttributes *fa;
-
-			field = gda_row_get_field (row, c);
-			fa = gda_data_model_describe_column (model, c);
-
-			gda_field_set_defined_size (field, gda_field_attributes_get_defined_size (fa));
-			gda_field_set_name (field, gda_field_attributes_get_name (fa));
-			gda_field_set_caption (field, gda_field_attributes_get_caption (fa));
-			gda_field_set_scale (field, gda_field_attributes_get_scale (fa));
-			gda_field_set_gdatype (field, gda_field_attributes_get_gdatype (fa));
-			gda_field_set_allow_null (field, gda_field_attributes_get_allow_null (fa));
-			gda_field_set_primary_key (field, gda_field_attributes_get_primary_key (fa));
-			gda_field_set_unique_key (field, gda_field_attributes_get_unique_key (fa));
-			gda_field_set_references (field, gda_field_attributes_get_references (fa));
-
-			gda_field_set_value (field, gda_data_model_get_value_at (model, c, r));
-
-			gda_field_attributes_free (fa);
+			GdaValue *value;
+			value = gda_value_copy (gda_data_model_get_value_at (model, c, r));
+			memcpy (gda_row_get_value (row, c), value, sizeof (GdaValue));
 		}
 
 		/* call the callback function */

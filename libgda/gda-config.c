@@ -42,6 +42,8 @@ typedef struct {
     gchar *name;
     gchar *type;
     gchar *value;
+    gchar *mtime;
+    gchar *muser;
 } gda_config_entry;
 
 typedef struct {
@@ -84,6 +86,14 @@ gda_config_read_entries (xmlNodePtr cur)
 			entry->value =  xmlGetProp(cur, "value");
 			if (entry->value == NULL)
 				g_warning ("NULL 'value' in an entry");
+
+			entry->muser =  xmlGetProp(cur, "muser");
+			if (entry->value == NULL)
+				g_warning ("NULL 'muser' in an entry");
+
+			entry->mtime =  xmlGetProp(cur, "mtime");
+			if (entry->value == NULL)
+				g_warning ("NULL 'mtime' in an entry");
 
 			list = g_list_append (list, entry);
 		} else {
@@ -308,6 +318,8 @@ add_xml_entry (xmlNodePtr parent, gda_config_entry *entry)
 	xmlSetProp (new_node, "name", entry->name ? entry->name : "");
 	xmlSetProp (new_node, "type", entry->type ? entry->type : "");
 	xmlSetProp (new_node, "value", entry->value ? entry->value : "");
+	xmlSetProp (new_node, "mtime", entry->name ? entry->name : "");
+	xmlSetProp (new_node, "muser", entry->type ? entry->type : "");
 }
 
 static xmlNodePtr
@@ -1194,7 +1206,7 @@ gda_config_get_data_source_model (void)
 		value_list = g_list_append (value_list, gda_value_new_string (dsn_info->description));
 		value_list = g_list_append (value_list, gda_value_new_string (dsn_info->username));
 
-		gda_data_model_append_row (GDA_DATA_MODEL_ARRAY (model), value_list);
+		gda_data_model_append_row (GDA_DATA_MODEL (model), value_list);
 	}
 	
 	/* free memory */
