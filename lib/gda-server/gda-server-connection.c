@@ -101,8 +101,7 @@ CORBA_long
 impl_GDA_Connection_close (PortableServer_Servant servant,
 			   CORBA_Environment * ev)
 {
-	GdaServerConnection *cnc =
-		(GdaServerConnection *) bonobo_x_object (servant);
+	GdaServerConnection *cnc = (GdaServerConnection *) bonobo_x_object (servant);
 
 	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), -1);
 
@@ -118,13 +117,16 @@ impl_GDA_Connection_open (PortableServer_Servant servant,
 			  CORBA_char * user,
 			  CORBA_char * passwd, CORBA_Environment * ev)
 {
-	GdaServerConnection *cnc =
-		(GdaServerConnection *) bonobo_x_object (servant);
+	GdaServerConnection *cnc = (GdaServerConnection *) bonobo_x_object (servant);
 
 	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), -1);
 
-	if (gda_server_connection_open (cnc, dsn, user, passwd) != 0)
+	if (gda_server_connection_open (cnc, dsn, user, passwd) != 0) {
 		gda_error_list_to_exception (cnc->errors, ev);
+
+		bonobo_object_unref (BONOBO_OBJECT (cnc));
+		return -1;
+	}
 
 	return 0;
 }

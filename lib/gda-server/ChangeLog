@@ -1,3 +1,9 @@
+2001-07-31  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-server-connection.c (impl_GDA_Connection_open): unref the
+	GdaServerConnection if the connection attempt failed, thus not
+	leaving the providers around with no clients connected to them
+
 2001-07-24  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-server-recordset.c (impl_GDA_Recordset_moveNext,
