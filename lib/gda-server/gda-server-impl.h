@@ -28,7 +28,6 @@
 #endif
 
 #include <orb/orbit.h>
-#include <liboaf/liboaf.h>
 #include <gda.h>
 #include <gda-common.h>
 

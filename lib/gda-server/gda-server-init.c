@@ -26,6 +26,8 @@
 #  include <gnome.h>
 #endif
 
+#include <liboaf/liboaf.h>
+
 #ifdef ENABLE_NLS
 #  include <libintl.h>
 #  define _(String) gettext (String)

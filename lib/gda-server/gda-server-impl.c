@@ -34,6 +34,8 @@
 #  define N_(String) (String)
 #endif
 
+#include <liboaf/liboaf.h>
+
 #ifdef HAVE_GOBJECT
 static void gda_server_impl_finalize (GObject *object);
 #else

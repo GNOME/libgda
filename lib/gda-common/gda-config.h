@@ -91,10 +91,6 @@ Gda_Provider* gda_provider_find_by_name (const gchar* provider);
 GList*      gda_list_datasources              (void);
 GList*      gda_list_datasources_for_provider (gchar* provider);
 
-#if !defined(GDA_CONFIG_DIR)
-#  define GDA_CONFIG_DIR "/usr/local/etc/gnome-db"
-#endif
-
 typedef struct _Gda_Dsn
 {
   gchar*   gda_name;

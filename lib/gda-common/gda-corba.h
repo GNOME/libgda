@@ -19,6 +19,7 @@
 #if !defined(__gda_corba_h__)
 #  define __gda_corba_h__
 
+#include <glib.h>
 #include <orb/orb.h>
 #include <liboaf/liboaf.h>
 

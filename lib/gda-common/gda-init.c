@@ -23,7 +23,7 @@
 #ifdef HAVE_GOBJECT
 #  include <glib-object.h>
 #else
-#  include <gnome.h> // rremove!!!!!
+#  include <gnome.h> // remove!!!!!
 #endif
 
 #include <liboaf/liboaf.h>
