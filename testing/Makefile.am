@@ -9,6 +9,7 @@ noinst_PROGRAMS = \
 	gda-xmldb-test
 
 gda_test_SOURCES = \
+	client.c \
 	config.c \
 	models.c \
 	gda-test.c \

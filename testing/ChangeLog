@@ -1,5 +1,7 @@
 2001-11-04  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* client.c: basic client API test
+
 	* config.c (list_data_sources): added data source configuration
 	API test
 

@@ -29,6 +29,7 @@ run_gda_test (gpointer user_data)
 {
 	test_config ();
 	test_models ();
+	test_client ();
 
 	gda_main_quit ();
 }

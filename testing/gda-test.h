@@ -33,6 +33,7 @@ G_BEGIN_DECLS
 	g_print ("= %s\n", _msg_); \
         g_print ("=========================================\n");
 
+void test_client (void);
 void test_config (void);
 void test_models (void);
 
