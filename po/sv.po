@@ -8,15 +8,15 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2001-12-19 21:11+0100\n"
-"PO-Revision-Date: 2001-12-19 21:11+0100\n"
+"POT-Creation-Date: 2001-12-28 23:12+0100\n"
+"PO-Revision-Date: 2001-12-28 23:12+0100\n"
 "Last-Translator: Christian Rose <menthos@menthos.com>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=iso-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: libgda/gda-client.c:200 libgda/gda-client.c:295
+#: libgda/gda-client.c:200 libgda/gda-client.c:294
 #, c-format
 msgid "Data source %s not found in configuration"
 msgstr "Datakällan %s hittades inte i konfigurationen"
@@ -75,58 +75,73 @@ msgstr "Försök att initiera en redan initierad klient"
 msgid "Could not initialize Bonobo"
 msgstr "Kunde inte initiera Bonobo"
 
-#: libgda/gda-server.c:105
+#: libgda/gda-server.c:95
 #, c-format
 msgid "Don't know how to create components with IID %s"
 msgstr "Vet inte hur man skapar komponenter med IID %s"
 
-#: libgda/gda-server.c:112
+#: libgda/gda-server.c:102
 #, c-format
 msgid "Could not create component of type %s"
 msgstr "Kunde inte skapa komponent av typen %s"
 
-#: libgda/gda-server-connection.c:92
+#: libgda/gda-server-connection.c:90
 msgid "Could not duplicate client object. Client won't get notifications"
 msgstr ""
 "Kunde inte duplicera klientobjekt. Klienten kommer inte att få notifieringar"
 
-#: libgda/gda-server-connection.c:405
+#: libgda/gda-server-connection.c:440
 #, c-format
 msgid "Could not notify client about action %d"
 msgstr "Kunde inte notifiera klienten om åtgärden %d"
 
-#: libgda/gda-server-recordset.c:206
+#: libgda/gda-server-recordset.c:204
 msgid "No implementation for the fetch() method found"
 msgstr "Ingen implementation för fetch()-metoden hittades"
 
-#: libgda/gda-value.c:501
+#: libgda/gda-value.c:573
 msgid "TRUE"
 msgstr "SANT"
 
-#: libgda/gda-value.c:503
+#: libgda/gda-value.c:575
 msgid "FALSE"
 msgstr "FALSKT"
 
-#: libgda/gda-xml-database.c:166
-msgid "bad formed document"
-msgstr "felaktigt dokument"
+#: libgda/gda-xml-database.c:162
+#, c-format
+msgid "Could not load file at %s"
+msgstr "Kunde inte läsa in filen vid %s"
 
-#: libgda/gda-xml-database.c:268
+#: libgda/gda-xml-database.c:173
+#, c-format
+msgid "Could not parse file at %s"
+msgstr "Kunde inte tolka filen vid %s"
+
+#: libgda/gda-xml-database.c:183
+#, c-format
+msgid "Bad formed document at %s"
+msgstr "Felaktigt dokument vid %s"
+
+#: libgda/gda-xml-database.c:258
 #, c-format
 msgid "table %s already exists"
 msgstr "tabellen %s finns redan"
 
-#: libgda/gda-xml-database.c:450
+#: libgda/gda-xml-database.c:440
 #, c-format
 msgid "%p is not a valid table"
 msgstr "%p är ingen giltig tabell"
 
-#: providers/default/gda-default-provider.c:140
+#: providers/default/gda-default-provider.c:141
 msgid ""
 "A full path must be specified on the connection string to open a database."
 msgstr ""
 "En fullständig sökväg måste anges i anslutningssträngen för att öppna en "
 "databas."
+
+#: providers/default/gda-default-provider.c:199
+msgid "Invalid DEFAULT handle"
+msgstr "Ogiltigt DEFAULT-handtag"
 
 #: providers/default/GNOME_Database_Provider_Default.server.in.h:1
 msgid "Default component factory"
@@ -140,14 +155,17 @@ msgstr "Standardåtkomst för GDA-datakällor"
 msgid "Could not initiate Default component factory"
 msgstr "Kunde inte initiera standardkomponentfabrik"
 
-#: providers/mysql/gda-mysql-provider.c:153
+#: providers/mysql/gda-mysql-provider.c:171
 msgid ""
 "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
 msgstr ""
 "Du kan inte ange en UNIX_SOCKET om du också anger antingen en HOST eller en "
 "PORT."
 
-#: providers/mysql/gda-mysql-provider.c:224
+#: providers/mysql/gda-mysql-provider.c:242
+#: providers/mysql/gda-mysql-provider.c:321
+#: providers/mysql/gda-mysql-provider.c:350
+#: providers/mysql/gda-mysql-provider.c:379
 msgid "Invalid MYSQL handle"
 msgstr "Ogiltigt MYSQL-handtag"
 
@@ -295,9 +313,6 @@ msgstr "Kunde inte initiera Sybase-komponentfabrik"
 
 #~ msgid "thread is already running"
 #~ msgstr "tråden kör redan"
-
-#~ msgid "Could not open file %s"
-#~ msgstr "Kunde inte öppna filen %s"
 
 #~ msgid "Item with id %s not found"
 #~ msgstr "Objektet med id %s kunde inte hittas"
