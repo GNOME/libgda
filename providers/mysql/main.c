@@ -54,7 +54,7 @@ setup_factory (void)
 	/* register the components for this server */
 	gda_server_register_component (gda_mysql_server,
 				       GDA_MYSQL_PROVIDER_ID,
-				       GDA_MYSQL_TYPE_PROVIDER);
+				       GDA_TYPE_MYSQL_PROVIDER);
 }
 
 int

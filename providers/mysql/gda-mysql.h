@@ -25,11 +25,24 @@
 #if !defined(__gda_mysql_h__)
 #  define __gda_mysql_h__
 
+#include <glib/gmacros.h>
 #include <config.h>
-#include <gda-server.h>
+#include <libgda/gda-server.h>
 #include <gda-mysql-provider.h>
+#include <mysql.h>
+#include <mysql_com.h>
 
 #define GDA_MYSQL_COMPONENT_FACTORY_ID "OAFIID:GNOME_Database_MySQL_ComponentFactory"
 #define GDA_MYSQL_PROVIDER_ID          "OAFIID:GNOME_Database_MySQL_Provider"
+
+G_BEGIN_DECLS
+
+/*
+ * Utility functions
+ */
+
+GdaError *gda_mysql_make_error (MYSQL *handle);
+
+G_END_DECLS
 
 #endif

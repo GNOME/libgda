@@ -22,32 +22,25 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#if !defined(__gda_mysql_provider_h__)
-#  define __gda_mysql_provider_h__
+#include "gda-mysql.h"
 
-#include <libgda/gda-server-provider.h>
+GdaError *
+gda_mysql_make_error (MYSQL *handle)
+{
+	GdaError *error;
 
-G_BEGIN_DECLS
+	error = gda_error_new ();
+	if (handle != NULL) {
+		gda_error_set_description (error, mysql_error (handle));
+		gda_error_set_number (error, mysql_errno (handle));
+	}
+	else {
+		gda_error_set_description (error, "NO DESCRIPTION");
+		gda_error_set_number (error, -1);
+	}
 
-#define GDA_TYPE_MYSQL_PROVIDER            (gda_mysql_provider_get_type())
-#define GDA_MYSQL_PROVIDER(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_MYSQL_PROVIDER, GdaMysqlProvider))
-#define GDA_MYSQL_PROVIDER_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_MYSQL_PROVIDER, GdaMysqlProviderClass))
-#define GDA_IS_MYSQL_PROVIDER(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_MYSQL_PROVIDER))
-#define GDA_IS_MYSQL_PROVIDER_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GDA_TYPE_MYSQL_PROVIDER))
+	gda_error_set_source (error, "gda-mysql");
+	gda_error_set_sqlstate (error, "Not available");
 
-typedef struct _GdaMysqlProvider      GdaMysqlProvider;
-typedef struct _GdaMysqlProviderClass GdaMysqlProviderClass;
-
-struct _GdaMysqlProvider {
-	GdaServerProvider provider;
-};
-
-struct _GdaMysqlProviderClass {
-	GdaServerProviderClass parent_class;
-};
-
-GType gda_mysql_provider_get_type (void);
-
-G_END_DECLS
-
-#endif
+	return error;
+}

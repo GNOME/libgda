@@ -22,7 +22,7 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include "gda-mysql-provider.h"
+#include "gda-mysql.h"
 
 #define PARENT_TYPE GDA_TYPE_SERVER_PROVIDER
 
@@ -73,7 +73,7 @@ gda_mysql_provider_finalize (GObject *object)
 {
 	GdaMysqlProvider *myprv = (GdaMysqlProvider *) object;
 
-	g_return_if_fail (GDA_MYSQL_IS_PROVIDER (myprv));
+	g_return_if_fail (GDA_IS_MYSQL_PROVIDER (myprv));
 
 	/* chain to parent class */
 	parent_class->finalize (object);
@@ -113,7 +113,7 @@ gda_mysql_provider_open_connection (GdaServerProvider *provider,
 				    const gchar *username,
 				    const gchar *password)
 {
-	gchar *t_host, * = NULL;
+	gchar *t_host = NULL;
         gchar *t_db = NULL;
         gchar *t_user = NULL;
         gchar *t_password = NULL;
@@ -127,7 +127,7 @@ gda_mysql_provider_open_connection (GdaServerProvider *provider,
 	GdaError *error;
 	GdaMysqlProvider *myprv = (GdaMysqlProvider *) provider;
 
-	g_return_val_if_fail (GDA_MYSQL_IS_PROVIDER (myprv), FALSE);
+	g_return_val_if_fail (GDA_IS_MYSQL_PROVIDER (myprv), FALSE);
 	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), FALSE);
 
 	/* get all parameters received */
@@ -137,7 +137,7 @@ gda_mysql_provider_open_connection (GdaServerProvider *provider,
 	t_password = gda_quark_list_find (params, "PASSWORD");
 	t_port = gda_quark_list_find (params, "PORT");
 	t_unix_socket = gda_quark_list_find (params, "UNIX_SOCKET");
-	t_flags = gda_quark_list_find (qlist, "FLAGS");
+	t_flags = gda_quark_list_find (params, "FLAGS");
 
 	if (username)
 		t_user = username;
@@ -167,9 +167,9 @@ gda_mysql_provider_open_connection (GdaServerProvider *provider,
 #endif
 				    t_port ? atoi (t_port) : 0,
 				    t_unix_socket,
-				    t_flags = atoi (t_flags) : 0);
+				    t_flags ? atoi (t_flags) : 0);
 	if (!mysql) {
-		error = gda_mysql_make_error (cnc, mysql);
+		error = gda_mysql_make_error (mysql);
 		gda_server_connection_add_error (cnc, error);
 
 		return FALSE;
@@ -177,7 +177,7 @@ gda_mysql_provider_open_connection (GdaServerProvider *provider,
 #if MYSQL_VERSION_ID < 32200
 	err = mysql_select_db (mysql, t_db);
 	if (err != 0) {
-		error = gda_mysql_make_error (cnc, mysql);
+		error = gda_mysql_make_error (mysql);
 		mysql_close (mysql);
 		gda_server_connection_add_error (cnc, error);
 
@@ -197,7 +197,7 @@ gda_mysql_provider_close_connection (GdaServerProvider *provider, GdaServerConne
 	MYSQL *mysql;
 	GdaMysqlProvider *myprv = (GdaMysqlProvider *) provider;
 
-	g_return_val_if_fail (GDA_MYSQL_IS_PROVIDER (myprv), FALSE);
+	g_return_val_if_fail (GDA_IS_MYSQL_PROVIDER (myprv), FALSE);
 	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), FALSE);
 
 	mysql = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_MYSQL_HANDLE);
@@ -206,4 +206,6 @@ gda_mysql_provider_close_connection (GdaServerProvider *provider, GdaServerConne
 
 	mysql_close (mysql);
 	g_object_set_data (G_OBJECT (cnc), OBJECT_DATA_MYSQL_HANDLE, NULL);
+
+	return TRUE;
 }
