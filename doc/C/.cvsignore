@@ -1,7 +1,7 @@
 Makefile
 Makefile.in
 html
-sgml
+xml
 html-build.stamp
 html.stamp
 libgda-decl-list.txt
