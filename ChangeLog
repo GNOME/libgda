@@ -1,3 +1,7 @@
+2003-03-12  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* providers/sybase/Makefile.am: added missing header file.
+
 2003-03-12  David T Hollis <dhollis@davehollis.com>
 
 	* libgda.spec.in: Fix --with-tds & --without-tds to match what
