@@ -36,8 +36,7 @@ sql_field *sql_field_set_param_spec (sql_field * field, GList * param_spec);
 
 /* table */
 sql_table *sql_table_build (char *tablename);
-sql_table *sql_table_build_join (sql_table * left, sql_table * right,
-				 sql_where * cond);
+sql_table *sql_table_set_join (sql_table * table, sql_join_type join_type, sql_where * cond);
 sql_table *sql_table_build_select (sql_select_statement * select);
 sql_table *sql_table_set_as (sql_table * table, char *as);
 

@@ -28,7 +28,7 @@ param_spec      *ps;
 sql_order_field *of;
 }
 
-%token L_SELECT L_FROM L_WHERE L_AS L_JOIN L_ON L_ORDER L_BY L_ORDER_ASC L_ORDER_DSC
+%token L_SELECT L_FROM L_WHERE L_AS L_ON L_ORDER L_BY L_ORDER_ASC L_ORDER_DSC
 %token L_DISTINCT L_BETWEEN L_IN L_GROUP L_INSERT L_INTO L_VALUES L_UPDATE L_SET
 %token L_DOT L_COMMA L_NULL L_LBRACKET L_RBRACKET
 %token L_IDENT
@@ -37,6 +37,7 @@ sql_order_field *of;
 %token L_MINUS L_PLUS L_TIMES L_DIV
 %token L_STRING L_TEXTUAL
 %token L_DELETE
+%token L_JOIN L_INNER L_LEFT L_RIGHT L_FULL L_OUTER
 
 %token L_LSBRACKET L_RSBRACKET
 %token L_PNAME L_PTYPE L_PISPARAM L_PDESCR L_PNULLOK
@@ -46,8 +47,8 @@ sql_order_field *of;
 %type <list> fields_list tables_list field_name dotted_name opt_orderby opt_groupby opt_fields_list set_list param_spec param_spec_list order_fields_list
 %type <f> field
 %type <fi> field_raw
-%type <t> table table_simple
-%type <i> condition_operator field_op opt_distinct 
+%type <t> table 
+%type <i> condition_operator field_op opt_distinct join_type
 %type <w> where_list opt_where
 %type <c> where_item set_item
 %type <ps> param_spec_item
@@ -120,9 +121,28 @@ fields_list: field			{$$ = g_list_append (NULL, $1);}
 	| field L_COMMA fields_list	{$$ = g_list_prepend ($3, $1);}
 	;
 
-tables_list: table			{$$ = g_list_append (NULL, $1);}
-	| table L_COMMA tables_list	{$$ = g_list_prepend ($3, $1);}
+join_type: L_LEFT L_JOIN		{$$ = SQL_left_join;}
+	| L_LEFT L_OUTER L_JOIN         {$$ = SQL_left_join;}
+	| L_RIGHT L_JOIN                {$$ = SQL_right_join;}
+	| L_RIGHT L_OUTER L_JOIN        {$$ = SQL_right_join;}
+	| L_FULL L_JOIN			{$$ = SQL_full_join;}
+	| L_FULL L_OUTER L_JOIN         {$$ = SQL_full_join;}
+	| L_INNER L_JOIN		{$$ = SQL_inner_join;}
+	| L_JOIN			{$$ = SQL_inner_join;}
 	;
+
+tables_list: table					{$$ = g_list_append (NULL, $1);}
+	| tables_list L_COMMA table			{$$ = g_list_append ($1, $3);}
+	| tables_list join_type table			{$$ = g_list_append ($1, sql_table_set_join ($3, $2, NULL));}
+	| tables_list join_type table L_ON where_list   {$$ = g_list_append ($1, sql_table_set_join ($3, $2, $5));}
+	;
+
+table:    L_IDENT                       {$$ = sql_table_build ($1); memsql_free ($1);}
+        | table L_AS L_IDENT            {$$ = sql_table_set_as ($1, $3);}
+        | table L_IDENT                 {$$ = sql_table_set_as ($1, $2);}
+        | select_statement              {$$ = sql_table_build_select ($1);}
+        | L_LBRACKET table L_RBRACKET   {$$ = $2;}
+        ;
 
 field: field_raw				{$$ = sql_field_build ($1);}
 	| field_raw L_AS L_IDENT		{$$ = sql_field_set_as (sql_field_build ($1), $3);}
@@ -156,18 +176,6 @@ field_raw: field_name			{$$ = sql_field_item_build ($1);}
 	| L_LBRACKET field_raw L_RBRACKET	{$$ = $2;}
 	| L_IDENT L_LBRACKET fields_list L_RBRACKET	{$$ = sql_field_build_function($1, $3); }
         | L_IDENT L_LBRACKET L_RBRACKET     {$$ = sql_field_build_function($1, NULL); }
-	;
-
-table:    table_simple                          {;}
-	| table_simple L_AS L_IDENT		{$$ = sql_table_set_as ($1, $3);}
-	| table_simple L_IDENT			{$$ = sql_table_set_as ($1, $2);}
-	;
-
-table_simple: L_IDENT					{$$ = sql_table_build ($1); memsql_free ($1);}
-	| table L_JOIN table L_ON where_list		{$$ = sql_table_build_join ($1, $3, $5); }
-	| table L_JOIN table				{$$ = sql_table_build_join ($1, $3, NULL); }
-	| select_statement				{$$ = sql_table_build_select ($1);}
-	| L_LBRACKET table_simple L_RBRACKET		{$$ = $2;}
 	;
 
 where_list: where_item				{$$ = sql_where_build_single ($1);}

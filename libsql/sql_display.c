@@ -163,20 +163,28 @@ sql_display_where (int indent, sql_where * where)
 static int
 sql_display_table (int indent, sql_table * table)
 {
+	if (table->join_type != SQL_cross_join) {
+		switch (table->join_type) {
+		case SQL_inner_join:
+			output ("inner join");
+			break;
+		case SQL_left_join:
+			output ("left join");
+			break;
+		case SQL_right_join:
+			output ("right join");
+			break;
+		case SQL_full_join:
+			output ("full join");
+			break;
+		default:
+			break;
+		}
+	}
+
 	switch (table->type) {
 	case SQL_simple:
 		output ("table: %s", table->d.simple);
-		break;
-
-	case SQL_join:
-		output ("table:");
-		output ("cond:");
-		if (table->d.join.cond)
-			sql_display_where (indent + 1, table->d.join.cond);
-		output ("left");
-		sql_display_table (indent + 1, table->d.join.left);
-		output ("right");
-		sql_display_table (indent + 1, table->d.join.right);
 		break;
 
 	case SQL_nestedselect:
@@ -184,6 +192,12 @@ sql_display_table (int indent, sql_table * table)
 		sql_display_select (indent + 1, table->d.select);
 		break;
 	}
+
+	if (table->join_cond) {
+		output ("cond:");
+		sql_display_where (indent + 1, table->join_cond);
+	}
+
 	return 0;
 }
 

@@ -181,23 +181,19 @@ sql_table_build (char *tablename)
 	retval->d.simple = memsql_strdup (tablename);
 
 	retval->as = NULL;
+	retval->join_type = SQL_cross_join;
+	retval->join_cond = NULL;
 
 	return retval;
 }
 
 sql_table *
-sql_table_build_join (sql_table * left, sql_table *right, sql_where * cond)
+sql_table_set_join (sql_table * table, sql_join_type join_type, sql_where * cond)
 {
-	sql_table *retval;
+	table->join_type = join_type;
+	table->join_cond = cond;
 
-	retval = memsql_alloc (sizeof *retval);
-	retval->type = SQL_join;
-	retval->d.join.left = left;
-	retval->d.join.right = right;
-	retval->d.join.cond = cond;
-	retval->as = NULL;
-
-	return retval;
+	return table;
 }
 
 sql_table *

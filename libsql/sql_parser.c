@@ -166,32 +166,6 @@ sql_destroy_condition (sql_condition * cond)
 }
 
 static int
-sql_destroy_table (sql_table * table)
-{
-	if (!table)
-		return 0;
-
-	switch (table->type) {
-	case SQL_simple:
-		memsql_free (table->d.simple);
-		break;
-
-	case SQL_join:
-		sql_destroy_table (table->d.join.left);
-		sql_destroy_table (table->d.join.right);
-		sql_destroy_where (table->d.join.cond);
-		break;
-
-	case SQL_nestedselect:
-		sql_destroy_select (table->d.select);
-		break;
-	}
-
-	memsql_free (table);
-	return 0;
-}
-
-static int
 sql_destroy_where (sql_where * where)
 {
 	if (!where)
@@ -213,6 +187,29 @@ sql_destroy_where (sql_where * where)
 	}
 
 	memsql_free (where);
+	return 0;
+}
+
+static int
+sql_destroy_table (sql_table * table)
+{
+	if (!table)
+		return 0;
+
+	switch (table->type) {
+	case SQL_simple:
+		memsql_free (table->d.simple);
+		break;
+
+	case SQL_nestedselect:
+		sql_destroy_select (table->d.select);
+		break;
+	}
+
+	if (table->join_cond)
+		sql_destroy_where (table->join_cond);
+
+	memsql_free (table);
 	return 0;
 }
 
@@ -250,7 +247,7 @@ sql_destroy_select (sql_select_statement * select)
 	for (walk = select->order; walk != NULL; walk = walk->next) {
 		GList *walk2 = ((sql_order_field *) walk->data)->name;
 		
-		for (walk2; walk2 != NULL; walk2 = walk2->next)
+		for (; walk2 != NULL; walk2 = walk2->next)
 			memsql_free (walk2->data);
 		memsql_free (walk->data);
 	}
@@ -574,36 +571,48 @@ sql_table_stringify (sql_table * table)
 	if (!table)
 		return NULL;
 
+	/* join type */
+	switch (table->join_type) {
+	case SQL_cross_join:
+		retval = NULL;
+		break;
+	case SQL_inner_join:
+		retval = memsql_strdup (" join ");
+		break;
+	case SQL_left_join:
+		retval = memsql_strdup (" left join ");
+		break;
+	case SQL_right_join:
+		retval = memsql_strdup (" right join ");
+		break;
+	case SQL_full_join:
+		retval = memsql_strdup (" full join ");
+		break;
+	}
+
+	/* table */
 	switch (table->type) {
 	case SQL_simple:
-		retval = memsql_strdup (table->d.simple);
-		break;
-
-	case SQL_join:
-		retval =
-			memsql_strappend_free (sql_table_stringify (table->d.join.left),
-					       memsql_strdup (" join "));
-		retval =
-			memsql_strappend_free (retval,
-					       sql_table_stringify (table->d.join.right));
-		if (table->d.join.cond) {
-			retval = memsql_strappend_free (retval, memsql_strdup (" on "));
-			retval =
-				memsql_strappend_free (retval,
-						       sql_condition_stringify (table->d.join.cond));
-		}
+		retval = memsql_strappend_free (retval, memsql_strdup (table->d.simple));
 		break;
 
 	case SQL_nestedselect:
-		retval =
-			memsql_strappend_free (memsql_strdup ("("),
-					       sql_select_stringify (table->d.select));
+		retval = memsql_strappend_free (retval, memsql_strdup ("("));
+		retval = memsql_strappend_free (retval,
+						sql_select_stringify (table->d.select));
 		retval = memsql_strappend_free (retval, memsql_strdup (")"));
 		break;
 
 	default:
 		fprintf (stderr, "Invalid table type: %d\n", table->type);
 		retval = NULL;
+	}
+
+	/* join condition */
+	if (table->join_cond) {
+		retval = memsql_strappend_free (retval, memsql_strdup (" on "));
+		retval = memsql_strappend_free (retval,
+						sql_condition_stringify (table->join_cond));
 	}
 
 	return retval;

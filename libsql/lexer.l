@@ -43,6 +43,11 @@ char *string_buf_ptr;
 "values"	{return L_VALUES;}
 "as"		{return L_AS;}
 "join"		{return L_JOIN;}
+"inner"         {return L_INNER;}
+"left"		{return L_LEFT;}
+"right"       	{return L_RIGHT;}
+"full"		{return L_FULL;}
+"outer"		{return L_OUTER;}
 "like"		{return L_LIKE;}
 "set"		{return L_SET;}
 "on"		{return L_ON;}

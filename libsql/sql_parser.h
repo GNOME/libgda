@@ -146,28 +146,32 @@ struct param_spec
 typedef enum
 {
 	SQL_simple,
-	SQL_join,
 	SQL_nestedselect
 }
 sql_table_type;
+
+typedef enum
+{
+	SQL_cross_join, /* default */
+	SQL_inner_join,
+	SQL_left_join,
+	SQL_right_join,
+	SQL_full_join
+}
+sql_join_type;
 
 struct sql_table
 {
 	sql_table_type type;
 	union
 	{
-		char *simple;
-		struct
-		{
-			sql_table *left;
-			sql_table *right;
-			sql_where *cond;
-		}
-		join;
+		char                 *simple;
 		sql_select_statement *select;
 	}
 	d;
-	char *as;
+	char          *as;
+	sql_join_type  join_type;
+	sql_where     *join_cond;
 };
 
 
