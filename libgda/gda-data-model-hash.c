@@ -94,6 +94,7 @@ gda_data_model_hash_append_row (GdaDataModel *model, const GList *values)
 			GDA_DATA_MODEL_HASH (model),
 			g_hash_table_size (GDA_DATA_MODEL_HASH (model)->priv->rows),
 			row);
+		gda_row_set_number (row, g_hash_table_size (GDA_DATA_MODEL_HASH (model)->priv->rows) - 1);
 		gda_data_model_row_inserted (model, g_hash_table_size (GDA_DATA_MODEL_HASH (model)->priv->rows) - 1);
 		gda_data_model_changed (model);
 	}
