@@ -118,6 +118,11 @@ GdaDataSourceInfo *gda_config_copy_data_source_info (GdaDataSourceInfo *info);
 void               gda_config_free_data_source_info (GdaDataSourceInfo *info);
 void               gda_config_free_data_source_list (GList *list);
 GdaDataModel      *gda_config_get_data_source_model (void);
+void               gda_config_save_data_source (const gchar *name,
+						const gchar *provider,
+						const gchar *cnc_string,
+						const gchar *description,
+						const gchar *username);
 
 G_END_DECLS
 

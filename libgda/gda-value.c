@@ -174,6 +174,16 @@ gda_value_isa (GdaValue *value, GdaValueType type)
 }
 
 /**
+ * gda_value_is_null
+ */
+gboolean
+gda_value_is_null (GdaValue *value)
+{
+	g_return_val_if_fail (value != NULL, FALSE);
+	return bonobo_arg_type_is_equal (GDA_VALUE_TYPE_NULL, value->_type, NULL);
+}
+
+/**
  * gda_value_copy
  */
 GdaValue *
@@ -386,6 +396,24 @@ gda_value_set_integer (GdaValue *value, gint val)
 		CORBA_free (value->_value);
 
 	value->_value = ORBit_copy_value (&val, BONOBO_ARG_INT);
+}
+
+/**
+ * gda_value_set_null
+ */
+void
+gda_value_set_null (GdaValue *value)
+{
+	g_return_if_fail (value != NULL);
+
+	if (!gda_value_isa (value, GDA_VALUE_TYPE_NULL)) {
+		clear_value (value);
+		value->_type = ORBit_RootObject_duplicate (GDA_VALUE_TYPE_NULL);
+	}
+	else if (value->_value)
+		CORBA_free (value->_value);
+
+	value->_value = NULL;
 }
 
 /**

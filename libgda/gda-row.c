@@ -306,7 +306,7 @@ gboolean
 gda_field_is_null (GdaField *field)
 {
 	g_return_val_if_fail (field != NULL, TRUE);
-	return FALSE;
+	return gda_value_is_null (&field->value);
 }
 
 /**
@@ -507,6 +507,10 @@ gda_field_set_integer_value (GdaField *field, gint value)
 void
 gda_field_set_null_value (GdaField *field)
 {
+	g_return_if_fail (field != NULL);
+
+	field->actualSize = 0;
+	gda_value_set_null (&field->value);
 }
 
 /**

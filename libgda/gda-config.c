@@ -860,3 +860,45 @@ gda_config_get_data_source_model (void)
 	
 	return model;
 }
+
+/**
+ * gda_config_save_data_source
+ */
+void
+gda_config_save_data_source (const gchar *name,
+			     const gchar *provider,
+			     const gchar *cnc_string,
+			     const gchar *description,
+			     const gchar *username)
+{
+	gchar *tmp;
+
+	g_return_if_fail (name != NULL);
+	g_return_if_fail (provider != NULL);
+
+	/* set the provider */
+	tmp = g_strdup_printf ("%s/%s/Provider", GDA_CONFIG_SECTION_DATASOURCES, name);
+	gda_config_set_string (tmp, provider);
+	g_free (tmp);
+
+	/* set the connection string */
+	if (cnc_string) {
+		tmp = g_strdup_printf ("%s/%s/DSN", GDA_CONFIG_SECTION_DATASOURCES, name);
+		gda_config_set_string (tmp, cnc_string);
+		g_free (tmp);
+	}
+
+	/* set the description */
+	if (description) {
+		tmp = g_strdup_printf ("%s/%s/Description", GDA_CONFIG_SECTION_DATASOURCES, name);
+		gda_config_set_string (tmp, description);
+		g_free (tmp);
+	}
+
+	/* set the username */
+	if (cnc_string) {
+		tmp = g_strdup_printf ("%s/%s/Username", GDA_CONFIG_SECTION_DATASOURCES, name);
+		gda_config_set_string (tmp, username);
+		g_free (tmp);
+	}
+}

@@ -66,6 +66,7 @@ GdaValue     *gda_value_new_tinyint (gchar val);
 void          gda_value_free (GdaValue *value);
 
 gboolean      gda_value_isa (GdaValue *value, GdaValueType type);
+gboolean      gda_value_is_null (GdaValue *value);
 GdaValue     *gda_value_copy (GdaValue *value);
 
 long long     gda_value_get_bigint (GdaValue *value);
@@ -82,6 +83,7 @@ GdaGeometricPoint *gda_value_get_geometric_point (GdaValue *value);
 void          gda_value_set_geometric_point (GdaValue *value, GdaGeometricPoint *val);
 gint          gda_value_get_integer (GdaValue *value);
 void          gda_value_set_integer (GdaValue *value, gint val);
+void          gda_value_set_null (GdaValue *value);
 gfloat        gda_value_get_single (GdaValue *value);
 void          gda_value_set_single (GdaValue *value, gfloat val);
 gshort        gda_value_get_smallint (GdaValue *value);
