@@ -59,36 +59,12 @@ guint    gda_config_add_listener (const gchar *path,
 void     gda_config_remove_listener (guint id);
 
 /*
- * CORBA components configuration
+ * Providers configuration
  */
 
-typedef enum {
-	GDA_COMPONENT_TYPE_INVALID = -1,
-	GDA_COMPONENT_TYPE_EXE,
-	GDA_COMPONENT_TYPE_SHLIB,
-	GDA_COMPONENT_TYPE_FACTORY
-} GdaComponentType;
-
 typedef struct {
 	gchar *id;
 	gchar *location;
-	GdaComponentType type;
-	gchar *description;
-	GList *repo_ids;
-	gchar *username;
-	gchar *hostname;
-	gchar *domain;
-	GdaParameterList *properties;
-} GdaComponentInfo;
-
-GList        *gda_config_get_component_list (const gchar *query);
-void          gda_config_free_component_list (GList *list);
-GdaDataModel *gda_config_get_component_data_model (const gchar *query);
-
-typedef struct {
-	gchar *id;
-	gchar *location;
-	GdaComponentType type;
 	gchar *description;
 	GList *repo_ids;
 	gchar *username;

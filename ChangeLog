@@ -1,5 +1,11 @@
 2002-04-22  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* libgda/gda-config.h: removed obsolte GdaComponentInfo structure.
+
+	* testing/config.c: fixes.
+
+2002-04-22  Rodrigo Moya <rodrigo@gnome-db.org>
+
 	* providers/default/*:
 	* providers/mysql/*:
 	* providers/postgres/*:

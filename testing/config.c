@@ -88,9 +88,6 @@ list_all_providers (void)
 
 		g_print (_(" Provider = %s\n"), info->id);
 		g_print (_("\tlocation = %s\n"), info->location);
-		g_print (_("\ttype = %s\n"),
-			 info->type == GDA_COMPONENT_TYPE_EXE ? "exe" :
-			 info->type == GDA_COMPONENT_TYPE_SHLIB ? "shlib" : "");
 		g_print (_("\tdescription = %s\n"), info->description);
 
 		g_print (_("\trepo_ids ="));
