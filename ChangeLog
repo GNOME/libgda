@@ -1,3 +1,11 @@
+2001-10-17  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* libgda.spec.in: added OMF files
+
+	* configure.in: don't define GDA_oafdir
+
+	* providers/*/Makefile.am: install oaf files in $(datadir)/oaf
+
 2001-10-14  Carlos Perelló Marín <carlos@gnome-db.org>
 
         * configure.in (ALL_LINGUAS): Added pt.

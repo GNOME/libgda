@@ -160,6 +160,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/lib*.so.*
 %{_datadir}/gnome/html/*
 %{_datadir}/gda
+%{_datadir}/omf/*
 %{_datadir}/oaf/GNOME_GDA_Provider_Default.oaf
 %{_datadir}/idl/*
 

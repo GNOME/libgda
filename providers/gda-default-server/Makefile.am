@@ -29,7 +29,7 @@ libgda_default_a_SOURCES = \
 	gda-default-recordset.c \
 	gda-default.h
 
-oafdir=$(DESTDIR)$(GDA_oafdir)
+oafdir=$(datadir)/oaf
 
 oaf_in_files = GNOME_GDA_Provider_Default.oaf.in
 oaf_DATA = $(oaf_in_files:.oaf.in=.oaf)

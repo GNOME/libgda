@@ -639,11 +639,7 @@ AC_SUBST(CAMEL_CFLAGS)
 AC_SUBST(XML_LIBS)
 AC_SUBST(XML_CFLAGS)
 
-dnl GDA_oafdir=`oaf-config --prefix`/share/oaf
-GDA_oafdir=${prefix}/share/oaf
-
 AC_SUBST(ORBIT_IDL)
-AC_SUBST(GDA_oafdir)
 
 AC_OUTPUT([
 Makefile

@@ -23,7 +23,7 @@ libgda_mysql_a_SOURCES = \
 	gda-mysql-recordset.c \
 	gda-mysql.h 
 
-oafdir=$(DESTDIR)$(GDA_oafdir)
+oafdir=$(datadir)/oaf
 
 oaf_in_files = GNOME_GDA_Provider_MySQL.oaf.in
 oaf_DATA = $(oaf_in_files:.oaf.in=.oaf)

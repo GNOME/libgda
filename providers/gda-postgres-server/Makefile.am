@@ -23,7 +23,7 @@ libgda_postgres_a_SOURCES = \
 	gda-postgres-recordset.c \
 	gda-postgres.h
 
-oafdir=$(DESTDIR)$(GDA_oafdir)
+oafdir=$(datadir)/oaf
 
 oaf_in_files = GNOME_GDA_Provider_Postgres.oaf.in
 oaf_DATA = $(oaf_in_files:.oaf.in=.oaf)
