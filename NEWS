@@ -1,3 +1,28 @@
+libgda 0.9, 2002-12-10
+----------------------
+
+ - Fixed weird initialization of the MySQL structures (cleber)
+ - Fixed #96758 (rodrigo)
+ - Fixed #95985 (rodrigo)
+ - Fixed #96810 (rodrigo)
+ - Fixed bison problems in SQL parser (gonzalo)
+ - Fixed DTD validation of config XML file (gonzalo)
+ - Implemented most schemas for FreeTDS provider (holger)
+ - Fixed crash on provider lookups in client library (gonzalo)
+ - Documentation fixes and additions (gonzalo, calvaris)
+ - Fixed #99997 (rodrigo)
+ - Fixed #96810 (rodrigo)
+ - First working version of the ported (from libgda 0.2.x) Sybase
+   provider (holger)
+ - Fixed #97669 (holger (FreeTDS part), rodrigo (Oracle part))
+ - Updated translations:
+        - cs (Michal Bukovjan)	
+	- de (cneumair)
+	- es (pablodc)
+	- ms (sebol)
+	- pt_BR (gdvieira)
+        - sv (menthos)
+
 libgda 0.8.199, 2002-10-23
 --------------------------
 

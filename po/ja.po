@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda CVS-20010407\n"
-"POT-Creation-Date: 2002-10-23 22:48+0200\n"
+"POT-Creation-Date: 2002-12-11 12:55+0100\n"
 "PO-Revision-Date: 2001-04-07 12:45+0900\n"
 "Last-Translator: Akira TAGOH <tagoh@gnome.gr.jp>\n"
 "Language-Team: Japanese <translation@gnome.gr.jp>\n"
@@ -13,58 +13,60 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: libgda/gda-client.c:253 libgda/gda-client.c:444 libgda/gda-connection.c:214
+#: libgda/gda-client.c:253 libgda/gda-client.c:449 libgda/gda-connection.c:214
 #, fuzzy, c-format
 msgid "Data source %s not found in configuration"
 msgstr "データベース '%s' はシステム設定から見つかりませんでした"
 
-#: libgda/gda-client.c:272
+#: libgda/gda-client.c:277
 #, fuzzy, c-format
 msgid "Could not find provider %s in the current setup"
 msgstr "クライアントメッセージ数を取得することが出来ませんでした"
 
-#: libgda/gda-client.c:299
+#: libgda/gda-client.c:304
 #, fuzzy, c-format
 msgid "Provider %s does not implement entry function"
 msgstr "未実装の機能をプロバイダ %s で開始しています"
 
-#: libgda/gda-client.c:309
+#: libgda/gda-client.c:314
 #, fuzzy
 msgid "Could not create GdaServerProvider object from plugin"
 msgstr "GdaServerCommand の割り当てることが出来ませんでした"
 
-#: libgda/gda-client.c:372
+#: libgda/gda-client.c:377
 msgid "Temporary data source created by libgda. Don't remove it"
 msgstr ""
 
 #. gda_server_recordset_model_set_field_defined_size (recset, 0, 256);
-#: libgda/gda-config.c:1269 providers/default/gda-default-provider.c:556
+#: libgda/gda-config.c:1322 providers/default/gda-default-provider.c:556
 #: providers/default/gda-default-provider.c:576
 #: providers/default/gda-default-provider.c:613
-#: providers/mysql/gda-mysql-provider.c:662
+#: providers/mysql/gda-mysql-provider.c:663
+#: providers/mysql/gda-mysql-provider.c:847
 #: providers/oracle/gda-oracle-provider.c:1031
+#: providers/oracle/gda-oracle-provider.c:1530
 msgid "Name"
 msgstr ""
 
-#: libgda/gda-config.c:1270
+#: libgda/gda-config.c:1323
 msgid "Provider"
 msgstr ""
 
-#: libgda/gda-config.c:1271
+#: libgda/gda-config.c:1324
 #, fuzzy
 msgid "Connection string"
 msgstr "接続は切れたようです"
 
-#: libgda/gda-config.c:1272 providers/postgres/gda-postgres-provider.c:903
+#: libgda/gda-config.c:1325 providers/postgres/gda-postgres-provider.c:903
 msgid "Description"
 msgstr ""
 
-#: libgda/gda-config.c:1273
+#: libgda/gda-config.c:1326
 #, fuzzy
 msgid "Username"
 msgstr "ユーザ名"
 
-#: libgda/gda-config.c:1274
+#: libgda/gda-config.c:1327
 #, fuzzy
 msgid "Password"
 msgstr "パスワード"
@@ -196,7 +198,7 @@ msgid "Not Implemented"
 msgstr "%s は実装されていません"
 
 #: providers/default/gda-default-provider.c:455
-#: providers/mysql/gda-mysql-provider.c:1022
+#: providers/mysql/gda-mysql-provider.c:1027
 #: providers/oracle/gda-oracle-provider.c:1088
 #: providers/postgres/gda-postgres-provider.c:1065
 #: providers/sqlite/gda-sqlite-provider.c:617
@@ -205,7 +207,7 @@ msgid "Field name"
 msgstr "ファイル名"
 
 #: providers/default/gda-default-provider.c:456
-#: providers/mysql/gda-mysql-provider.c:1023
+#: providers/mysql/gda-mysql-provider.c:1028
 #: providers/oracle/gda-oracle-provider.c:1089
 #: providers/postgres/gda-postgres-provider.c:1066
 #: providers/sqlite/gda-sqlite-provider.c:618
@@ -213,8 +215,7 @@ msgid "Data type"
 msgstr ""
 
 #: providers/default/gda-default-provider.c:457
-#: providers/freetds/gda-freetds-provider.c:791
-#: providers/mysql/gda-mysql-provider.c:1024
+#: providers/mysql/gda-mysql-provider.c:1029
 #: providers/oracle/gda-oracle-provider.c:1090
 #: providers/postgres/gda-postgres-provider.c:1067
 #: providers/sqlite/gda-sqlite-provider.c:619
@@ -222,8 +223,7 @@ msgid "Size"
 msgstr ""
 
 #: providers/default/gda-default-provider.c:458
-#: providers/freetds/gda-freetds-provider.c:795
-#: providers/mysql/gda-mysql-provider.c:1025
+#: providers/mysql/gda-mysql-provider.c:1030
 #: providers/oracle/gda-oracle-provider.c:1091
 #: providers/postgres/gda-postgres-provider.c:1068
 #: providers/sqlite/gda-sqlite-provider.c:620
@@ -232,7 +232,7 @@ msgid "Scale"
 msgstr "False"
 
 #: providers/default/gda-default-provider.c:459
-#: providers/mysql/gda-mysql-provider.c:1026
+#: providers/mysql/gda-mysql-provider.c:1031
 #: providers/oracle/gda-oracle-provider.c:1092
 #: providers/postgres/gda-postgres-provider.c:1069
 #: providers/sqlite/gda-sqlite-provider.c:621
@@ -240,7 +240,7 @@ msgid "Not null?"
 msgstr ""
 
 #: providers/default/gda-default-provider.c:460
-#: providers/mysql/gda-mysql-provider.c:1027
+#: providers/mysql/gda-mysql-provider.c:1032
 #: providers/oracle/gda-oracle-provider.c:1093
 #: providers/postgres/gda-postgres-provider.c:1070
 #: providers/sqlite/gda-sqlite-provider.c:622
@@ -248,7 +248,7 @@ msgid "Primary key?"
 msgstr ""
 
 #: providers/default/gda-default-provider.c:461
-#: providers/mysql/gda-mysql-provider.c:1028
+#: providers/mysql/gda-mysql-provider.c:1033
 #: providers/oracle/gda-oracle-provider.c:1094
 #: providers/postgres/gda-postgres-provider.c:1071
 #: providers/sqlite/gda-sqlite-provider.c:623
@@ -256,7 +256,7 @@ msgid "Unique index?"
 msgstr ""
 
 #: providers/default/gda-default-provider.c:462
-#: providers/mysql/gda-mysql-provider.c:1029
+#: providers/mysql/gda-mysql-provider.c:1034
 #: providers/oracle/gda-oracle-provider.c:1095
 #: providers/postgres/gda-postgres-provider.c:1072
 #: providers/sqlite/gda-sqlite-provider.c:624
@@ -282,133 +282,77 @@ msgstr "%s へ接続することが出来ませんでした"
 msgid "GDA default provider, based on the libgda XML format"
 msgstr ""
 
-#: providers/freetds/gda-freetds-provider.c:188
+#: providers/freetds/gda-freetds-provider.c:191
 msgid ""
 "Connection aborted. You must provide at least a host, username and password "
 "using DSN 'QUERY=;USER=;PASSWORD='."
 msgstr ""
 
-#: providers/freetds/gda-freetds-provider.c:201
+#: providers/freetds/gda-freetds-provider.c:204
 msgid "Error creating message container."
 msgstr ""
 
-#: providers/freetds/gda-freetds-provider.c:208
+#: providers/freetds/gda-freetds-provider.c:211
 msgid "Error creating error container."
 msgstr ""
 
-#: providers/freetds/gda-freetds-provider.c:246
-#: providers/freetds/gda-freetds-provider.c:248
+#: providers/freetds/gda-freetds-provider.c:249
+#: providers/freetds/gda-freetds-provider.c:251
 #, fuzzy
 msgid "Allocating tds context failed."
 msgstr "レコードセットの割り当てに失敗しました"
 
-#: providers/freetds/gda-freetds-provider.c:264
-#: providers/freetds/gda-freetds-provider.c:266
+#: providers/freetds/gda-freetds-provider.c:267
+#: providers/freetds/gda-freetds-provider.c:269
 msgid "Establishing connection failed."
 msgstr ""
 
-#: providers/freetds/gda-freetds-provider.c:278
-#: providers/freetds/gda-freetds-provider.c:279
+#: providers/freetds/gda-freetds-provider.c:281
+#: providers/freetds/gda-freetds-provider.c:282
 #, fuzzy
 msgid "Failed getting connection info."
 msgstr "再接続を試みています"
 
-#: providers/freetds/gda-freetds-provider.c:622
-#: providers/oracle/gda-oracle-provider.c:1687
-msgid "Procedures"
-msgstr ""
-
-#: providers/freetds/gda-freetds-provider.c:631
-#: providers/oracle/gda-oracle-provider.c:1695
-msgid "Tables"
-msgstr ""
-
-#: providers/freetds/gda-freetds-provider.c:639
-msgid "Types"
-msgstr ""
-
-#. Set it here instead of the SQL query to allow i18n
-#: providers/freetds/gda-freetds-provider.c:647
-#: providers/oracle/gda-oracle-provider.c:1491
-#: providers/postgres/gda-postgres-provider.c:1448 testing/client.c:128
-#, fuzzy
-msgid "Users"
-msgstr "ユーザ名"
-
-#: providers/freetds/gda-freetds-provider.c:655
-#: providers/oracle/gda-oracle-provider.c:1703 testing/client.c:125
-msgid "Views"
-msgstr ""
-
-#: providers/freetds/gda-freetds-provider.c:688
-#: providers/freetds/gda-freetds-provider.c:689
+#: providers/freetds/gda-freetds-provider.c:763
+#: providers/freetds/gda-freetds-provider.c:764
 msgid "Query did not succeed in execute_cmd()."
 msgstr ""
 
-#: providers/freetds/gda-freetds-provider.c:698
-#: providers/freetds/gda-freetds-provider.c:700
+#: providers/freetds/gda-freetds-provider.c:773
+#: providers/freetds/gda-freetds-provider.c:775
 msgid "Unexpected result tokens in execute_cmd()."
 msgstr ""
 
-#: providers/freetds/gda-freetds-provider.c:708
-#: providers/freetds/gda-freetds-provider.c:709
+#: providers/freetds/gda-freetds-provider.c:783
+#: providers/freetds/gda-freetds-provider.c:784
 msgid "Unexpected return in execute_cmd()."
 msgstr ""
 
-#: providers/freetds/gda-freetds-provider.c:787
-#, fuzzy
-msgid "Field Name"
-msgstr "ファイル名"
-
-#: providers/freetds/gda-freetds-provider.c:789
-msgid "Data Type"
-msgstr ""
-
-#: providers/freetds/gda-freetds-provider.c:793
-msgid "Precision"
-msgstr ""
-
-#: providers/freetds/gda-freetds-provider.c:797
-msgid "Identity"
-msgstr ""
-
-#: providers/freetds/gda-freetds-provider.c:799
-msgid "Nullable"
-msgstr ""
-
-#: providers/freetds/gda-freetds-provider.c:801
-msgid "Domain"
-msgstr ""
-
-#: providers/freetds/gda-freetds-provider.c:803
-msgid "Printfmt"
-msgstr ""
-
-#: providers/freetds/gda-freetds-provider.c:929
+#: providers/freetds/gda-freetds-provider.c:988
 #, c-format
 msgid ""
 "Msg %d, Level %d, State %d, Server %s, Line %d\n"
 "%s\n"
 msgstr ""
 
-#: providers/freetds/gda-freetds-provider.c:948 providers/freetds/utils.c:45
+#: providers/freetds/gda-freetds-provider.c:1007 providers/freetds/utils.c:45
 #: providers/oracle/utils.c:72 providers/postgres/utils.c:52
 msgid "Not available"
 msgstr "利用できません"
 
-#: providers/freetds/gda-freetds-recordset.c:357
+#: providers/freetds/gda-freetds-recordset.c:361
 msgid "Error processing result rows.\n"
 msgstr ""
 
-#: providers/freetds/gda-freetds-recordset.c:365
+#: providers/freetds/gda-freetds-recordset.c:368
 msgid "Unexpected freetds return code in tds_process_row_tokens().\n"
 msgstr ""
 
-#: providers/freetds/gda-freetds-recordset.c:374
+#: providers/freetds/gda-freetds-recordset.c:378
 msgid "Error processing results.\n"
 msgstr ""
 
-#: providers/freetds/gda-freetds-recordset.c:381
+#: providers/freetds/gda-freetds-recordset.c:385
 msgid "Unexpected freetds return code in tds_process_result_tokens\n"
 msgstr ""
 
@@ -453,6 +397,34 @@ msgstr ""
 msgid "GDA provider for IBMDB2"
 msgstr "MDB (MS Access)ファイル用のGDAデータソースアクセス"
 
+#: providers/interbase/gda-interbase-provider.c:186
+msgid "No database specified"
+msgstr ""
+
+#: providers/interbase/gda-interbase-provider.c:209
+#, fuzzy
+msgid "Could not attach to database"
+msgstr "cs_diag() を初期化することが出来ませんでした"
+
+#: providers/interbase/gda-interbase-provider.c:233
+#: providers/interbase/gda-interbase-provider.c:260
+#: providers/interbase/gda-interbase-provider.c:278
+#: providers/interbase/gda-interbase-provider.c:347
+#: providers/interbase/gda-interbase-provider.c:381
+#: providers/interbase/gda-interbase-provider.c:419
+msgid "Invalid Interbase handle"
+msgstr ""
+
+#: providers/interbase/gda-interbase-provider.c:387
+#: providers/interbase/gda-interbase-provider.c:425
+msgid "Invalid transaction handle"
+msgstr ""
+
+#: providers/interbase/libmain.c:39
+#, fuzzy
+msgid "GDA provider for Interbase/Firebird databases"
+msgstr "MDB (MS Access)ファイル用のGDAデータソースアクセス"
+
 #: providers/mdb/gda-mdb-provider.c:188
 msgid "A database FILENAME must be specified in the connection_string"
 msgstr ""
@@ -485,32 +457,27 @@ msgstr ""
 "提供するなら, UNIX_SOCKET を削除するか, HOST と PORT の両方のオプションを削除"
 "してください"
 
-#: providers/mysql/gda-mysql-provider.c:290
-#: providers/mysql/gda-mysql-provider.c:1038
+#: providers/mysql/gda-mysql-provider.c:291
+#: providers/mysql/gda-mysql-provider.c:1043
 #: providers/mysql/gda-mysql-recordset.c:59
 #: providers/mysql/gda-mysql-recordset.c:175
 msgid "Invalid MySQL handle"
 msgstr ""
 
-#: providers/mysql/gda-mysql-provider.c:305
-#: providers/mysql/gda-mysql-provider.c:355
-#: providers/mysql/gda-mysql-provider.c:378
-#: providers/mysql/gda-mysql-provider.c:409
-#: providers/mysql/gda-mysql-provider.c:441
-#: providers/mysql/gda-mysql-provider.c:509
-#: providers/mysql/gda-mysql-provider.c:561
-#: providers/mysql/gda-mysql-provider.c:589
+#: providers/mysql/gda-mysql-provider.c:306
+#: providers/mysql/gda-mysql-provider.c:356
+#: providers/mysql/gda-mysql-provider.c:379
+#: providers/mysql/gda-mysql-provider.c:410
+#: providers/mysql/gda-mysql-provider.c:442
+#: providers/mysql/gda-mysql-provider.c:510
+#: providers/mysql/gda-mysql-provider.c:562
+#: providers/mysql/gda-mysql-provider.c:590
 msgid "Invalid MYSQL handle"
 msgstr ""
 
-#: providers/mysql/gda-mysql-provider.c:924
-#: providers/oracle/gda-oracle-provider.c:1595
-#: providers/postgres/gda-postgres-provider.c:920
-#: providers/sqlite/gda-sqlite-provider.c:746
-msgid "Type"
-msgstr ""
-
-#: providers/mysql/gda-mysql-provider.c:925
+#: providers/mysql/gda-mysql-provider.c:848
+#: providers/mysql/gda-mysql-provider.c:930
+#: providers/oracle/gda-oracle-provider.c:1530
 #: providers/postgres/gda-postgres-provider.c:688
 #: providers/postgres/gda-postgres-provider.c:902
 #: providers/postgres/gda-postgres-provider.c:921
@@ -521,7 +488,9 @@ msgstr ""
 msgid "Owner"
 msgstr ""
 
-#: providers/mysql/gda-mysql-provider.c:926
+#: providers/mysql/gda-mysql-provider.c:849
+#: providers/mysql/gda-mysql-provider.c:931
+#: providers/oracle/gda-oracle-provider.c:1530
 #: providers/postgres/gda-postgres-provider.c:689
 #: providers/postgres/gda-postgres-provider.c:922
 #: providers/postgres/gda-postgres-provider.c:968
@@ -531,20 +500,27 @@ msgstr ""
 msgid "Comments"
 msgstr ""
 
-#: providers/mysql/gda-mysql-provider.c:927
+#: providers/mysql/gda-mysql-provider.c:929
+#: providers/oracle/gda-oracle-provider.c:1629
+#: providers/postgres/gda-postgres-provider.c:920
+#: providers/sqlite/gda-sqlite-provider.c:746
+msgid "Type"
+msgstr ""
+
+#: providers/mysql/gda-mysql-provider.c:932
 #: providers/postgres/gda-postgres-provider.c:923
 #: providers/sqlite/gda-sqlite-provider.c:749
 msgid "GDA type"
 msgstr ""
 
-#: providers/mysql/gda-mysql-provider.c:1030
+#: providers/mysql/gda-mysql-provider.c:1035
 #: providers/postgres/gda-postgres-provider.c:1073
 #: providers/sqlite/gda-sqlite-provider.c:625
 msgid "Default value"
 msgstr ""
 
-#: providers/mysql/gda-mysql-provider.c:1047
-#: providers/mysql/gda-mysql-provider.c:1055
+#: providers/mysql/gda-mysql-provider.c:1052
+#: providers/mysql/gda-mysql-provider.c:1060
 msgid "Table name is needed but none specified in parameter list"
 msgstr ""
 
@@ -790,19 +766,34 @@ msgid "Could not get the Oracle field nullable attribute"
 msgstr ""
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/oracle/gda-oracle-provider.c:1683
-#: providers/postgres/gda-postgres-provider.c:994 testing/client.c:126
+#: providers/oracle/gda-oracle-provider.c:1491
+#: providers/postgres/gda-postgres-provider.c:1448 testing/client.c:129
+#, fuzzy
+msgid "Users"
+msgstr "ユーザ名"
+
+#. Set it here instead of the SQL query to allow i18n
+#: providers/oracle/gda-oracle-provider.c:1717
+#: providers/postgres/gda-postgres-provider.c:994 testing/client.c:127
 msgid "Indexes"
 msgstr ""
 
-#: providers/oracle/gda-oracle-provider.c:1691 testing/client.c:129
+#: providers/oracle/gda-oracle-provider.c:1721
+msgid "Procedures"
+msgstr ""
+
+#: providers/oracle/gda-oracle-provider.c:1725 testing/client.c:130
 msgid "Sequences"
 msgstr ""
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/oracle/gda-oracle-provider.c:1699
-#: providers/postgres/gda-postgres-provider.c:1054 testing/client.c:130
+#: providers/oracle/gda-oracle-provider.c:1732
+#: providers/postgres/gda-postgres-provider.c:1054 testing/client.c:131
 msgid "Triggers"
+msgstr ""
+
+#: providers/oracle/gda-oracle-provider.c:1736 testing/client.c:126
+msgid "Views"
 msgstr ""
 
 #: providers/oracle/gda-oracle-recordset.c:73
@@ -935,7 +926,7 @@ msgid "InType"
 msgstr ""
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:1423 testing/client.c:121
+#: providers/postgres/gda-postgres-provider.c:1423 testing/client.c:122
 #, fuzzy
 msgid "Databases"
 msgstr "データベース名"
@@ -1008,86 +999,86 @@ msgstr "'%s' にロケールを設定することが出来ませんでした"
 msgid "Could not get file from %s"
 msgstr "'%s' にロケールを設定することが出来ませんでした"
 
-#: testing/client.c:41
+#: testing/client.c:42
 msgid "\t\tNONE\n"
 msgstr ""
 
-#: testing/client.c:81
+#: testing/client.c:82
 #, c-format
 msgid "** ERROR: could not open connection to %s\n"
 msgstr ""
 
 #. show provider features
-#: testing/client.c:86
+#: testing/client.c:87
 msgid "\tProvider capabilities...\n"
 msgstr ""
 
-#: testing/client.c:87
+#: testing/client.c:88
 #, c-format
 msgid "\t\tAggregates: %s\n"
 msgstr ""
 
-#: testing/client.c:89 testing/client.c:92 testing/client.c:95
-#: testing/client.c:98 testing/client.c:101 testing/client.c:104
-#: testing/client.c:107 testing/client.c:110 testing/client.c:113
-#: testing/client.c:116
+#: testing/client.c:90 testing/client.c:93 testing/client.c:96
+#: testing/client.c:99 testing/client.c:102 testing/client.c:105
+#: testing/client.c:108 testing/client.c:111 testing/client.c:114
+#: testing/client.c:117
 msgid "Supported"
 msgstr ""
 
-#: testing/client.c:89 testing/client.c:92 testing/client.c:95
-#: testing/client.c:98 testing/client.c:101 testing/client.c:104
-#: testing/client.c:107 testing/client.c:110 testing/client.c:113
-#: testing/client.c:116
+#: testing/client.c:90 testing/client.c:93 testing/client.c:96
+#: testing/client.c:99 testing/client.c:102 testing/client.c:105
+#: testing/client.c:108 testing/client.c:111 testing/client.c:114
+#: testing/client.c:117
 msgid "Not supported"
 msgstr ""
 
-#: testing/client.c:90
+#: testing/client.c:91
 #, c-format
 msgid "\t\tIndexes: %s\n"
 msgstr ""
 
-#: testing/client.c:93
+#: testing/client.c:94
 #, c-format
 msgid "\t\tProcedures: %s\n"
 msgstr ""
 
-#: testing/client.c:96
+#: testing/client.c:97
 #, c-format
 msgid "\t\tSequences: %s\n"
 msgstr ""
 
-#: testing/client.c:99
+#: testing/client.c:100
 #, c-format
 msgid "\t\tSQL: %s\n"
 msgstr ""
 
-#: testing/client.c:102
+#: testing/client.c:103
 #, c-format
 msgid "\t\tTransactions: %s\n"
 msgstr ""
 
-#: testing/client.c:105
+#: testing/client.c:106
 #, c-format
 msgid "\t\tTriggers: %s\n"
 msgstr ""
 
-#: testing/client.c:108
+#: testing/client.c:109
 #, c-format
 msgid "\t\tUsers: %s\n"
 msgstr ""
 
-#: testing/client.c:111
+#: testing/client.c:112
 #, c-format
 msgid "\t\tViews: %s\n"
 msgstr ""
 
-#: testing/client.c:114
+#: testing/client.c:115
 #, c-format
 msgid "\t\tXML queries: %s\n"
 msgstr ""
 
 #. show connection schemas
-#: testing/client.c:119
+#: testing/client.c:120
 #, c-format
 msgid ""
 "\n"
@@ -1095,50 +1086,50 @@ msgid ""
 "\n"
 msgstr ""
 
-#: testing/client.c:122
+#: testing/client.c:123
 msgid "Stored procedures"
 msgstr ""
 
-#: testing/client.c:123
+#: testing/client.c:124
 #, fuzzy
 msgid "Connection Tables"
 msgstr "接続は切れたようです"
 
-#: testing/client.c:124
+#: testing/client.c:125
 msgid "Available types"
 msgstr ""
 
-#: testing/client.c:127
+#: testing/client.c:128
 msgid "Aggregates"
 msgstr ""
 
-#: testing/client.c:135 testing/client.c:143
+#: testing/client.c:136 testing/client.c:144
 msgid "\tStarting transaction..."
 msgstr ""
 
-#: testing/client.c:137 testing/client.c:141 testing/client.c:145
-#: testing/client.c:149
+#: testing/client.c:138 testing/client.c:142 testing/client.c:146
+#: testing/client.c:150
 #, fuzzy
 msgid "Error"
 msgstr "エラー"
 
-#: testing/client.c:139
+#: testing/client.c:140
 msgid "\tFinishing transaction..."
 msgstr ""
 
-#: testing/client.c:147
+#: testing/client.c:148
 msgid "\tRolling back transaction..."
 msgstr ""
 
-#: testing/client.c:173
+#: testing/client.c:176
 msgid "Testing GDA client API"
 msgstr ""
 
-#: testing/client.c:182
+#: testing/client.c:185
 msgid "** ERROR: gda_config_get_data_source_list returned a NULL item\n"
 msgstr ""
 
-#: testing/client.c:186
+#: testing/client.c:189
 #, fuzzy, c-format
 msgid " Data source = %s, User = %s\n"
 msgstr "データソース %s は見つかりませんでした"
@@ -1165,6 +1156,10 @@ msgstr ""
 #: testing/config.c:93
 msgid "\tgda_params ="
 msgstr ""
+
+#, fuzzy
+#~ msgid "Field Name"
+#~ msgstr "ファイル名"
 
 #, fuzzy
 #~ msgid "Could not load %s provider"
