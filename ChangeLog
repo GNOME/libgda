@@ -1,5 +1,17 @@
 2002-05-19  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* libgda/gda-data-model-array.c (gda_data_model_array_remove_row):
+	* libgda/gda-data-model-list.c (gda_data_model_list_remove_row):
+	implemented remove_row method.
+
+	* libgda/gda-data-model-hash.c (gda_data_model_hash_append_row):
+	proxy the call to gda_data_model_hash_insert_row, using the length
+	of the model as the row number.
+
+	* libgda/gda-value.[ch] (gda_value_set_from_value): new function.
+
+2002-05-19  Rodrigo Moya <rodrigo@gnome-db.org>
+
 	* libgda/gda-data-model.[ch]: added remove_row and update_row
 	virtual methods.
 	(gda_data_model_class_init): initialize new members.

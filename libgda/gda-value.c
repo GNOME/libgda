@@ -1207,7 +1207,7 @@ gda_value_set_tinyint (GdaValue *value, gchar val)
  *
  * Stores the value data from its string representation as @type.
  *
- * Returns: TRUE if the value has been property converted to @type from
+ * Returns: TRUE if the value has been properly converted to @type from
  * its string representation. FALSE otherwise.
  */
 gboolean
@@ -1221,6 +1221,80 @@ gda_value_set_from_string (GdaValue *value,
 	clear_value (value);
 	value->type = type;
 	return set_from_string (value, as_string);
+}
+
+/**
+ * gda_value_set_from_value
+ * @value: a #GdaValue.
+ * @from: the value to copy from.
+ *
+ * Set the value of a #GdaValue from another #GdaValue. This
+ * is different from #gda_value_copy, which creates a new #GdaValue.
+ * #gda_value_set_from_value, on the other hand, copies the contents
+ * of @copy into @value, which must already be allocated.
+ *
+ * Returns: TRUE if successful, FALSE otherwise.
+ */
+gboolean
+gda_value_set_from_value (GdaValue *value, const GdaValue *from)
+{
+	g_return_val_if_fail (value != NULL, FALSE);
+	g_return_val_if_fail (from != NULL, FALSE);
+
+	switch (from->type) {
+	case GDA_VALUE_TYPE_NULL :
+		gda_value_set_null (value);
+		break;
+	case GDA_VALUE_TYPE_BIGINT :
+		gda_value_set_bigint (value, gda_value_get_bigint ((GdaValue *) from));
+		break;
+	case GDA_VALUE_TYPE_BINARY :
+		/* FIXME */
+		break;
+	case GDA_VALUE_TYPE_BOOLEAN :
+		gda_value_set_boolean (value, gda_value_get_boolean ((GdaValue *) from));
+		break;
+	case GDA_VALUE_TYPE_DATE :
+		gda_value_set_date (value, gda_value_get_date ((GdaValue *) from));
+		break;
+	case GDA_VALUE_TYPE_DOUBLE :
+		gda_value_set_double (value, gda_value_get_double ((GdaValue *) from));
+		break;
+	case GDA_VALUE_TYPE_GEOMETRIC_POINT :
+		gda_value_set_geometric_point (value, gda_value_get_geometric_point ((GdaValue *) from));
+		break;
+	case GDA_VALUE_TYPE_INTEGER :
+		gda_value_set_integer (value, gda_value_get_integer ((GdaValue *) from));
+		break;
+	case GDA_VALUE_TYPE_LIST :
+		gda_value_set_list (value, gda_value_get_list ((GdaValue *) from));
+		break;
+	case GDA_VALUE_TYPE_NUMERIC :
+		gda_value_set_numeric (value, gda_value_get_numeric ((GdaValue *) from));
+		break;
+	case GDA_VALUE_TYPE_SINGLE :
+		gda_value_set_single (value, gda_value_get_single ((GdaValue *) from));
+		break;
+	case GDA_VALUE_TYPE_SMALLINT :
+		gda_value_set_smallint (value, gda_value_get_smallint ((GdaValue *) from));
+		break;
+	case GDA_VALUE_TYPE_STRING :
+		gda_value_set_string (value, gda_value_get_string ((GdaValue *) from));
+		break;
+	case GDA_VALUE_TYPE_TIME :
+		gda_value_set_time (value, gda_value_get_time ((GdaValue *) from));
+		break;
+	case GDA_VALUE_TYPE_TIMESTAMP :
+		gda_value_set_timestamp (value, gda_value_get_timestamp ((GdaValue *) from));
+		break;
+	case GDA_VALUE_TYPE_TINYINT :
+		gda_value_set_tinyint (value, gda_value_get_tinyint ((GdaValue *) from));
+		break;
+	default :
+		return FALSE;
+	}
+
+	return TRUE;
 }
 
 /**

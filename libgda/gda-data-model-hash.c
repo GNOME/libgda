@@ -79,8 +79,43 @@ gda_data_model_hash_is_editable (GdaDataModel *model)
 static const GdaRow *
 gda_data_model_hash_append_row (GdaDataModel *model, const GList *values)
 {
+	GdaRow *row;
+	gint i;
+	gint cols;
+	GList *l;
+
+	g_return_val_if_fail (GDA_IS_DATA_MODEL_HASH (model), NULL);
+	g_return_val_if_fail (values != NULL, NULL);
+
+	cols = g_list_length ((GList *) values);
+
+	/* create the GdaRow to add */
+	row = gda_row_new (cols);
+	for (i = 0, l = (GList *) values; i < cols && l != NULL; i++, l = l->next) {
+		const GdaValue *value;
+
+		value = (const GdaValue *) l->data;
+		if (!value) {
+			gda_row_free (row);
+			return NULL;
+		}
+
+		gda_value_set_from_value (gda_row_get_value (row, i), value);
+	}
+
+	gda_data_model_hash_insert_row (
+		GDA_DATA_MODEL_HASH (model),
+		g_hash_table_size (GDA_DATA_MODEL_HASH (model)->priv->rows),
+		row);
+
+	return row;
+}
+
+static gboolean
+gda_data_model_hash_remove_row (GdaDataModel *model, const GdaRow *row)
+{
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_HASH (model), FALSE);
-	return NULL;
+	return FALSE;
 }
 
 static void
@@ -104,6 +139,7 @@ gda_data_model_hash_class_init (GdaDataModelHashClass *klass)
 	model_class->get_value_at = gda_data_model_hash_get_value_at;
 	model_class->is_editable = gda_data_model_hash_is_editable;
 	model_class->append_row = gda_data_model_hash_append_row;
+	model_class->remove_row = gda_data_model_hash_remove_row;
 }
 
 static void
@@ -230,7 +266,7 @@ gda_data_model_hash_insert_row (GdaDataModelHash *model,
 
 	if (g_hash_table_lookup (model->priv->rows,
 				 GINT_TO_POINTER (rownum)) != NULL){
-		g_warning ("Inserting an already existing column!");
+		g_warning ("Inserting an already existing row!");
 		g_hash_table_remove (model->priv->rows,
 				     GINT_TO_POINTER (rownum));
 	}

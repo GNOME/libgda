@@ -139,6 +139,20 @@ gda_data_model_array_append_row (GdaDataModel *model, const GList *values)
 	return (const GdaRow *) row;
 }
 
+static gboolean
+gda_data_model_array_remove_row (GdaDataModel *model, const GdaRow *row)
+{
+	g_return_val_if_fail (GDA_IS_DATA_MODEL_ARRAY (model), FALSE);
+	g_return_val_if_fail (row != NULL, FALSE);
+
+	if (g_ptr_array_remove (GDA_DATA_MODEL_ARRAY (model)->priv->rows, (gpointer) row)) {
+		gda_data_model_changed (model);
+		return TRUE;
+	}
+
+	return FALSE;
+}
+
 static void
 gda_data_model_array_class_init (GdaDataModelArrayClass *klass)
 {
@@ -155,6 +169,8 @@ gda_data_model_array_class_init (GdaDataModelArrayClass *klass)
 	model_class->get_value_at = gda_data_model_array_get_value_at;
 	model_class->is_editable = gda_data_model_array_is_editable;
 	model_class->append_row = gda_data_model_array_append_row;
+	model_class->remove_row = gda_data_model_array_remove_row;
+	model_class->update_row = NULL;
 }
 
 static void

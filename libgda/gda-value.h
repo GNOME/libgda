@@ -167,6 +167,7 @@ void          gda_value_set_tinyint (GdaValue *value, gchar val);
 gboolean      gda_value_set_from_string (GdaValue *value, 
 					 const gchar *as_string,
 					 GdaValueType type);
+gboolean      gda_value_set_from_value (GdaValue *value, const GdaValue *from);
 
 
 gint          gda_value_compare (const GdaValue *value1,
