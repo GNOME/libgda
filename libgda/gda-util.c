@@ -26,10 +26,13 @@
 /**
  * gda_file_load
  * @uri: URI for the file to be loaded.
+ *
+ * NOT IMPLEMENTED YET!
  */
 gchar *
 gda_file_load (const gchar *uri)
 {
+	return NULL;
 }
 
 /**

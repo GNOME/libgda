@@ -204,7 +204,7 @@ gda_data_model_array_append_row (GdaDataModelArray *model, const GList *values)
 	g_return_if_fail (GDA_IS_DATA_MODEL_ARRAY (model));
 	g_return_if_fail (values != NULL);
 
-	len = g_list_length (values);
+	len = g_list_length ((GList *) values);
 	if (len != model->priv->number_of_columns)
 		return;
 
@@ -212,7 +212,7 @@ gda_data_model_array_append_row (GdaDataModelArray *model, const GList *values)
 		GList *l;
 		GdaValue *new_value;
 
-		l = g_list_nth (values, i);
+		l = g_list_nth ((GList *) values, i);
 		if (!l)
 			return;
 

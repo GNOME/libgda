@@ -482,8 +482,6 @@ gda_config_add_listener (const gchar *path, GdaConfigListenerFunc func, gpointer
 void
 gda_config_remove_listener (guint id)
 {
-	GList *l;
-
 	gconf_client_notify_remove (get_conf_client (), id);
 }
 
@@ -714,22 +712,22 @@ gda_config_get_data_source_list (void)
 		info->name = g_strdup ((const gchar *) l->data);
 
 		/* get the provider */
-		tmp = g_strdup_printf ("%s/%s/Provider", GDA_CONFIG_SECTION_DATASOURCES, l->data);
+		tmp = g_strdup_printf ("%s/%s/Provider", GDA_CONFIG_SECTION_DATASOURCES, (char *) l->data);
 		info->provider = gda_config_get_string (tmp);
 		g_free (tmp);
 
 		/* get the connection string */
-		tmp = g_strdup_printf ("%s/%s/DSN", GDA_CONFIG_SECTION_DATASOURCES, l->data);
+		tmp = g_strdup_printf ("%s/%s/DSN", GDA_CONFIG_SECTION_DATASOURCES, (char *) l->data);
 		info->cnc_string = gda_config_get_string (tmp);
 		g_free (tmp);
 
 		/* get the description */
-		tmp = g_strdup_printf ("%s/%s/Description", GDA_CONFIG_SECTION_DATASOURCES, l->data);
+		tmp = g_strdup_printf ("%s/%s/Description", GDA_CONFIG_SECTION_DATASOURCES, (char *) l->data);
 		info->description = gda_config_get_string (tmp);
 		g_free (tmp);
 
 		/* get the user name */
-		tmp = g_strdup_printf ("%s/%s/Username", GDA_CONFIG_SECTION_DATASOURCES, l->data);
+		tmp = g_strdup_printf ("%s/%s/Username", GDA_CONFIG_SECTION_DATASOURCES, (char *) l->data);
 		info->username = gda_config_get_string (tmp);
 		g_free (tmp);
 

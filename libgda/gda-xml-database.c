@@ -22,6 +22,8 @@
 
 #include <config.h>
 #include <libgda/gda-xml-database.h>
+#include <libgda/gda-util.h>
+#include <libgda/gda-log.h>
 #include <bonobo/bonobo-i18n.h>
 
 struct _GdaXmlDatabasePrivate {

@@ -186,7 +186,6 @@ gda_error_list_to_exception (GList *error_list, CORBA_Environment *ev)
 {
 	GNOME_Database_DriverError *exception;
 	GNOME_Database_ErrorSeq *corba_errors;
-	gint count;
 	gint i;
 
 	g_return_if_fail (ev != NULL);

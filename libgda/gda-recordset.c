@@ -47,7 +47,7 @@ enum {
 	LAST_SIGNAL
 };
 
-static gint gda_recordset_signals[LAST_SIGNAL] = { 0, };
+//static gint gda_recordset_signals[LAST_SIGNAL] = { 0, };
 static GObjectClass *parent_class = NULL;
 
 /*

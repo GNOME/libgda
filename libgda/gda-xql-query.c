@@ -97,8 +97,8 @@ gda_xql_query_to_dom (GdaXqlItem *xqlitem, xmlNode *parent)
   xmlNode *node;
   GdaXqlItemClass *klass = GDA_XQL_ITEM_CLASS (xqlitem);
 
-  g_return_if_fail (GDA_IS_XQL_ITEM (xqlitem));
-  g_return_if_fail (parent != NULL);
+  g_return_val_if_fail (GDA_IS_XQL_ITEM (xqlitem), NULL);
+  g_return_val_if_fail (parent != NULL, NULL);
 
   node =  klass->to_dom (xqlitem, parent);
 

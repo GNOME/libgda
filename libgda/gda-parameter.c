@@ -51,13 +51,12 @@ GdaParameter *
 gda_parameter_new (const gchar *name, GdaValueType type)
 {
 	GdaParameter *param;
-	const gchar *static_data = NULL;
 
 	param = GNOME_Database_Parameter__alloc ();
 	if (name)
 		gda_parameter_set_name (param, name);
 	CORBA_any_set_release (&param->value, TRUE);
-	param->value._type = CORBA_Object_duplicate ((CORBA_Object) type, NULL);
+	param->value._type = (GdaValueType) CORBA_Object_duplicate ((CORBA_Object) type, NULL);
 
 	return param;
 }
@@ -189,7 +188,7 @@ gda_parameter_list_add_parameter (GdaParameterList *plist, GdaParameter *param)
 {
 	gpointer orig_key;
 	gpointer orig_value;
-	gchar *name;
+	const gchar *name;
 
 	g_return_if_fail (plist != NULL);
 	g_return_if_fail (param != NULL);

@@ -65,7 +65,6 @@ remove_component_hash (gpointer key, gpointer value, gpointer user_data)
 static void
 component_destroyed_cb (BonoboObject *object, gpointer user_data)
 {
-	GList *l;
 	GdaServer *server = (GdaServer *) user_data;
 
 	g_return_if_fail (GDA_IS_SERVER (server));

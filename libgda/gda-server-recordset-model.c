@@ -297,5 +297,5 @@ void
 gda_server_recordset_model_append_row (GdaServerRecordsetModel *recset, const GList *values)
 {
 	g_return_if_fail (GDA_IS_SERVER_RECORDSET_MODEL (recset));
-	gda_data_model_array_append_row (recset->priv->model, values);
+	gda_data_model_array_append_row (GDA_DATA_MODEL_ARRAY (recset->priv->model), values);
 }

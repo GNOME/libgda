@@ -14,6 +14,20 @@
 	* gda-value.[ch]:
 	* gda-row.[ch]: changed 'long long' by 'gint64'. Removed all warnings.
 	Added some missing const to *value_new_*.
+
+	* gda-config.c:
+	* gda-data-model-array.c:
+	* gda-error.c:
+	* gda-parameter.c:
+	* gda-recordset.c:
+	* gda-server-connection.c:
+	* gda-server-recordset-model.c:
+	* gda-server.c:
+	* gda-util.c:
+	* gda-xml-database.c:
+	* gda-xml-document.c:
+	* gda-xql-query.c: removed all warnings except for unused static
+	functions in gda-xql-select.c and gda-xql-item.c.
 	
 2002-01-14  Rodrigo Moya <rodrigo@gnome-db.org>
 

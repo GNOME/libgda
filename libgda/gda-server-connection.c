@@ -278,7 +278,7 @@ impl_Connection_getSchema (PortableServer_Servant servant,
 
 	bonobo_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), CORBA_OBJECT_NIL, ev);
 
-	plist = gda_parameter_list_new_from_corba (params);
+	plist = gda_parameter_list_new_from_corba ((GNOME_Database_ParameterList *) params);
 	recset = gda_server_provider_get_schema (cnc->priv->provider, cnc, schema, plist);
 	gda_parameter_list_free (plist);
 

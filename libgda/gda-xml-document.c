@@ -23,6 +23,7 @@
 
 #include "config.h"
 #include "gda-xml-document.h"
+#include <libgda/gda-util.h>
 #include <glib-object.h>
 
 static void gda_xml_document_class_init (GdaXmlDocumentClass *klass);
