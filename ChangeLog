@@ -1,5 +1,6 @@
 2002-05-02  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* providers/oracle/Makefile.am:
 	* providers/sybase/Makefile.am: removed .server-related stuff.
 
 2002-05-02  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
