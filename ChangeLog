@@ -1,3 +1,13 @@
+2002-01-26  Carlos Perelló Marín <carlos@gnome-db.org>
+
+	* providers/sqlite/gda-sqlite-provider.c
+	* providers/sqlite/gda-sqlite-provider.h
+	* providers/sqlite/gda-sqlite-recordset.c
+	* providers/sqlite/gda-sqlite-recordset.h
+	* providers/sqlite/gda-sqlite.h
+	* providers/sqlite/main.c: Lots of changes. Now it should work ;-)
+	Also I have started some code to support transactions.
+	
 2002-01-26  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* libgda/gda-client.c (gda_client_open_connection): ping already

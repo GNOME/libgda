@@ -31,7 +31,7 @@
 G_BEGIN_DECLS
 
 GdaServerRecordset *gda_sqlite_recordset_new (GdaServerConnection *cnc,
-					      SQLITE_Recordset *drecset);
+					      SQLITE_Recordset *srecset);
 
 G_END_DECLS
 

@@ -25,11 +25,8 @@
 #  define __gda_sqlite_h__
 
 #include <glib/gmacros.h>
-#include <bonobo/bonobo-i18n.h>
-#include <config.h>
-#include <libgda/gda-server.h>
-#include <gda-sqlite-provider.h>
 #include <sqlite.h>
+#include <libgda/gda-server.h>
 
 #define GDA_SQLITE_COMPONENT_FACTORY_ID "OAFIID:GNOME_Database_SQLite_ComponentFactory"
 #define GDA_SQLITE_PROVIDER_ID          "OAFIID:GNOME_Database_SQLite_Provider"

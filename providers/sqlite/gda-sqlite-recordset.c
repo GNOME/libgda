@@ -21,8 +21,12 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#if defined(HAVE_CONFIG_H)
+#  include <config.h>
+#endif
+
 #include <bonobo/bonobo-i18n.h>
-#include "gda-sqlite-recordset.h"
+#include "gda-sqlite.h"
 
 #define OBJECT_DATA_RECSET_HANDLE "GDA_Sqlite_RecsetHandle"
 
@@ -31,13 +35,13 @@
  */
 
 static void
-free_drecset (gpointer data)
+free_srecset (gpointer data)
 {
-	SQLITE_Recordset *drecset = (SQLITE_Recordset *) data;
+	SQLITE_Recordset *srecset = (SQLITE_Recordset *) data;
 
-	g_return_if_fail (drecset != NULL);
-	sqlite_free_table(drecset->data);
-	g_free (drecset);
+	g_return_if_fail (srecset != NULL);
+	sqlite_free_table(srecset->data);
+	g_free (srecset);
 }
 
 static GdaRow *
@@ -135,18 +139,18 @@ describe_func (GdaServerRecordset *recset)
  */
 
 GdaServerRecordset *
-gda_sqlite_recordset_new (GdaServerConnection *cnc, SQLITE_Recordset *drecset)
+gda_sqlite_recordset_new (GdaServerConnection *cnc, SQLITE_Recordset *srecset)
 {
 	GdaServerRecordset *recset;
 
 	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), NULL);
-	g_return_val_if_fail (drecset != NULL, NULL);
+	g_return_val_if_fail (srecset != NULL, NULL);
 
-	if (drecset->data) {
+	if (srecset->data) {
 		recset = gda_server_recordset_new (cnc, fetch_func,
 						   describe_func);
 		g_object_set_data_full (G_OBJECT (recset), OBJECT_DATA_RECSET_HANDLE,
-					drecset, (GDestroyNotify) free_drecset);
+					srecset, (GDestroyNotify) free_srecset);
 		
 		return recset;
 	}

@@ -25,14 +25,16 @@
 #  define __gda_sqlite_provider_h__
 
 #include <libgda/gda-server-provider.h>
-
-G_BEGIN_DECLS
+#include <libgda/gda-server-recordset-model.h>
 
 #define GDA_TYPE_SQLITE_PROVIDER            (gda_sqlite_provider_get_type())
 #define GDA_SQLITE_PROVIDER(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_SQLITE_PROVIDER, GdaSqliteProvider))
 #define GDA_SQLITE_PROVIDER_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_SQLITE_PROVIDER, GdaSqliteProviderClass))
 #define GDA_IS_SQLITE_PROVIDER(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_SQLITE_PROVIDER))
 #define GDA_IS_SQLITE_PROVIDER_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GDA_TYPE_SQLITE_PROVIDER))
+
+#define PARENT_TYPE GDA_TYPE_SERVER_PROVIDER
+#define OBJECT_DATA_SQLITE_HANDLE "GDA_Sqlite_SqliteHandle"
 
 typedef struct _GdaSqliteProvider      GdaSqliteProvider;
 typedef struct _GdaSqliteProviderClass GdaSqliteProviderClass;
@@ -44,6 +46,8 @@ struct _GdaSqliteProvider {
 struct _GdaSqliteProviderClass {
 	GdaServerProviderClass parent_class;
 };
+
+G_BEGIN_DECLS
 
 GType gda_sqlite_provider_get_type (void);
 

@@ -21,8 +21,14 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#if defined(HAVE_CONFIG_H)
+#  include <config.h>
+#endif
+
+#include <bonobo/bonobo-i18n.h>
 #include "libgda/libgda.h"
 #include "gda-sqlite.h"
+#include "gda-sqlite-provider.h"
 
 GdaServer *gda_sqlite_server = NULL;
 
