@@ -24,6 +24,7 @@
 #if !defined(__gda_value_h__)
 #  define __gda_value_h__
 
+#include <time.h>
 #include <glib/glist.h>
 #include <glib/gmacros.h>
 #include <glib-object.h>
@@ -139,6 +140,7 @@ GdaValue     *gda_value_new_smallint (gshort val);
 GdaValue     *gda_value_new_string (const gchar *val);
 GdaValue     *gda_value_new_time (const GdaTime *val);
 GdaValue     *gda_value_new_timestamp (const GdaTimestamp *val);
+GdaValue     *gda_value_new_timestamp_from_timet (time_t val);
 GdaValue     *gda_value_new_tinyint (gchar val);
 GdaValue     *gda_value_new_type (GdaValueType val);
 GdaValue     *gda_value_new_from_string (const gchar *as_string,

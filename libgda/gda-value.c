@@ -564,6 +564,39 @@ gda_value_new_timestamp (const GdaTimestamp *val)
 }
 
 /**
+ * gda_value_new_timestamp_from_timet
+ * @val: value to set for the new #GdaValue.
+ *
+ * Make a new #GdaValue of type #GDA_VALUE_TYPE_TIMESTAMP with value @val (of type
+ * time_t).
+ *
+ * Returns: the newly created #GdaValue.
+ */
+GdaValue *
+gda_value_new_timestamp_from_timet (time_t val)
+{
+	GdaValue *value;
+	struct tm *ltm;
+
+	value = g_new0 (GdaValue, 1);
+	ltm = localtime ((const time_t *) &val);
+	if (ltm) {
+		GdaTimestamp tstamp;
+		tstamp.year = ltm->tm_year;
+		tstamp.month = ltm->tm_mon;
+		tstamp.day = ltm->tm_mday;
+		tstamp.hour = ltm->tm_hour;
+		tstamp.minute = ltm->tm_min;
+		tstamp.second = ltm->tm_sec;
+		tstamp.fraction = 0;
+		tstamp.timezone = 0; /* FIXME */
+		gda_value_set_timestamp (value, (const GdaTimestamp *) &tstamp);
+	}
+
+	return value;
+}
+
+/**
  * gda_value_new_tinyint
  * @val: value to set for the new #GdaValue.
  *
