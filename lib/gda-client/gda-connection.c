@@ -179,6 +179,7 @@ gda_connection_class_init (GdaConnectionClass* klass)
 			       GTK_TYPE_NONE, 0);
 
 	gtk_object_class_add_signals(object_class, gda_connection_signals, LAST_SIGNAL);
+
 	object_class->destroy = gda_connection_destroy;
 	klass->error   = gda_connection_real_error;
 	klass->warning = gda_connection_real_warning;
