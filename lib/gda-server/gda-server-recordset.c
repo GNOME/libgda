@@ -18,7 +18,7 @@
  */
 
 #include "config.h"
-#include "gda-server-impl.h"
+#include "gda-server.h"
 #include "gda-server-private.h"
 
 /*
@@ -240,9 +240,9 @@ impl_GDA_Recordset_close (impl_POA_GDA_Recordset * servant,
 		servant->poa,
 		PortableServer_POA_servant_to_id(servant->poa,servant, ev),
 		ev);
-	gda_server_impl_exception(ev);
+	gda_server_exception(ev);
 	impl_GDA_Recordset__destroy(servant, ev);
-	if (gda_server_impl_exception(ev) < 0)
+	if (gda_server_exception(ev) < 0)
 		return -1;
 	return 0;
 }
@@ -379,7 +379,7 @@ impl_GDA_Recordset_fetch (impl_POA_GDA_Recordset * servant,
 
 		gda_log_error(_("%s: an error ocurred while fetching data"), __PRETTY_FUNCTION__);
 		exception->errors._length = g_list_length(cnc->errors);
-		exception->errors._buffer = gda_server_impl_make_error_buffer(cnc);
+		exception->errors._buffer = gda_server_make_error_buffer(cnc);
 		exception->realcommand = CORBA_string_dup("Fetch");
 		CORBA_exception_set(ev, CORBA_USER_EXCEPTION, ex_GDA_DriverError, exception);
 		return chunk;

@@ -18,7 +18,7 @@
  */
 
 #include "config.h"
-#include "gda-server-impl.h"
+#include "gda-server.h"
 #include "gda-server-private.h"
 
 /*
@@ -233,7 +233,7 @@ impl_GDA_Command_open (impl_POA_GDA_Command * servant,
 	gda_server_error_free(error);
 	if (affected) *affected = laffected;
 	retval = impl_GDA_Recordset__create(servant->poa, recset, ev);
-	gda_server_impl_exception(ev);
+	gda_server_exception(ev);
 	return retval;
 }
 

@@ -18,7 +18,7 @@
  */
 
 #include "config.h"
-#include "gda-server-impl.h"
+#include "gda-server.h"
 #include "gda-server-private.h"
 
 /*
@@ -180,7 +180,7 @@ impl_GDA_Connection__get_errors (impl_POA_GDA_Connection * servant,
 	GDA_ErrorSeq* rc = GDA_ErrorSeq__alloc();
 
 	rc->_length = 0;
-	rc->_buffer = gda_server_impl_make_error_buffer(servant->cnc);
+	rc->_buffer = gda_server_make_error_buffer(servant->cnc);
 	return rc;
 }
 
@@ -245,7 +245,7 @@ impl_GDA_Connection_close (impl_POA_GDA_Connection * servant,
 		servant->poa,
 		PortableServer_POA_servant_to_id(servant->poa, servant, ev),
 		ev);
-	if (gda_server_impl_exception(ev) < 0)
+	if (gda_server_exception(ev) < 0)
 		rc = -1;
 	return rc;
 }
@@ -262,7 +262,7 @@ impl_GDA_Connection_open (impl_POA_GDA_Connection * servant,
 	/* free the previous GdaServerConnection, if any */
 	if (servant->cnc != NULL)
 		gda_server_connection_free (servant->cnc);
-	servant->cnc = gda_server_connection_new(gda_server_impl_find(servant->id));
+	servant->cnc = gda_server_connection_new(gda_server_find(servant->id));
 	if (!servant->cnc)
 		return -1;
 
@@ -271,7 +271,7 @@ impl_GDA_Connection_open (impl_POA_GDA_Connection * servant,
 
 		if (servant->cnc != NULL && servant->cnc->errors != NULL) {
 			exception->errors._length = g_list_length(servant->cnc->errors);
-			exception->errors._buffer = gda_server_impl_make_error_buffer(servant->cnc);
+			exception->errors._buffer = gda_server_make_error_buffer(servant->cnc);
 		}
 		else
 			exception->errors._length = 0;
@@ -300,13 +300,13 @@ impl_GDA_Connection_openSchema (impl_POA_GDA_Connection * servant,
 							constraints->_length)) == 0) {
 		GDA_DriverError* exception = GDA_DriverError__alloc();
 		exception->errors._length = g_list_length(servant->cnc->errors);
-		exception->errors._buffer = gda_server_impl_make_error_buffer(servant->cnc);
+		exception->errors._buffer = gda_server_make_error_buffer(servant->cnc);
 		exception->realcommand = CORBA_string_dup(__PRETTY_FUNCTION__);
 		CORBA_exception_set(ev, CORBA_USER_EXCEPTION, ex_GDA_DriverError, exception);
 		return CORBA_OBJECT_NIL;
     }
 	new_recset = impl_GDA_Recordset__create(servant->poa, recset, ev);
-	gda_server_impl_exception(ev);
+	gda_server_exception(ev);
 	return new_recset;
 }
 
@@ -322,12 +322,13 @@ impl_GDA_Connection_modifySchema (impl_POA_GDA_Connection * servant,
 		!= 0) {
 		GDA_DriverError* exception = GDA_DriverError__alloc();
 		exception->errors._length = g_list_length(servant->cnc->errors);
-		exception->errors._buffer = gda_server_impl_make_error_buffer(servant->cnc);
+		exception->errors._buffer = gda_server_make_error_buffer(servant->cnc);
 		exception->realcommand = CORBA_string_dup(__PRETTY_FUNCTION__);
 		CORBA_exception_set(ev, CORBA_USER_EXCEPTION, ex_GDA_DriverError, exception);
 		return -1;
     }
-	if (!gda_server_impl_exception(ev)) return -1;
+	if (!gda_server_exception(ev))
+		return -1;
   
 	return 0;
 }
@@ -340,7 +341,7 @@ impl_GDA_Connection_createCommand (impl_POA_GDA_Connection * servant,
 	GdaServerCommand* cmd = gda_server_command_new(servant->cnc);
 
 	retval = impl_GDA_Command__create(servant->poa, cmd, ev);
-	if (gda_server_impl_exception(ev)) {
+	if (gda_server_exception(ev)) {
 		gda_server_command_free(cmd);
 		return CORBA_OBJECT_NIL;
     }
@@ -356,7 +357,7 @@ impl_GDA_Connection_createRecordset (impl_POA_GDA_Connection * servant,
 	GdaServerRecordset* rs = gda_server_recordset_new(servant->cnc);
 
 	retval = impl_GDA_Recordset__create(servant->poa, rs, ev);
-	if (gda_server_impl_exception(ev)) {
+	if (gda_server_exception(ev)) {
 		gda_server_recordset_free(rs);
 		return CORBA_OBJECT_NIL;
     }
@@ -446,7 +447,7 @@ free_error_list (GList *list)
  * gda_server_connection_new
  */
 GdaServerConnection *
-gda_server_connection_new (GdaServerImpl *server_impl)
+gda_server_connection_new (GdaServer *server_impl)
 {
 	GdaServerConnection* cnc;
 	
@@ -835,7 +836,7 @@ gda_server_connection_free (GdaServerConnection *cnc)
 			if (!cnc->server_impl->connections) {
 				/* if no connections left, terminate */
 				gda_log_message("No connections left. Terminating");
-				gda_server_impl_stop(cnc->server_impl);
+				gda_server_stop(cnc->server_impl);
 			}
 		}
 		g_free((gpointer) cnc);

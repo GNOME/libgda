@@ -17,9 +17,9 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include "config.h"
-#include "gda-server-impl.h"
 #include <time.h>
+#include "gda-server.h"
+#include "gda-server-private.h"
 
 /**
  * gda_server_field_new

@@ -17,8 +17,7 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include "config.h"
-#include "gda-server-impl.h"
+#include "gda-server.h"
 #include "gda-server-private.h"
 
 /*
@@ -95,7 +94,7 @@ impl_GDA_ConnectionFactory_create_connection (impl_POA_GDA_ConnectionFactory * s
 	GDA_Connection new_connection;
 	
 	new_connection = impl_GDA_Connection__create(servant->poa, goad_id, ev);
-	if (gda_server_impl_exception(ev)) {
+	if (gda_server_exception(ev)) {
 		gda_log_error("There was an error when creating a connection object");
 		CORBA_Object_release(new_connection, ev);
 		return CORBA_OBJECT_NIL;
