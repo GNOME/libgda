@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda VERSION\n"
-"POT-Creation-Date: 2002-07-07 23:22+0200\n"
-"PO-Revision-Date: 2002-05-30 14:25+0700\n"
+"POT-Creation-Date: 2002-07-22 13:59+0200\n"
+"PO-Revision-Date: 2002-07-22 22:37+0700\n"
 "Last-Translator: pclouds <pclouds@gmx.net>\n"
 "Language-Team: GnomeVI <gnomevi-list@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -38,7 +38,7 @@ msgstr "Việc tạo GdaServerProvider thất bại"
 
 #: libgda/gda-client.c:341
 msgid "Temporary data source created by libgda. Don't remove it"
-msgstr ""
+msgstr "Nguồn dữ liệu tạm được tạo bởi libgda. Đừng loại bỏ nó"
 
 #. gda_server_recordset_model_set_field_defined_size (recset, 0, 256);
 #: libgda/gda-config.c:1268 providers/default/gda-default-provider.c:463
@@ -67,7 +67,7 @@ msgstr "Tên người dùng"
 
 #: libgda/gda-config.c:1273
 msgid "Password"
-msgstr ""
+msgstr "Mật khẩu"
 
 #: libgda/gda-data-model.c:589
 #, c-format
@@ -139,11 +139,11 @@ msgstr "Lỗi đọc %s: %s"
 msgid "Could not create file %s"
 msgstr "Không thể tạo tập tin %s"
 
-#: libgda/gda-value.c:1315
+#: libgda/gda-value.c:1346
 msgid "TRUE"
 msgstr "ĐÚNG"
 
-#: libgda/gda-value.c:1317
+#: libgda/gda-value.c:1348
 msgid "FALSE"
 msgstr "SAI"
 
@@ -192,58 +192,58 @@ msgid "Not Implemented"
 msgstr "Chưa được thực hiện"
 
 #: providers/default/gda-default-provider.c:361
-#: providers/mysql/gda-mysql-provider.c:873
+#: providers/mysql/gda-mysql-provider.c:941
 #: providers/oracle/gda-oracle-provider.c:1056
-#: providers/postgres/gda-postgres-provider.c:829
+#: providers/postgres/gda-postgres-provider.c:835
 msgid "Field name"
 msgstr "Tên trường"
 
 #: providers/default/gda-default-provider.c:362
-#: providers/mysql/gda-mysql-provider.c:874
+#: providers/mysql/gda-mysql-provider.c:942
 #: providers/oracle/gda-oracle-provider.c:1057
-#: providers/postgres/gda-postgres-provider.c:830
+#: providers/postgres/gda-postgres-provider.c:836
 msgid "Data type"
 msgstr "Kiểu dữ liệu"
 
 #: providers/default/gda-default-provider.c:363
-#: providers/mysql/gda-mysql-provider.c:875
+#: providers/mysql/gda-mysql-provider.c:943
 #: providers/oracle/gda-oracle-provider.c:1058
-#: providers/postgres/gda-postgres-provider.c:831
+#: providers/postgres/gda-postgres-provider.c:837
 msgid "Size"
 msgstr "Kích thước"
 
 #: providers/default/gda-default-provider.c:364
-#: providers/mysql/gda-mysql-provider.c:876
+#: providers/mysql/gda-mysql-provider.c:944
 #: providers/oracle/gda-oracle-provider.c:1059
-#: providers/postgres/gda-postgres-provider.c:832
+#: providers/postgres/gda-postgres-provider.c:838
 msgid "Scale"
 msgstr "Co dãn"
 
 #: providers/default/gda-default-provider.c:365
-#: providers/mysql/gda-mysql-provider.c:877
+#: providers/mysql/gda-mysql-provider.c:945
 #: providers/oracle/gda-oracle-provider.c:1060
-#: providers/postgres/gda-postgres-provider.c:833
+#: providers/postgres/gda-postgres-provider.c:839
 msgid "Not null?"
 msgstr "Không null?"
 
 #: providers/default/gda-default-provider.c:366
-#: providers/mysql/gda-mysql-provider.c:878
+#: providers/mysql/gda-mysql-provider.c:946
 #: providers/oracle/gda-oracle-provider.c:1061
-#: providers/postgres/gda-postgres-provider.c:834
+#: providers/postgres/gda-postgres-provider.c:840
 msgid "Primary key?"
 msgstr "Khóa chính?"
 
 #: providers/default/gda-default-provider.c:367
-#: providers/mysql/gda-mysql-provider.c:879
+#: providers/mysql/gda-mysql-provider.c:947
 #: providers/oracle/gda-oracle-provider.c:1062
-#: providers/postgres/gda-postgres-provider.c:835
+#: providers/postgres/gda-postgres-provider.c:841
 msgid "Unique index?"
 msgstr "Index duy nhất?"
 
 #: providers/default/gda-default-provider.c:368
-#: providers/mysql/gda-mysql-provider.c:880
+#: providers/mysql/gda-mysql-provider.c:948
 #: providers/oracle/gda-oracle-provider.c:1063
-#: providers/postgres/gda-postgres-provider.c:836
+#: providers/postgres/gda-postgres-provider.c:842
 msgid "References"
 msgstr "Tham chiếu"
 
@@ -304,20 +304,36 @@ msgstr ""
 msgid "Invalid MYSQL handle"
 msgstr "Handle MYSQL không hợp lệ"
 
-#. gda_server_recordset_model_set_field_defined_size (recset, 0, 32);
-#: providers/mysql/gda-mysql-provider.c:775
+#. 2nd, the owner
+#: providers/mysql/gda-mysql-provider.c:779
+msgid "Unknown"
+msgstr "Không biết"
+
+#: providers/mysql/gda-mysql-provider.c:846
 #: providers/oracle/gda-oracle-provider.c:1563
 msgid "Type"
 msgstr "Kiểu"
 
-#: providers/mysql/gda-mysql-provider.c:888
+#: providers/mysql/gda-mysql-provider.c:847
+msgid "Owner"
+msgstr "Sở hữu"
+
+#: providers/mysql/gda-mysql-provider.c:848
+msgid "Comments"
+msgstr "Ghi chú"
+
+#: providers/mysql/gda-mysql-provider.c:849
+msgid "GDA type"
+msgstr "Kiểu GDA"
+
+#: providers/mysql/gda-mysql-provider.c:956
 #: providers/mysql/gda-mysql-recordset.c:58
 #: providers/mysql/gda-mysql-recordset.c:174
 msgid "Invalid MySQL handle"
 msgstr "Handle MySQL không hợp lệ"
 
-#: providers/mysql/gda-mysql-provider.c:897
-#: providers/mysql/gda-mysql-provider.c:905
+#: providers/mysql/gda-mysql-provider.c:965
+#: providers/mysql/gda-mysql-provider.c:973
 msgid "You need to specify the name of the table"
 msgstr "Bạn cần cho biết tên bảng"
 
@@ -353,64 +369,52 @@ msgid "GDA bridge to ODBC data sources"
 msgstr "Cầu nối GDA cho nguồn dữ liệu ODBC"
 
 #: providers/oracle/gda-oracle-provider.c:193
-#, fuzzy
 msgid "Could not initialize Oracle"
-msgstr "Không thể khởi động môi trường Oracle"
+msgstr "Không thể khởi động Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:204
-#, fuzzy
 msgid "Could not initialize the Oracle environment"
 msgstr "Không thể khởi động môi trường Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:216
-#, fuzzy
 msgid "Could not allocate the Oracle service handle"
-msgstr "Không thể khởi động Oracle server handle"
+msgstr "Không thể cấp phát Oracle service handle"
 
 #: providers/oracle/gda-oracle-provider.c:226
-#, fuzzy
 msgid "Could not allocate the Oracle error handle"
-msgstr "Không thể khởi động Oracle error handler"
+msgstr "Không thể cấp phát Oracle error handle"
 
 #: providers/oracle/gda-oracle-provider.c:238
-#, fuzzy
 msgid "Could not allocate the Oracle server handle"
-msgstr "Không thể khởi động Oracle server handle"
+msgstr "Không thể cấp phát Oracle server handle"
 
 #: providers/oracle/gda-oracle-provider.c:251
-#, fuzzy
 msgid "Could not allocate the Oracle session handle"
-msgstr "Không thể khởi động Oracle error handler"
+msgstr "Không thể cấp phát Oracle session handle"
 
 #: providers/oracle/gda-oracle-provider.c:281
-#, fuzzy
 msgid "Could not attach to the Oracle server"
-msgstr "Không thể khởi động Oracle server handle"
+msgstr "Không thể gắn với Oracle server"
 
 #: providers/oracle/gda-oracle-provider.c:297
-#, fuzzy
 msgid "Could not set the Oracle server attribute in the service context"
-msgstr "Không thể khởi động Oracle service context"
+msgstr "Không thể đặt thuộc tính Oracle server trong service context"
 
 #: providers/oracle/gda-oracle-provider.c:313
-#, fuzzy
 msgid "Could not set the Oracle username attribute"
-msgstr "Không thể khởi động Oracle server handle"
+msgstr "Không thể đặt thuộc tính tên người dùng Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:329
-#, fuzzy
 msgid "Could not set the Oracle password attribute"
-msgstr "Không thể khởi động Oracle component factory"
+msgstr "Không thể đặt thuộc tính mật khẩu Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:344
-#, fuzzy
 msgid "Could not begin the Oracle session"
-msgstr "Không thể khởi động môi trường Oracle"
+msgstr "Không thể bắt đầu Oracle session"
 
 #: providers/oracle/gda-oracle-provider.c:362
-#, fuzzy
 msgid "Could not set the Oracle session attribute in the service context"
-msgstr "Không thể khởi động Oracle service context"
+msgstr "Không thể đặt thuộc tính session Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:444
 #: providers/oracle/gda-oracle-provider.c:518
@@ -424,65 +428,55 @@ msgstr "Không thể khởi động Oracle service context"
 #: providers/oracle/gda-oracle-recordset.c:166
 #: providers/oracle/gda-oracle-recordset.c:388
 #: providers/oracle/gda-oracle-recordset.c:589
-#, fuzzy
 msgid "Invalid Oracle handle"
-msgstr "Handle Sqlite không hợp lệ"
+msgstr "Handle Oracle không hợp lệ"
 
 #: providers/oracle/gda-oracle-provider.c:455
-#, fuzzy
 msgid "Could not allocate the Oracle statement handle"
-msgstr "Không thể khởi động Oracle server handle"
+msgstr "Không thể cấp phát Oracle statement handle"
 
 #: providers/oracle/gda-oracle-provider.c:466
-#, fuzzy
 msgid "Could not prepare the Oracle statement"
-msgstr "Không thể khởi động môi trường Oracle"
+msgstr "Không thể chuẩn bị Oracle statement"
 
 #: providers/oracle/gda-oracle-provider.c:498
-#, fuzzy
 msgid "Could not bind the Oracle statement parameter"
-msgstr "Không thể khởi động Oracle component factory"
+msgstr "Không thể gắn kết Oracle statement parameter"
 
 #: providers/oracle/gda-oracle-provider.c:543
-#, fuzzy
 msgid "Could not get the Oracle statement type"
-msgstr "Không thể khởi động Oracle component factory"
+msgstr "Không thể lấy Oracle statement type"
 
 #: providers/oracle/gda-oracle-provider.c:561
-#, fuzzy
 msgid "Could not execute the Oracle statement"
-msgstr "Không thể khởi động môi trường Oracle"
+msgstr "Không thể thực hiện Oracle statement"
 
 #: providers/oracle/gda-oracle-provider.c:574
 msgid "Could not get the number of columns in the result set"
-msgstr ""
+msgstr "Không thể lấu số cột trong tập kết quả"
 
 #: providers/oracle/gda-oracle-provider.c:591
 msgid "Could not get the parameter descripter in the result set"
-msgstr ""
+msgstr "Không thể lấy bộ mô tả tham số trong tập kết quả"
 
 #: providers/oracle/gda-oracle-provider.c:603
-#, fuzzy
 msgid "Could not get the column name in the result set"
-msgstr "Không thể lấy giá trị cột"
+msgstr "Không thể lấy tên cột trong tập kết quả"
 
 #: providers/oracle/gda-oracle-provider.c:749
 #: providers/oracle/gda-oracle-provider.c:825
 #: providers/oracle/gda-oracle-provider.c:875
 #: providers/oracle/gda-oracle-provider.c:931
-#, fuzzy
 msgid "Could not attach the transaction to the service context"
-msgstr "Không thể khởi động Oracle service context"
+msgstr "Không thể gắn phiên giao dịch vào service context"
 
 #: providers/oracle/gda-oracle-provider.c:799
-#, fuzzy
 msgid "Could not allocate the Oracle transaction handle"
-msgstr "Không thể khởi động Oracle error handler"
+msgstr "Không thể cấp phát Oracle transaction handler"
 
 #: providers/oracle/gda-oracle-provider.c:811
-#, fuzzy
 msgid "Could not set the Oracle transaction name"
-msgstr "Không thể khởi động môi trường Oracle"
+msgstr "Không thể đặt tên phiên giao dịch Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:836
 #, fuzzy
@@ -556,46 +550,45 @@ msgstr "Không thể khởi động Oracle server handle"
 
 #: providers/oracle/gda-oracle-provider.c:1393
 msgid "Could not get the Oracle field nullable attribute"
-msgstr ""
+msgstr "Không thể lấy trường thuộc tính có-thể-null của Oracle"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/oracle/gda-oracle-provider.c:1459
-#: providers/postgres/gda-postgres-provider.c:1197 testing/client.c:123
+#: providers/postgres/gda-postgres-provider.c:1203 testing/client.c:123
 msgid "Users"
 msgstr "Người dùng"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/oracle/gda-oracle-provider.c:1651
-#: providers/postgres/gda-postgres-provider.c:767 testing/client.c:121
+#: providers/postgres/gda-postgres-provider.c:773 testing/client.c:121
 msgid "Indexes"
 msgstr "Index"
 
 #: providers/oracle/gda-oracle-provider.c:1655
-#, fuzzy
 msgid "Procedures"
-msgstr "\t\tThủ tục: %s\n"
+msgstr "Thủ tục"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/oracle/gda-oracle-provider.c:1659
-#: providers/postgres/gda-postgres-provider.c:1225 testing/client.c:124
+#: providers/postgres/gda-postgres-provider.c:1231 testing/client.c:124
 msgid "Sequences"
 msgstr "Sequence"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/oracle/gda-oracle-provider.c:1663
-#: providers/postgres/gda-postgres-provider.c:672
+#: providers/postgres/gda-postgres-provider.c:678
 msgid "Tables"
 msgstr "Bảng"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/oracle/gda-oracle-provider.c:1667
-#: providers/postgres/gda-postgres-provider.c:818 testing/client.c:125
+#: providers/postgres/gda-postgres-provider.c:824 testing/client.c:125
 msgid "Triggers"
 msgstr "Trigger"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/oracle/gda-oracle-provider.c:1671
-#: providers/postgres/gda-postgres-provider.c:742 testing/client.c:120
+#: providers/postgres/gda-postgres-provider.c:748 testing/client.c:120
 msgid "Views"
 msgstr "View"
 
@@ -672,35 +665,35 @@ msgstr "KHÔNG CÓ MÔ TẢ"
 msgid "Not available"
 msgstr "Chưa sẵn sàng"
 
-#: providers/postgres/gda-postgres-provider.c:382
-#: providers/postgres/gda-postgres-provider.c:453
-#: providers/postgres/gda-postgres-provider.c:587
+#: providers/postgres/gda-postgres-provider.c:388
+#: providers/postgres/gda-postgres-provider.c:459
+#: providers/postgres/gda-postgres-provider.c:593
 #: providers/postgres/gda-postgres-recordset.c:175
 #: providers/postgres/gda-postgres-recordset.c:215
 #: providers/postgres/gda-postgres-recordset.c:257
 msgid "Invalid PostgreSQL handle"
 msgstr "Handle PostgreSQL không hợp lệ"
 
-#: providers/postgres/gda-postgres-provider.c:711
+#: providers/postgres/gda-postgres-provider.c:717
 msgid "Types"
 msgstr "Kiểu"
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:793 testing/client.c:122
+#: providers/postgres/gda-postgres-provider.c:799 testing/client.c:122
 msgid "Aggregates"
 msgstr "Aggregate"
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:1172 testing/client.c:116
+#: providers/postgres/gda-postgres-provider.c:1178 testing/client.c:116
 msgid "Databases"
 msgstr "Cơ sở dữ liệu"
 
-#: providers/postgres/gda-postgres-provider.c:1265
+#: providers/postgres/gda-postgres-provider.c:1271
 #, fuzzy
 msgid "Table name"
 msgstr "Tên bảng"
 
-#: providers/postgres/gda-postgres-provider.c:1266
+#: providers/postgres/gda-postgres-provider.c:1272
 #, fuzzy
 msgid "Sequence"
 msgstr "Sequence"
@@ -710,6 +703,11 @@ msgstr "Sequence"
 #: providers/sqlite/gda-sqlite-recordset.c:245
 msgid "Column number out of range"
 msgstr "Số cột vượt ngoài phạm vi"
+
+#: providers/postgres/gda-postgres-recordset.c:353
+#, c-format
+msgid "Tuples:\"%s\""
+msgstr ""
 
 #: providers/postgres/libmain.c:41
 msgid "GDA provider for PostgreSQL databases"
@@ -724,9 +722,8 @@ msgstr "Handle SQLITE không hợp lệ"
 #: providers/sqlite/gda-sqlite-recordset.c:159
 #: providers/sqlite/gda-sqlite-recordset.c:198
 #: providers/sqlite/gda-sqlite-recordset.c:239
-#, fuzzy
 msgid "Invalid SQLite handle"
-msgstr "Handle Sqlite không hợp lệ"
+msgstr "Handle SQLite không hợp lệ"
 
 #: providers/sqlite/gda-sqlite-provider.c:332
 msgid "Only one database per connection is allowed"
@@ -734,7 +731,7 @@ msgstr "Chỉ cho phép một cơ sở dữ liệu cho mỗi kết nối"
 
 #: providers/sqlite/gda-sqlite-provider.c:346
 msgid "To remove a SQLite database you should remove the database file by hand"
-msgstr ""
+msgstr "Để loại bỏ cơ sở dữ liệu SQLite, bạn nên loại bỏ tập tin cơ sở dữ liệu bằng tay"
 
 #: providers/sqlite/libmain.c:41
 msgid "GDA provider for SQLite databases"
@@ -802,9 +799,9 @@ msgid "\t\tSequences: %s\n"
 msgstr "\t\tSequence: %s\n"
 
 #: testing/client.c:96
-#, fuzzy, c-format
+#, c-format
 msgid "\t\tSQL: %s\n"
-msgstr "\t\tNgôn ngữ SQL: %s\n"
+msgstr "\t\tSQL: %s\n"
 
 #: testing/client.c:99
 #, c-format
@@ -833,7 +830,7 @@ msgstr "\t\tTruy vấn XML: %s\n"
 
 #: testing/client.c:117
 msgid "Stored procedures"
-msgstr ""
+msgstr "Stored procedures"
 
 #: testing/client.c:118
 msgid "Connection Tables"
