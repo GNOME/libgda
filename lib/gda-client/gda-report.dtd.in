@@ -6,7 +6,7 @@
      reportviewer's DTD (http://www.mutinybaysoftware.com)
 -->
 
-<!ENTITY % query SYSTEM "/usr/share/libgda/dtd/gda-xml-query.dtd">
+<!ENTITY % query SYSTEM "@datadir@/gda/dtd/gda-xml-query.dtd">
 %query;
 
 
@@ -51,14 +51,14 @@
 
 <!ELEMENT reportelementlist   (line|label|special|repfield|picture)+>
 
-<!ELEMENT reportheader (query?,reportelementlist)>
+<!ELEMENT reportheader (reportelementlist)>
 <!ATTLIST reportheader 
   height          NMTOKEN           "2.0"
   newpage         (yes|no)          "no"
 >
 
 	
-<!ELEMENT reportfooter (query?,reportelementlist)>
+<!ELEMENT reportfooter (reportelementlist)>
 <!ATTLIST reportfooter 
   height          NMTOKEN           "2.0"
   newpage         (yes|no)          "no"
@@ -71,7 +71,7 @@
 
 <!ELEMENT pageheaderlist (pageheader+)>
 
-<!ELEMENT pageheader (query?,reportelementlist)>
+<!ELEMENT pageheader (reportelementlist)>
 <!ATTLIST pageheader 
   height          NMTOKEN           "2.0"
   positionfreq   (%positionfreq;)   "all"
@@ -81,7 +81,7 @@
 
 <!ELEMENT pagefooterlist (pagefooter+)>
 
-<!ELEMENT pagefooter (query?,reportelementlist)>
+<!ELEMENT pagefooter (reportelementlist)>
 <!ATTLIST pagefooter 
   height          NMTOKEN           "2.0"
   positionfreq   (%positionfreq;)   "all"
@@ -94,13 +94,13 @@
 -->
 <!ELEMENT datalist (reportdata+)>
 
-<!ELEMENT dataheader (query?,reportelementlist)>
+<!ELEMENT dataheader (reportelementlist)>
 <!ATTLIST dataheader 
   height          NMTOKEN           "2.0"
 >
 
 
-<!ELEMENT datafooter (query?,reportelementlist)>
+<!ELEMENT datafooter (reportelementlist)>
 <!ATTLIST datafooter 
   height          NMTOKEN           "2.0"
 >
@@ -109,20 +109,20 @@
 <!ELEMENT reportdata (detail|(groupheader?,reportdata,groupfooter?))>
 
 
-<!ELEMENT detail (query?,reportelementlist)>
+<!ELEMENT detail (reportelementlist)>
 <!ATTLIST detail 
   height          NMTOKEN           "2.0"
 >
 
 
-<!ELEMENT groupheader (query?,reportelementlist)>
+<!ELEMENT groupheader (reportelementlist)>
 <!ATTLIST groupheader 
   height          NMTOKEN           "2.0"
   newpage         (yes|no)          "no"
 >
 
 
-<!ELEMENT groupfooter (query?,reportelementlist)>
+<!ELEMENT groupfooter (reportelementlist)>
 <!ATTLIST groupfooter 
   height        NMTOKEN             "2.0"
   newpage       (yes|no)            "no"

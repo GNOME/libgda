@@ -64,6 +64,7 @@ struct _Gda_Report
   Gda_XmlFile              obj;
 
   gchar                   *id;
+  GHashTable              *queries;
   xmlNodePtr               ReportHeader;
   xmlNodePtr               PageHeaderList;
   xmlNodePtr               DataHeader;

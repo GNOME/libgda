@@ -56,6 +56,7 @@ gda_report_init (Gda_Report *object)
   g_return_if_fail(GDA_REPORT_IS_OBJECT(object));
 
   object->id = NULL;
+  object->queries = NULL;
   object->ReportHeader = NULL;
   object->PageHeaderList = NULL;
   object->DataHeader = NULL;
@@ -105,6 +106,7 @@ gda_report_new (const gchar *id)
   gda_xml_file_construct(xmlfile, "report");
 
   root = xmlfile->root;
+//  object->queries = g_hash_table_new ((*GHashFunc) g_str_hash, (*GCompareFunc) g_str_equal);
   object->ReportHeader = xmlNewChild(root, NULL, "ReportHeader", NULL);
   object->PageHeaderList = xmlNewChild(root, NULL, "PageHeaderList", NULL);
   object->DataHeader = xmlNewChild(root, NULL, "DataHeader", NULL);
@@ -113,62 +115,53 @@ gda_report_new (const gchar *id)
   object->PageFooterList = xmlNewChild(root, NULL, "PageFooterList", NULL);
   object->ReportFooter = xmlNewChild(root, NULL, "ReportFooter", NULL);;
 
-  if (id)
-    {
-      object->id = g_strdup(id);
-      xmlNewProp(root, "id", id);
-    }
+  if (id) {
+    object->id = g_strdup(id);
+    xmlNewProp(root, "id", id);
+  }
   /* DTD */
   GDA_XML_FILE(object)->dtd = xmlCreateIntSubset(GDA_XML_FILE(object)->doc, 
-             "report", NULL, 
-             GDA_REPORT_DTD_FILE);
+                                                 "report", NULL, 
+                                                 GDA_REPORT_DTD_FILE);
 
   return object;
 }
 
-
-
-
-Gda_Report*  gda_report_new_from_file(const gchar *filename)
-{
-  Gda_Report* object;
-  gchar *str;
+Gda_Report*  gda_report_new_from_file(const gchar *filename) {
+Gda_Report* object;
+gchar *str;
 
   object = GDA_REPORT(gtk_type_new(gda_report_get_type()));
 
   /* DTD already done while loading. */
   GDA_XML_FILE(object)->doc = xmlParseFile(filename);
-  if (GDA_XML_FILE(object)->doc)
-    {
-      xmlNodePtr node;
-      GDA_XML_FILE(object)->root = 
-  xmlDocGetRootElement(GDA_XML_FILE(object)->doc);
-      node = GDA_XML_FILE(object)->root->childs;
-      while (node)
-  {
-    if (!strcmp(node->name, "ReportHeader"))
-      object->ReportHeader = node;
-    if (!strcmp(node->name, "PageHeaderList"))
-      object->PageHeaderList = node;
-    if (!strcmp(node->name, "DataHeader"))
-      object->DataHeader = node;
-    if (!strcmp(node->name, "DataList"))
-      object->DataList = node;
-    if (!strcmp(node->name, "DataFooter"))
-      object->DataFooter = node;
-    if (!strcmp(node->name, "PageFooterList"))
-      object->PageFooterList = node;
-    if (!strcmp(node->name, "ReportFooter"))
-      object->ReportFooter = node;
-    node = node->next;
-  }
+  if (GDA_XML_FILE(object)->doc) {
+    xmlNodePtr node;
+    GDA_XML_FILE(object)->root = xmlDocGetRootElement(GDA_XML_FILE(object)->doc);
+    node = GDA_XML_FILE(object)->root->childs;
+    while (node) {
+      if (!strcmp(node->name, "ReportHeader"))
+        object->ReportHeader = node;
+      if (!strcmp(node->name, "PageHeaderList"))
+        object->PageHeaderList = node;
+      if (!strcmp(node->name, "DataHeader"))
+        object->DataHeader = node;
+      if (!strcmp(node->name, "DataList"))
+        object->DataList = node;
+      if (!strcmp(node->name, "DataFooter"))
+        object->DataFooter = node;
+      if (!strcmp(node->name, "PageFooterList"))
+        object->PageFooterList = node;
+      if (!strcmp(node->name, "ReportFooter"))
+        object->ReportFooter = node;
+      node = node->next;
     }
+  }
 
   /* DTD */
   GDA_XML_FILE(object)->dtd = xmlCreateIntSubset(GDA_XML_FILE(object)->doc, 
-             "report", NULL, 
-             GDA_REPORT_DTD_FILE);
-
+                                                 "report", NULL, 
+                                                 GDA_REPORT_DTD_FILE);
   return object;
 }
 
@@ -261,10 +254,6 @@ Gda_ReportTag nlocation;
       case GDA_REPORT_REPORT_ELEMENT_LIST:
         node = xmlNewNode(NULL, "reportelementlist");
         break;
-      case GDA_REPORT_QUERY:
-        node = xmlNewNode(NULL, "query");
-        /* TODO */
-        break;
       case GDA_REPORT_REPORT_DATA:
         node = xmlNewNode(NULL, "reportdata");
         break;
@@ -276,43 +265,43 @@ Gda_ReportTag nlocation;
     if (node)
       switch (location) {
         case GDA_REPORT_REPORT_HEADER:
-          if ((nlocation == GDA_REPORT_QUERY) || (nlocation == GDA_REPORT_REPORT_ELEMENT_LIST))
+          if (nlocation == GDA_REPORT_REPORT_ELEMENT_LIST)
             xmlAddChild(r->ReportHeader, node);
           else
             error = TRUE;
           break;
         case GDA_REPORT_PAGE_HEADER_LIST:
-          if ((nlocation == GDA_REPORT_QUERY) || (nlocation == GDA_REPORT_REPORT_ELEMENT_LIST))
+          if (nlocation == GDA_REPORT_REPORT_ELEMENT_LIST)
             xmlAddChild(r->PageHeaderList, node);
           else
             error = TRUE;
           break;
         case GDA_REPORT_DATA_HEADER:
-          if ((nlocation == GDA_REPORT_QUERY) || (nlocation == GDA_REPORT_REPORT_ELEMENT_LIST))
+          if (nlocation == GDA_REPORT_REPORT_ELEMENT_LIST)
             xmlAddChild(r->DataHeader, node);
           else
             error = TRUE;
           break;
         case GDA_REPORT_DATA_LIST:
-          if ((nlocation == GDA_REPORT_REPORT_DATA))
+          if (nlocation == GDA_REPORT_REPORT_DATA)
             xmlAddChild(r->DataList, node);
           else
             error = TRUE;
           break;
         case GDA_REPORT_DATA_FOOTER:
-          if ((nlocation == GDA_REPORT_QUERY) || (nlocation == GDA_REPORT_REPORT_ELEMENT_LIST))
+          if (nlocation == GDA_REPORT_REPORT_ELEMENT_LIST)
             xmlAddChild(r->DataFooter, node);
           else
             error = TRUE;
           break;
         case GDA_REPORT_PAGE_FOOTER_LIST:
-          if ((nlocation == GDA_REPORT_QUERY) || (nlocation == GDA_REPORT_REPORT_ELEMENT_LIST))
+          if (nlocation == GDA_REPORT_REPORT_ELEMENT_LIST)
             xmlAddChild(r->PageFooterList, node);
           else
             error = TRUE;
           break;
         case GDA_REPORT_REPORT_FOOTER:
-          if ((nlocation == GDA_REPORT_QUERY) || (nlocation == GDA_REPORT_REPORT_ELEMENT_LIST))
+          if (nlocation == GDA_REPORT_REPORT_ELEMENT_LIST)
             xmlAddChild(r->ReportFooter, node);
           else
             error = TRUE;
@@ -566,14 +555,14 @@ void gda_report_set_attribute(xmlNodePtr node, const gchar *attname,
     xmlSetProp(node, (xmlChar *) attname, (xmlChar *) value);
 }
 
-void gda_report_set_id(Gda_Report *q, xmlNodePtr node, const gchar *value)
+void gda_report_set_id(Gda_Report *r, xmlNodePtr node, const gchar *value)
 {
   xmlAttrPtr ptr=NULL;
 
   if (node)
     ptr = xmlSetProp(node, "id", (xmlChar *) value);
   if (ptr)
-    xmlAddID(GDA_XML_FILE(q)->context, GDA_XML_FILE(q)->doc,
+    xmlAddID(GDA_XML_FILE(r)->context, GDA_XML_FILE(r)->doc,
        (xmlChar *) value, ptr);
 }
 
@@ -591,10 +580,6 @@ Gda_ReportTag retval=GDA_REPORT_UNKNOWN;
 
   if (!found && !strcmp(node->name, "reportelementlist")) {
     retval = GDA_REPORT_REPORT_ELEMENT_LIST;
-    found = TRUE;
-  }
-  if (!found && !strcmp(node->name, "query")) {
-    retval = GDA_REPORT_QUERY;
     found = TRUE;
   }
   if (!found && !strcmp(node->name, "reportdata")) {
@@ -667,10 +652,10 @@ Gda_ReportTag retval=GDA_REPORT_UNKNOWN;
     retval = GDA_REPORT_PAGE_FOOTER_LIST;
     found = TRUE;
   }
-/*  if (!found && !strcmp(node->name, "ReportFooter")) {
+  if (!found && !strcmp(node->name, "ReportFooter")) {
     retval = GDA_REPORT_REPORT_FOOTER;
     found = TRUE;
-  }*/
+  }
 
   return retval;
 }
