@@ -73,7 +73,7 @@ gda_value_new_null (void)
  * Returns: The newly created #GdaValue.
  */
 GdaValue *
-gda_value_new_bigint (long long val)
+gda_value_new_bigint (gint64 val)
 {
 	return (GdaValue *) bonobo_arg_new_from (GDA_VALUE_TYPE_BIGINT,
 						(gconstpointer) &val);
@@ -358,7 +358,7 @@ gda_value_copy (GdaValue *value)
  * 
  * Returns: the value contained in @value.
  */
-long long
+gint64
 gda_value_get_bigint (GdaValue *value)
 {
 	g_return_val_if_fail (value != NULL, -1);
@@ -373,7 +373,7 @@ gda_value_get_bigint (GdaValue *value)
  * Stores @val into @value.
  */
 void
-gda_value_set_bigint (GdaValue *value, long long val)
+gda_value_set_bigint (GdaValue *value, gint64 val)
 {
 	g_return_if_fail (value != NULL);
 

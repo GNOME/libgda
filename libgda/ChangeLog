@@ -2,6 +2,9 @@
 
 	* gda-value.c: added documentation. Corrected changed parameter value
 	in *_list().
+
+	* gda-value.[ch]:
+	* gda-row.[ch]: changed 'long long' by 'gint64'.
 	
 2002-01-14  Rodrigo Moya <rodrigo@gnome-db.org>
 

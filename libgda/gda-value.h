@@ -56,7 +56,7 @@ typedef GNOME_Database_Timestamp      GdaTimestamp;
 #define GDA_VALUE_TYPE_TINYINT   TC_CORBA_char
 
 GdaValue     *gda_value_new_null (void);
-GdaValue     *gda_value_new_bigint (long long val);
+GdaValue     *gda_value_new_bigint (gint64 val);
 GdaValue     *gda_value_new_binary (gconstpointer val);
 GdaValue     *gda_value_new_boolean (gboolean val);
 GdaValue     *gda_value_new_date (GdaDate *val);
@@ -77,8 +77,8 @@ gboolean      gda_value_isa (const GdaValue *value, GdaValueType type);
 gboolean      gda_value_is_null (GdaValue *value);
 GdaValue     *gda_value_copy (GdaValue *value);
 
-long long     gda_value_get_bigint (GdaValue *value);
-void          gda_value_set_bigint (GdaValue *value, long long val);
+gint64        gda_value_get_bigint (GdaValue *value);
+void          gda_value_set_bigint (GdaValue *value, gint64 val);
 gconstpointer gda_value_get_binary (GdaValue *value);
 void          gda_value_set_binary (GdaValue *value, gconstpointer val, glong size);
 gboolean      gda_value_get_boolean (GdaValue *value);

@@ -339,7 +339,7 @@ gda_field_set_value (GdaField *field, const GdaValue *value)
 /**
  * gda_field_get_bigint_value
  */
-long long
+gint64
 gda_field_get_bigint_value (GdaField *field)
 {
 	g_return_val_if_fail (field != NULL, -1);
@@ -350,12 +350,12 @@ gda_field_get_bigint_value (GdaField *field)
  * gda_field_set_bigint_value
  */
 void
-gda_field_set_bigint_value (GdaField *field, long long value)
+gda_field_set_bigint_value (GdaField *field, gint64 value)
 {
 	g_return_if_fail (field != NULL);
 
 	field->attributes.gdaType = GDA_TYPE_BIGINT;
-	field->actualSize = sizeof (long long);
+	field->actualSize = sizeof (gint64);
 
 	gda_value_set_bigint (&field->value, value);
 }
