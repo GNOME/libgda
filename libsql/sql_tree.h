@@ -1,0 +1,27 @@
+#ifndef SQL_TREE_H
+#define SQL_TREE_H
+
+#include "sql_parser.h"
+
+sql_statement *sql_statement_build(sql_statement_type type, void *statement);
+sql_select_statement *sql_select_statement_build(int distinct, GList * fields, GList * from, sql_where * where,
+      GList * order, GList * group);
+sql_insert_statement *sql_insert_statement_build(sql_table * table, GList *fields, GList * values);
+sql_update_statement *sql_update_statement_build(sql_table *table, GList *set, sql_where *where);
+sql_field_item *sql_field_item_build(GList * name);
+sql_field_item *sql_field_item_build_equation(sql_field_item * left, sql_field_item * right, sql_field_operator op);
+sql_field_item *sql_field_item_build_select(sql_select_statement * select);
+sql_field_item *sql_field_build_function(gchar *funcname, GList *funcarglist);
+sql_field *sql_field_build(sql_field_item * item);
+sql_field *sql_field_set_as(sql_field * field, char *as);
+sql_table *sql_table_build(char *tablename);
+sql_table *sql_table_build_join(sql_table * left, sql_table * right, sql_condition * cond);
+sql_table *sql_table_build_select(sql_select_statement * select);
+sql_table *sql_table_set_as(sql_table * table, char *as);
+sql_where *sql_where_build_single(sql_condition * cond);
+sql_where *sql_where_build_negated(sql_where * where);
+sql_where *sql_where_build_pair(sql_where * left, sql_where * right, sql_logic_operator op);
+sql_condition *sql_build_condition(sql_field * left, sql_field * right, sql_condition_operator op);
+sql_condition *sql_build_condition_between(sql_field * field, sql_field * lower, sql_field * upper);
+
+#endif /* SQL_TREE_H */

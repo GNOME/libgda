@@ -1,3 +1,20 @@
+2002-06-18  Andrew Hill <andru@treshna.com>
+
+	* libsql/: Import SQL parser into libgda.  the test programme 
+	sql_parser_test can be used to test sql statements. 
+	* libsql/sample_sql_statements: List of SQL statements to test.
+	* libsql/sql_parser.[ch]: API to libsql
+	* libsql/sql_display.c: For debugging purposes, breaks down
+	a SQL statement into a tree like display.
+	* libsql/paser.y: bison code
+	* libsql/lexer.l: bison code
+	* libsql/sql_parse_test.c: sql_parser_test code to test sql
+	* libsql/mem.[ch]: Memory debugging and tracking code, similar
+	to glib but with a few little extras and designed to work with
+	the parser for garbage collection etc.
+	* libsql/sqltree.[ch]: Code used for building and parsing the 
+	sql tree (the more complex SQL statements).  
+	
 2002-06-17  Carlos Perelló Marín <carlos@gnome-db.org>
 
 	* doc/C/tmpl/gda-command.sgml: Automatic update.

@@ -1,0 +1,20 @@
+Select * from foo
+select a,b from blah
+select foo.blah from waah where a=b
+select a as b from blah
+select * from b where a.c is null
+select a as b from foo where a not null and (a = b or b = c) and (c = d or e = f)
+select a,b from c join d on c.foo = b.foo
+select a-b as foo from b
+select a,b from foo order by a
+select distinct a from b
+select a from b join (select a from b) on a = b
+select a from b where c between d and e
+select a from b join d on b.e = d.f as wibble where wibble.a = 5
+select * from foo where a not in (select * from b)
+select * from foo where lower(foo) = 5
+select * from b where b like '%a'
+insert into foo values (a,b)
+insert into foo (a,b) values (c,d)
+UPDATE films SET kind = 'Dramatic' WHERE kind = 'Drama'
+update foo set a=b, c=d  where foo=5
