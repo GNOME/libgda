@@ -22,6 +22,7 @@
 
 #include <config.h>
 #include <libgda/gda-intl.h>
+#include <glib.h>
 #include <stdlib.h>
 #include <string.h>
 #include "gda-freetds.h"
@@ -46,3 +47,52 @@ gda_freetds_make_error (gchar *message)
 	return error;
 }
 
+gchar
+**gda_freetds_split_commandlist(const gchar *cmdlist)
+{
+	const gchar esc = '\\';
+	
+	GSList *str_list = NULL, *akt_ptr = NULL;
+	gchar **arr = NULL, *str = NULL;
+
+	guint cnt = 0, akt_pos = 0, last_pos = 0;
+	gint single_quotes = 0;
+
+	g_return_val_if_fail(cmdlist != NULL, NULL);
+
+	while (akt_pos < strlen(cmdlist)) {
+		// assume \ is escape character
+		if ((akt_pos == 0) || (cmdlist[akt_pos - 1] != esc)) {
+			if ((single_quotes == 0) & (cmdlist[akt_pos] == ';')) {
+				if (akt_pos > last_pos) {
+					str = g_strndup((gchar *) (cmdlist + last_pos),
+					                akt_pos - last_pos);
+					cnt++;
+					str_list = g_slist_prepend(str_list, str);
+				}
+				last_pos = akt_pos + 1;
+			}
+			// semicolons in quotes will not split as they are
+			// part of the query
+			if (cmdlist[akt_pos] == '\'') {
+				single_quotes = 1 - single_quotes;
+			}
+		}
+		akt_pos++;
+	}
+	if (last_pos < strlen(cmdlist)) {
+		str = g_strndup((gchar *) (cmdlist + last_pos),
+		                strlen(cmdlist) - last_pos);
+		cnt++;
+	}
+	arr = g_new0(gchar *, cnt + 1);
+	arr[cnt--] = NULL;
+
+	for (akt_ptr = str_list; akt_ptr; akt_ptr = akt_ptr->next) {
+		arr[cnt--] = akt_ptr->data;
+	}
+
+	g_slist_free (str_list);
+
+	return arr;
+}
