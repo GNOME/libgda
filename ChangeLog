@@ -1,5 +1,8 @@
 2002-01-23  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* report/libgda-report/gda-report-document.c
+	(gda_report_document_new_from_string): implemented basic parser
+
 	* libgda/gda-util.c (gda_file_load): implemented
 
 2002-01-23  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>

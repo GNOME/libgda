@@ -125,7 +125,24 @@ gda_report_document_new (void)
 GdaReportDocument *
 gda_report_document_new_from_string (const gchar *xml)
 {
-	return NULL;
+	GdaReportDocument *document;
+
+	g_return_val_if_fail (xml != NULL, NULL);
+
+	/* parse the XML string */
+	document = g_object_new (GDA_TYPE_REPORT_DOCUMENT, NULL);
+
+	GDA_XML_DOCUMENT (document)->doc = xmlParseMemory (xml, strlen (xml));
+	if (!GDA_XML_DOCUMENT (document)->doc) {
+		gda_log_error (_("Could not parse XML document"));
+		g_object_unref (G_OBJECT (document));
+		return NULL;
+	}
+
+	GDA_XML_DOCUMENT (document)->root =
+		xmlDocGetRootElement (GDA_XML_DOCUMENT (document)->doc);
+
+	return document;
 }
 
 /**
