@@ -224,8 +224,9 @@ gda_mysql_provider_open_connection (GdaServerProvider *provider,
 		if (!t_host)
 			t_host = "localhost";
 	}
-
+	
 	mysql = g_new0 (MYSQL, 1);
+	mysql_init (mysql);
 	mysql = mysql_real_connect (mysql, t_host, t_user, t_password,
 #if MYSQL_VERSION_ID >= 32200
 				    t_db,
