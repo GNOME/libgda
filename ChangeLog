@@ -1,3 +1,16 @@
+2002-04-01  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
+	* libgda/gda-value.c (gda_value_isa): test type of value for NULL.
+
+	* providers/postgres/gda-postgres-provider.c: implemented SCHEMA_USERS,
+	SCHEMA_DATABASES and SCHEMA_SEQUENCES.
+
+	* providers/postgres/gda-postgres-recordset.c: use the new functions
+	gda_field_attributes_*.
+
+	* providers/postgres/utils.c (gda_data_type_to_string): removed unused
+	function.
+
 2002-03-31  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* idl/GNOME_Database.idl: added SCHEMA_USERS, SCHEMA_SEQUENCES,

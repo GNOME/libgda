@@ -332,6 +332,10 @@ gboolean
 gda_value_isa (const GdaValue *value, GdaValueType type)
 {
 	g_return_val_if_fail (value != NULL, FALSE);
+
+	if (value->_type == NULL)
+		return FALSE;
+
 	return bonobo_arg_type_is_equal (type, value->_type, NULL);
 }
 

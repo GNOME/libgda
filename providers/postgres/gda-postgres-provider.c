@@ -1054,6 +1054,78 @@ get_postgres_fields_metadata (GdaServerConnection *cnc, GdaParameterList *params
 	return GDA_SERVER_RECORDSET (recset);
 }
 
+static GdaServerRecordset *
+get_postgres_databases (GdaServerConnection *cnc, GdaParameterList *params)
+{
+	GList *reclist;
+	GdaServerRecordset *recset;
+
+	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), NULL);
+
+	reclist = process_sql_commands (NULL, cnc, 
+			"SELECT datname "
+			"FROM pg_database "
+			"ORDER BY 1",
+			GDA_COMMAND_OPTION_STOP_ON_ERRORS);
+
+	if (!reclist)
+		return NULL;
+
+	recset = GDA_SERVER_RECORDSET (reclist->data);
+	g_list_free (reclist);
+
+	return recset;
+}
+
+static GdaServerRecordset *
+get_postgres_users (GdaServerConnection *cnc, GdaParameterList *params)
+{
+	GList *reclist;
+	GdaServerRecordset *recset;
+
+	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), NULL);
+
+	reclist = process_sql_commands (NULL, cnc, 
+			"SELECT usename "
+			"FROM pg_user "
+			"ORDER BY usename",
+			GDA_COMMAND_OPTION_STOP_ON_ERRORS);
+
+	if (!reclist)
+		return NULL;
+
+	recset = GDA_SERVER_RECORDSET (reclist->data);
+	g_list_free (reclist);
+
+	return recset;
+}
+
+static GdaServerRecordset *
+get_postgres_sequences (GdaServerConnection *cnc, GdaParameterList *params)
+{
+	GList *reclist;
+	GdaServerRecordset *recset;
+
+	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), NULL);
+
+
+	reclist = process_sql_commands (NULL, cnc, 
+			"SELECT relname "
+			"FROM pg_class "
+			"WHERE relkind IN ('S','') "
+			"      AND relname !~ '^pg_' "
+			"ORDER BY 1",
+			GDA_COMMAND_OPTION_STOP_ON_ERRORS);
+
+	if (!reclist)
+		return NULL;
+
+	recset = GDA_SERVER_RECORDSET (reclist->data);
+	g_list_free (reclist);
+
+	return recset;
+}
+
 /* get_schema handler for the GdaPostgresProvider class */
 static GdaServerRecordset *
 gda_postgres_provider_get_schema (GdaServerProvider *provider,
@@ -1065,22 +1137,29 @@ gda_postgres_provider_get_schema (GdaServerProvider *provider,
 	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), NULL);
 
 	switch (schema) {
-	case GNOME_Database_Connection_SCHEMA_PROCEDURES :
-		return get_postgres_procedures (cnc, params);
-	case GNOME_Database_Connection_SCHEMA_TABLES :
-		return get_postgres_tables (cnc, params);
-	case GNOME_Database_Connection_SCHEMA_TYPES :
-		return get_postgres_types (cnc, params);
-	case GNOME_Database_Connection_SCHEMA_VIEWS :
-		return get_postgres_views (cnc, params);
-	case GNOME_Database_Connection_SCHEMA_INDEXES :
-		return get_postgres_indexes (cnc, params);
 	case GNOME_Database_Connection_SCHEMA_AGGREGATES :
 		return get_postgres_aggregates (cnc, params);
-	case GNOME_Database_Connection_SCHEMA_TRIGGERS :
-		return get_postgres_triggers (cnc, params);
+	case GNOME_Database_Connection_SCHEMA_DATABASES :
+		return get_postgres_databases (cnc, params);
+	case GNOME_Database_Connection_SCHEMA_INDEXES :
+		return get_postgres_indexes (cnc, params);
 	case GNOME_Database_Connection_SCHEMA_FIELDS :
 		return get_postgres_fields_metadata (cnc, params);
+	case GNOME_Database_Connection_SCHEMA_PROCEDURES :
+		return get_postgres_procedures (cnc, params);
+	case GNOME_Database_Connection_SCHEMA_SEQUENCES : // NEW
+		return get_postgres_sequences (cnc, params);
+	case GNOME_Database_Connection_SCHEMA_TABLES :
+		return get_postgres_tables (cnc, params);
+	case GNOME_Database_Connection_SCHEMA_TRIGGERS :
+		return get_postgres_triggers (cnc, params);
+	case GNOME_Database_Connection_SCHEMA_TYPES :
+		return get_postgres_types (cnc, params);
+	case GNOME_Database_Connection_SCHEMA_USERS :
+		return get_postgres_users (cnc, params);
+	case GNOME_Database_Connection_SCHEMA_VIEWS :
+		return get_postgres_views (cnc, params);
+
 	}
 
 	return NULL;

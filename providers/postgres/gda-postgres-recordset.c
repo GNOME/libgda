@@ -154,6 +154,9 @@ describe_func (GdaServerRecordset *recset)
 		// PQfsize() == -1 => variable length
 		gda_field_attributes_set_defined_size (field_attrs, 
 							PQfsize (pg_res, i));
+		gda_field_attributes_set_references (field_attrs, "");
+		gda_field_attributes_set_primary_key (field_attrs, FALSE);
+		gda_field_attributes_set_unique_key (field_attrs, FALSE);
 	}
 
 	return attrs;
