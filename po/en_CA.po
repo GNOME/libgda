@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2004-04-17 13:04-0400\n"
-"PO-Revision-Date: 2004-04-17 13:14-0400\n"
+"POT-Creation-Date: 2004-04-19 17:51-0400\n"
+"PO-Revision-Date: 2004-04-19 18:14-0400\n"
 "Last-Translator: Adam Weinberger <adamw@gnome.org>\n"
 "Language-Team: en_CA <adamw@FreeBSD.org>\n"
 "MIME-Version: 1.0\n"
@@ -203,6 +203,20 @@ msgstr "Invalid XML node"
 msgid "Could not add the data from the XML node"
 msgstr "Could not add the data from the XML node"
 
+#: libsql/sql_parser.c:59
+#, c-format
+msgid "Parse error near `%s'"
+msgstr "Parse error near `%s'"
+
+#: libsql/sql_parser.c:61
+#, c-format
+msgid "Syntax error near `%s'"
+msgstr "Syntax error near `%s'"
+
+#: libsql/sql_parser.c:358
+msgid "Empty query to parse"
+msgstr "Empty query to parse"
+
 #: providers/firebird/gda-firebird-provider.c:187
 msgid "No database specified"
 msgstr "No database specified"
@@ -307,19 +321,19 @@ msgstr ""
 msgid "Not available"
 msgstr "Not available"
 
-#: providers/freetds/gda-freetds-recordset.c:376
+#: providers/freetds/gda-freetds-recordset.c:377
 msgid "Error processing result rows.\n"
 msgstr "Error processing result rows.\n"
 
-#: providers/freetds/gda-freetds-recordset.c:383
+#: providers/freetds/gda-freetds-recordset.c:384
 msgid "Unexpected freetds return code in tds_process_row_tokens().\n"
 msgstr "Unexpected freetds return code in tds_process_row_tokens().\n"
 
-#: providers/freetds/gda-freetds-recordset.c:393
+#: providers/freetds/gda-freetds-recordset.c:394
 msgid "Error processing results.\n"
 msgstr "Error processing results.\n"
 
-#: providers/freetds/gda-freetds-recordset.c:400
+#: providers/freetds/gda-freetds-recordset.c:401
 msgid "Unexpected freetds return code in tds_process_result_tokens\n"
 msgstr "Unexpected freetds return code in tds_process_result_tokens\n"
 
@@ -488,6 +502,14 @@ msgstr "GDA type"
 #: providers/postgres/gda-postgres-provider.c:1904 testing/client.c:137
 msgid "Users"
 msgstr "Users"
+
+#: providers/ibmdb2/gda-ibmdb2-types.c:154
+msgid "[BLOB unsupported]"
+msgstr "[BLOB unsupported]"
+
+#: providers/ibmdb2/gda-ibmdb2-types.c:157
+msgid "[Unsupported data]"
+msgstr "[Unsupported data]"
 
 #: providers/ibmdb2/libmain.c:39
 msgid "Provider for IBMDB2 databases"
