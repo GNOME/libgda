@@ -1,3 +1,7 @@
+2001-12-17  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* POTFILES.in: removed gda-field.c
+
 2001-12-16  Kjartan Maraas  <kmaraas@gnome.org>
 
 	* no.po: Updated Norwegian (bokmål) translation.
