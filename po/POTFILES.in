@@ -1,10 +1,12 @@
+# List of source files containing translatable strings.
+# Please keep this file sorted alphabetically.
 libgda/gda-client.c
 libgda/gda-command.c
 libgda/gda-config.c
 libgda/gda-connection.c
 libgda/gda-data-model-array.c
-libgda/gda-data-model.c
 libgda/gda-data-model-list.c
+libgda/gda-data-model.c
 libgda/gda-error.c
 libgda/gda-init.c
 libgda/gda-log.c
@@ -12,28 +14,34 @@ libgda/gda-parameter.c
 libgda/gda-quark-list.c
 libgda/gda-recordset.c
 libgda/gda-row.c
+libgda/gda-select.c
 libgda/gda-server-provider.c
 libgda/gda-table.c
+libgda/gda-util.c
 libgda/gda-value.c
 libgda/gda-xml-database.c
 libgda/gda-xml-document.c
-# List of source files containing translatable strings.
-# Please keep this file sorted alphabetically.
 providers/default/gda-default-provider.c
 providers/default/gda-default-recordset.c
+providers/default/libmain.c
+providers/mdb/gda-mdb-provider.c
+providers/mdb/libmain.c
 providers/mysql/gda-mysql-provider.c
 providers/mysql/gda-mysql-recordset.c
+providers/mysql/libmain.c
 providers/mysql/utils.c
+providers/odbc/libmain.c
 providers/oracle/gda-oracle-connection.c
 providers/oracle/main.c
 providers/postgres/gda-postgres-provider.c
 providers/postgres/gda-postgres-recordset.c
+providers/postgres/libmain.c
 providers/postgres/utils.c
 providers/sqlite/gda-sqlite-provider.c
 providers/sqlite/gda-sqlite-recordset.c
+providers/sqlite/libmain.c
 providers/sybase/main.c
 report/gda-report-engine.c
-report/GNOME_Database_Report.server.in
 report/job.c
 report/libgda-report/gda-report-client.c
 report/libgda-report/gda-report-document.c
