@@ -16,7 +16,7 @@ DOC_SOURCE_DIR=../../libgda
 SCAN_OPTIONS=--source-dir=../../report/libgda-report
 
 # Extra options to supply to gtkdoc-mkdb.
-MKDB_OPTIONS=--source-dir=../../report/libgda-report
+MKDB_OPTIONS=--source-dir=../../report/libgda-report --output-format=xml
 
 # Extra options to supply to gtkdoc-fixref.
 FIXXREF_OPTIONS=
@@ -171,7 +171,7 @@ dist-hook: dist-check-gtkdoc html-build.stamp dist-hook-local
 	mkdir $(distdir)/sgml
 	mkdir $(distdir)/html
 	-cp $(srcdir)/tmpl/*.sgml $(distdir)/tmpl
-	-cp $(srcdir)/sgml/*.sgml $(distdir)/sgml
+	-cp $(srcdir)/xml/*.sgml $(distdir)/xml
 	-cp $(srcdir)/html/index.sgml $(distdir)/html
 	-cp $(srcdir)/html/*.html $(srcdir)/html/*.css $(distdir)/html
 

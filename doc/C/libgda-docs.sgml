@@ -23,73 +23,73 @@
 <!ENTITY SYBASE          "<application>Sybase</application>">
 <!ENTITY MSACC           "<application>MS Access</application>">
 <!ENTITY INFOR           "<application>Informix</application>">
-<!ENTITY GDASERVERPROVIDER "<xref linkend='libgda-GdaServerProvider'>">
-<!ENTITY GDADATAMODEL    "<xref linkend='libgda-GdaDataModel'>">
-<!ENTITY GDADATAMODELARRAY "<xref linkend='libgda-GdaDataModelArray'>">
-<!ENTITY GDADATAMODELHASH "<xref linkend='libgda-GdaDataModelHash'>">
+<!ENTITY GDASERVERPROVIDER "<xref linkend='libgda-GdaServerProvider'>GdaServerProvider</xref>">
+<!ENTITY GDADATAMODEL    "<xref linkend='libgda-GdaDataModel'>GdaDataModel</xref>">
+<!ENTITY GDADATAMODELARRAY "<xref linkend='libgda-GdaDataModelArray'>GdaDataModelArray</xref>">
+<!ENTITY GDADATAMODELHASH "<xref linkend='libgda-GdaDataModelHash'>GdaDataModelHash</xref>">
 <!ENTITY fullexample SYSTEM "examples/full_example.c">
 <!ENTITY migration.sgml SYSTEM "migration.sgml">
-<!ENTITY libgda-blob SYSTEM "sgml/gda-blob.sgml">
-<!ENTITY libgda-client SYSTEM "sgml/gda-client.sgml">
-<!ENTITY libgda-command SYSTEM "sgml/gda-command.sgml">
-<!ENTITY libgda-config SYSTEM "sgml/gda-config.sgml">
-<!ENTITY libgda-connection SYSTEM "sgml/gda-connection.sgml">
-<!ENTITY libgda-data-model-array SYSTEM "sgml/gda-data-model-array.sgml">
-<!ENTITY libgda-data-model-hash SYSTEM "sgml/gda-data-model-hash.sgml">
-<!ENTITY libgda-data-model-list SYSTEM "sgml/gda-data-model-list.sgml">
-<!ENTITY libgda-data-model SYSTEM "sgml/gda-data-model.sgml">
-<!ENTITY libgda-error SYSTEM "sgml/gda-error.sgml">
-<!ENTITY libgda-export SYSTEM "sgml/gda-export.sgml">
-<!ENTITY libgda-field SYSTEM "sgml/gda-field.sgml">
-<!ENTITY libgda-init SYSTEM "sgml/libgda.sgml">
-<!ENTITY libgda-log SYSTEM "sgml/gda-log.sgml">
-<!ENTITY libgda-parameter SYSTEM "sgml/gda-parameter.sgml">
-<!ENTITY libgda-quark-list SYSTEM "sgml/gda-quark-list.sgml">
-<!ENTITY libgda-row SYSTEM "sgml/gda-row.sgml">
-<!ENTITY libgda-select SYSTEM "sgml/gda-select.sgml">
-<!ENTITY libgda-server-provider SYSTEM "sgml/gda-server-provider.sgml">
-<!ENTITY libgda-table SYSTEM "sgml/gda-table.sgml">
-<!ENTITY libgda-transaction SYSTEM "sgml/gda-transaction.sgml">
-<!ENTITY libgda-util SYSTEM "sgml/gda-util.sgml">
-<!ENTITY libgda-value SYSTEM "sgml/gda-value.sgml">
-<!ENTITY libgda-xml-connection SYSTEM "sgml/gda-xml-connection.sgml">
-<!ENTITY libgda-xml-database SYSTEM "sgml/gda-xml-database.sgml">
-<!ENTITY libgda-xml-document SYSTEM "sgml/gda-xml-document.sgml">
-<!ENTITY libgda-xql-atom SYSTEM "sgml/gda-xql-atom.sgml">
-<!ENTITY libgda-xql-bin SYSTEM "sgml/gda-xql-bin.sgml">
-<!ENTITY libgda-xql-column SYSTEM "sgml/gda-xql-column.sgml">
-<!ENTITY libgda-xql-const SYSTEM "sgml/gda-xql-const.sgml">
-<!ENTITY libgda-xql-delete SYSTEM "sgml/gda-xql-delete.sgml">
-<!ENTITY libgda-xql-dml SYSTEM "sgml/gda-xql-dml.sgml">
-<!ENTITY libgda-xql-dual SYSTEM "sgml/gda-xql-dual.sgml">
-<!ENTITY libgda-xql-field SYSTEM "sgml/gda-xql-field.sgml">
-<!ENTITY libgda-xql-func SYSTEM "sgml/gda-xql-func.sgml">
-<!ENTITY libgda-xql-insert SYSTEM "sgml/gda-xql-insert.sgml">
-<!ENTITY libgda-xql-item SYSTEM "sgml/gda-xql-item.sgml">
-<!ENTITY libgda-xql-join SYSTEM "sgml/gda-xql-join.sgml">
-<!ENTITY libgda-xql-list SYSTEM "sgml/gda-xql-list.sgml">
-<!ENTITY libgda-xql-query SYSTEM "sgml/gda-xql-query.sgml">
-<!ENTITY libgda-xql-select SYSTEM "sgml/gda-xql-select.sgml">
-<!ENTITY libgda-xql-stack SYSTEM "sgml/gda-xql-stack.sgml">
-<!ENTITY libgda-xql-target SYSTEM "sgml/gda-xql-target.sgml">
-<!ENTITY libgda-xql-update SYSTEM "sgml/gda-xql-update.sgml">
-<!ENTITY libgda-xql-utils SYSTEM "sgml/gda-xql-utils.sgml">
-<!ENTITY libgda-xql-value SYSTEM "sgml/gda-xql-value.sgml">
-<!ENTITY libgda-xql-valueref SYSTEM "sgml/gda-xql-valueref.sgml">
-<!ENTITY libgda-report-types SYSTEM "sgml/gda-report-types.sgml">
-<!ENTITY libgda-report-document SYSTEM "sgml/gda-report-document.sgml">
-<!ENTITY libgda-report-item SYSTEM "sgml/gda-report-item.sgml">
-<!ENTITY libgda-report-item-detail SYSTEM "sgml/gda-report-item-detail.sgml">
-<!ENTITY libgda-report-item-label SYSTEM "sgml/gda-report-item-label.sgml">
-<!ENTITY libgda-report-item-pagefooter SYSTEM "sgml/gda-report-item-pagefooter.sgml">
-<!ENTITY libgda-report-item-pageheader SYSTEM "sgml/gda-report-item-pageheader.sgml">
-<!ENTITY libgda-report-item-repfield SYSTEM "sgml/gda-report-item-repfield.sgml">
-<!ENTITY libgda-report-item-report SYSTEM "sgml/gda-report-item-report.sgml">
-<!ENTITY libgda-report-item-reportfooter SYSTEM "sgml/gda-report-item-reportfooter.sgml">
-<!ENTITY libgda-report-item-reportheader SYSTEM "sgml/gda-report-item-reportheader.sgml">
-<!ENTITY libgda-report-item-sqlquery SYSTEM "sgml/gda-report-item-sqlquery.sgml">
-<!ENTITY libgda-report-result SYSTEM "sgml/gda-report-result.sgml">
-<!ENTITY libgda-report-valid SYSTEM "sgml/gda-report-valid.sgml">
+<!ENTITY libgda-blob SYSTEM "xml/gda-blob.xml">
+<!ENTITY libgda-client SYSTEM "xml/gda-client.xml">
+<!ENTITY libgda-command SYSTEM "xml/gda-command.xml">
+<!ENTITY libgda-config SYSTEM "xml/gda-config.xml">
+<!ENTITY libgda-connection SYSTEM "xml/gda-connection.xml">
+<!ENTITY libgda-data-model-array SYSTEM "xml/gda-data-model-array.xml">
+<!ENTITY libgda-data-model-hash SYSTEM "xml/gda-data-model-hash.xml">
+<!ENTITY libgda-data-model-list SYSTEM "xml/gda-data-model-list.xml">
+<!ENTITY libgda-data-model SYSTEM "xml/gda-data-model.xml">
+<!ENTITY libgda-error SYSTEM "xml/gda-error.xml">
+<!ENTITY libgda-export SYSTEM "xml/gda-export.xml">
+<!ENTITY libgda-field SYSTEM "xml/gda-field.xml">
+<!ENTITY libgda-init SYSTEM "xml/libgda.xml">
+<!ENTITY libgda-log SYSTEM "xml/gda-log.xml">
+<!ENTITY libgda-parameter SYSTEM "xml/gda-parameter.xml">
+<!ENTITY libgda-quark-list SYSTEM "xml/gda-quark-list.xml">
+<!ENTITY libgda-row SYSTEM "xml/gda-row.xml">
+<!ENTITY libgda-select SYSTEM "xml/gda-select.xml">
+<!ENTITY libgda-server-provider SYSTEM "xml/gda-server-provider.xml">
+<!ENTITY libgda-table SYSTEM "xml/gda-table.xml">
+<!ENTITY libgda-transaction SYSTEM "xml/gda-transaction.xml">
+<!ENTITY libgda-util SYSTEM "xml/gda-util.xml">
+<!ENTITY libgda-value SYSTEM "xml/gda-value.xml">
+<!ENTITY libgda-xml-connection SYSTEM "xml/gda-xml-connection.xml">
+<!ENTITY libgda-xml-database SYSTEM "xml/gda-xml-database.xml">
+<!ENTITY libgda-xml-document SYSTEM "xml/gda-xml-document.xml">
+<!ENTITY libgda-xql-atom SYSTEM "xml/gda-xql-atom.xml">
+<!ENTITY libgda-xql-bin SYSTEM "xml/gda-xql-bin.xml">
+<!ENTITY libgda-xql-column SYSTEM "xml/gda-xql-column.xml">
+<!ENTITY libgda-xql-const SYSTEM "xml/gda-xql-const.xml">
+<!ENTITY libgda-xql-delete SYSTEM "xml/gda-xql-delete.xml">
+<!ENTITY libgda-xql-dml SYSTEM "xml/gda-xql-dml.xml">
+<!ENTITY libgda-xql-dual SYSTEM "xml/gda-xql-dual.xml">
+<!ENTITY libgda-xql-field SYSTEM "xml/gda-xql-field.xml">
+<!ENTITY libgda-xql-func SYSTEM "xml/gda-xql-func.xml">
+<!ENTITY libgda-xql-insert SYSTEM "xml/gda-xql-insert.xml">
+<!ENTITY libgda-xql-item SYSTEM "xml/gda-xql-item.xml">
+<!ENTITY libgda-xql-join SYSTEM "xml/gda-xql-join.xml">
+<!ENTITY libgda-xql-list SYSTEM "xml/gda-xql-list.xml">
+<!ENTITY libgda-xql-query SYSTEM "xml/gda-xql-query.xml">
+<!ENTITY libgda-xql-select SYSTEM "xml/gda-xql-select.xml">
+<!ENTITY libgda-xql-stack SYSTEM "xml/gda-xql-stack.xml">
+<!ENTITY libgda-xql-target SYSTEM "xml/gda-xql-target.xml">
+<!ENTITY libgda-xql-update SYSTEM "xml/gda-xql-update.xml">
+<!ENTITY libgda-xql-utils SYSTEM "xml/gda-xql-utils.xml">
+<!ENTITY libgda-xql-value SYSTEM "xml/gda-xql-value.xml">
+<!ENTITY libgda-xql-valueref SYSTEM "xml/gda-xql-valueref.xml">
+<!ENTITY libgda-report-types SYSTEM "xml/gda-report-types.xml">
+<!ENTITY libgda-report-document SYSTEM "xml/gda-report-document.xml">
+<!ENTITY libgda-report-item SYSTEM "xml/gda-report-item.xml">
+<!ENTITY libgda-report-item-detail SYSTEM "xml/gda-report-item-detail.xml">
+<!ENTITY libgda-report-item-label SYSTEM "xml/gda-report-item-label.xml">
+<!ENTITY libgda-report-item-pagefooter SYSTEM "xml/gda-report-item-pagefooter.xml">
+<!ENTITY libgda-report-item-pageheader SYSTEM "xml/gda-report-item-pageheader.xml">
+<!ENTITY libgda-report-item-repfield SYSTEM "xml/gda-report-item-repfield.xml">
+<!ENTITY libgda-report-item-report SYSTEM "xml/gda-report-item-report.xml">
+<!ENTITY libgda-report-item-reportfooter SYSTEM "xml/gda-report-item-reportfooter.xml">
+<!ENTITY libgda-report-item-reportheader SYSTEM "xml/gda-report-item-reportheader.xml">
+<!ENTITY libgda-report-item-sqlquery SYSTEM "xml/gda-report-item-sqlquery.xml">
+<!ENTITY libgda-report-result SYSTEM "xml/gda-report-result.xml">
+<!ENTITY libgda-report-valid SYSTEM "xml/gda-report-valid.xml">
 <!ENTITY fdl-appendix SYSTEM "fdl-appendix.sgml">
 ]>
 
@@ -129,7 +129,7 @@
       </author>
       <author>
 	<firstname>Xabier</firstname>
-	<surname>Rodríguez Calvar</surname>
+	<surname>Rodriguez Calvar</surname>
 	<affiliation>
           <orgname>&igalia;</orgname>
 	  <address><email>xrcalvar@igalia.com</email></address>
@@ -138,7 +138,7 @@
         </contrib>
       </author>
       <author>
-	<firstname>José</firstname>
+	<firstname>Jose</firstname>
 	<surname>Dapena Paz</surname>
 	<affiliation>
           <orgname>&igalia;</orgname>
@@ -2250,10 +2250,10 @@
 	<table frame="all">
 	  <title>Standard Schema and supported parameters</title>
 	  <tgroup cols="4" colsep="1" rowsep="1" align="justify">
-	    <colspec colname="c1">
-	    <colspec colname="c2">
-	    <colspec colname="c3">
-	    <colspec colname="c4">
+	    <colspec colname="c1"/>
+	    <colspec colname="c2"/>
+	    <colspec colname="c3"/>
+	    <colspec colname="c4"/>
 	    <thead>
 	      <row>
 		<entry>Object type</entry>
