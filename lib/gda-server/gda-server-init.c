@@ -91,7 +91,6 @@ void
 gda_server_init (const gchar *app_id, const gchar *version, gint nargs, gchar *args[])
 {
   static gboolean   initialized = FALSE;
-  CORBA_Environment ev;
 
   if (initialized)
     {
@@ -101,13 +100,6 @@ gda_server_init (const gchar *app_id, const gchar *version, gint nargs, gchar *a
 
   initialize_signals();
 
-#if defined(USING_OAF)
   gnome_init_with_popt_table(app_id, version, nargs, args, oaf_popt_options, 0, NULL);
   oaf_init(nargs, args);
-#else
-  CORBA_exception_init(&ev);
-  gnome_CORBA_init(app_id, version, &nargs, args,
-		   GNORBA_INIT_SERVER_FUNC, &ev);
-  CORBA_exception_free(&ev);
-#endif
 }
