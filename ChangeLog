@@ -1,3 +1,8 @@
+2001-06-21  Bob Jones <bobjones68@yahoo.com>
+
+	* configure.in: change (again) ORACLE_LIBS and ORACLE_CFLAGS. It
+	seems now that this will work with both Oracle 8i and 9i
+
 2001-06-19  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* configure.in: use again `oaf-config --prefix` for getting the
