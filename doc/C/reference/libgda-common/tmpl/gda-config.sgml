@@ -1,0 +1,493 @@
+<!-- ##### SECTION Title ##### -->
+gda-config
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### MACRO GDA_CONFIG_SECTION_DATASOURCES ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO GDA_CONFIG_SECTION_LOG ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION gda_config_get_string ##### -->
+<para>
+
+</para>
+
+@path: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_config_get_int ##### -->
+<para>
+
+</para>
+
+@path: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_config_get_float ##### -->
+<para>
+
+</para>
+
+@path: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_config_get_boolean ##### -->
+<para>
+
+</para>
+
+@path: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_config_set_string ##### -->
+<para>
+
+</para>
+
+@path: 
+@new_value: 
+
+
+<!-- ##### FUNCTION gda_config_set_int ##### -->
+<para>
+
+</para>
+
+@path: 
+@new_value: 
+
+
+<!-- ##### FUNCTION gda_config_set_float ##### -->
+<para>
+
+</para>
+
+@path: 
+@new_value: 
+
+
+<!-- ##### FUNCTION gda_config_set_boolean ##### -->
+<para>
+
+</para>
+
+@path: 
+@new_value: 
+
+
+<!-- ##### FUNCTION gda_config_remove_section ##### -->
+<para>
+
+</para>
+
+@path: 
+
+
+<!-- ##### FUNCTION gda_config_remove_key ##### -->
+<para>
+
+</para>
+
+@path: 
+
+
+<!-- ##### FUNCTION gda_config_has_section ##### -->
+<para>
+
+</para>
+
+@path: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_config_has_key ##### -->
+<para>
+
+</para>
+
+@path: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_config_commit ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION gda_config_rollback ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION gda_config_list_sections ##### -->
+<para>
+
+</para>
+
+@path: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_config_list_keys ##### -->
+<para>
+
+</para>
+
+@path: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_config_free_list ##### -->
+<para>
+
+</para>
+
+@list: 
+
+
+<!-- ##### MACRO GDA_PROVIDER_TYPE ##### -->
+<para>
+
+</para>
+
+@srv: 
+
+
+<!-- ##### MACRO GDA_PROVIDER_NAME ##### -->
+<para>
+
+</para>
+
+@srv: 
+
+
+<!-- ##### MACRO GDA_PROVIDER_COMMENT ##### -->
+<para>
+
+</para>
+
+@srv: 
+
+
+<!-- ##### MACRO GDA_PROVIDER_LOCATION ##### -->
+<para>
+
+</para>
+
+@srv: 
+
+
+<!-- ##### MACRO GDA_PROVIDER_REPO_ID ##### -->
+<para>
+
+</para>
+
+@srv: 
+
+
+<!-- ##### MACRO GDA_PROVIDER_USERNAME ##### -->
+<para>
+
+</para>
+
+@srv: 
+
+
+<!-- ##### MACRO GDA_PROVIDER_HOSTNAME ##### -->
+<para>
+
+</para>
+
+@srv: 
+
+
+<!-- ##### MACRO GDA_PROVIDER_DOMAIN ##### -->
+<para>
+
+</para>
+
+@srv: 
+
+
+<!-- ##### MACRO GDA_PROVIDER_DSN_PARAMS ##### -->
+<para>
+
+</para>
+
+@srv: 
+
+
+<!-- ##### FUNCTION gda_provider_new ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_provider_copy ##### -->
+<para>
+
+</para>
+
+@provider: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_provider_free ##### -->
+<para>
+
+</para>
+
+@provider: 
+
+
+<!-- ##### FUNCTION gda_provider_list ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_provider_free_list ##### -->
+<para>
+
+</para>
+
+@list: 
+
+
+<!-- ##### FUNCTION gda_provider_find_by_name ##### -->
+<para>
+
+</para>
+
+@name: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_list_datasources ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_list_datasources_for_provider ##### -->
+<para>
+
+</para>
+
+@name: 
+@Returns: 
+
+
+<!-- ##### MACRO GDA_DSN_GDA_NAME ##### -->
+<para>
+
+</para>
+
+@dsn: 
+
+
+<!-- ##### MACRO GDA_DSN_PROVIDER ##### -->
+<para>
+
+</para>
+
+@dsn: 
+
+
+<!-- ##### MACRO GDA_DSN_DSN ##### -->
+<para>
+
+</para>
+
+@dsn: 
+
+
+<!-- ##### MACRO GDA_DSN_DESCRIPTION ##### -->
+<para>
+
+</para>
+
+@dsn: 
+
+
+<!-- ##### MACRO GDA_DSN_USERNAME ##### -->
+<para>
+
+</para>
+
+@dsn: 
+
+
+<!-- ##### MACRO GDA_DSN_CONFIG ##### -->
+<para>
+
+</para>
+
+@dsn: 
+
+
+<!-- ##### MACRO gda_dsn_new ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION gda_dsn_free ##### -->
+<para>
+
+</para>
+
+@dsn: 
+
+
+<!-- ##### FUNCTION gda_dsn_copy ##### -->
+<para>
+
+</para>
+
+@dsn: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_dsn_find_by_name ##### -->
+<para>
+
+</para>
+
+@dsn_name: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_dsn_set_name ##### -->
+<para>
+
+</para>
+
+@dsn: 
+@name: 
+
+
+<!-- ##### FUNCTION gda_dsn_set_provider ##### -->
+<para>
+
+</para>
+
+@dsn: 
+@provider: 
+
+
+<!-- ##### FUNCTION gda_dsn_set_dsn ##### -->
+<para>
+
+</para>
+
+@dsn: 
+@dsn_str: 
+
+
+<!-- ##### FUNCTION gda_dsn_set_description ##### -->
+<para>
+
+</para>
+
+@dsn: 
+@description: 
+
+
+<!-- ##### FUNCTION gda_dsn_set_username ##### -->
+<para>
+
+</para>
+
+@dsn: 
+@username: 
+
+
+<!-- ##### FUNCTION gda_dsn_set_config ##### -->
+<para>
+
+</para>
+
+@dsn: 
+@config: 
+
+
+<!-- ##### FUNCTION gda_dsn_set_global ##### -->
+<para>
+
+</para>
+
+@dsn: 
+@is_global: 
+
+
+<!-- ##### FUNCTION gda_dsn_save ##### -->
+<para>
+
+</para>
+
+@dsn: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_dsn_remove ##### -->
+<para>
+
+</para>
+
+@dsn: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_dsn_list ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_dsn_free_list ##### -->
+<para>
+
+</para>
+
+@list: 
+
+

@@ -1,0 +1,52 @@
+<!DOCTYPE book PUBLIC "-//Davenport//DTD DocBook V3.0//EN"[
+<!ENTITY libgda-common-reference SYSTEM "libgda-common/libgda-common-docs.sgml">
+
+<!ENTITY libgda-common-h SYSTEM "libgda-common/sgml/gda-common.sgml">
+<!ENTITY libgda-config-h SYSTEM "libgda-common/sgml/gda-config.sgml">
+<!ENTITY libgda-corba-h SYSTEM "libgda-common/sgml/gda-corba.sgml">
+<!ENTITY libgda-log-h SYSTEM "libgda-common/sgml/gda-log.sgml">
+<!ENTITY libgda-thread-h SYSTEM "libgda-common/sgml/gda-thread.sgml">
+<!ENTITY libgda-util-h SYSTEM "libgda-common/sgml/gda-util.sgml">
+<!ENTITY libgda-xml-database-h SYSTEM "libgda-common/sgml/gda-xml-database.sgml">
+<!ENTITY libgda-xml-file-h SYSTEM "libgda-common/sgml/gda-xml-file.sgml">
+]>
+
+<book id="libgda-reference">
+  <bookinfo>
+    <title>libgda API reference</title>
+
+    <authorgroup>
+    </authorgroup>
+
+    <copyright>
+      <year>2001</year>
+      <holder>The Free Software Foundation</holder>
+    </copyright>
+
+    <legalnotice id="legalnotice">
+      <para>
+        Permission is granted to copy, distribute and/or modify this
+        document under the terms of the <ulink type="help"
+        url="gnome-help:fdl"><citetitle>GNU Free Documentation
+        License</citetitle></ulink>, Version 1.1 or any later version
+        published by the Free Software Foundation with no Invariant
+        Sections, no Front-Cover Texts, and no Back-Cover Texts. You
+        may obtain a copy of the <citetitle>GNU Free Documentation
+        License</citetitle> from the Free Software Foundation by
+        visiting <ulink type="http" url="http://www.fsf.org">their Web
+        site</ulink> or by writing to: Free Software Foundation, Inc.,
+        59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+      </para>
+	  <para>
+        Many of the names used by companies to distinguish their
+        products and services are claimed as trademarks. Where those
+        names appear in any GNOME documentation, and those trademarks
+        are made aware to the members of the GNOME Documentation
+        Project, the names have been printed in caps or initial caps.
+       </para>
+    </legalnotice>
+  </bookinfo>
+
+  &libgda-common-reference;
+
+</book>

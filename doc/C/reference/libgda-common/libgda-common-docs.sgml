@@ -1,0 +1,25 @@
+<reference id="libgda-common-reference">
+    <title>GDA Common Library API Reference</title>
+    <partintro>
+      <para>
+        The GDA common library
+      </para>
+    </partintro>
+
+    &libgda-common-h;
+    &libgda-config-h;
+    &libgda-corba-h;
+    &libgda-log-h;
+    &libgda-thread-h;
+    &libgda-util-h;
+    &libgda-xml-database-h;
+    &libgda-xml-file-h;
+
+</reference>
+
+<!--
+Local variables:
+mode: sgml
+sgml-parent-document: ("../../libgda-reference.sgml" "book" "book" "")
+End:
+-->

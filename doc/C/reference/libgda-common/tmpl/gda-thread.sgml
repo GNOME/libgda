@@ -1,0 +1,100 @@
+<!-- ##### SECTION Title ##### -->
+GdaThread
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### MACRO GDA_TYPE_THREAD ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO GDA_THREAD ##### -->
+<para>
+
+</para>
+
+@obj: 
+
+
+<!-- ##### MACRO IS_GDA_THREAD ##### -->
+<para>
+
+</para>
+
+@obj: 
+
+
+<!-- ##### USER_FUNCTION GdaThreadFunc ##### -->
+<para>
+
+</para>
+
+@thr: 
+@user_data: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_thread_get_type ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_thread_new ##### -->
+<para>
+
+</para>
+
+@func: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_thread_free ##### -->
+<para>
+
+</para>
+
+@thr: 
+
+
+<!-- ##### FUNCTION gda_thread_start ##### -->
+<para>
+
+</para>
+
+@thr: 
+@user_data: 
+
+
+<!-- ##### FUNCTION gda_thread_stop ##### -->
+<para>
+
+</para>
+
+@thr: 
+
+
+<!-- ##### FUNCTION gda_thread_is_running ##### -->
+<para>
+
+</para>
+
+@thr: 
+@Returns: 
+
+
