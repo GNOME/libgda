@@ -2238,12 +2238,12 @@
 
 	* report/Created an example for the report engine..
 
-2000-09-29	Akira TAGOH <tagoh@gnome.gr.jp>
+2000-09-29  Akira TAGOH <tagoh@gnome.gr.jp>
 
 	* acconfig.h, configure.in, lib/gda-common/gda-config.c:
 	  lib/gda-common/gda-corba.c: removed a old code for OAF < 0.5.0.
 
-2000-09-29	Akira TAGOH <tagoh@gnome.gr.jp>
+2000-09-29  Akira TAGOH <tagoh@gnome.gr.jp>
 
 	* configure.in:
 	  lib/gda-common/gda-config.c: GConf >= 0.9 is necessary.
@@ -2256,7 +2256,11 @@
 
 	* testing/Makefile.am, gda-test.c: First "official" version
 
-2000-09-10	Akira TAGOH <tagoh@gnome.gr.jp>
+2000-09-25  Akira TAGOH <tagoh@gnome.gr.jp>
+
+	* po/POTFILES.in: not implement python binding.
+
+2000-09-10  Akira TAGOH <tagoh@gnome.gr.jp>
 
 	* configure.in: deleted lib/gda-client/gda-report.dtd entry.
 
@@ -2264,22 +2268,22 @@
 
 	* lib/gda-client/gda-report.dtd.in: Modified a path prefix.
 
-2000-09-09	Carlos Perell)Bó Marín <carlos@hispalinux.es>
+2000-09-09  Carlos Perelló Marín <carlos@hispalinux.es>
 
 	* integrated the gda-report.dtd with autoconf (but it
 	  does not work as well as it should.
 
 	* updated to the gda-report.[ch]
  
-2000-09-03	Carlos Perell)Bó Marín <carlos@hispalinux.es>
+2000-09-03  Carlos Perelló Marín <carlos@hispalinux.es>
 
 	* updated the gda-report.[ch] for the new DTD
 
-2000-09-02	Akira TAGOH <at@ue-spacy.com>
+2000-09-02  Akira TAGOH <at@ue-spacy.com>
 
 	* configure.in: deleted an USING_OLD_OAF judgment by the same version.
 
-2000-08-08	Rodrigo Moya <rodrigo@linuxave.net>
+2000-08-08  Rodrigo Moya <rodrigo@linuxave.net>
 
 	* made first version separated from GNOME-DB
 
