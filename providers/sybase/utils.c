@@ -241,16 +241,12 @@ gboolean sybase_add_cmsg_errors_to_list(GdaConnection *cnc)
 				returner = TRUE;
 			}
 			else {
-				tempspace = g_strdup_printf("%s %ld %s %ld %s %ld %s %ld : %s",
-																																_("Sybase OpenClient Msg: severity("),
-																																(long) CS_SEVERITY(msg.severity), 																																		
-																																_("), number("),
-																																(long) CS_NUMBER(msg.msgnumber),
-																																_("), origin("),
-																																(long) CS_ORIGIN(msg.msgnumber), 
-																																_("), layer("),
-																																(long) CS_LAYER(msg.msgnumber),
-																																(msg.msgstring) ? msg.msgstring : "");
+				tempspace = g_strdup_printf(_("Sybase OpenClient Msg: severity(%ld), number(%ld), origin(%ld), layer(%ld): %s"),
+							    (long) CS_SEVERITY(msg.severity),
+							    (long) CS_NUMBER(msg.msgnumber),
+							    (long) CS_ORIGIN(msg.msgnumber),
+							    (long) CS_LAYER(msg.msgnumber),
+							    (msg.msgstring) ? msg.msgstring : "");
 				error = gda_error_new();
 				g_return_val_if_fail (error != NULL, FALSE);
 				gda_error_set_description (error,tempspace);
