@@ -1426,10 +1426,10 @@
                 for (column_id = 0; column_id < gda_data_model_get_n_columns (dm);
                      column_id++)
                   {
+		    /* We don't need to free this value! */
                     value = gda_row_get_value (row, column_id);
                     string=gda_value_stringify (value);
                     g_print ("%s\t", string);
-                    gda_value_free(value);
                     g_free(string);
                   }
                 g_print ("\n");

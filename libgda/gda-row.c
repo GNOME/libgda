@@ -145,6 +145,9 @@ gda_row_set_id (GdaRow *row, const gchar *id)
  * @num: field index.
  *
  * Gets a pointer to a #GdaValue stored in a #GdaRow.
+ *
+ * This is a pointer to the internal array of values. Don't try to free
+ * or modify it!
  * 
  * Returns: a pointer to the #GdaValue in the position @num of @row.
  */
