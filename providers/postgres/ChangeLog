@@ -1,3 +1,8 @@
+2002-01-03  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
+	* utils.c:
+	* gda-postgres-recordset.c: Added support for GdaGeometricPoint.
+
 2002-01-02  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
 	* gda-postgres-provider.c (process_sql_commands()): don't call

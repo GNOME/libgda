@@ -36,12 +36,12 @@ gda_postgres_make_error (PGconn *handle)
 		gda_error_set_description (error, PQerrorMessage(handle));
 		gda_error_set_number (error, -1);
 	} else {
-		gda_error_set_description (error, "NO DESCRIPTION");
+		gda_error_set_description (error, _("NO DESCRIPTION"));
 		gda_error_set_number (error, -1);
 	}
 
 	gda_error_set_source (error, "gda-postgres");
-	gda_error_set_sqlstate (error, "Not available");
+	gda_error_set_sqlstate (error, _("Not available"));
 
 	return error;
 }
@@ -80,15 +80,43 @@ gda_postgres_type_to_gda (Oid postgres_type)
 		return GDA_TYPE_TIME;
 	case VARBITOID :
 		return GDA_TYPE_BINARY;
+	case POINTOID :
+		return GDA_TYPE_GEOMETRIC_POINT;
 	}
 
 	return GDA_TYPE_UNKNOWN;
+}
+
+static GdaGeometricPoint *
+make_point (const gchar *value)
+{
+	GdaGeometricPoint *point;
+
+	g_return_val_if_fail (value != NULL, NULL);
+	
+	point = g_new (GdaGeometricPoint, 1);
+	value++;
+	point->x = atof (value);
+	value = strchr (value, ',');
+	value++;
+	point->y = atof (value);
+
+	return point;
+}
+
+static void
+delete_point (GdaGeometricPoint *point)
+{
+	g_return_if_fail (point != NULL);
+	
+	g_free (point);
 }
 
 void 
 gda_postgres_set_type_value (GdaField *field, GdaType type, const gchar *value)
 {
 	GDate *date;
+	GdaGeometricPoint *point;
 
 	switch (type) {
 	case GDA_TYPE_BOOLEAN :
@@ -132,6 +160,12 @@ gda_postgres_set_type_value (GdaField *field, GdaType type, const gchar *value)
 		gda_field_set_date_value (field, date);
 		g_date_free (date);
 		
+		break;
+	case GDA_TYPE_GEOMETRIC_POINT :
+		point = make_point (value);
+		gda_field_set_geometric_point_value (field, point);
+		gda_field_set_gdatype (field, type);
+		delete_point (point);
 		break;
 	case GDA_TYPE_TIMESTAMP : //FIXME
 	case GDA_TYPE_TIME : //FIXME
