@@ -1,3 +1,11 @@
+2002-12-09  Holger Thon <holger.thon@gnome-db.org>
+
+	Merged sybase provider from head
+
+        * providers/sybase/*: first working release of new sybase-provider,
+        supporting rowresults and schemas
+        * configure.in: activated sybase provider, fixed libraries
+
 2002-11-12  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	Fixes #96810

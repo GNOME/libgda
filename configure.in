@@ -379,7 +379,7 @@ fi
 AM_CONDITIONAL(IBMDB2, test x$ibmdb2dir != x)
 
 dnl Test for Sybase
-try_sybase=false
+try_sybase=true
 AC_ARG_WITH(sybase,
 [  --with-sybase=<directory>	use Sybase backend in <directory>],[
 AC_MSG_CHECKING(for Sybase files)
@@ -405,12 +405,17 @@ then
 			sybasedir="$d"
 			break
 		fi
-		for v in 11.9.2 11.0.3.3
+		for v in 11.9.2 12.5 11.0.3.3
 		do
 			if test -f "$d-$v/include/ctpublic.h"
 			then
 				AC_MSG_RESULT(found Sybase in $d-$v)
 				sybasedir="$d-$v"
+				break
+			elif test -f "$d-$v/OCS/include/ctpublic.h"
+			then
+				AC_MSG_RESULT(found Sybase in $d-$v)
+				sybasedir="$d-$v/OCS"
 				break
 			fi
 		done
@@ -419,15 +424,19 @@ then
 	then
 		AC_MSG_WARN(Sybase backend not used)
 	else
+		SYBASE_DIR=${sybasedir}
 		SYBASE_CFLAGS="-I${sybasedir}/include"
-		SYBASE_LIBS="-lnsl -ldl -lm -L${sybasedir}/lib"
+		SYBASE_LIBS="-lnsl -ldl -lm"
 		AC_MSG_CHECKING(for Sybase host system type)
 		AC_MSG_RESULT($host)
 		case "$host" in
-		*linux*) sybase_ctlibs="-lct -lcs -lsybtcl -lcomn -lintl"
-			sybase_blklibs="-lblk ${sybase_ctlibs}"
-			SYBASE_LIBS="${SYBASE_LIBS} ${sybase_ctlibs} ${sybase_blklibs}"
+		*linux*) sybase_ctlibs="-L${sybasedir}/lib -lct -lcs -lsybtcl -lcomn -lintl"
+			sybase_blklibs="-L${sybasedir}/lib -lblk ${sybase_ctlibs}"
+			SYBASE_LIBS="${SYBASE_LIBS} ${sybase_blklibs}"
+			AC_CHECK_LIB(ct,tdsdump_on,[
+			AC_MSG_WARN(linking against freetds libct)
 			AC_DEFINE(HAVE_SYBASE)
+			], AC_DEFINE(HAVE_SYBASE))
 			;;
 		*) AC_MSG_WARN(this host type is unsupported; sybase backend not used)
 			sybasedir=""
@@ -672,6 +681,7 @@ AC_SUBST(FREETDS_LIBS)
 AC_SUBST(FREETDS_CFLAGS)
 AC_SUBST(IBMDB2_LIBS)
 AC_SUBST(IBMDB2_CFLAGS)
+AC_SUBST(SYBASE_DIR)
 AC_SUBST(SYBASE_LIBS)
 AC_SUBST(SYBASE_CFLAGS)
 AC_SUBST(LDAP_LIBS)
