@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <libgda-config>
 	<section path="/apps/libgda/Datasources/Default">
-		<entry name="Provider" type="string" value="Default"/>
+		<entry name="Provider" type="string" value="XML"/>
 		<entry name="Username" type="string" value="nouser"/>
 		<entry name="DSN" type="string" value="URI=/tmp/gnome-db-test.db"/>
-		<entry name="Description" type="string" value="Default libgda provider"/>
+		<entry name="Description" type="string" value="Default data source"/>
 	</section>
 </libgda-config>
 
