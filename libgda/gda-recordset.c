@@ -215,6 +215,8 @@ gda_recordset_finalize (GObject * object)
 {
 	GdaRecordset *recset = (GdaRecordset *) object;
 
+	g_return_if_fail (GDA_IS_RECORDSET (recset));
+
 	/* remove timeout handler */
 	if (recset->priv->timeout_id != -1) {
 		g_source_remove (recset->priv->timeout_id);

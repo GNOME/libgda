@@ -1,3 +1,8 @@
+2002-01-22  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* libgda/gda-recordset.c (gda_recordset_finalize): check for
+	object type before continuing.
+
 2002-01-22  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
 	* idl/GNOME_Database.idl: moved declarations of Command* before
