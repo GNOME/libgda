@@ -56,7 +56,7 @@ static GObjectClass *parent_class = NULL;
  */
 
 static void
-recset_finalized_cb (GObject *object, gpointer user_data)
+recset_weak_cb (gpointer user_data, GObject *object)
 {
 	GdaRecordset *recset = (GdaRecordset *) object;
 	GdaConnection *cnc = (GdaConnection *) user_data;
@@ -363,8 +363,7 @@ gda_connection_execute_command (GdaConnection *cnc,
 		reclist = g_list_append (reclist, recset);
 
 		cnc->priv->recset_list = g_list_append (cnc->priv->recset_list, recset);
-		g_signal_connect (G_OBJECT (recset), "finalize",
-				  G_CALLBACK (recset_finalized_cb), cnc);
+		g_object_weak_ref (G_OBJECT (recset), (GWeakNotify) recset_weak_cb, cnc);
 	}
 
 	return reclist;

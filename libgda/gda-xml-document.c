@@ -25,7 +25,9 @@
 #include "gda-xml-document.h"
 #include <glib-object.h>
 
-static void gda_xml_document_finalize (GObject * object);
+static void gda_xml_document_class_init (GdaXmlDocumentClass *klass);
+static void gda_xml_document_init       (GdaXmlDocument *xmldoc, GdaXmlDocumentClass *klass);
+static void gda_xml_document_finalize   (GObject * object);
 
 /* errors handling */
 static void (gda_xml_document_error_def) (void *ctx, const char *msg, ...);
@@ -38,6 +40,7 @@ enum {
 };
 
 static gint gda_xml_document_signals[GDA_XML_DOCUMENT_LAST_SIGNAL] = { 0, };
+static GObjectClass *parent_class = NULL;
 
 /*
  * GdaXmlDocument object implementation
@@ -46,6 +49,8 @@ static void
 gda_xml_document_class_init (GdaXmlDocumentClass * klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
+
+	parent_class = g_type_class_peek_parent (klass);
 
 	gda_xml_document_signals[GDA_XML_DOCUMENT_WARNING] =
 		g_signal_new ("warning",
@@ -85,6 +90,19 @@ gda_xml_document_init (GdaXmlDocument *xmldoc, GdaXmlDocumentClass *klass)
 	xmldoc->dtd = NULL;
 	xmldoc->root = NULL;
 	xmldoc->context = NULL;
+}
+
+static void
+gda_xml_document_finalize (GObject *object)
+{
+	GdaXmlDocument *xmldoc = (GdaXmlDocument *) object;
+
+	g_return_if_fail (GDA_IS_XML_DOCUMENT (xmldoc));
+
+	xmlFreeDoc (xmldoc->doc);
+	xmldoc->doc = NULL;
+
+	parent_class->finalize (object);
 }
 
 GType
@@ -143,55 +161,6 @@ gda_xml_document_construct (GdaXmlDocument * xmldoc, const gchar * root_doc)
 }
 
 /**
- * gda_xml_document_free
- */
-void
-gda_xml_document_free (GdaXmlDocument *xmldoc)
-{
-	g_return_if_fail (GDA_IS_XML_DOCUMENT (xmldoc));
-	g_object_unref (G_OBJECT (xmldoc));
-}
-
-static void
-gda_xml_document_finalize (GObject *object)
-{
-	GObjectClass *parent_class;
-	GdaXmlDocument *xmldoc = (GdaXmlDocument *) object;
-
-	g_return_if_fail (GDA_IS_XML_DOCUMENT (xmldoc));
-
-	xmlFreeDoc (xmldoc->doc);
-	xmldoc->doc = NULL;
-
-	parent_class = G_OBJECT_CLASS (g_type_class_peek (G_TYPE_OBJECT));
-	if (parent_class && parent_class->finalize)
-		parent_class->finalize (object);
-}
-
-/**
- * gda_xml_document_new_from_file
- * @filename: file name
- *
- * Load a #GdaXmlDocument from the given @filename
- */
-/* GdaXmlDocument * */
-/* gda_xml_document_new_from_file (const gchar *filename) */
-/* { */
-/*   GdaXmlDocument* xmldocument; */
-
-/*   xmldocument = GDA_XML_DOCUMENT(gtk_type_new(gda_xml_document_get_type())); */
-
-   /* DTD already done while loading */
-/*   xmldocument->doc = xmlParseFile(filename); */
-/*   if (xmldocument->doc) */
-/*     { */
-/*       xmldocument->root = xmlDocGetRootElement(xmldocument->doc); */
-/*     } */
-
-/*   return xmldocument; */
-/* } */
-
-/**
  * gda_xml_document_get_compress_mode
  * @xmldoc: a #GdaXmlDocument object
  *
@@ -216,10 +185,37 @@ gda_xml_document_set_compress_mode (GdaXmlDocument *xmldoc, gint mode)
 }
 
 /**
+ * gda_xml_document_to_file
+ * @xmldoc: a #GdaXmlDocument object.
+ * @uri: URI of the resulting file.
+ *
+ * Saves the given #GdaXmlDocument into a disk file. That is, it
+ * translates the in-memory document structure, transforms it to
+ * XML and saves, in the given file, the resulting XML output.
+ *
+ * Returns: TRUE if successful, FALSE on error.
+ */
+gboolean
+gda_xml_document_to_file (GdaXmlDocument *xmldoc, const gchar *uri)
+{
+	gchar *body;
+	gboolean rc;
+
+	g_return_val_if_fail (GDA_IS_XML_DOCUMENT (xmldoc), FALSE);
+	g_return_val_if_fail ((uri != NULL), FALSE);
+
+	body = gda_xml_document_stringify (xmldoc);
+	rc = gda_file_save (uri, body, strlen (body));
+	g_free (body);
+
+	return rc;
+}
+
+/**
  * gda_xml_document_stringify
  */
 gchar *
-gda_xml_document_stringify (GdaXmlDocument * xmldoc)
+gda_xml_document_stringify (GdaXmlDocument *xmldoc)
 {
 	xmlChar *str;
 	gint i;
@@ -228,18 +224,6 @@ gda_xml_document_stringify (GdaXmlDocument * xmldoc)
 
 	xmlDocDumpMemory (xmldoc->doc, &str, &i);
 	return str;
-}
-
-/**
- * gda_xml_document_to_file
- */
-gint
-gda_xml_document_to_file (GdaXmlDocument * xmldoc, const gchar * filename)
-{
-	g_return_val_if_fail (GDA_IS_XML_DOCUMENT (xmldoc), -1);
-	g_return_val_if_fail ((filename != NULL), -1);
-
-	return xmlSaveFile (filename, xmldoc->doc);
 }
 
 /* FIXME: signals in preparation for future use. Will work when I understand 

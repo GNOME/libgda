@@ -1,3 +1,15 @@
+2001-12-22  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-connection.c (gda_connection_execute_command): don't connect
+	to "finalize" signals
+
+	* gda-util.[ch] (gda_file_save): new function
+	(gda_file_load): new function
+
+	* gda-xml-document.c (gda_xml_document_free): removed useless function
+	(gda_xml_document_to_file): use URIs instead of local filenames, and
+	call gda_file_save instead of xmlSaveFile.
+
 2001-12-21  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-server.c (component_destroyed_cb): fixed
