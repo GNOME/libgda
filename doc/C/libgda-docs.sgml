@@ -962,19 +962,19 @@
 	<listitem>
 	  <para>get_n_rows</para>
 	  <para>
-	    Returns the number of rows in the data model.
-	  </para>
-	</listitem>
-	<listitem>
-	  <para>get_n_columns</para>
-	  <para>
-	    Returns the number of columns in the data model. If the provider
+	    Returns the number of rows in the data model. If the provider
 	    can know in advance the number of rows the database server has
 	    returned, this function should just return that, and not
 	    retrieve any data. On the other hand, if it can't it should
 	    either retrieve all data, or move to the last record in the
 	    recordset and retrieve the row number, if the underlying
 	    data source allows it.
+	  </para>
+	</listitem>
+	<listitem>
+	  <para>get_n_columns</para>
+	  <para>
+	    Returns the number of columns in the data model.
 	  </para>
 	</listitem>
 	<listitem>

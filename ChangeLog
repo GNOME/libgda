@@ -1,3 +1,7 @@
+2002-08-04  Florian Blaser <florian@tizoo.ch>
+
+	* doc/C/libgda-docs.sgml: some small corrections.
+
 2002-07-17  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
 	* tools/gda-config-tool.c: added options for listing datasources and
