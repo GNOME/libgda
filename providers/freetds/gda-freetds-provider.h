@@ -66,7 +66,7 @@ struct _GdaFreeTDSConnectionData {
 #ifdef HAVE_FREETDS_VER0_6X
 	TDSCONNECTINFO *config;    /* tds connect struct */
 #else
-	TDSCONFIGINFO  *config     /* tds config struct */
+	TDSCONFIGINFO  *config;     /* tds config struct */
 #endif
 
 	/* Data just got at connection beginning */

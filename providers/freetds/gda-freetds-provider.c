@@ -243,6 +243,9 @@ gda_freetds_provider_open_connection (GdaServerProvider *provider,
 	tds_set_library(tds_cnc->login, "TDS-Library");
 	if (t_host)
 		tds_set_server(tds_cnc->login, (char *) t_host);
+
+	if (t_port)
+		tds_set_port(tds_cnc->login, atoi(t_port));
 	
 	tds_set_charset(tds_cnc->login, "iso_1");
 	tds_set_language(tds_cnc->login, "us_english");
@@ -267,7 +270,21 @@ gda_freetds_provider_open_connection (GdaServerProvider *provider,
 #if defined(HAVE_FREETDS_VER0_60)
 	tds_cnc->tds = tds_connect(tds_cnc->login, tds_cnc->ctx, NULL);
 #elif defined(HAVE_FREETDS_VER0_6X)
-	tds_connect (tds_cnc->tds, tds_cnc->config);
+	tds_cnc->tds = tds_alloc_socket(tds_cnc->ctx, 512);
+	if (! tds_cnc->tds) {
+		gda_log_error (_("Allocating tds socket failed."));
+		gda_freetds_free_connection_data (tds_cnc);
+		gda_connection_add_error_string (cnc, _("Allocating tds socket failed."));
+		return FALSE;
+	}
+	tds_set_parent (tds_cnc->tds, NULL);
+	tds_cnc->config = tds_read_config_info (NULL, tds_cnc->login, tds_cnc->ctx->locale);
+	if (tds_connect (tds_cnc->tds, tds_cnc->config) != TDS_SUCCEED) {
+		gda_log_error (_("Establishing connection failed."));
+		//gda_freetds_free_connection_data (tds_cnc);
+		gda_connection_add_error_string (cnc, _("Establishing connection failed."));
+		return FALSE;
+	}
 #else
 	tds_cnc->tds = tds_connect(tds_cnc->login, NULL);
 #endif
