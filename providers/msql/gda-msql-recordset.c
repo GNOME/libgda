@@ -115,6 +115,7 @@ static gint gda_msql_recordset_numrows(GdaDataModel *model) {
   GdaMsqlRecordset *rs=(GdaMsqlRecordset*)model;
   
   if (!GDA_IS_MSQL_RECORDSET(rs)) return -1;
+  if (rs->res==NULL) return rs->n_rows;
   return msqlNumRows(rs->res);
 }
 
@@ -122,6 +123,7 @@ static gint gda_msql_recordset_numcols(GdaDataModel *model) {
   GdaMsqlRecordset *rs=(GdaMsqlRecordset*)model;
   
   if (!GDA_IS_MSQL_RECORDSET(rs)) return -1;
+  if (rs->res==NULL) return 0;
   return msqlNumFields(rs->res);
 }
 
@@ -342,19 +344,21 @@ GType gda_msql_recordset_get_type(void) {
 }
 
 GdaMsqlRecordset 
-*gda_msql_recordset_new(GdaConnection *cnc,m_result *res,int sock) {
+*gda_msql_recordset_new(GdaConnection *cnc,m_result *res,int sock,int n_rows) {
   GdaMsqlRecordset *rs;
   m_fdata          *fields;
   register gint     i;
 
   if (!GDA_IS_CONNECTION(cnc)) return NULL;
-  if (!res) return NULL;
-  rs=g_object_new(GDA_TYPE_MSQL_RECORDSET,NULL);
+    rs=g_object_new(GDA_TYPE_MSQL_RECORDSET,NULL);
   rs->cnc=cnc;
   rs->res=res;
   rs->sock=sock;
-  for (fields=res->fieldData,i=0;fields;fields=fields->next,i++) {
-    gda_data_model_set_column_title(GDA_DATA_MODEL(rs),i,fields->field.name);
+  rs->n_rows=n_rows;
+  if (res!=NULL) {
+    for (fields=res->fieldData,i=0;fields;fields=fields->next,i++) {
+      gda_data_model_set_column_title(GDA_DATA_MODEL(rs),i,fields->field.name);
+    }
   }
   return rs;
 }

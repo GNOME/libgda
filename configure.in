@@ -219,7 +219,7 @@ AM_CONDITIONAL(MYSQL, test x$mysqldir != x)
 
 dnl Test for mSQL
 try_msql=true
-AC_ARG_WITH(mysql,
+AC_ARG_WITH(msql,
 [  --with-mSQL=<directory>	use mSQL backend in <directory>],[
 if test $withval = no
 then

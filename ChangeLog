@@ -1,3 +1,11 @@
+2003-09-19  Chris Silles <cas@starfire-programming.net>
+
+	* configure.in: fixed msql switch check
+	* providers/msql/gda-msql-provider.c:
+	* providers/msql/gda-msql-recordset.c:
+	* providers/msql/gda-msql-recordset.h: Fixed mSQL provider handling
+	of non-query queries.
+
 2003-09-17  Seth Remington <sremington@saberlogic.com>
 
 	Fixes #117202
