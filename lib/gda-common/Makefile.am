@@ -6,7 +6,7 @@ INCLUDES = \
 	-I.
 
 BUILT_SOURCES = GDA-skels.c GDA-stubs.c GDA-common.c GDA.h
-CLEANFILES += $(BUILT_SOURCES)
+CLEANFILES = $(BUILT_SOURCES)
 IDL_FILES = \
 	$(top_srcdir)/idl/GDA.idl \
 	$(top_srcdir)/idl/GDA_Command.idl \
