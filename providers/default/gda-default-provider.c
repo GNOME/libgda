@@ -133,7 +133,7 @@ gda_default_provider_open_connection (GdaServerProvider *provider,
 	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), FALSE);
 
 	/* get all parameters received */
-	t_filename = gda_quark_list_find (params, "DIRECTORY");
+	t_filename = gda_quark_list_find (params, "FILENAME");
 
 	if (!t_filename || *t_filename != '/') {
 		gda_server_connection_add_error_string ( cnc,
