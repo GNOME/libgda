@@ -8,8 +8,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2003-03-27 02:29+0100\n"
-"PO-Revision-Date: 2003-03-27 02:30+0100\n"
+"POT-Creation-Date: 2003-04-10 12:43+0200\n"
+"PO-Revision-Date: 2003-04-10 12:44+0200\n"
 "Last-Translator: Christian Rose <menthos@menthos.com>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -394,7 +394,17 @@ msgstr ""
 
 #: providers/freetds/gda-freetds-provider.c:1062 providers/freetds/utils.c:44
 #: providers/oracle/utils.c:71 providers/postgres/utils.c:51
-#: providers/sybase/utils.c:171
+#: providers/sybase/gda-sybase-provider.c:765
+#: providers/sybase/gda-sybase-recordset.c:512
+#: providers/sybase/gda-sybase-recordset.c:534
+#: providers/sybase/gda-sybase-recordset.c:593 providers/sybase/utils.c:205
+#: providers/sybase/utils.c:223 providers/sybase/utils.c:239
+#: providers/sybase/utils.c:259 providers/sybase/utils.c:279
+#: providers/sybase/utils.c:320 providers/sybase/utils.c:337
+#: providers/sybase/utils.c:389 providers/sybase/utils.c:415
+#: providers/sybase/utils.c:449 providers/sybase/utils.c:466
+#: providers/sybase/utils.c:489 providers/sybase/utils.c:505
+#: providers/sybase/utils.c:543
 msgid "Not available"
 msgstr "Inte tillgänglig"
 
@@ -419,7 +429,7 @@ msgid "Provider for TDS-based databases (using FreeTDS)"
 msgstr "Leverantör för TDS-baserade databaser (använder FreeTDS)"
 
 #: providers/freetds/utils.c:40 providers/oracle/utils.c:66
-#: providers/postgres/utils.c:46 providers/sybase/utils.c:166
+#: providers/postgres/utils.c:46 providers/sybase/utils.c:538
 msgid "NO DESCRIPTION"
 msgstr "INGEN BESKRIVNING"
 
@@ -473,7 +483,7 @@ msgstr "Funktion"
 #: providers/postgres/gda-postgres-provider.c:1301
 #: providers/postgres/gda-postgres-provider.c:1845
 #: providers/sqlite/gda-sqlite-provider.c:752
-#: providers/sybase/gda-sybase-provider.c:909
+#: providers/sybase/gda-sybase-provider.c:1098
 msgid "Owner"
 msgstr "Ägare"
 
@@ -527,7 +537,7 @@ msgstr "Utlösare"
 #: providers/oracle/gda-oracle-provider.c:2012
 #: providers/postgres/gda-postgres-provider.c:1123
 #: providers/sqlite/gda-sqlite-provider.c:751
-#: providers/sybase/gda-sybase-provider.c:907
+#: providers/sybase/gda-sybase-provider.c:1096
 msgid "Type"
 msgstr "Typ"
 
@@ -550,7 +560,7 @@ msgstr "Typ"
 #: providers/postgres/gda-postgres-provider.c:1302
 #: providers/postgres/gda-postgres-provider.c:1846
 #: providers/sqlite/gda-sqlite-provider.c:753
-#: providers/sybase/gda-sybase-provider.c:911
+#: providers/sybase/gda-sybase-provider.c:1100
 msgid "Comments"
 msgstr "Kommentarer"
 
@@ -559,7 +569,7 @@ msgstr "Kommentarer"
 #: providers/odbc/gda-odbc-provider.c:1257
 #: providers/postgres/gda-postgres-provider.c:1126
 #: providers/sqlite/gda-sqlite-provider.c:754
-#: providers/sybase/gda-sybase-provider.c:913
+#: providers/sybase/gda-sybase-provider.c:1102
 msgid "GDA type"
 msgstr "GDA-typ"
 
@@ -1180,81 +1190,16 @@ msgstr "Kunde inte hämta information för fält"
 msgid "Provider for SQLite databases"
 msgstr "Leverantör för SQLite-databaser"
 
-#. the logic to connect to the database
-#: providers/sybase/gda-sybase-provider.c:251
-msgid "about to open connection"
-msgstr "kommer att öppna anslutning"
-
-#: providers/sybase/gda-sybase-provider.c:277
+#: providers/sybase/gda-sybase-provider.c:291
 msgid "Out of memory. Allocating connection structure failed."
 msgstr "Slut på minne. Allokering av anslutningsstruktur misslyckades."
 
-#: providers/sybase/gda-sybase-provider.c:289
-msgid "Context allocated."
-msgstr "Sammanhang allokerat."
-
-#: providers/sybase/gda-sybase-provider.c:296
-msgid "Client library initialized."
-msgstr "Klientbibliotek initierat."
-
-#: providers/sybase/gda-sybase-provider.c:322
+#: providers/sybase/gda-sybase-provider.c:336
 #, c-format
 msgid "Locale set to '%s'."
 msgstr "Lokal inställd till \"%s\"."
 
-#: providers/sybase/gda-sybase-provider.c:337
-msgid "Could not initialize cslib callback"
-msgstr "Kunde inte initiera csli-återanrop"
-
-#: providers/sybase/gda-sybase-provider.c:341
-msgid "CS-lib callback initialized."
-msgstr "CS-lib-återanrop initierat."
-
-#: providers/sybase/gda-sybase-provider.c:347
-msgid "Could not initialize ct-client callback"
-msgstr "Kunde inte initiera ct-client-återanrop"
-
-#: providers/sybase/gda-sybase-provider.c:351
-msgid "CT-Client callback initialized."
-msgstr "CT-Client-återanrop initierat."
-
-#: providers/sybase/gda-sybase-provider.c:358
-msgid "Could not initialize ct-server callback"
-msgstr "Kunde inte initiera ct-server-återanrop"
-
-#: providers/sybase/gda-sybase-provider.c:362
-msgid "CT-Server callback initialized."
-msgstr "CT-Server-återanrop initierat."
-
-#: providers/sybase/gda-sybase-provider.c:370
-msgid "Connection allocated."
-msgstr "Anslutning allokerad."
-
-#: providers/sybase/gda-sybase-provider.c:410
-msgid "Appname set."
-msgstr "Programnamn inställt."
-
-#: providers/sybase/gda-sybase-provider.c:423
-msgid "Username set."
-msgstr "Användarnamn inställt."
-
-#: providers/sybase/gda-sybase-provider.c:437
-msgid "Password set."
-msgstr "Lösenord inställt."
-
-#: providers/sybase/gda-sybase-provider.c:449
-msgid "Empty password set."
-msgstr "Tomt lösenord inställt."
-
-#: providers/sybase/gda-sybase-provider.c:459
-msgid "Connected."
-msgstr "Ansluten."
-
-#: providers/sybase/gda-sybase-provider.c:477
-msgid "Finally connected."
-msgstr "Äntligen ansluten."
-
-#: providers/sybase/gda-sybase-provider.c:611
+#: providers/sybase/gda-sybase-provider.c:642
 msgid ""
 "Cmd structure already in use. Command will not be executed because of "
 "blocked connection."
@@ -1262,70 +1207,113 @@ msgstr ""
 "Kommandostruktur används redan. Kommandot kommer inte att köras på grund av "
 "blockerad anslutning."
 
-#: providers/sybase/gda-sybase-provider.c:626
+#: providers/sybase/gda-sybase-provider.c:656
 #, c-format
 msgid "Failed allocating a command structure in %s()"
 msgstr "Misslyckades med allokering av kommandostruktur i %s()"
 
-#: providers/sybase/gda-sybase-provider.c:637
+#: providers/sybase/gda-sybase-provider.c:670
 msgid "Could not prepare command structure."
 msgstr "Kunde inte förbereda kommandostruktur."
 
-#: providers/sybase/gda-sybase-provider.c:646
+#: providers/sybase/gda-sybase-provider.c:680
 msgid "Sending sql-command failed."
 msgstr "Skickande av sql-kommando misslyckades."
 
-#: providers/sybase/gda-sybase-provider.c:717
+#: providers/sybase/gda-sybase-provider.c:706
+#: providers/sybase/gda-sybase-provider.c:724
+#: providers/sybase/gda-sybase-provider.c:790
+#: providers/sybase/gda-sybase-provider.c:811
+msgid "GDA_IS_SYBASE_RECORDSET != TRUE"
+msgstr "GDA_IS_SYBASE_RECORDSET != SANT"
+
+#. when you execute a stored procedure through openclient, this
+#. part of the result set loop is where you fetch the return status
+#. of the executed stored procedure.  You fetch it like a CS_ROW_RESULT
+#: providers/sybase/gda-sybase-provider.c:712
+msgid "CS_STATUS_RESULT!"
+msgstr "CS_STATUS_RESULT!"
+
+#: providers/sybase/gda-sybase-provider.c:734
+msgid "Hit unsupported result type"
+msgstr "Stötte på ej stödd resultattyp"
+
+#: providers/sybase/gda-sybase-provider.c:762
+msgid ""
+"an error occured when calling ct_diag attempting to test if there is a "
+"server message for resultset"
+msgstr ""
+"ett fel inträffade vid anrop av ct_diag vid försök att testa om det finns "
+"ett servermeddelande för resultatmängd"
+
+#: providers/sybase/gda-sybase-provider.c:793
+#, c-format
+msgid "%s returned %s"
+msgstr "%s returnerade %s"
+
+#: providers/sybase/gda-sybase-provider.c:820
 msgid "Failed dropping command structure."
 msgstr "Kastande av kommandostruktur misslyckades."
 
-#: providers/sybase/gda-sybase-provider.c:747
+#: providers/sybase/gda-sybase-provider.c:850
 #, c-format
 msgid "Command structure already in use. %s failed."
 msgstr "Kommandostruktur används redan. %s misslyckades."
 
-#: providers/sybase/gda-sybase-provider.c:755
-#: providers/sybase/gda-sybase-provider.c:859
+#: providers/sybase/gda-sybase-provider.c:858
 msgid "Could not allocate command structure."
 msgstr "Kunde inte allokera kommandostruktur."
 
-#: providers/sybase/gda-sybase-provider.c:763
+#: providers/sybase/gda-sybase-provider.c:867
 #, c-format
 msgid "Could not prepare command structure with %s."
 msgstr "Kunde inte förbereda kommandostruktur med %s."
 
-#: providers/sybase/gda-sybase-provider.c:772
+#: providers/sybase/gda-sybase-provider.c:877
 msgid "Sending command failed."
 msgstr "Skickande av kommando misslyckades."
 
-#: providers/sybase/gda-sybase-provider.c:796
-#: providers/sybase/gda-sybase-provider.c:812
-#: providers/sybase/gda-sybase-provider.c:822
+#: providers/sybase/gda-sybase-provider.c:902
+#: providers/sybase/gda-sybase-provider.c:919
+#: providers/sybase/gda-sybase-provider.c:930
 #, c-format
 msgid "%s: %s failed"
 msgstr "%s: %s misslyckades"
 
-#: providers/sybase/gda-sybase-provider.c:857
-#, c-format
-msgid ""
-"Connection already in use. Could not allocate command structure in %s()."
-msgstr ""
-"Anslutningen används redan. Kunde inte allokera kommandostruktur i %s()."
+#: providers/sybase/gda-sybase-provider.c:974
+msgid "could not allocate cmd structure to find current database."
+msgstr "kunde inte allokera kommandostruktur för att hitta aktuell databas."
 
-#: providers/sybase/gda-sybase-provider.c:870
-#, c-format
-msgid "Failed dropping command structure in %s()."
-msgstr "Kastande av kommandostruktur i %s() misslyckades."
+#: providers/sybase/gda-sybase-provider.c:985
+msgid "could not execute command to get current database."
+msgstr "kunde inte exekvera kommando för att få tag i aktuell databas."
 
-#: providers/sybase/gda-sybase-recordset.c:317
+#: providers/sybase/gda-sybase-provider.c:993
+msgid "could not send command to get current database."
+msgstr "kunde inte skicka kommando för att få tag i aktuell databas."
+
+#: providers/sybase/gda-sybase-provider.c:1016
+msgid "could not bind variable to get current database."
+msgstr "kunde inte binda variabel för att få tag i aktuell databas."
+
+#: providers/sybase/gda-sybase-provider.c:1029
+#: providers/sybase/gda-sybase-provider.c:1044
+msgid "could not fetch data to find current database."
+msgstr "kunde inte hämta data för att hitta aktuell databas."
+
+#: providers/sybase/gda-sybase-provider.c:1058
+msgid "could not drop cmd structure to find current database."
+msgstr "kunde inte släppa kommandostruktur för att hitta aktuell databas."
+
+#: providers/sybase/gda-sybase-recordset.c:315
 msgid "Could not allocate datamodel. No results will be returned."
 msgstr "Kunde inte allokera datamodell. Inga resultat kommer att returneras."
 
-#: providers/sybase/gda-sybase-recordset.c:320
+#: providers/sybase/gda-sybase-recordset.c:318
 msgid "ct_cancel() failed."
 msgstr "ct_cancel() misslyckades."
 
-#: providers/sybase/gda-sybase-recordset.c:332
+#: providers/sybase/gda-sybase-recordset.c:331
 #, c-format
 msgid "%s failed while processing a row result."
 msgstr "%s misslyckades vid behandling av ett radresultat."
@@ -1336,73 +1324,94 @@ msgid "%s returned <= 0 columns."
 msgstr "%s returnerade <= 0 kolumner."
 
 #: providers/sybase/gda-sybase-recordset.c:359
+#: providers/sybase/gda-sybase-recordset.c:549
 msgid "Could not allocate structure for column metainformation."
 msgstr "Kunde inte allokera struktur för kolumnmetainformation."
 
 #: providers/sybase/gda-sybase-recordset.c:363
+#: providers/sybase/gda-sybase-recordset.c:553
 #, c-format
 msgid "Could not call %s while processing row resultset."
 msgstr "Kunde inte anropa %s behandling av radresultatmängd."
 
-#: providers/sybase/gda-sybase-recordset.c:384
+#: providers/sybase/gda-sybase-recordset.c:382
 #: providers/sybase/gda-sybase-recordset.c:403
 #, c-format
 msgid "Could not run %s on column %d"
 msgstr "Kunde inte köra %s på kolumn %d"
 
-#: providers/sybase/gda-sybase-recordset.c:392
+#: providers/sybase/gda-sybase-recordset.c:391
 #, c-format
 msgid "Could not allocate data placeholder for column %d"
 msgstr "kunde inte allokera datahållare för kolumn %d"
 
-#: providers/sybase/gda-sybase-recordset.c:421
+#: providers/sybase/gda-sybase-recordset.c:422
 #, c-format
 msgid "Could not run %s to cancel processing row resultset."
 msgstr "Kunde inte köra %s för att avbryta behandling av radresultatmängd."
 
-#: providers/sybase/gda-sybase-recordset.c:436
+#: providers/sybase/gda-sybase-recordset.c:438
 #, c-format
 msgid "%s failed on row %d"
 msgstr "%s misslyckades på rad %d"
 
-#: providers/sybase/gda-sybase-recordset.c:463
+#: providers/sybase/gda-sybase-recordset.c:465
 #, c-format
 msgid "%s terminated with unexpected return code."
 msgstr "%s avslutades med oväntad slutkod."
 
-#: providers/sybase/gda-sybase-recordset.c:540
-#, c-format
-msgid "%s returned %s"
-msgstr "%s returnerade %s"
+#: providers/sybase/gda-sybase-recordset.c:509
+msgid ""
+"an error occured when calling ct_diag attempting to retrieve a server "
+"message count for resultset"
+msgstr ""
+"ett fel inträffade vid anrop av ct_diag vid försök att hämta ett "
+"servermeddelandeantal för resultatmängd"
 
+#: providers/sybase/gda-sybase-recordset.c:518
+msgid "attempting to make recordset and msg count != 1 !"
+msgstr "försöker att skapa resultatmängs och meddelandeantal != 1 !"
+
+#: providers/sybase/gda-sybase-recordset.c:531
+msgid ""
+"an error occured when calling ct_diag attempting to retrieve a server "
+"message for recordset"
+msgstr ""
+"ett fel inträffade vid anrop av ct_diag vid försök att hämta ett "
+"servermeddelande för resultatmängd"
+
+#: providers/sybase/gda-sybase-recordset.c:590 providers/sybase/utils.c:412
+msgid "call to ct_diag failed when attempting to clear the server messages"
+msgstr "anrop av ct_diag misslyckades vid försök att tömma servermeddelandena"
+
+#: providers/sybase/gda-sybase-types.c:94
 #: providers/sybase/gda-sybase-types.c:97
-#: providers/sybase/gda-sybase-types.c:100
 msgid "Attempt setting a nonnullable field to null."
 msgstr "Försök att ställa in ett onullbart fält till null."
 
-#: providers/sybase/gda-sybase-types.c:217
+#: providers/sybase/gda-sybase-types.c:208
 #, c-format
 msgid "cslib cannot convert type %d"
 msgstr "cslib kan inte konvertera typ %d"
 
-#: providers/sybase/gda-sybase-types.c:232
+#: providers/sybase/gda-sybase-types.c:223
 #, c-format
 msgid "data conversion failed for type %d"
 msgstr "datakonvertering misslyckades för typ %d"
 
 #: providers/sybase/libmain.c:40
-msgid "Provider for sybase databases (using OpenClient)"
-msgstr "Leverantör för sybase-databaser (använder OpenClient)"
+msgid "GDA provider for sybase databases (using OpenClient)"
+msgstr "GDA-leverantör för sybase-databaser (använder OpenClient)"
 
-#: providers/sybase/main.c:51
+#: providers/sybase/main.c:52
 msgid "Could not initiate Sybase component factory"
 msgstr "Kunde inte initiera Sybase-komponentfabrik"
 
-#: providers/sybase/utils.c:37
+#: providers/sybase/utils.c:48
 msgid "Call: csmsg callback"
 msgstr "Anrop: csmsg-återanrop"
 
-#: providers/sybase/utils.c:42
+#: providers/sybase/utils.c:53
 #, c-format
 msgid ""
 "CS-Library error:\n"
@@ -1413,16 +1422,16 @@ msgstr ""
 "\tallvarlighet(%ld) lager(%ld) ursprung (%ld) nummer(%ld)\n"
 "\t%s"
 
-#: providers/sybase/utils.c:49
+#: providers/sybase/utils.c:60
 #, c-format
 msgid "OS error: %s"
 msgstr "OS-fel: %s"
 
-#: providers/sybase/utils.c:59
+#: providers/sybase/utils.c:70
 msgid "Call: Client callback."
 msgstr "Anrop: Klientåteranrop."
 
-#: providers/sybase/utils.c:64
+#: providers/sybase/utils.c:75
 #, c-format
 msgid ""
 "CT-Client error:\n"
@@ -1433,11 +1442,11 @@ msgstr ""
 "\tallvarlighet(%ld) lager(%ld) ursprung (%ld) nummer(%ld)\n"
 "\t%s"
 
-#: providers/sybase/utils.c:79
+#: providers/sybase/utils.c:90
 msgid "Call: server callback"
 msgstr "Anrop: serveråteranrop"
 
-#: providers/sybase/utils.c:84
+#: providers/sybase/utils.c:95
 #, c-format
 msgid ""
 "CT-Server message:\n"
@@ -1446,26 +1455,124 @@ msgstr ""
 "CT-servermeddelande:\n"
 "\tnummer(%ld) allvarlighet(%ld) tillstånd(%ld) rad(%ld)"
 
-#: providers/sybase/utils.c:89
+#: providers/sybase/utils.c:100
 #, c-format
 msgid "\tServer name: %s\n"
 msgstr "\tServernamn: %s\n"
 
-#: providers/sybase/utils.c:92
+#: providers/sybase/utils.c:103
 #, c-format
 msgid "\tProcedure name: %s\n"
 msgstr "\tProcedurnamn: %s\n"
 
-#: providers/sybase/utils.c:130
+#: providers/sybase/utils.c:147
 msgid "ct_diag() failed determining # of client messages."
 msgstr "ct_diag() misslyckades med att avgöra antalet klientmeddelanden."
 
-#: providers/sybase/utils.c:138
-#, c-format
-msgid "%d messages fetched."
-msgstr "%d meddelanden hämtades."
+#: providers/sybase/utils.c:202
+msgid "call to cs_diag failed when attempting to the amount of client messages"
+msgstr ""
+"anrop av ct_diag misslyckades vid försök att avgöra antalet klientmeddelanden"
 
-#: providers/sybase/utils.c:152
+#: providers/sybase/utils.c:220
+msgid ""
+"an error occured when calling cs_diag attempting to retrieve a client message"
+msgstr ""
+"ett fel inträffade vid anrop av cs_diag vid försök att hämta ett "
+"klientmeddelande"
+
+#: providers/sybase/utils.c:230
+msgid "OS_Error:("
+msgstr "OS_Error:("
+
+#: providers/sybase/utils.c:232
+msgid ") Message: "
+msgstr ") Meddelande: "
+
+#: providers/sybase/utils.c:245
+msgid "Sybase OpenClient Msg: severity("
+msgstr ""
+
+#: providers/sybase/utils.c:247
+msgid "), number("
+msgstr "), tal("
+
+#: providers/sybase/utils.c:249
+msgid "), origin("
+msgstr "), ursprung("
+
+#: providers/sybase/utils.c:251
+msgid "), layer("
+msgstr "), lager("
+
+#: providers/sybase/utils.c:276
+msgid "call to cs_diag failed when attempting to clear the client messages"
+msgstr "anrop av cs_diag misslyckades vid försök att tömma klientmeddelandena"
+
+#: providers/sybase/utils.c:317
+msgid "call to ct_diag failed when attempting to the amount of server messages"
+msgstr ""
+"anrop av ct_diag misslyckades vid försök att avgöra antalet servermeddelanden"
+
+#: providers/sybase/utils.c:334
+msgid ""
+"an error occured when calling ct_diag attempting to retrieve a server message"
+msgstr ""
+"ett fel inträffade vid anrop av ct_diag vid försök att hämta ett "
+"servermeddelande"
+
+#: providers/sybase/utils.c:346
+msgid "Server:"
+msgstr "Server:"
+
+#: providers/sybase/utils.c:350
+msgid "Stored Procedure:"
+msgstr "Lagrad procedur:"
+
+#: providers/sybase/utils.c:354
+msgid "Number"
+msgstr "Tal"
+
+#: providers/sybase/utils.c:357 providers/sybase/utils.c:474
+msgid "Severity"
+msgstr "Allvarlighet"
+
+#: providers/sybase/utils.c:360
+msgid "State"
+msgstr "Tillstånd"
+
+#: providers/sybase/utils.c:363
+msgid "Line"
+msgstr "Rad"
+
+#: providers/sybase/utils.c:446
+msgid "call to ct_diag failed when attempting to the amount of client messages"
+msgstr ""
+"anrop av ct_diag misslyckades vid försök att avgöra antalet klientmeddelanden"
+
+#: providers/sybase/utils.c:463
+msgid ""
+"an error occured when calling ct_diag attempting to retrieve a client message"
+msgstr ""
+
+#: providers/sybase/utils.c:476
+msgid "Layer"
+msgstr "Lager"
+
+#: providers/sybase/utils.c:478
+msgid "Origin"
+msgstr "Ursprung"
+
+#: providers/sybase/utils.c:480
+msgid "Message Number"
+msgstr "Meddelandetal"
+
+#: providers/sybase/utils.c:502
+msgid "call to ct_diag failed when attempting to clear the client messages"
+msgstr ""
+"anrop av ct_diag misslyckades vid försök att avgöra antalet klientmeddelanden"
+
+#: providers/sybase/utils.c:523
 msgid "Operation not possible, connection busy."
 msgstr "Åtgärden är inte möjlig, anslutningen upptagen."
 
@@ -1731,6 +1838,83 @@ msgstr "Objekt med ID %s är inte en etikett"
 msgid "Item with ID %s is not a repfield"
 msgstr "Objekt med ID %s är inte ett repfält"
 
+#~ msgid "OS Error:("
+#~ msgstr "OS-fel:("
+
+#~ msgid "Message:"
+#~ msgstr "Meddelande:"
+
+#~ msgid "number"
+#~ msgstr "tal"
+
+#~ msgid "origin"
+#~ msgstr "ursprung"
+
+#~ msgid "layer"
+#~ msgstr "lager"
+
+#~ msgid "Server"
+#~ msgstr "Server"
+
+#~ msgid "about to open connection"
+#~ msgstr "kommer att öppna anslutning"
+
+#~ msgid "Context allocated."
+#~ msgstr "Sammanhang allokerat."
+
+#~ msgid "Client library initialized."
+#~ msgstr "Klientbibliotek initierat."
+
+#~ msgid "Could not initialize cslib callback"
+#~ msgstr "Kunde inte initiera csli-återanrop"
+
+#~ msgid "CS-lib callback initialized."
+#~ msgstr "CS-lib-återanrop initierat."
+
+#~ msgid "Could not initialize ct-client callback"
+#~ msgstr "Kunde inte initiera ct-client-återanrop"
+
+#~ msgid "CT-Client callback initialized."
+#~ msgstr "CT-Client-återanrop initierat."
+
+#~ msgid "Could not initialize ct-server callback"
+#~ msgstr "Kunde inte initiera ct-server-återanrop"
+
+#~ msgid "CT-Server callback initialized."
+#~ msgstr "CT-Server-återanrop initierat."
+
+#~ msgid "Connection allocated."
+#~ msgstr "Anslutning allokerad."
+
+#~ msgid "Appname set."
+#~ msgstr "Programnamn inställt."
+
+#~ msgid "Username set."
+#~ msgstr "Användarnamn inställt."
+
+#~ msgid "Password set."
+#~ msgstr "Lösenord inställt."
+
+#~ msgid "Empty password set."
+#~ msgstr "Tomt lösenord inställt."
+
+#~ msgid "Connected."
+#~ msgstr "Ansluten."
+
+#~ msgid "Finally connected."
+#~ msgstr "Äntligen ansluten."
+
+#~ msgid ""
+#~ "Connection already in use. Could not allocate command structure in %s()."
+#~ msgstr ""
+#~ "Anslutningen används redan. Kunde inte allokera kommandostruktur i %s()."
+
+#~ msgid "Failed dropping command structure in %s()."
+#~ msgstr "Kastande av kommandostruktur i %s() misslyckades."
+
+#~ msgid "%d messages fetched."
+#~ msgstr "%d meddelanden hämtades."
+
 #~ msgid "Could not get DTD from %s"
 #~ msgstr "Kunde inte hämta DTD från %s"
 
@@ -1783,9 +1967,6 @@ msgstr "Objekt med ID %s är inte ett repfält"
 #~ "Anslutningen används redan. Kunde inte allokera kommandostruktur i "
 #~ "'_get_database'"
 
-#~ msgid "Failed dropping command structure in get_database()."
-#~ msgstr "Kastande av kommandostruktur misslyckades i get_database()."
-
 #~ msgid "Could not ct_describe column %d"
 #~ msgstr "Kunde inte ct_describe kolumn %d"
 
@@ -1818,9 +1999,6 @@ msgstr "Objekt med ID %s är inte ett repfält"
 
 #~ msgid "Printfmt"
 #~ msgstr "Utskriftsformat"
-
-#~ msgid "Could not attach to database"
-#~ msgstr "Kunde inte ansluta till databasen"
 
 #~ msgid "Provider %s is not installed"
 #~ msgstr "Leverantören %s är inte installerad"
@@ -2032,9 +2210,6 @@ msgstr "Objekt med ID %s är inte ett repfält"
 #~ msgid "ct_diag 2 failed in sybase_check_servermsg"
 #~ msgstr "ct_diag 2 misslyckades i sybase_check_servermsg"
 
-#~ msgid "Server Message: "
-#~ msgstr "Servermeddelande: "
-
 #~ msgid "Informational Server  Message: "
 #~ msgstr "Informativt servermeddelande: "
 
@@ -2046,15 +2221,6 @@ msgstr "Objekt med ID %s är inte ett repfält"
 
 #~ msgid "SYB"
 #~ msgstr "SYB"
-
-#~ msgid "severity"
-#~ msgstr "allvarlighet"
-
-#~ msgid "origin"
-#~ msgstr "ursprung"
-
-#~ msgid "layer"
-#~ msgstr "lager"
 
 #~ msgid ""
 #~ "\n"
@@ -2266,9 +2432,6 @@ msgstr "Objekt med ID %s är inte ett repfält"
 
 #~ msgid "schema_tables: invalid constraint type %d"
 #~ msgstr "schema_tables: ogiltig restriktionstyp %d"
-
-#~ msgid "Invalid or unsupported constraint type: %d"
-#~ msgstr "Ogiltig eller ej stödd restriktionstyp: %d"
 
 #~ msgid "connection status: %x"
 #~ msgstr "anslutningsstatus: %x"
