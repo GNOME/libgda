@@ -46,6 +46,7 @@ module GNOME {
 			unsigned short hour;
 			unsigned short minute;
 			unsigned short second;
+			long timezone;	// # of seconds to the east UTC
 		};
 		struct Timestamp {
 			short year;
@@ -55,6 +56,7 @@ module GNOME {
 			unsigned short minute;
 			unsigned short second;
 			unsigned long  fraction;
+			long timezone;	// # of seconds to the east UTC
 		};
 		struct GeometricPoint {
 			double x;
