@@ -407,7 +407,10 @@ gda_freetds_provider_supports (GdaServerProvider *provider,
 	g_return_val_if_fail (GDA_IS_FREETDS_PROVIDER (tds_prov), FALSE);
 
 	switch (feature) {
+		case GDA_CONNECTION_FEATURE_PROCEDURES:
 		case GDA_CONNECTION_FEATURE_SQL:
+		case GDA_CONNECTION_FEATURE_USERS:
+		case GDA_CONNECTION_FEATURE_VIEWS:
 			return TRUE;
 	}
 	
@@ -466,6 +469,8 @@ static GdaDataModel
 			return recset;
 		case GDA_CONNECTION_SCHEMA_USERS:
 			return gda_freetds_execute_query (cnc, "SELECT name FROM sysusers WHERE (valid_user(uid) = 1) ORDER by name");
+		case GDA_CONNECTION_SCHEMA_VIEWS:
+			return gda_freetds_execute_query (cnc, "SELECT name FROM sysobjects WHERE (type = 'V') ORDER BY name");
 	}
 	
 	return NULL;
