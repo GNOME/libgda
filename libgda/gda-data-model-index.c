@@ -21,7 +21,7 @@
  */
 
 #include <libgda/gda-data-model-index.h>
-#include <libgda/gda-data-model-column-index-attributes.h>
+#include <libgda/gda-column-index.h>
 
 GType
 gda_data_model_index_get_type (void)
@@ -82,8 +82,8 @@ gda_data_model_index_copy (GdaDataModelIndex *dmi)
 	/* g_list_copy (shallow copy) not good enough */
 	for (i = 0; i < g_list_length (dmi->col_idx_list); i++) 
 		dmi_copy->col_idx_list = g_list_append (dmi_copy->col_idx_list, 
-			(GdaDataModelColumnIndexAttributes *) 
-			gda_data_model_column_index_attributes_copy (g_list_nth_data (dmi->col_idx_list, i)));
+			(GdaColumnIndex *) 
+			gda_column_index_copy (g_list_nth_data (dmi->col_idx_list, i)));
 
 	return dmi_copy;
 }
@@ -107,7 +107,7 @@ gda_data_model_index_free (GdaDataModelIndex *dmi)
 
 	/* free column index attributes list */	
 	for (i = 0; i < g_list_length (dmi->col_idx_list); i++) 
-		gda_data_model_column_index_attributes_free (g_list_nth_data (dmi->col_idx_list, i));
+		gda_column_index_free (g_list_nth_data (dmi->col_idx_list, i));
 
 	g_list_free (dmi->col_idx_list);
 
@@ -158,7 +158,7 @@ gda_data_model_index_equal (const GdaDataModelIndex *lhs,
 		return FALSE;
 
 	for (i = 0; i < g_list_length (lhs->col_idx_list); i++) 
-		if (gda_data_model_column_index_attributes_equal (g_list_nth_data (lhs->col_idx_list, i), 
+		if (gda_column_index_equal (g_list_nth_data (lhs->col_idx_list, i), 
 							    g_list_nth_data (rhs->col_idx_list, i)) == FALSE)
 			return FALSE;
     
@@ -317,7 +317,7 @@ gda_data_model_index_set_references (GdaDataModelIndex *dmi, const gchar *ref)
  * gda_data_model_index_get_column_index_list
  * @dmi: a #GdaDataModelIndex.
  *
- * Returns: @dmi's list of #GdaDataModelColumnIndexAttributes.
+ * Returns: @dmi's list of #GdaColumnIndex.
  */
 GList *
 gda_data_model_index_get_column_index_list (GdaDataModelIndex *dmi)
@@ -329,7 +329,7 @@ gda_data_model_index_get_column_index_list (GdaDataModelIndex *dmi)
 /**
  * gda_data_model_index_set_column_index_list
  * @dmi: a #GdaDataModelIndex.
- * @col_idx_list: list of #GdaDataModelColumnIndexAttributes.
+ * @col_idx_list: list of #GdaColumnIndex.
  *
  * Sets @dmi's list of column index attributes by
  * copying @col_idx_list to its internal representation.
@@ -345,7 +345,7 @@ gda_data_model_index_set_column_index_list (GdaDataModelIndex *dmi, GList *col_i
 
 		/* free column index attributes list */	
 		for (i = 0; i < g_list_length (dmi->col_idx_list); i++) 
-			gda_data_model_column_index_attributes_free (g_list_nth_data (dmi->col_idx_list, i));
+			gda_column_index_free (g_list_nth_data (dmi->col_idx_list, i));
 
 		g_list_free (dmi->col_idx_list);
 		dmi->col_idx_list = NULL;
@@ -356,8 +356,8 @@ gda_data_model_index_set_column_index_list (GdaDataModelIndex *dmi, GList *col_i
 		/* g_list_copy (shallow copy) not good enough */
 		for (i = 0; i < g_list_length (col_idx_list); i++) 
 			dmi->col_idx_list = g_list_append (dmi->col_idx_list, 
-				(GdaDataModelColumnIndexAttributes *) 
-				gda_data_model_column_index_attributes_copy (g_list_nth_data (col_idx_list, i)));
+				(GdaColumnIndex *) 
+				gda_column_index_copy (g_list_nth_data (col_idx_list, i)));
 	}
 }
 

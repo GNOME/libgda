@@ -1,5 +1,10 @@
 2005-03-03  Álvaro Peña  <alvaropg@telefonica.net>
 
+	* *: Renamed GdaDataModelColumnIndexAttributes to
+	GdaColumnAttributes
+
+2005-03-03  Álvaro Peña  <alvaropg@telefonica.net>
+
 	* *: Changed GdaDataModelColumnAttributes name to
 	GdaColumn
 
@@ -204,7 +209,7 @@
 
 	* doc/C: added create/drop index to documentation.
 
-	* libgda/gda-data-model-column-index-attributes: minor bugfixes.
+	* libgda/gda-column-index: minor bugfixes.
 
 	* libgda/gda-data-model-index: minor bugfixes.
 
@@ -217,10 +222,10 @@
 
 2005-02-01  Bas Driessen <bas.driessen@xobas.com>
 
-	* libgda/: introduced GdaDataModelColumnIndexAttributes to hold
+	* libgda/: introduced GdaColumnIndex to hold
 	index properties on column level.
 
-	* doc/C: added GdaDataModelColumnIndexAttributes to 
+	* doc/C: added GdaColumnIndex to 
 	documentation.
 
 2005-01-31  Bas Driessen <bas.driessen@xobas.com>

@@ -36,7 +36,7 @@
 #include <libgda/gda-data-model-list.h>
 #include <libgda/gda-error.h>
 #include <libgda/gda-column.h>
-#include <libgda/gda-data-model-column-index-attributes.h>
+#include <libgda/gda-column-index.h>
 #include <libgda/gda-data-model-index.h>
 #include <libgda/gda-log.h>
 #include <libgda/gda-parameter.h>

@@ -701,7 +701,7 @@ gda_connection_drop_database (GdaConnection *cnc, const gchar *name)
  * and @index_list can be set to NULL. Index related values set in #GdaColumn
  * should not overlap settings in @index_list. A table can only have one Primary Key for instance.
  * Either set it in #GdaColumn that is part of @attributes_list or in 
- * #GdaDataModelColumnIndexAttributes that is part of @index_list.
+ * #GdaColumnIndex that is part of @index_list.
  *
  * Returns: %TRUE if successful, %FALSE otherwise.
  */

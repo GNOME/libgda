@@ -25,7 +25,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <libgda/gda-data-model-array.h>
-#include <libgda/gda-data-model-column-index-attributes.h>
+#include <libgda/gda-column-index.h>
 #include "gda-postgres.h"
 #include "gda-postgres-provider.h"
 
@@ -960,7 +960,7 @@ gda_postgres_provider_create_index (GdaServerProvider *provider,
 				    const gchar *table_name)
 {
 	GdaPostgresProvider *pg_prv = (GdaPostgresProvider *) provider;
-	GdaDataModelColumnIndexAttributes *dmcia;
+	GdaColumnIndex *dmcia;
 	GString *sql;
 	GList *col_list;
 	gchar *index_name, *col_ref, *idx_ref;
@@ -999,14 +999,14 @@ gda_postgres_provider_create_index (GdaServerProvider *provider,
 		if (i > 0)
 			g_string_append_printf (sql, ", ");
 			
-		dmcia = (GdaDataModelColumnIndexAttributes *) g_list_nth_data ((GList *) col_list, i);
+		dmcia = (GdaColumnIndex *) g_list_nth_data ((GList *) col_list, i);
 
 		/* name */	
-		g_string_append_printf (sql, "\"%s\" ", gda_data_model_column_index_attributes_get_column_name (dmcia));
+		g_string_append_printf (sql, "\"%s\" ", gda_column_index_get_column_name (dmcia));
 
 		/* any additional column parameters */
-		if (gda_data_model_column_index_attributes_get_references (dmcia) != NULL) {
-			col_ref = (gchar *) gda_data_model_column_index_attributes_get_references (dmcia);
+		if (gda_column_index_get_references (dmcia) != NULL) {
+			col_ref = (gchar *) gda_column_index_get_references (dmcia);
 			if ((col_ref != NULL) && (*col_ref != '\0'))
 				g_string_append_printf (sql, " %s ", col_ref);
 		}

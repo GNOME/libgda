@@ -24,7 +24,7 @@
  */
 
 #include <libgda/gda-data-model-array.h>
-#include <libgda/gda-data-model-column-index-attributes.h>
+#include <libgda/gda-column-index.h>
 #include <libgda/gda-util.h>
 #include <libgda/gda-intl.h>
 #include <stdlib.h>
@@ -732,7 +732,7 @@ gda_mysql_provider_create_index (GdaServerProvider *provider,
 {
 	MYSQL *mysql;
 	GdaMysqlProvider *myprv = (GdaMysqlProvider *) provider;
-	GdaDataModelColumnIndexAttributes *dmcia;
+	GdaColumnIndex *dmcia;
 	GString *sql;
 	GList *col_list;
 	gchar *index_name, *col_ref, *idx_ref;
@@ -775,27 +775,27 @@ gda_mysql_provider_create_index (GdaServerProvider *provider,
 		if (i > 0)
 			g_string_append_printf (sql, ", ");
 
-		dmcia = (GdaDataModelColumnIndexAttributes *) g_list_nth_data ((GList *) col_list, i);
+		dmcia = (GdaColumnIndex *) g_list_nth_data ((GList *) col_list, i);
 
 		/* name */
-		g_string_append_printf (sql, "`%s` ", gda_data_model_column_index_attributes_get_column_name (dmcia));
+		g_string_append_printf (sql, "`%s` ", gda_column_index_get_column_name (dmcia));
 
 		/* size */
-		if (gda_data_model_column_index_attributes_get_defined_size (dmcia) > 0) {
-			size = gda_data_model_column_index_attributes_get_defined_size (dmcia);
+		if (gda_column_index_get_defined_size (dmcia) > 0) {
+			size = gda_column_index_get_defined_size (dmcia);
 			g_string_append_printf (sql, " (%d) ", size);
 		}
 
 		/* sorting */
-		sort = gda_data_model_column_index_attributes_get_sorting (dmcia);
+		sort = gda_column_index_get_sorting (dmcia);
 		if (sort == GDA_SORTING_DESCENDING)
 			g_string_append_printf (sql, " DESC ");
 		else
 			g_string_append_printf (sql, " ASC ");
 
 		/* any additional column parameters */
-		if (gda_data_model_column_index_attributes_get_references (dmcia) != NULL) {
-			col_ref = (gchar *) gda_data_model_column_index_attributes_get_references (dmcia);
+		if (gda_column_index_get_references (dmcia) != NULL) {
+			col_ref = (gchar *) gda_column_index_get_references (dmcia);
 			if ((col_ref != NULL) && (*col_ref != '\0'))
 				g_string_append_printf (sql, " %s ", col_ref);
 		}
