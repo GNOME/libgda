@@ -115,3 +115,19 @@ gda_report_document_new (void)
 
 	return document;
 }
+
+/**
+ * gda_report_document_new_from_string
+ */
+GdaReportDocument *
+gda_report_document_new_from_string (const gchar *xml)
+{
+}
+
+/**
+ * gda_report_document_new_from_uri
+ */
+GdaReportDocument *
+gda_report_document_new_from_uri (const gchar *uri)
+{
+}

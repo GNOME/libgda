@@ -48,6 +48,8 @@ struct _GdaReportDocumentClass {
 
 GType              gda_report_document_get_type (void);
 GdaReportDocument *gda_report_document_new (void);
+GdaReportDocument *gda_report_document_new_from_string (const gchar *xml);
+GdaReportDocument *gda_report_document_new_from_uri (const gchar *uri);
 
 G_END_DECLS
 

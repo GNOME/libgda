@@ -2,6 +2,8 @@
 
 	* libgda-report/gda-report-document.[ch]: new files for managing
 	the XML format used for reports
+	(gda_report_document_new_from_string): new function
+	(gda_report_document_new_from_uri): new function
 
 2001-12-23  Rodrigo Moya <rodrigo@gnome-db.org>
 
