@@ -348,7 +348,7 @@ then
 		AC_MSG_RESULT(found IBM DB2 in $ibmdb2dir)
 		AC_DEFINE(HAVE_IBMDB2)
 		AC_MSG_WARN(IBM DB2 Provider does not work yet)
-		IBMDB2_CFLAGS="-I${ibmdb2dir}/include"
+		IBMDB2_CFLAGS="-DIBMDB2_DIR=\\\"${ibmdb2dir}\\\" -I${ibmdb2dir}/include"
 		IBMDB2_LIBS="-L${ibmdb2dir}/lib -Wl,-rpath,${ibmdb2dir}/lib -ldb2"
 	fi
 fi
