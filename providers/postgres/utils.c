@@ -54,6 +54,7 @@ gda_postgres_type_to_gda (Oid postgres_type)
 		return GDA_TYPE_BOOLEAN;
 	case BYTEAOID :
 	case CHAROID :
+	case NAMEOID :
 	case TEXTOID :
 	case BPCHAROID :
 	case VARCHAROID :
@@ -84,9 +85,10 @@ gda_postgres_type_to_gda (Oid postgres_type)
 		return GDA_TYPE_GEOMETRIC_POINT;
 	}
 
-	return GDA_TYPE_UNKNOWN;
+	return GDA_TYPE_STRING;
 }
 
+/* Makes a point from a string like "(3.2,5.6)" */
 static GdaGeometricPoint *
 make_point (const gchar *value)
 {
@@ -113,39 +115,68 @@ delete_point (GdaGeometricPoint *point)
 }
 
 void 
-gda_postgres_set_type_value (GdaField *field, GdaType type, const gchar *value)
+gda_postgres_set_field_data (GdaField *field, const gchar *fname,
+				GdaType type, const gchar *value, 
+				gint dbsize, gboolean isNull)
 {
 	GDate *date;
 	GdaGeometricPoint *point;
+	gint scale;
+
+	g_return_if_fail (field != NULL);
+	g_return_if_fail (fname != NULL);
+	g_return_if_fail (value != NULL);
+
+	//TODO: What do I do with BLOBs?
+
+	gda_field_set_name (field, fname);
+	// dbsize == -1 => variable length
+	gda_field_set_defined_size (field, dbsize);
+	scale = (type == GDA_TYPE_DOUBLE) ? DBL_DIG :
+		(type == GDA_TYPE_SINGLE) ? FLT_DIG : 0;
+	gda_field_set_scale (field, scale);
+
+	if (isNull) 
+		type = GDA_TYPE_NULL;
 
 	switch (type) {
 	case GDA_TYPE_BOOLEAN :
 		gda_field_set_gdatype (field, type);
-		gda_field_set_boolean_value (field, atoi (value));
+		gda_field_set_boolean_value (field, 
+				(*value == 't') ? TRUE : FALSE);
+		gda_field_set_actual_size (field, sizeof (gboolean));
 		break;
 	case GDA_TYPE_STRING :
 		gda_field_set_gdatype (field, type);
 		gda_field_set_string_value (field, value);
+		gda_field_set_actual_size (field, strlen (value));
 		break;
 	case GDA_TYPE_BIGINT :
 		gda_field_set_gdatype (field, type);
+		//FIXME: Don't know if atoll() is portable
 		gda_field_set_bigint_value (field, atoll (value));
+		//TODO: conditionally use gint64 based on G_HAVE_GINT64
+		gda_field_set_actual_size (field, sizeof (gint64));
 		break;
 	case GDA_TYPE_INTEGER :
 		gda_field_set_gdatype (field, type);
 		gda_field_set_integer_value (field, atol (value));
+		gda_field_set_actual_size (field, sizeof (gint32));
 		break;
 	case GDA_TYPE_SMALLINT :
 		gda_field_set_gdatype (field, type);
 		gda_field_set_smallint_value (field, atoi (value));
+		gda_field_set_actual_size (field, sizeof (gint16));
 		break;
 	case GDA_TYPE_SINGLE :
 		gda_field_set_gdatype (field, type);
 		gda_field_set_single_value (field, atof (value));
+		gda_field_set_actual_size (field, sizeof (gfloat));
 		break;
 	case GDA_TYPE_DOUBLE :
 		gda_field_set_gdatype (field, type);
 		gda_field_set_double_value (field, atof (value));
+		gda_field_set_actual_size (field, sizeof (gdouble));
 		break;
 	case GDA_TYPE_DATE :
 		gda_field_set_gdatype (field, type);
@@ -159,6 +190,7 @@ gda_postgres_set_type_value (GdaField *field, GdaType type, const gchar *value)
 		}
 		gda_field_set_date_value (field, date);
 		g_date_free (date);
+		gda_field_set_actual_size (field, sizeof (GDate));
 		
 		break;
 	case GDA_TYPE_GEOMETRIC_POINT :
@@ -166,6 +198,12 @@ gda_postgres_set_type_value (GdaField *field, GdaType type, const gchar *value)
 		gda_field_set_geometric_point_value (field, point);
 		gda_field_set_gdatype (field, type);
 		delete_point (point);
+		gda_field_set_actual_size (field, sizeof (GdaGeometricPoint));
+		break;
+	case GDA_TYPE_NULL :
+		gda_field_set_gdatype (field, type);
+		gda_field_set_null_value (field);
+		gda_field_set_actual_size (field, 0);
 		break;
 	case GDA_TYPE_TIMESTAMP : //FIXME
 	case GDA_TYPE_TIME : //FIXME
@@ -173,6 +211,7 @@ gda_postgres_set_type_value (GdaField *field, GdaType type, const gchar *value)
 	default :
 		gda_field_set_string_value (field, value);
 		gda_field_set_gdatype (field, GDA_TYPE_STRING);
+		gda_field_set_actual_size (field, strlen (value));
 	}
 }
 

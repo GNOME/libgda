@@ -326,18 +326,31 @@ process_sql_commands (GList *reclist, GdaServerConnection *cnc, const gchar *sql
 		while (arr[n]) {
 			PGresult *pg_res;
 			GdaServerRecordset *recset;
+			gint status;
 
 			pg_res = PQexec(pconn, arr[n]);
 			if (pg_res == NULL) {
 				gda_server_connection_add_error (
 					cnc, gda_postgres_make_error (pconn));
+				g_list_foreach (reclist, (GFunc) g_object_unref, NULL);
+				g_list_free (reclist);
+				reclist = NULL;
 				break;
 			} 
 			
-			if (PQresultStatus(pg_res) == PGRES_TUPLES_OK){
+			status = PQresultStatus(pg_res);
+			if (status == PGRES_TUPLES_OK ||
+			    status == PGRES_COMMAND_OK) {
 				recset = gda_postgres_recordset_new (cnc, pg_res);
 				if (GDA_IS_SERVER_RECORDSET (recset))
 					reclist = g_list_append (reclist, recset);
+			} else {
+				gda_server_connection_add_error (
+					cnc, gda_postgres_make_error (pconn));
+				g_list_foreach (reclist, (GFunc) g_object_unref, NULL);
+				g_list_free (reclist);
+				reclist = NULL;
+				break;
 			}
 
 			n++;

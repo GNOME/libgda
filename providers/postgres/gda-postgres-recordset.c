@@ -77,25 +77,17 @@ fetch_func (GdaServerRecordset *recset, gulong rownum)
 		GdaField *field;
 		gchar *thevalue;
 		GdaType ftype;
+		gboolean isNull;
 
 		field = gda_row_get_field (row, i);
-		//TODO: What do I do when PQfsize() returns -1 to show that the
-		//field is of variable length?
-		//TODO: actual_size == defined_size!!!
-		//TODO: What do I do with NULLs?
-		//TODO: What do I do with BLOBs?
-		//TODO: PQfsize() returns the length of the attribute in the server, not
-		//the same length as PQgetlength(), which contains the length of the 
-		//string returned by PQgetvalue()!!! So PQfsize may be < PQgetlength!!!
-		gda_field_set_actual_size (field, PQgetlength (pg_res, rownum, i));
-		gda_field_set_defined_size (field, PQfsize (pg_res, i));
-		gda_field_set_name (field, PQfname (pg_res, i));
-		//TODO: Don't know what the scale is!
-		//gda_field_set_scale (field, mysql_fields[i].decimals);
-		gda_field_set_scale (field, 0);
-		ftype = gda_postgres_type_to_gda (PQftype (pg_res, i));
 		thevalue = PQgetvalue(pg_res, rownum, i);
-		gda_postgres_set_type_value(field, ftype, thevalue);
+
+		ftype = gda_postgres_type_to_gda (PQftype (pg_res, i));
+		isNull = *thevalue != '\0' ? 
+				FALSE : PQgetisnull (pg_res, rownum, i);
+
+		gda_postgres_set_field_data (field, PQfname (pg_res, i), ftype,
+					thevalue, PQfsize (pg_res, i), isNull);
 	}
 
 	return row;
@@ -125,15 +117,22 @@ describe_func (GdaServerRecordset *recset)
 	
 	for (i = 0; i < field_count; i++) {
 		GdaFieldAttributes *field_attrs;
+		GdaType ftype;
+		gint scale;
 
 		field_attrs = gda_row_attributes_get_field (attrs, i);
 		gda_field_attributes_set_name (field_attrs, PQfname (pg_res, i));
-		//TODO: PQfsize() or PQgetlength()?
-		gda_field_attributes_set_defined_size (field_attrs, PQfsize (pg_res, i));
-		//TODO: What is the scale?
-		gda_field_attributes_set_scale (field_attrs, 0);
-		gda_field_attributes_set_gdatype (field_attrs,
-						  gda_postgres_type_to_gda (PQftype (pg_res, i)));
+
+		ftype = gda_postgres_type_to_gda (PQftype (pg_res, i));
+		scale = (ftype == GDA_TYPE_DOUBLE) ? DBL_DIG :
+			(ftype == GDA_TYPE_SINGLE) ? FLT_DIG : 0;
+
+		gda_field_attributes_set_scale (field_attrs, scale);
+		gda_field_attributes_set_gdatype (field_attrs, ftype);
+
+		// PQfsize() == -1 => variable length
+		gda_field_attributes_set_defined_size (field_attrs, 
+							PQfsize (pg_res, i));
 	}
 
 	return attrs;

@@ -1,3 +1,23 @@
+2002-01-08  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
+	* utils.c (gda_postgres_set_type_value): renamed to
+	gda_postgres_set_field_data(). Now it sets all the field data, not
+	just type and value.
+	(gda_postgres_type_to_gda()): added NAMEOID type (char(32) used for
+	internal names in PostgreSQL). Default return value is now STRING so
+	as describe_func() doesn't set the column type to UNKNOWN.
+
+	* gda-postgres.h: removed declaration of gda_postgres_set_type_value()
+	and added gda_postgres_set_field_data().
+
+	* gda-postgres-recordset.c (fetch_func()): use the new function to set
+	the field data. Removed TODO list. Check for null values.
+	(describe_func()): removed TODO list. Values for scale and
+	defined_size are now ok.
+
+	* gda_postgres_provider.c: free the list of recordsets when there is
+	an error and return NULL after adding the error to the connection.
+	
 2002-01-07  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
 	* *.[ch]: changed copyright to the GNOME Foundation.
