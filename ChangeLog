@@ -1,5 +1,8 @@
 2003-03-12  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* providers/xbase/libmain.c (plugin_get_*): made name shorter
+	and improved description.
+
 	* providers/sybase/Makefile.am: added missing header file.
 
 2003-03-12  David T Hollis <dhollis@davehollis.com>
