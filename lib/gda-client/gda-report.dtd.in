@@ -1,5 +1,5 @@
 <!-- gda-report.dtd
-     Copyright (C) 2000 Carlos Perello Marin
+     Copyright (C) 2000 Carlos Perello Marin <carlos@hispalinux.es>
                         Gerhard Dieringer
 
      Based on the Mutiny Bay Software's
@@ -10,6 +10,7 @@
 %query;
 
 
+<!ENTITY % reportelement   "line|label|special|repfield|picture">
 <!ENTITY % positionfreq    "first|inside|last|allbutfirst|allbutlast|firstandlast|all">
 <!ENTITY % pagefreq        "even|odd|all">
 <!ENTITY % linestyle       "none|solid|dash|dot|dashdot|dashdotdot">
@@ -20,6 +21,7 @@
 <!ELEMENT report (reportheader?, pageheaderlist?, dataheader?,  datalist?, 
                   datafooter?,   pagefooterlist?, reportfooter?)>
 <!ATTLIST report
+  reportstyle     (form|list)       "list"
   pagesize        (A3|A4|A5|A6|B3|B4|B5|B6|letter|legal|executive) "A4"
   orientation     (portrait|landscape) "portrait"
   units           (inch|cm|pt)      "cm"
@@ -30,7 +32,7 @@
   bgcolor         NMTOKENS          "255 255 255"
   fgcolor         NMTOKENS          "0 0 0"
   bordercolor     NMTOKENS          "0 0 0"
-  borderwidth     NMTOKEN           "1"
+  borderwidth     NMTOKEN           "0.05"
   borderstyle     (%linestyle;)     "none"
   fontfamily      NMTOKEN           "Helvetica"
   fontsize        NMTOKEN           "10"
@@ -44,24 +46,68 @@
   precision       NMTOKEN           "2"
   currency        CDATA             "EUR"
   commaseparator  (yes|no)          "no"
-  linewidth       NMTOKEN           "1"
+  linewidth       NMTOKEN           "0.05"
   linecolor       NMTOKENS          "0 0 0"
   linestyle       (%linestyle;)     "solid"
 >
 
-<!ELEMENT reportelementlist   (line|label|special|repfield|picture)+>
+<!ELEMENT reportelementlist   (%reportelement;)+>
 
 <!ELEMENT reportheader (reportelementlist)>
 <!ATTLIST reportheader 
+  active          (yes|no)          "yes"
+  visible         (yes|no)          "yes"
   height          NMTOKEN           "2.0"
   newpage         (yes|no)          "no"
+  bgcolor         NMTOKENS          #IMPLIED
+  fgcolor         NMTOKENS          #IMPLIED
+  bordercolor     NMTOKENS          #IMPLIED
+  borderwidth     NMTOKEN           #IMPLIED
+  borderstyle     (%linestyle;)     #IMPLIED
+  fontfamily      NMTOKEN           #IMPLIED
+  fontsize        NMTOKEN           #IMPLIED
+  fontweight      (%fontweight;)    #IMPLIED
+  fontitalic      (yes|no)          #IMPLIED
+  halignment      (%halignment;)    #IMPLIED
+  valignment      (%valignment;)    #IMPLIED
+  wordwrap        (yes|no)          #IMPLIED
+  negvaluecolor   NMTOKENS          #IMPLIED
+  dateformat      CDATA             #IMPLIED
+  precision       NMTOKEN           #IMPLIED
+  currency        CDATA             #IMPLIED
+  commaseparator  (yes|no)          #IMPLIED
+  linewidth       NMTOKEN           #IMPLIED
+  linecolor       NMTOKENS          #IMPLIED
+  linestyle       (%linestyle;)     #IMPLIED
 >
 
-	
+
 <!ELEMENT reportfooter (reportelementlist)>
 <!ATTLIST reportfooter 
+  active          (yes|no)          "yes"
+  visible         (yes|no)          "yes"
   height          NMTOKEN           "2.0"
   newpage         (yes|no)          "no"
+  bgcolor         NMTOKENS          #IMPLIED
+  fgcolor         NMTOKENS          #IMPLIED
+  bordercolor     NMTOKENS          #IMPLIED
+  borderwidth     NMTOKEN           #IMPLIED
+  borderstyle     (%linestyle;)     #IMPLIED
+  fontfamily      NMTOKEN           #IMPLIED
+  fontsize        NMTOKEN           #IMPLIED
+  fontweight      (%fontweight;)    #IMPLIED
+  fontitalic      (yes|no)          #IMPLIED
+  halignment      (%halignment;)    #IMPLIED
+  valignment      (%valignment;)    #IMPLIED
+  wordwrap        (yes|no)          #IMPLIED
+  negvaluecolor   NMTOKENS          #IMPLIED
+  dateformat      CDATA             #IMPLIED
+  precision       NMTOKEN           #IMPLIED
+  currency        CDATA             #IMPLIED
+  commaseparator  (yes|no)          #IMPLIED
+  linewidth       NMTOKEN           #IMPLIED
+  linecolor       NMTOKENS          #IMPLIED
+  linestyle       (%linestyle;)     #IMPLIED
 >
 
 <!-- the pageheader/-footer are only printed, if both frequency conditions are true
@@ -73,9 +119,31 @@
 
 <!ELEMENT pageheader (reportelementlist)>
 <!ATTLIST pageheader 
+  active          (yes|no)          "yes"
+  visible         (yes|no)          "yes"
   height          NMTOKEN           "2.0"
   positionfreq   (%positionfreq;)   "all"
   pagefreq       (%pagefreq;)       "all"
+  bgcolor         NMTOKENS          #IMPLIED
+  fgcolor         NMTOKENS          #IMPLIED
+  bordercolor     NMTOKENS          #IMPLIED
+  borderwidth     NMTOKEN           #IMPLIED
+  borderstyle     (%linestyle;)     #IMPLIED
+  fontfamily      NMTOKEN           #IMPLIED
+  fontsize        NMTOKEN           #IMPLIED
+  fontweight      (%fontweight;)    #IMPLIED
+  fontitalic      (yes|no)          #IMPLIED
+  halignment      (%halignment;)    #IMPLIED
+  valignment      (%valignment;)    #IMPLIED
+  wordwrap        (yes|no)          #IMPLIED
+  negvaluecolor   NMTOKENS          #IMPLIED
+  dateformat      CDATA             #IMPLIED
+  precision       NMTOKEN           #IMPLIED
+  currency        CDATA             #IMPLIED
+  commaseparator  (yes|no)          #IMPLIED
+  linewidth       NMTOKEN           #IMPLIED
+  linecolor       NMTOKENS          #IMPLIED
+  linestyle       (%linestyle;)     #IMPLIED
 >
 
 
@@ -83,127 +151,268 @@
 
 <!ELEMENT pagefooter (reportelementlist)>
 <!ATTLIST pagefooter 
+  active          (yes|no)          "yes"
+  visible         (yes|no)          "yes"
   height          NMTOKEN           "2.0"
   positionfreq   (%positionfreq;)   "all"
   pagefreq       (%pagefreq;)       "all"
+  bgcolor         NMTOKENS          #IMPLIED
+  fgcolor         NMTOKENS          #IMPLIED
+  bordercolor     NMTOKENS          #IMPLIED
+  borderwidth     NMTOKEN           #IMPLIED
+  borderstyle     (%linestyle;)     #IMPLIED
+  fontfamily      NMTOKEN           #IMPLIED
+  fontsize        NMTOKEN           #IMPLIED
+  fontweight      (%fontweight;)    #IMPLIED
+  fontitalic      (yes|no)          #IMPLIED
+  halignment      (%halignment;)    #IMPLIED
+  valignment      (%valignment;)    #IMPLIED
+  wordwrap        (yes|no)          #IMPLIED
+  negvaluecolor   NMTOKENS          #IMPLIED
+  dateformat      CDATA             #IMPLIED
+  precision       NMTOKEN           #IMPLIED
+  currency        CDATA             #IMPLIED
+  commaseparator  (yes|no)          #IMPLIED
+  linewidth       NMTOKEN           #IMPLIED
+  linecolor       NMTOKENS          #IMPLIED
+  linestyle       (%linestyle;)     #IMPLIED
 >
 
 
 <!-- the dataheader/-footer ist like a groupheader/-footer for a virtuell group,
      that contains all the data
 -->
-<!ELEMENT datalist (reportdata+)>
-
 <!ELEMENT dataheader (reportelementlist)>
 <!ATTLIST dataheader 
+  active          (yes|no)          "yes"
+  visible         (yes|no)          "yes"
   height          NMTOKEN           "2.0"
+  bgcolor         NMTOKENS          #IMPLIED
+  fgcolor         NMTOKENS          #IMPLIED
+  bordercolor     NMTOKENS          #IMPLIED
+  borderwidth     NMTOKEN           #IMPLIED
+  borderstyle     (%linestyle;)     #IMPLIED
+  fontfamily      NMTOKEN           #IMPLIED
+  fontsize        NMTOKEN           #IMPLIED
+  fontweight      (%fontweight;)    #IMPLIED
+  fontitalic      (yes|no)          #IMPLIED
+  halignment      (%halignment;)    #IMPLIED
+  valignment      (%valignment;)    #IMPLIED
+  wordwrap        (yes|no)          #IMPLIED
+  negvaluecolor   NMTOKENS          #IMPLIED
+  dateformat      CDATA             #IMPLIED
+  precision       NMTOKEN           #IMPLIED
+  currency        CDATA             #IMPLIED
+  commaseparator  (yes|no)          #IMPLIED
+  linewidth       NMTOKEN           #IMPLIED
+  linecolor       NMTOKENS          #IMPLIED
+  linestyle       (%linestyle;)     #IMPLIED
 >
 
 
 <!ELEMENT datafooter (reportelementlist)>
 <!ATTLIST datafooter 
+  active          (yes|no)          "yes"
+  visible         (yes|no)          "yes"
   height          NMTOKEN           "2.0"
+  bgcolor         NMTOKENS          #IMPLIED
+  fgcolor         NMTOKENS          #IMPLIED
+  bordercolor     NMTOKENS          #IMPLIED
+  borderwidth     NMTOKEN           #IMPLIED
+  borderstyle     (%linestyle;)     #IMPLIED
+  fontfamily      NMTOKEN           #IMPLIED
+  fontsize        NMTOKEN           #IMPLIED
+  fontweight      (%fontweight;)    #IMPLIED
+  fontitalic      (yes|no)          #IMPLIED
+  halignment      (%halignment;)    #IMPLIED
+  valignment      (%valignment;)    #IMPLIED
+  wordwrap        (yes|no)          #IMPLIED
+  negvaluecolor   NMTOKENS          #IMPLIED
+  dateformat      CDATA             #IMPLIED
+  precision       NMTOKEN           #IMPLIED
+  currency        CDATA             #IMPLIED
+  commaseparator  (yes|no)          #IMPLIED
+  linewidth       NMTOKEN           #IMPLIED
+  linecolor       NMTOKENS          #IMPLIED
+  linestyle       (%linestyle;)     #IMPLIED
 >
 
+
+<!ELEMENT datalist (reportdata+)>
 
 <!ELEMENT reportdata (detail|(groupheader?,reportdata,groupfooter?))>
 
 
 <!ELEMENT detail (reportelementlist)>
 <!ATTLIST detail 
+  active          (yes|no)          "yes"
+  visible         (yes|no)          "yes"
   height          NMTOKEN           "2.0"
+  bgcolor         NMTOKENS          #IMPLIED
+  fgcolor         NMTOKENS          #IMPLIED
+  bordercolor     NMTOKENS          #IMPLIED
+  borderwidth     NMTOKEN           #IMPLIED
+  borderstyle     (%linestyle;)     #IMPLIED
+  fontfamily      NMTOKEN           #IMPLIED
+  fontsize        NMTOKEN           #IMPLIED
+  fontweight      (%fontweight;)    #IMPLIED
+  fontitalic      (yes|no)          #IMPLIED
+  halignment      (%halignment;)    #IMPLIED
+  valignment      (%valignment;)    #IMPLIED
+  wordwrap        (yes|no)          #IMPLIED
+  negvaluecolor   NMTOKENS          #IMPLIED
+  dateformat      CDATA             #IMPLIED
+  precision       NMTOKEN           #IMPLIED
+  currency        CDATA             #IMPLIED
+  commaseparator  (yes|no)          #IMPLIED
+  linewidth       NMTOKEN           #IMPLIED
+  linecolor       NMTOKENS          #IMPLIED
+  linestyle       (%linestyle;)     #IMPLIED
 >
 
 
 <!ELEMENT groupheader (reportelementlist)>
 <!ATTLIST groupheader 
+  active          (yes|no)          "yes"
+  visible         (yes|no)          "yes"
   height          NMTOKEN           "2.0"
   newpage         (yes|no)          "no"
+  groupvar        NMTOKEN           #REQUIRED
+  bgcolor         NMTOKENS          #IMPLIED
+  fgcolor         NMTOKENS          #IMPLIED
+  bordercolor     NMTOKENS          #IMPLIED
+  borderwidth     NMTOKEN           #IMPLIED
+  borderstyle     (%linestyle;)     #IMPLIED
+  fontfamily      NMTOKEN           #IMPLIED
+  fontsize        NMTOKEN           #IMPLIED
+  fontweight      (%fontweight;)    #IMPLIED
+  fontitalic      (yes|no)          #IMPLIED
+  halignment      (%halignment;)    #IMPLIED
+  valignment      (%valignment;)    #IMPLIED
+  wordwrap        (yes|no)          #IMPLIED
+  negvaluecolor   NMTOKENS          #IMPLIED
+  dateformat      CDATA             #IMPLIED
+  precision       NMTOKEN           #IMPLIED
+  currency        CDATA             #IMPLIED
+  commaseparator  (yes|no)          #IMPLIED
+  linewidth       NMTOKEN           #IMPLIED
+  linecolor       NMTOKENS          #IMPLIED
+  linestyle       (%linestyle;)     #IMPLIED
 >
 
 
 <!ELEMENT groupfooter (reportelementlist)>
 <!ATTLIST groupfooter 
+  active          (yes|no)          "yes"
+  visible         (yes|no)          "yes"
   height        NMTOKEN             "2.0"
   newpage       (yes|no)            "no"
+  bgcolor         NMTOKENS          #IMPLIED
+  fgcolor         NMTOKENS          #IMPLIED
+  bordercolor     NMTOKENS          #IMPLIED
+  borderwidth     NMTOKEN           #IMPLIED
+  borderstyle     (%linestyle;)     #IMPLIED
+  fontfamily      NMTOKEN           #IMPLIED
+  fontsize        NMTOKEN           #IMPLIED
+  fontweight      (%fontweight;)    #IMPLIED
+  fontitalic      (yes|no)          #IMPLIED
+  halignment      (%halignment;)    #IMPLIED
+  valignment      (%valignment;)    #IMPLIED
+  wordwrap        (yes|no)          #IMPLIED
+  negvaluecolor   NMTOKENS          #IMPLIED
+  dateformat      CDATA             #IMPLIED
+  precision       NMTOKEN           #IMPLIED
+  currency        CDATA             #IMPLIED
+  commaseparator  (yes|no)          #IMPLIED
+  linewidth       NMTOKEN           #IMPLIED
+  linecolor       NMTOKENS          #IMPLIED
+  linestyle       (%linestyle;)     #IMPLIED
 >
 
 
 <!ELEMENT picture EMPTY>
 <!ATTLIST picture 
-  x             NMTOKEN            #REQUIRED
-  y             NMTOKEN            #REQUIRED
-  width         NMTOKEN            #REQUIRED
-  height        NMTOKEN            #REQUIRED
-  size          (cut|scale)        "scale"
-  aspectratio   (fixed|float)      "fixed"
-  format        NMTOKEN            #REQUIRED
-  source        (intern|extern)    #REQUIRED
-  data          CDATA              #REQUIRED
+  active          (yes|no)          "yes"
+  visible         (yes|no)          "yes"
+  x               NMTOKEN           #REQUIRED
+  y               NMTOKEN           #REQUIRED
+  width           NMTOKEN           #REQUIRED
+  height          NMTOKEN           #REQUIRED
+  size            (cut|scale)       "scale"
+  aspectratio     (fixed|float)     "fixed"
+  format          NMTOKEN           #REQUIRED
+  source          (intern|extern)   #REQUIRED
+  data            CDATA             #REQUIRED
 >
 
 
 <!ELEMENT line EMPTY>
 <!ATTLIST line 
-  x1   		      NMTOKEN            #REQUIRED
-  y1            NMTOKEN            #REQUIRED
-  x2            NMTOKEN            #REQUIRED
-  y2            NMTOKEN            #REQUIRED
-  linewidth     NMTOKEN            #IMPLIED
-  lineheight    NMTOKEN            #IMPLIED
-  linecolor     NMTOKENS           #IMPLIED
-  linestyle     (%linestyle;)      #IMPLIED
+  active          (yes|no)          "yes"
+  visible         (yes|no)          "yes"
+  x1              NMTOKEN           #REQUIRED
+  y1              NMTOKEN           #REQUIRED
+  x2              NMTOKEN           #REQUIRED
+  y2              NMTOKEN           #REQUIRED
+  linewidth       NMTOKEN           #IMPLIED
+  lineheight      NMTOKEN           #IMPLIED
+  linecolor       NMTOKENS          #IMPLIED
+  linestyle       (%linestyle;)     #IMPLIED
 >
 
 
 <!ELEMENT label EMPTY>
 <!ATTLIST label 
-  text          CDATA              #REQUIRED
-  x             NMTOKEN            #REQUIRED
-  y             NMTOKEN            #REQUIRED
-  width         NMTOKEN            #REQUIRED
-  height        NMTOKEN            #REQUIRED
-  bgcolor       NMTOKENS           #IMPLIED
-  fgcolor       NMTOKENS           #IMPLIED
-  bordercolor   NMTOKENS           #IMPLIED
-  borderwidth   NMTOKEN            #IMPLIED
-  borderstyle   (%linestyle;)      #IMPLIED
-  fontfamily    NMTOKEN            #IMPLIED
-  fontsize      NMTOKEN            #IMPLIED
-  fontweight    (%fontweight;)     #IMPLIED
-  fontitalic    (yes|no)           #IMPLIED
-  halignment    (%halignment;)     #IMPLIED
-  valignment    (%valignment;)     #IMPLIED
-  wordwrap      (yes|no)           #IMPLIED
+  active          (yes|no)          "yes"
+  visible         (yes|no)          "yes"
+  text            CDATA             #REQUIRED
+  x               NMTOKEN           #REQUIRED
+  y               NMTOKEN           #REQUIRED
+  width           NMTOKEN           #REQUIRED
+  height          NMTOKEN           #REQUIRED
+  bgcolor         NMTOKENS          #IMPLIED
+  fgcolor         NMTOKENS          #IMPLIED
+  bordercolor     NMTOKENS          #IMPLIED
+  borderwidth     NMTOKEN           #IMPLIED
+  borderstyle     (%linestyle;)     #IMPLIED
+  fontfamily      NMTOKEN           #IMPLIED
+  fontsize        NMTOKEN           #IMPLIED
+  fontweight      (%fontweight;)    #IMPLIED
+  fontitalic      (yes|no)          #IMPLIED
+  halignment      (%halignment;)    #IMPLIED
+  valignment      (%valignment;)    #IMPLIED
+  wordwrap        (yes|no)          #IMPLIED
 >
 
 
 <!ELEMENT repfield EMPTY>
 <!ATTLIST repfield
-  query           IDREF            #REQUIRED 
-  value           IDREF            #REQUIRED 
-  x               NMTOKEN          #REQUIRED
-  y               NMTOKEN          #REQUIRED
-  width           NMTOKEN          #REQUIRED
-  height          NMTOKEN          #REQUIRED
-  datatype        NMTOKEN          #REQUIRED
-  bgcolor         NMTOKENS         #IMPLIED
-  fgcolor         NMTOKENS         #IMPLIED
-  bordercolor     NMTOKENS         #IMPLIED
-  borderwidth     NMTOKEN          #IMPLIED
-  borderstyle     (%linestyle;)    #IMPLIED
-  fontfamily      NMTOKEN          #IMPLIED
-  fontsize        NMTOKEN          #IMPLIED
-  fontweight      (%fontweight;)   #IMPLIED
-  fontitalic      (yes|no)         #IMPLIED
-  halignment      (%halignment;)   #IMPLIED
-  valignment      (%halignment;)   #IMPLIED
-  wordwrap        (yes|no)         #IMPLIED
-  dateformat      CDATA            #IMPLIED
-  precision       NMTOKEN          #IMPLIED
-  currency        CDATA            #IMPLIED
-  negvaluecolor   NMTOKENS         #IMPLIED
-  commaseparator  (yes|no)         #IMPLIED
+  active          (yes|no)          "yes"
+  visible         (yes|no)          "yes"
+  query           IDREF             #REQUIRED 
+  value           IDREF             #REQUIRED 
+  x               NMTOKEN           #REQUIRED
+  y               NMTOKEN           #REQUIRED
+  width           NMTOKEN           #REQUIRED
+  height          NMTOKEN           #REQUIRED
+  datatype        NMTOKEN           #REQUIRED
+  bgcolor         NMTOKENS          #IMPLIED
+  fgcolor         NMTOKENS          #IMPLIED
+  bordercolor     NMTOKENS          #IMPLIED
+  borderwidth     NMTOKEN           #IMPLIED
+  borderstyle     (%linestyle;)     #IMPLIED
+  fontfamily      NMTOKEN           #IMPLIED
+  fontsize        NMTOKEN           #IMPLIED
+  fontweight      (%fontweight;)    #IMPLIED
+  fontitalic      (yes|no)          #IMPLIED
+  halignment      (%halignment;)    #IMPLIED
+  valignment      (%halignment;)    #IMPLIED
+  wordwrap        (yes|no)          #IMPLIED
+  dateformat      CDATA             #IMPLIED
+  precision       NMTOKEN           #IMPLIED
+  currency        CDATA             #IMPLIED
+  negvaluecolor   NMTOKENS          #IMPLIED
+  commaseparator  (yes|no)          #IMPLIED
 >
 
 
@@ -221,6 +430,8 @@
 
 <!ELEMENT special EMPTY>
 <!ATTLIST special
+  active          (yes|no)            "yes"
+  visible         (yes|no)            "yes"
   text            CDATA               #REQUIRED 
   x               NMTOKEN             #REQUIRED
   y               NMTOKEN             #REQUIRED
