@@ -5,10 +5,10 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 2.0\n"
-"POT-Creation-Date: 2002-02-10 20:00+0100\n"
-"PO-Revision-Date: 2002-02-11 01:20+0000\n"
+"POT-Creation-Date: 2002-03-06 00:58+0000\n"
+"PO-Revision-Date: 2002-03-06 01:00+0000\n"
 "Last-Translator: Duarte Loreto <happyguy_pt@hotmail.com>\n"
-"Language-Team: Portuguese <none@none.org>\n"
+"Language-Team: Portuguese <gnome_pt@yahoogroups.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=iso-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -27,31 +27,31 @@ msgstr "Incapaz de activar objecto %s"
 msgid "Could not create connection component"
 msgstr "Incapaz de criar componente de ligação"
 
-#: libgda/gda-config.c:508
+#: libgda/gda-config.c:512
 msgid "Could not query CORBA components"
 msgstr "Incapaz de questionar componentes CORBA"
 
-#: libgda/gda-config.c:615
+#: libgda/gda-config.c:619
 msgid "Could not query CORBA providers"
 msgstr "Incapaz de questionar fornecedores CORBA"
 
-#: libgda/gda-config.c:865
+#: libgda/gda-config.c:869
 msgid "Name"
 msgstr "Nome"
 
-#: libgda/gda-config.c:866
+#: libgda/gda-config.c:870
 msgid "Provider"
 msgstr "Fornecedor"
 
-#: libgda/gda-config.c:867
+#: libgda/gda-config.c:871
 msgid "Connection string"
 msgstr "Expressão de ligação"
 
-#: libgda/gda-config.c:868
+#: libgda/gda-config.c:872
 msgid "Description"
 msgstr "Descrição"
 
-#: libgda/gda-config.c:869
+#: libgda/gda-config.c:873
 msgid "Username"
 msgstr "Utilizador"
 
@@ -291,82 +291,6 @@ msgstr "Fábrica de componente SQLite"
 msgid "Could not initiate Sqlite component factory"
 msgstr "Incapaz de inicializar fábrica de componente Sqlite"
 
-#: providers/sybase/gda-sybase-error.c:137
-msgid "ct_diag 1 failed in sybase_check_clientmsg"
-msgstr "ct_diag 1 falhou em sybase_check_clientmsg"
-
-#: providers/sybase/gda-sybase-error.c:159
-#: providers/sybase/gda-sybase-error.c:197
-msgid "ct_diag 2 failed in sybase_check_clientmsg"
-msgstr "ct_diag 2 falhou em sybase_check_clientmsg"
-
-#: providers/sybase/gda-sybase-error.c:167
-#: providers/sybase/gda-sybase-error.c:376
-msgid "Client Message: "
-msgstr "Mensagem Cliente: "
-
-#: providers/sybase/gda-sybase-error.c:178
-#: providers/sybase/gda-sybase-error.c:387
-msgid "Informational Client  Message: "
-msgstr "Mensagem Informatica  Cliente: "
-
-#: providers/sybase/gda-sybase-error.c:239
-msgid "ct_diag 1 failed in sybase_check_servermsg"
-msgstr "ct_diag 1 falhou em sybase_check_servermsg"
-
-#: providers/sybase/gda-sybase-error.c:261
-#: providers/sybase/gda-sybase-error.c:304
-msgid "ct_diag 2 failed in sybase_check_servermsg"
-msgstr "ct_diag 2 falhou em sybase_check_servermsg"
-
-#: providers/sybase/gda-sybase-error.c:274
-msgid "Server Message: "
-msgstr "Mensagem Servidor: "
-
-#: providers/sybase/gda-sybase-error.c:285
-msgid "Informational Server  Message: "
-msgstr "Mensagem Informativa  Servidor: "
-
-#: providers/sybase/gda-sybase-error.c:346
-msgid "cs_diag 1 failed in sybase_check_clientmsg"
-msgstr "cs_diag 1 falhou em sybase_check_clientmsg"
-
-#: providers/sybase/gda-sybase-error.c:368
-#: providers/sybase/gda-sybase-error.c:406
-msgid "cs_diag 2 failed in sybase_check_clientmsg"
-msgstr "cs_diag 2 falhou em sybase_check_clientmsg"
-
-#: providers/sybase/gda-sybase-error.c:429
-msgid "SYB"
-msgstr "SYB"
-
-#: providers/sybase/gda-sybase-error.c:431
-msgid "severity"
-msgstr "gravidade"
-
-#: providers/sybase/gda-sybase-error.c:433
-msgid "number"
-msgstr "número"
-
-#: providers/sybase/gda-sybase-error.c:435
-msgid "origin"
-msgstr "origem"
-
-#: providers/sybase/gda-sybase-error.c:437
-msgid "layer"
-msgstr "camada"
-
-#: providers/sybase/gda-sybase-error.c:444
-#, c-format
-msgid ""
-"\n"
-"\tOperating system error number(%ld):\n"
-"\t%s"
-msgstr ""
-"\n"
-"\tErro de sistema operativo número(%ld):\n"
-"\t%s"
-
 #: providers/sybase/GNOME_Database_Provider_Sybase.server.in.h:1
 msgid "GDA Datasource Access for Sybase"
 msgstr "Acesso a Fonte de Dados GDA para Sybase"
@@ -470,33 +394,41 @@ msgstr "Vistas"
 msgid "Indexes"
 msgstr "Índices"
 
+#: testing/client.c:92
+msgid "Aggregates"
+msgstr "Agregados"
+
+#: testing/client.c:93
+msgid "Triggers"
+msgstr "Triggers"
+
 #. test transactions
-#: testing/client.c:94 testing/client.c:102
+#: testing/client.c:96 testing/client.c:104
 msgid "\tStarting transaction..."
 msgstr "\tA iniciar transacção..."
 
-#: testing/client.c:96 testing/client.c:100 testing/client.c:104
-#: testing/client.c:108
+#: testing/client.c:98 testing/client.c:102 testing/client.c:106
+#: testing/client.c:110
 msgid "Error"
 msgstr "Erro"
 
-#: testing/client.c:98
+#: testing/client.c:100
 msgid "\tFinishing transaction..."
 msgstr "\tA terminar transacção..."
 
-#: testing/client.c:106
+#: testing/client.c:108
 msgid "\tRolling back transaction..."
 msgstr "\tA fazer rollback da transacção..."
 
-#: testing/client.c:127
+#: testing/client.c:129
 msgid "Testing GDA client API"
 msgstr "A testar API cliente do GDA"
 
-#: testing/client.c:136
+#: testing/client.c:138
 msgid "** ERROR: gda_config_get_data_source_list returned a NULL item\n"
 msgstr "** ERRO: gda_config_get_data_source_list devolveu um item NULL\n"
 
-#: testing/client.c:140
+#: testing/client.c:142
 #, c-format
 msgid " Data source = %s, User = %s\n"
 msgstr " Fonte de dados = %s, Utilizador = %s\n"
@@ -547,3 +479,57 @@ msgstr "\tdomínio = %s\n"
 #: testing/config.c:106
 msgid "\tgda_params ="
 msgstr "\tgda_params ="
+
+#~ msgid "ct_diag 1 failed in sybase_check_clientmsg"
+#~ msgstr "ct_diag 1 falhou em sybase_check_clientmsg"
+
+#~ msgid "ct_diag 2 failed in sybase_check_clientmsg"
+#~ msgstr "ct_diag 2 falhou em sybase_check_clientmsg"
+
+#~ msgid "Client Message: "
+#~ msgstr "Mensagem Cliente: "
+
+#~ msgid "Informational Client  Message: "
+#~ msgstr "Mensagem Informatica  Cliente: "
+
+#~ msgid "ct_diag 1 failed in sybase_check_servermsg"
+#~ msgstr "ct_diag 1 falhou em sybase_check_servermsg"
+
+#~ msgid "ct_diag 2 failed in sybase_check_servermsg"
+#~ msgstr "ct_diag 2 falhou em sybase_check_servermsg"
+
+#~ msgid "Server Message: "
+#~ msgstr "Mensagem Servidor: "
+
+#~ msgid "Informational Server  Message: "
+#~ msgstr "Mensagem Informativa  Servidor: "
+
+#~ msgid "cs_diag 1 failed in sybase_check_clientmsg"
+#~ msgstr "cs_diag 1 falhou em sybase_check_clientmsg"
+
+#~ msgid "cs_diag 2 failed in sybase_check_clientmsg"
+#~ msgstr "cs_diag 2 falhou em sybase_check_clientmsg"
+
+#~ msgid "SYB"
+#~ msgstr "SYB"
+
+#~ msgid "severity"
+#~ msgstr "gravidade"
+
+#~ msgid "number"
+#~ msgstr "número"
+
+#~ msgid "origin"
+#~ msgstr "origem"
+
+#~ msgid "layer"
+#~ msgstr "camada"
+
+#~ msgid ""
+#~ "\n"
+#~ "\tOperating system error number(%ld):\n"
+#~ "\t%s"
+#~ msgstr ""
+#~ "\n"
+#~ "\tErro de sistema operativo número(%ld):\n"
+#~ "\t%s"
