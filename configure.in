@@ -287,6 +287,7 @@ fi
 
 AM_CONDITIONAL(POSTGRES, test x$postgresdir != x)
 
+dnl Check for Primebase
 AC_ARG_WITH(primebase,
 --with-primebase=<directory>	use primebase sdk in <directory>,[
 if test $withval != yes
