@@ -1,3 +1,7 @@
+2004-10-20  Marcel Telka  <marcel@telka.sk>
+
+	* POTFILES.skip: New file with providers/sybase/main.c.
+
 2004-10-14  Tommi Vainikainen  <thv@iki.fi>
 
 	* fi.po: Updated Finnish translation.
