@@ -21,7 +21,10 @@
 #include "config.h"
 #include "gda-connection.h"
 #include "gda-command.h"
-#include <gtk/gtksignal.h>
+
+#ifndef HAVE_GOBJECT
+#  include <gtk/gtksignal.h>
+#endif
 
 #ifdef ENABLE_NLS
 #  include <libintl.h>
@@ -97,7 +100,7 @@ gda_connection_get_type (void)
 			(GInstanceInitFunc) gda_connection_init,    /* instance_init */
 			NULL,                                       /* value_table */
 		};
-		type = g_type_register_static (G_TYPE_OBJECT, "Gda_Connection", &info);
+		type = g_type_register_static (G_TYPE_OBJECT, "Gda_Connection", &info, 0);
 	}
 	return type;
 }

@@ -21,7 +21,10 @@
 #include "config.h"
 #include "gda-batch.h"
 #include <stdio.h>
-#include <gtk/gtksignal.h>
+
+#ifndef HAVE_GOBJECT
+#  include <gtk/gtksignal.h>
+#endif
 
 /* Gda_Batch object signals */
 enum
@@ -63,7 +66,7 @@ gda_batch_get_type (void)
         (GInstanceInitFunc) gda_batch_init,    /* instance_init */
         NULL,                                  /* value_table */
       };
-      type = g_type_register_static (G_TYPE_OBJECT, "Gda_Batch", &info);
+      type = g_type_register_static (G_TYPE_OBJECT, "Gda_Batch", &info, 0);
     }
   return type;
 }

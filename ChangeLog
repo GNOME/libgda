@@ -1,3 +1,10 @@
+2001-03-28  Reinhard Müller  <reinhard.mueller@bytewise.at>
+
+	* include gtk/gtksignal.h only when gtk is used.
+	* added new parameter to g_type_register_static
+	* configure.in: glib version must be >= 1.3.2
+	* tools/gda-run.c: include config.h above other includes
+
 2001-03-19  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* replaced all gtk/gtk.h with gtkobject.h, since it's the only

@@ -22,7 +22,10 @@
 #include "gda-connection-pool.h"
 #include "gda-common.h"
 #include "GDA.h"
-#include <gtk/gtksignal.h>
+
+#ifndef HAVE_GOBJECT
+#  include <gtk/gtksignal.h>
+#endif
 
 #ifdef ENABLE_NLS
 #  include <libintl.h>
@@ -131,7 +134,7 @@ gda_connection_pool_get_type (void)
 	NULL,                                            /* value_table */
       };
       type = g_type_register_static (G_TYPE_OBJECT, "Gda_ConnectionPool",
-                                     &info);
+                                     &info, 0);
     }
   return type;
 }

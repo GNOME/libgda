@@ -19,7 +19,10 @@
 
 #include "config.h"
 #include "gda-server.h"
-#include <gtk/gtksignal.h>
+
+#ifndef HAVE_GOBJECT
+#  include <gtk/gtksignal.h>
+#endif
 
 #ifdef ENABLE_NLS
 #  include <libintl.h>
@@ -119,7 +122,7 @@ gda_server_impl_get_type (void) {
 			(GInstanceInitFunc) gda_server_impl_init,    /* instance_init */
 			NULL,                                        /* value_table */
 		};
-		type = g_type_register_static (G_TYPE_OBJECT, "Gda_ServerImpl", &info);
+		type = g_type_register_static (G_TYPE_OBJECT, "Gda_ServerImpl", &info, 0);
 	}
 	return (type);
 }

@@ -19,7 +19,10 @@
 
 #include "config.h"
 #include "gda-xml-file.h"
-#include <gtk/gtksignal.h>
+
+#ifndef HAVE_GOBJECT
+#  include <gtk/gtksignal.h>
+#endif
 
 enum
 {
@@ -126,7 +129,7 @@ gda_xml_file_get_type (void)
         (GInstanceInitFunc) gda_xml_file_init,    /* instance_init */
         NULL,                                     /* value_table */
       };
-      type = g_type_register_static (G_TYPE_OBJECT, "Gda_XmlFile", &info);
+      type = g_type_register_static (G_TYPE_OBJECT, "Gda_XmlFile", &info, 0);
     }
   return (type);
 }

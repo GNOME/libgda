@@ -20,7 +20,10 @@
 #include "config.h"
 #include "gda-xml-database.h"
 #include <stdlib.h>
-#include <gtk/gtksignal.h>
+
+#ifndef HAVE_GOBJECT
+#  include <gtk/gtksignal.h>
+#endif
 
 #ifdef ENABLE_NLS
 #  include <libintl.h>
@@ -125,7 +128,7 @@ gda_xml_database_get_type (void)
         NULL,                                         /* value_table */
       };
       type = g_type_register_static (GDA_TYPE_XML_FILE, "Gda_XmlDatabase",
-                                     &info);
+                                     &info, 0);
     }
   return type;
 }

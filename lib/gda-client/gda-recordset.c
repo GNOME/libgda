@@ -20,7 +20,10 @@
 
 #include "config.h"
 #include "gda-recordset.h"
-#include <gtk/gtksignal.h>
+
+#ifndef HAVE_GOBJECT
+#  include <gtk/gtksignal.h>
+#endif
 
 enum {
 	RECORDSET_ERROR,
@@ -83,7 +86,7 @@ gda_recordset_get_type (void) {
 			(GInstanceInitFunc) gda_recordset_init,    /* instance_init */
 			NULL,                                      /* value_table */
 		};
-		type = g_type_register_static (G_TYPE_OBJECT, "Gda_Recordset", &info);
+		type = g_type_register_static (G_TYPE_OBJECT, "Gda_Recordset", &info, 0);
 	}
 	return type;
 }
@@ -475,7 +478,9 @@ gda_recordset_move (Gda_Recordset* rs, gint count, gpointer bookmark) {
 	else fetch_and_dont_store(rs, count, 0);
 	
 	/* emit "row_changed" signal for data-bound widgets */
+#ifndef HAVE_GOBJECT   /* FIXME */
 	gtk_signal_emit(GTK_OBJECT(rs), gda_recordset_signals[RECORDSET_ROW_CHANGED]);
+#endif
 	return rs->current_index;
 }
 

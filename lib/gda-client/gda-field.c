@@ -78,7 +78,7 @@ gda_field_get_type (void)
         (GInstanceInitFunc) gda_field_init,    /* instance_init */
         NULL,                                  /* value_table */
       };
-      type = g_type_register_static (G_TYPE_OBJECT, "Gda_Field", &info);
+      type = g_type_register_static (G_TYPE_OBJECT, "Gda_Field", &info, 0);
     }
   return type;
 }

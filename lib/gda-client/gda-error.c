@@ -74,7 +74,7 @@ gda_error_get_type (void)
         (GInstanceInitFunc) gda_error_init,    /* instance_init */
 	NULL,                                  /* value_table */
       };
-      type = g_type_register_static (G_TYPE_OBJECT, "Gda_Error", &info);
+      type = g_type_register_static (G_TYPE_OBJECT, "Gda_Error", &info, 0);
     }
   return type;
 }

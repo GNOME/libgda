@@ -64,7 +64,7 @@ gda_command_get_type (void) {
 			(GInstanceInitFunc) gda_command_init,    /* instance_init */
 			NULL,                                    /* value_table */
 		};
-		type = g_type_register_static (G_TYPE_OBJECT, "Gda_Command", &info);
+		type = g_type_register_static (G_TYPE_OBJECT, "Gda_Command", &info, 0);
 	}
 	return type;
 }
