@@ -195,27 +195,6 @@ GDA_IS_EXPORT_CLASS
 </SECTION>
 
 <SECTION>
-<FILE>gda-recordset</FILE>
-GdaRecordsetPrivate
-<TITLE>GdaRecordset</TITLE>
-GdaRecordsetFetchFunc
-GdaRecordsetDescribeFunc
-gda_recordset_new
-gda_recordset_get_connection
-gda_recordset_get_command_text
-gda_recordset_set_command_text
-gda_recordset_get_command_type
-gda_recordset_set_command_type
-<SUBSECTION Standard>
-GDA_RECORDSET
-GDA_IS_RECORDSET
-GDA_TYPE_RECORDSET
-gda_recordset_get_type
-GDA_RECORDSET_CLASS
-GDA_IS_RECORDSET_CLASS
-</SECTION>
-
-<SECTION>
 <FILE>gda-server-provider</FILE>
 GdaServerProviderPrivate
 <TITLE>GdaServerProvider</TITLE>

@@ -2,7 +2,7 @@
 GdaTable
 
 <!-- ##### SECTION Short_Description ##### -->
-
+An in-memory representation of a database table
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>

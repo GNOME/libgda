@@ -6,7 +6,8 @@ Database client access
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
-
+  This class is the main entry point for libgda client applications. It provides
+  the way by which client applications open connections.
 </para>
 
 <!-- ##### SECTION See_Also ##### -->

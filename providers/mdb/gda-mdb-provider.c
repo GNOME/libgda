@@ -21,10 +21,11 @@
  */
 
 #include <config.h>
+#include <stdlib.h>
+#include <glib/gbacktrace.h>
 #include <libgda/gda-data-model-array.h>
 #include <libgda/gda-data-model-list.h>
 #include <libgda/gda-intl.h>
-#include <stdlib.h>
 #include "gda-mdb.h"
 
 #define PARENT_TYPE GDA_TYPE_SERVER_PROVIDER
@@ -296,6 +297,8 @@ gda_mdb_provider_get_schema (GdaServerProvider *provider,
 {
 	GdaMdbConnection *mdb_cnc;
 	GdaMdbProvider *mdb_prv = (GdaMdbProvider *) provider;
+
+	G_BREAKPOINT();
 
 	g_return_val_if_fail (GDA_IS_MDB_PROVIDER (mdb_prv), NULL);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);

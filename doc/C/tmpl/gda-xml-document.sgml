@@ -2,7 +2,7 @@
 GdaXmlDocument
 
 <!-- ##### SECTION Short_Description ##### -->
-
+Base class for XML document management
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>

@@ -2,7 +2,7 @@
 GdaXmlDatabase
 
 <!-- ##### SECTION Short_Description ##### -->
-
+XML database representation (used for import/export and in the default provider)
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>

@@ -37,7 +37,6 @@
 <!ENTITY libgda-log SYSTEM "sgml/gda-log.sgml">
 <!ENTITY libgda-parameter SYSTEM "sgml/gda-parameter.sgml">
 <!ENTITY libgda-quark-list SYSTEM "sgml/gda-quark-list.sgml">
-<!ENTITY libgda-recordset SYSTEM "sgml/gda-recordset.sgml">
 <!ENTITY libgda-row SYSTEM "sgml/gda-row.sgml">
 <!ENTITY libgda-server-provider SYSTEM "sgml/gda-server-provider.sgml">
 <!ENTITY libgda-table SYSTEM "sgml/gda-table.sgml">
@@ -749,7 +748,6 @@
     &libgda-log;
     &libgda-parameter;
     &libgda-quark-list;
-    &libgda-recordset;
     &libgda-row;
     &libgda-server-provider;
     &libgda-table;

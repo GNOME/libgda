@@ -2,7 +2,7 @@
 GdaError
 
 <!-- ##### SECTION Short_Description ##### -->
-
+Functions for managing errors
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>

@@ -2,11 +2,11 @@
 GdaBatch
 
 <!-- ##### SECTION Short_Description ##### -->
-
+Batch command execution
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
-
+  The #GdaBatch class provides a way to execute batch jobs on a given data source.
 </para>
 
 <!-- ##### SECTION See_Also ##### -->

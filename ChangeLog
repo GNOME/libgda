@@ -1,5 +1,13 @@
 2002-05-14  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* doc/C/tmpl/*.sgml:
+	* libgda/gda-connection.c: added some documentation.
+
+	* doc/C/tmpl/gda-recordset.sgml:
+	* libgda/gda-recordset.[ch]: removed.
+
+2002-05-14  Rodrigo Moya <rodrigo@gnome-db.org>
+
 	* libgda/gda-log.c (gda_log_message, gda_log_error): made them show
 	the error message at least.
 

@@ -2,7 +2,7 @@
 GdaServerProvider
 
 <!-- ##### SECTION Short_Description ##### -->
-
+Base class for implementing new providers
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
