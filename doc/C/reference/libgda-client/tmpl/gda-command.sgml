@@ -139,21 +139,3 @@ Command management
 @value: 
 
 
-<!-- ##### FUNCTION gda_command_get_timeout ##### -->
-<para>
-
-</para>
-
-@cmd: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_command_set_timeout ##### -->
-<para>
-
-</para>
-
-@cmd: 
-@timeout: 
-
-

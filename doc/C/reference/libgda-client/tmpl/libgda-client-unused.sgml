@@ -1,3 +1,1510 @@
+<!-- ##### FUNCTION CORBA_sequence_CORBA_octet__alloc ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+<!-- ##### FUNCTION CORBA_sequence_CORBA_octet__free ##### -->
+<para>
+
+</para>
+
+@mem: 
+@dat: 
+@free_strings: 
+@Returns: 
+
+<!-- ##### FUNCTION CORBA_sequence_CORBA_octet_allocbuf ##### -->
+<para>
+
+</para>
+
+@len: 
+@Returns: 
+
+<!-- ##### FUNCTION CORBA_sequence_CORBA_string__free ##### -->
+<para>
+
+</para>
+
+@mem: 
+@dat: 
+@free_strings: 
+@Returns: 
+
+<!-- ##### FUNCTION CORBA_sequence_CORBA_string_allocbuf ##### -->
+<para>
+
+</para>
+
+@len: 
+@Returns: 
+
+<!-- ##### FUNCTION CORBA_sequence_GDA_CmdParameter__free ##### -->
+<para>
+
+</para>
+
+@mem: 
+@dat: 
+@free_strings: 
+@Returns: 
+
+<!-- ##### FUNCTION CORBA_sequence_GDA_Connection_Constraint__free ##### -->
+<para>
+
+</para>
+
+@mem: 
+@dat: 
+@free_strings: 
+@Returns: 
+
+<!-- ##### FUNCTION CORBA_sequence_GDA_Error__alloc ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+<!-- ##### FUNCTION CORBA_sequence_GDA_Error__free ##### -->
+<para>
+
+</para>
+
+@mem: 
+@dat: 
+@free_strings: 
+@Returns: 
+
+<!-- ##### FUNCTION CORBA_sequence_GDA_Error_allocbuf ##### -->
+<para>
+
+</para>
+
+@len: 
+@Returns: 
+
+<!-- ##### FUNCTION CORBA_sequence_GDA_FieldAttributes__free ##### -->
+<para>
+
+</para>
+
+@mem: 
+@dat: 
+@free_strings: 
+@Returns: 
+
+<!-- ##### FUNCTION CORBA_sequence_GDA_Field__alloc ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+<!-- ##### FUNCTION CORBA_sequence_GDA_Field__free ##### -->
+<para>
+
+</para>
+
+@mem: 
+@dat: 
+@free_strings: 
+@Returns: 
+
+<!-- ##### FUNCTION CORBA_sequence_GDA_Field_allocbuf ##### -->
+<para>
+
+</para>
+
+@len: 
+@Returns: 
+
+<!-- ##### FUNCTION CORBA_sequence_GDA_Row__alloc ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+<!-- ##### FUNCTION CORBA_sequence_GDA_Row__free ##### -->
+<para>
+
+</para>
+
+@mem: 
+@dat: 
+@free_strings: 
+@Returns: 
+
+<!-- ##### FUNCTION CORBA_sequence_GDA_Row_allocbuf ##### -->
+<para>
+
+</para>
+
+@len: 
+@Returns: 
+
+<!-- ##### ENUM GDA_AffectedRows ##### -->
+<para>
+
+</para>
+
+@GDA_GDR_AFFECT_CURRENT: 
+@GDA_GDR_AFFECT_GROUP: 
+@GDA_GDR_AFFECT_ALL: 
+
+<!-- ##### MACRO GDA_CMD_NORECORDS ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### TYPEDEF GDA_CmdParameterSeq ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION GDA_CmdParameterSeq__alloc ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+<!-- ##### FUNCTION GDA_CmdParameterSeq__free ##### -->
+<para>
+
+</para>
+
+@mem: 
+@dat: 
+@free_strings: 
+@Returns: 
+
+<!-- ##### FUNCTION GDA_CmdParameter__alloc ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+<!-- ##### FUNCTION GDA_CmdParameter__free ##### -->
+<para>
+
+</para>
+
+@mem: 
+@dat: 
+@free_strings: 
+@Returns: 
+
+<!-- ##### TYPEDEF GDA_Command ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### ENUM GDA_CommandType ##### -->
+<para>
+
+</para>
+
+@GDA_COMMAND_TYPE_TEXT: 
+@GDA_COMMAND_TYPE_TABLE: 
+@GDA_COMMAND_TYPE_TABLEDIRECT: 
+@GDA_COMMAND_TYPE_STOREDPROCEDURE: 
+@GDA_COMMAND_TYPE_FILE: 
+@GDA_COMMAND_TYPE_XML: 
+
+<!-- ##### VARIABLE GDA_Command__classid ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO GDA_Command__free ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION GDA_Command__get_cmdTimeout ##### -->
+<para>
+
+</para>
+
+@_obj: 
+@ev: 
+@Returns: 
+
+<!-- ##### FUNCTION GDA_Command__get_prepared ##### -->
+<para>
+
+</para>
+
+@_obj: 
+@ev: 
+@Returns: 
+
+<!-- ##### FUNCTION GDA_Command__get_state ##### -->
+<para>
+
+</para>
+
+@_obj: 
+@ev: 
+@Returns: 
+
+<!-- ##### FUNCTION GDA_Command__get_text ##### -->
+<para>
+
+</para>
+
+@_obj: 
+@ev: 
+@Returns: 
+
+<!-- ##### FUNCTION GDA_Command__get_type ##### -->
+<para>
+
+</para>
+
+@_obj: 
+@ev: 
+@Returns: 
+
+<!-- ##### FUNCTION GDA_Command__set_cmdTimeout ##### -->
+<para>
+
+</para>
+
+@_obj: 
+@value: 
+@ev: 
+
+<!-- ##### FUNCTION GDA_Command__set_state ##### -->
+<para>
+
+</para>
+
+@_obj: 
+@value: 
+@ev: 
+
+<!-- ##### FUNCTION GDA_Command__set_text ##### -->
+<para>
+
+</para>
+
+@_obj: 
+@value: 
+@ev: 
+
+<!-- ##### FUNCTION GDA_Command__set_type ##### -->
+<para>
+
+</para>
+
+@_obj: 
+@value: 
+@ev: 
+
+<!-- ##### FUNCTION GDA_Command_open ##### -->
+<para>
+
+</para>
+
+@_obj: 
+@param: 
+@ct: 
+@lt: 
+@affected: 
+@ev: 
+@Returns: 
+
+<!-- ##### TYPEDEF GDA_Connection ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### TYPEDEF GDA_ConnectionFactory ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### VARIABLE GDA_ConnectionFactory__classid ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO GDA_ConnectionFactory__free ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION GDA_ConnectionFactory_create_connection ##### -->
+<para>
+
+</para>
+
+@Param1: 
+@goad_id: 
+@ev: 
+@Returns: 
+
+<!-- ##### MACRO GDA_ConnectionFactory_create_object ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO GDA_ConnectionFactory_manufactures ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO GDA_ConnectionFactory_ref ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO GDA_ConnectionFactory_unref ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION GDA_Connection_ConstraintSeq__free ##### -->
+<para>
+
+</para>
+
+@mem: 
+@dat: 
+@free_strings: 
+@Returns: 
+
+<!-- ##### ENUM GDA_Connection_ConstraintType ##### -->
+<para>
+
+</para>
+
+@GDA_Connection_no_CONSTRAINT: 
+@GDA_Connection_OBJECT_CATALOG: 
+@GDA_Connection_OBJECT_SCHEMA: 
+@GDA_Connection_OBJECT_NAME: 
+@GDA_Connection_TABLE_TYPE: 
+@GDA_Connection_COLUMN_NAME: 
+@GDA_Connection_INDEX_NAME: 
+@GDA_Connection_TYPE: 
+@GDA_Connection_EXTRA_INFO: 
+
+<!-- ##### FUNCTION GDA_Connection_Constraint__alloc ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+<!-- ##### FUNCTION GDA_Connection_Constraint__free ##### -->
+<para>
+
+</para>
+
+@mem: 
+@dat: 
+@free_strings: 
+@Returns: 
+
+<!-- ##### TYPEDEF GDA_Connection_DSNlist ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION GDA_Connection_DSNlist__alloc ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+<!-- ##### FUNCTION GDA_Connection_DSNlist__free ##### -->
+<para>
+
+</para>
+
+@mem: 
+@dat: 
+@free_strings: 
+@Returns: 
+
+<!-- ##### ENUM GDA_Connection_Feature ##### -->
+<para>
+
+</para>
+
+@GDA_Connection_FEATURE_FOREIGN_KEYS: 
+@GDA_Connection_FEATURE_INHERITANCE: 
+@GDA_Connection_FEATURE_OBJECT_ID: 
+@GDA_Connection_FEATURE_PROCS: 
+@GDA_Connection_FEATURE_SEQUENCES: 
+@GDA_Connection_FEATURE_SQL: 
+@GDA_Connection_FEATURE_SQL_SUBSELECT: 
+@GDA_Connection_FEATURE_TRANSACTIONS: 
+@GDA_Connection_FEATURE_TRIGGERS: 
+@GDA_Connection_FEATURE_VIEWS: 
+@GDA_Connection_FEATURE_XML_QUERIES: 
+
+<!-- ##### ENUM GDA_Connection_Permission ##### -->
+<para>
+
+</para>
+
+@GDA_Connection_PERM_UNKNOWN: 
+@GDA_Connection_PERM_READ: 
+@GDA_Connection_PERM_WRITE: 
+@GDA_Connection_PERM_RW: 
+@GDA_Connection_PERM_DENY_READ: 
+@GDA_Connection_PERM_DENY_WRITE: 
+@GDA_Connection_PERM_EXCLUSIVE: 
+
+<!-- ##### ENUM GDA_Connection_QType ##### -->
+<para>
+
+</para>
+
+@GDA_Connection_GDCN_SCHEMA_AGGREGATES: 
+@GDA_Connection_GDCN_SCHEMA_ASSERTS: 
+@GDA_Connection_GDCN_SCHEMA_CATALOGS: 
+@GDA_Connection_GDCN_SCHEMA_CHARSETS: 
+@GDA_Connection_GDCN_SCHEMA_CHECK_CONSTRAINTS: 
+@GDA_Connection_GDCN_SCHEMA_COLLATIONS: 
+@GDA_Connection_GDCN_SCHEMA_COL_DOM_USAGE: 
+@GDA_Connection_GDCN_SCHEMA_COL_PRIVS: 
+@GDA_Connection_GDCN_SCHEMA_COLS: 
+@GDA_Connection_GDCN_SCHEMA_CONSTR_COL_USAGE: 
+@GDA_Connection_GDCN_SCHEMA_CONSTR_TAB_USAGE: 
+@GDA_Connection_GDCN_SCHEMA_FOREIGN_KEYS: 
+@GDA_Connection_GDCN_SCHEMA_INDEXES: 
+@GDA_Connection_GDCN_SCHEMA_INDEX_COLS: 
+@GDA_Connection_GDCN_SCHEMA_KEY_COL_USAGE: 
+@GDA_Connection_GDCN_SCHEMA_PRIM_KEYS: 
+@GDA_Connection_GDCN_SCHEMA_PROC_COLUMNS: 
+@GDA_Connection_GDCN_SCHEMA_PROC_PARAMS: 
+@GDA_Connection_GDCN_SCHEMA_PROCS: 
+@GDA_Connection_GDCN_SCHEMA_PROV_SPEC: 
+@GDA_Connection_GDCN_SCHEMA_PROV_TYPES: 
+@GDA_Connection_GDCN_SCHEMA_REF_CONSTRAINTS: 
+@GDA_Connection_GDCN_SCHEMA_SEQUENCES: 
+@GDA_Connection_GDCN_SCHEMA_SQL_LANG: 
+@GDA_Connection_GDCN_SCHEMA_STATISTICS: 
+@GDA_Connection_GDCN_SCHEMA_TAB_CONSTRAINTS: 
+@GDA_Connection_GDCN_SCHEMA_TAB_PARENTS: 
+@GDA_Connection_GDCN_SCHEMA_TAB_PRIVS: 
+@GDA_Connection_GDCN_SCHEMA_TABLES: 
+@GDA_Connection_GDCN_SCHEMA_TRANSLATIONS: 
+@GDA_Connection_GDCN_SCHEMA_USAGE_PROVS: 
+@GDA_Connection_GDCN_SCHEMA_VIEW_COL_USAGE: 
+@GDA_Connection_GDCN_SCHEMA_VIEW_TAB_USAGE: 
+@GDA_Connection_GDCN_SCHEMA_VIEWS: 
+@GDA_Connection_GDCN_SCHEMA_LAST: 
+
+<!-- ##### VARIABLE GDA_Connection__classid ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO GDA_Connection__free ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION GDA_Connection__get_cmdTimeout ##### -->
+<para>
+
+</para>
+
+@_obj: 
+@ev: 
+@Returns: 
+
+<!-- ##### FUNCTION GDA_Connection__get_connectTimeout ##### -->
+<para>
+
+</para>
+
+@_obj: 
+@ev: 
+@Returns: 
+
+<!-- ##### FUNCTION GDA_Connection__get_cursor ##### -->
+<para>
+
+</para>
+
+@_obj: 
+@ev: 
+@Returns: 
+
+<!-- ##### FUNCTION GDA_Connection__get_errors ##### -->
+<para>
+
+</para>
+
+@_obj: 
+@ev: 
+@Returns: 
+
+<!-- ##### FUNCTION GDA_Connection__get_flags ##### -->
+<para>
+
+</para>
+
+@_obj: 
+@ev: 
+@Returns: 
+
+<!-- ##### FUNCTION GDA_Connection__get_version ##### -->
+<para>
+
+</para>
+
+@_obj: 
+@ev: 
+@Returns: 
+
+<!-- ##### FUNCTION GDA_Connection__set_cmdTimeout ##### -->
+<para>
+
+</para>
+
+@_obj: 
+@value: 
+@ev: 
+
+<!-- ##### FUNCTION GDA_Connection__set_connectTimeout ##### -->
+<para>
+
+</para>
+
+@_obj: 
+@value: 
+@ev: 
+
+<!-- ##### FUNCTION GDA_Connection__set_cursor ##### -->
+<para>
+
+</para>
+
+@_obj: 
+@value: 
+@ev: 
+
+<!-- ##### FUNCTION GDA_Connection__set_flags ##### -->
+<para>
+
+</para>
+
+@_obj: 
+@value: 
+@ev: 
+
+<!-- ##### FUNCTION GDA_Connection_beginTransaction ##### -->
+<para>
+
+</para>
+
+@_obj: 
+@ev: 
+@Returns: 
+
+<!-- ##### FUNCTION GDA_Connection_close ##### -->
+<para>
+
+</para>
+
+@_obj: 
+@ev: 
+@Returns: 
+
+<!-- ##### FUNCTION GDA_Connection_commitTransaction ##### -->
+<para>
+
+</para>
+
+@_obj: 
+@ev: 
+@Returns: 
+
+<!-- ##### FUNCTION GDA_Connection_createCommand ##### -->
+<para>
+
+</para>
+
+@_obj: 
+@ev: 
+@Returns: 
+
+<!-- ##### FUNCTION GDA_Connection_createRecordset ##### -->
+<para>
+
+</para>
+
+@_obj: 
+@ev: 
+@Returns: 
+
+<!-- ##### FUNCTION GDA_Connection_createTable ##### -->
+<para>
+
+</para>
+
+@_obj: 
+@name: 
+@columns: 
+@ev: 
+@Returns: 
+
+<!-- ##### FUNCTION GDA_Connection_modifySchema ##### -->
+<para>
+
+</para>
+
+@_obj: 
+@t: 
+@constraints: 
+@ev: 
+@Returns: 
+
+<!-- ##### FUNCTION GDA_Connection_open ##### -->
+<para>
+
+</para>
+
+@_obj: 
+@dsn: 
+@user: 
+@passwd: 
+@ev: 
+@Returns: 
+
+<!-- ##### FUNCTION GDA_Connection_openSchema ##### -->
+<para>
+
+</para>
+
+@_obj: 
+@t: 
+@constraints: 
+@ev: 
+@Returns: 
+
+<!-- ##### FUNCTION GDA_Connection_rollbackTransaction ##### -->
+<para>
+
+</para>
+
+@_obj: 
+@ev: 
+@Returns: 
+
+<!-- ##### FUNCTION GDA_Connection_sql2xml ##### -->
+<para>
+
+</para>
+
+@_obj: 
+@sql: 
+@ev: 
+@Returns: 
+
+<!-- ##### FUNCTION GDA_Connection_startLogging ##### -->
+<para>
+
+</para>
+
+@_obj: 
+@filename: 
+@ev: 
+@Returns: 
+
+<!-- ##### FUNCTION GDA_Connection_stopLogging ##### -->
+<para>
+
+</para>
+
+@_obj: 
+@ev: 
+@Returns: 
+
+<!-- ##### FUNCTION GDA_Connection_supports ##### -->
+<para>
+
+</para>
+
+@_obj: 
+@feature: 
+@ev: 
+@Returns: 
+
+<!-- ##### FUNCTION GDA_Connection_xml2sql ##### -->
+<para>
+
+</para>
+
+@_obj: 
+@xml: 
+@ev: 
+@Returns: 
+
+<!-- ##### ENUM GDA_CursorLocation ##### -->
+<para>
+
+</para>
+
+@GDA_USE_CLIENT_CURSOR: 
+@GDA_USE_SERVER_CURSOR: 
+
+<!-- ##### ENUM GDA_CursorType ##### -->
+<para>
+
+</para>
+
+@GDA_OPEN_FWDONLY: 
+@GDA_OPEN_KEYSET: 
+@GDA_OPEN_DYNAMIC: 
+@GDA_OPEN_STATIC: 
+
+<!-- ##### TYPEDEF GDA_Date ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION GDA_DbDate__alloc ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+<!-- ##### FUNCTION GDA_DbDate__free ##### -->
+<para>
+
+</para>
+
+@mem: 
+@dat: 
+@free_strings: 
+@Returns: 
+
+<!-- ##### FUNCTION GDA_DbTime__alloc ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+<!-- ##### FUNCTION GDA_DbTime__free ##### -->
+<para>
+
+</para>
+
+@mem: 
+@dat: 
+@free_strings: 
+@Returns: 
+
+<!-- ##### FUNCTION GDA_DbTimestamp__alloc ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+<!-- ##### FUNCTION GDA_DbTimestamp__free ##### -->
+<para>
+
+</para>
+
+@mem: 
+@dat: 
+@free_strings: 
+@Returns: 
+
+<!-- ##### FUNCTION GDA_DriverError__alloc ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+<!-- ##### FUNCTION GDA_DriverError__free ##### -->
+<para>
+
+</para>
+
+@mem: 
+@dat: 
+@free_strings: 
+@Returns: 
+
+<!-- ##### TYPEDEF GDA_ErrorSeq ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION GDA_ErrorSeq__alloc ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+<!-- ##### FUNCTION GDA_ErrorSeq__free ##### -->
+<para>
+
+</para>
+
+@mem: 
+@dat: 
+@free_strings: 
+@Returns: 
+
+<!-- ##### FUNCTION GDA_Error__alloc ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+<!-- ##### FUNCTION GDA_Error__free ##### -->
+<para>
+
+</para>
+
+@mem: 
+@dat: 
+@free_strings: 
+@Returns: 
+
+<!-- ##### FUNCTION GDA_FieldAttributes__alloc ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+<!-- ##### FUNCTION GDA_FieldAttributes__free ##### -->
+<para>
+
+</para>
+
+@mem: 
+@dat: 
+@free_strings: 
+@Returns: 
+
+<!-- ##### FUNCTION GDA_FieldValue__alloc ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+<!-- ##### FUNCTION GDA_FieldValue__free ##### -->
+<para>
+
+</para>
+
+@mem: 
+@dat: 
+@free_strings: 
+@Returns: 
+
+<!-- ##### FUNCTION GDA_Field__alloc ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+<!-- ##### FUNCTION GDA_Field__free ##### -->
+<para>
+
+</para>
+
+@mem: 
+@dat: 
+@free_strings: 
+@Returns: 
+
+<!-- ##### TYPEDEF GDA_Fieldx ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### VARIABLE GDA_Fieldx__classid ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO GDA_Fieldx__free ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION GDA_Fieldx_appendChunk ##### -->
+<para>
+
+</para>
+
+@_obj: 
+@data: 
+@ev: 
+@Returns: 
+
+<!-- ##### FUNCTION GDA_Fieldx_getChunk ##### -->
+<para>
+
+</para>
+
+@_obj: 
+@amount: 
+@ev: 
+@Returns: 
+
+<!-- ##### MACRO GDA_H ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### ENUM GDA_IsolationLevel ##### -->
+<para>
+
+</para>
+
+@GDA_IL_UNSPECIFIED: 
+@GDA_IL_CHAOS: 
+@GDA_IL_BROWSE: 
+@GDA_IL_READ_COMMITED: 
+@GDA_IL_READ_INCOMMTED: 
+@GDA_IL_READ_REPEATED: 
+@GDA_IL_READ_SERIALIZABLE: 
+
+<!-- ##### ENUM GDA_LockType ##### -->
+<para>
+
+</para>
+
+@GDA_LOCK_READONLY: 
+@GDA_LOCK_PESSIMISTIC: 
+@GDA_LOCK_OPTIMISTIC: 
+@GDA_LOCK_BATCH: 
+
+<!-- ##### FUNCTION GDA_NotSupported__alloc ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+<!-- ##### FUNCTION GDA_NotSupported__free ##### -->
+<para>
+
+</para>
+
+@mem: 
+@dat: 
+@free_strings: 
+@Returns: 
+
+<!-- ##### ENUM GDA_Option ##### -->
+<para>
+
+</para>
+
+@GDA_ADD_NEW: 
+@GDA_APPROX_POS: 
+@GDA_BOOKMARK: 
+@GDA_DELETE: 
+@GDA_HOLD_RECS: 
+@GDA_MOVE_PREV: 
+@GDA_DO_RESYNC: 
+@GDA_DO_UPDATE: 
+@GDA_UPDATE_BATCH: 
+
+<!-- ##### TYPEDEF GDA_Parameter ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### ENUM GDA_ParameterDirection ##### -->
+<para>
+
+</para>
+
+@GDA_PARAM_IN: 
+@GDA_PARAM_OUT: 
+@GDA_PARAM_INOUT: 
+
+<!-- ##### TYPEDEF GDA_Parameter_VarBinString ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION GDA_Parameter_VarBinString__alloc ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+<!-- ##### FUNCTION GDA_Parameter_VarBinString__free ##### -->
+<para>
+
+</para>
+
+@mem: 
+@dat: 
+@free_strings: 
+@Returns: 
+
+<!-- ##### VARIABLE GDA_Parameter__classid ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO GDA_Parameter__free ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION GDA_Parameter_appendChunk ##### -->
+<para>
+
+</para>
+
+@_obj: 
+@data: 
+@ev: 
+@Returns: 
+
+<!-- ##### TYPEDEF GDA_Recordset ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### TYPEDEF GDA_Recordset_Chunk ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION GDA_Recordset_Chunk__alloc ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+<!-- ##### FUNCTION GDA_Recordset_Chunk__free ##### -->
+<para>
+
+</para>
+
+@mem: 
+@dat: 
+@free_strings: 
+@Returns: 
+
+<!-- ##### VARIABLE GDA_Recordset__classid ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO GDA_Recordset__free ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION GDA_Recordset__get_cachesize ##### -->
+<para>
+
+</para>
+
+@_obj: 
+@ev: 
+@Returns: 
+
+<!-- ##### FUNCTION GDA_Recordset__get_currentBookmark ##### -->
+<para>
+
+</para>
+
+@_obj: 
+@ev: 
+@Returns: 
+
+<!-- ##### FUNCTION GDA_Recordset__get_currentCursorType ##### -->
+<para>
+
+</para>
+
+@_obj: 
+@ev: 
+@Returns: 
+
+<!-- ##### FUNCTION GDA_Recordset__get_lockingMode ##### -->
+<para>
+
+</para>
+
+@_obj: 
+@ev: 
+@Returns: 
+
+<!-- ##### FUNCTION GDA_Recordset__get_maxrecords ##### -->
+<para>
+
+</para>
+
+@_obj: 
+@ev: 
+@Returns: 
+
+<!-- ##### FUNCTION GDA_Recordset__get_pagecount ##### -->
+<para>
+
+</para>
+
+@_obj: 
+@ev: 
+@Returns: 
+
+<!-- ##### FUNCTION GDA_Recordset__get_pagesize ##### -->
+<para>
+
+</para>
+
+@_obj: 
+@ev: 
+@Returns: 
+
+<!-- ##### FUNCTION GDA_Recordset__get_recCount ##### -->
+<para>
+
+</para>
+
+@_obj: 
+@ev: 
+@Returns: 
+
+<!-- ##### FUNCTION GDA_Recordset__get_source ##### -->
+<para>
+
+</para>
+
+@_obj: 
+@ev: 
+@Returns: 
+
+<!-- ##### FUNCTION GDA_Recordset__get_status ##### -->
+<para>
+
+</para>
+
+@_obj: 
+@ev: 
+@Returns: 
+
+<!-- ##### FUNCTION GDA_Recordset__set_cachesize ##### -->
+<para>
+
+</para>
+
+@_obj: 
+@value: 
+@ev: 
+
+<!-- ##### FUNCTION GDA_Recordset__set_currentBookmark ##### -->
+<para>
+
+</para>
+
+@_obj: 
+@value: 
+@ev: 
+
+<!-- ##### FUNCTION GDA_Recordset__set_currentCursorType ##### -->
+<para>
+
+</para>
+
+@_obj: 
+@value: 
+@ev: 
+
+<!-- ##### FUNCTION GDA_Recordset__set_lockingMode ##### -->
+<para>
+
+</para>
+
+@_obj: 
+@value: 
+@ev: 
+
+<!-- ##### FUNCTION GDA_Recordset__set_maxrecords ##### -->
+<para>
+
+</para>
+
+@_obj: 
+@value: 
+@ev: 
+
+<!-- ##### FUNCTION GDA_Recordset__set_pagesize ##### -->
+<para>
+
+</para>
+
+@_obj: 
+@value: 
+@ev: 
+
+<!-- ##### FUNCTION GDA_Recordset_close ##### -->
+<para>
+
+</para>
+
+@_obj: 
+@ev: 
+@Returns: 
+
+<!-- ##### FUNCTION GDA_Recordset_describe ##### -->
+<para>
+
+</para>
+
+@_obj: 
+@ev: 
+@Returns: 
+
+<!-- ##### FUNCTION GDA_Recordset_fetch ##### -->
+<para>
+
+</para>
+
+@_obj: 
+@count: 
+@ev: 
+@Returns: 
+
+<!-- ##### FUNCTION GDA_Recordset_move ##### -->
+<para>
+
+</para>
+
+@_obj: 
+@count: 
+@bookmark: 
+@ev: 
+@Returns: 
+
+<!-- ##### FUNCTION GDA_Recordset_moveFirst ##### -->
+<para>
+
+</para>
+
+@_obj: 
+@ev: 
+@Returns: 
+
+<!-- ##### FUNCTION GDA_Recordset_moveLast ##### -->
+<para>
+
+</para>
+
+@_obj: 
+@ev: 
+@Returns: 
+
+<!-- ##### FUNCTION GDA_Recordset_reQuery ##### -->
+<para>
+
+</para>
+
+@_obj: 
+@ev: 
+@Returns: 
+
+<!-- ##### FUNCTION GDA_Recordset_reSync ##### -->
+<para>
+
+</para>
+
+@_obj: 
+@ev: 
+@Returns: 
+
+<!-- ##### FUNCTION GDA_Recordset_supports ##### -->
+<para>
+
+</para>
+
+@_obj: 
+@what: 
+@ev: 
+@Returns: 
+
+<!-- ##### TYPEDEF GDA_Row ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### TYPEDEF GDA_RowAttributes ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION GDA_RowAttributes__alloc ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+<!-- ##### FUNCTION GDA_RowAttributes__free ##### -->
+<para>
+
+</para>
+
+@mem: 
+@dat: 
+@free_strings: 
+@Returns: 
+
+<!-- ##### FUNCTION GDA_Row__alloc ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+<!-- ##### FUNCTION GDA_Row__free ##### -->
+<para>
+
+</para>
+
+@mem: 
+@dat: 
+@free_strings: 
+@Returns: 
+
+<!-- ##### ENUM GDA_ValueType ##### -->
+<para>
+
+</para>
+
+@GDA_TypeNull: 
+@GDA_TypeBigint: 
+@GDA_TypeBinary: 
+@GDA_TypeBoolean: 
+@GDA_TypeBstr: 
+@GDA_TypeChar: 
+@GDA_TypeCurrency: 
+@GDA_TypeDate: 
+@GDA_TypeDbDate: 
+@GDA_TypeDbTime: 
+@GDA_TypeDbTimestamp: 
+@GDA_TypeDecimal: 
+@GDA_TypeDouble: 
+@GDA_TypeError: 
+@GDA_TypeInteger: 
+@GDA_TypeLongvarbin: 
+@GDA_TypeLongvarchar: 
+@GDA_TypeLongvarwchar: 
+@GDA_TypeNumeric: 
+@GDA_TypeSingle: 
+@GDA_TypeSmallint: 
+@GDA_TypeTinyint: 
+@GDA_TypeUBigint: 
+@GDA_TypeUSmallint: 
+@GDA_TypeVarchar: 
+@GDA_TypeVarbin: 
+@GDA_TypeVarwchar: 
+@GDA_TypeFixchar: 
+@GDA_TypeFixbin: 
+@GDA_TypeFixwchar: 
+@GDA_TypeUnknown: 
+@GDA_TypeLastValue: 
+
+<!-- ##### FUNCTION GDA_Value__alloc ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+<!-- ##### FUNCTION GDA_Value__free ##### -->
+<para>
+
+</para>
+
+@mem: 
+@dat: 
+@free_strings: 
+@Returns: 
+
+<!-- ##### TYPEDEF GDA_VarBinString ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION GDA_VarBinString__alloc ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+<!-- ##### FUNCTION GDA_VarBinString__free ##### -->
+<para>
+
+</para>
+
+@mem: 
+@dat: 
+@free_strings: 
+@Returns: 
+
 <!-- ##### MACRO IS_GDA_BATCH ##### -->
 <para>
 
@@ -95,4 +1602,1610 @@
 </para>
 
 @klass: 
+
+<!-- ##### MACRO ORBIT_DECL_CORBA_sequence_CORBA_octet ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO ORBIT_DECL_CORBA_sequence_CORBA_string ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO ORBIT_DECL_CORBA_sequence_GDA_CmdParameter ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO ORBIT_DECL_CORBA_sequence_GDA_Connection_Constraint ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO ORBIT_DECL_CORBA_sequence_GDA_Error ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO ORBIT_DECL_CORBA_sequence_GDA_Field ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO ORBIT_DECL_CORBA_sequence_GDA_FieldAttributes ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO ORBIT_DECL_CORBA_sequence_GDA_Row ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO ORBIT_DECL_GDA_Command ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO ORBIT_DECL_GDA_Connection ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO ORBIT_DECL_GDA_ConnectionFactory ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO ORBIT_DECL_GDA_Fieldx ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO ORBIT_DECL_GDA_Parameter ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO ORBIT_DECL_GDA_Recordset ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO ORBIT_IDL_SERIAL ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO ORBIT_IMPL_CORBA_sequence_CORBA_octet_0 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO ORBIT_IMPL_CORBA_sequence_CORBA_octet_1 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO ORBIT_IMPL_CORBA_sequence_CORBA_octet_2 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO ORBIT_IMPL_CORBA_sequence_CORBA_string_0 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO ORBIT_IMPL_CORBA_sequence_CORBA_string_1 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO ORBIT_IMPL_CORBA_sequence_CORBA_string_2 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO ORBIT_IMPL_CORBA_sequence_GDA_CmdParameter_0 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO ORBIT_IMPL_CORBA_sequence_GDA_CmdParameter_1 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO ORBIT_IMPL_CORBA_sequence_GDA_CmdParameter_2 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO ORBIT_IMPL_CORBA_sequence_GDA_Connection_Constraint_0 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO ORBIT_IMPL_CORBA_sequence_GDA_Connection_Constraint_1 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO ORBIT_IMPL_CORBA_sequence_GDA_Connection_Constraint_2 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO ORBIT_IMPL_CORBA_sequence_GDA_Error_0 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO ORBIT_IMPL_CORBA_sequence_GDA_Error_1 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO ORBIT_IMPL_CORBA_sequence_GDA_Error_2 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO ORBIT_IMPL_CORBA_sequence_GDA_FieldAttributes_0 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO ORBIT_IMPL_CORBA_sequence_GDA_FieldAttributes_1 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO ORBIT_IMPL_CORBA_sequence_GDA_FieldAttributes_2 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO ORBIT_IMPL_CORBA_sequence_GDA_Field_0 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO ORBIT_IMPL_CORBA_sequence_GDA_Field_1 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO ORBIT_IMPL_CORBA_sequence_GDA_Field_2 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO ORBIT_IMPL_CORBA_sequence_GDA_Row_0 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO ORBIT_IMPL_CORBA_sequence_GDA_Row_1 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO ORBIT_IMPL_CORBA_sequence_GDA_Row_2 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION POA_GDA_Command__fini ##### -->
+<para>
+
+</para>
+
+@servant: 
+@ev: 
+
+<!-- ##### FUNCTION POA_GDA_Command__init ##### -->
+<para>
+
+</para>
+
+@servant: 
+@ev: 
+
+<!-- ##### FUNCTION POA_GDA_ConnectionFactory__fini ##### -->
+<para>
+
+</para>
+
+@servant: 
+@ev: 
+
+<!-- ##### FUNCTION POA_GDA_ConnectionFactory__init ##### -->
+<para>
+
+</para>
+
+@servant: 
+@ev: 
+
+<!-- ##### FUNCTION POA_GDA_Connection__fini ##### -->
+<para>
+
+</para>
+
+@servant: 
+@ev: 
+
+<!-- ##### FUNCTION POA_GDA_Connection__init ##### -->
+<para>
+
+</para>
+
+@servant: 
+@ev: 
+
+<!-- ##### FUNCTION POA_GDA_Fieldx__fini ##### -->
+<para>
+
+</para>
+
+@servant: 
+@ev: 
+
+<!-- ##### FUNCTION POA_GDA_Fieldx__init ##### -->
+<para>
+
+</para>
+
+@servant: 
+@ev: 
+
+<!-- ##### FUNCTION POA_GDA_Parameter__fini ##### -->
+<para>
+
+</para>
+
+@servant: 
+@ev: 
+
+<!-- ##### FUNCTION POA_GDA_Parameter__init ##### -->
+<para>
+
+</para>
+
+@servant: 
+@ev: 
+
+<!-- ##### FUNCTION POA_GDA_Recordset__fini ##### -->
+<para>
+
+</para>
+
+@servant: 
+@ev: 
+
+<!-- ##### FUNCTION POA_GDA_Recordset__init ##### -->
+<para>
+
+</para>
+
+@servant: 
+@ev: 
+
+<!-- ##### MACRO TC_CORBA_sequence_CORBA_octet ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_CORBA_sequence_CORBA_string ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_CORBA_sequence_GDA_CmdParameter ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_CORBA_sequence_GDA_Connection_Constraint ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_CORBA_sequence_GDA_Error ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_CORBA_sequence_GDA_Field ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_CORBA_sequence_GDA_FieldAttributes ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_CORBA_sequence_GDA_Row ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_GDA_AffectedRows ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_GDA_CmdParameter ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_GDA_CmdParameterSeq ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_GDA_Command ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_GDA_CommandType ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_GDA_Connection ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_GDA_ConnectionFactory ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_GDA_Connection_Constraint ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_GDA_Connection_ConstraintSeq ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_GDA_Connection_ConstraintType ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_GDA_Connection_DSNlist ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_GDA_Connection_Feature ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_GDA_Connection_Permission ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_GDA_Connection_QType ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_GDA_CursorLocation ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_GDA_CursorType ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_GDA_Date ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_GDA_DbDate ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_GDA_DbTime ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_GDA_DbTimestamp ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_GDA_DriverError ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_GDA_Error ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_GDA_ErrorSeq ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_GDA_Field ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_GDA_FieldAttributes ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_GDA_FieldValue ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_GDA_Fieldx ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_GDA_IsolationLevel ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_GDA_LockType ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_GDA_NotSupported ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_GDA_Option ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_GDA_Parameter ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_GDA_ParameterDirection ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_GDA_Parameter_VarBinString ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_GDA_Recordset ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_GDA_Recordset_Chunk ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_GDA_Row ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_GDA_RowAttributes ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_GDA_Value ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_GDA_ValueType ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_GDA_VarBinString ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_CORBA_sequence_CORBA_octet_0 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_CORBA_sequence_CORBA_octet_1 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_CORBA_sequence_CORBA_octet_2 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_CORBA_sequence_CORBA_string_0 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_CORBA_sequence_CORBA_string_1 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_CORBA_sequence_CORBA_string_2 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_CORBA_sequence_GDA_CmdParameter_0 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_CORBA_sequence_GDA_CmdParameter_1 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_CORBA_sequence_GDA_CmdParameter_2 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_CORBA_sequence_GDA_Connection_Constraint_0 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_CORBA_sequence_GDA_Connection_Constraint_1 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_CORBA_sequence_GDA_Connection_Constraint_2 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_CORBA_sequence_GDA_Error_0 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_CORBA_sequence_GDA_Error_1 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_CORBA_sequence_GDA_Error_2 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_CORBA_sequence_GDA_FieldAttributes_0 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_CORBA_sequence_GDA_FieldAttributes_1 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_CORBA_sequence_GDA_FieldAttributes_2 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_CORBA_sequence_GDA_Field_0 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_CORBA_sequence_GDA_Field_1 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_CORBA_sequence_GDA_Field_2 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_CORBA_sequence_GDA_Row_0 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_CORBA_sequence_GDA_Row_1 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_CORBA_sequence_GDA_Row_2 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_AffectedRows_0 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_AffectedRows_1 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_AffectedRows_2 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_CmdParameterSeq_0 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_CmdParameterSeq_1 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_CmdParameterSeq_2 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_CmdParameter_0 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_CmdParameter_1 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_CmdParameter_2 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_CommandType_0 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_CommandType_1 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_CommandType_2 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_Command_0 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_Command_1 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_Command_2 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_ConnectionFactory_0 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_ConnectionFactory_1 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_ConnectionFactory_2 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_Connection_0 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_Connection_1 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_Connection_2 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_Connection_ConstraintSeq_0 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_Connection_ConstraintSeq_1 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_Connection_ConstraintSeq_2 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_Connection_ConstraintType_0 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_Connection_ConstraintType_1 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_Connection_ConstraintType_2 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_Connection_Constraint_0 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_Connection_Constraint_1 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_Connection_Constraint_2 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_Connection_DSNlist_0 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_Connection_DSNlist_1 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_Connection_DSNlist_2 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_Connection_Feature_0 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_Connection_Feature_1 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_Connection_Feature_2 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_Connection_Permission_0 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_Connection_Permission_1 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_Connection_Permission_2 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_Connection_QType_0 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_Connection_QType_1 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_Connection_QType_2 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_CursorLocation_0 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_CursorLocation_1 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_CursorLocation_2 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_CursorType_0 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_CursorType_1 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_CursorType_2 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_Date_0 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_Date_1 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_Date_2 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_DbDate_0 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_DbDate_1 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_DbDate_2 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_DbTime_0 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_DbTime_1 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_DbTime_2 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_DbTimestamp_0 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_DbTimestamp_1 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_DbTimestamp_2 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_DriverError_0 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_DriverError_1 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_DriverError_2 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_ErrorSeq_0 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_ErrorSeq_1 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_ErrorSeq_2 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_Error_0 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_Error_1 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_Error_2 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_FieldAttributes_0 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_FieldAttributes_1 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_FieldAttributes_2 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_FieldValue_0 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_FieldValue_1 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_FieldValue_2 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_Field_0 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_Field_1 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_Field_2 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_Fieldx_0 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_Fieldx_1 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_Fieldx_2 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_IsolationLevel_0 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_IsolationLevel_1 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_IsolationLevel_2 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_LockType_0 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_LockType_1 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_LockType_2 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_NotSupported_0 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_NotSupported_1 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_NotSupported_2 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_Option_0 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_Option_1 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_Option_2 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_ParameterDirection_0 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_ParameterDirection_1 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_ParameterDirection_2 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_Parameter_0 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_Parameter_1 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_Parameter_2 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_Parameter_VarBinString_0 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_Parameter_VarBinString_1 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_Parameter_VarBinString_2 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_Recordset_0 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_Recordset_1 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_Recordset_2 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_Recordset_Chunk_0 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_Recordset_Chunk_1 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_Recordset_Chunk_2 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_RowAttributes_0 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_RowAttributes_1 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_RowAttributes_2 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_Row_0 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_Row_1 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_Row_2 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_ValueType_0 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_ValueType_1 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_ValueType_2 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_Value_0 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_Value_1 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_Value_2 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_VarBinString_0 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_VarBinString_1 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TC_IMPL_TC_GDA_VarBinString_2 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO ex_GDA_DriverError ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO ex_GDA_NotSupported ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION gda_command_get_timeout ##### -->
+<para>
+
+</para>
+
+@cmd: 
+@Returns: 
+
+<!-- ##### FUNCTION gda_command_set_timeout ##### -->
+<para>
+
+</para>
+
+@cmd: 
+@timeout: 
+
+<!-- ##### FUNCTION gda_connection_add_errorlist ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@list: 
+
+<!-- ##### FUNCTION gda_connection_get_cmd_timeout ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@Returns: 
+
+<!-- ##### FUNCTION gda_connection_get_connect_timeout ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@Returns: 
+
+<!-- ##### FUNCTION gda_connection_get_cursor_location ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@Returns: 
+
+<!-- ##### FUNCTION gda_connection_get_flags ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@Returns: 
+
+<!-- ##### FUNCTION gda_connection_set_cmd_timeout ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@cmd_timeout: 
+
+<!-- ##### FUNCTION gda_connection_set_connect_timeout ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@timeout: 
+
+<!-- ##### FUNCTION gda_connection_set_cursor_location ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@cursor: 
+
+<!-- ##### FUNCTION gda_connection_set_flags ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@flags: 
 

@@ -1,3 +1,7 @@
+2001-07-12  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* reference/libgda-client/: fixed references to non-existent files
+
 2001-05-17  Sean Allen <zeroone@worldonline.co.za>
 
 	* libgda.sgml: worked on syntax and English, entity referenced

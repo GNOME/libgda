@@ -248,15 +248,6 @@ Connection management
 @error: 
 
 
-<!-- ##### FUNCTION gda_connection_add_errorlist ##### -->
-<para>
-
-</para>
-
-@cnc: 
-@list: 
-
-
 <!-- ##### MACRO gda_connection_is_open ##### -->
 <para>
 
@@ -287,78 +278,6 @@ Connection management
 </para>
 
 @cnc: 
-
-
-<!-- ##### FUNCTION gda_connection_get_flags ##### -->
-<para>
-
-</para>
-
-@cnc: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_connection_set_flags ##### -->
-<para>
-
-</para>
-
-@cnc: 
-@flags: 
-
-
-<!-- ##### FUNCTION gda_connection_get_cmd_timeout ##### -->
-<para>
-
-</para>
-
-@cnc: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_connection_set_cmd_timeout ##### -->
-<para>
-
-</para>
-
-@cnc: 
-@cmd_timeout: 
-
-
-<!-- ##### FUNCTION gda_connection_get_connect_timeout ##### -->
-<para>
-
-</para>
-
-@cnc: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_connection_set_connect_timeout ##### -->
-<para>
-
-</para>
-
-@cnc: 
-@timeout: 
-
-
-<!-- ##### FUNCTION gda_connection_get_cursor_location ##### -->
-<para>
-
-</para>
-
-@cnc: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_connection_set_cursor_location ##### -->
-<para>
-
-</para>
-
-@cnc: 
-@cursor: 
 
 
 <!-- ##### FUNCTION gda_connection_get_version ##### -->
