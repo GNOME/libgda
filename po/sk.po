@@ -5,36 +5,56 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda 0.3.1\n"
-"POT-Creation-Date: 2001-11-11 12:52+0100\n"
-"PO-Revision-Date: 2001-11-11 12:56CET\n"
+"POT-Creation-Date: 2001-12-13 14:36+0100\n"
+"PO-Revision-Date: 2001-12-13 14:37CET\n"
 "Last-Translator: Stanislav Visnovsky <visnovsky@nenya.ms.mff.cuni.cz>\n"
 "Language-Team: Slovak <sk-i18n@lists.linux.sk>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: KBabel 0.9.5\n"
+"X-Generator: KBabel 0.9.6\n"
 
-#: libgda/gda-client.c:176
+#: libgda/gda-client.c:200 libgda/gda-client.c:295
 #, c-format
 msgid "Data source %s not found in configuration"
 msgstr "Zdroj dát %s nebol nájdený v konfigurácii"
 
-#: libgda/gda-client.c:208
+#: libgda/gda-client.c:221
 #, c-format
 msgid "Could not activate object %s"
 msgstr "Nie je aktivovať objekt %s"
 
-#: libgda/gda-client.c:226
+#: libgda/gda-client.c:239
 msgid "Could not create connection component"
 msgstr "Nie je možné vytvoriť komponent pre spojenie"
 
-#: libgda/gda-config.c:524
+#: libgda/gda-config.c:515
 msgid "Could not query CORBA components"
 msgstr "Nie je možné získať komponenty CORBA"
 
-#: libgda/gda-config.c:629
+#: libgda/gda-config.c:622
 msgid "Could not query CORBA providers"
 msgstr "Nie je možné získať poskytovateľov CORBA"
+
+#: libgda/gda-config.c:835
+msgid "Name"
+msgstr "Meno"
+
+#: libgda/gda-config.c:836
+msgid "Provider"
+msgstr "Poskytovateľ"
+
+#: libgda/gda-config.c:837
+msgid "Connection string"
+msgstr "Reťazec spojenia"
+
+#: libgda/gda-config.c:838
+msgid "Description"
+msgstr "Popis"
+
+#: libgda/gda-config.c:839
+msgid "Username"
+msgstr "Meno používateľa"
 
 #: libgda/gda-error.c:127
 #, c-format
@@ -63,11 +83,11 @@ msgstr "Neviem, ako vytvoriť komponenty s IID %s"
 msgid "Could not create component of type %s"
 msgstr "Nie je možné vytvoriť komponent typu %s"
 
-#: libgda/gda-server-connection.c:86
+#: libgda/gda-server-connection.c:92
 msgid "Could not duplicate client object. Client won't get notifications"
 msgstr "Nie je možné duplikovať klientský objekt. Klient nebude dostávať upozornenia"
 
-#: libgda/gda-server-connection.c:360
+#: libgda/gda-server-connection.c:412
 #, c-format
 msgid "Could not notify client about action %d"
 msgstr "Nie je možné informovať klienta o akcii %d"
@@ -80,21 +100,21 @@ msgstr "TRUE"
 msgid "FALSE"
 msgstr "FALSE"
 
-#: libgda/gda-xml-database.c:167
+#: libgda/gda-xml-database.c:166
 msgid "bad formed document"
 msgstr "neplatný dokument"
 
-#: libgda/gda-xml-database.c:269
+#: libgda/gda-xml-database.c:268
 #, c-format
 msgid "table %s already exists"
 msgstr "tabuľka %s už existuje"
 
-#: libgda/gda-xml-database.c:451
+#: libgda/gda-xml-database.c:450
 #, c-format
 msgid "%p is not a valid table"
 msgstr "%p nie je platná tabuľka"
 
-#: providers/default/gda-default-provider.c:131
+#: providers/default/gda-default-provider.c:140
 msgid "A full path must be specified on the connection string to open a database."
 msgstr "Pre otvorenie databáze musíte zadať celú cestu v reťazci spojenia."
 
