@@ -1098,7 +1098,7 @@ gda_oracle_init_md_recset (GdaConnection *cnc)
 {
 	GdaDataModelArray *recset;
 	gint i;
-	GdaOracleColData cols[8] = {
+	GdaOracleColData cols[9] = {
 		{ N_("Field name")	, GDA_VALUE_TYPE_STRING },
 		{ N_("Data type")	, GDA_VALUE_TYPE_STRING },
 		{ N_("Size")		, GDA_VALUE_TYPE_INTEGER },
@@ -1106,7 +1106,8 @@ gda_oracle_init_md_recset (GdaConnection *cnc)
 		{ N_("Not null?")	, GDA_VALUE_TYPE_BOOLEAN },
 		{ N_("Primary key?")	, GDA_VALUE_TYPE_BOOLEAN },
 		{ N_("Unique index?")	, GDA_VALUE_TYPE_BOOLEAN },
-		{ N_("References")	, GDA_VALUE_TYPE_STRING }
+		{ N_("References")	, GDA_VALUE_TYPE_STRING  },
+		{ N_("Default value")   , GDA_VALUE_TYPE_STRING  }
 	};
 
 	recset = GDA_DATA_MODEL_ARRAY (gda_data_model_array_new (sizeof cols / sizeof cols[0]));
@@ -1256,10 +1257,15 @@ gda_oracle_fill_md_data (const gchar *tblname,
 	OCIParam *collsthd; /* handle to list of columns */
 	OCIParam *colhd;    /* column handle */
 	gint i;
+	ub1 obj_type;
 	ub2 numcols;
 	GList *list = NULL;
 	gint result;
 	GHashTable *h_table_index;
+	ub4 one = 1;
+	text *syn_schema, *syn_name, *syn_link;
+	ub4  syn_schema_len, syn_name_len, syn_link_len;
+	gchar *syn_points_to, *syn_ptr;
 
 	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_ORACLE_HANDLE);
 
@@ -1273,6 +1279,18 @@ gda_oracle_fill_md_data (const gchar *tblname,
 			_("Could not allocate the Oracle describe handle")))
 		return NULL;
 
+	result = OCIAttrSet ((dvoid *)dschp,
+			     (ub4) OCI_HTYPE_DESCRIBE,
+			     (dvoid *)&one,
+			     0,
+			     OCI_ATTR_DESC_PUBLIC,
+			     priv_data->herr);
+	if (!gda_oracle_check_result (result, cnc, priv_data, OCI_HTYPE_ERROR,
+			_("Could not set describe handle attribute"))) {
+		OCIHandleFree ((dvoid *) dschp, OCI_HTYPE_DESCRIBE);
+		return NULL;
+	}
+
 	/* Describe the table */
 	result = OCIDescribeAny (priv_data->hservice,
 				priv_data->herr,
@@ -1280,7 +1298,7 @@ gda_oracle_fill_md_data (const gchar *tblname,
 				strlen (tblname),
 				OCI_OTYPE_NAME,
 				0,
-				OCI_PTYPE_TABLE,
+				OCI_PTYPE_UNK,
 				(OCIDescribe *) dschp);
 	if (!gda_oracle_check_result (result, cnc, priv_data, OCI_HTYPE_ERROR,
 			_("Could not describe the Oracle table"))) {
@@ -1299,6 +1317,98 @@ gda_oracle_fill_md_data (const gchar *tblname,
 			_("Could not get the Oracle parameter handle"))) {
 		OCIHandleFree ((dvoid *) dschp, OCI_HTYPE_DESCRIBE);
 		return NULL;
+	}
+
+	/* Find what type of thing we actually described */
+	result = OCIAttrGet ((dvoid *) parmh,
+				(ub4) OCI_DTYPE_PARAM,
+				(dvoid *) &obj_type,
+				(ub4 *) 0,
+				(ub4) OCI_ATTR_PTYPE,
+				(OCIError *) priv_data->herr);
+	if (!gda_oracle_check_result (result, cnc, priv_data, OCI_HTYPE_ERROR,
+			_("Could not get descibed object type"))) {
+		OCIHandleFree ((dvoid *) dschp, OCI_HTYPE_DESCRIBE);
+		return NULL;
+	}
+	if (obj_type == OCI_PTYPE_SYN) {
+	    /* get the name the synonym points to */
+	    result = OCIAttrGet ((dvoid *) parmh,
+				 (ub4) OCI_DTYPE_PARAM,
+				 (dvoid *) &syn_schema,
+				 (ub4 *) &syn_schema_len,
+				 (ub4) OCI_ATTR_SCHEMA_NAME,
+				 (OCIError *) priv_data->herr);
+	    if (!gda_oracle_check_result (result, cnc, priv_data, OCI_HTYPE_ERROR,
+			_("Could not get synonym referred-to schema"))) {
+		OCIHandleFree ((dvoid *) dschp, OCI_HTYPE_DESCRIBE);
+		return NULL;
+	    }
+	    result = OCIAttrGet ((dvoid *) parmh,
+				 (ub4) OCI_DTYPE_PARAM,
+				 (dvoid *) &syn_name,
+				 (ub4 *) &syn_name_len,
+				 (ub4) OCI_ATTR_NAME,
+				 (OCIError *) priv_data->herr);
+	    if (!gda_oracle_check_result (result, cnc, priv_data, OCI_HTYPE_ERROR,
+			_("Could not get synonym referred-to name"))) {
+		OCIHandleFree ((dvoid *) dschp, OCI_HTYPE_DESCRIBE);
+		return NULL;
+	    }
+	    result = OCIAttrGet ((dvoid *) parmh,
+				 (ub4) OCI_DTYPE_PARAM,
+				 (dvoid *) &syn_link,
+				 (ub4 *) &syn_link_len,
+				 (ub4) OCI_ATTR_LINK,
+				 (OCIError *) priv_data->herr);
+	    if (!gda_oracle_check_result (result, cnc, priv_data, OCI_HTYPE_ERROR,
+			_("Could not get synonym referred-to dblink"))) {
+		OCIHandleFree ((dvoid *) dschp, OCI_HTYPE_DESCRIBE);
+		return NULL;
+	    }
+	    /* combine the synonym attributes into a single name */
+	    syn_points_to = g_malloc(syn_schema_len+syn_name_len+syn_link_len+4);
+	    strncpy(syn_points_to, syn_schema, syn_schema_len);
+	    syn_ptr = syn_points_to + syn_schema_len;
+	    *syn_ptr++ = '.';
+	    strncpy(syn_ptr, syn_name, syn_name_len);
+	    syn_ptr += syn_name_len;
+	    if (syn_link != NULL)
+	    {
+		*syn_ptr++ = '@';
+		strncpy(syn_ptr, syn_link, syn_link_len);
+		syn_ptr += syn_link_len;
+	    }
+	    *syn_ptr = '\0';
+
+	    /* re-issue the OCIDescribeAny for the referred to object. */
+	    result = OCIDescribeAny (priv_data->hservice,
+				     priv_data->herr,
+				     (text *) syn_points_to,
+				     syn_ptr - syn_points_to,
+				     OCI_OTYPE_NAME,
+				     0,
+				     OCI_PTYPE_UNK,
+				(OCIDescribe *) dschp);
+	    g_free(syn_points_to);
+	if (!gda_oracle_check_result (result, cnc, priv_data, OCI_HTYPE_ERROR,
+			_("Could not describe the Oracle table"))) {
+		OCIHandleFree ((dvoid *) dschp, OCI_HTYPE_DESCRIBE);
+		return NULL;
+	}
+
+	/* Get the parameter handle */
+	result = OCIAttrGet ((dvoid *) dschp,
+				(ub4) OCI_HTYPE_DESCRIBE, 
+				(dvoid **) &parmh,
+				(ub4 *) 0,
+				(ub4) OCI_ATTR_PARAM,
+				(OCIError *) priv_data->herr);
+	if (!gda_oracle_check_result (result, cnc, priv_data, OCI_HTYPE_ERROR,
+			_("Could not get the Oracle parameter handle"))) {
+		OCIHandleFree ((dvoid *) dschp, OCI_HTYPE_DESCRIBE);
+		return NULL;
+	}
 	}
 
 	/* Get the number of columns */
@@ -1376,7 +1486,6 @@ gda_oracle_fill_md_data (const gchar *tblname,
 		rowlist = g_list_append (rowlist, value);
 
 		/* Data type */
-		typename = g_malloc0 (31);
 		result = OCIAttrGet ((dvoid *)colhd,
 					(ub4) OCI_DTYPE_PARAM,
 					(dvoid *) &type,
@@ -1391,6 +1500,8 @@ gda_oracle_fill_md_data (const gchar *tblname,
 		}
 
 		typename = oracle_sqltype_to_string (type);
+		g_log("gda-oracle", G_LOG_LEVEL_DEBUG,
+		      "type for %s is %d, %s", colname, type, typename);
 		value = gda_value_new_string (typename);
 		rowlist = g_list_append (rowlist, value);
 
@@ -1473,6 +1584,10 @@ gda_oracle_fill_md_data (const gchar *tblname,
 		value = gda_value_new_string (index_data->references);
 		rowlist = g_list_append (rowlist, value);
 
+		/* default */
+		value = gda_value_new_string ("none");
+		rowlist = g_list_append (rowlist, value);
+		
 		g_free (index_data);
 
 		list = g_list_append (list, rowlist);
