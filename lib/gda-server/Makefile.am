@@ -45,7 +45,7 @@ libgda_server_la_SOURCES = \
 	gda-server-init.c \
 	gda-server-recordset.c \
 	$(gda_server_headers)
-libgda_server_la_LIBADD =
+libgda_server_la_LIBADD = -lpopt
 
 gdaincludedir=$(includedir)/gda
 gdainclude_HEADERS=$(gda_server_headers)
