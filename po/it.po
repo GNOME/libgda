@@ -1131,9 +1131,6 @@ msgstr "Amministratore GDA"
 #~ msgid "Report Writer"
 #~ msgstr ""
 
-#~ msgid ""
-#~ msgstr "Diseñador visual de informes"
-
 #~ msgid "Manage system and user data sources"
 #~ msgstr ""
 
