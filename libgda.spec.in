@@ -158,6 +158,7 @@ fi
 
 %doc AUTHORS COPYING ChangeLog NEWS README
 %{prefix}/bin/gda-test
+%{prefix}/bin/gda-run
 %{prefix}/lib/libgda-common.so*
 %{prefix}/lib/libgda-client.so*
 %{prefix}/lib/libgda-server.so*
@@ -168,7 +169,6 @@ fi
 %defattr(-, root, root)
 
 %{prefix}/bin/gda-build*
-%{prefix}/bin/gda-run
 %{prefix}/bin/gda-config
 %{prefix}/lib/libgda-common.*a
 %{prefix}/lib/libgda-client.*a

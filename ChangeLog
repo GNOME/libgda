@@ -1,3 +1,7 @@
+2001-02-08	Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* libgda.spec.in: moved gda-run from libgda-devel to libgda
+
 2001-02-06	Carlos Perelló Marín <carlos@gnome-db.org>
 
 	* .cvsignore, Makefile.am: Updated to the new xml-i18n-tools
