@@ -25,6 +25,7 @@ libgda 1.1.99, 2004-10-10
  - Added reset_connection virtual method for providers (rodrigo)
  - Fixed compilation under Win32 (alan)
  - Improved autotools setup (julio)
+ - Fixed leaks in some samples contained in the documentation (rodrigo)
  - Updated translations:
         - cs (miroslav)
 	- en_CA (adam)

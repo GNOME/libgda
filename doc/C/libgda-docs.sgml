@@ -1411,14 +1411,14 @@
               g_print("%s\t",gda_data_model_get_column_title (dm, column_id));
             g_print("\n");
           
-            for (row_id = 0; row_id &lt; gda_data_model_get_n_rows (dm); row_id++)
-              {
+            for (row_id = 0; row_id &lt; gda_data_model_get_n_rows (dm); row_id++) {
                 for (column_id = 0; column_id &lt; gda_data_model_get_n_columns (dm);
-                     column_id++)
-                  {
-                    value =
-                      (GdaValue *) gda_data_model_get_value_at (dm, column_id, row_id);
-                    g_print ("%s\t", gda_value_stringify (value));
+                     column_id++) {
+                    char *str;
+
+                    value = gda_data_model_get_value_at (dm, column_id, row_id);
+                    str = gda_value_stringify (value);
+                    g_print ("%s\t", str);
                   }
                 g_print("\n");
               }
