@@ -263,7 +263,8 @@ void
 gda_config_remove_section (const gchar *path)
 {
         g_return_if_fail (path != NULL);
-        gconf_client_remove_dir (get_conf_client (), path, NULL);
+	/* FIXME: see bug #73323 */
+        //gconf_client_recursive_unset (get_conf_client (), path, 0, NULL);
 }
 
 /**
