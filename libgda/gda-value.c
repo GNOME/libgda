@@ -1573,7 +1573,7 @@ gda_value_compare (const GdaValue *value1, const GdaValue *value2)
 	gint retval;
 
 	g_return_val_if_fail (value1 != NULL && value2 != NULL, -1);
-	g_return_val_if_fail (value1->type != value2->type, -1);
+	g_return_val_if_fail (value1->type == value2->type, -1);
 
 	switch (value1->type) {
 	case GDA_VALUE_TYPE_BIGINT :
