@@ -1,3 +1,7 @@
+2001-07-27  Carlos Perelló Marín <carlos@gnome-db.org>
+
+	* GDA_Report.idl: Fixed a name.
+
 2001-07-19  Carlos Perelló Marín <carlos@gnome-db.org>
 
 	* *.idl: Sorry, the rename will be done in the near future, not now.
