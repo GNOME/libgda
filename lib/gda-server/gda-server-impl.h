@@ -128,16 +128,16 @@ struct _GdaServerImplFunctions {
 	gint                 (*connection_commit_transaction)(GdaServerConnection *cnc);
 	gint                 (*connection_rollback_transaction)(GdaServerConnection *cnc);
 	GdaServerRecordset* (*connection_open_schema)(GdaServerConnection *cnc,
-	                                               GdaServerError *error,
-	                                               GDA_Connection_QType t,
-	                                               GDA_Connection_Constraint *constraints,
-	                                               gint length);
+						      GdaServerError *error,
+						      GDA_Connection_QType t,
+						      GDA_Connection_Constraint *constraints,
+						      gint length);
 	glong                (*connection_modify_schema)(GdaServerConnection *cnc,
-                                                   GDA_Connection_QType t,
-                                                   GDA_Connection_Constraint *constraints,
-                                                   gint length);
+							 GDA_Connection_QType t,
+							 GDA_Connection_Constraint *constraints,
+							 gint length);
 	gint                 (*connection_start_logging)(GdaServerConnection *cnc,
-                                                   const gchar *filename);
+							 const gchar *filename);
 	gint                 (*connection_stop_logging)(GdaServerConnection *cnc);
 	gchar*               (*connection_create_table)(GdaServerConnection *cnc, GDA_RowAttributes *columns);
 	gboolean             (*connection_supports)(GdaServerConnection *cnc, GDA_Connection_Feature feature);
@@ -152,10 +152,10 @@ struct _GdaServerImplFunctions {
 	/* Command interface */
 	gboolean             (*command_new)(GdaServerCommand *cmd);
 	GdaServerRecordset* (*command_execute)(GdaServerCommand *cmd,
-	                                        GdaServerError *error,
-	                                        const GDA_CmdParameterSeq *params,
-	                                        gulong *affected,
-	                                        gulong options);
+					       GdaServerError *error,
+					       const GDA_CmdParameterSeq *params,
+					       gulong *affected,
+					       gulong options);
 	void                 (*command_free)(GdaServerCommand *cmd);
 
 	/* Recordset interface */
@@ -296,21 +296,21 @@ void             gda_server_field_set_varbin (GdaServerField *field, gpointer va
  * GdaServerError management
  */
 GdaServerError* gda_server_error_new              (void);
-gchar*           gda_server_error_get_description  (GdaServerError *error);
-void             gda_server_error_set_description  (GdaServerError *error, const gchar *description);
-glong            gda_server_error_get_number       (GdaServerError *error);
-void             gda_server_error_set_number       (GdaServerError *error, glong number);
-void             gda_server_error_set_source       (GdaServerError *error, const gchar *source);
-void             gda_server_error_set_help_file    (GdaServerError *error, const gchar *helpfile);
-void             gda_server_error_set_help_context (GdaServerError *error, const gchar *helpctxt);
-void             gda_server_error_set_sqlstate     (GdaServerError *error, const gchar *sqlstate);
-void             gda_server_error_set_native       (GdaServerError *error, const gchar *native);
-void             gda_server_error_free             (GdaServerError *error);
+gchar*          gda_server_error_get_description  (GdaServerError *error);
+void            gda_server_error_set_description  (GdaServerError *error, const gchar *description);
+glong           gda_server_error_get_number       (GdaServerError *error);
+void            gda_server_error_set_number       (GdaServerError *error, glong number);
+void            gda_server_error_set_source       (GdaServerError *error, const gchar *source);
+void            gda_server_error_set_help_file    (GdaServerError *error, const gchar *helpfile);
+void            gda_server_error_set_help_context (GdaServerError *error, const gchar *helpctxt);
+void            gda_server_error_set_sqlstate     (GdaServerError *error, const gchar *sqlstate);
+void            gda_server_error_set_native       (GdaServerError *error, const gchar *native);
+void            gda_server_error_free             (GdaServerError *error);
 
-void             gda_server_error_make             (GdaServerError *error,
-                                                    GdaServerRecordset *recset,
-                                                    GdaServerConnection *cnc,
-                                                    gchar *where);
+void            gda_server_error_make             (GdaServerError *error,
+						   GdaServerRecordset *recset,
+						   GdaServerConnection *cnc,
+						   gchar *where);
 
 /*
  * GdaServerImpl object - interface for providers implementations

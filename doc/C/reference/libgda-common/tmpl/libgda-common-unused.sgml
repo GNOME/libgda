@@ -1,0 +1,66 @@
+<!-- ##### MACRO TO_SQL ##### -->
+<para>
+
+</para>
+
+@_o_: 
+
+<!-- ##### FUNCTION destroy_hash_pair ##### -->
+<para>
+
+</para>
+
+@key: 
+@value: 
+@func: 
+@Returns: 
+
+<!-- ##### FUNCTION dom_to_xml ##### -->
+<para>
+
+</para>
+
+@node: 
+@freedoc: 
+@Returns: 
+
+<!-- ##### FUNCTION xml_query_item_get_sqlfmt ##### -->
+<para>
+
+</para>
+
+@self: 
+@Returns: 
+
+<!-- ##### FUNCTION xml_query_item_get_sqlop ##### -->
+<para>
+
+</para>
+
+@self: 
+@Returns: 
+
+<!-- ##### FUNCTION xml_query_item_set_sqlfmt ##### -->
+<para>
+
+</para>
+
+@self: 
+@sqlfmt: 
+
+<!-- ##### FUNCTION xml_query_item_set_sqlop ##### -->
+<para>
+
+</para>
+
+@self: 
+@sqlop: 
+
+<!-- ##### FUNCTION xml_query_item_to_sql ##### -->
+<para>
+
+</para>
+
+@self: 
+@Returns: 
+

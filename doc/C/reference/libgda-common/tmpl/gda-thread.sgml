@@ -2,11 +2,18 @@
 GdaThread
 
 <!-- ##### SECTION Short_Description ##### -->
-
+Thread support functions
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
-
+This module (still in development, DON'T USE IT) provides a convenient way
+of adding multithread support to GDA applications. As with some other
+libgda-common modules, this is intended to be used internally in other
+GDA parts, but it is also made available for GDA application supports.
+</para>
+<para>
+Using this module will allow you to forget about the actual thread
+implementation available on your system.
 </para>
 
 <!-- ##### SECTION See_Also ##### -->

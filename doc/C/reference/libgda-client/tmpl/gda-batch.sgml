@@ -2,11 +2,13 @@
 GdaBatch
 
 <!-- ##### SECTION Short_Description ##### -->
-
+Batch job execution
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
-
+The GdaBatch object provides a way of easily adding transactions to
+your applications. It allows you to reference a set of commands as a
+unique entity (a batch job).
 </para>
 
 <!-- ##### SECTION See_Also ##### -->

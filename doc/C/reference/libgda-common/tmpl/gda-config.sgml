@@ -2,11 +2,16 @@
 gda-config
 
 <!-- ##### SECTION Short_Description ##### -->
-
+Functions to access the underlying configuration database
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
-
+This module provides an abstraction of all the access to the underlying
+configuration database. Currently, this means gda-config is just a
+wrapper around the GConf API, but we want to keep this design just in
+case we want later to change this (thus only having to change this
+module), as well as to allow other people to write their libgda
+implementations for other operating systems/environments.
 </para>
 
 <!-- ##### SECTION See_Also ##### -->

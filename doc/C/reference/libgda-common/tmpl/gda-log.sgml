@@ -2,11 +2,12 @@
 gda-log
 
 <!-- ##### SECTION Short_Description ##### -->
-
+Functions to write GDA logs
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
-
+This module contains functions that let you send log messages from your
+GDA applications (either clients or providers) to the GDA log system.
 </para>
 
 <!-- ##### SECTION See_Also ##### -->

@@ -2,11 +2,13 @@
 gda-corba
 
 <!-- ##### SECTION Short_Description ##### -->
-
+CORBA utility functions
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
-
+This module provides a set of utility functions for some CORBA-related
+tasks. It is mainly provided to be used internally in other GDA parts,
+but it is made available for GDA application developers also.
 </para>
 
 <!-- ##### SECTION See_Also ##### -->

@@ -99,8 +99,6 @@ AC_MSG_CHECKING(for libxml)
 if xml-config --libs > /dev/null 2>&1
 then
 	AC_MSG_RESULT(found)
-	gda_xml_libs=`xml-config --libs`
-	gda_xml_cflags=`xml-config --cflags`
 else
 	AC_MSG_ERROR(not found)
 fi
@@ -110,8 +108,8 @@ AC_MSG_CHECKING(for libxslt)
 if xslt-config --libs > /dev/null 2>&1
 then
 	AC_MSG_RESULT(found)
-	gda_xml_libs="$(gda_xml_libs) `xslt-config --libs`"
-	gda_xml_cflags="$(gda_xml_cflags) `xslt-config --cflags`"
+	gda_xml_libs=`xslt-config --libs`
+	gda_xml_cflags=`xslt-config --cflags`
 else
 	AC_MSG_ERROR(not found)
 fi

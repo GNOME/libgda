@@ -2,11 +2,18 @@
 gda-common
 
 <!-- ##### SECTION Short_Description ##### -->
-
+Common functions for GDA clients and providers
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
-
+The gda-common library is used by both GDA clients and providers. Thus,
+it contains lots of useful code for both of them, as well as some layers
+to hide the underlying technologies (CORBA, configuration database) to
+GDA application developers.
+</para>
+<para>
+It also contains some useful stuff that is used internally in other GDA
+parts, but that you can also use in your programs.
 </para>
 
 <!-- ##### SECTION See_Also ##### -->

@@ -2,7 +2,7 @@
 GdaRecordset
 
 <!-- ##### SECTION Short_Description ##### -->
-
+Recordset (set of rows returned by providers) management
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
