@@ -228,7 +228,7 @@ process_sql_commands (GList *reclist, GdaConnection *cnc,
 
 		while (arr[n]) {
 			SQLITE_Recordset *srecset;
-			GdaRecordset *recset;
+			GdaSqliteRecordset *recset;
 			gint status;
 
 			srecset = g_new0 (SQLITE_Recordset, 1);
@@ -242,9 +242,9 @@ process_sql_commands (GList *reclist, GdaConnection *cnc,
 			    status == SQLITE_OK) {
 
 				recset = gda_sqlite_recordset_new (cnc, srecset);
-				if (GDA_IS_RECORDSET (recset)) {
-					gda_recordset_set_command_text (recset, arr[n]);
-					gda_recordset_set_command_type (recset, GDA_COMMAND_TYPE_SQL);
+				if (GDA_IS_SQLITE_RECORDSET (recset)) {
+					gda_data_model_set_command_text (recset, arr[n]);
+					gda_data_model_set_command_type (recset, GDA_COMMAND_TYPE_SQL);
 					reclist = g_list_append (reclist, recset);
 				}
 			} else {
