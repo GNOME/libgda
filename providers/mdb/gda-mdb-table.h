@@ -20,29 +20,15 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#if !defined(__gda_mdb_h__)
-#  define __gda_mdb_h__
+#if !defined(__gda_mdb_table_h__)
+#  define __gda_mdb_table_h__
 
-#include <glib/gmacros.h>
-#include <config.h>
-#include <libgda/gda-connection.h>
-#include <libgda/gda-server-provider.h>
-#include <libgda/gda-intl.h>
-#include <libgda/gda-value.h>
-#include "gda-mdb-provider.h"
-#include <mdbtools.h>
-
-#define GDA_MYSQL_PROVIDER_ID          "GDA MDB provider"
+#include <libgda/gda-table.h>
+#include "gda-mdb.h"
 
 G_BEGIN_DECLS
 
-typedef struct {
-	GdaConnection *cnc;
-	MdbHandle *mdb;
-	gchar *server_version;
-} GdaMdbConnection;
-
-GdaValueType gda_mdb_type_to_gda (int col_type);
+GdaTable *gda_mdb_table_new (GdaMdbConnection *mdb_cnc, const gchar *name);
 
 G_END_DECLS
 

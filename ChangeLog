@@ -1,3 +1,20 @@
+2002-12-28  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* libgda/gda-data-model.c (gda_data_model_describe_column): don't call
+	gda_data_model_get_column_title, to avoid circular calls between the 2
+	functions. Should fix #102131.
+
+	* libgda/gda-table.[ch] (gda_table_get_name, gda_table_set_name):
+	new functions.
+
+	* providers/mdb/gda-mdb-table.[ch]: added implementation of data
+	data models based on the tables from the MdbHandle structure.
+
+	* providers/mdb/gda-mdb-provider.c (get_mdb_tables): use correct
+	value types for schema data model.
+
+	* providers/mdb/util.c (gda_mdb_type_to_gda): new function.
+
 2002-12-27  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* providers/mdb/gda-mdb-provider.c (gda_mdb_provider_supports): added

@@ -10,8 +10,11 @@ INCLUDES = \
 libgda_mdb_la_SOURCES = \
 	gda-mdb-provider.c \
 	gda-mdb-provider.h \
+	gda-mdb-table.c \
+	gda-mdb-table.h \
 	gda-mdb.h \
-	libmain.c
+	libmain.c \
+	util.c
 libgda_mdb_la_LDFLAGS = -export-dynamic -module -avoid-version
 libgda_mdb_la_LIBADD = \
 	$(LIBGDA_LIBS) \

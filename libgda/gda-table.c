@@ -210,6 +210,40 @@ gda_table_new_from_model (const gchar *name, const GdaDataModel *model, gboolean
 }
 
 /**
+ * gda_table_get_name
+ * @table: A #GdaTable object.
+ *
+ * Get the name of the given #GdaTable.
+ *
+ * Returns: the name of the table.
+ */
+const gchar *
+gda_table_get_name (GdaTable *table)
+{
+	g_return_val_if_fail (GDA_IS_TABLE (table), NULL);
+	return (const gchar *) table->priv->name;
+}
+
+/**
+ * gda_table_set_name
+ * @table: A #GdaTable object.
+ * @name: New name for the table.
+ *
+ * Set the name of the given #GdaTable.
+ */
+void
+gda_table_set_name (GdaTable *table, const gchar *name)
+{
+	g_return_if_fail (GDA_IS_TABLE (table));
+	g_return_if_fail (name != NULL);
+
+	if (table->priv->name)
+		g_free (table->priv->name);
+
+	table->priv->name = g_strdup (name);
+}
+
+/**
  * gda_table_add_field
  * @table: A #GdaTable object.
  * @fa: Attributes for the new field.

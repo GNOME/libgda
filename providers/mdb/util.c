@@ -20,30 +20,26 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#if !defined(__gda_mdb_h__)
-#  define __gda_mdb_h__
+#include "gda-mdb.h"
 
-#include <glib/gmacros.h>
-#include <config.h>
-#include <libgda/gda-connection.h>
-#include <libgda/gda-server-provider.h>
-#include <libgda/gda-intl.h>
-#include <libgda/gda-value.h>
-#include "gda-mdb-provider.h"
-#include <mdbtools.h>
+GdaValueType
+gda_mdb_type_to_gda (int col_type)
+{
+	switch (col_type) {
+	case MDB_BOOL : return GDA_VALUE_TYPE_BOOLEAN;
+	case MDB_BYTE : return GDA_VALUE_TYPE_TINYINT;
+	case MDB_DOUBLE : return GDA_VALUE_TYPE_DOUBLE;
+	case MDB_FLOAT : return GDA_VALUE_TYPE_SINGLE;
+	case MDB_INT : return GDA_VALUE_TYPE_INTEGER;
+	case MDB_LONGINT : return GDA_VALUE_TYPE_BIGINT;
+	case MDB_MEMO : return GDA_VALUE_TYPE_BINARY;
+	case MDB_MONEY : return GDA_VALUE_TYPE_DOUBLE;
+	case MDB_NUMERIC : return GDA_VALUE_TYPE_NUMERIC;
+	case MDB_OLE : return GDA_VALUE_TYPE_BINARY;
+	case MDB_REPID : return GDA_VALUE_TYPE_BINARY;
+	case MDB_SDATETIME : return GDA_VALUE_TYPE_TIMESTAMP;
+	case MDB_TEXT : return GDA_VALUE_TYPE_STRING;
+	}
 
-#define GDA_MYSQL_PROVIDER_ID          "GDA MDB provider"
-
-G_BEGIN_DECLS
-
-typedef struct {
-	GdaConnection *cnc;
-	MdbHandle *mdb;
-	gchar *server_version;
-} GdaMdbConnection;
-
-GdaValueType gda_mdb_type_to_gda (int col_type);
-
-G_END_DECLS
-
-#endif
+	return GDA_VALUE_TYPE_UNKNOWN;
+}

@@ -359,10 +359,12 @@ gda_data_model_describe_column (GdaDataModel *model, gint col)
 	fa = CLASS (model)->describe_column (model, col);
 	if (!fa) {
 		const GdaValue *value;
+
 		/* we generate a basic FieldAttributes structure */
 		fa = gda_field_attributes_new ();
 		gda_field_attributes_set_defined_size (fa, 0);
-		gda_field_attributes_set_name (fa, gda_data_model_get_column_title (model, col));
+		gda_field_attributes_set_name (fa, g_hash_table_lookup (model->priv->column_titles,
+									GINT_TO_POINTER (col)));
 		gda_field_attributes_set_scale (fa, 0);
 		value = gda_data_model_get_value_at (model, col, 0);
 		if (value == NULL)

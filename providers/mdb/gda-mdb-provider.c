@@ -214,6 +214,8 @@ gda_mdb_provider_open_connection (GdaServerProvider *provider,
 		return FALSE;
 	}
 
+	mdb_read_catalog (mdb_cnc->mdb, MDB_TABLE);
+
 	g_object_set_data (G_OBJECT (cnc), OBJECT_DATA_MDB_HANDLE, mdb_cnc);
 
 	return TRUE;
@@ -239,7 +241,9 @@ gda_mdb_provider_close_connection (GdaServerProvider *provider, GdaConnection *c
 		g_free (mdb_cnc->server_version);
 		mdb_cnc->server_version = NULL;
 	}
-	/* FIXME: close MDB database */
+
+	//mdb_free_handle (mdb_cnc->mdb);
+
 	g_free (mdb_cnc);
 	g_object_set_data (G_OBJECT (cnc), OBJECT_DATA_MDB_HANDLE, NULL);
 
@@ -368,7 +372,6 @@ get_mdb_tables (GdaMdbConnection *mdb_cnc)
 	gda_data_model_set_column_title (GDA_DATA_MODEL (model), 2, _("Comments"));
 	gda_data_model_set_column_title (GDA_DATA_MODEL (model), 3, "SQL");
 
-	//mdb_read_catalog (mdb_cnc->mdb, MDB_TABLE);
 	for (i = 0; i < mdb_cnc->mdb->num_catalog; i++) {
 		GdaValue *value;
 		MdbCatalogEntry *entry;
@@ -383,9 +386,9 @@ get_mdb_tables (GdaMdbConnection *mdb_cnc)
 
 				value_list = g_list_append (value_list,
 							    gda_value_new_string (entry->object_name));
-				value_list = g_list_append (value_list, gda_value_new_null ());
-				value_list = g_list_append (value_list, gda_value_new_null ());
-				value_list = g_list_append (value_list, gda_value_new_null ());
+				value_list = g_list_append (value_list, gda_value_new_string (""));
+				value_list = g_list_append (value_list, gda_value_new_string (""));
+				value_list = g_list_append (value_list, gda_value_new_string (""));
 
 				gda_data_model_append_row (model, value_list);
 
@@ -394,8 +397,6 @@ get_mdb_tables (GdaMdbConnection *mdb_cnc)
 			}
 		}
 	}
-
-	// mdb_free_catalog (mdb_cnc->mdb);
 
 	return GDA_DATA_MODEL (model);
 }
