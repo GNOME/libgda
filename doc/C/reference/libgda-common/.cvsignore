@@ -5,3 +5,5 @@ sgml.stamp
 tmpl.stamp
 *.txt
 libgda-common.signals
+libgda-common-scan
+libgda-common-scan.c
