@@ -148,3 +148,13 @@ gda_server_recordset_new (GdaServerConnection *cnc,
 
 	return recset;
 }
+
+/**
+ * gda_server_recordset_get_connection
+ */
+GdaServerConnection *
+gda_server_recordset_get_connection (GdaServerRecordset *recset)
+{
+	g_return_val_if_fail (GDA_IS_SERVER_RECORDSET (recset), NULL);
+	return recset->priv->cnc;
+}

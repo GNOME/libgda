@@ -52,10 +52,11 @@ struct _GdaServerRecordsetClass {
 typedef GdaRow * (* GdaServerRecordsetFetchFunc) (GdaServerRecordset *recset, glong row);
 typedef GdaRowAttributes * (* GdaServerRecordsetDescribeFunc) (GdaServerRecordset *recset);
 
-GType               gda_server_recordset_get_type (void);
-GdaServerRecordset *gda_server_recordset_new (GdaServerConnection *cnc,
-					      GdaServerRecordsetFetchFunc fetch_func,
-					      GdaServerRecordsetDescribeFunc desc_func);
+GType                gda_server_recordset_get_type (void);
+GdaServerRecordset  *gda_server_recordset_new (GdaServerConnection *cnc,
+					       GdaServerRecordsetFetchFunc fetch_func,
+					       GdaServerRecordsetDescribeFunc desc_func);
+GdaServerConnection *gda_server_recordset_get_connection (GdaServerRecordset *recset);
 
 G_END_DECLS
 

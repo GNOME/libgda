@@ -26,8 +26,7 @@
 
 #include <libgda/gda-data-model-array.h>
 #include <libgda/gda-connection.h>
-#include <libgda/gda-field.h>
-#include <libgda/GNOME_Database.h>
+#include <libgda/gda-row.h>
 
 G_BEGIN_DECLS
 

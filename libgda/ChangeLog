@@ -1,3 +1,22 @@
+2001-12-17  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-field.[ch]: removed, moved all functions to gda-row
+
+	* gda-server-recordset.c (gda_server_recordset_get_connection): new
+	function
+
+	* gda-row.c (gda_row_attributes_new): new function
+	(gda_row_attributes_get_field): new function
+	(gda_field_attributes_get_defined_size): new function
+	(gda_field_attributes_set_defined_size): new function
+	(gda_field_attributes_get_name): new function
+	(gda_field_attributes_set_name): new function
+	(gda_field_attributes_get_scale): new function
+	(gda_field_attributes_set_scale): new function
+	(gda_field_attributes_get_gdatype): new function
+	(gda_field_attributes_set_gdatype): new function
+	(gda_field_*): moved from gda-field.[ch]
+
 2001-12-13  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-parameter.c (gda_parameter_list_to_corba): new function

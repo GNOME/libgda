@@ -24,16 +24,88 @@
 #if !defined(__gda_row_h__)
 #  define __gda_row_h__
 
+#include <libgda/gda-value.h>
 #include <libgda/GNOME_Database.h>
 #include <glib/gmacros.h>
 
 G_BEGIN_DECLS
 
-typedef GNOME_Database_Row GdaRow;
-typedef GNOME_Database_RowAttributes GdaRowAttributes;
+typedef GNOME_Database_Row             GdaRow;
+typedef GNOME_Database_RowAttributes   GdaRowAttributes;
+typedef GNOME_Database_FieldAttributes GdaFieldAttributes;
+typedef GNOME_Database_Type            GdaType;
+typedef GNOME_Database_Field           GdaField;
 
-GdaRow *gda_row_new (gint count);
-void    gda_row_free (GdaRow *row);
+#define GDA_TYPE_NULL GNOME_Database_TYPE_NULL
+#define GDA_TYPE_BIGINT GNOME_Database_TYPE_BIGINT
+#define GDA_TYPE_BINARY GNOME_Database_TYPE_BINARY
+#define GDA_TYPE_BOOLEAN GNOME_Database_TYPE_BOOLEAN
+#define GDA_TYPE_DATE GNOME_Database_TYPE_DATE
+#define GDA_TYPE_TIME GNOME_Database_TYPE_TIME
+#define GDA_TYPE_TIMESTAMP GNOME_Database_TYPE_TIMESTAMP
+#define GDA_TYPE_DOUBLE GNOME_Database_TYPE_DOUBLE
+#define GDA_TYPE_INTEGER GNOME_Database_TYPE_INTEGER
+#define GDA_TYPE_SINGLE GNOME_Database_TYPE_SINGLE
+#define GDA_TYPE_SMALLINT GNOME_Database_TYPE_SMALLINT
+#define GDA_TYPE_STRING GNOME_Database_TYPE_STRING
+#define GDA_TYPE_TINYINT GNOME_Database_TYPE_TINYINT
+#define GDA_TYPE_UNKNOWN GNOME_Database_TYPE_UNKNOWN
+
+GdaRow             *gda_row_new (gint count);
+void                gda_row_free (GdaRow *row);
+
+GdaRowAttributes   *gda_row_attributes_new (gint count);
+void                gda_row_attributes_free (GdaRowAttributes *attrs);
+GdaFieldAttributes *gda_row_attributes_get_field (GdaRowAttributes *attrs, gint num);
+
+glong               gda_field_attributes_get_defined_size (GdaFieldAttributes *fa);
+void                gda_field_attributes_set_defined_size (GdaFieldAttributes *fs, glong size);
+const gchar        *gda_field_attributes_get_name (GdaFieldAttributes *fa);
+void                gda_field_attributes_set_name (GdaFieldAttributes *fa, const gchar *name);
+glong               gda_field_attributes_get_scale (GdaFieldAttributes *fa);
+void                gda_field_attributes_set_scale (GdaFieldAttributes *fa, glong scale);
+GdaType             gda_field_attributes_get_gdatype (GdaFieldAttributes *fa);
+void                gda_field_attributes_set_gdatype (GdaFieldAttributes *fa, GdaType type);
+
+glong               gda_field_get_actual_size (GdaField *field);
+void                gda_field_set_actual_size (GdaField *field, glong size);
+glong               gda_field_get_defined_size (GdaField *field);
+void                gda_field_set_defined_size (GdaField *field, glong size);
+const gchar        *gda_field_get_name (GdaField *field);
+void                gda_field_set_name (GdaField *field, const gchar *name);
+glong               gda_field_get_scale (GdaField *field);
+void                gda_field_set_scale (GdaField *field, glong scale);
+GdaType             gda_field_get_gdatype (GdaField *field);
+void                gda_field_set_gdatype (GdaField *field, GdaType type);
+gboolean            gda_field_is_null (GdaField *field);
+GdaValue           *gda_field_get_value (GdaField *field);
+void                gda_field_set_value (GdaField *field, GdaValue *value);
+long long           gda_field_get_bigint_value (GdaField *field);
+void                gda_field_set_bigint_value (GdaField *field, long long value);
+gconstpointer       gda_field_get_binary_value (GdaField *field);
+void                gda_field_set_binary_value (GdaField *field, gconstpointer value, glong size);
+gboolean            gda_field_get_boolean_value (GdaField *field);
+void                gda_field_set_boolean_value (GdaField *field, gboolean value);
+GDate              *gda_field_get_date_value (GdaField *field);
+void                gda_field_set_date_value (GdaField *field, GDate *date);
+gdouble             gda_field_get_double_value (GdaField *field);
+void                gda_field_set_double_value (GdaField *field, gdouble value);
+gint                gda_field_get_integer_value (GdaField *field);
+void                gda_field_set_integer_value (GdaField *field, gint value);
+void                gda_field_set_null_value (GdaField *field);
+gfloat              gda_field_get_single_value (GdaField *field);
+void                gda_field_set_single_value (GdaField *field, gfloat value);
+gshort              gda_field_get_smallint_value (GdaField *field);
+void                gda_field_set_smallint_value (GdaField *field, gshort value);
+const gchar        *gda_field_get_string_value (GdaField *field);
+void                gda_field_set_string_value (GdaField *field, const gchar *value);
+GTime               gda_field_get_time_value (GdaField *field);
+void                gda_field_set_time_value (GdaField *field, GTime value);
+time_t              gda_field_get_timestamp_value (GdaField *field);
+void                gda_field_set_timestamp_value (GdaField *field, time_t value);
+gchar               gda_field_get_tinyint_value (GdaField *field);
+void                gda_field_set_tinyint_value (GdaField *field, gchar value);
+gchar              *gda_field_stringify (GdaField *field);
 
 G_END_DECLS
 
