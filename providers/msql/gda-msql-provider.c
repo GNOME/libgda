@@ -246,7 +246,7 @@ static GList *process_sql_commands(GList *rl,GdaConnection *cnc,
         break;
       }
       res=msqlStoreResult();
-      rs=gda_msql_recordset_new(cnc,res,*sock);
+      rs=gda_msql_recordset_new(cnc,res,*sock,(int)rc);
       if (GDA_IS_MSQL_RECORDSET(rs)) {
         gda_data_model_set_command_text((GdaDataModel*)rs,arr[n]);
         gda_data_model_set_command_type((GdaDataModel*)rs,
@@ -429,7 +429,7 @@ static GdaDataModel
   sock_ptr=g_object_get_data(G_OBJECT(cnc),OBJECT_DATA_MSQL_HANDLE);
   if (!sock_ptr) return NULL;
   res=msqlListDBs(*sock_ptr);
-  rs=gda_msql_recordset_new(cnc,res,*sock_ptr);
+  rs=gda_msql_recordset_new(cnc,res,*sock_ptr,(int)msqlNumRows(res));
   return (rs) ? GDA_DATA_MODEL(rs) : NULL;
 }
 

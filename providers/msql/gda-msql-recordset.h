@@ -51,6 +51,7 @@ struct _GdaMsqlRecordset {
   GdaConnection   *cnc;
   m_result        *res;
   int              sock;
+  int              n_rows;
 };
 
 struct _GdaMsqlRecordsetClass {
@@ -59,7 +60,7 @@ struct _GdaMsqlRecordsetClass {
 
 GType             gda_msql_recordset_get_type(void);
 GdaMsqlRecordset *gda_msql_recordset_new(GdaConnection *cnc,m_result *res,
-                                         int sock);
+                                         int sock,int n_rows);
 
 G_END_DECLS
 
