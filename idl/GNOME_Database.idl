@@ -1,15 +1,121 @@
-/* -*- Mode: IDL; tab-width: 8; indent-tabs-mode: t; c-basic-offset: 8 -*- */
 #ifndef __GNOME_Database_idl__
 #define __GNOME_Database_idl__ 1
 
-#include <GNOME_Database_Error.idl>
-#include <GNOME_Database_Listener.idl>
-#include <GNOME_Database_Field.idl>
-#include <GNOME_Database_Parameter.idl>
-#include <GNOME_Database_Recordset.idl>
-#include <GNOME_Database_Command.idl>
-#include <GNOME_Database_Error.idl>
-#include <GNOME_Database_Connection.idl>
+#include <Bonobo.idl>
+
+module GNOME {
+	module Database {
+		/*
+		 * Basic types
+		 */
+		typedef sequence<string> StringList;
+		typedef any Value;
+
+		struct Parameter {
+			string name;
+			Value value;
+		};
+		typedef sequence<Parameter> ParameterList;
+
+		/*
+		 * GDA data types
+		 */
+		enum ValueType {
+			TYPE_BIGINT,
+			TYPE_CHAR,
+			TYPE_DATE,
+			TYPE_DOUBLE,
+			TYPE_SINGLE,
+			TYPE_SMALLINT,
+			TYPE_TIME,
+			TYPE_TIMESTAMP,
+			TYPE_VARCHAR,
+			TYPE_UNKNOWN
+		};
+
+		/*
+		 * The Connection struct contains all information
+		 * about an open connection
+		 */
+		struct Connection {
+			string cnc_str;
+			string username;
+			string password;
+		};
+
+		/*
+		 * The Recordset struct contains all information
+		 * about a set of rows returned by the underlying
+		 * provider as a result of executing a command
+		 */
+		struct FieldAttributes {
+			string name;
+			short size;
+			short scale;
+			ValueType type;
+		};
+		struct Field {
+			FieldAttributes attr;
+			Value value;
+		};
+		typedef sequence<FieldAttributes> RowAttributes;
+		typedef sequence<Field> Row;
+
+		struct Recordset {
+			Command parent;
+			RowAttributes attr;
+			Row current;
+		};
+		typedef sequence<Recordset> RecordsetList;
+
+		/*
+		 * The Command struct contains information about a
+		 * command to be executed on the server
+		 */
+		enum CommandType {
+			COMMAND_TYPE_SQL,
+			COMMAND_TYPE_XML,
+			COMMAND_TYPE_PROCEDURE,
+			COMMAND_TYPE_TABLE,
+			COMMAND_TYPE_INVALID
+		};
+
+		struct Command {
+			string text;
+			CommandType type;
+			RecordsetList recordsets;
+		};
+
+		/*
+		 * The Provider interface is the CORBA interface to be
+		 * implemented by the different providers
+		 */
+		interface Provider : Bonobo::Unknown {
+			/* information methods */
+			string getVersion ();
+
+			/* basic operations */
+			Connection openConnection (in string cnc_string,
+						   in string username,
+						   in string password);
+			boolean closeConnection (in Connection cnc);
+
+			/* command execution methods */
+			Command createCommand (in string text, CommandType type);
+			boolean prepareCommand (inout Command cmd, in ParameterList plist);
+			RecordsetList executeCommand (inout Command cmd,
+						      in ParameterList plist);
+
+			/* recordset management methods */
+			boolean moveFirst (inout Recordset recset);
+			boolean moveLast (inout Recordset recset);
+			boolean moveNext (inout Recordset recset);
+			boolean movePrevious (inout Recordset recset);
+			Row fetchRow (inout Recordset recset);
+		};
+	};
+
+};
 
 #endif
 

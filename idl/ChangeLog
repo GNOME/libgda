@@ -1,3 +1,7 @@
+2001-10-07  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* *.idl: started refactoring on the IDL interfaces
+
 2001-08-19  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* GNOME_Database_Field.idl: replaced the use of unions with cleaner
