@@ -1,3 +1,7 @@
+2001-05-18  Carlos Perelló Marín <carlos@gnome-db.org>
+
+	* GDA_Report.idl: Modified some attributes names.
+	
 2001-04-23  Carlos Perelló Marín <carlos@gnome-db.org>
 
 	* GDA_Report.idl: Added all the DTD objects and some exceptions

@@ -1,5 +1,6 @@
 /* GDA Report Engine
  * Copyright (C) 2000 Rodrigo Moya
+ * Copyright (C) 2001 Carlos Perelló Marín <carlos@gnome-db.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -37,12 +38,32 @@
 #define N_(String) (String)
 #endif
 
-#include <gda-report.h>
 #include <gda-report-defs.h>
-#include <gda-report-element.h>
-#include <gda-report-engine.h>
 #include <gda-report-format.h>
 #include <gda-report-stream.h>
+#include <gda-report-output.h>
+#include <gda-report-engine.h>
+#include <gda-report.h>
+#include <gda-report-section.h>
+#include <gda-report-header.h>
+#include <gda-report-page.h>
+#include <gda-report-page-header.h>
+#include <gda-report-data-header.h>
+#include <gda-report-group-header.h>
+#include <gda-report-detail.h>
+#include <gda-report-data.h>
+#include <gda-report-element.h>
+#include <gda-report-picture.h>
+#include <gda-report-line.h>
+#include <gda-report-object.h>
+#include <gda-report-text-object.h>
+#include <gda-report-label.h>
+#include <gda-report-special.h>
+#include <gda-report-repfield.h>
+#include <gda-report-group-footer.h>
+#include <gda-report-data-footer.h>
+#include <gda-report-page-footer.h>
+#include <gda-report-footer.h>
 
 void gda_report_init ();
 

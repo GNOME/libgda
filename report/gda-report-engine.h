@@ -26,11 +26,12 @@
 #include <gtk/gtk.h>
 #endif
 
-#include <GDA_Report.h>
-
 #if defined(__cplusplus)
 extern "C" {
 #endif
+
+#include <GDA_Report.h>
+#include <gda-report.h>
 
 typedef struct _GdaReportEngine GdaReportEngine;
 typedef struct _GdaReportEngineClass GdaReportEngineClass;
@@ -41,20 +42,20 @@ typedef enum {
 
 struct _GdaReportEngine {
 #ifdef HAVE_GOBJECT
-	GObject		object;
+	GObject			parent;
 #else
-	GtkObject	object;
+	GtkObject		parent;
 #endif
-	GDA_ReportEngine corba_engine;
-	GList*		errors_head;
+	GDA_ReportEngine	corba_engine;
+	GList*			errors_head;
 };
 
 struct _GdaReportEngineClass {
 #ifdef HAVE_GOBJECT
-	GObjectClass	parent_class;
-	GObjectClass	*parent;
+	GObjectClass		parent_class;
+	GObjectClass*		parent;
 #else
-	GtkObjectClass	parent_class;
+	GtkObjectClass		parent_class;
 #endif
 	void (* warning) (GdaReportEngine* object, GList* errors);
 	void (* error)   (GdaReportEngine* object, GList* errors);
@@ -79,28 +80,30 @@ struct _GdaReportEngineClass {
 #endif
 
 #ifdef HAVE_GOBJECT
-GType		  gda_report_engine_get_type	(void);
+GType			gda_report_engine_get_type	(void);
 #else
-GtkType		  gda_report_engine_get_type	(void);
+GtkType			gda_report_engine_get_type	(void);
 #endif
 
-GdaReportEngine* gda_report_engine_new			 (void);
-void		  gda_report_engine_free		 (GdaReportEngine *engine);
+GdaReportEngine*	gda_report_engine_new		(void);
+void			gda_report_engine_free		(GdaReportEngine *engine);
 
-GList*		  gda_report_engine_query_reports        (GdaReportEngine *engine,
-							  const gchar *condition,
-							  GdaReportFlags flags);
-gboolean	  gda_report_engine_register_converter	 (GdaReportEngine *engine,
-							  gchar *format,
-							  gchar *converter);
-void		  gda_report_engine_unregister_converter (GdaReportEngine *engine,
-							  gchar *converter);
-gchar*		  gda_report_engine_find_converter	 (GdaReportEngine *engine,
-							  gchar* format);
+GList*			gda_report_engine_query_reports	(GdaReportEngine *engine,
+							 const gchar *condition,
+							 GdaReportFlags flags);
+void			gda_report_engine_add_report	(GdaReportEngine *engine,
+							 GdaReport* report);
+void			gda_report_engine_remove_report	(GdaReportEngine* engine;
+							 GdaReport* report);
+gboolean		gda_report_engine_register_converter	(GdaReportEngine *engine,
+								 gchar *format,
+								 gchar *converter);
+void			gda_report_engine_unregister_converter	(GdaReportEngine *engine,
+								 gchar *converter);
+gchar*			gda_report_engine_find_converter	(GdaReportEngine *engine,
+								 gchar* format);
 		
-
 #if defined(__cplusplus)
 }
 #endif
-
 #endif

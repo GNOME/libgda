@@ -31,7 +31,6 @@ extern "C" {
 #endif
 
 #include <GDA_Report.h>
-#include <gda-report-element.h>
 #include <gda-report-stream.h>
 
 typedef struct _GdaReportFormat       GdaReportFormat;
@@ -39,20 +38,20 @@ typedef struct _GdaReportFormatClass  GdaReportFormatClass;
 
 struct _GdaReportFormat {
 #ifdef HAVE_GOBJECT
-	GObject		object;
+	GObject			parent;
 #else
-	GtkObject	object;
+	GtkObject		parent;
 #endif
 	GDA_ReportFormat	corba_report_format;
-	GList*		errors_head;
+	GList*			errors_head;
 };
 
 struct _GdaReportFormatClass {
 #ifdef HAVE_GOBJECT
-	GObjectClass	parent_class;
-	GObjectClass	*parent;
+	GObjectClass		parent_class;
+	GObjectClass*		parent;
 #else
-	GtkObjectClass	parent_class;
+	GtkObjectClass		parent_class;
 #endif
 	void (* warning) (GdaReportFormat* object, GList* errors);
 	void (* error)   (GdaReportFormat* object, GList* errors);
@@ -79,8 +78,7 @@ GtkType			gda_report_format_get_type	(void);
 
 void			gda_report_format_free		(GdaReportFormat* object);
 
-GdaReportElement*	gda_report_format_get_root_element	(void);
-GdaReportStream*	gda_report_format_get_stream		(void);
+GdaReportStream*	gda_report_format_get_stream	(void);
 
 #if defined(__cplusplus)
 }

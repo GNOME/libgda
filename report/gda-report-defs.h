@@ -1,5 +1,6 @@
 /* GDA Report Engine
  * Copyright (C) 2000 Rodrigo Moya
+ * Copyright (C) 2001 Carlos Perelló Marín <carlos@gnome-db.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -18,6 +19,10 @@
 
 #if !defined(__gda_report_defs_h__)
 #  define __gda_report_defs_h__
+
+#if defined(__cplusplus)
+extern "C" {
+#endif
 
 #include <gda-common.h>
 
@@ -116,5 +121,7 @@ struct _GdaReportAttribute {
 	gchar* value;
 };
 
-
+#if defined(__cplusplus)
+}
+#endif
 #endif

@@ -37,10 +37,10 @@ typedef struct _GdaReportOutput       GdaReportOutput;
 typedef struct _GdaReportOutputClass  GdaReportOutputClass;
 
 struct _GdaReportOutput {
-	GdaReportFormat	object;
+	GdaReportFormat		object;
 	
-	GDA_ReportOutput	corba_report_output;
-	GList*		errors_head;
+	GDA_ReportOutput	corba_reportoutput;
+	GList*			errors_head;
 };
 
 struct _GdaReportOutputClass {
@@ -71,7 +71,8 @@ GtkType			gda_report_output_get_type	(void);
 
 void			gda_report_output_free		(GdaReportOutput* object);
 
-GdaReportStream*	gda_report_output_convert	(gchar* format, glong flags);
+GdaReportStream*	gda_report_output_convert	(GdaReportOutput* object, gchar* format,
+							 glong flags);
 
 #if defined(__cplusplus)
 }

@@ -236,9 +236,9 @@ module GDA {
 		attribute float y1;
 		attribute float x2;
 		attribute float y2;
-		attribute float linewidth;
-		attribute ReportColor linecolor;
-		attribute ReportLineStyle linestyle;
+		attribute float width;
+		attribute ReportColor color;
+		attribute ReportLineStyle style;
 		
 	};
 
@@ -303,7 +303,6 @@ module GDA {
 	};
 
 	interface ReportFormat {	
-//		ReportElement getRootElement (); // I think that this is not useful now
 		ReportStream  getStream ();
 	};
 	
@@ -362,7 +361,7 @@ module GDA {
 		attribute ReportLineStyle linestyle;
 
 		attribute ReportHeader		rheader;
-		attribute ReportPageList		plist;
+		attribute ReportPageList	plist;
 		attribute ReportFooter		rfooter;
 		
 		readonly attribute ReportFormat format;

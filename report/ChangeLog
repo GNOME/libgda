@@ -1,3 +1,19 @@
+2001-05-19  Carlos Perelló Marín <carlos@gnome-db.org>
+
+	* gda-report*.h: Reviewed and corrected some mistakes.
+	* Makefile.am: Added the new .h files.
+	
+2001-05-18  Carlos Perelló Marín <carlos@gnome-db.org>
+
+	* gda-report*header.h, gda-report*footer.h, gda-report-detail.h,
+	  gda-report-data.h, gda-report-page.h, gda-report-picture.h,
+	  gda-report-line.h, gda-report-element.h, gda-report-label.h,
+	  gda-report-object.h, gda-report-repfield.h, gda-report-section.h,
+	  gda-report-special.h, gda-report-text-object.h: Defined
+	* gda-report-element.h, gda-report-engine.h, gda-report.h: Updated to the new IDL.
+	* gda-report-client.h: Added the new .h files.
+	* gda*.c: Don't compile now, please wait I will commit the correct ones soon.
+	
 2001-05-16  Carlos Perelló Marín <carlos@gnome-db.org>
 
 	* gda-report-defs.h: Updated.

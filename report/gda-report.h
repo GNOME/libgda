@@ -32,9 +32,11 @@ extern "C" {
 
 #include <GDA_Report.h>
 #include <gda-report-engine.h>
-#include <gda-report-element.h>
+#include <gda-report-defs.h>
 #include <gda-report-format.h>
 #include <gda-report-output.h>
+#include <gda-report-header.h>
+#include <gda-report-footer.h>
 
 typedef struct _GdaReport       GdaReport;
 typedef struct _GdaReportClass  GdaReportClass;
@@ -87,16 +89,103 @@ void			gda_report_free			(GdaReport* object);
 
 gchar*			gda_report_get_name		(GdaReport* object);
 gint			gda_report_set_name		(GdaReport* object, gchar* name);
-
 gchar*			gda_report_get_description	(GdaReport* object);
 gint			gda_report_set_description	(GdaReport* object, gchar* description);
-
-GdaReportElement*	gda_report_get_elements		(GdaReport* object);
-gint			gda_report_set_elements		(GdaReport* object, GdaReportElement* element);
+ReportPageSize		gda_report_get_pagesize		(GdaReport* object);
+void			gda_report_set_pagesize		(GdaReport* object,
+							 ReportPageSize pagesize);
+ReportOrientation	gda_report_get_orientation	(GdaReport* object);
+void			gda_report_set_orientation	(GdaReport* object,
+							 ReportOrientation orientation);
+ReportUnits		gda_report_get_units		(GdaReport* object);
+void			gda_report_set_units		(GdaReport* object,
+							 ReportUnits units);
+gfloat			gda_report_get_topmargin	(GdaReport* object);
+void			gda_report_set_topmargin	(GdaReport* object,
+							 gfloat topmargin);
+gfloat			gda_report_get_bottommargin	(GdaReport* object);
+void			gda_report_set_bottommargin	(GdaReport* object,
+							 gfloat bottommargin);
+gfloat			gda_report_get_leftmargin	(GdaReport* object);
+void			gda_report_set_leftmargin	(GdaReport* object,
+							 gfloat leftmargin);
+gfloat			gda_report_get_rightmargin	(GdaReport* object);
+void			gda_report_set_rightmargin	(GdaReport* object,
+							 gfloat rightmargin);
+GdkColor*		gda_report_get_bgcolor		(GdaReport* object);
+void			gda_report_set_bgcolor		(GdaReport* object,
+							 GdkColor* bgcolor);
+GdkColor*		gda_report_get_fgcolor		(GdaReport* object);
+void			gda_report_set_fgcolor		(GdaReport* object,
+							 GdkColor* fgcolor);
+GdkColor*		gda_report_get_bordercolor	(GdaReport* object);
+void			gda_report_set_bordercolor	(GdaReport* object,
+							 GdkColor* bordercolor);
+gfloat			gda_report_get_borderwidth	(GdaReport* object);
+void			gda_report_set_borderwidth	(GdaReport* object,
+							 gfloat borderwidth);
+ReportLineStyle		gda_report_get_borderstyle	(GdaReport* object);
+void			gda_report_set_borderstyle	(GdaReport* object,
+							 ReportLineStyle borderstyle);
+gchar*			gda_report_get_fontfamily	(GdaReport* object);
+void			gda_report_set_fontfamily	(GdaReport* object,
+							 gchar* fontfamily);
+gushort			gda_report_get_fontsize		(GdaReport* object);
+void			gda_report_set_fontsize		(GdaReport* object,
+							 gshort fontsize);
+ReportFontWeight	gda_report_get_fontweight	(GdaReport* object);
+void			gda_report_set_fontweight	(GdaReport* object,
+							 ReportFontWeight fontweight);
+gboolean		gda_report_get_fontitalic	(GdaReport* object);
+void			gda_report_set_fontitalic	(GdaReport* object,
+							 gboolean fontitalic);
+ReportHAlignment	gda_report_get_halignment	(GdaReport* object);
+void			gda_report_set_halignment	(GdaReport* object,
+							 ReportHAlignment halignment);
+ReportVAlignment	gda_report_get_valignment	(GdaReport* object);
+void			gda_report_set_valignment	(GdaReport* object,
+							 ReportVAlignment valignment);
+gboolean		gda_report_get_wordwrap		(GdaReport* object),
+void			gda_report_set_wordwrap		(GdaReport* object,
+							 gboolean wordwrap);
+GdkColor*		gda_report_get_negvaluecolor	(GdaReport* object);
+void			gda_report_set_negvaluecolor	(GdaReport* object,
+							 GdkColor* negvaluecolor);
+gchar*			gda_report_get_dateformat	(GdaReport* object);
+void			gda_report_set_dateformat	(GdaReport* object,
+							 gchar* dateformat);
+gushort			gda_report_get_precision	(GdaReport* object);
+void			gda_report_set_precision	(GdaReport* object,
+							 gushort precision);
+gchar*			gda_report_get_currency		(GdaReport* object);
+void			gda_report_set_currency		(GdaReport* object,
+							 gchar* currency);
+gboolean		gda_report_get_commaseparator	(GdaReport* object);
+void			gda_report_set_commaseparator	(GdaReport* object,
+							 gboolean commaseparator);
+gfloat			gda_report_get_linewidth	(GdaReport* object);
+void			gda_report_set_linewidth	(GdaReport* object,
+							 gfloat linewidth);
+GdkColor*		gda_report_get_linecolor	(GdaReport* object);
+void			gda_report_set_linecolor	(GdaReport* object,
+							 GdkColor* linecolor);
+ReportLineStyle		gda_report_get_linestyle	(GdaReport* object);
+void			gda_report_set_linestyle	(GdaReport* object,
+							 ReportLineStyle linestyle);
+GdaReportHeader*	gda_report_get_rheader		(GdaReport* object);
+void			gda_report_set_rheader		(GdaReport* object,
+							 GdaReportHeader* rheader);
+GList*			gda_report_get_plist		(GdaReport* object);
+void			gda_report_set_plist		(GdaReport* object,
+							 GList* plist);
+GdaReportFooter*	gda_report_get_rfooter		(GdaReport* object);
+void			gda_report_set_rfooter		(GdaReport* object,
+							 GdaReportFooter* rfooter);
 
 GdaReportFormat*	gda_report_get_format		(GdaReport* object);
 
-GdaReportOutput*	gda_report_run			(GdaReport* object, GList param, gint32 flags);
+GdaReportOutput*	gda_report_run			(GdaReport* object, GList* param,
+							 gint32 flags);
 							 
 gboolean		gda_report_isLocked		(GdaReport* object);
 void			gda_report_lock			(GdaReport* object);

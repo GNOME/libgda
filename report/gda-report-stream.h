@@ -34,25 +34,27 @@
 extern "C" {
 #endif
 
+#include <GDA_Report.h>
+
 typedef struct _GdaReportStream       GdaReportStream;
 typedef struct _GdaReportStreamClass  GdaReportStreamClass;
 
 struct _GdaReportStream {
 #ifdef HAVE_GOBJECT
-	GObject		object;
+	GObject			parent;
 #else
-	GtkObject	object;
+	GtkObject		parent;
 #endif
-	GDA_ReportStream  corba_reportstream;
-	GdaReportEngine* engine;
-	GList*		errors_head;
-	gint32		seek;
+	GDA_ReportStream	corba_reportstream;
+	GdaReportEngine*	engine;
+	GList*			errors_head;
+	gint32			seek;
 };
 
 struct _GdaReportStreamClass {
 #ifdef HAVE_GOBJECT
 	GObjectClass	parent_class;
-	GObjectClass	*parent;
+	GObjectClass*	parent;
 #else
 	GtkObjectClass	parent_class;
 #endif

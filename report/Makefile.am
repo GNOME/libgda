@@ -14,15 +14,33 @@ $(BUILT_SOURCES): $(top_builddir)/report/idl/GDA_Report.idl
 	orbit-idl $(top_builddir)/report/idl/GDA_Report.idl
 
 gda_report_headers = \
-	gda-report.h \
-	gda-report-client.h \
 	gda-report-defs.h \
-	gda-report-element.h \
-	gda-report-engine.h \
 	gda-report-format.h \
+	gda-report-stream.h \
 	gda-report-output.h \
-	gda-report-stream.h
-
+	gda-report-engine.h \
+	gda-report.h \
+	gda-report-section.h \
+	gda-report-header.h \
+	gda-report-page.h \
+	gda-report-page-header.h \
+	gda-report-data-header.h \
+	gda-report-group-header.h \
+	gda-report-detail.h \
+	gda-report-data.h \
+	gda-report-element.h \
+	gda-report-picture.h \
+	gda-report-line.h \
+	gda-report-object.h \
+	gda-report-text-object.h \
+	gda-report-label.h \
+	gda-report-special.h \
+	gda-report-repfield.h \
+	gda-report-group-footer.h \
+	gda-report-data-footer.h \
+	gda-report-page-footer.h \
+	gda-report-footer.h
+	
 libgda_report_la_SOURCES = \
 	GDA_Report.h \
 	GDA_Report-common.c \

@@ -31,20 +31,19 @@ extern "C" {
 #endif
 
 #include <GDA_Report.h>
-#include <gda-report-defs.h>
 
 typedef struct _GdaReportElement       GdaReportElement;
 typedef struct _GdaReportElementClass  GdaReportElementClass;
 
 struct _GdaReportElement {
 #ifdef HAVE_GOBJECT
-	GObject		object;
+	GObject			parent;
 #else
-	GtkObject	object;
+	GtkObject		parent;
 #endif
-	GDA_ReportElement	corba_report_element;
-	gchar*		name;
-	GList*		errors_head;
+	GDA_ReportElement	corba_reportelement;
+	gchar*			name;
+	GList*			errors_head;
 };
 
 struct _GdaReportElementClass {
@@ -81,18 +80,17 @@ GdaReportElement*	gda_report_element_new		(gchar* name);
 void			gda_report_element_free		(GdaReportElement* object);
 
 gchar*			gda_report_element_get_name	(GdaReportElement* object);
-gint			gda_report_element_set_name	(GdaReportElement* object, gchar* name);
+gint			gda_report_element_set_name	(GdaReportElement* object,
+							 gchar* name);
 
-gint			gda_report_element_add_attribute	(gchar* name, gchar* value);
-gint			gda_report_element_remove_attribute	(gchar* name);
-GdaReportAttribute*	gda_report_element_get_attribute	(gchar* name);
-gint			gda_report_element_set_attribute	(gchar* name, gchar* value);
-GdaReportElement*	gda_report_element_add_child		(gchar* name);
-gint			gda_report_element_remove_child		(GdaReportElement* child);
-GList*			gda_report_element_get_children		(void);
-
+gboolean		gda_report_element_get_active	(GdaReportElement* object);
+void			gda_report_element_set_active	(GdaReportElement* object,
+							 gboolean active);
+gboolean		gda_report_element_get_visible	(GdaReportElement* object);
+void			gda_report_element_set_visible	(GdaReportElement* object,
+							 gboolean visible);
+		
 #if defined(__cplusplus)
 }
 #endif
-
 #endif
