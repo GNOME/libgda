@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda 0.2.96\n"
-"POT-Creation-Date: 2002-02-02 13:53+0100\n"
+"POT-Creation-Date: 2002-03-02 22:50+0100\n"
 "PO-Revision-Date: 2002-02-02 13:51+0100\n"
 "Last-Translator: Frederic Riss <frederic.riss@laposte.net>\n"
 "Language-Team: GNOME French Team <gnomefr@traduc.org>\n"

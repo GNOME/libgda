@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-db\n"
-"POT-Creation-Date: 2002-01-25 01:10+0100\n"
+"POT-Creation-Date: 2002-03-02 22:50+0100\n"
 "PO-Revision-Date: 2001-01-14 22:25+01:00\n"
 "Last-Translator: Clara Tattoni <clara.tattoni@libero.it>\n"
 "Language-Team: Italian <it@li.org>\n"

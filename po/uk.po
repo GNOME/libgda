@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2002-01-25 01:10+0100\n"
+"POT-Creation-Date: 2002-03-02 22:50+0100\n"
 "PO-Revision-Date: 1999-11-17 10:06+0200\n"
 "Last-Translator: Yuri Syrota <rasta@renome.rovno.ua>\n"
 "Language-Team: Ukrainian <uk@li.org>\n"

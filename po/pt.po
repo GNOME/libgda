@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.4.1\n"
-"POT-Creation-Date: 2002-02-28 01:11+0000\n"
+"POT-Creation-Date: 2002-03-02 22:50+0100\n"
 "PO-Revision-Date: 2002-02-28 01:15+0000\n"
 "Last-Translator: Duarte Loreto <happyguy_pt@hotmail.com>\n"
 "Language-Team: Portuguese <none@none.org>\n"
