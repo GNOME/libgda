@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-db CVS\n"
-"POT-Creation-Date: 2002-01-17 02:13+0100\n"
+"POT-Creation-Date: 2002-01-25 01:10+0100\n"
 "PO-Revision-Date: 2000-03-13 18:23+0000\n"
 "Last-Translator:  Alastair McKinstry <mckinstry@computer.org>\n"
 "Language-Team: Irish <ga@li.org>\n"
@@ -23,16 +23,16 @@ msgstr ""
 msgid "Data source %s not found"
 msgstr ""
 
-#: lib/gda-client/gda-connection.c:449
+#: lib/gda-client/gda-connection.c:433
 #, c-format
 msgid "Database '%s' not found in system configuration"
 msgstr ""
 
-#: lib/gda-client/gda-connection.c:453 lib/gda-client/gda-connection.c:470
+#: lib/gda-client/gda-connection.c:437 lib/gda-client/gda-connection.c:454
 msgid "[GDA Client Library]"
 msgstr ""
 
-#: lib/gda-client/gda-connection.c:469
+#: lib/gda-client/gda-connection.c:453
 msgid "Could not open CORBA factory"
 msgstr ""
 

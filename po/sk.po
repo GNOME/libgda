@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda 0.2.9\n"
-"POT-Creation-Date: 2002-01-17 02:13+0100\n"
+"POT-Creation-Date: 2002-01-25 01:10+0100\n"
 "PO-Revision-Date: 2001-12-13 16:57CET\n"
 "Last-Translator: Stanislav Visnovsky <visnovsky@nenya.ms.mff.cuni.cz>\n"
 "Language-Team: Slovak <sk-i18n@lists.linux.sk>\n"
@@ -24,16 +24,16 @@ msgstr "nie je možné otvoriť spojenie s %s"
 msgid "Data source %s not found"
 msgstr "Zdroj dát %s nenájdený"
 
-#: lib/gda-client/gda-connection.c:449
+#: lib/gda-client/gda-connection.c:433
 #, c-format
 msgid "Database '%s' not found in system configuration"
 msgstr "Databáza '%s' nebola nájdená v systémovej konfigurácii"
 
-#: lib/gda-client/gda-connection.c:453 lib/gda-client/gda-connection.c:470
+#: lib/gda-client/gda-connection.c:437 lib/gda-client/gda-connection.c:454
 msgid "[GDA Client Library]"
 msgstr "[klientská knižnice GDA]"
 
-#: lib/gda-client/gda-connection.c:469
+#: lib/gda-client/gda-connection.c:453
 msgid "Could not open CORBA factory"
 msgstr "Nie je možné otvoriť CORBA factory"
 

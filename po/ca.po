@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-db CVS\n"
-"POT-Creation-Date: 2002-01-17 02:13+0100\n"
+"POT-Creation-Date: 2002-01-25 01:10+0100\n"
 "PO-Revision-Date: 2000-06-19 01:05+02:00\n"
 "Last-Translator: Softcatala <linux@softcatala.org>\n"
 "Language-Team: \n"
@@ -23,16 +23,16 @@ msgstr "No es possible obrir la conexió a '%s'"
 msgid "Data source %s not found"
 msgstr "L'orígen de les dades %s no es troba"
 
-#: lib/gda-client/gda-connection.c:449
+#: lib/gda-client/gda-connection.c:433
 #, c-format
 msgid "Database '%s' not found in system configuration"
 msgstr "La base de dades '%s' no es troba en la configuració del sistema"
 
-#: lib/gda-client/gda-connection.c:453 lib/gda-client/gda-connection.c:470
+#: lib/gda-client/gda-connection.c:437 lib/gda-client/gda-connection.c:454
 msgid "[GDA Client Library]"
 msgstr ""
 
-#: lib/gda-client/gda-connection.c:469
+#: lib/gda-client/gda-connection.c:453
 msgid "Could not open CORBA factory"
 msgstr "No es pot obrir l'objecte CORBA"
 

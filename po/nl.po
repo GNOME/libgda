@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Libgda CVS\n"
-"POT-Creation-Date: 2002-01-17 02:13+0100\n"
+"POT-Creation-Date: 2002-01-25 01:10+0100\n"
 "PO-Revision-Date: 2000-11-05 12:36+0100\n"
 "Last-Translator: Almer S. Tigelaar <almer1@dds.nl>\n"
 "Language-Team: Dutch <nl@li.org>\n"
@@ -23,16 +23,16 @@ msgstr "Kon verbinding naar %s niet openen"
 msgid "Data source %s not found"
 msgstr "Gegevensbron %s kon niet worden gevonden"
 
-#: lib/gda-client/gda-connection.c:449
+#: lib/gda-client/gda-connection.c:433
 #, c-format
 msgid "Database '%s' not found in system configuration"
 msgstr "Databank '%s' niet gevonden in systeemconfiguratie"
 
-#: lib/gda-client/gda-connection.c:453 lib/gda-client/gda-connection.c:470
+#: lib/gda-client/gda-connection.c:437 lib/gda-client/gda-connection.c:454
 msgid "[GDA Client Library]"
 msgstr ""
 
-#: lib/gda-client/gda-connection.c:469
+#: lib/gda-client/gda-connection.c:453
 msgid "Could not open CORBA factory"
 msgstr "Kon 'CORBA factory' niet openen"
 

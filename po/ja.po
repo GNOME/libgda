@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda CVS-20011213\n"
-"POT-Creation-Date: 2002-01-17 02:13+0100\n"
+"POT-Creation-Date: 2002-01-25 01:10+0100\n"
 "PO-Revision-Date: 2001-12-13 20:47+0900\n"
 "Last-Translator: Akira TAGOH <tagoh@gnome.gr.jp>\n"
 "Language-Team: Japanese <translation@gnome.gr.jp>\n"
@@ -23,16 +23,16 @@ msgstr "%s へ接続することが出来ませんでした"
 msgid "Data source %s not found"
 msgstr "データソース %s は見つかりませんでした"
 
-#: lib/gda-client/gda-connection.c:449
+#: lib/gda-client/gda-connection.c:433
 #, c-format
 msgid "Database '%s' not found in system configuration"
 msgstr "データベース '%s' はシステム設定から見つかりませんでした"
 
-#: lib/gda-client/gda-connection.c:453 lib/gda-client/gda-connection.c:470
+#: lib/gda-client/gda-connection.c:437 lib/gda-client/gda-connection.c:454
 msgid "[GDA Client Library]"
 msgstr "[GDAクライアントライブラリ]"
 
-#: lib/gda-client/gda-connection.c:469
+#: lib/gda-client/gda-connection.c:453
 msgid "Could not open CORBA factory"
 msgstr "CORBA ファクトリを開くことが出来ませんでした"
 
