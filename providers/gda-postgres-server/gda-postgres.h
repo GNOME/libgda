@@ -1,5 +1,5 @@
 /* GNOME DB Postgres Provider
- * Copyright (C) 2000 Vivien Malerba
+ * Copyright (C) 2000, 2001 Vivien Malerba
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -26,7 +26,7 @@
 #include <gda-server.h>
 #include <glib.h>
 #include <libpq-fe.h>
-#include "gda-builtin-res.h"
+#include <gda-builtin-res.h>
 
 #ifdef ENABLE_NLS
 #  include <libintl.h>

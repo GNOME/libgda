@@ -17,8 +17,6 @@ gda_postgres_srv_LDADD = \
 	$(POSTGRES_LIBS)
 
 libgda_postgres_a_SOURCES = \
-	gda-builtin-res.c \
-	gda-builtin-res.h \
 	gda-postgres-command.c \
 	gda-postgres-connection.c \
 	gda-postgres-recordset.c \
