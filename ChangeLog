@@ -1,5 +1,14 @@
 2003-10-11  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	Fixes #123342
+
+	* libgda/gda-client.c (gda_client_close_all_connections): remove
+	connections from the list before closing them.
+	(gda_client_notify_event): only notify events if the connection is
+	in our private list.
+
+2003-10-11  Rodrigo Moya <rodrigo@gnome-db.org>
+
 	Fixes #121403
 
 	* libgda/gda-connection.c (gda_connection_new): duplicate
