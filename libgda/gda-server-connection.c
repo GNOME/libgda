@@ -252,6 +252,20 @@ impl_Connection_rollbackTransaction (PortableServer_Servant servant,
 	return result;
 }
 
+static CORBA_boolean
+impl_Connection_supports (PortableServer_Servant servant,
+			  GNOME_Database_Feature feature,
+			  CORBA_Environment *ev)
+{
+	gboolean result;
+	GdaServerConnection *cnc = (GdaServerConnection *) bonobo_x_object (servant);
+
+	bonobo_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), FALSE, ev);
+
+	result = gda_server_provider_supports (cnc->priv->provider, feature);
+	return result;
+}
+
 /*
  * GdaServerConnection class implementation
  */

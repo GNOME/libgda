@@ -80,6 +80,12 @@ gboolean       gda_connection_begin_transaction (GdaConnection *cnc, const gchar
 gboolean       gda_connection_commit_transaction (GdaConnection *cnc, const gchar *id);
 gboolean       gda_connection_rollback_transaction (GdaConnection *cnc, const gchar *id);
 
+typedef enum {
+	GDA_CONNECTION_FEATURE_TRANSACTIONS = GNOME_Database_FEATURE_TRANSACTIONS
+} GdaConnectionFeature;
+
+gboolean       gda_connection_supports (GdaConnection *cnc, GdaConnectionFeature feature);
+
 G_END_DECLS
 
 #endif

@@ -446,3 +446,29 @@ gda_connection_rollback_transaction (GdaConnection *cnc, const gchar *id)
 
 	return TRUE;
 }
+
+/**
+ * gda_connection_supports
+ */
+gboolean
+gda_connection_supports (GdaConnection *cnc, GdaConnectionFeature feature)
+{
+	CORBA_Environment ev;
+	CORBA_boolean corba_res;
+
+	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), FALSE);
+
+	CORBA_exception_init (&ev);
+
+	corba_res = GNOME_Database_Connection_supports (cnc->priv->corba_cnc,
+							feature, &ev);
+	if (BONOBO_EX (&ev)) {
+		gda_connection_add_error_list (cnc, gda_error_list_from_exception (&ev));
+		CORBA_exception_free (&ev);
+		return FALSE;
+	}
+
+	CORBA_exception_free (&ev);
+
+	return corba_res;
+}
