@@ -18,6 +18,9 @@
 
 #include "config.h"
 
+/* FIXME: This should really have it's own header file */
+#include "gda-common.h"
+
 #ifdef HAVE_GOBJECT
 #  include <glib-object.h>
 #else
@@ -26,11 +29,6 @@
 
 #include <liboaf/liboaf.h>
 #include <gda-log.h>
-
-/* this must not be included above, because liboaf.h must come after gnome.h,
-   so that POPT_AUTOHELP is defined in liboaf.h */
-/* FIXME: This should really have it's own header file */
-#include "gda-common.h"
 
 #ifdef ENABLE_NLS
 #  include <libintl.h>
