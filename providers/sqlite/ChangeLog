@@ -1,3 +1,7 @@
+2001-11-03  Carlos Perelló Marín <carlos@gnome-db.org>
+
+	* sqlite: Added from stable branch.
+
 2001-11-02  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* started restructuration with the new API
