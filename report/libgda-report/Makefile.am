@@ -28,12 +28,14 @@ $(gda_report_corba_built_files): $(IDLFILES) $(ORBIT_IDL)
 
 gda_report_headers = \
 	gda-report-client.h \
+	gda-report-document.h \
 	gda-report.h
 
 libgda_report_2_la_SOURCES = \
 	$(gda_report_corba_built_files) \
 	$(gda_report_headers) \
-	gda-report-client.c
+	gda-report-client.c \
+	gda-report-document.c
 
 libgda_report_2_la_LDFLAGS = -version-info $(GDA_CURRENT):$(GDA_REVISION):$(GDA_AGE)
 libgda_report_2_la_LIBADD = $(LIBGDA_LIBS)

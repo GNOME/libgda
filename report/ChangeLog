@@ -1,3 +1,8 @@
+2001-12-24  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* libgda-report/gda-report-document.[ch]: new files for managing
+	the XML format used for reports
+
 2001-12-23  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* main.c: main file for the engine binary
