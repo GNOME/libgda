@@ -3,6 +3,7 @@ Makefile.in
 gda-report-server
 .deps
 .libs
+*.oaf
 *.o
 *.lo
 GDA_Report.h
