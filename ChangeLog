@@ -1,3 +1,9 @@
+2002-09-18  Vivien Malerba <malerba@gnome-db.org>
+	* libgda/gda-value.[ch]: changed the _xml functions to work
+	with xmlNodePtr instead of gchar *
+	* providers/postgres/gda-postgres-provider.c: bug fix for NULL
+	default value for a field
+
 2002-09-18  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* report/libgda-report/gda-report-document.[ch]: fixed public
