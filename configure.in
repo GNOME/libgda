@@ -314,7 +314,6 @@ then
 					AC_DEFINE(HAVE_FREETDS)
 					;;
 				*v0.6*) AC_MSG_RESULT($freetdsvercheck - using v0.6x api)
-					AC_MSG_WARN($freetdsvercheck plugin may not load via dlopen)
 					AC_DEFINE(HAVE_FREETDS_VER0_6X)
 					FREETDS_CFLAGS="-I${freetdsdir}/include"
 					FREETDS_LIBS="-L${freetdsdir}/lib -ltds"

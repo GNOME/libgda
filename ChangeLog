@@ -1,3 +1,11 @@
+2002-10-23  Holger Thon <holger.thon@gnome-db.org>
+
+	* providers/freetds/gda-freetds-provider.c:
+	fixed dlopen() bug which made loading the provider fail with freetds
+	0.6x
+
+	* configure.in: Removed freetds v0.60 warning
+
 2002-10-16  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* providers/interbase/Makefile.am:
