@@ -1,0 +1,16 @@
+/* -*- Mode: IDL; tab-width: 8; indent-tabs-mode: t; c-basic-offset: 8 -*- */
+#ifndef __error__
+#define __error__ 1
+
+struct Error
+{
+  string description;
+  long   number;
+  string source;
+  string sqlstate;
+  string nativeMsg;
+};
+
+typedef sequence<Error> ErrorSeq;
+
+#endif

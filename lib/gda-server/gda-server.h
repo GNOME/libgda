@@ -1,0 +1,43 @@
+/* GNOME DB Server Library
+ * Copyright (C) 2000 Rodrigo Moya
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this library; if not, write to the Free
+ * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ */
+
+#if !defined(__gda_server_h__)
+#  define __gda_server_h__
+
+/*
+ * This is the main header file for the libgda-server library
+ */
+#include <orb/orbit.h>
+#if defined(USING_OAF)
+#  include <liboaf/liboaf.h>
+#else
+#  include <libgnorba/gnorba.h>
+#endif
+
+#include <gda.h>
+#include <gda-common.h>
+#include <gda-server-impl.h>
+
+void gda_server_init (const gchar *app_id, const gchar *version, gint nargs, gchar *args[]);
+
+#endif
+
+
+
+
+

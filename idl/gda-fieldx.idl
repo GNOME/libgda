@@ -1,0 +1,12 @@
+/* -*- Mode: IDL; tab-width: 8; indent-tabs-mode: t; c-basic-offset: 8 -*- */
+
+#ifndef __fieldx__
+#define __fieldx__ 1
+
+interface Fieldx {
+  long             appendChunk(in VarBinString data);
+  VarBinString     getChunk   (in long amount);
+  
+};
+
+#endif

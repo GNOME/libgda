@@ -1,0 +1,117 @@
+/* -*- Mode: IDL; tab-width: 8; indent-tabs-mode: t; c-basic-offset: 8 -*- */
+/* #include "gda-recordset.idl" */
+#include "gda-error.idl"
+
+#ifndef __connection__
+#define __connection__ 1
+
+interface Connection {
+	enum QType {
+		GDCN_SCHEMA_AGGREGATES,
+		GDCN_SCHEMA_ASSERTS,
+		GDCN_SCHEMA_CATALOGS,
+		GDCN_SCHEMA_CHARSETS,
+		GDCN_SCHEMA_CHECK_CONSTRAINTS,
+		GDCN_SCHEMA_COLLATIONS,
+		GDCN_SCHEMA_COL_DOM_USAGE,
+		GDCN_SCHEMA_COL_PRIVS,
+		GDCN_SCHEMA_COLS,
+		GDCN_SCHEMA_CONSTR_COL_USAGE,
+		GDCN_SCHEMA_CONSTR_TAB_USAGE,
+		GDCN_SCHEMA_FOREIGN_KEYS,
+		GDCN_SCHEMA_INDEXES,
+                GDCN_SCHEMA_INDEX_COLS,
+		GDCN_SCHEMA_KEY_COL_USAGE,
+		GDCN_SCHEMA_PRIM_KEYS,
+		GDCN_SCHEMA_PROC_COLUMNS,
+		GDCN_SCHEMA_PROC_PARAMS,
+		GDCN_SCHEMA_PROCS,
+		GDCN_SCHEMA_PROV_SPEC,
+		GDCN_SCHEMA_PROV_TYPES,
+		GDCN_SCHEMA_REF_CONSTRAINTS,
+                GDCN_SCHEMA_SEQUENCES,
+		GDCN_SCHEMA_SQL_LANG,
+		GDCN_SCHEMA_STATISTICS,
+		GDCN_SCHEMA_TAB_CONSTRAINTS,
+                GDCN_SCHEMA_TAB_PARENTS,
+		GDCN_SCHEMA_TAB_PRIVS,
+		GDCN_SCHEMA_TABLES,
+		GDCN_SCHEMA_TRANSLATIONS,
+		GDCN_SCHEMA_USAGE_PROVS,
+		GDCN_SCHEMA_VIEW_COL_USAGE,
+		GDCN_SCHEMA_VIEW_TAB_USAGE,
+		GDCN_SCHEMA_VIEWS,
+		GDCN_SCHEMA_LAST
+	};
+	enum ConstraintType {
+		  no_CONSTRAINT, // end of arglist marker
+		  OBJECT_CATALOG, OBJECT_SCHEMA, OBJECT_NAME, // for all constraints 
+                  TABLE_TYPE, // GDCN_SCHEMA_TABLES
+		  COLUMN_NAME, INDEX_NAME, TYPE, // GDCN_TABLE_COLUMN
+                  EXTRA_INFO
+	};
+	enum Permission {
+		PERM_UNKNOWN,
+		PERM_READ,
+		PERM_WRITE,
+		PERM_RW,
+		PERM_DENY_READ,
+		PERM_DENY_WRITE,
+		PERM_EXCLUSIVE
+	};
+	enum Feature {
+		FEATURE_FOREIGN_KEYS,
+		FEATURE_INHERITANCE,
+		FEATURE_OBJECT_ID,
+		FEATURE_PROCS,
+		FEATURE_SEQUENCES,
+		FEATURE_SQL,
+		FEATURE_SQL_SUBSELECT,
+		FEATURE_TRANSACTIONS,
+		FEATURE_TRIGGERS,
+		FEATURE_VIEWS,
+		FEATURE_XML_QUERIES
+	};
+	struct Constraint{
+		ConstraintType ctype;
+		string         value;
+	};
+	typedef sequence<Constraint> ConstraintSeq;
+	typedef sequence<string>     DSNlist;
+
+	attribute long               flags;
+	attribute long               cmdTimeout;
+	attribute long               connectTimeout;
+	attribute CursorLocation     cursor;
+	readonly attribute string    version;
+	readonly attribute ErrorSeq  errors;
+
+	long        beginTransaction()
+		raises (NotSupported);
+
+	long        commitTransaction()
+		raises (NotSupported);
+
+	long        rollbackTransaction()
+		raises (NotSupported);
+
+	long        close();
+	long        open   (in string dsn,
+			    in string user,
+			    in string passwd)
+		raises (DriverError);
+	Recordset   openSchema (in QType t,
+				in ConstraintSeq constraints)
+		raises (NotSupported, DriverError);
+	Command     createCommand();
+	Recordset   createRecordset();
+
+	DSNlist     listSources();
+	long        startLogging(in string filename);
+	long        stopLogging();
+	string      createTable(in string name, in RowAttributes columns)
+		raises (NotSupported, DriverError);
+	boolean     supports (in Feature feature);
+};
+
+#endif

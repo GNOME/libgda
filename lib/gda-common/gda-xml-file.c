@@ -1,0 +1,204 @@
+/* GNOME DB library
+ * Copyright (C) 1999, 2000 Rodrigo Moya
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this library; if not, write to the Free
+ * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ */
+
+#include <gda-common.h>
+
+enum
+{
+  GDA_XML_FILE_WARNING,
+  GDA_XML_FILE_ERROR,
+  GDA_XML_FILE_LAST_SIGNAL
+};
+
+static gint gda_xml_file_signals[GDA_XML_FILE_LAST_SIGNAL] = { 0, 0 };
+
+static void gda_xml_file_init       (Gda_XmlFile *xmlfile);
+static void gda_xml_file_class_init (Gda_XmlFileClass *klass);
+
+static void gda_xml_file_destroy    (Gda_XmlFile *xmlfile);
+
+/* errors handling */
+static void (gda_xml_file_error_def) (void *ctx, const char *msg, ...);
+static void (gda_xml_file_warn_def) (void *ctx, const char *msg, ...);
+
+/*
+ * Gda_XmlFile object implementation
+ */
+static void
+gda_xml_file_class_init (Gda_XmlFileClass *klass)
+{
+  GtkObjectClass* object_class = GTK_OBJECT_CLASS(klass);
+
+  gda_xml_file_signals[GDA_XML_FILE_WARNING] =
+    gtk_signal_new ("warning",
+                    GTK_RUN_FIRST,
+                    object_class->type,
+                    GTK_SIGNAL_OFFSET (Gda_XmlFileClass, warning),
+                    gtk_marshal_NONE__POINTER, GTK_TYPE_NONE, 1, 
+		    GTK_TYPE_POINTER);
+
+  gda_xml_file_signals[GDA_XML_FILE_ERROR] =
+    gtk_signal_new ("error",
+                    GTK_RUN_FIRST,
+                    object_class->type,
+                    GTK_SIGNAL_OFFSET (Gda_XmlFileClass, error),
+                    gtk_marshal_NONE__POINTER, GTK_TYPE_NONE, 1, 
+		    GTK_TYPE_POINTER);
+
+  gtk_object_class_add_signals (object_class, gda_xml_file_signals, 
+				GDA_XML_FILE_LAST_SIGNAL);
+
+  klass->warning = NULL;
+  klass->error = NULL;
+
+  object_class->destroy = (void (*)(GtkObject *)) gda_xml_file_destroy;
+}
+
+static void
+gda_xml_file_init (Gda_XmlFile *xmlfile)
+{
+  /* might change in future versions of libxml */
+  extern int xmlDoValidityCheckingDefaultValue;
+  xmlDoValidityCheckingDefaultValue = 1;
+
+  g_return_if_fail(GDA_IS_XML_FILE(xmlfile));
+
+  xmlfile->doc = NULL;
+  xmlfile->dtd = NULL;
+  xmlfile->root = NULL;
+  xmlfile->context = NULL;
+}
+
+GtkType
+gda_xml_file_get_type (void)
+{
+  static guint gda_xml_file_type = 0;
+  if (!gda_xml_file_type)
+    {
+      GtkTypeInfo gda_xml_file_info =
+      {
+        "Gda_XmlFile",
+        sizeof(Gda_XmlFile),
+        sizeof(Gda_XmlFileClass),
+        (GtkClassInitFunc) gda_xml_file_class_init,
+        (GtkObjectInitFunc) gda_xml_file_init,
+        (GtkArgSetFunc) 0,
+        (GtkArgSetFunc) 0
+      };
+      gda_xml_file_type = gtk_type_unique(gtk_object_get_type(), &gda_xml_file_info);
+    }
+  return (gda_xml_file_type);
+}
+
+/**
+ * gda_xml_file_new
+ * @root_doc: root document new
+ *
+ * Create a new #Gda_XmlFile object, with a root document of type @root_doc
+ */
+Gda_XmlFile *
+gda_xml_file_new (const gchar *root_doc)
+{
+  Gda_XmlFile* xmlfile;
+
+  xmlfile = GDA_XML_FILE(gtk_type_new(gda_xml_file_get_type()));
+
+  gda_xml_file_construct(xmlfile, root_doc);
+
+  return xmlfile;
+}
+
+void gda_xml_file_construct(Gda_XmlFile *xmlfile, const gchar *root_doc)
+{
+  /* initialize XML document */
+  xmlfile->doc = xmlNewDoc("1.0");
+  xmlfile->doc->root = xmlNewDocNode(xmlfile->doc, NULL, root_doc, NULL);
+  xmlfile->root = xmlfile->doc->root;
+
+  xmlfile->context = g_new0(xmlValidCtxt, 1);
+  xmlfile->context->userData = xmlfile;
+  xmlfile->context->error = gda_xml_file_error_def;
+  xmlfile->context->warning = gda_xml_file_warn_def;
+}
+
+static void
+gda_xml_file_destroy (Gda_XmlFile *xmlfile)
+{
+  g_return_if_fail(GDA_IS_XML_FILE(xmlfile));
+
+  xmlFreeDoc(xmlfile->doc);
+}
+
+/**
+ * gda_xml_file_new_from_file
+ * @filename: file name
+ *
+ * Load a #Gda_XmlFile from the given @filename
+ */
+/* Gda_XmlFile * */
+/* gda_xml_file_new_from_file (const gchar *filename) */
+/* { */
+/*   Gda_XmlFile* xmlfile; */
+
+/*   xmlfile = GDA_XML_FILE(gtk_type_new(gda_xml_file_get_type())); */
+
+   /* DTD already done while loading */ 
+/*   xmlfile->doc = xmlParseFile(filename); */
+/*   if (xmlfile->doc) */
+/*     { */
+/*       xmlfile->root = xmlDocGetRootElement(xmlfile->doc); */
+/*     } */
+
+/*   return xmlfile; */
+/* } */
+
+gchar* gda_xml_file_stringify(Gda_XmlFile *f)
+{
+  xmlChar *str;
+  gint i;
+
+  xmlDocDumpMemory(f->doc, &str, &i);
+  return str;
+}
+
+
+
+gint  gda_xml_file_to_file(Gda_XmlFile *f, const gchar *filename)
+{
+  g_return_val_if_fail(GDA_IS_XML_FILE(f), -1);
+  g_return_val_if_fail((filename != NULL), -1);
+
+  return xmlSaveFile(filename, f->doc);
+}
+
+/* FIXME: signals in preparation for future use. Will work when I understand 
+   how validation is done with libxml. */
+static void (gda_xml_file_error_def) (void *ctx, const char *msg, ...)
+{
+  g_print("ERR SIG\n");
+  gtk_signal_emit(GTK_OBJECT(((xmlValidCtxtPtr)ctx)->userData), 
+		  gda_xml_file_signals[GDA_XML_FILE_ERROR], msg);
+}
+
+static void (gda_xml_file_warn_def) (void *ctx, const char *msg, ...)
+{
+  g_print("WARN SIG\n");
+  gtk_signal_emit(GTK_OBJECT(((xmlValidCtxtPtr)ctx)->userData), 
+		  gda_xml_file_signals[GDA_XML_FILE_ERROR], msg);
+}
+

@@ -1,0 +1,478 @@
+AC_INIT(common/gda-common/gda-common.h)
+AM_CONFIG_HEADER(config.h)
+
+AM_INIT_AUTOMAKE(libgda,0.0.97)
+AM_MAINTAINER_MODE
+
+dnl
+dnl Checks for programs
+dnl
+AC_PROG_CC
+AM_PROG_LIBTOOL
+AC_PROG_CXX
+
+dnl
+dnl Checks for libraries
+dnl
+AM_PATH_GLIB
+
+dnl Check for ORBit
+AC_MSG_CHECKING(for ORBit)
+if orbit-config --libs > /dev/null 2>&1
+then
+	AC_MSG_RESULT(found)
+	ORBIT_IDL=`which orbit-idl`
+else
+	AC_MSG_ERROR(not found)
+fi
+
+dnl Check for OAF
+AC_MSG_CHECKING(for OAF)
+if oaf-config --libs > /dev/null 2>&1
+then
+	AC_MSG_RESULT(found)
+	gda_oaf_libs=`oaf-config --libs`
+	gda_oaf_cflags=`oaf-config --cflags`
+else
+	AC_MSG_ERROR(not found)
+fi
+
+dnl Check for libxml
+AC_MSG_CHECKING(for libxml)
+if xml-config --libs > /dev/null 2>&1
+then
+	AC_MSG_RESULT(found)
+	gda_xml_libs=`xml-config --libs`
+	gda_xml_cflags=`xml-config --cflags`
+else
+	AC_MSG_ERROR(not found)
+fi
+
+dnl
+dnl Checks for providers
+dnl
+
+dnl Test for ODBC
+AC_ARG_WITH(odbc,
+   --with-odbc=<directory>     use ODBC libraries in <directory>,[
+if test $withval != yes
+then
+	dir=$withval
+else
+	dir="/usr/local"
+fi
+odbcdir=""
+AC_MSG_CHECKING(for ODBC files)
+for d in $dir /usr /usr/local
+do
+	if test -f $d/lib/libodbc.so
+	then
+		AC_MSG_RESULT(found ODBC in $d)
+		odbclib="-lodbc"
+		odbcdir=$d
+		break
+	fi
+	if test -f $d/lib/libiodbc.so
+	then
+		AC_MSG_RESULT(found iODBC in $d)
+		odbclib="-liodbc"
+		odbcdir=$d
+		break
+	fi
+done
+if test x$odbcdir = x
+then
+	AC_MSG_WARN(ODBC backend not used)
+else
+	AC_DEFINE(HAVE_ODBC)
+	ODBC_CFLAGS=${odbcdir}/include
+	ODBC_LIBS="${odbcdir}/lib $odbclib"
+fi
+])
+
+AM_CONDITIONAL(ODBC, test x$odbcdir != x)
+
+dnl Test for MySQL
+AC_ARG_WITH(mysql,
+   --with-mysql=<directory>     use mysql backend in <directory>,[
+if test $withval != yes
+then
+	dir=$withval
+else
+	dir="/usr/local"
+fi
+mysqldir=""
+AC_MSG_CHECKING(for MySQL files)
+for d in $dir /usr /usr/local /usr/local/mysql /opt/mysql /opt/packages/mysql
+do
+	if test -f $d/include/mysql/mysql.h
+	then
+		mysqldir_suffix=/mysql
+	else
+		mysqldir_suffix=
+	fi
+	if test -f $d/lib/mysql/libmysqlclient.a
+	then
+		AC_MSG_RESULT(found mysql in $d)
+		mysqldir=$d
+		mysqllibdir_suffix=/mysql
+		break
+	fi
+	if test -f $d/lib/libmysqlclient.a
+	then
+		AC_MSG_RESULT(found mysql in $d)
+		mysqldir=$d
+		mysqllibdir_suffix=
+		break
+	fi
+done
+if test x$mysqldir = x
+then
+	AC_MSG_WARN(MySQL backend not used)
+else
+	AC_DEFINE(HAVE_MYSQL)
+	MYSQL_CFLAGS="-I${mysqldir}/include${mysqldir_suffix}"
+	MYSQL_LIBS="-L${mysqldir}/lib${mysqllibdir_suffix}"
+	if test -f ${mysqldir}/lib${mysqllibdir_suffix}/libmystrings.a
+	then
+		MYSQL_LIBS="${MYSQL_LIBS} -lmystrings"
+fi
+])
+
+AM_CONDITIONAL(MYSQL, test x$mysqldir != x)
+
+dnl Test for PostgreSQL
+AC_ARG_WITH(postgres,
+   --with-postgres=<directory>     use postgres backend in <directory>,[
+if test $withval != yes
+then
+	dir=$withval
+else
+	dir="/usr/local"
+fi
+AC_MSG_CHECKING(for Postgres files)
+postgresdir=""
+for d in $dir /usr /usr/local/postgres /opt/postgres /opt/packages/postgres /disk/postgres
+do
+	if test -f $d/lib/libpq.so
+	then
+		AC_MSG_RESULT(found Postgres in $d)
+		postgresdir=$d
+		break
+	fi
+done
+if test x$postgresdir = x
+then
+	AC_MSG_WARN(Postgres backend not used)
+else
+	if test -f ${postgresdir}/include/libpq-fe.h
+	then
+		POSTGRES_CFLAGS=-I${postgresdir}/include
+	elif test -f ${postgresdir}/include/pgsql/libpq-fe.h
+	then
+		POSTGRES_CFLAGS=-I${postgresdir}/include/pgsql
+	elif test -f ${postgresdir}/include/postgresql/libpq-fe.h
+	then
+		POSTGRES_CFLAGS=-I${postgresdir}/include/postgresql
+	else
+		AC_MSG_WARN(Postgres include files not found, backend not used)
+		postgresdir=""
+	fi
+	POSTGRES_LIBS="-L${postgresdir}/lib -lpq"
+fi
+
+])
+
+AM_CONDITIONAL(POSTGRES, test x$postgresdir != x)
+
+dnl Test for Sybase
+AC_ARG_WITH(sybase,
+   --with-sybase=<directory>     use SyBASE backend in <directory>,[
+if test $withval != yes
+then
+	dir=$withval
+else
+	dir="/opt2/sybase"
+fi
+AC_MSG_CHECKING(for Sybase files)
+sybasedir=""
+for d in $dir /usr/local/sybase /opt/sybase /opt/packages/sybase /opt/sybase-11.9.2
+do
+	if test -f $d/include/ctpublic.h
+	then
+		AC_MSG_RESULT(found Sybase in $d)
+		sybasedir=$d
+		break
+	fi
+done
+if test x$sybasedir = x
+then
+	AC_MSG_WARN(Sybase backend not used)
+else
+	SYBASE_CFLAGS=-I${sybasedir}/include
+	SYBASE_LIBS="-L${sybasedir}/lib"
+	AC_MSG_CHECKING(for Sybase target host system type)
+	AC_MSG_RESULT($host)
+	case "$host" in
+		*linux*)
+			sybase_ctlibs="-lct -lcs -lsybtcl -lcomn -lintl"
+			sybase_blklibs="-lblk $SYBASE_CTLIBS"
+			SYBASE_LIBS="${SYBASE_LIBS} ${sybase_ctlibs} ${sybase_blklibs)"
+			AC_DEFINE(HAVE_SYBASE)
+			;;
+		*)
+			AC_MSG_WARN(this host type is unsupported; sybase backend not used)
+			sybasedir=""
+			;;
+	esac
+fi
+])
+
+AM_CONDITIONAL(SYBASE, test x$sybasedir != x)
+
+dnl Link gda-sybase-srv against debugable libs
+AC_ARG_ENABLE(sybase-debug,
+    [  --enable-sybase-debug=[no/min/max]      no=none, min=debug msgs, max=min and link against sybase devlibs (which are static!).],,enable_sybase_debug=no)
+if test "x$sybasedir" != "x"
+then
+       AC_MSG_CHECKING(for Sybase debugging level)
+       if test "x$enable_sybase_debug" = "xmax"
+       then
+               AC_DEFINE(SYBASE_DEBUG)
+               if test -f $sybasedir/devlib/libct.a
+               then
+                       AC_MSG_RESULT(max)
+                       AC_MSG_WARN(erase passwords in bug-buddy debug output before sending bugreports)
+                       SYBASE_LIBS=${sybasedir}/devlib
+               else
+                       AC_MSG_RESULT(min)
+                       AC_MSG_WARN(no debug libraries found, using --enable-sybase-debug=min)
+                       enable_sybase_debug=min
+               fi
+       else
+               AC_MSG_RESULT($enable_sybase_debug)
+               if test "x$enable_sybase_debug" != "x"
+               then
+                       if test "x$enable_sybase_debug" != "xno"
+                       then
+                               AC_DEFINE(SYBASE_DEBUG)
+                       fi
+               fi
+       fi
+else
+       if test "x$enable_sybase_debug" != "xno"
+       then
+               AC_MSG_WARN(you applied sybase debugging options, but sybase has not been found or is unsupported, disabling debug options)
+       fi
+       enable_sybase_debug=no
+fi
+
+dnl test for LDAP
+AC_ARG_WITH(ldap,
+   --with-ldap=<directory>     use LDAP backend in <directory>,[
+if test $withval != yes
+then
+	dir=$withval
+else
+	dir="/usr/local"
+fi
+AC_MSG_CHECKING(for LDAP files)
+ldapdir=""
+for d in $dir /usr /usr/local/ldap /opt/ldap /opt/packages/ldap /usr/local/openldap /opt/openldap /opt/packages/openldap
+do
+	if test -f $d/lib/libldap.so
+	then
+		AC_MSG_RESULT(found LDAP in $d)
+		LDAP_LIBS="-lldap -llber"
+		ldapdir=$d
+		break
+	fi
+	if test -f $d/lib/libopenldap.so
+	then
+		AC_MSG_RESULT(found OpenLDAP in $d)
+		LDAP_LIBS="-lopenldap -llber-openldap"
+		ldapdir=$d
+		break
+	fi
+done
+if test x$ldapdir = x
+then
+	AC_MSG_WARN(LDAP backend not used)
+else
+	if test -f ${ldapdir}/include/ldap.h
+	then
+		LDAP_CFLAGS="-I$ldapdir/include"
+	elif test -f ${ldapdir}/include/openldap/ldap.h
+	then
+		LDAP_CFLAGS="-I$ldapdir/include/openldap"
+	else
+		AC_MSG_WARN(LDAP include files not found. backend not used)
+		ldapdir=""
+	fi
+	AC_DEFINE(HAVE_LDAP)
+	LDAP_LIBS="-L$ldapdir/lib $LDAP_LIBS"
+fi
+])
+
+AM_CONDITIONAL(LDAP, test x$ldapdir != x)
+
+dnl test for ORACLE
+AC_ARG_WITH(oracle,
+   --with-oracle=<directory>     use ORACLE backend in <directoty>,[
+if test $withval != yes
+then
+	dir=$withval
+else
+	dir="/usr/local"
+fi
+AC_MSG_CHECKING(for ORACLE installation)
+for d in $dir $ORACLE_HOME /opt/oracle
+do
+   if test -f $d/lib/libclntsh.so
+   then
+		AC_MSG_RESULT(found ORACLE in $d)
+		oracledir=$d
+	break
+	fi
+done
+if test x$oracledir = x
+then
+	AC_MSG_WARN(ORACLE backend not used)
+else
+	AC_DEFINE(HAVE_ORACLE)
+	ORACLE_CFLAGS="-I${ORACLE_HOME}/rdbms/demo -I${ORACLE_HOME}/plsql/public -I${ORACLE_HOME}/network/public"
+	ORACLE_LIBS="-L${ORACLE_HOME}/lib -lm -ldl -lserver -lclient \
+                     -lgeneric -lcommon -lvsn -lagent -lmm -lclntsh -lslax \
+                     -lsql -lepc -lepcpt -lcore4 -lnlsrtl3 -lepcfe -lextp \
+                     -lplsb -lplsf -licd \
+                     -lpsd -lpsa"
+fi
+])
+
+AM_CONDITIONAL(ORACLE, test x$oracledir != x)
+
+dnl test for INTERBASE
+AC_ARG_WITH(interbase,
+   --with-interbase=<directory>     use INTERBASE backend in <directoty>,[
+if test $withval != yes
+then
+	dir=$withval
+else
+	dir="/usr/local"
+fi
+AC_MSG_CHECKING(for INTERBASE installation)
+for d in $dir /usr/local/interbase /usr/local /usr /opt/interbase
+do
+   if test -f $d/include/ibase.h
+   then
+		AC_MSG_RESULT(found INTERBASE in $d)
+		interbasedir=$d
+	break
+	fi
+done
+if test x$interbasedir = x
+then
+	AC_MSG_WARN(INTERBASE backend not used)
+else
+	AC_DEFINE(HAVE_INTERBASE)
+	INTERBASE_CFLAGS="-I${interbasedir}/include"
+	INTERBASE_LIBS="-L{interbasedir}/lib -lgds -ldl -lcrypt"
+fi
+])
+
+AM_CONDITIONAL(INTERBASE, test x$interbasedir != x)
+
+dnl test for MDB libraries
+AC_ARG_WITH(mdb,
+   --with-mdb=<directory>     use MDB libraries in <directoty>,[
+if test $withval != yes
+then
+	dir=$withval
+else
+	dir="/usr/local"
+fi
+AC_MSG_CHECKING(for MDB installation)
+for d in $dir /usr/local/mdbtools /usr/local /usr /opt/mdbtools
+do
+   if test -f $d/include/mdbtools.h
+   then
+		AC_MSG_RESULT(found MDB in $d)
+		mdbdir=$d
+	break
+	fi
+done
+if test x$mdbdir = x
+then
+	AC_MSG_WARN(MDB libraries not used)
+else
+	AC_DEFINE(HAVE_MDB)
+	MDB_CFLAGS="-I${mdbdir}/include"
+	MDB_LIBS="-L{mdbdir}/lib -lmdb"
+fi
+])
+
+AM_CONDITIONAL(MDB, test x$mdbdir != x)
+
+dnl
+dnl Translations
+dnl
+ALL_LINGUAS="es"
+
+dnl
+dnl Variables
+dnl
+GDA_CLIENT_LIBS="$gda_xml_libs $gda_oaf_libs"
+GDA_CLIENT_CFLAGS="$gda_xml_cflags $gda_oaf_cflags"
+GDA_PROVIDER_LIBS="$gda_xml_libs $gda_oaf_libs"
+GDA_PROVIDER_CFLAGS="$gda_xml_cflags $gda_oaf_cflags"
+
+AC_SUBST(GDA_CLIENT_LIBS)
+AC_SUBST(GDA_CLIENT_CFLAGS)
+AC_SUBST(GDA_PROVIDER_LIBS)
+AC_SUBST(GDA_PROVIDER_CFLAGS)
+AC_SUBST(ODBC_LIBS)
+AC_SUBST(ODBC_CFLAGS)
+AC_SUBST(MYSQL_LIBS)
+AC_SUBST(MYSQL_CFLAGS)
+AC_SUBST(POSTGRES_LIBS)
+AC_SUBST(POSTGRES_CFLAGS)
+AC_SUBST(SYBASE_LIBS)
+AC_SUBST(SYBASE_CFLAGS)
+AC_SUBST(LDAP_LIBS)
+AC_SUBST(LDAP_CFLAGS)
+AC_SUBST(ORACLE_LIBS)
+AC_SUBST(ORACLE_CFLAGS)
+AC_SUBST(INTERBASE_LIBS)
+AC_SUBST(INTERBASE_CFLAGS)
+AC_SUBST(MDB_LIBS)
+AC_SUBST(MDB_CFLAGS)
+
+GDA_oafinfodir=`oaf-config --prefix`/share/oaf
+
+AC_SUBST(ORBIT_IDL)
+AC_SUBST(GDA_oafinfodir)
+
+AC_OUTPUT([
+Makefile
+po/Makefile.in
+doc/Makefile
+idl/Makefile
+lib/Makefile
+lib/gda-common/Makefile
+lib/gda-client/Makefile
+lib/gda-server/Makefile
+bindings/Makefile
+providers/Makefile
+providers/gda-odbc-server
+providers/gda-mysql-server
+providers/gda-postgres-server
+providers/gda-sybase-server
+providers/gda-ldap-server
+providers/gda-oracle-server
+providers/gda-interbase-server
+providers/gda-mdb-server
+tools/Makefile
+tools/gda-config
+tools/gda-buildserver
+tools/gda-buildclient
+stamp.h],[sed -e "/POTFILES =/r po/POTFILES" po/Makefile.in > po/Makefile])

@@ -1,0 +1,109 @@
+/* GNOME DB MsAccess Provider
+ * Copyright (C) 2000 Alvaro del Castillo
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this library; if not, write to the Free
+ * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ */
+
+#if !defined(__gda_mdb_h__)
+#  define __gda_mdb_h__
+
+#if defined(HAVE_CONFIG_H)
+#  include <config.h>
+#endif
+
+#include <gda-server.h>
+#include "mdbtools.h"
+/*#include <mdb_com.h>*/
+
+/*
+ * Per-object specific structures
+ */
+typedef struct
+{
+  MdbHandle* mdb;
+} MdbHandle_Connection;
+
+typedef struct
+{
+} Mdb_Command;
+
+typedef struct _Mdb_Recordset Mdb_Recordset;
+struct _Mdb_Recordset
+{
+  MdbTableDef 	      *table;
+  MdbHandle            *mdb;
+  MdbCatalogEntry     entry;
+  /*gint*               order;
+  gint                order_count;
+  MYSQL_ROW           array;
+  unsigned long       lengths;*/
+};
+
+/*
+ * Server implementation prototypes
+ */
+gboolean gda_mdb_connection_new (Gda_ServerConnection *cnc);
+gint gda_mdb_connection_open (Gda_ServerConnection *cnc,
+				const gchar *dsn,
+				const gchar *user,
+				const gchar *password);
+void gda_mdb_connection_close (Gda_ServerConnection *cnc);
+gint gda_mdb_connection_begin_transaction (Gda_ServerConnection *cnc);
+gint gda_mdb_connection_commit_transaction (Gda_ServerConnection *cnc);
+gint gda_mdb_connection_rollback_transaction (Gda_ServerConnection *cnc);
+Gda_ServerRecordset* gda_mdb_connection_open_schema (Gda_ServerConnection *cnc,
+						       Gda_ServerError *error,
+						       GDA_Connection_QType t,
+						       GDA_Connection_Constraint *constraints,
+						       gint length);
+gint gda_mdb_connection_start_logging (Gda_ServerConnection *cnc,
+					     const gchar *filename);
+gint gda_mdb_connection_stop_logging (Gda_ServerConnection *cnc);
+gchar* gda_mdb_connection_create_table (Gda_ServerConnection *cnc,
+					  GDA_RowAttributes *columns);
+gboolean gda_mdb_connection_supports (Gda_ServerConnection *cnc,
+					GDA_Connection_Feature feature);
+GDA_ValueType gda_mdb_connection_get_gda_type (Gda_ServerConnection *cnc,
+						 gulong sql_type);
+gshort gda_mdb_connection_get_c_type (Gda_ServerConnection *cnc,
+					GDA_ValueType type);
+void gda_mdb_connection_free (Gda_ServerConnection *cnc);
+
+gboolean gda_mdb_command_new (Gda_ServerCommand *cmd);
+Gda_ServerRecordset* gda_mdb_command_execute (Gda_ServerCommand *cmd,
+						Gda_ServerError *error,
+						const GDA_CmdParameterSeq *params,
+						gulong *affected,
+						gulong options);
+void gda_mdb_command_free (Gda_ServerCommand *cmd);
+
+gboolean gda_mdb_recordset_new       (Gda_ServerRecordset *recset);
+gint     gda_mdb_recordset_move_next (Gda_ServerRecordset *recset);
+gint     gda_mdb_recordset_move_prev (Gda_ServerRecordset *recset);
+gint     gda_mdb_recordset_close     (Gda_ServerRecordset *recset);
+void     gda_mdb_recordset_free      (Gda_ServerRecordset *recset);
+
+void gda_mdb_error_make (Gda_ServerError *error,
+			   Gda_ServerRecordset *recset,
+			   Gda_ServerConnection *cnc,
+			   gchar *where);
+
+/*
+ * Utility functions
+ */
+void gda_mdb_init_recset_fields (Gda_ServerRecordset *recset,
+				   Mdb_Recordset *mdb_recset);
+
+#endif

@@ -1,0 +1,12 @@
+/* -*- Mode: IDL; tab-width: 8; indent-tabs-mode: t; c-basic-offset: 8 -*- */
+
+#ifndef __field__
+#define __field__ 1
+
+interface Field {
+	long             appendChunk(in VarBinString data);
+	VarBinString     getChunk   (in long amount);
+  
+};
+
+#endif

@@ -1,0 +1,22 @@
+/* -*- Mode: IDL; tab-width: 8; indent-tabs-mode: t; c-basic-offset: 8 -*- */
+#ifndef __command__
+#define __command__ 1
+
+interface Recordset;
+interface Connection;
+
+interface Command {
+
+           attribute long          cmdTimeout;
+  readonly attribute boolean       prepared;
+	   attribute long          state;
+  	   attribute string        text;
+	   attribute unsigned long type;
+ 	   Recordset               open(in CmdParameterSeq param,
+					in CursorType ct,
+					in LockType lt,
+					out unsigned long affected)
+		   raises (DriverError);
+};
+
+#endif

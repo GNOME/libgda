@@ -1,0 +1,123 @@
+#!/bin/sh
+
+version=@VERSION@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+datadir=@datadir@
+CC=@CC@
+shell=@shell@
+GNOME_CONFIG=@GNOME_CONFIG@
+
+TEMPLATES_DIR="${datadir}/gnome-db/templates"
+TMPL_C_FILES="gda-srv-command.c gda-srv-connection.c gda-srv-error.c gda-srv-field.c gda-srv-recordset.c main-srv.c"
+TMPL_H_FILES="gda-srv-command.h gda-srv-connection.h gda-srv-error.h gda-srv-field.h gda-srv-recordset.h"
+TMPL_FIXED_FILES="gda-srv.c gda-srv.h"
+
+usage()
+{
+	cat <<EOF
+Usage: gda-buildserver [OPTIONS] -o target -f object_files
+Options:
+	[-p PROVIDER --skels] Generate server implementation skeletons for PROVIDER
+	[--version]           Display script version
+EOF
+
+	exit $1
+}
+
+buildskels()
+{
+	for tmpl in ${TMPL_C_FILES} ${TMPL_H_FILES}
+	do
+		if ! `sed -e "s/<provider-name>/${ARG_PROVIDER}/g" ${TEMPLATES_DIR}/${tmpl}.tmpl > ./${tmpl}`
+		then
+			echo "$0: error creating file ${tmpl}"
+			exit 1
+		fi
+	done
+	echo The following files have been created:
+    echo ${TMPL_C_FILES} ${TMPL_H_FILES}
+    echo
+	echo Now fill the gaps commented on these files
+}
+
+if test $# -lt 1
+then
+	usage 1 1>&2
+fi
+
+# Read command-line options
+while test $# -gt 0
+do
+	case "$1" in
+	-o)
+		current_arg="ARG_TARGET"
+		;;
+	-p)
+		ARG_PROVIDER=$2
+		shift
+		echo ${ARG_PROVIDER}
+		;;
+	-f)
+		current_arg="ARG_FILES"
+		;;
+	-s)
+		buildskels
+		exit
+		;;
+	--skels)
+		buildskels
+		exit
+		;;
+	--version)
+		echo "gda-buildserver version ${version}"
+		echo ""
+		echo "Copyright (C) The Free Software Foundation, 1998-2000"
+		echo "Software developped by Rodrigo Moya <rmoya@chez.com>"
+		exit 0
+		;;
+	*)
+		if test "$current_arg" = "ARG_TARGET"
+		then
+			target="$1"
+		elif test "$current_arg" = "ARG_FILES"
+		then
+			files="$files $1"
+		fi
+		;;
+	esac
+	shift
+done
+
+# Set variables
+INCLUDE_FLAGS="-I${prefix}/include/gda @GNOME_INCLUDEDIR@"
+IDL_FLAGS=`${GNOME_CONFIG} --cflags idl`
+LIBS_FLAGS="@GNORBA_LIBS@ @INTLLIBS@ -L${prefix}/lib -lgda-server -lgda-common"
+GENERATED_C_FILES="gda-skels.c gda-common.c"
+GENERATED_O_FILES="gda-skels.o gda-common.o"
+GENERATED_FILES="$GENERATED_C_FILES gda-stubs.c gda.h"
+
+# Generate and compile ORBit files
+if ! `orbit-idl -I${datadir}/idl ${IDL_FLAGS} ${datadir}/idl/gda.idl`
+then
+	echo "$0: error compiling IDL files"
+	exit 1
+fi
+for f in ${GENERATED_C_FILES}
+do
+	if ! `$CC ${INCLUDE_FLAGS} -c $f`
+	then
+		echo "$0: error compiling $f"
+		exit 1
+	fi
+done
+
+# Build the server
+if ! `$CC -o ${target} ${obj_files} ${GENERATED_O_FILES} ${files} ${LIBS_FLAGS}`
+then
+	echo "$0: error running $_"
+	exit 1
+fi
+
+# Clean up
+rm -f ${GENERATED_FILES}

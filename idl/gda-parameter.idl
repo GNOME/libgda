@@ -1,0 +1,10 @@
+/* -*- Mode: IDL; tab-width: 8; indent-tabs-mode: t; c-basic-offset: 8 -*- */
+#ifndef __parameter__
+#define __parameter__ 1
+
+interface Parameter {
+	typedef sequence<octet> VarBinString;
+  long     appendChunk(in VarBinString data);
+};
+  
+#endif

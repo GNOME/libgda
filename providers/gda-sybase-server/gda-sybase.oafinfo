@@ -1,0 +1,13 @@
+<oaf_info>
+
+<oaf_server iid="OAFIID:gda-sybase:b04e9dc2-1cc8-4027-8cf9-27dcb6a2a63f"
+            type="exe"
+            location="gda-sybase-srv">
+	<oaf_attribute name="repo_ids" type="stringv">
+		<item value="IDL:GDA/ConnectionFactory:1.0"/>
+	</oaf_attribute>
+	<oaf_attribute name="description" type="string"
+	               value="GDA Datasource Access for Sybase"/>
+</oaf_server>
+
+</oaf_info>

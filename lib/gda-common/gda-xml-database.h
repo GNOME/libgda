@@ -1,0 +1,66 @@
+/* GNOME DB library
+ * Copyright (C) 1999, 2000 Rodrigo Moya
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this library; if not, write to the Free
+ * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ */
+
+#if !defined(__gda_xml_database_h__)
+#  define __gda_xml_database_h__
+
+#include <gda-xml-file.h>
+
+BEGIN_GNOME_DECLS
+
+typedef struct _Gda_XmlDatabase      Gda_XmlDatabase;
+typedef struct _Gda_XmlDatabaseClass Gda_XmlDatabaseClass;
+
+#define GDA_TYPE_XML_DATABASE            (gda_xml_database_get_type())
+#define GDA_XML_DATABASE(obj)            GTK_CHECK_CAST(obj, GDA_TYPE_XML_DATABASE, Gda_XmlDatabase)
+#define GDA_XML_DATABASE_CLASS(klass)    GTK_CHECK_CLASS_CAST(klass, GDA_TYPE_XML_DATABASE, Gda_XmlDatabaseClass)
+#define GDA_IS_XML_DATABASE(obj)         GTK_CHECK_TYPE(obj, GDA_TYPE_XML_DATABASE)
+#define GDA_IS_XML_DATABASE_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_XML_DATABASE))
+
+struct _Gda_XmlDatabase
+{
+  Gda_XmlFile file;
+
+  xmlNodePtr  tables;
+  xmlNodePtr  views;
+};
+
+struct _Gda_XmlDatabaseClass
+{
+  Gda_XmlFileClass parent_class;
+
+  /* signals */
+  void (*changed)(Gda_XmlDatabase *xmldb);
+};
+
+GtkType          gda_xml_database_get_type        (void);
+
+Gda_XmlDatabase* gda_xml_database_new             (void);
+void             gda_xml_database_free            (Gda_XmlDatabase *xmldb);
+
+xmlNodePtr       gda_xml_database_table_new       (Gda_XmlDatabase *xmldb, gchar *tname);
+xmlNodePtr       gda_xml_database_table_find      (Gda_XmlDatabase *xmldb, gchar *tname);
+xmlNodePtr       gda_xml_database_table_add_field (Gda_XmlDatabase *xmldb,
+						   xmlNodePtr table,
+						   const gchar *fname);
+
+void             gda_xml_database_changed         (Gda_XmlDatabase *xmldb);
+
+END_GNOME_DECLS
+
+#endif
