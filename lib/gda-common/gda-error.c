@@ -18,27 +18,12 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#include "gda-common-private.h"
 #include "config.h"
 #include "gda-error.h"
 #include "GDA.h"
 
-#ifdef ENABLE_NLS
-#  include <libintl.h>
-#  define _(String) gettext (String)
-#  define N_(String) (String)
-#else
-/* Stubs that do something close enough. */
-#  define textdomain(String)
-#  define gettext(String) (String)
-#  define dgettext(Domain,Message) (Message)
-#  define dcgettext(Domain,Message,Type) (Message)
-#  define bindtextdomain(Domain,Directory)
-#  define _(String) (String)
-#  define N_(String) (String)
-#endif
-
-enum
-{
+enum {
 	/* add signals here */
 	GDA_ERROR_LAST_SIGNAL
 };
@@ -95,7 +80,9 @@ gda_error_init (GdaError * error)
 
 /*
  * gda_error_new:
- * Creates a new unitialized error object.
+ *
+ * Creates a new unitialized error object. This class is used for communicating
+ * errors from the different providers to the clients.
  *
  * Returns: the error object.
  */
@@ -108,6 +95,15 @@ gda_error_new (void)
 	return error;
 }
 
+/**
+ * gda_error_list_from_exception
+ * @ev: a CORBA_Environment structure
+ *
+ * Creates a list of #GdaError's from a CORBA_Environment structure. This
+ * is the standard way of informing of errors. 
+ *
+ * Returns: a list of #GdaError structures.
+ */
 GList *
 gda_error_list_from_exception (CORBA_Environment * ev)
 {
@@ -208,6 +204,12 @@ gda_error_list_from_exception (CORBA_Environment * ev)
 	return all_errors;
 }
 
+/**
+ * gda_error_to_exception
+ * @error: a #GdaError object
+ * @ev: a CORBA exception
+ *
+ */
 void
 gda_error_to_exception (GdaError * error, CORBA_Environment * ev)
 {

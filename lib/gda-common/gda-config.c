@@ -338,7 +338,7 @@ gda_config_free_list (GList * list)
 /**
  * gda_provider_new:
  *
- * Allocates memory for a new GdaProvider object and initializes struct 
+ * Allocates memory for a new #GdaProvider object and initializes struct 
  * members.
  *
  * Returns: a pointer to a new #GdaProvider object.
@@ -354,7 +354,7 @@ gda_provider_new (void)
 
 /**
  * gda_provider_copy:
- * @provider: the provider to be copies.
+ * @provider: the provider to be copied.
  *
  * Make a deep copy of all the data needed to describe a GDA provider.
  *
@@ -868,7 +868,7 @@ gda_dsn_set_dsn (GdaDsn * dsn, const gchar * dsn_str)
  * @dsn: data source
  * @description: DSN description for the given #GdaDsn structure
  *
- * Set the description string
+ * Set the description string for the given #GdaDsn structure.
  */
 void
 gda_dsn_set_description (GdaDsn * dsn, const gchar * description)
@@ -1047,6 +1047,12 @@ gda_dsn_free_list (GList * list)
 
 /**
  * gda_config_save_last_connection
+ * @gda_name: GDA connection name
+ * @username: user name used for the connection
+ *
+ * Adds an entry to the 'Last Connections' configuration section. This section
+ * is read by top level clients, such as the GnomeDbLogin widget in
+ * GNOME-DB to show the user a list of the last successful connections.
  */
 void
 gda_config_save_last_connection (const gchar * gda_name,

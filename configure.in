@@ -1,19 +1,20 @@
 AC_INIT(lib/gda-common/gda-common.h)
 
-AM_INIT_AUTOMAKE(libgda,0.2.90)
-
-AM_MAINTAINER_MODE
 AM_CONFIG_HEADER(config.h)
+AM_INIT_AUTOMAKE(libgda,0.2.90)
+AM_MAINTAINER_MODE
 AM_ACLOCAL_INCLUDE(macros)
 AM_PROG_XML_I18N_TOOLS
 
 dnl
 dnl Checks for programs
 dnl
+AC_ISC_POSIX
 AC_PROG_CC
 AC_PROG_CXX
-AC_ISC_POSIX
 AC_STDC_HEADERS
+
+AM_PROG_XML_I18N_TOOLS
 AM_PROG_LIBTOOL
 
 dnl
@@ -671,4 +672,5 @@ doc/C/reference/Makefile
 doc/C/reference/libgda-common/Makefile
 doc/C/reference/libgda-client/Makefile
 doc/pt_BR/Makefile
-stamp.h])
+stamp.h
+],[sed -e "/POTFILES =/r po/POTFILES" po/Makefile.in > po/Makefile])

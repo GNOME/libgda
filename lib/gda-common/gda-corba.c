@@ -38,7 +38,9 @@
 /**
  * gda_corba_get_orb
  *
- * Return the CORBA ORB being used by the current program
+ * Return the CORBA ORB being used by the current program.
+ *
+ * Returns: a reference to the current CORBA ORB
  */
 CORBA_ORB
 gda_corba_get_orb (void)
@@ -49,7 +51,9 @@ gda_corba_get_orb (void)
 /**
  * gda_corba_get_name_service
  *
- * Return a reference to the CORBA name service
+ * Return a reference to the CORBA name service.
+ *
+ * Returns: a reference to the CORBA name service
  */
 CORBA_Object
 gda_corba_get_name_service (void)
@@ -60,7 +64,15 @@ gda_corba_get_name_service (void)
 
 /**
  * gda_corba_handle_exception
+ * @ev: a CORBA_Environment structure
  *
+ * Handles the given exception. Note that this function is very simple: it just
+ * logs an error message to the GDA log if there was an exception, and nothing
+ * else. So, it is only useful if you just want to know if a CORBA exception
+ * happened. If you want more detailed information about the exception,
+ * you should handle it yourself.
+ *
+ * Returns: TRUE if there was no error, FALSE otherwise.
  */
 gboolean
 gda_corba_handle_exception (CORBA_Environment * ev)
