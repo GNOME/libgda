@@ -1,5 +1,7 @@
 2001-11-03  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* Makefile.am: don't install headers in $includedir/gnome-2.0
+
 	* gda-value.c (gda_value_new): return the created structure
 
 	* gda-data-model-list.c (gda_data_model_list_get_type): this class

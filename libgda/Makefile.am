@@ -88,7 +88,7 @@ libgda_2_la_SOURCES = \
 libgda_2_la_LDFLAGS = -version-info $(GDA_CURRENT):$(GDA_REVISION):$(GDA_AGE)
 libgda_2_la_LIBADD = $(LIBGDA_LIBS) 
 
-gdaincludedir=$(includedir)/gnome-2.0/libgda
+gdaincludedir=$(includedir)/libgda
 gdainclude_HEADERS=$(gda_headers)
 
 CLEANFILES = $(gda_marshal_built_files) $(gda_corba_built_sources)

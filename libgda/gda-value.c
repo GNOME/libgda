@@ -58,15 +58,8 @@ gda_value_free (GdaValue *value)
 GdaValue *
 gda_value_copy (GdaValue *value)
 {
-	GdaValue *new_value;
-
 	g_return_val_if_fail (value != NULL, NULL);
-
-	new_value = gda_value_new ();
-	new_value->_type = value->_type;
-	new_value->_value = ORBit_copy_value (value->_value, value->_type);
-
-	return new_value;
+	return bonobo_arg_copy ((const BonoboArg *) value);
 }
 
 /**
@@ -288,10 +281,10 @@ gda_value_set_string (GdaValue *value, const gchar *val)
 {
 	g_return_if_fail (value != NULL);
 
-	CORBA_Object_release ((CORBA_Object) value->_type, NULL);
+	//CORBA_Object_release ((CORBA_Object) value->_type, NULL);
 
-	value->_type = (CORBA_TypeCode) CORBA_Object_duplicate (
-		(CORBA_Object) TC_CORBA_string, NULL);
+	//value->_type = (CORBA_TypeCode) CORBA_Object_duplicate (
+	//	(CORBA_Object) TC_CORBA_string, NULL);
 	BONOBO_ARG_SET_STRING (value, val);
 }
 
@@ -424,7 +417,7 @@ gda_value_stringify (GdaValue *value)
 		else
 			retval = g_strdup (_("FALSE"));
 	}
-	else if (bonobo_arg_type_is_equal (BONOBO_ARG_STRING, value->_type, NULL))
+	else if (bonobo_arg_type_is_equal (TC_CORBA_string, value->_type, NULL))
 		retval = g_strdup (gda_value_get_string (value));
 	else if (bonobo_arg_type_is_equal (BONOBO_ARG_LONG, value->_type, NULL))
 		retval = g_strdup_printf ("%d", gda_value_get_integer (value));
@@ -445,6 +438,4 @@ gda_value_stringify (GdaValue *value)
 		retval = g_strdup (_("<Unknown Type(NULL)>"));
         	
 	return retval;
-
-
 }
