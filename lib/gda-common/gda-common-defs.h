@@ -43,23 +43,4 @@
 #  endif
 #endif
 
-/*
- * Object system
- */
-#if defined(HAVE_GOBJECT)
-#  define GdaType GType
-#  define GDA_OBJECT       G_OBJECT
-#  define GDA_OBJECT_CLASS G_OBJECT_CLASS
-
-#  define gda_object_unref g_object_unref
-#  define gda_object_ref   g_object_ref
-#else
-#  define GdaType GtkType
-#  define GDA_OBJECT       GTK_OBJECT
-#  define GDA_OBJECT_CLASS GTK_OBJECT_CLASS
-
-#  define gda_object_unref gtk_object_unref
-#  define gda_object_ref   gtk_object_ref
-#endif
-
 #endif

@@ -38,7 +38,7 @@ typedef struct _GdaExport        GdaExport;
 typedef struct _GdaExportClass   GdaExportClass;
 typedef struct _GdaExportPrivate GdaExportPrivate;
 
-#define GDA_TYPE_EXPORT (gda_export_get_type())
+#define GDA_TYPE_EXPORT            (gda_export_get_type())
 #define GDA_EXPORT(obj)            GTK_CHECK_CAST(obj, GDA_TYPE_EXPORT, GdaExport)
 #define GDA_EXPORT_CLASS(klass)    GTK_CHECK_CLASS_CAST(klass, GDA_TYPE_EXPORT, GdaExportClass)
 #define GDA_IS_EXPORT(obj)         GTK_CHECK_TYPE(obj, GDA_TYPE_EXPORT)

@@ -52,6 +52,7 @@ static void
 free_hash_entry (gpointer key, gpointer value, gpointer user_data)
 {
 	g_free (key);
+	g_free (value);
 }
 
 static void
@@ -90,6 +91,8 @@ get_object_list (GdaConnection * cnc, GDA_Connection_QType qtype)
 	}
 
 	gda_recordset_free (recset);
+
+	return list;
 }
 
 /*
@@ -155,7 +158,7 @@ static void
 gda_export_destroy (GtkObject *object)
 {
 	GtkObjectClass *parent_class;
-	GdaExport *exp = (GdaExport *) exp;
+	GdaExport *exp = (GdaExport *) object;
 
 	g_return_if_fail (GDA_IS_EXPORT (exp));
 
@@ -191,7 +194,7 @@ gda_export_new (GdaConnection * cnc)
 {
 	GdaExport *exp;
 
-	exp = GDA_EXPORT (gtk_type_new (gda_export_get_type ()));
+	exp = GDA_EXPORT (gtk_type_new (GDA_TYPE_EXPORT));
 	if (GDA_IS_CONNECTION (cnc))
 		gda_export_set_connection (exp, cnc);
 
@@ -320,7 +323,7 @@ gda_export_get_connection (GdaExport * exp)
  * gda_export_set_connection
  */
 void
-gda_export_set_connection (GdaExport * exp, GdaConnection * cnc)
+gda_export_set_connection (GdaExport *exp, GdaConnection * cnc)
 {
 	g_return_if_fail (GDA_IS_EXPORT (exp));
 
