@@ -1,3 +1,8 @@
+2001-07-12  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-xml-util.c: gray out the call to xmlIOParseDTD until we can
+	use libxml2
+
 2001-07-09  Akira TAGOH <tagoh@gnome-db.org>
 
 	* gda-xml-util.c: fixed typo.

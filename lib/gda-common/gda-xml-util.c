@@ -74,7 +74,9 @@ gda_xml_util_new_node (const gchar *tag, xmlNodePtr parent_node)
 
 	if (parent_node == NULL) {
 		doc = xmlNewDoc ("1.0");
+#if 0
 		doc->extSubset = xmlIOParseDTD (NULL, input, XML_CHAR_ENCODING_NONE);
+#endif
 
 		node = xmlNewDocNode (doc, NULL, (xmlChar *) tag, NULL);
 		xmlDocSetRootElement (doc, node);
