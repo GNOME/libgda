@@ -5,37 +5,37 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 2.0\n"
-"POT-Creation-Date: 2002-05-03 02:43+0200\n"
-"PO-Revision-Date: 2002-04-01 01:30+0000\n"
+"POT-Creation-Date: 2002-05-06 00:23+0100\n"
+"PO-Revision-Date: 2002-05-06 00:30+0000\n"
 "Last-Translator: Duarte Loreto <happyguy_pt@hotmail.com>\n"
 "Language-Team: Portuguese <gnome_pt@yahoogroups.com>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=iso-8859-1\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: libgda/gda-client.c:207 libgda/gda-client.c:319 libgda/gda-connection.c:207
 #, c-format
 msgid "Data source %s not found in configuration"
-msgstr "Base de dados %s n„o encontrada na configuraÁ„o"
+msgstr "Base de dados %s n√£o encontrada na configura√ß√£o"
 
 #: libgda/gda-client.c:225
 #, c-format
 msgid "Provider %s is not installed"
-msgstr ""
+msgstr "Fornecedor %s n√£o est√° instalado"
 
 #: libgda/gda-client.c:234
-#, fuzzy, c-format
+#, c-format
 msgid "Could not load %s provider"
-msgstr "Incapaz de questionar fornecedores CORBA"
+msgstr "Incapaz de carregar fornecedor %s"
 
 #: libgda/gda-client.c:250
 #, c-format
 msgid "Provider %s does not implement entry point"
-msgstr ""
+msgstr "Fornecedor %s n√£o implementa o ponto de entrada"
 
 #: libgda/gda-client.c:259
 msgid "Creation of GdaServerProvider failed"
-msgstr ""
+msgstr "Cria√ß√£o do GdaServerProvider falhou"
 
 #. gda_server_recordset_model_set_field_defined_size (recset, 0, 256);
 #: libgda/gda-config.c:1105 providers/default/gda-default-provider.c:445
@@ -51,11 +51,11 @@ msgstr "Fornecedor"
 
 #: libgda/gda-config.c:1107
 msgid "Connection string"
-msgstr "Express„o de ligaÁ„o"
+msgstr "Express√£o de liga√ß√£o"
 
 #: libgda/gda-config.c:1108
 msgid "Description"
-msgstr "DescriÁ„o"
+msgstr "Descri√ß√£o"
 
 #: libgda/gda-config.c:1109
 msgid "Username"
@@ -63,16 +63,16 @@ msgstr "Utilizador"
 
 #: libgda/gda-init.c:42
 msgid "Attempt to initialize an already initialized client"
-msgstr "Tentativa de inicializar um cliente j· inicializado"
+msgstr "Tentativa de inicializar um cliente j√° inicializado"
 
 #: libgda/gda-init.c:53
 msgid "libgda needs GModule. Finishing..."
-msgstr ""
+msgstr "libgda necessita do GModule. A terminar..."
 
 #: libgda/gda-table.c:233
 #, c-format
 msgid "There is already a field called %s"
-msgstr "J· existe um campo chamado %s"
+msgstr "J√° existe um campo chamado %s"
 
 #: libgda/gda-value.c:1030
 msgid "TRUE"
@@ -95,33 +95,33 @@ msgstr "Incapaz de parsear ficheiro em %s"
 #: libgda/gda-xml-database.c:247
 #, c-format
 msgid "Invalid XML database file '%s'"
-msgstr "Ficheiro XML de base de dados '%s' inv·lido"
+msgstr "Ficheiro XML de base de dados '%s' inv√°lido"
 
 #: libgda/gda-xml-database.c:466 libgda/gda-xml-database.c:502
 #: libgda/gda-xml-database.c:543
 #, c-format
 msgid "Table %s already exists"
-msgstr "Tabela %s j· existe"
+msgstr "Tabela %s j√° existe"
 
 #: libgda/gda-xml-database.c:536
 msgid "Invalid node"
-msgstr "NÛ inv·lido"
+msgstr "N√≥ inv√°lido"
 
 #: libgda/gda-xml-database.c:568
 #, c-format
 msgid "Duplicated <data> node for table %s"
-msgstr "NÛ <data> duplicado para a tabela %s"
+msgstr "N√≥ <data> duplicado para a tabela %s"
 
 #: libgda/gda-xml-database.c:575
 msgid "Invalid XML node"
-msgstr "NÛ XML inv·lido"
+msgstr "N√≥ XML inv√°lido"
 
 #: providers/default/gda-default-provider.c:169
 #: providers/sqlite/gda-sqlite-provider.c:162
 msgid ""
 "A full path must be specified on the connection string to open a database."
 msgstr ""
-"Tem de ser indicado um caminho completo na express„o de ligaÁ„o para abrir "
+"Tem de ser indicado um caminho completo na express√£o de liga√ß√£o para abrir "
 "uma base de dados."
 
 #: providers/default/gda-default-provider.c:343
@@ -152,52 +152,52 @@ msgstr "Escala"
 #: providers/mysql/gda-mysql-provider.c:743
 #: providers/postgres/gda-postgres-provider.c:741
 msgid "Not null?"
-msgstr "N„o nulo?"
+msgstr "N√£o nulo?"
 
 #: providers/default/gda-default-provider.c:348
 #: providers/mysql/gda-mysql-provider.c:744
 #: providers/postgres/gda-postgres-provider.c:742
 msgid "Primary key?"
-msgstr "Chave prim·ria?"
+msgstr "Chave prim√°ria?"
 
 #: providers/default/gda-default-provider.c:349
 #: providers/mysql/gda-mysql-provider.c:745
 #: providers/postgres/gda-postgres-provider.c:743
 msgid "Unique index?"
-msgstr "Õndice ˙nico?"
+msgstr "√çndice √∫nico?"
 
 #: providers/default/gda-default-provider.c:350
 #: providers/mysql/gda-mysql-provider.c:746
 #: providers/postgres/gda-postgres-provider.c:744
 msgid "References"
-msgstr "ReferÍncias"
+msgstr "Refer√™ncias"
 
 #: providers/default/gda-default-provider.c:360
 #: providers/default/gda-default-provider.c:366
 msgid "Invalid argument"
-msgstr "Argumento inv·lido"
+msgstr "Argumento inv√°lido"
 
 #: providers/default/gda-default-provider.c:373
 #, c-format
 msgid "Table %s not found"
-msgstr "Tabela %s n„o encontrada"
+msgstr "Tabela %s n√£o encontrada"
 
 #: providers/default/gda-default-provider.c:398
 msgid "Could not get description for column"
-msgstr "Incapaz de obter descriÁ„o para coluna"
+msgstr "Incapaz de obter descri√ß√£o para coluna"
 
 #: providers/mysql/gda-mysql-provider.c:183
 msgid ""
 "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
 msgstr ""
-"N„o pode indicar um UNIX_SOCKET se tambÈm indicar ou um SERVIDOR ou PORTO."
+"N√£o pode indicar um UNIX_SOCKET se tamb√©m indicar ou um SERVIDOR ou PORTO."
 
 #: providers/mysql/gda-mysql-provider.c:254
 #: providers/mysql/gda-mysql-provider.c:333
 #: providers/mysql/gda-mysql-provider.c:361
 #: providers/mysql/gda-mysql-provider.c:389
 msgid "Invalid MYSQL handle"
-msgstr "Handle MYSQL inv·lida"
+msgstr "Handle MYSQL inv√°lida"
 
 #. gda_server_recordset_model_set_field_defined_size (recset, 0, 32);
 #: providers/mysql/gda-mysql-provider.c:641
@@ -209,18 +209,18 @@ msgstr "Tipo"
 #: providers/mysql/gda-mysql-recordset.c:63
 #: providers/mysql/gda-mysql-recordset.c:166
 msgid "Invalid MySQL handle"
-msgstr "Handle MySQL inv·lida"
+msgstr "Handle MySQL inv√°lida"
 
 #: providers/mysql/gda-mysql-provider.c:763
 #: providers/mysql/gda-mysql-provider.c:771
 msgid "You need to specify the name of the table"
-msgstr ""
+msgstr "Tem de especificar o nome da tabela"
 
 #: providers/mysql/gda-mysql-recordset.c:76
 #: providers/postgres/gda-postgres-recordset.c:85
 #: providers/sqlite/gda-sqlite-recordset.c:74
 msgid "Row number out of range"
-msgstr "N˙mero de linha fora do limite"
+msgstr "N√∫mero de linha fora do limite"
 
 #: providers/oracle/gda-oracle-connection.c:79
 msgid "Could not initialize Oracle environment"
@@ -236,11 +236,11 @@ msgstr "Incapaz de inicializar handle de servidor Oracle"
 
 #: providers/oracle/gda-oracle-connection.c:111
 msgid "Could not initialize Oracle service context"
-msgstr "Incapaz de inicializar contexto de serviÁo Oracle"
+msgstr "Incapaz de inicializar contexto de servi√ßo Oracle"
 
 #: providers/oracle/main.c:48
 msgid "Could not initiate Oracle component factory"
-msgstr "Incapaz de inicializar f·brica de componente Oracle"
+msgstr "Incapaz de inicializar f√°brica de componente Oracle"
 
 #: providers/oracle/main.c:74
 msgid "Could not initialize OCI library"
@@ -251,34 +251,34 @@ msgstr "Incapaz de inicializar biblioteca OCI"
 #: providers/postgres/gda-postgres-recordset.c:72
 #: providers/postgres/gda-postgres-recordset.c:128
 msgid "Invalid PostgreSQL handle"
-msgstr "Handle PostgreSQL inv·lida"
+msgstr "Handle PostgreSQL inv√°lida"
 
 #: providers/postgres/utils.c:47
 msgid "NO DESCRIPTION"
-msgstr "SEM DESCRI«√O"
+msgstr "SEM DESCRI√á√ÉO"
 
 #: providers/postgres/utils.c:52
 msgid "Not available"
-msgstr "IndisponÌvel"
+msgstr "Indispon√≠vel"
 
 #: providers/sqlite/gda-sqlite-provider.c:220
 #: providers/sqlite/gda-sqlite-recordset.c:63
 msgid "Invalid SQLITE handle"
-msgstr "Handle SQLITE inv·lida"
+msgstr "Handle SQLITE inv√°lida"
 
 #: providers/sqlite/gda-sqlite-recordset.c:113
 msgid "Invalid Sqlite handle"
-msgstr "Handle Sqlite inv·lida"
+msgstr "Handle Sqlite inv√°lida"
 
 #: providers/sybase/main.c:52
 msgid "Could not initiate Sybase component factory"
-msgstr "Incapaz de inicializar f·brica de componente Sybase"
+msgstr "Incapaz de inicializar f√°brica de componente Sybase"
 
 #: report/gda-report-engine.c:68 report/libgda-report/gda-report-client.c:196
 #: report/libgda-report/gda-report-client.c:210
 #, c-format
 msgid "CORBA exception: %s"
-msgstr "ExcepÁ„o CORBA: %s"
+msgstr "Excep√ß√£o CORBA: %s"
 
 #: report/gda-report-engine.c:106
 msgid "Could not create global GDA client"
@@ -286,19 +286,19 @@ msgstr "Incapaz de criar cliente global GDA"
 
 #: report/GNOME_Database_Report.server.in.h:1
 msgid "GDA Report engine"
-msgstr "Motor de RelatÛrio GDA"
+msgstr "Motor de Relat√≥rio GDA"
 
 #: report/GNOME_Database_Report.server.in.h:2
 msgid "GDA Report engine factory"
-msgstr "F·brica de motor de RelatÛrio GDA"
+msgstr "F√°brica de motor de Relat√≥rio GDA"
 
 #: report/job.c:44
 msgid "Could not parse XML report"
-msgstr "Incapaz de parsear relatÛrio XML"
+msgstr "Incapaz de parsear relat√≥rio XML"
 
 #: report/libgda-report/gda-report-client.c:142
 msgid "Could not activate report engine"
-msgstr "Incapaz de activar motor de relatÛrios"
+msgstr "Incapaz de activar motor de relat√≥rios"
 
 #: report/libgda-report/gda-report-client.c:183
 msgid "Could not create BonoboStreamMem object"
@@ -315,7 +315,7 @@ msgstr "Incapaz de obter ficheiro de %s"
 
 #: report/main.c:47
 msgid "Could not initiate Report component factory"
-msgstr "Incapaz de inicializar f·brica de componentes de RelatÛrio"
+msgstr "Incapaz de inicializar f√°brica de componentes de Relat√≥rio"
 
 #: testing/client.c:39
 msgid "\t\tNONE\n"
@@ -324,7 +324,7 @@ msgstr "\t\tNENHUM\n"
 #: testing/client.c:78
 #, c-format
 msgid "** ERROR: could not open connection to %s\n"
-msgstr "** ERRO: incapaz de abrir ligaÁ„o a %s\n"
+msgstr "** ERRO: incapaz de abrir liga√ß√£o a %s\n"
 
 #. show provider features
 #: testing/client.c:83
@@ -334,7 +334,7 @@ msgstr "\tCapacidades do fornecedor...\n"
 #: testing/client.c:84
 #, c-format
 msgid "\t\tTransactions: %s\n"
-msgstr "\t\tTransacÁıes: %s\n"
+msgstr "\t\tTransac√ß√µes: %s\n"
 
 #: testing/client.c:86
 msgid "Supported"
@@ -342,7 +342,7 @@ msgstr "Suportado"
 
 #: testing/client.c:86
 msgid "Not supported"
-msgstr "N„o suportado"
+msgstr "N√£o suportado"
 
 #. show connection schemas
 #: testing/client.c:89
@@ -355,11 +355,11 @@ msgstr "Procedimentos armazenados"
 
 #: testing/client.c:91
 msgid "Connection Tables"
-msgstr "Tabelas de LigaÁ„o"
+msgstr "Tabelas de Liga√ß√£o"
 
 #: testing/client.c:92
 msgid "Available types"
-msgstr "Tipos disponÌveis"
+msgstr "Tipos dispon√≠veis"
 
 #: testing/client.c:93
 msgid "Views"
@@ -367,7 +367,7 @@ msgstr "Vistas"
 
 #: testing/client.c:94
 msgid "Indexes"
-msgstr "Õndices"
+msgstr "√çndices"
 
 #: testing/client.c:95
 msgid "Aggregates"
@@ -379,7 +379,7 @@ msgstr "Utilizadores"
 
 #: testing/client.c:97
 msgid "Sequences"
-msgstr "SequÍncias"
+msgstr "Sequ√™ncias"
 
 #: testing/client.c:98
 msgid "Triggers"
@@ -388,7 +388,7 @@ msgstr "Triggers"
 #. test transactions
 #: testing/client.c:101 testing/client.c:109
 msgid "\tStarting transaction..."
-msgstr "\tA iniciar transacÁ„o..."
+msgstr "\tA iniciar transac√ß√£o..."
 
 #: testing/client.c:103 testing/client.c:107 testing/client.c:111
 #: testing/client.c:115
@@ -397,11 +397,11 @@ msgstr "Erro"
 
 #: testing/client.c:105
 msgid "\tFinishing transaction..."
-msgstr "\tA terminar transacÁ„o..."
+msgstr "\tA terminar transac√ß√£o..."
 
 #: testing/client.c:113
 msgid "\tRolling back transaction..."
-msgstr "\tA fazer rollback da transacÁ„o..."
+msgstr "\tA fazer rollback da transac√ß√£o..."
 
 #: testing/client.c:134
 msgid "Testing GDA client API"
@@ -428,12 +428,12 @@ msgstr " Fornecedor = %s\n"
 #: testing/config.c:90
 #, c-format
 msgid "\tlocation = %s\n"
-msgstr "\tlocalizaÁ„o = %s\n"
+msgstr "\tlocaliza√ß√£o = %s\n"
 
 #: testing/config.c:91
 #, c-format
 msgid "\tdescription = %s\n"
-msgstr "\tdescriÁ„o = %s\n"
+msgstr "\tdescri√ß√£o = %s\n"
 
 #: testing/config.c:93
 msgid "\tgda_params ="
@@ -443,7 +443,7 @@ msgstr "\tgda_params ="
 #~ msgstr "Incapaz de activar objecto %s"
 
 #~ msgid "Could not create connection component"
-#~ msgstr "Incapaz de criar componente de ligaÁ„o"
+#~ msgstr "Incapaz de criar componente de liga√ß√£o"
 
 #~ msgid "Could not query CORBA components"
 #~ msgstr "Incapaz de questionar componentes CORBA"
@@ -452,83 +452,83 @@ msgstr "\tgda_params ="
 #~ msgstr "%s: Ocorreu um erro no sistema CORBA."
 
 #~ msgid "Unknown CORBA exception for connection"
-#~ msgstr "ExcepÁ„o para ligaÁ„o CORBA desconhecida"
+#~ msgstr "Excep√ß√£o para liga√ß√£o CORBA desconhecida"
 
 #~ msgid "Could not initialize Bonobo"
 #~ msgstr "Incapaz de inicializar Bonobo"
 
 #~ msgid "Don't know how to create components with IID %s"
-#~ msgstr "CriaÁ„o de componentes com IID %s desconhecida"
+#~ msgstr "Cria√ß√£o de componentes com IID %s desconhecida"
 
 #~ msgid "Could not create component of type %s"
 #~ msgstr "Incapaz de criar componente do tipo %s"
 
 #~ msgid "Could not duplicate client object. Client won't get notifications"
 #~ msgstr ""
-#~ "Incapaz de duplicar objecto cliente. Cliente n„o receber· notificaÁıes"
+#~ "Incapaz de duplicar objecto cliente. Cliente n√£o receber√° notifica√ß√µes"
 
 #~ msgid "Could not notify client about action %d"
-#~ msgstr "Incapaz de notificar cliente sobre a acÁ„o %d"
+#~ msgstr "Incapaz de notificar cliente sobre a ac√ß√£o %d"
 
 #~ msgid "No implementation for the fetch() method found"
-#~ msgstr "Nenhuma implementaÁ„o encontrada para o mÈtido fetch()"
+#~ msgstr "Nenhuma implementa√ß√£o encontrada para o m√©tido fetch()"
 
 #~ msgid "Default component factory"
-#~ msgstr "F·brica de componentes de defeito"
+#~ msgstr "F√°brica de componentes de defeito"
 
 #~ msgid "GDA Default Datasource Access"
 #~ msgstr "Acesso de Fonte de Dados de Defeito GDA"
 
 #~ msgid "Could not initiate Default component factory"
-#~ msgstr "Incapaz de inicializar f·brica de componentes de Defeito"
+#~ msgstr "Incapaz de inicializar f√°brica de componentes de Defeito"
 
 #~ msgid "GDA Datasource Access for MySQL"
 #~ msgstr "Acesso a Fonte de Dados GDA para MySQL"
 
 #~ msgid "MySQL component factory"
-#~ msgstr "F·brica de componente MySQL"
+#~ msgstr "F√°brica de componente MySQL"
 
 #~ msgid "Could not initiate MySQL component factory"
-#~ msgstr "Incapaz de inicializar f·brica de componente MySQL"
+#~ msgstr "Incapaz de inicializar f√°brica de componente MySQL"
 
 #~ msgid "GDA Datasource Access for ODBC"
 #~ msgstr "Acesso a Fonte de Dados GDA para ODBC"
 
 #~ msgid "ODBC component factory"
-#~ msgstr "F·brica de componente ODBC"
+#~ msgstr "F√°brica de componente ODBC"
 
 #~ msgid "Could not initiate ODBC component factory"
-#~ msgstr "Incapaz de inicializar f·brica de componente ODBC"
+#~ msgstr "Incapaz de inicializar f√°brica de componente ODBC"
 
 #~ msgid "GDA Datasource Access for Oracle"
 #~ msgstr "Acesso a Fonte de Dados GDA para Oracle"
 
 #~ msgid "Oracle component factory"
-#~ msgstr "F·brica de componente Oracle"
+#~ msgstr "F√°brica de componente Oracle"
 
 #~ msgid "GDA Datasource Access for Postgres"
 #~ msgstr "Acesso a Fonte de Dados GDA para Postgres"
 
 #~ msgid "Postgres component factory"
-#~ msgstr "F·brica de componente Postgres"
+#~ msgstr "F√°brica de componente Postgres"
 
 #~ msgid "Could not initiate PostgreSQL component factory"
-#~ msgstr "Incapaz de inicializar f·brica de componente PostgreSQL"
+#~ msgstr "Incapaz de inicializar f√°brica de componente PostgreSQL"
 
 #~ msgid "GDA SQLite Datasource Access"
 #~ msgstr "Acesso de Fonte de Dados GDA SQLite"
 
 #~ msgid "SQLite component factory"
-#~ msgstr "F·brica de componente SQLite"
+#~ msgstr "F√°brica de componente SQLite"
 
 #~ msgid "Could not initiate Sqlite component factory"
-#~ msgstr "Incapaz de inicializar f·brica de componente Sqlite"
+#~ msgstr "Incapaz de inicializar f√°brica de componente Sqlite"
 
 #~ msgid "GDA Datasource Access for Sybase"
 #~ msgstr "Acesso a Fonte de Dados GDA para Sybase"
 
 #~ msgid "Sybase component factory"
-#~ msgstr "F·brica de componente Sybase"
+#~ msgstr "F√°brica de componente Sybase"
 
 #~ msgid "\ttype = %s\n"
 #~ msgstr "\ttipo = %s\n"
@@ -543,22 +543,22 @@ msgstr "\tgda_params ="
 #~ msgstr "\tservidor = %s\n"
 
 #~ msgid "\tdomain = %s\n"
-#~ msgstr "\tdomÌnio = %s\n"
+#~ msgstr "\tdom√≠nio = %s\n"
 
 #~ msgid "numeric"
-#~ msgstr "numÈrico"
+#~ msgstr "num√©rico"
 
 #~ msgid "Bad formed document at %s"
 #~ msgstr "Documento mal formado em %s"
 
 #~ msgid "%p is not a valid table"
-#~ msgstr "%p n„o È uma tabela v·lida"
+#~ msgstr "%p n√£o √© uma tabela v√°lida"
 
 #~ msgid "Invalid DEFAULT handle"
-#~ msgstr "Handle DEFEITO inv·lida"
+#~ msgstr "Handle DEFEITO inv√°lida"
 
 #~ msgid "Invalid Default handle"
-#~ msgstr "Handle Defeito inv·lida"
+#~ msgstr "Handle Defeito inv√°lida"
 
 #~ msgid "ct_diag 1 failed in sybase_check_clientmsg"
 #~ msgstr "ct_diag 1 falhou em sybase_check_clientmsg"
@@ -608,5 +608,5 @@ msgstr "\tgda_params ="
 #~ "\t%s"
 #~ msgstr ""
 #~ "\n"
-#~ "\tErro de sistema operativo n˙mero(%ld):\n"
+#~ "\tErro de sistema operativo n√∫mero(%ld):\n"
 #~ "\t%s"
