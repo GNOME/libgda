@@ -1,3 +1,8 @@
+2002-11-01  Cleber Rodrigues <cleber@gnome-db.org>
+
+	* providers/mysql/gda-mysql-provider.c: added missing mysql_init()
+	on the initialization of the connection structure.
+
 2002-10-29  Holger Thon <holger.thon@gnome-db.org>
 
 	* providers/freetds/gda-freetds-provider.c (get_schema):
