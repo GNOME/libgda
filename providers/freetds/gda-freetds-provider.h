@@ -57,7 +57,7 @@ struct _GdaFreeTDSConnectionData {
 	gint          rc;         // rc code of last operation
 	GPtrArray     *msg_arr;   // array containing msgs from server
 	GPtrArray     *err_arr;   // array containing error msgs from server
-	GString       *database;  // database we are connected to
+	gchar         *database;  // database we are connected to
 	
 	TDSLOGIN      *login;     // tds login struct
 #ifdef HAVE_FREETDS_VER0_6X

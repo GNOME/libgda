@@ -30,6 +30,8 @@
 
 G_BEGIN_DECLS
 
+#define TDS_QUERY_CURRENT_DATABASE \
+	"SELECT db_name() AS database"
 #define TDS_QUERY_SERVER_VERSION \
 	"SELECT (@@version) AS version"
 
@@ -70,11 +72,13 @@ G_BEGIN_DECLS
 	"SELECT c.name, t.name AS typename, " \
 	       "c.length, c.scale, " \
 	       "(CASE WHEN ((c.status & 0x08) = 0x08) " \
-	             "THEN 1 " \
-	             "ELSE 0 " \
+	             "THEN convert(bit, 1) " \
+	             "ELSE convert(bit, 0) " \
 	       " END " \
 	       ") AS nullable, " \
-	       "NULL, NULL, NULL, NULL " \
+	       " convert(bit, 0) AS pkey, " \
+	       " convert(bit, 0) AS unique_index, " \
+	       " '' AS ref, '' AS def_val" \
 	"  FROM syscolumns c, systypes t " \
 	"    WHERE (c.id = OBJECT_ID('%s')) " \
 	"      AND (c.usertype = t.usertype) " \
@@ -101,6 +105,12 @@ G_BEGIN_DECLS
 	"  ORDER BY c.colid ASC"
 */
 
+#define TDS_FIXMODEL_SCHEMA_INDEXES(model) \
+	if (model) { \
+		gda_data_model_set_column_title (GDA_DATA_MODEL (model),  0, \
+		                                 _("Indexes")); \
+	}
+	
 #define TDS_FIXMODEL_SCHEMA_PROCEDURES(model) \
 	if (model) { \
 		gda_data_model_set_column_title (GDA_DATA_MODEL (model),  0, \
@@ -121,10 +131,11 @@ G_BEGIN_DECLS
 		                                 _("Definition")); \
 	}
 #define TDS_SCHEMA_PROCEDURES \
-	"SELECT name, NULL, NULL, NULL, NULL, NULL, NULL, NULL " \
-        "  FROM sysobjects " \
-	" WHERE (type = 'P') OR " \
-	"       (type = 'XP') " \
+	"SELECT o.name, o.id, u.name as owner, '', " \
+	"       '', 0, '', '' " \
+        "  FROM sysobjects o, sysusers u" \
+	" WHERE ((o.type = 'P') OR (o.type = 'XP')) " \
+	"   AND (o.uid = u.uid) " \
 	" ORDER BY name"
 
 
@@ -140,11 +151,12 @@ G_BEGIN_DECLS
 		                                 _("Definition")); \
 	}
 #define TDS_SCHEMA_TABLES \
-	"SELECT name, NULL, NULL, NULL " \
-	"  FROM sysobjects " \
-	" WHERE (type = 'U') AND " \
-	"       (name NOT LIKE 'spt_%') AND " \
-	"       (name != 'syblicenseslog') " \
+	"SELECT o.name, u.name AS owner, '', '' " \
+	"  FROM sysobjects o, sysusers u " \
+	" WHERE ((o.type = 'U') AND " \
+	"        (o.name NOT LIKE 'spt_%') AND " \
+	"        (o.name != 'syblicenseslog')) " \
+	"   AND (o.uid = u.uid) " \
 	" ORDER BY name"
 
 
@@ -160,8 +172,9 @@ G_BEGIN_DECLS
 		                                 _("GDA type")); \
 	}
 #define TDS_SCHEMA_TYPES \
-	"SELECT name, uid, length, type " \
-	"  FROM systypes " \
+	"SELECT t.name, u.name AS owner, t.length, t.type " \
+	"  FROM systypes t, sysusers u " \
+	" WHERE (t.uid = u.uid) " \
 	" ORDER BY name"
 
 
@@ -188,9 +201,9 @@ G_BEGIN_DECLS
 		                                 _("Definition")); \
 	}
 #define TDS_SCHEMA_VIEWS \
-	"SELECT name, NULL, NULL, NULL " \
-	"  FROM sysobjects " \
-	" WHERE (type = 'V') " \
+	"SELECT o.name, u.name, '', '' " \
+	"  FROM sysobjects o, sysusers u " \
+	" WHERE (o.type = 'V') AND (o.uid = u.uid)" \
 	" ORDER BY name"
 
 G_END_DECLS

@@ -98,6 +98,11 @@ static GList* gda_freetds_provider_process_sql_commands(GList         *reclist,
                                                         GdaConnection *cnc,
                                                         const gchar   *sql);
 
+static gchar *gda_freetds_get_stringresult_of_query (GdaConnection *cnc, 
+                                                     const gchar *sql,
+                                                     const gint col,
+                                                     const gint row);
+
 #ifdef HAVE_FREETDS_VER0_5X
   static gboolean tds_cbs_initialized = FALSE;
   extern int (*g_tds_msg_handler)();
@@ -238,7 +243,7 @@ gda_freetds_provider_open_connection (GdaServerProvider *provider,
 	if (t_host)
 		tds_set_server(tds_cnc->login, (char *) t_host);
 	
-	tds_set_charset(tds_cnc->login, "iso-1");
+	tds_set_charset(tds_cnc->login, "iso_1");
 	tds_set_language(tds_cnc->login, "us_english");
 	tds_set_packet(tds_cnc->login, 512);
 
@@ -318,6 +323,10 @@ gda_freetds_free_connection_data (GdaFreeTDSConnectionData *tds_cnc)
 	if (tds_cnc->server_version) {
 		g_free (tds_cnc->server_version);
 		tds_cnc->server_version = NULL;
+	}
+	if (tds_cnc->database) {
+		g_free (tds_cnc->database);
+		tds_cnc->database = NULL;
 	}
 	if (tds_cnc->config) {
 		tds_free_config(tds_cnc->config);
@@ -409,15 +418,13 @@ static const gchar
 	g_return_val_if_fail (tds_cnc != NULL, NULL);
 	g_return_val_if_fail (tds_cnc->tds != NULL, NULL);
 
-	// FIXME: freetds does not support obtaining current database from
-	//        backend yet
-	//        perhaps update it at least in change_database() until
-	//        this feature will be supported in freetds
+	if (tds_cnc->database) {
+		g_free (tds_cnc->database);
+	}
+	tds_cnc->database = gda_freetds_get_stringresult_of_query (cnc,
+	                       TDS_QUERY_CURRENT_DATABASE, 0, 0);
 
-//	tds_cnc->rc = tds_process_env_chg(tds_cnc->tds);
-//	return (const gchar*) tds_cnc->tds->env->database;
-
-	return NULL;
+	return (const gchar*) tds_cnc->database;
 }
 
 static gboolean
@@ -624,7 +631,6 @@ static GdaDataModel
 	TDSCOLINFO col;
 	GdaValueType gda_type;
 	GdaValue     *value = NULL;
-	guint uid = 0;
 	gint i = 1;
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
@@ -666,16 +672,6 @@ static GdaDataModel
 				// col 2: comment -> clear
 				value = gda_row_get_value (row, 2);
 				gda_value_set_string (value, "");
-				
-				// col 1: owner -> set
-				value = gda_row_get_value (row, 1);
-				// FIXME: use correct userid
-				uid = gda_value_get_integer (value);
-				if (uid <= 1) {
-					gda_value_set_string (value, "dbo");
-				} else {
-					gda_value_set_null (value);
-				}
 			}
 		}
 	}
@@ -815,6 +811,36 @@ gda_freetds_execute_query (GdaConnection *cnc, const gchar* sql)
 	}
 
 	return recset;
+}
+
+// make sure to g_free() result after use
+static gchar *
+gda_freetds_get_stringresult_of_query (GdaConnection *cnc, 
+                                       const gchar *sql,
+                                       const gint col,
+                                       const gint row)
+{
+	GdaDataModel    *model = NULL;
+	GdaValue        *value = NULL;
+	gchar           *ret = NULL;
+
+	// GDA_IS_CONNECTION (cnc) validation in function call
+	model = gda_freetds_execute_query (cnc, sql);
+	
+	if (model) {
+		value = (GdaValue *) gda_data_model_get_value_at (model,
+		                                                  col, row);
+
+		if ((value != NULL)
+		    && (gda_value_get_type (value) != GDA_VALUE_TYPE_NULL)
+		    && (gda_value_get_type (value) != GDA_VALUE_TYPE_UNKNOWN)) {
+			ret = (gchar *) gda_value_stringify (value);
+		}
+		
+		g_object_unref (model);
+	}
+
+	return ret;
 }
 
 static GdaDataModel *
