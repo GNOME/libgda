@@ -1,3 +1,8 @@
+2001-05-03  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-config.c (gda_provider_copy): make a copy of ALL the
+	GdaProvider structure members
+	
 2001-04-25  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-config.c (gda_dsn_save): check pointer before using them

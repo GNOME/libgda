@@ -329,6 +329,19 @@ gda_provider_copy (GdaProvider* provider)
 	if (provider->location) retval->location = g_strdup(provider->location);
 	if (provider->repo_id) retval->repo_id = g_strdup(provider->repo_id);
 	if (provider->type) retval->type = g_strdup(provider->type);
+	if (provider->username) retval->username = g_strdup(provider->username);
+	if (provider->hostname) retval->hostname = g_strdup(provider->hostname);
+	if (provider->domain) retval->domain = g_strdup(provider->domain);
+
+	if (provider->dsn_params) {
+		GList *node;
+
+		retval->dsn_params = NULL;
+		for (node = g_list_first(provider->dsn_params); node; node = g_list_next(node)) {
+			retval->dsn_params = g_list_append(retval->dsn_params,
+											   g_strdup((gchar *) node->data));
+		}
+	}
   
 	return retval;
 }
@@ -386,7 +399,7 @@ gda_provider_list (void)
 	if (servlist) {
 		for (i = 0; i < servlist->_length; i++) {
 			gchar* dsn_params;
-          
+
 			provider = gda_provider_new();
 			provider->name = g_strdup(servlist->_buffer[i].iid);
 			provider->location = g_strdup(servlist->_buffer[i].location_info);

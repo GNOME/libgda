@@ -51,7 +51,8 @@ gda_corba_get_orb (void) {
  * Return a reference to the CORBA name service
  */
 CORBA_Object
-gda_corba_get_name_service (void) {
+gda_corba_get_name_service (void)
+{
 	CORBA_Environment ev;
 	return oaf_name_service_get(&ev);
 }
@@ -61,21 +62,22 @@ gda_corba_get_name_service (void) {
  *
  */
 gboolean
-gda_corba_handle_exception (CORBA_Environment *ev) {
+gda_corba_handle_exception (CORBA_Environment *ev)
+{
 	g_return_val_if_fail(ev != NULL, FALSE);
 	
 	switch (ev->_major) {
-		case CORBA_NO_EXCEPTION :
-			CORBA_exception_free(ev);
-			break;
-		case CORBA_SYSTEM_EXCEPTION :
-			CORBA_exception_free(ev);
-			gda_log_error(_("CORBA System exception: %s"), CORBA_exception_id(ev));
-			return FALSE;
-		case CORBA_USER_EXCEPTION :
-			CORBA_exception_free(ev);
-			/* FIXME: look at gconf/gconf/gconf-internals.c */
-			return FALSE;
+	case CORBA_NO_EXCEPTION :
+		CORBA_exception_free(ev);
+		break;
+	case CORBA_SYSTEM_EXCEPTION :
+		CORBA_exception_free(ev);
+		gda_log_error(_("CORBA System exception: %s"), CORBA_exception_id(ev));
+		return FALSE;
+	case CORBA_USER_EXCEPTION :
+		CORBA_exception_free(ev);
+		/* FIXME: look at gconf/gconf/gconf-internals.c */
+		return FALSE;
 	}
 	return TRUE;
 }
@@ -84,7 +86,8 @@ gda_corba_handle_exception (CORBA_Environment *ev) {
  * gda_corba_get_oaf_attribute
  */
 gchar *
-gda_corba_get_oaf_attribute (CORBA_sequence_OAF_Property props, const gchar *name) {
+gda_corba_get_oaf_attribute (CORBA_sequence_OAF_Property props, const gchar *name)
+{
 	gchar* ret = NULL;
 	gint   i, j;
 	
