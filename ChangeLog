@@ -1,3 +1,11 @@
+2002-08-23  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* providers/mysql/gda-mysql-provider.c (get_mysql_tables): set the
+	owner to an empty string instead of "Unknown".
+	(get_table_fields, field_row_to_value_list): added 'default value' field.
+	(add_aggregate_row): renamed from add_string_row. Still missing the
+	addition of the missing columns.
+
 2002-08-23  Richard Campbell <richard.campbell@oarcorp.com>
 
 	* doc/C/Makefile.am: fixed connection string description for the
