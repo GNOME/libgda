@@ -23,6 +23,7 @@
 
 #include <config.h>
 #include <libgda/gda-recordset.h>
+#include <libgda/gda-row.h>
 #include <glib-object.h>
 #include <bonobo/bonobo-exception.h>
 
@@ -32,6 +33,7 @@ struct _GdaRecordsetPrivate {
 	GdaConnection *cnc;
 	GNOME_Database_Recordset corba_recset;
 	GNOME_Database_RowAttributes *attributes;
+	guint timeout_id;
 };
 
 static void gda_recordset_class_init (GdaRecordsetClass *klass);
@@ -44,6 +46,22 @@ enum {
 
 static gint gda_recordset_signals[LAST_SIGNAL] = { 0, };
 static GObjectClass *parent_class = NULL;
+
+/*
+ * Private functions
+ */
+
+static void
+get_data (GdaRecordset *recset)
+{
+	g_return_if_fail (GDA_IS_RECORDSET (recset));
+
+	/* remove timeout handler */
+	if (recset->priv->timeout_id != -1)
+		g_source_remove (recset->priv->timeout_id);
+
+	gda_data_model_array_clear (GDA_DATA_MODEL_ARRAY (recset));
+}
 
 /*
  * GdaRecordset class implementation
@@ -119,12 +137,19 @@ gda_recordset_init (GdaRecordset *recset, GdaRecordsetClass *klass)
 	recset->priv->cnc = NULL;
 	recset->priv->corba_recset = CORBA_OBJECT_NIL;
 	recset->priv->attributes = NULL;
+	recset->priv->timeout_id = -1;
 }
 
 static void
 gda_recordset_finalize (GObject * object)
 {
 	GdaRecordset *recset = (GdaRecordset *) object;
+
+	/* remove timeout handler */
+	if (recset->priv->timeout_id != -1) {
+		g_source_remove (recset->priv->timeout_id);
+		recset->priv->timeout_id = -1;
+	}
 
 	/* free memory */
 	if (recset->priv->corba_recset != CORBA_OBJECT_NIL) {
@@ -156,6 +181,7 @@ gda_recordset_new (GdaConnection *cnc, GNOME_Database_Recordset corba_recset)
 {
 	GdaRecordset *recset;
 	CORBA_Environment ev;
+	gint i;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (corba_recset != CORBA_OBJECT_NIL, NULL);
@@ -174,6 +200,19 @@ gda_recordset_new (GdaConnection *cnc, GNOME_Database_Recordset corba_recset)
 		g_object_unref (G_OBJECT (recset));
 		return NULL;
 	}
+
+	gda_data_model_array_set_n_columns (GDA_DATA_MODEL_ARRAY (recset),
+					    recset->priv->attributes->_length);
+
+	for (i = 0; i < recset->priv->attributes->_length; i++) {
+		gda_data_model_set_column_title (
+			GDA_DATA_MODEL (recset), i,
+			gda_field_attributes_get_name (
+				&recset->priv->attributes->_buffer[i]));
+	}
+
+	/* retrieve all data from the underlying recordset */
+	get_data (recset);
 
 	return recset;
 }

@@ -48,6 +48,7 @@ struct _GdaDataModelArrayClass {
 
 GType         gda_data_model_array_get_type (void);
 GdaDataModel *gda_data_model_array_new (gint cols);
+void          gda_data_model_array_set_n_columns (GdaDataModelArray *model, gint cols);
 void          gda_data_model_array_clear (GdaDataModelArray *model);
 void          gda_data_model_array_append_row (GdaDataModelArray *model, const GList *values);
 

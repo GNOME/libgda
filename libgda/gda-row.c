@@ -128,7 +128,7 @@ gda_field_attributes_set_defined_size (GdaFieldAttributes *fa, glong size)
  * gda_field_attributes_get_name
  */
 const gchar *
-gda_field_attirbutes_get_name (GdaFieldAttributes *fa)
+gda_field_attributes_get_name (GdaFieldAttributes *fa)
 {
 	g_return_val_if_fail (fa != NULL, NULL);
 	return (const gchar *) fa->name;

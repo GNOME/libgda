@@ -158,8 +158,19 @@ gda_data_model_array_new (gint cols)
 	GdaDataModel *model;
 
 	model = g_object_new (GDA_TYPE_DATA_MODEL_ARRAY, NULL);
-	GDA_DATA_MODEL_ARRAY (model)->priv->number_of_columns = cols;
+	gda_data_model_array_set_n_columns (GDA_DATA_MODEL_ARRAY (model), cols);
 	return model;
+}
+
+/**
+ * gda_data_model_array_set_n_columns
+ */
+void
+gda_data_model_array_set_n_columns (GdaDataModelArray *model, gint cols)
+{
+	g_return_if_fail (GDA_IS_DATA_MODEL_ARRAY (model));
+	model->priv->number_of_columns = cols;
+	/* FIXME: should rebuild the internal array, removing/adding empty cols */
 }
 
 /**

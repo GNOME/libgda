@@ -1,3 +1,14 @@
+2001-12-19  Cleber Rodrigues <cleberrrjr@bol.com.br>
+
+	* gda-xql-*: ported GDA XML Query stuff to GNOME 2
+
+2001-12-19  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-server-recordset.c (gda_recordset_new): set column titles
+
+	* gda-data-model-array.c (gda_data_model_array_set_n_columns): new
+	function
+
 2001-12-18  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-server-recordset.c (impl_Recordset_moveFirst): implemented

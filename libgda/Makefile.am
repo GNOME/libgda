@@ -53,6 +53,27 @@ gda_headers = \
 	gda-value.h \
 	gda-xml-database.h \
 	gda-xml-document.h \
+	gda-xql-atom.h \
+	gda-xql-dual.h \
+	gda-xql-list.h \
+	gda-xql-utils.h \
+	gda-xql-bin.h \
+	gda-xql-field.h \
+	gda-xql-query.h \
+	gda-xql-value.h \
+	gda-xql-column.h \
+	gda-xql-func.h \
+	gda-xql-select.h \
+	gda-xql-valueref.h \
+	gda-xql-const.h \
+	gda-xql-insert.h \
+	gda-xql-stack.h \
+	gda-xql-delete.h \
+	gda-xql-item.h \
+	gda-xql-target.h \
+	gda-xql-dml.h \
+	gda-xql-join.h \
+	gda-xql-update.h
 	libgda.h
 
 $(libgda_2_la_OBJECTS): $(gda_marshal_built_files)
@@ -82,7 +103,28 @@ libgda_2_la_SOURCES = \
 	gda-server-recordset.c \
 	gda-value.c \
 	gda-xml-database.c \
-	gda-xml-document.c
+	gda-xml-document.c \
+	gda-xql-atom.c \
+	gda-xql-dual.c \
+	gda-xql-list.c \
+	gda-xql-utils.c \
+	gda-xql-bin.c \
+	gda-xql-field.c \
+	gda-xql-query.c \
+	gda-xql-value.c \
+	gda-xql-column.c \
+	gda-xql-func.c \
+	gda-xql-select.c \
+	gda-xql-valueref.c \
+	gda-xql-const.c \
+	gda-xql-insert.c \
+	gda-xql-stack.c \
+	gda-xql-delete.c \
+	gda-xql-item.c \
+	gda-xql-target.c \
+	gda-xql-dml.c \
+	gda-xql-join.c \
+	gda-xql-update.c
 
 libgda_2_la_LDFLAGS = -version-info $(GDA_CURRENT):$(GDA_REVISION):$(GDA_AGE)
 libgda_2_la_LIBADD = $(LIBGDA_LIBS) 
