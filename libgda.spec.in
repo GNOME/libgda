@@ -57,6 +57,9 @@ BuildRequires:    glib2-devel >= 2.0.0
 BuildRequires:    libxml2-devel
 BuildRequires:    libxslt-devel >= 1.0.9
 BuildRequires:    ncurses-devel
+BuildRequires:    scrollkeeper
+BuildRequires:    groff
+BuildRequires:    readline-devel
 
 %if %{FREETDS}
 BuildRequires:    freetds-devel
@@ -78,12 +81,6 @@ BuildRequires:    unixODBC-devel
 BuildRequires:	  sqlite-devel
 %endif
 
-%if %{FIREBIRD}
-CONFIG="$CONFIG --with-firebird"
-%else
-CONFIG="$CONFIG --without-firebird"
-%endif
-
 %if %{MDB}
 BuildRequires:	  mdbtools-devel
 %endif
@@ -100,10 +97,10 @@ gnome database programs.
 %package devel
 Summary:          Development libraries and header files for libgda.
 Group:            Development/Libraries
-Requires:         %name = %{version}
 Requires:         glib2-devel >= 2.0.0
 Requires:         libxml2-devel
 Requires:         libxslt-devel >= 1.0.9
+Requires:         %{name} = %{epoch}:%{version}-%{release}
 
 %description devel
 This package contains the header files and libraries needed to write
@@ -190,9 +187,15 @@ This package includes the GDA LDAP provider.
 %endif
 
 %prep
-%setup -q -n %{name}-%{version}
+%setup -q
 
 %build
+%if %{FIREBIRD}
+CONFIG="$CONFIG --with-firebird"
+%else
+CONFIG="$CONFIG --without-firebird"
+%endif
+
 %if %{FREETDS}
 CONFIG="$CONFIG --with-tds"
 %else
@@ -290,6 +293,7 @@ rm -rf %{buildroot}
 %dir %{_libdir}/libgda
 %dir %{_libdir}/libgda/providers
 %{_libdir}/libgda/providers/libgda-xml.so
+%{_libdir}/libgda/providers/libgda-bdb.so
 %{_mandir}/man1/*
 %{_mandir}/man5/*
 
@@ -297,8 +301,8 @@ rm -rf %{buildroot}
 %defattr(-,root,root)
 %doc %{_datadir}/gtk-doc/html/libgda
 %{_datadir}/omf/*
-%{_includedir}/libgda
-%{_includedir}/libgda-report
+%dir %{_includedir}/libgda-1.1/
+%{_includedir}/libgda-1.1/*
 %{_libdir}/*.a
 %{_libdir}/*.la
 %{_libdir}/*.so
@@ -306,56 +310,81 @@ rm -rf %{buildroot}
 
 %if %{FREETDS}
 %files -n gda-freetds
+%defattr(-,root,root)
 %{_libdir}/libgda/providers/libgda-freetds.so
 %endif
 
 %if %{IBMDB2}
 %files -n gda-ibmdb2
+%defattr(-,root,root)
 %{_libdir}/libgda/providers/libgda-ibmdb2.so
 %endif
 
 %if %{MYSQL}
 %files -n gda-mysql
+%defattr(-,root,root)
 %{_libdir}/libgda/providers/libgda-mysql.so
 %endif
 
 %if %{ODBC}
 %files -n gda-odbc
+%defattr(-,root,root)
 %{_libdir}/libgda/providers/libgda-odbc.so
 %endif
 
 %if %{ORACLE}
 %files -n gda-oracle
+%defattr(-,root,root)
 %{_libdir}/libgda/providers/libgda-oracle.so
 %endif
 
 %if %{POSTGRES}
 %files -n gda-postgres
+%defattr(-,root,root)
 %{_libdir}/libgda/providers/libgda-postgres.so
 %endif
 
 %if %{SQLITE}
 %files -n gda-sqlite
+%defattr(-,root,root)
 %{_libdir}/libgda/providers/libgda-sqlite.so
 %endif
 
 %if %{SYBASE}
 %files -n gda-sybase
+%defattr(-,root,root)
 %{_libdir}/libgda/providers/libgda-sybase.so
 %endif
 
 %if %{MDB}
 %files -n gda-mdb
+%defattr(-,root,root)
 %{_libdir}/libgda/providers/libgda-mdb.so
 %endif
 
 %if %{LDAP}
 %files -n gda-ldap
+%defattr(-,root,root)
 %{_libdir}/libgda/providers/libgda-ldap.so
 %endif
 
-
 %changelog
+* Tue Oct 12 2004 David Hollis <dhollis@davehollis.com> 1:1.1.99
+- Incorporate RH changes, update %files for new includes & provs
+
+* Fri Oct  8 2004 Caolan McNamara <caolanm@redhat.com> 1:1.0.4-3
+- #rh135043# Extra BuildRequires
+
+* Thu Sep  9 2004 Bill Nottingham <notting@redhat.com> 1:1.0.4-2
+- %%defattr
+
+* Thu Aug 12 2004 Caolan McNamara <caolanm@redhat.com> 1:1.0.4-1
+- Initial Red Hat import
+- patch for missing break statement
+- fixup devel package requirement pickiness
+- autoconf patch to pick up correct mysql path from mysql_config (e.g. x64)
+- autoconf patch to just look in the normal place for postgres first
+
 * Tue Mar 11 2003 David Hollis <dhollis@davehollis.com>
 - Fix --with-tds & --without-tds to match what configure wants
 

@@ -1,3 +1,7 @@
+2004-10-13  David Hollis <dhollis@davehollis.com>
+
+	* libgda.spec.in: fixed for correct building on RH.
+
 2004-10-10  Tomasz Kłoczko <kloczek@pld.org.pl>
 
 	* configure.in, providers/xbase/gda-xbase-database.cpp: fixes for
