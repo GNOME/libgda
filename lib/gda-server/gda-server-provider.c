@@ -76,7 +76,8 @@ gda_server_provider_finalize (GObject *object)
 	g_return_if_fail (GDA_IS_SERVER_PROVIDER (provider));
 
 	/* free memory */
-	g_list_free (provider->priv->connections);
+	g_hash_table_foreach (provider->priv->connections, free_hash_connection, NULL);
+	g_hash_table_destroy (provider->priv->connections);
 
 	g_free (provider->priv);
 	provider->priv = NULL;
@@ -121,4 +122,26 @@ gda_server_provider_open_connection (GdaServerProvider *provider,
 	}
 
 	return cnc;
+}
+
+/**
+ * gda_server_provider_close_connection
+ */
+gboolean
+gda_server_provider_close_connection (GdaServerProvider *provider, GdaServerConnection *cnc)
+{
+	gboolean retcode;
+
+	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), FALSE);
+	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), FALSE);
+
+	if (CLASS (provider)->close_connection != NULL)
+		retcode = CLASS (provider)->close_connection (provider, cnc);
+	else
+		retcode = TRUE;
+
+	provider->priv->connections = g_list_remove (provider->priv->connections, cnc);
+	g_object_unref (G_OBJECT (cnc));
+
+	return retcode;
 }

@@ -57,6 +57,15 @@ GdaServerConnection *gda_server_provider_open_connection (GdaServerProvider *pro
 							  const gchar *cnc_string,
 							  const gchar *username,
 							  const gchar *password);
+gboolean             gda_server_provider_close_connection (GdaServerProvider *provider,
+							   GdaServerConnection *cnc);
+
+GdaServerCommand    *gda_server_provider_create_command (GdaServerProvider *provider,
+							 GdaServerConnection *cnc,
+							 const gchar *text,
+							 GNOME_Database_CommandType type);
+gboolean            *gda_server_provider_prepare_command (GdaServerProvider *provider,
+							  GdaParamList *plist);
 
 G_END_DECLS
 
