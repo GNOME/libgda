@@ -19,6 +19,6 @@
 #if !defined(__gda_report_defs_h__)
 #  define __gda_report_defs_h__
 
-#define GDA_REPORT_OAFIID "OAFIID:report-engine:963e541e-4142-4d87-b62f-35ed31e545d9"
+#define GDA_REPORT_OAFIID "OAFIID:GNOME_GDA_ReportEngine"
 
 #endif

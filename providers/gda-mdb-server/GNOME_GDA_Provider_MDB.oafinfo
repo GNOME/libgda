@@ -1,6 +1,6 @@
 <oaf_info>
 
-<oaf_server iid="OAFIID:gda-mdb:b7df028e-fb20-44c5-a47b-e98167c5720e"
+<oaf_server iid="OAFIID:GNOME_GDA_Provider_MDB_ConnectionFactory"
             type="exe"
             location="gda-mdb-srv">
 	<oaf_attribute name="repo_ids" type="stringv">

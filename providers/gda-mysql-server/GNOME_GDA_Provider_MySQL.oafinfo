@@ -1,6 +1,6 @@
 <oaf_info>
 
-<oaf_server iid="OAFIID:gda-mysql:78212cda-11b9-4d07-a277-9e411700a54b"
+<oaf_server iid="OAFIID:GNOME_GDA_Provider_MySQL_ConnectionFactory"
             type="exe"
             location="gda-mysql-srv">
 	<oaf_attribute name="repo_ids" type="stringv">

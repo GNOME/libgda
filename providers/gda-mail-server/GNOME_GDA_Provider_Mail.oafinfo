@@ -1,6 +1,6 @@
 <oaf_info>
 
-<oaf_server iid="OAFIID:gda-mail:395ad2ae-5d89-46ac-a181-e40d6ded43e4"
+<oaf_server iid="OAFIID:GNOME_GDA_Provider_Mail_ConnectionFactory"
             type="exe"
             location="gda-mail-srv">
 	<oaf_attribute name="repo_ids" type="stringv">

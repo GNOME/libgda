@@ -1,6 +1,6 @@
 <oaf_info>
 
-<oaf_server iid="OAFIID:report-engine:963e541e-4142-4d87-b62f-35ed31e545d9"
+<oaf_server iid="OAFIID:GNOME_GDA_ReportEngine"
             type="exe"
             location="gda-report">
 	<oaf_attribute name="repo_ids" type="stringv">

@@ -1,6 +1,6 @@
 <oaf_info>
 
-<oaf_server iid="OAFIID:gda-odbc:b0d1eb1f-73d4-441c-a5b7-3bd5fc0ff7f3"
+<oaf_server iid="OAFIID:GNOME_GDA_Provider_ODBC_ConnectionFactory"
             type="exe"
             location="gda-odbc-srv">
 	<oaf_attribute name="repo_ids" type="stringv">

@@ -1,6 +1,6 @@
 <oaf_info>
 
-<oaf_server iid="OAFIID:gda-primebase:646ef7bd-3cc0-479a-91a8-5ffd674f9c23"
+<oaf_server iid="OAFIID:GNOME_GDA_Provider_Primebase_ConnectionFactory"
            type="exe"
        location="gda-primebase-srv">
         <oaf_attribute name="repo_ids" type="stringv">

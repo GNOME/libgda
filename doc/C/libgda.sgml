@@ -381,7 +381,7 @@
 	     is as follows:
 	     <programlisting>
 	      [sales]
-		  Provider=OAFIID:gda-mysql:78212cda-11b9-4d07-a277-9e411700a54b
+		  Provider=OAFIID:GNOME_GDA_Provider_MySQL_ConnectionFactory
 		  DSN=DATABASE=test;HOST=localhost;PORT=1111
 		  Description=MySQL Test Database in native mode
 		  Configurator=None

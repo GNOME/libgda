@@ -61,7 +61,7 @@ main (gint argc, gchar *argv[])
   gda_server_init("gda-interbase-srv", VERSION, argc, argv);
 
   /* register the server implementation */
-  server_impl = gda_server_impl_new("OAFIID:gda-interbase:f3dee204-4e44-4505-8ca8-9703c4473c0f",
+  server_impl = gda_server_impl_new("OAFIID:GNOME_GDA_Provider_InterBase_ConnectionFactory",
                                     &server_impl_functions);
   if (server_impl)
     {

@@ -65,7 +65,7 @@ main (gint argc, gchar *argv[])
   gda_server_init("gda-sybase-srv", VERSION, argc, argv);
 
   /* register the server implementation */
-  server_impl = gda_server_impl_new("OAFIID:gda-sybase:f212f5f3-8365-4c52-b1c1-b67f9e7b2550",
+  server_impl = gda_server_impl_new("OAFIID:GNOME_GDA_Provider_Sybase_ConnectionFactory",
                                     &server_impl_functions);
   if (server_impl)
     {

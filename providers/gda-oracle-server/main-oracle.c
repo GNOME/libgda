@@ -60,7 +60,7 @@ main (gint argc, gchar *argv[])
   gda_server_init("gda-oracle-srv", VERSION, argc, argv);
 
   /* register the server implementation */
-  server_impl = gda_server_impl_new("OAFIID:gda-oracle:f9f8ec0c-c72a-40e3-a1a7-c10aaa41387b",
+  server_impl = gda_server_impl_new("OAFIID:GNOME_GDA_Provider_Oracle_ConnectionFactory",
                                     &server_impl_functions);
   if (server_impl)
     {

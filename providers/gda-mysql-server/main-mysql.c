@@ -61,7 +61,7 @@ main (gint argc, gchar *argv[])
   gda_server_init("gda-mysql-srv", VERSION, argc, argv);
 
   /* register the server implementation */
-  server_impl = gda_server_impl_new("OAFIID:gda-mysql:78212cda-11b9-4d07-a277-9e411700a54b",
+  server_impl = gda_server_impl_new("OAFIID:GNOME_GDA_Provider_MySQL_ConnectionFactory",
                                     &server_impl_functions);
   if (server_impl)
     {

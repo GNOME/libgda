@@ -1,6 +1,6 @@
 <oaf_info>
 
-<oaf_server iid="OAFIID:gda-tds:87cd7ac2-c89d-436c-bf39-7146d2fb0f9e"
+<oaf_server iid="OAFIID:GNOME_GDA_Provider_TDS_ConnectionFactory"
             type="exe"
             location="gda-tds-srv">
 	<oaf_attribute name="repo_ids" type="stringv">

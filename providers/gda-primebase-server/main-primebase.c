@@ -60,7 +60,7 @@ main (gint argc, gchar *argv[])
   gda_server_init("gda-postgres-srv", VERSION, argc, argv);
 
   /* register the server implementation */
-  server_impl = gda_server_impl_new("OAFIID:gda-primebase:646ef7bd-3cc0-479a-91a8-5ffd674f9c23", &server_impl_functions);
+  server_impl = gda_server_impl_new("OAFIID:GNOME_GDA_Provider_Primebase_ConnectionFactory", &server_impl_functions);
   if (server_impl)
     {
       gda_server_impl_start(server_impl);

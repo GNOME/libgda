@@ -60,7 +60,7 @@ main (gint argc, gchar *argv[])
   gda_server_init("gda-odbc-srv", VERSION, argc, argv);
 
   /* register the server implementation */
-  server_impl = gda_server_impl_new("OAFIID:gda-odbc:b0d1eb1f-73d4-441c-a5b7-3bd5fc0ff7f3",
+  server_impl = gda_server_impl_new("OAFIID:GNOME_GDA_Provider_ODBC_ConnectionFactory",
                                     &server_impl_functions);
   if (server_impl)
     {

@@ -1,6 +1,6 @@
 <oaf_info>
 
-<oaf_server iid="OAFIID:gda-ldap:99216286-7c05-438f-8fe8-5bcc2223f5d7"
+<oaf_server iid="OAFIID:GNOME_GDA_Provider_LDAP_ConnectionFactory"
             type="exe"
             location="gda-ldap-srv">
 	<oaf_attribute name="repo_ids" type="stringv">

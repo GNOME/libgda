@@ -61,7 +61,7 @@ main (gint argc, gchar * argv[])
 	gda_server_init("gda-mail-srv", VERSION, argc, argv);
 
 	/* register the server implementation */
-	server_impl = gda_server_impl_new("OAFIID:gda-mail:395ad2ae-5d89-46ac-a181-e40d6ded43e4",
+	server_impl = gda_server_impl_new("OAFIID:GNOME_GDA_Provider_Mail_ConnectionFactory",
 									  &server_impl_functions);
 	if (server_impl)
     {

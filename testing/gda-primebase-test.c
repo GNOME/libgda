@@ -156,7 +156,7 @@ main (int argc, char* argv[])
   gda_init ("gda-test", NULL, argc, argv);
   cnc = gda_connection_new (gda_corba_get_orb ());
   list_providers();
-  provider = g_strdup("OAFIID:gda-primebase:646ef7bd-3cc0-479a-91a8-5ffd674f9c23");
+  provider = g_strdup("OAFIID:GNOME_GDA_Provider_Primebase_ConnectionFactory");
   g_print ("\nchoosing %s...\n", provider);
   gda_connection_set_provider (cnc, provider);
   g_print ("\nPlease enter dsn (like 'DATABASE=test'): ");

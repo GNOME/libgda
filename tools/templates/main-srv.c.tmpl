@@ -59,7 +59,7 @@ main (gint argc, gchar *argv[])
   gda_server_init("gda-postgres-srv", VERSION, argc, argv);
 
   /* register the server implementation */
-  server_impl = gda_server_impl_new("OAFIID:gda-<provider-name>:<uuid>", &server_impl_functions);
+  server_impl = gda_server_impl_new("OAFIID:GNOME_GDA_Provider_<provider-name>_ConnectionFactory", &server_impl_functions);
   if (server_impl)
     {
       gda_server_impl_start(server_impl);

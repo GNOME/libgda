@@ -65,7 +65,7 @@ main (gint argc, gchar *argv[])
   gda_server_init("gda-tds-srv", VERSION, argc, argv);
 
   /* register the server implementation */
-  server_impl = gda_server_impl_new("OAFIID:gda-tds:87cd7ac2-c89d-436c-bf39-7146d2fb0f9e",
+  server_impl = gda_server_impl_new("OAFIID:GNOME_GDA_Provider_TDS_ConnectionFactory",
                                     &server_impl_functions);
   if (server_impl)
     {

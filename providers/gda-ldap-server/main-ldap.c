@@ -60,7 +60,7 @@ main (gint argc, gchar *argv[])
   gda_server_init("gda-ldap-srv", VERSION, argc, argv);
 
   /* register the server implementation */
-  server_impl = gda_server_impl_new("OAFIID:gda-ldap:99216286-7c05-438f-8fe8-5bcc2223f5d7",
+  server_impl = gda_server_impl_new("OAFIID:GNOME_GDA_Provider_LDAP_ConnectionFactory",
                                     &server_impl_functions);
   if (server_impl)
     {
