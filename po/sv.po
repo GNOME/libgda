@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2000-10-05 07:45+0200\n"
-"PO-Revision-Date: 2000-10-05 07:48+0200\n"
+"POT-Creation-Date: 2000-10-09 16:50+0200\n"
+"PO-Revision-Date: 2000-10-09 16:55+0200\n"
 "Last-Translator: Christian Rose <menthos@menthos.com>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -71,6 +71,10 @@ msgstr "Falskt"
 #, c-format
 msgid "CORBA System exception: %s"
 msgstr "Undantag i CORBA-systemet: %s"
+
+#: lib/gda-common/gda-init.c:32
+msgid "Attempt to initialize an already initialized client"
+msgstr "Försök att initiera en redan initierad klient"
 
 #: lib/gda-common/gda-log.c:29
 msgid "Saving log...x"
@@ -171,6 +175,7 @@ msgid "Starting provider %s with no implementation functions"
 msgstr "Startar leverantör %s utan några implementationsfunktioner"
 
 #: lib/gda-server/gda-server-impl.c:141
+#: report/server/gda-report-server-main.c:120
 msgid ""
 "OAF doesn't know about our IID; indicates broken installation. Exiting..."
 msgstr ""
@@ -260,7 +265,7 @@ msgstr "Inte tillgänglig"
 msgid "error"
 msgstr "fel"
 
-#: providers/gda-ldap-server/main-ldap.c:75
+#: providers/gda-ldap-server/main-ldap.c:68
 msgid "Could not register LDAP provider implementation"
 msgstr "Kunde inte registrera LDAP-leverantörsimplementation"
 
@@ -269,7 +274,7 @@ msgstr "Kunde inte registrera LDAP-leverantörsimplementation"
 msgid "Error code %ld"
 msgstr "Felkod %ld"
 
-#: providers/gda-interbase-server/main-interbase.c:75
+#: providers/gda-interbase-server/main-interbase.c:69
 msgid "Could not register INTERBASE provider implementation"
 msgstr "Kunde inte registrera INTERBASE-leverantörsimplementation"
 
@@ -278,19 +283,19 @@ msgstr "Kunde inte registrera INTERBASE-leverantörsimplementation"
 #: providers/gda-mysql-server/gda-mysql-connection.c:251
 #: providers/gda-oracle-server/gda-oracle-connection.c:295
 #: providers/gda-postgres-server/gda-postgres-connection.c:511
-#: providers/gda-sybase-server/gda-sybase-connection.c:249
+#: providers/gda-sybase-server/gda-sybase-connection.c:253
 #, c-format
 msgid "Unhandled SCHEMA_QTYPE %d"
 msgstr "Ej hanterad SCHEMA_QTYPE %d"
 
-#: providers/gda-mail-server/main-mail.c:76
+#: providers/gda-mail-server/main-mail.c:69
 msgid "Could not register Mail provider implementation"
 msgstr "Kunde inte registrera e-postleverantörsimplementation"
 
 #. execute command
 #: providers/gda-mdb-server/gda-mdb-command.c:86
 #: providers/gda-mysql-server/gda-mysql-command.c:87
-#: providers/gda-sybase-server/gda-sybase-command.c:112
+#: providers/gda-sybase-server/gda-sybase-command.c:116
 #, c-format
 msgid "executing command '%s'"
 msgstr "exekverar kommandot \"%s\""
@@ -330,22 +335,22 @@ msgstr "mysql_recset är NULL"
 
 #: providers/gda-mdb-server/gda-mdb-connection.c:448
 #: providers/gda-mysql-server/gda-mysql-connection.c:475
-#: providers/gda-sybase-server/gda-sybase-connection.c:403
+#: providers/gda-sybase-server/gda-sybase-connection.c:407
 msgid "No table name given for SCHEMA_COLS"
 msgstr "Inget tabellnamn angivet för SCHEMA_COLS"
 
-#: providers/gda-mdb-server/main-mdb.c:76
-#: providers/gda-mysql-server/main-mysql.c:76
+#: providers/gda-mdb-server/main-mdb.c:69
+#: providers/gda-mysql-server/main-mysql.c:69
 msgid "Could not register MySQL provider implementation"
 msgstr "Kunde inte registrera MySQL-leverantörsinformation"
 
 #: providers/gda-mysql-server/gda-mysql-connection.c:162
 #, c-format
 msgid ""
-"Opening connection with user=%s, password=%s, host=%shost=%s, port=%s, "
+"Opening connection with user=%s, password=%s, host=%s, port=%s, "
 "unix_socket=%s"
 msgstr ""
-"Öppnar anslutning med användare=%s, lösenord=%s, värd=%shost=%s, port=%s, "
+"Öppnar anslutning med användare=%s, lösenord=%s, värd=%s, port=%s, "
 "unix_socket=%s"
 
 #: providers/gda-odbc-server/gda-odbc-connection.c:280
@@ -362,7 +367,7 @@ msgstr "gda_odbc_connection_open_schema: Ej hanterad SCHEMA_QTYPE %d\n"
 msgid "no text"
 msgstr "ingen text"
 
-#: providers/gda-odbc-server/main-odbc.c:75
+#: providers/gda-odbc-server/main-odbc.c:68
 msgid "Could not register ODBC provider implementation"
 msgstr "Kunde inte registrera ODBC-leverantörsimplementation"
 
@@ -404,7 +409,7 @@ msgstr "Okänd ORACLE-datatyp i fill_field_values"
 msgid "recordset object being created without associated connection"
 msgstr "postsamlingsobjekt skapas utan associerad anslutning"
 
-#: providers/gda-oracle-server/main-oracle.c:75
+#: providers/gda-oracle-server/main-oracle.c:68
 msgid "Could not register ORACLE provider implementation"
 msgstr "Kunde inte registrera ORACLE-leverantörsimplementation"
 
@@ -413,217 +418,217 @@ msgstr "Kunde inte registrera ORACLE-leverantörsimplementation"
 msgid "postgres_recset is NULL"
 msgstr "postgres_recset är NULL"
 
-#: providers/gda-postgres-server/main-postgres.c:75
+#: providers/gda-postgres-server/main-postgres.c:68
 msgid "Could not register PostgreSQL provider implementation"
 msgstr "Kunde inte registrera PostgreSQL-leverantörsinformation"
 
-#: providers/gda-sybase-server/gda-sybase-command.c:107
+#: providers/gda-sybase-server/gda-sybase-command.c:111
 msgid "Connection seems to be dead"
 msgstr "Anslutningen verkar vara död"
 
-#: providers/gda-sybase-server/gda-sybase-command.c:127
+#: providers/gda-sybase-server/gda-sybase-command.c:131
 msgid "Filling command structure failed\n"
 msgstr "Ifyllning av kommandostruktur misslyckades\n"
 
-#: providers/gda-sybase-server/gda-sybase-command.c:139
+#: providers/gda-sybase-server/gda-sybase-command.c:143
 msgid "sending cmd failed"
 msgstr "skickande av kommando misslyckades"
 
-#: providers/gda-sybase-server/gda-sybase-command.c:146
+#: providers/gda-sybase-server/gda-sybase-command.c:150
 msgid "Allocating recordset failed"
 msgstr "Allokering av postsamling misslyckades"
 
-#: providers/gda-sybase-server/gda-sybase-command.c:156
+#: providers/gda-sybase-server/gda-sybase-command.c:160
 msgid "Getting recordset userdata failed"
 msgstr "Hämtning av postsamlingsanvändardata misslyckades"
 
-#: providers/gda-sybase-server/gda-sybase-command.c:212
+#: providers/gda-sybase-server/gda-sybase-command.c:218
 msgid "Command execution finished, all results processed"
 msgstr "Kommandokörningen slutförd, alla resultat bearbetade"
 
-#: providers/gda-sybase-server/gda-sybase-command.c:216
+#: providers/gda-sybase-server/gda-sybase-command.c:222
 msgid "Command failed"
 msgstr "Kommando misslyckades"
 
-#: providers/gda-sybase-server/gda-sybase-command.c:220
+#: providers/gda-sybase-server/gda-sybase-command.c:226
 msgid "Execution of resultless command succeeded"
 msgstr "Körning av resultatlöst kommando lyckades"
 
-#: providers/gda-sybase-server/gda-sybase-command.c:236
+#: providers/gda-sybase-server/gda-sybase-command.c:242
 #, c-format
 msgid "ct_results() returned %x"
 msgstr "ct_results() returnerade %x"
 
-#: providers/gda-sybase-server/gda-sybase-command.c:246
+#: providers/gda-sybase-server/gda-sybase-command.c:252
 msgid "No further results, command completly succeeded."
 msgstr "Inga ytterlilgare resultat, kommandot lyckades helt."
 
-#: providers/gda-sybase-server/gda-sybase-command.c:250
+#: providers/gda-sybase-server/gda-sybase-command.c:256
 msgid "An error occured during command execution."
 msgstr "Ett fel inträffade under kommandokörningen."
 
-#: providers/gda-sybase-server/gda-sybase-command.c:257
+#: providers/gda-sybase-server/gda-sybase-command.c:263
 msgid "Cmd execution returned unknown result, may be an error"
 msgstr "Kommandokörningen returnerade ett okänt resultat, kan vara ett fel"
 
-#: providers/gda-sybase-server/gda-sybase-command.c:270
+#: providers/gda-sybase-server/gda-sybase-command.c:276
 msgid "No data returned, freeing recordset structure"
 msgstr "Ingen data returnerad, frigör postsamlingsstrukturen"
 
-#: providers/gda-sybase-server/gda-sybase-command.c:301
-#: providers/gda-sybase-server/gda-sybase-command.c:313
+#: providers/gda-sybase-server/gda-sybase-command.c:307
+#: providers/gda-sybase-server/gda-sybase-command.c:319
 msgid "Freeing command structure failed"
 msgstr "Frigörning av kommandostrukturen misslyckades"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:129
+#: providers/gda-sybase-server/gda-sybase-connection.c:133
 msgid "Error allocating error structure"
 msgstr "Fel vid allokering av felstruktur"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:137
+#: providers/gda-sybase-server/gda-sybase-connection.c:141
 msgid "Not enough memory for sybase_Connection"
 msgstr "Inte tillräckligt med minne för sybase_Connection"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:393
+#: providers/gda-sybase-server/gda-sybase-connection.c:397
 #, c-format
 msgid "schema_cols: table_name '%s'"
 msgstr "schema_cols: table_name \"%s\""
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:409
+#: providers/gda-sybase-server/gda-sybase-connection.c:413
 msgid "Could not allocate command structure"
 msgstr "Kunde inte allokera kommandostruktur"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:431
+#: providers/gda-sybase-server/gda-sybase-connection.c:435
 msgid "Could not allocate enough memory for query"
 msgstr "Kunde inte allokera tillräckligt med minne för fråga"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:445
+#: providers/gda-sybase-server/gda-sybase-connection.c:449
 msgid "Could not get recordset in schema_cols"
 msgstr "Kunde inte hämta postsamling i schema_cols"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:477
-#: providers/gda-sybase-server/gda-sybase-connection.c:554
+#: providers/gda-sybase-server/gda-sybase-connection.c:481
+#: providers/gda-sybase-server/gda-sybase-connection.c:558
 #, c-format
 msgid "schema_tables: table name = '%s'"
 msgstr "schema_tables: tabellnamn = \"%s\""
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:485
-#: providers/gda-sybase-server/gda-sybase-connection.c:562
+#: providers/gda-sybase-server/gda-sybase-connection.c:489
+#: providers/gda-sybase-server/gda-sybase-connection.c:566
 #, c-format
 msgid "schema_tables: table_schema = '%s'"
 msgstr "schema_tables: table_schema = \"%s\""
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:490
+#: providers/gda-sybase-server/gda-sybase-connection.c:494
 #, c-format
 msgid "schema_procedures: proc_catalog = '%s' UNUSED!\n"
 msgstr "schema_procedures: proc_catalog = \"%s\" OANVÄND!\n"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:494
+#: providers/gda-sybase-server/gda-sybase-connection.c:498
 #, c-format
 msgid "schema_procs: invalid constraint type %d"
 msgstr "schema_procs: ogiltig restriktionstyp %d"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:504
+#: providers/gda-sybase-server/gda-sybase-connection.c:508
 msgid "Could not allocate cmd structure"
 msgstr "Kunde inte allokera kommandostruktur"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:567
+#: providers/gda-sybase-server/gda-sybase-connection.c:571
 #, c-format
 msgid "schema_procedures: proc_catalog = '%s' UNUSED!"
 msgstr "schema_procedures: proc_catalog = \"%s\" OANVÄND!"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:571
+#: providers/gda-sybase-server/gda-sybase-connection.c:575
 #, c-format
 msgid "schema_tables: invalid constraint type %d"
 msgstr "schema_tables: ogiltig restriktionstyp %d"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:632
+#: providers/gda-sybase-server/gda-sybase-connection.c:636
 #, c-format
 msgid "Invalid or unsupported constraint type: %d"
 msgstr "Ogiltig eller ej stödd restriktionstyp: %d"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:673
+#: providers/gda-sybase-server/gda-sybase-connection.c:677
 msgid "Could not allocate Gda_ServerCommand"
 msgstr "Kunde inte allokera Gda_ServerCommand"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:703
-#: providers/gda-sybase-server/gda-sybase-connection.c:708
+#: providers/gda-sybase-server/gda-sybase-connection.c:707
+#: providers/gda-sybase-server/gda-sybase-connection.c:712
 #, c-format
 msgid "connection status: %x"
 msgstr "anslutningsstatus: %x"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:704
+#: providers/gda-sybase-server/gda-sybase-connection.c:708
 #, c-format
 msgid "return code: %x"
 msgstr "återvändskod: %x"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:741
+#: providers/gda-sybase-server/gda-sybase-connection.c:745
 msgid "attempting reconnection"
 msgstr "försöker att återansluta"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:879
+#: providers/gda-sybase-server/gda-sybase-connection.c:884
 #, c-format
 msgid "Reconnected to '%s'"
 msgstr "Återanslöt till \"%s\""
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:881
+#: providers/gda-sybase-server/gda-sybase-connection.c:886
 #, c-format
 msgid "Connected to %s"
 msgstr "Anslöt till %s"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:889
+#: providers/gda-sybase-server/gda-sybase-connection.c:894
 #, c-format
 msgid "Selected database '%s'"
 msgstr "Valde databasen \"%s\""
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:918
+#: providers/gda-sybase-server/gda-sybase-connection.c:923
 #, c-format
 msgid "%s: Could not allocate cmd structure"
 msgstr "%s: Kunde inte allokera kommandostruktur"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:927
+#: providers/gda-sybase-server/gda-sybase-connection.c:932
 #, c-format
 msgid "%s: Could not allocate memory for cmd string"
 msgstr "%s: Kunde inte allokera minne för kommandosträng"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:940
+#: providers/gda-sybase-server/gda-sybase-connection.c:945
 #, c-format
 msgid "%s: ct_command failed"
 msgstr "%s: ct_command misslyckades"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:949
+#: providers/gda-sybase-server/gda-sybase-connection.c:954
 #, c-format
 msgid "%s: sending command failed"
 msgstr "%s: skickande av kommando misslyckades"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:960
+#: providers/gda-sybase-server/gda-sybase-connection.c:965
 #, c-format
 msgid "%s: selecting database failed"
 msgstr "%s: val av databas misslyckades"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:978
+#: providers/gda-sybase-server/gda-sybase-connection.c:983
 #, c-format
 msgid "%s: use command failed"
 msgstr "%s: användningskommando misslyckades"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:1005
+#: providers/gda-sybase-server/gda-sybase-connection.c:1010
 msgid "Could not allocate locale structure"
 msgstr "Kunde inte allokera lokalstruktur"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:1011
+#: providers/gda-sybase-server/gda-sybase-connection.c:1016
 #, c-format
 msgid "Could not set locale to '%s'"
 msgstr "Kunde inte sätta lokalen till \"%s\""
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:1017
+#: providers/gda-sybase-server/gda-sybase-connection.c:1022
 #, c-format
 msgid "Could not configure locale to be '%s'"
 msgstr "Kunde inte konfigurera lokalen till att vara \"%s\""
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:1022
+#: providers/gda-sybase-server/gda-sybase-connection.c:1027
 msgid "Could not drop locale structure"
 msgstr "Kunde inte kasta lokalstrukturen"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:1035
+#: providers/gda-sybase-server/gda-sybase-connection.c:1040
 #, c-format
 msgid "Fatal error: %s\n"
 msgstr "Fatalt fel: %s\n"
@@ -767,74 +772,117 @@ msgstr "Klientmeddelande:"
 msgid "CS-Library error:"
 msgstr "CS-Library-fel:"
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:148
+#: providers/gda-sybase-server/gda-sybase-recordset.c:152
 #, c-format
 msgid "fetch error at row %d"
 msgstr "hämtningsfel på rad %d"
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:155
+#: providers/gda-sybase-server/gda-sybase-recordset.c:159
 #, c-format
 msgid "CS_END_DATA on row %d; canceling"
 msgstr "CS_END_DATA på rad %d; avbryter"
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:164
+#: providers/gda-sybase-server/gda-sybase-recordset.c:168
 #, c-format
 msgid "%s: Error (%d)"
 msgstr "%s: Fel (%d)"
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:339
+#: providers/gda-sybase-server/gda-sybase-recordset.c:343
 msgid "Failed fetching # of columns"
 msgstr "Misslyckades med att hämta antalet kolumner"
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:345
+#: providers/gda-sybase-server/gda-sybase-recordset.c:349
 #, c-format
 msgid "Counted %d columns"
 msgstr "Räknade %d kolumner"
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:352
+#: providers/gda-sybase-server/gda-sybase-recordset.c:356
 #, c-format
 msgid "%s could not allocate datafmt info"
 msgstr "%s kunde inte allokera datafmt-information"
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:362
+#: providers/gda-sybase-server/gda-sybase-recordset.c:366
 #, c-format
 msgid "%s could not allocate data fields"
 msgstr "%s kunde inte allokera datafält"
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:380
+#: providers/gda-sybase-server/gda-sybase-recordset.c:384
 #, c-format
 msgid "ct_describe on col # %d"
 msgstr "ct_describe i kolumn nummer %d"
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:387
+#: providers/gda-sybase-server/gda-sybase-recordset.c:391
 #, c-format
 msgid "ct_describe on col # %d failed"
 msgstr "ct_describe i kolumn nummer %d misslyckades"
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:393
+#: providers/gda-sybase-server/gda-sybase-recordset.c:397
 #, c-format
 msgid "ct_describe(%d): '%s', %d (%s)"
 msgstr "ct_describe(%d): \"%s\", %d (%s)"
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:402
+#: providers/gda-sybase-server/gda-sybase-recordset.c:406
 msgid "could not allocate data holder"
 msgstr "kunde inte allokera datahållare"
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:412
+#: providers/gda-sybase-server/gda-sybase-recordset.c:416
 msgid "could not ct_bind data holder to column"
 msgstr "kunde inte använda ct_bind för att binda datahållare till kolumn"
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:419
+#: providers/gda-sybase-server/gda-sybase-recordset.c:423
 msgid "illegal type detected, aborting"
 msgstr "ogiltig typ upptäckt, avbryter"
 
-#: providers/gda-sybase-server/gda-sybase-recordset.c:425
+#: providers/gda-sybase-server/gda-sybase-recordset.c:429
 msgid "could not allocate field"
 msgstr "kunde inte allokera fält"
 
-#: providers/gda-sybase-server/main-sybase.c:80
+#: providers/gda-sybase-server/main-sybase.c:73
 msgid "Could not register gda-sybase provider implementation"
 msgstr "Kunde inte registrera gda-sybase-leverantörsinformation"
+
+#: report/gda-report-engine.c:71
+#, c-format
+msgid "CORBA exception unloading report engine: %s"
+msgstr "CORBA-undantag vid nerstängning av rapportmotor: %s"
+
+#: report/server/gda-report-server-main.c:43
+#: report/server/gda-report-server-main.c:50
+#, c-format
+msgid "Received signal %d, shutting down."
+msgstr "Mottog signalen %d, stänger ner."
+
+#: report/server/gda-report-server-main.c:54
+#, c-format
+msgid "Received signal %d, shutting down cleanly"
+msgstr "Mottog signalen %d, stänger ner snyggt"
+
+#: report/server/gda-report-server-main.c:96
+msgid "Failed to initialize OAF: please mail bug report to OAF maintainers"
+msgstr ""
+"Misslyckades med att initiera OAF: var vänlig och skicka en buggrapport till "
+"OAF:s underhållare"
+
+#: report/server/gda-report-server-main.c:106
+msgid "Could not activate report engine"
+msgstr "Kunde inte aktivera rapportmotorn"
+
+#: report/server/gda-report-server-main.c:123
+msgid ""
+"Another instance of the report engine is already registered with OAF. "
+"Exiting..."
+msgstr ""
+"En annan instans av denna rapportmotor är redan registrerad hos OAF. "
+"Avslutar..."
+
+#: report/server/gda-report-server-main.c:126
+msgid "Unknown error registering report engine with OAF. Exiting"
+msgstr "Okänt fel vid registrering av denna rapportmotor hos OAF. Avslutar"
+
+#: report/server/gda-report-server-main.c:130
+#, c-format
+msgid "Registered report engine with ID = %s"
+msgstr "Registrerade rapportmotor med ID = %s"
 
 #: tools/gda-run.c:29
 msgid "database name"
