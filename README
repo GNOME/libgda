@@ -23,16 +23,14 @@ developed based on it.
 Dependencies
 ------------
 To compile libgda, you must have the following packages installed:
-glib       ftp://ftp.gnome.org/pub/GNOME/stable/sources/glib/glib-1.2.8.tar.gz< gtk+       ftp://ftp.gnome.org/pub/GNOME/stable/sources/gtk+/gtk+-1.2.8.tar.gz< gnome-xml
-gnome-libs ftp://ftp.gnome.org/pub/GNOME/stable/sources/gnome-libs/gnome-libs.1.2.3.tar.gz
-ORBit      ftp://ftp.gnome.org/pub/GNOME/stable/sources/ORBit/ORBit-0.5.3.tar.gz
-oaf        ftp://ftp.gnome.org/pub/GNOME/unstable/sources/oaf/oaf-0.4.0.tar.gz<
-For glib, gtk+, and gnome-libs, probably any older version since 1.0 will be ok.
-You have these packages installed already if you are using the Gnome Desktop.
-gtk+ and gnome-libs dependence will be removed as soon as glib 1.4 is available.
-
-ORBit Version 0.5.1 or newer is needed.
-OAF Version 0.4.0 or newer is needed.
+glib 1.2 or newer
+gtk+ 1.0 or newer
+gnome-xml
+gnome-libs
+ORBit 0.5.1 or newer
+oaf 0.4.0 or newer
+GConf 0.9 or newer
+You can get all these packages from ftp.gnome.org.
 
 Subdirectories
 --------------
