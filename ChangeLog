@@ -1,3 +1,8 @@
+2002-05-29  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* doc/C/libgda-docs.sgml: added new methods to 'Writing providers'
+	part.
+
 2002-05-28  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* doc/C/libgda-docs.sgml:

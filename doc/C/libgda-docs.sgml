@@ -813,10 +813,23 @@
 	   </para>
 	</listitem>
 	<listitem>
+	  <para>get_database</para>
+	  <para>
+	    Returns the name of the currently open database for a given
+	    connection.
+	  </para>
+	</listitem>
+	<listitem>
 	   <para>create_database</para>
 	   <para>
 	   Creates a new database whose name is received in a parameter.	
 	   </para>
+	</listitem>
+	<listitem>
+	  <para>drop_database</para>
+	  <para>
+	    Drops an existing database whose name is received in a parameter.
+	  </para>
 	</listitem>
 	<listitem>
 	   <para>execute_command</para>
