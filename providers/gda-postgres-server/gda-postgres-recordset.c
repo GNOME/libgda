@@ -22,7 +22,9 @@
 #include <time.h>
 
 /* private functions */
-/* Converting MM-DD-YYYY to struct tm */
+/* Converting MM-DD-YYYY to struct tm 
+   or 
+   MM/DD/YYYY to struct tm */
 static struct tm *
 str_to_tmstruct_date(gchar *date)
 {
@@ -103,7 +105,9 @@ str_to_tmstruct_date2(gchar *date)
   return stm;
 }
 
-/* Converting HH:MM:SS to struct tm */
+/* Converting HH:MM:SS to struct tm 
+   or 
+   HH:MM:SS+/-FZ to struct tm */
 static struct tm *
 str_to_tmstruct_time(gchar *time)
 {
@@ -248,6 +252,18 @@ str_to_tmstruct_timestamp(gchar *time)
   stm->tm_sec = ss;
 
   return stm;
+}
+
+static struct tm *
+str_to_tmstruct_tinterval_left(gchar *time)
+{
+  return NULL;
+}
+
+static struct tm *
+str_to_tmstruct_tinterval_right(gchar *time)
+{
+  return NULL;
 }
 
 /*
@@ -590,12 +606,18 @@ fill_field_values (Gda_ServerRecordset *recset, POSTGRES_Recordset *prc)
   GSList *repl_list;
   POSTGRES_Recordset_Replacement *repl;
   guint valtype=GDA_TypeUnknown;
+  /* need to know about the postgres version. */
+  POSTGRES_Connection *cnc;
 
   /* check parameters */
   g_return_if_fail(recset != NULL);
   g_return_if_fail((prc->pq_data != NULL) || (prc->btin_res != NULL));
-  /* traverse all recordset values */
 
+  cnc = (POSTGRES_Connection *) 
+    gda_server_connection_get_user_data(recset->cnc);
+  g_return_if_fail(cnc != NULL);
+
+  /* traverse all recordset values */
   node = g_list_first(recset->fields);
 
   fprintf(stderr,"getting data from row %ld\n", row);
@@ -720,12 +742,21 @@ fill_field_values (Gda_ServerRecordset *recset, POSTGRES_Recordset *prc)
               break;
 
             case GDA_TypeDbTimestamp: /* FIXME */
+	      /* binded to datetime, timestamp, abstime, interval/timespan, 
+		 tinterval, reltime */
+	      
+	      /* We don't use gda_server_field_set_timestamp
+		 ((Gda_ServerField *field, GDate *dat, GTime tim); 
+		 we use direct modifications in memory.
+	      */
+	      
               /* the output format for abstime and datetime will be
                  for ex: 05/27/2000 15:26:36.00 CET
                  and the one of timestamp for ex:
                  2000-05-12 16:43:29+02
                  because the DATESTYLE is set in gda-postgres-connection.c
                  to SQL with US (NonEuropean) conventions. */
+
               field->value->_u.dbtstamp.year = 0;
               field->value->_u.dbtstamp.month = 0;
               field->value->_u.dbtstamp.day = 0;
@@ -740,11 +771,14 @@ fill_field_values (Gda_ServerRecordset *recset, POSTGRES_Recordset *prc)
                 }
               field->actual_length = sizeof(GDA_DbTimestamp);
 
-              if ((field->sql_type == gda_postgres_connection_get_sql_type
-                  (prc->cnc, "abstime")) ||
-                  (field->sql_type == gda_postgres_connection_get_sql_type
-                  (prc->cnc, "datetime")))
-                {
+              if (((field->sql_type == gda_postgres_connection_get_sql_type
+		    (prc->cnc, "abstime")) ||
+		   (field->sql_type == gda_postgres_connection_get_sql_type
+		    (prc->cnc, "datetime"))) ||
+		  ((cnc->version > 7.0) && 
+		   (field->sql_type == gda_postgres_connection_get_sql_type
+		    (prc->cnc, "timestamp"))))
+	      {
                   stm = str_to_tmstruct_abstime(native_value);
 
                   if (!stm)
@@ -759,8 +793,9 @@ fill_field_values (Gda_ServerRecordset *recset, POSTGRES_Recordset *prc)
                   g_free(stm);
                   break;
                 }
-              if (field->sql_type == gda_postgres_connection_get_sql_type
-                  (prc->cnc, "timestamp"))
+	      if ((cnc->version < 7.0) &&
+		  (field->sql_type == gda_postgres_connection_get_sql_type
+		   (prc->cnc, "timestamp")))
                 {
                   stm = str_to_tmstruct_timestamp(native_value);
 
@@ -775,6 +810,30 @@ fill_field_values (Gda_ServerRecordset *recset, POSTGRES_Recordset *prc)
                   g_free(stm);
                   break;
                 }
+	      if ((field->sql_type == gda_postgres_connection_get_sql_type
+		   (prc->cnc, "tinterval")))
+	      {
+		/* FIXME */
+		/* use str_to_tmstruct_tinterval_left and
+		   str_to_tmstruct_tinterval_right */
+		field->actual_length = 0;
+		break;
+	      }
+	      if (((cnc->version < 7.0) && 
+		   (field->sql_type == gda_postgres_connection_get_sql_type
+		    (prc->cnc, "timespan"))) ||
+		  ((cnc->version > 7.0) && 
+		   (field->sql_type == gda_postgres_connection_get_sql_type
+		    (prc->cnc, "interval"))) ||
+		  ((field->sql_type == gda_postgres_connection_get_sql_type
+		    (prc->cnc, "tinterval"))))
+		{
+		  /* FIXME */
+		  /* this one will be quite complicated! */
+		  field->actual_length = 0;
+		  break;
+		}
+	      
               break;
 
             case GDA_TypeSmallint:

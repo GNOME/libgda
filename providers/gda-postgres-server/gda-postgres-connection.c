@@ -17,6 +17,7 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include <stdlib.h>
 #include "gda-postgres.h"
 #include <ctype.h>
 
@@ -68,12 +69,15 @@ schema_ops_fn schema_ops[GDA_Connection_GDCN_SCHEMA_LAST] =
    gda_postgres_connection_get_gda_type() 
 */
 
-#define POSTGRES_Types_Array_Nb 23
+#define POSTGRES_Types_Array_Nb 27
 POSTGRES_Types_Array types_array[POSTGRES_Types_Array_Nb] = 
 {
   {"datetime", 0, GDA_TypeDbTimestamp, SQL_C_TIMESTAMP},   /* DO NOT REMOVE */
   {"timestamp", 0, GDA_TypeDbTimestamp, SQL_C_TIMESTAMP},  /* DO NOT REMOVE */
   {"abstime", 0, GDA_TypeDbTimestamp, SQL_C_TIMESTAMP},    /* DO NOT REMOVE */
+  {"interval", 0, GDA_TypeDbTimestamp, SQL_C_TIMESTAMP},   /**/
+  {"tinterval", 0, GDA_TypeDbTimestamp, SQL_C_TIMESTAMP},  /**/
+  {"reltime", 0, GDA_TypeDbTimestamp, SQL_C_TIMESTAMP},    /**/
   {"bool", 0, GDA_TypeBoolean, SQL_C_BIT},                 /* DO NOT REMOVE */
   {"bpchar", 0, GDA_TypeChar, SQL_C_CHAR}, 
   {"char", 0, GDA_TypeChar, SQL_C_CHAR},
@@ -93,6 +97,7 @@ POSTGRES_Types_Array types_array[POSTGRES_Types_Array_Nb] =
   {"oid", 0, GDA_TypeInteger, SQL_C_SLONG},
   {"xid", 0, GDA_TypeInteger, SQL_C_SLONG},
   {"time", 0, GDA_TypeDbTime, SQL_C_TIME},
+  {"timez", 0, GDA_TypeDbTime, SQL_C_TIME},                /**/
   {"money", 0, GDA_TypeSingle, SQL_C_FLOAT}
 };
 GSList *global_connection_data_list = NULL;
@@ -149,10 +154,47 @@ get_value(gchar* ptr)
 
 /* returns the version as for example 6.53 or 7.02 for 6.5.3 or 7.0.2 
    so that versions can be numerically compared */
+static gfloat version_to_float(gchar *str)
+{
+  gfloat ver=0;
+  gchar *ptr = str;
+  gfloat mult=1.0;
+  gboolean first = TRUE;
+  
+  while (*ptr != 0)
+    {
+      if (*ptr == '.')
+	{
+	  if (first)
+	    {
+	      mult = 0.1;
+	      first = FALSE;
+	    }
+	}
+      else
+	{
+	  if (mult >= 1)
+	    {
+	      ver = mult * ver + (*ptr - '0');
+	      mult *= 10;
+	    }
+	  else
+	    {
+	      ver += (*ptr - '0') *mult;
+	      mult /= 10;
+	    }
+	}
+
+      ptr ++;
+    }
+
+  return ver;
+}
+
 static gfloat get_postmaster_version(PGconn *conn)
 {
   PGresult *res;
-  gchar *nver, *ver;
+  gchar *nver;
   gchar *ptr, *index, *index2;
   gfloat retval;
   gboolean first = TRUE;
@@ -169,34 +211,9 @@ static gfloat get_postmaster_version(PGconn *conn)
 
   ptr = strtok(nver, " ");
   ptr = strtok(NULL, " ");
-
-  ver = g_strdup(ptr);
-  index = ptr;
-  index2 = ver;
-  while (*index != 0)
-    {
-      if (*index == '.') 
-	{
-	  if (first)
-	    {
-	      first = FALSE;
-	      *index2 = '.';
-	      index2 ++;
-	    }
-	}
-      else
-	{
-	  *index2 = *index;
-	  index2 ++;
-	}
-	  
-      index ++;
-    }
-  *index2 = 0;
+  retval = version_to_float(ptr);
 
   g_free(nver);
-  retval = (gfloat) atof(ver);
-  g_free(ver);
 
   return retval;
 }
@@ -258,17 +275,13 @@ gda_postgres_connection_open (Gda_ServerConnection *cnc,
 	      "pq_conn=%p\n", dsn, pc, pc->pq_conn);
       if (PQstatus(pc->pq_conn) != CONNECTION_OK)
 	{
-	  Gda_ServerRecordset *recset;
-
-	  recset = gda_server_recordset_new(cnc);
-	  gda_server_error_make(gda_server_error_new(), recset, cnc, 
+	  gda_server_error_make(gda_server_error_new(), NULL, cnc, 
 				__PRETTY_FUNCTION__);
 	  return (-1);
 	}
       
       /* set the version of postgres for that connection */
       pc->version = get_postmaster_version(pc->pq_conn);
-      g_print("POSTMASTER VERSION: %f\n", pc->version);
 
       /*
        * is there already a types_array filled (same dsn, same user)? 
@@ -748,7 +761,13 @@ gda_postgres_error_make (Gda_ServerError *error,
 	gda_server_error_set_description(error, 
 					 PQresultErrorMessage(pr->pq_data));
       else
-	gda_server_error_set_description(error, "NO DESCRIPTION");
+	{
+	  if (pc->pq_conn)
+	    gda_server_error_set_description(error, 
+					     PQerrorMessage(pc->pq_conn));
+	  else
+	    gda_server_error_set_description(error, "NO DESCRIPTION");
+	}
       gda_log_error(_("error '%s' at %s"), 
 		    gda_server_error_get_description(error), where);
       if (pr && pr->pq_data)
@@ -1128,7 +1147,7 @@ schema_procedures (Gda_ServerError *error,
    value is changed from say 18 18 0 0 0 0 0 0 to 18 18, and can even be
    empty.
   */
-#define IN_PG_PROCS_NON_ALLOWED "('abstime', 'array_assgn', 'array_clip', 'array_in', 'array_ref', 'array_set', 'bpcharin', 'btabstimecmp', 'btcharcmp', 'btfloat4cmp', 'btfloat8cmp', 'btint24cmp', 'btint2cmp', 'btint42cmp', 'btint4cmp', 'btnamecmp', 'bttextcmp', 'byteaGetBit', 'byteaGetByte', 'byteaGetSize', 'byteaSetBit', 'byteaSetByte', 'date', 'date_cmp', 'datetime', 'datetime_cmp', 'float8', 'hashbpchar', 'hashchar', 'hashfloat4', 'hashfloat8', 'hashint2', 'hashint4', 'hashname', 'hashtext', 'hashvarchar', 'int', 'int2', 'int4', 'lo_close', 'lo_lseek', 'lo_tell', 'loread', 'lowrite', 'pg_get_ruledef', 'pg_get_userbyid', 'pg_get_viewdef', 'pqtest', 'time_cmp', 'timestamp', 'userfntest', 'varcharcmp', 'varcharin', 'xideq', 'keyfirsteq')"
+#define IN_PG_PROCS_NON_ALLOWED "('array_assgn', 'array_clip', 'array_in', 'array_ref', 'array_set', 'bpcharin', 'btabstimecmp', 'btcharcmp', 'btfloat4cmp', 'btfloat8cmp', 'btint24cmp', 'btint2cmp', 'btint42cmp', 'btint4cmp', 'btnamecmp', 'bttextcmp', 'byteaGetBit', 'byteaGetByte', 'byteaGetSize', 'byteaSetBit', 'byteaSetByte', 'date_cmp', 'datetime_cmp', 'float8', 'hashbpchar', 'hashchar', 'hashfloat4', 'hashfloat8', 'hashint2', 'hashint4', 'hashname', 'hashtext', 'hashvarchar', 'int', 'int2', 'int4', 'lo_close', 'lo_lseek', 'lo_tell', 'loread', 'lowrite', 'pg_get_ruledef', 'pg_get_userbyid', 'pg_get_viewdef', 'pqtest', 'time_cmp', 'userfntest', 'varcharcmp', 'varcharin', 'xideq', 'keyfirsteq')"
   where = FALSE;
   if (extra_info)
     {
@@ -1252,22 +1271,13 @@ schema_procedures (Gda_ServerError *error,
 
   /* notypes and notypes_sym are unioned so we have one PGresult which is already sorted */
 
-  if (pc->version < 7.0)
-    notypes =PQexec(pc->pq_conn, 
-		    "select distinct int4(text(oprcode)) as code FROM "
-		    "pg_operator UNION "
-		    "select p.oid as code from pg_proc p where "
-		    "text(p.proname)!=p.prosrc and p.prosrc IN "
-		    "(select text(proname) from pg_proc where text(proname)= "
-		    "p.prosrc) order by code");
-  else
-    notypes =PQexec(pc->pq_conn, 
-		    "select distinct int4(text(oprcode)) as code FROM "
-		    "pg_operator UNION "
-		    "select p.oid as code from pg_proc p where "
-		    "text(p.proname)!=p.prosrc and p.prosrc IN "
-		    "(select text(proname) from pg_proc where text(proname)= "
-		    "p.prosrc) order by code");
+  notypes =PQexec(pc->pq_conn, 
+		  "select distinct int4(text(oprcode)) as code FROM "
+		  "pg_operator UNION "
+		  "select p.oid as code from pg_proc p where "
+		  "text(p.proname)!=p.prosrc and p.prosrc IN "
+		  "(select text(proname) from pg_proc where text(proname)= "
+		  "p.prosrc) order by code");
 
   if ((!res || (PQresultStatus(res) != PGRES_TUPLES_OK) ||
        (PQntuples(res) < 1)) ||
@@ -1440,9 +1450,16 @@ schema_proc_params (Gda_ServerError *error,
 
 
   /* fetch what we want, and put it into out builtin result */
-  query = g_strdup_printf("SELECT prorettype, proargtypes FROM pg_proc "
-			  "WHERE (pronargs = 0 or oid8types(proargtypes)!= '')"
-			  " AND oid = %s", proc_name);
+  if (pc->version < 7.0)  
+    query = g_strdup_printf("SELECT prorettype, proargtypes FROM pg_proc "
+			    "WHERE (pronargs = 0 or "
+			    "oid8types(proargtypes)!= '')"
+			    " AND oid = %s", proc_name);
+  else
+    query = g_strdup_printf("SELECT prorettype, proargtypes FROM pg_proc "
+			    "WHERE (pronargs = 0 or "
+			    "oidvectortypes(proargtypes)!= '')"
+			    " AND oid = %s", proc_name);
   res = PQexec(pc->pq_conn, query);
   g_free(query);
   if (!res || (PQresultStatus(res) != PGRES_TUPLES_OK) ||
