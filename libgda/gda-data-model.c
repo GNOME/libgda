@@ -25,6 +25,7 @@
 #include <libgda/gda-intl.h>
 #include <libgda/gda-data-model.h>
 #include <libgda/gda-log.h>
+#include <libgda/gda-util.h>
 #include <libgda/gda-xml-database.h>
 #include <string.h>
 
@@ -857,7 +858,7 @@ xml_set_int (xmlNodePtr node, const gchar *name, gint value)
 xmlNodePtr
 gda_data_model_to_xml_node (GdaDataModel *model, const gchar *name)
 {
-	xmlNodePtr *node;
+	xmlNodePtr node;
 	gint cols, rows, i;
 
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
@@ -908,8 +909,9 @@ gda_data_model_to_xml_node (GdaDataModel *model, const gchar *name)
 
 				value = gda_data_model_get_value_at (model, c, r);
 				str = gda_value_stringify (value);
-				field = xmlNewChild (row, NULL, "field", str);
+				field = xmlNewChild (row, NULL, "value", str);
 				xml_set_int (field, "position", c);
+				xmlSetProp (field, "gdatype", gda_type_to_string (gda_value_get_type (value)));
 
 				g_free (str);
 			}
@@ -917,6 +919,103 @@ gda_data_model_to_xml_node (GdaDataModel *model, const gchar *name)
 	}
 
 	return node;
+}
+
+static gboolean
+add_xml_row (GdaDataModel *model, xmlNodePtr xml_row)
+{
+	xmlNodePtr xml_field;
+	GList *value_list = NULL;
+	GPtrArray *values;
+	gint i;
+	gboolean retval = TRUE;
+
+	values = g_ptr_array_new ();
+	g_ptr_array_set_size (values, gda_data_model_get_n_columns (model));
+	for (xml_field = xml_row->xmlChildrenNode; xml_field != NULL; xml_field = xml_field->next) {
+		gint pos;
+		GdaValue *value;
+
+		if (!strcmp (xml_field->name, "value"))
+			continue;
+
+		pos = atoi (xmlGetProp (xml_field, "position"));
+		if (pos < 0 || pos >= gda_data_model_get_n_columns (model)) {
+			g_warning ("add_xml_row(): invalid position on 'field' node");
+			retval = FALSE;
+			break;
+		}
+
+		if (g_ptr_array_index (values, pos) != NULL) {
+			g_warning ("add_xml_row(): two fields with the same position");
+			retval = FALSE;
+			break;
+		}
+
+		/* create the value for this field */
+		value = gda_value_new_from_xml ((const xmlNodePtr) xml_field);
+		if (!value) {
+			g_warning ("add_xml_row(): cannot retrieve value from XML node");
+			retval = FALSE;
+			break;
+		}
+
+		g_ptr_array_index (values, pos) = value;
+	}
+
+	if (retval) {
+		for (i = 0; i < values->len; i++) {
+			GdaValue *value = (GdaValue *) g_ptr_array_index (values, i);
+
+			if (!value) {
+				g_warning ("add_xml_row(): there are missing values on the XML node");
+				retval = FALSE;
+				break;
+			}
+
+			value_list = g_list_append (value_list, value);
+		}
+
+		if (retval)
+			gda_data_model_append_row (model, value_list);
+
+		g_list_free (value_list);
+	}
+
+	for (i = 0; i < values->len; i++)
+		gda_value_free ((GdaValue *) g_ptr_array_index (values, i));
+
+	return retval;
+}
+
+/**
+ * gda_data_model_add_data_from_xml_node
+ * @model: a #GdaDataModel.
+ * @node: a XML node representing a <data> XML node.
+ *
+ * Add the data from a XML node to the given data model.
+ *
+ * Returns: TRUE if successful, FALSE otherwise.
+ */
+gboolean
+gda_data_model_add_data_from_xml_node (GdaDataModel *model, xmlNodePtr node)
+{
+	xmlNodePtr children;
+
+	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
+	g_return_val_if_fail (node != NULL, FALSE);
+
+	if (strcmp (node->name, "data") != 0)
+		return FALSE;
+
+	for (children = node->xmlChildrenNode; children != NULL; children = children->next) {
+		if (!strcmp (children->name, "row")) {
+			if (!add_xml_row (model, children))
+				return FALSE;
+		}
+	}
+
+	return TRUE;
 }
 
 /**

@@ -179,3 +179,14 @@ Base class for implementing new providers
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_server_provider_create_blob ##### -->
+<para>
+
+</para>
+
+@provider: 
+@cnc: 
+@blob: 
+@Returns: 
+
+

@@ -293,6 +293,14 @@ Access/Management of libgda configuration
 @password: 
 
 
+<!-- ##### FUNCTION gda_config_save_data_source_info ##### -->
+<para>
+
+</para>
+
+@dsn_info: 
+
+
 <!-- ##### FUNCTION gda_config_remove_data_source ##### -->
 <para>
 

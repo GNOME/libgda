@@ -62,7 +62,7 @@ XML database representation (used for import/export and in the default provider)
 @name: 
 
 
-<!-- ##### FUNCTION gda_xml_database_get_version ##### -->
+<!-- ##### FUNCTION gda_xml_database_get_user_version ##### -->
 <para>
 
 </para>
@@ -71,13 +71,22 @@ XML database representation (used for import/export and in the default provider)
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_xml_database_set_version ##### -->
+<!-- ##### FUNCTION gda_xml_database_set_user_version ##### -->
 <para>
 
 </para>
 
 @xmldb: 
-@version: 
+@user_version: 
+
+
+<!-- ##### FUNCTION gda_xml_database_get_version ##### -->
+<para>
+
+</para>
+
+@xmldb: 
+@Returns: 
 
 
 <!-- ##### FUNCTION gda_xml_database_get_uri ##### -->

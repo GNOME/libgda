@@ -59,6 +59,7 @@ gda_connection_execute_non_query
 gda_connection_begin_transaction
 gda_connection_commit_transaction
 gda_connection_rollback_transaction
+gda_connection_create_blob
 gda_connection_get_errors
 GdaConnectionFeature
 gda_connection_supports
@@ -156,6 +157,7 @@ gda_data_model_to_comma_separated
 gda_data_model_to_tab_separated
 gda_data_model_to_xml
 gda_data_model_to_xml_node
+gda_data_model_add_data_from_xml_node
 gda_data_model_get_command_text
 gda_data_model_set_command_text
 gda_data_model_get_command_type
@@ -253,6 +255,7 @@ gda_server_provider_commit_transaction
 gda_server_provider_rollback_transaction
 gda_server_provider_supports
 gda_server_provider_get_schema
+gda_server_provider_create_blob
 <SUBSECTION Standard>
 GDA_SERVER_PROVIDER
 GDA_IS_SERVER_PROVIDER
@@ -332,8 +335,9 @@ gda_xml_database_new
 gda_xml_database_new_from_uri
 gda_xml_database_get_name
 gda_xml_database_set_name
+gda_xml_database_get_user_version
+gda_xml_database_set_user_version
 gda_xml_database_get_version
-gda_xml_database_set_version
 gda_xml_database_get_uri
 gda_xml_database_set_uri
 gda_xml_database_changed
@@ -1460,6 +1464,7 @@ gda_config_free_data_source_info
 gda_config_free_data_source_list
 gda_config_get_data_source_model
 gda_config_save_data_source
+gda_config_save_data_source_info
 gda_config_remove_data_source
 GDA_CONFIG_BASE
 GDA_CONFIG_SECTION_DATASOURCES
@@ -1588,6 +1593,7 @@ gda_value_new_null
 gda_value_new_bigint
 gda_value_new_biguint
 gda_value_new_binary
+gda_value_new_blob
 gda_value_new_boolean
 gda_value_new_date
 gda_value_new_double
@@ -1622,6 +1628,8 @@ gda_value_get_biguint
 gda_value_set_biguint
 gda_value_get_binary
 gda_value_set_binary
+gda_value_get_blob
+gda_value_set_blob
 gda_value_get_boolean
 gda_value_set_boolean
 gda_value_get_date
@@ -1684,6 +1692,19 @@ gda_init
 GdaInitFunc
 gda_main_run
 gda_main_quit
+</SECTION>
+
+<SECTION>
+<FILE>gda-blob</FILE>
+GdaBlobMode
+GdaBlob
+gda_blob_open
+gda_blob_read
+gda_blob_write
+gda_blob_lseek
+gda_blob_close
+gda_blob_remove
+gda_blob_free_data
 </SECTION>
 
 <SECTION>

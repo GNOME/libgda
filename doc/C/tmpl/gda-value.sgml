@@ -30,6 +30,7 @@ gda-value
 @GDA_VALUE_TYPE_BIGINT: 
 @GDA_VALUE_TYPE_BIGUINT: 
 @GDA_VALUE_TYPE_BINARY: 
+@GDA_VALUE_TYPE_BLOB: 
 @GDA_VALUE_TYPE_BOOLEAN: 
 @GDA_VALUE_TYPE_DATE: 
 @GDA_VALUE_TYPE_DOUBLE: 
@@ -132,6 +133,15 @@ gda-value
 
 @val: 
 @size: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_value_new_blob ##### -->
+<para>
+
+</para>
+
+@val: 
 @Returns: 
 
 
@@ -441,6 +451,24 @@ gda-value
 @value: 
 @val: 
 @size: 
+
+
+<!-- ##### FUNCTION gda_value_get_blob ##### -->
+<para>
+
+</para>
+
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_value_set_blob ##### -->
+<para>
+
+</para>
+
+@value: 
+@val: 
 
 
 <!-- ##### FUNCTION gda_value_get_boolean ##### -->

@@ -700,7 +700,7 @@ gda_xml_database_new_table_from_model (GdaXmlDatabase *xmldb,
  * @xmldb: XML Database.
  * @node: A XML node pointer.
  *
- * Add a table to the given XML database by parsong the given
+ * Add a table to the given XML database by parsing the given
  * XML node pointer, which usually is obtained from an
  * already loaded xmlDocPtr.
  *
@@ -773,7 +773,11 @@ gda_xml_database_new_table_from_node (GdaXmlDatabase *xmldb, xmlNodePtr node)
 		}
 	}
 
-	/* FIXME: add the data of the table */
+	/* add the data of the table */
+	if (data) {
+		if (!gda_data_model_add_data_from_xml_node (GDA_DATA_MODEL (table), data))
+			g_warning (_("Could not add the data from the XML node"));
+	}
 
 	/* add the table to the XML database object */
 	g_hash_table_insert (xmldb->priv->tables, g_strdup (name), table);

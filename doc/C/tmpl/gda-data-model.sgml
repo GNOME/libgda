@@ -284,6 +284,16 @@ Basic data model class
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_data_model_add_data_from_xml_node ##### -->
+<para>
+
+</para>
+
+@model: 
+@node: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_data_model_get_command_text ##### -->
 <para>
 

@@ -112,6 +112,7 @@ gchar              *gda_data_model_to_comma_separated (GdaDataModel *model);
 gchar              *gda_data_model_to_tab_separated (GdaDataModel *model);
 gchar              *gda_data_model_to_xml (GdaDataModel *model, gboolean standalone);
 xmlNodePtr          gda_data_model_to_xml_node (GdaDataModel *model, const gchar *name);
+gboolean            gda_data_model_add_data_from_xml_node (GdaDataModel *model, xmlNodePtr node);
 
 const gchar        *gda_data_model_get_command_text (GdaDataModel *recset);
 void                gda_data_model_set_command_text (GdaDataModel *recset, const gchar *txt);

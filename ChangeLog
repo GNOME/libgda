@@ -1,3 +1,14 @@
+2003-08-23  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* libgda/gda-data-model.[ch] (gda_data_model_add_data_from_xml_node):
+	new function.
+	(gda_data_model_to_xml_node): use "value" instead of "field" as the
+	name for the nodes representing the fields' values, to work the same
+	as gda_value_new_from_xml(). Also, add the "gdatype" property.
+
+	* libgda/gda-xml-database.c (gda_xml_database_new_table_from_node):
+	implemented missing code.
+
 2003-08-22  Philippe CHARLIER <p.charlier@chello.be>
 
 	* libgda/gda-xml-database.[ch] (gda_xml_database_set_version): removed
