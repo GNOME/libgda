@@ -1,3 +1,8 @@
+2001-10-11  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-server-connection.[ch]:
+	* gda-server-provider.[ch]: adapted to IDL changes
+
 2001-10-10  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-server-connection.[ch]: re-added

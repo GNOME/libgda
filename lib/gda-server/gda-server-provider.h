@@ -42,30 +42,47 @@ struct _GdaServerProviderClass {
 	BonoboXObjectClass parent_class;
 	POA_GNOME_Database_Provider__epv epv;
 
+	/* signals */
+	void (* last_connection_gone) (GdaServerProvider *provider);
+
 	/* virtual methods */
 	GdaServerConnection * (* open_connection) (GdaServerProvider *provider,
-						   const gchar *cnc_string,
+						   GdaServerConnection *cnc,
+						   GdaQuarkList *params,
 						   const gchar *username,
 						   const gchar *password);
 	gboolean (* close_connection) (GdaServerProvider *provider,
 				       GdaServerConnection *cnc);
-	
+
+	gboolean (* begin_transaction) (GdaServerProvider *provider,
+					GdaServerConnection *cnc,
+					const gchar *trans_id);
+	gboolean (* commit_transaction) (GdaServerProvider *provider,
+					 GdaServerConnection *cnc,
+					 const gchar *trans_id);
+	gboolean (* rollback_transaction) (GdaServerProvider *provider,
+					   GdaServerConnection *cnc,
+					   const gchar *trans_id);
 };
 
-GType                gda_server_provider_get_type (void);
-GdaServerConnection *gda_server_provider_open_connection (GdaServerProvider *provider,
-							  const gchar *cnc_string,
-							  const gchar *username,
-							  const gchar *password);
-gboolean             gda_server_provider_close_connection (GdaServerProvider *provider,
-							   GdaServerConnection *cnc);
+GType    gda_server_provider_get_type (void);
+gboolean gda_server_provider_open_connection (GdaServerProvider *provider,
+					      GdaServerConnection *cnc,
+					      GdaParameterList *params,
+					      const gchar *username,
+					      const gchar *password);
+gboolean gda_server_provider_close_connection (GdaServerProvider *provider,
+					       GdaServerConnection *cnc);
 
-GdaServerCommand    *gda_server_provider_create_command (GdaServerProvider *provider,
-							 GdaServerConnection *cnc,
-							 const gchar *text,
-							 GNOME_Database_CommandType type);
-gboolean            *gda_server_provider_prepare_command (GdaServerProvider *provider,
-							  GdaParamList *plist);
+gboolean gda_server_provider_begin_transaction (GdaServerProvider *provider,
+						GdaServerConnection *cnc,
+						const gchar *trans_id);
+gboolean gda_server_provider_commit_transaction (GdaServerProvider *provider,
+						 GdaServerConnection *cnc,
+						 const gchar *trans_id);
+gboolean gda_server_provider_rollback_transaction (GdaServerProvider *provider,
+						   GdaConnection *cnc,
+						   const gchar *trans_id);
 
 G_END_DECLS
 

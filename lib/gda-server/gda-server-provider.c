@@ -20,10 +20,11 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#include <config.h>
 #include "gda-server-provider.h"
 
 #define PARENT_TYPE BONOBO_X_OBJECT_TYPE
-#define CLASS(provider) (GDA_SERVER_PROVIDER_CLASS (G_OBJECT (provider)->klass))
+#define CLASS(provider) (GDA_SERVER_PROVIDER_CLASS (G_OBJECT_GET_CLASS (provider)))
 
 struct _GdaServerProviderPrivate {
 	GList *connections;
@@ -35,6 +36,31 @@ static void gda_server_provider_init       (GdaServerProvider *provider,
 static void gda_server_provider_finalize   (GObject *object);
 
 static GObjectClass *parent_class = NULL;
+
+/*
+ * CORBA methods implementation
+ */
+
+static CORBA_char *
+impl_Provider_getVersion (PortableServer_Servant servant, CORBA_Environment *ev)
+{
+	return CORBA_string_dup (VERSION);
+}
+
+static GNOME_Database_Connection
+impl_Provider_createConnection (PortableServer_Servant servant, CORBA_Environment *ev)
+{
+	GdaServerConnection *cnc;
+	GdaServerProvider *provider = (GdaServerProvider *) bonobo_x_object (servant);
+
+	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), CORBA_OBJECT_NIL);
+
+	cnc = gda_server_connection_new (provider);
+	if (GDA_IS_SERVER_CONNECTION (cnc))
+		return bonobo_object_corba_objref (BONOBO_OBJECT (cnc));
+
+	return CORBA_OBJECT_NIL; 
+}
 
 /*
  * GdaServerProvider class implementation
@@ -51,11 +77,14 @@ gda_server_provider_class_init (GdaServerProviderClass *klass)
 	object_class->finalize = gda_server_provider_finalize;
 	klass->open_connection = NULL;
 	klass->close_connection = NULL;
+	klass->begin_transaction = NULL;
+	klass->commit_transaction = NULL;
+	klass->rollback_transaction = NULL;
 
-	/* sets the epv */
+	/* set the epv */
 	epv = &klass->epv;
-	epv->openConnection = impl_Provider_openConnection;
-	epv->closeConnection = impl_Provider_closeConnection;
+	epv->getVersion = impl_Provider_getVersion;
+	epv->createConnection = impl_Provider_createConnection;
 }
 
 static void
@@ -76,8 +105,7 @@ gda_server_provider_finalize (GObject *object)
 	g_return_if_fail (GDA_IS_SERVER_PROVIDER (provider));
 
 	/* free memory */
-	g_hash_table_foreach (provider->priv->connections, free_hash_connection, NULL);
-	g_hash_table_destroy (provider->priv->connections);
+	g_list_free (provider->priv->connections);
 
 	g_free (provider->priv);
 	provider->priv = NULL;
@@ -94,6 +122,7 @@ BONOBO_X_TYPE_FUNC_FULL (GdaServerProvider,
 /**
  * gda_server_provider_open_connection
  * @provider: a #GdaServerProvider object.
+ * @cnc: a #GdaServerConnection object.
  * @cnc_string: connection string.
  * @username: user name for logging in.
  * @password: password for authentication.
@@ -104,24 +133,24 @@ BONOBO_X_TYPE_FUNC_FULL (GdaServerProvider,
  * Returns: a newly-allocated #GdaServerConnection object, or NULL
  * if it fails.
  */
-GdaServerConnection *
+gboolean
 gda_server_provider_open_connection (GdaServerProvider *provider,
-				     const gchar *cnc_string,
+				     GdaServerConnection *cnc,
+				     GdaParameterList *params,
 				     const gchar *username,
 				     const gchar *password)
 {
+	gboolean retcode;
 	GdaServerConnection *cnc;
 
-	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
-	g_return_val_if_fail (CLASS (provider)->open_connection != NULL, NULL);
+	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), FALSE);
+	g_return_val_if_fail (CLASS (provider)->open_connection != NULL, FALSE);
 
-	cnc = CLASS (provider)->open_connection (provider, cnc_string, username, password);
-	if (cnc) {
-		provider->priv->connections = g_list_append (
-			provider->priv->connections, cnc);
-	}
+	retcode = CLASS (provider)->open_connection (provider, cnc, params, username, password);
+	if (retcode)
+		provider->priv->connections = g_list_append (provider->priv->connections);
 
-	return cnc;
+	return retcode;
 }
 
 /**
@@ -141,7 +170,52 @@ gda_server_provider_close_connection (GdaServerProvider *provider, GdaServerConn
 		retcode = TRUE;
 
 	provider->priv->connections = g_list_remove (provider->priv->connections, cnc);
-	g_object_unref (G_OBJECT (cnc));
 
 	return retcode;
 }
+
+/**
+ * gda_server_provider_begin_transaction
+ */
+gboolean
+gda_server_provider_begin_transaction (GdaServerProvider *provider,
+				       GdaServerConnection *cnc,
+				       const gchar *trans_id)
+{
+	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), FALSE);
+	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (CLASS (provider)->begin_transaction != NULL, FALSE);
+
+	return CLASS (provider)->begin_transaction (provider, cnc, trans_id);
+}
+
+/**
+ * gda_server_provider_commit_transaction
+ */
+gboolean
+gda_server_provider_commit_transaction (GdaServerProvider *provider,
+				       GdaServerConnection *cnc,
+				       const gchar *trans_id)
+{
+	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), FALSE);
+	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (CLASS (provider)->commit_transaction != NULL, FALSE);
+
+	return CLASS (provider)->commit_transaction (provider, cnc, trans_id);
+}
+
+/**
+ * gda_server_provider_rollback_transaction
+ */
+gboolean
+gda_server_provider_rollback_transaction (GdaServerProvider *provider,
+					  GdaServerConnection *cnc,
+					  const gchar *trans_id)
+{
+	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), FALSE);
+	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (CLASS (provider)->rollback_transaction != NULL, FALSE);
+
+	return CLASS (provider)->rollback_transaction (provider, cnc, trans_id);
+}
+
