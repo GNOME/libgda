@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda 0.2.11\n"
-"POT-Creation-Date: 2001-10-04 18:53+0200\n"
+"POT-Creation-Date: 2001-10-08 22:27+0200\n"
 "PO-Revision-Date: 2001-06-25 18:55+02:00\n"
 "Last-Translator: Kjartan Maraas <kmaraas@gnome.org>\n"
 "Language-Team: Norwegian (Nynorsk)\n"
@@ -39,23 +39,25 @@ msgstr ""
 msgid "Could not open CORBA factory"
 msgstr "Kunne ikkje opna fil"
 
-#: lib/gda-client/gda-field.c:228 lib/gda-client/gda-field.c:285
-#: lib/gda-client/gda-field.c:294
+#: lib/gda-client/gda-field.c:243 lib/gda-client/gda-field.c:298
+#: lib/gda-client/gda-field.c:307
+#: providers/gda-mysql-server/gda-mysql-recordset.c:197
 msgid "<NULL>"
 msgstr ""
 
-#: lib/gda-client/gda-field.c:233 lib/gda-client/gda-field.c:236
+#: lib/gda-client/gda-field.c:248 lib/gda-client/gda-field.c:251
 msgid "<Unknown GDA Type(NULL)>"
 msgstr ""
 
-#: lib/gda-client/gda-field.c:249
-msgid "TRUE"
-msgstr ""
-
-#: lib/gda-client/gda-field.c:251
+#: lib/gda-client/gda-field.c:264
 #, fuzzy
-msgid "FALSE"
-msgstr " FEILA"
+msgid "true"
+msgstr "Sann"
+
+#: lib/gda-client/gda-field.c:266
+#, fuzzy
+msgid "false"
+msgstr "Usann"
 
 #: lib/gda-common/gda-corba.c:88
 #, c-format
@@ -1077,6 +1079,10 @@ msgstr "Fann ikkje søkjeteksten '%1'."
 #, fuzzy
 msgid "Could not register <PROVIDER-NAME> provider implementation"
 msgstr "Du må oppgi eit namn på implementasjonsfila."
+
+#, fuzzy
+#~ msgid "FALSE"
+#~ msgstr " FEILA"
 
 #, fuzzy
 #~ msgid "%s: an error ocurred while fetching data"
