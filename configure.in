@@ -276,22 +276,22 @@ then
 elif test $withval = yes
 then
 	dir="/usr/local/freetds"
-	if test -f /etc/freetds/compile_gda_tds_provider
-	then
-		try_freetds=true
-	else
-		AC_MSG_WARN(freetds backend disabled)
-		try_freetds=false
-	fi
+dnl	if test -f /etc/freetds/compile_gda_tds_provider
+dnl	then
+dnl		try_freetds=true
+dnl	else
+dnl		AC_MSG_WARN(freetds backend disabled)
+dnl		try_freetds=false
+dnl	fi
 else
 	dir=$withval
-	if test -f /etc/freetds/compile_gda_tds_provider
-	then
-		try_freetds=true
-	else
-		AC_MSG_WARN(freetds backend disabled)
-		try_freetds=false
-	fi
+dnl	if test -f /etc/freetds/compile_gda_tds_provider
+dnl	then
+dnl		try_freetds=true
+dnl	else
+dnl		AC_MSG_WARN(freetds backend disabled)
+dnl		try_freetds=false
+dnl	fi
 fi
 ])
 freetdsdir=""
