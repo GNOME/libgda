@@ -55,7 +55,7 @@ void          gda_error_list_free (GList * errors);
 
 const gchar  *gda_error_get_description (GdaError *error);
 void          gda_error_set_description (GdaError *error, const gchar *description);
-const glong   gda_error_get_number (GdaError *error);
+glong         gda_error_get_number (GdaError *error);
 void          gda_error_set_number (GdaError *error, glong number);
 const gchar  *gda_error_get_source (GdaError *error);
 void          gda_error_set_source (GdaError *error, const gchar *source);
