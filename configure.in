@@ -31,15 +31,26 @@ else
 fi
 
 dnl Check for GConf
-AC_MSG_CHECKING(for GConf)
+use_gconf=false
+gconfminver="0.6"
+AC_MSG_CHECKING(for GConf >= $gconfminver)
 if gconf-config --libs gconf > /dev/null 2>&1
 then
-     AC_MSG_RESULT(found)
-     AC_DEFINE(USING_GCONF)
-     gda_gconf_libs=`gconf-config --libs gconf`
-     gda_gconf_cflags=`gconf-config --cflags gconf`
-else
-	AC_MSG_ERROR(not found)
+	gconfver=`gconf-config --version | awk 'BEGIN {FS="."}{printf "%d", $1*1000+$2}'`
+	if test "$gconfver" -ge 6
+	then
+		AC_MSG_RESULT(found)
+		AC_DEFINE(USING_GCONF)
+		gda_gconf_libs=`gconf-config --libs gconf`
+		gda_gconf_cflags=`gconf-config --cflags gconf`
+
+		use_gconf=true
+	fi
+fi
+if ! $use_gconf
+then
+	AC_MSG_ERROR([
+*** GConf $gconfminver or later is necessary in order to build libgda.])
 fi
 
 dnl Check for OAF
