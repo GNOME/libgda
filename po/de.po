@@ -6,9 +6,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda-0.2.3-cvs\n"
-"POT-Creation-Date: 2002-07-07 23:22+0200\n"
-"PO-Revision-Date: 2002-03-05 13:45+01:00\n"
-"Last-Translator: Christian Meyer <chrisime@gnome.org>\n"
+"POT-Creation-Date: 2002-08-03 14:24+0200\n"
+"PO-Revision-Date: 2002-08-03 14:07+0200\n"
+"Last-Translator: Manuel Borchers <webmaster@matronix.de>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,25 +22,25 @@ msgstr "Datenquelle %s nicht in der Konfiguration gefunden"
 #: libgda/gda-client.c:244
 #, c-format
 msgid "Provider %s is not installed"
-msgstr ""
+msgstr "Der Treiber %s ist nicht installiert"
 
 #: libgda/gda-client.c:253
-#, fuzzy, c-format
+#, c-format
 msgid "Could not load %s provider"
-msgstr "CORBA-Lieferanten konnten nicht abgefragt werden"
+msgstr "Das Laden des Treibers %s ist fehlgeschlagen"
 
 #: libgda/gda-client.c:269
 #, c-format
 msgid "Provider %s does not implement entry point"
-msgstr ""
+msgstr "Der Treiber %s bietet keinen Einstiegspunkt"
 
 #: libgda/gda-client.c:278
 msgid "Creation of GdaServerProvider failed"
-msgstr ""
+msgstr "Der Aufruf des GdaServer-Treibers ist fehlgeschlagen"
 
 #: libgda/gda-client.c:341
 msgid "Temporary data source created by libgda. Don't remove it"
-msgstr ""
+msgstr "Eine von libgda erstellte temporäre Datenquelle. Nicht löschen"
 
 #. gda_server_recordset_model_set_field_defined_size (recset, 0, 256);
 #: libgda/gda-config.c:1268 providers/default/gda-default-provider.c:463
@@ -53,7 +53,7 @@ msgstr "Name"
 
 #: libgda/gda-config.c:1269
 msgid "Provider"
-msgstr "Lieferant"
+msgstr "Treiber"
 
 #: libgda/gda-config.c:1270
 msgid "Connection string"
@@ -69,62 +69,63 @@ msgstr "Benutzername"
 
 #: libgda/gda-config.c:1273
 msgid "Password"
-msgstr ""
+msgstr "Passwort"
 
 #: libgda/gda-data-model.c:589
 #, c-format
 msgid "Data model %p is not editable"
-msgstr ""
+msgstr "Das Datenmodell %p ist nicht veränderbar"
 
 #: libgda/gda-init.c:49
 msgid "Attempt to initialize an already initialized client"
-msgstr "Versuch, einen bereits initialisierten Client zu initialisieren"
+msgstr ""
+"Es wurde versucht, einen bereits initialisierten Client zu initialisieren"
 
 #: libgda/gda-init.c:60
 msgid "libgda needs GModule. Finishing..."
-msgstr ""
+msgstr "libgda erfordert GModule. Abbruch..."
 
 #: libgda/gda-log.c:82
 #, c-format
 msgid "MESSAGE: %s"
-msgstr ""
+msgstr "NACHRICHT: %s"
 
 #: libgda/gda-log.c:101
 #, c-format
 msgid "ERROR: %s"
-msgstr ""
+msgstr "FEHLER: %s"
 
 #: libgda/gda-select.c:119 libgda/gda-select.c:142 libgda/gda-select.c:201
 msgid "Unexpected integer value"
-msgstr ""
+msgstr "Unerwarteter ganzzahliger Wert"
 
 #: libgda/gda-select.c:131 libgda/gda-select.c:211
 msgid "Unexpected float value"
-msgstr ""
+msgstr "Unerwarteter Fließkomma-Wert"
 
 #: libgda/gda-select.c:154
 msgid "Unexpected string value"
-msgstr ""
+msgstr "Unerwarteter Buchstaben-Wert"
 
 #: libgda/gda-select.c:165
 msgid "Unexpected symbol '='"
-msgstr ""
+msgstr "Unerwartetes Symbol »=«"
 
 #: libgda/gda-select.c:176
 msgid "Unexpected symbol '<'"
-msgstr ""
+msgstr "Unerwartetes Symbol »<«"
 
 #: libgda/gda-select.c:187
 msgid "Unexpected symbol '>'"
-msgstr ""
+msgstr "Unerwartetes Symbol »>«"
 
 #: libgda/gda-select.c:215
 msgid "Found a non-numeric value after a '-' sign"
-msgstr ""
+msgstr "Es wurde ein nicht-nummerischer Wert nach einem »-«-Zeichen gefunden"
 
 #: libgda/gda-select.c:231
 msgid "Unexpected identifier"
-msgstr ""
+msgstr "Unerwarteter Bezeichner"
 
 #: libgda/gda-table.c:234
 #, c-format
@@ -134,18 +135,18 @@ msgstr "Es gibt bereits ein Feld mit dem Namen %s"
 #: libgda/gda-util.c:143
 #, c-format
 msgid "Error while reading %s: %s"
-msgstr ""
+msgstr "Beim Lesen von %s ist ein Fehler aufgetreten: %s"
 
 #: libgda/gda-util.c:169
-#, fuzzy, c-format
+#, c-format
 msgid "Could not create file %s"
-msgstr "Datei bei %s konnte nicht interpretiert werden"
+msgstr "Das Erstellen der Datei %s ist fehlgeschlagen"
 
-#: libgda/gda-value.c:1315
+#: libgda/gda-value.c:1346
 msgid "TRUE"
 msgstr "WAHR"
 
-#: libgda/gda-value.c:1317
+#: libgda/gda-value.c:1348
 msgid "FALSE"
 msgstr "FALSCH"
 
@@ -177,7 +178,7 @@ msgstr "Ungültiger Node"
 #: libgda/gda-xml-database.c:569
 #, c-format
 msgid "Duplicated <data> node for table %s"
-msgstr ""
+msgstr "Doppelter <data>-Knoten in Tabelle %s"
 
 #: libgda/gda-xml-database.c:576
 msgid "Invalid XML node"
@@ -193,108 +194,104 @@ msgstr ""
 
 #: providers/default/gda-default-provider.c:242
 msgid "Not Implemented"
-msgstr ""
+msgstr "Nicht implementiert"
 
 #: providers/default/gda-default-provider.c:361
-#: providers/mysql/gda-mysql-provider.c:873
+#: providers/mysql/gda-mysql-provider.c:941
 #: providers/oracle/gda-oracle-provider.c:1056
-#: providers/postgres/gda-postgres-provider.c:829
+#: providers/postgres/gda-postgres-provider.c:835
 msgid "Field name"
-msgstr ""
+msgstr "Feldname"
 
 #: providers/default/gda-default-provider.c:362
-#: providers/mysql/gda-mysql-provider.c:874
+#: providers/mysql/gda-mysql-provider.c:942
 #: providers/oracle/gda-oracle-provider.c:1057
-#: providers/postgres/gda-postgres-provider.c:830
+#: providers/postgres/gda-postgres-provider.c:836
 msgid "Data type"
-msgstr ""
+msgstr "Daten-Typ"
 
 #: providers/default/gda-default-provider.c:363
-#: providers/mysql/gda-mysql-provider.c:875
+#: providers/mysql/gda-mysql-provider.c:943
 #: providers/oracle/gda-oracle-provider.c:1058
-#: providers/postgres/gda-postgres-provider.c:831
+#: providers/postgres/gda-postgres-provider.c:837
 msgid "Size"
-msgstr ""
+msgstr "Größe"
 
 #: providers/default/gda-default-provider.c:364
-#: providers/mysql/gda-mysql-provider.c:876
+#: providers/mysql/gda-mysql-provider.c:944
 #: providers/oracle/gda-oracle-provider.c:1059
-#: providers/postgres/gda-postgres-provider.c:832
+#: providers/postgres/gda-postgres-provider.c:838
 msgid "Scale"
-msgstr ""
+msgstr "Skalierung"
 
 #: providers/default/gda-default-provider.c:365
-#: providers/mysql/gda-mysql-provider.c:877
+#: providers/mysql/gda-mysql-provider.c:945
 #: providers/oracle/gda-oracle-provider.c:1060
-#: providers/postgres/gda-postgres-provider.c:833
+#: providers/postgres/gda-postgres-provider.c:839
 msgid "Not null?"
-msgstr ""
+msgstr "Nicht Null?"
 
 #: providers/default/gda-default-provider.c:366
-#: providers/mysql/gda-mysql-provider.c:878
+#: providers/mysql/gda-mysql-provider.c:946
 #: providers/oracle/gda-oracle-provider.c:1061
-#: providers/postgres/gda-postgres-provider.c:834
+#: providers/postgres/gda-postgres-provider.c:840
 msgid "Primary key?"
-msgstr ""
+msgstr "Primärschlüssel?"
 
 #: providers/default/gda-default-provider.c:367
-#: providers/mysql/gda-mysql-provider.c:879
+#: providers/mysql/gda-mysql-provider.c:947
 #: providers/oracle/gda-oracle-provider.c:1062
-#: providers/postgres/gda-postgres-provider.c:835
+#: providers/postgres/gda-postgres-provider.c:841
 msgid "Unique index?"
-msgstr ""
+msgstr "Eindeutiger Index?"
 
 #: providers/default/gda-default-provider.c:368
-#: providers/mysql/gda-mysql-provider.c:880
+#: providers/mysql/gda-mysql-provider.c:948
 #: providers/oracle/gda-oracle-provider.c:1063
-#: providers/postgres/gda-postgres-provider.c:836
+#: providers/postgres/gda-postgres-provider.c:842
 msgid "References"
-msgstr ""
+msgstr "Referenzen"
 
 #: providers/default/gda-default-provider.c:378
 #: providers/default/gda-default-provider.c:384
-#, fuzzy
 msgid "Invalid argument"
-msgstr "Ungültiger Node"
+msgstr "Ungültiges Argument"
 
 #: providers/default/gda-default-provider.c:391
 #, c-format
 msgid "Table %s not found"
-msgstr ""
+msgstr "Tabelle %s wurde nicht gefunden"
 
 #: providers/default/gda-default-provider.c:416
-#, fuzzy
 msgid "Could not get description for column"
-msgstr "Verbindungskomponente konnte nicht erzeugt werden"
+msgstr "Es konnte keine Beschreibung zur Spalte empfangen werden"
 
 #: providers/default/libmain.c:39
 msgid "GDA default provider, based on the libgda XML format"
-msgstr ""
+msgstr "Der vorgegebene GDA-Treiber, basierend auf dem XML-Format"
 
 #: providers/mdb/gda-mdb-provider.c:176
-#, fuzzy
 msgid "A database FILENAME must be specified in the connection_string"
 msgstr ""
-"Um eine Datenbank zu öffnen, muss in der Verbindungszeichenkette ein voller "
-"Pfad angegeben werden."
+"In der Verbindungszeichenkette muß der Dateiname einer Datenbank angegeben "
+"werden."
 
 #: providers/mdb/gda-mdb-provider.c:184
-#, fuzzy, c-format
+#, c-format
 msgid "Could not open file %s"
-msgstr "Datei bei %s konnte nicht interpretiert werden"
+msgstr "Datei %s konnte nicht geöffnet werden"
 
 #: providers/mdb/gda-mdb-provider.c:206 providers/mdb/gda-mdb-provider.c:308
-#, fuzzy
 msgid "Invalid MDB handle"
-msgstr "Ungültiger MySQL-Handle"
+msgstr "Ungültiger MDB-Handle"
 
 #: providers/mdb/gda-mdb-provider.c:273
 msgid "Table Name"
-msgstr ""
+msgstr "Tabellenname"
 
 #: providers/mdb/libmain.c:34
 msgid "GDA provider for MS Access files"
-msgstr ""
+msgstr "GDA-Treiber für MS Access-Dateien"
 
 #: providers/mysql/gda-mysql-provider.c:198
 msgid ""
@@ -312,24 +309,40 @@ msgstr ""
 #: providers/mysql/gda-mysql-provider.c:494
 #: providers/mysql/gda-mysql-provider.c:522
 msgid "Invalid MYSQL handle"
-msgstr "Ungültiger MYSQL-Handle"
+msgstr "Ungültiger MySQL-Handle"
 
-#. gda_server_recordset_model_set_field_defined_size (recset, 0, 32);
-#: providers/mysql/gda-mysql-provider.c:775
+#. 2nd, the owner
+#: providers/mysql/gda-mysql-provider.c:779
+msgid "Unknown"
+msgstr "Unbekannt"
+
+#: providers/mysql/gda-mysql-provider.c:846
 #: providers/oracle/gda-oracle-provider.c:1563
 msgid "Type"
 msgstr "Typ"
 
-#: providers/mysql/gda-mysql-provider.c:888
+#: providers/mysql/gda-mysql-provider.c:847
+msgid "Owner"
+msgstr "Besitzer"
+
+#: providers/mysql/gda-mysql-provider.c:848
+msgid "Comments"
+msgstr "Kommentare"
+
+#: providers/mysql/gda-mysql-provider.c:849
+msgid "GDA type"
+msgstr "GDA-Typ"
+
+#: providers/mysql/gda-mysql-provider.c:956
 #: providers/mysql/gda-mysql-recordset.c:58
 #: providers/mysql/gda-mysql-recordset.c:174
 msgid "Invalid MySQL handle"
 msgstr "Ungültiger MySQL-Handle"
 
-#: providers/mysql/gda-mysql-provider.c:897
-#: providers/mysql/gda-mysql-provider.c:905
+#: providers/mysql/gda-mysql-provider.c:965
+#: providers/mysql/gda-mysql-provider.c:973
 msgid "You need to specify the name of the table"
-msgstr ""
+msgstr "Sie müssen einen Namen für die Tabelle angeben"
 
 #: providers/mysql/gda-mysql-recordset.c:69
 #: providers/postgres/gda-postgres-recordset.c:184
@@ -342,88 +355,77 @@ msgstr "Zeilennummer außerhalb des Erlaubten"
 #: providers/mysql/gda-mysql-recordset.c:281
 #: providers/oracle/gda-oracle-recordset.c:467
 msgid "Attempt to insert a row with an invalid number of columns"
-msgstr ""
+msgstr "Es wurde versucht, eine Zeile mit ungültiger Spaltenanzahl einzufügen"
 
 #: providers/mysql/gda-mysql-recordset.c:296
 #: providers/oracle/gda-oracle-recordset.c:482
-#, fuzzy
 msgid "Could not retrieve column's information"
-msgstr "Verbindungskomponente konnte nicht erzeugt werden"
+msgstr "Spalteninformationen konnten nicht empfangen werden"
 
 #: providers/mysql/gda-mysql-recordset.c:314
 #: providers/oracle/gda-oracle-recordset.c:500
-#, fuzzy
 msgid "Could not retrieve column's value"
-msgstr "Datei von %s war nicht zu erreichen"
+msgstr "Spaltenwerte konnten nicht empfangen werden"
 
 #: providers/mysql/libmain.c:36
 msgid "GDA provider for MySQL databases"
-msgstr ""
+msgstr "GDA-Treiber für MySQL-Datenbanken"
 
 #: providers/odbc/libmain.c:36
-#, fuzzy
 msgid "GDA bridge to ODBC data sources"
-msgstr "GDA-SQLite-Datenquellen-Zugriff"
+msgstr "GDA-Verbindung zu ODBC Datenquellen"
 
 #: providers/oracle/gda-oracle-provider.c:193
-#, fuzzy
 msgid "Could not initialize Oracle"
-msgstr "Oracle-Umgebung konnte nicht initialisiert werden"
+msgstr "Oracle konnte nicht initialisiert werden"
 
 #: providers/oracle/gda-oracle-provider.c:204
-#, fuzzy
 msgid "Could not initialize the Oracle environment"
-msgstr "Oracle-Umgebung konnte nicht initialisiert werden"
+msgstr "Die Oracle-Umgebung konnte nicht initialisiert werden"
 
 #: providers/oracle/gda-oracle-provider.c:216
-#, fuzzy
 msgid "Could not allocate the Oracle service handle"
-msgstr "Oracle-Serverhandle konnte nicht initialisiert werden"
+msgstr "Der Oracle-Dienst-Handle konnte nicht initialisiert werden"
 
 #: providers/oracle/gda-oracle-provider.c:226
-#, fuzzy
 msgid "Could not allocate the Oracle error handle"
-msgstr "Oracle-Fehlerbehandlung konnte nicht initialisiert werden"
+msgstr "Der Oracle-Fehler-Handle konnte nicht initialisiert werden"
 
 #: providers/oracle/gda-oracle-provider.c:238
-#, fuzzy
 msgid "Could not allocate the Oracle server handle"
-msgstr "Oracle-Serverhandle konnte nicht initialisiert werden"
+msgstr "Oracle-Server-Handle konnte nicht initialisiert werden"
 
 #: providers/oracle/gda-oracle-provider.c:251
-#, fuzzy
 msgid "Could not allocate the Oracle session handle"
-msgstr "Oracle-Fehlerbehandlung konnte nicht initialisiert werden"
+msgstr "Der Oracle-Sitzungs-Handle konnte nicht initialisiert werden"
 
+# CHECK
 #: providers/oracle/gda-oracle-provider.c:281
-#, fuzzy
 msgid "Could not attach to the Oracle server"
-msgstr "Oracle-Serverhandle konnte nicht initialisiert werden"
+msgstr "Es konnte nicht dem Oracle-Server beigetreten werden"
 
+# CHECK
 #: providers/oracle/gda-oracle-provider.c:297
-#, fuzzy
 msgid "Could not set the Oracle server attribute in the service context"
-msgstr "Oracle-Dienstekontext konnte nicht initialisiert werden"
+msgstr ""
+"Das Oracle-Serverattribut konnte nicht im Dienstekontext festgelegt werden"
 
 #: providers/oracle/gda-oracle-provider.c:313
-#, fuzzy
 msgid "Could not set the Oracle username attribute"
-msgstr "Oracle-Serverhandle konnte nicht initialisiert werden"
+msgstr "Das Oracle-Attribut »Benutzername« konnte nicht festgelegt werden"
 
 #: providers/oracle/gda-oracle-provider.c:329
-#, fuzzy
 msgid "Could not set the Oracle password attribute"
-msgstr "Oracle-Komponentenfabrik konnte nicht geöffnet werden"
+msgstr "Das Oracle-Attribut »Passwort« konnte nicht festgelegt werden"
 
 #: providers/oracle/gda-oracle-provider.c:344
-#, fuzzy
 msgid "Could not begin the Oracle session"
-msgstr "Oracle-Umgebung konnte nicht initialisiert werden"
+msgstr "Die Oracle-Sitzung konnte nicht gestartet werden"
 
 #: providers/oracle/gda-oracle-provider.c:362
-#, fuzzy
 msgid "Could not set the Oracle session attribute in the service context"
-msgstr "Oracle-Dienstekontext konnte nicht initialisiert werden"
+msgstr ""
+"Das Oracle-Sitzungsattribut konnte nicht im Dienstkontext festgelegt werden"
 
 #: providers/oracle/gda-oracle-provider.c:444
 #: providers/oracle/gda-oracle-provider.c:518
@@ -437,47 +439,40 @@ msgstr "Oracle-Dienstekontext konnte nicht initialisiert werden"
 #: providers/oracle/gda-oracle-recordset.c:166
 #: providers/oracle/gda-oracle-recordset.c:388
 #: providers/oracle/gda-oracle-recordset.c:589
-#, fuzzy
 msgid "Invalid Oracle handle"
-msgstr "Ungültiger SQLite-Handle"
+msgstr "Ungültiger Oracle-Handle"
 
 #: providers/oracle/gda-oracle-provider.c:455
-#, fuzzy
 msgid "Could not allocate the Oracle statement handle"
-msgstr "Oracle-Serverhandle konnte nicht initialisiert werden"
+msgstr "Oracle-Anweisungs-Handle konnte nicht initialisiert werden"
 
 #: providers/oracle/gda-oracle-provider.c:466
-#, fuzzy
 msgid "Could not prepare the Oracle statement"
-msgstr "Oracle-Umgebung konnte nicht initialisiert werden"
+msgstr "Die Oracle-Anweisung konnte nicht vorbereitet werden"
 
 #: providers/oracle/gda-oracle-provider.c:498
-#, fuzzy
 msgid "Could not bind the Oracle statement parameter"
-msgstr "Oracle-Komponentenfabrik konnte nicht geöffnet werden"
+msgstr "Anweisungs-Parameter konnten nicht verarbeitet werden"
 
 #: providers/oracle/gda-oracle-provider.c:543
-#, fuzzy
 msgid "Could not get the Oracle statement type"
-msgstr "Oracle-Komponentenfabrik konnte nicht geöffnet werden"
+msgstr "Der Typ der Anweisung konnte nicht festgestellt werden"
 
 #: providers/oracle/gda-oracle-provider.c:561
-#, fuzzy
 msgid "Could not execute the Oracle statement"
-msgstr "Oracle-Umgebung konnte nicht initialisiert werden"
+msgstr "Die Oracle-Anweisung konnte nicht ausgeführt werden"
 
 #: providers/oracle/gda-oracle-provider.c:574
 msgid "Could not get the number of columns in the result set"
-msgstr ""
+msgstr "Die Spaltenanzahl im Ergebnis konnte nicht empfangen werden"
 
 #: providers/oracle/gda-oracle-provider.c:591
 msgid "Could not get the parameter descripter in the result set"
-msgstr ""
+msgstr "Die Parameter-Beschreibung im Ergebnis konnte nicht empfangen werden"
 
 #: providers/oracle/gda-oracle-provider.c:603
-#, fuzzy
 msgid "Could not get the column name in the result set"
-msgstr "Datei von %s war nicht zu erreichen"
+msgstr "Der Spaltenname im Ergebnis konnte nicht empfangen werden"
 
 #: providers/oracle/gda-oracle-provider.c:749
 #: providers/oracle/gda-oracle-provider.c:825
@@ -485,199 +480,174 @@ msgstr "Datei von %s war nicht zu erreichen"
 #: providers/oracle/gda-oracle-provider.c:931
 #, fuzzy
 msgid "Could not attach the transaction to the service context"
-msgstr "Oracle-Dienstekontext konnte nicht initialisiert werden"
+msgstr "Die Transaktion konnt nicht in den Dienstekontext übernommen werden"
 
 #: providers/oracle/gda-oracle-provider.c:799
 #, fuzzy
 msgid "Could not allocate the Oracle transaction handle"
-msgstr "Oracle-Fehlerbehandlung konnte nicht initialisiert werden"
+msgstr "Oracle-Transaktions-Handle konnte nicht initialisiert werden"
 
 #: providers/oracle/gda-oracle-provider.c:811
-#, fuzzy
 msgid "Could not set the Oracle transaction name"
-msgstr "Oracle-Umgebung konnte nicht initialisiert werden"
+msgstr "Der Name der Oracle-Transaktion konnte nicht festgelegt werden"
 
 #: providers/oracle/gda-oracle-provider.c:836
-#, fuzzy
 msgid "Could not start the Oracle transaction"
-msgstr "Oracle-Komponentenfabrik konnte nicht geöffnet werden"
+msgstr "Die Oracle-Transaktion konnte nicht gestartet werden"
 
 #: providers/oracle/gda-oracle-provider.c:884
-#, fuzzy
 msgid "Could not prepare the transaction to commit"
-msgstr "Verbindungskomponente konnte nicht erzeugt werden"
+msgstr "Die Transaktion konnte nicht für die Übermittlung vorbereitet werden"
 
 #: providers/oracle/gda-oracle-provider.c:892
-#, fuzzy
 msgid "Could not commit the Oracle transaction"
-msgstr "Oracle-Komponentenfabrik konnte nicht geöffnet werden"
+msgstr "Die Transaktion konnte nicht übermittelt werden"
 
 #: providers/oracle/gda-oracle-provider.c:938
-#, fuzzy
 msgid "Could not rollback the Oracle transaction"
-msgstr "Oracle-Komponentenfabrik konnte nicht geöffnet werden"
+msgstr "Die Transaktion konnte nicht rückgängig gemacht werden"
 
 #: providers/oracle/gda-oracle-provider.c:1227
-#, fuzzy
 msgid "Could not allocate the Oracle describe handle"
-msgstr "Oracle-Serverhandle konnte nicht initialisiert werden"
+msgstr "Oracle-Server-Handle konnte nicht initialisiert werden"
 
 #: providers/oracle/gda-oracle-provider.c:1240
-#, fuzzy
 msgid "Could not describe the Oracle table"
-msgstr "Datei von %s war nicht zu erreichen"
+msgstr "Die Oracle-Tabelle konnte nicht beschrieben werden"
 
 #: providers/oracle/gda-oracle-provider.c:1253
-#, fuzzy
 msgid "Could not get the Oracle parameter handle"
-msgstr "Oracle-Serverhandle konnte nicht initialisiert werden"
+msgstr "Oracle-Paramenter-Handle konnte nicht empfangen werden"
 
 #: providers/oracle/gda-oracle-provider.c:1266
-#, fuzzy
 msgid "Could not get the number of columns in the table"
-msgstr "Datei von %s war nicht zu erreichen"
+msgstr "Die Spaltenanzahl innerhalb der Tabelle konnte nicht empfangen werden"
 
 #: providers/oracle/gda-oracle-provider.c:1278
-#, fuzzy
 msgid "Could not get the column list"
-msgstr "Datei von %s war nicht zu erreichen"
+msgstr "Die Spaltenliste konnte nicht empfangen werden"
 
 #: providers/oracle/gda-oracle-provider.c:1307
-#, fuzzy
 msgid "Could not get the Oracle column handle"
-msgstr "Oracle-Fehlerbehandlung konnte nicht initialisiert werden"
+msgstr "Oracle-Spalten-Handle konnte nicht empfangen werden"
 
 #: providers/oracle/gda-oracle-provider.c:1320
-#, fuzzy
 msgid "Could not get the Oracle field name"
-msgstr "Oracle-Umgebung konnte nicht initialisiert werden"
+msgstr "Der Name des Oracle-Felds konnte nicht empfangen werden"
 
 #: providers/oracle/gda-oracle-provider.c:1341
-#, fuzzy
 msgid "Could not get the Oracle field data type"
-msgstr "Oracle-Komponentenfabrik konnte nicht geöffnet werden"
+msgstr "Der Datentyp des Oracle-Felds konnte nicht empfangen werden"
 
 #: providers/oracle/gda-oracle-provider.c:1359
-#, fuzzy
 msgid "Could not get the Oracle field defined size"
-msgstr "Datei von %s war nicht zu erreichen"
+msgstr "Die Größe des Oracle-Felds konnte nicht empfangen werden"
 
+# CHECK
 #: providers/oracle/gda-oracle-provider.c:1376
-#, fuzzy
 msgid "Could not get the Oracle field scale"
-msgstr "Oracle-Serverhandle konnte nicht initialisiert werden"
+msgstr "Die Orcale-Feldskalierung konnte nicht empfangen werden"
 
 #: providers/oracle/gda-oracle-provider.c:1393
 msgid "Could not get the Oracle field nullable attribute"
-msgstr ""
+msgstr "Das Oracle «nulltable»-Attribut konnte nicht empfangen werden"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/oracle/gda-oracle-provider.c:1459
-#: providers/postgres/gda-postgres-provider.c:1197 testing/client.c:123
-#, fuzzy
+#: providers/postgres/gda-postgres-provider.c:1203 testing/client.c:123
 msgid "Users"
-msgstr "Benutzername"
+msgstr "Benutzer"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/oracle/gda-oracle-provider.c:1651
-#: providers/postgres/gda-postgres-provider.c:767 testing/client.c:121
+#: providers/postgres/gda-postgres-provider.c:773 testing/client.c:121
 msgid "Indexes"
 msgstr "Indizes"
 
+# CHECK
 #: providers/oracle/gda-oracle-provider.c:1655
-#, fuzzy
 msgid "Procedures"
-msgstr "Stored Procedures"
+msgstr "Prozeduren"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/oracle/gda-oracle-provider.c:1659
-#: providers/postgres/gda-postgres-provider.c:1225 testing/client.c:124
+#: providers/postgres/gda-postgres-provider.c:1231 testing/client.c:124
 msgid "Sequences"
-msgstr ""
+msgstr "Sequenzen"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/oracle/gda-oracle-provider.c:1663
-#: providers/postgres/gda-postgres-provider.c:672
+#: providers/postgres/gda-postgres-provider.c:678
 msgid "Tables"
-msgstr ""
+msgstr "Tabellen"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/oracle/gda-oracle-provider.c:1667
-#: providers/postgres/gda-postgres-provider.c:818 testing/client.c:125
+#: providers/postgres/gda-postgres-provider.c:824 testing/client.c:125
 msgid "Triggers"
-msgstr "Trigger"
+msgstr "Auslöser"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/oracle/gda-oracle-provider.c:1671
-#: providers/postgres/gda-postgres-provider.c:742 testing/client.c:120
+#: providers/postgres/gda-postgres-provider.c:748 testing/client.c:120
 msgid "Views"
 msgstr "Ansichten"
 
 #: providers/oracle/gda-oracle-recordset.c:73
-#, fuzzy
 msgid "Could not get the Oracle parameter"
-msgstr "Oracle-Umgebung konnte nicht initialisiert werden"
+msgstr "Der Oracle-Parameter konnte nicht empfangen werden"
 
+# CHECK
 #: providers/oracle/gda-oracle-recordset.c:83
-#, fuzzy
 msgid "Could not get the parameter defined size"
-msgstr "Datei bei %s konnte nicht interpretiert werden"
+msgstr "Die definierte Größe des Parameters konnte nicht empfangen werden"
 
 #: providers/oracle/gda-oracle-recordset.c:96
-#, fuzzy
 msgid "Could not get the parameter data type"
-msgstr "Komponenten vom Typ %s konnte nicht erzeugt werden"
+msgstr "Der Datentyp des Parameters konnte nicht empfangen werden"
 
+# CHECK
 #: providers/oracle/gda-oracle-recordset.c:127
-#, fuzzy
 msgid "Could not define by position"
-msgstr "Datei bei %s konnte nicht geladen werden"
+msgstr "Es konnte nicht anhand der Position definiert werden"
 
 #: providers/oracle/gda-oracle-recordset.c:172
 #: providers/postgres/gda-postgres-recordset.c:263
-#, fuzzy
 msgid "Column out of range"
-msgstr "Zeilennummer außerhalb des Erlaubten"
+msgstr "Zeile außerhalb des Erlaubten"
 
 #: providers/oracle/gda-oracle-recordset.c:184
-#, fuzzy
 msgid "Could not get the Oracle parameter information"
-msgstr "Verbindungskomponente konnte nicht erzeugt werden"
+msgstr "Parameter-Information konnte nicht empfangen werden"
 
 #: providers/oracle/gda-oracle-recordset.c:194
-#, fuzzy
 msgid "Could not get the Oracle column name"
-msgstr "Datei von %s war nicht zu erreichen"
+msgstr "Der Oracle-Spaltenname konnte nicht empfangen werden"
 
 #: providers/oracle/gda-oracle-recordset.c:209
-#, fuzzy
 msgid "Could not get the Oracle column data type"
-msgstr "Oracle-Komponentenfabrik konnte nicht geöffnet werden"
+msgstr "Der Datentyp zur Spalte konnte nicht empfangen werden"
 
+# CHECK
 #: providers/oracle/gda-oracle-recordset.c:221
-#, fuzzy
 msgid "Could not get the Oracle column scale"
-msgstr "Datei von %s war nicht zu erreichen"
+msgstr "Die Oracle-Spaltenskalierung konnte nicht empfangen werden"
 
 #: providers/oracle/gda-oracle-recordset.c:233
-#, fuzzy
 msgid "Could not get the Oracle column nullable attribute"
-msgstr "Oracle-Komponentenfabrik konnte nicht geöffnet werden"
+msgstr "Das Orcale «column nulltable»-Attribut konnte nicht empfangen werden"
 
 #: providers/oracle/gda-oracle-recordset.c:245
-#, fuzzy
 msgid "Could not get the Oracle defined size"
-msgstr "Datei von %s war nicht zu erreichen"
+msgstr "Die von Oracle definierte Größe konnte nicht empfangen werden"
 
 #: providers/oracle/gda-oracle-recordset.c:353
-#, fuzzy
 msgid "Could not fetch a row"
-msgstr "Datei von %s war nicht zu erreichen"
+msgstr "Eine Zeile konnte nicht abgerufen werden"
 
 #: providers/oracle/libmain.c:34
-#, fuzzy
 msgid "GDA provider for Oracle databases"
-msgstr "GDA-SQLite-Datenquellen-Zugriff"
+msgstr "GDA-Treiber für Oracle-Datenbanken"
 
 #: providers/oracle/utils.c:67 providers/postgres/utils.c:47
 msgid "NO DESCRIPTION"
@@ -687,48 +657,51 @@ msgstr "KEINE BESCHREIBUNG"
 msgid "Not available"
 msgstr "Nicht verfügbar"
 
-#: providers/postgres/gda-postgres-provider.c:382
-#: providers/postgres/gda-postgres-provider.c:453
-#: providers/postgres/gda-postgres-provider.c:587
+#: providers/postgres/gda-postgres-provider.c:388
+#: providers/postgres/gda-postgres-provider.c:459
+#: providers/postgres/gda-postgres-provider.c:593
 #: providers/postgres/gda-postgres-recordset.c:175
 #: providers/postgres/gda-postgres-recordset.c:215
 #: providers/postgres/gda-postgres-recordset.c:257
 msgid "Invalid PostgreSQL handle"
 msgstr "Ungültiger PostgreSQL-Handle"
 
-#: providers/postgres/gda-postgres-provider.c:711
-#, fuzzy
+#: providers/postgres/gda-postgres-provider.c:717
 msgid "Types"
-msgstr "Typ"
+msgstr "Typen"
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:793 testing/client.c:122
+#: providers/postgres/gda-postgres-provider.c:799 testing/client.c:122
 msgid "Aggregates"
 msgstr "Aggregate"
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:1172 testing/client.c:116
+#: providers/postgres/gda-postgres-provider.c:1178 testing/client.c:116
 msgid "Databases"
-msgstr ""
+msgstr "Datenbanken"
 
-#: providers/postgres/gda-postgres-provider.c:1265
+#: providers/postgres/gda-postgres-provider.c:1271
 msgid "Table name"
-msgstr ""
+msgstr "Tabellenname"
 
-#: providers/postgres/gda-postgres-provider.c:1266
+#: providers/postgres/gda-postgres-provider.c:1272
 msgid "Sequence"
-msgstr ""
+msgstr "Sequenz"
 
 #: providers/postgres/gda-postgres-recordset.c:230
 #: providers/sqlite/gda-sqlite-recordset.c:213
 #: providers/sqlite/gda-sqlite-recordset.c:245
-#, fuzzy
 msgid "Column number out of range"
-msgstr "Zeilennummer außerhalb des Erlaubten"
+msgstr "Spaltenanzahl außerhalb des Erlaubten"
+
+#: providers/postgres/gda-postgres-recordset.c:353
+#, c-format
+msgid "Tuples:\"%s\""
+msgstr "Tupel: «%s»"
 
 #: providers/postgres/libmain.c:41
 msgid "GDA provider for PostgreSQL databases"
-msgstr ""
+msgstr "GDA-Treiber für PostgreSQL-Datenbanken"
 
 #: providers/sqlite/gda-sqlite-provider.c:246
 msgid "Invalid SQLITE handle"
@@ -739,21 +712,22 @@ msgstr "Ungültiger SQLITE-Handle"
 #: providers/sqlite/gda-sqlite-recordset.c:159
 #: providers/sqlite/gda-sqlite-recordset.c:198
 #: providers/sqlite/gda-sqlite-recordset.c:239
-#, fuzzy
 msgid "Invalid SQLite handle"
 msgstr "Ungültiger SQLite-Handle"
 
 #: providers/sqlite/gda-sqlite-provider.c:332
 msgid "Only one database per connection is allowed"
-msgstr ""
+msgstr "Es ist nur eine Datenbank pro Verbindung erlaubt"
 
 #: providers/sqlite/gda-sqlite-provider.c:346
 msgid "To remove a SQLite database you should remove the database file by hand"
 msgstr ""
+"Bitte die Datenbankdatei manuell löschen, um die SQLite-Datenbank zu "
+"entfernen"
 
 #: providers/sqlite/libmain.c:41
 msgid "GDA provider for SQLite databases"
-msgstr ""
+msgstr "GDA-Treiber für SQLite-Datenbanken"
 
 #: providers/sybase/main.c:52
 msgid "Could not initiate Sybase component factory"
@@ -780,12 +754,12 @@ msgstr "** FEHLER: Verbindung zu %s konnte nicht geöffnet werden\n"
 #. show provider features
 #: testing/client.c:83
 msgid "\tProvider capabilities...\n"
-msgstr "\tLieferanten-Fähigkeiten...\n"
+msgstr "\tTreiber-Fähigkeiten...\n"
 
 #: testing/client.c:84
-#, fuzzy, c-format
+#, c-format
 msgid "\t\tAggregates: %s\n"
-msgstr "Aggregate"
+msgstr "\t\tAggregate: %s\n"
 
 #: testing/client.c:86 testing/client.c:89 testing/client.c:92
 #: testing/client.c:95 testing/client.c:98 testing/client.c:101
@@ -802,24 +776,24 @@ msgid "Not supported"
 msgstr "Nicht unterstützt"
 
 #: testing/client.c:87
-#, fuzzy, c-format
+#, c-format
 msgid "\t\tIndexes: %s\n"
-msgstr "Indizes"
+msgstr "\t\tIndizes: %s\n"
 
 #: testing/client.c:90
 #, c-format
 msgid "\t\tProcedures: %s\n"
-msgstr ""
+msgstr "\t\tVorgänge: %s\n"
 
 #: testing/client.c:93
 #, c-format
 msgid "\t\tSequences: %s\n"
-msgstr ""
+msgstr "\t\tSequenzen: %s\n"
 
 #: testing/client.c:96
 #, c-format
 msgid "\t\tSQL: %s\n"
-msgstr ""
+msgstr "\t\tSQL: %\n"
 
 #: testing/client.c:99
 #, c-format
@@ -827,28 +801,28 @@ msgid "\t\tTransactions: %s\n"
 msgstr "\t\tTransaktionen: %s\n"
 
 #: testing/client.c:102
-#, fuzzy, c-format
+#, c-format
 msgid "\t\tTriggers: %s\n"
-msgstr "Trigger"
+msgstr "\t\tAuslöser: %s\n"
 
 #: testing/client.c:105
 #, c-format
 msgid "\t\tUsers: %s\n"
-msgstr ""
+msgstr "\t\tBenutzer: %s\n"
 
 #: testing/client.c:108
 #, c-format
 msgid "\t\tViews: %s\n"
-msgstr ""
+msgstr "\t\tAnsichten: %s\n"
 
 #: testing/client.c:111
 #, c-format
 msgid "\t\tXML queries: %s\n"
-msgstr ""
+msgstr "\t\tXML-Abfragen: %s\n"
 
 #: testing/client.c:117
 msgid "Stored procedures"
-msgstr "Stored Procedures"
+msgstr "Gespeicherte Prozeduren"
 
 #: testing/client.c:118
 msgid "Connection Tables"
@@ -900,7 +874,7 @@ msgstr ""
 #: testing/config.c:89
 #, c-format
 msgid " Provider = %s\n"
-msgstr " Lieferant = %s\n"
+msgstr " Treiber = %s\n"
 
 #: testing/config.c:90
 #, c-format
@@ -915,129 +889,3 @@ msgstr "\tBeschreibung = %s\n"
 #: testing/config.c:93
 msgid "\tgda_params ="
 msgstr "\tGDA_Parameter ="
-
-#~ msgid "Could not initialize OCI library"
-#~ msgstr "OCI-Bibliothek konnte nicht initialisiert werden"
-
-#~ msgid "CORBA exception: %s"
-#~ msgstr "CORBA-Ausnahme: %s"
-
-#~ msgid "Could not create global GDA client"
-#~ msgstr "Globaler GDA-Client konnte nicht erzeugt werden"
-
-#~ msgid "GDA Report engine"
-#~ msgstr "GDA-Berichts-Engine"
-
-#~ msgid "GDA Report engine factory"
-#~ msgstr "GDA-Berichts-Engine-Fabrik"
-
-#~ msgid "Could not parse XML report"
-#~ msgstr "XML-Bericht konnte nicht interpretiert werden"
-
-#~ msgid "Could not activate report engine"
-#~ msgstr "Berichts-Engine konnte nicht aktiviert werden"
-
-#~ msgid "Could not create BonoboStreamMem object"
-#~ msgstr "BonoboStreamMem-Objekt konnte nicht erzeugt werden"
-
-#~ msgid "Could not initiate Report component factory"
-#~ msgstr "Berichts-Komponentenfabrik konnte nicht angestoßen werden"
-
-#~ msgid "Could not activate object %s"
-#~ msgstr "Objekt %s konnte nicht aktiviert werden"
-
-#~ msgid "Could not query CORBA components"
-#~ msgstr "CORBA-Komponenten konnten nicht abgefragt werden"
-
-#~ msgid "%s: An Error occured in the CORBA system."
-#~ msgstr "%s: Ein Fehler ist in dem CORBA-System aufgetreten."
-
-#~ msgid "Unknown CORBA exception for connection"
-#~ msgstr "Unbekannte CORBA-Ausnahme an der Verbindung"
-
-#~ msgid "Could not initialize Bonobo"
-#~ msgstr "Bonobo konnte nicht initialisiert werden"
-
-#~ msgid "Don't know how to create components with IID %s"
-#~ msgstr ""
-#~ "Es ist nicht bekannt, wie Komponenten mit der IID %s erzeugt werden sollen"
-
-#~ msgid "Could not duplicate client object. Client won't get notifications"
-#~ msgstr ""
-#~ "Client-Objekt konnte nicht dupliziert werden. Client wird keine "
-#~ "Benachrichtigung erhalten"
-
-#~ msgid "Could not notify client about action %d"
-#~ msgstr "Client konnte nicht über Aktion %d benachrichtigt werden"
-
-#~ msgid "No implementation for the fetch() method found"
-#~ msgstr "Keine Implementation der Methode fetch() gefunden"
-
-#~ msgid "Default component factory"
-#~ msgstr "Vorgabe-Komponentenfabrik"
-
-#~ msgid "GDA Default Datasource Access"
-#~ msgstr "GDA-Vorgabe-Datenquellen-Zugriff"
-
-#~ msgid "Could not initiate Default component factory"
-#~ msgstr "Vorgabe-Komponentenfabrik konnte nicht angestoßen werden"
-
-#~ msgid "GDA Datasource Access for MySQL"
-#~ msgstr "GDA-Datasource-Access für MySQL"
-
-#~ msgid "MySQL component factory"
-#~ msgstr "MySQL-Komponentenfabrik"
-
-#~ msgid "Could not initiate MySQL component factory"
-#~ msgstr "MySQL-Komponentenfabrik konnte nicht angestoßen werden"
-
-#~ msgid "GDA Datasource Access for ODBC"
-#~ msgstr "GDA-Datasource-Access für ODBC"
-
-#~ msgid "ODBC component factory"
-#~ msgstr "ODBC-Komponentenfabrik"
-
-#~ msgid "Could not initiate ODBC component factory"
-#~ msgstr "ODBC-Komponentenfabrik konnte nicht initialisiert werden"
-
-#~ msgid "GDA Datasource Access for Oracle"
-#~ msgstr "GDA-Datasource-Access für Oracle"
-
-#~ msgid "Oracle component factory"
-#~ msgstr "Oracle-Komponentenfabrik"
-
-#~ msgid "GDA Datasource Access for Postgres"
-#~ msgstr "GDA-Datasource-Access für Postgres"
-
-#~ msgid "Postgres component factory"
-#~ msgstr "Postgres-Komponentenfabrik"
-
-#~ msgid "Could not initiate PostgreSQL component factory"
-#~ msgstr "PostgreSQL-Komponentenfabrik konnte nicht angestoßen werden"
-
-#~ msgid "SQLite component factory"
-#~ msgstr "SQLite-Komponentenfabrik"
-
-#~ msgid "Could not initiate Sqlite component factory"
-#~ msgstr "SQLite-Komponentenfabrik konnte nicht angestoßen werden"
-
-#~ msgid "GDA Datasource Access for Sybase"
-#~ msgstr "GDA-Datasource-Access für Sybase"
-
-#~ msgid "Sybase component factory"
-#~ msgstr "Sybase-Komponentenfabrik"
-
-#~ msgid "\ttype = %s\n"
-#~ msgstr "\tTyp = %s\n"
-
-#~ msgid "\trepo_ids ="
-#~ msgstr "\trepo_IDs ="
-
-#~ msgid "\tusername = %s\n"
-#~ msgstr "\tBenutzername = %s\n"
-
-#~ msgid "\thostname = %s\n"
-#~ msgstr "\tRechnername = %s\n"
-
-#~ msgid "\tdomain = %s\n"
-#~ msgstr "\tDomain = %s\n"
