@@ -5,10 +5,10 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda    cvs\n"
-"POT-Creation-Date: 2000-10-09 11:15+0200\n"
-"PO-Revision-Date: 2000-10-09 11:15+0200\n"
-"Last-Translator: Christian Meyer <linux@chrisime.de>\n"
-"Language-Team: deutsch <gnome-de@gnome.org>\n"
+"POT-Creation-Date: 2000-10-14 12:46+0200\n"
+"PO-Revision-Date: 2000-10-14 12:47+0200\n"
+"Last-Translator: Kai Lahmann <kl@linuxfaqs.de>\n"
+"Language-Team: German <gnome-de@gnome.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=iso-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -58,46 +58,46 @@ msgstr "WAHR"
 msgid "FALSE"
 msgstr "FALSCH"
 
-#: lib/gda-common/gda-corba.c:72
+#: lib/gda-common/gda-corba.c:88
 msgid "True"
 msgstr "Wahr"
 
-#: lib/gda-common/gda-corba.c:72
+#: lib/gda-common/gda-corba.c:88
 msgid "False"
 msgstr "Falsch"
 
-#: lib/gda-common/gda-corba.c:119
+#: lib/gda-common/gda-corba.c:135
 #, c-format
 msgid "CORBA System exception: %s"
 msgstr "CORBA-System-Ausnahmefehler: %s"
 
-#: lib/gda-common/gda-init.c:32
+#: lib/gda-common/gda-init.c:58
 msgid "Attempt to initialize an already initialized client"
 msgstr "Versuch, einen bereits initialisierten Client zu initialisieren"
 
-#: lib/gda-common/gda-log.c:29
+#: lib/gda-common/gda-log.c:47
 msgid "Saving log...x"
 msgstr "Log...x wird gespeichert"
 
 #. compose message
-#: lib/gda-common/gda-log.c:50
+#: lib/gda-common/gda-log.c:68
 msgid "ERROR: "
 msgstr "Fehler:"
 
-#: lib/gda-common/gda-log.c:50
+#: lib/gda-common/gda-log.c:68
 msgid "MESSAGE: "
 msgstr "Meldung:"
 
-#: lib/gda-common/gda-thread.c:150
+#: lib/gda-common/gda-thread.c:210
 msgid "thread is already running"
 msgstr "Thread läuft schon"
 
-#: lib/gda-common/gda-xml-database.c:224
+#: lib/gda-common/gda-xml-database.c:281
 #, c-format
 msgid "table %s already exists"
 msgstr "Tabelle %s existiert schon"
 
-#: lib/gda-common/gda-xml-database.c:388
+#: lib/gda-common/gda-xml-database.c:445
 #, c-format
 msgid "%p is not a valid table"
 msgstr "%p ist keine gültige Tabelle"
@@ -526,7 +526,7 @@ msgid "schema_procedures: proc_catalog = '%s' UNUSED!\n"
 msgstr "schema_procedures: proc_catalog = '%s' UNGENUTZT!\n"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:498
-#, fuzzy, c-format
+#, c-format
 msgid "schema_procs: invalid constraint type %d"
 msgstr "schema_procs: Ungültiger Konstantentyp %d"
 
@@ -540,12 +540,12 @@ msgid "schema_procedures: proc_catalog = '%s' UNUSED!"
 msgstr "schema_procedures: proc_catalog = '%s' UNGENUTZT!"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:575
-#, fuzzy, c-format
+#, c-format
 msgid "schema_tables: invalid constraint type %d"
 msgstr "schema_tables: Ungültiger Konstantentyp %d"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:636
-#, fuzzy, c-format
+#, c-format
 msgid "Invalid or unsupported constraint type: %d"
 msgstr "Ungültiger oder nicht unterstützter Konstantentyp: %d"
 
@@ -646,8 +646,8 @@ msgstr "gda_sybase_error_make(%p,%p,%p,%p)"
 #, c-format
 msgid "No error flag ist set, though %s is called. This may be a bug."
 msgstr ""
-"Kein Fehlercode angegeben, obwohl %s aufgerufen wurde. Dies könnte ein "
-"Fehler sein."
+"Kein Fehlercode angegeben, obwohl %s aufgerufen wurde. Dies könnte ein Fehler "
+"sein."
 
 #: providers/gda-sybase-server/gda-sybase-error.c:135
 msgid "cs_diag() initialized"
@@ -848,7 +848,7 @@ msgstr ""
 "Die gda-sybase-Anbieter-Implementiertung konnte nicht registriert werden"
 
 #: report/gda-report-engine.c:71
-#, fuzzy, c-format
+#, c-format
 msgid "CORBA exception unloading report engine: %s"
 msgstr "CORBA-Ausnahme, Berichtsmodul wird entfernt: %s"
 
@@ -870,9 +870,8 @@ msgstr ""
 "die OAF-Entwickler"
 
 #: report/server/gda-report-server-main.c:106
-#, fuzzy
 msgid "Could not activate report engine"
-msgstr "Die Server-Meldungen konnte nicht gelöscht werden"
+msgstr "Die Berichts-Maschine konnte nicht aktiviert werden"
 
 #: report/server/gda-report-server-main.c:123
 msgid ""
@@ -932,3 +931,4 @@ msgstr "%s: Fehlkonfigurierter DSN Eintrag"
 #, c-format
 msgid "%s: data source '%s' not found\n"
 msgstr "%s: Datenquelle '%s' nicht gefunden\n"
+
