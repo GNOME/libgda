@@ -180,7 +180,7 @@ set_from_string (GdaValue *value, const gchar *as_string)
 			gda_value_set_double (value, dvalue);
 			retval = TRUE;
 		}
-		break;
+		break;	
 	case GDA_VALUE_TYPE_NUMERIC :
 		//FIXME: what test whould i do for numeric?
 		numeric.number = g_strdup (as_string);
@@ -227,6 +227,7 @@ set_from_string (GdaValue *value, const gchar *as_string)
 		value->value.v_type = gda_type_from_string (as_string);
 		break;
 	case GDA_VALUE_TYPE_LIST : //FIXME
+	case GDA_VALUE_TYPE_MONEY : //FIXME
 	default :
 		gda_value_set_string (value, as_string);
 		retval = TRUE;
@@ -425,6 +426,25 @@ gda_value_new_list (const GdaValueList *val)
 
 	value = g_new0 (GdaValue, 1);
 	gda_value_set_list (value, val);
+
+	return value;
+}
+
+/**
+ + gda_value_new_money
+ * @val: value to set for the new #GdaValue.
+ *
+ * Make a new #GdaValue of type #GDA_VALUE_TYPE_MONEY with value @val.
+ *
+ * Returns: The newly created #GdaValue.
+ */
+GdaValue *
+gda_value_new_money (const GdaMoney *val)
+{
+	GdaValue *value;
+
+	value = g_new0 (GdaValue, 1);
+	gda_value_set_money (value, val);
 
 	return value;
 }
@@ -703,6 +723,7 @@ gda_value_is_number (GdaValue *value)
 	case GDA_VALUE_TYPE_BIGINT :
 	case GDA_VALUE_TYPE_DOUBLE :
 	case GDA_VALUE_TYPE_INTEGER :
+	case GDA_VALUE_TYPE_MONEY :
 	case GDA_VALUE_TYPE_NUMERIC :
 	case GDA_VALUE_TYPE_SINGLE :
 	case GDA_VALUE_TYPE_SMALLINT :
@@ -768,6 +789,10 @@ gda_value_copy (const GdaValue *value)
 			copy->value.v_list = g_list_append (copy->value.v_list,
 							    gda_value_copy (v));
 		}
+		break;
+	case GDA_VALUE_TYPE_MONEY :
+		copy->value.v_money.currency = g_strdup (value->value.v_money.currency);
+		copy->value.v_money.amount = value->value.v_money.amount;
 		break;
 	case GDA_VALUE_TYPE_NUMERIC :
 		memcpy (&copy->value.v_numeric, &value->value.v_numeric, sizeof (GdaNumeric));
@@ -1112,6 +1137,41 @@ gda_value_set_list (GdaValue *value, const GdaValueList *val)
 	g_return_if_fail (val != NULL);
 
 	/* FIXME: implement */
+}
+
+/**
+ * gda_value_get_money
+ * @value: a #GdaValue whose value we want to get.
+ *
+ * Gets the value stored in @value.
+ * 
+ * Returns: the value contained in @value.
+ */
+const GdaMoney *
+gda_value_get_money (GdaValue *value)
+{
+	g_return_val_if_fail (value != NULL, NULL);
+	g_return_val_if_fail (gda_value_isa (value, GDA_VALUE_TYPE_MONEY), NULL);
+	return (const GdaMoney *) &value->value.v_money;
+}
+
+/**
+ * gda_value_set_money
+ * @value: a #GdaValue that will store @val.
+ * @val: value to be stored in @value.
+ *
+ * Stores @val into @value.
+ */
+void
+gda_value_set_money (GdaValue *value, const GdaMoney *val)
+{
+	g_return_if_fail (value != NULL);
+	g_return_if_fail (val != NULL);
+
+	clear_value (value);
+	value->type = GDA_VALUE_TYPE_MONEY;
+	value->value.v_money.currency = g_strdup (val->currency);
+	value->value.v_money.amount = val->amount;
 }
 
 /**
@@ -1482,6 +1542,9 @@ gda_value_set_from_value (GdaValue *value, const GdaValue *from)
 	case GDA_VALUE_TYPE_LIST :
 		gda_value_set_list (value, gda_value_get_list ((GdaValue *) from));
 		break;
+	case GDA_VALUE_TYPE_MONEY :
+		gda_value_set_money (value, gda_value_get_money ((GdaValue *) from));
+		break;
 	case GDA_VALUE_TYPE_NUMERIC :
 		gda_value_set_numeric (value, gda_value_get_numeric ((GdaValue *) from));
 		break;
@@ -1645,6 +1708,10 @@ gda_value_stringify (GdaValue *value)
 		else
 			retval = g_strdup ("");
 		break;
+	case GDA_VALUE_TYPE_MONEY :
+		retval = g_strdup_printf ("%s%f", value->value.v_money.currency,
+					  value->value.v_money.amount);
+		break;
 	case GDA_VALUE_TYPE_NUMERIC:
 		numeric = gda_value_get_numeric (value);
 		retval = g_strdup (numeric->number);
@@ -1723,6 +1790,13 @@ gda_value_compare (const GdaValue *value1, const GdaValue *value2)
 		}
 		if (retval == 0 && (l1 == NULL || l2 == NULL) && l1 != l2)
 			retval = (l1 == NULL) ? -1 : 1;
+		break;
+	case GDA_VALUE_TYPE_MONEY :
+		if (!strcmp (value1->value.v_money.currency ? value1->value.v_money.currency : "",
+			     value2->value.v_money.currency ? value2->value.v_money.currency : "")) {
+			retval = (gint) value1->value.v_double - value2->value.v_double;
+		} else
+			retval = -1; /* FIXME: do currency conversions to compare? */
 		break;
 	case GDA_VALUE_TYPE_NUMERIC :
 		retval = memcmp (&value1->value.v_numeric,

@@ -44,6 +44,7 @@ typedef enum {
 	GDA_VALUE_TYPE_GOBJECT,
 	GDA_VALUE_TYPE_INTEGER,
 	GDA_VALUE_TYPE_LIST,
+	GDA_VALUE_TYPE_MONEY,
 	GDA_VALUE_TYPE_NUMERIC,
 	GDA_VALUE_TYPE_SINGLE,
 	GDA_VALUE_TYPE_SMALLINT,
@@ -65,6 +66,11 @@ typedef struct {
 	gdouble x;
 	gdouble y;
 } GdaGeometricPoint;
+
+typedef struct {
+	gchar *currency;
+	gdouble amount;
+} GdaMoney;
 
 typedef struct {
 	gchar *number;
@@ -103,6 +109,7 @@ typedef struct {
 		GObject *v_gobj;
 		gint v_integer;
 		GdaValueList *v_list;
+		GdaMoney v_money;
 		GdaNumeric v_numeric;
 		gfloat v_single;
 		gshort v_smallint;
@@ -125,6 +132,7 @@ GdaValue     *gda_value_new_geometric_point (const GdaGeometricPoint *val);
 GdaValue     *gda_value_new_gobject (const GObject *val);
 GdaValue     *gda_value_new_integer (gint val);
 GdaValue     *gda_value_new_list (const GdaValueList *val);
+GdaValue     *gda_value_new_money (const GdaMoney *val);
 GdaValue     *gda_value_new_numeric (const GdaNumeric *val);
 GdaValue     *gda_value_new_single (gfloat val);
 GdaValue     *gda_value_new_smallint (gshort val);
@@ -164,6 +172,8 @@ void          gda_value_set_integer (GdaValue *value, gint val);
 const GdaValueList *gda_value_get_list (GdaValue *value);
 void          gda_value_set_list (GdaValue *value, const GdaValueList *val);
 void          gda_value_set_null (GdaValue *value);
+const GdaMoney *gda_value_get_money (GdaValue *value);
+void          gda_value_set_money (GdaValue *value, const GdaMoney *val);
 const GdaNumeric *gda_value_get_numeric (GdaValue *value);
 void          gda_value_set_numeric (GdaValue *value, const GdaNumeric *val);
 gfloat        gda_value_get_single (GdaValue *value);

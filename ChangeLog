@@ -1,5 +1,16 @@
 2003-01-18  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	Fixes #102024
+
+	* libgda/gda-value.[ch]: added money type.
+	(gda_value_new_money, gda_value_get_money, gda_value_set_money): new
+	functions.
+	(set_from_string, gda_value_is_number, gda_value_copyi,
+	gda_value_set_from_value, gda_value_stringify, gda_value_compare):
+	take the new type into account.
+
+2003-01-18  Rodrigo Moya <rodrigo@gnome-db.org>
+
 	Fixes #95959
 
 	* providers/default/libmain.c:
