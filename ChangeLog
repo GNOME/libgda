@@ -1,3 +1,9 @@
+2003-09-01  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* doc/C/tmpl/*.sgml:
+	* libgda/gda-parameter.c:
+	* libgda/gda-quark-list.c: added more inline documentation.
+
 2003-08-26  Philippe CHARLIER <p.charlier@chello.be>
 
 	* libgda/gda-value.c (gda_value_new_from_xml): the type is stored in
