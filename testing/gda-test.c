@@ -28,6 +28,8 @@
 #include <gda-client.h>
 #include <stdlib.h>
 
+
+#define MAXSTRLENGTH  1024
 /* ------------------------------------------------------------------------- */
 /* Print intro messages
 /* ------------------------------------------------------------------------- */
@@ -74,8 +76,9 @@ char *list_providers()
 	GdaProvider *provider;
 	int i = 0;
 	char *selected;
-	char *number = NULL;	/* the number of provider entered */
-	gint dummy;
+	char number[4];		/* the number of provider entered, I think
+				   that we will have not more than 999
+				   providers */
 	gint pno;		/* provider number converted with atoi */
 
 	list = gda_provider_list();
@@ -111,7 +114,7 @@ char *list_providers()
 	if (i > 1) {
 		do {
 			g_print("\nChoose one (enter the number):");
-			getline(&number, &dummy, stdin);
+			fgets(number, sizeof(number), stdin);
 			pno = atoi(number);
 		} while (pno < 1 || pno > i);
 		node = g_list_nth(list, pno - 1);
@@ -161,10 +164,9 @@ int main(int argc, char *argv[])
 {
 	gchar *provider;
 	GdaConnection *cnc;
-	gchar *dsn = NULL;
-	gchar *user = NULL;
-	gchar *password = NULL;
-	gint dummy;
+	gchar dsn[MAXSTRLENGTH];
+	gchar user[MAXSTRLENGTH];
+	gchar password[MAXSTRLENGTH];
 	gint length;
 
 	intro();
@@ -175,13 +177,16 @@ int main(int argc, char *argv[])
 	g_print("\nchoosing %s...\n", provider);
 	gda_connection_set_provider(cnc, provider);
 	g_print("\nPlease enter dsn (like 'DATABASE=test'): ");
-	length = getline(&dsn, &dummy, stdin);
+	fgets(dsn, MAXSTRLENGTH, stdin);
+	length = strlen (dsn);
 	dsn[length - 1] = 0;	/* remove \n at the end of the string */
 	g_print("Please enter user name: ");
-	length = getline(&user, &dummy, stdin);
+	fgets(user, MAXSTRLENGTH, stdin);
+	length = strlen (user);
 	user[length - 1] = 0;
 	g_print("Please enter password: ");
-	length = getline(&password, &dummy, stdin);
+	fgets(password, MAXSTRLENGTH, stdin);
+	length = strlen (password);
 	password[length - 1] = 0;
 	g_print("\nopening connection...\n");
 	!gda_connection_open(cnc, dsn, user, password) || die(cnc);

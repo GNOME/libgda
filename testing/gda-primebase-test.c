@@ -27,6 +27,8 @@
 #include <gda-common.h>
 #include <gda-client.h>
 
+#define MAXSTRLENGTH  1024
+
 /* ------------------------------------------------------------------------- */
 /* Print intro messages
 /* ------------------------------------------------------------------------- */
@@ -145,10 +147,9 @@ main (int argc, char* argv[])
 {
   gchar* provider;
   GdaConnection* cnc;
-  gchar* dsn = NULL;
-  gchar* user = NULL;
+  gchar dsn[MAXSTRLENGTH];
+  gchar user[MAXSTRLENGTH];
   gchar* password = NULL;
-  gint dummy;
   gint length;
 
   intro ();
@@ -160,10 +161,12 @@ main (int argc, char* argv[])
   g_print ("\nchoosing %s...\n", provider);
   gda_connection_set_provider (cnc, provider);
   g_print ("\nPlease enter dsn (like 'DATABASE=test'): ");
-  length = getline (&dsn, &dummy, stdin);
+  fgets(dsn, MAXSTRLENGTH, stdin);
+  length = strlen (dsn);
   dsn[length-1] = 0; /* remove \n at the end of the string */
   g_print ("Please enter user name: ");
-  length = getline (&user, &dummy, stdin);
+  fgets(user, MAXSTRLENGTH, stdin);
+  length = strlen (user);
   user[length-1] = 0;
   password = getpass("Please enter password: ");
   length = strlen(password);

@@ -1,3 +1,8 @@
+2001-07-08  Carlos Perelló Marín <carlos@gnome-db.org>
+
+	* gda*test.c: Changed the use of getline with fgets. It must
+	fix the #51404
+
 2001-05-07  Reinhard Müller  <reinhard.mueller@bytewise.at>
 
         * gda-test.c: Applied Margus Väli's patch to let the user select
