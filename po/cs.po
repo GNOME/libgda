@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda HEAD\n"
-"POT-Creation-Date: 2002-12-16 06:43+0100\n"
-"PO-Revision-Date: 2002-12-16 20:14+0100\n"
+"POT-Creation-Date: 2002-12-17 06:45+0100\n"
+"PO-Revision-Date: 2002-12-17 14:22+0100\n"
 "Last-Translator: Miloslav Trmac <mitr@volny.cz>\n"
 "Language-Team: Czech <cs@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -329,7 +329,7 @@ msgstr ""
 
 #: providers/freetds/gda-freetds-provider.c:1007 providers/freetds/utils.c:45
 #: providers/oracle/utils.c:72 providers/postgres/utils.c:52
-#: providers/sybase/utils.c:171
+#: providers/sybase/utils.c:172
 msgid "Not available"
 msgstr "Není k dispozici"
 
@@ -354,7 +354,7 @@ msgid "GDA provider for TDS-based databases (using FreeTDS)"
 msgstr "Poskytovatel GDA pro databáze založené na TDS (za použití FreeTDS)"
 
 #: providers/freetds/utils.c:41 providers/oracle/utils.c:67
-#: providers/postgres/utils.c:47 providers/sybase/utils.c:166
+#: providers/postgres/utils.c:47 providers/sybase/utils.c:167
 msgid "NO DESCRIPTION"
 msgstr "BEZ POPISU"
 
@@ -467,7 +467,7 @@ msgstr "Neplatný handle MYSQL"
 #: providers/postgres/gda-postgres-provider.c:1158
 #: providers/postgres/gda-postgres-provider.c:1608
 #: providers/sqlite/gda-sqlite-provider.c:747
-#: providers/sybase/gda-sybase-provider.c:904
+#: providers/sybase/gda-sybase-provider.c:906
 msgid "Owner"
 msgstr "Vlastník"
 
@@ -480,7 +480,7 @@ msgstr "Vlastník"
 #: providers/postgres/gda-postgres-provider.c:1159
 #: providers/postgres/gda-postgres-provider.c:1609
 #: providers/sqlite/gda-sqlite-provider.c:748
-#: providers/sybase/gda-sybase-provider.c:906
+#: providers/sybase/gda-sybase-provider.c:908
 msgid "Comments"
 msgstr "Komentář"
 
@@ -488,14 +488,14 @@ msgstr "Komentář"
 #: providers/oracle/gda-oracle-provider.c:1629
 #: providers/postgres/gda-postgres-provider.c:1014
 #: providers/sqlite/gda-sqlite-provider.c:746
-#: providers/sybase/gda-sybase-provider.c:902
+#: providers/sybase/gda-sybase-provider.c:904
 msgid "Type"
 msgstr "Typ"
 
 #: providers/mysql/gda-mysql-provider.c:932
 #: providers/postgres/gda-postgres-provider.c:1017
 #: providers/sqlite/gda-sqlite-provider.c:749
-#: providers/sybase/gda-sybase-provider.c:908
+#: providers/sybase/gda-sybase-provider.c:910
 msgid "GDA type"
 msgstr "Typ GDA"
 
@@ -917,6 +917,11 @@ msgstr "Nelze získat informace o poli"
 msgid "GDA provider for SQLite databases"
 msgstr "Poskytovatel GDA pro databáze SQLite"
 
+#. the logic to connect to the database
+#: providers/sybase/gda-sybase-provider.c:251
+msgid "about to open connection"
+msgstr "budu otevírat spojení"
+
 #: providers/sybase/gda-sybase-provider.c:277
 msgid "Out of memory. Allocating connection structure failed."
 msgstr "Nedostatek paměti. Alokace struktury conection selhala."
@@ -982,12 +987,11 @@ msgstr "Prázdné heslo nastaveno."
 msgid "Connected."
 msgstr "Připojeno."
 
-#. 	return TRUE;
-#: providers/sybase/gda-sybase-provider.c:478
+#: providers/sybase/gda-sybase-provider.c:477
 msgid "Finally connected."
 msgstr "Konečně připojeno."
 
-#: providers/sybase/gda-sybase-provider.c:612
+#: providers/sybase/gda-sybase-provider.c:611
 msgid ""
 "Cmd structure already in use. Command will not be executed because of "
 "blocked connection."
@@ -995,9 +999,10 @@ msgstr ""
 "Struktura cmd se již používá. Příkaz nebude kvůli zablokovanému spojení "
 "proveden."
 
-#: providers/sybase/gda-sybase-provider.c:626
-msgid "Failed allocating a command structure in process_sql_commands()."
-msgstr "Selhala alokace struktury command v process_sql_commands()."
+#: providers/sybase/gda-sybase-provider.c:625
+#, c-format
+msgid "Failed allocating a command structure in %s()"
+msgstr "Selhala alokace struktury command v %s()"
 
 #: providers/sybase/gda-sybase-provider.c:636
 msgid "Could not prepare command structure."
@@ -1012,42 +1017,41 @@ msgid "Failed dropping command structure."
 msgstr "Selhalo uvolňování struktury command."
 
 #: providers/sybase/gda-sybase-provider.c:744
-msgid "Command structure already in use. execute_cmd() failed."
-msgstr "Struktura command se již používá. execute_cmd() selhalo."
+#, c-format
+msgid "Command structure already in use. %s failed."
+msgstr "Struktura command se již používá. %s() selhalo."
 
-#: providers/sybase/gda-sybase-provider.c:751
-msgid "Could not ct_cmd_alloc() command structure."
-msgstr "Nemohu ct_cmd_alloc() strukturu command."
+#: providers/sybase/gda-sybase-provider.c:752
+#: providers/sybase/gda-sybase-provider.c:856
+msgid "Could not allocate command structure."
+msgstr "Nelze alokovat strukturu command."
 
-#: providers/sybase/gda-sybase-provider.c:759
-msgid "Could not prepare command structure with ct_command()."
-msgstr "Nelze připravit strukturu command s ct_command()."
+#: providers/sybase/gda-sybase-provider.c:760
+#, c-format
+msgid "Could not prepare command structure with %s."
+msgstr "Nelze připravit strukturu command s %s."
 
-#: providers/sybase/gda-sybase-provider.c:768
+#: providers/sybase/gda-sybase-provider.c:769
 msgid "Sending command failed."
 msgstr "Odesílání příkazu selhalo."
 
-#: providers/sybase/gda-sybase-provider.c:792
-#: providers/sybase/gda-sybase-provider.c:808
+#: providers/sybase/gda-sybase-provider.c:793
+#: providers/sybase/gda-sybase-provider.c:809
 #: providers/sybase/gda-sybase-provider.c:819
 #, c-format
 msgid "%s: %s failed"
 msgstr "%s: %s selhalo"
 
-#: providers/sybase/gda-sybase-provider.c:853
+#: providers/sybase/gda-sybase-provider.c:854
+#, c-format
 msgid ""
-"Connection already in use. Could not allocate command structure in "
-"'_get_database'"
-msgstr ""
-"Spojení se již používá. Nemohu alokovat struktru command v '_get_database'"
+"Connection already in use. Could not allocate command structure in %s()."
+msgstr "Spojení se již používá. Nemohu alokovat struktru command v %s()."
 
-#: providers/sybase/gda-sybase-provider.c:855
-msgid "Could not allocate command structure."
-msgstr "Nelze alokovat strukturu command."
-
-#: providers/sybase/gda-sybase-provider.c:866
-msgid "Failed dropping command structure in get_database()."
-msgstr "Selhalo uvolňování struktury command v get_database()."
+#: providers/sybase/gda-sybase-provider.c:867
+#, c-format
+msgid "Failed dropping command structure in %s()."
+msgstr "Selhalo uvolňování struktury command v %s()."
 
 #: providers/sybase/gda-sybase-recordset.c:315
 msgid "Could not allocate datamodel. No results will be returned."
@@ -1058,49 +1062,54 @@ msgid "ct_cancel() failed."
 msgstr "ct_cancel() selhalo."
 
 #: providers/sybase/gda-sybase-recordset.c:330
-msgid "ct_res_info() failed while processing a row result."
-msgstr "ct_res_info() selhalo při zpracovávání řádku výsledku."
+#, c-format
+msgid "%s failed while processing a row result."
+msgstr "%s() selhalo při zpracovávání řádku výsledku."
 
-#: providers/sybase/gda-sybase-recordset.c:336
-msgid "ct_res_info() returned <= 0 columns."
-msgstr "ct_res_info() vrátilo <= 0 sloupců."
+#: providers/sybase/gda-sybase-recordset.c:337
+#, c-format
+msgid "%s returned <= 0 columns."
+msgstr "%s() vrátilo <= 0 sloupců."
 
-#: providers/sybase/gda-sybase-recordset.c:355
+#: providers/sybase/gda-sybase-recordset.c:357
 msgid "Could not allocate structure for column metainformation."
 msgstr "Nelze alokovat strukturu pro metainformace o sloupci."
 
-#: providers/sybase/gda-sybase-recordset.c:359
-#: providers/sybase/gda-sybase-recordset.c:413
-msgid "Could not ct_cancel processing row resultset."
-msgstr "Nelze ct_cancel zpracovávání row resultset."
-
-#: providers/sybase/gda-sybase-recordset.c:376
+#: providers/sybase/gda-sybase-recordset.c:361
 #, c-format
-msgid "Could not ct_describe column %d"
-msgstr "Nelze ct_describe sloupec %d"
+msgid "Could not call %s while processing row resultset."
+msgstr "Nelze zavolat %s při zpracovávání row resultset."
 
-#: providers/sybase/gda-sybase-recordset.c:384
+#: providers/sybase/gda-sybase-recordset.c:379
+#: providers/sybase/gda-sybase-recordset.c:398
+#, c-format
+msgid "Could not run %s on column %d"
+msgstr "Nelze spustit %s na sloupci %d"
+
+#: providers/sybase/gda-sybase-recordset.c:387
 #, c-format
 msgid "Could not allocate data placeholder for column %d"
 msgstr "Nelze alokovat placeholder dat pro sloupec %d"
 
-#: providers/sybase/gda-sybase-recordset.c:395
+#: providers/sybase/gda-sybase-recordset.c:416
 #, c-format
-msgid "Could not ct_bind() column %d"
-msgstr "Nelze cd_bind() sloupec %d"
+msgid "Could not run %s to cancel processing row resultset."
+msgstr "Nelze spustit %s pro zrušení zpracovávání row resultset."
 
-#: providers/sybase/gda-sybase-recordset.c:428
+#: providers/sybase/gda-sybase-recordset.c:431
 #, c-format
-msgid "ct_fetch() failed on row %d"
-msgstr "ct_fetch() selhalo na řádku %d"
+msgid "%s failed on row %d"
+msgstr "%s selhalo na řádku %d"
 
-#: providers/sybase/gda-sybase-recordset.c:454
-msgid "ct_fetch terminated with unexpected return code."
-msgstr "ct_fetch skončilo s neočekávaným návratovým kódem."
+#: providers/sybase/gda-sybase-recordset.c:457
+#, c-format
+msgid "%s terminated with unexpected return code."
+msgstr "%s skončilo s neočekávaným návratovým kódem."
 
-#: providers/sybase/gda-sybase-recordset.c:528
-msgid "ct_results() returned CS_CMD_FAIL"
-msgstr "ct_results() vrátilo CS_CMD_FAIL"
+#: providers/sybase/gda-sybase-recordset.c:531
+#, c-format
+msgid "%s returned CS_CMD_FAIL"
+msgstr "%s vrátilo CS_CMD_FAIL"
 
 #: providers/sybase/gda-sybase-types.c:95
 #: providers/sybase/gda-sybase-types.c:98
@@ -1183,21 +1192,16 @@ msgstr "\tJméno serveru: %s\n"
 msgid "\tProcedure name: %s\n"
 msgstr "\tJméno procedury: %s\n"
 
-#: providers/sybase/utils.c:95
-#, c-format
-msgid "\t%s\n"
-msgstr "\t%s\n"
-
-#: providers/sybase/utils.c:130
+#: providers/sybase/utils.c:131
 msgid "ct_diag() failed determining # of client messages."
 msgstr "ct_diag() selhalo při zjišťování počtu zpráv klienta"
 
-#: providers/sybase/utils.c:138
+#: providers/sybase/utils.c:139
 #, c-format
 msgid "%d messages fetched."
 msgstr "získáno %d zpráv."
 
-#: providers/sybase/utils.c:152
+#: providers/sybase/utils.c:153
 msgid "Operation not possible, connection busy."
 msgstr "Operace není možná, spojení se používá."
 
