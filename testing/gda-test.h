@@ -36,6 +36,7 @@ G_BEGIN_DECLS
 void test_client (void);
 void test_config (void);
 void test_models (void);
+void test_values (void);
 
 G_END_DECLS
 

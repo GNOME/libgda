@@ -28,6 +28,7 @@ static void
 run_gda_test (gpointer user_data)
 {
 	test_config ();
+	test_values ();
 	test_models ();
 	test_client ();
 
