@@ -1327,7 +1327,7 @@ gda_oracle_fill_md_data (const gchar *tblname,
 				(ub4) OCI_ATTR_PTYPE,
 				(OCIError *) priv_data->herr);
 	if (!gda_oracle_check_result (result, cnc, priv_data, OCI_HTYPE_ERROR,
-			_("Could not get descibed object type"))) {
+			_("Could not get described object type"))) {
 		OCIHandleFree ((dvoid *) dschp, OCI_HTYPE_DESCRIBE);
 		return NULL;
 	}

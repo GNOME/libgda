@@ -1,3 +1,8 @@
+2003-02-06  Christian Neumair <chris@gnome-de.org>
+
+	* providers/ldap/.cvsignore: Added.
+	* providers/oracle/gda-oracle-provider.c: Fixed typo.
+
 2003-02-03  Sergey N. Belinsky <sergey_be@mail.ru>
 
 	* providers/ibmdb2/*: added support for transactions, and schemas
