@@ -364,6 +364,7 @@ gda_server_provider_drop_database (GdaServerProvider *provider,
  * @cnc: a #GdaConnection object.
  * @table_name: name of the table to create.
  * @attributes_list: list of #GdaDataModelColumnAttributes for all fields in the table.
+ * @index_list: list of #GdaDataModelIndex for all (additional) indexes in the table.
  *
  * Proxy the call to the create_table method on the #GdaServerProvider class
  * to the corresponding provider.
@@ -374,7 +375,8 @@ gboolean
 gda_server_provider_create_table (GdaServerProvider *provider,
 				  GdaConnection *cnc,
 				  const gchar *table_name,
-				  const GList *attributes_list)
+				  const GList *attributes_list,
+				  const GList *index_list)
 {
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), FALSE);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
@@ -382,7 +384,7 @@ gda_server_provider_create_table (GdaServerProvider *provider,
 	g_return_val_if_fail (attributes_list != NULL, FALSE);
 	g_return_val_if_fail (CLASS (provider)->create_table != NULL, FALSE);
 
-	return CLASS (provider)->create_table (provider, cnc, table_name, attributes_list);
+	return CLASS (provider)->create_table (provider, cnc, table_name, attributes_list, index_list);
 }
 
 /**
@@ -441,6 +443,7 @@ gda_server_provider_create_index (GdaServerProvider *provider,
  * @provider: a #GdaServerProvider object.
  * @cnc: a #GdaConnection object.
  * @index_name: name of the index to remove.
+ * @primary_key: if index is a PRIMARY KEY.
  * @table_name: name of the table index to remove from.
  *
  * Proxy the call to the drop_index method on the #GdaServerProvider class
@@ -452,6 +455,7 @@ gboolean
 gda_server_provider_drop_index (GdaServerProvider *provider,
 				GdaConnection *cnc,
 				const gchar *index_name,
+				gboolean primary_key,
 				const gchar *table_name)
 {
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), FALSE);
@@ -460,7 +464,7 @@ gda_server_provider_drop_index (GdaServerProvider *provider,
 	g_return_val_if_fail (table_name != NULL, FALSE);
 	g_return_val_if_fail (CLASS (provider)->drop_index != NULL, FALSE);
 
-	return CLASS (provider)->drop_index (provider, cnc, index_name, table_name);
+	return CLASS (provider)->drop_index (provider, cnc, index_name, primary_key, table_name);
 }
 
 /**

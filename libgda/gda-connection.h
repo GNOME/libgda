@@ -98,12 +98,13 @@ gboolean             gda_connection_change_database (GdaConnection *cnc, const g
 gboolean             gda_connection_create_database (GdaConnection *cnc, const gchar *name);
 gboolean             gda_connection_drop_database (GdaConnection *cnc, const gchar *name);
 gboolean             gda_connection_create_table (GdaConnection *cnc, const gchar *table_name,
-						  const GList *attributes_list);
+						  const GList *attributes_list,
+						  const GList *index_list);
 gboolean             gda_connection_drop_table (GdaConnection *cnc, const gchar *table_name);
 gboolean             gda_connection_create_index (GdaConnection *cnc, const GdaDataModelIndex *index,
 						  const gchar *table_name);
 gboolean             gda_connection_drop_index (GdaConnection *cnc, const gchar *index_name,
-						const gchar *table_name);
+						gboolean primary_key, const gchar *table_name);
 
 GList               *gda_connection_execute_command (GdaConnection *cnc,
 						     GdaCommand *cmd,

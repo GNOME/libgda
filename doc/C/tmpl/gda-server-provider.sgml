@@ -114,6 +114,7 @@ Base class for implementing new providers
 @cnc: 
 @table_name: 
 @attributes_list: 
+@index_list: 
 @Returns: 
 
 
@@ -148,6 +149,7 @@ Base class for implementing new providers
 @provider: 
 @cnc: 
 @index_name: 
+@primary_key: 
 @table_name: 
 @Returns: 
 

@@ -24,6 +24,7 @@
  */
 
 #include <libgda/gda-data-model-array.h>
+#include <libgda/gda-data-model-column-index-attributes.h>
 #include <libgda/gda-util.h>
 #include <libgda/gda-intl.h>
 #include <stdlib.h>
@@ -70,7 +71,8 @@ static gboolean gda_mysql_provider_drop_database (GdaServerProvider *provider,
 static gboolean gda_mysql_provider_create_table (GdaServerProvider *provider,
                                                     GdaConnection *cnc,
                                                     const gchar *table_name,
-                                                    const GList *attributes_list);
+                                                    const GList *attributes_list,
+                                                    const GList *index_list);
 
 static gboolean gda_mysql_provider_drop_table (GdaServerProvider *provider,
                                                      GdaConnection *cnc,
@@ -84,6 +86,7 @@ static gboolean gda_mysql_provider_create_index (GdaServerProvider *provider,
 static gboolean gda_mysql_provider_drop_index (GdaServerProvider *provider,
                                                      GdaConnection *cnc,
                                                      const gchar *index_name,
+						     gboolean primary_key,
                                                      const gchar *table_name);
 
 static GList *gda_mysql_provider_execute_command (GdaServerProvider *provider,
@@ -530,16 +533,19 @@ static gboolean
 gda_mysql_provider_create_table (GdaServerProvider *provider,
 					GdaConnection *cnc,
 					const gchar *table_name,
-					const GList *attributes_list)
+					const GList *attributes_list,
+					const GList *index_list)
 {
 	MYSQL *mysql;
 	GdaMysqlProvider *myprv = (GdaMysqlProvider *) provider;
 	GdaDataModelColumnAttributes *dmca;
+	GdaDataModelIndex *dmi;
 	GString *sql;
 	gint i, rc;
 	gchar *mysql_data_type, *default_value, *references;
 	glong size;
 	GdaValueType value_type;
+	gboolean retval;
 
 	g_return_val_if_fail (GDA_IS_MYSQL_PROVIDER (myprv), FALSE);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
@@ -666,6 +672,22 @@ gda_mysql_provider_create_table (GdaServerProvider *provider,
 	/* clean up */
 	g_string_free (sql, TRUE);
 
+	/* Create indexes */
+	if (index_list != NULL) {
+
+		/* step through index_list */
+		for (i=0; i<g_list_length ((GList *) index_list); i++) {
+
+			/* get index */
+			dmi = (GdaDataModelIndex *) g_list_nth_data ((GList *) index_list, i);
+
+			/* create index */
+			retval = gda_postgres_provider_create_index (provider, cnc, dmi, table_name);
+			if (retval == FALSE)
+				return FALSE;
+		}
+	}
+
 	return TRUE;
 }
 
@@ -710,13 +732,96 @@ gda_mysql_provider_create_index (GdaServerProvider *provider,
 {
 	MYSQL *mysql;
 	GdaMysqlProvider *myprv = (GdaMysqlProvider *) provider;
+	GdaDataModelColumnIndexAttributes *dmcia;
+	GString *sql;
+	GList *col_list;
+	gchar *index_name, *col_ref, *idx_ref;
+	gint i, rc, size;
+	gboolean retval = FALSE;
+	GdaSorting sort;
 
 	g_return_val_if_fail (GDA_IS_MYSQL_PROVIDER (myprv), FALSE);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (index != NULL, FALSE);
 	g_return_val_if_fail (table_name != NULL, FALSE);
 
-	return FALSE;
+	/* get MySQL handle */
+	mysql = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_MYSQL_HANDLE);
+	if (!mysql) {
+		gda_connection_add_error_string (cnc, _("Invalid MYSQL handle"));
+		return FALSE;
+	}
+
+	/* prepare the SQL command */
+	sql = g_string_new ("ALTER TABLE ");
+
+	/* get index name */
+	index_name = (gchar *) gda_data_model_index_get_name ((GdaDataModelIndex *) index);
+
+	/* determine type of index (PRIMARY, UNIQUE or INDEX) */
+	if (gda_data_model_index_get_primary_key ((GdaDataModelIndex *) index) == TRUE)
+		g_string_append_printf (sql, "%s ADD PRIMARY KEY (", table_name, index_name);
+	else if (gda_data_model_index_get_unique_key ((GdaDataModelIndex *) index) == TRUE)
+		g_string_append_printf (sql, "%s ADD UNIQUE `%s` (", table_name, index_name);
+	else
+		g_string_append_printf (sql, "%s ADD INDEX `%s` (", table_name, index_name);
+
+	/* get the list of index columns */
+	col_list = gda_data_model_index_get_column_index_list ((GdaDataModelIndex *) index);
+
+	/* step through list */
+	for (i = 0; i < g_list_length ((GList *) col_list); i++) {
+
+		if (i > 0)
+			g_string_append_printf (sql, ", ");
+
+		dmcia = (GdaDataModelColumnIndexAttributes *) g_list_nth_data ((GList *) col_list, i);
+
+		/* name */
+		g_string_append_printf (sql, "`%s` ", gda_data_model_column_index_attributes_get_column_name (dmcia));
+
+		/* size */
+		if (gda_data_model_column_index_attributes_get_defined_size (dmcia) > 0) {
+			size = gda_data_model_column_index_attributes_get_defined_size (dmcia);
+			g_string_append_printf (sql, " (%d) ", size);
+		}
+
+		/* sorting */
+		sort = gda_data_model_column_index_attributes_get_sorting (dmcia);
+		if (sort == GDA_SORTING_DESCENDING)
+			g_string_append_printf (sql, " DESC ");
+		else
+			g_string_append_printf (sql, " ASC ");
+
+		/* any additional column parameters */
+		if (gda_data_model_column_index_attributes_get_references (dmcia) != NULL) {
+			col_ref = (gchar *) gda_data_model_column_index_attributes_get_references (dmcia);
+			if ((col_ref != NULL) && (*col_ref != '\0'))
+				g_string_append_printf (sql, " %s ", col_ref);
+		}
+	}
+
+	/* finish the SQL column(s) section command */
+	g_string_append_printf (sql, ")");
+
+	/* any additional index parameters */
+	if (gda_data_model_index_get_references ((GdaDataModelIndex *) index) != NULL) {
+		idx_ref = (gchar *) gda_data_model_index_get_references ((GdaDataModelIndex *) index);
+		if ((idx_ref != NULL) && (*idx_ref != '\0'))
+		g_string_append_printf (sql, " %s ", idx_ref);
+	}
+
+        /* execute sql command */
+	rc = mysql_query (mysql, sql->str);
+	if (rc != 0) {
+		gda_connection_add_error (cnc, gda_mysql_make_error (mysql));
+		return FALSE;
+	}
+
+	/* clean up */
+	g_string_free (sql, TRUE);
+
+	return TRUE;
 }
 
 /* drop_index handler for the GdaMysqlProvider class */
@@ -724,6 +829,7 @@ static gboolean
 gda_mysql_provider_drop_index (GdaServerProvider *provider,
 				  GdaConnection *cnc,
 				  const gchar *index_name,
+				  gboolean primary_key,
 				  const gchar *table_name)
 {
 	gint rc;
@@ -736,13 +842,18 @@ gda_mysql_provider_drop_index (GdaServerProvider *provider,
 	g_return_val_if_fail (index_name != NULL, FALSE);
 	g_return_val_if_fail (table_name != NULL, FALSE);
 
+	/* get MySQL handle */
 	mysql = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_MYSQL_HANDLE);
 	if (!mysql) {
 		gda_connection_add_error_string (cnc, _("Invalid MYSQL handle"));
 		return FALSE;
 	}
 
-	sql = g_strdup_printf ("DROP INDEX %s ON %s", index_name, table_name);
+	if (primary_key == TRUE)
+		sql = g_strdup_printf ("ALTER TABLE %s DROP PRIMARY KEY", table_name);
+	else
+		sql = g_strdup_printf ("ALTER TABLE %s DROP INDEX `%s`", table_name, index_name);
+
 	rc = mysql_query (mysql, sql);
 	g_free (sql);
 	if (rc != 0) {
@@ -1192,14 +1303,14 @@ get_mysql_tables (GdaConnection *cnc, GdaParameterList *params)
 		gchar *str;
 
 		/* 1st, the name of the table */
-		name = gda_value_stringify (gda_data_model_get_value_at (GDA_DATA_MODEL (recset), 0, r));
+		name = gda_value_stringify ((GdaValue *) gda_data_model_get_value_at (GDA_DATA_MODEL (recset), 0, r));
 		value_list = g_list_append (value_list, gda_value_new_string (name));
 
 		/* 2nd, the owner */
 		value_list = g_list_append (value_list, gda_value_new_string (""));
 
 		/* 3rd, the comments */
-		str = gda_value_stringify (gda_data_model_get_value_at (GDA_DATA_MODEL (recset), 14, r));
+		str = gda_value_stringify ((GdaValue *) gda_data_model_get_value_at (GDA_DATA_MODEL (recset), 14, r));
 		value_list = g_list_append (value_list, gda_value_new_string (str));
 		g_free (str);
 
@@ -1209,7 +1320,7 @@ get_mysql_tables (GdaConnection *cnc, GdaParameterList *params)
 		g_free (str);
 		if (reclist && GDA_IS_DATA_MODEL (reclist->data)) {
 			str = gda_value_stringify (
-				gda_data_model_get_value_at (GDA_DATA_MODEL (reclist->data), 1, 0));
+				(GdaValue *) gda_data_model_get_value_at (GDA_DATA_MODEL (reclist->data), 1, 0));
 			value_list = g_list_append (value_list, gda_value_new_string (str));
 
 			g_free (str);

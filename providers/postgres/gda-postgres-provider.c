@@ -61,7 +61,8 @@ static gboolean gda_postgres_provider_drop_database (GdaServerProvider *provider
 static gboolean gda_postgres_provider_create_table (GdaServerProvider *provider,
 						    GdaConnection *cnc,
 						    const gchar *table_name,
-						    const GList *attributes_list);
+						    const GList *attributes_list,
+						    const GList *index_list);
 
 static gboolean gda_postgres_provider_drop_table (GdaServerProvider *provider,
 						     GdaConnection *cnc,
@@ -75,6 +76,7 @@ static gboolean gda_postgres_provider_create_index (GdaServerProvider *provider,
 static gboolean gda_postgres_provider_drop_index (GdaServerProvider *provider,
 						     GdaConnection *cnc,
 						     const gchar *index_name,
+						     gboolean primary_key,
 						     const gchar *table_name);
 
 static GList *gda_postgres_provider_execute_command (GdaServerProvider *provider,
@@ -819,10 +821,12 @@ static gboolean
 gda_postgres_provider_create_table (GdaServerProvider *provider,
 				    GdaConnection *cnc,
 				    const gchar *table_name,
-				    const GList *attributes_list)
+				    const GList *attributes_list,
+				    const GList *index_list)
 {
 	GdaPostgresProvider *pg_prv = (GdaPostgresProvider *) provider;
 	GdaDataModelColumnAttributes *dmca;
+	GdaDataModelIndex *dmi;
 	GString *sql;
 	gint i;
 	gchar *postgres_data_type, *default_value, *references;
@@ -905,6 +909,22 @@ gda_postgres_provider_create_table (GdaServerProvider *provider,
 	/* clean up */
 	g_string_free (sql, TRUE);
 
+	/* Create indexes */
+	if (index_list != NULL) {
+
+		/* step through index_list */
+		for (i=0; i<g_list_length ((GList *) index_list); i++) {
+
+			/* get index */
+			dmi = (GdaDataModelIndex *) g_list_nth_data ((GList *) index_list, i);
+
+			/* create index */
+			retval = gda_postgres_provider_create_index (provider, cnc, dmi, table_name);
+			if (retval == FALSE)
+				return FALSE;
+		}
+	}
+
 	/* return */
 	return retval;
 }
@@ -943,7 +963,7 @@ gda_postgres_provider_create_index (GdaServerProvider *provider,
 	GdaDataModelColumnIndexAttributes *dmcia;
 	GString *sql;
 	GList *col_list;
-	gchar *index_name;
+	gchar *index_name, *col_ref, *idx_ref;
 	gint i;
 	gboolean retval;
 
@@ -983,10 +1003,24 @@ gda_postgres_provider_create_index (GdaServerProvider *provider,
 
 		/* name */	
 		g_string_append_printf (sql, "\"%s\" ", gda_data_model_column_index_attributes_get_column_name (dmcia));
+
+		/* any additional column parameters */
+		if (gda_data_model_column_index_attributes_get_references (dmcia) != NULL) {
+			col_ref = (gchar *) gda_data_model_column_index_attributes_get_references (dmcia);
+			if ((col_ref != NULL) && (*col_ref != '\0'))
+				g_string_append_printf (sql, " %s ", col_ref);
+		}
 	}
 
-	/* finish the SQL command */
+	/* finish the SQL column(s) section command */
 	g_string_append_printf (sql, ")");
+
+	/* any additional index parameters */
+	if (gda_data_model_index_get_references ((GdaDataModelIndex *) index) != NULL) {
+		idx_ref = (gchar *) gda_data_model_index_get_references ((GdaDataModelIndex *) index);
+		if ((idx_ref != NULL) && (*idx_ref != '\0'))
+			g_string_append_printf (sql, " %s ", idx_ref);
+	}
 
 	/* execute sql command */
 	retval = gda_postgres_provider_single_command (pg_prv, cnc, sql->str);
@@ -1002,6 +1036,7 @@ static gboolean
 gda_postgres_provider_drop_index (GdaServerProvider *provider,
 				  GdaConnection *cnc,
 				  const gchar *index_name,
+				  gboolean primary_key,
 				  const gchar *table_name)
 {
 	gboolean retval = FALSE, retval_temp;

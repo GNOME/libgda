@@ -5,6 +5,7 @@
 <!ENTITY LIBGDA          "<application>libgda</application>">
 <!ENTITY GNOMEDB         "<application>GNOME-DB</application>">
 <!ENTITY igalia          '<emphasis><ulink url="http://www.igalia.com">Igalia, S.L.</ulink></emphasis>'>
+<!ENTITY xobas           '<emphasis><ulink url="http://www.xobas.com">Xobas Software</ulink></emphasis>'>
 <!ENTITY API             "<acronym>API</acronym>">
 <!ENTITY DBMS            "<acronym>DBMS</acronym>">
 <!ENTITY DSN             "<acronym>DSN</acronym>">
@@ -155,8 +156,11 @@
         <firstname>Bas</firstname>
         <surname>Driessen</surname>
         <affiliation>
+          <orgname>&xobas;</orgname>
           <address><email>bas.driessen@xobas.com</email></address>
         </affiliation>
+	<contrib>libgda, gda-postgres, gda-mysql
+        </contrib>
       </author>
     </authorgroup>
     <date>1999 February</date>

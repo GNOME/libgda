@@ -82,7 +82,8 @@ struct _GdaServerProviderClass {
 	gboolean (* create_table) (GdaServerProvider *provider,
 				   GdaConnection *cnc,
 				   const gchar *table_name,
-				   const GList *attributes_list);
+				   const GList *attributes_list,
+				   const GList *index_list);
 	gboolean (* drop_table) (GdaServerProvider *provider,
 				 GdaConnection *cnc,
 				 const gchar *table_name);
@@ -93,6 +94,7 @@ struct _GdaServerProviderClass {
 	gboolean (* drop_index) (GdaServerProvider *provider,
 				 GdaConnection *cnc,
 				 const gchar *index_name,
+				 gboolean primary_key,
 				 const gchar *table_name);
 
 	GList * (* execute_command) (GdaServerProvider *provider,
@@ -162,7 +164,8 @@ gboolean gda_server_provider_drop_database (GdaServerProvider *provider,
 gboolean gda_server_provider_create_table (GdaServerProvider *provider,
 					   GdaConnection *cnc,
 					   const gchar *table_name,
-					   const GList *attributes_list);
+					   const GList *attributes_list,
+				   	   const GList *index_list);
 gboolean gda_server_provider_drop_table (GdaServerProvider *provider,
 					 GdaConnection *cnc,
 					 const gchar *table_name);
@@ -173,6 +176,7 @@ gboolean gda_server_provider_create_index (GdaServerProvider *provider,
 gboolean gda_server_provider_drop_index (GdaServerProvider *provider,
 					 GdaConnection *cnc,
 					 const gchar *index_name,
+				 	 gboolean primary_key,
 					 const gchar *table_name);
 
 GList   *gda_server_provider_execute_command (GdaServerProvider *provider,

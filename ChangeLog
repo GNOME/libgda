@@ -1,3 +1,42 @@
+2005-02-05  Bas Driessen <bas.driessen@xobas.com>
+
+	* providers/mysql/gda-mysql-provider.c: added function
+	gda_mysql_provider_create_index() and added DROP INDEX/
+	PRIMARY KEY method to gda_mysql_provider_drop_index().
+
+	(gda_mysql_provider_create_table):
+	added parameter 'index_list' and code to create the
+	indexes.
+
+	(get_mysql_tables):
+	suppress some compiler noise by proper casting of
+	pointers.
+
+	* providers/postgres/gda-postgres-provider.c:
+	(gda_postgres_provider_create_table):
+	added parameter 'index_list' and code to create the
+	indexes.
+
+	* libgda/gda-connection.[ch]
+	(gda_connection_create_table):
+	added parameter 'index_list' to hold a list of indexes to
+	create.	
+
+	(gda_connection_drop_index):
+	added parameter 'primary_key', since not all data providers
+	allow a name to be given to an index/key.
+
+	* libgda/gda-server-provider.[ch]
+	(gda_server_provider_create_table):
+	added parameter index_list to hold a list of indexes to
+	create.	
+
+	(gda_server_provider_drop_index):
+	added parameter 'primary_key', since not all data providers
+	allow a name to be given to an index/key.
+
+	* doc/C/: updated documentation.
+
 2005-02-04  Bas Driessen <bas.driessen@xobas.com>
 
 	* providers/postgres/gda-postgres-provider.c: added function

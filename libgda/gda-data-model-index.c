@@ -317,7 +317,7 @@ gda_data_model_index_set_references (GdaDataModelIndex *dmi, const gchar *ref)
  * gda_data_model_index_get_column_index_list
  * @dmi: a #GdaDataModelIndex.
  *
- * Returns: @dmi's list of column index attributes.
+ * Returns: @dmi's list of #GdaDataModelColumnIndexAttributes.
  */
 GList *
 gda_data_model_index_get_column_index_list (GdaDataModelIndex *dmi)
@@ -329,7 +329,7 @@ gda_data_model_index_get_column_index_list (GdaDataModelIndex *dmi)
 /**
  * gda_data_model_index_set_column_index_list
  * @dmi: a #GdaDataModelIndex.
- * @col_idx_list: list of column index attributes.
+ * @col_idx_list: list of #GdaDataModelColumnIndexAttributes.
  *
  * Sets @dmi's list of column index attributes by
  * copying @col_idx_list to its internal representation.
