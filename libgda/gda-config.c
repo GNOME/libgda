@@ -949,11 +949,11 @@ gda_config_get_provider_list (void)
 		}
 
 		g_module_symbol (handle, "plugin_get_name",
-				 (gpointer) &plugin_get_name);
+				 (gpointer *) &plugin_get_name);
 		g_module_symbol (handle, "plugin_get_description",
-				 (gpointer) &plugin_get_description);
+				 (gpointer *) &plugin_get_description);
 		g_module_symbol (handle, "plugin_get_connection_params",
-				 (gpointer) &plugin_get_cnc_params);
+				 (gpointer *) &plugin_get_cnc_params);
 
 		info = g_new0 (GdaProviderInfo, 1);
 		info->location = path;

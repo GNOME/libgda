@@ -3,8 +3,8 @@ lib_LTLIBRARIES = libgda-report-2.la
 INCLUDES = \
 	-I$(top_builddir)/report \
 	-I$(top_srcdir)/report \
-	-I$(top_builddir)/libgda \
-	-I$(top_srcdir)/libgda \
+	-I$(top_builddir) \
+	-I$(top_srcdir) \
 	$(LIBGDA_CFLAGS)
 
 gda_report_headers = \

@@ -1,3 +1,7 @@
+2002-05-22  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* report/libgda-report/Makefile.am: fixed INCLUDES.
+
 2002-05-21  Carlos Perelló Marín <carlos@gnome-db.org>
 
 	* report/idl/*: Removed. It's not needed anymore because we don't
