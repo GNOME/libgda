@@ -9,8 +9,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2002-08-21 20:12+0200\n"
-"PO-Revision-Date: 2002-08-21 20:22+0200\n"
+"POT-Creation-Date: 2002-08-22 13:04+0200\n"
+"PO-Revision-Date: 2002-08-22 13:09+0200\n"
 "Last-Translator: GNOME PL Team <translators@gnome.pl>\n"
 "Language-Team: Polish <pl@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -62,7 +62,9 @@ msgstr "Dostarczyciel"
 msgid "Connection string"
 msgstr "Napis identyfikujący połączenie"
 
-#: libgda/gda-config.c:1
+#: libgda/gda-config.c:1 providers/postgres/gda-postgres-provider.c:1
+#: providers/postgres/gda-postgres-provider.c:1
+#: providers/postgres/gda-postgres-provider.c:1
 msgid "Description"
 msgstr "Opis"
 
@@ -312,10 +314,8 @@ msgstr "Błąd przy pobieraniu informacji o połączeniu."
 msgid "Procedures"
 msgstr "Procedury"
 
-#. Set it here instead of the SQL query to allow i18n
 #: providers/freetds/gda-freetds-provider.c:1
 #: providers/oracle/gda-oracle-provider.c:1
-#: providers/postgres/gda-postgres-provider.c:1
 msgid "Tables"
 msgstr "Tabele"
 
@@ -331,10 +331,8 @@ msgstr "Typy"
 msgid "Users"
 msgstr "Użytkownicy"
 
-#. Set it here instead of the SQL query to allow i18n
 #: providers/freetds/gda-freetds-provider.c:1
-#: providers/oracle/gda-oracle-provider.c:1
-#: providers/postgres/gda-postgres-provider.c:1 testing/client.c:1
+#: providers/oracle/gda-oracle-provider.c:1 testing/client.c:1
 msgid "Views"
 msgstr "Perspektywy"
 
@@ -496,14 +494,24 @@ msgid "Type"
 msgstr "Typ"
 
 #: providers/mysql/gda-mysql-provider.c:1
+#: providers/postgres/gda-postgres-provider.c:1
+#: providers/postgres/gda-postgres-provider.c:1
+#: providers/postgres/gda-postgres-provider.c:1
+#: providers/postgres/gda-postgres-provider.c:1
+#: providers/postgres/gda-postgres-provider.c:1
+#: providers/postgres/gda-postgres-provider.c:1
 msgid "Owner"
 msgstr "Właściciel"
 
 #: providers/mysql/gda-mysql-provider.c:1
+#: providers/postgres/gda-postgres-provider.c:1
+#: providers/postgres/gda-postgres-provider.c:1
+#: providers/postgres/gda-postgres-provider.c:1
 msgid "Comments"
 msgstr "Komentarze"
 
 #: providers/mysql/gda-mysql-provider.c:1
+#: providers/postgres/gda-postgres-provider.c:1
 msgid "GDA type"
 msgstr "Typ GDA"
 
@@ -724,9 +732,7 @@ msgstr "Nie można pobrać atrybutu dopuszczania braku wartości pola Oracle'a"
 msgid "Indexes"
 msgstr "Indeksy"
 
-#. Set it here instead of the SQL query to allow i18n
-#: providers/oracle/gda-oracle-provider.c:1
-#: providers/postgres/gda-postgres-provider.c:1 testing/client.c:1
+#: providers/oracle/gda-oracle-provider.c:1 testing/client.c:1
 msgid "Sequences"
 msgstr "Sekwencje"
 
@@ -802,22 +808,70 @@ msgid "Invalid PostgreSQL handle"
 msgstr "Niepoprawny uchwytu PostgreSQL-a"
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:1 testing/client.c:1
-msgid "Aggregates"
-msgstr "Agregaty"
+#: providers/postgres/gda-postgres-provider.c:1
+#: providers/postgres/gda-postgres-provider.c:1
+msgid "Id"
+msgstr "Od"
+
+#: providers/postgres/gda-postgres-provider.c:1
+msgid "Procedure name"
+msgstr "Nazwa procedury"
+
+#: providers/postgres/gda-postgres-provider.c:1
+msgid "Out type"
+msgstr "Zwracany typ"
+
+#: providers/postgres/gda-postgres-provider.c:1
+msgid "Nb args"
+msgstr "Liczba argumentów"
+
+#: providers/postgres/gda-postgres-provider.c:1
+msgid "In types"
+msgstr "Typy argumentów"
+
+#: providers/postgres/gda-postgres-provider.c:1
+#: providers/postgres/gda-postgres-provider.c:1
+#: providers/postgres/gda-postgres-provider.c:1
+#: providers/postgres/gda-postgres-provider.c:1
+msgid "Definition"
+msgstr "Definicja"
+
+#. Set it here instead of the SQL query to allow i18n
+#: providers/postgres/gda-postgres-provider.c:1
+msgid "Table"
+msgstr "Tabela"
+
+#. Set it here instead of the SQL query to allow i18n
+#: providers/postgres/gda-postgres-provider.c:1
+msgid "View"
+msgstr "Perspektywa"
+
+#: providers/postgres/gda-postgres-provider.c:1
+msgid "Aggregate"
+msgstr "Agregat"
+
+#: providers/postgres/gda-postgres-provider.c:1
+msgid "InType"
+msgstr "TypWe"
+
+#: providers/postgres/gda-postgres-provider.c:1
+msgid "OutType"
+msgstr "TypWy"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/postgres/gda-postgres-provider.c:1 testing/client.c:1
 msgid "Databases"
 msgstr "Bazy danych"
 
+#. Set it here instead of the SQL query to allow i18n
 #: providers/postgres/gda-postgres-provider.c:1
-msgid "Table name"
-msgstr "Nazwa tabeli"
-
 #: providers/postgres/gda-postgres-provider.c:1
 msgid "Sequence"
 msgstr "Sekwencja"
+
+#: providers/postgres/gda-postgres-provider.c:1
+msgid "Table name"
+msgstr "Nazwa tabeli"
 
 #: providers/postgres/gda-postgres-recordset.c:1
 #: providers/sqlite/gda-sqlite-recordset.c:1
@@ -973,6 +1027,10 @@ msgstr "Tabele połączenia"
 #: testing/client.c:1
 msgid "Available types"
 msgstr "Dostępne typy"
+
+#: testing/client.c:1
+msgid "Aggregates"
+msgstr "Agregaty"
 
 #. test transactions
 #: testing/client.c:1 testing/client.c:1
