@@ -131,7 +131,8 @@ gda_row_attributes_free (GdaRowAttributes *attrs)
 gint
 gda_row_attributes_get_length (GdaRowAttributes *attrs)
 {
-	g_return_val_if_fail (attrs != NULL, -1);
+	//FIXME: commented out until we have get_n_rows () in recordsets
+	//g_return_val_if_fail (attrs != NULL, -1);
 	return g_list_length (attrs);
 }
 

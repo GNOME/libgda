@@ -125,8 +125,8 @@ free_hash_provider (gpointer key, gpointer value, gpointer user_data)
 
 	g_free (iid);
 	if (prv) {
-		g_module_close (prv->handle);
 		g_object_unref (G_OBJECT (prv->provider));
+		g_module_close (prv->handle);
 		g_free (prv);
 	}
 }

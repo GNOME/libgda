@@ -95,7 +95,7 @@ static const GdaValue *
 gda_recordset_get_value_at (GdaDataModel *model, gint col, gint row)
 {
 	gint fetched_count;
-	gint i, k;
+	gint i;
 	GdaRecordset *recset = (GdaRecordset *) model;
 
 	g_return_val_if_fail (GDA_IS_RECORDSET (recset), NULL);

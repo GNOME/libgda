@@ -1,5 +1,14 @@
 2002-05-01  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
+	* gda-client.c: fixed SIGSEGV when freeing the provider hash.
+
+	* gda-recordset.c: remove local variable left by mistake.
+	
+	* gda-row.c (gda_row_attributes_get_length): allow NULL as input.
+	This is a temporary fix until we have get_n_rows for recorsets.
+
+2002-05-01  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
 	* libgda/gda-config.c:
 	* libgda/gda-recordset.c: fixes to correctly overwrite global
 	configuration with the one provided by the user.
