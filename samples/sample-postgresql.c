@@ -1,4 +1,4 @@
-/* -*- Mode: C; tab-width: 8; indent-tabs-mode: t; c-basic-offset: 8 -*- */
+/* -*- Mode: C; c-style: "K&R"; tab-width: 8; indent-tabs-mode: t; c-basic-offset: 8 -*- */
 /*
  * Copyright (C) 2003 The GNOME Foundation
  *
@@ -37,7 +37,7 @@
 #include <libgda/libgda.h>
 
 /* Show errors from a working connection */
-void
+static void
 get_errors (GdaConnection *connection)
 {
         GList    *list;
@@ -46,49 +46,46 @@ get_errors (GdaConnection *connection)
       
         list = (GList *) gda_connection_get_errors (connection);
       
-        for (node = g_list_first (list); node != NULL; node = g_list_next (node))
-          {
-            error = (GdaError *) node->data;
-            g_print ("Error no: %d\t", gda_error_get_number (error));
-            g_print ("desc: %s\t", gda_error_get_description (error));
-            g_print ("source: %s\t", gda_error_get_source (error));
-            g_print ("sqlstate: %s\n", gda_error_get_sqlstate (error));
-          }
+        for (node = g_list_first (list); node != NULL; node = g_list_next (node)) {
+		error = (GdaError *) node->data;
+		g_print ("Error no: %d\t", gda_error_get_number (error));
+		g_print ("desc: %s\t", gda_error_get_description (error));
+		g_print ("source: %s\t", gda_error_get_source (error));
+		g_print ("sqlstate: %s\n", gda_error_get_sqlstate (error));
+	}
 }
 
 /* Show results from a query */
-void
+static void
 show_table2 (GdaDataModel * dm)
 {
-  gint      row_id;
-  gint      column_id;
-  GdaValue *value;
-  GdaRow   *row;
-  gchar    *string;
+	gint      row_id;
+	gint      column_id;
+	GdaValue *value;
+	GdaRow   *row;
+	gchar    *string;
 
 
-  g_print ("Data on the sample table:\n");
+	g_print ("Data on the sample table:\n");
 
-  for (column_id = 0; column_id < gda_data_model_get_n_columns (dm);
-       column_id++)
-    g_print ("%s\t", gda_data_model_get_column_title (dm, column_id));
+	for (column_id = 0; column_id < gda_data_model_get_n_columns (dm);
+	     column_id++)
+		g_print ("%s\t", gda_data_model_get_column_title (dm, column_id));
   
 
-  g_print ("\n---------------------------------------\n");
+	g_print ("\n---------------------------------------\n");
 
-  for (row_id = 0; row_id < gda_data_model_get_n_rows (dm); row_id++)
-    {
-      row = (GdaRow *) gda_data_model_get_row (dm, row_id);
-      for (column_id = 0; column_id < gda_data_model_get_n_columns (dm);
-	   column_id++)
-	{
-	  value = gda_row_get_value (row, column_id);
-	  string = gda_value_stringify (value);
-	  g_print ("%s\t", string);
-	  g_free (string);
+	for (row_id = 0; row_id < gda_data_model_get_n_rows (dm); row_id++) {
+		row = (GdaRow *) gda_data_model_get_row (dm, row_id);
+		for (column_id = 0; column_id < gda_data_model_get_n_columns (dm);
+		     column_id++) {
+			value = gda_row_get_value (row, column_id);
+			string = gda_value_stringify (value);
+			g_print ("%s\t", string);
+			g_free (string);
+		}
+		g_print ("\n");
 	}
-      g_print ("\n");
-    }
 }
 
 int
@@ -136,19 +133,19 @@ main(int argc, char *argv[])
         res_cmd = gda_connection_execute_command (con, cmd, NULL);
 
         if (res_cmd != NULL)
-          for (node = g_list_first (res_cmd); node != NULL; node = g_list_next (node)) {
-            dm = (GdaDataModel *) node->data;
-            if (dm == NULL) {
-              errors = TRUE;
-              get_errors (con);
-            } else {
-              show_table2 (dm);
-              g_object_unref (dm);
-            }
-          }
+		for (node = g_list_first (res_cmd); node != NULL; node = g_list_next (node)) {
+			dm = (GdaDataModel *) node->data;
+			if (dm == NULL) {
+				errors = TRUE;
+				get_errors (con);
+			} else {
+				show_table2 (dm);
+				g_object_unref (dm);
+			}
+		}
         else {
-          errors = TRUE;
-          get_errors (con);
+		errors = TRUE;
+		get_errors (con);
         }
         gda_command_free (cmd);
 
