@@ -159,6 +159,8 @@ sql_destroy_condition (sql_condition * cond)
 		sql_destroy_field (cond->d.between.lower);
 		sql_destroy_field (cond->d.between.upper);
 		break;
+	default:
+		break;
 	}
 
 	memsql_free (cond);
@@ -511,6 +513,18 @@ sql_condition_op_stringify (sql_condition_operator op)
 		return memsql_strdup ("in");
 	case SQL_notin:
 		return memsql_strdup ("not in");
+	case SQL_between:
+		return memsql_strdup ("between");
+	case SQL_gt:
+                return memsql_strdup (">");
+        case SQL_lt:
+                return memsql_strdup ("<");
+        case SQL_geq:
+                return memsql_strdup (">=");
+        case SQL_leq:
+                return memsql_strdup ("<=");
+        case SQL_diff:
+                return memsql_strdup ("!=");
 	default:
 		fprintf (stderr, "Invalid condition op: %d\n", op);
 	}
@@ -566,7 +580,7 @@ sql_condition_stringify (sql_condition * cond)
 static char *
 sql_table_stringify (sql_table * table)
 {
-	char *retval;
+	char *retval = NULL;
 
 	if (!table)
 		return NULL;
@@ -612,7 +626,7 @@ sql_table_stringify (sql_table * table)
 	if (table->join_cond) {
 		retval = memsql_strappend_free (retval, memsql_strdup (" on "));
 		retval = memsql_strappend_free (retval,
-						sql_condition_stringify (table->join_cond));
+						sql_condition_stringify ((sql_condition*) table->join_cond));
 	}
 
 	return retval;
@@ -758,6 +772,8 @@ sql_select_stringify (sql_select_statement * select)
 
 		for (walk = select->order; walk != NULL; walk = walk->next) {
 			order = memsql_strappend_free (order, sql_field_stringify (walk->data));
+			if (((sql_order_field *) walk->data)->order_type == SQL_desc)
+				order = memsql_strappend_free (order, memsql_strdup (" desc "));
 			if (walk->next)
 				order = memsql_strappend_free (order, memsql_strdup (", "));
 		}
