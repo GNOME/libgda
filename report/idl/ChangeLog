@@ -1,3 +1,10 @@
+2001-09-01  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* GDA_Report.idl: renamed to GNOME_Database_Report.idl
+
+	* GNOME_Database_Report.idl: re-started implementation by keeping it
+	as simple as possible for the moment
+
 2001-07-27  Carlos Perelló Marín <carlos@gnome-db.org>
 
 	* GDA_Report.idl: More fixes.

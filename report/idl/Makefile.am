@@ -1,5 +1,5 @@
 idldir = $(datadir)/idl
 idl_DATA= \
-	GDA_Report.idl
+	GNOME_Database_Report.idl
 
 EXTRA_DIST = $(idl_DATA)
