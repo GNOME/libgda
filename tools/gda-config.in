@@ -82,7 +82,7 @@ if test "$echo_exec_prefix" = "yes"; then
 	echo $exec_prefix
 fi
 if test "$echo_cflags" = "yes"; then
-	cflags="-I@prefix@/include/gda"
+	cflags="-I@prefix@/include/libgda-@VERSION@/gda"
 	if test "$lib_client" = "yes"
 	then
 		cflags="$cflags @GDA_CLIENT_CFLAGS@"
@@ -93,7 +93,7 @@ if test "$echo_cflags" = "yes"; then
 	fi
 	if test "$lib_cpp" = "yes"
 	then
-		cflags="$cflags -I@prefix@/include/gda++"
+		cflags="$cflags -I@prefix@/include/libgda-@VERSION@/gda++"
 	fi
 	echo $cflags
 fi

@@ -1,3 +1,7 @@
+2001-10-07  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-config.in: adapted to new location of header files
+
 2001-01-01	Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-buildserver.in: fixed auto* macros expansion
