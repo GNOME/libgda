@@ -83,7 +83,6 @@ fi
 %files
 %defattr(-, root, root)
 
-%doc AUTHORS COPYING ChangeLog NEWS README TODO
 %{prefix}/bin/gda-oracle-srv
 %{prefix}/lib/libgda-oracle.so*
 %{prefix}/share/oaf/gda-oracle.oafinfo

@@ -83,7 +83,6 @@ fi
 %files
 %defattr(-, root, root)
 
-%doc AUTHORS COPYING ChangeLog NEWS README TODO
 %{prefix}/bin/gda-odbc-srv
 %{prefix}/lib/libgda-odbc.so*
 %{prefix}/share/oaf/gda-odbc.oafinfo

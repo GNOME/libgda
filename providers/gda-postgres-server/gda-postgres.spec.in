@@ -83,7 +83,6 @@ fi
 %files
 %defattr(-, root, root)
 
-%doc AUTHORS COPYING ChangeLog NEWS README TODO
 %{prefix}/bin/gda-postgres-srv
 %{prefix}/lib/libgda-postgres.so*
 %{prefix}/share/oaf/gda-postgres.oafinfo
