@@ -2,9 +2,9 @@
  * $Id$
  *
  * GNOME DB sybase Provider
- * Copyright (C) 2000 Rodrigo Moya
- * Copyright (C) 2000 Stephan Heinze
  * Copyright (C) 2000 Holger Thon
+ * Copyright (C) 2000 Stephan Heinze
+ * Copyright (C) 2000 Rodrigo Moya
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -22,6 +22,10 @@
  */
 
 // $Log$
+// Revision 1.3  2000/10/29 17:55:29  holger
+// - fixed AUTHORS file
+// - no code changes to gda-sybase-command.c (timestamp failure)
+//
 // Revision 1.2  2000/10/06 19:24:45  menthos
 // Added Swedish entry to configure.in and changed some C++-style comments causing problems to
 // C-style.
