@@ -19,7 +19,7 @@
 
 #include "gda-mysql.h"
 
-static GdaServerImpl*         server_impl = NULL;
+static GdaServer*             server_impl = NULL;
 static GdaServerImplFunctions server_impl_functions =
 {
   gda_mysql_connection_new,
@@ -63,11 +63,11 @@ main (gint argc, gchar *argv[])
   gda_server_init("gda-mysql-srv", VERSION, argc, argv);
 
   /* register the server implementation */
-  server_impl = gda_server_impl_new("OAFIID:GNOME_GDA_Provider_MDB_ConnectionFactory",
+  server_impl = gda_server_new("OAFIID:GNOME_GDA_Provider_MDB_ConnectionFactory",
                                     &server_impl_functions);
   if (server_impl)
     {
-      gda_server_impl_start(server_impl);
+      gda_server_start(server_impl);
     }
   else gda_log_error(_("Could not register MySQL provider implementation"));
   return 0;

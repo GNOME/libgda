@@ -733,7 +733,7 @@ static GdaServerRecordset*  schema_tables(GdaServerRecordset*  recset,
 	  table_type = constraints->value;
 	  break;
 	default :
-	  fprintf(stderr,"schema_tables: invalid constraint type %d\n", constraints->ctype);
+	  gda_log_error("schema_tables: invalid constraint type %d\n", constraints->ctype);
       odbc_recset->allocated = 0;
 	  SQLFreeStmt(odbc_recset->hstmt, SQL_DROP);
 	  return NULL;
@@ -825,7 +825,7 @@ static GdaServerRecordset*  schema_columns(GdaServerRecordset*  recset,
 	  break;
 
 	default :
-	  fprintf(stderr,"schema_columns: invalid constraint type %d\n", constraints->ctype);
+	  gda_log_error("schema_columns: invalid constraint type %d\n", constraints->ctype);
       odbc_recset->allocated = 0;
 	  SQLFreeStmt(odbc_recset->hstmt, SQL_DROP);
       gda_server_recordset_free(recset);

@@ -18,7 +18,7 @@
 
 #include "gda-ldap.h"
 
-static GdaServerImpl*         server_impl = NULL;
+static GdaServer*             server_impl = NULL;
 static GdaServerImplFunctions server_impl_functions =
 {
   gda_ldap_connection_new,
@@ -62,11 +62,11 @@ main (gint argc, gchar *argv[])
   gda_server_init("gda-ldap-srv", VERSION, argc, argv);
 
   /* register the server implementation */
-  server_impl = gda_server_impl_new("OAFIID:GNOME_GDA_Provider_LDAP_ConnectionFactory",
+  server_impl = gda_server_new("OAFIID:GNOME_GDA_Provider_LDAP_ConnectionFactory",
                                     &server_impl_functions);
   if (server_impl)
     {
-      gda_server_impl_start(server_impl);
+      gda_server_start(server_impl);
     }
   else gda_log_error(_("Could not register LDAP provider implementation"));
   return 0;
