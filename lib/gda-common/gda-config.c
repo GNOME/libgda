@@ -26,6 +26,8 @@ get_conf_engine (void)
 {
   if (!conf_engine)
     {
+      /* initialize GConf */
+      gconf_init(0, NULL, NULL);
       conf_engine = gconf_engine_get_default();
     }
   return conf_engine;
@@ -362,15 +364,18 @@ gda_provider_list (void)
           dsn_params = gda_corba_get_oaf_attribute(servlist->_buffer[i].props, "gda_params");
           if (dsn_params)
             {
-              gint   cnt = 0;
-              gchar* arr = g_strsplit(dsn_params, ";", 0);
+              gint    cnt = 0;
+              gchar** arr = g_strsplit(dsn_params, ";", 0);
               
-              while (arr[cnt])
+              if (arr)
                 {
-                  provider->dsn_params = g_list_append(provider->dsn_params, g_strdup(arr[cnt]));
-                  cnt++;
+                  while (arr[cnt] != NULL)
+                    {
+                      provider->dsn_params = g_list_append(provider->dsn_params, g_strdup(arr[cnt]));
+                      cnt++;
+                    }
+                  g_strfreev(arr);
                 }
-              g_strfreev(arr);
               g_free((gpointer) dsn_params);
             }
 
