@@ -166,6 +166,7 @@ fi
 %defattr(-, root, root)
 
 %doc AUTHORS COPYING ChangeLog NEWS README
+%{prefix}/bin/gda-default-srv
 %{prefix}/bin/gda-test
 %{prefix}/bin/gda-run
 %{prefix}/lib/libgda-common.so*
@@ -173,6 +174,7 @@ fi
 %{prefix}/lib/libgda-server.so*
 %{prefix}/share/gda/dtd/*
 %{prefix}/share/gnome/help/libgda/*
+%{prefix}/share/oaf/GNOME_GDA_Provider_Default.oaf
 
 %files devel
 %defattr(-, root, root)
