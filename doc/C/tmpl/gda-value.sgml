@@ -473,6 +473,59 @@ gda-value
 
 </para>
 
+<informaltable pgwide=1>
+<tgroup cols=2>
+<tbody>
+<row>
+<entry>#GDA_VALUE_TYPE_BIGINT</entry><entry>"%%ld"</entry>
+</row>
+<row>
+<entry>#GDA_VALUE_TYPE_BOOLEAN</entry><entry>"TRUE" |
+ "FALSE"</entry>
+</row>
+<row>
+<entry>#GDA_VALUE_TYPE_STRING</entry><entry>"%%s"</entry>
+</row>
+<row>
+<entry>#GDA_VALUE_TYPE_INTEGER</entry><entry>"%%d"</entry>
+</row>
+<row>
+<entry>#GDA_VALUE_TYPE_SMALLINT</entry><entry>"%%d"</entry>
+</row>
+<row>
+<entry>#GDA_VALUE_TYPE_SINGLE</entry><entry>"%%f"</entry>
+</row>
+<row>
+<entry>#GDA_VALUE_TYPE_DOUBLE</entry><entry>"%%f"</entry>
+</row>
+<row>
+<entry>#GDA_VALUE_TYPE_TIME (w/o  TZ)</entry><entry>"%%02u:%%02u:%%02u"</entry>
+</row>
+<row>
+<entry>#GDA_VALUE_TYPE_TIME (with TZ)</entry><entry>"%%02u:%%02u:%%02u%+03d" </entry>
+</row>
+<row>
+<entry>#GDA_VALUE_TYPE_DATE</entry><entry>"%%04u-%%02u-%%02u"</entry>
+</row>
+<row>
+<entry>#GDA_VALUE_TYPE_TIMESTAMP (w/o  TZ)</entry><entry>"%%04u-%%02u-%%02u %%02u:%%02u:%%02u.%%03d"</entry>
+</row>
+<row>
+ <entry>#GDA_VALUE_TYPE_TIMESTAMP (with TZ)</entry><entry>"%%04u-%%02u-%%02u %%02u:%%02u:%%02u.%%03d%+03d"</entry>
+</row>
+<row>
+<entry>#GDA_VALUE_TYPE_GEOMETRIC_POINT</entry><entry>"(%.*lg,%.*lg)" (max precision)</entry>
+</row>
+<row>
+<entry>#GDA_VALUE_TYPE_NULL</entry><entry>"NULL"</entry>
+</row>
+<row>
+<entry>Not in the list</entry><entry>""</entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+
 @value: 
 @Returns: 
 

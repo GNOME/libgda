@@ -1,3 +1,9 @@
+2002-01-14  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
+	* libgda-docs.sgml: removed warning in line 484.
+
+	* tmpl/gda-value.sgml: added documentation for gda_value_stringify().
+
 2002-01-01  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* libgda.sgml: libgda-init functions

@@ -481,9 +481,9 @@
 	  
 	  <programlistingco>
 	    <areaspec>
-	      <area id="provider" coords="2"/>
-	      <area id="dsn" coords="3"/>
-              <area id="description" coords="4"/>
+	      <area id="provider" coords="2">
+	      <area id="dsn" coords="3">
+              <area id="description" coords="4">
             </areaspec>
 	    <programlisting>
 	      [sales]
