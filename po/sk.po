@@ -1,18 +1,19 @@
+# Slovak translation of sk.po
 # libgda Slovak translation.
 # Copyright (C) 2000,2001,2002 Free Software Foundation, Inc.
 # Stanislav Visnovsky <visnovsky@nenya.ms.mff.cuni.cz>, 2000,2001,2002.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: libgda 0.3.1\n"
-"POT-Creation-Date: 2002-05-03 02:43+0200\n"
-"PO-Revision-Date: 2002-04-10 16:52+0200\n"
-"Last-Translator: Stanislav Višňovský <visnovsky@nenya.ms.mff.cuni.cz>\n"
+"Project-Id-Version: sk\n"
+"POT-Creation-Date: 2002-05-11 16:17+0200\n"
+"PO-Revision-Date: 2002-05-11 16:19+0200\n"
+"Last-Translator: Stanislav Visnovsky <visnovsky@nenya.ms.mff.cuni.cz>\n"
 "Language-Team: Slovak <sk-i18n@lists.linux.sk>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: KBabel 0.9.6\n"
+"X-Generator: KBabel 1.0beta1\n"
 
 #: libgda/gda-client.c:207 libgda/gda-client.c:319 libgda/gda-connection.c:207
 #, c-format
@@ -22,43 +23,43 @@ msgstr "Zdroj dát %s nebol nájdený v konfigurácii"
 #: libgda/gda-client.c:225
 #, c-format
 msgid "Provider %s is not installed"
-msgstr ""
+msgstr "Poskytovateľ %s nie je nainštalovaný"
 
 #: libgda/gda-client.c:234
-#, fuzzy, c-format
+#, c-format
 msgid "Could not load %s provider"
-msgstr "Nie je možné získať poskytovateľov CORBA"
+msgstr "Nie je možné získať poskytovateľa %s"
 
 #: libgda/gda-client.c:250
 #, c-format
 msgid "Provider %s does not implement entry point"
-msgstr ""
+msgstr "Poskytovateľ %s neimplementuje vstupný bod"
 
 #: libgda/gda-client.c:259
 msgid "Creation of GdaServerProvider failed"
-msgstr ""
+msgstr "Vytvorenie GdaServerProvider zlyhalo"
 
 #. gda_server_recordset_model_set_field_defined_size (recset, 0, 256);
-#: libgda/gda-config.c:1105 providers/default/gda-default-provider.c:445
+#: libgda/gda-config.c:1176 providers/default/gda-default-provider.c:445
 #: providers/default/gda-default-provider.c:467
-#: providers/default/gda-default-provider.c:503
+#: providers/default/gda-default-provider.c:504
 #: providers/mysql/gda-mysql-provider.c:450
 msgid "Name"
 msgstr "Meno"
 
-#: libgda/gda-config.c:1106
+#: libgda/gda-config.c:1177
 msgid "Provider"
 msgstr "Poskytovateľ"
 
-#: libgda/gda-config.c:1107
+#: libgda/gda-config.c:1178
 msgid "Connection string"
 msgstr "Reťazec spojenia"
 
-#: libgda/gda-config.c:1108
+#: libgda/gda-config.c:1179
 msgid "Description"
 msgstr "Popis"
 
-#: libgda/gda-config.c:1109
+#: libgda/gda-config.c:1180
 msgid "Username"
 msgstr "Meno používateľa"
 
@@ -68,7 +69,7 @@ msgstr "Pokus o inicializáciu už inicializovaného klienta"
 
 #: libgda/gda-init.c:53
 msgid "libgda needs GModule. Finishing..."
-msgstr ""
+msgstr "libgda vyžaduje GModule. Končím..."
 
 #: libgda/gda-table.c:233
 #, c-format
@@ -119,55 +120,54 @@ msgstr "Neplatný XML uzol"
 
 #: providers/default/gda-default-provider.c:169
 #: providers/sqlite/gda-sqlite-provider.c:162
-msgid ""
-"A full path must be specified on the connection string to open a database."
+msgid "A full path must be specified on the connection string to open a database."
 msgstr "Pre otvorenie databáze musíte zadať celú cestu v reťazci spojenia."
 
 #: providers/default/gda-default-provider.c:343
 #: providers/mysql/gda-mysql-provider.c:739
-#: providers/postgres/gda-postgres-provider.c:737
+#: providers/postgres/gda-postgres-provider.c:747
 msgid "Field name"
 msgstr "Meno poľa"
 
 #: providers/default/gda-default-provider.c:344
 #: providers/mysql/gda-mysql-provider.c:740
-#: providers/postgres/gda-postgres-provider.c:738
+#: providers/postgres/gda-postgres-provider.c:748
 msgid "Data type"
 msgstr "Typ dát"
 
 #: providers/default/gda-default-provider.c:345
 #: providers/mysql/gda-mysql-provider.c:741
-#: providers/postgres/gda-postgres-provider.c:739
+#: providers/postgres/gda-postgres-provider.c:749
 msgid "Size"
 msgstr "Veľkosť"
 
 #: providers/default/gda-default-provider.c:346
 #: providers/mysql/gda-mysql-provider.c:742
-#: providers/postgres/gda-postgres-provider.c:740
+#: providers/postgres/gda-postgres-provider.c:750
 msgid "Scale"
 msgstr "Škála"
 
 #: providers/default/gda-default-provider.c:347
 #: providers/mysql/gda-mysql-provider.c:743
-#: providers/postgres/gda-postgres-provider.c:741
+#: providers/postgres/gda-postgres-provider.c:751
 msgid "Not null?"
 msgstr "Nie null?"
 
 #: providers/default/gda-default-provider.c:348
 #: providers/mysql/gda-mysql-provider.c:744
-#: providers/postgres/gda-postgres-provider.c:742
+#: providers/postgres/gda-postgres-provider.c:752
 msgid "Primary key?"
 msgstr "Primárny kľúč?"
 
 #: providers/default/gda-default-provider.c:349
 #: providers/mysql/gda-mysql-provider.c:745
-#: providers/postgres/gda-postgres-provider.c:743
+#: providers/postgres/gda-postgres-provider.c:753
 msgid "Unique index?"
 msgstr "Unikátny index?"
 
 #: providers/default/gda-default-provider.c:350
 #: providers/mysql/gda-mysql-provider.c:746
-#: providers/postgres/gda-postgres-provider.c:744
+#: providers/postgres/gda-postgres-provider.c:754
 msgid "References"
 msgstr "Referencie"
 
@@ -186,10 +186,8 @@ msgid "Could not get description for column"
 msgstr "Nepodarilo sa získať popis stĺpca"
 
 #: providers/mysql/gda-mysql-provider.c:183
-msgid ""
-"You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
-msgstr ""
-"Nemôžete poskytovať UNIX_SOCKET ak tiež poskytujete HOSTITEĽ alebo a PORT."
+msgid "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
+msgstr "Nemôžete poskytovať UNIX_SOCKET ak tiež poskytujete HOSTITEĽ alebo a PORT."
 
 #: providers/mysql/gda-mysql-provider.c:254
 #: providers/mysql/gda-mysql-provider.c:333
@@ -200,23 +198,22 @@ msgstr "Neplatný handle MYSQL"
 
 #. gda_server_recordset_model_set_field_defined_size (recset, 0, 32);
 #: providers/mysql/gda-mysql-provider.c:641
-#: providers/postgres/gda-postgres-provider.c:623
 msgid "Type"
 msgstr "Typ"
 
 #: providers/mysql/gda-mysql-provider.c:754
-#: providers/mysql/gda-mysql-recordset.c:63
-#: providers/mysql/gda-mysql-recordset.c:166
+#: providers/mysql/gda-mysql-recordset.c:58
+#: providers/mysql/gda-mysql-recordset.c:179
 msgid "Invalid MySQL handle"
 msgstr "Neplatný handle MySQL"
 
 #: providers/mysql/gda-mysql-provider.c:763
 #: providers/mysql/gda-mysql-provider.c:771
 msgid "You need to specify the name of the table"
-msgstr ""
+msgstr "Musíte zadať meno tabuľky"
 
-#: providers/mysql/gda-mysql-recordset.c:76
-#: providers/postgres/gda-postgres-recordset.c:85
+#: providers/mysql/gda-mysql-recordset.c:69
+#: providers/postgres/gda-postgres-recordset.c:188
 #: providers/sqlite/gda-sqlite-recordset.c:74
 msgid "Row number out of range"
 msgstr "Neplatný počet riadkov"
@@ -246,11 +243,63 @@ msgid "Could not initialize OCI library"
 msgstr "Nie je možné inicializovať knižnicu OCI"
 
 #: providers/postgres/gda-postgres-provider.c:370
-#: providers/postgres/gda-postgres-provider.c:508
-#: providers/postgres/gda-postgres-recordset.c:72
-#: providers/postgres/gda-postgres-recordset.c:128
+#: providers/postgres/gda-postgres-provider.c:513
+#: providers/postgres/gda-postgres-recordset.c:176
+#: providers/postgres/gda-postgres-recordset.c:225
 msgid "Invalid PostgreSQL handle"
 msgstr "Neplatný handle PostgreSQL"
+
+#. Set it here instead of the SQL query to allow i18n
+#: providers/postgres/gda-postgres-provider.c:590
+msgid "Tables"
+msgstr "Tabuľky"
+
+#: providers/postgres/gda-postgres-provider.c:629
+msgid "Types"
+msgstr "Typy"
+
+#. Set it here instead of the SQL query to allow i18n
+#: providers/postgres/gda-postgres-provider.c:660 testing/client.c:93
+msgid "Views"
+msgstr "Pohľady"
+
+#. Set it here instead of the SQL query to allow i18n
+#: providers/postgres/gda-postgres-provider.c:685 testing/client.c:94
+msgid "Indexes"
+msgstr "Indexy"
+
+#. Set it here instead of the SQL query to allow i18n
+#: providers/postgres/gda-postgres-provider.c:711 testing/client.c:95
+msgid "Aggregates"
+msgstr "Agregáty"
+
+#. Set it here instead of the SQL query to allow i18n
+#: providers/postgres/gda-postgres-provider.c:736 testing/client.c:98
+msgid "Triggers"
+msgstr "Triggery"
+
+#. Set it here instead of the SQL query to allow i18n
+#: providers/postgres/gda-postgres-provider.c:1090 testing/client.c:89
+msgid "Databases"
+msgstr "Databáze"
+
+#. Set it here instead of the SQL query to allow i18n
+#: providers/postgres/gda-postgres-provider.c:1115 testing/client.c:96
+msgid "Users"
+msgstr "Používatelia"
+
+#. Set it here instead of the SQL query to allow i18n
+#: providers/postgres/gda-postgres-provider.c:1143 testing/client.c:97
+msgid "Sequences"
+msgstr "Sekvencie"
+
+#: providers/postgres/gda-postgres-recordset.c:194
+msgid "Column number out of range"
+msgstr "Neplatný počet stĺpcov"
+
+#: providers/postgres/gda-postgres-recordset.c:232
+msgid "Column out of range"
+msgstr "Neplatný stĺpec"
 
 #: providers/postgres/utils.c:47
 msgid "NO DESCRIPTION"
@@ -314,8 +363,7 @@ msgstr "Nie je možné získať súbor z %s"
 
 #: report/main.c:47
 msgid "Could not initiate Report component factory"
-msgstr ""
-"Nie je možné inicializovať vytváracie rozhranie pre komponent pre reporty"
+msgstr "Nie je možné inicializovať vytváracie rozhranie pre komponent pre reporty"
 
 #: testing/client.c:39
 msgid "\t\tNONE\n"
@@ -344,11 +392,6 @@ msgstr "Podporované"
 msgid "Not supported"
 msgstr "Nepodporované"
 
-#. show connection schemas
-#: testing/client.c:89
-msgid "Databases"
-msgstr "Databáze"
-
 #: testing/client.c:90
 msgid "Stored procedures"
 msgstr "Uložené procedúry"
@@ -360,30 +403,6 @@ msgstr "Tabuľky spojenia"
 #: testing/client.c:92
 msgid "Available types"
 msgstr "Dostupné typy"
-
-#: testing/client.c:93
-msgid "Views"
-msgstr "Pohľady"
-
-#: testing/client.c:94
-msgid "Indexes"
-msgstr "Indexy"
-
-#: testing/client.c:95
-msgid "Aggregates"
-msgstr "Agregáty"
-
-#: testing/client.c:96
-msgid "Users"
-msgstr "Používatelia"
-
-#: testing/client.c:97
-msgid "Sequences"
-msgstr "Sekvencie"
-
-#: testing/client.c:98
-msgid "Triggers"
-msgstr "Triggery"
 
 #. test transactions
 #: testing/client.c:101 testing/client.c:109
@@ -662,3 +681,4 @@ msgstr "\tgda_params ="
 #~ "\n"
 #~ "\tČíslo chyby operačného systému (%ld):\n"
 #~ "\t%s"
+
