@@ -114,12 +114,82 @@ delete_point (GdaGeometricPoint *point)
 	g_free (point);
 }
 
+/* Makes a GdaTime from a string like "12:30:15+01" */
+static GdaTime *
+make_time (const gchar *value)
+{
+	GdaTime *time;
+
+	g_return_val_if_fail (value != NULL, NULL);
+	
+	time = g_new (GdaTime, 1);
+	time->hour = atoi (value);
+	value += 3;
+	time->minute = atoi (value);
+	value += 3;
+	time->second = atoi (value);
+	value += 2;
+	if (*value)
+		time->timezone = atoi (value);
+	else
+		time->timezone = TIMEZONE_INVALID;
+
+	return time;
+}
+
+static void
+delete_time (GdaTime *time)
+{
+	g_return_if_fail (time != NULL);
+	
+	g_free (time);
+}
+
+/* Makes a GdaTimestamp from a string like "2003-12-13 13:12:01.12+01" */
+static GdaTimestamp *
+make_timestamp (const gchar *value)
+{
+	GdaTimestamp *timestamp;
+
+	g_return_val_if_fail (value != NULL, NULL);
+	
+	timestamp = g_new (GdaTimestamp, 1);
+	timestamp->year = atoi (value);
+	value += 5;
+	timestamp->month = atoi (value);
+	value += 3;
+	timestamp->day = atoi (value);
+	value += 3;
+	timestamp->hour = atoi (value);
+	value += 3;
+	timestamp->minute = atoi (value);
+	value += 3;
+	timestamp->second = atoi (value);
+	value += 3;
+	timestamp->fraction = atol (value) * 10; // I have only hundredths of second
+	value += 3;
+	timestamp->timezone = atol (value) * 60 * 60;
+
+	return timestamp;
+}
+
+static void
+delete_timestamp (GdaTimestamp *timestamp)
+{
+	g_return_if_fail (timestamp != NULL);
+	
+	g_free (timestamp);
+}
+
 void 
 gda_postgres_set_field_data (GdaField *field, const gchar *fname,
 				GdaType type, const gchar *value, 
 				gint dbsize, gboolean isNull)
 {
-	GDate *date;
+	GDate *gdate;
+	GdaDate *date;
+	GdaTime *time;
+	GdaTimestamp *timestamp;
 	GdaGeometricPoint *point;
 	gint scale;
 
@@ -180,18 +250,22 @@ gda_postgres_set_field_data (GdaField *field, const gchar *fname,
 		break;
 	case GDA_TYPE_DATE :
 		gda_field_set_gdatype (field, type);
-		date = g_date_new ();
-		g_date_set_parse (date, value);
-		if (!g_date_valid (date)) {
+		gdate = g_date_new ();
+		g_date_set_parse (gdate, value);
+		if (!g_date_valid (gdate)) {
 			g_warning ("Could not parse '%s' "
 				"Setting date to 01/01/0001!\n", field);
-			g_date_clear (date, 1);
-			g_date_set_dmy (date, 1, 1, 1);
+			g_date_clear (gdate, 1);
+			g_date_set_dmy (gdate, 1, 1, 1);
 		}
+		date = g_new (GdaDate, 1);
+		date->day = g_date_get_day (gdate);
+		date->month = g_date_get_month (gdate);
+		date->year = g_date_get_year (gdate);
 		gda_field_set_date_value (field, date);
-		g_date_free (date);
-		gda_field_set_actual_size (field, sizeof (GDate));
-		
+		g_free (date);
+		g_date_free (gdate);
+		gda_field_set_actual_size (field, sizeof (GdaDate));
 		break;
 	case GDA_TYPE_GEOMETRIC_POINT :
 		point = make_point (value);
@@ -205,8 +279,20 @@ gda_postgres_set_field_data (GdaField *field, const gchar *fname,
 		gda_field_set_null_value (field);
 		gda_field_set_actual_size (field, 0);
 		break;
-	case GDA_TYPE_TIMESTAMP : //FIXME
-	case GDA_TYPE_TIME : //FIXME
+	case GDA_TYPE_TIMESTAMP :
+		timestamp = make_timestamp (value);
+		gda_field_set_timestamp_value (field, timestamp);
+		gda_field_set_gdatype (field, type);
+		delete_timestamp (timestamp);
+		gda_field_set_actual_size (field, sizeof (GdaTimestamp));
+		break;
+	case GDA_TYPE_TIME :
+		time = make_time (value);
+		gda_field_set_time_value (field, time);
+		gda_field_set_gdatype (field, type);
+		delete_time (time);
+		gda_field_set_actual_size (field, sizeof (GdaTime));
+		break;
 	case GDA_TYPE_BINARY : //FIXME
 	default :
 		gda_field_set_string_value (field, value);
