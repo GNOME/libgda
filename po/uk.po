@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2002-04-11 23:03+0300\n"
+"POT-Creation-Date: 2002-05-03 02:43+0200\n"
 "PO-Revision-Date: 2002-04-12 00:08+0200\n"
 "Last-Translator: Yuriy Syrota <yuri@renome.rovno.ua>\n"
 "Language-Team: Ukrainian <uk@li.org>\n"
@@ -13,103 +13,72 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: libgda/gda-client.c:199
-#: libgda/gda-client.c:309
-#: libgda/gda-connection.c:214
+#: libgda/gda-client.c:207 libgda/gda-client.c:319 libgda/gda-connection.c:207
 #, c-format
 msgid "Data source %s not found in configuration"
 msgstr "Джерела даних \"%s\" не знайдено у конфіґурації"
 
-#: libgda/gda-client.c:236
+#: libgda/gda-client.c:225
 #, c-format
-msgid "Could not activate object %s"
-msgstr "Не вдалося активувати об'єкт %s"
+msgid "Provider %s is not installed"
+msgstr ""
 
-#: libgda/gda-client.c:254
-msgid "Could not create connection component"
-msgstr "Не вдалося створити компонент з'єднання"
-
-#: libgda/gda-config.c:513
-msgid "Could not query CORBA components"
-msgstr "Не вдалось зробити запит на отримання компонент CORBA"
-
-#: libgda/gda-config.c:620
-msgid "Could not query CORBA providers"
+#: libgda/gda-client.c:234
+#, fuzzy, c-format
+msgid "Could not load %s provider"
 msgstr "Не вдалось зробити запит на отримання постачальників CORBA"
 
-#: libgda/gda-config.c:870
-#: providers/default/gda-default-provider.c:437
-#: providers/default/gda-default-provider.c:457
-#: providers/mysql/gda-mysql-provider.c:447
+#: libgda/gda-client.c:250
+#, c-format
+msgid "Provider %s does not implement entry point"
+msgstr ""
+
+#: libgda/gda-client.c:259
+msgid "Creation of GdaServerProvider failed"
+msgstr ""
+
+#. gda_server_recordset_model_set_field_defined_size (recset, 0, 256);
+#: libgda/gda-config.c:1105 providers/default/gda-default-provider.c:445
+#: providers/default/gda-default-provider.c:467
+#: providers/default/gda-default-provider.c:503
+#: providers/mysql/gda-mysql-provider.c:450
 msgid "Name"
 msgstr "Назва"
 
-#: libgda/gda-config.c:871
+#: libgda/gda-config.c:1106
 msgid "Provider"
 msgstr "Постачальник"
 
-#: libgda/gda-config.c:872
+#: libgda/gda-config.c:1107
 msgid "Connection string"
 msgstr "Рядок з'єднання"
 
-#: libgda/gda-config.c:873
+#: libgda/gda-config.c:1108
 msgid "Description"
 msgstr "Опис"
 
-#: libgda/gda-config.c:874
+#: libgda/gda-config.c:1109
 msgid "Username"
 msgstr "Користувач"
 
-#: libgda/gda-error.c:128
-#, c-format
-msgid "%s: An Error occured in the CORBA system."
-msgstr "%s: Сталася помилка у системі CORBA."
-
-#: libgda/gda-error.c:163
-msgid "Unknown CORBA exception for connection"
-msgstr "Невідоме розширення CORBA для з'єднання"
-
-#: libgda/gda-init.c:43
+#: libgda/gda-init.c:42
 msgid "Attempt to initialize an already initialized client"
 msgstr "Спроба ініціалізувати вже ініціалізованого клієнта"
 
-#: libgda/gda-init.c:55
-msgid "Could not initialize Bonobo"
-msgstr "Не вдалося ініціалізувати Bonobo"
-
-#: libgda/gda-server.c:109
-#, c-format
-msgid "Don't know how to create components with IID %s"
-msgstr "Невідомо як створити компоненти з IID %s"
-
-#: libgda/gda-server.c:123
-#, c-format
-msgid "Could not create component of type %s"
-msgstr "Не вдалося створити компонент типу %s"
-
-#: libgda/gda-server-connection.c:92
-msgid "Could not duplicate client object. Client won't get notifications"
-msgstr "Не вдалося здублювати клієнтський об'єкт. Клієнт не отримуватиме сповіщень."
-
-#: libgda/gda-server-connection.c:452
-#, c-format
-msgid "Could not notify client about action %d"
-msgstr "Не вдалося сповістити клієнта про дію %d"
-
-#: libgda/gda-server-recordset.c:208
-msgid "No implementation for the fetch() method found"
-msgstr "Не знайдено реалізації метода fetch()"
+#: libgda/gda-init.c:53
+msgid "libgda needs GModule. Finishing..."
+msgstr ""
 
 #: libgda/gda-table.c:233
 #, c-format
 msgid "There is already a field called %s"
 msgstr "Вже є поле з назвою %s"
 
-#: libgda/gda-value.c:986
+#: libgda/gda-value.c:1030
 msgid "TRUE"
 msgstr "ІСТИНА"
 
-#: libgda/gda-value.c:988
+#: libgda/gda-value.c:1032
 msgid "FALSE"
 msgstr "ХИБНІСТЬ"
 
@@ -124,13 +93,11 @@ msgid "Could not parse file at %s"
 msgstr "Не вдалося проаналізувати файл на %s"
 
 #: libgda/gda-xml-database.c:247
-#: libgda/gda-xml-database.c:267
 #, c-format
 msgid "Invalid XML database file '%s'"
 msgstr "Невірний XML-файл бази даних \"%s\""
 
-#: libgda/gda-xml-database.c:466
-#: libgda/gda-xml-database.c:502
+#: libgda/gda-xml-database.c:466 libgda/gda-xml-database.c:502
 #: libgda/gda-xml-database.c:543
 #, c-format
 msgid "Table %s already exists"
@@ -149,113 +116,109 @@ msgstr "Продубльований вузол <data> для таблиці %s"
 msgid "Invalid XML node"
 msgstr "Неправильний XML-вузол"
 
-#: providers/default/gda-default-provider.c:162
-#: providers/sqlite/gda-sqlite-provider.c:152
-msgid "A full path must be specified on the connection string to open a database."
-msgstr "У рядку з'єднання з відкритою базою даних необхідно вказати повний шлях."
+#: providers/default/gda-default-provider.c:169
+#: providers/sqlite/gda-sqlite-provider.c:162
+msgid ""
+"A full path must be specified on the connection string to open a database."
+msgstr ""
+"У рядку з'єднання з відкритою базою даних необхідно вказати повний шлях."
 
-#: providers/default/gda-default-provider.c:336
-#: providers/mysql/gda-mysql-provider.c:736
-#: providers/postgres/gda-postgres-provider.c:727
+#: providers/default/gda-default-provider.c:343
+#: providers/mysql/gda-mysql-provider.c:739
+#: providers/postgres/gda-postgres-provider.c:737
 msgid "Field name"
 msgstr "Назва поля"
 
-#: providers/default/gda-default-provider.c:337
-#: providers/mysql/gda-mysql-provider.c:737
-#: providers/postgres/gda-postgres-provider.c:728
+#: providers/default/gda-default-provider.c:344
+#: providers/mysql/gda-mysql-provider.c:740
+#: providers/postgres/gda-postgres-provider.c:738
 msgid "Data type"
 msgstr "Тип даних"
 
-#: providers/default/gda-default-provider.c:338
-#: providers/mysql/gda-mysql-provider.c:738
-#: providers/postgres/gda-postgres-provider.c:729
+#: providers/default/gda-default-provider.c:345
+#: providers/mysql/gda-mysql-provider.c:741
+#: providers/postgres/gda-postgres-provider.c:739
 msgid "Size"
 msgstr "Розмір"
 
-#: providers/default/gda-default-provider.c:339
-#: providers/mysql/gda-mysql-provider.c:739
-#: providers/postgres/gda-postgres-provider.c:730
+#: providers/default/gda-default-provider.c:346
+#: providers/mysql/gda-mysql-provider.c:742
+#: providers/postgres/gda-postgres-provider.c:740
 msgid "Scale"
 msgstr "Масштаб"
 
-#: providers/default/gda-default-provider.c:340
-#: providers/mysql/gda-mysql-provider.c:740
-#: providers/postgres/gda-postgres-provider.c:731
+#: providers/default/gda-default-provider.c:347
+#: providers/mysql/gda-mysql-provider.c:743
+#: providers/postgres/gda-postgres-provider.c:741
 msgid "Not null?"
 msgstr "Не NULL?"
 
-#: providers/default/gda-default-provider.c:341
-#: providers/mysql/gda-mysql-provider.c:741
-#: providers/postgres/gda-postgres-provider.c:732
+#: providers/default/gda-default-provider.c:348
+#: providers/mysql/gda-mysql-provider.c:744
+#: providers/postgres/gda-postgres-provider.c:742
 msgid "Primary key?"
 msgstr "Первинний ключ?"
 
-#: providers/default/gda-default-provider.c:342
-#: providers/mysql/gda-mysql-provider.c:742
-#: providers/postgres/gda-postgres-provider.c:733
-#: providers/postgres/main.c:70
+#: providers/default/gda-default-provider.c:349
+#: providers/mysql/gda-mysql-provider.c:745
+#: providers/postgres/gda-postgres-provider.c:743
 msgid "Unique index?"
 msgstr "Унікальний індекс?"
 
-#: providers/default/gda-default-provider.c:343
-#: providers/mysql/gda-mysql-provider.c:743
-#: providers/postgres/gda-postgres-provider.c:734
+#: providers/default/gda-default-provider.c:350
+#: providers/mysql/gda-mysql-provider.c:746
+#: providers/postgres/gda-postgres-provider.c:744
 msgid "References"
 msgstr "Посилання"
 
-#: providers/default/gda-default-provider.c:353
-#: providers/default/gda-default-provider.c:359
+#: providers/default/gda-default-provider.c:360
+#: providers/default/gda-default-provider.c:366
 msgid "Invalid argument"
 msgstr "Неправильний арґумент"
 
-#: providers/default/gda-default-provider.c:366
+#: providers/default/gda-default-provider.c:373
 #, c-format
 msgid "Table %s not found"
 msgstr "Не знайдено таблиці %s"
 
-#: providers/default/gda-default-provider.c:391
+#: providers/default/gda-default-provider.c:398
 msgid "Could not get description for column"
 msgstr "Не вдалося отримати опис стовпчика"
 
-#: providers/default/gda-default-provider.c:494
-#: providers/mysql/gda-mysql-provider.c:638
-#: providers/postgres/gda-postgres-provider.c:616
-msgid "Type"
-msgstr "Тип"
-
-#: providers/default/main.c:50
-msgid "Could not initiate Default component factory"
-msgstr "Не вдалося ініціювати типову фабрику компонентів"
-
-#: providers/mysql/gda-mysql-provider.c:176
-msgid "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
+#: providers/mysql/gda-mysql-provider.c:183
+msgid ""
+"You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
 msgstr "Ви не можете вказати UNIX_SOCKET, якщо ви вже вказали ХОСТ чи ПОРТ."
 
-#: providers/mysql/gda-mysql-provider.c:247
-#: providers/mysql/gda-mysql-provider.c:327
-#: providers/mysql/gda-mysql-provider.c:356
-#: providers/mysql/gda-mysql-provider.c:385
+#: providers/mysql/gda-mysql-provider.c:254
+#: providers/mysql/gda-mysql-provider.c:333
+#: providers/mysql/gda-mysql-provider.c:361
+#: providers/mysql/gda-mysql-provider.c:389
 msgid "Invalid MYSQL handle"
 msgstr ""
 
-#: providers/mysql/gda-mysql-recordset.c:64
-#: providers/mysql/gda-mysql-recordset.c:168
+#. gda_server_recordset_model_set_field_defined_size (recset, 0, 32);
+#: providers/mysql/gda-mysql-provider.c:641
+#: providers/postgres/gda-postgres-provider.c:623
+msgid "Type"
+msgstr "Тип"
+
+#: providers/mysql/gda-mysql-provider.c:754
+#: providers/mysql/gda-mysql-recordset.c:63
+#: providers/mysql/gda-mysql-recordset.c:166
 msgid "Invalid MySQL handle"
 msgstr ""
 
-#: providers/mysql/gda-mysql-recordset.c:77
+#: providers/mysql/gda-mysql-provider.c:763
+#: providers/mysql/gda-mysql-provider.c:771
+msgid "You need to specify the name of the table"
+msgstr ""
+
+#: providers/mysql/gda-mysql-recordset.c:76
 #: providers/postgres/gda-postgres-recordset.c:85
 #: providers/sqlite/gda-sqlite-recordset.c:74
 msgid "Row number out of range"
 msgstr ""
-
-#: providers/mysql/main.c:51
-msgid "Could not initiate MySQL component factory"
-msgstr "Не вдалося ініціювати фабрику копонентів MySQL"
-
-#: providers/odbc/main.c:51
-msgid "Could not initiate ODBC component factory"
-msgstr "Не вдалося ініціювати фабрику копонентів ODBC"
 
 #: providers/oracle/gda-oracle-connection.c:79
 msgid "Could not initialize Oracle environment"
@@ -283,16 +246,12 @@ msgstr "Не вдалося ініціювати фабрику копонент
 msgid "Could not initialize OCI library"
 msgstr "Не вдалося ініціалізувати бібліотеку OCI"
 
-#: providers/postgres/gda-postgres-provider.c:362
-#: providers/postgres/gda-postgres-provider.c:501
+#: providers/postgres/gda-postgres-provider.c:370
+#: providers/postgres/gda-postgres-provider.c:508
 #: providers/postgres/gda-postgres-recordset.c:72
-#: providers/postgres/gda-postgres-recordset.c:129
+#: providers/postgres/gda-postgres-recordset.c:128
 msgid "Invalid PostgreSQL handle"
 msgstr ""
-
-#: providers/postgres/main.c:51
-msgid "Could not initiate PostgreSQL component factory"
-msgstr "Не вдалося ініціювати фабрику копонентів PostgreSQL"
 
 #: providers/postgres/utils.c:47
 msgid "NO DESCRIPTION"
@@ -303,26 +262,20 @@ msgstr "НЕМАЄ ОПИСУ"
 msgid "Not available"
 msgstr "%p не є вірною таблицею"
 
-#: providers/sqlite/gda-sqlite-provider.c:211
+#: providers/sqlite/gda-sqlite-provider.c:220
 #: providers/sqlite/gda-sqlite-recordset.c:63
 msgid "Invalid SQLITE handle"
 msgstr ""
 
-#: providers/sqlite/gda-sqlite-recordset.c:114
+#: providers/sqlite/gda-sqlite-recordset.c:113
 msgid "Invalid Sqlite handle"
 msgstr ""
-
-#: providers/sqlite/main.c:54
-#, fuzzy
-msgid "Could not initiate Sqlite component factory"
-msgstr "Не вдалося ініціювати фабрику копонентів Sybase"
 
 #: providers/sybase/main.c:52
 msgid "Could not initiate Sybase component factory"
 msgstr "Не вдалося ініціювати фабрику копонентів Sybase"
 
-#: report/gda-report-engine.c:68
-#: report/libgda-report/gda-report-client.c:196
+#: report/gda-report-engine.c:68 report/libgda-report/gda-report-client.c:196
 #: report/libgda-report/gda-report-client.c:210
 #, c-format
 msgid "CORBA exception: %s"
@@ -332,6 +285,14 @@ msgstr "Вийняткова ситуація CORBA: %s"
 #, fuzzy
 msgid "Could not create global GDA client"
 msgstr "Не вдалося створити компонент з'єднання"
+
+#: report/GNOME_Database_Report.server.in.h:1
+msgid "GDA Report engine"
+msgstr ""
+
+#: report/GNOME_Database_Report.server.in.h:2
+msgid "GDA Report engine factory"
+msgstr ""
 
 #: report/job.c:44
 msgid "Could not parse XML report"
@@ -361,33 +322,23 @@ msgid "Could not initiate Report component factory"
 msgstr "Не вдалося ініціювати типову фабрику компонентів"
 
 #: testing/client.c:39
-msgid ""
-"\t\tNONE\n"
-""
+msgid "\t\tNONE\n"
 msgstr ""
 
 #: testing/client.c:78
 #, c-format
-msgid ""
-"** ERROR: could not open connection to %s\n"
-""
+msgid "** ERROR: could not open connection to %s\n"
 msgstr ""
 
 #. show provider features
 #: testing/client.c:83
-msgid ""
-"\tProvider capabilities...\n"
-""
+msgid "\tProvider capabilities...\n"
 msgstr ""
 
 #: testing/client.c:84
 #, c-format
-msgid ""
-"\t\tTransactions: %s\n"
-""
-msgstr ""
-"\t\tТранзакції: %s\n"
-""
+msgid "\t\tTransactions: %s\n"
+msgstr "\t\tТранзакції: %s\n"
 
 #: testing/client.c:86
 msgid "Supported"
@@ -439,14 +390,11 @@ msgid "Triggers"
 msgstr "Триґери"
 
 #. test transactions
-#: testing/client.c:101
-#: testing/client.c:109
+#: testing/client.c:101 testing/client.c:109
 msgid "\tStarting transaction..."
 msgstr "\tПочаток транзакції..."
 
-#: testing/client.c:103
-#: testing/client.c:107
-#: testing/client.c:111
+#: testing/client.c:103 testing/client.c:107 testing/client.c:111
 #: testing/client.c:115
 msgid "Error"
 msgstr "Помилка"
@@ -464,90 +412,93 @@ msgid "Testing GDA client API"
 msgstr ""
 
 #: testing/client.c:143
-msgid ""
-"** ERROR: gda_config_get_data_source_list returned a NULL item\n"
-""
+msgid "** ERROR: gda_config_get_data_source_list returned a NULL item\n"
 msgstr ""
 
 #: testing/client.c:147
 #, c-format
-msgid ""
-" Data source = %s, User = %s\n"
-""
-msgstr ""
-" Джерело даних: %s, користувач %s\n"
-""
+msgid " Data source = %s, User = %s\n"
+msgstr " Джерело даних: %s, користувач %s\n"
 
-#: testing/config.c:86
-msgid ""
-"** ERROR: gda_config_get_provider_list returned a NULL item\n"
-""
+#: testing/config.c:85
+msgid "** ERROR: gda_config_get_provider_list returned a NULL item\n"
 msgstr ""
+
+#: testing/config.c:89
+#, c-format
+msgid " Provider = %s\n"
+msgstr " Постачальник = %s\n"
 
 #: testing/config.c:90
 #, c-format
-msgid ""
-" Provider = %s\n"
-""
+msgid "\tlocation = %s\n"
 msgstr ""
-" Постачальник = %s\n"
-""
 
 #: testing/config.c:91
 #, c-format
-msgid ""
-"\tlocation = %s\n"
-""
-msgstr ""
+msgid "\tdescription = %s\n"
+msgstr "\tопис = %s\n"
 
-#: testing/config.c:92
-#, c-format
-msgid ""
-"\ttype = %s\n"
-""
-msgstr ""
-"\tтип = %s\n"
-""
-
-#: testing/config.c:95
-#, c-format
-msgid ""
-"\tdescription = %s\n"
-""
-msgstr ""
-"\tопис = %s\n"
-""
-
-#: testing/config.c:97
-msgid "\trepo_ids ="
-msgstr ""
-
-#: testing/config.c:104
-#, c-format
-msgid ""
-"\tusername = %s\n"
-""
-msgstr ""
-"\tкористувач = %s\n"
-""
-
-#: testing/config.c:105
-#, c-format
-msgid ""
-"\thostname = %s\n"
-""
-msgstr ""
-
-#: testing/config.c:106
-#, c-format
-msgid ""
-"\tdomain = %s\n"
-""
-msgstr ""
-"\tдомен = %s\n"
-""
-
-#: testing/config.c:108
+#: testing/config.c:93
 msgid "\tgda_params ="
 msgstr ""
 
+#~ msgid "Could not activate object %s"
+#~ msgstr "Не вдалося активувати об'єкт %s"
+
+#~ msgid "Could not create connection component"
+#~ msgstr "Не вдалося створити компонент з'єднання"
+
+#~ msgid "Could not query CORBA components"
+#~ msgstr "Не вдалось зробити запит на отримання компонент CORBA"
+
+#~ msgid "%s: An Error occured in the CORBA system."
+#~ msgstr "%s: Сталася помилка у системі CORBA."
+
+#~ msgid "Unknown CORBA exception for connection"
+#~ msgstr "Невідоме розширення CORBA для з'єднання"
+
+#~ msgid "Could not initialize Bonobo"
+#~ msgstr "Не вдалося ініціалізувати Bonobo"
+
+#~ msgid "Don't know how to create components with IID %s"
+#~ msgstr "Невідомо як створити компоненти з IID %s"
+
+#~ msgid "Could not create component of type %s"
+#~ msgstr "Не вдалося створити компонент типу %s"
+
+#~ msgid "Could not duplicate client object. Client won't get notifications"
+#~ msgstr ""
+#~ "Не вдалося здублювати клієнтський об'єкт. Клієнт не отримуватиме "
+#~ "сповіщень."
+
+#~ msgid "Could not notify client about action %d"
+#~ msgstr "Не вдалося сповістити клієнта про дію %d"
+
+#~ msgid "No implementation for the fetch() method found"
+#~ msgstr "Не знайдено реалізації метода fetch()"
+
+#~ msgid "Could not initiate Default component factory"
+#~ msgstr "Не вдалося ініціювати типову фабрику компонентів"
+
+#~ msgid "Could not initiate MySQL component factory"
+#~ msgstr "Не вдалося ініціювати фабрику копонентів MySQL"
+
+#~ msgid "Could not initiate ODBC component factory"
+#~ msgstr "Не вдалося ініціювати фабрику копонентів ODBC"
+
+#~ msgid "Could not initiate PostgreSQL component factory"
+#~ msgstr "Не вдалося ініціювати фабрику копонентів PostgreSQL"
+
+#, fuzzy
+#~ msgid "Could not initiate Sqlite component factory"
+#~ msgstr "Не вдалося ініціювати фабрику копонентів Sybase"
+
+#~ msgid "\ttype = %s\n"
+#~ msgstr "\tтип = %s\n"
+
+#~ msgid "\tusername = %s\n"
+#~ msgstr "\tкористувач = %s\n"
+
+#~ msgid "\tdomain = %s\n"
+#~ msgstr "\tдомен = %s\n"

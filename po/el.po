@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-db 0.0.91\n"
-"POT-Creation-Date: 2002-03-27 00:18+0100\n"
+"POT-Creation-Date: 2002-05-03 02:43+0200\n"
 "PO-Revision-Date: 2000-02-12 19:29+0000\n"
 "Last-Translator: Simos Xenitellis <simos@hellug.gr>\n"
 "Language-Team: Greek <nls@tux.hellug.gr>\n"
@@ -14,123 +14,86 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #
-#: libgda/gda-client.c:198 libgda/gda-client.c:308 libgda/gda-connection.c:213
+#: libgda/gda-client.c:207 libgda/gda-client.c:319 libgda/gda-connection.c:207
 #, fuzzy, c-format
 msgid "Data source %s not found in configuration"
 msgstr "Πηγές Δεδομένων"
 
+#: libgda/gda-client.c:225
+#, c-format
+msgid "Provider %s is not installed"
+msgstr ""
+
 #
-#: libgda/gda-client.c:235
+#: libgda/gda-client.c:234
 #, fuzzy, c-format
-msgid "Could not activate object %s"
-msgstr ""
-"Αδυναμία φόρτωσης αρχείου\n"
-" %s"
+msgid "Could not load %s provider"
+msgstr "Αδυναμία φόρτωσης γραμματοσειράς πλέγματος"
 
-#
-#: libgda/gda-client.c:253
-#, fuzzy
-msgid "Could not create connection component"
-msgstr "Αδυναμία αλλαγής στον κατάλογο '%s'"
-
-#: libgda/gda-config.c:512
-msgid "Could not query CORBA components"
+#: libgda/gda-client.c:250
+#, c-format
+msgid "Provider %s does not implement entry point"
 msgstr ""
 
-#: libgda/gda-config.c:619
-msgid "Could not query CORBA providers"
+#: libgda/gda-client.c:259
+msgid "Creation of GdaServerProvider failed"
 msgstr ""
 
 #
-#: libgda/gda-config.c:869 providers/default/gda-default-provider.c:417
-#: providers/mysql/gda-mysql-provider.c:446
+#. gda_server_recordset_model_set_field_defined_size (recset, 0, 256);
+#: libgda/gda-config.c:1105 providers/default/gda-default-provider.c:445
+#: providers/default/gda-default-provider.c:467
+#: providers/default/gda-default-provider.c:503
+#: providers/mysql/gda-mysql-provider.c:450
 msgid "Name"
 msgstr "Όνομα"
 
 #
-#: libgda/gda-config.c:870
+#: libgda/gda-config.c:1106
 msgid "Provider"
 msgstr "Παροχεύς"
 
 #
-#: libgda/gda-config.c:871
+#: libgda/gda-config.c:1107
 #, fuzzy
 msgid "Connection string"
 msgstr "Ρυθμίσεις Σύνδεσης"
 
 #
-#: libgda/gda-config.c:872
+#: libgda/gda-config.c:1108
 msgid "Description"
 msgstr "Περιγραφή"
 
 #
-#: libgda/gda-config.c:873
+#: libgda/gda-config.c:1109
 msgid "Username"
 msgstr "Όνομα χρήστη"
 
-#: libgda/gda-error.c:127
-#, c-format
-msgid "%s: An Error occured in the CORBA system."
-msgstr ""
-
-#: libgda/gda-error.c:156
-msgid "Unknown CORBA exception for connection"
-msgstr ""
-
-#: libgda/gda-init.c:44
+#: libgda/gda-init.c:42
 msgid "Attempt to initialize an already initialized client"
 msgstr ""
 
-#
-#: libgda/gda-init.c:56
-#, fuzzy
-msgid "Could not initialize Bonobo"
-msgstr "Αδυναμία περικοπής αρχείου %s"
-
-#: libgda/gda-server.c:108
-#, c-format
-msgid "Don't know how to create components with IID %s"
+#: libgda/gda-init.c:53
+msgid "libgda needs GModule. Finishing..."
 msgstr ""
 
-#
-#: libgda/gda-server.c:122
-#, fuzzy, c-format
-msgid "Could not create component of type %s"
-msgstr ""
-"Αδυναμία φόρτωσης αρχείου\n"
-" %s"
-
-#: libgda/gda-server-connection.c:90
-msgid "Could not duplicate client object. Client won't get notifications"
-msgstr ""
-
-#
-#: libgda/gda-server-connection.c:450
-#, fuzzy, c-format
-msgid "Could not notify client about action %d"
-msgstr "Αδυναμία αλλαγής στον κατάλογο '%s'"
-
-#: libgda/gda-server-recordset.c:207
-msgid "No implementation for the fetch() method found"
-msgstr ""
-
-#: libgda/gda-table.c:229
+#: libgda/gda-table.c:233
 #, c-format
 msgid "There is already a field called %s"
 msgstr ""
 
 #
-#: libgda/gda-value.c:981
+#: libgda/gda-value.c:1030
 msgid "TRUE"
 msgstr "ΑΛΗΘΕΣ"
 
 #
-#: libgda/gda-value.c:983
+#: libgda/gda-value.c:1032
 msgid "FALSE"
 msgstr "ΨΕΥΔΕΣ"
 
 #
-#: libgda/gda-xml-database.c:225
+#: libgda/gda-xml-database.c:228
 #, fuzzy, c-format
 msgid "Could not load file at %s"
 msgstr ""
@@ -138,388 +101,227 @@ msgstr ""
 " %s"
 
 #
-#: libgda/gda-xml-database.c:234
+#: libgda/gda-xml-database.c:237
 #, fuzzy, c-format
 msgid "Could not parse file at %s"
 msgstr ""
 "Αδυναμία φόρτωσης αρχείου\n"
 " %s"
 
-#: libgda/gda-xml-database.c:244
+#: libgda/gda-xml-database.c:247
 #, c-format
 msgid "Invalid XML database file '%s'"
 msgstr ""
 
-#: libgda/gda-xml-database.c:432 libgda/gda-xml-database.c:473
+#: libgda/gda-xml-database.c:466 libgda/gda-xml-database.c:502
+#: libgda/gda-xml-database.c:543
 #, c-format
 msgid "Table %s already exists"
 msgstr ""
 
-#: libgda/gda-xml-database.c:466
+#: libgda/gda-xml-database.c:536
 msgid "Invalid node"
 msgstr ""
 
-#: libgda/gda-xml-database.c:498
+#: libgda/gda-xml-database.c:568
 #, c-format
 msgid "Duplicated <data> node for table %s"
 msgstr ""
 
-#: libgda/gda-xml-database.c:505
+#: libgda/gda-xml-database.c:575
 msgid "Invalid XML node"
 msgstr ""
 
-#: providers/default/gda-default-provider.c:159
-#: providers/sqlite/gda-sqlite-provider.c:152
+#: providers/default/gda-default-provider.c:169
+#: providers/sqlite/gda-sqlite-provider.c:162
 msgid ""
 "A full path must be specified on the connection string to open a database."
 msgstr ""
 
 #
-#: providers/default/gda-default-provider.c:333
-#: providers/mysql/gda-mysql-provider.c:717
-#: providers/postgres/gda-postgres-provider.c:724
+#: providers/default/gda-default-provider.c:343
+#: providers/mysql/gda-mysql-provider.c:739
+#: providers/postgres/gda-postgres-provider.c:737
 #, fuzzy
 msgid "Field name"
 msgstr "Όνομα αρχείου"
 
 #
-#: providers/default/gda-default-provider.c:334
-#: providers/mysql/gda-mysql-provider.c:718
-#: providers/postgres/gda-postgres-provider.c:725
+#: providers/default/gda-default-provider.c:344
+#: providers/mysql/gda-mysql-provider.c:740
+#: providers/postgres/gda-postgres-provider.c:738
 #, fuzzy
 msgid "Data type"
 msgstr "Δεδομένα"
 
-#: providers/default/gda-default-provider.c:335
-#: providers/mysql/gda-mysql-provider.c:719
-#: providers/postgres/gda-postgres-provider.c:726
+#: providers/default/gda-default-provider.c:345
+#: providers/mysql/gda-mysql-provider.c:741
+#: providers/postgres/gda-postgres-provider.c:739
 msgid "Size"
 msgstr ""
 
 #
-#: providers/default/gda-default-provider.c:336
-#: providers/mysql/gda-mysql-provider.c:720
-#: providers/postgres/gda-postgres-provider.c:727
+#: providers/default/gda-default-provider.c:346
+#: providers/mysql/gda-mysql-provider.c:742
+#: providers/postgres/gda-postgres-provider.c:740
 #, fuzzy
 msgid "Scale"
 msgstr "Αποθήκευση"
 
-#: providers/default/gda-default-provider.c:337
-#: providers/mysql/gda-mysql-provider.c:721
-#: providers/postgres/gda-postgres-provider.c:728
+#: providers/default/gda-default-provider.c:347
+#: providers/mysql/gda-mysql-provider.c:743
+#: providers/postgres/gda-postgres-provider.c:741
 msgid "Not null?"
 msgstr ""
 
-#: providers/default/gda-default-provider.c:338
-#: providers/mysql/gda-mysql-provider.c:722
-#: providers/postgres/gda-postgres-provider.c:729
+#: providers/default/gda-default-provider.c:348
+#: providers/mysql/gda-mysql-provider.c:744
+#: providers/postgres/gda-postgres-provider.c:742
 msgid "Primary key?"
 msgstr ""
 
-#: providers/default/gda-default-provider.c:339
-#: providers/mysql/gda-mysql-provider.c:723
-#: providers/postgres/gda-postgres-provider.c:730
+#: providers/default/gda-default-provider.c:349
+#: providers/mysql/gda-mysql-provider.c:745
+#: providers/postgres/gda-postgres-provider.c:743
 msgid "Unique index?"
 msgstr ""
 
 #
-#: providers/default/gda-default-provider.c:340
-#: providers/mysql/gda-mysql-provider.c:724
-#: providers/postgres/gda-postgres-provider.c:731
+#: providers/default/gda-default-provider.c:350
+#: providers/mysql/gda-mysql-provider.c:746
+#: providers/postgres/gda-postgres-provider.c:744
 #, fuzzy
 msgid "References"
 msgstr "Προτιμίσεις"
 
-#: providers/default/gda-default-provider.c:350
-#: providers/default/gda-default-provider.c:356
+#: providers/default/gda-default-provider.c:360
+#: providers/default/gda-default-provider.c:366
 msgid "Invalid argument"
 msgstr ""
 
 #
-#: providers/default/gda-default-provider.c:363
+#: providers/default/gda-default-provider.c:373
 #, fuzzy, c-format
 msgid "Table %s not found"
 msgstr "Πηγές Δεδομένων"
 
 #
-#: providers/default/gda-default-provider.c:388
+#: providers/default/gda-default-provider.c:398
 #, fuzzy
 msgid "Could not get description for column"
 msgstr "Αδυναμία αλλαγής στον κατάλογο '%s'"
 
-#
-#: providers/default/gda-default-provider.c:472
-#: providers/mysql/gda-mysql-provider.c:619
-#: providers/postgres/gda-postgres-provider.c:613
-#, fuzzy
-msgid "Type"
-msgstr "Τύποι"
-
-#
-#: providers/default/GNOME_Database_Provider_Default.server.in.h:1
-#, fuzzy
-msgid "Default component factory"
-msgstr "Αδυναμία αλλαγής στον κατάλογο '%s'"
-
-#: providers/default/GNOME_Database_Provider_Default.server.in.h:2
-msgid "GDA Default Datasource Access"
-msgstr ""
-
-#: providers/default/main.c:48
-msgid "Could not initiate Default component factory"
-msgstr ""
-
-#: providers/mysql/gda-mysql-provider.c:175
+#: providers/mysql/gda-mysql-provider.c:183
 msgid ""
 "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
 msgstr ""
 
-#: providers/mysql/gda-mysql-provider.c:246
-#: providers/mysql/gda-mysql-provider.c:326
-#: providers/mysql/gda-mysql-provider.c:355
-#: providers/mysql/gda-mysql-provider.c:384
+#: providers/mysql/gda-mysql-provider.c:254
+#: providers/mysql/gda-mysql-provider.c:333
+#: providers/mysql/gda-mysql-provider.c:361
+#: providers/mysql/gda-mysql-provider.c:389
 msgid "Invalid MYSQL handle"
 msgstr ""
 
+#
+#. gda_server_recordset_model_set_field_defined_size (recset, 0, 32);
+#: providers/mysql/gda-mysql-provider.c:641
+#: providers/postgres/gda-postgres-provider.c:623
+#, fuzzy
+msgid "Type"
+msgstr "Τύποι"
+
+#: providers/mysql/gda-mysql-provider.c:754
 #: providers/mysql/gda-mysql-recordset.c:63
-#: providers/mysql/gda-mysql-recordset.c:167
+#: providers/mysql/gda-mysql-recordset.c:166
 msgid "Invalid MySQL handle"
 msgstr ""
 
+#: providers/mysql/gda-mysql-provider.c:763
+#: providers/mysql/gda-mysql-provider.c:771
+msgid "You need to specify the name of the table"
+msgstr ""
+
 #: providers/mysql/gda-mysql-recordset.c:76
-#: providers/postgres/gda-postgres-recordset.c:84
+#: providers/postgres/gda-postgres-recordset.c:85
 #: providers/sqlite/gda-sqlite-recordset.c:74
 msgid "Row number out of range"
 msgstr ""
 
-#: providers/mysql/GNOME_Database_Provider_MySQL.server.in.h:1
-msgid "GDA Datasource Access for MySQL"
-msgstr ""
-
-#: providers/mysql/GNOME_Database_Provider_MySQL.server.in.h:2
-msgid "MySQL component factory"
-msgstr ""
-
 #
-#: providers/mysql/main.c:49
-#, fuzzy
-msgid "Could not initiate MySQL component factory"
-msgstr "Αδυναμία περικοπής αρχείου %s"
-
-#: providers/odbc/GNOME_Database_Provider_ODBC.server.in.h:1
-msgid "GDA Datasource Access for ODBC"
-msgstr ""
-
-#
-#: providers/odbc/GNOME_Database_Provider_ODBC.server.in.h:2
-#, fuzzy
-msgid "ODBC component factory"
-msgstr "Αδυναμία αλλαγής στον κατάλογο '%s'"
-
-#
-#: providers/odbc/main.c:49
-#, fuzzy
-msgid "Could not initiate ODBC component factory"
-msgstr "Αδυναμία περικοπής αρχείου %s"
-
-#
-#: providers/oracle/gda-oracle-connection.c:77
+#: providers/oracle/gda-oracle-connection.c:79
 #, fuzzy
 msgid "Could not initialize Oracle environment"
 msgstr "Αδυναμία περικοπής αρχείου %s"
 
 #
-#: providers/oracle/gda-oracle-connection.c:87
+#: providers/oracle/gda-oracle-connection.c:89
 #, fuzzy
 msgid "Could not initialize Oracle error handler"
 msgstr "Αδυναμία περικοπής αρχείου %s"
 
 #
-#: providers/oracle/gda-oracle-connection.c:98
+#: providers/oracle/gda-oracle-connection.c:100
 #, fuzzy
 msgid "Could not initialize Oracle server handle"
 msgstr "Αδυναμία περικοπής αρχείου %s"
 
 #
-#: providers/oracle/gda-oracle-connection.c:109
+#: providers/oracle/gda-oracle-connection.c:111
 #, fuzzy
 msgid "Could not initialize Oracle service context"
 msgstr "Αδυναμία περικοπής αρχείου %s"
 
-#: providers/oracle/GNOME_Database_Provider_Oracle.server.in.h:1
-msgid "GDA Datasource Access for Oracle"
-msgstr ""
-
 #
-#: providers/oracle/GNOME_Database_Provider_Oracle.server.in.h:2
-#, fuzzy
-msgid "Oracle component factory"
-msgstr "Αδυναμία αλλαγής στον κατάλογο '%s'"
-
-#
-#: providers/oracle/main.c:46
+#: providers/oracle/main.c:48
 #, fuzzy
 msgid "Could not initiate Oracle component factory"
 msgstr "Αδυναμία περικοπής αρχείου %s"
 
 #
-#: providers/oracle/main.c:70
+#: providers/oracle/main.c:74
 #, fuzzy
 msgid "Could not initialize OCI library"
 msgstr "Αδυναμία περικοπής αρχείου %s"
 
-#: providers/postgres/gda-postgres-provider.c:360
-#: providers/postgres/gda-postgres-provider.c:498
-#: providers/postgres/gda-postgres-recordset.c:71
+#: providers/postgres/gda-postgres-provider.c:370
+#: providers/postgres/gda-postgres-provider.c:508
+#: providers/postgres/gda-postgres-recordset.c:72
 #: providers/postgres/gda-postgres-recordset.c:128
 msgid "Invalid PostgreSQL handle"
 msgstr ""
 
-#: providers/postgres/GNOME_Database_Provider_Postgres.server.in.h:1
-msgid "GDA Datasource Access for Postgres"
-msgstr ""
-
-#
-#: providers/postgres/GNOME_Database_Provider_Postgres.server.in.h:2
-#, fuzzy
-msgid "Postgres component factory"
-msgstr "Αδυναμία αλλαγής στον κατάλογο '%s'"
-
-#
-#: providers/postgres/main.c:49
-#, fuzzy
-msgid "Could not initiate PostgreSQL component factory"
-msgstr "Αδυναμία περικοπής αρχείου %s"
-
-#: providers/postgres/utils.c:39
+#: providers/postgres/utils.c:47
 msgid "NO DESCRIPTION"
 msgstr ""
 
-#: providers/postgres/utils.c:44
+#: providers/postgres/utils.c:52
 msgid "Not available"
 msgstr ""
 
-#
-#: providers/postgres/utils.c:240
-#, fuzzy
-msgid "NULL"
-msgstr "«ΚΕΝΟ»"
-
-#: providers/postgres/utils.c:243
-msgid "big integer"
-msgstr ""
-
-#: providers/postgres/utils.c:246
-msgid "binary"
-msgstr ""
-
-#: providers/postgres/utils.c:249
-msgid "boolean"
-msgstr ""
-
-#
-#: providers/postgres/utils.c:252
-#, fuzzy
-msgid "date"
-msgstr "Επικόλληση"
-
-#: providers/postgres/utils.c:255
-msgid "double precision"
-msgstr ""
-
-#: providers/postgres/utils.c:258
-msgid "geometric point"
-msgstr ""
-
-#: providers/postgres/utils.c:261
-msgid "integer"
-msgstr ""
-
-#: providers/postgres/utils.c:264
-msgid "list of values"
-msgstr ""
-
-#: providers/postgres/utils.c:267
-msgid "numeric"
-msgstr ""
-
-#: providers/postgres/utils.c:270
-msgid "single precision"
-msgstr ""
-
-#: providers/postgres/utils.c:273
-msgid "small integer"
-msgstr ""
-
-#: providers/postgres/utils.c:276
-msgid "string"
-msgstr ""
-
-#: providers/postgres/utils.c:279
-msgid "time"
-msgstr ""
-
-#: providers/postgres/utils.c:282
-msgid "timestamp"
-msgstr ""
-
-#: providers/postgres/utils.c:285
-msgid "tiny integer"
-msgstr ""
-
-#
-#: providers/postgres/utils.c:288
-#, fuzzy
-msgid "Unknown type"
-msgstr "«Άγνωστος Τύπος GDA(ΚΕΝΟ)»"
-
-#: providers/sqlite/gda-sqlite-provider.c:211
+#: providers/sqlite/gda-sqlite-provider.c:220
 #: providers/sqlite/gda-sqlite-recordset.c:63
 msgid "Invalid SQLITE handle"
 msgstr ""
 
-#: providers/sqlite/gda-sqlite-recordset.c:114
+#: providers/sqlite/gda-sqlite-recordset.c:113
 msgid "Invalid Sqlite handle"
 msgstr ""
 
-#: providers/sqlite/GNOME_Database_Provider_SQLite.server.in.h:1
-msgid "GDA SQLite Datasource Access"
-msgstr ""
-
 #
-#: providers/sqlite/GNOME_Database_Provider_SQLite.server.in.h:2
-#, fuzzy
-msgid "SQLite component factory"
-msgstr "Αδυναμία αλλαγής στον κατάλογο '%s'"
-
-#
-#: providers/sqlite/main.c:54
-#, fuzzy
-msgid "Could not initiate Sqlite component factory"
-msgstr "Αδυναμία περικοπής αρχείου %s"
-
-#: providers/sybase/GNOME_Database_Provider_Sybase.server.in.h:1
-msgid "GDA Datasource Access for Sybase"
-msgstr ""
-
-#: providers/sybase/GNOME_Database_Provider_Sybase.server.in.h:2
-msgid "Sybase component factory"
-msgstr ""
-
-#
-#: providers/sybase/main.c:50
+#: providers/sybase/main.c:52
 #, fuzzy
 msgid "Could not initiate Sybase component factory"
 msgstr "Αδυναμία περικοπής αρχείου %s"
 
-#: report/gda-report-engine.c:67 report/libgda-report/gda-report-client.c:195
-#: report/libgda-report/gda-report-client.c:209
+#: report/gda-report-engine.c:68 report/libgda-report/gda-report-client.c:196
+#: report/libgda-report/gda-report-client.c:210
 #, c-format
 msgid "CORBA exception: %s"
 msgstr ""
 
 #
-#: report/gda-report-engine.c:105
+#: report/gda-report-engine.c:106
 #, fuzzy
 msgid "Could not create global GDA client"
 msgstr "Αδυναμία αλλαγής στον κατάλογο '%s'"
@@ -533,7 +335,7 @@ msgid "GDA Report engine factory"
 msgstr ""
 
 #
-#: report/job.c:43
+#: report/job.c:44
 #, fuzzy
 msgid "Could not parse XML report"
 msgstr ""
@@ -541,7 +343,7 @@ msgstr ""
 " %s"
 
 #
-#: report/libgda-report/gda-report-client.c:141
+#: report/libgda-report/gda-report-client.c:142
 #, fuzzy
 msgid "Could not activate report engine"
 msgstr ""
@@ -549,13 +351,13 @@ msgstr ""
 " %s"
 
 #
-#: report/libgda-report/gda-report-client.c:182
+#: report/libgda-report/gda-report-client.c:183
 #, fuzzy
 msgid "Could not create BonoboStreamMem object"
 msgstr "Αδυναμία αλλαγής στον κατάλογο '%s'"
 
 #
-#: report/libgda-report/gda-report-document.c:137
+#: report/libgda-report/gda-report-document.c:138
 #, fuzzy
 msgid "Could not parse XML document"
 msgstr ""
@@ -563,7 +365,7 @@ msgstr ""
 " %s"
 
 #
-#: report/libgda-report/gda-report-document.c:162
+#: report/libgda-report/gda-report-document.c:163
 #, fuzzy, c-format
 msgid "Could not get file from %s"
 msgstr ""
@@ -576,158 +378,244 @@ msgstr ""
 msgid "Could not initiate Report component factory"
 msgstr "Αδυναμία περικοπής αρχείου %s"
 
-#: testing/client.c:37
+#: testing/client.c:39
 msgid "\t\tNONE\n"
 msgstr ""
 
-#: testing/client.c:76
+#: testing/client.c:78
 #, c-format
 msgid "** ERROR: could not open connection to %s\n"
 msgstr ""
 
 #
 #. show provider features
-#: testing/client.c:81
+#: testing/client.c:83
 #, fuzzy
 msgid "\tProvider capabilities...\n"
 msgstr "Χαρακτηριστικά Παροχέα"
 
-#: testing/client.c:82
+#: testing/client.c:84
 #, fuzzy, c-format
 msgid "\t\tTransactions: %s\n"
 msgstr "Διενέργειες"
 
-#: testing/client.c:84
+#: testing/client.c:86
 msgid "Supported"
 msgstr ""
 
 #
-#: testing/client.c:84
+#: testing/client.c:86
 #, fuzzy
 msgid "Not supported"
 msgstr "Δεν υποστηρίζονται διενέργειες"
 
 #
 #. show connection schemas
-#: testing/client.c:87
+#: testing/client.c:89
+#, fuzzy
+msgid "Databases"
+msgstr "Βάση"
+
+#
+#: testing/client.c:90
 #, fuzzy
 msgid "Stored procedures"
 msgstr "Αποθηκευμένες Διαδικασίες"
 
 #
-#: testing/client.c:88
+#: testing/client.c:91
 #, fuzzy
 msgid "Connection Tables"
 msgstr "Ρυθμίσεις Σύνδεσης"
 
-#: testing/client.c:89
+#: testing/client.c:92
 msgid "Available types"
 msgstr ""
 
 #
-#: testing/client.c:90
+#: testing/client.c:93
 msgid "Views"
 msgstr "Προβολές"
 
-#: testing/client.c:91
+#: testing/client.c:94
 msgid "Indexes"
 msgstr ""
 
 #
-#: testing/client.c:92
+#: testing/client.c:95
 msgid "Aggregates"
 msgstr "Ενοποιήσεις"
 
-#: testing/client.c:93
+#
+#: testing/client.c:96
+#, fuzzy
+msgid "Users"
+msgstr "Όνομα χρήστη"
+
+#
+#: testing/client.c:97
+msgid "Sequences"
+msgstr "Ακολουθίες"
+
+#: testing/client.c:98
 msgid "Triggers"
 msgstr ""
 
 #
 #. test transactions
-#: testing/client.c:96 testing/client.c:104
+#: testing/client.c:101 testing/client.c:109
 #, fuzzy
 msgid "\tStarting transaction..."
 msgstr "Εκκίνηση Διενέργειας"
 
-#: testing/client.c:98 testing/client.c:102 testing/client.c:106
-#: testing/client.c:110
+#: testing/client.c:103 testing/client.c:107 testing/client.c:111
+#: testing/client.c:115
 msgid "Error"
 msgstr ""
 
 #
-#: testing/client.c:100
+#: testing/client.c:105
 #, fuzzy
 msgid "\tFinishing transaction..."
 msgstr "Εκκίνηση νέας διενέργειας"
 
 #
-#: testing/client.c:108
+#: testing/client.c:113
 #, fuzzy
 msgid "\tRolling back transaction..."
 msgstr "Εκκίνηση νέας διενέργειας"
 
-#: testing/client.c:129
+#: testing/client.c:134
 msgid "Testing GDA client API"
 msgstr ""
 
-#: testing/client.c:138
+#: testing/client.c:143
 msgid "** ERROR: gda_config_get_data_source_list returned a NULL item\n"
 msgstr ""
 
-#: testing/client.c:142
+#: testing/client.c:147
 #, c-format
 msgid " Data source = %s, User = %s\n"
 msgstr ""
 
-#: testing/config.c:84
+#: testing/config.c:85
 msgid "** ERROR: gda_config_get_provider_list returned a NULL item\n"
 msgstr ""
 
 #
-#: testing/config.c:88
+#: testing/config.c:89
 #, fuzzy, c-format
 msgid " Provider = %s\n"
 msgstr "Παροχεύς"
 
-#: testing/config.c:89
+#: testing/config.c:90
 #, c-format
 msgid "\tlocation = %s\n"
 msgstr ""
 
-#: testing/config.c:90
-#, c-format
-msgid "\ttype = %s\n"
-msgstr ""
-
 #
-#: testing/config.c:93
+#: testing/config.c:91
 #, fuzzy, c-format
 msgid "\tdescription = %s\n"
 msgstr "Περιγραφή"
 
-#: testing/config.c:95
-msgid "\trepo_ids ="
+#: testing/config.c:93
+msgid "\tgda_params ="
 msgstr ""
 
 #
-#: testing/config.c:102
-#, fuzzy, c-format
-msgid "\tusername = %s\n"
-msgstr "Όνομα χρήστη"
+#, fuzzy
+#~ msgid "Could not activate object %s"
+#~ msgstr ""
+#~ "Αδυναμία φόρτωσης αρχείου\n"
+#~ " %s"
 
-#: testing/config.c:103
-#, c-format
-msgid "\thostname = %s\n"
-msgstr ""
+#
+#, fuzzy
+#~ msgid "Could not create connection component"
+#~ msgstr "Αδυναμία αλλαγής στον κατάλογο '%s'"
 
-#: testing/config.c:104
-#, c-format
-msgid "\tdomain = %s\n"
-msgstr ""
+#
+#, fuzzy
+#~ msgid "Could not initialize Bonobo"
+#~ msgstr "Αδυναμία περικοπής αρχείου %s"
 
-#: testing/config.c:106
-msgid "\tgda_params ="
-msgstr ""
+#
+#, fuzzy
+#~ msgid "Could not create component of type %s"
+#~ msgstr ""
+#~ "Αδυναμία φόρτωσης αρχείου\n"
+#~ " %s"
+
+#
+#, fuzzy
+#~ msgid "Could not notify client about action %d"
+#~ msgstr "Αδυναμία αλλαγής στον κατάλογο '%s'"
+
+#
+#, fuzzy
+#~ msgid "Default component factory"
+#~ msgstr "Αδυναμία αλλαγής στον κατάλογο '%s'"
+
+#
+#, fuzzy
+#~ msgid "Could not initiate MySQL component factory"
+#~ msgstr "Αδυναμία περικοπής αρχείου %s"
+
+#
+#, fuzzy
+#~ msgid "ODBC component factory"
+#~ msgstr "Αδυναμία αλλαγής στον κατάλογο '%s'"
+
+#
+#, fuzzy
+#~ msgid "Could not initiate ODBC component factory"
+#~ msgstr "Αδυναμία περικοπής αρχείου %s"
+
+#
+#, fuzzy
+#~ msgid "Oracle component factory"
+#~ msgstr "Αδυναμία αλλαγής στον κατάλογο '%s'"
+
+#
+#, fuzzy
+#~ msgid "Postgres component factory"
+#~ msgstr "Αδυναμία αλλαγής στον κατάλογο '%s'"
+
+#
+#, fuzzy
+#~ msgid "Could not initiate PostgreSQL component factory"
+#~ msgstr "Αδυναμία περικοπής αρχείου %s"
+
+#
+#, fuzzy
+#~ msgid "NULL"
+#~ msgstr "«ΚΕΝΟ»"
+
+#
+#, fuzzy
+#~ msgid "date"
+#~ msgstr "Επικόλληση"
+
+#
+#, fuzzy
+#~ msgid "Unknown type"
+#~ msgstr "«Άγνωστος Τύπος GDA(ΚΕΝΟ)»"
+
+#
+#, fuzzy
+#~ msgid "SQLite component factory"
+#~ msgstr "Αδυναμία αλλαγής στον κατάλογο '%s'"
+
+#
+#, fuzzy
+#~ msgid "Could not initiate Sqlite component factory"
+#~ msgstr "Αδυναμία περικοπής αρχείου %s"
+
+#
+#, fuzzy
+#~ msgid "\tusername = %s\n"
+#~ msgstr "Όνομα χρήστη"
 
 #
 #, fuzzy
@@ -1025,10 +913,6 @@ msgstr ""
 #
 #~ msgid "Object Inheritance"
 #~ msgstr "Κληρονομικότητα Αντικειμένου"
-
-#
-#~ msgid "Sequences"
-#~ msgstr "Ακολουθίες"
 
 #
 #~ msgid "XML Queries"
@@ -1573,10 +1457,6 @@ msgstr ""
 #~ msgstr "Σχετικά με αυτό το πρόγραμμα"
 
 #
-#~ msgid "Database"
-#~ msgstr "Βάση"
-
-#
 #~ msgid "Tools"
 #~ msgstr "Εργαλεία"
 
@@ -1611,10 +1491,6 @@ msgstr ""
 #
 #~ msgid "Next"
 #~ msgstr "Επόμενο"
-
-#
-#~ msgid "Could not load grid font"
-#~ msgstr "Αδυναμία φόρτωσης γραμματοσειράς πλέγματος"
 
 #
 #~ msgid "Execute SQL command"

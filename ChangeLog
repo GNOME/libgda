@@ -1,5 +1,6 @@
 2002-05-02  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* testing/Makefile.am:
 	* tools/Makefile.am:
 	* providers/default/Makefile.am: added missing -I's to INCLUDES.
 

@@ -9,7 +9,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2002-04-26 01:28+0200\n"
+"POT-Creation-Date: 2002-05-03 02:43+0200\n"
 "PO-Revision-Date: 2002-04-26 01:29+0200\n"
 "Last-Translator: GNOME PL Team <translators@gnome.pl>\n"
 "Language-Team: Polish <pl@li.org>\n"
@@ -17,309 +17,276 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: libgda/gda-client.c:1 libgda/gda-client.c:1 libgda/gda-connection.c:1
+#: libgda/gda-client.c:207 libgda/gda-client.c:319 libgda/gda-connection.c:207
 #, c-format
 msgid "Data source %s not found in configuration"
 msgstr "Nie odnaleziono źródła danych \"%s\" w konfiguracji"
 
+#: libgda/gda-client.c:225
+#, c-format
+msgid "Provider %s is not installed"
+msgstr ""
+
+#: libgda/gda-client.c:234
+#, fuzzy, c-format
+msgid "Could not load %s provider"
+msgstr "Nie można odczytać pliku %s"
+
+#: libgda/gda-client.c:250
+#, c-format
+msgid "Provider %s does not implement entry point"
+msgstr ""
+
+#: libgda/gda-client.c:259
+msgid "Creation of GdaServerProvider failed"
+msgstr ""
+
 #. gda_server_recordset_model_set_field_defined_size (recset, 0, 256);
-#: libgda/gda-config.c:1 providers/default/gda-default-provider.c:1
-#: providers/default/gda-default-provider.c:1
-#: providers/default/gda-default-provider.c:1
-#: providers/mysql/gda-mysql-provider.c:1
+#: libgda/gda-config.c:1105 providers/default/gda-default-provider.c:445
+#: providers/default/gda-default-provider.c:467
+#: providers/default/gda-default-provider.c:503
+#: providers/mysql/gda-mysql-provider.c:450
 msgid "Name"
 msgstr "Nazwa"
 
-#: libgda/gda-config.c:1
+#: libgda/gda-config.c:1106
 msgid "Provider"
 msgstr "Dostarczyciel"
 
-#: libgda/gda-config.c:1
+#: libgda/gda-config.c:1107
 msgid "Connection string"
 msgstr "Napis identyfikujący połączenie"
 
-#: libgda/gda-config.c:1
+#: libgda/gda-config.c:1108
 msgid "Description"
 msgstr "Opis"
 
-#: libgda/gda-config.c:1
+#: libgda/gda-config.c:1109
 msgid "Username"
 msgstr "Nazwa użytkownika"
 
-#: libgda/gda-init.c:1
+#: libgda/gda-init.c:42
 msgid "Attempt to initialize an already initialized client"
 msgstr "Próba zainicjowania już zainicjowanego klienta"
 
-#: libgda/gda-table.c:1
+#: libgda/gda-init.c:53
+msgid "libgda needs GModule. Finishing..."
+msgstr ""
+
+#: libgda/gda-table.c:233
 #, c-format
 msgid "There is already a field called %s"
 msgstr "Pole o nazwie %s już istnieje."
 
-#: libgda/gda-value.c:1
+#: libgda/gda-value.c:1030
 msgid "TRUE"
 msgstr "PRAWDA"
 
-#: libgda/gda-value.c:1
+#: libgda/gda-value.c:1032
 msgid "FALSE"
 msgstr "FAŁSZ"
 
-#: libgda/gda-xml-database.c:1
+#: libgda/gda-xml-database.c:228
 #, c-format
 msgid "Could not load file at %s"
 msgstr "Nie można odczytać pliku %s"
 
-#: libgda/gda-xml-database.c:1
+#: libgda/gda-xml-database.c:237
 #, c-format
 msgid "Could not parse file at %s"
 msgstr "Nie można przeanalizować pliku %s"
 
-#: libgda/gda-xml-database.c:1
+#: libgda/gda-xml-database.c:247
 #, c-format
 msgid "Invalid XML database file '%s'"
 msgstr "Niepoprawny plik bazy danych w XML-u \"%s\""
 
-#: libgda/gda-xml-database.c:1 libgda/gda-xml-database.c:1
-#: libgda/gda-xml-database.c:1
+#: libgda/gda-xml-database.c:466 libgda/gda-xml-database.c:502
+#: libgda/gda-xml-database.c:543
 #, c-format
 msgid "Table %s already exists"
 msgstr "Tabela %s już istnieje"
 
-#: libgda/gda-xml-database.c:1
+#: libgda/gda-xml-database.c:536
 msgid "Invalid node"
 msgstr "Niepoprawny tryb"
 
-#: libgda/gda-xml-database.c:1
+#: libgda/gda-xml-database.c:568
 #, c-format
 msgid "Duplicated <data> node for table %s"
 msgstr "Zduplikowany węzeł <data> dla tabeli %s"
 
-#: libgda/gda-xml-database.c:1
+#: libgda/gda-xml-database.c:575
 msgid "Invalid XML node"
 msgstr "Niepoprawny węzeł XML-a"
 
-#: providers/default/gda-default-provider.c:1
-#: providers/sqlite/gda-sqlite-provider.c:1
+#: providers/default/gda-default-provider.c:169
+#: providers/sqlite/gda-sqlite-provider.c:162
 msgid ""
 "A full path must be specified on the connection string to open a database."
 msgstr ""
 "Aby otworzyć bazę danych, w napisie identyfikującym połączenie należy podać "
 "pełną ścieżkę."
 
-#: providers/default/gda-default-provider.c:1
-#: providers/mysql/gda-mysql-provider.c:1
-#: providers/postgres/gda-postgres-provider.c:1
+#: providers/default/gda-default-provider.c:343
+#: providers/mysql/gda-mysql-provider.c:739
+#: providers/postgres/gda-postgres-provider.c:737
 msgid "Field name"
 msgstr "Nazwa pola"
 
-#: providers/default/gda-default-provider.c:1
-#: providers/mysql/gda-mysql-provider.c:1
-#: providers/postgres/gda-postgres-provider.c:1
+#: providers/default/gda-default-provider.c:344
+#: providers/mysql/gda-mysql-provider.c:740
+#: providers/postgres/gda-postgres-provider.c:738
 msgid "Data type"
 msgstr "Typ danych"
 
-#: providers/default/gda-default-provider.c:1
-#: providers/mysql/gda-mysql-provider.c:1
-#: providers/postgres/gda-postgres-provider.c:1
+#: providers/default/gda-default-provider.c:345
+#: providers/mysql/gda-mysql-provider.c:741
+#: providers/postgres/gda-postgres-provider.c:739
 msgid "Size"
 msgstr "Rozmiar"
 
-#: providers/default/gda-default-provider.c:1
-#: providers/mysql/gda-mysql-provider.c:1
-#: providers/postgres/gda-postgres-provider.c:1
+#: providers/default/gda-default-provider.c:346
+#: providers/mysql/gda-mysql-provider.c:742
+#: providers/postgres/gda-postgres-provider.c:740
 msgid "Scale"
 msgstr "Skala"
 
-#: providers/default/gda-default-provider.c:1
-#: providers/mysql/gda-mysql-provider.c:1
-#: providers/postgres/gda-postgres-provider.c:1
+#: providers/default/gda-default-provider.c:347
+#: providers/mysql/gda-mysql-provider.c:743
+#: providers/postgres/gda-postgres-provider.c:741
 msgid "Not null?"
 msgstr "Niepuste?"
 
-#: providers/default/gda-default-provider.c:1
-#: providers/mysql/gda-mysql-provider.c:1
-#: providers/postgres/gda-postgres-provider.c:1
+#: providers/default/gda-default-provider.c:348
+#: providers/mysql/gda-mysql-provider.c:744
+#: providers/postgres/gda-postgres-provider.c:742
 msgid "Primary key?"
 msgstr "Klucz główny?"
 
-#: providers/default/gda-default-provider.c:1
-#: providers/mysql/gda-mysql-provider.c:1
-#: providers/postgres/gda-postgres-provider.c:1
+#: providers/default/gda-default-provider.c:349
+#: providers/mysql/gda-mysql-provider.c:745
+#: providers/postgres/gda-postgres-provider.c:743
 msgid "Unique index?"
 msgstr "Unikatowy indeks?"
 
-#: providers/default/gda-default-provider.c:1
-#: providers/mysql/gda-mysql-provider.c:1
-#: providers/postgres/gda-postgres-provider.c:1
+#: providers/default/gda-default-provider.c:350
+#: providers/mysql/gda-mysql-provider.c:746
+#: providers/postgres/gda-postgres-provider.c:744
 msgid "References"
 msgstr "Referencja"
 
-#: providers/default/gda-default-provider.c:1
-#: providers/default/gda-default-provider.c:1
+#: providers/default/gda-default-provider.c:360
+#: providers/default/gda-default-provider.c:366
 msgid "Invalid argument"
 msgstr "Niepoprawny argument"
 
-#: providers/default/gda-default-provider.c:1
+#: providers/default/gda-default-provider.c:373
 #, c-format
 msgid "Table %s not found"
 msgstr "Nie odnaleziono tabeli %s"
 
 # c-format
-#: providers/default/gda-default-provider.c:1
+#: providers/default/gda-default-provider.c:398
 msgid "Could not get description for column"
 msgstr "Nie można uzyskać opisu kolumny"
 
-#: providers/default/GNOME_Database_Provider_Default.server.in.h:1
-msgid "Default component factory"
-msgstr "Generator domyślnych komponentów"
-
-#: providers/default/GNOME_Database_Provider_Default.server.in.h:1
-msgid "GDA Default Datasource Access"
-msgstr "Domyślny dostęp do źródła danych GDA"
-
-#: providers/mysql/gda-mysql-provider.c:1
+#: providers/mysql/gda-mysql-provider.c:183
 msgid ""
 "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
 msgstr ""
 "Nie można podawać UNIX_SOCKET przy jednoczesnym ustawieniu HOST (komputera) "
 "lub PORT (portu)."
 
-#: providers/mysql/gda-mysql-provider.c:1
-#: providers/mysql/gda-mysql-provider.c:1
-#: providers/mysql/gda-mysql-provider.c:1
-#: providers/mysql/gda-mysql-provider.c:1
+#: providers/mysql/gda-mysql-provider.c:254
+#: providers/mysql/gda-mysql-provider.c:333
+#: providers/mysql/gda-mysql-provider.c:361
+#: providers/mysql/gda-mysql-provider.c:389
 msgid "Invalid MYSQL handle"
 msgstr "Niepoprawny uchwyt MySQL-a"
 
 #. gda_server_recordset_model_set_field_defined_size (recset, 0, 32);
-#: providers/mysql/gda-mysql-provider.c:1
-#: providers/postgres/gda-postgres-provider.c:1
+#: providers/mysql/gda-mysql-provider.c:641
+#: providers/postgres/gda-postgres-provider.c:623
 msgid "Type"
 msgstr "Typ"
 
-#: providers/mysql/gda-mysql-provider.c:1
-#: providers/mysql/gda-mysql-recordset.c:1
-#: providers/mysql/gda-mysql-recordset.c:1
+#: providers/mysql/gda-mysql-provider.c:754
+#: providers/mysql/gda-mysql-recordset.c:63
+#: providers/mysql/gda-mysql-recordset.c:166
 msgid "Invalid MySQL handle"
 msgstr "Niepoprawny uchwyt MySQL-a"
 
-#: providers/mysql/gda-mysql-provider.c:1
-#: providers/mysql/gda-mysql-provider.c:1
+#: providers/mysql/gda-mysql-provider.c:763
+#: providers/mysql/gda-mysql-provider.c:771
 msgid "You need to specify the name of the table"
 msgstr "Należy podać nazwę tabeli"
 
-#: providers/mysql/gda-mysql-recordset.c:1
-#: providers/postgres/gda-postgres-recordset.c:1
-#: providers/sqlite/gda-sqlite-recordset.c:1
+#: providers/mysql/gda-mysql-recordset.c:76
+#: providers/postgres/gda-postgres-recordset.c:85
+#: providers/sqlite/gda-sqlite-recordset.c:74
 msgid "Row number out of range"
 msgstr "Numer wiersza poza zakresem"
 
-#: providers/mysql/GNOME_Database_Provider_MySQL.server.in.h:1
-msgid "GDA Datasource Access for MySQL"
-msgstr "Dostęp do źródła danych GDA - MySQL"
-
-#: providers/mysql/GNOME_Database_Provider_MySQL.server.in.h:1
-msgid "MySQL component factory"
-msgstr "Generator komponentów MySQL-a"
-
-#: providers/odbc/GNOME_Database_Provider_ODBC.server.in.h:1
-msgid "GDA Datasource Access for ODBC"
-msgstr "Dostęp do źródła danych GDA - ODBC"
-
-#: providers/odbc/GNOME_Database_Provider_ODBC.server.in.h:1
-msgid "ODBC component factory"
-msgstr "Generator komponenetów ODBC"
-
-#: providers/oracle/gda-oracle-connection.c:1
+#: providers/oracle/gda-oracle-connection.c:79
 msgid "Could not initialize Oracle environment"
 msgstr "Nie można zainicjować środowiska Oracle'a"
 
-#: providers/oracle/gda-oracle-connection.c:1
+#: providers/oracle/gda-oracle-connection.c:89
 msgid "Could not initialize Oracle error handler"
 msgstr "Nie można zainicjować uchwytu błędów Oracle'a"
 
-#: providers/oracle/gda-oracle-connection.c:1
+#: providers/oracle/gda-oracle-connection.c:100
 msgid "Could not initialize Oracle server handle"
 msgstr "Nie można zainicjować uchwytu serwera Oracle'a"
 
-#: providers/oracle/gda-oracle-connection.c:1
+#: providers/oracle/gda-oracle-connection.c:111
 msgid "Could not initialize Oracle service context"
 msgstr "Nie można zainicjować kontekstu usługi Oracle'a"
 
-#: providers/oracle/GNOME_Database_Provider_Oracle.server.in.h:1
-msgid "GDA Datasource Access for Oracle"
-msgstr "Dostęp do źródła danych GDA - Oracle"
-
-#: providers/oracle/GNOME_Database_Provider_Oracle.server.in.h:1
-msgid "Oracle component factory"
-msgstr "Generator komponenetów Oracle'a"
-
-#: providers/oracle/main.c:1
+#: providers/oracle/main.c:48
 msgid "Could not initiate Oracle component factory"
 msgstr "Nie można zainicjować generatora komponenetów Oracle'a"
 
-#: providers/oracle/main.c:1
+#: providers/oracle/main.c:74
 msgid "Could not initialize OCI library"
 msgstr "Nie można zainicjować biblioteki OCI"
 
-#: providers/postgres/gda-postgres-provider.c:1
-#: providers/postgres/gda-postgres-provider.c:1
-#: providers/postgres/gda-postgres-recordset.c:1
-#: providers/postgres/gda-postgres-recordset.c:1
+#: providers/postgres/gda-postgres-provider.c:370
+#: providers/postgres/gda-postgres-provider.c:508
+#: providers/postgres/gda-postgres-recordset.c:72
+#: providers/postgres/gda-postgres-recordset.c:128
 msgid "Invalid PostgreSQL handle"
 msgstr "Niepoprawny uchwytu PostgreSQL-a"
 
-#: providers/postgres/GNOME_Database_Provider_Postgres.server.in.h:1
-msgid "GDA Datasource Access for Postgres"
-msgstr "Dostęp do źródła danych GDA - Postgres"
-
-#: providers/postgres/GNOME_Database_Provider_Postgres.server.in.h:1
-msgid "Postgres component factory"
-msgstr "Generator komponenetów PostgreSQL-a"
-
-#: providers/postgres/utils.c:1
+#: providers/postgres/utils.c:47
 msgid "NO DESCRIPTION"
 msgstr "BRA OPISU"
 
-#: providers/postgres/utils.c:1
+#: providers/postgres/utils.c:52
 msgid "Not available"
 msgstr "Niedostępne"
 
-#: providers/sqlite/gda-sqlite-provider.c:1
-#: providers/sqlite/gda-sqlite-recordset.c:1
+#: providers/sqlite/gda-sqlite-provider.c:220
+#: providers/sqlite/gda-sqlite-recordset.c:63
 msgid "Invalid SQLITE handle"
 msgstr "Niepoprawny uchwyt SQLit"
 
-#: providers/sqlite/gda-sqlite-recordset.c:1
+#: providers/sqlite/gda-sqlite-recordset.c:113
 msgid "Invalid Sqlite handle"
 msgstr "Niepoprawny uchwyt SQLite"
 
-#: providers/sqlite/GNOME_Database_Provider_SQLite.server.in.h:1
-msgid "GDA SQLite Datasource Access"
-msgstr "Dostęp do źródła danych GDA SQLite"
-
-#: providers/sqlite/GNOME_Database_Provider_SQLite.server.in.h:1
-msgid "SQLite component factory"
-msgstr "Generator komponenetów SQLite"
-
-#: providers/sybase/GNOME_Database_Provider_Sybase.server.in.h:1
-msgid "GDA Datasource Access for Sybase"
-msgstr "Dostęp do źródła danych GDA - Sybase"
-
-#: providers/sybase/GNOME_Database_Provider_Sybase.server.in.h:1
-msgid "Sybase component factory"
-msgstr "Generator komponenetów Sybase'a"
-
-#: providers/sybase/main.c:1
+#: providers/sybase/main.c:52
 msgid "Could not initiate Sybase component factory"
 msgstr "Nie można zainicjować generatora komponenetów Sybase'a"
 
-#: report/gda-report-engine.c:1 report/libgda-report/gda-report-client.c:1
-#: report/libgda-report/gda-report-client.c:1
+#: report/gda-report-engine.c:68 report/libgda-report/gda-report-client.c:196
+#: report/libgda-report/gda-report-client.c:210
 #, c-format
 msgid "CORBA exception: %s"
 msgstr "Wyjątek Corby: %s"
 
-#: report/gda-report-engine.c:1
+#: report/gda-report-engine.c:106
 msgid "Could not create global GDA client"
 msgstr "Nie można stworzyć globalnego klienta GDA"
 
@@ -327,174 +294,209 @@ msgstr "Nie można stworzyć globalnego klienta GDA"
 msgid "GDA Report engine"
 msgstr "Mechanizm raportów GDA"
 
-#: report/GNOME_Database_Report.server.in.h:1
+#: report/GNOME_Database_Report.server.in.h:2
 msgid "GDA Report engine factory"
 msgstr "Generator mechanizmu raportów GDA"
 
-#: report/job.c:1
+#: report/job.c:44
 msgid "Could not parse XML report"
 msgstr "Nie można przeanalizować raportu w XML-u"
 
-#: report/libgda-report/gda-report-client.c:1
+#: report/libgda-report/gda-report-client.c:142
 msgid "Could not activate report engine"
 msgstr "Nie można uaktywnić mechanizmu raportów"
 
-#: report/libgda-report/gda-report-client.c:1
+#: report/libgda-report/gda-report-client.c:183
 msgid "Could not create BonoboStreamMem object"
 msgstr "Nie można stworzyć obiektu BonoboStreamMem"
 
-#: report/libgda-report/gda-report-document.c:1
+#: report/libgda-report/gda-report-document.c:138
 msgid "Could not parse XML document"
 msgstr "Nie można przeanalizować dokumentu w XML-u"
 
-#: report/libgda-report/gda-report-document.c:1
+#: report/libgda-report/gda-report-document.c:163
 #, c-format
 msgid "Could not get file from %s"
 msgstr "Nie można uzyskać pliku spod %s"
 
-#: report/main.c:1
+#: report/main.c:47
 msgid "Could not initiate Report component factory"
 msgstr "Nie można zainicjować generatora komponentów raportu"
 
-#: testing/client.c:1
+#: testing/client.c:39
 msgid "\t\tNONE\n"
 msgstr "\t\tBRAK\n"
 
 # c-format
-#: testing/client.c:1
+#: testing/client.c:78
 #, c-format
 msgid "** ERROR: could not open connection to %s\n"
 msgstr "** BŁĄD: nie można nawiązać połączenia z %s\n"
 
 #. show provider features
-#: testing/client.c:1
+#: testing/client.c:83
 msgid "\tProvider capabilities...\n"
 msgstr "\tMożliwości dostarczyciela...\n"
 
-#: testing/client.c:1
+#: testing/client.c:84
 #, c-format
 msgid "\t\tTransactions: %s\n"
 msgstr "\t\tTransakcje: %s\n"
 
-#: testing/client.c:1
+#: testing/client.c:86
 msgid "Supported"
 msgstr "Obsługiwane"
 
-#: testing/client.c:1
+#: testing/client.c:86
 msgid "Not supported"
 msgstr "Nieobsługiwane"
 
 #. show connection schemas
-#: testing/client.c:1
+#: testing/client.c:89
 msgid "Databases"
 msgstr "Bazy danych"
 
-#: testing/client.c:1
+#: testing/client.c:90
 msgid "Stored procedures"
 msgstr "Procedury zapamiętane"
 
-#: testing/client.c:1
+#: testing/client.c:91
 msgid "Connection Tables"
 msgstr "Tabele połączenia"
 
-#: testing/client.c:1
+#: testing/client.c:92
 msgid "Available types"
 msgstr "Dostępne typy"
 
-#: testing/client.c:1
+#: testing/client.c:93
 msgid "Views"
 msgstr "Perspektywy"
 
-#: testing/client.c:1
+#: testing/client.c:94
 msgid "Indexes"
 msgstr "Indeksy"
 
-#: testing/client.c:1
+#: testing/client.c:95
 msgid "Aggregates"
 msgstr "Agregaty"
 
-#: testing/client.c:1
+#: testing/client.c:96
 msgid "Users"
 msgstr "Użytkownicy"
 
-#: testing/client.c:1
+#: testing/client.c:97
 msgid "Sequences"
 msgstr "Sekwencje"
 
-#: testing/client.c:1
+#: testing/client.c:98
 msgid "Triggers"
 msgstr "Wyzwalacze"
 
 #. test transactions
-#: testing/client.c:1 testing/client.c:1
+#: testing/client.c:101 testing/client.c:109
 msgid "\tStarting transaction..."
 msgstr "\tRozpoczynanie transakcji..."
 
-#: testing/client.c:1 testing/client.c:1 testing/client.c:1
-#: testing/client.c:1
+#: testing/client.c:103 testing/client.c:107 testing/client.c:111
+#: testing/client.c:115
 msgid "Error"
 msgstr "Błąd"
 
-#: testing/client.c:1
+#: testing/client.c:105
 msgid "\tFinishing transaction..."
 msgstr "\tKończenie transakcji..."
 
-#: testing/client.c:1
+#: testing/client.c:113
 msgid "\tRolling back transaction..."
 msgstr "\tWycofywanie transakcji..."
 
-#: testing/client.c:1
+#: testing/client.c:134
 msgid "Testing GDA client API"
 msgstr "Testowanie API klienta GDA"
 
-#: testing/client.c:1
+#: testing/client.c:143
 msgid "** ERROR: gda_config_get_data_source_list returned a NULL item\n"
 msgstr ""
 "** BŁĄD: Funkcja gda_config_get_data_source_list zwróciła wartość NULL\n"
 
-#: testing/client.c:1
+#: testing/client.c:147
 #, c-format
 msgid " Data source = %s, User = %s\n"
 msgstr " Źródło danych = %s, użytkownik = %s\n"
 
-#: testing/config.c:1
+#: testing/config.c:85
 msgid "** ERROR: gda_config_get_provider_list returned a NULL item\n"
 msgstr "** BŁĄD: Funkcja gda_config_get_provider_list zwróciła wartość NULL\n"
 
-#: testing/config.c:1
+#: testing/config.c:89
 #, c-format
 msgid " Provider = %s\n"
 msgstr " Dostarczyciel = %s\n"
 
-#: testing/config.c:1
+#: testing/config.c:90
 #, c-format
 msgid "\tlocation = %s\n"
 msgstr "\tpołożenie = %s\n"
 
-#: testing/config.c:1
+#: testing/config.c:91
 #, c-format
 msgid "\tdescription = %s\n"
 msgstr "\topis = %s\n"
 
-#: testing/config.c:1
-msgid "\trepo_ids ="
-msgstr "\tid_repo ="
-
-#: testing/config.c:1
-#, c-format
-msgid "\tusername = %s\n"
-msgstr "\tnazwa_użytkownika = %s\n"
-
-#: testing/config.c:1
-#, c-format
-msgid "\thostname = %s\n"
-msgstr "\tnazwa_komputera = %s\n"
-
-#: testing/config.c:1
-#, c-format
-msgid "\tdomain = %s\n"
-msgstr "\tdziedzina = %s\n"
-
-#: testing/config.c:1
+#: testing/config.c:93
 msgid "\tgda_params ="
 msgstr "\tparam_gda ="
+
+#~ msgid "Default component factory"
+#~ msgstr "Generator domyślnych komponentów"
+
+#~ msgid "GDA Default Datasource Access"
+#~ msgstr "Domyślny dostęp do źródła danych GDA"
+
+#~ msgid "GDA Datasource Access for MySQL"
+#~ msgstr "Dostęp do źródła danych GDA - MySQL"
+
+#~ msgid "MySQL component factory"
+#~ msgstr "Generator komponentów MySQL-a"
+
+#~ msgid "GDA Datasource Access for ODBC"
+#~ msgstr "Dostęp do źródła danych GDA - ODBC"
+
+#~ msgid "ODBC component factory"
+#~ msgstr "Generator komponenetów ODBC"
+
+#~ msgid "GDA Datasource Access for Oracle"
+#~ msgstr "Dostęp do źródła danych GDA - Oracle"
+
+#~ msgid "Oracle component factory"
+#~ msgstr "Generator komponenetów Oracle'a"
+
+#~ msgid "GDA Datasource Access for Postgres"
+#~ msgstr "Dostęp do źródła danych GDA - Postgres"
+
+#~ msgid "Postgres component factory"
+#~ msgstr "Generator komponenetów PostgreSQL-a"
+
+#~ msgid "GDA SQLite Datasource Access"
+#~ msgstr "Dostęp do źródła danych GDA SQLite"
+
+#~ msgid "SQLite component factory"
+#~ msgstr "Generator komponenetów SQLite"
+
+#~ msgid "GDA Datasource Access for Sybase"
+#~ msgstr "Dostęp do źródła danych GDA - Sybase"
+
+#~ msgid "Sybase component factory"
+#~ msgstr "Generator komponenetów Sybase'a"
+
+#~ msgid "\trepo_ids ="
+#~ msgstr "\tid_repo ="
+
+#~ msgid "\tusername = %s\n"
+#~ msgstr "\tnazwa_użytkownika = %s\n"
+
+#~ msgid "\thostname = %s\n"
+#~ msgstr "\tnazwa_komputera = %s\n"
+
+#~ msgid "\tdomain = %s\n"
+#~ msgstr "\tdziedzina = %s\n"

@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-db 0.0.91\n"
-"POT-Creation-Date: 2002-04-23 21:58+0200\n"
+"POT-Creation-Date: 2002-05-03 02:43+0200\n"
 "PO-Revision-Date: 2002-04-23 21:58+0200\n"
 "Last-Translator: Kjartan Maraas <kmaraas@online.no>\n"
 "Language-Team: Norwegian <no@li.org>\n"
@@ -13,38 +13,61 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8-bit\n"
 
-#: libgda/gda-client.c:191 libgda/gda-client.c:262 libgda/gda-connection.c:207
+#: libgda/gda-client.c:207 libgda/gda-client.c:319 libgda/gda-connection.c:207
 #, c-format
 msgid "Data source %s not found in configuration"
 msgstr "Datakilde «%s» ble ikke funnet i konfigurasjonen"
 
+#: libgda/gda-client.c:225
+#, c-format
+msgid "Provider %s is not installed"
+msgstr ""
+
+#: libgda/gda-client.c:234
+#, fuzzy, c-format
+msgid "Could not load %s provider"
+msgstr "Kunne ikke spørre CORBA-tilbydere"
+
+#: libgda/gda-client.c:250
+#, c-format
+msgid "Provider %s does not implement entry point"
+msgstr ""
+
+#: libgda/gda-client.c:259
+msgid "Creation of GdaServerProvider failed"
+msgstr ""
+
 #. gda_server_recordset_model_set_field_defined_size (recset, 0, 256);
-#: libgda/gda-config.c:615 providers/default/gda-default-provider.c:435
-#: providers/default/gda-default-provider.c:455
-#: providers/default/gda-default-provider.c:491
-#: providers/mysql/gda-mysql-provider.c:441
+#: libgda/gda-config.c:1105 providers/default/gda-default-provider.c:445
+#: providers/default/gda-default-provider.c:467
+#: providers/default/gda-default-provider.c:503
+#: providers/mysql/gda-mysql-provider.c:450
 msgid "Name"
 msgstr "Navn"
 
-#: libgda/gda-config.c:616
+#: libgda/gda-config.c:1106
 msgid "Provider"
 msgstr "Tilbyder"
 
-#: libgda/gda-config.c:617
+#: libgda/gda-config.c:1107
 msgid "Connection string"
 msgstr "Tilkoblingsstreng"
 
-#: libgda/gda-config.c:618
+#: libgda/gda-config.c:1108
 msgid "Description"
 msgstr "Beskrivelse"
 
-#: libgda/gda-config.c:619
+#: libgda/gda-config.c:1109
 msgid "Username"
 msgstr "Brukernavn"
 
 #: libgda/gda-init.c:42
 msgid "Attempt to initialize an already initialized client"
 msgstr "Forsøk på å initiere en allerede initiert klient"
+
+#: libgda/gda-init.c:53
+msgid "libgda needs GModule. Finishing..."
+msgstr ""
 
 #: libgda/gda-table.c:233
 #, c-format
@@ -93,135 +116,111 @@ msgstr "Duplisert <data>-node for tabell %s"
 msgid "Invalid XML node"
 msgstr "Ugyldig XML-node"
 
-#: providers/default/gda-default-provider.c:160
-#: providers/sqlite/gda-sqlite-provider.c:153
+#: providers/default/gda-default-provider.c:169
+#: providers/sqlite/gda-sqlite-provider.c:162
 msgid ""
 "A full path must be specified on the connection string to open a database."
 msgstr ""
 "En full sti må spesifiseres i tilkoblingsstrengen for å åpne en database."
 
-#: providers/default/gda-default-provider.c:334
-#: providers/mysql/gda-mysql-provider.c:730
-#: providers/postgres/gda-postgres-provider.c:728
+#: providers/default/gda-default-provider.c:343
+#: providers/mysql/gda-mysql-provider.c:739
+#: providers/postgres/gda-postgres-provider.c:737
 msgid "Field name"
 msgstr "Feltnavn"
 
-#: providers/default/gda-default-provider.c:335
-#: providers/mysql/gda-mysql-provider.c:731
-#: providers/postgres/gda-postgres-provider.c:729
+#: providers/default/gda-default-provider.c:344
+#: providers/mysql/gda-mysql-provider.c:740
+#: providers/postgres/gda-postgres-provider.c:738
 msgid "Data type"
 msgstr "Datatype"
 
-#: providers/default/gda-default-provider.c:336
-#: providers/mysql/gda-mysql-provider.c:732
-#: providers/postgres/gda-postgres-provider.c:730
+#: providers/default/gda-default-provider.c:345
+#: providers/mysql/gda-mysql-provider.c:741
+#: providers/postgres/gda-postgres-provider.c:739
 msgid "Size"
 msgstr "Størrelse"
 
-#: providers/default/gda-default-provider.c:337
-#: providers/mysql/gda-mysql-provider.c:733
-#: providers/postgres/gda-postgres-provider.c:731
+#: providers/default/gda-default-provider.c:346
+#: providers/mysql/gda-mysql-provider.c:742
+#: providers/postgres/gda-postgres-provider.c:740
 msgid "Scale"
 msgstr "Skala"
 
-#: providers/default/gda-default-provider.c:338
-#: providers/mysql/gda-mysql-provider.c:734
-#: providers/postgres/gda-postgres-provider.c:732
+#: providers/default/gda-default-provider.c:347
+#: providers/mysql/gda-mysql-provider.c:743
+#: providers/postgres/gda-postgres-provider.c:741
 msgid "Not null?"
 msgstr "Ikke null"
 
-#: providers/default/gda-default-provider.c:339
-#: providers/mysql/gda-mysql-provider.c:735
-#: providers/postgres/gda-postgres-provider.c:733
+#: providers/default/gda-default-provider.c:348
+#: providers/mysql/gda-mysql-provider.c:744
+#: providers/postgres/gda-postgres-provider.c:742
 msgid "Primary key?"
 msgstr "Primærnøkkel"
 
-#: providers/default/gda-default-provider.c:340
-#: providers/mysql/gda-mysql-provider.c:736
-#: providers/postgres/gda-postgres-provider.c:734
+#: providers/default/gda-default-provider.c:349
+#: providers/mysql/gda-mysql-provider.c:745
+#: providers/postgres/gda-postgres-provider.c:743
 msgid "Unique index?"
 msgstr "Unik indeks"
 
-#: providers/default/gda-default-provider.c:341
-#: providers/mysql/gda-mysql-provider.c:737
-#: providers/postgres/gda-postgres-provider.c:735
+#: providers/default/gda-default-provider.c:350
+#: providers/mysql/gda-mysql-provider.c:746
+#: providers/postgres/gda-postgres-provider.c:744
 msgid "References"
 msgstr "Referanser"
 
-#: providers/default/gda-default-provider.c:351
-#: providers/default/gda-default-provider.c:357
+#: providers/default/gda-default-provider.c:360
+#: providers/default/gda-default-provider.c:366
 msgid "Invalid argument"
 msgstr "Ugyldig argument"
 
-#: providers/default/gda-default-provider.c:364
+#: providers/default/gda-default-provider.c:373
 #, c-format
 msgid "Table %s not found"
 msgstr "Tabell %s ikke funnet"
 
-#: providers/default/gda-default-provider.c:389
+#: providers/default/gda-default-provider.c:398
 msgid "Could not get description for column"
 msgstr "Kunne ikke hente beskrivelse for kolonne"
 
-#: providers/default/GNOME_Database_Provider_Default.server.in.h:1
-msgid "Default component factory"
-msgstr "Forvalgt komponentfactory"
-
-#: providers/default/GNOME_Database_Provider_Default.server.in.h:2
-msgid "GDA Default Datasource Access"
-msgstr "Forvalgt datakildeaksess for GDA"
-
-#: providers/mysql/gda-mysql-provider.c:174
+#: providers/mysql/gda-mysql-provider.c:183
 msgid ""
 "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
 msgstr ""
 "Du kan ikke tilby en UNIX_SOCKET hvis du også tilbyr enten en VERT eller en "
 "PORT."
 
-#: providers/mysql/gda-mysql-provider.c:245
-#: providers/mysql/gda-mysql-provider.c:324
-#: providers/mysql/gda-mysql-provider.c:352
-#: providers/mysql/gda-mysql-provider.c:380
+#: providers/mysql/gda-mysql-provider.c:254
+#: providers/mysql/gda-mysql-provider.c:333
+#: providers/mysql/gda-mysql-provider.c:361
+#: providers/mysql/gda-mysql-provider.c:389
 msgid "Invalid MYSQL handle"
 msgstr "Ugyldig MYSQL-håndtak"
 
 #. gda_server_recordset_model_set_field_defined_size (recset, 0, 32);
-#: providers/mysql/gda-mysql-provider.c:632
-#: providers/postgres/gda-postgres-provider.c:614
+#: providers/mysql/gda-mysql-provider.c:641
+#: providers/postgres/gda-postgres-provider.c:623
 msgid "Type"
 msgstr "Type"
 
-#: providers/mysql/gda-mysql-provider.c:745
-#: providers/mysql/gda-mysql-recordset.c:64
-#: providers/mysql/gda-mysql-recordset.c:168
+#: providers/mysql/gda-mysql-provider.c:754
+#: providers/mysql/gda-mysql-recordset.c:63
+#: providers/mysql/gda-mysql-recordset.c:166
 msgid "Invalid MySQL handle"
 msgstr "Ugyldig MYSQL-håndtak"
 
-#: providers/mysql/gda-mysql-provider.c:754
-#: providers/mysql/gda-mysql-provider.c:762
+#: providers/mysql/gda-mysql-provider.c:763
+#: providers/mysql/gda-mysql-provider.c:771
 msgid "You need to specify the name of the table"
 msgstr "Du må spesifisere navnet på tabellen"
 
-#: providers/mysql/gda-mysql-recordset.c:77
+#: providers/mysql/gda-mysql-recordset.c:76
 #: providers/postgres/gda-postgres-recordset.c:85
-#: providers/sqlite/gda-sqlite-recordset.c:75
+#: providers/sqlite/gda-sqlite-recordset.c:74
 msgid "Row number out of range"
 msgstr "Radnummer utenfor område"
-
-#: providers/mysql/GNOME_Database_Provider_MySQL.server.in.h:1
-msgid "GDA Datasource Access for MySQL"
-msgstr "GDA datakildeaksess for MySQL"
-
-#: providers/mysql/GNOME_Database_Provider_MySQL.server.in.h:2
-msgid "MySQL component factory"
-msgstr "MySQL komponentfactory"
-
-#: providers/odbc/GNOME_Database_Provider_ODBC.server.in.h:1
-msgid "GDA Datasource Access for ODBC"
-msgstr "GDA datakildeaksess for ODBC"
-
-#: providers/odbc/GNOME_Database_Provider_ODBC.server.in.h:2
-msgid "ODBC component factory"
-msgstr "ODBC komponentfactory"
 
 #: providers/oracle/gda-oracle-connection.c:79
 msgid "Could not initialize Oracle environment"
@@ -239,14 +238,6 @@ msgstr "Kunne ikke initiere tjenerhåndtak for Oracle"
 msgid "Could not initialize Oracle service context"
 msgstr "Kunne ikke initiere tjenerkontekst for Oracle"
 
-#: providers/oracle/GNOME_Database_Provider_Oracle.server.in.h:1
-msgid "GDA Datasource Access for Oracle"
-msgstr "GDA datakildeaksess for Oracle"
-
-#: providers/oracle/GNOME_Database_Provider_Oracle.server.in.h:2
-msgid "Oracle component factory"
-msgstr "Oracle komponentfactory"
-
 #: providers/oracle/main.c:48
 msgid "Could not initiate Oracle component factory"
 msgstr "Kunne ikke initiere Oracle komponentfactory"
@@ -255,20 +246,12 @@ msgstr "Kunne ikke initiere Oracle komponentfactory"
 msgid "Could not initialize OCI library"
 msgstr "Kunne ikke initiere OCI-bibliotek"
 
-#: providers/postgres/gda-postgres-provider.c:361
-#: providers/postgres/gda-postgres-provider.c:499
+#: providers/postgres/gda-postgres-provider.c:370
+#: providers/postgres/gda-postgres-provider.c:508
 #: providers/postgres/gda-postgres-recordset.c:72
 #: providers/postgres/gda-postgres-recordset.c:128
 msgid "Invalid PostgreSQL handle"
 msgstr "Ugyldig PostgreSQL-håndtak"
-
-#: providers/postgres/GNOME_Database_Provider_Postgres.server.in.h:1
-msgid "GDA Datasource Access for Postgres"
-msgstr "GDA datakildeaksess for Postgres"
-
-#: providers/postgres/GNOME_Database_Provider_Postgres.server.in.h:2
-msgid "Postgres component factory"
-msgstr "Postgres komponentfactory"
 
 #: providers/postgres/utils.c:47
 msgid "NO DESCRIPTION"
@@ -278,30 +261,14 @@ msgstr "INGEN BESKRIVELSE"
 msgid "Not available"
 msgstr "Ikke tilgjengelig"
 
-#: providers/sqlite/gda-sqlite-provider.c:211
-#: providers/sqlite/gda-sqlite-recordset.c:64
+#: providers/sqlite/gda-sqlite-provider.c:220
+#: providers/sqlite/gda-sqlite-recordset.c:63
 msgid "Invalid SQLITE handle"
 msgstr "Ugyldig SQLite-håndtak"
 
-#: providers/sqlite/gda-sqlite-recordset.c:115
+#: providers/sqlite/gda-sqlite-recordset.c:113
 msgid "Invalid Sqlite handle"
 msgstr "Ugyldig SQLite-håndtak"
-
-#: providers/sqlite/GNOME_Database_Provider_SQLite.server.in.h:1
-msgid "GDA SQLite Datasource Access"
-msgstr "SQLite datakildeaksess for GDA"
-
-#: providers/sqlite/GNOME_Database_Provider_SQLite.server.in.h:2
-msgid "SQLite component factory"
-msgstr "SQLite komponentfactory"
-
-#: providers/sybase/GNOME_Database_Provider_Sybase.server.in.h:1
-msgid "GDA Datasource Access for Sybase"
-msgstr "GDA datakildeaksess for Sybase"
-
-#: providers/sybase/GNOME_Database_Provider_Sybase.server.in.h:2
-msgid "Sybase component factory"
-msgstr "Sybase komponentfactory"
 
 #: providers/sybase/main.c:52
 msgid "Could not initiate Sybase component factory"
@@ -470,27 +437,62 @@ msgid "\tdescription = %s\n"
 msgstr "\tbeskrivelse = %s\n"
 
 #: testing/config.c:93
-msgid "\trepo_ids ="
-msgstr "\trepo_ids ="
-
-#: testing/config.c:100
-#, c-format
-msgid "\tusername = %s\n"
-msgstr "\tbrukernavn = %s\n"
-
-#: testing/config.c:101
-#, c-format
-msgid "\thostname = %s\n"
-msgstr "\tvertsnavn = %s\n"
-
-#: testing/config.c:102
-#, c-format
-msgid "\tdomain = %s\n"
-msgstr "\tdomene = %s\n"
-
-#: testing/config.c:104
 msgid "\tgda_params ="
 msgstr "\tgda_parametere ="
+
+#~ msgid "Default component factory"
+#~ msgstr "Forvalgt komponentfactory"
+
+#~ msgid "GDA Default Datasource Access"
+#~ msgstr "Forvalgt datakildeaksess for GDA"
+
+#~ msgid "GDA Datasource Access for MySQL"
+#~ msgstr "GDA datakildeaksess for MySQL"
+
+#~ msgid "MySQL component factory"
+#~ msgstr "MySQL komponentfactory"
+
+#~ msgid "GDA Datasource Access for ODBC"
+#~ msgstr "GDA datakildeaksess for ODBC"
+
+#~ msgid "ODBC component factory"
+#~ msgstr "ODBC komponentfactory"
+
+#~ msgid "GDA Datasource Access for Oracle"
+#~ msgstr "GDA datakildeaksess for Oracle"
+
+#~ msgid "Oracle component factory"
+#~ msgstr "Oracle komponentfactory"
+
+#~ msgid "GDA Datasource Access for Postgres"
+#~ msgstr "GDA datakildeaksess for Postgres"
+
+#~ msgid "Postgres component factory"
+#~ msgstr "Postgres komponentfactory"
+
+#~ msgid "GDA SQLite Datasource Access"
+#~ msgstr "SQLite datakildeaksess for GDA"
+
+#~ msgid "SQLite component factory"
+#~ msgstr "SQLite komponentfactory"
+
+#~ msgid "GDA Datasource Access for Sybase"
+#~ msgstr "GDA datakildeaksess for Sybase"
+
+#~ msgid "Sybase component factory"
+#~ msgstr "Sybase komponentfactory"
+
+#~ msgid "\trepo_ids ="
+#~ msgstr "\trepo_ids ="
+
+#~ msgid "\tusername = %s\n"
+#~ msgstr "\tbrukernavn = %s\n"
+
+#~ msgid "\thostname = %s\n"
+#~ msgstr "\tvertsnavn = %s\n"
+
+#~ msgid "\tdomain = %s\n"
+#~ msgstr "\tdomene = %s\n"
 
 #~ msgid "Could not activate object %s"
 #~ msgstr "Kunne ikke aktivere objekt %s"
@@ -500,9 +502,6 @@ msgstr "\tgda_parametere ="
 
 #~ msgid "Could not query CORBA components"
 #~ msgstr "Kunne ikke spørre CORBA-komponenter"
-
-#~ msgid "Could not query CORBA providers"
-#~ msgstr "Kunne ikke spørre CORBA-tilbydere"
 
 #~ msgid "%s: An Error occured in the CORBA system."
 #~ msgstr "%s: En feil oppsto i CORBA-systemet."

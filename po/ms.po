@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda HEAD\n"
-"POT-Creation-Date: 2002-03-27 00:18+0100\n"
+"POT-Creation-Date: 2002-05-03 02:43+0200\n"
 "PO-Revision-Date: 2002-03-15 00:56+0800\n"
 "Last-Translator: Hasbullah Bin Pit <sebol@ikhlas.com>\n"
 "Language-Team: Bahasa Melayu <gabai-penyumbang@lists.sourceforge.net>\n"
@@ -12,439 +12,275 @@ msgstr ""
 "Content-Type: text/plain; charset=ISO-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: libgda/gda-client.c:198 libgda/gda-client.c:308 libgda/gda-connection.c:213
+#: libgda/gda-client.c:207 libgda/gda-client.c:319 libgda/gda-connection.c:207
 #, c-format
 msgid "Data source %s not found in configuration"
 msgstr "Sumber data &s tidak dijumpai pada konfigurasi"
 
-#: libgda/gda-client.c:235
+#: libgda/gda-client.c:225
 #, c-format
-msgid "Could not activate object %s"
-msgstr "Tak dapat menghidupkan objek %s"
+msgid "Provider %s is not installed"
+msgstr ""
 
-#: libgda/gda-client.c:253
-msgid "Could not create connection component"
-msgstr "Tak dapat mencipta komponen sambungan"
-
-#: libgda/gda-config.c:512
-msgid "Could not query CORBA components"
-msgstr "Tak dapat kueri komponen CORBA"
-
-#: libgda/gda-config.c:619
-msgid "Could not query CORBA providers"
+#: libgda/gda-client.c:234
+#, fuzzy, c-format
+msgid "Could not load %s provider"
 msgstr "Tak dpaat kueri pembekal CORBA"
 
-#: libgda/gda-config.c:869 providers/default/gda-default-provider.c:417
-#: providers/mysql/gda-mysql-provider.c:446
+#: libgda/gda-client.c:250
+#, c-format
+msgid "Provider %s does not implement entry point"
+msgstr ""
+
+#: libgda/gda-client.c:259
+msgid "Creation of GdaServerProvider failed"
+msgstr ""
+
+#. gda_server_recordset_model_set_field_defined_size (recset, 0, 256);
+#: libgda/gda-config.c:1105 providers/default/gda-default-provider.c:445
+#: providers/default/gda-default-provider.c:467
+#: providers/default/gda-default-provider.c:503
+#: providers/mysql/gda-mysql-provider.c:450
 msgid "Name"
 msgstr "Nama"
 
-#: libgda/gda-config.c:870
+#: libgda/gda-config.c:1106
 msgid "Provider"
 msgstr "Pembekal"
 
-#: libgda/gda-config.c:871
+#: libgda/gda-config.c:1107
 msgid "Connection string"
 msgstr "Rentetan Sambungan"
 
-#: libgda/gda-config.c:872
+#: libgda/gda-config.c:1108
 msgid "Description"
 msgstr "Huraian"
 
-#: libgda/gda-config.c:873
+#: libgda/gda-config.c:1109
 msgid "Username"
 msgstr "Namapengguna"
 
-#: libgda/gda-error.c:127
-#, c-format
-msgid "%s: An Error occured in the CORBA system."
-msgstr "%s: Ralat berlaku pada sistem CORBA"
-
-#: libgda/gda-error.c:156
-msgid "Unknown CORBA exception for connection"
-msgstr "Pengecualian CORBA tidak diketahui bagi sambungan"
-
-#: libgda/gda-init.c:44
+#: libgda/gda-init.c:42
 msgid "Attempt to initialize an already initialized client"
 msgstr "Cuba menginitialisasikan klient yang telah diinitialisasi"
 
-#: libgda/gda-init.c:56
-msgid "Could not initialize Bonobo"
-msgstr "Gagal menjanakan Bonobo"
+#: libgda/gda-init.c:53
+msgid "libgda needs GModule. Finishing..."
+msgstr ""
 
-#: libgda/gda-server.c:108
-#, c-format
-msgid "Don't know how to create components with IID %s"
-msgstr "Tidak tahu bagaimana untuk mencipta komponen dengan IID %s"
-
-#: libgda/gda-server.c:122
-#, c-format
-msgid "Could not create component of type %s"
-msgstr "Tak dapat mencipta komponen bagi jenis %s"
-
-#: libgda/gda-server-connection.c:90
-msgid "Could not duplicate client object. Client won't get notifications"
-msgstr "Tak dapat menduakan objek klien. Klien tidak akan dapat notifikasi"
-
-#: libgda/gda-server-connection.c:450
-#, c-format
-msgid "Could not notify client about action %d"
-msgstr "Tak dapat memberitahu klien tentang aksi %d"
-
-#: libgda/gda-server-recordset.c:207
-msgid "No implementation for the fetch() method found"
-msgstr "Tiada implementasi bagi kaedah fetch() dijumpai"
-
-#: libgda/gda-table.c:229
+#: libgda/gda-table.c:233
 #, c-format
 msgid "There is already a field called %s"
 msgstr "Terdapat medan bernama %s"
 
-#: libgda/gda-value.c:981
+#: libgda/gda-value.c:1030
 msgid "TRUE"
 msgstr "BENAR"
 
-#: libgda/gda-value.c:983
+#: libgda/gda-value.c:1032
 msgid "FALSE"
 msgstr "PALSU"
 
-#: libgda/gda-xml-database.c:225
+#: libgda/gda-xml-database.c:228
 #, c-format
 msgid "Could not load file at %s"
 msgstr "Tak dapat memuatkan fail pada %s"
 
-#: libgda/gda-xml-database.c:234
+#: libgda/gda-xml-database.c:237
 #, c-format
 msgid "Could not parse file at %s"
 msgstr "Tak dapat menghantar fail pada %s"
 
-#: libgda/gda-xml-database.c:244
+#: libgda/gda-xml-database.c:247
 #, c-format
 msgid "Invalid XML database file '%s'"
 msgstr "Fail pangkalandata XML tidak sah"
 
-#: libgda/gda-xml-database.c:432 libgda/gda-xml-database.c:473
+#: libgda/gda-xml-database.c:466 libgda/gda-xml-database.c:502
+#: libgda/gda-xml-database.c:543
 #, c-format
 msgid "Table %s already exists"
 msgstr "Jadual %s telah wujud"
 
-#: libgda/gda-xml-database.c:466
+#: libgda/gda-xml-database.c:536
 msgid "Invalid node"
 msgstr "Nod tidak sah"
 
-#: libgda/gda-xml-database.c:498
+#: libgda/gda-xml-database.c:568
 #, c-format
 msgid "Duplicated <data> node for table %s"
 msgstr "<data> bertindan bagi jadual %s"
 
-#: libgda/gda-xml-database.c:505
+#: libgda/gda-xml-database.c:575
 msgid "Invalid XML node"
 msgstr "Nod XML tidak sah"
 
-#: providers/default/gda-default-provider.c:159
-#: providers/sqlite/gda-sqlite-provider.c:152
+#: providers/default/gda-default-provider.c:169
+#: providers/sqlite/gda-sqlite-provider.c:162
 msgid ""
 "A full path must be specified on the connection string to open a database."
 msgstr ""
 "Path penuh mesti dinyatakan pada rentetan sambungan untuk membua "
 "pangkalandata"
 
-#: providers/default/gda-default-provider.c:333
-#: providers/mysql/gda-mysql-provider.c:717
-#: providers/postgres/gda-postgres-provider.c:724
+#: providers/default/gda-default-provider.c:343
+#: providers/mysql/gda-mysql-provider.c:739
+#: providers/postgres/gda-postgres-provider.c:737
 msgid "Field name"
 msgstr "Nama Medan"
 
-#: providers/default/gda-default-provider.c:334
-#: providers/mysql/gda-mysql-provider.c:718
-#: providers/postgres/gda-postgres-provider.c:725
+#: providers/default/gda-default-provider.c:344
+#: providers/mysql/gda-mysql-provider.c:740
+#: providers/postgres/gda-postgres-provider.c:738
 msgid "Data type"
 msgstr "Jenis data"
 
-#: providers/default/gda-default-provider.c:335
-#: providers/mysql/gda-mysql-provider.c:719
-#: providers/postgres/gda-postgres-provider.c:726
+#: providers/default/gda-default-provider.c:345
+#: providers/mysql/gda-mysql-provider.c:741
+#: providers/postgres/gda-postgres-provider.c:739
 msgid "Size"
 msgstr "Saiz"
 
-#: providers/default/gda-default-provider.c:336
-#: providers/mysql/gda-mysql-provider.c:720
-#: providers/postgres/gda-postgres-provider.c:727
+#: providers/default/gda-default-provider.c:346
+#: providers/mysql/gda-mysql-provider.c:742
+#: providers/postgres/gda-postgres-provider.c:740
 msgid "Scale"
 msgstr "Skala"
 
-#: providers/default/gda-default-provider.c:337
-#: providers/mysql/gda-mysql-provider.c:721
-#: providers/postgres/gda-postgres-provider.c:728
+#: providers/default/gda-default-provider.c:347
+#: providers/mysql/gda-mysql-provider.c:743
+#: providers/postgres/gda-postgres-provider.c:741
 msgid "Not null?"
 msgstr "Tidak null?"
 
-#: providers/default/gda-default-provider.c:338
-#: providers/mysql/gda-mysql-provider.c:722
-#: providers/postgres/gda-postgres-provider.c:729
+#: providers/default/gda-default-provider.c:348
+#: providers/mysql/gda-mysql-provider.c:744
+#: providers/postgres/gda-postgres-provider.c:742
 msgid "Primary key?"
 msgstr "Kekunci Utama?"
 
-#: providers/default/gda-default-provider.c:339
-#: providers/mysql/gda-mysql-provider.c:723
-#: providers/postgres/gda-postgres-provider.c:730
+#: providers/default/gda-default-provider.c:349
+#: providers/mysql/gda-mysql-provider.c:745
+#: providers/postgres/gda-postgres-provider.c:743
 msgid "Unique index?"
 msgstr "Indeks unik?"
 
-#: providers/default/gda-default-provider.c:340
-#: providers/mysql/gda-mysql-provider.c:724
-#: providers/postgres/gda-postgres-provider.c:731
+#: providers/default/gda-default-provider.c:350
+#: providers/mysql/gda-mysql-provider.c:746
+#: providers/postgres/gda-postgres-provider.c:744
 msgid "References"
 msgstr "Rujukan"
 
-#: providers/default/gda-default-provider.c:350
-#: providers/default/gda-default-provider.c:356
+#: providers/default/gda-default-provider.c:360
+#: providers/default/gda-default-provider.c:366
 msgid "Invalid argument"
 msgstr "Hujah tidak sah"
 
-#: providers/default/gda-default-provider.c:363
+#: providers/default/gda-default-provider.c:373
 #, c-format
 msgid "Table %s not found"
 msgstr "Jadual %s tidak dijumpai"
 
-#: providers/default/gda-default-provider.c:388
+#: providers/default/gda-default-provider.c:398
 msgid "Could not get description for column"
 msgstr "Tak memperolehi huraian bagi kolum"
 
-#: providers/default/gda-default-provider.c:472
-#: providers/mysql/gda-mysql-provider.c:619
-#: providers/postgres/gda-postgres-provider.c:613
-msgid "Type"
-msgstr "Jenis"
-
-#: providers/default/GNOME_Database_Provider_Default.server.in.h:1
-msgid "Default component factory"
-msgstr "Kilang komponen defaul"
-
-#: providers/default/GNOME_Database_Provider_Default.server.in.h:2
-msgid "GDA Default Datasource Access"
-msgstr "Akses sumber sata default GDA"
-
-#: providers/default/main.c:48
-msgid "Could not initiate Default component factory"
-msgstr "Gagal menginitialisasikan kilang komponen default"
-
-#: providers/mysql/gda-mysql-provider.c:175
+#: providers/mysql/gda-mysql-provider.c:183
 msgid ""
 "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
 msgstr ""
 "Anda tidak boleh membekalkan UNIX_SOCKET jika anda juga membekalkan samada "
 "HOST atau PORT"
 
-#: providers/mysql/gda-mysql-provider.c:246
-#: providers/mysql/gda-mysql-provider.c:326
-#: providers/mysql/gda-mysql-provider.c:355
-#: providers/mysql/gda-mysql-provider.c:384
+#: providers/mysql/gda-mysql-provider.c:254
+#: providers/mysql/gda-mysql-provider.c:333
+#: providers/mysql/gda-mysql-provider.c:361
+#: providers/mysql/gda-mysql-provider.c:389
 msgid "Invalid MYSQL handle"
 msgstr "Pengendali MyQL tidak sah"
 
+#. gda_server_recordset_model_set_field_defined_size (recset, 0, 32);
+#: providers/mysql/gda-mysql-provider.c:641
+#: providers/postgres/gda-postgres-provider.c:623
+msgid "Type"
+msgstr "Jenis"
+
+#: providers/mysql/gda-mysql-provider.c:754
 #: providers/mysql/gda-mysql-recordset.c:63
-#: providers/mysql/gda-mysql-recordset.c:167
+#: providers/mysql/gda-mysql-recordset.c:166
 msgid "Invalid MySQL handle"
 msgstr "Pengendali MySQL tidak sah"
 
+#: providers/mysql/gda-mysql-provider.c:763
+#: providers/mysql/gda-mysql-provider.c:771
+msgid "You need to specify the name of the table"
+msgstr ""
+
 #: providers/mysql/gda-mysql-recordset.c:76
-#: providers/postgres/gda-postgres-recordset.c:84
+#: providers/postgres/gda-postgres-recordset.c:85
 #: providers/sqlite/gda-sqlite-recordset.c:74
 msgid "Row number out of range"
 msgstr "Baris diluar julat"
 
-#: providers/mysql/GNOME_Database_Provider_MySQL.server.in.h:1
-msgid "GDA Datasource Access for MySQL"
-msgstr "Akses sumber data GDA bagi MySQL"
-
-#: providers/mysql/GNOME_Database_Provider_MySQL.server.in.h:2
-msgid "MySQL component factory"
-msgstr "Kilang komponen MySQL"
-
-#: providers/mysql/main.c:49
-msgid "Could not initiate MySQL component factory"
-msgstr "Gagal menginitialisasilan kilang komponen MySQL"
-
-#: providers/odbc/GNOME_Database_Provider_ODBC.server.in.h:1
-msgid "GDA Datasource Access for ODBC"
-msgstr "Akses Sumber sata GDA bagi ODBC"
-
-#: providers/odbc/GNOME_Database_Provider_ODBC.server.in.h:2
-msgid "ODBC component factory"
-msgstr "Kilang komponen ODBC"
-
-#: providers/odbc/main.c:49
-msgid "Could not initiate ODBC component factory"
-msgstr "Gagal menginitialisasikan kilang komponen ODBC"
-
-#: providers/oracle/gda-oracle-connection.c:77
+#: providers/oracle/gda-oracle-connection.c:79
 msgid "Could not initialize Oracle environment"
 msgstr "Gagal menginitialisasikan persekitaran Oracle"
 
-#: providers/oracle/gda-oracle-connection.c:87
+#: providers/oracle/gda-oracle-connection.c:89
 msgid "Could not initialize Oracle error handler"
 msgstr "Gagal menginitialisasikan pengendali ralat Oracle"
 
-#: providers/oracle/gda-oracle-connection.c:98
+#: providers/oracle/gda-oracle-connection.c:100
 msgid "Could not initialize Oracle server handle"
 msgstr "Gagal menginitialisasikan pengendali pelayan Oracle"
 
-#: providers/oracle/gda-oracle-connection.c:109
+#: providers/oracle/gda-oracle-connection.c:111
 msgid "Could not initialize Oracle service context"
 msgstr "Gagal menginitialisasikan ikonteks servis Oracle"
 
-#: providers/oracle/GNOME_Database_Provider_Oracle.server.in.h:1
-msgid "GDA Datasource Access for Oracle"
-msgstr "Akses Sumber sata GDA bagi Oracle"
-
-#: providers/oracle/GNOME_Database_Provider_Oracle.server.in.h:2
-msgid "Oracle component factory"
-msgstr "Kilang komponen Oracle"
-
-#: providers/oracle/main.c:46
+#: providers/oracle/main.c:48
 msgid "Could not initiate Oracle component factory"
 msgstr "Gagal menginitialisasikan kilang komponen Oracle"
 
-#: providers/oracle/main.c:70
+#: providers/oracle/main.c:74
 msgid "Could not initialize OCI library"
 msgstr "Gagal menginitialisasikan pustaka OCI"
 
-#: providers/postgres/gda-postgres-provider.c:360
-#: providers/postgres/gda-postgres-provider.c:498
-#: providers/postgres/gda-postgres-recordset.c:71
+#: providers/postgres/gda-postgres-provider.c:370
+#: providers/postgres/gda-postgres-provider.c:508
+#: providers/postgres/gda-postgres-recordset.c:72
 #: providers/postgres/gda-postgres-recordset.c:128
 msgid "Invalid PostgreSQL handle"
 msgstr "Pengendali PostgreSQL tidak sah"
 
-#: providers/postgres/GNOME_Database_Provider_Postgres.server.in.h:1
-msgid "GDA Datasource Access for Postgres"
-msgstr "Akses sumber data GDA bagi Postgres"
-
-#: providers/postgres/GNOME_Database_Provider_Postgres.server.in.h:2
-msgid "Postgres component factory"
-msgstr "Kilang komponen Postgres"
-
-#: providers/postgres/main.c:49
-msgid "Could not initiate PostgreSQL component factory"
-msgstr "Tak dapat menginitialisasikan kilang komponen PostgreSQL"
-
-#: providers/postgres/utils.c:39
+#: providers/postgres/utils.c:47
 msgid "NO DESCRIPTION"
 msgstr "TIADA HURAIAN"
 
-#: providers/postgres/utils.c:44
+#: providers/postgres/utils.c:52
 msgid "Not available"
 msgstr "Tidak ada"
 
-#: providers/postgres/utils.c:240
-msgid "NULL"
-msgstr "NULL"
-
-#: providers/postgres/utils.c:243
-msgid "big integer"
-msgstr "integer besar"
-
-#: providers/postgres/utils.c:246
-msgid "binary"
-msgstr "binari"
-
-#: providers/postgres/utils.c:249
-msgid "boolean"
-msgstr "boolean"
-
-#: providers/postgres/utils.c:252
-msgid "date"
-msgstr "tarikh"
-
-#: providers/postgres/utils.c:255
-msgid "double precision"
-msgstr "dwi ketepatan"
-
-#: providers/postgres/utils.c:258
-msgid "geometric point"
-msgstr "titik geometrik"
-
-#: providers/postgres/utils.c:261
-msgid "integer"
-msgstr "integer"
-
-#: providers/postgres/utils.c:264
-msgid "list of values"
-msgstr "senarai nilai"
-
-#: providers/postgres/utils.c:267
-msgid "numeric"
-msgstr "numerik"
-
-#: providers/postgres/utils.c:270
-msgid "single precision"
-msgstr "ketepatan tunggal"
-
-#: providers/postgres/utils.c:273
-msgid "small integer"
-msgstr "integer kecil"
-
-#: providers/postgres/utils.c:276
-msgid "string"
-msgstr "rentetan"
-
-#: providers/postgres/utils.c:279
-msgid "time"
-msgstr "masa"
-
-#: providers/postgres/utils.c:282
-msgid "timestamp"
-msgstr "setem masa"
-
-#: providers/postgres/utils.c:285
-msgid "tiny integer"
-msgstr "integer halus"
-
-#: providers/postgres/utils.c:288
-msgid "Unknown type"
-msgstr "Jenis takdikenali"
-
-#: providers/sqlite/gda-sqlite-provider.c:211
+#: providers/sqlite/gda-sqlite-provider.c:220
 #: providers/sqlite/gda-sqlite-recordset.c:63
 msgid "Invalid SQLITE handle"
 msgstr "Pengendali SQLITE tidak sah"
 
-#: providers/sqlite/gda-sqlite-recordset.c:114
+#: providers/sqlite/gda-sqlite-recordset.c:113
 msgid "Invalid Sqlite handle"
 msgstr "Pengandeli Sqlite yang tak sah"
 
-#: providers/sqlite/GNOME_Database_Provider_SQLite.server.in.h:1
-msgid "GDA SQLite Datasource Access"
-msgstr "Akses sumber data SQLite GDA"
-
-#: providers/sqlite/GNOME_Database_Provider_SQLite.server.in.h:2
-msgid "SQLite component factory"
-msgstr "Kilang komponen SQLite"
-
-#: providers/sqlite/main.c:54
-msgid "Could not initiate Sqlite component factory"
-msgstr "Gagal Gagal menginitialisasikan kilang komponen Sqlite"
-
-#: providers/sybase/GNOME_Database_Provider_Sybase.server.in.h:1
-msgid "GDA Datasource Access for Sybase"
-msgstr "Akses sumber data GDA bagi Sybase"
-
-#: providers/sybase/GNOME_Database_Provider_Sybase.server.in.h:2
-msgid "Sybase component factory"
-msgstr "Kilang komponen Sybase"
-
-#: providers/sybase/main.c:50
+#: providers/sybase/main.c:52
 msgid "Could not initiate Sybase component factory"
 msgstr "Gagal Gagal menginitialisasikan kilang komponen Sybase"
 
-#: report/gda-report-engine.c:67 report/libgda-report/gda-report-client.c:195
-#: report/libgda-report/gda-report-client.c:209
+#: report/gda-report-engine.c:68 report/libgda-report/gda-report-client.c:196
+#: report/libgda-report/gda-report-client.c:210
 #, c-format
 msgid "CORBA exception: %s"
 msgstr "Pengecualian CORBA: %s"
 
-#: report/gda-report-engine.c:105
+#: report/gda-report-engine.c:106
 msgid "Could not create global GDA client"
 msgstr "Tak dapat mencipta klien GDA global"
 
@@ -456,23 +292,23 @@ msgstr "Jentera pelaporan GDA"
 msgid "GDA Report engine factory"
 msgstr "Kilang Jentera pelaporan GDA"
 
-#: report/job.c:43
+#: report/job.c:44
 msgid "Could not parse XML report"
 msgstr "Tak dapat menghantar laporan XML"
 
-#: report/libgda-report/gda-report-client.c:141
+#: report/libgda-report/gda-report-client.c:142
 msgid "Could not activate report engine"
 msgstr "Tak dapat mengaktifkan jentera laporan"
 
-#: report/libgda-report/gda-report-client.c:182
+#: report/libgda-report/gda-report-client.c:183
 msgid "Could not create BonoboStreamMem object"
 msgstr "Tak dapat mencipta objek BonoboStreamMem"
 
-#: report/libgda-report/gda-report-document.c:137
+#: report/libgda-report/gda-report-document.c:138
 msgid "Could not parse XML document"
 msgstr "Tak dapat menghantar dokumen XML"
 
-#: report/libgda-report/gda-report-document.c:162
+#: report/libgda-report/gda-report-document.c:163
 #, c-format
 msgid "Could not get file from %s"
 msgstr "Gagal mendapatkan fail daripada %s"
@@ -481,136 +317,282 @@ msgstr "Gagal mendapatkan fail daripada %s"
 msgid "Could not initiate Report component factory"
 msgstr "Gagal menginitialisasikan kilang komponen Laporan"
 
-#: testing/client.c:37
+#: testing/client.c:39
 msgid "\t\tNONE\n"
 msgstr "\t\tTIADA\n"
 
-#: testing/client.c:76
+#: testing/client.c:78
 #, c-format
 msgid "** ERROR: could not open connection to %s\n"
 msgstr "** RALAT: tak dapat membuka sambungan ke %s\n"
 
 #. show provider features
-#: testing/client.c:81
+#: testing/client.c:83
 msgid "\tProvider capabilities...\n"
 msgstr "\tKebolehan Pembekal...\n"
 
-#: testing/client.c:82
+#: testing/client.c:84
 #, c-format
 msgid "\t\tTransactions: %s\n"
 msgstr "\t\tTransaksi: %s\n"
 
-#: testing/client.c:84
+#: testing/client.c:86
 msgid "Supported"
 msgstr "Disokong"
 
-#: testing/client.c:84
+#: testing/client.c:86
 msgid "Not supported"
 msgstr "Tidak disokong"
 
 #. show connection schemas
-#: testing/client.c:87
+#: testing/client.c:89
+msgid "Databases"
+msgstr ""
+
+#: testing/client.c:90
 msgid "Stored procedures"
 msgstr "Prosedur Tersimpan"
 
-#: testing/client.c:88
+#: testing/client.c:91
 msgid "Connection Tables"
 msgstr "Jadual Sambungan"
 
-#: testing/client.c:89
+#: testing/client.c:92
 msgid "Available types"
 msgstr "Jenis yang ada"
 
-#: testing/client.c:90
+#: testing/client.c:93
 msgid "Views"
 msgstr "Paparan"
 
-#: testing/client.c:91
+#: testing/client.c:94
 msgid "Indexes"
 msgstr "Indeks"
 
-#: testing/client.c:92
+#: testing/client.c:95
 msgid "Aggregates"
 msgstr "Agregat"
 
-#: testing/client.c:93
+#: testing/client.c:96
+#, fuzzy
+msgid "Users"
+msgstr "Namapengguna"
+
+#: testing/client.c:97
+#, fuzzy
+msgid "Sequences"
+msgstr "Rujukan"
+
+#: testing/client.c:98
 msgid "Triggers"
 msgstr "Pemicu"
 
 #. test transactions
-#: testing/client.c:96 testing/client.c:104
+#: testing/client.c:101 testing/client.c:109
 msgid "\tStarting transaction..."
 msgstr "\tMemulakan transaksi..."
 
-#: testing/client.c:98 testing/client.c:102 testing/client.c:106
-#: testing/client.c:110
+#: testing/client.c:103 testing/client.c:107 testing/client.c:111
+#: testing/client.c:115
 msgid "Error"
 msgstr "Ralat"
 
-#: testing/client.c:100
+#: testing/client.c:105
 msgid "\tFinishing transaction..."
 msgstr "\tMenamatkan transaksi..."
 
-#: testing/client.c:108
+#: testing/client.c:113
 msgid "\tRolling back transaction..."
 msgstr "\tRollback transaksi..."
 
-#: testing/client.c:129
+#: testing/client.c:134
 msgid "Testing GDA client API"
 msgstr "Uji API klien GDA"
 
-#: testing/client.c:138
+#: testing/client.c:143
 msgid "** ERROR: gda_config_get_data_source_list returned a NULL item\n"
 msgstr "** RALAT: gda_config_get_source_list memulangkan item NULL\n"
 
-#: testing/client.c:142
+#: testing/client.c:147
 #, c-format
 msgid " Data source = %s, User = %s\n"
 msgstr " Sumber data =  %s, Pengguna = %s\n"
 
-#: testing/config.c:84
+#: testing/config.c:85
 msgid "** ERROR: gda_config_get_provider_list returned a NULL item\n"
 msgstr "** RALAT: gda_config_get_provider_list memulangkan item NULL\n"
 
-#: testing/config.c:88
+#: testing/config.c:89
 #, c-format
 msgid " Provider = %s\n"
 msgstr " Pembekal = %s\n"
 
-#: testing/config.c:89
+#: testing/config.c:90
 #, c-format
 msgid "\tlocation = %s\n"
 msgstr "\tlokasi = %s\n"
 
-#: testing/config.c:90
-#, c-format
-msgid "\ttype = %s\n"
-msgstr "\tjenis = %s\n"
-
-#: testing/config.c:93
+#: testing/config.c:91
 #, c-format
 msgid "\tdescription = %s\n"
 msgstr "\thuraian = %s\n"
 
-#: testing/config.c:95
-msgid "\trepo_ids ="
-msgstr "\trepo_ids ="
-
-#: testing/config.c:102
-#, c-format
-msgid "\tusername = %s\n"
-msgstr "\tnamapengguna = %s\n"
-
-#: testing/config.c:103
-#, c-format
-msgid "\thostname = %s\n"
-msgstr "\tnamahos = %s\n"
-
-#: testing/config.c:104
-#, c-format
-msgid "\tdomain = %s\n"
-msgstr "\tdomain = %s\n"
-
-#: testing/config.c:106
+#: testing/config.c:93
 msgid "\tgda_params ="
 msgstr "\tgda_params ="
+
+#~ msgid "Could not activate object %s"
+#~ msgstr "Tak dapat menghidupkan objek %s"
+
+#~ msgid "Could not create connection component"
+#~ msgstr "Tak dapat mencipta komponen sambungan"
+
+#~ msgid "Could not query CORBA components"
+#~ msgstr "Tak dapat kueri komponen CORBA"
+
+#~ msgid "%s: An Error occured in the CORBA system."
+#~ msgstr "%s: Ralat berlaku pada sistem CORBA"
+
+#~ msgid "Unknown CORBA exception for connection"
+#~ msgstr "Pengecualian CORBA tidak diketahui bagi sambungan"
+
+#~ msgid "Could not initialize Bonobo"
+#~ msgstr "Gagal menjanakan Bonobo"
+
+#~ msgid "Don't know how to create components with IID %s"
+#~ msgstr "Tidak tahu bagaimana untuk mencipta komponen dengan IID %s"
+
+#~ msgid "Could not create component of type %s"
+#~ msgstr "Tak dapat mencipta komponen bagi jenis %s"
+
+#~ msgid "Could not duplicate client object. Client won't get notifications"
+#~ msgstr "Tak dapat menduakan objek klien. Klien tidak akan dapat notifikasi"
+
+#~ msgid "Could not notify client about action %d"
+#~ msgstr "Tak dapat memberitahu klien tentang aksi %d"
+
+#~ msgid "No implementation for the fetch() method found"
+#~ msgstr "Tiada implementasi bagi kaedah fetch() dijumpai"
+
+#~ msgid "Default component factory"
+#~ msgstr "Kilang komponen defaul"
+
+#~ msgid "GDA Default Datasource Access"
+#~ msgstr "Akses sumber sata default GDA"
+
+#~ msgid "Could not initiate Default component factory"
+#~ msgstr "Gagal menginitialisasikan kilang komponen default"
+
+#~ msgid "GDA Datasource Access for MySQL"
+#~ msgstr "Akses sumber data GDA bagi MySQL"
+
+#~ msgid "MySQL component factory"
+#~ msgstr "Kilang komponen MySQL"
+
+#~ msgid "Could not initiate MySQL component factory"
+#~ msgstr "Gagal menginitialisasilan kilang komponen MySQL"
+
+#~ msgid "GDA Datasource Access for ODBC"
+#~ msgstr "Akses Sumber sata GDA bagi ODBC"
+
+#~ msgid "ODBC component factory"
+#~ msgstr "Kilang komponen ODBC"
+
+#~ msgid "Could not initiate ODBC component factory"
+#~ msgstr "Gagal menginitialisasikan kilang komponen ODBC"
+
+#~ msgid "GDA Datasource Access for Oracle"
+#~ msgstr "Akses Sumber sata GDA bagi Oracle"
+
+#~ msgid "Oracle component factory"
+#~ msgstr "Kilang komponen Oracle"
+
+#~ msgid "GDA Datasource Access for Postgres"
+#~ msgstr "Akses sumber data GDA bagi Postgres"
+
+#~ msgid "Postgres component factory"
+#~ msgstr "Kilang komponen Postgres"
+
+#~ msgid "Could not initiate PostgreSQL component factory"
+#~ msgstr "Tak dapat menginitialisasikan kilang komponen PostgreSQL"
+
+#~ msgid "NULL"
+#~ msgstr "NULL"
+
+#~ msgid "big integer"
+#~ msgstr "integer besar"
+
+#~ msgid "binary"
+#~ msgstr "binari"
+
+#~ msgid "boolean"
+#~ msgstr "boolean"
+
+#~ msgid "date"
+#~ msgstr "tarikh"
+
+#~ msgid "double precision"
+#~ msgstr "dwi ketepatan"
+
+#~ msgid "geometric point"
+#~ msgstr "titik geometrik"
+
+#~ msgid "integer"
+#~ msgstr "integer"
+
+#~ msgid "list of values"
+#~ msgstr "senarai nilai"
+
+#~ msgid "numeric"
+#~ msgstr "numerik"
+
+#~ msgid "single precision"
+#~ msgstr "ketepatan tunggal"
+
+#~ msgid "small integer"
+#~ msgstr "integer kecil"
+
+#~ msgid "string"
+#~ msgstr "rentetan"
+
+#~ msgid "time"
+#~ msgstr "masa"
+
+#~ msgid "timestamp"
+#~ msgstr "setem masa"
+
+#~ msgid "tiny integer"
+#~ msgstr "integer halus"
+
+#~ msgid "Unknown type"
+#~ msgstr "Jenis takdikenali"
+
+#~ msgid "GDA SQLite Datasource Access"
+#~ msgstr "Akses sumber data SQLite GDA"
+
+#~ msgid "SQLite component factory"
+#~ msgstr "Kilang komponen SQLite"
+
+#~ msgid "Could not initiate Sqlite component factory"
+#~ msgstr "Gagal Gagal menginitialisasikan kilang komponen Sqlite"
+
+#~ msgid "GDA Datasource Access for Sybase"
+#~ msgstr "Akses sumber data GDA bagi Sybase"
+
+#~ msgid "Sybase component factory"
+#~ msgstr "Kilang komponen Sybase"
+
+#~ msgid "\ttype = %s\n"
+#~ msgstr "\tjenis = %s\n"
+
+#~ msgid "\trepo_ids ="
+#~ msgstr "\trepo_ids ="
+
+#~ msgid "\tusername = %s\n"
+#~ msgstr "\tnamapengguna = %s\n"
+
+#~ msgid "\thostname = %s\n"
+#~ msgstr "\tnamahos = %s\n"
+
+#~ msgid "\tdomain = %s\n"
+#~ msgstr "\tdomain = %s\n"

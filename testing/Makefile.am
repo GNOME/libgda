@@ -1,6 +1,6 @@
 INCLUDES = \
-	-I$(top_builddir)/libgda \
-	-I$(top_srcdir)/libgda \
+	-I$(top_builddir) \
+	-I$(top_srcdir) \
 	$(LIBGDA_CFLAGS)
 
 bin_PROGRAMS = gda-test 

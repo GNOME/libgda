@@ -8,7 +8,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2002-04-02 00:53+0200\n"
+"POT-Creation-Date: 2002-05-03 02:43+0200\n"
 "PO-Revision-Date: 2002-04-02 00:53+0200\n"
 "Last-Translator: Christian Rose <menthos@menthos.com>\n"
 "Language-Team: Swedish <sv@li.org>\n"
@@ -16,372 +16,275 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: libgda/gda-client.c:198 libgda/gda-client.c:308 libgda/gda-connection.c:213
+#: libgda/gda-client.c:207 libgda/gda-client.c:319 libgda/gda-connection.c:207
 #, c-format
 msgid "Data source %s not found in configuration"
 msgstr "Datakällan %s hittades inte i konfigurationen"
 
-#: libgda/gda-client.c:235
+#: libgda/gda-client.c:225
 #, c-format
-msgid "Could not activate object %s"
-msgstr "Kunde inte aktivera objektet %s"
+msgid "Provider %s is not installed"
+msgstr ""
 
-#: libgda/gda-client.c:253
-msgid "Could not create connection component"
-msgstr "Kunde inte skapa anslutningskomponent"
-
-#: libgda/gda-config.c:512
-msgid "Could not query CORBA components"
-msgstr "Kunde inte fråga CORBA-komponenter"
-
-#: libgda/gda-config.c:619
-msgid "Could not query CORBA providers"
+#: libgda/gda-client.c:234
+#, fuzzy, c-format
+msgid "Could not load %s provider"
 msgstr "Kunde inte fråga CORBA-leverantörer"
 
-#: libgda/gda-config.c:869 providers/default/gda-default-provider.c:420
-#: providers/mysql/gda-mysql-provider.c:446
+#: libgda/gda-client.c:250
+#, fuzzy, c-format
+msgid "Provider %s does not implement entry point"
+msgstr "Startar leverantör %s utan några implementationsfunktioner"
+
+#: libgda/gda-client.c:259
+msgid "Creation of GdaServerProvider failed"
+msgstr ""
+
+#. gda_server_recordset_model_set_field_defined_size (recset, 0, 256);
+#: libgda/gda-config.c:1105 providers/default/gda-default-provider.c:445
+#: providers/default/gda-default-provider.c:467
+#: providers/default/gda-default-provider.c:503
+#: providers/mysql/gda-mysql-provider.c:450
 msgid "Name"
 msgstr "Namn"
 
-#: libgda/gda-config.c:870
+#: libgda/gda-config.c:1106
 msgid "Provider"
 msgstr "Leverantör"
 
-#: libgda/gda-config.c:871
+#: libgda/gda-config.c:1107
 msgid "Connection string"
 msgstr "Anslutningssträng"
 
-#: libgda/gda-config.c:872
+#: libgda/gda-config.c:1108
 msgid "Description"
 msgstr "Beskrivning"
 
-#: libgda/gda-config.c:873
+#: libgda/gda-config.c:1109
 msgid "Username"
 msgstr "Användarnamn"
 
-#: libgda/gda-error.c:127
-#, c-format
-msgid "%s: An Error occured in the CORBA system."
-msgstr "%s: Ett fel inträffade i CORBA-systemet."
-
-#: libgda/gda-error.c:162
-msgid "Unknown CORBA exception for connection"
-msgstr "Okänt CORBA-undantag för anslutning"
-
-#: libgda/gda-init.c:45
+#: libgda/gda-init.c:42
 msgid "Attempt to initialize an already initialized client"
 msgstr "Försök att initiera en redan initierad klient"
 
-#: libgda/gda-init.c:57
-msgid "Could not initialize Bonobo"
-msgstr "Kunde inte initiera Bonobo"
-
-#: libgda/gda-server.c:108
-#, c-format
-msgid "Don't know how to create components with IID %s"
-msgstr "Vet inte hur man skapar komponenter med IID %s"
-
-#: libgda/gda-server.c:122
-#, c-format
-msgid "Could not create component of type %s"
-msgstr "Kunde inte skapa komponent av typen %s"
-
-#: libgda/gda-server-connection.c:91
-msgid "Could not duplicate client object. Client won't get notifications"
+#: libgda/gda-init.c:53
+msgid "libgda needs GModule. Finishing..."
 msgstr ""
-"Kunde inte duplicera klientobjekt. Klienten kommer inte att få notifieringar"
 
-#: libgda/gda-server-connection.c:451
-#, c-format
-msgid "Could not notify client about action %d"
-msgstr "Kunde inte notifiera klienten om åtgärden %d"
-
-#: libgda/gda-server-recordset.c:207
-msgid "No implementation for the fetch() method found"
-msgstr "Ingen implementation för fetch()-metoden hittades"
-
-#: libgda/gda-table.c:230
+#: libgda/gda-table.c:233
 #, c-format
 msgid "There is already a field called %s"
 msgstr "Det finns redan ett fält med namnet %s"
 
-#: libgda/gda-value.c:985
+#: libgda/gda-value.c:1030
 msgid "TRUE"
 msgstr "SANT"
 
-#: libgda/gda-value.c:987
+#: libgda/gda-value.c:1032
 msgid "FALSE"
 msgstr "FALSKT"
 
-#: libgda/gda-xml-database.c:226
+#: libgda/gda-xml-database.c:228
 #, c-format
 msgid "Could not load file at %s"
 msgstr "Kunde inte läsa in filen vid %s"
 
-#: libgda/gda-xml-database.c:235
+#: libgda/gda-xml-database.c:237
 #, c-format
 msgid "Could not parse file at %s"
 msgstr "Kunde inte tolka filen vid %s"
 
-#: libgda/gda-xml-database.c:245
+#: libgda/gda-xml-database.c:247
 #, c-format
 msgid "Invalid XML database file '%s'"
 msgstr "Ogiltig XML-databasfil \"%s\""
 
-#: libgda/gda-xml-database.c:433 libgda/gda-xml-database.c:474
+#: libgda/gda-xml-database.c:466 libgda/gda-xml-database.c:502
+#: libgda/gda-xml-database.c:543
 #, c-format
 msgid "Table %s already exists"
 msgstr "Tabellen %s finns redan"
 
-#: libgda/gda-xml-database.c:467
+#: libgda/gda-xml-database.c:536
 msgid "Invalid node"
 msgstr "Ogiltig nod"
 
-#: libgda/gda-xml-database.c:499
+#: libgda/gda-xml-database.c:568
 #, c-format
 msgid "Duplicated <data> node for table %s"
 msgstr "Duplicerad <data>-nod för tabellen %s"
 
-#: libgda/gda-xml-database.c:506
+#: libgda/gda-xml-database.c:575
 msgid "Invalid XML node"
 msgstr "Ogiltig XML-nod"
 
-#: providers/default/gda-default-provider.c:160
-#: providers/sqlite/gda-sqlite-provider.c:152
+#: providers/default/gda-default-provider.c:169
+#: providers/sqlite/gda-sqlite-provider.c:162
 msgid ""
 "A full path must be specified on the connection string to open a database."
 msgstr ""
 "En fullständig sökväg måste anges i anslutningssträngen för att öppna en "
 "databas."
 
-#: providers/default/gda-default-provider.c:334
-#: providers/mysql/gda-mysql-provider.c:735
-#: providers/postgres/gda-postgres-provider.c:725
+#: providers/default/gda-default-provider.c:343
+#: providers/mysql/gda-mysql-provider.c:739
+#: providers/postgres/gda-postgres-provider.c:737
 msgid "Field name"
 msgstr "Fältnamn"
 
-#: providers/default/gda-default-provider.c:335
-#: providers/mysql/gda-mysql-provider.c:736
-#: providers/postgres/gda-postgres-provider.c:726
+#: providers/default/gda-default-provider.c:344
+#: providers/mysql/gda-mysql-provider.c:740
+#: providers/postgres/gda-postgres-provider.c:738
 msgid "Data type"
 msgstr "Datatyp"
 
-#: providers/default/gda-default-provider.c:336
-#: providers/mysql/gda-mysql-provider.c:737
-#: providers/postgres/gda-postgres-provider.c:727
+#: providers/default/gda-default-provider.c:345
+#: providers/mysql/gda-mysql-provider.c:741
+#: providers/postgres/gda-postgres-provider.c:739
 msgid "Size"
 msgstr "Storlek"
 
-#: providers/default/gda-default-provider.c:337
-#: providers/mysql/gda-mysql-provider.c:738
-#: providers/postgres/gda-postgres-provider.c:728
+#: providers/default/gda-default-provider.c:346
+#: providers/mysql/gda-mysql-provider.c:742
+#: providers/postgres/gda-postgres-provider.c:740
 msgid "Scale"
 msgstr "Skala"
 
-#: providers/default/gda-default-provider.c:338
-#: providers/mysql/gda-mysql-provider.c:739
-#: providers/postgres/gda-postgres-provider.c:729
+#: providers/default/gda-default-provider.c:347
+#: providers/mysql/gda-mysql-provider.c:743
+#: providers/postgres/gda-postgres-provider.c:741
 msgid "Not null?"
 msgstr "Inte null?"
 
-#: providers/default/gda-default-provider.c:339
-#: providers/mysql/gda-mysql-provider.c:740
-#: providers/postgres/gda-postgres-provider.c:730
+#: providers/default/gda-default-provider.c:348
+#: providers/mysql/gda-mysql-provider.c:744
+#: providers/postgres/gda-postgres-provider.c:742
 msgid "Primary key?"
 msgstr "Primärnyckel?"
 
-#: providers/default/gda-default-provider.c:340
-#: providers/mysql/gda-mysql-provider.c:741
-#: providers/postgres/gda-postgres-provider.c:731
+#: providers/default/gda-default-provider.c:349
+#: providers/mysql/gda-mysql-provider.c:745
+#: providers/postgres/gda-postgres-provider.c:743
 msgid "Unique index?"
 msgstr "Unikt index?"
 
-#: providers/default/gda-default-provider.c:341
-#: providers/mysql/gda-mysql-provider.c:742
-#: providers/postgres/gda-postgres-provider.c:732
+#: providers/default/gda-default-provider.c:350
+#: providers/mysql/gda-mysql-provider.c:746
+#: providers/postgres/gda-postgres-provider.c:744
 msgid "References"
 msgstr "Referenser"
 
-#: providers/default/gda-default-provider.c:351
-#: providers/default/gda-default-provider.c:357
+#: providers/default/gda-default-provider.c:360
+#: providers/default/gda-default-provider.c:366
 msgid "Invalid argument"
 msgstr "Ogiltigt argument"
 
-#: providers/default/gda-default-provider.c:364
+#: providers/default/gda-default-provider.c:373
 #, c-format
 msgid "Table %s not found"
 msgstr "Tabellen %s kunde inte hittas"
 
-#: providers/default/gda-default-provider.c:389
+#: providers/default/gda-default-provider.c:398
 msgid "Could not get description for column"
 msgstr "Kunde inte hämta beskrivningen för kolumnen"
 
-#: providers/default/gda-default-provider.c:475
-#: providers/mysql/gda-mysql-provider.c:637
-#: providers/postgres/gda-postgres-provider.c:614
-msgid "Type"
-msgstr "Typ"
-
-#: providers/default/GNOME_Database_Provider_Default.server.in.h:1
-msgid "Default component factory"
-msgstr "Standardkomponentfabrik"
-
-#: providers/default/GNOME_Database_Provider_Default.server.in.h:2
-msgid "GDA Default Datasource Access"
-msgstr "Standardåtkomst för GDA-datakällor"
-
-#: providers/default/main.c:48
-msgid "Could not initiate Default component factory"
-msgstr "Kunde inte initiera standardkomponentfabrik"
-
-#: providers/mysql/gda-mysql-provider.c:175
+#: providers/mysql/gda-mysql-provider.c:183
 msgid ""
 "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
 msgstr ""
 "Du kan inte ange en UNIX_SOCKET om du också anger antingen en HOST eller en "
 "PORT."
 
-#: providers/mysql/gda-mysql-provider.c:246
-#: providers/mysql/gda-mysql-provider.c:326
-#: providers/mysql/gda-mysql-provider.c:355
-#: providers/mysql/gda-mysql-provider.c:384
+#: providers/mysql/gda-mysql-provider.c:254
+#: providers/mysql/gda-mysql-provider.c:333
+#: providers/mysql/gda-mysql-provider.c:361
+#: providers/mysql/gda-mysql-provider.c:389
 msgid "Invalid MYSQL handle"
 msgstr "Ogiltigt MYSQL-handtag"
 
+#. gda_server_recordset_model_set_field_defined_size (recset, 0, 32);
+#: providers/mysql/gda-mysql-provider.c:641
+#: providers/postgres/gda-postgres-provider.c:623
+msgid "Type"
+msgstr "Typ"
+
+#: providers/mysql/gda-mysql-provider.c:754
 #: providers/mysql/gda-mysql-recordset.c:63
-#: providers/mysql/gda-mysql-recordset.c:167
+#: providers/mysql/gda-mysql-recordset.c:166
 msgid "Invalid MySQL handle"
 msgstr "Ogiltigt MySQL-handtag"
 
+#: providers/mysql/gda-mysql-provider.c:763
+#: providers/mysql/gda-mysql-provider.c:771
+msgid "You need to specify the name of the table"
+msgstr ""
+
 #: providers/mysql/gda-mysql-recordset.c:76
-#: providers/postgres/gda-postgres-recordset.c:84
+#: providers/postgres/gda-postgres-recordset.c:85
 #: providers/sqlite/gda-sqlite-recordset.c:74
 msgid "Row number out of range"
 msgstr "Radnummer utanför intervallet"
 
-#: providers/mysql/GNOME_Database_Provider_MySQL.server.in.h:1
-msgid "GDA Datasource Access for MySQL"
-msgstr "GDA-datakälleåtkomst för MySQL"
-
-#: providers/mysql/GNOME_Database_Provider_MySQL.server.in.h:2
-msgid "MySQL component factory"
-msgstr "MySQL-komponentfabrik"
-
-#: providers/mysql/main.c:49
-msgid "Could not initiate MySQL component factory"
-msgstr "Kunde inte initiera MySQL-komponentfabrik"
-
-#: providers/odbc/GNOME_Database_Provider_ODBC.server.in.h:1
-msgid "GDA Datasource Access for ODBC"
-msgstr "GDA-datakälleåtkomst för ODBC"
-
-#: providers/odbc/GNOME_Database_Provider_ODBC.server.in.h:2
-msgid "ODBC component factory"
-msgstr "ODBC-komponentfabrik"
-
-#: providers/odbc/main.c:49
-msgid "Could not initiate ODBC component factory"
-msgstr "Kunde inte initiera ODBC-komponentfabrik"
-
-#: providers/oracle/gda-oracle-connection.c:77
+#: providers/oracle/gda-oracle-connection.c:79
 msgid "Could not initialize Oracle environment"
 msgstr "Kunde inte initiera Oracle-miljö"
 
-#: providers/oracle/gda-oracle-connection.c:87
+#: providers/oracle/gda-oracle-connection.c:89
 msgid "Could not initialize Oracle error handler"
 msgstr "Kunde inte initiera Oracle-felhanterare"
 
-#: providers/oracle/gda-oracle-connection.c:98
+#: providers/oracle/gda-oracle-connection.c:100
 msgid "Could not initialize Oracle server handle"
 msgstr "Kunde inte initiera Oracle-serverhandtag"
 
-#: providers/oracle/gda-oracle-connection.c:109
+#: providers/oracle/gda-oracle-connection.c:111
 msgid "Could not initialize Oracle service context"
 msgstr "Kunde inte initiera Oracle-tjänstesammanhang"
 
-#: providers/oracle/GNOME_Database_Provider_Oracle.server.in.h:1
-msgid "GDA Datasource Access for Oracle"
-msgstr "GDA-datakälleåtkomst för Oracle"
-
-#: providers/oracle/GNOME_Database_Provider_Oracle.server.in.h:2
-msgid "Oracle component factory"
-msgstr "Oracle-komponentfabrik"
-
-#: providers/oracle/main.c:46
+#: providers/oracle/main.c:48
 msgid "Could not initiate Oracle component factory"
 msgstr "Kunde inte initiera Oracle-komponentfabrik"
 
-#: providers/oracle/main.c:70
+#: providers/oracle/main.c:74
 msgid "Could not initialize OCI library"
 msgstr "Kunde inte initiera OCI-bibliotek"
 
-#: providers/postgres/gda-postgres-provider.c:360
-#: providers/postgres/gda-postgres-provider.c:499
-#: providers/postgres/gda-postgres-recordset.c:71
+#: providers/postgres/gda-postgres-provider.c:370
+#: providers/postgres/gda-postgres-provider.c:508
+#: providers/postgres/gda-postgres-recordset.c:72
 #: providers/postgres/gda-postgres-recordset.c:128
 msgid "Invalid PostgreSQL handle"
 msgstr "Ogiltigt PostgreSQL-handtag"
 
-#: providers/postgres/GNOME_Database_Provider_Postgres.server.in.h:1
-msgid "GDA Datasource Access for Postgres"
-msgstr "GDA-datakälleåtkomst för Postgres"
-
-#: providers/postgres/GNOME_Database_Provider_Postgres.server.in.h:2
-msgid "Postgres component factory"
-msgstr "Postgres-komponentfabrik"
-
-#: providers/postgres/main.c:49
-msgid "Could not initiate PostgreSQL component factory"
-msgstr "Kunde inte initiera PostgreSQL-komponentfabrik"
-
-#: providers/postgres/utils.c:45
+#: providers/postgres/utils.c:47
 msgid "NO DESCRIPTION"
 msgstr "INGEN BESKRIVNING"
 
-#: providers/postgres/utils.c:50
+#: providers/postgres/utils.c:52
 msgid "Not available"
 msgstr "Inte tillgänglig"
 
-#: providers/sqlite/gda-sqlite-provider.c:211
+#: providers/sqlite/gda-sqlite-provider.c:220
 #: providers/sqlite/gda-sqlite-recordset.c:63
 msgid "Invalid SQLITE handle"
 msgstr "Ogiltigt SQLITE-handtag"
 
-#: providers/sqlite/gda-sqlite-recordset.c:114
+#: providers/sqlite/gda-sqlite-recordset.c:113
 msgid "Invalid Sqlite handle"
 msgstr "Ogiltigt Sqlite-handtag"
 
-#: providers/sqlite/GNOME_Database_Provider_SQLite.server.in.h:1
-msgid "GDA SQLite Datasource Access"
-msgstr "Åtkomst för GDA SQLite-datakällor"
-
-#: providers/sqlite/GNOME_Database_Provider_SQLite.server.in.h:2
-msgid "SQLite component factory"
-msgstr "SQLite-komponentfabrik"
-
-#: providers/sqlite/main.c:54
-msgid "Could not initiate Sqlite component factory"
-msgstr "Kunde inte initiera Sqlite-komponentfabrik"
-
-#: providers/sybase/GNOME_Database_Provider_Sybase.server.in.h:1
-msgid "GDA Datasource Access for Sybase"
-msgstr "GDA-datakälleåtkomst för Sybase"
-
-#: providers/sybase/GNOME_Database_Provider_Sybase.server.in.h:2
-msgid "Sybase component factory"
-msgstr "Sybase-komponentfabrik"
-
-#: providers/sybase/main.c:50
+#: providers/sybase/main.c:52
 msgid "Could not initiate Sybase component factory"
 msgstr "Kunde inte initiera Sybase-komponentfabrik"
 
-#: report/gda-report-engine.c:67 report/libgda-report/gda-report-client.c:195
-#: report/libgda-report/gda-report-client.c:209
+#: report/gda-report-engine.c:68 report/libgda-report/gda-report-client.c:196
+#: report/libgda-report/gda-report-client.c:210
 #, c-format
 msgid "CORBA exception: %s"
 msgstr "CORBA-undantag: %s"
 
-#: report/gda-report-engine.c:105
+#: report/gda-report-engine.c:106
 msgid "Could not create global GDA client"
 msgstr "Kunde inte skapa global GDA-klient"
 
@@ -393,23 +296,23 @@ msgstr "GDA-rapportmotor"
 msgid "GDA Report engine factory"
 msgstr "GDA-rapportmotorfabrik"
 
-#: report/job.c:43
+#: report/job.c:44
 msgid "Could not parse XML report"
 msgstr "Kunde inte tolka XML-rapport"
 
-#: report/libgda-report/gda-report-client.c:141
+#: report/libgda-report/gda-report-client.c:142
 msgid "Could not activate report engine"
 msgstr "Kunde inte aktivera rapportmotor"
 
-#: report/libgda-report/gda-report-client.c:182
+#: report/libgda-report/gda-report-client.c:183
 msgid "Could not create BonoboStreamMem object"
 msgstr "Kunde inte skapa BonoboStreamMem-objekt"
 
-#: report/libgda-report/gda-report-document.c:137
+#: report/libgda-report/gda-report-document.c:138
 msgid "Could not parse XML document"
 msgstr "Kunde inte tolka XML-dokument"
 
-#: report/libgda-report/gda-report-document.c:162
+#: report/libgda-report/gda-report-document.c:163
 #, c-format
 msgid "Could not get file from %s"
 msgstr "Kunde inte hämta filen från %s"
@@ -418,151 +321,234 @@ msgstr "Kunde inte hämta filen från %s"
 msgid "Could not initiate Report component factory"
 msgstr "Kunde inte initiera rapportkomponentfabrik"
 
-#: testing/client.c:37
+#: testing/client.c:39
 msgid "\t\tNONE\n"
 msgstr "\t\tINGEN\n"
 
-#: testing/client.c:76
+#: testing/client.c:78
 #, c-format
 msgid "** ERROR: could not open connection to %s\n"
 msgstr "** FEL: kunde inte öppna anslutning till %s\n"
 
 #. show provider features
-#: testing/client.c:81
+#: testing/client.c:83
 msgid "\tProvider capabilities...\n"
 msgstr "\tLeverantörskapabiliteter...\n"
 
-#: testing/client.c:82
+#: testing/client.c:84
 #, c-format
 msgid "\t\tTransactions: %s\n"
 msgstr "\t\tTransaktioner: %s\n"
 
-#: testing/client.c:84
+#: testing/client.c:86
 msgid "Supported"
 msgstr "Stöds"
 
-#: testing/client.c:84
+#: testing/client.c:86
 msgid "Not supported"
 msgstr "Stöds inte"
 
 #. show connection schemas
-#: testing/client.c:87
+#: testing/client.c:89
 msgid "Databases"
 msgstr "Databaser"
 
-#: testing/client.c:88
+#: testing/client.c:90
 msgid "Stored procedures"
 msgstr "Lagrade procedurer"
 
-#: testing/client.c:89
+#: testing/client.c:91
 msgid "Connection Tables"
 msgstr "Anslutningstabeller"
 
-#: testing/client.c:90
+#: testing/client.c:92
 msgid "Available types"
 msgstr "Tillgängliga typer"
 
-#: testing/client.c:91
+#: testing/client.c:93
 msgid "Views"
 msgstr "Vyer"
 
-#: testing/client.c:92
+#: testing/client.c:94
 msgid "Indexes"
 msgstr "Index"
 
-#: testing/client.c:93
+#: testing/client.c:95
 msgid "Aggregates"
 msgstr "Aggregat"
 
-#: testing/client.c:94
+#: testing/client.c:96
 msgid "Users"
 msgstr "Användare"
 
-#: testing/client.c:95
+#: testing/client.c:97
 msgid "Sequences"
 msgstr "Sekvenser"
 
-#: testing/client.c:96
+#: testing/client.c:98
 msgid "Triggers"
 msgstr "Utlösare"
 
 #. test transactions
-#: testing/client.c:99 testing/client.c:107
+#: testing/client.c:101 testing/client.c:109
 msgid "\tStarting transaction..."
 msgstr "\tStartar transaktion..."
 
-#: testing/client.c:101 testing/client.c:105 testing/client.c:109
-#: testing/client.c:113
+#: testing/client.c:103 testing/client.c:107 testing/client.c:111
+#: testing/client.c:115
 msgid "Error"
 msgstr "Fel"
 
-#: testing/client.c:103
+#: testing/client.c:105
 msgid "\tFinishing transaction..."
 msgstr "\tSlutförde transaktion..."
 
-#: testing/client.c:111
+#: testing/client.c:113
 msgid "\tRolling back transaction..."
 msgstr "\tÅterställer transaktion..."
 
-#: testing/client.c:132
+#: testing/client.c:134
 msgid "Testing GDA client API"
 msgstr "Testar GDA-klient-API"
 
-#: testing/client.c:141
+#: testing/client.c:143
 msgid "** ERROR: gda_config_get_data_source_list returned a NULL item\n"
 msgstr "** FEL: gda_config_get_data_source_list returnerade ett NULL-objekt\n"
 
-#: testing/client.c:145
+#: testing/client.c:147
 #, c-format
 msgid " Data source = %s, User = %s\n"
 msgstr " Datakälla = %s, användare = %s\n"
 
-#: testing/config.c:84
+#: testing/config.c:85
 msgid "** ERROR: gda_config_get_provider_list returned a NULL item\n"
 msgstr "** FEL: gda_config_get_provider_list returnerade ett NULL-objekt\n"
 
-#: testing/config.c:88
+#: testing/config.c:89
 #, c-format
 msgid " Provider = %s\n"
 msgstr " Leverantör = %s\n"
 
-#: testing/config.c:89
+#: testing/config.c:90
 #, c-format
 msgid "\tlocation = %s\n"
 msgstr "\tplats = %s\n"
 
-#: testing/config.c:90
-#, c-format
-msgid "\ttype = %s\n"
-msgstr "\ttyp = %s\n"
-
-#: testing/config.c:93
+#: testing/config.c:91
 #, c-format
 msgid "\tdescription = %s\n"
 msgstr "\tbeskrivning = %s\n"
 
-#: testing/config.c:95
-msgid "\trepo_ids ="
-msgstr "\trepo-id ="
-
-#: testing/config.c:102
-#, c-format
-msgid "\tusername = %s\n"
-msgstr "\tanvändarnamn = %s\n"
-
-#: testing/config.c:103
-#, c-format
-msgid "\thostname = %s\n"
-msgstr "\tvärdnamn = %s\n"
-
-#: testing/config.c:104
-#, c-format
-msgid "\tdomain = %s\n"
-msgstr "\tdomän = %s\n"
-
-#: testing/config.c:106
+#: testing/config.c:93
 msgid "\tgda_params ="
 msgstr "\tgda_params ="
+
+#~ msgid "Could not activate object %s"
+#~ msgstr "Kunde inte aktivera objektet %s"
+
+#~ msgid "Could not create connection component"
+#~ msgstr "Kunde inte skapa anslutningskomponent"
+
+#~ msgid "Could not query CORBA components"
+#~ msgstr "Kunde inte fråga CORBA-komponenter"
+
+#~ msgid "%s: An Error occured in the CORBA system."
+#~ msgstr "%s: Ett fel inträffade i CORBA-systemet."
+
+#~ msgid "Unknown CORBA exception for connection"
+#~ msgstr "Okänt CORBA-undantag för anslutning"
+
+#~ msgid "Could not initialize Bonobo"
+#~ msgstr "Kunde inte initiera Bonobo"
+
+#~ msgid "Don't know how to create components with IID %s"
+#~ msgstr "Vet inte hur man skapar komponenter med IID %s"
+
+#~ msgid "Could not create component of type %s"
+#~ msgstr "Kunde inte skapa komponent av typen %s"
+
+#~ msgid "Could not duplicate client object. Client won't get notifications"
+#~ msgstr ""
+#~ "Kunde inte duplicera klientobjekt. Klienten kommer inte att få "
+#~ "notifieringar"
+
+#~ msgid "Could not notify client about action %d"
+#~ msgstr "Kunde inte notifiera klienten om åtgärden %d"
+
+#~ msgid "No implementation for the fetch() method found"
+#~ msgstr "Ingen implementation för fetch()-metoden hittades"
+
+#~ msgid "Default component factory"
+#~ msgstr "Standardkomponentfabrik"
+
+#~ msgid "GDA Default Datasource Access"
+#~ msgstr "Standardåtkomst för GDA-datakällor"
+
+#~ msgid "Could not initiate Default component factory"
+#~ msgstr "Kunde inte initiera standardkomponentfabrik"
+
+#~ msgid "GDA Datasource Access for MySQL"
+#~ msgstr "GDA-datakälleåtkomst för MySQL"
+
+#~ msgid "MySQL component factory"
+#~ msgstr "MySQL-komponentfabrik"
+
+#~ msgid "Could not initiate MySQL component factory"
+#~ msgstr "Kunde inte initiera MySQL-komponentfabrik"
+
+#~ msgid "GDA Datasource Access for ODBC"
+#~ msgstr "GDA-datakälleåtkomst för ODBC"
+
+#~ msgid "ODBC component factory"
+#~ msgstr "ODBC-komponentfabrik"
+
+#~ msgid "Could not initiate ODBC component factory"
+#~ msgstr "Kunde inte initiera ODBC-komponentfabrik"
+
+#~ msgid "GDA Datasource Access for Oracle"
+#~ msgstr "GDA-datakälleåtkomst för Oracle"
+
+#~ msgid "Oracle component factory"
+#~ msgstr "Oracle-komponentfabrik"
+
+#~ msgid "GDA Datasource Access for Postgres"
+#~ msgstr "GDA-datakälleåtkomst för Postgres"
+
+#~ msgid "Postgres component factory"
+#~ msgstr "Postgres-komponentfabrik"
+
+#~ msgid "Could not initiate PostgreSQL component factory"
+#~ msgstr "Kunde inte initiera PostgreSQL-komponentfabrik"
+
+#~ msgid "GDA SQLite Datasource Access"
+#~ msgstr "Åtkomst för GDA SQLite-datakällor"
+
+#~ msgid "SQLite component factory"
+#~ msgstr "SQLite-komponentfabrik"
+
+#~ msgid "Could not initiate Sqlite component factory"
+#~ msgstr "Kunde inte initiera Sqlite-komponentfabrik"
+
+#~ msgid "GDA Datasource Access for Sybase"
+#~ msgstr "GDA-datakälleåtkomst för Sybase"
+
+#~ msgid "Sybase component factory"
+#~ msgstr "Sybase-komponentfabrik"
+
+#~ msgid "\ttype = %s\n"
+#~ msgstr "\ttyp = %s\n"
+
+#~ msgid "\trepo_ids ="
+#~ msgstr "\trepo-id ="
+
+#~ msgid "\tusername = %s\n"
+#~ msgstr "\tanvändarnamn = %s\n"
+
+#~ msgid "\thostname = %s\n"
+#~ msgstr "\tvärdnamn = %s\n"
+
+#~ msgid "\tdomain = %s\n"
+#~ msgstr "\tdomän = %s\n"
 
 #~ msgid "NULL"
 #~ msgstr "NULL"
@@ -683,9 +669,6 @@ msgstr "\tgda_params ="
 
 #~ msgid "%s not implemented"
 #~ msgstr "%s är inte implementerat"
-
-#~ msgid "Starting provider %s with no implementation functions"
-#~ msgstr "Startar leverantör %s utan några implementationsfunktioner"
 
 #~ msgid "CORBA system exception %s"
 #~ msgstr "CORBA-systemundantag %s"
