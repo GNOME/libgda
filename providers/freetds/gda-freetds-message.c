@@ -57,6 +57,32 @@ GdaFreeTDSMessage
 	return message;
 }
 
+GdaFreeTDSMessage *
+gda_freetds_message_add (GdaConnection *cnc,
+                         TDSMSGINFO *info,
+                         const gboolean is_err_msg)
+{
+	GdaFreeTDSMessage *msg = NULL;
+	GdaFreeTDSConnectionData *tds_cnc = NULL;
+
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+	tds_cnc = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_FREETDS_HANDLE);
+	g_return_val_if_fail (tds_cnc != NULL, NULL);
+	g_return_val_if_fail (tds_cnc->msg_arr != NULL, NULL);
+	g_return_val_if_fail (tds_cnc->err_arr != NULL, NULL);
+	
+	msg = gda_freetds_message_new(cnc, info, is_err_msg);
+	g_return_val_if_fail (msg != NULL, NULL);
+
+	if (msg->is_err_msg) {
+		g_ptr_array_add (tds_cnc->err_arr, msg);
+	} else {
+		g_ptr_array_add (tds_cnc->msg_arr, msg);
+	}
+
+	return msg;
+}
+
 void
 gda_freetds_message_free (GdaFreeTDSMessage *message)
 {

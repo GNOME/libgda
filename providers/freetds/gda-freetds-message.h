@@ -46,6 +46,9 @@ struct _GdaFreeTDSMessage {
 GdaFreeTDSMessage *gda_freetds_message_new (GdaConnection *cnc,
                                             TDSMSGINFO *info,
                                             const gboolean is_err_msg);
+GdaFreeTDSMessage *gda_freetds_message_add (GdaConnection *cnc,
+                                            TDSMSGINFO *info,
+                                            const gboolean is_err_msg);
 void gda_freetds_message_free (GdaFreeTDSMessage *message);
 
 
