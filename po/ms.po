@@ -4,12 +4,12 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda HEAD\n"
-"POT-Creation-Date: 2002-09-09 22:11+0200\n"
+"POT-Creation-Date: 2002-09-11 13:17+0200\n"
 "PO-Revision-Date: 2002-03-15 00:56+0800\n"
 "Last-Translator: Hasbullah Bin Pit <sebol@ikhlas.com>\n"
 "Language-Team: Bahasa Melayu <gabai-penyumbang@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=ISO-8859-1\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: libgda/gda-client.c:227 libgda/gda-client.c:414 libgda/gda-connection.c:214
@@ -196,7 +196,7 @@ msgid "Invalid XML node"
 msgstr "Nod XML tidak sah"
 
 #: providers/default/gda-default-provider.c:191
-#: providers/sqlite/gda-sqlite-provider.c:186
+#: providers/sqlite/gda-sqlite-provider.c:183
 msgid ""
 "A full path must be specified on the connection string to open a database."
 msgstr ""
@@ -956,12 +956,10 @@ msgstr ""
 msgid "GDA provider for PostgreSQL databases"
 msgstr ""
 
-#: providers/sqlite/gda-sqlite-provider.c:246
-msgid "Invalid SQLITE handle"
-msgstr "Pengendali SQLITE tidak sah"
-
-#: providers/sqlite/gda-sqlite-provider.c:314
-#: providers/sqlite/gda-sqlite-provider.c:449
+#: providers/sqlite/gda-sqlite-provider.c:243
+#: providers/sqlite/gda-sqlite-provider.c:266
+#: providers/sqlite/gda-sqlite-provider.c:289
+#: providers/sqlite/gda-sqlite-provider.c:311
 #: providers/sqlite/gda-sqlite-recordset.c:159
 #: providers/sqlite/gda-sqlite-recordset.c:198
 #: providers/sqlite/gda-sqlite-recordset.c:239
@@ -969,13 +967,23 @@ msgstr "Pengendali SQLITE tidak sah"
 msgid "Invalid SQLite handle"
 msgstr "Pengandeli Sqlite yang tak sah"
 
-#: providers/sqlite/gda-sqlite-provider.c:332
+#: providers/sqlite/gda-sqlite-provider.c:270
+msgid ""
+"To change a SQLite database you should close the actual database and open a "
+"new one"
+msgstr ""
+
+#: providers/sqlite/gda-sqlite-provider.c:293
 msgid "Only one database per connection is allowed"
 msgstr ""
 
-#: providers/sqlite/gda-sqlite-provider.c:346
+#: providers/sqlite/gda-sqlite-provider.c:315
 msgid "To remove a SQLite database you should remove the database file by hand"
 msgstr ""
+
+#: providers/sqlite/gda-sqlite-provider.c:329
+msgid "Invalid SQLITE handle"
+msgstr "Pengendali SQLITE tidak sah"
 
 #: providers/sqlite/libmain.c:41
 msgid "GDA provider for SQLite databases"
@@ -985,14 +993,20 @@ msgstr ""
 msgid "Could not initiate Sybase component factory"
 msgstr "Gagal Gagal menginitialisasikan kilang komponen Sybase"
 
-#: report/libgda-report/gda-report-document.c:166
-msgid "Could not parse XML document"
-msgstr "Tak dapat menghantar dokumen XML"
+#: report/libgda-report/gda-report-document.c:158
+#, fuzzy, c-format
+msgid "Could not load report file at %s"
+msgstr "Tak dapat memuatkan fail pada %s"
 
-#: report/libgda-report/gda-report-document.c:191
-#, c-format
-msgid "Could not get file from %s"
-msgstr "Gagal mendapatkan fail daripada %s"
+#: report/libgda-report/gda-report-document.c:167
+#, fuzzy, c-format
+msgid "Could not parse report file at %s"
+msgstr "Tak dapat menghantar fail pada %s"
+
+#: report/libgda-report/gda-report-document.c:177
+#, fuzzy, c-format
+msgid "Invalid report file '%s'"
+msgstr "Fail pangkalandata XML tidak sah"
 
 #: testing/client.c:41
 msgid "\t\tNONE\n"
@@ -1149,6 +1163,12 @@ msgstr "\thuraian = %s\n"
 #: testing/config.c:93
 msgid "\tgda_params ="
 msgstr "\tgda_params ="
+
+#~ msgid "Could not parse XML document"
+#~ msgstr "Tak dapat menghantar dokumen XML"
+
+#~ msgid "Could not get file from %s"
+#~ msgstr "Gagal mendapatkan fail daripada %s"
 
 #~ msgid "Could not initialize OCI library"
 #~ msgstr "Gagal menginitialisasikan pustaka OCI"

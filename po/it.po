@@ -5,18 +5,18 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-db\n"
-"POT-Creation-Date: 2002-09-09 22:11+0200\n"
+"POT-Creation-Date: 2002-09-11 13:17+0200\n"
 "PO-Revision-Date: 2001-01-14 22:25+01:00\n"
 "Last-Translator: Clara Tattoni <clara.tattoni@libero.it>\n"
 "Language-Team: Italian <it@li.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=iso-8859-1\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: libgda/gda-client.c:227 libgda/gda-client.c:414 libgda/gda-connection.c:214
 #, fuzzy, c-format
 msgid "Data source %s not found in configuration"
-msgstr "Il database '%s' non Ë stato trovato nella configurazione del sistema"
+msgstr "Il database '%s' non √® stato trovato nella configurazione del sistema"
 
 #: libgda/gda-client.c:245
 #, c-format
@@ -76,11 +76,11 @@ msgstr "password"
 #: libgda/gda-data-model.c:608
 #, fuzzy, c-format
 msgid "Data model %p is not editable"
-msgstr "%p non Ë una tabella valida"
+msgstr "%p non √® una tabella valida"
 
 #: libgda/gda-init.c:49
 msgid "Attempt to initialize an already initialized client"
-msgstr "Tentativo di inizializzare un client gi‡ inizializzato"
+msgstr "Tentativo di inizializzare un client gi√† inizializzato"
 
 #: libgda/gda-init.c:60
 msgid "libgda needs GModule. Finishing..."
@@ -145,7 +145,7 @@ msgstr ""
 #: libgda/gda-util.c:169
 #, fuzzy, c-format
 msgid "Could not create file %s"
-msgstr "Non Ë possibile impostare locale a '%s'"
+msgstr "Non √® possibile impostare locale a '%s'"
 
 #: libgda/gda-value.c:1454
 msgid "TRUE"
@@ -158,12 +158,12 @@ msgstr "NO"
 #: libgda/gda-xml-database.c:236
 #, fuzzy, c-format
 msgid "Could not load file at %s"
-msgstr "Non Ë possibile impostare locale a '%s'"
+msgstr "Non √® possibile impostare locale a '%s'"
 
 #: libgda/gda-xml-database.c:245
 #, fuzzy, c-format
 msgid "Could not parse file at %s"
-msgstr "Non Ë possibile impostare locale a '%s'"
+msgstr "Non √® possibile impostare locale a '%s'"
 
 #: libgda/gda-xml-database.c:255
 #, fuzzy, c-format
@@ -173,18 +173,18 @@ msgstr "Database selezionato '%s'"
 #: libgda/gda-xml-database.c:407
 #, fuzzy, c-format
 msgid "Could not create a XML node from table %s"
-msgstr "Non Ë possibile impostare locale a '%s'"
+msgstr "Non √® possibile impostare locale a '%s'"
 
 #: libgda/gda-xml-database.c:425
 #, fuzzy
 msgid "Could not dump XML file to memory"
-msgstr "Non Ë possibile impostare locale a '%s'"
+msgstr "Non √® possibile impostare locale a '%s'"
 
 #: libgda/gda-xml-database.c:518 libgda/gda-xml-database.c:554
 #: libgda/gda-xml-database.c:597
 #, fuzzy, c-format
 msgid "Table %s already exists"
-msgstr "la tabella %s esiste gi‡"
+msgstr "la tabella %s esiste gi√†"
 
 #: libgda/gda-xml-database.c:590
 msgid "Invalid node"
@@ -200,7 +200,7 @@ msgid "Invalid XML node"
 msgstr ""
 
 #: providers/default/gda-default-provider.c:191
-#: providers/sqlite/gda-sqlite-provider.c:186
+#: providers/sqlite/gda-sqlite-provider.c:183
 msgid ""
 "A full path must be specified on the connection string to open a database."
 msgstr ""
@@ -416,17 +416,17 @@ msgstr ""
 #: providers/ibmdb2/gda-ibmdb2-provider.c:154
 #, fuzzy
 msgid "Could not allocate environment handle."
-msgstr "Non Ë possibile inizializzare cs_diag()"
+msgstr "Non √® possibile inizializzare cs_diag()"
 
 #: providers/ibmdb2/gda-ibmdb2-provider.c:165
 #, fuzzy
 msgid "Could not set autocommit to off.\n"
-msgstr "Non Ë possibile impostare locale a '%s'"
+msgstr "Non √® possibile impostare locale a '%s'"
 
 #: providers/ibmdb2/gda-ibmdb2-provider.c:179
 #, fuzzy
 msgid "Could not allocate environment handle.\n"
-msgstr "Non Ë possibile inizializzare cs_diag()"
+msgstr "Non √® possibile inizializzare cs_diag()"
 
 #. GetInfo is needed for obtaining database name
 #. is needed for tables schema
@@ -449,7 +449,7 @@ msgstr ""
 #: providers/mdb/gda-mdb-provider.c:197
 #, fuzzy, c-format
 msgid "Could not open file %s"
-msgstr "Non Ë possibile impostare locale a '%s'"
+msgstr "Non √® possibile impostare locale a '%s'"
 
 #: providers/mdb/gda-mdb-provider.c:219 providers/mdb/gda-mdb-provider.c:247
 #: providers/mdb/gda-mdb-provider.c:348
@@ -469,7 +469,7 @@ msgstr ""
 msgid ""
 "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
 msgstr ""
-"%s:%d: impossibile fornire una UNIX_SOCKET se si Ë gi‡ fornito un HOST o una "
+"%s:%d: impossibile fornire una UNIX_SOCKET se si √® gi√† fornito un HOST o una "
 "PORTA. Rimuovere la UNIX_SOCKET, oppure rimuovere entrambe le opzioni HOST e "
 "PORTA"
 
@@ -576,7 +576,7 @@ msgstr "Impossibile inizializzare ct_diag()"
 #: providers/oracle/gda-oracle-provider.c:216
 #, fuzzy
 msgid "Could not allocate the Oracle service handle"
-msgstr "Non Ë possibile inizializzare cs_diag()"
+msgstr "Non √® possibile inizializzare cs_diag()"
 
 #: providers/oracle/gda-oracle-provider.c:226
 #, fuzzy
@@ -586,7 +586,7 @@ msgstr "Impossibile inizializzare ct_diag()"
 #: providers/oracle/gda-oracle-provider.c:238
 #, fuzzy
 msgid "Could not allocate the Oracle server handle"
-msgstr "Non Ë possibile inizializzare cs_diag()"
+msgstr "Non √® possibile inizializzare cs_diag()"
 
 #: providers/oracle/gda-oracle-provider.c:251
 #, fuzzy
@@ -596,17 +596,17 @@ msgstr "Impossibile inizializzare ct_diag()"
 #: providers/oracle/gda-oracle-provider.c:281
 #, fuzzy
 msgid "Could not attach to the Oracle server"
-msgstr "Non Ë possibile inizializzare cs_diag()"
+msgstr "Non √® possibile inizializzare cs_diag()"
 
 #: providers/oracle/gda-oracle-provider.c:297
 #, fuzzy
 msgid "Could not set the Oracle server attribute in the service context"
-msgstr "Non Ë possibile inizializzare cs_diag()"
+msgstr "Non √® possibile inizializzare cs_diag()"
 
 #: providers/oracle/gda-oracle-provider.c:313
 #, fuzzy
 msgid "Could not set the Oracle username attribute"
-msgstr "Non Ë possibile inizializzare cs_diag()"
+msgstr "Non √® possibile inizializzare cs_diag()"
 
 #: providers/oracle/gda-oracle-provider.c:329
 #, fuzzy
@@ -621,7 +621,7 @@ msgstr "Impossibile inizializzare ct_diag()"
 #: providers/oracle/gda-oracle-provider.c:362
 #, fuzzy
 msgid "Could not set the Oracle session attribute in the service context"
-msgstr "Non Ë possibile inizializzare cs_diag()"
+msgstr "Non √® possibile inizializzare cs_diag()"
 
 #: providers/oracle/gda-oracle-provider.c:444
 #: providers/oracle/gda-oracle-provider.c:518
@@ -641,7 +641,7 @@ msgstr ""
 #: providers/oracle/gda-oracle-provider.c:455
 #, fuzzy
 msgid "Could not allocate the Oracle statement handle"
-msgstr "Non Ë possibile inizializzare cs_diag()"
+msgstr "Non √® possibile inizializzare cs_diag()"
 
 #: providers/oracle/gda-oracle-provider.c:466
 #, fuzzy
@@ -683,12 +683,12 @@ msgstr "Impossibile avere il numero dei messaggi del client"
 #: providers/oracle/gda-oracle-provider.c:931
 #, fuzzy
 msgid "Could not attach the transaction to the service context"
-msgstr "Non Ë possibile inizializzare cs_diag()"
+msgstr "Non √® possibile inizializzare cs_diag()"
 
 #: providers/oracle/gda-oracle-provider.c:799
 #, fuzzy
 msgid "Could not allocate the Oracle transaction handle"
-msgstr "Non Ë possibile allocare la struttura locale"
+msgstr "Non √® possibile allocare la struttura locale"
 
 #: providers/oracle/gda-oracle-provider.c:811
 #, fuzzy
@@ -713,12 +713,12 @@ msgstr "Impossibile registrare l'implementazione di gda-sysbase provider"
 #: providers/oracle/gda-oracle-provider.c:938
 #, fuzzy
 msgid "Could not rollback the Oracle transaction"
-msgstr "Non Ë possibile allocare la struttura locale"
+msgstr "Non √® possibile allocare la struttura locale"
 
 #: providers/oracle/gda-oracle-provider.c:1227
 #, fuzzy
 msgid "Could not allocate the Oracle describe handle"
-msgstr "Non Ë possibile inizializzare cs_diag()"
+msgstr "Non √® possibile inizializzare cs_diag()"
 
 #: providers/oracle/gda-oracle-provider.c:1240
 #, fuzzy
@@ -728,7 +728,7 @@ msgstr "Impossibile azzerare i messaggi del server"
 #: providers/oracle/gda-oracle-provider.c:1253
 #, fuzzy
 msgid "Could not get the Oracle parameter handle"
-msgstr "Non Ë possibile inizializzare cs_diag()"
+msgstr "Non √® possibile inizializzare cs_diag()"
 
 #: providers/oracle/gda-oracle-provider.c:1266
 #, fuzzy
@@ -738,7 +738,7 @@ msgstr "Impossibile azzerare i messaggi del server"
 #: providers/oracle/gda-oracle-provider.c:1278
 #, fuzzy
 msgid "Could not get the column list"
-msgstr "Non Ë possibile impostare locale a '%s'"
+msgstr "Non √® possibile impostare locale a '%s'"
 
 #: providers/oracle/gda-oracle-provider.c:1307
 #, fuzzy
@@ -758,7 +758,7 @@ msgstr "Impossibile registrare l'implementazione di gda-sysbase provider"
 #: providers/oracle/gda-oracle-provider.c:1359
 #, fuzzy
 msgid "Could not get the Oracle field defined size"
-msgstr "Non Ë possibile impostare locale a '%s'"
+msgstr "Non √® possibile impostare locale a '%s'"
 
 #: providers/oracle/gda-oracle-provider.c:1376
 #, fuzzy
@@ -793,17 +793,17 @@ msgstr "Impossibile inizializzare ct_diag()"
 #: providers/oracle/gda-oracle-recordset.c:83
 #, fuzzy
 msgid "Could not get the parameter defined size"
-msgstr "Non Ë possibile impostare locale a '%s'"
+msgstr "Non √® possibile impostare locale a '%s'"
 
 #: providers/oracle/gda-oracle-recordset.c:96
 #, fuzzy
 msgid "Could not get the parameter data type"
-msgstr "Non Ë possibile allocare il campo"
+msgstr "Non √® possibile allocare il campo"
 
 #: providers/oracle/gda-oracle-recordset.c:127
 #, fuzzy
 msgid "Could not define by position"
-msgstr "Non Ë possibile impostare locale a '%s'"
+msgstr "Non √® possibile impostare locale a '%s'"
 
 #: providers/oracle/gda-oracle-recordset.c:172
 #: providers/postgres/gda-postgres-recordset.c:263
@@ -838,12 +838,12 @@ msgstr "Impossibile registrare l'implementazione di gda-sysbase provider"
 #: providers/oracle/gda-oracle-recordset.c:245
 #, fuzzy
 msgid "Could not get the Oracle defined size"
-msgstr "Non Ë possibile impostare locale a '%s'"
+msgstr "Non √® possibile impostare locale a '%s'"
 
 #: providers/oracle/gda-oracle-recordset.c:353
 #, fuzzy
 msgid "Could not fetch a row"
-msgstr "Non Ë possibile impostare locale a '%s'"
+msgstr "Non √® possibile impostare locale a '%s'"
 
 #: providers/oracle/libmain.c:34
 msgid "GDA provider for Oracle databases"
@@ -940,24 +940,32 @@ msgstr ""
 msgid "GDA provider for PostgreSQL databases"
 msgstr ""
 
-#: providers/sqlite/gda-sqlite-provider.c:246
-msgid "Invalid SQLITE handle"
-msgstr ""
-
-#: providers/sqlite/gda-sqlite-provider.c:314
-#: providers/sqlite/gda-sqlite-provider.c:449
+#: providers/sqlite/gda-sqlite-provider.c:243
+#: providers/sqlite/gda-sqlite-provider.c:266
+#: providers/sqlite/gda-sqlite-provider.c:289
+#: providers/sqlite/gda-sqlite-provider.c:311
 #: providers/sqlite/gda-sqlite-recordset.c:159
 #: providers/sqlite/gda-sqlite-recordset.c:198
 #: providers/sqlite/gda-sqlite-recordset.c:239
 msgid "Invalid SQLite handle"
 msgstr ""
 
-#: providers/sqlite/gda-sqlite-provider.c:332
+#: providers/sqlite/gda-sqlite-provider.c:270
+msgid ""
+"To change a SQLite database you should close the actual database and open a "
+"new one"
+msgstr ""
+
+#: providers/sqlite/gda-sqlite-provider.c:293
 msgid "Only one database per connection is allowed"
 msgstr ""
 
-#: providers/sqlite/gda-sqlite-provider.c:346
+#: providers/sqlite/gda-sqlite-provider.c:315
 msgid "To remove a SQLite database you should remove the database file by hand"
+msgstr ""
+
+#: providers/sqlite/gda-sqlite-provider.c:329
+msgid "Invalid SQLITE handle"
 msgstr ""
 
 #: providers/sqlite/libmain.c:41
@@ -969,15 +977,20 @@ msgstr ""
 msgid "Could not initiate Sybase component factory"
 msgstr "Impossibile registrare l'implementazione di gda-sysbase provider"
 
-#: report/libgda-report/gda-report-document.c:166
-#, fuzzy
-msgid "Could not parse XML document"
-msgstr "Non Ë possibile impostare locale a '%s'"
-
-#: report/libgda-report/gda-report-document.c:191
+#: report/libgda-report/gda-report-document.c:158
 #, fuzzy, c-format
-msgid "Could not get file from %s"
-msgstr "Non Ë possibile impostare locale a '%s'"
+msgid "Could not load report file at %s"
+msgstr "Non √® possibile impostare locale a '%s'"
+
+#: report/libgda-report/gda-report-document.c:167
+#, fuzzy, c-format
+msgid "Could not parse report file at %s"
+msgstr "Non √® possibile impostare locale a '%s'"
+
+#: report/libgda-report/gda-report-document.c:177
+#, fuzzy, c-format
+msgid "Invalid report file '%s'"
+msgstr "Database selezionato '%s'"
 
 #: testing/client.c:41
 msgid "\t\tNONE\n"
@@ -1138,8 +1151,16 @@ msgid "\tgda_params ="
 msgstr ""
 
 #, fuzzy
+#~ msgid "Could not parse XML document"
+#~ msgstr "Non √® possibile impostare locale a '%s'"
+
+#, fuzzy
+#~ msgid "Could not get file from %s"
+#~ msgstr "Non √® possibile impostare locale a '%s'"
+
+#, fuzzy
 #~ msgid "An error occurred during fetch"
-#~ msgstr "Si Ë verificato un errore durante l'esecuzione del comando."
+#~ msgstr "Si √® verificato un errore durante l'esecuzione del comando."
 
 #, fuzzy
 #~ msgid "Could not initialize OCI library"
@@ -1155,11 +1176,11 @@ msgstr ""
 
 #, fuzzy
 #~ msgid "Could not parse XML report"
-#~ msgstr "Non Ë possibile impostare locale a '%s'"
+#~ msgstr "Non √® possibile impostare locale a '%s'"
 
 #, fuzzy
 #~ msgid "Could not activate report engine"
-#~ msgstr "Non Ë possibile allocare il campo"
+#~ msgstr "Non √® possibile allocare il campo"
 
 #, fuzzy
 #~ msgid "Could not create BonoboStreamMem object"
@@ -1172,10 +1193,10 @@ msgstr ""
 
 #, fuzzy
 #~ msgid "Could not activate object %s"
-#~ msgstr "Non Ë possibile allocare il campo"
+#~ msgstr "Non √® possibile allocare il campo"
 
 #~ msgid "%s: An Error occured in the CORBA system."
-#~ msgstr "%s: Si Ë verificato un errore nel sistema CORBA."
+#~ msgstr "%s: Si √® verificato un errore nel sistema CORBA."
 
 #, fuzzy
 #~ msgid "Could not initialize Bonobo"
@@ -1183,7 +1204,7 @@ msgstr ""
 
 #, fuzzy
 #~ msgid "Could not notify client about action %d"
-#~ msgstr "Non Ë possibile avere il client msg # %d"
+#~ msgstr "Non √® possibile avere il client msg # %d"
 
 #, fuzzy
 #~ msgid "Default component factory"
@@ -1277,7 +1298,7 @@ msgstr ""
 #~ msgstr "Ricevuto il segnale %d, ignorato"
 
 #~ msgid "Attempt to initialize an already initialized provider"
-#~ msgstr "Tentativo di inizializzazione di un provider gi‡ inizializzato"
+#~ msgstr "Tentativo di inizializzazione di un provider gi√† inizializzato"
 
 #~ msgid "CORBA system exception %s"
 #~ msgstr "Eccezione del sistema CORBA %s"
@@ -1312,7 +1333,7 @@ msgstr ""
 #~ "or a PORT. Please remove the UNIX_SOCKET, or remove both the HOST and "
 #~ "PORT options"
 #~ msgstr ""
-#~ "%s:%d: impossibile fornire una UNIX_SOCKET se si Ë gi‡ fornito un HOST o "
+#~ "%s:%d: impossibile fornire una UNIX_SOCKET se si √® gi√† fornito un HOST o "
 #~ "una PORTA. Rimuovere la UNIX_SOCKET, oppure rimuovere entrambe le opzioni "
 #~ "HOST e PORTA"
 
@@ -1324,7 +1345,7 @@ msgstr ""
 #~ msgstr "Connessione in corso con file=%s, utente=%s, password=%s"
 
 #~ msgid "mysql_recset is NULL"
-#~ msgstr "mysql_recset Ë NULL"
+#~ msgstr "mysql_recset √® NULL"
 
 #~ msgid "No table name given for SCHEMA_COLS"
 #~ msgstr "Nessun nome formito per  SCHEMA_COLS"
@@ -1346,7 +1367,7 @@ msgstr ""
 #~ msgstr "Impossibile registrare l'implementazione per il provider ODBC"
 
 #~ msgid "command object being created without associated connection"
-#~ msgstr "il comando Ë stato creato senza una connessione associata"
+#~ msgstr "il comando √® stato creato senza una connessione associata"
 
 #~ msgid "Executing command '%s'"
 #~ msgstr "Esecuzione del comando '%s'"
@@ -1367,7 +1388,7 @@ msgstr ""
 #~ msgstr "Tipo di dato ORACLE sconosciuto in fill_field_values"
 
 #~ msgid "postgres_recset is NULL"
-#~ msgstr "postgres_recset Ë NULL"
+#~ msgstr "postgres_recset √® NULL"
 
 #~ msgid "Could not register PostgreSQL provider implementation"
 #~ msgstr "Impossibile registrare l'implementazione per il provider PostgreSQL"
@@ -1396,7 +1417,7 @@ msgstr ""
 
 #~ msgid "Cmd execution returned unknown result, may be an error"
 #~ msgstr ""
-#~ "L'esecuzione del comando ha fornito un risultato sconosciuto, puÚ essere "
+#~ "L'esecuzione del comando ha fornito un risultato sconosciuto, pu√≤ essere "
 #~ "un errore"
 
 #, fuzzy
@@ -1413,7 +1434,7 @@ msgstr ""
 #~ msgstr "Impossibile allocare abbastanza memoria per la query"
 
 #~ msgid "Could not allocate cmd structure"
-#~ msgstr "Non Ë possibile allocare la struttura comandi"
+#~ msgstr "Non √® possibile allocare la struttura comandi"
 
 #~ msgid "Could not allocate GdaServerCommand"
 #~ msgstr "Impossiobile allocare GdaServerCommand"
@@ -1431,7 +1452,7 @@ msgstr ""
 #~ msgstr "Connesso a %s"
 
 #~ msgid "%s: Could not allocate memory for cmd string"
-#~ msgstr "%s: non Ë possibile allocare memoria per la linea di comando"
+#~ msgstr "%s: non √® possibile allocare memoria per la linea di comando"
 
 #~ msgid "%s: ct_command failed"
 #~ msgstr "%s: comando_ct fallito"
@@ -1446,10 +1467,10 @@ msgstr ""
 #~ msgstr "%s: uso del comando fallito"
 
 #~ msgid "Could not configure locale to be '%s'"
-#~ msgstr "Non Ë possibile configurare locale a '%s'"
+#~ msgstr "Non √® possibile configurare locale a '%s'"
 
 #~ msgid "Could not drop locale structure"
-#~ msgstr "Non Ë possibile ignorare la struttura locale"
+#~ msgstr "Non √® possibile ignorare la struttura locale"
 
 #~ msgid "Fatal error: %s\n"
 #~ msgstr "Errore fatale: %s\n"
@@ -1482,7 +1503,7 @@ msgstr ""
 #~ msgstr "%d messaggio di ctlib da scaricare"
 
 #~ msgid "error is nullpointer in gda_sybase_messages_handle"
-#~ msgstr "l'errore Ë un puntatore nullo in gda_sybase_messages_handle"
+#~ msgstr "l'errore √® un puntatore nullo in gda_sybase_messages_handle"
 
 #~ msgid "Could not get # of server messages"
 #~ msgstr "Impossibile avere il numero di messaggi del server"
@@ -1539,10 +1560,10 @@ msgstr ""
 #~ msgstr "%d colonne contate"
 
 #~ msgid "%s could not allocate datafmt info"
-#~ msgstr "%s non Ë possibile allocare le informazioni datafmt"
+#~ msgstr "%s non √® possibile allocare le informazioni datafmt"
 
 #~ msgid "%s could not allocate data fields"
-#~ msgstr "%s non Ë possibile allocare i campi dei dati"
+#~ msgstr "%s non √® possibile allocare i campi dei dati"
 
 #~ msgid "ct_describe on col # %d"
 #~ msgstr "ct_describe sulla col num %d"
@@ -1558,10 +1579,10 @@ msgstr ""
 #~ msgstr "Impossibile allocare il contenitore dei dati"
 
 #~ msgid "illegal type detected, aborting"
-#~ msgstr "Ë stato riconosciuto un dato di tipo illegale, interruzione"
+#~ msgstr "√® stato riconosciuto un dato di tipo illegale, interruzione"
 
 #~ msgid "could not allocate field"
-#~ msgstr "Non Ë possibile allocare il campo"
+#~ msgstr "Non √® possibile allocare il campo"
 
 #, fuzzy
 #~ msgid "Could not connect to '%s@%s:%s' with connparm '%s'"
@@ -1605,13 +1626,13 @@ msgstr ""
 #~ msgstr "%s: Il server non ha risposto."
 
 #~ msgid "thread is already running"
-#~ msgstr "il Ë thread gi‡ in esecuzione"
+#~ msgstr "il √® thread gi√† in esecuzione"
 
 #~ msgid "impl_GDA_Connection_open: opening connection with DSN: %s"
 #~ msgstr "impl_GDA_Connection_open: apertura di una connessione con DSN: %s"
 
 #~ msgid "%s: an error ocurred while fetching data"
-#~ msgstr "%s: si Ë verificato un errore nella raccolta dati"
+#~ msgstr "%s: si √® verificato un errore nella raccolta dati"
 
 #~ msgid ""
 #~ "OAF doesn't know about our IID; indicates broken installation. Exiting..."
@@ -1623,7 +1644,7 @@ msgstr ""
 #~ "Another instance of this provider is already registered with OAF. "
 #~ "Exiting..."
 #~ msgstr ""
-#~ "Un'altra istanza di questo provider Ë gi‡ registrata con OAF. Chiusura in "
+#~ "Un'altra istanza di questo provider √® gi√† registrata con OAF. Chiusura in "
 #~ "corso..."
 
 #~ msgid "Unknown error registering this provider with OAF. Exiting"

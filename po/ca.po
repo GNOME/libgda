@@ -1,41 +1,41 @@
 #
-# TraducciÛ (c)Softcatal‡ 2002
+# Traducci√≥ (c)Softcatal√† 2002
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-db CVS\n"
-"POT-Creation-Date: 2002-09-09 22:11+0200\n"
+"POT-Creation-Date: 2002-09-11 13:17+0200\n"
 "PO-Revision-Date: 2002-08-16 03:58+0000\n"
 "Last-Translator: Eduard Pertez i Juncosa <eduardp@eduard.pertinez>\n"
 "Language-Team:  <ca@li.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=ISO-8859-1\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: KBabel 0.9.6\n"
 
 #: libgda/gda-client.c:227 libgda/gda-client.c:414 libgda/gda-connection.c:214
 #, c-format
 msgid "Data source %s not found in configuration"
-msgstr "L'origen de dades %s no s'ha trobat en la configuraciÛ del GDA"
+msgstr "L'origen de dades %s no s'ha trobat en la configuraci√≥ del GDA"
 
 #: libgda/gda-client.c:245
 #, c-format
 msgid "Provider %s is not installed"
-msgstr "El proveÔdor %s no es troba instal∑lat."
+msgstr "El prove√Ødor %s no es troba instal¬∑lat."
 
 #: libgda/gda-client.c:254
 #, c-format
 msgid "Could not load %s provider"
-msgstr "No Ès possible carregar el proveÔdor %s"
+msgstr "No √©s possible carregar el prove√Ødor %s"
 
 #: libgda/gda-client.c:270
 #, c-format
 msgid "Provider %s does not implement entry point"
-msgstr "El proveÔdor %s no implementa el punt d'entrada"
+msgstr "El prove√Ødor %s no implementa el punt d'entrada"
 
 #: libgda/gda-client.c:279
 msgid "Creation of GdaServerProvider failed"
-msgstr "La creaciÛ del GdaServerProvider ha fallat"
+msgstr "La creaci√≥ del GdaServerProvider ha fallat"
 
 #: libgda/gda-client.c:342
 msgid "Temporary data source created by libgda. Don't remove it"
@@ -52,15 +52,15 @@ msgstr "Nom"
 
 #: libgda/gda-config.c:1269
 msgid "Provider"
-msgstr "ProveÔdor"
+msgstr "Prove√Ødor"
 
 #: libgda/gda-config.c:1270
 msgid "Connection string"
-msgstr "Cadena de connexiÛ"
+msgstr "Cadena de connexi√≥"
 
 #: libgda/gda-config.c:1271 providers/postgres/gda-postgres-provider.c:903
 msgid "Description"
-msgstr "DescripciÛ"
+msgstr "Descripci√≥"
 
 #: libgda/gda-config.c:1272
 msgid "Username"
@@ -73,7 +73,7 @@ msgstr "Contrasenya"
 #: libgda/gda-data-model.c:608
 #, c-format
 msgid "Data model %p is not editable"
-msgstr "El model de dades %p no Ès editable"
+msgstr "El model de dades %p no √©s editable"
 
 #: libgda/gda-init.c:49
 msgid "Attempt to initialize an already initialized client"
@@ -111,19 +111,19 @@ msgstr "Valor de cadena inesperat"
 
 #: libgda/gda-select.c:166
 msgid "Unexpected symbol '='"
-msgstr "SÌmbol '=' inesperat"
+msgstr "S√≠mbol '=' inesperat"
 
 #: libgda/gda-select.c:177
 msgid "Unexpected symbol '<'"
-msgstr "SÌmbol '<' inesperat"
+msgstr "S√≠mbol '<' inesperat"
 
 #: libgda/gda-select.c:188
 msgid "Unexpected symbol '>'"
-msgstr "SÌmbol '>' inesperat"
+msgstr "S√≠mbol '>' inesperat"
 
 #: libgda/gda-select.c:216
 msgid "Found a non-numeric value after a '-' sign"
-msgstr "S'ha trobat un valor no numËric darrera el signe '-'"
+msgstr "S'ha trobat un valor no num√®ric darrera el signe '-'"
 
 #: libgda/gda-select.c:232
 msgid "Unexpected identifier"
@@ -137,7 +137,7 @@ msgstr "Ja existeix un camp anomenat %s"
 #: libgda/gda-util.c:143
 #, c-format
 msgid "Error while reading %s: %s"
-msgstr "S'ha produÔt un error en llegir %s: %s"
+msgstr "S'ha produ√Øt un error en llegir %s: %s"
 
 #: libgda/gda-util.c:169
 #, c-format
@@ -165,7 +165,7 @@ msgstr "No s'ha pogut analitzar el fitxer a  %s"
 #: libgda/gda-xml-database.c:255
 #, c-format
 msgid "Invalid XML database file '%s'"
-msgstr "Base de Dades XML %s inv‡lida"
+msgstr "Base de Dades XML %s inv√†lida"
 
 #: libgda/gda-xml-database.c:407
 #, fuzzy, c-format
@@ -185,7 +185,7 @@ msgstr "La taula %s ja existeix"
 
 #: libgda/gda-xml-database.c:590
 msgid "Invalid node"
-msgstr "Node inv‡lid"
+msgstr "Node inv√†lid"
 
 #: libgda/gda-xml-database.c:632
 #, c-format
@@ -194,22 +194,22 @@ msgstr "Node <dades> duplicat per la taula %s"
 
 #: libgda/gda-xml-database.c:639
 msgid "Invalid XML node"
-msgstr "Node XML inv‡lid"
+msgstr "Node XML inv√†lid"
 
 #: providers/default/gda-default-provider.c:191
-#: providers/sqlite/gda-sqlite-provider.c:186
+#: providers/sqlite/gda-sqlite-provider.c:183
 msgid ""
 "A full path must be specified on the connection string to open a database."
 msgstr ""
-"Per obrir una base de dades cal especificar un camÌ complert a la cadena de "
-"connexiÛ."
+"Per obrir una base de dades cal especificar un cam√≠ complert a la cadena de "
+"connexi√≥."
 
 #: providers/default/gda-default-provider.c:253
 #: providers/default/gda-default-provider.c:268
 #: providers/default/gda-default-provider.c:295
 #, fuzzy
 msgid "Invalid internal handle"
-msgstr "Manegador Oracle inv‡lid"
+msgstr "Manegador Oracle inv√†lid"
 
 #: providers/default/gda-default-provider.c:334
 msgid "Not Implemented"
@@ -250,33 +250,33 @@ msgstr "Escala"
 #: providers/oracle/gda-oracle-provider.c:1060
 #: providers/postgres/gda-postgres-provider.c:1069
 msgid "Not null?"
-msgstr "No Ès nul?"
+msgstr "No √©s nul?"
 
 #: providers/default/gda-default-provider.c:460
 #: providers/mysql/gda-mysql-provider.c:1016
 #: providers/oracle/gda-oracle-provider.c:1061
 #: providers/postgres/gda-postgres-provider.c:1070
 msgid "Primary key?"
-msgstr "…s clau prim‡ria?"
+msgstr "√âs clau prim√†ria?"
 
 #: providers/default/gda-default-provider.c:461
 #: providers/mysql/gda-mysql-provider.c:1017
 #: providers/oracle/gda-oracle-provider.c:1062
 #: providers/postgres/gda-postgres-provider.c:1071
 msgid "Unique index?"
-msgstr "L'Ìndex Ès exclusiu?"
+msgstr "L'√≠ndex √©s exclusiu?"
 
 #: providers/default/gda-default-provider.c:462
 #: providers/mysql/gda-mysql-provider.c:1018
 #: providers/oracle/gda-oracle-provider.c:1063
 #: providers/postgres/gda-postgres-provider.c:1072
 msgid "References"
-msgstr "ReferËncies"
+msgstr "Refer√®ncies"
 
 #: providers/default/gda-default-provider.c:472
 #: providers/default/gda-default-provider.c:478
 msgid "Invalid argument"
-msgstr "Argument inv‡lid"
+msgstr "Argument inv√†lid"
 
 #: providers/default/gda-default-provider.c:485
 #, c-format
@@ -289,7 +289,7 @@ msgstr "No s'ha pogut recuperar el descriptor per la columna"
 
 #: providers/default/libmain.c:39
 msgid "GDA default provider, based on the libgda XML format"
-msgstr "ProveÔdor GDA per defecte, basat en el format XML de libgda"
+msgstr "Prove√Ødor GDA per defecte, basat en el format XML de libgda"
 
 #: providers/freetds/gda-freetds-provider.c:174
 msgid ""
@@ -312,7 +312,7 @@ msgstr ""
 #: providers/freetds/gda-freetds-provider.c:237
 #, fuzzy
 msgid "Failed getting connection info."
-msgstr "Obre una connexiÛ nova "
+msgstr "Obre una connexi√≥ nova "
 
 #: providers/freetds/gda-freetds-provider.c:542
 #: providers/oracle/gda-oracle-provider.c:1655
@@ -356,7 +356,7 @@ msgstr "Tipus de Dada"
 #: providers/freetds/gda-freetds-provider.c:651
 #, fuzzy
 msgid "Precision"
-msgstr "VersiÛ"
+msgstr "Versi√≥"
 
 #: providers/freetds/gda-freetds-provider.c:655
 #, fuzzy
@@ -409,12 +409,12 @@ msgstr ""
 #: providers/freetds/libmain.c:39
 #, fuzzy
 msgid "GDA provider for TDS-based databases (using FreeTDS)"
-msgstr "ProveÔdor GDA per bases de dades Oracle"
+msgstr "Prove√Ødor GDA per bases de dades Oracle"
 
 #: providers/freetds/utils.c:41 providers/oracle/utils.c:67
 #: providers/postgres/utils.c:47
 msgid "NO DESCRIPTION"
-msgstr "Sense DescripciÛ"
+msgstr "Sense Descripci√≥"
 
 #: providers/ibmdb2/gda-ibmdb2-provider.c:142
 #: providers/ibmdb2/gda-ibmdb2-provider.c:154
@@ -425,7 +425,7 @@ msgstr "No s'ha pogut ser assignat el manegador d'ordre d'Oracle"
 #: providers/ibmdb2/gda-ibmdb2-provider.c:165
 #, fuzzy
 msgid "Could not set autocommit to off.\n"
-msgstr "No Ès pot carregar el fitxer '%s'"
+msgstr "No √©s pot carregar el fitxer '%s'"
 
 #: providers/ibmdb2/gda-ibmdb2-provider.c:179
 #, fuzzy
@@ -445,12 +445,12 @@ msgstr ""
 #: providers/ibmdb2/libmain.c:39
 #, fuzzy
 msgid "GDA provider for IBMDB2"
-msgstr "ProveÔdor GDA per Bases de Dades MySQL"
+msgstr "Prove√Ødor GDA per Bases de Dades MySQL"
 
 #: providers/mdb/gda-mdb-provider.c:188
 msgid "A database FILENAME must be specified in the connection_string"
 msgstr ""
-"La base de dades FILENAME ha de ser especificada a la cadena de connexiÛ "
+"La base de dades FILENAME ha de ser especificada a la cadena de connexi√≥ "
 "(connection_string)"
 
 #: providers/mdb/gda-mdb-provider.c:197
@@ -461,7 +461,7 @@ msgstr "No s'ha pogut obrir el fitxer %s"
 #: providers/mdb/gda-mdb-provider.c:219 providers/mdb/gda-mdb-provider.c:247
 #: providers/mdb/gda-mdb-provider.c:348
 msgid "Invalid MDB handle"
-msgstr "El Manegador MDB Ès inv‡lid"
+msgstr "El Manegador MDB √©s inv√†lid"
 
 #: providers/mdb/gda-mdb-provider.c:313
 msgid "Table Name"
@@ -469,20 +469,20 @@ msgstr "Nom de la Taula"
 
 #: providers/mdb/libmain.c:34
 msgid "GDA provider for MS Access files"
-msgstr "ProveÔdor GDA per fitxers MS Access"
+msgstr "Prove√Ødor GDA per fitxers MS Access"
 
 #: providers/mysql/gda-mysql-provider.c:215
 msgid ""
 "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
 msgstr ""
-"No pots donar un UNIX_SOCKET si a la vegada est‡s donant un HOST o un PORT."
+"No pots donar un UNIX_SOCKET si a la vegada est√†s donant un HOST o un PORT."
 
 #: providers/mysql/gda-mysql-provider.c:290
 #: providers/mysql/gda-mysql-provider.c:1027
 #: providers/mysql/gda-mysql-recordset.c:59
 #: providers/mysql/gda-mysql-recordset.c:175
 msgid "Invalid MySQL handle"
-msgstr "Manegador MySQL inv‡lid"
+msgstr "Manegador MySQL inv√†lid"
 
 #: providers/mysql/gda-mysql-provider.c:305
 #: providers/mysql/gda-mysql-provider.c:355
@@ -493,7 +493,7 @@ msgstr "Manegador MySQL inv‡lid"
 #: providers/mysql/gda-mysql-provider.c:561
 #: providers/mysql/gda-mysql-provider.c:589
 msgid "Invalid MYSQL handle"
-msgstr "Manegador MYSQL inv‡lid"
+msgstr "Manegador MYSQL inv√†lid"
 
 #: providers/mysql/gda-mysql-provider.c:913
 #: providers/oracle/gda-oracle-provider.c:1563
@@ -541,17 +541,17 @@ msgstr ""
 #: providers/sqlite/gda-sqlite-recordset.c:168
 #: providers/sqlite/gda-sqlite-recordset.c:207
 msgid "Row number out of range"
-msgstr "N˙mero de fila fora de rang"
+msgstr "N√∫mero de fila fora de rang"
 
 #: providers/mysql/gda-mysql-recordset.c:289
 #: providers/oracle/gda-oracle-recordset.c:467
 msgid "Attempt to insert a row with an invalid number of columns"
-msgstr "S'ha intentat inserir una fila amb un n˙mero inv‡lid de columnes"
+msgstr "S'ha intentat inserir una fila amb un n√∫mero inv√†lid de columnes"
 
 #: providers/mysql/gda-mysql-recordset.c:304
 #: providers/oracle/gda-oracle-recordset.c:482
 msgid "Could not retrieve column's information"
-msgstr "No s'ha pogut recuperar la informaciÛ de la columna"
+msgstr "No s'ha pogut recuperar la informaci√≥ de la columna"
 
 #: providers/mysql/gda-mysql-recordset.c:322
 #: providers/oracle/gda-oracle-recordset.c:500
@@ -560,7 +560,7 @@ msgstr "No s'ha pogut recuperar el valor de la columna"
 
 #: providers/mysql/libmain.c:41
 msgid "GDA provider for MySQL databases"
-msgstr "ProveÔdor GDA per Bases de Dades MySQL"
+msgstr "Prove√Ødor GDA per Bases de Dades MySQL"
 
 #: providers/odbc/libmain.c:36
 msgid "GDA bridge to ODBC data sources"
@@ -588,7 +588,7 @@ msgstr "El manegador del servidor Oracle no pot ser assignat"
 
 #: providers/oracle/gda-oracle-provider.c:251
 msgid "Could not allocate the Oracle session handle"
-msgstr "El manegador de sessiÛ d'Oracle no pot ser assignat"
+msgstr "El manegador de sessi√≥ d'Oracle no pot ser assignat"
 
 #: providers/oracle/gda-oracle-provider.c:281
 msgid "Could not attach to the Oracle server"
@@ -610,11 +610,11 @@ msgstr "No s'ha pogut especificar l'atribut Contrasenya d'Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:344
 msgid "Could not begin the Oracle session"
-msgstr "No es pot iniciar la sessiÛ Oracle"
+msgstr "No es pot iniciar la sessi√≥ Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:362
 msgid "Could not set the Oracle session attribute in the service context"
-msgstr "No s'han pogut definir la sessiÛ Oracle en el context del servei"
+msgstr "No s'han pogut definir la sessi√≥ Oracle en el context del servei"
 
 #: providers/oracle/gda-oracle-provider.c:444
 #: providers/oracle/gda-oracle-provider.c:518
@@ -629,7 +629,7 @@ msgstr "No s'han pogut definir la sessiÛ Oracle en el context del servei"
 #: providers/oracle/gda-oracle-recordset.c:388
 #: providers/oracle/gda-oracle-recordset.c:589
 msgid "Invalid Oracle handle"
-msgstr "Manegador Oracle inv‡lid"
+msgstr "Manegador Oracle inv√†lid"
 
 #: providers/oracle/gda-oracle-provider.c:455
 msgid "Could not allocate the Oracle statement handle"
@@ -653,12 +653,12 @@ msgstr "No es pot executar l'ordre d'Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:574
 msgid "Could not get the number of columns in the result set"
-msgstr "No s'ha pogut recuperar el n˙mero de columnes del conjunt de resultats"
+msgstr "No s'ha pogut recuperar el n√∫mero de columnes del conjunt de resultats"
 
 #: providers/oracle/gda-oracle-provider.c:591
 msgid "Could not get the parameter descripter in the result set"
 msgstr ""
-"No s'ha pogut recuperar el descriptor de par‡metres en el conjunt de "
+"No s'ha pogut recuperar el descriptor de par√†metres en el conjunt de "
 "resultats"
 
 #: providers/oracle/gda-oracle-provider.c:603
@@ -670,35 +670,35 @@ msgstr "No s'ha pogut recuperar el nom de columna al conjunt de resultats"
 #: providers/oracle/gda-oracle-provider.c:875
 #: providers/oracle/gda-oracle-provider.c:931
 msgid "Could not attach the transaction to the service context"
-msgstr "No s'a pogut adjuntar la transacciÛ amb el context de servei"
+msgstr "No s'a pogut adjuntar la transacci√≥ amb el context de servei"
 
 #: providers/oracle/gda-oracle-provider.c:799
 msgid "Could not allocate the Oracle transaction handle"
-msgstr "No ha pogut ser assignat el manegador de transacciÛ Oracle"
+msgstr "No ha pogut ser assignat el manegador de transacci√≥ Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:811
 msgid "Could not set the Oracle transaction name"
-msgstr "No s'ha pogut definir el nom de la transacciÛ Oracle"
+msgstr "No s'ha pogut definir el nom de la transacci√≥ Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:836
 msgid "Could not start the Oracle transaction"
-msgstr "No s'ha pogut comenÁar la transacciÛ Oracle"
+msgstr "No s'ha pogut comen√ßar la transacci√≥ Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:884
 msgid "Could not prepare the transaction to commit"
-msgstr "No s'ha pogut preparar la transacciÛ a executar"
+msgstr "No s'ha pogut preparar la transacci√≥ a executar"
 
 #: providers/oracle/gda-oracle-provider.c:892
 msgid "Could not commit the Oracle transaction"
-msgstr "No s'ha pogut executar la transacciÛ Oracle"
+msgstr "No s'ha pogut executar la transacci√≥ Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:938
 msgid "Could not rollback the Oracle transaction"
-msgstr "No es possible tirar enrera la transacciÛ Oracle"
+msgstr "No es possible tirar enrera la transacci√≥ Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:1227
 msgid "Could not allocate the Oracle describe handle"
-msgstr "No ha pogut ser assignat el manegador de la descripciÛ d'Oracle"
+msgstr "No ha pogut ser assignat el manegador de la descripci√≥ d'Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:1240
 msgid "Could not describe the Oracle table"
@@ -706,11 +706,11 @@ msgstr "No s'ha pogut descriure la taula Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:1253
 msgid "Could not get the Oracle parameter handle"
-msgstr "No s'ha pogut recuperar el manegador de par‡metres d'Oracle"
+msgstr "No s'ha pogut recuperar el manegador de par√†metres d'Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:1266
 msgid "Could not get the number of columns in the table"
-msgstr "No s'ha pogut recuperar el n˙mero de columnes de la taula"
+msgstr "No s'ha pogut recuperar el n√∫mero de columnes de la taula"
 
 #: providers/oracle/gda-oracle-provider.c:1278
 msgid "Could not get the column list"
@@ -738,17 +738,17 @@ msgstr "No s'ha pogut recuperar l'escala d'un camp Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:1393
 msgid "Could not get the Oracle field nullable attribute"
-msgstr "No s'ha pogut recuperar l'atribut de nul∑labilitat del camp"
+msgstr "No s'ha pogut recuperar l'atribut de nul¬∑labilitat del camp"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/oracle/gda-oracle-provider.c:1651
 #: providers/postgres/gda-postgres-provider.c:994 testing/client.c:126
 msgid "Indexes"
-msgstr "Õndexs"
+msgstr "√çndexs"
 
 #: providers/oracle/gda-oracle-provider.c:1659 testing/client.c:129
 msgid "Sequences"
-msgstr "Seq¸Ëncies"
+msgstr "Seq√º√®ncies"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/oracle/gda-oracle-provider.c:1667
@@ -758,19 +758,19 @@ msgstr "Gallets"
 
 #: providers/oracle/gda-oracle-recordset.c:73
 msgid "Could not get the Oracle parameter"
-msgstr "No s'ha pogut recuperar el par‡metre d'Oracle"
+msgstr "No s'ha pogut recuperar el par√†metre d'Oracle"
 
 #: providers/oracle/gda-oracle-recordset.c:83
 msgid "Could not get the parameter defined size"
-msgstr "No s'ha pogut recuperar la mida definida pel par‡metre"
+msgstr "No s'ha pogut recuperar la mida definida pel par√†metre"
 
 #: providers/oracle/gda-oracle-recordset.c:96
 msgid "Could not get the parameter data type"
-msgstr "No s'ha pogut recuperar el tipus de dada del par‡metre"
+msgstr "No s'ha pogut recuperar el tipus de dada del par√†metre"
 
 #: providers/oracle/gda-oracle-recordset.c:127
 msgid "Could not define by position"
-msgstr "No s'ha pogut definir per posiciÛ"
+msgstr "No s'ha pogut definir per posici√≥"
 
 #: providers/oracle/gda-oracle-recordset.c:172
 #: providers/postgres/gda-postgres-recordset.c:263
@@ -779,7 +779,7 @@ msgstr "Columna fora de rang"
 
 #: providers/oracle/gda-oracle-recordset.c:184
 msgid "Could not get the Oracle parameter information"
-msgstr "No s'ha pogut recuperar la informaciÛ d'un parametre Oracle"
+msgstr "No s'ha pogut recuperar la informaci√≥ d'un parametre Oracle"
 
 #: providers/oracle/gda-oracle-recordset.c:194
 msgid "Could not get the Oracle column name"
@@ -795,7 +795,7 @@ msgstr "No s'ha pogut recuperar l'escala de la columna Oracle"
 
 #: providers/oracle/gda-oracle-recordset.c:233
 msgid "Could not get the Oracle column nullable attribute"
-msgstr "No s'ha pogut recuperar l'atribut de nul∑labilitat de la columna"
+msgstr "No s'ha pogut recuperar l'atribut de nul¬∑labilitat de la columna"
 
 #: providers/oracle/gda-oracle-recordset.c:245
 msgid "Could not get the Oracle defined size"
@@ -807,7 +807,7 @@ msgstr "No s'ha pogut agafar una columna"
 
 #: providers/oracle/libmain.c:34
 msgid "GDA provider for Oracle databases"
-msgstr "ProveÔdor GDA per bases de dades Oracle"
+msgstr "Prove√Ødor GDA per bases de dades Oracle"
 
 #: providers/postgres/gda-postgres-provider.c:413
 #: providers/postgres/gda-postgres-provider.c:430
@@ -817,7 +817,7 @@ msgstr "ProveÔdor GDA per bases de dades Oracle"
 #: providers/postgres/gda-postgres-recordset.c:215
 #: providers/postgres/gda-postgres-recordset.c:257
 msgid "Invalid PostgreSQL handle"
-msgstr "Manegador PostgreSQL inv‡lid"
+msgstr "Manegador PostgreSQL inv√†lid"
 
 #: providers/postgres/gda-postgres-provider.c:686
 #, fuzzy
@@ -850,7 +850,7 @@ msgstr "Tipus GDA"
 #: providers/postgres/gda-postgres-provider.c:1473
 #, fuzzy
 msgid "Definition"
-msgstr "DescripciÛ"
+msgstr "Descripci√≥"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/postgres/gda-postgres-provider.c:901
@@ -891,13 +891,13 @@ msgstr "Base de dades"
 #: providers/postgres/gda-postgres-provider.c:1511
 #, fuzzy
 msgid "Sequence"
-msgstr "Seq¸Ëncia"
+msgstr "Seq√º√®ncia"
 
 #: providers/postgres/gda-postgres-recordset.c:230
 #: providers/sqlite/gda-sqlite-recordset.c:213
 #: providers/sqlite/gda-sqlite-recordset.c:245
 msgid "Column number out of range"
-msgstr "N˙mero de columna fora de rang"
+msgstr "N√∫mero de columna fora de rang"
 
 #: providers/postgres/gda-postgres-recordset.c:353
 #, c-format
@@ -906,45 +906,61 @@ msgstr "Tuples:\"%s\""
 
 #: providers/postgres/libmain.c:41
 msgid "GDA provider for PostgreSQL databases"
-msgstr "ProveÔdor GDA per bases de dades PostgreSQL"
+msgstr "Prove√Ødor GDA per bases de dades PostgreSQL"
 
-#: providers/sqlite/gda-sqlite-provider.c:246
-msgid "Invalid SQLITE handle"
-msgstr "Manegador SQLITE inv‡lid"
-
-#: providers/sqlite/gda-sqlite-provider.c:314
-#: providers/sqlite/gda-sqlite-provider.c:449
+#: providers/sqlite/gda-sqlite-provider.c:243
+#: providers/sqlite/gda-sqlite-provider.c:266
+#: providers/sqlite/gda-sqlite-provider.c:289
+#: providers/sqlite/gda-sqlite-provider.c:311
 #: providers/sqlite/gda-sqlite-recordset.c:159
 #: providers/sqlite/gda-sqlite-recordset.c:198
 #: providers/sqlite/gda-sqlite-recordset.c:239
 msgid "Invalid SQLite handle"
-msgstr "Manegador SQLite inv‡lid"
+msgstr "Manegador SQLite inv√†lid"
 
-#: providers/sqlite/gda-sqlite-provider.c:332
+#: providers/sqlite/gda-sqlite-provider.c:270
+#, fuzzy
+msgid ""
+"To change a SQLite database you should close the actual database and open a "
+"new one"
+msgstr ""
+"Per eliminar una base de dades SQLite n'has d'esborrar el fitxer manualment"
+
+#: providers/sqlite/gda-sqlite-provider.c:293
 msgid "Only one database per connection is allowed"
-msgstr "NomÈs est‡ permesa una base de dades per connexiÛ"
+msgstr "Nom√©s est√† permesa una base de dades per connexi√≥"
 
-#: providers/sqlite/gda-sqlite-provider.c:346
+#: providers/sqlite/gda-sqlite-provider.c:315
 msgid "To remove a SQLite database you should remove the database file by hand"
 msgstr ""
 "Per eliminar una base de dades SQLite n'has d'esborrar el fitxer manualment"
 
+#: providers/sqlite/gda-sqlite-provider.c:329
+msgid "Invalid SQLITE handle"
+msgstr "Manegador SQLITE inv√†lid"
+
 #: providers/sqlite/libmain.c:41
 msgid "GDA provider for SQLite databases"
-msgstr "ProveÔdor GDA per bases de dades SQLite"
+msgstr "Prove√Ødor GDA per bases de dades SQLite"
 
 #: providers/sybase/main.c:52
 msgid "Could not initiate Sybase component factory"
 msgstr "No es poden iniciar els components Sybase"
 
-#: report/libgda-report/gda-report-document.c:166
-msgid "Could not parse XML document"
-msgstr "No s'ha pogut analitzar el document XML"
+#: report/libgda-report/gda-report-document.c:158
+#, fuzzy, c-format
+msgid "Could not load report file at %s"
+msgstr "No s'ha pogut carregar el fitxer a  %s"
 
-#: report/libgda-report/gda-report-document.c:191
-#, c-format
-msgid "Could not get file from %s"
-msgstr "No s'ha pogut recuperar el fitxer des de %s"
+#: report/libgda-report/gda-report-document.c:167
+#, fuzzy, c-format
+msgid "Could not parse report file at %s"
+msgstr "No s'ha pogut analitzar el fitxer a  %s"
+
+#: report/libgda-report/gda-report-document.c:177
+#, fuzzy, c-format
+msgid "Invalid report file '%s'"
+msgstr "Base de Dades XML %s inv√†lida"
 
 #: testing/client.c:41
 msgid "\t\tNONE\n"
@@ -953,12 +969,12 @@ msgstr "\t\tCAP\n"
 #: testing/client.c:81
 #, c-format
 msgid "** ERROR: could not open connection to %s\n"
-msgstr "** ERROR:  No s'ha pogut obrir la connexiÛ amb %s\n"
+msgstr "** ERROR:  No s'ha pogut obrir la connexi√≥ amb %s\n"
 
 #. show provider features
 #: testing/client.c:86
 msgid "\tProvider capabilities...\n"
-msgstr "\tCaracterÌstiques del .proveÔdor..\n"
+msgstr "\tCaracter√≠stiques del .prove√Ødor..\n"
 
 #: testing/client.c:87
 #, c-format
@@ -982,7 +998,7 @@ msgstr "No suportat"
 #: testing/client.c:90
 #, c-format
 msgid "\t\tIndexes: %s\n"
-msgstr "Õndexs\t\t: %s\n"
+msgstr "√çndexs\t\t: %s\n"
 
 #: testing/client.c:93
 #, c-format
@@ -992,7 +1008,7 @@ msgstr "\t\tProcediments: %s\n"
 #: testing/client.c:96
 #, c-format
 msgid "\t\tSequences: %s\n"
-msgstr "\t\tSeq¸Ëncies: %s\n"
+msgstr "\t\tSeq√º√®ncies: %s\n"
 
 #: testing/client.c:99
 #, c-format
@@ -1039,7 +1055,7 @@ msgstr "Procediments emmagatzemats"
 
 #: testing/client.c:123
 msgid "Connection Tables"
-msgstr "Taules de connexiÛ"
+msgstr "Taules de connexi√≥"
 
 #: testing/client.c:124
 msgid "Available types"
@@ -1051,7 +1067,7 @@ msgstr "Afegits"
 
 #: testing/client.c:135 testing/client.c:143
 msgid "\tStarting transaction..."
-msgstr "\tComenÁa la transacciÛ..."
+msgstr "\tComen√ßa la transacci√≥..."
 
 #: testing/client.c:137 testing/client.c:141 testing/client.c:145
 #: testing/client.c:149
@@ -1060,11 +1076,11 @@ msgstr "Error"
 
 #: testing/client.c:139
 msgid "\tFinishing transaction..."
-msgstr "\tFinalitzant la transacciÛ..."
+msgstr "\tFinalitzant la transacci√≥..."
 
 #: testing/client.c:147
 msgid "\tRolling back transaction..."
-msgstr "\tTirant enrera la transacciÛ..."
+msgstr "\tTirant enrera la transacci√≥..."
 
 #: testing/client.c:173
 msgid "Testing GDA client API"
@@ -1086,21 +1102,27 @@ msgstr "** ERROR: gda_config_get_provider_list ha retornat un element NULL\n"
 #: testing/config.c:89
 #, c-format
 msgid " Provider = %s\n"
-msgstr "ProveÔdor = %s\n"
+msgstr "Prove√Ødor = %s\n"
 
 #: testing/config.c:90
 #, c-format
 msgid "\tlocation = %s\n"
-msgstr "\tLocalitzaciÛ = %s\n"
+msgstr "\tLocalitzaci√≥ = %s\n"
 
 #: testing/config.c:91
 #, c-format
 msgid "\tdescription = %s\n"
-msgstr "\tDescripciÛ = %s\n"
+msgstr "\tDescripci√≥ = %s\n"
 
 #: testing/config.c:93
 msgid "\tgda_params ="
 msgstr "\tgda_params ="
+
+#~ msgid "Could not parse XML document"
+#~ msgstr "No s'ha pogut analitzar el document XML"
+
+#~ msgid "Could not get file from %s"
+#~ msgstr "No s'ha pogut recuperar el fitxer des de %s"
 
 #~ msgid "Unknown"
 #~ msgstr "Desconegut"
@@ -1113,7 +1135,7 @@ msgstr "\tgda_params ="
 
 #, fuzzy
 #~ msgid "An error occurred during fetch"
-#~ msgstr "%s: error ocurregut durant navegaciÛ de les dades"
+#~ msgstr "%s: error ocurregut durant navegaci√≥ de les dades"
 
 #, fuzzy
 #~ msgid "Could not initialize OCI library"
@@ -1121,29 +1143,29 @@ msgstr "\tgda_params ="
 
 #, fuzzy
 #~ msgid "CORBA exception: %s"
-#~ msgstr "ExcepciÛ CORBA d'usuari: %s"
+#~ msgstr "Excepci√≥ CORBA d'usuari: %s"
 
 #, fuzzy
 #~ msgid "Could not create global GDA client"
-#~ msgstr "No es possible obrir la conexiÛ a '%s'"
+#~ msgstr "No es possible obrir la conexi√≥ a '%s'"
 
 #, fuzzy
 #~ msgid "GDA Report engine factory"
-#~ msgstr "DSN per a la connexiÛ"
+#~ msgstr "DSN per a la connexi√≥"
 
 #, fuzzy
 #~ msgid "Could not parse XML report"
 #~ msgstr ""
-#~ "No Ès possible carregar el fitxer\n"
+#~ "No √©s possible carregar el fitxer\n"
 #~ " %s"
 
 #, fuzzy
 #~ msgid "Could not activate report engine"
-#~ msgstr "No Ès possible activar el servei %s"
+#~ msgstr "No √©s possible activar el servei %s"
 
 #, fuzzy
 #~ msgid "Could not create BonoboStreamMem object"
-#~ msgstr "No es possible obrir la conexiÛ a '%s'"
+#~ msgstr "No es possible obrir la conexi√≥ a '%s'"
 
 #, fuzzy
 #~ msgid "Could not initiate Report component factory"
@@ -1151,7 +1173,7 @@ msgstr "\tgda_params ="
 
 #, fuzzy
 #~ msgid "Could not activate object %s"
-#~ msgstr "No Ès pot obtenir l'objecte %s %s"
+#~ msgstr "No √©s pot obtenir l'objecte %s %s"
 
 #, fuzzy
 #~ msgid "Could not query CORBA components"
@@ -1174,11 +1196,11 @@ msgstr "\tgda_params ="
 
 #, fuzzy
 #~ msgid "Default component factory"
-#~ msgstr "No es pot registrar el control f‡brica"
+#~ msgstr "No es pot registrar el control f√†brica"
 
 #, fuzzy
 #~ msgid "GDA Default Datasource Access"
-#~ msgstr "OrÌgens de les dades GDA"
+#~ msgstr "Or√≠gens de les dades GDA"
 
 #, fuzzy
 #~ msgid "Could not initiate Default component factory"
@@ -1186,7 +1208,7 @@ msgstr "\tgda_params ="
 
 #, fuzzy
 #~ msgid "GDA Datasource Access for MySQL"
-#~ msgstr "OrÌgens de les dades GDA"
+#~ msgstr "Or√≠gens de les dades GDA"
 
 #, fuzzy
 #~ msgid "Could not initiate MySQL component factory"
@@ -1194,11 +1216,11 @@ msgstr "\tgda_params ="
 
 #, fuzzy
 #~ msgid "GDA Datasource Access for ODBC"
-#~ msgstr "OrÌgens de les dades GDA"
+#~ msgstr "Or√≠gens de les dades GDA"
 
 #, fuzzy
 #~ msgid "ODBC component factory"
-#~ msgstr "No es pot registrar el control f‡brica"
+#~ msgstr "No es pot registrar el control f√†brica"
 
 #, fuzzy
 #~ msgid "Could not initiate ODBC component factory"
@@ -1206,19 +1228,19 @@ msgstr "\tgda_params ="
 
 #, fuzzy
 #~ msgid "GDA Datasource Access for Oracle"
-#~ msgstr "OrÌgens de les dades GDA"
+#~ msgstr "Or√≠gens de les dades GDA"
 
 #, fuzzy
 #~ msgid "Oracle component factory"
-#~ msgstr "No es pot registrar el control f‡brica"
+#~ msgstr "No es pot registrar el control f√†brica"
 
 #, fuzzy
 #~ msgid "GDA Datasource Access for Postgres"
-#~ msgstr "OrÌgens de les dades GDA"
+#~ msgstr "Or√≠gens de les dades GDA"
 
 #, fuzzy
 #~ msgid "Postgres component factory"
-#~ msgstr "No es pot registrar el control f‡brica"
+#~ msgstr "No es pot registrar el control f√†brica"
 
 #, fuzzy
 #~ msgid "Could not initiate PostgreSQL component factory"
@@ -1238,11 +1260,11 @@ msgstr "\tgda_params ="
 
 #, fuzzy
 #~ msgid "GDA SQLite Datasource Access"
-#~ msgstr "OrÌgens de les dades GDA"
+#~ msgstr "Or√≠gens de les dades GDA"
 
 #, fuzzy
 #~ msgid "SQLite component factory"
-#~ msgstr "No es pot registrar el control f‡brica"
+#~ msgstr "No es pot registrar el control f√†brica"
 
 #, fuzzy
 #~ msgid "Could not initiate Sqlite component factory"
@@ -1250,7 +1272,7 @@ msgstr "\tgda_params ="
 
 #, fuzzy
 #~ msgid "GDA Datasource Access for Sybase"
-#~ msgstr "OrÌgens de les dades GDA"
+#~ msgstr "Or√≠gens de les dades GDA"
 
 #, fuzzy
 #~ msgid "\tusername = %s\n"
@@ -1258,7 +1280,7 @@ msgstr "\tgda_params ="
 
 #, fuzzy
 #~ msgid "Bad formed document at %s"
-#~ msgstr "Anar al seg¸ent document"
+#~ msgstr "Anar al seg√ºent document"
 
 #, fuzzy
 #~ msgid "Client Message: "
@@ -1277,11 +1299,11 @@ msgstr "\tgda_params ="
 #~ msgstr "Esborra"
 
 #~ msgid "Database '%s' not found in system configuration"
-#~ msgstr "La base de dades '%s' no es troba en la configuraciÛ del sistema"
+#~ msgstr "La base de dades '%s' no es troba en la configuraci√≥ del sistema"
 
 #, fuzzy
 #~ msgid "CORBA System exception: %s"
-#~ msgstr "ExcepciÛ CORBA de sistema %s"
+#~ msgstr "Excepci√≥ CORBA de sistema %s"
 
 #, fuzzy
 #~ msgid "False"
@@ -1289,57 +1311,57 @@ msgstr "\tgda_params ="
 
 #, fuzzy
 #~ msgid "[CORBA User Exception]"
-#~ msgstr "ExcepciÛ CORBA d'usuari: %s"
+#~ msgstr "Excepci√≥ CORBA d'usuari: %s"
 
 #, fuzzy
 #~ msgid "Saving log...x"
 #~ msgstr "Desant a '%s' ..."
 
 #~ msgid "Could not get pointer to server implementation"
-#~ msgstr "No es pot obtenir el punter a la implementaciÛ del servidor"
+#~ msgstr "No es pot obtenir el punter a la implementaci√≥ del servidor"
 
 #~ msgid "CORBA system exception %s"
-#~ msgstr "ExcepciÛ CORBA de sistema %s"
+#~ msgstr "Excepci√≥ CORBA de sistema %s"
 
 #, fuzzy
 #~ msgid "You must specify a directory for the database to be stored"
-#~ msgstr "Heu d'especificar un nom per a l'exportaciÛ de la base de dades"
+#~ msgstr "Heu d'especificar un nom per a l'exportaci√≥ de la base de dades"
 
 #, fuzzy
 #~ msgid "Could not register Default provider implementation"
-#~ msgstr "No es pot registrar la implamentaciÛ del proveidor LDAP"
+#~ msgstr "No es pot registrar la implamentaci√≥ del proveidor LDAP"
 
 #, fuzzy
 #~ msgid "GDA Datasource Access for LDAP"
-#~ msgstr "OrÌgens de les dades GDA"
+#~ msgstr "Or√≠gens de les dades GDA"
 
 #~ msgid "error '%s' at %s"
 #~ msgstr "error '%s' en %s"
 
 #~ msgid "Could not register LDAP provider implementation"
-#~ msgstr "No es pot registrar la implamentaciÛ del proveidor LDAP"
+#~ msgstr "No es pot registrar la implamentaci√≥ del proveidor LDAP"
 
 #, fuzzy
 #~ msgid "GDA Datasource Access for Interbase"
-#~ msgstr "L'orÌgen de les dades no tÈ nom!"
+#~ msgstr "L'or√≠gen de les dades no t√© nom!"
 
 #~ msgid "Error code %ld"
 #~ msgstr "Codi d'error %ld"
 
 #~ msgid "Could not register INTERBASE provider implementation"
-#~ msgstr "No es pot registrar la implementaciÛ del proveidor INTERBASE"
+#~ msgstr "No es pot registrar la implementaci√≥ del proveidor INTERBASE"
 
 #, fuzzy
 #~ msgid "GDA Datasource Access for Mail"
-#~ msgstr "OrÌgens de les dades GDA"
+#~ msgstr "Or√≠gens de les dades GDA"
 
 #, fuzzy
 #~ msgid "Mail provider connection factory"
-#~ msgstr "No es pot registrar el control f‡brica"
+#~ msgstr "No es pot registrar el control f√†brica"
 
 #, fuzzy
 #~ msgid "Could not register Mail provider implementation"
-#~ msgstr "No es pot registrar la implamentaciÛ del proveidor LDAP"
+#~ msgstr "No es pot registrar la implamentaci√≥ del proveidor LDAP"
 
 #, fuzzy
 #~ msgid "executing command '%s'"
@@ -1351,15 +1373,15 @@ msgstr "\tgda_params ="
 
 #, fuzzy
 #~ msgid "Could not register MySQL provider implementation"
-#~ msgstr "No es pot registrar la implamentaciÛ del proveidor LDAP"
+#~ msgstr "No es pot registrar la implamentaci√≥ del proveidor LDAP"
 
 #, fuzzy
 #~ msgid "ODBC provider connection factory"
-#~ msgstr "No es pot registrar el control f‡brica"
+#~ msgstr "No es pot registrar el control f√†brica"
 
 #, fuzzy
 #~ msgid "Could not register ODBC provider implementation"
-#~ msgstr "No es pot registrar la implamentaciÛ del proveidor LDAP"
+#~ msgstr "No es pot registrar la implamentaci√≥ del proveidor LDAP"
 
 #, fuzzy
 #~ msgid "Executing command '%s'"
@@ -1367,22 +1389,22 @@ msgstr "\tgda_params ="
 
 #, fuzzy
 #~ msgid "Could not register ORACLE provider implementation"
-#~ msgstr "No es pot registrar la implamentaciÛ del proveidor LDAP"
+#~ msgstr "No es pot registrar la implamentaci√≥ del proveidor LDAP"
 
 #, fuzzy
 #~ msgid "Postgres provider connection factory"
-#~ msgstr "No es pot registrar el control f‡brica"
+#~ msgstr "No es pot registrar el control f√†brica"
 
 #, fuzzy
 #~ msgid "Could not register PostgreSQL provider implementation"
-#~ msgstr "No es pot registrar la implamentaciÛ del proveidor LDAP"
+#~ msgstr "No es pot registrar la implamentaci√≥ del proveidor LDAP"
 
 #~ msgid "Command failed"
 #~ msgstr "Ordre fallida"
 
 #, fuzzy
 #~ msgid "Could not allocate command structure"
-#~ msgstr "No Ès possible truncar el fitxer %s"
+#~ msgstr "No √©s possible truncar el fitxer %s"
 
 #, fuzzy
 #~ msgid "Could not allocate enough memory for query"
@@ -1390,11 +1412,11 @@ msgstr "\tgda_params ="
 
 #, fuzzy
 #~ msgid "Could not allocate cmd structure"
-#~ msgstr "No Ès possible truncar el fitxer %s"
+#~ msgstr "No √©s possible truncar el fitxer %s"
 
 #, fuzzy
 #~ msgid "Could not allocate GdaServerCommand"
-#~ msgstr "No Ès possible activar el servei %s"
+#~ msgstr "No √©s possible activar el servei %s"
 
 #, fuzzy
 #~ msgid "return code: %x"
@@ -1409,7 +1431,7 @@ msgstr "\tgda_params ="
 
 #, fuzzy
 #~ msgid "%s: Could not allocate cmd structure"
-#~ msgstr "No Ès possible truncar el fitxer %s"
+#~ msgstr "No √©s possible truncar el fitxer %s"
 
 #, fuzzy
 #~ msgid "%s: Could not allocate memory for cmd string"
@@ -1434,7 +1456,7 @@ msgstr "\tgda_params ="
 #, fuzzy
 #~ msgid "Could not drop locale structure"
 #~ msgstr ""
-#~ "No Ès possible carregar el fitxer\n"
+#~ "No √©s possible carregar el fitxer\n"
 #~ " %s"
 
 #, fuzzy
@@ -1443,32 +1465,32 @@ msgstr "\tgda_params ="
 
 #, fuzzy
 #~ msgid "%s could not find server implementation"
-#~ msgstr "No es pot obtenir el punter a la implementaciÛ del servidor"
+#~ msgstr "No es pot obtenir el punter a la implementaci√≥ del servidor"
 
 #, fuzzy
 #~ msgid "Could not get # of messages"
 #~ msgstr ""
-#~ "No Ès possible carregar el fitxer\n"
+#~ "No √©s possible carregar el fitxer\n"
 #~ " %s"
 
 #, fuzzy
 #~ msgid "Could not get # of server messages"
-#~ msgstr "No es pot obtenir el punter a la implementaciÛ del servidor"
+#~ msgstr "No es pot obtenir el punter a la implementaci√≥ del servidor"
 
 #, fuzzy
 #~ msgid "Could not clear client messages"
 #~ msgstr ""
-#~ "No Ès possible carregar el fitxer\n"
+#~ "No √©s possible carregar el fitxer\n"
 #~ " %s"
 
 #, fuzzy
 #~ msgid "Could not get server msg # %d"
-#~ msgstr "No Ès possible activar el servei %s"
+#~ msgstr "No √©s possible activar el servei %s"
 
 #, fuzzy
 #~ msgid "Could not clear cslib messages"
 #~ msgstr ""
-#~ "No Ès possible carregar el fitxer\n"
+#~ "No √©s possible carregar el fitxer\n"
 #~ " %s"
 
 #, fuzzy
@@ -1477,31 +1499,31 @@ msgstr "\tgda_params ="
 
 #, fuzzy
 #~ msgid "%s could not allocate datafmt info"
-#~ msgstr "No Ès possible carregar el tipus de lletra de l'editor"
+#~ msgstr "No √©s possible carregar el tipus de lletra de l'editor"
 
 #, fuzzy
 #~ msgid "%s could not allocate data fields"
 #~ msgstr ""
-#~ "No Ès possible carregar el fitxer\n"
+#~ "No √©s possible carregar el fitxer\n"
 #~ " %s"
 
 #, fuzzy
 #~ msgid "could not allocate data holder"
-#~ msgstr "No Ès possible truncar el fitxer %s"
+#~ msgstr "No √©s possible truncar el fitxer %s"
 
 #, fuzzy
 #~ msgid "could not allocate field"
 #~ msgstr ""
-#~ "No Ès possible carregar el fitxer\n"
+#~ "No √©s possible carregar el fitxer\n"
 #~ " %s"
 
 #, fuzzy
 #~ msgid "Could not register gda-sybase provider implementation"
-#~ msgstr "No es pot registrar la implamentaciÛ del proveidor LDAP"
+#~ msgstr "No es pot registrar la implamentaci√≥ del proveidor LDAP"
 
 #, fuzzy
 #~ msgid "GDA Datasource Access for primebase"
-#~ msgstr "OrÌgens de les dades GDA"
+#~ msgstr "Or√≠gens de les dades GDA"
 
 #, fuzzy
 #~ msgid "Could not connect to '%s@%s:%s' with connparm '%s'"
@@ -1509,11 +1531,11 @@ msgstr "\tgda_params ="
 
 #, fuzzy
 #~ msgid "Could not register PRIMEBASE provider implementation"
-#~ msgstr "No es pot registrar la implementaciÛ del proveidor INTERBASE"
+#~ msgstr "No es pot registrar la implementaci√≥ del proveidor INTERBASE"
 
 #, fuzzy
 #~ msgid "GDA Datasource Access for Sybase/MS SQL"
-#~ msgstr "OrÌgens de les dades GDA"
+#~ msgstr "Or√≠gens de les dades GDA"
 
 #, fuzzy
 #~ msgid "Reconnected to %s"
@@ -1521,26 +1543,26 @@ msgstr "\tgda_params ="
 
 #, fuzzy
 #~ msgid "Could not register gda-tds provider implementation"
-#~ msgstr "No es pot registrar la implamentaciÛ del proveidor LDAP"
+#~ msgstr "No es pot registrar la implamentaci√≥ del proveidor LDAP"
 
 #~ msgid "%s: misconfigured DSN entry"
 #~ msgstr "%s: entrada DSN mal configurada"
 
 #~ msgid "%s: data source '%s' not found\n"
-#~ msgstr "%s: orÌgen de les dades '%s' no existeix\n"
+#~ msgstr "%s: or√≠gen de les dades '%s' no existeix\n"
 
 #, fuzzy
 #~ msgid "Could not register <PROVIDER-NAME> provider implementation"
-#~ msgstr "No es pot registrar la implementaciÛ del proveidor INTERBASE"
+#~ msgstr "No es pot registrar la implementaci√≥ del proveidor INTERBASE"
 
 #~ msgid "%s: The server didn't respond."
 #~ msgstr "%s: El servidor no respon."
 
 #~ msgid "thread is already running"
-#~ msgstr "el procÈs est· en marxa"
+#~ msgstr "el proc√©s est√° en marxa"
 
 #~ msgid "impl_GDA_Connection_open: opening connection with DSN: %s"
-#~ msgstr "impl_GDA_Connection_open: obrint conexiÛ amb DSN: %s"
+#~ msgstr "impl_GDA_Connection_open: obrint conexi√≥ amb DSN: %s"
 
 #~ msgid "Registered with ID = %s"
 #~ msgstr "Registrat amb ID = %s"
@@ -1553,7 +1575,7 @@ msgstr "\tgda_params ="
 #~ msgstr "Crea l'script"
 
 #~ msgid "Create script from object definition"
-#~ msgstr "Crea un script a partir de la definiciÛ de l'objecte"
+#~ msgstr "Crea un script a partir de la definici√≥ de l'objecte"
 
 #~ msgid "Refresh"
 #~ msgstr "Refresca"
@@ -1571,7 +1593,7 @@ msgstr "\tgda_params ="
 #~ msgstr "Navegador: %s@%s"
 
 #~ msgid "No connection open"
-#~ msgstr "No s'ha pogut obrir la connexiÛ"
+#~ msgstr "No s'ha pogut obrir la connexi√≥"
 
 #~ msgid "General"
 #~ msgstr "General"
@@ -1580,7 +1602,7 @@ msgstr "\tgda_params ="
 #~ msgstr "Entorn"
 
 #~ msgid "Config File"
-#~ msgstr "Fitxer de configuraciÛ"
+#~ msgstr "Fitxer de configuraci√≥"
 
 #~ msgid "Save As"
 #~ msgstr "Anomena i desa"
@@ -1604,13 +1626,13 @@ msgstr "\tgda_params ="
 #~ msgstr "Desa les opcions en sortir"
 
 #~ msgid "Open connection dialog on entry"
-#~ msgstr "Obre el di‡leg de connexiÛ en entrar"
+#~ msgstr "Obre el di√†leg de connexi√≥ en entrar"
 
 #~ msgid "Editor Font"
 #~ msgstr "Tipus de lletra de l'editor"
 
 #~ msgid "Grid Font"
-#~ msgstr "Tipus de lletra de la quadrÌcula"
+#~ msgstr "Tipus de lletra de la quadr√≠cula"
 
 #~ msgid "Language"
 #~ msgstr "Llenguatge"
@@ -1619,7 +1641,7 @@ msgstr "\tgda_params ="
 #~ msgstr "Comanda de consola"
 
 #~ msgid "Tabs position"
-#~ msgstr "PosiciÛ dels tabuladors"
+#~ msgstr "Posici√≥ dels tabuladors"
 
 #~ msgid "Top"
 #~ msgstr "Superior"
@@ -1650,13 +1672,13 @@ msgstr "\tgda_params ="
 #~ msgstr "Nom del objecte"
 
 #~ msgid "Open Connection"
-#~ msgstr "Obre la connexiÛ"
+#~ msgstr "Obre la connexi√≥"
 
 #~ msgid "Connecting..."
 #~ msgstr "Connectant..."
 
 #~ msgid "Transaction started"
-#~ msgstr "TransacciÛ iniciada"
+#~ msgstr "Transacci√≥ iniciada"
 
 #~ msgid "Commit executed"
 #~ msgstr "Commit executat"
@@ -1674,10 +1696,10 @@ msgstr "\tgda_params ="
 #~ msgstr "DSN"
 
 #~ msgid "Command Timeout"
-#~ msgstr "Temps d'espera d'execuciÛ exhaurit"
+#~ msgstr "Temps d'espera d'execuci√≥ exhaurit"
 
 #~ msgid "Connect Timeout"
-#~ msgstr "Temps d'espera de connexiÛ exhaurit"
+#~ msgstr "Temps d'espera de connexi√≥ exhaurit"
 
 #~ msgid "Trace File"
 #~ msgstr "Fitxer de seguiment"
@@ -1717,7 +1739,7 @@ msgstr "\tgda_params ="
 #~ "Error saving file\n"
 #~ "'%s'"
 #~ msgstr ""
-#~ "S'ha produÔt un error en desar el fitxer\n"
+#~ "S'ha produ√Øt un error en desar el fitxer\n"
 #~ "'%s'"
 
 #~ msgid "Designer"
@@ -1778,7 +1800,7 @@ msgstr "\tgda_params ="
 #~ msgstr "Ordre '%s' completada"
 
 #~ msgid "Unable to execute '%s'"
-#~ msgstr "No Ès possible executar '%s'"
+#~ msgstr "No √©s possible executar '%s'"
 
 #~ msgid ""
 #~ "File\n"
@@ -1831,7 +1853,7 @@ msgstr "\tgda_params ="
 #~ "Error saving XML file\n"
 #~ "'%s'"
 #~ msgstr ""
-#~ "S'ha produÔt un error en desar el fitxer XML\n"
+#~ "S'ha produ√Øt un error en desar el fitxer XML\n"
 #~ "'%s'"
 
 #~ msgid "No objects are selected"
@@ -1853,42 +1875,42 @@ msgstr "\tgda_params ="
 #~ msgstr "Mostra el fitxer en acabar"
 
 #~ msgid "Add object extra info"
-#~ msgstr "Afegeix informaciÛ addicional al objecte"
+#~ msgstr "Afegeix informaci√≥ addicional al objecte"
 
 #~ msgid "GDA Config"
-#~ msgstr "ConfiguraciÛ del GDA"
+#~ msgstr "Configuraci√≥ del GDA"
 
 #~ msgid "Data Sources"
-#~ msgstr "OrÌgens de les dades"
+#~ msgstr "Or√≠gens de les dades"
 
 #, fuzzy
 #~ msgid "Load file to import"
-#~ msgstr "Carrega el fitxer a la memÚria intermËdia"
+#~ msgstr "Carrega el fitxer a la mem√≤ria interm√®dia"
 
 #, fuzzy
 #~ msgid "Save buffer"
-#~ msgstr "Desa la memÚria intermËdia actual"
+#~ msgstr "Desa la mem√≤ria interm√®dia actual"
 
 #~ msgid "Start"
-#~ msgstr "ComenÁa"
+#~ msgstr "Comen√ßa"
 
 #, fuzzy
 #~ msgid "Start importing data"
-#~ msgstr "ComenÁa l'exportaciÛ"
+#~ msgstr "Comen√ßa l'exportaci√≥"
 
 #, fuzzy
 #~ msgid "Clear all entries"
 #~ msgstr "Esborra tots els camps"
 
 #~ msgid "There were errors during the SQL execution"
-#~ msgstr "Hi han hagut errors durant l'execuciÛ se la sentËncia SQL"
+#~ msgstr "Hi han hagut errors durant l'execuci√≥ se la sent√®ncia SQL"
 
 #~ msgid "Transaction finished successfully"
-#~ msgstr "La transacciÛ ha finalitzat correctament"
+#~ msgstr "La transacci√≥ ha finalitzat correctament"
 
 #, fuzzy
 #~ msgid "Transaction rolled back"
-#~ msgstr "TransacciÛ iniciada"
+#~ msgstr "Transacci√≥ iniciada"
 
 #~ msgid "You must select a file to be imported"
 #~ msgstr "Ha de seleccionar un fitxer a importar"
@@ -1910,7 +1932,7 @@ msgstr "\tgda_params ="
 
 #, fuzzy
 #~ msgid "Transaction Mode"
-#~ msgstr "TransacciÛ iniciada"
+#~ msgstr "Transacci√≥ iniciada"
 
 #~ msgid "Refresh log"
 #~ msgstr "Refresca el registre"
@@ -1937,13 +1959,13 @@ msgstr "\tgda_params ="
 #~ msgstr "Entorn visual del GNOME-DB"
 
 #~ msgid "Open connection..."
-#~ msgstr "Obre la connexiÛ..."
+#~ msgstr "Obre la connexi√≥..."
 
 #~ msgid "Close connection"
-#~ msgstr "Tanca la connexiÛ"
+#~ msgstr "Tanca la connexi√≥"
 
 #~ msgid "Close current connection"
-#~ msgstr "Tanca la connexiÛ actual"
+#~ msgstr "Tanca la connexi√≥ actual"
 
 #~ msgid "Close all connections"
 #~ msgstr "Tanca totes les connexions"
@@ -1952,7 +1974,7 @@ msgstr "\tgda_params ="
 #~ msgstr "Surt"
 
 #~ msgid "Exit application"
-#~ msgstr "Surt de l'aplicaciÛ"
+#~ msgstr "Surt de l'aplicaci√≥"
 
 #~ msgid "Object Browser"
 #~ msgstr "Explorador d'objectes"
@@ -1961,13 +1983,13 @@ msgstr "\tgda_params ="
 #~ msgstr "Navega per la base de dades d'objectes"
 
 #~ msgid "SQL Builder"
-#~ msgstr "Constructor de sentËncies SQL"
+#~ msgstr "Constructor de sent√®ncies SQL"
 
 #~ msgid "Construct SQL statements"
 #~ msgstr "Crea ordres SQL"
 
 #~ msgid "View connection properties"
-#~ msgstr "Visualitza les propietats de la connexiÛ"
+#~ msgstr "Visualitza les propietats de la connexi√≥"
 
 #~ msgid "Start/Stop Server Trace"
 #~ msgstr "Inicia/atura el seguiment del servidor"
@@ -1994,10 +2016,10 @@ msgstr "\tgda_params ="
 #~ msgstr "Importa les dades a la base de dades"
 
 #~ msgid "Begin Transaction"
-#~ msgstr "ComenÁa la transacciÛ"
+#~ msgstr "Comen√ßa la transacci√≥"
 
 #~ msgid "Begin new transaction"
-#~ msgstr "ComenÁa una nova transacciÛ"
+#~ msgstr "Comen√ßa una nova transacci√≥"
 
 #~ msgid "Commit changes"
 #~ msgstr "Canvis Commit"
@@ -2041,7 +2063,7 @@ msgstr "\tgda_params ="
 
 #, fuzzy
 #~ msgid "The GDA configuration tool"
-#~ msgstr "L'eina de configuraciÛ del GDA"
+#~ msgstr "L'eina de configuraci√≥ del GDA"
 
 #, fuzzy
 #~ msgid "GDA Builder"
@@ -2051,22 +2073,22 @@ msgstr "\tgda_params ="
 #~ msgstr "L'entorn de desenvolupament del GDA"
 
 #~ msgid "Preferences..."
-#~ msgstr "PreferËncies...."
+#~ msgstr "Prefer√®ncies...."
 
 #~ msgid "Configure user preferences"
-#~ msgstr "Configura les preferËncies d'usuari"
+#~ msgstr "Configura les prefer√®ncies d'usuari"
 
 #~ msgid "GDA Configuration..."
-#~ msgstr "ConfiguraciÛ del GDA..."
+#~ msgstr "Configuraci√≥ del GDA..."
 
 #~ msgid "GDA Configuration"
-#~ msgstr "ConfiguraciÛ del GDA"
+#~ msgstr "Configuraci√≥ del GDA"
 
 #~ msgid "Save Options"
 #~ msgstr "Desa les opcions"
 
 #~ msgid "Save current configuration"
-#~ msgstr "Desa la configuraciÛ actual"
+#~ msgstr "Desa la configuraci√≥ actual"
 
 #~ msgid "Previous window"
 #~ msgstr "Finestra anterior"
@@ -2075,10 +2097,10 @@ msgstr "\tgda_params ="
 #~ msgstr "Mou-ho a la finestra anterior de la llista"
 
 #~ msgid "Next window"
-#~ msgstr "Finestra seg¸ent"
+#~ msgstr "Finestra seg√ºent"
 
 #~ msgid "Move to next window on list"
-#~ msgstr "Mou-ho a la seg¸ent finestra de la llista"
+#~ msgstr "Mou-ho a la seg√ºent finestra de la llista"
 
 #~ msgid "Close current"
 #~ msgstr "Tanca l'actual"
@@ -2120,7 +2142,7 @@ msgstr "\tgda_params ="
 #~ msgstr "Anterior"
 
 #~ msgid "Next"
-#~ msgstr "Seg¸ent"
+#~ msgstr "Seg√ºent"
 
 #~ msgid "Execute SQL command"
 #~ msgstr "Executa l'ordre SQL"
@@ -2129,25 +2151,25 @@ msgstr "\tgda_params ="
 #~ msgstr "Executa l'script"
 
 #~ msgid "Execute buffer as SQL script"
-#~ msgstr "Executa la memÚria intermËdia com un script SQL"
+#~ msgstr "Executa la mem√≤ria interm√®dia com un script SQL"
 
 #~ msgid "Select SQL Command"
 #~ msgstr "Selecciona l'ordre SQL"
 
 #~ msgid "Refresh grid"
-#~ msgstr "Refresca la quadrÌcula"
+#~ msgstr "Refresca la quadr√≠cula"
 
 #~ msgid "Clear SQL window"
 #~ msgstr "Buida la finestra SQL"
 
 #~ msgid "Print grid"
-#~ msgstr "Imprimeix la quadrÌcula"
+#~ msgstr "Imprimeix la quadr√≠cula"
 
 #~ msgid "Load file into buffer"
-#~ msgstr "Carrega el fitxer a la memÚria intermËdia"
+#~ msgstr "Carrega el fitxer a la mem√≤ria interm√®dia"
 
 #~ msgid "Save current buffer"
-#~ msgstr "Desa la memÚria intermËdia actual"
+#~ msgstr "Desa la mem√≤ria interm√®dia actual"
 
 #~ msgid "Cut selected text to clipboard"
 #~ msgstr "Retalla el text seleccionat cap al porta-retalls"
@@ -2183,7 +2205,7 @@ msgstr "\tgda_params ="
 #~ msgstr "Fitxer de seguiment del servidor"
 
 #~ msgid "Server trace is disabled for this connection"
-#~ msgstr "El seguiment del servidor est‡ inhabilitat per a aquesta connexiÛ"
+#~ msgstr "El seguiment del servidor est√† inhabilitat per a aquesta connexi√≥"
 
 #~ msgid "File %s inserted"
 #~ msgstr "Fitxer %s insertat"
@@ -2192,33 +2214,33 @@ msgstr "\tgda_params ="
 #~ "Error opening file\n"
 #~ " %s"
 #~ msgstr ""
-#~ "S'ha produÔt un error en obrir el fitxer\n"
+#~ "S'ha produ√Øt un error en obrir el fitxer\n"
 #~ " %s"
 
 #~ msgid ""
 #~ "Error writing to file\n"
 #~ " %s"
 #~ msgstr ""
-#~ "S'ha produÔt un error en escriure al fitxer\n"
+#~ "S'ha produ√Øt un error en escriure al fitxer\n"
 #~ " %s"
 
 #~ msgid "Wrote file %s"
 #~ msgstr "Escriu el fitxer %s"
 
 #~ msgid "Question"
-#~ msgstr "QuestiÛ"
+#~ msgstr "Questi√≥"
 
 #~ msgid "Select all"
 #~ msgstr "Selecciona-ho tot"
 
 #~ msgid "Select all text in buffer"
-#~ msgstr "Selecciona tot el text de la memÚria intermËdia"
+#~ msgstr "Selecciona tot el text de la mem√≤ria interm√®dia"
 
 #~ msgid "Insert file..."
 #~ msgstr "Inserta el fitxer..."
 
 #~ msgid "Insert file into current position"
-#~ msgstr "Inserta el fitxer en la posiciÛ actual"
+#~ msgstr "Inserta el fitxer en la posici√≥ actual"
 
 #~ msgid "Save to file..."
 #~ msgstr "Desa al fitxer..."
@@ -2230,7 +2252,7 @@ msgstr "\tgda_params ="
 #~ msgstr "Imprimeix..."
 
 #~ msgid "Print buffer"
-#~ msgstr "Imprimeix la memÚria intermËdia"
+#~ msgstr "Imprimeix la mem√≤ria interm√®dia"
 
 #~ msgid "Object Name"
 #~ msgstr "Nom del objecte"
@@ -2239,11 +2261,11 @@ msgstr "\tgda_params ="
 #~ msgstr "0 files"
 
 #~ msgid "Extra Info"
-#~ msgstr "InformaciÛ addicional"
+#~ msgstr "Informaci√≥ addicional"
 
 #, fuzzy
 #~ msgid "Configuration file saved"
-#~ msgstr "ConfiguraciÛ del GDA"
+#~ msgstr "Configuraci√≥ del GDA"
 
 #, fuzzy
 #~ msgid "SQL"
@@ -2295,7 +2317,7 @@ msgstr "\tgda_params ="
 #~ msgstr "Selecciona"
 
 #~ msgid "Select from previous commands"
-#~ msgstr "Selecciona desde comandes prËvies"
+#~ msgstr "Selecciona desde comandes pr√®vies"
 
 #, fuzzy
 #~ msgid "Copy selected text"
@@ -2310,7 +2332,7 @@ msgstr "\tgda_params ="
 #~ msgstr "Esborra el contingut del fitxer"
 
 #~ msgid "Start export"
-#~ msgstr "ComenÁa l'exportaciÛ"
+#~ msgstr "Comen√ßa l'exportaci√≥"
 
 #, fuzzy
 #~ msgid "Clear all fields"
@@ -2325,7 +2347,7 @@ msgstr "\tgda_params ="
 
 #, fuzzy
 #~ msgid "Clear object selection"
-#~ msgstr "Esborra la selecciÛ d'objectes"
+#~ msgstr "Esborra la selecci√≥ d'objectes"
 
 #, fuzzy
 #~ msgid "Select file"
@@ -2337,10 +2359,10 @@ msgstr "\tgda_params ="
 
 #, fuzzy
 #~ msgid "Begin transaction failed"
-#~ msgstr "L'inici de la transacciÛ ha fallat"
+#~ msgstr "L'inici de la transacci√≥ ha fallat"
 
 #~ msgid "Data source does not support transactions"
-#~ msgstr "L'orÌgen de les dades no soporta transaccions"
+#~ msgstr "L'or√≠gen de les dades no soporta transaccions"
 
 #, fuzzy
 #~ msgid "Commit executed successfully"
@@ -2348,7 +2370,7 @@ msgstr "\tgda_params ="
 
 #, fuzzy
 #~ msgid "Commit transaction failed"
-#~ msgstr "El commit de la transacciÛ ha fallat"
+#~ msgstr "El commit de la transacci√≥ ha fallat"
 
 #, fuzzy
 #~ msgid "Rollback executed successfully"
@@ -2356,11 +2378,11 @@ msgstr "\tgda_params ="
 
 #, fuzzy
 #~ msgid "Open Connection..."
-#~ msgstr "Obre la connexiÛ..."
+#~ msgstr "Obre la connexi√≥..."
 
 #, fuzzy
 #~ msgid "Open a connection to a data source"
-#~ msgstr "Obre el di‡leg de connexiÛ en entrar"
+#~ msgstr "Obre el di√†leg de connexi√≥ en entrar"
 
 #, fuzzy
 #~ msgid "Disconnect all"
@@ -2380,7 +2402,7 @@ msgstr "\tgda_params ="
 
 #, fuzzy
 #~ msgid "Commit transaction"
-#~ msgstr "ComenÁa la transacciÛ"
+#~ msgstr "Comen√ßa la transacci√≥"
 
 #, fuzzy
 #~ msgid "Configure"
@@ -2417,7 +2439,7 @@ msgstr "\tgda_params ="
 
 #, fuzzy
 #~ msgid "The GNOME-DB configuration tool"
-#~ msgstr "L'eina de configuraciÛ del GDA"
+#~ msgstr "L'eina de configuraci√≥ del GDA"
 
 #, fuzzy
 #~ msgid "GNOME-DB Builder"
@@ -2429,7 +2451,7 @@ msgstr "\tgda_params ="
 
 #, fuzzy
 #~ msgid "Data sources..."
-#~ msgstr "OrÌgens de les dades..."
+#~ msgstr "Or√≠gens de les dades..."
 
 #, fuzzy
 #~ msgid "Save options"
@@ -2444,14 +2466,14 @@ msgstr "\tgda_params ="
 
 #, fuzzy
 #~ msgid "Exit Application"
-#~ msgstr "Surt de l'aplicaciÛ"
+#~ msgstr "Surt de l'aplicaci√≥"
 
 #~ msgid "Could not initialize Bonobo\n"
 #~ msgstr "No es pot iniciar Bonobo\n"
 
 #, fuzzy
 #~ msgid "Close configurator"
-#~ msgstr "Tanca la connexiÛ"
+#~ msgstr "Tanca la connexi√≥"
 
 #, fuzzy
 #~ msgid "The GNOME-DB front end"
@@ -2462,7 +2484,7 @@ msgstr "\tgda_params ="
 #~ msgstr "Entorn visual de SQL"
 
 #~ msgid "The SQL front end"
-#~ msgstr "L'entorn visual de sentËncies SQL"
+#~ msgstr "L'entorn visual de sent√®ncies SQL"
 
 #, fuzzy
 #~ msgid "The GNOME-DB development environment"
@@ -2485,24 +2507,24 @@ msgstr "\tgda_params ="
 #~ "welcome to redistribute it under the conditions of the GNU General Public "
 #~ "Licence."
 #~ msgstr ""
-#~ "Aquest programa Ès part del projecte GNOME per LINUX. El GNOME Data "
-#~ "Access ve sense CAP MENA DE GARANTIA. Aquest programari Ès de lliure "
-#~ "distribuciÛ, per tant, podeu redistribuir-lo sota les condicions de la "
-#~ "llicËncia GNU (General Public Licence)."
+#~ "Aquest programa √©s part del projecte GNOME per LINUX. El GNOME Data "
+#~ "Access ve sense CAP MENA DE GARANTIA. Aquest programari √©s de lliure "
+#~ "distribuci√≥, per tant, podeu redistribuir-lo sota les condicions de la "
+#~ "llic√®ncia GNU (General Public Licence)."
 
 #, fuzzy
 #~ msgid "Unable to execute Bug Report Tool"
-#~ msgstr "No Ès possible executar l'eina de Reportar Errors"
+#~ msgstr "No √©s possible executar l'eina de Reportar Errors"
 
 #~ msgid "Config"
-#~ msgstr "ConfiguraciÛ"
+#~ msgstr "Configuraci√≥"
 
 #~ msgid "Global"
 #~ msgstr "Global"
 
 #, fuzzy
 #~ msgid "Error while saving configuration!"
-#~ msgstr "Error durant el procÈs de desar la configuraciÛ!"
+#~ msgstr "Error durant el proc√©s de desar la configuraci√≥!"
 
 #, fuzzy
 #~ msgid "Error %d of %d"
@@ -2514,7 +2536,7 @@ msgstr "\tgda_params ="
 
 #, fuzzy
 #~ msgid "Source"
-#~ msgstr "OrÌgens de les dades"
+#~ msgstr "Or√≠gens de les dades"
 
 #~ msgid "sqlstate"
 #~ msgstr "sqlstate"
@@ -2536,7 +2558,7 @@ msgstr "\tgda_params ="
 
 #, fuzzy
 #~ msgid "Clear selection"
-#~ msgstr "Esborra la selecciÛ"
+#~ msgstr "Esborra la selecci√≥"
 
 #, fuzzy
 #~ msgid "Clear all selected rows"
@@ -2550,25 +2572,25 @@ msgstr "\tgda_params ="
 
 #, fuzzy
 #~ msgid "Refresh grid contents"
-#~ msgstr "Refresca el contingut de la quadrÌcula"
+#~ msgstr "Refresca el contingut de la quadr√≠cula"
 
 #, fuzzy
 #~ msgid "Print grid contents"
-#~ msgstr "Imprimeix el contingut de la quadrÌcula"
+#~ msgstr "Imprimeix el contingut de la quadr√≠cula"
 
 #~ msgid "Show columns"
 #~ msgstr "Mostra les columnes"
 
 #~ msgid "Show column titles"
-#~ msgstr "Mostra els tÌtols de les columnes"
+#~ msgstr "Mostra els t√≠tols de les columnes"
 
 #~ msgid "Hide column titles"
-#~ msgstr "Amaga els tÌtols de les columnes"
+#~ msgstr "Amaga els t√≠tols de les columnes"
 
 #~ msgid "No datasource '%s' defined in your GDA configuration file"
 #~ msgstr ""
-#~ "No hi ha l'orÌgen de les dades '%s' definit en el seu fitxer de "
-#~ "configuraciÛ GDA"
+#~ "No hi ha l'or√≠gen de les dades '%s' definit en el seu fitxer de "
+#~ "configuraci√≥ GDA"
 
 #, fuzzy
 #~ msgid "User Name"
@@ -2576,7 +2598,7 @@ msgstr "\tgda_params ="
 
 #, fuzzy
 #~ msgid "Last Connections"
-#~ msgstr "⁄ltimes connexions"
+#~ msgstr "√öltimes connexions"
 
 #~ msgid "Entry %d of %d"
 #~ msgstr "Entrada %d de %d"
@@ -2611,32 +2633,32 @@ msgstr "\tgda_params ="
 
 #, fuzzy
 #~ msgid "Data Source Name"
-#~ msgstr "Nom de l'ÛrÌgen de les dades"
+#~ msgstr "Nom de l'√≥r√≠gen de les dades"
 
 #, fuzzy
 #~ msgid "User name to use for the connection"
-#~ msgstr "Nom de l'usuari a utilitzar en la conexiÛ"
+#~ msgstr "Nom de l'usuari a utilitzar en la conexi√≥"
 
 #~ msgid "Password to authenticate user"
 #~ msgstr "Contrasenya per validar l'usuari"
 
 #, fuzzy
 #~ msgid "To open/close the connection"
-#~ msgstr "Tancar/obrir la connexiÛ"
+#~ msgstr "Tancar/obrir la connexi√≥"
 
 #~ msgid "View requested to be activated but there is already an active view"
-#~ msgstr "Vista demanada per activarse perÚ ja es la vista activa"
+#~ msgstr "Vista demanada per activarse per√≤ ja es la vista activa"
 
 #, fuzzy
 #~ msgid "Unable to activate object %s"
-#~ msgstr "No Ès possible activar l'objecte %s"
+#~ msgstr "No √©s possible activar l'objecte %s"
 
 #~ msgid "control has no property bag"
-#~ msgstr "el control no tÈ propietats"
+#~ msgstr "el control no t√© propietats"
 
 #, fuzzy
 #~ msgid "Could not register %s factory"
-#~ msgstr "No Ès pot registrar el control f‡brica %s"
+#~ msgstr "No √©s pot registrar el control f√†brica %s"
 
 #~ msgid "Disconnected from database"
 #~ msgstr "Deconectat de la base de dades"
@@ -2788,7 +2810,7 @@ msgstr "\tgda_params ="
 
 #, fuzzy
 #~ msgid "Insert at current position"
-#~ msgstr "Inserta el fitxer en la posiciÛ actual"
+#~ msgstr "Inserta el fitxer en la posici√≥ actual"
 
 #, fuzzy
 #~ msgid "Command separators"
@@ -2802,7 +2824,7 @@ msgstr "\tgda_params ="
 #~ msgstr "Ha d'especificar un fitxer per ser carregat"
 
 #~ msgid "You must specifiy the characters used as command separators"
-#~ msgstr "Ha d'especificar els car‡cters utilitzats com a separadors d'ordres"
+#~ msgstr "Ha d'especificar els car√†cters utilitzats com a separadors d'ordres"
 
 #, fuzzy
 #~ msgid "Edit"
@@ -2819,11 +2841,11 @@ msgstr "\tgda_params ="
 
 #, fuzzy
 #~ msgid "Tab Position"
-#~ msgstr "PosiciÛ dels tabuladors"
+#~ msgstr "Posici√≥ dels tabuladors"
 
 #, fuzzy
 #~ msgid "Grid"
-#~ msgstr "QuadrÌcula"
+#~ msgstr "Quadr√≠cula"
 
 #, fuzzy
 #~ msgid "Font"
@@ -2836,11 +2858,11 @@ msgstr "\tgda_params ="
 #~ msgstr "Color de fons"
 
 #~ msgid "Show row numbers"
-#~ msgstr "Mostra n˙mero de files"
+#~ msgstr "Mostra n√∫mero de files"
 
 #, fuzzy
 #~ msgid "User Interface"
-#~ msgstr "InterfÌcie d'usuari"
+#~ msgstr "Interf√≠cie d'usuari"
 
 #~ msgid "GDA"
 #~ msgstr "GDA"
@@ -2863,7 +2885,7 @@ msgstr "\tgda_params ="
 
 #, fuzzy
 #~ msgid "Data sources"
-#~ msgstr "OrÌgens de les dades"
+#~ msgstr "Or√≠gens de les dades"
 
 #~ msgid "Apply"
 #~ msgstr "Aplicar"
@@ -2886,7 +2908,7 @@ msgstr "\tgda_params ="
 
 #, fuzzy
 #~ msgid "Error loading file '%s'"
-#~ msgstr "S'ha produÔt un error en carregar el fitxer '%s'"
+#~ msgstr "S'ha produ√Øt un error en carregar el fitxer '%s'"
 
 #~ msgid "Activate"
 #~ msgstr "Activa"
@@ -2903,9 +2925,9 @@ msgstr "\tgda_params ="
 #~ "any services installed or I don't know the path to find them.\n"
 #~ "In either case, please check your GNOME-DB installation."
 #~ msgstr ""
-#~ "No s'ha pogut trobar cap servei instalat. Tan pot Èsser que no\n"
-#~ "tingui cap servei instalat com que no conegui el camÌ per trobarlos.\n"
-#~ "En qualsevol case, si us plau comprovi la seva instalaciÛ de GNOME-DB."
+#~ "No s'ha pogut trobar cap servei instalat. Tan pot √©sser que no\n"
+#~ "tingui cap servei instalat com que no conegui el cam√≠ per trobarlos.\n"
+#~ "En qualsevol case, si us plau comprovi la seva instalaci√≥ de GNOME-DB."
 
 #~ msgid "Service '%s' activated"
 #~ msgstr "Servei '%s' activat"
@@ -2918,22 +2940,22 @@ msgstr "\tgda_params ="
 
 #, fuzzy
 #~ msgid "Select config component"
-#~ msgstr "Selecciona la configuraciÛ del component"
+#~ msgstr "Selecciona la configuraci√≥ del component"
 
 #~ msgid "You need Bonobo to load components!"
 #~ msgstr "Necessita Bonobo per carregar els components!"
 
 #, fuzzy
 #~ msgid "Add new data source"
-#~ msgstr "Afegeix nous orÌgens de dades"
+#~ msgstr "Afegeix nous or√≠gens de dades"
 
 #, fuzzy
 #~ msgid "Edit selected data source"
-#~ msgstr "Edita els orÌgens de dades seleccionats"
+#~ msgstr "Edita els or√≠gens de dades seleccionats"
 
 #, fuzzy
 #~ msgid "Remove selected data source"
-#~ msgstr "Esborra els orÌgens de dades seleccionats"
+#~ msgstr "Esborra els or√≠gens de dades seleccionats"
 
 #, fuzzy
 #~ msgid "Browse selected data source"
@@ -2941,24 +2963,24 @@ msgstr "\tgda_params ="
 
 #, fuzzy
 #~ msgid "Data Source"
-#~ msgstr "OrÌgens de les dades"
+#~ msgstr "Or√≠gens de les dades"
 
 #, fuzzy
 #~ msgid "Browse Data Source"
-#~ msgstr "OrÌgens de les dades"
+#~ msgstr "Or√≠gens de les dades"
 
 #, fuzzy
 #~ msgid "could not load browser control"
-#~ msgstr "No Ès possible carregar el control navegador"
+#~ msgstr "No √©s possible carregar el control navegador"
 
 #~ msgid "Load config component"
-#~ msgstr "Carrega la configuraciÛ del component"
+#~ msgstr "Carrega la configuraci√≥ del component"
 
 #~ msgid "Module"
-#~ msgstr "MÚdul"
+#~ msgstr "M√≤dul"
 
 #~ msgid "User access rights"
-#~ msgstr "Privilegis d'accÈs del usuari"
+#~ msgstr "Privilegis d'acc√©s del usuari"
 
 #~ msgid "All"
 #~ msgstr "Tot"
@@ -2973,27 +2995,27 @@ msgstr "\tgda_params ="
 #~ msgstr "Mostra/Amaga el ID de l'usuari"
 
 #~ msgid "Give it TRUE to reset/start the component"
-#~ msgstr "DÛna CERT per parar/arrancar el component"
+#~ msgstr "D√≥na CERT per parar/arrancar el component"
 
 #, fuzzy
 #~ msgid "User name setting"
-#~ msgstr "ConfiguraciÛ de l'usuari"
+#~ msgstr "Configuraci√≥ de l'usuari"
 
 #~ msgid "Group name setting"
-#~ msgstr "ConfiguraciÛ de grups"
+#~ msgstr "Configuraci√≥ de grups"
 
 #~ msgid "Object type setting"
-#~ msgstr "ConfiguraciÛ del tipus d'objecte"
+#~ msgstr "Configuraci√≥ del tipus d'objecte"
 
 #, fuzzy
 #~ msgid "Object name setting"
-#~ msgstr "ConfiguraciÛ de l'objecte"
+#~ msgstr "Configuraci√≥ de l'objecte"
 
 #~ msgid "Access rigths"
-#~ msgstr "Privilegis d'accÈs"
+#~ msgstr "Privilegis d'acc√©s"
 
 #~ msgid "All users rights"
-#~ msgstr "Tots els privilegis d'accÈs"
+#~ msgstr "Tots els privilegis d'acc√©s"
 
 #~ msgid "Groups rights"
 #~ msgstr "Privilegis dels grups"
@@ -3020,7 +3042,7 @@ msgstr "\tgda_params ="
 #~ msgstr "Regla"
 
 #~ msgid "Index"
-#~ msgstr "Õndex"
+#~ msgstr "√çndex"
 
 #, fuzzy
 #~ msgid "Name:"
@@ -3062,7 +3084,7 @@ msgstr "\tgda_params ="
 #~ msgstr "Suprimeix usuari"
 
 #~ msgid "Yes"
-#~ msgstr "SÌ"
+#~ msgstr "S√≠"
 
 #~ msgid "No"
 #~ msgstr "No"
@@ -3074,7 +3096,7 @@ msgstr "\tgda_params ="
 #~ msgstr "Registre %8.0f"
 
 #~ msgid "We could not load the glade interface description! (%s)"
-#~ msgstr "No es pot carregar la descripciÛ de glade! (%s)"
+#~ msgstr "No es pot carregar la descripci√≥ de glade! (%s)"
 
 #, fuzzy
 #~ msgid "Select the table name"
@@ -3090,7 +3112,7 @@ msgstr "\tgda_params ="
 #~ msgstr "%s: longitud = %d"
 
 #~ msgid "%s: sending field description for '%s'"
-#~ msgstr "%s: enviant camp de descripciÛ per a '%s'"
+#~ msgstr "%s: enviant camp de descripci√≥ per a '%s'"
 
 #, fuzzy
 #~ msgid "Refresh all"
@@ -3115,7 +3137,7 @@ msgstr "\tgda_params ="
 #~ msgstr "Controls"
 
 #~ msgid "Control settings"
-#~ msgstr "ConfiguraciÛ dels controls"
+#~ msgstr "Configuraci√≥ dels controls"
 
 #, fuzzy
 #~ msgid "database provider"
@@ -3141,22 +3163,22 @@ msgstr "\tgda_params ="
 
 #, fuzzy
 #~ msgid "Run the GDA configuration tool"
-#~ msgstr "Executa l'eina de configuraciÛ del GDA"
+#~ msgstr "Executa l'eina de configuraci√≥ del GDA"
 
 #~ msgid "Run the GDA build environment"
-#~ msgstr "Executa l'entorn de construcciÛ del GDA"
+#~ msgstr "Executa l'entorn de construcci√≥ del GDA"
 
 #~ msgid "Transaction Support"
 #~ msgstr "Suport de transaccions"
 
 #~ msgid "Printer setup..."
-#~ msgstr "ConfiguraciÛ de la impressora..."
+#~ msgstr "Configuraci√≥ de la impressora..."
 
 #~ msgid "Open printer setup dialog"
-#~ msgstr "Obre el di‡leg de configuraciÛ de la impressora"
+#~ msgstr "Obre el di√†leg de configuraci√≥ de la impressora"
 
 #~ msgid "Exit"
 #~ msgstr "Surt"
 
 #~ msgid "Reload config drivers"
-#~ msgstr "Torna a carregar els controladors de la configuraciÛ"
+#~ msgstr "Torna a carregar els controladors de la configuraci√≥"

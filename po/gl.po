@@ -1,27 +1,27 @@
 # Galician translation of libgda.
-# Copyright (C) 2000 Jes˙s Bravo ¡lvarez.
-# Jes˙s Bravo ¡lvarez <jba@pobox.com>, 2000.
+# Copyright (C) 2000 Jes√∫s Bravo √Ålvarez.
+# Jes√∫s Bravo √Ålvarez <jba@pobox.com>, 2000.
 #
-# Proxecto Trasno - AdaptaciÛn do software libre · lingua galega:  Se desexas
-# colaborar connosco, podes atopar m·is informaciÛn en http://trasno.gpul.org
+# Proxecto Trasno - Adaptaci√≥n do software libre √° lingua galega:  Se desexas
+# colaborar connosco, podes atopar m√°is informaci√≥n en http://trasno.gpul.org
 #
 # First Version: 2000-04-29 12:07+0200
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2002-09-09 22:11+0200\n"
+"POT-Creation-Date: 2002-09-11 13:17+0200\n"
 "PO-Revision-Date: 2000-10-29 15:03+0100\n"
-"Last-Translator: Jes˙s Bravo ¡lvarez <jba@pobox.com>\n"
+"Last-Translator: Jes√∫s Bravo √Ålvarez <jba@pobox.com>\n"
 "Language-Team: Galician <trasno@ceu.fi.udc.es>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=iso-8859-1\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: libgda/gda-client.c:227 libgda/gda-client.c:414 libgda/gda-connection.c:214
 #, fuzzy, c-format
 msgid "Data source %s not found in configuration"
-msgstr "Base de datos '%s' non atopada na configuraciÛn do sistema"
+msgstr "Base de datos '%s' non atopada na configuraci√≥n do sistema"
 
 #: libgda/gda-client.c:245
 #, c-format
@@ -31,12 +31,12 @@ msgstr ""
 #: libgda/gda-client.c:254
 #, fuzzy, c-format
 msgid "Could not load %s provider"
-msgstr "Non foi posible abri-la f·brica CORBA"
+msgstr "Non foi posible abri-la f√°brica CORBA"
 
 #: libgda/gda-client.c:270
 #, fuzzy, c-format
 msgid "Provider %s does not implement entry point"
-msgstr "Iniciando o fornecedor %s sen funciÛns de implementaciÛn"
+msgstr "Iniciando o fornecedor %s sen funci√≥ns de implementaci√≥n"
 
 #: libgda/gda-client.c:279
 msgid "Creation of GdaServerProvider failed"
@@ -62,7 +62,7 @@ msgstr ""
 #: libgda/gda-config.c:1270
 #, fuzzy
 msgid "Connection string"
-msgstr "Semella que a conexiÛn est· morta"
+msgstr "Semella que a conexi√≥n est√° morta"
 
 #: libgda/gda-config.c:1271 providers/postgres/gda-postgres-provider.c:903
 msgid "Description"
@@ -81,7 +81,7 @@ msgstr "contrasinal"
 #: libgda/gda-data-model.c:608
 #, fuzzy, c-format
 msgid "Data model %p is not editable"
-msgstr "%p non È unha t·boa v·lida"
+msgstr "%p non √© unha t√°boa v√°lida"
 
 #: libgda/gda-init.c:49
 msgid "Attempt to initialize an already initialized client"
@@ -189,7 +189,7 @@ msgstr "Non foi posible establece-lo locale a '%s'"
 #: libgda/gda-xml-database.c:597
 #, fuzzy, c-format
 msgid "Table %s already exists"
-msgstr "a t·boa %s xa existe"
+msgstr "a t√°boa %s xa existe"
 
 #: libgda/gda-xml-database.c:590
 msgid "Invalid node"
@@ -205,7 +205,7 @@ msgid "Invalid XML node"
 msgstr ""
 
 #: providers/default/gda-default-provider.c:191
-#: providers/sqlite/gda-sqlite-provider.c:186
+#: providers/sqlite/gda-sqlite-provider.c:183
 msgid ""
 "A full path must be specified on the connection string to open a database."
 msgstr ""
@@ -294,7 +294,7 @@ msgstr "Fonte de datos %s non atopada"
 #: providers/default/gda-default-provider.c:510
 #, fuzzy
 msgid "Could not get description for column"
-msgstr "non foi posible abrir unha conexiÛn a %s"
+msgstr "non foi posible abrir unha conexi√≥n a %s"
 
 #: providers/default/libmain.c:39
 msgid "GDA default provider, based on the libgda XML format"
@@ -322,7 +322,7 @@ msgstr ""
 #: providers/freetds/gda-freetds-provider.c:237
 #, fuzzy
 msgid "Failed getting connection info."
-msgstr "tentando a reconexiÛn"
+msgstr "tentando a reconexi√≥n"
 
 #: providers/freetds/gda-freetds-provider.c:542
 #: providers/oracle/gda-oracle-provider.c:1655
@@ -391,7 +391,7 @@ msgstr ""
 #: providers/freetds/gda-freetds-provider.c:798 providers/freetds/utils.c:45
 #: providers/oracle/utils.c:72 providers/postgres/utils.c:52
 msgid "Not available"
-msgstr "Non dispoÒible"
+msgstr "Non dispo√±ible"
 
 #: providers/freetds/gda-freetds-recordset.c:356
 msgid "Error processing result rows.\n"
@@ -422,7 +422,7 @@ msgstr ""
 #: providers/ibmdb2/gda-ibmdb2-provider.c:154
 #, fuzzy
 msgid "Could not allocate environment handle."
-msgstr "Non foi posible asignar memoria para o manexador da declaraciÛn"
+msgstr "Non foi posible asignar memoria para o manexador da declaraci√≥n"
 
 #: providers/ibmdb2/gda-ibmdb2-provider.c:165
 #, fuzzy
@@ -432,7 +432,7 @@ msgstr "Non foi posible establece-lo locale a '%s'"
 #: providers/ibmdb2/gda-ibmdb2-provider.c:179
 #, fuzzy
 msgid "Could not allocate environment handle.\n"
-msgstr "Non foi posible asignar memoria para o manexador da declaraciÛn"
+msgstr "Non foi posible asignar memoria para o manexador da declaraci√≥n"
 
 #. GetInfo is needed for obtaining database name
 #. is needed for tables schema
@@ -475,8 +475,8 @@ msgstr ""
 msgid ""
 "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
 msgstr ""
-"%s:%d: Non pode indicar un UNIX_SOCKET se tamÈn d· unha M¡QUINA ou un PORTO. "
-"Quite o UNIX_SOCKET, ou as opciÛns M¡QUINA e PORTO"
+"%s:%d: Non pode indicar un UNIX_SOCKET se tam√©n d√° unha M√ÅQUINA ou un PORTO. "
+"Quite o UNIX_SOCKET, ou as opci√≥ns M√ÅQUINA e PORTO"
 
 #: providers/mysql/gda-mysql-provider.c:290
 #: providers/mysql/gda-mysql-provider.c:1027
@@ -552,7 +552,7 @@ msgstr ""
 #: providers/oracle/gda-oracle-recordset.c:482
 #, fuzzy
 msgid "Could not retrieve column's information"
-msgstr "non foi posible abrir unha conexiÛn a %s"
+msgstr "non foi posible abrir unha conexi√≥n a %s"
 
 #: providers/mysql/gda-mysql-recordset.c:322
 #: providers/oracle/gda-oracle-recordset.c:500
@@ -596,7 +596,7 @@ msgstr "Non foi posible inicializar cs_diag()"
 #: providers/oracle/gda-oracle-provider.c:251
 #, fuzzy
 msgid "Could not allocate the Oracle session handle"
-msgstr "Non foi posible asignar memoria para o manexador da declaraciÛn"
+msgstr "Non foi posible asignar memoria para o manexador da declaraci√≥n"
 
 #: providers/oracle/gda-oracle-provider.c:281
 #, fuzzy
@@ -616,7 +616,7 @@ msgstr "Non foi posible inicializar cs_diag()"
 #: providers/oracle/gda-oracle-provider.c:329
 #, fuzzy
 msgid "Could not set the Oracle password attribute"
-msgstr "Non foi posible abri-la f·brica CORBA"
+msgstr "Non foi posible abri-la f√°brica CORBA"
 
 #: providers/oracle/gda-oracle-provider.c:344
 #, fuzzy
@@ -646,7 +646,7 @@ msgstr ""
 #: providers/oracle/gda-oracle-provider.c:455
 #, fuzzy
 msgid "Could not allocate the Oracle statement handle"
-msgstr "Non foi posible asignar memoria para o manexador da declaraciÛn"
+msgstr "Non foi posible asignar memoria para o manexador da declaraci√≥n"
 
 #: providers/oracle/gda-oracle-provider.c:466
 #, fuzzy
@@ -656,12 +656,12 @@ msgstr "Non foi posible inicializar ct_diag()"
 #: providers/oracle/gda-oracle-provider.c:498
 #, fuzzy
 msgid "Could not bind the Oracle statement parameter"
-msgstr "Non foi posible abri-la f·brica CORBA"
+msgstr "Non foi posible abri-la f√°brica CORBA"
 
 #: providers/oracle/gda-oracle-provider.c:543
 #, fuzzy
 msgid "Could not get the Oracle statement type"
-msgstr "Non foi posible abri-la f·brica CORBA"
+msgstr "Non foi posible abri-la f√°brica CORBA"
 
 #: providers/oracle/gda-oracle-provider.c:561
 #, fuzzy
@@ -671,7 +671,7 @@ msgstr "Non foi posible inicializar ct_diag()"
 #: providers/oracle/gda-oracle-provider.c:574
 #, fuzzy
 msgid "Could not get the number of columns in the result set"
-msgstr "Non foi posible obte-lo n˙mero de mensaxes de cliente"
+msgstr "Non foi posible obte-lo n√∫mero de mensaxes de cliente"
 
 #: providers/oracle/gda-oracle-provider.c:591
 msgid "Could not get the parameter descripter in the result set"
@@ -680,7 +680,7 @@ msgstr ""
 #: providers/oracle/gda-oracle-provider.c:603
 #, fuzzy
 msgid "Could not get the column name in the result set"
-msgstr "Non foi posible obte-lo n˙mero de mensaxes de cliente"
+msgstr "Non foi posible obte-lo n√∫mero de mensaxes de cliente"
 
 #: providers/oracle/gda-oracle-provider.c:749
 #: providers/oracle/gda-oracle-provider.c:825
@@ -693,7 +693,7 @@ msgstr "Non foi posible inicializar cs_diag()"
 #: providers/oracle/gda-oracle-provider.c:799
 #, fuzzy
 msgid "Could not allocate the Oracle transaction handle"
-msgstr "Non foi posible asignar memoria para o manexador da declaraciÛn"
+msgstr "Non foi posible asignar memoria para o manexador da declaraci√≥n"
 
 #: providers/oracle/gda-oracle-provider.c:811
 #, fuzzy
@@ -703,17 +703,17 @@ msgstr "Non foi posible inicializar ct_diag()"
 #: providers/oracle/gda-oracle-provider.c:836
 #, fuzzy
 msgid "Could not start the Oracle transaction"
-msgstr "Non foi posible abri-la f·brica CORBA"
+msgstr "Non foi posible abri-la f√°brica CORBA"
 
 #: providers/oracle/gda-oracle-provider.c:884
 #, fuzzy
 msgid "Could not prepare the transaction to commit"
-msgstr "non foi posible abrir unha conexiÛn a %s"
+msgstr "non foi posible abrir unha conexi√≥n a %s"
 
 #: providers/oracle/gda-oracle-provider.c:892
 #, fuzzy
 msgid "Could not commit the Oracle transaction"
-msgstr "Non foi posible abri-la f·brica CORBA"
+msgstr "Non foi posible abri-la f√°brica CORBA"
 
 #: providers/oracle/gda-oracle-provider.c:938
 #, fuzzy
@@ -723,7 +723,7 @@ msgstr "Non foi posible asignar memoria para a estructura de locale"
 #: providers/oracle/gda-oracle-provider.c:1227
 #, fuzzy
 msgid "Could not allocate the Oracle describe handle"
-msgstr "Non foi posible asignar memoria para o manexador da declaraciÛn"
+msgstr "Non foi posible asignar memoria para o manexador da declaraci√≥n"
 
 #: providers/oracle/gda-oracle-provider.c:1240
 #, fuzzy
@@ -758,7 +758,7 @@ msgstr "Non foi posible inicializar ct_diag()"
 #: providers/oracle/gda-oracle-provider.c:1341
 #, fuzzy
 msgid "Could not get the Oracle field data type"
-msgstr "Non foi posible abri-la f·brica CORBA"
+msgstr "Non foi posible abri-la f√°brica CORBA"
 
 #: providers/oracle/gda-oracle-provider.c:1359
 #, fuzzy
@@ -768,7 +768,7 @@ msgstr "Non foi posible establece-lo locale a '%s'"
 #: providers/oracle/gda-oracle-provider.c:1376
 #, fuzzy
 msgid "Could not get the Oracle field scale"
-msgstr "Non foi posible obte-lo n˙mero de mensaxes de cliente"
+msgstr "Non foi posible obte-lo n√∫mero de mensaxes de cliente"
 
 #: providers/oracle/gda-oracle-provider.c:1393
 msgid "Could not get the Oracle field nullable attribute"
@@ -818,7 +818,7 @@ msgstr ""
 #: providers/oracle/gda-oracle-recordset.c:184
 #, fuzzy
 msgid "Could not get the Oracle parameter information"
-msgstr "non foi posible abrir unha conexiÛn a %s"
+msgstr "non foi posible abrir unha conexi√≥n a %s"
 
 #: providers/oracle/gda-oracle-recordset.c:194
 #, fuzzy
@@ -828,7 +828,7 @@ msgstr "Non foi posible baleira-las mensaxes de servidor"
 #: providers/oracle/gda-oracle-recordset.c:209
 #, fuzzy
 msgid "Could not get the Oracle column data type"
-msgstr "Non foi posible abri-la f·brica CORBA"
+msgstr "Non foi posible abri-la f√°brica CORBA"
 
 #: providers/oracle/gda-oracle-recordset.c:221
 #, fuzzy
@@ -838,7 +838,7 @@ msgstr "Non foi posible baleira-las mensaxes de servidor"
 #: providers/oracle/gda-oracle-recordset.c:233
 #, fuzzy
 msgid "Could not get the Oracle column nullable attribute"
-msgstr "Non foi posible abri-la f·brica CORBA"
+msgstr "Non foi posible abri-la f√°brica CORBA"
 
 #: providers/oracle/gda-oracle-recordset.c:245
 #, fuzzy
@@ -945,24 +945,32 @@ msgstr ""
 msgid "GDA provider for PostgreSQL databases"
 msgstr ""
 
-#: providers/sqlite/gda-sqlite-provider.c:246
-msgid "Invalid SQLITE handle"
-msgstr ""
-
-#: providers/sqlite/gda-sqlite-provider.c:314
-#: providers/sqlite/gda-sqlite-provider.c:449
+#: providers/sqlite/gda-sqlite-provider.c:243
+#: providers/sqlite/gda-sqlite-provider.c:266
+#: providers/sqlite/gda-sqlite-provider.c:289
+#: providers/sqlite/gda-sqlite-provider.c:311
 #: providers/sqlite/gda-sqlite-recordset.c:159
 #: providers/sqlite/gda-sqlite-recordset.c:198
 #: providers/sqlite/gda-sqlite-recordset.c:239
 msgid "Invalid SQLite handle"
 msgstr ""
 
-#: providers/sqlite/gda-sqlite-provider.c:332
+#: providers/sqlite/gda-sqlite-provider.c:270
+msgid ""
+"To change a SQLite database you should close the actual database and open a "
+"new one"
+msgstr ""
+
+#: providers/sqlite/gda-sqlite-provider.c:293
 msgid "Only one database per connection is allowed"
 msgstr ""
 
-#: providers/sqlite/gda-sqlite-provider.c:346
+#: providers/sqlite/gda-sqlite-provider.c:315
 msgid "To remove a SQLite database you should remove the database file by hand"
+msgstr ""
+
+#: providers/sqlite/gda-sqlite-provider.c:329
+msgid "Invalid SQLITE handle"
 msgstr ""
 
 #: providers/sqlite/libmain.c:41
@@ -972,17 +980,22 @@ msgstr ""
 #: providers/sybase/main.c:52
 #, fuzzy
 msgid "Could not initiate Sybase component factory"
-msgstr "Non foi posible abri-la f·brica CORBA"
+msgstr "Non foi posible abri-la f√°brica CORBA"
 
-#: report/libgda-report/gda-report-document.c:166
-#, fuzzy
-msgid "Could not parse XML document"
-msgstr "Non foi posible establece-lo locale a '%s'"
-
-#: report/libgda-report/gda-report-document.c:191
+#: report/libgda-report/gda-report-document.c:158
 #, fuzzy, c-format
-msgid "Could not get file from %s"
+msgid "Could not load report file at %s"
 msgstr "Non foi posible establece-lo locale a '%s'"
+
+#: report/libgda-report/gda-report-document.c:167
+#, fuzzy, c-format
+msgid "Could not parse report file at %s"
+msgstr "Non foi posible establece-lo locale a '%s'"
+
+#: report/libgda-report/gda-report-document.c:177
+#, fuzzy, c-format
+msgid "Invalid report file '%s'"
+msgstr "Seleccionada a base de datos '%s'"
 
 #: testing/client.c:41
 msgid "\t\tNONE\n"
@@ -1078,7 +1091,7 @@ msgstr ""
 #: testing/client.c:123
 #, fuzzy
 msgid "Connection Tables"
-msgstr "Semella que a conexiÛn est· morta"
+msgstr "Semella que a conexi√≥n est√° morta"
 
 #: testing/client.c:124
 msgid "Available types"
@@ -1143,8 +1156,16 @@ msgid "\tgda_params ="
 msgstr ""
 
 #, fuzzy
+#~ msgid "Could not parse XML document"
+#~ msgstr "Non foi posible establece-lo locale a '%s'"
+
+#, fuzzy
+#~ msgid "Could not get file from %s"
+#~ msgstr "Non foi posible establece-lo locale a '%s'"
+
+#, fuzzy
 #~ msgid "An error occurred during fetch"
-#~ msgstr "Ocorreu un erro durante a execuciÛn do comando."
+#~ msgstr "Ocorreu un erro durante a execuci√≥n do comando."
 
 #, fuzzy
 #~ msgid "Could not initialize OCI library"
@@ -1152,11 +1173,11 @@ msgstr ""
 
 #, fuzzy
 #~ msgid "CORBA exception: %s"
-#~ msgstr "ExcepciÛn de usuario de CORBA: %s"
+#~ msgstr "Excepci√≥n de usuario de CORBA: %s"
 
 #, fuzzy
 #~ msgid "Could not create global GDA client"
-#~ msgstr "non foi posible abrir unha conexiÛn a %s"
+#~ msgstr "non foi posible abrir unha conexi√≥n a %s"
 
 #, fuzzy
 #~ msgid "Could not parse XML report"
@@ -1168,11 +1189,11 @@ msgstr ""
 
 #, fuzzy
 #~ msgid "Could not create BonoboStreamMem object"
-#~ msgstr "non foi posible abrir unha conexiÛn a %s"
+#~ msgstr "non foi posible abrir unha conexi√≥n a %s"
 
 #, fuzzy
 #~ msgid "Could not initiate Report component factory"
-#~ msgstr "Non foi posible rexistra-la implementaciÛn do fornecedor de correo"
+#~ msgstr "Non foi posible rexistra-la implementaci√≥n do fornecedor de correo"
 
 #, fuzzy
 #~ msgid "Could not activate object %s"
@@ -1180,7 +1201,7 @@ msgstr ""
 
 #, fuzzy
 #~ msgid "Could not query CORBA components"
-#~ msgstr "Non foi posible abri-la f·brica CORBA"
+#~ msgstr "Non foi posible abri-la f√°brica CORBA"
 
 #~ msgid "%s: An Error occured in the CORBA system."
 #~ msgstr "%s: Ocorreu un erro no sistema CORBA."
@@ -1195,35 +1216,35 @@ msgstr ""
 
 #, fuzzy
 #~ msgid "Default component factory"
-#~ msgstr "non foi posible abrir unha conexiÛn a %s"
+#~ msgstr "non foi posible abrir unha conexi√≥n a %s"
 
 #, fuzzy
 #~ msgid "Could not initiate Default component factory"
-#~ msgstr "Non foi posible rexistra-la implementaciÛn do fornecedor de correo"
+#~ msgstr "Non foi posible rexistra-la implementaci√≥n do fornecedor de correo"
 
 #, fuzzy
 #~ msgid "Could not initiate MySQL component factory"
-#~ msgstr "Non foi posible rexistra-la implementaciÛn do fornecedor MySQL"
+#~ msgstr "Non foi posible rexistra-la implementaci√≥n do fornecedor MySQL"
 
 #, fuzzy
 #~ msgid "ODBC component factory"
-#~ msgstr "non foi posible abrir unha conexiÛn a %s"
+#~ msgstr "non foi posible abrir unha conexi√≥n a %s"
 
 #, fuzzy
 #~ msgid "Could not initiate ODBC component factory"
-#~ msgstr "Non foi posible abri-la f·brica CORBA"
+#~ msgstr "Non foi posible abri-la f√°brica CORBA"
 
 #, fuzzy
 #~ msgid "Oracle component factory"
-#~ msgstr "non foi posible abrir unha conexiÛn a %s"
+#~ msgstr "non foi posible abrir unha conexi√≥n a %s"
 
 #, fuzzy
 #~ msgid "Postgres component factory"
-#~ msgstr "non foi posible abrir unha conexiÛn a %s"
+#~ msgstr "non foi posible abrir unha conexi√≥n a %s"
 
 #, fuzzy
 #~ msgid "Could not initiate PostgreSQL component factory"
-#~ msgstr "Non foi posible rexistra-la implementaciÛn do fornecedor MySQL"
+#~ msgstr "Non foi posible rexistra-la implementaci√≥n do fornecedor MySQL"
 
 #, fuzzy
 #~ msgid "NULL"
@@ -1231,15 +1252,15 @@ msgstr ""
 
 #, fuzzy
 #~ msgid "Unknown type"
-#~ msgstr "Tipo %ld de ORACLE descoÒecido"
+#~ msgstr "Tipo %ld de ORACLE desco√±ecido"
 
 #, fuzzy
 #~ msgid "SQLite component factory"
-#~ msgstr "non foi posible abrir unha conexiÛn a %s"
+#~ msgstr "non foi posible abrir unha conexi√≥n a %s"
 
 #, fuzzy
 #~ msgid "Could not initiate Sqlite component factory"
-#~ msgstr "Non foi posible abri-la f·brica CORBA"
+#~ msgstr "Non foi posible abri-la f√°brica CORBA"
 
 #, fuzzy
 #~ msgid "\tusername = %s\n"
@@ -1262,26 +1283,26 @@ msgstr ""
 #~ msgstr "Mensaxe de servidor:"
 
 #~ msgid "CORBA System exception: %s"
-#~ msgstr "ExcepciÛn de Sistema de CORBA: %s"
+#~ msgstr "Excepci√≥n de Sistema de CORBA: %s"
 
 #~ msgid "True"
 #~ msgstr "Certo"
 
 #, fuzzy
 #~ msgid "[CORBA User Exception]"
-#~ msgstr "ExcepciÛn de usuario de CORBA: %s"
+#~ msgstr "Excepci√≥n de usuario de CORBA: %s"
 
 #~ msgid "<Unknown GDA Type(NULL)>"
-#~ msgstr "<Tipo GDA DescoÒecido (NULL)>"
+#~ msgstr "<Tipo GDA Desco√±ecido (NULL)>"
 
 #~ msgid "Saving log...x"
 #~ msgstr "Gardando rexistro..."
 
 #~ msgid "Could not get pointer to server implementation"
-#~ msgstr "Non se pode obte-lo punteiro · implementaciÛn do servidor"
+#~ msgstr "Non se pode obte-lo punteiro √° implementaci√≥n do servidor"
 
 #~ msgid "Received signal %d, shutting down"
-#~ msgstr "Recibiuse o sinal %d, saÌndo"
+#~ msgstr "Recibiuse o sinal %d, sa√≠ndo"
 
 #~ msgid "Received signal %d. Ignoring"
 #~ msgstr "Recibiuse o sinal %d. Ignorando"
@@ -1290,25 +1311,25 @@ msgstr ""
 #~ msgstr "Tentouse inicializar un fornecedor xa inicializado"
 
 #~ msgid "CORBA system exception %s"
-#~ msgstr "ExcepciÛn de sistema de CORBA %s"
+#~ msgstr "Excepci√≥n de sistema de CORBA %s"
 
 #~ msgid "error '%s' at %s"
 #~ msgstr "erro '%s' en %s"
 
 #~ msgid "Could not register LDAP provider implementation"
-#~ msgstr "Non foi posible rexistra-la implementaciÛn do fornecedor LDAP"
+#~ msgstr "Non foi posible rexistra-la implementaci√≥n do fornecedor LDAP"
 
 #~ msgid "Error code %ld"
-#~ msgstr "CÛdigo de erro %ld"
+#~ msgstr "C√≥digo de erro %ld"
 
 #~ msgid "Could not register INTERBASE provider implementation"
-#~ msgstr "Non foi posible rexistra-la implementaciÛn do fornecedor INTERBASE"
+#~ msgstr "Non foi posible rexistra-la implementaci√≥n do fornecedor INTERBASE"
 
 #~ msgid "Unhandled SCHEMA_QTYPE %d"
 #~ msgstr "SCHEMA_QTYPE %d non manexado"
 
 #~ msgid "Could not register Mail provider implementation"
-#~ msgstr "Non foi posible rexistra-la implementaciÛn do fornecedor de correo"
+#~ msgstr "Non foi posible rexistra-la implementaci√≥n do fornecedor de correo"
 
 #~ msgid "executing command '%s'"
 #~ msgstr "executando o comando '%s'"
@@ -1321,27 +1342,27 @@ msgstr ""
 #~ "or a PORT. Please remove the UNIX_SOCKET, or remove both the HOST and "
 #~ "PORT options"
 #~ msgstr ""
-#~ "%s:%d: Non pode indicar un UNIX_SOCKET se tamÈn d· unha M¡QUINA ou un "
-#~ "PORTO. Quite o UNIX_SOCKET, ou as opciÛns M¡QUINA e PORTO"
+#~ "%s:%d: Non pode indicar un UNIX_SOCKET se tam√©n d√° unha M√ÅQUINA ou un "
+#~ "PORTO. Quite o UNIX_SOCKET, ou as opci√≥ns M√ÅQUINA e PORTO"
 
 #~ msgid "%s:%d: You must  provide the filename with the MS Access database"
 #~ msgstr ""
 #~ "%s:%d: Ten que indica-lo nome do ficheiro coa base de datos MS Access"
 
 #~ msgid "Opening connection with filename=%s, user=%s, password=%s"
-#~ msgstr "Abrindo a conexiÛn con ficheiro=%s, usuario=%s, contrasinal=%s"
+#~ msgstr "Abrindo a conexi√≥n con ficheiro=%s, usuario=%s, contrasinal=%s"
 
 #~ msgid "mysql_recset is NULL"
-#~ msgstr "mysql_recset È NULL"
+#~ msgstr "mysql_recset √© NULL"
 
 #~ msgid "No table name given for SCHEMA_COLS"
-#~ msgstr "Non se indicou un nome de t·boa para SCHEMA_COLS"
+#~ msgstr "Non se indicou un nome de t√°boa para SCHEMA_COLS"
 
 #~ msgid ""
 #~ "Opening connection with user=%s, password=%s, host=%s, port=%s, "
 #~ "unix_socket=%s"
 #~ msgstr ""
-#~ "Abrindo a conexiÛn con usuario=%s, contrasinal=%s, m·quina=%s, porto=%s, "
+#~ "Abrindo a conexi√≥n con usuario=%s, contrasinal=%s, m√°quina=%s, porto=%s, "
 #~ "unix_socket=%s"
 
 #~ msgid "gda_odbc_connection_open_schema: Unhandled SCHEMA_QTYPE %d\n"
@@ -1351,10 +1372,10 @@ msgstr ""
 #~ msgstr "sen texto"
 
 #~ msgid "Could not register ODBC provider implementation"
-#~ msgstr "Non foi posible rexistra-la implementaciÛn do fornecedor ODBC"
+#~ msgstr "Non foi posible rexistra-la implementaci√≥n do fornecedor ODBC"
 
 #~ msgid "command object being created without associated connection"
-#~ msgstr "o obxecto de comando estase a crear sen unha conexiÛn asociada"
+#~ msgstr "o obxecto de comando estase a crear sen unha conexi√≥n asociada"
 
 #~ msgid "Executing command '%s'"
 #~ msgstr "Executando o comando '%s'"
@@ -1369,63 +1390,63 @@ msgstr ""
 #~ msgstr "erro en OCIHandleAlloc() HTYPE_ERROR"
 
 #~ msgid "Unknown ORACLE type %ld"
-#~ msgstr "Tipo %ld de ORACLE descoÒecido"
+#~ msgstr "Tipo %ld de ORACLE desco√±ecido"
 
 #~ msgid "Unknown ORACLE data type in fill_field_values"
-#~ msgstr "Tipo de datos de ORACLE descoÒecido en fill_field_values"
+#~ msgstr "Tipo de datos de ORACLE desco√±ecido en fill_field_values"
 
 #~ msgid "recordset object being created without associated connection"
-#~ msgstr "o obxecto recordset estase a crear sen ningunha conexiÛn asociada"
+#~ msgstr "o obxecto recordset estase a crear sen ningunha conexi√≥n asociada"
 
 #~ msgid "Could not register ORACLE provider implementation"
-#~ msgstr "Non foi posible rexistra-la implementaciÛn do fornecedor ORACLE"
+#~ msgstr "Non foi posible rexistra-la implementaci√≥n do fornecedor ORACLE"
 
 #~ msgid "postgres_recset is NULL"
-#~ msgstr "postgres_recset È NULL"
+#~ msgstr "postgres_recset √© NULL"
 
 #~ msgid "Could not register PostgreSQL provider implementation"
-#~ msgstr "Non foi posible rexistra-la implementaciÛn do fornecedor PostgreSQL"
+#~ msgstr "Non foi posible rexistra-la implementaci√≥n do fornecedor PostgreSQL"
 
 #~ msgid "Connection seems to be dead"
-#~ msgstr "Semella que a conexiÛn est· morta"
+#~ msgstr "Semella que a conexi√≥n est√° morta"
 
 #~ msgid "Filling command structure failed\n"
 #~ msgstr "Fallou o enchido da estructura do comando\n"
 
 #~ msgid "sending cmd failed"
-#~ msgstr "fallou o envÌo do comando"
+#~ msgstr "fallou o env√≠o do comando"
 
 #~ msgid "Allocating recordset failed"
-#~ msgstr "Fallou a asignaciÛn de memoria para o recordset"
+#~ msgstr "Fallou a asignaci√≥n de memoria para o recordset"
 
 #~ msgid "Getting recordset userdata failed"
-#~ msgstr "Fallou a obtenciÛn dos datos de usuario do recordset"
+#~ msgstr "Fallou a obtenci√≥n dos datos de usuario do recordset"
 
 #~ msgid "Command execution finished, all results processed"
-#~ msgstr "ExecuciÛn do comando rematada, procesados tÛdolos resultados"
+#~ msgstr "Execuci√≥n do comando rematada, procesados t√≥dolos resultados"
 
 #~ msgid "Command failed"
 #~ msgstr "Comando fallido"
 
 #~ msgid "Execution of resultless command succeeded"
-#~ msgstr "ExecuciÛn correcta dun comando sen resultado"
+#~ msgstr "Execuci√≥n correcta dun comando sen resultado"
 
 #~ msgid "ct_results() returned %x"
 #~ msgstr "ct_results() devolveu %x"
 
 #~ msgid "No further results, command completly succeeded."
-#~ msgstr "Non hai m·is resultados, o comando completouse correctamente."
+#~ msgstr "Non hai m√°is resultados, o comando completouse correctamente."
 
 #~ msgid "Cmd execution returned unknown result, may be an error"
 #~ msgstr ""
-#~ "A execuciÛn do comando devolveu un resultado descoÒecido, pode que sexa "
+#~ "A execuci√≥n do comando devolveu un resultado desco√±ecido, pode que sexa "
 #~ "un erro"
 
 #~ msgid "No data returned, freeing recordset structure"
-#~ msgstr "Non se devolveu ning˙n dato, liberando a estructura recordset"
+#~ msgstr "Non se devolveu ning√∫n dato, liberando a estructura recordset"
 
 #~ msgid "Freeing command structure failed"
-#~ msgstr "Fallou a liberaciÛn da estructura do comando"
+#~ msgstr "Fallou a liberaci√≥n da estructura do comando"
 
 #~ msgid "Not enough memory for sybase_Connection"
 #~ msgstr "Non hai memoria dabondo para sybase_Connection"
@@ -1443,25 +1464,25 @@ msgstr ""
 #~ msgstr "Non foi posible obte-lo recordset en schema_cols"
 
 #~ msgid "schema_procs: invalid constraint type %d"
-#~ msgstr "schema_procs: tipo de restricciÛn %d non v·lida"
+#~ msgstr "schema_procs: tipo de restricci√≥n %d non v√°lida"
 
 #~ msgid "Could not allocate cmd structure"
 #~ msgstr "Non foi posible asignar memoria para a estructura cmd"
 
 #~ msgid "schema_tables: invalid constraint type %d"
-#~ msgstr "schema_tables: tipo de restricciÛn %d non v·lida"
+#~ msgstr "schema_tables: tipo de restricci√≥n %d non v√°lida"
 
 #~ msgid "Invalid or unsupported constraint type: %d"
-#~ msgstr "Tipo de restricciÛn non v·lida ou non soportada: %d"
+#~ msgstr "Tipo de restricci√≥n non v√°lida ou non soportada: %d"
 
 #~ msgid "Could not allocate GdaServerCommand"
 #~ msgstr "Non foi posible asignar memoria para GdaServerCommand"
 
 #~ msgid "connection status: %x"
-#~ msgstr "estado da conexiÛn: %x"
+#~ msgstr "estado da conexi√≥n: %x"
 
 #~ msgid "return code: %x"
-#~ msgstr "cÛdigo devolvido: %x"
+#~ msgstr "c√≥digo devolvido: %x"
 
 #~ msgid "Reconnected to '%s'"
 #~ msgstr "Reonectado a '%s'"
@@ -1479,10 +1500,10 @@ msgstr ""
 #~ msgstr "%s: ct_command fallou"
 
 #~ msgid "%s: sending command failed"
-#~ msgstr "%s: fallou o envÌo do comando"
+#~ msgstr "%s: fallou o env√≠o do comando"
 
 #~ msgid "%s: selecting database failed"
-#~ msgstr "%s: fallou a selecciÛn da base de datos"
+#~ msgstr "%s: fallou a selecci√≥n da base de datos"
 
 #~ msgid "%s: use command failed"
 #~ msgstr "%s: o comando 'use' fallou"
@@ -1502,7 +1523,7 @@ msgstr ""
 #~ msgid "No error flag ist set, though %s is called. This may be a bug."
 #~ msgstr ""
 #~ "Non hai ningunha marca de erro activa, pero chamouse a %s. Isto pode ser "
-#~ "un erro no cÛdigo."
+#~ "un erro no c√≥digo."
 
 #~ msgid "cs_diag() initialized"
 #~ msgstr "cs_diag() inicializado"
@@ -1514,13 +1535,13 @@ msgstr ""
 #~ msgstr "Non foi posible inicializar ct_diag()"
 
 #~ msgid "%s could not find server implementation"
-#~ msgstr "%s non puido atopa-la implementaciÛn do servidor"
+#~ msgstr "%s non puido atopa-la implementaci√≥n do servidor"
 
 #~ msgid "%s could not get cnc userdata"
 #~ msgstr "%s non puido obte-los datos de usuario de cnc"
 
 #~ msgid "Could not get # of messages"
-#~ msgstr "Non foi posible obte-lo n˙mero de mensaxes"
+#~ msgstr "Non foi posible obte-lo n√∫mero de mensaxes"
 
 #~ msgid "%d ctlib messages to fetch"
 #~ msgstr "%d mensaxes de ctlib para recibir"
@@ -1529,10 +1550,10 @@ msgstr ""
 #~ msgstr "%d mensaxes de ctlib para recibir"
 
 #~ msgid "error is nullpointer in gda_sybase_messages_handle"
-#~ msgstr "o erro È un punteiro a null en gda_sybase_messages_handle"
+#~ msgstr "o erro √© un punteiro a null en gda_sybase_messages_handle"
 
 #~ msgid "Could not get # of server messages"
-#~ msgstr "Non foi posible obte-lo n˙mero de mensaxes de servidor"
+#~ msgstr "Non foi posible obte-lo n√∫mero de mensaxes de servidor"
 
 #~ msgid "Fetching %d client messages"
 #~ msgstr "Recibindo %d mensaxes de cliente"
@@ -1553,7 +1574,7 @@ msgstr ""
 #~ msgstr "Non foi posible recibi-la mensaxe de servidor %d"
 
 #~ msgid "Could not get # of cslib messages"
-#~ msgstr "Non foi posible obte-lo n˙mero de mensaxes de cslib"
+#~ msgstr "Non foi posible obte-lo n√∫mero de mensaxes de cslib"
 
 #~ msgid "Fetching %d cslib messages"
 #~ msgstr "Recibindo %d mensaxes de cslib"
@@ -1581,13 +1602,13 @@ msgstr ""
 #~ msgstr "%s: Erro (%d)"
 
 #~ msgid "Failed fetching # of columns"
-#~ msgstr "Fallou a recepciÛn do n˙mero de columnas"
+#~ msgstr "Fallou a recepci√≥n do n√∫mero de columnas"
 
 #~ msgid "Counted %d columns"
-#~ msgstr "Cont·ronse %d columnas"
+#~ msgstr "Cont√°ronse %d columnas"
 
 #~ msgid "%s could not allocate datafmt info"
-#~ msgstr "%s non puido asignar memoria para a informaciÛn do formato de datos"
+#~ msgstr "%s non puido asignar memoria para a informaci√≥n do formato de datos"
 
 #~ msgid "%s could not allocate data fields"
 #~ msgstr "%s non puido asignar memoria para os campos de datos"
@@ -1606,7 +1627,7 @@ msgstr ""
 
 #~ msgid "could not ct_bind data holder to column"
 #~ msgstr ""
-#~ "non foi posible asignar con ct_bind o almacenador de datos · columna"
+#~ "non foi posible asignar con ct_bind o almacenador de datos √° columna"
 
 #~ msgid "illegal type detected, aborting"
 #~ msgstr "tipo ilegal detectado, abortando"
@@ -1615,11 +1636,11 @@ msgstr ""
 #~ msgstr "non foi posible asignar memoria para o campo"
 
 #~ msgid "Could not register gda-sybase provider implementation"
-#~ msgstr "Non foi posible rexistra-la implementaciÛn do fornecedor gda-sybase"
+#~ msgstr "Non foi posible rexistra-la implementaci√≥n do fornecedor gda-sybase"
 
 #, fuzzy
 #~ msgid "Could not connect to '%s@%s:%s' with connparm '%s'"
-#~ msgstr "non foi posible abrir unha conexiÛn a %s"
+#~ msgstr "non foi posible abrir unha conexi√≥n a %s"
 
 #, fuzzy
 #~ msgid "Not enough memory for primebase_Error structure."
@@ -1627,7 +1648,7 @@ msgstr ""
 
 #, fuzzy
 #~ msgid "Could not register PRIMEBASE provider implementation"
-#~ msgstr "Non foi posible rexistra-la implementaciÛn do fornecedor INTERBASE"
+#~ msgstr "Non foi posible rexistra-la implementaci√≥n do fornecedor INTERBASE"
 
 #, fuzzy
 #~ msgid "Not enough memory for tds_Connection"
@@ -1643,7 +1664,7 @@ msgstr ""
 
 #, fuzzy
 #~ msgid "Could not register gda-tds provider implementation"
-#~ msgstr "Non foi posible rexistra-la implementaciÛn do fornecedor gda-sybase"
+#~ msgstr "Non foi posible rexistra-la implementaci√≥n do fornecedor gda-sybase"
 
 #~ msgid "%s: misconfigured DSN entry"
 #~ msgstr "%s: entrada DSN mal configurada"
@@ -1653,16 +1674,16 @@ msgstr ""
 
 #, fuzzy
 #~ msgid "Could not register <PROVIDER-NAME> provider implementation"
-#~ msgstr "Non foi posible rexistra-la implementaciÛn do fornecedor INTERBASE"
+#~ msgstr "Non foi posible rexistra-la implementaci√≥n do fornecedor INTERBASE"
 
 #~ msgid "%s: The server didn't respond."
 #~ msgstr "%s: O servidor non respondeu."
 
 #~ msgid "thread is already running"
-#~ msgstr "o fÌo aÌnda est· en execuciÛn"
+#~ msgstr "o f√≠o a√≠nda est√° en execuci√≥n"
 
 #~ msgid "impl_GDA_Connection_open: opening connection with DSN: %s"
-#~ msgstr "impl_GDA_Connection_open: abrindo a conexiÛn co DSN: %s"
+#~ msgstr "impl_GDA_Connection_open: abrindo a conexi√≥n co DSN: %s"
 
 #~ msgid "%s: an error ocurred while fetching data"
 #~ msgstr "%s: ocorreu un erro recibindo os datos"
@@ -1670,42 +1691,42 @@ msgstr ""
 #~ msgid ""
 #~ "OAF doesn't know about our IID; indicates broken installation. Exiting..."
 #~ msgstr ""
-#~ "OAF descoÒece o noso IID; isto indica unha instalaciÛn errÛnea. SaÌndo..."
+#~ "OAF desco√±ece o noso IID; isto indica unha instalaci√≥n err√≥nea. Sa√≠ndo..."
 
 #~ msgid ""
 #~ "Another instance of this provider is already registered with OAF. "
 #~ "Exiting..."
 #~ msgstr ""
-#~ "Xa hai rexistrada outra instancia deste fornecedor con OAF. SaÌndo..."
+#~ "Xa hai rexistrada outra instancia deste fornecedor con OAF. Sa√≠ndo..."
 
 #~ msgid "Unknown error registering this provider with OAF. Exiting"
-#~ msgstr "Erro descoÒecido rexistrando este fornecedor con OAF. SaÌndo"
+#~ msgstr "Erro desco√±ecido rexistrando este fornecedor con OAF. Sa√≠ndo"
 
 #~ msgid "Registered with ID = %s"
 #~ msgstr "Rexistrado co ID = %s"
 
 #~ msgid "CORBA exception unloading report engine: %s"
-#~ msgstr "ExcepciÛn de CORBA o descargar o motor de informes: %s"
+#~ msgstr "Excepci√≥n de CORBA o descargar o motor de informes: %s"
 
 #~ msgid "Received signal %d, shutting down."
-#~ msgstr "Recibiuse o sinal %d, saÌndo."
+#~ msgstr "Recibiuse o sinal %d, sa√≠ndo."
 
 #~ msgid "Received signal %d, shutting down cleanly"
-#~ msgstr "Recibiuse o sinal %d, saÌndo limpamente"
+#~ msgstr "Recibiuse o sinal %d, sa√≠ndo limpamente"
 
 #~ msgid "Failed to initialize OAF: please mail bug report to OAF maintainers"
 #~ msgstr ""
-#~ "Fallo Û inicializar OAF: por favor, envÌe un informe do erro Ûs "
+#~ "Fallo √≥ inicializar OAF: por favor, env√≠e un informe do erro √≥s "
 #~ "encargados do OAF"
 
 #~ msgid ""
 #~ "Another instance of the report engine is already registered with OAF. "
 #~ "Exiting..."
 #~ msgstr ""
-#~ "Xa hai rexistrada outra instancia do motor de informes con OAF. SaÌndo..."
+#~ "Xa hai rexistrada outra instancia do motor de informes con OAF. Sa√≠ndo..."
 
 #~ msgid "Unknown error registering report engine with OAF. Exiting"
-#~ msgstr "Erro descoÒecido rexistrando o motor de informes con OAF. SaÌndo"
+#~ msgstr "Erro desco√±ecido rexistrando o motor de informes con OAF. Sa√≠ndo"
 
 #~ msgid "Registered report engine with ID = %s"
 #~ msgstr "Rexistrado o motor de informes co ID = %s"
@@ -1714,7 +1735,7 @@ msgstr ""
 #~ msgstr "%s: lonxitude = %d"
 
 #~ msgid "%s: sending field description for '%s'"
-#~ msgstr "%s: enviando a descriciÛn do campo '%s'"
+#~ msgstr "%s: enviando a descrici√≥n do campo '%s'"
 
 #~ msgid "schema_tables: table name = '%s'"
 #~ msgstr "schema_tables: table name = '%s'"
@@ -1723,10 +1744,10 @@ msgstr ""
 #~ msgstr "schema_tables: table_schema = '%s'"
 
 #~ msgid "schema_procedures: proc_catalog = '%s' UNUSED!\n"
-#~ msgstr "schema_procedures: proc_catalog = '%s' °SEN USAR!\n"
+#~ msgstr "schema_procedures: proc_catalog = '%s' ¬°SEN USAR!\n"
 
 #~ msgid "schema_procedures: proc_catalog = '%s' UNUSED!"
-#~ msgstr "schema_procedures: proc_catalog = '%s' °SEN USAR!"
+#~ msgstr "schema_procedures: proc_catalog = '%s' ¬°SEN USAR!"
 
 #~ msgid "DATABASE"
 #~ msgstr "BASE-DE-DATOS"

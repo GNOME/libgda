@@ -1,22 +1,22 @@
 # Turkish translation of libgda.
 # Copyright (C) 2001 Free Software Foundation, Inc.
-# Görkem Çetin <gorkem@gelecek.com.tr>, 2001.
+# GÃ¶rkem Ã‡etin <gorkem@gelecek.com.tr>, 2001.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2002-09-09 22:11+0200\n"
+"POT-Creation-Date: 2002-09-11 13:18+0200\n"
 "PO-Revision-Date: 2001-11-05 19:40+0200\n"
-"Last-Translator: Görkem Çetin <gorkem@gelecek.com.tr>\n"
+"Last-Translator: GÃ¶rkem Ã‡etin <gorkem@gelecek.com.tr>\n"
 "Language-Team: Turkish <gnome-turk@gnome.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=iso-8859-9\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: libgda/gda-client.c:227 libgda/gda-client.c:414 libgda/gda-connection.c:214
 #, fuzzy, c-format
 msgid "Data source %s not found in configuration"
-msgstr "Sistemde %s veritabaný bulunmadý"
+msgstr "Sistemde %s veritabanÄ± bulunmadÄ±"
 
 #: libgda/gda-client.c:245
 #, c-format
@@ -26,7 +26,7 @@ msgstr ""
 #: libgda/gda-client.c:254
 #, fuzzy, c-format
 msgid "Could not load %s provider"
-msgstr "CORBA factory açýlamadý"
+msgstr "CORBA factory aÃ§Ä±lamadÄ±"
 
 #: libgda/gda-client.c:270
 #, c-format
@@ -48,23 +48,23 @@ msgstr ""
 #: providers/mysql/gda-mysql-provider.c:651
 #: providers/oracle/gda-oracle-provider.c:999
 msgid "Name"
-msgstr "Ýsim"
+msgstr "Ä°sim"
 
 #: libgda/gda-config.c:1269
 msgid "Provider"
-msgstr "Saðlayýcý"
+msgstr "SaÄŸlayÄ±cÄ±"
 
 #: libgda/gda-config.c:1270
 msgid "Connection string"
-msgstr "Baðlantý dizisi"
+msgstr "BaÄŸlantÄ± dizisi"
 
 #: libgda/gda-config.c:1271 providers/postgres/gda-postgres-provider.c:903
 msgid "Description"
-msgstr "Açýklama"
+msgstr "AÃ§Ä±klama"
 
 #: libgda/gda-config.c:1272
 msgid "Username"
-msgstr "Kullanýcý adý"
+msgstr "KullanÄ±cÄ± adÄ±"
 
 #: libgda/gda-config.c:1273
 msgid "Password"
@@ -73,7 +73,7 @@ msgstr ""
 #: libgda/gda-data-model.c:608
 #, fuzzy, c-format
 msgid "Data model %p is not editable"
-msgstr "%p geçersiz bir tablo"
+msgstr "%p geÃ§ersiz bir tablo"
 
 #: libgda/gda-init.c:49
 msgid "Attempt to initialize an already initialized client"
@@ -142,25 +142,25 @@ msgstr ""
 #: libgda/gda-util.c:169
 #, fuzzy, c-format
 msgid "Could not create file %s"
-msgstr "%s adresindeki dosya ayrýþtýrýlamadý"
+msgstr "%s adresindeki dosya ayrÄ±ÅŸtÄ±rÄ±lamadÄ±"
 
 #: libgda/gda-value.c:1454
 msgid "TRUE"
-msgstr "DOÐRU"
+msgstr "DOÄžRU"
 
 #: libgda/gda-value.c:1456
 msgid "FALSE"
-msgstr "YANLIÞ"
+msgstr "YANLIÅž"
 
 #: libgda/gda-xml-database.c:236
 #, c-format
 msgid "Could not load file at %s"
-msgstr "%s adresindeki dosya yüklenemedi"
+msgstr "%s adresindeki dosya yÃ¼klenemedi"
 
 #: libgda/gda-xml-database.c:245
 #, c-format
 msgid "Could not parse file at %s"
-msgstr "%s adresindeki dosya ayrýþtýrýlamadý"
+msgstr "%s adresindeki dosya ayrÄ±ÅŸtÄ±rÄ±lamadÄ±"
 
 #: libgda/gda-xml-database.c:255
 #, c-format
@@ -170,12 +170,12 @@ msgstr ""
 #: libgda/gda-xml-database.c:407
 #, fuzzy, c-format
 msgid "Could not create a XML node from table %s"
-msgstr "%s adresindeki dosya ayrýþtýrýlamadý"
+msgstr "%s adresindeki dosya ayrÄ±ÅŸtÄ±rÄ±lamadÄ±"
 
 #: libgda/gda-xml-database.c:425
 #, fuzzy
 msgid "Could not dump XML file to memory"
-msgstr "%s adresindeki dosya yüklenemedi"
+msgstr "%s adresindeki dosya yÃ¼klenemedi"
 
 #: libgda/gda-xml-database.c:518 libgda/gda-xml-database.c:554
 #: libgda/gda-xml-database.c:597
@@ -197,7 +197,7 @@ msgid "Invalid XML node"
 msgstr ""
 
 #: providers/default/gda-default-provider.c:191
-#: providers/sqlite/gda-sqlite-provider.c:186
+#: providers/sqlite/gda-sqlite-provider.c:183
 msgid ""
 "A full path must be specified on the connection string to open a database."
 msgstr ""
@@ -283,7 +283,7 @@ msgstr ""
 #: providers/default/gda-default-provider.c:510
 #, fuzzy
 msgid "Could not get description for column"
-msgstr "Baðlantý bileþeni oluþturulamadý"
+msgstr "BaÄŸlantÄ± bileÅŸeni oluÅŸturulamadÄ±"
 
 #: providers/default/libmain.c:39
 msgid "GDA default provider, based on the libgda XML format"
@@ -315,7 +315,7 @@ msgstr ""
 #: providers/oracle/gda-oracle-provider.c:1655
 #, fuzzy
 msgid "Procedures"
-msgstr "Depolanmýþ yorlamlar"
+msgstr "DepolanmÄ±ÅŸ yorlamlar"
 
 #: providers/freetds/gda-freetds-provider.c:550
 #: providers/oracle/gda-oracle-provider.c:1663
@@ -326,7 +326,7 @@ msgstr ""
 #: providers/postgres/gda-postgres-provider.c:920
 #, fuzzy
 msgid "Types"
-msgstr "Tür"
+msgstr "TÃ¼r"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/freetds/gda-freetds-provider.c:562
@@ -334,12 +334,12 @@ msgstr "Tür"
 #: providers/postgres/gda-postgres-provider.c:1444 testing/client.c:128
 #, fuzzy
 msgid "Users"
-msgstr "Kullanýcý adý"
+msgstr "KullanÄ±cÄ± adÄ±"
 
 #: providers/freetds/gda-freetds-provider.c:568
 #: providers/oracle/gda-oracle-provider.c:1671 testing/client.c:125
 msgid "Views"
-msgstr "Görünümler"
+msgstr "GÃ¶rÃ¼nÃ¼mler"
 
 #: providers/freetds/gda-freetds-provider.c:645
 msgid "Field Name"
@@ -348,12 +348,12 @@ msgstr ""
 #: providers/freetds/gda-freetds-provider.c:647
 #, fuzzy
 msgid "Data Type"
-msgstr "Tür"
+msgstr "TÃ¼r"
 
 #: providers/freetds/gda-freetds-provider.c:651
 #, fuzzy
 msgid "Precision"
-msgstr "Açýklama"
+msgstr "AÃ§Ä±klama"
 
 #: providers/freetds/gda-freetds-provider.c:655
 msgid "Identity"
@@ -406,23 +406,23 @@ msgstr ""
 #: providers/freetds/utils.c:41 providers/oracle/utils.c:67
 #: providers/postgres/utils.c:47
 msgid "NO DESCRIPTION"
-msgstr "AÇIKLAMA YOK"
+msgstr "AÃ‡IKLAMA YOK"
 
 #: providers/ibmdb2/gda-ibmdb2-provider.c:142
 #: providers/ibmdb2/gda-ibmdb2-provider.c:154
 #, fuzzy
 msgid "Could not allocate environment handle."
-msgstr "Oracle ortamý baþlatýlamadý"
+msgstr "Oracle ortamÄ± baÅŸlatÄ±lamadÄ±"
 
 #: providers/ibmdb2/gda-ibmdb2-provider.c:165
 #, fuzzy
 msgid "Could not set autocommit to off.\n"
-msgstr "%s adresinden dosya alýnamadý"
+msgstr "%s adresinden dosya alÄ±namadÄ±"
 
 #: providers/ibmdb2/gda-ibmdb2-provider.c:179
 #, fuzzy
 msgid "Could not allocate environment handle.\n"
-msgstr "Oracle ortamý baþlatýlamadý"
+msgstr "Oracle ortamÄ± baÅŸlatÄ±lamadÄ±"
 
 #. GetInfo is needed for obtaining database name
 #. is needed for tables schema
@@ -445,7 +445,7 @@ msgstr ""
 #: providers/mdb/gda-mdb-provider.c:197
 #, fuzzy, c-format
 msgid "Could not open file %s"
-msgstr "%s adresindeki dosya ayrýþtýrýlamadý"
+msgstr "%s adresindeki dosya ayrÄ±ÅŸtÄ±rÄ±lamadÄ±"
 
 #: providers/mdb/gda-mdb-provider.c:219 providers/mdb/gda-mdb-provider.c:247
 #: providers/mdb/gda-mdb-provider.c:348
@@ -486,7 +486,7 @@ msgstr ""
 #: providers/mysql/gda-mysql-provider.c:913
 #: providers/oracle/gda-oracle-provider.c:1563
 msgid "Type"
-msgstr "Tür"
+msgstr "TÃ¼r"
 
 #: providers/mysql/gda-mysql-provider.c:914
 #: providers/postgres/gda-postgres-provider.c:688
@@ -539,13 +539,13 @@ msgstr ""
 #: providers/oracle/gda-oracle-recordset.c:482
 #, fuzzy
 msgid "Could not retrieve column's information"
-msgstr "Baðlantý bileþeni oluþturulamadý"
+msgstr "BaÄŸlantÄ± bileÅŸeni oluÅŸturulamadÄ±"
 
 #: providers/mysql/gda-mysql-recordset.c:322
 #: providers/oracle/gda-oracle-recordset.c:500
 #, fuzzy
 msgid "Could not retrieve column's value"
-msgstr "%s adresinden dosya alýnamadý"
+msgstr "%s adresinden dosya alÄ±namadÄ±"
 
 #: providers/mysql/libmain.c:41
 msgid "GDA provider for MySQL databases"
@@ -558,62 +558,62 @@ msgstr ""
 #: providers/oracle/gda-oracle-provider.c:193
 #, fuzzy
 msgid "Could not initialize Oracle"
-msgstr "Oracle ortamý baþlatýlamadý"
+msgstr "Oracle ortamÄ± baÅŸlatÄ±lamadÄ±"
 
 #: providers/oracle/gda-oracle-provider.c:204
 #, fuzzy
 msgid "Could not initialize the Oracle environment"
-msgstr "Oracle ortamý baþlatýlamadý"
+msgstr "Oracle ortamÄ± baÅŸlatÄ±lamadÄ±"
 
 #: providers/oracle/gda-oracle-provider.c:216
 #, fuzzy
 msgid "Could not allocate the Oracle service handle"
-msgstr "CORBA factory açýlamadý"
+msgstr "CORBA factory aÃ§Ä±lamadÄ±"
 
 #: providers/oracle/gda-oracle-provider.c:226
 #, fuzzy
 msgid "Could not allocate the Oracle error handle"
-msgstr "Oracle ortamý baþlatýlamadý"
+msgstr "Oracle ortamÄ± baÅŸlatÄ±lamadÄ±"
 
 #: providers/oracle/gda-oracle-provider.c:238
 #, fuzzy
 msgid "Could not allocate the Oracle server handle"
-msgstr "CORBA factory açýlamadý"
+msgstr "CORBA factory aÃ§Ä±lamadÄ±"
 
 #: providers/oracle/gda-oracle-provider.c:251
 #, fuzzy
 msgid "Could not allocate the Oracle session handle"
-msgstr "Oracle ortamý baþlatýlamadý"
+msgstr "Oracle ortamÄ± baÅŸlatÄ±lamadÄ±"
 
 #: providers/oracle/gda-oracle-provider.c:281
 #, fuzzy
 msgid "Could not attach to the Oracle server"
-msgstr "CORBA factory açýlamadý"
+msgstr "CORBA factory aÃ§Ä±lamadÄ±"
 
 #: providers/oracle/gda-oracle-provider.c:297
 #, fuzzy
 msgid "Could not set the Oracle server attribute in the service context"
-msgstr "CORBA factory açýlamadý"
+msgstr "CORBA factory aÃ§Ä±lamadÄ±"
 
 #: providers/oracle/gda-oracle-provider.c:313
 #, fuzzy
 msgid "Could not set the Oracle username attribute"
-msgstr "Oracle ortamý baþlatýlamadý"
+msgstr "Oracle ortamÄ± baÅŸlatÄ±lamadÄ±"
 
 #: providers/oracle/gda-oracle-provider.c:329
 #, fuzzy
 msgid "Could not set the Oracle password attribute"
-msgstr "CORBA factory açýlamadý"
+msgstr "CORBA factory aÃ§Ä±lamadÄ±"
 
 #: providers/oracle/gda-oracle-provider.c:344
 #, fuzzy
 msgid "Could not begin the Oracle session"
-msgstr "Oracle ortamý baþlatýlamadý"
+msgstr "Oracle ortamÄ± baÅŸlatÄ±lamadÄ±"
 
 #: providers/oracle/gda-oracle-provider.c:362
 #, fuzzy
 msgid "Could not set the Oracle session attribute in the service context"
-msgstr "CORBA factory açýlamadý"
+msgstr "CORBA factory aÃ§Ä±lamadÄ±"
 
 #: providers/oracle/gda-oracle-provider.c:444
 #: providers/oracle/gda-oracle-provider.c:518
@@ -633,27 +633,27 @@ msgstr ""
 #: providers/oracle/gda-oracle-provider.c:455
 #, fuzzy
 msgid "Could not allocate the Oracle statement handle"
-msgstr "Oracle ortamý baþlatýlamadý"
+msgstr "Oracle ortamÄ± baÅŸlatÄ±lamadÄ±"
 
 #: providers/oracle/gda-oracle-provider.c:466
 #, fuzzy
 msgid "Could not prepare the Oracle statement"
-msgstr "Oracle ortamý baþlatýlamadý"
+msgstr "Oracle ortamÄ± baÅŸlatÄ±lamadÄ±"
 
 #: providers/oracle/gda-oracle-provider.c:498
 #, fuzzy
 msgid "Could not bind the Oracle statement parameter"
-msgstr "CORBA factory açýlamadý"
+msgstr "CORBA factory aÃ§Ä±lamadÄ±"
 
 #: providers/oracle/gda-oracle-provider.c:543
 #, fuzzy
 msgid "Could not get the Oracle statement type"
-msgstr "CORBA factory açýlamadý"
+msgstr "CORBA factory aÃ§Ä±lamadÄ±"
 
 #: providers/oracle/gda-oracle-provider.c:561
 #, fuzzy
 msgid "Could not execute the Oracle statement"
-msgstr "Oracle ortamý baþlatýlamadý"
+msgstr "Oracle ortamÄ± baÅŸlatÄ±lamadÄ±"
 
 #: providers/oracle/gda-oracle-provider.c:574
 msgid "Could not get the number of columns in the result set"
@@ -666,7 +666,7 @@ msgstr ""
 #: providers/oracle/gda-oracle-provider.c:603
 #, fuzzy
 msgid "Could not get the column name in the result set"
-msgstr "%s adresinden dosya alýnamadý"
+msgstr "%s adresinden dosya alÄ±namadÄ±"
 
 #: providers/oracle/gda-oracle-provider.c:749
 #: providers/oracle/gda-oracle-provider.c:825
@@ -674,7 +674,7 @@ msgstr "%s adresinden dosya alýnamadý"
 #: providers/oracle/gda-oracle-provider.c:931
 #, fuzzy
 msgid "Could not attach the transaction to the service context"
-msgstr "CORBA factory açýlamadý"
+msgstr "CORBA factory aÃ§Ä±lamadÄ±"
 
 #: providers/oracle/gda-oracle-provider.c:799
 msgid "Could not allocate the Oracle transaction handle"
@@ -683,77 +683,77 @@ msgstr ""
 #: providers/oracle/gda-oracle-provider.c:811
 #, fuzzy
 msgid "Could not set the Oracle transaction name"
-msgstr "Oracle ortamý baþlatýlamadý"
+msgstr "Oracle ortamÄ± baÅŸlatÄ±lamadÄ±"
 
 #: providers/oracle/gda-oracle-provider.c:836
 #, fuzzy
 msgid "Could not start the Oracle transaction"
-msgstr "CORBA factory açýlamadý"
+msgstr "CORBA factory aÃ§Ä±lamadÄ±"
 
 #: providers/oracle/gda-oracle-provider.c:884
 #, fuzzy
 msgid "Could not prepare the transaction to commit"
-msgstr "Baðlantý bileþeni oluþturulamadý"
+msgstr "BaÄŸlantÄ± bileÅŸeni oluÅŸturulamadÄ±"
 
 #: providers/oracle/gda-oracle-provider.c:892
 #, fuzzy
 msgid "Could not commit the Oracle transaction"
-msgstr "CORBA factory açýlamadý"
+msgstr "CORBA factory aÃ§Ä±lamadÄ±"
 
 #: providers/oracle/gda-oracle-provider.c:938
 #, fuzzy
 msgid "Could not rollback the Oracle transaction"
-msgstr "CORBA factory açýlamadý"
+msgstr "CORBA factory aÃ§Ä±lamadÄ±"
 
 #: providers/oracle/gda-oracle-provider.c:1227
 #, fuzzy
 msgid "Could not allocate the Oracle describe handle"
-msgstr "CORBA factory açýlamadý"
+msgstr "CORBA factory aÃ§Ä±lamadÄ±"
 
 #: providers/oracle/gda-oracle-provider.c:1240
 #, fuzzy
 msgid "Could not describe the Oracle table"
-msgstr "%s adresinden dosya alýnamadý"
+msgstr "%s adresinden dosya alÄ±namadÄ±"
 
 #: providers/oracle/gda-oracle-provider.c:1253
 #, fuzzy
 msgid "Could not get the Oracle parameter handle"
-msgstr "CORBA factory açýlamadý"
+msgstr "CORBA factory aÃ§Ä±lamadÄ±"
 
 #: providers/oracle/gda-oracle-provider.c:1266
 #, fuzzy
 msgid "Could not get the number of columns in the table"
-msgstr "%s adresinden dosya alýnamadý"
+msgstr "%s adresinden dosya alÄ±namadÄ±"
 
 #: providers/oracle/gda-oracle-provider.c:1278
 #, fuzzy
 msgid "Could not get the column list"
-msgstr "%s adresinden dosya alýnamadý"
+msgstr "%s adresinden dosya alÄ±namadÄ±"
 
 #: providers/oracle/gda-oracle-provider.c:1307
 #, fuzzy
 msgid "Could not get the Oracle column handle"
-msgstr "%s adresinden dosya alýnamadý"
+msgstr "%s adresinden dosya alÄ±namadÄ±"
 
 #: providers/oracle/gda-oracle-provider.c:1320
 #, fuzzy
 msgid "Could not get the Oracle field name"
-msgstr "Oracle ortamý baþlatýlamadý"
+msgstr "Oracle ortamÄ± baÅŸlatÄ±lamadÄ±"
 
 #: providers/oracle/gda-oracle-provider.c:1341
 #, fuzzy
 msgid "Could not get the Oracle field data type"
-msgstr "CORBA factory açýlamadý"
+msgstr "CORBA factory aÃ§Ä±lamadÄ±"
 
 #: providers/oracle/gda-oracle-provider.c:1359
 #, fuzzy
 msgid "Could not get the Oracle field defined size"
-msgstr "%s adresinden dosya alýnamadý"
+msgstr "%s adresinden dosya alÄ±namadÄ±"
 
 #: providers/oracle/gda-oracle-provider.c:1376
 #, fuzzy
 msgid "Could not get the Oracle field scale"
-msgstr "%s adresinden dosya alýnamadý"
+msgstr "%s adresinden dosya alÄ±namadÄ±"
 
 #: providers/oracle/gda-oracle-provider.c:1393
 msgid "Could not get the Oracle field nullable attribute"
@@ -763,7 +763,7 @@ msgstr ""
 #: providers/oracle/gda-oracle-provider.c:1651
 #: providers/postgres/gda-postgres-provider.c:994 testing/client.c:126
 msgid "Indexes"
-msgstr "Ýndeksler"
+msgstr "Ä°ndeksler"
 
 #: providers/oracle/gda-oracle-provider.c:1659 testing/client.c:129
 msgid "Sequences"
@@ -778,22 +778,22 @@ msgstr ""
 #: providers/oracle/gda-oracle-recordset.c:73
 #, fuzzy
 msgid "Could not get the Oracle parameter"
-msgstr "Oracle ortamý baþlatýlamadý"
+msgstr "Oracle ortamÄ± baÅŸlatÄ±lamadÄ±"
 
 #: providers/oracle/gda-oracle-recordset.c:83
 #, fuzzy
 msgid "Could not get the parameter defined size"
-msgstr "%s adresindeki dosya ayrýþtýrýlamadý"
+msgstr "%s adresindeki dosya ayrÄ±ÅŸtÄ±rÄ±lamadÄ±"
 
 #: providers/oracle/gda-oracle-recordset.c:96
 #, fuzzy
 msgid "Could not get the parameter data type"
-msgstr "%s türünde bir bileþen oluþturulamadý"
+msgstr "%s tÃ¼rÃ¼nde bir bileÅŸen oluÅŸturulamadÄ±"
 
 #: providers/oracle/gda-oracle-recordset.c:127
 #, fuzzy
 msgid "Could not define by position"
-msgstr "%s adresindeki dosya yüklenemedi"
+msgstr "%s adresindeki dosya yÃ¼klenemedi"
 
 #: providers/oracle/gda-oracle-recordset.c:172
 #: providers/postgres/gda-postgres-recordset.c:263
@@ -803,37 +803,37 @@ msgstr ""
 #: providers/oracle/gda-oracle-recordset.c:184
 #, fuzzy
 msgid "Could not get the Oracle parameter information"
-msgstr "Baðlantý bileþeni oluþturulamadý"
+msgstr "BaÄŸlantÄ± bileÅŸeni oluÅŸturulamadÄ±"
 
 #: providers/oracle/gda-oracle-recordset.c:194
 #, fuzzy
 msgid "Could not get the Oracle column name"
-msgstr "%s adresinden dosya alýnamadý"
+msgstr "%s adresinden dosya alÄ±namadÄ±"
 
 #: providers/oracle/gda-oracle-recordset.c:209
 #, fuzzy
 msgid "Could not get the Oracle column data type"
-msgstr "CORBA factory açýlamadý"
+msgstr "CORBA factory aÃ§Ä±lamadÄ±"
 
 #: providers/oracle/gda-oracle-recordset.c:221
 #, fuzzy
 msgid "Could not get the Oracle column scale"
-msgstr "%s adresinden dosya alýnamadý"
+msgstr "%s adresinden dosya alÄ±namadÄ±"
 
 #: providers/oracle/gda-oracle-recordset.c:233
 #, fuzzy
 msgid "Could not get the Oracle column nullable attribute"
-msgstr "CORBA factory açýlamadý"
+msgstr "CORBA factory aÃ§Ä±lamadÄ±"
 
 #: providers/oracle/gda-oracle-recordset.c:245
 #, fuzzy
 msgid "Could not get the Oracle defined size"
-msgstr "%s adresinden dosya alýnamadý"
+msgstr "%s adresinden dosya alÄ±namadÄ±"
 
 #: providers/oracle/gda-oracle-recordset.c:353
 #, fuzzy
 msgid "Could not fetch a row"
-msgstr "%s adresinden dosya alýnamadý"
+msgstr "%s adresinden dosya alÄ±namadÄ±"
 
 #: providers/oracle/libmain.c:34
 msgid "GDA provider for Oracle databases"
@@ -852,7 +852,7 @@ msgstr ""
 #: providers/postgres/gda-postgres-provider.c:686
 #, fuzzy
 msgid "Procedure"
-msgstr "Depolanmýþ yorlamlar"
+msgstr "DepolanmÄ±ÅŸ yorlamlar"
 
 #: providers/postgres/gda-postgres-provider.c:687
 #: providers/postgres/gda-postgres-provider.c:1024
@@ -878,7 +878,7 @@ msgstr ""
 #: providers/postgres/gda-postgres-provider.c:1473
 #, fuzzy
 msgid "Definition"
-msgstr "Açýklama"
+msgstr "AÃ§Ä±klama"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/postgres/gda-postgres-provider.c:901
@@ -890,23 +890,23 @@ msgstr ""
 #: providers/postgres/gda-postgres-provider.c:966
 #, fuzzy
 msgid "View"
-msgstr "Görünümler"
+msgstr "GÃ¶rÃ¼nÃ¼mler"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/postgres/gda-postgres-provider.c:1023
 #, fuzzy
 msgid "Aggregate"
-msgstr "\t\tAktarýmlar %s\n"
+msgstr "\t\tAktarÄ±mlar %s\n"
 
 #: providers/postgres/gda-postgres-provider.c:1027
 #, fuzzy
 msgid "OutType"
-msgstr "Tür"
+msgstr "TÃ¼r"
 
 #: providers/postgres/gda-postgres-provider.c:1028
 #, fuzzy
 msgid "InType"
-msgstr "Tür"
+msgstr "TÃ¼r"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/postgres/gda-postgres-provider.c:1419 testing/client.c:121
@@ -934,24 +934,32 @@ msgstr ""
 msgid "GDA provider for PostgreSQL databases"
 msgstr ""
 
-#: providers/sqlite/gda-sqlite-provider.c:246
-msgid "Invalid SQLITE handle"
-msgstr ""
-
-#: providers/sqlite/gda-sqlite-provider.c:314
-#: providers/sqlite/gda-sqlite-provider.c:449
+#: providers/sqlite/gda-sqlite-provider.c:243
+#: providers/sqlite/gda-sqlite-provider.c:266
+#: providers/sqlite/gda-sqlite-provider.c:289
+#: providers/sqlite/gda-sqlite-provider.c:311
 #: providers/sqlite/gda-sqlite-recordset.c:159
 #: providers/sqlite/gda-sqlite-recordset.c:198
 #: providers/sqlite/gda-sqlite-recordset.c:239
 msgid "Invalid SQLite handle"
 msgstr ""
 
-#: providers/sqlite/gda-sqlite-provider.c:332
+#: providers/sqlite/gda-sqlite-provider.c:270
+msgid ""
+"To change a SQLite database you should close the actual database and open a "
+"new one"
+msgstr ""
+
+#: providers/sqlite/gda-sqlite-provider.c:293
 msgid "Only one database per connection is allowed"
 msgstr ""
 
-#: providers/sqlite/gda-sqlite-provider.c:346
+#: providers/sqlite/gda-sqlite-provider.c:315
 msgid "To remove a SQLite database you should remove the database file by hand"
+msgstr ""
+
+#: providers/sqlite/gda-sqlite-provider.c:329
+msgid "Invalid SQLITE handle"
 msgstr ""
 
 #: providers/sqlite/libmain.c:41
@@ -961,25 +969,31 @@ msgstr ""
 #: providers/sybase/main.c:52
 #, fuzzy
 msgid "Could not initiate Sybase component factory"
-msgstr "CORBA factory açýlamadý"
+msgstr "CORBA factory aÃ§Ä±lamadÄ±"
 
-#: report/libgda-report/gda-report-document.c:166
-msgid "Could not parse XML document"
-msgstr "XML belgesi ayrýþtýrýlamadý"
+#: report/libgda-report/gda-report-document.c:158
+#, fuzzy, c-format
+msgid "Could not load report file at %s"
+msgstr "%s adresindeki dosya yÃ¼klenemedi"
 
-#: report/libgda-report/gda-report-document.c:191
+#: report/libgda-report/gda-report-document.c:167
+#, fuzzy, c-format
+msgid "Could not parse report file at %s"
+msgstr "%s adresindeki dosya ayrÄ±ÅŸtÄ±rÄ±lamadÄ±"
+
+#: report/libgda-report/gda-report-document.c:177
 #, c-format
-msgid "Could not get file from %s"
-msgstr "%s adresinden dosya alýnamadý"
+msgid "Invalid report file '%s'"
+msgstr ""
 
 #: testing/client.c:41
 msgid "\t\tNONE\n"
-msgstr "\t\tHÝÇBÝRÝ\n"
+msgstr "\t\tHÄ°Ã‡BÄ°RÄ°\n"
 
 #: testing/client.c:81
 #, c-format
 msgid "** ERROR: could not open connection to %s\n"
-msgstr "** HATA: %s adresine baðlantý kurulamadý\n"
+msgstr "** HATA: %s adresine baÄŸlantÄ± kurulamadÄ±\n"
 
 #. show provider features
 #: testing/client.c:86
@@ -989,7 +1003,7 @@ msgstr ""
 #: testing/client.c:87
 #, fuzzy, c-format
 msgid "\t\tAggregates: %s\n"
-msgstr "\t\tAktarýmlar %s\n"
+msgstr "\t\tAktarÄ±mlar %s\n"
 
 #: testing/client.c:89 testing/client.c:92 testing/client.c:95
 #: testing/client.c:98 testing/client.c:101 testing/client.c:104
@@ -1008,7 +1022,7 @@ msgstr "Desteklenmez"
 #: testing/client.c:90
 #, fuzzy, c-format
 msgid "\t\tIndexes: %s\n"
-msgstr "Ýndeksler"
+msgstr "Ä°ndeksler"
 
 #: testing/client.c:93
 #, c-format
@@ -1028,12 +1042,12 @@ msgstr ""
 #: testing/client.c:102
 #, c-format
 msgid "\t\tTransactions: %s\n"
-msgstr "\t\tAktarýmlar %s\n"
+msgstr "\t\tAktarÄ±mlar %s\n"
 
 #: testing/client.c:105
 #, fuzzy, c-format
 msgid "\t\tTriggers: %s\n"
-msgstr "\t\tAktarýmlar %s\n"
+msgstr "\t\tAktarÄ±mlar %s\n"
 
 #: testing/client.c:108
 #, c-format
@@ -1061,15 +1075,15 @@ msgstr ""
 
 #: testing/client.c:122
 msgid "Stored procedures"
-msgstr "Depolanmýþ yorlamlar"
+msgstr "DepolanmÄ±ÅŸ yorlamlar"
 
 #: testing/client.c:123
 msgid "Connection Tables"
-msgstr "Baðlantý Tablolarý"
+msgstr "BaÄŸlantÄ± TablolarÄ±"
 
 #: testing/client.c:124
 msgid "Available types"
-msgstr "Kullanýlabilir türler"
+msgstr "KullanÄ±labilir tÃ¼rler"
 
 #: testing/client.c:127
 msgid "Aggregates"
@@ -1077,7 +1091,7 @@ msgstr ""
 
 #: testing/client.c:135 testing/client.c:143
 msgid "\tStarting transaction..."
-msgstr "\tÝletiþime baþlanýyor.."
+msgstr "\tÄ°letiÅŸime baÅŸlanÄ±yor.."
 
 #: testing/client.c:137 testing/client.c:141 testing/client.c:145
 #: testing/client.c:149
@@ -1103,7 +1117,7 @@ msgstr ""
 #: testing/client.c:186
 #, fuzzy, c-format
 msgid " Data source = %s, User = %s\n"
-msgstr "%s veri kaynaðý bulunamadý"
+msgstr "%s veri kaynaÄŸÄ± bulunamadÄ±"
 
 #: testing/config.c:85
 msgid "** ERROR: gda_config_get_provider_list returned a NULL item\n"
@@ -1128,9 +1142,15 @@ msgstr ""
 msgid "\tgda_params ="
 msgstr ""
 
+#~ msgid "Could not parse XML document"
+#~ msgstr "XML belgesi ayrÄ±ÅŸtÄ±rÄ±lamadÄ±"
+
+#~ msgid "Could not get file from %s"
+#~ msgstr "%s adresinden dosya alÄ±namadÄ±"
+
 #, fuzzy
 #~ msgid "Could not create global GDA client"
-#~ msgstr "%s'e baðlantý kurulamadý"
+#~ msgstr "%s'e baÄŸlantÄ± kurulamadÄ±"
 
 #~ msgid "GDA Report engine"
 #~ msgstr "GDA rapor motoru"
@@ -1139,104 +1159,104 @@ msgstr ""
 #~ msgstr "GDA rapor motoru mimarisi"
 
 #~ msgid "Could not parse XML report"
-#~ msgstr "XML raporu ayrýþtýrýlamadý"
+#~ msgstr "XML raporu ayrÄ±ÅŸtÄ±rÄ±lamadÄ±"
 
 #, fuzzy
 #~ msgid "Could not activate report engine"
-#~ msgstr "%s'e baðlantý kurulamadý"
+#~ msgstr "%s'e baÄŸlantÄ± kurulamadÄ±"
 
 #, fuzzy
 #~ msgid "Could not create BonoboStreamMem object"
-#~ msgstr "%s'e baðlantý kurulamadý"
+#~ msgstr "%s'e baÄŸlantÄ± kurulamadÄ±"
 
 #~ msgid "Could not initiate Report component factory"
-#~ msgstr "Raporlama bileþen mimarisi açýlamadý"
+#~ msgstr "Raporlama bileÅŸen mimarisi aÃ§Ä±lamadÄ±"
 
 #~ msgid "Could not activate object %s"
-#~ msgstr "%s nesnesi etkinleþtirilemedi"
+#~ msgstr "%s nesnesi etkinleÅŸtirilemedi"
 
 #~ msgid "Could not query CORBA components"
-#~ msgstr "CORBA bileþenleri üzerinde tarama yapýlamadý"
+#~ msgstr "CORBA bileÅŸenleri Ã¼zerinde tarama yapÄ±lamadÄ±"
 
 #~ msgid "%s: An Error occured in the CORBA system."
-#~ msgstr "%s: CORBA sisteminde bir hata oluþtu."
+#~ msgstr "%s: CORBA sisteminde bir hata oluÅŸtu."
 
 #~ msgid "Could not initialize Bonobo"
-#~ msgstr "Bonobo baþlatýlamadý"
+#~ msgstr "Bonobo baÅŸlatÄ±lamadÄ±"
 
 #~ msgid "Could not duplicate client object. Client won't get notifications"
-#~ msgstr "Ýstemci nesnesi kopyalanamadý. Ýstemci bundan haberdar olmayacak"
+#~ msgstr "Ä°stemci nesnesi kopyalanamadÄ±. Ä°stemci bundan haberdar olmayacak"
 
 #, fuzzy
 #~ msgid "Could not notify client about action %d"
-#~ msgstr "%s'e baðlantý kurulamadý"
+#~ msgstr "%s'e baÄŸlantÄ± kurulamadÄ±"
 
 #, fuzzy
 #~ msgid "Default component factory"
-#~ msgstr "CORBA factory açýlamadý"
+#~ msgstr "CORBA factory aÃ§Ä±lamadÄ±"
 
 #, fuzzy
 #~ msgid "Could not initiate Default component factory"
-#~ msgstr "CORBA factory açýlamadý"
+#~ msgstr "CORBA factory aÃ§Ä±lamadÄ±"
 
 #~ msgid "MySQL component factory"
-#~ msgstr "MySQL bileþen mimarisi"
+#~ msgstr "MySQL bileÅŸen mimarisi"
 
 #, fuzzy
 #~ msgid "Could not initiate MySQL component factory"
-#~ msgstr "CORBA factory açýlamadý"
+#~ msgstr "CORBA factory aÃ§Ä±lamadÄ±"
 
 #~ msgid "ODBC component factory"
-#~ msgstr "ODBC bileþen mimarisi"
+#~ msgstr "ODBC bileÅŸen mimarisi"
 
 #~ msgid "Could not initiate ODBC component factory"
-#~ msgstr "ODBC bileþen mimarisi baþlatýlamadý"
+#~ msgstr "ODBC bileÅŸen mimarisi baÅŸlatÄ±lamadÄ±"
 
 #, fuzzy
 #~ msgid "Oracle component factory"
-#~ msgstr "CORBA factory açýlamadý"
+#~ msgstr "CORBA factory aÃ§Ä±lamadÄ±"
 
 #~ msgid "GDA Datasource Access for Postgres"
-#~ msgstr "Postgres için GDA kaynak eriþimi"
+#~ msgstr "Postgres iÃ§in GDA kaynak eriÅŸimi"
 
 #~ msgid "Postgres component factory"
-#~ msgstr "Postgres bileþen mimarisi"
+#~ msgstr "Postgres bileÅŸen mimarisi"
 
 #, fuzzy
 #~ msgid "Could not initiate PostgreSQL component factory"
-#~ msgstr "CORBA factory açýlamadý"
+#~ msgstr "CORBA factory aÃ§Ä±lamadÄ±"
 
 #, fuzzy
 #~ msgid "numeric"
-#~ msgstr "sayý"
+#~ msgstr "sayÄ±"
 
 #~ msgid "SQLite component factory"
-#~ msgstr "SQLite bileþen mimarisi"
+#~ msgstr "SQLite bileÅŸen mimarisi"
 
 #, fuzzy
 #~ msgid "Could not initiate Sqlite component factory"
-#~ msgstr "CORBA factory açýlamadý"
+#~ msgstr "CORBA factory aÃ§Ä±lamadÄ±"
 
 #~ msgid "table %s already exists"
 #~ msgstr "%s tablosu zaten var"
 
 #~ msgid "Client Message: "
-#~ msgstr "Ýstemci Mesajý: "
+#~ msgstr "Ä°stemci MesajÄ±: "
 
 #~ msgid "Informational Client  Message: "
-#~ msgstr "Ýstemci Bilgi Mesajý:"
+#~ msgstr "Ä°stemci Bilgi MesajÄ±:"
 
 #~ msgid "Server Message: "
-#~ msgstr "Sunucu Mesajý: "
+#~ msgstr "Sunucu MesajÄ±: "
 
 #~ msgid "Informational Server  Message: "
-#~ msgstr "Sunucu Bilgi Mesajý: "
+#~ msgstr "Sunucu Bilgi MesajÄ±: "
 
 #~ msgid "SYB"
 #~ msgstr "SYB"
 
 #~ msgid "severity"
-#~ msgstr "önem"
+#~ msgstr "Ã¶nem"
 
 #~ msgid "origin"
 #~ msgstr "kaynak"

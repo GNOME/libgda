@@ -9,7 +9,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2002-09-09 22:11+0200\n"
+"POT-Creation-Date: 2002-09-11 13:18+0200\n"
 "PO-Revision-Date: 2002-08-22 13:09+0200\n"
 "Last-Translator: GNOME PL Team <translators@gnome.pl>\n"
 "Language-Team: Polish <pl@li.org>\n"
@@ -201,7 +201,7 @@ msgid "Invalid XML node"
 msgstr "Niepoprawny węzeł XML-a"
 
 #: providers/default/gda-default-provider.c:191
-#: providers/sqlite/gda-sqlite-provider.c:186
+#: providers/sqlite/gda-sqlite-provider.c:183
 msgid ""
 "A full path must be specified on the connection string to open a database."
 msgstr ""
@@ -902,25 +902,34 @@ msgstr "Krotki:\"%s\""
 msgid "GDA provider for PostgreSQL databases"
 msgstr "Dostarczyciel GDA dla baz danych PostgreSQL"
 
-#: providers/sqlite/gda-sqlite-provider.c:246
-msgid "Invalid SQLITE handle"
-msgstr "Niepoprawny uchwyt SQLit"
-
-#: providers/sqlite/gda-sqlite-provider.c:314
-#: providers/sqlite/gda-sqlite-provider.c:449
+#: providers/sqlite/gda-sqlite-provider.c:243
+#: providers/sqlite/gda-sqlite-provider.c:266
+#: providers/sqlite/gda-sqlite-provider.c:289
+#: providers/sqlite/gda-sqlite-provider.c:311
 #: providers/sqlite/gda-sqlite-recordset.c:159
 #: providers/sqlite/gda-sqlite-recordset.c:198
 #: providers/sqlite/gda-sqlite-recordset.c:239
 msgid "Invalid SQLite handle"
 msgstr "Niepoprawny uchwyt SQLite"
 
-#: providers/sqlite/gda-sqlite-provider.c:332
+#: providers/sqlite/gda-sqlite-provider.c:270
+#, fuzzy
+msgid ""
+"To change a SQLite database you should close the actual database and open a "
+"new one"
+msgstr "Aby usunąć bazę danych SQLite, należy ręcznie usunąć plik bazy danych."
+
+#: providers/sqlite/gda-sqlite-provider.c:293
 msgid "Only one database per connection is allowed"
 msgstr "Dopuszczalna jest tylko jedna baza danych na połączenie"
 
-#: providers/sqlite/gda-sqlite-provider.c:346
+#: providers/sqlite/gda-sqlite-provider.c:315
 msgid "To remove a SQLite database you should remove the database file by hand"
 msgstr "Aby usunąć bazę danych SQLite, należy ręcznie usunąć plik bazy danych."
+
+#: providers/sqlite/gda-sqlite-provider.c:329
+msgid "Invalid SQLITE handle"
+msgstr "Niepoprawny uchwyt SQLit"
 
 #: providers/sqlite/libmain.c:41
 msgid "GDA provider for SQLite databases"
@@ -930,14 +939,20 @@ msgstr "Dostarczyciel GDA dla baz danych SQLite"
 msgid "Could not initiate Sybase component factory"
 msgstr "Nie można zainicjować generatora komponentów Sybase'a"
 
-#: report/libgda-report/gda-report-document.c:166
-msgid "Could not parse XML document"
-msgstr "Nie można przeanalizować dokumentu w XML-u"
+#: report/libgda-report/gda-report-document.c:158
+#, fuzzy, c-format
+msgid "Could not load report file at %s"
+msgstr "Nie można odczytać pliku %s"
 
-#: report/libgda-report/gda-report-document.c:191
-#, c-format
-msgid "Could not get file from %s"
-msgstr "Nie można uzyskać pliku spod %s"
+#: report/libgda-report/gda-report-document.c:167
+#, fuzzy, c-format
+msgid "Could not parse report file at %s"
+msgstr "Nie można przeanalizować pliku %s"
+
+#: report/libgda-report/gda-report-document.c:177
+#, fuzzy, c-format
+msgid "Invalid report file '%s'"
+msgstr "Niepoprawny plik bazy danych w XML-u \"%s\""
 
 #: testing/client.c:41
 msgid "\t\tNONE\n"
@@ -1099,6 +1114,12 @@ msgstr "\topis = %s\n"
 #: testing/config.c:93
 msgid "\tgda_params ="
 msgstr "\tparam_gda ="
+
+#~ msgid "Could not parse XML document"
+#~ msgstr "Nie można przeanalizować dokumentu w XML-u"
+
+#~ msgid "Could not get file from %s"
+#~ msgstr "Nie można uzyskać pliku spod %s"
 
 #~ msgid "Unknown"
 #~ msgstr "Nieznany"

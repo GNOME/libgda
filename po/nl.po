@@ -5,12 +5,12 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Libgda CVS\n"
-"POT-Creation-Date: 2002-09-09 22:11+0200\n"
+"POT-Creation-Date: 2002-09-11 13:17+0200\n"
 "PO-Revision-Date: 2002-03-09 19:16+0100\n"
 "Last-Translator: Arjan Timmerman <arjan@kwando-tech.nl>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=iso-8859-1\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: libgda/gda-client.c:227 libgda/gda-client.c:414 libgda/gda-connection.c:214
@@ -199,7 +199,7 @@ msgid "Invalid XML node"
 msgstr "Ongeldige MYSQL handeling"
 
 #: providers/default/gda-default-provider.c:191
-#: providers/sqlite/gda-sqlite-provider.c:186
+#: providers/sqlite/gda-sqlite-provider.c:183
 msgid ""
 "A full path must be specified on the connection string to open a database."
 msgstr ""
@@ -959,12 +959,10 @@ msgstr ""
 msgid "GDA provider for PostgreSQL databases"
 msgstr ""
 
-#: providers/sqlite/gda-sqlite-provider.c:246
-msgid "Invalid SQLITE handle"
-msgstr "Ongeldige SQLITE handeling"
-
-#: providers/sqlite/gda-sqlite-provider.c:314
-#: providers/sqlite/gda-sqlite-provider.c:449
+#: providers/sqlite/gda-sqlite-provider.c:243
+#: providers/sqlite/gda-sqlite-provider.c:266
+#: providers/sqlite/gda-sqlite-provider.c:289
+#: providers/sqlite/gda-sqlite-provider.c:311
 #: providers/sqlite/gda-sqlite-recordset.c:159
 #: providers/sqlite/gda-sqlite-recordset.c:198
 #: providers/sqlite/gda-sqlite-recordset.c:239
@@ -972,13 +970,23 @@ msgstr "Ongeldige SQLITE handeling"
 msgid "Invalid SQLite handle"
 msgstr "Ongeldige Sqlite handeling"
 
-#: providers/sqlite/gda-sqlite-provider.c:332
+#: providers/sqlite/gda-sqlite-provider.c:270
+msgid ""
+"To change a SQLite database you should close the actual database and open a "
+"new one"
+msgstr ""
+
+#: providers/sqlite/gda-sqlite-provider.c:293
 msgid "Only one database per connection is allowed"
 msgstr ""
 
-#: providers/sqlite/gda-sqlite-provider.c:346
+#: providers/sqlite/gda-sqlite-provider.c:315
 msgid "To remove a SQLite database you should remove the database file by hand"
 msgstr ""
+
+#: providers/sqlite/gda-sqlite-provider.c:329
+msgid "Invalid SQLITE handle"
+msgstr "Ongeldige SQLITE handeling"
 
 #: providers/sqlite/libmain.c:41
 msgid "GDA provider for SQLite databases"
@@ -989,15 +997,20 @@ msgstr ""
 msgid "Could not initiate Sybase component factory"
 msgstr "Kon 'CORBA factory' niet openen"
 
-#: report/libgda-report/gda-report-document.c:166
-#, fuzzy
-msgid "Could not parse XML document"
-msgstr "Kon lokale instellingen niet veranderen naar '%s'"
+#: report/libgda-report/gda-report-document.c:158
+#, fuzzy, c-format
+msgid "Could not load report file at %s"
+msgstr "Kon bestand niet laden op '%s'"
 
-#: report/libgda-report/gda-report-document.c:191
-#, c-format
-msgid "Could not get file from %s"
-msgstr "Kon het bestand %s niet verkrijgen"
+#: report/libgda-report/gda-report-document.c:167
+#, fuzzy, c-format
+msgid "Could not parse report file at %s"
+msgstr "Kreeg een ontledingsfout in bestand bij %s"
+
+#: report/libgda-report/gda-report-document.c:177
+#, fuzzy, c-format
+msgid "Invalid report file '%s'"
+msgstr "Geselecteerde databank '%s'"
 
 #: testing/client.c:41
 msgid "\t\tNONE\n"
@@ -1161,6 +1174,13 @@ msgstr "\tomschrijving = %s\n"
 #: testing/config.c:93
 msgid "\tgda_params ="
 msgstr "\tgda_params ="
+
+#, fuzzy
+#~ msgid "Could not parse XML document"
+#~ msgstr "Kon lokale instellingen niet veranderen naar '%s'"
+
+#~ msgid "Could not get file from %s"
+#~ msgstr "Kon het bestand %s niet verkrijgen"
 
 #~ msgid "Could not initialize OCI library"
 #~ msgstr "Kon OCI Bibliotheek niet initializeren"

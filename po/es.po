@@ -9,7 +9,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2002-09-09 05:55+0200\n"
+"POT-Creation-Date: 2002-09-11 13:17+0200\n"
 "PO-Revision-Date: 2002-06-05 22:51GMT -03:00\n"
 "Last-Translator: Pablo Gonzalo del Campo <pablodc@bigfoot.com>\n"
 "Language-Team: español <traductores@es.gnome.org>\n"
@@ -201,8 +201,9 @@ msgid "Invalid XML node"
 msgstr "Nodo XML inválido"
 
 #: providers/default/gda-default-provider.c:191
-#: providers/sqlite/gda-sqlite-provider.c:186
-msgid "A full path must be specified on the connection string to open a database."
+#: providers/sqlite/gda-sqlite-provider.c:183
+msgid ""
+"A full path must be specified on the connection string to open a database."
 msgstr ""
 "Una ruta completa debe ser especificada en la cadena de conexión para abrir "
 "la base de datos."
@@ -434,7 +435,8 @@ msgstr ""
 
 #: providers/ibmdb2/gda-ibmdb2-provider.c:205
 msgid "SQLGetFunctions gave unexpected return. Connection terminated.\n"
-msgstr "SQLGetFunctions ha obtenido un retorno inesperado. Conexión finalizada.\n"
+msgstr ""
+"SQLGetFunctions ha obtenido un retorno inesperado. Conexión finalizada.\n"
 
 #: providers/ibmdb2/libmain.c:39
 msgid "GDA provider for IBMDB2"
@@ -465,8 +467,10 @@ msgid "GDA provider for MS Access files"
 msgstr "Proveedor GDA para archivos MS Access"
 
 #: providers/mysql/gda-mysql-provider.c:215
-msgid "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
-msgstr "No puede proveer un UNIX_SOCKET si al mismo tiempo provee un HOST o un PORT."
+msgid ""
+"You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
+msgstr ""
+"No puede proveer un UNIX_SOCKET si al mismo tiempo provee un HOST o un PORT."
 
 #: providers/mysql/gda-mysql-provider.c:290
 #: providers/mysql/gda-mysql-provider.c:1027
@@ -524,8 +528,8 @@ msgstr "Valor predeterminado"
 #: providers/mysql/gda-mysql-provider.c:1044
 msgid "Table name is needed but none specified in parameter list"
 msgstr ""
-"El nombre de la tabla es necesario pero no se ha especificado uno en la lista "
-"de parametros"
+"El nombre de la tabla es necesario pero no se ha especificado uno en la "
+"lista de parametros"
 
 #: providers/mysql/gda-mysql-recordset.c:70
 #: providers/postgres/gda-postgres-recordset.c:184
@@ -647,7 +651,8 @@ msgstr "No se ha podido ejecutar la sentencia de Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:574
 msgid "Could not get the number of columns in the result set"
-msgstr "No se ha podido obtener la cantidad de columnas en el conjunto de resultado"
+msgstr ""
+"No se ha podido obtener la cantidad de columnas en el conjunto de resultado"
 
 #: providers/oracle/gda-oracle-provider.c:591
 msgid "Could not get the parameter descripter in the result set"
@@ -657,7 +662,8 @@ msgstr ""
 
 #: providers/oracle/gda-oracle-provider.c:603
 msgid "Could not get the column name in the result set"
-msgstr "No se ha podido obtener el nombre de la columna en el conjunto de resultado"
+msgstr ""
+"No se ha podido obtener el nombre de la columna en el conjunto de resultado"
 
 #: providers/oracle/gda-oracle-provider.c:749
 #: providers/oracle/gda-oracle-provider.c:825
@@ -892,27 +898,38 @@ msgstr "Tuples:«%s»"
 msgid "GDA provider for PostgreSQL databases"
 msgstr "Proveedor GDA para bases de datos PostgreSQL"
 
-#: providers/sqlite/gda-sqlite-provider.c:246
-msgid "Invalid SQLITE handle"
-msgstr "Manejador SQLITE inválido"
-
-#: providers/sqlite/gda-sqlite-provider.c:314
-#: providers/sqlite/gda-sqlite-provider.c:449
+#: providers/sqlite/gda-sqlite-provider.c:243
+#: providers/sqlite/gda-sqlite-provider.c:266
+#: providers/sqlite/gda-sqlite-provider.c:289
+#: providers/sqlite/gda-sqlite-provider.c:311
 #: providers/sqlite/gda-sqlite-recordset.c:159
 #: providers/sqlite/gda-sqlite-recordset.c:198
 #: providers/sqlite/gda-sqlite-recordset.c:239
 msgid "Invalid SQLite handle"
 msgstr "Manejador SQLite inválido"
 
-#: providers/sqlite/gda-sqlite-provider.c:332
+#: providers/sqlite/gda-sqlite-provider.c:270
+#, fuzzy
+msgid ""
+"To change a SQLite database you should close the actual database and open a "
+"new one"
+msgstr ""
+"Para quitar una base de datos SQLite debe remover el archivo de la base de "
+"datos manualmente"
+
+#: providers/sqlite/gda-sqlite-provider.c:293
 msgid "Only one database per connection is allowed"
 msgstr "Sólo se permite una base de datos por conexión"
 
-#: providers/sqlite/gda-sqlite-provider.c:346
+#: providers/sqlite/gda-sqlite-provider.c:315
 msgid "To remove a SQLite database you should remove the database file by hand"
 msgstr ""
 "Para quitar una base de datos SQLite debe remover el archivo de la base de "
 "datos manualmente"
+
+#: providers/sqlite/gda-sqlite-provider.c:329
+msgid "Invalid SQLITE handle"
+msgstr "Manejador SQLITE inválido"
 
 #: providers/sqlite/libmain.c:41
 msgid "GDA provider for SQLite databases"
@@ -922,14 +939,20 @@ msgstr "Proveedor GDA para bases de datos SQLite"
 msgid "Could not initiate Sybase component factory"
 msgstr "No se ha podido inicializar el origen de componente Sybase"
 
-#: report/libgda-report/gda-report-document.c:166
-msgid "Could not parse XML document"
-msgstr "No se ha podido analizar el documento XML"
+#: report/libgda-report/gda-report-document.c:158
+#, fuzzy, c-format
+msgid "Could not load report file at %s"
+msgstr "No se ha podido cargar el archivo en %s"
 
-#: report/libgda-report/gda-report-document.c:191
-#, c-format
-msgid "Could not get file from %s"
-msgstr "No se ha podido obtener el archivo desde %s"
+#: report/libgda-report/gda-report-document.c:167
+#, fuzzy, c-format
+msgid "Could not parse report file at %s"
+msgstr "No se ha podido analizar el archivo en %s"
+
+#: report/libgda-report/gda-report-document.c:177
+#, fuzzy, c-format
+msgid "Invalid report file '%s'"
+msgstr "Archivo de base de datos XML inválido «%s»"
 
 #: testing/client.c:41
 msgid "\t\tNONE\n"
@@ -1090,6 +1113,12 @@ msgstr "\tdescripción = %s\n"
 msgid "\tgda_params ="
 msgstr "\tgda_params ="
 
+#~ msgid "Could not parse XML document"
+#~ msgstr "No se ha podido analizar el documento XML"
+
+#~ msgid "Could not get file from %s"
+#~ msgstr "No se ha podido obtener el archivo desde %s"
+
 #~ msgid "Unknown"
 #~ msgstr "Desconocido"
 
@@ -1226,4 +1255,3 @@ msgstr "\tgda_params ="
 
 #~ msgid "\tdomain = %s\n"
 #~ msgstr "\tdominio = %s\n"
-

@@ -6,18 +6,18 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2002-09-09 22:11+0200\n"
+"POT-Creation-Date: 2002-09-11 13:17+0200\n"
 "PO-Revision-Date: 2000-11-12 19:00+0100\n"
 "Last-Translator: Markku Verkkoniemi <myv@iki.fi>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=iso-8859-15\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: libgda/gda-client.c:227 libgda/gda-client.c:414 libgda/gda-connection.c:214
 #, fuzzy, c-format
 msgid "Data source %s not found in configuration"
-msgstr "J‰rjestelm‰asetuksista ei lˆydy tietokantaa \"%s\""
+msgstr "J√§rjestelm√§asetuksista ei l√∂ydy tietokantaa \"%s\""
 
 #: libgda/gda-client.c:245
 #, c-format
@@ -32,7 +32,7 @@ msgstr "CORBA-tehdasta ei voi avata"
 #: libgda/gda-client.c:270
 #, fuzzy, c-format
 msgid "Provider %s does not implement entry point"
-msgstr "K‰ynnistet‰‰n tuottaja %s ilman toteutustoimintoja"
+msgstr "K√§ynnistet√§√§n tuottaja %s ilman toteutustoimintoja"
 
 #: libgda/gda-client.c:279
 msgid "Creation of GdaServerProvider failed"
@@ -58,7 +58,7 @@ msgstr ""
 #: libgda/gda-config.c:1270
 #, fuzzy
 msgid "Connection string"
-msgstr "Yhteys n‰ytt‰‰ olevan poikki"
+msgstr "Yhteys n√§ytt√§√§ olevan poikki"
 
 #: libgda/gda-config.c:1271 providers/postgres/gda-postgres-provider.c:903
 msgid "Description"
@@ -67,7 +67,7 @@ msgstr ""
 #: libgda/gda-config.c:1272
 #, fuzzy
 msgid "Username"
-msgstr "k‰ytt‰j‰tunnus"
+msgstr "k√§ytt√§j√§tunnus"
 
 #: libgda/gda-config.c:1273
 #, fuzzy
@@ -154,7 +154,7 @@ msgstr "TOSI"
 
 #: libgda/gda-value.c:1456
 msgid "FALSE"
-msgstr "EPƒTOSI"
+msgstr "EP√ÑTOSI"
 
 #: libgda/gda-xml-database.c:236
 #, fuzzy, c-format
@@ -201,7 +201,7 @@ msgid "Invalid XML node"
 msgstr ""
 
 #: providers/default/gda-default-provider.c:191
-#: providers/sqlite/gda-sqlite-provider.c:186
+#: providers/sqlite/gda-sqlite-provider.c:183
 msgid ""
 "A full path must be specified on the connection string to open a database."
 msgstr ""
@@ -247,7 +247,7 @@ msgstr ""
 #: providers/postgres/gda-postgres-provider.c:1068
 #, fuzzy
 msgid "Scale"
-msgstr "Ep‰tosi"
+msgstr "Ep√§tosi"
 
 #: providers/default/gda-default-provider.c:459
 #: providers/mysql/gda-mysql-provider.c:1015
@@ -285,12 +285,12 @@ msgstr ""
 #: providers/default/gda-default-provider.c:485
 #, fuzzy, c-format
 msgid "Table %s not found"
-msgstr "Datal‰hdett‰ %s ei lˆydy"
+msgstr "Datal√§hdett√§ %s ei l√∂ydy"
 
 #: providers/default/gda-default-provider.c:510
 #, fuzzy
 msgid "Could not get description for column"
-msgstr "yhteytt‰ paikkaan %s ei voi avata"
+msgstr "yhteytt√§ paikkaan %s ei voi avata"
 
 #: providers/default/libmain.c:39
 msgid "GDA default provider, based on the libgda XML format"
@@ -318,7 +318,7 @@ msgstr ""
 #: providers/freetds/gda-freetds-provider.c:237
 #, fuzzy
 msgid "Failed getting connection info."
-msgstr "yhteytt‰ yritet‰‰n uudelleen"
+msgstr "yhteytt√§ yritet√§√§n uudelleen"
 
 #: providers/freetds/gda-freetds-provider.c:542
 #: providers/oracle/gda-oracle-provider.c:1655
@@ -341,7 +341,7 @@ msgstr ""
 #: providers/postgres/gda-postgres-provider.c:1444 testing/client.c:128
 #, fuzzy
 msgid "Users"
-msgstr "k‰ytt‰j‰tunnus"
+msgstr "k√§ytt√§j√§tunnus"
 
 #: providers/freetds/gda-freetds-provider.c:568
 #: providers/oracle/gda-oracle-provider.c:1671 testing/client.c:125
@@ -472,7 +472,7 @@ msgid ""
 "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
 msgstr ""
 "%s:%d: UNIX_SOCKETia ei voi antaa, jos joko HOST tai PORT on jo annettu. "
-"Poista UNIX_SOCKET tai sek‰ HOST- ett‰ PORT-valinta"
+"Poista UNIX_SOCKET tai sek√§ HOST- ett√§ PORT-valinta"
 
 #: providers/mysql/gda-mysql-provider.c:290
 #: providers/mysql/gda-mysql-provider.c:1027
@@ -548,13 +548,13 @@ msgstr ""
 #: providers/oracle/gda-oracle-recordset.c:482
 #, fuzzy
 msgid "Could not retrieve column's information"
-msgstr "yhteytt‰ paikkaan %s ei voi avata"
+msgstr "yhteytt√§ paikkaan %s ei voi avata"
 
 #: providers/mysql/gda-mysql-recordset.c:322
 #: providers/oracle/gda-oracle-recordset.c:500
 #, fuzzy
 msgid "Could not retrieve column's value"
-msgstr "Palvelinilmoituksia ei voi tyhjent‰‰"
+msgstr "Palvelinilmoituksia ei voi tyhjent√§√§"
 
 #: providers/mysql/libmain.c:41
 msgid "GDA provider for MySQL databases"
@@ -667,7 +667,7 @@ msgstr "ct_diag():ia ei voi alustaa"
 #: providers/oracle/gda-oracle-provider.c:574
 #, fuzzy
 msgid "Could not get the number of columns in the result set"
-msgstr "Asiakasilmoitusten m‰‰r‰‰ ei saada"
+msgstr "Asiakasilmoitusten m√§√§r√§√§ ei saada"
 
 #: providers/oracle/gda-oracle-provider.c:591
 msgid "Could not get the parameter descripter in the result set"
@@ -676,7 +676,7 @@ msgstr ""
 #: providers/oracle/gda-oracle-provider.c:603
 #, fuzzy
 msgid "Could not get the column name in the result set"
-msgstr "Asiakasilmoitusten m‰‰r‰‰ ei saada"
+msgstr "Asiakasilmoitusten m√§√§r√§√§ ei saada"
 
 #: providers/oracle/gda-oracle-provider.c:749
 #: providers/oracle/gda-oracle-provider.c:825
@@ -704,7 +704,7 @@ msgstr "CORBA-tehdasta ei voi avata"
 #: providers/oracle/gda-oracle-provider.c:884
 #, fuzzy
 msgid "Could not prepare the transaction to commit"
-msgstr "yhteytt‰ paikkaan %s ei voi avata"
+msgstr "yhteytt√§ paikkaan %s ei voi avata"
 
 #: providers/oracle/gda-oracle-provider.c:892
 #, fuzzy
@@ -724,7 +724,7 @@ msgstr "Lausekahvaa ei voi varata"
 #: providers/oracle/gda-oracle-provider.c:1240
 #, fuzzy
 msgid "Could not describe the Oracle table"
-msgstr "Palvelinilmoituksia ei voi tyhjent‰‰"
+msgstr "Palvelinilmoituksia ei voi tyhjent√§√§"
 
 #: providers/oracle/gda-oracle-provider.c:1253
 #, fuzzy
@@ -734,7 +734,7 @@ msgstr "cs_diag():ia ei voi alustaa"
 #: providers/oracle/gda-oracle-provider.c:1266
 #, fuzzy
 msgid "Could not get the number of columns in the table"
-msgstr "Palvelinilmoituksia ei voi tyhjent‰‰"
+msgstr "Palvelinilmoituksia ei voi tyhjent√§√§"
 
 #: providers/oracle/gda-oracle-provider.c:1278
 #, fuzzy
@@ -764,7 +764,7 @@ msgstr "localea ei voi asettaa \"%s\":ksi"
 #: providers/oracle/gda-oracle-provider.c:1376
 #, fuzzy
 msgid "Could not get the Oracle field scale"
-msgstr "Asiakasilmoitusten m‰‰r‰‰ ei saada"
+msgstr "Asiakasilmoitusten m√§√§r√§√§ ei saada"
 
 #: providers/oracle/gda-oracle-provider.c:1393
 msgid "Could not get the Oracle field nullable attribute"
@@ -799,7 +799,7 @@ msgstr "localea ei voi asettaa \"%s\":ksi"
 #: providers/oracle/gda-oracle-recordset.c:96
 #, fuzzy
 msgid "Could not get the parameter data type"
-msgstr "kentt‰‰ ei voi varata"
+msgstr "kentt√§√§ ei voi varata"
 
 #: providers/oracle/gda-oracle-recordset.c:127
 #, fuzzy
@@ -814,12 +814,12 @@ msgstr ""
 #: providers/oracle/gda-oracle-recordset.c:184
 #, fuzzy
 msgid "Could not get the Oracle parameter information"
-msgstr "yhteytt‰ paikkaan %s ei voi avata"
+msgstr "yhteytt√§ paikkaan %s ei voi avata"
 
 #: providers/oracle/gda-oracle-recordset.c:194
 #, fuzzy
 msgid "Could not get the Oracle column name"
-msgstr "Palvelinilmoituksia ei voi tyhjent‰‰"
+msgstr "Palvelinilmoituksia ei voi tyhjent√§√§"
 
 #: providers/oracle/gda-oracle-recordset.c:209
 #, fuzzy
@@ -829,7 +829,7 @@ msgstr "CORBA-tehdasta ei voi avata"
 #: providers/oracle/gda-oracle-recordset.c:221
 #, fuzzy
 msgid "Could not get the Oracle column scale"
-msgstr "Palvelinilmoituksia ei voi tyhjent‰‰"
+msgstr "Palvelinilmoituksia ei voi tyhjent√§√§"
 
 #: providers/oracle/gda-oracle-recordset.c:233
 #, fuzzy
@@ -941,24 +941,32 @@ msgstr ""
 msgid "GDA provider for PostgreSQL databases"
 msgstr ""
 
-#: providers/sqlite/gda-sqlite-provider.c:246
-msgid "Invalid SQLITE handle"
-msgstr ""
-
-#: providers/sqlite/gda-sqlite-provider.c:314
-#: providers/sqlite/gda-sqlite-provider.c:449
+#: providers/sqlite/gda-sqlite-provider.c:243
+#: providers/sqlite/gda-sqlite-provider.c:266
+#: providers/sqlite/gda-sqlite-provider.c:289
+#: providers/sqlite/gda-sqlite-provider.c:311
 #: providers/sqlite/gda-sqlite-recordset.c:159
 #: providers/sqlite/gda-sqlite-recordset.c:198
 #: providers/sqlite/gda-sqlite-recordset.c:239
 msgid "Invalid SQLite handle"
 msgstr ""
 
-#: providers/sqlite/gda-sqlite-provider.c:332
+#: providers/sqlite/gda-sqlite-provider.c:270
+msgid ""
+"To change a SQLite database you should close the actual database and open a "
+"new one"
+msgstr ""
+
+#: providers/sqlite/gda-sqlite-provider.c:293
 msgid "Only one database per connection is allowed"
 msgstr ""
 
-#: providers/sqlite/gda-sqlite-provider.c:346
+#: providers/sqlite/gda-sqlite-provider.c:315
 msgid "To remove a SQLite database you should remove the database file by hand"
+msgstr ""
+
+#: providers/sqlite/gda-sqlite-provider.c:329
+msgid "Invalid SQLITE handle"
 msgstr ""
 
 #: providers/sqlite/libmain.c:41
@@ -970,15 +978,20 @@ msgstr ""
 msgid "Could not initiate Sybase component factory"
 msgstr "CORBA-tehdasta ei voi avata"
 
-#: report/libgda-report/gda-report-document.c:166
-#, fuzzy
-msgid "Could not parse XML document"
+#: report/libgda-report/gda-report-document.c:158
+#, fuzzy, c-format
+msgid "Could not load report file at %s"
 msgstr "localea ei voi asettaa \"%s\":ksi"
 
-#: report/libgda-report/gda-report-document.c:191
+#: report/libgda-report/gda-report-document.c:167
 #, fuzzy, c-format
-msgid "Could not get file from %s"
+msgid "Could not parse report file at %s"
 msgstr "localea ei voi asettaa \"%s\":ksi"
+
+#: report/libgda-report/gda-report-document.c:177
+#, fuzzy, c-format
+msgid "Invalid report file '%s'"
+msgstr "Tietokanta \"%s\" valittu"
 
 #: testing/client.c:41
 msgid "\t\tNONE\n"
@@ -1074,7 +1087,7 @@ msgstr ""
 #: testing/client.c:123
 #, fuzzy
 msgid "Connection Tables"
-msgstr "Yhteys n‰ytt‰‰ olevan poikki"
+msgstr "Yhteys n√§ytt√§√§ olevan poikki"
 
 #: testing/client.c:124
 msgid "Available types"
@@ -1113,7 +1126,7 @@ msgstr ""
 #: testing/client.c:186
 #, fuzzy, c-format
 msgid " Data source = %s, User = %s\n"
-msgstr "Datal‰hdett‰ %s ei lˆydy"
+msgstr "Datal√§hdett√§ %s ei l√∂ydy"
 
 #: testing/config.c:85
 msgid "** ERROR: gda_config_get_provider_list returned a NULL item\n"
@@ -1139,6 +1152,14 @@ msgid "\tgda_params ="
 msgstr ""
 
 #, fuzzy
+#~ msgid "Could not parse XML document"
+#~ msgstr "localea ei voi asettaa \"%s\":ksi"
+
+#, fuzzy
+#~ msgid "Could not get file from %s"
+#~ msgstr "localea ei voi asettaa \"%s\":ksi"
+
+#, fuzzy
 #~ msgid "An error occurred during fetch"
 #~ msgstr "Komennon suorituksessa tapahtui virhe"
 
@@ -1148,11 +1169,11 @@ msgstr ""
 
 #, fuzzy
 #~ msgid "CORBA exception: %s"
-#~ msgstr "CORBA-k‰ytt‰j‰poikkeus: %s"
+#~ msgstr "CORBA-k√§ytt√§j√§poikkeus: %s"
 
 #, fuzzy
 #~ msgid "Could not create global GDA client"
-#~ msgstr "yhteytt‰ paikkaan %s ei voi avata"
+#~ msgstr "yhteytt√§ paikkaan %s ei voi avata"
 
 #, fuzzy
 #~ msgid "Could not parse XML report"
@@ -1164,11 +1185,11 @@ msgstr ""
 
 #, fuzzy
 #~ msgid "Could not create BonoboStreamMem object"
-#~ msgstr "yhteytt‰ paikkaan %s ei voi avata"
+#~ msgstr "yhteytt√§ paikkaan %s ei voi avata"
 
 #, fuzzy
 #~ msgid "Could not initiate Report component factory"
-#~ msgstr "Postituottajatoteutusta ei voi rekisterˆid‰"
+#~ msgstr "Postituottajatoteutusta ei voi rekister√∂id√§"
 
 #, fuzzy
 #~ msgid "Could not activate object %s"
@@ -1179,7 +1200,7 @@ msgstr ""
 #~ msgstr "CORBA-tehdasta ei voi avata"
 
 #~ msgid "%s: An Error occured in the CORBA system."
-#~ msgstr "%s: CORBA-j‰rjestelm‰ss‰ virhe."
+#~ msgstr "%s: CORBA-j√§rjestelm√§ss√§ virhe."
 
 #, fuzzy
 #~ msgid "Could not initialize Bonobo"
@@ -1187,23 +1208,23 @@ msgstr ""
 
 #, fuzzy
 #~ msgid "Could not notify client about action %d"
-#~ msgstr "Asiakasilmoitusten m‰‰r‰‰ %d ei saada"
+#~ msgstr "Asiakasilmoitusten m√§√§r√§√§ %d ei saada"
 
 #, fuzzy
 #~ msgid "Default component factory"
-#~ msgstr "yhteytt‰ paikkaan %s ei voi avata"
+#~ msgstr "yhteytt√§ paikkaan %s ei voi avata"
 
 #, fuzzy
 #~ msgid "Could not initiate Default component factory"
-#~ msgstr "Postituottajatoteutusta ei voi rekisterˆid‰"
+#~ msgstr "Postituottajatoteutusta ei voi rekister√∂id√§"
 
 #, fuzzy
 #~ msgid "Could not initiate MySQL component factory"
-#~ msgstr "MySQL-tuottajatoteutusta ei voi rekisterˆid‰"
+#~ msgstr "MySQL-tuottajatoteutusta ei voi rekister√∂id√§"
 
 #, fuzzy
 #~ msgid "ODBC component factory"
-#~ msgstr "yhteytt‰ paikkaan %s ei voi avata"
+#~ msgstr "yhteytt√§ paikkaan %s ei voi avata"
 
 #, fuzzy
 #~ msgid "Could not initiate ODBC component factory"
@@ -1211,15 +1232,15 @@ msgstr ""
 
 #, fuzzy
 #~ msgid "Oracle component factory"
-#~ msgstr "yhteytt‰ paikkaan %s ei voi avata"
+#~ msgstr "yhteytt√§ paikkaan %s ei voi avata"
 
 #, fuzzy
 #~ msgid "Postgres component factory"
-#~ msgstr "yhteytt‰ paikkaan %s ei voi avata"
+#~ msgstr "yhteytt√§ paikkaan %s ei voi avata"
 
 #, fuzzy
 #~ msgid "Could not initiate PostgreSQL component factory"
-#~ msgstr "MySQL-tuottajatoteutusta ei voi rekisterˆid‰"
+#~ msgstr "MySQL-tuottajatoteutusta ei voi rekister√∂id√§"
 
 #, fuzzy
 #~ msgid "NULL"
@@ -1231,7 +1252,7 @@ msgstr ""
 
 #, fuzzy
 #~ msgid "SQLite component factory"
-#~ msgstr "yhteytt‰ paikkaan %s ei voi avata"
+#~ msgstr "yhteytt√§ paikkaan %s ei voi avata"
 
 #, fuzzy
 #~ msgid "Could not initiate Sqlite component factory"
@@ -1239,7 +1260,7 @@ msgstr ""
 
 #, fuzzy
 #~ msgid "\tusername = %s\n"
-#~ msgstr "k‰ytt‰j‰tunnus"
+#~ msgstr "k√§ytt√§j√§tunnus"
 
 #, fuzzy
 #~ msgid "Client Message: "
@@ -1258,14 +1279,14 @@ msgstr ""
 #~ msgstr "Palvelinilmoitus:"
 
 #~ msgid "CORBA System exception: %s"
-#~ msgstr "CORBA-j‰rjestelm‰poikkeus %s"
+#~ msgstr "CORBA-j√§rjestelm√§poikkeus %s"
 
 #~ msgid "True"
 #~ msgstr "Tosi"
 
 #, fuzzy
 #~ msgid "[CORBA User Exception]"
-#~ msgstr "CORBA-k‰ytt‰j‰poikkeus: %s"
+#~ msgstr "CORBA-k√§ytt√§j√§poikkeus: %s"
 
 #~ msgid "<Unknown GDA Type(NULL)>"
 #~ msgstr "<Tuntematon GDA-tyyppi(NULL)>"
@@ -1280,31 +1301,31 @@ msgstr ""
 #~ msgstr "Signaali %d vastaanotettu, sulkeutuu"
 
 #~ msgid "Received signal %d. Ignoring"
-#~ msgstr "Signaali %d vastaanotettu. Ei v‰litet‰"
+#~ msgstr "Signaali %d vastaanotettu. Ei v√§litet√§"
 
 #~ msgid "Attempt to initialize an already initialized provider"
 #~ msgstr "Yritys alustaa jo alustettu tuottaja"
 
 #~ msgid "CORBA system exception %s"
-#~ msgstr "CORBA-j‰rjestelm‰poikkeus %s"
+#~ msgstr "CORBA-j√§rjestelm√§poikkeus %s"
 
 #~ msgid "error '%s' at %s"
 #~ msgstr "virhe \"%s\" paikassa %s"
 
 #~ msgid "Could not register LDAP provider implementation"
-#~ msgstr "LDAP-tuottajatoteutusta ei voi rekisterˆid‰"
+#~ msgstr "LDAP-tuottajatoteutusta ei voi rekister√∂id√§"
 
 #~ msgid "Error code %ld"
 #~ msgstr "Virhekoodi %ld"
 
 #~ msgid "Could not register INTERBASE provider implementation"
-#~ msgstr "INTERBASE-tuottajatoteutusta ei voi rekisterˆid‰"
+#~ msgstr "INTERBASE-tuottajatoteutusta ei voi rekister√∂id√§"
 
 #~ msgid "Unhandled SCHEMA_QTYPE %d"
-#~ msgstr "K‰sittelem‰tˆn SCHEMA_QTYPE %d"
+#~ msgstr "K√§sittelem√§t√∂n SCHEMA_QTYPE %d"
 
 #~ msgid "Could not register Mail provider implementation"
-#~ msgstr "Postituottajatoteutusta ei voi rekisterˆid‰"
+#~ msgstr "Postituottajatoteutusta ei voi rekister√∂id√§"
 
 #~ msgid "executing command '%s'"
 #~ msgstr "suoritetaan komento \"%s\""
@@ -1318,38 +1339,38 @@ msgstr ""
 #~ "PORT options"
 #~ msgstr ""
 #~ "%s:%d: UNIX_SOCKETia ei voi antaa, jos joko HOST tai PORT on jo annettu. "
-#~ "Poista UNIX_SOCKET tai sek‰ HOST- ett‰ PORT-valinta"
+#~ "Poista UNIX_SOCKET tai sek√§ HOST- ett√§ PORT-valinta"
 
 #~ msgid "%s:%d: You must  provide the filename with the MS Access database"
-#~ msgstr "%s:%d: MS Access -tietokannalle t‰ytyy antaa tiedostonimi"
+#~ msgstr "%s:%d: MS Access -tietokannalle t√§ytyy antaa tiedostonimi"
 
 #~ msgid "Opening connection with filename=%s, user=%s, password=%s"
-#~ msgstr "Avataan yhteys, tiedostonimi=%s, k‰ytt‰j‰=%s, salasana=%s"
+#~ msgstr "Avataan yhteys, tiedostonimi=%s, k√§ytt√§j√§=%s, salasana=%s"
 
 #~ msgid "mysql_recset is NULL"
 #~ msgstr "mysql_recset on NULL"
 
 #~ msgid "No table name given for SCHEMA_COLS"
-#~ msgstr "SCHEMA_COLS:ille ei taulunime‰"
+#~ msgstr "SCHEMA_COLS:ille ei taulunime√§"
 
 #~ msgid ""
 #~ "Opening connection with user=%s, password=%s, host=%s, port=%s, "
 #~ "unix_socket=%s"
 #~ msgstr ""
-#~ "Avataan yhteys, k‰ytt‰j‰=%s, salasana=%s, verkkoasema=%s, portti=%s, "
+#~ "Avataan yhteys, k√§ytt√§j√§=%s, salasana=%s, verkkoasema=%s, portti=%s, "
 #~ "unix_socket=%s"
 
 #~ msgid "gda_odbc_connection_open_schema: Unhandled SCHEMA_QTYPE %d\n"
-#~ msgstr "gda_odbc_connection_open_schema: K‰sittelem‰tˆn SCHEMA_QTYPE %d\n"
+#~ msgstr "gda_odbc_connection_open_schema: K√§sittelem√§t√∂n SCHEMA_QTYPE %d\n"
 
 #~ msgid "no text"
-#~ msgstr "ei teksti‰"
+#~ msgstr "ei teksti√§"
 
 #~ msgid "Could not register ODBC provider implementation"
-#~ msgstr "ODBC-tuottajatoteutusta ei voi rekisterˆid‰"
+#~ msgstr "ODBC-tuottajatoteutusta ei voi rekister√∂id√§"
 
 #~ msgid "command object being created without associated connection"
-#~ msgstr "komentokohdetta luodaan ilman johdettua yhteytt‰"
+#~ msgstr "komentokohdetta luodaan ilman johdettua yhteytt√§"
 
 #~ msgid "Executing command '%s'"
 #~ msgstr "Komentoa \"%s\" suoritetaan"
@@ -1370,34 +1391,34 @@ msgstr ""
 #~ msgstr "Tuntematon ORACLE-tietotyyppi kohdassa fill_field_values"
 
 #~ msgid "recordset object being created without associated connection"
-#~ msgstr "tulosjoukkokohdetta luodaan ilman johdettua yhteytt‰"
+#~ msgstr "tulosjoukkokohdetta luodaan ilman johdettua yhteytt√§"
 
 #~ msgid "Could not register ORACLE provider implementation"
-#~ msgstr "ORACLE-tuottajatoteutusta ei voi rekisterˆid‰"
+#~ msgstr "ORACLE-tuottajatoteutusta ei voi rekister√∂id√§"
 
 #~ msgid "postgres_recset is NULL"
 #~ msgstr "postgres_recset on NULL"
 
 #~ msgid "Could not register PostgreSQL provider implementation"
-#~ msgstr "PostgreSQL-tuottajatoteutusta ei voi rekisterˆid‰"
+#~ msgstr "PostgreSQL-tuottajatoteutusta ei voi rekister√∂id√§"
 
 #~ msgid "Connection seems to be dead"
-#~ msgstr "Yhteys n‰ytt‰‰ olevan poikki"
+#~ msgstr "Yhteys n√§ytt√§√§ olevan poikki"
 
 #~ msgid "Filling command structure failed\n"
-#~ msgstr "Komentorakenteen t‰yttˆ ei onnistu\n"
+#~ msgstr "Komentorakenteen t√§ytt√∂ ei onnistu\n"
 
 #~ msgid "sending cmd failed"
-#~ msgstr "komennon l‰hetys ei onnistu"
+#~ msgstr "komennon l√§hetys ei onnistu"
 
 #~ msgid "Allocating recordset failed"
 #~ msgstr "Tulosjoukon varaus ei onnistu"
 
 #~ msgid "Getting recordset userdata failed"
-#~ msgstr "Tulosjoukon k‰ytt‰j‰tietoja ei saada"
+#~ msgstr "Tulosjoukon k√§ytt√§j√§tietoja ei saada"
 
 #~ msgid "Command execution finished, all results processed"
-#~ msgstr "Komennon suoritus loppu, kaikki tulokset k‰sitelty"
+#~ msgstr "Komennon suoritus loppu, kaikki tulokset k√§sitelty"
 
 #~ msgid "Command failed"
 #~ msgstr "Komento ei onnistu"
@@ -1409,10 +1430,10 @@ msgstr ""
 #~ msgstr "ct_results()-palautus %x"
 
 #~ msgid "No further results, command completly succeeded."
-#~ msgstr "Ei muita tuloksia, komento t‰ysin suoritettu."
+#~ msgstr "Ei muita tuloksia, komento t√§ysin suoritettu."
 
 #~ msgid "Cmd execution returned unknown result, may be an error"
-#~ msgstr "Komennon suoritus palautti tuntemattoman tuloksen, ehk‰ virhe"
+#~ msgstr "Komennon suoritus palautti tuntemattoman tuloksen, ehk√§ virhe"
 
 #~ msgid "No data returned, freeing recordset structure"
 #~ msgstr "Dataa ei palaudu, vapautetaan tulosjoukkorakenne"
@@ -1421,7 +1442,7 @@ msgstr ""
 #~ msgstr "Komentorakenteen vapautus ei onnistu"
 
 #~ msgid "Not enough memory for sybase_Connection"
-#~ msgstr "sybase_Connectionille ei riitt‰v‰sti muistia"
+#~ msgstr "sybase_Connectionille ei riitt√§v√§sti muistia"
 
 #~ msgid "schema_cols: table_name '%s'"
 #~ msgstr "schema_cols: taulunimi \"%s\""
@@ -1430,7 +1451,7 @@ msgstr ""
 #~ msgstr "Komentorakennetta ei voi varata"
 
 #~ msgid "Could not allocate enough memory for query"
-#~ msgstr "Kyselylle riitt‰v‰‰ muistia ei voi varata"
+#~ msgstr "Kyselylle riitt√§v√§√§ muistia ei voi varata"
 
 #~ msgid "Could not get recordset in schema_cols"
 #~ msgstr "schema_cols:issa ei saa tulosjoukkoa"
@@ -1472,13 +1493,13 @@ msgstr ""
 #~ msgstr "%s: ct_command ei onnistu"
 
 #~ msgid "%s: sending command failed"
-#~ msgstr "%s: komennon l‰hetys ei onnistu"
+#~ msgstr "%s: komennon l√§hetys ei onnistu"
 
 #~ msgid "%s: selecting database failed"
 #~ msgstr "%s: tietokannan valinta ei onnistu"
 
 #~ msgid "%s: use command failed"
-#~ msgstr "%s: k‰yttˆkomento ei onnistu"
+#~ msgstr "%s: k√§ytt√∂komento ei onnistu"
 
 #~ msgid "Could not configure locale to be '%s'"
 #~ msgstr "localen asetusta ei voi muuttaa \"%s\":ksi"
@@ -1505,13 +1526,13 @@ msgstr ""
 #~ msgstr "ct_diag():ia ei voi alustaa"
 
 #~ msgid "%s could not find server implementation"
-#~ msgstr "%s ei lˆyd‰ palvelintoteutusta"
+#~ msgstr "%s ei l√∂yd√§ palvelintoteutusta"
 
 #~ msgid "%s could not get cnc userdata"
-#~ msgstr "%s ei saa cnc-k‰yttˆtietoja"
+#~ msgstr "%s ei saa cnc-k√§ytt√∂tietoja"
 
 #~ msgid "Could not get # of messages"
-#~ msgstr "Ilmoitusten m‰‰r‰‰ ei saada"
+#~ msgstr "Ilmoitusten m√§√§r√§√§ ei saada"
 
 #~ msgid "%d ctlib messages to fetch"
 #~ msgstr "%d ctlib-ilmoitusta haettavana"
@@ -1523,7 +1544,7 @@ msgstr ""
 #~ msgstr "Virhe on nollaosoitin gda_sybase_messages_handle:ssa"
 
 #~ msgid "Could not get # of server messages"
-#~ msgstr "Palvelinilmoitusten m‰‰r‰‰ ei saada"
+#~ msgstr "Palvelinilmoitusten m√§√§r√§√§ ei saada"
 
 #~ msgid "Fetching %d client messages"
 #~ msgstr "Haetaan %d asiakasilmoitusta"
@@ -1532,7 +1553,7 @@ msgstr ""
 #~ msgstr "Haetaan %d asiakasilmoitus"
 
 #~ msgid "Could not clear client messages"
-#~ msgstr "Asikasilmoituksia ei voi tyhjent‰‰"
+#~ msgstr "Asikasilmoituksia ei voi tyhjent√§√§"
 
 #~ msgid "Fetching %d server messages"
 #~ msgstr "Haetaan %d palvelinilmoitusta"
@@ -1541,10 +1562,10 @@ msgstr ""
 #~ msgstr "Haetaan %d palvelinilmoitus"
 
 #~ msgid "Could not get server msg # %d"
-#~ msgstr "Palvelinilmoitusten %d m‰‰r‰‰ ei saada"
+#~ msgstr "Palvelinilmoitusten %d m√§√§r√§√§ ei saada"
 
 #~ msgid "Could not get # of cslib messages"
-#~ msgstr "cslib-ilmoitusten m‰‰r‰‰ ei saada"
+#~ msgstr "cslib-ilmoitusten m√§√§r√§√§ ei saada"
 
 #~ msgid "Fetching %d cslib messages"
 #~ msgstr "Haetaan %d cslib-ilmoitusta"
@@ -1554,25 +1575,25 @@ msgstr ""
 #~ msgstr "Haetaan %d cslib-ilmoitusta"
 
 #~ msgid "Could not get cslib msg # %d"
-#~ msgstr "cslib-ilmoitusten m‰‰r‰‰ %d ei saada"
+#~ msgstr "cslib-ilmoitusten m√§√§r√§√§ %d ei saada"
 
 #~ msgid "Could not clear cslib messages"
-#~ msgstr "cslib-ilmoituksia ei voi tyhjent‰‰"
+#~ msgstr "cslib-ilmoituksia ei voi tyhjent√§√§"
 
 #~ msgid "CS-Library error:"
 #~ msgstr "CS-kirjastovirhe:"
 
 #~ msgid "fetch error at row %d"
-#~ msgstr "hakuvirhe rivill‰ %d"
+#~ msgstr "hakuvirhe rivill√§ %d"
 
 #~ msgid "CS_END_DATA on row %d; canceling"
-#~ msgstr "CS_END_DATA rivill‰ %d; peruu"
+#~ msgstr "CS_END_DATA rivill√§ %d; peruu"
 
 #~ msgid "%s: Error (%d)"
 #~ msgstr "%s: Virhe (%d)"
 
 #~ msgid "Failed fetching # of columns"
-#~ msgstr "Sarakkeiden m‰‰r‰n haku ei onnistu"
+#~ msgstr "Sarakkeiden m√§√§r√§n haku ei onnistu"
 
 #~ msgid "Counted %d columns"
 #~ msgstr "Laskettu %d saraketta"
@@ -1581,47 +1602,47 @@ msgstr ""
 #~ msgstr "%s ei voi varata datafmt-infoa"
 
 #~ msgid "%s could not allocate data fields"
-#~ msgstr "%s ei voi varata tietokentti‰"
+#~ msgstr "%s ei voi varata tietokentti√§"
 
 #~ msgid "ct_describe on col # %d"
-#~ msgstr "ct_describe sarakem‰‰r‰ss‰ %d"
+#~ msgstr "ct_describe sarakem√§√§r√§ss√§ %d"
 
 #~ msgid "ct_describe on col # %d failed"
-#~ msgstr "ct_describe sarakem‰‰r‰ss‰ %d ei onnistu"
+#~ msgstr "ct_describe sarakem√§√§r√§ss√§ %d ei onnistu"
 
 #~ msgid "ct_describe(%d): '%s', %d (%s)"
 #~ msgstr "ct_describe(%d): \"%s\", %d (%s)"
 
 #~ msgid "could not allocate data holder"
-#~ msgstr "tiedonpidint‰ ei voi varata"
+#~ msgstr "tiedonpidint√§ ei voi varata"
 
 #~ msgid "could not ct_bind data holder to column"
-#~ msgstr "tiedonpidint‰ ei voi liitt‰‰ sarakkeeseen ct_bind:ill‰"
+#~ msgstr "tiedonpidint√§ ei voi liitt√§√§ sarakkeeseen ct_bind:ill√§"
 
 #~ msgid "illegal type detected, aborting"
-#~ msgstr "laiton tyyppi havaittu, keskeytet‰‰n"
+#~ msgstr "laiton tyyppi havaittu, keskeytet√§√§n"
 
 #~ msgid "could not allocate field"
-#~ msgstr "kentt‰‰ ei voi varata"
+#~ msgstr "kentt√§√§ ei voi varata"
 
 #~ msgid "Could not register gda-sybase provider implementation"
-#~ msgstr "gda-sybase-toteutusta ei voi rekisterˆid‰"
+#~ msgstr "gda-sybase-toteutusta ei voi rekister√∂id√§"
 
 #, fuzzy
 #~ msgid "Could not connect to '%s@%s:%s' with connparm '%s'"
-#~ msgstr "yhteytt‰ paikkaan %s ei voi avata"
+#~ msgstr "yhteytt√§ paikkaan %s ei voi avata"
 
 #, fuzzy
 #~ msgid "Not enough memory for primebase_Error structure."
-#~ msgstr "sybase_Connectionille ei riitt‰v‰sti muistia"
+#~ msgstr "sybase_Connectionille ei riitt√§v√§sti muistia"
 
 #, fuzzy
 #~ msgid "Could not register PRIMEBASE provider implementation"
-#~ msgstr "INTERBASE-tuottajatoteutusta ei voi rekisterˆid‰"
+#~ msgstr "INTERBASE-tuottajatoteutusta ei voi rekister√∂id√§"
 
 #, fuzzy
 #~ msgid "Not enough memory for tds_Connection"
-#~ msgstr "sybase_Connectionille ei riitt‰v‰sti muistia"
+#~ msgstr "sybase_Connectionille ei riitt√§v√§sti muistia"
 
 #, fuzzy
 #~ msgid "Reconnected to %s"
@@ -1633,23 +1654,23 @@ msgstr ""
 
 #, fuzzy
 #~ msgid "Could not register gda-tds provider implementation"
-#~ msgstr "gda-sybase-toteutusta ei voi rekisterˆid‰"
+#~ msgstr "gda-sybase-toteutusta ei voi rekister√∂id√§"
 
 #~ msgid "%s: misconfigured DSN entry"
-#~ msgstr "%s: DSN-kohta v‰‰rin asetettu"
+#~ msgstr "%s: DSN-kohta v√§√§rin asetettu"
 
 #~ msgid "%s: data source '%s' not found\n"
-#~ msgstr "%s: datal‰hdett‰ \"%s\" ei lˆydy\n"
+#~ msgstr "%s: datal√§hdett√§ \"%s\" ei l√∂ydy\n"
 
 #, fuzzy
 #~ msgid "Could not register <PROVIDER-NAME> provider implementation"
-#~ msgstr "INTERBASE-tuottajatoteutusta ei voi rekisterˆid‰"
+#~ msgstr "INTERBASE-tuottajatoteutusta ei voi rekister√∂id√§"
 
 #~ msgid "%s: The server didn't respond."
 #~ msgstr "%s: Palvelin ei vastaa."
 
 #~ msgid "thread is already running"
-#~ msgstr "s‰ie on jo ajossa"
+#~ msgstr "s√§ie on jo ajossa"
 
 #~ msgid "impl_GDA_Connection_open: opening connection with DSN: %s"
 #~ msgstr "impl_GDA_Connection_open: avataan yhteys DSN: %s"
@@ -1660,20 +1681,20 @@ msgstr ""
 #~ msgid ""
 #~ "OAF doesn't know about our IID; indicates broken installation. Exiting..."
 #~ msgstr ""
-#~ "OAF ei tied‰ mit‰‰n IID:st‰mme; kertoo asennuksen olevan rikki. "
+#~ "OAF ei tied√§ mit√§√§n IID:st√§mme; kertoo asennuksen olevan rikki. "
 #~ "Lopettaa..."
 
 #~ msgid ""
 #~ "Another instance of this provider is already registered with OAF. "
 #~ "Exiting..."
 #~ msgstr ""
-#~ "T‰m‰n tuottajan toinen ilmentym‰ on jo rekisterˆity OAF:‰‰n. Lopettaa..."
+#~ "T√§m√§n tuottajan toinen ilmentym√§ on jo rekister√∂ity OAF:√§√§n. Lopettaa..."
 
 #~ msgid "Unknown error registering this provider with OAF. Exiting"
-#~ msgstr "Tuntematon virhe t‰t‰ tuottajaa OAF:‰‰n rekisterˆidess‰. Lopettaa"
+#~ msgstr "Tuntematon virhe t√§t√§ tuottajaa OAF:√§√§n rekister√∂idess√§. Lopettaa"
 
 #~ msgid "Registered with ID = %s"
-#~ msgstr "Rekisterˆity ID = %s"
+#~ msgstr "Rekister√∂ity ID = %s"
 
 #~ msgid "CORBA exception unloading report engine: %s"
 #~ msgstr "CORBA-poikkeus raporttikoneen latauksessa: %s"
@@ -1685,25 +1706,25 @@ msgstr ""
 #~ msgstr "Signaali %d vastaanotettu, suljetaan siististi"
 
 #~ msgid "Failed to initialize OAF: please mail bug report to OAF maintainers"
-#~ msgstr "OAF:n alustus ei onnistu: l‰het‰ virheraportti OAF:n yll‰pit‰jille"
+#~ msgstr "OAF:n alustus ei onnistu: l√§het√§ virheraportti OAF:n yll√§pit√§jille"
 
 #~ msgid ""
 #~ "Another instance of the report engine is already registered with OAF. "
 #~ "Exiting..."
 #~ msgstr ""
-#~ "Raporttikoneen toinen ilmentym‰ on jo rekisterˆity OAF:‰‰n. Lopettaa..."
+#~ "Raporttikoneen toinen ilmentym√§ on jo rekister√∂ity OAF:√§√§n. Lopettaa..."
 
 #~ msgid "Unknown error registering report engine with OAF. Exiting"
-#~ msgstr "Tuntematon virhe rekisterˆidess‰ raporttikonetta OAF:‰‰n. Lopettaa"
+#~ msgstr "Tuntematon virhe rekister√∂idess√§ raporttikonetta OAF:√§√§n. Lopettaa"
 
 #~ msgid "Registered report engine with ID = %s"
-#~ msgstr "Rekisterˆity raporttikone, ID = %s"
+#~ msgstr "Rekister√∂ity raporttikone, ID = %s"
 
 #~ msgid "%s: length = %d"
 #~ msgstr "%s: pituus = %d"
 
 #~ msgid "%s: sending field description for '%s'"
-#~ msgstr "%s: l‰hetet‰‰n \"%s\":lle kentt‰kuvaus"
+#~ msgstr "%s: l√§hetet√§√§n \"%s\":lle kentt√§kuvaus"
 
 #~ msgid "schema_tables: table name = '%s'"
 #~ msgstr "schema_tables: taulunimi = \"%s\""
@@ -1712,16 +1733,16 @@ msgstr ""
 #~ msgstr "schema_tables: table_schema = \"%s\""
 
 #~ msgid "schema_procedures: proc_catalog = '%s' UNUSED!\n"
-#~ msgstr "schema_procedures: proc_catalog = \"%s\" EI KƒYT÷SSƒ!\n"
+#~ msgstr "schema_procedures: proc_catalog = \"%s\" EI K√ÑYT√ñSS√Ñ!\n"
 
 #~ msgid "schema_procedures: proc_catalog = '%s' UNUSED!"
-#~ msgstr "schema_procedures: proc_catalog = \"%s\" EI KƒYT÷SSƒ!"
+#~ msgstr "schema_procedures: proc_catalog = \"%s\" EI K√ÑYT√ñSS√Ñ!"
 
 #~ msgid "DATABASE"
 #~ msgstr "TIETOKANTA"
 
 #~ msgid "USER-NAME"
-#~ msgstr "KƒYTTƒJƒTUNNUS"
+#~ msgstr "K√ÑYTT√ÑJ√ÑTUNNUS"
 
 #~ msgid "PASSWORD"
 #~ msgstr "SALASANA"

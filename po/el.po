@@ -5,19 +5,19 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-db 0.0.91\n"
-"POT-Creation-Date: 2002-09-09 22:11+0200\n"
+"POT-Creation-Date: 2002-09-11 13:17+0200\n"
 "PO-Revision-Date: 2000-02-12 19:29+0000\n"
 "Last-Translator: Simos Xenitellis <simos@hellug.gr>\n"
 "Language-Team: Greek <nls@tux.hellug.gr>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=iso-8859-7\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #
 #: libgda/gda-client.c:227 libgda/gda-client.c:414 libgda/gda-connection.c:214
 #, fuzzy, c-format
 msgid "Data source %s not found in configuration"
-msgstr "Πηγές Δεδομένων"
+msgstr "Ξ Ξ·Ξ³Ξ­Ο‚ Ξ”ΞµΞ΄ΞΏΞΌΞ­Ξ½Ο‰Ξ½"
 
 #: libgda/gda-client.c:245
 #, c-format
@@ -28,7 +28,7 @@ msgstr ""
 #: libgda/gda-client.c:254
 #, fuzzy, c-format
 msgid "Could not load %s provider"
-msgstr "Αδυναμία φόρτωσης γραμματοσειράς πλέγματος"
+msgstr "Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ο†ΟΟΟ„Ο‰ΟƒΞ·Ο‚ Ξ³ΟΞ±ΞΌΞΌΞ±Ο„ΞΏΟƒΞµΞΉΟΞ¬Ο‚ Ο€Ξ»Ξ­Ξ³ΞΌΞ±Ο„ΞΏΟ‚"
 
 #: libgda/gda-client.c:270
 #, c-format
@@ -51,28 +51,28 @@ msgstr ""
 #: providers/mysql/gda-mysql-provider.c:651
 #: providers/oracle/gda-oracle-provider.c:999
 msgid "Name"
-msgstr "Όνομα"
+msgstr "ΞΞ½ΞΏΞΌΞ±"
 
 #
 #: libgda/gda-config.c:1269
 msgid "Provider"
-msgstr "Παροχεύς"
+msgstr "Ξ Ξ±ΟΞΏΟ‡ΞµΟΟ‚"
 
 #
 #: libgda/gda-config.c:1270
 #, fuzzy
 msgid "Connection string"
-msgstr "Ρυθμίσεις Σύνδεσης"
+msgstr "Ξ΅Ο…ΞΈΞΌΞ―ΟƒΞµΞΉΟ‚ Ξ£ΟΞ½Ξ΄ΞµΟƒΞ·Ο‚"
 
 #
 #: libgda/gda-config.c:1271 providers/postgres/gda-postgres-provider.c:903
 msgid "Description"
-msgstr "Περιγραφή"
+msgstr "Ξ ΞµΟΞΉΞ³ΟΞ±Ο†Ξ®"
 
 #
 #: libgda/gda-config.c:1272
 msgid "Username"
-msgstr "Όνομα χρήστη"
+msgstr "ΞΞ½ΞΏΞΌΞ± Ο‡ΟΞ®ΟƒΟ„Ξ·"
 
 #: libgda/gda-config.c:1273
 msgid "Password"
@@ -137,7 +137,7 @@ msgstr ""
 #: libgda/gda-select.c:232
 #, fuzzy
 msgid "Unexpected identifier"
-msgstr "Ταυτότητες Αντικειμένου"
+msgstr "Ξ¤Ξ±Ο…Ο„ΟΟ„Ξ·Ο„ΞµΟ‚ Ξ‘Ξ½Ο„ΞΉΞΊΞµΞΉΞΌΞ­Ξ½ΞΏΟ…"
 
 #: libgda/gda-table.c:234
 #, c-format
@@ -149,7 +149,7 @@ msgstr ""
 #, fuzzy, c-format
 msgid "Error while reading %s: %s"
 msgstr ""
-"Σφάλμα ανάγνωσης αρχείου\n"
+"Ξ£Ο†Ξ¬Ξ»ΞΌΞ± Ξ±Ξ½Ξ¬Ξ³Ξ½Ο‰ΟƒΞ·Ο‚ Ξ±ΟΟ‡ΞµΞ―ΞΏΟ…\n"
 " %s"
 
 #
@@ -157,25 +157,25 @@ msgstr ""
 #, fuzzy, c-format
 msgid "Could not create file %s"
 msgstr ""
-"Αδυναμία φόρτωσης αρχείου\n"
+"Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ο†ΟΟΟ„Ο‰ΟƒΞ·Ο‚ Ξ±ΟΟ‡ΞµΞ―ΞΏΟ…\n"
 " %s"
 
 #
 #: libgda/gda-value.c:1454
 msgid "TRUE"
-msgstr "ΑΛΗΘΕΣ"
+msgstr "Ξ‘Ξ›Ξ—ΞΞ•Ξ£"
 
 #
 #: libgda/gda-value.c:1456
 msgid "FALSE"
-msgstr "ΨΕΥΔΕΣ"
+msgstr "Ξ¨Ξ•Ξ¥Ξ”Ξ•Ξ£"
 
 #
 #: libgda/gda-xml-database.c:236
 #, fuzzy, c-format
 msgid "Could not load file at %s"
 msgstr ""
-"Αδυναμία φόρτωσης αρχείου\n"
+"Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ο†ΟΟΟ„Ο‰ΟƒΞ·Ο‚ Ξ±ΟΟ‡ΞµΞ―ΞΏΟ…\n"
 " %s"
 
 #
@@ -183,7 +183,7 @@ msgstr ""
 #, fuzzy, c-format
 msgid "Could not parse file at %s"
 msgstr ""
-"Αδυναμία φόρτωσης αρχείου\n"
+"Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ο†ΟΟΟ„Ο‰ΟƒΞ·Ο‚ Ξ±ΟΟ‡ΞµΞ―ΞΏΟ…\n"
 " %s"
 
 #: libgda/gda-xml-database.c:255
@@ -196,7 +196,7 @@ msgstr ""
 #, fuzzy, c-format
 msgid "Could not create a XML node from table %s"
 msgstr ""
-"Αδυναμία φόρτωσης αρχείου\n"
+"Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ο†ΟΟΟ„Ο‰ΟƒΞ·Ο‚ Ξ±ΟΟ‡ΞµΞ―ΞΏΟ…\n"
 " %s"
 
 #
@@ -204,7 +204,7 @@ msgstr ""
 #, fuzzy
 msgid "Could not dump XML file to memory"
 msgstr ""
-"Αδυναμία φόρτωσης αρχείου\n"
+"Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ο†ΟΟΟ„Ο‰ΟƒΞ·Ο‚ Ξ±ΟΟ‡ΞµΞ―ΞΏΟ…\n"
 " %s"
 
 #: libgda/gda-xml-database.c:518 libgda/gda-xml-database.c:554
@@ -227,7 +227,7 @@ msgid "Invalid XML node"
 msgstr ""
 
 #: providers/default/gda-default-provider.c:191
-#: providers/sqlite/gda-sqlite-provider.c:186
+#: providers/sqlite/gda-sqlite-provider.c:183
 msgid ""
 "A full path must be specified on the connection string to open a database."
 msgstr ""
@@ -249,7 +249,7 @@ msgstr ""
 #: providers/postgres/gda-postgres-provider.c:1065
 #, fuzzy
 msgid "Field name"
-msgstr "Όνομα αρχείου"
+msgstr "ΞΞ½ΞΏΞΌΞ± Ξ±ΟΟ‡ΞµΞ―ΞΏΟ…"
 
 #
 #: providers/default/gda-default-provider.c:456
@@ -258,7 +258,7 @@ msgstr "Όνομα αρχείου"
 #: providers/postgres/gda-postgres-provider.c:1066
 #, fuzzy
 msgid "Data type"
-msgstr "Δεδομένα"
+msgstr "Ξ”ΞµΞ΄ΞΏΞΌΞ­Ξ½Ξ±"
 
 #: providers/default/gda-default-provider.c:457
 #: providers/freetds/gda-freetds-provider.c:649
@@ -276,7 +276,7 @@ msgstr ""
 #: providers/postgres/gda-postgres-provider.c:1068
 #, fuzzy
 msgid "Scale"
-msgstr "Αποθήκευση"
+msgstr "Ξ‘Ο€ΞΏΞΈΞ®ΞΊΞµΟ…ΟƒΞ·"
 
 #: providers/default/gda-default-provider.c:459
 #: providers/mysql/gda-mysql-provider.c:1015
@@ -306,7 +306,7 @@ msgstr ""
 #: providers/postgres/gda-postgres-provider.c:1072
 #, fuzzy
 msgid "References"
-msgstr "Προτιμίσεις"
+msgstr "Ξ ΟΞΏΟ„ΞΉΞΌΞ―ΟƒΞµΞΉΟ‚"
 
 #: providers/default/gda-default-provider.c:472
 #: providers/default/gda-default-provider.c:478
@@ -317,13 +317,13 @@ msgstr ""
 #: providers/default/gda-default-provider.c:485
 #, fuzzy, c-format
 msgid "Table %s not found"
-msgstr "Πηγές Δεδομένων"
+msgstr "Ξ Ξ·Ξ³Ξ­Ο‚ Ξ”ΞµΞ΄ΞΏΞΌΞ­Ξ½Ο‰Ξ½"
 
 #
 #: providers/default/gda-default-provider.c:510
 #, fuzzy
 msgid "Could not get description for column"
-msgstr "Αδυναμία αλλαγής στον κατάλογο '%s'"
+msgstr "Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ξ±Ξ»Ξ»Ξ±Ξ³Ξ®Ο‚ ΟƒΟ„ΞΏΞ½ ΞΊΞ±Ο„Ξ¬Ξ»ΞΏΞ³ΞΏ '%s'"
 
 #: providers/default/libmain.c:39
 msgid "GDA default provider, based on the libgda XML format"
@@ -351,27 +351,27 @@ msgstr ""
 #: providers/freetds/gda-freetds-provider.c:237
 #, fuzzy
 msgid "Failed getting connection info."
-msgstr "¶νοιγμα νέας σύνδεσης"
+msgstr "Ξ†Ξ½ΞΏΞΉΞ³ΞΌΞ± Ξ½Ξ­Ξ±Ο‚ ΟƒΟΞ½Ξ΄ΞµΟƒΞ·Ο‚"
 
 #
 #: providers/freetds/gda-freetds-provider.c:542
 #: providers/oracle/gda-oracle-provider.c:1655
 #, fuzzy
 msgid "Procedures"
-msgstr "Διαδικασίες"
+msgstr "Ξ”ΞΉΞ±Ξ΄ΞΉΞΊΞ±ΟƒΞ―ΞµΟ‚"
 
 #
 #: providers/freetds/gda-freetds-provider.c:550
 #: providers/oracle/gda-oracle-provider.c:1663
 msgid "Tables"
-msgstr "Πίνακες"
+msgstr "Ξ Ξ―Ξ½Ξ±ΞΊΞµΟ‚"
 
 #
 #: providers/freetds/gda-freetds-provider.c:556
 #: providers/postgres/gda-postgres-provider.c:920
 #, fuzzy
 msgid "Types"
-msgstr "Τύποι"
+msgstr "Ξ¤ΟΟ€ΞΏΞΉ"
 
 #
 #. Set it here instead of the SQL query to allow i18n
@@ -380,31 +380,31 @@ msgstr "Τύποι"
 #: providers/postgres/gda-postgres-provider.c:1444 testing/client.c:128
 #, fuzzy
 msgid "Users"
-msgstr "Όνομα χρήστη"
+msgstr "ΞΞ½ΞΏΞΌΞ± Ο‡ΟΞ®ΟƒΟ„Ξ·"
 
 #
 #: providers/freetds/gda-freetds-provider.c:568
 #: providers/oracle/gda-oracle-provider.c:1671 testing/client.c:125
 msgid "Views"
-msgstr "Προβολές"
+msgstr "Ξ ΟΞΏΞ²ΞΏΞ»Ξ­Ο‚"
 
 #
 #: providers/freetds/gda-freetds-provider.c:645
 #, fuzzy
 msgid "Field Name"
-msgstr "Όνομα αρχείου"
+msgstr "ΞΞ½ΞΏΞΌΞ± Ξ±ΟΟ‡ΞµΞ―ΞΏΟ…"
 
 #
 #: providers/freetds/gda-freetds-provider.c:647
 #, fuzzy
 msgid "Data Type"
-msgstr "Δεδομένα"
+msgstr "Ξ”ΞµΞ΄ΞΏΞΌΞ­Ξ½Ξ±"
 
 #
 #: providers/freetds/gda-freetds-provider.c:651
 #, fuzzy
 msgid "Precision"
-msgstr "Περιγραφή"
+msgstr "Ξ ΞµΟΞΉΞ³ΟΞ±Ο†Ξ®"
 
 #: providers/freetds/gda-freetds-provider.c:655
 msgid "Identity"
@@ -418,13 +418,13 @@ msgstr ""
 #: providers/freetds/gda-freetds-provider.c:659
 #, fuzzy
 msgid "Domain"
-msgstr "Εντολή"
+msgstr "Ξ•Ξ½Ο„ΞΏΞ»Ξ®"
 
 #
 #: providers/freetds/gda-freetds-provider.c:661
 #, fuzzy
 msgid "Printfmt"
-msgstr "Εκτύπωση"
+msgstr "Ξ•ΞΊΟ„ΟΟ€Ο‰ΟƒΞ·"
 
 #: providers/freetds/gda-freetds-provider.c:780
 #, c-format
@@ -468,21 +468,21 @@ msgstr ""
 #: providers/ibmdb2/gda-ibmdb2-provider.c:154
 #, fuzzy
 msgid "Could not allocate environment handle."
-msgstr "Αδυναμία περικοπής αρχείου %s"
+msgstr "Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ο€ΞµΟΞΉΞΊΞΏΟ€Ξ®Ο‚ Ξ±ΟΟ‡ΞµΞ―ΞΏΟ… %s"
 
 #
 #: providers/ibmdb2/gda-ibmdb2-provider.c:165
 #, fuzzy
 msgid "Could not set autocommit to off.\n"
 msgstr ""
-"Αδυναμία φόρτωσης αρχείου\n"
+"Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ο†ΟΟΟ„Ο‰ΟƒΞ·Ο‚ Ξ±ΟΟ‡ΞµΞ―ΞΏΟ…\n"
 " %s"
 
 #
 #: providers/ibmdb2/gda-ibmdb2-provider.c:179
 #, fuzzy
 msgid "Could not allocate environment handle.\n"
-msgstr "Αδυναμία περικοπής αρχείου %s"
+msgstr "Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ο€ΞµΟΞΉΞΊΞΏΟ€Ξ®Ο‚ Ξ±ΟΟ‡ΞµΞ―ΞΏΟ… %s"
 
 #. GetInfo is needed for obtaining database name
 #. is needed for tables schema
@@ -507,7 +507,7 @@ msgstr ""
 #, fuzzy, c-format
 msgid "Could not open file %s"
 msgstr ""
-"Αδυναμία φόρτωσης αρχείου\n"
+"Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ο†ΟΟΟ„Ο‰ΟƒΞ·Ο‚ Ξ±ΟΟ‡ΞµΞ―ΞΏΟ…\n"
 " %s"
 
 #: providers/mdb/gda-mdb-provider.c:219 providers/mdb/gda-mdb-provider.c:247
@@ -519,7 +519,7 @@ msgstr ""
 #: providers/mdb/gda-mdb-provider.c:313
 #, fuzzy
 msgid "Table Name"
-msgstr "Όνομα Αντικειμένου"
+msgstr "ΞΞ½ΞΏΞΌΞ± Ξ‘Ξ½Ο„ΞΉΞΊΞµΞΉΞΌΞ­Ξ½ΞΏΟ…"
 
 #: providers/mdb/libmain.c:34
 msgid "GDA provider for MS Access files"
@@ -553,7 +553,7 @@ msgstr ""
 #: providers/oracle/gda-oracle-provider.c:1563
 #, fuzzy
 msgid "Type"
-msgstr "Τύποι"
+msgstr "Ξ¤ΟΟ€ΞΏΞΉ"
 
 #: providers/mysql/gda-mysql-provider.c:914
 #: providers/postgres/gda-postgres-provider.c:688
@@ -574,14 +574,14 @@ msgstr ""
 #: providers/postgres/gda-postgres-provider.c:1472
 #, fuzzy
 msgid "Comments"
-msgstr "Διάπραξη"
+msgstr "Ξ”ΞΉΞ¬Ο€ΟΞ±ΞΎΞ·"
 
 #
 #: providers/mysql/gda-mysql-provider.c:916
 #: providers/postgres/gda-postgres-provider.c:923
 #, fuzzy
 msgid "GDA type"
-msgstr "Δεδομένα"
+msgstr "Ξ”ΞµΞ΄ΞΏΞΌΞ­Ξ½Ξ±"
 
 #: providers/mysql/gda-mysql-provider.c:1019
 #: providers/postgres/gda-postgres-provider.c:1073
@@ -611,14 +611,14 @@ msgstr ""
 #: providers/oracle/gda-oracle-recordset.c:482
 #, fuzzy
 msgid "Could not retrieve column's information"
-msgstr "Αδυναμία αλλαγής στον κατάλογο '%s'"
+msgstr "Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ξ±Ξ»Ξ»Ξ±Ξ³Ξ®Ο‚ ΟƒΟ„ΞΏΞ½ ΞΊΞ±Ο„Ξ¬Ξ»ΞΏΞ³ΞΏ '%s'"
 
 #
 #: providers/mysql/gda-mysql-recordset.c:322
 #: providers/oracle/gda-oracle-recordset.c:500
 #, fuzzy
 msgid "Could not retrieve column's value"
-msgstr "Αδυναμία αλλαγής στον κατάλογο '%s'"
+msgstr "Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ξ±Ξ»Ξ»Ξ±Ξ³Ξ®Ο‚ ΟƒΟ„ΞΏΞ½ ΞΊΞ±Ο„Ξ¬Ξ»ΞΏΞ³ΞΏ '%s'"
 
 #: providers/mysql/libmain.c:41
 msgid "GDA provider for MySQL databases"
@@ -632,73 +632,73 @@ msgstr ""
 #: providers/oracle/gda-oracle-provider.c:193
 #, fuzzy
 msgid "Could not initialize Oracle"
-msgstr "Αδυναμία περικοπής αρχείου %s"
+msgstr "Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ο€ΞµΟΞΉΞΊΞΏΟ€Ξ®Ο‚ Ξ±ΟΟ‡ΞµΞ―ΞΏΟ… %s"
 
 #
 #: providers/oracle/gda-oracle-provider.c:204
 #, fuzzy
 msgid "Could not initialize the Oracle environment"
-msgstr "Αδυναμία περικοπής αρχείου %s"
+msgstr "Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ο€ΞµΟΞΉΞΊΞΏΟ€Ξ®Ο‚ Ξ±ΟΟ‡ΞµΞ―ΞΏΟ… %s"
 
 #
 #: providers/oracle/gda-oracle-provider.c:216
 #, fuzzy
 msgid "Could not allocate the Oracle service handle"
-msgstr "Αδυναμία περικοπής αρχείου %s"
+msgstr "Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ο€ΞµΟΞΉΞΊΞΏΟ€Ξ®Ο‚ Ξ±ΟΟ‡ΞµΞ―ΞΏΟ… %s"
 
 #
 #: providers/oracle/gda-oracle-provider.c:226
 #, fuzzy
 msgid "Could not allocate the Oracle error handle"
-msgstr "Αδυναμία περικοπής αρχείου %s"
+msgstr "Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ο€ΞµΟΞΉΞΊΞΏΟ€Ξ®Ο‚ Ξ±ΟΟ‡ΞµΞ―ΞΏΟ… %s"
 
 #
 #: providers/oracle/gda-oracle-provider.c:238
 #, fuzzy
 msgid "Could not allocate the Oracle server handle"
-msgstr "Αδυναμία περικοπής αρχείου %s"
+msgstr "Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ο€ΞµΟΞΉΞΊΞΏΟ€Ξ®Ο‚ Ξ±ΟΟ‡ΞµΞ―ΞΏΟ… %s"
 
 #
 #: providers/oracle/gda-oracle-provider.c:251
 #, fuzzy
 msgid "Could not allocate the Oracle session handle"
-msgstr "Αδυναμία περικοπής αρχείου %s"
+msgstr "Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ο€ΞµΟΞΉΞΊΞΏΟ€Ξ®Ο‚ Ξ±ΟΟ‡ΞµΞ―ΞΏΟ… %s"
 
 #
 #: providers/oracle/gda-oracle-provider.c:281
 #, fuzzy
 msgid "Could not attach to the Oracle server"
-msgstr "Αδυναμία περικοπής αρχείου %s"
+msgstr "Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ο€ΞµΟΞΉΞΊΞΏΟ€Ξ®Ο‚ Ξ±ΟΟ‡ΞµΞ―ΞΏΟ… %s"
 
 #
 #: providers/oracle/gda-oracle-provider.c:297
 #, fuzzy
 msgid "Could not set the Oracle server attribute in the service context"
-msgstr "Αδυναμία περικοπής αρχείου %s"
+msgstr "Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ο€ΞµΟΞΉΞΊΞΏΟ€Ξ®Ο‚ Ξ±ΟΟ‡ΞµΞ―ΞΏΟ… %s"
 
 #
 #: providers/oracle/gda-oracle-provider.c:313
 #, fuzzy
 msgid "Could not set the Oracle username attribute"
-msgstr "Αδυναμία περικοπής αρχείου %s"
+msgstr "Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ο€ΞµΟΞΉΞΊΞΏΟ€Ξ®Ο‚ Ξ±ΟΟ‡ΞµΞ―ΞΏΟ… %s"
 
 #
 #: providers/oracle/gda-oracle-provider.c:329
 #, fuzzy
 msgid "Could not set the Oracle password attribute"
-msgstr "Αδυναμία περικοπής αρχείου %s"
+msgstr "Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ο€ΞµΟΞΉΞΊΞΏΟ€Ξ®Ο‚ Ξ±ΟΟ‡ΞµΞ―ΞΏΟ… %s"
 
 #
 #: providers/oracle/gda-oracle-provider.c:344
 #, fuzzy
 msgid "Could not begin the Oracle session"
-msgstr "Αδυναμία περικοπής αρχείου %s"
+msgstr "Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ο€ΞµΟΞΉΞΊΞΏΟ€Ξ®Ο‚ Ξ±ΟΟ‡ΞµΞ―ΞΏΟ… %s"
 
 #
 #: providers/oracle/gda-oracle-provider.c:362
 #, fuzzy
 msgid "Could not set the Oracle session attribute in the service context"
-msgstr "Αδυναμία περικοπής αρχείου %s"
+msgstr "Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ο€ΞµΟΞΉΞΊΞΏΟ€Ξ®Ο‚ Ξ±ΟΟ‡ΞµΞ―ΞΏΟ… %s"
 
 #: providers/oracle/gda-oracle-provider.c:444
 #: providers/oracle/gda-oracle-provider.c:518
@@ -719,31 +719,31 @@ msgstr ""
 #: providers/oracle/gda-oracle-provider.c:455
 #, fuzzy
 msgid "Could not allocate the Oracle statement handle"
-msgstr "Αδυναμία περικοπής αρχείου %s"
+msgstr "Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ο€ΞµΟΞΉΞΊΞΏΟ€Ξ®Ο‚ Ξ±ΟΟ‡ΞµΞ―ΞΏΟ… %s"
 
 #
 #: providers/oracle/gda-oracle-provider.c:466
 #, fuzzy
 msgid "Could not prepare the Oracle statement"
-msgstr "Αδυναμία περικοπής αρχείου %s"
+msgstr "Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ο€ΞµΟΞΉΞΊΞΏΟ€Ξ®Ο‚ Ξ±ΟΟ‡ΞµΞ―ΞΏΟ… %s"
 
 #
 #: providers/oracle/gda-oracle-provider.c:498
 #, fuzzy
 msgid "Could not bind the Oracle statement parameter"
-msgstr "Αδυναμία περικοπής αρχείου %s"
+msgstr "Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ο€ΞµΟΞΉΞΊΞΏΟ€Ξ®Ο‚ Ξ±ΟΟ‡ΞµΞ―ΞΏΟ… %s"
 
 #
 #: providers/oracle/gda-oracle-provider.c:543
 #, fuzzy
 msgid "Could not get the Oracle statement type"
-msgstr "Αδυναμία περικοπής αρχείου %s"
+msgstr "Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ο€ΞµΟΞΉΞΊΞΏΟ€Ξ®Ο‚ Ξ±ΟΟ‡ΞµΞ―ΞΏΟ… %s"
 
 #
 #: providers/oracle/gda-oracle-provider.c:561
 #, fuzzy
 msgid "Could not execute the Oracle statement"
-msgstr "Αδυναμία περικοπής αρχείου %s"
+msgstr "Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ο€ΞµΟΞΉΞΊΞΏΟ€Ξ®Ο‚ Ξ±ΟΟ‡ΞµΞ―ΞΏΟ… %s"
 
 #: providers/oracle/gda-oracle-provider.c:574
 msgid "Could not get the number of columns in the result set"
@@ -757,7 +757,7 @@ msgstr ""
 #: providers/oracle/gda-oracle-provider.c:603
 #, fuzzy
 msgid "Could not get the column name in the result set"
-msgstr "Αδυναμία αλλαγής στον κατάλογο '%s'"
+msgstr "Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ξ±Ξ»Ξ»Ξ±Ξ³Ξ®Ο‚ ΟƒΟ„ΞΏΞ½ ΞΊΞ±Ο„Ξ¬Ξ»ΞΏΞ³ΞΏ '%s'"
 
 #
 #: providers/oracle/gda-oracle-provider.c:749
@@ -766,107 +766,107 @@ msgstr "Αδυναμία αλλαγής στον κατάλογο '%s'"
 #: providers/oracle/gda-oracle-provider.c:931
 #, fuzzy
 msgid "Could not attach the transaction to the service context"
-msgstr "Αδυναμία περικοπής αρχείου %s"
+msgstr "Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ο€ΞµΟΞΉΞΊΞΏΟ€Ξ®Ο‚ Ξ±ΟΟ‡ΞµΞ―ΞΏΟ… %s"
 
 #
 #: providers/oracle/gda-oracle-provider.c:799
 #, fuzzy
 msgid "Could not allocate the Oracle transaction handle"
-msgstr "Αδυναμία περικοπής αρχείου %s"
+msgstr "Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ο€ΞµΟΞΉΞΊΞΏΟ€Ξ®Ο‚ Ξ±ΟΟ‡ΞµΞ―ΞΏΟ… %s"
 
 #
 #: providers/oracle/gda-oracle-provider.c:811
 #, fuzzy
 msgid "Could not set the Oracle transaction name"
-msgstr "Αδυναμία περικοπής αρχείου %s"
+msgstr "Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ο€ΞµΟΞΉΞΊΞΏΟ€Ξ®Ο‚ Ξ±ΟΟ‡ΞµΞ―ΞΏΟ… %s"
 
 #
 #: providers/oracle/gda-oracle-provider.c:836
 #, fuzzy
 msgid "Could not start the Oracle transaction"
-msgstr "Αδυναμία περικοπής αρχείου %s"
+msgstr "Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ο€ΞµΟΞΉΞΊΞΏΟ€Ξ®Ο‚ Ξ±ΟΟ‡ΞµΞ―ΞΏΟ… %s"
 
 #
 #: providers/oracle/gda-oracle-provider.c:884
 #, fuzzy
 msgid "Could not prepare the transaction to commit"
-msgstr "Αδυναμία αλλαγής στον κατάλογο '%s'"
+msgstr "Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ξ±Ξ»Ξ»Ξ±Ξ³Ξ®Ο‚ ΟƒΟ„ΞΏΞ½ ΞΊΞ±Ο„Ξ¬Ξ»ΞΏΞ³ΞΏ '%s'"
 
 #
 #: providers/oracle/gda-oracle-provider.c:892
 #, fuzzy
 msgid "Could not commit the Oracle transaction"
-msgstr "Αδυναμία περικοπής αρχείου %s"
+msgstr "Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ο€ΞµΟΞΉΞΊΞΏΟ€Ξ®Ο‚ Ξ±ΟΟ‡ΞµΞ―ΞΏΟ… %s"
 
 #
 #: providers/oracle/gda-oracle-provider.c:938
 #, fuzzy
 msgid "Could not rollback the Oracle transaction"
-msgstr "Αδυναμία περικοπής αρχείου %s"
+msgstr "Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ο€ΞµΟΞΉΞΊΞΏΟ€Ξ®Ο‚ Ξ±ΟΟ‡ΞµΞ―ΞΏΟ… %s"
 
 #
 #: providers/oracle/gda-oracle-provider.c:1227
 #, fuzzy
 msgid "Could not allocate the Oracle describe handle"
-msgstr "Αδυναμία περικοπής αρχείου %s"
+msgstr "Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ο€ΞµΟΞΉΞΊΞΏΟ€Ξ®Ο‚ Ξ±ΟΟ‡ΞµΞ―ΞΏΟ… %s"
 
 #
 #: providers/oracle/gda-oracle-provider.c:1240
 #, fuzzy
 msgid "Could not describe the Oracle table"
-msgstr "Αδυναμία αλλαγής στον κατάλογο '%s'"
+msgstr "Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ξ±Ξ»Ξ»Ξ±Ξ³Ξ®Ο‚ ΟƒΟ„ΞΏΞ½ ΞΊΞ±Ο„Ξ¬Ξ»ΞΏΞ³ΞΏ '%s'"
 
 #
 #: providers/oracle/gda-oracle-provider.c:1253
 #, fuzzy
 msgid "Could not get the Oracle parameter handle"
-msgstr "Αδυναμία περικοπής αρχείου %s"
+msgstr "Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ο€ΞµΟΞΉΞΊΞΏΟ€Ξ®Ο‚ Ξ±ΟΟ‡ΞµΞ―ΞΏΟ… %s"
 
 #
 #: providers/oracle/gda-oracle-provider.c:1266
 #, fuzzy
 msgid "Could not get the number of columns in the table"
-msgstr "Αδυναμία αλλαγής στον κατάλογο '%s'"
+msgstr "Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ξ±Ξ»Ξ»Ξ±Ξ³Ξ®Ο‚ ΟƒΟ„ΞΏΞ½ ΞΊΞ±Ο„Ξ¬Ξ»ΞΏΞ³ΞΏ '%s'"
 
 #
 #: providers/oracle/gda-oracle-provider.c:1278
 #, fuzzy
 msgid "Could not get the column list"
 msgstr ""
-"Αδυναμία φόρτωσης αρχείου\n"
+"Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ο†ΟΟΟ„Ο‰ΟƒΞ·Ο‚ Ξ±ΟΟ‡ΞµΞ―ΞΏΟ…\n"
 " %s"
 
 #
 #: providers/oracle/gda-oracle-provider.c:1307
 #, fuzzy
 msgid "Could not get the Oracle column handle"
-msgstr "Αδυναμία περικοπής αρχείου %s"
+msgstr "Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ο€ΞµΟΞΉΞΊΞΏΟ€Ξ®Ο‚ Ξ±ΟΟ‡ΞµΞ―ΞΏΟ… %s"
 
 #
 #: providers/oracle/gda-oracle-provider.c:1320
 #, fuzzy
 msgid "Could not get the Oracle field name"
-msgstr "Αδυναμία περικοπής αρχείου %s"
+msgstr "Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ο€ΞµΟΞΉΞΊΞΏΟ€Ξ®Ο‚ Ξ±ΟΟ‡ΞµΞ―ΞΏΟ… %s"
 
 #
 #: providers/oracle/gda-oracle-provider.c:1341
 #, fuzzy
 msgid "Could not get the Oracle field data type"
-msgstr "Αδυναμία περικοπής αρχείου %s"
+msgstr "Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ο€ΞµΟΞΉΞΊΞΏΟ€Ξ®Ο‚ Ξ±ΟΟ‡ΞµΞ―ΞΏΟ… %s"
 
 #
 #: providers/oracle/gda-oracle-provider.c:1359
 #, fuzzy
 msgid "Could not get the Oracle field defined size"
 msgstr ""
-"Αδυναμία φόρτωσης αρχείου\n"
+"Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ο†ΟΟΟ„Ο‰ΟƒΞ·Ο‚ Ξ±ΟΟ‡ΞµΞ―ΞΏΟ…\n"
 " %s"
 
 #
 #: providers/oracle/gda-oracle-provider.c:1376
 #, fuzzy
 msgid "Could not get the Oracle field scale"
-msgstr "Αδυναμία περικοπής αρχείου %s"
+msgstr "Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ο€ΞµΟΞΉΞΊΞΏΟ€Ξ®Ο‚ Ξ±ΟΟ‡ΞµΞ―ΞΏΟ… %s"
 
 #: providers/oracle/gda-oracle-provider.c:1393
 msgid "Could not get the Oracle field nullable attribute"
@@ -881,7 +881,7 @@ msgstr ""
 #
 #: providers/oracle/gda-oracle-provider.c:1659 testing/client.c:129
 msgid "Sequences"
-msgstr "Ακολουθίες"
+msgstr "Ξ‘ΞΊΞΏΞ»ΞΏΟ…ΞΈΞ―ΞµΟ‚"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/oracle/gda-oracle-provider.c:1667
@@ -893,14 +893,14 @@ msgstr ""
 #: providers/oracle/gda-oracle-recordset.c:73
 #, fuzzy
 msgid "Could not get the Oracle parameter"
-msgstr "Αδυναμία περικοπής αρχείου %s"
+msgstr "Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ο€ΞµΟΞΉΞΊΞΏΟ€Ξ®Ο‚ Ξ±ΟΟ‡ΞµΞ―ΞΏΟ… %s"
 
 #
 #: providers/oracle/gda-oracle-recordset.c:83
 #, fuzzy
 msgid "Could not get the parameter defined size"
 msgstr ""
-"Αδυναμία φόρτωσης αρχείου\n"
+"Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ο†ΟΟΟ„Ο‰ΟƒΞ·Ο‚ Ξ±ΟΟ‡ΞµΞ―ΞΏΟ…\n"
 " %s"
 
 #
@@ -908,7 +908,7 @@ msgstr ""
 #, fuzzy
 msgid "Could not get the parameter data type"
 msgstr ""
-"Αδυναμία φόρτωσης αρχείου\n"
+"Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ο†ΟΟΟ„Ο‰ΟƒΞ·Ο‚ Ξ±ΟΟ‡ΞµΞ―ΞΏΟ…\n"
 " %s"
 
 #
@@ -916,7 +916,7 @@ msgstr ""
 #, fuzzy
 msgid "Could not define by position"
 msgstr ""
-"Αδυναμία φόρτωσης αρχείου\n"
+"Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ο†ΟΟΟ„Ο‰ΟƒΞ·Ο‚ Ξ±ΟΟ‡ΞµΞ―ΞΏΟ…\n"
 " %s"
 
 #: providers/oracle/gda-oracle-recordset.c:172
@@ -928,38 +928,38 @@ msgstr ""
 #: providers/oracle/gda-oracle-recordset.c:184
 #, fuzzy
 msgid "Could not get the Oracle parameter information"
-msgstr "Αδυναμία αλλαγής στον κατάλογο '%s'"
+msgstr "Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ξ±Ξ»Ξ»Ξ±Ξ³Ξ®Ο‚ ΟƒΟ„ΞΏΞ½ ΞΊΞ±Ο„Ξ¬Ξ»ΞΏΞ³ΞΏ '%s'"
 
 #
 #: providers/oracle/gda-oracle-recordset.c:194
 #, fuzzy
 msgid "Could not get the Oracle column name"
-msgstr "Αδυναμία αλλαγής στον κατάλογο '%s'"
+msgstr "Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ξ±Ξ»Ξ»Ξ±Ξ³Ξ®Ο‚ ΟƒΟ„ΞΏΞ½ ΞΊΞ±Ο„Ξ¬Ξ»ΞΏΞ³ΞΏ '%s'"
 
 #
 #: providers/oracle/gda-oracle-recordset.c:209
 #, fuzzy
 msgid "Could not get the Oracle column data type"
-msgstr "Αδυναμία περικοπής αρχείου %s"
+msgstr "Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ο€ΞµΟΞΉΞΊΞΏΟ€Ξ®Ο‚ Ξ±ΟΟ‡ΞµΞ―ΞΏΟ… %s"
 
 #
 #: providers/oracle/gda-oracle-recordset.c:221
 #, fuzzy
 msgid "Could not get the Oracle column scale"
-msgstr "Αδυναμία αλλαγής στον κατάλογο '%s'"
+msgstr "Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ξ±Ξ»Ξ»Ξ±Ξ³Ξ®Ο‚ ΟƒΟ„ΞΏΞ½ ΞΊΞ±Ο„Ξ¬Ξ»ΞΏΞ³ΞΏ '%s'"
 
 #
 #: providers/oracle/gda-oracle-recordset.c:233
 #, fuzzy
 msgid "Could not get the Oracle column nullable attribute"
-msgstr "Αδυναμία περικοπής αρχείου %s"
+msgstr "Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ο€ΞµΟΞΉΞΊΞΏΟ€Ξ®Ο‚ Ξ±ΟΟ‡ΞµΞ―ΞΏΟ… %s"
 
 #
 #: providers/oracle/gda-oracle-recordset.c:245
 #, fuzzy
 msgid "Could not get the Oracle defined size"
 msgstr ""
-"Αδυναμία φόρτωσης αρχείου\n"
+"Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ο†ΟΟΟ„Ο‰ΟƒΞ·Ο‚ Ξ±ΟΟ‡ΞµΞ―ΞΏΟ…\n"
 " %s"
 
 #
@@ -967,7 +967,7 @@ msgstr ""
 #, fuzzy
 msgid "Could not fetch a row"
 msgstr ""
-"Αδυναμία φόρτωσης αρχείου\n"
+"Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ο†ΟΟΟ„Ο‰ΟƒΞ·Ο‚ Ξ±ΟΟ‡ΞµΞ―ΞΏΟ…\n"
 " %s"
 
 #: providers/oracle/libmain.c:34
@@ -988,7 +988,7 @@ msgstr ""
 #: providers/postgres/gda-postgres-provider.c:686
 #, fuzzy
 msgid "Procedure"
-msgstr "Διαδικασίες"
+msgstr "Ξ”ΞΉΞ±Ξ΄ΞΉΞΊΞ±ΟƒΞ―ΞµΟ‚"
 
 #: providers/postgres/gda-postgres-provider.c:687
 #: providers/postgres/gda-postgres-provider.c:1024
@@ -999,7 +999,7 @@ msgstr ""
 #: providers/postgres/gda-postgres-provider.c:690
 #, fuzzy
 msgid "Return type"
-msgstr "Δεδομένα"
+msgstr "Ξ”ΞµΞ΄ΞΏΞΌΞ­Ξ½Ξ±"
 
 #: providers/postgres/gda-postgres-provider.c:691
 msgid "Nb args"
@@ -1009,7 +1009,7 @@ msgstr ""
 #: providers/postgres/gda-postgres-provider.c:692
 #, fuzzy
 msgid "Args types"
-msgstr "Ενοποιήσεις"
+msgstr "Ξ•Ξ½ΞΏΟ€ΞΏΞΉΞ®ΟƒΞµΞΉΟ‚"
 
 #
 #: providers/postgres/gda-postgres-provider.c:693
@@ -1019,7 +1019,7 @@ msgstr "Ενοποιήσεις"
 #: providers/postgres/gda-postgres-provider.c:1473
 #, fuzzy
 msgid "Definition"
-msgstr "Περιγραφή"
+msgstr "Ξ ΞµΟΞΉΞ³ΟΞ±Ο†Ξ®"
 
 #
 #. Set it here instead of the SQL query to allow i18n
@@ -1027,39 +1027,39 @@ msgstr "Περιγραφή"
 #: providers/postgres/gda-postgres-provider.c:1510
 #, fuzzy
 msgid "Table"
-msgstr "Πίνακες"
+msgstr "Ξ Ξ―Ξ½Ξ±ΞΊΞµΟ‚"
 
 #
 #. Set it here instead of the SQL query to allow i18n
 #: providers/postgres/gda-postgres-provider.c:966
 msgid "View"
-msgstr "Όψη"
+msgstr "ΞΟΞ·"
 
 #
 #. Set it here instead of the SQL query to allow i18n
 #: providers/postgres/gda-postgres-provider.c:1023
 #, fuzzy
 msgid "Aggregate"
-msgstr "Ενοποιήσεις"
+msgstr "Ξ•Ξ½ΞΏΟ€ΞΏΞΉΞ®ΟƒΞµΞΉΟ‚"
 
 #
 #: providers/postgres/gda-postgres-provider.c:1027
 #, fuzzy
 msgid "OutType"
-msgstr "Τύποι"
+msgstr "Ξ¤ΟΟ€ΞΏΞΉ"
 
 #
 #: providers/postgres/gda-postgres-provider.c:1028
 #, fuzzy
 msgid "InType"
-msgstr "Τύποι"
+msgstr "Ξ¤ΟΟ€ΞΏΞΉ"
 
 #
 #. Set it here instead of the SQL query to allow i18n
 #: providers/postgres/gda-postgres-provider.c:1419 testing/client.c:121
 #, fuzzy
 msgid "Databases"
-msgstr "Βάση"
+msgstr "Ξ’Ξ¬ΟƒΞ·"
 
 #
 #. Set it here instead of the SQL query to allow i18n
@@ -1067,7 +1067,7 @@ msgstr "Βάση"
 #: providers/postgres/gda-postgres-provider.c:1511
 #, fuzzy
 msgid "Sequence"
-msgstr "Ακολουθίες"
+msgstr "Ξ‘ΞΊΞΏΞ»ΞΏΟ…ΞΈΞ―ΞµΟ‚"
 
 #: providers/postgres/gda-postgres-recordset.c:230
 #: providers/sqlite/gda-sqlite-recordset.c:213
@@ -1084,24 +1084,32 @@ msgstr ""
 msgid "GDA provider for PostgreSQL databases"
 msgstr ""
 
-#: providers/sqlite/gda-sqlite-provider.c:246
-msgid "Invalid SQLITE handle"
-msgstr ""
-
-#: providers/sqlite/gda-sqlite-provider.c:314
-#: providers/sqlite/gda-sqlite-provider.c:449
+#: providers/sqlite/gda-sqlite-provider.c:243
+#: providers/sqlite/gda-sqlite-provider.c:266
+#: providers/sqlite/gda-sqlite-provider.c:289
+#: providers/sqlite/gda-sqlite-provider.c:311
 #: providers/sqlite/gda-sqlite-recordset.c:159
 #: providers/sqlite/gda-sqlite-recordset.c:198
 #: providers/sqlite/gda-sqlite-recordset.c:239
 msgid "Invalid SQLite handle"
 msgstr ""
 
-#: providers/sqlite/gda-sqlite-provider.c:332
+#: providers/sqlite/gda-sqlite-provider.c:270
+msgid ""
+"To change a SQLite database you should close the actual database and open a "
+"new one"
+msgstr ""
+
+#: providers/sqlite/gda-sqlite-provider.c:293
 msgid "Only one database per connection is allowed"
 msgstr ""
 
-#: providers/sqlite/gda-sqlite-provider.c:346
+#: providers/sqlite/gda-sqlite-provider.c:315
 msgid "To remove a SQLite database you should remove the database file by hand"
+msgstr ""
+
+#: providers/sqlite/gda-sqlite-provider.c:329
+msgid "Invalid SQLITE handle"
 msgstr ""
 
 #: providers/sqlite/libmain.c:41
@@ -1112,23 +1120,28 @@ msgstr ""
 #: providers/sybase/main.c:52
 #, fuzzy
 msgid "Could not initiate Sybase component factory"
-msgstr "Αδυναμία περικοπής αρχείου %s"
+msgstr "Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ο€ΞµΟΞΉΞΊΞΏΟ€Ξ®Ο‚ Ξ±ΟΟ‡ΞµΞ―ΞΏΟ… %s"
 
 #
-#: report/libgda-report/gda-report-document.c:166
-#, fuzzy
-msgid "Could not parse XML document"
-msgstr ""
-"Αδυναμία φόρτωσης αρχείου\n"
-" %s"
-
-#
-#: report/libgda-report/gda-report-document.c:191
+#: report/libgda-report/gda-report-document.c:158
 #, fuzzy, c-format
-msgid "Could not get file from %s"
+msgid "Could not load report file at %s"
 msgstr ""
-"Αδυναμία φόρτωσης αρχείου\n"
+"Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ο†ΟΟΟ„Ο‰ΟƒΞ·Ο‚ Ξ±ΟΟ‡ΞµΞ―ΞΏΟ…\n"
 " %s"
+
+#
+#: report/libgda-report/gda-report-document.c:167
+#, fuzzy, c-format
+msgid "Could not parse report file at %s"
+msgstr ""
+"Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ο†ΟΟΟ„Ο‰ΟƒΞ·Ο‚ Ξ±ΟΟ‡ΞµΞ―ΞΏΟ…\n"
+" %s"
+
+#: report/libgda-report/gda-report-document.c:177
+#, c-format
+msgid "Invalid report file '%s'"
+msgstr ""
 
 #: testing/client.c:41
 msgid "\t\tNONE\n"
@@ -1144,13 +1157,13 @@ msgstr ""
 #: testing/client.c:86
 #, fuzzy
 msgid "\tProvider capabilities...\n"
-msgstr "Χαρακτηριστικά Παροχέα"
+msgstr "Ξ§Ξ±ΟΞ±ΞΊΟ„Ξ·ΟΞΉΟƒΟ„ΞΉΞΊΞ¬ Ξ Ξ±ΟΞΏΟ‡Ξ­Ξ±"
 
 #
 #: testing/client.c:87
 #, fuzzy, c-format
 msgid "\t\tAggregates: %s\n"
-msgstr "Ενοποιήσεις"
+msgstr "Ξ•Ξ½ΞΏΟ€ΞΏΞΉΞ®ΟƒΞµΞΉΟ‚"
 
 #: testing/client.c:89 testing/client.c:92 testing/client.c:95
 #: testing/client.c:98 testing/client.c:101 testing/client.c:104
@@ -1166,7 +1179,7 @@ msgstr ""
 #: testing/client.c:116
 #, fuzzy
 msgid "Not supported"
-msgstr "Δεν υποστηρίζονται διενέργειες"
+msgstr "Ξ”ΞµΞ½ Ο…Ο€ΞΏΟƒΟ„Ξ·ΟΞ―Ξ¶ΞΏΞ½Ο„Ξ±ΞΉ Ξ΄ΞΉΞµΞ½Ξ­ΟΞ³ΞµΞΉΞµΟ‚"
 
 #: testing/client.c:90
 #, c-format
@@ -1177,29 +1190,29 @@ msgstr ""
 #: testing/client.c:93
 #, fuzzy, c-format
 msgid "\t\tProcedures: %s\n"
-msgstr "Διαδικασίες"
+msgstr "Ξ”ΞΉΞ±Ξ΄ΞΉΞΊΞ±ΟƒΞ―ΞµΟ‚"
 
 #
 #: testing/client.c:96
 #, fuzzy, c-format
 msgid "\t\tSequences: %s\n"
-msgstr "Ακολουθίες"
+msgstr "Ξ‘ΞΊΞΏΞ»ΞΏΟ…ΞΈΞ―ΞµΟ‚"
 
 #
 #: testing/client.c:99
 #, fuzzy, c-format
 msgid "\t\tSQL: %s\n"
-msgstr "Ακολουθίες"
+msgstr "Ξ‘ΞΊΞΏΞ»ΞΏΟ…ΞΈΞ―ΞµΟ‚"
 
 #: testing/client.c:102
 #, fuzzy, c-format
 msgid "\t\tTransactions: %s\n"
-msgstr "Διενέργειες"
+msgstr "Ξ”ΞΉΞµΞ½Ξ­ΟΞ³ΞµΞΉΞµΟ‚"
 
 #: testing/client.c:105
 #, fuzzy, c-format
 msgid "\t\tTriggers: %s\n"
-msgstr "Διενέργειες"
+msgstr "Ξ”ΞΉΞµΞ½Ξ­ΟΞ³ΞµΞΉΞµΟ‚"
 
 #: testing/client.c:108
 #, c-format
@@ -1215,7 +1228,7 @@ msgstr ""
 #: testing/client.c:114
 #, fuzzy, c-format
 msgid "\t\tXML queries: %s\n"
-msgstr "Ερωτήσεις XML"
+msgstr "Ξ•ΟΟ‰Ο„Ξ®ΟƒΞµΞΉΟ‚ XML"
 
 #. show connection schemas
 #: testing/client.c:119
@@ -1230,13 +1243,13 @@ msgstr ""
 #: testing/client.c:122
 #, fuzzy
 msgid "Stored procedures"
-msgstr "Αποθηκευμένες Διαδικασίες"
+msgstr "Ξ‘Ο€ΞΏΞΈΞ·ΞΊΞµΟ…ΞΌΞ­Ξ½ΞµΟ‚ Ξ”ΞΉΞ±Ξ΄ΞΉΞΊΞ±ΟƒΞ―ΞµΟ‚"
 
 #
 #: testing/client.c:123
 #, fuzzy
 msgid "Connection Tables"
-msgstr "Ρυθμίσεις Σύνδεσης"
+msgstr "Ξ΅Ο…ΞΈΞΌΞ―ΟƒΞµΞΉΟ‚ Ξ£ΟΞ½Ξ΄ΞµΟƒΞ·Ο‚"
 
 #: testing/client.c:124
 msgid "Available types"
@@ -1245,13 +1258,13 @@ msgstr ""
 #
 #: testing/client.c:127
 msgid "Aggregates"
-msgstr "Ενοποιήσεις"
+msgstr "Ξ•Ξ½ΞΏΟ€ΞΏΞΉΞ®ΟƒΞµΞΉΟ‚"
 
 #
 #: testing/client.c:135 testing/client.c:143
 #, fuzzy
 msgid "\tStarting transaction..."
-msgstr "Εκκίνηση Διενέργειας"
+msgstr "Ξ•ΞΊΞΊΞ―Ξ½Ξ·ΟƒΞ· Ξ”ΞΉΞµΞ½Ξ­ΟΞ³ΞµΞΉΞ±Ο‚"
 
 #: testing/client.c:137 testing/client.c:141 testing/client.c:145
 #: testing/client.c:149
@@ -1262,13 +1275,13 @@ msgstr ""
 #: testing/client.c:139
 #, fuzzy
 msgid "\tFinishing transaction..."
-msgstr "Εκκίνηση νέας διενέργειας"
+msgstr "Ξ•ΞΊΞΊΞ―Ξ½Ξ·ΟƒΞ· Ξ½Ξ­Ξ±Ο‚ Ξ΄ΞΉΞµΞ½Ξ­ΟΞ³ΞµΞΉΞ±Ο‚"
 
 #
 #: testing/client.c:147
 #, fuzzy
 msgid "\tRolling back transaction..."
-msgstr "Εκκίνηση νέας διενέργειας"
+msgstr "Ξ•ΞΊΞΊΞ―Ξ½Ξ·ΟƒΞ· Ξ½Ξ­Ξ±Ο‚ Ξ΄ΞΉΞµΞ½Ξ­ΟΞ³ΞµΞΉΞ±Ο‚"
 
 #: testing/client.c:173
 msgid "Testing GDA client API"
@@ -1291,7 +1304,7 @@ msgstr ""
 #: testing/config.c:89
 #, fuzzy, c-format
 msgid " Provider = %s\n"
-msgstr "Παροχεύς"
+msgstr "Ξ Ξ±ΟΞΏΟ‡ΞµΟΟ‚"
 
 #: testing/config.c:90
 #, c-format
@@ -1302,7 +1315,7 @@ msgstr ""
 #: testing/config.c:91
 #, fuzzy, c-format
 msgid "\tdescription = %s\n"
-msgstr "Περιγραφή"
+msgstr "Ξ ΞµΟΞΉΞ³ΟΞ±Ο†Ξ®"
 
 #: testing/config.c:93
 msgid "\tgda_params ="
@@ -1310,423 +1323,437 @@ msgstr ""
 
 #
 #, fuzzy
+#~ msgid "Could not parse XML document"
+#~ msgstr ""
+#~ "Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ο†ΟΟΟ„Ο‰ΟƒΞ·Ο‚ Ξ±ΟΟ‡ΞµΞ―ΞΏΟ…\n"
+#~ " %s"
+
+#
+#, fuzzy
+#~ msgid "Could not get file from %s"
+#~ msgstr ""
+#~ "Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ο†ΟΟΟ„Ο‰ΟƒΞ·Ο‚ Ξ±ΟΟ‡ΞµΞ―ΞΏΟ…\n"
+#~ " %s"
+
+#
+#, fuzzy
 #~ msgid "Table name"
-#~ msgstr "Όνομα Αντικειμένου"
+#~ msgstr "ΞΞ½ΞΏΞΌΞ± Ξ‘Ξ½Ο„ΞΉΞΊΞµΞΉΞΌΞ­Ξ½ΞΏΟ…"
 
 #
 #, fuzzy
 #~ msgid "Could not initialize OCI library"
-#~ msgstr "Αδυναμία περικοπής αρχείου %s"
+#~ msgstr "Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ο€ΞµΟΞΉΞΊΞΏΟ€Ξ®Ο‚ Ξ±ΟΟ‡ΞµΞ―ΞΏΟ… %s"
 
 #
 #, fuzzy
 #~ msgid "Could not create global GDA client"
-#~ msgstr "Αδυναμία αλλαγής στον κατάλογο '%s'"
+#~ msgstr "Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ξ±Ξ»Ξ»Ξ±Ξ³Ξ®Ο‚ ΟƒΟ„ΞΏΞ½ ΞΊΞ±Ο„Ξ¬Ξ»ΞΏΞ³ΞΏ '%s'"
 
 #
 #, fuzzy
 #~ msgid "Could not parse XML report"
 #~ msgstr ""
-#~ "Αδυναμία φόρτωσης αρχείου\n"
+#~ "Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ο†ΟΟΟ„Ο‰ΟƒΞ·Ο‚ Ξ±ΟΟ‡ΞµΞ―ΞΏΟ…\n"
 #~ " %s"
 
 #
 #, fuzzy
 #~ msgid "Could not activate report engine"
 #~ msgstr ""
-#~ "Αδυναμία φόρτωσης αρχείου\n"
+#~ "Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ο†ΟΟΟ„Ο‰ΟƒΞ·Ο‚ Ξ±ΟΟ‡ΞµΞ―ΞΏΟ…\n"
 #~ " %s"
 
 #
 #, fuzzy
 #~ msgid "Could not create BonoboStreamMem object"
-#~ msgstr "Αδυναμία αλλαγής στον κατάλογο '%s'"
+#~ msgstr "Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ξ±Ξ»Ξ»Ξ±Ξ³Ξ®Ο‚ ΟƒΟ„ΞΏΞ½ ΞΊΞ±Ο„Ξ¬Ξ»ΞΏΞ³ΞΏ '%s'"
 
 #
 #, fuzzy
 #~ msgid "Could not initiate Report component factory"
-#~ msgstr "Αδυναμία περικοπής αρχείου %s"
+#~ msgstr "Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ο€ΞµΟΞΉΞΊΞΏΟ€Ξ®Ο‚ Ξ±ΟΟ‡ΞµΞ―ΞΏΟ… %s"
 
 #
 #, fuzzy
 #~ msgid "Could not activate object %s"
 #~ msgstr ""
-#~ "Αδυναμία φόρτωσης αρχείου\n"
+#~ "Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ο†ΟΟΟ„Ο‰ΟƒΞ·Ο‚ Ξ±ΟΟ‡ΞµΞ―ΞΏΟ…\n"
 #~ " %s"
 
 #
 #, fuzzy
 #~ msgid "Could not initialize Bonobo"
-#~ msgstr "Αδυναμία περικοπής αρχείου %s"
+#~ msgstr "Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ο€ΞµΟΞΉΞΊΞΏΟ€Ξ®Ο‚ Ξ±ΟΟ‡ΞµΞ―ΞΏΟ… %s"
 
 #
 #, fuzzy
 #~ msgid "Could not notify client about action %d"
-#~ msgstr "Αδυναμία αλλαγής στον κατάλογο '%s'"
+#~ msgstr "Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ξ±Ξ»Ξ»Ξ±Ξ³Ξ®Ο‚ ΟƒΟ„ΞΏΞ½ ΞΊΞ±Ο„Ξ¬Ξ»ΞΏΞ³ΞΏ '%s'"
 
 #
 #, fuzzy
 #~ msgid "Default component factory"
-#~ msgstr "Αδυναμία αλλαγής στον κατάλογο '%s'"
+#~ msgstr "Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ξ±Ξ»Ξ»Ξ±Ξ³Ξ®Ο‚ ΟƒΟ„ΞΏΞ½ ΞΊΞ±Ο„Ξ¬Ξ»ΞΏΞ³ΞΏ '%s'"
 
 #
 #, fuzzy
 #~ msgid "Could not initiate MySQL component factory"
-#~ msgstr "Αδυναμία περικοπής αρχείου %s"
+#~ msgstr "Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ο€ΞµΟΞΉΞΊΞΏΟ€Ξ®Ο‚ Ξ±ΟΟ‡ΞµΞ―ΞΏΟ… %s"
 
 #
 #, fuzzy
 #~ msgid "ODBC component factory"
-#~ msgstr "Αδυναμία αλλαγής στον κατάλογο '%s'"
+#~ msgstr "Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ξ±Ξ»Ξ»Ξ±Ξ³Ξ®Ο‚ ΟƒΟ„ΞΏΞ½ ΞΊΞ±Ο„Ξ¬Ξ»ΞΏΞ³ΞΏ '%s'"
 
 #
 #, fuzzy
 #~ msgid "Could not initiate ODBC component factory"
-#~ msgstr "Αδυναμία περικοπής αρχείου %s"
+#~ msgstr "Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ο€ΞµΟΞΉΞΊΞΏΟ€Ξ®Ο‚ Ξ±ΟΟ‡ΞµΞ―ΞΏΟ… %s"
 
 #
 #, fuzzy
 #~ msgid "Oracle component factory"
-#~ msgstr "Αδυναμία αλλαγής στον κατάλογο '%s'"
+#~ msgstr "Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ξ±Ξ»Ξ»Ξ±Ξ³Ξ®Ο‚ ΟƒΟ„ΞΏΞ½ ΞΊΞ±Ο„Ξ¬Ξ»ΞΏΞ³ΞΏ '%s'"
 
 #
 #, fuzzy
 #~ msgid "Postgres component factory"
-#~ msgstr "Αδυναμία αλλαγής στον κατάλογο '%s'"
+#~ msgstr "Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ξ±Ξ»Ξ»Ξ±Ξ³Ξ®Ο‚ ΟƒΟ„ΞΏΞ½ ΞΊΞ±Ο„Ξ¬Ξ»ΞΏΞ³ΞΏ '%s'"
 
 #
 #, fuzzy
 #~ msgid "Could not initiate PostgreSQL component factory"
-#~ msgstr "Αδυναμία περικοπής αρχείου %s"
+#~ msgstr "Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ο€ΞµΟΞΉΞΊΞΏΟ€Ξ®Ο‚ Ξ±ΟΟ‡ΞµΞ―ΞΏΟ… %s"
 
 #
 #, fuzzy
 #~ msgid "NULL"
-#~ msgstr "«ΚΕΝΟ»"
+#~ msgstr "Β«ΞΞ•ΞΞΒ»"
 
 #
 #, fuzzy
 #~ msgid "date"
-#~ msgstr "Επικόλληση"
+#~ msgstr "Ξ•Ο€ΞΉΞΊΟΞ»Ξ»Ξ·ΟƒΞ·"
 
 #
 #, fuzzy
 #~ msgid "Unknown type"
-#~ msgstr "«¶γνωστος Τύπος GDA(ΚΕΝΟ)»"
+#~ msgstr "Β«Ξ†Ξ³Ξ½Ο‰ΟƒΟ„ΞΏΟ‚ Ξ¤ΟΟ€ΞΏΟ‚ GDA(ΞΞ•ΞΞ)Β»"
 
 #
 #, fuzzy
 #~ msgid "SQLite component factory"
-#~ msgstr "Αδυναμία αλλαγής στον κατάλογο '%s'"
+#~ msgstr "Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ξ±Ξ»Ξ»Ξ±Ξ³Ξ®Ο‚ ΟƒΟ„ΞΏΞ½ ΞΊΞ±Ο„Ξ¬Ξ»ΞΏΞ³ΞΏ '%s'"
 
 #
 #, fuzzy
 #~ msgid "Could not initiate Sqlite component factory"
-#~ msgstr "Αδυναμία περικοπής αρχείου %s"
+#~ msgstr "Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ο€ΞµΟΞΉΞΊΞΏΟ€Ξ®Ο‚ Ξ±ΟΟ‡ΞµΞ―ΞΏΟ… %s"
 
 #
 #, fuzzy
 #~ msgid "\tusername = %s\n"
-#~ msgstr "Όνομα χρήστη"
+#~ msgstr "ΞΞ½ΞΏΞΌΞ± Ο‡ΟΞ®ΟƒΟ„Ξ·"
 
 #
 #, fuzzy
 #~ msgid "Server Message: "
-#~ msgstr "Αρχείο Παρακολούθησης Εξυπηρετητή"
+#~ msgstr "Ξ‘ΟΟ‡ΞµΞ―ΞΏ Ξ Ξ±ΟΞ±ΞΊΞΏΞ»ΞΏΟΞΈΞ·ΟƒΞ·Ο‚ Ξ•ΞΎΟ…Ο€Ξ·ΟΞµΟ„Ξ·Ο„Ξ®"
 
 #
 #, fuzzy
 #~ msgid "layer"
-#~ msgstr "Καθαρισμός"
+#~ msgstr "ΞΞ±ΞΈΞ±ΟΞΉΟƒΞΌΟΟ‚"
 
 #
 #, fuzzy
 #~ msgid "False"
-#~ msgstr "Αρχείο"
+#~ msgstr "Ξ‘ΟΟ‡ΞµΞ―ΞΏ"
 
 #
 #, fuzzy
 #~ msgid "Saving log...x"
-#~ msgstr "Αποθήκευση στο '%s' ..."
+#~ msgstr "Ξ‘Ο€ΞΏΞΈΞ®ΞΊΞµΟ…ΟƒΞ· ΟƒΟ„ΞΏ '%s' ..."
 
 #
 #, fuzzy
 #~ msgid "You must specify a directory for the database to be stored"
-#~ msgstr "Πρέπει να παράσχετε ένα όνομα για την εξαγωγή της βάσης"
+#~ msgstr "Ξ ΟΞ­Ο€ΞµΞΉ Ξ½Ξ± Ο€Ξ±ΟΞ¬ΟƒΟ‡ΞµΟ„Ξµ Ξ­Ξ½Ξ± ΟΞ½ΞΏΞΌΞ± Ξ³ΞΉΞ± Ο„Ξ·Ξ½ ΞµΞΎΞ±Ξ³Ο‰Ξ³Ξ® Ο„Ξ·Ο‚ Ξ²Ξ¬ΟƒΞ·Ο‚"
 
 #
 #, fuzzy
 #~ msgid "executing command '%s'"
-#~ msgstr "Εκτέλεση του '%s'"
+#~ msgstr "Ξ•ΞΊΟ„Ξ­Ξ»ΞµΟƒΞ· Ο„ΞΏΟ… '%s'"
 
 #
 #, fuzzy
 #~ msgid "info '%s'"
-#~ msgstr "Εκτέλεση του '%s'"
+#~ msgstr "Ξ•ΞΊΟ„Ξ­Ξ»ΞµΟƒΞ· Ο„ΞΏΟ… '%s'"
 
 #
 #, fuzzy
 #~ msgid "ODBC provider connection factory"
-#~ msgstr "¶νοιγμα διαλόγου σύνδεσης στην είσοδο"
+#~ msgstr "Ξ†Ξ½ΞΏΞΉΞ³ΞΌΞ± Ξ΄ΞΉΞ±Ξ»ΟΞ³ΞΏΟ… ΟƒΟΞ½Ξ΄ΞµΟƒΞ·Ο‚ ΟƒΟ„Ξ·Ξ½ ΞµΞ―ΟƒΞΏΞ΄ΞΏ"
 
 #
 #, fuzzy
 #~ msgid "Executing command '%s'"
-#~ msgstr "Εκτέλεση του '%s'"
+#~ msgstr "Ξ•ΞΊΟ„Ξ­Ξ»ΞµΟƒΞ· Ο„ΞΏΟ… '%s'"
 
 #
 #~ msgid "Command failed"
-#~ msgstr "Αποτυχία εντολής"
+#~ msgstr "Ξ‘Ο€ΞΏΟ„Ο…Ο‡Ξ―Ξ± ΞµΞ½Ο„ΞΏΞ»Ξ®Ο‚"
 
 #
 #, fuzzy
 #~ msgid "Could not allocate cmd structure"
-#~ msgstr "Αδυναμία φόρτωσης γραμματοσειράς κειμενογράφου"
+#~ msgstr "Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ο†ΟΟΟ„Ο‰ΟƒΞ·Ο‚ Ξ³ΟΞ±ΞΌΞΌΞ±Ο„ΞΏΟƒΞµΞΉΟΞ¬Ο‚ ΞΊΞµΞΉΞΌΞµΞ½ΞΏΞ³ΟΞ¬Ο†ΞΏΟ…"
 
 #
 #, fuzzy
 #~ msgid "Reconnected to '%s'"
-#~ msgstr "Σύνδεση με %s"
+#~ msgstr "Ξ£ΟΞ½Ξ΄ΞµΟƒΞ· ΞΌΞµ %s"
 
 #
 #~ msgid "Connected to %s"
-#~ msgstr "Σύνδεση με %s"
+#~ msgstr "Ξ£ΟΞ½Ξ΄ΞµΟƒΞ· ΞΌΞµ %s"
 
 #
 #, fuzzy
 #~ msgid "%s: Could not allocate memory for cmd string"
-#~ msgstr "Αδυναμία φόρτωσης γραμματοσειράς κειμενογράφου"
+#~ msgstr "Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ο†ΟΟΟ„Ο‰ΟƒΞ·Ο‚ Ξ³ΟΞ±ΞΌΞΌΞ±Ο„ΞΏΟƒΞµΞΉΟΞ¬Ο‚ ΞΊΞµΞΉΞΌΞµΞ½ΞΏΞ³ΟΞ¬Ο†ΞΏΟ…"
 
 #
 #, fuzzy
 #~ msgid "%s: ct_command failed"
-#~ msgstr "Αποτυχία εντολής"
+#~ msgstr "Ξ‘Ο€ΞΏΟ„Ο…Ο‡Ξ―Ξ± ΞµΞ½Ο„ΞΏΞ»Ξ®Ο‚"
 
 #
 #, fuzzy
 #~ msgid "%s: sending command failed"
-#~ msgstr "Αποτυχία εντολής"
+#~ msgstr "Ξ‘Ο€ΞΏΟ„Ο…Ο‡Ξ―Ξ± ΞµΞ½Ο„ΞΏΞ»Ξ®Ο‚"
 
 #
 #, fuzzy
 #~ msgid "%s: use command failed"
-#~ msgstr "Αποτυχία εντολής"
+#~ msgstr "Ξ‘Ο€ΞΏΟ„Ο…Ο‡Ξ―Ξ± ΞµΞ½Ο„ΞΏΞ»Ξ®Ο‚"
 
 #
 #, fuzzy
 #~ msgid "Could not configure locale to be '%s'"
-#~ msgstr "Αδυναμία αλλαγής στον κατάλογο '%s'"
+#~ msgstr "Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ξ±Ξ»Ξ»Ξ±Ξ³Ξ®Ο‚ ΟƒΟ„ΞΏΞ½ ΞΊΞ±Ο„Ξ¬Ξ»ΞΏΞ³ΞΏ '%s'"
 
 #
 #, fuzzy
 #~ msgid "Could not drop locale structure"
 #~ msgstr ""
-#~ "Αδυναμία φόρτωσης αρχείου\n"
+#~ "Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ο†ΟΟΟ„Ο‰ΟƒΞ·Ο‚ Ξ±ΟΟ‡ΞµΞ―ΞΏΟ…\n"
 #~ " %s"
 
 #
 #, fuzzy
 #~ msgid "Could not clear client messages"
 #~ msgstr ""
-#~ "Αδυναμία φόρτωσης αρχείου\n"
+#~ "Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ο†ΟΟΟ„Ο‰ΟƒΞ·Ο‚ Ξ±ΟΟ‡ΞµΞ―ΞΏΟ…\n"
 #~ " %s"
 
 #
 #, fuzzy
 #~ msgid "Could not clear cslib messages"
 #~ msgstr ""
-#~ "Αδυναμία φόρτωσης αρχείου\n"
+#~ "Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ο†ΟΟΟ„Ο‰ΟƒΞ·Ο‚ Ξ±ΟΟ‡ΞµΞ―ΞΏΟ…\n"
 #~ " %s"
 
 #
 #, fuzzy
 #~ msgid "%s could not allocate datafmt info"
-#~ msgstr "Αδυναμία φόρτωσης γραμματοσειράς κειμενογράφου"
+#~ msgstr "Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ο†ΟΟΟ„Ο‰ΟƒΞ·Ο‚ Ξ³ΟΞ±ΞΌΞΌΞ±Ο„ΞΏΟƒΞµΞΉΟΞ¬Ο‚ ΞΊΞµΞΉΞΌΞµΞ½ΞΏΞ³ΟΞ¬Ο†ΞΏΟ…"
 
 #
 #, fuzzy
 #~ msgid "%s could not allocate data fields"
 #~ msgstr ""
-#~ "Αδυναμία φόρτωσης αρχείου\n"
+#~ "Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ο†ΟΟΟ„Ο‰ΟƒΞ·Ο‚ Ξ±ΟΟ‡ΞµΞ―ΞΏΟ…\n"
 #~ " %s"
 
 #
 #, fuzzy
 #~ msgid "could not allocate data holder"
-#~ msgstr "Αδυναμία φόρτωσης γραμματοσειράς κειμενογράφου"
+#~ msgstr "Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ο†ΟΟΟ„Ο‰ΟƒΞ·Ο‚ Ξ³ΟΞ±ΞΌΞΌΞ±Ο„ΞΏΟƒΞµΞΉΟΞ¬Ο‚ ΞΊΞµΞΉΞΌΞµΞ½ΞΏΞ³ΟΞ¬Ο†ΞΏΟ…"
 
 #
 #, fuzzy
 #~ msgid "could not allocate field"
 #~ msgstr ""
-#~ "Αδυναμία φόρτωσης αρχείου\n"
+#~ "Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ο†ΟΟΟ„Ο‰ΟƒΞ·Ο‚ Ξ±ΟΟ‡ΞµΞ―ΞΏΟ…\n"
 #~ " %s"
 
 #
 #, fuzzy
 #~ msgid "Could not connect to '%s@%s:%s' with connparm '%s'"
-#~ msgstr "Αδυναμία αλλαγής στον κατάλογο '%s'"
+#~ msgstr "Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ± Ξ±Ξ»Ξ»Ξ±Ξ³Ξ®Ο‚ ΟƒΟ„ΞΏΞ½ ΞΊΞ±Ο„Ξ¬Ξ»ΞΏΞ³ΞΏ '%s'"
 
 #
 #, fuzzy
 #~ msgid "Reconnected to %s"
-#~ msgstr "Σύνδεση με %s"
+#~ msgstr "Ξ£ΟΞ½Ξ΄ΞµΟƒΞ· ΞΌΞµ %s"
 
 #
 #~ msgid "Create script"
-#~ msgstr "Δημιουργία γραφής"
+#~ msgstr "Ξ”Ξ·ΞΌΞΉΞΏΟ…ΟΞ³Ξ―Ξ± Ξ³ΟΞ±Ο†Ξ®Ο‚"
 
 #
 #~ msgid "Create script from object definition"
-#~ msgstr "Δημιουργίά γραφής από ορισμό αντικειμένου"
+#~ msgstr "Ξ”Ξ·ΞΌΞΉΞΏΟ…ΟΞ³Ξ―Ξ¬ Ξ³ΟΞ±Ο†Ξ®Ο‚ Ξ±Ο€Ο ΞΏΟΞΉΟƒΞΌΟ Ξ±Ξ½Ο„ΞΉΞΊΞµΞΉΞΌΞ­Ξ½ΞΏΟ…"
 
 #
 #~ msgid "Refresh"
-#~ msgstr "Ανανέωση"
+#~ msgstr "Ξ‘Ξ½Ξ±Ξ½Ξ­Ο‰ΟƒΞ·"
 
 #
 #~ msgid "Refresh all lists"
-#~ msgstr "Ανανέωση όλων των λιστών"
+#~ msgstr "Ξ‘Ξ½Ξ±Ξ½Ξ­Ο‰ΟƒΞ· ΟΞ»Ο‰Ξ½ Ο„Ο‰Ξ½ Ξ»ΞΉΟƒΟ„ΟΞ½"
 
 #
 #~ msgid "Close"
-#~ msgstr "Κλείσιμο"
+#~ msgstr "ΞΞ»ΞµΞ―ΟƒΞΉΞΌΞΏ"
 
 #
 #~ msgid "Close this window"
-#~ msgstr "Κλείσιμο του παραθύρου"
+#~ msgstr "ΞΞ»ΞµΞ―ΟƒΞΉΞΌΞΏ Ο„ΞΏΟ… Ο€Ξ±ΟΞ±ΞΈΟΟΞΏΟ…"
 
 #
 #~ msgid "Browser: %s@%s"
-#~ msgstr "Φυλλομετρητής: %s@%s"
+#~ msgstr "Ξ¦Ο…Ξ»Ξ»ΞΏΞΌΞµΟ„ΟΞ·Ο„Ξ®Ο‚: %s@%s"
 
 #
 #~ msgid "No connection open"
-#~ msgstr "Δεν υπάρχει ανοιχτή σύνδεση"
+#~ msgstr "Ξ”ΞµΞ½ Ο…Ο€Ξ¬ΟΟ‡ΞµΞΉ Ξ±Ξ½ΞΏΞΉΟ‡Ο„Ξ® ΟƒΟΞ½Ξ΄ΞµΟƒΞ·"
 
 #
 #~ msgid "General"
-#~ msgstr "Γενικά"
+#~ msgstr "Ξ“ΞµΞ½ΞΉΞΊΞ¬"
 
 #
 #~ msgid "Environment"
-#~ msgstr "Περιβάλλον"
+#~ msgstr "Ξ ΞµΟΞΉΞ²Ξ¬Ξ»Ξ»ΞΏΞ½"
 
 #
 #~ msgid "Config File"
-#~ msgstr "Αρχείο Ρυθμίσεων"
+#~ msgstr "Ξ‘ΟΟ‡ΞµΞ―ΞΏ Ξ΅Ο…ΞΈΞΌΞ―ΟƒΞµΟ‰Ξ½"
 
 #
 #~ msgid "Save As"
-#~ msgstr "Αποθήκευση Ως"
+#~ msgstr "Ξ‘Ο€ΞΏΞΈΞ®ΞΊΞµΟ…ΟƒΞ· Ξ©Ο‚"
 
 #
 #~ msgid "Variable"
-#~ msgstr "Μεταβλητή"
+#~ msgstr "ΞΞµΟ„Ξ±Ξ²Ξ»Ξ·Ο„Ξ®"
 
 #
 #~ msgid "Value"
-#~ msgstr "Τιμή"
+#~ msgstr "Ξ¤ΞΉΞΌΞ®"
 
 #
 #~ msgid "Add"
-#~ msgstr "Πρόσθεση"
+#~ msgstr "Ξ ΟΟΟƒΞΈΞµΟƒΞ·"
 
 #
 #~ msgid "Remove"
-#~ msgstr "Διαγραφή"
+#~ msgstr "Ξ”ΞΉΞ±Ξ³ΟΞ±Ο†Ξ®"
 
 #
 #~ msgid "Current"
-#~ msgstr "Τρέχον"
+#~ msgstr "Ξ¤ΟΞ­Ο‡ΞΏΞ½"
 
 #
 #~ msgid "Save options on exit"
-#~ msgstr "Αποθήκευση επιλογών και έξοδος"
+#~ msgstr "Ξ‘Ο€ΞΏΞΈΞ®ΞΊΞµΟ…ΟƒΞ· ΞµΟ€ΞΉΞ»ΞΏΞ³ΟΞ½ ΞΊΞ±ΞΉ Ξ­ΞΎΞΏΞ΄ΞΏΟ‚"
 
 #
 #~ msgid "Editor Font"
-#~ msgstr "Γραμματοσειρά Επεξεργαστή Κειμένου"
+#~ msgstr "Ξ“ΟΞ±ΞΌΞΌΞ±Ο„ΞΏΟƒΞµΞΉΟΞ¬ Ξ•Ο€ΞµΞΎΞµΟΞ³Ξ±ΟƒΟ„Ξ® ΞΞµΞΉΞΌΞ­Ξ½ΞΏΟ…"
 
 #
 #~ msgid "Grid Font"
-#~ msgstr "Γραμματοσειρά Πλέγματος"
+#~ msgstr "Ξ“ΟΞ±ΞΌΞΌΞ±Ο„ΞΏΟƒΞµΞΉΟΞ¬ Ξ Ξ»Ξ­Ξ³ΞΌΞ±Ο„ΞΏΟ‚"
 
 #
 #~ msgid "Language"
-#~ msgstr "Γλώσσα"
+#~ msgstr "Ξ“Ξ»ΟΟƒΟƒΞ±"
 
 #
 #~ msgid "Shell"
-#~ msgstr "Φλοιός"
+#~ msgstr "Ξ¦Ξ»ΞΏΞΉΟΟ‚"
 
 #
 #~ msgid "Tabs position"
-#~ msgstr "Θέση στηλοθετών"
+#~ msgstr "ΞΞ­ΟƒΞ· ΟƒΟ„Ξ·Ξ»ΞΏΞΈΞµΟ„ΟΞ½"
 
 #
 #~ msgid "Top"
-#~ msgstr "Κορυφή"
+#~ msgstr "ΞΞΏΟΟ…Ο†Ξ®"
 
 #
 #~ msgid "Bottom"
-#~ msgstr "Βάση"
+#~ msgstr "Ξ’Ξ¬ΟƒΞ·"
 
 #
 #~ msgid "Left"
-#~ msgstr "Αριστερά"
+#~ msgstr "Ξ‘ΟΞΉΟƒΟ„ΞµΟΞ¬"
 
 #
 #~ msgid "Right"
-#~ msgstr "Δεξιά"
+#~ msgstr "Ξ”ΞµΞΎΞΉΞ¬"
 
 #
 #~ msgid "Add Environment Variable"
-#~ msgstr "Προσθήκη Μεταβλητής Περιβάλλοντος"
+#~ msgstr "Ξ ΟΞΏΟƒΞΈΞ®ΞΊΞ· ΞΞµΟ„Ξ±Ξ²Ξ»Ξ·Ο„Ξ®Ο‚ Ξ ΞµΟΞΉΞ²Ξ¬Ξ»Ξ»ΞΏΞ½Ο„ΞΏΟ‚"
 
 #
 #~ msgid "Current Environment"
-#~ msgstr "Τρέχον Περιβάλλον"
+#~ msgstr "Ξ¤ΟΞ­Ο‡ΞΏΞ½ Ξ ΞµΟΞΉΞ²Ξ¬Ξ»Ξ»ΞΏΞ½"
 
 #
 #~ msgid "Save As..."
-#~ msgstr "Αποθήκευση Ως..."
+#~ msgstr "Ξ‘Ο€ΞΏΞΈΞ®ΞΊΞµΟ…ΟƒΞ· Ξ©Ο‚..."
 
 #
 #~ msgid "Error Viewer"
-#~ msgstr "Παρατηρητής Σφαλμάτων"
+#~ msgstr "Ξ Ξ±ΟΞ±Ο„Ξ·ΟΞ·Ο„Ξ®Ο‚ Ξ£Ο†Ξ±Ξ»ΞΌΞ¬Ο„Ο‰Ξ½"
 
 #
 #~ msgid "Object Inheritance"
-#~ msgstr "Κληρονομικότητα Αντικειμένου"
+#~ msgstr "ΞΞ»Ξ·ΟΞΏΞ½ΞΏΞΌΞΉΞΊΟΟ„Ξ·Ο„Ξ± Ξ‘Ξ½Ο„ΞΉΞΊΞµΞΉΞΌΞ­Ξ½ΞΏΟ…"
 
 #
 #~ msgid "Open Connection"
-#~ msgstr "¶νοιγμα Σύνδεσης"
+#~ msgstr "Ξ†Ξ½ΞΏΞΉΞ³ΞΌΞ± Ξ£ΟΞ½Ξ΄ΞµΟƒΞ·Ο‚"
 
 #
 #~ msgid "Connecting..."
-#~ msgstr "Σύνδεση..."
+#~ msgstr "Ξ£ΟΞ½Ξ΄ΞµΟƒΞ·..."
 
 #
 #~ msgid "Transaction started"
-#~ msgstr "Έναρξη διενέργειας"
+#~ msgstr "ΞΞ½Ξ±ΟΞΎΞ· Ξ΄ΞΉΞµΞ½Ξ­ΟΞ³ΞµΞΉΞ±Ο‚"
 
 #
 #~ msgid "Commit executed"
-#~ msgstr "Η δέσμευση εκτελέστηκε"
+#~ msgstr "Ξ— Ξ΄Ξ­ΟƒΞΌΞµΟ…ΟƒΞ· ΞµΞΊΟ„ΞµΞ»Ξ­ΟƒΟ„Ξ·ΞΊΞµ"
 
 #
 #~ msgid "Rollback executed"
-#~ msgstr "Η επαναφορά εκτελέστηκε"
+#~ msgstr "Ξ— ΞµΟ€Ξ±Ξ½Ξ±Ο†ΞΏΟΞ¬ ΞµΞΊΟ„ΞµΞ»Ξ­ΟƒΟ„Ξ·ΞΊΞµ"
 
 #
 #~ msgid "Properties"
-#~ msgstr "Ρυθμίσεις"
+#~ msgstr "Ξ΅Ο…ΞΈΞΌΞ―ΟƒΞµΞΉΟ‚"
 
 #
 #~ msgid "GDA Name"
-#~ msgstr "Όνομα GDA"
+#~ msgstr "ΞΞ½ΞΏΞΌΞ± GDA"
 
 #
 #~ msgid "DSN"
@@ -1734,111 +1761,111 @@ msgstr ""
 
 #
 #~ msgid "Command Timeout"
-#~ msgstr "Λήξη Χρόνου Εντολής"
+#~ msgstr "Ξ›Ξ®ΞΎΞ· Ξ§ΟΟΞ½ΞΏΟ… Ξ•Ξ½Ο„ΞΏΞ»Ξ®Ο‚"
 
 #
 #~ msgid "Connect Timeout"
-#~ msgstr "Λήξη Χρόνου Σύνδεσης"
+#~ msgstr "Ξ›Ξ®ΞΎΞ· Ξ§ΟΟΞ½ΞΏΟ… Ξ£ΟΞ½Ξ΄ΞµΟƒΞ·Ο‚"
 
 #
 #~ msgid "Trace File"
-#~ msgstr "Αρχείο Καταγραφής"
+#~ msgstr "Ξ‘ΟΟ‡ΞµΞ―ΞΏ ΞΞ±Ο„Ξ±Ξ³ΟΞ±Ο†Ξ®Ο‚"
 
 #
 #~ msgid "New"
-#~ msgstr "Νέο"
+#~ msgstr "ΞΞ­ΞΏ"
 
 #
 #~ msgid "Create new database design"
-#~ msgstr "Δημιουργία νέας σχεδίασης βάσης"
+#~ msgstr "Ξ”Ξ·ΞΌΞΉΞΏΟ…ΟΞ³Ξ―Ξ± Ξ½Ξ­Ξ±Ο‚ ΟƒΟ‡ΞµΞ΄Ξ―Ξ±ΟƒΞ·Ο‚ Ξ²Ξ¬ΟƒΞ·Ο‚"
 
 #
 #~ msgid "Open"
-#~ msgstr "¶νοιγμα"
+#~ msgstr "Ξ†Ξ½ΞΏΞΉΞ³ΞΌΞ±"
 
 #
 #~ msgid "Open database design from file"
-#~ msgstr "¶νοιγμα σχεδίασης βάσης από αρχείο"
+#~ msgstr "Ξ†Ξ½ΞΏΞΉΞ³ΞΌΞ± ΟƒΟ‡ΞµΞ΄Ξ―Ξ±ΟƒΞ·Ο‚ Ξ²Ξ¬ΟƒΞ·Ο‚ Ξ±Ο€Ο Ξ±ΟΟ‡ΞµΞ―ΞΏ"
 
 #
 #~ msgid "Save database design to file"
-#~ msgstr "Αποθήκευση σχεδίασης βάσης σε αρχείο"
+#~ msgstr "Ξ‘Ο€ΞΏΞΈΞ®ΞΊΞµΟ…ΟƒΞ· ΟƒΟ‡ΞµΞ΄Ξ―Ξ±ΟƒΞ·Ο‚ Ξ²Ξ¬ΟƒΞ·Ο‚ ΟƒΞµ Ξ±ΟΟ‡ΞµΞ―ΞΏ"
 
 #
 #~ msgid "Open XML File"
-#~ msgstr "¶νοιγμα Αρχείου XML"
+#~ msgstr "Ξ†Ξ½ΞΏΞΉΞ³ΞΌΞ± Ξ‘ΟΟ‡ΞµΞ―ΞΏΟ… XML"
 
 #
 #~ msgid "Select File"
-#~ msgstr "Επιλογή Αρχείου"
+#~ msgstr "Ξ•Ο€ΞΉΞ»ΞΏΞ³Ξ® Ξ‘ΟΟ‡ΞµΞ―ΞΏΟ…"
 
 #
 #~ msgid ""
 #~ "Error saving file\n"
 #~ "'%s'"
 #~ msgstr ""
-#~ "Σφάλμα αποθήκευσης αρχείου\n"
+#~ "Ξ£Ο†Ξ¬Ξ»ΞΌΞ± Ξ±Ο€ΞΏΞΈΞ®ΞΊΞµΟ…ΟƒΞ·Ο‚ Ξ±ΟΟ‡ΞµΞ―ΞΏΟ…\n"
 #~ "'%s'"
 
 #
 #~ msgid "Designer"
-#~ msgstr "Σχεδιαστής"
+#~ msgstr "Ξ£Ο‡ΞµΞ΄ΞΉΞ±ΟƒΟ„Ξ®Ο‚"
 
 #
 #~ msgid "Delete"
-#~ msgstr "Διαγραφή"
+#~ msgstr "Ξ”ΞΉΞ±Ξ³ΟΞ±Ο†Ξ®"
 
 #
 #~ msgid "Create a new empty file"
-#~ msgstr "Δημιουργία νέου κενού αρχείου"
+#~ msgstr "Ξ”Ξ·ΞΌΞΉΞΏΟ…ΟΞ³Ξ―Ξ± Ξ½Ξ­ΞΏΟ… ΞΊΞµΞ½ΞΏΟ Ξ±ΟΟ‡ΞµΞ―ΞΏΟ…"
 
 #
 #~ msgid "Open an existing file"
-#~ msgstr "¶νοιγμα υπάρχοντος αρχείου"
+#~ msgstr "Ξ†Ξ½ΞΏΞΉΞ³ΞΌΞ± Ο…Ο€Ξ¬ΟΟ‡ΞΏΞ½Ο„ΞΏΟ‚ Ξ±ΟΟ‡ΞµΞ―ΞΏΟ…"
 
 #
 #~ msgid "Save current file"
-#~ msgstr "Αποθήκευση τρέχοντος αρχείου"
+#~ msgstr "Ξ‘Ο€ΞΏΞΈΞ®ΞΊΞµΟ…ΟƒΞ· Ο„ΟΞ­Ο‡ΞΏΞ½Ο„ΞΏΟ‚ Ξ±ΟΟ‡ΞµΞ―ΞΏΟ…"
 
 #
 #~ msgid "Save file with another name"
-#~ msgstr "Αποθήκευση αρχείου με άλλο όνομα"
+#~ msgstr "Ξ‘Ο€ΞΏΞΈΞ®ΞΊΞµΟ…ΟƒΞ· Ξ±ΟΟ‡ΞµΞ―ΞΏΟ… ΞΌΞµ Ξ¬Ξ»Ξ»ΞΏ ΟΞ½ΞΏΞΌΞ±"
 
 #
 #~ msgid "Print current file"
-#~ msgstr "Εκτύπωση τρέχοντος αρχείου"
+#~ msgstr "Ξ•ΞΊΟ„ΟΟ€Ο‰ΟƒΞ· Ο„ΟΞ­Ο‡ΞΏΞ½Ο„ΞΏΟ‚ Ξ±ΟΟ‡ΞµΞ―ΞΏΟ…"
 
 #
 #~ msgid "Close current file"
-#~ msgstr "Κλείσιμο τρέχοντος αρχείου"
+#~ msgstr "ΞΞ»ΞµΞ―ΟƒΞΉΞΌΞΏ Ο„ΟΞ­Ο‡ΞΏΞ½Ο„ΞΏΟ‚ Ξ±ΟΟ‡ΞµΞ―ΞΏΟ…"
 
 #
 #~ msgid "Cut"
-#~ msgstr "Αποκοπή"
+#~ msgstr "Ξ‘Ο€ΞΏΞΊΞΏΟ€Ξ®"
 
 #
 #~ msgid "Cut selected text"
-#~ msgstr "Αποκοπή επιλεγμένου κειμένου"
+#~ msgstr "Ξ‘Ο€ΞΏΞΊΞΏΟ€Ξ® ΞµΟ€ΞΉΞ»ΞµΞ³ΞΌΞ­Ξ½ΞΏΟ… ΞΊΞµΞΉΞΌΞ­Ξ½ΞΏΟ…"
 
 #
 #~ msgid "Copy"
-#~ msgstr "Αντιγραφή"
+#~ msgstr "Ξ‘Ξ½Ο„ΞΉΞ³ΟΞ±Ο†Ξ®"
 
 #
 #~ msgid "Copy selected text to clipboard"
-#~ msgstr "Αντιγραφή επιλεγμένου κειμένου στο clipboard"
+#~ msgstr "Ξ‘Ξ½Ο„ΞΉΞ³ΟΞ±Ο†Ξ® ΞµΟ€ΞΉΞ»ΞµΞ³ΞΌΞ­Ξ½ΞΏΟ… ΞΊΞµΞΉΞΌΞ­Ξ½ΞΏΟ… ΟƒΟ„ΞΏ clipboard"
 
 #
 #~ msgid "Paste clipboard's contents"
-#~ msgstr "Επικόλληση του περιεχομένου του clipboard"
+#~ msgstr "Ξ•Ο€ΞΉΞΊΟΞ»Ξ»Ξ·ΟƒΞ· Ο„ΞΏΟ… Ο€ΞµΟΞΉΞµΟ‡ΞΏΞΌΞ­Ξ½ΞΏΟ… Ο„ΞΏΟ… clipboard"
 
 #
 #~ msgid "Run Command"
-#~ msgstr "Εκτέλεση Εντολής"
+#~ msgstr "Ξ•ΞΊΟ„Ξ­Ξ»ΞµΟƒΞ· Ξ•Ξ½Ο„ΞΏΞ»Ξ®Ο‚"
 
 #
 #~ msgid "Directory"
-#~ msgstr "Κατάλογος"
+#~ msgstr "ΞΞ±Ο„Ξ¬Ξ»ΞΏΞ³ΞΏΟ‚"
 
 #
 #~ msgid ""
@@ -1846,16 +1873,16 @@ msgstr ""
 #~ "In directory '%s'\n"
 #~ "\n"
 #~ msgstr ""
-#~ "Έξοδος από το '%s'\n"
-#~ "Στον κατάλογο '%s'\n"
+#~ "ΞΞΎΞΏΞ΄ΞΏΟ‚ Ξ±Ο€Ο Ο„ΞΏ '%s'\n"
+#~ "Ξ£Ο„ΞΏΞ½ ΞΊΞ±Ο„Ξ¬Ξ»ΞΏΞ³ΞΏ '%s'\n"
 
 #
 #~ msgid "Command '%s' completed"
-#~ msgstr "Η εντολή '%s' εκτελέστηκε"
+#~ msgstr "Ξ— ΞµΞ½Ο„ΞΏΞ»Ξ® '%s' ΞµΞΊΟ„ΞµΞ»Ξ­ΟƒΟ„Ξ·ΞΊΞµ"
 
 #
 #~ msgid "Unable to execute '%s'"
-#~ msgstr "Αδυναμίά εκτέλεσης του '%s'"
+#~ msgstr "Ξ‘Ξ΄Ο…Ξ½Ξ±ΞΌΞ―Ξ¬ ΞµΞΊΟ„Ξ­Ξ»ΞµΟƒΞ·Ο‚ Ο„ΞΏΟ… '%s'"
 
 #
 #~ msgid ""
@@ -1864,138 +1891,138 @@ msgstr ""
 #~ " has been changed.\n"
 #~ " Do you want to save the changes?"
 #~ msgstr ""
-#~ "Το αρχείο\n"
+#~ "Ξ¤ΞΏ Ξ±ΟΟ‡ΞµΞ―ΞΏ\n"
 #~ " '%s'\n"
-#~ " έχει τροποποιηθεί.\n"
-#~ " Θέλετε να αποθηκεύσετε τις αλλαγές;"
+#~ " Ξ­Ο‡ΞµΞΉ Ο„ΟΞΏΟ€ΞΏΟ€ΞΏΞΉΞ·ΞΈΞµΞ―.\n"
+#~ " ΞΞ­Ξ»ΞµΟ„Ξµ Ξ½Ξ± Ξ±Ο€ΞΏΞΈΞ·ΞΊΞµΟΟƒΞµΟ„Ξµ Ο„ΞΉΟ‚ Ξ±Ξ»Ξ»Ξ±Ξ³Ξ­Ο‚;"
 
 #
 #~ msgid "Open File"
-#~ msgstr "¶νοιγμα Αρχείου"
+#~ msgstr "Ξ†Ξ½ΞΏΞΉΞ³ΞΌΞ± Ξ‘ΟΟ‡ΞµΞ―ΞΏΟ…"
 
 #
 #~ msgid "Editor"
-#~ msgstr "Κειμενογράφος"
+#~ msgstr "ΞΞµΞΉΞΌΞµΞ½ΞΏΞ³ΟΞ¬Ο†ΞΏΟ‚"
 
 #
 #~ msgid "Run"
-#~ msgstr "Εκτέλεση"
+#~ msgstr "Ξ•ΞΊΟ„Ξ­Ξ»ΞµΟƒΞ·"
 
 #
 #~ msgid "Find"
-#~ msgstr "Εύρεση"
+#~ msgstr "Ξ•ΟΟΞµΟƒΞ·"
 
 #
 #~ msgid "GDA Config"
-#~ msgstr "Ρύθμιση GDA"
+#~ msgstr "Ξ΅ΟΞΈΞΌΞΉΟƒΞ· GDA"
 
 #
 #~ msgid "Config"
-#~ msgstr "Ρύθμιση"
+#~ msgstr "Ξ΅ΟΞΈΞΌΞΉΟƒΞ·"
 
 #
 #~ msgid "To XML"
-#~ msgstr "Σε XML"
+#~ msgstr "Ξ£Ξµ XML"
 
 #
 #~ msgid "Export selected data to XML file"
-#~ msgstr "Εξαγωγή επιλεγμένων δεδομένων σε αρχείου XML"
+#~ msgstr "Ξ•ΞΎΞ±Ξ³Ο‰Ξ³Ξ® ΞµΟ€ΞΉΞ»ΞµΞ³ΞΌΞ­Ξ½Ο‰Ξ½ Ξ΄ΞµΞ΄ΞΏΞΌΞ­Ξ½Ο‰Ξ½ ΟƒΞµ Ξ±ΟΟ‡ΞµΞ―ΞΏΟ… XML"
 
 #
 #~ msgid "To SQL"
-#~ msgstr "Σε SQL"
+#~ msgstr "Ξ£Ξµ SQL"
 
 #
 #~ msgid "Export selected data as a SQL script"
-#~ msgstr "Εξαγωγή επιλεγμένων δεδομένων σε πρόγραμμα SQL"
+#~ msgstr "Ξ•ΞΎΞ±Ξ³Ο‰Ξ³Ξ® ΞµΟ€ΞΉΞ»ΞµΞ³ΞΌΞ­Ξ½Ο‰Ξ½ Ξ΄ΞµΞ΄ΞΏΞΌΞ­Ξ½Ο‰Ξ½ ΟƒΞµ Ο€ΟΟΞ³ΟΞ±ΞΌΞΌΞ± SQL"
 
 #
 #~ msgid "Refresh data"
-#~ msgstr "Ανανέωση δεδομένων"
+#~ msgstr "Ξ‘Ξ½Ξ±Ξ½Ξ­Ο‰ΟƒΞ· Ξ΄ΞµΞ΄ΞΏΞΌΞ­Ξ½Ο‰Ξ½"
 
 #
 #~ msgid "Clear all widgets"
-#~ msgstr "Καθαρισμός των widgets"
+#~ msgstr "ΞΞ±ΞΈΞ±ΟΞΉΟƒΞΌΟΟ‚ Ο„Ο‰Ξ½ widgets"
 
 #
 #~ msgid "You have to provide a file name"
-#~ msgstr "Πρέπει να παράσχετε ένα όνομα αρχείου"
+#~ msgstr "Ξ ΟΞ­Ο€ΞµΞΉ Ξ½Ξ± Ο€Ξ±ΟΞ¬ΟƒΟ‡ΞµΟ„Ξµ Ξ­Ξ½Ξ± ΟΞ½ΞΏΞΌΞ± Ξ±ΟΟ‡ΞµΞ―ΞΏΟ…"
 
 #
 #~ msgid "Exporting object named '%s'"
-#~ msgstr "Εξαγωγή αντικειμένου με όνομα '%s'"
+#~ msgstr "Ξ•ΞΎΞ±Ξ³Ο‰Ξ³Ξ® Ξ±Ξ½Ο„ΞΉΞΊΞµΞΉΞΌΞ­Ξ½ΞΏΟ… ΞΌΞµ ΟΞ½ΞΏΞΌΞ± '%s'"
 
 #
 #~ msgid ""
 #~ "Error saving XML file\n"
 #~ "'%s'"
 #~ msgstr ""
-#~ "Σφάλμα στην αποθήκευση αρχείου XML\n"
+#~ "Ξ£Ο†Ξ¬Ξ»ΞΌΞ± ΟƒΟ„Ξ·Ξ½ Ξ±Ο€ΞΏΞΈΞ®ΞΊΞµΟ…ΟƒΞ· Ξ±ΟΟ‡ΞµΞ―ΞΏΟ… XML\n"
 #~ "'%s'"
 
 #
 #~ msgid "No objects are selected"
-#~ msgstr "Δεν έχουν επιλεγεί αντικείμενα"
+#~ msgstr "Ξ”ΞµΞ½ Ξ­Ο‡ΞΏΟ…Ξ½ ΞµΟ€ΞΉΞ»ΞµΞ³ΞµΞ― Ξ±Ξ½Ο„ΞΉΞΊΞµΞ―ΞΌΞµΞ½Ξ±"
 
 #
 #~ msgid "Export: %s@%s"
-#~ msgstr "Εξαγωγή: %s@%s"
+#~ msgstr "Ξ•ΞΎΞ±Ξ³Ο‰Ξ³Ξ®: %s@%s"
 
 #
 #~ msgid "TABLES"
-#~ msgstr "ΠΙΝΑΚΕΣ"
+#~ msgstr "Ξ Ξ™ΞΞ‘ΞΞ•Ξ£"
 
 #
 #~ msgid "VIEWS"
-#~ msgstr "ΟΨΕΙΣ"
+#~ msgstr "ΞΞ¨Ξ•Ξ™Ξ£"
 
 #
 #~ msgid "Export data"
-#~ msgstr "Εξαγωγή δεδομένων"
+#~ msgstr "Ξ•ΞΎΞ±Ξ³Ο‰Ξ³Ξ® Ξ΄ΞµΞ΄ΞΏΞΌΞ­Ξ½Ο‰Ξ½"
 
 #
 #~ msgid "Show file when done"
-#~ msgstr "Εμφάνιση αρχείου μετά των περάτωση"
+#~ msgstr "Ξ•ΞΌΟ†Ξ¬Ξ½ΞΉΟƒΞ· Ξ±ΟΟ‡ΞµΞ―ΞΏΟ… ΞΌΞµΟ„Ξ¬ Ο„Ο‰Ξ½ Ο€ΞµΟΞ¬Ο„Ο‰ΟƒΞ·"
 
 #
 #~ msgid "Add object extra info"
-#~ msgstr "Πρόσθεση επιπλέον πληροφοριών αντικειμένου"
+#~ msgstr "Ξ ΟΟΟƒΞΈΞµΟƒΞ· ΞµΟ€ΞΉΟ€Ξ»Ξ­ΞΏΞ½ Ο€Ξ»Ξ·ΟΞΏΟ†ΞΏΟΞΉΟΞ½ Ξ±Ξ½Ο„ΞΉΞΊΞµΞΉΞΌΞ­Ξ½ΞΏΟ…"
 
 #
 #~ msgid "Refresh log"
-#~ msgstr "Ανανέωση καταγραφών"
+#~ msgstr "Ξ‘Ξ½Ξ±Ξ½Ξ­Ο‰ΟƒΞ· ΞΊΞ±Ο„Ξ±Ξ³ΟΞ±Ο†ΟΞ½"
 
 #
 #~ msgid "Clear file contents"
-#~ msgstr "Καθαρισμός περιεχομένων αρχείου"
+#~ msgstr "ΞΞ±ΞΈΞ±ΟΞΉΟƒΞΌΟΟ‚ Ο€ΞµΟΞΉΞµΟ‡ΞΏΞΌΞ­Ξ½Ο‰Ξ½ Ξ±ΟΟ‡ΞµΞ―ΞΏΟ…"
 
 #
 #~ msgid "Save log file with a different name"
-#~ msgstr "Αποθήκευση αρχείου με διαφορετικό όνομα"
+#~ msgstr "Ξ‘Ο€ΞΏΞΈΞ®ΞΊΞµΟ…ΟƒΞ· Ξ±ΟΟ‡ΞµΞ―ΞΏΟ… ΞΌΞµ Ξ΄ΞΉΞ±Ο†ΞΏΟΞµΟ„ΞΉΞΊΟ ΟΞ½ΞΏΞΌΞ±"
 
 #
 #~ msgid "Save Log File"
-#~ msgstr "Αποθήκευση Αρχείου Καταγραφών"
+#~ msgstr "Ξ‘Ο€ΞΏΞΈΞ®ΞΊΞµΟ…ΟƒΞ· Ξ‘ΟΟ‡ΞµΞ―ΞΏΟ… ΞΞ±Ο„Ξ±Ξ³ΟΞ±Ο†ΟΞ½"
 
 #
 #~ msgid "Ready"
-#~ msgstr "Έτοιμος"
+#~ msgstr "ΞΟ„ΞΏΞΉΞΌΞΏΟ‚"
 
 #
 #~ msgid "File %s loaded"
-#~ msgstr "Το αρχείο %s φορτώθηκε"
+#~ msgstr "Ξ¤ΞΏ Ξ±ΟΟ‡ΞµΞ―ΞΏ %s Ο†ΞΏΟΟ„ΟΞΈΞ·ΞΊΞµ"
 
 #
 #~ msgid "GDA logs"
-#~ msgstr "Καταγραφές GDA"
+#~ msgstr "ΞΞ±Ο„Ξ±Ξ³ΟΞ±Ο†Ξ­Ο‚ GDA"
 
 #
 #~ msgid "GNOME-DB Front End"
-#~ msgstr "Περιβάλλον Χρήσης του GNOME-DB"
+#~ msgstr "Ξ ΞµΟΞΉΞ²Ξ¬Ξ»Ξ»ΞΏΞ½ Ξ§ΟΞ®ΟƒΞ·Ο‚ Ο„ΞΏΟ… GNOME-DB"
 
 #
 #~ msgid "Copyright The Free Software Foundation (C) 1998-2000"
-#~ msgstr "Πνευματικά Δικαιώματα The Free Software Foundation (C) 1998-2000"
+#~ msgstr "Ξ Ξ½ΞµΟ…ΞΌΞ±Ο„ΞΉΞΊΞ¬ Ξ”ΞΉΞΊΞ±ΞΉΟΞΌΞ±Ο„Ξ± The Free Software Foundation (C) 1998-2000"
 
 #
 #~ msgid ""
@@ -2004,350 +2031,350 @@ msgstr ""
 #~ "welcome to redistribute it under the conditions of the GNU General Public "
 #~ "Licence."
 #~ msgstr ""
-#~ "Το παρόν πρόγραμμα είναι μέρος του Έργου GNOME για το Linux. Η Πρόσβαση "
-#~ "Σε Βάσεις Δεδομένων του GNOME (GNOME Data Access) δεν παρέχει ΚΑΜΙΑ "
-#~ "ΑΠΟΛΥΤΩΣ ΕΓΓΥΗΣΗ. Αυτό είναι ελεύθερο λογισμικό και είστε ευσπρόσδεκτοι "
-#~ "να το επαναδιανείμετε κάτων από τους κανόνες του GNU General Public "
+#~ "Ξ¤ΞΏ Ο€Ξ±ΟΟΞ½ Ο€ΟΟΞ³ΟΞ±ΞΌΞΌΞ± ΞµΞ―Ξ½Ξ±ΞΉ ΞΌΞ­ΟΞΏΟ‚ Ο„ΞΏΟ… ΞΟΞ³ΞΏΟ… GNOME Ξ³ΞΉΞ± Ο„ΞΏ Linux. Ξ— Ξ ΟΟΟƒΞ²Ξ±ΟƒΞ· "
+#~ "Ξ£Ξµ Ξ’Ξ¬ΟƒΞµΞΉΟ‚ Ξ”ΞµΞ΄ΞΏΞΌΞ­Ξ½Ο‰Ξ½ Ο„ΞΏΟ… GNOME (GNOME Data Access) Ξ΄ΞµΞ½ Ο€Ξ±ΟΞ­Ο‡ΞµΞΉ ΞΞ‘ΞΞ™Ξ‘ "
+#~ "Ξ‘Ξ ΞΞ›Ξ¥Ξ¤Ξ©Ξ£ Ξ•Ξ“Ξ“Ξ¥Ξ—Ξ£Ξ—. Ξ‘Ο…Ο„Ο ΞµΞ―Ξ½Ξ±ΞΉ ΞµΞ»ΞµΟΞΈΞµΟΞΏ Ξ»ΞΏΞ³ΞΉΟƒΞΌΞΉΞΊΟ ΞΊΞ±ΞΉ ΞµΞ―ΟƒΟ„Ξµ ΞµΟ…ΟƒΟ€ΟΟΟƒΞ΄ΞµΞΊΟ„ΞΏΞΉ "
+#~ "Ξ½Ξ± Ο„ΞΏ ΞµΟ€Ξ±Ξ½Ξ±Ξ΄ΞΉΞ±Ξ½ΞµΞ―ΞΌΞµΟ„Ξµ ΞΊΞ¬Ο„Ο‰Ξ½ Ξ±Ο€Ο Ο„ΞΏΟ…Ο‚ ΞΊΞ±Ξ½ΟΞ½ΞµΟ‚ Ο„ΞΏΟ… GNU General Public "
 #~ "Licence."
 
 #
 #~ msgid "Open connection..."
-#~ msgstr "¶νοιγμα σύνδεσης..."
+#~ msgstr "Ξ†Ξ½ΞΏΞΉΞ³ΞΌΞ± ΟƒΟΞ½Ξ΄ΞµΟƒΞ·Ο‚..."
 
 #
 #~ msgid "Close connection"
-#~ msgstr "Κλείσιμο σύνδεσης"
+#~ msgstr "ΞΞ»ΞµΞ―ΟƒΞΉΞΌΞΏ ΟƒΟΞ½Ξ΄ΞµΟƒΞ·Ο‚"
 
 #
 #~ msgid "Close current connection"
-#~ msgstr "Κλείσιμο τρέχουσας σύνδεσης"
+#~ msgstr "ΞΞ»ΞµΞ―ΟƒΞΉΞΌΞΏ Ο„ΟΞ­Ο‡ΞΏΟ…ΟƒΞ±Ο‚ ΟƒΟΞ½Ξ΄ΞµΟƒΞ·Ο‚"
 
 #
 #~ msgid "Close all connections"
-#~ msgstr "Κλείσιμο όλων των συνδέσεων"
+#~ msgstr "ΞΞ»ΞµΞ―ΟƒΞΉΞΌΞΏ ΟΞ»Ο‰Ξ½ Ο„Ο‰Ξ½ ΟƒΟ…Ξ½Ξ΄Ξ­ΟƒΞµΟ‰Ξ½"
 
 #
 #~ msgid "Printer setup..."
-#~ msgstr "Ρύθμιση εκτυπωτή..."
+#~ msgstr "Ξ΅ΟΞΈΞΌΞΉΟƒΞ· ΞµΞΊΟ„Ο…Ο€Ο‰Ο„Ξ®..."
 
 #
 #~ msgid "Open printer setup dialog"
-#~ msgstr "¶νοιγμα διαλόγου ρύθμισης εκτυπωτή"
+#~ msgstr "Ξ†Ξ½ΞΏΞΉΞ³ΞΌΞ± Ξ΄ΞΉΞ±Ξ»ΟΞ³ΞΏΟ… ΟΟΞΈΞΌΞΉΟƒΞ·Ο‚ ΞµΞΊΟ„Ο…Ο€Ο‰Ο„Ξ®"
 
 #
 #~ msgid "Quit"
-#~ msgstr "Τερματισμός"
+#~ msgstr "Ξ¤ΞµΟΞΌΞ±Ο„ΞΉΟƒΞΌΟΟ‚"
 
 #
 #~ msgid "Exit application"
-#~ msgstr "Έξοδος από εφαρμογή"
+#~ msgstr "ΞΞΎΞΏΞ΄ΞΏΟ‚ Ξ±Ο€Ο ΞµΟ†Ξ±ΟΞΌΞΏΞ³Ξ®"
 
 #
 #~ msgid "Object Browser"
-#~ msgstr "Φυλλομετρητής Αντικειμένων"
+#~ msgstr "Ξ¦Ο…Ξ»Ξ»ΞΏΞΌΞµΟ„ΟΞ·Ο„Ξ®Ο‚ Ξ‘Ξ½Ο„ΞΉΞΊΞµΞΉΞΌΞ­Ξ½Ο‰Ξ½"
 
 #
 #~ msgid "Browse database objects"
-#~ msgstr "Ερεύνηση αντικειμένων βάσης"
+#~ msgstr "Ξ•ΟΞµΟΞ½Ξ·ΟƒΞ· Ξ±Ξ½Ο„ΞΉΞΊΞµΞΉΞΌΞ­Ξ½Ο‰Ξ½ Ξ²Ξ¬ΟƒΞ·Ο‚"
 
 #
 #~ msgid "SQL Builder"
-#~ msgstr "Δομητής SQL"
+#~ msgstr "Ξ”ΞΏΞΌΞ·Ο„Ξ®Ο‚ SQL"
 
 #
 #~ msgid "Construct SQL statements"
-#~ msgstr "Δόμηση εντολών SQL"
+#~ msgstr "Ξ”ΟΞΌΞ·ΟƒΞ· ΞµΞ½Ο„ΞΏΞ»ΟΞ½ SQL"
 
 #
 #~ msgid "View connection properties"
-#~ msgstr "Εμφάνιση ρυθμίσεων σύνδεσης"
+#~ msgstr "Ξ•ΞΌΟ†Ξ¬Ξ½ΞΉΟƒΞ· ΟΟ…ΞΈΞΌΞ―ΟƒΞµΟ‰Ξ½ ΟƒΟΞ½Ξ΄ΞµΟƒΞ·Ο‚"
 
 #
 #~ msgid "Start/Stop Server Trace"
-#~ msgstr "Εκκίνηση/Τερματισμός Παρακολούθησης Εξυπηρετητή"
+#~ msgstr "Ξ•ΞΊΞΊΞ―Ξ½Ξ·ΟƒΞ·/Ξ¤ΞµΟΞΌΞ±Ο„ΞΉΟƒΞΌΟΟ‚ Ξ Ξ±ΟΞ±ΞΊΞΏΞ»ΞΏΟΞΈΞ·ΟƒΞ·Ο‚ Ξ•ΞΎΟ…Ο€Ξ·ΟΞµΟ„Ξ·Ο„Ξ®"
 
 #
 #~ msgid "Start or stop server trace"
-#~ msgstr "Εκκίνηση ή τερματισμός παρακολούθησης εξυπηρετητή"
+#~ msgstr "Ξ•ΞΊΞΊΞ―Ξ½Ξ·ΟƒΞ· Ξ® Ο„ΞµΟΞΌΞ±Ο„ΞΉΟƒΞΌΟΟ‚ Ο€Ξ±ΟΞ±ΞΊΞΏΞ»ΞΏΟΞΈΞ·ΟƒΞ·Ο‚ ΞµΞΎΟ…Ο€Ξ·ΟΞµΟ„Ξ·Ο„Ξ®"
 
 #
 #~ msgid "View Server Trace"
-#~ msgstr "Προβολή Παρακολούθησης Εξυπηρετητή"
+#~ msgstr "Ξ ΟΞΏΞ²ΞΏΞ»Ξ® Ξ Ξ±ΟΞ±ΞΊΞΏΞ»ΞΏΟΞΈΞ·ΟƒΞ·Ο‚ Ξ•ΞΎΟ…Ο€Ξ·ΟΞµΟ„Ξ·Ο„Ξ®"
 
 #
 #~ msgid "View server trace file"
-#~ msgstr "Προβολή αρχείου παρακολούθησης εξυπηρετητή"
+#~ msgstr "Ξ ΟΞΏΞ²ΞΏΞ»Ξ® Ξ±ΟΟ‡ΞµΞ―ΞΏΟ… Ο€Ξ±ΟΞ±ΞΊΞΏΞ»ΞΏΟΞΈΞ·ΟƒΞ·Ο‚ ΞµΞΎΟ…Ο€Ξ·ΟΞµΟ„Ξ·Ο„Ξ®"
 
 #
 #~ msgid "Export"
-#~ msgstr "Εξαγωγή"
+#~ msgstr "Ξ•ΞΎΞ±Ξ³Ο‰Ξ³Ξ®"
 
 #
 #~ msgid "Export Data to Different Formats"
-#~ msgstr "Εξαγωγή Δεδομένων σε Διάφορες Μορφές"
+#~ msgstr "Ξ•ΞΎΞ±Ξ³Ο‰Ξ³Ξ® Ξ”ΞµΞ΄ΞΏΞΌΞ­Ξ½Ο‰Ξ½ ΟƒΞµ Ξ”ΞΉΞ¬Ο†ΞΏΟΞµΟ‚ ΞΞΏΟΟ†Ξ­Ο‚"
 
 #
 #~ msgid "Import"
-#~ msgstr "Εισαγωγή"
+#~ msgstr "Ξ•ΞΉΟƒΞ±Ξ³Ο‰Ξ³Ξ®"
 
 #
 #~ msgid "Import Data into the Database"
-#~ msgstr "Εισαγωγή Δεδομένων στη Βάση"
+#~ msgstr "Ξ•ΞΉΟƒΞ±Ξ³Ο‰Ξ³Ξ® Ξ”ΞµΞ΄ΞΏΞΌΞ­Ξ½Ο‰Ξ½ ΟƒΟ„Ξ· Ξ’Ξ¬ΟƒΞ·"
 
 #
 #~ msgid "Commit changes"
-#~ msgstr "Διάπραξη αλλαγών"
+#~ msgstr "Ξ”ΞΉΞ¬Ο€ΟΞ±ΞΎΞ· Ξ±Ξ»Ξ»Ξ±Ξ³ΟΞ½"
 
 #
 #~ msgid "Rollback"
-#~ msgstr "Επαναφορά"
+#~ msgstr "Ξ•Ο€Ξ±Ξ½Ξ±Ο†ΞΏΟΞ¬"
 
 #
 #~ msgid "Discard all changes"
-#~ msgstr "Απόρριψη όλων των αλλαγών"
+#~ msgstr "Ξ‘Ο€ΟΟΟΞΉΟΞ· ΟΞ»Ο‰Ξ½ Ο„Ο‰Ξ½ Ξ±Ξ»Ξ»Ξ±Ξ³ΟΞ½"
 
 #
 #~ msgid "Database Designer"
-#~ msgstr "Σχεδιαστής Βάσης"
+#~ msgstr "Ξ£Ο‡ΞµΞ΄ΞΉΞ±ΟƒΟ„Ξ®Ο‚ Ξ’Ξ¬ΟƒΞ·Ο‚"
 
 #
 #~ msgid "Visual Database Designer"
-#~ msgstr "Γραφικός Σχεδιαστής Βάσης"
+#~ msgstr "Ξ“ΟΞ±Ο†ΞΉΞΊΟΟ‚ Ξ£Ο‡ΞµΞ΄ΞΉΞ±ΟƒΟ„Ξ®Ο‚ Ξ’Ξ¬ΟƒΞ·Ο‚"
 
 #
 #~ msgid "View GDA server log files"
-#~ msgstr "Εμφάνιση αρχείων καταγραφής εξυπηρετητή GDA"
+#~ msgstr "Ξ•ΞΌΟ†Ξ¬Ξ½ΞΉΟƒΞ· Ξ±ΟΟ‡ΞµΞ―Ο‰Ξ½ ΞΊΞ±Ο„Ξ±Ξ³ΟΞ±Ο†Ξ®Ο‚ ΞµΞΎΟ…Ο€Ξ·ΟΞµΟ„Ξ·Ο„Ξ® GDA"
 
 #
 #~ msgid "Text editor"
-#~ msgstr "Κειμενογράγος"
+#~ msgstr "ΞΞµΞΉΞΌΞµΞ½ΞΏΞ³ΟΞ¬Ξ³ΞΏΟ‚"
 
 #
 #~ msgid "Open the internal text editor"
-#~ msgstr "¶νοιγμα εσωτερικού κειμενογράφου"
+#~ msgstr "Ξ†Ξ½ΞΏΞΉΞ³ΞΌΞ± ΞµΟƒΟ‰Ο„ΞµΟΞΉΞΊΞΏΟ ΞΊΞµΞΉΞΌΞµΞ½ΞΏΞ³ΟΞ¬Ο†ΞΏΟ…"
 
 #
 #~ msgid "Run shell"
-#~ msgstr "Εκτέλεση φλοιού"
+#~ msgstr "Ξ•ΞΊΟ„Ξ­Ξ»ΞµΟƒΞ· Ο†Ξ»ΞΏΞΉΞΏΟ"
 
 #
 #~ msgid "Open shell window"
-#~ msgstr "¶νοιγμα παραθύρου φλοιού"
+#~ msgstr "Ξ†Ξ½ΞΏΞΉΞ³ΞΌΞ± Ο€Ξ±ΟΞ±ΞΈΟΟΞΏΟ… Ο†Ξ»ΞΏΞΉΞΏΟ"
 
 #
 #~ msgid "Calculator"
-#~ msgstr "Υπολογιστής"
+#~ msgstr "Ξ¥Ο€ΞΏΞ»ΞΏΞ³ΞΉΟƒΟ„Ξ®Ο‚"
 
 #
 #~ msgid "Open desktop calculator"
-#~ msgstr "¶νοιγμα παραθύρου υπολογιστή"
+#~ msgstr "Ξ†Ξ½ΞΏΞΉΞ³ΞΌΞ± Ο€Ξ±ΟΞ±ΞΈΟΟΞΏΟ… Ο…Ο€ΞΏΞ»ΞΏΞ³ΞΉΟƒΟ„Ξ®"
 
 #
 #~ msgid "GDA Manager"
-#~ msgstr "Διαχειριστής GDA"
+#~ msgstr "Ξ”ΞΉΞ±Ο‡ΞµΞΉΟΞΉΟƒΟ„Ξ®Ο‚ GDA"
 
 #
 #~ msgid "The GDA configuration tool"
-#~ msgstr "Το εργαλείο ρύθμισης του GDA"
+#~ msgstr "Ξ¤ΞΏ ΞµΟΞ³Ξ±Ξ»ΞµΞ―ΞΏ ΟΟΞΈΞΌΞΉΟƒΞ·Ο‚ Ο„ΞΏΟ… GDA"
 
 #
 #~ msgid "GDA Builder"
-#~ msgstr "Δομητής GDA"
+#~ msgstr "Ξ”ΞΏΞΌΞ·Ο„Ξ®Ο‚ GDA"
 
 #
 #~ msgid "The GDA development environment"
-#~ msgstr "Το περιβάλλον ανάπτυξης του GDA"
+#~ msgstr "Ξ¤ΞΏ Ο€ΞµΟΞΉΞ²Ξ¬Ξ»Ξ»ΞΏΞ½ Ξ±Ξ½Ξ¬Ο€Ο„Ο…ΞΎΞ·Ο‚ Ο„ΞΏΟ… GDA"
 
 #
 #~ msgid "Preferences..."
-#~ msgstr "Προτιμίσεις..."
+#~ msgstr "Ξ ΟΞΏΟ„ΞΉΞΌΞ―ΟƒΞµΞΉΟ‚..."
 
 #
 #~ msgid "Configure user preferences"
-#~ msgstr "Ρύθμιση προτιμίσεων χρήστη"
+#~ msgstr "Ξ΅ΟΞΈΞΌΞΉΟƒΞ· Ο€ΟΞΏΟ„ΞΉΞΌΞ―ΟƒΞµΟ‰Ξ½ Ο‡ΟΞ®ΟƒΟ„Ξ·"
 
 #
 #~ msgid "GDA Configuration..."
-#~ msgstr "Ρύθμιση GDA..."
+#~ msgstr "Ξ΅ΟΞΈΞΌΞΉΟƒΞ· GDA..."
 
 #
 #~ msgid "GDA Configuration"
-#~ msgstr "Ρύθμιση GDA"
+#~ msgstr "Ξ΅ΟΞΈΞΌΞΉΟƒΞ· GDA"
 
 #
 #~ msgid "Save Options"
-#~ msgstr "Αποθήκευση Επιλογών"
+#~ msgstr "Ξ‘Ο€ΞΏΞΈΞ®ΞΊΞµΟ…ΟƒΞ· Ξ•Ο€ΞΉΞ»ΞΏΞ³ΟΞ½"
 
 #
 #~ msgid "Save current configuration"
-#~ msgstr "Αποθήκευση τρέχουσας διαρρύθμισης"
+#~ msgstr "Ξ‘Ο€ΞΏΞΈΞ®ΞΊΞµΟ…ΟƒΞ· Ο„ΟΞ­Ο‡ΞΏΟ…ΟƒΞ±Ο‚ Ξ΄ΞΉΞ±ΟΟΟΞΈΞΌΞΉΟƒΞ·Ο‚"
 
 #
 #~ msgid "Previous window"
-#~ msgstr "Προηγούμενο παράθυρο"
+#~ msgstr "Ξ ΟΞΏΞ·Ξ³ΞΏΟΞΌΞµΞ½ΞΏ Ο€Ξ±ΟΞ¬ΞΈΟ…ΟΞΏ"
 
 #
 #~ msgid "Move to previous window on list"
-#~ msgstr "Μετακίνηση στο προηγούμενο παράθυρο στη λίστα"
+#~ msgstr "ΞΞµΟ„Ξ±ΞΊΞ―Ξ½Ξ·ΟƒΞ· ΟƒΟ„ΞΏ Ο€ΟΞΏΞ·Ξ³ΞΏΟΞΌΞµΞ½ΞΏ Ο€Ξ±ΟΞ¬ΞΈΟ…ΟΞΏ ΟƒΟ„Ξ· Ξ»Ξ―ΟƒΟ„Ξ±"
 
 #
 #~ msgid "Next window"
-#~ msgstr "Επόμενο παράθυρο"
+#~ msgstr "Ξ•Ο€ΟΞΌΞµΞ½ΞΏ Ο€Ξ±ΟΞ¬ΞΈΟ…ΟΞΏ"
 
 #
 #~ msgid "Move to next window on list"
-#~ msgstr "Μετακίνηση στο επόμενο παράθυρο στη λίστα"
+#~ msgstr "ΞΞµΟ„Ξ±ΞΊΞ―Ξ½Ξ·ΟƒΞ· ΟƒΟ„ΞΏ ΞµΟ€ΟΞΌΞµΞ½ΞΏ Ο€Ξ±ΟΞ¬ΞΈΟ…ΟΞΏ ΟƒΟ„Ξ· Ξ»Ξ―ΟƒΟ„Ξ±"
 
 #
 #~ msgid "Close current"
-#~ msgstr "Κλείσιμο τρεχόντος"
+#~ msgstr "ΞΞ»ΞµΞ―ΟƒΞΉΞΌΞΏ Ο„ΟΞµΟ‡ΟΞ½Ο„ΞΏΟ‚"
 
 #
 #~ msgid "Close active window"
-#~ msgstr "Κλείσιμο ενεργού παραθύρου"
+#~ msgstr "ΞΞ»ΞµΞ―ΟƒΞΉΞΌΞΏ ΞµΞ½ΞµΟΞ³ΞΏΟ Ο€Ξ±ΟΞ±ΞΈΟΟΞΏΟ…"
 
 #
 #~ msgid "Close all"
-#~ msgstr "Κλείσιμο όλων"
+#~ msgstr "ΞΞ»ΞµΞ―ΟƒΞΉΞΌΞΏ ΟΞ»Ο‰Ξ½"
 
 #
 #~ msgid "Close all open windows"
-#~ msgstr "Κλείσιμο όλων των ανοικτών παραθύρων"
+#~ msgstr "ΞΞ»ΞµΞ―ΟƒΞΉΞΌΞΏ ΟΞ»Ο‰Ξ½ Ο„Ο‰Ξ½ Ξ±Ξ½ΞΏΞΉΞΊΟ„ΟΞ½ Ο€Ξ±ΟΞ±ΞΈΟΟΟ‰Ξ½"
 
 #
 #~ msgid "About gnome-db..."
-#~ msgstr "Σχετικά με το gnome-db..."
+#~ msgstr "Ξ£Ο‡ΞµΟ„ΞΉΞΊΞ¬ ΞΌΞµ Ο„ΞΏ gnome-db..."
 
 #
 #~ msgid "About this program"
-#~ msgstr "Σχετικά με αυτό το πρόγραμμα"
+#~ msgstr "Ξ£Ο‡ΞµΟ„ΞΉΞΊΞ¬ ΞΌΞµ Ξ±Ο…Ο„Ο Ο„ΞΏ Ο€ΟΟΞ³ΟΞ±ΞΌΞΌΞ±"
 
 #
 #~ msgid "Tools"
-#~ msgstr "Εργαλεία"
+#~ msgstr "Ξ•ΟΞ³Ξ±Ξ»ΞµΞ―Ξ±"
 
 #
 #~ msgid "Options"
-#~ msgstr "Επιλογές"
+#~ msgstr "Ξ•Ο€ΞΉΞ»ΞΏΞ³Ξ­Ο‚"
 
 #
 #~ msgid "Window"
-#~ msgstr "Παράθυρο"
+#~ msgstr "Ξ Ξ±ΟΞ¬ΞΈΟ…ΟΞΏ"
 
 #
 #~ msgid "Help"
-#~ msgstr "Βοήθεια"
+#~ msgstr "Ξ’ΞΏΞ®ΞΈΞµΞΉΞ±"
 
 #
 #~ msgid "Connect"
-#~ msgstr "Σύνδεση"
+#~ msgstr "Ξ£ΟΞ½Ξ΄ΞµΟƒΞ·"
 
 #
 #~ msgid "Disconnect"
-#~ msgstr "Αποσύνδεση"
+#~ msgstr "Ξ‘Ο€ΞΏΟƒΟΞ½Ξ΄ΞµΟƒΞ·"
 
 #
 #~ msgid "GDA Logs"
-#~ msgstr "Καταγραφές GDA"
+#~ msgstr "ΞΞ±Ο„Ξ±Ξ³ΟΞ±Ο†Ξ­Ο‚ GDA"
 
 #
 #~ msgid "Previous"
-#~ msgstr "Προηγούμενο"
+#~ msgstr "Ξ ΟΞΏΞ·Ξ³ΞΏΟΞΌΞµΞ½ΞΏ"
 
 #
 #~ msgid "Next"
-#~ msgstr "Επόμενο"
+#~ msgstr "Ξ•Ο€ΟΞΌΞµΞ½ΞΏ"
 
 #
 #~ msgid "Execute SQL command"
-#~ msgstr "Εκτέλεση εντολής SQL"
+#~ msgstr "Ξ•ΞΊΟ„Ξ­Ξ»ΞµΟƒΞ· ΞµΞ½Ο„ΞΏΞ»Ξ®Ο‚ SQL"
 
 #
 #~ msgid "Run Script"
-#~ msgstr "Εκτέλεση Προγράμματος Εντολών"
+#~ msgstr "Ξ•ΞΊΟ„Ξ­Ξ»ΞµΟƒΞ· Ξ ΟΞΏΞ³ΟΞ¬ΞΌΞΌΞ±Ο„ΞΏΟ‚ Ξ•Ξ½Ο„ΞΏΞ»ΟΞ½"
 
 #
 #~ msgid "Execute buffer as SQL script"
-#~ msgstr "Εκτέλεση ενταμιευτή ως πρόγραμμα εντολών SQL"
+#~ msgstr "Ξ•ΞΊΟ„Ξ­Ξ»ΞµΟƒΞ· ΞµΞ½Ο„Ξ±ΞΌΞΉΞµΟ…Ο„Ξ® Ο‰Ο‚ Ο€ΟΟΞ³ΟΞ±ΞΌΞΌΞ± ΞµΞ½Ο„ΞΏΞ»ΟΞ½ SQL"
 
 #
 #~ msgid "Select SQL Command"
-#~ msgstr "Επιλογή Εντολής SQL"
+#~ msgstr "Ξ•Ο€ΞΉΞ»ΞΏΞ³Ξ® Ξ•Ξ½Ο„ΞΏΞ»Ξ®Ο‚ SQL"
 
 #
 #~ msgid "Refresh grid"
-#~ msgstr "Ανανέωση πλέγματος"
+#~ msgstr "Ξ‘Ξ½Ξ±Ξ½Ξ­Ο‰ΟƒΞ· Ο€Ξ»Ξ­Ξ³ΞΌΞ±Ο„ΞΏΟ‚"
 
 #
 #~ msgid "Clear SQL window"
-#~ msgstr "Καθαρισμός παραθύρου SQL"
+#~ msgstr "ΞΞ±ΞΈΞ±ΟΞΉΟƒΞΌΟΟ‚ Ο€Ξ±ΟΞ±ΞΈΟΟΞΏΟ… SQL"
 
 #
 #~ msgid "Print grid"
-#~ msgstr "Εκτύπωση πλέγματος"
+#~ msgstr "Ξ•ΞΊΟ„ΟΟ€Ο‰ΟƒΞ· Ο€Ξ»Ξ­Ξ³ΞΌΞ±Ο„ΞΏΟ‚"
 
 #
 #~ msgid "Load file into buffer"
-#~ msgstr "Φόρτωση αρχείου στον ενταμιευτή"
+#~ msgstr "Ξ¦ΟΟΟ„Ο‰ΟƒΞ· Ξ±ΟΟ‡ΞµΞ―ΞΏΟ… ΟƒΟ„ΞΏΞ½ ΞµΞ½Ο„Ξ±ΞΌΞΉΞµΟ…Ο„Ξ®"
 
 #
 #~ msgid "Save current buffer"
-#~ msgstr "Αποθήκευση τρέχοντος ενταμιευτή"
+#~ msgstr "Ξ‘Ο€ΞΏΞΈΞ®ΞΊΞµΟ…ΟƒΞ· Ο„ΟΞ­Ο‡ΞΏΞ½Ο„ΞΏΟ‚ ΞµΞ½Ο„Ξ±ΞΌΞΉΞµΟ…Ο„Ξ®"
 
 #
 #~ msgid "Cut selected text to clipboard"
-#~ msgstr "Αποκοπή επιλεγμένου κειμένου στο clipboard"
+#~ msgstr "Ξ‘Ο€ΞΏΞΊΞΏΟ€Ξ® ΞµΟ€ΞΉΞ»ΞµΞ³ΞΌΞ­Ξ½ΞΏΟ… ΞΊΞµΞΉΞΌΞ­Ξ½ΞΏΟ… ΟƒΟ„ΞΏ clipboard"
 
 #
 #~ msgid "Paste text from clipboard"
-#~ msgstr "Επικόλληση κειμένο από το clipboard"
+#~ msgstr "Ξ•Ο€ΞΉΞΊΟΞ»Ξ»Ξ·ΟƒΞ· ΞΊΞµΞΉΞΌΞ­Ξ½ΞΏ Ξ±Ο€Ο Ο„ΞΏ clipboard"
 
 #
 #~ msgid "%d rows"
-#~ msgstr "%d γραμμές"
+#~ msgstr "%d Ξ³ΟΞ±ΞΌΞΌΞ­Ο‚"
 
 #
 #~ msgid "Select SQL Script"
-#~ msgstr "Επιλογή Προγράμματος Εντολών SQL"
+#~ msgstr "Ξ•Ο€ΞΉΞ»ΞΏΞ³Ξ® Ξ ΟΞΏΞ³ΟΞ¬ΞΌΞΌΞ±Ο„ΞΏΟ‚ Ξ•Ξ½Ο„ΞΏΞ»ΟΞ½ SQL"
 
 #
 #~ msgid "Command succeeded"
-#~ msgstr "Η εντολή ήταν επιτυχής"
+#~ msgstr "Ξ— ΞµΞ½Ο„ΞΏΞ»Ξ® Ξ®Ο„Ξ±Ξ½ ΞµΟ€ΞΉΟ„Ο…Ο‡Ξ®Ο‚"
 
 #
 #~ msgid "Save SQL Script"
-#~ msgstr "Αποθήκευση Προγράμματος Εντολών SQL"
+#~ msgstr "Ξ‘Ο€ΞΏΞΈΞ®ΞΊΞµΟ…ΟƒΞ· Ξ ΟΞΏΞ³ΟΞ¬ΞΌΞΌΞ±Ο„ΞΏΟ‚ Ξ•Ξ½Ο„ΞΏΞ»ΟΞ½ SQL"
 
 #
 #~ msgid "Row %d - %d rows selected"
-#~ msgstr "Γραμμή %d - %d γραμμές επιλέχθηκαν"
+#~ msgstr "Ξ“ΟΞ±ΞΌΞΌΞ® %d - %d Ξ³ΟΞ±ΞΌΞΌΞ­Ο‚ ΞµΟ€ΞΉΞ»Ξ­Ο‡ΞΈΞ·ΞΊΞ±Ξ½"
 
 #
 #~ msgid "Server trace stopped"
-#~ msgstr "Η παρακολούθηση εξυπηρετητή διακόπηκε"
+#~ msgstr "Ξ— Ο€Ξ±ΟΞ±ΞΊΞΏΞ»ΞΏΟΞΈΞ·ΟƒΞ· ΞµΞΎΟ…Ο€Ξ·ΟΞµΟ„Ξ·Ο„Ξ® Ξ΄ΞΉΞ±ΞΊΟΟ€Ξ·ΞΊΞµ"
 
 #
 #~ msgid "Select Trace File"
-#~ msgstr "Επιλογή Αρχείου Παρακολούθησης"
+#~ msgstr "Ξ•Ο€ΞΉΞ»ΞΏΞ³Ξ® Ξ‘ΟΟ‡ΞµΞ―ΞΏΟ… Ξ Ξ±ΟΞ±ΞΊΞΏΞ»ΞΏΟΞΈΞ·ΟƒΞ·Ο‚"
 
 #
 #~ msgid "Server trace to file %s started"
-#~ msgstr "Η παρακολούθηση εξυπηρετητή στο αρχείο %s ξεκίνησε"
+#~ msgstr "Ξ— Ο€Ξ±ΟΞ±ΞΊΞΏΞ»ΞΏΟΞΈΞ·ΟƒΞ· ΞµΞΎΟ…Ο€Ξ·ΟΞµΟ„Ξ·Ο„Ξ® ΟƒΟ„ΞΏ Ξ±ΟΟ‡ΞµΞ―ΞΏ %s ΞΎΞµΞΊΞ―Ξ½Ξ·ΟƒΞµ"
 
 #
 #~ msgid "Server trace is disabled for this connection"
-#~ msgstr "Η παρακολούθηση εξυπηρετητή είναι ανενεργή για αυτή τη σύνδεση"
+#~ msgstr "Ξ— Ο€Ξ±ΟΞ±ΞΊΞΏΞ»ΞΏΟΞΈΞ·ΟƒΞ· ΞµΞΎΟ…Ο€Ξ·ΟΞµΟ„Ξ·Ο„Ξ® ΞµΞ―Ξ½Ξ±ΞΉ Ξ±Ξ½ΞµΞ½ΞµΟΞ³Ξ® Ξ³ΞΉΞ± Ξ±Ο…Ο„Ξ® Ο„Ξ· ΟƒΟΞ½Ξ΄ΞµΟƒΞ·"
 
 #
 #~ msgid "File %s inserted"
-#~ msgstr "Το αρχείο %s εισήχθηκε"
+#~ msgstr "Ξ¤ΞΏ Ξ±ΟΟ‡ΞµΞ―ΞΏ %s ΞµΞΉΟƒΞ®Ο‡ΞΈΞ·ΞΊΞµ"
 
 #
 #~ msgid ""
 #~ "Error opening file\n"
 #~ " %s"
 #~ msgstr ""
-#~ "Σφάλμα ανοίγματος αρχείου\n"
+#~ "Ξ£Ο†Ξ¬Ξ»ΞΌΞ± Ξ±Ξ½ΞΏΞ―Ξ³ΞΌΞ±Ο„ΞΏΟ‚ Ξ±ΟΟ‡ΞµΞ―ΞΏΟ…\n"
 #~ " %s"
 
 #
@@ -2355,77 +2382,77 @@ msgstr ""
 #~ "Error writing to file\n"
 #~ " %s"
 #~ msgstr ""
-#~ "Σφάλμα γραψίματος αρχείου\n"
+#~ "Ξ£Ο†Ξ¬Ξ»ΞΌΞ± Ξ³ΟΞ±ΟΞ―ΞΌΞ±Ο„ΞΏΟ‚ Ξ±ΟΟ‡ΞµΞ―ΞΏΟ…\n"
 #~ " %s"
 
 #
 #~ msgid "Wrote file %s"
-#~ msgstr "Γράψιμο αρχείου %s"
+#~ msgstr "Ξ“ΟΞ¬ΟΞΉΞΌΞΏ Ξ±ΟΟ‡ΞµΞ―ΞΏΟ… %s"
 
 #
 #~ msgid "Question"
-#~ msgstr "Ερώτηση"
+#~ msgstr "Ξ•ΟΟΟ„Ξ·ΟƒΞ·"
 
 #
 #~ msgid "Select all"
-#~ msgstr "Επιλογή όλων"
+#~ msgstr "Ξ•Ο€ΞΉΞ»ΞΏΞ³Ξ® ΟΞ»Ο‰Ξ½"
 
 #
 #~ msgid "Select all text in buffer"
-#~ msgstr "Επιλογή όλου του κειμένου στον ενταμιευτή"
+#~ msgstr "Ξ•Ο€ΞΉΞ»ΞΏΞ³Ξ® ΟΞ»ΞΏΟ… Ο„ΞΏΟ… ΞΊΞµΞΉΞΌΞ­Ξ½ΞΏΟ… ΟƒΟ„ΞΏΞ½ ΞµΞ½Ο„Ξ±ΞΌΞΉΞµΟ…Ο„Ξ®"
 
 #
 #~ msgid "Insert file..."
-#~ msgstr "Εισαγωγή αρχείου..."
+#~ msgstr "Ξ•ΞΉΟƒΞ±Ξ³Ο‰Ξ³Ξ® Ξ±ΟΟ‡ΞµΞ―ΞΏΟ…..."
 
 #
 #~ msgid "Insert file into current position"
-#~ msgstr "Εισαγωγή αρχείου στην τρέχουσα θέση"
+#~ msgstr "Ξ•ΞΉΟƒΞ±Ξ³Ο‰Ξ³Ξ® Ξ±ΟΟ‡ΞµΞ―ΞΏΟ… ΟƒΟ„Ξ·Ξ½ Ο„ΟΞ­Ο‡ΞΏΟ…ΟƒΞ± ΞΈΞ­ΟƒΞ·"
 
 #
 #~ msgid "Save to file..."
-#~ msgstr "Αποθήκευση σε αρχείο..."
+#~ msgstr "Ξ‘Ο€ΞΏΞΈΞ®ΞΊΞµΟ…ΟƒΞ· ΟƒΞµ Ξ±ΟΟ‡ΞµΞ―ΞΏ..."
 
 #
 #~ msgid "Save widget contents to file"
-#~ msgstr "Αποθήκευση περιεχομένων widget σε αρχείο"
+#~ msgstr "Ξ‘Ο€ΞΏΞΈΞ®ΞΊΞµΟ…ΟƒΞ· Ο€ΞµΟΞΉΞµΟ‡ΞΏΞΌΞ­Ξ½Ο‰Ξ½ widget ΟƒΞµ Ξ±ΟΟ‡ΞµΞ―ΞΏ"
 
 #
 #~ msgid "Print..."
-#~ msgstr "Εκτύπωση..."
+#~ msgstr "Ξ•ΞΊΟ„ΟΟ€Ο‰ΟƒΞ·..."
 
 #
 #~ msgid "Print buffer"
-#~ msgstr "Εκτύπωση ενταμιευτή"
+#~ msgstr "Ξ•ΞΊΟ„ΟΟ€Ο‰ΟƒΞ· ΞµΞ½Ο„Ξ±ΞΌΞΉΞµΟ…Ο„Ξ®"
 
 #
 #~ msgid "0 rows"
-#~ msgstr "0 γραμμές"
+#~ msgstr "0 Ξ³ΟΞ±ΞΌΞΌΞ­Ο‚"
 
 #
 #~ msgid "Extra Info"
-#~ msgstr "Επιπλέον Πληροφορίες"
+#~ msgstr "Ξ•Ο€ΞΉΟ€Ξ»Ξ­ΞΏΞ½ Ξ Ξ»Ξ·ΟΞΏΟ†ΞΏΟΞ―ΞµΟ‚"
 
 #
 #~ msgid "Reload"
-#~ msgstr "Επαναφόρτωση"
+#~ msgstr "Ξ•Ο€Ξ±Ξ½Ξ±Ο†ΟΟΟ„Ο‰ΟƒΞ·"
 
 #
 #~ msgid "Reload config drivers"
-#~ msgstr "Επαναφόρτωση οδηγών ρυθμίσεων"
+#~ msgstr "Ξ•Ο€Ξ±Ξ½Ξ±Ο†ΟΟΟ„Ο‰ΟƒΞ· ΞΏΞ΄Ξ·Ξ³ΟΞ½ ΟΟ…ΞΈΞΌΞ―ΟƒΞµΟ‰Ξ½"
 
 #
 #~ msgid "SQL Front End"
-#~ msgstr "Περιβάλλον Λειτουργίας SQL"
+#~ msgstr "Ξ ΞµΟΞΉΞ²Ξ¬Ξ»Ξ»ΞΏΞ½ Ξ›ΞµΞΉΟ„ΞΏΟ…ΟΞ³Ξ―Ξ±Ο‚ SQL"
 
 #
 #~ msgid "The SQL front end"
-#~ msgstr "Το περιβάλλον λειτουργίας SQL"
+#~ msgstr "Ξ¤ΞΏ Ο€ΞµΟΞΉΞ²Ξ¬Ξ»Ξ»ΞΏΞ½ Ξ»ΞµΞΉΟ„ΞΏΟ…ΟΞ³Ξ―Ξ±Ο‚ SQL"
 
 #
 #~ msgid "GNOME-DB Manager"
-#~ msgstr "Διαχειριστής GNOME-DB"
+#~ msgstr "Ξ”ΞΉΞ±Ο‡ΞµΞΉΟΞΉΟƒΟ„Ξ®Ο‚ GNOME-DB"
 
 #
 #~ msgid "Features"
-#~ msgstr "Χαρακτηριστικά"
+#~ msgstr "Ξ§Ξ±ΟΞ±ΞΊΟ„Ξ·ΟΞΉΟƒΟ„ΞΉΞΊΞ¬"

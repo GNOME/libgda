@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda HEAD\n"
-"POT-Creation-Date: 2002-09-09 22:11+0200\n"
+"POT-Creation-Date: 2002-09-11 13:17+0200\n"
 "PO-Revision-Date: 2002-09-02 12:05+0100\n"
 "Last-Translator: Christian Neumair <christian-neumair@web.de>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
@@ -199,7 +199,7 @@ msgid "Invalid XML node"
 msgstr "Ungültiger XML-Node"
 
 #: providers/default/gda-default-provider.c:191
-#: providers/sqlite/gda-sqlite-provider.c:186
+#: providers/sqlite/gda-sqlite-provider.c:183
 msgid ""
 "A full path must be specified on the connection string to open a database."
 msgstr ""
@@ -904,27 +904,38 @@ msgstr "Tupel: «%s»"
 msgid "GDA provider for PostgreSQL databases"
 msgstr "GDA-Treiber für PostgreSQL-Datenbanken"
 
-#: providers/sqlite/gda-sqlite-provider.c:246
-msgid "Invalid SQLITE handle"
-msgstr "Ungültiger SQLITE-Handle"
-
-#: providers/sqlite/gda-sqlite-provider.c:314
-#: providers/sqlite/gda-sqlite-provider.c:449
+#: providers/sqlite/gda-sqlite-provider.c:243
+#: providers/sqlite/gda-sqlite-provider.c:266
+#: providers/sqlite/gda-sqlite-provider.c:289
+#: providers/sqlite/gda-sqlite-provider.c:311
 #: providers/sqlite/gda-sqlite-recordset.c:159
 #: providers/sqlite/gda-sqlite-recordset.c:198
 #: providers/sqlite/gda-sqlite-recordset.c:239
 msgid "Invalid SQLite handle"
 msgstr "Ungültiger SQLite-Handle"
 
-#: providers/sqlite/gda-sqlite-provider.c:332
+#: providers/sqlite/gda-sqlite-provider.c:270
+#, fuzzy
+msgid ""
+"To change a SQLite database you should close the actual database and open a "
+"new one"
+msgstr ""
+"Bitte die Datenbankdatei manuell löschen, um die SQLite-Datenbank zu "
+"entfernen"
+
+#: providers/sqlite/gda-sqlite-provider.c:293
 msgid "Only one database per connection is allowed"
 msgstr "Es ist nur eine Datenbank pro Verbindung erlaubt"
 
-#: providers/sqlite/gda-sqlite-provider.c:346
+#: providers/sqlite/gda-sqlite-provider.c:315
 msgid "To remove a SQLite database you should remove the database file by hand"
 msgstr ""
 "Bitte die Datenbankdatei manuell löschen, um die SQLite-Datenbank zu "
 "entfernen"
+
+#: providers/sqlite/gda-sqlite-provider.c:329
+msgid "Invalid SQLITE handle"
+msgstr "Ungültiger SQLITE-Handle"
 
 #: providers/sqlite/libmain.c:41
 msgid "GDA provider for SQLite databases"
@@ -934,14 +945,20 @@ msgstr "GDA-Treiber für SQLite-Datenbanken"
 msgid "Could not initiate Sybase component factory"
 msgstr "Sybase-Komponentenfabrik konnte nicht angestoßen werden"
 
-#: report/libgda-report/gda-report-document.c:166
-msgid "Could not parse XML document"
-msgstr "XML-Dokument konnte nicht interpretiert werden"
+#: report/libgda-report/gda-report-document.c:158
+#, fuzzy, c-format
+msgid "Could not load report file at %s"
+msgstr "Datei bei %s konnte nicht geladen werden"
 
-#: report/libgda-report/gda-report-document.c:191
-#, c-format
-msgid "Could not get file from %s"
-msgstr "Datei von %s war nicht zu erreichen"
+#: report/libgda-report/gda-report-document.c:167
+#, fuzzy, c-format
+msgid "Could not parse report file at %s"
+msgstr "Datei bei %s konnte nicht interpretiert werden"
+
+#: report/libgda-report/gda-report-document.c:177
+#, fuzzy, c-format
+msgid "Invalid report file '%s'"
+msgstr "Ungültige XML-Datenbankdatei »%s«"
 
 #: testing/client.c:41
 msgid "\t\tNONE\n"
@@ -1105,3 +1122,9 @@ msgstr "\tBeschreibung = %s\n"
 #: testing/config.c:93
 msgid "\tgda_params ="
 msgstr "\tGDA-_Parameter ="
+
+#~ msgid "Could not parse XML document"
+#~ msgstr "XML-Dokument konnte nicht interpretiert werden"
+
+#~ msgid "Could not get file from %s"
+#~ msgstr "Datei von %s war nicht zu erreichen"

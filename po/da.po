@@ -12,7 +12,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2002-09-09 22:11+0200\n"
+"POT-Creation-Date: 2002-09-11 13:17+0200\n"
 "PO-Revision-Date: 2002-09-03 22:14+0200\n"
 "Last-Translator: Ole Laursen <olau@hardworking.dk>\n"
 "Language-Team: Danish <dansk@klid.dk>\n"
@@ -203,7 +203,7 @@ msgid "Invalid XML node"
 msgstr "Ugyldigt XML-punkt"
 
 #: providers/default/gda-default-provider.c:191
-#: providers/sqlite/gda-sqlite-provider.c:186
+#: providers/sqlite/gda-sqlite-provider.c:183
 msgid ""
 "A full path must be specified on the connection string to open a database."
 msgstr ""
@@ -886,25 +886,34 @@ msgstr "Tupler:\"%s\""
 msgid "GDA provider for PostgreSQL databases"
 msgstr "GDA-udbyder til PostgreSQL-databaser"
 
-#: providers/sqlite/gda-sqlite-provider.c:246
-msgid "Invalid SQLITE handle"
-msgstr "Ugyldigt SQLite-håndtag"
-
-#: providers/sqlite/gda-sqlite-provider.c:314
-#: providers/sqlite/gda-sqlite-provider.c:449
+#: providers/sqlite/gda-sqlite-provider.c:243
+#: providers/sqlite/gda-sqlite-provider.c:266
+#: providers/sqlite/gda-sqlite-provider.c:289
+#: providers/sqlite/gda-sqlite-provider.c:311
 #: providers/sqlite/gda-sqlite-recordset.c:159
 #: providers/sqlite/gda-sqlite-recordset.c:198
 #: providers/sqlite/gda-sqlite-recordset.c:239
 msgid "Invalid SQLite handle"
 msgstr "Ugyldigt SQLite-håndtag"
 
-#: providers/sqlite/gda-sqlite-provider.c:332
+#: providers/sqlite/gda-sqlite-provider.c:270
+#, fuzzy
+msgid ""
+"To change a SQLite database you should close the actual database and open a "
+"new one"
+msgstr "For at fjerne en SQLite-database skal du fjerne databasefilen manuelt"
+
+#: providers/sqlite/gda-sqlite-provider.c:293
 msgid "Only one database per connection is allowed"
 msgstr "Kun én database pr. forbindelse er tilladt"
 
-#: providers/sqlite/gda-sqlite-provider.c:346
+#: providers/sqlite/gda-sqlite-provider.c:315
 msgid "To remove a SQLite database you should remove the database file by hand"
 msgstr "For at fjerne en SQLite-database skal du fjerne databasefilen manuelt"
+
+#: providers/sqlite/gda-sqlite-provider.c:329
+msgid "Invalid SQLITE handle"
+msgstr "Ugyldigt SQLite-håndtag"
 
 #: providers/sqlite/libmain.c:41
 msgid "GDA provider for SQLite databases"
@@ -914,14 +923,20 @@ msgstr "GDA-udbyder til SQLite-databaser"
 msgid "Could not initiate Sybase component factory"
 msgstr "Kunne ikke klargøre Sybase-komponentfabrik"
 
-#: report/libgda-report/gda-report-document.c:166
-msgid "Could not parse XML document"
-msgstr "Kunne ikke fortolke XML-dokument"
+#: report/libgda-report/gda-report-document.c:158
+#, fuzzy, c-format
+msgid "Could not load report file at %s"
+msgstr "Kunne ikke åbne fil ved %s"
 
-#: report/libgda-report/gda-report-document.c:191
-#, c-format
-msgid "Could not get file from %s"
-msgstr "Kunne ikke skaffe fil fra %s"
+#: report/libgda-report/gda-report-document.c:167
+#, fuzzy, c-format
+msgid "Could not parse report file at %s"
+msgstr "Kunne ikke fortolke fil ved %s"
+
+#: report/libgda-report/gda-report-document.c:177
+#, fuzzy, c-format
+msgid "Invalid report file '%s'"
+msgstr "Ugyldig XML-databasefil '%s'"
 
 #: testing/client.c:41
 msgid "\t\tNONE\n"
@@ -1082,6 +1097,12 @@ msgstr "\tbeskrivelse = %s\n"
 #: testing/config.c:93
 msgid "\tgda_params ="
 msgstr "\tgda_params ="
+
+#~ msgid "Could not parse XML document"
+#~ msgstr "Kunne ikke fortolke XML-dokument"
+
+#~ msgid "Could not get file from %s"
+#~ msgstr "Kunne ikke skaffe fil fra %s"
 
 #~ msgid "Unknown"
 #~ msgstr "Ukendt"

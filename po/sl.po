@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2002-09-09 22:11+0200\n"
+"POT-Creation-Date: 2002-09-11 13:18+0200\n"
 "PO-Revision-Date: 2000-11-13 19:36+0100\n"
 "Last-Translator: Andraz Tori <andraz.tori1@guest.arnes.si>\n"
 "Language-Team: Slovenian <sl@li.org>\n"
@@ -198,7 +198,7 @@ msgid "Invalid XML node"
 msgstr "Neveljaven list XML"
 
 #: providers/default/gda-default-provider.c:191
-#: providers/sqlite/gda-sqlite-provider.c:186
+#: providers/sqlite/gda-sqlite-provider.c:183
 msgid ""
 "A full path must be specified on the connection string to open a database."
 msgstr "Niz povezave mora navesti polno pot za odprtje zbirke podatkov."
@@ -959,12 +959,10 @@ msgstr ""
 msgid "GDA provider for PostgreSQL databases"
 msgstr ""
 
-#: providers/sqlite/gda-sqlite-provider.c:246
-msgid "Invalid SQLITE handle"
-msgstr "Neveljaven obrvnavalnik SQLITE"
-
-#: providers/sqlite/gda-sqlite-provider.c:314
-#: providers/sqlite/gda-sqlite-provider.c:449
+#: providers/sqlite/gda-sqlite-provider.c:243
+#: providers/sqlite/gda-sqlite-provider.c:266
+#: providers/sqlite/gda-sqlite-provider.c:289
+#: providers/sqlite/gda-sqlite-provider.c:311
 #: providers/sqlite/gda-sqlite-recordset.c:159
 #: providers/sqlite/gda-sqlite-recordset.c:198
 #: providers/sqlite/gda-sqlite-recordset.c:239
@@ -972,13 +970,23 @@ msgstr "Neveljaven obrvnavalnik SQLITE"
 msgid "Invalid SQLite handle"
 msgstr "Neveljaven obravnavalnik Sqlite"
 
-#: providers/sqlite/gda-sqlite-provider.c:332
+#: providers/sqlite/gda-sqlite-provider.c:270
+msgid ""
+"To change a SQLite database you should close the actual database and open a "
+"new one"
+msgstr ""
+
+#: providers/sqlite/gda-sqlite-provider.c:293
 msgid "Only one database per connection is allowed"
 msgstr ""
 
-#: providers/sqlite/gda-sqlite-provider.c:346
+#: providers/sqlite/gda-sqlite-provider.c:315
 msgid "To remove a SQLite database you should remove the database file by hand"
 msgstr ""
+
+#: providers/sqlite/gda-sqlite-provider.c:329
+msgid "Invalid SQLITE handle"
+msgstr "Neveljaven obrvnavalnik SQLITE"
 
 #: providers/sqlite/libmain.c:41
 msgid "GDA provider for SQLite databases"
@@ -988,14 +996,20 @@ msgstr ""
 msgid "Could not initiate Sybase component factory"
 msgstr "Ne morem inicializirati tovarne komponent Sybase"
 
-#: report/libgda-report/gda-report-document.c:166
-msgid "Could not parse XML document"
-msgstr "Nisem mogel razčleniti dokumenta XML"
+#: report/libgda-report/gda-report-document.c:158
+#, fuzzy, c-format
+msgid "Could not load report file at %s"
+msgstr "Nisem mogel naložiti datoteke %s"
 
-#: report/libgda-report/gda-report-document.c:191
-#, c-format
-msgid "Could not get file from %s"
-msgstr "Nisem mogel dobiti datoteke od %s"
+#: report/libgda-report/gda-report-document.c:167
+#, fuzzy, c-format
+msgid "Could not parse report file at %s"
+msgstr "Nisem mogel razlčleniti datoteke %s"
+
+#: report/libgda-report/gda-report-document.c:177
+#, fuzzy, c-format
+msgid "Invalid report file '%s'"
+msgstr "Neveljavna datoteka zbirke podatkov XML '%s'"
 
 #: testing/client.c:41
 msgid "\t\tNONE\n"
@@ -1152,6 +1166,12 @@ msgstr "\topis = %s\n"
 #: testing/config.c:93
 msgid "\tgda_params ="
 msgstr "\tparametri_gda ="
+
+#~ msgid "Could not parse XML document"
+#~ msgstr "Nisem mogel razčleniti dokumenta XML"
+
+#~ msgid "Could not get file from %s"
+#~ msgstr "Nisem mogel dobiti datoteke od %s"
 
 #~ msgid "Could not activate object %s"
 #~ msgstr "Nisem uspel aktivirati predmeta %s"

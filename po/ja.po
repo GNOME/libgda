@@ -5,18 +5,18 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda CVS-20010407\n"
-"POT-Creation-Date: 2002-09-09 22:11+0200\n"
+"POT-Creation-Date: 2002-09-11 13:17+0200\n"
 "PO-Revision-Date: 2001-04-07 12:45+0900\n"
 "Last-Translator: Akira TAGOH <tagoh@gnome.gr.jp>\n"
 "Language-Team: Japanese <translation@gnome.gr.jp>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=euc-jp\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: libgda/gda-client.c:227 libgda/gda-client.c:414 libgda/gda-connection.c:214
 #, fuzzy, c-format
 msgid "Data source %s not found in configuration"
-msgstr "¥Ç¡¼¥¿¥Ù¡¼¥¹ '%s' ¤Ï¥·¥¹¥Æ¥àÀßÄê¤«¤é¸«¤Ä¤«¤ê¤Ş¤»¤ó¤Ç¤·¤¿"
+msgstr "ãƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹ '%s' ã¯ã‚·ã‚¹ãƒ†ãƒ è¨­å®šã‹ã‚‰è¦‹ã¤ã‹ã‚Šã¾ã›ã‚“ã§ã—ãŸ"
 
 #: libgda/gda-client.c:245
 #, c-format
@@ -26,12 +26,12 @@ msgstr ""
 #: libgda/gda-client.c:254
 #, fuzzy, c-format
 msgid "Could not load %s provider"
-msgstr "CORBA ¥Õ¥¡¥¯¥È¥ê¤ò³«¤¯¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+msgstr "CORBA ãƒ•ã‚¡ã‚¯ãƒˆãƒªã‚’é–‹ãã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #: libgda/gda-client.c:270
 #, fuzzy, c-format
 msgid "Provider %s does not implement entry point"
-msgstr "Ì¤¼ÂÁõ¤Îµ¡Ç½¤ò¥×¥í¥Ğ¥¤¥À %s ¤Ç³«»Ï¤·¤Æ¤¤¤Ş¤¹"
+msgstr "æœªå®Ÿè£…ã®æ©Ÿèƒ½ã‚’ãƒ—ãƒ­ãƒã‚¤ãƒ€ %s ã§é–‹å§‹ã—ã¦ã„ã¾ã™"
 
 #: libgda/gda-client.c:279
 msgid "Creation of GdaServerProvider failed"
@@ -57,7 +57,7 @@ msgstr ""
 #: libgda/gda-config.c:1270
 #, fuzzy
 msgid "Connection string"
-msgstr "ÀÜÂ³¤ÏÀÚ¤ì¤¿¤è¤¦¤Ç¤¹"
+msgstr "æ¥ç¶šã¯åˆ‡ã‚ŒãŸã‚ˆã†ã§ã™"
 
 #: libgda/gda-config.c:1271 providers/postgres/gda-postgres-provider.c:903
 msgid "Description"
@@ -66,21 +66,21 @@ msgstr ""
 #: libgda/gda-config.c:1272
 #, fuzzy
 msgid "Username"
-msgstr "¥æ¡¼¥¶Ì¾"
+msgstr "ãƒ¦ãƒ¼ã‚¶å"
 
 #: libgda/gda-config.c:1273
 #, fuzzy
 msgid "Password"
-msgstr "¥Ñ¥¹¥ï¡¼¥É"
+msgstr "ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰"
 
 #: libgda/gda-data-model.c:608
 #, fuzzy, c-format
 msgid "Data model %p is not editable"
-msgstr "%p ¤ÏÍ­¸ú¤Ê¥Æ¡¼¥Ö¥ë¤Ç¤Ï¤¢¤ê¤Ş¤»¤ó"
+msgstr "%p ã¯æœ‰åŠ¹ãªãƒ†ãƒ¼ãƒ–ãƒ«ã§ã¯ã‚ã‚Šã¾ã›ã‚“"
 
 #: libgda/gda-init.c:49
 msgid "Attempt to initialize an already initialized client"
-msgstr "½é´ü²½¤ò»î¤ß¤Ş¤·¤¿¤¬¤¹¤Ç¤Ë¥¯¥é¥¤¥¢¥ó¥È¤Ï½é´ü²½¤µ¤ì¤Æ¤¤¤Ş¤¹"
+msgstr "åˆæœŸåŒ–ã‚’è©¦ã¿ã¾ã—ãŸãŒã™ã§ã«ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆã¯åˆæœŸåŒ–ã•ã‚Œã¦ã„ã¾ã™"
 
 #: libgda/gda-init.c:60
 msgid "libgda needs GModule. Finishing..."
@@ -93,12 +93,12 @@ msgstr ""
 #: libgda/gda-log.c:82
 #, fuzzy, c-format
 msgid "MESSAGE: %s"
-msgstr "¥á¥Ã¥»¡¼¥¸: "
+msgstr "ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸: "
 
 #: libgda/gda-log.c:101
 #, fuzzy, c-format
 msgid "ERROR: %s"
-msgstr "¥¨¥é¡¼: "
+msgstr "ã‚¨ãƒ©ãƒ¼: "
 
 #: libgda/gda-select.c:120 libgda/gda-select.c:143 libgda/gda-select.c:202
 msgid "Unexpected integer value"
@@ -145,7 +145,7 @@ msgstr ""
 #: libgda/gda-util.c:169
 #, fuzzy, c-format
 msgid "Could not create file %s"
-msgstr "'%s' ¤Ë¥í¥±¡¼¥ë¤òÀßÄê¤¹¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+msgstr "'%s' ã«ãƒ­ã‚±ãƒ¼ãƒ«ã‚’è¨­å®šã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #: libgda/gda-value.c:1454
 msgid "TRUE"
@@ -158,33 +158,33 @@ msgstr "FALSE"
 #: libgda/gda-xml-database.c:236
 #, fuzzy, c-format
 msgid "Could not load file at %s"
-msgstr "'%s' ¤Ë¥í¥±¡¼¥ë¤òÀßÄê¤¹¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+msgstr "'%s' ã«ãƒ­ã‚±ãƒ¼ãƒ«ã‚’è¨­å®šã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #: libgda/gda-xml-database.c:245
 #, fuzzy, c-format
 msgid "Could not parse file at %s"
-msgstr "'%s' ¤Ë¥í¥±¡¼¥ë¤òÀßÄê¤¹¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+msgstr "'%s' ã«ãƒ­ã‚±ãƒ¼ãƒ«ã‚’è¨­å®šã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #: libgda/gda-xml-database.c:255
 #, fuzzy, c-format
 msgid "Invalid XML database file '%s'"
-msgstr "¥Ç¡¼¥¿¥Ù¡¼¥¹ '%s' ¤òÁªÂò¤·¤Ş¤·¤¿"
+msgstr "ãƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹ '%s' ã‚’é¸æŠã—ã¾ã—ãŸ"
 
 #: libgda/gda-xml-database.c:407
 #, fuzzy, c-format
 msgid "Could not create a XML node from table %s"
-msgstr "'%s' ¤Ë¥í¥±¡¼¥ë¤òÀßÄê¤¹¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+msgstr "'%s' ã«ãƒ­ã‚±ãƒ¼ãƒ«ã‚’è¨­å®šã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #: libgda/gda-xml-database.c:425
 #, fuzzy
 msgid "Could not dump XML file to memory"
-msgstr "'%s' ¤Ë¥í¥±¡¼¥ë¤òÀßÄê¤¹¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+msgstr "'%s' ã«ãƒ­ã‚±ãƒ¼ãƒ«ã‚’è¨­å®šã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #: libgda/gda-xml-database.c:518 libgda/gda-xml-database.c:554
 #: libgda/gda-xml-database.c:597
 #, fuzzy, c-format
 msgid "Table %s already exists"
-msgstr "¥Æ¡¼¥Ö¥ë %s ¤Ï¤¹¤Ç¤ËÂ¸ºß¤·¤Æ¤¤¤Ş¤¹"
+msgstr "ãƒ†ãƒ¼ãƒ–ãƒ« %s ã¯ã™ã§ã«å­˜åœ¨ã—ã¦ã„ã¾ã™"
 
 #: libgda/gda-xml-database.c:590
 msgid "Invalid node"
@@ -200,7 +200,7 @@ msgid "Invalid XML node"
 msgstr ""
 
 #: providers/default/gda-default-provider.c:191
-#: providers/sqlite/gda-sqlite-provider.c:186
+#: providers/sqlite/gda-sqlite-provider.c:183
 msgid ""
 "A full path must be specified on the connection string to open a database."
 msgstr ""
@@ -214,7 +214,7 @@ msgstr ""
 #: providers/default/gda-default-provider.c:334
 #, fuzzy
 msgid "Not Implemented"
-msgstr "%s ¤Ï¼ÂÁõ¤µ¤ì¤Æ¤¤¤Ş¤»¤ó"
+msgstr "%s ã¯å®Ÿè£…ã•ã‚Œã¦ã„ã¾ã›ã‚“"
 
 #: providers/default/gda-default-provider.c:455
 #: providers/mysql/gda-mysql-provider.c:1011
@@ -222,7 +222,7 @@ msgstr "%s ¤Ï¼ÂÁõ¤µ¤ì¤Æ¤¤¤Ş¤»¤ó"
 #: providers/postgres/gda-postgres-provider.c:1065
 #, fuzzy
 msgid "Field name"
-msgstr "¥Õ¥¡¥¤¥ëÌ¾"
+msgstr "ãƒ•ã‚¡ã‚¤ãƒ«å"
 
 #: providers/default/gda-default-provider.c:456
 #: providers/mysql/gda-mysql-provider.c:1012
@@ -284,12 +284,12 @@ msgstr ""
 #: providers/default/gda-default-provider.c:485
 #, fuzzy, c-format
 msgid "Table %s not found"
-msgstr "¥Ç¡¼¥¿¥½¡¼¥¹ %s ¤Ï¸«¤Ä¤«¤ê¤Ş¤»¤ó¤Ç¤·¤¿"
+msgstr "ãƒ‡ãƒ¼ã‚¿ã‚½ãƒ¼ã‚¹ %s ã¯è¦‹ã¤ã‹ã‚Šã¾ã›ã‚“ã§ã—ãŸ"
 
 #: providers/default/gda-default-provider.c:510
 #, fuzzy
 msgid "Could not get description for column"
-msgstr "%s ¤ØÀÜÂ³¤¹¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+msgstr "%s ã¸æ¥ç¶šã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #: providers/default/libmain.c:39
 msgid "GDA default provider, based on the libgda XML format"
@@ -316,7 +316,7 @@ msgstr ""
 #: providers/freetds/gda-freetds-provider.c:237
 #, fuzzy
 msgid "Failed getting connection info."
-msgstr "ºÆÀÜÂ³¤ò»î¤ß¤Æ¤¤¤Ş¤¹"
+msgstr "å†æ¥ç¶šã‚’è©¦ã¿ã¦ã„ã¾ã™"
 
 #: providers/freetds/gda-freetds-provider.c:542
 #: providers/oracle/gda-oracle-provider.c:1655
@@ -339,7 +339,7 @@ msgstr ""
 #: providers/postgres/gda-postgres-provider.c:1444 testing/client.c:128
 #, fuzzy
 msgid "Users"
-msgstr "¥æ¡¼¥¶Ì¾"
+msgstr "ãƒ¦ãƒ¼ã‚¶å"
 
 #: providers/freetds/gda-freetds-provider.c:568
 #: providers/oracle/gda-oracle-provider.c:1671 testing/client.c:125
@@ -349,7 +349,7 @@ msgstr ""
 #: providers/freetds/gda-freetds-provider.c:645
 #, fuzzy
 msgid "Field Name"
-msgstr "¥Õ¥¡¥¤¥ëÌ¾"
+msgstr "ãƒ•ã‚¡ã‚¤ãƒ«å"
 
 #: providers/freetds/gda-freetds-provider.c:647
 msgid "Data Type"
@@ -385,7 +385,7 @@ msgstr ""
 #: providers/freetds/gda-freetds-provider.c:798 providers/freetds/utils.c:45
 #: providers/oracle/utils.c:72 providers/postgres/utils.c:52
 msgid "Not available"
-msgstr "ÍøÍÑ¤Ç¤­¤Ş¤»¤ó"
+msgstr "åˆ©ç”¨ã§ãã¾ã›ã‚“"
 
 #: providers/freetds/gda-freetds-recordset.c:356
 msgid "Error processing result rows.\n"
@@ -406,7 +406,7 @@ msgstr ""
 #: providers/freetds/libmain.c:39
 #, fuzzy
 msgid "GDA provider for TDS-based databases (using FreeTDS)"
-msgstr "MDB (MS Access)¥Õ¥¡¥¤¥ëÍÑ¤ÎGDA¥Ç¡¼¥¿¥½¡¼¥¹¥¢¥¯¥»¥¹"
+msgstr "MDB (MS Access)ãƒ•ã‚¡ã‚¤ãƒ«ç”¨ã®GDAãƒ‡ãƒ¼ã‚¿ã‚½ãƒ¼ã‚¹ã‚¢ã‚¯ã‚»ã‚¹"
 
 #: providers/freetds/utils.c:41 providers/oracle/utils.c:67
 #: providers/postgres/utils.c:47
@@ -417,17 +417,17 @@ msgstr ""
 #: providers/ibmdb2/gda-ibmdb2-provider.c:154
 #, fuzzy
 msgid "Could not allocate environment handle."
-msgstr "¥¹¥Æ¡¼¥È¥á¥ó¥È¥Ï¥ó¥É¥ë¤ò³ä¤êÅö¤Æ¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+msgstr "ã‚¹ãƒ†ãƒ¼ãƒˆãƒ¡ãƒ³ãƒˆãƒãƒ³ãƒ‰ãƒ«ã‚’å‰²ã‚Šå½“ã¦ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #: providers/ibmdb2/gda-ibmdb2-provider.c:165
 #, fuzzy
 msgid "Could not set autocommit to off.\n"
-msgstr "'%s' ¤Ë¥í¥±¡¼¥ë¤òÀßÄê¤¹¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+msgstr "'%s' ã«ãƒ­ã‚±ãƒ¼ãƒ«ã‚’è¨­å®šã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #: providers/ibmdb2/gda-ibmdb2-provider.c:179
 #, fuzzy
 msgid "Could not allocate environment handle.\n"
-msgstr "¥¹¥Æ¡¼¥È¥á¥ó¥È¥Ï¥ó¥É¥ë¤ò³ä¤êÅö¤Æ¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+msgstr "ã‚¹ãƒ†ãƒ¼ãƒˆãƒ¡ãƒ³ãƒˆãƒãƒ³ãƒ‰ãƒ«ã‚’å‰²ã‚Šå½“ã¦ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #. GetInfo is needed for obtaining database name
 #. is needed for tables schema
@@ -442,7 +442,7 @@ msgstr ""
 #: providers/ibmdb2/libmain.c:39
 #, fuzzy
 msgid "GDA provider for IBMDB2"
-msgstr "MDB (MS Access)¥Õ¥¡¥¤¥ëÍÑ¤ÎGDA¥Ç¡¼¥¿¥½¡¼¥¹¥¢¥¯¥»¥¹"
+msgstr "MDB (MS Access)ãƒ•ã‚¡ã‚¤ãƒ«ç”¨ã®GDAãƒ‡ãƒ¼ã‚¿ã‚½ãƒ¼ã‚¹ã‚¢ã‚¯ã‚»ã‚¹"
 
 #: providers/mdb/gda-mdb-provider.c:188
 msgid "A database FILENAME must be specified in the connection_string"
@@ -451,7 +451,7 @@ msgstr ""
 #: providers/mdb/gda-mdb-provider.c:197
 #, fuzzy, c-format
 msgid "Could not open file %s"
-msgstr "'%s' ¤Ë¥í¥±¡¼¥ë¤òÀßÄê¤¹¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+msgstr "'%s' ã«ãƒ­ã‚±ãƒ¼ãƒ«ã‚’è¨­å®šã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #: providers/mdb/gda-mdb-provider.c:219 providers/mdb/gda-mdb-provider.c:247
 #: providers/mdb/gda-mdb-provider.c:348
@@ -465,16 +465,16 @@ msgstr ""
 #: providers/mdb/libmain.c:34
 #, fuzzy
 msgid "GDA provider for MS Access files"
-msgstr "MDB (MS Access)¥Õ¥¡¥¤¥ëÍÑ¤ÎGDA¥Ç¡¼¥¿¥½¡¼¥¹¥¢¥¯¥»¥¹"
+msgstr "MDB (MS Access)ãƒ•ã‚¡ã‚¤ãƒ«ç”¨ã®GDAãƒ‡ãƒ¼ã‚¿ã‚½ãƒ¼ã‚¹ã‚¢ã‚¯ã‚»ã‚¹"
 
 #: providers/mysql/gda-mysql-provider.c:215
 #, fuzzy
 msgid ""
 "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
 msgstr ""
-"%s:%d: UNIX_SOCKET ¤òÄó¶¡¤¹¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó. HOST ¤Ş¤¿¤Ï PORT ¤Î¤É¤Á¤é¤«¤ò"
-"Äó¶¡¤¹¤ë¤Ê¤é, UNIX_SOCKET ¤òºï½ü¤¹¤ë¤«, HOST ¤È PORT ¤ÎÎ¾Êı¤Î¥ª¥×¥·¥ç¥ó¤òºï½ü"
-"¤·¤Æ¤¯¤À¤µ¤¤"
+"%s:%d: UNIX_SOCKET ã‚’æä¾›ã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“. HOST ã¾ãŸã¯ PORT ã®ã©ã¡ã‚‰ã‹ã‚’"
+"æä¾›ã™ã‚‹ãªã‚‰, UNIX_SOCKET ã‚’å‰Šé™¤ã™ã‚‹ã‹, HOST ã¨ PORT ã®ä¸¡æ–¹ã®ã‚ªãƒ—ã‚·ãƒ§ãƒ³ã‚’å‰Šé™¤"
+"ã—ã¦ãã ã•ã„"
 
 #: providers/mysql/gda-mysql-provider.c:290
 #: providers/mysql/gda-mysql-provider.c:1027
@@ -550,13 +550,13 @@ msgstr ""
 #: providers/oracle/gda-oracle-recordset.c:482
 #, fuzzy
 msgid "Could not retrieve column's information"
-msgstr "%s ¤ØÀÜÂ³¤¹¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+msgstr "%s ã¸æ¥ç¶šã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #: providers/mysql/gda-mysql-recordset.c:322
 #: providers/oracle/gda-oracle-recordset.c:500
 #, fuzzy
 msgid "Could not retrieve column's value"
-msgstr "¥µ¡¼¥Ğ¥á¥Ã¥»¡¼¥¸¤ò¾Ãµî¤¹¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+msgstr "ã‚µãƒ¼ãƒãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’æ¶ˆå»ã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #: providers/mysql/libmain.c:41
 msgid "GDA provider for MySQL databases"
@@ -565,67 +565,67 @@ msgstr ""
 #: providers/odbc/libmain.c:36
 #, fuzzy
 msgid "GDA bridge to ODBC data sources"
-msgstr "ODBCÍÑ¤ÎGDA¥Ç¡¼¥¿¥½¡¼¥¹¥¢¥¯¥»¥¹"
+msgstr "ODBCç”¨ã®GDAãƒ‡ãƒ¼ã‚¿ã‚½ãƒ¼ã‚¹ã‚¢ã‚¯ã‚»ã‚¹"
 
 #: providers/oracle/gda-oracle-provider.c:193
 #, fuzzy
 msgid "Could not initialize Oracle"
-msgstr "ct_diag() ¤ò½é´ü²½¤¹¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+msgstr "ct_diag() ã‚’åˆæœŸåŒ–ã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #: providers/oracle/gda-oracle-provider.c:204
 #, fuzzy
 msgid "Could not initialize the Oracle environment"
-msgstr "ct_diag() ¤ò½é´ü²½¤¹¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+msgstr "ct_diag() ã‚’åˆæœŸåŒ–ã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #: providers/oracle/gda-oracle-provider.c:216
 #, fuzzy
 msgid "Could not allocate the Oracle service handle"
-msgstr "cs_diag() ¤ò½é´ü²½¤¹¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+msgstr "cs_diag() ã‚’åˆæœŸåŒ–ã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #: providers/oracle/gda-oracle-provider.c:226
 #, fuzzy
 msgid "Could not allocate the Oracle error handle"
-msgstr "ct_diag() ¤ò½é´ü²½¤¹¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+msgstr "ct_diag() ã‚’åˆæœŸåŒ–ã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #: providers/oracle/gda-oracle-provider.c:238
 #, fuzzy
 msgid "Could not allocate the Oracle server handle"
-msgstr "cs_diag() ¤ò½é´ü²½¤¹¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+msgstr "cs_diag() ã‚’åˆæœŸåŒ–ã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #: providers/oracle/gda-oracle-provider.c:251
 #, fuzzy
 msgid "Could not allocate the Oracle session handle"
-msgstr "¥¹¥Æ¡¼¥È¥á¥ó¥È¥Ï¥ó¥É¥ë¤ò³ä¤êÅö¤Æ¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+msgstr "ã‚¹ãƒ†ãƒ¼ãƒˆãƒ¡ãƒ³ãƒˆãƒãƒ³ãƒ‰ãƒ«ã‚’å‰²ã‚Šå½“ã¦ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #: providers/oracle/gda-oracle-provider.c:281
 #, fuzzy
 msgid "Could not attach to the Oracle server"
-msgstr "cs_diag() ¤ò½é´ü²½¤¹¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+msgstr "cs_diag() ã‚’åˆæœŸåŒ–ã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #: providers/oracle/gda-oracle-provider.c:297
 #, fuzzy
 msgid "Could not set the Oracle server attribute in the service context"
-msgstr "cs_diag() ¤ò½é´ü²½¤¹¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+msgstr "cs_diag() ã‚’åˆæœŸåŒ–ã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #: providers/oracle/gda-oracle-provider.c:313
 #, fuzzy
 msgid "Could not set the Oracle username attribute"
-msgstr "cs_diag() ¤ò½é´ü²½¤¹¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+msgstr "cs_diag() ã‚’åˆæœŸåŒ–ã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #: providers/oracle/gda-oracle-provider.c:329
 #, fuzzy
 msgid "Could not set the Oracle password attribute"
-msgstr "CORBA ¥Õ¥¡¥¯¥È¥ê¤ò³«¤¯¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+msgstr "CORBA ãƒ•ã‚¡ã‚¯ãƒˆãƒªã‚’é–‹ãã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #: providers/oracle/gda-oracle-provider.c:344
 #, fuzzy
 msgid "Could not begin the Oracle session"
-msgstr "ct_diag() ¤ò½é´ü²½¤¹¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+msgstr "ct_diag() ã‚’åˆæœŸåŒ–ã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #: providers/oracle/gda-oracle-provider.c:362
 #, fuzzy
 msgid "Could not set the Oracle session attribute in the service context"
-msgstr "cs_diag() ¤ò½é´ü²½¤¹¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+msgstr "cs_diag() ã‚’åˆæœŸåŒ–ã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #: providers/oracle/gda-oracle-provider.c:444
 #: providers/oracle/gda-oracle-provider.c:518
@@ -645,32 +645,32 @@ msgstr ""
 #: providers/oracle/gda-oracle-provider.c:455
 #, fuzzy
 msgid "Could not allocate the Oracle statement handle"
-msgstr "¥¹¥Æ¡¼¥È¥á¥ó¥È¥Ï¥ó¥É¥ë¤ò³ä¤êÅö¤Æ¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+msgstr "ã‚¹ãƒ†ãƒ¼ãƒˆãƒ¡ãƒ³ãƒˆãƒãƒ³ãƒ‰ãƒ«ã‚’å‰²ã‚Šå½“ã¦ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #: providers/oracle/gda-oracle-provider.c:466
 #, fuzzy
 msgid "Could not prepare the Oracle statement"
-msgstr "ct_diag() ¤ò½é´ü²½¤¹¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+msgstr "ct_diag() ã‚’åˆæœŸåŒ–ã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #: providers/oracle/gda-oracle-provider.c:498
 #, fuzzy
 msgid "Could not bind the Oracle statement parameter"
-msgstr "CORBA ¥Õ¥¡¥¯¥È¥ê¤ò³«¤¯¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+msgstr "CORBA ãƒ•ã‚¡ã‚¯ãƒˆãƒªã‚’é–‹ãã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #: providers/oracle/gda-oracle-provider.c:543
 #, fuzzy
 msgid "Could not get the Oracle statement type"
-msgstr "CORBA ¥Õ¥¡¥¯¥È¥ê¤ò³«¤¯¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+msgstr "CORBA ãƒ•ã‚¡ã‚¯ãƒˆãƒªã‚’é–‹ãã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #: providers/oracle/gda-oracle-provider.c:561
 #, fuzzy
 msgid "Could not execute the Oracle statement"
-msgstr "ct_diag() ¤ò½é´ü²½¤¹¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+msgstr "ct_diag() ã‚’åˆæœŸåŒ–ã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #: providers/oracle/gda-oracle-provider.c:574
 #, fuzzy
 msgid "Could not get the number of columns in the result set"
-msgstr "¥¯¥é¥¤¥¢¥ó¥È¥á¥Ã¥»¡¼¥¸¿ô¤ò¼èÆÀ¤¹¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+msgstr "ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆãƒ¡ãƒƒã‚»ãƒ¼ã‚¸æ•°ã‚’å–å¾—ã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #: providers/oracle/gda-oracle-provider.c:591
 msgid "Could not get the parameter descripter in the result set"
@@ -679,7 +679,7 @@ msgstr ""
 #: providers/oracle/gda-oracle-provider.c:603
 #, fuzzy
 msgid "Could not get the column name in the result set"
-msgstr "¥¯¥é¥¤¥¢¥ó¥È¥á¥Ã¥»¡¼¥¸¿ô¤ò¼èÆÀ¤¹¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+msgstr "ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆãƒ¡ãƒƒã‚»ãƒ¼ã‚¸æ•°ã‚’å–å¾—ã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #: providers/oracle/gda-oracle-provider.c:749
 #: providers/oracle/gda-oracle-provider.c:825
@@ -687,87 +687,87 @@ msgstr "¥¯¥é¥¤¥¢¥ó¥È¥á¥Ã¥»¡¼¥¸¿ô¤ò¼èÆÀ¤¹¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
 #: providers/oracle/gda-oracle-provider.c:931
 #, fuzzy
 msgid "Could not attach the transaction to the service context"
-msgstr "cs_diag() ¤ò½é´ü²½¤¹¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+msgstr "cs_diag() ã‚’åˆæœŸåŒ–ã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #: providers/oracle/gda-oracle-provider.c:799
 #, fuzzy
 msgid "Could not allocate the Oracle transaction handle"
-msgstr "¥¹¥Æ¡¼¥È¥á¥ó¥È¥Ï¥ó¥É¥ë¤ò³ä¤êÅö¤Æ¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+msgstr "ã‚¹ãƒ†ãƒ¼ãƒˆãƒ¡ãƒ³ãƒˆãƒãƒ³ãƒ‰ãƒ«ã‚’å‰²ã‚Šå½“ã¦ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #: providers/oracle/gda-oracle-provider.c:811
 #, fuzzy
 msgid "Could not set the Oracle transaction name"
-msgstr "ct_diag() ¤ò½é´ü²½¤¹¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+msgstr "ct_diag() ã‚’åˆæœŸåŒ–ã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #: providers/oracle/gda-oracle-provider.c:836
 #, fuzzy
 msgid "Could not start the Oracle transaction"
-msgstr "CORBA ¥Õ¥¡¥¯¥È¥ê¤ò³«¤¯¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+msgstr "CORBA ãƒ•ã‚¡ã‚¯ãƒˆãƒªã‚’é–‹ãã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #: providers/oracle/gda-oracle-provider.c:884
 #, fuzzy
 msgid "Could not prepare the transaction to commit"
-msgstr "%s ¤ØÀÜÂ³¤¹¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+msgstr "%s ã¸æ¥ç¶šã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #: providers/oracle/gda-oracle-provider.c:892
 #, fuzzy
 msgid "Could not commit the Oracle transaction"
-msgstr "CORBA ¥Õ¥¡¥¯¥È¥ê¤ò³«¤¯¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+msgstr "CORBA ãƒ•ã‚¡ã‚¯ãƒˆãƒªã‚’é–‹ãã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #: providers/oracle/gda-oracle-provider.c:938
 #, fuzzy
 msgid "Could not rollback the Oracle transaction"
-msgstr "¥í¥±¡¼¥ë¹½Â¤ÂÎ¤ò³ä¤êÅö¤Æ¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+msgstr "ãƒ­ã‚±ãƒ¼ãƒ«æ§‹é€ ä½“ã‚’å‰²ã‚Šå½“ã¦ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #: providers/oracle/gda-oracle-provider.c:1227
 #, fuzzy
 msgid "Could not allocate the Oracle describe handle"
-msgstr "¥¹¥Æ¡¼¥È¥á¥ó¥È¥Ï¥ó¥É¥ë¤ò³ä¤êÅö¤Æ¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+msgstr "ã‚¹ãƒ†ãƒ¼ãƒˆãƒ¡ãƒ³ãƒˆãƒãƒ³ãƒ‰ãƒ«ã‚’å‰²ã‚Šå½“ã¦ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #: providers/oracle/gda-oracle-provider.c:1240
 #, fuzzy
 msgid "Could not describe the Oracle table"
-msgstr "¥µ¡¼¥Ğ¥á¥Ã¥»¡¼¥¸¤ò¾Ãµî¤¹¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+msgstr "ã‚µãƒ¼ãƒãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’æ¶ˆå»ã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #: providers/oracle/gda-oracle-provider.c:1253
 #, fuzzy
 msgid "Could not get the Oracle parameter handle"
-msgstr "cs_diag() ¤ò½é´ü²½¤¹¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+msgstr "cs_diag() ã‚’åˆæœŸåŒ–ã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #: providers/oracle/gda-oracle-provider.c:1266
 #, fuzzy
 msgid "Could not get the number of columns in the table"
-msgstr "¥µ¡¼¥Ğ¥á¥Ã¥»¡¼¥¸¤ò¾Ãµî¤¹¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+msgstr "ã‚µãƒ¼ãƒãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’æ¶ˆå»ã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #: providers/oracle/gda-oracle-provider.c:1278
 #, fuzzy
 msgid "Could not get the column list"
-msgstr "'%s' ¤Ë¥í¥±¡¼¥ë¤òÀßÄê¤¹¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+msgstr "'%s' ã«ãƒ­ã‚±ãƒ¼ãƒ«ã‚’è¨­å®šã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #: providers/oracle/gda-oracle-provider.c:1307
 #, fuzzy
 msgid "Could not get the Oracle column handle"
-msgstr "ct_diag() ¤ò½é´ü²½¤¹¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+msgstr "ct_diag() ã‚’åˆæœŸåŒ–ã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #: providers/oracle/gda-oracle-provider.c:1320
 #, fuzzy
 msgid "Could not get the Oracle field name"
-msgstr "ct_diag() ¤ò½é´ü²½¤¹¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+msgstr "ct_diag() ã‚’åˆæœŸåŒ–ã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #: providers/oracle/gda-oracle-provider.c:1341
 #, fuzzy
 msgid "Could not get the Oracle field data type"
-msgstr "CORBA ¥Õ¥¡¥¯¥È¥ê¤ò³«¤¯¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+msgstr "CORBA ãƒ•ã‚¡ã‚¯ãƒˆãƒªã‚’é–‹ãã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #: providers/oracle/gda-oracle-provider.c:1359
 #, fuzzy
 msgid "Could not get the Oracle field defined size"
-msgstr "'%s' ¤Ë¥í¥±¡¼¥ë¤òÀßÄê¤¹¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+msgstr "'%s' ã«ãƒ­ã‚±ãƒ¼ãƒ«ã‚’è¨­å®šã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #: providers/oracle/gda-oracle-provider.c:1376
 #, fuzzy
 msgid "Could not get the Oracle field scale"
-msgstr "¥¯¥é¥¤¥¢¥ó¥È¥á¥Ã¥»¡¼¥¸¿ô¤ò¼èÆÀ¤¹¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+msgstr "ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆãƒ¡ãƒƒã‚»ãƒ¼ã‚¸æ•°ã‚’å–å¾—ã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #: providers/oracle/gda-oracle-provider.c:1393
 msgid "Could not get the Oracle field nullable attribute"
@@ -792,22 +792,22 @@ msgstr ""
 #: providers/oracle/gda-oracle-recordset.c:73
 #, fuzzy
 msgid "Could not get the Oracle parameter"
-msgstr "ct_diag() ¤ò½é´ü²½¤¹¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+msgstr "ct_diag() ã‚’åˆæœŸåŒ–ã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #: providers/oracle/gda-oracle-recordset.c:83
 #, fuzzy
 msgid "Could not get the parameter defined size"
-msgstr "'%s' ¤Ë¥í¥±¡¼¥ë¤òÀßÄê¤¹¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+msgstr "'%s' ã«ãƒ­ã‚±ãƒ¼ãƒ«ã‚’è¨­å®šã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #: providers/oracle/gda-oracle-recordset.c:96
 #, fuzzy
 msgid "Could not get the parameter data type"
-msgstr "¥Õ¥£¡¼¥ë¥É¤ò³ä¤êÅö¤Æ¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+msgstr "ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã‚’å‰²ã‚Šå½“ã¦ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #: providers/oracle/gda-oracle-recordset.c:127
 #, fuzzy
 msgid "Could not define by position"
-msgstr "'%s' ¤Ë¥í¥±¡¼¥ë¤òÀßÄê¤¹¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+msgstr "'%s' ã«ãƒ­ã‚±ãƒ¼ãƒ«ã‚’è¨­å®šã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #: providers/oracle/gda-oracle-recordset.c:172
 #: providers/postgres/gda-postgres-recordset.c:263
@@ -817,42 +817,42 @@ msgstr ""
 #: providers/oracle/gda-oracle-recordset.c:184
 #, fuzzy
 msgid "Could not get the Oracle parameter information"
-msgstr "%s ¤ØÀÜÂ³¤¹¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+msgstr "%s ã¸æ¥ç¶šã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #: providers/oracle/gda-oracle-recordset.c:194
 #, fuzzy
 msgid "Could not get the Oracle column name"
-msgstr "¥µ¡¼¥Ğ¥á¥Ã¥»¡¼¥¸¤ò¾Ãµî¤¹¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+msgstr "ã‚µãƒ¼ãƒãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’æ¶ˆå»ã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #: providers/oracle/gda-oracle-recordset.c:209
 #, fuzzy
 msgid "Could not get the Oracle column data type"
-msgstr "CORBA ¥Õ¥¡¥¯¥È¥ê¤ò³«¤¯¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+msgstr "CORBA ãƒ•ã‚¡ã‚¯ãƒˆãƒªã‚’é–‹ãã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #: providers/oracle/gda-oracle-recordset.c:221
 #, fuzzy
 msgid "Could not get the Oracle column scale"
-msgstr "¥µ¡¼¥Ğ¥á¥Ã¥»¡¼¥¸¤ò¾Ãµî¤¹¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+msgstr "ã‚µãƒ¼ãƒãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’æ¶ˆå»ã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #: providers/oracle/gda-oracle-recordset.c:233
 #, fuzzy
 msgid "Could not get the Oracle column nullable attribute"
-msgstr "CORBA ¥Õ¥¡¥¯¥È¥ê¤ò³«¤¯¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+msgstr "CORBA ãƒ•ã‚¡ã‚¯ãƒˆãƒªã‚’é–‹ãã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #: providers/oracle/gda-oracle-recordset.c:245
 #, fuzzy
 msgid "Could not get the Oracle defined size"
-msgstr "'%s' ¤Ë¥í¥±¡¼¥ë¤òÀßÄê¤¹¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+msgstr "'%s' ã«ãƒ­ã‚±ãƒ¼ãƒ«ã‚’è¨­å®šã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #: providers/oracle/gda-oracle-recordset.c:353
 #, fuzzy
 msgid "Could not fetch a row"
-msgstr "'%s' ¤Ë¥í¥±¡¼¥ë¤òÀßÄê¤¹¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+msgstr "'%s' ã«ãƒ­ã‚±ãƒ¼ãƒ«ã‚’è¨­å®šã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #: providers/oracle/libmain.c:34
 #, fuzzy
 msgid "GDA provider for Oracle databases"
-msgstr "MDB (MS Access)¥Õ¥¡¥¤¥ëÍÑ¤ÎGDA¥Ç¡¼¥¿¥½¡¼¥¹¥¢¥¯¥»¥¹"
+msgstr "MDB (MS Access)ãƒ•ã‚¡ã‚¤ãƒ«ç”¨ã®GDAãƒ‡ãƒ¼ã‚¿ã‚½ãƒ¼ã‚¹ã‚¢ã‚¯ã‚»ã‚¹"
 
 #: providers/postgres/gda-postgres-provider.c:413
 #: providers/postgres/gda-postgres-provider.c:430
@@ -898,7 +898,7 @@ msgstr ""
 #: providers/postgres/gda-postgres-provider.c:1510
 #, fuzzy
 msgid "Table"
-msgstr "¥Õ¥¡¥¤¥ëÌ¾"
+msgstr "ãƒ•ã‚¡ã‚¤ãƒ«å"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/postgres/gda-postgres-provider.c:966
@@ -922,7 +922,7 @@ msgstr ""
 #: providers/postgres/gda-postgres-provider.c:1419 testing/client.c:121
 #, fuzzy
 msgid "Databases"
-msgstr "¥Ç¡¼¥¿¥Ù¡¼¥¹Ì¾"
+msgstr "ãƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹å"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/postgres/gda-postgres-provider.c:1470
@@ -945,24 +945,32 @@ msgstr ""
 msgid "GDA provider for PostgreSQL databases"
 msgstr ""
 
-#: providers/sqlite/gda-sqlite-provider.c:246
-msgid "Invalid SQLITE handle"
-msgstr ""
-
-#: providers/sqlite/gda-sqlite-provider.c:314
-#: providers/sqlite/gda-sqlite-provider.c:449
+#: providers/sqlite/gda-sqlite-provider.c:243
+#: providers/sqlite/gda-sqlite-provider.c:266
+#: providers/sqlite/gda-sqlite-provider.c:289
+#: providers/sqlite/gda-sqlite-provider.c:311
 #: providers/sqlite/gda-sqlite-recordset.c:159
 #: providers/sqlite/gda-sqlite-recordset.c:198
 #: providers/sqlite/gda-sqlite-recordset.c:239
 msgid "Invalid SQLite handle"
 msgstr ""
 
-#: providers/sqlite/gda-sqlite-provider.c:332
+#: providers/sqlite/gda-sqlite-provider.c:270
+msgid ""
+"To change a SQLite database you should close the actual database and open a "
+"new one"
+msgstr ""
+
+#: providers/sqlite/gda-sqlite-provider.c:293
 msgid "Only one database per connection is allowed"
 msgstr ""
 
-#: providers/sqlite/gda-sqlite-provider.c:346
+#: providers/sqlite/gda-sqlite-provider.c:315
 msgid "To remove a SQLite database you should remove the database file by hand"
+msgstr ""
+
+#: providers/sqlite/gda-sqlite-provider.c:329
+msgid "Invalid SQLITE handle"
 msgstr ""
 
 #: providers/sqlite/libmain.c:41
@@ -972,17 +980,22 @@ msgstr ""
 #: providers/sybase/main.c:52
 #, fuzzy
 msgid "Could not initiate Sybase component factory"
-msgstr "CORBA ¥Õ¥¡¥¯¥È¥ê¤ò³«¤¯¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+msgstr "CORBA ãƒ•ã‚¡ã‚¯ãƒˆãƒªã‚’é–‹ãã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
-#: report/libgda-report/gda-report-document.c:166
-#, fuzzy
-msgid "Could not parse XML document"
-msgstr "'%s' ¤Ë¥í¥±¡¼¥ë¤òÀßÄê¤¹¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
-
-#: report/libgda-report/gda-report-document.c:191
+#: report/libgda-report/gda-report-document.c:158
 #, fuzzy, c-format
-msgid "Could not get file from %s"
-msgstr "'%s' ¤Ë¥í¥±¡¼¥ë¤òÀßÄê¤¹¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+msgid "Could not load report file at %s"
+msgstr "'%s' ã«ãƒ­ã‚±ãƒ¼ãƒ«ã‚’è¨­å®šã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
+
+#: report/libgda-report/gda-report-document.c:167
+#, fuzzy, c-format
+msgid "Could not parse report file at %s"
+msgstr "'%s' ã«ãƒ­ã‚±ãƒ¼ãƒ«ã‚’è¨­å®šã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
+
+#: report/libgda-report/gda-report-document.c:177
+#, fuzzy, c-format
+msgid "Invalid report file '%s'"
+msgstr "ãƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹ '%s' ã‚’é¸æŠã—ã¾ã—ãŸ"
 
 #: testing/client.c:41
 msgid "\t\tNONE\n"
@@ -1078,7 +1091,7 @@ msgstr ""
 #: testing/client.c:123
 #, fuzzy
 msgid "Connection Tables"
-msgstr "ÀÜÂ³¤ÏÀÚ¤ì¤¿¤è¤¦¤Ç¤¹"
+msgstr "æ¥ç¶šã¯åˆ‡ã‚ŒãŸã‚ˆã†ã§ã™"
 
 #: testing/client.c:124
 msgid "Available types"
@@ -1096,7 +1109,7 @@ msgstr ""
 #: testing/client.c:149
 #, fuzzy
 msgid "Error"
-msgstr "¥¨¥é¡¼"
+msgstr "ã‚¨ãƒ©ãƒ¼"
 
 #: testing/client.c:139
 msgid "\tFinishing transaction..."
@@ -1117,7 +1130,7 @@ msgstr ""
 #: testing/client.c:186
 #, fuzzy, c-format
 msgid " Data source = %s, User = %s\n"
-msgstr "¥Ç¡¼¥¿¥½¡¼¥¹ %s ¤Ï¸«¤Ä¤«¤ê¤Ş¤»¤ó¤Ç¤·¤¿"
+msgstr "ãƒ‡ãƒ¼ã‚¿ã‚½ãƒ¼ã‚¹ %s ã¯è¦‹ã¤ã‹ã‚Šã¾ã›ã‚“ã§ã—ãŸ"
 
 #: testing/config.c:85
 msgid "** ERROR: gda_config_get_provider_list returned a NULL item\n"
@@ -1143,107 +1156,115 @@ msgid "\tgda_params ="
 msgstr ""
 
 #, fuzzy
+#~ msgid "Could not parse XML document"
+#~ msgstr "'%s' ã«ãƒ­ã‚±ãƒ¼ãƒ«ã‚’è¨­å®šã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
+
+#, fuzzy
+#~ msgid "Could not get file from %s"
+#~ msgstr "'%s' ã«ãƒ­ã‚±ãƒ¼ãƒ«ã‚’è¨­å®šã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
+
+#, fuzzy
 #~ msgid "An error occurred during fetch"
-#~ msgstr "¥³¥Ş¥ó¥É¼Â¹ÔÃæ¤Ë¥¨¥é¡¼¤¬È¯À¸¤·¤Ş¤·¤¿"
+#~ msgstr "ã‚³ãƒãƒ³ãƒ‰å®Ÿè¡Œä¸­ã«ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ã¾ã—ãŸ"
 
 #, fuzzy
 #~ msgid "Could not initialize OCI library"
-#~ msgstr "ct_diag() ¤ò½é´ü²½¤¹¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+#~ msgstr "ct_diag() ã‚’åˆæœŸåŒ–ã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #, fuzzy
 #~ msgid "CORBA exception: %s"
-#~ msgstr "CORBA ¥æ¡¼¥¶Îã³°: %s"
+#~ msgstr "CORBA ãƒ¦ãƒ¼ã‚¶ä¾‹å¤–: %s"
 
 #, fuzzy
 #~ msgid "Could not create global GDA client"
-#~ msgstr "%s ¤ØÀÜÂ³¤¹¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+#~ msgstr "%s ã¸æ¥ç¶šã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #, fuzzy
 #~ msgid "GDA Report engine"
-#~ msgstr "GDAÊ¬ÇÛ¥ì¥İ¡¼¥È¥¨¥ó¥¸¥ó"
+#~ msgstr "GDAåˆ†é…ãƒ¬ãƒãƒ¼ãƒˆã‚¨ãƒ³ã‚¸ãƒ³"
 
 #, fuzzy
 #~ msgid "Could not parse XML report"
-#~ msgstr "'%s' ¤Ë¥í¥±¡¼¥ë¤òÀßÄê¤¹¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+#~ msgstr "'%s' ã«ãƒ­ã‚±ãƒ¼ãƒ«ã‚’è¨­å®šã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #, fuzzy
 #~ msgid "Could not activate report engine"
-#~ msgstr "¥ì¥İ¡¼¥È¥¨¥ó¥¸¥ó¤ò»ÏÆ°¤µ¤»¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+#~ msgstr "ãƒ¬ãƒãƒ¼ãƒˆã‚¨ãƒ³ã‚¸ãƒ³ã‚’å§‹å‹•ã•ã›ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #, fuzzy
 #~ msgid "Could not create BonoboStreamMem object"
-#~ msgstr "%s ¤ØÀÜÂ³¤¹¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+#~ msgstr "%s ã¸æ¥ç¶šã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #, fuzzy
 #~ msgid "Could not initiate Report component factory"
-#~ msgstr "¥á¡¼¥ë¥×¥í¥Ğ¥¤¥À¤Î¼ÂÁõ¤òÅĞÏ¿¤¹¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+#~ msgstr "ãƒ¡ãƒ¼ãƒ«ãƒ—ãƒ­ãƒã‚¤ãƒ€ã®å®Ÿè£…ã‚’ç™»éŒ²ã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #, fuzzy
 #~ msgid "Could not activate object %s"
-#~ msgstr "¥ì¥İ¡¼¥È¥¨¥ó¥¸¥ó¤ò»ÏÆ°¤µ¤»¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+#~ msgstr "ãƒ¬ãƒãƒ¼ãƒˆã‚¨ãƒ³ã‚¸ãƒ³ã‚’å§‹å‹•ã•ã›ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #, fuzzy
 #~ msgid "Could not query CORBA components"
-#~ msgstr "CORBA ¥Õ¥¡¥¯¥È¥ê¤ò³«¤¯¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+#~ msgstr "CORBA ãƒ•ã‚¡ã‚¯ãƒˆãƒªã‚’é–‹ãã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #~ msgid "%s: An Error occured in the CORBA system."
-#~ msgstr "%s: CORBA ¥·¥¹¥Æ¥à¤Ç¥¨¥é¡¼¤¬È¯À¸¤·¤Ş¤·¤¿"
+#~ msgstr "%s: CORBA ã‚·ã‚¹ãƒ†ãƒ ã§ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ã¾ã—ãŸ"
 
 #, fuzzy
 #~ msgid "Could not initialize Bonobo"
-#~ msgstr "ct_diag() ¤ò½é´ü²½¤¹¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+#~ msgstr "ct_diag() ã‚’åˆæœŸåŒ–ã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #, fuzzy
 #~ msgid "Could not notify client about action %d"
-#~ msgstr "¥¯¥é¥¤¥¢¥ó¥È¥á¥Ã¥»¡¼¥¸ÈÖ¹æ %d ¤ò¼èÆÀ¤¹¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+#~ msgstr "ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ç•ªå· %d ã‚’å–å¾—ã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #, fuzzy
 #~ msgid "Default component factory"
-#~ msgstr "%s ¤ØÀÜÂ³¤¹¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+#~ msgstr "%s ã¸æ¥ç¶šã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #, fuzzy
 #~ msgid "GDA Default Datasource Access"
-#~ msgstr "ODBCÍÑ¤ÎGDA¥Ç¡¼¥¿¥½¡¼¥¹¥¢¥¯¥»¥¹"
+#~ msgstr "ODBCç”¨ã®GDAãƒ‡ãƒ¼ã‚¿ã‚½ãƒ¼ã‚¹ã‚¢ã‚¯ã‚»ã‚¹"
 
 #, fuzzy
 #~ msgid "Could not initiate Default component factory"
-#~ msgstr "¥á¡¼¥ë¥×¥í¥Ğ¥¤¥À¤Î¼ÂÁõ¤òÅĞÏ¿¤¹¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+#~ msgstr "ãƒ¡ãƒ¼ãƒ«ãƒ—ãƒ­ãƒã‚¤ãƒ€ã®å®Ÿè£…ã‚’ç™»éŒ²ã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #~ msgid "GDA Datasource Access for MySQL"
-#~ msgstr "MySQLÍÑ¤ÎGDA¥Ç¡¼¥¿¥½¡¼¥¹¥¢¥¯¥»¥¹"
+#~ msgstr "MySQLç”¨ã®GDAãƒ‡ãƒ¼ã‚¿ã‚½ãƒ¼ã‚¹ã‚¢ã‚¯ã‚»ã‚¹"
 
 #, fuzzy
 #~ msgid "Could not initiate MySQL component factory"
-#~ msgstr "MySQL ¥×¥í¥Ğ¥¤¥À¤Î¼ÂÁõ¤òÅĞÏ¿¤¹¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+#~ msgstr "MySQL ãƒ—ãƒ­ãƒã‚¤ãƒ€ã®å®Ÿè£…ã‚’ç™»éŒ²ã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #~ msgid "GDA Datasource Access for ODBC"
-#~ msgstr "ODBCÍÑ¤ÎGDA¥Ç¡¼¥¿¥½¡¼¥¹¥¢¥¯¥»¥¹"
+#~ msgstr "ODBCç”¨ã®GDAãƒ‡ãƒ¼ã‚¿ã‚½ãƒ¼ã‚¹ã‚¢ã‚¯ã‚»ã‚¹"
 
 #, fuzzy
 #~ msgid "ODBC component factory"
-#~ msgstr "%s ¤ØÀÜÂ³¤¹¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+#~ msgstr "%s ã¸æ¥ç¶šã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #, fuzzy
 #~ msgid "Could not initiate ODBC component factory"
-#~ msgstr "CORBA ¥Õ¥¡¥¯¥È¥ê¤ò³«¤¯¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+#~ msgstr "CORBA ãƒ•ã‚¡ã‚¯ãƒˆãƒªã‚’é–‹ãã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #~ msgid "GDA Datasource Access for Oracle"
-#~ msgstr "OracleÍÑ¤ÎGDA¥Ç¡¼¥¿¥½¡¼¥¹¥¢¥¯¥»¥¹"
+#~ msgstr "Oracleç”¨ã®GDAãƒ‡ãƒ¼ã‚¿ã‚½ãƒ¼ã‚¹ã‚¢ã‚¯ã‚»ã‚¹"
 
 #, fuzzy
 #~ msgid "Oracle component factory"
-#~ msgstr "%s ¤ØÀÜÂ³¤¹¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+#~ msgstr "%s ã¸æ¥ç¶šã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #~ msgid "GDA Datasource Access for Postgres"
-#~ msgstr "PostgresÍÑ¤ÎGDA¥Ç¡¼¥¿¥½¡¼¥¹¥¢¥¯¥»¥¹"
+#~ msgstr "Postgresç”¨ã®GDAãƒ‡ãƒ¼ã‚¿ã‚½ãƒ¼ã‚¹ã‚¢ã‚¯ã‚»ã‚¹"
 
 #, fuzzy
 #~ msgid "Postgres component factory"
-#~ msgstr "%s ¤ØÀÜÂ³¤¹¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+#~ msgstr "%s ã¸æ¥ç¶šã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #, fuzzy
 #~ msgid "Could not initiate PostgreSQL component factory"
-#~ msgstr "MySQL ¥×¥í¥Ğ¥¤¥À¤Î¼ÂÁõ¤òÅĞÏ¿¤¹¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+#~ msgstr "MySQL ãƒ—ãƒ­ãƒã‚¤ãƒ€ã®å®Ÿè£…ã‚’ç™»éŒ²ã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #, fuzzy
 #~ msgid "NULL"
@@ -1251,526 +1272,526 @@ msgstr ""
 
 #, fuzzy
 #~ msgid "Unknown type"
-#~ msgstr "Ì¤ÃÎ¤Î ORACLE ¥¿¥¤¥× %ld ¤Ç¤¹"
+#~ msgstr "æœªçŸ¥ã® ORACLE ã‚¿ã‚¤ãƒ— %ld ã§ã™"
 
 #, fuzzy
 #~ msgid "SQLite component factory"
-#~ msgstr "%s ¤ØÀÜÂ³¤¹¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+#~ msgstr "%s ã¸æ¥ç¶šã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #, fuzzy
 #~ msgid "Could not initiate Sqlite component factory"
-#~ msgstr "CORBA ¥Õ¥¡¥¯¥È¥ê¤ò³«¤¯¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+#~ msgstr "CORBA ãƒ•ã‚¡ã‚¯ãƒˆãƒªã‚’é–‹ãã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #~ msgid "GDA Datasource Access for Sybase"
-#~ msgstr "SybaseÍÑ¤ÎGDA¥Ç¡¼¥¿¥½¡¼¥¹¥¢¥¯¥»¥¹"
+#~ msgstr "Sybaseç”¨ã®GDAãƒ‡ãƒ¼ã‚¿ã‚½ãƒ¼ã‚¹ã‚¢ã‚¯ã‚»ã‚¹"
 
 #, fuzzy
 #~ msgid "\tusername = %s\n"
-#~ msgstr "¥æ¡¼¥¶Ì¾"
+#~ msgstr "ãƒ¦ãƒ¼ã‚¶å"
 
 #, fuzzy
 #~ msgid "Client Message: "
-#~ msgstr "¥¯¥é¥¤¥¢¥ó¥È¥á¥Ã¥»¡¼¥¸:"
+#~ msgstr "ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆãƒ¡ãƒƒã‚»ãƒ¼ã‚¸:"
 
 #, fuzzy
 #~ msgid "Informational Client  Message: "
-#~ msgstr "¥¯¥é¥¤¥¢¥ó¥È¥á¥Ã¥»¡¼¥¸:"
+#~ msgstr "ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆãƒ¡ãƒƒã‚»ãƒ¼ã‚¸:"
 
 #, fuzzy
 #~ msgid "Server Message: "
-#~ msgstr "¥µ¡¼¥Ğ¥á¥Ã¥»¡¼¥¸:"
+#~ msgstr "ã‚µãƒ¼ãƒãƒ¡ãƒƒã‚»ãƒ¼ã‚¸:"
 
 #, fuzzy
 #~ msgid "Informational Server  Message: "
-#~ msgstr "¥µ¡¼¥Ğ¥á¥Ã¥»¡¼¥¸:"
+#~ msgstr "ã‚µãƒ¼ãƒãƒ¡ãƒƒã‚»ãƒ¼ã‚¸:"
 
 #~ msgid "CORBA System exception: %s"
-#~ msgstr "CORBA ¥·¥¹¥Æ¥àÎã³°: %s"
+#~ msgstr "CORBA ã‚·ã‚¹ãƒ†ãƒ ä¾‹å¤–: %s"
 
 #~ msgid "True"
 #~ msgstr "True"
 
 #, fuzzy
 #~ msgid "[CORBA User Exception]"
-#~ msgstr "CORBA ¥æ¡¼¥¶Îã³°: %s"
+#~ msgstr "CORBA ãƒ¦ãƒ¼ã‚¶ä¾‹å¤–: %s"
 
 #~ msgid "<Unknown GDA Type(NULL)>"
-#~ msgstr "<Ì¤ÃÎ¤Î GDA ¥¿¥¤¥×(NULL)>"
+#~ msgstr "<æœªçŸ¥ã® GDA ã‚¿ã‚¤ãƒ—(NULL)>"
 
 #~ msgid "Saving log...x"
-#~ msgstr "¥í¥°¤òÊİÂ¸Ãæ...x"
+#~ msgstr "ãƒ­ã‚°ã‚’ä¿å­˜ä¸­...x"
 
 #~ msgid "Could not get pointer to server implementation"
-#~ msgstr "¥µ¡¼¥Ğ¤Î¼ÂÁõ¤Ø¤Î¥İ¥¤¥ó¥¿¤ò¼èÆÀ¤¹¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+#~ msgstr "ã‚µãƒ¼ãƒã®å®Ÿè£…ã¸ã®ãƒã‚¤ãƒ³ã‚¿ã‚’å–å¾—ã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #~ msgid "Received signal %d, shutting down"
-#~ msgstr "¥·¥°¥Ê¥ë %d ¤ò¼õ¿®¤·¤Ş¤·¤¿, ½ªÎ»¤·¤Ş¤¹"
+#~ msgstr "ã‚·ã‚°ãƒŠãƒ« %d ã‚’å—ä¿¡ã—ã¾ã—ãŸ, çµ‚äº†ã—ã¾ã™"
 
 #~ msgid "Received signal %d. Ignoring"
-#~ msgstr "¥·¥°¥Ê¥ë %d ¤ò¼õ¿®¤·¤Ş¤·¤¿, Ìµ»ë¤·¤Ş¤¹"
+#~ msgstr "ã‚·ã‚°ãƒŠãƒ« %d ã‚’å—ä¿¡ã—ã¾ã—ãŸ, ç„¡è¦–ã—ã¾ã™"
 
 #~ msgid "Attempt to initialize an already initialized provider"
-#~ msgstr "½é´ü²½¤ò»î¤ß¤Ş¤·¤¿¤¬¤¹¤Ç¤Ë¥×¥í¥Ğ¥¤¥À¤Ï½é´ü²½¤µ¤ì¤Æ¤¤¤Ş¤¹"
+#~ msgstr "åˆæœŸåŒ–ã‚’è©¦ã¿ã¾ã—ãŸãŒã™ã§ã«ãƒ—ãƒ­ãƒã‚¤ãƒ€ã¯åˆæœŸåŒ–ã•ã‚Œã¦ã„ã¾ã™"
 
 #~ msgid "CORBA system exception %s"
-#~ msgstr "CORBA ¥·¥¹¥Æ¥àÎã³° %s"
+#~ msgstr "CORBA ã‚·ã‚¹ãƒ†ãƒ ä¾‹å¤– %s"
 
 #~ msgid "GDA Datasource Access for LDAP"
-#~ msgstr "LDAPÍÑ¤ÎGDA¥Ç¡¼¥¿¥½¡¼¥¹¥¢¥¯¥»¥¹"
+#~ msgstr "LDAPç”¨ã®GDAãƒ‡ãƒ¼ã‚¿ã‚½ãƒ¼ã‚¹ã‚¢ã‚¯ã‚»ã‚¹"
 
 #~ msgid "error '%s' at %s"
-#~ msgstr "¥¨¥é¡¼ '%s' ¤¬ %s ¤ÇÈ¯À¸¤·¤Ş¤·¤¿"
+#~ msgstr "ã‚¨ãƒ©ãƒ¼ '%s' ãŒ %s ã§ç™ºç”Ÿã—ã¾ã—ãŸ"
 
 #~ msgid "Could not register LDAP provider implementation"
-#~ msgstr "LDAP ¥×¥í¥Ğ¥¤¥À¤Î¼ÂÁõ¤òÅĞÏ¿¤¹¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+#~ msgstr "LDAP ãƒ—ãƒ­ãƒã‚¤ãƒ€ã®å®Ÿè£…ã‚’ç™»éŒ²ã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #~ msgid "GDA Datasource Access for Interbase"
-#~ msgstr "InterbaseÍÑ¤ÎGDA¥Ç¡¼¥¿¥½¡¼¥¹¥¢¥¯¥»¥¹"
+#~ msgstr "Interbaseç”¨ã®GDAãƒ‡ãƒ¼ã‚¿ã‚½ãƒ¼ã‚¹ã‚¢ã‚¯ã‚»ã‚¹"
 
 #~ msgid "Error code %ld"
-#~ msgstr "¥¨¥é¡¼¥³¡¼¥É %ld"
+#~ msgstr "ã‚¨ãƒ©ãƒ¼ã‚³ãƒ¼ãƒ‰ %ld"
 
 #~ msgid "Could not register INTERBASE provider implementation"
-#~ msgstr "INTERBASE ¥×¥í¥Ğ¥¤¥À¤Î¼ÂÁõ¤òÅĞÏ¿¤¹¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+#~ msgstr "INTERBASE ãƒ—ãƒ­ãƒã‚¤ãƒ€ã®å®Ÿè£…ã‚’ç™»éŒ²ã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #~ msgid "GDA Datasource Access for Mail"
-#~ msgstr "MailÍÑ¤ÎGDA¥Ç¡¼¥¿¥½¡¼¥¹¥¢¥¯¥»¥¹"
+#~ msgstr "Mailç”¨ã®GDAãƒ‡ãƒ¼ã‚¿ã‚½ãƒ¼ã‚¹ã‚¢ã‚¯ã‚»ã‚¹"
 
 #~ msgid "Unhandled SCHEMA_QTYPE %d"
-#~ msgstr "SCHEMA_QTYPE %d ¤Ï°·¤¨¤Ş¤»¤ó"
+#~ msgstr "SCHEMA_QTYPE %d ã¯æ‰±ãˆã¾ã›ã‚“"
 
 #~ msgid "Could not register Mail provider implementation"
-#~ msgstr "¥á¡¼¥ë¥×¥í¥Ğ¥¤¥À¤Î¼ÂÁõ¤òÅĞÏ¿¤¹¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+#~ msgstr "ãƒ¡ãƒ¼ãƒ«ãƒ—ãƒ­ãƒã‚¤ãƒ€ã®å®Ÿè£…ã‚’ç™»éŒ²ã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #~ msgid "executing command '%s'"
-#~ msgstr "¥³¥Ş¥ó¥É '%s' ¤ò¼Â¹Ô¤·¤Æ¤¤¤Ş¤¹"
+#~ msgstr "ã‚³ãƒãƒ³ãƒ‰ '%s' ã‚’å®Ÿè¡Œã—ã¦ã„ã¾ã™"
 
 #~ msgid "info '%s'"
-#~ msgstr "¾ğÊó '%s'"
+#~ msgstr "æƒ…å ± '%s'"
 
 #~ msgid ""
 #~ "%s:%d: You cannot provide a UNIX_SOCKET if you also provide either a HOST "
 #~ "or a PORT. Please remove the UNIX_SOCKET, or remove both the HOST and "
 #~ "PORT options"
 #~ msgstr ""
-#~ "%s:%d: UNIX_SOCKET ¤òÄó¶¡¤¹¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó. HOST ¤Ş¤¿¤Ï PORT ¤Î¤É¤Á¤é¤«"
-#~ "¤òÄó¶¡¤¹¤ë¤Ê¤é, UNIX_SOCKET ¤òºï½ü¤¹¤ë¤«, HOST ¤È PORT ¤ÎÎ¾Êı¤Î¥ª¥×¥·¥ç¥ó"
-#~ "¤òºï½ü¤·¤Æ¤¯¤À¤µ¤¤"
+#~ "%s:%d: UNIX_SOCKET ã‚’æä¾›ã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“. HOST ã¾ãŸã¯ PORT ã®ã©ã¡ã‚‰ã‹"
+#~ "ã‚’æä¾›ã™ã‚‹ãªã‚‰, UNIX_SOCKET ã‚’å‰Šé™¤ã™ã‚‹ã‹, HOST ã¨ PORT ã®ä¸¡æ–¹ã®ã‚ªãƒ—ã‚·ãƒ§ãƒ³"
+#~ "ã‚’å‰Šé™¤ã—ã¦ãã ã•ã„"
 
 #~ msgid "%s:%d: You must  provide the filename with the MS Access database"
-#~ msgstr "%s:%d: MS Access ¥Ç¡¼¥¿¥Ù¡¼¥¹¤Î¥Õ¥¡¥¤¥ëÌ¾¤òÄó¶¡¤·¤Ê¤±¤ì¤Ğ¤Ê¤ê¤Ş¤»¤ó"
+#~ msgstr "%s:%d: MS Access ãƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹ã®ãƒ•ã‚¡ã‚¤ãƒ«åã‚’æä¾›ã—ãªã‘ã‚Œã°ãªã‚Šã¾ã›ã‚“"
 
 #~ msgid "Opening connection with filename=%s, user=%s, password=%s"
-#~ msgstr "¥Õ¥¡¥¤¥ëÌ¾=%s, ¥æ¡¼¥¶=%s, ¥Ñ¥¹¥ï¡¼¥É=%s ¤ÇÀÜÂ³¤ò³«¤¤¤Æ¤¤¤Ş¤¹"
+#~ msgstr "ãƒ•ã‚¡ã‚¤ãƒ«å=%s, ãƒ¦ãƒ¼ã‚¶=%s, ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰=%s ã§æ¥ç¶šã‚’é–‹ã„ã¦ã„ã¾ã™"
 
 #~ msgid "mysql_recset is NULL"
-#~ msgstr "mysql_recset ¤Ï NULL ¤Ç¤¹"
+#~ msgstr "mysql_recset ã¯ NULL ã§ã™"
 
 #~ msgid "No table name given for SCHEMA_COLS"
-#~ msgstr "SCHEMA_COLS ¤Î¤¿¤á¤Î¥Æ¡¼¥Ö¥ëÌ¾¤¬Í¿¤¨¤é¤ì¤Æ¤¤¤Ş¤»¤ó"
+#~ msgstr "SCHEMA_COLS ã®ãŸã‚ã®ãƒ†ãƒ¼ãƒ–ãƒ«åãŒä¸ãˆã‚‰ã‚Œã¦ã„ã¾ã›ã‚“"
 
 #~ msgid ""
 #~ "Opening connection with user=%s, password=%s, host=%s, port=%s, "
 #~ "unix_socket=%s"
 #~ msgstr ""
-#~ "¥æ¡¼¥¶=%s, ¥Ñ¥¹¥ï¡¼¥É=%s, ¥Û¥¹¥È=%s, ¥İ¡¼¥È=%s, unix ¥½¥±¥Ã¥È=%s ¤ÇÀÜÂ³¤ò"
-#~ "³«¤¤¤Æ¤¤¤Ş¤¹"
+#~ "ãƒ¦ãƒ¼ã‚¶=%s, ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰=%s, ãƒ›ã‚¹ãƒˆ=%s, ãƒãƒ¼ãƒˆ=%s, unix ã‚½ã‚±ãƒƒãƒˆ=%s ã§æ¥ç¶šã‚’"
+#~ "é–‹ã„ã¦ã„ã¾ã™"
 
 #~ msgid "gda_odbc_connection_open_schema: Unhandled SCHEMA_QTYPE %d\n"
-#~ msgstr "gda_odbc_connection_open_schema: SCHEMA_QTYPE %d ¤Ï°·¤¨¤Ş¤»¤ó\n"
+#~ msgstr "gda_odbc_connection_open_schema: SCHEMA_QTYPE %d ã¯æ‰±ãˆã¾ã›ã‚“\n"
 
 #~ msgid "no text"
-#~ msgstr "¥Æ¥­¥¹¥È¤¬¤¢¤ê¤Ş¤»¤ó"
+#~ msgstr "ãƒ†ã‚­ã‚¹ãƒˆãŒã‚ã‚Šã¾ã›ã‚“"
 
 #~ msgid "Could not register ODBC provider implementation"
-#~ msgstr "ODBC ¥×¥í¥Ğ¥¤¥À¤Î¼ÂÁõ¤òÅĞÏ¿¤¹¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+#~ msgstr "ODBC ãƒ—ãƒ­ãƒã‚¤ãƒ€ã®å®Ÿè£…ã‚’ç™»éŒ²ã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #~ msgid "command object being created without associated connection"
-#~ msgstr "¥³¥Ş¥ó¥É¥ª¥Ö¥¸¥§¥¯¥È¤ÏÀÜÂ³¤Ê¤·¤ÇºîÀ®¤·¤Ş¤·¤¿"
+#~ msgstr "ã‚³ãƒãƒ³ãƒ‰ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã¯æ¥ç¶šãªã—ã§ä½œæˆã—ã¾ã—ãŸ"
 
 #~ msgid "Executing command '%s'"
-#~ msgstr "¥³¥Ş¥ó¥É '%s' ¤ò¼Â¹Ô¤·¤Æ¤¤¤Ş¤¹"
+#~ msgstr "ã‚³ãƒãƒ³ãƒ‰ '%s' ã‚’å®Ÿè¡Œã—ã¦ã„ã¾ã™"
 
 #~ msgid "error in OCIHandleAlloc() HTYPE_SVCCTX"
-#~ msgstr "OCIHandleAlloc() HTYPE_SVCCTX ¤Ç¥¨¥é¡¼¤¬È¯À¸¤·¤Ş¤·¤¿"
+#~ msgstr "OCIHandleAlloc() HTYPE_SVCCTX ã§ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ã¾ã—ãŸ"
 
 #~ msgid "error in OCIHandleAlloc() HTYPE_SERVER"
-#~ msgstr "OCIHandleAlloc() HTYPE_SERVER ¤Ç¥¨¥é¡¼¤¬È¯À¸¤·¤Ş¤·¤¿"
+#~ msgstr "OCIHandleAlloc() HTYPE_SERVER ã§ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ã¾ã—ãŸ"
 
 #~ msgid "error in OCIHandleAlloc() HTYPE_ERROR"
-#~ msgstr "OCIHandleAlloc() HTYPE_ERROR ¤Ç¥¨¥é¡¼¤¬È¯À¸¤·¤Ş¤·¤¿"
+#~ msgstr "OCIHandleAlloc() HTYPE_ERROR ã§ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ã¾ã—ãŸ"
 
 #~ msgid "Unknown ORACLE type %ld"
-#~ msgstr "Ì¤ÃÎ¤Î ORACLE ¥¿¥¤¥× %ld ¤Ç¤¹"
+#~ msgstr "æœªçŸ¥ã® ORACLE ã‚¿ã‚¤ãƒ— %ld ã§ã™"
 
 #~ msgid "Unknown ORACLE data type in fill_field_values"
-#~ msgstr "fill_field_values ¤ËÌ¤ÃÎ¤Î ORACLE ¥Ç¡¼¥¿¥¿¥¤¥×¤¬¤¢¤ê¤Ş¤¹"
+#~ msgstr "fill_field_values ã«æœªçŸ¥ã® ORACLE ãƒ‡ãƒ¼ã‚¿ã‚¿ã‚¤ãƒ—ãŒã‚ã‚Šã¾ã™"
 
 #~ msgid "recordset object being created without associated connection"
-#~ msgstr "¥ì¥³¡¼¥É¥»¥Ã¥È¥ª¥Ö¥¸¥§¥¯¥È¤ÏÀÜÂ³¤Ê¤·¤ÇºîÀ®¤·¤Ş¤·¤¿"
+#~ msgstr "ãƒ¬ã‚³ãƒ¼ãƒ‰ã‚»ãƒƒãƒˆã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã¯æ¥ç¶šãªã—ã§ä½œæˆã—ã¾ã—ãŸ"
 
 #~ msgid "Could not register ORACLE provider implementation"
-#~ msgstr "ORACLE ¥×¥í¥Ğ¥¤¥À¤Î¼ÂÁõ¤òÅĞÏ¿¤¹¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+#~ msgstr "ORACLE ãƒ—ãƒ­ãƒã‚¤ãƒ€ã®å®Ÿè£…ã‚’ç™»éŒ²ã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #~ msgid "postgres_recset is NULL"
-#~ msgstr "postgres_recset ¤Ï NULL ¤Ç¤¹"
+#~ msgstr "postgres_recset ã¯ NULL ã§ã™"
 
 #~ msgid "Could not register PostgreSQL provider implementation"
-#~ msgstr "PostgreSQL ¥×¥í¥Ğ¥¤¥À¤Î¼ÂÁõ¤òÅĞÏ¿¤¹¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+#~ msgstr "PostgreSQL ãƒ—ãƒ­ãƒã‚¤ãƒ€ã®å®Ÿè£…ã‚’ç™»éŒ²ã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #~ msgid "Connection seems to be dead"
-#~ msgstr "ÀÜÂ³¤ÏÀÚ¤ì¤¿¤è¤¦¤Ç¤¹"
+#~ msgstr "æ¥ç¶šã¯åˆ‡ã‚ŒãŸã‚ˆã†ã§ã™"
 
 #~ msgid "Filling command structure failed\n"
-#~ msgstr "¥³¥Ş¥ó¥É¹½Â¤ÂÎ¤Î½¼Å¶¤Ë¼ºÇÔ¤·¤Ş¤·¤¿\n"
+#~ msgstr "ã‚³ãƒãƒ³ãƒ‰æ§‹é€ ä½“ã®å……å¡«ã«å¤±æ•—ã—ã¾ã—ãŸ\n"
 
 #~ msgid "sending cmd failed"
-#~ msgstr "¥³¥Ş¥ó¥É¤ÎÁ÷¿®¤Ë¼ºÇÔ¤·¤Ş¤·¤¿"
+#~ msgstr "ã‚³ãƒãƒ³ãƒ‰ã®é€ä¿¡ã«å¤±æ•—ã—ã¾ã—ãŸ"
 
 #~ msgid "Allocating recordset failed"
-#~ msgstr "¥ì¥³¡¼¥É¥»¥Ã¥È¤Î³ä¤êÅö¤Æ¤Ë¼ºÇÔ¤·¤Ş¤·¤¿"
+#~ msgstr "ãƒ¬ã‚³ãƒ¼ãƒ‰ã‚»ãƒƒãƒˆã®å‰²ã‚Šå½“ã¦ã«å¤±æ•—ã—ã¾ã—ãŸ"
 
 #~ msgid "Getting recordset userdata failed"
-#~ msgstr "¥ì¥³¡¼¥É¥»¥Ã¥È¤Î¥æ¡¼¥¶¥Ç¡¼¥¿¤Î¼èÆÀ¤Ë¼ºÇÔ¤·¤Ş¤·¤¿"
+#~ msgstr "ãƒ¬ã‚³ãƒ¼ãƒ‰ã‚»ãƒƒãƒˆã®ãƒ¦ãƒ¼ã‚¶ãƒ‡ãƒ¼ã‚¿ã®å–å¾—ã«å¤±æ•—ã—ã¾ã—ãŸ"
 
 #~ msgid "Command execution finished, all results processed"
-#~ msgstr "¥³¥Ş¥ó¥É¤Î¼Â¹Ô¤Ï´°Î»¤·¤Ş¤·¤¿, ¤¹¤Ù¤Æ¤Î·ë²Ì¤ò½èÍı¤·¤Ş¤·¤¿"
+#~ msgstr "ã‚³ãƒãƒ³ãƒ‰ã®å®Ÿè¡Œã¯å®Œäº†ã—ã¾ã—ãŸ, ã™ã¹ã¦ã®çµæœã‚’å‡¦ç†ã—ã¾ã—ãŸ"
 
 #~ msgid "Command failed"
-#~ msgstr "¥³¥Ş¥ó¥É¤Ï¼ºÇÔ¤·¤Ş¤·¤¿"
+#~ msgstr "ã‚³ãƒãƒ³ãƒ‰ã¯å¤±æ•—ã—ã¾ã—ãŸ"
 
 #~ msgid "Execution of resultless command succeeded"
-#~ msgstr "·ë²Ì¤Î¤Ê¤¤¼Â¹Ô¥³¥Ş¥ó¥É¤ÏÀ®¸ù¤·¤Ş¤·¤¿"
+#~ msgstr "çµæœã®ãªã„å®Ÿè¡Œã‚³ãƒãƒ³ãƒ‰ã¯æˆåŠŸã—ã¾ã—ãŸ"
 
 #~ msgid "ct_results() returned %x"
-#~ msgstr "ct_results() ¤Ï %x ¤òÊÖ¤·¤Ş¤·¤¿"
+#~ msgstr "ct_results() ã¯ %x ã‚’è¿”ã—ã¾ã—ãŸ"
 
 #~ msgid "No further results, command completly succeeded."
-#~ msgstr "¿¼¹ï¤Ê·ë²Ì¤Ï¤¢¤ê¤Ş¤»¤ó, ¥³¥Ş¥ó¥É¤Ï´°Á´¤ËÀ®¸ù¤·¤Ş¤·¤¿"
+#~ msgstr "æ·±åˆ»ãªçµæœã¯ã‚ã‚Šã¾ã›ã‚“, ã‚³ãƒãƒ³ãƒ‰ã¯å®Œå…¨ã«æˆåŠŸã—ã¾ã—ãŸ"
 
 #~ msgid "Cmd execution returned unknown result, may be an error"
-#~ msgstr "¥³¥Ş¥ó¥É¼Â¹Ô¤ÏÌ¤ÃÎ¤Î·ë²Ì¤òÊÖ¤·¤Ş¤·¤¿, ¥¨¥é¡¼¤«¤â¤·¤ì¤Ş¤»¤ó"
+#~ msgstr "ã‚³ãƒãƒ³ãƒ‰å®Ÿè¡Œã¯æœªçŸ¥ã®çµæœã‚’è¿”ã—ã¾ã—ãŸ, ã‚¨ãƒ©ãƒ¼ã‹ã‚‚ã—ã‚Œã¾ã›ã‚“"
 
 #~ msgid "No data returned, freeing recordset structure"
-#~ msgstr "¥Ç¡¼¥¿¤¬ÊÖ¤µ¤ì¤Ş¤»¤ó, ¥ì¥³¡¼¥É¥»¥Ã¥È¹½Â¤ÂÎ¤ò³«Êü¤·¤Æ¤¤¤Ş¤¹"
+#~ msgstr "ãƒ‡ãƒ¼ã‚¿ãŒè¿”ã•ã‚Œã¾ã›ã‚“, ãƒ¬ã‚³ãƒ¼ãƒ‰ã‚»ãƒƒãƒˆæ§‹é€ ä½“ã‚’é–‹æ”¾ã—ã¦ã„ã¾ã™"
 
 #~ msgid "Freeing command structure failed"
-#~ msgstr "¥³¥Ş¥ó¥É¹½Â¤ÂÎ¤Î³«Êü¤Ë¼ºÇÔ¤·¤Ş¤·¤¿"
+#~ msgstr "ã‚³ãƒãƒ³ãƒ‰æ§‹é€ ä½“ã®é–‹æ”¾ã«å¤±æ•—ã—ã¾ã—ãŸ"
 
 #, fuzzy
 #~ msgid "Not enough memory for sybase_Connection"
-#~ msgstr "primebase_Error ¹½Â¤ÂÎ¤Î¤¿¤á¤Î½½Ê¬¤Ê¥á¥â¥ê¤¬¤¢¤ê¤Ş¤»¤ó"
+#~ msgstr "primebase_Error æ§‹é€ ä½“ã®ãŸã‚ã®ååˆ†ãªãƒ¡ãƒ¢ãƒªãŒã‚ã‚Šã¾ã›ã‚“"
 
 #~ msgid "schema_cols: table_name '%s'"
 #~ msgstr "schema_cols: table_name '%s'"
 
 #~ msgid "Could not allocate command structure"
-#~ msgstr "¥³¥Ş¥ó¥É¹½Â¤ÂÎ¤ò³ä¤êÅö¤Æ¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+#~ msgstr "ã‚³ãƒãƒ³ãƒ‰æ§‹é€ ä½“ã‚’å‰²ã‚Šå½“ã¦ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #~ msgid "Could not allocate enough memory for query"
-#~ msgstr "¥¯¥¨¥ê¤Î¤¿¤á¤Î½½Ê¬¤Ê¥á¥â¥ê¤ò³ä¤êÅö¤Æ¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+#~ msgstr "ã‚¯ã‚¨ãƒªã®ãŸã‚ã®ååˆ†ãªãƒ¡ãƒ¢ãƒªã‚’å‰²ã‚Šå½“ã¦ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #~ msgid "Could not get recordset in schema_cols"
-#~ msgstr "schema_cols ¤«¤é¥ì¥³¡¼¥É¥»¥Ã¥È¤ò¼èÆÀ¤¹¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+#~ msgstr "schema_cols ã‹ã‚‰ãƒ¬ã‚³ãƒ¼ãƒ‰ã‚»ãƒƒãƒˆã‚’å–å¾—ã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #~ msgid "schema_procs: invalid constraint type %d"
-#~ msgstr "schema_procs: À©Ìó¥¿¥¤¥× %d ¤ÏÌµ¸ú¤Ç¤¹"
+#~ msgstr "schema_procs: åˆ¶ç´„ã‚¿ã‚¤ãƒ— %d ã¯ç„¡åŠ¹ã§ã™"
 
 #~ msgid "Could not allocate cmd structure"
-#~ msgstr "¥³¥Ş¥ó¥É¹½Â¤ÂÎ¤ò³ä¤êÅö¤Æ¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+#~ msgstr "ã‚³ãƒãƒ³ãƒ‰æ§‹é€ ä½“ã‚’å‰²ã‚Šå½“ã¦ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #~ msgid "schema_tables: invalid constraint type %d"
-#~ msgstr "schema_tables: À©Ìó¥¿¥¤¥× %d ¤ÏÌµ¸ú¤Ç¤¹"
+#~ msgstr "schema_tables: åˆ¶ç´„ã‚¿ã‚¤ãƒ— %d ã¯ç„¡åŠ¹ã§ã™"
 
 #~ msgid "Invalid or unsupported constraint type: %d"
-#~ msgstr "À©Ìó¥¿¥¤¥×¤ÏÌµ¸ú¤Ş¤¿¤Ï¥µ¥İ¡¼¥È¤·¤Æ¤¤¤Ş¤»¤ó: %d"
+#~ msgstr "åˆ¶ç´„ã‚¿ã‚¤ãƒ—ã¯ç„¡åŠ¹ã¾ãŸã¯ã‚µãƒãƒ¼ãƒˆã—ã¦ã„ã¾ã›ã‚“: %d"
 
 #~ msgid "Could not allocate GdaServerCommand"
-#~ msgstr "GdaServerCommand ¤Î³ä¤êÅö¤Æ¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+#~ msgstr "GdaServerCommand ã®å‰²ã‚Šå½“ã¦ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #~ msgid "connection status: %x"
-#~ msgstr "ÀÜÂ³¾õ¶·: %x"
+#~ msgstr "æ¥ç¶šçŠ¶æ³: %x"
 
 #~ msgid "return code: %x"
-#~ msgstr "Ìá¤êÃÍ: %x"
+#~ msgstr "æˆ»ã‚Šå€¤: %x"
 
 #~ msgid "Reconnected to '%s'"
-#~ msgstr "'%s' ¤ØºÆÀÜÂ³¤·¤Ş¤·¤¿"
+#~ msgstr "'%s' ã¸å†æ¥ç¶šã—ã¾ã—ãŸ"
 
 #~ msgid "Connected to %s"
-#~ msgstr "%s ¤ËÀÜÂ³´°Î»"
+#~ msgstr "%s ã«æ¥ç¶šå®Œäº†"
 
 #~ msgid "%s: Could not allocate cmd structure"
-#~ msgstr "%s: ¥³¥Ş¥ó¥É¹½Â¤ÂÎ¤ò³ä¤êÅö¤Æ¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+#~ msgstr "%s: ã‚³ãƒãƒ³ãƒ‰æ§‹é€ ä½“ã‚’å‰²ã‚Šå½“ã¦ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #~ msgid "%s: Could not allocate memory for cmd string"
-#~ msgstr "%s: ¥³¥Ş¥ó¥ÉÊ¸»úÎó¤Î¤¿¤á¤Î¥á¥â¥ê¤ò³ä¤êÅö¤Æ¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+#~ msgstr "%s: ã‚³ãƒãƒ³ãƒ‰æ–‡å­—åˆ—ã®ãŸã‚ã®ãƒ¡ãƒ¢ãƒªã‚’å‰²ã‚Šå½“ã¦ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #~ msgid "%s: ct_command failed"
-#~ msgstr "%s: ct_command ¤Ï¼ºÇÔ¤·¤Ş¤·¤¿"
+#~ msgstr "%s: ct_command ã¯å¤±æ•—ã—ã¾ã—ãŸ"
 
 #~ msgid "%s: sending command failed"
-#~ msgstr "%s: ¥³¥Ş¥ó¥É¤ÎÁ÷¿®¤Ï¼ºÇÔ¤·¤Ş¤·¤¿"
+#~ msgstr "%s: ã‚³ãƒãƒ³ãƒ‰ã®é€ä¿¡ã¯å¤±æ•—ã—ã¾ã—ãŸ"
 
 #~ msgid "%s: selecting database failed"
-#~ msgstr "%s: ¥Ç¡¼¥¿¥Ù¡¼¥¹¤ÎÁªÂò¤Ë¼ºÇÔ¤·¤Ş¤·¤¿"
+#~ msgstr "%s: ãƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹ã®é¸æŠã«å¤±æ•—ã—ã¾ã—ãŸ"
 
 #~ msgid "%s: use command failed"
-#~ msgstr "%s: ¥æ¡¼¥¶¥³¥Ş¥ó¥É¤Ï¼ºÇÔ¤·¤Ş¤·¤¿"
+#~ msgstr "%s: ãƒ¦ãƒ¼ã‚¶ã‚³ãƒãƒ³ãƒ‰ã¯å¤±æ•—ã—ã¾ã—ãŸ"
 
 #~ msgid "Could not configure locale to be '%s'"
-#~ msgstr "'%s' ¤Ë¥í¥±¡¼¥ë¤òÀßÄê¤¹¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+#~ msgstr "'%s' ã«ãƒ­ã‚±ãƒ¼ãƒ«ã‚’è¨­å®šã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #~ msgid "Could not drop locale structure"
-#~ msgstr "¥í¥±¡¼¥ë¹½Â¤ÂÎ¤ò¥É¥í¥Ã¥×¤¹¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+#~ msgstr "ãƒ­ã‚±ãƒ¼ãƒ«æ§‹é€ ä½“ã‚’ãƒ‰ãƒ­ãƒƒãƒ—ã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #~ msgid "Fatal error: %s\n"
-#~ msgstr "Ã×Ì¿Åª¤Ê¥¨¥é¡¼: %s\n"
+#~ msgstr "è‡´å‘½çš„ãªã‚¨ãƒ©ãƒ¼: %s\n"
 
 #~ msgid "gda_sybase_error_make(%p,%p,%p,%p)"
 #~ msgstr "gda_sybase_error_make(%p,%p,%p,%p)"
 
 #~ msgid "No error flag ist set, though %s is called. This may be a bug."
 #~ msgstr ""
-#~ "%s ¤¬¸Æ¤Ğ¤ì¤¿¤Ë¤â¤«¤«¤ï¤é¤º¥¨¥é¡¼¥Õ¥é¥°¤¬ÀßÄê¤µ¤ì¤Æ¤¤¤Ş¤»¤ó. ¤³¤ì¤ÏÉÔ¶ñ¹ç"
-#~ "¤«¤â¤·¤ì¤Ş¤»¤ó"
+#~ "%s ãŒå‘¼ã°ã‚ŒãŸã«ã‚‚ã‹ã‹ã‚ã‚‰ãšã‚¨ãƒ©ãƒ¼ãƒ•ãƒ©ã‚°ãŒè¨­å®šã•ã‚Œã¦ã„ã¾ã›ã‚“. ã“ã‚Œã¯ä¸å…·åˆ"
+#~ "ã‹ã‚‚ã—ã‚Œã¾ã›ã‚“"
 
 #~ msgid "cs_diag() initialized"
-#~ msgstr "cs_diag() ¤ò½é´ü²½¤·¤Ş¤·¤¿"
+#~ msgstr "cs_diag() ã‚’åˆæœŸåŒ–ã—ã¾ã—ãŸ"
 
 #~ msgid "ct_diag() initialized"
-#~ msgstr "ct_diag() ¤ò½é´ü²½¤·¤Ş¤·¤¿"
+#~ msgstr "ct_diag() ã‚’åˆæœŸåŒ–ã—ã¾ã—ãŸ"
 
 #~ msgid "Could not initialize ct_diag()"
-#~ msgstr "ct_diag() ¤ò½é´ü²½¤¹¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+#~ msgstr "ct_diag() ã‚’åˆæœŸåŒ–ã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #~ msgid "%s could not find server implementation"
-#~ msgstr "%s ¤ò¥µ¡¼¥Ğ¤Î¼ÂÁõ¤«¤é¸«ÉÕ¤±¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+#~ msgstr "%s ã‚’ã‚µãƒ¼ãƒã®å®Ÿè£…ã‹ã‚‰è¦‹ä»˜ã‘ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #~ msgid "%s could not get cnc userdata"
-#~ msgstr "%s ¤Ï cnc ¥æ¡¼¥¶¥Ç¡¼¥¿¤ò¼èÆÀ¤¹¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+#~ msgstr "%s ã¯ cnc ãƒ¦ãƒ¼ã‚¶ãƒ‡ãƒ¼ã‚¿ã‚’å–å¾—ã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #~ msgid "Could not get # of messages"
-#~ msgstr "¥á¥Ã¥»¡¼¥¸¿ô¤ò¼èÆÀ¤¹¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+#~ msgstr "ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸æ•°ã‚’å–å¾—ã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #~ msgid "%d ctlib messages to fetch"
-#~ msgstr "%d ¸Ä¤Î ctlib ¥á¥Ã¥»¡¼¥¸¤ò¼èÆÀ¤·¤Ş¤·¤¿"
+#~ msgstr "%d å€‹ã® ctlib ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’å–å¾—ã—ã¾ã—ãŸ"
 
 #~ msgid "%d ctlib message to fetch"
-#~ msgstr "%d ¸Ä¤Î ctlib ¥á¥Ã¥»¡¼¥¸¤ò¼èÆÀ¤·¤Ş¤·¤¿"
+#~ msgstr "%d å€‹ã® ctlib ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’å–å¾—ã—ã¾ã—ãŸ"
 
 #~ msgid "error is nullpointer in gda_sybase_messages_handle"
-#~ msgstr "gda_sybase_messages_handle ¤Î NULL ¥İ¥¤¥ó¥¿¤Ï¥¨¥é¡¼¤Ç¤¹"
+#~ msgstr "gda_sybase_messages_handle ã® NULL ãƒã‚¤ãƒ³ã‚¿ã¯ã‚¨ãƒ©ãƒ¼ã§ã™"
 
 #~ msgid "Could not get # of server messages"
-#~ msgstr "¥µ¡¼¥Ğ¥á¥Ã¥»¡¼¥¸¿ô¤ò¼èÆÀ¤¹¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+#~ msgstr "ã‚µãƒ¼ãƒãƒ¡ãƒƒã‚»ãƒ¼ã‚¸æ•°ã‚’å–å¾—ã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #~ msgid "Fetching %d client messages"
-#~ msgstr "%d ¸Ä¤Î¥¯¥é¥¤¥¢¥ó¥È¥á¥Ã¥»¡¼¥¸¤ò¼èÆÀ¤·¤Æ¤¤¤Ş¤¹"
+#~ msgstr "%d å€‹ã®ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’å–å¾—ã—ã¦ã„ã¾ã™"
 
 #~ msgid "Fetching %d client message"
-#~ msgstr "%d ¸Ä¤Î¥¯¥é¥¤¥¢¥ó¥È¥á¥Ã¥»¡¼¥¸¤ò¼èÆÀ¤·¤Æ¤¤¤Ş¤¹"
+#~ msgstr "%d å€‹ã®ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’å–å¾—ã—ã¦ã„ã¾ã™"
 
 #~ msgid "Could not clear client messages"
-#~ msgstr "¥¯¥é¥¤¥¢¥ó¥È¥á¥Ã¥»¡¼¥¸¤ò¾Ãµî¤¹¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+#~ msgstr "ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’æ¶ˆå»ã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #~ msgid "Fetching %d server messages"
-#~ msgstr "%d ¸Ä¤Î¥µ¡¼¥Ğ¥á¥Ã¥»¡¼¥¸¤ò¼èÆÀ¤·¤Æ¤¤¤Ş¤¹"
+#~ msgstr "%d å€‹ã®ã‚µãƒ¼ãƒãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’å–å¾—ã—ã¦ã„ã¾ã™"
 
 #~ msgid "Fetching %d server message"
-#~ msgstr "%d ¸Ä¤Î¥µ¡¼¥Ğ¥á¥Ã¥»¡¼¥¸¤ò¼èÆÀ¤·¤Æ¤¤¤Ş¤¹"
+#~ msgstr "%d å€‹ã®ã‚µãƒ¼ãƒãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’å–å¾—ã—ã¦ã„ã¾ã™"
 
 #~ msgid "Could not get server msg # %d"
-#~ msgstr "¥µ¡¼¥Ğ¥á¥Ã¥»¡¼¥¸ÈÖ¹æ %d ¤ò¼èÆÀ¤¹¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+#~ msgstr "ã‚µãƒ¼ãƒãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ç•ªå· %d ã‚’å–å¾—ã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #~ msgid "Could not get # of cslib messages"
-#~ msgstr "cslib ¥á¥Ã¥»¡¼¥¸¿ô¤ò¼èÆÀ¤¹¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+#~ msgstr "cslib ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸æ•°ã‚’å–å¾—ã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #~ msgid "Fetching %d cslib messages"
-#~ msgstr "%d ¸Ä¤Î cslib ¥á¥Ã¥»¡¼¥¸¤ò¼èÆÀ¤·¤Æ¤·¤Ş¤¹"
+#~ msgstr "%d å€‹ã® cslib ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’å–å¾—ã—ã¦ã—ã¾ã™"
 
 #~ msgid "Fetching %d cslib message"
-#~ msgstr "%d ¸Ä¤Î cslib ¥á¥Ã¥»¡¼¥¸¤ò¼èÆÀ¤·¤Æ¤·¤Ş¤¹"
+#~ msgstr "%d å€‹ã® cslib ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’å–å¾—ã—ã¦ã—ã¾ã™"
 
 #~ msgid "Could not get cslib msg # %d"
-#~ msgstr "cslib ¥á¥Ã¥»¡¼¥¸ÈÖ¹æ %d ¤ò¼èÆÀ¤¹¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+#~ msgstr "cslib ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ç•ªå· %d ã‚’å–å¾—ã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #~ msgid "Could not clear cslib messages"
-#~ msgstr "cslib ¥á¥Ã¥»¡¼¥¸¤ò¾Ãµî¤¹¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+#~ msgstr "cslib ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’æ¶ˆå»ã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #~ msgid "CS-Library error:"
-#~ msgstr "CS-Library ¥¨¥é¡¼:"
+#~ msgstr "CS-Library ã‚¨ãƒ©ãƒ¼:"
 
 #~ msgid "fetch error at row %d"
-#~ msgstr "%d ÎóÌÜ¤Î¼èÆÀ¤Ç¥¨¥é¡¼¤¬È¯À¸¤·¤Ş¤·¤¿"
+#~ msgstr "%d åˆ—ç›®ã®å–å¾—ã§ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ã¾ã—ãŸ"
 
 #~ msgid "CS_END_DATA on row %d; canceling"
-#~ msgstr "%d ÎóÌÜ¤Ç CS_END_DATA; ¥­¥ã¥ó¥»¥ëÃæ"
+#~ msgstr "%d åˆ—ç›®ã§ CS_END_DATA; ã‚­ãƒ£ãƒ³ã‚»ãƒ«ä¸­"
 
 #~ msgid "%s: Error (%d)"
-#~ msgstr "%s: ¥¨¥é¡¼ (%d)"
+#~ msgstr "%s: ã‚¨ãƒ©ãƒ¼ (%d)"
 
 #~ msgid "Failed fetching # of columns"
-#~ msgstr "¥«¥é¥à¿ô¤Î¼èÆÀ¤Ë¼ºÇÔ¤·¤Ş¤·¤¿"
+#~ msgstr "ã‚«ãƒ©ãƒ æ•°ã®å–å¾—ã«å¤±æ•—ã—ã¾ã—ãŸ"
 
 #~ msgid "Counted %d columns"
-#~ msgstr "%d ¥«¥é¥à¤ò¥«¥¦¥ó¥È¤·¤Ş¤·¤¿"
+#~ msgstr "%d ã‚«ãƒ©ãƒ ã‚’ã‚«ã‚¦ãƒ³ãƒˆã—ã¾ã—ãŸ"
 
 #~ msgid "%s could not allocate datafmt info"
-#~ msgstr "%s ¤Ï¥Ç¡¼¥¿¥Õ¥©¡¼¥Ş¥Ã¥È¾ğÊó¤ò³ä¤êÅö¤Æ¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+#~ msgstr "%s ã¯ãƒ‡ãƒ¼ã‚¿ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆæƒ…å ±ã‚’å‰²ã‚Šå½“ã¦ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #~ msgid "%s could not allocate data fields"
-#~ msgstr "%s ¤Ï¥Ç¡¼¥¿¥Õ¥£¡¼¥ë¥É¤ò³ä¤êÅö¤Æ¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+#~ msgstr "%s ã¯ãƒ‡ãƒ¼ã‚¿ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã‚’å‰²ã‚Šå½“ã¦ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #~ msgid "ct_describe on col # %d"
-#~ msgstr "¥«¥é¥àÈÖ¹æ %d ¤Ç ct_describe ¤·¤Ş¤¹"
+#~ msgstr "ã‚«ãƒ©ãƒ ç•ªå· %d ã§ ct_describe ã—ã¾ã™"
 
 #~ msgid "ct_describe on col # %d failed"
-#~ msgstr "¥«¥é¥àÈÖ¹æ %d ¤Ç ct_describe ¤Ë¼ºÇÔ¤·¤Ş¤·¤¿"
+#~ msgstr "ã‚«ãƒ©ãƒ ç•ªå· %d ã§ ct_describe ã«å¤±æ•—ã—ã¾ã—ãŸ"
 
 #~ msgid "ct_describe(%d): '%s', %d (%s)"
 #~ msgstr "ct_describe(%d): '%s', %d (%s)"
 
 #~ msgid "could not allocate data holder"
-#~ msgstr "¥Ç¡¼¥¿¥Û¥ë¥À¡¼¤ò³ä¤êÅö¤Æ¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+#~ msgstr "ãƒ‡ãƒ¼ã‚¿ãƒ›ãƒ«ãƒ€ãƒ¼ã‚’å‰²ã‚Šå½“ã¦ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #~ msgid "could not ct_bind data holder to column"
-#~ msgstr "¥«¥é¥à¤Ë¥Ç¡¼¥¿¥Û¥ë¥À¡¼¤ò ct_bind ¤¹¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+#~ msgstr "ã‚«ãƒ©ãƒ ã«ãƒ‡ãƒ¼ã‚¿ãƒ›ãƒ«ãƒ€ãƒ¼ã‚’ ct_bind ã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #~ msgid "illegal type detected, aborting"
-#~ msgstr "ÉÔÅö¤Ê¥¿¥¤¥×¤ò¸¡½Ğ¤·¤Ş¤·¤¿, Ãæ»ß¤·¤Æ¤¤¤Ş¤¹"
+#~ msgstr "ä¸å½“ãªã‚¿ã‚¤ãƒ—ã‚’æ¤œå‡ºã—ã¾ã—ãŸ, ä¸­æ­¢ã—ã¦ã„ã¾ã™"
 
 #~ msgid "could not allocate field"
-#~ msgstr "¥Õ¥£¡¼¥ë¥É¤ò³ä¤êÅö¤Æ¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+#~ msgstr "ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã‚’å‰²ã‚Šå½“ã¦ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #~ msgid "Could not register gda-sybase provider implementation"
-#~ msgstr "gda-sybase ¥×¥í¥Ğ¥¤¥À¤Î¼ÂÁõ¤òÅĞÏ¿¤¹¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+#~ msgstr "gda-sybase ãƒ—ãƒ­ãƒã‚¤ãƒ€ã®å®Ÿè£…ã‚’ç™»éŒ²ã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #~ msgid "GDA Datasource Access for primebase"
-#~ msgstr "primebaseÍÑ¤ÎGDA¥Ç¡¼¥¿¥½¡¼¥¹¥¢¥¯¥»¥¹"
+#~ msgstr "primebaseç”¨ã®GDAãƒ‡ãƒ¼ã‚¿ã‚½ãƒ¼ã‚¹ã‚¢ã‚¯ã‚»ã‚¹"
 
 #~ msgid "Could not connect to '%s@%s:%s' with connparm '%s'"
-#~ msgstr "'%s@%s:%s'¤ØÀÜÂ³¥Ñ¥é¥á¡¼¥¿ '%s'¤ÇÀÜÂ³¤¹¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+#~ msgstr "'%s@%s:%s'ã¸æ¥ç¶šãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ '%s'ã§æ¥ç¶šã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #~ msgid "%2ld: Connected to '%s@%s:%s' with connparm: '%s'"
-#~ msgstr "%2ld: '%s@%s:%s'¤ØÀÜÂ³¥Ñ¥é¥á¡¼¥¿ '%s'¤ÇÀÜÂ³¤·¤Ş¤·¤¿"
+#~ msgstr "%2ld: '%s@%s:%s'ã¸æ¥ç¶šãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ '%s'ã§æ¥ç¶šã—ã¾ã—ãŸ"
 
 #~ msgid "Could not get PBIConnectionInfo(), disconnecting"
-#~ msgstr "PBIConnectionInfo() ¤òÆÀ¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿, ÀÚÃÇ¤·¤Æ¤¤¤Ş¤¹"
+#~ msgstr "PBIConnectionInfo() ã‚’å¾—ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ, åˆ‡æ–­ã—ã¦ã„ã¾ã™"
 
 #~ msgid "%2ld: ConInfo: '%s@%s', Cl v%x, Srv '%s' v%x, Brand '%s'"
 #~ msgstr "%2ld: ConInfo: '%s@%s', Cl v%x, Srv '%s' v%x, Brand '%s'"
 
 #~ msgid "Not enough memory for primebase_Error structure."
-#~ msgstr "primebase_Error ¹½Â¤ÂÎ¤Î¤¿¤á¤Î½½Ê¬¤Ê¥á¥â¥ê¤¬¤¢¤ê¤Ş¤»¤ó"
+#~ msgstr "primebase_Error æ§‹é€ ä½“ã®ãŸã‚ã®ååˆ†ãªãƒ¡ãƒ¢ãƒªãŒã‚ã‚Šã¾ã›ã‚“"
 
 #~ msgid "%2ld: ERROR: %ld (%ld) : %s.\n"
-#~ msgstr "%2ld: ¥¨¥é¡¼: %ld (%ld) : %s.\n"
+#~ msgstr "%2ld: ã‚¨ãƒ©ãƒ¼: %ld (%ld) : %s.\n"
 
 #~ msgid "Could not register PRIMEBASE provider implementation"
-#~ msgstr "PRIMEBASE ¥×¥í¥Ğ¥¤¥À¤Î¼ÂÁõ¤òÅĞÏ¿¤¹¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+#~ msgstr "PRIMEBASE ãƒ—ãƒ­ãƒã‚¤ãƒ€ã®å®Ÿè£…ã‚’ç™»éŒ²ã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #~ msgid "GDA Datasource Access for Sybase/MS SQL"
-#~ msgstr "Sybase/MS SQLÍÑ¤ÎGDA¥Ç¡¼¥¿¥½¡¼¥¹¥¢¥¯¥»¥¹"
+#~ msgstr "Sybase/MS SQLç”¨ã®GDAãƒ‡ãƒ¼ã‚¿ã‚½ãƒ¼ã‚¹ã‚¢ã‚¯ã‚»ã‚¹"
 
 #, fuzzy
 #~ msgid "Not enough memory for tds_Connection"
-#~ msgstr "primebase_Error ¹½Â¤ÂÎ¤Î¤¿¤á¤Î½½Ê¬¤Ê¥á¥â¥ê¤¬¤¢¤ê¤Ş¤»¤ó"
+#~ msgstr "primebase_Error æ§‹é€ ä½“ã®ãŸã‚ã®ååˆ†ãªãƒ¡ãƒ¢ãƒªãŒã‚ã‚Šã¾ã›ã‚“"
 
 #~ msgid "Reconnected to %s"
-#~ msgstr "'%s' ¤ØºÆÀÜÂ³¤·¤Ş¤·¤¿"
+#~ msgstr "'%s' ã¸å†æ¥ç¶šã—ã¾ã—ãŸ"
 
 #~ msgid "gda_tds_error_make(%p,%p,%p,%p)"
 #~ msgstr "gda_tds_error_make(%p,%p,%p,%p)"
 
 #~ msgid "Could not register gda-tds provider implementation"
-#~ msgstr "gda-tds ¥×¥í¥Ğ¥¤¥À¤Î¼ÂÁõ¤òÅĞÏ¿¤¹¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+#~ msgstr "gda-tds ãƒ—ãƒ­ãƒã‚¤ãƒ€ã®å®Ÿè£…ã‚’ç™»éŒ²ã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #~ msgid "%s: misconfigured DSN entry"
-#~ msgstr "%s: DSN ¥¨¥ó¥È¥ê¤ÎÀßÄê¥ß¥¹¤Ç¤¹"
+#~ msgstr "%s: DSN ã‚¨ãƒ³ãƒˆãƒªã®è¨­å®šãƒŸã‚¹ã§ã™"
 
 #~ msgid "%s: data source '%s' not found\n"
-#~ msgstr "%s: ¥Ç¡¼¥¿¥½¡¼¥¹ '%s' ¤Ï¸«¤Ä¤«¤ê¤Ş¤»¤ó¤Ç¤·¤¿\n"
+#~ msgstr "%s: ãƒ‡ãƒ¼ã‚¿ã‚½ãƒ¼ã‚¹ '%s' ã¯è¦‹ã¤ã‹ã‚Šã¾ã›ã‚“ã§ã—ãŸ\n"
 
 #, fuzzy
 #~ msgid "Could not register <PROVIDER-NAME> provider implementation"
-#~ msgstr "PRIMEBASE ¥×¥í¥Ğ¥¤¥À¤Î¼ÂÁõ¤òÅĞÏ¿¤¹¤ë¤³¤È¤¬½ĞÍè¤Ş¤»¤ó¤Ç¤·¤¿"
+#~ msgstr "PRIMEBASE ãƒ—ãƒ­ãƒã‚¤ãƒ€ã®å®Ÿè£…ã‚’ç™»éŒ²ã™ã‚‹ã“ã¨ãŒå‡ºæ¥ã¾ã›ã‚“ã§ã—ãŸ"
 
 #~ msgid "%s: The server didn't respond."
-#~ msgstr "%s: ¥µ¡¼¥Ğ¤Ï±şÅú¤·¤Ş¤»¤ó¤Ç¤·¤¿"
+#~ msgstr "%s: ã‚µãƒ¼ãƒã¯å¿œç­”ã—ã¾ã›ã‚“ã§ã—ãŸ"
 
 #~ msgid "thread is already running"
-#~ msgstr "¥¹¥ì¥Ã¥É¤Ï¤¹¤Ç¤Ë¼Â¹ÔÃæ¤Ç¤¹"
+#~ msgstr "ã‚¹ãƒ¬ãƒƒãƒ‰ã¯ã™ã§ã«å®Ÿè¡Œä¸­ã§ã™"
 
 #~ msgid "impl_GDA_Connection_open: opening connection with DSN: %s"
-#~ msgstr "impl_GDA_Connection_open: DSN '%s' ¤ÇÀÜÂ³¤ò³«¤¤¤Æ¤¤¤Ş¤¹"
+#~ msgstr "impl_GDA_Connection_open: DSN '%s' ã§æ¥ç¶šã‚’é–‹ã„ã¦ã„ã¾ã™"
 
 #~ msgid "%s: an error ocurred while fetching data"
-#~ msgstr "%s: ¥Ç¡¼¥¿¼èÆÀÃæ¤Ë¥¨¥é¡¼¤¬È¯À¸¤·¤Ş¤·¤¿"
+#~ msgstr "%s: ãƒ‡ãƒ¼ã‚¿å–å¾—ä¸­ã«ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ã¾ã—ãŸ"
 
 #~ msgid ""
 #~ "OAF doesn't know about our IID; indicates broken installation. Exiting..."
 #~ msgstr ""
-#~ "OAF ¤Ï IID ¤Ë¤Ä¤¤¤ÆÃÎ¤ê¤Ş¤»¤ó; ¥¤¥ó¥¹¥È¡¼¥ë¤¬¼ºÇÔ¤·¤Æ¤¤¤ë¤«¤â¤ì¤Ş¤»¤ó. ½ª"
-#~ "Î»¤·¤Ş¤¹..."
+#~ "OAF ã¯ IID ã«ã¤ã„ã¦çŸ¥ã‚Šã¾ã›ã‚“; ã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«ãŒå¤±æ•—ã—ã¦ã„ã‚‹ã‹ã‚‚ã‚Œã¾ã›ã‚“. çµ‚"
+#~ "äº†ã—ã¾ã™..."
 
 #~ msgid ""
 #~ "Another instance of this provider is already registered with OAF. "
 #~ "Exiting..."
 #~ msgstr ""
-#~ "¤³¤Î¥×¥í¥Ğ¥¤¥À¤ÎÊÌ¤Î¥¤¥ó¥¹¥¿¥ó¥¹¤Ï¤¹¤Ç¤Ë OAF ¤¬ÅĞÏ¿¤·¤Æ¤¤¤Ş¤¹. ½ªÎ»¤·¤Ş"
-#~ "¤¹..."
+#~ "ã“ã®ãƒ—ãƒ­ãƒã‚¤ãƒ€ã®åˆ¥ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã¯ã™ã§ã« OAF ãŒç™»éŒ²ã—ã¦ã„ã¾ã™. çµ‚äº†ã—ã¾"
+#~ "ã™..."
 
 #~ msgid "Unknown error registering this provider with OAF. Exiting"
 #~ msgstr ""
-#~ "OAF ¤¬¤³¤Î¥×¥í¥Ğ¥¤¥À¤òÅĞÏ¿Ãæ¤ËÌ¤ÃÎ¤Î¥¨¥é¡¼¤¬È¯À¸¤·¤Ş¤·¤¿. ½ªÎ»¤·¤Ş¤¹"
+#~ "OAF ãŒã“ã®ãƒ—ãƒ­ãƒã‚¤ãƒ€ã‚’ç™»éŒ²ä¸­ã«æœªçŸ¥ã®ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ã¾ã—ãŸ. çµ‚äº†ã—ã¾ã™"
 
 #~ msgid "Registered with ID = %s"
-#~ msgstr "ID = %s ¤ÇÅĞÏ¿¤·¤Ş¤·¤¿"
+#~ msgstr "ID = %s ã§ç™»éŒ²ã—ã¾ã—ãŸ"
 
 #~ msgid "CORBA exception unloading report engine: %s"
-#~ msgstr "CORBA Îã³°¤Ï¥ì¥İ¡¼¥È¥¨¥ó¥¸¥ó¤ò¼è¤ê³°¤·¤Æ¤¤¤Ş¤¹: %s"
+#~ msgstr "CORBA ä¾‹å¤–ã¯ãƒ¬ãƒãƒ¼ãƒˆã‚¨ãƒ³ã‚¸ãƒ³ã‚’å–ã‚Šå¤–ã—ã¦ã„ã¾ã™: %s"
 
 #~ msgid "Received signal %d, shutting down."
-#~ msgstr "¥·¥°¥Ê¥ë %d ¤ò¼õ¿®¤·¤Ş¤·¤¿, ½ªÎ»¤·¤Ş¤¹"
+#~ msgstr "ã‚·ã‚°ãƒŠãƒ« %d ã‚’å—ä¿¡ã—ã¾ã—ãŸ, çµ‚äº†ã—ã¾ã™"
 
 #~ msgid "Received signal %d, shutting down cleanly"
-#~ msgstr "¥·¥°¥Ê¥ë %d ¤ò¼õ¿®¤·¤Ş¤·¤¿, ¤­¤ì¤¤¤Ë½ªÎ»¤·¤Ş¤¹"
+#~ msgstr "ã‚·ã‚°ãƒŠãƒ« %d ã‚’å—ä¿¡ã—ã¾ã—ãŸ, ãã‚Œã„ã«çµ‚äº†ã—ã¾ã™"
 
 #~ msgid "Failed to initialize OAF: please mail bug report to OAF maintainers"
-#~ msgstr "OAF ¤Î½é´ü²½¤Ë¼ºÇÔ: OAF ¥á¥ó¥Æ¥Ê¤ØÉÔ¶ñ¹çÊó¹ğ¤ò¥á¡¼¥ë¤·¤Æ¤¯¤À¤µ¤¤"
+#~ msgstr "OAF ã®åˆæœŸåŒ–ã«å¤±æ•—: OAF ãƒ¡ãƒ³ãƒ†ãƒŠã¸ä¸å…·åˆå ±å‘Šã‚’ãƒ¡ãƒ¼ãƒ«ã—ã¦ãã ã•ã„"
 
 #~ msgid ""
 #~ "Another instance of the report engine is already registered with OAF. "
 #~ "Exiting..."
 #~ msgstr ""
-#~ "¥ì¥İ¡¼¥È¥¨¥ó¥¸¥ó¤ÎÊÌ¤Î¥¤¥ó¥¹¥¿¥ó¥¹¤Ï¤¹¤Ç¤Ë OAF ¤¬ÅĞÏ¿¤·¤Æ¤¤¤Ş¤¹. ½ªÎ»¤·¤Ş"
-#~ "¤¹..."
+#~ "ãƒ¬ãƒãƒ¼ãƒˆã‚¨ãƒ³ã‚¸ãƒ³ã®åˆ¥ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã¯ã™ã§ã« OAF ãŒç™»éŒ²ã—ã¦ã„ã¾ã™. çµ‚äº†ã—ã¾"
+#~ "ã™..."
 
 #~ msgid "Unknown error registering report engine with OAF. Exiting"
 #~ msgstr ""
-#~ "OAF ¤¬¥ì¥İ¡¼¥È¥¨¥ó¥¸¥ó¤òÅĞÏ¿Ãæ¤ËÌ¤ÃÎ¤Î¥¨¥é¡¼¤¬È¯À¸¤·¤Ş¤·¤¿. ½ªÎ»¤·¤Ş¤¹"
+#~ "OAF ãŒãƒ¬ãƒãƒ¼ãƒˆã‚¨ãƒ³ã‚¸ãƒ³ã‚’ç™»éŒ²ä¸­ã«æœªçŸ¥ã®ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ã¾ã—ãŸ. çµ‚äº†ã—ã¾ã™"
 
 #~ msgid "Registered report engine with ID = %s"
-#~ msgstr "ID = %s ¤Ç¥ì¥İ¡¼¥È¥¨¥ó¥¸¥ó¤òÅĞÏ¿¤·¤Ş¤·¤¿"
+#~ msgstr "ID = %s ã§ãƒ¬ãƒãƒ¼ãƒˆã‚¨ãƒ³ã‚¸ãƒ³ã‚’ç™»éŒ²ã—ã¾ã—ãŸ"
 
 #~ msgid "%s: length = %d"
-#~ msgstr "%s: Ä¹¤µ = %d"
+#~ msgstr "%s: é•·ã• = %d"
 
 #~ msgid "%s: sending field description for '%s'"
-#~ msgstr "%s: '%s' ¤Î¤¿¤á¤Î¥Õ¥£¡¼¥ë¥É¤Îµ­½Ò¤òÁ÷¿®Ãæ"
+#~ msgstr "%s: '%s' ã®ãŸã‚ã®ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã®è¨˜è¿°ã‚’é€ä¿¡ä¸­"
 
 #~ msgid "schema_tables: table name = '%s'"
-#~ msgstr "schema_tables: ¥Æ¡¼¥Ö¥ëÌ¾ = '%s'"
+#~ msgstr "schema_tables: ãƒ†ãƒ¼ãƒ–ãƒ«å = '%s'"
 
 #~ msgid "schema_tables: table_schema = '%s'"
 #~ msgstr "schema_tables: table_schema = '%s'"
 
 #~ msgid "schema_procedures: proc_catalog = '%s' UNUSED!\n"
-#~ msgstr "schema_procedures: proc_catalog = %s' ¤Ï»È¤Ã¤Æ¤¤¤Ş¤»¤ó!\n"
+#~ msgstr "schema_procedures: proc_catalog = %s' ã¯ä½¿ã£ã¦ã„ã¾ã›ã‚“!\n"
 
 #~ msgid "schema_procedures: proc_catalog = '%s' UNUSED!"
-#~ msgstr "schema_procedures: proc_catalog = '%s' ¤Ï»È¤Ã¤Æ¤¤¤Ş¤»¤ó!"
+#~ msgstr "schema_procedures: proc_catalog = '%s' ã¯ä½¿ã£ã¦ã„ã¾ã›ã‚“!"
 
 #~ msgid "DATABASE"
 #~ msgstr "DATABASE"

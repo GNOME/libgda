@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda VERSION\n"
-"POT-Creation-Date: 2002-09-09 22:11+0200\n"
+"POT-Creation-Date: 2002-09-11 13:17+0200\n"
 "PO-Revision-Date: 2001-12-14 16:37GMT+0200\n"
 "Last-Translator: Vasif İsmayıloğlu MD <azerb_linux@hotmail.com>\n"
 "Language-Team: Azerbaijani Turkic <linuxaz@azerimail.net>\n"
@@ -198,7 +198,7 @@ msgid "Invalid XML node"
 msgstr ""
 
 #: providers/default/gda-default-provider.c:191
-#: providers/sqlite/gda-sqlite-provider.c:186
+#: providers/sqlite/gda-sqlite-provider.c:183
 msgid ""
 "A full path must be specified on the connection string to open a database."
 msgstr ""
@@ -936,24 +936,32 @@ msgstr ""
 msgid "GDA provider for PostgreSQL databases"
 msgstr ""
 
-#: providers/sqlite/gda-sqlite-provider.c:246
-msgid "Invalid SQLITE handle"
-msgstr ""
-
-#: providers/sqlite/gda-sqlite-provider.c:314
-#: providers/sqlite/gda-sqlite-provider.c:449
+#: providers/sqlite/gda-sqlite-provider.c:243
+#: providers/sqlite/gda-sqlite-provider.c:266
+#: providers/sqlite/gda-sqlite-provider.c:289
+#: providers/sqlite/gda-sqlite-provider.c:311
 #: providers/sqlite/gda-sqlite-recordset.c:159
 #: providers/sqlite/gda-sqlite-recordset.c:198
 #: providers/sqlite/gda-sqlite-recordset.c:239
 msgid "Invalid SQLite handle"
 msgstr ""
 
-#: providers/sqlite/gda-sqlite-provider.c:332
+#: providers/sqlite/gda-sqlite-provider.c:270
+msgid ""
+"To change a SQLite database you should close the actual database and open a "
+"new one"
+msgstr ""
+
+#: providers/sqlite/gda-sqlite-provider.c:293
 msgid "Only one database per connection is allowed"
 msgstr ""
 
-#: providers/sqlite/gda-sqlite-provider.c:346
+#: providers/sqlite/gda-sqlite-provider.c:315
 msgid "To remove a SQLite database you should remove the database file by hand"
+msgstr ""
+
+#: providers/sqlite/gda-sqlite-provider.c:329
+msgid "Invalid SQLITE handle"
 msgstr ""
 
 #: providers/sqlite/libmain.c:41
@@ -965,15 +973,20 @@ msgstr ""
 msgid "Could not initiate Sybase component factory"
 msgstr "MySQL komponent emalatxanası hazırlana bilmədi"
 
-#: report/libgda-report/gda-report-document.c:166
-#, fuzzy
-msgid "Could not parse XML document"
-msgstr "MySQL komponent emalatxanası hazırlana bilmədi"
-
-#: report/libgda-report/gda-report-document.c:191
+#: report/libgda-report/gda-report-document.c:158
 #, fuzzy, c-format
-msgid "Could not get file from %s"
+msgid "Could not load report file at %s"
 msgstr "%s cismi fəallaşdırıla bilmədi"
+
+#: report/libgda-report/gda-report-document.c:167
+#, fuzzy, c-format
+msgid "Could not parse report file at %s"
+msgstr "%s cismi fəallaşdırıla bilmədi"
+
+#: report/libgda-report/gda-report-document.c:177
+#, c-format
+msgid "Invalid report file '%s'"
+msgstr ""
 
 #: testing/client.c:41
 msgid "\t\tNONE\n"
@@ -1130,6 +1143,14 @@ msgstr ""
 #: testing/config.c:93
 msgid "\tgda_params ="
 msgstr ""
+
+#, fuzzy
+#~ msgid "Could not parse XML document"
+#~ msgstr "MySQL komponent emalatxanası hazırlana bilmədi"
+
+#, fuzzy
+#~ msgid "Could not get file from %s"
+#~ msgstr "%s cismi fəallaşdırıla bilmədi"
 
 #, fuzzy
 #~ msgid "Could not initialize OCI library"

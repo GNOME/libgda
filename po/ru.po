@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda-2\n"
-"POT-Creation-Date: 2002-09-09 22:11+0200\n"
+"POT-Creation-Date: 2002-09-11 13:18+0200\n"
 "PO-Revision-Date: 2002-09-09 17:23+0400\n"
 "Last-Translator: Dmitry G. Mastrukov <dmitry@taurussoft.org>\n"
 "Language-Team: Russian <gnome-cyr@gnome.org>\n"
@@ -204,7 +204,7 @@ msgid "Invalid XML node"
 msgstr "Недопустимый узел XML"
 
 #: providers/default/gda-default-provider.c:191
-#: providers/sqlite/gda-sqlite-provider.c:186
+#: providers/sqlite/gda-sqlite-provider.c:183
 msgid ""
 "A full path must be specified on the connection string to open a database."
 msgstr ""
@@ -908,26 +908,36 @@ msgstr "Данные: \"%s\""
 msgid "GDA provider for PostgreSQL databases"
 msgstr "Провайдер GDA для доступа к базам данных PostgreSQL"
 
-#: providers/sqlite/gda-sqlite-provider.c:246
-msgid "Invalid SQLITE handle"
-msgstr "Недопустимый обработчик SQLITE"
-
-#: providers/sqlite/gda-sqlite-provider.c:314
-#: providers/sqlite/gda-sqlite-provider.c:449
+#: providers/sqlite/gda-sqlite-provider.c:243
+#: providers/sqlite/gda-sqlite-provider.c:266
+#: providers/sqlite/gda-sqlite-provider.c:289
+#: providers/sqlite/gda-sqlite-provider.c:311
 #: providers/sqlite/gda-sqlite-recordset.c:159
 #: providers/sqlite/gda-sqlite-recordset.c:198
 #: providers/sqlite/gda-sqlite-recordset.c:239
 msgid "Invalid SQLite handle"
 msgstr "Недопустимый обработчик SQLite"
 
-#: providers/sqlite/gda-sqlite-provider.c:332
+#: providers/sqlite/gda-sqlite-provider.c:270
+#, fuzzy
+msgid ""
+"To change a SQLite database you should close the actual database and open a "
+"new one"
+msgstr ""
+"Для удаления базы данных SQLite следует вручную удалить файл базы данных"
+
+#: providers/sqlite/gda-sqlite-provider.c:293
 msgid "Only one database per connection is allowed"
 msgstr "Допустима только одна база данных на соединение"
 
-#: providers/sqlite/gda-sqlite-provider.c:346
+#: providers/sqlite/gda-sqlite-provider.c:315
 msgid "To remove a SQLite database you should remove the database file by hand"
 msgstr ""
 "Для удаления базы данных SQLite следует вручную удалить файл базы данных"
+
+#: providers/sqlite/gda-sqlite-provider.c:329
+msgid "Invalid SQLITE handle"
+msgstr "Недопустимый обработчик SQLITE"
 
 #: providers/sqlite/libmain.c:41
 msgid "GDA provider for SQLite databases"
@@ -938,15 +948,21 @@ msgid "Could not initiate Sybase component factory"
 msgstr "Не удалось инициализировать фабрику компонента Sybase"
 
 # fe/fe_editor.c:175 fe/fe_editor.c:212
-#: report/libgda-report/gda-report-document.c:166
-msgid "Could not parse XML document"
-msgstr "Не удалось разобрать документ XML"
+#: report/libgda-report/gda-report-document.c:158
+#, fuzzy, c-format
+msgid "Could not load report file at %s"
+msgstr "Не удалось загрузить файл %s"
 
 # fe/fe_editor.c:175 fe/fe_editor.c:212
-#: report/libgda-report/gda-report-document.c:191
-#, c-format
-msgid "Could not get file from %s"
-msgstr "Не удалось получить файл с %s"
+#: report/libgda-report/gda-report-document.c:167
+#, fuzzy, c-format
+msgid "Could not parse report file at %s"
+msgstr "Не удалось разобрать файл %s"
+
+#: report/libgda-report/gda-report-document.c:177
+#, fuzzy, c-format
+msgid "Invalid report file '%s'"
+msgstr "Недопустимый файл базы данных  \"%s\" в формате XML"
 
 #: testing/client.c:41
 msgid "\t\tNONE\n"
@@ -1107,6 +1123,14 @@ msgstr "\tописание = %s\n"
 #: testing/config.c:93
 msgid "\tgda_params ="
 msgstr "\tпараметры gda ="
+
+# fe/fe_editor.c:175 fe/fe_editor.c:212
+#~ msgid "Could not parse XML document"
+#~ msgstr "Не удалось разобрать документ XML"
+
+# fe/fe_editor.c:175 fe/fe_editor.c:212
+#~ msgid "Could not get file from %s"
+#~ msgstr "Не удалось получить файл с %s"
 
 #~ msgid "Unknown"
 #~ msgstr "Неизвестный"

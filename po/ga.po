@@ -5,12 +5,12 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-db CVS\n"
-"POT-Creation-Date: 2002-09-09 22:11+0200\n"
+"POT-Creation-Date: 2002-09-11 13:17+0200\n"
 "PO-Revision-Date: 2000-03-13 18:23+0000\n"
 "Last-Translator:  Alastair McKinstry <mckinstry@computer.org>\n"
 "Language-Team: Irish <ga@li.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=iso-8859-1\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8-bit\n"
 
 #: libgda/gda-client.c:227 libgda/gda-client.c:414 libgda/gda-connection.c:214
@@ -64,7 +64,7 @@ msgstr ""
 
 #: libgda/gda-config.c:1272
 msgid "Username"
-msgstr "Úsáidtheoir"
+msgstr "ÃšsÃ¡idtheoir"
 
 #: libgda/gda-config.c:1273
 msgid "Password"
@@ -196,7 +196,7 @@ msgid "Invalid XML node"
 msgstr ""
 
 #: providers/default/gda-default-provider.c:191
-#: providers/sqlite/gda-sqlite-provider.c:186
+#: providers/sqlite/gda-sqlite-provider.c:183
 msgid ""
 "A full path must be specified on the connection string to open a database."
 msgstr ""
@@ -241,7 +241,7 @@ msgstr ""
 #: providers/postgres/gda-postgres-provider.c:1068
 #, fuzzy
 msgid "Scale"
-msgstr "Sábháil"
+msgstr "SÃ¡bhÃ¡il"
 
 #: providers/default/gda-default-provider.c:459
 #: providers/mysql/gda-mysql-provider.c:1015
@@ -316,7 +316,7 @@ msgstr ""
 #: providers/oracle/gda-oracle-provider.c:1655
 #, fuzzy
 msgid "Procedures"
-msgstr "Albachtaí"
+msgstr "AlbachtaÃ­"
 
 #: providers/freetds/gda-freetds-provider.c:550
 #: providers/oracle/gda-oracle-provider.c:1663
@@ -334,7 +334,7 @@ msgstr ""
 #: providers/postgres/gda-postgres-provider.c:1444 testing/client.c:128
 #, fuzzy
 msgid "Users"
-msgstr "Úsáidtheoir"
+msgstr "ÃšsÃ¡idtheoir"
 
 #: providers/freetds/gda-freetds-provider.c:568
 #: providers/oracle/gda-oracle-provider.c:1671 testing/client.c:125
@@ -366,12 +366,12 @@ msgstr ""
 #: providers/freetds/gda-freetds-provider.c:659
 #, fuzzy
 msgid "Domain"
-msgstr "Ordú"
+msgstr "OrdÃº"
 
 #: providers/freetds/gda-freetds-provider.c:661
 #, fuzzy
 msgid "Printfmt"
-msgstr "Priontáil"
+msgstr "PriontÃ¡il"
 
 #: providers/freetds/gda-freetds-provider.c:780
 #, c-format
@@ -505,7 +505,7 @@ msgstr ""
 #: providers/postgres/gda-postgres-provider.c:1472
 #, fuzzy
 msgid "Comments"
-msgstr "Ordú"
+msgstr "OrdÃº"
 
 #: providers/mysql/gda-mysql-provider.c:916
 #: providers/postgres/gda-postgres-provider.c:923
@@ -807,7 +807,7 @@ msgstr ""
 #: providers/postgres/gda-postgres-provider.c:686
 #, fuzzy
 msgid "Procedure"
-msgstr "Albachtaí"
+msgstr "AlbachtaÃ­"
 
 #: providers/postgres/gda-postgres-provider.c:687
 #: providers/postgres/gda-postgres-provider.c:1024
@@ -887,24 +887,32 @@ msgstr ""
 msgid "GDA provider for PostgreSQL databases"
 msgstr ""
 
-#: providers/sqlite/gda-sqlite-provider.c:246
-msgid "Invalid SQLITE handle"
-msgstr ""
-
-#: providers/sqlite/gda-sqlite-provider.c:314
-#: providers/sqlite/gda-sqlite-provider.c:449
+#: providers/sqlite/gda-sqlite-provider.c:243
+#: providers/sqlite/gda-sqlite-provider.c:266
+#: providers/sqlite/gda-sqlite-provider.c:289
+#: providers/sqlite/gda-sqlite-provider.c:311
 #: providers/sqlite/gda-sqlite-recordset.c:159
 #: providers/sqlite/gda-sqlite-recordset.c:198
 #: providers/sqlite/gda-sqlite-recordset.c:239
 msgid "Invalid SQLite handle"
 msgstr ""
 
-#: providers/sqlite/gda-sqlite-provider.c:332
+#: providers/sqlite/gda-sqlite-provider.c:270
+msgid ""
+"To change a SQLite database you should close the actual database and open a "
+"new one"
+msgstr ""
+
+#: providers/sqlite/gda-sqlite-provider.c:293
 msgid "Only one database per connection is allowed"
 msgstr ""
 
-#: providers/sqlite/gda-sqlite-provider.c:346
+#: providers/sqlite/gda-sqlite-provider.c:315
 msgid "To remove a SQLite database you should remove the database file by hand"
+msgstr ""
+
+#: providers/sqlite/gda-sqlite-provider.c:329
+msgid "Invalid SQLITE handle"
 msgstr ""
 
 #: providers/sqlite/libmain.c:41
@@ -915,13 +923,19 @@ msgstr ""
 msgid "Could not initiate Sybase component factory"
 msgstr ""
 
-#: report/libgda-report/gda-report-document.c:166
-msgid "Could not parse XML document"
+#: report/libgda-report/gda-report-document.c:158
+#, c-format
+msgid "Could not load report file at %s"
 msgstr ""
 
-#: report/libgda-report/gda-report-document.c:191
+#: report/libgda-report/gda-report-document.c:167
 #, c-format
-msgid "Could not get file from %s"
+msgid "Could not parse report file at %s"
+msgstr ""
+
+#: report/libgda-report/gda-report-document.c:177
+#, c-format
+msgid "Invalid report file '%s'"
 msgstr ""
 
 #: testing/client.c:41
@@ -1086,7 +1100,7 @@ msgstr ""
 
 #, fuzzy
 #~ msgid "\tusername = %s\n"
-#~ msgstr "Úsáidtheoir"
+#~ msgstr "ÃšsÃ¡idtheoir"
 
 #, fuzzy
 #~ msgid "layer"
@@ -1101,16 +1115,16 @@ msgstr ""
 #~ msgstr "Ag rith '%s'"
 
 #~ msgid "Close"
-#~ msgstr "Dún"
+#~ msgstr "DÃºn"
 
 #~ msgid "Close this window"
-#~ msgstr "Dún an fhuinneog seo"
+#~ msgstr "DÃºn an fhuinneog seo"
 
 #~ msgid "Environment"
 #~ msgstr "Imshaoil"
 
 #~ msgid "Save As"
-#~ msgstr "Sábháil le"
+#~ msgstr "SÃ¡bhÃ¡il le"
 
 #~ msgid "Value"
 #~ msgstr "Luach"
@@ -1119,7 +1133,7 @@ msgstr ""
 #~ msgstr "Suim"
 
 #~ msgid "Remove"
-#~ msgstr "Scríos"
+#~ msgstr "ScrÃ­os"
 
 #~ msgid "Language"
 #~ msgstr "Teanga"
@@ -1134,13 +1148,13 @@ msgstr ""
 #~ msgstr "Bun"
 
 #~ msgid "Left"
-#~ msgstr "Clé"
+#~ msgstr "ClÃ©"
 
 #~ msgid "Right"
 #~ msgstr "Deis"
 
 #~ msgid "Save As..."
-#~ msgstr "Sábháil Le..."
+#~ msgstr "SÃ¡bhÃ¡il Le..."
 
 #~ msgid "New"
 #~ msgstr "Nua"
@@ -1149,7 +1163,7 @@ msgstr ""
 #~ msgstr "Oscail"
 
 #~ msgid "Select File"
-#~ msgstr "Tóg Comhad"
+#~ msgstr "TÃ³g Comhad"
 
 #~ msgid "Delete"
 #~ msgstr "Dealaigh"
@@ -1158,16 +1172,16 @@ msgstr ""
 #~ msgstr "Gearr"
 
 #~ msgid "Copy"
-#~ msgstr "Cóip"
+#~ msgstr "CÃ³ip"
 
 #~ msgid "Directory"
-#~ msgstr "Fillteán"
+#~ msgstr "FillteÃ¡n"
 
 #~ msgid "Open File"
 #~ msgstr "Oscail Comhad"
 
 #~ msgid "Editor"
-#~ msgstr "Eagarthóir"
+#~ msgstr "EagarthÃ³ir"
 
 #~ msgid "Run"
 #~ msgstr "Rith"
@@ -1179,34 +1193,34 @@ msgstr ""
 #~ msgstr "Loganna GDA"
 
 #~ msgid "Printer setup..."
-#~ msgstr "Socraigh Printéir..."
+#~ msgstr "Socraigh PrintÃ©ir..."
 
 #~ msgid "Quit"
 #~ msgstr "Ealu"
 
 #~ msgid "Exit application"
-#~ msgstr "Eirigh as fiedhmchlár"
+#~ msgstr "Eirigh as fiedhmchlÃ¡r"
 
 #~ msgid "Text editor"
-#~ msgstr "Eagathóir teacs"
+#~ msgstr "EagathÃ³ir teacs"
 
 #~ msgid "Calculator"
-#~ msgstr "Aireamhán"
+#~ msgstr "AireamhÃ¡n"
 
 #~ msgid "Preferences..."
 #~ msgstr "Roghnachais..."
 
 #~ msgid "Close all"
-#~ msgstr "Dún gach rud"
+#~ msgstr "DÃºn gach rud"
 
 #~ msgid "Close all open windows"
-#~ msgstr "Dún gach fhuinneog oscailte"
+#~ msgstr "DÃºn gach fhuinneog oscailte"
 
 #~ msgid "About gnome-db..."
 #~ msgstr "Faoi gnome-db..."
 
 #~ msgid "About this program"
-#~ msgstr "Faoi ríomhchlár seo"
+#~ msgstr "Faoi rÃ­omhchlÃ¡r seo"
 
 #~ msgid "Options"
 #~ msgstr "Roghnachais"
@@ -1221,10 +1235,10 @@ msgstr ""
 #~ msgstr "Ealu"
 
 #~ msgid "Select all"
-#~ msgstr "Tóg gach rud"
+#~ msgstr "TÃ³g gach rud"
 
 #~ msgid "Print..."
-#~ msgstr "Priontáil..."
+#~ msgstr "PriontÃ¡il..."
 
 #~ msgid "GNOME-DB Manager"
 #~ msgstr "Bainisteoir GNOME-DB"

@@ -1,3 +1,9 @@
+2002-09-11 Carlos Perello Marin <carlos@gnome-db.org>
+
+	* *.po: Updated and reencoded as UTF-8
+	* README.translators: We don't accept any .po file that does not use
+	UTF-8 charset.
+
 2002-09-09 Pablo Gonzalo del Campo <pablodc@bigfoot.com>
 
 	* es.po: Updated Spanish Translation.
