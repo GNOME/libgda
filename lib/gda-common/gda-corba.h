@@ -27,6 +27,8 @@ CORBA_ORB    gda_corba_get_orb           (void);
 CORBA_Object gda_corba_get_name_service  (void);
 gchar*       gda_corba_get_oaf_attribute (CORBA_sequence_OAF_Property props, const gchar *name);
 
+gboolean     gda_corba_handle_exception  (CORBA_Environment *ev);
+
 #if defined(__cplusplus)
 }
 #endif
