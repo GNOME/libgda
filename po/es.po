@@ -13,7 +13,7 @@ msgstr ""
 "Last-Translator: Antonio de la Torre <adltorre@terra.es>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=iso8859-1\n"
+"Content-Type: text/plain; charset=iso-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: lib/gda-client/gda-connection-pool.c:267
@@ -503,7 +503,7 @@ msgstr "Ejecución correcta de comando resultless"
 #: providers/gda-tds-server/gda-tds-command.c:225
 #, c-format
 msgid "ct_results() returned %x"
-msgstr "ct_results() devolvió %s"
+msgstr "ct_results() devolvió %x"
 
 #: providers/gda-sybase-server/gda-sybase-command.c:261
 #: providers/gda-tds-server/gda-tds-command.c:235
@@ -831,7 +831,7 @@ msgstr "Retomando %d mensaje cslib"
 #: providers/gda-sybase-server/gda-sybase-error.c:431
 #, c-format
 msgid "Could not get cslib msg # %d"
-msgstr "No pudo obtenerse mensaje # %s cslib"
+msgstr "No pudo obtenerse mensaje # %d cslib"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:455
 msgid "Could not clear cslib messages"

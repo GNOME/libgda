@@ -950,7 +950,7 @@ msgstr "Kunne ikke få PBIConnectionInfo(), nedkobler"
 #: providers/gda-primebase-server/gda-primebase-connection.c:172
 #, c-format
 msgid "%2ld: ConInfo: '%s@%s', Cl v%x, Srv '%s' v%x, Brand '%s'"
-msgstr "%2ld: ConInfo: %s@%s, klient API v%x, server '%s', mærke: '%s'"
+msgstr "%2ld: ConInfo: %s@%s, klient API v%x, server '%s' v%x, mærke: '%s'"
 
 #: providers/gda-primebase-server/gda-primebase-connection.c:376
 msgid "Not enough memory for primebase_Error structure."
