@@ -22,7 +22,7 @@
 
 #include "gda-test.h"
 
-static void
+void
 display_data_model (GdaDataModel *model)
 {
 	gint cols, rows;

@@ -22,6 +22,40 @@
 
 #include "gda-test.h"
 
+/* Shows the object schemas */
+static void
+show_schema (GdaConnection *cnc, GdaConnectionSchema schema, const gchar *label)
+{
+	GdaDataModel *model;
+	gint r, c;
+	gint row_count, col_count;
+
+	g_print ("\t\t%s\n", label);
+
+	model = gda_connection_get_schema (cnc, schema, NULL);
+	if (!GDA_IS_DATA_MODEL (model)) {
+		g_print ("\t\t\tNONE\n");
+		return;
+	}
+
+	row_count = gda_data_model_get_n_rows (model);
+	col_count = gda_data_model_get_n_columns (model);
+	for (r = 0; r < row_count; r++) {
+		g_print ("\t\t");
+		for (c = 0; c < col_count; c++) {
+			GdaValue *value;
+			gchar *str;
+
+			value = gda_data_model_get_value_at (model, c, r);
+			str = gda_value_stringify (value);
+			g_print ("\t%s", str);
+			g_free (str);
+		}
+		g_print ("\n");
+	}
+
+}
+
 /* Opens a connection and test basic operations on it */
 static void
 open_connection (GdaClient *client,
@@ -46,7 +80,10 @@ open_connection (GdaClient *client,
 		 gda_connection_supports (cnc, GDA_CONNECTION_FEATURE_TRANSACTIONS) ?
 		 _("Supported") : _("Not supported"));
 
-	/* start a transaction */
+	/* show connection schemas */
+	show_schema (cnc, GDA_CONNECTION_SCHEMA_TABLES, "Connection Tables");
+
+	/* test transactions */
 	g_print ("\tStarting transaction...");
 	res = gda_connection_begin_transaction (cnc, NULL);
 	g_print ("%s\n", res ? "OK" : "Error");
@@ -62,6 +99,7 @@ open_connection (GdaClient *client,
 	g_print ("\tRolling back transaction...");
 	res = gda_connection_rollback_transaction (cnc, NULL);
 	g_print ("%s\n", res ? "OK" : "Error");
+
 	/* close the connection */
 	gda_connection_close (cnc);
 }

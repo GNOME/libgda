@@ -1,3 +1,8 @@
+2001-12-28  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* client.c (show_schemas): new function for showing database schema
+	objects from the tested connections
+
 2001-12-22  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* client.c: added gda_connection_supports test
