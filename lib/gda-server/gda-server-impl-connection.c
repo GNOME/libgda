@@ -18,6 +18,7 @@
 
 #include "config.h"
 #include "gda-server-impl.h"
+#include "gda-server-impl-connection.h"
 
 #ifdef ENABLE_NLS
 #  include <libintl.h>

@@ -1,0 +1,5 @@
+2000-10-21	Rodrigo Moya <rodrigo@linuxave.net>
+
+	* replaced the GNOME_GenericFactory (from gnorba times) with the
+	OAF's GNOME_ObjectFactory, thus removing the latest GNOME
+	dependency
