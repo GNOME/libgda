@@ -57,34 +57,26 @@ void     gda_config_free_list      (GList *list);
  */
 typedef struct _Gda_Provider
 {
-  gchar*         name;
-  gchar*         comment;
-  gchar*         location;
-  gchar*         repo_id;
-  gchar*         type;
-  gchar*         username;
-  gchar*         hostname;
-  gchar*         domain;
-  gchar*         main_config;
-  gchar*         users_list_config;
-  gchar*         users_ac_config;
-  gchar*         db_config;
-  gchar*         dsn_config;
+  gchar* name;
+  gchar* comment;
+  gchar* location;
+  gchar* repo_id;
+  gchar* type;
+  gchar* username;
+  gchar* hostname;
+  gchar* domain;
+  GList* dsn_params;
 } Gda_Provider;
 
-#define GDA_PROVIDER_TYPE(srv)              ((srv) ? (srv)->type : 0)
-#define GDA_PROVIDER_NAME(srv)              ((srv) ? (srv)->name : 0)
-#define GDA_PROVIDER_COMMENT(srv)           ((srv) ? (srv)->comment : 0)
-#define GDA_PROVIDER_LOCATION(srv)          ((srv) ? (srv)->location : 0)
-#define GDA_PROVIDER_REPO_ID(srv)           ((srv) ? (srv)->repo_id : 0)
-#define GDA_PROVIDER_USERNAME(srv)        ((srv) ? (srv)->username : 0)
-#define GDA_PROVIDER_HOSTNAME(srv)        ((srv) ? (srv)->hostname : 0)
-#define GDA_PROVIDER_DOMAIN(srv)          ((srv) ? (srv)->domain : 0)
-#define GDA_PROVIDER_MAIN_CONFIG(srv)       ((srv) ? (srv)->main_config : 0)
-#define GDA_PROVIDER_USERS_LIST_CONFIG(srv) ((srv) ? (srv)->users_list_config : 0)
-#define GDA_PROVIDER_USERS_AC_CONFIG(srv)   ((srv) ? (srv)->users_ac_config : 0)
-#define GDA_PROVIDER_DB_CONFIG(srv)         ((srv) ? (srv)->db_config : 0)
-#define GDA_PROVIDER_DSN_CONFIG(srv)        ((srv) ? (srv)->dsn_config : 0)
+#define GDA_PROVIDER_TYPE(srv)       ((srv) ? (srv)->type : 0)
+#define GDA_PROVIDER_NAME(srv)       ((srv) ? (srv)->name : 0)
+#define GDA_PROVIDER_COMMENT(srv)    ((srv) ? (srv)->comment : 0)
+#define GDA_PROVIDER_LOCATION(srv)   ((srv) ? (srv)->location : 0)
+#define GDA_PROVIDER_REPO_ID(srv)    ((srv) ? (srv)->repo_id : 0)
+#define GDA_PROVIDER_USERNAME(srv)   ((srv) ? (srv)->username : 0)
+#define GDA_PROVIDER_HOSTNAME(srv)   ((srv) ? (srv)->hostname : 0)
+#define GDA_PROVIDER_DOMAIN(srv)     ((srv) ? (srv)->domain : 0)
+#define GDA_PROVIDER_DSN_PARAMS(srv) ((srv) ? (srv)->dsn_params : 0)
 
 Gda_Provider* gda_provider_new          (void);
 Gda_Provider* gda_provider_copy         (Gda_Provider*);

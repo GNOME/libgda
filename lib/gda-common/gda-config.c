@@ -285,16 +285,6 @@ gda_provider_copy (Gda_Provider* provider)
   if (provider->location) retval->location = g_strdup(provider->location);
   if (provider->repo_id) retval->repo_id = g_strdup(provider->repo_id);
   if (provider->type) retval->type = g_strdup(provider->type);
-  if (provider->main_config)
-    retval->main_config = g_strdup(provider->main_config);
-  if (provider->users_list_config)
-    retval->users_list_config = g_strdup(provider->users_list_config);
-  if (provider->users_ac_config)
-    retval->users_ac_config = g_strdup(provider->users_ac_config);
-  if (provider->db_config)
-    retval->db_config = g_strdup(provider->db_config);
-  if (provider->dsn_config)
-    retval->dsn_config = g_strdup(provider->dsn_config);
   
   return retval;
 }
@@ -317,11 +307,17 @@ gda_provider_free (Gda_Provider* provider)
   if (provider->username) g_free((gpointer) provider->username);
   if (provider->hostname) g_free((gpointer) provider->hostname);
   if (provider->domain) g_free((gpointer) provider->domain);
-  if (provider->main_config) g_free((gpointer) provider->main_config);
-  if (provider->users_list_config) g_free((gpointer) provider->users_list_config);
-  if (provider->users_ac_config) g_free((gpointer) provider->users_ac_config);
-  if (provider->db_config) g_free((gpointer) provider->db_config);
-  if (provider->dsn_config) g_free((gpointer) provider->dsn_config);
+  if (provider->dsn_params)
+    {
+      GList* node;
+      
+      while ((node = g_list_first(provider->dsn_params)))
+        {
+          gchar* str = (gchar *) node->data;
+          provider->dsn_params = g_list_remove(provider->dsn_params, (gpointer) str);
+          g_free((gpointer) str);
+        }
+    }
 
   g_free(provider);
 }
@@ -349,6 +345,8 @@ gda_provider_list (void)
     {
       for (i = 0; i < servlist->_length; i++)
         {
+          gchar* dsn_params;
+          
           provider = gda_provider_new();
           provider->name = g_strdup(servlist->_buffer[i].iid);
           provider->location = g_strdup(servlist->_buffer[i].location_info);
@@ -358,11 +356,23 @@ gda_provider_list (void)
           provider->username = g_strdup(servlist->_buffer[i].username);
           provider->hostname = g_strdup(servlist->_buffer[i].hostname);
           provider->domain = g_strdup(servlist->_buffer[i].domain);
-          provider->main_config = gda_corba_get_oaf_attribute(servlist->_buffer[i].props, "gda-main-config");
-          provider->users_list_config = gda_corba_get_oaf_attribute(servlist->_buffer[i].props, "gda-users-list-config");
-          provider->users_ac_config = gda_corba_get_oaf_attribute(servlist->_buffer[i].props, "gda-users-ac-config");
-          provider->db_config = gda_corba_get_oaf_attribute(servlist->_buffer[i].props, "gda-db-config");
-          provider->dsn_config = gda_corba_get_oaf_attribute(servlist->_buffer[i].props, "gda-dsn-config");
+
+          /* get list of available DSN params */
+          provider->dsn_params = NULL;
+          dsn_params = gda_corba_get_oaf_attribute(servlist->_buffer[i].props, "gda_params");
+          if (dsn_params)
+            {
+              gint   cnt = 0;
+              gchar* arr = g_strsplit(dsn_params, ";", 0);
+              
+              while (arr[cnt])
+                {
+                  provider->dsn_params = g_list_append(provider->dsn_params, g_strdup(arr[cnt]));
+                  cnt++;
+                }
+              g_strfreev(arr);
+            }
+
           retval = g_list_append(retval, (gpointer) provider);
         }
 
