@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda 0.3.1\n"
-"POT-Creation-Date: 2002-03-07 00:28+0100\n"
-"PO-Revision-Date: 2002-02-26 16:33+0100\n"
+"POT-Creation-Date: 2002-03-07 14:28+0100\n"
+"PO-Revision-Date: 2002-03-07 14:29+0100\n"
 "Last-Translator: Stanislav Višňovský <visnovsky@nenya.ms.mff.cuni.cz>\n"
 "Language-Team: Slovak <sk-i18n@lists.linux.sk>\n"
 "MIME-Version: 1.0\n"
@@ -85,8 +85,7 @@ msgstr "Nie je možné vytvoriť komponent typu %s"
 
 #: libgda/gda-server-connection.c:90
 msgid "Could not duplicate client object. Client won't get notifications"
-msgstr ""
-"Nie je možné duplikovať klientský objekt. Klient nebude dostávať upozornenia"
+msgstr "Nie je možné duplikovať klientský objekt. Klient nebude dostávať upozornenia"
 
 #: libgda/gda-server-connection.c:440
 #, c-format
@@ -96,6 +95,11 @@ msgstr "Nie je možné informovať klienta o akcii %d"
 #: libgda/gda-server-recordset.c:207
 msgid "No implementation for the fetch() method found"
 msgstr "Nenájdená implementácia metódy fetch()"
+
+#: libgda/gda-table.c:229
+#, c-format
+msgid "There is already a field called %s"
+msgstr "Už je definované pole nazvané %s"
 
 #: libgda/gda-value.c:926
 msgid "TRUE"
@@ -118,32 +122,29 @@ msgstr "Nie je možné spracovať súbor %s"
 #: libgda/gda-xml-database.c:232 libgda/gda-xml-database.c:249
 #, c-format
 msgid "Invalid XML database file '%s'"
-msgstr ""
+msgstr "Neplatný XML súbor databázy '%s'"
 
 #: libgda/gda-xml-database.c:293 libgda/gda-xml-database.c:333
-#, fuzzy, c-format
+#, c-format
 msgid "Table %s already exists"
-msgstr "tabuľka %s už existuje"
+msgstr "Tabuľka %s už existuje"
 
 #: libgda/gda-xml-database.c:327
-#, fuzzy
 msgid "Invalid node"
-msgstr "Neplatný handle MYSQL"
+msgstr "Neplatný uzol"
 
 #: libgda/gda-xml-database.c:358
 #, c-format
 msgid "Duplicated <data> node for table %s"
-msgstr ""
+msgstr "Duplikovaný uzol <data> pre tabuľku %s"
 
 #: libgda/gda-xml-database.c:365
-#, fuzzy
 msgid "Invalid XML node"
-msgstr "Neplatný handle MYSQL"
+msgstr "Neplatný XML uzol"
 
 #: providers/default/gda-default-provider.c:139
 #: providers/sqlite/gda-sqlite-provider.c:152
-msgid ""
-"A full path must be specified on the connection string to open a database."
+msgid "A full path must be specified on the connection string to open a database."
 msgstr "Pre otvorenie databáze musíte zadať celú cestu v reťazci spojenia."
 
 #: providers/default/GNOME_Database_Provider_Default.server.in.h:1
@@ -156,14 +157,11 @@ msgstr "GDA štandardný prístup k zdroju dát"
 
 #: providers/default/main.c:48
 msgid "Could not initiate Default component factory"
-msgstr ""
-"Nie je možné inicializovať vytváracie rozhranie pre štandardný komponent"
+msgstr "Nie je možné inicializovať vytváracie rozhranie pre štandardný komponent"
 
 #: providers/mysql/gda-mysql-provider.c:175
-msgid ""
-"You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
-msgstr ""
-"Nemôžete poskytovať UNIX_SOCKET ak tiež poskytujete HOSTITEĽ alebo a PORT."
+msgid "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
+msgstr "Nemôžete poskytovať UNIX_SOCKET ak tiež poskytujete HOSTITEĽ alebo a PORT."
 
 #: providers/mysql/gda-mysql-provider.c:246
 #: providers/mysql/gda-mysql-provider.c:326
@@ -261,8 +259,7 @@ msgstr "Vytváracie rozhranie komponentu pre Postgres"
 
 #: providers/postgres/main.c:49
 msgid "Could not initiate PostgreSQL component factory"
-msgstr ""
-"Nie je možné inicializovať vytváracie rozhranie pre komponent PostreSQL"
+msgstr "Nie je možné inicializovať vytváracie rozhranie pre komponent PostreSQL"
 
 #: providers/postgres/utils.c:39
 msgid "NO DESCRIPTION"
@@ -346,8 +343,7 @@ msgstr "Nie je možné získať súbor z %s"
 
 #: report/main.c:47
 msgid "Could not initiate Report component factory"
-msgstr ""
-"Nie je možné inicializovať vytváracie rozhranie pre komponent pre reporty"
+msgstr "Nie je možné inicializovať vytváracie rozhranie pre komponent pre reporty"
 
 #: testing/client.c:37
 msgid "\t\tNONE\n"
@@ -548,3 +544,4 @@ msgstr "\tgda_params ="
 #~ "\n"
 #~ "\tČíslo chyby operačného systému (%ld):\n"
 #~ "\t%s"
+
