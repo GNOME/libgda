@@ -1,5 +1,7 @@
 2002-05-02  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* providers/default/Makefile.am: added missing -I's to INCLUDES.
+
 	* providers/oracle/Makefile.am:
 	* providers/sybase/Makefile.am: removed .server-related stuff.
 
