@@ -1,3 +1,7 @@
+2002-06-04  Pablo Saratxaga  <pablo@mandrakesoft.com>
+
+	* configure.in: Added Vietnamese (vi) to ALL_LINGUAS
+
 2002-05-12  Carlos Perello Marin <carlos@gnome-db.org>
 
 	* macros/*: Imported directly the macros dir. This way we don't need
