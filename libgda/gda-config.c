@@ -29,10 +29,10 @@
 #include <gconf/gconf.h>
 #include <string.h>
 
-#define GDA_CONFIG_SECTION_DATASOURCES       "/apps/gda/Datasources"
-#define GDA_CONFIG_SECTION_LAST_CONNECTIONS  "/apps/gda/LastConnections"
+#define GDA_CONFIG_SECTION_DATASOURCES       "/apps/libgda/Datasources"
+#define GDA_CONFIG_SECTION_LAST_CONNECTIONS  "/apps/libgda/LastConnections"
 
-#define GDA_CONFIG_KEY_MAX_LAST_CONNECTIONS  "/apps/gda/MaxLastConnections"
+#define GDA_CONFIG_KEY_MAX_LAST_CONNECTIONS  "/apps/libgda/MaxLastConnections"
 
 static GList *activation_property_to_list (Bonobo_ActivationProperty *prop);
 static GdaParameter *activation_property_to_parameter (Bonobo_ActivationProperty *prop);

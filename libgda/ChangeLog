@@ -1,3 +1,8 @@
+2001-11-12  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-config.c: use /apps/libgda as prefix for configuration,
+	for not stepping on the GNOME 1.x version configuration
+
 2001-11-10  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-config.[ch] (gda_config_add_listener): new function
