@@ -1,3 +1,8 @@
+2001-10-10  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-data-model.[ch]: refactored. Lots of classes will depend on this
+	abstract class, so do it with care
+
 2001-10-07  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* Makefile.am: adapted to new IDL files

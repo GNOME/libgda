@@ -23,16 +23,9 @@
 #if !defined(__gda_data_model_h__)
 #  define __gda_data_model_h__
 
-#include <gda-common-defs.h>
 #include <gda-value.h>
 
 G_BEGIN_DECLS
-
-#define GDA_TYPE_DATA_MODEL            (gda_data_model_get_type())
-#define GDA_DATA_MODEL(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_DATA_MODEL, GdaDataModel))
-#define GDA_DATA_MODEL_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_DATA_MODEL, GdaDataModelClass))
-#define GDA_IS_DATA_MODEL(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_DATA_MODEL))
-#define GDA_IS_DATA_MODEL_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GDA_TYPE_DATA_MODEL))
 
 typedef struct _GdaDataModel        GdaDataModel;
 typedef struct _GdaDataModelClass   GdaDataModelClass;
@@ -46,24 +39,25 @@ struct _GdaDataModel {
 struct _GdaDataModelClass {
 	GObjectClass parent_class;
 
-	/* signals */
-	void (* changed) (GdaDataModel *model);
-
-	/* virtual methods to be implemented by subclasses */
+	/* virtual methods */
+	GdaValue * (* get_value_at) (GdaDataModel *model, gint col, gint row);
 };
 
-GType        gda_data_model_get_type (void);
+GType               gda_data_model_get_type (void);
 
-void         gda_data_model_append_column (GdaDataModel *model, const gchar *title);
-void         gda_data_model_remove_column (GdaDataModel *model, gint col);
-void         gda_data_model_append_row (GdaDataModel *model);
-void         gda_data_model_remove_row (GdaDataModel *model, gint row);
+gint                gda_data_model_get_n_columns (GdaDataModel *model);
+void                gda_data_model_add_column (GdaDataModel *model, GdaFieldAttributes *attr);
+void                gda_data_model_insert_column (GdaDataModel *model,
+						  GdaFieldAttributes *attr,
+						  gint pos);
+void                gda_data_model_remove_column_by_pos (GdaDataModel *model, gint pos);
+void                gda_data_model_remove_column_by_name (GdaDataModel *model,
+							  const gchar *name);
+GdaFieldAttributes *gda_data_model_describe_column_by_pos (GdaDataModel *model, gint pos);
+GdaFieldAttributes *gda_data_model_describe_column_by_name (GdaDataModel *model,
+							    const gchar *name);
 
-gint         gda_data_model_get_n_columns (GdaDataModel *model);
-const gchar *gda_data_model_get_column_title (GdaDataModel *model, gint col);
-gint         gda_data_model_get_row_count (GdaDataModel *model);
-GdaValue    *gda_data_model_get_value_at (GdaDataModel *model, gint row, gint col);
-void         gda_data_model_set_value_at (GdaDataModel *model, gint row, gint col, GdaValue *value);
+GdaValue           *gda_data_model_get_value_at (GdaDataModel *model, gint col, gint row);
 
 G_END_DECLS
 

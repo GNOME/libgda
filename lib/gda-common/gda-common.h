@@ -23,6 +23,8 @@
 #if !defined(__gda_common_h__)
 #  define __gda_common_h__
 
+#include <gda-data-model.h>
+#include <gda-quark-list.h>
 #include <gda-value.h>
 
 G_BEGIN_DECLS
