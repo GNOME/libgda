@@ -1,3 +1,8 @@
+2004-08-16  Joe Marcus Clarke <marcus@freebsd.org>
+
+	* providers/xml/gda-xml-provider.c (get_types): use empty strings
+	rather than NULL for the owner field.
+
 2004-08-12  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	Released 1.1.6.
