@@ -72,6 +72,7 @@ open_connection (GdaClient *client,
 	GdaConnection *cnc;
 	gboolean res;
 	GdaDataSourceInfo *dsn_info;
+	GdaTransaction *xaction;
 
 	g_return_if_fail (GDA_IS_CLIENT (client));
 
@@ -129,21 +130,25 @@ open_connection (GdaClient *client,
 	show_schema (cnc, GDA_CONNECTION_SCHEMA_TRIGGERS, _("Triggers"));
 
 	/* test transactions */
+	xaction = gda_transaction_new (NULL);
+
 	g_print (_("\tStarting transaction..."));
-	res = gda_connection_begin_transaction (cnc, NULL);
+	res = gda_connection_begin_transaction (cnc, xaction);
 	g_print ("%s\n", res ? "OK" : _("Error"));
 
 	g_print (_("\tFinishing transaction..."));
-	res = gda_connection_commit_transaction (cnc, NULL);
+	res = gda_connection_commit_transaction (cnc, xaction);
 	g_print ("%s\n", res ? "OK" : _("Error"));
 
 	g_print (_("\tStarting transaction..."));
-	res = gda_connection_begin_transaction (cnc, NULL);
+	res = gda_connection_begin_transaction (cnc, xaction);
 	g_print ("%s\n", res ? "OK" : _("Error"));
 
 	g_print (_("\tRolling back transaction..."));
-	res = gda_connection_rollback_transaction (cnc, NULL);
+	res = gda_connection_rollback_transaction (cnc, xaction);
 	g_print ("%s\n", res ? "OK" : _("Error"));
+
+	g_object_unref (G_OBJECT (xaction));
 
 	dsn_info = gda_config_find_data_source (name);
 	/* Postgres own tests */

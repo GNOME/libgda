@@ -496,6 +496,7 @@ gda_mysql_provider_begin_transaction (GdaServerProvider *provider,
 
 	g_return_val_if_fail (GDA_IS_MYSQL_PROVIDER (myprv), FALSE);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (GDA_IS_TRANSACTION (xaction), FALSE);
 
 	mysql = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_MYSQL_HANDLE);
 	if (!mysql) {
@@ -503,6 +504,30 @@ gda_mysql_provider_begin_transaction (GdaServerProvider *provider,
 		return FALSE;
 	}
 
+	/* set isolation level */
+	switch (gda_transaction_get_isolation_level (xaction)) {
+	case GDA_TRANSACTION_ISOLATION_READ_COMMITTED :
+		rc = mysql_real_query (mysql, "SET TRANSACTION ISOLATION LEVEL READ COMMITTED", 46);
+		break;
+	case GDA_TRANSACTION_ISOLATION_READ_UNCOMMITTED :
+		rc = mysql_real_query (mysql, "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED", 48);
+		break;
+	case GDA_TRANSACTION_ISOLATION_REPEATABLE_READ :
+		rc = mysql_real_query (mysql, "SET TRANSACTION ISOLATION LEVEL REPEATABLE READ", 47);
+		break;
+	case GDA_TRANSACTION_ISOLATION_SERIALIZABLE :
+		rc = mysql_real_query (mysql, "SET TRANSACTION ISOLATION LEVEL SERIALIZABLE", 44);
+		break;
+	default :
+		rc = 0;
+	}
+
+	if (rc != 0) {
+		gda_connection_add_error (cnc, gda_mysql_make_error (mysql));
+		return FALSE;
+	}
+
+	/* start the transaction */
 	rc = mysql_real_query (mysql, "BEGIN", strlen ("BEGIN"));
 	if (rc != 0) {
 		gda_connection_add_error (cnc, gda_mysql_make_error (mysql));

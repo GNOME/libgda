@@ -1,5 +1,12 @@
 2002-08-24  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* providers/mysql/gda-mysql-provider.c
+	(gda_mysql_provider_begin_transaction): set the isolation level for
+	the transaction.
+
+	* testing/client.c (open_connection): create a GdaTransaction for
+	passing it to transaction methods.
+
 	* libgda/gda-transaction.[ch]: added isolation level support.
 	(gda_transaction_get_isolation_level): new function.
 	(gda_transaction_set_isolation_level): new function.
