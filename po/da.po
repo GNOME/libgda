@@ -24,22 +24,22 @@ msgstr "Kunne ikke åbne forbindelse til '%s'"
 msgid "Data source %s not found"
 msgstr "Datakilde %s ikke fundet"
 
-#: lib/gda-client/gda-connection.c:234 lib/gda-client/gda-error.c:179
+#: lib/gda-client/gda-connection.c:226 lib/gda-client/gda-error.c:179
 #, c-format
 msgid "%s: The server didn't respond."
 msgstr "%s: Serveren svarede ikke."
 
-#: lib/gda-client/gda-connection.c:238 lib/gda-client/gda-error.c:183
+#: lib/gda-client/gda-connection.c:230 lib/gda-client/gda-error.c:183
 #, c-format
 msgid "%s: An Error occured in the CORBA system."
 msgstr "%s: En fejl skete i CORBA-systemet."
 
-#: lib/gda-client/gda-connection.c:493
+#: lib/gda-client/gda-connection.c:478
 #, c-format
 msgid "Database '%s' not found in system configuration"
 msgstr "Database '%s' ikke fundet i systemkonfiguration"
 
-#: lib/gda-client/gda-connection.c:509
+#: lib/gda-client/gda-connection.c:493
 msgid "Could not open CORBA factory"
 msgstr "Kunne ikke åbne CORBA fabrik"
 
@@ -107,14 +107,14 @@ msgstr "%p er ikke en gyldig tabel"
 msgid "Could not get pointer to server implementation"
 msgstr "Kunne ikke få peger til tjeneste-implementation"
 
-#: lib/gda-server/gda-server-impl-connection.c:123
-#: lib/gda-server/gda-server-impl-connection.c:132
-#: lib/gda-server/gda-server-impl-connection.c:139
-#: lib/gda-server/gda-server-impl-connection.c:148
-#: lib/gda-server/gda-server-impl-connection.c:155
-#: lib/gda-server/gda-server-impl-connection.c:164
-#: lib/gda-server/gda-server-impl-connection.c:171
-#: lib/gda-server/gda-server-impl-connection.c:180
+#: lib/gda-server/gda-server-impl-connection.c:125
+#: lib/gda-server/gda-server-impl-connection.c:134
+#: lib/gda-server/gda-server-impl-connection.c:141
+#: lib/gda-server/gda-server-impl-connection.c:150
+#: lib/gda-server/gda-server-impl-connection.c:157
+#: lib/gda-server/gda-server-impl-connection.c:166
+#: lib/gda-server/gda-server-impl-connection.c:173
+#: lib/gda-server/gda-server-impl-connection.c:182
 #: lib/gda-server/gda-server-impl-recordset.c:126
 #: lib/gda-server/gda-server-impl-recordset.c:135
 #: lib/gda-server/gda-server-impl-recordset.c:142
@@ -140,7 +140,7 @@ msgstr "Kunne ikke få peger til tjeneste-implementation"
 msgid "%s not implemented"
 msgstr "%s ikke implementeret"
 
-#: lib/gda-server/gda-server-impl-connection.c:272
+#: lib/gda-server/gda-server-impl-connection.c:274
 #, c-format
 msgid "impl_GDA_Connection_open: opening connection with DSN: %s"
 msgstr "impl_GDA_Connection_open: åbner forbindelse med DSN: %s"
@@ -212,38 +212,42 @@ msgstr "Modtog signal %d. Ignorerer"
 msgid "Attempt to initialize an already initialized provider"
 msgstr "Forsøg på at initiere en allerede initieret udbyder"
 
-#: providers/gda-interbase-server/gda-interbase-connection.c:261
-#: providers/gda-ldap-server/gda-ldap-connection.c:272
-#: providers/gda-mdb-server/gda-mdb-connection.c:360
-#: providers/gda-mysql-server/gda-mysql-connection.c:387
-#: providers/gda-odbc-server/gda-odbc-connection.c:609
-#: providers/gda-odbc-server/gda-odbc-connection.c:642
-#: providers/gda-oracle-server/gda-oracle-connection.c:426
-#: providers/gda-postgres-server/gda-postgres-connection.c:779
+#: providers/gda-ldap-server/GNOME_GDA_Provider_LDAP.oaf.in.h:1
+msgid "GDA Datasource Access for LDAP"
+msgstr ""
+
+#: providers/gda-interbase-server/gda-interbase-connection.c:273
+#: providers/gda-ldap-server/gda-ldap-connection.c:284
+#: providers/gda-mdb-server/gda-mdb-connection.c:372
+#: providers/gda-mysql-server/gda-mysql-connection.c:399
+#: providers/gda-odbc-server/gda-odbc-connection.c:621
+#: providers/gda-odbc-server/gda-odbc-connection.c:654
+#: providers/gda-oracle-server/gda-oracle-connection.c:438
+#: providers/gda-postgres-server/gda-postgres-connection.c:790
 #: providers/gda-sybase-server/gda-sybase-error.c:109
 #: providers/gda-tds-server/gda-tds-error.c:108
 #, c-format
 msgid "error '%s' at %s"
 msgstr "Fejl %s ved %s"
 
-#: providers/gda-interbase-server/gda-interbase-connection.c:266
-#: providers/gda-interbase-server/gda-interbase-connection.c:267
-#: providers/gda-ldap-server/gda-ldap-connection.c:277
-#: providers/gda-ldap-server/gda-ldap-connection.c:278
-#: providers/gda-mdb-server/gda-mdb-connection.c:364
-#: providers/gda-mdb-server/gda-mdb-connection.c:365
-#: providers/gda-mysql-server/gda-mysql-connection.c:391
-#: providers/gda-mysql-server/gda-mysql-connection.c:392
-#: providers/gda-odbc-server/gda-odbc-connection.c:611
-#: providers/gda-odbc-server/gda-odbc-connection.c:612
-#: providers/gda-odbc-server/gda-odbc-connection.c:644
-#: providers/gda-odbc-server/gda-odbc-connection.c:645
-#: providers/gda-oracle-server/gda-oracle-connection.c:431
-#: providers/gda-oracle-server/gda-oracle-connection.c:432
-#: providers/gda-postgres-server/gda-postgres-connection.c:786
-#: providers/gda-postgres-server/gda-postgres-connection.c:787
-#: providers/gda-primebase-server/gda-primebase-connection.c:302
-#: providers/gda-primebase-server/gda-primebase-connection.c:303
+#: providers/gda-interbase-server/gda-interbase-connection.c:278
+#: providers/gda-interbase-server/gda-interbase-connection.c:279
+#: providers/gda-ldap-server/gda-ldap-connection.c:289
+#: providers/gda-ldap-server/gda-ldap-connection.c:290
+#: providers/gda-mdb-server/gda-mdb-connection.c:376
+#: providers/gda-mdb-server/gda-mdb-connection.c:377
+#: providers/gda-mysql-server/gda-mysql-connection.c:403
+#: providers/gda-mysql-server/gda-mysql-connection.c:404
+#: providers/gda-odbc-server/gda-odbc-connection.c:623
+#: providers/gda-odbc-server/gda-odbc-connection.c:624
+#: providers/gda-odbc-server/gda-odbc-connection.c:656
+#: providers/gda-odbc-server/gda-odbc-connection.c:657
+#: providers/gda-oracle-server/gda-oracle-connection.c:443
+#: providers/gda-oracle-server/gda-oracle-connection.c:444
+#: providers/gda-postgres-server/gda-postgres-connection.c:797
+#: providers/gda-postgres-server/gda-postgres-connection.c:798
+#: providers/gda-primebase-server/gda-primebase-connection.c:314
+#: providers/gda-primebase-server/gda-primebase-connection.c:315
 #: providers/gda-sybase-server/gda-sybase-error.c:118
 #: providers/gda-sybase-server/gda-sybase-error.c:119
 #: providers/gda-tds-server/gda-tds-error.c:117
@@ -251,45 +255,55 @@ msgstr "Fejl %s ved %s"
 msgid "Not available"
 msgstr "Ikke tilgængelig"
 
-#: providers/gda-interbase-server/gda-interbase-connection.c:268
-#: providers/gda-ldap-server/gda-ldap-connection.c:279
-#: providers/gda-mdb-server/gda-mdb-connection.c:366
-#: providers/gda-mysql-server/gda-mysql-connection.c:393
-#: providers/gda-oracle-server/gda-oracle-connection.c:433
-#: providers/gda-postgres-server/gda-postgres-connection.c:788
-#: providers/gda-primebase-server/gda-primebase-connection.c:304
+#: providers/gda-interbase-server/gda-interbase-connection.c:280
+#: providers/gda-ldap-server/gda-ldap-connection.c:291
+#: providers/gda-mdb-server/gda-mdb-connection.c:378
+#: providers/gda-mysql-server/gda-mysql-connection.c:405
+#: providers/gda-oracle-server/gda-oracle-connection.c:445
+#: providers/gda-postgres-server/gda-postgres-connection.c:799
+#: providers/gda-primebase-server/gda-primebase-connection.c:316
 #: providers/gda-sybase-server/gda-sybase-error.c:120
 #: providers/gda-tds-server/gda-tds-error.c:119
 msgid "error"
 msgstr "fejl"
 
-#: providers/gda-ldap-server/main-ldap.c:69
+#: providers/gda-ldap-server/main-ldap.c:71
 msgid "Could not register LDAP provider implementation"
 msgstr "Kunne ikke registrere LDAP-udbyder implementation"
 
-#: providers/gda-interbase-server/gda-interbase-connection.c:260
+#: providers/gda-interbase-server/GNOME_GDA_Provider_InterBase.oaf.in.h:1
+msgid "GDA Datasource Access for Interbase"
+msgstr ""
+
+#: providers/gda-interbase-server/gda-interbase-connection.c:272
 #, c-format
 msgid "Error code %ld"
 msgstr "Fejlkode %ld"
 
-#: providers/gda-interbase-server/main-interbase.c:70
+#: providers/gda-interbase-server/main-interbase.c:72
 msgid "Could not register INTERBASE provider implementation"
 msgstr "Kunne ikke registrere INTERBASE-udbyder implementation"
+
+#: providers/gda-mail-server/GNOME_GDA_Provider_Mail.oaf.in.h:1
+msgid "GDA Datasource Access for Mail"
+msgstr ""
 
 #: providers/gda-mail-server/gda-mail-connection.c:108
 #: providers/gda-mdb-server/gda-mdb-connection.c:224
 #: providers/gda-mysql-server/gda-mysql-connection.c:251
 #: providers/gda-oracle-server/gda-oracle-connection.c:295
 #: providers/gda-postgres-server/gda-postgres-connection.c:511
-#: providers/gda-sybase-server/gda-sybase-connection.c:269
-#: providers/gda-tds-server/gda-tds-connection.c:258
 #, c-format
 msgid "Unhandled SCHEMA_QTYPE %d"
 msgstr "Uhåndteret SCHEMA_QTYPE %d"
 
-#: providers/gda-mail-server/main-mail.c:70
+#: providers/gda-mail-server/main-mail.c:72
 msgid "Could not register Mail provider implementation"
 msgstr "Kunne ikke registrere Mail udbyderimplementation"
+
+#: providers/gda-mdb-server/GNOME_GDA_Provider_MDB.oaf.in.h:1
+msgid "GDA Datasource Access for MDB (MS Access) files"
+msgstr ""
 
 #. execute command
 #: providers/gda-mdb-server/gda-mdb-command.c:86
@@ -328,22 +342,26 @@ msgstr "%s:%d: Du skal opgive filnavnet på MS Access databasen"
 msgid "Opening connection with filename=%s, user=%s, password=%s"
 msgstr "Åbner forbindelse med filnavn=%s, bruger=%s, adgangskode=%s"
 
-#: providers/gda-mdb-server/gda-mdb-connection.c:415
-#: providers/gda-mysql-server/gda-mysql-connection.c:442
+#: providers/gda-mdb-server/gda-mdb-connection.c:427
+#: providers/gda-mysql-server/gda-mysql-connection.c:454
 msgid "mysql_recset is NULL"
 msgstr "mysql_recent er NULL"
 
-#: providers/gda-mdb-server/gda-mdb-connection.c:457
-#: providers/gda-mysql-server/gda-mysql-connection.c:484
-#: providers/gda-sybase-server/gda-sybase-connection.c:432
-#: providers/gda-tds-server/gda-tds-connection.c:415
+#: providers/gda-mdb-server/gda-mdb-connection.c:469
+#: providers/gda-mysql-server/gda-mysql-connection.c:496
+#: providers/gda-sybase-server/gda-sybase-connection.c:452
+#: providers/gda-tds-server/gda-tds-connection.c:451
 msgid "No table name given for SCHEMA_COLS"
 msgstr "Intet tabelnavn opgivet for SCHEMA_COLS"
 
-#: providers/gda-mdb-server/main-mdb.c:70
-#: providers/gda-mysql-server/main-mysql.c:70
+#: providers/gda-mdb-server/main-mdb.c:72
+#: providers/gda-mysql-server/main-mysql.c:72
 msgid "Could not register MySQL provider implementation"
 msgstr "Kunne ikke registrere MySQL-udbyder implementation"
+
+#: providers/gda-mysql-server/GNOME_GDA_Provider_MySQL.oaf.in.h:1
+msgid "GDA Datasource Access for MySQL"
+msgstr ""
 
 #: providers/gda-mysql-server/gda-mysql-connection.c:162
 #, c-format
@@ -353,23 +371,31 @@ msgid ""
 msgstr ""
 "Åbner forbindelse med user=%s, password=%s, host=%s, port=%s, unix_socket=%s"
 
+#: providers/gda-odbc-server/GNOME_GDA_Provider_ODBC.oaf.in.h:1
+msgid "GDA Datasource Access for ODBC"
+msgstr ""
+
 #: providers/gda-odbc-server/gda-odbc-connection.c:280
 #, c-format
 msgid "gda_odbc_connection_open_schema: Unhandled SCHEMA_QTYPE %d\n"
 msgstr "gda_odbc_connection_open_schema: Uhåndteret SCHEMA_QTYPE %d\n"
 
-#: providers/gda-odbc-server/gda-odbc-connection.c:626
-#: providers/gda-odbc-server/gda-odbc-connection.c:627
-#: providers/gda-odbc-server/gda-odbc-connection.c:628
-#: providers/gda-odbc-server/gda-odbc-connection.c:659
-#: providers/gda-odbc-server/gda-odbc-connection.c:660
-#: providers/gda-odbc-server/gda-odbc-connection.c:661
+#: providers/gda-odbc-server/gda-odbc-connection.c:638
+#: providers/gda-odbc-server/gda-odbc-connection.c:639
+#: providers/gda-odbc-server/gda-odbc-connection.c:640
+#: providers/gda-odbc-server/gda-odbc-connection.c:671
+#: providers/gda-odbc-server/gda-odbc-connection.c:672
+#: providers/gda-odbc-server/gda-odbc-connection.c:673
 msgid "no text"
 msgstr "ingen tekst"
 
-#: providers/gda-odbc-server/main-odbc.c:69
+#: providers/gda-odbc-server/main-odbc.c:71
 msgid "Could not register ODBC provider implementation"
 msgstr "Kunne ikke registrere ODBC udbyderimplementation"
+
+#: providers/gda-oracle-server/GNOME_GDA_Provider_Oracle.oaf.in.h:1
+msgid "GDA Datasource Access for Oracle"
+msgstr ""
 
 #: providers/gda-oracle-server/gda-oracle-command.c:185
 msgid "Could not allocate statement handle"
@@ -409,18 +435,26 @@ msgstr "Ukendt ORACLE datatype i fill_field_values"
 msgid "recordset object being created without associated connection"
 msgstr "postobjektet oprettes uden associeret forbindelse"
 
-#: providers/gda-oracle-server/main-oracle.c:69
+#: providers/gda-oracle-server/main-oracle.c:71
 msgid "Could not register ORACLE provider implementation"
 msgstr "Kunne ikke registrere ORACLE udbyderimplementation"
 
-#: providers/gda-postgres-server/gda-postgres-connection.c:888
-#: providers/gda-postgres-server/gda-postgres-connection.c:1000
+#: providers/gda-postgres-server/GNOME_GDA_Provider_Postgres.oaf.in.h:1
+msgid "GDA Datasource Access for Postgres"
+msgstr ""
+
+#: providers/gda-postgres-server/gda-postgres-connection.c:899
+#: providers/gda-postgres-server/gda-postgres-connection.c:1011
 msgid "postgres_recset is NULL"
 msgstr "postgres_recset er NULL"
 
-#: providers/gda-postgres-server/main-postgres.c:69
+#: providers/gda-postgres-server/main-postgres.c:71
 msgid "Could not register PostgreSQL provider implementation"
 msgstr "Kunne ikke registrere PostgreSQL udbyderimplementation"
+
+#: providers/gda-sybase-server/GNOME_GDA_Provider_Sybase.oaf.in.h:1
+msgid "GDA Datasource Access for Sybase"
+msgstr ""
 
 #: providers/gda-sybase-server/gda-sybase-command.c:115
 #: providers/gda-tds-server/gda-tds-command.c:110
@@ -497,186 +531,177 @@ msgstr "Ingen data returneret, frigiver postsæt-struktur"
 msgid "Freeing command structure failed"
 msgstr "Frigivning af postsæt-struktur mislykkedes"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:149
-#: providers/gda-tds-server/gda-tds-connection.c:129
-msgid "Error allocating error structure"
-msgstr "Fejl ved allokering af fejl-struktur"
-
-#: providers/gda-sybase-server/gda-sybase-connection.c:157
-msgid "Not enough memory for sybase_Connection"
-msgstr "Ikke nok hukommelse for sybase_Connection"
-
-#: providers/gda-sybase-server/gda-sybase-connection.c:422
-#: providers/gda-tds-server/gda-tds-connection.c:405
+#: providers/gda-sybase-server/gda-sybase-connection.c:442
+#: providers/gda-tds-server/gda-tds-connection.c:441
 #, c-format
 msgid "schema_cols: table_name '%s'"
 msgstr "schema_cols: table_name '%s'"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:438
-#: providers/gda-tds-server/gda-tds-connection.c:421
+#: providers/gda-sybase-server/gda-sybase-connection.c:458
+#: providers/gda-tds-server/gda-tds-connection.c:457
 msgid "Could not allocate command structure"
 msgstr "Kunne ikke allokere kommandostruktur"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:460
-#: providers/gda-tds-server/gda-tds-connection.c:443
+#: providers/gda-sybase-server/gda-sybase-connection.c:480
+#: providers/gda-tds-server/gda-tds-connection.c:479
 msgid "Could not allocate enough memory for query"
 msgstr "Kunne ikke allokere nok hukommelse for forespørgsel"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:474
-#: providers/gda-tds-server/gda-tds-connection.c:457
+#: providers/gda-sybase-server/gda-sybase-connection.c:494
+#: providers/gda-tds-server/gda-tds-connection.c:493
 msgid "Could not get recordset in schema_cols"
 msgstr "Kunne ikke hente postsæt i schema_cols"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:506
-#: providers/gda-sybase-server/gda-sybase-connection.c:583
-#: providers/gda-tds-server/gda-tds-connection.c:489
-#: providers/gda-tds-server/gda-tds-connection.c:566
+#: providers/gda-sybase-server/gda-sybase-connection.c:526
+#: providers/gda-sybase-server/gda-sybase-connection.c:603
+#: providers/gda-tds-server/gda-tds-connection.c:525
+#: providers/gda-tds-server/gda-tds-connection.c:602
 #, c-format
 msgid "schema_tables: table name = '%s'"
 msgstr "schema_tables: tabelnavn = '%s'"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:514
-#: providers/gda-sybase-server/gda-sybase-connection.c:591
-#: providers/gda-tds-server/gda-tds-connection.c:497
-#: providers/gda-tds-server/gda-tds-connection.c:574
+#: providers/gda-sybase-server/gda-sybase-connection.c:534
+#: providers/gda-sybase-server/gda-sybase-connection.c:611
+#: providers/gda-tds-server/gda-tds-connection.c:533
+#: providers/gda-tds-server/gda-tds-connection.c:610
 #, c-format
 msgid "schema_tables: table_schema = '%s'"
 msgstr "schema_tables: table_schema = '%s'"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:519
-#: providers/gda-tds-server/gda-tds-connection.c:502
+#: providers/gda-sybase-server/gda-sybase-connection.c:539
+#: providers/gda-tds-server/gda-tds-connection.c:538
 #, c-format
 msgid "schema_procedures: proc_catalog = '%s' UNUSED!\n"
 msgstr "schema_procedures: proc_catalog = '%s' UBRUGT!\n"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:523
-#: providers/gda-tds-server/gda-tds-connection.c:506
+#: providers/gda-sybase-server/gda-sybase-connection.c:543
+#: providers/gda-tds-server/gda-tds-connection.c:542
 #, c-format
 msgid "schema_procs: invalid constraint type %d"
 msgstr "schema_procs: ugyldig begrænsningstype %d"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:533
-#: providers/gda-tds-server/gda-tds-connection.c:516
+#: providers/gda-sybase-server/gda-sybase-connection.c:553
+#: providers/gda-tds-server/gda-tds-connection.c:552
 msgid "Could not allocate cmd structure"
 msgstr "Kunne ikke allokere kommandostruktur"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:596
-#: providers/gda-tds-server/gda-tds-connection.c:579
+#: providers/gda-sybase-server/gda-sybase-connection.c:616
+#: providers/gda-tds-server/gda-tds-connection.c:615
 #, c-format
 msgid "schema_procedures: proc_catalog = '%s' UNUSED!"
 msgstr "schema_procedures: proc_catalog = '%s' UBRUGT!"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:600
-#: providers/gda-tds-server/gda-tds-connection.c:583
+#: providers/gda-sybase-server/gda-sybase-connection.c:620
+#: providers/gda-tds-server/gda-tds-connection.c:619
 #, c-format
 msgid "schema_tables: invalid constraint type %d"
 msgstr "schema_tables: ugyldig begrænsningstype %d"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:661
-#: providers/gda-tds-server/gda-tds-connection.c:644
+#: providers/gda-sybase-server/gda-sybase-connection.c:681
+#: providers/gda-tds-server/gda-tds-connection.c:680
 #, c-format
 msgid "Invalid or unsupported constraint type: %d"
 msgstr "Ugyldig eller ikke støttet begrænsningstype: %d"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:702
-#: providers/gda-tds-server/gda-tds-connection.c:685
+#: providers/gda-sybase-server/gda-sybase-connection.c:722
+#: providers/gda-tds-server/gda-tds-connection.c:721
 msgid "Could not allocate Gda_ServerCommand"
 msgstr "Kunne ikke allokere Gda_ServerCommand"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:732
-#: providers/gda-sybase-server/gda-sybase-connection.c:737
-#: providers/gda-tds-server/gda-tds-connection.c:715
-#: providers/gda-tds-server/gda-tds-connection.c:720
+#: providers/gda-sybase-server/gda-sybase-connection.c:752
+#: providers/gda-sybase-server/gda-sybase-connection.c:757
+#: providers/gda-tds-server/gda-tds-connection.c:751
+#: providers/gda-tds-server/gda-tds-connection.c:756
 #, c-format
 msgid "connection status: %x"
 msgstr "opkoblingsstatus: %x"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:733
-#: providers/gda-tds-server/gda-tds-connection.c:716
+#: providers/gda-sybase-server/gda-sybase-connection.c:753
+#: providers/gda-tds-server/gda-tds-connection.c:752
 #, c-format
 msgid "return code: %x"
 msgstr "returkode: %x"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:770
-#: providers/gda-tds-server/gda-tds-connection.c:751
+#: providers/gda-sybase-server/gda-sybase-connection.c:790
+#: providers/gda-tds-server/gda-tds-connection.c:787
 msgid "attempting reconnection"
 msgstr "forsøger opkobling på nyt"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:909
+#: providers/gda-sybase-server/gda-sybase-connection.c:929
 #, c-format
 msgid "Reconnected to '%s'"
 msgstr "Genopkoblet til '%s'"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:911
-#: providers/gda-tds-server/gda-tds-connection.c:856
+#: providers/gda-sybase-server/gda-sybase-connection.c:931
+#: providers/gda-tds-server/gda-tds-connection.c:892
 #, c-format
 msgid "Connected to %s"
 msgstr "Forbundet med %s"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:919
-#: providers/gda-tds-server/gda-tds-connection.c:866
+#: providers/gda-sybase-server/gda-sybase-connection.c:939
+#: providers/gda-tds-server/gda-tds-connection.c:902
 #, c-format
 msgid "Selected database '%s'"
 msgstr "Valgt database '%s'"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:948
-#: providers/gda-tds-server/gda-tds-connection.c:891
+#: providers/gda-sybase-server/gda-sybase-connection.c:968
+#: providers/gda-tds-server/gda-tds-connection.c:927
 #, c-format
 msgid "%s: Could not allocate cmd structure"
 msgstr "%s: Kunne ikke allokere kommandostruktur"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:957
-#: providers/gda-tds-server/gda-tds-connection.c:900
+#: providers/gda-sybase-server/gda-sybase-connection.c:977
+#: providers/gda-tds-server/gda-tds-connection.c:936
 #, c-format
 msgid "%s: Could not allocate memory for cmd string"
 msgstr "%s: Kunne ikke allokere hukommelse for kommandostreng"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:970
-#: providers/gda-tds-server/gda-tds-connection.c:910
+#: providers/gda-sybase-server/gda-sybase-connection.c:990
+#: providers/gda-tds-server/gda-tds-connection.c:946
 #, c-format
 msgid "%s: ct_command failed"
 msgstr "%s: ct_command mislykkedes"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:979
-#: providers/gda-tds-server/gda-tds-connection.c:919
+#: providers/gda-sybase-server/gda-sybase-connection.c:999
+#: providers/gda-tds-server/gda-tds-connection.c:955
 #, c-format
 msgid "%s: sending command failed"
 msgstr "%s: sendingskommando mislykkedes"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:990
+#: providers/gda-sybase-server/gda-sybase-connection.c:1010
 #, c-format
 msgid "%s: selecting database failed"
 msgstr "%s: valg af database mislykkedes"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:1008
+#: providers/gda-sybase-server/gda-sybase-connection.c:1028
 #, c-format
 msgid "%s: use command failed"
 msgstr "%s: brugskommando mislykkedes"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:1035
-#: providers/gda-tds-server/gda-tds-connection.c:981
+#: providers/gda-sybase-server/gda-sybase-connection.c:1055
+#: providers/gda-tds-server/gda-tds-connection.c:1017
 msgid "Could not allocate locale structure"
 msgstr "Kunne ikke allokere locale-struktur"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:1041
-#: providers/gda-tds-server/gda-tds-connection.c:987
+#: providers/gda-sybase-server/gda-sybase-connection.c:1061
+#: providers/gda-tds-server/gda-tds-connection.c:1023
 #, c-format
 msgid "Could not set locale to '%s'"
 msgstr "Kunne ikke sætte locale til '%s'"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:1047
-#: providers/gda-tds-server/gda-tds-connection.c:993
+#: providers/gda-sybase-server/gda-sybase-connection.c:1067
+#: providers/gda-tds-server/gda-tds-connection.c:1029
 #, c-format
 msgid "Could not configure locale to be '%s'"
 msgstr "Kunne ikke konfigurere locale til at være '%s'"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:1052
-#: providers/gda-tds-server/gda-tds-connection.c:998
+#: providers/gda-sybase-server/gda-sybase-connection.c:1072
+#: providers/gda-tds-server/gda-tds-connection.c:1034
 msgid "Could not drop locale structure"
 msgstr "Kunne ikke overspringe locale-struktur"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:1065
-#: providers/gda-tds-server/gda-tds-connection.c:1011
+#: providers/gda-sybase-server/gda-sybase-connection.c:1085
+#: providers/gda-tds-server/gda-tds-connection.c:1047
 #, c-format
 msgid "Fatal error: %s\n"
 msgstr "Fatal fejl: %s\n"
@@ -902,9 +927,13 @@ msgstr "ugyldig type fundet, afbryder"
 msgid "could not allocate field"
 msgstr "Kunne ikke allokere felt"
 
-#: providers/gda-sybase-server/main-sybase.c:74
+#: providers/gda-sybase-server/main-sybase.c:76
 msgid "Could not register gda-sybase provider implementation"
 msgstr "Kunne ikke registrere gda-sybase udbyderimplementation"
+
+#: providers/gda-primebase-server/GNOME_GDA_Provider_Primebase.oaf.in.h:1
+msgid "GDA Datasource Access for primebase"
+msgstr ""
 
 #: providers/gda-primebase-server/gda-primebase-command.c:128
 msgid "An error occured."
@@ -925,11 +954,11 @@ msgstr "%2ld: ConInfo: %s@%s, klient API v%x, status: %x"
 msgid "Could not connect to '%s'"
 msgstr "Kunne ikke forbinde til '%s'"
 
-#: providers/gda-primebase-server/gda-primebase-connection.c:316
+#: providers/gda-primebase-server/gda-primebase-connection.c:328
 msgid "Not enough memory for primebase_Error structure."
 msgstr "Ikke nok hukommelse for primebase_Error struktur"
 
-#: providers/gda-primebase-server/gda-primebase-connection.c:324
+#: providers/gda-primebase-server/gda-primebase-connection.c:336
 #, c-format
 msgid "%2ld: ERROR: %ld (%ld) : %s.\n"
 msgstr "%2ld: FEJL: %ld (%ld) : %s.\n"
@@ -938,15 +967,15 @@ msgstr "%2ld: FEJL: %ld (%ld) : %s.\n"
 msgid "No according field found"
 msgstr "Intet svarende-felt fundet"
 
-#: providers/gda-primebase-server/main-primebase.c:68
+#: providers/gda-primebase-server/main-primebase.c:70
 msgid "Could not register PRIMEBASE provider implementation"
 msgstr "Kunne ikke registrere PRIMEBASE-udbyder implementation"
 
-#: providers/gda-tds-server/gda-tds-connection.c:137
-msgid "Not enough memory for tds_Connection"
-msgstr "Ikke nok hukommelse for tds_Connection"
+#: providers/gda-tds-server/GNOME_GDA_Provider_TDS.oaf.in.h:1
+msgid "GDA Datasource Access for Sybase/MS SQL"
+msgstr ""
 
-#: providers/gda-tds-server/gda-tds-connection.c:854
+#: providers/gda-tds-server/gda-tds-connection.c:890
 #, c-format
 msgid "Reconnected to %s"
 msgstr "Genopkoblet til %s"
@@ -956,14 +985,18 @@ msgstr "Genopkoblet til %s"
 msgid "gda_tds_error_make(%p,%p,%p,%p)"
 msgstr "gda_tds_error_make(%p,%p,%p,%p)"
 
-#: providers/gda-tds-server/main-tds.c:74
+#: providers/gda-tds-server/main-tds.c:76
 msgid "Could not register gda-tds provider implementation"
 msgstr "Kunne ikke registrere gda-tds udbyderimplementation"
 
-#: report/gda-report-engine.c:207
+#: report/gda-report-engine.c:209
 #, c-format
 msgid "CORBA exception unloading report engine: %s"
 msgstr "CORBA undtagelse ved lukning af rapportmaskine: %s"
+
+#: report/server/GNOME_GDA_Report.oaf.in.h:1
+msgid "GDA Distributed Report Engine"
+msgstr ""
 
 #: report/server/gda-report-server-main.c:41
 #: report/server/gda-report-server-main.c:48
@@ -1044,3 +1077,12 @@ msgstr "%s: fejlkonfigureret DSN indgang"
 #, c-format
 msgid "%s: data source '%s' not found\n"
 msgstr "%s: datakilde '%s' ikke fundet\n"
+
+#~ msgid "Error allocating error structure"
+#~ msgstr "Fejl ved allokering af fejl-struktur"
+
+#~ msgid "Not enough memory for sybase_Connection"
+#~ msgstr "Ikke nok hukommelse for sybase_Connection"
+
+#~ msgid "Not enough memory for tds_Connection"
+#~ msgstr "Ikke nok hukommelse for tds_Connection"
