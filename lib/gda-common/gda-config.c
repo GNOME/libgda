@@ -27,7 +27,7 @@ get_conf_engine (void)
   if (!conf_engine)
     {
       /* initialize GConf */
-      gconf_init(0, NULL, NULL);
+      if (!gconf_is_initialized()) gconf_init(0, NULL, NULL);
       conf_engine = gconf_engine_get_default();
     }
   return conf_engine;
@@ -200,7 +200,11 @@ gda_config_list_sections (const gchar *path)
       
       for (node = slist; node != NULL; node = g_slist_next(node))
         {
-          ret = g_list_append(ret, g_strdup(node->data));
+          gchar* section_name = strrchr((const char *) node->data, '/');
+          if (section_name)
+            {
+              ret = g_list_append(ret, g_strdup(section_name + 1));
+            }
         }
       g_slist_free(slist);
     }
