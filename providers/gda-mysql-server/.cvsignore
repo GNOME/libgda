@@ -1,0 +1,8 @@
+Makefile
+Makefile.in
+*.o
+*.lo
+libgda-mysql.la
+gda-mysql-srv
+.deps
+.libs

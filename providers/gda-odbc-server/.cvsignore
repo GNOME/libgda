@@ -1,0 +1,8 @@
+Makefile
+Makefile.in
+*.o
+*.lo
+libgda-odbc.la
+gda-odbc-srv
+.deps
+.libs

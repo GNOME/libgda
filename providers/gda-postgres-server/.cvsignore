@@ -1,0 +1,8 @@
+Makefile
+Makefile.in
+*.o
+*.lo
+libgda-postgres.la
+gda-postgres-srv
+.deps
+.libs
