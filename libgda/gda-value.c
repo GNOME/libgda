@@ -64,6 +64,14 @@ clear_value (GdaValue *value)
 		gda_blob_free_data (&value->value.v_blob);
 		memset (&value->value.v_blob, 0, sizeof (GdaBlob));
 		break;
+	case GDA_VALUE_TYPE_BINARY :
+		g_free (value->value.v_binary);
+		value->value.v_binary = NULL;
+		break;
+	case GDA_VALUE_TYPE_NUMERIC :
+		g_free (value->value.v_numeric.number);
+		value->value.v_numeric.number = NULL;
+		break;
 	default :
 		break;
 	}

@@ -1,5 +1,14 @@
 2003-08-24  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
+	* libgda/gda-client.c:
+	* libgda/gda-value.c:
+	* providers/postgres/gda-postgres-provider.c:
+	* testing/client.c:
+	* testing/postgres-test.c: fixed leaks. Now gda-test doesn't leak when
+	testing mysql, postgrest and default providers.
+
+2003-08-24  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
 	* doc/C/libgda-docs.sgml:
 	* doc/C/tmpl/gda-blob.sgml:
 	* libgda/gda-connection.c:

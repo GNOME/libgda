@@ -533,8 +533,11 @@ gda_postgres_provider_close_connection (GdaServerProvider *provider, GdaConnecti
 
 	PQfinish (priv_data->pconn);
 
-	for (i = 0; i < priv_data->ntypes; i++)
+	for (i = 0; i < priv_data->ntypes; i++) {
 		g_free (priv_data->type_data[i].name);
+		g_free (priv_data->type_data[i].comments);
+		g_free (priv_data->type_data[i].owner);
+	}
 	
 	g_hash_table_destroy (priv_data->h_table);
 	g_free (priv_data->type_data);

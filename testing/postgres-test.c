@@ -247,6 +247,7 @@ blob_tests (GdaConnection *cnc)
 		g_print ("OK\n");
 	}
 
+	gda_blob_free_data (blob);
 	gda_connection_rollback_transaction (cnc, xaction);
 	
 	gda_connection_begin_transaction (cnc, xaction);

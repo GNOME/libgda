@@ -60,7 +60,8 @@ show_schema (GdaConnection *cnc, GdaConnectionSchema schema, const gchar *label)
 		}
 		g_print ("\n");
 	}
-
+	
+	g_object_unref ((GObject *) model);
 }
 
 /* Opens a connection and test basic operations on it */

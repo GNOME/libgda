@@ -345,6 +345,7 @@ gda_client_open_connection (GdaClient *client,
 		/* load the new provider */
 		prv = g_new0 (LoadedProvider, 1);
 		prv->handle = g_module_open (prv_info->location, G_MODULE_BIND_LAZY);
+		gda_config_free_provider_info (prv_info);
 		if (!prv->handle) {
 			emit_client_error (client, NULL, g_module_error ());
 			gda_config_free_data_source_info (dsn_info);
