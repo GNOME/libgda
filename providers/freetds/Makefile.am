@@ -17,6 +17,7 @@ libgda_freetds_la_SOURCES = \
 	gda-freetds-message.c \
 	gda-freetds-message.h \
 	gda-freetds.h \
+	gda-tds-schemas.h \
 	libmain.c \
 	utils.c
 
