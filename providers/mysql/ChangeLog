@@ -1,3 +1,8 @@
+2002-01-03  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* utils.c (gda_mysql_type_to_gda): when we can't resolve the types,
+	default to STRING, not to UNKNOWN
+
 2001-12-30  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-mysql-provider.c (get_mysql_types): implemented TYPES schema

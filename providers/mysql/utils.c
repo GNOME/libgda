@@ -83,7 +83,7 @@ gda_mysql_type_to_gda (enum enum_field_types mysql_type)
 	case FIELD_TYPE_NEWDATE :
 	case FIELD_TYPE_ENUM :
 	case FIELD_TYPE_SET :
-		break;
+		return GDA_TYPE_STRING;
 	}
 
 	return GDA_TYPE_UNKNOWN;
