@@ -548,9 +548,9 @@ gda_client_find_connection (GdaClient *client,
 		tmp_usr = gda_connection_get_username (cnc);
 		tmp_pwd = gda_connection_get_password (cnc);
 
-		if (((!tmp_dsn && !dsn_info->name) || !strcmp (tmp_dsn, dsn_info->name)) &&
-		    ((!tmp_usr && !username) || !strcmp (tmp_usr, username)) &&
-		    ((!tmp_pwd && !password) || !strcmp (tmp_pwd, password))) {
+		if (!strcmp (tmp_dsn ? tmp_dsn : "", dsn_info->name ? dsn_info->name : "")
+		    && !strcmp (tmp_usr ? tmp_usr : "", username ? username : "")
+		    && !strcmp (tmp_pwd ? tmp_pwd : "", password ? password : "")) {
 			gda_config_free_data_source_info (dsn_info);
 			return cnc;
 		}
