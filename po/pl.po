@@ -9,8 +9,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2002-05-26 13:25+0200\n"
-"PO-Revision-Date: 2002-05-26 13:37+0200\n"
+"POT-Creation-Date: 2002-06-04 23:00+0200\n"
+"PO-Revision-Date: 2002-06-04 23:01+0200\n"
 "Last-Translator: GNOME PL Team <translators@gnome.pl>\n"
 "Language-Team: Polish <pl@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -64,6 +64,10 @@ msgstr "Opis"
 #: libgda/gda-config.c:1
 msgid "Username"
 msgstr "Nazwa użytkownika"
+
+#: libgda/gda-config.c:1
+msgid "Password"
+msgstr "Hasło"
 
 #: libgda/gda-data-model.c:1
 #, c-format
@@ -292,6 +296,7 @@ msgstr ""
 #: providers/mysql/gda-mysql-provider.c:1
 #: providers/mysql/gda-mysql-provider.c:1
 #: providers/mysql/gda-mysql-provider.c:1
+#: providers/mysql/gda-mysql-provider.c:1
 msgid "Invalid MYSQL handle"
 msgstr "Niepoprawny uchwyt MySQL-a"
 
@@ -363,6 +368,7 @@ msgstr "Nie można zainicjować generatora komponenetów Oracle'a"
 msgid "Could not initialize OCI library"
 msgstr "Nie można zainicjować biblioteki OCI"
 
+#: providers/postgres/gda-postgres-provider.c:1
 #: providers/postgres/gda-postgres-provider.c:1
 #: providers/postgres/gda-postgres-provider.c:1
 #: providers/postgres/gda-postgres-recordset.c:1
