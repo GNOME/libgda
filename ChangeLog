@@ -1,5 +1,10 @@
 2002-12-15  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* libgda/gda-connection.h: added SCHEMA_LANGUAGES to GdaConnectionSchema
+	enumeration.
+
+2002-12-15  Rodrigo Moya <rodrigo@gnome-db.org>
+
 	Fixes #101085
 
 	* providers/sybase/gda-sybase-provider.c
