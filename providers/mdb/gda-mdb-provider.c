@@ -37,6 +37,7 @@ static void gda_mdb_provider_init       (GdaMdbProvider *provider,
 					   GdaMdbProviderClass *klass);
 static void gda_mdb_provider_finalize   (GObject *object);
 
+static const gchar *gda_mdb_provider_get_version (GdaServerProvider *provider);
 static gboolean gda_mdb_provider_open_connection (GdaServerProvider *provider,
 						    GdaConnection *cnc,
 						    GdaQuarkList *params,
@@ -44,6 +45,8 @@ static gboolean gda_mdb_provider_open_connection (GdaServerProvider *provider,
 						    const gchar *password);
 static gboolean gda_mdb_provider_close_connection (GdaServerProvider *provider,
 						     GdaConnection *cnc);
+static const gchar *gda_mdb_provider_get_server_version (GdaServerProvider *provider,
+							 GdaConnection *cnc);
 static GList *gda_mdb_provider_execute_command (GdaServerProvider *provider,
 						  GdaConnection *cnc,
 						  GdaCommand *cmd,
@@ -85,8 +88,10 @@ gda_mdb_provider_class_init (GdaMdbProviderClass *klass)
 	parent_class = g_type_class_peek_parent (klass);
 
 	object_class->finalize = gda_mdb_provider_finalize;
+	provider_class->get_version = gda_mdb_provider_get_version;
 	provider_class->open_connection = gda_mdb_provider_open_connection;
 	provider_class->close_connection = gda_mdb_provider_close_connection;
+	provider_class->get_server_version = gda_mdb_provider_get_server_version;
 	provider_class->execute_command = gda_mdb_provider_execute_command;
 	provider_class->begin_transaction = gda_mdb_provider_begin_transaction;
 	provider_class->commit_transaction = gda_mdb_provider_commit_transaction;
@@ -153,6 +158,13 @@ gda_mdb_provider_new (void)
 	return GDA_SERVER_PROVIDER (provider);
 }
 
+/* get_version handler for the GdaMdbProvider class */
+static const gchar *
+gda_mdb_provider_get_version (GdaServerProvider *provider)
+{
+	return VERSION;
+}
+
 /* open_connection handler for the GdaMdbProvider class */
 static gboolean
 gda_mdb_provider_open_connection (GdaServerProvider *provider,
@@ -179,6 +191,7 @@ gda_mdb_provider_open_connection (GdaServerProvider *provider,
 
 	mdb_cnc = g_new0 (GdaMdbConnection, 1);
 	mdb_cnc->cnc = cnc;
+	mdb_cnc->server_version = NULL;
 	mdb_cnc->mdb = mdb_open (filename);
 	if (!mdb_cnc->mdb) {
 		gda_connection_add_error_string (cnc, _("Could not open file %s"), filename);
@@ -207,11 +220,38 @@ gda_mdb_provider_close_connection (GdaServerProvider *provider, GdaConnection *c
 		return FALSE;
 	}
 
+	if (mdb_cnc->server_version != NULL) {
+		g_free (mdb_cnc->server_version);
+		mdb_cnc->server_version = NULL;
+	}
 	/* FIXME: close MDB database */
 	g_free (mdb_cnc);
 	g_object_set_data (G_OBJECT (cnc), OBJECT_DATA_MDB_HANDLE, NULL);
 
 	return TRUE;
+}
+
+/* get_server_version handler for the GdaMdbProvider class */
+static const gchar *
+gda_mdb_provider_get_server_version (GdaServerProvider *provider,
+				     GdaConnection *cnc)
+{
+	GdaMdbConnection *mdb_cnc;
+	GdaMdbProvider *mdb_prv = (GdaMdbProvider *) provider;
+
+	g_return_val_if_fail (GDA_IS_MDB_PROVIDER (mdb_prv), NULL);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+
+	mdb_cnc = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_MDB_HANDLE);
+	if (!mdb_cnc) {
+		gda_connection_add_error_string (cnc, _("Invalid MDB handle"));
+		return NULL;
+	}
+
+	if (!mdb_cnc->server_version)
+		mdb_cnc->server_version = g_strdup_printf ("Microsoft Jet %d", mdb_cnc->mdb->jet_version);
+
+	return (const gchar *) mdb_cnc->server_version;
 }
 
 /* execute_command handler for the GdaMdbProvider class */

@@ -39,6 +39,7 @@ G_BEGIN_DECLS
 typedef struct {
 	GdaConnection *cnc;
 	MdbHandle *mdb;
+	gchar *server_version;
 } GdaMdbConnection;
 
 G_END_DECLS
