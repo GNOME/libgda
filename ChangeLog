@@ -1,3 +1,7 @@
+2001-08-27  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* configure.in: use AM_GNOME_GETTEXT instead of AM_GNU_GETTEXT
+
 2001-08-10  Zbigniew Chyla  <cyba@gnome.pl>
 
 	* configure.in (ALL_LINGUAS): Added nn.
