@@ -1,0 +1,6 @@
+2001-04-28  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* ChangeLog: added
+	* gda-postgres-command.c (gda_postgres_command_execute):
+	added (partial) support for command_type (GDA_COMMAND_TYPE_TABLE,
+	GDA_COMMAND_TYPE_TEXT, etc). Fixes bug #51733
