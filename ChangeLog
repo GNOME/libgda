@@ -1,3 +1,8 @@
+2001-12-29  Carlos Perelló Marín <carlos@gnome-db.org>
+
+	* providers/default/sqlite/Makefile.am: Fixed to pass distcheck.
+	It's only a bad fix, we should review it. Happy New Year!!!
+	
 2001-12-28  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* configure.in: bumped version to 0.8.99

@@ -36,7 +36,7 @@ libsqlite_a_SOURCES = \
 	where.c
 
 stamp-parser: parse.y lemon
-	$(builddir)/lemon $(builddir)/parse.y
+	$(top_builddir)/providers/default/sqlite/lemon $(top_srcdir)/providers/default/sqlite/parse.y
 	touch $@
 
 parse.c: stamp-parser
