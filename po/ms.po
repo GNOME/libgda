@@ -15,7 +15,7 @@ msgstr ""
 #: libgda/gda-client.c:207 libgda/gda-client.c:319 libgda/gda-connection.c:207
 #, c-format
 msgid "Data source %s not found in configuration"
-msgstr "Sumber data &s tidak dijumpai pada konfigurasi"
+msgstr "Sumber data %s tidak dijumpai pada konfigurasi"
 
 #: libgda/gda-client.c:225
 #, c-format
@@ -92,7 +92,7 @@ msgid "Could not parse file at %s"
 msgstr "Tak dapat menghantar fail pada %s"
 
 #: libgda/gda-xml-database.c:247
-#, c-format
+#, fuzzy, c-format
 msgid "Invalid XML database file '%s'"
 msgstr "Fail pangkalandata XML tidak sah"
 

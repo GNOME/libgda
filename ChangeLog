@@ -1,3 +1,7 @@
+2002-05-14  Pablo Saratxaga  <pablo@mandrakesoft.com>
+
+	* configure.in: Added Vietnamese (vi) and Azeri (az) to ALL_LINGUAS
+
 2002-05-14  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* providers/mysql/gda-mysql-recordset.c: check pointers before
