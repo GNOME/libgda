@@ -1,3 +1,10 @@
+2005-02-28  Loic Minier <lool+gnome@via.ecp.fr>
+
+	Fixes #168641
+
+	* configure.in: don't use builtin copy of gtk-doc macro, use
+	GTK_DOC_CHECK instead.
+
 2005-02-28  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	Fixes #129153
