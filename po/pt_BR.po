@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-06-01 01:37+0200\n"
+"POT-Creation-Date: 2004-06-08 00:08+0200\n"
 "PO-Revision-Date: 2004-03-19 22:38-0300\n"
 "Last-Translator: Alexandre Folle de Menezes <afmenez@terra.com.br>\n"
 "Language-Team: Brazilian Portuguese <ldp-br@bazar.conectiva.com.br>\n"
@@ -99,7 +99,7 @@ msgstr "Usuário"
 msgid "Password"
 msgstr "Senha"
 
-#: libgda/gda-data-model.c:889
+#: libgda/gda-data-model.c:880
 #, fuzzy, c-format
 msgid "Data model %p is not updatable"
 msgstr "Modelo de dados %p não é editável"
@@ -536,7 +536,7 @@ msgid "Invalid LDAP handle"
 msgstr "Handle LDAP inválido"
 
 #: providers/ldap/gda-ldap-recordset.c:69
-#: providers/mysql/gda-mysql-recordset.c:130
+#: providers/mysql/gda-mysql-recordset.c:139
 #: providers/postgres/gda-postgres-recordset.c:193
 #: providers/postgres/gda-postgres-recordset.c:357
 #: providers/sqlite/gda-sqlite-recordset.c:165
@@ -547,21 +547,21 @@ msgstr "Número de linha fora do limite"
 
 #: providers/ldap/gda-ldap-recordset.c:283
 #: providers/msql/gda-msql-recordset.c:229
-#: providers/mysql/gda-mysql-recordset.c:309
+#: providers/mysql/gda-mysql-recordset.c:320
 #: providers/oracle/gda-oracle-recordset.c:469
 msgid "Attempt to insert a row with an invalid number of columns"
 msgstr "Tentativa de inserção de uma linha com um número inválido de colunas"
 
 #: providers/ldap/gda-ldap-recordset.c:298
 #: providers/msql/gda-msql-recordset.c:241
-#: providers/mysql/gda-mysql-recordset.c:324
+#: providers/mysql/gda-mysql-recordset.c:335
 #: providers/oracle/gda-oracle-recordset.c:484
 msgid "Could not retrieve column's information"
 msgstr "Impossível obter informação da coluna"
 
 #: providers/ldap/gda-ldap-recordset.c:316
 #: providers/msql/gda-msql-recordset.c:255
-#: providers/mysql/gda-mysql-recordset.c:342
+#: providers/mysql/gda-mysql-recordset.c:353
 #: providers/oracle/gda-oracle-recordset.c:502
 msgid "Could not retrieve column's value"
 msgstr "Impossível obter valor da coluna"
@@ -858,8 +858,8 @@ msgstr ""
 
 #: providers/mysql/gda-mysql-provider.c:299
 #: providers/mysql/gda-mysql-provider.c:1110
-#: providers/mysql/gda-mysql-recordset.c:119
-#: providers/mysql/gda-mysql-recordset.c:192
+#: providers/mysql/gda-mysql-recordset.c:128
+#: providers/mysql/gda-mysql-recordset.c:202
 msgid "Invalid MySQL handle"
 msgstr "Handle MySQL inválida"
 

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda-2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-06-01 01:37+0200\n"
+"POT-Creation-Date: 2004-06-08 00:08+0200\n"
 "PO-Revision-Date: 2003-06-28 16:24+0400\n"
 "Last-Translator: Valek Filippov <frob@df.ru>\n"
 "Language-Team: Russian <gnome-cyr@gnome.org>\n"
@@ -99,7 +99,7 @@ msgstr "Имя пользователя"
 msgid "Password"
 msgstr "Пароль"
 
-#: libgda/gda-data-model.c:889
+#: libgda/gda-data-model.c:880
 #, fuzzy, c-format
 msgid "Data model %p is not updatable"
 msgstr "Модель данных %p нередактируема"
@@ -552,7 +552,7 @@ msgid "Invalid LDAP handle"
 msgstr "Неправильный обработчик LDAP"
 
 #: providers/ldap/gda-ldap-recordset.c:69
-#: providers/mysql/gda-mysql-recordset.c:130
+#: providers/mysql/gda-mysql-recordset.c:139
 #: providers/postgres/gda-postgres-recordset.c:193
 #: providers/postgres/gda-postgres-recordset.c:357
 #: providers/sqlite/gda-sqlite-recordset.c:165
@@ -563,7 +563,7 @@ msgstr "Номер строки находится вне диапазона"
 
 #: providers/ldap/gda-ldap-recordset.c:283
 #: providers/msql/gda-msql-recordset.c:229
-#: providers/mysql/gda-mysql-recordset.c:309
+#: providers/mysql/gda-mysql-recordset.c:320
 #: providers/oracle/gda-oracle-recordset.c:469
 msgid "Attempt to insert a row with an invalid number of columns"
 msgstr "Произошла попытка вставить запись с недопустимым числом столбцов"
@@ -571,7 +571,7 @@ msgstr "Произошла попытка вставить запись с не�
 # fe/fe_editor.c:175 fe/fe_editor.c:212
 #: providers/ldap/gda-ldap-recordset.c:298
 #: providers/msql/gda-msql-recordset.c:241
-#: providers/mysql/gda-mysql-recordset.c:324
+#: providers/mysql/gda-mysql-recordset.c:335
 #: providers/oracle/gda-oracle-recordset.c:484
 msgid "Could not retrieve column's information"
 msgstr "Не удалось извлечь информацию о столбце"
@@ -579,7 +579,7 @@ msgstr "Не удалось извлечь информацию о столбц�
 # fe/fe_editor.c:175 fe/fe_editor.c:212
 #: providers/ldap/gda-ldap-recordset.c:316
 #: providers/msql/gda-msql-recordset.c:255
-#: providers/mysql/gda-mysql-recordset.c:342
+#: providers/mysql/gda-mysql-recordset.c:353
 #: providers/oracle/gda-oracle-recordset.c:502
 msgid "Could not retrieve column's value"
 msgstr "Не удалось извлечь значение столбца"
@@ -872,8 +872,8 @@ msgstr ""
 
 #: providers/mysql/gda-mysql-provider.c:299
 #: providers/mysql/gda-mysql-provider.c:1110
-#: providers/mysql/gda-mysql-recordset.c:119
-#: providers/mysql/gda-mysql-recordset.c:192
+#: providers/mysql/gda-mysql-recordset.c:128
+#: providers/mysql/gda-mysql-recordset.c:202
 msgid "Invalid MySQL handle"
 msgstr "Обработчик MySQL недопустим"
 

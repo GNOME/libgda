@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-06-01 01:37+0200\n"
+"POT-Creation-Date: 2004-06-08 00:08+0200\n"
 "PO-Revision-Date: 2004-04-16 22:49+0200\n"
 "Last-Translator: Christian Rose <menthos@menthos.com>\n"
 "Language-Team: Swedish <sv@li.org>\n"
@@ -98,7 +98,7 @@ msgstr "Användarnamn"
 msgid "Password"
 msgstr "Lösenord"
 
-#: libgda/gda-data-model.c:889
+#: libgda/gda-data-model.c:880
 #, c-format
 msgid "Data model %p is not updatable"
 msgstr "Datamodellen %p är inte uppdateringsbar"
@@ -535,7 +535,7 @@ msgid "Invalid LDAP handle"
 msgstr "Ogiltigt LDAP-handtag"
 
 #: providers/ldap/gda-ldap-recordset.c:69
-#: providers/mysql/gda-mysql-recordset.c:130
+#: providers/mysql/gda-mysql-recordset.c:139
 #: providers/postgres/gda-postgres-recordset.c:193
 #: providers/postgres/gda-postgres-recordset.c:357
 #: providers/sqlite/gda-sqlite-recordset.c:165
@@ -546,21 +546,21 @@ msgstr "Radnummer utanför intervallet"
 
 #: providers/ldap/gda-ldap-recordset.c:283
 #: providers/msql/gda-msql-recordset.c:229
-#: providers/mysql/gda-mysql-recordset.c:309
+#: providers/mysql/gda-mysql-recordset.c:320
 #: providers/oracle/gda-oracle-recordset.c:469
 msgid "Attempt to insert a row with an invalid number of columns"
 msgstr "Försök att infoga en rad med ett ogiltigt antal kolumner"
 
 #: providers/ldap/gda-ldap-recordset.c:298
 #: providers/msql/gda-msql-recordset.c:241
-#: providers/mysql/gda-mysql-recordset.c:324
+#: providers/mysql/gda-mysql-recordset.c:335
 #: providers/oracle/gda-oracle-recordset.c:484
 msgid "Could not retrieve column's information"
 msgstr "Kunde inte hämta kolumninformation"
 
 #: providers/ldap/gda-ldap-recordset.c:316
 #: providers/msql/gda-msql-recordset.c:255
-#: providers/mysql/gda-mysql-recordset.c:342
+#: providers/mysql/gda-mysql-recordset.c:353
 #: providers/oracle/gda-oracle-recordset.c:502
 msgid "Could not retrieve column's value"
 msgstr "Kunde inte hämta kolumnvärde"
@@ -850,8 +850,8 @@ msgstr ""
 
 #: providers/mysql/gda-mysql-provider.c:299
 #: providers/mysql/gda-mysql-provider.c:1110
-#: providers/mysql/gda-mysql-recordset.c:119
-#: providers/mysql/gda-mysql-recordset.c:192
+#: providers/mysql/gda-mysql-recordset.c:128
+#: providers/mysql/gda-mysql-recordset.c:202
 msgid "Invalid MySQL handle"
 msgstr "Ogiltigt MySQL-handtag"
 

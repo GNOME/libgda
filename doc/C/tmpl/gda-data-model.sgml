@@ -222,8 +222,10 @@ Basic data model class
 </para>
 
 @model: 
-@col: 
+@attrs: 
 @Returns: 
+<!-- # Unused Parameters # -->
+@col: 
 
 
 <!-- ##### FUNCTION gda_data_model_update_column ##### -->
@@ -233,6 +235,7 @@ Basic data model class
 
 @model: 
 @col: 
+@attrs: 
 @Returns: 
 
 
