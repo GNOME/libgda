@@ -176,49 +176,49 @@ struct _GdaServerImplFunctions {
  * GdaServerConnection management
  */
 GdaServerConnection* gda_server_connection_new  (GdaServerImpl *server_impl);
-gchar*                gda_server_connection_get_dsn (GdaServerConnection *cnc);
-void                  gda_server_connection_set_dsn (GdaServerConnection *cnc, const gchar *dsn);
-gchar*                gda_server_connection_get_username (GdaServerConnection *cnc);
-void                  gda_server_connection_set_username (GdaServerConnection *cnc,
-                                                          const gchar *username);
-gchar*                gda_server_connection_get_password (GdaServerConnection *cnc);
-void                  gda_server_connection_set_password (GdaServerConnection *cnc,
+gchar*               gda_server_connection_get_dsn (GdaServerConnection *cnc);
+void                 gda_server_connection_set_dsn (GdaServerConnection *cnc, const gchar *dsn);
+gchar*               gda_server_connection_get_username (GdaServerConnection *cnc);
+void                 gda_server_connection_set_username (GdaServerConnection *cnc,
+							 const gchar *username);
+gchar*               gda_server_connection_get_password (GdaServerConnection *cnc);
+void                 gda_server_connection_set_password (GdaServerConnection *cnc,
                                                           const gchar *password);
-void                  gda_server_connection_add_error (GdaServerConnection *cnc,
+void                 gda_server_connection_add_error (GdaServerConnection *cnc,
                                                        GdaServerError *error);
-void                  gda_server_connection_add_error_string (GdaServerConnection *cnc,
+void                 gda_server_connection_add_error_string (GdaServerConnection *cnc,
                                                               const gchar *msg);
-gpointer              gda_server_connection_get_user_data (GdaServerConnection *cnc);
-void                  gda_server_connection_set_user_data (GdaServerConnection *cnc, gpointer user_data);
-void                  gda_server_connection_free (GdaServerConnection *cnc);
+gpointer             gda_server_connection_get_user_data (GdaServerConnection *cnc);
+void                 gda_server_connection_set_user_data (GdaServerConnection *cnc, gpointer user_data);
+void                 gda_server_connection_free (GdaServerConnection *cnc);
 
-gint                  gda_server_connection_open (GdaServerConnection *cnc,
+gint                 gda_server_connection_open (GdaServerConnection *cnc,
                                                   const gchar *dsn,
                                                   const gchar *user,
                                                   const gchar *password);
-void                  gda_server_connection_close (GdaServerConnection *cnc);
-gint                  gda_server_connection_begin_transaction (GdaServerConnection *cnc);
-gint                  gda_server_connection_commit_transaction (GdaServerConnection *cnc);
-gint                  gda_server_connection_rollback_transaction (GdaServerConnection *cnc);
+void                 gda_server_connection_close (GdaServerConnection *cnc);
+gint                 gda_server_connection_begin_transaction (GdaServerConnection *cnc);
+gint                 gda_server_connection_commit_transaction (GdaServerConnection *cnc);
+gint                 gda_server_connection_rollback_transaction (GdaServerConnection *cnc);
 GdaServerRecordset*  gda_server_connection_open_schema (GdaServerConnection *cnc,
                                                          GdaServerError *error,
                                                          GDA_Connection_QType t,
                                                          GDA_Connection_Constraint *constraints,
                                                          gint length);
-gint                  gda_server_connection_start_logging (GdaServerConnection *cnc,
+gint                 gda_server_connection_start_logging (GdaServerConnection *cnc,
                                                            const gchar *filename);
-gint                  gda_server_connection_stop_logging (GdaServerConnection *cnc);
-gchar*                gda_server_connection_create_table (GdaServerConnection *cnc,
+gint                 gda_server_connection_stop_logging (GdaServerConnection *cnc);
+gchar*               gda_server_connection_create_table (GdaServerConnection *cnc,
                                                           GDA_RowAttributes *columns);
-gboolean              gda_server_connection_supports (GdaServerConnection *cnc,
+gboolean             gda_server_connection_supports (GdaServerConnection *cnc,
                                                       GDA_Connection_Feature feature);
-GDA_ValueType         gda_server_connection_get_gda_type (GdaServerConnection *cnc,
+GDA_ValueType        gda_server_connection_get_gda_type (GdaServerConnection *cnc,
                                                           gulong sql_type);
-gshort                gda_server_connection_get_c_type (GdaServerConnection *cnc,
+gshort               gda_server_connection_get_c_type (GdaServerConnection *cnc,
                                                         GDA_ValueType type);
-gchar*                gda_server_connection_sql2xml (GdaServerConnection *cnc,
+gchar*               gda_server_connection_sql2xml (GdaServerConnection *cnc,
                                                      const gchar *sql);
-gchar*                gda_server_connection_xml2sql (GdaServerConnection *cnc,
+gchar*               gda_server_connection_xml2sql (GdaServerConnection *cnc,
                                                      const gchar *xml);
 
 /*
@@ -226,16 +226,16 @@ gchar*                gda_server_connection_xml2sql (GdaServerConnection *cnc,
  */
 GdaServerCommand*    gda_server_command_new  (GdaServerConnection *cnc);
 GdaServerConnection* gda_server_command_get_connection (GdaServerCommand *cmd);
-gchar*                gda_server_command_get_text (GdaServerCommand *cmd);
-void                  gda_server_command_set_text (GdaServerCommand *cmd,
+gchar*               gda_server_command_get_text (GdaServerCommand *cmd);
+void                 gda_server_command_set_text (GdaServerCommand *cmd,
                                                    const gchar *text);
-GDA_CommandType       gda_server_command_get_type (GdaServerCommand *cmd);
-void                  gda_server_command_set_type (GdaServerCommand *cmd,
+GDA_CommandType      gda_server_command_get_type (GdaServerCommand *cmd);
+void                 gda_server_command_set_type (GdaServerCommand *cmd,
                                                    GDA_CommandType type);
-gpointer              gda_server_command_get_user_data (GdaServerCommand *cmd);
-void                  gda_server_command_set_user_data (GdaServerCommand *cmd,
+gpointer             gda_server_command_get_user_data (GdaServerCommand *cmd);
+void                 gda_server_command_set_user_data (GdaServerCommand *cmd,
                                                         gpointer user_data);
-void                  gda_server_command_free (GdaServerCommand *cmd);
+void                 gda_server_command_free (GdaServerCommand *cmd);
 GdaServerRecordset*  gda_server_command_execute (GdaServerCommand *cmd,
                                                   GdaServerError *error,
                                                   const GDA_CmdParameterSeq *params,
@@ -247,50 +247,50 @@ GdaServerRecordset*  gda_server_command_execute (GdaServerCommand *cmd,
  */
 GdaServerRecordset*  gda_server_recordset_new  (GdaServerConnection *cnc);
 GdaServerConnection* gda_server_recordset_get_connection (GdaServerRecordset *recset);
-void                  gda_server_recordset_add_field (GdaServerRecordset *recset,
+void                 gda_server_recordset_add_field (GdaServerRecordset *recset,
                                                       GdaServerField *field);
-GList*                gda_server_recordset_get_fields (GdaServerRecordset *recset);
-gboolean              gda_server_recordset_is_at_begin (GdaServerRecordset *recset);
-void                  gda_server_recordset_set_at_begin (GdaServerRecordset *recset,
+GList*               gda_server_recordset_get_fields (GdaServerRecordset *recset);
+gboolean             gda_server_recordset_is_at_begin (GdaServerRecordset *recset);
+void                 gda_server_recordset_set_at_begin (GdaServerRecordset *recset,
                                                          gboolean at_begin);
-gboolean              gda_server_recordset_is_at_end (GdaServerRecordset *recset);
-void                  gda_server_recordset_set_at_end (GdaServerRecordset *recset,
+gboolean             gda_server_recordset_is_at_end (GdaServerRecordset *recset);
+void                 gda_server_recordset_set_at_end (GdaServerRecordset *recset,
                                                        gboolean at_end);
-gpointer              gda_server_recordset_get_user_data (GdaServerRecordset *recset);
-void                  gda_server_recordset_set_user_data (GdaServerRecordset *recset,
+gpointer             gda_server_recordset_get_user_data (GdaServerRecordset *recset);
+void                 gda_server_recordset_set_user_data (GdaServerRecordset *recset,
                                                           gpointer user_data);
-void                  gda_server_recordset_free (GdaServerRecordset *recset);
+void                 gda_server_recordset_free (GdaServerRecordset *recset);
 
-gint                  gda_server_recordset_move_next (GdaServerRecordset *recset);
-gint                  gda_server_recordset_move_prev (GdaServerRecordset *recset);
-gint                  gda_server_recordset_close (GdaServerRecordset *recset);
+gint                 gda_server_recordset_move_next (GdaServerRecordset *recset);
+gint                 gda_server_recordset_move_prev (GdaServerRecordset *recset);
+gint                 gda_server_recordset_close (GdaServerRecordset *recset);
 
 /*
  * GdaServerField management
  */
 GdaServerField* gda_server_field_new  (void);
-void             gda_server_field_set_name (GdaServerField *field, const gchar *name);
-gulong           gda_server_field_get_sql_type (GdaServerField *field);
-void             gda_server_field_set_sql_type (GdaServerField *field, gulong sql_type);
-void             gda_server_field_set_defined_length (GdaServerField *field, glong length);
-void             gda_server_field_set_actual_length (GdaServerField *field, glong length);
-void             gda_server_field_set_scale (GdaServerField *field, gshort scale);
-gpointer         gda_server_field_get_user_data (GdaServerField *field);
-void             gda_server_field_set_user_data (GdaServerField *field, gpointer user_data);
-void             gda_server_field_free (GdaServerField *field);
+void            gda_server_field_set_name (GdaServerField *field, const gchar *name);
+gulong          gda_server_field_get_sql_type (GdaServerField *field);
+void            gda_server_field_set_sql_type (GdaServerField *field, gulong sql_type);
+void            gda_server_field_set_defined_length (GdaServerField *field, glong length);
+void            gda_server_field_set_actual_length (GdaServerField *field, glong length);
+void            gda_server_field_set_scale (GdaServerField *field, gshort scale);
+gpointer        gda_server_field_get_user_data (GdaServerField *field);
+void            gda_server_field_set_user_data (GdaServerField *field, gpointer user_data);
+void            gda_server_field_free (GdaServerField *field);
 
-void             gda_server_field_set_boolean (GdaServerField *field, gboolean val);
-void             gda_server_field_set_date (GdaServerField *field, GDate *val);
-void             gda_server_field_set_time (GdaServerField *field, GTime val);
-void             gda_server_field_set_timestamp (GdaServerField *field, GDate *dat, GTime tim);
-void             gda_server_field_set_smallint (GdaServerField *field, gshort val);
-void             gda_server_field_set_integer (GdaServerField *field, gint val);
-void             gda_server_field_set_longvarchar (GdaServerField *field, gchar *val);
-void             gda_server_field_set_char (GdaServerField *field, gchar *val);
-void             gda_server_field_set_varchar (GdaServerField *field, gchar *val);
-void             gda_server_field_set_single (GdaServerField *field, gfloat val);
-void             gda_server_field_set_double (GdaServerField *field, gdouble val);
-void             gda_server_field_set_varbin (GdaServerField *field, gpointer val, glong size);
+void            gda_server_field_set_boolean (GdaServerField *field, gboolean val);
+void            gda_server_field_set_date (GdaServerField *field, GDate *val);
+void            gda_server_field_set_time (GdaServerField *field, GTime val);
+void            gda_server_field_set_timestamp (GdaServerField *field, GDate *dat, GTime tim);
+void            gda_server_field_set_smallint (GdaServerField *field, gshort val);
+void            gda_server_field_set_integer (GdaServerField *field, gint val);
+void            gda_server_field_set_longvarchar (GdaServerField *field, gchar *val);
+void            gda_server_field_set_char (GdaServerField *field, gchar *val);
+void            gda_server_field_set_varchar (GdaServerField *field, gchar *val);
+void            gda_server_field_set_single (GdaServerField *field, gfloat val);
+void            gda_server_field_set_double (GdaServerField *field, gdouble val);
+void            gda_server_field_set_varbin (GdaServerField *field, gpointer val, glong size);
 
 /*
  * GdaServerError management

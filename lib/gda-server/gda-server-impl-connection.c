@@ -88,7 +88,7 @@ static POA_GDA_Connection__vepv impl_GDA_Connection_vepv = {
  * Stub implementations
  */
 GDA_Connection
-impl_GDA_Connection__create (PortableServer_POA poa, CORBA_char *goad_id, CORBA_Environment * ev)
+impl_GDA_Connection__create (PortableServer_POA poa, CORBA_char *id, CORBA_Environment * ev)
 {
 	GDA_Connection retval;
 	impl_POA_GDA_Connection *newservant;
@@ -97,7 +97,9 @@ impl_GDA_Connection__create (PortableServer_POA poa, CORBA_char *goad_id, CORBA_
 	newservant = g_new0(impl_POA_GDA_Connection, 1);
 	newservant->servant.vepv = &impl_GDA_Connection_vepv;
 	newservant->poa = poa;
-	newservant->cnc = gda_server_connection_new(gda_server_impl_find(goad_id));
+
+	newservant->cnc = NULL;
+	newservant->id = g_strdup (id);
 
 	POA_GDA_Connection__init((PortableServer_Servant) newservant, ev);
 	objid = PortableServer_POA_activate_object(poa, newservant, ev);
@@ -117,7 +119,7 @@ impl_GDA_Connection__destroy (impl_POA_GDA_Connection * servant, CORBA_Environme
 
 CORBA_long
 impl_GDA_Connection__get_flags (impl_POA_GDA_Connection * servant,
-								CORBA_Environment * ev)
+				CORBA_Environment * ev)
 {
 	gda_log_message(_("%s not implemented"), __PRETTY_FUNCTION__);
 	return 0;
@@ -125,15 +127,15 @@ impl_GDA_Connection__get_flags (impl_POA_GDA_Connection * servant,
 
 void
 impl_GDA_Connection__set_flags (impl_POA_GDA_Connection * servant,
-								CORBA_long value,
-								CORBA_Environment * ev)
+				CORBA_long value,
+				CORBA_Environment * ev)
 {
 	gda_log_message(_("%s not implemented"), __PRETTY_FUNCTION__);
 }
 
 CORBA_long
 impl_GDA_Connection__get_cmdTimeout (impl_POA_GDA_Connection * servant,
-									 CORBA_Environment * ev)
+				     CORBA_Environment * ev)
 {
 	gda_log_message(_("%s not implemented"), __PRETTY_FUNCTION__);
 	return 0;
@@ -141,15 +143,15 @@ impl_GDA_Connection__get_cmdTimeout (impl_POA_GDA_Connection * servant,
 
 void
 impl_GDA_Connection__set_cmdTimeout (impl_POA_GDA_Connection * servant,
-									 CORBA_long value,
-									 CORBA_Environment * ev)
+				     CORBA_long value,
+				     CORBA_Environment * ev)
 {
 	gda_log_message(_("%s not implemented"), __PRETTY_FUNCTION__);
 }
 
 CORBA_long
 impl_GDA_Connection__get_connectTimeout (impl_POA_GDA_Connection * servant,
-										 CORBA_Environment * ev)
+					 CORBA_Environment * ev)
 {
 	gda_log_message(_("%s not implemented"), __PRETTY_FUNCTION__);
 	return 0;
@@ -157,15 +159,15 @@ impl_GDA_Connection__get_connectTimeout (impl_POA_GDA_Connection * servant,
 
 void
 impl_GDA_Connection__set_connectTimeout (impl_POA_GDA_Connection * servant,
-										 CORBA_long value,
-										 CORBA_Environment * ev)
+					 CORBA_long value,
+					 CORBA_Environment * ev)
 {
 	gda_log_message(_("%s not implemented"), __PRETTY_FUNCTION__);
 }
 
 GDA_CursorLocation
 impl_GDA_Connection__get_cursor (impl_POA_GDA_Connection * servant,
-								 CORBA_Environment * ev)
+				 CORBA_Environment * ev)
 {
 	gda_log_message(_("%s not implemented"), __PRETTY_FUNCTION__);
 	return 0;
@@ -173,22 +175,22 @@ impl_GDA_Connection__get_cursor (impl_POA_GDA_Connection * servant,
 
 void
 impl_GDA_Connection__set_cursor (impl_POA_GDA_Connection * servant,
-								 GDA_CursorLocation value,
-								 CORBA_Environment * ev)
+				 GDA_CursorLocation value,
+				 CORBA_Environment * ev)
 {
 	gda_log_message(_("%s not implemented"), __PRETTY_FUNCTION__);
 }
 
 CORBA_char *
 impl_GDA_Connection__get_version (impl_POA_GDA_Connection * servant,
-								  CORBA_Environment * ev)
+				  CORBA_Environment * ev)
 {
 	return CORBA_string_dup(VERSION);
 }
 
 GDA_ErrorSeq *
 impl_GDA_Connection__get_errors (impl_POA_GDA_Connection * servant,
-								 CORBA_Environment * ev)
+				 CORBA_Environment * ev)
 {
 	GDA_ErrorSeq* rc = GDA_ErrorSeq__alloc();
 
@@ -199,7 +201,7 @@ impl_GDA_Connection__get_errors (impl_POA_GDA_Connection * servant,
 
 CORBA_long
 impl_GDA_Connection_beginTransaction (impl_POA_GDA_Connection * servant,
-									  CORBA_Environment * ev)
+				      CORBA_Environment * ev)
 {
 	GdaServerConnection* cnc = servant->cnc;
 	GDA_NotSupported*     exception;
@@ -214,7 +216,7 @@ impl_GDA_Connection_beginTransaction (impl_POA_GDA_Connection * servant,
 
 CORBA_long
 impl_GDA_Connection_commitTransaction (impl_POA_GDA_Connection * servant,
-									   CORBA_Environment * ev)
+				       CORBA_Environment * ev)
 {
 	GdaServerConnection* cnc = servant->cnc;
 	GDA_NotSupported*         exception;
@@ -229,7 +231,7 @@ impl_GDA_Connection_commitTransaction (impl_POA_GDA_Connection * servant,
 
 CORBA_long
 impl_GDA_Connection_rollbackTransaction (impl_POA_GDA_Connection * servant,
-										 CORBA_Environment * ev)
+					 CORBA_Environment * ev)
 {
 	GdaServerConnection* cnc = servant->cnc;
 	GDA_NotSupported*         exception;
@@ -245,28 +247,40 @@ impl_GDA_Connection_rollbackTransaction (impl_POA_GDA_Connection * servant,
 
 CORBA_long
 impl_GDA_Connection_close (impl_POA_GDA_Connection * servant,
-						   CORBA_Environment * ev)
+			   CORBA_Environment * ev)
 {
 	CORBA_long rc = 0;
 
-	gda_server_connection_close(servant->cnc);
-	gda_server_connection_free(servant->cnc);
+	gda_server_connection_close (servant->cnc);
+	gda_server_connection_free (servant->cnc);
+	servant->cnc = NULL;
+	g_free (servant->id);
 
-	PortableServer_POA_deactivate_object(servant->poa,
-										 PortableServer_POA_servant_to_id(servant->poa, servant, ev),
-										 ev);
-	if (gda_server_impl_exception(ev) < 0) rc = -1;
+	PortableServer_POA_deactivate_object (
+		servant->poa,
+		PortableServer_POA_servant_to_id(servant->poa, servant, ev),
+		ev);
+	if (gda_server_impl_exception(ev) < 0)
+		rc = -1;
 	return rc;
 }
 
 CORBA_long
 impl_GDA_Connection_open (impl_POA_GDA_Connection * servant,
-						  CORBA_char * dsn,
-						  CORBA_char * user,
-						  CORBA_char * passwd,
-						  CORBA_Environment * ev)
+			  CORBA_char * dsn,
+			  CORBA_char * user,
+			  CORBA_char * passwd,
+			  CORBA_Environment * ev)
 {
 	gda_log_message(_("impl_GDA_Connection_open: opening connection with DSN: %s"), dsn);
+
+	/* free the previous GdaServerConnection, if any */
+	if (servant->cnc != NULL)
+		gda_server_connection_free (servant->cnc);
+	servant->cnc = gda_server_connection_new(gda_server_impl_find(servant->id));
+	if (!servant->cnc)
+		return -1;
+
 	if (gda_server_connection_open(servant->cnc, dsn, user, passwd) != 0) {
 		GDA_DriverError* exception = GDA_DriverError__alloc();
 
@@ -279,15 +293,16 @@ impl_GDA_Connection_open (impl_POA_GDA_Connection * servant,
 		exception->realcommand = CORBA_string_dup(__PRETTY_FUNCTION__);
 		CORBA_exception_set(ev, CORBA_USER_EXCEPTION, ex_GDA_DriverError, exception);
 		return -1;
-    }
+	}
+
 	return 0;
 }
 
 GDA_Recordset
 impl_GDA_Connection_openSchema (impl_POA_GDA_Connection * servant,
                                 GDA_Connection_QType t,
-								GDA_Connection_ConstraintSeq * constraints,
-								CORBA_Environment * ev)
+				GDA_Connection_ConstraintSeq * constraints,
+				CORBA_Environment * ev)
 {
 	GdaServerConnection* cnc = servant->cnc;
 	GDA_Recordset             new_recset;
@@ -296,8 +311,8 @@ impl_GDA_Connection_openSchema (impl_POA_GDA_Connection * servant,
 
 	memset(&e, '\0', sizeof(e));
 	if ((recset = gda_server_connection_open_schema(cnc, &e, t,
-													constraints->_buffer,
-													constraints->_length)) == 0) {
+							constraints->_buffer,
+							constraints->_length)) == 0) {
 		GDA_DriverError* exception = GDA_DriverError__alloc();
 		exception->errors._length = g_list_length(servant->cnc->errors);
 		exception->errors._buffer = gda_server_impl_make_error_buffer(servant->cnc);
@@ -334,7 +349,7 @@ impl_GDA_Connection_modifySchema (impl_POA_GDA_Connection * servant,
 
 GDA_Command
 impl_GDA_Connection_createCommand (impl_POA_GDA_Connection * servant,
-								   CORBA_Environment * ev)
+				   CORBA_Environment * ev)
 {
 	GDA_Command retval;
 	GdaServerCommand* cmd = gda_server_command_new(servant->cnc);
@@ -350,7 +365,7 @@ impl_GDA_Connection_createCommand (impl_POA_GDA_Connection * servant,
 
 GDA_Recordset
 impl_GDA_Connection_createRecordset (impl_POA_GDA_Connection * servant,
-									 CORBA_Environment * ev)
+				     CORBA_Environment * ev)
 {
 	GDA_Recordset            retval;
 	GdaServerRecordset* rs = gda_server_recordset_new(servant->cnc);
@@ -366,8 +381,8 @@ impl_GDA_Connection_createRecordset (impl_POA_GDA_Connection * servant,
 
 CORBA_long
 impl_GDA_Connection_startLogging (impl_POA_GDA_Connection * servant,
-								  CORBA_char * filename,
-								  CORBA_Environment * ev)
+				  CORBA_char * filename,
+				  CORBA_Environment * ev)
 {
 	GdaServerConnection *cnc = servant->cnc;
 
@@ -379,7 +394,7 @@ impl_GDA_Connection_startLogging (impl_POA_GDA_Connection * servant,
 
 CORBA_long
 impl_GDA_Connection_stopLogging (impl_POA_GDA_Connection * servant,
-								 CORBA_Environment * ev)
+				 CORBA_Environment * ev)
 {
 	GdaServerConnection *cnc = servant->cnc;
 
@@ -391,9 +406,9 @@ impl_GDA_Connection_stopLogging (impl_POA_GDA_Connection * servant,
 
 CORBA_char *
 impl_GDA_Connection_createTable (impl_POA_GDA_Connection * servant,
-								 CORBA_char * name,
-								 GDA_RowAttributes * columns,
-								 CORBA_Environment * ev)
+				 CORBA_char * name,
+				 GDA_RowAttributes * columns,
+				 CORBA_Environment * ev)
 {
 	CORBA_char* retval;
 

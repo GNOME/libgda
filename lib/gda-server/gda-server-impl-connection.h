@@ -25,18 +25,18 @@
 /*
  * App-specific servant structures
  */
-typedef struct
-{
-  POA_GDA_Connection   servant;
-  PortableServer_POA   poa;
-  CORBA_long           attr_flags;
-  CORBA_long           attr_cmdTimeout;
-  CORBA_long           attr_connectTimeout;
-  GDA_CursorLocation   attr_cursor;
-  CORBA_char*          attr_version;
-  GDA_ErrorSeq         attr_errors;
+typedef struct {
+	POA_GDA_Connection   servant;
+	PortableServer_POA   poa;
+	CORBA_long           attr_flags;
+	CORBA_long           attr_cmdTimeout;
+	CORBA_long           attr_connectTimeout;
+	GDA_CursorLocation   attr_cursor;
+	CORBA_char*          attr_version;
+	GDA_ErrorSeq         attr_errors;
 
-  GdaServerConnection* cnc;
+	GdaServerConnection* cnc;
+	gchar*               id;
 } impl_POA_GDA_Connection;
 
 /*
