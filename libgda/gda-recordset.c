@@ -157,6 +157,13 @@ gda_recordset_get_value_at (GdaDataModel *model, gint col, gint row)
 	return GDA_DATA_MODEL_CLASS (parent_class)->get_value_at (model, col, row);
 }
 
+/**
+ * gda_recordset_get_type
+ *
+ * Registers the GType for the #GdaRecordset class.
+ *
+ * Returns: the identifier for the #GdaRecordset class. 
+ */
 GType
 gda_recordset_get_type (void)
 {
@@ -243,12 +250,28 @@ gda_recordset_finalize (GObject * object)
 	parent_class->finalize (object);
 }
 
+/**
+ * gda_recordset_get_command_text
+ * @recset: a #GdaRecordset.
+ *
+ * Get the text of command that generated this recordset.
+ *
+ * Returns: a string with the command issued.
+ */
 const gchar *
 gda_recordset_get_command_text (GdaRecordset *recset) {
 	g_return_val_if_fail (GDA_IS_RECORDSET (recset), NULL);
 	return recset->priv->cmd_text;
 }
 
+/**
+ * gda_recordset_get_command_type
+ * @recset: a #GdaRecordset.
+ *
+ * Get the type of command that generated this recordset.
+ *
+ * Returns: a #GdaCommandType.
+ */
 GdaCommandType
 gda_recordset_get_command_type (GdaRecordset *recset) {
 	g_return_val_if_fail (GDA_IS_RECORDSET (recset), GDA_COMMAND_TYPE_INVALID);
@@ -257,7 +280,8 @@ gda_recordset_get_command_type (GdaRecordset *recset) {
 }
 
 /**
- * gda_recordset_new:
+ * gda_recordset_new
+ * @cnc: a #GdaConnection to be associated with the new recordset.
  * @corba_recset: a GNOME_Database_Recordset object
  *
  * Allocates space for a new recordset.

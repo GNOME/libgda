@@ -86,3 +86,39 @@ GdaServerRecordset
 @func: 
 
 
+<!-- ##### FUNCTION gda_server_recordset_get_command_text ##### -->
+<para>
+
+</para>
+
+@recset: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_server_recordset_set_command_text ##### -->
+<para>
+
+</para>
+
+@recset: 
+@cmd_text: 
+
+
+<!-- ##### FUNCTION gda_server_recordset_get_command_type ##### -->
+<para>
+
+</para>
+
+@recset: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_server_recordset_set_command_type ##### -->
+<para>
+
+</para>
+
+@recset: 
+@cmd_type: 
+
+

@@ -1,3 +1,17 @@
+2002-01-23  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
+	* doc/C/libgda-sections.txt:
+	* doc/C/tmpl/gda-command.sgml:
+	* doc/C/tmpl/gda-connection.sgml:
+	* doc/C/tmpl/gda-recordset.sgml:
+	* doc/C/tmpl/gda-report-datasource.sgml:
+	* doc/C/tmpl/gda-row.sgml:
+	* doc/C/tmpl/gda-server-recordset-model.sgml:
+	* doc/C/tmpl/gda-server-recordset.sgml:
+	* doc/C/tmpl/gda-xql-utils.sgml:
+	* libgda/gda-recordset.c: added documentation for
+	gda_recordset_get_command_t*().
+
 2002-01-23  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* data/gda-xml-query.dtd:

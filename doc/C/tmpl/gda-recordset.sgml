@@ -30,3 +30,21 @@ GdaRecordset
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_recordset_get_command_text ##### -->
+<para>
+
+</para>
+
+@recset: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_recordset_get_command_type ##### -->
+<para>
+
+</para>
+
+@recset: 
+@Returns: 
+
+
