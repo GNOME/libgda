@@ -32,9 +32,6 @@
 
 2003-11-11  Laurent Sansonetti <laurent@datarescue.be>
 
-	* providers/postgres/gda-postgres-recordset.c:
-	Added support for updatable data models.
-
 	* libgda/gda-command.[ch] (gda_command_get_type, gda_command_copy):
 	* libgda/gda-field.[ch] (gda_field_attributes_get_type):
 	* libgda/gda-parameter.[ch] (gda_parameter_get_type, gda_parameter_copy,

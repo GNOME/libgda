@@ -38,7 +38,6 @@ struct _GdaPostgresRecordsetPrivate {
 	PGresult *pg_res;
 	GdaConnection *cnc;
 	GdaValueType *column_types;
-	gchar *table_name;
 	gint ncolumns;
 	gint nrows;
 
@@ -56,7 +55,6 @@ static const GdaValue *gda_postgres_recordset_get_value_at    (GdaDataModel *mod
 static GdaFieldAttributes *gda_postgres_recordset_describe    (GdaDataModel *model, gint col);
 static gint gda_postgres_recordset_get_n_rows 		      (GdaDataModel *model);
 static const GdaRow *gda_postgres_recordset_get_row 	      (GdaDataModel *model, gint rownum);
-static gboolean gda_postgres_recordset_update_row 	      (GdaDataModel *model, const GdaRow *row);
 
 static GObjectClass *parent_class = NULL;
 
@@ -89,7 +87,6 @@ gda_postgres_recordset_class_init (GdaPostgresRecordsetClass *klass)
 	model_class->describe_column = gda_postgres_recordset_describe;
 	model_class->get_value_at = gda_postgres_recordset_get_value_at;
 	model_class->get_row = gda_postgres_recordset_get_row;
-	model_class->update_row = gda_postgres_recordset_update_row;
 }
 
 static void
@@ -153,7 +150,6 @@ get_row (GdaDataModel *model, GdaPostgresRecordsetPrivate *priv, gint rownum)
 		}
 	}
 
-	gda_row_set_number (row, rownum);
 	id = g_strdup_printf ("%d", rownum);
 	gda_row_set_id (row, id); /* FIXME: by now, the rowid is just the row number */
 	g_free (id);
@@ -196,133 +192,9 @@ gda_postgres_recordset_get_row (GdaDataModel *model, gint row)
 
 	row_list = get_row (model, priv_data, row);
 	gda_data_model_hash_insert_row (GDA_DATA_MODEL_HASH (model),
-					row, row_list);
+					 row, row_list);
 
 	return (const GdaRow *) row_list;
-}
-
-static gboolean
-gda_postgres_recordset_update_row (GdaDataModel *model, const GdaRow *row)
-{
-	GdaPostgresRecordset *recset = (GdaPostgresRecordset *) model;
-	GdaPostgresRecordsetPrivate *priv_data;
-	gint colnum, uk, nuk;
-	PGresult *pg_res, *pg_upd_res;
-	gchar *query, *query_where, *query_set, *tmp;
-	GdaPostgresConnectionData *cnc_priv_data;
-	PGconn *pg_conn;
-	gboolean status = FALSE;
-
-	g_return_val_if_fail (GDA_IS_POSTGRES_RECORDSET (recset), FALSE);
-	g_return_val_if_fail (recset->priv != NULL, FALSE);
-	g_return_val_if_fail (row != NULL, FALSE);
-	priv_data = recset->priv;
-	pg_res = priv_data->pg_res;
-	cnc_priv_data = g_object_get_data (G_OBJECT (priv_data->cnc),
-					   OBJECT_DATA_POSTGRES_HANDLE);
-	pg_conn = cnc_priv_data->pconn;
-	
-	/* checks if the given row belongs to the given model */
-	if (gda_row_get_model ((GdaRow *) row) != model) {
-		gda_connection_add_error_string (priv_data->cnc,
-						_("Given row doesn't belong to the model."));
-		return FALSE;
-	}
-
-	/* checks if the table name has been guessed */
-	if (priv_data->table_name == NULL) {
-		gda_connection_add_error_string (priv_data->cnc,
-						_("Table name could not be guessed."));
-		return FALSE;
-	}
-
-	query_where = g_strdup ("WHERE TRUE ");
-	query_set = g_strdup ("SET ");
-
-	for (colnum = uk = nuk = 0;
-	     colnum != gda_data_model_get_n_columns (model);
-	     colnum++) 
-	{
-		GdaFieldAttributes *attrs = gda_data_model_describe_column (model, colnum);
-		const gchar *column_name = PQfname (pg_res, colnum);
-		gchar *newval = gda_value_stringify (gda_row_get_value ((GdaRow *) row, colnum));
-		const gchar *oldval = PQgetvalue (pg_res, gda_row_get_number ((GdaRow *) row), colnum);
-
-		/* unique column: we won't update it, but we will use it as
-		   an index */
-		if (gda_field_attributes_get_primary_key (attrs) ||
-		    gda_field_attributes_get_unique_key (attrs)) 
-		{
-			/* checks if it hasn't be modified anyway */
-			if (oldval == NULL ||
-	   		    newval == NULL ||
-			    strcmp (oldval, newval) != 0)
-			    	continue;
-
-			/* fills the 'where' part of the update command */
-			tmp = g_strdup_printf ("AND %s = '%s' ",
-					       column_name,
-					       newval);
-			query_where = g_strconcat (query_where, tmp, NULL);
-			g_free (tmp);
-			uk++;
-		}
-		/* non-unique column: update it */
-		else {
-			/* fills the 'set' part of the update command */
-			tmp = g_strdup_printf ("%s = '%s', ", 
-					       column_name,
-					       newval);
-			query_set = g_strconcat (query_set, tmp, NULL);
-			g_free (tmp);
-			nuk++;
-		}
-
-		g_free (newval);
-		gda_field_attributes_free (attrs);
-	}
-
-	if (uk == 0) {
-		gda_connection_add_error_string (priv_data->cnc,
-						_("Model doesn't have at least one non-modified unique key."));
-	}
-	else if (nuk == 0) {
-		gda_connection_add_error_string (priv_data->cnc,
-						_("Model doesn't have any non-unique values to update."));
-	}
-	else {
-		/* remove the last ',' in the SET part */
-		tmp = strrchr (query_set, ',');
-		if (tmp != NULL)
-			*tmp = ' ';
-		
-		/* build the update command */
-		query = g_strdup_printf ("UPDATE %s %s %s", 
-					 priv_data->table_name,
-					 query_set,
-					 query_where);
-	
-		/* update the row */
-		pg_upd_res = PQexec (pg_conn, query);
-		g_free (query);
-	
-		if (pg_upd_res != NULL) {
-			/* update ok! */
-			if (PQresultStatus (pg_upd_res) == PGRES_COMMAND_OK)
-				status = TRUE;
-			else
-				gda_connection_add_error (priv_data->cnc,
-			        	                  gda_postgres_make_error (pg_conn, pg_upd_res));
-			PQclear (pg_upd_res);
-		}
-		else
-			gda_connection_add_error (priv_data->cnc,
-			       	                  gda_postgres_make_error (pg_conn, NULL));
-	}
-	
-	g_free (query_set);
-	g_free (query_where);
-	return status;
 }
 
 static const GdaValue *
@@ -370,85 +242,6 @@ gda_postgres_recordset_get_value_at (GdaDataModel *model, gint col, gint row)
 	return gda_row_get_value (row_list, col);
 }
 
-/* Try to guess the table name involved in the given data model. 
- * It can fail on complicated queries, where several tables are
- * involved in the same time.
- */
-static gchar *guess_table_name (GdaPostgresRecordset *recset)
-{
-	GdaPostgresConnectionData *cnc_priv_data;
-	PGresult *pg_res, *pg_name_res;
-	PGconn *pg_conn;
-	gchar *table_name = NULL;
-	
-	pg_res = recset->priv->pg_res;
-	cnc_priv_data = g_object_get_data (G_OBJECT (recset->priv->cnc),
-					   OBJECT_DATA_POSTGRES_HANDLE);
-	pg_conn = cnc_priv_data->pconn;
-
-	if (PQnfields (pg_res) > 0) {
-		gchar *query = g_strdup_printf ("SELECT c.relname FROM pg_catalog.pg_class c WHERE c.relkind = 'r'");
-		gint i;
-		for (i = 0; i < PQnfields (pg_res); i++) {
-			const gchar *column_name = PQfname (pg_res, i);
-			gchar *cond = g_strdup_printf (" AND '%s' IN (SELECT a.attname FROM pg_catalog.pg_attribute a WHERE a.attrelid = c.oid)", column_name);
-			query = g_strconcat (query, cond, NULL);
-			g_free (cond);
-		}
-		pg_name_res = PQexec (pg_conn, query);
-		if (pg_name_res != NULL) {
-			if (PQntuples (pg_name_res) == 1)
-				table_name = PQgetvalue (pg_name_res, 0, 0);
-			PQclear (pg_name_res);
-		}
-		g_free (query);
-	}
-	return table_name != NULL ? g_strdup (table_name) : NULL;
-}
-
-/* Checks if the given column number of the given data model
- * has the given constraint.
- *
- * contype may be one of the following:
- *    'f': foreign key
- *    'p': primary key
- *    'u': unique key
- *    etc...
- */
-static gboolean check_constraint (const GdaDataModel *model,
-				  const gchar *table_name,
-				  const gint col,
-				  const gchar contype)
-{
-	GdaPostgresRecordset *recset = (GdaPostgresRecordset *) model;
-	GdaPostgresRecordsetPrivate *priv_data;
-	GdaPostgresConnectionData *cnc_priv_data;
-	PGresult *pg_res, *pg_con_res;
-	gchar *column_name;
-	gchar *query;
-	gboolean state = FALSE;
-
-	g_return_val_if_fail (table_name != NULL, FALSE);
-	
-	priv_data = recset->priv;
-	pg_res = priv_data->pg_res;
-	cnc_priv_data = g_object_get_data (G_OBJECT (priv_data->cnc),
-					   OBJECT_DATA_POSTGRES_HANDLE);
-
-	column_name = PQfname (pg_res, col);
-	if (column_name != NULL) {
-		query = g_strdup_printf ("SELECT 1 FROM pg_catalog.pg_class c, pg_catalog.pg_constraint c2, pg_catalog.pg_attribute a WHERE c.relname = '%s' AND c.oid = c2.conrelid and a.attrelid = c.oid and c2.contype = '%c' and c2.conkey[1] = a.attnum and a.attname = '%s'", table_name, contype, column_name);
-		pg_con_res = PQexec (cnc_priv_data->pconn, query);
-		if (pg_con_res != NULL) {
-			state = PQntuples (pg_con_res) == 1;
-			PQclear (pg_con_res);
-		}
-		g_free (query);
-	}
-
-	return state;
-}
-
 static GdaFieldAttributes *
 gda_postgres_recordset_describe (GdaDataModel *model, gint col)
 {
@@ -458,7 +251,6 @@ gda_postgres_recordset_describe (GdaDataModel *model, gint col)
 	GdaValueType ftype;
 	gint scale;
 	GdaFieldAttributes *field_attrs;
-	gboolean ispk, isuk;
 
 	g_return_val_if_fail (GDA_IS_POSTGRES_RECORDSET (recset), NULL);
 	g_return_val_if_fail (recset->priv != NULL, 0);
@@ -471,7 +263,7 @@ gda_postgres_recordset_describe (GdaDataModel *model, gint col)
 		return NULL;
 	}
 
-	if (col >= priv_data->ncolumns) {
+	if (col >= priv_data->ncolumns){
 		gda_connection_add_error_string (priv_data->cnc,
 						_("Column out of range"));
 		return NULL;
@@ -491,25 +283,10 @@ gda_postgres_recordset_describe (GdaDataModel *model, gint col)
 	gda_field_attributes_set_gdatype (field_attrs, ftype);
 
 	/* PQfsize() == -1 => variable length */
-	gda_field_attributes_set_defined_size (field_attrs,
-					       PQfsize (pg_res, col));
-					       
+	gda_field_attributes_set_defined_size (field_attrs, PQfsize (pg_res, col));
 	gda_field_attributes_set_references (field_attrs, "");
-
-	gda_field_attributes_set_table (field_attrs,
-					priv_data->table_name);
-
-	ispk = check_constraint (model,
-				 priv_data->table_name,
-				 col, 
-				 'p');
-	isuk = check_constraint (model, 
-				 priv_data->table_name,
-				 col, 
-				 'u');
-	
-	gda_field_attributes_set_primary_key (field_attrs, ispk);
-	gda_field_attributes_set_unique_key (field_attrs, isuk);
+	gda_field_attributes_set_primary_key (field_attrs, FALSE);
+	gda_field_attributes_set_unique_key (field_attrs, FALSE);
 	/* FIXME: set_allow_null? */
 
 	return field_attrs;
@@ -584,7 +361,7 @@ gda_postgres_recordset_new (GdaConnection *cnc, PGresult *pg_res)
 	model->priv->column_types = get_column_types (model->priv);
 	gda_data_model_hash_set_n_columns (GDA_DATA_MODEL_HASH (model),
 					    model->priv->ncolumns);
-	model->priv->table_name = guess_table_name (model);
+
 	return GDA_DATA_MODEL (model);
 }
 
