@@ -1,3 +1,8 @@
+2002-01-25  Cleber Rodrigues <cleberrrjr@bol.com.br>
+
+	* libgda/gda-connection.* 
+	(gda_connection_is_open): implemented
+
 2002-01-23  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* report/libgda-report/gda-report-document.c

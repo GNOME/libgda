@@ -227,6 +227,14 @@ gda_connection_close (GdaConnection *cnc)
 	return TRUE;
 }
 
+gboolean
+gda_connection_is_open (GdaConnection *cnc)
+{
+        g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+
+	return cnc->priv->is_open;
+}
+
 /**
  * gda_connection_get_client
  */
