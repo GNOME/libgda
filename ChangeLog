@@ -1,3 +1,11 @@
+2005-02-05  Vivien Malerba <malerba@gnome-db.org>
+
+	* libgda/gda-value.c: make gda_value_stringify() return "NULL" if its argument is NULL, and fixed a bug in
+	  gda_value_compare() with strings comparison.
+	* libgda/gda-data-model-column-attributes.h: added a 'dbms_type' field to the GdaDataModelColumnAttributes
+	  structure, where a string representation of the real DBMS data type for the column should be set. Work
+	  needs to be done wherever GdaDataModelColumnAttributes structures are created and filled.
+
 2005-02-05  Bas Driessen <bas.driessen@xobas.com>
 
 	* providers/mysql/gda-mysql-provider.c: added function
@@ -135,6 +143,7 @@
 	attributes to attributes_list for gda_server_provider_create_table
 	entry.
 
+>>>>>>> 1.746
 2005-01-25  Bas Driessen <bas.driessen@xobas.com>
 
 	* libgda/gda-data-model-array.c: introduced new 

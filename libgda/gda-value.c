@@ -2054,7 +2054,8 @@ gda_value_stringify (GdaValue *value)
 	GString *str = NULL;
 	gchar *retval = NULL;
 
-	g_return_val_if_fail (value != NULL, NULL);
+	if (!value)
+		return g_strdup ("NULL");
 
 	switch (value->type){
 	case GDA_VALUE_TYPE_BIGINT:
@@ -2075,7 +2076,10 @@ gda_value_stringify (GdaValue *value)
 			retval = g_strdup (_("FALSE"));
 		break;
 	case GDA_VALUE_TYPE_STRING:
-		retval = g_strdup (gda_value_get_string (value));
+		if (gda_value_get_string (value))
+			retval = g_strdup (gda_value_get_string (value));
+		else
+			retval = g_strdup ("");
 		break;
 	case GDA_VALUE_TYPE_INTEGER:
 		retval = g_strdup_printf ("%d", gda_value_get_integer (value));
@@ -2303,7 +2307,18 @@ gda_value_compare (GdaValue *value1, GdaValue *value2)
                 retval = value1->value.v_smalluint - value2->value.v_smalluint;
                 break;
 	case GDA_VALUE_TYPE_STRING :
-		retval = strcmp (value1->value.v_string, value2->value.v_string);
+		if (value1->value.v_string && value2->value.v_string)
+			retval = strcmp (value1->value.v_string, value2->value.v_string);
+		else {
+			if (value1->value.v_string)
+				return 1;
+			else {
+				if (value2->value.v_string)
+					return -1;
+				else
+					return 0;
+			}
+		}
 		break;
 	case GDA_VALUE_TYPE_TIME :
 		retval = memcmp (&value1->value.v_time, &value2->value.v_time,

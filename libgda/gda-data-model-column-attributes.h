@@ -32,21 +32,25 @@ G_BEGIN_DECLS
 
 
 struct _GdaDataModelColumnAttributes {
-	gint defined_size;
-	gchar *name;
-	gchar *table;
-	gchar *caption;
-	gint scale;
+	gint         defined_size;
+	gchar       *name;
+	gchar       *table;
+	gchar       *caption;
+	gint         scale;
+
+	gchar       *dbms_type;
 	GdaValueType gda_type;
-	gboolean allow_null;
-	gboolean primary_key;
-	gboolean unique_key;
-	gchar *references;
-	gboolean auto_increment;
-	glong auto_increment_start;
-	glong auto_increment_step;
-	gint position;
-	GdaValue *default_value;
+
+	gboolean     allow_null;
+	gboolean     primary_key;
+	gboolean     unique_key;
+	gchar       *references;
+
+	gboolean     auto_increment;
+	glong        auto_increment_start;
+	glong        auto_increment_step;
+	gint         position;
+	GdaValue    *default_value;
 };
 
 #define GDA_TYPE_DATA_MODEL_COLUMN_ATTRIVUTES (gda_data_model_column_attributes_get_type ())
@@ -55,7 +59,8 @@ GType               gda_data_model_column_attributes_get_type (void);
 GdaDataModelColumnAttributes *gda_data_model_column_attributes_new (void);
 GdaDataModelColumnAttributes *gda_data_model_column_attributes_copy (GdaDataModelColumnAttributes *fa);
 void                gda_data_model_column_attributes_free (GdaDataModelColumnAttributes *fa);
-gboolean            gda_data_model_column_attributes_equal (const GdaDataModelColumnAttributes *lhs, const GdaDataModelColumnAttributes *rhs);
+gboolean            gda_data_model_column_attributes_equal (const GdaDataModelColumnAttributes *lhs, 
+							    const GdaDataModelColumnAttributes *rhs);
 glong               gda_data_model_column_attributes_get_defined_size (GdaDataModelColumnAttributes *fa);
 void                gda_data_model_column_attributes_set_defined_size (GdaDataModelColumnAttributes *fa, glong size);
 const gchar        *gda_data_model_column_attributes_get_name (GdaDataModelColumnAttributes *fa);
@@ -67,8 +72,7 @@ void                gda_data_model_column_attributes_set_caption (GdaDataModelCo
 glong               gda_data_model_column_attributes_get_scale (GdaDataModelColumnAttributes *fa);
 void                gda_data_model_column_attributes_set_scale (GdaDataModelColumnAttributes *fa, glong scale);
 GdaValueType        gda_data_model_column_attributes_get_gdatype (GdaDataModelColumnAttributes *fa);
-void                gda_data_model_column_attributes_set_gdatype (GdaDataModelColumnAttributes *fa,
-						      GdaValueType type);
+void                gda_data_model_column_attributes_set_gdatype (GdaDataModelColumnAttributes *fa, GdaValueType type);
 gboolean            gda_data_model_column_attributes_get_allow_null (GdaDataModelColumnAttributes *fa);
 void                gda_data_model_column_attributes_set_allow_null (GdaDataModelColumnAttributes *fa, gboolean allow);
 gboolean            gda_data_model_column_attributes_get_primary_key (GdaDataModelColumnAttributes *fa);
