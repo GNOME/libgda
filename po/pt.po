@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 2.2\n"
-"POT-Creation-Date: 2003-03-09 19:39+0100\n"
-"PO-Revision-Date: 2003-03-01 01:19+0100\n"
+"POT-Creation-Date: 2003-03-16 03:03+0000\n"
+"PO-Revision-Date: 2003-03-16 03:09+0100\n"
 "Last-Translator: Duarte Loreto <happyguy_pt@hotmail.com>\n"
 "Language-Team: Portuguese <gnome_pt@yahoogroups.com>\n"
 "MIME-Version: 1.0\n"
@@ -1488,8 +1488,8 @@ msgid "Invalid Xbase handle"
 msgstr "Handle Xbase inválida"
 
 #: providers/xbase/libmain.c:39
-msgid "Provider for Xbase databases"
-msgstr "Fornecedor para bases de dados Xbase"
+msgid "Provider for Xbase (dBase, FoxPro, etc) files"
+msgstr "Fornecedor para ficheiros Xbase (dBase, FoxPro, etc)"
 
 #: report/libgda-report/gda-report-document.c:171
 msgid "Could not parse XML document"
