@@ -19,10 +19,11 @@
 #if !defined(__gda_xml_query_h__)
 #define __gda_xml_query_h__
 
-#include <gnome.h>
-#include "gda-xml-file.h"
+#include <gda-xml-file.h>
 
-BEGIN_GNOME_DECLS
+#if defined(__cplusplus)
+extern "C" {
+#endif
 
 #define GDA_XML_QUERY(obj)            GTK_CHECK_CAST(obj, gda_xml_query_get_type(), Gda_XmlQuery)
 #define GDA_XML_QUERY_CLASS(klass)    GTK_CHECK_CLASS_CAST(klass, gda_xml_query_get_type(), Gda_XmlQueryClass)
@@ -120,7 +121,10 @@ xmlNodePtr     gda_xml_query_find_tag         (xmlNodePtr parent,
 
 /* simple SQL rendering implementation. Every DBMS should implement its own */
 gchar*         gda_xml_query_get_standard_sql (Gda_XmlQuery *q);
-END_GNOME_DECLS
+
+#if defined(__cplusplus)
+}
+#endif
 
 #endif
 

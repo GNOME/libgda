@@ -20,12 +20,13 @@
 #if !defined(__gda_xml_file_h__)
 #  define __gda_xml_file_h__
 
-#include <gnome.h>
 #include <gnome-xml/tree.h>
 #include <gnome-xml/parser.h>
 #include <gnome-xml/valid.h>
 
-BEGIN_GNOME_DECLS
+#if defined(__cplusplus)
+extern "C" {
+#endif
 
 typedef struct _Gda_XmlFile      Gda_XmlFile;
 typedef struct _Gda_XmlFileClass Gda_XmlFileClass;
@@ -68,6 +69,8 @@ gchar*         gda_xml_file_stringify        (Gda_XmlFile *f);
 void         gda_xml_file_construct(Gda_XmlFile *xmlfile, 
 				    const gchar *root_doc);
 
-END_GNOME_DECLS
+#if defined(__cplusplus)
+}
+#endif
 
 #endif

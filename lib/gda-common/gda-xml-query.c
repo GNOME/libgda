@@ -22,7 +22,8 @@
  * xmlValidateElement()
  */
 
-#include "gda-xml-query.h"
+#include <gda-common.h>
+
 #define GDA_XML_QUERY_DTD_FILE DTDINSTALLDIR"/gda-xml-query.dtd"
 
 static void gda_xml_query_class_init (Gda_XmlQueryClass *klass);

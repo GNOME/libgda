@@ -37,5 +37,6 @@
 #include <gda-thread.h>
 #include <gda-xml-file.h>
 #include <gda-xml-database.h>
+#include <gda-xml-query.h>
 
 #endif

@@ -19,3 +19,42 @@ the GDA model's set of CORBA interfaces.
 libgda was part of the GNOME-DB project (http://www.gnome.org/projects/gnome-db),
 but has been separated from it to allow non-GNOME applications to be
 developed based on it.
+
+Dependencies
+------------
+To compile libgda, you must have the following packages installed:
+glib       ftp://ftp.gnome.org/pub/GNOME/stable/sources/glib/glib-1.2.8.tar.gz< gtk+       ftp://ftp.gnome.org/pub/GNOME/stable/sources/gtk+/gtk+-1.2.8.tar.gz< gnome-xml
+gnome-libs ftp://ftp.gnome.org/pub/GNOME/stable/sources/gnome-libs/gnome-libs.1.2.3.tar.gz
+ORBit      ftp://ftp.gnome.org/pub/GNOME/stable/sources/ORBit/ORBit-0.5.3.tar.gz
+oaf        ftp://ftp.gnome.org/pub/GNOME/unstable/sources/oaf/oaf-0.4.0.tar.gz<
+For glib, gtk+, and gnome-libs, probably any older version since 1.0 will be ok.
+You have these packages installed already if you are using the Gnome Desktop.
+gtk+ and gnome-libs dependence will be removed as soon as glib 1.4 is available.
+
+ORBit Version 0.5.1 or newer is needed.
+OAF Version 0.4.0 or newer is needed.
+
+Subdirectories
+--------------
+bindings: language bindings for other languages than C
+doc: the libgda api documentation
+idl: CORBA idl files
+intl: the gettext package needed for internationalization
+lib: the actual libgda library
+po: translation files for other languages than English
+providers: some GDA service providers
+tools: useful helper programs
+testing: tools for testing and test programs
+
+Further information
+-------------------
+libgda comes with a automatic installation tool. For a guide on how to
+install libgda, see the file named INSTALL.
+
+libgda comes with NO WARRANTY, to the extent permitted by law. You may
+redistribute copies of libgda under the terms of the GNU General
+Public License. For more information about these matters, see the file
+named COPYING.
+
+For errors you find in the code or the documentation, please contact
+gnome-db-list@gnome.org or the author of the file.

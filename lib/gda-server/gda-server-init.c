@@ -100,6 +100,7 @@ gda_server_init (const gchar *app_id, const gchar *version, gint nargs, gchar *a
 
   initialize_signals();
 
+  /* FIXME: replace the GNOME call */
   gnome_init_with_popt_table(app_id, version, nargs, args, oaf_popt_options, 0, NULL);
   oaf_init(nargs, args);
 }

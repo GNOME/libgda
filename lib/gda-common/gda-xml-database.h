@@ -21,7 +21,9 @@
 
 #include <gda-xml-file.h>
 
-BEGIN_GNOME_DECLS
+#if defined(__cplusplus)
+extern "C" {
+#endif
 
 typedef struct _Gda_XmlDatabase      Gda_XmlDatabase;
 typedef struct _Gda_XmlDatabaseClass Gda_XmlDatabaseClass;
@@ -99,6 +101,8 @@ void         gda_xml_database_field_set_size       (Gda_XmlDatabase *xmldb, xmlN
 gint         gda_xml_database_field_get_scale      (Gda_XmlDatabase *xmldb, xmlNodePtr field);
 void         gda_xml_database_field_set_scale      (Gda_XmlDatabase *xmldb, xmlNodePtr field, gint scale);
 
-END_GNOME_DECLS
+#if defined(__cplusplus)
+}
+#endif
 
 #endif
