@@ -1,3 +1,8 @@
+2003-11-28  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
+	* libgda/gda-data-model.c: emit the row_updated, row_inserted,
+	row_removed and changed signals when appropiate.
+
 2003-11-28  Laurent Sansonetti <lrz@gnome.org>
 
 	* configure.in, providers/Makefile.am, providers/bdb/*:
