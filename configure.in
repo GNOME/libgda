@@ -695,6 +695,7 @@ po/Makefile.in
 intl/Makefile
 idl/Makefile
 lib/Makefile
+lib/gda-xml/Makefile
 lib/gda-common/Makefile
 dnl lib/gda-common/gda-xml-query/Makefile
 dnl lib/gda-common/gda-xml-query/testing/Makefile

@@ -1,3 +1,8 @@
+2001-06-15  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* lib/gda-xml: added new directory which will contain all XML
+	related code (GdaXmlFile, GdaXmlDatabase, XML queries, etc)
+
 2001-06-14  Robert Marz <Robert.Marz@oracle.com>
 
 	* configure.in: changed ORACLE_CFLAGS and ORACLE_LIBS to match

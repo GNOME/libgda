@@ -1,1 +1,1 @@
-SUBDIRS = gda-common gda-client gda-server
+SUBDIRS = gda-xml gda-common gda-client gda-server
