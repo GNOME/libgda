@@ -67,13 +67,19 @@ typedef struct {
 	gchar *id;
 	gchar *location;
 	gchar *description;
-	GList *gda_params;
+	GList *gda_params; /* A list of const char* */
 } GdaProviderInfo;
+
+#define GDA_TYPE_PROVIDER_INFO (gda_provider_info_get_type ())
+
+GType            gda_provider_info_get_type (void);
+GdaProviderInfo* gda_provider_info_copy (GdaProviderInfo *src);
+void             gda_config_free_provider_info (GdaProviderInfo *provider_info); //TODO: Rename to gda_provider_info_free
 
 GList           *gda_config_get_provider_list (void);
 void             gda_config_free_provider_list (GList *list);
 GdaProviderInfo *gda_config_get_provider_by_name (const gchar *name);
-void             gda_config_free_provider_info (GdaProviderInfo *provider_info);
+
 
 /*
  * Data sources configuration
@@ -88,11 +94,17 @@ typedef struct {
 	gchar *password;
 } GdaDataSourceInfo;
 
+#define GDA_TYPE_DATA_SOURCE_INFO (gda_data_source_info_get_type ())
+
+GType              gda_data_source_info_get_type (void);
+GdaDataSourceInfo *gda_config_copy_data_source_info (GdaDataSourceInfo *info); //TODO: Rename to gda_data_source_info_copy
+void               gda_config_free_data_source_info (GdaDataSourceInfo *info); //TODO: Rename to gda_data_source_info_free
+
 GList             *gda_config_get_data_source_list (void);
 GdaDataSourceInfo *gda_config_find_data_source (const gchar *name);
-GdaDataSourceInfo *gda_config_copy_data_source_info (GdaDataSourceInfo *info);
-void               gda_config_free_data_source_info (GdaDataSourceInfo *info);
+
 void               gda_config_free_data_source_list (GList *list);
+
 GdaDataModel      *gda_config_get_data_source_model (void);
 void               gda_config_save_data_source (const gchar *name,
 						const gchar *provider,
