@@ -19,6 +19,9 @@ BuildRoot: 	/var/tmp/%{name}-%{ver}-root
 URL: 		http://www.gnome-db.org/
 DocDir: 	%{prefix}/doc
 
+BuildPrereq: GConf-devel >= 0.11, libxml-devel >= 1.8, oaf-devel >= 0.6, ORBit-devel >= 0.5, glib-devel >= 1.2, gtk+-devel >= 1.2
+Requires: Gconf >= 0.11, libxml >= 1.8, oaf >= 0.6, ORBit >= 0.5, glib >= 1.2, gtk+ >= 1.2
+
 %description
 GNU Data Access is an attempt to provide uniform access to
 different kinds of data sources (databases, information
@@ -52,6 +55,8 @@ GNU Data Access is an attempt to provide uniform access to
 Summary: GDA ODBC Provider
 Group:		Applications/Databases
 Requires:	%name = %{PACKAGE_VERSION}
+Requires:	unixODBC >= 1.8.12
+BuildPrereq:	unixODBC-devel >= 1.8.12
 
 %description -n gda-odbc
 GNU Data Access is an attempt to provide uniform access to
@@ -71,6 +76,8 @@ GNU Data Access is an attempt to provide uniform access to
 Summary: GDA PostgreSQL Provider
 Group:		Applications/Databases
 Requires:	%name = %{PACKAGE_VERSION}
+Requires:	postgresql >= 6.5
+BuildPrereq:	postgresql-devel >= 6.5
 
 %description -n gda-postgres
 GNU Data Access is an attempt to provide uniform access to
@@ -90,6 +97,8 @@ GNU Data Access is an attempt to provide uniform access to
 Summary: GDA MySQL Provider
 Group:		Applications/Databases
 Requires:	%name = %{PACKAGE_VERSION}
+Requires:	mysql >= 3.22
+BuildPrereq:	mysql-devel >= 3.22
 
 %description -n gda-mysql
 GNU Data Access is an attempt to provide uniform access to
@@ -106,6 +115,9 @@ GNU Data Access is an attempt to provide uniform access to
  This package includes the GDA MySQL provider
 
 %changelog
+* Wed Mar 14 2001 Ismael Olea <olea@hispafuentes.com>
+- Added dependencies, this was really a mess
+
 * Sat Sep 2 2000 Rodrigo Moya <rodrigo@linuxave.net>
 - Initial spec imported from old GNOME-DB spec
 
