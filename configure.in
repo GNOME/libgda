@@ -2,7 +2,7 @@ AC_PREREQ(2.52)
 AC_INIT(lib/gda-common/gda-common.h)
 
 AM_CONFIG_HEADER(config.h)
-AM_INIT_AUTOMAKE(libgda2,0.3.1)
+AM_INIT_AUTOMAKE(libgda,0.3.1)
 
 AM_MAINTAINER_MODE
 
@@ -461,4 +461,4 @@ doc/C/reference/libgda-common/Makefile
 doc/C/reference/libgda-client/Makefile
 doc/pt_BR/Makefile
 stamp.h
-])
+],[sed -e "/POTFILES =/r po/POTFILES" po/Makefile.in > po/Makefile])
