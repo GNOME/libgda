@@ -1,3 +1,8 @@
+2001-03-10  Carlos Perelló Marín <carlos@gnome-db.org>
+
+        * updated.sh: Removed because don't run correctly in all
+          situations, please use xml-i18n-update directly.
+
 2001-02-19  Valek Filippov <frob@df.ru>
 
 	* ru.po: Updated russian translation.
