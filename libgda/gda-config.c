@@ -1134,7 +1134,7 @@ gda_config_free_provider_list (GList *list)
 		GdaProviderInfo *provider_info = (GdaProviderInfo *) l->data;
 
 		if (provider_info != NULL)
-			gda_config_free_provider_info (provider_info);
+			gda_provider_info_free (provider_info);
 	}
 
 	g_list_free (list);
@@ -1252,13 +1252,13 @@ gda_provider_info_copy (GdaProviderInfo *src)
 }
 
 /**
- * gda_config_free_provider_info
+ * gda_provider_info_free
  * @provider_info: provider information to free.
  *
  * Deallocates all memory associated to the given #GdaProviderInfo.
  */
 void
-gda_config_free_provider_info (GdaProviderInfo *provider_info)
+gda_provider_info_free (GdaProviderInfo *provider_info)
 {
 	g_return_if_fail (provider_info != NULL);
 
@@ -1687,7 +1687,7 @@ gda_provider_info_get_type (void)
 	if (our_type == 0)
 		our_type = g_boxed_type_register_static ("GdaProviderInfo",
 			(GBoxedCopyFunc) gda_provider_info_copy,
-			(GBoxedFreeFunc) gda_config_free_provider_info);
+			(GBoxedFreeFunc) gda_provider_info_free);
 
   return our_type;
 }

@@ -74,7 +74,7 @@ typedef struct {
 
 GType            gda_provider_info_get_type (void);
 GdaProviderInfo* gda_provider_info_copy (GdaProviderInfo *src);
-void             gda_config_free_provider_info (GdaProviderInfo *provider_info); //TODO: Rename to gda_provider_info_free
+void             gda_provider_info_free (GdaProviderInfo *provider_info);
 
 GList           *gda_config_get_provider_list (void);
 void             gda_config_free_provider_list (GList *list);
