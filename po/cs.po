@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda HEAD\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-08-26 12:06+0200\n"
-"PO-Revision-Date: 2004-08-26 19:07+0200\n"
+"POT-Creation-Date: 2004-09-06 12:16+0200\n"
+"PO-Revision-Date: 2004-09-06 19:44+0200\n"
 "Last-Translator: Miloslav Trmac <mitr@volny.cz>\n"
 "Language-Team: Czech <cs@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -57,7 +57,7 @@ msgid "Location"
 msgstr "Umístění"
 
 #: libgda/gda-config.c:1196 libgda/gda-config.c:1455
-#: providers/firebird/gda-firebird-provider.c:320
+#: providers/firebird/gda-firebird-provider.c:322
 #: providers/ibmdb2/gda-ibmdb2-provider.c:863
 #: providers/ibmdb2/gda-ibmdb2-provider.c:892
 #: providers/ibmdb2/gda-ibmdb2-provider.c:920
@@ -68,7 +68,7 @@ msgstr "Umístění"
 msgid "Description"
 msgstr "Popis"
 
-#: libgda/gda-config.c:1452 providers/firebird/gda-firebird-provider.c:728
+#: libgda/gda-config.c:1452 providers/firebird/gda-firebird-provider.c:730
 #: providers/ldap/gda-ldap-provider.c:327 providers/mdb/gda-mdb-provider.c:457
 #: providers/mdb/gda-mdb-provider.c:594 providers/mdb/gda-mdb-provider.c:654
 #: providers/msql/gda-msql-provider.c:448
@@ -221,11 +221,52 @@ msgstr "Chyba syntaxe poblíž `%s'"
 msgid "Empty query to parse"
 msgstr "Zpracováván prázdný dotaz"
 
+#: providers/firebird/gda-firebird-blob.c:129
+#: providers/firebird/gda-firebird-blob.c:176
+#: providers/firebird/gda-firebird-blob.c:224
+#: providers/firebird/gda-firebird-provider.c:820
+#: providers/firebird/gda-firebird-provider.c:937
+#: providers/firebird/gda-firebird-provider.c:964
+#: providers/firebird/gda-firebird-provider.c:983
+#: providers/firebird/gda-firebird-provider.c:1019
+#: providers/firebird/gda-firebird-provider.c:1112
+#: providers/firebird/gda-firebird-provider.c:1207
+#: providers/firebird/gda-firebird-provider.c:1241
+#: providers/firebird/gda-firebird-provider.c:1279
+#: providers/firebird/gda-firebird-recordset.c:694
+#: providers/firebird/gda-firebird-recordset.c:896
+msgid "Invalid Firebird handle"
+msgstr "Neplatný handle Firebird"
+
+#: providers/firebird/gda-firebird-blob.c:134
+msgid "Unable to start transaction"
+msgstr "Nemohu zahájit transakci"
+
+#: providers/firebird/gda-firebird-blob.c:145
+msgid "Blob already open"
+msgstr "Blob je již otevřen"
+
+#: providers/firebird/gda-firebird-blob.c:199
+msgid "Error getting blob segment."
+msgstr "Chyba při získávání segmentu blobu."
+
+#: providers/firebird/gda-firebird-blob.c:203
+msgid "Can't read a closed Blob"
+msgstr "Nemohu číst zavřený blob"
+
+#: providers/firebird/gda-firebird-blob.c:240
+msgid "Unable to close blob."
+msgstr "Nemohu zavřít blob"
+
+#: providers/firebird/gda-firebird-blob.c:243
+msgid "Blob is closed"
+msgstr "Blob je uzavřen"
+
 #. gda_server_recordset_model_set_field_defined_size (recset, 0, 32);
-#: providers/firebird/gda-firebird-provider.c:229
+#: providers/firebird/gda-firebird-provider.c:231
 #: providers/ibmdb2/gda-ibmdb2-provider.c:946
 #: providers/ldap/gda-ldap-provider.c:423
-#: providers/mysql/gda-mysql-provider.c:1002
+#: providers/mysql/gda-mysql-provider.c:1012
 #: providers/odbc/gda-odbc-provider.c:1360
 #: providers/oracle/gda-oracle-provider.c:2095
 #: providers/postgres/gda-postgres-provider.c:1235
@@ -235,9 +276,9 @@ msgstr "Zpracováván prázdný dotaz"
 msgid "Type"
 msgstr "Typ"
 
-#: providers/firebird/gda-firebird-provider.c:230
-#: providers/firebird/gda-firebird-provider.c:319
-#: providers/firebird/gda-firebird-provider.c:730
+#: providers/firebird/gda-firebird-provider.c:232
+#: providers/firebird/gda-firebird-provider.c:321
+#: providers/firebird/gda-firebird-provider.c:732
 #: providers/ibmdb2/gda-ibmdb2-provider.c:742
 #: providers/ibmdb2/gda-ibmdb2-provider.c:832
 #: providers/ibmdb2/gda-ibmdb2-provider.c:861
@@ -251,7 +292,7 @@ msgstr "Typ"
 #: providers/msql/gda-msql-provider.c:487
 #: providers/mysql/gda-mysql-provider.c:734
 #: providers/mysql/gda-mysql-provider.c:921
-#: providers/mysql/gda-mysql-provider.c:1003
+#: providers/mysql/gda-mysql-provider.c:1013
 #: providers/odbc/gda-odbc-provider.c:1025
 #: providers/odbc/gda-odbc-provider.c:1138
 #: providers/odbc/gda-odbc-provider.c:1247
@@ -276,8 +317,8 @@ msgstr "Typ"
 msgid "Owner"
 msgstr "Vlastník"
 
-#: providers/firebird/gda-firebird-provider.c:231
-#: providers/firebird/gda-firebird-provider.c:731
+#: providers/firebird/gda-firebird-provider.c:233
+#: providers/firebird/gda-firebird-provider.c:733
 #: providers/ibmdb2/gda-ibmdb2-provider.c:948
 #: providers/ldap/gda-ldap-provider.c:329 providers/mdb/gda-mdb-provider.c:549
 #: providers/mdb/gda-mdb-provider.c:596 providers/mdb/gda-mdb-provider.c:656
@@ -285,7 +326,7 @@ msgstr "Vlastník"
 #: providers/msql/gda-msql-provider.c:488
 #: providers/mysql/gda-mysql-provider.c:735
 #: providers/mysql/gda-mysql-provider.c:922
-#: providers/mysql/gda-mysql-provider.c:1004
+#: providers/mysql/gda-mysql-provider.c:1014
 #: providers/odbc/gda-odbc-provider.c:1139
 #: providers/odbc/gda-odbc-provider.c:1362
 #: providers/odbc/gda-odbc-provider.c:1456
@@ -306,10 +347,10 @@ msgstr "Vlastník"
 msgid "Comments"
 msgstr "Komentář"
 
-#: providers/firebird/gda-firebird-provider.c:232
+#: providers/firebird/gda-firebird-provider.c:234
 #: providers/ibmdb2/gda-ibmdb2-provider.c:949
 #: providers/msql/gda-msql-provider.c:489
-#: providers/mysql/gda-mysql-provider.c:1005
+#: providers/mysql/gda-mysql-provider.c:1015
 #: providers/odbc/gda-odbc-provider.c:1363
 #: providers/oracle/gda-oracle-provider.c:2097
 #: providers/postgres/gda-postgres-provider.c:1238
@@ -320,7 +361,7 @@ msgid "GDA type"
 msgstr "Typ GDA"
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/firebird/gda-firebird-provider.c:318
+#: providers/firebird/gda-firebird-provider.c:320
 #: providers/ibmdb2/gda-ibmdb2-provider.c:833
 #: providers/ibmdb2/gda-ibmdb2-provider.c:890
 #: providers/ibmdb2/gda-ibmdb2-provider.c:999
@@ -330,7 +371,7 @@ msgstr "Typ GDA"
 msgid "Table"
 msgstr "Tabulka"
 
-#: providers/firebird/gda-firebird-provider.c:321
+#: providers/firebird/gda-firebird-provider.c:323
 #: providers/mdb/gda-mdb-provider.c:553
 #: providers/odbc/gda-odbc-provider.c:1143
 #: providers/odbc/gda-odbc-provider.c:1249
@@ -345,9 +386,9 @@ msgstr "Tabulka"
 msgid "Definition"
 msgstr "Definice"
 
-#: providers/firebird/gda-firebird-provider.c:613
+#: providers/firebird/gda-firebird-provider.c:615
 #: providers/mdb/gda-mdb-provider.c:490
-#: providers/mysql/gda-mysql-provider.c:1100
+#: providers/mysql/gda-mysql-provider.c:1110
 #: providers/odbc/gda-odbc-provider.c:949
 #: providers/oracle/gda-oracle-provider.c:1248
 #: providers/postgres/gda-postgres-provider.c:1464
@@ -356,9 +397,9 @@ msgstr "Definice"
 msgid "Field name"
 msgstr "Název pole"
 
-#: providers/firebird/gda-firebird-provider.c:614
+#: providers/firebird/gda-firebird-provider.c:616
 #: providers/mdb/gda-mdb-provider.c:491 providers/msql/gda-msql-provider.c:537
-#: providers/mysql/gda-mysql-provider.c:1101
+#: providers/mysql/gda-mysql-provider.c:1111
 #: providers/odbc/gda-odbc-provider.c:950
 #: providers/oracle/gda-oracle-provider.c:1249
 #: providers/postgres/gda-postgres-provider.c:1465
@@ -367,9 +408,9 @@ msgstr "Název pole"
 msgid "Data type"
 msgstr "Datový typ"
 
-#: providers/firebird/gda-firebird-provider.c:615
+#: providers/firebird/gda-firebird-provider.c:617
 #: providers/mdb/gda-mdb-provider.c:492 providers/msql/gda-msql-provider.c:538
-#: providers/mysql/gda-mysql-provider.c:1102
+#: providers/mysql/gda-mysql-provider.c:1112
 #: providers/odbc/gda-odbc-provider.c:951
 #: providers/oracle/gda-oracle-provider.c:1250
 #: providers/postgres/gda-postgres-provider.c:1466
@@ -378,9 +419,9 @@ msgstr "Datový typ"
 msgid "Size"
 msgstr "Velikost"
 
-#: providers/firebird/gda-firebird-provider.c:616
+#: providers/firebird/gda-firebird-provider.c:618
 #: providers/mdb/gda-mdb-provider.c:493 providers/msql/gda-msql-provider.c:539
-#: providers/mysql/gda-mysql-provider.c:1103
+#: providers/mysql/gda-mysql-provider.c:1113
 #: providers/odbc/gda-odbc-provider.c:952
 #: providers/oracle/gda-oracle-provider.c:1251
 #: providers/postgres/gda-postgres-provider.c:1467
@@ -389,9 +430,9 @@ msgstr "Velikost"
 msgid "Scale"
 msgstr "Škála"
 
-#: providers/firebird/gda-firebird-provider.c:617
+#: providers/firebird/gda-firebird-provider.c:619
 #: providers/mdb/gda-mdb-provider.c:494
-#: providers/mysql/gda-mysql-provider.c:1104
+#: providers/mysql/gda-mysql-provider.c:1114
 #: providers/odbc/gda-odbc-provider.c:953
 #: providers/oracle/gda-oracle-provider.c:1252
 #: providers/postgres/gda-postgres-provider.c:1468
@@ -400,9 +441,9 @@ msgstr "Škála"
 msgid "Not null?"
 msgstr "Nenulový?"
 
-#: providers/firebird/gda-firebird-provider.c:618
+#: providers/firebird/gda-firebird-provider.c:620
 #: providers/mdb/gda-mdb-provider.c:495 providers/msql/gda-msql-provider.c:541
-#: providers/mysql/gda-mysql-provider.c:1105
+#: providers/mysql/gda-mysql-provider.c:1115
 #: providers/odbc/gda-odbc-provider.c:954
 #: providers/oracle/gda-oracle-provider.c:1253
 #: providers/postgres/gda-postgres-provider.c:1469
@@ -411,9 +452,9 @@ msgstr "Nenulový?"
 msgid "Primary key?"
 msgstr "Primární klíč?"
 
-#: providers/firebird/gda-firebird-provider.c:619
+#: providers/firebird/gda-firebird-provider.c:621
 #: providers/mdb/gda-mdb-provider.c:496 providers/msql/gda-msql-provider.c:542
-#: providers/mysql/gda-mysql-provider.c:1106
+#: providers/mysql/gda-mysql-provider.c:1116
 #: providers/odbc/gda-odbc-provider.c:955
 #: providers/oracle/gda-oracle-provider.c:1254
 #: providers/postgres/gda-postgres-provider.c:1470
@@ -422,9 +463,9 @@ msgstr "Primární klíč?"
 msgid "Unique index?"
 msgstr "Unikátní index?"
 
-#: providers/firebird/gda-firebird-provider.c:620
+#: providers/firebird/gda-firebird-provider.c:622
 #: providers/mdb/gda-mdb-provider.c:497 providers/msql/gda-msql-provider.c:543
-#: providers/mysql/gda-mysql-provider.c:1107
+#: providers/mysql/gda-mysql-provider.c:1117
 #: providers/odbc/gda-odbc-provider.c:956
 #: providers/oracle/gda-oracle-provider.c:1255
 #: providers/postgres/gda-postgres-provider.c:1471
@@ -433,9 +474,9 @@ msgstr "Unikátní index?"
 msgid "References"
 msgstr "Reference"
 
-#: providers/firebird/gda-firebird-provider.c:621
+#: providers/firebird/gda-firebird-provider.c:623
 #: providers/mdb/gda-mdb-provider.c:498 providers/msql/gda-msql-provider.c:544
-#: providers/mysql/gda-mysql-provider.c:1108
+#: providers/mysql/gda-mysql-provider.c:1118
 #: providers/odbc/gda-odbc-provider.c:957
 #: providers/oracle/gda-oracle-provider.c:1256
 #: providers/postgres/gda-postgres-provider.c:1472
@@ -443,29 +484,29 @@ msgstr "Reference"
 msgid "Default value"
 msgstr "Implicitní hodnota"
 
-#: providers/firebird/gda-firebird-provider.c:630
-#: providers/firebird/gda-firebird-provider.c:637
+#: providers/firebird/gda-firebird-provider.c:632
+#: providers/firebird/gda-firebird-provider.c:639
 #: providers/msql/gda-msql-provider.c:557
 #: providers/msql/gda-msql-provider.c:563
-#: providers/mysql/gda-mysql-provider.c:1125
-#: providers/mysql/gda-mysql-provider.c:1133
+#: providers/mysql/gda-mysql-provider.c:1135
+#: providers/mysql/gda-mysql-provider.c:1143
 msgid "Table name is needed but none specified in parameter list"
 msgstr "Je třeba název tabulky, ale v seznamu parametrů žádný není"
 
 #. 5th the return type
 #. 6th the argument type
-#: providers/firebird/gda-firebird-provider.c:706
 #: providers/firebird/gda-firebird-provider.c:708
+#: providers/firebird/gda-firebird-provider.c:710
 msgid "UNKNOWN"
 msgstr "NEZNÁMÉ"
 
-#: providers/firebird/gda-firebird-provider.c:729
+#: providers/firebird/gda-firebird-provider.c:731
 #: providers/mdb/gda-mdb-provider.c:547
 #: providers/mysql/gda-mysql-provider.c:733
 msgid "ID"
 msgstr "ID"
 
-#: providers/firebird/gda-firebird-provider.c:732
+#: providers/firebird/gda-firebird-provider.c:734
 #: providers/mdb/gda-mdb-provider.c:550
 #: providers/mysql/gda-mysql-provider.c:736
 #: providers/odbc/gda-odbc-provider.c:1140
@@ -473,7 +514,7 @@ msgstr "ID"
 msgid "Return type"
 msgstr "Návratový typ"
 
-#: providers/firebird/gda-firebird-provider.c:733
+#: providers/firebird/gda-firebird-provider.c:735
 #: providers/mdb/gda-mdb-provider.c:552
 #: providers/mysql/gda-mysql-provider.c:737
 #: providers/odbc/gda-odbc-provider.c:1142
@@ -481,54 +522,36 @@ msgstr "Návratový typ"
 msgid "Args types"
 msgstr "Typy argumentů"
 
-#: providers/firebird/gda-firebird-provider.c:734
+#: providers/firebird/gda-firebird-provider.c:736
 #: providers/mysql/gda-mysql-provider.c:738
 #: providers/oracle/gda-oracle-provider.c:1913
 #: providers/oracle/gda-oracle-provider.c:1975
 msgid "SQL"
 msgstr "SQL"
 
-#: providers/firebird/gda-firebird-provider.c:818
-#: providers/firebird/gda-firebird-provider.c:935
-#: providers/firebird/gda-firebird-provider.c:962
-#: providers/firebird/gda-firebird-provider.c:981
-#: providers/firebird/gda-firebird-provider.c:1033
-#: providers/firebird/gda-firebird-provider.c:1126
-#: providers/firebird/gda-firebird-provider.c:1195
-#: providers/firebird/gda-firebird-provider.c:1229
-#: providers/firebird/gda-firebird-provider.c:1267
-#: providers/firebird/gda-firebird-recordset.c:730
-#: providers/firebird/gda-firebird-recordset.c:932
-msgid "Invalid Firebird handle"
-msgstr "Neplatný handle Firebird"
-
-#: providers/firebird/gda-firebird-provider.c:856
+#: providers/firebird/gda-firebird-provider.c:858
 msgid "No database specified"
 msgstr "Není zadána databáze"
 
-#: providers/firebird/gda-firebird-provider.c:1235
-#: providers/firebird/gda-firebird-provider.c:1273
+#: providers/firebird/gda-firebird-provider.c:1247
+#: providers/firebird/gda-firebird-provider.c:1285
 msgid "Invalid transaction handle"
 msgstr "Neplatný handle transakce"
 
-#: providers/firebird/gda-firebird-recordset.c:384
-#: providers/firebird/gda-firebird-recordset.c:424
+#: providers/firebird/gda-firebird-recordset.c:345
+#: providers/firebird/gda-firebird-recordset.c:386
 msgid "Statement already prepared."
 msgstr "Příkaz je již připraven."
 
-#: providers/firebird/gda-firebird-recordset.c:388
+#: providers/firebird/gda-firebird-recordset.c:349
 msgid "Transaction not initialized."
 msgstr "Transakce neinicializována."
 
-#: providers/firebird/gda-firebird-recordset.c:493
+#: providers/firebird/gda-firebird-recordset.c:456
 msgid "Firebird's ARRAY datatype not supported yet!\n"
 msgstr "Typ dat Firebirdu ARRAY ještě není podporován!\n"
 
-#: providers/firebird/gda-firebird-recordset.c:498
-msgid "Firebird's BLOB datatype not supported yet!\n"
-msgstr "Typ dat Firebirdu BLOB ještě není podporován!\n"
-
-#: providers/firebird/gda-firebird-recordset.c:601
+#: providers/firebird/gda-firebird-recordset.c:565
 msgid "Unknown Firebird's field value!\n"
 msgstr "Neznámá hodnota pole Firebirdu!\n"
 
@@ -906,7 +929,7 @@ msgid ""
 msgstr "Nelze zadat UNIX_SOCKET pokud jste také zadali HOST nebo PORT."
 
 #: providers/mysql/gda-mysql-provider.c:305
-#: providers/mysql/gda-mysql-provider.c:1116
+#: providers/mysql/gda-mysql-provider.c:1126
 #: providers/mysql/gda-mysql-recordset.c:128
 #: providers/mysql/gda-mysql-recordset.c:202
 msgid "Invalid MySQL handle"
@@ -921,7 +944,7 @@ msgstr "Neplatný handle MySQL"
 #: providers/mysql/gda-mysql-provider.c:566
 #: providers/mysql/gda-mysql-provider.c:623
 #: providers/mysql/gda-mysql-provider.c:656
-#: providers/mysql/gda-mysql-provider.c:1244
+#: providers/mysql/gda-mysql-provider.c:1254
 msgid "Invalid MYSQL handle"
 msgstr "Neplatný handle MYSQL"
 
