@@ -192,7 +192,7 @@ void
 gda_row_set_number (GdaRow *row, gint number)
 {
 	g_return_if_fail (row != NULL);
-	row->number = 0;
+	row->number = number;
 }
 
 /**
