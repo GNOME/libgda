@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda HEAD\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2003-06-08 20:20+0200\n"
-"PO-Revision-Date: 2003-04-19 15:26+0200\n"
+"POT-Creation-Date: 2003-06-14 13:32+0200\n"
+"PO-Revision-Date: 2003-06-14 22:38+0200\n"
 "Last-Translator: Miloslav Trmac <mitr@volny.cz>\n"
 "Language-Team: Czech <cs@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -768,9 +768,8 @@ msgid "Provider for Microsoft Access files"
 msgstr "Poskytovatel pro soubory Microsoft Access"
 
 #: providers/msql/gda-msql-libmain.c:41
-#, fuzzy
 msgid "Provider for Hughes Technologies mSQL databases"
-msgstr "Poskytovatel pro databáze PostgreSQL"
+msgstr "Poskytovatel pro databáze Hughes Technologies mSQL"
 
 #: providers/msql/gda-msql-provider.c:228
 #: providers/msql/gda-msql-provider.c:270
@@ -778,38 +777,34 @@ msgstr "Poskytovatel pro databáze PostgreSQL"
 #: providers/msql/gda-msql-provider.c:549
 #: providers/msql/gda-msql-recordset.c:67
 #: providers/msql/gda-msql-recordset.c:130
-#, fuzzy
 msgid "Invalid mSQL handle"
-msgstr "Neplatný handle MySQL"
+msgstr "Neplatný handle mSQL"
 
 #: providers/msql/gda-msql-provider.c:315
 msgid "mSQL allows database creation only through the msqladmin tool."
-msgstr ""
+msgstr "mSQL umožňuje vytvoření databáze jen pomocí nástroje msqladmin."
 
 #: providers/msql/gda-msql-provider.c:328
 msgid "mSQL allows database drops only through the msqladmin tool."
-msgstr ""
+msgstr "mSQL umožňuje zrušení databáze jen pomocí nástroje msqladmin."
 
 #: providers/msql/gda-msql-provider.c:373
 #: providers/msql/gda-msql-provider.c:386
 #: providers/msql/gda-msql-provider.c:399
 msgid "mSQL doesn't support transactions."
-msgstr ""
+msgstr "mSQL nepodporuje transakce."
 
 #: providers/msql/gda-msql-provider.c:483
-#, fuzzy
 msgid "Title"
-msgstr "Tabulka"
+msgstr "Název"
 
 #: providers/msql/gda-msql-provider.c:534
-#, fuzzy
 msgid "Field Name"
 msgstr "Název pole"
 
 #: providers/msql/gda-msql-provider.c:538
-#, fuzzy
 msgid "Not null"
-msgstr "Nenulový?"
+msgstr "Nenulový"
 
 #: providers/msql/gda-msql-provider.c:555
 #: providers/msql/gda-msql-provider.c:561
@@ -819,7 +814,6 @@ msgid "Table name is needed but none specified in parameter list"
 msgstr "Je třeba název tabulky, ale v seznamu parametrů žádný není"
 
 #: providers/msql/gda-msql-recordset.c:74
-#, fuzzy
 msgid "Row number out of bounds"
 msgstr "Číslo řádku mimo rozsah"
 
