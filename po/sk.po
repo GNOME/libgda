@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda 0.3.1\n"
-"POT-Creation-Date: 2002-02-10 20:00+0100\n"
-"PO-Revision-Date: 2002-01-30 16:33CET\n"
+"POT-Creation-Date: 2002-02-26 16:32+0100\n"
+"PO-Revision-Date: 2002-02-26 16:33+0100\n"
 "Last-Translator: Stanislav Višňovský <visnovsky@nenya.ms.mff.cuni.cz>\n"
 "Language-Team: Slovak <sk-i18n@lists.linux.sk>\n"
 "MIME-Version: 1.0\n"
@@ -28,31 +28,31 @@ msgstr "Nie je aktivovať objekt %s"
 msgid "Could not create connection component"
 msgstr "Nie je možné vytvoriť komponent pre spojenie"
 
-#: libgda/gda-config.c:508
+#: libgda/gda-config.c:511
 msgid "Could not query CORBA components"
 msgstr "Nie je možné získať komponenty CORBA"
 
-#: libgda/gda-config.c:615
+#: libgda/gda-config.c:618
 msgid "Could not query CORBA providers"
 msgstr "Nie je možné získať poskytovateľov CORBA"
 
-#: libgda/gda-config.c:865
+#: libgda/gda-config.c:868
 msgid "Name"
 msgstr "Meno"
 
-#: libgda/gda-config.c:866
+#: libgda/gda-config.c:869
 msgid "Provider"
 msgstr "Poskytovateľ"
 
-#: libgda/gda-config.c:867
+#: libgda/gda-config.c:870
 msgid "Connection string"
 msgstr "Reťazec spojenia"
 
-#: libgda/gda-config.c:868
+#: libgda/gda-config.c:871
 msgid "Description"
 msgstr "Popis"
 
-#: libgda/gda-config.c:869
+#: libgda/gda-config.c:872
 msgid "Username"
 msgstr "Meno používateľa"
 
@@ -85,8 +85,7 @@ msgstr "Nie je možné vytvoriť komponent typu %s"
 
 #: libgda/gda-server-connection.c:90
 msgid "Could not duplicate client object. Client won't get notifications"
-msgstr ""
-"Nie je možné duplikovať klientský objekt. Klient nebude dostávať upozornenia"
+msgstr "Nie je možné duplikovať klientský objekt. Klient nebude dostávať upozornenia"
 
 #: libgda/gda-server-connection.c:440
 #, c-format
@@ -132,8 +131,7 @@ msgstr "%p nie je platná tabuľka"
 
 #: providers/default/gda-default-provider.c:141
 #: providers/sqlite/gda-sqlite-provider.c:152
-msgid ""
-"A full path must be specified on the connection string to open a database."
+msgid "A full path must be specified on the connection string to open a database."
 msgstr "Pre otvorenie databáze musíte zadať celú cestu v reťazci spojenia."
 
 #: providers/default/gda-default-provider.c:199
@@ -162,14 +160,11 @@ msgstr "GDA štandardný prístup k zdroju dát"
 
 #: providers/default/main.c:48
 msgid "Could not initiate Default component factory"
-msgstr ""
-"Nie je možné inicializovať vytváracie rozhranie pre štandardný komponent"
+msgstr "Nie je možné inicializovať vytváracie rozhranie pre štandardný komponent"
 
 #: providers/mysql/gda-mysql-provider.c:175
-msgid ""
-"You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
-msgstr ""
-"Nemôžete poskytovať UNIX_SOCKET ak tiež poskytujete HOSTITEĽ alebo a PORT."
+msgid "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
+msgstr "Nemôžete poskytovať UNIX_SOCKET ak tiež poskytujete HOSTITEĽ alebo a PORT."
 
 #: providers/mysql/gda-mysql-provider.c:246
 #: providers/mysql/gda-mysql-provider.c:326
@@ -201,19 +196,16 @@ msgid "Could not initiate MySQL component factory"
 msgstr "Nie je možné inicializovať vytváracie rozhranie pre komponent MySQL"
 
 #: providers/odbc/GNOME_Database_Provider_ODBC.server.in.h:1
-#, fuzzy
 msgid "GDA Datasource Access for ODBC"
-msgstr "GDA prístup k zdroju dát pre Oracle"
+msgstr "GDA prístup k zdroju dát pre ODBC"
 
 #: providers/odbc/GNOME_Database_Provider_ODBC.server.in.h:2
-#, fuzzy
 msgid "ODBC component factory"
-msgstr "Vytváracie rozhranie komponentu pre Oracle"
+msgstr "Vytváracie rozhranie komponentu pre ODBC"
 
 #: providers/odbc/main.c:49
-#, fuzzy
 msgid "Could not initiate ODBC component factory"
-msgstr "Nie je možné inicializovať vytváracie rozhranie pre Oracle"
+msgstr "Nie je možné inicializovať vytváracie rozhranie pre ODBC"
 
 #: providers/oracle/gda-oracle-connection.c:77
 msgid "Could not initialize Oracle environment"
@@ -264,8 +256,7 @@ msgstr "Vytváracie rozhranie komponentu pre Postgres"
 
 #: providers/postgres/main.c:49
 msgid "Could not initiate PostgreSQL component factory"
-msgstr ""
-"Nie je možné inicializovať vytváracie rozhranie pre komponent PostreSQL"
+msgstr "Nie je možné inicializovať vytváracie rozhranie pre komponent PostreSQL"
 
 #: providers/postgres/utils.c:39
 msgid "NO DESCRIPTION"
@@ -425,8 +416,7 @@ msgstr "Nie je možné získať súbor z %s"
 
 #: report/main.c:47
 msgid "Could not initiate Report component factory"
-msgstr ""
-"Nie je možné inicializovať vytváracie rozhranie pre komponent pre reporty"
+msgstr "Nie je možné inicializovať vytváracie rozhranie pre komponent pre reporty"
 
 #: testing/client.c:37
 msgid "\t\tNONE\n"
@@ -476,33 +466,41 @@ msgstr "Pohľady"
 msgid "Indexes"
 msgstr "Indexy"
 
+#: testing/client.c:92
+msgid "Aggregates"
+msgstr "Agregáty"
+
+#: testing/client.c:93
+msgid "Triggers"
+msgstr "Triggery"
+
 #. test transactions
-#: testing/client.c:94 testing/client.c:102
+#: testing/client.c:96 testing/client.c:104
 msgid "\tStarting transaction..."
 msgstr "\tZačítam transakciu..."
 
-#: testing/client.c:96 testing/client.c:100 testing/client.c:104
-#: testing/client.c:108
+#: testing/client.c:98 testing/client.c:102 testing/client.c:106
+#: testing/client.c:110
 msgid "Error"
 msgstr "Chyba"
 
-#: testing/client.c:98
+#: testing/client.c:100
 msgid "\tFinishing transaction..."
 msgstr "\tDokončujem transakciu..."
 
-#: testing/client.c:106
+#: testing/client.c:108
 msgid "\tRolling back transaction..."
 msgstr "\tOdvolávam transakciu..."
 
-#: testing/client.c:127
+#: testing/client.c:129
 msgid "Testing GDA client API"
 msgstr "Testujem klientské API pre GDA"
 
-#: testing/client.c:136
+#: testing/client.c:138
 msgid "** ERROR: gda_config_get_data_source_list returned a NULL item\n"
 msgstr "** ERROR: gda_config_get_data_source_list vrátila položku NULL\n"
 
-#: testing/client.c:140
+#: testing/client.c:142
 #, c-format
 msgid " Data source = %s, User = %s\n"
 msgstr " Zdroj dát = %s, používateľ = %s\n"
@@ -553,3 +551,4 @@ msgstr "\tdoména = %s\n"
 #: testing/config.c:106
 msgid "\tgda_params ="
 msgstr "\tgda_params ="
+
