@@ -152,13 +152,13 @@ gda_corba_oafiid_is_active (const gchar *oafiid)
   query = g_strdup_printf("iid = '%s' AND _active = true", oafiid);
   CORBA_exception_init(&ev);
   servlist = oaf_query(query, NULL, &ev);
-  CORBA_exception_free(&ev);
   g_free((gpointer) query);
   
-  if (servlist)
+  if (gda_corba_handle_exception(&ev))
     {
+      CORBA_exception_free(&ev);
       /* FIXME: free servlist */
-      return TRUE;
+      return servlist->_length == 0 ? FALSE : TRUE;
     }
   return FALSE;
 }

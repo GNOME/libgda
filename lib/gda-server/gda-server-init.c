@@ -16,6 +16,8 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#define POPT_AUTOHELP
+
 #include "config.h"
 #include <signal.h>
 

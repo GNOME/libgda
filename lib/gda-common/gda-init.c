@@ -16,6 +16,8 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
  
+#define POPT_AUTOHELP // needed to have oaf_popt_options declared in liboaf.h
+
 #include "config.h"
 
 #ifdef HAVE_GOBJECT
