@@ -27,7 +27,6 @@
 
 #include <libgda/gda-server-connection.h>
 #include <libgda/gda-server-recordset.h>
-#include <mysql/mysql.h>
 
 G_BEGIN_DECLS
 

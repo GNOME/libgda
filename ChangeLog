@@ -1,3 +1,8 @@
+2002-01-30  Frederic.Devernay@sophia.inria.fr
+
+	* providers/mysql/gda-mysql-recordset.h: don't include mysql/mysql.h,
+	not needed and not existing in many setups. Fixes #70059
+
 2002-01-29  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* configure.in: bumped version to 0.8.103
