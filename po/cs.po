@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda HEAD\n"
-"POT-Creation-Date: 2002-12-25 06:57+0100\n"
-"PO-Revision-Date: 2002-12-25 13:23+0100\n"
+"POT-Creation-Date: 2002-12-27 06:58+0100\n"
+"PO-Revision-Date: 2002-12-28 00:13+0100\n"
 "Last-Translator: Miloslav Trmac <mitr@volny.cz>\n"
 "Language-Team: Czech <cs@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -41,6 +41,7 @@ msgstr "Dočasný zdroj dat vytvořený programem libgda. Neodstraňujte."
 #: libgda/gda-config.c:1322 providers/default/gda-default-provider.c:556
 #: providers/default/gda-default-provider.c:576
 #: providers/default/gda-default-provider.c:613
+#: providers/mdb/gda-mdb-provider.c:358 providers/mdb/gda-mdb-provider.c:421
 #: providers/mysql/gda-mysql-provider.c:663
 #: providers/mysql/gda-mysql-provider.c:847
 #: providers/oracle/gda-oracle-provider.c:1031
@@ -412,23 +413,101 @@ msgstr "Neplatný handle transakce"
 msgid "GDA provider for Interbase/Firebird databases"
 msgstr "Poskytovatel GDA pro databáze Interbase/Firebird"
 
-#: providers/mdb/gda-mdb-provider.c:188
+#: providers/mdb/gda-mdb-provider.c:203
 msgid "A database FILENAME must be specified in the connection_string"
 msgstr "V připojovacím řetězci musí být zadán název souboru databáze"
 
-#: providers/mdb/gda-mdb-provider.c:197
+#: providers/mdb/gda-mdb-provider.c:212
+#: providers/xbase/gda-xbase-provider.c:224
 #, c-format
 msgid "Could not open file %s"
 msgstr "Nelze otevřít soubor %s"
 
-#: providers/mdb/gda-mdb-provider.c:219 providers/mdb/gda-mdb-provider.c:247
-#: providers/mdb/gda-mdb-provider.c:348
+#: providers/mdb/gda-mdb-provider.c:234 providers/mdb/gda-mdb-provider.c:262
+#: providers/mdb/gda-mdb-provider.c:457
 msgid "Invalid MDB handle"
 msgstr "Neplatný handle MDB"
 
-#: providers/mdb/gda-mdb-provider.c:313
-msgid "Table Name"
-msgstr "Název tabulky"
+#: providers/mdb/gda-mdb-provider.c:359 providers/mdb/gda-mdb-provider.c:422
+#: providers/mysql/gda-mysql-provider.c:848
+#: providers/mysql/gda-mysql-provider.c:930
+#: providers/oracle/gda-oracle-provider.c:1530
+#: providers/postgres/gda-postgres-provider.c:830
+#: providers/postgres/gda-postgres-provider.c:1100
+#: providers/postgres/gda-postgres-provider.c:1119
+#: providers/postgres/gda-postgres-provider.c:1179
+#: providers/postgres/gda-postgres-provider.c:1296
+#: providers/postgres/gda-postgres-provider.c:1831
+#: providers/sqlite/gda-sqlite-provider.c:747
+#: providers/sybase/gda-sybase-provider.c:906
+msgid "Owner"
+msgstr "Vlastník"
+
+#: providers/mdb/gda-mdb-provider.c:360 providers/mdb/gda-mdb-provider.c:423
+#: providers/mysql/gda-mysql-provider.c:849
+#: providers/mysql/gda-mysql-provider.c:931
+#: providers/oracle/gda-oracle-provider.c:1530
+#: providers/postgres/gda-postgres-provider.c:831
+#: providers/postgres/gda-postgres-provider.c:1120
+#: providers/postgres/gda-postgres-provider.c:1180
+#: providers/postgres/gda-postgres-provider.c:1297
+#: providers/postgres/gda-postgres-provider.c:1832
+#: providers/sqlite/gda-sqlite-provider.c:748
+#: providers/sybase/gda-sybase-provider.c:908
+msgid "Comments"
+msgstr "Komentář"
+
+#: providers/mdb/gda-mdb-provider.c:424
+msgid "GDA Type"
+msgstr "Typ GDA"
+
+#: providers/mdb/gda-mdb-provider.c:426
+msgid "Boolean type"
+msgstr "Booleovský typ"
+
+#: providers/mdb/gda-mdb-provider.c:427
+msgid "1-byte integers"
+msgstr "1-bytová celé čísla"
+
+#: providers/mdb/gda-mdb-provider.c:428
+msgid "Double precision values"
+msgstr "Hodnoty s dvojitou přesností"
+
+#: providers/mdb/gda-mdb-provider.c:429
+msgid "Single precision values"
+msgstr "Hodnoty s jednoduchou přesností"
+
+#: providers/mdb/gda-mdb-provider.c:430
+msgid "32-bit integers"
+msgstr "32-bitová celá čísla"
+
+#: providers/mdb/gda-mdb-provider.c:431
+msgid "64-bit integers"
+msgstr "64-bitová celá čísla"
+
+#: providers/mdb/gda-mdb-provider.c:432
+msgid "Variable length character strings"
+msgstr "Řetězce znaků s proměnnou délkou"
+
+#: providers/mdb/gda-mdb-provider.c:433
+msgid "Money amounts"
+msgstr "Finanční částky"
+
+#: providers/mdb/gda-mdb-provider.c:434
+msgid "OLE object"
+msgstr "Objekt OLE"
+
+#: providers/mdb/gda-mdb-provider.c:435
+msgid "FIXME"
+msgstr "FIXME"
+
+#: providers/mdb/gda-mdb-provider.c:436
+msgid "Date/time value"
+msgstr "Hodnota data/času"
+
+#: providers/mdb/gda-mdb-provider.c:437
+msgid "Character strings"
+msgstr "Řetězce znaků"
 
 #: providers/mdb/libmain.c:34
 msgid "GDA provider for MS Access files"
@@ -456,33 +535,6 @@ msgstr "Neplatný handle MySQL"
 #: providers/mysql/gda-mysql-provider.c:590
 msgid "Invalid MYSQL handle"
 msgstr "Neplatný handle MYSQL"
-
-#: providers/mysql/gda-mysql-provider.c:848
-#: providers/mysql/gda-mysql-provider.c:930
-#: providers/oracle/gda-oracle-provider.c:1530
-#: providers/postgres/gda-postgres-provider.c:830
-#: providers/postgres/gda-postgres-provider.c:1100
-#: providers/postgres/gda-postgres-provider.c:1119
-#: providers/postgres/gda-postgres-provider.c:1179
-#: providers/postgres/gda-postgres-provider.c:1296
-#: providers/postgres/gda-postgres-provider.c:1831
-#: providers/sqlite/gda-sqlite-provider.c:747
-#: providers/sybase/gda-sybase-provider.c:906
-msgid "Owner"
-msgstr "Vlastník"
-
-#: providers/mysql/gda-mysql-provider.c:849
-#: providers/mysql/gda-mysql-provider.c:931
-#: providers/oracle/gda-oracle-provider.c:1530
-#: providers/postgres/gda-postgres-provider.c:831
-#: providers/postgres/gda-postgres-provider.c:1120
-#: providers/postgres/gda-postgres-provider.c:1180
-#: providers/postgres/gda-postgres-provider.c:1297
-#: providers/postgres/gda-postgres-provider.c:1832
-#: providers/sqlite/gda-sqlite-provider.c:748
-#: providers/sybase/gda-sybase-provider.c:908
-msgid "Comments"
-msgstr "Komentář"
 
 #: providers/mysql/gda-mysql-provider.c:929
 #: providers/oracle/gda-oracle-provider.c:1629
@@ -1205,16 +1257,16 @@ msgstr "získáno %d zpráv."
 msgid "Operation not possible, connection busy."
 msgstr "Operace není možná, spojení se používá."
 
-#: providers/xbase/gda-xbase-provider.c:185
-msgid "Either FILENAME or DIRECTORY can be specified, but not both"
-msgstr "Může být zadáno buď JMÉNOSOUBORU nebo ADRESÁŘ, ale ne obojí"
+#: providers/xbase/gda-xbase-provider.c:186
+msgid "Either FILENAME or DIRECTORY can be specified, but not both or neither"
+msgstr "Může být zadáno buď JMÉNOSOUBORU nebo ADRESÁŘ, ale ne obojí nebo nic"
 
-#: providers/xbase/gda-xbase-provider.c:205
+#: providers/xbase/gda-xbase-provider.c:233
 msgid "Either FILENAME or DIRECTORY must be specified in the connection string"
 msgstr "V řetězci spojení musí být zadáno JMÉNOSOUBORU nebo ADRESÁŘ"
 
-#: providers/xbase/gda-xbase-provider.c:234
-#: providers/xbase/gda-xbase-provider.c:352
+#: providers/xbase/gda-xbase-provider.c:262
+#: providers/xbase/gda-xbase-provider.c:380
 msgid "Invalid Xbase handle"
 msgstr "Neplatný handle Xbase"
 
@@ -1405,6 +1457,9 @@ msgstr "\tpopis = %s\n"
 msgid "\tgda_params ="
 msgstr "\tgda_params ="
 
+#~ msgid "Table Name"
+#~ msgstr "Název tabulky"
+
 #~ msgid "Tables"
 #~ msgstr "Tabulky"
 
@@ -1428,9 +1483,6 @@ msgstr "\tgda_params ="
 
 #~ msgid "Domain"
 #~ msgstr "Doména"
-
-#~ msgid "Printfmt"
-#~ msgstr "Printfmt"
 
 #~ msgid "Could not attach to database"
 #~ msgstr "Nelze se připojit k databázi"
