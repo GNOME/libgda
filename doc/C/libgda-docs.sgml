@@ -412,7 +412,8 @@
           to use the <EMPHASIS>pkg-config</EMPHASIS> command.
         </para>
         <PROGRAMLISTING>
-          <SYSTEMITEM CLASS="prompt">$</SYSTEMITEM> <USERINPUT> gcc -o main `pkg-config --cflags --libs libgda` main.c</USERINPUT>
+          <SYSTEMITEM CLASS="prompt">$</SYSTEMITEM> <USERINPUT> gcc -c full_example.c `pkg-config --cflags libgda`</USERINPUT>
+          <SYSTEMITEM CLASS="prompt">$</SYSTEMITEM> <USERINPUT> gcc -o full_example `pkg-config --libs libgda` full_example.o</USERINPUT>
         </PROGRAMLISTING>
 	<para>
 	  Doing this will add to the C compiler command line all needed header files
