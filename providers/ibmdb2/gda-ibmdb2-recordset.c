@@ -24,6 +24,7 @@
 #include <string.h>
 #include "gda-ibmdb2.h"
 #include "gda-ibmdb2-recordset.h"
+#include "gda-ibmdb2-types.h"
 
 #ifdef PARENT_TYPE
 #undef PARENT_TYPE
@@ -196,10 +197,10 @@ gda_ibmdb2_recordset_describe (GdaDataModel *model, gint col)
 	
 	gda_field_attributes_set_name (attribs, field->column_name);
 	gda_field_attributes_set_scale (attribs, field->column_scale);
-        gda_field_attributes_set_gdatype (attribs, gda_ibmdb2_get_value_type (field->column_type));
+        gda_field_attributes_set_gdatype (attribs, gda_ibmdb2_get_value_type (field));
         gda_field_attributes_set_defined_size (attribs, field->column_size);
 
-        ggda_field_attributes_set_unique_key (attribs, FALSE);
+        gda_field_attributes_set_unique_key (attribs, FALSE);
 	gda_field_attributes_set_references (attribs, "");
         gda_field_attributes_set_primary_key (attribs, FALSE);
 
@@ -315,6 +316,8 @@ gda_ibmdb2_recordset_new (GdaConnection *cnc, SQLHANDLE hstmt)
 		gda_ibmdb2_emit_error (cnc, conn_data->henv, conn_data->hdbc, hstmt);
 	}
 
+	g_warning ("Num Cols: %d", ncols);
+	
 	if (ncols == 0) {
 		return GDA_DATA_MODEL (recset);
 	}

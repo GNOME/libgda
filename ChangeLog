@@ -1,3 +1,8 @@
+2003-05-12 Sergey N. Belinsky <sergey_be@mail.ru>
+	* gda-ibmdb2-provider.c:
+	* gda-ibmdb2-recordset.c:
+	* gda-ibmdb2-types.c: fix for compile problem.
+
 2003-05-10  Danilo Schoeneberg <dj@starfire-programming.net>
 
 	* configure.in:

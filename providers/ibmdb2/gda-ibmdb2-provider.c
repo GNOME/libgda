@@ -442,7 +442,6 @@ process_sql_commands (GList *reclist, GdaConnection *cnc, const gchar *sql, GdaC
 {
 	GdaIBMDB2ConnectionData *conn_data = NULL;
         gchar **arr;
-	gint i;
 	
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 
@@ -588,7 +587,7 @@ gda_ibmdb2_provider_begin_transaction (GdaServerProvider *provider,
 				           SQL_NTS);
 	if (conn_data->rc != SQL_SUCCESS)
 	{
-		gda_odbc_emit_error (cnc, conn_data->henv, conn_data->hdbc, SQL_NULL_HANDLE);
+		gda_ibmdb2_emit_error (cnc, conn_data->henv, conn_data->hdbc, SQL_NULL_HANDLE);
                 return FALSE;
 	}
 								      
@@ -613,7 +612,7 @@ gda_ibmdb2_provider_commit_transaction (GdaServerProvider *provider,
     
 	if (conn_data->rc != SQL_SUCCESS)
 	{
-                gda_odbc_emit_error (cnc, conn_data->henv, conn_data->hdbc, SQL_NULL_HANDLE);
+                gda_ibmdb2_emit_error (cnc, conn_data->henv, conn_data->hdbc, SQL_NULL_HANDLE);
 		return FALSE;
 	}
 
@@ -623,7 +622,7 @@ gda_ibmdb2_provider_commit_transaction (GdaServerProvider *provider,
 				           SQL_NTS);
 	if (conn_data->rc != SQL_SUCCESS)
 	{
-		gda_odbc_emit_error (cnc, conn_data->henv, conn_data->hdbc, SQL_NULL_HANDLE);
+		gda_ibmdb2_emit_error (cnc, conn_data->henv, conn_data->hdbc, SQL_NULL_HANDLE);
                 return FALSE;
 	}
 	return TRUE;
@@ -647,7 +646,7 @@ gda_ibmdb2_provider_rollback_transaction (GdaServerProvider *provider,
     
 	if (conn_data->rc != SQL_SUCCESS)
 	{
-                gda_odbc_emit_error (cnc, conn_data->henv, conn_data->hdbc, SQL_NULL_HANDLE);
+                gda_ibmdb2_emit_error (cnc, conn_data->henv, conn_data->hdbc, SQL_NULL_HANDLE);
 		return FALSE;
 	}
 
@@ -657,7 +656,7 @@ gda_ibmdb2_provider_rollback_transaction (GdaServerProvider *provider,
 				           SQL_NTS);
 	if (conn_data->rc != SQL_SUCCESS)
 	{
-                gda_odbc_emit_error (cnc, conn_data->henv, conn_data->hdbc, SQL_NULL_HANDLE);
+                gda_ibmdb2_emit_error (cnc, conn_data->henv, conn_data->hdbc, SQL_NULL_HANDLE);
 		return FALSE;
 	}
 

@@ -33,7 +33,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 const GdaValueType
-gda_freetds_get_value_type (GdaIBMDB2Field *col)
+gda_ibmdb2_get_value_type (GdaIBMDB2Field *col)
 {
 	g_return_val_if_fail (col != NULL, GDA_VALUE_TYPE_UNKNOWN);
 
