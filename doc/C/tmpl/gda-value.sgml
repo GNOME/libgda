@@ -4,7 +4,6 @@ gda-value
 <!-- ##### SECTION Short_Description ##### -->
 Functions for accesing #GdaValue.
 
-
 <!-- ##### SECTION Long_Description ##### -->
 <para>
 A #GdaValue holds the data for a (row, column) retrieved from a query to a
@@ -339,6 +338,15 @@ to any data, get a newly allocated copy of the data.
 
 
 <!-- ##### FUNCTION gda_value_copy ##### -->
+<para>
+
+</para>
+
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_value_get_bigint ##### -->
 <para>
 
 </para>

@@ -304,6 +304,15 @@ Functions for accesing #GdaRow.
 @value: 
 
 
+<!-- ##### FUNCTION gda_field_get_bigint_value ##### -->
+<para>
+
+</para>
+
+@field: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_field_set_bigint_value ##### -->
 <para>
 

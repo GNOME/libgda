@@ -897,6 +897,7 @@ gda_field_set_gdatype
 gda_field_is_null
 gda_field_get_value
 gda_field_set_value
+gda_field_get_bigint_value
 gda_field_set_bigint_value
 gda_field_get_binary_value
 gda_field_set_binary_value
@@ -990,6 +991,7 @@ gda_value_free
 gda_value_isa
 gda_value_is_null
 gda_value_copy
+gda_value_get_bigint
 gda_value_set_bigint
 gda_value_get_binary
 gda_value_set_binary
