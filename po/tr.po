@@ -19,49 +19,43 @@ msgid "Data source %s not found in configuration"
 msgstr "Sistemde %s veritabaný bulunmadý"
 
 #: libgda/gda-client.c:237
-#, fuzzy, c-format
 msgid "Could not activate object %s"
-msgstr "%s'e baðlantý kurulamadý"
+msgstr "%s nesnesi etkinleþtirilemedi"
 
 #: libgda/gda-client.c:255
-#, fuzzy
 msgid "Could not create connection component"
-msgstr "%s'e baðlantý kurulamadý"
+msgstr "Baðlantý bileþeni oluþturulamadý"
 
-#: libgda/gda-config.c:512
-#, fuzzy
 msgid "Could not query CORBA components"
-msgstr "CORBA factory açýlamadý"
+msgstr "CORBA bileþenleri üzerinde tarama yapýlamadý"
 
-#: libgda/gda-config.c:619
-#, fuzzy
 msgid "Could not query CORBA providers"
 msgstr "CORBA factory açýlamadý"
 
 #: libgda/gda-config.c:869
 msgid "Name"
-msgstr ""
+msgstr "Ýsim"
 
 #: libgda/gda-config.c:870
 msgid "Provider"
-msgstr ""
+msgstr "Saðlayýcý"
 
 #: libgda/gda-config.c:871
 msgid "Connection string"
-msgstr ""
+msgstr "Baðlantý dizisi"
 
 #: libgda/gda-config.c:872
 msgid "Description"
-msgstr ""
+msgstr "Açýklama"
 
 #: libgda/gda-config.c:873
 msgid "Username"
-msgstr ""
+msgstr "Kullanýcý adý"
 
 #: libgda/gda-error.c:127
 #, c-format
 msgid "%s: An Error occured in the CORBA system."
-msgstr ""
+msgstr "%s: CORBA sisteminde bir hata oluþtu."
 
 #: libgda/gda-error.c:156
 msgid "Unknown CORBA exception for connection"
@@ -73,7 +67,7 @@ msgstr ""
 
 #: libgda/gda-init.c:56
 msgid "Could not initialize Bonobo"
-msgstr ""
+msgstr "Bonobo baþlatýlamadý"
 
 #: libgda/gda-server.c:108
 #, c-format
@@ -81,13 +75,12 @@ msgid "Don't know how to create components with IID %s"
 msgstr ""
 
 #: libgda/gda-server.c:122
-#, fuzzy, c-format
 msgid "Could not create component of type %s"
-msgstr "%s'e baðlantý kurulamadý"
+msgstr "%s türünde bir bileþen oluþturulamadý"
 
 #: libgda/gda-server-connection.c:90
 msgid "Could not duplicate client object. Client won't get notifications"
-msgstr ""
+msgstr "Ýstemci nesnesi kopyalanamadý. Ýstemci bundan haberdar olmayacak"
 
 #: libgda/gda-server-connection.c:440
 #, fuzzy, c-format
@@ -100,31 +93,28 @@ msgstr ""
 
 #: libgda/gda-value.c:926
 msgid "TRUE"
-msgstr ""
+msgstr "DOÐRU"
 
 #: libgda/gda-value.c:928
 msgid "FALSE"
-msgstr ""
+msgstr "YANLIÞ"
 
-#: libgda/gda-xml-database.c:214
-#, fuzzy, c-format
 msgid "Could not load file at %s"
-msgstr "%s'e baðlantý kurulamadý"
+msgstr "%s adresindeki dosya yüklenemedi"
 
-#: libgda/gda-xml-database.c:223
-#, fuzzy, c-format
 msgid "Could not parse file at %s"
-msgstr "%s'e baðlantý kurulamadý"
+msgstr "%s adresindeki dosya ayrýþtýrýlamadý"
 
-#: libgda/gda-xml-database.c:232 libgda/gda-xml-database.c:249
-#, c-format
-msgid "Invalid XML database file '%s'"
-msgstr ""
+msgid "table %s already exists"
+msgstr "%s tablosu zaten var"
 
-#: libgda/gda-xml-database.c:293 libgda/gda-xml-database.c:333
+#: libgda/gda-xml-database.c:442
 #, c-format
+msgid "%p is not a valid table"
+msgstr "%p geçersiz bir tablo"
+
 msgid "Table %s already exists"
-msgstr ""
+msgstr "%s tablosu zaten var"
 
 #: libgda/gda-xml-database.c:327
 msgid "Invalid node"
@@ -174,7 +164,7 @@ msgstr ""
 #: providers/mysql/gda-mysql-provider.c:464
 #: providers/postgres/gda-postgres-provider.c:570
 msgid "Type"
-msgstr ""
+msgstr "Tür"
 
 #: providers/mysql/gda-mysql-recordset.c:63
 #: providers/mysql/gda-mysql-recordset.c:170
@@ -193,7 +183,7 @@ msgstr ""
 
 #: providers/mysql/GNOME_Database_Provider_MySQL.server.in.h:2
 msgid "MySQL component factory"
-msgstr ""
+msgstr "MySQL bileþen mimarisi"
 
 #: providers/mysql/main.c:49
 #, fuzzy
@@ -205,19 +195,16 @@ msgid "GDA Datasource Access for ODBC"
 msgstr ""
 
 #: providers/odbc/GNOME_Database_Provider_ODBC.server.in.h:2
-#, fuzzy
 msgid "ODBC component factory"
-msgstr "CORBA factory açýlamadý"
+msgstr "ODBC bileþen mimarisi"
 
 #: providers/odbc/main.c:49
-#, fuzzy
 msgid "Could not initiate ODBC component factory"
-msgstr "CORBA factory açýlamadý"
+msgstr "ODBC bileþen mimarisi baþlatýlamadý"
 
 #: providers/oracle/gda-oracle-connection.c:77
-#, fuzzy
 msgid "Could not initialize Oracle environment"
-msgstr "CORBA factory açýlamadý"
+msgstr "Oracle ortamý baþlatýlamadý"
 
 #: providers/oracle/gda-oracle-connection.c:87
 msgid "Could not initialize Oracle error handler"
@@ -259,12 +246,11 @@ msgstr ""
 
 #: providers/postgres/GNOME_Database_Provider_Postgres.server.in.h:1
 msgid "GDA Datasource Access for Postgres"
-msgstr ""
+msgstr "Postgres için GDA kaynak eriþimi"
 
 #: providers/postgres/GNOME_Database_Provider_Postgres.server.in.h:2
-#, fuzzy
 msgid "Postgres component factory"
-msgstr "CORBA factory açýlamadý"
+msgstr "Postgres bileþen mimarisi"
 
 #: providers/postgres/main.c:49
 #, fuzzy
@@ -273,11 +259,11 @@ msgstr "CORBA factory açýlamadý"
 
 #: providers/postgres/utils.c:39
 msgid "NO DESCRIPTION"
-msgstr ""
+msgstr "AÇIKLAMA YOK"
 
 #: providers/postgres/utils.c:44
 msgid "Not available"
-msgstr ""
+msgstr "Yok"
 
 #: providers/sqlite/gda-sqlite-provider.c:211
 #: providers/sqlite/gda-sqlite-recordset.c:63
@@ -293,14 +279,86 @@ msgid "GDA SQLite Datasource Access"
 msgstr ""
 
 #: providers/sqlite/GNOME_Database_Provider_SQLite.server.in.h:2
-#, fuzzy
 msgid "SQLite component factory"
-msgstr "CORBA factory açýlamadý"
+msgstr "SQLite bileþen mimarisi"
 
 #: providers/sqlite/main.c:54
 #, fuzzy
 msgid "Could not initiate Sqlite component factory"
 msgstr "CORBA factory açýlamadý"
+
+#: providers/sybase/gda-sybase-error.c:137
+msgid "ct_diag 1 failed in sybase_check_clientmsg"
+msgstr ""
+
+#: providers/sybase/gda-sybase-error.c:159
+#: providers/sybase/gda-sybase-error.c:197
+msgid "ct_diag 2 failed in sybase_check_clientmsg"
+msgstr ""
+
+#: providers/sybase/gda-sybase-error.c:167
+#: providers/sybase/gda-sybase-error.c:376
+msgid "Client Message: "
+msgstr "Ýstemci Mesajý: "
+
+#: providers/sybase/gda-sybase-error.c:178
+#: providers/sybase/gda-sybase-error.c:387
+msgid "Informational Client  Message: "
+msgstr "Ýstemci Bilgi Mesajý:"
+
+#: providers/sybase/gda-sybase-error.c:239
+msgid "ct_diag 1 failed in sybase_check_servermsg"
+msgstr ""
+
+#: providers/sybase/gda-sybase-error.c:261
+#: providers/sybase/gda-sybase-error.c:304
+msgid "ct_diag 2 failed in sybase_check_servermsg"
+msgstr ""
+
+#: providers/sybase/gda-sybase-error.c:274
+msgid "Server Message: "
+msgstr "Sunucu Mesajý: "
+
+#: providers/sybase/gda-sybase-error.c:285
+msgid "Informational Server  Message: "
+msgstr "Sunucu Bilgi Mesajý: "
+
+#: providers/sybase/gda-sybase-error.c:346
+msgid "cs_diag 1 failed in sybase_check_clientmsg"
+msgstr ""
+
+#: providers/sybase/gda-sybase-error.c:368
+#: providers/sybase/gda-sybase-error.c:406
+msgid "cs_diag 2 failed in sybase_check_clientmsg"
+msgstr ""
+
+#: providers/sybase/gda-sybase-error.c:429
+msgid "SYB"
+msgstr "SYB"
+
+#: providers/sybase/gda-sybase-error.c:431
+msgid "severity"
+msgstr "önem"
+
+#: providers/sybase/gda-sybase-error.c:433
+msgid "number"
+msgstr "sayý"
+
+#: providers/sybase/gda-sybase-error.c:435
+msgid "origin"
+msgstr "kaynak"
+
+#: providers/sybase/gda-sybase-error.c:437
+msgid "layer"
+msgstr "katman"
+
+#: providers/sybase/gda-sybase-error.c:444
+#, c-format
+msgid ""
+"\n"
+"\tOperating system error number(%ld):\n"
+"\t%s"
+msgstr ""
 
 #: providers/sybase/GNOME_Database_Provider_Sybase.server.in.h:1
 msgid "GDA Datasource Access for Sybase"
@@ -328,16 +386,15 @@ msgstr "%s'e baðlantý kurulamadý"
 
 #: report/GNOME_Database_Report.server.in.h:1
 msgid "GDA Report engine"
-msgstr ""
+msgstr "GDA rapor motoru"
 
 #: report/GNOME_Database_Report.server.in.h:2
 msgid "GDA Report engine factory"
-msgstr ""
+msgstr "GDA rapor motoru mimarisi"
 
 #: report/job.c:43
-#, fuzzy
 msgid "Could not parse XML report"
-msgstr "%s'e baðlantý kurulamadý"
+msgstr "XML raporu ayrýþtýrýlamadý"
 
 #: report/libgda-report/gda-report-client.c:141
 #, fuzzy
@@ -350,28 +407,25 @@ msgid "Could not create BonoboStreamMem object"
 msgstr "%s'e baðlantý kurulamadý"
 
 #: report/libgda-report/gda-report-document.c:137
-#, fuzzy
 msgid "Could not parse XML document"
-msgstr "%s'e baðlantý kurulamadý"
+msgstr "XML belgesi ayrýþtýrýlamadý"
 
 #: report/libgda-report/gda-report-document.c:162
-#, fuzzy, c-format
 msgid "Could not get file from %s"
-msgstr "%s'e baðlantý kurulamadý"
+msgstr "%s adresinden dosya alýnamadý"
 
 #: report/main.c:47
-#, fuzzy
 msgid "Could not initiate Report component factory"
-msgstr "CORBA factory açýlamadý"
+msgstr "Raporlama bileþen mimarisi açýlamadý"
 
 #: testing/client.c:37
 msgid "\t\tNONE\n"
-msgstr ""
+msgstr "\t\tHÝÇBÝRÝ\n"
 
 #: testing/client.c:76
 #, c-format
 msgid "** ERROR: could not open connection to %s\n"
-msgstr ""
+msgstr "** HATA: %s adresine baðlantý kurulamadý\n"
 
 #. show provider features
 #: testing/client.c:81
@@ -381,36 +435,36 @@ msgstr ""
 #: testing/client.c:82
 #, c-format
 msgid "\t\tTransactions: %s\n"
-msgstr ""
+msgstr "\t\tAktarýmlar %s\n"
 
 #: testing/client.c:84
 msgid "Supported"
-msgstr ""
+msgstr "Desteklenir"
 
 #: testing/client.c:84
 msgid "Not supported"
-msgstr ""
+msgstr "Desteklenmez"
 
 #. show connection schemas
 #: testing/client.c:87
 msgid "Stored procedures"
-msgstr ""
+msgstr "Depolanmýþ yorlamlar"
 
 #: testing/client.c:88
 msgid "Connection Tables"
-msgstr ""
+msgstr "Baðlantý Tablolarý"
 
 #: testing/client.c:89
 msgid "Available types"
-msgstr ""
+msgstr "Kullanýlabilir türler"
 
 #: testing/client.c:90
 msgid "Views"
-msgstr ""
+msgstr "Görünümler"
 
 #: testing/client.c:91
 msgid "Indexes"
-msgstr ""
+msgstr "Ýndeksler"
 
 #: testing/client.c:92
 msgid "Aggregates"
@@ -420,15 +474,13 @@ msgstr ""
 msgid "Triggers"
 msgstr ""
 
-#. test transactions
-#: testing/client.c:96 testing/client.c:104
 msgid "\tStarting transaction..."
-msgstr ""
+msgstr "\tÝletiþime baþlanýyor.."
 
 #: testing/client.c:98 testing/client.c:102 testing/client.c:106
 #: testing/client.c:110
 msgid "Error"
-msgstr ""
+msgstr "Hata"
 
 #: testing/client.c:100
 msgid "\tFinishing transaction..."
@@ -498,14 +550,3 @@ msgstr ""
 msgid "\tgda_params ="
 msgstr ""
 
-#~ msgid "[GDA Client Library]"
-#~ msgstr "[GDA Ýstemci Kütüphanesi]"
-
-#~ msgid "<NULL>"
-#~ msgstr "<BOÞ>"
-
-#~ msgid "true"
-#~ msgstr "doðru"
-
-#~ msgid "false"
-#~ msgstr "yanlýþ"
