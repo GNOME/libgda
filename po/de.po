@@ -1,13 +1,13 @@
 # German po for libgda
 # Copyright (C) 2000 Free Software Foundation, Inc.
-# Christian Meyer <cm@ggtt.de>, 2000, 2001.
+# Christian Meyer <chrisime@gnome.org>, 2000, 2001.
 # Kai Lahmann <kl@linuxfaqs.de>, 2000.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda-0.2.3-cvs\n"
-"POT-Creation-Date: 2001-11-22 14:07+0100\n"
-"PO-Revision-Date: 2001-04-29 03:52+0200\n"
+"POT-Creation-Date: 2001-12-26 15:14+0100\n"
+"PO-Revision-Date: 2001-12-26 15:14+0100\n"
 "Last-Translator: Christian Meyer <chrisime@gnome.org>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -31,7 +31,7 @@ msgstr "Datenbank '%s' nicht in der Systemkonfiguration gefunden"
 
 #: lib/gda-client/gda-connection.c:453 lib/gda-client/gda-connection.c:470
 msgid "[GDA Client Library]"
-msgstr ""
+msgstr "[GDA Client-Bibliothek]"
 
 #: lib/gda-client/gda-connection.c:469
 msgid "Could not open CORBA factory"
@@ -48,14 +48,12 @@ msgid "<Unknown GDA Type(NULL)>"
 msgstr "<Unbekannter GDA-Typ(NULL)>"
 
 #: lib/gda-client/gda-field.c:264
-#, fuzzy
 msgid "true"
-msgstr "Wahr"
+msgstr "wahr"
 
 #: lib/gda-client/gda-field.c:266
-#, fuzzy
 msgid "false"
-msgstr "Falsch"
+msgstr "falsch"
 
 #: lib/gda-common/gda-corba.c:88
 #, c-format
@@ -81,22 +79,20 @@ msgid "%s: An Error occured in the CORBA system."
 msgstr "%s: Ein Fehler ist in dem CORBA-System aufgetreten."
 
 #: lib/gda-common/gda-error.c:152
-#, fuzzy
 msgid "[CORBA User Exception]"
-msgstr "CORBA Anwenderfehler: %s"
+msgstr "[CORBA-Anwenderfehler]"
 
 #: lib/gda-common/gda-error.c:201
 msgid "Unknown CORBA exception for connection"
-msgstr ""
+msgstr "Unbekannte CORBA-Ausnahme für Verbindung"
 
 #: lib/gda-common/gda-init.c:55
 msgid "Attempt to initialize an already initialized client"
 msgstr "Versuch, einen bereits initialisierten Client zu initialisieren"
 
 #: lib/gda-common/gda-init.c:64 lib/gda-server/gda-server-init.c:121
-#, fuzzy
 msgid "Could not initialize Bonobo"
-msgstr "ct_diag() konnte nicht initialisiert werden"
+msgstr "Bonobo konnte nicht initialisiert werden"
 
 #: lib/gda-common/gda-log.c:48
 msgid "Saving log...x"
@@ -116,14 +112,14 @@ msgid "thread is already running"
 msgstr "Thread läuft schon"
 
 #: lib/gda-common/gda-util.c:113
-#, fuzzy, c-format
+#, c-format
 msgid "Could not open file %s"
-msgstr "Lokale Struktur konnte nicht auf '%s' gesetzt werden"
+msgstr "Datei %s konnte nicht geöffnet werden"
 
 #: lib/gda-common/gda-util.c:138
-#, fuzzy, c-format
+#, c-format
 msgid "Could not create file %s"
-msgstr "Das Feld konnte nicht erreicht werden"
+msgstr "Datei %s konnte nicht erzeugt werden"
 
 #: lib/gda-common/gda-xml-database.c:166
 msgid "bad formed document"
@@ -140,18 +136,19 @@ msgid "%p is not a valid table"
 msgstr "%p ist keine gültige Tabelle"
 
 #: lib/gda-common/gda-xml-item.c:386
-#, fuzzy, c-format
+#, c-format
 msgid "Item with id %s not found"
-msgstr "Datenquelle %s nicht gefunden"
+msgstr "Datenquelle mit Kennung %s nicht gefunden"
 
 #: lib/gda-server/gda-server-connection.c:404
-#, fuzzy
 msgid "Connection being closed"
-msgstr "Die Verbindung scheint tot zu sein"
+msgstr "Die Verbindung wird geschlossen"
 
+# How to translate "listener" -cm-
+# 2001-12-26
 #: lib/gda-server/gda-server-connection.c:407
 msgid "This connection is being closed, so all listeners are released"
-msgstr ""
+msgstr "Die Verbindung wird geschlossen. Alle listener werden freigegeben."
 
 #: lib/gda-server/gda-server-error.c:41
 msgid "Could not get pointer to server implementation"
@@ -195,31 +192,27 @@ msgid "CORBA user exception: %s"
 msgstr "CORBA Anwenderfehler: %s"
 
 #: providers/gda-default-server/GNOME_GDA_Provider_Default.oaf.in.h:1
-#, fuzzy
 msgid "Default provider connection factory"
-msgstr "Vebindung zu %s konnte nicht geöffnet werden"
+msgstr "Vorgabe-Anbieter-Verbindungsfabrik"
 
 #: providers/gda-default-server/GNOME_GDA_Provider_Default.oaf.in.h:2
-#, fuzzy
 msgid "GDA Default Datasource Access"
-msgstr "GDA-Datasource-Access für ODBC"
+msgstr "GDA-Vorgabe-Datasource-Access"
 
 #: providers/gda-default-server/gda-default-connection.c:127
 msgid "You must specify a directory for the database to be stored"
-msgstr ""
+msgstr "Sie müssen ein Verzeichnis für die zu speichernde Datenbank angeben"
 
 #: providers/gda-default-server/gda-default-connection.c:235
 #: providers/gda-mysql-server/gda-mysql-connection.c:283
 #: providers/gda-oracle-server/gda-oracle-connection.c:334
 #: providers/gda-postgres-server/gda-postgres-connection.c:486
-#, fuzzy
 msgid "Unknown schema type"
-msgstr "Unbekannter ORACLE-Typ %ld"
+msgstr "Unbekannter Scheme-Typ"
 
 #: providers/gda-default-server/main-default.c:70
-#, fuzzy
 msgid "Could not register Default provider implementation"
-msgstr "Die Mail-Anbieter-Implementierung konnte nicht registriert werden"
+msgstr "Die Vorgabe-Anbieter-Implementierung konnte nicht registriert werden"
 
 #: providers/gda-ldap-server/GNOME_GDA_Provider_LDAP.oaf.in.h:1
 msgid "GDA Datasource Access for LDAP"
@@ -227,7 +220,7 @@ msgstr "GDA-Datasource-Access für LDAP"
 
 #: providers/gda-ldap-server/GNOME_GDA_Provider_LDAP.oaf.in.h:2
 msgid "LDAP provider connection factory"
-msgstr ""
+msgstr "LDAP-Anbieter-Verbindungsfabrik"
 
 #: providers/gda-interbase-server/gda-interbase-connection.c:331
 #: providers/gda-ldap-server/gda-ldap-connection.c:293
@@ -288,12 +281,12 @@ msgstr "GDA-Datasource-Access für Interbase"
 
 #: providers/gda-interbase-server/GNOME_GDA_Provider_InterBase.oaf.in.h:2
 msgid "InterBase provider connection factory"
-msgstr ""
+msgstr "InterBase-Anbieter-Verbindungsfabrik"
 
 #: providers/gda-interbase-server/gda-interbase-connection.c:327
-#, fuzzy, c-format
+#, c-format
 msgid "Error code %ld (%s)"
-msgstr "Fehlercode %ld"
+msgstr "Fehlercode %ld (%s)"
 
 #: providers/gda-interbase-server/main-interbase.c:74
 msgid "Could not register INTERBASE provider implementation"
@@ -305,7 +298,7 @@ msgstr "GDA-Datasource-Access für Mail"
 
 #: providers/gda-mail-server/GNOME_GDA_Provider_Mail.oaf.in.h:2
 msgid "Mail provider connection factory"
-msgstr ""
+msgstr "Mail-Anbieter-Verbindungsfabrik"
 
 #: providers/gda-mail-server/gda-mail-connection.c:107
 #: providers/gda-mdb-server/gda-mdb-connection.c:224
@@ -325,7 +318,7 @@ msgstr "GDA-Datasource-Access für MDB (MS Access) Dateien"
 
 #: providers/gda-mdb-server/GNOME_GDA_Provider_MDB.oaf.in.h:2
 msgid "MDB provider connection factory"
-msgstr ""
+msgstr "MDB-Anbieter-Verbindungsfabrik"
 
 #. execute command
 #: providers/gda-mdb-server/gda-mdb-command.c:86
@@ -385,17 +378,16 @@ msgstr "GDA-Datasource-Access für MySQL"
 
 #: providers/gda-mysql-server/GNOME_GDA_Provider_MySQL.oaf.in.h:2
 msgid "MySQL provider connection factory"
-msgstr ""
+msgstr "MySQL-Anbieter-Verbindungsfabrik"
 
 #: providers/gda-mysql-server/gda-mysql-connection.c:175
-#, fuzzy
 msgid ""
 "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a "
 "PORT. Please remove the UNIX_SOCKET, or remove both the HOST and PORT options"
 msgstr ""
-"%s:%d: Sie konnen keinen UNIX_SOCKET anbieten, wenn Sie auch einen PORT und "
-"einen HOST angeben. Bitte entfernen Sie entweder die PORT- und die HOST-"
-"Optionen, oder entfernen Sie die UNIX_SOCKET-Optionen"
+"Sie konnen keinen UNIX_SOCKET anbieten, wenn Sie auch einen HOST oder "
+"eineneinen PORT angeben. Bitte entfernen Sie den UNIX_SOCKET, oder entfernen "
+"Siebeode HOST- und PORT-Optionen"
 
 #: providers/gda-mysql-server/gda-mysql-connection.c:191
 #, c-format
@@ -408,11 +400,11 @@ msgstr ""
 
 #: providers/gda-mysql-server/gda-mysql-connection.c:623
 msgid "Unknown"
-msgstr ""
+msgstr "Unbekannt"
 
 #: providers/gda-mysql-server/gda-mysql-connection.c:656
 msgid "No MYSQL_Connection for GdaServerConnection"
-msgstr ""
+msgstr "Keine MYSQL_Verbindung für GdaServerConnection"
 
 #: providers/gda-odbc-server/GNOME_GDA_Provider_ODBC.oaf.in.h:1
 msgid "GDA Datasource Access for ODBC"
@@ -420,7 +412,7 @@ msgstr "GDA-Datasource-Access für ODBC"
 
 #: providers/gda-odbc-server/GNOME_GDA_Provider_ODBC.oaf.in.h:2
 msgid "ODBC provider connection factory"
-msgstr ""
+msgstr "ODBC-Anbieter-Verbindungsfabrik"
 
 #: providers/gda-odbc-server/gda-odbc-connection.c:277
 #, c-format
@@ -446,7 +438,7 @@ msgstr "GDA-Datasource-Access für Oracle"
 
 #: providers/gda-oracle-server/GNOME_GDA_Provider_Oracle.oaf.in.h:2
 msgid "Oracle provider connection factory"
-msgstr ""
+msgstr "Orcle-Anbieter-Verbindungsfabrik"
 
 #: providers/gda-oracle-server/gda-oracle-command.c:191
 msgid "Could not allocate statement handle"
@@ -496,7 +488,7 @@ msgstr "GDA-Datasource-Access für Postgres"
 
 #: providers/gda-postgres-server/GNOME_GDA_Provider_Postgres.oaf.in.h:2
 msgid "Postgres provider connection factory"
-msgstr ""
+msgstr "Postgres-Anbieter-Verbindungsfabrik"
 
 #: providers/gda-postgres-server/gda-postgres-connection.c:888
 #: providers/gda-postgres-server/gda-postgres-connection.c:1005
@@ -514,7 +506,7 @@ msgstr "GDA-Datasource-Access für Sybase"
 
 #: providers/gda-sybase-server/GNOME_GDA_Provider_Sybase.oaf.in.h:2
 msgid "Sybase provider connection factory"
-msgstr ""
+msgstr "Sybase-Anbieter-Verbindungsfabrik"
 
 #.      gda_server_error_make(error, 0, cnc, "connection seems to be dead");
 #: providers/gda-sybase-server/gda-sybase-command.c:160
@@ -549,9 +541,8 @@ msgid "Freeing command structure failed"
 msgstr "Löschen der Befehlsstruktur fehlgeschlagen"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:182
-#, fuzzy
 msgid "Not enough memory for sybase_Connection"
-msgstr "Nicht genug Speicher für primebase_Error Struktur"
+msgstr "Nicht genug Speicher für sybase_Verbindung"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:483
 #: providers/gda-tds-server/gda-tds-connection.c:442
@@ -733,41 +724,43 @@ msgid "Could not get # of messages"
 msgstr "Die Anzahl der Meldungen konnte nicht erhalten werden"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:356
-#, fuzzy
 msgid "ct_diag failed, Could not get # of client messages(1)"
-msgstr "Die Anzahl der Client-Meldungen konnte nicht ermittelt werden"
+msgstr ""
+"ct_diag fehlgeschlagen. Anzahl der Client-Meldungen(1) konnte nicht erhalten "
+"werden."
 
+# Bummer -cm-
+# 2001-12-26
 #: providers/gda-sybase-server/gda-sybase-error.c:381
-#, fuzzy
 msgid "Could not get client msg #"
-msgstr "Die Client-Meldungen %d konnte nicht empfangen werden"
+msgstr "Client-Meldungen konnte nicht erhalten werden:"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:394
 #: providers/gda-sybase-server/gda-sybase-error.c:396
 #: providers/gda-sybase-server/gda-sybase-error.c:688
 #: providers/gda-sybase-server/gda-sybase-error.c:690
-#, fuzzy
 msgid "Client Message:"
-msgstr "Client-Nachricht:"
+msgstr "Client-Meldung:"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:424
-#, fuzzy
 msgid "ct_diag failed, Could not get # of client messages(2)"
-msgstr "Die Anzahl der Client-Meldungen konnte nicht ermittelt werden"
+msgstr ""
+"ct_diag fehlgeschlagen. Anzahl der Client-Meldungen(2) konnte nicht erhalten "
+"werden."
 
 #: providers/gda-sybase-server/gda-sybase-error.c:442
 msgid "Could not clear client messages"
 msgstr "Client-Meldungen konnte nicht gelöscht werden"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:486
-#, fuzzy
 msgid "Could not get # of server messages(1)"
-msgstr "Die Anzahl der Server-Meldungen konnte nicht erhalten werden"
+msgstr "Anzahl von Server-Meldungen(1) konnte nicht erhalten werden"
 
+# Bummer -cm-
+# 2001-12-26
 #: providers/gda-sybase-server/gda-sybase-error.c:510
-#, fuzzy
 msgid "Could not get server msg #"
-msgstr "Die Server-Meldung %d konnte nicht empfangen werden"
+msgstr "Server-Meldung konnte nicht erhalten werden:"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:570
 msgid "Could not get # of server messages"
@@ -779,7 +772,7 @@ msgstr "Die Server-Meldungen konnte nicht gelöscht werden"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:634
 msgid "Could not get # of cslib messages"
-msgstr "Die Anzahl der cslib-Meldungen konnte nicht empfangen werden"
+msgstr "Die Anzahl der cslib-Meldungen konnte nicht erhalten werden"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:650
 #, c-format
@@ -791,15 +784,15 @@ msgstr "%d cslib-Meldungen werden geholt"
 msgid "Fetching %d cslib message"
 msgstr "cslib-Meldung %d wird geholt"
 
+# Bummer -cm-
+# 2001-12-26
 #: providers/gda-sybase-server/gda-sybase-error.c:672
-#, fuzzy
 msgid "Could not get cslib msg #"
-msgstr "Die cslib-Meldung %d konnte nicht empfangen werden"
+msgstr "cslib-Meldung konnte nicht erhalten werden:"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:711
-#, fuzzy
 msgid "Could not get # of cslib messages(2)"
-msgstr "Die Anzahl der cslib-Meldungen konnte nicht empfangen werden"
+msgstr "Anzahl der cslib-Meldungen(2) konnte nicht erhalten werden"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:729
 msgid "Could not clear cslib messages"
@@ -807,23 +800,25 @@ msgstr "Die cslib-Meldungen konnte nicht gelöscht werden"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:761
 msgid "SYB"
-msgstr ""
+msgstr "SYB"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:763
 msgid "severity"
-msgstr ""
+msgstr "Schwere"
 
+# is this correct, or is "Nummer" better -cm-
+# 2001-12-26
 #: providers/gda-sybase-server/gda-sybase-error.c:765
 msgid "number"
-msgstr ""
+msgstr "Anzahl"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:767
 msgid "origin"
-msgstr ""
+msgstr "Herkunft"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:769
 msgid "layer"
-msgstr ""
+msgstr "Schicht"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:776
 #, c-format
@@ -832,6 +827,9 @@ msgid ""
 "\tOperating system error number(%ld):\n"
 "\t%s"
 msgstr ""
+"\n"
+"\tBetriebssystem-Fehlernummer(%ld):\n"
+"\t%s"
 
 #: providers/gda-sybase-server/gda-sybase-recordset.c:219
 #: providers/gda-tds-server/gda-tds-recordset.c:199
@@ -928,7 +926,7 @@ msgstr "%2ld: Verbunden mit '%s@%s:%s' mit Verb.Param.: '%s'"
 #: providers/gda-primebase-server/gda-primebase-connection.c:171
 msgid "Could not get PBIConnectionInfo(), disconnecting"
 msgstr ""
-"PBIConnectionInfo() konnte nicht empfangen werden, Verbindung wird getrennt"
+"PBIConnectionInfo() konnte nicht erhalten werden, Verbindung wird getrennt"
 
 #: providers/gda-primebase-server/gda-primebase-connection.c:176
 #, c-format
@@ -954,7 +952,7 @@ msgstr "GDA-Datasource-Acess für Sybase/MS SQL"
 
 #: providers/gda-tds-server/GNOME_GDA_Provider_TDS.oaf.in.h:2
 msgid "TDS provider connection factory"
-msgstr ""
+msgstr "TDS-Anbieter-Verbindungsfabrik"
 
 #: providers/gda-tds-server/gda-tds-command.c:135
 msgid "Filling command structure failed\n"
@@ -995,9 +993,8 @@ msgid "No data returned, freeing recordset structure"
 msgstr "Keine Daten zurückgegeben, die Struktur wird gelöscht"
 
 #: providers/gda-tds-server/gda-tds-connection.c:165
-#, fuzzy
 msgid "Not enough memory for tds_Connection"
-msgstr "Nicht genug Speicher für primebase_Error Struktur"
+msgstr "Nicht genug Speicher tds_Verbindung"
 
 #. Fixme: replace "dummy" with buf when CS_GET CS_SERVERNAME works
 #: providers/gda-tds-server/gda-tds-connection.c:893
@@ -1049,132 +1046,5 @@ msgid "%s: data source '%s' not found\n"
 msgstr "%s: Datenquelle '%s' nicht gefunden\n"
 
 #: tools/templates/main-srv.c.tmpl:60
-#, fuzzy
 msgid "Could not register <PROVIDER-NAME> provider implementation"
-msgstr "PRIMEBASE-Anbieter Implementierung konnte nicht registriert werden"
-
-#~ msgid "gda_sybase_error_make(%p,%p,%p,%p)"
-#~ msgstr "gda_sybase_error_make(%p,%p,%p,%p)"
-
-#~ msgid "%d ctlib messages to fetch"
-#~ msgstr "%d ctlib-Meldungen zu empfangen"
-
-#~ msgid "%d ctlib message to fetch"
-#~ msgstr "ctlib-Meldung %d zu empfangen"
-
-#~ msgid "error is nullpointer in gda_sybase_messages_handle"
-#~ msgstr "Fehler ist Nullzeiger in gda_sybase_messages_handle"
-
-#~ msgid "Fetching %d client messages"
-#~ msgstr "%d Client-Meldungen werden geholt"
-
-#~ msgid "Fetching %d client message"
-#~ msgstr "Client-Meldung %d wird geholt"
-
-#~ msgid "Fetching %d server messages"
-#~ msgstr "%d Server-Meldungen werden geholt"
-
-#~ msgid "Fetching %d server message"
-#~ msgstr "Server-Meldung %d werden geholt"
-
-#~ msgid "TRUE"
-#~ msgstr "WAHR"
-
-#~ msgid "FALSE"
-#~ msgstr "FALSCH"
-
-#~ msgid "impl_GDA_Connection_open: opening connection with DSN: %s"
-#~ msgstr "impl_GDA_Connection_open: Verbindung mit DSN öffnen: %s"
-
-#~ msgid "%s: an error ocurred while fetching data"
-#~ msgstr "%s: Ein Fehler trat auf, während die Daten empfangen werden"
-
-#~ msgid ""
-#~ "OAF doesn't know about our IID; indicates broken installation. Exiting..."
-#~ msgstr ""
-#~ "OAF weiß nichts über ihre IID. Das deutet auf defekte Installation hin. "
-#~ "Abbruch..."
-
-#~ msgid ""
-#~ "Another instance of this provider is already registered with OAF. "
-#~ "Exiting..."
-#~ msgstr ""
-#~ "Eine andere Instanz dieses Anbieters ist bereits mit OAF registriert. "
-#~ "Abbruch..."
-
-#~ msgid "Unknown error registering this provider with OAF. Exiting"
-#~ msgstr ""
-#~ "Unbekannter Fehler beim Registrieren dieses Anbieters mit OAF. Abbruch"
-
-#~ msgid "Registered with ID = %s"
-#~ msgstr "Registriert mit ID = %s"
-
-#~ msgid "CORBA exception unloading report engine: %s"
-#~ msgstr "CORBA-Ausnahme, Berichtsmodul wird entfernt: %s"
-
-#~ msgid "GDA Distributed Report Engine"
-#~ msgstr "GDA-Distributed-Report-Engine"
-
-#~ msgid "Received signal %d, shutting down."
-#~ msgstr "Signal %d wurde erhalten, Abbruch."
-
-#~ msgid "Received signal %d, shutting down cleanly"
-#~ msgstr "Signal %d wurde erhalten, fehlerfreies Herunterfahren"
-
-#~ msgid "Failed to initialize OAF: please mail bug report to OAF maintainers"
-#~ msgstr ""
-#~ "OAF konnte nicht initialisiert werden: Bitte berichten Sie diesen Fehler "
-#~ "an die OAF-Entwickler"
-
-#~ msgid "Could not activate report engine"
-#~ msgstr "Die Berichts-Engine konnte nicht aktiviert werden"
-
-#~ msgid ""
-#~ "Another instance of the report engine is already registered with OAF. "
-#~ "Exiting..."
-#~ msgstr ""
-#~ "Eine andere Instalz dieses Anbieters ist bereits mit OAF registriert. "
-#~ "Beenden..."
-
-#~ msgid "Unknown error registering report engine with OAF. Exiting"
-#~ msgstr ""
-#~ "Unbekannter Fehler beim Registrieren dieses Anbieters mit OAF. Beenden"
-
-#~ msgid "Registered report engine with ID = %s"
-#~ msgstr "Berichtsmodul registriert mit ID = %s"
-
-#~ msgid "schema_tables: table name = '%s'"
-#~ msgstr "schema_tables: Tabellenname = '%s'"
-
-#~ msgid "schema_tables: table_schema = '%s'"
-#~ msgstr "schema_tables: table_schema = '%s'"
-
-#~ msgid "schema_procedures: proc_catalog = '%s' UNUSED!\n"
-#~ msgstr "schema_procedures: proc_catalog = '%s' UNGENUTZT!\n"
-
-#~ msgid "schema_procedures: proc_catalog = '%s' UNUSED!"
-#~ msgstr "schema_procedures: proc_catalog = '%s' UNGENUTZT!"
-
-#~ msgid "database name"
-#~ msgstr "Datenbankname"
-
-#~ msgid "DATABASE"
-#~ msgstr "DATENBANK"
-
-#~ msgid "user name"
-#~ msgstr "Benutzername"
-
-#~ msgid "USER-NAME"
-#~ msgstr "BENUTZERNAME"
-
-#~ msgid "password"
-#~ msgstr "Passwort"
-
-#~ msgid "PASSWORD"
-#~ msgstr "PASSWORT"
-
-#~ msgid "file name"
-#~ msgstr "Dateiname"
-
-#~ msgid "FILE-NAME"
-#~ msgstr "DATEINAME"
+msgstr "<ANBIETERNAME> Anbieter konnte nicht registriert werden"
