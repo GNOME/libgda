@@ -1,5 +1,15 @@
 2004-09-25  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	Fixes #152487
+
+	* libgda/gda-server-provider.[ch]: added 'reset_connection' method.
+	(gda_server_provider_reset_connection): new function.
+	(gda_server_provider_class_init): initialize new method.
+
+	* libgda/gda-connection.[ch] (gda_connection_reset): new function.
+
+2004-09-25  Rodrigo Moya <rodrigo@gnome-db.org>
+
 	* libgda/Makefile.am: install gda-log.h with the other headers.
 
 2004-09-25  Szalai Ferenc <szferi@einstein.ki.iif.hu>

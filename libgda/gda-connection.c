@@ -299,6 +299,22 @@ gda_connection_new (GdaClient *client,
 }
 
 /**
+ * gda_connection_reset:
+ * @cnc: a #GdaConnection object.
+ *
+ * Resets the given #GdaConnection.
+ *
+ * Returns: %TRUE if successful, %FALSE otherwise.
+ */
+gboolean
+gda_connection_reset (GdaConnection *cnc)
+{
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+
+	return gda_server_provider_reset_connection (cnc->priv->provider_obj, cnc);
+}
+
+/**
  * gda_connection_close
  * @cnc: a #GdaConnection object.
  *

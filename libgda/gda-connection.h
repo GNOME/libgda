@@ -70,6 +70,7 @@ GdaConnection       *gda_connection_new (GdaClient *client,
 					 const gchar *username,
 					 const gchar *password,
 					 GdaConnectionOptions options);
+gboolean             gda_connection_reset (GdaConnection *cnc);
 gboolean             gda_connection_close (GdaConnection *cnc);
 gboolean             gda_connection_is_open (GdaConnection *cnc);
 
