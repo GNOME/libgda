@@ -1,3 +1,10 @@
+2003-09-17  Seth Remington <sremington@saberlogic.com>
+                                                                                    
+        Fixes #117202
+                                                                                    
+        * providers/freetds/gda-freetds-provider.[ch]: adapted to API changes
+        in tds_connect.
+
 2003-09-01  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* providers/xml/gda-xml-provider.c: killed warnings.
