@@ -280,7 +280,7 @@ gda_config_add_entry (const gchar *section_path,
 	entry->type = g_strdup (type);
 	entry->value = g_strdup (value);
 	
-	section = gda_config_search_section (cfg_client->global, section_path);
+	section = gda_config_search_section (cfg_client->user, section_path);
 	if (section == NULL)
 		section = gda_config_add_section (section_path);
 

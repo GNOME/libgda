@@ -1,3 +1,16 @@
+2002-05-20  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
+	* libgda/gda-config.c: don't create a new section for each entry
+	added (one-liner).
+
+2002-05-19  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
+	* libgda/gda-data-model-hash.c: 
+	(gda_data_model_hash_get_value_at): use gda_data_model_hash_get_row.
+	
+	* providers/postgres/gda-postgres-recordset.c: added gda_postgres_recordset_get_row and changed
+	get_value_at to use it.
+
 2002-05-19  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* testing/client.c (open_connection): added tests for all missing
