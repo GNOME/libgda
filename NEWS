@@ -1,3 +1,17 @@
+libgda 1.0.3, 2004-01-16
+------------------------
+
+ - Backported gda_data_model_foreach from HEAD (gonzalo)
+ - Python bindings related issues (jon)
+ - Fixed documentation typos (rodrigo)
+ - Fixed C99'isms (rodrigo)
+ - Fixed replacement of files in gda_file_save (laurent)
+ - Fixed startup commands execution in SQLite provider (nikolai)
+ - Updated translations:
+        - es (serrador)
+        - nl (adrighem)
+        - pt (dnloreto)
+
 libgda 1.0.2, 2003-11-30
 ------------------------
 
