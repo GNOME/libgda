@@ -1,4 +1,4 @@
-SUBDIRS = idl server
+SUBDIRS = idl engine
 
 INCLUDES = \
 	-I$(top_builddir)/lib/gda-common \
@@ -7,11 +7,16 @@ INCLUDES = \
 
 lib_LTLIBRARIES = libgda-report.la
 
-BUILT_SOURCES = GDA_Report.h GDA_Report-common.c GDA_Report-stubs.c GDA_Report-skels.c
+BUILT_SOURCES = \
+	GNOME_Database_Report.h \
+	GNOME_Database_Report-common.c \
+	GNOME_Database_Report-stubs.c \
+	GNOME_Database_Report-skels.c
+
 CLEANFILES += $(BUILT_SOURCES) gda-report.dtd
 
-$(BUILT_SOURCES): $(top_builddir)/report/idl/GDA_Report.idl
-	orbit-idl $(top_builddir)/report/idl/GDA_Report.idl
+$(BUILT_SOURCES): $(top_builddir)/report/idl/GNOME_Database_Report.idl
+	orbit-idl $(top_builddir)/report/idl/GNOME_Database_Report.idl
 
 gda_report_headers = \
 	gda-report-defs.h \
@@ -42,10 +47,7 @@ gda_report_headers = \
 	gda-report-footer.h
 	
 libgda_report_la_SOURCES = \
-	GDA_Report.h \
-	GDA_Report-common.c \
-	GDA_Report-skels.c \
-	GDA_Report-stubs.c \
+	$(BUILT_SOURCES) \
 	gda-report-engine.c \
 	gda-report-stream.c \
 	gda-report.c \
