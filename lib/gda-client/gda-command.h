@@ -72,7 +72,7 @@ struct _GdaCommand {
 #endif
 	CORBA_Object    command;
 	CORBA_ORB       orb;
-	GdaConnection* connection;
+	GdaConnection*  connection;
 	gchar*          text;
 	GDA_CommandType type;
 	GList*          parameters;
@@ -94,15 +94,15 @@ GType           gda_command_get_type         (void);
 guint           gda_command_get_type         (void);
 #endif
 
-GdaCommand*    gda_command_new              (void);
+GdaCommand*     gda_command_new              (void);
 void            gda_command_free             (GdaCommand* cmd);
-GdaConnection* gda_command_get_connection   (GdaCommand* cmd);
-gint            gda_command_set_connection   (GdaCommand* cmd, GdaConnection* cnc);
+GdaConnection*  gda_command_get_connection   (GdaCommand* cmd);
+void            gda_command_set_connection   (GdaCommand* cmd, GdaConnection* cnc);
 gchar*          gda_command_get_text         (GdaCommand* cmd);
 void            gda_command_set_text         (GdaCommand* cmd, gchar* text);
 GDA_CommandType gda_command_get_cmd_type     (GdaCommand* cmd);
 void            gda_command_set_cmd_type     (GdaCommand* cmd, GDA_CommandType type);
-GdaRecordset*  gda_command_execute          (GdaCommand* cmd, gulong* reccount, gulong flags);
+GdaRecordset*   gda_command_execute          (GdaCommand* cmd, gulong* reccount, gulong flags);
 void            gda_command_create_parameter (GdaCommand* cmd,
                                               gchar* name,
                                               GDA_ParameterDirection inout,

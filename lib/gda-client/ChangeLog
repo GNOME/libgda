@@ -1,3 +1,7 @@
+2001-07-05  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-command.c (gda_command_destroy): properly destroy GtkObject's
+
 2001-07-04  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-connection-pool.c (gda_connection_pool_open_connection): call
