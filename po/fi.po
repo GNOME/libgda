@@ -8,49 +8,49 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-01-17 00:08+0100\n"
-"PO-Revision-Date: 2003-09-19 14:25+0300\n"
+"POT-Creation-Date: 2004-03-08 01:01+0200\n"
+"PO-Revision-Date: 2004-02-04 00:47+0200\n"
 "Last-Translator: Tommi Vainikainen <Tommi.Vainikainen@iki.fi>\n"
 "Language-Team: Finnish <gnome-fi-laatu@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: libgda/gda-client.c:312 libgda/gda-client.c:517 libgda/gda-connection.c:218
+#: libgda/gda-client.c:312 libgda/gda-client.c:535 libgda/gda-connection.c:218
 #, c-format
 msgid "Data source %s not found in configuration"
 msgstr "Asetuksista ei löydy tietolähdettä %s"
 
-#: libgda/gda-client.c:339
+#: libgda/gda-client.c:341
 #, c-format
 msgid "Could not find provider %s in the current setup"
 msgstr "Nykyisistä asetuksista ei löydy tarjoajaa %s"
 
-#: libgda/gda-client.c:369
+#: libgda/gda-client.c:371
 #, c-format
 msgid "Provider %s does not implement entry function"
 msgstr "Tarjoaja %s ei toteuta merkintätoimintoa"
 
-#: libgda/gda-client.c:379
+#: libgda/gda-client.c:381
 msgid "Could not create GdaServerProvider object from plugin"
 msgstr "GdaServerProvider-oliota ei voida luoda liitännäisestä"
 
-#: libgda/gda-client.c:444
+#: libgda/gda-client.c:461
 msgid "Temporary data source created by libgda. Don't remove it"
 msgstr "Tilapäinen libgda:n luoma tietolähde. Älä poista tätä"
 
-#: libgda/gda-config.c:1073
+#: libgda/gda-config.c:1081
 #, c-format
 msgid "Error: %s"
 msgstr "Virhe: %s"
 
-#: libgda/gda-config.c:1400 providers/ldap/gda-ldap-provider.c:327
+#: libgda/gda-config.c:1408 providers/ldap/gda-ldap-provider.c:327
 #: providers/mdb/gda-mdb-provider.c:457 providers/mdb/gda-mdb-provider.c:594
 #: providers/mdb/gda-mdb-provider.c:654 providers/msql/gda-msql-provider.c:448
 #: providers/mysql/gda-mysql-provider.c:702
 #: providers/mysql/gda-mysql-provider.c:890
-#: providers/odbc/gda-odbc-provider.c:733
-#: providers/odbc/gda-odbc-provider.c:789
+#: providers/odbc/gda-odbc-provider.c:738
+#: providers/odbc/gda-odbc-provider.c:794
 #: providers/oracle/gda-oracle-provider.c:1893
 #: providers/oracle/gda-oracle-provider.c:1910
 #: providers/oracle/gda-oracle-provider.c:1955
@@ -60,29 +60,29 @@ msgstr "Virhe: %s"
 msgid "Name"
 msgstr "Nimi"
 
-#: libgda/gda-config.c:1401
+#: libgda/gda-config.c:1409
 msgid "Provider"
 msgstr "Tuottaja"
 
-#: libgda/gda-config.c:1402
+#: libgda/gda-config.c:1410
 msgid "Connection string"
 msgstr "Yhteysmerkkijono"
 
-#: libgda/gda-config.c:1403 providers/ibmdb2/gda-ibmdb2-provider.c:863
+#: libgda/gda-config.c:1411 providers/ibmdb2/gda-ibmdb2-provider.c:863
 #: providers/ibmdb2/gda-ibmdb2-provider.c:892
 #: providers/ibmdb2/gda-ibmdb2-provider.c:920
 #: providers/ibmdb2/gda-ibmdb2-provider.c:1001
-#: providers/odbc/gda-odbc-provider.c:1142
-#: providers/odbc/gda-odbc-provider.c:1298
+#: providers/odbc/gda-odbc-provider.c:1147
+#: providers/odbc/gda-odbc-provider.c:1303
 #: providers/postgres/gda-postgres-provider.c:1118
 msgid "Description"
 msgstr "Kuvaus"
 
-#: libgda/gda-config.c:1404
+#: libgda/gda-config.c:1412
 msgid "Username"
 msgstr "Käyttäjätunnus"
 
-#: libgda/gda-config.c:1405
+#: libgda/gda-config.c:1413
 msgid "Password"
 msgstr "Salasana"
 
@@ -357,11 +357,11 @@ msgstr "Funktio"
 #: providers/mysql/gda-mysql-provider.c:704
 #: providers/mysql/gda-mysql-provider.c:891
 #: providers/mysql/gda-mysql-provider.c:973
-#: providers/odbc/gda-odbc-provider.c:1032
-#: providers/odbc/gda-odbc-provider.c:1141
-#: providers/odbc/gda-odbc-provider.c:1255
-#: providers/odbc/gda-odbc-provider.c:1297
-#: providers/odbc/gda-odbc-provider.c:1349
+#: providers/odbc/gda-odbc-provider.c:1037
+#: providers/odbc/gda-odbc-provider.c:1146
+#: providers/odbc/gda-odbc-provider.c:1260
+#: providers/odbc/gda-odbc-provider.c:1302
+#: providers/odbc/gda-odbc-provider.c:1354
 #: providers/oracle/gda-oracle-provider.c:1154
 #: providers/oracle/gda-oracle-provider.c:1893
 #: providers/oracle/gda-oracle-provider.c:1911
@@ -391,7 +391,7 @@ msgstr "Hakemisto"
 #: providers/ibmdb2/gda-ibmdb2-provider.c:833
 #: providers/ibmdb2/gda-ibmdb2-provider.c:890
 #: providers/ibmdb2/gda-ibmdb2-provider.c:999
-#: providers/odbc/gda-odbc-provider.c:1140
+#: providers/odbc/gda-odbc-provider.c:1145
 #: providers/postgres/gda-postgres-provider.c:1116
 #: providers/postgres/gda-postgres-provider.c:2000
 msgid "Table"
@@ -399,7 +399,7 @@ msgstr "Taulu"
 
 #: providers/ibmdb2/gda-ibmdb2-provider.c:860
 #: providers/mdb/gda-mdb-provider.c:546
-#: providers/odbc/gda-odbc-provider.c:1030
+#: providers/odbc/gda-odbc-provider.c:1035
 #: providers/postgres/gda-postgres-provider.c:845
 msgid "Procedure"
 msgstr "Toimintosarja"
@@ -425,7 +425,7 @@ msgstr "Liipaisimet"
 #: providers/ibmdb2/gda-ibmdb2-provider.c:946
 #: providers/ldap/gda-ldap-provider.c:423
 #: providers/mysql/gda-mysql-provider.c:972
-#: providers/odbc/gda-odbc-provider.c:1254
+#: providers/odbc/gda-odbc-provider.c:1259
 #: providers/oracle/gda-oracle-provider.c:2095
 #: providers/postgres/gda-postgres-provider.c:1135
 #: providers/sqlite/gda-sqlite-provider.c:749
@@ -441,9 +441,9 @@ msgstr "Tyyppi"
 #: providers/mysql/gda-mysql-provider.c:705
 #: providers/mysql/gda-mysql-provider.c:892
 #: providers/mysql/gda-mysql-provider.c:974
-#: providers/odbc/gda-odbc-provider.c:1033
-#: providers/odbc/gda-odbc-provider.c:1256
-#: providers/odbc/gda-odbc-provider.c:1350
+#: providers/odbc/gda-odbc-provider.c:1038
+#: providers/odbc/gda-odbc-provider.c:1261
+#: providers/odbc/gda-odbc-provider.c:1355
 #: providers/oracle/gda-oracle-provider.c:1155
 #: providers/oracle/gda-oracle-provider.c:1893
 #: providers/oracle/gda-oracle-provider.c:1912
@@ -463,7 +463,7 @@ msgstr "Kommentit"
 #: providers/ibmdb2/gda-ibmdb2-provider.c:949
 #: providers/msql/gda-msql-provider.c:489
 #: providers/mysql/gda-mysql-provider.c:975
-#: providers/odbc/gda-odbc-provider.c:1257
+#: providers/odbc/gda-odbc-provider.c:1262
 #: providers/oracle/gda-oracle-provider.c:2097
 #: providers/postgres/gda-postgres-provider.c:1138
 #: providers/sqlite/gda-sqlite-provider.c:752
@@ -549,7 +549,7 @@ msgstr "MBD-tarjoaja ei tue transaktioita"
 
 #: providers/mdb/gda-mdb-provider.c:490
 #: providers/mysql/gda-mysql-provider.c:1070
-#: providers/odbc/gda-odbc-provider.c:914
+#: providers/odbc/gda-odbc-provider.c:919
 #: providers/oracle/gda-oracle-provider.c:1248
 #: providers/postgres/gda-postgres-provider.c:1363
 #: providers/sqlite/gda-sqlite-provider.c:620
@@ -559,7 +559,7 @@ msgstr "Kentän nimi"
 
 #: providers/mdb/gda-mdb-provider.c:491 providers/msql/gda-msql-provider.c:537
 #: providers/mysql/gda-mysql-provider.c:1071
-#: providers/odbc/gda-odbc-provider.c:915
+#: providers/odbc/gda-odbc-provider.c:920
 #: providers/oracle/gda-oracle-provider.c:1249
 #: providers/postgres/gda-postgres-provider.c:1364
 #: providers/sqlite/gda-sqlite-provider.c:621
@@ -569,7 +569,7 @@ msgstr "Tietotyyppi"
 
 #: providers/mdb/gda-mdb-provider.c:492 providers/msql/gda-msql-provider.c:538
 #: providers/mysql/gda-mysql-provider.c:1072
-#: providers/odbc/gda-odbc-provider.c:916
+#: providers/odbc/gda-odbc-provider.c:921
 #: providers/oracle/gda-oracle-provider.c:1250
 #: providers/postgres/gda-postgres-provider.c:1365
 #: providers/sqlite/gda-sqlite-provider.c:622
@@ -579,7 +579,7 @@ msgstr "Koko"
 
 #: providers/mdb/gda-mdb-provider.c:493 providers/msql/gda-msql-provider.c:539
 #: providers/mysql/gda-mysql-provider.c:1073
-#: providers/odbc/gda-odbc-provider.c:917
+#: providers/odbc/gda-odbc-provider.c:922
 #: providers/oracle/gda-oracle-provider.c:1251
 #: providers/postgres/gda-postgres-provider.c:1366
 #: providers/sqlite/gda-sqlite-provider.c:623
@@ -589,7 +589,7 @@ msgstr "Asteikko"
 
 #: providers/mdb/gda-mdb-provider.c:494
 #: providers/mysql/gda-mysql-provider.c:1074
-#: providers/odbc/gda-odbc-provider.c:918
+#: providers/odbc/gda-odbc-provider.c:923
 #: providers/oracle/gda-oracle-provider.c:1252
 #: providers/postgres/gda-postgres-provider.c:1367
 #: providers/sqlite/gda-sqlite-provider.c:624
@@ -599,7 +599,7 @@ msgstr "Ei tyhjä?"
 
 #: providers/mdb/gda-mdb-provider.c:495 providers/msql/gda-msql-provider.c:541
 #: providers/mysql/gda-mysql-provider.c:1075
-#: providers/odbc/gda-odbc-provider.c:919
+#: providers/odbc/gda-odbc-provider.c:924
 #: providers/oracle/gda-oracle-provider.c:1253
 #: providers/postgres/gda-postgres-provider.c:1368
 #: providers/sqlite/gda-sqlite-provider.c:625
@@ -609,7 +609,7 @@ msgstr "Ensisijainen avain?"
 
 #: providers/mdb/gda-mdb-provider.c:496 providers/msql/gda-msql-provider.c:542
 #: providers/mysql/gda-mysql-provider.c:1076
-#: providers/odbc/gda-odbc-provider.c:920
+#: providers/odbc/gda-odbc-provider.c:925
 #: providers/oracle/gda-oracle-provider.c:1254
 #: providers/postgres/gda-postgres-provider.c:1369
 #: providers/sqlite/gda-sqlite-provider.c:626
@@ -619,7 +619,7 @@ msgstr "Uniikkihakemisto?"
 
 #: providers/mdb/gda-mdb-provider.c:497 providers/msql/gda-msql-provider.c:543
 #: providers/mysql/gda-mysql-provider.c:1077
-#: providers/odbc/gda-odbc-provider.c:921
+#: providers/odbc/gda-odbc-provider.c:926
 #: providers/oracle/gda-oracle-provider.c:1255
 #: providers/postgres/gda-postgres-provider.c:1370
 #: providers/sqlite/gda-sqlite-provider.c:627
@@ -629,7 +629,7 @@ msgstr "Viittaukset"
 
 #: providers/mdb/gda-mdb-provider.c:498 providers/msql/gda-msql-provider.c:544
 #: providers/mysql/gda-mysql-provider.c:1078
-#: providers/odbc/gda-odbc-provider.c:922
+#: providers/odbc/gda-odbc-provider.c:927
 #: providers/oracle/gda-oracle-provider.c:1256
 #: providers/postgres/gda-postgres-provider.c:1371
 #: providers/sqlite/gda-sqlite-provider.c:628
@@ -643,7 +643,7 @@ msgstr "ID"
 
 #: providers/mdb/gda-mdb-provider.c:550
 #: providers/mysql/gda-mysql-provider.c:706
-#: providers/odbc/gda-odbc-provider.c:1034
+#: providers/odbc/gda-odbc-provider.c:1039
 #: providers/postgres/gda-postgres-provider.c:849
 msgid "Return type"
 msgstr "Paluutyyppi"
@@ -654,16 +654,16 @@ msgstr "arg-määrä"
 
 #: providers/mdb/gda-mdb-provider.c:552
 #: providers/mysql/gda-mysql-provider.c:707
-#: providers/odbc/gda-odbc-provider.c:1036
+#: providers/odbc/gda-odbc-provider.c:1041
 #: providers/postgres/gda-postgres-provider.c:851
 msgid "Args types"
 msgstr "Arg-tyypit"
 
 #: providers/mdb/gda-mdb-provider.c:553
-#: providers/odbc/gda-odbc-provider.c:1037
-#: providers/odbc/gda-odbc-provider.c:1143
-#: providers/odbc/gda-odbc-provider.c:1299
-#: providers/odbc/gda-odbc-provider.c:1351
+#: providers/odbc/gda-odbc-provider.c:1042
+#: providers/odbc/gda-odbc-provider.c:1148
+#: providers/odbc/gda-odbc-provider.c:1304
+#: providers/odbc/gda-odbc-provider.c:1356
 #: providers/oracle/gda-oracle-provider.c:1158
 #: providers/postgres/gda-postgres-provider.c:852
 #: providers/postgres/gda-postgres-provider.c:1119
@@ -734,9 +734,9 @@ msgstr "Komentoa \"%s\" ei voi jäsentää"
 #. parsing went fine, but there is no result
 #. (e.g. because of an invalid column name)
 #: providers/mdb/gda-mdb-provider.c:744
-#, fuzzy, c-format
+#, c-format
 msgid "Got no result for '%s' command"
-msgstr "Komentoa \"%s\" ei voi jäsentää"
+msgstr "Komennolta \"%s\" ei saatu mitään tulosta"
 
 #: providers/mdb/gda-mdb-table.c:48 providers/xml/gda-xml-provider.c:519
 #, c-format
@@ -844,34 +844,34 @@ msgstr "Tarjoaja MySQL-tietokannoille"
 msgid "Unable to SQLAllocEnv()..."
 msgstr "SQLAllocEnv() ei onnistu..."
 
-#: providers/odbc/gda-odbc-provider.c:433
-#: providers/odbc/gda-odbc-provider.c:453
-#: providers/odbc/gda-odbc-provider.c:483
-#: providers/odbc/gda-odbc-provider.c:513
-#: providers/odbc/gda-odbc-provider.c:544
-#: providers/odbc/gda-odbc-provider.c:574
+#: providers/odbc/gda-odbc-provider.c:438
+#: providers/odbc/gda-odbc-provider.c:458
+#: providers/odbc/gda-odbc-provider.c:488
+#: providers/odbc/gda-odbc-provider.c:518
+#: providers/odbc/gda-odbc-provider.c:549
+#: providers/odbc/gda-odbc-provider.c:579
 msgid "Invalid Odbc handle"
 msgstr "Kelvoton Odbc-kahva"
 
-#: providers/odbc/gda-odbc-provider.c:1031
+#: providers/odbc/gda-odbc-provider.c:1036
 #: providers/oracle/gda-oracle-provider.c:1153
 #: providers/postgres/gda-postgres-provider.c:846
 #: providers/postgres/gda-postgres-provider.c:1312
 msgid "Id"
 msgstr "Tunniste"
 
-#: providers/odbc/gda-odbc-provider.c:1035
+#: providers/odbc/gda-odbc-provider.c:1040
 #: providers/postgres/gda-postgres-provider.c:850
 msgid "Nb args"
 msgstr "Arg-määrä"
 
-#: providers/odbc/gda-odbc-provider.c:1296
+#: providers/odbc/gda-odbc-provider.c:1301
 #: providers/oracle/gda-oracle-provider.c:2193 testing/client.c:134
 msgid "Views"
 msgstr "Näkymät"
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/odbc/gda-odbc-provider.c:1348
+#: providers/odbc/gda-odbc-provider.c:1353
 #: providers/postgres/gda-postgres-provider.c:1945
 #: providers/postgres/gda-postgres-provider.c:2001
 msgid "Sequence"
