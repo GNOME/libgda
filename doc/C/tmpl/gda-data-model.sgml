@@ -92,6 +92,16 @@ Basic data model class
 @title: 
 
 
+<!-- ##### FUNCTION gda_data_model_get_column_position ##### -->
+<para>
+
+</para>
+
+@model: 
+@title: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_data_model_get_value_at ##### -->
 <para>
 

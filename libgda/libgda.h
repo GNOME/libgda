@@ -40,6 +40,7 @@
 #include <libgda/gda-parameter.h>
 #include <libgda/gda-quark-list.h>
 #include <libgda/gda-row.h>
+#include <libgda/gda-select.h>
 #include <libgda/gda-table.h>
 #include <libgda/gda-util.h>
 #include <libgda/gda-value.h>

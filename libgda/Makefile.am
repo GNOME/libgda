@@ -32,6 +32,7 @@ gda_headers = \
 	gda-parameter.h \
 	gda-quark-list.h \
 	gda-row.h \
+	gda-select.h \
 	gda-server-provider.h \
 	gda-table.h \
 	gda-util.h \
@@ -82,6 +83,7 @@ libgda_2_la_SOURCES = \
 	gda-parameter.c \
 	gda-quark-list.c \
 	gda-row.c \
+	gda-select.c \
 	gda-server-provider.c \
 	gda-table.c \
 	gda-util.c \

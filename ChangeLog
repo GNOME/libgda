@@ -1,3 +1,17 @@
+2002-05-16  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* libgda/gda-data-model.c (gda_data_model_begin_edit): don't start
+	editing if the data model is not editable.
+	(gda_data_model_get_column_position): new function.
+
+	* libgda/gda-select.[ch]: new class for doing filtering data models
+	based on a search expression.
+
+	* libgda/Makefile.am:
+	* libgda/libgda.h: added new files.
+
+	* doc/C/*: added new documentation.
+
 2002-05-16  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
 	* libgda/gda-value.[ch]:

@@ -122,6 +122,7 @@ gda_data_model_get_n_columns
 gda_data_model_describe_column
 gda_data_model_get_column_title
 gda_data_model_set_column_title
+gda_data_model_get_column_position
 gda_data_model_get_value_at
 gda_data_model_is_editable
 gda_data_model_append_row
@@ -668,6 +669,20 @@ GDA_TYPE_TABLE
 gda_table_get_type
 GDA_TABLE_CLASS
 GDA_IS_TABLE_CLASS
+</SECTION>
+
+<SECTION>
+<FILE>gda-select</FILE>
+GdaSelectPrivate
+<TITLE>GdaSelect</TITLE>
+gda_select_new
+<SUBSECTION Standard>
+GDA_SELECT
+GDA_IS_SELECT
+GDA_TYPE_SELECT
+gda_select_get_type
+GDA_SELECT_CLASS
+GDA_IS_SELECT_CLASS
 </SECTION>
 
 <SECTION>

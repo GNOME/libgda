@@ -76,6 +76,7 @@ gint                gda_data_model_get_n_columns (GdaDataModel *model);
 GdaFieldAttributes *gda_data_model_describe_column (GdaDataModel *model, gint col);
 const gchar        *gda_data_model_get_column_title (GdaDataModel *model, gint col);
 void                gda_data_model_set_column_title (GdaDataModel *model, gint col, const gchar *title);
+gint                gda_data_model_get_column_position (GdaDataModel *model, const gchar *title);
 const GdaValue     *gda_data_model_get_value_at (GdaDataModel *model, gint col, gint row);
 
 gboolean            gda_data_model_is_editable (GdaDataModel *model);

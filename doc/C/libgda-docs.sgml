@@ -38,6 +38,7 @@
 <!ENTITY libgda-parameter SYSTEM "sgml/gda-parameter.sgml">
 <!ENTITY libgda-quark-list SYSTEM "sgml/gda-quark-list.sgml">
 <!ENTITY libgda-row SYSTEM "sgml/gda-row.sgml">
+<!ENTITY libgda-select SYSTEM "sgml/gda-select.sgml">
 <!ENTITY libgda-server-provider SYSTEM "sgml/gda-server-provider.sgml">
 <!ENTITY libgda-table SYSTEM "sgml/gda-table.sgml">
 <!ENTITY libgda-util SYSTEM "sgml/gda-util.sgml">
@@ -749,6 +750,7 @@
     &libgda-parameter;
     &libgda-quark-list;
     &libgda-row;
+    &libgda-select;
     &libgda-server-provider;
     &libgda-table;
     &libgda-util;

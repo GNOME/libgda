@@ -22,6 +22,7 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#include <libgda/gda-intl.h>
 #include <libgda/gda-data-model.h>
 
 #define PARENT_TYPE G_TYPE_OBJECT
@@ -342,6 +343,39 @@ gda_data_model_set_column_title (GdaDataModel *model, gint col, const gchar *tit
 }
 
 /**
+ * gda_data_model_get_column_position
+ * @model: a #GdaDataModel object.
+ * @title: column title.
+ *
+ * Get the position of a column on the data model, based on
+ * the column's title.
+ *
+ * Returns: the position of the column in the data model, or -1
+ * if the column could not be found.
+ */
+gint
+gda_data_model_get_column_position (GdaDataModel *model, const gchar *title)
+{
+	gint n_cols;
+	gint i;
+
+	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), -1);
+	g_return_val_if_fail (title != NULL, -1);
+
+	n_cols = gda_data_model_get_n_columns (model);
+	for (i = 0; i < n_cols; i++) {
+		gpointer value;
+
+		value = g_hash_table_lookup (model->priv->column_titles,
+					     GINT_TO_POINTER (i));
+		if (value && !strcmp (title, (const char *) value))
+			return i;
+	}
+
+	return -1;
+}
+
+/**
  * gda_data_model_get_value_at
  * @model: a #GdaDataModel object.
  * @col: column number.
@@ -482,6 +516,11 @@ gda_data_model_begin_edit (GdaDataModel *model)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
 	g_return_val_if_fail (model->priv->editing == FALSE, FALSE);
+
+	if (!gda_data_model_is_editable (model)) {
+		gda_log_error (_("Data model %p is not editable"), model);
+		return FALSE;
+	}
 
 	model->priv->editing = TRUE;
 	g_signal_emit (G_OBJECT (model), gda_data_model_signals[BEGIN_EDIT], 0);
