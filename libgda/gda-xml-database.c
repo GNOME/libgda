@@ -546,7 +546,7 @@ gda_xml_database_to_string (GdaXmlDatabase *xmldb)
 	list = gda_xml_database_get_tables (xmldb);
 	for (l = list; l != NULL; l = l->next) {
 		GdaTable *table = gda_xml_database_find_table (xmldb, l->data);
-		xmlNodePtr node = gda_data_model_to_xml_node (GDA_DATA_MODEL (table), l->data);
+		xmlNodePtr node = gda_data_model_to_xml_node (GDA_DATA_MODEL (table), NULL, 0, l->data);
 
 		if (!node) {
 			gda_log_error (_("Could not create a XML node from table %s"), l->data);

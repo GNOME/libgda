@@ -1,3 +1,9 @@
+2005-03-25  Vivien Malerba <malerba@gnome-db.org>
+	* libgda/gda-data-model.[ch]: grouped the gda_data_model_to_comma_separated() and 
+	  gda_data_model_to_tab_separated() into a single gda_data_model_to_text_separated() method
+	* libgda/gda-data-model.[ch]: Added an optionnal argument to the export functions to provide
+	  which columns are to be exported
+
 2005-03-24  Bas Driessen <bas.driessen@xobas.com>
 
 	* providers/postgres/gda-postgres-recordset.c

@@ -394,24 +394,6 @@ Basic data model class
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_data_model_to_comma_separated ##### -->
-<para>
-
-</para>
-
-@model: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_data_model_to_tab_separated ##### -->
-<para>
-
-</para>
-
-@model: 
-@Returns: 
-
-
 <!-- ##### FUNCTION gda_data_model_to_xml ##### -->
 <para>
 
