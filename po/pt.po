@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 2.0\n"
-"POT-Creation-Date: 2002-03-07 00:28+0100\n"
-"PO-Revision-Date: 2002-03-06 01:00+0000\n"
+"POT-Creation-Date: 2002-03-12 01:28+0000\n"
+"PO-Revision-Date: 2002-03-12 01:30+0000\n"
 "Last-Translator: Duarte Loreto <happyguy_pt@hotmail.com>\n"
 "Language-Team: Portuguese <gnome_pt@yahoogroups.com>\n"
 "MIME-Version: 1.0\n"
@@ -95,6 +95,11 @@ msgstr "Incapaz de notificar cliente sobre a acção %d"
 msgid "No implementation for the fetch() method found"
 msgstr "Nenhuma implementação encontrada para o métido fetch()"
 
+#: libgda/gda-table.c:229
+#, c-format
+msgid "There is already a field called %s"
+msgstr "Já existe um campo chamado %s"
+
 #: libgda/gda-value.c:926
 msgid "TRUE"
 msgstr "VERDADEIRO"
@@ -116,27 +121,25 @@ msgstr "Incapaz de parsear ficheiro em %s"
 #: libgda/gda-xml-database.c:232 libgda/gda-xml-database.c:249
 #, c-format
 msgid "Invalid XML database file '%s'"
-msgstr ""
+msgstr "Ficheiro XML de base de dados '%s' inválido"
 
 #: libgda/gda-xml-database.c:293 libgda/gda-xml-database.c:333
-#, fuzzy, c-format
+#, c-format
 msgid "Table %s already exists"
-msgstr "tabela %s já existe"
+msgstr "Tabela %s já existe"
 
 #: libgda/gda-xml-database.c:327
-#, fuzzy
 msgid "Invalid node"
-msgstr "Handle MYSQL inválida"
+msgstr "Nó inválido"
 
 #: libgda/gda-xml-database.c:358
 #, c-format
 msgid "Duplicated <data> node for table %s"
-msgstr ""
+msgstr "Nó <data> duplicado para a tabela %s"
 
 #: libgda/gda-xml-database.c:365
-#, fuzzy
 msgid "Invalid XML node"
-msgstr "Handle MYSQL inválida"
+msgstr "Nó XML inválido"
 
 #: providers/default/gda-default-provider.c:139
 #: providers/sqlite/gda-sqlite-provider.c:152
