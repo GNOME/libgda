@@ -1,3 +1,8 @@
+2002-10-12  Alfons <alfons@proteus.demon.nl>
+
+	* libgda/gda-select.c (gda_select_run): use sql_destroy instead of
+	sql_statement_destroy.
+
 2002-10-12  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* libgda/gda-select.c (gda_select_run): commented out call to
