@@ -16,7 +16,13 @@ else
 	configure="./autogen.sh"
 endif
 
-add_flags=$(GDA_WITH_PRIMEBASE) $(GDA_WITH_SYBASE) $(GDA_WITH_TDS)
+add_flags=$(GDA_WITH_PRIMEBASE) \
+	$(GDA_WITH_SYBASE) \
+	$(GDA_WITH_TDS)
+
+add_files=gda-primebase.files gda-primebase.postinst \
+	gda-sybase.files gda-sybase.postinst \
+	gda-tds.files gda-tds.postinst
 
 constrol: control-stamp
 control-stamp:
@@ -40,10 +46,12 @@ configure-stamp:
 	dh_testdir
 	# Add here commands to configure the package.
 	$(configure) --prefix=/usr \
-		    --with-mysql=yes \
-		    --with-postgres=yes \
-		    --with-odbc=yes \
-			$(add_flags)
+		--mandir=/usr/share/man \
+		--infodir=/usr/share/info \
+		--with-mysql=yes \
+		--with-postgres=yes \
+		--with-odbc=yes \
+		$(add_flags)
 
 	touch configure-stamp
 
@@ -60,9 +68,7 @@ clean:
 	dh_testdir
 	dh_testroot
 	rm -f build-stamp configure-stamp control-stamp
-	test -e debian/gda-primebase.* && rm -f debian/gda-primebase.*
-	test -e debian/gda-sybase.* && rm -f debian/gda-sybase.*
-	test -e debian/gda-tds.* && rm -f debian/gda-tds.*
+	$(foreach file,$(add_files),test -e debian/$(file) && rm -f debian/$(file) || true &&) true
 
 	# Add here commands to clean up after the build process.
 	-$(MAKE) distclean
