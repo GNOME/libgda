@@ -59,7 +59,7 @@ gda_postgres_type_name_to_gda (const gchar *name)
 		return GDA_TYPE_SMALLINT;
 	if (!strcmp (name, "float4"))
 		return GDA_TYPE_SINGLE;
-	// TODO: when we have a numeric type, move "numeric".
+	//TODO: numeric handling
 	if (!strcmp (name, "float8") || !strcmp (name, "numeric"))
 		return GDA_TYPE_DOUBLE;
 	if (!strncmp (name, "timestamp", 9))
@@ -228,9 +228,7 @@ gda_postgres_set_field_data (GdaField *field, const gchar *fname,
 		break;
 	case GDA_TYPE_BIGINT :
 		gda_field_set_gdatype (field, type);
-		//FIXME: Don't know if atoll() is portable
 		gda_field_set_bigint_value (field, atoll (value));
-		//TODO: conditionally use gint64 based on G_HAVE_GINT64
 		gda_field_set_actual_size (field, sizeof (gint64));
 		break;
 	case GDA_TYPE_INTEGER :

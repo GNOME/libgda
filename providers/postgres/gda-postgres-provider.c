@@ -718,9 +718,8 @@ gda_postgres_get_idx_data (PGconn *pconn, const gchar *tblname)
 
 	pg_idx = PQexec(pconn, query);
 	g_free (query);
-	if (pg_idx == NULL) {
+	if (pg_idx == NULL)
 		return NULL;
-	}
 
 	nidx = PQntuples (pg_idx);
 
@@ -767,6 +766,9 @@ gda_postgres_index_type (gint colnum, GList *idx_list, IdxType type)
 	GdaPostgresIdxData *idx_data;
 	gint i;
 
+	if (idx_list == NULL || g_list_length (idx_list) == 0)
+		return FALSE;
+
 	for (list = idx_list; list; list = list->next) {
 		idx_data = (GdaPostgresIdxData *) list->data;
 		for (i = 0; i < idx_data->ncolumns; i++) {
@@ -793,7 +795,7 @@ gda_postgres_fill_md_data (const gchar *tblname, GdaServerRecordsetModel *recset
 	GList *idx_data;
 
 	query = g_strdup_printf (
-			"SELECT a.attname, b.typname, a.atttypmod, a.attnotnull "
+			"SELECT a.attname, b.typname, a.atttypmod, b.typlen, a.attnotnull "
 			"FROM pg_class c, pg_attribute a, pg_type b "
 			"WHERE c.relname = '%s' AND a.attnum > 0 AND "
 			"      a.attrelid = c.oid and b.oid = a.atttypid "
@@ -826,8 +828,13 @@ gda_postgres_fill_md_data (const gchar *tblname, GdaServerRecordsetModel *recset
 		rowlist = g_list_append (rowlist, value);
 
 		/* Defined size */
-		thevalue = PQgetvalue(pg_res, i, 2);
+		thevalue = PQgetvalue(pg_res, i, 3);
 		integer = atoi (thevalue);
+		if (integer == -1 && type == GDA_TYPE_STRING) {
+			thevalue = PQgetvalue(pg_res, i, 2);
+			integer = atoi (thevalue);
+		}
+			
 		value = gda_value_new_integer ((integer != -1) ? integer : 0);
 		rowlist = g_list_append (rowlist, value);
 
@@ -836,7 +843,7 @@ gda_postgres_fill_md_data (const gchar *tblname, GdaServerRecordsetModel *recset
 		rowlist = g_list_append (rowlist, value);
 
 		/* Not null? */
-		thevalue = PQgetvalue(pg_res, i, 3);
+		thevalue = PQgetvalue(pg_res, i, 4);
 		value = gda_value_new_boolean ((*thevalue == 't' ? TRUE : FALSE));
 		rowlist = g_list_append (rowlist, value);
 
@@ -859,7 +866,9 @@ gda_postgres_fill_md_data (const gchar *tblname, GdaServerRecordsetModel *recset
 	}
 
 	PQclear (pg_res);
-	g_free (idx_data->data);
+	if (idx_data && idx_data->data)
+		g_free (idx_data->data);
+
 	g_list_free (idx_data);
 
 	return list;
