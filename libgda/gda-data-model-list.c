@@ -82,6 +82,7 @@ gda_data_model_list_class_init (GdaDataModelListClass *klass)
 	object_class->finalize = gda_data_model_list_finalize;
 	model_class->get_n_rows = gda_data_model_list_get_n_rows;
 	model_class->get_n_columns = gda_data_model_list_get_n_columns;
+	model_class->describe_column = NULL;
 	model_class->get_value_at = gda_data_model_list_get_value_at;
 }
 

@@ -92,6 +92,29 @@ gda_recordset_get_n_columns (GdaDataModel *model)
 	return recset->priv->attributes->_length;
 }
 
+static GdaFieldAttributes *
+gda_recordset_describe_column (GdaDataModel *model, gint col)
+{
+	GdaFieldAttributes *fa;
+	GdaRecordset *recset = (GdaRecordset *) model;
+
+	g_return_val_if_fail (GDA_IS_RECORDSET (recset), NULL);
+	g_return_val_if_fail (recset->priv->attributes != NULL, NULL);
+
+	if (col >= recset->priv->attributes->_length ||
+	    recset->priv->attributes <= 0)
+		return NULL;
+
+	fa = gda_field_attributes_new ();
+	gda_field_attributes_set_defined_size (fa, recset->priv->attributes->_buffer[col].definedSize);
+	gda_field_attributes_set_name (fa, recset->priv->attributes->_buffer[col].name);
+	gda_field_attributes_set_scale (fa, recset->priv->attributes->_buffer[col].scale);
+	gda_field_attributes_set_gdatype (fa, recset->priv->attributes->_buffer[col].gdaType);
+	gda_field_attributes_set_allow_null (fa, recset->priv->attributes->_buffer[col].allowNull);
+
+	return fa;
+}
+
 static const GdaValue *
 gda_recordset_get_value_at (GdaDataModel *model, gint col, gint row)
 {
@@ -197,6 +220,7 @@ gda_recordset_class_init (GdaRecordsetClass *klass)
 	object_class->finalize = gda_recordset_finalize;
 	model_class->get_n_rows = gda_recordset_get_n_rows;
 	model_class->get_n_columns = gda_recordset_get_n_columns;
+	model_class->describe_column = gda_recordset_describe_column;
 	model_class->get_value_at = gda_recordset_get_value_at;
 }
 
@@ -248,35 +272,6 @@ gda_recordset_finalize (GObject * object)
 	recset->priv = NULL;
 
 	parent_class->finalize (object);
-}
-
-/**
- * gda_recordset_get_command_text
- * @recset: a #GdaRecordset.
- *
- * Get the text of command that generated this recordset.
- *
- * Returns: a string with the command issued.
- */
-const gchar *
-gda_recordset_get_command_text (GdaRecordset *recset) {
-	g_return_val_if_fail (GDA_IS_RECORDSET (recset), NULL);
-	return recset->priv->cmd_text;
-}
-
-/**
- * gda_recordset_get_command_type
- * @recset: a #GdaRecordset.
- *
- * Get the type of command that generated this recordset.
- *
- * Returns: a #GdaCommandType.
- */
-GdaCommandType
-gda_recordset_get_command_type (GdaRecordset *recset) {
-	g_return_val_if_fail (GDA_IS_RECORDSET (recset), GDA_COMMAND_TYPE_INVALID);
-	return recset->priv->cmd_type;
-
 }
 
 /**
@@ -351,3 +346,33 @@ gda_recordset_new (GdaConnection *cnc, GNOME_Database_Recordset corba_recset)
 	return recset;
 }
 
+/**
+ * gda_recordset_get_command_text
+ * @recset: a #GdaRecordset.
+ *
+ * Get the text of command that generated this recordset.
+ *
+ * Returns: a string with the command issued.
+ */
+const gchar *
+gda_recordset_get_command_text (GdaRecordset *recset)
+{
+	g_return_val_if_fail (GDA_IS_RECORDSET (recset), NULL);
+	return recset->priv->cmd_text;
+}
+
+/**
+ * gda_recordset_get_command_type
+ * @recset: a #GdaRecordset.
+ *
+ * Get the type of command that generated this recordset.
+ *
+ * Returns: a #GdaCommandType.
+ */
+GdaCommandType
+gda_recordset_get_command_type (GdaRecordset *recset)
+{
+	g_return_val_if_fail (GDA_IS_RECORDSET (recset), GDA_COMMAND_TYPE_INVALID);
+	return recset->priv->cmd_type;
+
+}

@@ -21,6 +21,7 @@
  */
 
 #include <bonobo/bonobo-i18n.h>
+#include <libgda/gda-log.h>
 #include <libgda/gda-table.h>
 
 #define PARENT_TYPE GDA_TYPE_DATA_MODEL
@@ -40,14 +41,38 @@ static GObjectClass *parent_class = NULL;
  * GdaTable class implementation
  */
 
+static GdaFieldAttributes *
+gda_table_describe_column (GdaDataModel *model, gint col)
+{
+	GdaFieldAttributes *fa, *new_fa;
+	GdaTable *table = (GdaTable *) model;
+
+	g_return_val_if_fail (GDA_IS_TABLE (table), NULL);
+
+	if (col >= g_hash_table_size (table->priv->fields))
+		return NULL;
+
+	/* FIXME: obtain 'fa' from hash table */
+	new_fa = gda_field_attributes_new ();
+	gda_field_attributes_set_defined_size (new_fa, fa->definedSize);
+	gda_field_attributes_set_name (new_fa, fa->name);
+	gda_field_attributes_set_scale (new_fa, fa->scale);
+	gda_field_attributes_set_gdatype (new_fa, fa->gdaType);
+	gda_field_attributes_set_allow_null (new_fa, fa->allowNull);
+
+	return new_fa;
+}
+
 static void
 gda_table_class_init (GdaTableClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
+	GdaDataModelClass *model_class = GDA_DATA_MODEL_CLASS (klass);
 
 	parent_class = g_type_class_peek_parent (klass);
 
 	object_class->finalize = gda_table_finalize;
+	model_class->describe_column = gda_table_describe_column;
 }
 
 static void
@@ -139,6 +164,47 @@ gda_table_new (const gchar *name)
 }
 
 /**
+ * gda_table_new_from_model
+ * @name: Name for the new table.
+ * @model: Model to create the table from.
+ *
+ * Create a #GdaTable object from the given #GdaDataModel. This
+ * is very useful to maintain an in-memory copy of a given
+ * recordset obtained from a database. This is also used when
+ * exporting data to a #GdaXmlDatabase object.
+ *
+ * Returns: the newly created object.
+ */
+GdaTable *
+gda_table_new_from_model (const gchar *name, const GdaDataModel *model)
+{
+	GdaTable *table;
+	gint n;
+	gint cols;
+
+	g_return_val_if_fail (name != NULL, NULL);
+	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
+
+	table = gda_table_new (name);
+	if (!table)
+		return NULL;
+
+	/* add the columns description */
+	cols = gda_data_model_get_n_columns (GDA_DATA_MODEL (model));
+	for (n = 0; n < cols; n++) {
+		GdaFieldAttributes *fa;
+
+		fa = gda_data_model_describe_column (GDA_DATA_MODEL (model), n);
+		gda_table_add_field (table, (const GdaFieldAttributes *) fa);
+	}
+
+	/* add the data */
+	gda_table_add_data_from_model (table, model);
+
+	return table;
+}
+
+/**
  * gda_table_add_field
  * @table: A #GdaTable object.
  * @fa: Attributes for the new field.
@@ -173,4 +239,16 @@ gda_table_add_field (GdaTable *table, const GdaFieldAttributes *fa)
 	gda_field_attributes_set_allow_null (new_fa, gda_field_attributes_get_allow_null (fa));
 
 	g_hash_table_insert (table->priv->fields, g_strdup (name), new_fa);
+	gda_data_model_array_set_n_columns (GDA_DATA_MODEL_ARRAY (table),
+					    g_hash_table_size (table->priv->fields));
+}
+
+/**
+ * gda_table_add_data_from_model
+ */
+void
+gda_table_add_data_from_model (GdaTable *table, const GdaDataModel *model)
+{
+	g_return_if_fail (GDA_IS_TABLE (table));
+	g_return_if_fail (GDA_IS_DATA_MODEL (model));
 }

@@ -66,6 +66,7 @@ gda_data_model_class_init (GdaDataModelClass *klass)
 	object_class->finalize = gda_data_model_finalize;
 	klass->get_n_rows = NULL;
 	klass->get_n_columns = NULL;
+	klass->describe_column = NULL;
 	klass->get_value_at = NULL;
 }
 
@@ -206,6 +207,40 @@ gda_data_model_get_n_columns (GdaDataModel *model)
 	g_return_val_if_fail (CLASS (model)->get_n_columns != NULL, -1);
 
 	return CLASS (model)->get_n_columns (model);
+}
+
+/**
+ * gda_data_model_describe_column
+ * @model: a #GdaDataModel object.
+ * @col: column number.
+ *
+ * Query the underlying data model implementation for a description
+ * of a given column. That description is returned in the form of
+ * a #GdaFieldAttributes structure, which contains all the information
+ * about the given column in the data model.
+ *
+ * Returns: the description of the column.
+ */
+GdaFieldAttributes *
+gda_data_model_describe_column (GdaDataModel *model, gint col)
+{
+	GdaFieldAttributes *fa;
+
+	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
+	g_return_val_if_fail (CLASS (model)->get_n_columns != NULL, NULL);
+
+	fa = CLASS (model)->get_n_columns (model);
+	if (!fa) {
+		/* we generate a basic FieldAttributes structure */
+		fa = gda_field_attributes_new ();
+		gda_field_attributes_set_defined_size (fa, 0);
+		gda_field_attributes_set_name (fa, gda_data_model_get_column_title (model, col));
+		gda_field_attributes_set_scale (fa, 0);
+		gda_field_attributes_set_gdatype (fa, GDA_TYPE_STRING);
+		gda_field_attributes_set_allow_null (fa, TRUE);
+	}
+
+	return fa;
 }
 
 /**

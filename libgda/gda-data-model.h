@@ -23,6 +23,7 @@
 #if !defined(__gda_data_model_h__)
 #  define __gda_data_model_h__
 
+#include <libgda/gda-row.h>
 #include <libgda/gda-value.h>
 
 G_BEGIN_DECLS
@@ -51,19 +52,21 @@ struct _GdaDataModelClass {
 	/* virtual methods */
 	gint (* get_n_rows) (GdaDataModel *model);
 	gint (* get_n_columns) (GdaDataModel *model);
+	GdaFieldAttributes * (* describe_column) (GdaDataModel *model, gint col);
 	const GdaValue * (* get_value_at) (GdaDataModel *model, gint col, gint row);
 };
 
-GType           gda_data_model_get_type (void);
+GType               gda_data_model_get_type (void);
 
-void            gda_data_model_changed (GdaDataModel *model);
-void            gda_data_model_freeze (GdaDataModel *model);
-void            gda_data_model_thaw (GdaDataModel *model);
+void                gda_data_model_changed (GdaDataModel *model);
+void                gda_data_model_freeze (GdaDataModel *model);
+void                gda_data_model_thaw (GdaDataModel *model);
 
-gint            gda_data_model_get_n_rows (GdaDataModel *model);
-gint            gda_data_model_get_n_columns (GdaDataModel *model);
-const gchar    *gda_data_model_get_column_title (GdaDataModel *model, gint col);
-void            gda_data_model_set_column_title (GdaDataModel *model, gint col, const gchar *title);
+gint                gda_data_model_get_n_rows (GdaDataModel *model);
+gint                gda_data_model_get_n_columns (GdaDataModel *model);
+GdaFieldAttributes *gda_data_model_describe_column (GdaDataModel *model, gint col);
+const gchar        *gda_data_model_get_column_title (GdaDataModel *model, gint col);
+void                gda_data_model_set_column_title (GdaDataModel *model, gint col, const gchar *title);
 const GdaValue *gda_data_model_get_value_at (GdaDataModel *model, gint col, gint row);
 
 G_END_DECLS

@@ -24,20 +24,16 @@
 #if !defined(__gda_default_h__)
 #  define __gda_default_h__
 
+#include <config.h>
 #include <glib/gmacros.h>
 #include <bonobo/bonobo-i18n.h>
-#include <config.h>
 #include <libgda/gda-server.h>
 #include <gda-default-provider.h>
-#include <sqlite.h>
 
 #define GDA_DEFAULT_COMPONENT_FACTORY_ID "OAFIID:GNOME_Database_Default_ComponentFactory"
 #define GDA_DEFAULT_PROVIDER_ID          "OAFIID:GNOME_Database_Default_Provider"
 
 typedef struct {
-	gint ncols;
-	gint nrows;
-	gchar **data;
 } DEFAULT_Recordset;
 
 #endif

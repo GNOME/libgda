@@ -125,8 +125,6 @@ gda_default_provider_open_connection (GdaServerProvider *provider,
 {
 	const gchar *t_filename = NULL;
 	gchar *errmsg = NULL;
-
-	sqlite *sqlite;
 	
 	GdaDefaultProvider *dfprv = (GdaDefaultProvider *) provider;
 
@@ -141,27 +139,10 @@ gda_default_provider_open_connection (GdaServerProvider *provider,
 				_("A full path must be specified on the "
 				"connection string to open a database."));
 		return FALSE;
-	} else {
-
-		sqlite = sqlite_open (t_filename, 0666, &errmsg);
-
-		/* free memory */
-		g_free ((gpointer) t_filename);
-		
-		if (!sqlite) {
-			gda_server_connection_add_error_string (cnc, errmsg);
-			
-			free (errmsg); /* must use free () for this pointer */
-			
-			return FALSE;
-		} else {
-
-			g_object_set_data (G_OBJECT (cnc),
-					   OBJECT_DATA_DEFAULT_HANDLE, sqlite);
-
-			return TRUE;
-		}
 	}
+
+	/* FIXME: open connection */
+	return FALSE;
 }
 
 /* close_connection handler for the GdaDefaultProvider class */
@@ -169,18 +150,11 @@ static gboolean
 gda_default_provider_close_connection (GdaServerProvider *provider,
 				       GdaServerConnection *cnc)
 {
-	sqlite *sqlite;
-	
 	GdaDefaultProvider *dfprv = (GdaDefaultProvider *) provider;
 
 	g_return_val_if_fail (GDA_IS_DEFAULT_PROVIDER (dfprv), FALSE);
 	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), FALSE);
 
-	sqlite = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_DEFAULT_HANDLE);
-	if (!sqlite)
-		return FALSE;
-
-	sqlite_close (sqlite);
 	g_object_set_data (G_OBJECT (cnc), OBJECT_DATA_DEFAULT_HANDLE, NULL);
 
 	return TRUE;
@@ -189,16 +163,8 @@ gda_default_provider_close_connection (GdaServerProvider *provider,
 static GList *
 process_sql_commands (GList *reclist, GdaServerConnection *cnc, const gchar *sql)
 {
-	sqlite *sqlite;
 	gchar  *errmsg;
 	gchar **arr;
-
-	sqlite = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_DEFAULT_HANDLE);
-	if (!sqlite) {
-		gda_server_connection_add_error_string (cnc,
-						        _("Invalid DEFAULT handle"));
-		return NULL;
-	}
 
 	/* parse SQL string, which can contain several commands, separated by ';' */
 	arr = g_strsplit (sql, ";", 0);
@@ -206,28 +172,6 @@ process_sql_commands (GList *reclist, GdaServerConnection *cnc, const gchar *sql
 		gint n = 0;
 
 		while (arr[n]) {
-			DEFAULT_Recordset *drecset;
-			GdaServerRecordset *recset;
-
-			drecset = g_new0 (DEFAULT_Recordset, 1);
-			
-			if (sqlite_get_table (sqlite, arr[n], &drecset->data,
-					      &drecset->nrows, &drecset->ncols,
-					      &errmsg) != SQLITE_OK) {
-
-				GdaError *error = gda_error_new ();
-				gda_error_set_description (error, errmsg);
-				gda_server_connection_add_error (cnc, error);
-				
-				free (errmsg);
-
-				break;
-			}
-
-			recset = gda_default_recordset_new (cnc, drecset);
-			if (GDA_IS_SERVER_RECORDSET (recset))
-				reclist = g_list_append (reclist, recset);
-
 			n++;
 		}
 

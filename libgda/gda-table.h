@@ -23,7 +23,7 @@
 #if !defined(__gda_table_h__)
 #  define __gda_table_h__
 
-#include <libgda/gda-data-model-array.h>
+#include <libgda/gda-recordset.h>
 #include <libgda/gda-row.h>
 
 G_BEGIN_DECLS
@@ -49,7 +49,10 @@ struct _GdaTableClass {
 
 GType     gda_table_get_type (void);
 GdaTable *gda_table_new (const gchar *name);
+GdaTable *gda_table_new_from_model (const gchar *name, const GdaDataModel *model);
+
 void      gda_table_add_field (GdaTable *table, const GdaFieldAttributes *fa);
+void      gda_table_add_data_from_model (GdaTable *table, const GdaDataModel *model);
 
 G_END_DECLS
 

@@ -1,3 +1,25 @@
+2002-03-06  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* libgda/gda-data-model.[ch]: added "describe_column" virtual method.
+	(gda_data_model_describe_column): new function.
+	(gda_data_model_class_init): initialize new member.
+
+	* libgda/gda-data-model-array.c (gda_data_model_array_class_init):
+	* libgda/gda-data-model-list.c (gda_data_model_list_class_init):
+	initialize new member.
+
+	* libgda/gda-recordset.c (gda_recordset_describe_column): new method.
+
+	* libgda/gda-table.[ch] (gda_table_new_from_model): new function to
+	create a GdaTable from a GdaDataModel.
+	(gda_table_describe_column): new method.
+	(gda_table_add_field): set number of columns on the underlying
+	GdaDataModelArray class.
+	(gda_table_add_data_from_model): new function.
+
+	* providers/default/*: reworked to be based on GdaXmlDatabase, since
+	the old default provider is now the GDA SQLite provider.
+
 2002-03-05  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* libgda/gda-row.[ch] (gda_field_attributes_new):

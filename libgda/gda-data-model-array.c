@@ -93,6 +93,7 @@ gda_data_model_array_class_init (GdaDataModelArrayClass *klass)
 	object_class->finalize = gda_data_model_array_finalize;
 	model_class->get_n_rows = gda_data_model_array_get_n_rows;
 	model_class->get_n_columns = gda_data_model_array_get_n_columns;
+	model_class->describe_column = NULL;
 	model_class->get_value_at = gda_data_model_array_get_value_at;
 }
 

@@ -21,7 +21,7 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include "libgda/libgda.h"
+#include <libgda/libgda.h>
 #include "gda-default.h"
 
 GdaServer *gda_default_server = NULL;
