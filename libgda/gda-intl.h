@@ -24,8 +24,6 @@
 #if !defined(__gda_intl_h__)
 #  define __gda_intl_h__
 
-#include "config.h"
-
 #ifdef ENABLE_NLS
 #include<libintl.h>
 #define _(String) dgettext(GETTEXT_PACKAGE,String)
