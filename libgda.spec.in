@@ -8,6 +8,7 @@
 # --with sybase
 # --with mdb
 # --with ldap
+# --with firebird
 # --without mysql
 # --without odbc
 # --without postgres
@@ -23,6 +24,7 @@
 %define           SYBASE   0
 %define 	  MDB	   0
 %define		  LDAP	   0
+%define		  FIREBIRD 0
 
 %{?_with_tds:%define FREETDS 	1}
 %{?_with_db2:%define IBMDB2 	1}
@@ -31,6 +33,7 @@
 %{?_with_oracle:%define ORACLE 	1}
 %{?_with_sqlite:%define SQLITE 	1}
 %{?_with_sybase:%define SYBASE 	1}
+%{?_with_firebird:%define FIREBIRD  1}
 %{?_without_mysql:%define MYSQL 0}
 %{?_without_odbc:%define ODBC 	0}
 %{?_without_postgres:%define POSTGRES 	0}
@@ -73,6 +76,12 @@ BuildRequires:    unixODBC-devel
 
 %if %{SQLITE}
 BuildRequires:	  sqlite-devel
+%endif
+
+%if %{FIREBIRD}
+CONFIG="$CONFIG --with-firebird"
+%else
+CONFIG="$CONFIG --without-firebird"
 %endif
 
 %if %{MDB}

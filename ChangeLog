@@ -1,3 +1,9 @@
+2004-06-06  Marcin Siennicki <m.siennicki@cloos.pl>
+
+	Fixes #142580
+
+	* libgda.spec.in: added information for building FireBird provider.
+
 2004-06-06  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* libgda/gda-data-model.[ch] (gda_data_model_append_column,
