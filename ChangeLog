@@ -1,5 +1,12 @@
 2002-06-02  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
+	* configure.in: check for headers needed by gda-config-tool.
+
+	* tools/Makefile.am: don't try to build gda-config-tool if needed 
+	headers and/or libs not found.
+
+2002-06-02  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
 	* tools/gda-config-tool.c: added support for writing the configuration
 	to a file.
 

@@ -545,7 +545,7 @@ fi
 AM_CONDITIONAL(MDB, test x$mdbdir != x)
 
 dnl ******************************
-dnl Check for readline/history
+dnl Check for readline/history/popt
 dnl ******************************
 AC_CHECK_LIB(readline,readline, READLINE_LIB=-lreadline)
 AM_CONDITIONAL(READLINE_LIB, test ! "x$READLINE_LIB" = "x")
@@ -558,6 +558,16 @@ AC_SUBST(HISTORY_LIB)
 AC_CHECK_LIB(popt,poptGetContext,POPT_LIB=-lpopt)
 AM_CONDITIONAL(POPT_LIB, test ! "x$POPT_LIB" = "x")
 AC_SUBST(POPT_LIB)
+
+AC_CHECK_HEADERS([popt.h readline/readline.h readline/history.h],,
+		CONFIG_TOOL_HEADERS="wrong" && \
+		echo Not building gda-config-tool)
+AM_CONDITIONAL(BUILD_CONFIG_TOOL, 
+		(test ! "x$CONFIG_TOOL_HEADERS" = "xwrong" -a \
+		      ! "x$READLINE_LIB" = "x" -a \
+		      ! "x$HISTORY_LIB" = "x" -a \
+		      ! "x$POPT_LIB" = "x")) 
+AC_SUBST(BUILD_CONFIG_TOOL)
 
 dnl ******************************
 dnl Variables
