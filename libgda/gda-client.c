@@ -135,13 +135,14 @@ typedef struct {
 static void
 remove_provider_in_hash (gpointer key, gpointer value, gpointer user_data)
 {
-	gchar *provider_id = key;
 	LoadedProvider *prv = value;
 	prv_weak_cb_data *cb_data = user_data;
 
-	if (prv == cb_data->provider && !cb_data->already_removed) {
+	if (prv->provider == cb_data->provider && !cb_data->already_removed) {
 		g_hash_table_remove (cb_data->client->priv->providers, key);
-		free_hash_provider (key, value, NULL);
+		g_free (key);
+		g_module_close (prv->handle);
+		g_free (prv);
 		cb_data->already_removed = TRUE;
 	}
 }

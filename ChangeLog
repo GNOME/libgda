@@ -1,3 +1,8 @@
+2003-01-13  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
+	* libgda/gda-client.c: don't unref the providers twice. Fixed with
+	Rodrigo's help.
+
 2003-01-13  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* libgda/gda-log.c (gda_log_error, gda_log_message): use
