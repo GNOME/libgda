@@ -1,3 +1,8 @@
+2002-05-13  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
+	* libgda/gda-data-model-hash.[ch]: implementation of new
+	GdaDataModelHash. Not yet added to Makefile.am.
+
 2002-05-12  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
 	* libgda/gda-config.c (write_config_file): assign the root node to the
