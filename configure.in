@@ -18,7 +18,7 @@ AC_SUBST(GDA_VERSION)
 # - If interfaces is the same as the previous version, set GDA_REVISION += 1
 #
 GDA_CURRENT=1
-GDA_REVISION=1
+GDA_REVISION=2
 GDA_AGE=0
 
 AC_SUBST(GDA_CURRENT)

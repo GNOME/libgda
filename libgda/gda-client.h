@@ -58,10 +58,12 @@ GdaClient     *gda_client_new (void);
 GdaConnection *gda_client_open_connection (GdaClient *client,
 					   const gchar *dsn,
 					   const gchar *username,
-					   const gchar *password);
+					   const gchar *password,
+					   GdaConnectionOptions options);
 GdaConnection *gda_client_open_connection_from_string (GdaClient *client,
 						       const gchar *provider_id,
-						       const gchar *cnc_string);
+						       const gchar *cnc_string,
+						       GdaConnectionOptions options);
 const GList   *gda_client_get_connection_list (GdaClient *client);
 GdaConnection *gda_client_find_connection (GdaClient *client,
 					   const gchar *dsn,

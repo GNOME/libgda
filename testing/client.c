@@ -76,7 +76,7 @@ open_connection (GdaClient *client,
 
 	g_return_if_fail (GDA_IS_CLIENT (client));
 
-	cnc = gda_client_open_connection (client, name, username, password);
+	cnc = gda_client_open_connection (client, name, username, password, 0);
 	if (!GDA_IS_CONNECTION (cnc)) {
 		g_print (_("** ERROR: could not open connection to %s\n"), name);
 		return;

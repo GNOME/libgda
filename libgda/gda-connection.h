@@ -58,48 +58,56 @@ struct _GdaConnectionClass {
 };
 
 GType          gda_connection_get_type (void);
-GdaConnection *gda_connection_new (GdaClient *client,
-				   GdaServerProvider *provider,
-				   const gchar *dsn,
-				   const gchar *username,
-				   const gchar *password);
-gboolean       gda_connection_close (GdaConnection *cnc);
-gboolean       gda_connection_is_open (GdaConnection *cnc);
 
-GdaClient     *gda_connection_get_client (GdaConnection *cnc);
-void           gda_connection_set_client (GdaConnection *cnc, GdaClient *client);
+typedef enum {
+	GDA_CONNECTION_OPTIONS_READ_ONLY = 1 << 0
+} GdaConnectionOptions;
 
-const gchar   *gda_connection_get_server_version (GdaConnection *cnc);
-const gchar   *gda_connection_get_database (GdaConnection *cnc);
-const gchar   *gda_connection_get_dsn (GdaConnection *cnc);
-const gchar   *gda_connection_get_cnc_string (GdaConnection *cnc);
-const gchar   *gda_connection_get_provider (GdaConnection *cnc);
-const gchar   *gda_connection_get_username (GdaConnection *cnc);
-const gchar   *gda_connection_get_password (GdaConnection *cnc);
+GdaConnection       *gda_connection_new (GdaClient *client,
+					 GdaServerProvider *provider,
+					 const gchar *dsn,
+					 const gchar *username,
+					 const gchar *password,
+					 GdaConnectionOptions options);
+gboolean             gda_connection_close (GdaConnection *cnc);
+gboolean             gda_connection_is_open (GdaConnection *cnc);
 
-void           gda_connection_add_error (GdaConnection *cnc, GdaError *error);
-void           gda_connection_add_error_string (GdaConnection *cnc, const gchar *str, ...);
-void           gda_connection_add_error_list (GdaConnection *cnc, GList *error_list);
+GdaClient           *gda_connection_get_client (GdaConnection *cnc);
+void                 gda_connection_set_client (GdaConnection *cnc, GdaClient *client);
 
-gboolean       gda_connection_change_database (GdaConnection *cnc, const gchar *name);
-gboolean       gda_connection_create_database (GdaConnection *cnc, const gchar *name);
-gboolean       gda_connection_drop_database (GdaConnection *cnc, const gchar *name);
+GdaConnectionOptions gda_connection_get_options (GdaConnection *cnc);
 
-GList         *gda_connection_execute_command (GdaConnection *cnc,
-					       GdaCommand *cmd,
-					       GdaParameterList *params);
-GdaDataModel  *gda_connection_execute_single_command (GdaConnection *cnc,
-						      GdaCommand *cmd,
-						      GdaParameterList *params);
-gint           gda_connection_execute_non_query (GdaConnection *cnc,
-						 GdaCommand *cmd,
-						 GdaParameterList *params);
+const gchar         *gda_connection_get_server_version (GdaConnection *cnc);
+const gchar         *gda_connection_get_database (GdaConnection *cnc);
+const gchar         *gda_connection_get_dsn (GdaConnection *cnc);
+const gchar         *gda_connection_get_cnc_string (GdaConnection *cnc);
+const gchar         *gda_connection_get_provider (GdaConnection *cnc);
+const gchar         *gda_connection_get_username (GdaConnection *cnc);
+const gchar         *gda_connection_get_password (GdaConnection *cnc);
 
-gboolean       gda_connection_begin_transaction (GdaConnection *cnc, GdaTransaction *xaction);
-gboolean       gda_connection_commit_transaction (GdaConnection *cnc, GdaTransaction *xaction);
-gboolean       gda_connection_rollback_transaction (GdaConnection *cnc, GdaTransaction *xaction);
+void                 gda_connection_add_error (GdaConnection *cnc, GdaError *error);
+void                 gda_connection_add_error_string (GdaConnection *cnc, const gchar *str, ...);
+void                 gda_connection_add_error_list (GdaConnection *cnc, GList *error_list);
 
-const GList   *gda_connection_get_errors (GdaConnection *cnc);
+gboolean             gda_connection_change_database (GdaConnection *cnc, const gchar *name);
+gboolean             gda_connection_create_database (GdaConnection *cnc, const gchar *name);
+gboolean             gda_connection_drop_database (GdaConnection *cnc, const gchar *name);
+
+GList               *gda_connection_execute_command (GdaConnection *cnc,
+						     GdaCommand *cmd,
+						     GdaParameterList *params);
+GdaDataModel        *gda_connection_execute_single_command (GdaConnection *cnc,
+							    GdaCommand *cmd,
+							    GdaParameterList *params);
+gint                 gda_connection_execute_non_query (GdaConnection *cnc,
+						       GdaCommand *cmd,
+						       GdaParameterList *params);
+
+gboolean             gda_connection_begin_transaction (GdaConnection *cnc, GdaTransaction *xaction);
+gboolean             gda_connection_commit_transaction (GdaConnection *cnc, GdaTransaction *xaction);
+gboolean             gda_connection_rollback_transaction (GdaConnection *cnc, GdaTransaction *xaction);
+
+const GList         *gda_connection_get_errors (GdaConnection *cnc);
 
 typedef enum {
 	GDA_CONNECTION_FEATURE_AGGREGATES,
@@ -115,7 +123,7 @@ typedef enum {
 	GDA_CONNECTION_FEATURE_XML_QUERIES
 } GdaConnectionFeature;
 
-gboolean       gda_connection_supports (GdaConnection *cnc, GdaConnectionFeature feature);
+gboolean             gda_connection_supports (GdaConnection *cnc, GdaConnectionFeature feature);
 
 typedef enum {
 	GDA_CONNECTION_SCHEMA_AGGREGATES,
@@ -132,9 +140,9 @@ typedef enum {
 	GDA_CONNECTION_SCHEMA_VIEWS
 } GdaConnectionSchema;
 
-GdaDataModel *gda_connection_get_schema (GdaConnection *cnc,
-					 GdaConnectionSchema schema,
-					 GdaParameterList *params);
+GdaDataModel        *gda_connection_get_schema (GdaConnection *cnc,
+						GdaConnectionSchema schema,
+						GdaParameterList *params);
 
 G_END_DECLS
 

@@ -1,5 +1,22 @@
 2002-10-29  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* libgda/gda-connection.[ch] (gda_connection_new): added
+	GdaConnectionOptions argument.
+	(gda_connection_get_options): new function.
+
+	* libgda/gda-server-provider.[ch]
+	(gda_server_provider_open_connection):
+	* libgda/gda-client.[ch] (gda_client_open_connection,
+	gda_client_open_connection_from_string): added
+	GdaConnectionOptions argument.
+
+	* testing/client.c (open_connection): adapted to changes in
+	gda_client_open_connection.
+
+	* configure.in: changed sonum.
+
+2002-10-29  Rodrigo Moya <rodrigo@gnome-db.org>
+
 	Fixes #96810
 
 	* providers/oracle/gda-oracle-provider.c (get_oracle_tables):

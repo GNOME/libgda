@@ -35,6 +35,7 @@
 struct _GdaConnectionPrivate {
 	GdaClient *client;
 	GdaServerProvider *provider_obj;
+	GdaConnectionOptions options;
 	gchar *dsn;
 	gchar *cnc_string;
 	gchar *provider;
@@ -185,6 +186,7 @@ gda_connection_get_type (void)
  * @dsn: GDA data source to connect to.
  * @username: user name to use to connect.
  * @password: password for @username.
+ * @options: options for the connection.
  *
  * This function creates a new #GdaConnection object. It is not
  * intended to be used directly by applications (use
@@ -197,7 +199,8 @@ gda_connection_new (GdaClient *client,
 		    GdaServerProvider *provider,
 		    const gchar *dsn,
 		    const gchar *username,
-		    const gchar *password)
+		    const gchar *password,
+		    GdaConnectionOptions options)
 {
 	GdaConnection *cnc;
 	GdaDataSourceInfo *dsn_info;
@@ -253,6 +256,7 @@ gda_connection_new (GdaClient *client,
 	cnc->priv->provider = g_strdup (dsn_info->provider);
 	cnc->priv->username = g_strdup (real_username);
 	cnc->priv->password = g_strdup (real_password);
+	cnc->priv->options = options;
 
 	gda_config_free_data_source_info (dsn_info);
 

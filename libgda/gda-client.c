@@ -226,6 +226,7 @@ gda_client_new (void)
  * @dsn: data source name.
  * @username: user name.
  * @password: password for @username.
+ * @options: Options for the connection.
  *
  * Establish a connection to a data source.
  *
@@ -239,7 +240,8 @@ GdaConnection *
 gda_client_open_connection (GdaClient *client,
 			    const gchar *dsn,
 			    const gchar *username,
-			    const gchar *password)
+			    const gchar *password,
+			    GdaConnectionOptions options)
 {
 	GdaConnection *cnc;
 	LoadedProvider *prv;
@@ -318,7 +320,7 @@ gda_client_open_connection (GdaClient *client,
 				     prv);
 	}
 
-	cnc = gda_connection_new (client, prv->provider, dsn, username, password);
+	cnc = gda_connection_new (client, prv->provider, dsn, username, password, options);
 
 	if (!GDA_IS_CONNECTION (cnc)) {
 		gda_config_free_data_source_info (dsn_info);
@@ -355,7 +357,8 @@ gda_client_open_connection (GdaClient *client,
 GdaConnection *
 gda_client_open_connection_from_string (GdaClient *client,
 					const gchar *provider_id,
-					const gchar *cnc_string)
+					const gchar *cnc_string,
+					GdaConnectionOptions options)
 {
 	GdaDataSourceInfo *dsn_info;
 	GdaConnection *cnc;
@@ -383,7 +386,8 @@ gda_client_open_connection_from_string (GdaClient *client,
 	/* open the connection */
 	cnc = gda_client_open_connection (client, dsn_info->name,
 					  dsn_info->username,
-					  dsn_info->password);
+					  dsn_info->password,
+					  options);
 
 	/* free memory */
 	gda_config_remove_data_source (dsn_info->name);
