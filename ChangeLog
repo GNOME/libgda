@@ -1,3 +1,9 @@
+2005-01-20  Bas Driessen <bas.driessen@xobas.com>
+
+	* providers/postgres/gda-postgres-recordset.c
+	(guess_table_name): improve table name guessing by
+	also checking on correct number of columns. 
+
 2005-01-19  Bas Driessen <bas.driessen@xobas.com>
 
 	* libgda/gda-data-model-hash.c:

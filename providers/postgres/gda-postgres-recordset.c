@@ -617,7 +617,7 @@ static gchar *guess_table_name (GdaPostgresRecordset *recset)
 	pg_conn = cnc_priv_data->pconn;
 
 	if (PQnfields (pg_res) > 0) {
-		gchar *query = g_strdup_printf ("SELECT c.relname FROM pg_catalog.pg_class c WHERE c.relkind = 'r'");
+		gchar *query = g_strdup_printf ("SELECT c.relname FROM pg_catalog.pg_class c WHERE c.relkind = 'r' AND c.relnatts = '%d'", PQnfields (pg_res));
 		gint i;
 		for (i = 0; i < PQnfields (pg_res); i++) {
 			const gchar *column_name = PQfname (pg_res, i);
