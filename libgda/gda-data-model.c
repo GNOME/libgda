@@ -731,7 +731,7 @@ gda_data_model_update_row (GdaDataModel *model, const GdaRow *row)
 /**
  * gda_data_model_append_column
  * @model: a #GdaDataModel object.
- * @col: a #GdaFieldAttributes describing the column to add.
+ * @attrs: a #GdaFieldAttributes describing the column to add.
  *
  * Appends a column to the given data model.  If successful, the position of
  * the new column in the data model is set on @col, and you can grab it using
@@ -740,19 +740,15 @@ gda_data_model_update_row (GdaDataModel *model, const GdaRow *row)
  * Returns: %TRUE if successful, %FALSE otherwise.
  */
 gboolean
-gda_data_model_append_column (GdaDataModel *model, GdaFieldAttributes *col)
+gda_data_model_append_column (GdaDataModel *model, const GdaFieldAttributes *attrs)
 {
 	gboolean result;
 	
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
 	g_return_val_if_fail (CLASS (model)->append_column != NULL, FALSE);
-	g_return_val_if_fail (col != NULL, FALSE);
+	g_return_val_if_fail (attrs != NULL, FALSE);
 
-	result = CLASS (model)->append_column (model, col);
-	if (result) {
-		gda_data_model_column_inserted (model,
-						gda_field_attributes_get_position (col));
-	}
+	result = CLASS (model)->append_column (model, attrs);
 
 	return result;
 }
@@ -768,18 +764,14 @@ gda_data_model_append_column (GdaDataModel *model, GdaFieldAttributes *col)
  * Returns: %TRUE if successful, %FALSE otherwise.
  */
 gboolean
-gda_data_model_remove_column (GdaDataModel *model, const GdaFieldAttributes *col)
+gda_data_model_remove_column (GdaDataModel *model, gint col)
 {
 	gboolean result;
 
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
 	g_return_val_if_fail (CLASS (model)->remove_column != NULL, FALSE);
-	g_return_val_if_fail (col != NULL, FALSE);
 
 	result = CLASS (model)->remove_column (model, col);
-	if (result) {
-		gda_data_model_column_removed (model, gda_field_attributes_get_position (col));
-	}
 
 	return result;
 }
@@ -788,6 +780,7 @@ gda_data_model_remove_column (GdaDataModel *model, const GdaFieldAttributes *col
  * gda_data_model_update_column
  * @model: a #GdaDataModel object.
  * @col: the column to be updated.
+ * @attrs: attributes for the column.
  *
  * Updates a column in the given data model. This results in the underlying
  * database row's values being changed.
@@ -795,18 +788,16 @@ gda_data_model_remove_column (GdaDataModel *model, const GdaFieldAttributes *col
  * Returns: %TRUE if successful, %FALSE otherwise.
  */
 gboolean
-gda_data_model_update_column (GdaDataModel *model, const GdaFieldAttributes *col)
+gda_data_model_update_column (GdaDataModel *model, gint col, const GdaFieldAttributes *attrs)
 {
 	gboolean result;
 
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
 	g_return_val_if_fail (CLASS (model)->update_column != NULL, FALSE);
-	g_return_val_if_fail (col != NULL, FALSE);
+	g_return_val_if_fail (attrs != NULL, FALSE);
 
-	result = CLASS (model)->update_column (model, col);
-	if (result) {
-		gda_data_model_column_updated (model, gda_field_attributes_get_position (col));
-	}
+	result = CLASS (model)->update_column (model, col, attrs);
+
 	return result;
 }
 

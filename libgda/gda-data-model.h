@@ -73,12 +73,10 @@ struct _GdaDataModelClass {
 	const GdaRow * (* append_row) (GdaDataModel *model, const GList *values);
 	gboolean (* remove_row) (GdaDataModel *model, const GdaRow *row);
 	gboolean (* update_row) (GdaDataModel *model, const GdaRow *row);
-	gboolean (* append_column) (GdaDataModel *model,
-				    GdaFieldAttributes *col);
-	gboolean (* update_column) (GdaDataModel *model,
-				    const GdaFieldAttributes *col);
-	gboolean (* remove_column) (GdaDataModel *model,
-				    const GdaFieldAttributes *col);
+	gboolean (* append_column) (GdaDataModel *model, const GdaFieldAttributes *attrs);
+	gboolean (* update_column) (GdaDataModel *model, gint col,
+				    const GdaFieldAttributes *attrs);
+	gboolean (* remove_column) (GdaDataModel *model, gint col);
 };
 
 GType               gda_data_model_get_type (void);
@@ -106,12 +104,10 @@ gboolean            gda_data_model_is_updatable (GdaDataModel *model);
 const GdaRow       *gda_data_model_append_row (GdaDataModel *model, const GList *values);
 gboolean            gda_data_model_remove_row (GdaDataModel *model, const GdaRow *row);
 gboolean            gda_data_model_update_row (GdaDataModel *model, const GdaRow *row);
-gboolean	    gda_data_model_append_column (GdaDataModel *model,
-						  GdaFieldAttributes *col);
-gboolean	    gda_data_model_update_column (GdaDataModel *model,
-						  const GdaFieldAttributes *col);
-gboolean	    gda_data_model_remove_column (GdaDataModel *model,
-						  const GdaFieldAttributes *col);
+gboolean	    gda_data_model_append_column (GdaDataModel *model, const GdaFieldAttributes *attrs);
+gboolean	    gda_data_model_update_column (GdaDataModel *model, gint col,
+						  const GdaFieldAttributes *attrs);
+gboolean	    gda_data_model_remove_column (GdaDataModel *model, gint col);
 
 typedef gboolean (* GdaDataModelForeachFunc) (GdaDataModel *model,
 					      GdaRow *row,

@@ -1,5 +1,17 @@
 2004-06-06  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* libgda/gda-data-model.[ch] (gda_data_model_append_column,
+	gda_data_model_update_column, gda_data_model_remove_column): use
+	better function signatures.
+
+	* libgda/gda-data-model-array.c (gda_data_model_array_append_column,
+	gda_data_model_array_update_column,
+	gda_data_model_array_remove_column): started implementation of
+	missing virtual methods.
+	(gda_data_model_array_class_init): init new virtual methods.
+
+2004-06-06  Rodrigo Moya <rodrigo@gnome-db.org>
+
 	* providers/mysql/utils.c (gda_mysql_type_to_gda): added an
 	'is_unsigned' argument and return signed/unsigned types
 	approppriately.

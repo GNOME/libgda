@@ -166,6 +166,26 @@ gda_data_model_array_update_row (GdaDataModel *model, const GdaRow *row)
 	return FALSE; /* row not found in this data model */
 }
 
+static gboolean
+gda_data_model_array_append_column (GdaDataModel *model, const GdaFieldAttributes *attrs)
+{
+	g_return_val_if_fail (GDA_IS_DATA_MODEL_ARRAY (model), FALSE);
+	g_return_val_if_fail (attrs != NULL, FALSE);
+}
+
+static gboolean
+gda_data_model_array_update_column (GdaDataModel *model, gint col, const GdaFieldAttributes *attrs)
+{
+	g_return_val_if_fail (GDA_IS_DATA_MODEL_ARRAY (model), FALSE);
+	g_return_val_if_fail (attrs != NULL, FALSE);
+}
+
+static gboolean
+gda_data_model_array_remove_column (GdaDataModel *model, gint col)
+{
+	g_return_val_if_fail (GDA_IS_DATA_MODEL_ARRAY (model), FALSE);
+}
+
 static void
 gda_data_model_array_class_init (GdaDataModelArrayClass *klass)
 {
@@ -184,6 +204,9 @@ gda_data_model_array_class_init (GdaDataModelArrayClass *klass)
 	model_class->append_row = gda_data_model_array_append_row;
 	model_class->remove_row = gda_data_model_array_remove_row;
 	model_class->update_row = gda_data_model_array_update_row;
+	model_class->append_column = gda_data_model_array_append_column;
+	model_class->update_column = gda_data_model_array_update_column;
+	model_class->remove_column = gda_data_model_array_remove_column;
 }
 
 static void
