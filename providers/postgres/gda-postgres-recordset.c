@@ -458,7 +458,7 @@ gda_postgres_recordset_describe (GdaDataModel *model, gint col)
 	GdaValueType ftype;
 	gint scale;
 	GdaFieldAttributes *field_attrs;
-	gboolean ispk, isuk;
+	gboolean ispk = FALSE, isuk = FALSE;
 
 	g_return_val_if_fail (GDA_IS_POSTGRES_RECORDSET (recset), NULL);
 	g_return_val_if_fail (recset->priv != NULL, 0);
@@ -499,14 +499,17 @@ gda_postgres_recordset_describe (GdaDataModel *model, gint col)
 	gda_field_attributes_set_table (field_attrs,
 					priv_data->table_name);
 
-	ispk = check_constraint (model,
-				 priv_data->table_name,
-				 col, 
-				 'p');
-	isuk = check_constraint (model, 
-				 priv_data->table_name,
-				 col, 
-				 'u');
+	if (priv_data->table_name) {
+		ispk = check_constraint (model,
+					 priv_data->table_name,
+					 col, 
+					 'p');
+	
+		isuk = check_constraint (model, 
+					 priv_data->table_name,
+					 col, 
+					 'u');
+	}
 	
 	gda_field_attributes_set_primary_key (field_attrs, ispk);
 	gda_field_attributes_set_unique_key (field_attrs, isuk);
