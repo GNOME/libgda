@@ -1,3 +1,7 @@
+2003-04-12  David T Hollis <dhollis@davehollis.com>
+
+	* libgda.spec.in: made it work on RH9.
+
 2003-03-30  Mike Wingert <wingert.3@osu.edu>
 
 	* providers/sybase/*: fix for compile problem, related to changes

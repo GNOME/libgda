@@ -1,6 +1,18 @@
-# set the defines below to build support for the selected sql layer(s)
-# defaults (and package names) are set for redhat 7.x
-# with postgres, mysql and odbc installed
+# Default provider build options (MySQL, Postgres & unixODBC)
+#
+# Package build options:
+# --with tds
+# --with db2
+# --with oracle
+# --with sqlite
+# --with sybase
+# --with mdb
+# --with ldap
+# --without mysql
+# --without odbc
+# --without postgres
+# 
+
 %define           FREETDS  0
 %define           IBMDB2   0
 %define           MYSQL    1
@@ -9,11 +21,25 @@
 %define           POSTGRES 1
 %define           SQLITE   0
 %define           SYBASE   0
+%define 	  MDB	   0
+%define		  LDAP	   0
+
+%{?_with_tds:%define FREETDS 	1}
+%{?_with_db2:%define IBMDB2 	1}
+%{?_with_ldap:%define LDAP 	1}
+%{?_with_mdb:%define MDB 	1}
+%{?_with_oracle:%define ORACLE 	1}
+%{?_with_sqlite:%define SQLITE 	1}
+%{?_with_sybase:%define SYBASE 	1}
+%{?_without_mysql:%define MYSQL 0}
+%{?_without_odbc:%define ODBC 	0}
+%{?_without_postgres:%define POSTGRES 	0}
 
 Summary:          Library for writing gnome database programs
 Name:             libgda
 Version:          @VERSION@
 Release:          1
+Epoch:		  1
 Source:           %{name}-%{version}.tar.gz
 URL:              http://www.gnome-db.org/
 Group:            System Environment/Libraries
@@ -46,6 +72,14 @@ BuildRequires:    unixODBC-devel
 
 %if %{SQLITE}
 BuildRequires:	  sqlite-devel
+%endif
+
+%if %{MDB}
+BuildRequires:	  mdbtools-devel
+%endif
+
+%if %{LDAP}
+BuildRequires:	  openldap-devel
 %endif
 
 %description
@@ -143,6 +177,21 @@ Group:		System Environment/Libraries
 This package includes the GDA Sybase provider.
 %endif
 
+%if %{MDB}
+%package -n gda-mdb
+Summary:	GDA MDB Provider
+Group:		System Environment/Libraries
+%description -n gda-mdb
+This package includes the GDA MDB provider.
+%endif
+
+%if %{LDAP}
+%package -n gda-ldap
+Summary:	GDA LDAP Provider
+Group:		System Environment/Libraries
+%description -n gda-ldap
+This package includes the GDA LDAP provider.
+%endif
 
 %prep
 %setup -q -n %{name}-%{version}
@@ -196,6 +245,17 @@ CONFIG="$CONFIG --with-sybase"
 CONFIG="$CONFIG --without-sybase"
 %endif
 
+%if %{MDB}
+CONFIG="$CONFIG --with-mdb"
+%else
+CONFIG="$CONFIG --without-mdb"
+%endif
+
+%if %{LDAP}
+CONFIG="$CONFIG --with-ldap"
+%else
+CONFIG="$CONFIG --without-ldap"
+%endif
 
 %configure $CONFIG --disable-gtk-doc
 make %{?_smp_mflags}
@@ -203,6 +263,9 @@ make %{?_smp_mflags}
 %install
 rm -rf %{buildroot}
 %makeinstall
+
+# Cleanup unnecessary, unpackaged files
+rm -f %{buildroot}/%{_libdir}/libgda/providers/*.{a,la}
 
 %find_lang libgda-2
 
