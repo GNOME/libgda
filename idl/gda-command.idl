@@ -7,16 +7,14 @@ interface Connection;
 
 interface Command {
 
-           attribute long          cmdTimeout;
-  readonly attribute boolean       prepared;
-	   attribute long          state;
-  	   attribute string        text;
-	   attribute unsigned long type;
- 	   Recordset               open(in CmdParameterSeq param,
-					in CursorType ct,
-					in LockType lt,
-					out unsigned long affected)
-		   raises (DriverError);
+	attribute long             cmdTimeout;
+	readonly attribute boolean prepared;
+	attribute long             state;
+	attribute string           text;
+	attribute unsigned long    type;
+	
+	Recordset open (in CmdParameterSeq param, in CursorType ct, in LockType lt, out unsigned long affected)
+		raises (DriverError);
 };
 
 #endif

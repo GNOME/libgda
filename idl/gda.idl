@@ -2,7 +2,7 @@
 #ifndef __gda__
 #define __gda__ 1
 
-#include <gnome-factory.idl>
+#include <oaf-factory.idl>
 
 module GDA {
 	  enum ValueType {
@@ -189,16 +189,15 @@ module GDA {
 	typedef sequence<Field>           Row;
 	typedef sequence<FieldAttributes> RowAttributes;
 #include "gda-parameter.idl"
-  typedef sequence<CmdParameter> CmdParameterSeq;
+	typedef sequence<CmdParameter> CmdParameterSeq;
 #include "gda-command.idl"	
 #include "gda-error.idl"
 #include "gda-connection.idl"
 
 #include "gda-recordset.idl" 
 
-  interface ConnectionFactory : GNOME::GenericFactory {
-		Object create_connection(in string goad_id)
-			raises (CannotActivate);
+	interface ConnectionFactory : GNOME::ObjectFactory {
+		Object create_connection(in string goad_id) raises (CannotActivate);
 	};
 };
 
