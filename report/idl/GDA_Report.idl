@@ -26,10 +26,9 @@ module GDA {
 	 */
 	typedef sequence<octet> ReportStreamChunk;
 	interface ReportStream {
-		readonly attribute any contents;
-		
 		ReportStreamChunk readChunk (in long start, in long size);
 		long writeChunk (in ReportStreamChunk data, in long size);
+		long getLength ();
 	};
 	
 	/*
@@ -123,6 +122,8 @@ module GDA {
 		boolean         registerConverter (in string format, in ReportConverter converter);
 		void            unregisterConverter (in ReportConverter converter);
 		ReportConverter findConverter (in string format);
+		
+		ReportStream    createStream ();
 	};
 };
 
