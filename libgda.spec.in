@@ -301,8 +301,8 @@ rm -rf %{buildroot}
 %defattr(-,root,root)
 %doc %{_datadir}/gtk-doc/html/libgda
 %{_datadir}/omf/*
-%dir %{_includedir}/libgda-1.1/
-%{_includedir}/libgda-1.1/*
+%dir %{_includedir}/libgda-1.2/
+%{_includedir}/libgda-1.2/*
 %{_libdir}/*.a
 %{_libdir}/*.la
 %{_libdir}/*.so
