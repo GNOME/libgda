@@ -89,6 +89,8 @@ open_connection (GdaClient *client,
 	show_schema (cnc, GDA_CONNECTION_SCHEMA_TYPES, _("Available types"));
 	show_schema (cnc, GDA_CONNECTION_SCHEMA_VIEWS, _("Views"));
 	show_schema (cnc, GDA_CONNECTION_SCHEMA_INDEXES, _("Indexes"));
+	show_schema (cnc, GDA_CONNECTION_SCHEMA_AGGREGATES, _("Aggregates"));
+	show_schema (cnc, GDA_CONNECTION_SCHEMA_TRIGGERS, _("Triggers"));
 
 	/* test transactions */
 	g_print (_("\tStarting transaction..."));

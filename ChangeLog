@@ -1,3 +1,9 @@
+2002-02-26  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
+	* providers/postgres/gda-postgres-provider.c (get_postgres_triggers):
+	now gets only triggers, not constraints.
+	* testing/client.c: added tests for aggregates and triggers.
+
 2002-02-23  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* libgda/gda-config.c (gda_config_add_listener): we must call

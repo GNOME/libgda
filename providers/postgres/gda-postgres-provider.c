@@ -655,7 +655,9 @@ get_postgres_triggers (GdaServerConnection *cnc, GdaParameterList *params)
 	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), NULL);
 
 	reclist = process_sql_commands (NULL, cnc, 
-			"SELECT tgname FROM pg_trigger ORDER BY tgname ",
+			"SELECT tgname FROM pg_trigger "
+			"WHERE tgisconstraint = false "
+			"ORDER BY tgname ",
 			GDA_COMMAND_OPTION_STOP_ON_ERRORS);
 
 	if (!reclist)
