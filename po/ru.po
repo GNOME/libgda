@@ -1,11 +1,11 @@
-# Copyright (C) 1999 Free Software Foundation, Inc.
-# Valek Filippov <frob@df.ru>, 1999.
+# Copyright (C) 1999-2001 Free Software Foundation, Inc.
+# Valek Filippov <frob@df.ru>, 1999-2001.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gnome-db\n"
+"Project-Id-Version: libgda\n"
 "POT-Creation-Date: 2001-09-04 02:39+0200\n"
-"PO-Revision-Date: 2001-02-19 12:30+03:00\n"
+"PO-Revision-Date: 2001-10-13 21:14+0400\n"
 "Last-Translator: Valek Filippov <frob@df.ru>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -31,11 +31,11 @@ msgstr "База данных '%s' не найдена в конфигурации системы"
 
 #: lib/gda-client/gda-connection.c:431 lib/gda-client/gda-connection.c:447
 msgid "[GDA Client Library]"
-msgstr ""
+msgstr "[GDA клиентская библиотека]"
 
 #: lib/gda-client/gda-connection.c:446
 msgid "Could not open CORBA factory"
-msgstr ""
+msgstr "Не удалось открыть фабрику COBRA"
 
 #: lib/gda-common/gda-corba.c:73
 #, c-format
@@ -57,13 +57,12 @@ msgid "%s: An Error occured in the CORBA system."
 msgstr "%s: Возникла ошибка в системе CORBA."
 
 #: lib/gda-common/gda-error.c:132
-#, fuzzy
 msgid "[CORBA User Exception]"
-msgstr "Исключение пользователя CORBA %s"
+msgstr "[Исключение пользователя CORBA]"
 
 #: lib/gda-common/gda-error.c:167
 msgid "Unknown CORBA exception for connection"
-msgstr ""
+msgstr "Неизвестное исключение для соединения CORBA"
 
 # gda-clnt/gda-field.c:95
 #: lib/gda-common/gda-field.c:640
@@ -90,9 +89,8 @@ msgid "Attempt to initialize an already initialized client"
 msgstr "Попытка инициализировать уже инициализированного клиента"
 
 #: lib/gda-common/gda-init.c:44 lib/gda-server/gda-server-init.c:118
-#, fuzzy
 msgid "Could not initialize Bonobo"
-msgstr "Не удалось инициализировать ct_diag()"
+msgstr "Не удалось инициализировать Bonobo"
 
 #: lib/gda-common/gda-log.c:48
 msgid "Saving log...x"
@@ -109,19 +107,19 @@ msgstr "СООБЩЕНИЕ:"
 
 # fe/fe_editor.c:175 fe/fe_editor.c:212
 #: lib/gda-common/gda-util.c:113
-#, fuzzy, c-format
+#, c-format
 msgid "Could not open file %s"
-msgstr "Не удалось установить локализацию для '%s'"
+msgstr "Не удалось открыть файл %s"
 
 # fe/fe_log.c:92
 #: lib/gda-common/gda-util.c:138
-#, fuzzy, c-format
+#, c-format
 msgid "Could not create file %s"
-msgstr "не удалось получить поле"
+msgstr "Не удалось создать файл %s"
 
 #: lib/gda-common/gda-xml-database.c:168
 msgid "bad formed document"
-msgstr ""
+msgstr "плохо сформированный документ"
 
 #: lib/gda-common/gda-xml-database.c:270
 #, c-format
@@ -135,14 +133,13 @@ msgstr "%p не является допустимой таблицей"
 
 # fe/fe_main.c:205
 #: lib/gda-common/gda-xml-item.c:371
-#, fuzzy, c-format
+#, c-format
 msgid "Item with id %s not found"
-msgstr "Не найден источник данных %s"
+msgstr "Не найден элемент с идентификатором %s"
 
 #: lib/gda-server/gda-server-connection.c:392
-#, fuzzy
 msgid "Connection being closed"
-msgstr "Видимо соединение умерло"
+msgstr "Соединение было закрыто"
 
 #: lib/gda-server/gda-server-connection.c:394
 msgid "This connection is being closed, so all listeners are released"
@@ -191,34 +188,31 @@ msgstr "Исключение пользователя CORBA %s"
 
 # fe/fe_editor.c:175 fe/fe_editor.c:212
 #: providers/gda-default-server/GNOME_Database_Provider_Default.server.in.h:1
-#, fuzzy
 msgid "Default provider connection factory"
-msgstr "не удалось открыть соединение с %s"
+msgstr ""
 
 #: providers/gda-default-server/GNOME_Database_Provider_Default.server.in.h:2
 msgid "GDA Default Datasource Access"
-msgstr ""
+msgstr "GDA доступ к источнику данных по умолчанию"
 
 #: providers/gda-default-server/gda-default-connection.c:127
 msgid "You must specify a directory for the database to be stored"
-msgstr ""
+msgstr "Вы должны указать каталог, в котором будет сохранена база данных"
 
 #: providers/gda-default-server/gda-default-connection.c:235
 #: providers/gda-mysql-server/gda-mysql-connection.c:282
 #: providers/gda-oracle-server/gda-oracle-connection.c:334
 #: providers/gda-postgres-server/gda-postgres-connection.c:487
-#, fuzzy
 msgid "Unknown schema type"
-msgstr "Неизвестный тип ORACLE %ld"
+msgstr "Неизвестный тип схемы"
 
 #: providers/gda-default-server/main-default.c:69
-#, fuzzy
 msgid "Could not register Default provider implementation"
-msgstr "Не удалось зарегистрировать реализацию провайдера Mail"
+msgstr "Не удалось зарегистрировать реализацию провайдера по умолчанию"
 
 #: providers/gda-ldap-server/GNOME_Database_Provider_LDAP.server.in.h:1
 msgid "GDA Datasource Access for LDAP"
-msgstr ""
+msgstr "GDA доступ к источнику данных LDAP"
 
 #: providers/gda-ldap-server/GNOME_Database_Provider_LDAP.server.in.h:2
 msgid "LDAP provider connection factory"
@@ -279,7 +273,7 @@ msgstr "Не удалось зарегистрировать реализацию провайдера LDAP"
 
 #: providers/gda-interbase-server/GNOME_Database_Provider_InterBase.server.in.h:1
 msgid "GDA Datasource Access for Interbase"
-msgstr ""
+msgstr "GDA доступ к источнику данных для Interbase"
 
 #: providers/gda-interbase-server/GNOME_Database_Provider_InterBase.server.in.h:2
 msgid "InterBase provider connection factory"
@@ -296,7 +290,7 @@ msgstr "Не удалось зарегистрировать реализацию провайдера INTERBASE"
 
 #: providers/gda-mail-server/GNOME_Database_Provider_Mail.server.in.h:1
 msgid "GDA Datasource Access for Mail"
-msgstr ""
+msgstr "GDA доступ к источнику данных для Mail"
 
 #: providers/gda-mail-server/GNOME_Database_Provider_Mail.server.in.h:2
 msgid "Mail provider connection factory"
@@ -316,7 +310,7 @@ msgstr "Не удалось зарегистрировать реализацию провайдера Mail"
 
 #: providers/gda-mdb-server/GNOME_Database_Provider_MDB.server.in.h:1
 msgid "GDA Datasource Access for MDB (MS Access) files"
-msgstr ""
+msgstr "GDA доступ к источнику данных для файлов MDB (MS Access)"
 
 #: providers/gda-mdb-server/GNOME_Database_Provider_MDB.server.in.h:2
 msgid "MDB provider connection factory"
@@ -378,20 +372,17 @@ msgstr "Не удалось зарегистрировать реализацию провайдера MySQL"
 
 #: providers/gda-mysql-server/GNOME_Database_Provider_MySQL.server.in.h:1
 msgid "GDA Datasource Access for MySQL"
-msgstr ""
+msgstr "GDA доступ к источнику данных для MySQL"
 
 #: providers/gda-mysql-server/GNOME_Database_Provider_MySQL.server.in.h:2
 msgid "MySQL provider connection factory"
 msgstr ""
 
 #: providers/gda-mysql-server/gda-mysql-connection.c:174
-#, fuzzy
 msgid ""
 "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a "
 "PORT. Please remove the UNIX_SOCKET, or remove both the HOST and PORT options"
-msgstr ""
-"%s:%d: Вы не можете указывать UNIX_SOCKET, если вы также указываете Хост или "
-"Порт. Пожалуйста удалить параметры Хост и Порт или UNIX_SOCKET"
+msgstr "Вы не можете указывать UNIX_SOCKET, если вы также указываете Хост или Порт. Пожалуйста удалите параметры Хост и Порт или UNIX_SOCKET"
 
 #: providers/gda-mysql-server/gda-mysql-connection.c:190
 #, c-format
@@ -404,7 +395,7 @@ msgstr ""
 
 #: providers/gda-mysql-server/gda-mysql-connection.c:616
 msgid "Unknown"
-msgstr ""
+msgstr "Неизвестно"
 
 #: providers/gda-mysql-server/gda-mysql-connection.c:649
 msgid "No MYSQL_Connection for GdaServerConnection"
@@ -412,7 +403,7 @@ msgstr ""
 
 #: providers/gda-odbc-server/GNOME_Database_Provider_ODBC.server.in.h:1
 msgid "GDA Datasource Access for ODBC"
-msgstr ""
+msgstr "GDA доступ к источнику данных для ODBC"
 
 #: providers/gda-odbc-server/GNOME_Database_Provider_ODBC.server.in.h:2
 msgid "ODBC provider connection factory"
@@ -438,7 +429,7 @@ msgstr "Не удалось зарегистрировать реализацию провайдера ODBC"
 
 #: providers/gda-oracle-server/GNOME_Database_Provider_Oracle.server.in.h:1
 msgid "GDA Datasource Access for Oracle"
-msgstr ""
+msgstr "GDA доступ к источнику данных для Oracle"
 
 #: providers/gda-oracle-server/GNOME_Database_Provider_Oracle.server.in.h:2
 msgid "Oracle provider connection factory"
@@ -490,7 +481,7 @@ msgstr "Не удалось зарегистрировать реализацию провайдера ORACLE"
 
 #: providers/gda-postgres-server/GNOME_Database_Provider_Postgres.server.in.h:1
 msgid "GDA Datasource Access for Postgres"
-msgstr ""
+msgstr "GDA доступ к источнику данных для Postgres"
 
 #: providers/gda-postgres-server/GNOME_Database_Provider_Postgres.server.in.h:2
 msgid "Postgres provider connection factory"
@@ -507,7 +498,7 @@ msgstr "Не удалось зарегистрировать реализацию провайдера PostgreSQL"
 
 #: providers/gda-sybase-server/GNOME_Database_Provider_Sybase.server.in.h:1
 msgid "GDA Datasource Access for Sybase"
-msgstr ""
+msgstr "GDA доступ к источнику данных для Sybase"
 
 #: providers/gda-sybase-server/GNOME_Database_Provider_Sybase.server.in.h:2
 msgid "Sybase provider connection factory"
@@ -874,9 +865,9 @@ msgid "Fetching %d cslib messages"
 msgstr "Получение %d сообщений cslib"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:470
-#, fuzzy, c-format
+#, c-format
 msgid "Fetching %d cslib message"
-msgstr "Получение %d сообщений cslib"
+msgstr "Получение %d сообщения cslib"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:480
 #, c-format
@@ -991,12 +982,12 @@ msgstr "Не удалось зарегистрировать реализацию провайдера gda-sybase"
 
 #: providers/gda-primebase-server/GNOME_Database_Provider_Primebase.server.in.h:1
 msgid "GDA Datasource Access for primebase"
-msgstr ""
+msgstr "GDA доступ к источнику данных для primebase"
 
 #: providers/gda-primebase-server/gda-primebase-connection.c:157
 #, c-format
 msgid "Could not connect to '%s@%s:%s' with connparm '%s'"
-msgstr ""
+msgstr "Не удалось подключиться к \"%s@%s:%s\" с параметрами \"%s\""
 
 #: providers/gda-primebase-server/gda-primebase-connection.c:163
 #, c-format
@@ -1013,49 +1004,45 @@ msgid "%2ld: ConInfo: '%s@%s', Cl v%x, Srv '%s' v%x, Brand '%s'"
 msgstr ""
 
 #: providers/gda-primebase-server/gda-primebase-connection.c:390
-#, fuzzy
 msgid "Not enough memory for primebase_Error structure."
-msgstr "Недостаточно памяти для выполнения sybase_Соединения"
+msgstr "Недостаточно памяти для структуры primebase_Error."
 
 #: providers/gda-primebase-server/gda-primebase-connection.c:397
 #, c-format
 msgid "%2ld: ERROR: %ld (%ld) : %s.\n"
-msgstr ""
+msgstr "%2ld: ОШИБКА: %ld (%ld) : %s.\n"
 
 #: providers/gda-primebase-server/main-primebase.c:73
-#, fuzzy
 msgid "Could not register PRIMEBASE provider implementation"
-msgstr "Не удалось зарегистрировать реализацию провайдера INTERBASE"
+msgstr "Не удалось зарегистрировать реализацию провайдера PRIMEBASE"
 
 #: providers/gda-tds-server/GNOME_Database_Provider_TDS.server.in.h:1
 msgid "GDA Datasource Access for Sybase/MS SQL"
-msgstr ""
+msgstr "GDA доступ к источнику данных для Sybase/MS SQL"
 
 #: providers/gda-tds-server/GNOME_Database_Provider_TDS.server.in.h:2
 msgid "TDS provider connection factory"
 msgstr ""
 
 #: providers/gda-tds-server/gda-tds-connection.c:160
-#, fuzzy
 msgid "Not enough memory for tds_Connection"
-msgstr "Недостаточно памяти для выполнения sybase_Соединения"
+msgstr "Недостаточно памяти для tds_Connection"
 
 # fe/fe_connection.c:46
 #. Fixme: replace "dummy" with buf when CS_GET CS_SERVERNAME works
 #: providers/gda-tds-server/gda-tds-connection.c:888
-#, fuzzy, c-format
+#, c-format
 msgid "Reconnected to %s"
 msgstr "Пересоединение с \"%s\""
 
 #: providers/gda-tds-server/gda-tds-error.c:70
-#, fuzzy, c-format
+#, c-format
 msgid "gda_tds_error_make(%p,%p,%p,%p)"
-msgstr "gda_sybase_error_make(%p,%p,%p,%p)"
+msgstr "gda_tds_error_make(%p,%p,%p,%p)"
 
 #: providers/gda-tds-server/main-tds.c:78
-#, fuzzy
 msgid "Could not register gda-tds provider implementation"
-msgstr "Не удалось зарегистрировать реализацию провайдера gda-sybase"
+msgstr "Не удалось зарегистрировать реализацию провайдера gda-tds"
 
 #: tools/gda-run.c:102
 #, c-format
@@ -1068,115 +1055,5 @@ msgid "%s: data source '%s' not found\n"
 msgstr "%s: источник данных \"%s\" не найден\n"
 
 #: tools/templates/main-srv.c.tmpl:60
-#, fuzzy
 msgid "Could not register <PROVIDER-NAME> provider implementation"
-msgstr "Не удалось зарегистрировать реализацию провайдера INTERBASE"
-
-#~ msgid "%s: The server didn't respond."
-#~ msgstr "%s: Сервер не отвечает."
-
-#~ msgid "thread is already running"
-#~ msgstr "thread уже запущен"
-
-#~ msgid "impl_GDA_Connection_open: opening connection with DSN: %s"
-#~ msgstr "impl_GDA_Connection_open: открытие соединения с DSN: %s"
-
-#~ msgid "%s: an error ocurred while fetching data"
-#~ msgstr "%s: обнаружена ошибка при получении данных"
-
-#~ msgid ""
-#~ "OAF doesn't know about our IID; indicates broken installation. Exiting..."
-#~ msgstr ""
-#~ "OAF не знает о нашем IID; указывает на неправильную установку. Выход..."
-
-#~ msgid ""
-#~ "Another instance of this provider is already registered with OAF. "
-#~ "Exiting..."
-#~ msgstr ""
-#~ "Другой экземпляр этого провайдера уже зарегистрирован в OAF. Выход..."
-
-#~ msgid "Unknown error registering this provider with OAF. Exiting"
-#~ msgstr "Неизвестная ошибка регистрации этого провайдера в OAF. Выход"
-
-#~ msgid "Registered with ID = %s"
-#~ msgstr "Зарегистрировано с идентификатором = %s"
-
-#~ msgid "CORBA exception unloading report engine: %s"
-#~ msgstr "Исключение CORBA при выгрузке процессора отчетов: %s"
-
-#~ msgid "Received signal %d, shutting down."
-#~ msgstr "Получен сигнал %d, выключение."
-
-#~ msgid "Received signal %d, shutting down cleanly"
-#~ msgstr "Получен сигнал %d, чистое выключение"
-
-#~ msgid "Failed to initialize OAF: please mail bug report to OAF maintainers"
-#~ msgstr ""
-#~ "Сбой инициализации OAF: пожалуйста, отправьте сообщение об ошибке "
-#~ "разработчикам OAF"
-
-# fe/fe_log.c:92
-#~ msgid "Could not activate report engine"
-#~ msgstr "Не удалось активировать процессор отчетов"
-
-#~ msgid ""
-#~ "Another instance of the report engine is already registered with OAF. "
-#~ "Exiting..."
-#~ msgstr ""
-#~ "Другой экземпляр процессора отчетов уже зарегистрирован в OAF. \n"
-#~ "Выход..."
-
-#~ msgid "Unknown error registering report engine with OAF. Exiting"
-#~ msgstr ""
-#~ "Неизвестная ошибка регистрации процессора отчетов в OAF. \n"
-#~ "Выход"
-
-#~ msgid "Registered report engine with ID = %s"
-#~ msgstr "Зарегистрирован процессор отчетов с идентификатором = %s"
-
-#~ msgid "%s: length = %d"
-#~ msgstr "%s: длина = %d"
-
-#~ msgid "%s: sending field description for '%s'"
-#~ msgstr "%s: послано описание поля для \"%s\""
-
-#~ msgid "Error allocating error structure"
-#~ msgstr "Ошибка получения структуры ошибки"
-
-#~ msgid "schema_tables: table name = '%s'"
-#~ msgstr "schema_tables: название таблицы = \"%s\""
-
-#~ msgid "schema_tables: table_schema = '%s'"
-#~ msgstr "schema_tables: table_schema = \"%s\""
-
-#~ msgid "Fetchong %d cslib message"
-#~ msgstr "Получение %d сообщения cslib"
-
-# fe/fe_main.c:186
-#~ msgid "database name"
-#~ msgstr "название базы данных"
-
-#~ msgid "DATABASE"
-#~ msgstr "БАЗА ДАННЫХ"
-
-# fe/fe_impexp.c:164 fe/fe_impexp.c:274 fe/fe_impexp.c:391
-# gda-clnt-ui/gnome-db-browser.c:217
-#~ msgid "user name"
-#~ msgstr "имя пользователя"
-
-#~ msgid "USER-NAME"
-#~ msgstr "ИМЯ ПОЛЬЗОВАТЕЛЯ"
-
-#~ msgid "password"
-#~ msgstr "пароль"
-
-#~ msgid "PASSWORD"
-#~ msgstr "ПАРОЛЬ"
-
-# fe/fe_impexp.c:164 fe/fe_impexp.c:274 fe/fe_impexp.c:391
-# gda-clnt-ui/gnome-db-browser.c:217
-#~ msgid "file name"
-#~ msgstr "название файла"
-
-#~ msgid "FILE-NAME"
-#~ msgstr "НАЗВАНИЕ ФАЙЛА"
+msgstr "Не удалось зарегистрировать реализацию провайдера <PROVIDER-NAME>"
