@@ -58,6 +58,14 @@ gda_data_model_array_get_n_columns (GdaDataModel *model)
 	return GDA_DATA_MODEL_ARRAY (model)->priv->number_of_columns;
 }
 
+static GdaFieldAttributes *
+gda_data_model_array_describe_column (GdaDataModel *model, gint col)
+{
+	g_return_val_if_fail (GDA_IS_DATA_MODEL_ARRAY (model), NULL);
+
+	return NULL;
+}
+
 static const GdaValue *
 gda_data_model_array_get_value_at (GdaDataModel *model, gint col, gint row)
 {
@@ -105,13 +113,28 @@ gda_data_model_array_append_row (GdaDataModel *model, const GList *values)
 	for (i = 0; i < len; i++) {
 		GList *l;
 		GdaField *field;
+		GdaFieldAttributes *fa;
 
 		l = g_list_nth ((GList *) values, i);
 		if (!l)
 			return NULL;
 
 		field = gda_row_get_field (row, i);
-		/* FIXME: set properties for the GdaField */
+		fa = gda_data_model_describe_column (model, i);
+		if (!fa) {
+			gda_field_set_defined_size (field, gda_field_attributes_get_defined_size (fa));
+			gda_field_set_name (field, gda_field_attributes_get_name (fa));
+			gda_field_set_caption (field, gda_field_attributes_get_caption (fa));
+			gda_field_set_scale (field, gda_field_attributes_get_scale (fa));
+			gda_field_set_gdatype (field, gda_field_attributes_get_gdatype (fa));
+			gda_field_set_allow_null (field, gda_field_attributes_get_allow_null (fa));
+			gda_field_set_primary_key (field, gda_field_attributes_get_primary_key (fa));
+			gda_field_set_unique_key (field, gda_field_attributes_get_unique_key (fa));
+			gda_field_set_references (field, gda_field_attributes_get_references (fa));
+
+			gda_field_attributes_free (fa);
+		}
+
 		gda_field_set_value (field, (const GdaValue *) l->data);
 	}
 
@@ -132,7 +155,7 @@ gda_data_model_array_class_init (GdaDataModelArrayClass *klass)
 	object_class->finalize = gda_data_model_array_finalize;
 	model_class->get_n_rows = gda_data_model_array_get_n_rows;
 	model_class->get_n_columns = gda_data_model_array_get_n_columns;
-	model_class->describe_column = NULL;
+	model_class->describe_column = gda_data_model_array_describe_column;
 	model_class->get_value_at = gda_data_model_array_get_value_at;
 	model_class->is_editable = gda_data_model_array_is_editable;
 	model_class->append_row = gda_data_model_array_append_row;
