@@ -1,3 +1,10 @@
+2001-07-27  Carlos Perelló Marín <carlos@gnome-db.org>
+
+	* Makefile.am: /s/server/engine.
+	* gda-report-document-factory.h: Fixed.
+	* gda-report-document-factory.c: Started the implementation (based on
+	MrProject's ProjectFactory.
+
 2001-07-19  Carlos Perelló Marín <carlos@gnome-db.org>
 
 	* *.oaf.in: Reverted the last change, It will be done soon.

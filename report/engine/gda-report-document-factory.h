@@ -24,7 +24,8 @@
 
 #ifndef __GDA_REPORT_DOCUMENT_FACTORY_H__
 #define __GDA_REPORT_DOCUMENT_FACTORY_H__
-#endif
+
+#include "GDA_Report.h"
 
 #define GDA_REPORT_DOCUMENT_FACTORY_TYPE        (gda_report_document_factory_get_type ())
 #define GDA_REPORT_DOCUMENT_FACTORY(o)          (GTK_CHECK_CAST ((o), GDA_REPORT_DOCUMENT_FACTORY_TYPE, GdaReportDocumentFactory))
