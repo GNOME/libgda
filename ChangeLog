@@ -1,3 +1,7 @@
+2002-11-28  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* libgda/gda-init.c (gda_init): removed debug messages.
+
 2002-11-25  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* providers/xbase/gda-xbase-provider.[ch]: implementation of the
