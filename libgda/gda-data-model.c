@@ -237,7 +237,7 @@ gda_data_model_changed (GdaDataModel *model)
  * @model: a #GdaDataModel object.
  * @row: row number.
  *
- * Emits the 'row_inserted' signal on @model.
+ * Emits the 'row_inserted' and 'changed' signals on @model.
  */
 void
 gda_data_model_row_inserted (GdaDataModel *model, gint row)
@@ -248,6 +248,8 @@ gda_data_model_row_inserted (GdaDataModel *model, gint row)
 		g_signal_emit (G_OBJECT (model),
 			       gda_data_model_signals[ROW_INSERTED],
 			       0, row);
+
+		gda_data_model_changed (model);
 	}
 }
 
@@ -256,7 +258,7 @@ gda_data_model_row_inserted (GdaDataModel *model, gint row)
  * @model: a #GdaDataModel object.
  * @row: row number.
  *
- * Emits the 'row_updated' signal on @model.
+ * Emits the 'row_updated' and 'changed' signals on @model.
  */
 void
 gda_data_model_row_updated (GdaDataModel *model, gint row)
@@ -267,6 +269,8 @@ gda_data_model_row_updated (GdaDataModel *model, gint row)
 		g_signal_emit (G_OBJECT (model),
 			       gda_data_model_signals[ROW_UPDATED],
 			       0, row);
+
+		gda_data_model_changed (model);
 	}
 }
 
@@ -275,7 +279,7 @@ gda_data_model_row_updated (GdaDataModel *model, gint row)
  * @model: a #GdaDataModel object.
  * @row: row number.
  *
- * Emits the 'row_removed' signal on @model.
+ * Emits the 'row_removed' and 'changed' signal on @model.
  */
 void
 gda_data_model_row_removed (GdaDataModel *model, gint row)
@@ -286,6 +290,8 @@ gda_data_model_row_removed (GdaDataModel *model, gint row)
 		g_signal_emit (G_OBJECT (model),
 			       gda_data_model_signals[ROW_REMOVED],
 			       0, row);
+
+		gda_data_model_changed (model);
 	}
 }
 
@@ -559,15 +565,19 @@ gda_data_model_is_editable (GdaDataModel *model)
  *
  * Appends a row to the given data model.
  *
- * Returns: the unique ID of the added row.
+ * Returns: the added row.
  */
 const GdaRow *
 gda_data_model_append_row (GdaDataModel *model, const GList *values)
 {
+	const GdaRow *row;
+
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
 	g_return_val_if_fail (CLASS (model)->append_row != NULL, NULL);
 
-	return CLASS (model)->append_row (model, values);
+	row = CLASS (model)->append_row (model, values);
+	gda_data_model_row_inserted (model, gda_row_get_number ((GdaRow *) row));
+	return row;
 }
 
 /**
@@ -583,11 +593,18 @@ gda_data_model_append_row (GdaDataModel *model, const GList *values)
 gboolean
 gda_data_model_remove_row (GdaDataModel *model, const GdaRow *row)
 {
+	gboolean result;
+
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
 	g_return_val_if_fail (row != NULL, FALSE);
 	g_return_val_if_fail (CLASS (model)->remove_row != NULL, FALSE);
 
-	return CLASS (model)->remove_row (model, row);
+	result = CLASS (model)->remove_row (model, row);
+	if (result) {
+		gda_data_model_row_removed (model, gda_row_get_number ((GdaRow *) row));
+	}
+
+	return result;
 }
 
 /**
@@ -603,11 +620,17 @@ gda_data_model_remove_row (GdaDataModel *model, const GdaRow *row)
 gboolean
 gda_data_model_update_row (GdaDataModel *model, const GdaRow *row)
 {
+	gboolean result;
+
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
 	g_return_val_if_fail (row != NULL, FALSE);
 	g_return_val_if_fail (CLASS (model)->update_row != NULL, FALSE);
 
-	return CLASS (model)->update_row (model, row);
+	result = CLASS (model)->update_row (model, row);
+	if (result) {
+		gda_data_model_row_updated (model, gda_row_get_number ((GdaRow *) row));
+	}
+	return result;
 }
 
 /**
