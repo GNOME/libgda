@@ -1,5 +1,4 @@
 # translation of libgda.release-1-0-branch.po to Spanish
-# translation of libgda.HEAD.es.po to Spanish
 # Libgda Spanish Translation
 # Copyright © 2002-2003 Free Software Foundation, Inc.
 # This file is distributed under the same license as the libgda package.
@@ -8,7 +7,6 @@
 # Carlos Perelló Marín <carlos@gnome-db.org>, 2001.
 # Antonio de la Torre <adltorre@terra.es>, 2001.
 # Pablo Gonzalo del Campo <pablodc@bigfoot.com>,2002-2003.
-# Francisco Javier F. Serrador <serrador@arrakis.es>, 2003.
 # Francisco Javier F. Serrador <franciscojavier.fernandez.serrador@hispalinux.es>, 2003.
 #
 msgid ""
@@ -16,7 +14,7 @@ msgstr ""
 "Project-Id-Version: libgda.release-1-0-branch\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2003-11-11 15:39+0100\n"
-"PO-Revision-Date: 2003-11-11 16:49+0100\n"
+"PO-Revision-Date: 2003-11-14 04:25+0100\n"
 "Last-Translator: Francisco Javier F. Serrador <franciscojavier.fernandez.serrador@hispalinux.es>\n"
 "Language-Team: Spanish <traductores@es.gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -339,7 +337,7 @@ msgstr "No se ha podido asignar el manejador de ambiente.\n"
 #: providers/ibmdb2/gda-ibmdb2-provider.c:211
 msgid "SQLGetInfo is unsupported. Hence IBM DB2 Provider will not work.\n"
 msgstr ""
-"SQLGetInfo no esta soportado. Debido a esto el proveedor IBM DB2 no "
+"SQLGetInfo no está soportado. Debido a esto el proveedor IBM DB2 no "
 "funcionará.\n"
 
 #: providers/ibmdb2/gda-ibmdb2-provider.c:450
@@ -774,7 +772,7 @@ msgstr ""
 #: providers/msql/gda-msql-provider.c:331
 msgid "mSQL allows database drops only through the msqladmin tool."
 msgstr ""
-"mSQL permite drops en la base de datos sólo a través de la herramiente "
+"mSQL permite drops en la base de datos sólo a través de la herramienta "
 "msqladmin."
 
 #: providers/msql/gda-msql-provider.c:376
@@ -1193,7 +1191,7 @@ msgstr "Proveedor para bases datos Oracle"
 #: providers/postgres/gda-postgres-recordset.c:262
 #: providers/postgres/utils.c:178
 msgid "Invalid PostgreSQL handle"
-msgstr "Manejador PostgresSQL inválido"
+msgstr "Manejador PostgreSQL inválido"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/postgres/gda-postgres-provider.c:1195
@@ -1214,7 +1212,7 @@ msgstr "Número de columna fuera de rango"
 #: providers/postgres/gda-postgres-recordset.c:358
 #, c-format
 msgid "Tuples:\"%s\""
-msgstr "Tuples:«%s»"
+msgstr "Tuplas:«%s»"
 
 #: providers/postgres/libmain.c:41
 msgid "Provider for PostgreSQL databases"
@@ -1291,7 +1289,7 @@ msgstr "No se ha podido preparar la estructura de comando."
 
 #: providers/sybase/gda-sybase-provider.c:680
 msgid "Sending sql-command failed."
-msgstr "Ha fallado el envío del comando sql."
+msgstr "Ha fallado el envío del comando SQL."
 
 #: providers/sybase/gda-sybase-provider.c:706
 #: providers/sybase/gda-sybase-provider.c:724
@@ -1492,7 +1490,7 @@ msgstr "No se ha podido inicializar el origen de componente Sybase"
 
 #: providers/sybase/utils.c:48
 msgid "Call: csmsg callback"
-msgstr "Llamada: llamada reversa a csmsg"
+msgstr "Llamada: llamada de retorno (callback) a csmsg"
 
 #: providers/sybase/utils.c:53
 #, c-format
@@ -1689,7 +1687,7 @@ msgid ""
 "the XML provider."
 msgstr ""
 "Debe especificarse una ruta completa en la cadena de conexión para abrir "
-"unabase de datos en un proveedor XML."
+"una base de datos en un proveedor XML."
 
 #: providers/xml/gda-xml-provider.c:222 providers/xml/gda-xml-provider.c:244
 msgid "Invalid XML handle"
