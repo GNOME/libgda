@@ -17,7 +17,7 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <gda-report-object.h>
+#include <gda-report.h>
 
 
 enum {
@@ -151,35 +151,39 @@ gda_report_init (Gda_Report *object)
 }
 
 /**
- * gda_report__new:
- * @engine: the Report Engine to connect
+ * gda_report_new:
+ * @engine: the Report Engine to connect.
+ * @rep_name: The Report's name.
+ * @description: A descripiton.
  *
  * Allocates space for a client report object
  *
  * Returns: the pointer to the allocated object
  */
 Gda_Report*
-gda_report_new (Gda_ReportEngine* engine)
+gda_report_new (Gda_ReportEngine* engine, gchar* rep_name, gchar* description)
 {
-/*	CORBA_Environment ev;
-	Gda_ReportStream* object;
+	CORBA_Environment ev;
+	Gda_Report* object;
 	
 	g_return_val_if_fail(IS_GDA_REPORTENGINE(engine), NULL);
+	g_return_val_if_null(rep_name, NULL);
+	g_return_val_if_null(description, NULL);
 
 #ifdef HAVE_GOBJECT
-	object = GDA_REPORTSTREAM (g_object_new (GDA_TYPE_REPORTSTREAM, NULL));
+	object = GDA_REPORT (g_object_new (GDA_TYPE_REPORT, NULL));
 #else
-	object = gtk_type_new(gda_report_stream_get_type());
+	object = gtk_type_new(gda_report_get_type());
 #endif
 	object->engine = engine;
 	CORBA_exception_init(&ev);
-	object->corba_reportstream = GDA_ReportEngine_createStream(engine->corba_engine, &ev);
+	object->corba_report = GDA_ReportEngine_addReport(engine->corba_engine, \
+							  rep_name, description, &ev);
 	/*  if (gda_reportstream_corba_exception(object, &ev))
 	return -1;
 	else*/
-/*	CORBA_exception_free(&ev);
+	CORBA_exception_free(&ev);
 	return object;
-*/
 }
 
 /**
@@ -192,7 +196,7 @@ gda_report_new (Gda_ReportEngine* engine)
 void
 gda_report_free (Gda_Report* object)
 {
-/*	CORBA_Environment ev;
+	CORBA_Environment ev;
 	
 	g_return_if_fail(IS_GDA_REPORTSTREAM(object));
 	g_return_if_fail(object->corba_reportstream != CORBA_OBJECT_NIL);
@@ -315,3 +319,22 @@ gda_report_stream_length (Gda_ReportStream* object)
 	return size;
 
 }
+
+
+gchar*			gda_report_get_name		(Gda_Report* object);
+gint*			gda_report_set_name		(Gda_Report* object, gchar* name);
+
+gchar*			gda_report_get_description	(Gda_Report* object);
+gint*			gda_report_set_description	(Gda_Report* object, gchar* description);
+
+Gda_ReportElement*	gda_report_get_elements		(Gda_Report* object);
+gint*			gda_report_set_elements		(Gda_Report* object, Gda_ReportElement* element);
+
+Gda_ReportFormat*	gda_report_get_format		(Gda_Report* object);
+gboolean		gda_report_isLocked		(Gda_Report* object);
+
+Gda_ReportOutput*	gda_report_run			(Gda_Report* object,
+							 Gda_ReportParamList,
+							 gint32 flags);
+void			gda_report_lock			(Gda_Report* object);
+void			gda_report_unlock		(Gda_Report* object);

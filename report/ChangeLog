@@ -1,5 +1,9 @@
 2001-02-06	Carlos Perelló Marín <carlos@gnome-db.org>
 
+	* gda-report.[ch]: More updates
+
+2001-02-06	Carlos Perelló Marín <carlos@gnome-db.org>
+
 	* gda-report.h: Renamed to gda-report-client.h
 	* gda-report-object.[ch]: Renamed to gda-report.[ch]
 

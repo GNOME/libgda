@@ -1,3 +1,7 @@
+2001-02-06	Carlos Perelló Marín <carlos@gnome-db.org>
+
+	* .cvsignore, Makefile.am: Updated to the new xml-i18n-tools
+
 2001-01-22	Carlos Perelló Marín <carlos@gnome-db.org>
 
 	* .cvsignore: I forget it!!
