@@ -73,6 +73,9 @@ static gboolean gda_freetds_provider_commit_transaction (GdaServerProvider *prov
 static gboolean gda_freetds_provider_rollback_transaction (GdaServerProvider *provider,
                                                            GdaConnection *cnc,
                                                            GdaTransaction *xaction);
+static const gchar *gda_freetds_provider_get_server_version (GdaServerProvider *provider,
+                                                             GdaConnection *cnc);
+static const gchar *gda_freetds_provider_get_version (GdaServerProvider *provider);
 static gboolean gda_freetds_provider_supports (GdaServerProvider *provider,
                                                GdaConnection *cnc,
                                                GdaConnectionFeature feature);
@@ -487,6 +490,32 @@ gda_freetds_provider_supports (GdaServerProvider *provider,
 	return FALSE;
 }
 
+static const gchar
+*gda_freetds_provider_get_server_version (GdaServerProvider *provider,
+                                          GdaConnection *cnc)
+{
+	GdaFreeTDSProvider *tds_prov = (GdaFreeTDSProvider *) provider;
+	GdaFreeTDSConnectionData *tds_cnc = NULL;
+	
+	g_return_val_if_fail (GDA_IS_FREETDS_PROVIDER (tds_prov), NULL);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+	tds_cnc = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_FREETDS_HANDLE);
+	g_return_val_if_fail (tds_cnc != NULL, NULL);
+
+	// FIXME:
+	return NULL;
+}
+
+static const gchar
+*gda_freetds_provider_get_version (GdaServerProvider *provider)
+{
+	GdaFreeTDSProvider *tds_prov = (GdaFreeTDSProvider *) provider;
+
+	g_return_val_if_fail (GDA_IS_FREETDS_PROVIDER (tds_prov), NULL);
+
+	return VERSION;
+}
+
 static GdaDataModel
 *gda_freetds_provider_get_schema (GdaServerProvider *provider,                                                    GdaConnection *cnc,
                                   GdaConnectionSchema schema,
@@ -698,6 +727,8 @@ gda_freetds_provider_class_init (GdaFreeTDSProviderClass *klass)
 	provider_class->begin_transaction = gda_freetds_provider_begin_transaction;
 	provider_class->commit_transaction = gda_freetds_provider_commit_transaction;
 	provider_class->rollback_transaction = gda_freetds_provider_rollback_transaction;
+	provider_class->get_version = gda_freetds_provider_get_version;
+	provider_class->get_server_version = gda_freetds_provider_get_server_version;
 	provider_class->supports = gda_freetds_provider_supports;
 	provider_class->get_schema = gda_freetds_provider_get_schema;
 
