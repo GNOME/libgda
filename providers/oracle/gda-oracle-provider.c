@@ -1225,7 +1225,7 @@ g_string_right_trim (GString * input)
 }
 
 static GHashTable *
-get_oracle_index_data (GdaConnection *cnc, const gchar *tblname)
+get_oracle_index_data (GdaConnection *cnc, const gchar *owner, const gchar *tblname)
 {
 	gchar *sql;
 	GList *reclist;
@@ -1242,28 +1242,32 @@ get_oracle_index_data (GdaConnection *cnc, const gchar *tblname)
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
-	sql = g_strdup ("SELECT substr (c1.column_name,1,30) column_name, "
+	sql = g_strdup ("SELECT c1.column_name column_name, "
 			"con.constraint_type constraint_type, "
 			"'' uniqueness, "
 			"c2.table_name reference "
-			"FROM user_cons_columns c1, user_cons_columns c2, user_constraints con "
+			"FROM all_cons_columns c1, all_cons_columns c2, all_constraints con "
 			"WHERE con.constraint_name = c1.constraint_name " 
 			"AND con.constraint_type = 'R' "
 			"AND con.constraint_type IS NOT NULL "
 			"AND c1.table_name = upper (:TBLNAME) "
+			"AND c1.owner = upper (:OWNER) "
 			"AND con.r_constraint_name = c2.constraint_name "
-			"UNION "
-			"SELECT substr (c.column_name,1,30) column_name, "
+			"UNION ALL "
+			"SELECT c.column_name column_name, "
 			"t.constraint_type constraint_type, "
 			"substr (i.uniqueness, 1, 6) uniqueness, "
 			"'' reference "
-			"FROM user_indexes i, user_ind_columns c, user_constraints t "
+			"FROM all_indexes i, all_ind_columns c, all_constraints t "
 			"WHERE i.table_name = upper (:TBLNAME) "
+			"AND i.table_owner = upper (:OWNER) "
 			"AND t.constraint_type != 'R' "
 			"AND i.index_name = c.index_name "
 			"AND i.index_name = t.constraint_name "
 			"ORDER BY 1" );
 
+	gda_parameter_list_add_parameter (query_params, 
+			gda_parameter_new_string (":OWNER", owner));
 	gda_parameter_list_add_parameter (query_params, 
 			gda_parameter_new_string (":TBLNAME", tblname));
 
@@ -1399,12 +1403,14 @@ gda_oracle_fill_md_data (const gchar *tblname,
 	/* look up the table name to get the fully qualified name. */
 	upc_tblname = g_ascii_strup(tblname, -1);
 	if ((owner = g_tree_lookup(priv_data->tables, upc_tblname)) == NULL)
-	    owner = g_tree_lookup(priv_data->views, upc_tblname);
+		owner = g_tree_lookup(priv_data->views, upc_tblname);
 	g_free(upc_tblname);
-	if (owner == NULL)
-	    fq_tblname = tblname;
+	if (owner == NULL) {
+		fq_tblname = tblname;
+		owner = priv_data->schema;
+	}
 	else
-	    fq_tblname = g_strjoin(".", owner, tblname, NULL);
+		fq_tblname = g_strjoin(".", owner, tblname, NULL);
 	
 	/* Describe the table */
 	result = OCIDescribeAny (priv_data->hservice,
@@ -1570,7 +1576,7 @@ gda_oracle_fill_md_data (const gchar *tblname,
 		return NULL;
 	}
 
-	h_table_index = get_oracle_index_data (cnc, fq_tblname);
+	h_table_index = get_oracle_index_data (cnc, owner, tblname);
 
 	for (i = 1; i <= numcols; i += 1) {
 		text *strp;
