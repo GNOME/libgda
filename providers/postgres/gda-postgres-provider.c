@@ -591,6 +591,7 @@ static gboolean gda_postgres_provider_supports (GdaServerProvider *provider,
 	switch (feature) {
 	case GDA_CONNECTION_FEATURE_AGGREGATES :
 	case GDA_CONNECTION_FEATURE_INDEXES :
+	case GDA_CONNECTION_FEATURE_INHERITANCE :
 	case GDA_CONNECTION_FEATURE_PROCEDURES :
 	case GDA_CONNECTION_FEATURE_SEQUENCES :
 	case GDA_CONNECTION_FEATURE_SQL :
