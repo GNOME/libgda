@@ -307,7 +307,7 @@ gda_connection_new_from_dsn (const gchar *dsn_name,
 	gda_connection_set_provider (cnc, GDA_DSN_PROVIDER (dsn));
 	if (gda_connection_open (cnc,
 	                         GDA_DSN_DSN (dsn),
-	                         username,
+	                         username ? username : GDA_DSN_USERNAME (dsn),
                                  password) != 0) {
 		gda_connection_free (cnc);
 		cnc = NULL;
@@ -526,10 +526,11 @@ gda_connection_open (GdaConnection* cnc, const gchar* dsn, const gchar* user, co
 	if (gda_connection_corba_exception(cnc, &ev) < 0 || rc < 0) {
 		CORBA_SystemException* sysexc = CORBA_exception_value(&ev);
 		if (sysexc && sysexc->completed != CORBA_COMPLETED_NO) {
-			GDA_Connection_close(cnc->connection, &ev);
-			CORBA_Object_release(cnc->connection, &ev);
+			GDA_Connection_close (cnc->connection, &ev);
 		}
+		CORBA_Object_release (cnc->connection, &ev);
 		cnc->connection = CORBA_OBJECT_NIL;
+
 		return -1;
 	}
 

@@ -1,3 +1,12 @@
+2001-07-14  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-connection.c (gda_connection_new_from_dsn): use the user
+	configured in the DSN if no user name is given in the call to this
+	function
+
+	(gda_connection_open): CORBA_Object_release the connection if the
+	call is not successful
+
 2001-07-05  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-error.[ch]: moved to libgda-common
