@@ -1,6 +1,5 @@
 SUBDIRS = \
 	po \
-	idl \
 	libsql \
 	libgda \
 	providers \

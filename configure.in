@@ -743,7 +743,6 @@ Makefile
 libgda.spec
 libgda.pc
 po/Makefile.in
-idl/Makefile
 libsql/Makefile
 libgda/Makefile
 providers/Makefile
