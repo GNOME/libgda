@@ -64,3 +64,33 @@ Description: GNU data access library -- development files.
  (http://www.gnome.org/projects/gnome-db), but has been
  separated from it to allow non-GNOME applications to be
  developed based on it.
+
+Package: gda-sybase
+Maintainer: Holger Thon <holger.thon@gnome-db.org>
+Architecture: any
+Section: non-free/misc
+Priority: optional
+Depends: libgda0 (= ${Source-Version}), ${shlibs:Depends}
+Description: GDA backend server for Primebase
+ This package uses primebase backend.
+
+
+Package: gda-sybase
+Maintainer: Holger Thon <holger.thon@gnome-db.org>
+Architecture: any
+Section: non-free/misc
+Priority: optional
+Depends: libgda0 (= ${Source-Version}), ${shlibs:Depends}
+Description: GDA backend server for Sybase
+ This package uses sybase backend.
+
+
+Package: gda-tds
+Maintainer: Holger Thon <holger.thon@gnome-db.org>
+Architecture: any
+Section: non-free/misc
+Priority: optional
+Depends: libgda0 (= ${Source-Version}), ${shlibs:Depends}
+Description: GDA backend server for freetds
+ This package uses freetds backend.
+

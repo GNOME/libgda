@@ -22,6 +22,12 @@
  */
 
 // $Log$
+// Revision 1.4  2001/03/08 17:56:15  holger
+// Holger Thon <holger.thon@gnome-db.org>  Mar 8th, 2001
+//
+// 	* Added debian packaging proto entries for gda-primebase, gda-sybase,
+// 	  gda-tds
+//
 // Revision 1.3  2000/10/29 17:55:29  holger
 // - fixed AUTHORS file
 // - no code changes to gda-sybase-command.c (timestamp failure)
@@ -111,7 +117,7 @@ gda_sybase_command_execute (Gda_ServerCommand *cmd,
 
   if (gda_sybase_connection_dead(cnc))
     {
-      //             gda_server_error_make(error, 0, cnc, "connection seems to be dead");
+//      gda_server_error_make(error, 0, cnc, "connection seems to be dead");
       gda_log_error(_("Connection seems to be dead"));
       sybase_chkerr(error, NULL, cnc, cmd, __PRETTY_FUNCTION__);
     }
@@ -122,11 +128,10 @@ gda_sybase_command_execute (Gda_ServerCommand *cmd,
 
   // Initialize cmd structure and send query
   if (SYB_CHK((CS_INT *) &scnc->ret,
-	      ct_command(scmd->cmd, CS_LANG_CMD, sql_cmd, CS_NULLTERM,
-			 CS_UNUSED
-			 ),
-	      error, NULL, cnc, cmd
-	      ) != CS_SUCCEED)
+              ct_command(scmd->cmd, CS_LANG_CMD, sql_cmd, CS_NULLTERM,
+                         CS_UNUSED),
+              error, NULL, cnc, cmd
+ 	          ) != CS_SUCCEED)
     {
       // Cancel command if setting cmd structure fails
       SYB_CHK((CS_INT *) &scnc->ret, ct_cancel(NULL, scmd->cmd, CS_CANCEL_ALL),

@@ -8,18 +8,32 @@
 # This is the debhelper compatability version to use.
 export DH_COMPAT=1
 
-configure: configure-stamp
+CTRL=debian/control
+
+add_flags=$(GDA_WITH_PRIMEBASE) $(GDA_WITH_SYBASE) $(GDA_WITH_TDS)
+
+constrol: control-stamp
+control-stamp:
+	test -e debian/control-nonfree/control.orig || cp $(CTRL) debian/control-nonfree/control.orig
+	cp debian/control-nonfree/control.orig $(CTRL)
+	test -n "$(GDA_WITH_PRIMEBASE)" || cat debian/control-nonfree/gda-primebase.control >> $(CTRL)
+	test -n "$(GDA_WITH_SYBASE)" || cat debian/control-nonfree/gda-sybase.control >> $(CTRL)
+	test -n "$(GDA_WITH_TDS)" || cat debian/control-nonfree/gda-tds.control >> $(CTRL)
+	touch control-stamp
+
+configure: control-stamp configure-stamp
 configure-stamp:
 	dh_testdir
 	# Add here commands to configure the package.
 	./configure --prefix=/usr \
 		    --with-mysql=yes \
 		    --with-postgres=yes \
-		    --with-odbc=yes
+		    --with-odbc=yes \
+			 $(add_flags)
 
 	touch configure-stamp
 
-build: configure-stamp build-stamp
+build: control-stamp configure-stamp build-stamp
 build-stamp:
 	dh_testdir
 
@@ -31,7 +45,7 @@ build-stamp:
 clean:
 	dh_testdir
 	dh_testroot
-	rm -f build-stamp configure-stamp
+	rm -f build-stamp configure-stamp control-stamp
 
 	# Add here commands to clean up after the build process.
 	-$(MAKE) distclean
@@ -75,6 +89,9 @@ binary-arch: build install
 	dh_undocumented -pgda-mysql gda-mysql-srv.1
 	dh_undocumented -pgda-postgres gda-postgres-srv.1
 	dh_undocumented -pgda-odbc gda-odbc-srv.1
+	test -n "$(GDA_WITH_PRIMEBASE)" && dh_undocumented -pgda-primebase gda-primebase-srv.1
+	test -n "$(GDA_WITH_SYBASE)" && dh_undocumented -pgda-sybase gda-sybase-srv.1
+	test -n "$(GDA_WITH_TDS)" && dh_undocumented -pgda-tds gda-tds-srv.1
 	dh_installchangelogs ChangeLog
 	dh_link
 	dh_strip
