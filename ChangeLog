@@ -1,3 +1,8 @@
+2002-10-29  Holger Thon <holger.thon@gnome-db.org>
+
+	* providers/freetds/gda-freetds-provider.c (get_schema):
+	users schema fixed
+
 2002-10-29  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
 	* libsql/parser.y: a couple of fixes to make bison not to complain.
