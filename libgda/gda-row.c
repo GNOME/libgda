@@ -131,8 +131,7 @@ gda_row_attributes_free (GdaRowAttributes *attrs)
 gint
 gda_row_attributes_get_length (GdaRowAttributes *attrs)
 {
-	//FIXME: commented out until we have get_n_rows () in recordsets
-	//g_return_val_if_fail (attrs != NULL, -1);
+	g_return_val_if_fail (attrs != NULL, 0);
 	return g_list_length (attrs);
 }
 
@@ -147,9 +146,14 @@ GdaFieldAttributes *
 gda_row_attributes_get_field (GdaRowAttributes *attrs, gint num)
 {
 	GList *l;
+	gint length;
 
 	g_return_val_if_fail (attrs != NULL, NULL);
 	g_return_val_if_fail (num >= 0, NULL);
+
+	length = g_list_length (attrs);
+	if (num < 0 || num >= length)
+		return NULL;
 
 	l = g_list_nth (attrs, num);
 	return l ? (GdaFieldAttributes *) l->data : NULL;

@@ -1,3 +1,9 @@
+2002-05-01  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* libgda/gda-row.c (gda_row_attributes_get_length): return 0 if
+	the parameter is NULL, not -1.
+	(gda_row_attributes_get_field): check index before using it.
+
 2002-05-01  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
 	* libgda/gda-recordset.c:
