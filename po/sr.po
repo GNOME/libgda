@@ -8,7 +8,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2003-05-28 10:45+0200\n"
+"POT-Creation-Date: 2003-05-29 00:22+0200\n"
 "PO-Revision-Date: 2003-05-25 18:42-0400\n"
 "Last-Translator: Дејан Матијевић <dejan@ns.sympatico.ca>\n"
 "Language-Team: Serbian (sr) <serbiangnome-lista@nongnu.org>\n"
@@ -1242,7 +1242,7 @@ msgstr "Неуспело слање SQL наредбе."
 msgid "GDA_IS_SYBASE_RECORDSET != TRUE"
 msgstr "GDA_IS_SYBASE_RECORDSET != ISTINITO"
 
-#. when you execute a stored procedure through openclient, this 
+#. when you execute a stored procedure through openclient, this
 #. part of the result set loop is where you fetch the return status
 #. of the executed stored procedure.  You fetch it like a CS_ROW_RESULT
 #: providers/sybase/gda-sybase-provider.c:712

@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda VERSION\n"
-"POT-Creation-Date: 2003-03-09 19:39+0100\n"
+"POT-Creation-Date: 2003-05-29 00:22+0200\n"
 "PO-Revision-Date: 2002-10-20 20:03+0700\n"
 "Last-Translator: pclouds <pclouds@gmx.net>\n"
 "Language-Team: GnomeVI <gnomevi-list@lists.sourceforge.net>\n"
@@ -50,11 +50,10 @@ msgstr "Lỗi"
 #: providers/mysql/gda-mysql-provider.c:889
 #: providers/odbc/gda-odbc-provider.c:733
 #: providers/odbc/gda-odbc-provider.c:789
-#: providers/oracle/gda-oracle-provider.c:1068
-#: providers/oracle/gda-oracle-provider.c:1830
-#: providers/oracle/gda-oracle-provider.c:1847
-#: providers/oracle/gda-oracle-provider.c:1895
-#: providers/oracle/gda-oracle-provider.c:1912
+#: providers/oracle/gda-oracle-provider.c:1890
+#: providers/oracle/gda-oracle-provider.c:1907
+#: providers/oracle/gda-oracle-provider.c:1952
+#: providers/oracle/gda-oracle-provider.c:1969
 msgid "Name"
 msgstr "Tên"
 
@@ -66,13 +65,13 @@ msgstr "Bộ cung cấp"
 msgid "Connection string"
 msgstr "Chuỗi kết nối"
 
-#: libgda/gda-config.c:1326 providers/ibmdb2/gda-ibmdb2-provider.c:864
-#: providers/ibmdb2/gda-ibmdb2-provider.c:893
-#: providers/ibmdb2/gda-ibmdb2-provider.c:921
-#: providers/ibmdb2/gda-ibmdb2-provider.c:1002
+#: libgda/gda-config.c:1326 providers/ibmdb2/gda-ibmdb2-provider.c:863
+#: providers/ibmdb2/gda-ibmdb2-provider.c:892
+#: providers/ibmdb2/gda-ibmdb2-provider.c:920
+#: providers/ibmdb2/gda-ibmdb2-provider.c:1001
 #: providers/odbc/gda-odbc-provider.c:1142
 #: providers/odbc/gda-odbc-provider.c:1298
-#: providers/postgres/gda-postgres-provider.c:1106
+#: providers/postgres/gda-postgres-provider.c:1107
 msgid "Description"
 msgstr "Mô tả"
 
@@ -207,8 +206,8 @@ msgstr "Chưa được thực hiện"
 #: providers/mdb/gda-mdb-provider.c:490
 #: providers/mysql/gda-mysql-provider.c:1069
 #: providers/odbc/gda-odbc-provider.c:914
-#: providers/oracle/gda-oracle-provider.c:1192
-#: providers/postgres/gda-postgres-provider.c:1351
+#: providers/oracle/gda-oracle-provider.c:1248
+#: providers/postgres/gda-postgres-provider.c:1352
 #: providers/sqlite/gda-sqlite-provider.c:622
 msgid "Field name"
 msgstr "Tên trường"
@@ -217,8 +216,8 @@ msgstr "Tên trường"
 #: providers/mdb/gda-mdb-provider.c:491
 #: providers/mysql/gda-mysql-provider.c:1070
 #: providers/odbc/gda-odbc-provider.c:915
-#: providers/oracle/gda-oracle-provider.c:1193
-#: providers/postgres/gda-postgres-provider.c:1352
+#: providers/oracle/gda-oracle-provider.c:1249
+#: providers/postgres/gda-postgres-provider.c:1353
 #: providers/sqlite/gda-sqlite-provider.c:623
 msgid "Data type"
 msgstr "Kiểu dữ liệu"
@@ -227,8 +226,8 @@ msgstr "Kiểu dữ liệu"
 #: providers/mdb/gda-mdb-provider.c:492
 #: providers/mysql/gda-mysql-provider.c:1071
 #: providers/odbc/gda-odbc-provider.c:916
-#: providers/oracle/gda-oracle-provider.c:1194
-#: providers/postgres/gda-postgres-provider.c:1353
+#: providers/oracle/gda-oracle-provider.c:1250
+#: providers/postgres/gda-postgres-provider.c:1354
 #: providers/sqlite/gda-sqlite-provider.c:624
 msgid "Size"
 msgstr "Kích thước"
@@ -237,8 +236,8 @@ msgstr "Kích thước"
 #: providers/mdb/gda-mdb-provider.c:493
 #: providers/mysql/gda-mysql-provider.c:1072
 #: providers/odbc/gda-odbc-provider.c:917
-#: providers/oracle/gda-oracle-provider.c:1195
-#: providers/postgres/gda-postgres-provider.c:1354
+#: providers/oracle/gda-oracle-provider.c:1251
+#: providers/postgres/gda-postgres-provider.c:1355
 #: providers/sqlite/gda-sqlite-provider.c:625
 msgid "Scale"
 msgstr "Co dãn"
@@ -247,8 +246,8 @@ msgstr "Co dãn"
 #: providers/mdb/gda-mdb-provider.c:494
 #: providers/mysql/gda-mysql-provider.c:1073
 #: providers/odbc/gda-odbc-provider.c:918
-#: providers/oracle/gda-oracle-provider.c:1196
-#: providers/postgres/gda-postgres-provider.c:1355
+#: providers/oracle/gda-oracle-provider.c:1252
+#: providers/postgres/gda-postgres-provider.c:1356
 #: providers/sqlite/gda-sqlite-provider.c:626
 msgid "Not null?"
 msgstr "Không null?"
@@ -257,8 +256,8 @@ msgstr "Không null?"
 #: providers/mdb/gda-mdb-provider.c:495
 #: providers/mysql/gda-mysql-provider.c:1074
 #: providers/odbc/gda-odbc-provider.c:919
-#: providers/oracle/gda-oracle-provider.c:1197
-#: providers/postgres/gda-postgres-provider.c:1356
+#: providers/oracle/gda-oracle-provider.c:1253
+#: providers/postgres/gda-postgres-provider.c:1357
 #: providers/sqlite/gda-sqlite-provider.c:627
 msgid "Primary key?"
 msgstr "Khóa chính?"
@@ -267,8 +266,8 @@ msgstr "Khóa chính?"
 #: providers/mdb/gda-mdb-provider.c:496
 #: providers/mysql/gda-mysql-provider.c:1075
 #: providers/odbc/gda-odbc-provider.c:920
-#: providers/oracle/gda-oracle-provider.c:1198
-#: providers/postgres/gda-postgres-provider.c:1357
+#: providers/oracle/gda-oracle-provider.c:1254
+#: providers/postgres/gda-postgres-provider.c:1358
 #: providers/sqlite/gda-sqlite-provider.c:628
 msgid "Unique index?"
 msgstr "Index duy nhất?"
@@ -277,8 +276,8 @@ msgstr "Index duy nhất?"
 #: providers/mdb/gda-mdb-provider.c:497
 #: providers/mysql/gda-mysql-provider.c:1076
 #: providers/odbc/gda-odbc-provider.c:921
-#: providers/oracle/gda-oracle-provider.c:1199
-#: providers/postgres/gda-postgres-provider.c:1358
+#: providers/oracle/gda-oracle-provider.c:1255
+#: providers/postgres/gda-postgres-provider.c:1359
 #: providers/sqlite/gda-sqlite-provider.c:629
 msgid "References"
 msgstr "Tham chiếu"
@@ -392,8 +391,18 @@ msgstr ""
 "%s\n"
 
 #: providers/freetds/gda-freetds-provider.c:1062 providers/freetds/utils.c:44
-#: providers/oracle/utils.c:71 providers/postgres/utils.c:51
-#: providers/sybase/utils.c:171
+#: providers/oracle/utils.c:74 providers/postgres/utils.c:51
+#: providers/sybase/gda-sybase-provider.c:765
+#: providers/sybase/gda-sybase-recordset.c:512
+#: providers/sybase/gda-sybase-recordset.c:534
+#: providers/sybase/gda-sybase-recordset.c:593 providers/sybase/utils.c:205
+#: providers/sybase/utils.c:223 providers/sybase/utils.c:239
+#: providers/sybase/utils.c:259 providers/sybase/utils.c:279
+#: providers/sybase/utils.c:320 providers/sybase/utils.c:337
+#: providers/sybase/utils.c:389 providers/sybase/utils.c:415
+#: providers/sybase/utils.c:449 providers/sybase/utils.c:466
+#: providers/sybase/utils.c:489 providers/sybase/utils.c:505
+#: providers/sybase/utils.c:543
 msgid "Not available"
 msgstr "Chưa sẵn sàng"
 
@@ -418,8 +427,8 @@ msgstr "Mã trả về freetds không mong đợi trong tds_process_row_tokens\n
 msgid "Provider for TDS-based databases (using FreeTDS)"
 msgstr "Bộ cung cấp GDA cho cơ sở dữ liệu dựa trên TDS (dùng FreeTDS)"
 
-#: providers/freetds/utils.c:40 providers/oracle/utils.c:66
-#: providers/postgres/utils.c:46 providers/sybase/utils.c:166
+#: providers/freetds/utils.c:40 providers/oracle/utils.c:67
+#: providers/postgres/utils.c:46 providers/sybase/utils.c:538
 msgid "NO DESCRIPTION"
 msgstr "KHÔNG CÓ MÔ TẢ"
 
@@ -434,25 +443,25 @@ msgid "SQLGetInfo is unsupported. Hence IBM DB2 Provider will not work.\n"
 msgstr ""
 "Không hỗ trợ SQLGetInfo. Vì thể Bộ cung cấp IBM DB2 sẽ không hoạt động.\n"
 
-#: providers/ibmdb2/gda-ibmdb2-provider.c:451
-#: providers/ibmdb2/gda-ibmdb2-provider.c:581
-#: providers/ibmdb2/gda-ibmdb2-provider.c:689
-#: providers/ibmdb2/gda-ibmdb2-provider.c:764
+#: providers/ibmdb2/gda-ibmdb2-provider.c:450
+#: providers/ibmdb2/gda-ibmdb2-provider.c:580
+#: providers/ibmdb2/gda-ibmdb2-provider.c:688
+#: providers/ibmdb2/gda-ibmdb2-provider.c:763
 #, fuzzy
 msgid "Invalid IBM DB2 handle"
 msgstr "Handle MDB không hợp lệ"
 
-#: providers/ibmdb2/gda-ibmdb2-provider.c:742
+#: providers/ibmdb2/gda-ibmdb2-provider.c:741
 msgid "Function"
 msgstr ""
 
-#: providers/ibmdb2/gda-ibmdb2-provider.c:743
-#: providers/ibmdb2/gda-ibmdb2-provider.c:833
-#: providers/ibmdb2/gda-ibmdb2-provider.c:862
-#: providers/ibmdb2/gda-ibmdb2-provider.c:892
-#: providers/ibmdb2/gda-ibmdb2-provider.c:920
-#: providers/ibmdb2/gda-ibmdb2-provider.c:948
-#: providers/ibmdb2/gda-ibmdb2-provider.c:1001
+#: providers/ibmdb2/gda-ibmdb2-provider.c:742
+#: providers/ibmdb2/gda-ibmdb2-provider.c:832
+#: providers/ibmdb2/gda-ibmdb2-provider.c:861
+#: providers/ibmdb2/gda-ibmdb2-provider.c:891
+#: providers/ibmdb2/gda-ibmdb2-provider.c:919
+#: providers/ibmdb2/gda-ibmdb2-provider.c:947
+#: providers/ibmdb2/gda-ibmdb2-provider.c:1000
 #: providers/ldap/gda-ldap-provider.c:328 providers/mdb/gda-mdb-provider.c:548
 #: providers/mdb/gda-mdb-provider.c:595 providers/mdb/gda-mdb-provider.c:655
 #: providers/mysql/gda-mysql-provider.c:703
@@ -463,79 +472,81 @@ msgstr ""
 #: providers/odbc/gda-odbc-provider.c:1255
 #: providers/odbc/gda-odbc-provider.c:1297
 #: providers/odbc/gda-odbc-provider.c:1349
-#: providers/oracle/gda-oracle-provider.c:1830
-#: providers/oracle/gda-oracle-provider.c:1848
-#: providers/oracle/gda-oracle-provider.c:1895
-#: providers/oracle/gda-oracle-provider.c:1913
-#: providers/postgres/gda-postgres-provider.c:835
-#: providers/postgres/gda-postgres-provider.c:1105
-#: providers/postgres/gda-postgres-provider.c:1124
-#: providers/postgres/gda-postgres-provider.c:1184
-#: providers/postgres/gda-postgres-provider.c:1301
-#: providers/postgres/gda-postgres-provider.c:1845
+#: providers/oracle/gda-oracle-provider.c:1154
+#: providers/oracle/gda-oracle-provider.c:1890
+#: providers/oracle/gda-oracle-provider.c:1908
+#: providers/oracle/gda-oracle-provider.c:1952
+#: providers/oracle/gda-oracle-provider.c:1970
+#: providers/oracle/gda-oracle-provider.c:2093
+#: providers/postgres/gda-postgres-provider.c:836
+#: providers/postgres/gda-postgres-provider.c:1106
+#: providers/postgres/gda-postgres-provider.c:1125
+#: providers/postgres/gda-postgres-provider.c:1185
+#: providers/postgres/gda-postgres-provider.c:1302
+#: providers/postgres/gda-postgres-provider.c:1935
 #: providers/sqlite/gda-sqlite-provider.c:752
-#: providers/sybase/gda-sybase-provider.c:909
+#: providers/sybase/gda-sybase-provider.c:1098
 msgid "Owner"
 msgstr "Sở hữu"
 
-#: providers/ibmdb2/gda-ibmdb2-provider.c:778
+#: providers/ibmdb2/gda-ibmdb2-provider.c:777
 #, fuzzy
 msgid "Database"
 msgstr "Cơ sở dữ liệu"
 
-#: providers/ibmdb2/gda-ibmdb2-provider.c:832
+#: providers/ibmdb2/gda-ibmdb2-provider.c:831
 #, fuzzy
 msgid "Index"
 msgstr "Index"
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/ibmdb2/gda-ibmdb2-provider.c:834
-#: providers/ibmdb2/gda-ibmdb2-provider.c:891
-#: providers/ibmdb2/gda-ibmdb2-provider.c:1000
+#: providers/ibmdb2/gda-ibmdb2-provider.c:833
+#: providers/ibmdb2/gda-ibmdb2-provider.c:890
+#: providers/ibmdb2/gda-ibmdb2-provider.c:999
 #: providers/odbc/gda-odbc-provider.c:1140
-#: providers/postgres/gda-postgres-provider.c:1104
-#: providers/postgres/gda-postgres-provider.c:1899
+#: providers/postgres/gda-postgres-provider.c:1105
+#: providers/postgres/gda-postgres-provider.c:1989
 msgid "Table"
 msgstr "Bảng"
 
-#: providers/ibmdb2/gda-ibmdb2-provider.c:861
+#: providers/ibmdb2/gda-ibmdb2-provider.c:860
 #: providers/mdb/gda-mdb-provider.c:546
 #: providers/odbc/gda-odbc-provider.c:1030
-#: providers/postgres/gda-postgres-provider.c:833
+#: providers/postgres/gda-postgres-provider.c:834
 msgid "Procedure"
 msgstr "Thủ tục"
 
-#: providers/ibmdb2/gda-ibmdb2-provider.c:863
+#: providers/ibmdb2/gda-ibmdb2-provider.c:862
 msgid "Language"
 msgstr ""
 
-#: providers/ibmdb2/gda-ibmdb2-provider.c:894
-#: providers/ibmdb2/gda-ibmdb2-provider.c:922
-#: providers/ibmdb2/gda-ibmdb2-provider.c:1003
+#: providers/ibmdb2/gda-ibmdb2-provider.c:893
+#: providers/ibmdb2/gda-ibmdb2-provider.c:921
+#: providers/ibmdb2/gda-ibmdb2-provider.c:1002
 #, fuzzy
 msgid "SQL Definition"
 msgstr "Định nghĩa"
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/ibmdb2/gda-ibmdb2-provider.c:919
-#: providers/oracle/gda-oracle-provider.c:2115
-#: providers/postgres/gda-postgres-provider.c:1340 testing/client.c:135
+#: providers/ibmdb2/gda-ibmdb2-provider.c:918
+#: providers/oracle/gda-oracle-provider.c:2186
+#: providers/postgres/gda-postgres-provider.c:1341 testing/client.c:135
 msgid "Triggers"
 msgstr "Trigger"
 
 #. gda_server_recordset_model_set_field_defined_size (recset, 0, 32);
-#: providers/ibmdb2/gda-ibmdb2-provider.c:947
+#: providers/ibmdb2/gda-ibmdb2-provider.c:946
 #: providers/ldap/gda-ldap-provider.c:423
 #: providers/mysql/gda-mysql-provider.c:971
 #: providers/odbc/gda-odbc-provider.c:1254
-#: providers/oracle/gda-oracle-provider.c:2012
-#: providers/postgres/gda-postgres-provider.c:1123
+#: providers/oracle/gda-oracle-provider.c:2092
+#: providers/postgres/gda-postgres-provider.c:1124
 #: providers/sqlite/gda-sqlite-provider.c:751
-#: providers/sybase/gda-sybase-provider.c:907
+#: providers/sybase/gda-sybase-provider.c:1096
 msgid "Type"
 msgstr "Kiểu"
 
-#: providers/ibmdb2/gda-ibmdb2-provider.c:949
+#: providers/ibmdb2/gda-ibmdb2-provider.c:948
 #: providers/ldap/gda-ldap-provider.c:329 providers/mdb/gda-mdb-provider.c:549
 #: providers/mdb/gda-mdb-provider.c:596 providers/mdb/gda-mdb-provider.c:656
 #: providers/mysql/gda-mysql-provider.c:704
@@ -544,33 +555,36 @@ msgstr "Kiểu"
 #: providers/odbc/gda-odbc-provider.c:1033
 #: providers/odbc/gda-odbc-provider.c:1256
 #: providers/odbc/gda-odbc-provider.c:1350
-#: providers/oracle/gda-oracle-provider.c:1830
-#: providers/oracle/gda-oracle-provider.c:1849
-#: providers/oracle/gda-oracle-provider.c:1895
-#: providers/oracle/gda-oracle-provider.c:1914
-#: providers/postgres/gda-postgres-provider.c:836
-#: providers/postgres/gda-postgres-provider.c:1125
-#: providers/postgres/gda-postgres-provider.c:1185
-#: providers/postgres/gda-postgres-provider.c:1302
-#: providers/postgres/gda-postgres-provider.c:1846
+#: providers/oracle/gda-oracle-provider.c:1155
+#: providers/oracle/gda-oracle-provider.c:1890
+#: providers/oracle/gda-oracle-provider.c:1909
+#: providers/oracle/gda-oracle-provider.c:1952
+#: providers/oracle/gda-oracle-provider.c:1971
+#: providers/oracle/gda-oracle-provider.c:2094
+#: providers/postgres/gda-postgres-provider.c:837
+#: providers/postgres/gda-postgres-provider.c:1126
+#: providers/postgres/gda-postgres-provider.c:1186
+#: providers/postgres/gda-postgres-provider.c:1303
+#: providers/postgres/gda-postgres-provider.c:1936
 #: providers/sqlite/gda-sqlite-provider.c:753
-#: providers/sybase/gda-sybase-provider.c:911
+#: providers/sybase/gda-sybase-provider.c:1100
 msgid "Comments"
 msgstr "Ghi chú"
 
-#: providers/ibmdb2/gda-ibmdb2-provider.c:950
+#: providers/ibmdb2/gda-ibmdb2-provider.c:949
 #: providers/mysql/gda-mysql-provider.c:974
 #: providers/odbc/gda-odbc-provider.c:1257
-#: providers/postgres/gda-postgres-provider.c:1126
+#: providers/oracle/gda-oracle-provider.c:2094
+#: providers/postgres/gda-postgres-provider.c:1127
 #: providers/sqlite/gda-sqlite-provider.c:754
-#: providers/sybase/gda-sybase-provider.c:913
+#: providers/sybase/gda-sybase-provider.c:1102
 msgid "GDA type"
 msgstr "Kiểu GDA"
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/ibmdb2/gda-ibmdb2-provider.c:975
-#: providers/oracle/gda-oracle-provider.c:1761
-#: providers/postgres/gda-postgres-provider.c:1803 testing/client.c:133
+#: providers/ibmdb2/gda-ibmdb2-provider.c:974
+#: providers/oracle/gda-oracle-provider.c:1822
+#: providers/postgres/gda-postgres-provider.c:1893 testing/client.c:133
 msgid "Users"
 msgstr "Người dùng"
 
@@ -645,8 +659,8 @@ msgstr ""
 #: providers/mdb/gda-mdb-provider.c:498
 #: providers/mysql/gda-mysql-provider.c:1077
 #: providers/odbc/gda-odbc-provider.c:922
-#: providers/oracle/gda-oracle-provider.c:1200
-#: providers/postgres/gda-postgres-provider.c:1359
+#: providers/oracle/gda-oracle-provider.c:1256
+#: providers/postgres/gda-postgres-provider.c:1360
 #: providers/sqlite/gda-sqlite-provider.c:630
 msgid "Default value"
 msgstr "Giá trị mặc định"
@@ -659,7 +673,7 @@ msgstr ""
 #: providers/mdb/gda-mdb-provider.c:550
 #: providers/mysql/gda-mysql-provider.c:705
 #: providers/odbc/gda-odbc-provider.c:1034
-#: providers/postgres/gda-postgres-provider.c:837
+#: providers/postgres/gda-postgres-provider.c:838
 msgid "Return type"
 msgstr "Kiểu trả về"
 
@@ -670,7 +684,7 @@ msgstr ""
 #: providers/mdb/gda-mdb-provider.c:552
 #: providers/mysql/gda-mysql-provider.c:706
 #: providers/odbc/gda-odbc-provider.c:1036
-#: providers/postgres/gda-postgres-provider.c:839
+#: providers/postgres/gda-postgres-provider.c:840
 msgid "Args types"
 msgstr ""
 
@@ -679,11 +693,12 @@ msgstr ""
 #: providers/odbc/gda-odbc-provider.c:1143
 #: providers/odbc/gda-odbc-provider.c:1299
 #: providers/odbc/gda-odbc-provider.c:1351
-#: providers/postgres/gda-postgres-provider.c:840
-#: providers/postgres/gda-postgres-provider.c:1107
-#: providers/postgres/gda-postgres-provider.c:1186
-#: providers/postgres/gda-postgres-provider.c:1305
-#: providers/postgres/gda-postgres-provider.c:1847
+#: providers/oracle/gda-oracle-provider.c:1158
+#: providers/postgres/gda-postgres-provider.c:841
+#: providers/postgres/gda-postgres-provider.c:1108
+#: providers/postgres/gda-postgres-provider.c:1187
+#: providers/postgres/gda-postgres-provider.c:1306
+#: providers/postgres/gda-postgres-provider.c:1937
 msgid "Definition"
 msgstr "Định nghĩa"
 
@@ -781,16 +796,16 @@ msgstr "Handle MYSQL không hợp lệ"
 #: providers/mysql/gda-mysql-provider.c:539
 #: providers/mysql/gda-mysql-provider.c:596
 #: providers/mysql/gda-mysql-provider.c:629
-#: providers/oracle/gda-oracle-provider.c:845
-#: providers/oracle/gda-oracle-provider.c:927
-#: providers/oracle/gda-oracle-provider.c:988
+#: providers/oracle/gda-oracle-provider.c:857
+#: providers/oracle/gda-oracle-provider.c:939
+#: providers/oracle/gda-oracle-provider.c:1000
 #: providers/sqlite/gda-sqlite-provider.c:472
 msgid "Transactions are not supported in read-only mode"
 msgstr ""
 
 #: providers/mysql/gda-mysql-provider.c:707
-#: providers/oracle/gda-oracle-provider.c:1850
-#: providers/oracle/gda-oracle-provider.c:1915
+#: providers/oracle/gda-oracle-provider.c:1910
+#: providers/oracle/gda-oracle-provider.c:1972
 msgid "SQL"
 msgstr ""
 
@@ -819,25 +834,26 @@ msgid "Invalid Odbc handle"
 msgstr "Handle Oracle không hợp lệ"
 
 #: providers/odbc/gda-odbc-provider.c:1031
-#: providers/postgres/gda-postgres-provider.c:834
-#: providers/postgres/gda-postgres-provider.c:1300
+#: providers/oracle/gda-oracle-provider.c:1153
+#: providers/postgres/gda-postgres-provider.c:835
+#: providers/postgres/gda-postgres-provider.c:1301
 msgid "Id"
 msgstr "Id"
 
 #: providers/odbc/gda-odbc-provider.c:1035
-#: providers/postgres/gda-postgres-provider.c:838
+#: providers/postgres/gda-postgres-provider.c:839
 msgid "Nb args"
 msgstr ""
 
 #: providers/odbc/gda-odbc-provider.c:1296
-#: providers/oracle/gda-oracle-provider.c:2119 testing/client.c:130
+#: providers/oracle/gda-oracle-provider.c:2190 testing/client.c:130
 msgid "Views"
 msgstr "View"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/odbc/gda-odbc-provider.c:1348
-#: providers/postgres/gda-postgres-provider.c:1844
-#: providers/postgres/gda-postgres-provider.c:1900
+#: providers/postgres/gda-postgres-provider.c:1934
+#: providers/postgres/gda-postgres-provider.c:1990
 msgid "Sequence"
 msgstr ""
 
@@ -846,220 +862,241 @@ msgstr ""
 msgid "Provider for ODBC data sources"
 msgstr "Cầu nối GDA cho nguồn dữ liệu ODBC"
 
-#: providers/oracle/gda-oracle-provider.c:205
+#: providers/oracle/gda-oracle-provider.c:196
+msgid "No TNS name supplied"
+msgstr ""
+
+#: providers/oracle/gda-oracle-provider.c:212
 msgid "Could not initialize Oracle"
 msgstr "Không thể khởi động Oracle"
 
-#: providers/oracle/gda-oracle-provider.c:216
+#: providers/oracle/gda-oracle-provider.c:223
 msgid "Could not initialize the Oracle environment"
 msgstr "Không thể khởi động môi trường Oracle"
 
-#: providers/oracle/gda-oracle-provider.c:228
+#: providers/oracle/gda-oracle-provider.c:234
 msgid "Could not allocate the Oracle service handle"
 msgstr "Không thể cấp phát Oracle service handle"
 
-#: providers/oracle/gda-oracle-provider.c:238
+#: providers/oracle/gda-oracle-provider.c:244
 msgid "Could not allocate the Oracle error handle"
 msgstr "Không thể cấp phát Oracle error handle"
 
-#: providers/oracle/gda-oracle-provider.c:250
+#: providers/oracle/gda-oracle-provider.c:256
 msgid "Could not allocate the Oracle server handle"
 msgstr "Không thể cấp phát Oracle server handle"
 
-#: providers/oracle/gda-oracle-provider.c:263
+#: providers/oracle/gda-oracle-provider.c:269
 msgid "Could not allocate the Oracle session handle"
 msgstr "Không thể cấp phát Oracle session handle"
 
-#: providers/oracle/gda-oracle-provider.c:293
+#: providers/oracle/gda-oracle-provider.c:299
 msgid "Could not attach to the Oracle server"
 msgstr "Không thể gắn với Oracle server"
 
-#: providers/oracle/gda-oracle-provider.c:309
+#: providers/oracle/gda-oracle-provider.c:315
 msgid "Could not set the Oracle server attribute in the service context"
 msgstr "Không thể đặt thuộc tính Oracle server trong service context"
 
-#: providers/oracle/gda-oracle-provider.c:325
+#: providers/oracle/gda-oracle-provider.c:331
 msgid "Could not set the Oracle username attribute"
 msgstr "Không thể đặt thuộc tính tên người dùng Oracle"
 
-#: providers/oracle/gda-oracle-provider.c:341
+#: providers/oracle/gda-oracle-provider.c:347
 msgid "Could not set the Oracle password attribute"
 msgstr "Không thể đặt thuộc tính mật khẩu Oracle"
 
-#: providers/oracle/gda-oracle-provider.c:356
+#: providers/oracle/gda-oracle-provider.c:362
 msgid "Could not begin the Oracle session"
 msgstr "Không thể bắt đầu Oracle session"
 
-#: providers/oracle/gda-oracle-provider.c:374
+#: providers/oracle/gda-oracle-provider.c:380
 msgid "Could not set the Oracle session attribute in the service context"
 msgstr "Không thể đặt thuộc tính session Oracle"
 
-#: providers/oracle/gda-oracle-provider.c:454
-#: providers/oracle/gda-oracle-provider.c:486
-#: providers/oracle/gda-oracle-provider.c:561
-#: providers/oracle/gda-oracle-provider.c:710
-#: providers/oracle/gda-oracle-provider.c:733
-#: providers/oracle/gda-oracle-provider.c:756
-#: providers/oracle/gda-oracle-provider.c:786
-#: providers/oracle/gda-oracle-provider.c:840
-#: providers/oracle/gda-oracle-provider.c:922
-#: providers/oracle/gda-oracle-provider.c:983
+#: providers/oracle/gda-oracle-provider.c:466
+#: providers/oracle/gda-oracle-provider.c:498
+#: providers/oracle/gda-oracle-provider.c:573
+#: providers/oracle/gda-oracle-provider.c:722
+#: providers/oracle/gda-oracle-provider.c:745
+#: providers/oracle/gda-oracle-provider.c:768
+#: providers/oracle/gda-oracle-provider.c:798
+#: providers/oracle/gda-oracle-provider.c:852
+#: providers/oracle/gda-oracle-provider.c:934
+#: providers/oracle/gda-oracle-provider.c:995
+#: providers/oracle/gda-oracle-provider.c:1142
 #: providers/oracle/gda-oracle-recordset.c:167
 #: providers/oracle/gda-oracle-recordset.c:390
 #: providers/oracle/gda-oracle-recordset.c:591
 msgid "Invalid Oracle handle"
 msgstr "Handle Oracle không hợp lệ"
 
-#: providers/oracle/gda-oracle-provider.c:497
+#: providers/oracle/gda-oracle-provider.c:509
 msgid "Could not allocate the Oracle statement handle"
 msgstr "Không thể cấp phát Oracle statement handle"
 
-#: providers/oracle/gda-oracle-provider.c:508
+#: providers/oracle/gda-oracle-provider.c:520
 msgid "Could not prepare the Oracle statement"
 msgstr "Không thể chuẩn bị Oracle statement"
 
-#: providers/oracle/gda-oracle-provider.c:540
+#: providers/oracle/gda-oracle-provider.c:552
 msgid "Could not bind the Oracle statement parameter"
 msgstr "Không thể gắn kết Oracle statement parameter"
 
-#: providers/oracle/gda-oracle-provider.c:586
+#: providers/oracle/gda-oracle-provider.c:598
 msgid "Could not get the Oracle statement type"
 msgstr "Không thể lấy Oracle statement type"
 
-#: providers/oracle/gda-oracle-provider.c:598
+#: providers/oracle/gda-oracle-provider.c:610
 #, fuzzy
 msgid "Could not set the Oracle statement pre-fetch row count"
 msgstr "Không thể lấy Oracle statement type"
 
-#: providers/oracle/gda-oracle-provider.c:615
+#: providers/oracle/gda-oracle-provider.c:627
 msgid "Could not execute the Oracle statement"
 msgstr "Không thể thực hiện Oracle statement"
 
-#: providers/oracle/gda-oracle-provider.c:628
+#: providers/oracle/gda-oracle-provider.c:640
 msgid "Could not get the number of columns in the result set"
 msgstr "Không thể lấu số cột trong tập kết quả"
 
-#: providers/oracle/gda-oracle-provider.c:645
+#: providers/oracle/gda-oracle-provider.c:657
 msgid "Could not get the parameter descripter in the result set"
 msgstr "Không thể lấy bộ mô tả tham số trong tập kết quả"
 
-#: providers/oracle/gda-oracle-provider.c:657
+#: providers/oracle/gda-oracle-provider.c:669
 msgid "Could not get the column name in the result set"
 msgstr "Không thể lấy tên cột trong tập kết quả"
 
-#: providers/oracle/gda-oracle-provider.c:803
-#: providers/oracle/gda-oracle-provider.c:884
-#: providers/oracle/gda-oracle-provider.c:939
-#: providers/oracle/gda-oracle-provider.c:1000
+#: providers/oracle/gda-oracle-provider.c:815
+#: providers/oracle/gda-oracle-provider.c:896
+#: providers/oracle/gda-oracle-provider.c:951
+#: providers/oracle/gda-oracle-provider.c:1012
 msgid "Could not attach the transaction to the service context"
 msgstr "Không thể gắn phiên giao dịch vào service context"
 
-#: providers/oracle/gda-oracle-provider.c:858
+#: providers/oracle/gda-oracle-provider.c:870
 msgid "Could not allocate the Oracle transaction handle"
 msgstr "Không thể cấp phát Oracle transaction handler"
 
-#: providers/oracle/gda-oracle-provider.c:870
+#: providers/oracle/gda-oracle-provider.c:882
 msgid "Could not set the Oracle transaction name"
 msgstr "Không thể đặt tên phiên giao dịch Oracle"
 
-#: providers/oracle/gda-oracle-provider.c:895
+#: providers/oracle/gda-oracle-provider.c:907
 msgid "Could not start the Oracle transaction"
 msgstr "Không thể khởi động Oracle transaction"
 
-#: providers/oracle/gda-oracle-provider.c:948
+#: providers/oracle/gda-oracle-provider.c:960
 msgid "Could not prepare the transaction to commit"
 msgstr ""
 
-#: providers/oracle/gda-oracle-provider.c:956
+#: providers/oracle/gda-oracle-provider.c:968
 msgid "Could not commit the Oracle transaction"
 msgstr ""
 
-#: providers/oracle/gda-oracle-provider.c:1007
+#: providers/oracle/gda-oracle-provider.c:1019
 msgid "Could not rollback the Oracle transaction"
 msgstr ""
 
-#: providers/oracle/gda-oracle-provider.c:1378
+#. Set it here instead of the SQL query to allow i18n
+#: providers/oracle/gda-oracle-provider.c:1152
+#: providers/postgres/gda-postgres-provider.c:1300
+msgid "Aggregate"
+msgstr ""
+
+#: providers/oracle/gda-oracle-provider.c:1156
+#: providers/postgres/gda-postgres-provider.c:1304
+msgid "OutType"
+msgstr ""
+
+#: providers/oracle/gda-oracle-provider.c:1157
+#: providers/postgres/gda-postgres-provider.c:1305
+msgid "InType"
+msgstr ""
+
+#: providers/oracle/gda-oracle-provider.c:1438
 msgid "Could not allocate the Oracle describe handle"
 msgstr "Không thể cấp phát Oracle describe handle"
 
-#: providers/oracle/gda-oracle-provider.c:1388
+#: providers/oracle/gda-oracle-provider.c:1448
 #, fuzzy
 msgid "Could not set describe handle attribute"
 msgstr "Không thể đặt thuộc tính mật khẩu Oracle"
 
-#: providers/oracle/gda-oracle-provider.c:1414
-#: providers/oracle/gda-oracle-provider.c:1519
+#: providers/oracle/gda-oracle-provider.c:1475
+#: providers/oracle/gda-oracle-provider.c:1580
 msgid "Could not describe the Oracle table"
 msgstr "Không thể mô tả bảng Oracle"
 
-#: providers/oracle/gda-oracle-provider.c:1429
-#: providers/oracle/gda-oracle-provider.c:1532
+#: providers/oracle/gda-oracle-provider.c:1490
+#: providers/oracle/gda-oracle-provider.c:1593
 msgid "Could not get the Oracle parameter handle"
 msgstr "Không thể lấy Oracle parameter handle"
 
-#: providers/oracle/gda-oracle-provider.c:1444
+#: providers/oracle/gda-oracle-provider.c:1505
 #, fuzzy
 msgid "Could not get described object type"
 msgstr "Không thể lấy kiểu dữ liệu trường Oracle"
 
-#: providers/oracle/gda-oracle-provider.c:1459
+#: providers/oracle/gda-oracle-provider.c:1520
 #, fuzzy
 msgid "Could not get synonym referred-to schema"
 msgstr "Không thể lấy tập tin từ %s"
 
-#: providers/oracle/gda-oracle-provider.c:1472
+#: providers/oracle/gda-oracle-provider.c:1533
 #, fuzzy
 msgid "Could not get synonym referred-to name"
 msgstr "Không thể lấy tên trường Oracle"
 
-#: providers/oracle/gda-oracle-provider.c:1485
+#: providers/oracle/gda-oracle-provider.c:1546
 #, fuzzy
 msgid "Could not get synonym referred-to dblink"
 msgstr "Không thể lấy mô tả cột"
 
-#: providers/oracle/gda-oracle-provider.c:1547
+#: providers/oracle/gda-oracle-provider.c:1608
 msgid "Could not get the number of columns in the table"
 msgstr ""
 
-#: providers/oracle/gda-oracle-provider.c:1561
+#: providers/oracle/gda-oracle-provider.c:1622
 msgid "Could not get the column list"
 msgstr "Không thể lấy danh sách cột"
 
-#: providers/oracle/gda-oracle-provider.c:1592
+#: providers/oracle/gda-oracle-provider.c:1653
 msgid "Could not get the Oracle column handle"
 msgstr "Không thể lấy Oracle column handle"
 
-#: providers/oracle/gda-oracle-provider.c:1607
+#: providers/oracle/gda-oracle-provider.c:1668
 msgid "Could not get the Oracle field name"
 msgstr "Không thể lấy tên trường Oracle"
 
-#: providers/oracle/gda-oracle-provider.c:1629
+#: providers/oracle/gda-oracle-provider.c:1690
 msgid "Could not get the Oracle field data type"
 msgstr "Không thể lấy kiểu dữ liệu trường Oracle"
 
-#: providers/oracle/gda-oracle-provider.c:1649
+#: providers/oracle/gda-oracle-provider.c:1710
 msgid "Could not get the Oracle field defined size"
 msgstr ""
 
-#: providers/oracle/gda-oracle-provider.c:1668
+#: providers/oracle/gda-oracle-provider.c:1729
 msgid "Could not get the Oracle field scale"
 msgstr ""
 
-#: providers/oracle/gda-oracle-provider.c:1687
+#: providers/oracle/gda-oracle-provider.c:1748
 msgid "Could not get the Oracle field nullable attribute"
 msgstr "Không thể lấy trường thuộc tính có-thể-null của Oracle"
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/oracle/gda-oracle-provider.c:2100
-#: providers/postgres/gda-postgres-provider.c:1223 testing/client.c:131
+#: providers/oracle/gda-oracle-provider.c:2174
+#: providers/postgres/gda-postgres-provider.c:1224 testing/client.c:131
 msgid "Indexes"
 msgstr "Index"
 
-#: providers/oracle/gda-oracle-provider.c:2104
+#: providers/oracle/gda-oracle-provider.c:2177
 msgid "Procedures"
 msgstr "Thủ tục"
 
-#: providers/oracle/gda-oracle-provider.c:2108 testing/client.c:134
+#: providers/oracle/gda-oracle-provider.c:2180 testing/client.c:134
 msgid "Sequences"
 msgstr "Sequence"
 
@@ -1117,10 +1154,10 @@ msgstr "Không thể lấy hàng"
 msgid "Provider for Oracle databases"
 msgstr "Bộ cung cấp GDA cho cơ sở dữ liệu Oracle"
 
-#: providers/postgres/gda-postgres-provider.c:553
-#: providers/postgres/gda-postgres-provider.c:570
-#: providers/postgres/gda-postgres-provider.c:641
-#: providers/postgres/gda-postgres-provider.c:776
+#: providers/postgres/gda-postgres-provider.c:554
+#: providers/postgres/gda-postgres-provider.c:571
+#: providers/postgres/gda-postgres-provider.c:642
+#: providers/postgres/gda-postgres-provider.c:777
 #: providers/postgres/gda-postgres-recordset.c:176
 #: providers/postgres/gda-postgres-recordset.c:216
 #: providers/postgres/gda-postgres-recordset.c:258
@@ -1128,25 +1165,12 @@ msgid "Invalid PostgreSQL handle"
 msgstr "Handle PostgreSQL không hợp lệ"
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:1183
+#: providers/postgres/gda-postgres-provider.c:1184
 msgid "View"
 msgstr "View"
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:1299
-msgid "Aggregate"
-msgstr ""
-
-#: providers/postgres/gda-postgres-provider.c:1303
-msgid "OutType"
-msgstr ""
-
-#: providers/postgres/gda-postgres-provider.c:1304
-msgid "InType"
-msgstr ""
-
-#. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:1768 testing/client.c:126
+#: providers/postgres/gda-postgres-provider.c:1858 testing/client.c:126
 msgid "Databases"
 msgstr "Cơ sở dữ liệu"
 
@@ -1204,160 +1228,134 @@ msgstr "Không thể lấy thông tin trường"
 msgid "Provider for SQLite databases"
 msgstr "Bộ cung cấp GDA cho cơ sở dữ liệu SQLite"
 
-#. the logic to connect to the database
-#: providers/sybase/gda-sybase-provider.c:251
-#, fuzzy
-msgid "about to open connection"
-msgstr "** LỖI: không thể mở kết nối tới %s\n"
-
-#: providers/sybase/gda-sybase-provider.c:277
+#: providers/sybase/gda-sybase-provider.c:291
 msgid "Out of memory. Allocating connection structure failed."
 msgstr ""
 
-#: providers/sybase/gda-sybase-provider.c:289
-msgid "Context allocated."
-msgstr ""
-
-#: providers/sybase/gda-sybase-provider.c:296
-msgid "Client library initialized."
-msgstr ""
-
-#: providers/sybase/gda-sybase-provider.c:322
+#: providers/sybase/gda-sybase-provider.c:336
 #, c-format
 msgid "Locale set to '%s'."
 msgstr ""
 
-#: providers/sybase/gda-sybase-provider.c:337
-#, fuzzy
-msgid "Could not initialize cslib callback"
-msgstr "Không thể khởi động thư viện OCI"
-
-#: providers/sybase/gda-sybase-provider.c:341
-#, fuzzy
-msgid "CS-lib callback initialized."
-msgstr "khởi động libgda thành công"
-
-#: providers/sybase/gda-sybase-provider.c:347
-#, fuzzy
-msgid "Could not initialize ct-client callback"
-msgstr "Không thể khởi động Oracle"
-
-#: providers/sybase/gda-sybase-provider.c:351
-msgid "CT-Client callback initialized."
-msgstr ""
-
-#: providers/sybase/gda-sybase-provider.c:358
-#, fuzzy
-msgid "Could not initialize ct-server callback"
-msgstr "Không thể khởi động Oracle"
-
-#: providers/sybase/gda-sybase-provider.c:362
-msgid "CT-Server callback initialized."
-msgstr ""
-
-#: providers/sybase/gda-sybase-provider.c:370
-#, fuzzy
-msgid "Connection allocated."
-msgstr "Bảng kết nối"
-
-#: providers/sybase/gda-sybase-provider.c:410
-msgid "Appname set."
-msgstr ""
-
-#: providers/sybase/gda-sybase-provider.c:423
-#, fuzzy
-msgid "Username set."
-msgstr "Tên người dùng"
-
-#: providers/sybase/gda-sybase-provider.c:437
-#, fuzzy
-msgid "Password set."
-msgstr "Mật khẩu"
-
-#: providers/sybase/gda-sybase-provider.c:449
-msgid "Empty password set."
-msgstr ""
-
-#: providers/sybase/gda-sybase-provider.c:459
-msgid "Connected."
-msgstr ""
-
-#: providers/sybase/gda-sybase-provider.c:477
-msgid "Finally connected."
-msgstr ""
-
-#: providers/sybase/gda-sybase-provider.c:611
+#: providers/sybase/gda-sybase-provider.c:642
 msgid ""
 "Cmd structure already in use. Command will not be executed because of "
 "blocked connection."
 msgstr ""
 
-#: providers/sybase/gda-sybase-provider.c:626
+#: providers/sybase/gda-sybase-provider.c:656
 #, c-format
 msgid "Failed allocating a command structure in %s()"
 msgstr ""
 
-#: providers/sybase/gda-sybase-provider.c:637
+#: providers/sybase/gda-sybase-provider.c:670
 #, fuzzy
 msgid "Could not prepare command structure."
 msgstr "Không thể phân tích chuỗi SQL '%s'"
 
-#: providers/sybase/gda-sybase-provider.c:646
+#: providers/sybase/gda-sybase-provider.c:680
 msgid "Sending sql-command failed."
 msgstr ""
 
-#: providers/sybase/gda-sybase-provider.c:717
+#: providers/sybase/gda-sybase-provider.c:706
+#: providers/sybase/gda-sybase-provider.c:724
+#: providers/sybase/gda-sybase-provider.c:790
+#: providers/sybase/gda-sybase-provider.c:811
+msgid "GDA_IS_SYBASE_RECORDSET != TRUE"
+msgstr ""
+
+#. when you execute a stored procedure through openclient, this
+#. part of the result set loop is where you fetch the return status
+#. of the executed stored procedure.  You fetch it like a CS_ROW_RESULT
+#: providers/sybase/gda-sybase-provider.c:712
+msgid "CS_STATUS_RESULT!"
+msgstr ""
+
+#: providers/sybase/gda-sybase-provider.c:734
+msgid "Hit unsupported result type"
+msgstr ""
+
+#: providers/sybase/gda-sybase-provider.c:762
+msgid ""
+"an error occured when calling ct_diag attempting to test if there is a "
+"server message for resultset"
+msgstr ""
+
+#: providers/sybase/gda-sybase-provider.c:793
+#, c-format
+msgid "%s returned %s"
+msgstr ""
+
+#: providers/sybase/gda-sybase-provider.c:820
 msgid "Failed dropping command structure."
 msgstr ""
 
-#: providers/sybase/gda-sybase-provider.c:747
+#: providers/sybase/gda-sybase-provider.c:850
 #, c-format
 msgid "Command structure already in use. %s failed."
 msgstr ""
 
-#: providers/sybase/gda-sybase-provider.c:755
-#: providers/sybase/gda-sybase-provider.c:859
+#: providers/sybase/gda-sybase-provider.c:858
 #, fuzzy
 msgid "Could not allocate command structure."
 msgstr "Không thể cấp phát environment handle"
 
-#: providers/sybase/gda-sybase-provider.c:763
+#: providers/sybase/gda-sybase-provider.c:867
 #, fuzzy, c-format
 msgid "Could not prepare command structure with %s."
 msgstr "Không thể phân tích chuỗi SQL '%s'"
 
-#: providers/sybase/gda-sybase-provider.c:772
+#: providers/sybase/gda-sybase-provider.c:877
 msgid "Sending command failed."
 msgstr ""
 
-#: providers/sybase/gda-sybase-provider.c:796
-#: providers/sybase/gda-sybase-provider.c:812
-#: providers/sybase/gda-sybase-provider.c:822
+#: providers/sybase/gda-sybase-provider.c:902
+#: providers/sybase/gda-sybase-provider.c:919
+#: providers/sybase/gda-sybase-provider.c:930
 #, c-format
 msgid "%s: %s failed"
 msgstr ""
 
-#: providers/sybase/gda-sybase-provider.c:857
-#, c-format
-msgid ""
-"Connection already in use. Could not allocate command structure in %s()."
+#: providers/sybase/gda-sybase-provider.c:974
+#, fuzzy
+msgid "could not allocate cmd structure to find current database."
+msgstr "Không thể cấp phát environment handle"
+
+#: providers/sybase/gda-sybase-provider.c:985
+#, fuzzy
+msgid "could not execute command to get current database."
+msgstr "Không thể cấp phát environment handle"
+
+#: providers/sybase/gda-sybase-provider.c:993
+#, fuzzy
+msgid "could not send command to get current database."
+msgstr "Không thể phân tích chuỗi SQL '%s'"
+
+#: providers/sybase/gda-sybase-provider.c:1016
+#, fuzzy
+msgid "could not bind variable to get current database."
+msgstr "Không tìm thấy bộ cung cấp %s trong thiết lập hiện tại"
+
+#: providers/sybase/gda-sybase-provider.c:1029
+#: providers/sybase/gda-sybase-provider.c:1044
+msgid "could not fetch data to find current database."
 msgstr ""
 
-#: providers/sybase/gda-sybase-provider.c:870
-#, c-format
-msgid "Failed dropping command structure in %s()."
-msgstr ""
+#: providers/sybase/gda-sybase-provider.c:1058
+#, fuzzy
+msgid "could not drop cmd structure to find current database."
+msgstr "Không thể phân tích chuỗi SQL '%s'"
 
-#: providers/sybase/gda-sybase-recordset.c:317
+#: providers/sybase/gda-sybase-recordset.c:315
 #, fuzzy
 msgid "Could not allocate datamodel. No results will be returned."
 msgstr "Không thể cấp phát Oracle server handle"
 
-#: providers/sybase/gda-sybase-recordset.c:320
+#: providers/sybase/gda-sybase-recordset.c:318
 msgid "ct_cancel() failed."
 msgstr ""
 
-#: providers/sybase/gda-sybase-recordset.c:332
+#: providers/sybase/gda-sybase-recordset.c:331
 #, c-format
 msgid "%s failed while processing a row result."
 msgstr ""
@@ -1368,75 +1366,92 @@ msgid "%s returned <= 0 columns."
 msgstr ""
 
 #: providers/sybase/gda-sybase-recordset.c:359
+#: providers/sybase/gda-sybase-recordset.c:549
 #, fuzzy
 msgid "Could not allocate structure for column metainformation."
 msgstr "Không thể lấy thông tin cột"
 
 #: providers/sybase/gda-sybase-recordset.c:363
+#: providers/sybase/gda-sybase-recordset.c:553
 #, fuzzy, c-format
 msgid "Could not call %s while processing row resultset."
 msgstr "Không thể lấu số cột trong tập kết quả"
 
-#: providers/sybase/gda-sybase-recordset.c:384
+#: providers/sybase/gda-sybase-recordset.c:382
 #: providers/sybase/gda-sybase-recordset.c:403
 #, fuzzy, c-format
 msgid "Could not run %s on column %d"
 msgstr "Không thể phân tích chuỗi SQL '%s'"
 
-#: providers/sybase/gda-sybase-recordset.c:392
+#: providers/sybase/gda-sybase-recordset.c:391
 #, fuzzy, c-format
 msgid "Could not allocate data placeholder for column %d"
 msgstr "Không thể cấp phát Oracle error handle"
 
-#: providers/sybase/gda-sybase-recordset.c:421
+#: providers/sybase/gda-sybase-recordset.c:422
 #, fuzzy, c-format
 msgid "Could not run %s to cancel processing row resultset."
 msgstr "Không thể lấu số cột trong tập kết quả"
 
-#: providers/sybase/gda-sybase-recordset.c:436
+#: providers/sybase/gda-sybase-recordset.c:438
 #, c-format
 msgid "%s failed on row %d"
 msgstr ""
 
-#: providers/sybase/gda-sybase-recordset.c:463
+#: providers/sybase/gda-sybase-recordset.c:465
 #, c-format
 msgid "%s terminated with unexpected return code."
 msgstr ""
 
-#: providers/sybase/gda-sybase-recordset.c:540
-#, c-format
-msgid "%s returned %s"
+#: providers/sybase/gda-sybase-recordset.c:509
+msgid ""
+"an error occured when calling ct_diag attempting to retrieve a server "
+"message count for resultset"
 msgstr ""
 
+#: providers/sybase/gda-sybase-recordset.c:518
+msgid "attempting to make recordset and msg count != 1 !"
+msgstr ""
+
+#: providers/sybase/gda-sybase-recordset.c:531
+msgid ""
+"an error occured when calling ct_diag attempting to retrieve a server "
+"message for recordset"
+msgstr ""
+
+#: providers/sybase/gda-sybase-recordset.c:590 providers/sybase/utils.c:412
+msgid "call to ct_diag failed when attempting to clear the server messages"
+msgstr ""
+
+#: providers/sybase/gda-sybase-types.c:94
 #: providers/sybase/gda-sybase-types.c:97
-#: providers/sybase/gda-sybase-types.c:100
 msgid "Attempt setting a nonnullable field to null."
 msgstr ""
 
-#: providers/sybase/gda-sybase-types.c:217
+#: providers/sybase/gda-sybase-types.c:208
 #, c-format
 msgid "cslib cannot convert type %d"
 msgstr ""
 
-#: providers/sybase/gda-sybase-types.c:232
+#: providers/sybase/gda-sybase-types.c:223
 #, c-format
 msgid "data conversion failed for type %d"
 msgstr ""
 
 #: providers/sybase/libmain.c:40
 #, fuzzy
-msgid "Provider for sybase databases (using OpenClient)"
+msgid "GDA provider for sybase databases (using OpenClient)"
 msgstr "Bộ cung cấp GDA cho cơ sở dữ liệu dựa trên TDS (dùng FreeTDS)"
 
-#: providers/sybase/main.c:51
+#: providers/sybase/main.c:52
 msgid "Could not initiate Sybase component factory"
 msgstr "Không thể khởi động Sybase component factory"
 
-#: providers/sybase/utils.c:37
+#: providers/sybase/utils.c:48
 msgid "Call: csmsg callback"
 msgstr ""
 
-#: providers/sybase/utils.c:42
+#: providers/sybase/utils.c:53
 #, c-format
 msgid ""
 "CS-Library error:\n"
@@ -1444,16 +1459,16 @@ msgid ""
 "\t%s"
 msgstr ""
 
-#: providers/sybase/utils.c:49
+#: providers/sybase/utils.c:60
 #, c-format
 msgid "OS error: %s"
 msgstr ""
 
-#: providers/sybase/utils.c:59
+#: providers/sybase/utils.c:70
 msgid "Call: Client callback."
 msgstr ""
 
-#: providers/sybase/utils.c:64
+#: providers/sybase/utils.c:75
 #, c-format
 msgid ""
 "CT-Client error:\n"
@@ -1461,37 +1476,131 @@ msgid ""
 "\t%s"
 msgstr ""
 
-#: providers/sybase/utils.c:79
+#: providers/sybase/utils.c:90
 msgid "Call: server callback"
 msgstr ""
 
-#: providers/sybase/utils.c:84
+#: providers/sybase/utils.c:95
 #, c-format
 msgid ""
 "CT-Server message:\n"
 "\tnumber(%ld) severity(%ld) state(%ld) line(%ld)"
 msgstr ""
 
-#: providers/sybase/utils.c:89
+#: providers/sybase/utils.c:100
 #, fuzzy, c-format
 msgid "\tServer name: %s\n"
 msgstr "\t\tSequence: %s\n"
 
-#: providers/sybase/utils.c:92
+#: providers/sybase/utils.c:103
 #, fuzzy, c-format
 msgid "\tProcedure name: %s\n"
 msgstr "\t\tThủ tục: %s\n"
 
-#: providers/sybase/utils.c:130
+#: providers/sybase/utils.c:147
 msgid "ct_diag() failed determining # of client messages."
 msgstr ""
 
-#: providers/sybase/utils.c:138
-#, c-format
-msgid "%d messages fetched."
+#: providers/sybase/utils.c:202
+msgid "call to cs_diag failed when attempting to the amount of client messages"
 msgstr ""
 
-#: providers/sybase/utils.c:152
+#: providers/sybase/utils.c:220
+msgid ""
+"an error occured when calling cs_diag attempting to retrieve a client message"
+msgstr ""
+
+#: providers/sybase/utils.c:230
+#, fuzzy
+msgid "OS_Error:("
+msgstr "Lỗi"
+
+#: providers/sybase/utils.c:232
+msgid ") Message: "
+msgstr ""
+
+#: providers/sybase/utils.c:245
+msgid "Sybase OpenClient Msg: severity("
+msgstr ""
+
+#: providers/sybase/utils.c:247
+msgid "), number("
+msgstr ""
+
+#: providers/sybase/utils.c:249
+msgid "), origin("
+msgstr ""
+
+#: providers/sybase/utils.c:251
+msgid "), layer("
+msgstr ""
+
+#: providers/sybase/utils.c:276
+msgid "call to cs_diag failed when attempting to clear the client messages"
+msgstr ""
+
+#: providers/sybase/utils.c:317
+msgid "call to ct_diag failed when attempting to the amount of server messages"
+msgstr ""
+
+#: providers/sybase/utils.c:334
+msgid ""
+"an error occured when calling ct_diag attempting to retrieve a server message"
+msgstr ""
+
+#: providers/sybase/utils.c:346
+msgid "Server:"
+msgstr ""
+
+#: providers/sybase/utils.c:350
+#, fuzzy
+msgid "Stored Procedure:"
+msgstr "Stored procedures"
+
+#: providers/sybase/utils.c:354
+#, fuzzy
+msgid "Number"
+msgstr "Tên"
+
+#: providers/sybase/utils.c:357 providers/sybase/utils.c:474
+msgid "Severity"
+msgstr ""
+
+#: providers/sybase/utils.c:360
+#, fuzzy
+msgid "State"
+msgstr "Co dãn"
+
+#: providers/sybase/utils.c:363
+msgid "Line"
+msgstr ""
+
+#: providers/sybase/utils.c:446
+msgid "call to ct_diag failed when attempting to the amount of client messages"
+msgstr ""
+
+#: providers/sybase/utils.c:463
+msgid ""
+"an error occured when calling ct_diag attempting to retrieve a client message"
+msgstr ""
+
+#: providers/sybase/utils.c:476
+msgid "Layer"
+msgstr ""
+
+#: providers/sybase/utils.c:478
+msgid "Origin"
+msgstr ""
+
+#: providers/sybase/utils.c:480
+msgid "Message Number"
+msgstr ""
+
+#: providers/sybase/utils.c:502
+msgid "call to ct_diag failed when attempting to clear the client messages"
+msgstr ""
+
+#: providers/sybase/utils.c:523
 msgid "Operation not possible, connection busy."
 msgstr ""
 
@@ -1512,7 +1621,7 @@ msgstr "Handle Oracle không hợp lệ"
 
 #: providers/xbase/libmain.c:39
 #, fuzzy
-msgid "Provider for Xbase databases"
+msgid "Provider for Xbase (dBase, FoxPro, etc) files"
 msgstr "Bộ cung cấp GDA cho cơ sở dữ liệu Oracle"
 
 #: report/libgda-report/gda-report-document.c:171
@@ -1758,6 +1867,38 @@ msgstr ""
 #, c-format
 msgid "Item with ID %s is not a repfield"
 msgstr ""
+
+#, fuzzy
+#~ msgid "about to open connection"
+#~ msgstr "** LỖI: không thể mở kết nối tới %s\n"
+
+#, fuzzy
+#~ msgid "Could not initialize cslib callback"
+#~ msgstr "Không thể khởi động thư viện OCI"
+
+#, fuzzy
+#~ msgid "CS-lib callback initialized."
+#~ msgstr "khởi động libgda thành công"
+
+#, fuzzy
+#~ msgid "Could not initialize ct-client callback"
+#~ msgstr "Không thể khởi động Oracle"
+
+#, fuzzy
+#~ msgid "Could not initialize ct-server callback"
+#~ msgstr "Không thể khởi động Oracle"
+
+#, fuzzy
+#~ msgid "Connection allocated."
+#~ msgstr "Bảng kết nối"
+
+#, fuzzy
+#~ msgid "Username set."
+#~ msgstr "Tên người dùng"
+
+#, fuzzy
+#~ msgid "Password set."
+#~ msgstr "Mật khẩu"
 
 #~ msgid "Could not allocate environment handle."
 #~ msgstr "Không thể cấp phát environment handle"

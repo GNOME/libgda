@@ -1,3 +1,36 @@
+libgda 0.12, 2003-05-28
+-----------------------
+
+ - Fixed password problem in PostgreSQL provider (david, gonzalo)
+ - Fixed ODBC headers detection problem (rodrigo)
+ - Fixed typo in FreeTDS CFLAGS (rodrigo)
+ - Compilation fixes for Sybase provider (rodrigo)
+ - Spec file fixes for RH9 (david)
+ - Fixed libsql linking problems (rodrigo)
+ - Fixed NULL password access in Oracle provider (fozzy)
+ - Improved support for types in Oracle provider (fozzy)
+ - Fixed index schema retrieval in Oracle provider (fozzy)
+ - Fixed typo in MySQL library detection (bodo)
+ - Fixed aggregates schema in Oracle provider (fozzy)
+ - Some documentation fixes (cj)
+ - Initial version of mSQL provider (danilo)
+ - Fixed compilation problem in IBM DB2 provider (sergey)
+ - Improved sample code in documentation (xabier)
+ - Cleaned up GdaRow and GdaParameter APIs (xabier, rodrigo)
+ - Improvements to the fields metadata schema queries in the
+   PostgreSQL provider (vivien)
+ - Updated translations:
+        - cs (mitr)
+        - de (cneumair)
+	- es (pablodc)
+        - fa (roozbeh)
+	- it (marcoc)
+	- nl (adrighem)
+        - pt (dnloreto)
+	- pt_BR (evandrofg, gdvieira)
+	- sr (danilo)
+	- sv (menthos)
+
 libgda 0.11, 2003-03-08
 -----------------------
 
