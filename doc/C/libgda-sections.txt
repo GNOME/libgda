@@ -966,10 +966,12 @@ gda_quark_list_remove
 
 <SECTION>
 <FILE>gda-row</FILE>
+GdaDataModel
 GdaRow
 gda_row_new
 gda_row_new_from_list
 gda_row_free
+gda_row_get_model
 gda_row_get_number
 gda_row_set_number
 gda_row_get_id

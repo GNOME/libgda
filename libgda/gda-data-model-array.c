@@ -118,7 +118,7 @@ gda_data_model_array_append_row (GdaDataModel *model, const GList *values)
 	if (len != GDA_DATA_MODEL_ARRAY (model)->priv->number_of_columns)
 		return NULL;
 
-	row = gda_row_new_from_list (values);
+	row = gda_row_new_from_list (model, values);
 	if (row) {
 		g_ptr_array_add (GDA_DATA_MODEL_ARRAY (model)->priv->rows, row);
 		gda_row_set_number (row, GDA_DATA_MODEL_ARRAY (model)->priv->rows->len - 1);

@@ -14,6 +14,14 @@ Functions for accesing #GdaRow.
 
 </para>
 
+<!-- ##### STRUCT GdaDataModel ##### -->
+<para>
+
+</para>
+
+@object: 
+@priv: 
+
 <!-- ##### STRUCT GdaRow ##### -->
 <para>
 
@@ -25,6 +33,7 @@ Functions for accesing #GdaRow.
 
 </para>
 
+@model: 
 @count: 
 @Returns: 
 
@@ -34,6 +43,7 @@ Functions for accesing #GdaRow.
 
 </para>
 
+@model: 
 @values: 
 @Returns: 
 
@@ -44,6 +54,15 @@ Functions for accesing #GdaRow.
 </para>
 
 @row: 
+
+
+<!-- ##### FUNCTION gda_row_get_model ##### -->
+<para>
+
+</para>
+
+@row: 
+@Returns: 
 
 
 <!-- ##### FUNCTION gda_row_get_number ##### -->

@@ -339,7 +339,7 @@ fetch_row (GdaOracleRecordset *recset, gint rownum)
 
 	priv = recset->priv;
 
-	row = gda_row_new (priv->ncolumns);
+	row = gda_row_new (GDA_DATA_MODEL (recset), priv->ncolumns);
 
 	result = OCIStmtFetch ((OCIStmt *) priv->hstmt,
 				(OCIError *) priv->cdata->herr,
@@ -516,7 +516,7 @@ gda_oracle_recordset_append_row (GdaDataModel *model, const GList *values)
 
 	g_string_free (sql, TRUE);
 
-	row = gda_row_new_from_list (values);
+	row = gda_row_new_from_list (model, values);
 	g_ptr_array_add (recset->priv->rows, row);
 
 	return (const GdaRow *) row;

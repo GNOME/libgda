@@ -633,7 +633,7 @@ gda_data_model_foreach (GdaDataModel *model,
 	cols = gda_data_model_get_n_columns (model);
 
 	for (r = 0; r < rows; r++) {
-		row = gda_row_new (cols);
+		row = gda_row_new (model, cols);
 		for (c = 0; c < cols; c++) {
 			GdaValue *value;
 			value = gda_value_copy (gda_data_model_get_value_at (model, c, r));

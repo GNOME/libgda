@@ -1,5 +1,25 @@
 2003-01-09  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	Fixes #87321
+	
+	* libgda/gda-row.[ch] (gda_row_new, gda_row_new_from_list): added a
+	#GdaDataModel argument, so that implementations can associate the
+	GdaRow with the GdaDataModel that contains it.
+
+	* libgda/gda-data-model.c (gda_data_model_foreach):
+	* libgda/gda-data-model-array.c (gda_data_model_array_append_row):
+	* libgda/gda-data-model-hash.c (gda_data_model_hash_append_row):
+	* providers/freetds/gda-freetds-recordset.c (gda_freetds_get_current_row):
+	* providers/mysql/gda-mysql-recordset.c (fetch_row,
+	  gda_mysql_recordset_append_row):
+	* providers/oracle/gda-oracle-recordset.c (fetch_row,
+	  gda_oracle_recordset_append_row):
+	* providers/postgres/gda-postgres-recordset.c (get_row):
+	* providers/sqlite/gda-sqlite-recordset.c (get_row):
+	adapted to changes in gda_row_new.
+
+2003-01-09  Rodrigo Moya <rodrigo@gnome-db.org>
+
 	* providers/mysql/gda-mysql-provider.c
 	(gda_mysql_provider_begin_transaction):
 	(gda_mysql_provider_commit_transaction):

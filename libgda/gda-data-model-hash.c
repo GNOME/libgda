@@ -81,7 +81,7 @@ gda_data_model_hash_append_row (GdaDataModel *model, const GList *values)
 		return NULL;
 
 	/* create the GdaRow to add */
-	row = gda_row_new_from_list (values);
+	row = gda_row_new_from_list (model, values);
 	if (row) {
 		gda_data_model_hash_insert_row (
 			GDA_DATA_MODEL_HASH (model),

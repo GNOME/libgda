@@ -247,7 +247,7 @@ static GdaRow
 //	g_return_val_if_fail (recset->priv->colcnt 
 //	                      != recset->priv->res->num_cols, NULL);
 
-	row = gda_row_new(recset->priv->res->num_cols);
+	row = gda_row_new(GDA_DATA_MODEL (recset), recset->priv->res->num_cols);
 	g_return_val_if_fail (row != NULL, NULL);
 	
 	for (i = 0; i < recset->priv->res->num_cols; i++) {

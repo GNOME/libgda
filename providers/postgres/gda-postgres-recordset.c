@@ -126,7 +126,7 @@ get_column_types (GdaPostgresRecordsetPrivate *priv)
 }
 
 static GdaRow *
-get_row (GdaPostgresRecordsetPrivate *priv, gint rownum)
+get_row (GdaDataModel *model, GdaPostgresRecordsetPrivate *priv, gint rownum)
 {
 	gchar *thevalue;
 	GdaValueType ftype;
@@ -136,7 +136,7 @@ get_row (GdaPostgresRecordsetPrivate *priv, gint rownum)
 	gint i;
 	gchar *id;
 	
-	row = gda_row_new (priv->ncolumns);
+	row = gda_row_new (model, priv->ncolumns);
 	for (i = 0; i < priv->ncolumns; i++) {
 		thevalue = PQgetvalue(priv->pg_res, rownum, i);
 		ftype = priv->column_types [i];
@@ -185,7 +185,7 @@ gda_postgres_recordset_get_row (GdaDataModel *model, gint row)
 		return NULL;
 	}
 
-	row_list = get_row (priv_data, row);
+	row_list = get_row (model, priv_data, row);
 	gda_data_model_hash_insert_row (GDA_DATA_MODEL_HASH (model),
 					 row, row_list);
 
@@ -231,7 +231,7 @@ gda_postgres_recordset_get_value_at (GdaDataModel *model, gint col, gint row)
 		return NULL;
 	}
 
-	row_list = get_row (priv_data, row);
+	row_list = get_row (model, priv_data, row);
 	gda_data_model_hash_insert_row (GDA_DATA_MODEL_HASH (model),
 					 row, row_list);
 	return gda_row_get_value (row_list, col);

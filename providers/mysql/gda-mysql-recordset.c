@@ -72,7 +72,7 @@ fetch_row (GdaMysqlRecordset *recset, gulong rownum)
 	}
 
 	mysql_data_seek (recset->mysql_res, rownum);
-	row = gda_row_new (field_count);
+	row = gda_row_new (GDA_DATA_MODEL (recset), field_count);
 
 	lengths = recset->mysql_res->lengths;
 	mysql_fields = mysql_fetch_fields (recset->mysql_res);
@@ -343,7 +343,7 @@ gda_mysql_recordset_append_row (GdaDataModel *model, const GList *values)
 	}
 
 	/* append the row to the data model */
-	row = gda_row_new_from_list (values);
+	row = gda_row_new_from_list (model, values);
 	g_ptr_array_add (recset->rows, row);
 
 	return (const GdaRow *) row;

@@ -38,7 +38,6 @@ G_BEGIN_DECLS
 #define GDA_IS_DATA_MODEL(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_DATA_MODEL))
 #define GDA_IS_DATA_MODEL_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GDA_TYPE_DATA_MODEL))
 
-typedef struct _GdaDataModel        GdaDataModel;
 typedef struct _GdaDataModelClass   GdaDataModelClass;
 typedef struct _GdaDataModelPrivate GdaDataModelPrivate;
 

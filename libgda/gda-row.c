@@ -25,6 +25,7 @@
 #include <libgda/gda-row.h>
 
 struct _GdaRow {
+	GdaDataModel *model;
 	gint number;
 	gchar *id;
 	GdaValue *fields;
@@ -33,6 +34,7 @@ struct _GdaRow {
 
 /**
  * gda_row_new
+ * model: the #GdaDataModel this row belongs to.
  * @count: number of #GdaValue in the new #GdaRow.
  *
  * Creates a #GdaRow which can hold @count #GdaValue.
@@ -40,13 +42,14 @@ struct _GdaRow {
  * Returns: the newly allocated #GdaRow.
  */
 GdaRow *
-gda_row_new (gint count)
+gda_row_new (GdaDataModel *model, gint count)
 {
 	GdaRow *row = NULL;
 
 	g_return_val_if_fail (count >= 0, NULL);
 
 	row = g_new0 (GdaRow, 1);
+	row->model = model;
 	row->number = -1;
 	row->id = NULL;
 	row->nfields = count;
@@ -64,13 +67,13 @@ gda_row_new (gint count)
  * Returns: the newly created row.
  */
 GdaRow *
-gda_row_new_from_list (const GList *values)
+gda_row_new_from_list (GdaDataModel *model, const GList *values)
 {
 	GdaRow *row;
 	const GList *l;
 	gint i;
 
-	row = gda_row_new (g_list_length ((GList *) values));
+	row = gda_row_new (model, g_list_length ((GList *) values));
 	for (i = 0, l = values; l != NULL; l = l->next, i++) {
 		const GdaValue *value = (const GdaValue *) l->data;
 
@@ -101,6 +104,21 @@ gda_row_free (GdaRow *row)
 		gda_value_set_null (&row->fields [i]);
 	g_free (row->fields);
 	g_free (row);
+}
+
+/**
+ * gda_row_get_model
+ * @row: a #GdaRow.
+ *
+ * Get the #GdaDataModel the given #GdaRow belongs to.
+ *
+ * Returns: a #GdaDataModel.
+ */
+GdaDataModel *
+gda_row_get_model (GdaRow *row)
+{
+	g_return_val_if_fail (row != NULL, NULL);
+	return row->model;
 }
 
 /**
