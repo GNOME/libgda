@@ -58,6 +58,7 @@ struct _GdaFreeTDSRecordsetPrivate {
 	guint                    rowcnt;
 	gboolean                 fetched_all_results;
 
+	GPtrArray                *columns;
 	GPtrArray                *rows;
 };
 
