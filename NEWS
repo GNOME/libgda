@@ -1,3 +1,34 @@
+libgda 0.8.192, 2002-07-08
+--------------------------
+
+ - Some work on the report engine (carlos)
+ - More API documentation (gonzalo, rodrigo)
+ - Added gda_connection_exec_non_query to GdaConnection API (rodrigo)
+ - Added get_database virtual method on providers (rodrigo)
+ - Added change_database virtual method on providers (rodrigo)
+ - Added command line tool for libgda configuration (gonzalo)
+ - Fixed many config API problems (gonzalo)
+ - Allow storing passwords in data sources (rodrigo)
+ - Added GdaTransaction class for a better use of transactions (rodrigo)
+ - Added gda_client_open_connection_from_string to GdaClient API (rodrigo)
+ - Re-added PARENT_TABLES schema from the GNOME 1.4 branch (rodrigo, gonzalo)
+ - First working version of the Oracle provider for the new API (tim)
+ - Fixed PostgreSQL tests (gonzalo)
+ - Updated SQLite provider to the latest changes (carlos)
+ - Added SQL parser (andru)
+ - Improved error management in GdaConnection class (gonzalo)
+ - Updated translations:
+        - da (olau)
+        - es (pablodc)
+        - ko (cwryu)
+        - no (kmaraas)
+        - pl (chyla)
+        - pt (dnloreto)
+        - sk (stano)
+        - sv (menthos)
+        - sl (minmax)
+        - vi (pablo)
+
 libgda 0.8.191, 2002-05-24
 --------------------------
 

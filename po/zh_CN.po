@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2002-06-21 20:36+0200\n"
+"POT-Creation-Date: 2002-07-07 23:22+0200\n"
 "PO-Revision-Date: 2002-03-26 23:52+0800\n"
 "Last-Translator: He Qiangqiang <carton@linux.net.cn>\n"
 "Language-Team: zh_CN <i18n-translation@lists.linux.net.cn>\n"
@@ -42,31 +42,31 @@ msgid "Temporary data source created by libgda. Don't remove it"
 msgstr ""
 
 #. gda_server_recordset_model_set_field_defined_size (recset, 0, 256);
-#: libgda/gda-config.c:1270 providers/default/gda-default-provider.c:463
+#: libgda/gda-config.c:1268 providers/default/gda-default-provider.c:463
 #: providers/default/gda-default-provider.c:485
 #: providers/default/gda-default-provider.c:522
 #: providers/mysql/gda-mysql-provider.c:584
-#: providers/oracle/gda-oracle-provider.c:933
+#: providers/oracle/gda-oracle-provider.c:999
 msgid "Name"
 msgstr "名称"
 
-#: libgda/gda-config.c:1271
+#: libgda/gda-config.c:1269
 msgid "Provider"
 msgstr "提供者"
 
-#: libgda/gda-config.c:1272
+#: libgda/gda-config.c:1270
 msgid "Connection string"
 msgstr "连接字符串"
 
-#: libgda/gda-config.c:1273
+#: libgda/gda-config.c:1271
 msgid "Description"
 msgstr "描述"
 
-#: libgda/gda-config.c:1274
+#: libgda/gda-config.c:1272
 msgid "Username"
 msgstr "用户名"
 
-#: libgda/gda-config.c:1275
+#: libgda/gda-config.c:1273
 msgid "Password"
 msgstr ""
 
@@ -194,56 +194,56 @@ msgstr ""
 
 #: providers/default/gda-default-provider.c:361
 #: providers/mysql/gda-mysql-provider.c:873
-#: providers/oracle/gda-oracle-provider.c:990
+#: providers/oracle/gda-oracle-provider.c:1056
 #: providers/postgres/gda-postgres-provider.c:829
 msgid "Field name"
 msgstr "字段名"
 
 #: providers/default/gda-default-provider.c:362
 #: providers/mysql/gda-mysql-provider.c:874
-#: providers/oracle/gda-oracle-provider.c:991
+#: providers/oracle/gda-oracle-provider.c:1057
 #: providers/postgres/gda-postgres-provider.c:830
 msgid "Data type"
 msgstr "数据类型"
 
 #: providers/default/gda-default-provider.c:363
 #: providers/mysql/gda-mysql-provider.c:875
-#: providers/oracle/gda-oracle-provider.c:992
+#: providers/oracle/gda-oracle-provider.c:1058
 #: providers/postgres/gda-postgres-provider.c:831
 msgid "Size"
 msgstr "大小"
 
 #: providers/default/gda-default-provider.c:364
 #: providers/mysql/gda-mysql-provider.c:876
-#: providers/oracle/gda-oracle-provider.c:993
+#: providers/oracle/gda-oracle-provider.c:1059
 #: providers/postgres/gda-postgres-provider.c:832
 msgid "Scale"
 msgstr ""
 
 #: providers/default/gda-default-provider.c:365
 #: providers/mysql/gda-mysql-provider.c:877
-#: providers/oracle/gda-oracle-provider.c:994
+#: providers/oracle/gda-oracle-provider.c:1060
 #: providers/postgres/gda-postgres-provider.c:833
 msgid "Not null?"
 msgstr "非空？"
 
 #: providers/default/gda-default-provider.c:366
 #: providers/mysql/gda-mysql-provider.c:878
-#: providers/oracle/gda-oracle-provider.c:995
+#: providers/oracle/gda-oracle-provider.c:1061
 #: providers/postgres/gda-postgres-provider.c:834
 msgid "Primary key?"
 msgstr "主键？"
 
 #: providers/default/gda-default-provider.c:367
 #: providers/mysql/gda-mysql-provider.c:879
-#: providers/oracle/gda-oracle-provider.c:996
+#: providers/oracle/gda-oracle-provider.c:1062
 #: providers/postgres/gda-postgres-provider.c:835
 msgid "Unique index?"
 msgstr "唯一索引？"
 
 #: providers/default/gda-default-provider.c:368
 #: providers/mysql/gda-mysql-provider.c:880
-#: providers/oracle/gda-oracle-provider.c:997
+#: providers/oracle/gda-oracle-provider.c:1063
 #: providers/postgres/gda-postgres-provider.c:836
 msgid "References"
 msgstr "引用"
@@ -307,7 +307,7 @@ msgstr "无效的 MYSQL 句柄"
 
 #. gda_server_recordset_model_set_field_defined_size (recset, 0, 32);
 #: providers/mysql/gda-mysql-provider.c:775
-#: providers/oracle/gda-oracle-provider.c:1294
+#: providers/oracle/gda-oracle-provider.c:1563
 msgid "Type"
 msgstr "类型"
 
@@ -324,25 +324,25 @@ msgstr ""
 
 #: providers/mysql/gda-mysql-recordset.c:69
 #: providers/postgres/gda-postgres-recordset.c:184
-#: providers/postgres/gda-postgres-recordset.c:222
+#: providers/postgres/gda-postgres-recordset.c:224
 #: providers/sqlite/gda-sqlite-recordset.c:168
 #: providers/sqlite/gda-sqlite-recordset.c:207
 msgid "Row number out of range"
 msgstr "行数超出范围"
 
 #: providers/mysql/gda-mysql-recordset.c:281
-#: providers/oracle/gda-oracle-recordset.c:446
+#: providers/oracle/gda-oracle-recordset.c:467
 msgid "Attempt to insert a row with an invalid number of columns"
 msgstr ""
 
 #: providers/mysql/gda-mysql-recordset.c:296
-#: providers/oracle/gda-oracle-recordset.c:461
+#: providers/oracle/gda-oracle-recordset.c:482
 #, fuzzy
 msgid "Could not retrieve column's information"
 msgstr "无法创建连接组件"
 
 #: providers/mysql/gda-mysql-recordset.c:314
-#: providers/oracle/gda-oracle-recordset.c:479
+#: providers/oracle/gda-oracle-recordset.c:500
 #, fuzzy
 msgid "Could not retrieve column's value"
 msgstr "无法从 %s 中获得文件"
@@ -356,250 +356,251 @@ msgstr ""
 msgid "GDA bridge to ODBC data sources"
 msgstr "SQLite 的 GDA  数据源访问"
 
-#: providers/oracle/gda-oracle-provider.c:187
+#: providers/oracle/gda-oracle-provider.c:193
 #, fuzzy
 msgid "Could not initialize Oracle"
 msgstr "无法初始化 Oracle 环境"
 
-#: providers/oracle/gda-oracle-provider.c:198
+#: providers/oracle/gda-oracle-provider.c:204
 #, fuzzy
 msgid "Could not initialize the Oracle environment"
 msgstr "无法初始化 Oracle 环境"
 
-#: providers/oracle/gda-oracle-provider.c:210
+#: providers/oracle/gda-oracle-provider.c:216
 #, fuzzy
 msgid "Could not allocate the Oracle service handle"
 msgstr "无法初始化 Oracle 服务器句柄"
 
-#: providers/oracle/gda-oracle-provider.c:220
+#: providers/oracle/gda-oracle-provider.c:226
 #, fuzzy
 msgid "Could not allocate the Oracle error handle"
 msgstr "无法初始化 Oracle 错误处理程序"
 
-#: providers/oracle/gda-oracle-provider.c:230
+#: providers/oracle/gda-oracle-provider.c:238
 #, fuzzy
 msgid "Could not allocate the Oracle server handle"
 msgstr "无法初始化 Oracle 服务器句柄"
 
-#: providers/oracle/gda-oracle-provider.c:240
+#: providers/oracle/gda-oracle-provider.c:251
 #, fuzzy
 msgid "Could not allocate the Oracle session handle"
 msgstr "无法初始化 Oracle 错误处理程序"
 
-#: providers/oracle/gda-oracle-provider.c:266
+#: providers/oracle/gda-oracle-provider.c:281
 #, fuzzy
 msgid "Could not attach to the Oracle server"
 msgstr "无法初始化 Oracle 服务器句柄"
 
-#: providers/oracle/gda-oracle-provider.c:277
+#: providers/oracle/gda-oracle-provider.c:297
 #, fuzzy
 msgid "Could not set the Oracle server attribute in the service context"
 msgstr "无法初始化 Oracle 服务上下文"
 
-#: providers/oracle/gda-oracle-provider.c:288
+#: providers/oracle/gda-oracle-provider.c:313
 #, fuzzy
 msgid "Could not set the Oracle username attribute"
 msgstr "无法初始化 Oracle 服务器句柄"
 
-#: providers/oracle/gda-oracle-provider.c:299
+#: providers/oracle/gda-oracle-provider.c:329
 #, fuzzy
 msgid "Could not set the Oracle password attribute"
 msgstr "无法初始化 Oracle 组件工厂"
 
-#: providers/oracle/gda-oracle-provider.c:309
+#: providers/oracle/gda-oracle-provider.c:344
 #, fuzzy
 msgid "Could not begin the Oracle session"
 msgstr "无法初始化 Oracle 环境"
 
-#: providers/oracle/gda-oracle-provider.c:324
+#: providers/oracle/gda-oracle-provider.c:362
 #, fuzzy
 msgid "Could not set the Oracle session attribute in the service context"
 msgstr "无法初始化 Oracle 服务上下文"
 
-#: providers/oracle/gda-oracle-provider.c:400
-#: providers/oracle/gda-oracle-provider.c:470
-#: providers/oracle/gda-oracle-provider.c:598
-#: providers/oracle/gda-oracle-provider.c:621
-#: providers/oracle/gda-oracle-provider.c:644
-#: providers/oracle/gda-oracle-provider.c:674
-#: providers/oracle/gda-oracle-provider.c:730
-#: providers/oracle/gda-oracle-provider.c:799
-#: providers/oracle/gda-oracle-provider.c:854
-#: providers/oracle/gda-oracle-recordset.c:160
-#: providers/oracle/gda-oracle-recordset.c:367
+#: providers/oracle/gda-oracle-provider.c:444
+#: providers/oracle/gda-oracle-provider.c:518
+#: providers/oracle/gda-oracle-provider.c:656
+#: providers/oracle/gda-oracle-provider.c:679
+#: providers/oracle/gda-oracle-provider.c:702
+#: providers/oracle/gda-oracle-provider.c:732
+#: providers/oracle/gda-oracle-provider.c:788
+#: providers/oracle/gda-oracle-provider.c:863
+#: providers/oracle/gda-oracle-provider.c:919
+#: providers/oracle/gda-oracle-recordset.c:166
+#: providers/oracle/gda-oracle-recordset.c:388
+#: providers/oracle/gda-oracle-recordset.c:589
 #, fuzzy
 msgid "Invalid Oracle handle"
 msgstr "无效的 Sqlite 句柄"
 
-#: providers/oracle/gda-oracle-provider.c:411
+#: providers/oracle/gda-oracle-provider.c:455
 #, fuzzy
 msgid "Could not allocate the Oracle statement handle"
 msgstr "无法初始化 Oracle 服务器句柄"
 
-#: providers/oracle/gda-oracle-provider.c:422
+#: providers/oracle/gda-oracle-provider.c:466
 #, fuzzy
 msgid "Could not prepare the Oracle statement"
 msgstr "无法初始化 Oracle 环境"
 
-#: providers/oracle/gda-oracle-provider.c:452
+#: providers/oracle/gda-oracle-provider.c:498
 #, fuzzy
 msgid "Could not bind the Oracle statement parameter"
 msgstr "无法初始化 Oracle 组件工厂"
 
-#: providers/oracle/gda-oracle-provider.c:495
+#: providers/oracle/gda-oracle-provider.c:543
 #, fuzzy
 msgid "Could not get the Oracle statement type"
 msgstr "无法初始化 Oracle 组件工厂"
 
-#: providers/oracle/gda-oracle-provider.c:511
+#: providers/oracle/gda-oracle-provider.c:561
 #, fuzzy
 msgid "Could not execute the Oracle statement"
 msgstr "无法初始化 Oracle 环境"
 
-#: providers/oracle/gda-oracle-provider.c:522
+#: providers/oracle/gda-oracle-provider.c:574
 msgid "Could not get the number of columns in the result set"
 msgstr ""
 
-#: providers/oracle/gda-oracle-provider.c:537
+#: providers/oracle/gda-oracle-provider.c:591
 msgid "Could not get the parameter descripter in the result set"
 msgstr ""
 
-#: providers/oracle/gda-oracle-provider.c:547
+#: providers/oracle/gda-oracle-provider.c:603
 #, fuzzy
 msgid "Could not get the column name in the result set"
 msgstr "无法从 %s 中获得文件"
 
-#: providers/oracle/gda-oracle-provider.c:691
-#: providers/oracle/gda-oracle-provider.c:765
-#: providers/oracle/gda-oracle-provider.c:811
-#: providers/oracle/gda-oracle-provider.c:866
+#: providers/oracle/gda-oracle-provider.c:749
+#: providers/oracle/gda-oracle-provider.c:825
+#: providers/oracle/gda-oracle-provider.c:875
+#: providers/oracle/gda-oracle-provider.c:931
 #, fuzzy
 msgid "Could not attach the transaction to the service context"
 msgstr "无法初始化 Oracle 服务上下文"
 
-#: providers/oracle/gda-oracle-provider.c:741
+#: providers/oracle/gda-oracle-provider.c:799
 #, fuzzy
 msgid "Could not allocate the Oracle transaction handle"
 msgstr "无法初始化 Oracle 错误处理程序"
 
-#: providers/oracle/gda-oracle-provider.c:753
+#: providers/oracle/gda-oracle-provider.c:811
 #, fuzzy
 msgid "Could not set the Oracle transaction name"
 msgstr "无法初始化 Oracle 环境"
 
-#: providers/oracle/gda-oracle-provider.c:774
+#: providers/oracle/gda-oracle-provider.c:836
 #, fuzzy
 msgid "Could not start the Oracle transaction"
 msgstr "无法初始化 Oracle 组件工厂"
 
-#: providers/oracle/gda-oracle-provider.c:820
+#: providers/oracle/gda-oracle-provider.c:884
 #, fuzzy
 msgid "Could not prepare the transaction to commit"
 msgstr "无法获取列描述"
 
-#: providers/oracle/gda-oracle-provider.c:828
+#: providers/oracle/gda-oracle-provider.c:892
 #, fuzzy
 msgid "Could not commit the Oracle transaction"
 msgstr "无法初始化 Oracle 组件工厂"
 
-#: providers/oracle/gda-oracle-provider.c:873
+#: providers/oracle/gda-oracle-provider.c:938
 #, fuzzy
 msgid "Could not rollback the Oracle transaction"
 msgstr "无法初始化 Oracle 组件工厂"
 
-#: providers/oracle/gda-oracle-provider.c:1030
+#: providers/oracle/gda-oracle-provider.c:1227
 #, fuzzy
 msgid "Could not allocate the Oracle describe handle"
 msgstr "无法初始化 Oracle 服务器句柄"
 
-#: providers/oracle/gda-oracle-provider.c:1043
+#: providers/oracle/gda-oracle-provider.c:1240
 #, fuzzy
 msgid "Could not describe the Oracle table"
 msgstr "无法从 %s 中获得文件"
 
-#: providers/oracle/gda-oracle-provider.c:1054
+#: providers/oracle/gda-oracle-provider.c:1253
 #, fuzzy
 msgid "Could not get the Oracle parameter handle"
 msgstr "无法初始化 Oracle 服务器句柄"
 
-#: providers/oracle/gda-oracle-provider.c:1065
+#: providers/oracle/gda-oracle-provider.c:1266
 #, fuzzy
 msgid "Could not get the number of columns in the table"
 msgstr "无法从 %s 中获得文件"
 
-#: providers/oracle/gda-oracle-provider.c:1075
+#: providers/oracle/gda-oracle-provider.c:1278
 #, fuzzy
 msgid "Could not get the column list"
 msgstr "无法从 %s 中获得文件"
 
-#: providers/oracle/gda-oracle-provider.c:1098
+#: providers/oracle/gda-oracle-provider.c:1307
 #, fuzzy
 msgid "Could not get the Oracle column handle"
 msgstr "无法初始化 Oracle 错误处理程序"
 
-#: providers/oracle/gda-oracle-provider.c:1109
+#: providers/oracle/gda-oracle-provider.c:1320
 #, fuzzy
 msgid "Could not get the Oracle field name"
 msgstr "无法初始化 Oracle 环境"
 
-#: providers/oracle/gda-oracle-provider.c:1127
+#: providers/oracle/gda-oracle-provider.c:1341
 #, fuzzy
 msgid "Could not get the Oracle field data type"
 msgstr "无法初始化 Oracle 组件工厂"
 
-#: providers/oracle/gda-oracle-provider.c:1142
+#: providers/oracle/gda-oracle-provider.c:1359
 #, fuzzy
 msgid "Could not get the Oracle field defined size"
 msgstr "无法从 %s 中获得文件"
 
-#: providers/oracle/gda-oracle-provider.c:1156
+#: providers/oracle/gda-oracle-provider.c:1376
 #, fuzzy
 msgid "Could not get the Oracle field scale"
 msgstr "无法初始化 Oracle 服务器句柄"
 
-#: providers/oracle/gda-oracle-provider.c:1170
+#: providers/oracle/gda-oracle-provider.c:1393
 msgid "Could not get the Oracle field nullable attribute"
 msgstr ""
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/oracle/gda-oracle-provider.c:1212
+#: providers/oracle/gda-oracle-provider.c:1459
 #: providers/postgres/gda-postgres-provider.c:1197 testing/client.c:123
 #, fuzzy
 msgid "Users"
 msgstr "用户名"
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/oracle/gda-oracle-provider.c:1380
+#: providers/oracle/gda-oracle-provider.c:1651
 #: providers/postgres/gda-postgres-provider.c:767 testing/client.c:121
 msgid "Indexes"
 msgstr "索引"
 
-#: providers/oracle/gda-oracle-provider.c:1384
+#: providers/oracle/gda-oracle-provider.c:1655
 #, fuzzy
 msgid "Procedures"
 msgstr "存储过程"
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/oracle/gda-oracle-provider.c:1388
+#: providers/oracle/gda-oracle-provider.c:1659
 #: providers/postgres/gda-postgres-provider.c:1225 testing/client.c:124
 #, fuzzy
 msgid "Sequences"
 msgstr "引用"
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/oracle/gda-oracle-provider.c:1392
+#: providers/oracle/gda-oracle-provider.c:1663
 #: providers/postgres/gda-postgres-provider.c:672
 msgid "Tables"
 msgstr ""
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/oracle/gda-oracle-provider.c:1396
+#: providers/oracle/gda-oracle-provider.c:1667
 #: providers/postgres/gda-postgres-provider.c:818 testing/client.c:125
 msgid "Triggers"
 msgstr "触发器"
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/oracle/gda-oracle-provider.c:1400
+#: providers/oracle/gda-oracle-provider.c:1671
 #: providers/postgres/gda-postgres-provider.c:742 testing/client.c:120
 msgid "Views"
 msgstr "视图"
@@ -614,55 +615,56 @@ msgstr "无法初始化 Oracle 环境"
 msgid "Could not get the parameter defined size"
 msgstr "无法解析文件于 %s"
 
-#: providers/oracle/gda-oracle-recordset.c:94
+#: providers/oracle/gda-oracle-recordset.c:96
 #, fuzzy
 msgid "Could not get the parameter data type"
 msgstr "无法创建类型为 %s 的组件"
 
-#: providers/oracle/gda-oracle-recordset.c:123
+#: providers/oracle/gda-oracle-recordset.c:127
 #, fuzzy
 msgid "Could not define by position"
 msgstr "无法加载文件于 %s"
 
-#: providers/oracle/gda-oracle-recordset.c:166
-#: providers/postgres/gda-postgres-recordset.c:261
+#: providers/oracle/gda-oracle-recordset.c:172
+#: providers/postgres/gda-postgres-recordset.c:263
 #, fuzzy
 msgid "Column out of range"
 msgstr "行数超出范围"
 
-#: providers/oracle/gda-oracle-recordset.c:178
+#: providers/oracle/gda-oracle-recordset.c:184
 #, fuzzy
 msgid "Could not get the Oracle parameter information"
 msgstr "无法创建连接组件"
 
-#: providers/oracle/gda-oracle-recordset.c:188
+#: providers/oracle/gda-oracle-recordset.c:194
 #, fuzzy
 msgid "Could not get the Oracle column name"
 msgstr "无法从 %s 中获得文件"
 
-#: providers/oracle/gda-oracle-recordset.c:201
+#: providers/oracle/gda-oracle-recordset.c:209
 #, fuzzy
 msgid "Could not get the Oracle column data type"
 msgstr "无法初始化 Oracle 组件工厂"
 
-#: providers/oracle/gda-oracle-recordset.c:211
+#: providers/oracle/gda-oracle-recordset.c:221
 #, fuzzy
 msgid "Could not get the Oracle column scale"
 msgstr "无法从 %s 中获得文件"
 
-#: providers/oracle/gda-oracle-recordset.c:221
+#: providers/oracle/gda-oracle-recordset.c:233
 #, fuzzy
 msgid "Could not get the Oracle column nullable attribute"
 msgstr "无法初始化 Oracle 组件工厂"
 
-#: providers/oracle/gda-oracle-recordset.c:231
+#: providers/oracle/gda-oracle-recordset.c:245
 #, fuzzy
 msgid "Could not get the Oracle defined size"
 msgstr "无法从 %s 中获得文件"
 
-#: providers/oracle/gda-oracle-recordset.c:333
-msgid "An error occurred during fetch"
-msgstr ""
+#: providers/oracle/gda-oracle-recordset.c:353
+#, fuzzy
+msgid "Could not fetch a row"
+msgstr "无法从 %s 中获得文件"
 
 #: providers/oracle/libmain.c:34
 #, fuzzy
@@ -681,8 +683,8 @@ msgstr "不可用"
 #: providers/postgres/gda-postgres-provider.c:453
 #: providers/postgres/gda-postgres-provider.c:587
 #: providers/postgres/gda-postgres-recordset.c:175
-#: providers/postgres/gda-postgres-recordset.c:213
-#: providers/postgres/gda-postgres-recordset.c:255
+#: providers/postgres/gda-postgres-recordset.c:215
+#: providers/postgres/gda-postgres-recordset.c:257
 msgid "Invalid PostgreSQL handle"
 msgstr "无效的 PostgreSQL 句柄"
 
@@ -711,7 +713,7 @@ msgstr "字段名"
 msgid "Sequence"
 msgstr "引用"
 
-#: providers/postgres/gda-postgres-recordset.c:228
+#: providers/postgres/gda-postgres-recordset.c:230
 #: providers/sqlite/gda-sqlite-recordset.c:213
 #: providers/sqlite/gda-sqlite-recordset.c:245
 #, fuzzy

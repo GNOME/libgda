@@ -1,3 +1,7 @@
+2002-07-08  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	Released 0.8.192
+
 2002-07-04  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
 	* libgda/gda-config.c:

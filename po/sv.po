@@ -8,7 +8,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2002-07-04 00:25+0200\n"
+"POT-Creation-Date: 2002-07-07 23:22+0200\n"
 "PO-Revision-Date: 2002-07-04 00:26+0200\n"
 "Last-Translator: Christian Rose <menthos@menthos.com>\n"
 "Language-Team: Swedish <sv@li.org>\n"
@@ -45,7 +45,7 @@ msgid "Temporary data source created by libgda. Don't remove it"
 msgstr "Temporär datakälla skapad av libgda. Ta inte bort den"
 
 #. gda_server_recordset_model_set_field_defined_size (recset, 0, 256);
-#: libgda/gda-config.c:1270 providers/default/gda-default-provider.c:463
+#: libgda/gda-config.c:1268 providers/default/gda-default-provider.c:463
 #: providers/default/gda-default-provider.c:485
 #: providers/default/gda-default-provider.c:522
 #: providers/mysql/gda-mysql-provider.c:584
@@ -53,23 +53,23 @@ msgstr "Temporär datakälla skapad av libgda. Ta inte bort den"
 msgid "Name"
 msgstr "Namn"
 
-#: libgda/gda-config.c:1271
+#: libgda/gda-config.c:1269
 msgid "Provider"
 msgstr "Leverantör"
 
-#: libgda/gda-config.c:1272
+#: libgda/gda-config.c:1270
 msgid "Connection string"
 msgstr "Anslutningssträng"
 
-#: libgda/gda-config.c:1273
+#: libgda/gda-config.c:1271
 msgid "Description"
 msgstr "Beskrivning"
 
-#: libgda/gda-config.c:1274
+#: libgda/gda-config.c:1272
 msgid "Username"
 msgstr "Användarnamn"
 
-#: libgda/gda-config.c:1275
+#: libgda/gda-config.c:1273
 msgid "Password"
 msgstr "Lösenord"
 
