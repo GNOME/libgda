@@ -670,15 +670,15 @@ add_aggregate_row (GdaDataModelArray *recset, const gchar *str, const gchar *com
 	/* 2nd the unique id */
 	list = g_list_append (list, gda_value_new_string (str));
 	/* 3rd the owner */
-	list = g_list_append (list, gda_value_new_null ());
+	list = g_list_append (list, gda_value_new_string (NULL));
 	/* 4th the comments */ 
 	list = g_list_append (list, gda_value_new_string (comments));
 	/* 5th the return type */
-	list = g_list_append (list, gda_value_new_type (GDA_VALUE_TYPE_UNKNOWN));
+	list = g_list_append (list, gda_value_new_string (gda_type_to_string (GDA_VALUE_TYPE_UNKNOWN)));
 	/* 6th the argument type */
-	list = g_list_append (list, gda_value_new_type (GDA_VALUE_TYPE_UNKNOWN));
+	list = g_list_append (list, gda_value_new_string (gda_type_to_string (GDA_VALUE_TYPE_UNKNOWN)));
 	/* 7th the SQL definition */
-	list = g_list_append (list, gda_value_new_null ());
+	list = g_list_append (list, gda_value_new_string (NULL));
 
 	gda_data_model_append_row (GDA_DATA_MODEL (recset), list);
 
@@ -694,11 +694,14 @@ get_mysql_aggregates (GdaConnection *cnc, GdaParameterList *params)
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
 	/* create the recordset */
-	recset = (GdaDataModelArray *) gda_data_model_array_new (1);
-	//gda_server_recordset_model_set_field_defined_size (recset, 0, 32);
+	recset = (GdaDataModelArray *) gda_data_model_array_new (7);
 	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 0, _("Name"));
-	//gda_server_recordset_model_set_field_scale (recset, 0, 0);
-	//gda_server_recordset_model_set_field_gdatype (recset, 0, GDA_TYPE_STRING);
+	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 1, _("ID"));
+	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 2, _("Owner"));
+	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 3, _("Comments"));
+	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 4, _("Return type"));
+	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 5, _("Args types"));
+	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 6, _("SQL"));
 
 	/* fill the recordset */
 	add_aggregate_row (recset, "abs", "comments");
