@@ -1,3 +1,8 @@
+2000-10-22  Carlos Perelló Marín <carlos@hispalinux.es>
+
+	* Updated some report client objects and upgraded to
+	the new GObject model
+
 2000-10-01  Carlos Perelló Marín <carlos@hispalinux.es>
 
 	* Created an example for the report engine..
