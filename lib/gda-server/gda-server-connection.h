@@ -46,10 +46,14 @@ struct _GdaServerConnectionClass {
 GType                gda_server_connection_get_type (void);
 GdaServerConnection *gda_server_connection_new (GdaServerProvider *provider);
 
+void                 gda_server_connection_notify_action (GdaServerConnection *cnc,
+							  GNOME_Database_ActionId action,
+							  GdaParameterList *params);
+
 void                 gda_server_connection_add_error (GdaServerConnection *cnc,
 						      GdaError *error);
 void                 gda_server_connection_add_error_string (GdaServerConnection *cnc,
-							     const gchar *error);
+							     const gchar *msg);
 void                 gda_server_connection_free_error_list (GdaServerConnection *cnc);
 
 G_END_DECLS

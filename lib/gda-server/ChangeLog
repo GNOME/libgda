@@ -1,3 +1,9 @@
+2001-10-12  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-server-connection.c: keep track of clients being connected to
+	this connection, so that we can send notifications and ask for input
+	(gda_server_connection_notify_action): new function
+
 2001-10-11  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-server-connection.[ch]:

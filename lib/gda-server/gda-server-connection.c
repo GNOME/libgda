@@ -29,6 +29,8 @@
 struct _GdaServerConnectionPrivate {
 	GdaServerProvider *provider;
 	GList *errors;
+	GList *clients;
+	gboolean is_open;
 };
 
 static void gda_server_connection_class_init (GdaServerConnectionClass *klass);
@@ -44,6 +46,7 @@ static GObjectClass *parent_class = NULL;
 
 static CORBA_boolean
 impl_Connection_open (PortableServer_Servant servant,
+		      GNOME_Database_Client client,
 		      const CORBA_char *cnc_string,
 		      const CORBA_char *username,
 		      const CORBA_char *password,
@@ -51,28 +54,78 @@ impl_Connection_open (PortableServer_Servant servant,
 {
 	gboolean result;
 	GdaQuarkList *params;
+	GNOME_Database_Client client_copy;
+	CORBA_Environment ev2;
 	GdaServerConnection *cnc = (GdaServerConnection *) bonobo_x_object (servant);
 
 	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), FALSE);
 
-	params = gda_quark_list_new_from_string (cnc_string);
-	result = gda_server_provider_open_connection (cnc->priv->provider,
-						      cnc, params, username, password);
-	if (!result)
-		gda_error_list_to_exception (cnc->priv->errors, ev);
-	gda_server_connection_free_error_list (cnc);
-	gda_quark_list_free (params);
+	if (!cnc->priv->is_open) {
+		params = gda_quark_list_new_from_string (cnc_string);
+		result = gda_server_provider_open_connection (cnc->priv->provider,
+							      cnc, params,
+							      username, password);
+		if (!result) {
+			gda_error_list_to_exception (cnc->priv->errors, ev);
+			gda_server_connection_free_error_list (cnc);
+			gda_quark_list_free (params);
+			return FALSE;
+		}
+		cnc->priv->is_open = TRUE;
+	}
+
+	result = TRUE;
+
+	/* add the new client to our list */
+	CORBA_exception_init (&ev2);
+	client_copy = CORBA_Object_duplicate (client, &ev2);
+	if (BONOBO_EX (&ev2))
+		gda_log_error (_("Could not duplicate client object. Client won't get notifications"));
+	else {
+		cnc->priv->clients = g_list_append (cnc->priv->clients, client_copy);
+		gda_server_connection_notify_action (
+			cnc,
+			GNOME_Database_ACTION_CLIENT_CONNECTED,
+			NULL);
+	}
 
 	return result;
 }
 
 static CORBA_boolean
-impl_Connection_close (PortableServer_Servant servant, CORBA_Environment *ev)
+impl_Connection_close (PortableServer_Servant servant,
+		       GNOME_Database_Client client,
+		       CORBA_Environment *ev)
 {
 	gboolean result;
+	GList *l;
 	GdaServerConnection *cnc = (GdaServerConnection *) bonobo_x_object (servant);
 
 	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), FALSE);
+
+	/* remove the client from our list */
+	for (l = g_list_first (cnc->priv->clients); l; l = l->next) {
+		GNOME_Database_Client tmp_client;
+		gboolean is_equal;
+		CORBA_Environment ev2;
+
+		CORBA_exception_init (&ev2);
+
+		tmp_client = (GNOME_Database_Client) l->data;
+		is_equal = CORBA_Object_is_equivalent (tmp_client, client, &ev2);
+		if (!BONOBO_EX (&ev2) && is_equal) {
+			cnc->priv->clients = g_list_remove (cnc->priv->clients, tmp_client);
+			bonobo_object_release_unref (tmp_client);
+			gda_server_connection_notify_action (
+				cnc,
+				GNOME_Database_ACTION_CLIENT_EXITED,
+				NULL);
+			break;
+		}
+	}
+
+	if (g_list_length (cnc->priv->clients) > 0)
+		return TRUE;
 
 	result = gda_server_provider_close_connection (cnc->priv->provider, cnc);
 	if (!result)
@@ -105,6 +158,13 @@ impl_Connection_beginTransaction (PortableServer_Servant servant,
 	result = gda_server_provider_begin_transaction (cnc->priv->provider, cnc, trans_id);
 	if (!result)
 		gda_error_list_to_exception (cnc->priv->errors, ev);
+	else {
+		gda_server_connection_notify_action (
+			cnc,
+			GNOME_Database_ACTION_TRANSACTION_STARTED,
+			NULL);
+	}
+
 	gda_server_connection_free_error_list (cnc);
 
 	return result;
@@ -123,6 +183,12 @@ impl_Connection_commitTransaction (PortableServer_Servant servant,
 	result = gda_server_provider_commit_transaction (cnc->priv->provider, cnc, trans_id);
 	if (!result)
 		gda_error_list_to_exception (cnc->priv->errors, ev);
+	else {
+		gda_server_connection_notify_action (
+			cnc,
+			GNOME_Database_ACTION_TRANSACTION_FINISHED,
+			NULL);
+	}
 	gda_server_connection_free_error_list (cnc);
 
 	return result;
@@ -141,6 +207,12 @@ impl_Connection_rollbackTransaction (PortableServer_Servant servant,
 	result = gda_server_provider_rollback_transaction (cnc->priv->provider, cnc, trans_id);
 	if (!result)
 		gda_error_list_to_exception (cnc->priv->errors, ev);
+	else {
+		gda_server_connection_notify_action (
+			cnc,
+			GNOME_Database_ACTION_TRANSACTION_ABORTED,
+			NULL);
+	}
 	gda_server_connection_free_error_list (cnc);
 
 	return result;
@@ -178,17 +250,30 @@ gda_server_connection_init (GdaServerConnection *cnc, GdaServerConnectionClass *
 	cnc->priv = g_new0 (GdaServerConnectionPrivate, 1);
 	cnc->priv->provider = NULL;
 	cnc->priv->errors = NULL;
+	cnc->priv->clients = NULL;
+	cnc->priv->is_open = FALSE;
 }
 
 static void
 gda_server_connection_finalize (GObject *object)
 {
+	GList *l;
 	GdaServerConnection *cnc = (GdaServerConnection *) object;
 
 	g_return_if_fail (GDA_IS_SERVER_CONNECTION (cnc));
 
 	/* free memory */
 	gda_error_list_free (cnc->priv->errors);
+
+	for (l = g_list_first (cnc->priv->clients); l; l = l->next) {
+		GNOME_Database_Client client;
+
+		client = (GNOME_Database_Client) l->data;
+		if (client)
+			bonobo_object_release_unref (client, NULL);
+	}
+	g_list_free (cnc->priv->clients);
+
 	g_free (cnc->priv);
 	cnc->priv = NULL;
 
@@ -218,6 +303,36 @@ gda_server_connection_new (GdaServerProvider *provider)
 }
 
 /**
+ * gda_server_connection_notify_action
+ */
+void
+gda_server_connection_notify_action (GdaServerConnection *cnc,
+				     GNOME_Database_ActionId action,
+				     GdaParameterList *params)
+{
+	GList *l;
+
+	g_return_if_fail (GDA_IS_SERVER_CONNECTION (cnc));
+
+	for (l = g_list_first (cnc->priv->clients); l; l = l->next) {
+		GNOME_Database_Client client;
+
+		client = (GNOME_Database_Client) l->data;
+		if (client != CORBA_OBJECT_NIL) {
+			CORBA_Environment ev;
+
+			CORBA_exception_init (&ev);
+			GNOME_Database_Client_notifyAction (client, action, NULL, &ev);
+			if (BONOBO_EX (&ev)) {
+				gda_log_error (_("Could not notify client about action %d"),
+					       action);
+			}
+			CORBA_exception_free (&ev);
+		}
+	}
+}
+
+/**
  * gda_server_connection_add_error
  */
 void
@@ -227,6 +342,14 @@ gda_server_connection_add_error (GdaServerConnection *cnc, GdaError *error)
 	g_return_if_fail (GDA_IS_ERROR (error));
 
 	cnc->priv->errors = g_list_append (cnc->priv->errors, error);
+}
+
+/**
+ * gda_server_connection_add_error_string
+ */
+void
+gda_server_connection_add_error_string (GdaServerConnection *cnc, const gchar *msg)
+{
 }
 
 /**
