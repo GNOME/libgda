@@ -177,7 +177,7 @@ gda_data_model_column_index_attributes_get_defined_size (GdaDataModelColumnIndex
 
 /**
  * gda_data_model_column_index_attributes_set_defined_size
- * @dmcia: a #GdaDataModelColumnAttributes.
+ * @dmcia: a #GdaDataModelColumnIndexAttributes.
  * @size: the defined size we want to set.
  *
  * Sets the defined size of a #GdaDataModelColumnIndexAttributes.
@@ -204,7 +204,7 @@ gda_data_model_column_index_attributes_get_sorting (GdaDataModelColumnIndexAttri
 
 /**
  * gda_data_model_column_index_attributes_set_sorting
- * @dmcia: a #GdaDataModelColumnAttributes.
+ * @dmcia: a #GdaDataModelColumnIndexAttributes.
  * @sorting: the new sorting of @dmcia.
  *
  * Sets the sorting of a #GdaDataModelColumnIndexAttributes.

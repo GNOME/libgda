@@ -4,6 +4,7 @@
  * AUTHORS:
  *      Michael Lausch <michael@lausch.at>
  *	Rodrigo Moya <rodrigo@gnome-db.org>
+ *	Bas Driessen <bas.driessen@xobas.com>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -36,6 +37,7 @@
 #include <libgda/gda-error.h>
 #include <libgda/gda-data-model-column-attributes.h>
 #include <libgda/gda-data-model-column-index-attributes.h>
+#include <libgda/gda-data-model-index.h>
 #include <libgda/gda-log.h>
 #include <libgda/gda-parameter.h>
 #include <libgda/gda-quark-list.h>

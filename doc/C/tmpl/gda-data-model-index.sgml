@@ -1,0 +1,186 @@
+<!-- ##### SECTION Title ##### -->
+GdaDataModelIndex
+
+<!-- ##### SECTION Short_Description ##### -->
+Management of #GdaDataModel indexes
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### STRUCT GdaDataModelIndex ##### -->
+<para>
+
+</para>
+
+@name: 
+@table_name: 
+@primary_key: 
+@unique_key: 
+@references: 
+@col_idx_list: 
+
+<!-- ##### MACRO GDA_TYPE_DATA_MODEL_INDEX ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION gda_data_model_index_get_type ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_model_index_new ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_model_index_copy ##### -->
+<para>
+
+</para>
+
+@dmi: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_model_index_free ##### -->
+<para>
+
+</para>
+
+@dmi: 
+
+
+<!-- ##### FUNCTION gda_data_model_index_equal ##### -->
+<para>
+
+</para>
+
+@lhs: 
+@rhs: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_model_index_get_name ##### -->
+<para>
+
+</para>
+
+@dmi: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_model_index_set_name ##### -->
+<para>
+
+</para>
+
+@dmi: 
+@name: 
+
+
+<!-- ##### FUNCTION gda_data_model_index_get_table_name ##### -->
+<para>
+
+</para>
+
+@dmi: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_model_index_set_table_name ##### -->
+<para>
+
+</para>
+
+@dmi: 
+@name: 
+
+
+<!-- ##### FUNCTION gda_data_model_index_get_primary_key ##### -->
+<para>
+
+</para>
+
+@dmi: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_model_index_set_primary_key ##### -->
+<para>
+
+</para>
+
+@dmi: 
+@pk: 
+
+
+<!-- ##### FUNCTION gda_data_model_index_get_unique_key ##### -->
+<para>
+
+</para>
+
+@dmi: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_model_index_set_unique_key ##### -->
+<para>
+
+</para>
+
+@dmi: 
+@uk: 
+
+
+<!-- ##### FUNCTION gda_data_model_index_get_references ##### -->
+<para>
+
+</para>
+
+@dmi: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_model_index_set_references ##### -->
+<para>
+
+</para>
+
+@dmi: 
+@ref: 
+
+
+<!-- ##### FUNCTION gda_data_model_index_get_column_index_list ##### -->
+<para>
+
+</para>
+
+@dmi: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_model_index_set_column_index_list ##### -->
+<para>
+
+</para>
+
+@dmi: 
+@col_idx_list: 
+
+

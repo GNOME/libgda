@@ -44,6 +44,7 @@
 <!ENTITY libgda-export SYSTEM "xml/gda-export.xml">
 <!ENTITY libgda-column SYSTEM "xml/gda-column.xml">
 <!ENTITY libgda-column-index SYSTEM "xml/gda-column-index.xml">
+<!ENTITY libgda-data-model-index SYSTEM "xml/gda-data-model-index.xml">
 <!ENTITY libgda-init SYSTEM "xml/libgda.xml">
 <!ENTITY libgda-log SYSTEM "xml/gda-log.xml">
 <!ENTITY libgda-parameter SYSTEM "xml/gda-parameter.xml">
@@ -2114,6 +2115,7 @@
     &libgda-data-model-base;
     &libgda-column;
     &libgda-column-index;
+    &libgda-data-model-index;
     &libgda-row;
     &libgda-value;
     &libgda-error;

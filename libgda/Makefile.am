@@ -29,6 +29,7 @@ gda_headers = \
 	gda-error.h \
 	gda-data-model-column-attributes.h \
 	gda-data-model-column-index-attributes.h \
+	gda-data-model-index.h \
 	gda-log.h \
 	gda-parameter.h \
 	gda-quark-list.h \
@@ -83,6 +84,7 @@ libgda_sources =  \
 	gda-export.h \
 	gda-data-model-column-attributes.c \
 	gda-data-model-column-index-attributes.c \
+	gda-data-model-index.c \
 	gda-init.c \
 	gda-intl.h \
 	gda-log.c \

@@ -1,3 +1,10 @@
+2005-02-02  Bas Driessen <bas.driessen@xobas.com>
+
+	* libgda/: introduced GdaDataModelIndex to hold index
+	data for a data model.
+
+	* doc/C: added GdaDataModelIndex to documentation.
+
 2005-02-01  Bas Driessen <bas.driessen@xobas.com>
 
 	* libgda/: introduced GdaDataModelColumnIndexAttributes to hold
