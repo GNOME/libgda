@@ -1,3 +1,8 @@
+2002-11-07  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
+	* libgda/gda-client.c: check that provider is not null before doing the
+	lookup.
+
 2002-11-05  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
 	* libgda/gda-config.c: avoid "no DTD" message from libxml.
