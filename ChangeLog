@@ -1,5 +1,7 @@
 2002-05-15  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* libgda.pc.in: removed ORBit, bonobo-activation and libbonobo.
+
 	* configure.in: added report/gda-report.dtd to AC_OUTPUT.
 
 2002-05-14  Rodrigo Moya <rodrigo@gnome-db.org>
