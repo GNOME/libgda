@@ -5,7 +5,6 @@ lib/gda-client/gda-connection.c
 lib/gda-client/gda-error.c
 lib/gda-client/gda-field.c
 lib/gda-client/gda-recordset.c
-lib/gda-client/gda-report.c
 lib/gda-common/gda-config.c
 lib/gda-common/gda-corba.c
 lib/gda-common/gda-log.c

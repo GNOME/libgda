@@ -29,7 +29,6 @@ gda_client_headers = \
 	gda-error.h \
 	gda-field.h \
 	gda-recordset.h \
-	gda-report.h \
 	gda-value.h \
 	gda-client.h \
 	gda.h
@@ -44,18 +43,9 @@ libgda_client_la_SOURCES = \
 	gda-connection.c \
 	gda-error.c \
 	gda-field.c \
-	gda-recordset.c \
-	gda-report.c
+	gda-recordset.c 
 libgda_client_la_LIBADD =
 
 gdaincludedir=$(includedir)/gda
 gdainclude_HEADERS=$(gda_client_headers)
 
-DTD_FILES = gda-report.dtd
-dtddir=$(datadir)/gda/dtd
-dtd_DATA=$(DTD_FILES)
-
-%.dtd: %.dtd.in
-	sed 's,\@dtddir\@,$(dtddir),' $< > $@
-
-EXTRA_DIST = $(DTD_FILES)

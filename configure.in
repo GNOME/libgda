@@ -564,6 +564,7 @@ tools/gda-config
 tools/gda-buildserver
 tools/gda-buildclient
 report/Makefile
+report/gda-report.dtd
 report/idl/Makefile
 report/server/Makefile
 testing/Makefile
