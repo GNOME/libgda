@@ -1,3 +1,9 @@
+2001-12-19  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-mysql-provider.c (gda_mysql_provider_get_type): removed extra
+	if statement
+	(process_sql_commands): initialize counters before using them
+
 2001-12-18  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* Makefile.am:

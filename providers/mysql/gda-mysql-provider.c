@@ -90,21 +90,19 @@ gda_mysql_provider_get_type (void)
 	static GType type = 0;
 
 	if (!type) {
-		if (type == 0) {
-			static GTypeInfo info = {
-				sizeof (GdaMysqlProviderClass),
-				(GBaseInitFunc) NULL,
-				(GBaseFinalizeFunc) NULL,
-				(GClassInitFunc) gda_mysql_provider_class_init,
-				NULL, NULL,
-				sizeof (GdaMysqlProvider),
-				0,
-				(GInstanceInitFunc) gda_mysql_provider_init
-			};
-			type = g_type_register_static (PARENT_TYPE,
-						       "GdaMysqlProvider",
-						       &info, 0);
-		}
+		static GTypeInfo info = {
+			sizeof (GdaMysqlProviderClass),
+			(GBaseInitFunc) NULL,
+			(GBaseFinalizeFunc) NULL,
+			(GClassInitFunc) gda_mysql_provider_class_init,
+			NULL, NULL,
+			sizeof (GdaMysqlProvider),
+			0,
+			(GInstanceInitFunc) gda_mysql_provider_init
+		};
+		type = g_type_register_static (PARENT_TYPE,
+					       "GdaMysqlProvider",
+					       &info, 0);
 	}
 
 	return type;
@@ -230,7 +228,7 @@ process_sql_commands (GList *reclist, GdaServerConnection *cnc, const gchar *sql
 	/* parse SQL string, which can contain several commands, separated by ';' */
 	arr = g_strsplit (sql, ";", 0);
 	if (arr) {
-		gint n;
+		gint n = 0;
 
 		while (arr[n]) {
 			gint rc;
