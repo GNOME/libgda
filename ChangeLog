@@ -1,3 +1,8 @@
+2003-11-26  Filip Van Raemdonck <mechanix@debian.org>
+
+	* providers/mdb/gda-mdb-provider.c (gda_mdb_provider_execute_sql):
+	guard against passing NULL pointers to mdb-tools.
+
 2003-11-13  Frederic Crozat  <fcrozat@mandrakesoft.com>
 
 	* libgda/Makefile.am:
