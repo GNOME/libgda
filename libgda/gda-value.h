@@ -130,6 +130,7 @@ GdaValue     *gda_value_new_tinyint (gchar val);
 GdaValue     *gda_value_new_type (GdaValueType val);
 GdaValue     *gda_value_new_from_string (const gchar *as_string,
 					 GdaValueType type);
+GdaValue     *gda_value_new_from_xml (const gchar *xml);
 
 void          gda_value_free (GdaValue *value);
 
@@ -181,6 +182,7 @@ gboolean      gda_value_set_from_value (GdaValue *value, const GdaValue *from);
 gint          gda_value_compare (const GdaValue *value1,
 				 const GdaValue *value2);
 gchar        *gda_value_stringify (GdaValue *value);
+gchar        *gda_value_to_xml (GdaValue *value);
 
 G_END_DECLS
 
