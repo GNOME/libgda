@@ -1,3 +1,8 @@
+2003-11-03  Jonathan Blandford <jrb@redhat.com>
+
+	* libsql/lexer.l: #undef L_SET, since it might be defined when
+	enabling the BSD compatibility layer on Linux.
+
 2003-10-26  Laurent Sansonetti <laurent@datarescue.be>
 
 	* libgda/gda-data-model.c (gda_data_model_to_xml):
