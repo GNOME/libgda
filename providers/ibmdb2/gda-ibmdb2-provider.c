@@ -83,40 +83,145 @@ static GdaDataModel *gda_ibmdb2_provider_get_schema (GdaServerProvider *provider
 
 static gboolean
 gda_ibmdb2_provider_open_connection (GdaServerProvider *provider,
-                                      GdaConnection *cnc,
-                                      GdaQuarkList *params,
-                                      const gchar *username,
-                                      const gchar *password)
+                                     GdaConnection *cnc,
+                                     GdaQuarkList *params,
+                                     const gchar *username,
+                                     const gchar *password)
 {
-	return FALSE;
+	GdaError *error = NULL;
+	GdaIBMDB2Provider *db2_prov = (GdaIBMDB2Provider *) provider;
+	GdaIBMDB2ConnectionData *db2 = NULL;
+	gchar *db2_dsn = NULL;
+
+	const gchar *t_database = NULL;
+	const gchar *t_host = NULL;
+	const gchar *t_user = NULL;
+	const gchar *t_password = NULL;
+
+	g_return_val_if_fail (GDA_IS_IBMDB2_PROVIDER (db2_prov), FALSE);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+
+	t_database = gda_quark_list_find (params, "DATABASE");
+	t_host = gda_quark_list_find (params, "HOST");
+	t_user = gda_quark_list_find (params, "USER");
+	t_password = gda_quark_list_find (params, "PASSWORD");
+
+	if (username)
+		t_user = username;
+	if (password)
+		t_password = password;
+
+	if ((t_host == NULL) || (t_user == NULL) || (t_password == NULL)) {
+		gda_connection_add_error_string (cnc, _("You must at least provide host, user and password to connect."));
+		return FALSE;
+	}
+	
+	db2 = g_new0 (GdaIBMDB2ConnectionData, 1);
+	g_return_val_if_fail (db2 != NULL, FALSE);
+	
+	db2->rc = SQLAllocHandle (SQL_HANDLE_ENV, SQL_NULL_HANDLE, &db2->henv);
+	if (db2->rc != SQL_SUCCESS) {
+		g_free (db2);
+		db2 = NULL;
+		
+		gda_connection_add_error_string (cnc, _("Could not allocate environment handle."));
+		return FALSE;
+	}
+	db2->rc = SQLAllocHandle (SQL_HANDLE_DBC, db2->henv, &db2->hdbc);
+	if (db2->rc != SQL_SUCCESS) {
+		db2->rc = SQLFreeHandle (SQL_HANDLE_ENV, db2->henv);
+		g_free (db2);
+		db2 = NULL;
+		
+		gda_connection_add_error_string (cnc, _("Could not allocate environment handle."));
+		return FALSE;
+	}
+	db2->rc = SQLSetConnectAttr(db2->hdbc, SQL_ATTR_AUTOCOMMIT,
+	                            (void *) SQL_AUTOCOMMIT_OFF, SQL_NTS);
+	if (db2->rc != SQL_SUCCESS) {
+		db2->rc = SQLFreeHandle (SQL_HANDLE_DBC, db2->hdbc);
+		db2->rc = SQLFreeHandle (SQL_HANDLE_ENV, db2->henv);
+		g_free (db2);
+		db2 = NULL;
+
+		gda_connection_add_error_string (cnc, _("Could not set autocommit to off.\n"));
+		return FALSE;
+	}
+	db2->rc = SQLConnect (db2->hdbc,
+	                      (SQLCHAR *) t_host, SQL_NTS,
+	                      (SQLCHAR *) t_user, SQL_NTS,
+	                      (SQLCHAR *) t_password, SQL_NTS
+	                     );
+	if (db2->rc != SQL_SUCCESS) {
+		db2->rc = SQLFreeHandle (SQL_HANDLE_DBC, db2->hdbc);
+		db2->rc = SQLFreeHandle (SQL_HANDLE_ENV, db2->henv);
+		g_free (db2);
+		db2 = NULL;
+
+		gda_connection_add_error_string (cnc, _("Could not allocate environment handle."));
+		return FALSE;
+	}
+	
+	return TRUE;
 }
 
 static gboolean
 gda_ibmdb2_provider_close_connection (GdaServerProvider *provider,
-                                       GdaConnection *cnc)
+                                      GdaConnection *cnc)
 {
-	return FALSE;
+	GdaIBMDB2Provider *db2_prov = (GdaIBMDB2Provider *) provider;
+	GdaIBMDB2ConnectionData *db2 = NULL;
+
+	g_return_val_if_fail (GDA_IS_IBMDB2_PROVIDER (db2_prov), FALSE);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+	db2 = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_IBMDB2_HANDLE);
+	g_return_val_if_fail (db2 != NULL, FALSE);
+	
+	// FIXME: error handling
+	db2->rc = SQLDisconnect (db2->hdbc);
+	db2->rc = SQLFreeHandle (SQL_HANDLE_DBC, db2->hdbc);
+	db2->rc = SQLFreeHandle (SQL_HANDLE_ENV, db2->henv);
+	
+	g_free (db2);
+	db2 = NULL;
+	
+	return TRUE;
 }
 
 static const gchar
 *gda_ibmdb2_provider_get_database (GdaServerProvider *provider,
-                                    GdaConnection *cnc)
+                                   GdaConnection *cnc)
 {
+	GdaIBMDB2Provider *db2_prov = (GdaIBMDB2Provider *) provider;
+
+	g_return_val_if_fail (GDA_IS_IBMDB2_PROVIDER (db2_prov), NULL);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+
 	return NULL;
 }
 
 static gboolean
 gda_ibmdb2_provider_change_database (GdaServerProvider *provider,
-                                      GdaConnection *cnc,
-                                      const gchar *name)
+                                     GdaConnection *cnc,
+                                     const gchar *name)
 {
+	GdaIBMDB2Provider *db2_prov = (GdaIBMDB2Provider *) provider;
+
+	g_return_val_if_fail (GDA_IS_IBMDB2_PROVIDER (db2_prov), FALSE);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+
 	return FALSE;
 }
 
 static gboolean
 gda_ibmdb2_provider_create_database (GdaServerProvider *provider,                                                    GdaConnection *cnc,
-                                      const gchar *name)
+                                     const gchar *name)
 {
+	GdaIBMDB2Provider *db2_prov = (GdaIBMDB2Provider *) provider;
+
+	g_return_val_if_fail (GDA_IS_IBMDB2_PROVIDER (db2_prov), FALSE);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+	
 	return FALSE;
 }
 
@@ -125,6 +230,11 @@ gda_ibmdb2_provider_drop_database (GdaServerProvider *provider,
                                     GdaConnection *cnc,
                                     const gchar *name)
 {
+	GdaIBMDB2Provider *db2_prov = (GdaIBMDB2Provider *) provider;
+
+	g_return_val_if_fail (GDA_IS_IBMDB2_PROVIDER (db2_prov), FALSE);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+
 	return FALSE;
 }
 
@@ -134,46 +244,75 @@ static GList
                                        GdaCommand *cmd,
                                        GdaParameterList *params)
 {
+	GdaIBMDB2Provider *db2_prov = (GdaIBMDB2Provider *) provider;
+
+	g_return_val_if_fail (GDA_IS_IBMDB2_PROVIDER (db2_prov), NULL);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+
 	return NULL;
 }
 
 static gboolean
 gda_ibmdb2_provider_begin_transaction (GdaServerProvider *provider,
-                                        GdaConnection *cnc,
-                                        GdaTransaction *xaction)
+                                       GdaConnection *cnc,
+                                       GdaTransaction *xaction)
 {
+	GdaIBMDB2Provider *db2_prov = (GdaIBMDB2Provider *) provider;
+
+	g_return_val_if_fail (GDA_IS_IBMDB2_PROVIDER (db2_prov), FALSE);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+
 	return FALSE;
 }
 
 static gboolean
 gda_ibmdb2_provider_commit_transaction (GdaServerProvider *provider,
-                                         GdaConnection *cnc,
-                                         GdaTransaction *xaction)
+                                        GdaConnection *cnc,
+                                        GdaTransaction *xaction)
 {
+	GdaIBMDB2Provider *db2_prov = (GdaIBMDB2Provider *) provider;
+
+	g_return_val_if_fail (GDA_IS_IBMDB2_PROVIDER (db2_prov), FALSE);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+
 	return FALSE;
 }
 
 static gboolean
 gda_ibmdb2_provider_rollback_transaction (GdaServerProvider *provider,
-                                           GdaConnection *cnc,
-                                           GdaTransaction *xaction)
+                                          GdaConnection *cnc,
+                                          GdaTransaction *xaction)
 {
+	GdaIBMDB2Provider *db2_prov = (GdaIBMDB2Provider *) provider;
+
+	g_return_val_if_fail (GDA_IS_IBMDB2_PROVIDER (db2_prov), FALSE);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+
 	return FALSE;
 }
 
 static gboolean
 gda_ibmdb2_provider_supports (GdaServerProvider *provider,
-                               GdaConnection *cnc,
-                               GdaConnectionFeature feature)
+                              GdaConnection *cnc,
+                              GdaConnectionFeature feature)
 {
+	GdaIBMDB2Provider *db2_prov = (GdaIBMDB2Provider *) provider;
+
+	g_return_val_if_fail (GDA_IS_IBMDB2_PROVIDER (db2_prov), FALSE);
+
 	return FALSE;
 }
 
 static GdaDataModel
 *gda_ibmdb2_provider_get_schema (GdaServerProvider *provider,                                                    GdaConnection *cnc,
-                                  GdaConnectionSchema schema,
-                                  GdaParameterList *params)
+                                 GdaConnectionSchema schema,
+                                 GdaParameterList *params)
 {
+	GdaIBMDB2Provider *db2_prov = (GdaIBMDB2Provider *) provider;
+
+	g_return_val_if_fail (GDA_IS_IBMDB2_PROVIDER (db2_prov), NULL);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+
 	return NULL;
 }
 

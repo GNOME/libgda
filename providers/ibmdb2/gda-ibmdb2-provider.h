@@ -23,6 +23,8 @@
 #  define __gda_ibmdb2_provider_h__
 
 #include <libgda/gda-server-provider.h>
+#include <sqlcli1.h>
+#include "gda-ibmdb2.h"
 
 
 #define GDA_TYPE_IBMDB2_PROVIDER            (gda_ibmdb2_provider_get_type())
@@ -44,6 +46,13 @@ struct _GdaIBMDB2Provider {
 
 struct _GdaIBMDB2ProviderClass {
 	GdaServerProviderClass parent_class;
+};
+
+typedef struct _GdaIBMDB2ConnectionData GdaIBMDB2ConnectionData;
+struct _GdaIBMDB2ConnectionData {
+	SQLRETURN rc;
+	SQLHANDLE henv;
+	SQLHANDLE hdbc;
 };
 
 G_BEGIN_DECLS
