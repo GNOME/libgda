@@ -1,3 +1,38 @@
+libgda 1.1.99, 2004-10-10
+-------------------------
+
+ - Use empty strings rather than NULL for missing fields in XML provider
+   schema (joe)
+ - Improved SQL parser (vivien, dru)
+ - More fixes for GCC 3.4 compilation (caolan)
+ - Added escape_string virtual method for providers (alan)
+ - Added gda_connection_clear_error_list function (txema)
+ - Improved transaction support for PostgreSQL provider (txema)
+ - Fixed database dropping in FireBird provider (jeronimo)
+ - Added support for aggregates to FireBird provider (jeronimo)
+ - Fixed crash on strcmp in gda_client_find_connection (rodrigo)
+ - Use the correct dsn/username/password when searching connections in
+   gda_client_find_connection function (rodrigo)
+ - Added example code for FireBird provider (jeronimo)
+ - Corrected problem with FireBird date and datetime year part (jeronimo)
+ - Fixed #151054 (rodrigo)
+ - Added support for transparent connections in FireBird provider (jeronimo)
+ - Updated MySQL list of types to matche the real ones (alan)
+ - Added read-only support for blobs in FireBird provider (jeronimo)
+ - Improved ODBC, MySQL and PostgreSQL detection from autotools (caolan)
+ - Removed obsolete macros from configure.in (rodrigo)
+ - Removed lots of compilation warnings (szalai)
+ - Added reset_connection virtual method for providers (rodrigo)
+ - Fixed compilation under Win32 (alan)
+ - Updated translations:
+        - cs (miroslav)
+	- en_CA (adam)
+	- en_GB (david)
+	- nb (kjartan)
+	- pt_BR (raphael)
+	- sq (laurent)
+	- uk (maxim)
+
 libgda 1.0.4, 2004-04-18
 ------------------------
 

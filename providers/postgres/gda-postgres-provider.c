@@ -1569,6 +1569,11 @@ gda_postgres_index_type (gint colnum, GList *idx_list, IdxType type)
 	return FALSE;
 }
 
+#ifdef LIBGDA_WIN32
+/* this is a ming thing.. */
+#define strtok_r(a,b,c) strtok(a,b)
+
+#endif
 
 /* Converts a single dimension array in the form of '{AA,BB,CC}' to a list of
  * strings (here ->"AA"->"BB"->"CC) which must be freed by the caller
@@ -2161,7 +2166,7 @@ gda_postgres_provider_escape_string (GdaServerProvider *provider,
 				     const gchar *from,
 				     gchar *to)
 {
-	g_return_val_if_fail (GDA_IS_MYSQL_PROVIDER (provider), FALSE);
+	g_return_val_if_fail (GDA_IS_POSTGRES_PROVIDER (provider), FALSE);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (from != NULL, FALSE);
 	g_return_val_if_fail (to != NULL, FALSE);

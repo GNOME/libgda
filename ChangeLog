@@ -1,3 +1,10 @@
+2004-10-09  Alan Knowles <alan@akbkhome.com>
+
+	* libgda/gda-log.c: made it compile under Win32.
+
+	* providers/postgres/gda-postgres-provider.c
+	(gda_postgres_provider_escape_string): s/MYSQL/PostgreSQL.
+
 2004-09-25  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	Fixes #152487
