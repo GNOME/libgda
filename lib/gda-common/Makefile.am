@@ -59,7 +59,7 @@ gda_common_headers = \
 	gda-common.h \
 	GNOME_Database.h
 
-$(libgda_common_2_la_OBJECTS): GNOME_Database.h $(gda_marshal_built_files)
+$(libgda_common_2_la_OBJECTS): $(gda_marshal_built_files)
 
 libgda_common_2_la_SOURCES = \
 	$(gda_common_headers) \

@@ -1,3 +1,7 @@
+2001-09-05  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* configure.in: check for glib-genmarshal
+
 2001-09-03  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* first complete compilation on GNOME 2

@@ -21,10 +21,10 @@
 #include "config.h"
 #include "gda-connection-pool.h"
 #include "gda-common.h"
+#include "gda-marshal.h"
 #include "GNOME_Database.h"
 #include <gobject/gsignal.h>
 #include <bonobo/bonobo-i18n.h>
-#include <bonobo/bonobo-marshal.h>
 
 static void gda_connection_pool_class_init (GdaConnectionPoolClass * klass);
 static void gda_connection_pool_init       (GdaConnectionPool * pool, GdaConnectionPoolClass *klass);
@@ -102,7 +102,7 @@ gda_connection_pool_class_init (GdaConnectionPoolClass * klass)
 				G_SIGNAL_RUN_LAST,
 				G_STRUCT_OFFSET (GdaConnectionPoolClass, error),
 				NULL, NULL,
-				bonobo_marshal_VOID__POINTER_POINTER,
+				gda_marshal_VOID__POINTER_POINTER,
 				G_TYPE_NONE, 2, G_TYPE_POINTER,
 				G_TYPE_POINTER);
 
