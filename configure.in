@@ -441,10 +441,12 @@ AM_GNU_GETTEXT
 dnl
 dnl Variables
 dnl
-GDA_CLIENT_LIBS="$gda_xml_libs $gda_oaf_libs `gnome-config --libs gnomeui`"
-GDA_CLIENT_CFLAGS="$gda_xml_cflags $gda_oaf_cflags `gnome-config --cflags gnomeui`"
-GDA_PROVIDER_LIBS="$gda_xml_libs $gda_oaf_libs `gnome-config --libs gnomeui`"
-GDA_PROVIDER_CFLAGS="$gda_xml_cflags $gda_oaf_cflags `gnome-config --cflags gnomeui`"
+gda_base_libs=`glib-config --libs gthread`
+gda_base_cflags=`glib-config --cflags gthread`
+GDA_CLIENT_LIBS="$gda_base_libs $gda_xml_libs $gda_oaf_libs `gnome-config --libs gnomeui`"
+GDA_CLIENT_CFLAGS="$gda_base_cflags $gda_xml_cflags $gda_oaf_cflags `gnome-config --cflags gnomeui`"
+GDA_PROVIDER_LIBS="$gda_base_libs $gda_xml_libs $gda_oaf_libs `gnome-config --libs gnomeui`"
+GDA_PROVIDER_CFLAGS="$gda_base_cflags $gda_xml_cflags $gda_oaf_cflags `gnome-config --cflags gnomeui`"
 
 AC_SUBST(CFLAGS)
 AC_SUBST(CXXFLAGS)
