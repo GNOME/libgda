@@ -85,7 +85,7 @@ impl_Connection_open (PortableServer_Servant servant,
 	result = TRUE;
 
 	/* add the new client to our list */
-	client_copy = CORBA_Object_duplicate (client, ev);
+	client_copy = bonobo_object_dup_ref ((Bonobo_Unknown) client, ev);
 	if (BONOBO_EX (ev))
 		gda_log_error (_("Could not duplicate client object. Client won't get notifications"));
 	else {

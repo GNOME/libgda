@@ -1,5 +1,8 @@
 2002-01-13  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* gda-server-connection.c (impl_Connection_open): use
+	bonobo_object_dup_ref, not CORBA_Object_duplicate
+
 	* gda-connection.c (gda_connection_finalize): added new parameter
 	in the call to GNOME_Database_Connection_close
 
