@@ -1,4 +1,4 @@
-/* GNOME DB libary
+/* GDA C++ bindings
  * Copyright (C) 2000 Chris Wiegand
  *
  * This library is free software; you can redistribute it and/or
@@ -224,4 +224,14 @@ void
 Recordset::setCursortype (GDA_CursorType type)
 {
 	gda_recordset_set_cursortype (_gda_recordset, type);
+}
+
+GList* Recordset::getRow ()
+{
+	return gda_recordset_get_row (_gda_recordset);
+}
+
+gchar* Recordset::getRowAsString ()
+{
+	return gda_recordset_get_row_as_string (_gda_recordset);
 }

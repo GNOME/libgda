@@ -1,5 +1,6 @@
-/* GNOME DB libary
+/* GDA C++ bindings
  * Copyright (C) 2000 Chris Wiegand
+ * Copyright (C) 2001 Rodrigo Moya
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -64,6 +65,8 @@ namespace gda
 		void setCursorloc (GDA_CursorLocation loc);
 		GDA_CursorType getCursortype ();
 		void setCursortype (GDA_CursorType type);
+		GList *getRow ();
+		gchar *getRowAsString ();
 
 	      private:
 		  Connection * cnc;

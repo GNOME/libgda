@@ -1,3 +1,7 @@
+2001-09-02  Liam Girdwood <liam@novalinux.com>
+
+	* gdaRecordset.cpp (getRow, getRowAsString): new methods
+
 2001-04-28  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* applied patch from Kuba (kpuchar@poczta.onet.pl) which wraps
