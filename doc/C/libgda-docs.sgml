@@ -31,6 +31,7 @@
 <!ENTITY libgda-data-model SYSTEM "sgml/gda-data-model.sgml">
 <!ENTITY libgda-error SYSTEM "sgml/gda-error.sgml">
 <!ENTITY libgda-export SYSTEM "sgml/gda-export.sgml">
+<!ENTITY libgda-init SYSTEM "sgml/libgda.sgml">
 <!ENTITY libgda-log SYSTEM "sgml/gda-log.sgml">
 <!ENTITY libgda-parameter SYSTEM "sgml/gda-parameter.sgml">
 <!ENTITY libgda-quark-list SYSTEM "sgml/gda-quark-list.sgml">
@@ -608,6 +609,7 @@
     <para>
       The following sections describe the API available for &GDA applications.
     </para>
+    &libgda-init;
     &libgda-batch;
     &libgda-client;
     &libgda-command;

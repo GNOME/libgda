@@ -1,0 +1,51 @@
+<!-- ##### SECTION Title ##### -->
+libgda
+
+<!-- ##### SECTION Short_Description ##### -->
+Library initialization
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### FUNCTION gda_init ##### -->
+<para>
+
+</para>
+
+@app_id: 
+@version: 
+@nargs: 
+@args: 
+
+
+<!-- ##### USER_FUNCTION GdaInitFunc ##### -->
+<para>
+
+</para>
+
+@user_data: 
+
+
+<!-- ##### FUNCTION gda_main_run ##### -->
+<para>
+
+</para>
+
+@init_func: 
+@user_data: 
+
+
+<!-- ##### FUNCTION gda_main_quit ##### -->
+<para>
+
+</para>
+
+
+
