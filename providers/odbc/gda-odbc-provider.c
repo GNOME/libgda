@@ -261,25 +261,19 @@ gda_odbc_provider_close_connection (GdaServerProvider *provider,
 }
 
 static GList *
-process_sql_commands (GList *reclist, GdaConnection *cnc, GdaCommand *cmd)
+process_sql_commands (GList *reclist, GdaConnection *cnc, const gchar *sql, GdaCommandOptions opts)
 {
 	GdaOdbcConnectionData *priv_data;
 	GdaDataModelArray *recset;
-	GdaCommandOptions opts;
-	SQLCHAR *sql;
 	SQLSMALLINT ncols;
 	SQLRETURN rc;
 	int i;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
-	g_return_val_if_fail (cmd != NULL, NULL);
 
 	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_ODBC_HANDLE);
         if (!priv_data)
                 return NULL;
-
-	sql = (SQLCHAR*) gda_command_get_text ( cmd );
-	opts = gda_command_get_options ( cmd );
 
 	rc = SQLExecDirect ( priv_data->hstmt, sql, SQL_NTS );
 	if ( SQL_SUCCEEDED( rc )) {
@@ -384,19 +378,28 @@ gda_odbc_provider_execute_command (GdaServerProvider *provider,
 				   GdaParameterList *params)
 {
 	GList *reclist = NULL;
+	gchar *str;
+	GdaCommandOptions options;
 
 	g_return_val_if_fail (GDA_IS_ODBC_PROVIDER (provider), NULL);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (cmd != NULL, NULL);
 
 	/* execute command */
+	options = gda_command_get_options (cmd);
 	switch (gda_command_get_command_type (cmd)) {
 	case GDA_COMMAND_TYPE_SQL :
-		reclist = process_sql_commands (reclist, cnc, cmd);
+		reclist = process_sql_commands (reclist, cnc, gda_command_get_text (cmd),
+						options);
+		break;
+
+	case GDA_COMMAND_TYPE_TABLE :
+		str = g_strdup_printf ("SELECT * FROM %s", gda_command_get_text (cmd));
+		reclist = process_sql_commands (reclist, cnc, str, options);
+		g_free (str);
 		break;
 
 	/* FIXME: do these types */
-	case GDA_COMMAND_TYPE_TABLE :
 	case GDA_COMMAND_TYPE_PROCEDURE:
 	case GDA_COMMAND_TYPE_SCHEMA:
 		break;

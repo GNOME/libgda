@@ -1,3 +1,11 @@
+2004-01-10  Jon Willeke <willeke@users.sourceforge.net>
+
+	Fixes #130838
+
+	* providers/odbc/gda-odbc-provider.c (process_sql_commands): changed
+	to get the SQL command as a string.
+	(gda_odbc_provider_execute_command): added support for TABLE commands.
+	
 2004-01-10  J.H.M. Dassen (Ray) <jdassen@debian.org>
 
 	http://bugs.debian.org/226560
