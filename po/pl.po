@@ -9,8 +9,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2002-08-08 14:35+0200\n"
-"PO-Revision-Date: 2002-08-08 14:36+0200\n"
+"POT-Creation-Date: 2002-08-10 08:20+0200\n"
+"PO-Revision-Date: 2002-08-10 08:21+0200\n"
 "Last-Translator: GNOME PL Team <translators@gnome.pl>\n"
 "Language-Team: Polish <pl@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -276,6 +276,21 @@ msgstr "Nie można uzyskać opisu kolumny"
 #: providers/default/libmain.c:1
 msgid "GDA default provider, based on the libgda XML format"
 msgstr "Domyślny dostarczyciel GDA, oparty na formacie libgda XML"
+
+#: providers/freetds/libmain.c:1
+msgid "GDA provider for TDS-based databases (using FreeTDS)"
+msgstr ""
+"Dostarczyciel GDA dla baz danych opartych na TDS (wykorzystuje FreeTDS)"
+
+#: providers/freetds/utils.c:1 providers/oracle/utils.c:1
+#: providers/postgres/utils.c:1
+msgid "NO DESCRIPTION"
+msgstr "BRAK OPISU"
+
+#: providers/freetds/utils.c:1 providers/oracle/utils.c:1
+#: providers/postgres/utils.c:1
+msgid "Not available"
+msgstr "Niedostępne"
 
 #: providers/mdb/gda-mdb-provider.c:1
 msgid "A database FILENAME must be specified in the connection_string"
@@ -651,14 +666,6 @@ msgstr "Nie można pobrać wiersza"
 #: providers/oracle/libmain.c:1
 msgid "GDA provider for Oracle databases"
 msgstr "Dostarczyciel GDA dla baz danych Oracle"
-
-#: providers/oracle/utils.c:1 providers/postgres/utils.c:1
-msgid "NO DESCRIPTION"
-msgstr "BRAK OPISU"
-
-#: providers/oracle/utils.c:1 providers/postgres/utils.c:1
-msgid "Not available"
-msgstr "Niedostępne"
 
 #: providers/postgres/gda-postgres-provider.c:1
 #: providers/postgres/gda-postgres-provider.c:1
