@@ -431,6 +431,18 @@ static GdaDataModel
 			return gda_freetds_get_databases (cnc, params);
 		case GDA_CONNECTION_SCHEMA_FIELDS:
 			return gda_freetds_get_fields (cnc, params);
+		case GDA_CONNECTION_SCHEMA_PROCEDURES:
+			query = g_strdup ("SELECT name "
+			                  "FROM sysobjects "
+			                    "WHERE (type = 'P') "
+			                  "ORDER BY name");
+			recset = gda_freetds_execute_query (cnc, query);
+			g_free (query);
+			query = NULL;
+			if (recset != NULL)
+				gda_data_model_set_column_title (GDA_DATA_MODEL (recset),
+				                                 0, _("Procedures"));
+			return recset;
 		case GDA_CONNECTION_SCHEMA_TABLES:
 			query = g_strdup ("SELECT name "
 			                  "FROM sysobjects "
@@ -439,17 +451,21 @@ static GdaDataModel
 						  "(name != 'syblicenseslog') "
 			                  "ORDER BY name");
 
-			recset =gda_freetds_execute_query (cnc, query);
+			recset = gda_freetds_execute_query (cnc, query);
 			g_free (query);
 			query = NULL;
-			gda_data_model_set_column_title (GDA_DATA_MODEL (recset),
-			                                 0, _("Tables"));
+			if (recset != NULL)
+				gda_data_model_set_column_title (GDA_DATA_MODEL (recset),
+				                                 0, _("Tables"));
 			return recset;
 		case GDA_CONNECTION_SCHEMA_TYPES:
 			recset = gda_freetds_execute_query (cnc, "SELECT name FROM systypes ORDER BY name");
-			gda_data_model_set_column_title (GDA_DATA_MODEL (recset),
-			                                 0, _("Types"));
+			if (recset != NULL)
+				gda_data_model_set_column_title (GDA_DATA_MODEL (recset),
+				                                 0, _("Types"));
 			return recset;
+		case GDA_CONNECTION_SCHEMA_USERS:
+			return gda_freetds_execute_query (cnc, "SELECT name FROM sysusers WHERE (valid_user(uid) = 1) ORDER by name");
 	}
 	
 	return NULL;
