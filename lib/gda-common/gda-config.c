@@ -18,22 +18,33 @@
  */
 
 #include "config.h"
-#include <gconf/gconf.h>
+#include <string.h>
 #include <bonobo-activation/bonobo-activation.h>
+#include <bonobo-config/bonobo-config-database.h>
+#include <bonobo/bonobo-moniker-util.h>
+#include <bonobo/bonobo-property-bag-client.h>
 #include "gda-config.h"
 #include "gda-corba.h"
 
-static GConfEngine *conf_engine = NULL;
+static Bonobo_ConfigDatabase conf_engine = NULL;
 
-static GConfEngine *
+static Bonobo_ConfigDatabase
 get_conf_engine (void)
 {
+	CORBA_Environment ev;
+
 	if (!conf_engine) {
-		/* initialize GConf */
-		if (!gconf_is_initialized ())
-			gconf_init (0, NULL, NULL);
-		conf_engine = gconf_engine_get_default ();
+		CORBA_exception_init (&ev);
+
+		conf_engine = bonobo_get_object ("config:", "Bonobo/ConfigDatabase", &ev);
+		if (!conf_engine || BONOBO_EX (&ev)) {
+			CORBA_exception_free (&ev);
+			return NULL;
+		}
+
+		bonobo_running_context_auto_exit_unref (BONOBO_OBJECT (conf_engine));
 	}
+
 	return conf_engine;
 }
 
@@ -49,7 +60,7 @@ get_conf_engine (void)
 gchar *
 gda_config_get_string (const gchar * path)
 {
-	return gconf_engine_get_string (get_conf_engine (), path, NULL);
+	return bonobo_pbclient_get_string (get_conf_engine (), path, NULL);
 }
 
 /**
@@ -60,10 +71,10 @@ gda_config_get_string (const gchar * path)
  *
  * Returns: the value stored at the given entry
  */
-gint
+glong
 gda_config_get_int (const gchar * path)
 {
-	return gconf_engine_get_int (get_conf_engine (), path, NULL);
+	return bonobo_pbclient_get_long (get_conf_engine (), path, NULL);
 }
 
 /**
@@ -77,7 +88,7 @@ gda_config_get_int (const gchar * path)
 gdouble
 gda_config_get_float (const gchar * path)
 {
-	return gconf_engine_get_float (get_conf_engine (), path, NULL);
+	return bonobo_pbclient_get_float (get_conf_engine (), path, NULL);
 }
 
 /**
@@ -91,7 +102,7 @@ gda_config_get_float (const gchar * path)
 gboolean
 gda_config_get_boolean (const gchar * path)
 {
-	return gconf_engine_get_bool (get_conf_engine (), path, NULL);
+	return bonobo_pbclient_get_boolean (get_conf_engine (), path, NULL);
 }
 
 /**
@@ -104,7 +115,7 @@ gda_config_get_boolean (const gchar * path)
 void
 gda_config_set_string (const gchar * path, const gchar * new_value)
 {
-	gconf_engine_set_string (get_conf_engine (), path, new_value, NULL);
+	bonobo_pbclient_set_string (get_conf_engine (), path, new_value, NULL);
 }
 
 /**
@@ -115,9 +126,9 @@ gda_config_set_string (const gchar * path, const gchar * new_value)
  * Sets the given configuration entry to contain an integer
  */
 void
-gda_config_set_int (const gchar * path, gint new_value)
+gda_config_set_int (const gchar * path, glong new_value)
 {
-	gconf_engine_set_int (get_conf_engine (), path, new_value, NULL);
+	bonobo_pbclient_set_long (get_conf_engine (), path, new_value, NULL);
 }
 
 /**
@@ -130,7 +141,7 @@ gda_config_set_int (const gchar * path, gint new_value)
 void
 gda_config_set_float (const gchar * path, gdouble new_value)
 {
-	gconf_engine_set_float (get_conf_engine (), path, new_value, NULL);
+	bonobo_pbclient_set_float (get_conf_engine (), path, new_value, NULL);
 }
 
 /**
@@ -144,7 +155,7 @@ void
 gda_config_set_boolean (const gchar * path, gboolean new_value)
 {
 	g_return_if_fail (path != NULL);
-	gconf_engine_set_bool (get_conf_engine (), path, new_value, NULL);
+	bonobo_pbclient_set_boolean (get_conf_engine (), path, new_value, NULL);
 }
 
 /**
@@ -157,7 +168,7 @@ void
 gda_config_remove_section (const gchar * path)
 {
 	g_return_if_fail (path != NULL);
-	gconf_engine_remove_dir (get_conf_engine (), path, NULL);
+	/* FIXME: */
 }
 
 /**
@@ -169,7 +180,7 @@ gda_config_remove_section (const gchar * path)
 void
 gda_config_remove_key (const gchar * path)
 {
-	gconf_engine_unset (get_conf_engine (), path, NULL);
+	/* FIXME: */
 }
 
 /**
@@ -184,7 +195,7 @@ gda_config_remove_key (const gchar * path)
 gboolean
 gda_config_has_section (const gchar * path)
 {
-	return gconf_engine_dir_exists (get_conf_engine (), path, NULL);
+	return FALSE; /* FIXME: */
 }
 
 /**
@@ -198,41 +209,10 @@ gda_config_has_section (const gchar * path)
 gboolean
 gda_config_has_key (const gchar * path)
 {
-	GConfValue *value;
-
 	g_return_val_if_fail (path != NULL, FALSE);
 
-	value = gconf_engine_get (get_conf_engine (), path, NULL);
-	if (value) {
-		gconf_value_free (value);
-		return TRUE;
-	}
+	/* FIXME: */
 	return FALSE;
-}
-
-/**
- * gda_config_commit
- *
- * Commits all changes made to the configuration system. This means that
- * all buffered data (that is, modified data not yet written to the
- * configuration database), if any, is actually written to disk
- */
-void
-gda_config_commit (void)
-{
-	/* FIXME: is that correct? */
-	//gconf_suggest_sync(get_conf_engine(), NULL);
-}
-
-/**
- * gda_config_rollback
- *
- * Discards all changes made to the configuration system.
- */
-void
-gda_config_rollback (void)
-{
-	/* FIXME: how to do it? */
 }
 
 /**
@@ -254,21 +234,7 @@ gda_config_list_sections (const gchar * path)
 
 	g_return_val_if_fail (path != NULL, NULL);
 
-	slist = gconf_engine_all_dirs (get_conf_engine (), path, NULL);
-	if (slist) {
-		GSList *node;
-
-		for (node = slist; node != NULL; node = g_slist_next (node)) {
-			gchar *section_name =
-				strrchr ((const char *) node->data, '/');
-			if (section_name) {
-				ret = g_list_append (ret,
-						     g_strdup (section_name +
-							       1));
-			}
-		}
-		g_slist_free (slist);
-	}
+	/* FIXME: */
 	return ret;
 }
 
@@ -285,36 +251,7 @@ gda_config_list_sections (const gchar * path)
 GList *
 gda_config_list_keys (const gchar * path)
 {
-	GList *ret = NULL;
-	GSList *slist;
-
-	g_return_val_if_fail (path != NULL, NULL);
-
-	slist = gconf_engine_all_entries (get_conf_engine (), path, NULL);
-	if (slist) {
-		GSList *node;
-
-		for (node = slist; node != NULL; node = g_slist_next (node)) {
-			GConfEntry *entry = (GConfEntry *) node->data;
-			if (entry) {
-				gchar *entry_name;
-
-				entry_name =
-					strrchr ((const char *)
-						 gconf_entry_get_key (entry),
-						 '/');
-				if (entry_name) {
-					ret = g_list_append (ret,
-							     g_strdup
-							     (entry_name +
-							      1));
-				}
-				gconf_entry_free (entry);
-			}
-		}
-		g_slist_free (slist);
-	}
-	return ret;
+	/* FIXME: */
 }
 
 /**
@@ -452,15 +389,14 @@ GList *
 gda_provider_list (void)
 {
 	GList *retval = NULL;
-	OAF_ServerInfoList *servlist;
+	Bonobo_ServerInfoList *servlist;
 	CORBA_Environment ev;
 	gint i;
 	GdaProvider *provider;
 
 	CORBA_exception_init (&ev);
-	servlist =
-		oaf_query ("repo_ids.has('IDL:GDA/Connection:1.0')", NULL,
-			   &ev);
+	servlist = bonobo_activation_query (
+		"repo_ids.has('IDL:GDA/Connection:1.0')", NULL, &ev);
 	if (servlist) {
 		for (i = 0; i < servlist->_length; i++) {
 			gchar *dsn_params;
@@ -469,39 +405,28 @@ gda_provider_list (void)
 			provider->name = g_strdup (servlist->_buffer[i].iid);
 			provider->location =
 				g_strdup (servlist->_buffer[i].location_info);
-			provider->comment =
-				gda_corba_get_oaf_attribute (servlist->
-							     _buffer[i].props,
-							     "description");
-			provider->repo_id =
-				gda_corba_get_oaf_attribute (servlist->
-							     _buffer[i].props,
-							     "repo_ids");
-			provider->type =
-				g_strdup (servlist->_buffer[i].server_type);
-			provider->username =
-				g_strdup (servlist->_buffer[i].username);
-			provider->hostname =
-				g_strdup (servlist->_buffer[i].hostname);
-			provider->domain =
-				g_strdup (servlist->_buffer[i].domain);
+			provider->comment = gda_corba_get_ac_attribute (
+				servlist->_buffer[i].props, "description");
+			provider->repo_id = gda_corba_get_ac_attribute (
+				servlist->_buffer[i].props, "repo_ids");
+			provider->type = g_strdup (servlist->_buffer[i].server_type);
+			provider->username = g_strdup (servlist->_buffer[i].username);
+			provider->hostname = g_strdup (servlist->_buffer[i].hostname);
+			provider->domain = g_strdup (servlist->_buffer[i].domain);
 
 			/* get list of available DSN params */
 			provider->dsn_params = NULL;
-			dsn_params =
-				gda_corba_get_oaf_attribute (servlist->
-							     _buffer[i].props,
-							     "gda_params");
+			dsn_params = gda_corba_get_ac_attribute (
+				servlist->_buffer[i].props, "gda_params");
 			if (dsn_params) {
 				gint cnt = 0;
 				gchar **arr = g_strsplit (dsn_params, ";", 0);
 
 				if (arr) {
 					while (arr[cnt] != NULL) {
-						provider->dsn_params =
-							g_list_append
-							(provider->dsn_params,
-							 g_strdup (arr[cnt]));
+						provider->dsn_params = g_list_append (
+							provider->dsn_params,
+							g_strdup (arr[cnt]));
 						cnt++;
 					}
 					g_strfreev (arr);
@@ -562,14 +487,13 @@ gda_provider_find_by_name (const gchar * name)
 	while (node) {
 		if (!strcmp
 		    (name, GDA_PROVIDER_NAME ((GdaProvider *) node->data))) {
-			provider =
-				gda_provider_copy ((GdaProvider *) node->
-						   data);
+			provider = gda_provider_copy ((GdaProvider *) node->data);
 			break;
 		}
 		node = g_list_next (node);
 	}
 	gda_provider_free_list (list);
+
 	return provider;
 }
 
@@ -664,8 +588,7 @@ gda_dsn_list (void)
 	GList *ret = NULL;
 	GList *node;
 
-	datasources =
-		gda_config_list_sections (GDA_CONFIG_SECTION_DATASOURCES);
+	datasources = gda_config_list_sections (GDA_CONFIG_SECTION_DATASOURCES);
 	for (node = datasources; node != NULL; node = g_list_next (node)) {
 		GdaDsn *dsn;
 		gchar *name;
@@ -684,15 +607,13 @@ gda_dsn_list (void)
 							    GDA_CONFIG_SECTION_DATASOURCES,
 							    name));
 			gda_dsn_set_description (dsn,
-						 get_config_string
-						 ("%s/%s/Description",
-						  GDA_CONFIG_SECTION_DATASOURCES,
-						  name));
+						 get_config_string ("%s/%s/Description",
+								    GDA_CONFIG_SECTION_DATASOURCES,
+								    name));
 			gda_dsn_set_username (dsn,
-					      get_config_string
-					      ("%s/%s/Username",
-					       GDA_CONFIG_SECTION_DATASOURCES,
-					       name));
+					      get_config_string ("%s/%s/Username",
+								 GDA_CONFIG_SECTION_DATASOURCES,
+								 name));
 
 			/* add datasource to return list */
 			ret = g_list_append (ret, (gpointer) dsn);
@@ -790,6 +711,7 @@ gda_dsn_find_by_name (const gchar * dsn_name)
 		list = g_list_next (list);
 	}
 	g_list_free (g_list_first (list));
+
 	return rc;
 }
 

@@ -57,36 +57,36 @@ struct _GdaErrorClass {
 
 GType gda_error_get_type (void);
 
-GdaError *gda_error_new (void);
-GList *gda_error_list_from_exception (CORBA_Environment * ev);
-void gda_error_to_exception (GdaError * error,
-			     CORBA_Environment * ev);
-void gda_error_list_to_exception (GList * error_list,
-				  CORBA_Environment * ev);
+GdaError     *gda_error_new (void);
+GList        *gda_error_list_from_exception (CORBA_Environment * ev);
+void          gda_error_to_exception (GdaError * error,
+				      CORBA_Environment * ev);
+void          gda_error_list_to_exception (GList * error_list,
+					   CORBA_Environment * ev);
 GDA_ErrorSeq *gda_error_list_to_corba_seq (GList * error_list);
-void gda_error_free (GdaError * error);
-void gda_error_list_free (GList * errors);
+void          gda_error_free (GdaError * error);
+void          gda_error_list_free (GList * errors);
 
-const gchar *gda_error_get_description (GdaError * error);
-void gda_error_set_description (GdaError * error,
-				const gchar * description);
-const glong gda_error_get_number (GdaError * error);
-void gda_error_set_number (GdaError * error, glong number);
-const gchar *gda_error_get_source (GdaError * error);
-void gda_error_set_source (GdaError * error, const gchar * source);
-const gchar *gda_error_get_help_url (GdaError * error);
-void gda_error_set_help_url (GdaError * error, const gchar * helpurl);
-const gchar *gda_error_get_help_context (GdaError * error);
-void gda_error_set_help_context (GdaError * error,
-				 const gchar * helpctxt);
-const gchar *gda_error_get_sqlstate (GdaError * error);
-void gda_error_set_sqlstate (GdaError * error,
-			     const gchar * sqlstate);
-const gchar *gda_error_get_native (GdaError * error);
-void gda_error_set_native (GdaError * error, const gchar * native);
-const gchar *gda_error_get_real_command (GdaError * error);
-void gda_error_set_real_command (GdaError * error,
-				 const gchar * realcommand);
+const gchar  *gda_error_get_description (GdaError * error);
+void          gda_error_set_description (GdaError * error,
+					 const gchar * description);
+const glong   gda_error_get_number (GdaError * error);
+void          gda_error_set_number (GdaError * error, glong number);
+const gchar  *gda_error_get_source (GdaError * error);
+void          gda_error_set_source (GdaError * error, const gchar * source);
+const gchar  *gda_error_get_help_url (GdaError * error);
+void          gda_error_set_help_url (GdaError * error, const gchar * helpurl);
+const gchar  *gda_error_get_help_context (GdaError * error);
+void          gda_error_set_help_context (GdaError * error,
+					  const gchar * helpctxt);
+const gchar  *gda_error_get_sqlstate (GdaError * error);
+void          gda_error_set_sqlstate (GdaError * error,
+				      const gchar * sqlstate);
+const gchar  *gda_error_get_native (GdaError * error);
+void          gda_error_set_native (GdaError * error, const gchar * native);
+const gchar  *gda_error_get_real_command (GdaError * error);
+void          gda_error_set_real_command (GdaError * error,
+					  const gchar * realcommand);
 
 G_END_DECLS
 

@@ -85,8 +85,8 @@ gda_corba_handle_exception (CORBA_Environment * ev)
  * gda_corba_get_oaf_attribute
  */
 gchar *
-gda_corba_get_oaf_attribute (CORBA_sequence_OAF_Property props,
-			     const gchar * name)
+gda_corba_get_ac_attribute (CORBA_sequence_Bonobo_ActivationProperty props,
+			    const gchar * name)
 {
 	gchar *ret = NULL;
 	gint i, j;
@@ -96,44 +96,37 @@ gda_corba_get_oaf_attribute (CORBA_sequence_OAF_Property props,
 	for (i = 0; i < props._length; i++) {
 		if (!g_strcasecmp (props._buffer[i].name, name)) {
 			switch (props._buffer[i].v._d) {
-			case OAF_P_STRING:
+			case Bonobo_ACTIVATION_P_STRING :
 				return g_strdup (props._buffer[i].v._u.
 						 value_string);
-			case OAF_P_NUMBER:
+			case Bonobo_ACTIVATION_P_NUMBER :
 				return g_strdup_printf ("%f",
 							props._buffer[i].v._u.
 							value_number);
-			case OAF_P_BOOLEAN:
+			case Bonobo_ACTIVATION_P_BOOLEAN :
 				return g_strdup (props._buffer[i].v._u.
 						 value_boolean ? _("True") :
 						 _("False"));
-			case OAF_P_STRINGV:{
-					GNOME_stringlist strlist;
-					GString *str = NULL;
+			case Bonobo_ACTIVATION_P_STRINGV : {
+				CORBA_sequence_CORBA_string strlist;
+				GString *str = NULL;
 
-					strlist =
-						props._buffer[i].v._u.
-						value_stringv;
-					for (j = 0; j < strlist._length; j++) {
-						if (!str)
-							str = g_string_new
-								(strlist.
-								 _buffer[j]);
-						else {
-							str = g_string_append
-								(str, ";");
-							str = g_string_append
-								(str,
-								 strlist.
-								 _buffer[j]);
-						}
+				strlist = props._buffer[i].v._u.value_stringv;
+				for (j = 0; j < strlist._length; j++) {
+					if (!str)
+						str = g_string_new (strlist._buffer[j]);
+					else {
+						str = g_string_append (str, ";");
+						str = g_string_append (str,
+								       strlist._buffer[j]);
 					}
-					if (str) {
-						ret = g_strdup (str->str);
-						g_string_free (str, TRUE);
-					}
-					return ret;
 				}
+				if (str) {
+					ret = g_strdup (str->str);
+					g_string_free (str, TRUE);
+				}
+				return ret;
+			}
 			}
 		}
 	}
@@ -147,21 +140,4 @@ gda_corba_get_oaf_attribute (CORBA_sequence_OAF_Property props,
 gboolean
 gda_corba_id_is_active (const gchar *id)
 {
-	OAF_ServerInfoList *servlist;
-	CORBA_Environment ev;
-	gchar *query;
-
-	g_return_val_if_fail (id != NULL, FALSE);
-
-	query = g_strdup_printf ("iid = '%s' AND _active = 'true'", id);
-	CORBA_exception_init (&ev);
-	servlist = oaf_query (query, NULL, &ev);
-	g_free ((gpointer) query);
-
-	if (gda_corba_handle_exception (&ev)) {
-		CORBA_exception_free (&ev);
-		/* FIXME: free servlist */
-		return servlist->_length == 0 ? FALSE : TRUE;
-	}
-	return FALSE;
 }

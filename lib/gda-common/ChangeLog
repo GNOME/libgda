@@ -1,3 +1,9 @@
+2001-08-18  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-config.[ch]: switched to bonobo-config
+
+	* gda-corba.[ch]: switched to BonoboActivation
+
 2001-08-17  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* Makefile.am: s/GDA/GNOME_Database

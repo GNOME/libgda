@@ -20,7 +20,7 @@
 
 #include "gda-common-private.h"
 #include "gda-error.h"
-#include "GDA.h"
+#include "GNOME_Database.h"
 
 enum {
 	/* add signals here */

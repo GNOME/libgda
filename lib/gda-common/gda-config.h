@@ -34,12 +34,11 @@ G_BEGIN_DECLS
  * Configuration system access
  */
 gchar   *gda_config_get_string (const gchar * path);
-gint     gda_config_get_int (const gchar * path);
+glong    gda_config_get_int (const gchar * path);
 gdouble  gda_config_get_float (const gchar * path);
 gboolean gda_config_get_boolean (const gchar * path);
-void     gda_config_set_string (const gchar * path,
-		  	    const gchar * new_value);
-void     gda_config_set_int (const gchar * path, gint new_value);
+void     gda_config_set_string (const gchar * path, const gchar * new_value);
+void     gda_config_set_int (const gchar * path, glong new_value);
 void     gda_config_set_float (const gchar * path, gdouble new_value);
 void     gda_config_set_boolean (const gchar * path, gboolean new_value);
 
@@ -48,8 +47,6 @@ void     gda_config_remove_key (const gchar * path);
 
 gboolean gda_config_has_section (const gchar * path);
 gboolean gda_config_has_key (const gchar * path);
-void     gda_config_commit (void);
-void     gda_config_rollback (void);
 
 GList   *gda_config_list_sections (const gchar * path);
 GList   *gda_config_list_keys (const gchar * path);
