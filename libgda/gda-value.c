@@ -978,6 +978,7 @@ gda_value_copy (const GdaValue *value)
 		break;
 	case GDA_VALUE_TYPE_NUMERIC :
 		memcpy (&copy->value.v_numeric, &value->value.v_numeric, sizeof (GdaNumeric));
+		copy->value.v_numeric.number = g_strdup (value->value.v_numeric.number);
 		break;
 	case GDA_VALUE_TYPE_SINGLE :
 		copy->value.v_single = value->value.v_single;
