@@ -18,8 +18,8 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#ifndef __gda_error_h__
-#define __gda_error_h__ 1
+#if !defined(__gda_error_h__)
+#  define __gda_error_h__
 
 #include <glib.h>
 #ifdef HAVE_GOBJECT

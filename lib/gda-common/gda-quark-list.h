@@ -1,5 +1,8 @@
 /* GDA Common Library
- * Copyright (C) 2000 Rodrigo Moya
+ * Copyright (C) 2001, The Free Software Foundation
+ *
+ * Authors:
+ *	Rodrigo Moya <rodrigo@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -17,24 +20,28 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#if !defined(__gda_common_h__)
-#  define __gda_common_h__
+#if !defined(__gda_quark_list_h__)
+#  define __gda_quark_list_h__
 
-/*
- * This is the main header file for the libgda-common library
- */
+#include <glib.h>
 
-#include <gda-config.h>
-#include <gda-corba.h>
-#include <gda-error.h>
-#include <gda-listener.h>
-#include <gda-log.h>
-#include <gda-thread.h>
-#include <gda-util.h>
-#include <gda-xml-document.h>
-#include <gda-xml-database.h>
-#include <gda-xml-util.h>
+#if defined(__cplusplus)
+extern "C" {
+#endif
 
-void gda_init (const gchar *app_id, const gchar *version, gint nargs, gchar *args[]);
+typedef struct _GdaQuarkList GdaQuarkList;
+
+GdaQuarkList *gda_quark_list_new (void);
+GdaQuarkList *gda_quark_list_new_from_string (const gchar *string);
+void          gda_quark_list_free (GdaQuarkList *qlist);
+
+void          gda_quark_list_add_from_string (GdaQuarkList *qlist,
+					      const gchar *string,
+					      gboolean cleanup);
+const gchar  *gda_quark_list_find (GdaQuarkList *qlist, const gchar *name);
+
+#if defined(__cplusplus)
+}
+#endif
 
 #endif

@@ -1,7 +1,5 @@
 lib_LTLIBRARIES = libgda-common.la
 
-#SUBDIRS = gda-xml-query
-
 INCLUDES = \
 	$(GDA_CLIENT_CFLAGS) \
 	$(GDA_PROVIDER_CFLAGS) \
@@ -15,6 +13,7 @@ IDL_FILES = \
 	$(top_builddir)/idl/GDA_Connection.idl \
 	$(top_builddir)/idl/GDA_Error.idl \
 	$(top_builddir)/idl/GDA_Fieldx.idl \
+	$(top_builddir)/idl/GDA_Listener.idl \
 	$(top_builddir)/idl/GDA_Parameter.idl \
 	$(top_builddir)/idl/GDA_Recordset.idl
 
@@ -25,7 +24,9 @@ gda_common_headers = \
 	gda-config.h \
 	gda-corba.h \
 	gda-error.h \
+	gda-listener.h \
 	gda-log.h \
+	gda-quark-list.h \
 	gda-thread.h \
 	gda-util.h \
 	gda-xml-database.h \
@@ -43,7 +44,9 @@ libgda_common_la_SOURCES = \
 	gda-corba.c \
 	gda-error.c \
 	gda-init.c \
+	gda-listener.c \
 	gda-log.c \
+	gda-quark-list.c \
 	gda-thread.c \
 	gda-util.c \
 	gda-xml-database.c \

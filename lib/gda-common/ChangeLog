@@ -1,3 +1,11 @@
+2001-07-07  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-listener.[ch]: implementation of the GDA::Listener CORBA
+	interface, used by clients to receive notifications from providers
+
+	* gda-quark-list.[ch]: new file for managing connection strings and
+	similar value/pair lists
+
 2001-07-06  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-xml-file.[ch]: moved to gda-xml-document.[ch]
