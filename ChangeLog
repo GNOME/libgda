@@ -1,3 +1,7 @@
+2003-10-18  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* libgda/Makefile.am: added gda-marshal.c to built_files.
+
 2003-10-16  Paisa Seeluangsawat <paisa@users.sf.net>
 
 	* providers/mysql/gda-mysql-provider.c: 

@@ -152,7 +152,7 @@ libgda_built_headers = gda-marshal.h gda-enum-types.h
 libgda_built_cfiles = gda-enum-types.c
 
 # Don't build the library until we have built the headers that it needs:
-$(OBJECTS) $(libgda_2_la_OBJECTS): $(libgda_built_headers) $(libgda_built_cfiles)
+$(OBJECTS) $(libgda_2_la_OBJECTS): gda-marshal.c $(libgda_built_headers) $(libgda_built_cfiles)
 
 libgda_2_la_SOURCES = \
 	$(libgda_built_cfiles) \
