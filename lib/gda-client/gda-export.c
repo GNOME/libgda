@@ -146,7 +146,7 @@ run_export_cb (gpointer user_data)
 			gchar *type;
 
 			gda_field = gda_recordset_field_idx (recset, cnt);
-			type = gda_fieldtype_2_string (NULL, 0, gda_field_type (gda_field));
+			type = gda_util_gdatype_2_string (gda_field_type (gda_field));
 
 			xml_field = gda_xml_database_table_add_field (exp->priv->tmp_xmldb,
 								      xml_table,
@@ -157,7 +157,6 @@ run_export_cb (gpointer user_data)
 			gda_xml_database_field_set_scale (exp->priv->tmp_xmldb, xml_field,
 							  gda_field_get_scale (gda_field));
 
-			g_free (type);
 		}
 
 		if (exp->priv->tmp_flags & GDA_EXPORT_FLAGS_TABLE_DATA) {

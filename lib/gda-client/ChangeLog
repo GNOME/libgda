@@ -1,3 +1,7 @@
+2001-08-31  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-export.c (run_export_cb): s/gda_fieldtype_2_string/gda_util_gdatype_to_string
+
 2001-08-28  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* first successfull compilation on GNOME 2.x
