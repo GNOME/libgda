@@ -1,3 +1,7 @@
+2001-12-24  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* libgda-docs.sgml: added GdaReportDocument section
+
 2001-12-23  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* Makefile.am:
