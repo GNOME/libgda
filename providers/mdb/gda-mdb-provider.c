@@ -738,6 +738,12 @@ gda_mdb_provider_execute_sql (GdaMdbProvider *mdbprv, GdaConnection *cnc, const 
 		mdb_sql_reset (mdb_SQL);
 		return NULL;
 	}
+	if (!mdb_SQL->cur_table) {
+		/* parsing went fine, but there is no result
+		   (e.g. because of an invalid column name) */
+		gda_connection_add_error_string (cnc, _("Got no result for '%s' command"), sql);
+		return NULL;
+	}
 
 	model = gda_table_new (sql);
 
