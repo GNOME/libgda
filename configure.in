@@ -476,8 +476,6 @@ providers/oracle/Makefile
 providers/postgres/Makefile
 providers/sybase/Makefile
 tools/Makefile
-tools/gda-buildserver
-tools/gda-buildclient
 report/Makefile
 report/gda-report.dtd
 report/idl/Makefile

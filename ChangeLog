@@ -1,3 +1,7 @@
+2002-01-08  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* configure.in: removed gda-build* scripts
+
 2001-12-29  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* providers/default/sqlite/Makefile.am:
