@@ -1,0 +1,3 @@
+2000-10-17	Rodrigo Moya <rodrigo@linuxave.net>
+	* added OAFIID helper functions:
+	gda_corba_oafiid_is_active()

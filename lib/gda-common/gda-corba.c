@@ -57,6 +57,35 @@ gda_corba_get_name_service (void)
   return oaf_name_service_get(&ev);
 }
 
+/**
+ * gda_corba_handle_exception
+ *
+ */
+gboolean
+gda_corba_handle_exception (CORBA_Environment *ev)
+{
+  g_return_val_if_fail(ev != NULL, FALSE);
+  
+  switch (ev->_major)
+    {
+    case CORBA_NO_EXCEPTION :
+      CORBA_exception_free(ev);
+      break;
+    case CORBA_SYSTEM_EXCEPTION :
+      CORBA_exception_free(ev);
+      gda_log_error(_("CORBA System exception: %s"), CORBA_exception_id(ev));
+      return FALSE;
+    case CORBA_USER_EXCEPTION :
+      CORBA_exception_free(ev);
+      /* FIXME: look at gconf/gconf/gconf-internals.c */
+      return FALSE;
+    }
+  return TRUE;
+}
+
+/**
+ * gda_corba_get_oaf_attribute
+ */
 gchar *
 gda_corba_get_oaf_attribute (CORBA_sequence_OAF_Property props, const gchar *name)
 {
@@ -109,27 +138,28 @@ gda_corba_get_oaf_attribute (CORBA_sequence_OAF_Property props, const gchar *nam
 }
 
 /**
- * gda_corba_handle_exception
- *
+ * gda_corba_oafiid_is_active
  */
 gboolean
-gda_corba_handle_exception (CORBA_Environment *ev)
+gda_corba_oafiid_is_active (const gchar *oafiid)
 {
-  g_return_val_if_fail(ev != NULL, FALSE);
+  OAF_ServerInfoList* servlist;
+  CORBA_Environment   ev;
+  gchar*              query;
   
-  switch (ev->_major)
+  g_return_val_if_fail(oafiid != NULL, FALSE);
+
+  query = g_strdup_printf("iid = '%s' AND _active = true", oafiid);
+  CORBA_exception_init(&ev);
+  servlist = oaf_query(query, NULL, &ev);
+  CORBA_exception_free(&ev);
+  g_free((gpointer) query);
+  
+  if (servlist)
     {
-    case CORBA_NO_EXCEPTION :
-      CORBA_exception_free(ev);
-      break;
-    case CORBA_SYSTEM_EXCEPTION :
-      CORBA_exception_free(ev);
-      gda_log_error(_("CORBA System exception: %s"), CORBA_exception_id(ev));
-      return FALSE;
-    case CORBA_USER_EXCEPTION :
-      CORBA_exception_free(ev);
-      /* FIXME: look at gconf/gconf/gconf-internals.c */
-      return FALSE;
+      /* FIXME: free servlist */
+      return TRUE;
     }
-  return TRUE;
+  return FALSE;
 }
+
