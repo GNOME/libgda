@@ -87,6 +87,8 @@ gda_data_model_hash_append_row (GdaDataModel *model, const GList *values)
 			GDA_DATA_MODEL_HASH (model),
 			g_hash_table_size (GDA_DATA_MODEL_HASH (model)->priv->rows),
 			row);
+		gda_data_model_row_inserted (model, g_hash_table_size (GDA_DATA_MODEL_HASH (model)->priv->rows) - 1);
+		gda_data_model_changed (model);
 	}
 
 	return row;
@@ -253,6 +255,7 @@ gda_data_model_hash_insert_row (GdaDataModelHash *model,
 
 	g_hash_table_insert (model->priv->rows,
 			     GINT_TO_POINTER (rownum), row);
+	gda_data_model_row_inserted (GDA_DATA_MODEL (model), rownum);
 	gda_data_model_changed (GDA_DATA_MODEL (model));
 }
 
