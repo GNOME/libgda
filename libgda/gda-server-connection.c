@@ -475,6 +475,8 @@ gda_server_connection_free_error_list (GdaServerConnection *cnc)
 {
 	g_return_if_fail (GDA_IS_SERVER_CONNECTION (cnc));
 
-	gda_error_list_free (cnc->priv->errors);
-	cnc->priv->errors = NULL;
+	if (cnc->priv->errors != NULL) {
+		gda_error_list_free (cnc->priv->errors);
+		cnc->priv->errors = NULL;
+	}
 }
