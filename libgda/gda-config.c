@@ -57,8 +57,10 @@ activation_property_to_list (Bonobo_ActivationProperty *prop)
 		gint j;
 		Bonobo_StringList strlist = prop->v._u.value_stringv;
 
-		for (j = 0; j < strlist._length; j++)
-			list = g_list_append (list, strlist._buffer[j]);
+		for (j = 0; j < strlist._length; j++) {
+			gchar *str = g_strdup (strlist._buffer[j]);
+			list = g_list_append (list, str);
+		}
 	}
 
 	return list;
@@ -572,6 +574,8 @@ gda_config_get_provider_list (void)
 			provider_info->type = GDA_COMPONENT_TYPE_FACTORY;
 		else
 			provider_info->type = GDA_COMPONENT_TYPE_INVALID;
+
+		list = g_list_append (list, provider_info);
 	}
 
 	CORBA_free (server_list);

@@ -1,3 +1,10 @@
+2001-11-03  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-config.c (gda_config_get_provider_list): add the retrieved
+	items to the list to be returned or we'll allways return NULL!
+	(activation_property_to_list): g_strdup the string to be added to
+	the returned GList
+
 2001-11-02  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-command.c (gda_command_new): s/gda_command_get_type/
