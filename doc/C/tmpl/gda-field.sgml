@@ -14,35 +14,17 @@ Management of database fields
 
 </para>
 
-<!-- ##### STRUCT GdaFieldAttributes ##### -->
+<!-- ##### TYPEDEF GdaFieldAttributes ##### -->
 <para>
 
 </para>
 
-@defined_size: 
-@name: 
-@table: 
-@caption: 
-@scale: 
-@gda_type: 
-@allow_null: 
-@primary_key: 
-@unique_key: 
-@references: 
-@auto_increment: 
-@auto_increment_start: 
-@auto_increment_step: 
-@position: 
-@default_value: 
 
-<!-- ##### STRUCT GdaField ##### -->
+<!-- ##### TYPEDEF GdaField ##### -->
 <para>
 
 </para>
 
-@actual_size: 
-@value: 
-@attributes: 
 
 <!-- ##### FUNCTION gda_field_attributes_new ##### -->
 <para>

@@ -373,8 +373,11 @@
         </listitem>
       </itemizedlist>
       <para>
-        Providers are not installed by default, so you must specifically add
-        those arguments when running <filename>configure</filename>.
+        Libraries needed by providers are searched by default, so, if found, providers are
+	compiled by default. Those libraries are searched in hard-coded directories, so
+	if the installation of these libraries is in an uncommon place, the above arguments
+	should be used to specify the directories where the libraries and header files
+	are installed.
       </para>
       <para>
         If you find any problem during the configuration, compilation or
@@ -401,6 +404,18 @@
             <LISTITEM><para>libgda2-dev</para></LISTITEM>
             <LISTITEM><para>libgda2-doc</para></LISTITEM>
             <LISTITEM><para>libgda2-dbg</para></LISTITEM>
+            <LISTITEM><para>libgda2-ruby (Ruby bindings)</para></LISTITEM>
+          </ITEMIZEDLIST>
+	  <para>
+	    Alternatively, you can install the different providers that allow access to the
+	    different supported data sources. The packages you can choose from are:
+	  </para>
+	  <ITEMIZEDLIST>
+          <LISTITEM><para>gda2-postgres for PostgreSQL databases</para></LISTITEM>
+            <LISTITEM><para>gda2-mysql for MySQL databases</para></LISTITEM>
+            <LISTITEM><para>gda2-odbc for ODBC data sources</para></LISTITEM>
+            <LISTITEM><para>gda2-freetds for Sybase and MS SQL Server databases</para></LISTITEM>
+            <LISTITEM><para>gda2-sqlite for SQLite databases</para></LISTITEM>
           </ITEMIZEDLIST>
           <para>
             You can obtain information about any packages with:
@@ -2075,7 +2090,7 @@
     </sect1>
   </chapter>
   <chapter id="libgda-api">
-    <title>&LIBGDA; API Reference</title>
+    <title>Client API Reference</title>
     <para>
       The following sections describe the API available for &GDA; applications.
     </para>

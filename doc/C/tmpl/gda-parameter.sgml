@@ -15,13 +15,11 @@ Management of parameters
 
 </para>
 
-<!-- ##### STRUCT GdaParameter ##### -->
+<!-- ##### TYPEDEF GdaParameter ##### -->
 <para>
 
 </para>
 
-@name: 
-@value: 
 
 <!-- ##### FUNCTION gda_parameter_new_from_value ##### -->
 <para>

@@ -68,15 +68,11 @@ table names.
 @GDA_COMMAND_TYPE_SCHEMA: 
 @GDA_COMMAND_TYPE_INVALID: 
 
-<!-- ##### STRUCT GdaCommand ##### -->
+<!-- ##### TYPEDEF GdaCommand ##### -->
 <para>
 
 </para>
 
-@text: 
-@type: 
-@options: 
-@xaction: 
 
 <!-- ##### FUNCTION gda_command_new ##### -->
 <para>

@@ -54,30 +54,3 @@ Log functions
 @Varargs: 
 
 
-<!-- ##### FUNCTION gda_log_clean_all ##### -->
-<para>
-
-</para>
-
-@prgname: 
-
-
-<!-- ##### FUNCTION gda_log_clean_between ##### -->
-<para>
-
-</para>
-
-@prgname: 
-@from: 
-@to: 
-
-
-<!-- ##### FUNCTION gda_log_clean_entry ##### -->
-<para>
-
-</para>
-
-@prgname: 
-@entry: 
-
-
