@@ -1,3 +1,7 @@
+2002-11-09  Santi Camps <santicamps@wanadoo.es>
+
+	* data/Makefile.am: install XML files.
+
 2002-11-08  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	Fixes #97997
