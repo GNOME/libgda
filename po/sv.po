@@ -8,7 +8,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2002-01-05 17:58+0100\n"
+"POT-Creation-Date: 2002-01-13 02:32+0100\n"
 "PO-Revision-Date: 2002-01-05 17:58+0100\n"
 "Last-Translator: Christian Rose <menthos@menthos.com>\n"
 "Language-Team: Swedish <sv@li.org>\n"
@@ -99,11 +99,11 @@ msgstr "Kunde inte notifiera klienten om åtgärden %d"
 msgid "No implementation for the fetch() method found"
 msgstr "Ingen implementation för fetch()-metoden hittades"
 
-#: libgda/gda-value.c:610
+#: libgda/gda-value.c:602
 msgid "TRUE"
 msgstr "SANT"
 
-#: libgda/gda-value.c:612
+#: libgda/gda-value.c:604
 msgid "FALSE"
 msgstr "FALSKT"
 

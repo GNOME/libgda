@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda 0.3.1\n"
-"POT-Creation-Date: 2002-01-09 11:16+0100\n"
+"POT-Creation-Date: 2002-01-13 02:32+0100\n"
 "PO-Revision-Date: 2002-01-09 11:20CET\n"
 "Last-Translator: Stanislav Visnovsky <visnovsky@nenya.ms.mff.cuni.cz>\n"
 "Language-Team: Slovak <sk-i18n@lists.linux.sk>\n"
@@ -85,7 +85,8 @@ msgstr "Nie je možné vytvoriť komponent typu %s"
 
 #: libgda/gda-server-connection.c:90
 msgid "Could not duplicate client object. Client won't get notifications"
-msgstr "Nie je možné duplikovať klientský objekt. Klient nebude dostávať upozornenia"
+msgstr ""
+"Nie je možné duplikovať klientský objekt. Klient nebude dostávať upozornenia"
 
 #: libgda/gda-server-connection.c:440
 #, c-format
@@ -96,11 +97,11 @@ msgstr "Nie je možné informovať klienta o akcii %d"
 msgid "No implementation for the fetch() method found"
 msgstr "Nenájdená implementácia metódy fetch()"
 
-#: libgda/gda-value.c:638
+#: libgda/gda-value.c:602
 msgid "TRUE"
 msgstr "TRUE"
 
-#: libgda/gda-value.c:640
+#: libgda/gda-value.c:604
 msgid "FALSE"
 msgstr "FALSE"
 
@@ -130,7 +131,8 @@ msgid "%p is not a valid table"
 msgstr "%p nie je platná tabuľka"
 
 #: providers/default/gda-default-provider.c:141
-msgid "A full path must be specified on the connection string to open a database."
+msgid ""
+"A full path must be specified on the connection string to open a database."
 msgstr "Pre otvorenie databáze musíte zadať celú cestu v reťazci spojenia."
 
 #: providers/default/gda-default-provider.c:199
@@ -147,11 +149,14 @@ msgstr "GDA štandardný prístup k zdroju dát"
 
 #: providers/default/main.c:47
 msgid "Could not initiate Default component factory"
-msgstr "Nie je možné inicializovať vytváracie rozhranie pre štandardný komponent"
+msgstr ""
+"Nie je možné inicializovať vytváracie rozhranie pre štandardný komponent"
 
 #: providers/mysql/gda-mysql-provider.c:173
-msgid "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
-msgstr "Nemôžete poskytovať UNIX_SOCKET ak tiež poskytujete HOSTITEĽ alebo a PORT."
+msgid ""
+"You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
+msgstr ""
+"Nemôžete poskytovať UNIX_SOCKET ak tiež poskytujete HOSTITEĽ alebo a PORT."
 
 #: providers/mysql/gda-mysql-provider.c:244
 #: providers/mysql/gda-mysql-provider.c:323
@@ -263,4 +268,3 @@ msgstr ""
 #: providers/sybase/main.c:49
 msgid "Could not initiate Sybase component factory"
 msgstr "Nie je možné inicializovať vytváracie rozhranie pre komponent Sybase"
-

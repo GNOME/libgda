@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2002-01-06 00:04+0100\n"
+"POT-Creation-Date: 2002-01-13 02:32+0100\n"
 "PO-Revision-Date: 2000-11-13 19:36+0100\n"
 "Last-Translator: Andraz Tori <andraz.tori1@guest.arnes.si>\n"
 "Language-Team: Slovenian <sl@li.org>\n"
@@ -100,11 +100,11 @@ msgstr "Nisem mogel dobiti odjemalèevega sporoèila ¹tevilka %d"
 msgid "No implementation for the fetch() method found"
 msgstr ""
 
-#: libgda/gda-value.c:610
+#: libgda/gda-value.c:602
 msgid "TRUE"
 msgstr "RESNIÈNO"
 
-#: libgda/gda-value.c:612
+#: libgda/gda-value.c:604
 msgid "FALSE"
 msgstr "NERESNIÈNO"
 

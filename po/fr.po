@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda 0.2.4\n"
-"POT-Creation-Date: 2002-01-06 00:04+0100\n"
+"POT-Creation-Date: 2002-01-13 02:32+0100\n"
 "PO-Revision-Date: 2001-02-13 12:43+0100\n"
 "Last-Translator: Christophe Merlet (RedFox) <redfox@eikonex.org>\n"
 "Language-Team: GNOME French Team <gnomefr@gnomefr.traduc.org>\n"
@@ -101,11 +101,11 @@ msgstr "Ne peut obtenir le message du client n° %d"
 msgid "No implementation for the fetch() method found"
 msgstr ""
 
-#: libgda/gda-value.c:610
+#: libgda/gda-value.c:602
 msgid "TRUE"
 msgstr "VRAI"
 
-#: libgda/gda-value.c:612
+#: libgda/gda-value.c:604
 msgid "FALSE"
 msgstr "FAUX"
 

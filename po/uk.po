@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2002-01-06 00:04+0100\n"
+"POT-Creation-Date: 2002-01-13 02:32+0100\n"
 "PO-Revision-Date: 1999-11-17 10:06+0200\n"
 "Last-Translator: Yuri Syrota <rasta@renome.rovno.ua>\n"
 "Language-Team: Ukrainian <uk@li.org>\n"
@@ -96,11 +96,11 @@ msgstr "Не вдалося сповістити клієнта про дію %d
 msgid "No implementation for the fetch() method found"
 msgstr "Не знайдено реалізації метода fetch()"
 
-#: libgda/gda-value.c:610
+#: libgda/gda-value.c:602
 msgid "TRUE"
 msgstr "ІСТИНА"
 
-#: libgda/gda-value.c:612
+#: libgda/gda-value.c:604
 msgid "FALSE"
 msgstr "ХИБНІСТЬ"
 
