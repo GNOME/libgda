@@ -183,16 +183,30 @@ gda_freetds_get_value_type (TDSCOLINFO *col)
 
 
 void
-gda_freetds_set_gdavalue (GdaValue *field, gchar *val, TDSCOLINFO *col)
+gda_freetds_set_gdavalue (GdaValue *field, gchar *val, TDSCOLINFO *col,
+			  GdaFreeTDSConnectionData *tds_cnc)
 {
 	const TDS_INT max_size = 255;
 	TDS_INT col_size = 0;
 	gchar *txt = NULL;
+#ifdef HAVE_FREETDS_VER0_6X
+	CONV_RESULT tds_conv;
+#endif
 	GdaNumeric numeric;
 
 	g_return_if_fail (field != NULL);
 	g_return_if_fail (col != NULL);
 
+	// perhaps remove ifdef later on
+	// tds_cnc is just needed for context structure of 0.6x api for now
+#ifdef HAVE_FREETDS_VER0_6X
+	g_return_if_fail (tds_cnc != NULL);
+	g_return_if_fail (tds_cnc->ctx != NULL);
+
+	// make sure conv union is empty
+	memset((void *) &tds_conv, 0, sizeof(tds_conv));
+#endif
+	
 	// Handle null fields
 	if (val == NULL) {
 		gda_value_set_null (field);
@@ -290,10 +304,25 @@ gda_freetds_set_gdavalue (GdaValue *field, gchar *val, TDSCOLINFO *col)
 					col_size = col->column_size + 1;
 				}
 				txt = g_new0 (gchar, col_size);
+
+				// tds_convert api changed to 0.6x
+#ifndef HAVE_FREETDS_VER0_6X
 				tds_convert (col->column_type, val,
 				             col->column_size, SYBCHAR,
 				             txt, col_size - 1);
 				gda_value_set_string (field, txt ? txt : "");
+#else
+				tds_convert (tds_cnc->ctx, 
+				             col->column_type, val,
+				             col->column_size, SYBCHAR,
+				             col_size - 1, &tds_conv);
+				gda_value_set_string (field, 
+				                      (tds_conv.c
+				                        ? tds_conv.c
+				                        : (tds_conv.ib
+				                            ? tds_conv.ib
+				                            : "")));
+#endif
 				if (txt) {
 					g_free (txt);
 					val = NULL;

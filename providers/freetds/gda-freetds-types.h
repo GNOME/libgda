@@ -35,7 +35,8 @@
 
 G_BEGIN_DECLS
 
-void gda_freetds_set_gdavalue (GdaValue *field, gchar *val, TDSCOLINFO *col);
+void gda_freetds_set_gdavalue (GdaValue *field, gchar *val, TDSCOLINFO *col,
+                               GdaFreeTDSConnectionData *tds_cnc);
 const GdaValueType gda_freetds_get_value_type (TDSCOLINFO *col);
 
 

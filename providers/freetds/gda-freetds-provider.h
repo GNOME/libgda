@@ -22,6 +22,7 @@
 #if !defined(__gda_freetds_provider_h__)
 #  define __gda_freetds_provider_h__
 
+#include <config.h>
 #include <libgda/gda-server-provider.h>
 #include <tds.h>
 
@@ -56,6 +57,9 @@ struct _GdaFreeTDSConnectionData {
 	GString       *database;  // database we are connected to
 	
 	TDSLOGIN      *login;     // tds login struct
+#ifdef HAVE_FREETDS_VER0_6X
+	TDSCONTEXT    *ctx;       // tds context
+#endif
 	TDSSOCKET     *tds;       // connection handle
 	TDSCONFIGINFO *config;    // tds config struct
 };

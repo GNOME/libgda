@@ -255,7 +255,8 @@ static GdaRow
 		col = recset->priv->res->columns[i];
 		val = &(recset->priv->res->current_row[col->column_offset]);
 
-		gda_freetds_set_gdavalue (field, val, col);
+		gda_freetds_set_gdavalue (field, val, col,
+		                          recset->priv->tds_cnc);
 	}
 	
 	return row;
