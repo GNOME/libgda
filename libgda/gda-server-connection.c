@@ -479,15 +479,22 @@ gda_server_connection_add_error (GdaServerConnection *cnc, GdaError *error)
  * @gda_server_connection_add_error.
  */
 void
-gda_server_connection_add_error_string (GdaServerConnection *cnc, const gchar *msg)
+gda_server_connection_add_error_string (GdaServerConnection *cnc, const gchar *msg, ...)
 {
 	GdaError *error;
+	va_list args;
+        gchar sz[2048];
 
 	g_return_if_fail (GDA_IS_SERVER_CONNECTION (cnc));
 	g_return_if_fail (msg != NULL);
 
+	/* build the message string */
+	va_start (args, msg);
+        vsprintf (sz, msg, args);
+        va_end (args);
+
 	error = gda_error_new ();
-	gda_error_set_description (error, msg);
+	gda_error_set_description (error, sz);
 	gda_error_set_number (error, -1);
 	gda_error_set_source (error, g_get_prgname ());
 	gda_error_set_sqlstate (error, "-1");

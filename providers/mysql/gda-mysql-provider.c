@@ -756,7 +756,7 @@ get_table_fields (GdaServerConnection *cnc, GdaParameterList *params)
 	recset = gda_server_recordset_model_new (cnc, 8);
 	for (r = 0; r < sizeof (fields_desc) / sizeof (fields_desc[0]); r++) {
 		gint defined_size =  (fields_desc[r].type == GDA_TYPE_STRING) ? 64 : 
-			(fields_desc[r].type == GDA_TYPE_INTEGER) ? sizeof(gint) : 1;
+			(fields_desc[r].type == GDA_TYPE_INTEGER) ? sizeof (gint) : 1;
 
 		gda_server_recordset_model_set_field_defined_size (recset, r, defined_size);
 		gda_server_recordset_model_set_field_name (recset, r, fields_desc[r].name);

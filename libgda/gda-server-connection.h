@@ -66,7 +66,7 @@ void                 gda_server_connection_notify_action (GdaServerConnection *c
 void                 gda_server_connection_add_error (GdaServerConnection *cnc,
 						      GdaError *error);
 void                 gda_server_connection_add_error_string (GdaServerConnection *cnc,
-							     const gchar *msg);
+							     const gchar *msg, ...);
 void                 gda_server_connection_free_error_list (GdaServerConnection *cnc);
 
 G_END_DECLS

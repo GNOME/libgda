@@ -318,6 +318,92 @@ gda_default_provider_supports (GdaServerProvider *provider,
 }
 
 static GdaServerRecordset *
+get_table_fields (GdaServerConnection *cnc, GdaXmlDatabase *xmldb, GdaParameterList *params)
+{
+	GdaServerRecordsetModel *recset;
+	GdaParameter *par;
+	GdaTable *table;
+	gint i;
+	gint cols;
+	const gchar *table_name;
+	struct {
+		const gchar *name;
+		GdaType type;
+	} fields_desc[8] = {
+		{ N_("Field name")	, GDA_TYPE_STRING  },
+		{ N_("Data type")	, GDA_TYPE_STRING  },
+		{ N_("Size")		, GDA_TYPE_INTEGER },
+		{ N_("Scale")		, GDA_TYPE_INTEGER },
+		{ N_("Not null?")	, GDA_TYPE_BOOLEAN },
+		{ N_("Primary key?")	, GDA_TYPE_BOOLEAN },
+		{ N_("Unique index?")	, GDA_TYPE_BOOLEAN },
+		{ N_("References")	, GDA_TYPE_STRING  }
+	};
+
+	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), NULL);
+	g_return_val_if_fail (GDA_IS_XML_DATABASE (xmldb), NULL);
+	g_return_val_if_fail (params != NULL, NULL);
+
+	/* get parameters sent by client */
+	par = gda_parameter_list_find (params, "name");
+	if (!par) {
+		gda_server_connection_add_error_string (cnc, _("Invalid argument"));
+		return NULL;
+	}
+
+	table_name = gda_value_get_string (gda_parameter_get_value (par));
+	if (!table_name) {
+		gda_server_connection_add_error_string (cnc, _("Invalid argument"));
+		return NULL;
+	}
+
+	/* find the table */
+	table = gda_xml_database_find_table (xmldb, table_name);
+	if (!table) {
+		gda_server_connection_add_error_string (cnc, _("Table %s not found"), table_name);
+		return NULL;
+	}
+
+	/* fill in the recordset to be returned */
+	recset = gda_server_recordset_model_new (cnc, 8);
+	for (i = 0; i < sizeof (fields_desc) / sizeof (fields_desc[0]); i++) {
+		gint defined_size =  (fields_desc[i].type == GDA_TYPE_STRING) ? 64 : 
+			(fields_desc[i].type == GDA_TYPE_INTEGER) ? sizeof (gint) : 1;
+
+		gda_server_recordset_model_set_field_defined_size (recset, i, defined_size);
+		gda_server_recordset_model_set_field_name (recset, i, fields_desc[i].name);
+		gda_server_recordset_model_set_field_scale (recset, i, 0);
+		gda_server_recordset_model_set_field_gdatype (recset, i, fields_desc[i].type);
+	}
+
+	cols = gda_data_model_get_n_columns (GDA_DATA_MODEL (table));
+	for (i = 0; i < cols; i++) {
+		GdaFieldAttributes *fa;
+		GList *value_list = NULL;
+
+		fa = gda_data_model_describe_column (GDA_DATA_MODEL (table), i);
+		if (!fa) {
+			bonobo_object_unref (BONOBO_OBJECT (recset));
+			gda_server_connection_add_error_string (
+				cnc, _("Could not get description for column"));
+
+			return NULL;
+		}
+
+		value_list = g_list_append (value_list, gda_value_new_string (gda_field_attributes_get_name (fa)));
+		value_list = g_list_append (value_list, gda_value_new_string (gda_type_to_string (gda_field_attributes_get_gdatype (fa))));
+		value_list = g_list_append (value_list, gda_value_new_integer (gda_field_attributes_get_defined_size (fa)));
+		value_list = g_list_append (value_list, gda_value_new_integer (gda_field_attributes_get_scale (fa)));
+		value_list = g_list_append (value_list, gda_value_new_boolean (FALSE));
+		value_list = g_list_append (value_list, gda_value_new_boolean (FALSE));
+		value_list = g_list_append (value_list, gda_value_new_boolean (FALSE));
+		value_list = g_list_append (value_list, gda_value_new_string (""));
+
+		gda_field_attributes_free (fa);
+	}
+}
+
+static GdaServerRecordset *
 get_tables (GdaServerConnection *cnc, GdaXmlDatabase *xmldb)
 {
 	GdaServerRecordsetModel *recset;
@@ -424,6 +510,8 @@ gda_default_provider_get_schema (GdaServerProvider *provider,
 		return NULL;
 
 	switch (schema) {
+	case GNOME_Database_Connection_SCHEMA_FIELDS :
+		return get_table_fields (cnc, xmldb, params);
 	case GNOME_Database_Connection_SCHEMA_TABLES :
 		return get_tables (cnc, xmldb);
 	case GNOME_Database_Connection_SCHEMA_TYPES :

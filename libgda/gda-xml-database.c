@@ -393,6 +393,25 @@ gda_xml_database_free_table_list (GList *list)
 }
 
 /**
+ * gda_xml_database_find_table
+ * @xmldb: XML database.
+ * @name: Name for the table to look for.
+ *
+ * Searches the given XML database for a table named @name, and
+ * returns a pointer to it.
+ *
+ * Returns: a pointer to the table, or NULL if not found.
+ */
+GdaTable *
+gda_xml_database_find_table (GdaXmlDatabase *xmldb, const gchar *name)
+{
+	g_return_val_if_fail (GDA_IS_XML_DATABASE (xmldb), NULL);
+	g_return_val_if_fail (name != NULL, NULL);
+
+	return g_hash_table_lookup (xmldb->priv->tables, name);
+}
+
+/**
  * gda_xml_database_new_table
  * @xmldb: XML database.
  * @name: Name for the new table.

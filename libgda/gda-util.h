@@ -23,9 +23,12 @@
 #if !defined(__gda_util_h__)
 #  define __gda_util_h__
 
-#include <glib.h>
+#include <libgda/gda-row.h>
 
 G_BEGIN_DECLS
+
+const gchar *gda_type_to_string (GdaType type);
+GdaType      gda_type_from_string (const gchar *str);
 
 /*
  * File management utility functions

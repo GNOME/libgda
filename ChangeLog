@@ -1,5 +1,20 @@
 2002-03-25  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* providers/default/gda-default-provider.c (get_table_fields):
+	implemented SCHEMA_FIELDS schema.
+
+	* libgda/gda-xml-database.[ch] (gda_xml_database_find_table): new
+	function.
+
+	* libgda/gda-server-connection.[ch]
+	(gda_server_connection_add_error_string): allow variable list of
+	arguments, to format the string to be used for the error.
+
+	* libgda/gda-util.[ch] (gda_type_to_string): new function.
+	(gda_type_from_string): new function.
+
+2002-03-25  Rodrigo Moya <rodrigo@gnome-db.org>
+
 	* providers/mysql/gda-mysql-provider.c (get_table_fields): implemented
 	SCHEMA_FIELDS schema.
 
