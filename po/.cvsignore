@@ -1,10 +1,11 @@
+*.gmo
+*.pot
+Makefile
+Makefile.in
 Makefile.in.in
 POTFILES
-Makefile.in
-Makefile
 cat-id-tbl.c
-*.pot
-stamp-cat-id
-po2tbl.sed*
-*.gmo
 messages
+messages.mo
+po2tbl.sed*
+stamp-cat-id
