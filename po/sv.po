@@ -8,8 +8,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2001-09-25 23:18+0200\n"
-"PO-Revision-Date: 2001-08-02 00:57+0200\n"
+"POT-Creation-Date: 2001-10-03 18:35+0200\n"
+"PO-Revision-Date: 2001-10-03 18:44+0200\n"
 "Last-Translator: Christian Rose <menthos@menthos.com>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -39,7 +39,8 @@ msgstr "[GDA-klientbibliotek]"
 msgid "Could not open CORBA factory"
 msgstr "Kunde inte öppna CORBA-fabrik"
 
-#: lib/gda-client/gda-field.c:228
+#: lib/gda-client/gda-field.c:228 lib/gda-client/gda-field.c:285
+#: lib/gda-client/gda-field.c:294
 msgid "<NULL>"
 msgstr "<NULL>"
 
@@ -185,26 +186,24 @@ msgid "CORBA system exception %s"
 msgstr "CORBA-systemundantag %s"
 
 #: lib/gda-server/gda-server.c:218
-#, fuzzy, c-format
+#, c-format
 msgid "CORBA user exception: %s"
-msgstr "Undantag i CORBA-systemet: %s"
+msgstr "CORBA-användarundantag: %s"
 
 #: providers/gda-default-server/GNOME_GDA_Provider_Default.oaf.in.h:1
-#, fuzzy
 msgid "Default provider connection factory"
-msgstr "Fabrik för e-postleverantörsanslutning"
+msgstr "Standardfabrik för leverantörsanslutning"
 
 #: providers/gda-default-server/GNOME_GDA_Provider_Default.oaf.in.h:2
-#, fuzzy
 msgid "GDA Default Datasource Access"
-msgstr "GDA-datakälleåtkomst för ODBC"
+msgstr "Standardåtkomst för GDA-datakällor"
 
 #: providers/gda-default-server/gda-default-connection.c:127
 msgid "You must specify a directory for the database to be stored"
 msgstr "Du måste ange en katalog för databasen att lagras i"
 
 #: providers/gda-default-server/gda-default-connection.c:235
-#: providers/gda-mysql-server/gda-mysql-connection.c:282
+#: providers/gda-mysql-server/gda-mysql-connection.c:283
 #: providers/gda-oracle-server/gda-oracle-connection.c:334
 #: providers/gda-postgres-server/gda-postgres-connection.c:486
 msgid "Unknown schema type"
@@ -225,7 +224,7 @@ msgstr "Fabrik för LDAP-leverantörsanslutning"
 #: providers/gda-interbase-server/gda-interbase-connection.c:288
 #: providers/gda-ldap-server/gda-ldap-connection.c:293
 #: providers/gda-mdb-server/gda-mdb-connection.c:372
-#: providers/gda-mysql-server/gda-mysql-connection.c:486
+#: providers/gda-mysql-server/gda-mysql-connection.c:490
 #: providers/gda-odbc-server/gda-odbc-connection.c:624
 #: providers/gda-odbc-server/gda-odbc-connection.c:657
 #: providers/gda-oracle-server/gda-oracle-connection.c:479
@@ -241,8 +240,8 @@ msgstr "fel \"%s\" vid %s"
 #: providers/gda-ldap-server/gda-ldap-connection.c:298
 #: providers/gda-ldap-server/gda-ldap-connection.c:299
 #: providers/gda-mdb-server/gda-mdb-connection.c:377
-#: providers/gda-mysql-server/gda-mysql-connection.c:491
-#: providers/gda-mysql-server/gda-mysql-connection.c:492
+#: providers/gda-mysql-server/gda-mysql-connection.c:498
+#: providers/gda-mysql-server/gda-mysql-connection.c:499
 #: providers/gda-odbc-server/gda-odbc-connection.c:626
 #: providers/gda-odbc-server/gda-odbc-connection.c:628
 #: providers/gda-odbc-server/gda-odbc-connection.c:659
@@ -262,7 +261,7 @@ msgstr "Inte tillgänglig"
 #: providers/gda-interbase-server/gda-interbase-connection.c:295
 #: providers/gda-ldap-server/gda-ldap-connection.c:300
 #: providers/gda-mdb-server/gda-mdb-connection.c:378
-#: providers/gda-mysql-server/gda-mysql-connection.c:493
+#: providers/gda-mysql-server/gda-mysql-connection.c:500
 #: providers/gda-oracle-server/gda-oracle-connection.c:486
 #: providers/gda-postgres-server/gda-postgres-connection.c:777
 #: providers/gda-primebase-server/gda-primebase-connection.c:377
@@ -302,8 +301,6 @@ msgstr "Fabrik för e-postleverantörsanslutning"
 
 #: providers/gda-mail-server/gda-mail-connection.c:107
 #: providers/gda-mdb-server/gda-mdb-connection.c:224
-#: providers/gda-sybase-server/gda-sybase-connection.c:290
-#: providers/gda-tds-server/gda-tds-connection.c:283
 #, c-format
 msgid "Unhandled SCHEMA_QTYPE %d"
 msgstr "Ej hanterad SCHEMA_QTYPE %d"
@@ -361,7 +358,7 @@ msgid "mysql_recset is NULL"
 msgstr "mysql_recset är NULL"
 
 #: providers/gda-mdb-server/gda-mdb-connection.c:469
-#: providers/gda-mysql-server/gda-mysql-connection.c:838
+#: providers/gda-mysql-server/gda-mysql-connection.c:845
 #: providers/gda-sybase-server/gda-sybase-connection.c:469
 #: providers/gda-tds-server/gda-tds-connection.c:453
 msgid "No table name given for SCHEMA_COLS"
@@ -380,7 +377,7 @@ msgstr "GDA-datakälleåtkomst för MySQL"
 msgid "MySQL provider connection factory"
 msgstr "Fabrik för MySQL-leverantörsanslutning"
 
-#: providers/gda-mysql-server/gda-mysql-connection.c:174
+#: providers/gda-mysql-server/gda-mysql-connection.c:175
 msgid ""
 "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a "
 "PORT. Please remove the UNIX_SOCKET, or remove both the HOST and PORT options"
@@ -388,20 +385,20 @@ msgstr ""
 "Du kan inte ange en UNIX_SOCKET om du också anger antingen en HOST eller en "
 "PORT. Ta bort UNIX_SOCKET, eller ta bort både alternativen HOST och OPTIONS"
 
-#: providers/gda-mysql-server/gda-mysql-connection.c:190
+#: providers/gda-mysql-server/gda-mysql-connection.c:191
 #, c-format
 msgid ""
-"Opening connection with user=%s, password=%s, host=%s, port=%s, unix_socket=%"
-"s"
+"Opening connection with user=%s, password=%s, host=%s, port=%s, "
+"unix_socket=%s"
 msgstr ""
 "Öppnar anslutning med användare=%s, lösenord=%s, värd=%s, port=%s, "
 "unix_socket=%s"
 
-#: providers/gda-mysql-server/gda-mysql-connection.c:616
+#: providers/gda-mysql-server/gda-mysql-connection.c:623
 msgid "Unknown"
 msgstr "Okänd"
 
-#: providers/gda-mysql-server/gda-mysql-connection.c:649
+#: providers/gda-mysql-server/gda-mysql-connection.c:656
 msgid "No MYSQL_Connection for GdaServerConnection"
 msgstr "Ingen MYSQL_Connection för GdaServerConnection"
 
@@ -506,7 +503,6 @@ msgstr "GDA-datakälleåtkomst för Sybase"
 msgid "Sybase provider connection factory"
 msgstr "Fabrik för Sybase-leverantörsanslutning"
 
-#.      gda_server_error_make(error, 0, cnc, "connection seems to be dead");
 #: providers/gda-sybase-server/gda-sybase-command.c:136
 #: providers/gda-tds-server/gda-tds-command.c:121
 msgid "Connection seems to be dead"
@@ -580,10 +576,6 @@ msgstr "Ingen data returnerad, frigör postsamlingsstrukturen"
 msgid "Freeing command structure failed"
 msgstr "Frigörning av kommandostrukturen misslyckades"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:176
-msgid "Not enough memory for sybase_Connection"
-msgstr "Inte tillräckligt med minne för sybase_Connection"
-
 #: providers/gda-sybase-server/gda-sybase-connection.c:458
 #: providers/gda-tds-server/gda-tds-connection.c:442
 #, c-format
@@ -600,11 +592,32 @@ msgstr "Kunde inte allokera kommandostruktur"
 msgid "Could not allocate enough memory for query"
 msgstr "Kunde inte allokera tillräckligt med minne för fråga"
 
-#.          gda_server_error_make(error, NULL, cnc, __PRETTY_FUNCTION__);
 #: providers/gda-sybase-server/gda-sybase-connection.c:513
 #: providers/gda-tds-server/gda-tds-connection.c:497
 msgid "Could not get recordset in schema_cols"
 msgstr "Kunde inte hämta postsamling i schema_cols"
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:544
+#: providers/gda-sybase-server/gda-sybase-connection.c:620
+#: providers/gda-tds-server/gda-tds-connection.c:528
+#: providers/gda-tds-server/gda-tds-connection.c:604
+#, c-format
+msgid "schema_tables: table name = '%s'"
+msgstr "schema_tables: tabellnamn = \"%s\""
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:552
+#: providers/gda-sybase-server/gda-sybase-connection.c:628
+#: providers/gda-tds-server/gda-tds-connection.c:536
+#: providers/gda-tds-server/gda-tds-connection.c:612
+#, c-format
+msgid "schema_tables: table_schema = '%s'"
+msgstr "schema_tables: table_schema = \"%s\""
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:557
+#: providers/gda-tds-server/gda-tds-connection.c:541
+#, c-format
+msgid "schema_procedures: proc_catalog = '%s' UNUSED!\n"
+msgstr "schema_procedures: proc_catalog = \"%s\" OANVÄND!\n"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:562
 #: providers/gda-tds-server/gda-tds-connection.c:546
@@ -616,6 +629,12 @@ msgstr "schema_procs: ogiltig restriktionstyp %d"
 #: providers/gda-tds-server/gda-tds-connection.c:556
 msgid "Could not allocate cmd structure"
 msgstr "Kunde inte allokera kommandostruktur"
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:633
+#: providers/gda-tds-server/gda-tds-connection.c:617
+#, c-format
+msgid "schema_procedures: proc_catalog = '%s' UNUSED!"
+msgstr "schema_procedures: proc_catalog = \"%s\" OANVÄND!"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:638
 #: providers/gda-tds-server/gda-tds-connection.c:622
@@ -1003,11 +1022,6 @@ msgstr "GDA-datakälleåtkomst för Sybase/MS SQL"
 msgid "TDS provider connection factory"
 msgstr "Fabrik för TDS-leverantörsanslutning"
 
-#: providers/gda-tds-server/gda-tds-connection.c:165
-msgid "Not enough memory for tds_Connection"
-msgstr "Inte tillräckligt med minne för tds_Connection"
-
-#. Fixme: replace "dummy" with buf when CS_GET CS_SERVERNAME works
 #: providers/gda-tds-server/gda-tds-connection.c:893
 #, c-format
 msgid "Reconnected to %s"
@@ -1021,6 +1035,38 @@ msgstr "gda_tds_error_make(%p,%p,%p,%p)"
 #: providers/gda-tds-server/main-tds.c:78
 msgid "Could not register gda-tds provider implementation"
 msgstr "Kunde inte registrera gda-tds-leverantörsinformation"
+
+#: tools/gda-run.c:34
+msgid "database name"
+msgstr "databasnamn"
+
+#: tools/gda-run.c:34
+msgid "DATABASE"
+msgstr "DATABAS"
+
+#: tools/gda-run.c:35
+msgid "user name"
+msgstr "användarnamn"
+
+#: tools/gda-run.c:35
+msgid "USER-NAME"
+msgstr "ANVÄNDARNAMN"
+
+#: tools/gda-run.c:36
+msgid "password"
+msgstr "lösenord"
+
+#: tools/gda-run.c:36
+msgid "PASSWORD"
+msgstr "LÖSENORD"
+
+#: tools/gda-run.c:37
+msgid "file name"
+msgstr "filnamn"
+
+#: tools/gda-run.c:37
+msgid "FILE-NAME"
+msgstr "FILNAMN"
 
 #: tools/gda-run.c:109
 #, c-format
@@ -1036,41 +1082,11 @@ msgstr "%s: datakällan \"%s\" kunde inte hittas\n"
 msgid "Could not register <PROVIDER-NAME> provider implementation"
 msgstr "Kunde inte registrera <LEVERANTÖRSNAMN>-leverantörsimplementation"
 
-#~ msgid "schema_tables: table name = '%s'"
-#~ msgstr "schema_tables: tabellnamn = \"%s\""
+#~ msgid "Not enough memory for sybase_Connection"
+#~ msgstr "Inte tillräckligt med minne för sybase_Connection"
 
-#~ msgid "schema_tables: table_schema = '%s'"
-#~ msgstr "schema_tables: table_schema = \"%s\""
-
-#~ msgid "schema_procedures: proc_catalog = '%s' UNUSED!\n"
-#~ msgstr "schema_procedures: proc_catalog = \"%s\" OANVÄND!\n"
-
-#~ msgid "schema_procedures: proc_catalog = '%s' UNUSED!"
-#~ msgstr "schema_procedures: proc_catalog = \"%s\" OANVÄND!"
-
-#~ msgid "database name"
-#~ msgstr "databasnamn"
-
-#~ msgid "DATABASE"
-#~ msgstr "DATABAS"
-
-#~ msgid "user name"
-#~ msgstr "användarnamn"
-
-#~ msgid "USER-NAME"
-#~ msgstr "ANVÄNDARNAMN"
-
-#~ msgid "password"
-#~ msgstr "lösenord"
-
-#~ msgid "PASSWORD"
-#~ msgstr "LÖSENORD"
-
-#~ msgid "file name"
-#~ msgstr "filnamn"
-
-#~ msgid "FILE-NAME"
-#~ msgstr "FILNAMN"
+#~ msgid "Not enough memory for tds_Connection"
+#~ msgstr "Inte tillräckligt med minne för tds_Connection"
 
 #~ msgid "impl_GDA_Connection_open: opening connection with DSN: %s"
 #~ msgstr "impl_GDA_Connection_open: öppnar anslutning med DSN: %s"
@@ -1084,8 +1100,7 @@ msgstr "Kunde inte registrera <LEVERANTÖRSNAMN>-leverantörsimplementation"
 #~ "OAF känner inte till vårt IID; antyder trasig installation. Avslutar..."
 
 #~ msgid ""
-#~ "Another instance of this provider is already registered with OAF. "
-#~ "Exiting..."
+#~ "Another instance of this provider is already registered with OAF. Exiting..."
 #~ msgstr ""
 #~ "En annan instans av denna leverantör är redan registrerad hos OAF. "
 #~ "Avslutar..."
@@ -1110,8 +1125,8 @@ msgstr "Kunde inte registrera <LEVERANTÖRSNAMN>-leverantörsimplementation"
 
 #~ msgid "Failed to initialize OAF: please mail bug report to OAF maintainers"
 #~ msgstr ""
-#~ "Misslyckades med att initiera OAF: var vänlig och skicka en buggrapport "
-#~ "till OAF:s underhållare"
+#~ "Misslyckades med att initiera OAF: var vänlig och skicka en buggrapport till "
+#~ "OAF:s underhållare"
 
 #~ msgid "Could not activate report engine"
 #~ msgstr "Kunde inte aktivera rapportmotorn"
