@@ -20,8 +20,9 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#include <bonobo/bonobo-exception.h>
 #include <bonobo/bonobo-i18n.h>
-#include "gda-server-recordset.h"
+#include <libgda/gda-server-recordset.h>
 
 #define PARENT_TYPE BONOBO_X_OBJECT_TYPE
 
