@@ -172,7 +172,10 @@ module GNOME {
 
 			/* schemas */
 			enum Schema {
-				SCHEMA_TABLES
+				SCHEMA_PROCEDURES,
+				SCHEMA_TABLES,
+				SCHEMA_TYPES,
+				SCHEMA_VIEWS
 			};
 
 			Recordset getSchema (in Schema schema, in ParameterList params);

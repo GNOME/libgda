@@ -1,3 +1,7 @@
+2001-12-29  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* GNOME_Database.idl: added more schemas (VIEWS, PROCEDURES, TYPES)
+
 2001-12-27  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* GNOME_Database.idl: added schema stuff to ::Connection interface
