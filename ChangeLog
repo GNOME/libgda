@@ -1,3 +1,8 @@
+2002-05-12  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
+	* libgda/gda-config.c (write_config_file): assign the root node to the
+	document to avoid overwriting the config file with an empty one :-).
+
 2002-05-10  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* libgda/gda-data-model-array.c (gda_data_model_array_append_row):

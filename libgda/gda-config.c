@@ -339,6 +339,7 @@ write_config_file ()
 	doc = xmlNewDoc ("1.0");
 	g_return_if_fail (doc != NULL);
 	root = xmlNewDocNode (doc, NULL, "libgda-config", NULL);
+	xmlDocSetRootElement (doc, root);
 	for (ls = cfg_client->user; ls; ls = ls->next){
 		section = ls->data;
 		if (section == NULL)
