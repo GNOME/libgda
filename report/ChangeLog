@@ -1,3 +1,8 @@
+2000-11-05	Rodrigo Moya <rodrigo@linuxave.net>
+
+	* removed some attributes from the IDL interfaces and
+	added methods for accessing them instead
+
 2000-10-29	Rodrigo Moya <rodrigo@linuxave.net>
 
 	* idl/GDA_Report.idl: changed return value for

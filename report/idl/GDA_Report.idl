@@ -53,22 +53,23 @@ module GDA {
 			string contents;
 	};
 	interface ReportElement {
-		readonly attribute string name;
 		readonly attribute ReportAttributeList attr_list;
 		readonly attribute VE contents;
 		
-		void            addAttribute (in string name, in string value);
-		void            removeAttribute (in string name);
-		ReportAttribute getAttribute (in string name);
-		void            setAttribute (in string name, in string value);
+		void              addAttribute (in string name, in string value);
+		void              removeAttribute (in string name);
+		ReportAttribute   getAttribute (in string name);
+		void              setAttribute (in string name, in string value);
 		
-		ReportElement   addChild (in string name);
-		void            removeChild (in string name);
+		ReportElement     addChild (in string name);
+		void              removeChild (in ReportElement child);
+		ReportElementList getChildren ();
+		
+		string            getName ();
+		void              setName (in string name);
 	};
 	
-	interface ReportFormat {
-		readonly attribute string xml;
-		
+	interface ReportFormat {	
 		ReportElementList getStructure ();
 		ReportStream      getStream ();
 	};
