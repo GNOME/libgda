@@ -1,0 +1,20 @@
+<oaf_info>
+
+<oaf_server iid="OAFIID:gda-tds:87cd7ac2-c89d-436c-bf39-7146d2fb0f9e"
+            type="exe"
+            location="gda-tds-srv">
+	<oaf_attribute name="repo_ids" type="stringv">
+		<item value="IDL:GDA/ConnectionFactory:1.0"/>
+	</oaf_attribute>
+	<oaf_attribute name="description" type="string"
+	               value="GDA Datasource Access for Sybase/MS SQL"/>
+	<oaf_attribute name="gda_params" type="stringv">
+		<item value="HOST"/>
+		<item value="USERNAME"/>
+		<item value="APPNAME"/>
+		<item value="PASSWORD"/>
+		<item value="DATABASE"/>
+	</oaf_attribute>
+</oaf_server>
+
+</oaf_info>
