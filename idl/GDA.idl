@@ -5,7 +5,7 @@
 #include <oaf-factory.idl>
 
 #include "GDA_Error.idl"
-#include "GDA_Fieldx.idl"
+#include "GDA_Field.idl"
 #include "GDA_Recordset.idl"
 #include "GDA_Command.idl"	
 #include "GDA_Error.idl"
