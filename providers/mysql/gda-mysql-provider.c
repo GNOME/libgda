@@ -24,7 +24,9 @@
 
 #include <bonobo/bonobo-i18n.h>
 #include <libgda/gda-server-recordset-model.h>
+#include <stdlib.h>
 #include "gda-mysql.h"
+#include "gda-mysql-recordset.h"
 
 #define PARENT_TYPE GDA_TYPE_SERVER_PROVIDER
 
@@ -136,13 +138,13 @@ gda_mysql_provider_open_connection (GdaServerProvider *provider,
 				    const gchar *username,
 				    const gchar *password)
 {
-	gchar *t_host = NULL;
-        gchar *t_db = NULL;
-        gchar *t_user = NULL;
-        gchar *t_password = NULL;
-        gchar *t_port = NULL;
-        gchar *t_unix_socket = NULL;
-        gchar *t_flags = NULL;
+	const gchar *t_host = NULL;
+        const gchar *t_db = NULL;
+        const gchar *t_user = NULL;
+        const gchar *t_password = NULL;
+        const gchar *t_port = NULL;
+        const gchar *t_unix_socket = NULL;
+        const gchar *t_flags = NULL;
 	MYSQL *mysql;
 #if MYSQL_VERSION_ID < 32200
         gint err;
@@ -300,6 +302,7 @@ gda_mysql_provider_execute_command (GdaServerProvider *provider,
 		reclist = process_sql_commands (reclist, cnc, str);
 		g_free (str);
 		break;
+	default:
 	}
 
 	return reclist;
@@ -455,7 +458,7 @@ get_mysql_types (GdaServerConnection *cnc, GdaParameterList *params)
 	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), NULL);
 
 	/* create the recordset */
-	recset = gda_server_recordset_model_new (cnc, 1);
+	recset = (GdaServerRecordsetModel *) gda_server_recordset_model_new (cnc, 1);
 	gda_server_recordset_model_set_field_defined_size (recset, 0, 32);
 	gda_server_recordset_model_set_field_name (recset, 0, _("Type"));
 	gda_server_recordset_model_set_field_scale (recset, 0, 0);
@@ -480,7 +483,7 @@ get_mysql_types (GdaServerConnection *cnc, GdaParameterList *params)
 	add_string_row (recset, "tiny");
 	add_string_row (recset, "year");
 
-	return recset;
+	return GDA_SERVER_RECORDSET (recset);
 }
 
 /* get_schema handler for the GdaMysqlProvider class */

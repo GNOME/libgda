@@ -1,3 +1,8 @@
+2002-01-15  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
+	* gda-mysql-provider.c:
+	* gda-mysql-recordset.c: removed all warnings.
+
 2002-01-14  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
 	* main.c: included libgda/libgda.h to avoid warnings.
