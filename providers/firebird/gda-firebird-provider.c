@@ -1,4 +1,4 @@
-/* GDA Interbase Provider
+/* GDA FireBird Provider
  * Copyright (C) 1998-2002 The GNOME Foundation
  *
  * AUTHORS:
@@ -21,58 +21,58 @@
 
 #include <config.h>
 #include <libgda/gda-intl.h>
-#include "gda-interbase-provider.h"
-#include "gda-interbase-recordset.h"
+#include "gda-firebird-provider.h"
+#include "gda-firebird-recordset.h"
 
 #define PARENT_TYPE GDA_TYPE_SERVER_PROVIDER
 
-#define CONNECTION_DATA "GDA_Interbase_ConnectionData"
-#define TRANSACTION_DATA "GDA_Interbase_TransactionData"
-#define STATEMENT_DATA "GDA_Interbase_StatementData"
+#define CONNECTION_DATA "GDA_Firebird_ConnectionData"
+#define TRANSACTION_DATA "GDA_Firebird_TransactionData"
+#define STATEMENT_DATA "GDA_Firebird_StatementData"
 
-static void gda_interbase_provider_class_init (GdaInterbaseProviderClass *klass);
-static void gda_interbase_provider_init       (GdaInterbaseProvider *provider,
-					       GdaInterbaseProviderClass *klass);
-static void gda_interbase_provider_finalize   (GObject *object);
+static void gda_firebird_provider_class_init (GdaFirebirdProviderClass *klass);
+static void gda_firebird_provider_init       (GdaFirebirdProvider *provider,
+					       GdaFirebirdProviderClass *klass);
+static void gda_firebird_provider_finalize   (GObject *object);
 
-static const gchar *gda_interbase_provider_get_version (GdaServerProvider *provider);
-static gboolean gda_interbase_provider_open_connection (GdaServerProvider *provider,
+static const gchar *gda_firebird_provider_get_version (GdaServerProvider *provider);
+static gboolean gda_firebird_provider_open_connection (GdaServerProvider *provider,
 							GdaConnection *cnc,
 							GdaQuarkList *params,
 							const gchar *username,
 							const gchar *password);
-static gboolean gda_interbase_provider_close_connection (GdaServerProvider *provider,
+static gboolean gda_firebird_provider_close_connection (GdaServerProvider *provider,
 							 GdaConnection *cnc);
-static const gchar *gda_interbase_provider_get_server_version (GdaServerProvider *provider,
+static const gchar *gda_firebird_provider_get_server_version (GdaServerProvider *provider,
 							       GdaConnection *cnc);
-static const gchar *gda_interbase_provider_get_database (GdaServerProvider *provider,
+static const gchar *gda_firebird_provider_get_database (GdaServerProvider *provider,
 							 GdaConnection *cnc);
-static gboolean gda_interbase_provider_change_database (GdaServerProvider *provider,
+static gboolean gda_firebird_provider_change_database (GdaServerProvider *provider,
 							GdaConnection *cnc,
 							const gchar *name);
-static gboolean gda_interbase_provider_create_database (GdaServerProvider *provider,
+static gboolean gda_firebird_provider_create_database (GdaServerProvider *provider,
 							GdaConnection *cnc,
 							const gchar *name);
-static gboolean gda_interbase_provider_drop_database (GdaServerProvider *provider,
+static gboolean gda_firebird_provider_drop_database (GdaServerProvider *provider,
 						      GdaConnection *cnc,
 						      const gchar *name);
-static GList *gda_interbase_provider_execute_command (GdaServerProvider *provider,
+static GList *gda_firebird_provider_execute_command (GdaServerProvider *provider,
 						      GdaConnection *cnc,
 						      GdaCommand *cmd,
 						      GdaParameterList *params);
-static gboolean gda_interbase_provider_begin_transaction (GdaServerProvider *provider,
+static gboolean gda_firebird_provider_begin_transaction (GdaServerProvider *provider,
 							  GdaConnection *cnc,
 							  GdaTransaction *xaction);
-static gboolean gda_interbase_provider_commit_transaction (GdaServerProvider *provider,
+static gboolean gda_firebird_provider_commit_transaction (GdaServerProvider *provider,
 							   GdaConnection *cnc,
 							   GdaTransaction *xaction);
-static gboolean gda_interbase_provider_rollback_transaction (GdaServerProvider *provider,
+static gboolean gda_firebird_provider_rollback_transaction (GdaServerProvider *provider,
 							     GdaConnection *cnc,
 							     GdaTransaction *xaction);
-static gboolean gda_interbase_provider_supports (GdaServerProvider *provider,
+static gboolean gda_firebird_provider_supports (GdaServerProvider *provider,
 						 GdaConnection *cnc,
 						 GdaConnectionFeature feature);
-static GdaDataModel *gda_interbase_provider_get_schema (GdaServerProvider *provider,
+static GdaDataModel *gda_firebird_provider_get_schema (GdaServerProvider *provider,
 							GdaConnection *cnc,
 							GdaConnectionSchema schema,
 							GdaParameterList *params);
@@ -83,103 +83,103 @@ typedef struct {
 	gchar *dbname;
 	isc_db_handle handle;
 	ISC_STATUS status[20];
-} GdaInterbaseConnection;
+} GdaFirebirdConnection;
 
 /*
- * GdaInterbaseProvider class implementation
+ * GdaFirebirdProvider class implementation
  */
 
 static void
-gda_interbase_provider_class_init (GdaInterbaseProviderClass *klass)
+gda_firebird_provider_class_init (GdaFirebirdProviderClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 	GdaServerProviderClass *provider_class = GDA_SERVER_PROVIDER_CLASS (klass);
 
 	parent_class = g_type_class_peek_parent (klass);
 
-	object_class->finalize = gda_interbase_provider_finalize;
-	provider_class->get_version = gda_interbase_provider_get_version;
-	provider_class->open_connection = gda_interbase_provider_open_connection;
-	provider_class->close_connection = gda_interbase_provider_close_connection;
-	provider_class->get_server_version = gda_interbase_provider_get_server_version;
-	provider_class->get_database = gda_interbase_provider_get_database;
-	provider_class->change_database = gda_interbase_provider_change_database;
-	provider_class->create_database = gda_interbase_provider_create_database;
-	provider_class->drop_database = gda_interbase_provider_drop_database;
-	provider_class->execute_command = gda_interbase_provider_execute_command;
-	provider_class->begin_transaction = gda_interbase_provider_begin_transaction;
-	provider_class->commit_transaction = gda_interbase_provider_commit_transaction;
-	provider_class->rollback_transaction = gda_interbase_provider_rollback_transaction;
-	provider_class->supports = gda_interbase_provider_supports;
-	provider_class->get_schema = gda_interbase_provider_get_schema;
+	object_class->finalize = gda_firebird_provider_finalize;
+	provider_class->get_version = gda_firebird_provider_get_version;
+	provider_class->open_connection = gda_firebird_provider_open_connection;
+	provider_class->close_connection = gda_firebird_provider_close_connection;
+	provider_class->get_server_version = gda_firebird_provider_get_server_version;
+	provider_class->get_database = gda_firebird_provider_get_database;
+	provider_class->change_database = gda_firebird_provider_change_database;
+	provider_class->create_database = gda_firebird_provider_create_database;
+	provider_class->drop_database = gda_firebird_provider_drop_database;
+	provider_class->execute_command = gda_firebird_provider_execute_command;
+	provider_class->begin_transaction = gda_firebird_provider_begin_transaction;
+	provider_class->commit_transaction = gda_firebird_provider_commit_transaction;
+	provider_class->rollback_transaction = gda_firebird_provider_rollback_transaction;
+	provider_class->supports = gda_firebird_provider_supports;
+	provider_class->get_schema = gda_firebird_provider_get_schema;
 }
 
 static void
-gda_interbase_provider_init (GdaInterbaseProvider *provider, GdaInterbaseProviderClass *klass)
+gda_firebird_provider_init (GdaFirebirdProvider *provider, GdaFirebirdProviderClass *klass)
 {
 }
 
 static void
-gda_interbase_provider_finalize (GObject *object)
+gda_firebird_provider_finalize (GObject *object)
 {
-	GdaInterbaseProvider *iprv = (GdaInterbaseProvider *) object;
+	GdaFirebirdProvider *iprv = (GdaFirebirdProvider *) object;
 
-	g_return_if_fail (GDA_IS_INTERBASE_PROVIDER (iprv));
+	g_return_if_fail (GDA_IS_FIREBIRD_PROVIDER (iprv));
 
 	/* chain to parent class */
 	parent_class->finalize (object);
 }
 
 GType
-gda_interbase_provider_get_type (void)
+gda_firebird_provider_get_type (void)
 {
 	static GType type = 0;
 
 	if (!type) {
 		static GTypeInfo info = {
-			sizeof (GdaInterbaseProviderClass),
+			sizeof (GdaFirebirdProviderClass),
 			(GBaseInitFunc) NULL,
 			(GBaseFinalizeFunc) NULL,
-			(GClassInitFunc) gda_interbase_provider_class_init,
+			(GClassInitFunc) gda_firebird_provider_class_init,
 			NULL, NULL,
-			sizeof (GdaInterbaseProvider),
+			sizeof (GdaFirebirdProvider),
 			0,
-			(GInstanceInitFunc) gda_interbase_provider_init
+			(GInstanceInitFunc) gda_firebird_provider_init
 		};
-		type = g_type_register_static (PARENT_TYPE, "GdaInterbaseProvider", &info, 0);
+		type = g_type_register_static (PARENT_TYPE, "GdaFirebirdProvider", &info, 0);
 	}
 
 	return type;
 }
 
 GdaServerProvider *
-gda_interbase_provider_new (void)
+gda_firebird_provider_new (void)
 {
-	GdaInterbaseProvider *iprv;
+	GdaFirebirdProvider *iprv;
 
-	iprv = g_object_new (GDA_TYPE_INTERBASE_PROVIDER, NULL);
+	iprv = g_object_new (GDA_TYPE_FIREBIRD_PROVIDER, NULL);
 	return GDA_SERVER_PROVIDER (iprv);
 }
 
-/* get_version handler for the GdaInterbaseProvider class */
+/* get_version handler for the GdaFirebirdProvider class */
 static const gchar *
-gda_interbase_provider_get_version (GdaServerProvider *provider)
+gda_firebird_provider_get_version (GdaServerProvider *provider)
 {
 	return VERSION;
 }
 
-/* open_connection handler for the GdaInterbaseProvider class */
+/* open_connection handler for the GdaFirebirdProvider class */
 static gboolean
-gda_interbase_provider_open_connection (GdaServerProvider *provider,
+gda_firebird_provider_open_connection (GdaServerProvider *provider,
 					GdaConnection *cnc,
 					GdaQuarkList *params,
 					const gchar *username,
 					const gchar *password)
 {
-	GdaInterbaseConnection *icnc;
+	GdaFirebirdConnection *icnc;
 	gchar *ib_db, *ib_user, *ib_password;
 
-	g_return_val_if_fail (GDA_IS_INTERBASE_PROVIDER (provider), FALSE);
+	g_return_val_if_fail (GDA_IS_FIREBIRD_PROVIDER (provider), FALSE);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 
 	/* get parameters */
@@ -199,40 +199,40 @@ gda_interbase_provider_open_connection (GdaServerProvider *provider,
 	else
 		ib_password = gda_quark_list_find (params, "PASSWORD");
 
-	icnc = g_new0 (GdaInterbaseConnection, 1);
+	icnc = g_new0 (GdaFirebirdConnection, 1);
 
-	/* prepare connection to interbase server */
+	/* prepare connection to firebird server */
 	if (ib_user)
 		setenv ("ISC_USER", ib_user, 1);
 	if (ib_password)
 		setenv ("ISC_PASSWORD", ib_password, 1);
 
 	if (isc_attach_database (icnc->status, strlen (ib_db), ib_db, &icnc->handle, 0, NULL)) {
-		gda_interbase_connection_make_error (cnc);
+		gda_firebird_connection_make_error (cnc);
 		g_free (icnc);
 		return FALSE;
 	}
 
 	icnc->dbname = g_strdup (ib_db);
 
-	/* attach the GdaInterbaseConnection struct to the connection */
+	/* attach the GdaFirebirdConnection struct to the connection */
 	g_object_set_data (G_OBJECT (cnc), CONNECTION_DATA, icnc);
 
 	return TRUE;
 }
 
-/* close_connection handler for the GdaInterbaseProvider class */
+/* close_connection handler for the GdaFirebirdProvider class */
 static gboolean
-gda_interbase_provider_close_connection (GdaServerProvider *provider, GdaConnection *cnc)
+gda_firebird_provider_close_connection (GdaServerProvider *provider, GdaConnection *cnc)
 {
-	GdaInterbaseConnection *icnc;
+	GdaFirebirdConnection *icnc;
 
-	g_return_val_if_fail (GDA_IS_INTERBASE_PROVIDER (provider), FALSE);
+	g_return_val_if_fail (GDA_IS_FIREBIRD_PROVIDER (provider), FALSE);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 
 	icnc = g_object_get_data (G_OBJECT (cnc), CONNECTION_DATA);
 	if (!icnc) {
-		gda_connection_add_error_string (cnc, _("Invalid Interbase handle"));
+		gda_connection_add_error_string (cnc, _("Invalid Firebird handle"));
 		return FALSE;
 	}
 
@@ -247,46 +247,46 @@ gda_interbase_provider_close_connection (GdaServerProvider *provider, GdaConnect
 	return TRUE;
 }
 
-/* get_server_version handler for the GdaInterbaseProvider class */
+/* get_server_version handler for the GdaFirebirdProvider class */
 static const gchar *
-gda_interbase_provider_get_server_version (GdaServerProvider *provider,
+gda_firebird_provider_get_server_version (GdaServerProvider *provider,
 					   GdaConnection *cnc)
 {
-	GdaInterbaseConnection *icnc;
+	GdaFirebirdConnection *icnc;
 
-	g_return_val_if_fail (GDA_IS_INTERBASE_PROVIDER (provider), NULL);
+	g_return_val_if_fail (GDA_IS_FIREBIRD_PROVIDER (provider), NULL);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
 	icnc = g_object_get_data (G_OBJECT (cnc), CONNECTION_DATA);
 	if (!icnc) {
-		gda_connection_add_error_string (cnc, _("Invalid Interbase handle"));
+		gda_connection_add_error_string (cnc, _("Invalid Firebird handle"));
 		return NULL;
 	}
 
 	return "FIXME";
 }
 
-/* get_database handler for the GdaInterbaseProvider class */
+/* get_database handler for the GdaFirebirdProvider class */
 static const gchar *
-gda_interbase_provider_get_database (GdaServerProvider *provider, GdaConnection *cnc)
+gda_firebird_provider_get_database (GdaServerProvider *provider, GdaConnection *cnc)
 {
-	GdaInterbaseConnection *icnc;
+	GdaFirebirdConnection *icnc;
 
-	g_return_val_if_fail (GDA_IS_INTERBASE_PROVIDER (provider), NULL);
+	g_return_val_if_fail (GDA_IS_FIREBIRD_PROVIDER (provider), NULL);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
 	icnc = g_object_get_data (G_OBJECT (cnc), CONNECTION_DATA);
 	if (!icnc) {
-		gda_connection_add_error_string (cnc, _("Invalid Interbase handle"));
+		gda_connection_add_error_string (cnc, _("Invalid Firebird handle"));
 		return NULL;
 	}
 
 	return (const gchar *) icnc->dbname;
 }
 
-/* change_database handler for the GdaInterbaseProvider class */
+/* change_database handler for the GdaFirebirdProvider class */
 static gboolean
-gda_interbase_provider_change_database (GdaServerProvider *provider,
+gda_firebird_provider_change_database (GdaServerProvider *provider,
 					GdaConnection *cnc,
 					const gchar *name)
 {
@@ -294,24 +294,24 @@ gda_interbase_provider_change_database (GdaServerProvider *provider,
 	return FALSE;
 }
 
-/* create_database handler for the GdaInterbaseProvider class */
+/* create_database handler for the GdaFirebirdProvider class */
 static gboolean
-gda_interbase_provider_create_database (GdaServerProvider *provider,
+gda_firebird_provider_create_database (GdaServerProvider *provider,
 					GdaConnection *cnc,
 					const gchar *name)
 {
 	gchar *sql;
-	GdaInterbaseConnection *icnc;
+	GdaFirebirdConnection *icnc;
 	isc_db_handle db_handle = NULL;
 	isc_tr_handle tr_handle = NULL;
 
-	g_return_val_if_fail (GDA_IS_INTERBASE_PROVIDER (provider), FALSE);
+	g_return_val_if_fail (GDA_IS_FIREBIRD_PROVIDER (provider), FALSE);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (name != NULL, FALSE);
 
 	icnc = g_object_get_data (G_OBJECT (cnc), CONNECTION_DATA);
 	if (!icnc) {
-		gda_connection_add_error_string (cnc, _("Invalid Interbase handle"));
+		gda_connection_add_error_string (cnc, _("Invalid Firebird handle"));
 		return FALSE;
 	}
 
@@ -319,7 +319,7 @@ gda_interbase_provider_create_database (GdaServerProvider *provider,
 	sql = g_strdup_printf ("CREATE DATABASE '%s'", name);
 	if (isc_dsql_execute_immediate (icnc->status, &db_handle, &tr_handle,
 					0, sql, 1, NULL)) {
-		gda_interbase_connection_make_error (cnc);
+		gda_firebird_connection_make_error (cnc);
 		return FALSE;
 	}
 
@@ -329,9 +329,9 @@ gda_interbase_provider_create_database (GdaServerProvider *provider,
 	return TRUE;
 }
 
-/* drop_database handler for the GdaInterbaseProvider class */
+/* drop_database handler for the GdaFirebirdProvider class */
 static gboolean
-gda_interbase_provider_drop_database (GdaServerProvider *provider,
+gda_firebird_provider_drop_database (GdaServerProvider *provider,
 				      GdaConnection *cnc,
 				      const gchar *name)
 {
@@ -339,38 +339,38 @@ gda_interbase_provider_drop_database (GdaServerProvider *provider,
 }
 
 static GdaDataModel *
-run_sql (GdaConnection *cnc, GdaInterbaseConnection *icnc, isc_tr_handle *itr, const gchar *sql)
+run_sql (GdaConnection *cnc, GdaFirebirdConnection *icnc, isc_tr_handle *itr, const gchar *sql)
 {
 	GdaDataModel *model;
 
-	model = gda_interbase_recordset_new (cnc, itr, sql);
+	model = gda_firebird_recordset_new (cnc, itr, sql);
 	return model;
 }
 
-/* execute_command handler for the GdaInterbaseProvider class */
+/* execute_command handler for the GdaFirebirdProvider class */
 static GList *
-gda_interbase_provider_execute_command (GdaServerProvider *provider,
+gda_firebird_provider_execute_command (GdaServerProvider *provider,
 					GdaConnection *cnc,
 					GdaCommand *cmd,
 					GdaParameterList *params)
 {
-	GdaInterbaseConnection *icnc;
+	GdaFirebirdConnection *icnc;
 	isc_tr_handle *itr;
 	gchar **arr;
 	gint n;
 	GList *reclist = NULL;
 
-	g_return_val_if_fail (GDA_IS_INTERBASE_PROVIDER (provider), NULL);
+	g_return_val_if_fail (GDA_IS_FIREBIRD_PROVIDER (provider), NULL);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (cmd != NULL, NULL);
 
 	icnc = g_object_get_data (G_OBJECT (cnc), CONNECTION_DATA);
 	if (!icnc) {
-		gda_connection_add_error_string (cnc, _("Invalid Interbase handle"));
+		gda_connection_add_error_string (cnc, _("Invalid Firebird handle"));
 		return NULL;
 	}
 
-	itr = gda_interbase_command_get_transaction (cmd);
+	itr = gda_firebird_command_get_transaction (cmd);
 
 	/* parse command */
 	switch (gda_command_get_command_type (cmd)) {
@@ -390,13 +390,13 @@ gda_interbase_provider_execute_command (GdaServerProvider *provider,
 	return reclist;
 }
 
-/* begin_transaction handler for the GdaInterbaseProvider class */
+/* begin_transaction handler for the GdaFirebirdProvider class */
 static gboolean
-gda_interbase_provider_begin_transaction (GdaServerProvider *provider,
+gda_firebird_provider_begin_transaction (GdaServerProvider *provider,
 					  GdaConnection *cnc,
 					  GdaTransaction *xaction)
 {
-	GdaInterbaseConnection *icnc;
+	GdaFirebirdConnection *icnc;
 	isc_tr_handle *itr;
 	static char tpb[] = {
 		isc_tpb_version3,
@@ -406,12 +406,12 @@ gda_interbase_provider_begin_transaction (GdaServerProvider *provider,
 		isc_tpb_wait
 	};
 
-	g_return_val_if_fail (GDA_IS_INTERBASE_PROVIDER (provider), FALSE);
+	g_return_val_if_fail (GDA_IS_FIREBIRD_PROVIDER (provider), FALSE);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 
 	icnc = g_object_get_data (G_OBJECT (cnc), CONNECTION_DATA);
 	if (!icnc) {
-		gda_connection_add_error_string (cnc, _("Invalid Interbase handle"));
+		gda_connection_add_error_string (cnc, _("Invalid Firebird handle"));
 		return FALSE;
 	}
 
@@ -420,7 +420,7 @@ gda_interbase_provider_begin_transaction (GdaServerProvider *provider,
 
 	if (isc_start_transaction (icnc->status, itr, 1, &icnc->handle,
 				   (unsigned short) sizeof (tpb), &tpb)) {
-		gda_interbase_connection_make_error (cnc);
+		gda_firebird_connection_make_error (cnc);
 		g_free (itr);
 		return FALSE;
 	}
@@ -430,22 +430,22 @@ gda_interbase_provider_begin_transaction (GdaServerProvider *provider,
 	return TRUE;
 }
 
-/* commit_transaction handler for the GdaInterbaseProvider class */
+/* commit_transaction handler for the GdaFirebirdProvider class */
 static gboolean
-gda_interbase_provider_commit_transaction (GdaServerProvider *provider,
+gda_firebird_provider_commit_transaction (GdaServerProvider *provider,
 					   GdaConnection *cnc,
 					   GdaTransaction *xaction)
 {
-	GdaInterbaseConnection *icnc;
+	GdaFirebirdConnection *icnc;
 	isc_tr_handle *itr;
 	gboolean result;
 
-	g_return_val_if_fail (GDA_IS_INTERBASE_PROVIDER (provider), FALSE);
+	g_return_val_if_fail (GDA_IS_FIREBIRD_PROVIDER (provider), FALSE);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 
 	icnc = g_object_get_data (G_OBJECT (cnc), CONNECTION_DATA);
 	if (!icnc) {
-		gda_connection_add_error_string (cnc, _("Invalid Interbase handle"));
+		gda_connection_add_error_string (cnc, _("Invalid Firebird handle"));
 		return FALSE;
 	}
 
@@ -456,7 +456,7 @@ gda_interbase_provider_commit_transaction (GdaServerProvider *provider,
 	}
 
 	if (isc_commit_transaction (icnc->status, itr)) {
-		gda_interbase_connection_make_error (cnc);
+		gda_firebird_connection_make_error (cnc);
 		result = FALSE;
 	}
 	else
@@ -468,22 +468,22 @@ gda_interbase_provider_commit_transaction (GdaServerProvider *provider,
 	return result;
 }
 
-/* rollback_transaction handler for the GdaInterbaseProvider class */
+/* rollback_transaction handler for the GdaFirebirdProvider class */
 static gboolean
-gda_interbase_provider_rollback_transaction (GdaServerProvider *provider,
+gda_firebird_provider_rollback_transaction (GdaServerProvider *provider,
 					     GdaConnection *cnc,
 					     GdaTransaction *xaction)
 {
-	GdaInterbaseConnection *icnc;
+	GdaFirebirdConnection *icnc;
 	isc_tr_handle *itr;
 	gboolean result;
 
-	g_return_val_if_fail (GDA_IS_INTERBASE_PROVIDER (provider), FALSE);
+	g_return_val_if_fail (GDA_IS_FIREBIRD_PROVIDER (provider), FALSE);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 
 	icnc = g_object_get_data (G_OBJECT (cnc), CONNECTION_DATA);
 	if (!icnc) {
-		gda_connection_add_error_string (cnc, _("Invalid Interbase handle"));
+		gda_connection_add_error_string (cnc, _("Invalid Firebird handle"));
 		return FALSE;
 	}
 
@@ -494,7 +494,7 @@ gda_interbase_provider_rollback_transaction (GdaServerProvider *provider,
 	}
 
 	if (isc_rollback_transaction (icnc->status, itr)) {
-		gda_interbase_connection_make_error (cnc);
+		gda_firebird_connection_make_error (cnc);
 		result = FALSE;
 	}
 	else
@@ -506,9 +506,9 @@ gda_interbase_provider_rollback_transaction (GdaServerProvider *provider,
 	return result;
 }
 
-/* supports handler for the GdaInterbaseProvider class */
+/* supports handler for the GdaFirebirdProvider class */
 static gboolean
-gda_interbase_provider_supports (GdaServerProvider *provider,
+gda_firebird_provider_supports (GdaServerProvider *provider,
 				 GdaConnection *cnc,
 				 GdaConnectionFeature feature)
 {
@@ -516,9 +516,9 @@ gda_interbase_provider_supports (GdaServerProvider *provider,
 	return FALSE;
 }
 
-/* get_schema handler for the GdaInterbaseProvider class */
+/* get_schema handler for the GdaFirebirdProvider class */
 static GdaDataModel *
-gda_interbase_provider_get_schema (GdaServerProvider *provider,
+gda_firebird_provider_get_schema (GdaServerProvider *provider,
 				   GdaConnection *cnc,
 				   GdaConnectionSchema schema,
 				   GdaParameterList *params)
@@ -528,28 +528,28 @@ gda_interbase_provider_get_schema (GdaServerProvider *provider,
 }
 
 void
-gda_interbase_connection_make_error (GdaConnection *cnc)
+gda_firebird_connection_make_error (GdaConnection *cnc)
 {
 	GdaError *error;
-	GdaInterbaseConnection *icnc;
+	GdaFirebirdConnection *icnc;
 
 	g_return_if_fail (GDA_IS_CONNECTION (cnc));
 
 	icnc = g_object_get_data (G_OBJECT (cnc), CONNECTION_DATA);
 	if (!icnc) {
-		gda_connection_add_error_string (cnc, _("Invalid Interbase handle"));
+		gda_connection_add_error_string (cnc, _("Invalid Firebird handle"));
 		return;
 	}
 
 	error = gda_error_new ();
 	gda_error_set_number (error, isc_sqlcode (icnc->status));
-	gda_error_set_source (error, "[GDA Interbase]");
+	gda_error_set_source (error, "[GDA Firebird]");
 
 	gda_connection_add_error (cnc, error);
 }
 
 isc_tr_handle *
-gda_interbase_command_get_transaction (GdaCommand *cmd)
+gda_firebird_command_get_transaction (GdaCommand *cmd)
 {
 	GdaTransaction *xaction;
 	isc_tr_handle *itr;

@@ -1,4 +1,4 @@
-/* GDA Interbase Provider
+/* GDA FireBird Provider
  * Copyright (C) 1998-2002 The GNOME Foundation
  *
  * AUTHORS:
@@ -18,41 +18,3 @@
  * License along with this library; if not, write to the Free
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
-
-#include <libgda/gda-intl.h>
-#include "gda-interbase-provider.h"
-
-const gchar       *plugin_get_name (void);
-const gchar       *plugin_get_description (void);
-GList             *plugin_get_connection_params (void);
-GdaServerProvider *plugin_create_provider (void);
-
-const gchar *
-plugin_get_name (void)
-{
-	return "Interbase";
-}
-
-const gchar *
-plugin_get_description (void)
-{
-	return _("GDA provider for Interbase/Firebird databases");
-}
-
-GList *
-plugin_get_connection_params (void)
-{
-	GList *list = NULL;
-
-	list = g_list_append (list, g_strdup ("DATABASE"));
-	list = g_list_append (list, g_strdup ("PASSWORD"));
-	list = g_list_append (list, g_strdup ("USER"));
-
-	return list;
-}
-
-GdaServerProvider *
-plugin_create_provider (void)
-{
-	return gda_interbase_provider_new ();
-}

@@ -5,7 +5,7 @@
 #undef HAVE_STPCPY
 #undef HAVE_ODBC
 #undef HAVE_MYSQL
-#undef HAVE_INTERBASE
+#undef HAVE_FIREBIRD
 #undef HAVE_LDAP
 #undef HAVE_MDB
 #undef HAVE_ORACLE

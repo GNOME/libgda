@@ -1,4 +1,4 @@
-/* GDA Interbase Provider
+/* GDA FireBird Provider
  * Copyright (C) 1998-2002 The GNOME Foundation
  *
  * AUTHORS:
@@ -19,27 +19,27 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#if !defined(__gda_interbase_recordset_h__)
-#  define __gda_interbase_recordset_h__
+#if !defined(__gda_firebird_recordset_h__)
+#  define __gda_firebird_recordset_h__
 
 #include <libgda/gda-data-model.h>
 
 G_BEGIN_DECLS
 
-#define GDA_TYPE_INTERBASE_RECORDSET            (gda_interbase_recordset_get_type())
-#define GDA_INTERBASE_RECORDSET(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_INTERBASE_RECORDSET, GdaInterbaseRecordset))
-#define GDA_INTERBASE_RECORDSET_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_INTERBASE_RECORDSET, GdaInterbaseRecordsetClass))
-#define GDA_IS_INTERBASE_RECORDSET(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_INTERBASE_RECORDSET))
-#define GDA_IS_INTERBASE_RECORDSET_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GDA_TYPE_INTERBASE_RECORDSET))
+#define GDA_TYPE_FIREBIRD_RECORDSET            (gda_firebird_recordset_get_type())
+#define GDA_FIREBIRD_RECORDSET(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_FIREBIRD_RECORDSET, GdaFirebirdRecordset))
+#define GDA_FIREBIRD_RECORDSET_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_FIREBIRD_RECORDSET, GdaFirebirdRecordsetClass))
+#define GDA_IS_FIREBIRD_RECORDSET(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_FIREBIRD_RECORDSET))
+#define GDA_IS_FIREBIRD_RECORDSET_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GDA_TYPE_FIREBIRD_RECORDSET))
 
-typedef struct _GdaInterbaseRecordset      GdaInterbaseRecordset;
-typedef struct _GdaInterbaseRecordsetClass GdaInterbaseRecordsetClass;
+typedef struct _GdaFirebirdRecordset      GdaFirebirdRecordset;
+typedef struct _GdaFirebirdRecordsetClass GdaFirebirdRecordsetClass;
 
-struct _GdaInterbaseRecordset {
+struct _GdaFirebirdRecordset {
 	GdaDataModel model;
 };
 
-struct _GdaInterbaseRecordsetClass {
+struct _GdaFirebirdRecordsetClass {
 	GdaDataModelClass parent_class;
 };
 

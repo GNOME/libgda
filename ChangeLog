@@ -1,3 +1,13 @@
+2002-12-29  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* configure.in:
+	* acconfig.h: s/INTERBASE/FIREBIRD.
+
+	* providers/interbase/*: moved...
+
+	* providers/firebird/*: ...to here, since we will be supporting
+	FireBird, the community-based version of Interbase.
+
 2002-12-28  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* libgda/gda-data-model.c (gda_data_model_describe_column): don't call

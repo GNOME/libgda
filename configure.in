@@ -525,13 +525,13 @@ fi
 
 AM_CONDITIONAL(ORACLE, test x$oracledir != x)
 
-dnl test for INTERBASE
-try_interbase=true
-AC_ARG_WITH(interbase,
-[  --with-interbase=<directory>	use INTERBASE backend in <directoty>],[
+dnl test for FireBird
+try_firebird=true
+AC_ARG_WITH(firebird,
+[  --with-firebird=<directory>	use FireBird backend in <directoty>],[
 if test $withval = no
 then
-	try_interbase=false
+	try_firebird=false
 elif test $withval = yes
 then
 	dir="/usr/local"
@@ -539,29 +539,29 @@ else
 	dir=$withval
 fi
 ])
-if test $try_interbase = true
+if test $try_firebird = true
 then
-	AC_MSG_CHECKING(for INTERBASE installation)
-	for d in $dir /usr/local/interbase /usr/local /usr /opt/interbase
+	AC_MSG_CHECKING(for FireBird installation)
+	for d in $dir /usr/local/firebird /usr/local /usr /opt/firebird
 	do
 		if test -f $d/include/ibase.h
 		then
-			AC_MSG_RESULT(found INTERBASE in $d)
-			interbasedir=$d
+			AC_MSG_RESULT(found FireBird in $d)
+			firebirddir=$d
 			break
 		fi
 	done
-	if test x$interbasedir = x
+	if test x$firebirddir = x
 	then
-		AC_MSG_WARN(INTERBASE backend not used)
+		AC_MSG_WARN(FireBird backend not used)
 	else
-		AC_DEFINE(HAVE_INTERBASE)
-		INTERBASE_CFLAGS="-I${interbasedir}/include"
-		INTERBASE_LIBS="-L${interbasedir}/lib -lgds -ldl -lcrypt"
+		AC_DEFINE(HAVE_FIREBIRD)
+		FIREBIRD_CFLAGS="-I${firebirddir}/include"
+		FIREBIRD_LIBS="-L${firebirddir}/lib -lgds -ldl -lcrypt"
 	fi
 fi
 
-AM_CONDITIONAL(INTERBASE, test x$interbasedir != x)
+AM_CONDITIONAL(FIREBIRD, test x$firebirddir != x)
 
 dnl Test for Xbase
 try_xbase=true
@@ -727,8 +727,8 @@ AC_SUBST(LDAP_LIBS)
 AC_SUBST(LDAP_CFLAGS)
 AC_SUBST(ORACLE_LIBS)
 AC_SUBST(ORACLE_CFLAGS)
-AC_SUBST(INTERBASE_LIBS)
-AC_SUBST(INTERBASE_CFLAGS)
+AC_SUBST(FIREBIRD_LIBS)
+AC_SUBST(FIREBIRD_CFLAGS)
 AC_SUBST(MDB_LIBS)
 AC_SUBST(MDB_CFLAGS)
 AC_SUBST(CAMEL_LIBS)
@@ -749,7 +749,7 @@ providers/Makefile
 providers/default/Makefile
 providers/ibmdb2/Makefile
 providers/freetds/Makefile
-providers/interbase/Makefile
+providers/firebird/Makefile
 providers/mdb/Makefile
 providers/mysql/Makefile
 providers/odbc/Makefile
@@ -776,9 +776,9 @@ echo " Configuration summary"
 echo "   Installation prefix = $prefix"
 echo "   Providers"
 echo "      Default (XML) = yes"
+echo "      FireBird = `if test x$firebirddir != x; then echo yes; else echo no; fi`"
 echo "      FreeTDS = `if test x$freetdsdir != x; then echo yes; else echo no; fi`"
 echo "      IBM DB2 = `if test x$ibmdb2dir != x; then echo yes; else echo no; fi`"
-echo "      Interbase = `if test x$interbasedir != x; then echo yes; else echo no; fi`"
 echo "      MDB (MS Access) = `if test x$mdbdir != x; then echo yes; else echo no; fi`"
 echo "      MySQL = `if test x$mysqldir != x; then echo yes; else echo no; fi`"
 echo "      ODBC = `if test x$odbcdir != x; then echo yes; else echo no; fi`"
