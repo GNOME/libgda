@@ -205,7 +205,7 @@ gda_client_new (void)
  * This function is the most common way of opening database connections with
  * libgda.
  *
- * Returns: the opened connection if successful, NULL if there is
+ * Returns: the opened connection if successful, %NULL if there is
  * an error.
  */
 GdaConnection *
@@ -314,7 +314,9 @@ gda_client_open_connection (GdaClient *client,
  *
  * Open a connection given a provider ID and a connection string. This
  * allows applications to open connections without having to create
- * a data source in the configuration.
+ * a data source in the configuration.  The format of @cnc_string is
+ * similar to postgresql and mysql connection strings.
+ * 
  *
  * Returns: the opened connection if successful, NULL if there is
  * an error.
@@ -325,7 +327,6 @@ gda_client_open_connection_from_string (GdaClient *client,
 					const gchar *cnc_string)
 {
 	GdaDataSourceInfo *dsn_info;
-	gchar *str;
 	GdaConnection *cnc;
 	static gint count = 0;
 

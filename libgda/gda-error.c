@@ -209,6 +209,8 @@ gda_error_get_source (GdaError *error)
 
 /**
  * gda_error_set_source
+ * @error:
+ * @source:
  */
 void
 gda_error_set_source (GdaError *error, const gchar *source)
@@ -222,6 +224,9 @@ gda_error_set_source (GdaError *error, const gchar *source)
 
 /**
  * gda_error_get_sqlstate
+ * @error:
+ * 
+ * 
  */
 const gchar *
 gda_error_get_sqlstate (GdaError *error)
@@ -232,6 +237,8 @@ gda_error_get_sqlstate (GdaError *error)
 
 /**
  * gda_error_set_sqlstate
+ * @error: error code
+ * @sqlstate: SQL statement which generated the error
  */
 void
 gda_error_set_sqlstate (GdaError *error, const gchar *sqlstate)

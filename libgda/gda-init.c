@@ -32,6 +32,13 @@ static GMainLoop *main_loop = NULL;
 
 /**
  * gda_init
+ * @app_id:
+ * @version: 
+ * @nargs: argv passed in from you main()
+ * @args: List of arguments 
+ * 
+ * 
+ * 
  */
 void
 gda_init (const gchar *app_id, const gchar *version, gint nargs, gchar *args[])
@@ -109,6 +116,8 @@ gda_main_run (GdaInitFunc init_func, gpointer user_data)
 
 /**
  * gda_main_quit
+ * 
+ * Exit main loop
  */
 void
 gda_main_quit (void)

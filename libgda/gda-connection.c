@@ -61,20 +61,24 @@ static GObjectClass *parent_class = NULL;
  * Callbacks
  */
 
-//static void
-//recset_weak_cb (gpointer user_data, GObject *object)
-//{
-//	GdaRecordset *recset = (GdaRecordset *) object;
-//	GdaConnection *cnc = (GdaConnection *) user_data;
-//
-//	g_return_if_fail (GDA_IS_RECORDSET (recset));
-//	g_return_if_fail (GDA_IS_CONNECTION (cnc));
-//
-//	cnc->priv->recset_list = g_list_remove (cnc->priv->recset_list, recset);
-//}
+#if 0
+/* CODE IS DISABLED */
+static void
+recset_weak_cb (gpointer user_data, GObject *object)
+{
+	GdaRecordset *recset = (GdaRecordset *) object;
+	GdaConnection *cnc = (GdaConnection *) user_data;
+
+	g_return_if_fail (GDA_IS_RECORDSET (recset));
+	g_return_if_fail (GDA_IS_CONNECTION (cnc));
+
+	cnc->priv->recset_list = g_list_remove (cnc->priv->recset_list, recset);
+}
+#endif
 
 /*
  * GdaConnection class implementation
+ * @klass:
  */
 
 static void
@@ -147,28 +151,30 @@ gda_connection_finalize (GObject *object)
 	/* chain to parent class */
 	parent_class->finalize (object);
 }
-
+/**
+ * gda_connection_get_type
+ * 
+ * Figure out what the type of connection you have open.
+ * 
+ */
 GType
 gda_connection_get_type (void)
 {
-	static GType type = 0;
+   static GType type = 0;
 
-	if (!type) {
-		if (type == 0) {
-			static GTypeInfo info = {
-				sizeof (GdaConnectionClass),
-				(GBaseInitFunc) NULL,
-				(GBaseFinalizeFunc) NULL,
-				(GClassInitFunc) gda_connection_class_init,
-				NULL, NULL,
-				sizeof (GdaConnection),
-				0,
-				(GInstanceInitFunc) gda_connection_init
-			};
-			type = g_type_register_static (PARENT_TYPE, "GdaConnection", &info, 0);
-		}
+	if (type == 0) {
+		static GTypeInfo info = {
+			sizeof (GdaConnectionClass),
+			(GBaseInitFunc) NULL,
+			(GBaseFinalizeFunc) NULL,
+			(GClassInitFunc) gda_connection_class_init,
+			NULL, NULL,
+			sizeof (GdaConnection),
+			0,
+			(GInstanceInitFunc) gda_connection_init
+		};
+	type = g_type_register_static (PARENT_TYPE, "GdaConnection", &info, 0);
 	}
-
 	return type;
 }
 
@@ -621,7 +627,7 @@ gda_connection_execute_command (GdaConnection *cnc,
  * a list of them, as is the case with #gda_connection_execute_command.
  *
  * Returns: a #GdaDataModel containing the data returned by the
- * data source.
+ * data source, or %NULL on error.
  */
 GdaDataModel *
 gda_connection_execute_single_command (GdaConnection *cnc,
@@ -712,7 +718,8 @@ gda_connection_begin_transaction (GdaConnection *cnc, GdaTransaction *xaction)
  * @cnc: a #GdaConnection object.
  * @xaction: a #GdaTransaction object.
  *
- * Commit the given transaction.
+ * Commit the given transaction to the backend database.  You need to do 
+ * gda_connection_begin_transaction() first.
  *
  * Returns: TRUE if the transaction was finished successfully,
  * FALSE otherwise.
@@ -748,7 +755,7 @@ gda_connection_rollback_transaction (GdaConnection *cnc, GdaTransaction *xaction
  * @cnc: a #GdaConnection object.
  * @feature: feature to ask for.
  *
- * Ask the underlying provider for a specific supported feature.
+ * Ask the underlying provider for if a specific feature is supported.
  *
  * Returns: TRUE if the provider supports it, FALSE if not.
  */

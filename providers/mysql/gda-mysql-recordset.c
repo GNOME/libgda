@@ -318,7 +318,7 @@ gda_mysql_recordset_append_row (GdaDataModel *model, const GList *values)
 
 		if (i != 0)
 			sql = g_string_append (sql, ", ");
-		val_str = gda_mysql_value_to_sql_string (val);
+		val_str = gda_mysql_value_to_sql_string ((GdaValue*)val);
 		sql = g_string_append (sql, val_str);
 
 		g_free (val_str);
