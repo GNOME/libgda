@@ -34,7 +34,7 @@
 #  define N_(String) (String)
 #endif
 
-struct Gda_ReportEngine
+struct _Gda_ReportEngine
 {
   GDA_ReportEngine corba_engine;
 };
@@ -101,4 +101,10 @@ gda_report_engine_query_reports (Gda_ReportEngine *engine, const gchar *conditio
   CORBA_Environment ev;
 
   g_return_val_if_fail(engine != NULL, NULL);
+  
+  CORBA_exception_init(&ev);
+  
+  CORBA_exception_free(&ev);
+  return list;
 }
+

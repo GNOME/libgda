@@ -23,7 +23,7 @@
 extern "C" {
 #endif
 
-typedef struct Gda_ReportEngine Gda_ReportEngine;
+typedef struct _Gda_ReportEngine Gda_ReportEngine;
 
 Gda_ReportEngine* gda_report_engine_load          (void);
 void              gda_report_engine_unload        (Gda_ReportEngine *engine);

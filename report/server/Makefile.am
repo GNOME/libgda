@@ -15,12 +15,15 @@ gda_report_server_SOURCES = \
 	GDA_Report-skels.c \
 	gda-report-server-cache.c \
 	gda-report-server-cache.h \
+	gda-report-server-converter.c \
 	gda-report-server-db.c \
 	gda-report-server-db.h \
 	gda-report-server-element.c \
 	gda-report-server-engine.c \
 	gda-report-server-format.c \
 	gda-report-server-main.c \
+	gda-report-server-output.c \
+	gda-report-server-report.c \
 	gda-report-server-stream.c \
 	gda-report-server.h
 gda_report_server_LDADD = \

@@ -70,8 +70,8 @@ module GDA {
 	};
 	
 	interface ReportFormat {	
-		ReportElementList getStructure ();
-		ReportStream      getStream ();
+		ReportElement getRootElement ();
+		ReportStream  getStream ();
 	};
 	
 	/*
@@ -93,13 +93,11 @@ module GDA {
 	typedef sequence<ReportParam> ReportParamList;
 	
 	interface Report {
-		attribute string   name;
-		attribute string   description;
+		attribute string                name;
+		attribute string                description;
 		readonly attribute ReportFormat format;
-		attribute boolean  is_locked;
-		
-		void         fromStream (in ReportStream stream);
-		void         fromXML (in string xml);
+		readonly attribute boolean      isLocked;
+
 		ReportOutput run (in ReportParamList params, in long flags);
 		
 		/* for shared I/O access */
