@@ -1,0 +1,880 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <glib.h>
+#include <popt.h>
+#include <readline/readline.h>
+#include <readline/history.h>
+#include <libxml/xmlmemory.h>
+#include <libxml/parser.h>
+
+
+#define PRINT_ALL	0
+#define PRINT_SECTIONS	1
+#define PRINT_ENTRIES	2
+
+#define LIBGDA_USER_CONFIG_FILE "/.libgda/config"  /* Appended to $HOME */
+
+/*
+ * Declarations
+ */
+typedef enum {
+	CMD_OK,
+	CMD_UNKNOWN,
+	CMD_ERROR,
+	CMD_QUIT
+} CmdResult;
+
+typedef CmdResult (*mode_function) (const gchar *args);
+typedef struct {
+	gchar *command;
+	gchar *help;
+	mode_function function;
+} cmd;
+
+/*
+ * Static variables
+ */
+static const gchar *prompt_gda = "gda> ";
+static const gchar *prompt_config = "config> ";
+//static const gchar *prompt_query = "query> ";
+//static const gchar *prompt_query_cont = "-> ";
+
+static gboolean config_file_g_free = FALSE;
+static gchar *config_file;
+static cmd *commands;
+static GList *config_data;
+static GList *current_section;
+
+/*
+ * Generic functions
+ */
+static gchar *
+get_input_line (const gchar *prompt)
+{
+	gchar *line;
+	char *line_read;
+
+	line = NULL;
+	line_read = readline (prompt);
+	if (line_read){
+		if (*line_read)
+			add_history (line_read);
+		line = g_strdup (line_read);
+		free (line_read);
+	}
+
+	return line;
+}
+
+static CmdResult
+do_command (const gchar *line)
+{
+	gchar *stripped;
+	gint cmdlen;
+	gint i;
+	gchar *command;
+	CmdResult result;
+
+	stripped = g_strstrip (g_strdup (line));
+	i = 0;
+	while ((command = commands [i].help) != NULL){
+		command = commands [i].command;
+		cmdlen = strlen (command);
+		if (!g_strncasecmp (stripped, command, cmdlen)){
+			gchar *ptr;
+
+			ptr = NULL;
+			if (stripped [cmdlen] == '\0')
+				ptr = &stripped [cmdlen];
+			else if (g_ascii_isspace (stripped [cmdlen]))
+				ptr = &stripped [cmdlen + 1];
+			else
+				continue;
+
+			result = (commands [i].function) (ptr);
+			g_free (stripped);
+			return result;
+		}
+		i++;
+	}
+	
+	g_free (stripped);
+	return CMD_UNKNOWN;
+}
+
+static CmdResult
+process_commands (const gchar *prompt)
+{
+	gchar *line;
+	CmdResult result;
+
+	while ((line = get_input_line (prompt)) != NULL){
+		if (*line == '\0')
+			continue;
+
+		result = do_command (line);
+		if (result == CMD_QUIT)
+			break;
+
+		if (result == CMD_UNKNOWN)
+			g_print ("Error: Unknown command\n");
+		
+		g_free (line);
+	}
+
+	return ((line != NULL) ? CMD_OK : CMD_QUIT);
+}
+
+static CmdResult
+cmd_quit (const gchar *unused)
+{
+	return CMD_QUIT;
+}
+
+static CmdResult
+help (const gchar *unused)
+{
+	gchar *command;
+	int idx;
+
+	idx = 0;
+	while ((command = commands [idx].command) != NULL){
+		g_print ("%s: %s\n", command, commands[idx].help);
+		idx++;
+	}
+
+	g_print ("\n");
+	return CMD_OK;
+}
+
+static gboolean
+unquote (gchar *str)
+{
+	gint len;
+	
+	if (*str != '"')
+		return FALSE;
+
+	len = strlen (str);
+	if (len == 1 || str [len - 1] != '"')
+		return FALSE;
+
+	str [len - 1] = '\0';
+	g_memmove (str, str + 1, len - 1);
+	return TRUE;
+}
+
+static gboolean
+yes_or_no (const gchar *msg)
+{
+	gchar *prompt;
+	gchar *resp;
+	gint result;
+
+	result = ~(FALSE + TRUE);
+	prompt = g_strdup_printf ("Are you sure you want to %s? (yes/no) ", msg);
+	while (result == ~(FALSE + TRUE)){
+		resp = get_input_line (prompt);
+		if (!g_strcasecmp (resp, "yes"))
+			result = TRUE;
+		else if (!g_strcasecmp (resp, "no"))
+			result = FALSE;
+		else
+			g_print ("Error: enter yes or no, please.\n");
+			
+	}
+	g_free (prompt);
+	return (gboolean) result;
+}
+
+/*
+ * Mode CONFIG functions
+*/
+typedef struct {
+	gchar *name;
+	gchar *type;
+	gchar *value;
+} gda_config_entry;
+
+typedef struct {
+	gboolean modified;
+	gchar *path;
+	GList *entries;
+} gda_config_section;
+
+
+static GList *
+config_read_entries (xmlNodePtr cur)
+{
+	GList *list;
+	gda_config_entry *entry;
+
+	g_return_val_if_fail (cur != NULL, NULL);
+
+	list = NULL;
+	cur = cur->xmlChildrenNode;
+	while (cur != NULL){
+		if (!strcmp(cur->name, "entry")){
+			entry = g_new0 (gda_config_entry, 1);
+			entry->name = xmlGetProp(cur, "name");
+			if (entry->name == NULL){
+				g_warning ("NULL 'name' in an entry");
+				entry->name = g_strdup ("");
+			}
+
+			entry->type =  xmlGetProp(cur, "type");
+			if (entry->type == NULL){
+				g_warning ("NULL 'type' in an entry");
+				entry->type = g_strdup ("");
+			}
+
+			entry->value =  xmlGetProp(cur, "value");
+			if (entry->value == NULL){
+				g_warning ("NULL 'value' in an entry");
+				entry->value = g_strdup ("");
+			}
+
+			list = g_list_append (list, entry);
+		} else {
+			g_warning ("'entry' expected, got '%s'. Ignoring...", 
+				   cur->name);
+		}
+		cur = cur->next;
+	}
+	
+	return list;
+}
+
+static GList *
+parse_config_file (const gchar *buffer, int len)
+{
+	xmlDocPtr doc;
+	xmlNodePtr cur;
+	GList *list = NULL;
+	gda_config_section *section;
+
+	g_return_val_if_fail (buffer != NULL, NULL);
+	g_return_val_if_fail (len != 0, NULL);
+
+	xmlKeepBlanksDefault (0);
+	doc = xmlParseMemory (buffer, len);
+	if (doc == NULL){
+		g_warning ("File empty or not well-formed.");
+		return NULL;
+	}
+
+	cur = xmlDocGetRootElement (doc);
+	if (cur == NULL){
+		g_warning ("Cannot get root element!");
+		xmlFreeDoc (doc);
+		return NULL;
+	}
+
+	if (strcmp (cur->name, "libgda-config") != 0){
+		g_error ("root node != 'libgda-config' -> '%s'", cur->name);
+		xmlFreeDoc (doc);
+		return NULL;
+	}
+
+	cur = cur->xmlChildrenNode;
+	while (cur != NULL) {
+		if (!strcmp(cur->name, "section")){
+			section = g_new0 (gda_config_section, 1);
+			section->path = xmlGetProp (cur, "path");
+			if (section->path != NULL){
+				section->entries = config_read_entries (cur);
+				list = g_list_append (list, section);
+			} else {
+				g_warning ("ignoring section without 'path'!");
+				g_free (section);
+			}
+		} else {
+			g_warning ("'section' expected, got '%s'. Ignoring...",
+				   cur->name);
+		}
+
+		cur = cur->next;
+	}
+
+	xmlFreeDoc (doc);
+	return list;
+}
+
+static void
+free_entry (gpointer data, gpointer user_data)
+{
+	gda_config_entry *entry = data;
+
+	g_free (entry->name);
+	g_free (entry->type);
+	g_free (entry->value);
+	g_free (entry);
+}
+
+static void
+free_section (gpointer data, gpointer user_data)
+{
+	gda_config_section *section = data;
+
+	g_list_foreach (section->entries, free_entry, NULL);
+	g_list_free (section->entries);
+	g_free (section->path);
+	g_free (section);
+}
+
+static gboolean
+config_load_file (const gchar *file)
+{
+	gchar *file_contents;
+	gint len;
+
+	if (g_file_get_contents (file, &file_contents, &len, NULL))
+		config_data = parse_config_file (file_contents, len);
+
+	return TRUE;
+}
+
+static void
+printEntry (gpointer data, gpointer user_data)
+{
+	gda_config_entry *entry = data;
+	gint print_mode = GPOINTER_TO_INT (user_data);
+	gda_config_section *section;
+
+	if (print_mode != PRINT_ENTRIES){
+		g_print ("\tname: %s\n", entry->name);
+		g_print ("\ttype: %s\n", entry->type);
+		g_print ("\tvalue: %s\n\n", entry->value);
+	}
+	else {
+		section = current_section->data;
+		g_print ("entry %d ", g_list_index (section->entries, data));
+		g_print ("name: \"%s\" ", entry->name);
+		g_print ("type: \"%s\" ", entry->type);
+		g_print ("value: \"%s\"\n", entry->value);
+	}
+}
+
+static void
+printSection (gpointer data, gpointer user_data)
+{
+	gda_config_section *section = data;
+	gint print_mode = GPOINTER_TO_INT (user_data);
+	gint idx;
+	
+	idx = g_list_index (config_data, section);
+	g_print ("Section %d: %s\n", idx, section->path);
+
+	if (print_mode == PRINT_ALL || print_mode == PRINT_ENTRIES){
+		GList *saved_current;
+		saved_current = current_section;
+		current_section = g_list_nth (config_data, idx);
+		if (section->entries != NULL)
+			g_list_foreach (section->entries,
+					printEntry,
+					user_data);
+		else
+			g_print ("No entries.\n");
+
+		current_section = saved_current;
+	}
+}
+
+static CmdResult
+config_list (const char *line)
+{
+	g_print ("-Begin-------------------------\n");
+	g_list_foreach (config_data, printSection, GINT_TO_POINTER (PRINT_ALL));
+	g_print ("-End----------------------------\n");
+	return CMD_OK;
+}
+
+static GList *
+search_entry (GList *entries, const gchar *name)
+{
+	GList *ls;
+	gda_config_entry *entry;
+
+	entry = NULL;
+	for (ls = entries; ls; ls = ls->next){
+		entry = ls->data;
+		if (!strcmp (entry->name, name))
+			break;
+
+		entry = NULL;
+	}
+	return ls;
+}
+
+static GList *
+search_section (GList *sections, const gchar *path)
+{
+	GList *ls;
+	gda_config_section *section;
+
+	section = NULL;
+	for (ls = sections; ls; ls = ls->next){
+		section = ls->data;
+		if (!strcmp (section->path, path))
+			break;
+
+		section = NULL;
+	}
+	return ls;
+}
+
+static CmdResult
+config_sections (const char *line)
+{
+	g_list_foreach (config_data, 
+			printSection,
+			GINT_TO_POINTER (PRINT_SECTIONS));
+	return CMD_OK;
+}
+
+static CmdResult
+config_entries (const char *line)
+{
+	if (current_section == NULL){
+		g_print ("You must select a section before this command.\n");
+		return CMD_ERROR;
+	}
+
+	printSection (current_section->data, GINT_TO_POINTER (PRINT_ENTRIES));
+	return CMD_OK;
+}
+
+static CmdResult
+config_select_section (const char *line)
+{
+	gchar *section_name;
+	GList *new_section;
+
+	section_name = g_strstrip (g_strdup (line));
+	if (*section_name == '\0'){
+		gda_config_section *section;
+
+		if (current_section == NULL){
+			g_print ("Usage: section \"section_name\"|number\n");
+			g_print ("No section selected.\n");
+			g_free (section_name);
+			return CMD_ERROR;
+		}
+
+		section = current_section->data;
+		g_print ("Section '%s' is currently selected.\n",
+			 section->path);
+		g_free (section_name);
+		return CMD_OK;
+
+	}
+		
+	new_section = search_section (config_data, section_name);
+	if (new_section == NULL){
+		/* Try selecting by section number */
+		gchar *endptr [1];
+		glong value;
+		gda_config_section *section;
+		
+		value = strtol (line, endptr, 10);
+		new_section = g_list_nth (config_data, (gint) value);
+		if (new_section == NULL || **endptr != '\0'){
+			g_print ("Error: Section '%s' not found or incorrect"
+				 " section number.\n", section_name);
+			return CMD_ERROR;
+		}
+
+		section = new_section->data;
+		current_section = new_section;
+		g_print ("Selected section %d -> '%s'\n", (gint) value,
+							  section->path);
+	}
+	else {
+		current_section = new_section;
+		g_print ("Selected section '%s'.\n", section_name);
+	}
+
+	g_free (section_name);
+	
+	return CMD_OK;
+}
+
+static CmdResult
+config_add_section (const char *line)
+{
+	gda_config_section *section;
+	gchar *section_name;
+
+	section_name = g_strstrip (g_strdup (line));
+	if (*section_name == '\0'){
+		g_print ("Usage: add-section \"section_name\"\n");
+		g_free (section_name);
+		return CMD_ERROR;
+	}
+
+	if (unquote (section_name) == FALSE){
+		g_print ("Error: section name must be quoted.\n");
+		g_free (section_name);
+		return CMD_ERROR;
+	}
+
+	if (search_section (config_data, section_name) != NULL){
+		g_print ("Warning: section '%s' already exists. "
+			 "Ignoring command.\n", section_name);
+		g_free (section_name);
+		return CMD_OK;
+	}
+	
+	section = g_new0 (gda_config_section, 1);
+	section->path = section_name; // no need to free it
+	section->entries = NULL;
+	config_data = g_list_append (config_data, section);
+	current_section = g_list_last (config_data);
+	g_print ("Added section '%s' and selected it.\n", section_name);
+
+	return CMD_OK;
+}
+
+static CmdResult
+config_remove_section (const char *line)
+{
+	gda_config_section *section;
+	gchar *section_name;
+	GList *delete;
+	gchar *endptr [1];
+	glong value;
+	gboolean is_number;
+
+	value = 0;
+	is_number = FALSE;
+	delete = NULL;
+	section_name = g_strstrip (g_strdup (line));
+	if (*section_name == '\0'){
+		/* If no arguments, remove selected section */
+		if (current_section == NULL){
+			g_print ("Error: no selected section nor section name"
+				"specified.\n");
+			g_free (section_name);
+			return CMD_ERROR;
+		}
+		
+		if (yes_or_no ("remove current selected entry") != TRUE){
+			g_free (section_name);
+			return CMD_OK;
+		}
+
+		delete = g_list_nth (config_data, g_list_index (
+				     config_data, current_section->data));
+		g_assert (delete != NULL);
+	}
+	else {
+		is_number = g_ascii_isdigit (*section_name);
+		if (!is_number && unquote (section_name) == FALSE){
+			g_print ("Error: section name must be quoted.\n");
+			g_free (section_name);
+			return CMD_ERROR;
+		}
+
+		if (!is_number){
+			delete = search_section (config_data, section_name);
+			if (delete == NULL){
+				g_print ("Error: section '%s' not found .\n", 
+					 section_name);
+				g_free (section_name);
+				return CMD_ERROR;
+			}
+		}
+		else {
+			value = strtol (line, endptr, 10);
+			delete = g_list_nth (config_data, (gint) value);
+			if (delete == NULL || **endptr != '\0'){
+				g_print ("Error: section '%s' not found or "
+					 "section number out of range.",
+					section_name);
+				g_free (section_name);
+				return CMD_ERROR;
+			}
+		}
+	}
+
+	section = delete->data;
+	if (is_number)
+		g_print ("Removed section %d -> '%s'\n", (gint) value,
+							 section->path);
+	else 
+		g_print ("Removed section '%s'.\n", section->path);
+
+	free_section (section, NULL);
+	config_data = g_list_remove (config_data, section);
+	if (current_section == delete)
+		current_section = NULL;
+
+	g_free (section_name);
+	return CMD_OK;
+}
+
+static CmdResult
+config_add_entry (const char *line)
+{
+	g_print ("Sorry, add-entry not implemented yet.\n");
+	return CMD_OK;
+}
+
+static CmdResult
+config_remove_entry (const char *line)
+{
+	gda_config_section *section;
+	gda_config_entry *entry;
+	GList *entries;
+	gchar *entry_name;
+	gboolean is_number;
+	gchar *endptr [1];
+	glong value;
+
+	value = 0;
+	if (current_section == NULL){
+		g_print ("Error: no selected section.\n");
+		return CMD_ERROR;
+	}
+
+	entry_name = g_strstrip (g_strdup (line));
+	if (*entry_name == '\0'){
+		g_print ("Usage: remove-entry \"entry_name\"|number\n");
+		g_free (entry_name);
+		return CMD_ERROR;
+	}
+
+	entries = NULL;
+	section = current_section->data;
+	is_number = g_ascii_isdigit (*entry_name);
+	if (!is_number && unquote (entry_name) == FALSE){
+		g_print ("Error: entry name must be quoted.\n");
+		g_free (entry_name);
+		return CMD_ERROR;
+	}
+
+	if (!is_number){
+		entries = search_entry (section->entries, entry_name);
+		if (entries == NULL){
+			g_print ("Error: entry name=\"%s\" not found.\n", entry_name);
+			g_free (entry_name);
+			return CMD_ERROR;
+		}
+	}
+	else {
+		value = strtol (entry_name, endptr, 10);
+		entries = g_list_nth (section->entries, (gint) value);
+		if (entries == NULL || **endptr != '\0'){
+			g_print ("Error: entry '%s' out of range or "
+				"incorrect entry number.\n", entry_name);
+			g_free (entry_name);
+			return CMD_ERROR;
+		}
+	}
+
+	entry = entries->data;
+	if (!is_number)
+		g_print ("Removed entry name=\"%s\".\n", entry->name);
+	else
+		g_print ("Removed entry %d -> name=\"%s\".\n", (gint) value, 
+								entry->name);
+
+	free_entry (entry, NULL);
+	section->entries = g_list_remove (section->entries, entry);
+	g_free (entry_name);
+	return CMD_OK;
+}
+
+static CmdResult
+config_edit_entry (const char *line)
+{
+	g_print ("Sorry, edit-entry not implemented yet.\n");
+	return CMD_OK;
+}
+
+/*
+ * Mode functions
+ */
+static CmdResult
+mode_query (const gchar *unused)
+{
+	g_print ("query mode not implemented yet, sorry.\n");
+	return CMD_OK;
+}
+
+static CmdResult
+mode_config (const gchar *unused)
+{
+	CmdResult result;
+	cmd *old_commands;
+	static cmd mode_config_commands [] = {
+		{"help", "Display this help.", help},
+		{"list", "Display the whole configuration file held in memory.",
+		 config_list},
+		{"sections", "Display the sections in the configuration file.",
+		 config_sections},
+		{"select", "Selects a section to work on. "
+		           "You can use a section number or a quoted section "
+			   "name.",
+		 config_select_section},
+		{"entries", "Display the entries in the selected section.",
+		 config_entries},
+		{"add-section", "Creates a new section with the specified "
+				"path. The path must be quoted.",
+		 config_add_section},
+		{"remove-section", "Removes the specified section (number or "
+				   "full path) or the selected section if no"
+				   " argument specified. The path should be"
+				   " double quoted.",
+		 config_remove_section},
+		{"add-entry", "Add a new entry to the selected section.",
+		 config_add_entry},
+		{"remove-entry", "Removes an entry in the selected section"
+				 "by its name or number. "
+				 "Entry name should be double quoted.",
+		 config_remove_entry},
+		{"edit-entry", "Edit an entry in the selected section "
+				"by name or number."
+				"Entry name should be double quoted.",
+		 config_edit_entry},
+		{"quit", "Back to gda mode.", cmd_quit},
+		{ NULL, NULL, NULL }
+	};
+
+	if (!config_load_file (config_file))
+		return CMD_ERROR;
+
+	old_commands = commands;
+	commands = mode_config_commands;
+	result = process_commands (prompt_config);
+	g_list_foreach (config_data, free_section, NULL);
+	g_list_free (config_data);
+	commands = old_commands;
+	return result;
+}
+
+static CmdResult
+mode_gda ()
+{
+	static cmd mode_gda_commands [] = {
+		{"help", "Display this help.", help},
+		{"config", "Enters libgda configuration management mode.",
+		 mode_config},
+		{"query", "Enters query mode.", mode_query},
+		{"quit", "Finish the program.", cmd_quit},
+		{ NULL, NULL, NULL }
+	};
+
+	commands = mode_gda_commands;
+	process_commands (prompt_gda);
+	
+	return CMD_OK;
+}
+
+/*
+ * Readline/history related stuff
+ */
+static char *
+dupstr (const char *orig)
+{
+	char *dest;
+	int len;
+
+	len = strlen (orig) + 1;
+	dest = malloc (len);
+	if (dest == NULL){
+		perror (g_get_prgname ());
+		exit (1);
+	}
+	memcpy (dest, orig, len);
+	return dest;
+}
+
+static char *
+cmd_generator (const char *text, int state)
+{
+	static int list_index, len;
+	char *name;
+
+	if (!state){
+		list_index = 0;
+		len = strlen (text);
+	}
+
+	while ((name = commands [list_index].command) != NULL){
+		list_index++;
+		if (!g_strncasecmp (name, text, len))
+			return dupstr (name);
+	}
+
+	return NULL;
+}
+
+static char **
+completion_func (const gchar *text, int start, int end)
+{
+	return ((start == 0) ? rl_completion_matches (text, cmd_generator) :
+				NULL);
+}
+
+static void
+initialize_readline ()
+{
+	rl_readline_name = g_get_prgname ();
+	rl_attempted_completion_function = completion_func;
+}
+
+static void options (int argc, const char **argv)
+{
+	poptContext context;
+	
+	static const struct poptOption options[] = {
+		{
+			"config-file", 
+			'c', 
+			POPT_ARG_STRING, 
+			&config_file, 
+			0, 
+			"File to load the configuration from",
+			"filename"
+		},
+		POPT_AUTOHELP
+		{NULL, '\0', 0, NULL, 0}
+	};
+
+	context = poptGetContext (NULL, argc, argv, options, 0);
+	if (!context)
+		return;
+
+	if (poptGetNextOpt (context) < -1 || poptGetArg (context) != NULL){
+		g_print ("-Error: Incorrect argument in command line.\n");
+		poptPrintHelp (context, stderr, 0);
+		poptFreeContext (context);
+		exit (1);
+	}
+}
+
+/*
+ * main
+ */
+int
+main (int argc, char *argv [])
+{
+	options (argc, (const char **) argv);
+	if (config_file == NULL){
+		config_file = g_strdup_printf ("%s%s", g_get_home_dir (),
+						LIBGDA_USER_CONFIG_FILE);
+		config_file_g_free = TRUE;
+	}
+
+	g_print ("Using configuration file from %s\n", config_file);
+	initialize_readline ();
+	mode_gda ();
+	if (config_file_g_free)
+		g_free (config_file);
+	else
+		free (config_file);
+	return 0;
+}
+
