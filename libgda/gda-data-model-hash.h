@@ -45,19 +45,21 @@ struct _GdaDataModelHash {
 
 struct _GdaDataModelHashClass {
 	GdaDataModelClass parent_class;
-
-/*	const GdaRow * (* insert_row) (GdaDataModel *model, gint rownum, 
-				       const GList *values);*/
 };
 
 GType         gda_data_model_hash_get_type (void);
 GdaDataModel *gda_data_model_hash_new (gint cols);
-void          gda_data_model_hash_set_n_columns (GdaDataModelHash *model, gint cols);
-void          gda_data_model_hash_clear (GdaDataModelHash *model);
-const GdaValue *gda_data_model_hash_get_value_at (GdaDataModel *model, gint col, gint row);
-void 	      gda_data_model_hash_insert_row (GdaDataModel *model,
+const GdaValue *gda_data_model_hash_get_value_at (GdaDataModel *model,
+						  gint col,
+						  gint row);
+
+void	      gda_data_model_hash_clear (GdaDataModelHash *model);
+void	      gda_data_model_hash_set_n_columns (GdaDataModelHash *model,
+						 gint cols);
+
+void 	      gda_data_model_hash_insert_row (GdaDataModelHash *model,
 					      gint rownum, 
-					      GdaRow *values);
+					      GdaRow *row);
 
 G_END_DECLS
 

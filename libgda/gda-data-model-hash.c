@@ -32,7 +32,6 @@ struct _GdaDataModelHashPrivate {
 
 	/* the hash of rows, each item is a GdaRow */
 	GHashTable *rows;
-	GdaFieldAttributes *fa_pool;
 };
 
 static void gda_data_model_hash_class_init (GdaDataModelHashClass *klass);
@@ -61,21 +60,6 @@ gda_data_model_hash_describe_column (GdaDataModel *model, gint col)
 	return NULL;
 }
 
-const GdaValue *
-gda_data_model_hash_get_value_at (GdaDataModel *model, gint col, gint row)
-{
-	GdaRow *fields;
-
-	g_return_val_if_fail (GDA_IS_DATA_MODEL_HASH (model), NULL);
-
-	fields = g_hash_table_lookup (GDA_DATA_MODEL_HASH (model)->priv->rows,
-				      GINT_TO_POINTER (row));
-	if (fields == NULL)
-		return NULL;
-
-	return (const GdaValue *) gda_row_get_value (fields, col);
-}
-
 static gboolean
 gda_data_model_hash_is_editable (GdaDataModel *model)
 {
@@ -94,39 +78,6 @@ static void
 free_hash (gpointer value)
 {
 	gda_row_free ((GdaRow *) value);
-}
-
-/**
- * gda_data_model_hash_insert_row
- * @model: the model which is gonna hold the row.
- * @rownum: the number of the row.
- * @row: the row to insert. The model is responsible of freeing it!
- *
- * Inserts a row in the model.
- */
-void
-gda_data_model_hash_insert_row (GdaDataModel *model, gint rownum, GdaRow *row)
-{
-	gint len;
-	GdaDataModelHash *model_hash = (GdaDataModelHash *) model;
-
-	g_return_if_fail (GDA_IS_DATA_MODEL_HASH (model));
-	g_return_if_fail (row != NULL);
-
-	len = gda_row_get_length (row);
-	if (len != model_hash->priv->number_of_columns)
-		return;
-
-	if (g_hash_table_lookup (model_hash->priv->rows,
-				 GINT_TO_POINTER (rownum)) != NULL){
-		g_warning ("Inserting an already existing column.");
-		g_hash_table_remove (model_hash->priv->rows,
-				     GINT_TO_POINTER (rownum));
-	}
-
-	g_hash_table_insert (model_hash->priv->rows,
-			     GINT_TO_POINTER (rownum), row);
-	gda_data_model_changed (model);
 }
 
 static void
@@ -153,9 +104,7 @@ gda_data_model_hash_init (GdaDataModelHash *model, GdaDataModelHashClass *klass)
 	/* allocate internal structure */
 	model->priv = g_new0 (GdaDataModelHashPrivate, 1);
 	model->priv->number_of_columns = 0;
-	model->priv->fa_pool = NULL;
-	model->priv->rows = g_hash_table_new_full (g_direct_hash, g_direct_equal,
-					      NULL, free_hash);
+	model->priv->rows = NULL;
 }
 
 static void
@@ -176,6 +125,15 @@ gda_data_model_hash_finalize (GObject *object)
 	parent_class->finalize (object);
 }
 
+/*
+ * Public functions
+ */
+
+/**
+ * gda_data_model_hash_get_type
+ *
+ * Returns: the #GType of GdaDataModelHash.
+ */
 GType
 gda_data_model_hash_get_type (void)
 {
@@ -202,6 +160,9 @@ gda_data_model_hash_get_type (void)
 
 /**
  * gda_data_model_hash_new
+ * @cols: number of columns for rows in this data model.
+ *
+ * Returns: A pointer to the newly created #GdaDataModel.
  */
 GdaDataModel *
 gda_data_model_hash_new (gint cols)
@@ -214,12 +175,97 @@ gda_data_model_hash_new (gint cols)
 }
 
 /**
+ * gda_data_model_hash_get_value_at
+ * @model: the #GdaDataModelHash to retrieve the value from.
+ * @col: column number (starting from 0).
+ * @row: row number (starting from 0).
+ *
+ * Retrieve the value at a specified column and row.
+ * Returns: a pointer to a #GdaValue.
+ */
+const GdaValue *
+gda_data_model_hash_get_value_at (GdaDataModel *model, gint col, gint row)
+{
+	GdaRow *fields;
+
+	g_return_val_if_fail (GDA_IS_DATA_MODEL_HASH (model), NULL);
+
+	fields = g_hash_table_lookup (GDA_DATA_MODEL_HASH (model)->priv->rows,
+				      GINT_TO_POINTER (row));
+	if (fields == NULL)
+		return NULL;
+
+	return (const GdaValue *) gda_row_get_value (fields, col);
+}
+
+/**
+ * gda_data_model_hash_insert_row
+ * @model: the #GdaDataModelHash which is gonna hold the row.
+ * @rownum: the number of the row.
+ * @row: the row to insert. The model is responsible of freeing it!
+ *
+ * Inserts a row in the model.
+ */
+void
+gda_data_model_hash_insert_row (GdaDataModelHash *model,
+				gint rownum, 
+				GdaRow *row)
+{
+	g_return_if_fail (GDA_IS_DATA_MODEL_HASH (model));
+	g_return_if_fail (rownum >= 0);
+	g_return_if_fail (row != NULL);
+
+	if (gda_row_get_length (row) != model->priv->number_of_columns)
+		return;
+
+	if (g_hash_table_lookup (model->priv->rows,
+				 GINT_TO_POINTER (rownum)) != NULL){
+		g_warning ("Inserting an already existing column!");
+		g_hash_table_remove (model->priv->rows,
+				     GINT_TO_POINTER (rownum));
+	}
+
+	g_hash_table_insert (model->priv->rows,
+			     GINT_TO_POINTER (rownum), row);
+	gda_data_model_changed (GDA_DATA_MODEL (model));
+}
+
+/**
  * gda_data_model_hash_set_n_columns
+ * @model: the #GdaDataModelHash which is gonna hold the row.
+ * @cols: the number of columns for rows inserted in @model.
+ *
+ * Set the nunber of columns for rows inserted in this model.
+ * @cols must be greater than or equal to 0.
+ *
+ * This function calls #gda_data_model_hash_clear to free the
+ * existing rows if any.
  */
 void
 gda_data_model_hash_set_n_columns (GdaDataModelHash *model, gint cols)
 {
 	g_return_if_fail (GDA_IS_DATA_MODEL_HASH (model));
+	g_return_if_fail (cols >= 0);
+
 	model->priv->number_of_columns = cols;
+	gda_data_model_hash_clear (model);
+}
+
+/**
+ * gda_data_model_hash_clear
+ * @model: the model to clear
+ *
+ * Frees all the rows inserted in @model.
+ */
+void
+gda_data_model_hash_clear (GdaDataModelHash *model)
+{
+	g_return_if_fail (GDA_IS_DATA_MODEL_HASH (model));
+
+	if (model->priv->rows != NULL)
+		g_hash_table_destroy (model->priv->rows);
+	model->priv->rows = g_hash_table_new_full (g_direct_hash,
+						   g_direct_equal,
+						   NULL, free_hash);
 }
 

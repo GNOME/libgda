@@ -2,10 +2,14 @@
 GdaDataModelHash
 
 <!-- ##### SECTION Short_Description ##### -->
-Hash model class
+An implementation of #GdaDataModel based on a hash table.
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
+Unlike #GdaDataModelArray, this data model implementation stores the #GdaRow in
+a hash table. So it only retrieves from the database backend exactly the
+requested rows (while in GdaDataModelArray you have to retrieve all the rows
+until the one requested).
 
 </para>
 
@@ -64,6 +68,8 @@ Hash model class
 
 @model: 
 @rownum: 
+@row: 
+<!-- # Unused Parameters # -->
 @values: 
 
 

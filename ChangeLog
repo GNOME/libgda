@@ -1,3 +1,10 @@
+2002-05-15  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
+	* doc/C/tmpl/gda-data-model-hash.sgml: added a few lines.
+
+	* libgda/gda-data-model-hash.[ch]: moved some functions around, added
+	some doc, added a few more argument checks.
+
 2002-05-15  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* libgda.pc.in: removed ORBit, bonobo-activation and libbonobo.
