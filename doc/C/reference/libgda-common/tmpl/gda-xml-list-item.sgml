@@ -1,0 +1,60 @@
+<!-- ##### SECTION Title ##### -->
+GdaXmlListItem
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### STRUCT GdaXmlListItemPrivate ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION gda_xml_list_item_new ##### -->
+<para>
+
+</para>
+
+@tag: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_xml_list_item_add ##### -->
+<para>
+
+</para>
+
+@item: 
+@child: 
+
+
+<!-- ##### FUNCTION gda_xml_list_item_to_dom ##### -->
+<para>
+
+</para>
+
+@item: 
+@parent_node: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_xml_list_item_find_id ##### -->
+<para>
+
+</para>
+
+@item: 
+@id: 
+@Returns: 
+
+

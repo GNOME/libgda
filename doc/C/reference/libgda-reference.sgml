@@ -2,16 +2,21 @@
 <!ENTITY libgda-common-reference SYSTEM "libgda-common/libgda-common-docs.sgml">
 <!ENTITY libgda-client-reference SYSTEM "libgda-client/libgda-client-docs.sgml">
 
+<!ENTITY libgda-GDA-h SYSTEM "libgda-common/sgml/GDA.sgml">
+<!ENTITY libgda-common-defs-h SYSTEM "libgda-common/sgml/gda-common-defs.sgml">
 <!ENTITY libgda-common-h SYSTEM "libgda-common/sgml/gda-common.sgml">
 <!ENTITY libgda-config-h SYSTEM "libgda-common/sgml/gda-config.sgml">
 <!ENTITY libgda-corba-h SYSTEM "libgda-common/sgml/gda-corba.sgml">
+<!ENTITY libgda-error-h SYSTEM "libgda-common/sgml/gda-error.sgml">
+<!ENTITY libgda-listener-h SYSTEM "libgda-common/sgml/gda-listener.sgml">
 <!ENTITY libgda-log-h SYSTEM "libgda-common/sgml/gda-log.sgml">
+<!ENTITY libgda-quark-list-h SYSTEM "libgda-common/sgml/gda-quark-list.sgml">
 <!ENTITY libgda-thread-h SYSTEM "libgda-common/sgml/gda-thread.sgml">
 <!ENTITY libgda-util-h SYSTEM "libgda-common/sgml/gda-util.sgml">
 <!ENTITY libgda-xml-database-h SYSTEM "libgda-common/sgml/gda-xml-database.sgml">
 <!ENTITY libgda-xml-file-h SYSTEM "libgda-common/sgml/gda-xml-file.sgml">
+<!ENTITY libgda-xml-util-h SYSTEM "libgda-common/sgml/gda-xml-util.sgml">
 
-<!ENTITY libgda-GDA-h SYSTEM "libgda-client/sgml/GDA.sgml">
 <!ENTITY libgda-batch-h SYSTEM "libgda-client/sgml/gda-batch.sgml">
 <!ENTITY libgda-command-h SYSTEM "libgda-client/sgml/gda-command.sgml">
 <!ENTITY libgda-connection-pool-h SYSTEM "libgda-client/sgml/gda-connection-pool.sgml">

@@ -1,0 +1,46 @@
+<!-- ##### SECTION Title ##### -->
+gda-xql-column
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### STRUCT GdaXqlColumn ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### STRUCT GdaXqlColumnClass ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION gda_xql_column_new ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_xql_column_new_with_data ##### -->
+<para>
+
+</para>
+
+@num: 
+@asc: 
+@Returns: 
+
+

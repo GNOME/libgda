@@ -14,37 +14,6 @@ Command management
 
 </para>
 
-<!-- ##### MACRO GDA_TYPE_COMMAND ##### -->
-<para>
-
-</para>
-
-
-
-<!-- ##### MACRO GDA_COMMAND ##### -->
-<para>
-
-</para>
-
-@obj: 
-
-
-<!-- ##### MACRO GDA_COMMAND_CLASS ##### -->
-<para>
-
-</para>
-
-@klass: 
-
-
-<!-- ##### FUNCTION gda_command_get_type ##### -->
-<para>
-
-</para>
-
-@Returns: 
-
-
 <!-- ##### FUNCTION gda_command_new ##### -->
 <para>
 

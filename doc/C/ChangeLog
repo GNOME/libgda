@@ -1,3 +1,7 @@
+2001-07-31  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* reference/*: fixed to make it build again
+
 2001-07-12  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* reference/libgda-client/: fixed references to non-existent files

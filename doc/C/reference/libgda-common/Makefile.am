@@ -26,86 +26,41 @@ DOC_DIR_INSTALL_FILES = \
 	 libgda-common-sections.txt
 
 SOURCE_FILES = \
+	$(top_builddir)/lib/gda-common/gda-common-defs.h \
 	$(top_builddir)/lib/gda-common/gda-common.h \
 	$(top_builddir)/lib/gda-common/gda-config.c \
 	$(top_builddir)/lib/gda-common/gda-config.h \
 	$(top_builddir)/lib/gda-common/gda-corba.c \
 	$(top_builddir)/lib/gda-common/gda-corba.h \
+	$(top_builddir)/lib/gda-common/gda-error.c \
+	$(top_builddir)/lib/gda-common/gda-error.h \
 	$(top_builddir)/lib/gda-common/gda-init.c \
+	$(top_builddir)/lib/gda-common/gda-listener.c \
+	$(top_builddir)/lib/gda-common/gda-listener.h \
 	$(top_builddir)/lib/gda-common/gda-log.c \
 	$(top_builddir)/lib/gda-common/gda-log.h \
+	$(top_builddir)/lib/gda-common/gda-quark-list.c \
+	$(top_builddir)/lib/gda-common/gda-quark-list.h \
 	$(top_builddir)/lib/gda-common/gda-thread.c \
 	$(top_builddir)/lib/gda-common/gda-thread.h \
 	$(top_builddir)/lib/gda-common/gda-util.c \
 	$(top_builddir)/lib/gda-common/gda-util.h \
+	$(top_builddir)/lib/gda-common/gda-xml-atom-item.c \
+	$(top_builddir)/lib/gda-common/gda-xml-atom-item.h \
+	$(top_builddir)/lib/gda-common/gda-xml-bin-item.c \
+	$(top_builddir)/lib/gda-common/gda-xml-bin-item.h \
 	$(top_builddir)/lib/gda-common/gda-xml-database.c \
 	$(top_builddir)/lib/gda-common/gda-xml-database.h \
 	$(top_builddir)/lib/gda-common/gda-xml-document.c \
-	$(top_builddir)/lib/gda-common/gda-xml-document.h
+	$(top_builddir)/lib/gda-common/gda-xml-document.h \
+	$(top_builddir)/lib/gda-common/gda-xml-item.c \
+	$(top_builddir)/lib/gda-common/gda-xml-item.h \
+	$(top_builddir)/lib/gda-common/gda-xml-list-item.c \
+	$(top_builddir)/lib/gda-common/gda-xml-list-item.h \
+	$(top_builddir)/lib/gda-common/gda-xml-util.c \
+	$(top_builddir)/lib/gda-common/gda-xml-util.h
  
-#	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-atom.c \
-#	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-atom.h \
-#	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-bin.c \
-#	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-bin.h \
-#	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-column.c \
-#	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-column.h \
-#	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-const.c \
-#	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-const.h \
-#	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-delete.c \
-#	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-delete.h \
-#	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-dml.c \
-#	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-dml.h \
-#	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-dual.c \
-#	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-dual.h \
-#	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-field.c \
-#	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-field.h \
-#	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-func.c \
-#	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-func.h \
-#	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-insert.c \
-#	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-insert.h \
-#	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-item.c \
-#	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-item.h \
-#	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-join.c \
-#	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-join.h \
-#	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-list.c \
-#	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-list.h \
-#	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-query.c \
-#	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-query.h \
-#	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-select.c \
-#	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-select.h \
-#	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-stack.c \
-#	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-stack.h \
-#	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-target.c \
-#	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-target.h \
-#	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-update.c \
-#	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-update.h \
-#	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-value.c \
-#	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-value.h \
-#	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-valueref.c \
-#	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-valueref.h \
-#	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query.h
-
-IGNORED_HEADER_FILES = \
-	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-atom-private.h \
-	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-bin-private.h \
-	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-column-private.h \
-	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-const-private.h \
-	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-delete-private.h \
-	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-dml-private.h \
-	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-dual-private.h \
-	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-field-private.h \
-	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-func-private.h \
-	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-insert-private.h \
-	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-item-private.h \
-	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-join-private.h \
-	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-list-private.h \
-	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-query-private.h \
-	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-select-private.h \
-	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-stack-private.h \
-	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-target-private.h \
-	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-update-private.h \
-	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-value-private.h \
-	$(top_builddir)/lib/gda-common/gda-xml-query/xml-query-valueref-private.h
+IGNORED_HEADER_FILES = 
 
 scan_generated = \
 	libgda-common-decl.txt \

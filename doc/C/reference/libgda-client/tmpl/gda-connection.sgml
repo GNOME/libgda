@@ -14,43 +14,23 @@ Connection management
 
 </para>
 
-<!-- ##### MACRO GDA_TYPE_CONNECTION ##### -->
-<para>
-
-</para>
-
-
-
-<!-- ##### MACRO GDA_CONNECTION ##### -->
-<para>
-
-</para>
-
-@obj: 
-
-
-<!-- ##### MACRO GDA_CONNECTION_CLASS ##### -->
-<para>
-
-</para>
-
-@klass: 
-
-
-<!-- ##### FUNCTION gda_connection_get_type ##### -->
-<para>
-
-</para>
-
-@Returns: 
-
-
 <!-- ##### FUNCTION gda_connection_new ##### -->
 <para>
 
 </para>
 
 @orb: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_connection_new_from_dsn ##### -->
+<para>
+
+</para>
+
+@dsn_name: 
+@username: 
+@password: 
 @Returns: 
 
 
@@ -250,6 +230,15 @@ Connection management
 @error: 
 
 
+<!-- ##### FUNCTION gda_connection_add_error_list ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@list: 
+
+
 <!-- ##### MACRO gda_connection_is_open ##### -->
 <para>
 
@@ -309,6 +298,24 @@ Connection management
 @cnc: 
 @xml: 
 @Returns: 
+
+
+<!-- ##### FUNCTION gda_connection_add_listener ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@listener: 
+
+
+<!-- ##### FUNCTION gda_connection_remove_listener ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@listener: 
 
 
 <!-- ##### SIGNAL GdaConnection::error ##### -->

@@ -1,0 +1,88 @@
+<!-- ##### SECTION Title ##### -->
+GdaXmlBinItem
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### STRUCT GdaXmlBinItemPrivate ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION gda_xml_bin_item_new ##### -->
+<para>
+
+</para>
+
+@tag: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_xml_bin_item_new_with_data ##### -->
+<para>
+
+</para>
+
+@tag: 
+@child: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_xml_bin_item_get_child ##### -->
+<para>
+
+</para>
+
+@bin: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_xml_bin_item_set_child ##### -->
+<para>
+
+</para>
+
+@bin: 
+@child: 
+
+
+<!-- ##### FUNCTION gda_xml_bin_item_add ##### -->
+<para>
+
+</para>
+
+@item: 
+@child: 
+
+
+<!-- ##### FUNCTION gda_xml_bin_item_to_dom ##### -->
+<para>
+
+</para>
+
+@item: 
+@parent_node: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_xml_bin_item_find_id ##### -->
+<para>
+
+</para>
+
+@item: 
+@id: 
+@Returns: 
+
+

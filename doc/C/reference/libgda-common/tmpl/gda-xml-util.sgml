@@ -1,0 +1,65 @@
+<!-- ##### SECTION Title ##### -->
+gda-xml-util
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### FUNCTION gda_xml_util_gensym ##### -->
+<para>
+
+</para>
+
+@sym: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_xml_util_dom_to_xml ##### -->
+<para>
+
+</para>
+
+@node: 
+@freedoc: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_xml_util_dom_to_sql ##### -->
+<para>
+
+</para>
+
+@node: 
+@freedoc: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_xml_util_new_node ##### -->
+<para>
+
+</para>
+
+@tag: 
+@parent_node: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_xml_util_new_attr ##### -->
+<para>
+
+</para>
+
+@key: 
+@value: 
+@node: 
+
+

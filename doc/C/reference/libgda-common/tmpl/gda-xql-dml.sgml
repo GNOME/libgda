@@ -1,0 +1,127 @@
+<!-- ##### SECTION Title ##### -->
+GdaXqlDml
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### STRUCT GdaXqlDmlPrivate ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION gda_xql_dml_add_target_from_text ##### -->
+<para>
+
+</para>
+
+@dml: 
+@name: 
+@join: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_xql_dml_add_field_from_text ##### -->
+<para>
+
+</para>
+
+@dml: 
+@id: 
+@name: 
+@alias: 
+@group: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_xql_dml_add_const_from_text ##### -->
+<para>
+
+</para>
+
+@dml: 
+@value: 
+@type: 
+@null: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_xql_dml_add_func ##### -->
+<para>
+
+</para>
+
+@dml: 
+@item: 
+
+
+<!-- ##### FUNCTION gda_xql_dml_add_query ##### -->
+<para>
+
+</para>
+
+@dml: 
+@item: 
+
+
+<!-- ##### FUNCTION gda_xql_dml_add_row_condition ##### -->
+<para>
+
+</para>
+
+@dml: 
+@cond: 
+@type: 
+
+
+<!-- ##### FUNCTION gda_xql_dml_add_group_condition ##### -->
+<para>
+
+</para>
+
+@dml: 
+@cond: 
+@type: 
+
+
+<!-- ##### FUNCTION gda_xql_dml_add_order ##### -->
+<para>
+
+</para>
+
+@dml: 
+@column: 
+@asc: 
+
+
+<!-- ##### FUNCTION gda_xql_dml_add_set ##### -->
+<para>
+
+</para>
+
+@dml: 
+@item: 
+
+
+<!-- ##### FUNCTION gda_xql_dml_add_set_const ##### -->
+<para>
+
+</para>
+
+@dml: 
+@field: 
+@value: 
+@type: 
+@null: 
+
+

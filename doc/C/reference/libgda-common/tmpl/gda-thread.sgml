@@ -21,21 +21,6 @@ implementation available on your system.
 
 </para>
 
-<!-- ##### MACRO GDA_TYPE_THREAD ##### -->
-<para>
-
-</para>
-
-
-
-<!-- ##### MACRO GDA_THREAD ##### -->
-<para>
-
-</para>
-
-@obj: 
-
-
 <!-- ##### USER_FUNCTION GdaThreadFunc ##### -->
 <para>
 
@@ -43,14 +28,6 @@ implementation available on your system.
 
 @thr: 
 @user_data: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_thread_get_type ##### -->
-<para>
-
-</para>
-
 @Returns: 
 
 

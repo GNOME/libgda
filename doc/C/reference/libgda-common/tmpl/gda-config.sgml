@@ -26,7 +26,21 @@ implementations for other operating systems/environments.
 
 
 
+<!-- ##### MACRO GDA_CONFIG_SECTION_LAST_CONNECTIONS ##### -->
+<para>
+
+</para>
+
+
+
 <!-- ##### MACRO GDA_CONFIG_SECTION_LOG ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO GDA_CONFIG_KEY_MAX_LAST_CONNECTIONS ##### -->
 <para>
 
 </para>
@@ -494,5 +508,14 @@ implementations for other operating systems/environments.
 </para>
 
 @list: 
+
+
+<!-- ##### FUNCTION gda_config_save_last_connection ##### -->
+<para>
+
+</para>
+
+@gda_name: 
+@username: 
 
 

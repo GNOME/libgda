@@ -1,0 +1,67 @@
+<!-- ##### SECTION Title ##### -->
+gda-quark-list
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### STRUCT GdaQuarkList ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION gda_quark_list_new ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_quark_list_new_from_string ##### -->
+<para>
+
+</para>
+
+@string: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_quark_list_free ##### -->
+<para>
+
+</para>
+
+@qlist: 
+
+
+<!-- ##### FUNCTION gda_quark_list_add_from_string ##### -->
+<para>
+
+</para>
+
+@qlist: 
+@string: 
+@cleanup: 
+
+
+<!-- ##### FUNCTION gda_quark_list_find ##### -->
+<para>
+
+</para>
+
+@qlist: 
+@name: 
+@Returns: 
+
+

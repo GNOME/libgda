@@ -1,0 +1,51 @@
+<!-- ##### SECTION Title ##### -->
+GdaListener
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### STRUCT GdaListenerPrivate ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION gda_listener_new ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_listener_notify_action ##### -->
+<para>
+
+</para>
+
+@listener: 
+@message: 
+@action: 
+@description: 
+
+
+<!-- ##### SIGNAL GdaListener::notify-action ##### -->
+<para>
+
+</para>
+
+@gdalistener: the object which received the signal.
+@arg1: 
+@arg2: 
+@arg3: 
+

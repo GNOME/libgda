@@ -7,7 +7,6 @@ gda_batch_get_type
 gda_command_get_type
 gda_connection_pool_get_type
 gda_connection_get_type
-gda_error_get_type
 gda_export_get_type
 gda_field_get_type
 gda_recordset_get_type

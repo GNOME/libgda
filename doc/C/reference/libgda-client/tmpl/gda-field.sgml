@@ -14,29 +14,6 @@ Access to individual fields in recordsets
 
 </para>
 
-<!-- ##### MACRO GDA_TYPE_FIELD ##### -->
-<para>
-
-</para>
-
-
-
-<!-- ##### MACRO GDA_FIELD ##### -->
-<para>
-
-</para>
-
-@obj: 
-
-
-<!-- ##### MACRO GDA_FIELD_CLASS ##### -->
-<para>
-
-</para>
-
-@klass: 
-
-
 <!-- ##### MACRO gda_field_isnull ##### -->
 <para>
 
@@ -219,14 +196,6 @@ Access to individual fields in recordsets
 </para>
 
 @f: 
-
-
-<!-- ##### FUNCTION gda_field_get_type ##### -->
-<para>
-
-</para>
-
-@Returns: 
 
 
 <!-- ##### FUNCTION gda_field_new ##### -->

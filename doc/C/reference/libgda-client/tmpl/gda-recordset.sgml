@@ -14,42 +14,11 @@ Recordset (set of rows returned by providers) management
 
 </para>
 
-<!-- ##### MACRO GDA_TYPE_RECORDSET ##### -->
-<para>
-
-</para>
-
-
-
-<!-- ##### MACRO GDA_RECORDSET ##### -->
-<para>
-
-</para>
-
-@obj: 
-
-
-<!-- ##### MACRO GDA_RECORDSET_CLASS ##### -->
-<para>
-
-</para>
-
-@klass: 
-
-
 <!-- ##### MACRO GDA_RECORDSET_INVALID_POSITION ##### -->
 <para>
 
 </para>
 
-
-
-<!-- ##### FUNCTION gda_recordset_get_type ##### -->
-<para>
-
-</para>
-
-@Returns: 
 
 
 <!-- ##### FUNCTION gda_recordset_new ##### -->

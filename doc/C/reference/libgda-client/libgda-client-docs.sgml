@@ -9,7 +9,6 @@
       </para>
     </partintro>
 
-    &libgda-GDA-h;
     &libgda-batch-h;
     &libgda-command-h;
     &libgda-connection-pool-h;

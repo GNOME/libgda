@@ -16,37 +16,6 @@ unique entity (a batch job).
 
 </para>
 
-<!-- ##### MACRO GDA_TYPE_BATCH ##### -->
-<para>
-
-</para>
-
-
-
-<!-- ##### MACRO GDA_BATCH ##### -->
-<para>
-
-</para>
-
-@obj: 
-
-
-<!-- ##### MACRO GDA_BATCH_CLASS ##### -->
-<para>
-
-</para>
-
-@klass: 
-
-
-<!-- ##### FUNCTION gda_batch_get_type ##### -->
-<para>
-
-</para>
-
-@Returns: 
-
-
 <!-- ##### FUNCTION gda_batch_new ##### -->
 <para>
 

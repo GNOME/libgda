@@ -26,6 +26,12 @@ import/export features of libgda.
 
 </para>
 
+<!-- ##### STRUCT GdaXmlDatabasePrivate ##### -->
+<para>
+
+</para>
+
+
 <!-- ##### FUNCTION gda_xml_database_new ##### -->
 <para>
 
@@ -67,6 +73,12 @@ import/export features of libgda.
 </para>
 
 @xmldb: 
+
+
+<!-- ##### TYPEDEF GdaXmlDatabaseTable ##### -->
+<para>
+
+</para>
 
 
 <!-- ##### FUNCTION gda_xml_database_get_tables ##### -->
@@ -155,6 +167,12 @@ import/export features of libgda.
 @xmldb: 
 @table: 
 @owner: 
+
+
+<!-- ##### TYPEDEF GdaXmlDatabaseField ##### -->
+<para>
+
+</para>
 
 
 <!-- ##### FUNCTION gda_xml_database_table_field_count ##### -->
@@ -289,4 +307,11 @@ import/export features of libgda.
 @field: 
 @scale: 
 
+
+<!-- ##### SIGNAL GdaXmlDatabase::changed ##### -->
+<para>
+
+</para>
+
+@gdaxmldatabase: the object which received the signal.
 

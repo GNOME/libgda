@@ -1,5 +1,5 @@
 <!-- ##### SECTION Title ##### -->
-GDA
+gda-common-defs
 
 <!-- ##### SECTION Short_Description ##### -->
 
@@ -13,4 +13,18 @@ GDA
 <para>
 
 </para>
+
+<!-- ##### MACRO G_BEGIN_DECLS ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO G_END_DECLS ##### -->
+<para>
+
+</para>
+
+
 

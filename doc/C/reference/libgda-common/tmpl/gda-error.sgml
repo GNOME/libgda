@@ -1,0 +1,220 @@
+<!-- ##### SECTION Title ##### -->
+GdaError
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### FUNCTION gda_error_new ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_error_list_from_exception ##### -->
+<para>
+
+</para>
+
+@ev: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_error_to_exception ##### -->
+<para>
+
+</para>
+
+@error: 
+@ev: 
+
+
+<!-- ##### FUNCTION gda_error_list_to_exception ##### -->
+<para>
+
+</para>
+
+@error_list: 
+@ev: 
+
+
+<!-- ##### FUNCTION gda_error_list_to_corba_seq ##### -->
+<para>
+
+</para>
+
+@error_list: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_error_free ##### -->
+<para>
+
+</para>
+
+@error: 
+
+
+<!-- ##### FUNCTION gda_error_list_free ##### -->
+<para>
+
+</para>
+
+@errors: 
+
+
+<!-- ##### FUNCTION gda_error_get_description ##### -->
+<para>
+
+</para>
+
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_error_set_description ##### -->
+<para>
+
+</para>
+
+@error: 
+@description: 
+
+
+<!-- ##### FUNCTION gda_error_get_number ##### -->
+<para>
+
+</para>
+
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_error_set_number ##### -->
+<para>
+
+</para>
+
+@error: 
+@number: 
+
+
+<!-- ##### FUNCTION gda_error_get_source ##### -->
+<para>
+
+</para>
+
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_error_set_source ##### -->
+<para>
+
+</para>
+
+@error: 
+@source: 
+
+
+<!-- ##### FUNCTION gda_error_get_help_url ##### -->
+<para>
+
+</para>
+
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_error_set_help_url ##### -->
+<para>
+
+</para>
+
+@error: 
+@helpurl: 
+
+
+<!-- ##### FUNCTION gda_error_get_help_context ##### -->
+<para>
+
+</para>
+
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_error_set_help_context ##### -->
+<para>
+
+</para>
+
+@error: 
+@helpctxt: 
+
+
+<!-- ##### FUNCTION gda_error_get_sqlstate ##### -->
+<para>
+
+</para>
+
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_error_set_sqlstate ##### -->
+<para>
+
+</para>
+
+@error: 
+@sqlstate: 
+
+
+<!-- ##### FUNCTION gda_error_get_native ##### -->
+<para>
+
+</para>
+
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_error_set_native ##### -->
+<para>
+
+</para>
+
+@error: 
+@native: 
+
+
+<!-- ##### FUNCTION gda_error_get_real_command ##### -->
+<para>
+
+</para>
+
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_error_set_real_command ##### -->
+<para>
+
+</para>
+
+@error: 
+@realcommand: 
+
+

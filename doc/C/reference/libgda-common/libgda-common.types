@@ -1,3 +1,9 @@
 #include "config.h"
 #include "gda-common.h"
 #include <gtk/gtk.h>
+
+gda_error_get_type
+gda_listener_get_type
+gda_thread_get_type
+gda_xml_database_get_type
+gda_xml_document_get_type

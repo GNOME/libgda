@@ -1,0 +1,152 @@
+<!-- ##### SECTION Title ##### -->
+GdaXmlItem
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### STRUCT GdaXmlItemPrivate ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION gda_xml_item_free ##### -->
+<para>
+
+</para>
+
+@item: 
+
+
+<!-- ##### FUNCTION gda_xml_item_add ##### -->
+<para>
+
+</para>
+
+@item: 
+@child: 
+
+
+<!-- ##### FUNCTION gda_xml_item_to_dom ##### -->
+<para>
+
+</para>
+
+@item: 
+@parent_node: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_xml_item_get_attribute ##### -->
+<para>
+
+</para>
+
+@item: 
+@attrib: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_xml_item_set_attribute ##### -->
+<para>
+
+</para>
+
+@item: 
+@attrib: 
+@value: 
+
+
+<!-- ##### FUNCTION gda_xml_item_get_tag ##### -->
+<para>
+
+</para>
+
+@item: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_xml_item_set_tag ##### -->
+<para>
+
+</para>
+
+@item: 
+@tag: 
+
+
+<!-- ##### FUNCTION gda_xml_item_get_parent ##### -->
+<para>
+
+</para>
+
+@item: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_xml_item_set_parent ##### -->
+<para>
+
+</para>
+
+@item: 
+@parent: 
+
+
+<!-- ##### FUNCTION gda_xml_item_find_root ##### -->
+<para>
+
+</para>
+
+@item: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_xml_item_find_id ##### -->
+<para>
+
+</para>
+
+@item: 
+@id: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_xml_item_find_ref ##### -->
+<para>
+
+</para>
+
+@item: 
+@ref: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_xml_item_add_id ##### -->
+<para>
+
+</para>
+
+@item: 
+@id: 
+
+
+<!-- ##### FUNCTION gda_xml_item_add_ref ##### -->
+<para>
+
+</para>
+
+@item: 
+@ref: 
+
+
