@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-10-04 17:36+0300\n"
+"POT-Creation-Date: 2004-12-28 14:40+0100\n"
 "PO-Revision-Date: 2004-10-02 21:59+0300\n"
 "Last-Translator: Maxim Dziumanenko <mvd@mylinux.com.ua>\n"
 "Language-Team: Ukrainian <uk@li.org>\n"
@@ -39,23 +39,23 @@ msgid "Temporary data source created by libgda. Don't remove it"
 msgstr ""
 "Це тимчасове джерело даних, створене бібліотекою libgda. Не видаляйте його"
 
-#: libgda/gda-config.c:1081
+#: libgda/gda-config.c:1092
 #, c-format
 msgid "Error: %s"
 msgstr "Помилка: %s"
 
-#: libgda/gda-config.c:1194 providers/odbc/gda-odbc-provider.c:1137
+#: libgda/gda-config.c:1205 providers/odbc/gda-odbc-provider.c:1137
 #: providers/oracle/gda-oracle-provider.c:1153
 #: providers/postgres/gda-postgres-provider.c:945
 #: providers/postgres/gda-postgres-provider.c:1412
 msgid "Id"
 msgstr "Ід"
 
-#: libgda/gda-config.c:1195
+#: libgda/gda-config.c:1206
 msgid "Location"
 msgstr "Адреса"
 
-#: libgda/gda-config.c:1196 libgda/gda-config.c:1455
+#: libgda/gda-config.c:1207 libgda/gda-config.c:1532
 #: providers/firebird/gda-firebird-provider.c:322
 #: providers/ibmdb2/gda-ibmdb2-provider.c:863
 #: providers/ibmdb2/gda-ibmdb2-provider.c:892
@@ -67,10 +67,10 @@ msgstr "Адреса"
 msgid "Description"
 msgstr "Опис"
 
-#: libgda/gda-config.c:1452 providers/firebird/gda-firebird-provider.c:730
+#: libgda/gda-config.c:1529 providers/firebird/gda-firebird-provider.c:730
 #: providers/ldap/gda-ldap-provider.c:327 providers/mdb/gda-mdb-provider.c:457
 #: providers/mdb/gda-mdb-provider.c:594 providers/mdb/gda-mdb-provider.c:654
-#: providers/msql/gda-msql-provider.c:448
+#: providers/msql/gda-msql-provider.c:471
 #: providers/mysql/gda-mysql-provider.c:731
 #: providers/mysql/gda-mysql-provider.c:919
 #: providers/odbc/gda-odbc-provider.c:768
@@ -83,19 +83,19 @@ msgstr "Опис"
 msgid "Name"
 msgstr "Назва"
 
-#: libgda/gda-config.c:1453
+#: libgda/gda-config.c:1530
 msgid "Provider"
 msgstr "Постачальник"
 
-#: libgda/gda-config.c:1454
+#: libgda/gda-config.c:1531
 msgid "Connection string"
 msgstr "Рядок з'єднання"
 
-#: libgda/gda-config.c:1456
+#: libgda/gda-config.c:1533
 msgid "Username"
 msgstr "Користувач"
 
-#: libgda/gda-config.c:1457
+#: libgda/gda-config.c:1534
 msgid "Password"
 msgstr "Пароль"
 
@@ -287,8 +287,8 @@ msgstr "Тип"
 #: providers/ibmdb2/gda-ibmdb2-provider.c:1000
 #: providers/ldap/gda-ldap-provider.c:328 providers/mdb/gda-mdb-provider.c:548
 #: providers/mdb/gda-mdb-provider.c:595 providers/mdb/gda-mdb-provider.c:655
-#: providers/msql/gda-msql-provider.c:449
-#: providers/msql/gda-msql-provider.c:487
+#: providers/msql/gda-msql-provider.c:472
+#: providers/msql/gda-msql-provider.c:512
 #: providers/mysql/gda-mysql-provider.c:733
 #: providers/mysql/gda-mysql-provider.c:920
 #: providers/mysql/gda-mysql-provider.c:1012
@@ -309,7 +309,7 @@ msgstr "Тип"
 #: providers/postgres/gda-postgres-provider.c:1235
 #: providers/postgres/gda-postgres-provider.c:1295
 #: providers/postgres/gda-postgres-provider.c:1413
-#: providers/postgres/gda-postgres-provider.c:2046
+#: providers/postgres/gda-postgres-provider.c:2051
 #: providers/sqlite/gda-sqlite-provider.c:788
 #: providers/sybase/gda-sybase-provider.c:1098
 #: providers/xml/gda-xml-provider.c:655
@@ -321,8 +321,8 @@ msgstr "Власник"
 #: providers/ibmdb2/gda-ibmdb2-provider.c:948
 #: providers/ldap/gda-ldap-provider.c:329 providers/mdb/gda-mdb-provider.c:549
 #: providers/mdb/gda-mdb-provider.c:596 providers/mdb/gda-mdb-provider.c:656
-#: providers/msql/gda-msql-provider.c:450
-#: providers/msql/gda-msql-provider.c:488
+#: providers/msql/gda-msql-provider.c:473
+#: providers/msql/gda-msql-provider.c:513
 #: providers/mysql/gda-mysql-provider.c:734
 #: providers/mysql/gda-mysql-provider.c:921
 #: providers/mysql/gda-mysql-provider.c:1013
@@ -339,7 +339,7 @@ msgstr "Власник"
 #: providers/postgres/gda-postgres-provider.c:1236
 #: providers/postgres/gda-postgres-provider.c:1296
 #: providers/postgres/gda-postgres-provider.c:1414
-#: providers/postgres/gda-postgres-provider.c:2047
+#: providers/postgres/gda-postgres-provider.c:2052
 #: providers/sqlite/gda-sqlite-provider.c:789
 #: providers/sybase/gda-sybase-provider.c:1100
 #: providers/xml/gda-xml-provider.c:656
@@ -348,7 +348,7 @@ msgstr "Коментарі"
 
 #: providers/firebird/gda-firebird-provider.c:234
 #: providers/ibmdb2/gda-ibmdb2-provider.c:949
-#: providers/msql/gda-msql-provider.c:489
+#: providers/msql/gda-msql-provider.c:514
 #: providers/mysql/gda-mysql-provider.c:1014
 #: providers/odbc/gda-odbc-provider.c:1363
 #: providers/oracle/gda-oracle-provider.c:2097
@@ -366,7 +366,7 @@ msgstr "Тип GDA"
 #: providers/ibmdb2/gda-ibmdb2-provider.c:999
 #: providers/odbc/gda-odbc-provider.c:1246
 #: providers/postgres/gda-postgres-provider.c:1215
-#: providers/postgres/gda-postgres-provider.c:2100
+#: providers/postgres/gda-postgres-provider.c:2105
 msgid "Table"
 msgstr "Таблиця"
 
@@ -381,7 +381,7 @@ msgstr "Таблиця"
 #: providers/postgres/gda-postgres-provider.c:1218
 #: providers/postgres/gda-postgres-provider.c:1297
 #: providers/postgres/gda-postgres-provider.c:1417
-#: providers/postgres/gda-postgres-provider.c:2048
+#: providers/postgres/gda-postgres-provider.c:2053
 msgid "Definition"
 msgstr "Означення"
 
@@ -397,7 +397,7 @@ msgid "Field name"
 msgstr "Назва поля"
 
 #: providers/firebird/gda-firebird-provider.c:616
-#: providers/mdb/gda-mdb-provider.c:491 providers/msql/gda-msql-provider.c:537
+#: providers/mdb/gda-mdb-provider.c:491 providers/msql/gda-msql-provider.c:564
 #: providers/mysql/gda-mysql-provider.c:1110
 #: providers/odbc/gda-odbc-provider.c:950
 #: providers/oracle/gda-oracle-provider.c:1249
@@ -408,7 +408,7 @@ msgid "Data type"
 msgstr "Тип даних"
 
 #: providers/firebird/gda-firebird-provider.c:617
-#: providers/mdb/gda-mdb-provider.c:492 providers/msql/gda-msql-provider.c:538
+#: providers/mdb/gda-mdb-provider.c:492 providers/msql/gda-msql-provider.c:565
 #: providers/mysql/gda-mysql-provider.c:1111
 #: providers/odbc/gda-odbc-provider.c:951
 #: providers/oracle/gda-oracle-provider.c:1250
@@ -419,7 +419,7 @@ msgid "Size"
 msgstr "Розмір"
 
 #: providers/firebird/gda-firebird-provider.c:618
-#: providers/mdb/gda-mdb-provider.c:493 providers/msql/gda-msql-provider.c:539
+#: providers/mdb/gda-mdb-provider.c:493 providers/msql/gda-msql-provider.c:566
 #: providers/mysql/gda-mysql-provider.c:1112
 #: providers/odbc/gda-odbc-provider.c:952
 #: providers/oracle/gda-oracle-provider.c:1251
@@ -441,7 +441,7 @@ msgid "Not null?"
 msgstr "Не NULL?"
 
 #: providers/firebird/gda-firebird-provider.c:620
-#: providers/mdb/gda-mdb-provider.c:495 providers/msql/gda-msql-provider.c:541
+#: providers/mdb/gda-mdb-provider.c:495 providers/msql/gda-msql-provider.c:568
 #: providers/mysql/gda-mysql-provider.c:1114
 #: providers/odbc/gda-odbc-provider.c:954
 #: providers/oracle/gda-oracle-provider.c:1253
@@ -452,7 +452,7 @@ msgid "Primary key?"
 msgstr "Первинний ключ?"
 
 #: providers/firebird/gda-firebird-provider.c:621
-#: providers/mdb/gda-mdb-provider.c:496 providers/msql/gda-msql-provider.c:542
+#: providers/mdb/gda-mdb-provider.c:496 providers/msql/gda-msql-provider.c:569
 #: providers/mysql/gda-mysql-provider.c:1115
 #: providers/odbc/gda-odbc-provider.c:955
 #: providers/oracle/gda-oracle-provider.c:1254
@@ -463,7 +463,7 @@ msgid "Unique index?"
 msgstr "Унікальний індекс?"
 
 #: providers/firebird/gda-firebird-provider.c:622
-#: providers/mdb/gda-mdb-provider.c:497 providers/msql/gda-msql-provider.c:543
+#: providers/mdb/gda-mdb-provider.c:497 providers/msql/gda-msql-provider.c:570
 #: providers/mysql/gda-mysql-provider.c:1116
 #: providers/odbc/gda-odbc-provider.c:956
 #: providers/oracle/gda-oracle-provider.c:1255
@@ -474,7 +474,7 @@ msgid "References"
 msgstr "Посилання"
 
 #: providers/firebird/gda-firebird-provider.c:623
-#: providers/mdb/gda-mdb-provider.c:498 providers/msql/gda-msql-provider.c:544
+#: providers/mdb/gda-mdb-provider.c:498 providers/msql/gda-msql-provider.c:571
 #: providers/mysql/gda-mysql-provider.c:1117
 #: providers/odbc/gda-odbc-provider.c:957
 #: providers/oracle/gda-oracle-provider.c:1256
@@ -485,8 +485,8 @@ msgstr "Значення без обумовлення"
 
 #: providers/firebird/gda-firebird-provider.c:632
 #: providers/firebird/gda-firebird-provider.c:639
-#: providers/msql/gda-msql-provider.c:557
-#: providers/msql/gda-msql-provider.c:563
+#: providers/msql/gda-msql-provider.c:584
+#: providers/msql/gda-msql-provider.c:590
 #: providers/mysql/gda-mysql-provider.c:1134
 #: providers/mysql/gda-mysql-provider.c:1142
 msgid "Table name is needed but none specified in parameter list"
@@ -557,6 +557,45 @@ msgstr "Невідоме значення поля Firebird!\n"
 #: providers/firebird/libmain.c:40
 msgid "Provider for Firebird databases"
 msgstr "Постачальник для баз даних FireBird"
+
+#: providers/firebird/libmain.c:49 providers/freetds/libmain.c:48
+#: providers/ibmdb2/libmain.c:48 providers/msql/gda-msql-libmain.c:56
+#: providers/mysql/libmain.c:50 providers/postgres/libmain.c:50
+#: providers/sybase/libmain.c:49
+#, fuzzy
+msgid "Database Name"
+msgstr "База даних"
+
+#: providers/firebird/libmain.c:50 providers/freetds/libmain.c:49
+msgid "Name of the database to be used"
+msgstr ""
+
+#: providers/firebird/libmain.c:53
+#, fuzzy
+msgid "Character Set"
+msgstr "Рядок символів"
+
+#: providers/firebird/libmain.c:54
+#, fuzzy
+msgid "Character set to be used on the connection"
+msgstr "Параметр FILE не вказаний у з'єднання."
+
+#: providers/firebird/libmain.c:57
+msgid "SQL Dialect"
+msgstr ""
+
+#: providers/firebird/libmain.c:58
+msgid "SQL dialect to use on the connection"
+msgstr ""
+
+#: providers/firebird/libmain.c:61
+#, fuzzy
+msgid "Page Size"
+msgstr "Розмір"
+
+#: providers/firebird/libmain.c:62
+msgid "Page size to use on the database"
+msgstr ""
 
 #: providers/freetds/gda-freetds-provider.c:197
 msgid ""
@@ -637,25 +676,111 @@ msgstr ""
 msgid "Not available"
 msgstr "Не доступно"
 
-#: providers/freetds/gda-freetds-recordset.c:377
+#: providers/freetds/gda-freetds-recordset.c:376
 msgid "Error processing result rows.\n"
 msgstr "Помилка при обробці результату.\n"
 
-#: providers/freetds/gda-freetds-recordset.c:384
+#: providers/freetds/gda-freetds-recordset.c:383
 msgid "Unexpected freetds return code in tds_process_row_tokens().\n"
 msgstr "Неочікуваний код завершення freetds у tds_process_row_tokens().\n"
 
-#: providers/freetds/gda-freetds-recordset.c:394
+#: providers/freetds/gda-freetds-recordset.c:393
 msgid "Error processing results.\n"
 msgstr "Помилка обробки результатів.\n"
 
-#: providers/freetds/gda-freetds-recordset.c:401
+#: providers/freetds/gda-freetds-recordset.c:400
 msgid "Unexpected freetds return code in tds_process_result_tokens\n"
 msgstr "Неочікуваний код завершення freetds у tds_process_result_tokens\n"
 
 #: providers/freetds/libmain.c:39
 msgid "Provider for TDS-based databases (using FreeTDS)"
 msgstr "Постачальник для баз даних заснованих на TDS (через FreeTDS)"
+
+#: providers/freetds/libmain.c:52
+msgid "Host"
+msgstr ""
+
+#: providers/freetds/libmain.c:53
+msgid "Host name of the machine where the database is located"
+msgstr ""
+
+#: providers/freetds/libmain.c:56 providers/postgres/libmain.c:62
+#: providers/sybase/libmain.c:61
+msgid "Host Address"
+msgstr ""
+
+#: providers/freetds/libmain.c:57 providers/postgres/libmain.c:63
+#: providers/sybase/libmain.c:62
+msgid "IP address of the host to connect to"
+msgstr ""
+
+#: providers/freetds/libmain.c:60
+#, fuzzy
+msgid "Connection Options"
+msgstr "Рядок з'єднання"
+
+#: providers/freetds/libmain.c:61
+msgid "Extra options to use on the connection"
+msgstr ""
+
+#: providers/freetds/libmain.c:64 providers/ldap/libmain.c:64
+#: providers/mysql/libmain.c:58 providers/postgres/libmain.c:70
+#: providers/sybase/libmain.c:69
+#, fuzzy
+msgid "Port"
+msgstr "Точка"
+
+#: providers/freetds/libmain.c:65
+msgid "Port to use to connect to the database's host"
+msgstr ""
+
+#: providers/freetds/libmain.c:71 providers/sybase/libmain.c:76
+msgid "Enable Sybase"
+msgstr ""
+
+#: providers/freetds/libmain.c:72 providers/sybase/libmain.c:77
+msgid "Enable Sybase operative mode"
+msgstr ""
+
+#: providers/freetds/libmain.c:79
+msgid "FreeTDS Config File"
+msgstr ""
+
+#: providers/freetds/libmain.c:80
+msgid "Location of the FreeTDS config file"
+msgstr ""
+
+#: providers/freetds/libmain.c:84
+msgid "TDS Major Version"
+msgstr ""
+
+#: providers/freetds/libmain.c:85
+msgid "TDS protocol major version"
+msgstr ""
+
+#: providers/freetds/libmain.c:88
+msgid "TDS Minor Version"
+msgstr ""
+
+#: providers/freetds/libmain.c:89
+msgid "TDS protocol minor version"
+msgstr ""
+
+#: providers/freetds/libmain.c:93
+msgid "Dump File"
+msgstr ""
+
+#: providers/freetds/libmain.c:94
+msgid "File for TDS protocol dumps"
+msgstr ""
+
+#: providers/freetds/libmain.c:97
+msgid "Dump Configuration File"
+msgstr ""
+
+#: providers/freetds/libmain.c:98
+msgid "File fpr TDS protocol dumps configuration"
+msgstr ""
 
 #: providers/freetds/utils.c:40 providers/oracle/utils.c:67
 #: providers/postgres/utils.c:48 providers/sybase/utils.c:534
@@ -712,14 +837,14 @@ msgstr "Означення SQL"
 #. Set it here instead of the SQL query to allow i18n
 #: providers/ibmdb2/gda-ibmdb2-provider.c:918
 #: providers/oracle/gda-oracle-provider.c:2189
-#: providers/postgres/gda-postgres-provider.c:1452 testing/client.c:139
+#: providers/postgres/gda-postgres-provider.c:1452 testing/client.c:143
 msgid "Triggers"
 msgstr "Тригери"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/ibmdb2/gda-ibmdb2-provider.c:974
 #: providers/oracle/gda-oracle-provider.c:1825
-#: providers/postgres/gda-postgres-provider.c:2004 testing/client.c:137
+#: providers/postgres/gda-postgres-provider.c:2009 testing/client.c:141
 msgid "Users"
 msgstr "Користувачі"
 
@@ -735,6 +860,20 @@ msgstr "[Дані не підтримуються]"
 msgid "Provider for IBMDB2 databases"
 msgstr "Постачальник для баз даних IBM DB2"
 
+#: providers/ibmdb2/libmain.c:49 providers/msql/gda-msql-libmain.c:57
+#: providers/postgres/libmain.c:51 providers/sybase/libmain.c:50
+msgid "Name of the database to use"
+msgstr ""
+
+#: providers/ibmdb2/libmain.c:52 providers/postgres/libmain.c:66
+#: providers/sybase/libmain.c:65
+msgid "Extra Options"
+msgstr ""
+
+#: providers/ibmdb2/libmain.c:53
+msgid "Extra database options"
+msgstr ""
+
 #: providers/ldap/gda-ldap-provider.c:257
 #: providers/ldap/gda-ldap-provider.c:490
 #: providers/ldap/gda-ldap-provider.c:519
@@ -746,9 +885,9 @@ msgid "Invalid LDAP handle"
 msgstr "Неправильний логічний номер LDAP"
 
 #: providers/ldap/gda-ldap-recordset.c:69
-#: providers/mysql/gda-mysql-recordset.c:139
+#: providers/mysql/gda-mysql-recordset.c:145
 #: providers/postgres/gda-postgres-recordset.c:196
-#: providers/postgres/gda-postgres-recordset.c:474
+#: providers/postgres/gda-postgres-recordset.c:476
 #: providers/sqlite/gda-sqlite-recordset.c:165
 #: providers/sqlite/gda-sqlite-recordset.c:204
 #: providers/bdb/gda-bdb-recordset.c:111
@@ -757,7 +896,7 @@ msgstr "Номер рядка поза межами"
 
 #: providers/ldap/gda-ldap-recordset.c:283
 #: providers/msql/gda-msql-recordset.c:229
-#: providers/mysql/gda-mysql-recordset.c:320
+#: providers/mysql/gda-mysql-recordset.c:326
 #: providers/oracle/gda-oracle-recordset.c:469
 #: providers/postgres/gda-postgres-recordset.c:242
 msgid "Attempt to insert a row with an invalid number of columns"
@@ -765,7 +904,7 @@ msgstr "Спроба вставити рядок з неправильною к�
 
 #: providers/ldap/gda-ldap-recordset.c:298
 #: providers/msql/gda-msql-recordset.c:241
-#: providers/mysql/gda-mysql-recordset.c:335
+#: providers/mysql/gda-mysql-recordset.c:341
 #: providers/oracle/gda-oracle-recordset.c:484
 #: providers/postgres/gda-postgres-recordset.c:257
 msgid "Could not retrieve column's information"
@@ -773,16 +912,55 @@ msgstr "Не вдається отримати інформацію про ст�
 
 #: providers/ldap/gda-ldap-recordset.c:316
 #: providers/msql/gda-msql-recordset.c:255
-#: providers/mysql/gda-mysql-recordset.c:353
+#: providers/mysql/gda-mysql-recordset.c:359
 #: providers/oracle/gda-oracle-recordset.c:502
-#: providers/postgres/gda-postgres-recordset.c:275
-#: providers/postgres/gda-postgres-recordset.c:286
+#: providers/postgres/gda-postgres-recordset.c:277
+#: providers/postgres/gda-postgres-recordset.c:288
 msgid "Could not retrieve column's value"
 msgstr "Не вдається отримати значення стовпчика"
 
 #: providers/ldap/libmain.c:47
 msgid "Provider for LDAP directory"
 msgstr "Постачальник для каталогів LDAP"
+
+#: providers/ldap/libmain.c:56
+msgid "LDAP Flags"
+msgstr ""
+
+#: providers/ldap/libmain.c:57
+msgid "LDAP flags"
+msgstr ""
+
+#: providers/ldap/libmain.c:60 providers/msql/gda-msql-libmain.c:60
+#: providers/mysql/libmain.c:54 providers/postgres/libmain.c:58
+#: providers/sybase/libmain.c:53 providers/sybase/libmain.c:57
+#, fuzzy
+msgid "Host Name"
+msgstr "Назва"
+
+#: providers/ldap/libmain.c:61
+msgid "Host name of the LDAP server"
+msgstr ""
+
+#: providers/ldap/libmain.c:65
+msgid "Port to use for connecting to the LDAP server"
+msgstr ""
+
+#: providers/ldap/libmain.c:68
+msgid "Bind Domain"
+msgstr ""
+
+#: providers/ldap/libmain.c:69
+msgid "LDAP bind domain to use for authentication"
+msgstr ""
+
+#: providers/ldap/libmain.c:72
+msgid "Authentication Method"
+msgstr ""
+
+#: providers/ldap/libmain.c:73
+msgid "Authentication method to use for connecting"
+msgstr ""
 
 #: providers/mdb/gda-mdb-provider.c:205
 msgid "A database FILENAME must be specified in the connection_string"
@@ -883,42 +1061,60 @@ msgstr "Не знайдено таблиці %s"
 msgid "Provider for Microsoft Access files"
 msgstr "Постачальник для файлів Microsoft Access"
 
-#: providers/msql/gda-msql-libmain.c:41
+#: providers/mdb/libmain.c:45 providers/sqlite/libmain.c:50
+#: providers/xbase/libmain.c:48 providers/xml/libmain.c:48
+#, fuzzy
+msgid "File Name"
+msgstr "Назва поля"
+
+#: providers/mdb/libmain.c:46 providers/xbase/libmain.c:49
+#, fuzzy
+msgid "Full path of the file containing the database"
+msgstr ""
+"У рядку з'єднання з відкритою базою даних необхідно вказати повний шлях."
+
+#: providers/msql/gda-msql-libmain.c:45
 msgid "Provider for Hughes Technologies mSQL databases"
 msgstr "Постачальник для баз даних Hughes Technologies mSQL"
 
-#: providers/msql/gda-msql-provider.c:230
-#: providers/msql/gda-msql-provider.c:273
-#: providers/msql/gda-msql-provider.c:293
-#: providers/msql/gda-msql-provider.c:551
+#: providers/msql/gda-msql-libmain.c:61 providers/mysql/libmain.c:55
+#: providers/postgres/libmain.c:59 providers/sybase/libmain.c:54
+#: providers/sybase/libmain.c:58
+msgid "Name of the host to connect to"
+msgstr ""
+
+#: providers/msql/gda-msql-provider.c:242
+#: providers/msql/gda-msql-provider.c:286
+#: providers/msql/gda-msql-provider.c:307
+#: providers/msql/gda-msql-provider.c:578
 #: providers/msql/gda-msql-recordset.c:50
 #: providers/msql/gda-msql-recordset.c:140
 msgid "Invalid mSQL handle"
 msgstr "Неправильний логічний номер mSQL"
 
-#: providers/msql/gda-msql-provider.c:318
+#: providers/msql/gda-msql-provider.c:333
 msgid "mSQL allows database creation only through the msqladmin tool."
 msgstr "mSQL допускає створення баз даних лише за допомогою утиліти msqladmin."
 
-#: providers/msql/gda-msql-provider.c:331
+#: providers/msql/gda-msql-provider.c:347
 msgid "mSQL allows database drops only through the msqladmin tool."
 msgstr "mSQL допускає видалення баз даних лише за допомогою утиліти msqladmin."
 
-#: providers/msql/gda-msql-provider.c:376
-#: providers/msql/gda-msql-provider.c:389
-#: providers/msql/gda-msql-provider.c:402
+#: providers/msql/gda-msql-provider.c:394
+#: providers/msql/gda-msql-provider.c:408
+#: providers/msql/gda-msql-provider.c:422
 msgid "mSQL doesn't support transactions."
 msgstr "mSQL не підтримує транзакції."
 
-#: providers/msql/gda-msql-provider.c:486
+#: providers/msql/gda-msql-provider.c:511
 msgid "Title"
 msgstr "Заголовок"
 
-#: providers/msql/gda-msql-provider.c:536
+#: providers/msql/gda-msql-provider.c:563
 msgid "Field Name"
 msgstr "Назва поля"
 
-#: providers/msql/gda-msql-provider.c:540
+#: providers/msql/gda-msql-provider.c:567
 msgid "Not null"
 msgstr "Не NULL"
 
@@ -933,8 +1129,8 @@ msgstr "Не можна вказувати UNIX_SOCKET, якщо ви вже в�
 
 #: providers/mysql/gda-mysql-provider.c:304
 #: providers/mysql/gda-mysql-provider.c:1125
-#: providers/mysql/gda-mysql-recordset.c:128
-#: providers/mysql/gda-mysql-recordset.c:202
+#: providers/mysql/gda-mysql-recordset.c:134
+#: providers/mysql/gda-mysql-recordset.c:208
 msgid "Invalid MySQL handle"
 msgstr "Неправильний логічний номер MySQL"
 
@@ -966,6 +1162,30 @@ msgstr "У режимі лише-читання транзакції не під
 msgid "Provider for MySQL databases"
 msgstr "Постачальник для баз даних MySQL"
 
+#: providers/mysql/libmain.c:51
+msgid "Name of the database to connect to"
+msgstr ""
+
+#: providers/mysql/libmain.c:59
+msgid "Port number to use for connecting"
+msgstr ""
+
+#: providers/mysql/libmain.c:62
+msgid "UNIX Socket"
+msgstr ""
+
+#: providers/mysql/libmain.c:63
+msgid "Full path of the UNIX socket to use for connecting locally"
+msgstr ""
+
+#: providers/mysql/libmain.c:66
+msgid "Use Secure Connection"
+msgstr ""
+
+#: providers/mysql/libmain.c:67
+msgid "Whether to use or not SSL for establishing the connection"
+msgstr ""
+
 #: providers/odbc/gda-odbc-provider.c:183
 msgid "Unable to SQLAllocEnv()..."
 msgstr "Не вдається виконати SQLAllocEnv()..."
@@ -985,20 +1205,30 @@ msgid "Nb args"
 msgstr "Кільк. аргументів"
 
 #: providers/odbc/gda-odbc-provider.c:1402
-#: providers/oracle/gda-oracle-provider.c:2193 testing/client.c:134
+#: providers/oracle/gda-oracle-provider.c:2193 testing/client.c:138
 msgid "Views"
 msgstr "Відображення"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/odbc/gda-odbc-provider.c:1454
-#: providers/postgres/gda-postgres-provider.c:2045
-#: providers/postgres/gda-postgres-provider.c:2101
+#: providers/postgres/gda-postgres-provider.c:2050
+#: providers/postgres/gda-postgres-provider.c:2106
 msgid "Sequence"
 msgstr "Послідовність"
 
 #: providers/odbc/libmain.c:41
 msgid "Provider for ODBC data sources"
 msgstr "Постачальник для джерел даних ODBC"
+
+#: providers/odbc/libmain.c:50
+#, fuzzy
+msgid "Connection String"
+msgstr "Рядок з'єднання"
+
+#: providers/odbc/libmain.c:51
+#, fuzzy
+msgid "ODBC connection string"
+msgstr "Рядок з'єднання"
 
 #: providers/oracle/gda-oracle-provider.c:196
 msgid "No TNS name supplied"
@@ -1221,7 +1451,7 @@ msgstr "Не вдається отримати атрибут порожност
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/oracle/gda-oracle-provider.c:2177
-#: providers/postgres/gda-postgres-provider.c:1334 testing/client.c:135
+#: providers/postgres/gda-postgres-provider.c:1334 testing/client.c:139
 msgid "Indexes"
 msgstr "Індекси"
 
@@ -1229,7 +1459,7 @@ msgstr "Індекси"
 msgid "Procedures"
 msgstr "Процедури"
 
-#: providers/oracle/gda-oracle-provider.c:2183 testing/client.c:138
+#: providers/oracle/gda-oracle-provider.c:2183 testing/client.c:142
 msgid "Sequences"
 msgstr "Послідовності"
 
@@ -1250,7 +1480,7 @@ msgid "Could not define by position"
 msgstr "Не вдається визначити за позицією"
 
 #: providers/oracle/gda-oracle-recordset.c:173
-#: providers/postgres/gda-postgres-recordset.c:597
+#: providers/postgres/gda-postgres-recordset.c:599
 msgid "Column out of range"
 msgstr "Стовпчик поза межами діапазону"
 
@@ -1286,14 +1516,23 @@ msgstr "Не вдається отримати запис"
 msgid "Provider for Oracle databases"
 msgstr "Постачальник для баз даних Oracle"
 
+#: providers/oracle/libmain.c:43
+#, fuzzy
+msgid "TNS Name"
+msgstr "Назва"
+
+#: providers/oracle/libmain.c:44
+msgid "Name of the TNS configuration to use for connecting"
+msgstr ""
+
 #: providers/postgres/gda-postgres-provider.c:588
 #: providers/postgres/gda-postgres-provider.c:605
 #: providers/postgres/gda-postgres-provider.c:676
 #: providers/postgres/gda-postgres-provider.c:775
 #: providers/postgres/gda-postgres-provider.c:886
 #: providers/postgres/gda-postgres-recordset.c:187
-#: providers/postgres/gda-postgres-recordset.c:465
-#: providers/postgres/gda-postgres-recordset.c:591
+#: providers/postgres/gda-postgres-recordset.c:467
+#: providers/postgres/gda-postgres-recordset.c:593
 #: providers/postgres/utils.c:178
 msgid "Invalid PostgreSQL handle"
 msgstr "Неправильний логічний номер PostgreSQL"
@@ -1312,35 +1551,35 @@ msgid "View"
 msgstr "Відображення"
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:1969 testing/client.c:130
+#: providers/postgres/gda-postgres-provider.c:1974 testing/client.c:134
 msgid "Databases"
 msgstr "Бази даних"
 
 #: providers/postgres/gda-postgres-recordset.c:234
-#: providers/postgres/gda-postgres-recordset.c:348
+#: providers/postgres/gda-postgres-recordset.c:350
 msgid "Table name could not be guessed."
 msgstr "Неможливо здогадатись про назву таблиці."
 
-#: providers/postgres/gda-postgres-recordset.c:341
+#: providers/postgres/gda-postgres-recordset.c:343
 msgid "Given row doesn't belong to the model."
 msgstr "Вказаний рядок не належить моделі."
 
-#: providers/postgres/gda-postgres-recordset.c:400
+#: providers/postgres/gda-postgres-recordset.c:402
 msgid "Model doesn't have at least one non-modified unique key."
 msgstr "Модель не має принаймні одного незмінного унікального ключа."
 
-#: providers/postgres/gda-postgres-recordset.c:404
+#: providers/postgres/gda-postgres-recordset.c:406
 msgid "Model doesn't have any non-unique values to update."
 msgstr "Модель не має будь-яких не унікальних значень для оновлення."
 
-#: providers/postgres/gda-postgres-recordset.c:480
+#: providers/postgres/gda-postgres-recordset.c:482
 #: providers/sqlite/gda-sqlite-recordset.c:210
 #: providers/sqlite/gda-sqlite-recordset.c:242
 #: providers/bdb/gda-bdb-recordset.c:166
 msgid "Column number out of range"
 msgstr "Номер рядка поза межами діапазону"
 
-#: providers/postgres/gda-postgres-recordset.c:707
+#: providers/postgres/gda-postgres-recordset.c:709
 #, c-format
 msgid "Tuples:\"%s\""
 msgstr "Кортежі:\"%s\""
@@ -1348,6 +1587,34 @@ msgstr "Кортежі:\"%s\""
 #: providers/postgres/libmain.c:41
 msgid "Provider for PostgreSQL databases"
 msgstr "Постачальник для баз даних PostgreSQL"
+
+#: providers/postgres/libmain.c:54
+msgid "Search Path"
+msgstr ""
+
+#: providers/postgres/libmain.c:55
+msgid "Search path"
+msgstr ""
+
+#: providers/postgres/libmain.c:67
+msgid "Extra PostgreSQL options to use for the connection"
+msgstr ""
+
+#: providers/postgres/libmain.c:71 providers/sybase/libmain.c:70
+msgid "Port number to use for the connection"
+msgstr ""
+
+#: providers/postgres/libmain.c:74
+msgid "Require SSL"
+msgstr ""
+
+#: providers/postgres/libmain.c:75
+msgid "Whether to require SSL or not when connecting"
+msgstr ""
+
+#: providers/postgres/libmain.c:78 providers/postgres/libmain.c:79
+msgid "TTY"
+msgstr ""
 
 #: providers/sqlite/gda-sqlite-provider.c:199
 msgid ""
@@ -1389,6 +1656,12 @@ msgstr "Не вдається отримати інформацію про по�
 #: providers/sqlite/libmain.c:41
 msgid "Provider for SQLite databases"
 msgstr "Постачальник для баз даних SQLite"
+
+#: providers/sqlite/libmain.c:51
+#, fuzzy
+msgid "Full path of the file containing the SQLite database"
+msgstr ""
+"У рядку з'єднання з відкритою базою даних необхідно вказати повний шлях."
 
 #: providers/sybase/gda-sybase-provider.c:291
 msgid "Out of memory. Allocating connection structure failed."
@@ -1605,9 +1878,18 @@ msgstr "збій перетворення даних для типу %d"
 msgid "GDA provider for sybase databases (using OpenClient)"
 msgstr "GDA постачальник для баз даних SyBase (через OpenClient)"
 
-#: providers/sybase/main.c:52
-msgid "Could not initiate Sybase component factory"
-msgstr "Не вдається ініціювати фабрику компонентів Sybase"
+#: providers/sybase/libmain.c:66
+msgid "Extra Sybase options to use for the connection"
+msgstr ""
+
+#: providers/sybase/libmain.c:80
+#, fuzzy
+msgid "Locale"
+msgstr "Масштаб"
+
+#: providers/sybase/libmain.c:81
+msgid "Locale to use in the connection"
+msgstr ""
 
 #: providers/sybase/utils.c:48
 msgid "Call: csmsg callback"
@@ -1782,6 +2064,14 @@ msgstr "Неправильний логічний номер XBase"
 msgid "Provider for Xbase (dBase, FoxPro, etc) files"
 msgstr "Постачальник для баз даних XBase (dBase, FoxPro, тощо)"
 
+#: providers/xbase/libmain.c:52
+msgid "Directory"
+msgstr ""
+
+#: providers/xbase/libmain.c:53
+msgid "Directory containing the xBase files"
+msgstr ""
+
 #: providers/xml/gda-xml-provider.c:191
 msgid ""
 "A full path must be specified on the connection string to open a database on "
@@ -1900,6 +2190,12 @@ msgstr "XML"
 msgid "XML provider, based on the libgda XML database format"
 msgstr "Постачальник XML, оснований на libgda форматі даних XML"
 
+#: providers/xml/libmain.c:49
+#, fuzzy
+msgid "Full path of the file containing the XML database"
+msgstr ""
+"У рядку з'єднання з відкритою базою даних необхідно вказати повний шлях."
+
 #: report/libgda-report/gda-report-document.c:179
 msgid "Could not parse XML document"
 msgstr "Не вдається проаналізувати XML-документ"
@@ -1976,92 +2272,92 @@ msgstr "Значення \"%s\" атрибуту %s у %s не з переліч
 msgid "\t\tNONE\n"
 msgstr "\t\tНЕМАЄ\n"
 
-#: testing/client.c:83
+#: testing/client.c:87
 #, c-format
 msgid "** ERROR: could not open connection to %s\n"
 msgstr "** ПОМИЛКА: не вдалось встановити з'єднання з %s\n"
 
 #. show provider features
-#: testing/client.c:88
+#: testing/client.c:92
 msgid "\tProvider capabilities...\n"
 msgstr "\tМожливості постачальника...\n"
 
-#: testing/client.c:89
+#: testing/client.c:93
 #, c-format
 msgid "\t\tAggregates: %s\n"
 msgstr "\t\tАгрегати: %s\n"
 
-#: testing/client.c:91 testing/client.c:94 testing/client.c:97
-#: testing/client.c:100 testing/client.c:103 testing/client.c:106
-#: testing/client.c:109 testing/client.c:112 testing/client.c:115
-#: testing/client.c:118 testing/client.c:121 testing/client.c:124
+#: testing/client.c:95 testing/client.c:98 testing/client.c:101
+#: testing/client.c:104 testing/client.c:107 testing/client.c:110
+#: testing/client.c:113 testing/client.c:116 testing/client.c:119
+#: testing/client.c:122 testing/client.c:125 testing/client.c:128
 msgid "Supported"
 msgstr "Підтримуються"
 
-#: testing/client.c:91 testing/client.c:94 testing/client.c:97
-#: testing/client.c:100 testing/client.c:103 testing/client.c:106
-#: testing/client.c:109 testing/client.c:112 testing/client.c:115
-#: testing/client.c:118 testing/client.c:121 testing/client.c:124
+#: testing/client.c:95 testing/client.c:98 testing/client.c:101
+#: testing/client.c:104 testing/client.c:107 testing/client.c:110
+#: testing/client.c:113 testing/client.c:116 testing/client.c:119
+#: testing/client.c:122 testing/client.c:125 testing/client.c:128
 msgid "Not supported"
 msgstr "Не підтримуються"
 
-#: testing/client.c:92
+#: testing/client.c:96
 #, c-format
 msgid "\t\tIndexes: %s\n"
 msgstr "\t\tІндекси: %s\n"
 
-#: testing/client.c:95
+#: testing/client.c:99
 #, c-format
 msgid "\t\tNamespaces: %s\n"
 msgstr "\t\tПростори назв: %s\n"
 
-#: testing/client.c:98
+#: testing/client.c:102
 #, c-format
 msgid "\t\tProcedures: %s\n"
 msgstr "\t\tПроцедури: %s\n"
 
-#: testing/client.c:101
+#: testing/client.c:105
 #, c-format
 msgid "\t\tSequences: %s\n"
 msgstr "\t\tПослідовності: %s\n"
 
-#: testing/client.c:104
+#: testing/client.c:108
 #, c-format
 msgid "\t\tSQL: %s\n"
 msgstr "\t\tSQL: %s\n"
 
-#: testing/client.c:107
+#: testing/client.c:111
 #, c-format
 msgid "\t\tTransactions: %s\n"
 msgstr "\t\tТранзакції: %s\n"
 
-#: testing/client.c:110
+#: testing/client.c:114
 #, c-format
 msgid "\t\tTriggers: %s\n"
 msgstr "\t\tТригери: %s\n"
 
-#: testing/client.c:113
+#: testing/client.c:117
 #, c-format
 msgid "\t\tUsers: %s\n"
 msgstr "\t\tКористувачі: %s\n"
 
-#: testing/client.c:116
+#: testing/client.c:120
 #, c-format
 msgid "\t\tViews: %s\n"
 msgstr "\t\tВідображення: %s\n"
 
-#: testing/client.c:119
+#: testing/client.c:123
 #, c-format
 msgid "\t\tXML queries: %s\n"
 msgstr "\t\tXML-запити: %s\n"
 
-#: testing/client.c:122
+#: testing/client.c:126
 #, c-format
 msgid "\t\tBLOBs: %s\n"
 msgstr "\t\tBLOB-и: %s\n"
 
 #. show connection schemas
-#: testing/client.c:127
+#: testing/client.c:131
 #, c-format
 msgid ""
 "\n"
@@ -2072,56 +2368,56 @@ msgstr ""
 "\tПостачальник повідомляє про версію %s\n"
 "\n"
 
-#: testing/client.c:129
+#: testing/client.c:133
 msgid "Namespaces"
 msgstr "Простори назв"
 
-#: testing/client.c:131
+#: testing/client.c:135
 msgid "Stored procedures"
 msgstr "Збережені процедури"
 
-#: testing/client.c:132
+#: testing/client.c:136
 msgid "Connection Tables"
 msgstr "Таблиці з'єднання"
 
-#: testing/client.c:133
+#: testing/client.c:137
 msgid "Available types"
 msgstr "Доступні типи"
 
-#: testing/client.c:136
+#: testing/client.c:140
 msgid "Aggregates"
 msgstr "Агрегати"
 
-#: testing/client.c:140
+#: testing/client.c:144
 msgid "Languages"
 msgstr "Мови"
 
-#: testing/client.c:145 testing/client.c:153
+#: testing/client.c:149 testing/client.c:157
 msgid "\tStarting transaction..."
 msgstr "\tПочаток транзакції..."
 
-#: testing/client.c:147 testing/client.c:151 testing/client.c:155
-#: testing/client.c:159
+#: testing/client.c:151 testing/client.c:155 testing/client.c:159
+#: testing/client.c:163
 msgid "Error"
 msgstr "Помилка"
 
-#: testing/client.c:149
+#: testing/client.c:153
 msgid "\tFinishing transaction..."
 msgstr "\tЗавершення транзакції..."
 
-#: testing/client.c:157
+#: testing/client.c:161
 msgid "\tRolling back transaction..."
 msgstr "\tВідкат транзакції..."
 
-#: testing/client.c:188
+#: testing/client.c:192
 msgid "Testing GDA client API"
 msgstr "Перевірка GDA клієнтського API"
 
-#: testing/client.c:197
+#: testing/client.c:201
 msgid "** ERROR: gda_config_get_data_source_list returned a NULL item\n"
 msgstr "** ПОМИЛКА: функція gda_config_get_data_source_list повернула NULL\n"
 
-#: testing/client.c:201
+#: testing/client.c:205
 #, c-format
 msgid " Data source = %s, User = %s\n"
 msgstr " Джерело даних: %s, користувач %s\n"
@@ -2169,6 +2465,28 @@ msgstr "База даних порожня"
 #: providers/bdb/libmain.c:39
 msgid "Provider for Berkeley databases"
 msgstr "Постачальник для баз даних Berkeley"
+
+#: providers/bdb/libmain.c:48
+#, fuzzy
+msgid "Database File"
+msgstr "База даних"
+
+#: providers/bdb/libmain.c:49
+msgid "Berkeley DB database file to be used"
+msgstr ""
+
+#: providers/bdb/libmain.c:52
+#, fuzzy
+msgid "Database name"
+msgstr "База даних"
+
+#: providers/bdb/libmain.c:53
+#, fuzzy
+msgid "Name of the database in the database file to be used"
+msgstr "Для видалення бази даних необхідно вручну видалити файл бази даних"
+
+#~ msgid "Could not initiate Sybase component factory"
+#~ msgstr "Не вдається ініціювати фабрику компонентів Sybase"
 
 #~ msgid "Firebird's BLOB datatype not supported yet!\n"
 #~ msgstr "Тип даних BLOB ще не підтримується у Firebird!\n"

@@ -1,3 +1,23 @@
+libgda 1.2.0, 2004-12-28
+------------------------
+
+ - Detect correctly xbase library path (Tomasz)
+ - Fixed spec file for correct building on RH (David)
+ - Win32 build improvements and fixes (Alan)
+ - Added missing method implementation in GdaDataModelHash (Vivien)
+ - Fixed support for DATE, TIME, TIMESTAMP and DATETIME types in MySQL
+   provider (Vivien)
+ - Improved pkg-config modules detection (Tomasz)
+ - SQL parser improvements and fixes (Dru, Vivien)
+ - Fixed auto* build (Rodrigo)
+ - Use " character for field names in PostgreSQL queries (Bas)
+ - Updated translations:
+        - cs (Miroslav)
+	- en_CA (Adam)
+	- en_GB (David)
+	- fi (Tommi)
+	- it (Marco)
+
 libgda 1.1.99, 2004-10-10
 -------------------------
 

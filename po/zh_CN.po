@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-08-08 20:17+0200\n"
+"POT-Creation-Date: 2004-12-28 14:40+0100\n"
 "PO-Revision-Date: 2002-03-26 23:52+0800\n"
 "Last-Translator: He Qiangqiang <carton@linux.net.cn>\n"
 "Language-Team: zh_CN <i18n-translation@lists.linux.net.cn>\n"
@@ -38,40 +38,41 @@ msgstr "无法创建 BonoboStreamMem 对象"
 msgid "Temporary data source created by libgda. Don't remove it"
 msgstr ""
 
-#: libgda/gda-config.c:1081
+#: libgda/gda-config.c:1092
 #, fuzzy, c-format
 msgid "Error: %s"
 msgstr "错误"
 
-#: libgda/gda-config.c:1194 providers/odbc/gda-odbc-provider.c:1137
+#: libgda/gda-config.c:1205 providers/odbc/gda-odbc-provider.c:1137
 #: providers/oracle/gda-oracle-provider.c:1153
-#: providers/postgres/gda-postgres-provider.c:881
-#: providers/postgres/gda-postgres-provider.c:1347
+#: providers/postgres/gda-postgres-provider.c:945
+#: providers/postgres/gda-postgres-provider.c:1412
 msgid "Id"
 msgstr ""
 
-#: libgda/gda-config.c:1195
+#: libgda/gda-config.c:1206
 #, fuzzy
 msgid "Location"
 msgstr "\t位置 = %s\n"
 
-#: libgda/gda-config.c:1196 libgda/gda-config.c:1455
-#: providers/firebird/gda-firebird-provider.c:317
+#: libgda/gda-config.c:1207 libgda/gda-config.c:1532
+#: providers/firebird/gda-firebird-provider.c:322
 #: providers/ibmdb2/gda-ibmdb2-provider.c:863
 #: providers/ibmdb2/gda-ibmdb2-provider.c:892
 #: providers/ibmdb2/gda-ibmdb2-provider.c:920
 #: providers/ibmdb2/gda-ibmdb2-provider.c:1001
 #: providers/odbc/gda-odbc-provider.c:1248
 #: providers/odbc/gda-odbc-provider.c:1404
-#: providers/postgres/gda-postgres-provider.c:1153
+#: providers/postgres/gda-postgres-provider.c:1217
 msgid "Description"
 msgstr "描述"
 
-#: libgda/gda-config.c:1452 providers/ldap/gda-ldap-provider.c:327
-#: providers/mdb/gda-mdb-provider.c:457 providers/mdb/gda-mdb-provider.c:594
-#: providers/mdb/gda-mdb-provider.c:654 providers/msql/gda-msql-provider.c:448
-#: providers/mysql/gda-mysql-provider.c:726
-#: providers/mysql/gda-mysql-provider.c:914
+#: libgda/gda-config.c:1529 providers/firebird/gda-firebird-provider.c:730
+#: providers/ldap/gda-ldap-provider.c:327 providers/mdb/gda-mdb-provider.c:457
+#: providers/mdb/gda-mdb-provider.c:594 providers/mdb/gda-mdb-provider.c:654
+#: providers/msql/gda-msql-provider.c:471
+#: providers/mysql/gda-mysql-provider.c:731
+#: providers/mysql/gda-mysql-provider.c:919
 #: providers/odbc/gda-odbc-provider.c:768
 #: providers/odbc/gda-odbc-provider.c:824
 #: providers/oracle/gda-oracle-provider.c:1893
@@ -82,19 +83,19 @@ msgstr "描述"
 msgid "Name"
 msgstr "名称"
 
-#: libgda/gda-config.c:1453
+#: libgda/gda-config.c:1530
 msgid "Provider"
 msgstr "提供者"
 
-#: libgda/gda-config.c:1454
+#: libgda/gda-config.c:1531
 msgid "Connection string"
 msgstr "连接字符串"
 
-#: libgda/gda-config.c:1456
+#: libgda/gda-config.c:1533
 msgid "Username"
 msgstr "用户名"
 
-#: libgda/gda-config.c:1457
+#: libgda/gda-config.c:1534
 msgid "Password"
 msgstr ""
 
@@ -141,20 +142,20 @@ msgstr ""
 msgid "Could not create file %s"
 msgstr "无法解析文件于 %s"
 
-#: libgda/gda-value.c:2069
+#: libgda/gda-value.c:2073
 msgid "TRUE"
 msgstr "真"
 
-#: libgda/gda-value.c:2071
+#: libgda/gda-value.c:2075
 msgid "FALSE"
 msgstr "假"
 
-#: libgda/gda-value.c:2140
+#: libgda/gda-value.c:2144
 #, c-format
 msgid "(GObject of type '%s'"
 msgstr ""
 
-#: libgda/gda-value.c:2143
+#: libgda/gda-value.c:2147
 msgid "NULL GObject"
 msgstr ""
 
@@ -207,37 +208,80 @@ msgstr "无效的 XML 节点"
 msgid "Could not add the data from the XML node"
 msgstr "无法初始化 Oracle 服务器句柄"
 
-#: libsql/sql_parser.c:59
+#: libsql/sql_parser.c:60
 #, c-format
 msgid "Parse error near `%s'"
 msgstr ""
 
-#: libsql/sql_parser.c:61
+#: libsql/sql_parser.c:62
 #, c-format
 msgid "Syntax error near `%s'"
 msgstr ""
 
-#: libsql/sql_parser.c:371
+#: libsql/sql_parser.c:384
 msgid "Empty query to parse"
 msgstr ""
 
+#: providers/firebird/gda-firebird-blob.c:129
+#: providers/firebird/gda-firebird-blob.c:176
+#: providers/firebird/gda-firebird-blob.c:224
+#: providers/firebird/gda-firebird-provider.c:820
+#: providers/firebird/gda-firebird-provider.c:937
+#: providers/firebird/gda-firebird-provider.c:964
+#: providers/firebird/gda-firebird-provider.c:983
+#: providers/firebird/gda-firebird-provider.c:1019
+#: providers/firebird/gda-firebird-provider.c:1112
+#: providers/firebird/gda-firebird-provider.c:1207
+#: providers/firebird/gda-firebird-provider.c:1241
+#: providers/firebird/gda-firebird-provider.c:1279
+#: providers/firebird/gda-firebird-recordset.c:694
+#: providers/firebird/gda-firebird-recordset.c:896
+#, fuzzy
+msgid "Invalid Firebird handle"
+msgstr "无效的 Sqlite 句柄"
+
+#: providers/firebird/gda-firebird-blob.c:134
+#, fuzzy
+msgid "Unable to start transaction"
+msgstr "无法初始化 Oracle 组件工厂"
+
+#: providers/firebird/gda-firebird-blob.c:145
+msgid "Blob already open"
+msgstr ""
+
+#: providers/firebird/gda-firebird-blob.c:199
+msgid "Error getting blob segment."
+msgstr ""
+
+#: providers/firebird/gda-firebird-blob.c:203
+msgid "Can't read a closed Blob"
+msgstr ""
+
+#: providers/firebird/gda-firebird-blob.c:240
+msgid "Unable to close blob."
+msgstr ""
+
+#: providers/firebird/gda-firebird-blob.c:243
+msgid "Blob is closed"
+msgstr ""
+
 #. gda_server_recordset_model_set_field_defined_size (recset, 0, 32);
-#: providers/firebird/gda-firebird-provider.c:229
+#: providers/firebird/gda-firebird-provider.c:231
 #: providers/ibmdb2/gda-ibmdb2-provider.c:946
 #: providers/ldap/gda-ldap-provider.c:423
-#: providers/mysql/gda-mysql-provider.c:996
+#: providers/mysql/gda-mysql-provider.c:1011
 #: providers/odbc/gda-odbc-provider.c:1360
 #: providers/oracle/gda-oracle-provider.c:2095
-#: providers/postgres/gda-postgres-provider.c:1170
+#: providers/postgres/gda-postgres-provider.c:1234
 #: providers/sqlite/gda-sqlite-provider.c:787
 #: providers/sybase/gda-sybase-provider.c:1096
-#: providers/xml/gda-xml-provider.c:654 providers/xml/gda-xml-provider.c:655
-#: providers/xml/gda-xml-provider.c:680
+#: providers/xml/gda-xml-provider.c:654 providers/xml/gda-xml-provider.c:679
 msgid "Type"
 msgstr "类型"
 
-#: providers/firebird/gda-firebird-provider.c:230
-#: providers/firebird/gda-firebird-provider.c:316
+#: providers/firebird/gda-firebird-provider.c:232
+#: providers/firebird/gda-firebird-provider.c:321
+#: providers/firebird/gda-firebird-provider.c:732
 #: providers/ibmdb2/gda-ibmdb2-provider.c:742
 #: providers/ibmdb2/gda-ibmdb2-provider.c:832
 #: providers/ibmdb2/gda-ibmdb2-provider.c:861
@@ -247,11 +291,11 @@ msgstr "类型"
 #: providers/ibmdb2/gda-ibmdb2-provider.c:1000
 #: providers/ldap/gda-ldap-provider.c:328 providers/mdb/gda-mdb-provider.c:548
 #: providers/mdb/gda-mdb-provider.c:595 providers/mdb/gda-mdb-provider.c:655
-#: providers/msql/gda-msql-provider.c:449
-#: providers/msql/gda-msql-provider.c:487
-#: providers/mysql/gda-mysql-provider.c:728
-#: providers/mysql/gda-mysql-provider.c:915
-#: providers/mysql/gda-mysql-provider.c:997
+#: providers/msql/gda-msql-provider.c:472
+#: providers/msql/gda-msql-provider.c:512
+#: providers/mysql/gda-mysql-provider.c:733
+#: providers/mysql/gda-mysql-provider.c:920
+#: providers/mysql/gda-mysql-provider.c:1012
 #: providers/odbc/gda-odbc-provider.c:1025
 #: providers/odbc/gda-odbc-provider.c:1138
 #: providers/odbc/gda-odbc-provider.c:1247
@@ -264,216 +308,304 @@ msgstr "类型"
 #: providers/oracle/gda-oracle-provider.c:1955
 #: providers/oracle/gda-oracle-provider.c:1973
 #: providers/oracle/gda-oracle-provider.c:2096
-#: providers/postgres/gda-postgres-provider.c:882
-#: providers/postgres/gda-postgres-provider.c:1152
-#: providers/postgres/gda-postgres-provider.c:1171
-#: providers/postgres/gda-postgres-provider.c:1231
-#: providers/postgres/gda-postgres-provider.c:1348
-#: providers/postgres/gda-postgres-provider.c:1981
+#: providers/postgres/gda-postgres-provider.c:946
+#: providers/postgres/gda-postgres-provider.c:1216
+#: providers/postgres/gda-postgres-provider.c:1235
+#: providers/postgres/gda-postgres-provider.c:1295
+#: providers/postgres/gda-postgres-provider.c:1413
+#: providers/postgres/gda-postgres-provider.c:2051
 #: providers/sqlite/gda-sqlite-provider.c:788
 #: providers/sybase/gda-sybase-provider.c:1098
-#: providers/xml/gda-xml-provider.c:656
+#: providers/xml/gda-xml-provider.c:655
 msgid "Owner"
 msgstr ""
 
-#: providers/firebird/gda-firebird-provider.c:231
+#: providers/firebird/gda-firebird-provider.c:233
+#: providers/firebird/gda-firebird-provider.c:733
+#: providers/ibmdb2/gda-ibmdb2-provider.c:948
+#: providers/ldap/gda-ldap-provider.c:329 providers/mdb/gda-mdb-provider.c:549
+#: providers/mdb/gda-mdb-provider.c:596 providers/mdb/gda-mdb-provider.c:656
+#: providers/msql/gda-msql-provider.c:473
+#: providers/msql/gda-msql-provider.c:513
+#: providers/mysql/gda-mysql-provider.c:734
+#: providers/mysql/gda-mysql-provider.c:921
+#: providers/mysql/gda-mysql-provider.c:1013
+#: providers/odbc/gda-odbc-provider.c:1139
+#: providers/odbc/gda-odbc-provider.c:1362
+#: providers/odbc/gda-odbc-provider.c:1456
+#: providers/oracle/gda-oracle-provider.c:1155
+#: providers/oracle/gda-oracle-provider.c:1893
+#: providers/oracle/gda-oracle-provider.c:1912
+#: providers/oracle/gda-oracle-provider.c:1955
+#: providers/oracle/gda-oracle-provider.c:1974
+#: providers/oracle/gda-oracle-provider.c:2097
+#: providers/postgres/gda-postgres-provider.c:947
+#: providers/postgres/gda-postgres-provider.c:1236
+#: providers/postgres/gda-postgres-provider.c:1296
+#: providers/postgres/gda-postgres-provider.c:1414
+#: providers/postgres/gda-postgres-provider.c:2052
+#: providers/sqlite/gda-sqlite-provider.c:789
+#: providers/sybase/gda-sybase-provider.c:1100
+#: providers/xml/gda-xml-provider.c:656
+msgid "Comments"
+msgstr ""
+
+#: providers/firebird/gda-firebird-provider.c:234
 #: providers/ibmdb2/gda-ibmdb2-provider.c:949
-#: providers/msql/gda-msql-provider.c:489
-#: providers/mysql/gda-mysql-provider.c:999
+#: providers/msql/gda-msql-provider.c:514
+#: providers/mysql/gda-mysql-provider.c:1014
 #: providers/odbc/gda-odbc-provider.c:1363
 #: providers/oracle/gda-oracle-provider.c:2097
-#: providers/postgres/gda-postgres-provider.c:1173
+#: providers/postgres/gda-postgres-provider.c:1237
 #: providers/sqlite/gda-sqlite-provider.c:790
 #: providers/sybase/gda-sybase-provider.c:1102
-#: providers/xml/gda-xml-provider.c:658
+#: providers/xml/gda-xml-provider.c:657
 #, fuzzy
 msgid "GDA type"
 msgstr "数据类型"
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/firebird/gda-firebird-provider.c:315
+#: providers/firebird/gda-firebird-provider.c:320
 #: providers/ibmdb2/gda-ibmdb2-provider.c:833
 #: providers/ibmdb2/gda-ibmdb2-provider.c:890
 #: providers/ibmdb2/gda-ibmdb2-provider.c:999
 #: providers/odbc/gda-odbc-provider.c:1246
-#: providers/postgres/gda-postgres-provider.c:1151
-#: providers/postgres/gda-postgres-provider.c:2035
+#: providers/postgres/gda-postgres-provider.c:1215
+#: providers/postgres/gda-postgres-provider.c:2105
 #, fuzzy
 msgid "Table"
 msgstr "字段名"
 
-#: providers/firebird/gda-firebird-provider.c:318
+#: providers/firebird/gda-firebird-provider.c:323
 #: providers/mdb/gda-mdb-provider.c:553
 #: providers/odbc/gda-odbc-provider.c:1143
 #: providers/odbc/gda-odbc-provider.c:1249
 #: providers/odbc/gda-odbc-provider.c:1405
 #: providers/odbc/gda-odbc-provider.c:1457
 #: providers/oracle/gda-oracle-provider.c:1158
-#: providers/postgres/gda-postgres-provider.c:887
-#: providers/postgres/gda-postgres-provider.c:1154
-#: providers/postgres/gda-postgres-provider.c:1233
-#: providers/postgres/gda-postgres-provider.c:1352
-#: providers/postgres/gda-postgres-provider.c:1983
+#: providers/postgres/gda-postgres-provider.c:951
+#: providers/postgres/gda-postgres-provider.c:1218
+#: providers/postgres/gda-postgres-provider.c:1297
+#: providers/postgres/gda-postgres-provider.c:1417
+#: providers/postgres/gda-postgres-provider.c:2053
 #, fuzzy
 msgid "Definition"
 msgstr "描述"
 
-#: providers/firebird/gda-firebird-provider.c:609
+#: providers/firebird/gda-firebird-provider.c:615
 #: providers/mdb/gda-mdb-provider.c:490
-#: providers/mysql/gda-mysql-provider.c:1094
+#: providers/mysql/gda-mysql-provider.c:1109
 #: providers/odbc/gda-odbc-provider.c:949
 #: providers/oracle/gda-oracle-provider.c:1248
-#: providers/postgres/gda-postgres-provider.c:1398
+#: providers/postgres/gda-postgres-provider.c:1463
 #: providers/sqlite/gda-sqlite-provider.c:658
 #: providers/xml/gda-xml-provider.c:489
 msgid "Field name"
 msgstr "字段名"
 
-#: providers/firebird/gda-firebird-provider.c:610
-#: providers/mdb/gda-mdb-provider.c:491 providers/msql/gda-msql-provider.c:537
-#: providers/mysql/gda-mysql-provider.c:1095
+#: providers/firebird/gda-firebird-provider.c:616
+#: providers/mdb/gda-mdb-provider.c:491 providers/msql/gda-msql-provider.c:564
+#: providers/mysql/gda-mysql-provider.c:1110
 #: providers/odbc/gda-odbc-provider.c:950
 #: providers/oracle/gda-oracle-provider.c:1249
-#: providers/postgres/gda-postgres-provider.c:1399
+#: providers/postgres/gda-postgres-provider.c:1464
 #: providers/sqlite/gda-sqlite-provider.c:659
 #: providers/xml/gda-xml-provider.c:490
 msgid "Data type"
 msgstr "数据类型"
 
-#: providers/firebird/gda-firebird-provider.c:611
-#: providers/mdb/gda-mdb-provider.c:492 providers/msql/gda-msql-provider.c:538
-#: providers/mysql/gda-mysql-provider.c:1096
+#: providers/firebird/gda-firebird-provider.c:617
+#: providers/mdb/gda-mdb-provider.c:492 providers/msql/gda-msql-provider.c:565
+#: providers/mysql/gda-mysql-provider.c:1111
 #: providers/odbc/gda-odbc-provider.c:951
 #: providers/oracle/gda-oracle-provider.c:1250
-#: providers/postgres/gda-postgres-provider.c:1400
+#: providers/postgres/gda-postgres-provider.c:1465
 #: providers/sqlite/gda-sqlite-provider.c:660
 #: providers/xml/gda-xml-provider.c:491
 msgid "Size"
 msgstr "大小"
 
-#: providers/firebird/gda-firebird-provider.c:612
-#: providers/mdb/gda-mdb-provider.c:493 providers/msql/gda-msql-provider.c:539
-#: providers/mysql/gda-mysql-provider.c:1097
+#: providers/firebird/gda-firebird-provider.c:618
+#: providers/mdb/gda-mdb-provider.c:493 providers/msql/gda-msql-provider.c:566
+#: providers/mysql/gda-mysql-provider.c:1112
 #: providers/odbc/gda-odbc-provider.c:952
 #: providers/oracle/gda-oracle-provider.c:1251
-#: providers/postgres/gda-postgres-provider.c:1401
+#: providers/postgres/gda-postgres-provider.c:1466
 #: providers/sqlite/gda-sqlite-provider.c:661
 #: providers/xml/gda-xml-provider.c:492
 msgid "Scale"
 msgstr ""
 
-#: providers/firebird/gda-firebird-provider.c:613
+#: providers/firebird/gda-firebird-provider.c:619
 #: providers/mdb/gda-mdb-provider.c:494
-#: providers/mysql/gda-mysql-provider.c:1098
+#: providers/mysql/gda-mysql-provider.c:1113
 #: providers/odbc/gda-odbc-provider.c:953
 #: providers/oracle/gda-oracle-provider.c:1252
-#: providers/postgres/gda-postgres-provider.c:1402
+#: providers/postgres/gda-postgres-provider.c:1467
 #: providers/sqlite/gda-sqlite-provider.c:662
 #: providers/xml/gda-xml-provider.c:493
 msgid "Not null?"
 msgstr "非空？"
 
-#: providers/firebird/gda-firebird-provider.c:614
-#: providers/mdb/gda-mdb-provider.c:495 providers/msql/gda-msql-provider.c:541
-#: providers/mysql/gda-mysql-provider.c:1099
+#: providers/firebird/gda-firebird-provider.c:620
+#: providers/mdb/gda-mdb-provider.c:495 providers/msql/gda-msql-provider.c:568
+#: providers/mysql/gda-mysql-provider.c:1114
 #: providers/odbc/gda-odbc-provider.c:954
 #: providers/oracle/gda-oracle-provider.c:1253
-#: providers/postgres/gda-postgres-provider.c:1403
+#: providers/postgres/gda-postgres-provider.c:1468
 #: providers/sqlite/gda-sqlite-provider.c:663
 #: providers/xml/gda-xml-provider.c:494
 msgid "Primary key?"
 msgstr "主键？"
 
-#: providers/firebird/gda-firebird-provider.c:615
-#: providers/mdb/gda-mdb-provider.c:496 providers/msql/gda-msql-provider.c:542
-#: providers/mysql/gda-mysql-provider.c:1100
+#: providers/firebird/gda-firebird-provider.c:621
+#: providers/mdb/gda-mdb-provider.c:496 providers/msql/gda-msql-provider.c:569
+#: providers/mysql/gda-mysql-provider.c:1115
 #: providers/odbc/gda-odbc-provider.c:955
 #: providers/oracle/gda-oracle-provider.c:1254
-#: providers/postgres/gda-postgres-provider.c:1404
+#: providers/postgres/gda-postgres-provider.c:1469
 #: providers/sqlite/gda-sqlite-provider.c:664
 #: providers/xml/gda-xml-provider.c:495
 msgid "Unique index?"
 msgstr "唯一索引？"
 
-#: providers/firebird/gda-firebird-provider.c:616
-#: providers/mdb/gda-mdb-provider.c:497 providers/msql/gda-msql-provider.c:543
-#: providers/mysql/gda-mysql-provider.c:1101
+#: providers/firebird/gda-firebird-provider.c:622
+#: providers/mdb/gda-mdb-provider.c:497 providers/msql/gda-msql-provider.c:570
+#: providers/mysql/gda-mysql-provider.c:1116
 #: providers/odbc/gda-odbc-provider.c:956
 #: providers/oracle/gda-oracle-provider.c:1255
-#: providers/postgres/gda-postgres-provider.c:1405
+#: providers/postgres/gda-postgres-provider.c:1470
 #: providers/sqlite/gda-sqlite-provider.c:665
 #: providers/xml/gda-xml-provider.c:496
 msgid "References"
 msgstr "引用"
 
-#: providers/firebird/gda-firebird-provider.c:617
-#: providers/mdb/gda-mdb-provider.c:498 providers/msql/gda-msql-provider.c:544
-#: providers/mysql/gda-mysql-provider.c:1102
+#: providers/firebird/gda-firebird-provider.c:623
+#: providers/mdb/gda-mdb-provider.c:498 providers/msql/gda-msql-provider.c:571
+#: providers/mysql/gda-mysql-provider.c:1117
 #: providers/odbc/gda-odbc-provider.c:957
 #: providers/oracle/gda-oracle-provider.c:1256
-#: providers/postgres/gda-postgres-provider.c:1406
+#: providers/postgres/gda-postgres-provider.c:1471
 #: providers/sqlite/gda-sqlite-provider.c:666
 msgid "Default value"
 msgstr ""
 
-#: providers/firebird/gda-firebird-provider.c:626
-#: providers/firebird/gda-firebird-provider.c:633
-#: providers/msql/gda-msql-provider.c:557
-#: providers/msql/gda-msql-provider.c:563
-#: providers/mysql/gda-mysql-provider.c:1119
-#: providers/mysql/gda-mysql-provider.c:1127
+#: providers/firebird/gda-firebird-provider.c:632
+#: providers/firebird/gda-firebird-provider.c:639
+#: providers/msql/gda-msql-provider.c:584
+#: providers/msql/gda-msql-provider.c:590
+#: providers/mysql/gda-mysql-provider.c:1134
+#: providers/mysql/gda-mysql-provider.c:1142
 msgid "Table name is needed but none specified in parameter list"
 msgstr ""
 
-#: providers/firebird/gda-firebird-provider.c:728
-#: providers/firebird/gda-firebird-provider.c:845
-#: providers/firebird/gda-firebird-provider.c:872
-#: providers/firebird/gda-firebird-provider.c:891
-#: providers/firebird/gda-firebird-provider.c:943
-#: providers/firebird/gda-firebird-provider.c:1086
-#: providers/firebird/gda-firebird-provider.c:1120
-#: providers/firebird/gda-firebird-provider.c:1158
-#: providers/firebird/gda-firebird-recordset.c:724
-#: providers/firebird/gda-firebird-recordset.c:926
-#, fuzzy
-msgid "Invalid Firebird handle"
-msgstr "无效的 Sqlite 句柄"
+#. 5th the return type
+#. 6th the argument type
+#: providers/firebird/gda-firebird-provider.c:708
+#: providers/firebird/gda-firebird-provider.c:710
+msgid "UNKNOWN"
+msgstr ""
 
-#: providers/firebird/gda-firebird-provider.c:766
+#: providers/firebird/gda-firebird-provider.c:731
+#: providers/mdb/gda-mdb-provider.c:547
+#: providers/mysql/gda-mysql-provider.c:732
+msgid "ID"
+msgstr ""
+
+#: providers/firebird/gda-firebird-provider.c:734
+#: providers/mdb/gda-mdb-provider.c:550
+#: providers/mysql/gda-mysql-provider.c:735
+#: providers/odbc/gda-odbc-provider.c:1140
+#: providers/postgres/gda-postgres-provider.c:948
+#, fuzzy
+msgid "Return type"
+msgstr "数据类型"
+
+#: providers/firebird/gda-firebird-provider.c:735
+#: providers/mdb/gda-mdb-provider.c:552
+#: providers/mysql/gda-mysql-provider.c:736
+#: providers/odbc/gda-odbc-provider.c:1142
+#: providers/postgres/gda-postgres-provider.c:950
+#, fuzzy
+msgid "Args types"
+msgstr "聚合"
+
+#: providers/firebird/gda-firebird-provider.c:736
+#: providers/mysql/gda-mysql-provider.c:737
+#: providers/oracle/gda-oracle-provider.c:1913
+#: providers/oracle/gda-oracle-provider.c:1975
+msgid "SQL"
+msgstr ""
+
+#: providers/firebird/gda-firebird-provider.c:858
 msgid "No database specified"
 msgstr ""
 
-#: providers/firebird/gda-firebird-provider.c:1126
-#: providers/firebird/gda-firebird-provider.c:1164
+#: providers/firebird/gda-firebird-provider.c:1247
+#: providers/firebird/gda-firebird-provider.c:1285
 #, fuzzy
 msgid "Invalid transaction handle"
 msgstr "无效的 Sqlite 句柄"
 
-#: providers/firebird/gda-firebird-recordset.c:380
-#: providers/firebird/gda-firebird-recordset.c:420
+#: providers/firebird/gda-firebird-recordset.c:345
+#: providers/firebird/gda-firebird-recordset.c:386
 msgid "Statement already prepared."
 msgstr ""
 
-#: providers/firebird/gda-firebird-recordset.c:384
+#: providers/firebird/gda-firebird-recordset.c:349
 msgid "Transaction not initialized."
 msgstr ""
 
-#: providers/firebird/gda-firebird-recordset.c:489
-msgid "Firebird's ARRAY datatype not supported yet !\n"
+#: providers/firebird/gda-firebird-recordset.c:456
+msgid "Firebird's ARRAY datatype not supported yet!\n"
 msgstr ""
 
-#: providers/firebird/gda-firebird-recordset.c:494
-msgid "Firebird's BLOB datatype not supported yet !\n"
-msgstr ""
-
-#: providers/firebird/gda-firebird-recordset.c:595
-msgid "Unknown Firebird's field value !\n"
+#: providers/firebird/gda-firebird-recordset.c:565
+msgid "Unknown Firebird's field value!\n"
 msgstr ""
 
 #: providers/firebird/libmain.c:40
 #, fuzzy
 msgid "Provider for Firebird databases"
 msgstr "SQLite 的 GDA  数据源访问"
+
+#: providers/firebird/libmain.c:49 providers/freetds/libmain.c:48
+#: providers/ibmdb2/libmain.c:48 providers/msql/gda-msql-libmain.c:56
+#: providers/mysql/libmain.c:50 providers/postgres/libmain.c:50
+#: providers/sybase/libmain.c:49
+msgid "Database Name"
+msgstr ""
+
+#: providers/firebird/libmain.c:50 providers/freetds/libmain.c:49
+msgid "Name of the database to be used"
+msgstr ""
+
+#: providers/firebird/libmain.c:53
+msgid "Character Set"
+msgstr ""
+
+#: providers/firebird/libmain.c:54
+#, fuzzy
+msgid "Character set to be used on the connection"
+msgstr "要打开一个数据库，必须在连接字符串中指定完整路径。"
+
+#: providers/firebird/libmain.c:57
+msgid "SQL Dialect"
+msgstr ""
+
+#: providers/firebird/libmain.c:58
+#, fuzzy
+msgid "SQL dialect to use on the connection"
+msgstr "** 错误：无法打开与 %s 的连接\n"
+
+#: providers/firebird/libmain.c:61
+#, fuzzy
+msgid "Page Size"
+msgstr "大小"
+
+#: providers/firebird/libmain.c:62
+msgid "Page size to use on the database"
+msgstr ""
 
 #: providers/freetds/gda-freetds-provider.c:197
 msgid ""
@@ -550,19 +682,19 @@ msgstr ""
 msgid "Not available"
 msgstr "不可用"
 
-#: providers/freetds/gda-freetds-recordset.c:377
+#: providers/freetds/gda-freetds-recordset.c:376
 msgid "Error processing result rows.\n"
 msgstr ""
 
-#: providers/freetds/gda-freetds-recordset.c:384
+#: providers/freetds/gda-freetds-recordset.c:383
 msgid "Unexpected freetds return code in tds_process_row_tokens().\n"
 msgstr ""
 
-#: providers/freetds/gda-freetds-recordset.c:394
+#: providers/freetds/gda-freetds-recordset.c:393
 msgid "Error processing results.\n"
 msgstr ""
 
-#: providers/freetds/gda-freetds-recordset.c:401
+#: providers/freetds/gda-freetds-recordset.c:400
 msgid "Unexpected freetds return code in tds_process_result_tokens\n"
 msgstr ""
 
@@ -570,6 +702,92 @@ msgstr ""
 #, fuzzy
 msgid "Provider for TDS-based databases (using FreeTDS)"
 msgstr "SQLite 的 GDA  数据源访问"
+
+#: providers/freetds/libmain.c:52
+msgid "Host"
+msgstr ""
+
+#: providers/freetds/libmain.c:53
+msgid "Host name of the machine where the database is located"
+msgstr ""
+
+#: providers/freetds/libmain.c:56 providers/postgres/libmain.c:62
+#: providers/sybase/libmain.c:61
+msgid "Host Address"
+msgstr ""
+
+#: providers/freetds/libmain.c:57 providers/postgres/libmain.c:63
+#: providers/sybase/libmain.c:62
+msgid "IP address of the host to connect to"
+msgstr ""
+
+#: providers/freetds/libmain.c:60
+#, fuzzy
+msgid "Connection Options"
+msgstr "连接字符串"
+
+#: providers/freetds/libmain.c:61
+#, fuzzy
+msgid "Extra options to use on the connection"
+msgstr "** 错误：无法打开与 %s 的连接\n"
+
+#: providers/freetds/libmain.c:64 providers/ldap/libmain.c:64
+#: providers/mysql/libmain.c:58 providers/postgres/libmain.c:70
+#: providers/sybase/libmain.c:69
+msgid "Port"
+msgstr ""
+
+#: providers/freetds/libmain.c:65
+msgid "Port to use to connect to the database's host"
+msgstr ""
+
+#: providers/freetds/libmain.c:71 providers/sybase/libmain.c:76
+msgid "Enable Sybase"
+msgstr ""
+
+#: providers/freetds/libmain.c:72 providers/sybase/libmain.c:77
+msgid "Enable Sybase operative mode"
+msgstr ""
+
+#: providers/freetds/libmain.c:79
+msgid "FreeTDS Config File"
+msgstr ""
+
+#: providers/freetds/libmain.c:80
+msgid "Location of the FreeTDS config file"
+msgstr ""
+
+#: providers/freetds/libmain.c:84
+msgid "TDS Major Version"
+msgstr ""
+
+#: providers/freetds/libmain.c:85
+msgid "TDS protocol major version"
+msgstr ""
+
+#: providers/freetds/libmain.c:88
+msgid "TDS Minor Version"
+msgstr ""
+
+#: providers/freetds/libmain.c:89
+msgid "TDS protocol minor version"
+msgstr ""
+
+#: providers/freetds/libmain.c:93
+msgid "Dump File"
+msgstr ""
+
+#: providers/freetds/libmain.c:94
+msgid "File for TDS protocol dumps"
+msgstr ""
+
+#: providers/freetds/libmain.c:97
+msgid "Dump Configuration File"
+msgstr ""
+
+#: providers/freetds/libmain.c:98
+msgid "File fpr TDS protocol dumps configuration"
+msgstr ""
 
 #: providers/freetds/utils.c:40 providers/oracle/utils.c:67
 #: providers/postgres/utils.c:48 providers/sybase/utils.c:534
@@ -611,7 +829,7 @@ msgstr "索引"
 #: providers/ibmdb2/gda-ibmdb2-provider.c:860
 #: providers/mdb/gda-mdb-provider.c:546
 #: providers/odbc/gda-odbc-provider.c:1136
-#: providers/postgres/gda-postgres-provider.c:880
+#: providers/postgres/gda-postgres-provider.c:944
 #, fuzzy
 msgid "Procedure"
 msgstr "存储过程"
@@ -630,42 +848,14 @@ msgstr "描述"
 #. Set it here instead of the SQL query to allow i18n
 #: providers/ibmdb2/gda-ibmdb2-provider.c:918
 #: providers/oracle/gda-oracle-provider.c:2189
-#: providers/postgres/gda-postgres-provider.c:1387 testing/client.c:139
+#: providers/postgres/gda-postgres-provider.c:1452 testing/client.c:143
 msgid "Triggers"
 msgstr "触发器"
-
-#: providers/ibmdb2/gda-ibmdb2-provider.c:948
-#: providers/ldap/gda-ldap-provider.c:329 providers/mdb/gda-mdb-provider.c:549
-#: providers/mdb/gda-mdb-provider.c:596 providers/mdb/gda-mdb-provider.c:656
-#: providers/msql/gda-msql-provider.c:450
-#: providers/msql/gda-msql-provider.c:488
-#: providers/mysql/gda-mysql-provider.c:729
-#: providers/mysql/gda-mysql-provider.c:916
-#: providers/mysql/gda-mysql-provider.c:998
-#: providers/odbc/gda-odbc-provider.c:1139
-#: providers/odbc/gda-odbc-provider.c:1362
-#: providers/odbc/gda-odbc-provider.c:1456
-#: providers/oracle/gda-oracle-provider.c:1155
-#: providers/oracle/gda-oracle-provider.c:1893
-#: providers/oracle/gda-oracle-provider.c:1912
-#: providers/oracle/gda-oracle-provider.c:1955
-#: providers/oracle/gda-oracle-provider.c:1974
-#: providers/oracle/gda-oracle-provider.c:2097
-#: providers/postgres/gda-postgres-provider.c:883
-#: providers/postgres/gda-postgres-provider.c:1172
-#: providers/postgres/gda-postgres-provider.c:1232
-#: providers/postgres/gda-postgres-provider.c:1349
-#: providers/postgres/gda-postgres-provider.c:1982
-#: providers/sqlite/gda-sqlite-provider.c:789
-#: providers/sybase/gda-sybase-provider.c:1100
-#: providers/xml/gda-xml-provider.c:657
-msgid "Comments"
-msgstr ""
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/ibmdb2/gda-ibmdb2-provider.c:974
 #: providers/oracle/gda-oracle-provider.c:1825
-#: providers/postgres/gda-postgres-provider.c:1939 testing/client.c:137
+#: providers/postgres/gda-postgres-provider.c:2009 testing/client.c:141
 #, fuzzy
 msgid "Users"
 msgstr "用户名"
@@ -684,6 +874,20 @@ msgstr ""
 msgid "Provider for IBMDB2 databases"
 msgstr "SQLite 的 GDA  数据源访问"
 
+#: providers/ibmdb2/libmain.c:49 providers/msql/gda-msql-libmain.c:57
+#: providers/postgres/libmain.c:51 providers/sybase/libmain.c:50
+msgid "Name of the database to use"
+msgstr ""
+
+#: providers/ibmdb2/libmain.c:52 providers/postgres/libmain.c:66
+#: providers/sybase/libmain.c:65
+msgid "Extra Options"
+msgstr ""
+
+#: providers/ibmdb2/libmain.c:53
+msgid "Extra database options"
+msgstr ""
+
 #: providers/ldap/gda-ldap-provider.c:257
 #: providers/ldap/gda-ldap-provider.c:490
 #: providers/ldap/gda-ldap-provider.c:519
@@ -696,9 +900,9 @@ msgid "Invalid LDAP handle"
 msgstr "无效的 MySQL 句柄"
 
 #: providers/ldap/gda-ldap-recordset.c:69
-#: providers/mysql/gda-mysql-recordset.c:139
-#: providers/postgres/gda-postgres-recordset.c:193
-#: providers/postgres/gda-postgres-recordset.c:357
+#: providers/mysql/gda-mysql-recordset.c:145
+#: providers/postgres/gda-postgres-recordset.c:196
+#: providers/postgres/gda-postgres-recordset.c:476
 #: providers/sqlite/gda-sqlite-recordset.c:165
 #: providers/sqlite/gda-sqlite-recordset.c:204
 #: providers/bdb/gda-bdb-recordset.c:111
@@ -707,29 +911,72 @@ msgstr "行数超出范围"
 
 #: providers/ldap/gda-ldap-recordset.c:283
 #: providers/msql/gda-msql-recordset.c:229
-#: providers/mysql/gda-mysql-recordset.c:320
+#: providers/mysql/gda-mysql-recordset.c:326
 #: providers/oracle/gda-oracle-recordset.c:469
+#: providers/postgres/gda-postgres-recordset.c:242
 msgid "Attempt to insert a row with an invalid number of columns"
 msgstr ""
 
 #: providers/ldap/gda-ldap-recordset.c:298
 #: providers/msql/gda-msql-recordset.c:241
-#: providers/mysql/gda-mysql-recordset.c:335
+#: providers/mysql/gda-mysql-recordset.c:341
 #: providers/oracle/gda-oracle-recordset.c:484
+#: providers/postgres/gda-postgres-recordset.c:257
 #, fuzzy
 msgid "Could not retrieve column's information"
 msgstr "无法创建连接组件"
 
 #: providers/ldap/gda-ldap-recordset.c:316
 #: providers/msql/gda-msql-recordset.c:255
-#: providers/mysql/gda-mysql-recordset.c:353
+#: providers/mysql/gda-mysql-recordset.c:359
 #: providers/oracle/gda-oracle-recordset.c:502
+#: providers/postgres/gda-postgres-recordset.c:277
+#: providers/postgres/gda-postgres-recordset.c:288
 #, fuzzy
 msgid "Could not retrieve column's value"
 msgstr "无法从 %s 中获得文件"
 
-#: providers/ldap/libmain.c:42
+#: providers/ldap/libmain.c:47
 msgid "Provider for LDAP directory"
+msgstr ""
+
+#: providers/ldap/libmain.c:56
+msgid "LDAP Flags"
+msgstr ""
+
+#: providers/ldap/libmain.c:57
+msgid "LDAP flags"
+msgstr ""
+
+#: providers/ldap/libmain.c:60 providers/msql/gda-msql-libmain.c:60
+#: providers/mysql/libmain.c:54 providers/postgres/libmain.c:58
+#: providers/sybase/libmain.c:53 providers/sybase/libmain.c:57
+#, fuzzy
+msgid "Host Name"
+msgstr "名称"
+
+#: providers/ldap/libmain.c:61
+msgid "Host name of the LDAP server"
+msgstr ""
+
+#: providers/ldap/libmain.c:65
+msgid "Port to use for connecting to the LDAP server"
+msgstr ""
+
+#: providers/ldap/libmain.c:68
+msgid "Bind Domain"
+msgstr ""
+
+#: providers/ldap/libmain.c:69
+msgid "LDAP bind domain to use for authentication"
+msgstr ""
+
+#: providers/ldap/libmain.c:72
+msgid "Authentication Method"
+msgstr ""
+
+#: providers/ldap/libmain.c:73
+msgid "Authentication method to use for connecting"
 msgstr ""
 
 #: providers/mdb/gda-mdb-provider.c:205
@@ -755,30 +1002,9 @@ msgstr "无效的 MySQL 句柄"
 msgid "Transactions not supported in MDB provider"
 msgstr ""
 
-#: providers/mdb/gda-mdb-provider.c:547
-#: providers/mysql/gda-mysql-provider.c:727
-msgid "ID"
-msgstr ""
-
-#: providers/mdb/gda-mdb-provider.c:550
-#: providers/mysql/gda-mysql-provider.c:730
-#: providers/odbc/gda-odbc-provider.c:1140
-#: providers/postgres/gda-postgres-provider.c:884
-#, fuzzy
-msgid "Return type"
-msgstr "数据类型"
-
 #: providers/mdb/gda-mdb-provider.c:551
 msgid "# of args"
 msgstr ""
-
-#: providers/mdb/gda-mdb-provider.c:552
-#: providers/mysql/gda-mysql-provider.c:731
-#: providers/odbc/gda-odbc-provider.c:1142
-#: providers/postgres/gda-postgres-provider.c:886
-#, fuzzy
-msgid "Args types"
-msgstr "聚合"
 
 #: providers/mdb/gda-mdb-provider.c:657
 #, fuzzy
@@ -861,46 +1087,63 @@ msgstr "没有找到表 %s"
 msgid "Provider for Microsoft Access files"
 msgstr ""
 
-#: providers/msql/gda-msql-libmain.c:41
+#: providers/mdb/libmain.c:45 providers/sqlite/libmain.c:50
+#: providers/xbase/libmain.c:48 providers/xml/libmain.c:48
+#, fuzzy
+msgid "File Name"
+msgstr "字段名"
+
+#: providers/mdb/libmain.c:46 providers/xbase/libmain.c:49
+#, fuzzy
+msgid "Full path of the file containing the database"
+msgstr "要打开一个数据库，必须在连接字符串中指定完整路径。"
+
+#: providers/msql/gda-msql-libmain.c:45
 #, fuzzy
 msgid "Provider for Hughes Technologies mSQL databases"
 msgstr "SQLite 的 GDA  数据源访问"
 
-#: providers/msql/gda-msql-provider.c:230
-#: providers/msql/gda-msql-provider.c:273
-#: providers/msql/gda-msql-provider.c:293
-#: providers/msql/gda-msql-provider.c:551
+#: providers/msql/gda-msql-libmain.c:61 providers/mysql/libmain.c:55
+#: providers/postgres/libmain.c:59 providers/sybase/libmain.c:54
+#: providers/sybase/libmain.c:58
+msgid "Name of the host to connect to"
+msgstr ""
+
+#: providers/msql/gda-msql-provider.c:242
+#: providers/msql/gda-msql-provider.c:286
+#: providers/msql/gda-msql-provider.c:307
+#: providers/msql/gda-msql-provider.c:578
 #: providers/msql/gda-msql-recordset.c:50
 #: providers/msql/gda-msql-recordset.c:140
 #, fuzzy
 msgid "Invalid mSQL handle"
 msgstr "无效的 MySQL 句柄"
 
-#: providers/msql/gda-msql-provider.c:318
+#: providers/msql/gda-msql-provider.c:333
 msgid "mSQL allows database creation only through the msqladmin tool."
 msgstr ""
 
-#: providers/msql/gda-msql-provider.c:331
+#: providers/msql/gda-msql-provider.c:347
 msgid "mSQL allows database drops only through the msqladmin tool."
 msgstr ""
 
-#: providers/msql/gda-msql-provider.c:376
-#: providers/msql/gda-msql-provider.c:389
-#: providers/msql/gda-msql-provider.c:402
+#: providers/msql/gda-msql-provider.c:394
+#: providers/msql/gda-msql-provider.c:408
+#: providers/msql/gda-msql-provider.c:422
 msgid "mSQL doesn't support transactions."
 msgstr ""
 
-#: providers/msql/gda-msql-provider.c:486
+#: providers/msql/gda-msql-provider.c:511
 #, fuzzy
 msgid "Title"
 msgstr "字段名"
 
-#: providers/msql/gda-msql-provider.c:536
+#: providers/msql/gda-msql-provider.c:563
 #, fuzzy
 msgid "Field Name"
 msgstr "字段名"
 
-#: providers/msql/gda-msql-provider.c:540
+#: providers/msql/gda-msql-provider.c:567
 #, fuzzy
 msgid "Not null"
 msgstr "非空？"
@@ -910,50 +1153,70 @@ msgstr "非空？"
 msgid "Row number out of bounds"
 msgstr "行数超出范围"
 
-#: providers/mysql/gda-mysql-provider.c:223
+#: providers/mysql/gda-mysql-provider.c:228
 msgid ""
 "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
 msgstr "如果您已经给出了主机或端口，您就无法再给出 UNIX_SOCKET。"
 
-#: providers/mysql/gda-mysql-provider.c:299
-#: providers/mysql/gda-mysql-provider.c:1110
-#: providers/mysql/gda-mysql-recordset.c:128
-#: providers/mysql/gda-mysql-recordset.c:202
+#: providers/mysql/gda-mysql-provider.c:304
+#: providers/mysql/gda-mysql-provider.c:1125
+#: providers/mysql/gda-mysql-recordset.c:134
+#: providers/mysql/gda-mysql-recordset.c:208
 msgid "Invalid MySQL handle"
 msgstr "无效的 MySQL 句柄"
 
-#: providers/mysql/gda-mysql-provider.c:315
-#: providers/mysql/gda-mysql-provider.c:385
-#: providers/mysql/gda-mysql-provider.c:408
-#: providers/mysql/gda-mysql-provider.c:439
-#: providers/mysql/gda-mysql-provider.c:471
-#: providers/mysql/gda-mysql-provider.c:537
-#: providers/mysql/gda-mysql-provider.c:560
-#: providers/mysql/gda-mysql-provider.c:617
-#: providers/mysql/gda-mysql-provider.c:650
-msgid "Invalid MYSQL handle"
-msgstr "无效的 MYSQL 句柄"
-
+#: providers/mysql/gda-mysql-provider.c:320
+#: providers/mysql/gda-mysql-provider.c:390
+#: providers/mysql/gda-mysql-provider.c:413
+#: providers/mysql/gda-mysql-provider.c:444
+#: providers/mysql/gda-mysql-provider.c:476
+#: providers/mysql/gda-mysql-provider.c:542
 #: providers/mysql/gda-mysql-provider.c:565
 #: providers/mysql/gda-mysql-provider.c:622
 #: providers/mysql/gda-mysql-provider.c:655
+#: providers/mysql/gda-mysql-provider.c:1252
+msgid "Invalid MYSQL handle"
+msgstr "无效的 MYSQL 句柄"
+
+#: providers/mysql/gda-mysql-provider.c:570
+#: providers/mysql/gda-mysql-provider.c:627
+#: providers/mysql/gda-mysql-provider.c:660
 #: providers/oracle/gda-oracle-provider.c:857
 #: providers/oracle/gda-oracle-provider.c:939
 #: providers/oracle/gda-oracle-provider.c:1000
+#: providers/postgres/gda-postgres-provider.c:813
 #: providers/sqlite/gda-sqlite-provider.c:508
 msgid "Transactions are not supported in read-only mode"
-msgstr ""
-
-#: providers/mysql/gda-mysql-provider.c:732
-#: providers/oracle/gda-oracle-provider.c:1913
-#: providers/oracle/gda-oracle-provider.c:1975
-msgid "SQL"
 msgstr ""
 
 #: providers/mysql/libmain.c:41
 #, fuzzy
 msgid "Provider for MySQL databases"
 msgstr "SQLite 的 GDA  数据源访问"
+
+#: providers/mysql/libmain.c:51
+msgid "Name of the database to connect to"
+msgstr ""
+
+#: providers/mysql/libmain.c:59
+msgid "Port number to use for connecting"
+msgstr ""
+
+#: providers/mysql/libmain.c:62
+msgid "UNIX Socket"
+msgstr ""
+
+#: providers/mysql/libmain.c:63
+msgid "Full path of the UNIX socket to use for connecting locally"
+msgstr ""
+
+#: providers/mysql/libmain.c:66
+msgid "Use Secure Connection"
+msgstr ""
+
+#: providers/mysql/libmain.c:67
+msgid "Whether to use or not SSL for establishing the connection"
+msgstr ""
 
 #: providers/odbc/gda-odbc-provider.c:183
 msgid "Unable to SQLAllocEnv()..."
@@ -970,19 +1233,19 @@ msgid "Invalid Odbc handle"
 msgstr "无效的 Sqlite 句柄"
 
 #: providers/odbc/gda-odbc-provider.c:1141
-#: providers/postgres/gda-postgres-provider.c:885
+#: providers/postgres/gda-postgres-provider.c:949
 msgid "Nb args"
 msgstr ""
 
 #: providers/odbc/gda-odbc-provider.c:1402
-#: providers/oracle/gda-oracle-provider.c:2193 testing/client.c:134
+#: providers/oracle/gda-oracle-provider.c:2193 testing/client.c:138
 msgid "Views"
 msgstr "视图"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/odbc/gda-odbc-provider.c:1454
-#: providers/postgres/gda-postgres-provider.c:1980
-#: providers/postgres/gda-postgres-provider.c:2036
+#: providers/postgres/gda-postgres-provider.c:2050
+#: providers/postgres/gda-postgres-provider.c:2106
 #, fuzzy
 msgid "Sequence"
 msgstr "引用"
@@ -991,6 +1254,16 @@ msgstr "引用"
 #, fuzzy
 msgid "Provider for ODBC data sources"
 msgstr "SQLite 的 GDA  数据源访问"
+
+#: providers/odbc/libmain.c:50
+#, fuzzy
+msgid "Connection String"
+msgstr "连接字符串"
+
+#: providers/odbc/libmain.c:51
+#, fuzzy
+msgid "ODBC connection string"
+msgstr "连接字符串"
 
 #: providers/oracle/gda-oracle-provider.c:196
 msgid "No TNS name supplied"
@@ -1157,19 +1430,19 @@ msgstr "无法初始化 Oracle 组件工厂"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/oracle/gda-oracle-provider.c:1152
-#: providers/postgres/gda-postgres-provider.c:1346
+#: providers/postgres/gda-postgres-provider.c:1411
 #, fuzzy
 msgid "Aggregate"
 msgstr "聚合"
 
 #: providers/oracle/gda-oracle-provider.c:1156
-#: providers/postgres/gda-postgres-provider.c:1350
+#: providers/postgres/gda-postgres-provider.c:1415
 #, fuzzy
 msgid "OutType"
 msgstr "类型"
 
 #: providers/oracle/gda-oracle-provider.c:1157
-#: providers/postgres/gda-postgres-provider.c:1351
+#: providers/postgres/gda-postgres-provider.c:1416
 #, fuzzy
 msgid "InType"
 msgstr "类型"
@@ -1257,7 +1530,7 @@ msgstr ""
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/oracle/gda-oracle-provider.c:2177
-#: providers/postgres/gda-postgres-provider.c:1270 testing/client.c:135
+#: providers/postgres/gda-postgres-provider.c:1334 testing/client.c:139
 msgid "Indexes"
 msgstr "索引"
 
@@ -1266,7 +1539,7 @@ msgstr "索引"
 msgid "Procedures"
 msgstr "存储过程"
 
-#: providers/oracle/gda-oracle-provider.c:2183 testing/client.c:138
+#: providers/oracle/gda-oracle-provider.c:2183 testing/client.c:142
 #, fuzzy
 msgid "Sequences"
 msgstr "引用"
@@ -1292,7 +1565,7 @@ msgid "Could not define by position"
 msgstr "无法加载文件于 %s"
 
 #: providers/oracle/gda-oracle-recordset.c:173
-#: providers/postgres/gda-postgres-recordset.c:476
+#: providers/postgres/gda-postgres-recordset.c:599
 #, fuzzy
 msgid "Column out of range"
 msgstr "行数超出范围"
@@ -1337,46 +1610,64 @@ msgstr "无法从 %s 中获得文件"
 msgid "Provider for Oracle databases"
 msgstr "SQLite 的 GDA  数据源访问"
 
-#: providers/postgres/gda-postgres-provider.c:568
-#: providers/postgres/gda-postgres-provider.c:585
-#: providers/postgres/gda-postgres-provider.c:656
-#: providers/postgres/gda-postgres-provider.c:755
-#: providers/postgres/gda-postgres-provider.c:822
-#: providers/postgres/gda-postgres-recordset.c:184
-#: providers/postgres/gda-postgres-recordset.c:348
-#: providers/postgres/gda-postgres-recordset.c:470
+#: providers/oracle/libmain.c:43
+#, fuzzy
+msgid "TNS Name"
+msgstr "名称"
+
+#: providers/oracle/libmain.c:44
+msgid "Name of the TNS configuration to use for connecting"
+msgstr ""
+
+#: providers/postgres/gda-postgres-provider.c:588
+#: providers/postgres/gda-postgres-provider.c:605
+#: providers/postgres/gda-postgres-provider.c:676
+#: providers/postgres/gda-postgres-provider.c:775
+#: providers/postgres/gda-postgres-provider.c:886
+#: providers/postgres/gda-postgres-recordset.c:187
+#: providers/postgres/gda-postgres-recordset.c:467
+#: providers/postgres/gda-postgres-recordset.c:593
 #: providers/postgres/utils.c:178
 msgid "Invalid PostgreSQL handle"
 msgstr "无效的 PostgreSQL 句柄"
 
+#: providers/postgres/gda-postgres-provider.c:823
+msgid "Transactions are not supported in read uncommitted isolation level"
+msgstr ""
+
+#: providers/postgres/gda-postgres-provider.c:826
+msgid "Transactions are not supported in repeatable read isolation level"
+msgstr ""
+
 #. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:1230
+#: providers/postgres/gda-postgres-provider.c:1294
 #, fuzzy
 msgid "View"
 msgstr "视图"
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:1904 testing/client.c:130
+#: providers/postgres/gda-postgres-provider.c:1974 testing/client.c:134
 msgid "Databases"
 msgstr ""
 
-#: providers/postgres/gda-postgres-recordset.c:228
-msgid "Given row doesn't belong to the model."
-msgstr ""
-
-#: providers/postgres/gda-postgres-recordset.c:235
+#: providers/postgres/gda-postgres-recordset.c:234
+#: providers/postgres/gda-postgres-recordset.c:350
 msgid "Table name could not be guessed."
 msgstr ""
 
-#: providers/postgres/gda-postgres-recordset.c:287
+#: providers/postgres/gda-postgres-recordset.c:343
+msgid "Given row doesn't belong to the model."
+msgstr ""
+
+#: providers/postgres/gda-postgres-recordset.c:402
 msgid "Model doesn't have at least one non-modified unique key."
 msgstr ""
 
-#: providers/postgres/gda-postgres-recordset.c:291
+#: providers/postgres/gda-postgres-recordset.c:406
 msgid "Model doesn't have any non-unique values to update."
 msgstr ""
 
-#: providers/postgres/gda-postgres-recordset.c:363
+#: providers/postgres/gda-postgres-recordset.c:482
 #: providers/sqlite/gda-sqlite-recordset.c:210
 #: providers/sqlite/gda-sqlite-recordset.c:242
 #: providers/bdb/gda-bdb-recordset.c:166
@@ -1384,7 +1675,7 @@ msgstr ""
 msgid "Column number out of range"
 msgstr "行数超出范围"
 
-#: providers/postgres/gda-postgres-recordset.c:584
+#: providers/postgres/gda-postgres-recordset.c:709
 #, c-format
 msgid "Tuples:\"%s\""
 msgstr ""
@@ -1393,6 +1684,35 @@ msgstr ""
 #, fuzzy
 msgid "Provider for PostgreSQL databases"
 msgstr "SQLite 的 GDA  数据源访问"
+
+#: providers/postgres/libmain.c:54
+msgid "Search Path"
+msgstr ""
+
+#: providers/postgres/libmain.c:55
+msgid "Search path"
+msgstr ""
+
+#: providers/postgres/libmain.c:67
+msgid "Extra PostgreSQL options to use for the connection"
+msgstr ""
+
+#: providers/postgres/libmain.c:71 providers/sybase/libmain.c:70
+#, fuzzy
+msgid "Port number to use for the connection"
+msgstr "** 错误：无法打开与 %s 的连接\n"
+
+#: providers/postgres/libmain.c:74
+msgid "Require SSL"
+msgstr ""
+
+#: providers/postgres/libmain.c:75
+msgid "Whether to require SSL or not when connecting"
+msgstr ""
+
+#: providers/postgres/libmain.c:78 providers/postgres/libmain.c:79
+msgid "TTY"
+msgstr ""
 
 #: providers/sqlite/gda-sqlite-provider.c:199
 msgid ""
@@ -1436,6 +1756,11 @@ msgstr "无法创建连接组件"
 #, fuzzy
 msgid "Provider for SQLite databases"
 msgstr "SQLite 的 GDA  数据源访问"
+
+#: providers/sqlite/libmain.c:51
+#, fuzzy
+msgid "Full path of the file containing the SQLite database"
+msgstr "要打开一个数据库，必须在连接字符串中指定完整路径。"
 
 #: providers/sybase/gda-sybase-provider.c:291
 msgid "Out of memory. Allocating connection structure failed."
@@ -1652,9 +1977,19 @@ msgstr ""
 msgid "GDA provider for sybase databases (using OpenClient)"
 msgstr "SQLite 的 GDA  数据源访问"
 
-#: providers/sybase/main.c:52
-msgid "Could not initiate Sybase component factory"
-msgstr "无法初始化 Sybase 组件工厂"
+#: providers/sybase/libmain.c:66
+#, fuzzy
+msgid "Extra Sybase options to use for the connection"
+msgstr "** 错误：无法打开与 %s 的连接\n"
+
+#: providers/sybase/libmain.c:80
+msgid "Locale"
+msgstr ""
+
+#: providers/sybase/libmain.c:81
+#, fuzzy
+msgid "Locale to use in the connection"
+msgstr "** 错误：无法打开与 %s 的连接\n"
 
 #: providers/sybase/utils.c:48
 msgid "Call: csmsg callback"
@@ -1824,6 +2159,14 @@ msgstr "无效的 Sqlite 句柄"
 msgid "Provider for Xbase (dBase, FoxPro, etc) files"
 msgstr "SQLite 的 GDA  数据源访问"
 
+#: providers/xbase/libmain.c:52
+msgid "Directory"
+msgstr ""
+
+#: providers/xbase/libmain.c:53
+msgid "Directory containing the xBase files"
+msgstr ""
+
 #: providers/xml/gda-xml-provider.c:191
 #, fuzzy
 msgid ""
@@ -1855,99 +2198,99 @@ msgid "Could not get description for column"
 msgstr "无法获取列描述"
 
 #. fill the recordset
-#: providers/xml/gda-xml-provider.c:661
+#: providers/xml/gda-xml-provider.c:660
 #, fuzzy
 msgid "Big integer"
 msgstr "极小整数"
 
-#: providers/xml/gda-xml-provider.c:662
+#: providers/xml/gda-xml-provider.c:661
 #, fuzzy
 msgid "Big unsigned integer"
 msgstr "极小整数"
 
-#: providers/xml/gda-xml-provider.c:663
+#: providers/xml/gda-xml-provider.c:662
 #, fuzzy
 msgid "Binary"
 msgstr "二进制数据"
 
-#: providers/xml/gda-xml-provider.c:664
+#: providers/xml/gda-xml-provider.c:663
 #, fuzzy
 msgid "Boolean"
 msgstr "布尔值"
 
-#: providers/xml/gda-xml-provider.c:665
+#: providers/xml/gda-xml-provider.c:664
 #, fuzzy
 msgid "Date"
 msgstr "日期"
 
-#: providers/xml/gda-xml-provider.c:666
+#: providers/xml/gda-xml-provider.c:665
 #, fuzzy
 msgid "Double precision"
 msgstr "单精度"
 
-#: providers/xml/gda-xml-provider.c:667
+#: providers/xml/gda-xml-provider.c:666
 #, fuzzy
 msgid "Integer"
 msgstr "整数"
 
-#: providers/xml/gda-xml-provider.c:668
+#: providers/xml/gda-xml-provider.c:667
 msgid "List"
 msgstr ""
 
-#: providers/xml/gda-xml-provider.c:669
+#: providers/xml/gda-xml-provider.c:668
 msgid "Money"
 msgstr ""
 
-#: providers/xml/gda-xml-provider.c:670
+#: providers/xml/gda-xml-provider.c:669
 #, fuzzy
 msgid "Numeric"
 msgstr "数字"
 
-#: providers/xml/gda-xml-provider.c:671
+#: providers/xml/gda-xml-provider.c:670
 msgid "Point"
 msgstr ""
 
-#: providers/xml/gda-xml-provider.c:672
+#: providers/xml/gda-xml-provider.c:671
 #, fuzzy
 msgid "Single precision"
 msgstr "单精度"
 
-#: providers/xml/gda-xml-provider.c:673
+#: providers/xml/gda-xml-provider.c:672
 #, fuzzy
 msgid "Small integer"
 msgstr "小整数"
 
-#: providers/xml/gda-xml-provider.c:674
+#: providers/xml/gda-xml-provider.c:673
 #, fuzzy
 msgid "Small unsigned integer"
 msgstr "小整数"
 
-#: providers/xml/gda-xml-provider.c:675
+#: providers/xml/gda-xml-provider.c:674
 #, fuzzy
 msgid "String"
 msgstr "字符串"
 
-#: providers/xml/gda-xml-provider.c:676
+#: providers/xml/gda-xml-provider.c:675
 #, fuzzy
 msgid "Time"
 msgstr "时间"
 
-#: providers/xml/gda-xml-provider.c:677
+#: providers/xml/gda-xml-provider.c:676
 #, fuzzy
 msgid "Timestamp"
 msgstr "时戳"
 
-#: providers/xml/gda-xml-provider.c:678
+#: providers/xml/gda-xml-provider.c:677
 #, fuzzy
 msgid "Tiny integer"
 msgstr "极小整数"
 
-#: providers/xml/gda-xml-provider.c:679
+#: providers/xml/gda-xml-provider.c:678
 #, fuzzy
 msgid "Tiny unsigned integer"
 msgstr "极小整数"
 
-#: providers/xml/gda-xml-provider.c:681
+#: providers/xml/gda-xml-provider.c:680
 #, fuzzy
 msgid "Unsigned integer"
 msgstr "极小整数"
@@ -1960,15 +2303,20 @@ msgstr ""
 msgid "XML provider, based on the libgda XML database format"
 msgstr ""
 
-#: report/libgda-report/gda-report-document.c:178
+#: providers/xml/libmain.c:49
+#, fuzzy
+msgid "Full path of the file containing the XML database"
+msgstr "要打开一个数据库，必须在连接字符串中指定完整路径。"
+
+#: report/libgda-report/gda-report-document.c:179
 msgid "Could not parse XML document"
 msgstr "无法解析 XML 文档"
 
-#: report/libgda-report/gda-report-document.c:188
+#: report/libgda-report/gda-report-document.c:189
 msgid "XML document is not valid"
 msgstr ""
 
-#: report/libgda-report/gda-report-document.c:220
+#: report/libgda-report/gda-report-document.c:221
 #, c-format
 msgid "Could not get file from %s"
 msgstr "无法从 %s 中获得文件"
@@ -2036,92 +2384,92 @@ msgstr ""
 msgid "\t\tNONE\n"
 msgstr "\t\t无\n"
 
-#: testing/client.c:83
+#: testing/client.c:87
 #, c-format
 msgid "** ERROR: could not open connection to %s\n"
 msgstr "** 错误：无法打开与 %s 的连接\n"
 
 #. show provider features
-#: testing/client.c:88
+#: testing/client.c:92
 msgid "\tProvider capabilities...\n"
 msgstr "\t提供者能力...\n"
 
-#: testing/client.c:89
+#: testing/client.c:93
 #, fuzzy, c-format
 msgid "\t\tAggregates: %s\n"
 msgstr "聚合"
 
-#: testing/client.c:91 testing/client.c:94 testing/client.c:97
-#: testing/client.c:100 testing/client.c:103 testing/client.c:106
-#: testing/client.c:109 testing/client.c:112 testing/client.c:115
-#: testing/client.c:118 testing/client.c:121 testing/client.c:124
+#: testing/client.c:95 testing/client.c:98 testing/client.c:101
+#: testing/client.c:104 testing/client.c:107 testing/client.c:110
+#: testing/client.c:113 testing/client.c:116 testing/client.c:119
+#: testing/client.c:122 testing/client.c:125 testing/client.c:128
 msgid "Supported"
 msgstr "支持"
 
-#: testing/client.c:91 testing/client.c:94 testing/client.c:97
-#: testing/client.c:100 testing/client.c:103 testing/client.c:106
-#: testing/client.c:109 testing/client.c:112 testing/client.c:115
-#: testing/client.c:118 testing/client.c:121 testing/client.c:124
+#: testing/client.c:95 testing/client.c:98 testing/client.c:101
+#: testing/client.c:104 testing/client.c:107 testing/client.c:110
+#: testing/client.c:113 testing/client.c:116 testing/client.c:119
+#: testing/client.c:122 testing/client.c:125 testing/client.c:128
 msgid "Not supported"
 msgstr "不支持"
 
-#: testing/client.c:92
+#: testing/client.c:96
 #, fuzzy, c-format
 msgid "\t\tIndexes: %s\n"
 msgstr "索引"
 
-#: testing/client.c:95
+#: testing/client.c:99
 #, fuzzy, c-format
 msgid "\t\tNamespaces: %s\n"
 msgstr "\t\t事务：%s\n"
 
-#: testing/client.c:98
+#: testing/client.c:102
 #, c-format
 msgid "\t\tProcedures: %s\n"
 msgstr ""
 
-#: testing/client.c:101
+#: testing/client.c:105
 #, fuzzy, c-format
 msgid "\t\tSequences: %s\n"
 msgstr "引用"
 
-#: testing/client.c:104
+#: testing/client.c:108
 #, fuzzy, c-format
 msgid "\t\tSQL: %s\n"
 msgstr "引用"
 
-#: testing/client.c:107
+#: testing/client.c:111
 #, c-format
 msgid "\t\tTransactions: %s\n"
 msgstr "\t\t事务：%s\n"
 
-#: testing/client.c:110
+#: testing/client.c:114
 #, fuzzy, c-format
 msgid "\t\tTriggers: %s\n"
 msgstr "触发器"
 
-#: testing/client.c:113
+#: testing/client.c:117
 #, c-format
 msgid "\t\tUsers: %s\n"
 msgstr ""
 
-#: testing/client.c:116
+#: testing/client.c:120
 #, c-format
 msgid "\t\tViews: %s\n"
 msgstr ""
 
-#: testing/client.c:119
+#: testing/client.c:123
 #, c-format
 msgid "\t\tXML queries: %s\n"
 msgstr ""
 
-#: testing/client.c:122
+#: testing/client.c:126
 #, fuzzy, c-format
 msgid "\t\tBLOBs: %s\n"
 msgstr "引用"
 
 #. show connection schemas
-#: testing/client.c:127
+#: testing/client.c:131
 #, c-format
 msgid ""
 "\n"
@@ -2129,56 +2477,56 @@ msgid ""
 "\n"
 msgstr ""
 
-#: testing/client.c:129
+#: testing/client.c:133
 msgid "Namespaces"
 msgstr ""
 
-#: testing/client.c:131
+#: testing/client.c:135
 msgid "Stored procedures"
 msgstr "存储过程"
 
-#: testing/client.c:132
+#: testing/client.c:136
 msgid "Connection Tables"
 msgstr "连接表"
 
-#: testing/client.c:133
+#: testing/client.c:137
 msgid "Available types"
 msgstr "可用类型"
 
-#: testing/client.c:136
+#: testing/client.c:140
 msgid "Aggregates"
 msgstr "聚合"
 
-#: testing/client.c:140
+#: testing/client.c:144
 msgid "Languages"
 msgstr ""
 
-#: testing/client.c:145 testing/client.c:153
+#: testing/client.c:149 testing/client.c:157
 msgid "\tStarting transaction..."
 msgstr "\t开始事务..."
 
-#: testing/client.c:147 testing/client.c:151 testing/client.c:155
-#: testing/client.c:159
+#: testing/client.c:151 testing/client.c:155 testing/client.c:159
+#: testing/client.c:163
 msgid "Error"
 msgstr "错误"
 
-#: testing/client.c:149
+#: testing/client.c:153
 msgid "\tFinishing transaction..."
 msgstr "\t结束事务..."
 
-#: testing/client.c:157
+#: testing/client.c:161
 msgid "\tRolling back transaction..."
 msgstr "\t回滚事务..."
 
-#: testing/client.c:188
+#: testing/client.c:192
 msgid "Testing GDA client API"
 msgstr "正在测试 GDA 客户程序 API"
 
-#: testing/client.c:197
+#: testing/client.c:201
 msgid "** ERROR: gda_config_get_data_source_list returned a NULL item\n"
 msgstr "** 错误：gda_config_get_data_source_list 返回 NULL 项\n"
 
-#: testing/client.c:201
+#: testing/client.c:205
 #, c-format
 msgid " Data source = %s, User = %s\n"
 msgstr " 数据源 = %s，用户 = %s\n"
@@ -2230,9 +2578,24 @@ msgstr ""
 msgid "Provider for Berkeley databases"
 msgstr "SQLite 的 GDA  数据源访问"
 
-#, fuzzy
-#~ msgid "about to open connection"
-#~ msgstr "** 错误：无法打开与 %s 的连接\n"
+#: providers/bdb/libmain.c:48
+msgid "Database File"
+msgstr ""
+
+#: providers/bdb/libmain.c:49
+msgid "Berkeley DB database file to be used"
+msgstr ""
+
+#: providers/bdb/libmain.c:52
+msgid "Database name"
+msgstr ""
+
+#: providers/bdb/libmain.c:53
+msgid "Name of the database in the database file to be used"
+msgstr ""
+
+#~ msgid "Could not initiate Sybase component factory"
+#~ msgstr "无法初始化 Sybase 组件工厂"
 
 #, fuzzy
 #~ msgid "Could not initialize cslib callback"

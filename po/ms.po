@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda HEAD\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-08-08 20:17+0200\n"
+"POT-Creation-Date: 2004-12-28 14:40+0100\n"
 "PO-Revision-Date: 2003-08-07 06:21+0800\n"
 "Last-Translator: Hasbullah Bin Pit <sebol@ikhlas.com>\n"
 "Language-Team: Bahasa Melayu <gabai-penyumbang@lists.sourceforge.net>\n"
@@ -36,40 +36,41 @@ msgstr "Tak dapat mencipta objek GdaServerProvider drpd plugin"
 msgid "Temporary data source created by libgda. Don't remove it"
 msgstr "Sumber data sementara dicipta oleg libgda. Jangan buang ia"
 
-#: libgda/gda-config.c:1081
+#: libgda/gda-config.c:1092
 #, c-format
 msgid "Error: %s"
 msgstr "Ralat: %s"
 
-#: libgda/gda-config.c:1194 providers/odbc/gda-odbc-provider.c:1137
+#: libgda/gda-config.c:1205 providers/odbc/gda-odbc-provider.c:1137
 #: providers/oracle/gda-oracle-provider.c:1153
-#: providers/postgres/gda-postgres-provider.c:881
-#: providers/postgres/gda-postgres-provider.c:1347
+#: providers/postgres/gda-postgres-provider.c:945
+#: providers/postgres/gda-postgres-provider.c:1412
 msgid "Id"
 msgstr "Id"
 
-#: libgda/gda-config.c:1195
+#: libgda/gda-config.c:1206
 #, fuzzy
 msgid "Location"
 msgstr "Fungsi"
 
-#: libgda/gda-config.c:1196 libgda/gda-config.c:1455
-#: providers/firebird/gda-firebird-provider.c:317
+#: libgda/gda-config.c:1207 libgda/gda-config.c:1532
+#: providers/firebird/gda-firebird-provider.c:322
 #: providers/ibmdb2/gda-ibmdb2-provider.c:863
 #: providers/ibmdb2/gda-ibmdb2-provider.c:892
 #: providers/ibmdb2/gda-ibmdb2-provider.c:920
 #: providers/ibmdb2/gda-ibmdb2-provider.c:1001
 #: providers/odbc/gda-odbc-provider.c:1248
 #: providers/odbc/gda-odbc-provider.c:1404
-#: providers/postgres/gda-postgres-provider.c:1153
+#: providers/postgres/gda-postgres-provider.c:1217
 msgid "Description"
 msgstr "Huraian"
 
-#: libgda/gda-config.c:1452 providers/ldap/gda-ldap-provider.c:327
-#: providers/mdb/gda-mdb-provider.c:457 providers/mdb/gda-mdb-provider.c:594
-#: providers/mdb/gda-mdb-provider.c:654 providers/msql/gda-msql-provider.c:448
-#: providers/mysql/gda-mysql-provider.c:726
-#: providers/mysql/gda-mysql-provider.c:914
+#: libgda/gda-config.c:1529 providers/firebird/gda-firebird-provider.c:730
+#: providers/ldap/gda-ldap-provider.c:327 providers/mdb/gda-mdb-provider.c:457
+#: providers/mdb/gda-mdb-provider.c:594 providers/mdb/gda-mdb-provider.c:654
+#: providers/msql/gda-msql-provider.c:471
+#: providers/mysql/gda-mysql-provider.c:731
+#: providers/mysql/gda-mysql-provider.c:919
 #: providers/odbc/gda-odbc-provider.c:768
 #: providers/odbc/gda-odbc-provider.c:824
 #: providers/oracle/gda-oracle-provider.c:1893
@@ -80,19 +81,19 @@ msgstr "Huraian"
 msgid "Name"
 msgstr "Nama"
 
-#: libgda/gda-config.c:1453
+#: libgda/gda-config.c:1530
 msgid "Provider"
 msgstr "Pembekal"
 
-#: libgda/gda-config.c:1454
+#: libgda/gda-config.c:1531
 msgid "Connection string"
 msgstr "Rentetan Sambungan"
 
-#: libgda/gda-config.c:1456
+#: libgda/gda-config.c:1533
 msgid "Username"
 msgstr "Namapengguna"
 
-#: libgda/gda-config.c:1457
+#: libgda/gda-config.c:1534
 msgid "Password"
 msgstr "Katalaluan"
 
@@ -139,20 +140,20 @@ msgstr "Ralat bila membaca %s:%s"
 msgid "Could not create file %s"
 msgstr "Tak dapat mencipta fail %s"
 
-#: libgda/gda-value.c:2069
+#: libgda/gda-value.c:2073
 msgid "TRUE"
 msgstr "BENAR"
 
-#: libgda/gda-value.c:2071
+#: libgda/gda-value.c:2075
 msgid "FALSE"
 msgstr "PALSU"
 
-#: libgda/gda-value.c:2140
+#: libgda/gda-value.c:2144
 #, c-format
 msgid "(GObject of type '%s'"
 msgstr "(GObject bagi jenis '%s'"
 
-#: libgda/gda-value.c:2143
+#: libgda/gda-value.c:2147
 msgid "NULL GObject"
 msgstr "GObject NULL"
 
@@ -204,37 +205,80 @@ msgstr "Nod XML tidak sah"
 msgid "Could not add the data from the XML node"
 msgstr "Gagal mendapatkan pengendali parameter Oracle"
 
-#: libsql/sql_parser.c:59
+#: libsql/sql_parser.c:60
 #, c-format
 msgid "Parse error near `%s'"
 msgstr ""
 
-#: libsql/sql_parser.c:61
+#: libsql/sql_parser.c:62
 #, c-format
 msgid "Syntax error near `%s'"
 msgstr ""
 
-#: libsql/sql_parser.c:371
+#: libsql/sql_parser.c:384
 msgid "Empty query to parse"
 msgstr ""
 
+#: providers/firebird/gda-firebird-blob.c:129
+#: providers/firebird/gda-firebird-blob.c:176
+#: providers/firebird/gda-firebird-blob.c:224
+#: providers/firebird/gda-firebird-provider.c:820
+#: providers/firebird/gda-firebird-provider.c:937
+#: providers/firebird/gda-firebird-provider.c:964
+#: providers/firebird/gda-firebird-provider.c:983
+#: providers/firebird/gda-firebird-provider.c:1019
+#: providers/firebird/gda-firebird-provider.c:1112
+#: providers/firebird/gda-firebird-provider.c:1207
+#: providers/firebird/gda-firebird-provider.c:1241
+#: providers/firebird/gda-firebird-provider.c:1279
+#: providers/firebird/gda-firebird-recordset.c:694
+#: providers/firebird/gda-firebird-recordset.c:896
+msgid "Invalid Firebird handle"
+msgstr "Pengendali Firebird tidak sah"
+
+#: providers/firebird/gda-firebird-blob.c:134
+#, fuzzy
+msgid "Unable to start transaction"
+msgstr "Gagal memulakan transaksi Oracle"
+
+#: providers/firebird/gda-firebird-blob.c:145
+msgid "Blob already open"
+msgstr ""
+
+#: providers/firebird/gda-firebird-blob.c:199
+#, fuzzy
+msgid "Error getting blob segment."
+msgstr "Ralat mengedahkan unsur %s"
+
+#: providers/firebird/gda-firebird-blob.c:203
+msgid "Can't read a closed Blob"
+msgstr ""
+
+#: providers/firebird/gda-firebird-blob.c:240
+msgid "Unable to close blob."
+msgstr ""
+
+#: providers/firebird/gda-firebird-blob.c:243
+msgid "Blob is closed"
+msgstr ""
+
 #. gda_server_recordset_model_set_field_defined_size (recset, 0, 32);
-#: providers/firebird/gda-firebird-provider.c:229
+#: providers/firebird/gda-firebird-provider.c:231
 #: providers/ibmdb2/gda-ibmdb2-provider.c:946
 #: providers/ldap/gda-ldap-provider.c:423
-#: providers/mysql/gda-mysql-provider.c:996
+#: providers/mysql/gda-mysql-provider.c:1011
 #: providers/odbc/gda-odbc-provider.c:1360
 #: providers/oracle/gda-oracle-provider.c:2095
-#: providers/postgres/gda-postgres-provider.c:1170
+#: providers/postgres/gda-postgres-provider.c:1234
 #: providers/sqlite/gda-sqlite-provider.c:787
 #: providers/sybase/gda-sybase-provider.c:1096
-#: providers/xml/gda-xml-provider.c:654 providers/xml/gda-xml-provider.c:655
-#: providers/xml/gda-xml-provider.c:680
+#: providers/xml/gda-xml-provider.c:654 providers/xml/gda-xml-provider.c:679
 msgid "Type"
 msgstr "Jenis"
 
-#: providers/firebird/gda-firebird-provider.c:230
-#: providers/firebird/gda-firebird-provider.c:316
+#: providers/firebird/gda-firebird-provider.c:232
+#: providers/firebird/gda-firebird-provider.c:321
+#: providers/firebird/gda-firebird-provider.c:732
 #: providers/ibmdb2/gda-ibmdb2-provider.c:742
 #: providers/ibmdb2/gda-ibmdb2-provider.c:832
 #: providers/ibmdb2/gda-ibmdb2-provider.c:861
@@ -244,11 +288,11 @@ msgstr "Jenis"
 #: providers/ibmdb2/gda-ibmdb2-provider.c:1000
 #: providers/ldap/gda-ldap-provider.c:328 providers/mdb/gda-mdb-provider.c:548
 #: providers/mdb/gda-mdb-provider.c:595 providers/mdb/gda-mdb-provider.c:655
-#: providers/msql/gda-msql-provider.c:449
-#: providers/msql/gda-msql-provider.c:487
-#: providers/mysql/gda-mysql-provider.c:728
-#: providers/mysql/gda-mysql-provider.c:915
-#: providers/mysql/gda-mysql-provider.c:997
+#: providers/msql/gda-msql-provider.c:472
+#: providers/msql/gda-msql-provider.c:512
+#: providers/mysql/gda-mysql-provider.c:733
+#: providers/mysql/gda-mysql-provider.c:920
+#: providers/mysql/gda-mysql-provider.c:1012
 #: providers/odbc/gda-odbc-provider.c:1025
 #: providers/odbc/gda-odbc-provider.c:1138
 #: providers/odbc/gda-odbc-provider.c:1247
@@ -261,211 +305,299 @@ msgstr "Jenis"
 #: providers/oracle/gda-oracle-provider.c:1955
 #: providers/oracle/gda-oracle-provider.c:1973
 #: providers/oracle/gda-oracle-provider.c:2096
-#: providers/postgres/gda-postgres-provider.c:882
-#: providers/postgres/gda-postgres-provider.c:1152
-#: providers/postgres/gda-postgres-provider.c:1171
-#: providers/postgres/gda-postgres-provider.c:1231
-#: providers/postgres/gda-postgres-provider.c:1348
-#: providers/postgres/gda-postgres-provider.c:1981
+#: providers/postgres/gda-postgres-provider.c:946
+#: providers/postgres/gda-postgres-provider.c:1216
+#: providers/postgres/gda-postgres-provider.c:1235
+#: providers/postgres/gda-postgres-provider.c:1295
+#: providers/postgres/gda-postgres-provider.c:1413
+#: providers/postgres/gda-postgres-provider.c:2051
 #: providers/sqlite/gda-sqlite-provider.c:788
 #: providers/sybase/gda-sybase-provider.c:1098
-#: providers/xml/gda-xml-provider.c:656
+#: providers/xml/gda-xml-provider.c:655
 msgid "Owner"
 msgstr "Pemilik"
 
-#: providers/firebird/gda-firebird-provider.c:231
+#: providers/firebird/gda-firebird-provider.c:233
+#: providers/firebird/gda-firebird-provider.c:733
+#: providers/ibmdb2/gda-ibmdb2-provider.c:948
+#: providers/ldap/gda-ldap-provider.c:329 providers/mdb/gda-mdb-provider.c:549
+#: providers/mdb/gda-mdb-provider.c:596 providers/mdb/gda-mdb-provider.c:656
+#: providers/msql/gda-msql-provider.c:473
+#: providers/msql/gda-msql-provider.c:513
+#: providers/mysql/gda-mysql-provider.c:734
+#: providers/mysql/gda-mysql-provider.c:921
+#: providers/mysql/gda-mysql-provider.c:1013
+#: providers/odbc/gda-odbc-provider.c:1139
+#: providers/odbc/gda-odbc-provider.c:1362
+#: providers/odbc/gda-odbc-provider.c:1456
+#: providers/oracle/gda-oracle-provider.c:1155
+#: providers/oracle/gda-oracle-provider.c:1893
+#: providers/oracle/gda-oracle-provider.c:1912
+#: providers/oracle/gda-oracle-provider.c:1955
+#: providers/oracle/gda-oracle-provider.c:1974
+#: providers/oracle/gda-oracle-provider.c:2097
+#: providers/postgres/gda-postgres-provider.c:947
+#: providers/postgres/gda-postgres-provider.c:1236
+#: providers/postgres/gda-postgres-provider.c:1296
+#: providers/postgres/gda-postgres-provider.c:1414
+#: providers/postgres/gda-postgres-provider.c:2052
+#: providers/sqlite/gda-sqlite-provider.c:789
+#: providers/sybase/gda-sybase-provider.c:1100
+#: providers/xml/gda-xml-provider.c:656
+msgid "Comments"
+msgstr "Komen"
+
+#: providers/firebird/gda-firebird-provider.c:234
 #: providers/ibmdb2/gda-ibmdb2-provider.c:949
-#: providers/msql/gda-msql-provider.c:489
-#: providers/mysql/gda-mysql-provider.c:999
+#: providers/msql/gda-msql-provider.c:514
+#: providers/mysql/gda-mysql-provider.c:1014
 #: providers/odbc/gda-odbc-provider.c:1363
 #: providers/oracle/gda-oracle-provider.c:2097
-#: providers/postgres/gda-postgres-provider.c:1173
+#: providers/postgres/gda-postgres-provider.c:1237
 #: providers/sqlite/gda-sqlite-provider.c:790
 #: providers/sybase/gda-sybase-provider.c:1102
-#: providers/xml/gda-xml-provider.c:658
+#: providers/xml/gda-xml-provider.c:657
 msgid "GDA type"
 msgstr "Jenis GDA"
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/firebird/gda-firebird-provider.c:315
+#: providers/firebird/gda-firebird-provider.c:320
 #: providers/ibmdb2/gda-ibmdb2-provider.c:833
 #: providers/ibmdb2/gda-ibmdb2-provider.c:890
 #: providers/ibmdb2/gda-ibmdb2-provider.c:999
 #: providers/odbc/gda-odbc-provider.c:1246
-#: providers/postgres/gda-postgres-provider.c:1151
-#: providers/postgres/gda-postgres-provider.c:2035
+#: providers/postgres/gda-postgres-provider.c:1215
+#: providers/postgres/gda-postgres-provider.c:2105
 msgid "Table"
 msgstr "Jadual"
 
-#: providers/firebird/gda-firebird-provider.c:318
+#: providers/firebird/gda-firebird-provider.c:323
 #: providers/mdb/gda-mdb-provider.c:553
 #: providers/odbc/gda-odbc-provider.c:1143
 #: providers/odbc/gda-odbc-provider.c:1249
 #: providers/odbc/gda-odbc-provider.c:1405
 #: providers/odbc/gda-odbc-provider.c:1457
 #: providers/oracle/gda-oracle-provider.c:1158
-#: providers/postgres/gda-postgres-provider.c:887
-#: providers/postgres/gda-postgres-provider.c:1154
-#: providers/postgres/gda-postgres-provider.c:1233
-#: providers/postgres/gda-postgres-provider.c:1352
-#: providers/postgres/gda-postgres-provider.c:1983
+#: providers/postgres/gda-postgres-provider.c:951
+#: providers/postgres/gda-postgres-provider.c:1218
+#: providers/postgres/gda-postgres-provider.c:1297
+#: providers/postgres/gda-postgres-provider.c:1417
+#: providers/postgres/gda-postgres-provider.c:2053
 msgid "Definition"
 msgstr "Definisi"
 
-#: providers/firebird/gda-firebird-provider.c:609
+#: providers/firebird/gda-firebird-provider.c:615
 #: providers/mdb/gda-mdb-provider.c:490
-#: providers/mysql/gda-mysql-provider.c:1094
+#: providers/mysql/gda-mysql-provider.c:1109
 #: providers/odbc/gda-odbc-provider.c:949
 #: providers/oracle/gda-oracle-provider.c:1248
-#: providers/postgres/gda-postgres-provider.c:1398
+#: providers/postgres/gda-postgres-provider.c:1463
 #: providers/sqlite/gda-sqlite-provider.c:658
 #: providers/xml/gda-xml-provider.c:489
 msgid "Field name"
 msgstr "Nama Medan"
 
-#: providers/firebird/gda-firebird-provider.c:610
-#: providers/mdb/gda-mdb-provider.c:491 providers/msql/gda-msql-provider.c:537
-#: providers/mysql/gda-mysql-provider.c:1095
+#: providers/firebird/gda-firebird-provider.c:616
+#: providers/mdb/gda-mdb-provider.c:491 providers/msql/gda-msql-provider.c:564
+#: providers/mysql/gda-mysql-provider.c:1110
 #: providers/odbc/gda-odbc-provider.c:950
 #: providers/oracle/gda-oracle-provider.c:1249
-#: providers/postgres/gda-postgres-provider.c:1399
+#: providers/postgres/gda-postgres-provider.c:1464
 #: providers/sqlite/gda-sqlite-provider.c:659
 #: providers/xml/gda-xml-provider.c:490
 msgid "Data type"
 msgstr "Jenis data"
 
-#: providers/firebird/gda-firebird-provider.c:611
-#: providers/mdb/gda-mdb-provider.c:492 providers/msql/gda-msql-provider.c:538
-#: providers/mysql/gda-mysql-provider.c:1096
+#: providers/firebird/gda-firebird-provider.c:617
+#: providers/mdb/gda-mdb-provider.c:492 providers/msql/gda-msql-provider.c:565
+#: providers/mysql/gda-mysql-provider.c:1111
 #: providers/odbc/gda-odbc-provider.c:951
 #: providers/oracle/gda-oracle-provider.c:1250
-#: providers/postgres/gda-postgres-provider.c:1400
+#: providers/postgres/gda-postgres-provider.c:1465
 #: providers/sqlite/gda-sqlite-provider.c:660
 #: providers/xml/gda-xml-provider.c:491
 msgid "Size"
 msgstr "Saiz"
 
-#: providers/firebird/gda-firebird-provider.c:612
-#: providers/mdb/gda-mdb-provider.c:493 providers/msql/gda-msql-provider.c:539
-#: providers/mysql/gda-mysql-provider.c:1097
+#: providers/firebird/gda-firebird-provider.c:618
+#: providers/mdb/gda-mdb-provider.c:493 providers/msql/gda-msql-provider.c:566
+#: providers/mysql/gda-mysql-provider.c:1112
 #: providers/odbc/gda-odbc-provider.c:952
 #: providers/oracle/gda-oracle-provider.c:1251
-#: providers/postgres/gda-postgres-provider.c:1401
+#: providers/postgres/gda-postgres-provider.c:1466
 #: providers/sqlite/gda-sqlite-provider.c:661
 #: providers/xml/gda-xml-provider.c:492
 msgid "Scale"
 msgstr "Skala"
 
-#: providers/firebird/gda-firebird-provider.c:613
+#: providers/firebird/gda-firebird-provider.c:619
 #: providers/mdb/gda-mdb-provider.c:494
-#: providers/mysql/gda-mysql-provider.c:1098
+#: providers/mysql/gda-mysql-provider.c:1113
 #: providers/odbc/gda-odbc-provider.c:953
 #: providers/oracle/gda-oracle-provider.c:1252
-#: providers/postgres/gda-postgres-provider.c:1402
+#: providers/postgres/gda-postgres-provider.c:1467
 #: providers/sqlite/gda-sqlite-provider.c:662
 #: providers/xml/gda-xml-provider.c:493
 msgid "Not null?"
 msgstr "Tidak null?"
 
-#: providers/firebird/gda-firebird-provider.c:614
-#: providers/mdb/gda-mdb-provider.c:495 providers/msql/gda-msql-provider.c:541
-#: providers/mysql/gda-mysql-provider.c:1099
+#: providers/firebird/gda-firebird-provider.c:620
+#: providers/mdb/gda-mdb-provider.c:495 providers/msql/gda-msql-provider.c:568
+#: providers/mysql/gda-mysql-provider.c:1114
 #: providers/odbc/gda-odbc-provider.c:954
 #: providers/oracle/gda-oracle-provider.c:1253
-#: providers/postgres/gda-postgres-provider.c:1403
+#: providers/postgres/gda-postgres-provider.c:1468
 #: providers/sqlite/gda-sqlite-provider.c:663
 #: providers/xml/gda-xml-provider.c:494
 msgid "Primary key?"
 msgstr "Kekunci Utama?"
 
-#: providers/firebird/gda-firebird-provider.c:615
-#: providers/mdb/gda-mdb-provider.c:496 providers/msql/gda-msql-provider.c:542
-#: providers/mysql/gda-mysql-provider.c:1100
+#: providers/firebird/gda-firebird-provider.c:621
+#: providers/mdb/gda-mdb-provider.c:496 providers/msql/gda-msql-provider.c:569
+#: providers/mysql/gda-mysql-provider.c:1115
 #: providers/odbc/gda-odbc-provider.c:955
 #: providers/oracle/gda-oracle-provider.c:1254
-#: providers/postgres/gda-postgres-provider.c:1404
+#: providers/postgres/gda-postgres-provider.c:1469
 #: providers/sqlite/gda-sqlite-provider.c:664
 #: providers/xml/gda-xml-provider.c:495
 msgid "Unique index?"
 msgstr "Indeks unik?"
 
-#: providers/firebird/gda-firebird-provider.c:616
-#: providers/mdb/gda-mdb-provider.c:497 providers/msql/gda-msql-provider.c:543
-#: providers/mysql/gda-mysql-provider.c:1101
+#: providers/firebird/gda-firebird-provider.c:622
+#: providers/mdb/gda-mdb-provider.c:497 providers/msql/gda-msql-provider.c:570
+#: providers/mysql/gda-mysql-provider.c:1116
 #: providers/odbc/gda-odbc-provider.c:956
 #: providers/oracle/gda-oracle-provider.c:1255
-#: providers/postgres/gda-postgres-provider.c:1405
+#: providers/postgres/gda-postgres-provider.c:1470
 #: providers/sqlite/gda-sqlite-provider.c:665
 #: providers/xml/gda-xml-provider.c:496
 msgid "References"
 msgstr "Rujukan"
 
-#: providers/firebird/gda-firebird-provider.c:617
-#: providers/mdb/gda-mdb-provider.c:498 providers/msql/gda-msql-provider.c:544
-#: providers/mysql/gda-mysql-provider.c:1102
+#: providers/firebird/gda-firebird-provider.c:623
+#: providers/mdb/gda-mdb-provider.c:498 providers/msql/gda-msql-provider.c:571
+#: providers/mysql/gda-mysql-provider.c:1117
 #: providers/odbc/gda-odbc-provider.c:957
 #: providers/oracle/gda-oracle-provider.c:1256
-#: providers/postgres/gda-postgres-provider.c:1406
+#: providers/postgres/gda-postgres-provider.c:1471
 #: providers/sqlite/gda-sqlite-provider.c:666
 msgid "Default value"
 msgstr "Nilai Default"
 
-#: providers/firebird/gda-firebird-provider.c:626
-#: providers/firebird/gda-firebird-provider.c:633
-#: providers/msql/gda-msql-provider.c:557
-#: providers/msql/gda-msql-provider.c:563
-#: providers/mysql/gda-mysql-provider.c:1119
-#: providers/mysql/gda-mysql-provider.c:1127
+#: providers/firebird/gda-firebird-provider.c:632
+#: providers/firebird/gda-firebird-provider.c:639
+#: providers/msql/gda-msql-provider.c:584
+#: providers/msql/gda-msql-provider.c:590
+#: providers/mysql/gda-mysql-provider.c:1134
+#: providers/mysql/gda-mysql-provider.c:1142
 msgid "Table name is needed but none specified in parameter list"
 msgstr "Nama jadual diperlukan tetapi tidak dinyatakan pada senarai paramete"
 
-#: providers/firebird/gda-firebird-provider.c:728
-#: providers/firebird/gda-firebird-provider.c:845
-#: providers/firebird/gda-firebird-provider.c:872
-#: providers/firebird/gda-firebird-provider.c:891
-#: providers/firebird/gda-firebird-provider.c:943
-#: providers/firebird/gda-firebird-provider.c:1086
-#: providers/firebird/gda-firebird-provider.c:1120
-#: providers/firebird/gda-firebird-provider.c:1158
-#: providers/firebird/gda-firebird-recordset.c:724
-#: providers/firebird/gda-firebird-recordset.c:926
-msgid "Invalid Firebird handle"
-msgstr "Pengendali Firebird tidak sah"
+#. 5th the return type
+#. 6th the argument type
+#: providers/firebird/gda-firebird-provider.c:708
+#: providers/firebird/gda-firebird-provider.c:710
+msgid "UNKNOWN"
+msgstr ""
 
-#: providers/firebird/gda-firebird-provider.c:766
+#: providers/firebird/gda-firebird-provider.c:731
+#: providers/mdb/gda-mdb-provider.c:547
+#: providers/mysql/gda-mysql-provider.c:732
+msgid "ID"
+msgstr "ID"
+
+#: providers/firebird/gda-firebird-provider.c:734
+#: providers/mdb/gda-mdb-provider.c:550
+#: providers/mysql/gda-mysql-provider.c:735
+#: providers/odbc/gda-odbc-provider.c:1140
+#: providers/postgres/gda-postgres-provider.c:948
+msgid "Return type"
+msgstr "Jenis pemulangan"
+
+#: providers/firebird/gda-firebird-provider.c:735
+#: providers/mdb/gda-mdb-provider.c:552
+#: providers/mysql/gda-mysql-provider.c:736
+#: providers/odbc/gda-odbc-provider.c:1142
+#: providers/postgres/gda-postgres-provider.c:950
+msgid "Args types"
+msgstr "Jenis hujah"
+
+#: providers/firebird/gda-firebird-provider.c:736
+#: providers/mysql/gda-mysql-provider.c:737
+#: providers/oracle/gda-oracle-provider.c:1913
+#: providers/oracle/gda-oracle-provider.c:1975
+msgid "SQL"
+msgstr "SQL"
+
+#: providers/firebird/gda-firebird-provider.c:858
 msgid "No database specified"
 msgstr "Tiada pangkalandata dinyatakan"
 
-#: providers/firebird/gda-firebird-provider.c:1126
-#: providers/firebird/gda-firebird-provider.c:1164
+#: providers/firebird/gda-firebird-provider.c:1247
+#: providers/firebird/gda-firebird-provider.c:1285
 msgid "Invalid transaction handle"
 msgstr "Pengendali transaksi tidak sah"
 
-#: providers/firebird/gda-firebird-recordset.c:380
-#: providers/firebird/gda-firebird-recordset.c:420
+#: providers/firebird/gda-firebird-recordset.c:345
+#: providers/firebird/gda-firebird-recordset.c:386
 msgid "Statement already prepared."
 msgstr ""
 
-#: providers/firebird/gda-firebird-recordset.c:384
+#: providers/firebird/gda-firebird-recordset.c:349
 msgid "Transaction not initialized."
 msgstr ""
 
-#: providers/firebird/gda-firebird-recordset.c:489
-msgid "Firebird's ARRAY datatype not supported yet !\n"
+#: providers/firebird/gda-firebird-recordset.c:456
+msgid "Firebird's ARRAY datatype not supported yet!\n"
 msgstr ""
 
-#: providers/firebird/gda-firebird-recordset.c:494
-msgid "Firebird's BLOB datatype not supported yet !\n"
-msgstr ""
-
-#: providers/firebird/gda-firebird-recordset.c:595
-msgid "Unknown Firebird's field value !\n"
+#: providers/firebird/gda-firebird-recordset.c:565
+msgid "Unknown Firebird's field value!\n"
 msgstr ""
 
 #: providers/firebird/libmain.c:40
 #, fuzzy
 msgid "Provider for Firebird databases"
 msgstr "Pembekal GDA bagi pangkalandata Firebird"
+
+#: providers/firebird/libmain.c:49 providers/freetds/libmain.c:48
+#: providers/ibmdb2/libmain.c:48 providers/msql/gda-msql-libmain.c:56
+#: providers/mysql/libmain.c:50 providers/postgres/libmain.c:50
+#: providers/sybase/libmain.c:49
+#, fuzzy
+msgid "Database Name"
+msgstr "Pangkalan Data"
+
+#: providers/firebird/libmain.c:50 providers/freetds/libmain.c:49
+msgid "Name of the database to be used"
+msgstr ""
+
+#: providers/firebird/libmain.c:53
+#, fuzzy
+msgid "Character Set"
+msgstr "Rantaikata aksara"
+
+#: providers/firebird/libmain.c:54
+#, fuzzy
+msgid "Character set to be used on the connection"
+msgstr "NAMAFAIL pangkalandata mestilah dinyatakan pada connection_string"
+
+#: providers/firebird/libmain.c:57
+msgid "SQL Dialect"
+msgstr ""
+
+#: providers/firebird/libmain.c:58
+msgid "SQL dialect to use on the connection"
+msgstr ""
+
+#: providers/firebird/libmain.c:61
+#, fuzzy
+msgid "Page Size"
+msgstr "Saiz"
+
+#: providers/firebird/libmain.c:62
+msgid "Page size to use on the database"
+msgstr ""
 
 #: providers/freetds/gda-freetds-provider.c:197
 msgid ""
@@ -547,25 +679,110 @@ msgstr ""
 msgid "Not available"
 msgstr "Tidak ada"
 
-#: providers/freetds/gda-freetds-recordset.c:377
+#: providers/freetds/gda-freetds-recordset.c:376
 msgid "Error processing result rows.\n"
 msgstr "Ralat memproses baris hasil.\n"
 
-#: providers/freetds/gda-freetds-recordset.c:384
+#: providers/freetds/gda-freetds-recordset.c:383
 msgid "Unexpected freetds return code in tds_process_row_tokens().\n"
 msgstr "Kod kembalian freetds luardugaan pada tds_process_row_tokens().\n"
 
-#: providers/freetds/gda-freetds-recordset.c:394
+#: providers/freetds/gda-freetds-recordset.c:393
 msgid "Error processing results.\n"
 msgstr "Ralat memproses hasil.\n"
 
-#: providers/freetds/gda-freetds-recordset.c:401
+#: providers/freetds/gda-freetds-recordset.c:400
 msgid "Unexpected freetds return code in tds_process_result_tokens\n"
 msgstr "kod pemulangan fretds luar dugaan pada tds_oricess_result_token\n"
 
 #: providers/freetds/libmain.c:39
 msgid "Provider for TDS-based databases (using FreeTDS)"
 msgstr "Pembekal bagi pangkalandata berasaskan-TDS (menggunakan FreeTDS)"
+
+#: providers/freetds/libmain.c:52
+msgid "Host"
+msgstr ""
+
+#: providers/freetds/libmain.c:53
+msgid "Host name of the machine where the database is located"
+msgstr ""
+
+#: providers/freetds/libmain.c:56 providers/postgres/libmain.c:62
+#: providers/sybase/libmain.c:61
+msgid "Host Address"
+msgstr ""
+
+#: providers/freetds/libmain.c:57 providers/postgres/libmain.c:63
+#: providers/sybase/libmain.c:62
+msgid "IP address of the host to connect to"
+msgstr ""
+
+#: providers/freetds/libmain.c:60
+#, fuzzy
+msgid "Connection Options"
+msgstr "Rentetan Sambungan"
+
+#: providers/freetds/libmain.c:61
+msgid "Extra options to use on the connection"
+msgstr ""
+
+#: providers/freetds/libmain.c:64 providers/ldap/libmain.c:64
+#: providers/mysql/libmain.c:58 providers/postgres/libmain.c:70
+#: providers/sybase/libmain.c:69
+msgid "Port"
+msgstr ""
+
+#: providers/freetds/libmain.c:65
+msgid "Port to use to connect to the database's host"
+msgstr ""
+
+#: providers/freetds/libmain.c:71 providers/sybase/libmain.c:76
+msgid "Enable Sybase"
+msgstr ""
+
+#: providers/freetds/libmain.c:72 providers/sybase/libmain.c:77
+msgid "Enable Sybase operative mode"
+msgstr ""
+
+#: providers/freetds/libmain.c:79
+msgid "FreeTDS Config File"
+msgstr ""
+
+#: providers/freetds/libmain.c:80
+msgid "Location of the FreeTDS config file"
+msgstr ""
+
+#: providers/freetds/libmain.c:84
+msgid "TDS Major Version"
+msgstr ""
+
+#: providers/freetds/libmain.c:85
+msgid "TDS protocol major version"
+msgstr ""
+
+#: providers/freetds/libmain.c:88
+msgid "TDS Minor Version"
+msgstr ""
+
+#: providers/freetds/libmain.c:89
+msgid "TDS protocol minor version"
+msgstr ""
+
+#: providers/freetds/libmain.c:93
+msgid "Dump File"
+msgstr ""
+
+#: providers/freetds/libmain.c:94
+msgid "File for TDS protocol dumps"
+msgstr ""
+
+#: providers/freetds/libmain.c:97
+msgid "Dump Configuration File"
+msgstr ""
+
+#: providers/freetds/libmain.c:98
+msgid "File fpr TDS protocol dumps configuration"
+msgstr ""
 
 #: providers/freetds/utils.c:40 providers/oracle/utils.c:67
 #: providers/postgres/utils.c:48 providers/sybase/utils.c:534
@@ -605,7 +822,7 @@ msgstr "Indeks"
 #: providers/ibmdb2/gda-ibmdb2-provider.c:860
 #: providers/mdb/gda-mdb-provider.c:546
 #: providers/odbc/gda-odbc-provider.c:1136
-#: providers/postgres/gda-postgres-provider.c:880
+#: providers/postgres/gda-postgres-provider.c:944
 msgid "Procedure"
 msgstr "Prosedur"
 
@@ -622,42 +839,14 @@ msgstr "Definisi SQL"
 #. Set it here instead of the SQL query to allow i18n
 #: providers/ibmdb2/gda-ibmdb2-provider.c:918
 #: providers/oracle/gda-oracle-provider.c:2189
-#: providers/postgres/gda-postgres-provider.c:1387 testing/client.c:139
+#: providers/postgres/gda-postgres-provider.c:1452 testing/client.c:143
 msgid "Triggers"
 msgstr "Pemicu"
-
-#: providers/ibmdb2/gda-ibmdb2-provider.c:948
-#: providers/ldap/gda-ldap-provider.c:329 providers/mdb/gda-mdb-provider.c:549
-#: providers/mdb/gda-mdb-provider.c:596 providers/mdb/gda-mdb-provider.c:656
-#: providers/msql/gda-msql-provider.c:450
-#: providers/msql/gda-msql-provider.c:488
-#: providers/mysql/gda-mysql-provider.c:729
-#: providers/mysql/gda-mysql-provider.c:916
-#: providers/mysql/gda-mysql-provider.c:998
-#: providers/odbc/gda-odbc-provider.c:1139
-#: providers/odbc/gda-odbc-provider.c:1362
-#: providers/odbc/gda-odbc-provider.c:1456
-#: providers/oracle/gda-oracle-provider.c:1155
-#: providers/oracle/gda-oracle-provider.c:1893
-#: providers/oracle/gda-oracle-provider.c:1912
-#: providers/oracle/gda-oracle-provider.c:1955
-#: providers/oracle/gda-oracle-provider.c:1974
-#: providers/oracle/gda-oracle-provider.c:2097
-#: providers/postgres/gda-postgres-provider.c:883
-#: providers/postgres/gda-postgres-provider.c:1172
-#: providers/postgres/gda-postgres-provider.c:1232
-#: providers/postgres/gda-postgres-provider.c:1349
-#: providers/postgres/gda-postgres-provider.c:1982
-#: providers/sqlite/gda-sqlite-provider.c:789
-#: providers/sybase/gda-sybase-provider.c:1100
-#: providers/xml/gda-xml-provider.c:657
-msgid "Comments"
-msgstr "Komen"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/ibmdb2/gda-ibmdb2-provider.c:974
 #: providers/oracle/gda-oracle-provider.c:1825
-#: providers/postgres/gda-postgres-provider.c:1939 testing/client.c:137
+#: providers/postgres/gda-postgres-provider.c:2009 testing/client.c:141
 msgid "Users"
 msgstr "Pengguna"
 
@@ -674,6 +863,20 @@ msgstr ""
 msgid "Provider for IBMDB2 databases"
 msgstr "Pembekal GDA bagi pangkalandata IBMDB2"
 
+#: providers/ibmdb2/libmain.c:49 providers/msql/gda-msql-libmain.c:57
+#: providers/postgres/libmain.c:51 providers/sybase/libmain.c:50
+msgid "Name of the database to use"
+msgstr ""
+
+#: providers/ibmdb2/libmain.c:52 providers/postgres/libmain.c:66
+#: providers/sybase/libmain.c:65
+msgid "Extra Options"
+msgstr ""
+
+#: providers/ibmdb2/libmain.c:53
+msgid "Extra database options"
+msgstr ""
+
 #: providers/ldap/gda-ldap-provider.c:257
 #: providers/ldap/gda-ldap-provider.c:490
 #: providers/ldap/gda-ldap-provider.c:519
@@ -685,9 +888,9 @@ msgid "Invalid LDAP handle"
 msgstr "Pengendali LDAP tidak sah"
 
 #: providers/ldap/gda-ldap-recordset.c:69
-#: providers/mysql/gda-mysql-recordset.c:139
-#: providers/postgres/gda-postgres-recordset.c:193
-#: providers/postgres/gda-postgres-recordset.c:357
+#: providers/mysql/gda-mysql-recordset.c:145
+#: providers/postgres/gda-postgres-recordset.c:196
+#: providers/postgres/gda-postgres-recordset.c:476
 #: providers/sqlite/gda-sqlite-recordset.c:165
 #: providers/sqlite/gda-sqlite-recordset.c:204
 #: providers/bdb/gda-bdb-recordset.c:111
@@ -696,28 +899,71 @@ msgstr "Baris diluar julat"
 
 #: providers/ldap/gda-ldap-recordset.c:283
 #: providers/msql/gda-msql-recordset.c:229
-#: providers/mysql/gda-mysql-recordset.c:320
+#: providers/mysql/gda-mysql-recordset.c:326
 #: providers/oracle/gda-oracle-recordset.c:469
+#: providers/postgres/gda-postgres-recordset.c:242
 msgid "Attempt to insert a row with an invalid number of columns"
 msgstr "Cuba menyelit baris dengan bilangan kolum yg tidak sah"
 
 #: providers/ldap/gda-ldap-recordset.c:298
 #: providers/msql/gda-msql-recordset.c:241
-#: providers/mysql/gda-mysql-recordset.c:335
+#: providers/mysql/gda-mysql-recordset.c:341
 #: providers/oracle/gda-oracle-recordset.c:484
+#: providers/postgres/gda-postgres-recordset.c:257
 msgid "Could not retrieve column's information"
 msgstr "Tak dapat memperolehi maklumat kolum"
 
 #: providers/ldap/gda-ldap-recordset.c:316
 #: providers/msql/gda-msql-recordset.c:255
-#: providers/mysql/gda-mysql-recordset.c:353
+#: providers/mysql/gda-mysql-recordset.c:359
 #: providers/oracle/gda-oracle-recordset.c:502
+#: providers/postgres/gda-postgres-recordset.c:277
+#: providers/postgres/gda-postgres-recordset.c:288
 msgid "Could not retrieve column's value"
 msgstr "Tak dapat memperolehi nilai kolum"
 
-#: providers/ldap/libmain.c:42
+#: providers/ldap/libmain.c:47
 msgid "Provider for LDAP directory"
 msgstr "Pembekal bagi direktori LDAP"
+
+#: providers/ldap/libmain.c:56
+msgid "LDAP Flags"
+msgstr ""
+
+#: providers/ldap/libmain.c:57
+msgid "LDAP flags"
+msgstr ""
+
+#: providers/ldap/libmain.c:60 providers/msql/gda-msql-libmain.c:60
+#: providers/mysql/libmain.c:54 providers/postgres/libmain.c:58
+#: providers/sybase/libmain.c:53 providers/sybase/libmain.c:57
+#, fuzzy
+msgid "Host Name"
+msgstr "Nama"
+
+#: providers/ldap/libmain.c:61
+msgid "Host name of the LDAP server"
+msgstr ""
+
+#: providers/ldap/libmain.c:65
+msgid "Port to use for connecting to the LDAP server"
+msgstr ""
+
+#: providers/ldap/libmain.c:68
+msgid "Bind Domain"
+msgstr ""
+
+#: providers/ldap/libmain.c:69
+msgid "LDAP bind domain to use for authentication"
+msgstr ""
+
+#: providers/ldap/libmain.c:72
+msgid "Authentication Method"
+msgstr ""
+
+#: providers/ldap/libmain.c:73
+msgid "Authentication method to use for connecting"
+msgstr ""
 
 #: providers/mdb/gda-mdb-provider.c:205
 msgid "A database FILENAME must be specified in the connection_string"
@@ -740,28 +986,9 @@ msgstr "Pengendali MDB tidak sah"
 msgid "Transactions not supported in MDB provider"
 msgstr "Transaksi tak disokong pada pembekal MDB"
 
-#: providers/mdb/gda-mdb-provider.c:547
-#: providers/mysql/gda-mysql-provider.c:727
-msgid "ID"
-msgstr "ID"
-
-#: providers/mdb/gda-mdb-provider.c:550
-#: providers/mysql/gda-mysql-provider.c:730
-#: providers/odbc/gda-odbc-provider.c:1140
-#: providers/postgres/gda-postgres-provider.c:884
-msgid "Return type"
-msgstr "Jenis pemulangan"
-
 #: providers/mdb/gda-mdb-provider.c:551
 msgid "# of args"
 msgstr "# hujah"
-
-#: providers/mdb/gda-mdb-provider.c:552
-#: providers/mysql/gda-mysql-provider.c:731
-#: providers/odbc/gda-odbc-provider.c:1142
-#: providers/postgres/gda-postgres-provider.c:886
-msgid "Args types"
-msgstr "Jenis hujah"
 
 #: providers/mdb/gda-mdb-provider.c:657
 msgid "GDA Type"
@@ -837,43 +1064,62 @@ msgstr "Jadual %s tidak dijumpai"
 msgid "Provider for Microsoft Access files"
 msgstr "Pembekal bagi fail MS Access"
 
-#: providers/msql/gda-msql-libmain.c:41
+#: providers/mdb/libmain.c:45 providers/sqlite/libmain.c:50
+#: providers/xbase/libmain.c:48 providers/xml/libmain.c:48
+#, fuzzy
+msgid "File Name"
+msgstr "Nama Medan"
+
+#: providers/mdb/libmain.c:46 providers/xbase/libmain.c:49
+#, fuzzy
+msgid "Full path of the file containing the database"
+msgstr ""
+"Path penuh mesti dinyatakan pada rentetan sambungan untuk membua "
+"pangkalandata"
+
+#: providers/msql/gda-msql-libmain.c:45
 msgid "Provider for Hughes Technologies mSQL databases"
 msgstr "Pembekal bagi pangkalandata Hughes Technologies mSQL"
 
-#: providers/msql/gda-msql-provider.c:230
-#: providers/msql/gda-msql-provider.c:273
-#: providers/msql/gda-msql-provider.c:293
-#: providers/msql/gda-msql-provider.c:551
+#: providers/msql/gda-msql-libmain.c:61 providers/mysql/libmain.c:55
+#: providers/postgres/libmain.c:59 providers/sybase/libmain.c:54
+#: providers/sybase/libmain.c:58
+msgid "Name of the host to connect to"
+msgstr ""
+
+#: providers/msql/gda-msql-provider.c:242
+#: providers/msql/gda-msql-provider.c:286
+#: providers/msql/gda-msql-provider.c:307
+#: providers/msql/gda-msql-provider.c:578
 #: providers/msql/gda-msql-recordset.c:50
 #: providers/msql/gda-msql-recordset.c:140
 msgid "Invalid mSQL handle"
 msgstr "Pengendali mSQL tidak sah"
 
-#: providers/msql/gda-msql-provider.c:318
+#: providers/msql/gda-msql-provider.c:333
 msgid "mSQL allows database creation only through the msqladmin tool."
 msgstr "mSQL mengizinkan penciptaan pangkalan data hanya drpd radas msqladmin."
 
-#: providers/msql/gda-msql-provider.c:331
+#: providers/msql/gda-msql-provider.c:347
 msgid "mSQL allows database drops only through the msqladmin tool."
 msgstr ""
 "mSQL mengizinkan pengguguran pangkalan data hanya drpd radas msqladmin."
 
-#: providers/msql/gda-msql-provider.c:376
-#: providers/msql/gda-msql-provider.c:389
-#: providers/msql/gda-msql-provider.c:402
+#: providers/msql/gda-msql-provider.c:394
+#: providers/msql/gda-msql-provider.c:408
+#: providers/msql/gda-msql-provider.c:422
 msgid "mSQL doesn't support transactions."
 msgstr "mSQL tak menyokong transaksi."
 
-#: providers/msql/gda-msql-provider.c:486
+#: providers/msql/gda-msql-provider.c:511
 msgid "Title"
 msgstr "Tajuk"
 
-#: providers/msql/gda-msql-provider.c:536
+#: providers/msql/gda-msql-provider.c:563
 msgid "Field Name"
 msgstr "Nama Medan"
 
-#: providers/msql/gda-msql-provider.c:540
+#: providers/msql/gda-msql-provider.c:567
 msgid "Not null"
 msgstr "Tidak null"
 
@@ -881,51 +1127,71 @@ msgstr "Tidak null"
 msgid "Row number out of bounds"
 msgstr "Bilangan baris diluar julat"
 
-#: providers/mysql/gda-mysql-provider.c:223
+#: providers/mysql/gda-mysql-provider.c:228
 msgid ""
 "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
 msgstr ""
 "Anda tidak boleh membekalkan UNIX_SOCKET jika anda juga membekalkan samada "
 "HOST atau PORT"
 
-#: providers/mysql/gda-mysql-provider.c:299
-#: providers/mysql/gda-mysql-provider.c:1110
-#: providers/mysql/gda-mysql-recordset.c:128
-#: providers/mysql/gda-mysql-recordset.c:202
+#: providers/mysql/gda-mysql-provider.c:304
+#: providers/mysql/gda-mysql-provider.c:1125
+#: providers/mysql/gda-mysql-recordset.c:134
+#: providers/mysql/gda-mysql-recordset.c:208
 msgid "Invalid MySQL handle"
 msgstr "Pengendali MySQL tidak sah"
 
-#: providers/mysql/gda-mysql-provider.c:315
-#: providers/mysql/gda-mysql-provider.c:385
-#: providers/mysql/gda-mysql-provider.c:408
-#: providers/mysql/gda-mysql-provider.c:439
-#: providers/mysql/gda-mysql-provider.c:471
-#: providers/mysql/gda-mysql-provider.c:537
-#: providers/mysql/gda-mysql-provider.c:560
-#: providers/mysql/gda-mysql-provider.c:617
-#: providers/mysql/gda-mysql-provider.c:650
-msgid "Invalid MYSQL handle"
-msgstr "Pengendali MyQL tidak sah"
-
+#: providers/mysql/gda-mysql-provider.c:320
+#: providers/mysql/gda-mysql-provider.c:390
+#: providers/mysql/gda-mysql-provider.c:413
+#: providers/mysql/gda-mysql-provider.c:444
+#: providers/mysql/gda-mysql-provider.c:476
+#: providers/mysql/gda-mysql-provider.c:542
 #: providers/mysql/gda-mysql-provider.c:565
 #: providers/mysql/gda-mysql-provider.c:622
 #: providers/mysql/gda-mysql-provider.c:655
+#: providers/mysql/gda-mysql-provider.c:1252
+msgid "Invalid MYSQL handle"
+msgstr "Pengendali MyQL tidak sah"
+
+#: providers/mysql/gda-mysql-provider.c:570
+#: providers/mysql/gda-mysql-provider.c:627
+#: providers/mysql/gda-mysql-provider.c:660
 #: providers/oracle/gda-oracle-provider.c:857
 #: providers/oracle/gda-oracle-provider.c:939
 #: providers/oracle/gda-oracle-provider.c:1000
+#: providers/postgres/gda-postgres-provider.c:813
 #: providers/sqlite/gda-sqlite-provider.c:508
 msgid "Transactions are not supported in read-only mode"
 msgstr "Transaksi tak disokong pada mod baca-sahaja"
 
-#: providers/mysql/gda-mysql-provider.c:732
-#: providers/oracle/gda-oracle-provider.c:1913
-#: providers/oracle/gda-oracle-provider.c:1975
-msgid "SQL"
-msgstr "SQL"
-
 #: providers/mysql/libmain.c:41
 msgid "Provider for MySQL databases"
 msgstr "Pembekal bagi pangkalandata MySQL"
+
+#: providers/mysql/libmain.c:51
+msgid "Name of the database to connect to"
+msgstr ""
+
+#: providers/mysql/libmain.c:59
+msgid "Port number to use for connecting"
+msgstr ""
+
+#: providers/mysql/libmain.c:62
+msgid "UNIX Socket"
+msgstr ""
+
+#: providers/mysql/libmain.c:63
+msgid "Full path of the UNIX socket to use for connecting locally"
+msgstr ""
+
+#: providers/mysql/libmain.c:66
+msgid "Use Secure Connection"
+msgstr ""
+
+#: providers/mysql/libmain.c:67
+msgid "Whether to use or not SSL for establishing the connection"
+msgstr ""
 
 #: providers/odbc/gda-odbc-provider.c:183
 msgid "Unable to SQLAllocEnv()..."
@@ -941,25 +1207,35 @@ msgid "Invalid Odbc handle"
 msgstr "Pengendali Odbc tidak sah"
 
 #: providers/odbc/gda-odbc-provider.c:1141
-#: providers/postgres/gda-postgres-provider.c:885
+#: providers/postgres/gda-postgres-provider.c:949
 msgid "Nb args"
 msgstr ""
 
 #: providers/odbc/gda-odbc-provider.c:1402
-#: providers/oracle/gda-oracle-provider.c:2193 testing/client.c:134
+#: providers/oracle/gda-oracle-provider.c:2193 testing/client.c:138
 msgid "Views"
 msgstr "Paparan"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/odbc/gda-odbc-provider.c:1454
-#: providers/postgres/gda-postgres-provider.c:1980
-#: providers/postgres/gda-postgres-provider.c:2036
+#: providers/postgres/gda-postgres-provider.c:2050
+#: providers/postgres/gda-postgres-provider.c:2106
 msgid "Sequence"
 msgstr "Jujukan"
 
 #: providers/odbc/libmain.c:41
 msgid "Provider for ODBC data sources"
 msgstr "Pembekal bagi sumber data ODBC"
+
+#: providers/odbc/libmain.c:50
+#, fuzzy
+msgid "Connection String"
+msgstr "Rentetan Sambungan"
+
+#: providers/odbc/libmain.c:51
+#, fuzzy
+msgid "ODBC connection string"
+msgstr "Rentetan Sambungan"
 
 #: providers/oracle/gda-oracle-provider.c:196
 msgid "No TNS name supplied"
@@ -1100,17 +1376,17 @@ msgstr "Gagal menginitialisasikan kilang komponen Oracle"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/oracle/gda-oracle-provider.c:1152
-#: providers/postgres/gda-postgres-provider.c:1346
+#: providers/postgres/gda-postgres-provider.c:1411
 msgid "Aggregate"
 msgstr "Agregat"
 
 #: providers/oracle/gda-oracle-provider.c:1156
-#: providers/postgres/gda-postgres-provider.c:1350
+#: providers/postgres/gda-postgres-provider.c:1415
 msgid "OutType"
 msgstr "OutType"
 
 #: providers/oracle/gda-oracle-provider.c:1157
-#: providers/postgres/gda-postgres-provider.c:1351
+#: providers/postgres/gda-postgres-provider.c:1416
 msgid "InType"
 msgstr "InType"
 
@@ -1187,7 +1463,7 @@ msgstr "Tak dapat perolehi atribut bolehnull medan Oracle"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/oracle/gda-oracle-provider.c:2177
-#: providers/postgres/gda-postgres-provider.c:1270 testing/client.c:135
+#: providers/postgres/gda-postgres-provider.c:1334 testing/client.c:139
 msgid "Indexes"
 msgstr "Indeks"
 
@@ -1195,7 +1471,7 @@ msgstr "Indeks"
 msgid "Procedures"
 msgstr "Prosedur"
 
-#: providers/oracle/gda-oracle-provider.c:2183 testing/client.c:138
+#: providers/oracle/gda-oracle-provider.c:2183 testing/client.c:142
 msgid "Sequences"
 msgstr "Jujukan"
 
@@ -1216,7 +1492,7 @@ msgid "Could not define by position"
 msgstr "Tak dapat ditakrifkan oleh posisi"
 
 #: providers/oracle/gda-oracle-recordset.c:173
-#: providers/postgres/gda-postgres-recordset.c:476
+#: providers/postgres/gda-postgres-recordset.c:599
 msgid "Column out of range"
 msgstr "Kolum diluar julat"
 
@@ -1254,52 +1530,72 @@ msgstr "Gagal mendapatkan fail daripada %s"
 msgid "Provider for Oracle databases"
 msgstr "Pembekal bagi pangkalandata Oracle"
 
-#: providers/postgres/gda-postgres-provider.c:568
-#: providers/postgres/gda-postgres-provider.c:585
-#: providers/postgres/gda-postgres-provider.c:656
-#: providers/postgres/gda-postgres-provider.c:755
-#: providers/postgres/gda-postgres-provider.c:822
-#: providers/postgres/gda-postgres-recordset.c:184
-#: providers/postgres/gda-postgres-recordset.c:348
-#: providers/postgres/gda-postgres-recordset.c:470
+#: providers/oracle/libmain.c:43
+#, fuzzy
+msgid "TNS Name"
+msgstr "Nama"
+
+#: providers/oracle/libmain.c:44
+msgid "Name of the TNS configuration to use for connecting"
+msgstr ""
+
+#: providers/postgres/gda-postgres-provider.c:588
+#: providers/postgres/gda-postgres-provider.c:605
+#: providers/postgres/gda-postgres-provider.c:676
+#: providers/postgres/gda-postgres-provider.c:775
+#: providers/postgres/gda-postgres-provider.c:886
+#: providers/postgres/gda-postgres-recordset.c:187
+#: providers/postgres/gda-postgres-recordset.c:467
+#: providers/postgres/gda-postgres-recordset.c:593
 #: providers/postgres/utils.c:178
 msgid "Invalid PostgreSQL handle"
 msgstr "Pengendali PostgreSQL tidak sah"
 
+#: providers/postgres/gda-postgres-provider.c:823
+#, fuzzy
+msgid "Transactions are not supported in read uncommitted isolation level"
+msgstr "Transaksi tak disokong pada mod baca-sahaja"
+
+#: providers/postgres/gda-postgres-provider.c:826
+#, fuzzy
+msgid "Transactions are not supported in repeatable read isolation level"
+msgstr "Transaksi tak disokong pada mod baca-sahaja"
+
 #. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:1230
+#: providers/postgres/gda-postgres-provider.c:1294
 msgid "View"
 msgstr "Paparan"
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:1904 testing/client.c:130
+#: providers/postgres/gda-postgres-provider.c:1974 testing/client.c:134
 msgid "Databases"
 msgstr "PangkalanData"
 
-#: providers/postgres/gda-postgres-recordset.c:228
-msgid "Given row doesn't belong to the model."
-msgstr ""
-
-#: providers/postgres/gda-postgres-recordset.c:235
+#: providers/postgres/gda-postgres-recordset.c:234
+#: providers/postgres/gda-postgres-recordset.c:350
 msgid "Table name could not be guessed."
 msgstr ""
 
-#: providers/postgres/gda-postgres-recordset.c:287
+#: providers/postgres/gda-postgres-recordset.c:343
+msgid "Given row doesn't belong to the model."
+msgstr ""
+
+#: providers/postgres/gda-postgres-recordset.c:402
 msgid "Model doesn't have at least one non-modified unique key."
 msgstr ""
 
-#: providers/postgres/gda-postgres-recordset.c:291
+#: providers/postgres/gda-postgres-recordset.c:406
 msgid "Model doesn't have any non-unique values to update."
 msgstr ""
 
-#: providers/postgres/gda-postgres-recordset.c:363
+#: providers/postgres/gda-postgres-recordset.c:482
 #: providers/sqlite/gda-sqlite-recordset.c:210
 #: providers/sqlite/gda-sqlite-recordset.c:242
 #: providers/bdb/gda-bdb-recordset.c:166
 msgid "Column number out of range"
 msgstr "Bilangan kolum diluar julat"
 
-#: providers/postgres/gda-postgres-recordset.c:584
+#: providers/postgres/gda-postgres-recordset.c:709
 #, c-format
 msgid "Tuples:\"%s\""
 msgstr ""
@@ -1307,6 +1603,34 @@ msgstr ""
 #: providers/postgres/libmain.c:41
 msgid "Provider for PostgreSQL databases"
 msgstr "Pembekal bagi pangkalandata PostgreSQL"
+
+#: providers/postgres/libmain.c:54
+msgid "Search Path"
+msgstr ""
+
+#: providers/postgres/libmain.c:55
+msgid "Search path"
+msgstr ""
+
+#: providers/postgres/libmain.c:67
+msgid "Extra PostgreSQL options to use for the connection"
+msgstr ""
+
+#: providers/postgres/libmain.c:71 providers/sybase/libmain.c:70
+msgid "Port number to use for the connection"
+msgstr ""
+
+#: providers/postgres/libmain.c:74
+msgid "Require SSL"
+msgstr ""
+
+#: providers/postgres/libmain.c:75
+msgid "Whether to require SSL or not when connecting"
+msgstr ""
+
+#: providers/postgres/libmain.c:78 providers/postgres/libmain.c:79
+msgid "TTY"
+msgstr ""
 
 #: providers/sqlite/gda-sqlite-provider.c:199
 msgid ""
@@ -1351,6 +1675,13 @@ msgstr "Tak dapat perolehi maklumat bagi medan"
 #: providers/sqlite/libmain.c:41
 msgid "Provider for SQLite databases"
 msgstr "Pembekal bagi pangkalandata SQLite"
+
+#: providers/sqlite/libmain.c:51
+#, fuzzy
+msgid "Full path of the file containing the SQLite database"
+msgstr ""
+"Path penuh mesti dinyatakan pada rentetan sambungan untuk membua "
+"pangkalandata"
 
 #: providers/sybase/gda-sybase-provider.c:291
 msgid "Out of memory. Allocating connection structure failed."
@@ -1567,9 +1898,18 @@ msgstr "penukaran data gagal bagi jenis %d"
 msgid "GDA provider for sybase databases (using OpenClient)"
 msgstr "Pembekal GDA bagi pangkalandata sybase (menggunakan OpenClient)"
 
-#: providers/sybase/main.c:52
-msgid "Could not initiate Sybase component factory"
-msgstr "Gagal Gagal menginitialisasikan kilang komponen Sybase"
+#: providers/sybase/libmain.c:66
+msgid "Extra Sybase options to use for the connection"
+msgstr ""
+
+#: providers/sybase/libmain.c:80
+#, fuzzy
+msgid "Locale"
+msgstr "Skala"
+
+#: providers/sybase/libmain.c:81
+msgid "Locale to use in the connection"
+msgstr ""
 
 #: providers/sybase/utils.c:48
 msgid "Call: csmsg callback"
@@ -1746,6 +2086,14 @@ msgstr "Pengendali Xbase tidak sah"
 msgid "Provider for Xbase (dBase, FoxPro, etc) files"
 msgstr "Pembekal bagi fail Xbase (dBase, Foxpro, dll)"
 
+#: providers/xbase/libmain.c:52
+msgid "Directory"
+msgstr ""
+
+#: providers/xbase/libmain.c:53
+msgid "Directory containing the xBase files"
+msgstr ""
+
 #: providers/xml/gda-xml-provider.c:191
 msgid ""
 "A full path must be specified on the connection string to open a database on "
@@ -1776,89 +2124,89 @@ msgid "Could not get description for column"
 msgstr "Tak memperolehi huraian bagi kolum"
 
 #. fill the recordset
-#: providers/xml/gda-xml-provider.c:661
+#: providers/xml/gda-xml-provider.c:660
 #, fuzzy
 msgid "Big integer"
 msgstr "integer 64-bit"
 
-#: providers/xml/gda-xml-provider.c:662
+#: providers/xml/gda-xml-provider.c:661
 msgid "Big unsigned integer"
 msgstr ""
 
-#: providers/xml/gda-xml-provider.c:663
+#: providers/xml/gda-xml-provider.c:662
 msgid "Binary"
 msgstr ""
 
-#: providers/xml/gda-xml-provider.c:664
+#: providers/xml/gda-xml-provider.c:663
 #, fuzzy
 msgid "Boolean"
 msgstr "Jenis boolean"
 
-#: providers/xml/gda-xml-provider.c:665
+#: providers/xml/gda-xml-provider.c:664
 #, fuzzy
 msgid "Date"
 msgstr "Keadaan"
 
-#: providers/xml/gda-xml-provider.c:666
+#: providers/xml/gda-xml-provider.c:665
 msgid "Double precision"
 msgstr ""
 
-#: providers/xml/gda-xml-provider.c:667
+#: providers/xml/gda-xml-provider.c:666
 msgid "Integer"
 msgstr ""
 
-#: providers/xml/gda-xml-provider.c:668
+#: providers/xml/gda-xml-provider.c:667
 msgid "List"
 msgstr ""
 
-#: providers/xml/gda-xml-provider.c:669
+#: providers/xml/gda-xml-provider.c:668
 msgid "Money"
 msgstr ""
 
-#: providers/xml/gda-xml-provider.c:670
+#: providers/xml/gda-xml-provider.c:669
 #, fuzzy
 msgid "Numeric"
 msgstr "Nombor"
 
-#: providers/xml/gda-xml-provider.c:671
+#: providers/xml/gda-xml-provider.c:670
 msgid "Point"
 msgstr ""
 
-#: providers/xml/gda-xml-provider.c:672
+#: providers/xml/gda-xml-provider.c:671
 msgid "Single precision"
 msgstr ""
 
-#: providers/xml/gda-xml-provider.c:673
+#: providers/xml/gda-xml-provider.c:672
 msgid "Small integer"
 msgstr ""
 
-#: providers/xml/gda-xml-provider.c:674
+#: providers/xml/gda-xml-provider.c:673
 msgid "Small unsigned integer"
 msgstr ""
 
-#: providers/xml/gda-xml-provider.c:675
+#: providers/xml/gda-xml-provider.c:674
 msgid "String"
 msgstr ""
 
-#: providers/xml/gda-xml-provider.c:676
+#: providers/xml/gda-xml-provider.c:675
 #, fuzzy
 msgid "Time"
 msgstr "Tajuk"
 
-#: providers/xml/gda-xml-provider.c:677
+#: providers/xml/gda-xml-provider.c:676
 msgid "Timestamp"
 msgstr ""
 
-#: providers/xml/gda-xml-provider.c:678
+#: providers/xml/gda-xml-provider.c:677
 #, fuzzy
 msgid "Tiny integer"
 msgstr "integer 64-bit"
 
-#: providers/xml/gda-xml-provider.c:679
+#: providers/xml/gda-xml-provider.c:678
 msgid "Tiny unsigned integer"
 msgstr ""
 
-#: providers/xml/gda-xml-provider.c:681
+#: providers/xml/gda-xml-provider.c:680
 msgid "Unsigned integer"
 msgstr ""
 
@@ -1870,15 +2218,22 @@ msgstr "XML"
 msgid "XML provider, based on the libgda XML database format"
 msgstr "Pembekal XML, berdasarkan format pangkalan data XML libgda"
 
-#: report/libgda-report/gda-report-document.c:178
+#: providers/xml/libmain.c:49
+#, fuzzy
+msgid "Full path of the file containing the XML database"
+msgstr ""
+"Path penuh mesti dinyatakan pada rentetan sambungan untuk membua "
+"pangkalandata"
+
+#: report/libgda-report/gda-report-document.c:179
 msgid "Could not parse XML document"
 msgstr "Tak dapat menghantar dokumen XML"
 
-#: report/libgda-report/gda-report-document.c:188
+#: report/libgda-report/gda-report-document.c:189
 msgid "XML document is not valid"
 msgstr "Dokumen XML tidak sah"
 
-#: report/libgda-report/gda-report-document.c:220
+#: report/libgda-report/gda-report-document.c:221
 #, c-format
 msgid "Could not get file from %s"
 msgstr "Gagal mendapatkan fail daripada %s"
@@ -1946,92 +2301,92 @@ msgstr ""
 msgid "\t\tNONE\n"
 msgstr "\t\tTIADA\n"
 
-#: testing/client.c:83
+#: testing/client.c:87
 #, c-format
 msgid "** ERROR: could not open connection to %s\n"
 msgstr "** RALAT: tak dapat membuka sambungan ke %s\n"
 
 #. show provider features
-#: testing/client.c:88
+#: testing/client.c:92
 msgid "\tProvider capabilities...\n"
 msgstr "\tKebolehan Pembekal...\n"
 
-#: testing/client.c:89
+#: testing/client.c:93
 #, c-format
 msgid "\t\tAggregates: %s\n"
 msgstr "\t\tAgregat: %s\n"
 
-#: testing/client.c:91 testing/client.c:94 testing/client.c:97
-#: testing/client.c:100 testing/client.c:103 testing/client.c:106
-#: testing/client.c:109 testing/client.c:112 testing/client.c:115
-#: testing/client.c:118 testing/client.c:121 testing/client.c:124
+#: testing/client.c:95 testing/client.c:98 testing/client.c:101
+#: testing/client.c:104 testing/client.c:107 testing/client.c:110
+#: testing/client.c:113 testing/client.c:116 testing/client.c:119
+#: testing/client.c:122 testing/client.c:125 testing/client.c:128
 msgid "Supported"
 msgstr "Disokong"
 
-#: testing/client.c:91 testing/client.c:94 testing/client.c:97
-#: testing/client.c:100 testing/client.c:103 testing/client.c:106
-#: testing/client.c:109 testing/client.c:112 testing/client.c:115
-#: testing/client.c:118 testing/client.c:121 testing/client.c:124
+#: testing/client.c:95 testing/client.c:98 testing/client.c:101
+#: testing/client.c:104 testing/client.c:107 testing/client.c:110
+#: testing/client.c:113 testing/client.c:116 testing/client.c:119
+#: testing/client.c:122 testing/client.c:125 testing/client.c:128
 msgid "Not supported"
 msgstr "Tidak disokong"
 
-#: testing/client.c:92
+#: testing/client.c:96
 #, c-format
 msgid "\t\tIndexes: %s\n"
 msgstr "\t\tIndeks: %s\n"
 
-#: testing/client.c:95
+#: testing/client.c:99
 #, c-format
 msgid "\t\tNamespaces: %s\n"
 msgstr "\t\tRuangnama: %s\n"
 
-#: testing/client.c:98
+#: testing/client.c:102
 #, c-format
 msgid "\t\tProcedures: %s\n"
 msgstr "\t\tProsedur: %s\n"
 
-#: testing/client.c:101
+#: testing/client.c:105
 #, c-format
 msgid "\t\tSequences: %s\n"
 msgstr "\t\tJujukan: %s\n"
 
-#: testing/client.c:104
+#: testing/client.c:108
 #, c-format
 msgid "\t\tSQL: %s\n"
 msgstr "\t\tSQL: %s\n"
 
-#: testing/client.c:107
+#: testing/client.c:111
 #, c-format
 msgid "\t\tTransactions: %s\n"
 msgstr "\t\tTransaksi: %s\n"
 
-#: testing/client.c:110
+#: testing/client.c:114
 #, c-format
 msgid "\t\tTriggers: %s\n"
 msgstr "\t\tPemicu: %s\n"
 
-#: testing/client.c:113
+#: testing/client.c:117
 #, c-format
 msgid "\t\tUsers: %s\n"
 msgstr "\t\tPengguna: %s\n"
 
-#: testing/client.c:116
+#: testing/client.c:120
 #, c-format
 msgid "\t\tViews: %s\n"
 msgstr "\t\tPaparan: %s\n"
 
-#: testing/client.c:119
+#: testing/client.c:123
 #, c-format
 msgid "\t\tXML queries: %s\n"
 msgstr "\t\tKueri XML: %s\n"
 
-#: testing/client.c:122
+#: testing/client.c:126
 #, fuzzy, c-format
 msgid "\t\tBLOBs: %s\n"
 msgstr "\t\tSQL: %s\n"
 
 #. show connection schemas
-#: testing/client.c:127
+#: testing/client.c:131
 #, c-format
 msgid ""
 "\n"
@@ -2042,56 +2397,56 @@ msgstr ""
 "\tVersi laporan pembekal: %s\n"
 "\n"
 
-#: testing/client.c:129
+#: testing/client.c:133
 msgid "Namespaces"
 msgstr ""
 
-#: testing/client.c:131
+#: testing/client.c:135
 msgid "Stored procedures"
 msgstr "Prosedur Tersimpan"
 
-#: testing/client.c:132
+#: testing/client.c:136
 msgid "Connection Tables"
 msgstr "Jadual Sambungan"
 
-#: testing/client.c:133
+#: testing/client.c:137
 msgid "Available types"
 msgstr "Jenis yang ada"
 
-#: testing/client.c:136
+#: testing/client.c:140
 msgid "Aggregates"
 msgstr "Agregat"
 
-#: testing/client.c:140
+#: testing/client.c:144
 msgid "Languages"
 msgstr "Bahasa"
 
-#: testing/client.c:145 testing/client.c:153
+#: testing/client.c:149 testing/client.c:157
 msgid "\tStarting transaction..."
 msgstr "\tMemulakan transaksi..."
 
-#: testing/client.c:147 testing/client.c:151 testing/client.c:155
-#: testing/client.c:159
+#: testing/client.c:151 testing/client.c:155 testing/client.c:159
+#: testing/client.c:163
 msgid "Error"
 msgstr "Ralat"
 
-#: testing/client.c:149
+#: testing/client.c:153
 msgid "\tFinishing transaction..."
 msgstr "\tMenamatkan transaksi..."
 
-#: testing/client.c:157
+#: testing/client.c:161
 msgid "\tRolling back transaction..."
 msgstr "\tRollback transaksi..."
 
-#: testing/client.c:188
+#: testing/client.c:192
 msgid "Testing GDA client API"
 msgstr "Uji API klien GDA"
 
-#: testing/client.c:197
+#: testing/client.c:201
 msgid "** ERROR: gda_config_get_data_source_list returned a NULL item\n"
 msgstr "** RALAT: gda_config_get_source_list memulangkan item NULL\n"
 
-#: testing/client.c:201
+#: testing/client.c:205
 #, c-format
 msgid " Data source = %s, User = %s\n"
 msgstr " Sumber data =  %s, Pengguna = %s\n"
@@ -2143,6 +2498,30 @@ msgstr "PangkalanData"
 #, fuzzy
 msgid "Provider for Berkeley databases"
 msgstr "Pembekal bagi pangkalandata Oracle"
+
+#: providers/bdb/libmain.c:48
+#, fuzzy
+msgid "Database File"
+msgstr "Pangkalan Data"
+
+#: providers/bdb/libmain.c:49
+msgid "Berkeley DB database file to be used"
+msgstr ""
+
+#: providers/bdb/libmain.c:52
+#, fuzzy
+msgid "Database name"
+msgstr "Pangkalan Data"
+
+#: providers/bdb/libmain.c:53
+#, fuzzy
+msgid "Name of the database in the database file to be used"
+msgstr ""
+"Untuk membuang pangkalandata SQLite, anda patut membuang fail pangkalan data "
+"menggunakan tangan"
+
+#~ msgid "Could not initiate Sybase component factory"
+#~ msgstr "Gagal Gagal menginitialisasikan kilang komponen Sybase"
 
 #~ msgid "Sybase OpenClient Msg: severity("
 #~ msgstr "Msg Sybase OpenClient: keparahan("

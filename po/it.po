@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-db\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-11-09 17:19+0100\n"
+"POT-Creation-Date: 2004-12-28 14:40+0100\n"
 "PO-Revision-Date: 2004-11-09 18:14+0100\n"
 "Last-Translator: Marco Ciampa <ciampix@libero.it>\n"
 "Language-Team: italiano <tp@lists.linux.it>\n"
@@ -674,19 +674,19 @@ msgstr ""
 msgid "Not available"
 msgstr "Non disponibile"
 
-#: providers/freetds/gda-freetds-recordset.c:377
+#: providers/freetds/gda-freetds-recordset.c:376
 msgid "Error processing result rows.\n"
 msgstr "Errore nell'elaborare le righe risultanti.\n"
 
-#: providers/freetds/gda-freetds-recordset.c:384
+#: providers/freetds/gda-freetds-recordset.c:383
 msgid "Unexpected freetds return code in tds_process_row_tokens().\n"
 msgstr "Codice di ritorno freetds inaspettato in tds_process_row_tokens().\n"
 
-#: providers/freetds/gda-freetds-recordset.c:394
+#: providers/freetds/gda-freetds-recordset.c:393
 msgid "Error processing results.\n"
 msgstr "Errore nell'elaborazione dei risultati.\n"
 
-#: providers/freetds/gda-freetds-recordset.c:401
+#: providers/freetds/gda-freetds-recordset.c:400
 msgid "Unexpected freetds return code in tds_process_result_tokens\n"
 msgstr "Codice di ritorno freetds inaspettato in tds_process_result_tokens\n"
 
@@ -1537,11 +1537,13 @@ msgstr "Handle PostgreSQL non valido"
 
 #: providers/postgres/gda-postgres-provider.c:823
 msgid "Transactions are not supported in read uncommitted isolation level"
-msgstr "Le transazioni non sono supportate in livello isolato di lettura senza commit"
+msgstr ""
+"Le transazioni non sono supportate in livello isolato di lettura senza commit"
 
 #: providers/postgres/gda-postgres-provider.c:826
 msgid "Transactions are not supported in repeatable read isolation level"
-msgstr "Le transazioni non sono supportate in livello isolato di lettura ripetibile"
+msgstr ""
+"Le transazioni non sono supportate in livello isolato di lettura ripetibile"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/postgres/gda-postgres-provider.c:1294

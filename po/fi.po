@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-10-14 13:58+0300\n"
+"POT-Creation-Date: 2004-12-28 14:40+0100\n"
 "PO-Revision-Date: 2004-10-14 20:21+0300\n"
 "Last-Translator: Tommi Vainikainen <Tommi.Vainikainen@iki.fi>\n"
 "Language-Team: Finnish <gnome-fi-laatu@lists.sourceforge.net>\n"
@@ -672,19 +672,19 @@ msgstr ""
 msgid "Not available"
 msgstr "Ei saatavilla"
 
-#: providers/freetds/gda-freetds-recordset.c:377
+#: providers/freetds/gda-freetds-recordset.c:376
 msgid "Error processing result rows.\n"
 msgstr "Virhe käsiteltäessä tulosrivejä.\n"
 
-#: providers/freetds/gda-freetds-recordset.c:384
+#: providers/freetds/gda-freetds-recordset.c:383
 msgid "Unexpected freetds return code in tds_process_row_tokens().\n"
 msgstr "Odottamaton freetds-paluukoodi tds_process_row_tokens():ssa.\n"
 
-#: providers/freetds/gda-freetds-recordset.c:394
+#: providers/freetds/gda-freetds-recordset.c:393
 msgid "Error processing results.\n"
 msgstr "Virhe käsiteltäessä tuloksia.\n"
 
-#: providers/freetds/gda-freetds-recordset.c:401
+#: providers/freetds/gda-freetds-recordset.c:400
 msgid "Unexpected freetds return code in tds_process_result_tokens\n"
 msgstr "Odottamaton freetds-paluukoodi tds_process_result_tokens:ssa\n"
 
@@ -878,9 +878,9 @@ msgid "Invalid LDAP handle"
 msgstr "Virheellinen LDAP-kahva"
 
 #: providers/ldap/gda-ldap-recordset.c:69
-#: providers/mysql/gda-mysql-recordset.c:139
+#: providers/mysql/gda-mysql-recordset.c:145
 #: providers/postgres/gda-postgres-recordset.c:196
-#: providers/postgres/gda-postgres-recordset.c:474
+#: providers/postgres/gda-postgres-recordset.c:476
 #: providers/sqlite/gda-sqlite-recordset.c:165
 #: providers/sqlite/gda-sqlite-recordset.c:204
 #: providers/bdb/gda-bdb-recordset.c:111
@@ -889,7 +889,7 @@ msgstr "Rivinumero yli rajojen"
 
 #: providers/ldap/gda-ldap-recordset.c:283
 #: providers/msql/gda-msql-recordset.c:229
-#: providers/mysql/gda-mysql-recordset.c:320
+#: providers/mysql/gda-mysql-recordset.c:326
 #: providers/oracle/gda-oracle-recordset.c:469
 #: providers/postgres/gda-postgres-recordset.c:242
 msgid "Attempt to insert a row with an invalid number of columns"
@@ -897,7 +897,7 @@ msgstr "Yritys lisätä rivi, jossa on väärä määrä sarakkeita"
 
 #: providers/ldap/gda-ldap-recordset.c:298
 #: providers/msql/gda-msql-recordset.c:241
-#: providers/mysql/gda-mysql-recordset.c:335
+#: providers/mysql/gda-mysql-recordset.c:341
 #: providers/oracle/gda-oracle-recordset.c:484
 #: providers/postgres/gda-postgres-recordset.c:257
 msgid "Could not retrieve column's information"
@@ -905,10 +905,10 @@ msgstr "Ei saa sarakkeiden tietoja"
 
 #: providers/ldap/gda-ldap-recordset.c:316
 #: providers/msql/gda-msql-recordset.c:255
-#: providers/mysql/gda-mysql-recordset.c:353
+#: providers/mysql/gda-mysql-recordset.c:359
 #: providers/oracle/gda-oracle-recordset.c:502
-#: providers/postgres/gda-postgres-recordset.c:275
-#: providers/postgres/gda-postgres-recordset.c:286
+#: providers/postgres/gda-postgres-recordset.c:277
+#: providers/postgres/gda-postgres-recordset.c:288
 msgid "Could not retrieve column's value"
 msgstr "Ei saa sarakkeiden arvoja"
 
@@ -1118,8 +1118,8 @@ msgstr "UNIX_SOCKETia ei voi antaa, jos joko HOST tai PORT on jo annettu."
 
 #: providers/mysql/gda-mysql-provider.c:304
 #: providers/mysql/gda-mysql-provider.c:1125
-#: providers/mysql/gda-mysql-recordset.c:128
-#: providers/mysql/gda-mysql-recordset.c:202
+#: providers/mysql/gda-mysql-recordset.c:134
+#: providers/mysql/gda-mysql-recordset.c:208
 msgid "Invalid MySQL handle"
 msgstr "Virheellinen MySQL-kahva"
 
@@ -1466,7 +1466,7 @@ msgid "Could not define by position"
 msgstr "Sijainnin mukaan ei voi määritellä"
 
 #: providers/oracle/gda-oracle-recordset.c:173
-#: providers/postgres/gda-postgres-recordset.c:597
+#: providers/postgres/gda-postgres-recordset.c:599
 msgid "Column out of range"
 msgstr "Sarake yli rajojen"
 
@@ -1516,8 +1516,8 @@ msgstr "TNS-asetusten nimi, joita yhdistämisessä käytetään"
 #: providers/postgres/gda-postgres-provider.c:775
 #: providers/postgres/gda-postgres-provider.c:886
 #: providers/postgres/gda-postgres-recordset.c:187
-#: providers/postgres/gda-postgres-recordset.c:465
-#: providers/postgres/gda-postgres-recordset.c:591
+#: providers/postgres/gda-postgres-recordset.c:467
+#: providers/postgres/gda-postgres-recordset.c:593
 #: providers/postgres/utils.c:178
 msgid "Invalid PostgreSQL handle"
 msgstr "Virheellinen PostgreSQL-kahva"
@@ -1541,30 +1541,30 @@ msgid "Databases"
 msgstr "Tietokannat"
 
 #: providers/postgres/gda-postgres-recordset.c:234
-#: providers/postgres/gda-postgres-recordset.c:348
+#: providers/postgres/gda-postgres-recordset.c:350
 msgid "Table name could not be guessed."
 msgstr "Taulun nimeä ei voitu arvata."
 
-#: providers/postgres/gda-postgres-recordset.c:341
+#: providers/postgres/gda-postgres-recordset.c:343
 msgid "Given row doesn't belong to the model."
 msgstr "Annettu rivi ei kuulu malliin."
 
-#: providers/postgres/gda-postgres-recordset.c:400
+#: providers/postgres/gda-postgres-recordset.c:402
 msgid "Model doesn't have at least one non-modified unique key."
 msgstr "Mallissa ei ole vähintään yhtä muokkaamatonta uniikkia avainta."
 
-#: providers/postgres/gda-postgres-recordset.c:404
+#: providers/postgres/gda-postgres-recordset.c:406
 msgid "Model doesn't have any non-unique values to update."
 msgstr "Mallissa ei ole ei-uniikkeja arvoja päivitettäväksi."
 
-#: providers/postgres/gda-postgres-recordset.c:480
+#: providers/postgres/gda-postgres-recordset.c:482
 #: providers/sqlite/gda-sqlite-recordset.c:210
 #: providers/sqlite/gda-sqlite-recordset.c:242
 #: providers/bdb/gda-bdb-recordset.c:166
 msgid "Column number out of range"
 msgstr "Sarakenumero yli rajojen"
 
-#: providers/postgres/gda-postgres-recordset.c:707
+#: providers/postgres/gda-postgres-recordset.c:709
 #, c-format
 msgid "Tuples:\"%s\""
 msgstr "Monikot:\"%s\""

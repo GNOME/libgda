@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda HEAD\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-08-19 12:06+0200\n"
+"POT-Creation-Date: 2004-12-28 14:40+0100\n"
 "PO-Revision-Date: 2004-09-03 17:07+0200\n"
 "Last-Translator: Laurent Dhima <laurenti@alblinux.net>\n"
 "Language-Team: Albanian <gnome-albanian-perkthyesit@lists.sourceforge.net>\n"
@@ -26,8 +26,7 @@ msgid "Could not find provider %s in the current setup"
 msgstr "E pamundur gjetja e provider %s tek rregullimet aktuale"
 
 #: libgda/gda-client.c:371
-#, c-format
-#, fuzzy
+#, fuzzy, c-format
 msgid "Provider %s does not implement entry function"
 msgstr "nuk"
 
@@ -41,44 +40,40 @@ msgstr "nuk"
 msgid "Temporary data source created by libgda. Don't remove it"
 msgstr "nga hiq"
 
-#. GRUT modified this item
-#: libgda/gda-config.c:1081
+#: libgda/gda-config.c:1092
 #, c-format
 msgid "Error: %s"
 msgstr "Gabim: %s"
 
-#: libgda/gda-config.c:1194 providers/odbc/gda-odbc-provider.c:1137
+#: libgda/gda-config.c:1205 providers/odbc/gda-odbc-provider.c:1137
 #: providers/oracle/gda-oracle-provider.c:1153
-#: providers/postgres/gda-postgres-provider.c:931
-#: providers/postgres/gda-postgres-provider.c:1397
+#: providers/postgres/gda-postgres-provider.c:945
+#: providers/postgres/gda-postgres-provider.c:1412
 msgid "Id"
 msgstr "Id"
 
-#. GRUT modified this item
-#: libgda/gda-config.c:1195
+#: libgda/gda-config.c:1206
 msgid "Location"
 msgstr "Vendodhja"
 
-#. GRUT modified this item
-#: libgda/gda-config.c:1196 libgda/gda-config.c:1455
-#: providers/firebird/gda-firebird-provider.c:316
+#: libgda/gda-config.c:1207 libgda/gda-config.c:1532
+#: providers/firebird/gda-firebird-provider.c:322
 #: providers/ibmdb2/gda-ibmdb2-provider.c:863
 #: providers/ibmdb2/gda-ibmdb2-provider.c:892
 #: providers/ibmdb2/gda-ibmdb2-provider.c:920
 #: providers/ibmdb2/gda-ibmdb2-provider.c:1001
 #: providers/odbc/gda-odbc-provider.c:1248
 #: providers/odbc/gda-odbc-provider.c:1404
-#: providers/postgres/gda-postgres-provider.c:1203
+#: providers/postgres/gda-postgres-provider.c:1217
 msgid "Description"
 msgstr "Përshkrimi"
 
-#. GRUT modified this item
-#: libgda/gda-config.c:1452 providers/firebird/gda-firebird-provider.c:723
+#: libgda/gda-config.c:1529 providers/firebird/gda-firebird-provider.c:730
 #: providers/ldap/gda-ldap-provider.c:327 providers/mdb/gda-mdb-provider.c:457
 #: providers/mdb/gda-mdb-provider.c:594 providers/mdb/gda-mdb-provider.c:654
-#: providers/msql/gda-msql-provider.c:448
-#: providers/mysql/gda-mysql-provider.c:732
-#: providers/mysql/gda-mysql-provider.c:920
+#: providers/msql/gda-msql-provider.c:471
+#: providers/mysql/gda-mysql-provider.c:731
+#: providers/mysql/gda-mysql-provider.c:919
 #: providers/odbc/gda-odbc-provider.c:768
 #: providers/odbc/gda-odbc-provider.c:824
 #: providers/oracle/gda-oracle-provider.c:1893
@@ -89,27 +84,24 @@ msgstr "Përshkrimi"
 msgid "Name"
 msgstr "Emri"
 
-#: libgda/gda-config.c:1453
+#: libgda/gda-config.c:1530
 msgid "Provider"
 msgstr "Provider"
 
-#: libgda/gda-config.c:1454
+#: libgda/gda-config.c:1531
 msgid "Connection string"
 msgstr "Stringa e lidhjes"
 
-#. GRUT modified this item
-#: libgda/gda-config.c:1456
+#: libgda/gda-config.c:1533
 msgid "Username"
 msgstr "Përdoruesi"
 
-#. GRUT modified this item
-#: libgda/gda-config.c:1457
+#: libgda/gda-config.c:1534
 msgid "Password"
 msgstr "Fjalëkalimi"
 
 #: libgda/gda-data-model.c:880
-#, c-format
-#, fuzzy
+#, fuzzy, c-format
 msgid "Data model %p is not updatable"
 msgstr "Të dhëna është nuk"
 
@@ -122,80 +114,69 @@ msgid "libgda needs GModule. Finishing..."
 msgstr ""
 
 #: libgda/gda-select.c:393
-#, c-format
-#, fuzzy
+#, fuzzy, c-format
 msgid "Could not parse SQL string '%s'"
 msgstr "nuk SQL"
 
 #: libgda/gda-select.c:397
-#, c-format
-#, fuzzy
+#, fuzzy, c-format
 msgid "SQL command is not a SELECT (is '%s'"
 msgstr "SQL është nuk a është"
 
 #: libgda/gda-table.c:284
-#, c-format
-#, fuzzy
+#, fuzzy, c-format
 msgid "There is already a field called %s"
 msgstr "është a"
 
 #: libgda/gda-util.c:173
-#, c-format
-#, fuzzy
+#, fuzzy, c-format
 msgid "Could not parse SQL command '%s'"
 msgstr "nuk SQL"
 
 #: libgda/gda-util.c:206
-#, c-format
-#, fuzzy
+#, fuzzy, c-format
 msgid "Error while reading %s: %s"
 msgstr "Gabim"
 
 #: libgda/gda-util.c:232
-#, c-format
-#, fuzzy
+#, fuzzy, c-format
 msgid "Could not create file %s"
 msgstr "nuk"
 
-#: libgda/gda-value.c:2069
+#: libgda/gda-value.c:2073
 msgid "TRUE"
 msgstr ""
 
-#: libgda/gda-value.c:2071
+#: libgda/gda-value.c:2075
 msgid "FALSE"
 msgstr ""
 
-#: libgda/gda-value.c:2140
-#, c-format
-#, fuzzy
+#: libgda/gda-value.c:2144
+#, fuzzy, c-format
 msgid "(GObject of type '%s'"
 msgstr "nga lloji"
 
-#: libgda/gda-value.c:2143
+#: libgda/gda-value.c:2147
 msgid "NULL GObject"
 msgstr ""
 
 #: libgda/gda-xml-database.c:279
-#, c-format
-#, fuzzy
+#, fuzzy, c-format
 msgid "Could not load file at %s"
 msgstr "nuk ngarkoje"
 
 #: libgda/gda-xml-database.c:288
-#, c-format
-#, fuzzy
+#, fuzzy, c-format
 msgid "Could not parse file at %s"
 msgstr "nuk"
 
 #: libgda/gda-xml-database.c:298
-#, c-format
-#, fuzzy
+#, fuzzy, c-format
 msgid "Invalid XML database file '%s'"
 msgstr "E pavlefshme XML Bankë të dhënash (databazë)"
 
 #: libgda/gda-xml-database.c:541
-#, c-format
-#, fuzzy
+#, fuzzy, c-format
 msgid "Could not create a XML node from table %s"
 msgstr "nuk a XML nyje tabelë"
 
@@ -206,8 +187,7 @@ msgstr "nuk XML"
 
 #: libgda/gda-xml-database.c:650 libgda/gda-xml-database.c:687
 #: libgda/gda-xml-database.c:731
-#, c-format
-#, fuzzy
+#, fuzzy, c-format
 msgid "Table %s already exists"
 msgstr "Tabela ekziston"
 
@@ -217,8 +197,7 @@ msgid "Invalid node"
 msgstr "E pavlefshme nyje"
 
 #: libgda/gda-xml-database.c:766
-#, c-format
-#, fuzzy
+#, fuzzy, c-format
 msgid "Duplicated <data> node for table %s"
 msgstr "<data> nyje për tabelë"
 
@@ -232,42 +211,82 @@ msgstr "E pavlefshme XML nyje"
 msgid "Could not add the data from the XML node"
 msgstr "nuk shto XML nyje"
 
-#: libsql/sql_parser.c:59
-#, c-format
-#, fuzzy
+#: libsql/sql_parser.c:60
+#, fuzzy, c-format
 msgid "Parse error near `%s'"
 msgstr "gabim"
 
-#: libsql/sql_parser.c:61
-#, c-format
-#, fuzzy
+#: libsql/sql_parser.c:62
+#, fuzzy, c-format
 msgid "Syntax error near `%s'"
 msgstr "gabim"
 
-#: libsql/sql_parser.c:371
+#: libsql/sql_parser.c:384
 #, fuzzy
 msgid "Empty query to parse"
 msgstr "Bosh"
 
-#. GRUT modified this item
+#: providers/firebird/gda-firebird-blob.c:129
+#: providers/firebird/gda-firebird-blob.c:176
+#: providers/firebird/gda-firebird-blob.c:224
+#: providers/firebird/gda-firebird-provider.c:820
+#: providers/firebird/gda-firebird-provider.c:937
+#: providers/firebird/gda-firebird-provider.c:964
+#: providers/firebird/gda-firebird-provider.c:983
+#: providers/firebird/gda-firebird-provider.c:1019
+#: providers/firebird/gda-firebird-provider.c:1112
+#: providers/firebird/gda-firebird-provider.c:1207
+#: providers/firebird/gda-firebird-provider.c:1241
+#: providers/firebird/gda-firebird-provider.c:1279
+#: providers/firebird/gda-firebird-recordset.c:694
+#: providers/firebird/gda-firebird-recordset.c:896
+#, fuzzy
+msgid "Invalid Firebird handle"
+msgstr "E pavlefshme Firebird"
+
+#: providers/firebird/gda-firebird-blob.c:134
+#, fuzzy
+msgid "Unable to start transaction"
+msgstr "nuk nisje"
+
+#: providers/firebird/gda-firebird-blob.c:145
+msgid "Blob already open"
+msgstr ""
+
+#: providers/firebird/gda-firebird-blob.c:199
+#, fuzzy
+msgid "Error getting blob segment."
+msgstr "Gabim"
+
+#: providers/firebird/gda-firebird-blob.c:203
+msgid "Can't read a closed Blob"
+msgstr ""
+
+#: providers/firebird/gda-firebird-blob.c:240
+msgid "Unable to close blob."
+msgstr ""
+
+#: providers/firebird/gda-firebird-blob.c:243
+msgid "Blob is closed"
+msgstr ""
+
 #. gda_server_recordset_model_set_field_defined_size (recset, 0, 32);
-#: providers/firebird/gda-firebird-provider.c:228
+#: providers/firebird/gda-firebird-provider.c:231
 #: providers/ibmdb2/gda-ibmdb2-provider.c:946
 #: providers/ldap/gda-ldap-provider.c:423
-#: providers/mysql/gda-mysql-provider.c:1002
+#: providers/mysql/gda-mysql-provider.c:1011
 #: providers/odbc/gda-odbc-provider.c:1360
 #: providers/oracle/gda-oracle-provider.c:2095
-#: providers/postgres/gda-postgres-provider.c:1220
+#: providers/postgres/gda-postgres-provider.c:1234
 #: providers/sqlite/gda-sqlite-provider.c:787
 #: providers/sybase/gda-sybase-provider.c:1096
 #: providers/xml/gda-xml-provider.c:654 providers/xml/gda-xml-provider.c:679
 msgid "Type"
 msgstr "Lloji"
 
-#. GRUT modified this item
-#: providers/firebird/gda-firebird-provider.c:229
-#: providers/firebird/gda-firebird-provider.c:315
-#: providers/firebird/gda-firebird-provider.c:725
+#: providers/firebird/gda-firebird-provider.c:232
+#: providers/firebird/gda-firebird-provider.c:321
+#: providers/firebird/gda-firebird-provider.c:732
 #: providers/ibmdb2/gda-ibmdb2-provider.c:742
 #: providers/ibmdb2/gda-ibmdb2-provider.c:832
 #: providers/ibmdb2/gda-ibmdb2-provider.c:861
@@ -277,11 +296,11 @@ msgstr "Lloji"
 #: providers/ibmdb2/gda-ibmdb2-provider.c:1000
 #: providers/ldap/gda-ldap-provider.c:328 providers/mdb/gda-mdb-provider.c:548
 #: providers/mdb/gda-mdb-provider.c:595 providers/mdb/gda-mdb-provider.c:655
-#: providers/msql/gda-msql-provider.c:449
-#: providers/msql/gda-msql-provider.c:487
-#: providers/mysql/gda-mysql-provider.c:734
-#: providers/mysql/gda-mysql-provider.c:921
-#: providers/mysql/gda-mysql-provider.c:1003
+#: providers/msql/gda-msql-provider.c:472
+#: providers/msql/gda-msql-provider.c:512
+#: providers/mysql/gda-mysql-provider.c:733
+#: providers/mysql/gda-mysql-provider.c:920
+#: providers/mysql/gda-mysql-provider.c:1012
 #: providers/odbc/gda-odbc-provider.c:1025
 #: providers/odbc/gda-odbc-provider.c:1138
 #: providers/odbc/gda-odbc-provider.c:1247
@@ -294,199 +313,28 @@ msgstr "Lloji"
 #: providers/oracle/gda-oracle-provider.c:1955
 #: providers/oracle/gda-oracle-provider.c:1973
 #: providers/oracle/gda-oracle-provider.c:2096
-#: providers/postgres/gda-postgres-provider.c:932
-#: providers/postgres/gda-postgres-provider.c:1202
-#: providers/postgres/gda-postgres-provider.c:1221
-#: providers/postgres/gda-postgres-provider.c:1281
-#: providers/postgres/gda-postgres-provider.c:1398
-#: providers/postgres/gda-postgres-provider.c:2031
+#: providers/postgres/gda-postgres-provider.c:946
+#: providers/postgres/gda-postgres-provider.c:1216
+#: providers/postgres/gda-postgres-provider.c:1235
+#: providers/postgres/gda-postgres-provider.c:1295
+#: providers/postgres/gda-postgres-provider.c:1413
+#: providers/postgres/gda-postgres-provider.c:2051
 #: providers/sqlite/gda-sqlite-provider.c:788
 #: providers/sybase/gda-sybase-provider.c:1098
 #: providers/xml/gda-xml-provider.c:655
 msgid "Owner"
 msgstr "Pronari"
 
-#: providers/firebird/gda-firebird-provider.c:230
-#: providers/ibmdb2/gda-ibmdb2-provider.c:949
-#: providers/msql/gda-msql-provider.c:489
-#: providers/mysql/gda-mysql-provider.c:1005
-#: providers/odbc/gda-odbc-provider.c:1363
-#: providers/oracle/gda-oracle-provider.c:2097
-#: providers/postgres/gda-postgres-provider.c:1223
-#: providers/sqlite/gda-sqlite-provider.c:790
-#: providers/sybase/gda-sybase-provider.c:1102
-#: providers/xml/gda-xml-provider.c:657
-#, fuzzy
-msgid "GDA type"
-msgstr "lloji"
-
-#. GRUT modified this item
-#. Set it here instead of the SQL query to allow i18n
-#: providers/firebird/gda-firebird-provider.c:314
-#: providers/ibmdb2/gda-ibmdb2-provider.c:833
-#: providers/ibmdb2/gda-ibmdb2-provider.c:890
-#: providers/ibmdb2/gda-ibmdb2-provider.c:999
-#: providers/odbc/gda-odbc-provider.c:1246
-#: providers/postgres/gda-postgres-provider.c:1201
-#: providers/postgres/gda-postgres-provider.c:2085
-msgid "Table"
-msgstr "Tabela"
-
-#: providers/firebird/gda-firebird-provider.c:317
-#: providers/mdb/gda-mdb-provider.c:553
-#: providers/odbc/gda-odbc-provider.c:1143
-#: providers/odbc/gda-odbc-provider.c:1249
-#: providers/odbc/gda-odbc-provider.c:1405
-#: providers/odbc/gda-odbc-provider.c:1457
-#: providers/oracle/gda-oracle-provider.c:1158
-#: providers/postgres/gda-postgres-provider.c:937
-#: providers/postgres/gda-postgres-provider.c:1204
-#: providers/postgres/gda-postgres-provider.c:1283
-#: providers/postgres/gda-postgres-provider.c:1402
-#: providers/postgres/gda-postgres-provider.c:2033
-msgid "Definition"
-msgstr ""
-
-#: providers/firebird/gda-firebird-provider.c:608
-#: providers/mdb/gda-mdb-provider.c:490
-#: providers/mysql/gda-mysql-provider.c:1100
-#: providers/odbc/gda-odbc-provider.c:949
-#: providers/oracle/gda-oracle-provider.c:1248
-#: providers/postgres/gda-postgres-provider.c:1448
-#: providers/sqlite/gda-sqlite-provider.c:658
-#: providers/xml/gda-xml-provider.c:489
-#, fuzzy
-msgid "Field name"
-msgstr "Fusha emri"
-
-#: providers/firebird/gda-firebird-provider.c:609
-#: providers/mdb/gda-mdb-provider.c:491 providers/msql/gda-msql-provider.c:537
-#: providers/mysql/gda-mysql-provider.c:1101
-#: providers/odbc/gda-odbc-provider.c:950
-#: providers/oracle/gda-oracle-provider.c:1249
-#: providers/postgres/gda-postgres-provider.c:1449
-#: providers/sqlite/gda-sqlite-provider.c:659
-#: providers/xml/gda-xml-provider.c:490
-#, fuzzy
-msgid "Data type"
-msgstr "Të dhëna lloji"
-
-#: providers/firebird/gda-firebird-provider.c:610
-#: providers/mdb/gda-mdb-provider.c:492 providers/msql/gda-msql-provider.c:538
-#: providers/mysql/gda-mysql-provider.c:1102
-#: providers/odbc/gda-odbc-provider.c:951
-#: providers/oracle/gda-oracle-provider.c:1250
-#: providers/postgres/gda-postgres-provider.c:1450
-#: providers/sqlite/gda-sqlite-provider.c:660
-#: providers/xml/gda-xml-provider.c:491
-#, fuzzy
-msgid "Size"
-msgstr "Madhësia"
-
-#: providers/firebird/gda-firebird-provider.c:611
-#: providers/mdb/gda-mdb-provider.c:493 providers/msql/gda-msql-provider.c:539
-#: providers/mysql/gda-mysql-provider.c:1103
-#: providers/odbc/gda-odbc-provider.c:952
-#: providers/oracle/gda-oracle-provider.c:1251
-#: providers/postgres/gda-postgres-provider.c:1451
-#: providers/sqlite/gda-sqlite-provider.c:661
-#: providers/xml/gda-xml-provider.c:492
-#, fuzzy
-msgid "Scale"
-msgstr "Shkalla"
-
-#: providers/firebird/gda-firebird-provider.c:612
-#: providers/mdb/gda-mdb-provider.c:494
-#: providers/mysql/gda-mysql-provider.c:1104
-#: providers/odbc/gda-odbc-provider.c:953
-#: providers/oracle/gda-oracle-provider.c:1252
-#: providers/postgres/gda-postgres-provider.c:1452
-#: providers/sqlite/gda-sqlite-provider.c:662
-#: providers/xml/gda-xml-provider.c:493
-#, fuzzy
-msgid "Not null?"
-msgstr "Not?"
-
-#: providers/firebird/gda-firebird-provider.c:613
-#: providers/mdb/gda-mdb-provider.c:495 providers/msql/gda-msql-provider.c:541
-#: providers/mysql/gda-mysql-provider.c:1105
-#: providers/odbc/gda-odbc-provider.c:954
-#: providers/oracle/gda-oracle-provider.c:1253
-#: providers/postgres/gda-postgres-provider.c:1453
-#: providers/sqlite/gda-sqlite-provider.c:663
-#: providers/xml/gda-xml-provider.c:494
-msgid "Primary key?"
-msgstr ""
-
-#: providers/firebird/gda-firebird-provider.c:614
-#: providers/mdb/gda-mdb-provider.c:496 providers/msql/gda-msql-provider.c:542
-#: providers/mysql/gda-mysql-provider.c:1106
-#: providers/odbc/gda-odbc-provider.c:955
-#: providers/oracle/gda-oracle-provider.c:1254
-#: providers/postgres/gda-postgres-provider.c:1454
-#: providers/sqlite/gda-sqlite-provider.c:664
-#: providers/xml/gda-xml-provider.c:495
-#, fuzzy
-msgid "Unique index?"
-msgstr "Unique treguesi?"
-
-#: providers/firebird/gda-firebird-provider.c:615
-#: providers/mdb/gda-mdb-provider.c:497 providers/msql/gda-msql-provider.c:543
-#: providers/mysql/gda-mysql-provider.c:1107
-#: providers/odbc/gda-odbc-provider.c:956
-#: providers/oracle/gda-oracle-provider.c:1255
-#: providers/postgres/gda-postgres-provider.c:1455
-#: providers/sqlite/gda-sqlite-provider.c:665
-#: providers/xml/gda-xml-provider.c:496
-msgid "References"
-msgstr ""
-
-#: providers/firebird/gda-firebird-provider.c:616
-#: providers/mdb/gda-mdb-provider.c:498 providers/msql/gda-msql-provider.c:544
-#: providers/mysql/gda-mysql-provider.c:1108
-#: providers/odbc/gda-odbc-provider.c:957
-#: providers/oracle/gda-oracle-provider.c:1256
-#: providers/postgres/gda-postgres-provider.c:1456
-#: providers/sqlite/gda-sqlite-provider.c:666
-#, fuzzy
-msgid "Default value"
-msgstr "E prezgjedhur"
-
-#: providers/firebird/gda-firebird-provider.c:625
-#: providers/firebird/gda-firebird-provider.c:632
-#: providers/msql/gda-msql-provider.c:557
-#: providers/msql/gda-msql-provider.c:563
-#: providers/mysql/gda-mysql-provider.c:1125
-#: providers/mysql/gda-mysql-provider.c:1133
-#, fuzzy
-msgid "Table name is needed but none specified in parameter list"
-msgstr "Tabela emri është asnjë në lista"
-
-#. GRUT modified this item
-#. 5th the return type
-#. 6th the argument type
-#: providers/firebird/gda-firebird-provider.c:701
-#: providers/firebird/gda-firebird-provider.c:703
-msgid "UNKNOWN"
-msgstr "PANJOHUR"
-
-#. GRUT modified this item
-#: providers/firebird/gda-firebird-provider.c:724
-#: providers/mdb/gda-mdb-provider.c:547
-#: providers/mysql/gda-mysql-provider.c:733
-msgid "ID"
-msgstr "ID"
-
-#. GRUT modified this item
-#: providers/firebird/gda-firebird-provider.c:726
+#: providers/firebird/gda-firebird-provider.c:233
+#: providers/firebird/gda-firebird-provider.c:733
 #: providers/ibmdb2/gda-ibmdb2-provider.c:948
 #: providers/ldap/gda-ldap-provider.c:329 providers/mdb/gda-mdb-provider.c:549
 #: providers/mdb/gda-mdb-provider.c:596 providers/mdb/gda-mdb-provider.c:656
-#: providers/msql/gda-msql-provider.c:450
-#: providers/msql/gda-msql-provider.c:488
-#: providers/mysql/gda-mysql-provider.c:735
-#: providers/mysql/gda-mysql-provider.c:922
-#: providers/mysql/gda-mysql-provider.c:1004
+#: providers/msql/gda-msql-provider.c:473
+#: providers/msql/gda-msql-provider.c:513
+#: providers/mysql/gda-mysql-provider.c:734
+#: providers/mysql/gda-mysql-provider.c:921
+#: providers/mysql/gda-mysql-provider.c:1013
 #: providers/odbc/gda-odbc-provider.c:1139
 #: providers/odbc/gda-odbc-provider.c:1362
 #: providers/odbc/gda-odbc-provider.c:1456
@@ -496,98 +344,284 @@ msgstr "ID"
 #: providers/oracle/gda-oracle-provider.c:1955
 #: providers/oracle/gda-oracle-provider.c:1974
 #: providers/oracle/gda-oracle-provider.c:2097
-#: providers/postgres/gda-postgres-provider.c:933
-#: providers/postgres/gda-postgres-provider.c:1222
-#: providers/postgres/gda-postgres-provider.c:1282
-#: providers/postgres/gda-postgres-provider.c:1399
-#: providers/postgres/gda-postgres-provider.c:2032
+#: providers/postgres/gda-postgres-provider.c:947
+#: providers/postgres/gda-postgres-provider.c:1236
+#: providers/postgres/gda-postgres-provider.c:1296
+#: providers/postgres/gda-postgres-provider.c:1414
+#: providers/postgres/gda-postgres-provider.c:2052
 #: providers/sqlite/gda-sqlite-provider.c:789
 #: providers/sybase/gda-sybase-provider.c:1100
 #: providers/xml/gda-xml-provider.c:656
 msgid "Comments"
 msgstr "Komente"
 
-#: providers/firebird/gda-firebird-provider.c:727
+#: providers/firebird/gda-firebird-provider.c:234
+#: providers/ibmdb2/gda-ibmdb2-provider.c:949
+#: providers/msql/gda-msql-provider.c:514
+#: providers/mysql/gda-mysql-provider.c:1014
+#: providers/odbc/gda-odbc-provider.c:1363
+#: providers/oracle/gda-oracle-provider.c:2097
+#: providers/postgres/gda-postgres-provider.c:1237
+#: providers/sqlite/gda-sqlite-provider.c:790
+#: providers/sybase/gda-sybase-provider.c:1102
+#: providers/xml/gda-xml-provider.c:657
+#, fuzzy
+msgid "GDA type"
+msgstr "lloji"
+
+#. Set it here instead of the SQL query to allow i18n
+#: providers/firebird/gda-firebird-provider.c:320
+#: providers/ibmdb2/gda-ibmdb2-provider.c:833
+#: providers/ibmdb2/gda-ibmdb2-provider.c:890
+#: providers/ibmdb2/gda-ibmdb2-provider.c:999
+#: providers/odbc/gda-odbc-provider.c:1246
+#: providers/postgres/gda-postgres-provider.c:1215
+#: providers/postgres/gda-postgres-provider.c:2105
+msgid "Table"
+msgstr "Tabela"
+
+#: providers/firebird/gda-firebird-provider.c:323
+#: providers/mdb/gda-mdb-provider.c:553
+#: providers/odbc/gda-odbc-provider.c:1143
+#: providers/odbc/gda-odbc-provider.c:1249
+#: providers/odbc/gda-odbc-provider.c:1405
+#: providers/odbc/gda-odbc-provider.c:1457
+#: providers/oracle/gda-oracle-provider.c:1158
+#: providers/postgres/gda-postgres-provider.c:951
+#: providers/postgres/gda-postgres-provider.c:1218
+#: providers/postgres/gda-postgres-provider.c:1297
+#: providers/postgres/gda-postgres-provider.c:1417
+#: providers/postgres/gda-postgres-provider.c:2053
+msgid "Definition"
+msgstr ""
+
+#: providers/firebird/gda-firebird-provider.c:615
+#: providers/mdb/gda-mdb-provider.c:490
+#: providers/mysql/gda-mysql-provider.c:1109
+#: providers/odbc/gda-odbc-provider.c:949
+#: providers/oracle/gda-oracle-provider.c:1248
+#: providers/postgres/gda-postgres-provider.c:1463
+#: providers/sqlite/gda-sqlite-provider.c:658
+#: providers/xml/gda-xml-provider.c:489
+#, fuzzy
+msgid "Field name"
+msgstr "Fusha emri"
+
+#: providers/firebird/gda-firebird-provider.c:616
+#: providers/mdb/gda-mdb-provider.c:491 providers/msql/gda-msql-provider.c:564
+#: providers/mysql/gda-mysql-provider.c:1110
+#: providers/odbc/gda-odbc-provider.c:950
+#: providers/oracle/gda-oracle-provider.c:1249
+#: providers/postgres/gda-postgres-provider.c:1464
+#: providers/sqlite/gda-sqlite-provider.c:659
+#: providers/xml/gda-xml-provider.c:490
+#, fuzzy
+msgid "Data type"
+msgstr "Të dhëna lloji"
+
+#: providers/firebird/gda-firebird-provider.c:617
+#: providers/mdb/gda-mdb-provider.c:492 providers/msql/gda-msql-provider.c:565
+#: providers/mysql/gda-mysql-provider.c:1111
+#: providers/odbc/gda-odbc-provider.c:951
+#: providers/oracle/gda-oracle-provider.c:1250
+#: providers/postgres/gda-postgres-provider.c:1465
+#: providers/sqlite/gda-sqlite-provider.c:660
+#: providers/xml/gda-xml-provider.c:491
+#, fuzzy
+msgid "Size"
+msgstr "Madhësia"
+
+#: providers/firebird/gda-firebird-provider.c:618
+#: providers/mdb/gda-mdb-provider.c:493 providers/msql/gda-msql-provider.c:566
+#: providers/mysql/gda-mysql-provider.c:1112
+#: providers/odbc/gda-odbc-provider.c:952
+#: providers/oracle/gda-oracle-provider.c:1251
+#: providers/postgres/gda-postgres-provider.c:1466
+#: providers/sqlite/gda-sqlite-provider.c:661
+#: providers/xml/gda-xml-provider.c:492
+#, fuzzy
+msgid "Scale"
+msgstr "Shkalla"
+
+#: providers/firebird/gda-firebird-provider.c:619
+#: providers/mdb/gda-mdb-provider.c:494
+#: providers/mysql/gda-mysql-provider.c:1113
+#: providers/odbc/gda-odbc-provider.c:953
+#: providers/oracle/gda-oracle-provider.c:1252
+#: providers/postgres/gda-postgres-provider.c:1467
+#: providers/sqlite/gda-sqlite-provider.c:662
+#: providers/xml/gda-xml-provider.c:493
+#, fuzzy
+msgid "Not null?"
+msgstr "Not?"
+
+#: providers/firebird/gda-firebird-provider.c:620
+#: providers/mdb/gda-mdb-provider.c:495 providers/msql/gda-msql-provider.c:568
+#: providers/mysql/gda-mysql-provider.c:1114
+#: providers/odbc/gda-odbc-provider.c:954
+#: providers/oracle/gda-oracle-provider.c:1253
+#: providers/postgres/gda-postgres-provider.c:1468
+#: providers/sqlite/gda-sqlite-provider.c:663
+#: providers/xml/gda-xml-provider.c:494
+msgid "Primary key?"
+msgstr ""
+
+#: providers/firebird/gda-firebird-provider.c:621
+#: providers/mdb/gda-mdb-provider.c:496 providers/msql/gda-msql-provider.c:569
+#: providers/mysql/gda-mysql-provider.c:1115
+#: providers/odbc/gda-odbc-provider.c:955
+#: providers/oracle/gda-oracle-provider.c:1254
+#: providers/postgres/gda-postgres-provider.c:1469
+#: providers/sqlite/gda-sqlite-provider.c:664
+#: providers/xml/gda-xml-provider.c:495
+#, fuzzy
+msgid "Unique index?"
+msgstr "Unique treguesi?"
+
+#: providers/firebird/gda-firebird-provider.c:622
+#: providers/mdb/gda-mdb-provider.c:497 providers/msql/gda-msql-provider.c:570
+#: providers/mysql/gda-mysql-provider.c:1116
+#: providers/odbc/gda-odbc-provider.c:956
+#: providers/oracle/gda-oracle-provider.c:1255
+#: providers/postgres/gda-postgres-provider.c:1470
+#: providers/sqlite/gda-sqlite-provider.c:665
+#: providers/xml/gda-xml-provider.c:496
+msgid "References"
+msgstr ""
+
+#: providers/firebird/gda-firebird-provider.c:623
+#: providers/mdb/gda-mdb-provider.c:498 providers/msql/gda-msql-provider.c:571
+#: providers/mysql/gda-mysql-provider.c:1117
+#: providers/odbc/gda-odbc-provider.c:957
+#: providers/oracle/gda-oracle-provider.c:1256
+#: providers/postgres/gda-postgres-provider.c:1471
+#: providers/sqlite/gda-sqlite-provider.c:666
+#, fuzzy
+msgid "Default value"
+msgstr "E prezgjedhur"
+
+#: providers/firebird/gda-firebird-provider.c:632
+#: providers/firebird/gda-firebird-provider.c:639
+#: providers/msql/gda-msql-provider.c:584
+#: providers/msql/gda-msql-provider.c:590
+#: providers/mysql/gda-mysql-provider.c:1134
+#: providers/mysql/gda-mysql-provider.c:1142
+#, fuzzy
+msgid "Table name is needed but none specified in parameter list"
+msgstr "Tabela emri është asnjë në lista"
+
+#. 5th the return type
+#. 6th the argument type
+#: providers/firebird/gda-firebird-provider.c:708
+#: providers/firebird/gda-firebird-provider.c:710
+msgid "UNKNOWN"
+msgstr "PANJOHUR"
+
+#: providers/firebird/gda-firebird-provider.c:731
+#: providers/mdb/gda-mdb-provider.c:547
+#: providers/mysql/gda-mysql-provider.c:732
+msgid "ID"
+msgstr "ID"
+
+#: providers/firebird/gda-firebird-provider.c:734
 #: providers/mdb/gda-mdb-provider.c:550
-#: providers/mysql/gda-mysql-provider.c:736
+#: providers/mysql/gda-mysql-provider.c:735
 #: providers/odbc/gda-odbc-provider.c:1140
-#: providers/postgres/gda-postgres-provider.c:934
+#: providers/postgres/gda-postgres-provider.c:948
 #, fuzzy
 msgid "Return type"
 msgstr "lloji"
 
-#: providers/firebird/gda-firebird-provider.c:728
+#: providers/firebird/gda-firebird-provider.c:735
 #: providers/mdb/gda-mdb-provider.c:552
-#: providers/mysql/gda-mysql-provider.c:737
+#: providers/mysql/gda-mysql-provider.c:736
 #: providers/odbc/gda-odbc-provider.c:1142
-#: providers/postgres/gda-postgres-provider.c:936
+#: providers/postgres/gda-postgres-provider.c:950
 msgid "Args types"
 msgstr ""
 
-#. GRUT modified this item
-#: providers/firebird/gda-firebird-provider.c:729
-#: providers/mysql/gda-mysql-provider.c:738
+#: providers/firebird/gda-firebird-provider.c:736
+#: providers/mysql/gda-mysql-provider.c:737
 #: providers/oracle/gda-oracle-provider.c:1913
 #: providers/oracle/gda-oracle-provider.c:1975
 msgid "SQL"
 msgstr "SQL"
 
-#: providers/firebird/gda-firebird-provider.c:813
-#: providers/firebird/gda-firebird-provider.c:930
-#: providers/firebird/gda-firebird-provider.c:957
-#: providers/firebird/gda-firebird-provider.c:976
-#: providers/firebird/gda-firebird-provider.c:1028
-#: providers/firebird/gda-firebird-provider.c:1121
-#: providers/firebird/gda-firebird-provider.c:1190
-#: providers/firebird/gda-firebird-provider.c:1224
-#: providers/firebird/gda-firebird-provider.c:1262
-#: providers/firebird/gda-firebird-recordset.c:728
-#: providers/firebird/gda-firebird-recordset.c:930
-#, fuzzy
-msgid "Invalid Firebird handle"
-msgstr "E pavlefshme Firebird"
-
-#: providers/firebird/gda-firebird-provider.c:851
+#: providers/firebird/gda-firebird-provider.c:858
 #, fuzzy
 msgid "No database specified"
 msgstr "Jo Bankë të dhënash (databazë)"
 
-#: providers/firebird/gda-firebird-provider.c:1230
-#: providers/firebird/gda-firebird-provider.c:1268
+#: providers/firebird/gda-firebird-provider.c:1247
+#: providers/firebird/gda-firebird-provider.c:1285
 #, fuzzy
 msgid "Invalid transaction handle"
 msgstr "E pavlefshme"
 
-#: providers/firebird/gda-firebird-recordset.c:384
-#: providers/firebird/gda-firebird-recordset.c:424
+#: providers/firebird/gda-firebird-recordset.c:345
+#: providers/firebird/gda-firebird-recordset.c:386
 #, fuzzy
 msgid "Statement already prepared."
 msgstr "Statement."
 
-#: providers/firebird/gda-firebird-recordset.c:388
+#: providers/firebird/gda-firebird-recordset.c:349
 #, fuzzy
 msgid "Transaction not initialized."
 msgstr "nuk."
 
-#: providers/firebird/gda-firebird-recordset.c:493
+#: providers/firebird/gda-firebird-recordset.c:456
 #, fuzzy
-msgid "Firebird's ARRAY datatype not supported yet !\n"
+msgid "Firebird's ARRAY datatype not supported yet!\n"
 msgstr "Firebird nuk j"
 
-#: providers/firebird/gda-firebird-recordset.c:498
+#: providers/firebird/gda-firebird-recordset.c:565
 #, fuzzy
-msgid "Firebird's BLOB datatype not supported yet !\n"
-msgstr "Firebird nuk j"
-
-#: providers/firebird/gda-firebird-recordset.c:599
-#, fuzzy
-msgid "Unknown Firebird's field value !\n"
+msgid "Unknown Firebird's field value!\n"
 msgstr "Nuk njihet Firebird j"
 
 #: providers/firebird/libmain.c:40
 #, fuzzy
 msgid "Provider for Firebird databases"
 msgstr "për Firebird"
+
+#: providers/firebird/libmain.c:49 providers/freetds/libmain.c:48
+#: providers/ibmdb2/libmain.c:48 providers/msql/gda-msql-libmain.c:56
+#: providers/mysql/libmain.c:50 providers/postgres/libmain.c:50
+#: providers/sybase/libmain.c:49
+#, fuzzy
+msgid "Database Name"
+msgstr "Databaza"
+
+#: providers/firebird/libmain.c:50 providers/freetds/libmain.c:49
+msgid "Name of the database to be used"
+msgstr ""
+
+#: providers/firebird/libmain.c:53
+#, fuzzy
+msgid "Character Set"
+msgstr "Simboli"
+
+#: providers/firebird/libmain.c:54
+#, fuzzy
+msgid "Character set to be used on the connection"
+msgstr "FILE është nuk në."
+
+#: providers/firebird/libmain.c:57
+msgid "SQL Dialect"
+msgstr ""
+
+#: providers/firebird/libmain.c:58
+msgid "SQL dialect to use on the connection"
+msgstr ""
+
+#: providers/firebird/libmain.c:61
+#, fuzzy
+msgid "Page Size"
+msgstr "Madhësia"
+
+#: providers/firebird/libmain.c:62
+msgid "Page size to use on the database"
+msgstr ""
 
 #: providers/freetds/gda-freetds-provider.c:197
 #, fuzzy
@@ -650,8 +684,7 @@ msgid "Unexpected return in execute_cmd()."
 msgstr "në ekzekuto."
 
 #: providers/freetds/gda-freetds-provider.c:1060
-#, c-format
-#, fuzzy
+#, fuzzy, c-format
 msgid ""
 "Msg %d, Level %d, State %d, Server %s, Line %d\n"
 "%s\n"
@@ -674,22 +707,22 @@ msgstr "Etiketa Gjendja Serveri Linja j j"
 msgid "Not available"
 msgstr "Not"
 
-#: providers/freetds/gda-freetds-recordset.c:377
+#: providers/freetds/gda-freetds-recordset.c:376
 #, fuzzy
 msgid "Error processing result rows.\n"
 msgstr "Gabim rreshta j"
 
-#: providers/freetds/gda-freetds-recordset.c:384
+#: providers/freetds/gda-freetds-recordset.c:383
 #, fuzzy
 msgid "Unexpected freetds return code in tds_process_row_tokens().\n"
 msgstr "kodi në j"
 
-#: providers/freetds/gda-freetds-recordset.c:394
+#: providers/freetds/gda-freetds-recordset.c:393
 #, fuzzy
 msgid "Error processing results.\n"
 msgstr "Gabim rezultatet j"
 
-#: providers/freetds/gda-freetds-recordset.c:401
+#: providers/freetds/gda-freetds-recordset.c:400
 #, fuzzy
 msgid "Unexpected freetds return code in tds_process_result_tokens\n"
 msgstr "kodi në j"
@@ -698,6 +731,92 @@ msgstr "kodi në j"
 #, fuzzy
 msgid "Provider for TDS-based databases (using FreeTDS)"
 msgstr "për"
+
+#: providers/freetds/libmain.c:52
+msgid "Host"
+msgstr ""
+
+#: providers/freetds/libmain.c:53
+msgid "Host name of the machine where the database is located"
+msgstr ""
+
+#: providers/freetds/libmain.c:56 providers/postgres/libmain.c:62
+#: providers/sybase/libmain.c:61
+msgid "Host Address"
+msgstr ""
+
+#: providers/freetds/libmain.c:57 providers/postgres/libmain.c:63
+#: providers/sybase/libmain.c:62
+msgid "IP address of the host to connect to"
+msgstr ""
+
+#: providers/freetds/libmain.c:60
+#, fuzzy
+msgid "Connection Options"
+msgstr "Stringa e lidhjes"
+
+#: providers/freetds/libmain.c:61
+msgid "Extra options to use on the connection"
+msgstr ""
+
+#: providers/freetds/libmain.c:64 providers/ldap/libmain.c:64
+#: providers/mysql/libmain.c:58 providers/postgres/libmain.c:70
+#: providers/sybase/libmain.c:69
+#, fuzzy
+msgid "Port"
+msgstr "Pikë"
+
+#: providers/freetds/libmain.c:65
+msgid "Port to use to connect to the database's host"
+msgstr ""
+
+#: providers/freetds/libmain.c:71 providers/sybase/libmain.c:76
+msgid "Enable Sybase"
+msgstr ""
+
+#: providers/freetds/libmain.c:72 providers/sybase/libmain.c:77
+msgid "Enable Sybase operative mode"
+msgstr ""
+
+#: providers/freetds/libmain.c:79
+msgid "FreeTDS Config File"
+msgstr ""
+
+#: providers/freetds/libmain.c:80
+msgid "Location of the FreeTDS config file"
+msgstr ""
+
+#: providers/freetds/libmain.c:84
+msgid "TDS Major Version"
+msgstr ""
+
+#: providers/freetds/libmain.c:85
+msgid "TDS protocol major version"
+msgstr ""
+
+#: providers/freetds/libmain.c:88
+msgid "TDS Minor Version"
+msgstr ""
+
+#: providers/freetds/libmain.c:89
+msgid "TDS protocol minor version"
+msgstr ""
+
+#: providers/freetds/libmain.c:93
+msgid "Dump File"
+msgstr ""
+
+#: providers/freetds/libmain.c:94
+msgid "File for TDS protocol dumps"
+msgstr ""
+
+#: providers/freetds/libmain.c:97
+msgid "Dump Configuration File"
+msgstr ""
+
+#: providers/freetds/libmain.c:98
+msgid "File fpr TDS protocol dumps configuration"
+msgstr ""
 
 #: providers/freetds/utils.c:40 providers/oracle/utils.c:67
 #: providers/postgres/utils.c:48 providers/sybase/utils.c:534
@@ -725,17 +844,14 @@ msgstr "është nuk punë j"
 msgid "Invalid IBM DB2 handle"
 msgstr "E pavlefshme"
 
-#. GRUT modified this item
 #: providers/ibmdb2/gda-ibmdb2-provider.c:741
 msgid "Function"
 msgstr "Funksioni"
 
-#. GRUT modified this item
 #: providers/ibmdb2/gda-ibmdb2-provider.c:777
 msgid "Database"
 msgstr "Databaza"
 
-#. GRUT modified this item
 #: providers/ibmdb2/gda-ibmdb2-provider.c:831
 msgid "Index"
 msgstr "Treguesi"
@@ -743,11 +859,10 @@ msgstr "Treguesi"
 #: providers/ibmdb2/gda-ibmdb2-provider.c:860
 #: providers/mdb/gda-mdb-provider.c:546
 #: providers/odbc/gda-odbc-provider.c:1136
-#: providers/postgres/gda-postgres-provider.c:930
+#: providers/postgres/gda-postgres-provider.c:944
 msgid "Procedure"
 msgstr ""
 
-#. GRUT modified this item
 #: providers/ibmdb2/gda-ibmdb2-provider.c:862
 msgid "Language"
 msgstr "Gjuha"
@@ -762,15 +877,14 @@ msgstr "SQL"
 #. Set it here instead of the SQL query to allow i18n
 #: providers/ibmdb2/gda-ibmdb2-provider.c:918
 #: providers/oracle/gda-oracle-provider.c:2189
-#: providers/postgres/gda-postgres-provider.c:1437 testing/client.c:139
+#: providers/postgres/gda-postgres-provider.c:1452 testing/client.c:143
 msgid "Triggers"
 msgstr ""
 
-#. GRUT modified this item
 #. Set it here instead of the SQL query to allow i18n
 #: providers/ibmdb2/gda-ibmdb2-provider.c:974
 #: providers/oracle/gda-oracle-provider.c:1825
-#: providers/postgres/gda-postgres-provider.c:1989 testing/client.c:137
+#: providers/postgres/gda-postgres-provider.c:2009 testing/client.c:141
 msgid "Users"
 msgstr "Përdorues"
 
@@ -787,6 +901,20 @@ msgstr ""
 msgid "Provider for IBMDB2 databases"
 msgstr "për"
 
+#: providers/ibmdb2/libmain.c:49 providers/msql/gda-msql-libmain.c:57
+#: providers/postgres/libmain.c:51 providers/sybase/libmain.c:50
+msgid "Name of the database to use"
+msgstr ""
+
+#: providers/ibmdb2/libmain.c:52 providers/postgres/libmain.c:66
+#: providers/sybase/libmain.c:65
+msgid "Extra Options"
+msgstr ""
+
+#: providers/ibmdb2/libmain.c:53
+msgid "Extra database options"
+msgstr ""
+
 #: providers/ldap/gda-ldap-provider.c:257
 #: providers/ldap/gda-ldap-provider.c:490
 #: providers/ldap/gda-ldap-provider.c:519
@@ -799,9 +927,9 @@ msgid "Invalid LDAP handle"
 msgstr "E pavlefshme LDAP"
 
 #: providers/ldap/gda-ldap-recordset.c:69
-#: providers/mysql/gda-mysql-recordset.c:139
-#: providers/postgres/gda-postgres-recordset.c:193
-#: providers/postgres/gda-postgres-recordset.c:357
+#: providers/mysql/gda-mysql-recordset.c:145
+#: providers/postgres/gda-postgres-recordset.c:196
+#: providers/postgres/gda-postgres-recordset.c:476
 #: providers/sqlite/gda-sqlite-recordset.c:165
 #: providers/sqlite/gda-sqlite-recordset.c:204
 #: providers/bdb/gda-bdb-recordset.c:111
@@ -811,32 +939,75 @@ msgstr "Rresht nga"
 
 #: providers/ldap/gda-ldap-recordset.c:283
 #: providers/msql/gda-msql-recordset.c:229
-#: providers/mysql/gda-mysql-recordset.c:320
+#: providers/mysql/gda-mysql-recordset.c:326
 #: providers/oracle/gda-oracle-recordset.c:469
+#: providers/postgres/gda-postgres-recordset.c:242
 #, fuzzy
 msgid "Attempt to insert a row with an invalid number of columns"
 msgstr "a me I pavlefshëm nga kollonat"
 
 #: providers/ldap/gda-ldap-recordset.c:298
 #: providers/msql/gda-msql-recordset.c:241
-#: providers/mysql/gda-mysql-recordset.c:335
+#: providers/mysql/gda-mysql-recordset.c:341
 #: providers/oracle/gda-oracle-recordset.c:484
+#: providers/postgres/gda-postgres-recordset.c:257
 #, fuzzy
 msgid "Could not retrieve column's information"
 msgstr "nuk"
 
 #: providers/ldap/gda-ldap-recordset.c:316
 #: providers/msql/gda-msql-recordset.c:255
-#: providers/mysql/gda-mysql-recordset.c:353
+#: providers/mysql/gda-mysql-recordset.c:359
 #: providers/oracle/gda-oracle-recordset.c:502
+#: providers/postgres/gda-postgres-recordset.c:277
+#: providers/postgres/gda-postgres-recordset.c:288
 #, fuzzy
 msgid "Could not retrieve column's value"
 msgstr "nuk"
 
-#: providers/ldap/libmain.c:42
+#: providers/ldap/libmain.c:47
 #, fuzzy
 msgid "Provider for LDAP directory"
 msgstr "për LDAP"
+
+#: providers/ldap/libmain.c:56
+msgid "LDAP Flags"
+msgstr ""
+
+#: providers/ldap/libmain.c:57
+msgid "LDAP flags"
+msgstr ""
+
+#: providers/ldap/libmain.c:60 providers/msql/gda-msql-libmain.c:60
+#: providers/mysql/libmain.c:54 providers/postgres/libmain.c:58
+#: providers/sybase/libmain.c:53 providers/sybase/libmain.c:57
+#, fuzzy
+msgid "Host Name"
+msgstr "Emri"
+
+#: providers/ldap/libmain.c:61
+msgid "Host name of the LDAP server"
+msgstr ""
+
+#: providers/ldap/libmain.c:65
+msgid "Port to use for connecting to the LDAP server"
+msgstr ""
+
+#: providers/ldap/libmain.c:68
+msgid "Bind Domain"
+msgstr ""
+
+#: providers/ldap/libmain.c:69
+msgid "LDAP bind domain to use for authentication"
+msgstr ""
+
+#: providers/ldap/libmain.c:72
+msgid "Authentication Method"
+msgstr ""
+
+#: providers/ldap/libmain.c:73
+msgid "Authentication method to use for connecting"
+msgstr ""
 
 #: providers/mdb/gda-mdb-provider.c:205
 #, fuzzy
@@ -845,8 +1016,7 @@ msgstr "A Bankë të dhënash (databazë) EMRIFILE në"
 
 #: providers/mdb/gda-mdb-provider.c:214
 #: providers/xbase/gda-xbase-provider.c:223
-#, c-format
-#, fuzzy
+#, fuzzy, c-format
 msgid "Could not open file %s"
 msgstr "nuk hap"
 
@@ -930,22 +1100,19 @@ msgstr "Simboli"
 
 #. end unsafe
 #: providers/mdb/gda-mdb-provider.c:737
-#, c-format
-#, fuzzy
+#, fuzzy, c-format
 msgid "Could not parse '%s' command"
 msgstr "nuk"
 
 #. parsing went fine, but there is no result
 #. (e.g. because of an invalid column name)
 #: providers/mdb/gda-mdb-provider.c:744
-#, c-format
-#, fuzzy
+#, fuzzy, c-format
 msgid "Got no result for '%s' command"
 msgstr "jo për"
 
 #: providers/mdb/gda-mdb-table.c:48 providers/xml/gda-xml-provider.c:519
-#, c-format
-#, fuzzy
+#, fuzzy, c-format
 msgid "Table %s not found"
 msgstr "Tabela nuk"
 
@@ -954,48 +1121,64 @@ msgstr "Tabela nuk"
 msgid "Provider for Microsoft Access files"
 msgstr "për"
 
-#: providers/msql/gda-msql-libmain.c:41
+#: providers/mdb/libmain.c:45 providers/sqlite/libmain.c:50
+#: providers/xbase/libmain.c:48 providers/xml/libmain.c:48
+#, fuzzy
+msgid "File Name"
+msgstr "Emri i fushës"
+
+#: providers/mdb/libmain.c:46 providers/xbase/libmain.c:49
+#, fuzzy
+msgid "Full path of the file containing the database"
+msgstr "A shtegu në hap a Bankë të dhënash (databazë)."
+
+#: providers/msql/gda-msql-libmain.c:45
 #, fuzzy
 msgid "Provider for Hughes Technologies mSQL databases"
 msgstr "për"
 
-#: providers/msql/gda-msql-provider.c:230
-#: providers/msql/gda-msql-provider.c:273
-#: providers/msql/gda-msql-provider.c:293
-#: providers/msql/gda-msql-provider.c:551
+#: providers/msql/gda-msql-libmain.c:61 providers/mysql/libmain.c:55
+#: providers/postgres/libmain.c:59 providers/sybase/libmain.c:54
+#: providers/sybase/libmain.c:58
+msgid "Name of the host to connect to"
+msgstr ""
+
+#: providers/msql/gda-msql-provider.c:242
+#: providers/msql/gda-msql-provider.c:286
+#: providers/msql/gda-msql-provider.c:307
+#: providers/msql/gda-msql-provider.c:578
 #: providers/msql/gda-msql-recordset.c:50
 #: providers/msql/gda-msql-recordset.c:140
 #, fuzzy
 msgid "Invalid mSQL handle"
 msgstr "E pavlefshme"
 
-#: providers/msql/gda-msql-provider.c:318
+#: providers/msql/gda-msql-provider.c:333
 #, fuzzy
 msgid "mSQL allows database creation only through the msqladmin tool."
 msgstr "Bankë të dhënash (databazë)."
 
-#: providers/msql/gda-msql-provider.c:331
+#: providers/msql/gda-msql-provider.c:347
 #, fuzzy
 msgid "mSQL allows database drops only through the msqladmin tool."
 msgstr "Bankë të dhënash (databazë)."
 
-#: providers/msql/gda-msql-provider.c:376
-#: providers/msql/gda-msql-provider.c:389
-#: providers/msql/gda-msql-provider.c:402
+#: providers/msql/gda-msql-provider.c:394
+#: providers/msql/gda-msql-provider.c:408
+#: providers/msql/gda-msql-provider.c:422
 msgid "mSQL doesn't support transactions."
 msgstr ""
 
-#: providers/msql/gda-msql-provider.c:486
+#: providers/msql/gda-msql-provider.c:511
 #, fuzzy
 msgid "Title"
 msgstr "Titulli"
 
-#. GRUT modified this item
-#: providers/msql/gda-msql-provider.c:536
+#: providers/msql/gda-msql-provider.c:563
 msgid "Field Name"
 msgstr "Emri i fushës"
 
-#: providers/msql/gda-msql-provider.c:540
+#: providers/msql/gda-msql-provider.c:567
 #, fuzzy
 msgid "Not null"
 msgstr "Not"
@@ -1005,40 +1188,41 @@ msgstr "Not"
 msgid "Row number out of bounds"
 msgstr "Rresht nga"
 
-#: providers/mysql/gda-mysql-provider.c:229
+#: providers/mysql/gda-mysql-provider.c:228
 #, fuzzy
-msgid "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
+msgid ""
+"You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
 msgstr "Ti a SOCKET a HOST a PORTA."
 
-#: providers/mysql/gda-mysql-provider.c:305
-#: providers/mysql/gda-mysql-provider.c:1116
-#: providers/mysql/gda-mysql-recordset.c:128
-#: providers/mysql/gda-mysql-recordset.c:202
+#: providers/mysql/gda-mysql-provider.c:304
+#: providers/mysql/gda-mysql-provider.c:1125
+#: providers/mysql/gda-mysql-recordset.c:134
+#: providers/mysql/gda-mysql-recordset.c:208
 #, fuzzy
 msgid "Invalid MySQL handle"
 msgstr "E pavlefshme"
 
-#: providers/mysql/gda-mysql-provider.c:321
-#: providers/mysql/gda-mysql-provider.c:391
-#: providers/mysql/gda-mysql-provider.c:414
-#: providers/mysql/gda-mysql-provider.c:445
-#: providers/mysql/gda-mysql-provider.c:477
-#: providers/mysql/gda-mysql-provider.c:543
-#: providers/mysql/gda-mysql-provider.c:566
-#: providers/mysql/gda-mysql-provider.c:623
-#: providers/mysql/gda-mysql-provider.c:656
-#: providers/mysql/gda-mysql-provider.c:1244
+#: providers/mysql/gda-mysql-provider.c:320
+#: providers/mysql/gda-mysql-provider.c:390
+#: providers/mysql/gda-mysql-provider.c:413
+#: providers/mysql/gda-mysql-provider.c:444
+#: providers/mysql/gda-mysql-provider.c:476
+#: providers/mysql/gda-mysql-provider.c:542
+#: providers/mysql/gda-mysql-provider.c:565
+#: providers/mysql/gda-mysql-provider.c:622
+#: providers/mysql/gda-mysql-provider.c:655
+#: providers/mysql/gda-mysql-provider.c:1252
 #, fuzzy
 msgid "Invalid MYSQL handle"
 msgstr "E pavlefshme"
 
-#: providers/mysql/gda-mysql-provider.c:571
-#: providers/mysql/gda-mysql-provider.c:628
-#: providers/mysql/gda-mysql-provider.c:661
+#: providers/mysql/gda-mysql-provider.c:570
+#: providers/mysql/gda-mysql-provider.c:627
+#: providers/mysql/gda-mysql-provider.c:660
 #: providers/oracle/gda-oracle-provider.c:857
 #: providers/oracle/gda-oracle-provider.c:939
 #: providers/oracle/gda-oracle-provider.c:1000
-#: providers/postgres/gda-postgres-provider.c:799
+#: providers/postgres/gda-postgres-provider.c:813
 #: providers/sqlite/gda-sqlite-provider.c:508
 #, fuzzy
 msgid "Transactions are not supported in read-only mode"
@@ -1048,6 +1232,30 @@ msgstr "nuk në modaliteti"
 #, fuzzy
 msgid "Provider for MySQL databases"
 msgstr "për"
+
+#: providers/mysql/libmain.c:51
+msgid "Name of the database to connect to"
+msgstr ""
+
+#: providers/mysql/libmain.c:59
+msgid "Port number to use for connecting"
+msgstr ""
+
+#: providers/mysql/libmain.c:62
+msgid "UNIX Socket"
+msgstr ""
+
+#: providers/mysql/libmain.c:63
+msgid "Full path of the UNIX socket to use for connecting locally"
+msgstr ""
+
+#: providers/mysql/libmain.c:66
+msgid "Use Secure Connection"
+msgstr ""
+
+#: providers/mysql/libmain.c:67
+msgid "Whether to use or not SSL for establishing the connection"
+msgstr ""
 
 #: providers/odbc/gda-odbc-provider.c:183
 msgid "Unable to SQLAllocEnv()..."
@@ -1064,20 +1272,19 @@ msgid "Invalid Odbc handle"
 msgstr "E pavlefshme"
 
 #: providers/odbc/gda-odbc-provider.c:1141
-#: providers/postgres/gda-postgres-provider.c:935
+#: providers/postgres/gda-postgres-provider.c:949
 msgid "Nb args"
 msgstr ""
 
-#. GRUT modified this item
 #: providers/odbc/gda-odbc-provider.c:1402
-#: providers/oracle/gda-oracle-provider.c:2193 testing/client.c:134
+#: providers/oracle/gda-oracle-provider.c:2193 testing/client.c:138
 msgid "Views"
 msgstr "Shikime"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/odbc/gda-odbc-provider.c:1454
-#: providers/postgres/gda-postgres-provider.c:2030
-#: providers/postgres/gda-postgres-provider.c:2086
+#: providers/postgres/gda-postgres-provider.c:2050
+#: providers/postgres/gda-postgres-provider.c:2106
 msgid "Sequence"
 msgstr ""
 
@@ -1085,6 +1292,16 @@ msgstr ""
 #, fuzzy
 msgid "Provider for ODBC data sources"
 msgstr "për burimet"
+
+#: providers/odbc/libmain.c:50
+#, fuzzy
+msgid "Connection String"
+msgstr "Stringa e lidhjes"
+
+#: providers/odbc/libmain.c:51
+#, fuzzy
+msgid "ODBC connection string"
+msgstr "Stringa e lidhjes"
 
 #: providers/oracle/gda-oracle-provider.c:196
 #, fuzzy
@@ -1252,20 +1469,19 @@ msgstr "nuk"
 msgid "Could not rollback the Oracle transaction"
 msgstr "nuk kthe mbrapsht"
 
-#. GRUT modified this item
 #. Set it here instead of the SQL query to allow i18n
 #: providers/oracle/gda-oracle-provider.c:1152
-#: providers/postgres/gda-postgres-provider.c:1396
+#: providers/postgres/gda-postgres-provider.c:1411
 msgid "Aggregate"
 msgstr "Agregim"
 
 #: providers/oracle/gda-oracle-provider.c:1156
-#: providers/postgres/gda-postgres-provider.c:1400
+#: providers/postgres/gda-postgres-provider.c:1415
 msgid "OutType"
 msgstr ""
 
 #: providers/oracle/gda-oracle-provider.c:1157
-#: providers/postgres/gda-postgres-provider.c:1401
+#: providers/postgres/gda-postgres-provider.c:1416
 msgid "InType"
 msgstr ""
 
@@ -1353,7 +1569,7 @@ msgstr "nuk merr"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/oracle/gda-oracle-provider.c:2177
-#: providers/postgres/gda-postgres-provider.c:1320 testing/client.c:135
+#: providers/postgres/gda-postgres-provider.c:1334 testing/client.c:139
 msgid "Indexes"
 msgstr ""
 
@@ -1361,7 +1577,7 @@ msgstr ""
 msgid "Procedures"
 msgstr ""
 
-#: providers/oracle/gda-oracle-provider.c:2183 testing/client.c:138
+#: providers/oracle/gda-oracle-provider.c:2183 testing/client.c:142
 msgid "Sequences"
 msgstr ""
 
@@ -1386,7 +1602,7 @@ msgid "Could not define by position"
 msgstr "nuk nga"
 
 #: providers/oracle/gda-oracle-recordset.c:173
-#: providers/postgres/gda-postgres-recordset.c:476
+#: providers/postgres/gda-postgres-recordset.c:599
 #, fuzzy
 msgid "Column out of range"
 msgstr "Kollonë nga"
@@ -1431,61 +1647,70 @@ msgstr "nuk a"
 msgid "Provider for Oracle databases"
 msgstr "për"
 
-#: providers/postgres/gda-postgres-provider.c:574
-#: providers/postgres/gda-postgres-provider.c:591
-#: providers/postgres/gda-postgres-provider.c:662
-#: providers/postgres/gda-postgres-provider.c:761
-#: providers/postgres/gda-postgres-provider.c:872
-#: providers/postgres/gda-postgres-recordset.c:184
-#: providers/postgres/gda-postgres-recordset.c:348
-#: providers/postgres/gda-postgres-recordset.c:470
+#: providers/oracle/libmain.c:43
+#, fuzzy
+msgid "TNS Name"
+msgstr "Emri"
+
+#: providers/oracle/libmain.c:44
+msgid "Name of the TNS configuration to use for connecting"
+msgstr ""
+
+#: providers/postgres/gda-postgres-provider.c:588
+#: providers/postgres/gda-postgres-provider.c:605
+#: providers/postgres/gda-postgres-provider.c:676
+#: providers/postgres/gda-postgres-provider.c:775
+#: providers/postgres/gda-postgres-provider.c:886
+#: providers/postgres/gda-postgres-recordset.c:187
+#: providers/postgres/gda-postgres-recordset.c:467
+#: providers/postgres/gda-postgres-recordset.c:593
 #: providers/postgres/utils.c:178
 #, fuzzy
 msgid "Invalid PostgreSQL handle"
 msgstr "E pavlefshme"
 
-#: providers/postgres/gda-postgres-provider.c:809
+#: providers/postgres/gda-postgres-provider.c:823
 #, fuzzy
 msgid "Transactions are not supported in read uncommitted isolation level"
 msgstr "nuk në niveli"
 
-#: providers/postgres/gda-postgres-provider.c:812
+#: providers/postgres/gda-postgres-provider.c:826
 #, fuzzy
 msgid "Transactions are not supported in repeatable read isolation level"
 msgstr "nuk në niveli"
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:1280
+#: providers/postgres/gda-postgres-provider.c:1294
 #, fuzzy
 msgid "View"
 msgstr "Paraqitja"
 
-#. GRUT modified this item
 #. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:1954 testing/client.c:130
+#: providers/postgres/gda-postgres-provider.c:1974 testing/client.c:134
 msgid "Databases"
 msgstr "Databazat"
 
-#: providers/postgres/gda-postgres-recordset.c:228
-msgid "Given row doesn't belong to the model."
-msgstr ""
-
-#: providers/postgres/gda-postgres-recordset.c:235
+#: providers/postgres/gda-postgres-recordset.c:234
+#: providers/postgres/gda-postgres-recordset.c:350
 #, fuzzy
 msgid "Table name could not be guessed."
 msgstr "Tabela emri nuk."
 
-#: providers/postgres/gda-postgres-recordset.c:287
+#: providers/postgres/gda-postgres-recordset.c:343
+msgid "Given row doesn't belong to the model."
+msgstr ""
+
+#: providers/postgres/gda-postgres-recordset.c:402
 #, fuzzy
 msgid "Model doesn't have at least one non-modified unique key."
 msgstr "Modeli."
 
-#: providers/postgres/gda-postgres-recordset.c:291
+#: providers/postgres/gda-postgres-recordset.c:406
 #, fuzzy
 msgid "Model doesn't have any non-unique values to update."
 msgstr "Modeli çdo."
 
-#: providers/postgres/gda-postgres-recordset.c:363
+#: providers/postgres/gda-postgres-recordset.c:482
 #: providers/sqlite/gda-sqlite-recordset.c:210
 #: providers/sqlite/gda-sqlite-recordset.c:242
 #: providers/bdb/gda-bdb-recordset.c:166
@@ -1493,7 +1718,7 @@ msgstr "Modeli çdo."
 msgid "Column number out of range"
 msgstr "Kollonë nga"
 
-#: providers/postgres/gda-postgres-recordset.c:584
+#: providers/postgres/gda-postgres-recordset.c:709
 #, c-format
 msgid "Tuples:\"%s\""
 msgstr ""
@@ -1503,9 +1728,38 @@ msgstr ""
 msgid "Provider for PostgreSQL databases"
 msgstr "për"
 
+#: providers/postgres/libmain.c:54
+msgid "Search Path"
+msgstr ""
+
+#: providers/postgres/libmain.c:55
+msgid "Search path"
+msgstr ""
+
+#: providers/postgres/libmain.c:67
+msgid "Extra PostgreSQL options to use for the connection"
+msgstr ""
+
+#: providers/postgres/libmain.c:71 providers/sybase/libmain.c:70
+msgid "Port number to use for the connection"
+msgstr ""
+
+#: providers/postgres/libmain.c:74
+msgid "Require SSL"
+msgstr ""
+
+#: providers/postgres/libmain.c:75
+msgid "Whether to require SSL or not when connecting"
+msgstr ""
+
+#: providers/postgres/libmain.c:78 providers/postgres/libmain.c:79
+msgid "TTY"
+msgstr ""
+
 #: providers/sqlite/gda-sqlite-provider.c:199
 #, fuzzy
-msgid "A full path must be specified on the connection string to open a database."
+msgid ""
+"A full path must be specified on the connection string to open a database."
 msgstr "A shtegu në hap a Bankë të dhënash (databazë)."
 
 #: providers/sqlite/gda-sqlite-provider.c:223
@@ -1538,7 +1792,8 @@ msgstr "Vetëm Bankë të dhënash (databazë) është"
 #: providers/sqlite/gda-sqlite-provider.c:426
 #, fuzzy
 msgid "To remove a SQLite database you should remove the database file by hand"
-msgstr "Për hiq a Bankë të dhënash (databazë) hiq Bankë të dhënash (databazë) nga"
+msgstr ""
+"Për hiq a Bankë të dhënash (databazë) hiq Bankë të dhënash (databazë) nga"
 
 #: providers/sqlite/gda-sqlite-provider.c:700
 #, fuzzy
@@ -1549,6 +1804,11 @@ msgstr "nuk për"
 #, fuzzy
 msgid "Provider for SQLite databases"
 msgstr "për"
+
+#: providers/sqlite/libmain.c:51
+#, fuzzy
+msgid "Full path of the file containing the SQLite database"
+msgstr "A shtegu në hap a Bankë të dhënash (databazë)."
 
 #: providers/sybase/gda-sybase-provider.c:291
 #, fuzzy
@@ -1568,8 +1828,7 @@ msgid ""
 msgstr "Cmd në Komanda nuk nga bllokuar."
 
 #: providers/sybase/gda-sybase-provider.c:656
-#, c-format
-#, fuzzy
+#, fuzzy, c-format
 msgid "Failed allocating a command structure in %s()"
 msgstr "Dështoi a në"
 
@@ -1620,8 +1879,7 @@ msgid "Failed dropping command structure."
 msgstr "Dështoi."
 
 #: providers/sybase/gda-sybase-provider.c:850
-#, c-format
-#, fuzzy
+#, fuzzy, c-format
 msgid "Command structure already in use. %s failed."
 msgstr "Komanda në."
 
@@ -1631,8 +1889,7 @@ msgid "Could not allocate command structure."
 msgstr "nuk."
 
 #: providers/sybase/gda-sybase-provider.c:867
-#, c-format
-#, fuzzy
+#, fuzzy, c-format
 msgid "Could not prepare command structure with %s."
 msgstr "nuk me."
 
@@ -1690,14 +1947,12 @@ msgid "ct_cancel() failed."
 msgstr "anullo."
 
 #: providers/sybase/gda-sybase-recordset.c:331
-#, c-format
-#, fuzzy
+#, fuzzy, c-format
 msgid "%s failed while processing a row result."
 msgstr "a."
 
 #: providers/sybase/gda-sybase-recordset.c:339
-#, c-format
-#, fuzzy
+#, fuzzy, c-format
 msgid "%s returned <= 0 columns."
 msgstr "kollonat."
 
@@ -1709,39 +1964,33 @@ msgstr "nuk për."
 
 #: providers/sybase/gda-sybase-recordset.c:363
 #: providers/sybase/gda-sybase-recordset.c:553
-#, c-format
-#, fuzzy
+#, fuzzy, c-format
 msgid "Could not call %s while processing row resultset."
 msgstr "nuk."
 
 #: providers/sybase/gda-sybase-recordset.c:382
 #: providers/sybase/gda-sybase-recordset.c:403
-#, c-format
-#, fuzzy
+#, fuzzy, c-format
 msgid "Could not run %s on column %d"
 msgstr "nuk në"
 
 #: providers/sybase/gda-sybase-recordset.c:391
-#, c-format
-#, fuzzy
+#, fuzzy, c-format
 msgid "Could not allocate data placeholder for column %d"
 msgstr "nuk për"
 
 #: providers/sybase/gda-sybase-recordset.c:422
-#, c-format
-#, fuzzy
+#, fuzzy, c-format
 msgid "Could not run %s to cancel processing row resultset."
 msgstr "nuk anullo."
 
 #: providers/sybase/gda-sybase-recordset.c:438
-#, c-format
-#, fuzzy
+#, fuzzy, c-format
 msgid "%s failed on row %d"
 msgstr "në"
 
 #: providers/sybase/gda-sybase-recordset.c:465
-#, c-format
-#, fuzzy
+#, fuzzy, c-format
 msgid "%s terminated with unexpected return code."
 msgstr "me kodi."
 
@@ -1776,14 +2025,12 @@ msgid "Attempt setting a nonnullable field to null."
 msgstr "a."
 
 #: providers/sybase/gda-sybase-types.c:208
-#, c-format
-#, fuzzy
+#, fuzzy, c-format
 msgid "cslib cannot convert type %d"
 msgstr "konvertoje lloji"
 
 #: providers/sybase/gda-sybase-types.c:223
-#, c-format
-#, fuzzy
+#, fuzzy, c-format
 msgid "data conversion failed for type %d"
 msgstr "për lloji"
 
@@ -1792,10 +2039,18 @@ msgstr "për lloji"
 msgid "GDA provider for sybase databases (using OpenClient)"
 msgstr "për"
 
-#: providers/sybase/main.c:52
+#: providers/sybase/libmain.c:66
+msgid "Extra Sybase options to use for the connection"
+msgstr ""
+
+#: providers/sybase/libmain.c:80
 #, fuzzy
-msgid "Could not initiate Sybase component factory"
-msgstr "nuk komponenti"
+msgid "Locale"
+msgstr "Shkalla"
+
+#: providers/sybase/libmain.c:81
+msgid "Locale to use in the connection"
+msgstr ""
 
 #: providers/sybase/utils.c:48
 #, fuzzy
@@ -1803,8 +2058,7 @@ msgid "Call: csmsg callback"
 msgstr "Thirrje"
 
 #: providers/sybase/utils.c:53
-#, c-format
-#, fuzzy
+#, fuzzy, c-format
 msgid ""
 "CS-Library error:\n"
 "\tseverity(%ld) layer(%ld) origin (%ld) number(%ld)\n"
@@ -1812,8 +2066,7 @@ msgid ""
 msgstr "gabim j niveli j"
 
 #: providers/sybase/utils.c:60
-#, c-format
-#, fuzzy
+#, fuzzy, c-format
 msgid "OS error: %s"
 msgstr "gabim"
 
@@ -1823,8 +2076,7 @@ msgid "Call: Client callback."
 msgstr "Thirrje."
 
 #: providers/sybase/utils.c:75
-#, c-format
-#, fuzzy
+#, fuzzy, c-format
 msgid ""
 "CT-Client error:\n"
 "\tseverity(%ld) layer(%ld) origin (%ld) number(%ld)\n"
@@ -1837,22 +2089,19 @@ msgid "Call: server callback"
 msgstr "Thirrje server"
 
 #: providers/sybase/utils.c:95
-#, c-format
-#, fuzzy
+#, fuzzy, c-format
 msgid ""
 "CT-Server message:\n"
 "\tnumber(%ld) severity(%ld) state(%ld) line(%ld)"
 msgstr "Serveri mesazh j"
 
 #: providers/sybase/utils.c:100
-#, c-format
-#, fuzzy
+#, fuzzy, c-format
 msgid "\tServer name: %s\n"
 msgstr "emri j"
 
 #: providers/sybase/utils.c:103
-#, c-format
-#, fuzzy
+#, fuzzy, c-format
 msgid "\tProcedure name: %s\n"
 msgstr "emri j"
 
@@ -1868,7 +2117,8 @@ msgstr "nga"
 
 #: providers/sybase/utils.c:220
 #, fuzzy
-msgid "an error occured when calling cs_diag attempting to retrieve a client message"
+msgid ""
+"an error occured when calling cs_diag attempting to retrieve a client message"
 msgstr "gabim a mesazh"
 
 #: providers/sybase/utils.c:230
@@ -1882,8 +2132,7 @@ msgid ") Message: "
 msgstr "Mesazh "
 
 #: providers/sybase/utils.c:244
-#, c-format
-#, fuzzy
+#, fuzzy, c-format
 msgid ""
 "Sybase OpenClient Msg: severity(%ld), number(%ld), origin(%ld), layer(%ld): %"
 "s"
@@ -1901,10 +2150,10 @@ msgstr "nga server"
 
 #: providers/sybase/utils.c:330
 #, fuzzy
-msgid "an error occured when calling ct_diag attempting to retrieve a server message"
+msgid ""
+"an error occured when calling ct_diag attempting to retrieve a server message"
 msgstr "gabim a server mesazh"
 
-#. GRUT modified this item
 #: providers/sybase/utils.c:342
 msgid "Server:"
 msgstr "Serveri:"
@@ -1939,14 +2188,14 @@ msgstr "nga"
 
 #: providers/sybase/utils.c:459
 #, fuzzy
-msgid "an error occured when calling ct_diag attempting to retrieve a client message"
+msgid ""
+"an error occured when calling ct_diag attempting to retrieve a client message"
 msgstr "gabim a mesazh"
 
 #: providers/sybase/utils.c:472
 msgid "Layer"
 msgstr ""
 
-#. GRUT modified this item
 #: providers/sybase/utils.c:474
 msgid "Origin"
 msgstr "Origjina"
@@ -1987,6 +2236,14 @@ msgstr "E pavlefshme"
 msgid "Provider for Xbase (dBase, FoxPro, etc) files"
 msgstr "për"
 
+#: providers/xbase/libmain.c:52
+msgid "Directory"
+msgstr ""
+
+#: providers/xbase/libmain.c:53
+msgid "Directory containing the xBase files"
+msgstr ""
+
 #: providers/xml/gda-xml-provider.c:191
 #, fuzzy
 msgid ""
@@ -2010,7 +2267,6 @@ msgstr "E pavlefshme i brendshëm"
 msgid "Not Implemented"
 msgstr "Not"
 
-#. GRUT modified this item
 #: providers/xml/gda-xml-provider.c:506 providers/xml/gda-xml-provider.c:512
 msgid "Invalid argument"
 msgstr "Argument i pavlefshëm"
@@ -2029,17 +2285,14 @@ msgstr ""
 msgid "Big unsigned integer"
 msgstr ""
 
-#. GRUT modified this item
 #: providers/xml/gda-xml-provider.c:662
 msgid "Binary"
 msgstr "Binar"
 
-#. GRUT modified this item
 #: providers/xml/gda-xml-provider.c:663
 msgid "Boolean"
 msgstr "Boolean"
 
-#. GRUT modified this item
 #: providers/xml/gda-xml-provider.c:664
 msgid "Date"
 msgstr "Data"
@@ -2049,27 +2302,22 @@ msgstr "Data"
 msgid "Double precision"
 msgstr "Dyfish"
 
-#. GRUT modified this item
 #: providers/xml/gda-xml-provider.c:666
 msgid "Integer"
 msgstr "Integrues"
 
-#. GRUT modified this item
 #: providers/xml/gda-xml-provider.c:667
 msgid "List"
 msgstr "Lista"
 
-#. GRUT modified this item
 #: providers/xml/gda-xml-provider.c:668
 msgid "Money"
 msgstr "Të holla"
 
-#. GRUT modified this item
 #: providers/xml/gda-xml-provider.c:669
 msgid "Numeric"
 msgstr "Numerik"
 
-#. GRUT modified this item
 #: providers/xml/gda-xml-provider.c:670
 msgid "Point"
 msgstr "Pikë"
@@ -2089,17 +2337,14 @@ msgstr "E vogël"
 msgid "Small unsigned integer"
 msgstr "E vogël"
 
-#. GRUT modified this item
 #: providers/xml/gda-xml-provider.c:674
 msgid "String"
 msgstr "Stringë"
 
-#. GRUT modified this item
 #: providers/xml/gda-xml-provider.c:675
 msgid "Time"
 msgstr "Ora"
 
-#. GRUT modified this item
 #: providers/xml/gda-xml-provider.c:676
 msgid "Timestamp"
 msgstr "Koha"
@@ -2117,7 +2362,6 @@ msgstr ""
 msgid "Unsigned integer"
 msgstr "Pa firmë"
 
-#. GRUT modified this item
 #: providers/xml/libmain.c:33
 msgid "XML"
 msgstr "XML"
@@ -2127,19 +2371,23 @@ msgstr "XML"
 msgid "XML provider, based on the libgda XML database format"
 msgstr "XML në XML Bankë të dhënash (databazë)"
 
-#: report/libgda-report/gda-report-document.c:178
+#: providers/xml/libmain.c:49
+#, fuzzy
+msgid "Full path of the file containing the XML database"
+msgstr "A shtegu në hap a Bankë të dhënash (databazë)."
+
+#: report/libgda-report/gda-report-document.c:179
 #, fuzzy
 msgid "Could not parse XML document"
 msgstr "nuk XML"
 
-#: report/libgda-report/gda-report-document.c:188
+#: report/libgda-report/gda-report-document.c:189
 #, fuzzy
 msgid "XML document is not valid"
 msgstr "XML është nuk"
 
-#: report/libgda-report/gda-report-document.c:220
-#, c-format
-#, fuzzy
+#: report/libgda-report/gda-report-document.c:221
+#, fuzzy, c-format
 msgid "Could not get file from %s"
 msgstr "nuk merr"
 
@@ -2149,8 +2397,7 @@ msgstr "nuk merr"
 #: report/libgda-report/gda-report-item-report.c:155
 #: report/libgda-report/gda-report-item-reportfooter.c:172
 #: report/libgda-report/gda-report-item-reportheader.c:171
-#, c-format
-#, fuzzy
+#, fuzzy, c-format
 msgid "An element with ID %s already exists in the report"
 msgstr "me ID ekziston në"
 
@@ -2160,8 +2407,7 @@ msgstr "me ID ekziston në"
 #: report/libgda-report/gda-report-item-report.c:711
 #: report/libgda-report/gda-report-item-reportfooter.c:197
 #: report/libgda-report/gda-report-item-reportheader.c:196
-#, c-format
-#, fuzzy
+#, fuzzy, c-format
 msgid "Item with ID %s is not a label"
 msgstr "me ID është nuk a etiketa"
 
@@ -2171,8 +2417,7 @@ msgstr "me ID është nuk a etiketa"
 #: report/libgda-report/gda-report-item-report.c:739
 #: report/libgda-report/gda-report-item-reportfooter.c:225
 #: report/libgda-report/gda-report-item-reportheader.c:224
-#, c-format
-#, fuzzy
+#, fuzzy, c-format
 msgid "Item with ID %s is not a repfield"
 msgstr "me ID është nuk a"
 
@@ -2182,32 +2427,27 @@ msgid "Error setting parent -> child relation"
 msgstr "Gabim fëmi (sekondar, i dytë)"
 
 #: report/libgda-report/gda-report-item.c:375
-#, c-format
-#, fuzzy
+#, fuzzy, c-format
 msgid "Error setting value %s to attribute %s of item %s"
 msgstr "Gabim nga element"
 
 #: report/libgda-report/gda-report-valid.c:130
-#, c-format
-#, fuzzy
+#, fuzzy, c-format
 msgid "could not get DTD from %s"
 msgstr "nuk merr DTD"
 
 #: report/libgda-report/gda-report-valid.c:231
-#, c-format
-#, fuzzy
+#, fuzzy, c-format
 msgid "Error validating element %s"
 msgstr "Gabim"
 
 #: report/libgda-report/gda-report-valid.c:269
-#, c-format
-#, fuzzy
+#, fuzzy, c-format
 msgid "No declaration for attribute %s of element %s\n"
 msgstr "Jo për nga j"
 
 #: report/libgda-report/gda-report-valid.c:283
-#, c-format
-#, fuzzy
+#, fuzzy, c-format
 msgid "Value \"%s\" for attribute %s of %s is not among the enumerated set\n"
 msgstr "Vlera për nga është nuk j"
 
@@ -2216,173 +2456,156 @@ msgstr "Vlera për nga është nuk j"
 msgid "\t\tNONE\n"
 msgstr "j"
 
-#: testing/client.c:83
-#, c-format
-#, fuzzy
+#: testing/client.c:87
+#, fuzzy, c-format
 msgid "** ERROR: could not open connection to %s\n"
 msgstr "GABIM nuk hap j"
 
 #. show provider features
-#: testing/client.c:88
+#: testing/client.c:92
 #, fuzzy
 msgid "\tProvider capabilities...\n"
 msgstr "j"
 
-#: testing/client.c:89
-#, c-format
-#, fuzzy
+#: testing/client.c:93
+#, fuzzy, c-format
 msgid "\t\tAggregates: %s\n"
 msgstr "j"
 
-#: testing/client.c:91 testing/client.c:94 testing/client.c:97
-#: testing/client.c:100 testing/client.c:103 testing/client.c:106
-#: testing/client.c:109 testing/client.c:112 testing/client.c:115
-#: testing/client.c:118 testing/client.c:121 testing/client.c:124
+#: testing/client.c:95 testing/client.c:98 testing/client.c:101
+#: testing/client.c:104 testing/client.c:107 testing/client.c:110
+#: testing/client.c:113 testing/client.c:116 testing/client.c:119
+#: testing/client.c:122 testing/client.c:125 testing/client.c:128
 msgid "Supported"
 msgstr ""
 
-#: testing/client.c:91 testing/client.c:94 testing/client.c:97
-#: testing/client.c:100 testing/client.c:103 testing/client.c:106
-#: testing/client.c:109 testing/client.c:112 testing/client.c:115
-#: testing/client.c:118 testing/client.c:121 testing/client.c:124
+#: testing/client.c:95 testing/client.c:98 testing/client.c:101
+#: testing/client.c:104 testing/client.c:107 testing/client.c:110
+#: testing/client.c:113 testing/client.c:116 testing/client.c:119
+#: testing/client.c:122 testing/client.c:125 testing/client.c:128
 #, fuzzy
 msgid "Not supported"
 msgstr "Not"
 
-#: testing/client.c:92
-#, c-format
-#, fuzzy
+#: testing/client.c:96
+#, fuzzy, c-format
 msgid "\t\tIndexes: %s\n"
 msgstr "j"
 
-#: testing/client.c:95
-#, c-format
-#, fuzzy
+#: testing/client.c:99
+#, fuzzy, c-format
 msgid "\t\tNamespaces: %s\n"
 msgstr "j"
 
-#: testing/client.c:98
-#, c-format
-#, fuzzy
+#: testing/client.c:102
+#, fuzzy, c-format
 msgid "\t\tProcedures: %s\n"
 msgstr "j"
 
-#: testing/client.c:101
-#, c-format
-#, fuzzy
+#: testing/client.c:105
+#, fuzzy, c-format
 msgid "\t\tSequences: %s\n"
 msgstr "j"
 
-#: testing/client.c:104
-#, c-format
-#, fuzzy
+#: testing/client.c:108
+#, fuzzy, c-format
 msgid "\t\tSQL: %s\n"
 msgstr "j"
 
-#: testing/client.c:107
-#, c-format
-#, fuzzy
+#: testing/client.c:111
+#, fuzzy, c-format
 msgid "\t\tTransactions: %s\n"
 msgstr "j"
 
-#: testing/client.c:110
-#, c-format
-#, fuzzy
+#: testing/client.c:114
+#, fuzzy, c-format
 msgid "\t\tTriggers: %s\n"
 msgstr "j"
 
-#: testing/client.c:113
-#, c-format
-#, fuzzy
+#: testing/client.c:117
+#, fuzzy, c-format
 msgid "\t\tUsers: %s\n"
 msgstr "j"
 
-#: testing/client.c:116
-#, c-format
-#, fuzzy
+#: testing/client.c:120
+#, fuzzy, c-format
 msgid "\t\tViews: %s\n"
 msgstr "j"
 
-#: testing/client.c:119
-#, c-format
-#, fuzzy
+#: testing/client.c:123
+#, fuzzy, c-format
 msgid "\t\tXML queries: %s\n"
 msgstr "j"
 
-#: testing/client.c:122
-#, c-format
-#, fuzzy
+#: testing/client.c:126
+#, fuzzy, c-format
 msgid "\t\tBLOBs: %s\n"
 msgstr "j"
 
 #. show connection schemas
-#: testing/client.c:127
-#, c-format
-#, fuzzy
+#: testing/client.c:131
+#, fuzzy, c-format
 msgid ""
 "\n"
 "\tProvider reports version: %s\n"
 "\n"
 msgstr "j versioni j j"
 
-#: testing/client.c:129
+#: testing/client.c:133
 msgid "Namespaces"
 msgstr ""
 
-#: testing/client.c:131
+#: testing/client.c:135
 msgid "Stored procedures"
 msgstr ""
 
-#: testing/client.c:132
+#: testing/client.c:136
 #, fuzzy
 msgid "Connection Tables"
 msgstr "Lidhja Tabelat"
 
-#: testing/client.c:133
+#: testing/client.c:137
 #, fuzzy
 msgid "Available types"
 msgstr "Në dispozicion"
 
-#: testing/client.c:136
+#: testing/client.c:140
 msgid "Aggregates"
 msgstr ""
 
-#. GRUT modified this item
-#: testing/client.c:140
+#: testing/client.c:144
 msgid "Languages"
 msgstr "Gjuhët"
 
-#: testing/client.c:145 testing/client.c:153
+#: testing/client.c:149 testing/client.c:157
 msgid "\tStarting transaction..."
 msgstr ""
 
-#. GRUT modified this item
-#: testing/client.c:147 testing/client.c:151 testing/client.c:155
-#: testing/client.c:159
+#: testing/client.c:151 testing/client.c:155 testing/client.c:159
+#: testing/client.c:163
 msgid "Error"
 msgstr "Gabim"
 
-#: testing/client.c:149
+#: testing/client.c:153
 msgid "\tFinishing transaction..."
 msgstr ""
 
-#: testing/client.c:157
+#: testing/client.c:161
 #, fuzzy
 msgid "\tRolling back transaction..."
 msgstr "mbrapa."
 
-#: testing/client.c:188
+#: testing/client.c:192
 msgid "Testing GDA client API"
 msgstr ""
 
-#: testing/client.c:197
+#: testing/client.c:201
 #, fuzzy
 msgid "** ERROR: gda_config_get_data_source_list returned a NULL item\n"
 msgstr "GABIM merr lista a element j"
 
-#: testing/client.c:201
-#, c-format
-#, fuzzy
+#: testing/client.c:205
+#, fuzzy, c-format
 msgid " Data source = %s, User = %s\n"
 msgstr "Të dhëna Përdoruesi j"
 
@@ -2392,20 +2615,17 @@ msgid "** ERROR: gda_config_get_provider_list returned a NULL item\n"
 msgstr "GABIM merr lista a element j"
 
 #: testing/config.c:88
-#, c-format
-#, fuzzy
+#, fuzzy, c-format
 msgid " Provider = %s\n"
 msgstr "j"
 
 #: testing/config.c:89
-#, c-format
-#, fuzzy
+#, fuzzy, c-format
 msgid "\tlocation = %s\n"
 msgstr "j"
 
 #: testing/config.c:90
-#, c-format
-#, fuzzy
+#, fuzzy, c-format
 msgid "\tdescription = %s\n"
 msgstr "j"
 
@@ -2418,7 +2638,6 @@ msgstr ""
 msgid "The FILE parameter is not defined in the connection string."
 msgstr "FILE është nuk në."
 
-#. GRUT modified this item
 #: providers/bdb/gda-bdb-provider.c:185
 msgid "-"
 msgstr "-"
@@ -2439,3 +2658,30 @@ msgstr "Databaza është"
 msgid "Provider for Berkeley databases"
 msgstr "për"
 
+#: providers/bdb/libmain.c:48
+#, fuzzy
+msgid "Database File"
+msgstr "Databaza"
+
+#: providers/bdb/libmain.c:49
+msgid "Berkeley DB database file to be used"
+msgstr ""
+
+#: providers/bdb/libmain.c:52
+#, fuzzy
+msgid "Database name"
+msgstr "Databaza"
+
+#: providers/bdb/libmain.c:53
+#, fuzzy
+msgid "Name of the database in the database file to be used"
+msgstr ""
+"Për hiq a Bankë të dhënash (databazë) hiq Bankë të dhënash (databazë) nga"
+
+#, fuzzy
+#~ msgid "Firebird's BLOB datatype not supported yet !\n"
+#~ msgstr "Firebird nuk j"
+
+#, fuzzy
+#~ msgid "Could not initiate Sybase component factory"
+#~ msgstr "nuk komponenti"
