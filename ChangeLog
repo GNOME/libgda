@@ -5,6 +5,12 @@
 	* providers/oracle/gda-oracle-provider.c (get_oracle_tables): use
 	double quotes instead of single quotes for aliases in SELECT command.
 
+2002-12-16  Holger Thon <holger.thon@gnome-db.org>
+
+	Fixes translation bugs: #101084, #101085, #101087, #101088
+	* providers/sybase/gda-sybase-{provider,recordset}.c,
+	providers/sybase/utils.c: gettext fixes
+
 2002-12-15  Vivien Malerba <malerba@gnome-db.org>
 
 	* providers/postgres/gda-postgres-provider.c: implemented the tables
