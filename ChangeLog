@@ -1,8 +1,12 @@
 2002-12-10  Holger Thon <holger.thon@gnome-db.org>
 
-	2002-12-09 Fixes #97669
-	* providers/freetds/gda-freetds-provider.[ch]: fixed
+	Fixes #97669
+	* providers/freetds/gda-tds-{schemas.h,types.c}:
+	* providers/freetds/gda-freetds-provider.c: fixed types schema,
 	get_server_version
+	* providers/freetds/gda-freetds-recordset.c: fixed datamodel return
+	for queries without result
+	* testing/freetds-test.c: activated freetds provider checks again
 
 2002-12-09  Holger Thon <holger.thon@gnome-db.org>
 
