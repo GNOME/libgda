@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-db CVS\n"
-"POT-Creation-Date: 2001-06-03 23:56+0200\n"
+"POT-Creation-Date: 2001-06-15 22:11+0200\n"
 "PO-Revision-Date: 2000-03-13 18:23+0000\n"
 "Last-Translator:  Alastair McKinstry <mckinstry@computer.org>\n"
 "Language-Team: Irish <ga@li.org>\n"
@@ -23,12 +23,12 @@ msgstr ""
 msgid "Data source %s not found"
 msgstr ""
 
-#: lib/gda-client/gda-connection.c:235 lib/gda-client/gda-error.c:179
+#: lib/gda-client/gda-connection.c:228 lib/gda-client/gda-error.c:179
 #, c-format
 msgid "%s: The server didn't respond."
 msgstr ""
 
-#: lib/gda-client/gda-connection.c:239 lib/gda-client/gda-error.c:183
+#: lib/gda-client/gda-connection.c:232 lib/gda-client/gda-error.c:183
 #, c-format
 msgid "%s: An Error occured in the CORBA system."
 msgstr ""
@@ -107,14 +107,14 @@ msgstr ""
 msgid "Could not get pointer to server implementation"
 msgstr ""
 
-#: lib/gda-server/gda-server-impl-connection.c:122
-#: lib/gda-server/gda-server-impl-connection.c:131
-#: lib/gda-server/gda-server-impl-connection.c:138
-#: lib/gda-server/gda-server-impl-connection.c:147
-#: lib/gda-server/gda-server-impl-connection.c:154
-#: lib/gda-server/gda-server-impl-connection.c:163
-#: lib/gda-server/gda-server-impl-connection.c:170
-#: lib/gda-server/gda-server-impl-connection.c:179
+#: lib/gda-server/gda-server-impl-connection.c:124
+#: lib/gda-server/gda-server-impl-connection.c:133
+#: lib/gda-server/gda-server-impl-connection.c:140
+#: lib/gda-server/gda-server-impl-connection.c:149
+#: lib/gda-server/gda-server-impl-connection.c:156
+#: lib/gda-server/gda-server-impl-connection.c:165
+#: lib/gda-server/gda-server-impl-connection.c:172
+#: lib/gda-server/gda-server-impl-connection.c:181
 #: lib/gda-server/gda-server-impl-recordset.c:126
 #: lib/gda-server/gda-server-impl-recordset.c:135
 #: lib/gda-server/gda-server-impl-recordset.c:142
@@ -140,7 +140,7 @@ msgstr ""
 msgid "%s not implemented"
 msgstr ""
 
-#: lib/gda-server/gda-server-impl-connection.c:269
+#: lib/gda-server/gda-server-impl-connection.c:275
 #, c-format
 msgid "impl_GDA_Connection_open: opening connection with DSN: %s"
 msgstr ""
@@ -199,6 +199,10 @@ msgstr ""
 msgid "Attempt to initialize an already initialized provider"
 msgstr ""
 
+#: providers/gda-ldap-server/GNOME_GDA_Provider_LDAP.oaf.in.h:1
+msgid "GDA Datasource Access for LDAP"
+msgstr ""
+
 #: providers/gda-interbase-server/gda-interbase-connection.c:273
 #: providers/gda-ldap-server/gda-ldap-connection.c:284
 #: providers/gda-mdb-server/gda-mdb-connection.c:372
@@ -254,6 +258,10 @@ msgstr ""
 msgid "Could not register LDAP provider implementation"
 msgstr ""
 
+#: providers/gda-interbase-server/GNOME_GDA_Provider_InterBase.oaf.in.h:1
+msgid "GDA Datasource Access for Interbase"
+msgstr ""
+
 #: providers/gda-interbase-server/gda-interbase-connection.c:272
 #, c-format
 msgid "Error code %ld"
@@ -261,6 +269,10 @@ msgstr ""
 
 #: providers/gda-interbase-server/main-interbase.c:72
 msgid "Could not register INTERBASE provider implementation"
+msgstr ""
+
+#: providers/gda-mail-server/GNOME_GDA_Provider_Mail.oaf.in.h:1
+msgid "GDA Datasource Access for Mail"
 msgstr ""
 
 #: providers/gda-mail-server/gda-mail-connection.c:108
@@ -276,6 +288,10 @@ msgstr ""
 
 #: providers/gda-mail-server/main-mail.c:72
 msgid "Could not register Mail provider implementation"
+msgstr ""
+
+#: providers/gda-mdb-server/GNOME_GDA_Provider_MDB.oaf.in.h:1
+msgid "GDA Datasource Access for MDB (MS Access) files"
 msgstr ""
 
 #. execute command
@@ -329,11 +345,19 @@ msgstr ""
 msgid "Could not register MySQL provider implementation"
 msgstr ""
 
+#: providers/gda-mysql-server/GNOME_GDA_Provider_MySQL.oaf.in.h:1
+msgid "GDA Datasource Access for MySQL"
+msgstr ""
+
 #: providers/gda-mysql-server/gda-mysql-connection.c:153
 #, c-format
 msgid ""
 "Opening connection with user=%s, password=%s, host=%s, port=%s, unix_socket=%"
 "s"
+msgstr ""
+
+#: providers/gda-odbc-server/GNOME_GDA_Provider_ODBC.oaf.in.h:1
+msgid "GDA Datasource Access for ODBC"
 msgstr ""
 
 #: providers/gda-odbc-server/gda-odbc-connection.c:280
@@ -352,6 +376,10 @@ msgstr ""
 
 #: providers/gda-odbc-server/main-odbc.c:71
 msgid "Could not register ODBC provider implementation"
+msgstr ""
+
+#: providers/gda-oracle-server/GNOME_GDA_Provider_Oracle.oaf.in.h:1
+msgid "GDA Datasource Access for Oracle"
 msgstr ""
 
 #: providers/gda-oracle-server/gda-oracle-command.c:185
@@ -396,6 +424,10 @@ msgstr ""
 msgid "Could not register ORACLE provider implementation"
 msgstr ""
 
+#: providers/gda-postgres-server/GNOME_GDA_Provider_Postgres.oaf.in.h:1
+msgid "GDA Datasource Access for Postgres"
+msgstr ""
+
 #: providers/gda-postgres-server/gda-postgres-connection.c:849
 #: providers/gda-postgres-server/gda-postgres-connection.c:957
 msgid "postgres_recset is NULL"
@@ -403,6 +435,10 @@ msgstr ""
 
 #: providers/gda-postgres-server/main-postgres.c:71
 msgid "Could not register PostgreSQL provider implementation"
+msgstr ""
+
+#: providers/gda-sybase-server/GNOME_GDA_Provider_Sybase.oaf.in.h:1
+msgid "GDA Datasource Access for Sybase"
 msgstr ""
 
 #.      gda_server_error_make(error, 0, cnc, "connection seems to be dead");
@@ -856,6 +892,10 @@ msgstr ""
 msgid "Could not register gda-sybase provider implementation"
 msgstr ""
 
+#: providers/gda-primebase-server/GNOME_GDA_Provider_Primebase.oaf.in.h:1
+msgid "GDA Datasource Access for primebase"
+msgstr ""
+
 #: providers/gda-primebase-server/gda-primebase-connection.c:158
 #, c-format
 msgid "Could not connect to '%s@%s:%s' with connparm '%s'"
@@ -888,6 +928,10 @@ msgstr ""
 msgid "Could not register PRIMEBASE provider implementation"
 msgstr ""
 
+#: providers/gda-tds-server/GNOME_GDA_Provider_TDS.oaf.in.h:1
+msgid "GDA Datasource Access for Sybase/MS SQL"
+msgstr ""
+
 #: providers/gda-tds-server/gda-tds-connection.c:167
 msgid "Not enough memory for tds_Connection"
 msgstr ""
@@ -910,6 +954,10 @@ msgstr ""
 #: report/gda-report-engine.c:209
 #, c-format
 msgid "CORBA exception unloading report engine: %s"
+msgstr ""
+
+#: report/server/GNOME_GDA_Report.oaf.in.h:1
+msgid "GDA Distributed Report Engine"
 msgstr ""
 
 #: report/server/gda-report-server-main.c:41
