@@ -937,16 +937,54 @@ static GdaDataModel *
 get_postgres_tables (GdaConnection *cnc, GdaParameterList *params)
 {
 	GList *reclist;
+	GdaPostgresConnectionData *priv_data;
 	GdaDataModel *recset;
-
+	GdaParameter *par = NULL;
+	const gchar *namespace = NULL;
+	
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
-	reclist = process_sql_commands (
-		NULL, cnc,
-		"SELECT relname, usename, obj_description(pg_class.oid), NULL "
-		"FROM pg_class, pg_user "
-		"WHERE usesysid=relowner AND relkind = 'r' AND relname !~ '^pg_' ORDER BY relname",
-		GDA_COMMAND_OPTION_STOP_ON_ERRORS);
+	if (params)
+		par = gda_parameter_list_find (params, "namespace");
+
+	if (par)
+		namespace = gda_value_get_string ((GdaValue *) gda_parameter_get_value (par));
+
+	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE);
+	if (priv_data->version_float < 7.3) {
+		reclist = process_sql_commands (NULL, cnc,
+						"SELECT relname, usename, obj_description(pg_class.oid), NULL "
+						"FROM pg_class, pg_user "
+						"WHERE usesysid=relowner AND relkind = 'r' AND relname !~ '^pg_' "
+						"ORDER BY relname",
+						GDA_COMMAND_OPTION_STOP_ON_ERRORS);
+	}
+	else {
+		if (namespace) {
+			gchar *query;
+
+			query = g_strdup_printf ("SELECT c.relname, u.usename, pg_catalog.obj_description(c.oid), NULL "
+						 "FROM pg_catalog.pg_class c, pg_catalog.pg_user u, pg_catalog.pg_namespace n "
+						 "WHERE u.usesysid=c.relowner AND c.relkind = 'r' "
+						 "AND c.relnamespace=n.oid "
+						 "AND n.nspname ='%s' "
+						 "AND n.nspname NOT IN ('pg_catalog', 'pg_toast') "
+						 "ORDER BY relname", namespace);
+			reclist = process_sql_commands (NULL, cnc,
+							query,
+							GDA_COMMAND_OPTION_STOP_ON_ERRORS);
+			g_free (query);
+		}
+		else
+			reclist = process_sql_commands (NULL, cnc,
+							"SELECT c.relname, u.usename, pg_catalog.obj_description(c.oid), NULL "
+							"FROM pg_catalog.pg_class c, pg_catalog.pg_user u, pg_catalog.pg_namespace n "
+							"WHERE u.usesysid=c.relowner AND c.relkind = 'r' "
+							"AND c.relnamespace=n.oid AND pg_catalog.pg_table_is_visible (c.oid) "
+							"AND n.nspname NOT IN ('pg_catalog', 'pg_toast') "
+							"ORDER BY relname",
+							GDA_COMMAND_OPTION_STOP_ON_ERRORS);
+	}
 
 	if (!reclist)
 		return NULL;
@@ -1056,19 +1094,58 @@ static GdaDataModel *
 get_postgres_aggregates (GdaConnection *cnc, GdaParameterList *params)
 {
 	GList *reclist;
+	GdaPostgresConnectionData *priv_data;
 	GdaDataModel *recset;
-
+	GdaParameter *par = NULL;
+	const gchar *namespace = NULL;
+	
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
-	reclist = process_sql_commands (
-		NULL, cnc, 
-		"(SELECT a.aggname, a.oid, usename, obj_description (a.oid), t2.typname, t1.typname, NULL "
-		"FROM pg_aggregate a, pg_type t1, pg_type t2, pg_user u "
-		"WHERE a.aggbasetype = t1.oid AND a.aggfinaltype = t2.oid AND u.usesysid=aggowner) UNION "
-		"(SELECT a.aggname, a.oid, usename, obj_description (a.oid), t2.typname , '-', NULL "
-		"FROM pg_aggregate a, pg_type t2, pg_user u "
-		"WHERE a.aggfinaltype = t2.oid AND u.usesysid=aggowner AND a.aggbasetype = 0) ORDER BY 2",
-		GDA_COMMAND_OPTION_STOP_ON_ERRORS);
+	if (params)
+		par = gda_parameter_list_find (params, "namespace");
+
+	if (par)
+		namespace = gda_value_get_string ((GdaValue *) gda_parameter_get_value (par));
+
+	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE);
+	if (priv_data->version_float < 7.3) {
+		reclist = process_sql_commands (NULL, cnc, 
+						"(SELECT a.aggname, a.oid, usename, obj_description (a.oid), t2.typname, t1.typname, NULL "
+						"FROM pg_aggregate a, pg_type t1, pg_type t2, pg_user u "
+						"WHERE a.aggbasetype = t1.oid AND a.aggfinaltype = t2.oid AND u.usesysid=aggowner) UNION "
+						"(SELECT a.aggname, a.oid, usename, obj_description (a.oid), t2.typname , '-', NULL "
+						"FROM pg_aggregate a, pg_type t2, pg_user u "
+						"WHERE a.aggfinaltype = t2.oid AND u.usesysid=aggowner AND a.aggbasetype = 0) ORDER BY 2",
+						GDA_COMMAND_OPTION_STOP_ON_ERRORS);
+	}
+	else {
+		if (namespace) {
+			gchar *query;
+
+			query = g_strdup_printf ("%s", namespace);
+			reclist = process_sql_commands (NULL, cnc, query, GDA_COMMAND_OPTION_STOP_ON_ERRORS);
+			g_free (query);
+		}
+		else {
+			reclist = process_sql_commands (NULL, cnc, 
+							"SELECT p.proname, p.oid, u.usename, pg_catalog.obj_description(p.oid),"
+							"CASE p.proargtypes[0] "
+							"WHEN 'pg_catalog.\"any\"'::pg_catalog.regtype "
+							"THEN CAST('-' AS pg_catalog.text) "
+							"ELSE typi.typname "
+							"END,"
+							"typo.typname, NULL "
+							"FROM pg_catalog.pg_proc p, pg_catalog.pg_user u, pg_catalog.pg_namespace n, pg_catalog.pg_type typi, pg_catalog.pg_type typo "
+							"WHERE u.usesysid=p.proowner "
+							"AND n.oid = p.pronamespace "
+							"AND p.prorettype = typo.oid "
+							"AND p.proargtypes[0] = typi.oid "
+							"AND p.proisagg "
+							"AND pg_catalog.pg_function_is_visible(p.oid) "
+							"ORDER BY 2",
+							GDA_COMMAND_OPTION_STOP_ON_ERRORS);
+		}
+	}
 
 	if (!reclist)
 		return NULL;

@@ -1,3 +1,7 @@
+2002-12-15  Vivien Malerba <malerba@gnome-db.org>
+	* providers/postgres/gda-postgres-provider.c: implemented the tables
+	schema list for Postgres 7.3 and started the aggregates 
+
 2002-12-15  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* libgda/gda-connection.h: added SCHEMA_LANGUAGES to GdaConnectionSchema
