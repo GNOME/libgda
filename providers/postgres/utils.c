@@ -133,7 +133,8 @@ void
 gda_postgres_set_value (GdaValue *value,
 			GdaValueType type,
 			const gchar *thevalue,
-			gboolean isNull)
+			gboolean isNull,
+			gint length)
 {
 	GDate *gdate;
 	GdaDate date;
@@ -141,6 +142,7 @@ gda_postgres_set_value (GdaValue *value,
 	GdaTimestamp timestamp;
 	GdaGeometricPoint point;
 	GdaNumeric numeric;
+	/* guchar *unescaped; See comment below on BINARY */
 
 	if (isNull){
 		gda_value_set_null (value);
@@ -203,7 +205,20 @@ gda_postgres_set_value (GdaValue *value,
 		make_time (&timegda, thevalue);
 		gda_value_set_time (value, &timegda);
 		break;
-	case GDA_VALUE_TYPE_BINARY : //FIXME
+	case GDA_VALUE_TYPE_BINARY :
+		gda_value_set_binary (value, thevalue, length);
+		/*
+		 * No PQescapeBytea in 7.3??
+		unescaped = PQunescapeBytea (thevalue, &length);
+		if (unescaped != NULL) {
+			gda_value_set_binary (value, unescaped, length);
+			free (unescaped);
+		} else {
+			g_warning ("Error unescaping string: %s\n", thevalue);
+			gda_value_set_string (value, thevalue);
+		}
+		*/
+		break;
 	default :
 		gda_value_set_string (value, thevalue);
 	}

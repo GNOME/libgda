@@ -64,7 +64,8 @@ create_table (GdaConnection *cnc)
 				"time_value time, "
 				"date_value date, "
 				"timestamp_value timestamp, "
-				"null_value char(1) "
+				"null_value char(1), "
+				"bytea_value bytea "
 				")");
 }
 
@@ -92,7 +93,8 @@ insert_data (GdaConnection *cnc)
 				"time_value, "
 				"date_value, "
 				"timestamp_value, "
-				"point_value "
+				"point_value, "
+				"bytea_value"
 				") values ("
 				"'T', "
 				"-22, "
@@ -107,7 +109,8 @@ insert_data (GdaConnection *cnc)
 				"'21:13:14', "
 				"'2000-02-29', "
 				"'2004-02-29 14:00:11.31', "
-				"'(1,0)' "
+				"'(1,0)', "
+				"'This is a bytea value' "
 				")");
 }
 
@@ -165,11 +168,23 @@ test_parent_tables (GdaConnection *cnc)
 	gda_parameter_list_free (params);
 }
 
+static void
+print_errors (const GList *list)
+{
+	GList *tmp;
+
+	tmp = (GList *) list;
+	for (tmp = (GList *) list; tmp; tmp = tmp->next)
+		if (tmp->data && *((char *) tmp->data))
+			g_print ("\t\t\t%s\n", (char *) tmp->data);
+}
+
 /* Postgres provider tests */
 void
 do_postgres_test (GdaConnection *cnc)
 {
 	GList *list;
+	gboolean success;
 
 	g_return_if_fail (GDA_IS_CONNECTION (cnc));
 
@@ -180,15 +195,24 @@ do_postgres_test (GdaConnection *cnc)
 		 drop_table (cnc) ? "OK" : "Error (don't worry about this one)");
 
 	/* Creates a table with all supported data types */
+	success = create_table (cnc);
 	g_print ("\t\tCreate table with all supported types: %s\n",
-			create_table (cnc) ? "OK" : "Error");
+			success ? "OK" : "Error");
+
+	if (!success)
+		print_errors (gda_connection_get_errors (cnc));
 
 	/* Inserts values */
+	success = insert_data (cnc);
 	g_print ("\t\tInsert values for all known types: %s\n",
-				 insert_data (cnc) ? "OK" : "Error");
+				 success ? "OK" : "Error");
+
+	if (!success)
+		print_errors (gda_connection_get_errors (cnc));
 
 	/* Selects values */
 	list = select_data (cnc);
+	success = (list != NULL);
 	g_print ("\t\tSelecting values for all known types: %s\n",
 			 list ? "OK" : "Error");
 
@@ -199,12 +223,23 @@ do_postgres_test (GdaConnection *cnc)
 	g_list_foreach (list, (GFunc) g_object_unref, NULL);
 	g_list_free (list);
 
+	if (!success)
+		print_errors (gda_connection_get_errors (cnc));
+
 	/* Parent tables */
 	execute_non_query (cnc, "drop table gda_postgres_parent");
 	execute_non_query (cnc, "drop table gda_postgres_child");
+
 	test_parent_tables (cnc);
-	execute_non_query (cnc, "drop table gda_postgres_child");
-	execute_non_query (cnc, "drop table gda_postgres_parent");
+
+	success = execute_non_query (cnc, "drop table gda_postgres_child");
+	if (!success)
+		print_errors (gda_connection_get_errors (cnc));
+
+	success = execute_non_query (cnc, "drop table gda_postgres_parent");
+	if (!success)
+		print_errors (gda_connection_get_errors (cnc));
+
 	g_print ("-----------------\n");
 
 	/* Test random access speed */

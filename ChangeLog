@@ -1,3 +1,14 @@
+2003-01-13  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
+	* providers/postgres/gda-postgres-provider.c:
+	* providers/postgres/gda-postgres-recordset.c:
+	* providers/postgres/gda-postgres.h:
+	* providers/postgres/utils.c: added support for 'bytea' type fields as
+	GDA_VALUE_TYPE_BINARY.
+
+	* testing/postgres-test.c: added new 'bytea' field to test and display
+	errors when some statement fails.
+
 2003-01-10  Santi Camps <santi@gnome-db.org>
 
 	* libgda/report/Makefile.am: install gda-report.dtd to 

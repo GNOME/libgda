@@ -135,14 +135,16 @@ get_row (GdaDataModel *model, GdaPostgresRecordsetPrivate *priv, gint rownum)
 	GdaRow *row;
 	gint i;
 	gchar *id;
+	gint length;
 	
 	row = gda_row_new (model, priv->ncolumns);
 	for (i = 0; i < priv->ncolumns; i++) {
 		thevalue = PQgetvalue(priv->pg_res, rownum, i);
+		length = PQgetlength (priv->pg_res, rownum, i);
 		ftype = priv->column_types [i];
 		isNull = *thevalue != '\0' ? FALSE : PQgetisnull (priv->pg_res, rownum, i);
 		value = gda_row_get_value (row, i);
-		gda_postgres_set_value (value, ftype, thevalue, isNull);
+		gda_postgres_set_value (value, ftype, thevalue, isNull, length);
 	}
 
 	id = g_strdup_printf ("%d", rownum);

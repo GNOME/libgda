@@ -46,7 +46,8 @@ GdaError *gda_postgres_make_error (PGconn *pconn, PGresult *pg_res);
 void gda_postgres_set_value (GdaValue *value, 
 			     GdaValueType type, 
 			     const gchar *thevalue,
-			     gboolean isNull);
+			     gboolean isNull,
+			     gint length);
 
 GdaValueType gda_postgres_type_oid_to_gda (GdaPostgresTypeOid *type_data, 
 					   gint ntypes,
