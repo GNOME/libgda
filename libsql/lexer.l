@@ -6,6 +6,11 @@
 #include <glib.h>
 
 #include "sql_parser.h"
+
+#ifdef L_SET
+#undef L_SET
+#endif
+
 #include "parser.h"
 #include "mem.h"
 
