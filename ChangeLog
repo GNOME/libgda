@@ -1,3 +1,13 @@
+2003-01-16  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* libgda/gda-xml-database.[ch] (gda_xml_database_to_string): new
+	function.
+
+	* libgda/gda-data-model.c (gda_data_model_to_xml): implemented (only
+	the standalone=TRUE case).
+
+	* doc/C/*: new documentation added.
+
 2003-01-16  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
 	* configure.in: removed config.h.

@@ -14,7 +14,28 @@ Management of libgda's report format
 
 </para>
 
+<!-- ##### MACRO GDA_REPORT_DOCUMENT ##### -->
+<para>
+
+</para>
+
+@obj: 
+
+
 <!-- ##### STRUCT GdaReportDocumentPrivate ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### STRUCT GdaReportValidator ##### -->
+<para>
+
+</para>
+
+@priv: 
+
+<!-- ##### STRUCT GdaReportValidatorPrivate ##### -->
 <para>
 
 </para>
@@ -25,6 +46,7 @@ Management of libgda's report format
 
 </para>
 
+@valid: 
 @Returns: 
 
 
@@ -34,6 +56,7 @@ Management of libgda's report format
 </para>
 
 @xml: 
+@valid: 
 @Returns: 
 
 
@@ -43,28 +66,11 @@ Management of libgda's report format
 </para>
 
 @uri: 
+@valid: 
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_report_document_get_report_style ##### -->
-<para>
-
-</para>
-
-@document: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_report_document_set_report_style ##### -->
-<para>
-
-</para>
-
-@document: 
-@reportstyle: 
-
-
-<!-- ##### FUNCTION gda_report_document_get_page_size ##### -->
+<!-- ##### FUNCTION gda_report_document_to_dom ##### -->
 <para>
 
 </para>
@@ -73,16 +79,7 @@ Management of libgda's report format
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_report_document_set_page_size ##### -->
-<para>
-
-</para>
-
-@document: 
-@pagesize: 
-
-
-<!-- ##### FUNCTION gda_report_document_get_orientation ##### -->
+<!-- ##### FUNCTION gda_report_document_get_valid ##### -->
 <para>
 
 </para>
@@ -91,18 +88,17 @@ Management of libgda's report format
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_report_document_set_orientation ##### -->
+<!-- ##### FUNCTION gda_report_document_set_root_item ##### -->
 <para>
 
 </para>
 
 @document: 
-@orientation: 
-<!-- # Unused Parameters # -->
-@Param2: 
+@item: 
+@Returns: 
 
 
-<!-- ##### FUNCTION gda_report_document_get_units ##### -->
+<!-- ##### FUNCTION gda_report_document_get_root_item ##### -->
 <para>
 
 </para>
@@ -111,444 +107,13 @@ Management of libgda's report format
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_report_document_set_units ##### -->
+<!-- ##### FUNCTION gda_report_document_save_file ##### -->
 <para>
 
 </para>
 
-@document: 
-@units: 
-
-
-<!-- ##### FUNCTION gda_report_document_get_top_margin ##### -->
-<para>
-
-</para>
-
+@filename: 
 @document: 
 @Returns: 
-
-
-<!-- ##### FUNCTION gda_report_document_set_top_margin ##### -->
-<para>
-
-</para>
-
-@document: 
-@topmargin: 
-
-
-<!-- ##### FUNCTION gda_report_document_get_bottom_margin ##### -->
-<para>
-
-</para>
-
-@document: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_report_document_set_bottom_margin ##### -->
-<para>
-
-</para>
-
-@document: 
-@bottommargin: 
-
-
-<!-- ##### FUNCTION gda_report_document_get_left_margin ##### -->
-<para>
-
-</para>
-
-@document: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_report_document_set_left_margin ##### -->
-<para>
-
-</para>
-
-@document: 
-@leftmargin: 
-
-
-<!-- ##### FUNCTION gda_report_document_get_right_margin ##### -->
-<para>
-
-</para>
-
-@document: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_report_document_set_right_margin ##### -->
-<para>
-
-</para>
-
-@document: 
-@rightmargin: 
-
-
-<!-- ##### FUNCTION gda_report_document_get_bg_color ##### -->
-<para>
-
-</para>
-
-@document: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_report_document_set_bg_color ##### -->
-<para>
-
-</para>
-
-@document: 
-@bgcolor: 
-
-
-<!-- ##### FUNCTION gda_report_document_get_fg_color ##### -->
-<para>
-
-</para>
-
-@document: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_report_document_set_fg_color ##### -->
-<para>
-
-</para>
-
-@document: 
-@fgcolor: 
-
-
-<!-- ##### FUNCTION gda_report_document_get_border_color ##### -->
-<para>
-
-</para>
-
-@document: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_report_document_set_border_color ##### -->
-<para>
-
-</para>
-
-@document: 
-@bordercolor: 
-
-
-<!-- ##### FUNCTION gda_report_document_get_border_width ##### -->
-<para>
-
-</para>
-
-@document: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_report_document_set_border_width ##### -->
-<para>
-
-</para>
-
-@document: 
-@borderwidth: 
-
-
-<!-- ##### FUNCTION gda_report_document_get_border_style ##### -->
-<para>
-
-</para>
-
-@document: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_report_document_set_border_style ##### -->
-<para>
-
-</para>
-
-@document: 
-@borderstyle: 
-
-
-<!-- ##### FUNCTION gda_report_document_get_font_family ##### -->
-<para>
-
-</para>
-
-@document: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_report_document_set_font_family ##### -->
-<para>
-
-</para>
-
-@document: 
-@fontfamily: 
-
-
-<!-- ##### FUNCTION gda_report_document_get_font_size ##### -->
-<para>
-
-</para>
-
-@document: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_report_document_set_font_size ##### -->
-<para>
-
-</para>
-
-@document: 
-@fontsize: 
-
-
-<!-- ##### FUNCTION gda_report_document_get_font_weight ##### -->
-<para>
-
-</para>
-
-@document: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_report_document_set_font_weight ##### -->
-<para>
-
-</para>
-
-@document: 
-@fontweight: 
-
-
-<!-- ##### FUNCTION gda_report_document_get_font_italic ##### -->
-<para>
-
-</para>
-
-@document: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_report_document_set_fonti_talic ##### -->
-<para>
-
-</para>
-
-@document: 
-@fontitalic: 
-
-
-<!-- ##### FUNCTION gda_report_document_get_halignment ##### -->
-<para>
-
-</para>
-
-@document: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_report_document_set_halignment ##### -->
-<para>
-
-</para>
-
-@document: 
-@alignment: 
-
-
-<!-- ##### FUNCTION gda_report_document_get_valignment ##### -->
-<para>
-
-</para>
-
-@document: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_report_document_set_valignment ##### -->
-<para>
-
-</para>
-
-@document: 
-@alignment: 
-
-
-<!-- ##### FUNCTION gda_report_document_get_word_wrap ##### -->
-<para>
-
-</para>
-
-@document: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_report_document_set_word_wrap ##### -->
-<para>
-
-</para>
-
-@document: 
-@wordwrap: 
-
-
-<!-- ##### FUNCTION gda_report_document_get_neg_value_color ##### -->
-<para>
-
-</para>
-
-@document: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_report_document_set_neg_value_color ##### -->
-<para>
-
-</para>
-
-@document: 
-@negvaluecolor: 
-
-
-<!-- ##### FUNCTION gda_report_document_get_date_format ##### -->
-<para>
-
-</para>
-
-@document: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_report_document_set_date_format ##### -->
-<para>
-
-</para>
-
-@document: 
-@dateformat: 
-
-
-<!-- ##### FUNCTION gda_report_document_get_precision ##### -->
-<para>
-
-</para>
-
-@document: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_report_document_set_precision ##### -->
-<para>
-
-</para>
-
-@document: 
-@precision: 
-
-
-<!-- ##### FUNCTION gda_report_document_get_currency ##### -->
-<para>
-
-</para>
-
-@document: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_report_document_set_currency ##### -->
-<para>
-
-</para>
-
-@document: 
-@currency: 
-
-
-<!-- ##### FUNCTION gda_report_document_get_comma_separator ##### -->
-<para>
-
-</para>
-
-@document: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_report_document_set_comma_separator ##### -->
-<para>
-
-</para>
-
-@document: 
-@commaseparator: 
-
-
-<!-- ##### FUNCTION gda_report_document_get_line_width ##### -->
-<para>
-
-</para>
-
-@document: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_report_document_set_line_width ##### -->
-<para>
-
-</para>
-
-@document: 
-@linewidth: 
-
-
-<!-- ##### FUNCTION gda_report_document_get_line_color ##### -->
-<para>
-
-</para>
-
-@document: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_report_document_set_line_color ##### -->
-<para>
-
-</para>
-
-@document: 
-@linecolor: 
-
-
-<!-- ##### FUNCTION gda_report_document_get_line_style ##### -->
-<para>
-
-</para>
-
-@document: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_report_document_set_line_style ##### -->
-<para>
-
-</para>
-
-@document: 
-@linestyle: 
 
 

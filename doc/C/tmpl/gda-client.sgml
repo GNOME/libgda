@@ -15,6 +15,16 @@ Database client access
  #GdaConnection.
 </para>
 
+<!-- ##### ENUM GdaClientEvent ##### -->
+<para>
+
+</para>
+
+@GDA_CLIENT_EVENT_INVALID: 
+@GDA_CLIENT_EVENT_ERROR: 
+@GDA_CLIENT_EVENT_CONNECTION_OPENED: 
+@GDA_CLIENT_EVENT_CONNECTION_CLOSED: 
+
 <!-- ##### STRUCT GdaClientPrivate ##### -->
 <para>
 
@@ -81,6 +91,17 @@ Database client access
 </para>
 
 @client: 
+
+
+<!-- ##### FUNCTION gda_client_notify_event ##### -->
+<para>
+
+</para>
+
+@client: 
+@cnc: 
+@event: 
+@params: 
 
 
 <!-- ##### FUNCTION gda_client_begin_transaction ##### -->

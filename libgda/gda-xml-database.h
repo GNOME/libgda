@@ -63,6 +63,7 @@ void            gda_xml_database_set_uri (GdaXmlDatabase *xmldb, const gchar *ur
 void            gda_xml_database_changed (GdaXmlDatabase *xmldb);
 void            gda_xml_database_reload (GdaXmlDatabase *xmldb);
 gboolean        gda_xml_database_save (GdaXmlDatabase *xmldb, const gchar *uri);
+gchar          *gda_xml_database_to_string (GdaXmlDatabase *xmldb);
 
 GList          *gda_xml_database_get_tables (GdaXmlDatabase *xmldb);
 void            gda_xml_database_free_table_list (GList *list);

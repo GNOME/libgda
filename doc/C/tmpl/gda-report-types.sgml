@@ -14,93 +14,85 @@ gda-report-types
 
 </para>
 
-<!-- ##### ENUM GdaReportStyle ##### -->
+<!-- ##### STRUCT GdaReportColor ##### -->
 <para>
 
 </para>
 
-@GDA_REPORT_STYLE_FORM: 
-@GDA_REPORT_STYLE_LIST: 
+@priv: 
 
-<!-- ##### ENUM GdaReportPageSize ##### -->
+<!-- ##### STRUCT GdaReportColorPrivate ##### -->
 <para>
 
 </para>
 
-@GDA_REPORT_PAGE_SIZE_A3: 
-@GDA_REPORT_PAGE_SIZE_A4: 
-@GDA_REPORT_PAGE_SIZE_A5: 
-@GDA_REPORT_PAGE_SIZE_A6: 
-@GDA_REPORT_PAGE_SIZE_B3: 
-@GDA_REPORT_PAGE_SIZE_B4: 
-@GDA_REPORT_PAGE_SIZE_B5: 
-@GDA_REPORT_PAGE_SIZE_B6: 
-@GDA_REPORT_PAGE_SIZE_LETTER: 
-@GDA_REPORT_PAGE_SIZE_LEGAL: 
-@GDA_REPORT_PAGE_SIZE_EXECUTIVE: 
 
-<!-- ##### ENUM GdaReportOrientation ##### -->
+<!-- ##### STRUCT GdaReportNumber ##### -->
 <para>
 
 </para>
 
-@GDA_REPORT_ORIENTATION_PORTRAIT: 
-@GDA_REPORT_ORIENTATION_LANDSCAPE: 
+@priv: 
 
-<!-- ##### ENUM GdaReportUnits ##### -->
+<!-- ##### STRUCT GdaReportNumberPrivate ##### -->
 <para>
 
 </para>
 
-@GDA_REPORT_UNITS_INCH: 
-@GDA_REPORT_UNITS_CM: 
-@GDA_REPORT_UNITS_PT: 
 
-<!-- ##### ENUM GdaReportLineStyle ##### -->
+<!-- ##### FUNCTION gda_report_types_color_new ##### -->
 <para>
 
 </para>
 
-@GDA_REPORT_LINE_STYLE_NONE: 
-@GDA_REPORT_LINE_STYLE_SOLID: 
-@GDA_REPORT_LINE_STYLE_DASH: 
-@GDA_REPORT_LINE_STYLE_DOT: 
-@GDA_REPORT_LINE_STYLE_DASH_DOT: 
-@GDA_REPORT_LINE_STYLE_DASH_DOT_DOT: 
+@red: 
+@blue: 
+@yellow: 
+@Returns: 
 
-<!-- ##### ENUM GdaReportFontWeight ##### -->
+
+<!-- ##### FUNCTION gda_report_types_color_to_value ##### -->
 <para>
 
 </para>
 
-@GDA_REPORT_FONT_WEIGHT_LIGHT: 
-@GDA_REPORT_FONT_WEIGHT_NORMAL: 
-@GDA_REPORT_FONT_WEIGHT_SEMIBOLD: 
-@GDA_REPORT_FONT_WEIGHT_BOLD: 
-@GDA_REPORT_FONT_WEIGHT_BLACK: 
+@color: 
+@Returns: 
 
-<!-- ##### ENUM GdaReportHAlignment ##### -->
+
+<!-- ##### FUNCTION gda_report_types_value_to_color ##### -->
 <para>
 
 </para>
 
-@GDA_REPORT_H_ALIGNMENT_STANDAR: 
-@GDA_REPORT_H_ALIGNMENT_LEFT: 
-@GDA_REPORT_H_ALIGNMENT_CENTER: 
-@GDA_REPORT_H_ALIGNMENT_RIGHT: 
+@value: 
+@Returns: 
 
-<!-- ##### ENUM GdaReportVAlignment ##### -->
+
+<!-- ##### FUNCTION gda_report_types_number_new ##### -->
 <para>
 
 </para>
 
-@GDA_REPORT_V_ALIGNMENT_TOP: 
-@GDA_REPORT_V_ALIGNMENT_CENTER: 
-@GDA_REPORT_V_ALIGNMENT_BOTTOM: 
+@value: 
+@Returns: 
 
-<!-- ##### TYPEDEF GdaReportColor ##### -->
+
+<!-- ##### FUNCTION gda_report_types_number_to_value ##### -->
 <para>
 
 </para>
+
+@number: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_types_value_to_number ##### -->
+<para>
+
+</para>
+
+@value: 
+@Returns: 
 
 

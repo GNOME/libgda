@@ -101,6 +101,15 @@ XML database representation (used for import/export and in the default provider)
 @filename: 
 
 
+<!-- ##### FUNCTION gda_xml_database_to_string ##### -->
+<para>
+
+</para>
+
+@xmldb: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_xml_database_get_tables ##### -->
 <para>
 

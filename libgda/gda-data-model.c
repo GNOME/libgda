@@ -25,6 +25,7 @@
 #include <libgda/gda-intl.h>
 #include <libgda/gda-data-model.h>
 #include <libgda/gda-log.h>
+#include <libgda/gda-xml-database.h>
 #include <string.h>
 
 #define PARENT_TYPE G_TYPE_OBJECT
@@ -803,7 +804,30 @@ gda_data_model_to_tab_separated (GdaDataModel *model)
 gchar *
 gda_data_model_to_xml (GdaDataModel *model, gboolean standalone)
 {
-	return NULL;
+	xmlDocPtr xml_doc;
+	xmlNodePtr xml_root, xml_node, xml_tables;
+	gchar *xml = NULL;
+	xmlChar *xml_contents;
+	gint size;
+
+	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
+
+	xml_node = gda_data_model_to_xml_node (model, "exported_model");
+	if (standalone) {
+		xml_doc = xmlNewDoc ("1.0");
+		xml_root = xmlNewDocNode (xml_doc, NULL, "database", NULL);
+		xmlDocSetRootElement (xml_doc, xml_root);
+
+		xml_tables = xmlNewChild (xml_root, NULL, "tables", NULL);
+		xmlAddChild (xml_tables, xml_node);
+
+		xmlDocDumpMemory (xml_doc, &xml_contents, &size);
+		xmlFreeDoc (xml_doc);
+
+		xml = g_strdup (xml_contents);
+	}
+
+	return xml;
 }
 
 static void

@@ -381,15 +381,43 @@ gda_xml_database_reload (GdaXmlDatabase *xmldb)
 gboolean
 gda_xml_database_save (GdaXmlDatabase *xmldb, const gchar *uri)
 {
+        gchar*xml;
+	gboolean result;
+
+	g_return_val_if_fail (GDA_IS_XML_DATABASE (xmldb), FALSE);
+
+	xml = gda_xml_database_to_string (xmldb);
+	if (xml) {
+		result = gda_file_save (uri, xml, strlen (xml));
+		g_free (xml);
+	} else
+		result = FALSE;
+
+	return result;
+}
+
+/**
+ * gda_xml_database_to_string
+ * @xmldb: a #GdaXmlDatabase object.
+ *
+ * Get the given XML database contents as a XML string.
+ *
+ * Returns: the XML string representing the structure and contents of the
+ * given #GdaXmlDatabase object. The returned value must be freed when no
+ * longer needed.
+ */
+gchar *
+gda_xml_database_to_string (GdaXmlDatabase *xmldb)
+{
 	xmlDocPtr doc;
 	xmlNodePtr root;
 	xmlNodePtr tables_node = NULL;
 	GList *list, *l;
 	xmlChar *xml;
 	gint size;
-	gboolean result;
+	gchar *retval;
 
-	g_return_val_if_fail (GDA_IS_XML_DATABASE (xmldb), FALSE);
+	g_return_val_if_fail (GDA_IS_XML_DATABASE (xmldb), NULL);
 
 	/* create the top node */
 	doc = xmlNewDoc ("1.0");
@@ -406,7 +434,7 @@ gda_xml_database_save (GdaXmlDatabase *xmldb, const gchar *uri)
 			gda_log_error (_("Could not create a XML node from table %s"), l->data);
 			xmlFreeDoc (doc);
 			gda_xml_database_free_table_list (list);
-			return FALSE;
+			return NULL;
 		}
 
 		if (!tables_node)
@@ -422,13 +450,13 @@ gda_xml_database_save (GdaXmlDatabase *xmldb, const gchar *uri)
 	xmlFreeDoc (doc);
 	if (!xml) {
 		gda_log_error (_("Could not dump XML file to memory"));
-		return FALSE;
+		return NULL;
 	}
 
-	result = gda_file_save (uri, xml, size);
-	g_free (xml);
+	retval = g_strdup (xml);
+	free (xml);
 
-	return result;
+	return retval;
 }
 
 static void
