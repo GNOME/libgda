@@ -1,3 +1,8 @@
+2002-03-24  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* providers/mysql/gda-mysql-provider.c (get_mysql_aggregates):
+	implemented SCHEMA_AGGREGATES.
+
 2002-03-22  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* libgda/gda-data-model.[ch] (gda_data_model_to_comma_separated):

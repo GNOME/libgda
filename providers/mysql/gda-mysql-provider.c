@@ -415,24 +415,6 @@ gda_mysql_provider_supports (GdaServerProvider *provider,
 	return FALSE;
 }
 
-static GdaServerRecordset *
-get_mysql_tables (GdaServerConnection *cnc, GdaParameterList *params)
-{
-	GList *reclist;
-	GdaServerRecordset *recset;
-
-	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), NULL);
-
-	reclist = process_sql_commands (NULL, cnc, "show tables");
-	if (!reclist)
-		return NULL;
-
-	recset = GDA_SERVER_RECORDSET (reclist->data);
-	g_list_free (reclist);
-
-	return recset;
-}
-
 static void
 add_string_row (GdaServerRecordsetModel *recset, const gchar *str)
 {
@@ -449,6 +431,179 @@ add_string_row (GdaServerRecordsetModel *recset, const gchar *str)
 	gda_server_recordset_model_append_row (recset, &list);
 
 	gda_value_free (value);
+}
+
+static GdaServerRecordset *
+get_mysql_aggregates (GdaServerConnection *cnc, GdaParameterList *params)
+{
+	GdaServerRecordsetModel *recset;
+
+	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), NULL);
+
+	/* create the recordset */
+	recset = (GdaServerRecordsetModel *) gda_server_recordset_model_new (cnc, 1);
+	gda_server_recordset_model_set_field_defined_size (recset, 0, 32);
+	gda_server_recordset_model_set_field_name (recset, 0, _("Name"));
+	gda_server_recordset_model_set_field_scale (recset, 0, 0);
+	gda_server_recordset_model_set_field_gdatype (recset, 0, GDA_TYPE_STRING);
+
+	/* fill the recordset */
+	add_string_row (recset, "abs");
+	add_string_row (recset, "acos");
+	add_string_row (recset, "adddate");
+	add_string_row (recset, "ascii");
+	add_string_row (recset, "asin");
+	add_string_row (recset, "atan");
+	add_string_row (recset, "atan2");
+	add_string_row (recset, "benchmark");
+	add_string_row (recset, "bin");
+	add_string_row (recset, "bit_count");
+	add_string_row (recset, "ceiling");
+	add_string_row (recset, "char");
+	add_string_row (recset, "char_length");
+	add_string_row (recset, "character_length");
+	add_string_row (recset, "coalesce");
+	add_string_row (recset, "concat");
+	add_string_row (recset, "concat_ws");
+	add_string_row (recset, "connection_id");
+	add_string_row (recset, "conv");
+	add_string_row (recset, "cos");
+	add_string_row (recset, "cot");
+	add_string_row (recset, "count");
+	add_string_row (recset, "curdate");
+	add_string_row (recset, "current_date");
+	add_string_row (recset, "current_time");
+	add_string_row (recset, "current_timestamp");
+	add_string_row (recset, "curtime");
+	add_string_row (recset, "database");
+	add_string_row (recset, "date_add");
+	add_string_row (recset, "date_format");
+	add_string_row (recset, "date_sub");
+	add_string_row (recset, "dayname");
+	add_string_row (recset, "dayofmonth");
+	add_string_row (recset, "dayofweek");
+	add_string_row (recset, "dayofyear");
+	add_string_row (recset, "decode");
+	add_string_row (recset, "degrees");
+	add_string_row (recset, "elt");
+	add_string_row (recset, "encode");
+	add_string_row (recset, "encrypt");
+	add_string_row (recset, "exp");
+	add_string_row (recset, "export_set");
+	add_string_row (recset, "extract");
+	add_string_row (recset, "field");
+	add_string_row (recset, "find_in_set");
+	add_string_row (recset, "floor");
+	add_string_row (recset, "format");
+	add_string_row (recset, "from_days");
+	add_string_row (recset, "from_unixtime");
+	add_string_row (recset, "get_lock");
+	add_string_row (recset, "greatest");
+	add_string_row (recset, "hex");
+	add_string_row (recset, "hour");
+	add_string_row (recset, "if");
+	add_string_row (recset, "ifnull");
+	add_string_row (recset, "inet_aton");
+	add_string_row (recset, "inet_ntoa");
+	add_string_row (recset, "insert");
+	add_string_row (recset, "instr");
+	add_string_row (recset, "interval");
+	add_string_row (recset, "isnull");
+	add_string_row (recset, "last_insert_id");
+	add_string_row (recset, "lcase");
+	add_string_row (recset, "least");
+	add_string_row (recset, "left");
+	add_string_row (recset, "length");
+	add_string_row (recset, "load_file");
+	add_string_row (recset, "locate");
+	add_string_row (recset, "log");
+	add_string_row (recset, "log10");
+	add_string_row (recset, "lower");
+	add_string_row (recset, "lpad");
+	add_string_row (recset, "ltrim");
+	add_string_row (recset, "make_set");
+	add_string_row (recset, "master_pos_wait");
+	add_string_row (recset, "match");
+	add_string_row (recset, "max");
+	add_string_row (recset, "md5");
+	add_string_row (recset, "mid");
+	add_string_row (recset, "min");
+	add_string_row (recset, "minute");
+	add_string_row (recset, "mod");
+	add_string_row (recset, "month");
+	add_string_row (recset, "monthname");
+	add_string_row (recset, "now");
+	add_string_row (recset, "nullif");
+	add_string_row (recset, "oct");
+	add_string_row (recset, "octet_length");
+	add_string_row (recset, "ord");
+	add_string_row (recset, "password");
+	add_string_row (recset, "period_add");
+	add_string_row (recset, "period_diff");
+	add_string_row (recset, "pi");
+	add_string_row (recset, "position");	
+	add_string_row (recset, "pow");
+	add_string_row (recset, "power");
+	add_string_row (recset, "quarter");
+	add_string_row (recset, "radians");
+	add_string_row (recset, "rand");
+	add_string_row (recset, "release_lock");
+	add_string_row (recset, "repeat");
+	add_string_row (recset, "replace");	
+	add_string_row (recset, "reverse");
+	add_string_row (recset, "right");
+	add_string_row (recset, "round");
+	add_string_row (recset, "rpad");
+	add_string_row (recset, "rtrim");
+	add_string_row (recset, "second");
+	add_string_row (recset, "sec_to_time");
+	add_string_row (recset, "session_user");
+	add_string_row (recset, "sign");
+	add_string_row (recset, "sin");
+	add_string_row (recset, "soundex");
+	add_string_row (recset, "space");
+	add_string_row (recset, "sqrt");
+	add_string_row (recset, "strcmp");
+	add_string_row (recset, "subdate");
+	add_string_row (recset, "substring");
+	add_string_row (recset, "substring_index");
+	add_string_row (recset, "sysdate");
+	add_string_row (recset, "system_user");
+	add_string_row (recset, "tan");
+	add_string_row (recset, "time_format");
+	add_string_row (recset, "time_to_sec");
+	add_string_row (recset, "to_days");
+	add_string_row (recset, "trim");
+	add_string_row (recset, "truncate");
+	add_string_row (recset, "ucase");
+	add_string_row (recset, "unix_timestamp");
+	add_string_row (recset, "upper");
+	add_string_row (recset, "user");
+	add_string_row (recset, "version");
+	add_string_row (recset, "week");
+	add_string_row (recset, "weekday");
+	add_string_row (recset, "year");
+	add_string_row (recset, "yearweek");
+
+	return GDA_SERVER_RECORDSET (recset);
+}
+
+static GdaServerRecordset *
+get_mysql_tables (GdaServerConnection *cnc, GdaParameterList *params)
+{
+	GList *reclist;
+	GdaServerRecordset *recset;
+
+	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), NULL);
+
+	reclist = process_sql_commands (NULL, cnc, "show tables");
+	if (!reclist)
+		return NULL;
+
+	recset = GDA_SERVER_RECORDSET (reclist->data);
+	g_list_free (reclist);
+
+	return recset;
 }
 
 static GdaServerRecordset *
@@ -498,14 +653,12 @@ gda_mysql_provider_get_schema (GdaServerProvider *provider,
 	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), NULL);
 
 	switch (schema) {
-	case GNOME_Database_Connection_SCHEMA_PROCEDURES :
-		break;
 	case GNOME_Database_Connection_SCHEMA_TABLES :
 		return get_mysql_tables (cnc, params);
 	case GNOME_Database_Connection_SCHEMA_TYPES :
 		return get_mysql_types (cnc, params);
-	case GNOME_Database_Connection_SCHEMA_VIEWS :
-		break; /* FIXME */
+	case GNOME_Database_Connection_SCHEMA_AGGREGATES :
+		return get_mysql_aggregates (cnc, params);
 	}
 
 	return NULL;
