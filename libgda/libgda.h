@@ -48,6 +48,8 @@
 #include <libgda/gda-xml-connection.h>
 #include <libgda/gda-xml-document.h>
 #include <libgda/gda-xml-database.h>
+#include <libgda/gda-enum-types.h>
+  
 
 G_BEGIN_DECLS
 

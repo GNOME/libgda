@@ -65,9 +65,7 @@ gda_headers = \
 	gda-xql-update.h \
 	libgda.h
 
-$(libgda_2_la_OBJECTS): $(gda_marshal_built_files)
-
-libgda_2_la_SOURCES = \
+libgda_sources =  \
 	$(gda_headers) \
 	gda-blob.c \
 	gda-client.c \
@@ -118,13 +116,61 @@ libgda_2_la_SOURCES = \
 	gda-xql-join.c \
 	gda-xql-update.c
 
+
+# Generate the enums source code, with glib-mkenums:
+# This is based on the same Makefile.am stuff in pango:
+libgda_built_headers = gda-enum-types.h
+libgda_built_cfiles = gda-enum-types.c
+
+# Don't build the library until we have built the headers that it needs:
+$(OBJECTS) $(libgda_2_la_OBJECTS): $(libgda_built_headers) $(gda_marshal_built_files)
+
+gda-enum-types.h: s-enum-types-h
+	@true
+
+s-enum-types-h: @REBUILD@ $(gda_headers) Makefile
+	( cd $(srcdir) && glib-mkenums \
+			--fhead "#ifndef __LIBGDA_ENUM_TYPES_H__\n#define __LIBGDA_ENUM_TYPES_H__\n\n#include <glib-object.h>\n\nG_BEGIN_DECLS\n" \
+			--fprod "/* enumerations from \"@filename@\" */\n" \
+			--vhead "GType @enum_name@_get_type (void);\n#define GDA_TYPE_@ENUMSHORT@ (@enum_name@_get_type())\n" 	\
+			--ftail "G_END_DECLS\n\n#endif /* __LIBGDA_ENUM_TYPES_H__ */" \
+		$(gda_headers) ) > tmp-gda-enum-types.h \
+	&& (cmp -s tmp-gda-enum-types.h $(srcdir)/gda-enum-types.h || cp tmp-gda-enum-types.h $(srcdir)/gda-enum-types.h ) \
+	&& rm -f tmp-gda-enum-types.h	\
+	&& echo timestamp > $(@F)
+
+gda-enum-types.c: s-enum-types-c
+	@true
+
+s-enum-types-c: @REBUILD@ $(gda_headers) Makefile
+	( cd $(srcdir) && glib-mkenums \
+			--fhead "#include <libgda/libgda.h>\n" \
+      --fhead "#include <glib-object.h>" \
+      --fprod "\n/* enumerations from \"@filename@\" */" \
+			--vhead "GType\n@enum_name@_get_type (void)\n{\n  static GType etype = 0;\n  if (etype == 0) {\n    static const G@Type@Value values[] = {" 	\
+			--vprod "      { @VALUENAME@, \"@VALUENAME@\", \"@valuenick@\" }," \
+			--vtail "      { 0, NULL, NULL }\n    };\n    etype = g_@type@_register_static (\"@EnumName@\", values);\n  }\n  return etype;\n}\n" \
+		$(gda_headers) ) > tmp-gda-enum-types.c \
+	&& (cmp -s tmp-gda-enum-types.c $(srcdir)/gda-enum-types.c || cp tmp-gda-enum-types.c $(srcdir)/gda-enum-types.c ) \
+	&& rm -f tmp-gda-enum-types.c \
+	&& echo timestamp > $(@F)
+
+
+libgda_2_la_SOURCES = \
+	$(libgda_sources) \
+	$(libgda_built_cfiles)
+
 libgda_2_la_LDFLAGS = -version-info $(GDA_CURRENT):$(GDA_REVISION):$(GDA_AGE)
 libgda_2_la_LIBADD = $(LIBGDA_LIBS) $(top_builddir)/libsql/libgdasql.la
 
 gdaincludedir=$(includedir)/libgda
-gdainclude_HEADERS=$(gda_headers)
+gdainclude_HEADERS=$(gda_headers) $(libgda_built_headers)
 
-CLEANFILES = $(gda_marshal_built_files)
+CLEANFILES = $(gda_marshal_built_files) \
+	gda-enum-types.h \
+	s-enum-types-h \
+	gda-enum-types.c \
+	s-enum-types-c
 
 dist-hook:
 	cd $(distdir); rm -f $(gda_marshal_built_files)
