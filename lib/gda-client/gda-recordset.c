@@ -612,7 +612,9 @@ gda_recordset_field_idx (GdaRecordset * rs, gint idx)
  * gda_recordset_to_array:
  * @rs: the recordset
  *
- * Returns a pointer array containing the whole recordset
+ * Returns a pointer array containing the whole recordset. Each node in
+ * the returned array is a GPtrArray, which in turn contains GdaField's
+ * as its nodes.
  **/
 
 GPtrArray *
@@ -621,16 +623,17 @@ gda_recordset_to_array (GdaRecordset *rs)
 	GPtrArray *array, *row;
 	GdaField *rc;
 	gint fields, i, j;
+	gulong position;
 	
 	g_return_val_if_fail (GDA_IS_RECORDSET(rs), 0);
 	g_return_val_if_fail (rs->open, 0);
 	
-	gda_recordset_move_first(rs);
-	fields = rs->field_attributes->_length;
+	position = gda_recordset_move_first(rs);
 
 	array = g_ptr_array_new();
 
-	for (i = 0; i < rs->affected_rows; i++) {
+	while (position != GDA_RECORDSET_INVALID_POSITION &&
+	       !gda_recordset_eof (rs)) {
 		row = g_ptr_array_new(); 
 
 		for (j = 0; j < fields; j++) {
@@ -639,6 +642,8 @@ gda_recordset_to_array (GdaRecordset *rs)
 		}
 		
 		g_ptr_array_add(array, row);
+
+		position = gda_recordset_move_next (rs);
 	}
 
 	return array;
