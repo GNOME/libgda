@@ -1,3 +1,15 @@
+2001-11-03  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-test.c: re-started, to be more a test suite than a simple
+	test program
+
+	* config.c: GDA configuration API test suite
+	(list_all_sections_and_keys): stress test of the configuration
+	database access API
+	(list_all_providers): test providers' info retrieval API
+
+	* gda-test.h: new file
+
 2001-11-02  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* Makefile.am: removed non-existant _PROGRAMS, and fixed

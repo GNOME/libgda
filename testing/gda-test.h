@@ -20,23 +20,21 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include <config.h>
-#include <stdlib.h>
-#include "gda-test.h"
+#if !defined(__gda_test_h__)
+#  define __gda_test_h__
 
-static void
-run_gda_test (gpointer user_data)
-{
-	test_config ();
-	gda_main_quit ();
-}
+#include <libgda/libgda.h>
+#include <bonobo/bonobo-i18n.h>
 
-int
-main(int argc, char *argv[])
-{
-	gda_init ("gda-test", VERSION, argc, argv);
+G_BEGIN_DECLS
 
-	gda_main_run ((GdaInitFunc) run_gda_test, NULL);
+#define DISPLAY_MESSAGE(_msg_) \
+        g_print ("=========================================\n"); \
+	g_print ("= %s\n", _msg_); \
+        g_print ("=========================================\n");
 
-	return (0);
-}
+void test_config (void);
+
+G_END_DECLS
+
+#endif

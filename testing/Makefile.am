@@ -8,7 +8,10 @@ bin_PROGRAMS = gda-test
 noinst_PROGRAMS = \
 	gda-xmldb-test
 
-gda_test_SOURCES = gda-test.c
+gda_test_SOURCES = \
+	config.c \
+	gda-test.c \
+	gda-test.h
 gda_test_LDADD = \
 	$(top_builddir)/libgda/libgda-2.la \
 	$(LIBGDA_LIBS)
