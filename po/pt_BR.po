@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-db\n"
-"POT-Creation-Date: 2000-12-22 14:14+0100\n"
+"POT-Creation-Date: 2001-01-22 18:36+0100\n"
 "PO-Revision-Date: 2000-11-21 17:44-00:03\n"
 "Last-Translator: Ariel Bressan da Silva <ariel@conectiva.com.br>\n"
 "Language-Team: Brazilian Portuguese <ldp-br@bazar.conectiva.com.br>\n"
@@ -63,16 +63,16 @@ msgstr "VERDADEIRO"
 msgid "FALSE"
 msgstr "FALSO"
 
-#: lib/gda-common/gda-corba.c:77
+#: lib/gda-common/gda-corba.c:73
 #, c-format
 msgid "CORBA System exception: %s"
 msgstr "Exceção do sistema CORBA: %s"
 
-#: lib/gda-common/gda-corba.c:110
+#: lib/gda-common/gda-corba.c:102
 msgid "True"
 msgstr "Verdadeiro"
 
-#: lib/gda-common/gda-corba.c:110
+#: lib/gda-common/gda-corba.c:102
 msgid "False"
 msgstr "Falso"
 
@@ -170,7 +170,7 @@ msgid "Starting provider %s with no implementation functions"
 msgstr "Iniciando provedor %s sem implementação de funções"
 
 #: lib/gda-server/gda-server-impl.c:210
-#: report/server/gda-report-server-main.c:120
+#: report/server/gda-report-server-main.c:113
 msgid ""
 "OAF doesn't know about our IID; indicates broken installation. Exiting..."
 msgstr ""
@@ -842,44 +842,44 @@ msgstr "não pôde alocar campo"
 msgid "Could not register gda-sybase provider implementation"
 msgstr "Não pôde registrar implementação de provedor gda-sybase"
 
-#: report/gda-report-engine.c:87
+#: report/gda-report-engine.c:207
 #, c-format
 msgid "CORBA exception unloading report engine: %s"
 msgstr "Exceção CORBA descarregando mecanismo de relatório: %s"
 
-#: report/server/gda-report-server-main.c:43
-#: report/server/gda-report-server-main.c:50
+#: report/server/gda-report-server-main.c:41
+#: report/server/gda-report-server-main.c:48
 #, c-format
 msgid "Received signal %d, shutting down."
 msgstr "Sinal recebido %d, desligando."
 
-#: report/server/gda-report-server-main.c:54
+#: report/server/gda-report-server-main.c:52
 #, c-format
 msgid "Received signal %d, shutting down cleanly"
 msgstr "Sinal recebido %d, desligando"
 
-#: report/server/gda-report-server-main.c:96
+#: report/server/gda-report-server-main.c:92
 msgid "Failed to initialize OAF: please mail bug report to OAF maintainers"
 msgstr ""
 "Falhou ao inicializar OAF: favor enviar relatório de falha para "
 "osmantenedores OAF"
 
-#: report/server/gda-report-server-main.c:106
+#: report/server/gda-report-server-main.c:101
 msgid "Could not activate report engine"
 msgstr "Não pôde ativar mecanismo de relatório"
 
-#: report/server/gda-report-server-main.c:123
+#: report/server/gda-report-server-main.c:116
 msgid ""
 "Another instance of the report engine is already registered with OAF. "
 "Exiting..."
 msgstr ""
 "Outra instância do mecanismo de relatório já registrado com OAF. Saindo..."
 
-#: report/server/gda-report-server-main.c:126
+#: report/server/gda-report-server-main.c:119
 msgid "Unknown error registering report engine with OAF. Exiting"
 msgstr "Erro desconhecido registrando mecanismo de relatório com OAF. Saindo"
 
-#: report/server/gda-report-server-main.c:130
+#: report/server/gda-report-server-main.c:123
 #, c-format
 msgid "Registered report engine with ID = %s"
 msgstr "Mecanismo de relatório registrado com identificação = %s"
@@ -931,8 +931,8 @@ msgstr "%s: entrada DSN mal configurada"
 msgid "%s: data source '%s' not found\n"
 msgstr "%s: fonte de dados '%s' não encontrada\n"
 
-msgid "Fetchong %d cslib message"
-msgstr "Recuperando %d mensagem cslib"
+#~ msgid "Fetchong %d cslib message"
+#~ msgstr "Recuperando %d mensagem cslib"
 
-msgid "%s: not implemented"
-msgstr "%s: não implementado"
+#~ msgid "%s: not implemented"
+#~ msgstr "%s: não implementado"

@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda 0.2.2\n"
-"POT-Creation-Date: 2000-12-22 14:14+0100\n"
+"POT-Creation-Date: 2001-01-22 18:36+0100\n"
 "PO-Revision-Date: 2001-01-03 09:41CET\n"
 "Last-Translator: Stanislav Visnovsky <visnovsky@nenya.ms.mff.cuni.cz>\n"
 "Language-Team: Slovak <sk-i18n@rak.isternet.sk>\n"
@@ -59,16 +59,16 @@ msgstr "TRUE"
 msgid "FALSE"
 msgstr "FALSE"
 
-#: lib/gda-common/gda-corba.c:77
+#: lib/gda-common/gda-corba.c:73
 #, c-format
 msgid "CORBA System exception: %s"
 msgstr "Systémová výnimka CORBA: %s"
 
-#: lib/gda-common/gda-corba.c:110
+#: lib/gda-common/gda-corba.c:102
 msgid "True"
 msgstr "True"
 
-#: lib/gda-common/gda-corba.c:110
+#: lib/gda-common/gda-corba.c:102
 msgid "False"
 msgstr "False"
 
@@ -166,12 +166,14 @@ msgid "Starting provider %s with no implementation functions"
 msgstr "Spú¹»am poskytovateµa %s bez implementaèných funkcií"
 
 #: lib/gda-server/gda-server-impl.c:210
-#: report/server/gda-report-server-main.c:120
-msgid "OAF doesn't know about our IID; indicates broken installation. Exiting..."
+#: report/server/gda-report-server-main.c:113
+msgid ""
+"OAF doesn't know about our IID; indicates broken installation. Exiting..."
 msgstr "OAF nepozná na¹e IID, asi po¹kodená in¹talácia. Konèím..."
 
 #: lib/gda-server/gda-server-impl.c:213
-msgid "Another instance of this provider is already registered with OAF. Exiting..."
+msgid ""
+"Another instance of this provider is already registered with OAF. Exiting..."
 msgstr "Iná in¹tancia tohoto poskytovateµa je u¾ registrovaná u OAF. Konèím..."
 
 #: lib/gda-server/gda-server-impl.c:216
@@ -828,41 +830,42 @@ msgstr "nie je mo¾né alokova» pole"
 msgid "Could not register gda-sybase provider implementation"
 msgstr "Nie je mo¾né registrova» implementáciu gda-sybase poskytovateµa"
 
-#: report/gda-report-engine.c:87
+#: report/gda-report-engine.c:207
 #, c-format
 msgid "CORBA exception unloading report engine: %s"
 msgstr "Výnimka CORBA pri uvoµòovaní report engine: %s"
 
-#: report/server/gda-report-server-main.c:43
-#: report/server/gda-report-server-main.c:50
+#: report/server/gda-report-server-main.c:41
+#: report/server/gda-report-server-main.c:48
 #, c-format
 msgid "Received signal %d, shutting down."
 msgstr "Zachytený signál %d, vypínam."
 
-#: report/server/gda-report-server-main.c:54
+#: report/server/gda-report-server-main.c:52
 #, c-format
 msgid "Received signal %d, shutting down cleanly"
 msgstr "Zachytený signál %d, èisto vypínam."
 
-#: report/server/gda-report-server-main.c:96
+#: report/server/gda-report-server-main.c:92
 msgid "Failed to initialize OAF: please mail bug report to OAF maintainers"
-msgstr "Nepodarilo sa inicializova» OAF: prosím, odo¹lite správu o chybe správcom OAF"
+msgstr ""
+"Nepodarilo sa inicializova» OAF: prosím, odo¹lite správu o chybe správcom OAF"
 
-#: report/server/gda-report-server-main.c:106
+#: report/server/gda-report-server-main.c:101
 msgid "Could not activate report engine"
 msgstr "Nie je mo¾né aktivova» report engine"
 
-#: report/server/gda-report-server-main.c:123
+#: report/server/gda-report-server-main.c:116
 msgid ""
 "Another instance of the report engine is already registered with OAF. "
 "Exiting..."
 msgstr "Iná in¹tancia report engine u¾ je registrovaná u OAD. Konèím..."
 
-#: report/server/gda-report-server-main.c:126
+#: report/server/gda-report-server-main.c:119
 msgid "Unknown error registering report engine with OAF. Exiting"
 msgstr "Neznáma chyba pri registrácii report engine u OAD. Konèím"
 
-#: report/server/gda-report-server-main.c:130
+#: report/server/gda-report-server-main.c:123
 #, c-format
 msgid "Registered report engine with ID = %s"
 msgstr "Registrovaný report engine s ID = %s"
@@ -908,4 +911,3 @@ msgstr "%s: chyba v konfigurácii polo¾ky DSN"
 #, c-format
 msgid "%s: data source '%s' not found\n"
 msgstr "%s: zdroj dát '%s' nenájdený\n"
-

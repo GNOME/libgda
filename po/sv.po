@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2000-12-22 14:14+0100\n"
+"POT-Creation-Date: 2001-01-22 18:36+0100\n"
 "PO-Revision-Date: 2000-12-15 19:48+0200\n"
 "Last-Translator: Christian Rose <menthos@menthos.com>\n"
 "Language-Team: Swedish <sv@li.org>\n"
@@ -59,16 +59,16 @@ msgstr "SANT"
 msgid "FALSE"
 msgstr "FALSKT"
 
-#: lib/gda-common/gda-corba.c:77
+#: lib/gda-common/gda-corba.c:73
 #, c-format
 msgid "CORBA System exception: %s"
 msgstr "Undantag i CORBA-systemet: %s"
 
-#: lib/gda-common/gda-corba.c:110
+#: lib/gda-common/gda-corba.c:102
 msgid "True"
 msgstr "Sant"
 
-#: lib/gda-common/gda-corba.c:110
+#: lib/gda-common/gda-corba.c:102
 msgid "False"
 msgstr "Falskt"
 
@@ -166,7 +166,7 @@ msgid "Starting provider %s with no implementation functions"
 msgstr "Startar leverantör %s utan några implementationsfunktioner"
 
 #: lib/gda-server/gda-server-impl.c:210
-#: report/server/gda-report-server-main.c:120
+#: report/server/gda-report-server-main.c:113
 msgid ""
 "OAF doesn't know about our IID; indicates broken installation. Exiting..."
 msgstr ""
@@ -832,33 +832,33 @@ msgstr "kunde inte allokera fält"
 msgid "Could not register gda-sybase provider implementation"
 msgstr "Kunde inte registrera gda-sybase-leverantörsinformation"
 
-#: report/gda-report-engine.c:87
+#: report/gda-report-engine.c:207
 #, c-format
 msgid "CORBA exception unloading report engine: %s"
 msgstr "CORBA-undantag vid nerstängning av rapportmotor: %s"
 
-#: report/server/gda-report-server-main.c:43
-#: report/server/gda-report-server-main.c:50
+#: report/server/gda-report-server-main.c:41
+#: report/server/gda-report-server-main.c:48
 #, c-format
 msgid "Received signal %d, shutting down."
 msgstr "Mottog signalen %d, stänger ner."
 
-#: report/server/gda-report-server-main.c:54
+#: report/server/gda-report-server-main.c:52
 #, c-format
 msgid "Received signal %d, shutting down cleanly"
 msgstr "Mottog signalen %d, stänger ner snyggt"
 
-#: report/server/gda-report-server-main.c:96
+#: report/server/gda-report-server-main.c:92
 msgid "Failed to initialize OAF: please mail bug report to OAF maintainers"
 msgstr ""
 "Misslyckades med att initiera OAF: var vänlig och skicka en buggrapport till "
 "OAF:s underhållare"
 
-#: report/server/gda-report-server-main.c:106
+#: report/server/gda-report-server-main.c:101
 msgid "Could not activate report engine"
 msgstr "Kunde inte aktivera rapportmotorn"
 
-#: report/server/gda-report-server-main.c:123
+#: report/server/gda-report-server-main.c:116
 msgid ""
 "Another instance of the report engine is already registered with OAF. "
 "Exiting..."
@@ -866,11 +866,11 @@ msgstr ""
 "En annan instans av denna rapportmotor är redan registrerad hos OAF. "
 "Avslutar..."
 
-#: report/server/gda-report-server-main.c:126
+#: report/server/gda-report-server-main.c:119
 msgid "Unknown error registering report engine with OAF. Exiting"
 msgstr "Okänt fel vid registrering av denna rapportmotor hos OAF. Avslutar"
 
-#: report/server/gda-report-server-main.c:130
+#: report/server/gda-report-server-main.c:123
 #, c-format
 msgid "Registered report engine with ID = %s"
 msgstr "Registrerade rapportmotor med ID = %s"

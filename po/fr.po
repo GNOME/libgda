@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda 0.2.3\n"
-"POT-Creation-Date: 2001-01-11 17:41+0100\n"
+"POT-Creation-Date: 2001-01-22 18:36+0100\n"
 "PO-Revision-Date: 2001-01-11 17:46+0100\n"
 "Last-Translator: Christophe Merlet (RedFox) <redfox@eikonex.org>\n"
 "Language-Team: GNOME French Team <gnomefr@gnomefr.traduc.org>\n"
@@ -166,7 +166,7 @@ msgid "Starting provider %s with no implementation functions"
 msgstr "Démarrage du fournisseur %s avec aucune fonctions d'implémentation"
 
 #: lib/gda-server/gda-server-impl.c:210
-#: report/server/gda-report-server-main.c:120
+#: report/server/gda-report-server-main.c:113
 msgid ""
 "OAF doesn't know about our IID; indicates broken installation. Exiting..."
 msgstr ""
@@ -837,33 +837,33 @@ msgstr "ne peut allouer le champ"
 msgid "Could not register gda-sybase provider implementation"
 msgstr "Ne peut enregistrer l'implémentation du fournisseur gda-sybase"
 
-#: report/gda-report-engine.c:87
+#: report/gda-report-engine.c:207
 #, c-format
 msgid "CORBA exception unloading report engine: %s"
 msgstr "Exception CORBA durant le déchargement du moteur de rapport : %s"
 
-#: report/server/gda-report-server-main.c:43
-#: report/server/gda-report-server-main.c:50
+#: report/server/gda-report-server-main.c:41
+#: report/server/gda-report-server-main.c:48
 #, c-format
 msgid "Received signal %d, shutting down."
 msgstr "Réception du signal %d, extinction."
 
-#: report/server/gda-report-server-main.c:54
+#: report/server/gda-report-server-main.c:52
 #, c-format
 msgid "Received signal %d, shutting down cleanly"
 msgstr "Réception du signal %d, extionction propre."
 
-#: report/server/gda-report-server-main.c:96
+#: report/server/gda-report-server-main.c:92
 msgid "Failed to initialize OAF: please mail bug report to OAF maintainers"
 msgstr ""
 "Échec d'initialisation d'OAF : veuillez transmettre un rapport d'anomalies "
 "aux mainteneurs d'OAF"
 
-#: report/server/gda-report-server-main.c:106
+#: report/server/gda-report-server-main.c:101
 msgid "Could not activate report engine"
 msgstr "Ne peut activer le moteur de rapport"
 
-#: report/server/gda-report-server-main.c:123
+#: report/server/gda-report-server-main.c:116
 msgid ""
 "Another instance of the report engine is already registered with OAF. "
 "Exiting..."
@@ -871,12 +871,12 @@ msgstr ""
 "Une autre instance du moteur de rapport est déjà enregistré avec OAF. "
 "Quitte..."
 
-#: report/server/gda-report-server-main.c:126
+#: report/server/gda-report-server-main.c:119
 msgid "Unknown error registering report engine with OAF. Exiting"
 msgstr ""
 "Erreur inconnu durant l'enregistrement du moteur de rapport avec OAF. Quitte"
 
-#: report/server/gda-report-server-main.c:130
+#: report/server/gda-report-server-main.c:123
 #, c-format
 msgid "Registered report engine with ID = %s"
 msgstr "Moteur de rapport enregistré avec l'ID = %s"

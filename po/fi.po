@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2000-12-22 14:14+0100\n"
+"POT-Creation-Date: 2001-01-22 18:36+0100\n"
 "PO-Revision-Date: 2000-11-12 19:00+0100\n"
 "Last-Translator: Markku Verkkoniemi <myv@iki.fi>\n"
 "Language-Team: Finnish <fi@li.org>\n"
@@ -59,16 +59,16 @@ msgstr "TOSI"
 msgid "FALSE"
 msgstr "EPÄTOSI"
 
-#: lib/gda-common/gda-corba.c:77
+#: lib/gda-common/gda-corba.c:73
 #, c-format
 msgid "CORBA System exception: %s"
 msgstr "CORBA-järjestelmäpoikkeus %s"
 
-#: lib/gda-common/gda-corba.c:110
+#: lib/gda-common/gda-corba.c:102
 msgid "True"
 msgstr "Tosi"
 
-#: lib/gda-common/gda-corba.c:110
+#: lib/gda-common/gda-corba.c:102
 msgid "False"
 msgstr "Epätosi"
 
@@ -166,7 +166,7 @@ msgid "Starting provider %s with no implementation functions"
 msgstr "Käynnistetään tuottaja %s ilman toteutustoimintoja"
 
 #: lib/gda-server/gda-server-impl.c:210
-#: report/server/gda-report-server-main.c:120
+#: report/server/gda-report-server-main.c:113
 msgid ""
 "OAF doesn't know about our IID; indicates broken installation. Exiting..."
 msgstr ""
@@ -829,42 +829,42 @@ msgstr "kenttää ei voi varata"
 msgid "Could not register gda-sybase provider implementation"
 msgstr "gda-sybase-toteutusta ei voi rekisteröidä"
 
-#: report/gda-report-engine.c:87
+#: report/gda-report-engine.c:207
 #, c-format
 msgid "CORBA exception unloading report engine: %s"
 msgstr "CORBA-poikkeus raporttikoneen latauksessa: %s"
 
-#: report/server/gda-report-server-main.c:43
-#: report/server/gda-report-server-main.c:50
+#: report/server/gda-report-server-main.c:41
+#: report/server/gda-report-server-main.c:48
 #, c-format
 msgid "Received signal %d, shutting down."
 msgstr "Signaali %d vastaanotettu, suljetaan."
 
-#: report/server/gda-report-server-main.c:54
+#: report/server/gda-report-server-main.c:52
 #, c-format
 msgid "Received signal %d, shutting down cleanly"
 msgstr "Signaali %d vastaanotettu, suljetaan siististi"
 
-#: report/server/gda-report-server-main.c:96
+#: report/server/gda-report-server-main.c:92
 msgid "Failed to initialize OAF: please mail bug report to OAF maintainers"
 msgstr "OAF:n alustus ei onnistu: lähetä virheraportti OAF:n ylläpitäjille"
 
-#: report/server/gda-report-server-main.c:106
+#: report/server/gda-report-server-main.c:101
 msgid "Could not activate report engine"
 msgstr "Raporttikonetta ei voi aktivoida"
 
-#: report/server/gda-report-server-main.c:123
+#: report/server/gda-report-server-main.c:116
 msgid ""
 "Another instance of the report engine is already registered with OAF. "
 "Exiting..."
 msgstr ""
 "Raporttikoneen toinen ilmentymä on jo rekisteröity OAF:ään. Lopettaa..."
 
-#: report/server/gda-report-server-main.c:126
+#: report/server/gda-report-server-main.c:119
 msgid "Unknown error registering report engine with OAF. Exiting"
 msgstr "Tuntematon virhe rekisteröidessä raporttikonetta OAF:ään. Lopettaa"
 
-#: report/server/gda-report-server-main.c:130
+#: report/server/gda-report-server-main.c:123
 #, c-format
 msgid "Registered report engine with ID = %s"
 msgstr "Rekisteröity raporttikone, ID = %s"
