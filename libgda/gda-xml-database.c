@@ -724,7 +724,7 @@ gda_xml_database_new_table_from_node (GdaXmlDatabase *xmldb, xmlNodePtr node)
 
 	name = xmlGetProp (node, PROPERTY_NAME);
 	table = gda_table_new (name);
-	if (table) {
+	if (!table) {
 		gda_log_error (_("Table %s already exists"), name);
 		return NULL;
 	}
