@@ -280,8 +280,28 @@ gda_export_select_table (GdaExport *exp, const gchar *table)
 }
 
 /**
+ * gda_export_select_table_list
+ * @exp: a #GdaExport object
+ * @list: list of tables to be selected
+ *
+ * Adds all the tables contained in the given list to the list of
+ * selected tables
+ */
+void
+gda_export_select_table_list (GdaExport *exp, GList *list)
+{
+	GList *l;
+
+	g_return_if_fail (GDA_IS_EXPORT (exp));
+	g_return_if_fail (list != NULL);
+
+	for (l = g_list_first (list); l != NULL; l = g_list_next (l))
+		gda_export_select_table (exp, (const gchar *) l->data);
+}
+
+/**
  * gda_export_unselect_table
- * @export: a #GdaExport object
+ * @exp: a #GdaExport object
  * @table: name of the table
  *
  * Remove the given table name from the list of selected tables
