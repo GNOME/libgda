@@ -1,3 +1,7 @@
+2002-01-15  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
+	* gda-value.c: added documentation.
+	
 2002-01-14  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-value.[ch]: added declarations for new GdaValueList type

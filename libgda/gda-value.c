@@ -53,6 +53,10 @@ clear_value (GdaValue *value)
 
 /**
  * gda_value_new_null
+ *
+ * Make a new #GdaValue of type #GDA_VALUE_TYPE_NULL.
+ *
+ * Returns: The newly created #GdaValue.
  */
 GdaValue *
 gda_value_new_null (void)
@@ -60,6 +64,14 @@ gda_value_new_null (void)
 	return (GdaValue *) bonobo_arg_new (GDA_VALUE_TYPE_NULL);
 }
 
+/**
+ * gda_value_new_bigint
+ * @val: value to set for the new #GdaValue.
+ *
+ * Make a new #GdaValue of type #GDA_VALUE_TYPE_BIGINT with value @val.
+ *
+ * Returns: The newly created #GdaValue.
+ */
 GdaValue *
 gda_value_new_bigint (long long val)
 {
@@ -67,12 +79,29 @@ gda_value_new_bigint (long long val)
 						(gconstpointer) &val);
 }
 
+/**
+ * gda_value_new_binary
+ * @val: value to set for the new #GdaValue.
+ *
+ * NOT IMPLEMENTED YET!!!
+ * Make a new #GdaValue of type #GDA_VALUE_TYPE_BINARY with value @val.
+ *
+ * Returns: The newly created #GdaValue.
+ */
 GdaValue *
 gda_value_new_binary (gconstpointer val)
 {
 	return NULL;
 }
 
+/**
+ * gda_value_new_boolean
+ * @val: value to set for the new #GdaValue.
+ *
+ * Make a new #GdaValue of type #GDA_VALUE_TYPE_BOOLEAN with value @val.
+ *
+ * Returns: The newly created #GdaValue.
+ */
 GdaValue *
 gda_value_new_boolean (gboolean val)
 {
@@ -80,6 +109,14 @@ gda_value_new_boolean (gboolean val)
 						(gconstpointer) &val);
 }
 
+/**
+ * gda_value_new_date
+ * @val: value to set for the new #GdaValue.
+ *
+ * Make a new #GdaValue of type #GDA_VALUE_TYPE_DATE with value @val.
+ *
+ * Returns: The newly created #GdaValue.
+ */
 GdaValue *
 gda_value_new_date (GdaDate *val)
 {
@@ -89,6 +126,14 @@ gda_value_new_date (GdaDate *val)
 						(gconstpointer) val);
 }
 
+/**
+ * gda_value_new_double
+ * @val: value to set for the new #GdaValue.
+ *
+ * Make a new #GdaValue of type #GDA_VALUE_TYPE_DOUBLE with value @val.
+ *
+ * Returns: The newly created #GdaValue.
+ */
 GdaValue *
 gda_value_new_double (gdouble val)
 {
@@ -97,6 +142,15 @@ gda_value_new_double (gdouble val)
 
 }
 
+/**
+ * gda_value_new_geometric_point
+ * @val: value to set for the new #GdaValue.
+ *
+ * Make a new #GdaValue of type #GDA_VALUE_TYPE_GEOMETRIC_POINT with value
+ * @val.
+ *
+ * Returns: The newly created #GdaValue.
+ */
 GdaValue *
 gda_value_new_geometric_point (GdaGeometricPoint *val)
 {
@@ -106,6 +160,14 @@ gda_value_new_geometric_point (GdaGeometricPoint *val)
 			GDA_VALUE_TYPE_GEOMETRIC_POINT, (gconstpointer) val);
 }
 
+/**
+ * gda_value_new_integer
+ * @val: value to set for the new #GdaValue.
+ *
+ * Make a new #GdaValue of type #GDA_VALUE_TYPE_INTEGER with value @val.
+ *
+ * Returns: The newly created #GdaValue.
+ */
 GdaValue *
 gda_value_new_integer (gint val)
 {
@@ -113,13 +175,31 @@ gda_value_new_integer (gint val)
 						(gconstpointer) &val);
 }
 
+/**
+ * gda_value_new_list
+ * @val: value to set for the new #GdaValue.
+ *
+ * Make a new #GdaValue of type #GDA_VALUE_TYPE_LIST with value @val.
+ *
+ * Returns: The newly created #GdaValue.
+ */
 GdaValue *
-gda_value_new_list (GdaValueList *list)
+gda_value_new_list (GdaValueList *val)
 {
+	g_return_val_if_fail (list != NULL, NULL);
+
 	return (GdaValue *) bonobo_arg_new_from (GDA_VALUE_TYPE_LIST,
 						 (gconstpointer) list);
 }
 
+/**
+ * gda_value_new_single
+ * @val: value to set for the new #GdaValue.
+ *
+ * Make a new #GdaValue of type #GDA_VALUE_TYPE_SINGLE with value @val.
+ *
+ * Returns: The newly created #GdaValue.
+ */
 GdaValue *
 gda_value_new_single (gfloat val)
 {
@@ -127,6 +207,14 @@ gda_value_new_single (gfloat val)
 						(gconstpointer) &val);
 }
 
+/**
+ * gda_value_new_smallint
+ * @val: value to set for the new #GdaValue.
+ *
+ * Make a new #GdaValue of type #GDA_VALUE_TYPE_SMALLINT with value @val.
+ *
+ * Returns: The newly created #GdaValue.
+ */
 GdaValue *
 gda_value_new_smallint (gshort val)
 {
@@ -134,13 +222,31 @@ gda_value_new_smallint (gshort val)
 						(gconstpointer) &val);
 }
 
+/**
+ * gda_value_new_string
+ * @val: value to set for the new #GdaValue.
+ *
+ * Make a new #GdaValue of type #GDA_VALUE_TYPE_STRING with value @val.
+ *
+ * Returns: The newly created #GdaValue.
+ */
 GdaValue *
 gda_value_new_string (const gchar *val)
 {
+	g_return_val_if_fail (val != NULL, NULL);
+
 	return (GdaValue *) bonobo_arg_new_from (GDA_VALUE_TYPE_STRING,
 						(gconstpointer) &val);
 }
 
+/**
+ * gda_value_new_time
+ * @val: value to set for the new #GdaValue.
+ *
+ * Make a new #GdaValue of type #GDA_VALUE_TYPE_TIME with value @val.
+ *
+ * Returns: The newly created #GdaValue.
+ */
 GdaValue *
 gda_value_new_time (GdaTime *val)
 {
@@ -150,6 +256,14 @@ gda_value_new_time (GdaTime *val)
 					(gconstpointer) val);
 }
 
+/**
+ * gda_value_new_timestamp
+ * @val: value to set for the new #GdaValue.
+ *
+ * Make a new #GdaValue of type #GDA_VALUE_TYPE_TIMESTAMP with value @val.
+ *
+ * Returns: The newly created #GdaValue.
+ */
 GdaValue *
 gda_value_new_timestamp (GdaTimestamp *val)
 {
@@ -159,6 +273,14 @@ gda_value_new_timestamp (GdaTimestamp *val)
 						(gconstpointer) val);
 }
 
+/**
+ * gda_value_new_tinyint
+ * @val: value to set for the new #GdaValue.
+ *
+ * Make a new #GdaValue of type #GDA_VALUE_TYPE_TINYINT with value @val.
+ *
+ * Returns: The newly created #GdaValue.
+ */
 GdaValue *
 gda_value_new_tinyint (gchar val)
 {
@@ -168,6 +290,9 @@ gda_value_new_tinyint (gchar val)
 
 /**
  * gda_value_free
+ * @value: the resource to free.
+ *
+ * Deallocates all memory associated to  a #GdaValue.
  */
 void
 gda_value_free (GdaValue *value)
@@ -178,6 +303,13 @@ gda_value_free (GdaValue *value)
 
 /**
  * gda_value_isa
+ * @value: a value whose type is to be tested.
+ * @type: a type to test for.
+ *
+ * Test if a given @value is of type @type.
+ *
+ * Returns: a boolean that says whether or not @value is of type @type.
+ * If @value is NULL it returns FALSE.
  */
 gboolean
 gda_value_isa (const GdaValue *value, GdaValueType type)
@@ -188,6 +320,12 @@ gda_value_isa (const GdaValue *value, GdaValueType type)
 
 /**
  * gda_value_is_null
+ * @value: value to test.
+ *
+ * Tests if a given @value is of type #GDA_VALUE_TYPE_NULL.
+ *
+ * Returns: a boolean that says whether or not @value is of type
+ * #GDA_VALUE_TYPE_NULL.
  */
 gboolean
 gda_value_is_null (GdaValue *value)
@@ -199,6 +337,11 @@ gda_value_is_null (GdaValue *value)
 
 /**
  * gda_value_copy
+ * @value: value to get a copy from.
+ *
+ * Creates a new #GdaValue from an existing one.
+ * 
+ * Returns: a newly allocated #GdaValue with a copy of the data in @value.
  */
 GdaValue *
 gda_value_copy (GdaValue *value)
@@ -209,6 +352,11 @@ gda_value_copy (GdaValue *value)
 
 /**
  * gda_value_get_bigint
+ * @value: a #GdaValue whose value we want to get.
+ *
+ * Gets the value stored in @value.
+ * 
+ * Returns: the value contained in @value.
  */
 long long
 gda_value_get_bigint (GdaValue *value)
@@ -219,6 +367,10 @@ gda_value_get_bigint (GdaValue *value)
 
 /**
  * gda_value_set_bigint
+ * @value: a #GdaValue that will store @val.
+ * @val: value to be stored in @value.
+ *
+ * Stores @val into @value.
  */
 void
 gda_value_set_bigint (GdaValue *value, long long val)
@@ -237,6 +389,12 @@ gda_value_set_bigint (GdaValue *value, long long val)
 
 /**
  * gda_value_get_binary
+ * @value: a #GdaValue whose value we want to get.
+ *
+ * NOT IMPLEMENTED YET!!!
+ * Gets the value stored in @value.
+ * 
+ * Returns: the value contained in @value.
  */
 gconstpointer
 gda_value_get_binary (GdaValue *value)
@@ -246,6 +404,12 @@ gda_value_get_binary (GdaValue *value)
 
 /**
  * gda_value_set_binary
+ * @value: a #GdaValue that will store @val.
+ * @val: value to be stored in @value.
+ * @size: the size of the memory pool pointed to by @val.
+ *
+ * NOT IMPLEMENTED YET!!!
+ * Stores @val into @value.
  */
 void
 gda_value_set_binary (GdaValue *value, gconstpointer val, glong size)
@@ -254,6 +418,11 @@ gda_value_set_binary (GdaValue *value, gconstpointer val, glong size)
 
 /**
  * gda_value_get_boolean
+ * @value: a #GdaValue whose value we want to get.
+ *
+ * Gets the value stored in @value.
+ * 
+ * Returns: the value contained in @value.
  */
 gboolean
 gda_value_get_boolean (GdaValue *value)
@@ -264,6 +433,10 @@ gda_value_get_boolean (GdaValue *value)
 
 /**
  * gda_value_set_boolean
+ * @value: a #GdaValue that will store @val.
+ * @val: value to be stored in @value.
+ *
+ * Stores @val into @value.
  */
 void
 gda_value_set_boolean (GdaValue *value, gboolean val)
@@ -282,6 +455,11 @@ gda_value_set_boolean (GdaValue *value, gboolean val)
 
 /**
  * gda_value_get_date
+ * @value: a #GdaValue whose value we want to get.
+ *
+ * Gets the value stored in @value.
+ * 
+ * Returns: the value contained in @value.
  */
 const GdaDate *
 gda_value_get_date (GdaValue *value)
@@ -293,8 +471,12 @@ gda_value_get_date (GdaValue *value)
 }
 
 /**
- gda_value_set_date
-*/
+ * gda_value_set_date
+ * @value: a #GdaValue that will store @val.
+ * @val: value to be stored in @value.
+ *
+ * Stores @val into @value.
+ */
 void
 gda_value_set_date (GdaValue *value, GdaDate *val)
 {
@@ -313,6 +495,11 @@ gda_value_set_date (GdaValue *value, GdaDate *val)
 
 /**
  * gda_value_get_double
+ * @value: a #GdaValue whose value we want to get.
+ *
+ * Gets the value stored in @value.
+ * 
+ * Returns: the value contained in @value.
  */
 gdouble
 gda_value_get_double (GdaValue *value)
@@ -323,6 +510,10 @@ gda_value_get_double (GdaValue *value)
 
 /**
  * gda_value_set_double
+ * @value: a #GdaValue that will store @val.
+ * @val: value to be stored in @value.
+ *
+ * Stores @val into @value.
  */
 void
 gda_value_set_double (GdaValue *value, gdouble val)
@@ -341,6 +532,11 @@ gda_value_set_double (GdaValue *value, gdouble val)
 
 /**
  * gda_value_get_geometric_point
+ * @value: a #GdaValue whose value we want to get.
+ *
+ * Gets the value stored in @value.
+ * 
+ * Returns: the value contained in @value.
  */
 const GdaGeometricPoint *
 gda_value_get_geometric_point (GdaValue *value)
@@ -354,6 +550,10 @@ gda_value_get_geometric_point (GdaValue *value)
 
 /**
  * gda_value_set_geometric_point
+ * @value: a #GdaValue that will store @val.
+ * @val: value to be stored in @value.
+ *
+ * Stores @val into @value.
  */
 void
 gda_value_set_geometric_point (GdaValue *value, GdaGeometricPoint *val)
@@ -374,6 +574,11 @@ gda_value_set_geometric_point (GdaValue *value, GdaGeometricPoint *val)
 
 /**
  * gda_value_get_integer
+ * @value: a #GdaValue whose value we want to get.
+ *
+ * Gets the value stored in @value.
+ * 
+ * Returns: the value contained in @value.
  */
 gint
 gda_value_get_integer (GdaValue *value)
@@ -384,6 +589,10 @@ gda_value_get_integer (GdaValue *value)
 
 /**
  * gda_value_set_integer
+ * @value: a #GdaValue that will store @val.
+ * @val: value to be stored in @value.
+ *
+ * Stores @val into @value.
  */
 void
 gda_value_set_integer (GdaValue *value, gint val)
@@ -402,6 +611,11 @@ gda_value_set_integer (GdaValue *value, gint val)
 
 /**
  * gda_value_get_list
+ * @value: a #GdaValue whose value we want to get.
+ *
+ * Gets the value stored in @value.
+ * 
+ * Returns: the value contained in @value.
  */
 GdaValueList *
 gda_value_get_list (GdaValue *value)
@@ -415,6 +629,10 @@ gda_value_get_list (GdaValue *value)
 
 /**
  * gda_value_set_list
+ * @value: a #GdaValue that will store @val.
+ * @val: value to be stored in @value.
+ *
+ * Stores @val into @value.
  */
 void
 gda_value_set_list (GdaValue *value, GdaValueList *val)
@@ -434,6 +652,9 @@ gda_value_set_list (GdaValue *value, GdaValueList *val)
 
 /**
  * gda_value_set_null
+ * @value: a #GdaValue that will store a value of type #GDA_VALUE_TYPE_NULL.
+ *
+ * Sets the type of @value to #GDA_VALUE_TYPE_NULL.
  */
 void
 gda_value_set_null (GdaValue *value)
@@ -452,6 +673,11 @@ gda_value_set_null (GdaValue *value)
 
 /**
  * gda_value_get_single
+ * @value: a #GdaValue whose value we want to get.
+ *
+ * Gets the value stored in @value.
+ * 
+ * Returns: the value contained in @value.
  */
 gfloat
 gda_value_get_single (GdaValue *value)
@@ -462,6 +688,10 @@ gda_value_get_single (GdaValue *value)
 
 /**
  * gda_value_set_single
+ * @value: a #GdaValue that will store @val.
+ * @val: value to be stored in @value.
+ *
+ * Stores @val into @value.
  */
 void
 gda_value_set_single (GdaValue *value, gfloat val)
@@ -480,6 +710,11 @@ gda_value_set_single (GdaValue *value, gfloat val)
 
 /**
  * gda_value_get_smallint
+ * @value: a #GdaValue whose value we want to get.
+ *
+ * Gets the value stored in @value.
+ * 
+ * Returns: the value contained in @value.
  */
 gshort
 gda_value_get_smallint (GdaValue *value)
@@ -490,6 +725,10 @@ gda_value_get_smallint (GdaValue *value)
 
 /**
  * gda_value_set_smallint
+ * @value: a #GdaValue that will store @val.
+ * @val: value to be stored in @value.
+ *
+ * Stores @val into @value.
  */
 void
 gda_value_set_smallint (GdaValue *value, gshort val)
@@ -508,6 +747,11 @@ gda_value_set_smallint (GdaValue *value, gshort val)
 
 /**
  * gda_value_get_string
+ * @value: a #GdaValue whose value we want to get.
+ *
+ * Gets the value stored in @value.
+ * 
+ * Returns: the value contained in @value.
  */
 const gchar *
 gda_value_get_string (GdaValue *value)
@@ -518,6 +762,10 @@ gda_value_get_string (GdaValue *value)
 
 /**
  * gda_value_set_string
+ * @value: a #GdaValue that will store @val.
+ * @val: value to be stored in @value.
+ *
+ * Stores @val into @value.
  */
 void
 gda_value_set_string (GdaValue *value, const gchar *val)
@@ -536,6 +784,11 @@ gda_value_set_string (GdaValue *value, const gchar *val)
 
 /**
  * gda_value_get_time
+ * @value: a #GdaValue whose value we want to get.
+ *
+ * Gets the value stored in @value.
+ * 
+ * Returns: the value contained in @value.
  */
 const GdaTime *
 gda_value_get_time (GdaValue *value)
@@ -548,6 +801,10 @@ gda_value_get_time (GdaValue *value)
 
 /**
  * gda_value_set_time
+ * @value: a #GdaValue that will store @val.
+ * @val: value to be stored in @value.
+ *
+ * Stores @val into @value.
  */
 void
 gda_value_set_time (GdaValue *value, GdaTime *val)
@@ -567,6 +824,11 @@ gda_value_set_time (GdaValue *value, GdaTime *val)
 
 /**
  * gda_value_get_timestamp
+ * @value: a #GdaValue whose value we want to get.
+ *
+ * Gets the value stored in @value.
+ * 
+ * Returns: the value contained in @value.
  */
 const GdaTimestamp *
 gda_value_get_timestamp (GdaValue *value)
@@ -580,6 +842,10 @@ gda_value_get_timestamp (GdaValue *value)
 
 /**
  * gda_value_set_timestamp
+ * @value: a #GdaValue that will store @val.
+ * @val: value to be stored in @value.
+ *
+ * Stores @val into @value.
  */
 void
 gda_value_set_timestamp (GdaValue *value, GdaTimestamp *val)
@@ -599,6 +865,11 @@ gda_value_set_timestamp (GdaValue *value, GdaTimestamp *val)
 
 /**
  * gda_value_get_tinyint
+ * @value: a #GdaValue whose value we want to get.
+ *
+ * Gets the value stored in @value.
+ * 
+ * Returns: the value contained in @value.
  */
 gchar
 gda_value_get_tinyint (GdaValue *value)
@@ -609,6 +880,10 @@ gda_value_get_tinyint (GdaValue *value)
 
 /**
  * gda_value_set_tinyint
+ * @value: a #GdaValue that will store @val.
+ * @val: value to be stored in @value.
+ *
+ * Stores @val into @value.
  */
 void
 gda_value_set_tinyint (GdaValue *value, gchar val)
@@ -632,7 +907,8 @@ gda_value_set_tinyint (GdaValue *value, gchar val)
  * Converts a GdaValue to its string representation as indicated by this
  * table:
  *
- * Returns: a string formatted according to the preceding table.
+ * Returns: a string formatted according to the printf() style indicated in
+ * the preceding table.
  */
 gchar *
 gda_value_stringify (GdaValue *value)
