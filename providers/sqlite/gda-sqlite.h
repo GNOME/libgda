@@ -27,7 +27,7 @@
 #include <glib/gmacros.h>
 #include <glib/gtypes.h>
 #include <libgda/gda-value.h>
-#include <sqlite.h>
+#include <sqlite3.h>
 
 #define GDA_SQLITE_PROVIDER_ID          "GDA SQLite provider"
 
@@ -38,7 +38,7 @@ typedef struct {
 } SQLITEresult;
 
 typedef struct {
-	sqlite *connection;
+	sqlite3 *connection;
 	gchar *file;
 } SQLITEcnc;
 

@@ -1,3 +1,9 @@
+2005-02-18  Denis Fortin <denis.fortin@free.fr>
+
+	* configure.in: check for sqlite3.
+
+	* providers/sqlite/*: adapted to sqlite3.
+
 2005-02-18  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* libsql/Makefile.am: use LDFLAGS only.
