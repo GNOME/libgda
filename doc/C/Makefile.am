@@ -35,7 +35,7 @@ IGNORE_HFILES=config.h \
 HTML_IMAGES =
 
 # Extra SGML files that are included by $(DOC_MAIN_SGML_FILE).
-content_files =
+content_files = fdl-appendix.sgml
 
 # Other files to distribute.
 extra_files = examples/full_example.c
