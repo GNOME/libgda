@@ -29,5 +29,6 @@
 #include <gda-field.h>
 #include <gda-error.h>
 #include <gda-batch.h>
+#include <gda-export.h>
 
 #endif

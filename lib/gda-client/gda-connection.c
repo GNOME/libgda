@@ -107,7 +107,7 @@ gda_connection_get_type (void)
 	return type;
 }
 #else
-guint
+GtkType
 gda_connection_get_type (void)
 {
 	static guint gda_connection_type = 0;
@@ -149,30 +149,34 @@ gda_connection_class_init (GdaConnectionClass* klass)
 
 	object_class = (GtkObjectClass*) klass;
 	
-	gda_connection_signals[CONNECTION_ERROR] = gtk_signal_new("error",
-							    GTK_RUN_FIRST,
-							    object_class->type,
-							    GTK_SIGNAL_OFFSET(GdaConnectionClass, error),
-							    gtk_marshal_NONE__POINTER,
-							    GTK_TYPE_NONE, 1, GTK_TYPE_POINTER);
-	gda_connection_signals[CONNECTION_WARNING] = gtk_signal_new("warning",
-							    GTK_RUN_LAST,
-							    object_class->type,
-							    GTK_SIGNAL_OFFSET(GdaConnectionClass, warning),
-							    gtk_marshal_NONE__POINTER,
-							    GTK_TYPE_NONE, 1, GTK_TYPE_POINTER);
-	gda_connection_signals[CONNECTION_OPEN] = gtk_signal_new("open",
-							    GTK_RUN_LAST,
-							    object_class->type,
-							    GTK_SIGNAL_OFFSET(GdaConnectionClass, open),
-							    gtk_signal_default_marshaller,
-							    GTK_TYPE_NONE, 0);
-	gda_connection_signals[CONNECTION_CLOSE] = gtk_signal_new("close",
-							    GTK_RUN_LAST,
-							    object_class->type,
-							    GTK_SIGNAL_OFFSET(GdaConnectionClass, close),
-							    gtk_signal_default_marshaller,
-							    GTK_TYPE_NONE, 0);
+	gda_connection_signals[CONNECTION_ERROR] =
+		gtk_signal_new("error",
+			       GTK_RUN_FIRST,
+			       object_class->type,
+			       GTK_SIGNAL_OFFSET(GdaConnectionClass, error),
+			       gtk_marshal_NONE__POINTER,
+			       GTK_TYPE_NONE, 1, GTK_TYPE_POINTER);
+	gda_connection_signals[CONNECTION_WARNING] =
+		gtk_signal_new("warning",
+			       GTK_RUN_LAST,
+			       object_class->type,
+			       GTK_SIGNAL_OFFSET(GdaConnectionClass, warning),
+			       gtk_marshal_NONE__POINTER,
+			       GTK_TYPE_NONE, 1, GTK_TYPE_POINTER);
+	gda_connection_signals[CONNECTION_OPEN] =
+		gtk_signal_new("open",
+			       GTK_RUN_LAST,
+			       object_class->type,
+			       GTK_SIGNAL_OFFSET(GdaConnectionClass, open),
+			       gtk_signal_default_marshaller,
+			       GTK_TYPE_NONE, 0);
+	gda_connection_signals[CONNECTION_CLOSE] =
+		gtk_signal_new("close",
+			       GTK_RUN_LAST,
+			       object_class->type,
+			       GTK_SIGNAL_OFFSET(GdaConnectionClass, close),
+			       gtk_signal_default_marshaller,
+			       GTK_TYPE_NONE, 0);
 
 	gtk_object_class_add_signals(object_class, gda_connection_signals, LAST_SIGNAL);
 	object_class->destroy = gda_connection_destroy;

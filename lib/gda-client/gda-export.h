@@ -1,0 +1,98 @@
+/* GDA client libary
+ * Copyright (C) 2001 The Free Software Foundation
+ *
+ * AUTHORS:
+ *	Rodrigo Moya <rodrigo@gnome-db.org>
+ *
+ * This Library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public License as
+ * published by the Free Software Foundation; either version 2 of the
+ * License, or (at your option) any later version.
+ *
+ * This Library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this Library; see the file COPYING.LIB.  If not,
+ * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ */
+
+#if !defined(__gda_export_h__)
+#  define __gda_export_h__ 1
+
+#include <glib.h>
+
+#ifdef HAVE_GOBJECT
+#  include <glib-object.h>
+#else
+#  include <gtk/gtkobject.h>
+#endif
+
+#include <gda-connection.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+/*
+ * The export object. Makes it easy to perform an export operation
+ */
+
+typedef struct _GdaExport        GdaExport;
+typedef struct _GdaExportClass   GdaExportClass;
+typedef struct _GdaExportPrivate GdaExportPrivate;
+
+#define GDA_TYPE_EXPORT (gda_export_get_type())
+#define GDA_EXPORT(obj)            GTK_CHECK_CAST(obj, GDA_TYPE_EXPORT, GdaExport)
+#define GDA_EXPORT_CLASS(klass)    GTK_CHECK_CLASS_CAST(klass, GDA_TYPE_EXPORT, GdaExportClass)
+#define IS_GDA_EXPORT(obj)         GTK_CHECK_TYPE(obj, GDA_TYPE_EXPORT)
+#define IS_GDA_EXPORT_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_EXPORT))
+
+struct _GdaExport {
+#ifdef HAVE_GOBJECT
+	GObject object;
+#else
+	GtkObject object;
+#endif
+	GdaExportPrivate *priv;
+};
+
+struct _GdaExportClass {
+#ifdef HAVE_GOBJECT
+	GObjectClass parent_class;
+#else
+	GtkObjectClass parent_class;
+#endif
+
+	void (*object_selected)   (GdaExport *export, GDA_Connection_QType qtype, const gchar *name);
+	void (*object_unselected) (GdaExport *export, GDA_Connection_QType qtype, const gchar *name);
+};
+
+#ifdef HAVE_GOBJECT
+GType          gda_export_get_type       (void);
+#else
+GtkType        gda_export_get_type       (void);
+#endif
+
+GdaExport*     gda_export_new                 (GdaConnection *cnc);
+void           gda_export_free                (GdaExport *export);
+
+GList*         gda_export_get_tables          (GdaExport *);
+GList*         gda_export_get_selected_tables (GdaExport *export);
+void           gda_export_select_table        (GdaExport *export, const gchar *table);
+void           gda_export_unselect_table      (GdaExport *export, const gchar *table);
+
+void           gda_export_run                 (GdaExport *export);
+void           gda_export_stop                (GdaExport *export);
+
+GdaConnection* gda_export_get_connection      (GdaExport *export);
+void           gda_export_set_connection      (GdaExport *export, GdaConnection *cnc);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif

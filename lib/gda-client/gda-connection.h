@@ -108,7 +108,7 @@ GType              gda_connection_get_type            (void);
 guint              gda_connection_get_type            (void);
 #endif
 
-GdaConnection*    gda_connection_new                 (CORBA_ORB orb);
+GdaConnection*     gda_connection_new                 (CORBA_ORB orb);
 void               gda_connection_free                (GdaConnection* cnc);
 void               gda_connection_set_provider        (GdaConnection* cnc, gchar* name);
 const gchar*       gda_connection_get_provider        (GdaConnection* cnc);
@@ -116,9 +116,9 @@ gboolean           gda_connection_supports            (GdaConnection* cnc, GDA_C
 void               gda_connection_set_default_db      (GdaConnection* cnc, gchar* dsn);
 gint               gda_connection_open                (GdaConnection* cnc, gchar* dsn, gchar* user,gchar* pwd );
 void               gda_connection_close               (GdaConnection* cnc);
-GdaRecordset*     gda_connection_open_schema         (GdaConnection* cnc,
+GdaRecordset*      gda_connection_open_schema         (GdaConnection* cnc,
                                                        GDA_Connection_QType t, ...);
-GdaRecordset*     gda_connection_open_schema_array   (GdaConnection* cnc,
+GdaRecordset*      gda_connection_open_schema_array   (GdaConnection* cnc,
                                                        GDA_Connection_QType t,
                                                        GdaConstraint_Element*);
 glong              gda_connection_modify_schema       (GdaConnection *cnc,
@@ -127,7 +127,7 @@ GList*             gda_connection_get_errors          (GdaConnection* cnc);
 gint               gda_connection_begin_transaction   (GdaConnection* cnc);
 gint               gda_connection_commit_transaction  (GdaConnection* cnc);
 gint               gda_connection_rollback_transaction (GdaConnection* cnc);
-GdaRecordset*     gda_connection_execute             (GdaConnection* cnc, gchar* txt, gulong* reccount, gulong flags);
+GdaRecordset*      gda_connection_execute             (GdaConnection* cnc, gchar* txt, gulong* reccount, gulong flags);
 gint               gda_connection_start_logging       (GdaConnection* cnc, gchar* filename);
 gint               gda_connection_stop_logging        (GdaConnection* cnc);
 gchar*             gda_connection_create_recordset    (GdaConnection* cnc, GdaRecordset* rs);
