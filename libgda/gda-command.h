@@ -29,6 +29,14 @@
 G_BEGIN_DECLS
 
 typedef GNOME_Database_Command GdaCommand;
+
+typedef GNOME_Database_CommandOptions GdaCommandOptions;
+#define GDA_COMMAND_OPTION_IGNORE_ERRORS  GNOME_Database_IGNORE_ERRORS
+#define GDA_COMMAND_OPTION_STOP_ON_ERRORS GNOME_Database_STOP_ON_ERRORS
+#define GDA_COMMAND_OPTION_BAD_OPTION     GNOME_Database_BAD_OPTION
+#define GDA_COMMAND_DEFAULT_OPTION        GNOME_Database_DEFAULT_OPTION
+
+
 typedef enum {
 	GDA_COMMAND_TYPE_SQL = GNOME_Database_COMMAND_TYPE_SQL,
 	GDA_COMMAND_TYPE_XML = GNOME_Database_COMMAND_TYPE_XML,
@@ -37,13 +45,16 @@ typedef enum {
 	GDA_COMMAND_TYPE_INVALID = GNOME_Database_COMMAND_TYPE_INVALID
 } GdaCommandType;
 
-GdaCommand    *gda_command_new (const gchar *text, GdaCommandType type);
+GdaCommand    *gda_command_new (const gchar *text, GdaCommandType type,
+				GdaCommandOptions options);
 void           gda_command_free (GdaCommand *cmd);
 
 const gchar   *gda_command_get_text (GdaCommand *cmd);
 void           gda_command_set_text (GdaCommand *cmd, const gchar *text);
 GdaCommandType gda_command_get_command_type (GdaCommand *cmd);
 void           gda_command_set_command_type (GdaCommand *cmd, GdaCommandType type);
+GdaCommandOptions gda_command_get_options (GdaCommand *cmd);
+void           gda_command_set_options (GdaCommand *cmd, GdaCommandOptions option);
 
 G_END_DECLS
 
