@@ -1,3 +1,8 @@
+2002-09-26  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* bindings/c++/*: removed obsolete bindings. Current ones are in gtkmm
+	sources, for which we need a volunteer.
+
 2002-09-25  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* libgda/gda-client.c (emit_client_error): new function for emitting
