@@ -1,1 +1,7 @@
-SUBDIRS = c++
+if WITH_PERL
+PERL_SUBDIR = perl
+else
+PERL_SUBDIR =
+endif
+
+SUBDIRS = c++ $(PERL_SUBDIR)

@@ -59,7 +59,6 @@ then
 	gconfver=`gconf-config --version | awk 'BEGIN {FS="."}{printf "%d", $1*1000+$2}'`
 	if test "$gconfver" -ge 9
 	then
-		AC_DEFINE(USING_GCONF)
 		AC_MSG_RESULT(found)
 		gda_gconf_libs=`gconf-config --libs gconf`
 		gda_gconf_cflags=`gconf-config --cflags gconf`
@@ -82,7 +81,6 @@ then
 	oafver=`oaf-config --version | awk 'BEGIN {FS="."}{printf "%d", $1*10000+$2*100+$3}'`
 	if test "$oafver" -ge 500
 	then
-		AC_DEFINE(USING_OAF)
 		AC_MSG_RESULT(found)
 		gda_oaf_libs=`oaf-config --libs`
 		gda_oaf_cflags=`oaf-config --cflags`
@@ -104,6 +102,46 @@ then
 else
 	AC_MSG_ERROR(not found)
 fi
+
+dnl Check for Perl
+AC_CHECK_PROG(perl_val, perl, true, false)
+if $perl_val
+then
+	AC_MSG_CHECKING(for Perl CORBA::ORBit module)
+	perl -e 'eval { require CORBA::ORBit; }; if ($@) { exit(1); } else { exit(0); }'
+	if test "x$?" = "x0"; then
+		AC_MSG_RESULT(found)
+		
+		AC_MSG_CHECKING(for Perl Gtk:: module)
+		perl -e 'eval { require Gtk; }; if ($@) { exit(1); } else { exit(0); }'
+		if test "x$?" = "x0"; then
+			AC_MSG_RESULT(found)
+			
+			dnl Use Gtk to figure out the other options.
+			PERL_CCCDLFLAGS=`perl -MConfig -e 'print $Config{cccdlflags},"\n";'`
+			PERL_LDDLFLAGS=`perl -MConfig -e 'print $Config{lddlflags},"\n";'`
+			PERL_CC=`perl -MConfig -e 'print $Config{cc},"\n";'`
+			PERL_LD=`perl -MConfig -e 'print $Config{ld},"\n";'`
+			PERL_CCOPTS=`perl -MGtk -MCORBA::ORBit -e ccopts`
+			PERL_LDOPTS=`perl -MGtk -MCORBA::ORBit -e ldopts`
+			AC_SUBST(PERL_CCCDLFLAGS)
+			AC_SUBST(PERL_LDDLFLAGS)
+			AC_SUBST(PERL_CC)
+			AC_SUBST(PERL_LD)
+			AC_SUBST(PERL_CCOPTS)
+			AC_SUBST(PERL_LDOPTS)
+			perl_val=true
+			AC_DEFINE(HAVE_PERL)
+		else
+			AC_MSG_RESULT(not found)
+		fi
+	else
+		AC_MSG_RESULT(not found)
+	fi
+else
+	perl_val=false
+fi
+AM_CONDITIONAL(WITH_PERL, test $perl_val == true)
 
 dnl
 dnl Checks for providers
@@ -642,6 +680,7 @@ lib/gda-client/Makefile
 lib/gda-server/Makefile
 bindings/Makefile
 bindings/c++/Makefile
+bindings/perl/Makefile
 providers/Makefile
 providers/gda-odbc-server/Makefile
 providers/gda-odbc-server/gda-odbc.spec

@@ -16,5 +16,5 @@
 #undef SYBASE_DEBUG
 #undef HAVE_POSTGRES
 #undef HAVE_CAMEL
-#undef USING_GCONF
-#undef USING_OAF
+
+#undef HAVE_PERL
