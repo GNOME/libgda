@@ -84,7 +84,7 @@ fetch_row (GdaMysqlRecordset *recset, gulong rownum)
 		GdaValue *field;
 		gchar *thevalue;
 
-		field = gda_row_get_value (row, i);
+		field = (GdaValue*) gda_row_get_value (row, i);
 
 		thevalue = mysql_row[i];
 
@@ -160,6 +160,9 @@ gda_mysql_recordset_get_n_columns (GdaDataModel *model)
 	GdaMysqlRecordset *recset = (GdaMysqlRecordset *) model;
 
 	g_return_val_if_fail (GDA_IS_MYSQL_RECORDSET (recset), -1);
+	if (recset->mysql_res == NULL)
+		return 0;
+
 	return mysql_num_fields (recset->mysql_res);
 }
 
