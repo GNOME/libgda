@@ -1,24 +1,24 @@
 # libgda's Portuguese translation
-# Copyright (C) 1999-2001 libgda
+# Copyright © 1999-2004 libgda
 # Distributed under the same licence as the libgda package
-# Duarte Loreto <happyguy_pt@hotmail.com>, 2001, 2002, 2003
+# Duarte Loreto <happyguy_pt@hotmail.com>, 2001, 2004
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: 2.4\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-03-23 13:16+0100\n"
-"PO-Revision-Date: 2003-08-26 05:20+0000\n"
+"Project-Id-Version: 2.6\n"
+"Report-Msgid-Bugs-To: Duarte Loreto <happyguy_pt@hotmail.com>\n"
+"POT-Creation-Date: 2004-04-24 18:09+0100\n"
+"PO-Revision-Date: 2004-04-24 19:20+0000\n"
 "Last-Translator: Duarte Loreto <happyguy_pt@hotmail.com>\n"
 "Language-Team: Portuguese <gnome_pt@yahoogroups.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: libgda/gda-client.c:312 libgda/gda-client.c:535 libgda/gda-connection.c:218
+#: libgda/gda-client.c:312 libgda/gda-client.c:539 libgda/gda-connection.c:218
 #, c-format
 msgid "Data source %s not found in configuration"
-msgstr "Base de dados %s não encontrada na configuração"
+msgstr "Fonte de dados %s não foi encontrada na configuração"
 
 #: libgda/gda-client.c:341
 #, c-format
@@ -28,13 +28,13 @@ msgstr "Incapaz de obter o fornecedor %s na configuração actual"
 #: libgda/gda-client.c:371
 #, c-format
 msgid "Provider %s does not implement entry function"
-msgstr "Fornecedor %s não implementa função de entrada"
+msgstr "Fornecedor %s não implementa a função de entrada"
 
 #: libgda/gda-client.c:381
 msgid "Could not create GdaServerProvider object from plugin"
-msgstr "Incapaz de criar objecto GdaServerProvider a partir do plugin"
+msgstr "Incapaz de criar o objecto GdaServerProvider a partir do plugin"
 
-#: libgda/gda-client.c:461
+#: libgda/gda-client.c:465
 msgid "Temporary data source created by libgda. Don't remove it"
 msgstr "Fonte de dados temporária criada pelo libgda. Não a remova"
 
@@ -51,9 +51,8 @@ msgid "Id"
 msgstr "Id"
 
 #: libgda/gda-config.c:1195
-#, fuzzy
 msgid "Location"
-msgstr "Função"
+msgstr "Localização"
 
 #: libgda/gda-config.c:1196 libgda/gda-config.c:1455
 #: providers/ibmdb2/gda-ibmdb2-provider.c:863
@@ -99,7 +98,7 @@ msgid "Password"
 msgstr "Senha"
 
 #: libgda/gda-data-model.c:889
-#, fuzzy, c-format
+#, c-format
 msgid "Data model %p is not updatable"
 msgstr "Modelo de dados %p não é editável"
 
@@ -114,7 +113,7 @@ msgstr "libgda necessita do GModule. A terminar..."
 #: libgda/gda-select.c:393
 #, c-format
 msgid "Could not parse SQL string '%s'"
-msgstr "Incapaz de parsear expressão SQL '%s'"
+msgstr "Incapaz de parsear a expressão SQL '%s'"
 
 #: libgda/gda-select.c:397
 #, c-format
@@ -129,7 +128,7 @@ msgstr "Já existe um campo chamado %s"
 #: libgda/gda-util.c:153
 #, c-format
 msgid "Could not parse SQL command '%s'"
-msgstr "Incapaz de parsear comando SQL '%s'"
+msgstr "Incapaz de parsear o comando SQL '%s'"
 
 #: libgda/gda-util.c:186
 #, c-format
@@ -139,7 +138,7 @@ msgstr "Erro ao ler %s: %s"
 #: libgda/gda-util.c:212
 #, c-format
 msgid "Could not create file %s"
-msgstr "Incapaz de criar ficheiro %s"
+msgstr "Incapaz de criar o ficheiro %s"
 
 #: libgda/gda-value.c:1961
 msgid "TRUE"
@@ -161,12 +160,12 @@ msgstr "GObject NULL"
 #: libgda/gda-xml-database.c:279
 #, c-format
 msgid "Could not load file at %s"
-msgstr "Incapaz de ler ficheiro em %s"
+msgstr "Incapaz de ler o ficheiro em %s"
 
 #: libgda/gda-xml-database.c:288
 #, c-format
 msgid "Could not parse file at %s"
-msgstr "Incapaz de parsear ficheiro em %s"
+msgstr "Incapaz de parsear o ficheiro em %s"
 
 #: libgda/gda-xml-database.c:298
 #, c-format
@@ -180,7 +179,7 @@ msgstr "Incapaz de criar um nó XML da tabela %s"
 
 #: libgda/gda-xml-database.c:559
 msgid "Could not dump XML file to memory"
-msgstr "Incapaz de despejar ficheiro XML na memória"
+msgstr "Incapaz de despejar o ficheiro XML na memória"
 
 #: libgda/gda-xml-database.c:650 libgda/gda-xml-database.c:687
 #: libgda/gda-xml-database.c:731
@@ -205,6 +204,20 @@ msgstr "Nó XML inválido"
 msgid "Could not add the data from the XML node"
 msgstr "Incapaz de adicionar os dados do nó XML"
 
+#: libsql/sql_parser.c:59
+#, c-format
+msgid "Parse error near `%s'"
+msgstr "Erro de parseamento junto a `%s'"
+
+#: libsql/sql_parser.c:61
+#, c-format
+msgid "Syntax error near `%s'"
+msgstr "Erro de sintaxe junto a `%s'"
+
+#: libsql/sql_parser.c:358
+msgid "Empty query to parse"
+msgstr "Consulta a parsear vazia"
+
 #: providers/firebird/gda-firebird-provider.c:187
 msgid "No database specified"
 msgstr "Nenhuma base de dados especificada"
@@ -219,12 +232,12 @@ msgstr "Nenhuma base de dados especificada"
 #: providers/firebird/gda-firebird-provider.c:485
 #: providers/firebird/gda-firebird-provider.c:539
 msgid "Invalid Firebird handle"
-msgstr "Handle Firebird inválida"
+msgstr "Manipulador Firebird inválido"
 
 #: providers/firebird/gda-firebird-provider.c:453
 #: providers/firebird/gda-firebird-provider.c:491
 msgid "Invalid transaction handle"
-msgstr "Handle transacção inválida"
+msgstr "Manipulador de transacção inválido"
 
 #: providers/firebird/libmain.c:39
 msgid "Provider for FireBird databases"
@@ -236,26 +249,25 @@ msgid ""
 "using DSN 'QUERY=;USER=;PASSWORD='."
 msgstr ""
 "Ligação abortada. Tem de indicar pelo menos um servidor, utilizador e senha "
-"utilizando DSN 'QUERY=;USER;PASSWORD='."
+"utilizando DSN 'QUERY=;USER=;PASSWORD='."
 
 #: providers/freetds/gda-freetds-provider.c:210
 msgid "Error creating message container."
-msgstr "Erro ao criar contentor de mensagem."
+msgstr "Erro ao criar um contentor de mensagem."
 
 #: providers/freetds/gda-freetds-provider.c:217
 msgid "Error creating error container."
-msgstr "Erro ao criar contentor de erro."
+msgstr "Erro ao criar um contentor de erro."
 
 #: providers/freetds/gda-freetds-provider.c:258
 #: providers/freetds/gda-freetds-provider.c:260
 msgid "Allocating tds context failed."
-msgstr "Falha na alocação de contexto tds"
+msgstr "Falha na alocação de contexto tds."
 
 #: providers/freetds/gda-freetds-provider.c:275
 #: providers/freetds/gda-freetds-provider.c:277
-#, fuzzy
 msgid "Allocating tds socket failed."
-msgstr "Falha na alocação de contexto tds"
+msgstr "Falha na alocação de socket tds."
 
 #. gda_freetds_free_connection_data (tds_cnc);
 #: providers/freetds/gda-freetds-provider.c:283
@@ -263,22 +275,22 @@ msgstr "Falha na alocação de contexto tds"
 #: providers/freetds/gda-freetds-provider.c:292
 #: providers/freetds/gda-freetds-provider.c:294
 msgid "Establishing connection failed."
-msgstr "Falha ao estabelecer ligação."
+msgstr "Falha ao estabelecer uma ligação."
 
 #: providers/freetds/gda-freetds-provider.c:308
 #: providers/freetds/gda-freetds-provider.c:309
 msgid "Failed getting connection info."
-msgstr "Falha ao obter informação de ligação."
+msgstr "Falha ao obter a informação de ligação."
 
 #: providers/freetds/gda-freetds-provider.c:798
 #: providers/freetds/gda-freetds-provider.c:799
 msgid "Query did not succeed in execute_cmd()."
-msgstr "Query falhou em execute_cmd()."
+msgstr "Consulta falhou em execute_cmd()."
 
 #: providers/freetds/gda-freetds-provider.c:812
 #: providers/freetds/gda-freetds-provider.c:814
 msgid "Unexpected result tokens in execute_cmd()."
-msgstr "Secções de resultado inesperadas em execute_cmd()."
+msgstr "Blocos de resultado inesperados em execute_cmd()."
 
 #: providers/freetds/gda-freetds-provider.c:822
 #: providers/freetds/gda-freetds-provider.c:823
@@ -310,25 +322,25 @@ msgstr ""
 msgid "Not available"
 msgstr "Indisponível"
 
-#: providers/freetds/gda-freetds-recordset.c:376
+#: providers/freetds/gda-freetds-recordset.c:377
 msgid "Error processing result rows.\n"
 msgstr "Erro ao processar registos de resultado.\n"
 
-#: providers/freetds/gda-freetds-recordset.c:383
+#: providers/freetds/gda-freetds-recordset.c:384
 msgid "Unexpected freetds return code in tds_process_row_tokens().\n"
 msgstr "Código de retorno freetds inesperado em tds_process_row_tokens().\n"
 
-#: providers/freetds/gda-freetds-recordset.c:393
+#: providers/freetds/gda-freetds-recordset.c:394
 msgid "Error processing results.\n"
-msgstr "Erro ao processar resultados.\n"
+msgstr "Erro ao processar os resultados.\n"
 
-#: providers/freetds/gda-freetds-recordset.c:400
+#: providers/freetds/gda-freetds-recordset.c:401
 msgid "Unexpected freetds return code in tds_process_result_tokens\n"
 msgstr "Código de retorno freetds inesperado em tds_process_result_tokens\n"
 
 #: providers/freetds/libmain.c:39
 msgid "Provider for TDS-based databases (using FreeTDS)"
-msgstr "Fornecedor para bases de dados baseadas em TDS (utiliza FreeTDS)"
+msgstr "Fornecedor para bases de dados baseadas em TDS (utilizando FreeTDS)"
 
 #: providers/freetds/utils.c:40 providers/oracle/utils.c:67
 #: providers/postgres/utils.c:48 providers/sybase/utils.c:534
@@ -337,7 +349,7 @@ msgstr "SEM DESCRIÇÃO"
 
 #: providers/ibmdb2/gda-ibmdb2-provider.c:152
 msgid "Could not allocate environment handle.\n"
-msgstr "Incapaz de alocar handle de ambiente.\n"
+msgstr "Incapaz de alocar manipulador de ambiente.\n"
 
 #. GetInfo is needed for obtaining database name
 #. is needed for tables schema
@@ -351,7 +363,7 @@ msgstr ""
 #: providers/ibmdb2/gda-ibmdb2-provider.c:688
 #: providers/ibmdb2/gda-ibmdb2-provider.c:763
 msgid "Invalid IBM DB2 handle"
-msgstr "Handle IBM DB2 inválida"
+msgstr "Manipulador IBM DB2 inválido"
 
 #: providers/ibmdb2/gda-ibmdb2-provider.c:741
 msgid "Function"
@@ -389,7 +401,7 @@ msgstr "Função"
 #: providers/postgres/gda-postgres-provider.c:1196
 #: providers/postgres/gda-postgres-provider.c:1313
 #: providers/postgres/gda-postgres-provider.c:1946
-#: providers/sqlite/gda-sqlite-provider.c:751
+#: providers/sqlite/gda-sqlite-provider.c:788
 #: providers/sybase/gda-sybase-provider.c:1098
 msgid "Owner"
 msgstr "Dono"
@@ -443,7 +455,7 @@ msgstr "Triggers"
 #: providers/odbc/gda-odbc-provider.c:1360
 #: providers/oracle/gda-oracle-provider.c:2095
 #: providers/postgres/gda-postgres-provider.c:1135
-#: providers/sqlite/gda-sqlite-provider.c:750
+#: providers/sqlite/gda-sqlite-provider.c:787
 #: providers/sybase/gda-sybase-provider.c:1096
 msgid "Type"
 msgstr "Tipo"
@@ -470,7 +482,7 @@ msgstr "Tipo"
 #: providers/postgres/gda-postgres-provider.c:1197
 #: providers/postgres/gda-postgres-provider.c:1314
 #: providers/postgres/gda-postgres-provider.c:1947
-#: providers/sqlite/gda-sqlite-provider.c:752
+#: providers/sqlite/gda-sqlite-provider.c:789
 #: providers/sybase/gda-sybase-provider.c:1100
 msgid "Comments"
 msgstr "Comentários"
@@ -481,10 +493,10 @@ msgstr "Comentários"
 #: providers/odbc/gda-odbc-provider.c:1363
 #: providers/oracle/gda-oracle-provider.c:2097
 #: providers/postgres/gda-postgres-provider.c:1138
-#: providers/sqlite/gda-sqlite-provider.c:753
+#: providers/sqlite/gda-sqlite-provider.c:790
 #: providers/sybase/gda-sybase-provider.c:1102
 msgid "GDA type"
-msgstr "Tipos GDA"
+msgstr "Tipo GDA"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/ibmdb2/gda-ibmdb2-provider.c:974
@@ -492,6 +504,14 @@ msgstr "Tipos GDA"
 #: providers/postgres/gda-postgres-provider.c:1904 testing/client.c:137
 msgid "Users"
 msgstr "Utilizadores"
+
+#: providers/ibmdb2/gda-ibmdb2-types.c:154
+msgid "[BLOB unsupported]"
+msgstr "[BLOB não suportado]"
+
+#: providers/ibmdb2/gda-ibmdb2-types.c:157
+msgid "[Unsupported data]"
+msgstr "[Dados não suportados]"
 
 #: providers/ibmdb2/libmain.c:39
 msgid "Provider for IBMDB2 databases"
@@ -505,7 +525,7 @@ msgstr "Fornecedor para bases de dados IBMDB2"
 #: providers/ldap/gda-ldap-recordset.c:58
 #: providers/ldap/gda-ldap-recordset.c:176
 msgid "Invalid LDAP handle"
-msgstr "Handle LDAP inválida"
+msgstr "Manipulador LDAP inválido"
 
 #: providers/ldap/gda-ldap-recordset.c:69
 #: providers/mysql/gda-mysql-recordset.c:130
@@ -529,14 +549,14 @@ msgstr "Tentativa de inserção de um registo com um número inválido de coluna
 #: providers/mysql/gda-mysql-recordset.c:324
 #: providers/oracle/gda-oracle-recordset.c:484
 msgid "Could not retrieve column's information"
-msgstr "Incapaz de obter informação da coluna"
+msgstr "Incapaz de obter a informação da coluna"
 
 #: providers/ldap/gda-ldap-recordset.c:316
 #: providers/msql/gda-msql-recordset.c:255
 #: providers/mysql/gda-mysql-recordset.c:342
 #: providers/oracle/gda-oracle-recordset.c:502
 msgid "Could not retrieve column's value"
-msgstr "Incapaz de obter valor da coluna"
+msgstr "Incapaz de obter o valor da coluna"
 
 #: providers/ldap/libmain.c:42
 msgid "Provider for LDAP directory"
@@ -551,45 +571,45 @@ msgstr ""
 #: providers/xbase/gda-xbase-provider.c:223
 #, c-format
 msgid "Could not open file %s"
-msgstr "Incapaz de abrir ficheiro %s"
+msgstr "Incapaz de abrir o ficheiro %s"
 
 #: providers/mdb/gda-mdb-provider.c:238 providers/mdb/gda-mdb-provider.c:268
 #: providers/mdb/gda-mdb-provider.c:290 providers/mdb/gda-mdb-provider.c:342
 #: providers/mdb/gda-mdb-provider.c:690 providers/mdb/gda-mdb-provider.c:726
 msgid "Invalid MDB handle"
-msgstr "Handle MDB inválida"
+msgstr "Manipulador MDB inválido"
 
 #: providers/mdb/gda-mdb-provider.c:404 providers/mdb/gda-mdb-provider.c:414
 #: providers/mdb/gda-mdb-provider.c:424
 msgid "Transactions not supported in MDB provider"
-msgstr "Transacções não suportadas no fornecedor MDB"
+msgstr "Transacções não são suportadas pelo fornecedor MDB"
 
 #: providers/mdb/gda-mdb-provider.c:490
 #: providers/mysql/gda-mysql-provider.c:1069
 #: providers/odbc/gda-odbc-provider.c:949
 #: providers/oracle/gda-oracle-provider.c:1248
 #: providers/postgres/gda-postgres-provider.c:1363
-#: providers/sqlite/gda-sqlite-provider.c:621
+#: providers/sqlite/gda-sqlite-provider.c:658
 #: providers/xml/gda-xml-provider.c:489
 msgid "Field name"
-msgstr "Nome campo"
+msgstr "Nome do campo"
 
 #: providers/mdb/gda-mdb-provider.c:491 providers/msql/gda-msql-provider.c:537
 #: providers/mysql/gda-mysql-provider.c:1070
 #: providers/odbc/gda-odbc-provider.c:950
 #: providers/oracle/gda-oracle-provider.c:1249
 #: providers/postgres/gda-postgres-provider.c:1364
-#: providers/sqlite/gda-sqlite-provider.c:622
+#: providers/sqlite/gda-sqlite-provider.c:659
 #: providers/xml/gda-xml-provider.c:490
 msgid "Data type"
-msgstr "Tipo dados"
+msgstr "Tipo de dados"
 
 #: providers/mdb/gda-mdb-provider.c:492 providers/msql/gda-msql-provider.c:538
 #: providers/mysql/gda-mysql-provider.c:1071
 #: providers/odbc/gda-odbc-provider.c:951
 #: providers/oracle/gda-oracle-provider.c:1250
 #: providers/postgres/gda-postgres-provider.c:1365
-#: providers/sqlite/gda-sqlite-provider.c:623
+#: providers/sqlite/gda-sqlite-provider.c:660
 #: providers/xml/gda-xml-provider.c:491
 msgid "Size"
 msgstr "Tamanho"
@@ -599,7 +619,7 @@ msgstr "Tamanho"
 #: providers/odbc/gda-odbc-provider.c:952
 #: providers/oracle/gda-oracle-provider.c:1251
 #: providers/postgres/gda-postgres-provider.c:1366
-#: providers/sqlite/gda-sqlite-provider.c:624
+#: providers/sqlite/gda-sqlite-provider.c:661
 #: providers/xml/gda-xml-provider.c:492
 msgid "Scale"
 msgstr "Escala"
@@ -609,7 +629,7 @@ msgstr "Escala"
 #: providers/odbc/gda-odbc-provider.c:953
 #: providers/oracle/gda-oracle-provider.c:1252
 #: providers/postgres/gda-postgres-provider.c:1367
-#: providers/sqlite/gda-sqlite-provider.c:625
+#: providers/sqlite/gda-sqlite-provider.c:662
 #: providers/xml/gda-xml-provider.c:493
 msgid "Not null?"
 msgstr "Não nulo?"
@@ -619,7 +639,7 @@ msgstr "Não nulo?"
 #: providers/odbc/gda-odbc-provider.c:954
 #: providers/oracle/gda-oracle-provider.c:1253
 #: providers/postgres/gda-postgres-provider.c:1368
-#: providers/sqlite/gda-sqlite-provider.c:626
+#: providers/sqlite/gda-sqlite-provider.c:663
 #: providers/xml/gda-xml-provider.c:494
 msgid "Primary key?"
 msgstr "Chave primária?"
@@ -629,7 +649,7 @@ msgstr "Chave primária?"
 #: providers/odbc/gda-odbc-provider.c:955
 #: providers/oracle/gda-oracle-provider.c:1254
 #: providers/postgres/gda-postgres-provider.c:1369
-#: providers/sqlite/gda-sqlite-provider.c:627
+#: providers/sqlite/gda-sqlite-provider.c:664
 #: providers/xml/gda-xml-provider.c:495
 msgid "Unique index?"
 msgstr "Índice único?"
@@ -639,7 +659,7 @@ msgstr "Índice único?"
 #: providers/odbc/gda-odbc-provider.c:956
 #: providers/oracle/gda-oracle-provider.c:1255
 #: providers/postgres/gda-postgres-provider.c:1370
-#: providers/sqlite/gda-sqlite-provider.c:628
+#: providers/sqlite/gda-sqlite-provider.c:665
 #: providers/xml/gda-xml-provider.c:496
 msgid "References"
 msgstr "Referências"
@@ -649,7 +669,7 @@ msgstr "Referências"
 #: providers/odbc/gda-odbc-provider.c:957
 #: providers/oracle/gda-oracle-provider.c:1256
 #: providers/postgres/gda-postgres-provider.c:1371
-#: providers/sqlite/gda-sqlite-provider.c:629
+#: providers/sqlite/gda-sqlite-provider.c:666
 msgid "Default value"
 msgstr "Valor por omissão"
 
@@ -663,18 +683,18 @@ msgstr "ID"
 #: providers/odbc/gda-odbc-provider.c:1140
 #: providers/postgres/gda-postgres-provider.c:849
 msgid "Return type"
-msgstr "Tipo retorno"
+msgstr "Tipo de resultado"
 
 #: providers/mdb/gda-mdb-provider.c:551
 msgid "# of args"
-msgstr "Nº de args"
+msgstr "Nº de argumentos"
 
 #: providers/mdb/gda-mdb-provider.c:552
 #: providers/mysql/gda-mysql-provider.c:706
 #: providers/odbc/gda-odbc-provider.c:1142
 #: providers/postgres/gda-postgres-provider.c:851
 msgid "Args types"
-msgstr "Tipo args"
+msgstr "Tipo de argumentos"
 
 #: providers/mdb/gda-mdb-provider.c:553
 #: providers/odbc/gda-odbc-provider.c:1143
@@ -696,11 +716,11 @@ msgstr "Tipo GDA"
 
 #: providers/mdb/gda-mdb-provider.c:659
 msgid "Boolean type"
-msgstr "Tipo booleano"
+msgstr "Tipo boleano"
 
 #: providers/mdb/gda-mdb-provider.c:660
 msgid "1-byte integers"
-msgstr "Inteiros 1-byte"
+msgstr "Inteiros de 1-byte"
 
 #: providers/mdb/gda-mdb-provider.c:661
 msgid "Double precision values"
@@ -712,11 +732,11 @@ msgstr "Valores de precisão única"
 
 #: providers/mdb/gda-mdb-provider.c:663
 msgid "32-bit integers"
-msgstr "Inteiros 32-bit"
+msgstr "Inteiros de 32-bit"
 
 #: providers/mdb/gda-mdb-provider.c:664
 msgid "64-bit integers"
-msgstr "Inteiros 64-bit"
+msgstr "Inteiros de 64-bit"
 
 #: providers/mdb/gda-mdb-provider.c:665
 msgid "Variable length character strings"
@@ -740,25 +760,25 @@ msgstr "Valor data/hora"
 
 #: providers/mdb/gda-mdb-provider.c:670
 msgid "Character strings"
-msgstr "Expressões caracteres"
+msgstr "Expressões de caracteres"
 
 #. end unsafe
 #: providers/mdb/gda-mdb-provider.c:737
 #, c-format
 msgid "Could not parse '%s' command"
-msgstr "Incapaz de parsear comando '%s'"
+msgstr "Incapaz de parsear o comando '%s'"
 
 #. parsing went fine, but there is no result
 #. (e.g. because of an invalid column name)
 #: providers/mdb/gda-mdb-provider.c:744
-#, fuzzy, c-format
+#, c-format
 msgid "Got no result for '%s' command"
-msgstr "Incapaz de parsear comando '%s'"
+msgstr "Não foi obtido nenhum resultado para o comando '%s'"
 
 #: providers/mdb/gda-mdb-table.c:48 providers/xml/gda-xml-provider.c:519
 #, c-format
 msgid "Table %s not found"
-msgstr "Tabela %s não encontrada"
+msgstr "Tabela %s não foi encontrada"
 
 #: providers/mdb/libmain.c:36
 msgid "Provider for Microsoft Access files"
@@ -766,7 +786,7 @@ msgstr "Fornecedor para ficheiros Microsoft Access"
 
 #: providers/msql/gda-msql-libmain.c:41
 msgid "Provider for Hughes Technologies mSQL databases"
-msgstr "Fornecedor para bases de dados Hughes Technologies"
+msgstr "Fornecedor para bases de dados Hughes Technologies mSQL"
 
 #: providers/msql/gda-msql-provider.c:230
 #: providers/msql/gda-msql-provider.c:273
@@ -775,7 +795,7 @@ msgstr "Fornecedor para bases de dados Hughes Technologies"
 #: providers/msql/gda-msql-recordset.c:50
 #: providers/msql/gda-msql-recordset.c:140
 msgid "Invalid mSQL handle"
-msgstr "Handle mSQL inválida"
+msgstr "Manipulador mSQL inválido"
 
 #: providers/msql/gda-msql-provider.c:318
 msgid "mSQL allows database creation only through the msqladmin tool."
@@ -786,7 +806,7 @@ msgstr ""
 #: providers/msql/gda-msql-provider.c:331
 msgid "mSQL allows database drops only through the msqladmin tool."
 msgstr ""
-"mSQL apenas permite a remoção (drop) de bases de dados através da ferramenta "
+"mSQL apenas permite a remoção de bases de dados através da ferramenta "
 "msqladmin."
 
 #: providers/msql/gda-msql-provider.c:376
@@ -801,7 +821,7 @@ msgstr "Título"
 
 #: providers/msql/gda-msql-provider.c:536
 msgid "Field Name"
-msgstr "Nome Campo"
+msgstr "Nome do Campo"
 
 #: providers/msql/gda-msql-provider.c:540
 msgid "Not null"
@@ -831,7 +851,7 @@ msgstr ""
 #: providers/mysql/gda-mysql-recordset.c:119
 #: providers/mysql/gda-mysql-recordset.c:192
 msgid "Invalid MySQL handle"
-msgstr "Handle MySQL inválida"
+msgstr "Manipulador MySQL inválido"
 
 #: providers/mysql/gda-mysql-provider.c:311
 #: providers/mysql/gda-mysql-provider.c:381
@@ -842,7 +862,7 @@ msgstr "Handle MySQL inválida"
 #: providers/mysql/gda-mysql-provider.c:592
 #: providers/mysql/gda-mysql-provider.c:625
 msgid "Invalid MYSQL handle"
-msgstr "Handle MYSQL inválida"
+msgstr "Manipulador MYSQL inválido"
 
 #: providers/mysql/gda-mysql-provider.c:540
 #: providers/mysql/gda-mysql-provider.c:597
@@ -850,7 +870,7 @@ msgstr "Handle MYSQL inválida"
 #: providers/oracle/gda-oracle-provider.c:857
 #: providers/oracle/gda-oracle-provider.c:939
 #: providers/oracle/gda-oracle-provider.c:1000
-#: providers/sqlite/gda-sqlite-provider.c:471
+#: providers/sqlite/gda-sqlite-provider.c:508
 msgid "Transactions are not supported in read-only mode"
 msgstr "Não são suportadas transacções em modo apenas-leitura"
 
@@ -875,12 +895,12 @@ msgstr "Incapaz de SQLAllocEnv()..."
 #: providers/odbc/gda-odbc-provider.c:562
 #: providers/odbc/gda-odbc-provider.c:592
 msgid "Invalid Odbc handle"
-msgstr "Handle Odbc inválida"
+msgstr "Manipulador Odbc inválido"
 
 #: providers/odbc/gda-odbc-provider.c:1141
 #: providers/postgres/gda-postgres-provider.c:850
 msgid "Nb args"
-msgstr "Nº args"
+msgstr "Nº de argumentos"
 
 #: providers/odbc/gda-odbc-provider.c:1402
 #: providers/oracle/gda-oracle-provider.c:2193 testing/client.c:134
@@ -900,11 +920,11 @@ msgstr "Fornecedor para fontes de dados ODBC"
 
 #: providers/oracle/gda-oracle-provider.c:196
 msgid "No TNS name supplied"
-msgstr "Nenhum nome TNS especificado"
+msgstr "Nenhum nome de TNS especificado"
 
 #: providers/oracle/gda-oracle-provider.c:212
 msgid "Could not initialize Oracle"
-msgstr "Incapaz de inicializar Oracle"
+msgstr "Incapaz de inicializar o Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:223
 msgid "Could not initialize the Oracle environment"
@@ -912,19 +932,19 @@ msgstr "Incapaz de inicializar o ambiente Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:234
 msgid "Could not allocate the Oracle service handle"
-msgstr "Incapaz de alocar handle do serviço Oracle"
+msgstr "Incapaz de alocar manipulador do serviço Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:244
 msgid "Could not allocate the Oracle error handle"
-msgstr "Incapaz de alocar handle de erros Oracle"
+msgstr "Incapaz de alocar manipulador de erros Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:256
 msgid "Could not allocate the Oracle server handle"
-msgstr "Incapaz de alocar handle de servidor Oracle"
+msgstr "Incapaz de alocar manipulador de servidor Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:269
 msgid "Could not allocate the Oracle session handle"
-msgstr "Incapaz de alocar handle de sessão Oracle"
+msgstr "Incapaz de alocar manipulador de sessão Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:299
 msgid "Could not attach to the Oracle server"
@@ -945,7 +965,7 @@ msgstr "Incapaz de definir o atributo senha de Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:362
 msgid "Could not begin the Oracle session"
-msgstr "Incapaz de inicializar sessão Oracle"
+msgstr "Incapaz de inicializar a sessão Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:380
 msgid "Could not set the Oracle session attribute in the service context"
@@ -966,31 +986,33 @@ msgstr "Incapaz de definir o atributo de sessão Oracle no contexto do serviço"
 #: providers/oracle/gda-oracle-recordset.c:390
 #: providers/oracle/gda-oracle-recordset.c:591
 msgid "Invalid Oracle handle"
-msgstr "Handle Oracle inválida"
+msgstr "Manipulador Oracle inválido"
 
 #: providers/oracle/gda-oracle-provider.c:509
 msgid "Could not allocate the Oracle statement handle"
-msgstr "Incapaz de alocar handle de query Oracle"
+msgstr "Incapaz de alocar manipulador de consulta Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:520
 msgid "Could not prepare the Oracle statement"
-msgstr "Incapaz de preparar a query Oracle"
+msgstr "Incapaz de preparar a consulta Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:552
 msgid "Could not bind the Oracle statement parameter"
-msgstr "Incapaz de fazer bind do parâmetro de query Oracle"
+msgstr "Incapaz de associar o parâmetro de consulta Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:598
 msgid "Could not get the Oracle statement type"
-msgstr "Incapaz de obter o tipo de query Oracle"
+msgstr "Incapaz de obter o tipo de consulta Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:610
 msgid "Could not set the Oracle statement pre-fetch row count"
-msgstr "Incapaz de definir contagem registos antes obtenção da query Oracle"
+msgstr ""
+"Incapaz de definir a contagem de registos antes da obtenção da "
+"consulta Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:627
 msgid "Could not execute the Oracle statement"
-msgstr "Incapaz de executar a query Oracle"
+msgstr "Incapaz de executar a consulta Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:640
 msgid "Could not get the number of columns in the result set"
@@ -1013,11 +1035,11 @@ msgstr "Incapaz de anexar a transacção ao contexto de serviço"
 
 #: providers/oracle/gda-oracle-provider.c:870
 msgid "Could not allocate the Oracle transaction handle"
-msgstr "Incapaz de alocar handle de transacção Oracle"
+msgstr "Incapaz de alocar manipulador de transacção Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:882
 msgid "Could not set the Oracle transaction name"
-msgstr "Incapaz de definir nome de transacção Oracle"
+msgstr "Incapaz de definir o nome da transacção Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:907
 msgid "Could not start the Oracle transaction"
@@ -1025,15 +1047,15 @@ msgstr "Incapaz de iniciar a transacção Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:960
 msgid "Could not prepare the transaction to commit"
-msgstr "Incapaz de preparar a transacção para efectuar commit"
+msgstr "Incapaz de preparar a transacção para persistir"
 
 #: providers/oracle/gda-oracle-provider.c:968
 msgid "Could not commit the Oracle transaction"
-msgstr "Incapaz de executar o commit da transacção Oracle"
+msgstr "Incapaz de persistir a transacção Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:1019
 msgid "Could not rollback the Oracle transaction"
-msgstr "Incapaz de executar o rollback da transacção Oracle"
+msgstr "Incapaz de desfazer a transacção Oracle"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/oracle/gda-oracle-provider.c:1152
@@ -1044,20 +1066,20 @@ msgstr "Agregado"
 #: providers/oracle/gda-oracle-provider.c:1156
 #: providers/postgres/gda-postgres-provider.c:1315
 msgid "OutType"
-msgstr "Tipo Saída"
+msgstr "Tipo de Saída"
 
 #: providers/oracle/gda-oracle-provider.c:1157
 #: providers/postgres/gda-postgres-provider.c:1316
 msgid "InType"
-msgstr "Tipo Entrada"
+msgstr "Tipo de Entrada"
 
 #: providers/oracle/gda-oracle-provider.c:1441
 msgid "Could not allocate the Oracle describe handle"
-msgstr "Incapaz de alocar handle de descrição Oracle"
+msgstr "Incapaz de alocar manipulador de descrição Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:1451
 msgid "Could not set describe handle attribute"
-msgstr "Incapaz de definir o atributo de descrição de handle"
+msgstr "Incapaz de definir o atributo de descrição de manipulador"
 
 #: providers/oracle/gda-oracle-provider.c:1478
 #: providers/oracle/gda-oracle-provider.c:1583
@@ -1067,55 +1089,55 @@ msgstr "Incapaz de descrever a tabela Oracle"
 #: providers/oracle/gda-oracle-provider.c:1493
 #: providers/oracle/gda-oracle-provider.c:1596
 msgid "Could not get the Oracle parameter handle"
-msgstr "Incapaz de obter handle de parâmetro Oracle"
+msgstr "Incapaz de obter manipulador de parâmetro Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:1508
 msgid "Could not get described object type"
-msgstr "Incapaz de obter tipo do objecto descrito"
+msgstr "Incapaz de obter o tipo do objecto descrito"
 
 #: providers/oracle/gda-oracle-provider.c:1523
 msgid "Could not get synonym referred-to schema"
-msgstr "Incapaz de obter esquema da referência do sinónimo"
+msgstr "Incapaz de obter o esquema da referência do sinónimo"
 
 #: providers/oracle/gda-oracle-provider.c:1536
 msgid "Could not get synonym referred-to name"
-msgstr "Incapaz de obter nome da referência do sinónimo"
+msgstr "Incapaz de obter o nome referido no sinónimo"
 
 #: providers/oracle/gda-oracle-provider.c:1549
 msgid "Could not get synonym referred-to dblink"
-msgstr "Incapaz de obter dblink da referência do sinónimo"
+msgstr "Incapaz de obter o dblink referido no sinónimo"
 
 #: providers/oracle/gda-oracle-provider.c:1611
 msgid "Could not get the number of columns in the table"
-msgstr "Incapaz de obter número de colunas na tabela"
+msgstr "Incapaz de obter o número de colunas na tabela"
 
 #: providers/oracle/gda-oracle-provider.c:1625
 msgid "Could not get the column list"
-msgstr "Incapaz de obter lista de colunas"
+msgstr "Incapaz de obter a lista de colunas"
 
 #: providers/oracle/gda-oracle-provider.c:1656
 msgid "Could not get the Oracle column handle"
-msgstr "Incapaz de obter handle de coluna Oracle"
+msgstr "Incapaz de obter o manipulador de coluna Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:1671
 msgid "Could not get the Oracle field name"
-msgstr "Incapaz de obter nome de campo Oracle"
+msgstr "Incapaz de obter o nome de campo Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:1693
 msgid "Could not get the Oracle field data type"
-msgstr "Incapaz de obter tipo de dados do campo Oracle"
+msgstr "Incapaz de obter o tipo de dados do campo Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:1713
 msgid "Could not get the Oracle field defined size"
-msgstr "Incapaz de obter definição de tamanho de campo Oracle"
+msgstr "Incapaz de obter a definição de tamanho de campo Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:1732
 msgid "Could not get the Oracle field scale"
-msgstr "Incapaz de obter escala de campo Oracle"
+msgstr "Incapaz de obter a escala de campo Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:1751
 msgid "Could not get the Oracle field nullable attribute"
-msgstr "Incapaz de obter atributo de nulificação de campo Oracle"
+msgstr "Incapaz de obter o atributo de nulificação de campo Oracle"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/oracle/gda-oracle-provider.c:2177
@@ -1137,7 +1159,7 @@ msgstr "Incapaz de obter o parâmetro Oracle"
 
 #: providers/oracle/gda-oracle-recordset.c:82
 msgid "Could not get the parameter defined size"
-msgstr "Incapaz de o tamanho definido do parâmetro"
+msgstr "Incapaz de obter o tamanho definido do parâmetro"
 
 #: providers/oracle/gda-oracle-recordset.c:95
 msgid "Could not get the parameter data type"
@@ -1154,11 +1176,11 @@ msgstr "Coluna fora do limite"
 
 #: providers/oracle/gda-oracle-recordset.c:185
 msgid "Could not get the Oracle parameter information"
-msgstr "Incapaz de obter informação de parâmetro Oracle"
+msgstr "Incapaz de obter a informação de parâmetro Oracle"
 
 #: providers/oracle/gda-oracle-recordset.c:195
 msgid "Could not get the Oracle column name"
-msgstr "Incapaz de obter nome de coluna Oracle"
+msgstr "Incapaz de obter o nome de coluna Oracle"
 
 #: providers/oracle/gda-oracle-recordset.c:210
 msgid "Could not get the Oracle column data type"
@@ -1166,11 +1188,11 @@ msgstr "Incapaz de obter o tipo de dados da coluna Oracle"
 
 #: providers/oracle/gda-oracle-recordset.c:222
 msgid "Could not get the Oracle column scale"
-msgstr "Incapaz de obter escala da coluna Oracle"
+msgstr "Incapaz de obter a escala da coluna Oracle"
 
 #: providers/oracle/gda-oracle-recordset.c:234
 msgid "Could not get the Oracle column nullable attribute"
-msgstr "Incapaz de obter atributo de nulificação de coluna Oracle"
+msgstr "Incapaz de obter o atributo de nulificação de coluna Oracle"
 
 #: providers/oracle/gda-oracle-recordset.c:246
 msgid "Could not get the Oracle defined size"
@@ -1178,7 +1200,7 @@ msgstr "Incapaz de obter o tamanho definido Oracle"
 
 #: providers/oracle/gda-oracle-recordset.c:355
 msgid "Could not fetch a row"
-msgstr "Incapaz de trazer um registo"
+msgstr "Incapaz de obter um registo"
 
 #: providers/oracle/libmain.c:34
 msgid "Provider for Oracle databases"
@@ -1193,7 +1215,7 @@ msgstr "Fornecedor para bases de dados Oracle"
 #: providers/postgres/gda-postgres-recordset.c:470
 #: providers/postgres/utils.c:178
 msgid "Invalid PostgreSQL handle"
-msgstr "Handle PostgreSQL inválida"
+msgstr "Manipulador PostgreSQL inválido"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/postgres/gda-postgres-provider.c:1195
@@ -1207,19 +1229,19 @@ msgstr "Bases de dados"
 
 #: providers/postgres/gda-postgres-recordset.c:228
 msgid "Given row doesn't belong to the model."
-msgstr ""
+msgstr "Registo especificado não pertence ao modelo."
 
 #: providers/postgres/gda-postgres-recordset.c:235
 msgid "Table name could not be guessed."
-msgstr ""
+msgstr "Incapaz de inferir nome da tabela."
 
 #: providers/postgres/gda-postgres-recordset.c:287
 msgid "Model doesn't have at least one non-modified unique key."
-msgstr ""
+msgstr "Modelo não possui pelo menos uma chave úica não-alterada."
 
 #: providers/postgres/gda-postgres-recordset.c:291
 msgid "Model doesn't have any non-unique values to update."
-msgstr ""
+msgstr "Modelo não possui valores não-únicos a actualizar."
 
 #: providers/postgres/gda-postgres-recordset.c:363
 #: providers/sqlite/gda-sqlite-recordset.c:210
@@ -1249,33 +1271,33 @@ msgid "Could not set empty_result_callbacks SQLite option"
 msgstr "Incapaz de definir opção SQLite empty_result_callbacks"
 
 #: providers/sqlite/gda-sqlite-provider.c:242
-#: providers/sqlite/gda-sqlite-provider.c:342
-#: providers/sqlite/gda-sqlite-provider.c:553
-#: providers/sqlite/gda-sqlite-provider.c:718
+#: providers/sqlite/gda-sqlite-provider.c:379
+#: providers/sqlite/gda-sqlite-provider.c:590
+#: providers/sqlite/gda-sqlite-provider.c:755
 #: providers/sqlite/gda-sqlite-recordset.c:156
 #: providers/sqlite/gda-sqlite-recordset.c:195
 #: providers/sqlite/gda-sqlite-recordset.c:236
 msgid "Invalid SQLite handle"
-msgstr "Handle SQLite inválida"
+msgstr "Manipulador SQLite inválido"
 
-#: providers/sqlite/gda-sqlite-provider.c:264
+#: providers/sqlite/gda-sqlite-provider.c:300
 msgid "Invalid SQLITE handle"
-msgstr "Handle SQLITE inválida"
+msgstr "Manipulador SQLITE inválido"
 
-#: providers/sqlite/gda-sqlite-provider.c:360
-#: providers/sqlite/gda-sqlite-provider.c:375
+#: providers/sqlite/gda-sqlite-provider.c:397
+#: providers/sqlite/gda-sqlite-provider.c:412
 msgid "Only one database per connection is allowed"
 msgstr "Apenas é permitida uma base de dados por ligação"
 
-#: providers/sqlite/gda-sqlite-provider.c:389
+#: providers/sqlite/gda-sqlite-provider.c:426
 msgid "To remove a SQLite database you should remove the database file by hand"
 msgstr ""
 "Para remover uma base de dados SQLite deverá remover manualmente o ficheiro "
 "de base de dados"
 
-#: providers/sqlite/gda-sqlite-provider.c:663
+#: providers/sqlite/gda-sqlite-provider.c:700
 msgid "Could not retrieve information for field"
-msgstr "Incapaz de obter informação do campo"
+msgstr "Incapaz de obter a informação do campo"
 
 #: providers/sqlite/libmain.c:41
 msgid "Provider for SQLite databases"
@@ -1283,7 +1305,7 @@ msgstr "Fornecedor para bases de dados SQLite"
 
 #: providers/sybase/gda-sybase-provider.c:291
 msgid "Out of memory. Allocating connection structure failed."
-msgstr "Sem memória. Falha na alocação da estrutura de ligação."
+msgstr "Memória esgotada. Falha na alocação da estrutura de ligação."
 
 #: providers/sybase/gda-sybase-provider.c:336
 #, c-format
@@ -1305,18 +1327,18 @@ msgstr "Falha ao alocar uma estrutura de comando em %s()"
 
 #: providers/sybase/gda-sybase-provider.c:670
 msgid "Could not prepare command structure."
-msgstr "Incapaz de preparar estrutura de comando."
+msgstr "Incapaz de preparar a estrutura de comando."
 
 #: providers/sybase/gda-sybase-provider.c:680
 msgid "Sending sql-command failed."
-msgstr "Envio de comando SQL falhou."
+msgstr "Falha ao enviar comando SQL."
 
 #: providers/sybase/gda-sybase-provider.c:706
 #: providers/sybase/gda-sybase-provider.c:724
 #: providers/sybase/gda-sybase-provider.c:790
 #: providers/sybase/gda-sybase-provider.c:811
 msgid "GDA_IS_SYBASE_RECORDSET != TRUE"
-msgstr "GDA_IS_SYBASE_RECORDSET != VERDADE"
+msgstr "GDA_IS_SYBASE_RECORDSET != VERDADEIRO"
 
 #. when you execute a stored procedure through openclient, this
 #. part of the result set loop is where you fetch the return status
@@ -1327,15 +1349,15 @@ msgstr "CS_STATUS_RESULT!"
 
 #: providers/sybase/gda-sybase-provider.c:734
 msgid "Hit unsupported result type"
-msgstr "Encontrado tipo de resultado não suportado"
+msgstr "Encontrado um tipo de resultado não suportado"
 
 #: providers/sybase/gda-sybase-provider.c:762
 msgid ""
 "an error occured when calling ct_diag attempting to test if there is a "
 "server message for resultset"
 msgstr ""
-"ocorreu um erro ao chamar ct_diag a tentar testar se existe uma mensagem de "
-"servidor para o conjunto resultados (resultset)"
+"ocorreu um erro ao invocar ct_diag ao tentar testar se existe uma mensagem "
+"de servidor para o conjunto de resultados"
 
 #: providers/sybase/gda-sybase-provider.c:793
 #, c-format
@@ -1344,7 +1366,7 @@ msgstr "%s devolveu %s"
 
 #: providers/sybase/gda-sybase-provider.c:820
 msgid "Failed dropping command structure."
-msgstr "Falha ao descartar estrutura de comando."
+msgstr "Falha ao descartar a estrutura de comando."
 
 #: providers/sybase/gda-sybase-provider.c:850
 #, c-format
@@ -1353,16 +1375,16 @@ msgstr "Estrutura de comando já em utilização. %s falhou."
 
 #: providers/sybase/gda-sybase-provider.c:858
 msgid "Could not allocate command structure."
-msgstr "Incapaz de alocar estrutura de comando."
+msgstr "Incapaz de alocar a estrutura de comando."
 
 #: providers/sybase/gda-sybase-provider.c:867
 #, c-format
 msgid "Could not prepare command structure with %s."
-msgstr "Incapaz de preparar estrutura de comando com %s."
+msgstr "Incapaz de preparar a estrutura de comando com %s."
 
 #: providers/sybase/gda-sybase-provider.c:877
 msgid "Sending command failed."
-msgstr "Falha no envio de comando."
+msgstr "Falha ao enviar comando."
 
 #: providers/sybase/gda-sybase-provider.c:902
 #: providers/sybase/gda-sybase-provider.c:919
@@ -1374,32 +1396,32 @@ msgstr "%s: %s falhou"
 #: providers/sybase/gda-sybase-provider.c:974
 msgid "could not allocate cmd structure to find current database."
 msgstr ""
-"incapaz de alocar estrutura de comando para encontrar base de dados actual."
+"incapaz de alocar a estrutura de comando para encontrar a base de dados actual."
 
 #: providers/sybase/gda-sybase-provider.c:985
 msgid "could not execute command to get current database."
-msgstr "incapaz de executar comando para obter base de dados actual."
+msgstr "incapaz de executar o comando para obter a base de dados actual."
 
 #: providers/sybase/gda-sybase-provider.c:993
 msgid "could not send command to get current database."
-msgstr "incapaz de enviar comando para obter base de dados actual."
+msgstr "incapaz de enviar o comando para obter a base de dados actual."
 
 #: providers/sybase/gda-sybase-provider.c:1016
 msgid "could not bind variable to get current database."
-msgstr "incapaz de associar variável para obter base de dados actual."
+msgstr "incapaz de associar a variável para obter a base de dados actual."
 
 #: providers/sybase/gda-sybase-provider.c:1029
 #: providers/sybase/gda-sybase-provider.c:1044
 msgid "could not fetch data to find current database."
-msgstr "incapaz de extrair dados para obter base de dados actual."
+msgstr "incapaz de extrair os dados para obter a base de dados actual."
 
 #: providers/sybase/gda-sybase-provider.c:1058
 msgid "could not drop cmd structure to find current database."
-msgstr "incapaz de largar comando para obter base de dados actual."
+msgstr "incapaz de descartar o comando para obter a base de dados actual."
 
 #: providers/sybase/gda-sybase-recordset.c:315
 msgid "Could not allocate datamodel. No results will be returned."
-msgstr "Incapaz de alocar modelo de dados. Nenhum resultado será devolvido."
+msgstr "Incapaz de alocar o modelo de dados. Nenhum resultado será devolvido."
 
 #: providers/sybase/gda-sybase-recordset.c:318
 msgid "ct_cancel() failed."
@@ -1418,13 +1440,13 @@ msgstr "%s devolveu <= 0 colunas."
 #: providers/sybase/gda-sybase-recordset.c:359
 #: providers/sybase/gda-sybase-recordset.c:549
 msgid "Could not allocate structure for column metainformation."
-msgstr "Incapaz de alocar estrutura para metainformação da coluna."
+msgstr "Incapaz de alocar a estrutura para a meta-informação da coluna."
 
 #: providers/sybase/gda-sybase-recordset.c:363
 #: providers/sybase/gda-sybase-recordset.c:553
 #, c-format
 msgid "Could not call %s while processing row resultset."
-msgstr "Incapaz de chamar %s ao processar resultado registo."
+msgstr "Incapaz de invocar %s ao processar o resultado do registo."
 
 #: providers/sybase/gda-sybase-recordset.c:382
 #: providers/sybase/gda-sybase-recordset.c:403
@@ -1435,13 +1457,13 @@ msgstr "Incapaz de executar %s na coluna %d"
 #: providers/sybase/gda-sybase-recordset.c:391
 #, c-format
 msgid "Could not allocate data placeholder for column %d"
-msgstr "Incapaz de alocar repositório de dados para a coluna %d"
+msgstr "Incapaz de alocar o repositório de dados para a coluna %d"
 
 #: providers/sybase/gda-sybase-recordset.c:422
 #, c-format
 msgid "Could not run %s to cancel processing row resultset."
 msgstr ""
-"Incapaz de executar %s para cancelar processamento de resultado de registo."
+"Incapaz de executar %s para cancelar o processamento de resultado de registo."
 
 #: providers/sybase/gda-sybase-recordset.c:438
 #, c-format
@@ -1458,47 +1480,47 @@ msgid ""
 "an error occured when calling ct_diag attempting to retrieve a server "
 "message count for resultset"
 msgstr ""
-"ocorreu um erro ao chamar ct_diag ao tentar obter contagem de mensagens de "
-"servidor para conjunto resultados (resultset)"
+"ocorreu um erro ao invocar ct_diag ao tentar obter a contagem de mensagens "
+"de servidor para o conjunto de resultados"
 
 #: providers/sybase/gda-sybase-recordset.c:518
 msgid "attempting to make recordset and msg count != 1 !"
-msgstr "ao tentar criar recordset e contagem mensagens != 1 !"
+msgstr "ao tentar criar o conjunto de resultados e contagem de mensagens != 1 !"
 
 #: providers/sybase/gda-sybase-recordset.c:531
 msgid ""
 "an error occured when calling ct_diag attempting to retrieve a server "
 "message for recordset"
 msgstr ""
-"ocorreu um erro ao chamar ct_diag ao tentar obter uma mensagem de servidor "
-"para conjunto registos (recordset)"
+"ocorreu um erro ao invocar ct_diag ao tentar obter uma mensagem de servidor "
+"para o conjunto de registos"
 
 #: providers/sybase/gda-sybase-recordset.c:590 providers/sybase/utils.c:408
 msgid "call to ct_diag failed when attempting to clear the server messages"
-msgstr "falhou chamada a ct_diag() ao tentar limpar as mensagens de servidor"
+msgstr "falha ao invocar ct_diag() ao tentar limpar as mensagens de servidor"
 
 #: providers/sybase/gda-sybase-types.c:94
 #: providers/sybase/gda-sybase-types.c:97
 msgid "Attempt setting a nonnullable field to null."
-msgstr "Tentativa de definição de campo não nulo a nulo."
+msgstr "Tentativa de definição de campo não nulo para nulo."
 
 #: providers/sybase/gda-sybase-types.c:208
 #, c-format
 msgid "cslib cannot convert type %d"
-msgstr "cslib não consegue converter tipo %d"
+msgstr "cslib incapaz de converter o tipo %d"
 
 #: providers/sybase/gda-sybase-types.c:223
 #, c-format
 msgid "data conversion failed for type %d"
-msgstr "falha na conversão de dados para tipo %d"
+msgstr "falha na conversão de dados para o tipo %d"
 
 #: providers/sybase/libmain.c:40
 msgid "GDA provider for sybase databases (using OpenClient)"
-msgstr "Fornecedor GDA para bases de dados sybase (utiliza OpenClient)"
+msgstr "Fornecedor GDA para bases de dados sybase (utilizando OpenClient)"
 
 #: providers/sybase/main.c:52
 msgid "Could not initiate Sybase component factory"
-msgstr "Incapaz de inicializar fábrica de componente Sybase"
+msgstr "Incapaz de inicializar a fábrica de componente Sybase"
 
 #: providers/sybase/utils.c:48
 msgid "Call: csmsg callback"
@@ -1511,18 +1533,18 @@ msgid ""
 "\tseverity(%ld) layer(%ld) origin (%ld) number(%ld)\n"
 "\t%s"
 msgstr ""
-"Erro CS-Library:\n"
+"Erro na CS-Library:\n"
 "\tgravidade(%ld) camada(%ld) origem (%ld) número(%ld)\n"
 "\t%s"
 
 #: providers/sybase/utils.c:60
 #, c-format
 msgid "OS error: %s"
-msgstr "Erro SO: %s"
+msgstr "Erro de SO: %s"
 
 #: providers/sybase/utils.c:70
 msgid "Call: Client callback."
-msgstr "Chamada: Callback cliente."
+msgstr "Chamada: Callback de cliente."
 
 #: providers/sybase/utils.c:75
 #, c-format
@@ -1531,13 +1553,13 @@ msgid ""
 "\tseverity(%ld) layer(%ld) origin (%ld) number(%ld)\n"
 "\t%s"
 msgstr ""
-"Erro CT-Client:\n"
+"Erro em CT-Client:\n"
 "\tgravidade(%ld) camada(%ld) origem (%ld) número(%ld)\n"
 "\t%s"
 
 #: providers/sybase/utils.c:90
 msgid "Call: server callback"
-msgstr "Chamada: Callback servidor."
+msgstr "Chamada: Callback de servidor."
 
 #: providers/sybase/utils.c:95
 #, c-format
@@ -1545,32 +1567,32 @@ msgid ""
 "CT-Server message:\n"
 "\tnumber(%ld) severity(%ld) state(%ld) line(%ld)"
 msgstr ""
-"Mensagem CT-Server:\n"
+"Mensagem de CT-Server:\n"
 "\tnúmero(%ld) gravidade(%ld) estado(%ld) registo(%ld)"
 
 #: providers/sybase/utils.c:100
 #, c-format
 msgid "\tServer name: %s\n"
-msgstr "\tNome servidor: %s\n"
+msgstr "\tNome do servidor: %s\n"
 
 #: providers/sybase/utils.c:103
 #, c-format
 msgid "\tProcedure name: %s\n"
-msgstr "\t\tNome procedimento: %s\n"
+msgstr "\t\tNome do procedimento: %s\n"
 
 #: providers/sybase/utils.c:147
 msgid "ct_diag() failed determining # of client messages."
-msgstr "ct_diag() falhou ao determinar nº de mensagens de cliente."
+msgstr "Falha no ct_diag() ao determinar o nº de mensagens de cliente."
 
 #: providers/sybase/utils.c:202
 msgid "call to cs_diag failed when attempting to the amount of client messages"
-msgstr "falha na chamada a cs_diag ao determinar nº de mensagens de cliente"
+msgstr "falha ao invocar cs_diag para determinar o nº de mensagens de cliente"
 
 #: providers/sybase/utils.c:220
 msgid ""
 "an error occured when calling cs_diag attempting to retrieve a client message"
 msgstr ""
-"ocorreu um erro ao chamar cs_diag ao tentar obter uma mensagem de cliente"
+"ocorreu um erro ao invocar cs_diag para tentar obter uma mensagem de cliente"
 
 #: providers/sybase/utils.c:230
 msgid "OS_Error:("
@@ -1581,28 +1603,27 @@ msgid ") Message: "
 msgstr ") Mensagem: "
 
 #: providers/sybase/utils.c:244
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Sybase OpenClient Msg: severity(%ld), number(%ld), origin(%ld), layer(%ld): %"
 "s"
 msgstr ""
-"Erro CT-Client:\n"
-"\tgravidade(%ld) camada(%ld) origem (%ld) número(%ld)\n"
-"\t%s"
+"Mensagem Sybase OpenClient: gravidade(%ld), número(%ld), origem (%ld), "
+"camada(%ld): %s"
 
 #: providers/sybase/utils.c:272
 msgid "call to cs_diag failed when attempting to clear the client messages"
-msgstr "falha ao chamar cs_diag ao tentar limpar mensagens de cliente"
+msgstr "falha ao invocar cs_diag para tentar limpar as mensagens de cliente"
 
 #: providers/sybase/utils.c:313
 msgid "call to ct_diag failed when attempting to the amount of server messages"
-msgstr "falha ao chamar ct_diag ao determinar nº de mensagens de servidor"
+msgstr "falha ao invocar ct_diag para determinar o nº de mensagens de servidor"
 
 #: providers/sybase/utils.c:330
 msgid ""
 "an error occured when calling ct_diag attempting to retrieve a server message"
 msgstr ""
-"ocorreu um erro ao chamar ct_diag ao tentar obter uma mensagem de servidor"
+"ocorreu um erro ao invocar ct_diag para tentar obter uma mensagem de servidor"
 
 #: providers/sybase/utils.c:342
 msgid "Server:"
@@ -1630,13 +1651,13 @@ msgstr "Linha"
 
 #: providers/sybase/utils.c:442
 msgid "call to ct_diag failed when attempting to the amount of client messages"
-msgstr "falha na chamada a ct_diag ao determinar nº de mensagens de cliente"
+msgstr "falha ao invocar ct_diag para determinar o nº de mensagens de cliente"
 
 #: providers/sybase/utils.c:459
 msgid ""
 "an error occured when calling ct_diag attempting to retrieve a client message"
 msgstr ""
-"ocorreu um erro ao chamar ct_diag ao tentar obter uma mensagem de cliente"
+"ocorreu um erro ao invocar ct_diag para tentar obter uma mensagem de cliente"
 
 #: providers/sybase/utils.c:472
 msgid "Layer"
@@ -1648,11 +1669,11 @@ msgstr "Origem"
 
 #: providers/sybase/utils.c:476
 msgid "Message Number"
-msgstr "Número Mensagem"
+msgstr "Número da Mensagem"
 
 #: providers/sybase/utils.c:498
 msgid "call to ct_diag failed when attempting to clear the client messages"
-msgstr "falha ao chamar ct_diag ao tentar limpar as mensagens de cliente"
+msgstr "falha ao invocar ct_diag para tentar limpar as mensagens de cliente"
 
 #: providers/sybase/utils.c:519
 msgid "Operation not possible, connection busy."
@@ -1666,12 +1687,12 @@ msgstr ""
 #: providers/xbase/gda-xbase-provider.c:232
 msgid "Either FILENAME or DIRECTORY must be specified in the connection string"
 msgstr ""
-"Tem de ser indicado na expressão de ligação NOME FICHEIRO ou DIRECTÓRIO"
+"Tem de ser indicado na expressão de ligação o NOME FICHEIRO ou o DIRECTÓRIO"
 
 #: providers/xbase/gda-xbase-provider.c:261
 #: providers/xbase/gda-xbase-provider.c:379
 msgid "Invalid Xbase handle"
-msgstr "Handle Xbase inválida"
+msgstr "Manipulador Xbase inválido"
 
 #: providers/xbase/libmain.c:39
 msgid "Provider for Xbase (dBase, FoxPro, etc) files"
@@ -1687,16 +1708,16 @@ msgstr ""
 
 #: providers/xml/gda-xml-provider.c:222 providers/xml/gda-xml-provider.c:244
 msgid "Invalid XML handle"
-msgstr "Handle XML inválida"
+msgstr "Manipulador XML inválido"
 
 #: providers/xml/gda-xml-provider.c:263 providers/xml/gda-xml-provider.c:278
 #: providers/xml/gda-xml-provider.c:329
 msgid "Invalid internal handle"
-msgstr "Handle interna inválida"
+msgstr "Manipulador interno inválido"
 
 #: providers/xml/gda-xml-provider.c:368
 msgid "Not Implemented"
-msgstr "Não Implementado"
+msgstr "Por Implementar"
 
 #: providers/xml/gda-xml-provider.c:506 providers/xml/gda-xml-provider.c:512
 msgid "Invalid argument"
@@ -1704,7 +1725,7 @@ msgstr "Argumento inválido"
 
 #: providers/xml/gda-xml-provider.c:538
 msgid "Could not get description for column"
-msgstr "Incapaz de obter descrição para coluna"
+msgstr "Incapaz de obter a descrição da coluna"
 
 #: providers/xml/libmain.c:33
 msgid "XML"
@@ -1716,7 +1737,7 @@ msgstr "Fornecedor XML, baseado no formato de base de dados XML libgda"
 
 #: report/libgda-report/gda-report-document.c:171
 msgid "Could not parse XML document"
-msgstr "Incapaz de parsear documento XML"
+msgstr "Incapaz de parsear o documento XML"
 
 #: report/libgda-report/gda-report-document.c:181
 msgid "XML document is not valid"
@@ -1725,7 +1746,7 @@ msgstr "Documento XML inválido"
 #: report/libgda-report/gda-report-document.c:208
 #, c-format
 msgid "Could not get file from %s"
-msgstr "Incapaz de obter ficheiro de %s"
+msgstr "Incapaz de obter o ficheiro de %s"
 
 #: report/libgda-report/gda-report-item-detail.c:160
 #: report/libgda-report/gda-report-item-pagefooter.c:171
@@ -1759,22 +1780,22 @@ msgstr "Item com o ID %s não é um repfield"
 
 #: report/libgda-report/gda-report-item.c:276
 msgid "Error setting parent -> child relation"
-msgstr "Erro ao definir relação pai -> filho"
+msgstr "Erro ao definir uma relação pai -> filho"
 
 #: report/libgda-report/gda-report-item.c:375
 #, c-format
 msgid "Error setting value %s to attribute %s of item %s"
-msgstr "Erro ao definir valor %s no atributo %s do item %s"
+msgstr "Erro ao definir o valor %s no atributo %s do item %s"
 
 #: report/libgda-report/gda-report-valid.c:130
 #, c-format
 msgid "could not get DTD from %s"
-msgstr "Incapaz de obter DTD de %s"
+msgstr "Incapaz de obter o DTD de %s"
 
 #: report/libgda-report/gda-report-valid.c:231
 #, c-format
 msgid "Error validating element %s"
-msgstr "Erro ao validar elemento %s"
+msgstr "Erro ao validar o elemento %s"
 
 #: report/libgda-report/gda-report-valid.c:269
 #, c-format
@@ -1793,7 +1814,7 @@ msgstr "\t\tNENHUM\n"
 #: testing/client.c:83
 #, c-format
 msgid "** ERROR: could not open connection to %s\n"
-msgstr "** ERRO: incapaz de abrir ligação a %s\n"
+msgstr "** ERRO: incapaz de abrir a ligação a %s\n"
 
 #. show provider features
 #: testing/client.c:88
@@ -1827,7 +1848,7 @@ msgstr "\t\tÍndices: %s\n"
 #: testing/client.c:95
 #, c-format
 msgid "\t\tNamespaces: %s\n"
-msgstr "\t\tNomes espaços: %s\n"
+msgstr "\t\tNomes de espaços: %s\n"
 
 #: testing/client.c:98
 #, c-format
@@ -1867,7 +1888,7 @@ msgstr "\t\tVistas: %s\n"
 #: testing/client.c:119
 #, c-format
 msgid "\t\tXML queries: %s\n"
-msgstr "\t\tCondultas XML: %s\n"
+msgstr "\t\tConsultas XML: %s\n"
 
 #: testing/client.c:122
 #, c-format
@@ -1883,12 +1904,12 @@ msgid ""
 "\n"
 msgstr ""
 "\n"
-"\tRelatório de versões de fornecedores: %s\n"
+"\tVersão indicada pelo fornecedor: %s\n"
 "\n"
 
 #: testing/client.c:129
 msgid "Namespaces"
-msgstr "Nomes espaços"
+msgstr "Nomes de espaços"
 
 #: testing/client.c:131
 msgid "Stored procedures"
@@ -1925,7 +1946,7 @@ msgstr "\tA terminar transacção..."
 
 #: testing/client.c:157
 msgid "\tRolling back transaction..."
-msgstr "\tA fazer rollback da transacção..."
+msgstr "\tA desfazer a transacção..."
 
 #: testing/client.c:188
 msgid "Testing GDA client API"
@@ -1964,367 +1985,22 @@ msgid "\tgda_params ="
 msgstr "\tgda_params ="
 
 #: providers/bdb/gda-bdb-provider.c:154
-#, fuzzy
 msgid "The FILE parameter is not defined in the connection string."
-msgstr ""
-"Tem de ser indicado um NOME DE FICHEIRO de base de dados na connection_string"
+msgstr "O parâmetro FICHEIRO não se encontra definido na connection_string."
 
 #: providers/bdb/gda-bdb-provider.c:185
 msgid "-"
-msgstr ""
+msgstr "-"
 
 #: providers/bdb/gda-bdb-provider.c:242 providers/bdb/gda-bdb-provider.c:263
 #: providers/bdb/gda-bdb-provider.c:286
-#, fuzzy
 msgid "Invalid BDB handle"
-msgstr "Handle MDB inválida"
+msgstr "Manipulador MDB inválido"
 
 #: providers/bdb/gda-bdb-recordset.c:242
-#, fuzzy
 msgid "Database is empty"
-msgstr "Bases de dados"
+msgstr "Base de dados está vazia"
 
 #: providers/bdb/libmain.c:39
-#, fuzzy
 msgid "Provider for Berkeley databases"
-msgstr "Fornecedor para bases de dados Oracle"
-
-#~ msgid "Sybase OpenClient Msg: severity("
-#~ msgstr "Msg Sybase OpenClient: gravidade("
-
-#~ msgid "), number("
-#~ msgstr "), número("
-
-#~ msgid "), origin("
-#~ msgstr "), origem("
-
-#~ msgid "), layer("
-#~ msgstr "), camada("
-
-#~ msgid "Default"
-#~ msgstr "Omissão"
-
-#~ msgid "Default provider, based on XML"
-#~ msgstr "Fornecedor por omissão, baseado no XML"
-
-#~ msgid "about to open connection"
-#~ msgstr "prestes a iniciar ligação"
-
-#~ msgid "Context allocated."
-#~ msgstr "Contexto alocado."
-
-#~ msgid "Client library initialized."
-#~ msgstr "Biblioteca de cliente inicializada."
-
-#~ msgid "Could not initialize cslib callback"
-#~ msgstr "Incapaz de inicializar callback cslib"
-
-#~ msgid "CS-lib callback initialized."
-#~ msgstr "Callback CS-lib inicializado."
-
-#~ msgid "Could not initialize ct-client callback"
-#~ msgstr "Incapaz de inicializar callback ct-client"
-
-#~ msgid "CT-Client callback initialized."
-#~ msgstr "Callback CT-Client inicializado."
-
-#~ msgid "Could not initialize ct-server callback"
-#~ msgstr "Incapaz de inicializar callback ct-server"
-
-#~ msgid "CT-Server callback initialized."
-#~ msgstr "Callback CT-Server inicializado."
-
-#~ msgid "Connection allocated."
-#~ msgstr "Ligação alocada."
-
-#~ msgid "Appname set."
-#~ msgstr "Nome aplicação definida."
-
-#~ msgid "Username set."
-#~ msgstr "Utilizador definido."
-
-#~ msgid "Password set."
-#~ msgstr "Senha definida."
-
-#~ msgid "Empty password set."
-#~ msgstr "Senha vazia definida."
-
-#~ msgid "Connected."
-#~ msgstr "Ligado."
-
-#~ msgid "Finally connected."
-#~ msgstr "Finalmente ligado."
-
-#~ msgid ""
-#~ "Connection already in use. Could not allocate command structure in %s()."
-#~ msgstr ""
-#~ "Ligação já em utilização. Incapaz de alocar estrutura de comando em %s()."
-
-#~ msgid "Failed dropping command structure in %s()."
-#~ msgstr "Falha ao descartar estrutura de comando em %s()."
-
-#~ msgid "%d messages fetched."
-#~ msgstr "%d mensagens obtidas."
-
-#~ msgid "Could not allocate environment handle."
-#~ msgstr "Incapaz de alocar handle de ambiente."
-
-#~ msgid "Could not set autocommit to off.\n"
-#~ msgstr "Incapaz de desligar autocommit.\n"
-
-#~ msgid "SQLGetFunctions gave unexpected return. Connection terminated.\n"
-#~ msgstr "SQLGetFunctions deu resultado inesperado. Ligação terminada.\n"
-
-#~ msgid "MESSAGE: %s"
-#~ msgstr "MENSAGEM: %s"
-
-#~ msgid "ERROR: %s"
-#~ msgstr "ERRO: %s"
-
-#~ msgid "Tables"
-#~ msgstr "Tabelas"
-
-#~ msgid "Types"
-#~ msgstr "Tipos"
-
-#~ msgid "Data Type"
-#~ msgstr "Tipo Dados"
-
-#~ msgid "Precision"
-#~ msgstr "Precisão"
-
-#~ msgid "Identity"
-#~ msgstr "Identidade"
-
-#~ msgid "Nullable"
-#~ msgstr "Null Possível"
-
-#~ msgid "Domain"
-#~ msgstr "Domínio"
-
-#~ msgid "Printfmt"
-#~ msgstr "Formato Impr."
-
-#~ msgid "GDA provider for IBMDB2"
-#~ msgstr "Fornecedor GDA para IBMDB2"
-
-#~ msgid "Table Name"
-#~ msgstr "Nome Tabela"
-
-#~ msgid "Provider %s is not installed"
-#~ msgstr "Fornecedor %s não está instalado"
-
-#~ msgid "Could not load %s provider"
-#~ msgstr "Incapaz de carregar fornecedor %s"
-
-#~ msgid "Creation of GdaServerProvider failed"
-#~ msgstr "Criação do GdaServerProvider falhou"
-
-#~ msgid "Unexpected integer value"
-#~ msgstr "Valor inteiro inesperado"
-
-#~ msgid "Unexpected float value"
-#~ msgstr "Valor de vírgula flutuante inesperado"
-
-#~ msgid "Unexpected symbol '='"
-#~ msgstr "Símbolo '=' inesperado"
-
-#~ msgid "Unexpected symbol '<'"
-#~ msgstr "Símbolo '<' inesperado"
-
-#~ msgid "Unexpected symbol '>'"
-#~ msgstr "Símbolo '>' inesperado"
-
-#~ msgid "Found a non-numeric value after a '-' sign"
-#~ msgstr "Encontrado um valor não-numérico após um sinal '-'"
-
-#~ msgid "Unexpected identifier"
-#~ msgstr "Identificador inesperado"
-
-#~ msgid ""
-#~ "To change a SQLite database you should close the actual database and open "
-#~ "a new one"
-#~ msgstr ""
-#~ "Para alterar uma base de dados SQLite deverá fechar a base de dados "
-#~ "actual e abrir uma nova"
-
-#~ msgid "Could not load report file at %s"
-#~ msgstr "Incapaz de ler ficheiro relatório em %s"
-
-#~ msgid "Could not parse report file at %s"
-#~ msgstr "Incapaz de parsear ficheiro relatório em %s"
-
-#~ msgid "Invalid report file '%s'"
-#~ msgstr "Ficheiro de relatório '%s' inválido"
-
-#~ msgid "Unknown"
-#~ msgstr "Desconhecido"
-
-#~ msgid "You need to specify the name of the table"
-#~ msgstr "Tem de especificar o nome da tabela"
-
-#~ msgid "Table name"
-#~ msgstr "Nome tabela"
-
-#~ msgid "CORBA exception: %s"
-#~ msgstr "Excepção CORBA: %s"
-
-#~ msgid "Could not create global GDA client"
-#~ msgstr "Incapaz de criar cliente global GDA"
-
-#~ msgid "GDA Report engine"
-#~ msgstr "Motor de Relatório GDA"
-
-#~ msgid "GDA Report engine factory"
-#~ msgstr "Fábrica de motor de Relatório GDA"
-
-#~ msgid "Could not parse XML report"
-#~ msgstr "Incapaz de parsear relatório XML"
-
-#~ msgid "Could not activate report engine"
-#~ msgstr "Incapaz de activar motor de relatórios"
-
-#~ msgid "Could not initiate Report component factory"
-#~ msgstr "Incapaz de inicializar fábrica de componentes de Relatório"
-
-#~ msgid "Could not activate object %s"
-#~ msgstr "Incapaz de activar objecto %s"
-
-#~ msgid "Could not query CORBA components"
-#~ msgstr "Incapaz de questionar componentes CORBA"
-
-#~ msgid "%s: An Error occured in the CORBA system."
-#~ msgstr "%s: Ocorreu um erro no sistema CORBA."
-
-#~ msgid "Unknown CORBA exception for connection"
-#~ msgstr "Excepção para ligação CORBA desconhecida"
-
-#~ msgid "Could not initialize Bonobo"
-#~ msgstr "Incapaz de inicializar Bonobo"
-
-#~ msgid "Don't know how to create components with IID %s"
-#~ msgstr "Criação de componentes com IID %s desconhecida"
-
-#~ msgid "Could not duplicate client object. Client won't get notifications"
-#~ msgstr ""
-#~ "Incapaz de duplicar objecto cliente. Cliente não receberá notificações"
-
-#~ msgid "Could not notify client about action %d"
-#~ msgstr "Incapaz de notificar cliente sobre a acção %d"
-
-#~ msgid "No implementation for the fetch() method found"
-#~ msgstr "Nenhuma implementação encontrada para o métido fetch()"
-
-#~ msgid "Default component factory"
-#~ msgstr "Fábrica de componentes por omissão"
-
-#~ msgid "GDA Default Datasource Access"
-#~ msgstr "Acesso de Fonte de Dados por Omissão GDA"
-
-#~ msgid "Could not initiate Default component factory"
-#~ msgstr "Incapaz de inicializar fábrica de componentes por Omissão"
-
-#~ msgid "GDA Datasource Access for MySQL"
-#~ msgstr "Acesso a Fonte de Dados GDA para MySQL"
-
-#~ msgid "MySQL component factory"
-#~ msgstr "Fábrica de componente MySQL"
-
-#~ msgid "Could not initiate MySQL component factory"
-#~ msgstr "Incapaz de inicializar fábrica de componente MySQL"
-
-#~ msgid "GDA Datasource Access for ODBC"
-#~ msgstr "Acesso a Fonte de Dados GDA para ODBC"
-
-#~ msgid "ODBC component factory"
-#~ msgstr "Fábrica de componente ODBC"
-
-#~ msgid "Could not initiate ODBC component factory"
-#~ msgstr "Incapaz de inicializar fábrica de componente ODBC"
-
-#~ msgid "GDA Datasource Access for Oracle"
-#~ msgstr "Acesso a Fonte de Dados GDA para Oracle"
-
-#~ msgid "Oracle component factory"
-#~ msgstr "Fábrica de componente Oracle"
-
-#~ msgid "GDA Datasource Access for Postgres"
-#~ msgstr "Acesso a Fonte de Dados GDA para Postgres"
-
-#~ msgid "Postgres component factory"
-#~ msgstr "Fábrica de componente Postgres"
-
-#~ msgid "Could not initiate PostgreSQL component factory"
-#~ msgstr "Incapaz de inicializar fábrica de componente PostgreSQL"
-
-#~ msgid "SQLite component factory"
-#~ msgstr "Fábrica de componente SQLite"
-
-#~ msgid "Could not initiate Sqlite component factory"
-#~ msgstr "Incapaz de inicializar fábrica de componente Sqlite"
-
-#~ msgid "GDA Datasource Access for Sybase"
-#~ msgstr "Acesso a Fonte de Dados GDA para Sybase"
-
-#~ msgid "Sybase component factory"
-#~ msgstr "Fábrica de componente Sybase"
-
-#~ msgid "\ttype = %s\n"
-#~ msgstr "\ttipo = %s\n"
-
-#~ msgid "\trepo_ids ="
-#~ msgstr "\trepo_ids ="
-
-#~ msgid "\thostname = %s\n"
-#~ msgstr "\tservidor = %s\n"
-
-#~ msgid "\tdomain = %s\n"
-#~ msgstr "\tdomínio = %s\n"
-
-#~ msgid "Bad formed document at %s"
-#~ msgstr "Documento mal formado em %s"
-
-#~ msgid "%p is not a valid table"
-#~ msgstr "%p não é uma tabela válida"
-
-#~ msgid "Invalid DEFAULT handle"
-#~ msgstr "Handle OMISSÃO inválida"
-
-#~ msgid "ct_diag 1 failed in sybase_check_clientmsg"
-#~ msgstr "ct_diag 1 falhou em sybase_check_clientmsg"
-
-#~ msgid "ct_diag 2 failed in sybase_check_clientmsg"
-#~ msgstr "ct_diag 2 falhou em sybase_check_clientmsg"
-
-#~ msgid "Client Message: "
-#~ msgstr "Mensagem Cliente: "
-
-#~ msgid "Informational Client  Message: "
-#~ msgstr "Mensagem Informatica  Cliente: "
-
-#~ msgid "ct_diag 1 failed in sybase_check_servermsg"
-#~ msgstr "ct_diag 1 falhou em sybase_check_servermsg"
-
-#~ msgid "ct_diag 2 failed in sybase_check_servermsg"
-#~ msgstr "ct_diag 2 falhou em sybase_check_servermsg"
-
-#~ msgid "Informational Server  Message: "
-#~ msgstr "Mensagem Informativa  Servidor: "
-
-#~ msgid "cs_diag 1 failed in sybase_check_clientmsg"
-#~ msgstr "cs_diag 1 falhou em sybase_check_clientmsg"
-
-#~ msgid "cs_diag 2 failed in sybase_check_clientmsg"
-#~ msgstr "cs_diag 2 falhou em sybase_check_clientmsg"
-
-#~ msgid "SYB"
-#~ msgstr "SYB"
-
-#~ msgid ""
-#~ "\n"
-#~ "\tOperating system error number(%ld):\n"
-#~ "\t%s"
-#~ msgstr ""
-#~ "\n"
-#~ "\tErro de sistema operativo número(%ld):\n"
-#~ "\t%s"
+msgstr "Fornecedor para bases de dados Berkeley"
