@@ -146,7 +146,7 @@ fi
 rm -rf $RPM_BUILD_ROOT
 
 make prefix=$RPM_BUILD_ROOT%{prefix} sysconfdir=$RPM_BUILD_ROOT%{sysconfdir} \
-GDA_oafdir=$RPM_BUILD_ROOT%{prefix}/share/oaf \
+oafdir=$RPM_BUILD_ROOT%{prefix}/share/oaf \
 idldir=$RPM_BUILD_ROOT%{prefix}/share/idl \
 install
 

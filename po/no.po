@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-db 0.0.91\n"
-"POT-Creation-Date: 2001-05-18 16:01+0200\n"
+"POT-Creation-Date: 2001-05-27 14:38+0200\n"
 "PO-Revision-Date: 2001-05-18 16:02+02:00\n"
 "Last-Translator: Kjartan Maraas <kmaraas@online.no>\n"
 "Language-Team: Norwegian <no@li.org>\n"
@@ -282,6 +282,8 @@ msgstr "GDA datakildeaksess for e-post"
 #: providers/gda-mysql-server/gda-mysql-connection.c:239
 #: providers/gda-oracle-server/gda-oracle-connection.c:295
 #: providers/gda-postgres-server/gda-postgres-connection.c:477
+#: providers/gda-sybase-server/gda-sybase-connection.c:283
+#: providers/gda-tds-server/gda-tds-connection.c:288
 #, c-format
 msgid "Unhandled SCHEMA_QTYPE %d"
 msgstr "Uhåndtert SCHEMA_QTYPE %d"
@@ -355,8 +357,8 @@ msgstr "GDA datakildeaksess for MySQL"
 #: providers/gda-mysql-server/gda-mysql-connection.c:153
 #, c-format
 msgid ""
-"Opening connection with user=%s, password=%s, host=%s, port=%s, "
-"unix_socket=%s"
+"Opening connection with user=%s, password=%s, host=%s, port=%s, unix_socket=%"
+"s"
 msgstr ""
 "Åpner forbindelse med bruker=%s, passord=%s, vert=%s, port=%s,unix_socket=%s"
 
@@ -445,6 +447,7 @@ msgstr "Kunne ikke registrere PostgreSQL tilbyderimplementasjon"
 msgid "GDA Datasource Access for Sybase"
 msgstr "GDA datakildeaksess for Sybase"
 
+#.      gda_server_error_make(error, 0, cnc, "connection seems to be dead");
 #: providers/gda-sybase-server/gda-sybase-command.c:127
 #: providers/gda-tds-server/gda-tds-command.c:116
 msgid "Connection seems to be dead"
@@ -518,6 +521,10 @@ msgstr "Ingen data returnert, frigjør postsett-strukturen"
 msgid "Freeing command structure failed"
 msgstr "Frigjøring av kommandostrukturen feilet"
 
+#: providers/gda-sybase-server/gda-sybase-connection.c:171
+msgid "Not enough memory for sybase_Connection"
+msgstr "Ikke nok minne for sybase_Connection"
+
 #: providers/gda-sybase-server/gda-sybase-connection.c:448
 #: providers/gda-tds-server/gda-tds-connection.c:447
 #, c-format
@@ -534,32 +541,11 @@ msgstr "Kunne ikke allokere kommandostruktur"
 msgid "Could not allocate enough memory for query"
 msgstr "Kunne ikke allokere nok minne for spørring"
 
+#. 		gda_server_error_make(error, NULL, cnc, __PRETTY_FUNCTION__);
 #: providers/gda-sybase-server/gda-sybase-connection.c:500
 #: providers/gda-tds-server/gda-tds-connection.c:499
 msgid "Could not get recordset in schema_cols"
 msgstr "Kunne ikke hente postsett i schema_cols"
-
-#: providers/gda-sybase-server/gda-sybase-connection.c:532
-#: providers/gda-sybase-server/gda-sybase-connection.c:609
-#: providers/gda-tds-server/gda-tds-connection.c:531
-#: providers/gda-tds-server/gda-tds-connection.c:608
-#, c-format
-msgid "schema_tables: table name = '%s'"
-msgstr "schema_tables: tabellnavn = '%s'"
-
-#: providers/gda-sybase-server/gda-sybase-connection.c:540
-#: providers/gda-sybase-server/gda-sybase-connection.c:617
-#: providers/gda-tds-server/gda-tds-connection.c:539
-#: providers/gda-tds-server/gda-tds-connection.c:616
-#, c-format
-msgid "schema_tables: table_schema = '%s'"
-msgstr "schema_tables: table_schema = '%s'"
-
-#: providers/gda-sybase-server/gda-sybase-connection.c:545
-#: providers/gda-tds-server/gda-tds-connection.c:544
-#, c-format
-msgid "schema_procedures: proc_catalog = '%s' UNUSED!\n"
-msgstr "schema_procedures: proc_catalog = '%s' UBRUKT!\n"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:549
 #: providers/gda-tds-server/gda-tds-connection.c:548
@@ -571,12 +557,6 @@ msgstr "schema_procs: ugyldig begrensningstype %d"
 #: providers/gda-tds-server/gda-tds-connection.c:558
 msgid "Could not allocate cmd structure"
 msgstr "Kunne ikke allokere kommandostruktur"
-
-#: providers/gda-sybase-server/gda-sybase-connection.c:622
-#: providers/gda-tds-server/gda-tds-connection.c:621
-#, c-format
-msgid "schema_procedures: proc_catalog = '%s' UNUSED!"
-msgstr "schema_procedures: proc_catalog = '%s' UBRUKT!"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:626
 #: providers/gda-tds-server/gda-tds-connection.c:625
@@ -958,6 +938,11 @@ msgstr "Kunne ikke registrere PRIMEBASE tilbyderimplementasjon"
 msgid "GDA Datasource Access for Sybase/MS SQL"
 msgstr "GDA datakildeaksess for Sybase/MS SQL"
 
+#: providers/gda-tds-server/gda-tds-connection.c:167
+msgid "Not enough memory for tds_Connection"
+msgstr "Ikke nok minne for tds_Connection"
+
+#. Fixme: replace "dummy" with buf when CS_GET CS_SERVERNAME works
 #: providers/gda-tds-server/gda-tds-connection.c:896
 #, c-format
 msgid "Reconnected to %s"
@@ -1019,38 +1004,6 @@ msgstr "Ukjent feil under registrering av rapportmotoren i OAF. Avslutter"
 msgid "Registered report engine with ID = %s"
 msgstr "Registrerte rapportmotoren med ID = %s"
 
-#: tools/gda-run.c:34
-msgid "database name"
-msgstr "databasenavn"
-
-#: tools/gda-run.c:34
-msgid "DATABASE"
-msgstr "DATABASE"
-
-#: tools/gda-run.c:35
-msgid "user name"
-msgstr "brukernavn"
-
-#: tools/gda-run.c:35
-msgid "USER-NAME"
-msgstr "BRUKERNAVN"
-
-#: tools/gda-run.c:36
-msgid "password"
-msgstr "passord"
-
-#: tools/gda-run.c:36
-msgid "PASSWORD"
-msgstr "PASSORD"
-
-#: tools/gda-run.c:37
-msgid "file name"
-msgstr "filnavn"
-
-#: tools/gda-run.c:37
-msgid "FILE-NAME"
-msgstr "FILNAVN"
-
 #: tools/gda-run.c:109
 #, c-format
 msgid "%s: misconfigured DSN entry"
@@ -1061,6 +1014,42 @@ msgstr "%s: feilkonfigurert DSN-oppføring"
 msgid "%s: data source '%s' not found\n"
 msgstr "%s: datakilde '%s' ble ikke funnet\n"
 
+#~ msgid "schema_tables: table name = '%s'"
+#~ msgstr "schema_tables: tabellnavn = '%s'"
+
+#~ msgid "schema_tables: table_schema = '%s'"
+#~ msgstr "schema_tables: table_schema = '%s'"
+
+#~ msgid "schema_procedures: proc_catalog = '%s' UNUSED!\n"
+#~ msgstr "schema_procedures: proc_catalog = '%s' UBRUKT!\n"
+
+#~ msgid "schema_procedures: proc_catalog = '%s' UNUSED!"
+#~ msgstr "schema_procedures: proc_catalog = '%s' UBRUKT!"
+
+#~ msgid "database name"
+#~ msgstr "databasenavn"
+
+#~ msgid "DATABASE"
+#~ msgstr "DATABASE"
+
+#~ msgid "user name"
+#~ msgstr "brukernavn"
+
+#~ msgid "USER-NAME"
+#~ msgstr "BRUKERNAVN"
+
+#~ msgid "password"
+#~ msgstr "passord"
+
+#~ msgid "PASSWORD"
+#~ msgstr "PASSORD"
+
+#~ msgid "file name"
+#~ msgstr "filnavn"
+
+#~ msgid "FILE-NAME"
+#~ msgstr "FILNAVN"
+
 #~ msgid "%s: length = %d"
 #~ msgstr "%s: lengde = %d"
 
@@ -1070,9 +1059,6 @@ msgstr "%s: datakilde '%s' ble ikke funnet\n"
 #~ msgid "Error allocating error structure"
 #~ msgstr "Feil under allokering av feilstrukturen"
 
-#~ msgid "Not enough memory for sybase_Connection"
-#~ msgstr "Ikke nok minne for sybase_Connection"
-
 #~ msgid "An error occured."
 #~ msgstr "En feil oppsto."
 
@@ -1081,6 +1067,3 @@ msgstr "%s: datakilde '%s' ble ikke funnet\n"
 
 #~ msgid "No according field found"
 #~ msgstr "Ingen tilsvarende felt funnet"
-
-#~ msgid "Not enough memory for tds_Connection"
-#~ msgstr "Ikke nok minne for tds_Connection"

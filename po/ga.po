@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-db CVS\n"
-"POT-Creation-Date: 2000-03-10 23:07+0000\n"
+"POT-Creation-Date: 2001-05-27 14:38+0200\n"
 "PO-Revision-Date: 2000-03-13 18:23+0000\n"
 "Last-Translator:  Alastair McKinstry <mckinstry@computer.org>\n"
 "Language-Team: Irish <ga@li.org>\n"
@@ -13,1074 +13,1158 @@ msgstr ""
 "Content-Type: text/plain; charset=iso-8859-1\n"
 "Content-Transfer-Encoding: 8-bit\n"
 
-#: fe/fe_browser.c:27
-msgid "Create script"
-msgstr ""
-
-#: fe/fe_browser.c:27
-msgid "Create script from object definition"
-msgstr ""
-
-#: fe/fe_browser.c:30 fe/fe_designer.c:148 fe/fe_export.c:51 fe/fe_log.c:34
-#: fe/fe_sqlwin.c:46
-msgid "Refresh"
-msgstr ""
-
-#: fe/fe_browser.c:30
-msgid "Refresh all lists"
-msgstr ""
-
-#: fe/fe_browser.c:34 fe/fe_designer.c:41 fe/fe_editor.c:60 fe/fe_editor.c:74
-#: fe/fe_export.c:58 fe/fe_log.c:44
-msgid "Close"
-msgstr "Dún"
-
-#: fe/fe_browser.c:34 fe/fe_designer.c:41 fe/fe_editor.c:74 fe/fe_export.c:58
-#: fe/fe_log.c:44
-msgid "Close this window"
-msgstr "Dún an fhuinneog seo"
-
-#: fe/fe_browser.c:108
+#: lib/gda-client/gda-connection-pool.c:337
 #, c-format
-msgid "Browser: %s@%s"
+msgid "could not open connection to %s"
 msgstr ""
 
-#: fe/fe_browser.c:124 fe/fe_export.c:356
-msgid "No connection open"
+#: lib/gda-client/gda-connection-pool.c:345
+#, c-format
+msgid "Data source %s not found"
 msgstr ""
 
-#: fe/fe_config.c:50
-msgid "General"
+#: lib/gda-client/gda-connection.c:235 lib/gda-client/gda-error.c:179
+#, c-format
+msgid "%s: The server didn't respond."
 msgstr ""
 
-#: fe/fe_config.c:51
-msgid "Environment"
-msgstr "Imshaoil"
-
-#: fe/fe_config.c:52
-msgid "Config File"
+#: lib/gda-client/gda-connection.c:239 lib/gda-client/gda-error.c:183
+#, c-format
+msgid "%s: An Error occured in the CORBA system."
 msgstr ""
 
-#: fe/fe_config.c:53 fe/fe_gdaconfig.c:273
-msgid "Data Sources"
+#: lib/gda-client/gda-connection.c:511
+#, c-format
+msgid "Database '%s' not found in system configuration"
 msgstr ""
 
-#: fe/fe_config.c:81 fe/fe_config.c:125 fe/fe_designer.c:37 fe/fe_editor.c:51
-#: fe/fe_sqlwin.c:59
-msgid "Save"
-msgstr "Sábháil"
-
-#: fe/fe_config.c:85 fe/fe_config.c:129 fe/fe_log.c:40
-msgid "Save As"
-msgstr "Sábháil le"
-
-#: fe/fe_config.c:89 fe/fe_config.c:133 fe/fe_export.c:54 fe/fe_log.c:37
-#: fe/fe_sqlwin.c:49
-msgid "Clear"
-msgstr "Glan"
-
-#: fe/fe_config.c:156 fe/fe_config.c:454
-msgid "Variable"
+#: lib/gda-client/gda-connection.c:526
+msgid "Could not open CORBA factory"
 msgstr ""
 
-#: fe/fe_config.c:156 fe/fe_config.c:400 fe/fe_config.c:454
-msgid "Value"
-msgstr "Luach"
-
-#: fe/fe_config.c:182
-msgid "Add"
-msgstr "Suim"
-
-#: fe/fe_config.c:186 gda-clnt-ui/gnome-db-browser.c:472
-msgid "Remove"
-msgstr "Scríos"
-
-#: fe/fe_config.c:190
-msgid "Current"
+#: lib/gda-client/gda-field.c:245
+msgid "<NULL>"
 msgstr ""
 
-#: fe/fe_config.c:209
-msgid "Save options on exit"
+#: lib/gda-client/gda-field.c:251 lib/gda-client/gda-field.c:253
+msgid "<Unknown GDA Type(NULL)>"
 msgstr ""
 
-#: fe/fe_config.c:215
-msgid "Open connection dialog on entry"
+#: lib/gda-client/gda-field.c:266
+msgid "TRUE"
 msgstr ""
 
-#. Fonts
-#: fe/fe_config.c:228
-msgid "Editor Font"
+#: lib/gda-client/gda-field.c:267
+msgid "FALSE"
 msgstr ""
 
-#: fe/fe_config.c:248
-msgid "Grid Font"
+#: lib/gda-common/gda-corba.c:75
+#, c-format
+msgid "CORBA System exception: %s"
 msgstr ""
 
-#: fe/fe_config.c:270
-msgid "Language"
-msgstr "Teanga"
-
-#. shell
-#: fe/fe_config.c:289 fe/fe_editor.c:435
-msgid "Shell"
-msgstr "Blaosc"
-
-#. window tabs
-#: fe/fe_config.c:304 fe/fe_main.c:283
-msgid "Tabs position"
+#: lib/gda-common/gda-corba.c:105
+msgid "True"
 msgstr ""
 
-#: fe/fe_config.c:312 fe/fe_main.c:254
-msgid "Top"
-msgstr "Barr"
+#: lib/gda-common/gda-corba.c:105
+#, fuzzy
+msgid "False"
+msgstr "Comhad"
 
-#: fe/fe_config.c:321 fe/fe_main.c:257
-msgid "Bottom"
-msgstr "Bun"
-
-#: fe/fe_config.c:330 fe/fe_main.c:260
-msgid "Left"
-msgstr "Clé"
-
-#: fe/fe_config.c:339 fe/fe_main.c:263
-msgid "Right"
-msgstr "Deis"
-
-#. create the dialog box
-#: fe/fe_config.c:380
-msgid "Add Environment Variable"
+#: lib/gda-common/gda-init.c:59
+msgid "Attempt to initialize an already initialized client"
 msgstr ""
 
-#. create fields
-#: fe/fe_config.c:390 fe/fe_export.c:327
-msgid "Name"
-msgstr "Ainm"
-
-#. create dialog
-#: fe/fe_config.c:459
-msgid "Current Environment"
+#: lib/gda-common/gda-log.c:48
+msgid "Saving log...x"
 msgstr ""
 
-#: fe/fe_config.c:544 fe/fe_editor.c:54 fe/fe_editor.c:329 fe/fe_editor.c:354
-msgid "Save As..."
-msgstr "Sábháil Le..."
-
-#: fe/fe_config.c:629 fe/fe_main.c:325 gda-manager/gda-mgr-main.c:73
-msgid "Preferences"
-msgstr "Roghnachais"
-
-#: fe/fe_connection.c:33
-msgid "Error Viewer"
+#. compose message
+#: lib/gda-common/gda-log.c:69
+msgid "ERROR: "
 msgstr ""
 
-#: fe/fe_connection.c:51
+#: lib/gda-common/gda-log.c:69
+msgid "MESSAGE: "
+msgstr ""
+
+#: lib/gda-common/gda-thread.c:211
+msgid "thread is already running"
+msgstr ""
+
+#: lib/gda-common/gda-xml-database.c:286
+#, c-format
+msgid "table %s already exists"
+msgstr ""
+
+#: lib/gda-common/gda-xml-database.c:450
+#, c-format
+msgid "%p is not a valid table"
+msgstr ""
+
+#: lib/gda-server/gda-server-error.c:185
+msgid "Could not get pointer to server implementation"
+msgstr ""
+
+#: lib/gda-server/gda-server-impl-connection.c:122
+#: lib/gda-server/gda-server-impl-connection.c:131
+#: lib/gda-server/gda-server-impl-connection.c:138
+#: lib/gda-server/gda-server-impl-connection.c:147
+#: lib/gda-server/gda-server-impl-connection.c:154
+#: lib/gda-server/gda-server-impl-connection.c:163
+#: lib/gda-server/gda-server-impl-connection.c:170
+#: lib/gda-server/gda-server-impl-connection.c:179
+#: lib/gda-server/gda-server-impl-recordset.c:126
+#: lib/gda-server/gda-server-impl-recordset.c:135
+#: lib/gda-server/gda-server-impl-recordset.c:142
+#: lib/gda-server/gda-server-impl-recordset.c:157
+#: lib/gda-server/gda-server-impl-recordset.c:166
+#: lib/gda-server/gda-server-impl-recordset.c:173
+#: lib/gda-server/gda-server-impl-recordset.c:182
+#: lib/gda-server/gda-server-impl-recordset.c:189
+#: lib/gda-server/gda-server-impl-recordset.c:198
+#: lib/gda-server/gda-server-impl-recordset.c:205
+#: lib/gda-server/gda-server-impl-recordset.c:213
+#: lib/gda-server/gda-server-impl-recordset.c:222
+#: lib/gda-server/gda-server-impl-recordset.c:229
+#: lib/gda-server/gda-server-impl-recordset.c:237
+#: lib/gda-server/gda-server-impl-recordset.c:245
+#: lib/gda-server/gda-server-impl-recordset.c:273
+#: lib/gda-server/gda-server-impl-recordset.c:281
+#: lib/gda-server/gda-server-impl-recordset.c:289
+#: lib/gda-server/gda-server-impl-recordset.c:297
+#: lib/gda-server/gda-server-impl-recordset.c:305
+#: lib/gda-server/gda-server-impl-recordset.c:314
+#, c-format
+msgid "%s not implemented"
+msgstr ""
+
+#: lib/gda-server/gda-server-impl-connection.c:269
+#, c-format
+msgid "impl_GDA_Connection_open: opening connection with DSN: %s"
+msgstr ""
+
+#: lib/gda-server/gda-server-impl-recordset.c:402
+#, c-format
+msgid "%s: an error ocurred while fetching data"
+msgstr ""
+
+#: lib/gda-server/gda-server-impl.c:197
+#, c-format
+msgid "Starting provider %s with no implementation functions"
+msgstr ""
+
+#: lib/gda-server/gda-server-impl.c:223
+#: report/server/gda-report-server-main.c:113
+msgid ""
+"OAF doesn't know about our IID; indicates broken installation. Exiting..."
+msgstr ""
+
+#: lib/gda-server/gda-server-impl.c:226
+msgid ""
+"Another instance of this provider is already registered with OAF. Exiting..."
+msgstr ""
+
+#: lib/gda-server/gda-server-impl.c:229
+msgid "Unknown error registering this provider with OAF. Exiting"
+msgstr ""
+
+#: lib/gda-server/gda-server-impl.c:233
+#, c-format
+msgid "Registered with ID = %s"
+msgstr ""
+
+#: lib/gda-server/gda-server-impl.c:312
+#, c-format
+msgid "CORBA system exception %s"
+msgstr ""
+
+#: lib/gda-server/gda-server-impl.c:315
+#, c-format
+msgid "CORBA user exception: %s"
+msgstr ""
+
+#: lib/gda-server/gda-server-init.c:63 lib/gda-server/gda-server-init.c:69
+#, c-format
+msgid "Received signal %d, shutting down"
+msgstr ""
+
+#: lib/gda-server/gda-server-init.c:73
+#, c-format
+msgid "Received signal %d. Ignoring"
+msgstr ""
+
+#: lib/gda-server/gda-server-init.c:123
+msgid "Attempt to initialize an already initialized provider"
+msgstr ""
+
+#: providers/gda-ldap-server/GNOME_GDA_Provider_LDAP.oaf.in.h:1
+msgid "GDA Datasource Access for LDAP"
+msgstr ""
+
+#: providers/gda-interbase-server/gda-interbase-connection.c:273
+#: providers/gda-ldap-server/gda-ldap-connection.c:284
+#: providers/gda-mdb-server/gda-mdb-connection.c:372
+#: providers/gda-mysql-server/gda-mysql-connection.c:370
+#: providers/gda-odbc-server/gda-odbc-connection.c:621
+#: providers/gda-odbc-server/gda-odbc-connection.c:654
+#: providers/gda-oracle-server/gda-oracle-connection.c:438
+#: providers/gda-postgres-server/gda-postgres-connection.c:743
+#: providers/gda-sybase-server/gda-sybase-error.c:115
+#: providers/gda-tds-server/gda-tds-error.c:114
+#, c-format
+msgid "error '%s' at %s"
+msgstr ""
+
+#: providers/gda-interbase-server/gda-interbase-connection.c:278
+#: providers/gda-interbase-server/gda-interbase-connection.c:279
+#: providers/gda-ldap-server/gda-ldap-connection.c:289
+#: providers/gda-ldap-server/gda-ldap-connection.c:290
+#: providers/gda-mdb-server/gda-mdb-connection.c:376
+#: providers/gda-mdb-server/gda-mdb-connection.c:377
+#: providers/gda-mysql-server/gda-mysql-connection.c:374
+#: providers/gda-mysql-server/gda-mysql-connection.c:375
+#: providers/gda-odbc-server/gda-odbc-connection.c:623
+#: providers/gda-odbc-server/gda-odbc-connection.c:624
+#: providers/gda-odbc-server/gda-odbc-connection.c:656
+#: providers/gda-odbc-server/gda-odbc-connection.c:657
+#: providers/gda-oracle-server/gda-oracle-connection.c:443
+#: providers/gda-oracle-server/gda-oracle-connection.c:444
+#: providers/gda-postgres-server/gda-postgres-connection.c:750
+#: providers/gda-postgres-server/gda-postgres-connection.c:751
+#: providers/gda-primebase-server/gda-primebase-connection.c:363
+#: providers/gda-primebase-server/gda-primebase-connection.c:364
+#: providers/gda-sybase-server/gda-sybase-error.c:124
+#: providers/gda-sybase-server/gda-sybase-error.c:125
+#: providers/gda-tds-server/gda-tds-error.c:123
+#: providers/gda-tds-server/gda-tds-error.c:124
+msgid "Not available"
+msgstr ""
+
+#: providers/gda-interbase-server/gda-interbase-connection.c:280
+#: providers/gda-ldap-server/gda-ldap-connection.c:291
+#: providers/gda-mdb-server/gda-mdb-connection.c:378
+#: providers/gda-mysql-server/gda-mysql-connection.c:376
+#: providers/gda-oracle-server/gda-oracle-connection.c:445
+#: providers/gda-postgres-server/gda-postgres-connection.c:752
+#: providers/gda-primebase-server/gda-primebase-connection.c:365
+#: providers/gda-sybase-server/gda-sybase-error.c:126
+#: providers/gda-tds-server/gda-tds-error.c:125
+msgid "error"
+msgstr ""
+
+#: providers/gda-ldap-server/main-ldap.c:71
+msgid "Could not register LDAP provider implementation"
+msgstr ""
+
+#: providers/gda-interbase-server/GNOME_GDA_Provider_InterBase.oaf.in.h:1
+msgid "GDA Datasource Access for Interbase"
+msgstr ""
+
+#: providers/gda-interbase-server/gda-interbase-connection.c:272
+#, c-format
+msgid "Error code %ld"
+msgstr ""
+
+#: providers/gda-interbase-server/main-interbase.c:72
+msgid "Could not register INTERBASE provider implementation"
+msgstr ""
+
+#: providers/gda-mail-server/GNOME_GDA_Provider_Mail.oaf.in.h:1
+msgid "GDA Datasource Access for Mail"
+msgstr ""
+
+#: providers/gda-mail-server/gda-mail-connection.c:108
+#: providers/gda-mdb-server/gda-mdb-connection.c:224
+#: providers/gda-mysql-server/gda-mysql-connection.c:239
+#: providers/gda-oracle-server/gda-oracle-connection.c:295
+#: providers/gda-postgres-server/gda-postgres-connection.c:477
+#: providers/gda-sybase-server/gda-sybase-connection.c:283
+#: providers/gda-tds-server/gda-tds-connection.c:288
+#, c-format
+msgid "Unhandled SCHEMA_QTYPE %d"
+msgstr ""
+
+#: providers/gda-mail-server/main-mail.c:72
+msgid "Could not register Mail provider implementation"
+msgstr ""
+
+#: providers/gda-mdb-server/GNOME_GDA_Provider_MDB.oaf.in.h:1
+msgid "GDA Datasource Access for MDB (MS Access) files"
+msgstr ""
+
+#. execute command
+#: providers/gda-mdb-server/gda-mdb-command.c:86
+#: providers/gda-mysql-server/gda-mysql-command.c:103
+#: providers/gda-sybase-server/gda-sybase-command.c:132
+#: providers/gda-tds-server/gda-tds-command.c:120
+#, c-format
+msgid "executing command '%s'"
+msgstr ""
+
+#: providers/gda-mdb-server/gda-mdb-command.c:88
+#: providers/gda-mysql-server/gda-mysql-command.c:105
+#, fuzzy, c-format
+msgid "info '%s'"
+msgstr "Ag rith '%s'"
+
+#: providers/gda-mdb-server/gda-mdb-connection.c:137
+#: providers/gda-mysql-server/gda-mysql-connection.c:140
+#, c-format
+msgid ""
+"%s:%d: You cannot provide a UNIX_SOCKET if you also provide either a HOST or "
+"a PORT. Please remove the UNIX_SOCKET, or remove both the HOST and PORT "
+"options"
+msgstr ""
+
+#: providers/gda-mdb-server/gda-mdb-connection.c:147
+#, c-format
+msgid "%s:%d: You must  provide the filename with the MS Access database"
+msgstr ""
+
+#: providers/gda-mdb-server/gda-mdb-connection.c:152
+#, c-format
+msgid "Opening connection with filename=%s, user=%s, password=%s"
+msgstr ""
+
+#: providers/gda-mdb-server/gda-mdb-connection.c:427
+#: providers/gda-mysql-server/gda-mysql-connection.c:421
+msgid "mysql_recset is NULL"
+msgstr ""
+
+#: providers/gda-mdb-server/gda-mdb-connection.c:469
+#: providers/gda-mysql-server/gda-mysql-connection.c:460
+#: providers/gda-sybase-server/gda-sybase-connection.c:458
+#: providers/gda-tds-server/gda-tds-connection.c:457
+msgid "No table name given for SCHEMA_COLS"
+msgstr ""
+
+#: providers/gda-mdb-server/main-mdb.c:72
+#: providers/gda-mysql-server/main-mysql.c:72
+msgid "Could not register MySQL provider implementation"
+msgstr ""
+
+#: providers/gda-mysql-server/GNOME_GDA_Provider_MySQL.oaf.in.h:1
+msgid "GDA Datasource Access for MySQL"
+msgstr ""
+
+#: providers/gda-mysql-server/gda-mysql-connection.c:153
+#, c-format
+msgid ""
+"Opening connection with user=%s, password=%s, host=%s, port=%s, unix_socket=%"
+"s"
+msgstr ""
+
+#: providers/gda-odbc-server/GNOME_GDA_Provider_ODBC.oaf.in.h:1
+msgid "GDA Datasource Access for ODBC"
+msgstr ""
+
+#: providers/gda-odbc-server/gda-odbc-connection.c:280
+#, c-format
+msgid "gda_odbc_connection_open_schema: Unhandled SCHEMA_QTYPE %d\n"
+msgstr ""
+
+#: providers/gda-odbc-server/gda-odbc-connection.c:638
+#: providers/gda-odbc-server/gda-odbc-connection.c:639
+#: providers/gda-odbc-server/gda-odbc-connection.c:640
+#: providers/gda-odbc-server/gda-odbc-connection.c:671
+#: providers/gda-odbc-server/gda-odbc-connection.c:672
+#: providers/gda-odbc-server/gda-odbc-connection.c:673
+msgid "no text"
+msgstr ""
+
+#: providers/gda-odbc-server/main-odbc.c:71
+msgid "Could not register ODBC provider implementation"
+msgstr ""
+
+#: providers/gda-oracle-server/GNOME_GDA_Provider_Oracle.oaf.in.h:1
+msgid "GDA Datasource Access for Oracle"
+msgstr ""
+
+#: providers/gda-oracle-server/gda-oracle-command.c:185
+msgid "Could not allocate statement handle"
+msgstr ""
+
+#: providers/gda-oracle-server/gda-oracle-command.c:189
+msgid "command object being created without associated connection"
+msgstr ""
+
+#: providers/gda-oracle-server/gda-oracle-command.c:220
+#, c-format
+msgid "Executing command '%s'"
+msgstr ""
+
+#: providers/gda-oracle-server/gda-oracle-connection.c:113
+msgid "error in OCIHandleAlloc() HTYPE_SVCCTX"
+msgstr ""
+
+#: providers/gda-oracle-server/gda-oracle-connection.c:116
+msgid "error in OCIHandleAlloc() HTYPE_SERVER"
+msgstr ""
+
+#: providers/gda-oracle-server/gda-oracle-connection.c:119
+msgid "error in OCIHandleAlloc() HTYPE_ERROR"
+msgstr ""
+
+#: providers/gda-oracle-server/gda-oracle-connection.c:379
+#, c-format
+msgid "Unknown ORACLE type %ld"
+msgstr ""
+
+#: providers/gda-oracle-server/gda-oracle-recordset.c:115
+msgid "Unknown ORACLE data type in fill_field_values"
+msgstr ""
+
+#: providers/gda-oracle-server/gda-oracle-recordset.c:150
+msgid "recordset object being created without associated connection"
+msgstr ""
+
+#: providers/gda-oracle-server/main-oracle.c:71
+msgid "Could not register ORACLE provider implementation"
+msgstr ""
+
+#: providers/gda-postgres-server/GNOME_GDA_Provider_Postgres.oaf.in.h:1
+msgid "GDA Datasource Access for Postgres"
+msgstr ""
+
+#: providers/gda-postgres-server/gda-postgres-connection.c:849
+#: providers/gda-postgres-server/gda-postgres-connection.c:957
+msgid "postgres_recset is NULL"
+msgstr ""
+
+#: providers/gda-postgres-server/main-postgres.c:71
+msgid "Could not register PostgreSQL provider implementation"
+msgstr ""
+
+#: providers/gda-sybase-server/GNOME_GDA_Provider_Sybase.oaf.in.h:1
+msgid "GDA Datasource Access for Sybase"
+msgstr ""
+
+#.      gda_server_error_make(error, 0, cnc, "connection seems to be dead");
+#: providers/gda-sybase-server/gda-sybase-command.c:127
+#: providers/gda-tds-server/gda-tds-command.c:116
+msgid "Connection seems to be dead"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-command.c:146
+#: providers/gda-tds-server/gda-tds-command.c:131
+msgid "Filling command structure failed\n"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-command.c:158
+#: providers/gda-tds-server/gda-tds-command.c:139
+msgid "sending cmd failed"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-command.c:165
+#: providers/gda-tds-server/gda-tds-command.c:146
+msgid "Allocating recordset failed"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-command.c:175
+#: providers/gda-tds-server/gda-tds-command.c:154
+msgid "Getting recordset userdata failed"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-command.c:233
+#: providers/gda-tds-server/gda-tds-command.c:207
+msgid "Command execution finished, all results processed"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-command.c:237
+#: providers/gda-tds-server/gda-tds-command.c:211
+msgid "Command failed"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-command.c:241
+#: providers/gda-tds-server/gda-tds-command.c:215
+msgid "Execution of resultless command succeeded"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-command.c:257
+#: providers/gda-tds-server/gda-tds-command.c:231
+#, c-format
+msgid "ct_results() returned %x"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-command.c:267
+#: providers/gda-tds-server/gda-tds-command.c:241
+msgid "No further results, command completly succeeded."
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-command.c:271
+#: providers/gda-tds-server/gda-tds-command.c:245
+msgid "An error occured during command execution."
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-command.c:278
+#: providers/gda-tds-server/gda-tds-command.c:249
+msgid "Cmd execution returned unknown result, may be an error"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-command.c:291
+#: providers/gda-tds-server/gda-tds-command.c:259
+msgid "No data returned, freeing recordset structure"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-command.c:322
+#: providers/gda-sybase-server/gda-sybase-command.c:334
+#: providers/gda-tds-server/gda-tds-command.c:289
+#: providers/gda-tds-server/gda-tds-command.c:297
+msgid "Freeing command structure failed"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:171
+msgid "Not enough memory for sybase_Connection"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:448
+#: providers/gda-tds-server/gda-tds-connection.c:447
+#, c-format
+msgid "schema_cols: table_name '%s'"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:464
+#: providers/gda-tds-server/gda-tds-connection.c:463
+msgid "Could not allocate command structure"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:486
+#: providers/gda-tds-server/gda-tds-connection.c:485
+msgid "Could not allocate enough memory for query"
+msgstr ""
+
+#. 		gda_server_error_make(error, NULL, cnc, __PRETTY_FUNCTION__);
+#: providers/gda-sybase-server/gda-sybase-connection.c:500
+#: providers/gda-tds-server/gda-tds-connection.c:499
+msgid "Could not get recordset in schema_cols"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:549
+#: providers/gda-tds-server/gda-tds-connection.c:548
+#, c-format
+msgid "schema_procs: invalid constraint type %d"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:559
+#: providers/gda-tds-server/gda-tds-connection.c:558
+msgid "Could not allocate cmd structure"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:626
+#: providers/gda-tds-server/gda-tds-connection.c:625
+#, c-format
+msgid "schema_tables: invalid constraint type %d"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:687
+#: providers/gda-tds-server/gda-tds-connection.c:686
+#, c-format
+msgid "Invalid or unsupported constraint type: %d"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:728
+#: providers/gda-tds-server/gda-tds-connection.c:727
+msgid "Could not allocate GdaServerCommand"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:758
+#: providers/gda-sybase-server/gda-sybase-connection.c:763
+#: providers/gda-tds-server/gda-tds-connection.c:757
+#: providers/gda-tds-server/gda-tds-connection.c:762
+#, c-format
+msgid "connection status: %x"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:759
+#: providers/gda-tds-server/gda-tds-connection.c:758
+#, c-format
+msgid "return code: %x"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:796
+#: providers/gda-tds-server/gda-tds-connection.c:793
+msgid "attempting reconnection"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:935
+#, c-format
+msgid "Reconnected to '%s'"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:937
+#: providers/gda-tds-server/gda-tds-connection.c:898
 #, c-format
 msgid "Connected to %s"
 msgstr ""
 
-#: fe/fe_connection.c:81
-msgid "Object Identifiers"
-msgstr ""
-
-#: fe/fe_connection.c:82
-msgid "Object Inheritance"
-msgstr ""
-
-#: fe/fe_connection.c:83
-msgid "Sequences"
-msgstr ""
-
-#: fe/fe_connection.c:84
-msgid "Stored Procedures"
-msgstr ""
-
-#: fe/fe_connection.c:85
-msgid "Transactions"
-msgstr ""
-
-#: fe/fe_connection.c:86
-msgid "XML Queries"
-msgstr ""
-
-#: fe/fe_connection.c:165
-msgid "Open Connection"
-msgstr ""
-
-#: fe/fe_connection.c:178
-msgid "Connecting..."
-msgstr ""
-
-#: fe/fe_connection.c:193
-msgid "Transaction started"
-msgstr ""
-
-#: fe/fe_connection.c:195 fe/fe_connection.c:210 fe/fe_connection.c:225
-msgid "Transactions not supported"
-msgstr ""
-
-#: fe/fe_connection.c:208
-msgid "Commit executed"
-msgstr ""
-
-#: fe/fe_connection.c:223
-msgid "Rollback executed"
-msgstr ""
-
-#. create dialog
-#: fe/fe_connection.c:240 fe/fe_main.c:190
-msgid "Connection Properties"
-msgstr ""
-
-#: fe/fe_connection.c:242 fe/fe_export.c:315
-msgid "Properties"
-msgstr "Albachtaí"
-
-#: fe/fe_connection.c:249 fe/fe_gdaconfig.c:289
-msgid "GDA Name"
-msgstr "Ainm GDA"
-
-#: fe/fe_connection.c:257 fe/fe_gdaconfig.c:298
-msgid "Provider"
-msgstr ""
-
-#: fe/fe_connection.c:265 fe/fe_gdaconfig.c:308
-msgid "DSN"
-msgstr ""
-
-#: fe/fe_connection.c:273
-msgid "Command Timeout"
-msgstr ""
-
-#: fe/fe_connection.c:282
-msgid "Connect Timeout"
-msgstr ""
-
-#: fe/fe_connection.c:291
-msgid "Trace File"
-msgstr ""
-
-#: fe/fe_connection.c:300
-msgid "View"
-msgstr "Radharc"
-
-#: fe/fe_connection.c:306
-msgid "Provider Features"
-msgstr ""
-
-#: fe/fe_designer.c:31 fe/fe_designer.c:136 fe/fe_editor.c:45
-#: fe/fe_gdaconfig.c:347
-msgid "New"
-msgstr "Nua"
-
-#: fe/fe_designer.c:31
-msgid "Create new database design"
-msgstr ""
-
-#: fe/fe_designer.c:34 fe/fe_editor.c:48 fe/fe_sqlwin.c:56
-msgid "Open"
-msgstr "Oscail"
-
-#: fe/fe_designer.c:34
-msgid "Open database design from file"
-msgstr ""
-
-#: fe/fe_designer.c:37
-msgid "Save database design to file"
-msgstr ""
-
-#: fe/fe_designer.c:87
-msgid "Open XML File"
-msgstr ""
-
-#: fe/fe_designer.c:110 fe/fe_widget.c:37 fe/fe_widget.c:119
-#: fe/fe_widget.c:144
-msgid "Select File"
-msgstr "Tóg Comhad"
-
-#: fe/fe_designer.c:115
+#: providers/gda-sybase-server/gda-sybase-connection.c:945
+#: providers/gda-tds-server/gda-tds-connection.c:908
 #, c-format
+msgid "Selected database '%s'"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:974
+#: providers/gda-tds-server/gda-tds-connection.c:933
+#, c-format
+msgid "%s: Could not allocate cmd structure"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:983
+#: providers/gda-tds-server/gda-tds-connection.c:942
+#, c-format
+msgid "%s: Could not allocate memory for cmd string"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:996
+#: providers/gda-tds-server/gda-tds-connection.c:952
+#, c-format
+msgid "%s: ct_command failed"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:1005
+#: providers/gda-tds-server/gda-tds-connection.c:961
+#, c-format
+msgid "%s: sending command failed"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:1016
+#, c-format
+msgid "%s: selecting database failed"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:1034
+#, c-format
+msgid "%s: use command failed"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:1061
+#: providers/gda-tds-server/gda-tds-connection.c:1023
+msgid "Could not allocate locale structure"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:1067
+#: providers/gda-tds-server/gda-tds-connection.c:1029
+#, c-format
+msgid "Could not set locale to '%s'"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:1073
+#: providers/gda-tds-server/gda-tds-connection.c:1035
+#, c-format
+msgid "Could not configure locale to be '%s'"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:1078
+#: providers/gda-tds-server/gda-tds-connection.c:1040
+msgid "Could not drop locale structure"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:1091
+#: providers/gda-tds-server/gda-tds-connection.c:1053
+#, c-format
+msgid "Fatal error: %s\n"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:71
+#, c-format
+msgid "gda_sybase_error_make(%p,%p,%p,%p)"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:80
+#: providers/gda-tds-server/gda-tds-error.c:78
+#, c-format
+msgid "No error flag ist set, though %s is called. This may be a bug."
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:144
+msgid "cs_diag() initialized"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:147
+msgid "Could not initialize cs_diag()"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:154
+msgid "ct_diag() initialized"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:157
+msgid "Could not initialize ct_diag()"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:191
+#, c-format
+msgid "%s could not find server implementation"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:197
+#, c-format
+msgid "%s could not get cnc userdata"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:209
+msgid "Could not get # of messages"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:214
+#, c-format
+msgid "%d ctlib messages to fetch"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:216
+#, c-format
+msgid "%d ctlib message to fetch"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:252
+msgid "error is nullpointer in gda_sybase_messages_handle"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:277
+#: providers/gda-sybase-server/gda-sybase-error.c:344
+#: providers/gda-sybase-server/gda-sybase-error.c:387
+msgid "Could not get # of server messages"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:285
+#, c-format
+msgid "Fetching %d client messages"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:287
+#, c-format
+msgid "Fetching %d client message"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:296
+#, c-format
+msgid "Could not get client msg # %d"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:312
+msgid "Could not get # of client messages"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:320
+msgid "Could not clear client messages"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:352
+#, c-format
+msgid "Fetching %d server messages"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:354
+#, c-format
+msgid "Fetching %d server message"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:363
+#, c-format
+msgid "Could not get server msg # %d"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:395
+msgid "Could not clear server messages"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:417
+#: providers/gda-sybase-server/gda-sybase-error.c:453
+msgid "Could not get # of cslib messages"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:425
+#, c-format
+msgid "Fetching %d cslib messages"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:427
+#, c-format
+msgid "Fetching %d cslib message"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:437
+#, c-format
+msgid "Could not get cslib msg # %d"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:461
+msgid "Could not clear cslib messages"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:593
+#: providers/gda-tds-server/gda-tds-error.c:257
+msgid "Server message:"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:602
+#: providers/gda-tds-server/gda-tds-error.c:266
+msgid "Client message:"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:609
+#: providers/gda-tds-server/gda-tds-error.c:273
+msgid "CS-Library error:"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-recordset.c:158
+#: providers/gda-tds-server/gda-tds-recordset.c:155
+#, c-format
+msgid "fetch error at row %d"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-recordset.c:165
+#: providers/gda-tds-server/gda-tds-recordset.c:162
+#, c-format
+msgid "CS_END_DATA on row %d; canceling"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-recordset.c:174
+#: providers/gda-tds-server/gda-tds-recordset.c:169
+#, c-format
+msgid "%s: Error (%d)"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-recordset.c:349
+#: providers/gda-tds-server/gda-tds-recordset.c:342
+msgid "Failed fetching # of columns"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-recordset.c:355
+#: providers/gda-tds-server/gda-tds-recordset.c:349
+#, c-format
+msgid "Counted %d columns"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-recordset.c:362
+#: providers/gda-tds-server/gda-tds-recordset.c:356
+#, c-format
+msgid "%s could not allocate datafmt info"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-recordset.c:372
+#: providers/gda-tds-server/gda-tds-recordset.c:366
+#, c-format
+msgid "%s could not allocate data fields"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-recordset.c:390
+#: providers/gda-tds-server/gda-tds-recordset.c:384
+#, c-format
+msgid "ct_describe on col # %d"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-recordset.c:397
+#: providers/gda-tds-server/gda-tds-recordset.c:391
+#, c-format
+msgid "ct_describe on col # %d failed"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-recordset.c:403
+#: providers/gda-tds-server/gda-tds-recordset.c:397
+#, c-format
+msgid "ct_describe(%d): '%s', %d (%s)"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-recordset.c:412
+#: providers/gda-tds-server/gda-tds-recordset.c:406
+msgid "could not allocate data holder"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-recordset.c:422
+#: providers/gda-tds-server/gda-tds-recordset.c:416
+msgid "could not ct_bind data holder to column"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-recordset.c:429
+#: providers/gda-tds-server/gda-tds-recordset.c:423
+msgid "illegal type detected, aborting"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-recordset.c:435
+#: providers/gda-tds-server/gda-tds-recordset.c:429
+msgid "could not allocate field"
+msgstr ""
+
+#: providers/gda-sybase-server/main-sybase.c:76
+msgid "Could not register gda-sybase provider implementation"
+msgstr ""
+
+#: providers/gda-primebase-server/GNOME_GDA_Provider_Primebase.oaf.in.h:1
+msgid "GDA Datasource Access for primebase"
+msgstr ""
+
+#: providers/gda-primebase-server/gda-primebase-connection.c:158
+#, c-format
+msgid "Could not connect to '%s@%s:%s' with connparm '%s'"
+msgstr ""
+
+#: providers/gda-primebase-server/gda-primebase-connection.c:162
+#, c-format
+msgid "%2ld: Connected to '%s@%s:%s' with connparm: '%s'"
+msgstr ""
+
+#: providers/gda-primebase-server/gda-primebase-connection.c:168
+msgid "Could not get PBIConnectionInfo(), disconnecting"
+msgstr ""
+
+#: providers/gda-primebase-server/gda-primebase-connection.c:172
+#, c-format
+msgid "%2ld: ConInfo: '%s@%s', Cl v%x, Srv '%s' v%x, Brand '%s'"
+msgstr ""
+
+#: providers/gda-primebase-server/gda-primebase-connection.c:376
+msgid "Not enough memory for primebase_Error structure."
+msgstr ""
+
+#: providers/gda-primebase-server/gda-primebase-connection.c:383
+#, c-format
+msgid "%2ld: ERROR: %ld (%ld) : %s.\n"
+msgstr ""
+
+#: providers/gda-primebase-server/main-primebase.c:70
+msgid "Could not register PRIMEBASE provider implementation"
+msgstr ""
+
+#: providers/gda-tds-server/GNOME_GDA_Provider_TDS.oaf.in.h:1
+msgid "GDA Datasource Access for Sybase/MS SQL"
+msgstr ""
+
+#: providers/gda-tds-server/gda-tds-connection.c:167
+msgid "Not enough memory for tds_Connection"
+msgstr ""
+
+#. Fixme: replace "dummy" with buf when CS_GET CS_SERVERNAME works
+#: providers/gda-tds-server/gda-tds-connection.c:896
+#, c-format
+msgid "Reconnected to %s"
+msgstr ""
+
+#: providers/gda-tds-server/gda-tds-error.c:69
+#, c-format
+msgid "gda_tds_error_make(%p,%p,%p,%p)"
+msgstr ""
+
+#: providers/gda-tds-server/main-tds.c:76
+msgid "Could not register gda-tds provider implementation"
+msgstr ""
+
+#: report/gda-report-engine.c:209
+#, c-format
+msgid "CORBA exception unloading report engine: %s"
+msgstr ""
+
+#: report/server/GNOME_GDA_Report.oaf.in.h:1
+msgid "GDA Distributed Report Engine"
+msgstr ""
+
+#: report/server/gda-report-server-main.c:41
+#: report/server/gda-report-server-main.c:48
+#, c-format
+msgid "Received signal %d, shutting down."
+msgstr ""
+
+#: report/server/gda-report-server-main.c:52
+#, c-format
+msgid "Received signal %d, shutting down cleanly"
+msgstr ""
+
+#: report/server/gda-report-server-main.c:92
+msgid "Failed to initialize OAF: please mail bug report to OAF maintainers"
+msgstr ""
+
+#: report/server/gda-report-server-main.c:101
+msgid "Could not activate report engine"
+msgstr ""
+
+#: report/server/gda-report-server-main.c:116
 msgid ""
-"Error saving file\n"
-"'%s'"
+"Another instance of the report engine is already registered with OAF. "
+"Exiting..."
 msgstr ""
 
-#: fe/fe_designer.c:131
-msgid "Designer"
+#: report/server/gda-report-server-main.c:119
+msgid "Unknown error registering report engine with OAF. Exiting"
 msgstr ""
 
-#: fe/fe_designer.c:142 fe/fe_gdaconfig.c:352
-msgid "Delete"
-msgstr "Dealaigh"
-
-#: fe/fe_editor.c:45
-msgid "Create a new empty file"
-msgstr ""
-
-#: fe/fe_editor.c:48
-msgid "Open an existing file"
-msgstr ""
-
-#: fe/fe_editor.c:51
-msgid "Save current file"
-msgstr ""
-
-#: fe/fe_editor.c:54
-msgid "Save file with another name"
-msgstr ""
-
-#: fe/fe_editor.c:57 fe/fe_sqlwin.c:52
-msgid "Print"
-msgstr "Priontáil"
-
-#: fe/fe_editor.c:57
-msgid "Print current file"
-msgstr ""
-
-#: fe/fe_editor.c:60
-msgid "Close current file"
-msgstr ""
-
-#: fe/fe_editor.c:64 fe/fe_sqlwin.c:63 fe/fe_widget.c:162
-msgid "Cut"
-msgstr "Gearr"
-
-#: fe/fe_editor.c:64
-msgid "Cut selected text"
-msgstr ""
-
-#: fe/fe_editor.c:67 fe/fe_sqlwin.c:66 fe/fe_widget.c:165
-msgid "Copy"
-msgstr "Cóip"
-
-#: fe/fe_editor.c:67 fe/fe_sqlwin.c:66 fe/fe_widget.c:165
-msgid "Copy selected text to clipboard"
-msgstr ""
-
-#: fe/fe_editor.c:70 fe/fe_sqlwin.c:69 fe/fe_widget.c:168
-msgid "Paste"
-msgstr "Greamhaigh"
-
-#: fe/fe_editor.c:70
-msgid "Paste clipboard's contents"
-msgstr ""
-
-#: fe/fe_editor.c:134
-msgid "Run Command"
-msgstr ""
-
-#: fe/fe_editor.c:141
-msgid "Command"
-msgstr "Ordú"
-
-#: fe/fe_editor.c:152
-msgid "Directory"
-msgstr "Fillteán"
-
-#: fe/fe_editor.c:178 fe/fe_editor.c:215
+#: report/server/gda-report-server-main.c:123
 #, c-format
-msgid "Could not change to directory '%s'"
+msgid "Registered report engine with ID = %s"
 msgstr ""
 
-#: fe/fe_editor.c:188
+#: tools/gda-run.c:109
 #, c-format
-msgid "Running '%s'"
-msgstr "Ag rith '%s'"
+msgid "%s: misconfigured DSN entry"
+msgstr ""
 
-#. write header
-#: fe/fe_editor.c:194
+#: tools/gda-run.c:124
 #, c-format
-msgid ""
-"Output from '%s'\n"
-"In directory '%s'\n"
-"\n"
+msgid "%s: data source '%s' not found\n"
 msgstr ""
 
-#: fe/fe_editor.c:206
-#, c-format
-msgid "Command '%s' completed"
-msgstr ""
-
-#: fe/fe_editor.c:208 fe/fe_editor.c:274 fe/fe_editor.c:473
-#, c-format
-msgid "Unable to execute '%s'"
-msgstr ""
-
-#: fe/fe_editor.c:244
-#, c-format
-msgid ""
-"File\n"
-" '%s'\n"
-" has been changed.\n"
-" Do you want to save the changes?"
-msgstr ""
-
-#: fe/fe_editor.c:303
-msgid "Open File"
-msgstr "Oscail Comhad"
-
-#: fe/fe_editor.c:422
-msgid "Editor"
-msgstr "Eagarthóir"
-
-#: fe/fe_editor.c:429 fe/fe_sqlwin.c:37
-msgid "Run"
-msgstr "Rith"
-
-#: fe/fe_editor.c:441
-msgid "Find"
-msgstr "Faigh"
-
-#: fe/fe_gdaconfig.c:264
-msgid "GDA Config"
-msgstr ""
-
-#: fe/fe_gdaconfig.c:316
-msgid "Username"
-msgstr "Úsáidtheoir"
-
-#: fe/fe_gdaconfig.c:324
-msgid "Description"
-msgstr ""
-
-#: fe/fe_gdaconfig.c:332
-msgid "Config"
-msgstr ""
-
-#: fe/fe_export.c:44
-msgid "To XML"
-msgstr ""
-
-#: fe/fe_export.c:44
-msgid "Export selected data to XML file"
-msgstr ""
-
-#: fe/fe_export.c:47
-msgid "To SQL"
-msgstr ""
-
-#: fe/fe_export.c:47
-msgid "Export selected data as a SQL script"
-msgstr ""
-
-#: fe/fe_export.c:51
-msgid "Refresh data"
-msgstr ""
-
-#: fe/fe_export.c:54
-msgid "Clear all widgets"
-msgstr ""
-
-#: fe/fe_export.c:169
-msgid "You have to provide a file name"
-msgstr ""
-
-#: fe/fe_export.c:175
-msgid "You have to specify a name for the database export"
-msgstr ""
-
-#: fe/fe_export.c:195
-#, c-format
-msgid "Exporting object named '%s'"
-msgstr ""
-
-#. save XML file
-#: fe/fe_export.c:225
-#, c-format
-msgid "Saving to '%s' ..."
-msgstr ""
-
-#: fe/fe_export.c:227
-#, c-format
-msgid ""
-"Error saving XML file\n"
-"'%s'"
-msgstr ""
-
-#: fe/fe_export.c:235
-msgid "No objects are selected"
-msgstr ""
-
-#. create the view window
-#: fe/fe_export.c:280
-#, c-format
-msgid "Export: %s@%s"
-msgstr ""
-
-#: fe/fe_export.c:295
-msgid "TABLES"
-msgstr ""
-
-#: fe/fe_export.c:305
-msgid "VIEWS"
-msgstr ""
-
-#: fe/fe_export.c:322
-msgid "File name"
-msgstr "Ainm comhad"
-
-#: fe/fe_export.c:332
-msgid "Export data"
-msgstr ""
-
-#: fe/fe_export.c:335
-msgid "Show file when done"
-msgstr ""
-
-#: fe/fe_export.c:338
-msgid "Add object extra info"
-msgstr ""
-
-#: fe/fe_log.c:34
-msgid "Refresh log"
-msgstr ""
-
-#: fe/fe_log.c:37
-msgid "Clear file contents"
-msgstr ""
-
-#: fe/fe_log.c:40
-msgid "Save log file with a different name"
-msgstr ""
-
-#: fe/fe_log.c:120
-#, c-format
-msgid "Could not truncate file %s"
-msgstr ""
-
-#: fe/fe_log.c:156
-msgid "Save Log File"
-msgstr ""
-
-#: fe/fe_log.c:177
-#, c-format
-msgid ""
-"Could not load file\n"
-" %s"
-msgstr ""
-
-#: fe/fe_log.c:179 fe/fe_main.c:357 gda-manager/gda-mgr-main.c:217
-msgid "Ready"
-msgstr ""
-
-#: fe/fe_log.c:181 fe/fe_ui.c:199
-#, c-format
-msgid "File %s loaded"
-msgstr ""
-
-#: fe/fe_log.c:196 fe/fe_main.c:223
-msgid "GDA logs"
-msgstr "Loganna GDA"
-
-#: fe/fe_main.c:83
-msgid "GNOME-DB Front End"
-msgstr ""
-
-#: fe/fe_main.c:84 gda-manager/gda-mgr-main.c:135
-msgid "Copyright The Free Software Foundation (C) 1998-2000"
-msgstr ""
-
-#: fe/fe_main.c:86 gda-manager/gda-mgr-main.c:137
-msgid ""
-"This program is part of the GNOME project for LINUX. GNOME Data Access comes "
-"with ABSOLUTELY NO WARRANTY. This is free software, and you are welcome to "
-"redistribute it under the conditions of the GNU General Public Licence."
-msgstr ""
-
-#: fe/fe_main.c:162
-msgid "Open connection..."
-msgstr ""
-
-#: fe/fe_main.c:162 fe/fe_main.c:309
-msgid "Open a new connection"
-msgstr ""
-
-#: fe/fe_main.c:165
-msgid "Close connection"
-msgstr ""
-
-#: fe/fe_main.c:165 fe/fe_main.c:312 fe/fe_sqlwin.c:73
-msgid "Close current connection"
-msgstr ""
-
-#: fe/fe_main.c:168
-msgid "Close all connections"
-msgstr ""
-
-#: fe/fe_main.c:172
-msgid "Printer setup..."
-msgstr "Socraigh Printéir..."
-
-#: fe/fe_main.c:172
-msgid "Open printer setup dialog"
-msgstr ""
-
-#: fe/fe_main.c:176 gda-manager/gda-mgr-main.c:46
-#: gda-manager/gda-mgr-main.c:77
-msgid "Quit"
-msgstr "Ealu"
-
-#: fe/fe_main.c:176 fe/fe_main.c:329 gda-manager/gda-mgr-main.c:46
-#: gda-manager/gda-mgr-main.c:77
-msgid "Exit application"
-msgstr "Eirigh as fiedhmchlár"
-
-#: fe/fe_main.c:183
-msgid "Object Browser"
-msgstr ""
-
-#: fe/fe_main.c:183
-msgid "Browse database objects"
-msgstr ""
-
-#: fe/fe_main.c:186
-msgid "SQL Builder"
-msgstr ""
-
-#: fe/fe_main.c:186
-msgid "Construct SQL statements"
-msgstr ""
-
-#: fe/fe_main.c:190
-msgid "View connection properties"
-msgstr ""
-
-#: fe/fe_main.c:193
-msgid "Start/Stop Server Trace"
-msgstr ""
-
-#: fe/fe_main.c:193
-msgid "Start or stop server trace"
-msgstr ""
-
-#: fe/fe_main.c:196
-msgid "View Server Trace"
-msgstr ""
-
-#: fe/fe_main.c:196
-msgid "View server trace file"
-msgstr ""
-
-#: fe/fe_main.c:200
-msgid "Export"
-msgstr ""
-
-#: fe/fe_main.c:200
-msgid "Export Data to Different Formats"
-msgstr ""
-
-#: fe/fe_main.c:203
-msgid "Import"
-msgstr ""
-
-#: fe/fe_main.c:203
-msgid "Import Data into the Database"
-msgstr ""
-
-#: fe/fe_main.c:207
-msgid "Begin Transaction"
-msgstr ""
-
-#: fe/fe_main.c:207
-msgid "Begin new transaction"
-msgstr ""
-
-#: fe/fe_main.c:210
-msgid "Commit"
-msgstr ""
+#~ msgid "Close"
+#~ msgstr "Dún"
 
-#: fe/fe_main.c:210
-msgid "Commit changes"
-msgstr ""
-
-#: fe/fe_main.c:213
-msgid "Rollback"
-msgstr ""
-
-#: fe/fe_main.c:213
-msgid "Discard all changes"
-msgstr ""
-
-#: fe/fe_main.c:220
-msgid "Database Designer"
-msgstr ""
-
-#: fe/fe_main.c:220
-msgid "Visual Database Designer"
-msgstr ""
-
-#: fe/fe_main.c:223 fe/fe_main.c:315
-msgid "View GDA server log files"
-msgstr ""
-
-#: fe/fe_main.c:227
-msgid "Text editor"
-msgstr "Eagathóir teacs"
-
-#: fe/fe_main.c:227
-msgid "Open the internal text editor"
-msgstr ""
-
-#: fe/fe_main.c:230
-msgid "Run shell"
-msgstr ""
-
-#: fe/fe_main.c:230
-msgid "Open shell window"
-msgstr ""
-
-#: fe/fe_main.c:233
-msgid "Calculator"
-msgstr "Aireamhán"
-
-#: fe/fe_main.c:233
-msgid "Open desktop calculator"
-msgstr ""
-
-#: fe/fe_main.c:240
-msgid "Preferences..."
-msgstr "Roghnachais..."
-
-#: fe/fe_main.c:240 fe/fe_main.c:325 gda-manager/gda-mgr-main.c:73
-msgid "Configure user preferences"
-msgstr ""
-
-#: fe/fe_main.c:243
-msgid "GDA Configuration..."
-msgstr ""
-
-#: fe/fe_main.c:243
-msgid "GDA Configuration"
-msgstr ""
-
-#: fe/fe_main.c:247
-msgid "Save Options"
-msgstr ""
-
-#: fe/fe_main.c:247
-msgid "Save current configuration"
-msgstr ""
-
-#: fe/fe_main.c:270
-msgid "Previous window"
-msgstr ""
-
-#: fe/fe_main.c:270 fe/fe_main.c:319
-msgid "Move to previous window on list"
-msgstr ""
-
-#: fe/fe_main.c:273
-msgid "Next window"
-msgstr ""
-
-#: fe/fe_main.c:273 fe/fe_main.c:322
-msgid "Move to next window on list"
-msgstr ""
-
-#: fe/fe_main.c:276
-msgid "Close current"
-msgstr ""
-
-#: fe/fe_main.c:276
-msgid "Close active window"
-msgstr ""
-
-#: fe/fe_main.c:279
-msgid "Close all"
-msgstr "Dún gach rud"
-
-#: fe/fe_main.c:279
-msgid "Close all open windows"
-msgstr "Dún gach fhuinneog oscailte"
-
-#: fe/fe_main.c:290 gda-manager/gda-mgr-main.c:55
-msgid "About gnome-db..."
-msgstr "Faoi gnome-db..."
-
-#: fe/fe_main.c:290 gda-manager/gda-mgr-main.c:55
-msgid "About this program"
-msgstr "Faoi ríomhchlár seo"
-
-#: fe/fe_main.c:297 gda-manager/gda-mgr-main.c:62
-msgid "File"
-msgstr "Comhad"
-
-#: fe/fe_main.c:298
-msgid "Database"
-msgstr ""
-
-#: fe/fe_main.c:299
-msgid "Tools"
-msgstr ""
-
-#: fe/fe_main.c:300
-msgid "Options"
-msgstr "Roghnachais"
-
-#: fe/fe_main.c:301
-msgid "Window"
-msgstr "Fuinneog"
-
-#: fe/fe_main.c:302 gda-manager/gda-mgr-main.c:63
-msgid "Help"
-msgstr "Cabhair"
-
-#: fe/fe_main.c:309
-msgid "Connect"
-msgstr ""
-
-#: fe/fe_main.c:312 fe/fe_sqlwin.c:73
-msgid "Disconnect"
-msgstr ""
+#~ msgid "Close this window"
+#~ msgstr "Dún an fhuinneog seo"
 
-#: fe/fe_main.c:315
-msgid "GDA Logs"
-msgstr ""
-
-#: fe/fe_main.c:319
-msgid "Previous"
-msgstr ""
-
-#: fe/fe_main.c:322
-msgid "Next"
-msgstr ""
-
-#: fe/fe_main.c:329
-msgid "Exit"
-msgstr "Ealu"
-
-#: fe/fe_session.c:108
-msgid "Could not load editor font"
-msgstr ""
-
-#: fe/fe_session.c:115
-msgid "Could not load grid font"
-msgstr ""
-
-#: fe/fe_sqlwin.c:37
-msgid "Execute SQL command"
-msgstr ""
+#~ msgid "Environment"
+#~ msgstr "Imshaoil"
 
-#: fe/fe_sqlwin.c:40
-msgid "Run Script"
-msgstr ""
+#~ msgid "Save"
+#~ msgstr "Sábháil"
 
-#: fe/fe_sqlwin.c:40
-msgid "Execute buffer as SQL script"
-msgstr ""
+#~ msgid "Save As"
+#~ msgstr "Sábháil le"
 
-#: fe/fe_sqlwin.c:43 fe/fe_sqlwin.c:273
-msgid "Select SQL Command"
-msgstr ""
+#~ msgid "Clear"
+#~ msgstr "Glan"
 
-#: fe/fe_sqlwin.c:46
-msgid "Refresh grid"
-msgstr ""
+#~ msgid "Value"
+#~ msgstr "Luach"
 
-#: fe/fe_sqlwin.c:49
-msgid "Clear SQL window"
-msgstr ""
+#~ msgid "Add"
+#~ msgstr "Suim"
 
-#: fe/fe_sqlwin.c:52
-msgid "Print grid"
-msgstr ""
+#~ msgid "Remove"
+#~ msgstr "Scríos"
 
-#: fe/fe_sqlwin.c:56
-msgid "Load file into buffer"
-msgstr ""
+#~ msgid "Language"
+#~ msgstr "Teanga"
 
-#: fe/fe_sqlwin.c:59
-msgid "Save current buffer"
-msgstr ""
+#~ msgid "Shell"
+#~ msgstr "Blaosc"
 
-#: fe/fe_sqlwin.c:63 fe/fe_widget.c:162
-msgid "Cut selected text to clipboard"
-msgstr ""
+#~ msgid "Top"
+#~ msgstr "Barr"
 
-#: fe/fe_sqlwin.c:69 fe/fe_widget.c:168
-msgid "Paste text from clipboard"
-msgstr ""
+#~ msgid "Bottom"
+#~ msgstr "Bun"
 
-#: fe/fe_sqlwin.c:118 gda-clnt-ui/gnome-db-browser.c:121
-#, c-format
-msgid "%d rows"
-msgstr ""
+#~ msgid "Left"
+#~ msgstr "Clé"
 
-#: fe/fe_sqlwin.c:127
-msgid "Select SQL Script"
-msgstr ""
+#~ msgid "Right"
+#~ msgstr "Deis"
 
-#: fe/fe_sqlwin.c:201
-#, c-format
-msgid "Executing '%s'"
-msgstr ""
+#~ msgid "Name"
+#~ msgstr "Ainm"
 
-#: fe/fe_sqlwin.c:205 fe/fe_sqlwin.c:234
-msgid "Command succeeded"
-msgstr ""
+#~ msgid "Save As..."
+#~ msgstr "Sábháil Le..."
 
-#: fe/fe_sqlwin.c:208
-msgid "Command failed"
-msgstr ""
+#~ msgid "Preferences"
+#~ msgstr "Roghnachais"
 
-#: fe/fe_sqlwin.c:248
-msgid "Save SQL Script"
-msgstr ""
+#~ msgid "Properties"
+#~ msgstr "Albachtaí"
 
-#: fe/fe_sqlwin.c:260
-#, c-format
-msgid "Row %d - %d rows selected"
-msgstr ""
+#~ msgid "GDA Name"
+#~ msgstr "Ainm GDA"
 
-#: fe/fe_trace.c:37
-msgid "Server trace stopped"
-msgstr ""
+#~ msgid "View"
+#~ msgstr "Radharc"
 
-#. start logging for this connection
-#: fe/fe_trace.c:43
-msgid "Select Trace File"
-msgstr ""
+#~ msgid "New"
+#~ msgstr "Nua"
 
-#: fe/fe_trace.c:49
-#, c-format
-msgid "Server trace to file %s started"
-msgstr ""
+#~ msgid "Open"
+#~ msgstr "Oscail"
 
-#: fe/fe_trace.c:67
-msgid "Server Trace File"
-msgstr ""
+#~ msgid "Select File"
+#~ msgstr "Tóg Comhad"
 
-#: fe/fe_trace.c:81
-msgid "Server trace is disabled for this connection"
-msgstr ""
+#~ msgid "Delete"
+#~ msgstr "Dealaigh"
 
-#: fe/fe_ui.c:150 fe/fe_ui.c:192
-#, c-format
-msgid ""
-"Error reading file\n"
-" %s"
-msgstr ""
+#~ msgid "Print"
+#~ msgstr "Priontáil"
 
-#: fe/fe_ui.c:157
-#, c-format
-msgid "File %s inserted"
-msgstr ""
+#~ msgid "Cut"
+#~ msgstr "Gearr"
 
-#: fe/fe_ui.c:159 fe/fe_ui.c:201 fe/fe_ui.c:229
-#, c-format
-msgid ""
-"Error opening file\n"
-" %s"
-msgstr ""
+#~ msgid "Copy"
+#~ msgstr "Cóip"
 
-#: fe/fe_ui.c:223
-#, c-format
-msgid ""
-"Error writing to file\n"
-" %s"
-msgstr ""
+#~ msgid "Paste"
+#~ msgstr "Greamhaigh"
 
-#: fe/fe_ui.c:224
-#, c-format
-msgid "Wrote file %s"
-msgstr ""
+#~ msgid "Command"
+#~ msgstr "Ordú"
 
-#. create dialog box
-#: fe/fe_ui.c:291
-msgid "Question"
-msgstr ""
+#~ msgid "Directory"
+#~ msgstr "Fillteán"
 
-#: fe/fe_widget.c:171
-msgid "Select all"
-msgstr "Tóg gach rud"
+#~ msgid "Open File"
+#~ msgstr "Oscail Comhad"
 
-#: fe/fe_widget.c:171
-msgid "Select all text in buffer"
-msgstr ""
+#~ msgid "Editor"
+#~ msgstr "Eagarthóir"
 
-#: fe/fe_widget.c:175
-msgid "Insert file..."
-msgstr ""
+#~ msgid "Run"
+#~ msgstr "Rith"
 
-#: fe/fe_widget.c:175
-msgid "Insert file into current position"
-msgstr ""
+#~ msgid "Find"
+#~ msgstr "Faigh"
 
-#: fe/fe_widget.c:178
-msgid "Save to file..."
-msgstr ""
+#~ msgid "Username"
+#~ msgstr "Úsáidtheoir"
 
-#: fe/fe_widget.c:178
-msgid "Save widget contents to file"
-msgstr ""
+#~ msgid "File name"
+#~ msgstr "Ainm comhad"
 
-#: fe/fe_widget.c:181
-msgid "Print..."
-msgstr "Priontáil..."
+#~ msgid "GDA logs"
+#~ msgstr "Loganna GDA"
 
-#: fe/fe_widget.c:181
-msgid "Print buffer"
-msgstr ""
+#~ msgid "Printer setup..."
+#~ msgstr "Socraigh Printéir..."
 
-#: gda-clnt-ui/gnome-db-browser.c:79
-msgid "Object Name"
-msgstr ""
+#~ msgid "Quit"
+#~ msgstr "Ealu"
 
-#: gda-clnt-ui/gnome-db-browser.c:96
-msgid "0 rows"
-msgstr ""
+#~ msgid "Exit application"
+#~ msgstr "Eirigh as fiedhmchlár"
 
-#: gda-clnt-ui/gnome-db-browser.c:411
-msgid "Tables"
-msgstr ""
+#~ msgid "Text editor"
+#~ msgstr "Eagathóir teacs"
 
-#: gda-clnt-ui/gnome-db-browser.c:419
-msgid "Views"
-msgstr ""
+#~ msgid "Calculator"
+#~ msgstr "Aireamhán"
 
-#: gda-clnt-ui/gnome-db-browser.c:427
-msgid "Procedures"
-msgstr ""
+#~ msgid "Preferences..."
+#~ msgstr "Roghnachais..."
 
-#: gda-clnt-ui/gnome-db-browser.c:435
-msgid "Types"
-msgstr ""
+#~ msgid "Close all"
+#~ msgstr "Dún gach rud"
 
-#: gda-clnt-ui/gnome-db-browser.c:443
-msgid "Aggregates"
-msgstr ""
+#~ msgid "Close all open windows"
+#~ msgstr "Dún gach fhuinneog oscailte"
 
-#: gda-clnt-ui/gnome-db-browser.c:464
-msgid "Data"
-msgstr ""
+#~ msgid "About gnome-db..."
+#~ msgstr "Faoi gnome-db..."
 
-#: gda-clnt-ui/gnome-db-browser.c:479
-msgid "Extra Info"
-msgstr ""
+#~ msgid "About this program"
+#~ msgstr "Faoi ríomhchlár seo"
 
-#: gda-clnt/gda-field.c:187
-msgid "<NULL>"
-msgstr ""
+#~ msgid "Options"
+#~ msgstr "Roghnachais"
 
-#: gda-clnt/gda-field.c:193 gda-clnt/gda-field.c:195
-msgid "<Unknown GDA Type(NULL)>"
-msgstr ""
+#~ msgid "Window"
+#~ msgstr "Fuinneog"
 
-#: gda-clnt/gda-field.c:208
-msgid "TRUE"
-msgstr ""
+#~ msgid "Help"
+#~ msgstr "Cabhair"
 
-#: gda-clnt/gda-field.c:209
-msgid "FALSE"
-msgstr ""
+#~ msgid "Exit"
+#~ msgstr "Ealu"
 
-#: gda-manager/gda-mgr-main.c:42 gda-manager/gda-mgr-main.c:70
-msgid "Reload"
-msgstr ""
+#~ msgid "Select all"
+#~ msgstr "Tóg gach rud"
 
-#: gda-manager/gda-mgr-main.c:42 gda-manager/gda-mgr-main.c:70
-msgid "Reload config drivers"
-msgstr ""
+#~ msgid "Print..."
+#~ msgstr "Priontáil..."
 
-#: gda-manager/gda-mgr-main.c:134
-msgid "GNOME-DB Manager"
-msgstr "Bainisteoir GNOME-DB"
+#~ msgid "GNOME-DB Manager"
+#~ msgstr "Bainisteoir GNOME-DB"

@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda 0.2.2\n"
-"POT-Creation-Date: 2001-04-30 10:43+0200\n"
+"POT-Creation-Date: 2001-05-27 14:38+0200\n"
 "PO-Revision-Date: 2001-02-05 14:02CET\n"
 "Last-Translator: Stanislav Visnovsky <visnovsky@nenya.ms.mff.cuni.cz>\n"
 "Language-Team: Slovak <sk-i18n@rak.isternet.sk>\n"
@@ -24,22 +24,22 @@ msgstr "nie je mo¾né otvori» spojenie s %s"
 msgid "Data source %s not found"
 msgstr "Zdroj dát %s nenájdený"
 
-#: lib/gda-client/gda-connection.c:231 lib/gda-client/gda-error.c:179
+#: lib/gda-client/gda-connection.c:235 lib/gda-client/gda-error.c:179
 #, c-format
 msgid "%s: The server didn't respond."
 msgstr "%s: Server neodpovedal."
 
-#: lib/gda-client/gda-connection.c:235 lib/gda-client/gda-error.c:183
+#: lib/gda-client/gda-connection.c:239 lib/gda-client/gda-error.c:183
 #, c-format
 msgid "%s: An Error occured in the CORBA system."
 msgstr "%s: Nastala chyba v systéme CORBA."
 
-#: lib/gda-client/gda-connection.c:508
+#: lib/gda-client/gda-connection.c:511
 #, c-format
 msgid "Database '%s' not found in system configuration"
 msgstr "Databáza '%s' nebola nájdená v systémovej konfigurácii"
 
-#: lib/gda-client/gda-connection.c:523
+#: lib/gda-client/gda-connection.c:526
 msgid "Could not open CORBA factory"
 msgstr "Nie je mo¾né otvori» CORBA factory"
 
@@ -59,16 +59,16 @@ msgstr "TRUE"
 msgid "FALSE"
 msgstr "FALSE"
 
-#: lib/gda-common/gda-corba.c:73
+#: lib/gda-common/gda-corba.c:75
 #, c-format
 msgid "CORBA System exception: %s"
 msgstr "Systémová výnimka CORBA: %s"
 
-#: lib/gda-common/gda-corba.c:102
+#: lib/gda-common/gda-corba.c:105
 msgid "True"
 msgstr "True"
 
-#: lib/gda-common/gda-corba.c:102
+#: lib/gda-common/gda-corba.c:105
 msgid "False"
 msgstr "False"
 
@@ -107,14 +107,14 @@ msgstr "%p nie je platná tabuµka"
 msgid "Could not get pointer to server implementation"
 msgstr "Nie je mo¾né získa» ukazateµ na implementáciu serveru"
 
-#: lib/gda-server/gda-server-impl-connection.c:125
-#: lib/gda-server/gda-server-impl-connection.c:134
-#: lib/gda-server/gda-server-impl-connection.c:141
-#: lib/gda-server/gda-server-impl-connection.c:150
-#: lib/gda-server/gda-server-impl-connection.c:157
-#: lib/gda-server/gda-server-impl-connection.c:166
-#: lib/gda-server/gda-server-impl-connection.c:173
-#: lib/gda-server/gda-server-impl-connection.c:182
+#: lib/gda-server/gda-server-impl-connection.c:122
+#: lib/gda-server/gda-server-impl-connection.c:131
+#: lib/gda-server/gda-server-impl-connection.c:138
+#: lib/gda-server/gda-server-impl-connection.c:147
+#: lib/gda-server/gda-server-impl-connection.c:154
+#: lib/gda-server/gda-server-impl-connection.c:163
+#: lib/gda-server/gda-server-impl-connection.c:170
+#: lib/gda-server/gda-server-impl-connection.c:179
 #: lib/gda-server/gda-server-impl-recordset.c:126
 #: lib/gda-server/gda-server-impl-recordset.c:135
 #: lib/gda-server/gda-server-impl-recordset.c:142
@@ -140,7 +140,7 @@ msgstr "Nie je mo¾né získa» ukazateµ na implementáciu serveru"
 msgid "%s not implemented"
 msgstr "%s nie je implementované"
 
-#: lib/gda-server/gda-server-impl-connection.c:272
+#: lib/gda-server/gda-server-impl-connection.c:269
 #, c-format
 msgid "impl_GDA_Connection_open: opening connection with DSN: %s"
 msgstr "impl_GDA_Connection_open: otváranie spojenia s DSN: %s"
@@ -150,37 +150,37 @@ msgstr "impl_GDA_Connection_open: otváranie spojenia s DSN: %s"
 msgid "%s: an error ocurred while fetching data"
 msgstr "%s: nastala chyba pri získavaní dát"
 
-#: lib/gda-server/gda-server-impl.c:188
+#: lib/gda-server/gda-server-impl.c:197
 #, c-format
 msgid "Starting provider %s with no implementation functions"
 msgstr "Spú¹»am poskytovateµa %s bez implementaèných funkcií"
 
-#: lib/gda-server/gda-server-impl.c:214
+#: lib/gda-server/gda-server-impl.c:223
 #: report/server/gda-report-server-main.c:113
 msgid ""
 "OAF doesn't know about our IID; indicates broken installation. Exiting..."
 msgstr "OAF nepozná na¹e IID, asi po¹kodená in¹talácia. Konèím..."
 
-#: lib/gda-server/gda-server-impl.c:217
+#: lib/gda-server/gda-server-impl.c:226
 msgid ""
 "Another instance of this provider is already registered with OAF. Exiting..."
 msgstr "Iná in¹tancia tohoto poskytovateµa je u¾ registrovaná u OAF. Konèím..."
 
-#: lib/gda-server/gda-server-impl.c:220
+#: lib/gda-server/gda-server-impl.c:229
 msgid "Unknown error registering this provider with OAF. Exiting"
 msgstr "Neznáma chyba pri registrovaní poskytovateµa u OAF. Konèím"
 
-#: lib/gda-server/gda-server-impl.c:224
+#: lib/gda-server/gda-server-impl.c:233
 #, c-format
 msgid "Registered with ID = %s"
 msgstr "Registrovaný s ID = %s"
 
-#: lib/gda-server/gda-server-impl.c:300
+#: lib/gda-server/gda-server-impl.c:312
 #, c-format
 msgid "CORBA system exception %s"
 msgstr "Systémová výnimka CORBA %s"
 
-#: lib/gda-server/gda-server-impl.c:303
+#: lib/gda-server/gda-server-impl.c:315
 #, c-format
 msgid "CORBA user exception: %s"
 msgstr "Pou¾ívateµská výnimka CORBA: %s"
@@ -210,7 +210,7 @@ msgstr "GDA prístup k zdroju dát pre LDAP"
 #: providers/gda-odbc-server/gda-odbc-connection.c:621
 #: providers/gda-odbc-server/gda-odbc-connection.c:654
 #: providers/gda-oracle-server/gda-oracle-connection.c:438
-#: providers/gda-postgres-server/gda-postgres-connection.c:790
+#: providers/gda-postgres-server/gda-postgres-connection.c:743
 #: providers/gda-sybase-server/gda-sybase-error.c:115
 #: providers/gda-tds-server/gda-tds-error.c:114
 #, c-format
@@ -231,8 +231,8 @@ msgstr "chyba '%s' v %s"
 #: providers/gda-odbc-server/gda-odbc-connection.c:657
 #: providers/gda-oracle-server/gda-oracle-connection.c:443
 #: providers/gda-oracle-server/gda-oracle-connection.c:444
-#: providers/gda-postgres-server/gda-postgres-connection.c:797
-#: providers/gda-postgres-server/gda-postgres-connection.c:798
+#: providers/gda-postgres-server/gda-postgres-connection.c:750
+#: providers/gda-postgres-server/gda-postgres-connection.c:751
 #: providers/gda-primebase-server/gda-primebase-connection.c:363
 #: providers/gda-primebase-server/gda-primebase-connection.c:364
 #: providers/gda-sybase-server/gda-sybase-error.c:124
@@ -247,7 +247,7 @@ msgstr "Nie je k dispozícii"
 #: providers/gda-mdb-server/gda-mdb-connection.c:378
 #: providers/gda-mysql-server/gda-mysql-connection.c:376
 #: providers/gda-oracle-server/gda-oracle-connection.c:445
-#: providers/gda-postgres-server/gda-postgres-connection.c:799
+#: providers/gda-postgres-server/gda-postgres-connection.c:752
 #: providers/gda-primebase-server/gda-primebase-connection.c:365
 #: providers/gda-sybase-server/gda-sybase-error.c:126
 #: providers/gda-tds-server/gda-tds-error.c:125
@@ -279,7 +279,9 @@ msgstr "GDA prístup k zdroju dát pre Mail"
 #: providers/gda-mdb-server/gda-mdb-connection.c:224
 #: providers/gda-mysql-server/gda-mysql-connection.c:239
 #: providers/gda-oracle-server/gda-oracle-connection.c:295
-#: providers/gda-postgres-server/gda-postgres-connection.c:511
+#: providers/gda-postgres-server/gda-postgres-connection.c:477
+#: providers/gda-sybase-server/gda-sybase-connection.c:283
+#: providers/gda-tds-server/gda-tds-connection.c:288
 #, c-format
 msgid "Unhandled SCHEMA_QTYPE %d"
 msgstr "Nespracované SCHEMA_QTYPE %d"
@@ -353,8 +355,8 @@ msgstr "GDA prístup k zdroju dát pre MySQL"
 #: providers/gda-mysql-server/gda-mysql-connection.c:153
 #, c-format
 msgid ""
-"Opening connection with user=%s, password=%s, host=%s, port=%s, "
-"unix_socket=%s"
+"Opening connection with user=%s, password=%s, host=%s, port=%s, unix_socket=%"
+"s"
 msgstr ""
 "Otváram spojenie s pou¾ívateµom=%s, heslom=%s, hostiteµom=%s, portom=%s, "
 "unix_socket=%s"
@@ -431,8 +433,8 @@ msgstr "Nie je mo¾né registrova» implementáciu ORACLE poskytovateµa"
 msgid "GDA Datasource Access for Postgres"
 msgstr "GDA prístup k zdroju dát pre Postgres"
 
-#: providers/gda-postgres-server/gda-postgres-connection.c:899
-#: providers/gda-postgres-server/gda-postgres-connection.c:1011
+#: providers/gda-postgres-server/gda-postgres-connection.c:849
+#: providers/gda-postgres-server/gda-postgres-connection.c:957
 msgid "postgres_recset is NULL"
 msgstr "postgres_recset je NULL"
 
@@ -444,6 +446,7 @@ msgstr "Nie je mo¾né registrova» implementáciu PostgreSQL poskytovateµa"
 msgid "GDA Datasource Access for Sybase"
 msgstr "GDA prístup k zdroju dát pre Sybase"
 
+#.      gda_server_error_make(error, 0, cnc, "connection seems to be dead");
 #: providers/gda-sybase-server/gda-sybase-command.c:127
 #: providers/gda-tds-server/gda-tds-command.c:116
 msgid "Connection seems to be dead"
@@ -517,6 +520,10 @@ msgstr "Nevrátené ¾iadne dáta, uvoµòujem ¹truktúru recordset"
 msgid "Freeing command structure failed"
 msgstr "Príkaz pre uvoµnenie ¹truktúry zlyhal"
 
+#: providers/gda-sybase-server/gda-sybase-connection.c:171
+msgid "Not enough memory for sybase_Connection"
+msgstr "Nedostatok pamäti pre sybase_Connection"
+
 #: providers/gda-sybase-server/gda-sybase-connection.c:448
 #: providers/gda-tds-server/gda-tds-connection.c:447
 #, c-format
@@ -533,32 +540,11 @@ msgstr "Nie je mo¾né alokova» ¹truktúru pre príkaz"
 msgid "Could not allocate enough memory for query"
 msgstr "Nie je mo¾né alokova» dostatok pamäti pre otázku"
 
+#. 		gda_server_error_make(error, NULL, cnc, __PRETTY_FUNCTION__);
 #: providers/gda-sybase-server/gda-sybase-connection.c:500
 #: providers/gda-tds-server/gda-tds-connection.c:499
 msgid "Could not get recordset in schema_cols"
 msgstr "Nie je mo¾né získa» recordset v schema_cols"
-
-#: providers/gda-sybase-server/gda-sybase-connection.c:532
-#: providers/gda-sybase-server/gda-sybase-connection.c:609
-#: providers/gda-tds-server/gda-tds-connection.c:531
-#: providers/gda-tds-server/gda-tds-connection.c:608
-#, c-format
-msgid "schema_tables: table name = '%s'"
-msgstr "schema_tables: meno tabuµky = '%s'"
-
-#: providers/gda-sybase-server/gda-sybase-connection.c:540
-#: providers/gda-sybase-server/gda-sybase-connection.c:617
-#: providers/gda-tds-server/gda-tds-connection.c:539
-#: providers/gda-tds-server/gda-tds-connection.c:616
-#, c-format
-msgid "schema_tables: table_schema = '%s'"
-msgstr "schema_tables: table_schema = '%s'"
-
-#: providers/gda-sybase-server/gda-sybase-connection.c:545
-#: providers/gda-tds-server/gda-tds-connection.c:544
-#, c-format
-msgid "schema_procedures: proc_catalog = '%s' UNUSED!\n"
-msgstr "schema_procedures: proc_catalog = '%s' NEPOU®ITÉ!\n"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:549
 #: providers/gda-tds-server/gda-tds-connection.c:548
@@ -570,12 +556,6 @@ msgstr "schema_procs: neplatný typ obmedzenia %d"
 #: providers/gda-tds-server/gda-tds-connection.c:558
 msgid "Could not allocate cmd structure"
 msgstr "Nie je mo¾né alokova» ¹truktúru pre príkaz"
-
-#: providers/gda-sybase-server/gda-sybase-connection.c:622
-#: providers/gda-tds-server/gda-tds-connection.c:621
-#, c-format
-msgid "schema_procedures: proc_catalog = '%s' UNUSED!"
-msgstr "schema_procedures: proc_catalog = '%s' NEPOU®ITÉ!"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:626
 #: providers/gda-tds-server/gda-tds-connection.c:625
@@ -959,6 +939,11 @@ msgstr "Nie je mo¾né registrova» implementáciu PRIMEBASE poskytovateµa"
 msgid "GDA Datasource Access for Sybase/MS SQL"
 msgstr "GDA prístup k zdroju dát pre Sybase/MS SQL"
 
+#: providers/gda-tds-server/gda-tds-connection.c:167
+msgid "Not enough memory for tds_Connection"
+msgstr "Nedostatok pamäti pre tds_Connection"
+
+#. Fixme: replace "dummy" with buf when CS_GET CS_SERVERNAME works
 #: providers/gda-tds-server/gda-tds-connection.c:896
 #, c-format
 msgid "Reconnected to %s"
@@ -1017,38 +1002,6 @@ msgstr "Neznáma chyba pri registrácii report engine u OAD. Konèím"
 msgid "Registered report engine with ID = %s"
 msgstr "Registrovaný report engine s ID = %s"
 
-#: tools/gda-run.c:34
-msgid "database name"
-msgstr "meno databáze"
-
-#: tools/gda-run.c:34
-msgid "DATABASE"
-msgstr "DATABÁZA"
-
-#: tools/gda-run.c:35
-msgid "user name"
-msgstr "pou¾ívateµské meno"
-
-#: tools/gda-run.c:35
-msgid "USER-NAME"
-msgstr "POU®ÍVATE¥SKÉ-MENO"
-
-#: tools/gda-run.c:36
-msgid "password"
-msgstr "heslo"
-
-#: tools/gda-run.c:36
-msgid "PASSWORD"
-msgstr "HESLO"
-
-#: tools/gda-run.c:37
-msgid "file name"
-msgstr "meno súboru"
-
-#: tools/gda-run.c:37
-msgid "FILE-NAME"
-msgstr "MENO-SÚBORU"
-
 #: tools/gda-run.c:109
 #, c-format
 msgid "%s: misconfigured DSN entry"
@@ -1059,6 +1012,42 @@ msgstr "%s: chyba v konfigurácii polo¾ky DSN"
 msgid "%s: data source '%s' not found\n"
 msgstr "%s: zdroj dát '%s' nenájdený\n"
 
+#~ msgid "schema_tables: table name = '%s'"
+#~ msgstr "schema_tables: meno tabuµky = '%s'"
+
+#~ msgid "schema_tables: table_schema = '%s'"
+#~ msgstr "schema_tables: table_schema = '%s'"
+
+#~ msgid "schema_procedures: proc_catalog = '%s' UNUSED!\n"
+#~ msgstr "schema_procedures: proc_catalog = '%s' NEPOU®ITÉ!\n"
+
+#~ msgid "schema_procedures: proc_catalog = '%s' UNUSED!"
+#~ msgstr "schema_procedures: proc_catalog = '%s' NEPOU®ITÉ!"
+
+#~ msgid "database name"
+#~ msgstr "meno databáze"
+
+#~ msgid "DATABASE"
+#~ msgstr "DATABÁZA"
+
+#~ msgid "user name"
+#~ msgstr "pou¾ívateµské meno"
+
+#~ msgid "USER-NAME"
+#~ msgstr "POU®ÍVATE¥SKÉ-MENO"
+
+#~ msgid "password"
+#~ msgstr "heslo"
+
+#~ msgid "PASSWORD"
+#~ msgstr "HESLO"
+
+#~ msgid "file name"
+#~ msgstr "meno súboru"
+
+#~ msgid "FILE-NAME"
+#~ msgstr "MENO-SÚBORU"
+
 #~ msgid "%s: length = %d"
 #~ msgstr "%s: då¾ka = %d"
 
@@ -1068,9 +1057,6 @@ msgstr "%s: zdroj dát '%s' nenájdený\n"
 #~ msgid "Error allocating error structure"
 #~ msgstr "Chyba pri alokovaní chybovej ¹truktúry"
 
-#~ msgid "Not enough memory for sybase_Connection"
-#~ msgstr "Nedostatok pamäti pre sybase_Connection"
-
 #~ msgid "An error occured."
 #~ msgstr "Nastala chyba."
 
@@ -1079,6 +1065,3 @@ msgstr "%s: zdroj dát '%s' nenájdený\n"
 
 #~ msgid "No according field found"
 #~ msgstr "Nenájdené ¾iadne odpovedajúce pole"
-
-#~ msgid "Not enough memory for tds_Connection"
-#~ msgstr "Nedostatok pamäti pre tds_Connection"

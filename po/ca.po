@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-db CVS\n"
-"POT-Creation-Date: 2000-06-19 01:36+0200\n"
+"POT-Creation-Date: 2001-05-27 14:38+0200\n"
 "PO-Revision-Date: 2000-06-19 01:05+02:00\n"
 "Last-Translator: Softcatala <linux@softcatala.org>\n"
 "Language-Team: \n"
@@ -13,2864 +13,2842 @@ msgstr ""
 "Content-Type: text/plain; charset=iso-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: fe/fe_browser.c:27
-msgid "Create script"
-msgstr "Crea l'script"
-
-#: fe/fe_browser.c:27
-msgid "Create script from object definition"
-msgstr "Crea un script a partir de la definició de l'objecte"
-
-#: fe/fe_browser.c:30 fe/fe_export.c:51 fe/fe_log.c:34 fe/fe_sqlwin.c:46
-#: gda-fe/gda-fe-log.c:39 gda-fe/gda-fe-service.c:41
-msgid "Refresh"
-msgstr "Refresca"
-
-#: fe/fe_browser.c:30
-msgid "Refresh all lists"
-msgstr "Refresca totes les llistes"
-
-#: fe/fe_browser.c:34 fe/fe_designer.c:41 fe/fe_editor.c:60 fe/fe_editor.c:74
-#: fe/fe_export.c:58 fe/fe_import.c:56 fe/fe_log.c:44
-#: gda-dev/gda-builder-main.c:89 gda-fe/gda-fe-designer.c:42
-#: gda-fe/gda-fe-log.c:43 gda-fe/gda-fe-service.c:45
-#: gda-manager/gda-mgr-main.c:38 gda-manager/gda-mgr-main.c:87
-msgid "Close"
-msgstr "Tanca"
-
-#: fe/fe_browser.c:34 fe/fe_designer.c:41 fe/fe_editor.c:74 fe/fe_export.c:58
-#: fe/fe_import.c:56 fe/fe_log.c:44
-msgid "Close this window"
-msgstr "Tanca aquesta finestra"
-
-#: fe/fe_browser.c:108
-#, c-format
-msgid "Browser: %s@%s"
-msgstr "Navegador: %s@%s"
-
-#: fe/fe_browser.c:124 fe/fe_export.c:356
-msgid "No connection open"
-msgstr "No s'ha pogut obrir la connexió"
-
-#: fe/fe_config.c:49
-msgid "General"
-msgstr "General"
-
-#: fe/fe_config.c:50 gda-fe/gda-fe-config.c:302
-msgid "Environment"
-msgstr "Entorn"
-
-#: fe/fe_config.c:51
-msgid "Config File"
-msgstr "Fitxer de configuració"
-
-#: fe/fe_config.c:79 fe/fe_designer.c:37 fe/fe_editor.c:51 fe/fe_import.c:46
-#: fe/fe_sqlwin.c:59 gda-fe/gda-fe-batch.c:34 gda-fe/gda-fe-connection.c:73
-#: gda-fe/gda-fe-designer.c:35
-msgid "Save"
-msgstr "Desa"
-
-#: fe/fe_config.c:83 fe/fe_log.c:40
-msgid "Save As"
-msgstr "Anomena i desa"
-
-#: fe/fe_config.c:87 fe/fe_export.c:54 fe/fe_import.c:52 fe/fe_log.c:37
-#: fe/fe_sqlwin.c:49 gda-fe/gda-fe-batch.c:37 gda-fe/gda-fe-connection.c:89
-#: gda-fe/gda-fe-connection.c:99 gda-fe/gda-fe-designer.c:38
-#: gda-fe/gda-fe-log.c:36
-msgid "Clear"
-msgstr "Esborra"
-
-#: fe/fe_config.c:107 fe/fe_config.c:405
-msgid "Variable"
-msgstr "Variable"
-
-#: fe/fe_config.c:107 fe/fe_config.c:351 fe/fe_config.c:405
-#: gda-clnt-ui/gnome-db-xml-viewer.c:118 gda-clnt-ui/gnome-db-xml-viewer.c:342
-#: gda-fe/gda-fe-config.c:145 gda-fe/gda-fe-config.c:186
-msgid "Value"
-msgstr "Valor"
-
-#: fe/fe_config.c:128 gda-fe/gda-fe-batch.c:405 gda-fe/gda-fe-config.c:204
-#: gda-manager/gda-mgr-gda.c:36
-msgid "Add"
-msgstr "Afegeix"
-
-#: fe/fe_config.c:132 gda-clnt-ui/gnome-db-browser.c:471
-#: gda-fe/gda-fe-batch.c:421 gda-fe/gda-fe-config.c:211
-#: gda-fe/gda-fe-dsnconfig.c:158 gda-manager/gda-mgr-gda.c:42
-msgid "Remove"
-msgstr "Elimina"
-
-#: fe/fe_config.c:136
-msgid "Current"
-msgstr "Actual"
-
-#: fe/fe_config.c:160
-msgid "Save options on exit"
-msgstr "Desa les opcions en sortir"
-
-#: fe/fe_config.c:166
-msgid "Open connection dialog on entry"
-msgstr "Obre el diàleg de connexió en entrar"
-
-#. Fonts
-#: fe/fe_config.c:179 gda-fe/gda-fe-config.c:240
-msgid "Editor Font"
-msgstr "Tipus de lletra de l'editor"
-
-#: fe/fe_config.c:199
-msgid "Grid Font"
-msgstr "Tipus de lletra de la quadrícula"
-
-#: fe/fe_config.c:221
-msgid "Language"
-msgstr "Llenguatge"
-
-#. shell
-#: fe/fe_config.c:240 fe/fe_editor.c:435
-msgid "Shell"
-msgstr "Comanda de consola"
-
-#. window tabs
-#: fe/fe_config.c:255 fe/fe_main.c:274
-msgid "Tabs position"
-msgstr "Posició dels tabuladors"
-
-#: fe/fe_config.c:263 fe/fe_main.c:245 gda-fe/gda-fe-config.c:249
-msgid "Top"
-msgstr "Superior"
-
-#: fe/fe_config.c:272 fe/fe_main.c:248 gda-fe/gda-fe-config.c:250
-msgid "Bottom"
-msgstr "Inferior"
-
-#: fe/fe_config.c:281 fe/fe_main.c:251 gda-fe/gda-fe-config.c:251
-msgid "Left"
-msgstr "Esquerra"
-
-#: fe/fe_config.c:290 fe/fe_main.c:254 gda-fe/gda-fe-config.c:252
-msgid "Right"
-msgstr "Dreta"
-
-#. create the dialog box
-#: fe/fe_config.c:331 gda-fe/gda-fe-config.c:124
-msgid "Add Environment Variable"
-msgstr "Afegeix la variable d'entorn"
-
-#. create fields
-#: fe/fe_config.c:341 fe/fe_export.c:327 gda-fe/gda-fe-config.c:135
-#: gda-fe/gda-fe-config.c:186 gda-fe/gda-fe-service.c:287
-#: gda-fe/gda-fe-service.c:328
-#: gda-postgres-server/gda-postgres-config-users.c:119
-#: gda-postgres-server/gda-postgres-config-users.c:152
-msgid "Name"
-msgstr "Nom"
-
-#. create dialog
-#: fe/fe_config.c:411
-msgid "Current Environment"
-msgstr "Entorn actual"
-
-#: fe/fe_config.c:506 fe/fe_editor.c:54 fe/fe_editor.c:329 fe/fe_editor.c:354
-msgid "Save As..."
-msgstr "Anomena i desa..."
-
-#. create dialog
-#: fe/fe_config.c:578 fe/fe_main.c:316 gda-dev/gda-builder-main.c:149
-#: gda-fe/gda-fe-config.c:307 gda-fe/gda-fe-main.c:144
-#: gda-manager/gda-mgr-main.c:91
-msgid "Preferences"
-msgstr "Preferències"
-
-#: fe/fe_connection.c:33 gda-components/gda-components-connection.c:37
-#: gda-dev/gda-builder-database.c:31 gda-fe/gda-fe-connection.c:606
-msgid "Error Viewer"
-msgstr "Visualitzador d'errors"
-
-#: fe/fe_connection.c:51 gda-dev/gda-builder-database.c:58
-#, c-format
-msgid "Connected to %s"
-msgstr "Connectat a %s"
-
-#: fe/fe_connection.c:81 gda-fe/gda-fe-connection.c:125
-msgid "Object Identifiers"
-msgstr "Idenfificadors dels objectes"
-
-#: fe/fe_connection.c:82 gda-fe/gda-fe-connection.c:126
-#, fuzzy
-msgid "Object Inheritance"
-msgstr "Nom del objecte"
-
-#: fe/fe_connection.c:83 gda-fe/gda-fe-connection.c:127
-#: gda-postgres-server/gda-postgres-config-ac.c:168
-#, fuzzy
-msgid "Sequences"
-msgstr "Preferències"
-
-#: fe/fe_connection.c:84 gda-fe/gda-fe-connection.c:128
-#, fuzzy
-msgid "Stored Procedures"
-msgstr "Procediments"
-
-#: fe/fe_connection.c:85 gda-fe/gda-fe-connection.c:129
-#, fuzzy
-msgid "Transactions"
-msgstr "Transacció iniciada"
-
-#: fe/fe_connection.c:86 gda-fe/gda-fe-connection.c:130
-msgid "XML Queries"
-msgstr "Consultes XML"
-
-#: fe/fe_connection.c:165 gda-dev/gda-builder-database.c:83
-#: gda-fe/gda-fe-callbacks.c:125
-msgid "Open Connection"
-msgstr "Obre la connexió"
-
-#: fe/fe_connection.c:178 gda-fe/gda-fe-callbacks.c:142
-msgid "Connecting..."
-msgstr "Connectant..."
-
-#: fe/fe_connection.c:193 fe/fe_import.c:128 gda-fe/gda-fe-connection.c:622
-msgid "Transaction started"
-msgstr "Transacció iniciada"
-
-#: fe/fe_connection.c:195 fe/fe_connection.c:210 fe/fe_connection.c:225
-msgid "Transactions not supported"
-msgstr "Transacció no suportada"
-
-#: fe/fe_connection.c:208
-msgid "Commit executed"
-msgstr "Commit executat"
-
-#: fe/fe_connection.c:223
-msgid "Rollback executed"
-msgstr "Rollback executat"
-
-#. create dialog
-#: fe/fe_connection.c:240 fe/fe_main.c:175 gda-fe/gda-fe-connection.c:777
-#: gda-fe/gda-fe-main.c:73
-msgid "Connection Properties"
-msgstr "Propietats de la connexió"
-
-#. add detail frame
-#: fe/fe_connection.c:242 fe/fe_export.c:315 gda-fe/gda-fe-connection.c:780
-#: gda-fe/gda-fe-service.c:323
-msgid "Properties"
-msgstr "Propietats"
-
-#: fe/fe_connection.c:249 gda-clnt-ui/gnome-db-dsn-config.c:52
-#: gda-clnt-ui/gnome-db-login.c:223 gda-fe/gda-fe-connection.c:786
-#: gda-manager/gda-mgr-gda.c:296 gda-manager/gda-mgr-gda.c:400
-msgid "GDA Name"
-msgstr "Nom del GDA"
-
-#: fe/fe_connection.c:257 gda-clnt-ui/gnome-db-dsn-config.c:60
-#: gda-fe/gda-fe-connection.c:792 gda-fe/gda-fe-log.c:151
-msgid "Provider"
-msgstr "Proveidor"
-
-#: fe/fe_connection.c:265 gda-clnt-ui/gnome-db-dsn-config.c:80
-#: gda-fe/gda-fe-connection.c:798
-msgid "DSN"
-msgstr "DSN"
-
-#: fe/fe_connection.c:273 gda-fe/gda-fe-connection.c:804
-msgid "Command Timeout"
-msgstr "Temps d'espera d'execució exhaurit"
-
-#: fe/fe_connection.c:282 gda-fe/gda-fe-connection.c:811
-msgid "Connect Timeout"
-msgstr "Temps d'espera de connexió exhaurit"
-
-#: fe/fe_connection.c:291 gda-fe/gda-fe-connection.c:818
-msgid "Trace File"
-msgstr "Fitxer de seguiment"
-
-#: fe/fe_connection.c:300 gda-fe/gda-fe-connection.c:822
-#: gda-fe/gda-fe-log.c:33 gda-postgres-server/gda-postgres-config-ac.c:1106
-msgid "View"
-msgstr "Visualitza"
-
-#: fe/fe_connection.c:306 gda-fe/gda-fe-connection.c:831
-msgid "Provider Features"
-msgstr "Característiques del proveidor"
-
-#: fe/fe_designer.c:31 fe/fe_designer.c:48 fe/fe_editor.c:45
-#: fe/fe_gdaconfig.c:225 gda-dev/gda-builder-main.c:87
-#: gda-dev/gda-builder-main.c:142 gda-fe/gda-fe-designer.c:29
-#: gda-fe/gda-fe-dsnconfig.c:146
-msgid "New"
-msgstr "Nou"
-
-#: fe/fe_designer.c:31
-msgid "Create new database design"
-msgstr "Crea un disseny nou de base de dades"
-
-#: fe/fe_designer.c:34 fe/fe_editor.c:48 fe/fe_import.c:43 fe/fe_sqlwin.c:56
-#: gda-dev/gda-builder-main.c:88 gda-dev/gda-builder-main.c:145
-#: gda-fe/gda-fe-batch.c:31 gda-fe/gda-fe-connection.c:70
-#: gda-fe/gda-fe-designer.c:32
-msgid "Open"
-msgstr "Obre"
-
-#: fe/fe_designer.c:34
-msgid "Open database design from file"
-msgstr "Obre un disseny de base de dades des d'un fitxer"
-
-#: fe/fe_designer.c:37
-msgid "Save database design to file"
-msgstr "Desa el disseny de base de dades a un fitxer"
-
-#: fe/fe_designer.c:48
-msgid "Add new object"
-msgstr "Afegeix un nou objecte"
-
-#: fe/fe_designer.c:51 fe/fe_gdaconfig.c:230
-msgid "Delete"
-msgstr "Suprimeix"
-
-#: fe/fe_designer.c:51
-#, fuzzy
-msgid "Delete selected object"
-msgstr "Retalla el text seleccionat"
-
-#: fe/fe_designer.c:97
-msgid "Open XML File"
-msgstr "Obre un fitxer XML"
-
-#: fe/fe_designer.c:120 fe/fe_import.c:201 fe/fe_widget.c:37
-#: fe/fe_widget.c:119 fe/fe_widget.c:144 gda-clnt-ui/gda-ui.c:149
-msgid "Select File"
-msgstr "Selecciona un fitxer"
-
-#: fe/fe_designer.c:125
-#, c-format
-msgid ""
-"Error saving file\n"
-"'%s'"
-msgstr ""
-"S'ha produït un error en desar el fitxer\n"
-"'%s'"
-
-#: fe/fe_designer.c:141 gda-fe/gda-fe-designer.c:101
-msgid "Designer"
-msgstr "Dissenyador"
-
-#: fe/fe_editor.c:45
-msgid "Create a new empty file"
-msgstr "Crea un fitxer buit nou"
-
-#: fe/fe_editor.c:48
-msgid "Open an existing file"
-msgstr "Obre un fitxer existent"
-
-#: fe/fe_editor.c:51 gda-fe/gda-fe-connection.c:73
-msgid "Save current file"
-msgstr "Desa el fitxer actual"
-
-#: fe/fe_editor.c:54
-msgid "Save file with another name"
-msgstr "Desa el fitxer amb un altre nom"
-
-#: fe/fe_editor.c:57 fe/fe_sqlwin.c:52
-msgid "Print"
-msgstr "Imprimeix"
-
-#: fe/fe_editor.c:57
-msgid "Print current file"
-msgstr "Imprimeix el fitxer actual"
-
-#: fe/fe_editor.c:60
-msgid "Close current file"
-msgstr "Tanca el fitxer actual"
-
-#: fe/fe_editor.c:64 fe/fe_sqlwin.c:63 fe/fe_widget.c:162
-#: gda-fe/gda-fe-connection.c:80
-msgid "Cut"
-msgstr "Retalla"
-
-#: fe/fe_editor.c:64 gda-fe/gda-fe-connection.c:80
-msgid "Cut selected text"
-msgstr "Retalla el text seleccionat"
-
-#: fe/fe_editor.c:67 fe/fe_sqlwin.c:66 fe/fe_widget.c:165
-#: gda-clnt-ui/gnome-db-grid.c:168 gda-fe/gda-fe-connection.c:83
-msgid "Copy"
-msgstr "Copia"
-
-#: fe/fe_editor.c:67 fe/fe_sqlwin.c:66 fe/fe_widget.c:165
-msgid "Copy selected text to clipboard"
-msgstr "Copia el text seleccionat al porta-retalls"
-
-#: fe/fe_editor.c:70 fe/fe_sqlwin.c:69 fe/fe_widget.c:168
-#: gda-fe/gda-fe-connection.c:86
-msgid "Paste"
-msgstr "Enganxa"
-
-#: fe/fe_editor.c:70
-msgid "Paste clipboard's contents"
-msgstr "Enganxa el contingut del porta-retalls"
-
-#: fe/fe_editor.c:134
-msgid "Run Command"
-msgstr "Executa l'ordre"
-
-#. create dialog
-#: fe/fe_editor.c:141 gda-fe/gda-fe-batch.c:134
-msgid "Command"
-msgstr "Ordre"
-
-#: fe/fe_editor.c:152
-msgid "Directory"
-msgstr "Directori"
-
-#: fe/fe_editor.c:178 fe/fe_editor.c:215
-#, c-format
-msgid "Could not change to directory '%s'"
-msgstr "No es possible canviar al directori '%s'"
-
-#: fe/fe_editor.c:188
-#, c-format
-msgid "Running '%s'"
-msgstr "Executant '%s'"
-
-#. write header
-#: fe/fe_editor.c:194
-#, c-format
-msgid ""
-"Output from '%s'\n"
-"In directory '%s'\n"
-"\n"
-msgstr ""
-"Sortida des de '%s'\n"
-"Al directori '%s'\n"
-"\n"
-
-#: fe/fe_editor.c:206
-#, c-format
-msgid "Command '%s' completed"
-msgstr "Ordre '%s' completada"
-
-#: fe/fe_editor.c:208 fe/fe_editor.c:274 fe/fe_editor.c:473 fe/fe_util.c:56
-#: gda-dev/gda-builder-main.c:216 gda-fe/gda-fe-callbacks.c:196
-#: gda-manager/gda-mgr-callbacks.c:90
-#, c-format
-msgid "Unable to execute '%s'"
-msgstr "No és possible executar '%s'"
-
-#: fe/fe_editor.c:244
-#, c-format
-msgid ""
-"File\n"
-" '%s'\n"
-" has been changed.\n"
-" Do you want to save the changes?"
-msgstr ""
-"El fitxer\n"
-" '%s'\n"
-" ha estat modificat.\n"
-" Voleu desar els canvis?"
-
-#. create dialog
-#: fe/fe_editor.c:303 gda-fe/gda-fe-batch.c:300
-msgid "Open File"
-msgstr "Obre un fitxer"
-
-#: fe/fe_editor.c:422
-msgid "Editor"
-msgstr "Editor"
-
-#: fe/fe_editor.c:429 fe/fe_sqlwin.c:37
-msgid "Run"
-msgstr "Executa"
-
-#: fe/fe_editor.c:441
-msgid "Find"
-msgstr "Busca"
-
-#: fe/fe_export.c:44
-msgid "To XML"
-msgstr "A XML"
-
-#: fe/fe_export.c:44
-msgid "Export selected data to XML file"
-msgstr "Exporta les dades seleccionades a un fitxer XML"
-
-#: fe/fe_export.c:47
-msgid "To SQL"
-msgstr "A SQL"
-
-#: fe/fe_export.c:47
-msgid "Export selected data as a SQL script"
-msgstr "Exporta les dades seleccionades com un fitxer SQL"
-
-#: fe/fe_export.c:51
-msgid "Refresh data"
-msgstr "Actualitza les dades"
-
-#: fe/fe_export.c:54
-msgid "Clear all widgets"
-msgstr "Esborra tots els widgets"
-
-#: fe/fe_export.c:169
-msgid "You have to provide a file name"
-msgstr "Heu d'indicar un nom de fitxer"
-
-#: fe/fe_export.c:175
-msgid "You have to specify a name for the database export"
-msgstr "Heu d'especificar un nom per a l'exportació de la base de dades"
-
-#: fe/fe_export.c:195
-#, c-format
-msgid "Exporting object named '%s'"
-msgstr "Exportant l'objecte anomenat '%s'"
-
-#. save XML file
-#: fe/fe_export.c:225
-#, c-format
-msgid "Saving to '%s' ..."
-msgstr "Desant a '%s' ..."
-
-#: fe/fe_export.c:227
-#, c-format
-msgid ""
-"Error saving XML file\n"
-"'%s'"
-msgstr ""
-"S'ha produït un error en desar el fitxer XML\n"
-"'%s'"
-
-#: fe/fe_export.c:235
-msgid "No objects are selected"
-msgstr "No hi ha cap objecte seleccionat"
-
-#. create the view window
-#: fe/fe_export.c:280
-#, c-format
-msgid "Export: %s@%s"
-msgstr "Exporta: %s@%s"
-
-#: fe/fe_export.c:295
-msgid "TABLES"
-msgstr "TAULES"
-
-#: fe/fe_export.c:305
-msgid "VIEWS"
-msgstr "VISTES"
-
-#: fe/fe_export.c:322 fe/fe_import.c:288 gda-clnt-ui/gnome-db-xml-viewer.c:381
-#: gda-fe/gda-fe-connection.c:220
-msgid "File name"
-msgstr "Nom del fitxer"
-
-#: fe/fe_export.c:332
-msgid "Export data"
-msgstr "Exporta les dades"
-
-#: fe/fe_export.c:335
-msgid "Show file when done"
-msgstr "Mostra el fitxer en acabar"
-
-#: fe/fe_export.c:338
-msgid "Add object extra info"
-msgstr "Afegeix informació addicional al objecte"
-
-#: fe/fe_gdaconfig.c:185
-msgid "GDA Config"
-msgstr "Configuració del GDA"
-
-#: fe/fe_gdaconfig.c:194 gda-manager/gda-mgr-gda.c:409
-#: gda-manager/gda-mgr-main.c:183
-msgid "Data Sources"
-msgstr "Orígens de les dades"
-
-#: fe/fe_import.c:43
-#, fuzzy
-msgid "Load file to import"
-msgstr "Carrega el fitxer a la memòria intermèdia"
-
-#: fe/fe_import.c:46
-#, fuzzy
-msgid "Save buffer"
-msgstr "Desa la memòria intermèdia actual"
-
-#: fe/fe_import.c:49 gda-fe/gda-fe-connection.c:96
-msgid "Start"
-msgstr "Comença"
-
-#: fe/fe_import.c:49
-#, fuzzy
-msgid "Start importing data"
-msgstr "Comença l'exportació"
-
-#: fe/fe_import.c:52 gda-fe/gda-fe-designer.c:38
-#, fuzzy
-msgid "Clear all entries"
-msgstr "Esborra tots els camps"
-
-#: fe/fe_import.c:100
-msgid "There were errors during the SQL execution"
-msgstr "Hi han hagut errors durant l'execució se la sentència SQL"
-
-#: fe/fe_import.c:145
-msgid "Transaction finished successfully"
-msgstr "La transacció ha finalitzat correctament"
-
-#: fe/fe_import.c:189
-#, fuzzy
-msgid "Transaction rolled back"
-msgstr "Transacció iniciada"
-
-#: fe/fe_import.c:224
-msgid "You must select a file to be imported"
-msgstr "Ha de seleccionar un fitxer a importar"
-
-#. create the view window
-#: fe/fe_import.c:262
-#, fuzzy, c-format
-msgid "Import: %s@%s"
-msgstr "Importa: %s@%s"
-
-#: fe/fe_import.c:272
-#, fuzzy
-msgid "From XML"
-msgstr "Desde XML"
-
-#: fe/fe_import.c:274
-#, fuzzy
-msgid "From SQL"
-msgstr "Desde SQL"
-
-#. create options area
-#: fe/fe_import.c:278 fe/fe_main.c:291 gda-fe/gda-fe-batch.c:451
-#: gda-fe/gda-fe-main.c:131
-msgid "Options"
-msgstr "Opcions"
-
-#: fe/fe_import.c:284 gda-fe/gda-fe-batch.c:460
-#, fuzzy
-msgid "Transaction Mode"
-msgstr "Transacció iniciada"
-
-#: fe/fe_log.c:34
-msgid "Refresh log"
-msgstr "Refresca el registre"
-
-#: fe/fe_log.c:37
-msgid "Clear file contents"
-msgstr "Esborra el contingut del fitxer"
-
-#: fe/fe_log.c:40
-msgid "Save log file with a different name"
-msgstr "Desa el fitxer del registre amb un nom diferent"
-
-#: fe/fe_log.c:120
-#, c-format
-msgid "Could not truncate file %s"
-msgstr "No és possible truncar el fitxer %s"
-
-#: fe/fe_log.c:156
-msgid "Save Log File"
-msgstr "Desa el fitxer del registre"
-
-#: fe/fe_log.c:177
-#, c-format
-msgid ""
-"Could not load file\n"
-" %s"
-msgstr ""
-"No és possible carregar el fitxer\n"
-" %s"
-
-#: fe/fe_log.c:179 fe/fe_main.c:348 gda-components/gnome-db-container.c:252
-#: gda-components/gnome-db-container.c:298 gda-fe/gda-fe-callbacks.c:61
-#: gda-fe/gda-fe-connection.c:593 gda-fe/gda-fe-service.c:244
-#: gda-manager/gda-mgr-main.c:219
-msgid "Ready"
-msgstr "Preparat"
-
-#: fe/fe_log.c:181 fe/fe_ui.c:199
-#, c-format
-msgid "File %s loaded"
-msgstr "El fitxer %s s'ha carregat"
-
-#: fe/fe_log.c:196 fe/fe_main.c:208
-msgid "GDA logs"
-msgstr "Registres del GDA"
-
-#: fe/fe_main.c:78 gda-dev/gda-builder-main.c:106 gda-fe/gda-fe-callbacks.c:70
-#: gda-manager/gda-mgr-main.c:52
-msgid "GNOME-DB Front End"
-msgstr "Entorn visual del GNOME-DB"
-
-#: fe/fe_main.c:149
-msgid "Open connection..."
-msgstr "Obre la connexió..."
-
-#: fe/fe_main.c:149 fe/fe_main.c:300
-msgid "Open a new connection"
-msgstr "Obre una connexió nova "
-
-#: fe/fe_main.c:152 gda-fe/gda-fe-connection.c:57
-msgid "Close connection"
-msgstr "Tanca la connexió"
-
-#: fe/fe_main.c:152 fe/fe_main.c:303 fe/fe_sqlwin.c:73 gda-fe/gda-fe-main.c:28
-msgid "Close current connection"
-msgstr "Tanca la connexió actual"
-
-#: fe/fe_main.c:155 gda-fe/gda-fe-main.c:31
-msgid "Close all connections"
-msgstr "Tanca totes les connexions"
-
-#: fe/fe_main.c:161 fe/fe_main.c:320 gda-dev/gda-builder-main.c:98
-#: gda-dev/gda-builder-main.c:153 gda-fe/gda-fe-main.c:37
-#: gda-fe/gda-fe-main.c:148 gda-manager/gda-mgr-main.c:44
-#: gda-manager/gda-mgr-main.c:95
-msgid "Quit"
-msgstr "Surt"
-
-#: fe/fe_main.c:161 fe/fe_main.c:320 gda-dev/gda-builder-main.c:98
-#: gda-dev/gda-builder-main.c:153 gda-fe/gda-fe-main.c:37
-#: gda-manager/gda-mgr-main.c:44 gda-manager/gda-mgr-main.c:95
-msgid "Exit application"
-msgstr "Surt de l'aplicació"
-
-#: fe/fe_main.c:168
-msgid "Object Browser"
-msgstr "Explorador d'objectes"
-
-#: fe/fe_main.c:168
-msgid "Browse database objects"
-msgstr "Navega per la base de dades d'objectes"
-
-#: fe/fe_main.c:171
-msgid "SQL Builder"
-msgstr "Constructor de sentències SQL"
-
-#: fe/fe_main.c:171
-msgid "Construct SQL statements"
-msgstr "Crea ordres SQL"
-
-#: fe/fe_main.c:175 gda-fe/gda-fe-main.c:73
-msgid "View connection properties"
-msgstr "Visualitza les propietats de la connexió"
-
-#: fe/fe_main.c:178
-msgid "Start/Stop Server Trace"
-msgstr "Inicia/atura el seguiment del servidor"
-
-#: fe/fe_main.c:178
-msgid "Start or stop server trace"
-msgstr "Inicia o atura el seguiment del servidor"
-
-#: fe/fe_main.c:181
-msgid "View Server Trace"
-msgstr "Visualitza el seguiment del servidor"
-
-#: fe/fe_main.c:181
-msgid "View server trace file"
-msgstr "Visualitza el fitxer de seguiment del servidor"
-
-#: fe/fe_main.c:185 gda-fe/gda-fe-connection.c:50
-#: gda-fe/gda-fe-connection.c:244 gda-fe/gda-fe-main.c:56
-msgid "Export"
-msgstr "Exporta"
-
-#: fe/fe_main.c:185
-msgid "Export Data to Different Formats"
-msgstr "Exporta les dades a diferents formats"
-
-#: fe/fe_main.c:188 gda-fe/gda-fe-connection.c:53
-#: gda-fe/gda-fe-connection.c:258 gda-fe/gda-fe-main.c:59
-msgid "Import"
-msgstr "Importa"
-
-#: fe/fe_main.c:188
-msgid "Import Data into the Database"
-msgstr "Importa les dades a la base de dades"
-
-#: fe/fe_main.c:192
-msgid "Begin Transaction"
-msgstr "Comença la transacció"
-
-#: fe/fe_main.c:192
-msgid "Begin new transaction"
-msgstr "Comença una nova transacció"
-
-#: fe/fe_main.c:195 gda-fe/gda-fe-main.c:66
-msgid "Commit"
-msgstr "Commit"
-
-#: fe/fe_main.c:195
-msgid "Commit changes"
-msgstr "Canvis Commit"
-
-#: fe/fe_main.c:198 gda-fe/gda-fe-main.c:69
-msgid "Rollback"
-msgstr "Rollback"
-
-#: fe/fe_main.c:198 gda-fe/gda-fe-main.c:69
-msgid "Discard all changes"
-msgstr "Descarta tots els canvis"
-
-#: fe/fe_main.c:205
-msgid "Database Designer"
-msgstr "Dissenyador de bases de dades"
-
-#: fe/fe_main.c:205
-msgid "Visual Database Designer"
-msgstr "Dissenyador visual de bases de dades"
-
-#: fe/fe_main.c:208 fe/fe_main.c:306
-msgid "View GDA server log files"
-msgstr "Visualitza els fitxers de registre del servidor del GDA"
-
-#: fe/fe_main.c:211
-msgid "Text editor"
-msgstr "Editor de text"
-
-#: fe/fe_main.c:211
-msgid "Open the internal text editor"
-msgstr "Obre l'editor de text intern"
-
-#: fe/fe_main.c:214
-msgid "Run shell"
-msgstr "Executa la comanda de consola"
-
-#: fe/fe_main.c:214
-msgid "Open shell window"
-msgstr "Obre la finestra de comandes de consola"
-
-#: fe/fe_main.c:217 fe/fe_util.c:37
-msgid "Calculator"
-msgstr "Calculadora"
-
-#: fe/fe_main.c:217
-msgid "Open desktop calculator"
-msgstr "Obre la calculadora de l'escriptori"
-
-#: fe/fe_main.c:221
-#, fuzzy
-msgid "GDA Manager"
-msgstr "Gestor del GDA"
-
-#: fe/fe_main.c:221
-#, fuzzy
-msgid "The GDA configuration tool"
-msgstr "L'eina de configuració del GDA"
-
-#: fe/fe_main.c:224
-#, fuzzy
-msgid "GDA Builder"
-msgstr "Constructor del GDA"
-
-#: fe/fe_main.c:224
-msgid "The GDA development environment"
-msgstr "L'entorn de desenvolupament del GDA"
-
-#: fe/fe_main.c:231 gda-fe/gda-fe-main.c:103
-msgid "Preferences..."
-msgstr "Preferències...."
-
-#: fe/fe_main.c:231 fe/fe_main.c:316 gda-dev/gda-builder-main.c:149
-#: gda-fe/gda-fe-main.c:103 gda-fe/gda-fe-main.c:144
-#: gda-manager/gda-mgr-main.c:91
-msgid "Configure user preferences"
-msgstr "Configura les preferències d'usuari"
-
-#: fe/fe_main.c:234
-msgid "GDA Configuration..."
-msgstr "Configuració del GDA..."
-
-#: fe/fe_main.c:234
-msgid "GDA Configuration"
-msgstr "Configuració del GDA"
-
-#: fe/fe_main.c:238
-msgid "Save Options"
-msgstr "Desa les opcions"
-
-#: fe/fe_main.c:238 gda-fe/gda-fe-main.c:110
-msgid "Save current configuration"
-msgstr "Desa la configuració actual"
-
-#: fe/fe_main.c:261
-msgid "Previous window"
-msgstr "Finestra anterior"
-
-#: fe/fe_main.c:261 fe/fe_main.c:310
-msgid "Move to previous window on list"
-msgstr "Mou-ho a la finestra anterior de la llista"
-
-#: fe/fe_main.c:264
-msgid "Next window"
-msgstr "Finestra següent"
-
-#: fe/fe_main.c:264 fe/fe_main.c:313
-msgid "Move to next window on list"
-msgstr "Mou-ho a la següent finestra de la llista"
-
-#: fe/fe_main.c:267
-msgid "Close current"
-msgstr "Tanca l'actual"
-
-#: fe/fe_main.c:267
-msgid "Close active window"
-msgstr "Tanca la finestra activa"
-
-#: fe/fe_main.c:270 gda-dev/gda-builder-main.c:92
-msgid "Close all"
-msgstr "Tanca-ho tot"
-
-#: fe/fe_main.c:270 gda-dev/gda-builder-main.c:92
-msgid "Close all open windows"
-msgstr "Tanca totes les finestres obertes"
-
-#: fe/fe_main.c:281 gda-dev/gda-builder-main.c:121 gda-fe/gda-fe-main.c:117
-#: gda-manager/gda-mgr-main.c:67
-msgid "About gnome-db..."
-msgstr "Quant al gnome-db..."
-
-#: fe/fe_main.c:281 gda-dev/gda-builder-main.c:121
-#: gda-dev/gda-builder-main.c:125 gda-fe/gda-fe-main.c:117
-#: gda-fe/gda-fe-main.c:121 gda-manager/gda-mgr-main.c:67
-#: gda-manager/gda-mgr-main.c:71
-msgid "About this program"
-msgstr "Quant aquest programa"
-
-#: fe/fe_main.c:288 gda-dev/gda-builder-main.c:132 gda-fe/gda-fe-batch.c:316
-#: gda-fe/gda-fe-main.c:128 gda-manager/gda-mgr-main.c:78
-msgid "File"
-msgstr "Fitxer"
-
-#: fe/fe_main.c:289 gda-dev/gda-builder-main.c:133 gda-fe/gda-fe-main.c:129
-msgid "Database"
-msgstr "Base de dades"
-
-#: fe/fe_main.c:290 gda-dev/gda-builder-main.c:134 gda-fe/gda-fe-main.c:130
-#: gda-manager/gda-mgr-main.c:79
-msgid "Tools"
-msgstr "Eines"
-
-#: fe/fe_main.c:292
-msgid "Window"
-msgstr "Finestra"
-
-#: fe/fe_main.c:293 gda-dev/gda-builder-help.c:113
-#: gda-dev/gda-builder-main.c:135 gda-fe/gda-fe-main.c:132
-#: gda-manager/gda-mgr-main.c:80
-msgid "Help"
-msgstr "Ajuda"
-
-#: fe/fe_main.c:300 gda-fe/gda-fe-main.c:137
-msgid "Connect"
-msgstr "Connecta"
-
-#: fe/fe_main.c:303 fe/fe_sqlwin.c:73 gda-dev/gda-builder-main.c:73
-#: gda-fe/gda-fe-connection.c:57 gda-fe/gda-fe-main.c:28
-msgid "Disconnect"
-msgstr "Desconnecta"
-
-#: fe/fe_main.c:306
-msgid "GDA Logs"
-msgstr "Registres del GDA"
-
-#: fe/fe_main.c:310
-msgid "Previous"
-msgstr "Anterior"
-
-#: fe/fe_main.c:313
-msgid "Next"
-msgstr "Següent"
-
-#: fe/fe_session.c:108
-msgid "Could not load editor font"
-msgstr "No és possible carregar el tipus de lletra de l'editor"
-
-#: fe/fe_session.c:115
-msgid "Could not load grid font"
-msgstr "No és possible carregar el tipus de lletra de la quadrícula"
-
-#: fe/fe_sqlwin.c:37
-msgid "Execute SQL command"
-msgstr "Executa l'ordre SQL"
-
-#: fe/fe_sqlwin.c:40
-msgid "Run Script"
-msgstr "Executa l'script"
-
-#: fe/fe_sqlwin.c:40
-msgid "Execute buffer as SQL script"
-msgstr "Executa la memòria intermèdia com un script SQL"
-
-#: fe/fe_sqlwin.c:43 fe/fe_sqlwin.c:273
-msgid "Select SQL Command"
-msgstr "Selecciona l'ordre SQL"
-
-#: fe/fe_sqlwin.c:46 gda-clnt-ui/gnome-db-grid.c:181
-msgid "Refresh grid"
-msgstr "Refresca la quadrícula"
-
-#: fe/fe_sqlwin.c:49
-msgid "Clear SQL window"
-msgstr "Buida la finestra SQL"
-
-#: fe/fe_sqlwin.c:52 gda-clnt-ui/gnome-db-grid.c:184
-msgid "Print grid"
-msgstr "Imprimeix la quadrícula"
-
-#: fe/fe_sqlwin.c:56 gda-fe/gda-fe-connection.c:70
-msgid "Load file into buffer"
-msgstr "Carrega el fitxer a la memòria intermèdia"
-
-#: fe/fe_sqlwin.c:59
-msgid "Save current buffer"
-msgstr "Desa la memòria intermèdia actual"
-
-#: fe/fe_sqlwin.c:63 fe/fe_widget.c:162
-msgid "Cut selected text to clipboard"
-msgstr "Retalla el text seleccionat cap al porta-retalls"
-
-#: fe/fe_sqlwin.c:69 fe/fe_widget.c:168
-msgid "Paste text from clipboard"
-msgstr "Enganxa el text des del porta-retalls"
-
-#: fe/fe_sqlwin.c:118 gda-clnt-ui/gnome-db-browser.c:125
-#: gda-fe/gda-fe-connection.c:398
-#, c-format
-msgid "%d rows"
-msgstr "%d files"
-
-#: fe/fe_sqlwin.c:127
-msgid "Select SQL Script"
-msgstr "Selecciona l'script SQL"
-
-#: fe/fe_sqlwin.c:201
-#, c-format
-msgid "Executing '%s'"
-msgstr "Executant '%s'"
-
-#: fe/fe_sqlwin.c:205 fe/fe_sqlwin.c:234 gda-fe/gda-fe-connection.c:451
-msgid "Command succeeded"
-msgstr "Ordre reeixida"
-
-#: fe/fe_sqlwin.c:208 gda-fe/gda-fe-connection.c:456
-msgid "Command failed"
-msgstr "Ordre fallida"
-
-#: fe/fe_sqlwin.c:248
-msgid "Save SQL Script"
-msgstr "Desa l'script SQL"
-
-#: fe/fe_sqlwin.c:260 gda-fe/gda-fe-connection.c:408
-#, c-format
-msgid "Row %d - %d rows selected"
-msgstr "Fila %d - %d files seleccionades"
-
-#: fe/fe_trace.c:37
-msgid "Server trace stopped"
-msgstr "Seguiment del servidor aturat"
-
-#. start logging for this connection
-#: fe/fe_trace.c:43
-msgid "Select Trace File"
-msgstr "Selecciona el fitxer de seguiment"
-
-#: fe/fe_trace.c:49
-#, c-format
-msgid "Server trace to file %s started"
-msgstr "Seguiment del servidor cap al fitxer %s iniciat"
-
-#: fe/fe_trace.c:67
-msgid "Server Trace File"
-msgstr "Fitxer de seguiment del servidor"
-
-#: fe/fe_trace.c:81
-msgid "Server trace is disabled for this connection"
-msgstr "El seguiment del servidor està inhabilitat per a aquesta connexió"
-
-#: fe/fe_ui.c:150 fe/fe_ui.c:192
-#, c-format
-msgid ""
-"Error reading file\n"
-" %s"
-msgstr ""
-"S'ha produït un error en llegir el fitxer\n"
-" %s"
-
-#: fe/fe_ui.c:157
-#, c-format
-msgid "File %s inserted"
-msgstr "Fitxer %s insertat"
-
-#: fe/fe_ui.c:159 fe/fe_ui.c:201 fe/fe_ui.c:229
-#, c-format
-msgid ""
-"Error opening file\n"
-" %s"
-msgstr ""
-"S'ha produït un error en obrir el fitxer\n"
-" %s"
-
-#: fe/fe_ui.c:223
-#, c-format
-msgid ""
-"Error writing to file\n"
-" %s"
-msgstr ""
-"S'ha produït un error en escriure al fitxer\n"
-" %s"
-
-#: fe/fe_ui.c:224
-#, c-format
-msgid "Wrote file %s"
-msgstr "Escriu el fitxer %s"
-
-#. create dialog box
-#: fe/fe_ui.c:291
-msgid "Question"
-msgstr "Questió"
-
-#: fe/fe_widget.c:171 gda-clnt-ui/gnome-db-grid.c:171
-#: gda-fe/gda-fe-connection.c:102
-msgid "Select all"
-msgstr "Selecciona-ho tot"
-
-#: fe/fe_widget.c:171
-msgid "Select all text in buffer"
-msgstr "Selecciona tot el text de la memòria intermèdia"
-
-#: fe/fe_widget.c:175
-msgid "Insert file..."
-msgstr "Inserta el fitxer..."
-
-#: fe/fe_widget.c:175
-msgid "Insert file into current position"
-msgstr "Inserta el fitxer en la posició actual"
-
-#: fe/fe_widget.c:178
-msgid "Save to file..."
-msgstr "Desa al fitxer..."
-
-#: fe/fe_widget.c:178
-msgid "Save widget contents to file"
-msgstr "Desa el contingut del widget al fitxer"
-
-#: fe/fe_widget.c:181
-msgid "Print..."
-msgstr "Imprimeix..."
-
-#: fe/fe_widget.c:181
-msgid "Print buffer"
-msgstr "Imprimeix la memòria intermèdia"
-
-#: gda-clnt/gda-field.c:187
-msgid "<NULL>"
-msgstr "<NULL>"
-
-#: gda-clnt/gda-field.c:193 gda-clnt/gda-field.c:195
-msgid "<Unknown GDA Type(NULL)>"
-msgstr "<Tipus del GDA desconegut(NULL)>"
-
-#: gda-clnt/gda-field.c:208
-msgid "TRUE"
-msgstr "CERT"
-
-#: gda-clnt/gda-field.c:209
-msgid "FALSE"
-msgstr "FALS"
-
-#: gda-clnt-ui/gnome-db-browser.c:81
-msgid "Object Name"
-msgstr "Nom del objecte"
-
-#: gda-clnt-ui/gnome-db-browser.c:100
-msgid "0 rows"
-msgstr "0 files"
-
-#: gda-clnt-ui/gnome-db-browser.c:416
-#: gda-postgres-server/gda-postgres-config-ac.c:156
-msgid "Tables"
-msgstr "Taules"
-
-#: gda-clnt-ui/gnome-db-browser.c:424
-#: gda-postgres-server/gda-postgres-config-ac.c:162
-msgid "Views"
-msgstr "Vistes"
-
-#: gda-clnt-ui/gnome-db-browser.c:432
-msgid "Procedures"
-msgstr "Procediments"
-
-#: gda-clnt-ui/gnome-db-browser.c:440
-msgid "Types"
-msgstr "Tipus"
-
-#: gda-clnt-ui/gnome-db-browser.c:448
-msgid "Aggregates"
-msgstr "Afegits"
-
-#: gda-clnt-ui/gnome-db-browser.c:463
-msgid "Data"
-msgstr "Dades"
-
-#: gda-clnt-ui/gnome-db-browser.c:478
-msgid "Extra Info"
-msgstr "Informació addicional"
-
-#: gda-fe/gda-fe-callbacks.c:49 gda-rolodex/gda-rolodex-callbacks.c:49
-#, fuzzy, c-format
-msgid "Connected to '%s'"
-msgstr "Connectat a %s"
-
-#: gda-fe/gda-fe-callbacks.c:204
-#, fuzzy
-msgid "Configuration file saved"
-msgstr "Configuració del GDA"
-
-#: gda-fe/gda-fe-connection.c:38
-#, fuzzy
-msgid "SQL"
-msgstr "A SQL"
-
-#: gda-fe/gda-fe-connection.c:38 gda-fe/gda-fe-main.c:44
-#, fuzzy
-msgid "SQL Window"
-msgstr "Finestra SQL"
-
-#: gda-fe/gda-fe-batch.c:471 gda-fe/gda-fe-connection.c:41
-#: gda-fe/gda-fe-main.c:47
-msgid "Batch"
-msgstr "Ordres"
-
-#: gda-fe/gda-fe-connection.c:41 gda-fe/gda-fe-main.c:47
-msgid "Batch commands window"
-msgstr "Finestra d'ordres"
-
-#: gda-fe/gda-fe-connection.c:44
-#, fuzzy
-msgid "Queries"
-msgstr "Consultes"
-
-#: gda-fe/gda-fe-connection.c:44 gda-fe/gda-fe-main.c:50
-#, fuzzy
-msgid "Query designer"
-msgstr "Dissenyador"
-
-#: gda-fe/gda-fe-connection.c:47 gda-fe/gda-fe-connection.c:184
-#: gda-fe/gda-fe-main.c:53
-#, fuzzy
-msgid "Browser"
-msgstr "Navegador"
-
-#: gda-fe/gda-fe-connection.c:47
-#, fuzzy
-msgid "Browse Database"
-msgstr "Navega per la base de dades"
-
-#: gda-fe/gda-fe-connection.c:50 gda-fe/gda-fe-main.c:56
-#, fuzzy
-msgid "Export database"
-msgstr "Exporta les dades"
-
-#: gda-fe/gda-fe-connection.c:53 gda-fe/gda-fe-main.c:59
-#, fuzzy
-msgid "Import data into current database"
-msgstr "Importa les dades a la base de dades"
-
-#: gda-fe/gda-fe-batch.c:28 gda-fe/gda-fe-connection.c:64
-msgid "Execute"
-msgstr "Executar"
-
-#: gda-fe/gda-fe-connection.c:64
-#, fuzzy
-msgid "Execute current command"
-msgstr "Executa l'ordre actual"
-
-#: gda-fe/gda-fe-connection.c:67
-#: gda-postgres-server/gda-postgres-config-ac.c:292
-#, fuzzy
-msgid "Select"
-msgstr "Selecciona"
-
-#: gda-fe/gda-fe-connection.c:67
-msgid "Select from previous commands"
-msgstr "Selecciona desde comandes prèvies"
-
-#: gda-fe/gda-fe-connection.c:83
-#, fuzzy
-msgid "Copy selected text"
-msgstr "Retalla el text seleccionat"
-
-#: gda-fe/gda-fe-connection.c:86
-#, fuzzy
-msgid "Paste clipboard contents"
-msgstr "Enganxa el contingut del porta-retalls"
-
-#: gda-fe/gda-fe-connection.c:89
-#, fuzzy
-msgid "Clear window contents"
-msgstr "Esborra el contingut del fitxer"
-
-#: gda-fe/gda-fe-connection.c:96
-msgid "Start export"
-msgstr "Comença l'exportació"
-
-#: gda-fe/gda-fe-connection.c:99
-#, fuzzy
-msgid "Clear all fields"
-msgstr "Esborra tots els camps"
-
-#: gda-fe/gda-fe-connection.c:102
-#, fuzzy
-msgid "Select all objects in database"
-msgstr "Selecciona tot els objectes en la base de dades"
-
-#: gda-fe/gda-fe-connection.c:105
-msgid "Unselect"
-msgstr "Deselecciona"
-
-#: gda-fe/gda-fe-connection.c:105
-#, fuzzy
-msgid "Clear object selection"
-msgstr "Esborra la selecció d'objectes"
-
-#: gda-fe/gda-fe-connection.c:418 gda-fe/gda-fe-connection.c:470
-#, fuzzy
-msgid "Select file"
-msgstr "Selecciona un fitxer"
-
-#. create dialog
-#: gda-fe/gda-fe-connection.c:492
-#, fuzzy
-msgid "Select Command"
-msgstr "Selecciona l'ordre"
-
-#: gda-fe/gda-fe-connection.c:627
-#, fuzzy
-msgid "Begin transaction failed"
-msgstr "L'inici de la transacció ha fallat"
-
-#: gda-fe/gda-fe-connection.c:633 gda-fe/gda-fe-connection.c:660
-#: gda-fe/gda-fe-connection.c:687
-msgid "Data source does not support transactions"
-msgstr "L'orígen de les dades no soporta transaccions"
-
-#: gda-fe/gda-fe-connection.c:649
-#, fuzzy
-msgid "Commit executed successfully"
-msgstr "Commit executat correctament"
-
-#: gda-fe/gda-fe-connection.c:654
-#, fuzzy
-msgid "Commit transaction failed"
-msgstr "El commit de la transacció ha fallat"
-
-#: gda-fe/gda-fe-connection.c:676
-#, fuzzy
-msgid "Rollback executed successfully"
-msgstr "Rollback executat correctament"
-
-#: gda-fe/gda-fe-connection.c:681
-#, fuzzy
-msgid "Rollback transaction failed"
-msgstr "El rollback de la transacció ha fallat"
-
-#: gda-fe/gda-fe-connection.c:762 gda-manager/gda-mgr-container.c:182
-#, fuzzy, c-format
-msgid "Could not activate module %s"
-msgstr "No és possible truncar el fitxer %s"
-
-#: gda-fe/gda-fe-connection.c:825
-#, fuzzy
-msgid "Version"
-msgstr "Versió"
-
-#: gda-fe/gda-fe-main.c:25
-#, fuzzy
-msgid "Open Connection..."
-msgstr "Obre la connexió..."
-
-#: gda-fe/gda-fe-main.c:25 gda-fe/gda-fe-main.c:137
-#, fuzzy
-msgid "Open a connection to a data source"
-msgstr "Obre el diàleg de connexió en entrar"
-
-#: gda-fe/gda-fe-main.c:31
-#, fuzzy
-msgid "Disconnect all"
-msgstr "Desconnecta tot"
-
-#: gda-fe/gda-fe-main.c:44
-#, fuzzy
-msgid "SQL window"
-msgstr "Finestra SQL"
-
-#: gda-fe/gda-fe-main.c:50
-#, fuzzy
-msgid "Query Designer"
-msgstr "Dissenyador de consultes"
-
-#: gda-fe/gda-fe-main.c:53
-#, fuzzy
-msgid "Browse database"
-msgstr "Navega per la base de dades"
-
-#: gda-fe/gda-fe-main.c:63
-#, fuzzy
-msgid "Begin transaction"
-msgstr "Comença la transacció"
-
-#: gda-fe/gda-fe-main.c:66
-#, fuzzy
-msgid "Commit transaction"
-msgstr "Comença la transacció"
-
-#: gda-fe/gda-fe-main.c:76
-#, fuzzy
-msgid "Configure"
-msgstr "Configura"
-
-#: gda-fe/gda-fe-main.c:76 gda-manager/gda-mgr-gda.c:45
-#, fuzzy
-msgid "Configure underlying database"
-msgstr "Configura la dades de dades subratllada"
-
-#: gda-fe/gda-fe-main.c:83 gda-fe/gda-fe-main.c:140
-#, fuzzy
-msgid "View logs"
-msgstr "Visualitza fitxers de log"
-
-#: gda-fe/gda-fe-main.c:83
-msgid "View the different logs"
-msgstr "Visualitza fitxers de logs diferents"
-
-#: gda-fe/gda-fe-main.c:86
-#, fuzzy
-msgid "Database designer"
-msgstr "Dissenyador de bases de dades"
-
-#: gda-fe/gda-fe-main.c:86
-#, fuzzy
-msgid "Open the database designer"
-msgstr "Obre el dissenyador de base de dades"
-
-#: gda-fe/gda-fe-main.c:89
-msgid "Service control"
-msgstr "Control dels serveis"
-
-#: gda-fe/gda-fe-main.c:89
-#, fuzzy
-msgid "View service activity"
-msgstr "Visualitza l'activitat dels serveis"
-
-#: gda-dev/gda-builder-main.c:114 gda-fe/gda-fe-main.c:93
-#: gda-manager/gda-mgr-callbacks.c:25
-msgid "GNOME-DB Manager"
-msgstr "Gestor del GNOME-DB"
-
-#: gda-dev/gda-builder-main.c:114 gda-fe/gda-fe-main.c:93
-#, fuzzy
-msgid "The GNOME-DB configuration tool"
-msgstr "L'eina de configuració del GDA"
-
-#: gda-dev/gda-builder-callbacks.c:24 gda-fe/gda-fe-main.c:96
-#: gda-manager/gda-mgr-main.c:60
-#, fuzzy
-msgid "GNOME-DB Builder"
-msgstr "Constructor del GNOME-DB"
-
-#: gda-fe/gda-fe-main.c:96
-#, fuzzy
-msgid "The GNOME-DB Development Environment"
-msgstr "L'entorn de desenvolupament del GDA"
-
-#: gda-fe/gda-fe-main.c:106
-#, fuzzy
-msgid "Data sources..."
-msgstr "Orígens de les dades..."
-
-#: gda-fe/gda-fe-main.c:106
-msgid "Configure GDA data sources"
-msgstr "Configura els orígens de les dades del GDA"
-
-#: gda-fe/gda-fe-main.c:110
-#, fuzzy
-msgid "Save options"
-msgstr "Desa les opcions"
-
-#: gda-dev/gda-builder-main.c:125 gda-fe/gda-fe-main.c:121
-#: gda-manager/gda-mgr-main.c:71
-msgid "Submit bug report"
-msgstr "Envia una nota de error"
-
-#: gda-fe/gda-fe-log.c:165 gda-fe/gda-fe-main.c:140
-#, fuzzy
-msgid "Logs"
-msgstr "Registres del GDA"
-
-#: gda-fe/gda-fe-main.c:148
-#, fuzzy
-msgid "Exit Application"
-msgstr "Surt de l'aplicació"
-
-#: gda-dev/gda-builder-main.c:191 gda-fe/gda-fe-main.c:175
-#: gda-rolodex/gda-rolodex-main.c:120
-msgid "Could not initialize Bonobo\n"
-msgstr "No es pot iniciar Bonobo\n"
-
-#: gda-manager/gda-mgr-main.c:38 gda-manager/gda-mgr-main.c:87
-#, fuzzy
-msgid "Close configurator"
-msgstr "Tanca la connexió"
-
-#: gda-dev/gda-builder-main.c:106 gda-manager/gda-mgr-main.c:52
-#, fuzzy
-msgid "The GNOME-DB front end"
-msgstr "Entorn visual del GNOME-DB"
-
-#: gda-dev/gda-builder-main.c:110 gda-manager/gda-mgr-main.c:56
-#, fuzzy
-msgid "SQL Front End"
-msgstr "Entorn visual de SQL"
-
-#: gda-dev/gda-builder-main.c:110 gda-manager/gda-mgr-main.c:56
-msgid "The SQL front end"
-msgstr "L'entorn visual de sentències SQL"
-
-#: gda-manager/gda-mgr-main.c:60
-#, fuzzy
-msgid "The GNOME-DB development environment"
-msgstr "L'entorn de desenvolupament del GDA"
-
-#: gda-manager/gda-mgr-main.c:188
-#, fuzzy
-msgid "Providers"
-msgstr "Proveidors"
-
-#: gda-clnt/gda-connection.c:182 gda-clnt/gda-error.c:116
-#, c-format
-msgid "%s: The server didn't respond."
-msgstr "%s: El servidor no respon."
-
-#: gda-clnt/gda-connection.c:186 gda-clnt/gda-error.c:120
-#, c-format
-msgid "%s: An Error occured in the CORBA system."
-msgstr "%s: Hi ha hagut un error en el sistema CORBA."
-
-#: gda-clnt/gda-connection.c:476
-#, c-format
-msgid "Database '%s' not found in system configuration"
-msgstr "La base de dades '%s' no es troba en la configuració del sistema"
-
-#: gda-clnt/gda-connection.c:492
-msgid "Could not open CORBA factory"
-msgstr "No es pot obrir l'objecte CORBA"
-
-#: gda-clnt/gda-connection-pool.c:169
+#: lib/gda-client/gda-connection-pool.c:337
 #, fuzzy, c-format
 msgid "could not open connection to %s"
 msgstr "No es possible obrir la conexió a '%s'"
 
-#: gda-clnt/gda-connection-pool.c:180
+#: lib/gda-client/gda-connection-pool.c:345
 #, fuzzy, c-format
 msgid "Data source %s not found"
 msgstr "L'orígen de les dades %s no es troba"
 
-#: gda-clnt-ui/gda-ui.c:105
-#, fuzzy
-msgid "Select Color"
-msgstr "Selecciona un color"
+#: lib/gda-client/gda-connection.c:235 lib/gda-client/gda-error.c:179
+#, c-format
+msgid "%s: The server didn't respond."
+msgstr "%s: El servidor no respon."
 
-#: gda-clnt-ui/gda-ui.c:167
-#, fuzzy
-msgid "Select Font"
-msgstr "Selecciona un fitxer"
+#: lib/gda-client/gda-connection.c:239 lib/gda-client/gda-error.c:183
+#, c-format
+msgid "%s: An Error occured in the CORBA system."
+msgstr "%s: Hi ha hagut un error en el sistema CORBA."
 
-#: gda-clnt-ui/gda-ui.c:399
-msgid "Copyright The Free Software Foundation (C) 1998-2000"
-msgstr "Copyright The Free Software Foundation (C) 1998-2000"
+#: lib/gda-client/gda-connection.c:511
+#, c-format
+msgid "Database '%s' not found in system configuration"
+msgstr "La base de dades '%s' no es troba en la configuració del sistema"
 
-#: gda-clnt-ui/gda-ui.c:401
-msgid ""
-"This program is part of the GNOME project for LINUX. GNOME Data Access comes "
-"with ABSOLUTELY NO WARRANTY. This is free software, and you are welcome to "
-"redistribute it under the conditions of the GNU General Public Licence."
-msgstr ""
-"Aquest programa és part del projecte GNOME per LINUX. El GNOME Data Access "
-"ve sense CAP MENA DE GARANTIA. Aquest programari és de lliure distribució, "
-"per tant, podeu redistribuir-lo sota les condicions de la llicència GNU "
-"(General Public Licence)."
+#: lib/gda-client/gda-connection.c:526
+msgid "Could not open CORBA factory"
+msgstr "No es pot obrir l'objecte CORBA"
 
-#: gda-clnt-ui/gda-ui.c:439
+#: lib/gda-client/gda-field.c:245
+msgid "<NULL>"
+msgstr "<NULL>"
+
+#: lib/gda-client/gda-field.c:251 lib/gda-client/gda-field.c:253
+msgid "<Unknown GDA Type(NULL)>"
+msgstr "<Tipus del GDA desconegut(NULL)>"
+
+#: lib/gda-client/gda-field.c:266
+msgid "TRUE"
+msgstr "CERT"
+
+#: lib/gda-client/gda-field.c:267
+msgid "FALSE"
+msgstr "FALS"
+
+#: lib/gda-common/gda-corba.c:75
 #, fuzzy, c-format
-msgid ""
-"Could not open file\n"
-"%s"
-msgstr ""
-"No és possible carregar el fitxer\n"
-" %s"
+msgid "CORBA System exception: %s"
+msgstr "Excepció CORBA de sistema %s"
 
-#: gda-clnt-ui/gda-ui.c:569
-#, fuzzy
-msgid "Unable to execute Bug Report Tool"
-msgstr "No és possible executar l'eina de Reportar Errors"
-
-#: gda-clnt-ui/gnome-db-dsn-config.c:88 gda-clnt-ui/gnome-db-error.c:171
-#: gda-fe/gda-fe-service.c:333 gda-manager/gda-mgr-gda.c:400
-msgid "Description"
-msgstr "Descripció"
-
-#: gda-clnt-ui/gnome-db-dsn-config.c:96 gda-clnt-ui/gnome-db-login.c:241
-#: gda-manager/gda-mgr-gda.c:203 gda-manager/gda-mgr-gda.c:302
-msgid "Username"
-msgstr "Nom d'usuari"
-
-#: gda-clnt-ui/gnome-db-dsn-config.c:104 gda-manager/gda-mgr-gda.c:45
-msgid "Config"
-msgstr "Configuració"
-
-#: gda-clnt-ui/gnome-db-dsn-config.c:112 gda-manager/gda-mgr-gda.c:400
-msgid "Global"
-msgstr "Global"
-
-#: gda-clnt-ui/gnome-db-dsn-config.c:219
-#, fuzzy
-msgid "Error while saving configuration!"
-msgstr "Error durant el procés de desar la configuració!"
-
-#: gda-clnt-ui/gnome-db-dsn-config.c:222
-#, fuzzy
-msgid "Data source has no name!"
-msgstr "L'orígen de les dades no té nom!"
-
-#: gda-clnt-ui/gnome-db-error.c:101
-#, fuzzy, c-format
-msgid "Error %d of %d"
-msgstr "Error %d de %d"
-
-#: gda-clnt-ui/gnome-db-error.c:196
-#, fuzzy
-msgid "Show Help"
-msgstr "Mostra l'ajuda"
-
-#: gda-clnt-ui/gnome-db-error.c:202
-#, fuzzy
-msgid "Source"
-msgstr "Orígens de les dades"
-
-#: gda-clnt-ui/gnome-db-error.c:211
-msgid "sqlstate"
-msgstr "sqlstate"
-
-#: gda-clnt-ui/gnome-db-error.c:219
-msgid "Error 0 of 0"
-msgstr "Error 0 de 0"
-
-#: gda-clnt-ui/gnome-db-grid.c:147
-#, fuzzy
-msgid "Record View"
-msgstr "Desa la vista"
-
-#: gda-clnt-ui/gnome-db-grid.c:168
-#, fuzzy
-msgid "Copy selection to clipboard"
-msgstr "Copia el text seleccionat al porta-retalls"
-
-#: gda-clnt-ui/gnome-db-grid.c:171
-#, fuzzy
-msgid "Select all rows"
-msgstr "Selecciona totes les files"
-
-#: gda-clnt-ui/gnome-db-grid.c:174
-#, fuzzy
-msgid "Clear selection"
-msgstr "Esborra la selecció"
-
-#: gda-clnt-ui/gnome-db-grid.c:174
-#, fuzzy
-msgid "Clear all selected rows"
-msgstr "Esborra tots els camps"
-
-#: gda-clnt-ui/gnome-db-grid.c:177
-msgid "Record view..."
-msgstr "Desa les vistes..."
-
-#: gda-clnt-ui/gnome-db-grid.c:177
-msgid "View recordset record-by-record"
-msgstr "Visualitza les dades registre a registre"
-
-#: gda-clnt-ui/gnome-db-grid.c:181
-#, fuzzy
-msgid "Refresh grid contents"
-msgstr "Refresca el contingut de la quadrícula"
-
-#: gda-clnt-ui/gnome-db-grid.c:184
-#, fuzzy
-msgid "Print grid contents"
-msgstr "Imprimeix el contingut de la quadrícula"
-
-#: gda-clnt-ui/gnome-db-grid.c:187 gda-fe/gda-fe-config.c:282
-msgid "Show columns"
-msgstr "Mostra les columnes"
-
-#: gda-clnt-ui/gnome-db-grid.c:187
-msgid "Show column titles"
-msgstr "Mostra els títols de les columnes"
-
-#: gda-clnt-ui/gnome-db-grid.c:190
-msgid "Hide columns"
-msgstr "Amaga les columnes"
-
-#: gda-clnt-ui/gnome-db-grid.c:190
-msgid "Hide column titles"
-msgstr "Amaga els títols de les columnes"
-
-#: gda-clnt-ui/gnome-db-login.c:107 gda-clnt-ui/gnome-db-login.c:328
-#, c-format
-msgid "No datasource '%s' defined in your GDA configuration file"
-msgstr "No hi ha l'orígen de les dades '%s' definit en el seu fitxer de configuració GDA"
-
-#: gda-clnt-ui/gnome-db-login.c:223
-#, fuzzy
-msgid "User Name"
-msgstr "Nom d'usuari"
-
-#: gda-clnt-ui/gnome-db-login.c:231
-#, fuzzy
-msgid "GDA Datasource"
-msgstr "Orígens de les dades GDA"
-
-#: gda-clnt-ui/gnome-db-login.c:250 gda-manager/gda-mgr-gda.c:207
-#: gda-manager/gda-mgr-gda.c:307
-#: gda-postgres-server/gda-postgres-config-users.c:158
-msgid "Password"
-msgstr "Contrasenya"
-
-#: gda-clnt-ui/gnome-db-login.c:260
-#, fuzzy
-msgid "Last Connections"
-msgstr "Últimes connexions"
-
-#: gda-clnt-ui/gnome-db-log-viewer.c:88
-#, c-format
-msgid "Entry %d of %d"
-msgstr "Entrada %d de %d"
-
-#. create entries
-#: gda-clnt-ui/gnome-db-log-viewer.c:154 gda-clnt-ui/gnome-db-log-viewer.c:322
-#, fuzzy
-msgid "Date"
-msgstr "Data"
-
-#: gda-clnt-ui/gnome-db-log-viewer.c:154 gda-clnt-ui/gnome-db-log-viewer.c:328
-msgid "Time"
-msgstr "Hora"
-
-#: gda-clnt-ui/gnome-db-log-viewer.c:154
-msgid "Message"
-msgstr "Missatge"
-
-#. create dialog
-#: gda-clnt-ui/gnome-db-log-viewer.c:307
-msgid "Log Entry"
-msgstr "Entrada del registre"
-
-#: gda-clnt-ui/gnome-db-xml-viewer.c:51
-msgid "Add property"
-msgstr "Afegeix una propietat"
-
-#: gda-clnt-ui/gnome-db-xml-viewer.c:51
-msgid "Add a new property for this object"
-msgstr "Afegeix una nova propietat per a aquest objecte"
-
-#: gda-clnt-ui/gnome-db-xml-viewer.c:54
-msgid "Remove property"
-msgstr "Esborra la propietat"
-
-#: gda-clnt-ui/gnome-db-xml-viewer.c:54
-#, fuzzy
-msgid "Remove selected properties"
-msgstr "Esborra les propietats seleccionades"
-
-#. create the dialog
-#: gda-clnt-ui/gnome-db-xml-viewer.c:102
-#, fuzzy
-msgid "Add Property"
-msgstr "Afegeix una propietat"
-
-#: gda-clnt-ui/gnome-db-xml-viewer.c:112 gda-clnt-ui/gnome-db-xml-viewer.c:342
-#, fuzzy
-msgid "Property"
-msgstr "Propietat"
-
-#: gda-clnt-ui/gnome-db-xml-viewer.c:300
-#, c-format
-msgid "Invalid behaviour in %s"
+#: lib/gda-common/gda-corba.c:105
+msgid "True"
 msgstr ""
 
-#: gda-clnt-ui/gnome-db-xml-viewer.c:377
+#: lib/gda-common/gda-corba.c:105
 #, fuzzy
-msgid "Database name"
-msgstr "Nom de la base de dades"
+msgid "False"
+msgstr "Fitxer"
 
-#: gda-common/gda-log.c:33
+#: lib/gda-common/gda-init.c:59
+msgid "Attempt to initialize an already initialized client"
+msgstr ""
+
+#: lib/gda-common/gda-log.c:48
+#, fuzzy
+msgid "Saving log...x"
+msgstr "Desant a '%s' ..."
+
+#. compose message
+#: lib/gda-common/gda-log.c:69
 msgid "ERROR: "
 msgstr "ERROR: "
 
-#: gda-common/gda-log.c:33
+#: lib/gda-common/gda-log.c:69
 msgid "MESSAGE: "
 msgstr "MISSATGE: "
 
-#: gda-common/gda-thread.c:150
+#: lib/gda-common/gda-thread.c:211
 msgid "thread is already running"
 msgstr "el procés está en marxa"
 
-#: gda-components/gda-components-browser.c:54
-#, fuzzy
-msgid "Data Source Name"
-msgstr "Nom de l'órígen de les dades"
-
-#: gda-components/gda-components-browser.c:58
-#, fuzzy
-msgid "User name to use for the connection"
-msgstr "Nom de l'usuari a utilitzar en la conexió"
-
-#: gda-components/gda-components-browser.c:62
-msgid "Password to authenticate user"
-msgstr "Contrasenya per validar l'usuari"
-
-#: gda-components/gda-components-browser.c:66
-#, fuzzy
-msgid "To open/close the connection"
-msgstr "Tancar/obrir la connexió"
-
-#: gda-components/gda-components-factory.c:66
+#: lib/gda-common/gda-xml-database.c:286
 #, fuzzy, c-format
-msgid "Could not initialize %s component"
-msgstr "No es pot iniciar el component %s"
-
-#: gda-components/gda-components-grid.c:42
-msgid "Font to be used for the grid"
-msgstr ""
-
-#: gda-components/gda-components-main.c:34
-#: gda-odbc-server/gda-odbc-config-main.c:58
-#: gda-postgres-server/gda-postgres-config-main.c:326
-#, fuzzy
-msgid "Could not initialize CORBA"
-msgstr "No es pot iniciar CORBA"
-
-#: gda-components/gda-components-main.c:37
-#: gda-odbc-server/gda-odbc-config-main.c:49
-#: gda-odbc-server/gda-odbc-config-main.c:61
-#: gda-postgres-server/gda-postgres-config-main.c:329
-#, fuzzy
-msgid "Could not initialize Bonobo"
-msgstr "No es pot iniciar Bonobo"
-
-#: gda-components/gnome-db-container.c:117
-msgid "View requested to be activated but there is already an active view"
-msgstr "Vista demanada per activarse però ja es la vista activa"
-
-#: gda-components/gnome-db-container.c:420
-#, fuzzy, c-format
-msgid "Could not bind object %s"
-msgstr "No és pot obtenir l'objecte %s"
-" %s"
-
-#: gda-components/gnome-db-container.c:448
-#, fuzzy, c-format
-msgid "Unable to activate object %s"
-msgstr "No és possible activar l'objecte %s"
-
-#: gda-components/gnome-db-control.c:236
-#, c-format
-msgid "%s:%d: Could not create control widget"
-msgstr "%s:%d: No es pot crear el control widget"
-
-#: gda-components/gnome-db-control.c:412
-#, fuzzy
-msgid "Could not register control factory"
-msgstr "No es pot registrar el control fàbrica"
-
-#: gda-components/gnome-db-control.c:530
-msgid "control has no property bag"
-msgstr "el control no té propietats"
-
-#: gda-components/gnome-db-control.c:596
-#, c-format
-msgid "property %s not found"
-msgstr "la propietat %s no s'ha trobat"
-
-#: gda-components/gnome-db-factory.c:48
-#, c-format
-msgid "Factory %s already existing"
+msgid "table %s already exists"
 msgstr "Control fàbrica %s existeix"
 
-#: gda-components/gnome-db-factory.c:64
+#: lib/gda-common/gda-xml-database.c:450
 #, fuzzy, c-format
-msgid "Could not register %s factory"
-msgstr "No és pot registrar el control fàbrica %s"
-
-#: gda-dev/gda-builder-database.c:119
-msgid "Disconnected from database"
-msgstr "Deconectat de la base de dades"
-
-#: gda-dev/gda-builder-database.c:135
-#, fuzzy
-msgid "Database Browser"
-msgstr "Navegador de bases de dades"
-
-#: gda-dev/gda-builder-database.c:144
-#, fuzzy
-msgid "There are no open connections"
-msgstr "No hi han conexions obertes"
-
-#: gda-dev/gda-builder-help.c:30
-msgid "Back"
-msgstr "Endarrera"
-
-#: gda-dev/gda-builder-help.c:30
-#, fuzzy
-msgid "Go to previous document"
-msgstr "Anar al document previ"
-
-#: gda-dev/gda-builder-help.c:33
-msgid "Forward"
-msgstr "Endavant"
-
-#: gda-dev/gda-builder-help.c:33
-#, fuzzy
-msgid "Go to next document"
-msgstr "Anar al següent document"
-
-#: gda-dev/gda-builder-help.c:36
-msgid "Home"
-msgstr "Casa"
-
-#: gda-dev/gda-builder-help.c:36
-#, fuzzy
-msgid "Go to table of contents"
-msgstr "Anar a la taula de continguts"
-
-#: gda-dev/gda-builder-help.c:146
-#, fuzzy, c-format
-msgid "Could not load file '%s'"
-msgstr "No és pot carregar el fitxer '%s'"
-
-#: gda-dev/gda-builder-main.c:38 gda-dev/gda-builder-main.c:54
-msgid "Screen"
-msgstr "Pantalla"
-
-#: gda-dev/gda-builder-main.c:38
-msgid "New screen"
-msgstr "Nova pantalla"
-
-#: gda-dev/gda-builder-main.c:41 gda-dev/gda-builder-main.c:57
-#, fuzzy
-msgid "Report"
-msgstr "Llistat"
-
-#: gda-dev/gda-builder-main.c:41
-msgid "New report"
-msgstr "Nou llistat"
-
-#: gda-dev/gda-builder-main.c:44 gda-dev/gda-builder-main.c:60
-#, fuzzy
-msgid "Server"
-msgstr "Servidor"
-
-#: gda-dev/gda-builder-main.c:44
-msgid "New server"
-msgstr "Nou servidor"
-
-#: gda-dev/gda-builder-main.c:47 gda-dev/gda-builder-main.c:63
-msgid "Repository"
-msgstr "Biblioteca"
-
-#: gda-dev/gda-builder-main.c:47
-msgid "New repository"
-msgstr "Nova biblioteca"
-
-#: gda-dev/gda-builder-main.c:54
-#, fuzzy
-msgid "Open existing screen"
-msgstr "Obre una pantalla existent"
-
-#: gda-dev/gda-builder-main.c:57
-#, fuzzy
-msgid "Open existing report"
-msgstr "Obre un llistat existent"
-
-#: gda-dev/gda-builder-main.c:60
-#, fuzzy
-msgid "Open existing server"
-msgstr "Obre un servidor existent"
-
-#: gda-dev/gda-builder-main.c:63
-#, fuzzy
-msgid "Open existing repository"
-msgstr "Obre una biblioteca existent"
-
-#: gda-dev/gda-builder-main.c:70
-#, fuzzy
-msgid "Connect..."
-msgstr "Connectant..."
-
-#: gda-dev/gda-builder-main.c:70
-#, fuzzy
-msgid "Connect to database"
-msgstr "Connecta amb la base de dades"
-
-#: gda-dev/gda-builder-main.c:73
-#, fuzzy
-msgid "Close database connection"
-msgstr "Tanca la connexió de la base de dades"
-
-#: gda-dev/gda-builder-main.c:77 gda-manager/gda-mgr-gda.c:48
-#, fuzzy
-msgid "Browse"
-msgstr "Navegador"
-
-#: gda-dev/gda-builder-main.c:77
-#, fuzzy
-msgid "Open database browser"
-msgstr "Obre el navegador de base de dades"
-
-#: gda-dev/gda-builder-main.c:80
-#, fuzzy
-msgid "Import objects"
-msgstr "Importa objectes"
-
-#: gda-dev/gda-builder-main.c:80
-msgid "Import database objects into repository"
-msgstr "Importa objectes de la base de dades a la biblioteca"
-
-#: gda-dev/gda-builder-main.c:89
-#, fuzzy
-msgid "Close current window"
-msgstr "Tanca la finestra actual"
-
-#: gda-dev/gda-builder-main.c:142
-msgid "New Screen/Report"
-msgstr "Nova Pantalla/Llistat"
-
-#: gda-dev/gda-builder-main.c:145
-msgid "Open Screen/Report"
-msgstr "Obrir Pantalla/Llistat"
-
-#: gda-dev/gda-builder-project.c:41
-msgid "Project"
-msgstr "Projecte"
-
-#: gda-dev/gda-builder-project.c:46 gda-fe/gda-fe-service.c:343
-msgid "Location"
-msgstr "Localització"
-
-#: gda-dev/gda-run.c:32 testing/gda-client-test1.c:32
-#: testing/gda-client-test10.c:32 testing/gda-client-test11.c:32
-#: testing/gda-client-test12.c:33 testing/gda-client-test13.c:33
-#: testing/gda-client-test14.c:32 testing/gda-client-test2.c:32
-#: testing/gda-client-test3.c:32 testing/gda-client-test4.c:31
-#: testing/gda-client-test5.c:32 testing/gda-client-test6.c:30
-#: testing/gda-client-test7.c:32 testing/gda-client-test8.c:33
-#: testing/gda-client-test9.c:32 testing/gda-ui-test1.c:34
-#: testing/gda-ui-test2.c:34 testing/gda-ui-test3.c:32
-#, fuzzy
-msgid "database name"
-msgstr "Nom de la  base de dades"
-
-#: gda-dev/gda-run.c:32 testing/gda-client-test1.c:32
-#: testing/gda-client-test10.c:32 testing/gda-client-test11.c:32
-#: testing/gda-client-test12.c:33 testing/gda-client-test13.c:33
-#: testing/gda-client-test14.c:32 testing/gda-client-test2.c:32
-#: testing/gda-client-test3.c:32 testing/gda-client-test4.c:31
-#: testing/gda-client-test5.c:32 testing/gda-client-test6.c:30
-#: testing/gda-client-test7.c:32 testing/gda-client-test8.c:33
-#: testing/gda-client-test9.c:32 testing/gda-ui-test1.c:34
-#: testing/gda-ui-test2.c:34 testing/gda-ui-test3.c:32
-msgid "DATABASE"
-msgstr "BASE DE DADES"
-
-#: gda-dev/gda-run.c:33 testing/gda-client-test1.c:33
-#: testing/gda-client-test10.c:33 testing/gda-client-test11.c:33
-#: testing/gda-client-test12.c:34 testing/gda-client-test13.c:34
-#: testing/gda-client-test14.c:33 testing/gda-client-test2.c:33
-#: testing/gda-client-test3.c:33 testing/gda-client-test4.c:32
-#: testing/gda-client-test5.c:33 testing/gda-client-test6.c:31
-#: testing/gda-client-test7.c:33 testing/gda-client-test8.c:34
-#: testing/gda-client-test9.c:33 testing/gda-ui-test1.c:35
-#: testing/gda-ui-test2.c:35 testing/gda-ui-test3.c:33
-#, fuzzy
-msgid "user name"
-msgstr "Nom d'usuari"
-
-#: gda-dev/gda-run.c:33 testing/gda-client-test1.c:33
-#: testing/gda-client-test10.c:33 testing/gda-client-test11.c:33
-#: testing/gda-client-test12.c:34 testing/gda-client-test13.c:34
-#: testing/gda-client-test14.c:33 testing/gda-client-test2.c:33
-#: testing/gda-client-test3.c:33 testing/gda-client-test4.c:32
-#: testing/gda-client-test5.c:33 testing/gda-client-test6.c:31
-#: testing/gda-client-test7.c:33 testing/gda-client-test8.c:34
-#: testing/gda-client-test9.c:33 testing/gda-ui-test1.c:35
-#: testing/gda-ui-test2.c:35 testing/gda-ui-test3.c:33
-msgid "USER-NAME"
-msgstr "NOM D'USUARI"
-
-#: gda-dev/gda-run.c:34 testing/gda-client-test1.c:34
-#: testing/gda-client-test10.c:34 testing/gda-client-test11.c:34
-#: testing/gda-client-test12.c:35 testing/gda-client-test13.c:35
-#: testing/gda-client-test14.c:34 testing/gda-client-test2.c:34
-#: testing/gda-client-test3.c:34 testing/gda-client-test4.c:33
-#: testing/gda-client-test5.c:34 testing/gda-client-test6.c:32
-#: testing/gda-client-test7.c:34 testing/gda-client-test8.c:35
-#: testing/gda-client-test9.c:34 testing/gda-ui-test1.c:36
-#: testing/gda-ui-test2.c:36 testing/gda-ui-test3.c:34
-msgid "password"
-msgstr "contrasenya"
-
-#: gda-dev/gda-run.c:34 testing/gda-client-test1.c:34
-#: testing/gda-client-test10.c:34 testing/gda-client-test11.c:34
-#: testing/gda-client-test12.c:35 testing/gda-client-test13.c:35
-#: testing/gda-client-test14.c:34 testing/gda-client-test2.c:34
-#: testing/gda-client-test3.c:34 testing/gda-client-test4.c:33
-#: testing/gda-client-test5.c:34 testing/gda-client-test6.c:32
-#: testing/gda-client-test7.c:34 testing/gda-client-test8.c:35
-#: testing/gda-client-test9.c:34 testing/gda-ui-test1.c:36
-#: testing/gda-ui-test2.c:36 testing/gda-ui-test3.c:34
-msgid "PASSWORD"
-msgstr "CONTRASENYA"
-
-#: gda-dev/gda-run.c:35
-#, fuzzy
-msgid "file name"
-msgstr "Nom del fitxer"
-
-#: gda-dev/gda-run.c:35
-msgid "FILE-NAME"
-msgstr "NOM DEL FITXER"
-
-#: gda-dev/gda-run.c:109
-#, c-format
-msgid "%s: misconfigured DSN entry"
-msgstr "%s: entrada DSN mal configurada"
-
-#: gda-dev/gda-run.c:124
-#, c-format
-msgid "%s: data source '%s' not found\n"
-msgstr "%s: orígen de les dades '%s' no existeix\n"
-
-#: gda-fe/gda-fe-batch.c:28
-msgid "Execute batch file"
-msgstr ""
-
-#: gda-fe/gda-fe-batch.c:31
-#, fuzzy
-msgid "Open file"
-msgstr "Obre un fitxer"
-
-#: gda-fe/gda-fe-batch.c:34
-#, fuzzy
-msgid "Save file"
-msgstr "Desa al fitxer"
-
-#: gda-fe/gda-fe-batch.c:37
-#, fuzzy
-msgid "Clear command list"
-msgstr "Esborra la lista d'ordres"
-
-#: gda-fe/gda-fe-batch.c:94
-#, fuzzy, c-format
-msgid ""
-"Could not open file\n"
-"'%s'"
-msgstr ""
-"No és possible carregar el fitxer\n"
-" %s"
-
-#: gda-fe/gda-fe-batch.c:126
-#, fuzzy
-msgid "No command selected"
-msgstr "No hi ha cap ordre seleccionada"
-
-#: gda-fe/gda-fe-batch.c:145
-msgid "Enter command text"
-msgstr "Entra texte de la ordre"
-
-#: gda-fe/gda-fe-batch.c:160
-#, fuzzy
-msgid "Insert at current position"
-msgstr "Inserta el fitxer en la posició actual"
-
-#: gda-fe/gda-fe-batch.c:311
-#, fuzzy
-msgid "Command separators"
-msgstr "Separadors d'ordres"
-
-#: gda-fe/gda-fe-batch.c:321
-#, fuzzy
-msgid "Append to current file"
-msgstr "Afegeix al fitxer actual"
-
-#: gda-fe/gda-fe-batch.c:340
-msgid "You must specify a file to be loaded"
-msgstr "Ha d'especificar un fitxer per ser carregat"
-
-#: gda-fe/gda-fe-batch.c:342
-msgid "You must specifiy the characters used as command separators"
-msgstr "Ha d'especificar els caràcters utilitzats com a separadors d'ordres"
-
-#: gda-fe/gda-fe-batch.c:413 gda-manager/gda-mgr-gda.c:39
-#, fuzzy
-msgid "Edit"
-msgstr "Editor"
-
-#: gda-fe/gda-fe-batch.c:434
-msgid "Up"
-msgstr "Dalt"
-
-#: gda-fe/gda-fe-batch.c:442
-msgid "Down"
-msgstr "Baix"
-
-#: gda-fe/gda-fe-batch.c:465
-msgid "Send as XML"
-msgstr "Enviar com a XML"
-
-#: gda-fe/gda-fe-config.c:245
-#, fuzzy
-msgid "Tab Position"
-msgstr "Posició dels tabuladors"
-
-#: gda-fe/gda-fe-config.c:257
-#, fuzzy
-msgid "Grid"
-msgstr "Quadrícula"
-
-#: gda-fe/gda-fe-config.c:267
-#, fuzzy
-msgid "Font"
-msgstr "Tipus de lletra"
-
-#: gda-fe/gda-fe-config.c:271
-msgid "Foreground Color"
-msgstr "Color del texte"
-
-#: gda-fe/gda-fe-config.c:275
-msgid "Background Color"
-msgstr "Color de fons"
-
-#: gda-fe/gda-fe-config.c:280
-msgid "Show row numbers"
-msgstr "Mostra número de files"
-
-#: gda-fe/gda-fe-config.c:301
-#, fuzzy
-msgid "User Interface"
-msgstr "Interfície d'usuari"
-
-#: gda-fe/gda-fe-config.c:303
-msgid "GDA"
-msgstr "GDA"
-
-#: gda-fe/gda-fe-designer.c:29
-#, fuzzy
-msgid "New database design"
-msgstr "Disseny nou de base de dades"
-
-#: gda-fe/gda-fe-designer.c:32
-#, fuzzy
-msgid "Open database design"
-msgstr "Obre un disseny de base de dades"
-
-#: gda-fe/gda-fe-designer.c:35
-#, fuzzy
-msgid "Save database design"
-msgstr "Desa el disseny de base de dades"
-
-#: gda-fe/gda-fe-designer.c:42
-#, fuzzy
-msgid "Close designer window"
-msgstr "Tanca la finestra de disseny"
-
-#: gda-fe/gda-fe-designer.c:78
-#, fuzzy
-msgid "Select XML file"
-msgstr "Selecciona un fitxer XML"
-
-#. create dialog
-#: gda-fe/gda-fe-dsnconfig.c:116
-#, fuzzy
-msgid "Data sources"
-msgstr "Orígens de les dades"
-
-#: gda-fe/gda-fe-dsnconfig.c:152
-msgid "Apply"
-msgstr "Aplicar"
-
-#: gda-fe/gda-fe-log.c:33
-#, fuzzy
-msgid "View selected entry"
-msgstr "Visualitza la entrada seleccionada"
-
-#: gda-fe/gda-fe-log.c:36
-#, fuzzy
-msgid "Clear log file"
-msgstr "Esborra el fitxer de registre"
-
-#: gda-fe/gda-fe-log.c:39
-#, fuzzy
-msgid "Refresh log viewer"
-msgstr "Refresca el registre"
-
-#: gda-fe/gda-fe-log.c:43 gda-fe/gda-fe-service.c:45
-#, fuzzy
-msgid "Close log window"
-msgstr "Tanca la finestra del registre"
-
-#: gda-fe/gda-fe-log.c:124
-#, fuzzy, c-format
-msgid "Error loading file '%s'"
-msgstr "S'ha produït un error en carregar el fitxer '%s'"
-
-#: gda-fe/gda-fe-service.c:38
-msgid "Activate"
-msgstr "Activa"
-
-#: gda-fe/gda-fe-service.c:38
-msgid "Activate selected service"
-msgstr "Activa els serveis seleccionats"
-
-#: gda-fe/gda-fe-service.c:41
-#, fuzzy
-msgid "Refresh service list"
-msgstr "Refresca la llista de serveis"
-
-#: gda-fe/gda-fe-service.c:91
-msgid ""
-"Could not find any installed services. Either you don't have\n"
-"any services installed or I don't know the path to find them.\n"
-"In either case, please check your GNOME-DB installation."
-msgstr ""
-"No s'ha pogut trobar cap servei instalat. Tan pot ésser que no\n"
-"tingui cap servei instalat com que no conegui el camí per trobarlos.\n"
-"En qualsevol case, si us plau comprovi la seva instalació de GNOME-DB." 
-
-#: gda-fe/gda-fe-service.c:170
-#, c-format
-msgid "Service '%s' activated"
-msgstr "Servei '%s' activat"
-
-#: gda-fe/gda-fe-service.c:173
-#, fuzzy, c-format
-msgid "Could not activate service '%s'"
-msgstr "No és possible activar el servei %s"
-
-#: gda-fe/gda-fe-service.c:287 gda-fe/gda-fe-service.c:288
-msgid "Repo ID"
-msgstr "Biblio ID"
-
-#: gda-fe/gda-fe-service.c:338
-#, fuzzy
-msgid "Type"
-msgstr "Tipus"
-
-#: gda-fe/gda-fe-service.c:356
-msgid "Service Control"
-msgstr "Control de Serveis"
-
-#: gda-interbase-server/gda-interbase-connection.c:251
-#, c-format
-msgid "Error code %ld"
-msgstr "Codi d'error %ld"
-
-#: gda-interbase-server/gda-interbase-connection.c:252
-#: gda-ldap-server/gda-ldap-connection.c:263
-#, c-format
-msgid "error '%s' at %s"
-msgstr "error '%s' en %s"
-
-#: gda-interbase-server/gda-interbase-connection.c:257
-#: gda-interbase-server/gda-interbase-connection.c:258
-#: gda-ldap-server/gda-ldap-connection.c:268
-#: gda-ldap-server/gda-ldap-connection.c:269
-msgid "Not available"
+msgid "%p is not a valid table"
 msgstr "No disponible"
 
-#: gda-interbase-server/gda-interbase-connection.c:259
-#: gda-ldap-server/gda-ldap-connection.c:270
-msgid "error"
-msgstr "error"
-
-#: gda-interbase-server/main-interbase.c:70
-msgid "Could not register INTERBASE provider implementation"
-msgstr "No es pot registrar la implementació del proveidor INTERBASE"
-
-#: gda-ldap-server/main-ldap.c:75
-msgid "Could not register LDAP provider implementation"
-msgstr "No es pot registrar la implamentació del proveidor LDAP"
-
-#: gda-manager/gda-mgr-callbacks.c:65
-#: testing/controls_browser/gda-controls-browser.c:365
-#, fuzzy
-msgid "Select config component"
-msgstr "Selecciona la configuració del component"
-
-#: gda-manager/gda-mgr-container.c:132
-msgid "You need Bonobo to load components!"
-msgstr "Necessita Bonobo per carregar els components!"
-
-#: gda-manager/gda-mgr-gda.c:36
-#, fuzzy
-msgid "Add new data source"
-msgstr "Afegeix nous orígens de dades"
-
-#: gda-manager/gda-mgr-gda.c:39
-#, fuzzy
-msgid "Edit selected data source"
-msgstr "Edita els orígens de dades seleccionats"
-
-#: gda-manager/gda-mgr-gda.c:42
-#, fuzzy
-msgid "Remove selected data source"
-msgstr "Esborra els orígens de dades seleccionats"
-
-#: gda-manager/gda-mgr-gda.c:48
-#, fuzzy
-msgid "Browse selected data source"
-msgstr "Navega per la base de dades seleccionada"
-
-#. create the dialog
-#: gda-manager/gda-mgr-gda.c:148
-#, fuzzy
-msgid "Data Source"
-msgstr "Orígens de les dades"
-
-#. create dialog for asking the user name and password
-#: gda-manager/gda-mgr-gda.c:193
-#, fuzzy
-msgid "Browse Data Source"
-msgstr "Orígens de les dades"
-
-#: gda-manager/gda-mgr-gda.c:258
-#, fuzzy
-msgid "could not load browser control"
-msgstr "No és possible carregar el control navegador"
-
-#. create the dialog
-#: gda-manager/gda-mgr-gda.c:287
-msgid "Load config component"
-msgstr "Carrega la configuració del component"
-
-#: gda-manager/gda-mgr-gda.c:312
-msgid "Module"
-msgstr "Mòdul"
-
-#: gda-manager/gda-mgr-gda.c:320
-#, fuzzy
-msgid "Users"
-msgstr "Usuaris"
-
-#: gda-manager/gda-mgr-gda.c:323
-msgid "User access rights"
-msgstr "Privilegis d'accés del usuari"
-
-#: gda-manager/gda-mgr-gda.c:331
-msgid "All"
-msgstr "Tot"
-
-#: gda-manager/gda-mgr-gda.c:389
-#, fuzzy
-msgid "Data source not found in GDA configuration"
-msgstr "L'orígen de les dades no s'ha trobat en la configuració del GDA"
-
-#: gda-odbc-server/gda-odbc-config-main.c:78
-msgid "Could not create GnomeDbControl"
-msgstr "No es pot crear el control GnomDbControl"
-
-#: gda-odbc-server/gda-odbc-config-main.c:98
-#, c-format
-msgid "new instance %p created"
-msgstr "nova instancia %p creada"
-
-#: gda-postgres-server/gda-postgres-config-ac.c:94
-#: gda-postgres-server/gda-postgres-config-main.c:164
-#: gda-postgres-server/gda-postgres-config-users.c:93
-#, fuzzy
-msgid "DSN for the connection"
-msgstr "DSN per a la connexió"
-
-#: gda-postgres-server/gda-postgres-config-ac.c:98
-#: gda-postgres-server/gda-postgres-config-main.c:167
-#: gda-postgres-server/gda-postgres-config-main.c:280
-#: gda-postgres-server/gda-postgres-config-users.c:96
-msgid "User identity"
-msgstr "Identitat de l'usuari"
-
-#: gda-postgres-server/gda-postgres-config-ac.c:102
-#: gda-postgres-server/gda-postgres-config-main.c:170
-#: gda-postgres-server/gda-postgres-config-users.c:99
-msgid "User passord"
-msgstr "Contrasenya de l'usuari"
-
-#: gda-postgres-server/gda-postgres-config-ac.c:106
-#: gda-postgres-server/gda-postgres-config-main.c:173
-#: gda-postgres-server/gda-postgres-config-users.c:102
-msgid "Show/hide the user id"
-msgstr "Mostra/Amaga el ID de l'usuari"
-
-#: gda-postgres-server/gda-postgres-config-ac.c:110
-#: gda-postgres-server/gda-postgres-config-main.c:176
-#: gda-postgres-server/gda-postgres-config-users.c:105
-msgid "Give it TRUE to reset/start the component"
-msgstr "Dóna CERT per parar/arrancar el component"
-
-#: gda-postgres-server/gda-postgres-config-ac.c:114
-#: gda-postgres-server/gda-postgres-config-users.c:108
-#, fuzzy
-msgid "User name setting"
-msgstr "Configuració de l'usuari"
-
-#: gda-postgres-server/gda-postgres-config-ac.c:118
-msgid "Group name setting"
-msgstr "Configuració de grups"
-
-#: gda-postgres-server/gda-postgres-config-ac.c:122
-msgid "Object type setting"
-msgstr "Configuració del tipus d'objecte"
-
-#: gda-postgres-server/gda-postgres-config-ac.c:126
-#, fuzzy
-msgid "Object name setting"
-msgstr "Configuració de l'objecte"
-
-#: gda-postgres-server/gda-postgres-config-ac.c:141
-msgid "Access rigths"
-msgstr "Privilegis d'accés"
-
-#: gda-postgres-server/gda-postgres-config-ac.c:174
-msgid "Indexes"
-msgstr "Indexos"
-
-#: gda-postgres-server/gda-postgres-config-ac.c:206
-msgid "All users rights"
-msgstr "Tots els privilegis d'accés"
-
-#: gda-postgres-server/gda-postgres-config-ac.c:223
-msgid "Groups rights"
-msgstr "Privilegis dels grups"
-
-#: gda-postgres-server/gda-postgres-config-ac.c:230
-msgid "Group:"
-msgstr "Grup:"
-
-#: gda-postgres-server/gda-postgres-config-ac.c:241
-msgid "Individual users rights"
-msgstr "Privilegis individuals de l'usuari"
-
-#: gda-postgres-server/gda-postgres-config-ac.c:248
-#, fuzzy
-msgid "User:"
-msgstr "Usuari:"
-
-#: gda-postgres-server/gda-postgres-config-ac.c:298
-#, fuzzy
-msgid "Insert"
-msgstr "Inserta"
-
-#: gda-postgres-server/gda-postgres-config-ac.c:304
-#, fuzzy
-msgid "Update/Delete"
-msgstr "Actualitza/Suprimeix"
-
-#: gda-postgres-server/gda-postgres-config-ac.c:310
-msgid "Rule"
-msgstr "Regla"
-
-#: gda-postgres-server/gda-postgres-config-ac.c:1098
-#: gda-postgres-server/gda-postgres-config-ac.c:1125
-#, fuzzy
-msgid "Table"
-msgstr "Taula"
-
-#: gda-postgres-server/gda-postgres-config-ac.c:1100
-#: gda-postgres-server/gda-postgres-config-ac.c:1108
-#: gda-postgres-server/gda-postgres-config-ac.c:1116
-msgid "Owner"
-msgstr "Propietari"
-
-#: gda-postgres-server/gda-postgres-config-ac.c:1114
-#, fuzzy
-msgid "Sequence"
-msgstr "Seqüència"
-
-#: gda-postgres-server/gda-postgres-config-ac.c:1123
-msgid "Index"
-msgstr "Índex"
-
-#: gda-postgres-server/gda-postgres-config-main.c:286
-#, fuzzy
-msgid "Name:"
-msgstr "Nom:"
-
-#: gda-postgres-server/gda-postgres-config-main.c:293
-msgid "Password:"
-msgstr "Contrasenya"
-
-#: gda-postgres-server/gda-postgres-config-main.c:355
-#: gda-postgres-server/gda-postgres-config-main.c:380
-#: gda-postgres-server/gda-postgres-config-main.c:406
-#, fuzzy
-msgid "Could not instantiate the gnome-db-control"
-msgstr "No es pot instanciar el control gnome-db-control"
-
-#: gda-postgres-server/gda-postgres-config-users.c:119
-#: gda-postgres-server/gda-postgres-config-users.c:121
-msgid "Group(s)"
-msgstr "Grup(s)"
-
-#: gda-postgres-server/gda-postgres-config-users.c:119
-#: gda-postgres-server/gda-postgres-config-users.c:165
-#, fuzzy
-msgid "Create DB"
-msgstr "Crea DB"
-
-#: gda-postgres-server/gda-postgres-config-users.c:120
-#: gda-postgres-server/gda-postgres-config-users.c:171
-#, fuzzy
-msgid "Create users"
-msgstr "Crea usuaris"
-
-#: gda-postgres-server/gda-postgres-config-users.c:120
-#: gda-postgres-server/gda-postgres-config-users.c:177
-msgid "Valid until"
-msgstr "Valit fins"
-
-#: gda-postgres-server/gda-postgres-config-users.c:125
-#, fuzzy
-msgid "Known database users"
-msgstr "Usuaris de base de dades coneguts"
-
-#: gda-postgres-server/gda-postgres-config-users.c:208
-msgid "Save as new user"
-msgstr "Desa com a usuari nou"
-
-#: gda-postgres-server/gda-postgres-config-users.c:213
-msgid "Save modified user"
-msgstr "Desa l'usuari modificat"
-
-#: gda-postgres-server/gda-postgres-config-users.c:218
-#, fuzzy
-msgid "Delete user"
-msgstr "Suprimeix usuari"
-
-#: gda-postgres-server/gda-postgres-config-users.c:436
-#: gda-postgres-server/gda-postgres-config-users.c:440
-msgid "Yes"
-msgstr "Sí"
-
-#: gda-postgres-server/gda-postgres-config-users.c:438
-#: gda-postgres-server/gda-postgres-config-users.c:442
-msgid "No"
-msgstr "No"
-
-#: gda-rolodex/gda-rolodex-callbacks.c:28 testing/gda-ui-test3.c:53
-msgid "UI Test 3 Error"
-msgstr "Error en UI Test 3"
-
-#: gda-rolodex/gda-rolodex-main.c:91
-#, c-format
-msgid "Record %8.0f"
-msgstr "Registre %8.0f"
-
-#: gda-rolodex/gda-rolodex-main.c:273
-#, c-format
-msgid "We could not load the glade interface description! (%s)"
-msgstr "No es pot carregar la descripció de glade! (%s)"
-
-#: gda-rolodex/gda-rolodex-main.c:304
-#, fuzzy
-msgid "Select the table name"
-msgstr "Selecciona el nom de la taula"
-
-#: gda-srv/gda-server-error.c:169
+#: lib/gda-server/gda-server-error.c:185
 msgid "Could not get pointer to server implementation"
 msgstr "No es pot obtenir el punter a la implementació del servidor"
 
-#: gda-srv/gda-server-impl.c:112
-#, c-format
-msgid "Starting provider %s with no implementation functions"
-msgstr "Arrancant el proveidor %s sene implementació de funcions"
-
-#: gda-srv/gda-server-impl.c:144
-msgid "Could not get CORBA name service object"
-msgstr "No es pot obternir el nom CORBA de l'objecte servidor"
-
-#: gda-srv/gda-server-impl.c:151
-#, c-format
-msgid "Registered with ID = %s"
-msgstr "Registrat amb ID = %s"
-
-#: gda-srv/gda-server-impl.c:241
-#, c-format
-msgid "CORBA system exception %s"
-msgstr "Excepció CORBA de sistema %s"
-
-#: gda-srv/gda-server-impl.c:244
-#, c-format
-msgid "CORBA user exception: %s"
-msgstr "Excepció CORBA d'usuari: %s"
-
-#: gda-srv/gda-server-impl-connection.c:106
-#: gda-srv/gda-server-impl-connection.c:115
-#: gda-srv/gda-server-impl-connection.c:122
-#: gda-srv/gda-server-impl-connection.c:131
-#: gda-srv/gda-server-impl-connection.c:138
-#: gda-srv/gda-server-impl-connection.c:147
-#: gda-srv/gda-server-impl-connection.c:154
-#: gda-srv/gda-server-impl-connection.c:163
-#: gda-srv/gda-server-impl-recordset.c:113
-#: gda-srv/gda-server-impl-recordset.c:122
-#: gda-srv/gda-server-impl-recordset.c:129
-#: gda-srv/gda-server-impl-recordset.c:144
-#: gda-srv/gda-server-impl-recordset.c:153
-#: gda-srv/gda-server-impl-recordset.c:160
-#: gda-srv/gda-server-impl-recordset.c:169
-#: gda-srv/gda-server-impl-recordset.c:176
-#: gda-srv/gda-server-impl-recordset.c:185
-#: gda-srv/gda-server-impl-recordset.c:192
-#: gda-srv/gda-server-impl-recordset.c:200
-#: gda-srv/gda-server-impl-recordset.c:209
-#: gda-srv/gda-server-impl-recordset.c:216
-#: gda-srv/gda-server-impl-recordset.c:224
-#: gda-srv/gda-server-impl-recordset.c:232
-#: gda-srv/gda-server-impl-recordset.c:272
-#: gda-srv/gda-server-impl-recordset.c:282
-#: gda-srv/gda-server-impl-recordset.c:290
-#: gda-srv/gda-server-impl-recordset.c:298
-#: gda-srv/gda-server-impl-recordset.c:306
-#: gda-srv/gda-server-impl-recordset.c:314
-#: gda-srv/gda-server-impl-recordset.c:368
-#: gda-srv/gda-server-impl-recordset.c:376
-#: gda-srv/gda-server-impl-recordset.c:385
-#: gda-srv/gda-server-impl-recordset.c:393
-#: gda-srv/gda-server-impl-recordset.c:401
+#: lib/gda-server/gda-server-impl-connection.c:122
+#: lib/gda-server/gda-server-impl-connection.c:131
+#: lib/gda-server/gda-server-impl-connection.c:138
+#: lib/gda-server/gda-server-impl-connection.c:147
+#: lib/gda-server/gda-server-impl-connection.c:154
+#: lib/gda-server/gda-server-impl-connection.c:163
+#: lib/gda-server/gda-server-impl-connection.c:170
+#: lib/gda-server/gda-server-impl-connection.c:179
+#: lib/gda-server/gda-server-impl-recordset.c:126
+#: lib/gda-server/gda-server-impl-recordset.c:135
+#: lib/gda-server/gda-server-impl-recordset.c:142
+#: lib/gda-server/gda-server-impl-recordset.c:157
+#: lib/gda-server/gda-server-impl-recordset.c:166
+#: lib/gda-server/gda-server-impl-recordset.c:173
+#: lib/gda-server/gda-server-impl-recordset.c:182
+#: lib/gda-server/gda-server-impl-recordset.c:189
+#: lib/gda-server/gda-server-impl-recordset.c:198
+#: lib/gda-server/gda-server-impl-recordset.c:205
+#: lib/gda-server/gda-server-impl-recordset.c:213
+#: lib/gda-server/gda-server-impl-recordset.c:222
+#: lib/gda-server/gda-server-impl-recordset.c:229
+#: lib/gda-server/gda-server-impl-recordset.c:237
+#: lib/gda-server/gda-server-impl-recordset.c:245
+#: lib/gda-server/gda-server-impl-recordset.c:273
+#: lib/gda-server/gda-server-impl-recordset.c:281
+#: lib/gda-server/gda-server-impl-recordset.c:289
+#: lib/gda-server/gda-server-impl-recordset.c:297
+#: lib/gda-server/gda-server-impl-recordset.c:305
+#: lib/gda-server/gda-server-impl-recordset.c:314
 #, c-format
 msgid "%s not implemented"
 msgstr "%s no implementat"
 
-#: gda-srv/gda-server-impl-connection.c:255
+#: lib/gda-server/gda-server-impl-connection.c:269
 #, c-format
 msgid "impl_GDA_Connection_open: opening connection with DSN: %s"
 msgstr "impl_GDA_Connection_open: obrint conexió amb DSN: %s"
 
-#: gda-srv/gda-server-impl-recordset.c:240
-#: gda-srv/gda-server-impl-recordset.c:248
-#, c-format
-msgid "%s: not implemented"
-msgstr "%s: no implementat"
-
-#: gda-srv/gda-server-impl-recordset.c:333
-#, c-format
-msgid "%s: text = '%s'"
-msgstr "%s: texte = '%s'"
-
-#: gda-srv/gda-server-impl-recordset.c:494
+#: lib/gda-server/gda-server-impl-recordset.c:402
 #, c-format
 msgid "%s: an error ocurred while fetching data"
 msgstr "%s: error ocurregut durant navegació de les dades"
 
-#: gda-srv/gda-server-impl-recordset.c:533
+#: lib/gda-server/gda-server-impl.c:197
 #, c-format
-msgid "%s: length = %d"
-msgstr "%s: longitud = %d"
+msgid "Starting provider %s with no implementation functions"
+msgstr "Arrancant el proveidor %s sene implementació de funcions"
 
-#: gda-srv/gda-server-impl-recordset.c:546
+#: lib/gda-server/gda-server-impl.c:223
+#: report/server/gda-report-server-main.c:113
+msgid ""
+"OAF doesn't know about our IID; indicates broken installation. Exiting..."
+msgstr ""
+
+#: lib/gda-server/gda-server-impl.c:226
+msgid ""
+"Another instance of this provider is already registered with OAF. Exiting..."
+msgstr ""
+
+#: lib/gda-server/gda-server-impl.c:229
+msgid "Unknown error registering this provider with OAF. Exiting"
+msgstr ""
+
+#: lib/gda-server/gda-server-impl.c:233
 #, c-format
-msgid "%s: sending field description for '%s'"
-msgstr "%s: enviant camp de descripció per a '%s'"
+msgid "Registered with ID = %s"
+msgstr "Registrat amb ID = %s"
 
-#: testing/controls_browser/gda-controls-browser.c:275
+#: lib/gda-server/gda-server-impl.c:312
+#, c-format
+msgid "CORBA system exception %s"
+msgstr "Excepció CORBA de sistema %s"
+
+#: lib/gda-server/gda-server-impl.c:315
+#, c-format
+msgid "CORBA user exception: %s"
+msgstr "Excepció CORBA d'usuari: %s"
+
+#: lib/gda-server/gda-server-init.c:63 lib/gda-server/gda-server-init.c:69
+#, c-format
+msgid "Received signal %d, shutting down"
+msgstr ""
+
+#: lib/gda-server/gda-server-init.c:73
+#, c-format
+msgid "Received signal %d. Ignoring"
+msgstr ""
+
+#: lib/gda-server/gda-server-init.c:123
+msgid "Attempt to initialize an already initialized provider"
+msgstr ""
+
+#: providers/gda-ldap-server/GNOME_GDA_Provider_LDAP.oaf.in.h:1
 #, fuzzy
-msgid "Refresh all"
-msgstr "Refresca tot"
+msgid "GDA Datasource Access for LDAP"
+msgstr "Orígens de les dades GDA"
 
-#: testing/controls_browser/gda-controls-browser.c:275
-msgid "Ok"
-msgstr "Aceptar"
+#: providers/gda-interbase-server/gda-interbase-connection.c:273
+#: providers/gda-ldap-server/gda-ldap-connection.c:284
+#: providers/gda-mdb-server/gda-mdb-connection.c:372
+#: providers/gda-mysql-server/gda-mysql-connection.c:370
+#: providers/gda-odbc-server/gda-odbc-connection.c:621
+#: providers/gda-odbc-server/gda-odbc-connection.c:654
+#: providers/gda-oracle-server/gda-oracle-connection.c:438
+#: providers/gda-postgres-server/gda-postgres-connection.c:743
+#: providers/gda-sybase-server/gda-sybase-error.c:115
+#: providers/gda-tds-server/gda-tds-error.c:114
+#, c-format
+msgid "error '%s' at %s"
+msgstr "error '%s' en %s"
 
-#: testing/controls_browser/gda-controls-browser.c:393
+#: providers/gda-interbase-server/gda-interbase-connection.c:278
+#: providers/gda-interbase-server/gda-interbase-connection.c:279
+#: providers/gda-ldap-server/gda-ldap-connection.c:289
+#: providers/gda-ldap-server/gda-ldap-connection.c:290
+#: providers/gda-mdb-server/gda-mdb-connection.c:376
+#: providers/gda-mdb-server/gda-mdb-connection.c:377
+#: providers/gda-mysql-server/gda-mysql-connection.c:374
+#: providers/gda-mysql-server/gda-mysql-connection.c:375
+#: providers/gda-odbc-server/gda-odbc-connection.c:623
+#: providers/gda-odbc-server/gda-odbc-connection.c:624
+#: providers/gda-odbc-server/gda-odbc-connection.c:656
+#: providers/gda-odbc-server/gda-odbc-connection.c:657
+#: providers/gda-oracle-server/gda-oracle-connection.c:443
+#: providers/gda-oracle-server/gda-oracle-connection.c:444
+#: providers/gda-postgres-server/gda-postgres-connection.c:750
+#: providers/gda-postgres-server/gda-postgres-connection.c:751
+#: providers/gda-primebase-server/gda-primebase-connection.c:363
+#: providers/gda-primebase-server/gda-primebase-connection.c:364
+#: providers/gda-sybase-server/gda-sybase-error.c:124
+#: providers/gda-sybase-server/gda-sybase-error.c:125
+#: providers/gda-tds-server/gda-tds-error.c:123
+#: providers/gda-tds-server/gda-tds-error.c:124
+msgid "Not available"
+msgstr "No disponible"
+
+#: providers/gda-interbase-server/gda-interbase-connection.c:280
+#: providers/gda-ldap-server/gda-ldap-connection.c:291
+#: providers/gda-mdb-server/gda-mdb-connection.c:378
+#: providers/gda-mysql-server/gda-mysql-connection.c:376
+#: providers/gda-oracle-server/gda-oracle-connection.c:445
+#: providers/gda-postgres-server/gda-postgres-connection.c:752
+#: providers/gda-primebase-server/gda-primebase-connection.c:365
+#: providers/gda-sybase-server/gda-sybase-error.c:126
+#: providers/gda-tds-server/gda-tds-error.c:125
+msgid "error"
+msgstr "error"
+
+#: providers/gda-ldap-server/main-ldap.c:71
+msgid "Could not register LDAP provider implementation"
+msgstr "No es pot registrar la implamentació del proveidor LDAP"
+
+#: providers/gda-interbase-server/GNOME_GDA_Provider_InterBase.oaf.in.h:1
 #, fuzzy
-msgid "GNOME-DB Controls browser"
-msgstr "Navegador de controls GNOME-DB"
+msgid "GDA Datasource Access for Interbase"
+msgstr "L'orígen de les dades no té nom!"
 
-#: testing/controls_browser/gda-controls-browser.c:413
-msgid "New control"
-msgstr "Nou control"
+#: providers/gda-interbase-server/gda-interbase-connection.c:272
+#, c-format
+msgid "Error code %ld"
+msgstr "Codi d'error %ld"
 
-#: testing/controls_browser/gda-controls-browser.c:420
+#: providers/gda-interbase-server/main-interbase.c:72
+msgid "Could not register INTERBASE provider implementation"
+msgstr "No es pot registrar la implementació del proveidor INTERBASE"
+
+#: providers/gda-mail-server/GNOME_GDA_Provider_Mail.oaf.in.h:1
 #, fuzzy
-msgid "Close control"
-msgstr "Tanca el control"
+msgid "GDA Datasource Access for Mail"
+msgstr "Orígens de les dades GDA"
 
-#: testing/controls_browser/gda-controls-browser.c:433
+#: providers/gda-mail-server/gda-mail-connection.c:108
+#: providers/gda-mdb-server/gda-mdb-connection.c:224
+#: providers/gda-mysql-server/gda-mysql-connection.c:239
+#: providers/gda-oracle-server/gda-oracle-connection.c:295
+#: providers/gda-postgres-server/gda-postgres-connection.c:477
+#: providers/gda-sybase-server/gda-sybase-connection.c:283
+#: providers/gda-tds-server/gda-tds-connection.c:288
+#, c-format
+msgid "Unhandled SCHEMA_QTYPE %d"
+msgstr ""
+
+#: providers/gda-mail-server/main-mail.c:72
 #, fuzzy
-msgid "Controls"
-msgstr "Controls"
+msgid "Could not register Mail provider implementation"
+msgstr "No es pot registrar la implamentació del proveidor LDAP"
 
-#: testing/controls_browser/gda-controls-browser.c:464
-msgid "Control settings"
-msgstr "Configuració dels controls"
+#: providers/gda-mdb-server/GNOME_GDA_Provider_MDB.oaf.in.h:1
+msgid "GDA Datasource Access for MDB (MS Access) files"
+msgstr ""
 
-#: testing/gda-client-test1.c:31 testing/gda-client-test10.c:31
-#: testing/gda-client-test11.c:31 testing/gda-client-test12.c:32
-#: testing/gda-client-test13.c:32 testing/gda-client-test14.c:31
-#: testing/gda-client-test2.c:31 testing/gda-client-test3.c:31
-#: testing/gda-client-test4.c:30 testing/gda-client-test5.c:31
-#: testing/gda-client-test6.c:29 testing/gda-client-test7.c:31
-#: testing/gda-client-test8.c:32 testing/gda-client-test9.c:31
-#: testing/gda-ui-test1.c:33 testing/gda-ui-test2.c:33
-#: testing/gda-ui-test3.c:31
+#. execute command
+#: providers/gda-mdb-server/gda-mdb-command.c:86
+#: providers/gda-mysql-server/gda-mysql-command.c:103
+#: providers/gda-sybase-server/gda-sybase-command.c:132
+#: providers/gda-tds-server/gda-tds-command.c:120
+#, fuzzy, c-format
+msgid "executing command '%s'"
+msgstr "Executant '%s'"
+
+#: providers/gda-mdb-server/gda-mdb-command.c:88
+#: providers/gda-mysql-server/gda-mysql-command.c:105
+#, fuzzy, c-format
+msgid "info '%s'"
+msgstr "Executant '%s'"
+
+#: providers/gda-mdb-server/gda-mdb-connection.c:137
+#: providers/gda-mysql-server/gda-mysql-connection.c:140
+#, c-format
+msgid ""
+"%s:%d: You cannot provide a UNIX_SOCKET if you also provide either a HOST or "
+"a PORT. Please remove the UNIX_SOCKET, or remove both the HOST and PORT "
+"options"
+msgstr ""
+
+#: providers/gda-mdb-server/gda-mdb-connection.c:147
+#, c-format
+msgid "%s:%d: You must  provide the filename with the MS Access database"
+msgstr ""
+
+#: providers/gda-mdb-server/gda-mdb-connection.c:152
+#, c-format
+msgid "Opening connection with filename=%s, user=%s, password=%s"
+msgstr ""
+
+#: providers/gda-mdb-server/gda-mdb-connection.c:427
+#: providers/gda-mysql-server/gda-mysql-connection.c:421
+msgid "mysql_recset is NULL"
+msgstr ""
+
+#: providers/gda-mdb-server/gda-mdb-connection.c:469
+#: providers/gda-mysql-server/gda-mysql-connection.c:460
+#: providers/gda-sybase-server/gda-sybase-connection.c:458
+#: providers/gda-tds-server/gda-tds-connection.c:457
+msgid "No table name given for SCHEMA_COLS"
+msgstr ""
+
+#: providers/gda-mdb-server/main-mdb.c:72
+#: providers/gda-mysql-server/main-mysql.c:72
 #, fuzzy
-msgid "database provider"
-msgstr "Proveidor de bases de dades"
+msgid "Could not register MySQL provider implementation"
+msgstr "No es pot registrar la implamentació del proveidor LDAP"
 
-#: testing/gda-client-test1.c:31 testing/gda-client-test10.c:31
-#: testing/gda-client-test11.c:31 testing/gda-client-test12.c:32
-#: testing/gda-client-test13.c:32 testing/gda-client-test14.c:31
-#: testing/gda-client-test2.c:31 testing/gda-client-test3.c:31
-#: testing/gda-client-test4.c:30 testing/gda-client-test5.c:31
-#: testing/gda-client-test6.c:29 testing/gda-client-test7.c:31
-#: testing/gda-client-test8.c:32 testing/gda-client-test9.c:31
-#: testing/gda-ui-test1.c:33 testing/gda-ui-test2.c:33
-#: testing/gda-ui-test3.c:31
-msgid "PROVIDER"
-msgstr "PROVEIDOR"
-
-#: testing/gda-client-test12.c:36 testing/gda-client-test13.c:36
-#: testing/gda-client-test4.c:34 testing/gda-client-test5.c:35
-#: testing/gda-client-test6.c:33
+#: providers/gda-mysql-server/GNOME_GDA_Provider_MySQL.oaf.in.h:1
 #, fuzzy
-msgid "table"
-msgstr "taula"
+msgid "GDA Datasource Access for MySQL"
+msgstr "Orígens de les dades GDA"
 
-#: testing/gda-client-test12.c:36 testing/gda-client-test13.c:36
-#: testing/gda-client-test4.c:34 testing/gda-client-test6.c:33
+#: providers/gda-mysql-server/gda-mysql-connection.c:153
+#, c-format
+msgid ""
+"Opening connection with user=%s, password=%s, host=%s, port=%s, unix_socket=%"
+"s"
+msgstr ""
+
+#: providers/gda-odbc-server/GNOME_GDA_Provider_ODBC.oaf.in.h:1
 #, fuzzy
-msgid "TABLENAME"
-msgstr "NOM DE LA TAULA"
+msgid "GDA Datasource Access for ODBC"
+msgstr "Orígens de les dades GDA"
 
-#: testing/gda-client-test5.c:35
+#: providers/gda-odbc-server/gda-odbc-connection.c:280
+#, c-format
+msgid "gda_odbc_connection_open_schema: Unhandled SCHEMA_QTYPE %d\n"
+msgstr ""
+
+#: providers/gda-odbc-server/gda-odbc-connection.c:638
+#: providers/gda-odbc-server/gda-odbc-connection.c:639
+#: providers/gda-odbc-server/gda-odbc-connection.c:640
+#: providers/gda-odbc-server/gda-odbc-connection.c:671
+#: providers/gda-odbc-server/gda-odbc-connection.c:672
+#: providers/gda-odbc-server/gda-odbc-connection.c:673
+msgid "no text"
+msgstr ""
+
+#: providers/gda-odbc-server/main-odbc.c:71
 #, fuzzy
-msgid "TABLE NAME"
-msgstr "NOM DE LA TAULA"
+msgid "Could not register ODBC provider implementation"
+msgstr "No es pot registrar la implamentació del proveidor LDAP"
 
-#: testing/gda-ui-test3.c:94
-msgid "Logging in"
-msgstr "Conectant amb"
+#: providers/gda-oracle-server/GNOME_GDA_Provider_Oracle.oaf.in.h:1
+#, fuzzy
+msgid "GDA Datasource Access for Oracle"
+msgstr "Orígens de les dades GDA"
+
+#: providers/gda-oracle-server/gda-oracle-command.c:185
+#, fuzzy
+msgid "Could not allocate statement handle"
+msgstr "No és possible truncar el fitxer %s"
+
+#: providers/gda-oracle-server/gda-oracle-command.c:189
+msgid "command object being created without associated connection"
+msgstr ""
+
+#: providers/gda-oracle-server/gda-oracle-command.c:220
+#, fuzzy, c-format
+msgid "Executing command '%s'"
+msgstr "Executant '%s'"
+
+#: providers/gda-oracle-server/gda-oracle-connection.c:113
+msgid "error in OCIHandleAlloc() HTYPE_SVCCTX"
+msgstr ""
+
+#: providers/gda-oracle-server/gda-oracle-connection.c:116
+msgid "error in OCIHandleAlloc() HTYPE_SERVER"
+msgstr ""
+
+#: providers/gda-oracle-server/gda-oracle-connection.c:119
+msgid "error in OCIHandleAlloc() HTYPE_ERROR"
+msgstr ""
+
+#: providers/gda-oracle-server/gda-oracle-connection.c:379
+#, c-format
+msgid "Unknown ORACLE type %ld"
+msgstr ""
+
+#: providers/gda-oracle-server/gda-oracle-recordset.c:115
+msgid "Unknown ORACLE data type in fill_field_values"
+msgstr ""
+
+#: providers/gda-oracle-server/gda-oracle-recordset.c:150
+msgid "recordset object being created without associated connection"
+msgstr ""
+
+#: providers/gda-oracle-server/main-oracle.c:71
+#, fuzzy
+msgid "Could not register ORACLE provider implementation"
+msgstr "No es pot registrar la implamentació del proveidor LDAP"
+
+#: providers/gda-postgres-server/GNOME_GDA_Provider_Postgres.oaf.in.h:1
+msgid "GDA Datasource Access for Postgres"
+msgstr ""
+
+#: providers/gda-postgres-server/gda-postgres-connection.c:849
+#: providers/gda-postgres-server/gda-postgres-connection.c:957
+msgid "postgres_recset is NULL"
+msgstr ""
+
+#: providers/gda-postgres-server/main-postgres.c:71
+#, fuzzy
+msgid "Could not register PostgreSQL provider implementation"
+msgstr "No es pot registrar la implamentació del proveidor LDAP"
+
+#: providers/gda-sybase-server/GNOME_GDA_Provider_Sybase.oaf.in.h:1
+#, fuzzy
+msgid "GDA Datasource Access for Sybase"
+msgstr "Orígens de les dades GDA"
+
+#.      gda_server_error_make(error, 0, cnc, "connection seems to be dead");
+#: providers/gda-sybase-server/gda-sybase-command.c:127
+#: providers/gda-tds-server/gda-tds-command.c:116
+msgid "Connection seems to be dead"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-command.c:146
+#: providers/gda-tds-server/gda-tds-command.c:131
+msgid "Filling command structure failed\n"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-command.c:158
+#: providers/gda-tds-server/gda-tds-command.c:139
+msgid "sending cmd failed"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-command.c:165
+#: providers/gda-tds-server/gda-tds-command.c:146
+msgid "Allocating recordset failed"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-command.c:175
+#: providers/gda-tds-server/gda-tds-command.c:154
+msgid "Getting recordset userdata failed"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-command.c:233
+#: providers/gda-tds-server/gda-tds-command.c:207
+msgid "Command execution finished, all results processed"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-command.c:237
+#: providers/gda-tds-server/gda-tds-command.c:211
+msgid "Command failed"
+msgstr "Ordre fallida"
+
+#: providers/gda-sybase-server/gda-sybase-command.c:241
+#: providers/gda-tds-server/gda-tds-command.c:215
+msgid "Execution of resultless command succeeded"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-command.c:257
+#: providers/gda-tds-server/gda-tds-command.c:231
+#, c-format
+msgid "ct_results() returned %x"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-command.c:267
+#: providers/gda-tds-server/gda-tds-command.c:241
+msgid "No further results, command completly succeeded."
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-command.c:271
+#: providers/gda-tds-server/gda-tds-command.c:245
+msgid "An error occured during command execution."
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-command.c:278
+#: providers/gda-tds-server/gda-tds-command.c:249
+msgid "Cmd execution returned unknown result, may be an error"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-command.c:291
+#: providers/gda-tds-server/gda-tds-command.c:259
+msgid "No data returned, freeing recordset structure"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-command.c:322
+#: providers/gda-sybase-server/gda-sybase-command.c:334
+#: providers/gda-tds-server/gda-tds-command.c:289
+#: providers/gda-tds-server/gda-tds-command.c:297
+msgid "Freeing command structure failed"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:171
+msgid "Not enough memory for sybase_Connection"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:448
+#: providers/gda-tds-server/gda-tds-connection.c:447
+#, c-format
+msgid "schema_cols: table_name '%s'"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:464
+#: providers/gda-tds-server/gda-tds-connection.c:463
+#, fuzzy
+msgid "Could not allocate command structure"
+msgstr "No és possible truncar el fitxer %s"
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:486
+#: providers/gda-tds-server/gda-tds-connection.c:485
+#, fuzzy
+msgid "Could not allocate enough memory for query"
+msgstr "No es pot crear el control GnomDbControl"
+
+#. 		gda_server_error_make(error, NULL, cnc, __PRETTY_FUNCTION__);
+#: providers/gda-sybase-server/gda-sybase-connection.c:500
+#: providers/gda-tds-server/gda-tds-connection.c:499
+msgid "Could not get recordset in schema_cols"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:549
+#: providers/gda-tds-server/gda-tds-connection.c:548
+#, c-format
+msgid "schema_procs: invalid constraint type %d"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:559
+#: providers/gda-tds-server/gda-tds-connection.c:558
+#, fuzzy
+msgid "Could not allocate cmd structure"
+msgstr "No és possible truncar el fitxer %s"
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:626
+#: providers/gda-tds-server/gda-tds-connection.c:625
+#, c-format
+msgid "schema_tables: invalid constraint type %d"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:687
+#: providers/gda-tds-server/gda-tds-connection.c:686
+#, c-format
+msgid "Invalid or unsupported constraint type: %d"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:728
+#: providers/gda-tds-server/gda-tds-connection.c:727
+#, fuzzy
+msgid "Could not allocate GdaServerCommand"
+msgstr "No és possible activar el servei %s"
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:758
+#: providers/gda-sybase-server/gda-sybase-connection.c:763
+#: providers/gda-tds-server/gda-tds-connection.c:757
+#: providers/gda-tds-server/gda-tds-connection.c:762
+#, c-format
+msgid "connection status: %x"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:759
+#: providers/gda-tds-server/gda-tds-connection.c:758
+#, fuzzy, c-format
+msgid "return code: %x"
+msgstr "Codi d'error %ld"
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:796
+#: providers/gda-tds-server/gda-tds-connection.c:793
+#, fuzzy
+msgid "attempting reconnection"
+msgstr "Obre una connexió nova "
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:935
+#, fuzzy, c-format
+msgid "Reconnected to '%s'"
+msgstr "Connectat a %s"
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:937
+#: providers/gda-tds-server/gda-tds-connection.c:898
+#, c-format
+msgid "Connected to %s"
+msgstr "Connectat a %s"
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:945
+#: providers/gda-tds-server/gda-tds-connection.c:908
+#, fuzzy, c-format
+msgid "Selected database '%s'"
+msgstr "Desa el disseny de base de dades"
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:974
+#: providers/gda-tds-server/gda-tds-connection.c:933
+#, fuzzy, c-format
+msgid "%s: Could not allocate cmd structure"
+msgstr "No és possible truncar el fitxer %s"
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:983
+#: providers/gda-tds-server/gda-tds-connection.c:942
+#, fuzzy, c-format
+msgid "%s: Could not allocate memory for cmd string"
+msgstr "%s:%d: No es pot crear el control widget"
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:996
+#: providers/gda-tds-server/gda-tds-connection.c:952
+#, fuzzy, c-format
+msgid "%s: ct_command failed"
+msgstr "Ordre fallida"
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:1005
+#: providers/gda-tds-server/gda-tds-connection.c:961
+#, fuzzy, c-format
+msgid "%s: sending command failed"
+msgstr "Ordre fallida"
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:1016
+#, c-format
+msgid "%s: selecting database failed"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:1034
+#, fuzzy, c-format
+msgid "%s: use command failed"
+msgstr "Ordre fallida"
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:1061
+#: providers/gda-tds-server/gda-tds-connection.c:1023
+#, fuzzy
+msgid "Could not allocate locale structure"
+msgstr "No és possible truncar el fitxer %s"
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:1067
+#: providers/gda-tds-server/gda-tds-connection.c:1029
+#, fuzzy, c-format
+msgid "Could not set locale to '%s'"
+msgstr "No és pot carregar el fitxer '%s'"
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:1073
+#: providers/gda-tds-server/gda-tds-connection.c:1035
+#, fuzzy, c-format
+msgid "Could not configure locale to be '%s'"
+msgstr "No es possible canviar al directori '%s'"
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:1078
+#: providers/gda-tds-server/gda-tds-connection.c:1040
+#, fuzzy
+msgid "Could not drop locale structure"
+msgstr ""
+"No és possible carregar el fitxer\n"
+" %s"
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:1091
+#: providers/gda-tds-server/gda-tds-connection.c:1053
+#, c-format
+msgid "Fatal error: %s\n"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:71
+#, c-format
+msgid "gda_sybase_error_make(%p,%p,%p,%p)"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:80
+#: providers/gda-tds-server/gda-tds-error.c:78
+#, c-format
+msgid "No error flag ist set, though %s is called. This may be a bug."
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:144
+msgid "cs_diag() initialized"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:147
+#, fuzzy
+msgid "Could not initialize cs_diag()"
+msgstr "No es pot iniciar CORBA"
+
+#: providers/gda-sybase-server/gda-sybase-error.c:154
+msgid "ct_diag() initialized"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:157
+#, fuzzy
+msgid "Could not initialize ct_diag()"
+msgstr "No es pot iniciar CORBA"
+
+#: providers/gda-sybase-server/gda-sybase-error.c:191
+#, fuzzy, c-format
+msgid "%s could not find server implementation"
+msgstr "No es pot obtenir el punter a la implementació del servidor"
+
+#: providers/gda-sybase-server/gda-sybase-error.c:197
+#, c-format
+msgid "%s could not get cnc userdata"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:209
+#, fuzzy
+msgid "Could not get # of messages"
+msgstr ""
+"No és possible carregar el fitxer\n"
+" %s"
+
+#: providers/gda-sybase-server/gda-sybase-error.c:214
+#, c-format
+msgid "%d ctlib messages to fetch"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:216
+#, c-format
+msgid "%d ctlib message to fetch"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:252
+msgid "error is nullpointer in gda_sybase_messages_handle"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:277
+#: providers/gda-sybase-server/gda-sybase-error.c:344
+#: providers/gda-sybase-server/gda-sybase-error.c:387
+#, fuzzy
+msgid "Could not get # of server messages"
+msgstr "No es pot obtenir el punter a la implementació del servidor"
+
+#: providers/gda-sybase-server/gda-sybase-error.c:285
+#, c-format
+msgid "Fetching %d client messages"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:287
+#, c-format
+msgid "Fetching %d client message"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:296
+#, fuzzy, c-format
+msgid "Could not get client msg # %d"
+msgstr "No es possible canviar al directori '%s'"
+
+#: providers/gda-sybase-server/gda-sybase-error.c:312
+msgid "Could not get # of client messages"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:320
+#, fuzzy
+msgid "Could not clear client messages"
+msgstr ""
+"No és possible carregar el fitxer\n"
+" %s"
+
+#: providers/gda-sybase-server/gda-sybase-error.c:352
+#, c-format
+msgid "Fetching %d server messages"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:354
+#, c-format
+msgid "Fetching %d server message"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:363
+#, fuzzy, c-format
+msgid "Could not get server msg # %d"
+msgstr "No és possible activar el servei %s"
+
+#: providers/gda-sybase-server/gda-sybase-error.c:395
+#, fuzzy
+msgid "Could not clear server messages"
+msgstr "No és possible activar el servei %s"
+
+#: providers/gda-sybase-server/gda-sybase-error.c:417
+#: providers/gda-sybase-server/gda-sybase-error.c:453
+msgid "Could not get # of cslib messages"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:425
+#, c-format
+msgid "Fetching %d cslib messages"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:427
+#, c-format
+msgid "Fetching %d cslib message"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:437
+#, c-format
+msgid "Could not get cslib msg # %d"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:461
+#, fuzzy
+msgid "Could not clear cslib messages"
+msgstr ""
+"No és possible carregar el fitxer\n"
+" %s"
+
+#: providers/gda-sybase-server/gda-sybase-error.c:593
+#: providers/gda-tds-server/gda-tds-error.c:257
+msgid "Server message:"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:602
+#: providers/gda-tds-server/gda-tds-error.c:266
+msgid "Client message:"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-error.c:609
+#: providers/gda-tds-server/gda-tds-error.c:273
+msgid "CS-Library error:"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-recordset.c:158
+#: providers/gda-tds-server/gda-tds-recordset.c:155
+#, c-format
+msgid "fetch error at row %d"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-recordset.c:165
+#: providers/gda-tds-server/gda-tds-recordset.c:162
+#, c-format
+msgid "CS_END_DATA on row %d; canceling"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-recordset.c:174
+#: providers/gda-tds-server/gda-tds-recordset.c:169
+#, c-format
+msgid "%s: Error (%d)"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-recordset.c:349
+#: providers/gda-tds-server/gda-tds-recordset.c:342
+msgid "Failed fetching # of columns"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-recordset.c:355
+#: providers/gda-tds-server/gda-tds-recordset.c:349
+#, fuzzy, c-format
+msgid "Counted %d columns"
+msgstr "Amaga les columnes"
+
+#: providers/gda-sybase-server/gda-sybase-recordset.c:362
+#: providers/gda-tds-server/gda-tds-recordset.c:356
+#, fuzzy, c-format
+msgid "%s could not allocate datafmt info"
+msgstr "No és possible carregar el tipus de lletra de l'editor"
+
+#: providers/gda-sybase-server/gda-sybase-recordset.c:372
+#: providers/gda-tds-server/gda-tds-recordset.c:366
+#, fuzzy, c-format
+msgid "%s could not allocate data fields"
+msgstr ""
+"No és possible carregar el fitxer\n"
+" %s"
+
+#: providers/gda-sybase-server/gda-sybase-recordset.c:390
+#: providers/gda-tds-server/gda-tds-recordset.c:384
+#, c-format
+msgid "ct_describe on col # %d"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-recordset.c:397
+#: providers/gda-tds-server/gda-tds-recordset.c:391
+#, c-format
+msgid "ct_describe on col # %d failed"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-recordset.c:403
+#: providers/gda-tds-server/gda-tds-recordset.c:397
+#, c-format
+msgid "ct_describe(%d): '%s', %d (%s)"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-recordset.c:412
+#: providers/gda-tds-server/gda-tds-recordset.c:406
+#, fuzzy
+msgid "could not allocate data holder"
+msgstr "No és possible truncar el fitxer %s"
+
+#: providers/gda-sybase-server/gda-sybase-recordset.c:422
+#: providers/gda-tds-server/gda-tds-recordset.c:416
+msgid "could not ct_bind data holder to column"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-recordset.c:429
+#: providers/gda-tds-server/gda-tds-recordset.c:423
+msgid "illegal type detected, aborting"
+msgstr ""
+
+#: providers/gda-sybase-server/gda-sybase-recordset.c:435
+#: providers/gda-tds-server/gda-tds-recordset.c:429
+#, fuzzy
+msgid "could not allocate field"
+msgstr ""
+"No és possible carregar el fitxer\n"
+" %s"
+
+#: providers/gda-sybase-server/main-sybase.c:76
+#, fuzzy
+msgid "Could not register gda-sybase provider implementation"
+msgstr "No es pot registrar la implamentació del proveidor LDAP"
+
+#: providers/gda-primebase-server/GNOME_GDA_Provider_Primebase.oaf.in.h:1
+msgid "GDA Datasource Access for primebase"
+msgstr ""
+
+#: providers/gda-primebase-server/gda-primebase-connection.c:158
+#, fuzzy, c-format
+msgid "Could not connect to '%s@%s:%s' with connparm '%s'"
+msgstr "No es possible canviar al directori '%s'"
+
+#: providers/gda-primebase-server/gda-primebase-connection.c:162
+#, c-format
+msgid "%2ld: Connected to '%s@%s:%s' with connparm: '%s'"
+msgstr ""
+
+#: providers/gda-primebase-server/gda-primebase-connection.c:168
+msgid "Could not get PBIConnectionInfo(), disconnecting"
+msgstr ""
+
+#: providers/gda-primebase-server/gda-primebase-connection.c:172
+#, c-format
+msgid "%2ld: ConInfo: '%s@%s', Cl v%x, Srv '%s' v%x, Brand '%s'"
+msgstr ""
+
+#: providers/gda-primebase-server/gda-primebase-connection.c:376
+msgid "Not enough memory for primebase_Error structure."
+msgstr ""
+
+#: providers/gda-primebase-server/gda-primebase-connection.c:383
+#, c-format
+msgid "%2ld: ERROR: %ld (%ld) : %s.\n"
+msgstr ""
+
+#: providers/gda-primebase-server/main-primebase.c:70
+#, fuzzy
+msgid "Could not register PRIMEBASE provider implementation"
+msgstr "No es pot registrar la implementació del proveidor INTERBASE"
+
+#: providers/gda-tds-server/GNOME_GDA_Provider_TDS.oaf.in.h:1
+msgid "GDA Datasource Access for Sybase/MS SQL"
+msgstr ""
+
+#: providers/gda-tds-server/gda-tds-connection.c:167
+msgid "Not enough memory for tds_Connection"
+msgstr ""
+
+#. Fixme: replace "dummy" with buf when CS_GET CS_SERVERNAME works
+#: providers/gda-tds-server/gda-tds-connection.c:896
+#, fuzzy, c-format
+msgid "Reconnected to %s"
+msgstr "Connectat a %s"
+
+#: providers/gda-tds-server/gda-tds-error.c:69
+#, c-format
+msgid "gda_tds_error_make(%p,%p,%p,%p)"
+msgstr ""
+
+#: providers/gda-tds-server/main-tds.c:76
+#, fuzzy
+msgid "Could not register gda-tds provider implementation"
+msgstr "No es pot registrar la implamentació del proveidor LDAP"
+
+#: report/gda-report-engine.c:209
+#, c-format
+msgid "CORBA exception unloading report engine: %s"
+msgstr ""
+
+#: report/server/GNOME_GDA_Report.oaf.in.h:1
+msgid "GDA Distributed Report Engine"
+msgstr ""
+
+#: report/server/gda-report-server-main.c:41
+#: report/server/gda-report-server-main.c:48
+#, c-format
+msgid "Received signal %d, shutting down."
+msgstr ""
+
+#: report/server/gda-report-server-main.c:52
+#, c-format
+msgid "Received signal %d, shutting down cleanly"
+msgstr ""
+
+#: report/server/gda-report-server-main.c:92
+msgid "Failed to initialize OAF: please mail bug report to OAF maintainers"
+msgstr ""
+
+#: report/server/gda-report-server-main.c:101
+#, fuzzy
+msgid "Could not activate report engine"
+msgstr "No és possible activar el servei %s"
+
+#: report/server/gda-report-server-main.c:116
+msgid ""
+"Another instance of the report engine is already registered with OAF. "
+"Exiting..."
+msgstr ""
+
+#: report/server/gda-report-server-main.c:119
+msgid "Unknown error registering report engine with OAF. Exiting"
+msgstr ""
+
+#: report/server/gda-report-server-main.c:123
+#, fuzzy, c-format
+msgid "Registered report engine with ID = %s"
+msgstr "Registrat amb ID = %s"
+
+#: tools/gda-run.c:109
+#, c-format
+msgid "%s: misconfigured DSN entry"
+msgstr "%s: entrada DSN mal configurada"
+
+#: tools/gda-run.c:124
+#, c-format
+msgid "%s: data source '%s' not found\n"
+msgstr "%s: orígen de les dades '%s' no existeix\n"
+
+#~ msgid "Create script"
+#~ msgstr "Crea l'script"
+
+#~ msgid "Create script from object definition"
+#~ msgstr "Crea un script a partir de la definició de l'objecte"
+
+#~ msgid "Refresh"
+#~ msgstr "Refresca"
+
+#~ msgid "Refresh all lists"
+#~ msgstr "Refresca totes les llistes"
+
+#~ msgid "Close"
+#~ msgstr "Tanca"
+
+#~ msgid "Close this window"
+#~ msgstr "Tanca aquesta finestra"
+
+#~ msgid "Browser: %s@%s"
+#~ msgstr "Navegador: %s@%s"
+
+#~ msgid "No connection open"
+#~ msgstr "No s'ha pogut obrir la connexió"
+
+#~ msgid "General"
+#~ msgstr "General"
+
+#~ msgid "Environment"
+#~ msgstr "Entorn"
+
+#~ msgid "Config File"
+#~ msgstr "Fitxer de configuració"
+
+#~ msgid "Save"
+#~ msgstr "Desa"
+
+#~ msgid "Save As"
+#~ msgstr "Anomena i desa"
+
+#~ msgid "Clear"
+#~ msgstr "Esborra"
+
+#~ msgid "Variable"
+#~ msgstr "Variable"
+
+#~ msgid "Value"
+#~ msgstr "Valor"
+
+#~ msgid "Add"
+#~ msgstr "Afegeix"
+
+#~ msgid "Remove"
+#~ msgstr "Elimina"
+
+#~ msgid "Current"
+#~ msgstr "Actual"
+
+#~ msgid "Save options on exit"
+#~ msgstr "Desa les opcions en sortir"
+
+#~ msgid "Open connection dialog on entry"
+#~ msgstr "Obre el diàleg de connexió en entrar"
+
+#~ msgid "Editor Font"
+#~ msgstr "Tipus de lletra de l'editor"
+
+#~ msgid "Grid Font"
+#~ msgstr "Tipus de lletra de la quadrícula"
+
+#~ msgid "Language"
+#~ msgstr "Llenguatge"
+
+#~ msgid "Shell"
+#~ msgstr "Comanda de consola"
+
+#~ msgid "Tabs position"
+#~ msgstr "Posició dels tabuladors"
+
+#~ msgid "Top"
+#~ msgstr "Superior"
+
+#~ msgid "Bottom"
+#~ msgstr "Inferior"
+
+#~ msgid "Left"
+#~ msgstr "Esquerra"
+
+#~ msgid "Right"
+#~ msgstr "Dreta"
+
+#~ msgid "Add Environment Variable"
+#~ msgstr "Afegeix la variable d'entorn"
+
+#~ msgid "Name"
+#~ msgstr "Nom"
+
+#~ msgid "Current Environment"
+#~ msgstr "Entorn actual"
+
+#~ msgid "Save As..."
+#~ msgstr "Anomena i desa..."
+
+#~ msgid "Preferences"
+#~ msgstr "Preferències"
+
+#~ msgid "Error Viewer"
+#~ msgstr "Visualitzador d'errors"
+
+#~ msgid "Object Identifiers"
+#~ msgstr "Idenfificadors dels objectes"
+
+#, fuzzy
+#~ msgid "Object Inheritance"
+#~ msgstr "Nom del objecte"
+
+#, fuzzy
+#~ msgid "Sequences"
+#~ msgstr "Preferències"
+
+#, fuzzy
+#~ msgid "Stored Procedures"
+#~ msgstr "Procediments"
+
+#, fuzzy
+#~ msgid "Transactions"
+#~ msgstr "Transacció iniciada"
+
+#~ msgid "XML Queries"
+#~ msgstr "Consultes XML"
+
+#~ msgid "Open Connection"
+#~ msgstr "Obre la connexió"
+
+#~ msgid "Connecting..."
+#~ msgstr "Connectant..."
+
+#~ msgid "Transaction started"
+#~ msgstr "Transacció iniciada"
+
+#~ msgid "Transactions not supported"
+#~ msgstr "Transacció no suportada"
+
+#~ msgid "Commit executed"
+#~ msgstr "Commit executat"
+
+#~ msgid "Rollback executed"
+#~ msgstr "Rollback executat"
+
+#~ msgid "Connection Properties"
+#~ msgstr "Propietats de la connexió"
+
+#~ msgid "Properties"
+#~ msgstr "Propietats"
+
+#~ msgid "GDA Name"
+#~ msgstr "Nom del GDA"
+
+#~ msgid "Provider"
+#~ msgstr "Proveidor"
+
+#~ msgid "DSN"
+#~ msgstr "DSN"
+
+#~ msgid "Command Timeout"
+#~ msgstr "Temps d'espera d'execució exhaurit"
+
+#~ msgid "Connect Timeout"
+#~ msgstr "Temps d'espera de connexió exhaurit"
+
+#~ msgid "Trace File"
+#~ msgstr "Fitxer de seguiment"
+
+#~ msgid "View"
+#~ msgstr "Visualitza"
+
+#~ msgid "Provider Features"
+#~ msgstr "Característiques del proveidor"
+
+#~ msgid "New"
+#~ msgstr "Nou"
+
+#~ msgid "Create new database design"
+#~ msgstr "Crea un disseny nou de base de dades"
+
+#~ msgid "Open"
+#~ msgstr "Obre"
+
+#~ msgid "Open database design from file"
+#~ msgstr "Obre un disseny de base de dades des d'un fitxer"
+
+#~ msgid "Save database design to file"
+#~ msgstr "Desa el disseny de base de dades a un fitxer"
+
+#~ msgid "Add new object"
+#~ msgstr "Afegeix un nou objecte"
+
+#~ msgid "Delete"
+#~ msgstr "Suprimeix"
+
+#, fuzzy
+#~ msgid "Delete selected object"
+#~ msgstr "Retalla el text seleccionat"
+
+#~ msgid "Open XML File"
+#~ msgstr "Obre un fitxer XML"
+
+#~ msgid "Select File"
+#~ msgstr "Selecciona un fitxer"
+
+#~ msgid ""
+#~ "Error saving file\n"
+#~ "'%s'"
+#~ msgstr ""
+#~ "S'ha produït un error en desar el fitxer\n"
+#~ "'%s'"
+
+#~ msgid "Designer"
+#~ msgstr "Dissenyador"
+
+#~ msgid "Create a new empty file"
+#~ msgstr "Crea un fitxer buit nou"
+
+#~ msgid "Open an existing file"
+#~ msgstr "Obre un fitxer existent"
+
+#~ msgid "Save current file"
+#~ msgstr "Desa el fitxer actual"
+
+#~ msgid "Save file with another name"
+#~ msgstr "Desa el fitxer amb un altre nom"
+
+#~ msgid "Print"
+#~ msgstr "Imprimeix"
+
+#~ msgid "Print current file"
+#~ msgstr "Imprimeix el fitxer actual"
+
+#~ msgid "Close current file"
+#~ msgstr "Tanca el fitxer actual"
+
+#~ msgid "Cut"
+#~ msgstr "Retalla"
+
+#~ msgid "Cut selected text"
+#~ msgstr "Retalla el text seleccionat"
+
+#~ msgid "Copy"
+#~ msgstr "Copia"
+
+#~ msgid "Copy selected text to clipboard"
+#~ msgstr "Copia el text seleccionat al porta-retalls"
+
+#~ msgid "Paste"
+#~ msgstr "Enganxa"
+
+#~ msgid "Paste clipboard's contents"
+#~ msgstr "Enganxa el contingut del porta-retalls"
+
+#~ msgid "Run Command"
+#~ msgstr "Executa l'ordre"
+
+#~ msgid "Command"
+#~ msgstr "Ordre"
+
+#~ msgid "Directory"
+#~ msgstr "Directori"
+
+#~ msgid ""
+#~ "Output from '%s'\n"
+#~ "In directory '%s'\n"
+#~ "\n"
+#~ msgstr ""
+#~ "Sortida des de '%s'\n"
+#~ "Al directori '%s'\n"
+#~ "\n"
+
+#~ msgid "Command '%s' completed"
+#~ msgstr "Ordre '%s' completada"
+
+#~ msgid "Unable to execute '%s'"
+#~ msgstr "No és possible executar '%s'"
+
+#~ msgid ""
+#~ "File\n"
+#~ " '%s'\n"
+#~ " has been changed.\n"
+#~ " Do you want to save the changes?"
+#~ msgstr ""
+#~ "El fitxer\n"
+#~ " '%s'\n"
+#~ " ha estat modificat.\n"
+#~ " Voleu desar els canvis?"
+
+#~ msgid "Open File"
+#~ msgstr "Obre un fitxer"
+
+#~ msgid "Editor"
+#~ msgstr "Editor"
+
+#~ msgid "Run"
+#~ msgstr "Executa"
+
+#~ msgid "Find"
+#~ msgstr "Busca"
+
+#~ msgid "To XML"
+#~ msgstr "A XML"
+
+#~ msgid "Export selected data to XML file"
+#~ msgstr "Exporta les dades seleccionades a un fitxer XML"
+
+#~ msgid "To SQL"
+#~ msgstr "A SQL"
+
+#~ msgid "Export selected data as a SQL script"
+#~ msgstr "Exporta les dades seleccionades com un fitxer SQL"
+
+#~ msgid "Refresh data"
+#~ msgstr "Actualitza les dades"
+
+#~ msgid "Clear all widgets"
+#~ msgstr "Esborra tots els widgets"
+
+#~ msgid "You have to provide a file name"
+#~ msgstr "Heu d'indicar un nom de fitxer"
+
+#~ msgid "You have to specify a name for the database export"
+#~ msgstr "Heu d'especificar un nom per a l'exportació de la base de dades"
+
+#~ msgid "Exporting object named '%s'"
+#~ msgstr "Exportant l'objecte anomenat '%s'"
+
+#~ msgid ""
+#~ "Error saving XML file\n"
+#~ "'%s'"
+#~ msgstr ""
+#~ "S'ha produït un error en desar el fitxer XML\n"
+#~ "'%s'"
+
+#~ msgid "No objects are selected"
+#~ msgstr "No hi ha cap objecte seleccionat"
+
+#~ msgid "Export: %s@%s"
+#~ msgstr "Exporta: %s@%s"
+
+#~ msgid "TABLES"
+#~ msgstr "TAULES"
+
+#~ msgid "VIEWS"
+#~ msgstr "VISTES"
+
+#~ msgid "File name"
+#~ msgstr "Nom del fitxer"
+
+#~ msgid "Export data"
+#~ msgstr "Exporta les dades"
+
+#~ msgid "Show file when done"
+#~ msgstr "Mostra el fitxer en acabar"
+
+#~ msgid "Add object extra info"
+#~ msgstr "Afegeix informació addicional al objecte"
+
+#~ msgid "GDA Config"
+#~ msgstr "Configuració del GDA"
+
+#~ msgid "Data Sources"
+#~ msgstr "Orígens de les dades"
+
+#, fuzzy
+#~ msgid "Load file to import"
+#~ msgstr "Carrega el fitxer a la memòria intermèdia"
+
+#, fuzzy
+#~ msgid "Save buffer"
+#~ msgstr "Desa la memòria intermèdia actual"
+
+#~ msgid "Start"
+#~ msgstr "Comença"
+
+#, fuzzy
+#~ msgid "Start importing data"
+#~ msgstr "Comença l'exportació"
+
+#, fuzzy
+#~ msgid "Clear all entries"
+#~ msgstr "Esborra tots els camps"
+
+#~ msgid "There were errors during the SQL execution"
+#~ msgstr "Hi han hagut errors durant l'execució se la sentència SQL"
+
+#~ msgid "Transaction finished successfully"
+#~ msgstr "La transacció ha finalitzat correctament"
+
+#, fuzzy
+#~ msgid "Transaction rolled back"
+#~ msgstr "Transacció iniciada"
+
+#~ msgid "You must select a file to be imported"
+#~ msgstr "Ha de seleccionar un fitxer a importar"
+
+#, fuzzy
+#~ msgid "Import: %s@%s"
+#~ msgstr "Importa: %s@%s"
+
+#, fuzzy
+#~ msgid "From XML"
+#~ msgstr "Desde XML"
+
+#, fuzzy
+#~ msgid "From SQL"
+#~ msgstr "Desde SQL"
+
+#~ msgid "Options"
+#~ msgstr "Opcions"
+
+#, fuzzy
+#~ msgid "Transaction Mode"
+#~ msgstr "Transacció iniciada"
+
+#~ msgid "Refresh log"
+#~ msgstr "Refresca el registre"
+
+#~ msgid "Clear file contents"
+#~ msgstr "Esborra el contingut del fitxer"
+
+#~ msgid "Save log file with a different name"
+#~ msgstr "Desa el fitxer del registre amb un nom diferent"
+
+#~ msgid "Could not truncate file %s"
+#~ msgstr "No és possible truncar el fitxer %s"
+
+#~ msgid "Save Log File"
+#~ msgstr "Desa el fitxer del registre"
+
+#~ msgid "Ready"
+#~ msgstr "Preparat"
+
+#~ msgid "File %s loaded"
+#~ msgstr "El fitxer %s s'ha carregat"
+
+#~ msgid "GDA logs"
+#~ msgstr "Registres del GDA"
+
+#~ msgid "GNOME-DB Front End"
+#~ msgstr "Entorn visual del GNOME-DB"
+
+#~ msgid "Open connection..."
+#~ msgstr "Obre la connexió..."
+
+#~ msgid "Close connection"
+#~ msgstr "Tanca la connexió"
+
+#~ msgid "Close current connection"
+#~ msgstr "Tanca la connexió actual"
+
+#~ msgid "Close all connections"
+#~ msgstr "Tanca totes les connexions"
+
+#~ msgid "Quit"
+#~ msgstr "Surt"
+
+#~ msgid "Exit application"
+#~ msgstr "Surt de l'aplicació"
+
+#~ msgid "Object Browser"
+#~ msgstr "Explorador d'objectes"
+
+#~ msgid "Browse database objects"
+#~ msgstr "Navega per la base de dades d'objectes"
+
+#~ msgid "SQL Builder"
+#~ msgstr "Constructor de sentències SQL"
+
+#~ msgid "Construct SQL statements"
+#~ msgstr "Crea ordres SQL"
+
+#~ msgid "View connection properties"
+#~ msgstr "Visualitza les propietats de la connexió"
+
+#~ msgid "Start/Stop Server Trace"
+#~ msgstr "Inicia/atura el seguiment del servidor"
+
+#~ msgid "Start or stop server trace"
+#~ msgstr "Inicia o atura el seguiment del servidor"
+
+#~ msgid "View Server Trace"
+#~ msgstr "Visualitza el seguiment del servidor"
+
+#~ msgid "View server trace file"
+#~ msgstr "Visualitza el fitxer de seguiment del servidor"
+
+#~ msgid "Export"
+#~ msgstr "Exporta"
+
+#~ msgid "Export Data to Different Formats"
+#~ msgstr "Exporta les dades a diferents formats"
+
+#~ msgid "Import"
+#~ msgstr "Importa"
+
+#~ msgid "Import Data into the Database"
+#~ msgstr "Importa les dades a la base de dades"
+
+#~ msgid "Begin Transaction"
+#~ msgstr "Comença la transacció"
+
+#~ msgid "Begin new transaction"
+#~ msgstr "Comença una nova transacció"
+
+#~ msgid "Commit"
+#~ msgstr "Commit"
+
+#~ msgid "Commit changes"
+#~ msgstr "Canvis Commit"
+
+#~ msgid "Rollback"
+#~ msgstr "Rollback"
+
+#~ msgid "Discard all changes"
+#~ msgstr "Descarta tots els canvis"
+
+#~ msgid "Database Designer"
+#~ msgstr "Dissenyador de bases de dades"
+
+#~ msgid "Visual Database Designer"
+#~ msgstr "Dissenyador visual de bases de dades"
+
+#~ msgid "View GDA server log files"
+#~ msgstr "Visualitza els fitxers de registre del servidor del GDA"
+
+#~ msgid "Text editor"
+#~ msgstr "Editor de text"
+
+#~ msgid "Open the internal text editor"
+#~ msgstr "Obre l'editor de text intern"
+
+#~ msgid "Run shell"
+#~ msgstr "Executa la comanda de consola"
+
+#~ msgid "Open shell window"
+#~ msgstr "Obre la finestra de comandes de consola"
+
+#~ msgid "Calculator"
+#~ msgstr "Calculadora"
+
+#~ msgid "Open desktop calculator"
+#~ msgstr "Obre la calculadora de l'escriptori"
+
+#, fuzzy
+#~ msgid "GDA Manager"
+#~ msgstr "Gestor del GDA"
+
+#, fuzzy
+#~ msgid "The GDA configuration tool"
+#~ msgstr "L'eina de configuració del GDA"
+
+#, fuzzy
+#~ msgid "GDA Builder"
+#~ msgstr "Constructor del GDA"
+
+#~ msgid "The GDA development environment"
+#~ msgstr "L'entorn de desenvolupament del GDA"
+
+#~ msgid "Preferences..."
+#~ msgstr "Preferències...."
+
+#~ msgid "Configure user preferences"
+#~ msgstr "Configura les preferències d'usuari"
+
+#~ msgid "GDA Configuration..."
+#~ msgstr "Configuració del GDA..."
+
+#~ msgid "GDA Configuration"
+#~ msgstr "Configuració del GDA"
+
+#~ msgid "Save Options"
+#~ msgstr "Desa les opcions"
+
+#~ msgid "Save current configuration"
+#~ msgstr "Desa la configuració actual"
+
+#~ msgid "Previous window"
+#~ msgstr "Finestra anterior"
+
+#~ msgid "Move to previous window on list"
+#~ msgstr "Mou-ho a la finestra anterior de la llista"
+
+#~ msgid "Next window"
+#~ msgstr "Finestra següent"
+
+#~ msgid "Move to next window on list"
+#~ msgstr "Mou-ho a la següent finestra de la llista"
+
+#~ msgid "Close current"
+#~ msgstr "Tanca l'actual"
+
+#~ msgid "Close active window"
+#~ msgstr "Tanca la finestra activa"
+
+#~ msgid "Close all"
+#~ msgstr "Tanca-ho tot"
+
+#~ msgid "Close all open windows"
+#~ msgstr "Tanca totes les finestres obertes"
+
+#~ msgid "About gnome-db..."
+#~ msgstr "Quant al gnome-db..."
+
+#~ msgid "About this program"
+#~ msgstr "Quant aquest programa"
+
+#~ msgid "Database"
+#~ msgstr "Base de dades"
+
+#~ msgid "Tools"
+#~ msgstr "Eines"
+
+#~ msgid "Window"
+#~ msgstr "Finestra"
+
+#~ msgid "Help"
+#~ msgstr "Ajuda"
+
+#~ msgid "Connect"
+#~ msgstr "Connecta"
+
+#~ msgid "Disconnect"
+#~ msgstr "Desconnecta"
+
+#~ msgid "GDA Logs"
+#~ msgstr "Registres del GDA"
+
+#~ msgid "Previous"
+#~ msgstr "Anterior"
+
+#~ msgid "Next"
+#~ msgstr "Següent"
+
+#~ msgid "Could not load grid font"
+#~ msgstr "No és possible carregar el tipus de lletra de la quadrícula"
+
+#~ msgid "Execute SQL command"
+#~ msgstr "Executa l'ordre SQL"
+
+#~ msgid "Run Script"
+#~ msgstr "Executa l'script"
+
+#~ msgid "Execute buffer as SQL script"
+#~ msgstr "Executa la memòria intermèdia com un script SQL"
+
+#~ msgid "Select SQL Command"
+#~ msgstr "Selecciona l'ordre SQL"
+
+#~ msgid "Refresh grid"
+#~ msgstr "Refresca la quadrícula"
+
+#~ msgid "Clear SQL window"
+#~ msgstr "Buida la finestra SQL"
+
+#~ msgid "Print grid"
+#~ msgstr "Imprimeix la quadrícula"
+
+#~ msgid "Load file into buffer"
+#~ msgstr "Carrega el fitxer a la memòria intermèdia"
+
+#~ msgid "Save current buffer"
+#~ msgstr "Desa la memòria intermèdia actual"
+
+#~ msgid "Cut selected text to clipboard"
+#~ msgstr "Retalla el text seleccionat cap al porta-retalls"
+
+#~ msgid "Paste text from clipboard"
+#~ msgstr "Enganxa el text des del porta-retalls"
+
+#~ msgid "%d rows"
+#~ msgstr "%d files"
+
+#~ msgid "Select SQL Script"
+#~ msgstr "Selecciona l'script SQL"
+
+#~ msgid "Command succeeded"
+#~ msgstr "Ordre reeixida"
+
+#~ msgid "Save SQL Script"
+#~ msgstr "Desa l'script SQL"
+
+#~ msgid "Row %d - %d rows selected"
+#~ msgstr "Fila %d - %d files seleccionades"
+
+#~ msgid "Server trace stopped"
+#~ msgstr "Seguiment del servidor aturat"
+
+#~ msgid "Select Trace File"
+#~ msgstr "Selecciona el fitxer de seguiment"
+
+#~ msgid "Server trace to file %s started"
+#~ msgstr "Seguiment del servidor cap al fitxer %s iniciat"
+
+#~ msgid "Server Trace File"
+#~ msgstr "Fitxer de seguiment del servidor"
+
+#~ msgid "Server trace is disabled for this connection"
+#~ msgstr "El seguiment del servidor està inhabilitat per a aquesta connexió"
+
+#~ msgid ""
+#~ "Error reading file\n"
+#~ " %s"
+#~ msgstr ""
+#~ "S'ha produït un error en llegir el fitxer\n"
+#~ " %s"
+
+#~ msgid "File %s inserted"
+#~ msgstr "Fitxer %s insertat"
+
+#~ msgid ""
+#~ "Error opening file\n"
+#~ " %s"
+#~ msgstr ""
+#~ "S'ha produït un error en obrir el fitxer\n"
+#~ " %s"
+
+#~ msgid ""
+#~ "Error writing to file\n"
+#~ " %s"
+#~ msgstr ""
+#~ "S'ha produït un error en escriure al fitxer\n"
+#~ " %s"
+
+#~ msgid "Wrote file %s"
+#~ msgstr "Escriu el fitxer %s"
+
+#~ msgid "Question"
+#~ msgstr "Questió"
+
+#~ msgid "Select all"
+#~ msgstr "Selecciona-ho tot"
+
+#~ msgid "Select all text in buffer"
+#~ msgstr "Selecciona tot el text de la memòria intermèdia"
+
+#~ msgid "Insert file..."
+#~ msgstr "Inserta el fitxer..."
+
+#~ msgid "Insert file into current position"
+#~ msgstr "Inserta el fitxer en la posició actual"
+
+#~ msgid "Save to file..."
+#~ msgstr "Desa al fitxer..."
+
+#~ msgid "Save widget contents to file"
+#~ msgstr "Desa el contingut del widget al fitxer"
+
+#~ msgid "Print..."
+#~ msgstr "Imprimeix..."
+
+#~ msgid "Print buffer"
+#~ msgstr "Imprimeix la memòria intermèdia"
+
+#~ msgid "Object Name"
+#~ msgstr "Nom del objecte"
+
+#~ msgid "0 rows"
+#~ msgstr "0 files"
+
+#~ msgid "Tables"
+#~ msgstr "Taules"
+
+#~ msgid "Views"
+#~ msgstr "Vistes"
+
+#~ msgid "Procedures"
+#~ msgstr "Procediments"
+
+#~ msgid "Types"
+#~ msgstr "Tipus"
+
+#~ msgid "Aggregates"
+#~ msgstr "Afegits"
+
+#~ msgid "Data"
+#~ msgstr "Dades"
+
+#~ msgid "Extra Info"
+#~ msgstr "Informació addicional"
+
+#, fuzzy
+#~ msgid "Configuration file saved"
+#~ msgstr "Configuració del GDA"
+
+#, fuzzy
+#~ msgid "SQL"
+#~ msgstr "A SQL"
+
+#, fuzzy
+#~ msgid "SQL Window"
+#~ msgstr "Finestra SQL"
+
+#~ msgid "Batch"
+#~ msgstr "Ordres"
+
+#~ msgid "Batch commands window"
+#~ msgstr "Finestra d'ordres"
+
+#, fuzzy
+#~ msgid "Queries"
+#~ msgstr "Consultes"
+
+#, fuzzy
+#~ msgid "Query designer"
+#~ msgstr "Dissenyador"
+
+#, fuzzy
+#~ msgid "Browser"
+#~ msgstr "Navegador"
+
+#, fuzzy
+#~ msgid "Browse Database"
+#~ msgstr "Navega per la base de dades"
+
+#, fuzzy
+#~ msgid "Export database"
+#~ msgstr "Exporta les dades"
+
+#, fuzzy
+#~ msgid "Import data into current database"
+#~ msgstr "Importa les dades a la base de dades"
+
+#~ msgid "Execute"
+#~ msgstr "Executar"
+
+#, fuzzy
+#~ msgid "Execute current command"
+#~ msgstr "Executa l'ordre actual"
+
+#, fuzzy
+#~ msgid "Select"
+#~ msgstr "Selecciona"
+
+#~ msgid "Select from previous commands"
+#~ msgstr "Selecciona desde comandes prèvies"
+
+#, fuzzy
+#~ msgid "Copy selected text"
+#~ msgstr "Retalla el text seleccionat"
+
+#, fuzzy
+#~ msgid "Paste clipboard contents"
+#~ msgstr "Enganxa el contingut del porta-retalls"
+
+#, fuzzy
+#~ msgid "Clear window contents"
+#~ msgstr "Esborra el contingut del fitxer"
+
+#~ msgid "Start export"
+#~ msgstr "Comença l'exportació"
+
+#, fuzzy
+#~ msgid "Clear all fields"
+#~ msgstr "Esborra tots els camps"
+
+#, fuzzy
+#~ msgid "Select all objects in database"
+#~ msgstr "Selecciona tot els objectes en la base de dades"
+
+#~ msgid "Unselect"
+#~ msgstr "Deselecciona"
+
+#, fuzzy
+#~ msgid "Clear object selection"
+#~ msgstr "Esborra la selecció d'objectes"
+
+#, fuzzy
+#~ msgid "Select file"
+#~ msgstr "Selecciona un fitxer"
+
+#, fuzzy
+#~ msgid "Select Command"
+#~ msgstr "Selecciona l'ordre"
+
+#, fuzzy
+#~ msgid "Begin transaction failed"
+#~ msgstr "L'inici de la transacció ha fallat"
+
+#~ msgid "Data source does not support transactions"
+#~ msgstr "L'orígen de les dades no soporta transaccions"
+
+#, fuzzy
+#~ msgid "Commit executed successfully"
+#~ msgstr "Commit executat correctament"
+
+#, fuzzy
+#~ msgid "Commit transaction failed"
+#~ msgstr "El commit de la transacció ha fallat"
+
+#, fuzzy
+#~ msgid "Rollback executed successfully"
+#~ msgstr "Rollback executat correctament"
+
+#, fuzzy
+#~ msgid "Rollback transaction failed"
+#~ msgstr "El rollback de la transacció ha fallat"
+
+#, fuzzy
+#~ msgid "Version"
+#~ msgstr "Versió"
+
+#, fuzzy
+#~ msgid "Open Connection..."
+#~ msgstr "Obre la connexió..."
+
+#, fuzzy
+#~ msgid "Open a connection to a data source"
+#~ msgstr "Obre el diàleg de connexió en entrar"
+
+#, fuzzy
+#~ msgid "Disconnect all"
+#~ msgstr "Desconnecta tot"
+
+#, fuzzy
+#~ msgid "SQL window"
+#~ msgstr "Finestra SQL"
+
+#, fuzzy
+#~ msgid "Query Designer"
+#~ msgstr "Dissenyador de consultes"
+
+#, fuzzy
+#~ msgid "Browse database"
+#~ msgstr "Navega per la base de dades"
+
+#, fuzzy
+#~ msgid "Begin transaction"
+#~ msgstr "Comença la transacció"
+
+#, fuzzy
+#~ msgid "Commit transaction"
+#~ msgstr "Comença la transacció"
+
+#, fuzzy
+#~ msgid "Configure"
+#~ msgstr "Configura"
+
+#, fuzzy
+#~ msgid "Configure underlying database"
+#~ msgstr "Configura la dades de dades subratllada"
+
+#, fuzzy
+#~ msgid "View logs"
+#~ msgstr "Visualitza fitxers de log"
+
+#~ msgid "View the different logs"
+#~ msgstr "Visualitza fitxers de logs diferents"
+
+#, fuzzy
+#~ msgid "Database designer"
+#~ msgstr "Dissenyador de bases de dades"
+
+#, fuzzy
+#~ msgid "Open the database designer"
+#~ msgstr "Obre el dissenyador de base de dades"
+
+#~ msgid "Service control"
+#~ msgstr "Control dels serveis"
+
+#, fuzzy
+#~ msgid "View service activity"
+#~ msgstr "Visualitza l'activitat dels serveis"
+
+#~ msgid "GNOME-DB Manager"
+#~ msgstr "Gestor del GNOME-DB"
+
+#, fuzzy
+#~ msgid "The GNOME-DB configuration tool"
+#~ msgstr "L'eina de configuració del GDA"
+
+#, fuzzy
+#~ msgid "GNOME-DB Builder"
+#~ msgstr "Constructor del GNOME-DB"
+
+#, fuzzy
+#~ msgid "The GNOME-DB Development Environment"
+#~ msgstr "L'entorn de desenvolupament del GDA"
+
+#, fuzzy
+#~ msgid "Data sources..."
+#~ msgstr "Orígens de les dades..."
+
+#~ msgid "Configure GDA data sources"
+#~ msgstr "Configura els orígens de les dades del GDA"
+
+#, fuzzy
+#~ msgid "Save options"
+#~ msgstr "Desa les opcions"
+
+#~ msgid "Submit bug report"
+#~ msgstr "Envia una nota de error"
+
+#, fuzzy
+#~ msgid "Logs"
+#~ msgstr "Registres del GDA"
+
+#, fuzzy
+#~ msgid "Exit Application"
+#~ msgstr "Surt de l'aplicació"
+
+#~ msgid "Could not initialize Bonobo\n"
+#~ msgstr "No es pot iniciar Bonobo\n"
+
+#, fuzzy
+#~ msgid "Close configurator"
+#~ msgstr "Tanca la connexió"
+
+#, fuzzy
+#~ msgid "The GNOME-DB front end"
+#~ msgstr "Entorn visual del GNOME-DB"
+
+#, fuzzy
+#~ msgid "SQL Front End"
+#~ msgstr "Entorn visual de SQL"
+
+#~ msgid "The SQL front end"
+#~ msgstr "L'entorn visual de sentències SQL"
+
+#, fuzzy
+#~ msgid "The GNOME-DB development environment"
+#~ msgstr "L'entorn de desenvolupament del GDA"
+
+#, fuzzy
+#~ msgid "Providers"
+#~ msgstr "Proveidors"
+
+#, fuzzy
+#~ msgid "Select Color"
+#~ msgstr "Selecciona un color"
+
+#, fuzzy
+#~ msgid "Select Font"
+#~ msgstr "Selecciona un fitxer"
+
+#~ msgid "Copyright The Free Software Foundation (C) 1998-2000"
+#~ msgstr "Copyright The Free Software Foundation (C) 1998-2000"
+
+#~ msgid ""
+#~ "This program is part of the GNOME project for LINUX. GNOME Data Access "
+#~ "comes with ABSOLUTELY NO WARRANTY. This is free software, and you are "
+#~ "welcome to redistribute it under the conditions of the GNU General Public "
+#~ "Licence."
+#~ msgstr ""
+#~ "Aquest programa és part del projecte GNOME per LINUX. El GNOME Data "
+#~ "Access ve sense CAP MENA DE GARANTIA. Aquest programari és de lliure "
+#~ "distribució, per tant, podeu redistribuir-lo sota les condicions de la "
+#~ "llicència GNU (General Public Licence)."
+
+#, fuzzy
+#~ msgid "Unable to execute Bug Report Tool"
+#~ msgstr "No és possible executar l'eina de Reportar Errors"
+
+#~ msgid "Description"
+#~ msgstr "Descripció"
+
+#~ msgid "Username"
+#~ msgstr "Nom d'usuari"
+
+#~ msgid "Config"
+#~ msgstr "Configuració"
+
+#~ msgid "Global"
+#~ msgstr "Global"
+
+#, fuzzy
+#~ msgid "Error while saving configuration!"
+#~ msgstr "Error durant el procés de desar la configuració!"
+
+#, fuzzy
+#~ msgid "Error %d of %d"
+#~ msgstr "Error %d de %d"
+
+#, fuzzy
+#~ msgid "Show Help"
+#~ msgstr "Mostra l'ajuda"
+
+#, fuzzy
+#~ msgid "Source"
+#~ msgstr "Orígens de les dades"
+
+#~ msgid "sqlstate"
+#~ msgstr "sqlstate"
+
+#~ msgid "Error 0 of 0"
+#~ msgstr "Error 0 de 0"
+
+#, fuzzy
+#~ msgid "Record View"
+#~ msgstr "Desa la vista"
+
+#, fuzzy
+#~ msgid "Copy selection to clipboard"
+#~ msgstr "Copia el text seleccionat al porta-retalls"
+
+#, fuzzy
+#~ msgid "Select all rows"
+#~ msgstr "Selecciona totes les files"
+
+#, fuzzy
+#~ msgid "Clear selection"
+#~ msgstr "Esborra la selecció"
+
+#, fuzzy
+#~ msgid "Clear all selected rows"
+#~ msgstr "Esborra tots els camps"
+
+#~ msgid "Record view..."
+#~ msgstr "Desa les vistes..."
+
+#~ msgid "View recordset record-by-record"
+#~ msgstr "Visualitza les dades registre a registre"
+
+#, fuzzy
+#~ msgid "Refresh grid contents"
+#~ msgstr "Refresca el contingut de la quadrícula"
+
+#, fuzzy
+#~ msgid "Print grid contents"
+#~ msgstr "Imprimeix el contingut de la quadrícula"
+
+#~ msgid "Show columns"
+#~ msgstr "Mostra les columnes"
+
+#~ msgid "Show column titles"
+#~ msgstr "Mostra els títols de les columnes"
+
+#~ msgid "Hide column titles"
+#~ msgstr "Amaga els títols de les columnes"
+
+#~ msgid "No datasource '%s' defined in your GDA configuration file"
+#~ msgstr ""
+#~ "No hi ha l'orígen de les dades '%s' definit en el seu fitxer de "
+#~ "configuració GDA"
+
+#, fuzzy
+#~ msgid "User Name"
+#~ msgstr "Nom d'usuari"
+
+#~ msgid "Password"
+#~ msgstr "Contrasenya"
+
+#, fuzzy
+#~ msgid "Last Connections"
+#~ msgstr "Últimes connexions"
+
+#~ msgid "Entry %d of %d"
+#~ msgstr "Entrada %d de %d"
+
+#, fuzzy
+#~ msgid "Date"
+#~ msgstr "Data"
+
+#~ msgid "Time"
+#~ msgstr "Hora"
+
+#~ msgid "Message"
+#~ msgstr "Missatge"
+
+#~ msgid "Log Entry"
+#~ msgstr "Entrada del registre"
+
+#~ msgid "Add property"
+#~ msgstr "Afegeix una propietat"
+
+#~ msgid "Add a new property for this object"
+#~ msgstr "Afegeix una nova propietat per a aquest objecte"
+
+#~ msgid "Remove property"
+#~ msgstr "Esborra la propietat"
+
+#, fuzzy
+#~ msgid "Remove selected properties"
+#~ msgstr "Esborra les propietats seleccionades"
+
+#, fuzzy
+#~ msgid "Add Property"
+#~ msgstr "Afegeix una propietat"
+
+#, fuzzy
+#~ msgid "Property"
+#~ msgstr "Propietat"
+
+#, fuzzy
+#~ msgid "Database name"
+#~ msgstr "Nom de la base de dades"
+
+#, fuzzy
+#~ msgid "Data Source Name"
+#~ msgstr "Nom de l'órígen de les dades"
+
+#, fuzzy
+#~ msgid "User name to use for the connection"
+#~ msgstr "Nom de l'usuari a utilitzar en la conexió"
+
+#~ msgid "Password to authenticate user"
+#~ msgstr "Contrasenya per validar l'usuari"
+
+#, fuzzy
+#~ msgid "To open/close the connection"
+#~ msgstr "Tancar/obrir la connexió"
+
+#, fuzzy
+#~ msgid "Could not initialize %s component"
+#~ msgstr "No es pot iniciar el component %s"
+
+#, fuzzy
+#~ msgid "Could not initialize Bonobo"
+#~ msgstr "No es pot iniciar Bonobo"
+
+#~ msgid "View requested to be activated but there is already an active view"
+#~ msgstr "Vista demanada per activarse però ja es la vista activa"
+
+#, fuzzy
+#~ msgid "Could not bind object %s"
+#~ msgstr "No és pot obtenir l'objecte %s %s"
+
+#, fuzzy
+#~ msgid "Unable to activate object %s"
+#~ msgstr "No és possible activar l'objecte %s"
+
+#, fuzzy
+#~ msgid "Could not register control factory"
+#~ msgstr "No es pot registrar el control fàbrica"
+
+#~ msgid "control has no property bag"
+#~ msgstr "el control no té propietats"
+
+#~ msgid "property %s not found"
+#~ msgstr "la propietat %s no s'ha trobat"
+
+#, fuzzy
+#~ msgid "Could not register %s factory"
+#~ msgstr "No és pot registrar el control fàbrica %s"
+
+#~ msgid "Disconnected from database"
+#~ msgstr "Deconectat de la base de dades"
+
+#, fuzzy
+#~ msgid "Database Browser"
+#~ msgstr "Navegador de bases de dades"
+
+#, fuzzy
+#~ msgid "There are no open connections"
+#~ msgstr "No hi han conexions obertes"
+
+#~ msgid "Back"
+#~ msgstr "Endarrera"
+
+#, fuzzy
+#~ msgid "Go to previous document"
+#~ msgstr "Anar al document previ"
+
+#~ msgid "Forward"
+#~ msgstr "Endavant"
+
+#, fuzzy
+#~ msgid "Go to next document"
+#~ msgstr "Anar al següent document"
+
+#~ msgid "Home"
+#~ msgstr "Casa"
+
+#, fuzzy
+#~ msgid "Go to table of contents"
+#~ msgstr "Anar a la taula de continguts"
+
+#~ msgid "Screen"
+#~ msgstr "Pantalla"
+
+#~ msgid "New screen"
+#~ msgstr "Nova pantalla"
+
+#, fuzzy
+#~ msgid "Report"
+#~ msgstr "Llistat"
+
+#~ msgid "New report"
+#~ msgstr "Nou llistat"
+
+#, fuzzy
+#~ msgid "Server"
+#~ msgstr "Servidor"
+
+#~ msgid "New server"
+#~ msgstr "Nou servidor"
+
+#~ msgid "Repository"
+#~ msgstr "Biblioteca"
+
+#~ msgid "New repository"
+#~ msgstr "Nova biblioteca"
+
+#, fuzzy
+#~ msgid "Open existing screen"
+#~ msgstr "Obre una pantalla existent"
+
+#, fuzzy
+#~ msgid "Open existing report"
+#~ msgstr "Obre un llistat existent"
+
+#, fuzzy
+#~ msgid "Open existing server"
+#~ msgstr "Obre un servidor existent"
+
+#, fuzzy
+#~ msgid "Open existing repository"
+#~ msgstr "Obre una biblioteca existent"
+
+#, fuzzy
+#~ msgid "Connect..."
+#~ msgstr "Connectant..."
+
+#, fuzzy
+#~ msgid "Connect to database"
+#~ msgstr "Connecta amb la base de dades"
+
+#, fuzzy
+#~ msgid "Close database connection"
+#~ msgstr "Tanca la connexió de la base de dades"
+
+#, fuzzy
+#~ msgid "Browse"
+#~ msgstr "Navegador"
+
+#, fuzzy
+#~ msgid "Open database browser"
+#~ msgstr "Obre el navegador de base de dades"
+
+#, fuzzy
+#~ msgid "Import objects"
+#~ msgstr "Importa objectes"
+
+#~ msgid "Import database objects into repository"
+#~ msgstr "Importa objectes de la base de dades a la biblioteca"
+
+#, fuzzy
+#~ msgid "Close current window"
+#~ msgstr "Tanca la finestra actual"
+
+#~ msgid "New Screen/Report"
+#~ msgstr "Nova Pantalla/Llistat"
+
+#~ msgid "Open Screen/Report"
+#~ msgstr "Obrir Pantalla/Llistat"
+
+#~ msgid "Project"
+#~ msgstr "Projecte"
+
+#~ msgid "Location"
+#~ msgstr "Localització"
+
+#, fuzzy
+#~ msgid "database name"
+#~ msgstr "Nom de la  base de dades"
+
+#~ msgid "DATABASE"
+#~ msgstr "BASE DE DADES"
+
+#, fuzzy
+#~ msgid "user name"
+#~ msgstr "Nom d'usuari"
+
+#~ msgid "USER-NAME"
+#~ msgstr "NOM D'USUARI"
+
+#~ msgid "password"
+#~ msgstr "contrasenya"
+
+#~ msgid "PASSWORD"
+#~ msgstr "CONTRASENYA"
+
+#, fuzzy
+#~ msgid "file name"
+#~ msgstr "Nom del fitxer"
+
+#~ msgid "FILE-NAME"
+#~ msgstr "NOM DEL FITXER"
+
+#, fuzzy
+#~ msgid "Open file"
+#~ msgstr "Obre un fitxer"
+
+#, fuzzy
+#~ msgid "Save file"
+#~ msgstr "Desa al fitxer"
+
+#, fuzzy
+#~ msgid "Clear command list"
+#~ msgstr "Esborra la lista d'ordres"
+
+#, fuzzy
+#~ msgid ""
+#~ "Could not open file\n"
+#~ "'%s'"
+#~ msgstr ""
+#~ "No és possible carregar el fitxer\n"
+#~ " %s"
+
+#, fuzzy
+#~ msgid "No command selected"
+#~ msgstr "No hi ha cap ordre seleccionada"
+
+#~ msgid "Enter command text"
+#~ msgstr "Entra texte de la ordre"
+
+#, fuzzy
+#~ msgid "Insert at current position"
+#~ msgstr "Inserta el fitxer en la posició actual"
+
+#, fuzzy
+#~ msgid "Command separators"
+#~ msgstr "Separadors d'ordres"
+
+#, fuzzy
+#~ msgid "Append to current file"
+#~ msgstr "Afegeix al fitxer actual"
+
+#~ msgid "You must specify a file to be loaded"
+#~ msgstr "Ha d'especificar un fitxer per ser carregat"
+
+#~ msgid "You must specifiy the characters used as command separators"
+#~ msgstr "Ha d'especificar els caràcters utilitzats com a separadors d'ordres"
+
+#, fuzzy
+#~ msgid "Edit"
+#~ msgstr "Editor"
+
+#~ msgid "Up"
+#~ msgstr "Dalt"
+
+#~ msgid "Down"
+#~ msgstr "Baix"
+
+#~ msgid "Send as XML"
+#~ msgstr "Enviar com a XML"
+
+#, fuzzy
+#~ msgid "Tab Position"
+#~ msgstr "Posició dels tabuladors"
+
+#, fuzzy
+#~ msgid "Grid"
+#~ msgstr "Quadrícula"
+
+#, fuzzy
+#~ msgid "Font"
+#~ msgstr "Tipus de lletra"
+
+#~ msgid "Foreground Color"
+#~ msgstr "Color del texte"
+
+#~ msgid "Background Color"
+#~ msgstr "Color de fons"
+
+#~ msgid "Show row numbers"
+#~ msgstr "Mostra número de files"
+
+#, fuzzy
+#~ msgid "User Interface"
+#~ msgstr "Interfície d'usuari"
+
+#~ msgid "GDA"
+#~ msgstr "GDA"
+
+#, fuzzy
+#~ msgid "New database design"
+#~ msgstr "Disseny nou de base de dades"
+
+#, fuzzy
+#~ msgid "Open database design"
+#~ msgstr "Obre un disseny de base de dades"
+
+#, fuzzy
+#~ msgid "Close designer window"
+#~ msgstr "Tanca la finestra de disseny"
+
+#, fuzzy
+#~ msgid "Select XML file"
+#~ msgstr "Selecciona un fitxer XML"
+
+#, fuzzy
+#~ msgid "Data sources"
+#~ msgstr "Orígens de les dades"
+
+#~ msgid "Apply"
+#~ msgstr "Aplicar"
+
+#, fuzzy
+#~ msgid "View selected entry"
+#~ msgstr "Visualitza la entrada seleccionada"
+
+#, fuzzy
+#~ msgid "Clear log file"
+#~ msgstr "Esborra el fitxer de registre"
+
+#, fuzzy
+#~ msgid "Refresh log viewer"
+#~ msgstr "Refresca el registre"
+
+#, fuzzy
+#~ msgid "Close log window"
+#~ msgstr "Tanca la finestra del registre"
+
+#, fuzzy
+#~ msgid "Error loading file '%s'"
+#~ msgstr "S'ha produït un error en carregar el fitxer '%s'"
+
+#~ msgid "Activate"
+#~ msgstr "Activa"
+
+#~ msgid "Activate selected service"
+#~ msgstr "Activa els serveis seleccionats"
+
+#, fuzzy
+#~ msgid "Refresh service list"
+#~ msgstr "Refresca la llista de serveis"
+
+#~ msgid ""
+#~ "Could not find any installed services. Either you don't have\n"
+#~ "any services installed or I don't know the path to find them.\n"
+#~ "In either case, please check your GNOME-DB installation."
+#~ msgstr ""
+#~ "No s'ha pogut trobar cap servei instalat. Tan pot ésser que no\n"
+#~ "tingui cap servei instalat com que no conegui el camí per trobarlos.\n"
+#~ "En qualsevol case, si us plau comprovi la seva instalació de GNOME-DB."
+
+#~ msgid "Service '%s' activated"
+#~ msgstr "Servei '%s' activat"
+
+#~ msgid "Repo ID"
+#~ msgstr "Biblio ID"
+
+#, fuzzy
+#~ msgid "Type"
+#~ msgstr "Tipus"
+
+#~ msgid "Service Control"
+#~ msgstr "Control de Serveis"
+
+#, fuzzy
+#~ msgid "Select config component"
+#~ msgstr "Selecciona la configuració del component"
+
+#~ msgid "You need Bonobo to load components!"
+#~ msgstr "Necessita Bonobo per carregar els components!"
+
+#, fuzzy
+#~ msgid "Add new data source"
+#~ msgstr "Afegeix nous orígens de dades"
+
+#, fuzzy
+#~ msgid "Edit selected data source"
+#~ msgstr "Edita els orígens de dades seleccionats"
+
+#, fuzzy
+#~ msgid "Remove selected data source"
+#~ msgstr "Esborra els orígens de dades seleccionats"
+
+#, fuzzy
+#~ msgid "Browse selected data source"
+#~ msgstr "Navega per la base de dades seleccionada"
+
+#, fuzzy
+#~ msgid "Data Source"
+#~ msgstr "Orígens de les dades"
+
+#, fuzzy
+#~ msgid "Browse Data Source"
+#~ msgstr "Orígens de les dades"
+
+#, fuzzy
+#~ msgid "could not load browser control"
+#~ msgstr "No és possible carregar el control navegador"
+
+#~ msgid "Load config component"
+#~ msgstr "Carrega la configuració del component"
+
+#~ msgid "Module"
+#~ msgstr "Mòdul"
+
+#, fuzzy
+#~ msgid "Users"
+#~ msgstr "Usuaris"
+
+#~ msgid "User access rights"
+#~ msgstr "Privilegis d'accés del usuari"
+
+#~ msgid "All"
+#~ msgstr "Tot"
+
+#, fuzzy
+#~ msgid "Data source not found in GDA configuration"
+#~ msgstr "L'orígen de les dades no s'ha trobat en la configuració del GDA"
+
+#~ msgid "new instance %p created"
+#~ msgstr "nova instancia %p creada"
+
+#, fuzzy
+#~ msgid "DSN for the connection"
+#~ msgstr "DSN per a la connexió"
+
+#~ msgid "User identity"
+#~ msgstr "Identitat de l'usuari"
+
+#~ msgid "User passord"
+#~ msgstr "Contrasenya de l'usuari"
+
+#~ msgid "Show/hide the user id"
+#~ msgstr "Mostra/Amaga el ID de l'usuari"
+
+#~ msgid "Give it TRUE to reset/start the component"
+#~ msgstr "Dóna CERT per parar/arrancar el component"
+
+#, fuzzy
+#~ msgid "User name setting"
+#~ msgstr "Configuració de l'usuari"
+
+#~ msgid "Group name setting"
+#~ msgstr "Configuració de grups"
+
+#~ msgid "Object type setting"
+#~ msgstr "Configuració del tipus d'objecte"
+
+#, fuzzy
+#~ msgid "Object name setting"
+#~ msgstr "Configuració de l'objecte"
+
+#~ msgid "Access rigths"
+#~ msgstr "Privilegis d'accés"
+
+#~ msgid "Indexes"
+#~ msgstr "Indexos"
+
+#~ msgid "All users rights"
+#~ msgstr "Tots els privilegis d'accés"
+
+#~ msgid "Groups rights"
+#~ msgstr "Privilegis dels grups"
+
+#~ msgid "Group:"
+#~ msgstr "Grup:"
+
+#~ msgid "Individual users rights"
+#~ msgstr "Privilegis individuals de l'usuari"
+
+#, fuzzy
+#~ msgid "User:"
+#~ msgstr "Usuari:"
+
+#, fuzzy
+#~ msgid "Insert"
+#~ msgstr "Inserta"
+
+#, fuzzy
+#~ msgid "Update/Delete"
+#~ msgstr "Actualitza/Suprimeix"
+
+#~ msgid "Rule"
+#~ msgstr "Regla"
+
+#, fuzzy
+#~ msgid "Table"
+#~ msgstr "Taula"
+
+#~ msgid "Owner"
+#~ msgstr "Propietari"
+
+#, fuzzy
+#~ msgid "Sequence"
+#~ msgstr "Seqüència"
+
+#~ msgid "Index"
+#~ msgstr "Índex"
+
+#, fuzzy
+#~ msgid "Name:"
+#~ msgstr "Nom:"
+
+#~ msgid "Password:"
+#~ msgstr "Contrasenya"
+
+#, fuzzy
+#~ msgid "Could not instantiate the gnome-db-control"
+#~ msgstr "No es pot instanciar el control gnome-db-control"
+
+#~ msgid "Group(s)"
+#~ msgstr "Grup(s)"
+
+#, fuzzy
+#~ msgid "Create DB"
+#~ msgstr "Crea DB"
+
+#, fuzzy
+#~ msgid "Create users"
+#~ msgstr "Crea usuaris"
+
+#~ msgid "Valid until"
+#~ msgstr "Valit fins"
+
+#, fuzzy
+#~ msgid "Known database users"
+#~ msgstr "Usuaris de base de dades coneguts"
+
+#~ msgid "Save as new user"
+#~ msgstr "Desa com a usuari nou"
+
+#~ msgid "Save modified user"
+#~ msgstr "Desa l'usuari modificat"
+
+#, fuzzy
+#~ msgid "Delete user"
+#~ msgstr "Suprimeix usuari"
+
+#~ msgid "Yes"
+#~ msgstr "Sí"
+
+#~ msgid "No"
+#~ msgstr "No"
+
+#~ msgid "UI Test 3 Error"
+#~ msgstr "Error en UI Test 3"
+
+#~ msgid "Record %8.0f"
+#~ msgstr "Registre %8.0f"
+
+#~ msgid "We could not load the glade interface description! (%s)"
+#~ msgstr "No es pot carregar la descripció de glade! (%s)"
+
+#, fuzzy
+#~ msgid "Select the table name"
+#~ msgstr "Selecciona el nom de la taula"
+
+#~ msgid "Could not get CORBA name service object"
+#~ msgstr "No es pot obternir el nom CORBA de l'objecte servidor"
+
+#~ msgid "%s: not implemented"
+#~ msgstr "%s: no implementat"
+
+#~ msgid "%s: text = '%s'"
+#~ msgstr "%s: texte = '%s'"
+
+#~ msgid "%s: length = %d"
+#~ msgstr "%s: longitud = %d"
+
+#~ msgid "%s: sending field description for '%s'"
+#~ msgstr "%s: enviant camp de descripció per a '%s'"
+
+#, fuzzy
+#~ msgid "Refresh all"
+#~ msgstr "Refresca tot"
+
+#~ msgid "Ok"
+#~ msgstr "Aceptar"
+
+#, fuzzy
+#~ msgid "GNOME-DB Controls browser"
+#~ msgstr "Navegador de controls GNOME-DB"
+
+#~ msgid "New control"
+#~ msgstr "Nou control"
+
+#, fuzzy
+#~ msgid "Close control"
+#~ msgstr "Tanca el control"
+
+#, fuzzy
+#~ msgid "Controls"
+#~ msgstr "Controls"
+
+#~ msgid "Control settings"
+#~ msgstr "Configuració dels controls"
+
+#, fuzzy
+#~ msgid "database provider"
+#~ msgstr "Proveidor de bases de dades"
+
+#~ msgid "PROVIDER"
+#~ msgstr "PROVEIDOR"
+
+#, fuzzy
+#~ msgid "table"
+#~ msgstr "taula"
+
+#, fuzzy
+#~ msgid "TABLENAME"
+#~ msgstr "NOM DE LA TAULA"
+
+#, fuzzy
+#~ msgid "TABLE NAME"
+#~ msgstr "NOM DE LA TAULA"
+
+#~ msgid "Logging in"
+#~ msgstr "Conectant amb"
 
 #~ msgid "Load..."
 #~ msgstr "Carregant..."
