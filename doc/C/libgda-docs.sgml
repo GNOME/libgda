@@ -630,6 +630,44 @@
     &libgda-xml-document;
   </chapter>
 
+  <chapter id="libgda-providers">
+    <title>GDA Providers</title>
+    <para>
+      As stated before, for each different data source supported by
+      &LIBGDA;, there must be a CORBA object implementing the
+      GNOME::Database::Provider interface. So, in theory, you just need
+      the &LIBGDA; IDL files (included in the &LIBGDA; distribution),
+      and make use of them from your favorite language. That is, you
+      can access directly the &LIBGDA; architecture by talking to the different
+      via CORBA with the help of the IDL files.
+    </para>
+    <para>
+      As an example for this, we should talk about bonobo-python or
+      bonobo-perl, which are 2 of the most advanced Bonobo bindings
+      available, and which would help you in accessign the GDA
+      framework from those 2 lenguages.
+    </para>
+    <para>
+      Since &LIBGDA; itself is developed in the C language, and that most
+      providers are also implemented in that language, the &LIBGDA; library
+      itself contains a set of helper classes and functions to help you
+      in the addition of a new provider to the GDA framework.
+    </para>
+    <sect1 id="libgda-provider-class">
+      <title>The GdaServerProvider class </title>
+      <para>
+	The GdaServerProvider is the class you should implement for adding
+	a new provider. This class is just a typical GObject-based class,
+	with a set of virtual methods, that are the ones that you must implement.
+	These virtual methods are declared in the class structure, in the
+	<filename>gda-server-provider.h</filename> file. They are:
+      </para>
+      <programlisting>
+	
+      </programlisting>
+    </sect1>
+  </chapter>
+
   <chapter id="libgda-xql">
     <title>XML Queries</title>
     <para>

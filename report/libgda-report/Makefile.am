@@ -24,7 +24,7 @@ gda_report_corba_built_files = \
 	GNOME_Database_Report.h
 
 $(gda_report_corba_built_files): $(IDLFILES) $(ORBIT_IDL)
-	$(ORBIT_IDL) -I$(top_builddir)/idl -I$(BONOBO_ACTIVATION_IDL_DIR) -I$(BONOBO_IDL_DIR) -I$(top_builddir)/idl $(top_builddir)/report/idl/GNOME_Database_Report.idl
+	$(ORBIT_IDL) -I$(top_srcdir)/idl -I$(BONOBO_ACTIVATION_IDL_DIR) -I$(BONOBO_IDL_DIR) $(top_srcdir)/report/idl/GNOME_Database_Report.idl
 
 gda_report_headers = \
 	gda-report-client.h \

@@ -1,3 +1,9 @@
+2001-12-29  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* providers/default/sqlite/Makefile.am:
+	* report/libgda-report/Makefile.am: more changes to really
+	pass distcheck. 0.8.99 is ready
+
 2001-12-29  Carlos Perelló Marín <carlos@gnome-db.org>
 
 	* providers/default/sqlite/Makefile.am: Fixed to pass distcheck.
