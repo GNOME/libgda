@@ -1,5 +1,5 @@
 /* GDA MySQL provider
- * Copyright (C) 1998-2002 The GNOME Foundation.
+ * Copyright (C) 1998-2004 The GNOME Foundation.
  *
  * AUTHORS:
  *      Michael Lausch <michael@lausch.at>
@@ -977,21 +977,31 @@ get_mysql_types (GdaConnection *cnc, GdaParameterList *params)
 		GdaValueType type;
 	} types[] = {
 		{ "blob", "", "Binary blob", GDA_VALUE_TYPE_BINARY },
+		{ "bigint", "", "Big integer", GDA_VALUE_TYPE_BIGINT },
+		{ "char", "", "Char", GDA_VALUE_TYPE_STRING },
 		{ "date", "", "Date", GDA_VALUE_TYPE_DATE },
 		{ "datetime", "", "Date and time", GDA_VALUE_TYPE_TIMESTAMP },
 		{ "decimal", "", "Decimal number", GDA_VALUE_TYPE_DOUBLE },
 		{ "double", "", "Double precision number", GDA_VALUE_TYPE_DOUBLE },
 		{ "enum", "", "Enumeration", GDA_VALUE_TYPE_STRING },
 		{ "float", "", "Single precision number", GDA_VALUE_TYPE_SINGLE },
-		{ "int24", "", "24 bit integer", GDA_VALUE_TYPE_BIGINT },
+		{ "int", "", "Integer", GDA_VALUE_TYPE_INTEGER },
+		{ "integer", "", "Integer", GDA_VALUE_TYPE_INTEGER },		
 		{ "long", "", "Long integer", GDA_VALUE_TYPE_INTEGER },
-		{ "longlong", "", "Extra long integer", GDA_VALUE_TYPE_BIGINT },
+		{ "longblob", "", "Long blob", GDA_VALUE_TYPE_BINARY },
+		{ "longtext", "", "Long text", GDA_VALUE_TYPE_STRING },
+		{ "mediumint", "", "Medium integer", GDA_VALUE_TYPE_INTEGER },
+		{ "mediumblob", "", "Medium blob", GDA_VALUE_TYPE_BINARY },
+		{ "mediumtext", "", "Medium text", GDA_VALUE_TYPE_STRING },				
 		{ "set", "", "Set", GDA_VALUE_TYPE_STRING },
-		{ "short", "", "Short integer", GDA_VALUE_TYPE_SMALLINT },
-		{ "string", "", "String", GDA_VALUE_TYPE_STRING },
+		{ "smallint", "", "Small integer", GDA_VALUE_TYPE_INTEGER },
+		{ "text", "", "Text", GDA_VALUE_TYPE_STRING },
+		{ "tinyint", "", "Tiny integer", GDA_VALUE_TYPE_INTEGER }, /* really a boolean */
+		{ "tinyblob", "", "Tiny blob", GDA_VALUE_TYPE_BINARY },
+		{ "tinytext", "", "Tiny text", GDA_VALUE_TYPE_STRING },		
 		{ "time", "", "Time", GDA_VALUE_TYPE_TIME },
 		{ "timestamp", "", "Time stamp", GDA_VALUE_TYPE_TIMESTAMP },
-		{ "tiny", "", "Tiny integer", GDA_VALUE_TYPE_SMALLINT },
+		{ "varchar", "", "Variable Length Char", GDA_VALUE_TYPE_STRING },
 		{ "year", "", "Year", GDA_VALUE_TYPE_INTEGER }
 	};
 

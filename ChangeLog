@@ -1,3 +1,8 @@
+2004-09-01  Alan Knowles <alan@akbkhome.com>
+
+	* providers/mysql/gda-mysql-provider.c (get_mysql_types): updated
+	list of types to match the real MySQL types.
+
 2004-08-31  Jeronimo Albi <jeronimoalbi@yahoo.com.ar>
 
 	* providers/firebird/gda-firebird-provider.c:
