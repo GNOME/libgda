@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
 "POT-Creation-Date: 2003-03-07 17:08+0200\n"
-"PO-Revision-Date: 2003-03-07 08:06--500\n"
+"PO-Revision-Date: 2003-03-07 11:02--500\n"
 "Last-Translator: Yuriy Syrota <yuri@renome.rovno.ua>\n"
 "Language-Team: Ukrainian <uk@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -669,9 +669,8 @@ msgstr ""
 #: providers/mysql/gda-mysql-provider.c:705
 #: providers/odbc/gda-odbc-provider.c:1034
 #: providers/postgres/gda-postgres-provider.c:837
-#, fuzzy
 msgid "Return type"
-msgstr "Тип даних"
+msgstr "Тип повернення"
 
 #: providers/mdb/gda-mdb-provider.c:551
 msgid "# of args"
@@ -681,9 +680,8 @@ msgstr ""
 #: providers/mysql/gda-mysql-provider.c:706
 #: providers/odbc/gda-odbc-provider.c:1036
 #: providers/postgres/gda-postgres-provider.c:839
-#, fuzzy
 msgid "Args types"
-msgstr "Аґреґати"
+msgstr "Типи аргументів"
 
 #: providers/mdb/gda-mdb-provider.c:553
 #: providers/odbc/gda-odbc-provider.c:1037
@@ -695,9 +693,8 @@ msgstr "Аґреґати"
 #: providers/postgres/gda-postgres-provider.c:1186
 #: providers/postgres/gda-postgres-provider.c:1305
 #: providers/postgres/gda-postgres-provider.c:1847
-#, fuzzy
 msgid "Definition"
-msgstr "Опис"
+msgstr "Означення"
 
 #: providers/mdb/gda-mdb-provider.c:657
 #, fuzzy
@@ -820,9 +817,8 @@ msgstr ""
 #: providers/odbc/gda-odbc-provider.c:513
 #: providers/odbc/gda-odbc-provider.c:544
 #: providers/odbc/gda-odbc-provider.c:574
-#, fuzzy
 msgid "Invalid Odbc handle"
-msgstr "Неправильний XML-вузол"
+msgstr "Неправильний логічний номер ODBC"
 
 #: providers/odbc/gda-odbc-provider.c:1031
 #: providers/postgres/gda-postgres-provider.c:834
@@ -1190,9 +1186,8 @@ msgstr ""
 #: providers/sqlite/gda-sqlite-recordset.c:156
 #: providers/sqlite/gda-sqlite-recordset.c:195
 #: providers/sqlite/gda-sqlite-recordset.c:236
-#, fuzzy
 msgid "Invalid SQLite handle"
-msgstr "Неправильний XML-вузол"
+msgstr "Неправильний логічний номер SQLite"
 
 #: providers/sqlite/gda-sqlite-provider.c:265
 msgid "Invalid SQLITE handle"
@@ -1239,36 +1234,32 @@ msgid "Locale set to '%s'."
 msgstr ""
 
 #: providers/sybase/gda-sybase-provider.c:337
-#, fuzzy
 msgid "Could not initialize cslib callback"
-msgstr "Не вдалося ініціалізувати бібліотеку OCI"
+msgstr "Не вдалось ініціалізувати зворотній виклик cslib"
 
 #: providers/sybase/gda-sybase-provider.c:341
 msgid "CS-lib callback initialized."
-msgstr ""
+msgstr "Ініціалізовано зворотній виклик CS-lib."
 
 #: providers/sybase/gda-sybase-provider.c:347
-#, fuzzy
 msgid "Could not initialize ct-client callback"
-msgstr "Не вдалося ініціалізувати середовище Oracle"
+msgstr "Не вдалось ініціалізувати зворотній виклик ct-client"
 
 #: providers/sybase/gda-sybase-provider.c:351
 msgid "CT-Client callback initialized."
-msgstr ""
+msgstr "Ініціалізовано зворотній виклик CT-Client."
 
 #: providers/sybase/gda-sybase-provider.c:358
-#, fuzzy
 msgid "Could not initialize ct-server callback"
-msgstr "Не вдалося ініціалізувати середовище Oracle"
+msgstr "Не вдалось ініціалізувати зворотній виклик ct-server"
 
 #: providers/sybase/gda-sybase-provider.c:362
 msgid "CT-Server callback initialized."
-msgstr ""
+msgstr "Ініціалізовано зворотній виклик CT-Server."
 
 #: providers/sybase/gda-sybase-provider.c:370
-#, fuzzy
 msgid "Connection allocated."
-msgstr "Таблиці з'єднання"
+msgstr "З'єднання виділено."
 
 #: providers/sybase/gda-sybase-provider.c:410
 msgid "Appname set."
@@ -1335,14 +1326,14 @@ msgstr "Не вдалося проаналізувати файл на %s"
 
 #: providers/sybase/gda-sybase-provider.c:772
 msgid "Sending command failed."
-msgstr ""
+msgstr "Не вдалось відіслати команду."
 
 #: providers/sybase/gda-sybase-provider.c:796
 #: providers/sybase/gda-sybase-provider.c:812
 #: providers/sybase/gda-sybase-provider.c:822
 #, c-format
 msgid "%s: %s failed"
-msgstr ""
+msgstr "%s: збій %s"
 
 #: providers/sybase/gda-sybase-provider.c:857
 #, c-format
@@ -1361,17 +1352,17 @@ msgstr "Не вдалося ініціалізувати Bonobo"
 
 #: providers/sybase/gda-sybase-recordset.c:320
 msgid "ct_cancel() failed."
-msgstr ""
+msgstr "Збій функції ct_cancel()."
 
 #: providers/sybase/gda-sybase-recordset.c:332
 #, c-format
 msgid "%s failed while processing a row result."
-msgstr ""
+msgstr "Функція %s зазнала збою під час обробки результату рядка."
 
 #: providers/sybase/gda-sybase-recordset.c:339
 #, c-format
 msgid "%s returned <= 0 columns."
-msgstr ""
+msgstr "Функція %s повернула <= 0 стовпчиків."
 
 #: providers/sybase/gda-sybase-recordset.c:359
 #, fuzzy
@@ -1402,17 +1393,17 @@ msgstr "Не вдалося отримати файл з %s"
 #: providers/sybase/gda-sybase-recordset.c:436
 #, c-format
 msgid "%s failed on row %d"
-msgstr ""
+msgstr "Функція %s зазнала збою на рядку %d"
 
 #: providers/sybase/gda-sybase-recordset.c:463
 #, c-format
 msgid "%s terminated with unexpected return code."
-msgstr ""
+msgstr "Функція %s завершилася з несподіваним кодом повернення."
 
 #: providers/sybase/gda-sybase-recordset.c:540
 #, c-format
 msgid "%s returned %s"
-msgstr ""
+msgstr "Функція %s повернула %s"
 
 #: providers/sybase/gda-sybase-types.c:97
 #: providers/sybase/gda-sybase-types.c:100
@@ -1422,12 +1413,12 @@ msgstr ""
 #: providers/sybase/gda-sybase-types.c:217
 #, c-format
 msgid "cslib cannot convert type %d"
-msgstr ""
+msgstr "cslib неможе перетворити тип %d"
 
 #: providers/sybase/gda-sybase-types.c:232
 #, c-format
 msgid "data conversion failed for type %d"
-msgstr ""
+msgstr "збій перетворення даних для типу %d"
 
 #: providers/sybase/libmain.c:40
 msgid "Provider for sybase databases (using OpenClient)"
