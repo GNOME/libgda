@@ -38,7 +38,7 @@ get_conf_engine (void)
 gchar *
 gda_config_get_string (const gchar *path)
 {
-  return gconf_get_string(get_conf_engine(), path, NULL);
+  return gconf_engine_get_string(get_conf_engine(), path, NULL);
 }
 
 /**
@@ -48,7 +48,7 @@ gda_config_get_string (const gchar *path)
 gint
 gda_config_get_int (const gchar *path)
 {
-  return gconf_get_int(get_conf_engine(), path, NULL);
+  return gconf_engine_get_int(get_conf_engine(), path, NULL);
 }
 
 /**
@@ -58,7 +58,7 @@ gda_config_get_int (const gchar *path)
 gdouble
 gda_config_get_float (const gchar *path)
 {
-  return gconf_get_float(get_conf_engine(), path, NULL);
+  return gconf_engine_get_float(get_conf_engine(), path, NULL);
 }
 
 /**
@@ -68,7 +68,7 @@ gda_config_get_float (const gchar *path)
 gboolean
 gda_config_get_boolean (const gchar *path)
 {
-  return gconf_get_bool(get_conf_engine(), path, NULL);
+  return gconf_engine_get_bool(get_conf_engine(), path, NULL);
 }
 
 /**
@@ -79,7 +79,7 @@ gda_config_get_boolean (const gchar *path)
 void
 gda_config_set_string (const gchar *path, const gchar *new_value)
 {
-  gconf_set_string(get_conf_engine(), path, new_value, NULL);
+  gconf_engine_set_string(get_conf_engine(), path, new_value, NULL);
 }
 
 /**
@@ -90,7 +90,7 @@ gda_config_set_string (const gchar *path, const gchar *new_value)
 void
 gda_config_set_int (const gchar *path, gint new_value)
 {
-  gconf_set_int(get_conf_engine(), path, new_value, NULL);
+  gconf_engine_set_int(get_conf_engine(), path, new_value, NULL);
 }
 
 /**
@@ -101,7 +101,7 @@ gda_config_set_int (const gchar *path, gint new_value)
 void
 gda_config_set_float (const gchar *path, gdouble new_value)
 {
-  gconf_set_float(get_conf_engine(), path, new_value, NULL);
+  gconf_engine_set_float(get_conf_engine(), path, new_value, NULL);
 }
 
 /**
@@ -112,7 +112,7 @@ gda_config_set_float (const gchar *path, gdouble new_value)
 void
 gda_config_set_boolean (const gchar *path, gboolean new_value)
 {
-  gconf_set_bool(get_conf_engine(), path, new_value, NULL);
+  gconf_engine_set_bool(get_conf_engine(), path, new_value, NULL);
 }
 
 /**
@@ -135,7 +135,7 @@ gda_config_remove_section (const gchar *path)
 void
 gda_config_remove_key (const gchar *path)
 {
-  gconf_unset(get_conf_engine(), path, NULL);
+  gconf_engine_unset(get_conf_engine(), path, NULL);
 }
 
 /**
@@ -148,7 +148,7 @@ gda_config_remove_key (const gchar *path)
 gboolean
 gda_config_has_section (const gchar *path)
 {
-  return gconf_dir_exists(get_conf_engine(), path, NULL);
+  return gconf_engine_dir_exists(get_conf_engine, path, NULL);
 }
 
 /**
@@ -191,7 +191,7 @@ gda_config_list_sections (const gchar *path)
 
   g_return_val_if_fail(path != NULL, NULL);
   
-  slist = gconf_all_dirs(get_conf_engine(), path, NULL);
+  slist = gconf_engine_all_dirs(get_conf_engine(), path, NULL);
   if (slist)
     {
       GSList* node;
@@ -216,7 +216,7 @@ gda_config_list_keys (const gchar *path)
 
   g_return_val_if_fail(path != NULL, NULL);
   
-  slist = gconf_all_entries(get_conf_engine(), path, NULL);
+  slist = gconf_engine_all_entries(get_conf_engine(), path, NULL);
   if (slist)
     {
       GSList* node;

@@ -32,14 +32,13 @@ fi
 
 dnl Check for GConf
 use_gconf=false
-gconfminver="0.6"
+gconfminver="0.9"
 AC_MSG_CHECKING(for GConf >= $gconfminver)
 if gconf-config --libs gconf > /dev/null 2>&1
 then
 	gconfver=`gconf-config --version | awk 'BEGIN {FS="."}{printf "%d", $1*1000+$2}'`
-	if test "$gconfver" -ge 6
+	if test "$gconfver" -ge 9
 	then
-		AC_MSG_RESULT(found)
 		AC_DEFINE(USING_GCONF)
 		gda_gconf_libs=`gconf-config --libs gconf`
 		gda_gconf_cflags=`gconf-config --cflags gconf`
