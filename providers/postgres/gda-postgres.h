@@ -43,13 +43,18 @@ G_BEGIN_DECLS
  */
 
 GdaError *gda_postgres_make_error (PGconn *pconn, PGresult *pg_res);
-void gda_postgres_set_value (GdaValue *value, const gchar *fname,
-			     GdaValueType type, const gchar *thevalue, 
-			     gint dbsize, gboolean isNull);
+void gda_postgres_set_value (GdaValue *value, 
+			     GdaValueType type, 
+			     const gchar *thevalue,
+			     gboolean isNull);
 
 GdaValueType gda_postgres_type_oid_to_gda (GdaPostgresTypeOid *type_data, 
-					   gint ntypes, Oid postgres_type);
-GdaValueType gda_postgres_type_name_to_gda (GHashTable *h_table, const gchar *name);
+					   gint ntypes,
+					   Oid postgres_type);
+
+GdaValueType gda_postgres_type_name_to_gda (GHashTable *h_table,
+					    const gchar *name);
+
 const gchar *gda_data_type_to_string (GdaValueType type);
 
 G_END_DECLS

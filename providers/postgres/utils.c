@@ -130,9 +130,10 @@ make_timestamp (GdaTimestamp *timestamp, const gchar *value)
 }
 
 void
-gda_postgres_set_value (GdaValue *value, const gchar *fname,
-			GdaValueType type, const gchar *thevalue, 
-			gint dbsize, gboolean isNull)
+gda_postgres_set_value (GdaValue *value,
+			GdaValueType type,
+			const gchar *thevalue,
+			gboolean isNull)
 {
 	GDate *gdate;
 	GdaDate date;
@@ -142,7 +143,6 @@ gda_postgres_set_value (GdaValue *value, const gchar *fname,
 	GdaNumeric numeric;
 
 	g_return_if_fail (value != NULL);
-	g_return_if_fail (fname != NULL);
 	g_return_if_fail (thevalue != NULL);
 
 	//TODO: What do I do with BLOBs?

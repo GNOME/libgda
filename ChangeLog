@@ -1,5 +1,22 @@
 2002-05-10  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
+	* providers/postgres/gda-postgres-recordset.c: store number of rows
+	and columns and array of types for each column in the private
+	structure. Changed the name of some internal functions to 
+	gda_postgres_recordset_*.
+	
+	(gda_postgres_recordset_get_value_at): fetch all the rows previous to
+	the requested if it has not already done.
+
+	(gda_postgres_recordset_get_n_rows): removed. Not used any more since
+	the base class already provides a valid one.
+	
+	* providers/postgres/gda-postgres.h:
+	* providers/postgres/utils.c: removed dbsize and fname parameters from
+	gda_postgres_set_value.
+
+2002-05-10  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
 	* providers/postgres/gda-postgres-provider.c: set the column titles
 	for the recordsets.
 

@@ -38,6 +38,9 @@
 struct _GdaPostgresRecordsetPrivate {
 	PGresult *pg_res;
 	GdaConnection *cnc;
+	GdaValueType *column_types;
+	gint ncolumns;
+	gint nrows;
 
 	gint ntypes;
 	GdaPostgresTypeOid *type_data;
@@ -48,10 +51,10 @@ static void gda_postgres_recordset_class_init (GdaPostgresRecordsetClass *klass)
 static void gda_postgres_recordset_init       (GdaPostgresRecordset *recset,
 					       GdaPostgresRecordsetClass *klass);
 static void gda_postgres_recordset_finalize   (GObject *object);
-static const GdaValue *get_value_at_func      (GdaDataModel *model, gint col, gint row);
-static GdaFieldAttributes *describe_func      (GdaDataModel *model, gint col);
-static gint get_n_rows_func 		      (GdaDataModel *model);
-static gint get_n_columns_func 		      (GdaDataModel *model);
+
+static const GdaValue *gda_postgres_recordset_get_value_at    (GdaDataModel *model, gint col, gint row);
+static GdaFieldAttributes *gda_postgres_recordset_describe    (GdaDataModel *model, gint col);
+static gint gda_postgres_recordset_get_n_rows 		      (GdaDataModel *model);
 
 static GObjectClass *parent_class = NULL;
 
@@ -80,10 +83,9 @@ gda_postgres_recordset_class_init (GdaPostgresRecordsetClass *klass)
 	parent_class = g_type_class_peek_parent (klass);
 
 	object_class->finalize = gda_postgres_recordset_finalize;
-	model_class->get_n_rows = get_n_rows_func;
-	model_class->get_n_columns = get_n_columns_func;
-	model_class->describe_column = describe_func;
-	model_class->get_value_at = get_value_at_func;
+	model_class->get_n_rows = gda_postgres_recordset_get_n_rows;
+	model_class->describe_column = gda_postgres_recordset_describe;
+	model_class->get_value_at = gda_postgres_recordset_get_value_at;
 }
 
 static void
@@ -98,10 +100,53 @@ gda_postgres_recordset_finalize (GObject * object)
 		recset->priv->pg_res = NULL;
 	}
 
+	g_free (recset->priv->column_types);
+	recset->priv->column_types = NULL;
 	g_free (recset->priv);
 	recset->priv = NULL;
 
 	parent_class->finalize (object);
+}
+
+static GdaValueType *
+get_column_types (GdaPostgresRecordsetPrivate *priv)
+{
+	gint i, ncols;
+	GdaValueType *types;
+
+	ncols = PQnfields (priv->pg_res);
+	types = g_new (GdaValueType, ncols);
+	for (i = 0; i < ncols; i++)
+		types [i] = gda_postgres_type_oid_to_gda (priv->type_data,
+							  priv->ntypes, 
+							  PQftype (priv->pg_res, i));
+
+	return types;
+}
+
+static GList *
+get_row (GdaPostgresRecordsetPrivate *priv, gint row)
+{
+	gchar *thevalue;
+	GdaValueType ftype;
+	gboolean isNull;
+	GdaValue *value;
+	gint i;
+	GList *row_list = NULL;
+
+	for (i = 0; i < priv->ncolumns; i++) {
+		thevalue = PQgetvalue(priv->pg_res, row, i);
+		ftype = priv->column_types [i];
+		isNull = *thevalue != '\0' ? FALSE : PQgetisnull (priv->pg_res, row, i);
+		value = gda_value_new_null ();
+
+		gda_postgres_set_value (value, ftype, thevalue,
+					PQfsize (priv->pg_res, i),
+					isNull);
+
+		row_list = g_list_append (row_list, value);
+	}
+	return row_list;
 }
 
 /*
@@ -109,23 +154,22 @@ gda_postgres_recordset_finalize (GObject * object)
  */
 
 static const GdaValue *
-get_value_at_func (GdaDataModel *model, gint col, gint row)
+gda_postgres_recordset_get_value_at (GdaDataModel *model, gint col, gint row)
 {
 	GdaPostgresRecordset *recset = (GdaPostgresRecordset *) model;
 	GdaPostgresRecordsetPrivate *priv_data;
 	gint field_count;
 	gint row_count;
 	PGresult *pg_res;
-	gint i;
-	GList *row_list = NULL;
-	GdaValue *value;
+	gint current_row, fetched_rows;
+	GList *row_list;
 
 	g_return_val_if_fail (GDA_IS_POSTGRES_RECORDSET (recset), NULL);
 	g_return_val_if_fail (recset->priv != NULL, 0);
 	
-	value = (GdaValue *) GDA_DATA_MODEL_CLASS (parent_class)->get_value_at (model, col, row);
-	if (value != NULL)
-		return value;
+	fetched_rows = GDA_DATA_MODEL_CLASS (parent_class)->get_n_rows (model);
+	if (row >= 0 && row < fetched_rows)
+		return GDA_DATA_MODEL_CLASS (parent_class)->get_value_at (model, col, row);
 
 	priv_data = recset->priv;
 	pg_res = priv_data->pg_res;
@@ -135,8 +179,8 @@ get_value_at_func (GdaDataModel *model, gint col, gint row)
 		return NULL;
 	}
 
-	row_count = PQntuples (pg_res);
-	field_count = PQnfields (pg_res);
+	row_count = priv_data->nrows;
+	field_count = priv_data->ncolumns;
 
 	if (row == row_count)
 		return NULL; // For the last row don't add an error.
@@ -153,42 +197,17 @@ get_value_at_func (GdaDataModel *model, gint col, gint row)
 		return NULL;
 	}
 
-	for (i = 0; i < field_count; i++) {
-		gchar *thevalue;
-		GdaValueType ftype;
-		gboolean isNull;
-
-		thevalue = PQgetvalue(pg_res, row, i);
-
-		ftype = gda_postgres_type_oid_to_gda (priv_data->type_data,
-						      priv_data->ntypes, 
-						      PQftype (pg_res, i));
-
-		isNull = *thevalue != '\0' ? FALSE : PQgetisnull (pg_res, row, i);
-		thevalue = PQgetvalue(pg_res, row, i);
-
-		ftype = gda_postgres_type_oid_to_gda (priv_data->type_data,
-						      priv_data->ntypes, 
-						      PQftype (pg_res, i));
-
-		value = gda_value_new_null ();
-		gda_postgres_set_value (value, PQfname (pg_res, i), ftype,
-					thevalue, PQfsize (pg_res, i), isNull);
-
-		row_list = g_list_append (row_list, value);
+	for (current_row = fetched_rows; current_row <= row; current_row++){
+		row_list = get_row (priv_data, current_row);
+		gda_data_model_append_row (GDA_DATA_MODEL (model), row_list);
+		g_list_foreach (row_list, (GFunc) gda_value_free, NULL);
 	}
-
-	if (row_list == NULL)
-		return NULL;
-
-	gda_data_model_append_row (GDA_DATA_MODEL (model), row_list);
-	g_list_foreach (row_list, (GFunc) gda_value_free, NULL);
 
 	return GDA_DATA_MODEL_CLASS (parent_class)->get_value_at (model, col, row);
 }
 
 static GdaFieldAttributes *
-describe_func (GdaDataModel *model, gint col)
+gda_postgres_recordset_describe (GdaDataModel *model, gint col)
 {
 	GdaPostgresRecordset *recset = (GdaPostgresRecordset *) model;
 	GdaPostgresRecordsetPrivate *priv_data;
@@ -240,25 +259,7 @@ describe_func (GdaDataModel *model, gint col)
 }
 
 static gint
-get_n_columns_func (GdaDataModel *model)
-{
-	GdaPostgresRecordset *recset = (GdaPostgresRecordset *) model;
-	GdaPostgresRecordsetPrivate *priv_data;
-	PGresult *pg_res;
-
-	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), 0);
-	g_return_val_if_fail (recset->priv != NULL, 0);
-
-	priv_data = recset->priv;
-	pg_res = priv_data->pg_res;
-	if (!pg_res)
-		return 0;
-
-	return PQnfields (pg_res);
-}
-
-static gint
-get_n_rows_func (GdaDataModel *model)
+gda_postgres_recordset_get_n_rows (GdaDataModel *model)
 {
 	GdaPostgresRecordset *recset = (GdaPostgresRecordset *) model;
 	GdaPostgresRecordsetPrivate *priv_data;
@@ -318,8 +319,11 @@ gda_postgres_recordset_new (GdaConnection *cnc, PGresult *pg_res)
 	model->priv->ntypes = cnc_priv_data->ntypes;
 	model->priv->type_data = cnc_priv_data->type_data;
 	model->priv->h_table = cnc_priv_data->h_table;
+	model->priv->ncolumns = PQnfields (pg_res);
+	model->priv->nrows = PQntuples (pg_res);
+	model->priv->column_types = get_column_types (model->priv);
 	gda_data_model_array_set_n_columns (GDA_DATA_MODEL_ARRAY (model),
-					    PQnfields (pg_res));
+					    model->priv->ncolumns);
 
 	return GDA_DATA_MODEL (model);
 }
