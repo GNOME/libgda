@@ -74,7 +74,7 @@ gda_headers = \
 	gda-xql-target.h \
 	gda-xql-dml.h \
 	gda-xql-join.h \
-	gda-xql-update.h
+	gda-xql-update.h \
 	libgda.h
 
 $(libgda_2_la_OBJECTS): $(gda_marshal_built_files)
