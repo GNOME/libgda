@@ -52,13 +52,13 @@ static GList *gda_sqlite_provider_execute_command (GdaServerProvider *provider,
 						   GdaParameterList *params);
 static gboolean gda_sqlite_provider_begin_transaction (GdaServerProvider *provider,
 						       GdaConnection *cnc,
-						       const gchar *trans_id);
+						       GdaTransaction *xaction);
 static gboolean gda_sqlite_provider_commit_transaction (GdaServerProvider *provider,
 							GdaConnection *cnc,
-							const gchar *trans_id);
+							GdaTransaction *xaction);
 static gboolean gda_sqlite_provider_rollback_transaction (GdaServerProvider *provider,
 							  GdaConnection * cnc,
-							  const gchar *trans_id);
+							  GdaTransaction *xaction);
 static gboolean gda_sqlite_provider_supports (GdaServerProvider *provider,
 					      GdaConnection *cnc,
 					      GdaConnectionFeature feature);
@@ -331,7 +331,7 @@ gda_sqlite_provider_execute_command (GdaServerProvider *provider,
 static gboolean
 gda_sqlite_provider_begin_transaction (GdaServerProvider *provider,
 				       GdaConnection *cnc,
-				       const gchar *trans_id)
+				       GdaTransaction *xaction)
 {
 	GdaSqliteProvider *sqlite_prv = (GdaSqliteProvider *) provider;
 
@@ -345,7 +345,7 @@ gda_sqlite_provider_begin_transaction (GdaServerProvider *provider,
 static gboolean
 gda_sqlite_provider_commit_transaction (GdaServerProvider *provider,
 					GdaConnection *cnc,
-					const gchar *trans_id)
+					GdaTransaction *xaction)
 {
 	GdaSqliteProvider *sqlite_prv = (GdaSqliteProvider *) provider;
 
@@ -359,7 +359,7 @@ gda_sqlite_provider_commit_transaction (GdaServerProvider *provider,
 static gboolean
 gda_sqlite_provider_rollback_transaction (GdaServerProvider *provider,
 					  GdaConnection *cnc,
-					  const gchar *trans_id)
+					  GdaTransaction *xaction)
 {
 	GdaSqliteProvider *sqlite_prv = (GdaSqliteProvider *) provider;
 

@@ -27,6 +27,7 @@
 #include <libgda/gda-connection.h>
 #include <libgda/gda-data-model.h>
 #include <libgda/gda-quark-list.h>
+#include <libgda/gda-transaction.h>
 
 G_BEGIN_DECLS
 
@@ -75,13 +76,13 @@ struct _GdaServerProviderClass {
 
 	gboolean (* begin_transaction) (GdaServerProvider *provider,
 					GdaConnection *cnc,
-					const gchar *trans_id);
+					GdaTransaction *xaction);
 	gboolean (* commit_transaction) (GdaServerProvider *provider,
 					 GdaConnection *cnc,
-					 const gchar *trans_id);
+					 GdaTransaction *xaction);
 	gboolean (* rollback_transaction) (GdaServerProvider *provider,
 					   GdaConnection *cnc,
-					   const gchar *trans_id);
+					   GdaTransaction *xaction);
 
 	gboolean (* supports) (GdaServerProvider *provider,
 			       GdaConnection *cnc,
@@ -118,13 +119,13 @@ GList   *gda_server_provider_execute_command (GdaServerProvider *provider,
 
 gboolean gda_server_provider_begin_transaction (GdaServerProvider *provider,
 						GdaConnection *cnc,
-						const gchar *trans_id);
+						GdaTransaction *xaction);
 gboolean gda_server_provider_commit_transaction (GdaServerProvider *provider,
 						 GdaConnection *cnc,
-						 const gchar *trans_id);
+						 GdaTransaction *xaction);
 gboolean gda_server_provider_rollback_transaction (GdaServerProvider *provider,
 						   GdaConnection *cnc,
-						   const gchar *trans_id);
+						   GdaTransaction *xaction);
 
 gboolean gda_server_provider_supports (GdaServerProvider *provider,
 				       GdaConnection *cnc,

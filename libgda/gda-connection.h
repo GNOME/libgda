@@ -43,6 +43,7 @@ typedef struct _GdaConnectionClass   GdaConnectionClass;
 typedef struct _GdaConnectionPrivate GdaConnectionPrivate;
 
 typedef struct _GdaClient GdaClient; /* defined in gda-client.h */
+typedef struct _GdaTransaction GdaTransaction; /* defined in gda-transaction.h */
 
 struct _GdaConnection {
 	GObject object;
@@ -92,9 +93,9 @@ gint           gda_connection_execute_non_query (GdaConnection *cnc,
 						 GdaCommand *cmd,
 						 GdaParameterList *params);
 
-gboolean       gda_connection_begin_transaction (GdaConnection *cnc, const gchar *id);
-gboolean       gda_connection_commit_transaction (GdaConnection *cnc, const gchar *id);
-gboolean       gda_connection_rollback_transaction (GdaConnection *cnc, const gchar *id);
+gboolean       gda_connection_begin_transaction (GdaConnection *cnc, GdaTransaction *xaction);
+gboolean       gda_connection_commit_transaction (GdaConnection *cnc, GdaTransaction *xaction);
+gboolean       gda_connection_rollback_transaction (GdaConnection *cnc, GdaTransaction *xaction);
 
 typedef enum {
 	GDA_CONNECTION_FEATURE_AGGREGATES,

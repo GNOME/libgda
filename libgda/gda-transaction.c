@@ -127,9 +127,9 @@ gda_transaction_new (const gchar *name)
  *
  * Retrieve the name of the given transaction, as specified by the
  * client application (via a non-NULL parameter in the call to
- * @gda_transaction_new, or by calling @gda_transaction_set_name).
+ * #gda_transaction_new, or by calling #gda_transaction_set_name).
  * Note that some providers may set, when you call
- * @gda_connection_begin_transaction, the name of the transaction if
+ * #gda_connection_begin_transaction, the name of the transaction if
  * it's not been specified by the client application, so this function
  * may return, for some providers, values that you don't expect.
  *

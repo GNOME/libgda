@@ -59,13 +59,13 @@ static GList *gda_mysql_provider_execute_command (GdaServerProvider *provider,
 						  GdaParameterList *params);
 static gboolean gda_mysql_provider_begin_transaction (GdaServerProvider *provider,
 						      GdaConnection *cnc,
-						      const gchar *trans_id);
+						      GdaTransaction *xaction);
 static gboolean gda_mysql_provider_commit_transaction (GdaServerProvider *provider,
 						       GdaConnection *cnc,
-						       const gchar *trans_id);
+						       GdaTransaction *xaction);
 static gboolean gda_mysql_provider_rollback_transaction (GdaServerProvider *provider,
 							 GdaConnection *cnc,
-							 const gchar *trans_id);
+							 GdaTransaction *xaction);
 static gboolean gda_mysql_provider_supports (GdaServerProvider *provider,
 					     GdaConnection *cnc,
 					     GdaConnectionFeature feature);
@@ -418,7 +418,7 @@ gda_mysql_provider_execute_command (GdaServerProvider *provider,
 static gboolean
 gda_mysql_provider_begin_transaction (GdaServerProvider *provider,
 				      GdaConnection *cnc,
-				      const gchar *trans_id)
+				      GdaTransaction *xaction)
 {
 	MYSQL *mysql;
 	gint rc;
@@ -446,7 +446,7 @@ gda_mysql_provider_begin_transaction (GdaServerProvider *provider,
 static gboolean
 gda_mysql_provider_commit_transaction (GdaServerProvider *provider,
 				       GdaConnection *cnc,
-				       const gchar *trans_id)
+				       GdaTransaction *xaction)
 {
 	MYSQL *mysql;
 	gint rc;
@@ -474,7 +474,7 @@ gda_mysql_provider_commit_transaction (GdaServerProvider *provider,
 static gboolean
 gda_mysql_provider_rollback_transaction (GdaServerProvider *provider,
 					 GdaConnection *cnc,
-					 const gchar *trans_id)
+					 GdaTransaction *xaction)
 {
 	MYSQL *mysql;
 	gint rc;

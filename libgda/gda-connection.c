@@ -663,12 +663,10 @@ gda_connection_execute_non_query (GdaConnection *cnc,
 /**
  * gda_connection_begin_transaction
  * @cnc: a #GdaConnection object.
- * @id: transaction id.
+ * @xaction: a #GdaTransaction object.
  *
  * Start a transaction on the data source, identified by the
- * @id parameter, which, if not NULL, will be used by the underlying
- * provider to start a named transaction, if the data source it
- * is connected to does support that concept.
+ * @xaction parameter.
  *
  * Before starting a transaction, you can check whether the underlying
  * provider does support transactions or not by using the
@@ -678,37 +676,35 @@ gda_connection_execute_non_query (GdaConnection *cnc,
  * otherwise.
  */
 gboolean
-gda_connection_begin_transaction (GdaConnection *cnc, const gchar *id)
+gda_connection_begin_transaction (GdaConnection *cnc, GdaTransaction *xaction)
 {
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-	return gda_server_provider_begin_transaction (cnc->priv->provider_obj, cnc, id);
+	return gda_server_provider_begin_transaction (cnc->priv->provider_obj, cnc, xaction);
 }
 
 /**
  * gda_connection_commit_transaction
  * @cnc: a #GdaConnection object.
- * @id: transaction id.
+ * @xaction: a #GdaTransaction object.
  *
- * Commit the current transaction (if @id is NULL) or the named
- * transaction specified by the @id parameter.
+ * Commit the given transaction.
  *
  * Returns: TRUE if the transaction was finished successfully,
  * FALSE otherwise.
  */
 gboolean
-gda_connection_commit_transaction (GdaConnection *cnc, const gchar *id)
+gda_connection_commit_transaction (GdaConnection *cnc, GdaTransaction *xaction)
 {
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-	return gda_server_provider_commit_transaction (cnc->priv->provider_obj, cnc, id);
+	return gda_server_provider_commit_transaction (cnc->priv->provider_obj, cnc, xaction);
 }
 
 /**
  * gda_connection_rollback_transaction
  * @cnc: a #GdaConnection object.
- * @id: transaction id.
+ * @xaction: a #GdaTransaction object.
  *
- * Rollback the current transaction (if @id is NULL) or the named
- * transaction specified by the @id parameter. This means that all changes
+ * Rollback the given transaction. This means that all changes
  * made to the underlying data source since the last call to
  * #gda_connection_begin_transaction or #gda_connection_commit_transaction
  * will be discarded.
@@ -716,10 +712,10 @@ gda_connection_commit_transaction (GdaConnection *cnc, const gchar *id)
  * Returns: TRUE if the operation was successful, FALSE otherwise.
  */
 gboolean
-gda_connection_rollback_transaction (GdaConnection *cnc, const gchar *id)
+gda_connection_rollback_transaction (GdaConnection *cnc, GdaTransaction *xaction)
 {
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-	return gda_server_provider_rollback_transaction (cnc->priv->provider_obj, cnc, id);
+	return gda_server_provider_rollback_transaction (cnc->priv->provider_obj, cnc, xaction);
 }
 
 /**

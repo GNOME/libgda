@@ -1,5 +1,14 @@
 2002-06-03  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* libgda/gda-connection.[ch]:
+	* libgda/gda-server-provider.[ch]:
+	* providers/mysql/gda-mysql-provider.c:
+	* providers/sqlite/gda-sqlite-provider.c:
+	* providers/default/gda-default-provider.c:
+	* providers/mdb/gda-mdb-provider.c:
+	* providers/postgres/gda-postgres-provider.c: use GdaTransaction for
+	transaction related methods.
+
 	* libgda/gda-transaction.[ch]: new class.
 
 	* libgda/Makefile.am:

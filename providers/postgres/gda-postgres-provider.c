@@ -57,15 +57,15 @@ static GList *gda_postgres_provider_execute_command (GdaServerProvider *provider
 
 static gboolean gda_postgres_provider_begin_transaction (GdaServerProvider *provider,
 							 GdaConnection *cnc,
-							 const gchar *trans_id);
+							 GdaTransaction *xaction);
 
 static gboolean gda_postgres_provider_commit_transaction (GdaServerProvider *provider,
 							  GdaConnection *cnc,
-							  const gchar *trans_id);
+							  GdaTransaction *xaction);
 
 static gboolean gda_postgres_provider_rollback_transaction (GdaServerProvider *provider,
 							    GdaConnection *cnc,
-							    const gchar *trans_id);
+							    GdaTransaction *xaction);
 
 static gboolean gda_postgres_provider_single_command (const GdaPostgresProvider *provider,
 						      GdaConnection *cnc,
@@ -535,7 +535,7 @@ gda_postgres_provider_execute_command (GdaServerProvider *provider,
 static gboolean 
 gda_postgres_provider_begin_transaction (GdaServerProvider *provider,
 				         GdaConnection *cnc,
-					 const gchar *trans_id)
+					 GdaTransaction *xaction)
 {
 	GdaPostgresProvider *pg_prv = (GdaPostgresProvider *) provider;
 
@@ -548,7 +548,7 @@ gda_postgres_provider_begin_transaction (GdaServerProvider *provider,
 static gboolean 
 gda_postgres_provider_commit_transaction (GdaServerProvider *provider,
 					  GdaConnection *cnc,
-					  const gchar *trans_id)
+					  GdaTransaction *xaction)
 {
 	GdaPostgresProvider *pg_prv = (GdaPostgresProvider *) provider;
 
@@ -561,7 +561,7 @@ gda_postgres_provider_commit_transaction (GdaServerProvider *provider,
 static gboolean 
 gda_postgres_provider_rollback_transaction (GdaServerProvider *provider,
 					    GdaConnection *cnc,
-					    const gchar *trans_id)
+					    GdaTransaction *xaction)
 {
 	GdaPostgresProvider *pg_prv = (GdaPostgresProvider *) provider;
 

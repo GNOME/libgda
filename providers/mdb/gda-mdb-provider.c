@@ -49,14 +49,14 @@ static GList *gda_mdb_provider_execute_command (GdaServerProvider *provider,
 						  GdaCommand *cmd,
 						  GdaParameterList *params);
 static gboolean gda_mdb_provider_begin_transaction (GdaServerProvider *provider,
-						      GdaConnection *cnc,
-						      const gchar *trans_id);
+						    GdaConnection *cnc,
+						    GdaTransaction *xaction);
 static gboolean gda_mdb_provider_commit_transaction (GdaServerProvider *provider,
-						       GdaConnection *cnc,
-						       const gchar *trans_id);
+						     GdaConnection *cnc,
+						     GdaTransaction *xaction);
 static gboolean gda_mdb_provider_rollback_transaction (GdaServerProvider *provider,
-							 GdaConnection *cnc,
-							 const gchar *trans_id);
+						       GdaConnection *cnc,
+						       GdaTransaction *xaction);
 static gboolean gda_mdb_provider_supports (GdaServerProvider *provider,
 					     GdaConnection *cnc,
 					     GdaConnectionFeature feature);
@@ -227,8 +227,8 @@ gda_mdb_provider_execute_command (GdaServerProvider *provider,
 /* begin_transaction handler for the GdaMdbProvider class */
 static gboolean
 gda_mdb_provider_begin_transaction (GdaServerProvider *provider,
-				      GdaConnection *cnc,
-				      const gchar *trans_id)
+				    GdaConnection *cnc,
+				    GdaTransaction *xaction)
 {
 	return FALSE;
 }
@@ -236,8 +236,8 @@ gda_mdb_provider_begin_transaction (GdaServerProvider *provider,
 /* commit_transaction handler for the GdaMdbProvider class */
 static gboolean
 gda_mdb_provider_commit_transaction (GdaServerProvider *provider,
-				       GdaConnection *cnc,
-				       const gchar *trans_id)
+				     GdaConnection *cnc,
+				     GdaTransaction *xaction)
 {
 	return FALSE;
 }
@@ -245,8 +245,8 @@ gda_mdb_provider_commit_transaction (GdaServerProvider *provider,
 /* rollback_transaction handler for the GdaMdbProvider class */
 static gboolean
 gda_mdb_provider_rollback_transaction (GdaServerProvider *provider,
-					 GdaConnection *cnc,
-					 const gchar *trans_id)
+				       GdaConnection *cnc,
+				       GdaTransaction *xaction)
 {
 	return FALSE;
 }

@@ -274,13 +274,13 @@ gda_server_provider_execute_command (GdaServerProvider *provider,
 gboolean
 gda_server_provider_begin_transaction (GdaServerProvider *provider,
 				       GdaConnection *cnc,
-				       const gchar *trans_id)
+				       GdaTransaction *xaction)
 {
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), FALSE);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (CLASS (provider)->begin_transaction != NULL, FALSE);
 
-	return CLASS (provider)->begin_transaction (provider, cnc, trans_id);
+	return CLASS (provider)->begin_transaction (provider, cnc, xaction);
 }
 
 /**
@@ -289,13 +289,13 @@ gda_server_provider_begin_transaction (GdaServerProvider *provider,
 gboolean
 gda_server_provider_commit_transaction (GdaServerProvider *provider,
 					GdaConnection *cnc,
-					const gchar *trans_id)
+					GdaTransaction *xaction)
 {
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), FALSE);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (CLASS (provider)->commit_transaction != NULL, FALSE);
 
-	return CLASS (provider)->commit_transaction (provider, cnc, trans_id);
+	return CLASS (provider)->commit_transaction (provider, cnc, xaction);
 }
 
 /**
@@ -304,13 +304,13 @@ gda_server_provider_commit_transaction (GdaServerProvider *provider,
 gboolean
 gda_server_provider_rollback_transaction (GdaServerProvider *provider,
 					  GdaConnection *cnc,
-					  const gchar *trans_id)
+					  GdaTransaction *xaction)
 {
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), FALSE);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (CLASS (provider)->rollback_transaction != NULL, FALSE);
 
-	return CLASS (provider)->rollback_transaction (provider, cnc, trans_id);
+	return CLASS (provider)->rollback_transaction (provider, cnc, xaction);
 }
 
 /**

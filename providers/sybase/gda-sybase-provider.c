@@ -28,20 +28,17 @@
 
 static void 
 gda_sybase_provider_class_init (GdaSybaseProviderClass *klass);
-static void 
-gda_sybase_provider_init (GdaSybaseProvider *provider,
-																										GdaSybaseProviderClass *klass);
-static void 
-gda_sybase_provider_finalize   (GObject *object);
-static gboolean 
-gda_sybase_provider_open_connection (GdaServerProvider *provider,
-																																					GdaServerConnection *cnc,
-																																					GdaQuarkList *params,
-																																					const gchar *username,
-																																					const gchar *password);
-static gboolean 
-gda_sybase_provider_close_connection (GdaServerProvider *provider,
-																																						GdaServerConnection *cnc);
+static void gda_sybase_provider_init (GdaSybaseProvider *provider,
+				      GdaSybaseProviderClass *klass);
+static void gda_sybase_provider_finalize   (GObject *object);
+static gboolean gda_sybase_provider_open_connection (GdaServerProvider *provider,
+						     GdaServerConnection *cnc,
+						     GdaQuarkList *params,
+						     const gchar *username,
+						     const gchar *password);
+static gboolean gda_sybase_provider_close_connection (GdaServerProvider *provider,
+						      GdaServerConnection *cnc);
+
 static GObjectClass *parent_class = NULL;
 
 /*
@@ -66,7 +63,7 @@ gda_sybase_provider_class_init (GdaSybaseProviderClass *klass)
 
 static void
 gda_sybase_provider_init (GdaSybaseProvider *myprv, 
-																										GdaSybaseProviderClass *klass)
+			  GdaSybaseProviderClass *klass)
 {
 
 }
@@ -90,14 +87,14 @@ gda_sybase_provider_get_type (void)
 	if (!type) {
 		if (type == 0) {
 			static GTypeInfo info = {
-					sizeof (GdaSybaseProviderClass),
-					(GBaseInitFunc) NULL,
-					(GBaseFinalizeFunc) NULL,
-					(GClassInitFunc) gda_sybase_provider_class_init,
-					NULL, NULL,
-					sizeof (GdaSybaseProvider),
-					0,
-					(GInstanceInitFunc) gda_sybase_provider_init
+				sizeof (GdaSybaseProviderClass),
+				(GBaseInitFunc) NULL,
+				(GBaseFinalizeFunc) NULL,
+				(GClassInitFunc) gda_sybase_provider_class_init,
+				NULL, NULL,
+				sizeof (GdaSybaseProvider),
+				0,
+				(GInstanceInitFunc) gda_sybase_provider_init
 			};
 			type = g_type_register_static (PARENT_TYPE,
 						       "GdaSybaseProvider",
@@ -111,254 +108,225 @@ gda_sybase_provider_get_type (void)
 /* open_connection handler for the GdaSybaseProvider class */
 static gboolean
 gda_sybase_provider_open_connection (GdaServerProvider *provider,
-																																					GdaServerConnection *cnc,
-																																					GdaQuarkList *params,
-																																					const gchar *username,
-																																					const gchar *password)
+				     GdaServerConnection *cnc,
+				     GdaQuarkList *params,
+				     const gchar *username,
+				     const gchar *password)
 {
 		
-		sybase_connection *sconn;
-		CS_RETCODE ret;
-		gchar *t_host = NULL;
-		gchar *t_db = NULL;
-		gchar *t_user = NULL;
-		gchar *t_password = NULL;		
-		CS_CHAR buf[500];
+	sybase_connection *sconn;
+	CS_RETCODE ret;
+	gchar *t_host = NULL;
+	gchar *t_db = NULL;
+	gchar *t_user = NULL;
+	gchar *t_password = NULL;		
+	CS_CHAR buf[500];
 		
-		/* the logic to connect to the database */
+	/* the logic to connect to the database */
 
-		sybase_debug_msg("about to open connection");
+	sybase_debug_msg("about to open connection");
+	
+	if (username)
+		t_user = g_strdup(username);
+	else
+		t_user = gda_quark_list_find (params, "USERNAME");
 
-		if (username)
-				t_user = g_strdup(username);
-		else
-				t_user = gda_quark_list_find (params, "USERNAME");
+	
+	if (password)
+		t_password = g_strdup(password);
+	else
+		t_password = gda_quark_list_find (params, "PASSWORD");
 
 
-		if (password)
-				t_password = g_strdup(password);
-		else
-				t_password = gda_quark_list_find (params, "PASSWORD");
+	sybase_debug_msg("username password");
+	sybase_debug_msg(t_user);
+	sybase_debug_msg(t_password);
 
+	sconn = g_new(sybase_connection,1);
+	sconn->context = NULL;
+	sconn->connection = NULL;
 
-		sybase_debug_msg("username password");
-		sybase_debug_msg(t_user);
-		sybase_debug_msg(t_password);
-
-		sconn = g_new(sybase_connection,1);
-		sconn->context = NULL;
-		sconn->connection = NULL;
-
-		ret = cs_ctx_alloc (CS_VERSION_100, &sconn->context);
-		if (ret != CS_SUCCEED)
-				{
-						g_free((gpointer)sconn);
-      return FALSE;
-				}
-		ret = ct_init (sconn->context, CS_VERSION_100);
-		if (ret != CS_SUCCEED)
-				{
-						if (sconn->context)
-						{
-								ct_con_drop (sconn->connection);
-						}
-						g_free((gpointer)sconn);
-						return FALSE;
-				}				
-		/* allocate the connection structure */
-		ret = ct_con_alloc(sconn->context, &sconn->connection);
-		if (ret != CS_SUCCEED)
-				{
-						if (sconn->connection != NULL) 
-								{
-										ct_con_drop (sconn->connection);
-										sconn->connection = NULL;
-								}
-						if (sconn->context != NULL) 
-								{
-										ct_exit (sconn->context, CS_FORCE_EXIT);
-										cs_ctx_drop (sconn->context);
-										sconn->context = NULL;
-								}
-						return FALSE;
-				}						
-		ret = cs_diag (sconn->context, 
-																	CS_INIT, 
-																	CS_UNUSED, 
-																	CS_UNUSED,
-																	NULL);		
-		if (ret != CS_SUCCEED)
-				{
-						if (sconn->connection != NULL) 
-								{
-										ct_con_drop (sconn->connection);
-										sconn->connection = NULL;
-								}
-						if (sconn->context != NULL) 
-								{
-										ct_exit (sconn->context, CS_FORCE_EXIT);
-										cs_ctx_drop (sconn->context);
-										sconn->context = NULL;
-								}
-						return FALSE;
-				}						
-		ret = ct_diag (sconn->connection, 
-																	CS_INIT, 
-																	CS_UNUSED, 
-																	CS_UNUSED,
-																	NULL);
-		if (ret != CS_SUCCEED)
-				{
-						if (sconn->connection != NULL) 
-								{
-										ct_con_drop (sconn->connection);
-										sconn->connection = NULL;
-								}
-						if (sconn->context != NULL) 
-								{
-										ct_exit (sconn->context, CS_FORCE_EXIT);
-										cs_ctx_drop (sconn->context);
-										sconn->context = NULL;
-								}
-						return FALSE;
-				}								
-		ret = ct_con_props (sconn->connection, 
-                      CS_SET, 
-                      CS_APPNAME, 
-                      (CS_CHAR *) "libgda test", 
-                      CS_NULLTERM, 
-                      NULL);		
-		if (ret != CS_SUCCEED)
-				{
-						if (sconn->connection != NULL) 
-								{
-										ct_con_drop (sconn->connection);
-										sconn->connection = NULL;
-								}
-						if (sconn->context != NULL) 
-								{
-										ct_exit (sconn->context, CS_FORCE_EXIT);
-										cs_ctx_drop (sconn->context);
-										sconn->context = NULL;
-								}
-						return FALSE;
-				}						
+	ret = cs_ctx_alloc (CS_VERSION_100, &sconn->context);
+	if (ret != CS_SUCCEED) {
+		g_free((gpointer)sconn);
+		return FALSE;
+	}
+	ret = ct_init (sconn->context, CS_VERSION_100);
+	if (ret != CS_SUCCEED) {
+		if (sconn->context) {
+			ct_con_drop (sconn->connection);
+		}
+		g_free((gpointer)sconn);
+		return FALSE;
+	}				
+	/* allocate the connection structure */
+	ret = ct_con_alloc(sconn->context, &sconn->connection);
+	if (ret != CS_SUCCEED) {
+		if (sconn->connection != NULL) {
+			ct_con_drop (sconn->connection);
+			sconn->connection = NULL;
+		}
+		if (sconn->context != NULL) {
+			ct_exit (sconn->context, CS_FORCE_EXIT);
+			cs_ctx_drop (sconn->context);
+			sconn->context = NULL;
+		}
+		return FALSE;
+	}						
+	ret = cs_diag (sconn->context, 
+		       CS_INIT, 
+		       CS_UNUSED, 
+		       CS_UNUSED,
+		       NULL);		
+	if (ret != CS_SUCCEED) {
+		if (sconn->connection != NULL)  {
+			ct_con_drop (sconn->connection);
+			sconn->connection = NULL;
+		}
+		if (sconn->context != NULL) {
+			ct_exit (sconn->context, CS_FORCE_EXIT);
+			cs_ctx_drop (sconn->context);
+			sconn->context = NULL;
+		}
+		return FALSE;
+	}						
+	ret = ct_diag (sconn->connection, 
+		       CS_INIT, 
+		       CS_UNUSED, 
+		       CS_UNUSED,
+		       NULL);
+	if (ret != CS_SUCCEED) {
+		if (sconn->connection != NULL) {
+			ct_con_drop (sconn->connection);
+			sconn->connection = NULL;
+		}
+		if (sconn->context != NULL) {
+			ct_exit (sconn->context, CS_FORCE_EXIT);
+			cs_ctx_drop (sconn->context);
+			sconn->context = NULL;
+		}
+		return FALSE;
+	}								
+	ret = ct_con_props (sconn->connection, 
+			    CS_SET, 
+			    CS_APPNAME, 
+			    (CS_CHAR *) "libgda test", 
+			    CS_NULLTERM, 
+			    NULL);		
+	if (ret != CS_SUCCEED) {
+		if (sconn->connection != NULL) {
+			ct_con_drop (sconn->connection);
+			sconn->connection = NULL;
+		}
+		if (sconn->context != NULL) {
+			ct_exit (sconn->context, CS_FORCE_EXIT);
+			cs_ctx_drop (sconn->context);
+			sconn->context = NULL;
+		}
+		return FALSE;
+	}						
 
 
 
-		ret = ct_con_props(sconn->connection, 
-                     CS_SET, 
-                     CS_USERNAME, 
-                     (CS_CHAR *) t_user,
-                     CS_NULLTERM, 
-                     NULL);
+	ret = ct_con_props(sconn->connection, 
+			   CS_SET, 
+			   CS_USERNAME, 
+			   (CS_CHAR *) t_user,
+			   CS_NULLTERM, 
+			   NULL);
 
-		if (ret != CS_SUCCEED)
-				{
-						if (sconn->connection != NULL) 
-								{
-										ct_con_drop (sconn->connection);
-										sconn->connection = NULL;
-								}
-						if (sconn->context != NULL) 
-								{
-										ct_exit (sconn->context, CS_FORCE_EXIT);
-										cs_ctx_drop (sconn->context);
-										sconn->context = NULL;
-								}
-						return FALSE;
-				}								
-		ret = ct_con_props (sconn->connection, 
-                      CS_SET, 
-                      CS_PASSWORD, 
-                      (CS_CHAR *) t_password,
-                      CS_NULLTERM, 
-                      NULL);
+	if (ret != CS_SUCCEED) {
+		if (sconn->connection != NULL) {
+			ct_con_drop (sconn->connection);
+			sconn->connection = NULL;
+		}
+		if (sconn->context != NULL) {
+			ct_exit (sconn->context, CS_FORCE_EXIT);
+			cs_ctx_drop (sconn->context);
+			sconn->context = NULL;
+		}
+		return FALSE;
+	}								
+	ret = ct_con_props (sconn->connection, 
+			    CS_SET, 
+			    CS_PASSWORD, 
+			    (CS_CHAR *) t_password,
+			    CS_NULLTERM, 
+			    NULL);
 
-		if (ret != CS_SUCCEED)
-				{
-						if (sconn->connection != NULL) 
-								{
-										ct_con_drop (sconn->connection);
-										sconn->connection = NULL;
-								}
-						if (sconn->context != NULL) 
-								{
-										ct_exit (sconn->context, CS_FORCE_EXIT);
-										cs_ctx_drop (sconn->context);
-										sconn->context = NULL;
-								}
-						return FALSE;
-				}						
-		ret = ct_connect (sconn->connection, 
-																				(CS_CHAR *) NULL, 
-																				0);
-		if (ret != CS_SUCCEED)
-				{
-						if (sconn->connection != NULL) 
-								{
-										ct_con_drop (sconn->connection);
-										sconn->connection = NULL;
-								}
-						if (sconn->context != NULL) 
-								{
-										ct_exit (sconn->context, CS_FORCE_EXIT);
-										cs_ctx_drop (sconn->context);
-										sconn->context = NULL;
-								}
-						return FALSE;
-				}						
-		/* get the hostname from SQL server as a test */
-		ret = ct_con_props (sconn->connection, 
-                      CS_GET, 
-                      CS_SERVERNAME, 
-                      &buf, 
-                      CS_MAX_CHAR, 
-                      NULL);		
-		if (ret != CS_SUCCEED)
-				{
-						if (sconn->connection != NULL) 
-								{
-										ct_con_drop (sconn->connection);
-										sconn->connection = NULL;
-								}
-						if (sconn->context != NULL) 
-								{
-										ct_exit (sconn->context, CS_FORCE_EXIT);
-										cs_ctx_drop (sconn->context);
-										sconn->context = NULL;
-								}
-						return FALSE;
-				}						
-		return TRUE;
+	if (ret != CS_SUCCEED) {
+		if (sconn->connection != NULL) {
+			ct_con_drop (sconn->connection);
+			sconn->connection = NULL;
+		}
+		if (sconn->context != NULL) {
+			ct_exit (sconn->context, CS_FORCE_EXIT);
+			cs_ctx_drop (sconn->context);
+			sconn->context = NULL;
+		}
+		return FALSE;
+	}						
+	ret = ct_connect (sconn->connection, 
+			  (CS_CHAR *) NULL, 
+			  0);
+	if (ret != CS_SUCCEED) {
+		if (sconn->connection != NULL) {
+			ct_con_drop (sconn->connection);
+			sconn->connection = NULL;
+		}
+		if (sconn->context != NULL) {
+			ct_exit (sconn->context, CS_FORCE_EXIT);
+			cs_ctx_drop (sconn->context);
+			sconn->context = NULL;
+		}
+		return FALSE;
+	}						
+	/* get the hostname from SQL server as a test */
+	ret = ct_con_props (sconn->connection, 
+			    CS_GET, 
+			    CS_SERVERNAME, 
+			    &buf, 
+			    CS_MAX_CHAR, 
+			    NULL);		
+	if (ret != CS_SUCCEED) {
+		if (sconn->connection != NULL)  {
+			ct_con_drop (sconn->connection);
+			sconn->connection = NULL;
+		}
+		if (sconn->context != NULL) {
+			ct_exit (sconn->context, CS_FORCE_EXIT);
+			cs_ctx_drop (sconn->context);
+			sconn->context = NULL;
+		}
+		return FALSE;
+	}						
+	return TRUE;
 
 		
 		
-		g_object_set_data (G_OBJECT (cnc), OBJECT_DATA_SYBASE_HANDLE, sconn);
+	g_object_set_data (G_OBJECT (cnc), OBJECT_DATA_SYBASE_HANDLE, sconn);
 
-		return TRUE;
+	return TRUE;
 }
 
 /* close_connection handler for the GdaSybaseProvider class */
 static gboolean
 gda_sybase_provider_close_connection (GdaServerProvider *provider, 
-																																						GdaServerConnection *cnc)
+				      GdaServerConnection *cnc)
 {
-		sybase_connection *sconn;
-		g_return_val_if_fail (GDA_IS_SYBASE_PROVIDER (provider), FALSE);
-		g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), FALSE);
-		sconn = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_SYBASE_HANDLE);
-		if (sconn->connection != NULL) 
-				{
-						ct_con_drop (sconn->connection);
-						sconn->connection = NULL;
-				}
-		if (sconn->context != NULL) 
-				{
-						ct_exit (sconn->context, CS_FORCE_EXIT);
-						cs_ctx_drop (sconn->context);
-						sconn->context = NULL;
-				}
+	sybase_connection *sconn;
+	g_return_val_if_fail (GDA_IS_SYBASE_PROVIDER (provider), FALSE);
+	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), FALSE);
+	sconn = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_SYBASE_HANDLE);
+	if (sconn->connection != NULL) {
+		ct_con_drop (sconn->connection);
+		sconn->connection = NULL;
+	}
+	if (sconn->context != NULL) {
+		ct_exit (sconn->context, CS_FORCE_EXIT);
+		cs_ctx_drop (sconn->context);
+		sconn->context = NULL;
+	}
 	g_object_set_data (G_OBJECT (cnc), OBJECT_DATA_SYBASE_HANDLE, NULL);
 	return TRUE;
 }
