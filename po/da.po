@@ -11,8 +11,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2002-02-23 17:24+0100\n"
-"PO-Revision-Date: 2002-02-23 17:24+0100\n"
+"POT-Creation-Date: 2002-02-28 21:49+0100\n"
+"PO-Revision-Date: 2002-02-28 21:49+0100\n"
 "Last-Translator: Ole Laursen <olau@hardworking.dk>\n"
 "Language-Team: Danish <dansk@klid.dk>\n"
 "MIME-Version: 1.0\n"
@@ -33,31 +33,31 @@ msgstr "Kunne ikke aktivere objektet %s"
 msgid "Could not create connection component"
 msgstr "Kunne ikke oprette forbindelseskomponent"
 
-#: libgda/gda-config.c:508
+#: libgda/gda-config.c:511
 msgid "Could not query CORBA components"
 msgstr "Kunne ikke forespørge CORBA-komponenter"
 
-#: libgda/gda-config.c:615
+#: libgda/gda-config.c:618
 msgid "Could not query CORBA providers"
 msgstr "Kunne ikke forespørge CORBA-udbydere"
 
-#: libgda/gda-config.c:865
+#: libgda/gda-config.c:868
 msgid "Name"
 msgstr "Navn"
 
-#: libgda/gda-config.c:866
+#: libgda/gda-config.c:869
 msgid "Provider"
 msgstr "Udbyder"
 
-#: libgda/gda-config.c:867
+#: libgda/gda-config.c:870
 msgid "Connection string"
 msgstr "Forbindelsesstreng"
 
-#: libgda/gda-config.c:868
+#: libgda/gda-config.c:871
 msgid "Description"
 msgstr "Beskrivelse"
 
-#: libgda/gda-config.c:869
+#: libgda/gda-config.c:872
 msgid "Username"
 msgstr "Brugernavn"
 
@@ -476,33 +476,42 @@ msgstr "Visninger"
 msgid "Indexes"
 msgstr "Indekser"
 
+# RETMIG: find på et eller andet til disse to
+#: testing/client.c:92
+msgid "Aggregates"
+msgstr "Aggregater"
+
+#: testing/client.c:93
+msgid "Triggers"
+msgstr "Triggere"
+
 #. test transactions
-#: testing/client.c:94 testing/client.c:102
+#: testing/client.c:96 testing/client.c:104
 msgid "\tStarting transaction..."
 msgstr "\tBegynder transaktion..."
 
-#: testing/client.c:96 testing/client.c:100 testing/client.c:104
-#: testing/client.c:108
+#: testing/client.c:98 testing/client.c:102 testing/client.c:106
+#: testing/client.c:110
 msgid "Error"
 msgstr "Fejl"
 
-#: testing/client.c:98
+#: testing/client.c:100
 msgid "\tFinishing transaction..."
 msgstr "\tFuldfører transaktion..."
 
-#: testing/client.c:106
+#: testing/client.c:108
 msgid "\tRolling back transaction..."
 msgstr "\tRuller transaktion tilbage..."
 
-#: testing/client.c:127
+#: testing/client.c:129
 msgid "Testing GDA client API"
 msgstr "Tester GDA-klient-API"
 
-#: testing/client.c:136
+#: testing/client.c:138
 msgid "** ERROR: gda_config_get_data_source_list returned a NULL item\n"
 msgstr "** FEJL: gda_config_get_data_source_list returnerede et NULL-element\n"
 
-#: testing/client.c:140
+#: testing/client.c:142
 #, c-format
 msgid " Data source = %s, User = %s\n"
 msgstr " Datakilde = %s, bruger = %s\n"
