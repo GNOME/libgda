@@ -44,8 +44,10 @@ typedef struct {
 	glong auto_increment_start;
 	glong auto_increment_step;
 	gint position;
+	GdaValue *default_value;
 } GdaFieldAttributes;
 
+/* NOTE: Can't find any code using GdaField struct */
 typedef struct {
 	gint actual_size;
 	GdaValue *value;
@@ -81,6 +83,9 @@ void                gda_field_attributes_set_auto_increment (GdaFieldAttributes 
 							     gboolean is_auto);
 gint                gda_field_attributes_get_position (GdaFieldAttributes *fa);
 void                gda_field_attributes_set_position (GdaFieldAttributes *fa, gint position);
+
+const GdaValue     *gda_field_attributes_get_default_value (GdaFieldAttributes *fa);
+void                gda_field_attributes_set_default_value (GdaFieldAttributes *fa, const GdaValue *default_value);
 
 G_END_DECLS
 

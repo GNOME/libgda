@@ -48,6 +48,7 @@ gda_field_attributes_new (void)
 	fa->auto_increment_start = 0;
 	fa->auto_increment_step = 0;
 	fa->position = -1;
+	fa->default_value = NULL;
 
 	return fa;
 }
@@ -77,6 +78,7 @@ gda_field_attributes_copy (GdaFieldAttributes *fa)
 	fa_copy->auto_increment_start = fa->auto_increment_start;
 	fa_copy->auto_increment_step = fa->auto_increment_step;
 	fa_copy->position = fa->position;
+	fa_copy->default_value = gda_value_copy (fa->default_value);
 
 	return fa_copy;
 }
@@ -93,6 +95,7 @@ gda_field_attributes_free (GdaFieldAttributes *fa)
 	g_free (fa->table);
 	g_free (fa->caption);
 	g_free (fa->references);
+	g_free (fa->default_value);
 	g_free (fa);
 }
 
@@ -411,4 +414,29 @@ gda_field_attributes_set_position (GdaFieldAttributes *fa, gint position)
 {
 	g_return_if_fail (fa != NULL);
 	fa->position = position;
+}
+
+
+/**
+ * gda_field_attributes_get_default_value
+ */
+const GdaValue *
+gda_field_attributes_get_default_value (GdaFieldAttributes *fa)
+{
+	g_return_val_if_fail (fa != NULL, NULL);
+	return (const GdaValue *) fa->default_value;
+}
+
+/**
+ * gda_field_attributes_set_default_value
+ */
+void
+gda_field_attributes_set_default_value (GdaFieldAttributes *fa, const GdaValue *default_value)
+{
+	g_return_if_fail (fa != NULL);
+	g_return_if_fail (default_value != NULL);
+
+	if (fa->default_value)
+		g_free (fa->default_value);
+	fa->default_value = gda_value_copy (default_value);
 }
