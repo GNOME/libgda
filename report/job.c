@@ -20,6 +20,7 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#include <config.h>
 #include <libgda-report/gda-report-document.h>
 #include <bonobo/bonobo-exception.h>
 #include <bonobo/bonobo-i18n.h>

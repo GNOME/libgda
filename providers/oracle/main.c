@@ -19,6 +19,8 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include <config.h>
+#include <bonobo/bonobo-i18n.h>
 #include "libgda/libgda.h"
 #include "gda-oracle.h"
 
@@ -58,6 +60,8 @@ setup_factory (void)
 int
 main (int argc, char *argv[])
 {
+	setlocale (LC_ALL, "");
+
 	/* initialize application */
         gda_init ("gda-oracle-srv", VERSION, argc, argv);
 

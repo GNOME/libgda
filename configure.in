@@ -34,6 +34,8 @@ AC_PROG_INTLTOOL
 
 GNOME_PLATFORM_GNOME_2(yes, force)
 
+AC_DEFINE_UNQUOTED(BONOBO_EXPLICIT_TRANSLATION_DOMAIN, "libgda-2")
+
 dnl ******************************
 dnl Checks for programs
 dnl ******************************

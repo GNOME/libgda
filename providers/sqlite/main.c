@@ -66,6 +66,8 @@ setup_factory (void)
 int
 main (int argc, char *argv[])
 {
+	setlocale (LC_ALL, "");
+
 	/* initialize application */
 	gda_init ("gda-sqlite-srv", VERSION, argc, argv);
 

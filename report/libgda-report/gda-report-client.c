@@ -20,6 +20,7 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#include <config.h>
 #include <libgda-report/gda-report-client.h>
 #include <libgda-report/GNOME_Database_Report.h>
 #include <bonobo/bonobo-moniker-util.h>

@@ -16,10 +16,8 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
  * Boston, MA 02111-1307, USA.
  */
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
 
+#include <config.h>
 #include <bonobo-activation/bonobo-activation.h>
 #include <bonobo/bonobo-i18n.h>
 #include <bonobo/bonobo-main.h>

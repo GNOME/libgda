@@ -21,6 +21,7 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#include <config.h>
 #include <libgda/gda-error.h>
 #include <libgda/GNOME_Database.h>
 #include <bonobo/bonobo-exception.h>

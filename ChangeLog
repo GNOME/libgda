@@ -1,3 +1,36 @@
+2002-04-10  Zbigniew Chyla  <cyba@gnome.pl>
+
+	* acconfig.h: added BONOBO_EXPLICIT_TRANSLATION_DOMAIN.
+
+	* configure.in: defined BONOBO_EXPLICIT_TRANSLATION_DOMAIN.
+
+	* libgda/Makefile.am: set LIBGDA_LOCALEDIR to $(datadir)/locale.
+
+	* libgda/gda-client.c, libgda/gda-config.c, libgda/gda-connection.c,
+	libgda/gda-error.c, libgda/gda-init.c, libgda/gda-server-connection.c,
+	libgda/gda-server-recordset.c, libgda/gda-server.c, libgda/gda-table.c,
+	libgda/gda-value.c, providers/mysql/gda-mysql-recordset.c,
+	providers/oracle/gda-oracle-connection.c,
+	providers/postgres/gda-postgres-recordset.c,
+	providers/postgres/utils.c, report/gda-report-engine.c, report/job.c,
+	report/libgda-report/gda-report-client.c,
+	report/libgda-report/gda-report-document.c, testing/client.c,
+	testing/config.c:
+	added missing includes to fix i18n.
+
+	* providers/default/gda-default-provider.c (get_table_fields),
+	providers/mysql/gda-mysql-provider.c (get_table_fields),
+	providers/postgres/gda-postgres-provider.c (gda_postgres_init_md_recset):
+	translate field name,
+	added missing includes.
+
+	* providers/default/main.c, providers/mysql/main.c,
+	providers/odbc/main.c, providers/oracle/main.c, 
+	providers/postgres/main.c, providers/sqlite/main.c,
+	providers/sybase/main.c:
+	(main): call setlocale,
+	added missing includes.
+
 2002-04-02  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* libgda/gda-connection.c (gda_connection_execute_single_command): new

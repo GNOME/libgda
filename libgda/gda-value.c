@@ -21,6 +21,7 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#include <config.h>
 #include <time.h>
 #define ORBIT2_INTERNAL_API
 #include <orbit/orb-core/orbit-object.h>

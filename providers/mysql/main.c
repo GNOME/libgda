@@ -22,6 +22,8 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#include <config.h>
+#include <bonobo/bonobo-i18n.h>
 #include "libgda/libgda.h"
 #include "gda-mysql.h"
 
@@ -61,6 +63,8 @@ setup_factory (void)
 int
 main (int argc, char *argv[])
 {
+	setlocale (LC_ALL, "");
+
 	/* initialize application */
 	gda_init ("gda-mysql-srv", VERSION, argc, argv);
 

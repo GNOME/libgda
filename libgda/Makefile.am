@@ -4,7 +4,7 @@ INCLUDES = \
 	$(LIBGDA_CFLAGS) \
 	-I$(top_srcdir) \
 	-I$(top_builddir) \
-	-DLIBGDA_LOCALEDIR=\""$(gnomelocaledir)"\"
+	-DLIBGDA_LOCALEDIR=\""$(datadir)/locale"\"
 
 BUILT_SOURCES = \
 	GNOME_Database-skels.c

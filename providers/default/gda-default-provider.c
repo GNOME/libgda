@@ -21,6 +21,8 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#include <config.h>
+#include <bonobo/bonobo-i18n.h>
 #include <stdlib.h>
 #include <libgda/gda-row.h>
 #include <libgda/gda-server-recordset.h>
@@ -372,7 +374,7 @@ get_table_fields (GdaServerConnection *cnc, GdaXmlDatabase *xmldb, GdaParameterL
 			(fields_desc[i].type == GDA_TYPE_INTEGER) ? sizeof (gint) : 1;
 
 		gda_server_recordset_model_set_field_defined_size (recset, i, defined_size);
-		gda_server_recordset_model_set_field_name (recset, i, fields_desc[i].name);
+		gda_server_recordset_model_set_field_name (recset, i, _(fields_desc[i].name));
 		gda_server_recordset_model_set_field_scale (recset, i, 0);
 		gda_server_recordset_model_set_field_gdatype (recset, i, fields_desc[i].type);
 	}

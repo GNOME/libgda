@@ -20,6 +20,7 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#include <config.h>
 #include <libgda/gda-log.h>
 #include <libgda/gda-util.h>
 #include <libgda-report/gda-report-document.h>

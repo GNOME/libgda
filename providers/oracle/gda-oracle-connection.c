@@ -19,6 +19,8 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include <config.h>
+#include <bonobo/bonobo-i18n.h>
 #include "gda-oracle-connection.h"
 
 typedef struct {

@@ -21,6 +21,8 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include <config.h>
+#include <bonobo/bonobo-i18n.h>
 #include <stdlib.h>
 #include <string.h>
 #include "gda-postgres.h"
@@ -733,13 +735,13 @@ gda_postgres_init_md_recset (GdaServerConnection *cnc)
 		};
 
 	recset = GDA_SERVER_RECORDSET_MODEL (gda_server_recordset_model_new (cnc, 8));
-	for (i = 0; i < 8; i++) {
+	for (i = 0; i < sizeof cols / sizeof cols[0]; i++) {
 		data_type = cols[i].data_type;
 		defined_size =  (data_type == GDA_TYPE_STRING) ? NAMEDATALEN : 
 				(data_type == GDA_TYPE_INTEGER) ? sizeof(gint) : 1;
 
 		gda_server_recordset_model_set_field_defined_size (recset, i, defined_size);
-		gda_server_recordset_model_set_field_name (recset, i, cols[i].col_name);
+		gda_server_recordset_model_set_field_name (recset, i, _(cols[i].col_name));
 		gda_server_recordset_model_set_field_scale (recset, i, 0);
 		gda_server_recordset_model_set_field_gdatype (recset, i, data_type);
 	}
