@@ -1,3 +1,13 @@
+2002-05-20  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* libgda/gda-xml-connection.[ch]: new class for managing
+	.connection files, which are XML files that specify all parameters
+	needed to open a connection.
+
+	* libgda/libgda.h:
+	* libgda/Makefile.am:
+	* docs/C/*: added new API file.
+
 2002-05-20  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
 	* libgda/gda-config.c: don't create a new section for each entry

@@ -44,6 +44,7 @@
 #include <libgda/gda-table.h>
 #include <libgda/gda-util.h>
 #include <libgda/gda-value.h>
+#include <libgda/gda-xml-connection.h>
 #include <libgda/gda-xml-document.h>
 #include <libgda/gda-xml-database.h>
 

@@ -96,6 +96,7 @@ process_views_node (GdaXmlDatabase *xmldb, xmlNodePtr children)
 /*
  * GdaXmlDatabase class interface
  */
+
 static void
 gda_xml_database_class_init (GdaXmlDatabaseClass * klass)
 {

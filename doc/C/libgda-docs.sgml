@@ -43,6 +43,7 @@
 <!ENTITY libgda-table SYSTEM "sgml/gda-table.sgml">
 <!ENTITY libgda-util SYSTEM "sgml/gda-util.sgml">
 <!ENTITY libgda-value SYSTEM "sgml/gda-value.sgml">
+<!ENTITY libgda-xml-connection SYSTEM "sgml/gda-xml-connection.sgml">
 <!ENTITY libgda-xml-database SYSTEM "sgml/gda-xml-database.sgml">
 <!ENTITY libgda-xml-document SYSTEM "sgml/gda-xml-document.sgml">
 <!ENTITY libgda-xql-atom SYSTEM "sgml/gda-xql-atom.sgml">
@@ -755,6 +756,7 @@
     &libgda-table;
     &libgda-util;
     &libgda-value;
+    &libgda-xml-connection;
     &libgda-xml-database;
     &libgda-xml-document;
   </chapter>

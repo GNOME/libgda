@@ -37,6 +37,7 @@ gda_headers = \
 	gda-table.h \
 	gda-util.h \
 	gda-value.h \
+	gda-xml-connection.h \
 	gda-xml-database.h \
 	gda-xml-document.h \
 	gda-xql-atom.h \
@@ -88,6 +89,7 @@ libgda_2_la_SOURCES = \
 	gda-table.c \
 	gda-util.c \
 	gda-value.c \
+	gda-xml-connection.c \
 	gda-xml-database.c \
 	gda-xml-document.c \
 	gda-xql-atom.c \
