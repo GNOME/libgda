@@ -1,5 +1,7 @@
 SUBDIRS = C #es pt_BR
 
+if HAVE_SCROLLKEEPER
+
 omf_dest_dir=$(datadir)/omf/libgda
 scrollkeeper_localstate_dir = $(SCROLLKEEPER_LOCALSTATE_DIR)
 
@@ -18,6 +20,7 @@ uninstall-local:
 	-rmdir $(omf_dest_dir)
 	-scrollkeeper-update -p $(scrollkeeper_localstate_dir)
 
+endif
 
 EXTRA_DIST = \
 	NAMESPACE \

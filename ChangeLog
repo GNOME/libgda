@@ -1,3 +1,9 @@
+2002-10-06  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	Fixes #94845
+	
+	* configure.in: made use of scrollkeeper optional.
+
 2002-10-02  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* libgda/gda-field.[ch] (gda_field_attributes_copy): new function.
