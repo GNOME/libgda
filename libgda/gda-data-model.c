@@ -227,9 +227,9 @@ gda_data_model_describe_column (GdaDataModel *model, gint col)
 	GdaFieldAttributes *fa;
 
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
-	g_return_val_if_fail (CLASS (model)->get_n_columns != NULL, NULL);
+	g_return_val_if_fail (CLASS (model)->describe_column != NULL, NULL);
 
-	fa = CLASS (model)->get_n_columns (model);
+	fa = CLASS (model)->describe_column (model, col);
 	if (!fa) {
 		/* we generate a basic FieldAttributes structure */
 		fa = gda_field_attributes_new ();

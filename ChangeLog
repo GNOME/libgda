@@ -1,3 +1,8 @@
+2002-03-16  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* libgda/gda-data-model.c (gda_data_model_describe_column): fixed
+	copy&paste code.
+
 2002-03-14  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* idl/GNOME_Database.idl: changed Numeric type to match mike's
