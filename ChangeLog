@@ -1,3 +1,8 @@
+2003-11-30  Laurent Sansonetti <lrz@gnome.org>
+
+	* libgda/gda-parameter.c (gda_parameter_list_clear):
+	Parameters were not removed from the hash table (just freed).
+
 2003-11-29  Laurent Sansonetti <lrz@gnome.org>
 
 	* providers/bdb/*.c:

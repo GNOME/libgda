@@ -58,11 +58,12 @@ gda_parameter_list_get_type (void)
  * Private functions
  */
 
-static void
+static gboolean 
 free_hash_param (gpointer key, gpointer value, gpointer user_data)
 {
 	g_free (key);
 	gda_parameter_free ((GdaParameter *) value);
+	return TRUE;
 }
 
 /**
@@ -433,7 +434,7 @@ void
 gda_parameter_list_clear (GdaParameterList *plist)
 {
 	g_return_if_fail (plist != NULL);
-	g_hash_table_foreach_remove (plist->hash, (GHRFunc) free_hash_param, NULL);
+	g_hash_table_foreach_remove (plist->hash, free_hash_param, NULL);
 }
 
 /**
