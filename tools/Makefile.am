@@ -1,5 +1,7 @@
 if BUILD_CONFIG_TOOL
 CONFIG_TOOL=gda-config-tool
+man_MANS = gda-config-tool.1
+EXTRA_DIST = gda-config-tool.1
 else
 CONFIG_TOOL=
 endif
