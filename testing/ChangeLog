@@ -1,3 +1,7 @@
+2002-01-12  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* Makefile.am: added models.h to _SOURCES for distcheck
+
 2002-01-11  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
 	* *.[ch]: assign copyright to the GNOME Foundation.

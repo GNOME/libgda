@@ -9,6 +9,7 @@ gda_test_SOURCES = \
 	client.c \
 	config.c \
 	models.c \
+	models.h \
 	gda-test.c \
 	gda-test.h \
 	value.c \
