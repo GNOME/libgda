@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2002-03-22 12:20+0800\n"
-"PO-Revision-Date: 2002-03-25 22:35+0800\n"
+"POT-Creation-Date: 2002-03-26 23:48+0000\n"
+"PO-Revision-Date: 2002-03-26 23:52+0800\n"
 "Last-Translator: He Qiangqiang <carton@linux.net.cn>\n"
 "Language-Team: zh_CN <i18n-translation@lists.linux.net.cn>\n"
 "MIME-Version: 1.0\n"
@@ -35,7 +35,8 @@ msgstr "无法查询 CORBA 组件"
 msgid "Could not query CORBA providers"
 msgstr "无法查询 CORBA 提供者"
 
-#: libgda/gda-config.c:869 providers/default/gda-default-provider.c:331
+#: libgda/gda-config.c:869 providers/default/gda-default-provider.c:417
+#: providers/mysql/gda-mysql-provider.c:446
 msgid "Name"
 msgstr "名称"
 
@@ -86,7 +87,7 @@ msgstr "无法创建类型为 %s 的组件"
 msgid "Could not duplicate client object. Client won't get notifications"
 msgstr "无法复制客户对象。客户程序将不会得到通知"
 
-#: libgda/gda-server-connection.c:445
+#: libgda/gda-server-connection.c:450
 #, c-format
 msgid "Could not notify client about action %d"
 msgstr "无法通知客户程序关于动作 %d 的消息"
@@ -123,21 +124,21 @@ msgstr "无法解析文件于 %s"
 msgid "Invalid XML database file '%s'"
 msgstr "无效的 XML 数据库文件“%s”"
 
-#: libgda/gda-xml-database.c:413 libgda/gda-xml-database.c:454
+#: libgda/gda-xml-database.c:432 libgda/gda-xml-database.c:473
 #, c-format
 msgid "Table %s already exists"
 msgstr "已经存在表 %s "
 
-#: libgda/gda-xml-database.c:447
+#: libgda/gda-xml-database.c:466
 msgid "Invalid node"
 msgstr "无效节点"
 
-#: libgda/gda-xml-database.c:479
+#: libgda/gda-xml-database.c:498
 #, c-format
 msgid "Duplicated <data> node for table %s"
 msgstr "表 %s 中存在重复的 <data> 节点"
 
-#: libgda/gda-xml-database.c:486
+#: libgda/gda-xml-database.c:505
 msgid "Invalid XML node"
 msgstr "无效的 XML 节点"
 
@@ -147,8 +148,70 @@ msgid ""
 "A full path must be specified on the connection string to open a database."
 msgstr "要打开一个数据库，必须在连接字符串中指定完整路径。"
 
-#: providers/default/gda-default-provider.c:386
-#: providers/mysql/gda-mysql-provider.c:464
+#: providers/default/gda-default-provider.c:333
+#: providers/mysql/gda-mysql-provider.c:717
+#: providers/postgres/gda-postgres-provider.c:724
+msgid "Field name"
+msgstr "字段名"
+
+#: providers/default/gda-default-provider.c:334
+#: providers/mysql/gda-mysql-provider.c:718
+#: providers/postgres/gda-postgres-provider.c:725
+msgid "Data type"
+msgstr "数据类型"
+
+#: providers/default/gda-default-provider.c:335
+#: providers/mysql/gda-mysql-provider.c:719
+#: providers/postgres/gda-postgres-provider.c:726
+msgid "Size"
+msgstr "大小"
+
+#: providers/default/gda-default-provider.c:336
+#: providers/mysql/gda-mysql-provider.c:720
+#: providers/postgres/gda-postgres-provider.c:727
+msgid "Scale"
+msgstr ""
+
+#: providers/default/gda-default-provider.c:337
+#: providers/mysql/gda-mysql-provider.c:721
+#: providers/postgres/gda-postgres-provider.c:728
+msgid "Not null?"
+msgstr "非空？"
+
+#: providers/default/gda-default-provider.c:338
+#: providers/mysql/gda-mysql-provider.c:722
+#: providers/postgres/gda-postgres-provider.c:729
+msgid "Primary key?"
+msgstr "主键？"
+
+#: providers/default/gda-default-provider.c:339
+#: providers/mysql/gda-mysql-provider.c:723
+#: providers/postgres/gda-postgres-provider.c:730
+msgid "Unique index?"
+msgstr "唯一索引？"
+
+#: providers/default/gda-default-provider.c:340
+#: providers/mysql/gda-mysql-provider.c:724
+#: providers/postgres/gda-postgres-provider.c:731
+msgid "References"
+msgstr "引用"
+
+#: providers/default/gda-default-provider.c:350
+#: providers/default/gda-default-provider.c:356
+msgid "Invalid argument"
+msgstr "无效参数"
+
+#: providers/default/gda-default-provider.c:363
+#, c-format
+msgid "Table %s not found"
+msgstr "没有找到表 %s"
+
+#: providers/default/gda-default-provider.c:388
+msgid "Could not get description for column"
+msgstr "无法获取列描述"
+
+#: providers/default/gda-default-provider.c:472
+#: providers/mysql/gda-mysql-provider.c:619
 #: providers/postgres/gda-postgres-provider.c:613
 msgid "Type"
 msgstr "类型"
@@ -178,7 +241,7 @@ msgid "Invalid MYSQL handle"
 msgstr "无效的 MYSQL 句柄"
 
 #: providers/mysql/gda-mysql-recordset.c:63
-#: providers/mysql/gda-mysql-recordset.c:170
+#: providers/mysql/gda-mysql-recordset.c:167
 msgid "Invalid MySQL handle"
 msgstr "无效的 MySQL 句柄"
 
@@ -251,38 +314,6 @@ msgstr "无法初始化 OCI 库"
 msgid "Invalid PostgreSQL handle"
 msgstr "无效的 PostgreSQL 句柄"
 
-#: providers/postgres/gda-postgres-provider.c:724
-msgid "Field name"
-msgstr "字段名"
-
-#: providers/postgres/gda-postgres-provider.c:725
-msgid "Data type"
-msgstr "数据类型"
-
-#: providers/postgres/gda-postgres-provider.c:726
-msgid "Size"
-msgstr "大小"
-
-#: providers/postgres/gda-postgres-provider.c:727
-msgid "Scale"
-msgstr ""
-
-#: providers/postgres/gda-postgres-provider.c:728
-msgid "Not null?"
-msgstr "Not null?"
-
-#: providers/postgres/gda-postgres-provider.c:729
-msgid "Primary key?"
-msgstr "主键？"
-
-#: providers/postgres/gda-postgres-provider.c:730
-msgid "Unique index?"
-msgstr "唯一索引？"
-
-#: providers/postgres/gda-postgres-provider.c:731
-msgid "References"
-msgstr "引用"
-
 #: providers/postgres/GNOME_Database_Provider_Postgres.server.in.h:1
 msgid "GDA Datasource Access for Postgres"
 msgstr "Postgres 的 GDA 数据源访问"
@@ -302,6 +333,74 @@ msgstr "没有描述"
 #: providers/postgres/utils.c:44
 msgid "Not available"
 msgstr "不可用"
+
+#: providers/postgres/utils.c:240
+msgid "NULL"
+msgstr "NULL"
+
+#: providers/postgres/utils.c:243
+msgid "big integer"
+msgstr "大整数"
+
+#: providers/postgres/utils.c:246
+msgid "binary"
+msgstr "二进制数据"
+
+#: providers/postgres/utils.c:249
+msgid "boolean"
+msgstr "布尔值"
+
+#: providers/postgres/utils.c:252
+msgid "date"
+msgstr "日期"
+
+#: providers/postgres/utils.c:255
+msgid "double precision"
+msgstr "双精度"
+
+#: providers/postgres/utils.c:258
+msgid "geometric point"
+msgstr "几何点"
+
+#: providers/postgres/utils.c:261
+msgid "integer"
+msgstr "整数"
+
+#: providers/postgres/utils.c:264
+msgid "list of values"
+msgstr "值列表"
+
+#: providers/postgres/utils.c:267
+msgid "numeric"
+msgstr "数字"
+
+#: providers/postgres/utils.c:270
+msgid "single precision"
+msgstr "单精度"
+
+#: providers/postgres/utils.c:273
+msgid "small integer"
+msgstr "小整数"
+
+#: providers/postgres/utils.c:276
+msgid "string"
+msgstr "字符串"
+
+#: providers/postgres/utils.c:279
+msgid "time"
+msgstr "时间"
+
+#: providers/postgres/utils.c:282
+msgid "timestamp"
+msgstr "时戳"
+
+#: providers/postgres/utils.c:285
+msgid "tiny integer"
+msgstr "极小整数"
+
+#: providers/postgres/utils.c:288
+msgid "Unknown type"
+msgstr "未知类型"
 
 #: providers/sqlite/gda-sqlite-provider.c:211
 #: providers/sqlite/gda-sqlite-recordset.c:63
@@ -408,9 +507,8 @@ msgstr "不支持"
 
 #. show connection schemas
 #: testing/client.c:87
-#, fuzzy
 msgid "Stored procedures"
-msgstr "已保存的过程"
+msgstr "存储过程"
 
 #: testing/client.c:88
 msgid "Connection Tables"
