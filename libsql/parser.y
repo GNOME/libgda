@@ -65,6 +65,7 @@ insert_statement: L_INSERT L_INTO table opt_fields_list L_VALUES L_LBRACKET fiel
 
 update_statement: L_UPDATE table L_SET set_list opt_where
 			{$$ = sql_update_statement_build ($2, $4, $5);}
+			;
 
 set_list: set_item					{$$ = g_list_append (NULL, $1);}
 	| set_item L_COMMA set_list	{$$ = g_list_prepend ($3, $1);}
@@ -150,6 +151,7 @@ where_list: where_item			{$$ = sql_where_build_single ($1);}
 	;
 
 set_item: field L_EQ field		{$$ = sql_build_condition ($1, $3, SQL_eq);}
+	;
 
 condition_operator: L_EQ		{$$ = SQL_eq;}
 	| L_IS				{$$ = SQL_is;}

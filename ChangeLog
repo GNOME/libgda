@@ -1,3 +1,7 @@
+2002-10-29  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
+	* libsql/parser.y: a couple of fixes to make bison not to complain.
+
 2002-10-28  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	Fixes #95985
