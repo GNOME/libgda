@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda 0.8.103\n"
-"POT-Creation-Date: 2002-03-07 00:28+0100\n"
+"POT-Creation-Date: 2002-03-27 00:18+0100\n"
 "PO-Revision-Date: 2002-02-02 14:02+0100\n"
 "Last-Translator: Frederic Riss <frederic.riss@laposte.net>\n"
 "Language-Team: GNOME French Team <gnomefr@traduc.org>\n"
@@ -14,18 +14,18 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: libgda/gda-client.c:200 libgda/gda-client.c:310 libgda/gda-connection.c:213
+#: libgda/gda-client.c:198 libgda/gda-client.c:308 libgda/gda-connection.c:213
 #, fuzzy, c-format
 msgid "Data source %s not found in configuration"
 msgstr ""
 "La base de données « %s » n'a pas été trouvé dans la configuration système"
 
-#: libgda/gda-client.c:237
+#: libgda/gda-client.c:235
 #, fuzzy, c-format
 msgid "Could not activate object %s"
 msgstr "Ne peut activer le moteur de rapport"
 
-#: libgda/gda-client.c:255
+#: libgda/gda-client.c:253
 #, fuzzy
 msgid "Could not create connection component"
 msgstr "ne peut ouvrir de connexion sur %s"
@@ -40,7 +40,8 @@ msgstr "Ne peut ouvrir l'usine CORBA"
 msgid "Could not query CORBA providers"
 msgstr "Ne peut ouvrir l'usine CORBA"
 
-#: libgda/gda-config.c:869
+#: libgda/gda-config.c:869 providers/default/gda-default-provider.c:417
+#: providers/mysql/gda-mysql-provider.c:446
 msgid "Name"
 msgstr "Nom"
 
@@ -92,7 +93,7 @@ msgstr "Impossible de créer le fichier %s"
 msgid "Could not duplicate client object. Client won't get notifications"
 msgstr ""
 
-#: libgda/gda-server-connection.c:440
+#: libgda/gda-server-connection.c:450
 #, fuzzy, c-format
 msgid "Could not notify client about action %d"
 msgstr "Ne peut obtenir le nombre de messages du client"
@@ -101,54 +102,133 @@ msgstr "Ne peut obtenir le nombre de messages du client"
 msgid "No implementation for the fetch() method found"
 msgstr ""
 
-#: libgda/gda-value.c:926
+#: libgda/gda-table.c:229
+#, c-format
+msgid "There is already a field called %s"
+msgstr ""
+
+#: libgda/gda-value.c:981
 msgid "TRUE"
 msgstr "VRAI"
 
-#: libgda/gda-value.c:928
+#: libgda/gda-value.c:983
 msgid "FALSE"
 msgstr "FAUX"
 
-#: libgda/gda-xml-database.c:214
+#: libgda/gda-xml-database.c:225
 #, fuzzy, c-format
 msgid "Could not load file at %s"
 msgstr "Impossible d'ouvrir le fichier %s"
 
-#: libgda/gda-xml-database.c:223
+#: libgda/gda-xml-database.c:234
 #, fuzzy, c-format
 msgid "Could not parse file at %s"
 msgstr "Impossible d'ouvrir le fichier %s"
 
-#: libgda/gda-xml-database.c:232 libgda/gda-xml-database.c:249
+#: libgda/gda-xml-database.c:244
 #, fuzzy, c-format
 msgid "Invalid XML database file '%s'"
 msgstr "Base de données sélectionnée « %s »"
 
-#: libgda/gda-xml-database.c:293 libgda/gda-xml-database.c:333
+#: libgda/gda-xml-database.c:432 libgda/gda-xml-database.c:473
 #, fuzzy, c-format
 msgid "Table %s already exists"
 msgstr "la table %s existe déjà"
 
-#: libgda/gda-xml-database.c:327
+#: libgda/gda-xml-database.c:466
 #, fuzzy
 msgid "Invalid node"
 msgstr "Valeur par défaut"
 
-#: libgda/gda-xml-database.c:358
+#: libgda/gda-xml-database.c:498
 #, c-format
 msgid "Duplicated <data> node for table %s"
 msgstr ""
 
-#: libgda/gda-xml-database.c:365
+#: libgda/gda-xml-database.c:505
 #, fuzzy
 msgid "Invalid XML node"
 msgstr "Valeur par défaut"
 
-#: providers/default/gda-default-provider.c:139
+#: providers/default/gda-default-provider.c:159
 #: providers/sqlite/gda-sqlite-provider.c:152
 msgid ""
 "A full path must be specified on the connection string to open a database."
 msgstr ""
+
+#: providers/default/gda-default-provider.c:333
+#: providers/mysql/gda-mysql-provider.c:717
+#: providers/postgres/gda-postgres-provider.c:724
+#, fuzzy
+msgid "Field name"
+msgstr "Nom du champ"
+
+#: providers/default/gda-default-provider.c:334
+#: providers/mysql/gda-mysql-provider.c:718
+#: providers/postgres/gda-postgres-provider.c:725
+#, fuzzy
+msgid "Data type"
+msgstr "Données"
+
+#: providers/default/gda-default-provider.c:335
+#: providers/mysql/gda-mysql-provider.c:719
+#: providers/postgres/gda-postgres-provider.c:726
+msgid "Size"
+msgstr "Taille"
+
+#: providers/default/gda-default-provider.c:336
+#: providers/mysql/gda-mysql-provider.c:720
+#: providers/postgres/gda-postgres-provider.c:727
+#, fuzzy
+msgid "Scale"
+msgstr "Enregistrer"
+
+#: providers/default/gda-default-provider.c:337
+#: providers/mysql/gda-mysql-provider.c:721
+#: providers/postgres/gda-postgres-provider.c:728
+msgid "Not null?"
+msgstr ""
+
+#: providers/default/gda-default-provider.c:338
+#: providers/mysql/gda-mysql-provider.c:722
+#: providers/postgres/gda-postgres-provider.c:729
+msgid "Primary key?"
+msgstr ""
+
+#: providers/default/gda-default-provider.c:339
+#: providers/mysql/gda-mysql-provider.c:723
+#: providers/postgres/gda-postgres-provider.c:730
+msgid "Unique index?"
+msgstr ""
+
+#: providers/default/gda-default-provider.c:340
+#: providers/mysql/gda-mysql-provider.c:724
+#: providers/postgres/gda-postgres-provider.c:731
+#, fuzzy
+msgid "References"
+msgstr "Préférences"
+
+#: providers/default/gda-default-provider.c:350
+#: providers/default/gda-default-provider.c:356
+#, fuzzy
+msgid "Invalid argument"
+msgstr "Valeur par défaut"
+
+#: providers/default/gda-default-provider.c:363
+#, fuzzy, c-format
+msgid "Table %s not found"
+msgstr "Élément d'identifiant %s introuvable"
+
+#: providers/default/gda-default-provider.c:388
+#, fuzzy
+msgid "Could not get description for column"
+msgstr "ne peut ouvrir de connexion sur %s"
+
+#: providers/default/gda-default-provider.c:472
+#: providers/mysql/gda-mysql-provider.c:619
+#: providers/postgres/gda-postgres-provider.c:613
+msgid "Type"
+msgstr "Type"
 
 #: providers/default/GNOME_Database_Provider_Default.server.in.h:1
 #, fuzzy
@@ -179,18 +259,13 @@ msgstr ""
 msgid "Invalid MYSQL handle"
 msgstr ""
 
-#: providers/mysql/gda-mysql-provider.c:464
-#: providers/postgres/gda-postgres-provider.c:570
-msgid "Type"
-msgstr "Type"
-
 #: providers/mysql/gda-mysql-recordset.c:63
-#: providers/mysql/gda-mysql-recordset.c:170
+#: providers/mysql/gda-mysql-recordset.c:167
 msgid "Invalid MySQL handle"
 msgstr ""
 
 #: providers/mysql/gda-mysql-recordset.c:76
-#: providers/postgres/gda-postgres-recordset.c:70
+#: providers/postgres/gda-postgres-recordset.c:84
 #: providers/sqlite/gda-sqlite-recordset.c:74
 msgid "Row number out of range"
 msgstr ""
@@ -262,10 +337,10 @@ msgstr "Ne peut initialiser Bonobo"
 msgid "Could not initialize OCI library"
 msgstr "Ne peut initialiser Bonobo"
 
-#: providers/postgres/gda-postgres-provider.c:318
-#: providers/postgres/gda-postgres-provider.c:456
-#: providers/postgres/gda-postgres-recordset.c:59
-#: providers/postgres/gda-postgres-recordset.c:110
+#: providers/postgres/gda-postgres-provider.c:360
+#: providers/postgres/gda-postgres-provider.c:498
+#: providers/postgres/gda-postgres-recordset.c:71
+#: providers/postgres/gda-postgres-recordset.c:128
 msgid "Invalid PostgreSQL handle"
 msgstr ""
 
@@ -290,6 +365,82 @@ msgstr ""
 #: providers/postgres/utils.c:44
 msgid "Not available"
 msgstr "Non disponible"
+
+#: providers/postgres/utils.c:240
+#, fuzzy
+msgid "NULL"
+msgstr "<NUL>"
+
+#: providers/postgres/utils.c:243
+msgid "big integer"
+msgstr ""
+
+#: providers/postgres/utils.c:246
+msgid "binary"
+msgstr ""
+
+#: providers/postgres/utils.c:249
+msgid "boolean"
+msgstr ""
+
+#: providers/postgres/utils.c:252
+#, fuzzy
+msgid "date"
+msgstr "Mise à jour"
+
+#: providers/postgres/utils.c:255
+#, fuzzy
+msgid "double precision"
+msgstr "Précision"
+
+#: providers/postgres/utils.c:258
+msgid "geometric point"
+msgstr ""
+
+#: providers/postgres/utils.c:261
+msgid "integer"
+msgstr ""
+
+#: providers/postgres/utils.c:264
+msgid "list of values"
+msgstr ""
+
+#: providers/postgres/utils.c:267
+#, fuzzy
+msgid "numeric"
+msgstr "Numérique"
+
+#: providers/postgres/utils.c:270
+#, fuzzy
+msgid "single precision"
+msgstr "Précision"
+
+#: providers/postgres/utils.c:273
+msgid "small integer"
+msgstr ""
+
+#: providers/postgres/utils.c:276
+#, fuzzy
+msgid "string"
+msgstr "Chaîne"
+
+#: providers/postgres/utils.c:279
+#, fuzzy
+msgid "time"
+msgstr "Date/Heure"
+
+#: providers/postgres/utils.c:282
+msgid "timestamp"
+msgstr ""
+
+#: providers/postgres/utils.c:285
+msgid "tiny integer"
+msgstr ""
+
+#: providers/postgres/utils.c:288
+#, fuzzy
+msgid "Unknown type"
+msgstr "Type de schéma inconnu"
 
 #: providers/sqlite/gda-sqlite-provider.c:211
 #: providers/sqlite/gda-sqlite-recordset.c:63
@@ -567,9 +718,6 @@ msgstr ""
 #~ msgid "[GDA Client Library]"
 #~ msgstr "[Librairie cliente GDA]"
 
-#~ msgid "<NULL>"
-#~ msgstr "<NUL>"
-
 #~ msgid "<Unknown GDA Type(NULL)>"
 #~ msgstr "<Type GDA inconnu(NUL)>"
 
@@ -606,9 +754,6 @@ msgstr ""
 #~ msgid "thread is already running"
 #~ msgstr "le thread déjà en fonctionnement"
 
-#~ msgid "Item with id %s not found"
-#~ msgstr "Élément d'identifiant %s introuvable"
-
 #~ msgid "This connection is being closed, so all listeners are released"
 #~ msgstr "Cette connexion se ferme, donc tous les observateurs sont libérés"
 
@@ -635,9 +780,6 @@ msgstr ""
 
 #~ msgid "You must specify a directory for the database to be stored"
 #~ msgstr "Vous devez spécifier un répertoire pour stocker la base de données"
-
-#~ msgid "Unknown schema type"
-#~ msgstr "Type de schéma inconnu"
 
 #~ msgid "GDA Datasource Access for LDAP"
 #~ msgstr "Accès à une source LDAP pour GDA"
@@ -1212,9 +1354,6 @@ msgstr ""
 #~ msgid "Config File"
 #~ msgstr "Fichier de config."
 
-#~ msgid "Save"
-#~ msgstr "Enregistrer"
-
 #~ msgid "Save As"
 #~ msgstr "Enregistrer sous"
 
@@ -1253,9 +1392,6 @@ msgstr ""
 
 #~ msgid "Save As..."
 #~ msgstr "Enregistrer sous..."
-
-#~ msgid "Preferences"
-#~ msgstr "Préférences"
 
 #~ msgid "Error Viewer"
 #~ msgstr "Visualisateur d'erreurs"
@@ -1305,20 +1441,8 @@ msgstr ""
 #~ msgid "Next"
 #~ msgstr "Suivant"
 
-#~ msgid "Field Name"
-#~ msgstr "Nom du champ"
-
-#~ msgid "Size"
-#~ msgstr "Taille"
-
-#~ msgid "Precision"
-#~ msgstr "Précision"
-
 #~ msgid "Delete"
 #~ msgstr "Effacer"
-
-#~ msgid "Update"
-#~ msgstr "Mise à jour"
 
 #~ msgid "Record %d of %d"
 #~ msgstr "Enregistrement %d sur %d"
@@ -1695,9 +1819,6 @@ msgstr ""
 #~ msgid "Print buffer"
 #~ msgstr "Imprimer le tampon courant"
 
-#~ msgid "Data"
-#~ msgstr "Données"
-
 #~ msgid "GDA Server Properties"
 #~ msgstr "Propriétées du Serveur GDA"
 
@@ -1905,15 +2026,6 @@ msgstr ""
 
 #~ msgid "Format"
 #~ msgstr "Format"
-
-#~ msgid "String"
-#~ msgstr "Chaîne"
-
-#~ msgid "Numeric"
-#~ msgstr "Numérique"
-
-#~ msgid "Date/Time"
-#~ msgstr "Date/Heure"
 
 #~ msgid "Database Login"
 #~ msgstr "Login sur le SGBD"

@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda CVS-20010407\n"
-"POT-Creation-Date: 2002-03-07 00:28+0100\n"
+"POT-Creation-Date: 2002-03-27 00:18+0100\n"
 "PO-Revision-Date: 2001-04-07 12:45+0900\n"
 "Last-Translator: Akira TAGOH <tagoh@gnome.gr.jp>\n"
 "Language-Team: Japanese <translation@gnome.gr.jp>\n"
@@ -13,17 +13,17 @@ msgstr ""
 "Content-Type: text/plain; charset=euc-jp\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: libgda/gda-client.c:200 libgda/gda-client.c:310 libgda/gda-connection.c:213
+#: libgda/gda-client.c:198 libgda/gda-client.c:308 libgda/gda-connection.c:213
 #, fuzzy, c-format
 msgid "Data source %s not found in configuration"
 msgstr "データベース '%s' はシステム設定から見つかりませんでした"
 
-#: libgda/gda-client.c:237
+#: libgda/gda-client.c:235
 #, fuzzy, c-format
 msgid "Could not activate object %s"
 msgstr "レポートエンジンを始動させることが出来ませんでした"
 
-#: libgda/gda-client.c:255
+#: libgda/gda-client.c:253
 #, fuzzy
 msgid "Could not create connection component"
 msgstr "%s へ接続することが出来ませんでした"
@@ -38,7 +38,8 @@ msgstr "CORBA ファクトリを開くことが出来ませんでした"
 msgid "Could not query CORBA providers"
 msgstr "CORBA ファクトリを開くことが出来ませんでした"
 
-#: libgda/gda-config.c:869
+#: libgda/gda-config.c:869 providers/default/gda-default-provider.c:417
+#: providers/mysql/gda-mysql-provider.c:446
 msgid "Name"
 msgstr ""
 
@@ -92,7 +93,7 @@ msgstr "フィールドを割り当てることが出来ませんでした"
 msgid "Could not duplicate client object. Client won't get notifications"
 msgstr ""
 
-#: libgda/gda-server-connection.c:440
+#: libgda/gda-server-connection.c:450
 #, fuzzy, c-format
 msgid "Could not notify client about action %d"
 msgstr "クライアントメッセージ番号 %d を取得することが出来ませんでした"
@@ -101,51 +102,127 @@ msgstr "クライアントメッセージ番号 %d を取得することが出来ませんでした"
 msgid "No implementation for the fetch() method found"
 msgstr ""
 
-#: libgda/gda-value.c:926
+#: libgda/gda-table.c:229
+#, c-format
+msgid "There is already a field called %s"
+msgstr ""
+
+#: libgda/gda-value.c:981
 msgid "TRUE"
 msgstr "TRUE"
 
-#: libgda/gda-value.c:928
+#: libgda/gda-value.c:983
 msgid "FALSE"
 msgstr "FALSE"
 
-#: libgda/gda-xml-database.c:214
+#: libgda/gda-xml-database.c:225
 #, fuzzy, c-format
 msgid "Could not load file at %s"
 msgstr "'%s' にロケールを設定することが出来ませんでした"
 
-#: libgda/gda-xml-database.c:223
+#: libgda/gda-xml-database.c:234
 #, fuzzy, c-format
 msgid "Could not parse file at %s"
 msgstr "'%s' にロケールを設定することが出来ませんでした"
 
-#: libgda/gda-xml-database.c:232 libgda/gda-xml-database.c:249
+#: libgda/gda-xml-database.c:244
 #, fuzzy, c-format
 msgid "Invalid XML database file '%s'"
 msgstr "データベース '%s' を選択しました"
 
-#: libgda/gda-xml-database.c:293 libgda/gda-xml-database.c:333
+#: libgda/gda-xml-database.c:432 libgda/gda-xml-database.c:473
 #, fuzzy, c-format
 msgid "Table %s already exists"
 msgstr "テーブル %s はすでに存在しています"
 
-#: libgda/gda-xml-database.c:327
+#: libgda/gda-xml-database.c:466
 msgid "Invalid node"
 msgstr ""
 
-#: libgda/gda-xml-database.c:358
+#: libgda/gda-xml-database.c:498
 #, c-format
 msgid "Duplicated <data> node for table %s"
 msgstr ""
 
-#: libgda/gda-xml-database.c:365
+#: libgda/gda-xml-database.c:505
 msgid "Invalid XML node"
 msgstr ""
 
-#: providers/default/gda-default-provider.c:139
+#: providers/default/gda-default-provider.c:159
 #: providers/sqlite/gda-sqlite-provider.c:152
 msgid ""
 "A full path must be specified on the connection string to open a database."
+msgstr ""
+
+#: providers/default/gda-default-provider.c:333
+#: providers/mysql/gda-mysql-provider.c:717
+#: providers/postgres/gda-postgres-provider.c:724
+#, fuzzy
+msgid "Field name"
+msgstr "ファイル名"
+
+#: providers/default/gda-default-provider.c:334
+#: providers/mysql/gda-mysql-provider.c:718
+#: providers/postgres/gda-postgres-provider.c:725
+msgid "Data type"
+msgstr ""
+
+#: providers/default/gda-default-provider.c:335
+#: providers/mysql/gda-mysql-provider.c:719
+#: providers/postgres/gda-postgres-provider.c:726
+msgid "Size"
+msgstr ""
+
+#: providers/default/gda-default-provider.c:336
+#: providers/mysql/gda-mysql-provider.c:720
+#: providers/postgres/gda-postgres-provider.c:727
+#, fuzzy
+msgid "Scale"
+msgstr "False"
+
+#: providers/default/gda-default-provider.c:337
+#: providers/mysql/gda-mysql-provider.c:721
+#: providers/postgres/gda-postgres-provider.c:728
+msgid "Not null?"
+msgstr ""
+
+#: providers/default/gda-default-provider.c:338
+#: providers/mysql/gda-mysql-provider.c:722
+#: providers/postgres/gda-postgres-provider.c:729
+msgid "Primary key?"
+msgstr ""
+
+#: providers/default/gda-default-provider.c:339
+#: providers/mysql/gda-mysql-provider.c:723
+#: providers/postgres/gda-postgres-provider.c:730
+msgid "Unique index?"
+msgstr ""
+
+#: providers/default/gda-default-provider.c:340
+#: providers/mysql/gda-mysql-provider.c:724
+#: providers/postgres/gda-postgres-provider.c:731
+msgid "References"
+msgstr ""
+
+#: providers/default/gda-default-provider.c:350
+#: providers/default/gda-default-provider.c:356
+msgid "Invalid argument"
+msgstr ""
+
+#: providers/default/gda-default-provider.c:363
+#, fuzzy, c-format
+msgid "Table %s not found"
+msgstr "データソース %s は見つかりませんでした"
+
+#: providers/default/gda-default-provider.c:388
+#, fuzzy
+msgid "Could not get description for column"
+msgstr "%s へ接続することが出来ませんでした"
+
+#: providers/default/gda-default-provider.c:472
+#: providers/mysql/gda-mysql-provider.c:619
+#: providers/postgres/gda-postgres-provider.c:613
+msgid "Type"
 msgstr ""
 
 #: providers/default/GNOME_Database_Provider_Default.server.in.h:1
@@ -179,18 +256,13 @@ msgstr ""
 msgid "Invalid MYSQL handle"
 msgstr ""
 
-#: providers/mysql/gda-mysql-provider.c:464
-#: providers/postgres/gda-postgres-provider.c:570
-msgid "Type"
-msgstr ""
-
 #: providers/mysql/gda-mysql-recordset.c:63
-#: providers/mysql/gda-mysql-recordset.c:170
+#: providers/mysql/gda-mysql-recordset.c:167
 msgid "Invalid MySQL handle"
 msgstr ""
 
 #: providers/mysql/gda-mysql-recordset.c:76
-#: providers/postgres/gda-postgres-recordset.c:70
+#: providers/postgres/gda-postgres-recordset.c:84
 #: providers/sqlite/gda-sqlite-recordset.c:74
 msgid "Row number out of range"
 msgstr ""
@@ -261,10 +333,10 @@ msgstr "CORBA ファクトリを開くことが出来ませんでした"
 msgid "Could not initialize OCI library"
 msgstr "ct_diag() を初期化することが出来ませんでした"
 
-#: providers/postgres/gda-postgres-provider.c:318
-#: providers/postgres/gda-postgres-provider.c:456
-#: providers/postgres/gda-postgres-recordset.c:59
-#: providers/postgres/gda-postgres-recordset.c:110
+#: providers/postgres/gda-postgres-provider.c:360
+#: providers/postgres/gda-postgres-provider.c:498
+#: providers/postgres/gda-postgres-recordset.c:71
+#: providers/postgres/gda-postgres-recordset.c:128
 msgid "Invalid PostgreSQL handle"
 msgstr ""
 
@@ -289,6 +361,76 @@ msgstr ""
 #: providers/postgres/utils.c:44
 msgid "Not available"
 msgstr "利用できません"
+
+#: providers/postgres/utils.c:240
+#, fuzzy
+msgid "NULL"
+msgstr "<NULL>"
+
+#: providers/postgres/utils.c:243
+msgid "big integer"
+msgstr ""
+
+#: providers/postgres/utils.c:246
+msgid "binary"
+msgstr ""
+
+#: providers/postgres/utils.c:249
+msgid "boolean"
+msgstr ""
+
+#: providers/postgres/utils.c:252
+msgid "date"
+msgstr ""
+
+#: providers/postgres/utils.c:255
+msgid "double precision"
+msgstr ""
+
+#: providers/postgres/utils.c:258
+msgid "geometric point"
+msgstr ""
+
+#: providers/postgres/utils.c:261
+msgid "integer"
+msgstr ""
+
+#: providers/postgres/utils.c:264
+msgid "list of values"
+msgstr ""
+
+#: providers/postgres/utils.c:267
+msgid "numeric"
+msgstr ""
+
+#: providers/postgres/utils.c:270
+msgid "single precision"
+msgstr ""
+
+#: providers/postgres/utils.c:273
+msgid "small integer"
+msgstr ""
+
+#: providers/postgres/utils.c:276
+msgid "string"
+msgstr ""
+
+#: providers/postgres/utils.c:279
+msgid "time"
+msgstr ""
+
+#: providers/postgres/utils.c:282
+msgid "timestamp"
+msgstr ""
+
+#: providers/postgres/utils.c:285
+msgid "tiny integer"
+msgstr ""
+
+#: providers/postgres/utils.c:288
+#, fuzzy
+msgid "Unknown type"
+msgstr "未知の ORACLE タイプ %ld です"
 
 #: providers/sqlite/gda-sqlite-provider.c:211
 #: providers/sqlite/gda-sqlite-recordset.c:63
@@ -538,15 +680,9 @@ msgstr ""
 #~ msgid "True"
 #~ msgstr "True"
 
-#~ msgid "False"
-#~ msgstr "False"
-
 #, fuzzy
 #~ msgid "[CORBA User Exception]"
 #~ msgstr "CORBA ユーザ例外: %s"
-
-#~ msgid "<NULL>"
-#~ msgstr "<NULL>"
 
 #~ msgid "<Unknown GDA Type(NULL)>"
 #~ msgstr "<未知の GDA タイプ(NULL)>"
@@ -559,10 +695,6 @@ msgstr ""
 
 #~ msgid "MESSAGE: "
 #~ msgstr "メッセージ: "
-
-#, fuzzy
-#~ msgid "Item with id %s not found"
-#~ msgstr "データソース %s は見つかりませんでした"
 
 #~ msgid "Could not get pointer to server implementation"
 #~ msgstr "サーバの実装へのポインタを取得することが出来ませんでした"
@@ -584,10 +716,6 @@ msgstr ""
 
 #~ msgid "CORBA system exception %s"
 #~ msgstr "CORBA システム例外 %s"
-
-#, fuzzy
-#~ msgid "Unknown schema type"
-#~ msgstr "未知の ORACLE タイプ %ld です"
 
 #~ msgid "GDA Datasource Access for LDAP"
 #~ msgstr "LDAP用のGDAデータソースアクセス"
@@ -1084,9 +1212,6 @@ msgstr ""
 
 #~ msgid "PASSWORD"
 #~ msgstr "PASSWORD"
-
-#~ msgid "file name"
-#~ msgstr "ファイル名"
 
 #~ msgid "FILE-NAME"
 #~ msgstr "FILE-NAME"

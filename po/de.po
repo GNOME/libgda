@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda-0.2.3-cvs\n"
-"POT-Creation-Date: 2002-03-16 18:12+0100\n"
+"POT-Creation-Date: 2002-03-27 00:18+0100\n"
 "PO-Revision-Date: 2002-03-05 13:45+01:00\n"
 "Last-Translator: Christian Meyer <chrisime@gnome.org>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
@@ -14,17 +14,17 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: libgda/gda-client.c:200 libgda/gda-client.c:310 libgda/gda-connection.c:213
+#: libgda/gda-client.c:198 libgda/gda-client.c:308 libgda/gda-connection.c:213
 #, c-format
 msgid "Data source %s not found in configuration"
 msgstr "Datenquelle %s nicht in der Konfiguration gefunden"
 
-#: libgda/gda-client.c:237
+#: libgda/gda-client.c:235
 #, c-format
 msgid "Could not activate object %s"
 msgstr "Objekt %s konnte nicht aktiviert werden"
 
-#: libgda/gda-client.c:255
+#: libgda/gda-client.c:253
 msgid "Could not create connection component"
 msgstr "Verbindungskomponente konnte nicht erzeugt werden"
 
@@ -36,7 +36,8 @@ msgstr "CORBA-Komponenten konnten nicht abgefragt werden"
 msgid "Could not query CORBA providers"
 msgstr "CORBA-Lieferanten konnten nicht abgefragt werden"
 
-#: libgda/gda-config.c:869
+#: libgda/gda-config.c:869 providers/default/gda-default-provider.c:417
+#: providers/mysql/gda-mysql-provider.c:446
 msgid "Name"
 msgstr "Name"
 
@@ -90,7 +91,7 @@ msgstr ""
 "Client-Objekt konnte nicht dupliziert werden. Client wird keine "
 "Benachrichtigung erhalten"
 
-#: libgda/gda-server-connection.c:440
+#: libgda/gda-server-connection.c:450
 #, c-format
 msgid "Could not notify client about action %d"
 msgstr "Client konnte nicht über Aktion %d benachrichtigt werden"
@@ -112,46 +113,116 @@ msgstr "WAHR"
 msgid "FALSE"
 msgstr "FALSCH"
 
-#: libgda/gda-xml-database.c:214
+#: libgda/gda-xml-database.c:225
 #, c-format
 msgid "Could not load file at %s"
 msgstr "Datei bei %s konnte nicht geladen werden"
 
-#: libgda/gda-xml-database.c:223
+#: libgda/gda-xml-database.c:234
 #, c-format
 msgid "Could not parse file at %s"
 msgstr "Datei bei %s konnte nicht interpretiert werden"
 
-#: libgda/gda-xml-database.c:232 libgda/gda-xml-database.c:249
+#: libgda/gda-xml-database.c:244
 #, c-format
 msgid "Invalid XML database file '%s'"
 msgstr "Ungültige XML-Datenbankdatei »%s«"
 
-#: libgda/gda-xml-database.c:293 libgda/gda-xml-database.c:333
+#: libgda/gda-xml-database.c:432 libgda/gda-xml-database.c:473
 #, c-format
 msgid "Table %s already exists"
 msgstr "Tabelle %s existiert bereits"
 
-#: libgda/gda-xml-database.c:327
+#: libgda/gda-xml-database.c:466
 msgid "Invalid node"
 msgstr "Ungültiger Node"
 
-#: libgda/gda-xml-database.c:358
+#: libgda/gda-xml-database.c:498
 #, c-format
 msgid "Duplicated <data> node for table %s"
 msgstr ""
 
-#: libgda/gda-xml-database.c:365
+#: libgda/gda-xml-database.c:505
 msgid "Invalid XML node"
 msgstr "Ungültiger XML-Node"
 
-#: providers/default/gda-default-provider.c:139
+#: providers/default/gda-default-provider.c:159
 #: providers/sqlite/gda-sqlite-provider.c:152
 msgid ""
 "A full path must be specified on the connection string to open a database."
 msgstr ""
 "Um eine Datenbank zu öffnen, muss in der Verbindungszeichenkette ein voller "
 "Pfad angegeben werden."
+
+#: providers/default/gda-default-provider.c:333
+#: providers/mysql/gda-mysql-provider.c:717
+#: providers/postgres/gda-postgres-provider.c:724
+msgid "Field name"
+msgstr ""
+
+#: providers/default/gda-default-provider.c:334
+#: providers/mysql/gda-mysql-provider.c:718
+#: providers/postgres/gda-postgres-provider.c:725
+msgid "Data type"
+msgstr ""
+
+#: providers/default/gda-default-provider.c:335
+#: providers/mysql/gda-mysql-provider.c:719
+#: providers/postgres/gda-postgres-provider.c:726
+msgid "Size"
+msgstr ""
+
+#: providers/default/gda-default-provider.c:336
+#: providers/mysql/gda-mysql-provider.c:720
+#: providers/postgres/gda-postgres-provider.c:727
+msgid "Scale"
+msgstr ""
+
+#: providers/default/gda-default-provider.c:337
+#: providers/mysql/gda-mysql-provider.c:721
+#: providers/postgres/gda-postgres-provider.c:728
+msgid "Not null?"
+msgstr ""
+
+#: providers/default/gda-default-provider.c:338
+#: providers/mysql/gda-mysql-provider.c:722
+#: providers/postgres/gda-postgres-provider.c:729
+msgid "Primary key?"
+msgstr ""
+
+#: providers/default/gda-default-provider.c:339
+#: providers/mysql/gda-mysql-provider.c:723
+#: providers/postgres/gda-postgres-provider.c:730
+msgid "Unique index?"
+msgstr ""
+
+#: providers/default/gda-default-provider.c:340
+#: providers/mysql/gda-mysql-provider.c:724
+#: providers/postgres/gda-postgres-provider.c:731
+msgid "References"
+msgstr ""
+
+#: providers/default/gda-default-provider.c:350
+#: providers/default/gda-default-provider.c:356
+#, fuzzy
+msgid "Invalid argument"
+msgstr "Ungültiger Node"
+
+#: providers/default/gda-default-provider.c:363
+#, c-format
+msgid "Table %s not found"
+msgstr ""
+
+#: providers/default/gda-default-provider.c:388
+#, fuzzy
+msgid "Could not get description for column"
+msgstr "Verbindungskomponente konnte nicht erzeugt werden"
+
+#: providers/default/gda-default-provider.c:472
+#: providers/mysql/gda-mysql-provider.c:619
+#: providers/postgres/gda-postgres-provider.c:613
+msgid "Type"
+msgstr "Typ"
 
 #: providers/default/GNOME_Database_Provider_Default.server.in.h:1
 msgid "Default component factory"
@@ -179,18 +250,13 @@ msgstr ""
 msgid "Invalid MYSQL handle"
 msgstr "Ungültiger MYSQL-Handle"
 
-#: providers/mysql/gda-mysql-provider.c:464
-#: providers/postgres/gda-postgres-provider.c:570
-msgid "Type"
-msgstr "Typ"
-
 #: providers/mysql/gda-mysql-recordset.c:63
-#: providers/mysql/gda-mysql-recordset.c:170
+#: providers/mysql/gda-mysql-recordset.c:167
 msgid "Invalid MySQL handle"
 msgstr "Ungültiger MySQL-Handle"
 
 #: providers/mysql/gda-mysql-recordset.c:76
-#: providers/postgres/gda-postgres-recordset.c:70
+#: providers/postgres/gda-postgres-recordset.c:84
 #: providers/sqlite/gda-sqlite-recordset.c:74
 msgid "Row number out of range"
 msgstr "Zeilennummer außerhalb des Erlaubten"
@@ -251,10 +317,10 @@ msgstr "Oracle-Komponentenfabrik konnte nicht geöffnet werden"
 msgid "Could not initialize OCI library"
 msgstr "OCI-Bibliothek konnte nicht initialisiert werden"
 
-#: providers/postgres/gda-postgres-provider.c:318
-#: providers/postgres/gda-postgres-provider.c:456
-#: providers/postgres/gda-postgres-recordset.c:59
-#: providers/postgres/gda-postgres-recordset.c:110
+#: providers/postgres/gda-postgres-provider.c:360
+#: providers/postgres/gda-postgres-provider.c:498
+#: providers/postgres/gda-postgres-recordset.c:71
+#: providers/postgres/gda-postgres-recordset.c:128
 msgid "Invalid PostgreSQL handle"
 msgstr "Ungültiger PostgreSQL-Handle"
 
@@ -277,6 +343,74 @@ msgstr "KEINE BESCHREIBUNG"
 #: providers/postgres/utils.c:44
 msgid "Not available"
 msgstr "Nicht verfügbar"
+
+#: providers/postgres/utils.c:240
+msgid "NULL"
+msgstr ""
+
+#: providers/postgres/utils.c:243
+msgid "big integer"
+msgstr ""
+
+#: providers/postgres/utils.c:246
+msgid "binary"
+msgstr ""
+
+#: providers/postgres/utils.c:249
+msgid "boolean"
+msgstr ""
+
+#: providers/postgres/utils.c:252
+msgid "date"
+msgstr ""
+
+#: providers/postgres/utils.c:255
+msgid "double precision"
+msgstr ""
+
+#: providers/postgres/utils.c:258
+msgid "geometric point"
+msgstr ""
+
+#: providers/postgres/utils.c:261
+msgid "integer"
+msgstr ""
+
+#: providers/postgres/utils.c:264
+msgid "list of values"
+msgstr ""
+
+#: providers/postgres/utils.c:267
+msgid "numeric"
+msgstr ""
+
+#: providers/postgres/utils.c:270
+msgid "single precision"
+msgstr ""
+
+#: providers/postgres/utils.c:273
+msgid "small integer"
+msgstr ""
+
+#: providers/postgres/utils.c:276
+msgid "string"
+msgstr ""
+
+#: providers/postgres/utils.c:279
+msgid "time"
+msgstr ""
+
+#: providers/postgres/utils.c:282
+msgid "timestamp"
+msgstr ""
+
+#: providers/postgres/utils.c:285
+msgid "tiny integer"
+msgstr ""
+
+#: providers/postgres/utils.c:288
+msgid "Unknown type"
+msgstr ""
 
 #: providers/sqlite/gda-sqlite-provider.c:211
 #: providers/sqlite/gda-sqlite-recordset.c:63

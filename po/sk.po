@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda 0.3.1\n"
-"POT-Creation-Date: 2002-03-26 13:33+0100\n"
+"POT-Creation-Date: 2002-03-27 00:18+0100\n"
 "PO-Revision-Date: 2002-03-26 13:36+0100\n"
 "Last-Translator: Stanislav Višňovský <visnovsky@nenya.ms.mff.cuni.cz>\n"
 "Language-Team: Slovak <sk-i18n@lists.linux.sk>\n"
@@ -86,7 +86,8 @@ msgstr "Nie je možné vytvoriť komponent typu %s"
 
 #: libgda/gda-server-connection.c:90
 msgid "Could not duplicate client object. Client won't get notifications"
-msgstr "Nie je možné duplikovať klientský objekt. Klient nebude dostávať upozornenia"
+msgstr ""
+"Nie je možné duplikovať klientský objekt. Klient nebude dostávať upozornenia"
 
 #: libgda/gda-server-connection.c:450
 #, c-format
@@ -145,7 +146,8 @@ msgstr "Neplatný XML uzol"
 
 #: providers/default/gda-default-provider.c:159
 #: providers/sqlite/gda-sqlite-provider.c:152
-msgid "A full path must be specified on the connection string to open a database."
+msgid ""
+"A full path must be specified on the connection string to open a database."
 msgstr "Pre otvorenie databáze musíte zadať celú cestu v reťazci spojenia."
 
 #: providers/default/gda-default-provider.c:333
@@ -226,11 +228,14 @@ msgstr "GDA štandardný prístup k zdroju dát"
 
 #: providers/default/main.c:48
 msgid "Could not initiate Default component factory"
-msgstr "Nie je možné inicializovať vytváracie rozhranie pre štandardný komponent"
+msgstr ""
+"Nie je možné inicializovať vytváracie rozhranie pre štandardný komponent"
 
 #: providers/mysql/gda-mysql-provider.c:175
-msgid "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
-msgstr "Nemôžete poskytovať UNIX_SOCKET ak tiež poskytujete HOSTITEĽ alebo a PORT."
+msgid ""
+"You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
+msgstr ""
+"Nemôžete poskytovať UNIX_SOCKET ak tiež poskytujete HOSTITEĽ alebo a PORT."
 
 #: providers/mysql/gda-mysql-provider.c:246
 #: providers/mysql/gda-mysql-provider.c:326
@@ -323,7 +328,8 @@ msgstr "Vytváracie rozhranie komponentu pre Postgres"
 
 #: providers/postgres/main.c:49
 msgid "Could not initiate PostgreSQL component factory"
-msgstr "Nie je možné inicializovať vytváracie rozhranie pre komponent PostreSQL"
+msgstr ""
+"Nie je možné inicializovať vytváracie rozhranie pre komponent PostreSQL"
 
 #: providers/postgres/utils.c:39
 msgid "NO DESCRIPTION"
@@ -475,7 +481,8 @@ msgstr "Nie je možné získať súbor z %s"
 
 #: report/main.c:47
 msgid "Could not initiate Report component factory"
-msgstr "Nie je možné inicializovať vytváracie rozhranie pre komponent pre reporty"
+msgstr ""
+"Nie je možné inicializovať vytváracie rozhranie pre komponent pre reporty"
 
 #: testing/client.c:37
 msgid "\t\tNONE\n"
@@ -673,4 +680,3 @@ msgstr "\tgda_params ="
 #~ "\n"
 #~ "\tČíslo chyby operačného systému (%ld):\n"
 #~ "\t%s"
-
