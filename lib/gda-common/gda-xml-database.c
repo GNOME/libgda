@@ -120,7 +120,25 @@ gda_xml_database_new (void)
 Gda_XmlDatabase *
 gda_xml_database_new_from_file (const gchar *filename)
 {
-  return NULL;
+  Gda_XmlDatabase* xmldb;
+  
+  xmldb = GDA_XML_DATABASE(gtk_type_new(gda_xml_database_get_type()));
+  GDA_XML_FILE(xmldb)->doc = xmlParseFile(filename);
+  if (GDA_XML_FILE(xmldb)->doc)
+    {
+      xmlNodePtr node;
+      GDA_XML_FILE(xmldb)->root = xmlDocGetRootElement(GDA_XML_FILE(xmldb)->doc);
+      node = GDA_XML_FILE(xmldb)->root->childs;
+      while (node)
+        {
+        	if (!strcmp(node->name, OBJECT_TABLE))
+        	  xmldb->tables = node;
+        	else if (!strcmp(node->name, OBJECT_VIEW))
+        	  xmldb->views = node;
+        	node = node->next;
+        }
+    }
+  return xmldb;
 }
 
 static void
