@@ -1,0 +1,333 @@
+# Copyright (c) 1999, 2000 D. Richard Hipp
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public
+# License along with this library; if not, write to the
+# Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA  02111-1307, USA.
+#
+# Author contact information:
+#   drh@hwaci.com
+#   http://www.hwaci.com/drh/
+#
+#***********************************************************************
+# This file implements regression tests for SQLite library.  The
+# focus of this file is testing the CREATE TABLE statement.
+#
+# $Id$
+
+set testdir [file dirname $argv0]
+source $testdir/tester.tcl
+
+# Create a basic table and verify it is added to sqlite_master
+#
+do_test table-1.1 {
+  execsql {
+    CREATE TABLE test1 (
+      one varchar(10),
+      two text
+    )
+  }
+  execsql {
+    SELECT sql FROM sqlite_master WHERE type!='meta'
+  }
+} {{CREATE TABLE test1 (
+      one varchar(10),
+      two text
+    )}}
+
+# Verify that both table files exists in the database directory
+#
+do_test table-1.2 {
+  execsql {INSERT INTO test1 VALUES('hi', 'y''all')}
+} {}
+testif gdbm:
+do_test table-1.2b {
+  lsort [glob -nocomplain testdb/*.tbl]
+} {testdb/sqlite_master.tbl testdb/test1.tbl}
+
+# Verify the other fields of the sqlite_master file.
+#
+do_test table-1.3 {
+  execsql {SELECT name, tbl_name, type FROM sqlite_master WHERE type!='meta'}
+} {test1 test1 table}
+
+# Close and reopen the database.  Verify that everything is
+# still the same.
+#
+skipif memory:
+do_test table-1.4 {
+  db close
+  sqlite db testdb
+  execsql {SELECT name, tbl_name, type from sqlite_master WHERE type!='meta'}
+} {test1 test1 table}
+
+# Drop the database and make sure it disappears.
+#
+do_test table-1.5 {
+  execsql {DROP TABLE test1}
+  execsql {SELECT * FROM sqlite_master WHERE type!='meta'}
+} {}
+
+# Verify that the file associated with the database is gone.
+#
+testif gdbm:
+do_test table-1.5 {
+  lsort [glob -nocomplain testdb/*.tbl]
+} {testdb/sqlite_master.tbl}
+
+# Close and reopen the database.  Verify that the table is
+# still gone.
+#
+skipif memory:
+do_test table-1.6 {
+  db close
+  sqlite db testdb
+  execsql {SELECT name FROM sqlite_master WHERE type!='meta'}
+} {}
+
+# Repeat the above steps, but this time quote the table name.
+#
+do_test table-1.10 {
+  execsql {CREATE TABLE "create" (f1 int)}
+  execsql {SELECT name FROM sqlite_master WHERE type!='meta'}
+} {create}
+do_test table-1.11 {
+  execsql {DROP TABLE "create"}
+  execsql {SELECT name FROM "sqlite_master" WHERE type!='meta'}
+} {}
+do_test table-1.12 {
+  execsql {CREATE TABLE test1("f1 ho" int)}
+  execsql {SELECT name as "X" FROM sqlite_master WHERE type!='meta'}
+} {test1}
+do_test table-1.13 {
+  execsql {DROP TABLE "TEST1"}
+  execsql {SELECT name FROM "sqlite_master" WHERE type!='meta'}
+} {}
+
+
+
+# Verify that we cannot make two tables with the same name
+#
+do_test table-2.1 {
+  execsql {CREATE TABLE TEST2(one text)}
+  set v [catch {execsql {CREATE TABLE test2(two text)}} msg]
+  lappend v $msg
+} {1 {table test2 already exists}}
+do_test table-2.1b {
+  set v [catch {execsql {CREATE TABLE sqlite_master(two text)}} msg]
+  lappend v $msg
+} {1 {table sqlite_master already exists}}
+skipif memory:
+do_test table-2.1c {
+  db close
+  sqlite db testdb
+  set v [catch {execsql {CREATE TABLE sqlite_master(two text)}} msg]
+  lappend v $msg
+} {1 {table sqlite_master already exists}}
+do_test table-2.1d {
+  execsql {DROP TABLE test2; SELECT name FROM sqlite_master WHERE type!='meta'}
+} {}
+
+# Verify that we cannot make a table with the same name as an index
+#
+do_test table-2.2a {
+  execsql {CREATE TABLE test2(one text); CREATE INDEX test3 ON test2(one)}
+  set v [catch {execsql {CREATE TABLE test3(two text)}} msg]
+  lappend v $msg
+} {1 {there is already an index named test3}}
+skipif memory:
+do_test table-2.2b {
+  db close
+  sqlite db testdb
+  set v [catch {execsql {CREATE TABLE test3(two text)}} msg]
+  lappend v $msg
+} {1 {there is already an index named test3}}
+do_test table-2.2c {
+  execsql {DROP INDEX test3}
+  set v [catch {execsql {CREATE TABLE test3(two text)}} msg]
+  lappend v $msg
+} {0 {}}
+do_test table-2.2d {
+  execsql {SELECT name FROM sqlite_master WHERE type!='meta' ORDER BY name}
+} {test2 test3}
+do_test table-2.2e {
+  execsql {DROP TABLE test2; DROP TABLE test3}
+  execsql {SELECT name FROM sqlite_master WHERE type!='meta' ORDER BY name}
+} {}
+
+# Create a table with many field names
+#
+set big_table \
+{CREATE TABLE big(
+  f1 varchar(20),
+  f2 char(10),
+  f3 varchar(30) primary key,
+  f4 text,
+  f5 text,
+  f6 text,
+  f7 text,
+  f8 text,
+  f9 text,
+  f10 text,
+  f11 text,
+  f12 text,
+  f13 text,
+  f14 text,
+  f15 text,
+  f16 text,
+  f17 text,
+  f18 text,
+  f19 text,
+  f20 text
+)}
+do_test table-3.1 {
+  execsql $big_table
+  execsql {SELECT sql FROM sqlite_master WHERE type!='meta'}
+} \{$big_table\}
+do_test table-3.2 {
+  set v [catch {execsql {CREATE TABLE BIG(xyz foo)}} msg]
+  lappend v $msg
+} {1 {table BIG already exists}}
+do_test table-3.3 {
+  set v [catch {execsql {CREATE TABLE biG(xyz foo)}} msg]
+  lappend v $msg
+} {1 {table biG already exists}}
+do_test table-3.4 {
+  set v [catch {execsql {CREATE TABLE bIg(xyz foo)}} msg]
+  lappend v $msg
+} {1 {table bIg already exists}}
+skipif memory:
+do_test table-3.5 {
+  db close
+  sqlite db testdb
+  set v [catch {execsql {CREATE TABLE Big(xyz foo)}} msg]
+  lappend v $msg
+} {1 {table Big already exists}}
+do_test table-3.6 {
+  execsql {DROP TABLE big}
+  execsql {SELECT name FROM sqlite_master WHERE type!='meta'}
+} {}
+
+# Try creating large numbers of tables
+#
+set r {}
+for {set i 1} {$i<=100} {incr i} {
+  lappend r test$i
+}
+do_test table-4.1 {
+  for {set i 1} {$i<=100} {incr i} {
+    set sql "CREATE TABLE test$i ("
+    for {set k 1} {$k<$i} {incr k} {
+      append sql "field$k text,"
+    }
+    append sql "last_field text)"
+    execsql $sql
+  }
+  execsql {SELECT name FROM sqlite_master WHERE type!='meta' ORDER BY name}
+} $r
+skipif memory:
+do_test table-4.1b {
+  db close
+  sqlite db testdb
+  execsql {SELECT name FROM sqlite_master WHERE type!='meta' ORDER BY name}
+} $r
+
+# Drop the even numbered tables
+#
+set r {}
+for {set i 1} {$i<=100} {incr i 2} {
+  lappend r test$i
+}
+do_test table-4.2 {
+  for {set i 2} {$i<=100} {incr i 2} {
+    set sql "DROP TABLE TEST$i"
+    execsql $sql
+  }
+  execsql {SELECT name FROM sqlite_master WHERE type!='meta' ORDER BY name}
+} $r
+
+# Drop the odd number tables
+#
+do_test table-4.3 {
+  for {set i 1} {$i<=100} {incr i 2} {
+    set sql "DROP TABLE test$i"
+    execsql $sql
+  }
+  execsql {SELECT name FROM sqlite_master WHERE type!='meta' ORDER BY name}
+} {}
+
+# Try to drop a table that does not exist
+#
+do_test table-5.1 {
+  set v [catch {execsql {DROP TABLE test9}} msg]
+  lappend v $msg
+} {1 {no such table: test9}}
+
+# Try to drop sqlite_master
+#
+do_test table-5.2 {
+  set v [catch {execsql {DROP TABLE sqlite_master}} msg]
+  lappend v $msg
+} {1 {table sqlite_master may not be dropped}}
+
+# Make sure an EXPLAIN does not really create a new table
+#
+do_test table-5.3 {
+  execsql {EXPLAIN CREATE TABLE test1(f1 int)}
+  execsql {SELECT name FROM sqlite_master WHERE type!='meta'}
+} {}
+
+# Make sure an EXPLAIN does not really drop an existing table
+#
+do_test table-5.4 {
+  execsql {CREATE TABLE test1(f1 int)}
+  execsql {EXPLAIN DROP TABLE test1}
+  execsql {SELECT name FROM sqlite_master WHERE type!='meta'}
+} {test1}
+
+# Create a table with a goofy name
+#
+testif gdbm:
+do_test table-6.1 {
+  execsql {CREATE TABLE 'Spaces In This Name!'(x int)}
+  execsql {INSERT INTO 'spaces in this name!' VALUES(1)}
+  set list [glob -nocomplain testdb/spaces*.tbl]
+} {testdb/spaces+in+this+name+.tbl}
+
+# Try using keywords as table names or column names.
+# 
+do_test table-7.1 {
+  set v [catch {execsql {
+    CREATE TABLE weird(
+      desc text,
+      asc text,
+      explain int,
+      vacuum boolean,
+      delimiters varchar(10)
+    )
+  }} msg]
+  lappend v $msg
+} {0 {}}
+do_test table-7.2 {
+  execsql {
+    INSERT INTO weird VALUES('a','b',9,0,'xyz');
+    SELECT * FROM weird;
+  }
+} {a b 9 0 xyz}
+do_test table-7.3 {
+  execsql2 {
+    SELECT * FROM weird;
+  }
+} {desc a asc b explain 9 vacuum 0 delimiters xyz}
+
+finish_test

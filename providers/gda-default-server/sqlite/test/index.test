@@ -1,0 +1,354 @@
+# Copyright (c) 1999, 2000 D. Richard Hipp
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public
+# License along with this library; if not, write to the
+# Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA  02111-1307, USA.
+#
+# Author contact information:
+#   drh@hwaci.com
+#   http://www.hwaci.com/drh/
+#
+#***********************************************************************
+# This file implements regression tests for SQLite library.  The
+# focus of this file is testing the CREATE INDEX statement.
+#
+# $Id$
+
+set testdir [file dirname $argv0]
+source $testdir/tester.tcl
+
+# Create a basic index and verify it is added to sqlite_master
+#
+do_test index-1.1 {
+  execsql {CREATE TABLE test1(f1 int, f2 int, f3 int)}
+  execsql {CREATE INDEX index1 ON test1(f1)}
+  execsql {SELECT name FROM sqlite_master WHERE type!='meta' ORDER BY name}
+} {index1 test1}
+do_test index-1.1b {
+  execsql {SELECT name, sql, tbl_name, type FROM sqlite_master 
+           WHERE name='index1'}
+} {index1 {CREATE INDEX index1 ON test1(f1)} test1 index}
+skipif memory:
+do_test index-1.1c {
+  db close
+  sqlite db testdb
+  execsql {SELECT name, sql, tbl_name, type FROM sqlite_master 
+           WHERE name='index1'}
+} {index1 {CREATE INDEX index1 ON test1(f1)} test1 index}
+skipif memory:
+do_test index-1.1d {
+  db close
+  sqlite db testdb
+  execsql {SELECT name FROM sqlite_master WHERE type!='meta' ORDER BY name}
+} {index1 test1}
+
+# Verify that the index dies with the table
+#
+do_test index-1.2 {
+  execsql {DROP TABLE test1}
+  execsql {SELECT name FROM sqlite_master WHERE type!='meta' ORDER BY name}
+} {}
+
+# Try adding an index to a table that does not exist
+#
+do_test index-2.1 {
+  set v [catch {execsql {CREATE INDEX index1 ON test1(f1)}} msg]
+  lappend v $msg
+} {1 {no such table: test1}}
+
+# Try adding an index on a column of a table where the table
+# exists but the column does not.
+#
+do_test index-2.1 {
+  execsql {CREATE TABLE test1(f1 int, f2 int, f3 int)}
+  set v [catch {execsql {CREATE INDEX index1 ON test1(f4)}} msg]
+  lappend v $msg
+} {1 {table test1 has no column named f4}}
+
+# Try an index with some columns that match and others that do now.
+#
+do_test index-2.2 {
+  set v [catch {execsql {CREATE INDEX index1 ON test1(f1, f2, f4, f3)}} msg]
+  execsql {DROP TABLE test1}
+  lappend v $msg
+} {1 {table test1 has no column named f4}}
+
+# Try creating a bunch of indices on the same table
+#
+set r {}
+for {set i 1} {$i<100} {incr i} {
+  lappend r index$i
+}
+do_test index-3.1 {
+  execsql {CREATE TABLE test1(f1 int, f2 int, f3 int, f4 int, f5 int)}
+  for {set i 1} {$i<100} {incr i} {
+    set sql "CREATE INDEX index$i ON test1(f[expr {($i%5)+1}])"
+    execsql $sql
+  }
+  execsql {SELECT name FROM sqlite_master 
+           WHERE type='index' AND tbl_name='test1'
+           ORDER BY name}
+} $r
+
+# Add a single entry to the table.  Verify that files are created
+# for every index.
+#
+set r {}
+for {set i 1} {$i<100} {incr i} {
+  lappend r testdb/index$i.tbl
+}
+skipif memory:
+do_test index-3.2 {
+  execsql {INSERT INTO test1 VALUES(1,2,3,4,5)}
+  lsort -dictionary [glob testdb/index*.tbl]
+} $r
+
+# Verify that all the indices go away when we drop the table.
+#
+do_test index-3.3 {
+  execsql {DROP TABLE test1}
+  execsql {SELECT name FROM sqlite_master 
+           WHERE type='index' AND tbl_name='test1'
+           ORDER BY name}
+} {}
+do_test index-3.4 {
+  lsort -dictionary [glob -nocomplain testdb/index*.tbl]
+} {}
+
+# Create a table and insert values into that table.  Then create
+# an index on that table.  Verify that we can select values
+# from the table correctly using the index.
+#
+# Note that the index names "index9" and "indext" are chosen because
+# they both have the same hash.
+#
+do_test index-4.1 {
+  execsql {CREATE TABLE test1(cnt int, power int)}
+  for {set i 1} {$i<20} {incr i} {
+    execsql "INSERT INTO test1 VALUES($i,[expr {int(pow(2,$i))}])"
+  }
+  execsql {CREATE INDEX index9 ON test1(cnt)}
+  execsql {CREATE INDEX indext ON test1(power)}
+  execsql {SELECT name FROM sqlite_master WHERE type!='meta' ORDER BY name}
+} {index9 indext test1}
+do_test index-4.2 {
+  execsql {SELECT cnt FROM test1 WHERE power=4}
+} {2}
+do_test index-4.3 {
+  execsql {SELECT cnt FROM test1 WHERE power=1024}
+} {10}
+do_test index-4.4 {
+  execsql {SELECT power FROM test1 WHERE cnt=6}
+} {64}
+do_test index-4.5 {
+  execsql {DROP INDEX indext}
+  execsql {SELECT power FROM test1 WHERE cnt=6}
+} {64}
+do_test index-4.6 {
+  execsql {SELECT cnt FROM test1 WHERE power=1024}
+} {10}
+do_test index-4.7 {
+  execsql {CREATE INDEX indext ON test1(cnt)}
+  execsql {SELECT power FROM test1 WHERE cnt=6}
+} {64}
+do_test index-4.8 {
+  execsql {SELECT cnt FROM test1 WHERE power=1024}
+} {10}
+do_test index-4.9 {
+  execsql {DROP INDEX index9}
+  execsql {SELECT power FROM test1 WHERE cnt=6}
+} {64}
+do_test index-4.10 {
+  execsql {SELECT cnt FROM test1 WHERE power=1024}
+} {10}
+do_test index-4.11 {
+  execsql {DROP INDEX indext}
+  execsql {SELECT power FROM test1 WHERE cnt=6}
+} {64}
+do_test index-4.12 {
+  execsql {SELECT cnt FROM test1 WHERE power=1024}
+} {10}
+do_test index-4.13 {
+  execsql {DROP TABLE test1}
+  execsql {SELECT name FROM sqlite_master WHERE type!='meta' ORDER BY name}
+} {}
+
+# Do not allow indices to be added to sqlite_master
+#
+do_test index-5.1 {
+  set v [catch {execsql {CREATE INDEX index1 ON sqlite_master(name)}} msg]
+  lappend v $msg
+} {1 {table sqlite_master may not have new indices added}}
+do_test index-5.2 {
+  execsql {SELECT name FROM sqlite_master WHERE type!='meta'}
+} {}
+
+# Do not allow indices with duplicate names to be added
+#
+do_test index-6.1 {
+  execsql {CREATE TABLE test1(f1 int, f2 int)}
+  execsql {CREATE TABLE test2(g1 real, g2 real)}
+  execsql {CREATE INDEX index1 ON test1(f1)}
+  set v [catch {execsql {CREATE INDEX index1 ON test2(g1)}} msg]
+  lappend v $msg
+} {1 {index index1 already exists}}
+do_test index-6.1b {
+  execsql {SELECT name FROM sqlite_master WHERE type!='meta' ORDER BY name}
+} {index1 test1 test2}
+do_test index-6.2 {
+  set v [catch {execsql {CREATE INDEX test1 ON test2(g1)}} msg]
+  lappend v $msg
+} {1 {there is already a table named test1}}
+do_test index-6.2b {
+  execsql {SELECT name FROM sqlite_master WHERE type!='meta' ORDER BY name}
+} {index1 test1 test2}
+do_test index-6.3 {
+  execsql {DROP TABLE test1}
+  execsql {DROP TABLE test2}
+  execsql {SELECT name FROM sqlite_master WHERE type!='meta' ORDER BY name}
+} {}
+
+# Create a primary key
+#
+do_test index-7.1 {
+  execsql {CREATE TABLE test1(f1 int, f2 int primary key)}
+  for {set i 1} {$i<20} {incr i} {
+    execsql "INSERT INTO test1 VALUES($i,[expr {int(pow(2,$i))}])"
+  }
+  execsql {SELECT count(*) FROM test1}
+} {19}
+skipif memory:
+do_test index-7.1b {
+  lsort -dictionary [glob testdb/test1*.tbl]
+} {testdb/test1.tbl testdb/test1__primary_key.tbl}
+do_test index-7.2 {
+  execsql {SELECT f1 FROM test1 WHERE f2=65536}
+} {16}
+do_test index-7.3 {
+  set code [execsql {EXPLAIN SELECT f1 FROM test1 WHERE f2=65536}]
+  expr {[lsearch $code test1__primary_key]>0}
+} {1}
+do_test index-7.4 {
+  execsql {DROP table test1}
+  execsql {SELECT name FROM sqlite_master WHERE type!='meta'}
+} {}
+
+# Make sure we cannot drop a non-existant index.
+#
+do_test index-8.1 {
+  set v [catch {execsql {DROP INDEX index1}} msg]
+  lappend v $msg
+} {1 {no such index: index1}}
+
+# Make sure we don't actually create an index when the EXPLAIN keyword
+# is used.
+#
+do_test index-9.1 {
+  execsql {CREATE TABLE tab1(a int)}
+  execsql {EXPLAIN CREATE INDEX idx1 ON tab1(a)}
+  execsql {SELECT name FROM sqlite_master WHERE tbl_name='tab1'}
+} {tab1}
+do_test index-9.2 {
+  execsql {CREATE INDEX idx1 ON tab1(a)}
+  execsql {SELECT name FROM sqlite_master WHERE tbl_name='tab1' ORDER BY name}
+} {idx1 tab1}
+
+# Allow more than one entry with the same key.
+#
+do_test index-10.0 {
+  execsql {
+    CREATE TABLE t1(a int, b int);
+    CREATE INDEX i1 ON t1(a);
+    INSERT INTO t1 VALUES(1,2);
+    INSERT INTO t1 VALUES(2,4);
+    INSERT INTO t1 VALUES(3,8);
+    INSERT INTO t1 VALUES(1,12);
+    SELECT b FROM t1 WHERE a=1 ORDER BY b;
+  }
+} {2 12}
+do_test index-10.1 {
+  execsql {
+    SELECT b FROM t1 WHERE a=2 ORDER BY b;
+  }
+} {4}
+do_test index-10.2 {
+  execsql {
+    DELETE FROM t1 WHERE b=12;
+    SELECT b FROM t1 WHERE a=1 ORDER BY b;
+  }
+} {2}
+do_test index-10.3 {
+  execsql {
+    DELETE FROM t1 WHERE b=2;
+    SELECT b FROM t1 WHERE a=1 ORDER BY b;
+  }
+} {}
+do_test index-10.4 {
+  execsql {
+    DELETE FROM t1;
+    INSERT INTO t1 VALUES (1,1);
+    INSERT INTO t1 VALUES (1,2);
+    INSERT INTO t1 VALUES (1,3);
+    INSERT INTO t1 VALUES (1,4);
+    INSERT INTO t1 VALUES (1,5);
+    INSERT INTO t1 VALUES (1,6);
+    INSERT INTO t1 VALUES (1,7);
+    INSERT INTO t1 VALUES (1,8);
+    INSERT INTO t1 VALUES (1,9);
+    INSERT INTO t1 VALUES (2,0);
+    SELECT b FROM t1 WHERE a=1 ORDER BY b;
+  }
+} {1 2 3 4 5 6 7 8 9}
+do_test index-10.5 {
+  execsql {
+    DELETE FROM t1 WHERE b IN (2, 4, 6, 8);
+    SELECT b FROM t1 WHERE a=1 ORDER BY b;
+  }
+} {1 3 5 7 9}
+do_test index-10.6 {
+  execsql {
+    DELETE FROM t1 WHERE b>2;
+    SELECT b FROM t1 WHERE a=1 ORDER BY b;
+  }
+} {1}
+do_test index-10.7 {
+  execsql {
+    DELETE FROM t1 WHERE b=1;
+    SELECT b FROM t1 WHERE a=1 ORDER BY b;
+  }
+} {}
+do_test index-10.8 {
+  execsql {
+    SELECT b FROM t1 ORDER BY b;
+  }
+} {0}
+
+# Automatically create an index when we specify a primary key.
+#
+do_test index-11.1 {
+  execsql {
+    CREATE TABLE t3(
+      a text,
+      b int,
+      c float,
+      PRIMARY KEY(b)
+    );
+  }
+  for {set i 1} {$i<=50} {incr i} {
+    execsql "INSERT INTO t3 VALUES('x${i}x',$i,0.$i)"
+  }
+  execsql {SELECT c, fcnt() FROM t3 WHERE b==10}
+} {0.10 2}
+
+finish_test

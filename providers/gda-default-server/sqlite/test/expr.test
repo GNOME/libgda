@@ -1,0 +1,305 @@
+# Copyright (c) 1999, 2000 D. Richard Hipp
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public
+# License along with this library; if not, write to the
+# Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA  02111-1307, USA.
+#
+# Author contact information:
+#   drh@hwaci.com
+#   http://www.hwaci.com/drh/
+#
+#***********************************************************************
+# This file implements regression tests for SQLite library.  The
+# focus of this file is testing expressions.
+#
+# $Id$
+
+set testdir [file dirname $argv0]
+source $testdir/tester.tcl
+
+# Create a table to work with.
+#
+execsql {CREATE TABLE test1(i1 int, i2 int, r1 real, r2 real, t1 text, t2 text)}
+execsql {INSERT INTO test1 VALUES(1,2,1.1,2.2,'hello','world')}
+proc test_expr {name settings expr result} {
+  do_test $name [format {
+    execsql {UPDATE test1 SET %s}
+    execsql {SELECT %s FROM test1}
+  } $settings $expr] $result
+}
+
+test_expr expr-1.1 {i1=10, i2=20} {i1+i2} 30
+test_expr expr-1.2 {i1=10, i2=20} {i1-i2} -10
+test_expr expr-1.3 {i1=10, i2=20} {i1*i2} 200
+test_expr expr-1.4 {i1=10, i2=20} {i1/i2} 0.5
+test_expr expr-1.5 {i1=10, i2=20} {i2/i1} 2
+test_expr expr-1.6 {i1=10, i2=20} {i2<i1} 0
+test_expr expr-1.7 {i1=10, i2=20} {i2<=i1} 0
+test_expr expr-1.8 {i1=10, i2=20} {i2>i1} 1
+test_expr expr-1.9 {i1=10, i2=20} {i2>=i1} 1
+test_expr expr-1.10 {i1=10, i2=20} {i2!=i1} 1
+test_expr expr-1.11 {i1=10, i2=20} {i2=i1} 0
+test_expr expr-1.12 {i1=10, i2=20} {i2<>i1} 1
+test_expr expr-1.13 {i1=10, i2=20} {i2==i1} 0
+test_expr expr-1.14 {i1=20, i2=20} {i2<i1} 0
+test_expr expr-1.15 {i1=20, i2=20} {i2<=i1} 1
+test_expr expr-1.16 {i1=20, i2=20} {i2>i1} 0
+test_expr expr-1.17 {i1=20, i2=20} {i2>=i1} 1
+test_expr expr-1.18 {i1=20, i2=20} {i2!=i1} 0
+test_expr expr-1.19 {i1=20, i2=20} {i2=i1} 1
+test_expr expr-1.20 {i1=20, i2=20} {i2<>i1} 0
+test_expr expr-1.21 {i1=20, i2=20} {i2==i1} 1
+test_expr expr-1.22 {i1=1, i2=2, r1=3.0} {i1+i2*r1} {7}
+test_expr expr-1.23 {i1=1, i2=2, r1=3.0} {(i1+i2)*r1} {9}
+test_expr expr-1.24 {i1=1, i2=2} {min(i1,i2,i1+i2,i1-i2)} {-1}
+test_expr expr-1.25 {i1=1, i2=2} {max(i1,i2,i1+i2,i1-i2)} {3}
+test_expr expr-1.26 {i1=1, i2=2} {max(i1,i2,i1+i2,i1-i2)} {3}
+test_expr expr-1.27 {i1=1, i2=2} {i1==1 AND i2=2} {1}
+test_expr expr-1.28 {i1=1, i2=2} {i1=2 AND i2=1} {0}
+test_expr expr-1.29 {i1=1, i2=2} {i1=1 AND i2=1} {0}
+test_expr expr-1.30 {i1=1, i2=2} {i1=2 AND i2=2} {0}
+test_expr expr-1.31 {i1=1, i2=2} {i1==1 OR i2=2} {1}
+test_expr expr-1.32 {i1=1, i2=2} {i1=2 OR i2=1} {0}
+test_expr expr-1.33 {i1=1, i2=2} {i1=1 OR i2=1} {1}
+test_expr expr-1.34 {i1=1, i2=2} {i1=2 OR i2=2} {1}
+test_expr expr-1.35 {i1=1, i2=2} {i1-i2=-1} {1}
+test_expr expr-1.36 {i1=1, i2=0} {not i1} {0}
+test_expr expr-1.37 {i1=1, i2=NULL} {not i2} {1}
+test_expr expr-1.38 {i1=1} {-i1} {-1}
+test_expr expr-1.39 {i1=1} {+i1} {1}
+test_expr expr-1.40 {i1=1, i2=2} {+(i2+i1)} {3}
+test_expr expr-1.41 {i1=1, i2=2} {-(i2+i1)} {-3}
+
+test_expr expr-2.1 {r1=1.23, r2=2.34} {r1+r2} 3.57
+test_expr expr-2.2 {r1=1.23, r2=2.34} {r1-r2} -1.11
+test_expr expr-2.3 {r1=1.23, r2=2.34} {r1*r2} 2.8782
+test_expr expr-2.4 {r1=1.23, r2=2.34} {r1/r2} 0.525641025641026
+test_expr expr-2.5 {r1=1.23, r2=2.34} {r2/r1} 1.90243902439024
+test_expr expr-2.6 {r1=1.23, r2=2.34} {r2<r1} 0
+test_expr expr-2.7 {r1=1.23, r2=2.34} {r2<=r1} 0
+test_expr expr-2.8 {r1=1.23, r2=2.34} {r2>r1} 1
+test_expr expr-2.9 {r1=1.23, r2=2.34} {r2>=r1} 1
+test_expr expr-2.10 {r1=1.23, r2=2.34} {r2!=r1} 1
+test_expr expr-2.11 {r1=1.23, r2=2.34} {r2=r1} 0
+test_expr expr-2.12 {r1=1.23, r2=2.34} {r2<>r1} 1
+test_expr expr-2.13 {r1=1.23, r2=2.34} {r2==r1} 0
+test_expr expr-2.14 {r1=2.34, r2=2.34} {r2<r1} 0
+test_expr expr-2.15 {r1=2.34, r2=2.34} {r2<=r1} 1
+test_expr expr-2.16 {r1=2.34, r2=2.34} {r2>r1} 0
+test_expr expr-2.17 {r1=2.34, r2=2.34} {r2>=r1} 1
+test_expr expr-2.18 {r1=2.34, r2=2.34} {r2!=r1} 0
+test_expr expr-2.19 {r1=2.34, r2=2.34} {r2=r1} 1
+test_expr expr-2.20 {r1=2.34, r2=2.34} {r2<>r1} 0
+test_expr expr-2.21 {r1=2.34, r2=2.34} {r2==r1} 1
+test_expr expr-2.22 {r1=1.23, r2=2.34} {min(r1,r2,r1+r2,r1-r2)} {-1.11}
+test_expr expr-2.23 {r1=1.23, r2=2.34} {max(r1,r2,r1+r2,r1-r2)} {3.57}
+
+test_expr expr-3.1 {t1='abc', t2='xyz'} {t1<t2} 1
+test_expr expr-3.2 {t1='xyz', t2='abc'} {t1<t2} 0
+test_expr expr-3.3 {t1='abc', t2='abc'} {t1<t2} 0
+test_expr expr-3.4 {t1='abc', t2='xyz'} {t1<=t2} 1
+test_expr expr-3.5 {t1='xyz', t2='abc'} {t1<=t2} 0
+test_expr expr-3.6 {t1='abc', t2='abc'} {t1<=t2} 1
+test_expr expr-3.7 {t1='abc', t2='xyz'} {t1>t2} 0
+test_expr expr-3.8 {t1='xyz', t2='abc'} {t1>t2} 1
+test_expr expr-3.9 {t1='abc', t2='abc'} {t1>t2} 0
+test_expr expr-3.10 {t1='abc', t2='xyz'} {t1>=t2} 0
+test_expr expr-3.11 {t1='xyz', t2='abc'} {t1>=t2} 1
+test_expr expr-3.12 {t1='abc', t2='abc'} {t1>=t2} 1
+test_expr expr-3.13 {t1='abc', t2='xyz'} {t1=t2} 0
+test_expr expr-3.14 {t1='xyz', t2='abc'} {t1=t2} 0
+test_expr expr-3.15 {t1='abc', t2='abc'} {t1=t2} 1
+test_expr expr-3.16 {t1='abc', t2='xyz'} {t1==t2} 0
+test_expr expr-3.17 {t1='xyz', t2='abc'} {t1==t2} 0
+test_expr expr-3.18 {t1='abc', t2='abc'} {t1==t2} 1
+test_expr expr-3.19 {t1='abc', t2='xyz'} {t1<>t2} 1
+test_expr expr-3.20 {t1='xyz', t2='abc'} {t1<>t2} 1
+test_expr expr-3.21 {t1='abc', t2='abc'} {t1<>t2} 0
+test_expr expr-3.22 {t1='abc', t2='xyz'} {t1!=t2} 1
+test_expr expr-3.23 {t1='xyz', t2='abc'} {t1!=t2} 1
+test_expr expr-3.24 {t1='abc', t2='abc'} {t1!=t2} 0
+test_expr expr-3.25 {t1=NULL, t2='hi'} {t1 isnull} 1
+test_expr expr-3.26 {t1=NULL, t2='hi'} {t2 isnull} 0
+test_expr expr-3.27 {t1=NULL, t2='hi'} {t1 notnull} 0
+test_expr expr-3.28 {t1=NULL, t2='hi'} {t2 notnull} 1
+test_expr expr-3.29 {t1='xyz', t2='abc'} {t1||t2} {xyzabc}
+test_expr expr-3.30 {t1=NULL, t2='abc'} {t1||t2} {abc}
+test_expr expr-3.31 {t1='xyz', t2=NULL} {t1||t2} {xyz}
+test_expr expr-3.32 {t1='xyz', t2='abc'} {t1||' hi '||t2} {{xyz hi abc}}
+
+test_expr expr-4.1 {t1='abc', t2='Abc'} {t1<t2} 0
+test_expr expr-4.2 {t1='abc', t2='Abc'} {t1>t2} 1
+test_expr expr-4.3 {t1='abc', t2='Bbc'} {t1<t2} 1
+test_expr expr-4.4 {t1='abc', t2='Bbc'} {t1>t2} 0
+
+test_expr expr-5.1 {t1='abc', t2='xyz'} {t1 LIKE t2} 0
+test_expr expr-5.2 {t1='abc', t2='ABC'} {t1 LIKE t2} 1
+test_expr expr-5.3 {t1='abc', t2='A_C'} {t1 LIKE t2} 1
+test_expr expr-5.4 {t1='abc', t2='abc_'} {t1 LIKE t2} 0
+test_expr expr-5.5 {t1='abc', t2='A%C'} {t1 LIKE t2} 1
+test_expr expr-5.5b {t1='ac', t2='A%C'} {t1 LIKE t2} 1
+test_expr expr-5.6 {t1='abxyzzyc', t2='A%C'} {t1 LIKE t2} 1
+test_expr expr-5.7 {t1='abxyzzy', t2='A%C'} {t1 LIKE t2} 0
+test_expr expr-5.8 {t1='abxyzzycx', t2='A%C'} {t1 LIKE t2} 0
+test_expr expr-5.8b {t1='abxyzzycy', t2='A%CX'} {t1 LIKE t2} 0
+test_expr expr-5.9 {t1='abc', t2='A%_C'} {t1 LIKE t2} 1
+test_expr expr-5.9b {t1='ac', t2='A%_C'} {t1 LIKE t2} 0
+test_expr expr-5.10 {t1='abxyzzyc', t2='A%_C'} {t1 LIKE t2} 1
+test_expr expr-5.11 {t1='abc', t2='xyz'} {t1 NOT LIKE t2} 1
+test_expr expr-5.12 {t1='abc', t2='ABC'} {t1 NOT LIKE t2} 0
+
+# The following tests only work on versions of TCL that support
+# Unicode and SQLite configured for UTF-8 support.
+#
+if {"\u1234"!="u1234" && [sqlite -encoding]=="UTF-8"} {
+  test_expr expr-5.13 "t1='a\u0080c', t2='A_C'" {t1 LIKE t2} 1
+  test_expr expr-5.14 "t1='a\u07FFc', t2='A_C'" {t1 LIKE t2} 1
+  test_expr expr-5.15 "t1='a\u0800c', t2='A_C'" {t1 LIKE t2} 1
+  test_expr expr-5.16 "t1='a\uFFFFc', t2='A_C'" {t1 LIKE t2} 1
+  test_expr expr-5.17 "t1='a\u0080', t2='A__'" {t1 LIKE t2} 0
+  test_expr expr-5.18 "t1='a\u07FF', t2='A__'" {t1 LIKE t2} 0
+  test_expr expr-5.19 "t1='a\u0800', t2='A__'" {t1 LIKE t2} 0
+  test_expr expr-5.20 "t1='a\uFFFF', t2='A__'" {t1 LIKE t2} 0
+  test_expr expr-5.21 "t1='ax\uABCD', t2='A_\uABCD'" {t1 LIKE t2} 1
+  test_expr expr-5.22 "t1='ax\u1234', t2='A%\u1234'" {t1 LIKE t2} 1
+  test_expr expr-5.23 "t1='ax\uFEDC', t2='A_%'" {t1 LIKE t2} 1
+  test_expr expr-5.24 "t1='ax\uFEDCy\uFEDC', t2='A%\uFEDC'" {t1 LIKE t2} 1
+}
+
+# Theses tests are for when SQLite assumes iso8859 characters.
+#
+if {[sqlite -encoding]=="iso8859"} {
+  catch {encoding system iso8859-1}
+  test_expr expr-5.50 "t1='a\266c', t2='A_C'"  {t1 LIKE t2} 1
+  test_expr expr-5.51 "t1='a\347', t2='A_'"  {t1 LIKE t2} 1
+  test_expr expr-5.52 "t1='ax\351', t2='A_\351'"  {t1 LIKE t2} 1
+  test_expr expr-5.53 "t1='ax\241', t2='A_%'"  {t1 LIKE t2} 1
+}
+
+test_expr expr-6.1 {t1='abc', t2='xyz'} {t1 GLOB t2} 0
+test_expr expr-6.2 {t1='abc', t2='ABC'} {t1 GLOB t2} 0
+test_expr expr-6.3 {t1='abc', t2='A?C'} {t1 GLOB t2} 0
+test_expr expr-6.4 {t1='abc', t2='a?c'} {t1 GLOB t2} 1
+test_expr expr-6.5 {t1='abc', t2='abc?'} {t1 GLOB t2} 0
+test_expr expr-6.6 {t1='abc', t2='A*C'} {t1 GLOB t2} 0
+test_expr expr-6.7 {t1='abc', t2='a*c'} {t1 GLOB t2} 1
+test_expr expr-6.8 {t1='abxyzzyc', t2='a*c'} {t1 GLOB t2} 1
+test_expr expr-6.9 {t1='abxyzzy', t2='a*c'} {t1 GLOB t2} 0
+test_expr expr-6.10 {t1='abxyzzycx', t2='a*c'} {t1 GLOB t2} 0
+test_expr expr-6.11 {t1='abc', t2='xyz'} {t1 NOT GLOB t2} 1
+test_expr expr-6.12 {t1='abc', t2='abc'} {t1 NOT GLOB t2} 0
+test_expr expr-6.13 {t1='abc', t2='a[bx]c'} {t1 GLOB t2} 1
+test_expr expr-6.14 {t1='abc', t2='a[cx]c'} {t1 GLOB t2} 0
+test_expr expr-6.15 {t1='abc', t2='a[a-d]c'} {t1 GLOB t2} 1
+test_expr expr-6.16 {t1='abc', t2='a[^a-d]c'} {t1 GLOB t2} 0
+test_expr expr-6.17 {t1='abc', t2='a[A-Dc]c'} {t1 GLOB t2} 0
+test_expr expr-6.18 {t1='abc', t2='a[^A-Dc]c'} {t1 GLOB t2} 1
+test_expr expr-6.19 {t1='abc', t2='a[]b]c'} {t1 GLOB t2} 1
+test_expr expr-6.20 {t1='abc', t2='a[^]b]c'} {t1 GLOB t2} 0
+test_expr expr-6.21 {t1='abcdefg', t2='a*[de]g'} {t1 GLOB t2} 0
+test_expr expr-6.22 {t1='abcdefg', t2='a*[^de]g'} {t1 GLOB t2} 1
+test_expr expr-6.23 {t1='abcdefg', t2='a*?g'} {t1 GLOB t2} 1
+test_expr expr-6.24 {t1='ac', t2='a*c'} {t1 GLOB t2} 1
+test_expr expr-6.25 {t1='ac', t2='a*?c'} {t1 GLOB t2} 0
+
+# These tests only work on versions of TCL that support Unicode
+#
+if {"\u1234"!="u1234" && [sqlite -encoding]=="UTF-8"} {
+  test_expr expr-6.26 "t1='a\u0080c', t2='a?c'" {t1 GLOB t2} 1
+  test_expr expr-6.27 "t1='a\u07ffc', t2='a?c'" {t1 GLOB t2} 1
+  test_expr expr-6.28 "t1='a\u0800c', t2='a?c'" {t1 GLOB t2} 1
+  test_expr expr-6.29 "t1='a\uffffc', t2='a?c'" {t1 GLOB t2} 1
+  test_expr expr-6.30 "t1='a\u1234', t2='a?'" {t1 GLOB t2} 1
+  test_expr expr-6.31 "t1='a\u1234', t2='a??'" {t1 GLOB t2} 0
+  test_expr expr-6.32 "t1='ax\u1234', t2='a?\u1234'" {t1 GLOB t2} 1
+  test_expr expr-6.33 "t1='ax\u1234', t2='a*\u1234'" {t1 GLOB t2} 1
+  test_expr expr-6.34 "t1='ax\u1234y\u1234', t2='a*\u1234'" {t1 GLOB t2} 1
+  test_expr expr-6.35 "t1='a\u1234b', t2='a\[x\u1234y\]b'" {t1 GLOB t2} 1
+  test_expr expr-6.36 "t1='a\u1234b', t2='a\[\u1233-\u1235\]b'" {t1 GLOB t2} 1
+  test_expr expr-6.37 "t1='a\u1234b', t2='a\[\u1234-\u124f\]b'" {t1 GLOB t2} 1
+  test_expr expr-6.38 "t1='a\u1234b', t2='a\[\u1235-\u124f\]b'" {t1 GLOB t2} 0
+  test_expr expr-6.39 "t1='a\u1234b', t2='a\[a-\u1235\]b'" {t1 GLOB t2} 1
+  test_expr expr-6.40 "t1='a\u1234b', t2='a\[a-\u1234\]b'" {t1 GLOB t2} 1
+  test_expr expr-6.41 "t1='a\u1234b', t2='a\[a-\u1233\]b'" {t1 GLOB t2} 0
+}
+
+# Theses tests are for when SQLite assumes iso8859 characters.
+#
+if {[sqlite -encoding]=="iso8859"} {
+  catch {encoding system iso8859-1}
+  test_expr expr-6.50 "t1='a\266c', t2='a?c'" {t1 GLOB t2} 1
+  test_expr expr-6.51 "t1='a\266', t2='a?'" {t1 GLOB t2} 1
+  test_expr expr-6.52 "t1='a\266', t2='a??'" {t1 GLOB t2} 0
+  test_expr expr-6.53 "t1='ax\266', t2='a??'" {t1 GLOB t2} 1
+  test_expr expr-6.54 "t1='ax\266', t2='a?\266'" {t1 GLOB t2} 1
+  test_expr expr-6.55 "t1='ax\266y\266', t2='a*\266'" {t1 GLOB t2} 1
+  test_expr expr-6.56 "t1='a\266b', t2='a\[x\266y\]b'" {t1 GLOB t2} 1
+  test_expr expr-6.57 "t1='a\266b', t2='a\[\260-\270\]b'" {t1 GLOB t2} 1
+  test_expr expr-6.58 "t1='a\266b', t2='a\[\266-\270\]b'" {t1 GLOB t2} 1
+  test_expr expr-6.59 "t1='a\266b', t2='a\[\267-\270\]b'" {t1 GLOB t2} 0
+  test_expr expr-6.60 "t1='a\266b', t2='a\[x-\267\]b'" {t1 GLOB t2} 1
+  test_expr expr-6.61 "t1='a\266b', t2='a\[x-\266\]b'" {t1 GLOB t2} 1
+  test_expr expr-6.62 "t1='a\266b', t2='a\[x-\265\]b'" {t1 GLOB t2} 0
+}
+
+# The sqliteExprIfFalse and sqliteExprIfTrue routines are only
+# executed as part of a WHERE clause.  Create a table suitable
+# for testing these functions.
+#
+execsql {DROP TABLE test1}
+execsql {CREATE TABLE test1(a int, b int);}
+for {set i 1} {$i<=20} {incr i} {
+  execsql "INSERT INTO test1 VALUES($i,[expr {int(pow(2,$i))}])"
+}
+execsql "INSERT INTO test1 VALUES(NULL,0)"
+do_test expr-7.1 {
+  execsql {SELECT * FROM test1 ORDER BY a}
+} {{} 0 1 2 2 4 3 8 4 16 5 32 6 64 7 128 8 256 9 512 10 1024 11 2048 12 4096 13 8192 14 16384 15 32768 16 65536 17 131072 18 262144 19 524288 20 1048576}
+
+proc test_expr2 {name expr result} {
+  do_test $name [format {
+    execsql {SELECT a FROM test1 WHERE %s ORDER BY a}
+  } $expr] $result
+}
+
+test_expr2 expr-7.2  {a<10 AND a>8}                  {9}
+test_expr2 expr-7.3  {a<=10 AND a>=8}                {8 9 10}
+test_expr2 expr-7.4  {a>=8 AND a<=10}                {8 9 10}
+test_expr2 expr-7.5  {a>=20 OR a<=1}                 {{} 1 20}
+test_expr2 expr-7.6  {b!=4 AND a<=3}                 {{} 1 3}
+test_expr2 expr-7.7  {b==8 OR b==16 OR b==32}        {3 4 5}
+test_expr2 expr-7.8  {NOT b<>8 OR b==1024}           {3 10}
+test_expr2 expr-7.9  {b LIKE '10%'}                  {10 20}
+test_expr2 expr-7.10 {b LIKE '_4'}                   {6}
+test_expr2 expr-7.11 {a GLOB '1?'}            {10 11 12 13 14 15 16 17 18 19}
+test_expr2 expr-7.12 {b GLOB '1*4'}                  {10 14}
+test_expr2 expr-7.13 {b GLOB '*1[456]'}              {4}
+test_expr2 expr-7.14 {a ISNULL}                      {{}}
+test_expr2 expr-7.15 {a NOTNULL AND a<3}             {1 2}
+test_expr2 expr-7.16 {a AND a<3}                     {1 2}
+test_expr2 expr-7.17 {NOT a}                         {{}}
+test_expr2 expr-7.18 {a==11 OR (b>1000 AND b<2000)}  {10 11}
+test_expr2 expr-7.19 {a<=1 OR a>=20}                 {{} 1 20}
+test_expr2 expr-7.20 {a<1 OR a>20}                   {{}}
+test_expr2 expr-7.21 {a>19 OR a<1}                   {{} 20}
+test_expr2 expr-7.22 {a!=1 OR a=100} \
+                         {{} 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20}
+test_expr2 expr-7.23 {(a notnull AND a<4) OR a==8}   {1 2 3 8}
+test_expr2 expr-7.24 {a LIKE '2_' OR a==8}           {8 20}
+test_expr2 expr-7.25 {a GLOB '2?' OR a==8}           {8 20}
+test_expr2 expr-7.26 {a isnull OR a=8}               {{} 8}
+test_expr2 expr-7.27 {a notnull OR a=8} \
+                          {1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20}
+
+finish_test

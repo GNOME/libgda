@@ -1,0 +1,172 @@
+# Copyright (c) 1999, 2000 D. Richard Hipp
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public
+# License along with this library; if not, write to the
+# Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA  02111-1307, USA.
+#
+# Author contact information:
+#   drh@hwaci.com
+#   http://www.hwaci.com/drh/
+#
+#***********************************************************************
+# This file implements regression tests for SQLite library.  The
+# focus of this file is testing the INSERT statement.
+#
+# $Id$
+
+set testdir [file dirname $argv0]
+source $testdir/tester.tcl
+
+# Try to insert into a non-existant table.
+#
+do_test insert-1.1 {
+  set v [catch {execsql {INSERT INTO test1 VALUES(1,2,3)}} msg]
+  lappend v $msg
+} {1 {no such table: test1}}
+
+# Try to insert into sqlite_master
+#
+do_test insert-1.2 {
+  set v [catch {execsql {INSERT INTO sqlite_master VALUES(1,2,3,4)}} msg]
+  lappend v $msg
+} {1 {table sqlite_master may not be modified}}
+
+# Try to insert the wrong number of entries.
+#
+do_test insert-1.3 {
+  execsql {CREATE TABLE test1(one int, two int, three int)}
+  set v [catch {execsql {INSERT INTO test1 VALUES(1,2)}} msg]
+  lappend v $msg
+} {1 {table test1 has 3 columns but 2 values were supplied}}
+do_test insert-1.3b {
+  set v [catch {execsql {INSERT INTO test1 VALUES(1,2,3,4)}} msg]
+  lappend v $msg
+} {1 {table test1 has 3 columns but 4 values were supplied}}
+do_test insert-1.3c {
+  set v [catch {execsql {INSERT INTO test1(one,two) VALUES(1,2,3,4)}} msg]
+  lappend v $msg
+} {1 {4 values for 2 columns}}
+do_test insert-1.3d {
+  set v [catch {execsql {INSERT INTO test1(one,two) VALUES(1)}} msg]
+  lappend v $msg
+} {1 {1 values for 2 columns}}
+
+# Try to insert into a non-existant column of a table.
+#
+do_test insert-1.4 {
+  set v [catch {execsql {INSERT INTO test1(one,four) VALUES(1,2)}} msg]
+  lappend v $msg
+} {1 {table test1 has no column named four}}
+
+# Make sure the inserts actually happen
+#
+do_test insert-1.5 {
+  execsql {INSERT INTO test1 VALUES(1,2,3)}
+  execsql {SELECT * FROM test1}
+} {1 2 3}
+do_test insert-1.5b {
+  execsql {INSERT INTO test1 VALUES(4,5,6)}
+  execsql {SELECT * FROM test1 ORDER BY one}
+} {1 2 3 4 5 6}
+do_test insert-1.5c {
+  execsql {INSERT INTO test1 VALUES(7,8,9)}
+  execsql {SELECT * FROM test1 ORDER BY one}
+} {1 2 3 4 5 6 7 8 9}
+
+do_test insert-1.6 {
+  execsql {DELETE FROM test1}
+  execsql {INSERT INTO test1(one,two) VALUES(1,2)}
+  execsql {SELECT * FROM test1 ORDER BY one}
+} {1 2 {}}
+do_test insert-1.6b {
+  execsql {INSERT INTO test1(two,three) VALUES(5,6)}
+  execsql {SELECT * FROM test1 ORDER BY one}
+} {{} 5 6 1 2 {}}
+do_test insert-1.6c {
+  execsql {INSERT INTO test1(three,one) VALUES(7,8)}
+  execsql {SELECT * FROM test1 ORDER BY one}
+} {{} 5 6 1 2 {} 8 {} 7}
+
+# A table to use for testing default values
+#
+do_test insert-2.1 {
+  execsql {
+    CREATE TABLE test2(
+      f1 int default -111, 
+      f2 real default +4.32,
+      f3 int default +222,
+      f4 int default 7.89
+    )
+  }
+  execsql {SELECT * from test2}
+} {}
+do_test insert-2.2 {
+  execsql {INSERT INTO test2(f1,f3) VALUES(+10,-10)}
+  execsql {SELECT * FROM test2}
+} {10 4.32 -10 7.89}
+do_test insert-2.3 {
+  execsql {INSERT INTO test2(f2,f4) VALUES(1.23,-3.45)}
+  execsql {SELECT * FROM test2 WHERE f1==-111}
+} {-111 1.23 222 -3.45}
+do_test insert-2.4 {
+  execsql {INSERT INTO test2(f1,f2,f4) VALUES(77,+1.23,3.45)}
+  execsql {SELECT * FROM test2 WHERE f1==77}
+} {77 1.23 222 3.45}
+do_test insert-2.10 {
+  execsql {
+    DROP TABLE test2;
+    CREATE TABLE test2(
+      f1 int default 111, 
+      f2 real default -4.32,
+      f3 text default hi,
+      f4 text default 'abc-123',
+      f5 varchar(10)
+    )
+  }
+  execsql {SELECT * from test2}
+} {}
+do_test insert-2.11 {
+  execsql {INSERT INTO test2(f2,f4) VALUES(-2.22,'hi!')}
+  execsql {SELECT * FROM test2}
+} {111 -2.22 hi hi! {}}
+do_test insert-2.12 {
+  execsql {INSERT INTO test2(f1,f5) VALUES(1,'xyzzy')}
+  execsql {SELECT * FROM test2 ORDER BY f1}
+} {1 -4.32 hi abc-123 xyzzy 111 -2.22 hi hi! {}}
+
+# Do additional inserts with default values, but this time
+# on a table that has indices.  In particular we want to verify
+# that the correct default values are inserted into the indices.
+#
+do_test insert-3.1 {
+  execsql {
+    DELETE FROM test2;
+    CREATE INDEX index9 ON test2(f1,f2);
+    CREATE INDEX indext ON test2(f4,f5);
+    SELECT * from test2;
+  }
+} {}
+do_test insert-3.2 {
+  execsql {INSERT INTO test2(f2,f4) VALUES(-3.33,'hum')}
+  execsql {SELECT * FROM test2 WHERE f1=111 AND f2=-3.33}
+} {111 -3.33 hi hum {}}
+do_test insert-3.3 {
+  execsql {INSERT INTO test2(f1,f2,f5) VALUES(22,-4.44,'wham')}
+  execsql {SELECT * FROM test2 WHERE f1=111 AND f2=-3.33}
+} {111 -3.33 hi hum {}}
+do_test insert-3.4 {
+  execsql {SELECT * FROM test2 WHERE f1=22 AND f2=-4.44}
+} {22 -4.44 hi abc-123 wham}
+
+finish_test

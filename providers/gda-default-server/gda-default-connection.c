@@ -80,6 +80,10 @@ gda_default_connection_open (GdaServerConnection *cnc,
 							 const gchar *user,
 							 const gchar *password)
 {
+	g_return_val_if_fail(cnc != NULL, -1);
+	g_return_val_if_fail(dsn != NULL, -1);
+
+	return -1;
 }
 
 void
@@ -122,9 +126,9 @@ gda_default_connection_open_schema (GdaServerConnection *cnc,
 
 glong
 gda_default_connection_modify_schema (GdaServerConnection *cnc,
-                                    GDA_Connection_QType t,
-                                    GDA_Connection_Constraint *constraints,
-                                    gint length)
+									  GDA_Connection_QType t,
+									  GDA_Connection_Constraint *constraints,
+									  gint length)
 {
 	return -1;
 }

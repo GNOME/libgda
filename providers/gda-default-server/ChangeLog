@@ -1,5 +1,10 @@
 2001-04-28  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* imported libsqlite (http://www.hwaci.com/sw/sqlite/) into
+	our source tree, until it is oficially released
+
+2001-04-28  Rodrigo Moya <rodrigo@gnome-db.org>
+
 	* started gda-default-server, which will be a server *always*
 	installed with libgda, so that users don't have to worry about
 	setting up a RDBMS to use GNOME-DB/libgda
