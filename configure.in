@@ -500,7 +500,7 @@ AM_CONDITIONAL(MAIL, test x$cameldir != x)
 dnl
 dnl Translations
 dnl
-ALL_LINGUAS="es gl ja sv"
+ALL_LINGUAS="es gl ja nl sv"
 
 AM_GNOME_GETTEXT
 
