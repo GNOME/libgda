@@ -22,6 +22,12 @@
  */
 
 // $Log$
+// Revision 1.5  2000/11/21 19:57:13  holger
+// 2000-11-21 Holger Thon <holger@gidayu.max.uni-duisburg.de>
+//
+// 	- Fixed missing parameter in gda-sybase-server
+// 	- Removed ct_diag/cs_diag stuff completly from tds server
+//
 // Revision 1.4  2000/10/06 19:24:45  menthos
 // Added Swedish entry to configure.in and changed some C++-style comments causing problems to
 // C-style.
@@ -980,7 +986,7 @@ gda_sybase_connection_select_database(Gda_ServerConnection *cnc,
     return CS_SUCCEED;
   }
   
-  gda_log_error(_("%s: use command failed"));
+  gda_log_error(_("%s: use command failed"), __PRETTY_FUNCTION__);
   return CS_FAIL;
 }
 

@@ -22,6 +22,12 @@
  */
 
 // $Log$
+// Revision 1.2  2000/11/21 19:57:14  holger
+// 2000-11-21 Holger Thon <holger@gidayu.max.uni-duisburg.de>
+//
+// 	- Fixed missing parameter in gda-sybase-server
+// 	- Removed ct_diag/cs_diag stuff completly from tds server
+//
 // Revision 1.1  2000/11/04 23:42:17  holger
 // 2000-11-05  Holger Thon <gnome-dms@users.sourceforge.net>
 //
@@ -33,11 +39,11 @@
 
 //  callback handlers
 static CS_RETCODE CS_PUBLIC
-gda_tds_servermsg_callback(CS_CONTEXT *, CS_CONNECTION *, CS_SERVERMSG *);
+  gda_tds_servermsg_callback(CS_CONTEXT *, CS_CONNECTION *, CS_SERVERMSG *);
 static CS_RETCODE CS_PUBLIC
-gda_tds_clientmsg_callback(CS_CONTEXT *, CS_CONNECTION *, CS_CLIENTMSG *);
+  gda_tds_clientmsg_callback(CS_CONTEXT *, CS_CONNECTION *, CS_CLIENTMSG *);
 static CS_RETCODE CS_PUBLIC
-gda_tds_csmsg_callback(CS_CONTEXT *, CS_CLIENTMSG *);
+  gda_tds_csmsg_callback(CS_CONTEXT *, CS_CLIENTMSG *);
 
 
 Gda_ServerConnection *
@@ -112,350 +118,6 @@ gda_tds_error_make(Gda_ServerError *error,
   gda_server_error_set_help_context(error, _("Not available"));
   gda_server_error_set_sqlstate(error, _("error"));
   gda_server_error_set_native(error, gda_server_error_get_description(error));
-}
-
-/*
-gboolean
-gda_tds_messages_install(Gda_ServerConnection *cnc)
-{
-  tds_Connection *scnc = NULL;
-  
-  g_return_val_if_fail(cnc != NULL, FALSE);
-  scnc = (tds_Connection *) gda_server_connection_get_user_data(cnc);
-  g_return_val_if_fail(scnc != NULL, FALSE);
-  
-  if ((scnc->ctx) && ((scnc->ret = cs_diag(scnc->ctx, CS_INIT, CS_UNUSED,
-                                           CS_UNUSED, NULL)) == CS_SUCCEED)) {
-    scnc->cs_diag = TRUE;
-#ifdef TDS_DEBUG
-    gda_log_message(_("cs_diag() initialized"));
-#endif
-  } else {
-    gda_log_error(_("Could not initialize cs_diag()"));
-  }
-  
-  if ((scnc->cnc) && ((scnc->ret = ct_diag(scnc->cnc, CS_INIT, CS_UNUSED,
-                                           CS_UNUSED, NULL)) == CS_SUCCEED)) {
-    scnc->ct_diag = TRUE;
-#ifdef TDS_DEBUG
-    gda_log_message(_("ct_diag() initialized"));
-#endif
-  } else {
-    gda_log_error(_("Could not initialize ct_diag()"));
-  }
-  
-  // Succeeding means both succeed
-  return ((scnc->cs_diag == TRUE) && (scnc->ct_diag == TRUE)) ? TRUE : FALSE;
-}
-
-void
-gda_tds_messages_uninstall(Gda_ServerConnection *cnc)
-{
-  // Seems the diag info is dropped with the context/connection structure
-}
-*/
-
-void
-tds_chkerr(Gda_ServerError      *error,
-           Gda_ServerRecordset  *recset,
-           Gda_ServerConnection *_cnc,
-           Gda_ServerCommand    *_cmd,
-           gchar                *where)
-{/* remove tds_chkerr from code and rely on automatic error handling
-  Gda_ServerConnection *cnc = NULL;
-  Gda_ServerCommand    *cmd = NULL;
-  tds_Connection    *scnc = NULL;
-  tds_Command       *scmd = NULL;
-  tds_Recordset     *srecset = NULL;
-  CS_RETCODE           ret = CS_SUCCEED;
-  CS_INT               messages = 0;
-  
-  if (_cnc) {
-    cnc = _cnc;
-  } else if (recset) {
-    cnc = gda_server_recordset_get_connection(recset);
-    srecset = gda_server_recordset_get_user_data(recset);
-  } else {
-    gda_log_error(_("%s could not find server implementation"),
-                  __PRETTY_FUNCTION__);
-    return;
-  }
-  scnc = (tds_Connection *) gda_server_connection_get_user_data(cnc);
-  if (scnc == NULL) {
-    gda_log_error(_("%s could not get cnc userdata"),
-                  __PRETTY_FUNCTION__);
-    return;
-  }
-  if (_cmd) {
-    cmd = _cmd;
-  }
-  
-  if ((scnc->ct_diag == TRUE) && (scnc->cnc)) {
-    ret = ct_diag(scnc->cnc, CS_STATUS, CS_ALLMSG_TYPE, CS_UNUSED,
-                  &messages);
-    if (ret != CS_SUCCEED) {
-      gda_log_error(_("Could not get # of messages"));
-      return;
-    } else if (messages > 0) {
-#ifdef TDS_DEBUG
-      if (messages > 1) {
-        gda_log_message(_("%d ctlib messages to fetch"), messages);
-      } else {
-        gda_log_message(_("%d ctlib message to fetch"), messages);
-      }
-#endif
-      gda_tds_messages_handle_clientmsg(error, recset, cnc, where);
-      gda_tds_messages_handle_servermsg(error, recset, cnc, where);
-    }
-  }
-  if ((scnc->cs_diag == TRUE) && (scnc->ctx)) {
-    gda_tds_messages_handle_csmsg(error, recset, cnc, where);
-  }
-  
-  // Make sure err_type is set correct again
-  scnc->serr.err_type = TDS_ERR_NONE;
-*/
-}
-
-CS_RETCODE
-tds_exec_chk(CS_RETCODE *retvar,
-                CS_RETCODE retval,
-                Gda_ServerError *err,
-                Gda_ServerRecordset *rec,
-                Gda_ServerConnection *cnc,
-                Gda_ServerCommand *cmd,
-                gchar *where)
-{
-  tds_chkerr(err, rec, cnc, cmd, where);
-  
-  return ((retvar) ? (*retvar = retval) : retval);
-}
-
-void
-gda_tds_messages_handle(Gda_ServerError      *error,
-                        Gda_ServerRecordset  *recset,
-                        Gda_ServerConnection *cnc,
-                        gchar                *where)
-{
-  if (error == NULL) {
-    gda_log_error(_("error is nullpointer in gda_tds_messages_handle"));
-    return;
-  }
-  tds_chkerr(error, recset, cnc, NULL, where);
-}
-
-void
-gda_tds_messages_handle_clientmsg(Gda_ServerError      *error,
-                                     Gda_ServerRecordset  *recset,
-                                     Gda_ServerConnection *cnc,
-                                     gchar                *where)
-{
-/*
-  tds_Connection *scnc = NULL;
-  CS_RETCODE        ret = CS_SUCCEED;
-  CS_INT            msgcnt = 0;
-  CS_INT            msgcur = 0;
-  
-  g_return_if_fail(cnc != NULL);
-  scnc = (tds_Connection *) gda_server_connection_get_user_data(cnc);
-  g_return_if_fail(scnc != NULL);
-  g_return_if_fail(scnc->ct_diag != FALSE);
-  
-  ret = ct_diag(scnc->cnc, CS_STATUS, CS_CLIENTMSG_TYPE, CS_UNUSED,
-                &msgcnt);
-  if (ret != CS_SUCCEED) {
-    gda_log_error(_("Could not get # of server messages"));
-    return;
-  }
-  if (msgcnt == 0) {
-    return;
-  }
-#ifdef TDS_DEBUG
-  if (msgcnt > 1) {
-    gda_log_message(_("Fetching %d client messages"), msgcnt);
-  } else {
-    gda_log_message(_("Fetching %d client message"), msgcnt);
-  }
-#endif
-  while (msgcur < msgcnt) {
-    msgcur++;
-    
-    ret = ct_diag(scnc->cnc, CS_GET, CS_CLIENTMSG_TYPE, msgcur, 
-                  &scnc->serr.client_msg);
-    if (ret != CS_SUCCEED) {
-      gda_log_error(_("Could not get client msg # %d"), msgcur);
-      return;
-    }
-    
-    scnc->serr.err_type = TDS_ERR_CLIENT;
-//    if (!error) {
-      gda_tds_log_clientmsg("Client Message:", &scnc->serr.client_msg);
-//    } else {
-//      gda_server_error_make(error, recset, cnc, where);
-//    }
-    
-    // Check if any new message came in
-    if (msgcur == msgcnt) {
-      ret = ct_diag(scnc->cnc, CS_STATUS, CS_CLIENTMSG_TYPE,
-                    CS_UNUSED, &msgcnt);
-      if (ret != CS_SUCCEED) {
-        gda_log_error(_("Could not get # of client messages"));
-        return;
-      }
-    }
-  }
-  ret = ct_diag(scnc->cnc, CS_CLEAR, CS_CLIENTMSG_TYPE,
-                CS_UNUSED, &scnc->serr.client_msg);
-  if (ret != CS_SUCCEED) {
-    gda_log_error(_("Could not clear client messages"));
-  }
-*/
-}
-
-void
-gda_tds_messages_handle_servermsg(Gda_ServerError      *error,
-                                     Gda_ServerRecordset  *recset,
-                                     Gda_ServerConnection *cnc,
-                                     gchar                *where)
-{
-/*
-  Gda_ServerError   *serverr = error;
-  tds_Connection *scnc = NULL;
-  CS_RETCODE         ret = CS_SUCCEED;
-  CS_INT             msgcur = 0;
-  CS_INT             msgcnt = 0;
-  
-  g_return_if_fail(cnc != NULL);
-  scnc = (tds_Connection *) gda_server_connection_get_user_data(cnc);
-  g_return_if_fail(scnc != NULL);
-  g_return_if_fail(scnc->ct_diag != FALSE);
-  
-  ret = ct_diag(scnc->cnc, CS_STATUS, CS_SERVERMSG_TYPE, CS_UNUSED,
-                &msgcnt);
-  if (ret != CS_SUCCEED) {
-    gda_log_error(_("Could not get # of server messages"));
-    return;
-  }
-  if (msgcnt == 0) {
-    return;
-  }
-#ifdef TDS_DEBUG
-  if (msgcnt > 1) {
-    gda_log_message(_("Fetching %d server messages"), msgcnt);
-  } else {
-    gda_log_message(_("Fetching %d server message"), msgcnt);
-  }
-#endif
-  while (msgcur < msgcnt) {
-    msgcur++;
-    
-    ret = ct_diag(scnc->cnc, CS_GET, CS_SERVERMSG_TYPE, msgcur, 
-                  &scnc->serr.server_msg);
-    if (ret != CS_SUCCEED) {
-      gda_log_error(_("Could not get server msg # %d"), msgcur);
-      return;
-    }
-    
-    scnc->serr.err_type = TDS_ERR_SERVER;
-//    if (!error) {
-      gda_tds_log_servermsg("Server Message:", &scnc->serr.server_msg);
-//    } else {
-//      if (!serverr) {
-//        serverr = gda_server_error_new();
-//      }
-//      if (serverr) {
-//        gda_server_error_make(serverr, recset, cnc, where);
-//      }
-//    }
-    
-    // Check if current message has any extra error data
-    if (scnc->serr.server_msg.status & CS_HASEED) {
-    }
-    
-    // Check if any new message came in
-    if (msgcur == msgcnt) {
-      ret = ct_diag(scnc->cnc, CS_STATUS, CS_SERVERMSG_TYPE,
-                    CS_UNUSED, &msgcnt);
-      if (ret != CS_SUCCEED) {
-        gda_log_error(_("Could not get # of server messages"));
-        return;
-      }
-    }
-  }
-  ret = ct_diag(scnc->cnc, CS_CLEAR, CS_SERVERMSG_TYPE,
-                CS_UNUSED, &scnc->serr.server_msg);
-  if (ret != CS_SUCCEED) {
-    gda_log_error(_("Could not clear server messages"));
-  }
-*/
-}
-
-void
-gda_tds_messages_handle_csmsg(Gda_ServerError      *error,
-                                 Gda_ServerRecordset  *recset,
-                                 Gda_ServerConnection *cnc,
-                                 gchar                *where)
-{
-/*
-  tds_Connection *scnc = NULL;
-  CS_RETCODE        ret = CS_SUCCEED;
-  CS_INT            msgcnt = 0;
-  CS_INT            msgcur = 0;
-  
-  g_return_if_fail(cnc != NULL);
-  scnc = (tds_Connection *) gda_server_connection_get_user_data(cnc);
-  g_return_if_fail(scnc != NULL);
-  ret = cs_diag(scnc->ctx, CS_STATUS, CS_CLIENTMSG_TYPE, CS_UNUSED,
-                &msgcnt);
-  
-  if (ret != CS_SUCCEED) {
-    gda_log_error(_("Could not get # of cslib messages"));
-    return;
-  }
-  if (msgcnt == 0) {
-    return;
-  }
-#ifdef TDS_DEBUG
-  if (msgcnt > 1) {
-    gda_log_message(_("Fetching %d cslib messages"), msgcnt);
-  } else {
-    gda_log_message(_("Fetchong %d cslib message"), msgcnt);
-  } 
-#endif
-
-  while (msgcur < msgcnt) {
-    msgcur++;
-
-    ret = cs_diag(scnc->ctx, CS_GET, CS_CLIENTMSG_TYPE, msgcur, 
-                  &scnc->serr.cslib_msg);
-    if (ret != CS_SUCCEED) {
-      gda_log_error(_("Could not get cslib msg # %d"), msgcur);
-      return;
-    }
-    
-    scnc->serr.err_type = TDS_ERR_CSLIB;
-//  if (!error) {
-      gda_tds_log_clientmsg("CS-Library message:", &scnc->serr.cslib_msg);
-//  } else {
-//    gda_server_error_make(error, recset, cnc, where);
-//  }
-    
-    // Check if any new message came in
-    if (msgcur == msgcnt) {
-      ret = cs_diag(scnc->ctx, CS_STATUS, CS_CLIENTMSG_TYPE,
-                    CS_UNUSED, &msgcnt);
-      if (ret != CS_SUCCEED) {
-        gda_log_error(_("Could not get # of cslib messages"));
-        return;
-      }
-    }
-  }
-  ret = cs_diag(scnc->ctx, CS_CLEAR, CS_CLIENTMSG_TYPE,
-                CS_UNUSED, &scnc->serr.cslib_msg);
-  if (ret != CS_SUCCEED) {
-    gda_log_error(_("Could not clear cslib messages"));
-  }
-*/
 }
 
 gchar *
@@ -572,7 +234,7 @@ gda_tds_log_servermsg(const gchar *head, CS_SERVERMSG *msg)
 
 Gda_ServerConnection *
 gda_tds_callback_get_connection(const CS_CONTEXT *ctx,
-                                   const CS_CONNECTION *cnc)
+                                const CS_CONNECTION *cnc)
 {
 //  GList *server_list = gda_server_list();
   

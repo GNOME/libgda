@@ -48,50 +48,6 @@ void gda_tds_error_make (Gda_ServerError *error,
 
 void     gda_tds_cleanup(tds_Connection *, CS_RETCODE, const gchar *);
 
-gboolean gda_tds_messages_install(Gda_ServerConnection *);
-void     gda_tds_messages_uninstall(Gda_ServerConnection *);
-
-void     tds_chkerr(Gda_ServerError      *,
-                       Gda_ServerRecordset  *,
-                       Gda_ServerConnection *,
-                       Gda_ServerCommand    *,
-                       gchar                *);
-CS_RETCODE tds_exec_chk(CS_RETCODE *,
-                           CS_RETCODE,
-                           Gda_ServerError *,
-                           Gda_ServerRecordset *,
-                           Gda_ServerConnection *,
-                           Gda_ServerCommand *,
-                           gchar *);
-
-#ifdef TDS_DEBUG
-#define TDS_CHK(retptr, retcode, err, rec, cnc, cmd) \
-     tds_exec_chk(retptr, retcode, err, rec, cnc, cmd, \
-                  g_strdup_printf("%s at line %d (%s): ", __FILE__, __LINE__, \
-                  __PRETTY_FUNCTION__))
-#else
-#define TDS_CHK(retptr, retcode, err, rec, cnc, cmd) \
-     tds_exec_chk(retptr, retcode, err, rec, cnc, cmd, \
-                  __PRETTY_FUNCTION__)
-#endif
-
-void     gda_tds_messages_handle(Gda_ServerError *,
-                                    Gda_ServerRecordset *,
-                                    Gda_ServerConnection *,
-                                    gchar *where);
-void     gda_tds_messages_handle_clientmsg(Gda_ServerError *,
-                                              Gda_ServerRecordset *,
-                                              Gda_ServerConnection *,
-                                              gchar *where);
-void     gda_tds_messages_handle_servermsg(Gda_ServerError *,
-                                              Gda_ServerRecordset *,
-                                              Gda_ServerConnection *,
-                                              gchar *where);
-void     gda_tds_messages_handle_csmsg(Gda_ServerError *,
-                                          Gda_ServerRecordset *,
-                                          Gda_ServerConnection *,
-                                          gchar *where);
-
 // Don't forget to FREE the results :-)
 gchar *g_sprintf_clientmsg(const gchar*, CS_CLIENTMSG *);
 gchar *g_sprintf_servermsg(const gchar*, CS_SERVERMSG *);

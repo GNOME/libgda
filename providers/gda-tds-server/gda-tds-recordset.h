@@ -47,8 +47,8 @@ typedef struct _tds_Field {
 typedef struct _tds_Recordset {
   Gda_ServerConnection *cnc;
   Gda_ServerCommand    *cmd;
-  tds_Connection *scnc;
-  tds_Command    *scmd;
+  tds_Connection *tcnc;
+  tds_Command    *tcmd;
 	
   CS_RETCODE   ret;
   CS_RETCODE   result_type;
@@ -66,15 +66,15 @@ gint     gda_tds_recordset_close     (Gda_ServerRecordset *);
 void     gda_tds_recordset_free      (Gda_ServerRecordset *);
 
 void     gda_tds_init_recset_fields (Gda_ServerError *,
-                                        Gda_ServerRecordset *,
-                                        tds_Recordset *,
-                                        CS_RETCODE);
+                                     Gda_ServerRecordset *,
+                                     tds_Recordset *,
+                                     CS_RETCODE);
 
 void gda_tds_field_fill_values(Gda_ServerRecordset *,
-                                  tds_Recordset *);
+                               tds_Recordset *);
 gint gda_tds_row_result(gboolean forward,
-                           Gda_ServerRecordset *,
-                           tds_Recordset *,
-                           CS_COMMAND *);
+                        Gda_ServerRecordset *,
+                        tds_Recordset *,
+                        CS_COMMAND *);
 
 #endif
