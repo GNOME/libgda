@@ -177,6 +177,33 @@ gda_xml_document_destroy (GtkObject * object)
 /*   return xmldocument; */
 /* } */
 
+/**
+ * gda_xml_document_get_compress_mode
+ * @xmldoc: a #GdaXmlDocument object
+ *
+ * Returns the compression mode being used by the given
+ * XML document
+ */
+gint
+gda_xml_document_get_compress_mode (GdaXmlDocument *xmldoc)
+{
+	g_return_val_if_fail (GDA_IS_XML_DOCUMENT (xmldoc), -1);
+	return xmlGetDocCompressMode (xmldoc->doc);
+}
+
+/**
+ * gda_xml_document_set_compress_mode
+ */
+void
+gda_xml_document_set_compress_mode (GdaXmlDocument *xmldoc, gint mode)
+{
+	g_return_if_fail (GDA_IS_XML_DOCUMENT (xmldoc));
+	xmlSetDocCompressMode (xmldoc->doc, mode);
+}
+
+/**
+ * gda_xml_document_stringify
+ */
 gchar *
 gda_xml_document_stringify (GdaXmlDocument * xmldoc)
 {
@@ -189,6 +216,9 @@ gda_xml_document_stringify (GdaXmlDocument * xmldoc)
 	return str;
 }
 
+/**
+ * gda_xml_document_to_file
+ */
 gint
 gda_xml_document_to_file (GdaXmlDocument * xmldoc, const gchar * filename)
 {
