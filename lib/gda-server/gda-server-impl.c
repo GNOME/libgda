@@ -54,7 +54,8 @@ static GList* server_list = NULL;
  */
 #ifdef HAVE_GOBJECT
 static void
-gda_server_impl_class_init (GdaServerImplClass *klass, gpointer data) {
+gda_server_impl_class_init (GdaServerImplClass *klass, gpointer data)
+{
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 	
 	object_class->finalize = &gda_server_impl_finalize;
@@ -62,7 +63,8 @@ gda_server_impl_class_init (GdaServerImplClass *klass, gpointer data) {
 }
 #else
 static void
-gda_server_impl_class_init (GdaServerImplClass *klass) {
+gda_server_impl_class_init (GdaServerImplClass *klass)
+{
 	GtkObjectClass* object_class = (GtkObjectClass *) klass;
 	
 	object_class->destroy = gda_server_impl_destroy;
@@ -71,11 +73,12 @@ gda_server_impl_class_init (GdaServerImplClass *klass) {
 
 #ifdef HAVE_GOBJECT
 static void
-gda_server_impl_init (GdaServerImpl *server_impl, GdaServerImplClass *klass) {
+gda_server_impl_init (GdaServerImpl *server_impl, GdaServerImplClass *klass)
 #else
 static void
-gda_server_impl_init (GdaServerImpl *server_impl) {
+gda_server_impl_init (GdaServerImpl *server_impl)
 #endif
+{
 	g_return_if_fail(IS_GDA_SERVER_IMPL(server_impl));
 	
 	server_impl->name = NULL;
@@ -84,7 +87,8 @@ gda_server_impl_init (GdaServerImpl *server_impl) {
 
 #ifdef HAVE_GOBJECT
 static void
-gda_server_impl_finalize (GObject *object) {
+gda_server_impl_finalize (GObject *object)
+{
 	GdaServerImpl *server_impl = GDA_SERVER_IMPL (object);
 	GdaServerImplClass *klass =
 		G_TYPE_INSTANCE_GET_CLASS (object, GDA_SERVER_IMPL_CLASS, GdaServerImplClass);
@@ -96,7 +100,8 @@ gda_server_impl_finalize (GObject *object) {
 }
 #else
 static void
-gda_server_impl_destroy (GdaServerImpl *server_impl) {
+gda_server_impl_destroy (GdaServerImpl *server_impl)
+{
 	g_return_if_fail(IS_GDA_SERVER_IMPL(server_impl));
 	
 	server_list = g_list_remove(server_list, (gpointer) server_impl);
@@ -106,7 +111,8 @@ gda_server_impl_destroy (GdaServerImpl *server_impl) {
 
 #ifdef HAVE_GOBJECT
 GType
-gda_server_impl_get_type (void) {
+gda_server_impl_get_type (void)
+{
 	static GType type = 0;
 	
 	if (!type) {
@@ -128,7 +134,8 @@ gda_server_impl_get_type (void) {
 }
 #else
 GtkType
-gda_server_impl_get_type (void) {
+gda_server_impl_get_type (void)
+{
 	static guint type = 0;
 	
 	if (!type) {
@@ -159,12 +166,14 @@ gda_server_impl_get_type (void) {
  * #gda_server_impl_start
  */
 GdaServerImpl *
-gda_server_impl_new (const gchar *name, GdaServerImplFunctions *functions) {
-	GdaServerImpl*        server_impl;
-	PortableServer_POA     root_poa;
-	CORBA_char*            objref;
-	CORBA_ORB              orb;
+gda_server_impl_new (const gchar *name, GdaServerImplFunctions *functions)
+{
+	GdaServerImpl *server_impl;
+	PortableServer_POA root_poa;
+	CORBA_char *objref;
+	CORBA_ORB orb;
 	OAF_RegistrationResult result;
+	PortableServer_POAManager pm;
 	
 	g_return_val_if_fail(name != NULL, NULL);
 	
@@ -222,6 +231,12 @@ gda_server_impl_new (const gchar *name, GdaServerImplFunctions *functions) {
 		exit(-1);
 	}
 	gda_log_message(_("Registered with ID = %s"), objref);
+
+	/* activate the POA manager */
+	pm = PortableServer_POA__get_the_POAManager(server_impl->root_poa, server_impl->ev);
+	gda_server_impl_exception(server_impl->ev);
+	PortableServer_POAManager_activate(pm, server_impl->ev);
+	gda_server_impl_exception(server_impl->ev);
 	
 	server_list = g_list_append(server_list, (gpointer) server_impl);
 	return server_impl;
@@ -235,7 +250,8 @@ gda_server_impl_new (const gchar *name, GdaServerImplFunctions *functions) {
  * identification
  */
 GdaServerImpl *
-gda_server_impl_find (const gchar *id) {
+gda_server_impl_find (const gchar *id)
+{
 	GList* node;
 	
 	g_return_val_if_fail(id != NULL, NULL);
@@ -257,16 +273,10 @@ gda_server_impl_find (const gchar *id) {
  * Starts the given GDA provider
  */
 void
-gda_server_impl_start (GdaServerImpl *server_impl) {
-	PortableServer_POAManager pm;
-	
+gda_server_impl_start (GdaServerImpl *server_impl)
+{
 	g_return_if_fail(server_impl != NULL);
 	g_return_if_fail(server_impl->is_running == FALSE);
-	
-	pm = PortableServer_POA__get_the_POAManager(server_impl->root_poa, server_impl->ev);
-	gda_server_impl_exception(server_impl->ev);
-	PortableServer_POAManager_activate(pm, server_impl->ev);
-	gda_server_impl_exception(server_impl->ev);
 	
 	server_impl->is_running = TRUE;
 	CORBA_ORB_run(oaf_orb_get(), server_impl->ev);
@@ -279,7 +289,8 @@ gda_server_impl_start (GdaServerImpl *server_impl) {
  * Stops the given server implementation
  */
 void
-gda_server_impl_stop (GdaServerImpl *server_impl) {
+gda_server_impl_stop (GdaServerImpl *server_impl)
+{
 	g_return_if_fail(IS_GDA_SERVER_IMPL(server_impl));
 	g_return_if_fail(server_impl->is_running);
 	
@@ -292,7 +303,8 @@ gda_server_impl_stop (GdaServerImpl *server_impl) {
  * Convenience functions
  */
 gint
-gda_server_impl_exception (CORBA_Environment *ev) {
+gda_server_impl_exception (CORBA_Environment *ev)
+{
 	g_return_val_if_fail(ev != NULL, -1);
 	
 	switch (ev->_major) {
@@ -309,7 +321,8 @@ gda_server_impl_exception (CORBA_Environment *ev) {
 }
 
 GDA_Error *
-gda_server_impl_make_error_buffer (GdaServerConnection *cnc) {
+gda_server_impl_make_error_buffer (GdaServerConnection *cnc)
+{
 	gint       idx;
 	GList*     ptr;
 	GDA_Error* rc;

@@ -39,6 +39,8 @@ static POA_GNOME_ObjectFactory__epv impl_GDA_ConnectionFactory_GNOME_ObjectFacto
 	NULL,                        /* _private */
 	(gpointer) & impl_GDA_ConnectionFactory_manufactures,
 	(gpointer) & impl_GDA_ConnectionFactory_create_object,
+	(gpointer) & impl_GDA_ConnectionFactory_ref,
+	(gpointer) & impl_GDA_ConnectionFactory_unref,
 };
 
 /*
@@ -94,9 +96,12 @@ impl_GDA_ConnectionFactory_create_connection (impl_POA_GDA_ConnectionFactory * s
 	
 	new_connection = impl_GDA_Connection__create(servant->poa, goad_id, ev);
 	if (gda_server_impl_exception(ev)) {
+		gda_log_error("There was an error when creating a connection object");
 		CORBA_Object_release(new_connection, ev);
 		return CORBA_OBJECT_NIL;
 	}
+
+	gda_log_message("Connection object %p created", new_connection);
 	return new_connection;
 }
 
@@ -105,7 +110,7 @@ impl_GDA_ConnectionFactory_manufactures (impl_POA_GDA_ConnectionFactory *servant
                                          CORBA_char *obj_id,
                                          CORBA_Environment *ev)
 {
-	return FALSE;
+	return TRUE;
 }
 
 CORBA_Object
@@ -116,3 +121,16 @@ impl_GDA_ConnectionFactory_create_object (impl_POA_GDA_ConnectionFactory * serva
 {
 	return impl_GDA_ConnectionFactory_create_connection(servant, goad_id, ev);
 }
+
+void
+impl_GDA_ConnectionFactory_ref (impl_POA_GDA_ConnectionFactory *servant,
+								CORBA_Environment *ev)
+{
+}
+
+void
+impl_GDA_ConnectionFactory_unref (impl_POA_GDA_ConnectionFactory *servant,
+								  CORBA_Environment *ev)
+{
+}
+

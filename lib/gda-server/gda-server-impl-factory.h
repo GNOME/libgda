@@ -47,6 +47,10 @@ CORBA_Object impl_GDA_ConnectionFactory_create_object (impl_POA_GDA_ConnectionFa
                                                        CORBA_char *goad_id,
                                                        GNOME_stringlist *params,
                                                        CORBA_Environment *ev);
+void impl_GDA_ConnectionFactory_ref (impl_POA_GDA_ConnectionFactory *servant,
+									 CORBA_Environment *ev);
+void impl_GDA_ConnectionFactory_unref (impl_POA_GDA_ConnectionFactory *servant,
+									   CORBA_Environment *ev);
 
 #endif
 

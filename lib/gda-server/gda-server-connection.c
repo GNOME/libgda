@@ -375,6 +375,8 @@ gda_server_connection_add_error_string (GdaServerConnection *cnc, const gchar *m
 	gda_server_error_make(error, NULL, cnc, __PRETTY_FUNCTION__);
 	gda_server_error_set_description(error, msg);
 	gda_server_error_set_native(error, msg);
+
+	cnc->errors = g_list_append(cnc->errors, (gpointer) error);
 }
 
 /**

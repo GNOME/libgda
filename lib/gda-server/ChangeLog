@@ -1,3 +1,14 @@
+2001-05-04  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-server-connection.c (gda_server_connection_add_error_string):
+	actually add the new GdaServerError to the connection's list of
+	errors
+	* gda-server-impl-connection.c (impl_GDA_Connection_open):
+	check for NULL pointers
+	* gda-server-impl-factory.[ch] (impl_GDA_ConnectionFactory_ref)
+	(impl_GDA_ConnectionFactory_unref): added the 2 missing
+	OAF factory methods
+
 2001-04-14  Michael Meeks  <michael@ximian.com>
 
 	* Makefile.am: remove built files from dist.
