@@ -1,3 +1,7 @@
+2001-09-15  Akira TAGOH <tagoh@gnome-db.org>
+
+	* configure.in: add --enable-gtk-doc option.
+
 2001-08-27  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* configure.in: use AM_GNOME_GETTEXT instead of AM_GNU_GETTEXT
