@@ -587,6 +587,12 @@ gda_value_set_tinyint (GdaValue *value, gchar val)
 
 /**
  * gda_value_stringify
+ * @value: a #GdaValue.
+ *
+ * Converts a GdaValue to its string representation as indicated by this
+ * table:
+ *
+ * Returns: a string formatted according to the preceding table.
  */
 gchar *
 gda_value_stringify (const GdaValue *value)

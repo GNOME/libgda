@@ -10,6 +10,8 @@
 	* gda-server-recordset.h: changed BonoboXObject to BonoboObject.
 	Closes bug #67816.
 
+	* gda-value.c: added documentation for gda_value_stringify().
+
 2002-01-14  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-server.c (factory_callback): emit termination signals on all
