@@ -1,3 +1,8 @@
+2003-12-14  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* configure.in: disable MySQL provider until we resolve the licensing
+	issues.
+
 2003-12-14  Laurent Sansonetti <lrz@gnome.org>
 
 	* libgda/gda-connection.c, libgda/gda-data-model.c
