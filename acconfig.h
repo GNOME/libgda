@@ -12,6 +12,7 @@
 #undef HAVE_PRIMEBASE
 #undef HAVE_FREETDS
 #undef HAVE_SYBASE
+#undef HAVE_IBMDB2
 #undef SYBASE_DEBUG
 #undef HAVE_POSTGRES
 #undef HAVE_CAMEL
