@@ -14,3 +14,194 @@ GdaReportItem
 
 </para>
 
+<!-- ##### STRUCT GdaReportItemPrivate ##### -->
+<para>
+
+</para>
+
+@node: 
+@valid: 
+
+<!-- ##### FUNCTION gda_report_item_new ##### -->
+<para>
+
+</para>
+
+@valid: 
+@name: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_new_from_dom ##### -->
+<para>
+
+</para>
+
+@node: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_remove ##### -->
+<para>
+
+</para>
+
+@item: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_add_previous ##### -->
+<para>
+
+</para>
+
+@item: 
+@new_item: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_add_next ##### -->
+<para>
+
+</para>
+
+@item: 
+@new_item: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_add_child ##### -->
+<para>
+
+</para>
+
+@parent: 
+@child: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_replace ##### -->
+<para>
+
+</para>
+
+@item: 
+@new_item: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_to_dom ##### -->
+<para>
+
+</para>
+
+@item: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_get_item_type ##### -->
+<para>
+
+</para>
+
+@item: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_set_attribute ##### -->
+<para>
+
+</para>
+
+@item: 
+@name: 
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_get_attribute ##### -->
+<para>
+
+</para>
+
+@item: 
+@name: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_get_inherit_attribute ##### -->
+<para>
+
+</para>
+
+@item: 
+@name: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_get_child_by_id ##### -->
+<para>
+
+</para>
+
+@parent: 
+@id: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_get_first_child ##### -->
+<para>
+
+</para>
+
+@parent: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_get_next_child ##### -->
+<para>
+
+</para>
+
+@parent: 
+@item: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_set_content ##### -->
+<para>
+
+</para>
+
+@item: 
+@content: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_get_content ##### -->
+<para>
+
+</para>
+
+@item: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_belongs_to_report_document ##### -->
+<para>
+
+</para>
+
+@item: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_get_report ##### -->
+<para>
+
+</para>
+
+@item: 
+@Returns: 
+
+

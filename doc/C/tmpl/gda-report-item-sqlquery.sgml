@@ -14,3 +14,79 @@ GdaReportItemSqlQuery
 
 </para>
 
+<!-- ##### FUNCTION gda_report_item_sqlquery_new ##### -->
+<para>
+
+</para>
+
+@valid: 
+@id: 
+@sql: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_sqlquery_new_from_dom ##### -->
+<para>
+
+</para>
+
+@node: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_sqlquery_to_dom ##### -->
+<para>
+
+</para>
+
+@item: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_sqlquery_remove ##### -->
+<para>
+
+</para>
+
+@item: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_sqlquery_set_id ##### -->
+<para>
+
+</para>
+
+@item: 
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_sqlquery_get_id ##### -->
+<para>
+
+</para>
+
+@item: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_sqlquery_set_sql ##### -->
+<para>
+
+</para>
+
+@item: 
+@sql: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_sqlquery_get_sql ##### -->
+<para>
+
+</para>
+
+@item: 
+@Returns: 
+
+

@@ -1,3 +1,12 @@
+2005-01-11  Bas Driessen <bas.driessen@xobas.com>
+
+	* providers/postgres/gda-postgres-recordset.c
+	(gda_postgres_recordset_update_row):
+	use " for field names in 'SET' part of query.
+	remove unnecessary call to non-existent function
+	gda_data_model_hash_update_row.
+	emit appropriate 'updated' and 'changed' signals.
+
 2005-01-09  Vivien Malerba <malerba@gnome-db.org>
 	* libgda/: Implemented GdaDataModel as an interface, and added a GdaDataModelBase class to serve
 	  as a base class in relpacement of the previous GdaDataModel

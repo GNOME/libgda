@@ -19,6 +19,8 @@ Base class for implementing new providers
 
 </para>
 
+@object: 
+@priv: 
 
 <!-- ##### FUNCTION gda_server_provider_get_version ##### -->
 <para>

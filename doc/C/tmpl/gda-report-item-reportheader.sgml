@@ -14,3 +14,525 @@ GdaReportItemReportHeader
 
 </para>
 
+<!-- ##### FUNCTION gda_report_item_reportheader_new ##### -->
+<para>
+
+</para>
+
+@valid: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_reportheader_new_from_dom ##### -->
+<para>
+
+</para>
+
+@node: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_reportheader_to_dom ##### -->
+<para>
+
+</para>
+
+@item: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_reportheader_remove ##### -->
+<para>
+
+</para>
+
+@item: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_reportheader_add_element ##### -->
+<para>
+
+</para>
+
+@reportheader: 
+@element: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_reportheader_get_label_by_id ##### -->
+<para>
+
+</para>
+
+@reportheader: 
+@id: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_reportheader_get_repfield_by_id ##### -->
+<para>
+
+</para>
+
+@reportheader: 
+@id: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_reportheader_set_active ##### -->
+<para>
+
+</para>
+
+@item: 
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_reportheader_get_active ##### -->
+<para>
+
+</para>
+
+@item: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_reportheader_set_visible ##### -->
+<para>
+
+</para>
+
+@item: 
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_reportheader_get_visible ##### -->
+<para>
+
+</para>
+
+@item: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_reportheader_set_height ##### -->
+<para>
+
+</para>
+
+@item: 
+@number: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_reportheader_get_height ##### -->
+<para>
+
+</para>
+
+@item: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_reportheader_set_newpage ##### -->
+<para>
+
+</para>
+
+@item: 
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_reportheader_get_newpage ##### -->
+<para>
+
+</para>
+
+@item: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_reportheader_set_bgcolor ##### -->
+<para>
+
+</para>
+
+@item: 
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_reportheader_get_bgcolor ##### -->
+<para>
+
+</para>
+
+@item: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_reportheader_set_fgcolor ##### -->
+<para>
+
+</para>
+
+@item: 
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_reportheader_get_fgcolor ##### -->
+<para>
+
+</para>
+
+@item: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_reportheader_set_bordercolor ##### -->
+<para>
+
+</para>
+
+@item: 
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_reportheader_get_bordercolor ##### -->
+<para>
+
+</para>
+
+@item: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_reportheader_set_borderwidth ##### -->
+<para>
+
+</para>
+
+@item: 
+@number: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_reportheader_get_borderwidth ##### -->
+<para>
+
+</para>
+
+@item: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_reportheader_set_borderstyle ##### -->
+<para>
+
+</para>
+
+@item: 
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_reportheader_get_borderstyle ##### -->
+<para>
+
+</para>
+
+@item: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_reportheader_set_fontfamily ##### -->
+<para>
+
+</para>
+
+@item: 
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_reportheader_get_fontfamily ##### -->
+<para>
+
+</para>
+
+@item: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_reportheader_set_fontsize ##### -->
+<para>
+
+</para>
+
+@item: 
+@number: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_reportheader_get_fontsize ##### -->
+<para>
+
+</para>
+
+@item: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_reportheader_set_fontweight ##### -->
+<para>
+
+</para>
+
+@item: 
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_reportheader_get_fontweight ##### -->
+<para>
+
+</para>
+
+@item: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_reportheader_set_fontitalic ##### -->
+<para>
+
+</para>
+
+@item: 
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_reportheader_get_fontitalic ##### -->
+<para>
+
+</para>
+
+@item: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_reportheader_set_halignment ##### -->
+<para>
+
+</para>
+
+@item: 
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_reportheader_get_halignment ##### -->
+<para>
+
+</para>
+
+@item: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_reportheader_set_valignment ##### -->
+<para>
+
+</para>
+
+@item: 
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_reportheader_get_valignment ##### -->
+<para>
+
+</para>
+
+@item: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_reportheader_set_wordwrap ##### -->
+<para>
+
+</para>
+
+@item: 
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_reportheader_get_wordwrap ##### -->
+<para>
+
+</para>
+
+@item: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_reportheader_set_negvaluecolor ##### -->
+<para>
+
+</para>
+
+@item: 
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_reportheader_get_negvaluecolor ##### -->
+<para>
+
+</para>
+
+@item: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_reportheader_set_dateformat ##### -->
+<para>
+
+</para>
+
+@item: 
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_reportheader_get_dateformat ##### -->
+<para>
+
+</para>
+
+@item: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_reportheader_set_precision ##### -->
+<para>
+
+</para>
+
+@item: 
+@number: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_reportheader_get_precision ##### -->
+<para>
+
+</para>
+
+@item: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_reportheader_set_currency ##### -->
+<para>
+
+</para>
+
+@item: 
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_reportheader_get_currency ##### -->
+<para>
+
+</para>
+
+@item: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_reportheader_set_commaseparator ##### -->
+<para>
+
+</para>
+
+@item: 
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_reportheader_get_commaseparator ##### -->
+<para>
+
+</para>
+
+@item: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_reportheader_set_linewidth ##### -->
+<para>
+
+</para>
+
+@item: 
+@number: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_reportheader_get_linewidth ##### -->
+<para>
+
+</para>
+
+@item: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_reportheader_set_linecolor ##### -->
+<para>
+
+</para>
+
+@item: 
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_reportheader_get_linecolor ##### -->
+<para>
+
+</para>
+
+@item: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_reportheader_set_linestyle ##### -->
+<para>
+
+</para>
+
+@item: 
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_report_item_reportheader_get_linestyle ##### -->
+<para>
+
+</para>
+
+@item: 
+@Returns: 
+
+

@@ -14,17 +14,3 @@ This object is not intended to be instanciated directly, but to be inherited.
 
 </para>
 
-<!-- ##### STRUCT GdaDataModelBase ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### FUNCTION gda_data_model_base_get_type ##### -->
-<para>
-
-</para>
-
-@Returns: 
-
-
