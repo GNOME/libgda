@@ -1,3 +1,7 @@
+2001-12-05  mr mike <wingert.3@postbox.acs.ohio-state.edu>
+
+	* configure.in: re-added Sybase provider directory to build process
+
 2001-11-22  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* configure.in: require glib >= 1.3.10

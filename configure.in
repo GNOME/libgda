@@ -463,6 +463,7 @@ providers/Makefile
 providers/default/Makefile
 providers/default/sqlite/Makefile
 providers/mysql/Makefile
+providers/sybase/Makefile
 tools/Makefile
 tools/gda-buildserver
 tools/gda-buildclient
