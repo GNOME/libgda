@@ -70,16 +70,17 @@ void
 gda_log_message (const gchar *format, ...)
 {
 	va_list args;
-	gchar sz[2048];
+	gchar *msg;
 
 	g_return_if_fail (format != NULL);
 
 	/* build the message string */
 	va_start (args, format);
-	vsprintf (sz, format, args);
+	msg = g_strdup_vprintf (format, args);
 	va_end (args);
 
-	g_message (_("MESSAGE: %s"), sz);
+	g_message (_("MESSAGE: %s"), msg);
+	g_free (msg);
 }
 
 /**
@@ -89,16 +90,17 @@ void
 gda_log_error (const gchar * format, ...)
 {
 	va_list args;
-	gchar sz[2048];
+	gchar *msg;
 
 	g_return_if_fail (format != NULL);
 
 	/* build the message string */
 	va_start (args, format);
-	vsprintf (sz, format, args);
+	msg = g_strdup_vprintf (format, args);
 	va_end (args);
 
-	g_message (_("ERROR: %s"), sz);
+	g_message (_("ERROR: %s"), msg);
+	g_free (msg);
 }
 
 /**
