@@ -1,3 +1,7 @@
+2001-11-01  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* reorganization, putting all libraries in a single one
+
 2001-10-31  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* configure.in: set library AGE to 1

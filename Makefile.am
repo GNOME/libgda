@@ -1,7 +1,7 @@
 SUBDIRS = \
 	po \
 	idl \
-	lib \
+	libgda \
 	providers \
 	tools \
 	report \

@@ -1,5 +1,5 @@
 AC_PREREQ(2.52)
-AC_INIT(lib/gda-common/gda-common.h)
+AC_INIT(libgda/libgda.h)
 
 GDA_MAJOR_VERSION=0
 GDA_MINOR_VERSION=3
@@ -71,13 +71,9 @@ AC_SUBST(CFLAGS)
 AC_SUBST(CPPFLAGS)
 AC_SUBST(LDFLAGS)
 
-PKG_CHECK_MODULES(GDA_CLIENT, ORBit-2.0 >= 2.3.91 glib-2.0 >= 1.3.1 gobject-2.0 >= 1.3.1 gthread-2.0 >= 1.3.1 bonobo-activation-2.0 >= 0.7.0 libbonobo-2.0 libxml-2.0 gconf-2.0)
-AC_SUBST(GDA_CLIENT_CFLAGS)
-AC_SUBST(GDA_CLIENT_LIBS)
-
-PKG_CHECK_MODULES(GDA_PROVIDER, ORBit-2.0 >= 2.3.91 glib-2.0 >= 1.3.1 gobject-2.0 >= 1.3.1 gthread-2.0 >= 1.3.1 bonobo-activation-2.0 >= 0.7.0 libbonobo-2.0 libxml-2.0 bonobo-config-2.0)
-AC_SUBST(GDA_PROVIDER_CFLAGS)
-AC_SUBST(GDA_PROVIDER_LIBS)
+PKG_CHECK_MODULES(LIBGDA, ORBit-2.0 >= 2.3.91 glib-2.0 >= 1.3.1 gobject-2.0 >= 1.3.1 gthread-2.0 >= 1.3.1 bonobo-activation-2.0 >= 0.7.0 libbonobo-2.0 libxml-2.0 gconf-2.0)
+AC_SUBST(LIBGDA_CFLAGS)
+AC_SUBST(LIBGDA_LIBS)
 
 dnl ******************************
 dnl gtk-doc
@@ -460,10 +456,7 @@ libgda-client.pc
 libgda-server.pc
 po/Makefile.in
 idl/Makefile
-lib/Makefile
-lib/gda-common/Makefile
-lib/gda-client/Makefile
-lib/gda-server/Makefile
+libgda/Makefile
 providers/Makefile
 providers/gda-default-server/Makefile
 providers/gda-odbc-server/Makefile
