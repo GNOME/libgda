@@ -1,3 +1,7 @@
+2001-10-11  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* started refactoring to make use of the new gda-server library
+
 2001-07-15  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-mysql-connection.c (gda_mysql_connection_open_schema): return

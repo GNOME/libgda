@@ -82,6 +82,16 @@ impl_Connection_close (PortableServer_Servant servant, CORBA_Environment *ev)
 	return result;
 }
 
+static GNOME_Database_RecordsetList
+impl_Connection_executeCommand (PortableServer_Servant servant,
+				GNOME_Database_Command *cmd,
+				GNOME_Database_ParameterList *params)
+{
+	GdaServerConnection *cnc = (GdaServerConnection *) bonobo_x_object (servant);
+
+	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), NULL);
+}
+
 static CORBA_boolean
 impl_Connection_beginTransaction (PortableServer_Servant servant,
 				  GNOME_Database_TransactionId trans_id,
@@ -154,6 +164,7 @@ gda_server_connection_class_init (GdaServerConnectionClass *klass)
 	epv = &klass->epv;
 	epv->open = impl_Connection_open;
 	epv->close = impl_Connection_close;
+	epv->executeCommand = impl_Connection_executeCommand;
 	epv->beginTransaction = impl_Connection_beginTransaction;
 	epv->commitTransaction = impl_Connection_commitTransaction;
 	epv->rollbackTransaction = impl_Connection_rollbackTransaction;
