@@ -135,6 +135,10 @@ typedef struct {
 	glong binary_length;
 } GdaValue;
 
+/* Note: gda_value_get_type is already defined */
+#define GDA_TYPE_VALUE (gda_value_get_gtype())
+
+GType         gda_value_get_gtype (void);
 GdaValue     *gda_value_new_null (void);
 GdaValue     *gda_value_new_bigint (gint64 val);
 GdaValue     *gda_value_new_biguint(guint64 val);

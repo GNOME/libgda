@@ -32,6 +32,17 @@ struct _GdaRow {
 	gint nfields;
 };
 
+GType gda_row_get_type (void)
+{
+	static GType our_type = 0;
+
+	if (our_type == 0)
+		our_type = g_boxed_type_register_static ("GdaRow",
+			(GBoxedCopyFunc) gda_row_copy,
+			(GBoxedFreeFunc) gda_row_free);
+	return our_type;
+}
+
 /**
  * gda_row_new
  * @model: the #GdaDataModel this row belongs to.
@@ -105,6 +116,38 @@ gda_row_free (GdaRow *row)
 		gda_value_set_null (&row->fields [i]);
 	g_free (row->fields);
 	g_free (row);
+}
+
+/**
+ * gda_row_copy
+ * @row: quark_list to get a copy from.
+ *
+ * Creates a new #GdaRow from an existing one.
+ * 
+ * Returns: a newly allocated #GdaRow with a copy of the data in @row.
+ */
+GdaRow *
+gda_row_copy (GdaRow *row)
+{
+	GdaRow *new_row;
+	gint i;
+
+	g_return_val_if_fail (row != NULL, NULL);
+
+	new_row = gda_row_new (row->model, row->nfields);
+	new_row->number = row->number;
+	new_row->id = g_strdup (row->id);
+
+	for (i = 0; i < row->nfields; i++) { 
+		GdaValue *value = &row->fields[i];
+		if (value)
+			gda_value_set_from_value (gda_row_get_value (new_row, i),
+						  gda_value_copy (value));
+		else
+			gda_value_set_null (gda_row_get_value (new_row, i));
+	}
+
+	return new_row;	
 }
 
 /**

@@ -33,11 +33,15 @@ typedef struct {
 	GdaValue *value;
 } GdaParameter;
 
+#define GDA_TYPE_PARAMETER (gda_parameter_get_type())
+
+GType           gda_parameter_get_type (void);
 GdaParameter   *gda_parameter_new_from_value (const gchar *name, GdaValue *value);
 GdaParameter   *gda_parameter_new_boolean (const gchar *name, gboolean value);
 GdaParameter   *gda_parameter_new_double (const gchar *name, gdouble value);
 GdaParameter   *gda_parameter_new_gobject (const gchar *name, const GObject *value);
 GdaParameter   *gda_parameter_new_string (const gchar *name, const gchar *value);
+GdaParameter   *gda_parameter_copy (GdaParameter *param);
 void            gda_parameter_free (GdaParameter *param);
 const gchar    *gda_parameter_get_name (GdaParameter *param);
 void            gda_parameter_set_name (GdaParameter *param, const gchar *name);
@@ -46,8 +50,12 @@ void            gda_parameter_set_value (GdaParameter *param, GdaValue *value);
 
 typedef struct _GdaParameterList GdaParameterList;
 
+#define GDA_TYPE_PARAMETER_LIST (gda_parameter_list_get_type())
+
+GType               gda_parameter_list_get_type (void);
 GdaParameterList   *gda_parameter_list_new (void);
 void                gda_parameter_list_free (GdaParameterList *plist);
+GdaParameterList   *gda_parameter_list_copy (GdaParameterList *plist);
 void                gda_parameter_list_add_parameter (GdaParameterList *plist,
 						      GdaParameter *param);
 GList              *gda_parameter_list_get_names (GdaParameterList *plist);

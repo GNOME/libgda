@@ -53,9 +53,13 @@ typedef struct {
 	GdaTransaction *xaction;
 } GdaCommand;
 
+#define GDA_TYPE_COMMAND (gda_command_get_type ())
+
+GType             gda_command_get_type (void);
 GdaCommand       *gda_command_new (const gchar *text, GdaCommandType type,
 				   GdaCommandOptions options);
 void              gda_command_free (GdaCommand *cmd);
+GdaCommand       *gda_command_copy (GdaCommand *cmd);
 
 const gchar      *gda_command_get_text (GdaCommand *cmd);
 void              gda_command_set_text (GdaCommand *cmd, const gchar *text);

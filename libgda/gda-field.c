@@ -25,6 +25,18 @@
 #include <glib/gstrfuncs.h>
 #include <libgda/gda-field.h>
 
+GType
+gda_field_attributes_get_type (void)
+{
+	static GType our_type = 0;
+
+	if (our_type == 0) 
+		our_type = g_boxed_type_register_static ("GdaFieldAttributes",
+			(GBoxedCopyFunc) gda_field_attributes_copy,
+			(GBoxedFreeFunc) gda_field_attributes_free);
+	return our_type;
+}
+
 /**
  * gda_field_attributes_new
  *
@@ -449,3 +461,4 @@ gda_field_attributes_set_position (GdaFieldAttributes *fa, gint position)
 	g_return_if_fail (fa != NULL);
 	fa->position = position;
 }
+

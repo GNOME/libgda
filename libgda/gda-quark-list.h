@@ -25,13 +25,18 @@
 
 #include <glib/gmacros.h>
 #include <glib/gtypes.h>
+#include <glib-object.h>
 
 G_BEGIN_DECLS
 
 typedef struct _GdaQuarkList GdaQuarkList;
 
+#define GDA_TYPE_QUARK_LIST (gda_quark_list_get_type())
+
+GType         gda_quark_list_get_type (void);
 GdaQuarkList *gda_quark_list_new (void);
 GdaQuarkList *gda_quark_list_new_from_string (const gchar *string);
+GdaQuarkList *gda_quark_list_copy (GdaQuarkList *qlist);
 void          gda_quark_list_free (GdaQuarkList *qlist);
 
 void          gda_quark_list_add_from_string (GdaQuarkList *qlist,

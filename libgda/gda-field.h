@@ -52,6 +52,9 @@ typedef struct {
 	GdaFieldAttributes *attributes;
 } GdaField;
 
+#define GDA_TYPE_FIELD_ATTRIBUTES (gda_field_attributes_get_type ())
+
+GType               gda_field_attributes_get_type (void);
 GdaFieldAttributes *gda_field_attributes_new (void);
 GdaFieldAttributes *gda_field_attributes_copy (GdaFieldAttributes *fa);
 void                gda_field_attributes_free (GdaFieldAttributes *fa);

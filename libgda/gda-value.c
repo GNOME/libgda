@@ -36,6 +36,18 @@
 #include <libxml/parser.h>
 #include <libxml/tree.h>
 
+GType
+gda_value_get_gtype (void)
+{
+	static GType our_type = 0;
+
+	if (our_type == 0)
+		our_type = g_boxed_type_register_static ("GdaValue",
+			(GBoxedCopyFunc) gda_value_copy,
+			(GBoxedFreeFunc) gda_value_free);
+	return our_type;
+}
+
 /*
  * Private functions
  */
