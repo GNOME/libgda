@@ -20,13 +20,19 @@ add_flags=$(GDA_WITH_PRIMEBASE) $(GDA_WITH_SYBASE) $(GDA_WITH_TDS)
 
 constrol: control-stamp
 control-stamp:
-	cp $(CTRL).orig $(CTRL) 
-	test -n "$(GDA_WITH_PRIMEBASE)" || cat debian/control-nonfree/control.gda-primebase >> $(CTRL)
-	test -n "$(GDA_WITH_PRIMEBASE)" || cp $(NONFREE)/gda-primebase.* debian/
-	test -n "$(GDA_WITH_SYBASE)" || cat debian/control-nonfree/control.gda-sybase >> $(CTRL)
-	test -n "$(GDA_WITH_SYBASE)" || cp $(NONFREE)/gda-sybase.* debian/
-	test -n "$(GDA_WITH_TDS)" || cat debian/control-nonfree/control.gda-tds >> $(CTRL)
-	test -n "$(GDA_WITH_TDS)" || cp $(NONFREE)/gda-tds.* debian/
+	cp $(CTRL).orig $(CTRL)
+	@ifneq ($(strip $(GDA_WITH_PRIMEBASE)),)
+		cat debian/control-nonfree/control.gda-primebase >> $(CTRL)
+		cp $(NONFREE)/gda-primebase.* debian/
+	@endif
+	@ifneq ($(strip $(GDA_WITH_SYBASE)),)
+		cat debian/control-nonfree/control.gda-sybase >> $(CTRL)
+		cp $(NONFREE)/gda-sybase.* debian/
+	@endif
+	@ifneq ($(strip $(GDA_WITH_TDS)),)
+		cat debian/control-nonfree/control.gda-tds >> $(CTRL)
+		cp $(NONFREE)/gda-tds.* debian/
+	@endif
 	touch control-stamp
 
 configure: control-stamp configure-stamp
@@ -37,7 +43,7 @@ configure-stamp:
 		    --with-mysql=yes \
 		    --with-postgres=yes \
 		    --with-odbc=yes \
-			 $(add_flags)
+			$(add_flags)
 
 	touch configure-stamp
 
@@ -100,9 +106,15 @@ binary-arch: build install
 	dh_undocumented -pgda-mysql gda-mysql-srv.1
 	dh_undocumented -pgda-postgres gda-postgres-srv.1
 	dh_undocumented -pgda-odbc gda-odbc-srv.1
-	test -n "$(GDA_WITH_PRIMEBASE)" && dh_undocumented -pgda-primebase gda-primebase-srv.1
-	test -n "$(GDA_WITH_SYBASE)" && dh_undocumented -pgda-sybase gda-sybase-srv.1
-	test -n "$(GDA_WITH_TDS)" && dh_undocumented -pgda-tds gda-tds-srv.1
+	@ifneq ($(strip $(GDA_WITH_PRIMEBASE)),)
+		dh_undocumented -pgda-primebase gda-primebase-srv.1
+	@endif
+	@ifneq ($(strip $(GDA_WITH_SYBASE)),)
+		dh_undocumented -pgda-sybase gda-sybase-srv.1
+	@endif
+	@ifneq ($(strip $(GDA_WITH_TDS)),)
+		dh_undocumented -pgda-tds gda-tds-srv.1
+	@endif
 	dh_installchangelogs ChangeLog
 	dh_link
 	dh_strip
