@@ -429,6 +429,38 @@ fi
 
 AM_CONDITIONAL(INTERBASE, test x$interbasedir != x)
 
+dnl Test for sqlite
+AC_ARG_WITH(sqlite,
+[  --with-sqlite=<directory>     use sqlite backend in <directory>],[
+if test $withval != yes
+then
+        dir=$withval
+else
+        dir="/usr/local"
+fi
+AC_MSG_CHECKING(for sqlite files)
+sqlitedir=""
+for d in $dir /usr /opt/sqlite
+do
+        if test -f $d/include/sqlite.h
+        then
+                AC_MSG_RESULT(found sqlite in $d)
+                sqlitedir=$d
+                break
+        fi
+done
+if test x$sqlitedir = x
+then
+        AC_MSG_WARN(sqlite backend not used)
+else
+	SQLITE_CFLAGS=-I${sqlitedir}/include
+	SQLITE_LIBS="-L${sqlite}/lib -lsqlite"
+	AC_DEFINE(HAVE_SQLITE)
+fi
+])
+
+AM_CONDITIONAL(SQLITE, test x$sqlitedir != x)
+
 dnl ******************************
 dnl Variables
 dnl ******************************
@@ -459,6 +491,8 @@ AC_SUBST(CAMEL_LIBS)
 AC_SUBST(CAMEL_CFLAGS)
 AC_SUBST(XML_LIBS)
 AC_SUBST(XML_CFLAGS)
+AC_SUBST(SQLITE_LIBS)
+AC_SUBST(SQLITE_CFLAGS)
 
 AC_OUTPUT([
 Makefile
@@ -469,7 +503,6 @@ idl/Makefile
 libgda/Makefile
 providers/Makefile
 providers/default/Makefile
-providers/default/sqlite/Makefile
 providers/freetds/Makefile
 providers/interbase/Makefile
 providers/mysql/Makefile

@@ -1,3 +1,8 @@
+2002-01-18  Carlos Perelló Marín <carlos@gnome-db.org>
+
+	* sqlite/*: Removed, we use now distributions packages.
+	* Makefile.am: Changed to use the system sqlite installation.
+
 2002-01-15  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
 	* gda-default-provider.c: removed all warnings.

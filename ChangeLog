@@ -1,3 +1,7 @@
+2002-01-17  Carlos Perelló Marín <carlos@gnome-db.org>
+
+	* configure.in: Added sqlite detection code
+
 2002-01-12  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* configure.in: bumped version to 0.8.102

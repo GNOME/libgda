@@ -1,12 +1,9 @@
-SUBDIRS = sqlite
-
 bin_PROGRAMS = gda-default-srv-2
 
 INCLUDES = \
 	-I. \
 	$(LIBGDA_CFLAGS) \
-	-I$(top_srcdir)/providers/default/sqlite \
-	-I$(top_builddir)/providers/default/sqlite
+	$(SQLITE_CFLAGS)
 
 gda_default_srv_2_SOURCES = \
 	gda-default-provider.c \
@@ -19,7 +16,7 @@ gda_default_srv_2_SOURCES = \
 gda_default_srv_2_LDADD = \
 	$(LIBGDA_LIBS) \
 	$(top_builddir)/libgda/libgda-2.la \
-	$(top_builddir)/providers/default/sqlite/libsqlite.a
+	$(SQLITE_LIBS)
 
 serverdir=$(libdir)/bonobo/servers
 

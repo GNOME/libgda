@@ -15,4 +15,5 @@
 #undef SYBASE_DEBUG
 #undef HAVE_POSTGRES
 #undef HAVE_CAMEL
+#undef HAVE_SQLITE
 #undef GETTEXT_PACKAGE
