@@ -38,7 +38,7 @@ plugin_get_name (void)
 const gchar *
 plugin_get_description (void)
 {
-	return _("GDA provider for SQLite databases");
+	return _("Provider for SQLite databases");
 }
 
 GList *

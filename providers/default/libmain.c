@@ -36,7 +36,7 @@ plugin_get_name (void)
 const gchar *
 plugin_get_description (void)
 {
-	return _("GDA default provider, based on the libgda XML format");
+	return _("Default provider, based on XML");
 }
 
 GList *

@@ -36,7 +36,7 @@ plugin_get_name (void)
 const gchar *
 plugin_get_description (void)
 {
-	return _("GDA provider for Xbase databases");
+	return _("Provider for Xbase databases");
 }
 
 GList *

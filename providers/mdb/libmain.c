@@ -31,7 +31,7 @@ plugin_get_name (void)
 const gchar *
 plugin_get_description (void)
 {
-	return _("GDA provider for MS Access files");
+	return _("Provider for Microsoft Access files");
 }
 
 GList *

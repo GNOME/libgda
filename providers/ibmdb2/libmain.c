@@ -36,7 +36,7 @@ plugin_get_name (void)
 const gchar *
 plugin_get_description (void)
 {
-	return _("GDA provider for IBMDB2");
+	return _("Provider for IBMDB2 databases");
 }
 
 GList *

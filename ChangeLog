@@ -1,5 +1,24 @@
 2003-01-18  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	Fixes #95959
+
+	* providers/default/libmain.c:
+	* providers/firebird/libmain.c:
+	* providers/freetds/libmain.c:
+	* providers/ibmdb2/libmain.c:
+	* providers/ldap/libmain.c:
+	* providers/mdb/libmain.c:
+	* providers/mysql/libmain.c:
+	* providers/odbc/libmain.c:
+	* providers/oracle/libmain.c:
+	* providers/postgres/libmain.c:
+	* providers/sqlite/libmain.c:
+	* providers/sybase/libmain.c:
+	* providers/xbase/libmain.c: removed GDA/libgda from user-visible
+	strings.
+
+2003-01-18  Rodrigo Moya <rodrigo@gnome-db.org>
+
 	* providers/mysql/libmain.c (plugin_get_connection_params): added
 	USE_SSL parameter for the MySQL provider. Also, removed unused FLAGS
 	parameter.

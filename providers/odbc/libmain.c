@@ -38,7 +38,7 @@ plugin_get_name (void)
 const gchar *
 plugin_get_description (void)
 {
-	return _("GDA bridge to ODBC data sources");
+	return _("Provider for ODBC data sources");
 }
 
 GList *

@@ -38,7 +38,7 @@ plugin_get_name (void)
 const gchar *
 plugin_get_description (void)
 {
-	return _("GDA provider for PostgreSQL databases");
+	return _("Provider for PostgreSQL databases");
 }
 
 GList *

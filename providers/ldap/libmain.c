@@ -39,7 +39,7 @@ plugin_get_name (void)
 const gchar *
 plugin_get_description (void)
 {
-	return _("GDA provider for LDAP directory");
+	return _("Provider for LDAP directory");
 }
 
 GList *

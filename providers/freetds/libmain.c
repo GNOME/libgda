@@ -36,7 +36,7 @@ plugin_get_name (void)
 const gchar *
 plugin_get_description (void)
 {
-	return _("GDA provider for TDS-based databases (using FreeTDS)");
+	return _("Provider for TDS-based databases (using FreeTDS)");
 }
 
 GList *
