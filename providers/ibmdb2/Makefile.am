@@ -10,6 +10,10 @@ INCLUDES = \
 libgda_ibmdb2_la_SOURCES = \
 	gda-ibmdb2-provider.c \
 	gda-ibmdb2-provider.h \
+	gda-ibmdb2-recordset.c \
+	gda-ibmdb2-recordset.h \
+	gda-ibmdb2-types.c \
+	gda-ibmdb2-types.h \
 	gda-ibmdb2.h \
 	libmain.c \
 	utils.c

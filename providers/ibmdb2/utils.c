@@ -3,6 +3,7 @@
  *
  * AUTHORS:
  *         Holger Thon <holger.thon@gnome-db.org>
+ *	   Sergey N. Belinsky <sergey_be@mail.ru>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -26,4 +27,51 @@
 #include <sqlcli1.h>
 #include "gda-ibmdb2.h"
 
+GdaError *
+gda_ibmdb2_make_error (SQLHANDLE henv, SQLHANDLE hdbc, SQLHANDLE hstmt)
+{
+        GdaError *error = NULL;
+	SQLRETURN rc;
+        SQLCHAR sql_state[6];
+	SQLINTEGER native_error;
+	SQLCHAR error_msg[SQL_MAX_MESSAGE_LENGTH];
+	SQLSMALLINT error_msg_len;
+				       
 
+	if (henv != SQL_NULL_HANDLE) {
+    		rc = SQLError (henv,
+		    	       hdbc,
+		    	       hstmt,
+		               (SQLCHAR*)&sql_state,
+		               &native_error,
+		               (SQLCHAR*)&error_msg,
+		               sizeof (error_msg), 
+		               &error_msg_len);
+	    	
+		if (rc == SQL_SUCCESS) {
+    	 		error = gda_error_new ();
+			
+			//g_message("Error: %s\n", (gchar*)error_msg);
+			
+			gda_error_set_description (error, (gchar*)error_msg);
+			gda_error_set_number (error, native_error);
+			gda_error_set_source (error, "gda-ibmdb2");
+			gda_error_set_sqlstate (error, sql_state);
+		}
+	}
+
+	return error;
+}
+
+
+void
+gda_ibmdb2_emit_error (GdaConnection * cnc,
+		       SQLHANDLE henv, SQLHANDLE hdbc, SQLHANDLE hstmt)
+{
+	GdaError *error;
+	GList *list = NULL;
+	while ((error = gda_ibmdb2_make_error (henv, hdbc, hstmt))) {
+		list = g_list_append (list, error);
+	}
+	gda_connection_add_error_list (cnc, list);
+}

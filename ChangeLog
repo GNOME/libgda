@@ -1,3 +1,9 @@
+2003-02-03  Sergey N. Belinsky <sergey_be@mail.ru>
+
+	* providers/ibmdb2/*: added support for transactions, and schemas
+	for aggregates, users, views, database, procedures, types, triggers
+	and indexes. Added recordset class for IBM DB2.
+
 2003-02-04  Akira TAGOH <tagoh@gnome-db.org>
 
 	* don't use C++ comment in C sources/headers. it breaks the

@@ -3,6 +3,7 @@
  *
  * AUTHORS: 
  *         Holger Thon <holger.thon@gnome-db.org>
+ *	   Sergey N. Belinsky <sergey_be@mail.ru>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -24,7 +25,6 @@
 
 #include <libgda/gda-server-provider.h>
 #include <sqlcli1.h>
-#include "gda-ibmdb2.h"
 
 
 #define GDA_TYPE_IBMDB2_PROVIDER            (gda_ibmdb2_provider_get_type())
@@ -37,8 +37,9 @@
 #define OBJECT_DATA_IBMDB2_HANDLE "GDA_IBMDB2_IBMDB2Handle"
 
 
-typedef struct _GdaIBMDB2Provider      GdaIBMDB2Provider;
-typedef struct _GdaIBMDB2ProviderClass GdaIBMDB2ProviderClass;
+typedef struct _GdaIBMDB2Provider      	GdaIBMDB2Provider;
+typedef struct _GdaIBMDB2ProviderClass 	GdaIBMDB2ProviderClass;
+typedef struct _GdaIBMDB2ConnectionData GdaIBMDB2ConnectionData;
 
 struct _GdaIBMDB2Provider {
 	GdaServerProvider provider;
@@ -48,14 +49,18 @@ struct _GdaIBMDB2ProviderClass {
 	GdaServerProviderClass parent_class;
 };
 
-typedef struct _GdaIBMDB2ConnectionData GdaIBMDB2ConnectionData;
 struct _GdaIBMDB2ConnectionData {
-	SQLRETURN rc;
 	SQLHANDLE henv;
 	SQLHANDLE hdbc;
-
+	SQLHANDLE hstmt; // Only for schema
 	gchar    *database;
 	gboolean GetInfo_supported;
+	gchar    *server_version;
+	SQLRETURN rc;
+	SQLCHAR sql_state[5];
+	SQLINTEGER native_error;
+        SQLCHAR error_msg[SQL_MAX_MESSAGE_LENGTH + 1];
+	SQLSMALLINT size_error_msg;
 };
 
 G_BEGIN_DECLS

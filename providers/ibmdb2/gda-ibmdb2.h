@@ -1,7 +1,9 @@
 /* GDA IBMDB2 Provider
  * Copyright (C) 2002 The GNOME Foundation
  *
- * AUTHORS: Holger Thon <holger.thon@gnome-db.org>
+ * AUTHORS: 
+ *          Holger Thon <holger.thon@gnome-db.org>
+ *          Sergey N. Belinsky <sergey_be@mail.ru>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -21,20 +23,26 @@
 #if !defined(__gda_ibmdb2_h__)
 #  define __gda_ibmdb2_h__
 
-#if defined(HAVE_CONFIG_H)
-#endif
-
 #include <glib/gmacros.h>
 #include <libgda/gda-intl.h>
+#include <libgda/gda-connection.h>
 #include <libgda/gda-server-provider.h>
+#include <libgda/gda-value.h>
+#include <libgda/gda-intl.h>
 #include <sqlcli1.h>
 #include "gda-ibmdb2-provider.h"
-/* #include "gda-ibmdb2-recordset.h" */
 
 #define GDA_IBMDB2_PROVIDER_ID          "GDA IBMDB2 provider"
 
 G_BEGIN_DECLS
 
+/*
+ * Utility functions
+ */
+
+GdaError *gda_ibmdb2_make_error (SQLHANDLE henv, SQLHANDLE hdbc, SQLHANDLE hstmt);
+void 	  gda_ibmdb2_emit_error (GdaConnection *cnc, SQLHANDLE henv, SQLHANDLE hdbc, SQLHANDLE hstmt);
+										      
 G_END_DECLS
 
 #endif
