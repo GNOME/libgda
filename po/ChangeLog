@@ -1,3 +1,7 @@
+2002-05-02  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* POTFILES.in: removed deleted files.
+
 2002-05-02  Changwoo Ryu  <cwryu@debian.org>
 
 	* ko.po: Added Korean translation by Young-Ho, Cha

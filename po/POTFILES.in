@@ -21,23 +21,16 @@ libgda/gda-xml-document.c
 # Please keep this file sorted alphabetically.
 providers/default/gda-default-provider.c
 providers/default/gda-default-recordset.c
-providers/default/GNOME_Database_Provider_Default.server.in
 providers/mysql/gda-mysql-provider.c
 providers/mysql/gda-mysql-recordset.c
-providers/mysql/GNOME_Database_Provider_MySQL.server.in
 providers/mysql/utils.c
-providers/odbc/GNOME_Database_Provider_ODBC.server.in
 providers/oracle/gda-oracle-connection.c
-providers/oracle/GNOME_Database_Provider_Oracle.server.in
 providers/oracle/main.c
 providers/postgres/gda-postgres-provider.c
 providers/postgres/gda-postgres-recordset.c
-providers/postgres/GNOME_Database_Provider_Postgres.server.in
 providers/postgres/utils.c
 providers/sqlite/gda-sqlite-provider.c
 providers/sqlite/gda-sqlite-recordset.c
-providers/sqlite/GNOME_Database_Provider_SQLite.server.in
-providers/sybase/GNOME_Database_Provider_Sybase.server.in
 providers/sybase/main.c
 report/gda-report-engine.c
 report/GNOME_Database_Report.server.in
