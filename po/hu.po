@@ -1,1793 +1,304 @@
-# gnome-db po.
-# Copyright (C) 1999 Free Software Foundation, Inc.
-# Szabolcs BAN <shooby@gnome.hu>, 1999.
+# libgda po.
+# Copyright (C) 1999-2000 Free Software Foundation, Inc.
+# Szabolcs BAN <shooby@gnome.hu>, 1999-2000.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gnome-db 0.0.17\n"
-"POT-Creation-Date: 2000-07-28 14:32+0200\n"
-"PO-Revision-Date: 2000-05-10 14:00+0100\n"
-"Last-Translator: Szabolcs BAN <shooby@gnome.hu>\n"
-"Language-Team: Hungarian <hu@li.org>\n"
+"Project-Id-Version: libgda VERSION\n"
+"POT-Creation-Date: 2000-12-14 14:33+0100\n"
+"PO-Revision-Date: 2000-12-14 14:34+01:00\n"
+"Last-Translator: Emese Kovacs <emese@gnome.hu>\n"
+"Language-Team: Hungarian <hu@gnome.hu>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=iso-8859-2\n"
+"Content-Type: text/plain; charset=ISO 8859-2\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: gda-clnt-ui/gda-ui.c:105
-msgid "Select Color"
-msgstr "Szín választása"
-
-#: gda-clnt-ui/gda-ui.c:149
-msgid "Select File"
-msgstr "Válassz egy fájlt"
-
-#: gda-clnt-ui/gda-ui.c:167
-msgid "Select Font"
-msgstr "Válassz egy betûtípust"
-
-#: gda-clnt-ui/gda-ui.c:399
-msgid "Copyright The Free Software Foundation (C) 1998-2000"
-msgstr "Copyright The Free Software Foundation (C) 1998-2000"
-
-#: gda-clnt-ui/gda-ui.c:401
-msgid ""
-"This program is part of the GNOME project for LINUX. GNOME Data Access comes "
-"with ABSOLUTELY NO WARRANTY. This is free software, and you are welcome to "
-"redistribute it under the conditions of the GNU General Public Licence."
-msgstr ""
-"A program a GNOME projekt része, Linuxhoz. A GNOME Adatbázis elérés minden "
-"GARANCIA NÉLKÜL jelenik meg. Ez egy nyílt forráskódú szoftver, minden "
-"újra megjelentetést szabadon megtehetsz a GNU Nyilvános Licensz alapján."
-
-#: gda-clnt-ui/gda-ui.c:439
-#, c-format
-msgid ""
-"Could not open file\n"
-"%s"
-msgstr ""
-"Nem tudom betölteni\n"
-"a %s nevû fájlt"
-
-#: gda-clnt-ui/gda-ui.c:569
-msgid "Unable to execute Bug Report Tool"
-msgstr "Nem tudom elindítani a Hibajelentõ Eszközt"
-
-#: gda-clnt-ui/gnome-db-browser.c:93
-msgid "Object Name"
-msgstr "Objektum név"
-
-#: gda-clnt-ui/gnome-db-browser.c:112
-msgid "0 rows"
-msgstr "0 sor"
-
-#: gda-clnt-ui/gnome-db-browser.c:137 gda-fe/gda-fe-connection.c:404
-#, c-format
-msgid "%d rows"
-msgstr "%d sor"
-
-#: gda-clnt-ui/gnome-db-browser.c:432 gda-clnt-ui/gnome-db-designer.c:63
-#: gda-postgres-server/gda-postgres-config-ac.c:156
-msgid "Tables"
-msgstr "Táblák"
-
-#: gda-clnt-ui/gnome-db-browser.c:440 gda-clnt-ui/gnome-db-designer.c:72
-#: gda-fe/gda-fe-connection.c:135
-#: gda-postgres-server/gda-postgres-config-ac.c:162
-msgid "Views"
-msgstr "Nézetek"
-
-#: gda-clnt-ui/gnome-db-browser.c:448
-msgid "Procedures"
-msgstr "Eljárások"
-
-#: gda-clnt-ui/gnome-db-browser.c:456
-msgid "Types"
-msgstr "Típusok"
-
-#: gda-clnt-ui/gnome-db-browser.c:464
-msgid "Aggregates"
-msgstr "Aggregátumok"
-
-#: gda-clnt-ui/gnome-db-browser.c:479
-msgid "Data"
-msgstr "Adatok"
-
-#: gda-clnt-ui/gnome-db-browser.c:487 gda-fe/gda-fe-batch.c:421
-#: gda-fe/gda-fe-config.c:211 gda-fe/gda-fe-dsnconfig.c:158
-#: gda-manager/gda-mgr-gda.c:42 gda-manager/gda-mgr-providers.c:38
-msgid "Remove"
-msgstr "Töröl"
-
-#: gda-clnt-ui/gnome-db-browser.c:494
-msgid "Extra Info"
-msgstr "Extra információ"
-
-#: gda-clnt-ui/gnome-db-dsn-config.c:52 gda-clnt-ui/gnome-db-login.c:223
-#: gda-fe/gda-fe-connection.c:840 gda-manager/gda-mgr-gda.c:297
-#: gda-manager/gda-mgr-gda.c:407
-msgid "GDA Name"
-msgstr "GDA Név"
-
-#: gda-clnt-ui/gnome-db-dsn-config.c:60 gda-fe/gda-fe-connection.c:846
-#: gda-fe/gda-fe-log.c:151
-msgid "Provider"
-msgstr "GDA Szerver"
-
-#: gda-clnt-ui/gnome-db-dsn-config.c:80 gda-fe/gda-fe-connection.c:852
-msgid "DSN"
-msgstr "DSN"
-
-#: gda-clnt-ui/gnome-db-dsn-config.c:88 gda-clnt-ui/gnome-db-error.c:171
-#: gda-fe/gda-fe-service.c:294 gda-fe/gda-fe-service.c:340
-#: gda-manager/gda-mgr-gda.c:407
-msgid "Description"
-msgstr "Leírás"
-
-#: gda-clnt-ui/gnome-db-dsn-config.c:96 gda-clnt-ui/gnome-db-login.c:241
-#: gda-manager/gda-mgr-gda.c:203 gda-manager/gda-mgr-gda.c:303
-msgid "Username"
-msgstr "Felhasználónév"
-
-#: gda-clnt-ui/gnome-db-dsn-config.c:104 gda-manager/gda-mgr-gda.c:45
-msgid "Config"
-msgstr "Konfiguráció"
-
-#: gda-clnt-ui/gnome-db-dsn-config.c:112 gda-manager/gda-mgr-gda.c:407
-msgid "Global"
-msgstr "Globális"
-
-#: gda-clnt-ui/gnome-db-dsn-config.c:219
-msgid "Error while saving configuration!"
-msgstr "Hiba a beállítások mentésénél!"
-
-#: gda-clnt-ui/gnome-db-dsn-config.c:222
-msgid "Data source has no name!"
-msgstr "Az adatforrásnak nincs neve!"
-
-#: gda-clnt-ui/gnome-db-error.c:101
-#, c-format
-msgid "Error %d of %d"
-msgstr "%s:%s hiba"
-
-#: gda-clnt-ui/gnome-db-error.c:196
-msgid "Show Help"
-msgstr "Súgó"
-
-#: gda-clnt-ui/gnome-db-error.c:202
-msgid "Source"
-msgstr "Forrás"
-
-#: gda-clnt-ui/gnome-db-error.c:211
-msgid "sqlstate"
-msgstr "sqlstate"
-
-#: gda-clnt-ui/gnome-db-error.c:219
-msgid "Error 0 of 0"
-msgstr "0 hiba a 0-ból"
-
-#: gda-clnt-ui/gnome-db-grid.c:147
-msgid "Record View"
-msgstr "Rekord nézet"
-
-#: gda-clnt-ui/gnome-db-grid.c:168 gda-dev/gda-builder-main.c:115
-#: gda-fe/gda-fe-connection.c:84
-msgid "Copy"
-msgstr "Másolás"
-
-#: gda-clnt-ui/gnome-db-grid.c:168
-msgid "Copy selection to clipboard"
-msgstr "Kijelölt szöveg vágólapra másolása"
-
-#: gda-clnt-ui/gnome-db-grid.c:171 gda-fe/gda-fe-connection.c:103
-msgid "Select all"
-msgstr "Mindent kijelöl"
-
-#: gda-clnt-ui/gnome-db-grid.c:171
-msgid "Select all rows"
-msgstr "Minden sort kijelöl"
-
-#: gda-clnt-ui/gnome-db-grid.c:174
-msgid "Clear selection"
-msgstr "A kijelölés törlése"
-
-#: gda-clnt-ui/gnome-db-grid.c:174
-msgid "Clear all selected rows"
-msgstr "Minden kijelölt sor törlése"
-
-#: gda-clnt-ui/gnome-db-grid.c:177
-msgid "Record view..."
-msgstr "Rekord nézet..."
-
-#: gda-clnt-ui/gnome-db-grid.c:177
-msgid "View recordset record-by-record"
-msgstr "Rekordtömb megtekintése rekordról rekordra"
-
-#: gda-clnt-ui/gnome-db-grid.c:181
-msgid "Refresh grid"
-msgstr "Rács frissítése"
-
-#: gda-clnt-ui/gnome-db-grid.c:181
-msgid "Refresh grid contents"
-msgstr "Rács tartalom frissítése"
-
-#: gda-clnt-ui/gnome-db-grid.c:184
-msgid "Print grid"
-msgstr "Rács nyomtatása"
-
-#: gda-clnt-ui/gnome-db-grid.c:184
-msgid "Print grid contents"
-msgstr "Rács tartalom nyomtatása"
-
-#: gda-clnt-ui/gnome-db-grid.c:187 gda-fe/gda-fe-config.c:282
-msgid "Show columns"
-msgstr "Oszlopok mutatása"
-
-#: gda-clnt-ui/gnome-db-grid.c:187
-msgid "Show column titles"
-msgstr "Oszlopfejlécek mutatása"
-
-#: gda-clnt-ui/gnome-db-grid.c:190
-msgid "Hide columns"
-msgstr "Oszlopok elrejtése"
-
-#: gda-clnt-ui/gnome-db-grid.c:190
-msgid "Hide column titles"
-msgstr "Oszlopfejlécek elrejtése"
-
-#: gda-clnt-ui/gnome-db-log-viewer.c:88
-#, c-format
-msgid "Entry %d of %d"
-msgstr "%d bejegyzés a %d-bõl"
-
-#. create entries
-#: gda-clnt-ui/gnome-db-log-viewer.c:154 gda-clnt-ui/gnome-db-log-viewer.c:322
-msgid "Date"
-msgstr "Dátum"
-
-#: gda-clnt-ui/gnome-db-log-viewer.c:154 gda-clnt-ui/gnome-db-log-viewer.c:328
-msgid "Time"
-msgstr "Idõpont"
-
-#: gda-clnt-ui/gnome-db-log-viewer.c:154
-msgid "Message"
-msgstr "Üzenet"
-
-#. create dialog
-#: gda-clnt-ui/gnome-db-log-viewer.c:307
-msgid "Log Entry"
-msgstr "Napló bejegyzés"
-
-#: gda-clnt-ui/gnome-db-login.c:107 gda-clnt-ui/gnome-db-login.c:328
-#, c-format
-msgid "No datasource '%s' defined in your GDA configuration file"
-msgstr "Nincs '%s' adatforrás definiálva a GDA konfigurációs fájlodban"
-
-#: gda-clnt-ui/gnome-db-login.c:223
-msgid "User Name"
-msgstr "Felhasználónév"
-
-#: gda-clnt-ui/gnome-db-login.c:231
-msgid "GDA Datasource"
-msgstr "GDA adatforrás"
-
-#: gda-clnt-ui/gnome-db-login.c:250 gda-manager/gda-mgr-gda.c:207
-#: gda-manager/gda-mgr-gda.c:308
-#: gda-postgres-server/gda-postgres-config-users.c:158
-msgid "Password"
-msgstr "Jelszó"
-
-#: gda-clnt-ui/gnome-db-login.c:260
-msgid "Last Connections"
-msgstr "Utolsó kapcsolatok"
-
-#: gda-clnt/gda-connection-pool.c:169
+#: lib/gda-client/gda-connection-pool.c:267
 #, c-format
 msgid "could not open connection to %s"
 msgstr "nem tudok kapcsolódni: '%s'"
 
-#: gda-clnt/gda-connection-pool.c:180
+#: lib/gda-client/gda-connection-pool.c:280
 #, c-format
 msgid "Data source %s not found"
 msgstr "%s adatforrást nem találtam"
 
-#: gda-clnt/gda-connection.c:166 gda-clnt/gda-error.c:116
+#: lib/gda-client/gda-connection.c:234 lib/gda-client/gda-error.c:179
 #, c-format
 msgid "%s: The server didn't respond."
 msgstr "%s: A szerver nem válaszol."
 
-#: gda-clnt/gda-connection.c:170 gda-clnt/gda-error.c:120
+#: lib/gda-client/gda-connection.c:238 lib/gda-client/gda-error.c:183
 #, c-format
 msgid "%s: An Error occured in the CORBA system."
 msgstr "%s: Egy hiba történt a CORBA rendszerben."
 
-#: gda-clnt/gda-connection.c:457
+#: lib/gda-client/gda-connection.c:529
 #, c-format
 msgid "Database '%s' not found in system configuration"
 msgstr "A '%s' adatbázis nem található a konfigurációban"
 
-#: gda-clnt/gda-connection.c:473
+#: lib/gda-client/gda-connection.c:545
 msgid "Could not open CORBA factory"
 msgstr "Nem tudom megnyitni a CORBA factory-t"
 
-#: gda-clnt/gda-field.c:187
+#: lib/gda-client/gda-field.c:245
 msgid "<NULL>"
 msgstr "<NULL>"
 
-#: gda-clnt/gda-field.c:193 gda-clnt/gda-field.c:195
+#: lib/gda-client/gda-field.c:251 lib/gda-client/gda-field.c:253
 msgid "<Unknown GDA Type(NULL)>"
 msgstr "<Nem ismert GDA-típus(NULL)>"
 
-#: gda-clnt/gda-field.c:208
+#: lib/gda-client/gda-field.c:266
 msgid "TRUE"
 msgstr "IGAZ"
 
-#: gda-clnt/gda-field.c:209
+#: lib/gda-client/gda-field.c:267
 msgid "FALSE"
 msgstr "HAMIS"
 
-#: gda-common/gda-log.c:33
+#: lib/gda-common/gda-corba.c:77
+#, c-format
+msgid "CORBA System exception: %s"
+msgstr "CORBA rendszer kivétel: %s"
+
+#: lib/gda-common/gda-corba.c:110
+msgid "True"
+msgstr "Igaz"
+
+#: lib/gda-common/gda-corba.c:110
+msgid "False"
+msgstr "Hamis"
+
+#: lib/gda-common/gda-init.c:59
+msgid "Attempt to initialize an already initialized client"
+msgstr "Próbálkozás a már egyszer inicializált kliens inicializálására"
+
+#: lib/gda-common/gda-log.c:48
+msgid "Saving log...x"
+msgstr "Napló mentése...x"
+
+#. compose message
+#: lib/gda-common/gda-log.c:69
 msgid "ERROR: "
 msgstr "HIBA: "
 
-#: gda-common/gda-log.c:33
+#: lib/gda-common/gda-log.c:69
 msgid "MESSAGE: "
 msgstr "ÜZENET: "
 
-#: gda-common/gda-thread.c:150
+#: lib/gda-common/gda-thread.c:211
 msgid "thread is already running"
 msgstr "a szál már fut"
 
-#: gda-common/gda-xml-database.c:156
+#: lib/gda-common/gda-xml-database.c:282
 #, c-format
 msgid "table %s already exists"
 msgstr "a %s tábla már létezik"
 
-#: gda-components/gda-components-browser.c:54
-msgid "Data Source Name"
-msgstr "Adatforrás neve"
-
-#: gda-components/gda-components-browser.c:58
-msgid "User name to use for the connection"
-msgstr "Felhasználónév a kapcsolathoz"
-
-#: gda-components/gda-components-browser.c:62
-msgid "Password to authenticate user"
-msgstr "Felhasználó-azonosításhoz jelszó"
-
-#: gda-components/gda-components-browser.c:66
-msgid "To open/close the connection"
-msgstr "Kapcsolat nyitása/zárása"
-
-#: gda-components/gda-components-connection.c:37
-#: gda-dev/gda-builder-database.c:31 gda-fe/gda-fe-connection.c:660
-msgid "Error Viewer"
-msgstr "Hibanézõ"
-
-#: gda-components/gda-components-factory.c:66
+#: lib/gda-common/gda-xml-database.c:446
 #, c-format
-msgid "Could not initialize %s component"
-msgstr "Nem tudom a %s komponenst elindítani"
+msgid "%p is not a valid table"
+msgstr "A következõ nem érvényes táblanév: %p"
 
-#: gda-components/gda-components-grid.c:42
-msgid "Font to be used for the grid"
-msgstr "A rácsnál használatos betûtípus"
+#: lib/gda-server/gda-server-error.c:185
+msgid "Could not get pointer to server implementation"
+msgstr "Nem kapom meg a mutatót a szerverre"
 
-#: gda-components/gda-components-main.c:38
-#: gda-ldap-server/gda-ldap-config-main.c:42
-#: gda-mysql-server/gda-mysql-config-main.c:46
-#: gda-odbc-server/gda-odbc-config-main.c:58
-#: gda-postgres-server/gda-postgres-config-main.c:330
-msgid "Could not initialize CORBA"
-msgstr "Nem tudom a CORBA-t elindítani"
-
-#: gda-components/gda-components-main.c:45
-#: gda-ldap-server/gda-ldap-config-main.c:33
-#: gda-ldap-server/gda-ldap-config-main.c:45
-#: gda-mysql-server/gda-mysql-config-main.c:52
-#: gda-odbc-server/gda-odbc-config-main.c:49
-#: gda-odbc-server/gda-odbc-config-main.c:61
-#: gda-postgres-server/gda-postgres-config-main.c:337
-msgid "Could not initialize Bonobo"
-msgstr "Nem tudom a Bonobo-t elindítani"
-
-#: gda-components/gnome-db-container.c:117
-msgid "View requested to be activated but there is already an active view"
-msgstr "Az aktivizálásra szánt nézet aktivizálva lett, de már van "
-"aktív nézet"
-
-#: gda-components/gnome-db-container.c:252
-#: gda-components/gnome-db-container.c:298 gda-fe/gda-fe-callbacks.c:61
-#: gda-fe/gda-fe-connection.c:647 gda-fe/gda-fe-service.c:249
-#: gda-manager/gda-mgr-main.c:224
-msgid "Ready"
-msgstr "Kész"
-
-#: gda-components/gnome-db-container.c:420
+#: lib/gda-server/gda-server-impl-connection.c:123
+#: lib/gda-server/gda-server-impl-connection.c:132
+#: lib/gda-server/gda-server-impl-connection.c:139
+#: lib/gda-server/gda-server-impl-connection.c:148
+#: lib/gda-server/gda-server-impl-connection.c:155
+#: lib/gda-server/gda-server-impl-connection.c:164
+#: lib/gda-server/gda-server-impl-connection.c:171
+#: lib/gda-server/gda-server-impl-connection.c:180
+#: lib/gda-server/gda-server-impl-recordset.c:126
+#: lib/gda-server/gda-server-impl-recordset.c:135
+#: lib/gda-server/gda-server-impl-recordset.c:142
+#: lib/gda-server/gda-server-impl-recordset.c:157
+#: lib/gda-server/gda-server-impl-recordset.c:166
+#: lib/gda-server/gda-server-impl-recordset.c:173
+#: lib/gda-server/gda-server-impl-recordset.c:182
+#: lib/gda-server/gda-server-impl-recordset.c:189
+#: lib/gda-server/gda-server-impl-recordset.c:198
+#: lib/gda-server/gda-server-impl-recordset.c:205
+#: lib/gda-server/gda-server-impl-recordset.c:213
+#: lib/gda-server/gda-server-impl-recordset.c:222
+#: lib/gda-server/gda-server-impl-recordset.c:229
+#: lib/gda-server/gda-server-impl-recordset.c:237
+#: lib/gda-server/gda-server-impl-recordset.c:245
+#: lib/gda-server/gda-server-impl-recordset.c:273
+#: lib/gda-server/gda-server-impl-recordset.c:281
+#: lib/gda-server/gda-server-impl-recordset.c:289
+#: lib/gda-server/gda-server-impl-recordset.c:297
+#: lib/gda-server/gda-server-impl-recordset.c:305
+#: lib/gda-server/gda-server-impl-recordset.c:314
 #, c-format
-msgid "Could not bind object %s"
-msgstr "Nem tudom a %s nevû objektumt elérni"
+msgid "%s not implemented"
+msgstr "%s nincs még megírva"
 
-#: gda-components/gnome-db-container.c:448
+#: lib/gda-server/gda-server-impl-connection.c:272
 #, c-format
-msgid "Unable to activate object %s"
-msgstr "Nem tudom aktivizálni az '%s' objektumot"
+msgid "impl_GDA_Connection_open: opening connection with DSN: %s"
+msgstr "impl_GDA_Connection_open: kapcsolat megnyitása DSN-el: %s"
 
-#: gda-components/gnome-db-control.c:236
+#: lib/gda-server/gda-server-impl-recordset.c:407
 #, c-format
-msgid "%s:%d: Could not create control widget"
-msgstr "%s:%d: Nem tudom elkészíteni a vezérlõ widget-et"
+msgid "%s: an error ocurred while fetching data"
+msgstr "%s: hiba lépett fel az adatok lekérdezése közben"
 
-#: gda-components/gnome-db-control.c:412
-msgid "Could not register control factory"
-msgstr "Nem tudom regisztrálni vezérlõ factory-t"
-
-#: gda-components/gnome-db-control.c:530
-msgid "control has no property bag"
-msgstr "a vezérlésnek nincs beállítás tasakja"
-
-#: gda-components/gnome-db-control.c:596
+#: lib/gda-server/gda-server-impl-recordset.c:446
 #, c-format
-msgid "property %s not found"
-msgstr "A %s beállítás nem található"
+msgid "%s: length = %d"
+msgstr "%s: length = %d"
 
-#: gda-components/gnome-db-factory.c:51
+#: lib/gda-server/gda-server-impl-recordset.c:459
 #, c-format
-msgid "Factory %s already existing"
-msgstr "%s factory már van"
+msgid "%s: sending field description for '%s'"
+msgstr "%s: elemleírást küldöm '%s'-hoz"
 
-#: gda-components/gnome-db-factory.c:73
+#: lib/gda-server/gda-server-impl.c:195
 #, c-format
-msgid "Could not register %s factory"
-msgstr "Nem tudok regisztrálni %s factory-t"
-
-#: gda-dev/gda-builder-callbacks.c:24 gda-fe/gda-fe-main.c:96
-#: gda-manager/gda-mgr-main.c:60
-msgid "GNOME-DB Builder"
-msgstr "GNOME-DB Builder"
-
-#: gda-dev/gda-builder-database.c:58
-#, c-format
-msgid "Connected to %s"
-msgstr "Kapcsolódva %s-hez"
-
-#: gda-dev/gda-builder-database.c:83 gda-fe/gda-fe-callbacks.c:129
-msgid "Open Connection"
-msgstr "Kapcsolat nyitása"
-
-#: gda-dev/gda-builder-database.c:119
-msgid "Disconnected from database"
-msgstr "Az adatbázisról lekapcsolódva"
-
-#: gda-dev/gda-builder-database.c:135
-msgid "Database Browser"
-msgstr "Adatbázis böngészõ"
-
-#: gda-dev/gda-builder-database.c:144
-msgid "There are no open connections"
-msgstr "Nincsenek nyitott kapcsolatok"
-
-#: gda-dev/gda-builder-help.c:30
-msgid "Back"
-msgstr "Vissza"
-
-#: gda-dev/gda-builder-help.c:30
-msgid "Go to previous document"
-msgstr "Az elõzõ dokumentumra ugrik"
-
-#: gda-dev/gda-builder-help.c:33
-msgid "Forward"
-msgstr "Következõ"
-
-#: gda-dev/gda-builder-help.c:33
-msgid "Go to next document"
-msgstr "A következõ dokumentumra ugrik"
-
-#: gda-dev/gda-builder-help.c:36
-msgid "Home"
-msgstr "Haza"
-
-#: gda-dev/gda-builder-help.c:36
-msgid "Go to table of contents"
-msgstr "A tartalomjegyzékre urgik"
-
-#: gda-dev/gda-builder-help.c:113 gda-dev/gda-builder-main.c:178
-#: gda-fe/gda-fe-main.c:132 gda-manager/gda-mgr-main.c:80
-msgid "Help"
-msgstr "Súgó"
-
-#: gda-dev/gda-builder-help.c:146
-#, c-format
-msgid "Could not load file '%s'"
-msgstr "Nem tudom betölteni a %s nevû fájlt"
-
-#: gda-dev/gda-builder-main.c:38 gda-dev/gda-builder-main.c:54
-msgid "Screen"
-msgstr "Képernyõ"
-
-#: gda-dev/gda-builder-main.c:38
-msgid "New screen"
-msgstr "Új képernyõ"
-
-#: gda-dev/gda-builder-main.c:41 gda-dev/gda-builder-main.c:57
-msgid "Report"
-msgstr "Jelentés"
-
-#: gda-dev/gda-builder-main.c:41
-msgid "New report"
-msgstr "Új jelentés"
-
-#: gda-dev/gda-builder-main.c:44 gda-dev/gda-builder-main.c:60
-msgid "Server"
-msgstr "Szerver"
-
-#: gda-dev/gda-builder-main.c:44
-msgid "New server"
-msgstr "Új szerver"
-
-#: gda-dev/gda-builder-main.c:47 gda-dev/gda-builder-main.c:63
-msgid "Repository"
-msgstr "Repository"
-
-#: gda-dev/gda-builder-main.c:47
-msgid "New repository"
-msgstr "Új repository"
-
-#: gda-dev/gda-builder-main.c:54
-msgid "Open existing screen"
-msgstr "Meglévõ képernyõ megnyitása"
-
-#: gda-dev/gda-builder-main.c:57
-msgid "Open existing report"
-msgstr "Meglévõ jelentés megnyitása"
-
-#: gda-dev/gda-builder-main.c:60
-msgid "Open existing server"
-msgstr "Meglévõ szerver megnyitása"
-
-#: gda-dev/gda-builder-main.c:63
-msgid "Open existing repository"
-msgstr "Meglévõ repository megnyitása"
-
-#: gda-dev/gda-builder-main.c:70
-msgid "Connect..."
-msgstr "Kapcsolódás..."
-
-#: gda-dev/gda-builder-main.c:70
-msgid "Connect to database"
-msgstr "Kapcsolódás az adatbázishoz"
-
-#: gda-dev/gda-builder-main.c:73 gda-fe/gda-fe-connection.c:58
-#: gda-fe/gda-fe-main.c:28
-msgid "Disconnect"
-msgstr "Lekapcsolódás"
-
-#: gda-dev/gda-builder-main.c:73
-msgid "Close database connection"
-msgstr "Adatbázis kapcsolat zárása"
-
-#: gda-dev/gda-builder-main.c:77 gda-manager/gda-mgr-gda.c:48
-msgid "Browse"
-msgstr "Böngészés"
-
-#: gda-dev/gda-builder-main.c:77
-msgid "Open database browser"
-msgstr "Adatbázis böngészõ megnyitása"
-
-#: gda-dev/gda-builder-main.c:80
-msgid "Import objects"
-msgstr "Importálás"
-
-#: gda-dev/gda-builder-main.c:80
-msgid "Import database objects into repository"
-msgstr "Adatbázis objektumok importálása a repository-ba"
-
-#: gda-dev/gda-builder-main.c:87 gda-dev/gda-builder-main.c:185
-#: gda-fe/gda-fe-designer.c:29 gda-fe/gda-fe-dsnconfig.c:146
-#: gda-manager/gda-mgr-providers.c:32
-#: gda-mysql-server/gda-mysql-config-db.c:62
-msgid "New"
-msgstr "Új"
-
-#: gda-dev/gda-builder-main.c:88 gda-dev/gda-builder-main.c:188
-#: gda-fe/gda-fe-batch.c:31 gda-fe/gda-fe-connection.c:71
-#: gda-fe/gda-fe-designer.c:32
-msgid "Open"
-msgstr "Megnyit"
-
-#: gda-dev/gda-builder-main.c:89 gda-fe/gda-fe-designer.c:42
-#: gda-fe/gda-fe-log.c:43 gda-fe/gda-fe-service.c:50
-#: gda-manager/gda-mgr-main.c:38 gda-manager/gda-mgr-main.c:87
-msgid "Close"
-msgstr "Bezár"
-
-#: gda-dev/gda-builder-main.c:89
-msgid "Close current window"
-msgstr "Aktuális ablak bezárása"
-
-#: gda-dev/gda-builder-main.c:92
-msgid "Close all"
-msgstr "Mindent bezár"
-
-#: gda-dev/gda-builder-main.c:92
-msgid "Close all open windows"
-msgstr "Az összes megnyitott ablak zárása"
-
-#: gda-dev/gda-builder-main.c:98 gda-dev/gda-builder-main.c:196
-#: gda-fe/gda-fe-main.c:37 gda-fe/gda-fe-main.c:148
-#: gda-manager/gda-mgr-main.c:44 gda-manager/gda-mgr-main.c:95
-msgid "Quit"
-msgstr "Kilépés"
-
-#: gda-dev/gda-builder-main.c:98 gda-dev/gda-builder-main.c:196
-#: gda-fe/gda-fe-main.c:37 gda-manager/gda-mgr-main.c:44
-#: gda-manager/gda-mgr-main.c:95
-msgid "Exit application"
-msgstr "Kilépés a programból"
-
-#: gda-dev/gda-builder-main.c:105
-msgid "Undo"
-msgstr "Vissza"
-
-#: gda-dev/gda-builder-main.c:105
-msgid "Undo last action"
-msgstr "Utolsó mûvelet visszavonása"
-
-#: gda-dev/gda-builder-main.c:108
-msgid "Redo"
-msgstr "Újra"
-
-#: gda-dev/gda-builder-main.c:108
-msgid "Revert last undone action"
-msgstr "Visszavont mûvelet elvégzése"
-
-#: gda-dev/gda-builder-main.c:112 gda-fe/gda-fe-connection.c:81
-msgid "Cut"
-msgstr "Kivág"
-
-#: gda-dev/gda-builder-main.c:112
-msgid "Cut selected text/item"
-msgstr "Kijelölt szöveg/elem kivágása vágólapra"
-
-#: gda-dev/gda-builder-main.c:115
-msgid "Copy selected text/item to the clipboard"
-msgstr "Kijelölt szöveg/elem vágólapra másolása"
-
-#: gda-dev/gda-builder-main.c:118 gda-fe/gda-fe-connection.c:87
-msgid "Paste"
-msgstr "Beillesztés"
-
-#: gda-dev/gda-builder-main.c:118 gda-fe/gda-fe-connection.c:87
-msgid "Paste clipboard contents"
-msgstr "A vágólap tartalmának beillesztése"
-
-#: gda-dev/gda-builder-main.c:121
-msgid "Delete"
-msgstr "Töröl"
-
-#: gda-dev/gda-builder-main.c:121
-msgid "Delete selected text/item"
-msgstr "A kiválasztott szöveg/elem törlése"
-
-#: gda-dev/gda-builder-main.c:128
-msgid "New project"
-msgstr "Új projekt"
-
-#: gda-dev/gda-builder-main.c:128
-msgid "Create a new project"
-msgstr "Új projekt készítése"
-
-#: gda-dev/gda-builder-main.c:131
-msgid "Open project"
-msgstr "Projekt megnyitása"
-
-#: gda-dev/gda-builder-main.c:131
-msgid "Open an existing project"
-msgstr "Létezõ projektfájl megnyitása"
-
-#: gda-dev/gda-builder-main.c:134
-msgid "Save project"
-msgstr "Projekt mentése"
-
-#: gda-dev/gda-builder-main.c:134
-msgid "Save current project"
-msgstr "Jelenlegi projekt mentése"
-
-#: gda-dev/gda-builder-main.c:138
-msgid "Properties..."
-msgstr "Beállítások..."
-
-#: gda-dev/gda-builder-main.c:138
-msgid "View project properties"
-msgstr "Projekt tulajdonságai"
-
-#: gda-dev/gda-builder-main.c:146 gda-fe/gda-fe-callbacks.c:70
-#: gda-manager/gda-mgr-main.c:52
-msgid "GNOME-DB Front End"
-msgstr "GNOME-DB Felület"
-
-#: gda-dev/gda-builder-main.c:146 gda-manager/gda-mgr-main.c:52
-msgid "The GNOME-DB front end"
-msgstr "GNOME-DB felület"
-
-#: gda-dev/gda-builder-main.c:150 gda-manager/gda-mgr-main.c:56
-msgid "SQL Front End"
-msgstr "SQL felület"
-
-#: gda-dev/gda-builder-main.c:150 gda-manager/gda-mgr-main.c:56
-msgid "The SQL front end"
-msgstr "SQL felület"
-
-#: gda-dev/gda-builder-main.c:154 gda-fe/gda-fe-main.c:93
-#: gda-manager/gda-mgr-callbacks.c:25
-msgid "GNOME-DB Manager"
-msgstr "GNOME-DB menedzser"
-
-#: gda-dev/gda-builder-main.c:154 gda-fe/gda-fe-main.c:93
-msgid "The GNOME-DB configuration tool"
-msgstr "A GNOME-DB konfigurációs eszköz"
-
-#: gda-dev/gda-builder-main.c:161 gda-fe/gda-fe-main.c:117
-#: gda-manager/gda-mgr-main.c:67
-msgid "About gnome-db..."
-msgstr "Gnome-db névjegy..."
-
-#: gda-dev/gda-builder-main.c:161 gda-dev/gda-builder-main.c:165
-#: gda-fe/gda-fe-main.c:117 gda-fe/gda-fe-main.c:121
-#: gda-manager/gda-mgr-main.c:67 gda-manager/gda-mgr-main.c:71
-msgid "About this program"
-msgstr "A programról"
-
-#: gda-dev/gda-builder-main.c:165 gda-fe/gda-fe-main.c:121
-#: gda-manager/gda-mgr-main.c:71
-msgid "Submit bug report"
-msgstr "Hibajelentés feladása"
-
-#: gda-dev/gda-builder-main.c:172 gda-fe/gda-fe-batch.c:316
-#: gda-fe/gda-fe-main.c:128 gda-manager/gda-mgr-main.c:78
-msgid "File"
-msgstr "Fájl"
-
-#: gda-dev/gda-builder-main.c:173 gda-fe/gda-fe-batch.c:413
-#: gda-manager/gda-mgr-gda.c:39 gda-manager/gda-mgr-providers.c:35
-msgid "Edit"
-msgstr "Szerkeszt"
-
-#: gda-dev/gda-builder-main.c:174 gda-dev/gda-builder-main.c:176
-#: gda-dev/gda-builder-project.c:41
-msgid "Project"
-msgstr "Projekt"
-
-#: gda-dev/gda-builder-main.c:175 gda-fe/gda-fe-main.c:129
-#: gda-manager/gda-mgr-gda.c:321 gda-mysql-server/gda-mysql-config-main.c:81
-msgid "Database"
-msgstr "Adatbázis"
-
-#: gda-dev/gda-builder-main.c:177 gda-fe/gda-fe-main.c:130
-#: gda-manager/gda-mgr-main.c:79
-msgid "Tools"
-msgstr "Eszközök"
-
-#: gda-dev/gda-builder-main.c:185
-msgid "New Screen/Report"
-msgstr "Új képernyõ/jelentés"
-
-#: gda-dev/gda-builder-main.c:188
-msgid "Open Screen/Report"
-msgstr "Képernyõ/jelentés megnyitása"
-
-#. create dialog
-#: gda-dev/gda-builder-main.c:192 gda-fe/gda-fe-config.c:307
-#: gda-fe/gda-fe-main.c:144 gda-manager/gda-mgr-main.c:91
-msgid "Preferences"
-msgstr "Beállítások"
-
-#: gda-dev/gda-builder-main.c:192 gda-fe/gda-fe-main.c:103
-#: gda-fe/gda-fe-main.c:144 gda-manager/gda-mgr-main.c:91
-msgid "Configure user preferences"
-msgstr "Felhasználói beállítások"
-
-#: gda-dev/gda-builder-main.c:239 gda-fe/gda-fe-main.c:180
-#: gda-rolodex/gda-rolodex-main.c:124
-msgid "Could not initialize Bonobo\n"
-msgstr "Nem tudom a Bonobo-t elindítani\n"
-
-#: gda-dev/gda-builder-main.c:264 gda-fe/gda-fe-callbacks.c:200
-#: gda-manager/gda-mgr-callbacks.c:90
-#, c-format
-msgid "Unable to execute '%s'"
-msgstr "Nem tudom végrehajtani: '%s'"
-
-#: gda-dev/gda-builder-project.c:46 gda-fe/gda-fe-service.c:350
-#: gda-manager/gda-mgr-providers.c:160
-msgid "Location"
-msgstr "Hely"
-
-#: gda-dev/gda-run.c:29 testing/gda-client-test1.c:31
-#: testing/gda-client-test10.c:31 testing/gda-client-test11.c:31
-#: testing/gda-client-test12.c:32 testing/gda-client-test13.c:32
-#: testing/gda-client-test14.c:31 testing/gda-client-test2.c:32
-#: testing/gda-client-test3.c:32 testing/gda-client-test4.c:30
-#: testing/gda-client-test5.c:32 testing/gda-client-test6.c:29
-#: testing/gda-client-test7.c:31 testing/gda-client-test8.c:32
-#: testing/gda-client-test9.c:31 testing/gda-ui-test1.c:33
-#: testing/gda-ui-test2.c:33 testing/gda-ui-test3.c:31
-msgid "database name"
-msgstr "adatbázis név"
-
-#: gda-dev/gda-run.c:29 testing/gda-client-test1.c:31
-#: testing/gda-client-test10.c:31 testing/gda-client-test11.c:31
-#: testing/gda-client-test12.c:32 testing/gda-client-test13.c:32
-#: testing/gda-client-test14.c:31 testing/gda-client-test2.c:32
-#: testing/gda-client-test3.c:32 testing/gda-client-test4.c:30
-#: testing/gda-client-test5.c:32 testing/gda-client-test6.c:29
-#: testing/gda-client-test7.c:31 testing/gda-client-test8.c:32
-#: testing/gda-client-test9.c:31 testing/gda-ui-test1.c:33
-#: testing/gda-ui-test2.c:33 testing/gda-ui-test3.c:31
-msgid "DATABASE"
-msgstr "ADATBÁZIS"
-
-#: gda-dev/gda-run.c:30 testing/gda-client-test1.c:32
-#: testing/gda-client-test10.c:32 testing/gda-client-test11.c:32
-#: testing/gda-client-test12.c:33 testing/gda-client-test13.c:33
-#: testing/gda-client-test14.c:32 testing/gda-client-test2.c:33
-#: testing/gda-client-test3.c:33 testing/gda-client-test4.c:31
-#: testing/gda-client-test5.c:33 testing/gda-client-test6.c:30
-#: testing/gda-client-test7.c:32 testing/gda-client-test8.c:33
-#: testing/gda-client-test9.c:32 testing/gda-ui-test1.c:34
-#: testing/gda-ui-test2.c:34 testing/gda-ui-test3.c:32
-msgid "user name"
-msgstr "felhasználó név"
-
-#: gda-dev/gda-run.c:30 testing/gda-client-test1.c:32
-#: testing/gda-client-test10.c:32 testing/gda-client-test11.c:32
-#: testing/gda-client-test12.c:33 testing/gda-client-test13.c:33
-#: testing/gda-client-test14.c:32 testing/gda-client-test2.c:33
-#: testing/gda-client-test3.c:33 testing/gda-client-test4.c:31
-#: testing/gda-client-test5.c:33 testing/gda-client-test6.c:30
-#: testing/gda-client-test7.c:32 testing/gda-client-test8.c:33
-#: testing/gda-client-test9.c:32 testing/gda-ui-test1.c:34
-#: testing/gda-ui-test2.c:34 testing/gda-ui-test3.c:32
-msgid "USER-NAME"
-msgstr "FELHASZNÁLÓ"
-
-#: gda-dev/gda-run.c:31 testing/gda-client-test1.c:33
-#: testing/gda-client-test10.c:33 testing/gda-client-test11.c:33
-#: testing/gda-client-test12.c:34 testing/gda-client-test13.c:34
-#: testing/gda-client-test14.c:33 testing/gda-client-test2.c:34
-#: testing/gda-client-test3.c:34 testing/gda-client-test4.c:32
-#: testing/gda-client-test5.c:34 testing/gda-client-test6.c:31
-#: testing/gda-client-test7.c:33 testing/gda-client-test8.c:34
-#: testing/gda-client-test9.c:33 testing/gda-ui-test1.c:35
-#: testing/gda-ui-test2.c:35 testing/gda-ui-test3.c:33
-msgid "password"
-msgstr "jelszó"
-
-#: gda-dev/gda-run.c:31 testing/gda-client-test1.c:33
-#: testing/gda-client-test10.c:33 testing/gda-client-test11.c:33
-#: testing/gda-client-test12.c:34 testing/gda-client-test13.c:34
-#: testing/gda-client-test14.c:33 testing/gda-client-test2.c:34
-#: testing/gda-client-test3.c:34 testing/gda-client-test4.c:32
-#: testing/gda-client-test5.c:34 testing/gda-client-test6.c:31
-#: testing/gda-client-test7.c:33 testing/gda-client-test8.c:34
-#: testing/gda-client-test9.c:33 testing/gda-ui-test1.c:35
-#: testing/gda-ui-test2.c:35 testing/gda-ui-test3.c:33
-msgid "PASSWORD"
-msgstr "JELSZÓ"
-
-#: gda-dev/gda-run.c:32
-msgid "file name"
-msgstr "fájlnév"
-
-#: gda-dev/gda-run.c:32
-msgid "FILE-NAME"
-msgstr "FÁJLNÉV"
-
-#: gda-dev/gda-run.c:110
-#, c-format
-msgid "%s: misconfigured DSN entry"
-msgstr "%s: nem bekonfigurált DSN bejegyzés"
-
-#: gda-dev/gda-run.c:125
-#, c-format
-msgid "%s: data source '%s' not found\n"
-msgstr "%s: a '%s' adatforrást nem találom\n"
-
-#: gda-fe/gda-fe-batch.c:28 gda-fe/gda-fe-connection.c:65
-msgid "Execute"
-msgstr "Indít"
-
-#: gda-fe/gda-fe-batch.c:28
-msgid "Execute batch file"
-msgstr "Kötegfájl indítása"
-
-#: gda-fe/gda-fe-batch.c:31
-msgid "Open file"
-msgstr "Fájl megnyitása"
-
-#: gda-fe/gda-fe-batch.c:34 gda-fe/gda-fe-connection.c:74
-#: gda-fe/gda-fe-designer.c:35
-msgid "Save"
-msgstr "Mentés"
-
-#: gda-fe/gda-fe-batch.c:34
-msgid "Save file"
-msgstr "Fájl mentése"
-
-#: gda-fe/gda-fe-batch.c:37 gda-fe/gda-fe-connection.c:90
-#: gda-fe/gda-fe-connection.c:100 gda-fe/gda-fe-designer.c:38
-#: gda-fe/gda-fe-log.c:36
-msgid "Clear"
-msgstr "Törlés"
-
-#: gda-fe/gda-fe-batch.c:37
-msgid "Clear command list"
-msgstr "Parancslista törlése"
-
-#: gda-fe/gda-fe-batch.c:94 gda-fe/gda-fe-connection.c:454
-#: gda-fe/gda-fe-connection.c:522
-#, c-format
+msgid "Starting provider %s with no implementation functions"
+msgstr "%s szolgáltató indítása kellékfunkciók nélkül"
+
+#: lib/gda-server/gda-server-impl.c:222
+#: report/server/gda-report-server-main.c:120
 msgid ""
-"Could not open file\n"
-"'%s'"
-msgstr ""
-"Nem tudom megnyitni\n"
-"a %s nevû fájlt"
+"OAF doesn't know about our IID; indicates broken installation. Exiting..."
+msgstr "Az OAF nem tud az IID-drõl: rossz telepítésné lehet ez. Kilépek..."
 
-#: gda-fe/gda-fe-batch.c:126
-msgid "No command selected"
-msgstr "Nincs kijelölve parancs"
-
-#. create dialog
-#: gda-fe/gda-fe-batch.c:134
-msgid "Command"
-msgstr "Parancs"
-
-#: gda-fe/gda-fe-batch.c:145
-msgid "Enter command text"
-msgstr "Parancs beírása"
-
-#: gda-fe/gda-fe-batch.c:160
-msgid "Insert at current position"
-msgstr "Az aktuális pozícióba szúrás"
-
-#. create dialog
-#: gda-fe/gda-fe-batch.c:300
-msgid "Open File"
-msgstr "Fájl megnyitása"
-
-#: gda-fe/gda-fe-batch.c:311
-msgid "Command separators"
-msgstr "Parancs szeparátorok"
-
-#: gda-fe/gda-fe-batch.c:321
-msgid "Append to current file"
-msgstr "Jelenlegi fájlhoz fûz"
-
-#: gda-fe/gda-fe-batch.c:340
-msgid "You must specify a file to be loaded"
-msgstr "Meg kellene adnod egy fájlt betöltéshez"
-
-#: gda-fe/gda-fe-batch.c:342
-msgid "You must specifiy the characters used as command separators"
-msgstr "Meg kell adnod a parancsszeparátor karaktereket"
-
-#: gda-fe/gda-fe-batch.c:405 gda-fe/gda-fe-config.c:204
-#: gda-manager/gda-mgr-gda.c:36
-msgid "Add"
-msgstr "Hozzáad"
-
-#: gda-fe/gda-fe-batch.c:434
-msgid "Up"
-msgstr "Fel"
-
-#: gda-fe/gda-fe-batch.c:442
-msgid "Down"
-msgstr "Le"
-
-#. create options area
-#: gda-fe/gda-fe-batch.c:451 gda-fe/gda-fe-main.c:131
-msgid "Options"
-msgstr "Opciók"
-
-#: gda-fe/gda-fe-batch.c:460
-msgid "Transaction Mode"
-msgstr "Tranzakció mód"
-
-#: gda-fe/gda-fe-batch.c:465
-msgid "Send as XML"
-msgstr "XML-ként küld"
-
-#: gda-fe/gda-fe-batch.c:471 gda-fe/gda-fe-connection.c:42
-#: gda-fe/gda-fe-main.c:47
-msgid "Batch"
-msgstr "Kötegelt"
-
-#: gda-fe/gda-fe-callbacks.c:49 gda-rolodex/gda-rolodex-callbacks.c:49
-#, c-format
-msgid "Connected to '%s'"
-msgstr "Kapcsolódva: '%s'"
-
-#: gda-fe/gda-fe-callbacks.c:146
-msgid "Connecting..."
-msgstr "Kapcsolódás..."
-
-#: gda-fe/gda-fe-callbacks.c:208
-msgid "Configuration file saved"
-msgstr "A konfigurációs fájl elmentve"
-
-#. create the dialog box
-#: gda-fe/gda-fe-config.c:124
-msgid "Add Environment Variable"
-msgstr "Környezeti változó hozzáadása"
-
-#. create fields
-#: gda-fe/gda-fe-config.c:135 gda-fe/gda-fe-config.c:186
-#: gda-fe/gda-fe-service.c:294 gda-fe/gda-fe-service.c:335
-#: gda-manager/gda-mgr-providers.c:160
-#: gda-postgres-server/gda-postgres-config-users.c:119
-#: gda-postgres-server/gda-postgres-config-users.c:152
-msgid "Name"
-msgstr "Név"
-
-#: gda-fe/gda-fe-config.c:145 gda-fe/gda-fe-config.c:186
-msgid "Value"
-msgstr "Érték"
-
-#: gda-fe/gda-fe-config.c:240
-msgid "Editor Font"
-msgstr "Szerkesztõ betûtípus"
-
-#: gda-fe/gda-fe-config.c:245
-msgid "Tab Position"
-msgstr "Fül pozíció"
-
-#: gda-fe/gda-fe-config.c:249
-msgid "Top"
-msgstr "Fent"
-
-#: gda-fe/gda-fe-config.c:250
-msgid "Bottom"
-msgstr "Lent"
-
-#: gda-fe/gda-fe-config.c:251
-msgid "Left"
-msgstr "Balra"
-
-#: gda-fe/gda-fe-config.c:252
-msgid "Right"
-msgstr "Jobbra"
-
-#: gda-fe/gda-fe-config.c:257
-msgid "Grid"
-msgstr "Rács"
-
-#: gda-fe/gda-fe-config.c:267
-msgid "Font"
-msgstr "Betûtípus"
-
-#: gda-fe/gda-fe-config.c:271
-msgid "Foreground Color"
-msgstr "Elõtér szín"
-
-#: gda-fe/gda-fe-config.c:275
-msgid "Background Color"
-msgstr "Háttér szín"
-
-#: gda-fe/gda-fe-config.c:280
-msgid "Show row numbers"
-msgstr "Sorszámok mutatása"
-
-#: gda-fe/gda-fe-config.c:301
-msgid "User Interface"
-msgstr "Felhasználói interfész"
-
-#: gda-fe/gda-fe-config.c:302
-msgid "Environment"
-msgstr "Környezet"
-
-#: gda-fe/gda-fe-config.c:303
-msgid "GDA"
-msgstr "GDA"
-
-#: gda-fe/gda-fe-connection.c:39
-msgid "SQL"
-msgstr "SQL"
-
-#: gda-fe/gda-fe-connection.c:39 gda-fe/gda-fe-main.c:44
-msgid "SQL Window"
-msgstr "SQL Ablak"
-
-#: gda-fe/gda-fe-connection.c:42 gda-fe/gda-fe-main.c:47
-msgid "Batch commands window"
-msgstr "Kötegelt feldolgozás ablak"
-
-#: gda-fe/gda-fe-connection.c:45
-msgid "Queries"
-msgstr "Lekérdezések"
-
-#: gda-fe/gda-fe-connection.c:45 gda-fe/gda-fe-main.c:50
-msgid "Query designer"
-msgstr "Lekérdezés tervezõ"
-
-#: gda-fe/gda-fe-connection.c:48 gda-fe/gda-fe-connection.c:190
-#: gda-fe/gda-fe-main.c:53
-msgid "Browser"
-msgstr "Böngészõ"
-
-#: gda-fe/gda-fe-connection.c:48
-msgid "Browse Database"
-msgstr "Böngészés az adatbázisban"
-
-#: gda-fe/gda-fe-connection.c:51 gda-fe/gda-fe-connection.c:250
-#: gda-fe/gda-fe-main.c:56
-msgid "Export"
-msgstr "Exportál"
-
-#: gda-fe/gda-fe-connection.c:51 gda-fe/gda-fe-main.c:56
-msgid "Export database"
-msgstr "Adatbázis exportálás"
-
-#: gda-fe/gda-fe-connection.c:54 gda-fe/gda-fe-connection.c:264
-#: gda-fe/gda-fe-main.c:59
-msgid "Import"
-msgstr "Importál"
-
-#: gda-fe/gda-fe-connection.c:54 gda-fe/gda-fe-main.c:59
-msgid "Import data into current database"
-msgstr "Importálás az adatbázisba"
-
-#: gda-fe/gda-fe-connection.c:58
-msgid "Close connection"
-msgstr "Kapcsolat zárása"
-
-#: gda-fe/gda-fe-connection.c:65
-msgid "Execute current command"
-msgstr "Az aktuális parancs elindítása"
-
-#: gda-fe/gda-fe-connection.c:68
-#: gda-postgres-server/gda-postgres-config-ac.c:292
-msgid "Select"
-msgstr "Kiválaszt"
-
-#: gda-fe/gda-fe-connection.c:68
-msgid "Select from previous commands"
-msgstr "Az elõzõ parancsokból kiválasztás"
-
-#: gda-fe/gda-fe-connection.c:71
-msgid "Load file into buffer"
-msgstr "Fájl betöltése a pufferbe"
-
-#: gda-fe/gda-fe-connection.c:74
-msgid "Save current file"
-msgstr "Jelenlegi fájl mentése"
-
-#: gda-fe/gda-fe-connection.c:81
-msgid "Cut selected text"
-msgstr "Kijelölt szöveg kivágása vágólapra"
-
-#: gda-fe/gda-fe-connection.c:84
-msgid "Copy selected text"
-msgstr "Kijelölt szöveg másolása"
-
-#: gda-fe/gda-fe-connection.c:90
-msgid "Clear window contents"
-msgstr "Az ablak tartalmának törlése"
-
-#: gda-fe/gda-fe-connection.c:97
-msgid "Start"
-msgstr "Indít"
-
-#: gda-fe/gda-fe-connection.c:97
-msgid "Start export"
-msgstr "Exportálás indítása"
-
-#: gda-fe/gda-fe-connection.c:100
-msgid "Clear all fields"
-msgstr "Minden mezõ törlése"
-
-#: gda-fe/gda-fe-connection.c:103
-msgid "Select all objects in database"
-msgstr "Az összes objektum kiválasztása az adatbázisban"
-
-#: gda-fe/gda-fe-connection.c:106
-msgid "Unselect"
-msgstr "Kijelölés törlése"
-
-#: gda-fe/gda-fe-connection.c:106
-msgid "Clear object selection"
-msgstr "Az objektum-kijelölés törlése"
-
-#: gda-fe/gda-fe-connection.c:126
-msgid "Foreign keys"
-msgstr "Idegen kulcsok"
-
-#: gda-fe/gda-fe-connection.c:127
-msgid "Object Identifiers"
-msgstr "Objektum azonosítók"
-
-#: gda-fe/gda-fe-connection.c:128
-msgid "Object Inheritance"
-msgstr "Objektum öröklõdés"
-
-#: gda-fe/gda-fe-connection.c:129
-#: gda-postgres-server/gda-postgres-config-ac.c:168
-msgid "Sequences"
-msgstr "Sorozatok"
-
-#: gda-fe/gda-fe-connection.c:130
-msgid "SQL (Standard)"
-msgstr "SQL (Szabvány)"
-
-#: gda-fe/gda-fe-connection.c:131
-msgid "SQL Sub-Selects"
-msgstr "SQL Sub-select-ek"
-
-#: gda-fe/gda-fe-connection.c:132
-msgid "Stored Procedures"
-msgstr "Letárolt eljárások"
-
-#: gda-fe/gda-fe-connection.c:133
-msgid "Transactions"
-msgstr "Tranzakciók"
-
-#: gda-fe/gda-fe-connection.c:134
-msgid "Triggers"
-msgstr "Triggerek"
-
-#: gda-fe/gda-fe-connection.c:136
-msgid "XML Queries"
-msgstr "XML lekérdezések"
-
-#: gda-fe/gda-fe-connection.c:226
-msgid "File name"
-msgstr "Fájlnév"
-
-#: gda-fe/gda-fe-connection.c:414
-#, c-format
-msgid "Row %d - %d rows selected"
-msgstr "%d sor - %d sor kiválasztva"
-
-#: gda-fe/gda-fe-connection.c:424 gda-fe/gda-fe-connection.c:504
-msgid "Select file"
-msgstr "Válassz egy fájlt"
-
-#: gda-fe/gda-fe-connection.c:444
-#, c-format
+#: lib/gda-server/gda-server-impl.c:225
 msgid ""
-"Error reading from file\n"
-"'%s'"
+"Another instance of this provider is already registered with OAF. Exiting..."
+msgstr "Másik ilyen szolgáltató be van regisztrálva az OAF-ba. Kilépek..."
+
+#: lib/gda-server/gda-server-impl.c:228
+msgid "Unknown error registering this provider with OAF. Exiting"
+msgstr "Nem ismert hiba lépett fel az OAF-ba regisztrálásnál. Kilépek"
+
+#: lib/gda-server/gda-server-impl.c:232
+#, c-format
+msgid "Registered with ID = %s"
+msgstr "Regisztrálva %s azonosítóval"
+
+#: lib/gda-server/gda-server-impl.c:314
+#, c-format
+msgid "CORBA system exception %s"
+msgstr "CORBA renszer kivétel: %s"
+
+#: lib/gda-server/gda-server-impl.c:317
+#, c-format
+msgid "CORBA user exception: %s"
+msgstr "CORBA felhasználói kivétel: %s"
+
+#: lib/gda-server/gda-server-init.c:63 lib/gda-server/gda-server-init.c:69
+#, c-format
+msgid "Received signal %d, shutting down"
 msgstr ""
-"Fájl olvasási hiba\n"
-"%s"
+"A következõ jelzést kaptam: %d\n"
+"Leállás"
 
-#: gda-fe/gda-fe-connection.c:485
-msgid "Command succeeded"
-msgstr "A parancs végrehajtva"
-
-#: gda-fe/gda-fe-connection.c:490
-msgid "Command failed"
-msgstr "A parancs nem sikerült"
-
-#: gda-fe/gda-fe-connection.c:519
+#: lib/gda-server/gda-server-init.c:73
 #, c-format
-msgid ""
-"Error writing to file\n"
-"'%s'"
+msgid "Received signal %d. Ignoring"
 msgstr ""
-"Fájl írási hiba\n"
-"%s"
-
-#. create dialog
-#: gda-fe/gda-fe-connection.c:543
-msgid "Select Command"
-msgstr "Parancs kijelölése"
-
-#: gda-fe/gda-fe-connection.c:676
-msgid "Transaction started"
-msgstr "Tranzakció elkezdõdött"
-
-#: gda-fe/gda-fe-connection.c:681
-msgid "Begin transaction failed"
-msgstr "Tranzakciókezdés sikertelen"
-
-#: gda-fe/gda-fe-connection.c:687 gda-fe/gda-fe-connection.c:714
-#: gda-fe/gda-fe-connection.c:741
-msgid "Data source does not support transactions"
-msgstr "Az adatforrás nem kezel tranzakciókat"
-
-#: gda-fe/gda-fe-connection.c:703
-msgid "Commit executed successfully"
-msgstr "A parancs sikeresen lefutott"
-
-#: gda-fe/gda-fe-connection.c:708
-msgid "Commit transaction failed"
-msgstr "A tranzakció commit nem sikerült"
-
-#: gda-fe/gda-fe-connection.c:730
-msgid "Rollback executed successfully"
-msgstr "A rollback végrehajtódott"
-
-#: gda-fe/gda-fe-connection.c:735
-msgid "Rollback transaction failed"
-msgstr "A rollback nem sikerült"
-
-#: gda-fe/gda-fe-connection.c:816 gda-manager/gda-mgr-container.c:182
-#, c-format
-msgid "Could not activate module %s"
-msgstr "Nem tudom a modult aktivizálni: %s"
-
-#. create dialog
-#: gda-fe/gda-fe-connection.c:831 gda-fe/gda-fe-main.c:73
-msgid "Connection Properties"
-msgstr "Kapcsolódási beállítások"
-
-#. add detail frame
-#: gda-fe/gda-fe-connection.c:834 gda-fe/gda-fe-service.c:330
-msgid "Properties"
-msgstr "Beállítások"
-
-#: gda-fe/gda-fe-connection.c:858
-msgid "Command Timeout"
-msgstr "Parancs timeout"
-
-#: gda-fe/gda-fe-connection.c:865
-msgid "Connect Timeout"
-msgstr "Kapcsolódás timeout"
-
-#: gda-fe/gda-fe-connection.c:872
-msgid "Trace File"
-msgstr "Nyomkövetõfájl"
-
-#: gda-fe/gda-fe-connection.c:876 gda-fe/gda-fe-log.c:33
-#: gda-manager/gda-mgr-providers.c:45
-#: gda-postgres-server/gda-postgres-config-ac.c:1106
-msgid "View"
-msgstr "Nézet"
-
-#: gda-fe/gda-fe-connection.c:879
-msgid "Version"
-msgstr "Verzió"
-
-#: gda-fe/gda-fe-connection.c:885
-msgid "Provider Features"
-msgstr "Kiszolgáló tulajdonságok"
-
-#: gda-fe/gda-fe-designer.c:29
-msgid "New database design"
-msgstr "Új adatbázis-terv"
-
-#: gda-fe/gda-fe-designer.c:32
-msgid "Open database design"
-msgstr "Adatbázis-terv megnyitása"
-
-#: gda-fe/gda-fe-designer.c:35
-msgid "Save database design"
-msgstr "Az adatbázis-terv mentése"
-
-#: gda-fe/gda-fe-designer.c:38
-msgid "Clear all entries"
-msgstr "Minden mezõ törlése"
-
-#: gda-fe/gda-fe-designer.c:42
-msgid "Close designer window"
-msgstr "Bezárja az aktuális ablakot"
-
-#: gda-fe/gda-fe-designer.c:74
-msgid "Select XML file"
-msgstr "Válassz egy XML fájlt"
-
-#: gda-fe/gda-fe-designer.c:96
-msgid "Designer"
-msgstr "Tervezõ"
-
-#. create dialog
-#: gda-fe/gda-fe-dsnconfig.c:116
-msgid "Data sources"
-msgstr "Adatforrások"
-
-#: gda-fe/gda-fe-dsnconfig.c:152
-msgid "Apply"
-msgstr "Alkalmaz"
-
-#: gda-fe/gda-fe-log.c:33 gda-manager/gda-mgr-providers.c:45
-msgid "View selected entry"
-msgstr "Kijelölt elem megtekintése"
-
-#: gda-fe/gda-fe-log.c:36
-msgid "Clear log file"
-msgstr "Naplófájl törlése"
-
-#: gda-fe/gda-fe-log.c:39 gda-fe/gda-fe-service.c:46
-msgid "Refresh"
-msgstr "Frissít"
-
-#: gda-fe/gda-fe-log.c:39
-msgid "Refresh log viewer"
-msgstr "Napló nézet frissítése"
-
-#: gda-fe/gda-fe-log.c:43 gda-fe/gda-fe-service.c:50
-msgid "Close log window"
-msgstr "Napló ablak zárása"
-
-#: gda-fe/gda-fe-log.c:124
-#, c-format
-msgid "Error loading file '%s'"
-msgstr "A fájl betöltése nem sikerült: '%s'"
-
-#: gda-fe/gda-fe-log.c:165 gda-fe/gda-fe-main.c:140
-#: gda-manager/gda-mgr-providers.c:28
-msgid "Logs"
-msgstr "Naplók"
-
-#: gda-fe/gda-fe-main.c:25
-msgid "Open Connection..."
-msgstr "Új kapcsolat..."
-
-#: gda-fe/gda-fe-main.c:25 gda-fe/gda-fe-main.c:137
-msgid "Open a connection to a data source"
-msgstr "Új kapcsolat nyitása az adatforráshoz"
-
-#: gda-fe/gda-fe-main.c:28
-msgid "Close current connection"
-msgstr "Aktuális kapcsolat bezárása"
-
-#: gda-fe/gda-fe-main.c:31
-msgid "Disconnect all"
-msgstr "Mindenhonnan lekapcsolódás"
-
-#: gda-fe/gda-fe-main.c:31
-msgid "Close all connections"
-msgstr "Összes kapcsolat zárása"
-
-#: gda-fe/gda-fe-main.c:44
-msgid "SQL window"
-msgstr "SQL ablak"
-
-#: gda-fe/gda-fe-main.c:50
-msgid "Query Designer"
-msgstr "Lekérdezés-tervezõ"
-
-#: gda-fe/gda-fe-main.c:53
-msgid "Browse database"
-msgstr "Böngészés az adatbázisban"
-
-#: gda-fe/gda-fe-main.c:63
-msgid "Begin transaction"
-msgstr "Tranzakció kezdése"
-
-#: gda-fe/gda-fe-main.c:66
-msgid "Commit"
-msgstr "Érvényesít"
-
-#: gda-fe/gda-fe-main.c:66
-msgid "Commit transaction"
-msgstr "Tranzakció elküldése"
-
-#: gda-fe/gda-fe-main.c:69
-msgid "Rollback"
-msgstr "Visszaállítás"
-
-#: gda-fe/gda-fe-main.c:69
-msgid "Discard all changes"
-msgstr "A változások elvetése"
-
-#: gda-fe/gda-fe-main.c:73
-msgid "View connection properties"
-msgstr "Kapcsolat tulajdonságai"
-
-#: gda-fe/gda-fe-main.c:76
-msgid "Configure"
-msgstr "Konfigurálás"
-
-#: gda-fe/gda-fe-main.c:76 gda-manager/gda-mgr-gda.c:45
-msgid "Configure underlying database"
-msgstr "Az adatbázis konfigurálása"
-
-#: gda-fe/gda-fe-main.c:83 gda-fe/gda-fe-main.c:140
-msgid "View logs"
-msgstr "Naplók megtekintése"
-
-#: gda-fe/gda-fe-main.c:83
-msgid "View the different logs"
-msgstr "Különbözõ naplók megtekintése"
-
-#: gda-fe/gda-fe-main.c:86
-msgid "Database designer"
-msgstr "Adatbázis-tervezõ"
-
-#: gda-fe/gda-fe-main.c:86
-msgid "Open the database designer"
-msgstr "Adatbázis-tervezõ megnyitása"
-
-#: gda-fe/gda-fe-main.c:89
-msgid "Service control"
-msgstr "Szolgáltatás vezérlõ"
-
-#: gda-fe/gda-fe-main.c:89
-msgid "View service activity"
-msgstr "Szolgáltatás-aktivitás megtekintése"
-
-#: gda-fe/gda-fe-main.c:96
-msgid "The GNOME-DB Development Environment"
-msgstr "A GNOME-DB fejlesztõi környezet"
-
-#: gda-fe/gda-fe-main.c:103
-msgid "Preferences..."
-msgstr "Beállítások..."
-
-#: gda-fe/gda-fe-main.c:106
-msgid "Data sources..."
-msgstr "Adatforrások..."
-
-#: gda-fe/gda-fe-main.c:106
-msgid "Configure GDA data sources"
-msgstr "A GDA adatforrások konfigurálása"
-
-#: gda-fe/gda-fe-main.c:110
-msgid "Save options"
-msgstr "Beállítások mentése"
-
-#: gda-fe/gda-fe-main.c:110
-msgid "Save current configuration"
-msgstr "Jelenlegi beállítások mentése"
-
-#: gda-fe/gda-fe-main.c:137
-msgid "Connect"
-msgstr "Kapcsolat"
-
-#: gda-fe/gda-fe-main.c:148
-msgid "Exit Application"
-msgstr "Kilépés a programból"
-
-#: gda-fe/gda-fe-service.c:40
-msgid "Activate"
-msgstr "Aktivizál"
-
-#: gda-fe/gda-fe-service.c:40
-msgid "Activate selected service"
-msgstr "A kiválasztott szolgáltatás aktivizálása"
-
-#: gda-fe/gda-fe-service.c:43
-msgid "Stop"
-msgstr "Megállít"
-
-#: gda-fe/gda-fe-service.c:43
-msgid "Stop selected service"
-msgstr "Kijelölt szolgáltatás leállítása"
-
-#: gda-fe/gda-fe-service.c:46
-msgid "Refresh service list"
-msgstr "Szolgáltatáslisták frissítése"
-
-#: gda-fe/gda-fe-service.c:96
-msgid ""
-"Could not find any installed services. Either you don't have\n"
-"any services installed or I don't know the path to find them.\n"
-"In either case, please check your GNOME-DB installation."
-msgstr ""
-"Nem találok egy telepített szolgáltatást sem. Lehet, hogy nincs\n"
-"semmilyen szolgáltatás sem telepítve, vagy nem ismerem az útvonalát.\n"
-"Mind a két esetben ellenõrizd a GNOME-DB telepítésed."
-
-#: gda-fe/gda-fe-service.c:175
-#, c-format
-msgid "Service '%s' activated"
-msgstr "A '%s' szolgáltatás aktivizálva"
-
-#: gda-fe/gda-fe-service.c:178
-#, c-format
-msgid "Could not activate service '%s'"
-msgstr "Nem tudom a szolgáltatásat aktivizálni: %s"
-
-#: gda-fe/gda-fe-service.c:295
-msgid "Repo ID"
-msgstr "Repo ID"
-
-#: gda-fe/gda-fe-service.c:345 gda-manager/gda-mgr-providers.c:160
-msgid "Type"
-msgstr "Típus"
-
-#: gda-fe/gda-fe-service.c:363
-msgid "Service Control"
-msgstr "Szolgáltatás vezérlõ"
-
-#: gda-interbase-server/gda-interbase-connection.c:251
-#, c-format
-msgid "Error code %ld"
-msgstr "A hiba kódja %ld"
-
-#: gda-interbase-server/gda-interbase-connection.c:252
-#: gda-ldap-server/gda-ldap-connection.c:263
-#: gda-mysql-server/gda-mysql-connection.c:378
-#: gda-odbc-server/gda-odbc-connection.c:570
-#: gda-odbc-server/gda-odbc-connection.c:603
-#: gda-oracle-server/gda-oracle-connection.c:417
-#: gda-postgres-server/gda-postgres-connection.c:615
+"A következõ jelzést kaptam: %d\n"
+"Figyelmen kívül hagyva"
+
+#: lib/gda-server/gda-server-init.c:123
+msgid "Attempt to initialize an already initialized provider"
+msgstr "Egy már inicializált szolgáltató inicializálása"
+
+#: providers/gda-interbase-server/gda-interbase-connection.c:261
+#: providers/gda-ldap-server/gda-ldap-connection.c:272
+#: providers/gda-mdb-server/gda-mdb-connection.c:360
+#: providers/gda-mysql-server/gda-mysql-connection.c:387
+#: providers/gda-odbc-server/gda-odbc-connection.c:609
+#: providers/gda-odbc-server/gda-odbc-connection.c:642
+#: providers/gda-oracle-server/gda-oracle-connection.c:426
+#: providers/gda-postgres-server/gda-postgres-connection.c:779
+#: providers/gda-sybase-server/gda-sybase-error.c:109
 #, c-format
 msgid "error '%s' at %s"
 msgstr "'%s' hiba: %s"
 
-#: gda-interbase-server/gda-interbase-connection.c:257
-#: gda-interbase-server/gda-interbase-connection.c:258
-#: gda-ldap-server/gda-ldap-connection.c:268
-#: gda-ldap-server/gda-ldap-connection.c:269
-#: gda-mysql-server/gda-mysql-connection.c:382
-#: gda-mysql-server/gda-mysql-connection.c:383
-#: gda-odbc-server/gda-odbc-connection.c:572
-#: gda-odbc-server/gda-odbc-connection.c:573
-#: gda-odbc-server/gda-odbc-connection.c:605
-#: gda-odbc-server/gda-odbc-connection.c:606
-#: gda-oracle-server/gda-oracle-connection.c:422
-#: gda-oracle-server/gda-oracle-connection.c:423
-#: gda-postgres-server/gda-postgres-connection.c:622
-#: gda-postgres-server/gda-postgres-connection.c:623
+#: providers/gda-interbase-server/gda-interbase-connection.c:266
+#: providers/gda-interbase-server/gda-interbase-connection.c:267
+#: providers/gda-ldap-server/gda-ldap-connection.c:277
+#: providers/gda-ldap-server/gda-ldap-connection.c:278
+#: providers/gda-mdb-server/gda-mdb-connection.c:364
+#: providers/gda-mdb-server/gda-mdb-connection.c:365
+#: providers/gda-mysql-server/gda-mysql-connection.c:391
+#: providers/gda-mysql-server/gda-mysql-connection.c:392
+#: providers/gda-odbc-server/gda-odbc-connection.c:611
+#: providers/gda-odbc-server/gda-odbc-connection.c:612
+#: providers/gda-odbc-server/gda-odbc-connection.c:644
+#: providers/gda-odbc-server/gda-odbc-connection.c:645
+#: providers/gda-oracle-server/gda-oracle-connection.c:431
+#: providers/gda-oracle-server/gda-oracle-connection.c:432
+#: providers/gda-postgres-server/gda-postgres-connection.c:786
+#: providers/gda-postgres-server/gda-postgres-connection.c:787
+#: providers/gda-sybase-server/gda-sybase-error.c:118
+#: providers/gda-sybase-server/gda-sybase-error.c:119
 msgid "Not available"
 msgstr "Nem elérhetõ"
 
-#: gda-interbase-server/gda-interbase-connection.c:259
-#: gda-ldap-server/gda-ldap-connection.c:270
-#: gda-mysql-server/gda-mysql-connection.c:384
-#: gda-oracle-server/gda-oracle-connection.c:424
-#: gda-postgres-server/gda-postgres-connection.c:624
+#: providers/gda-interbase-server/gda-interbase-connection.c:268
+#: providers/gda-ldap-server/gda-ldap-connection.c:279
+#: providers/gda-mdb-server/gda-mdb-connection.c:366
+#: providers/gda-mysql-server/gda-mysql-connection.c:393
+#: providers/gda-oracle-server/gda-oracle-connection.c:433
+#: providers/gda-postgres-server/gda-postgres-connection.c:788
+#: providers/gda-sybase-server/gda-sybase-error.c:120
 msgid "error"
 msgstr "hiba"
 
-#: gda-interbase-server/main-interbase.c:74
-msgid "Could not register INTERBASE provider implementation"
-msgstr "Nem tudok INTERBASE szolgáltatót regisztrálni"
-
-#: gda-ldap-server/gda-ldap-config-main.c:59
-msgid "Could not create DSN config component"
-msgstr "Nem tudok DSN konfigurációs komponenst készíteni"
-
-#: gda-ldap-server/main-ldap.c:74
+#: providers/gda-ldap-server/main-ldap.c:69
 msgid "Could not register LDAP provider implementation"
 msgstr "Nem tudok LDAP szolgáltatót regisztrálni"
 
-#: gda-manager/gda-mgr-callbacks.c:65
-#: testing/controls_browser/gda-controls-browser.c:362
-msgid "Select config component"
-msgstr "Válassz konfigurációs komponenset"
+#: providers/gda-interbase-server/gda-interbase-connection.c:260
+#, c-format
+msgid "Error code %ld"
+msgstr "A hiba kódja %ld"
 
-#: gda-manager/gda-mgr-container.c:132
-msgid "You need Bonobo to load components!"
-msgstr "Bonobora van szükséged a komponensek betöltéséhez!"
+#: providers/gda-interbase-server/main-interbase.c:70
+msgid "Could not register INTERBASE provider implementation"
+msgstr "Nem tudok INTERBASE szolgáltatót regisztrálni"
 
-#: gda-manager/gda-mgr-gda.c:36
-msgid "Add new data source"
-msgstr "Az adatforrás hozzáadása"
+#: providers/gda-mail-server/gda-mail-connection.c:108
+#: providers/gda-mdb-server/gda-mdb-connection.c:224
+#: providers/gda-mysql-server/gda-mysql-connection.c:251
+#: providers/gda-oracle-server/gda-oracle-connection.c:295
+#: providers/gda-postgres-server/gda-postgres-connection.c:511
+#: providers/gda-sybase-server/gda-sybase-connection.c:269
+#, c-format
+msgid "Unhandled SCHEMA_QTYPE %d"
+msgstr "Nem lekezelt SCHEMA_QTYPE %d"
 
-#: gda-manager/gda-mgr-gda.c:39
-msgid "Edit selected data source"
-msgstr "A kijelölt adatforrás szerkesztése"
-
-#: gda-manager/gda-mgr-gda.c:42
-msgid "Remove selected data source"
-msgstr "A kijelölt adatforrás törlése"
-
-#: gda-manager/gda-mgr-gda.c:48
-msgid "Browse selected data source"
-msgstr "Böngészés az adatforrásban"
-
-#. create the dialog
-#: gda-manager/gda-mgr-gda.c:148
-msgid "Data Source"
-msgstr "Adatforrás"
-
-#. create dialog for asking the user name and password
-#: gda-manager/gda-mgr-gda.c:193
-msgid "Browse Data Source"
-msgstr "Böngészés az datforrásban"
-
-#: gda-manager/gda-mgr-gda.c:258
-msgid "could not load browser control"
-msgstr "Nem tudom a böngészõ vezérlõt betölteni"
-
-#. create the dialog
-#: gda-manager/gda-mgr-gda.c:288
-msgid "Load config component"
-msgstr "Konfigurációs komponens betöltése"
-
-#: gda-manager/gda-mgr-gda.c:313
-msgid "Module"
-msgstr "Modul"
-
-#: gda-manager/gda-mgr-gda.c:324
-msgid "Users"
-msgstr "Felhasználók"
-
-#: gda-manager/gda-mgr-gda.c:328
-msgid "User access rights"
-msgstr "Felhasználói jogok"
-
-#: gda-manager/gda-mgr-gda.c:336
-msgid "All"
-msgstr "Mind"
-
-#: gda-manager/gda-mgr-gda.c:396
-msgid "Data source not found in GDA configuration"
-msgstr "A GDA konfigurációban nem találtam adatforrást"
-
-#: gda-manager/gda-mgr-gda.c:416 gda-manager/gda-mgr-main.c:188
-msgid "Data Sources"
-msgstr "Adatforrások"
-
-#: gda-manager/gda-mgr-main.c:38 gda-manager/gda-mgr-main.c:87
-msgid "Close configurator"
-msgstr "Konfigurátor bezárása"
-
-#: gda-manager/gda-mgr-main.c:60
-msgid "The GNOME-DB development environment"
-msgstr "A GNOME-DB fejlesztõ felület"
-
-#: gda-manager/gda-mgr-main.c:193 gda-manager/gda-mgr-providers.c:168
-msgid "Providers"
-msgstr "Szolgáltatók"
-
-#: gda-manager/gda-mgr-providers.c:28
-msgid "View provider log"
-msgstr "Szolgáltató napló megtekintése"
-
-#: gda-manager/gda-mgr-providers.c:32
-msgid "Install a new GDA provider"
-msgstr "Új GDA szolgáltató telepítése"
-
-#: gda-manager/gda-mgr-providers.c:35
-msgid "Edit selected provider"
-msgstr "A kijelölt szolgáltató szerkesztése"
-
-#: gda-manager/gda-mgr-providers.c:38
-msgid "Remove selected provider"
-msgstr "A kiválasztott szolgáltató törlése"
-
-#: gda-manager/gda-mgr-providers.c:160
-msgid "Comments"
-msgstr "Megjegyzések"
+#: providers/gda-mail-server/main-mail.c:70
+msgid "Could not register Mail provider implementation"
+msgstr "Nem tudom regisztrálni a levelezés szolgáltatót"
 
 #. execute command
-#: gda-mysql-server/gda-mysql-command.c:87
+#: providers/gda-mdb-server/gda-mdb-command.c:86
+#: providers/gda-mysql-server/gda-mysql-command.c:87
+#: providers/gda-sybase-server/gda-sybase-command.c:120
 #, c-format
 msgid "executing command '%s'"
 msgstr "'%s' parancs indítása"
 
-#: gda-mysql-server/gda-mysql-command.c:89
+#: providers/gda-mdb-server/gda-mdb-command.c:88
+#: providers/gda-mysql-server/gda-mysql-command.c:89
 #, c-format
 msgid "info '%s'"
 msgstr "'%s' információ"
 
-#: gda-mysql-server/gda-mysql-config-db.c:33
-#: gda-mysql-server/gda-mysql-config-main.c:62
-#: gda-odbc-server/gda-odbc-config-main.c:73
-msgid "Could not create GnomeDbControl"
-msgstr "Nem tudok GnomeDbControl-t készíteni"
-
-#: gda-mysql-server/gda-mysql-config-db.c:50
-msgid "Available databases"
-msgstr "Elérhetõ adatbázisok"
-
-#: gda-mysql-server/gda-mysql-config-db.c:65
-msgid "Drop"
-msgstr "Eldob"
-
-#. create detail fields
-#: gda-mysql-server/gda-mysql-config-db.c:70
-msgid "Database name"
-msgstr "Adatbázis neve"
-
-#: gda-mysql-server/gda-mysql-config-db.c:74
-#: gda-postgres-server/gda-postgres-config-ac.c:1100
-#: gda-postgres-server/gda-postgres-config-ac.c:1108
-#: gda-postgres-server/gda-postgres-config-ac.c:1116
-msgid "Owner"
-msgstr "Tulajdonos"
-
-#: gda-mysql-server/gda-mysql-config-main.c:91
-#: gda-odbc-server/gda-odbc-config-main.c:93
-#, c-format
-msgid "new instance %p created"
-msgstr "új '%p' példány létrehozva"
-
-#: gda-mysql-server/gda-mysql-connection.c:148
+#: providers/gda-mdb-server/gda-mdb-connection.c:137
+#: providers/gda-mysql-server/gda-mysql-connection.c:148
 #, c-format
 msgid ""
 "%s:%d: You cannot provide a UNIX_SOCKET if you also provide either a HOST or "
@@ -1795,465 +306,1826 @@ msgid ""
 "options"
 msgstr ""
 "%s:%d: Nem adhatsz meg UNIX_SOCKET-et, ha HOST-ot vagy PORT-ot megadsz. "
-"Kérlek töröld a UNIX_SOCKET-et, vagy töröld mind a HOST és a PORT "
-"opciókat."
+"Kérlek töröld a UNIX_SOCKET-et, vagy töröld mind a HOST és a PORT opciókat."
 
-#: gda-mysql-server/gda-mysql-connection.c:162
+#: providers/gda-mdb-server/gda-mdb-connection.c:147
 #, c-format
-msgid ""
-"Opening connection with user=%s, password=%s, host=%shost=%s, port=%s, "
-"unix_socket=%s"
-msgstr ""
-"Kapcsolat létesítése, user=%s, password=%s, host=%shost=%s, port=%s, "
-"unix_socket=%s"
+msgid "%s:%d: You must  provide the filename with the MS Access database"
+msgstr "%s:%d: Meg kell adnon a fájlnevet a MS Access adatbázissal"
 
-#: gda-mysql-server/gda-mysql-connection.c:251
-#: gda-oracle-server/gda-oracle-connection.c:295
-#: gda-postgres-server/gda-postgres-connection.c:379
+#: providers/gda-mdb-server/gda-mdb-connection.c:152
 #, c-format
-msgid "Unhandled SCHEMA_QTYPE %d"
-msgstr "Nem lekezelt SCHEMA_QTYPE %d"
+msgid "Opening connection with filename=%s, user=%s, password=%s"
+msgstr "Kapcsolat létesítése, filename=%s, user=%s, password=%s"
 
-#: gda-mysql-server/gda-mysql-connection.c:433
+#: providers/gda-mdb-server/gda-mdb-connection.c:415
+#: providers/gda-mysql-server/gda-mysql-connection.c:442
 msgid "mysql_recset is NULL"
 msgstr "a mysql_recset NULL"
 
-#: gda-mysql-server/gda-mysql-connection.c:475
+#: providers/gda-mdb-server/gda-mdb-connection.c:457
+#: providers/gda-mysql-server/gda-mysql-connection.c:484
+#: providers/gda-sybase-server/gda-sybase-connection.c:432
 msgid "No table name given for SCHEMA_COLS"
 msgstr "Nincs táblanév adva a SCHEMA_COLS-hoz"
 
-#: gda-mysql-server/main-mysql.c:75
+#: providers/gda-mdb-server/main-mdb.c:70
+#: providers/gda-mysql-server/main-mysql.c:70
 msgid "Could not register MySQL provider implementation"
 msgstr "Nem tudom regisztrálni a MySQL szolgáltatót"
 
-#: gda-odbc-server/gda-odbc-connection.c:276
+#: providers/gda-mysql-server/gda-mysql-connection.c:162
+#, c-format
+msgid ""
+"Opening connection with user=%s, password=%s, host=%s, port=%s, "
+"unix_socket=%s"
+msgstr ""
+"Kapcsolat létesítése, user=%s, password=%s, host=%s, port=%s, unix_socket=%s"
+
+#: providers/gda-odbc-server/gda-odbc-connection.c:280
 #, c-format
 msgid "gda_odbc_connection_open_schema: Unhandled SCHEMA_QTYPE %d\n"
 msgstr "gda_odbc_connection_open_schema: Nem lekezelt SCHEMA_QTYPE %d\n"
 
-#: gda-odbc-server/gda-odbc-connection.c:587
-#: gda-odbc-server/gda-odbc-connection.c:588
-#: gda-odbc-server/gda-odbc-connection.c:589
-#: gda-odbc-server/gda-odbc-connection.c:620
-#: gda-odbc-server/gda-odbc-connection.c:621
-#: gda-odbc-server/gda-odbc-connection.c:622
+#: providers/gda-odbc-server/gda-odbc-connection.c:626
+#: providers/gda-odbc-server/gda-odbc-connection.c:627
+#: providers/gda-odbc-server/gda-odbc-connection.c:628
+#: providers/gda-odbc-server/gda-odbc-connection.c:659
+#: providers/gda-odbc-server/gda-odbc-connection.c:660
+#: providers/gda-odbc-server/gda-odbc-connection.c:661
 msgid "no text"
 msgstr "nincs szöveg"
 
-#: gda-odbc-server/gda-odbc-main.c:74
+#: providers/gda-odbc-server/main-odbc.c:69
 msgid "Could not register ODBC provider implementation"
 msgstr "Nem tudom regisztrálni az ODBC szolgáltatót"
 
-#: gda-oracle-server/gda-oracle-command.c:195
+#: providers/gda-oracle-server/gda-oracle-command.c:195
 msgid "Could not allocate statement handle"
 msgstr "Nem tudok álláskezelõt allokálni"
 
-#: gda-oracle-server/gda-oracle-command.c:199
+#: providers/gda-oracle-server/gda-oracle-command.c:199
 msgid "command object being created without associated connection"
 msgstr "kapcsolat nélkül lett létrehozva a parancsobjektum"
 
-#: gda-oracle-server/gda-oracle-command.c:226
+#: providers/gda-oracle-server/gda-oracle-command.c:226
 #, c-format
 msgid "Executing command '%s'"
 msgstr "'%s' indítása"
 
-#: gda-oracle-server/gda-oracle-connection.c:113
+#: providers/gda-oracle-server/gda-oracle-connection.c:113
 msgid "error in OCIHandleAlloc() HTYPE_SVCCTX"
 msgstr "hiba az OCIHandleAlloc()-ban HTYPE_SVCCTX"
 
-#: gda-oracle-server/gda-oracle-connection.c:116
+#: providers/gda-oracle-server/gda-oracle-connection.c:116
 msgid "error in OCIHandleAlloc() HTYPE_SERVER"
 msgstr "hiba az OCIHandleAlloc()-ban HTYPE_SERVER"
 
-#: gda-oracle-server/gda-oracle-connection.c:119
+#: providers/gda-oracle-server/gda-oracle-connection.c:119
 msgid "error in OCIHandleAlloc() HTYPE_ERROR"
 msgstr "hiba az OCIHandleAlloc()-ban HTYPE_ERROR"
 
-#: gda-oracle-server/gda-oracle-connection.c:370
+#: providers/gda-oracle-server/gda-oracle-connection.c:379
 #, c-format
 msgid "Unknown ORACLE type %ld"
 msgstr "Nem ismert ORACLE típus: %ld"
 
-#: gda-oracle-server/gda-oracle-recordset.c:115
+#: providers/gda-oracle-server/gda-oracle-recordset.c:115
 msgid "Unknown ORACLE data type in fill_field_values"
 msgstr "Nem ismert ORACLE adattípus a fill_field_values-ban"
 
-#: gda-oracle-server/gda-oracle-recordset.c:150
+#: providers/gda-oracle-server/gda-oracle-recordset.c:150
 msgid "recordset object being created without associated connection"
 msgstr "kapcsolat nélkül lett létrehozva a rekordtömb objektum"
 
-#: gda-oracle-server/main-oracle.c:74
+#: providers/gda-oracle-server/main-oracle.c:69
 msgid "Could not register ORACLE provider implementation"
 msgstr "Nem tudom regisztrálni az ORACLE szolgáltatót"
 
-#: gda-postgres-server/gda-postgres-config-ac.c:94
-#: gda-postgres-server/gda-postgres-config-main.c:164
-#: gda-postgres-server/gda-postgres-config-users.c:93
-msgid "DSN for the connection"
-msgstr "DSN a kapcsolathoz"
-
-#: gda-postgres-server/gda-postgres-config-ac.c:98
-#: gda-postgres-server/gda-postgres-config-main.c:167
-#: gda-postgres-server/gda-postgres-config-main.c:280
-#: gda-postgres-server/gda-postgres-config-users.c:96
-msgid "User identity"
-msgstr "Felhasználói azonosító"
-
-#: gda-postgres-server/gda-postgres-config-ac.c:102
-#: gda-postgres-server/gda-postgres-config-main.c:170
-#: gda-postgres-server/gda-postgres-config-users.c:99
-msgid "User passord"
-msgstr "Felhasználó jelszava"
-
-#: gda-postgres-server/gda-postgres-config-ac.c:106
-#: gda-postgres-server/gda-postgres-config-main.c:173
-#: gda-postgres-server/gda-postgres-config-users.c:102
-msgid "Show/hide the user id"
-msgstr "Használt ID mutatása/rejtése"
-
-#: gda-postgres-server/gda-postgres-config-ac.c:110
-#: gda-postgres-server/gda-postgres-config-main.c:176
-#: gda-postgres-server/gda-postgres-config-users.c:105
-msgid "Give it TRUE to reset/start the component"
-msgstr "TRUE-t adj a komponens reset/start-nak"
-
-#: gda-postgres-server/gda-postgres-config-ac.c:114
-#: gda-postgres-server/gda-postgres-config-users.c:108
-msgid "User name setting"
-msgstr "Felhasználónév beállítás"
-
-#: gda-postgres-server/gda-postgres-config-ac.c:118
-msgid "Group name setting"
-msgstr "Csoportnév beállítás"
-
-#: gda-postgres-server/gda-postgres-config-ac.c:122
-msgid "Object type setting"
-msgstr "Objektum típus beállítás"
-
-#: gda-postgres-server/gda-postgres-config-ac.c:126
-msgid "Object name setting"
-msgstr "Objektum név beállítás"
-
-#: gda-postgres-server/gda-postgres-config-ac.c:141
-msgid "Access rigths"
-msgstr "Elérési jogok"
-
-#: gda-postgres-server/gda-postgres-config-ac.c:174
-msgid "Indexes"
-msgstr "Indexek"
-
-#: gda-postgres-server/gda-postgres-config-ac.c:206
-msgid "All users rights"
-msgstr "Minden felhasználói jog"
-
-#: gda-postgres-server/gda-postgres-config-ac.c:223
-msgid "Groups rights"
-msgstr "Csoport jogok"
-
-#: gda-postgres-server/gda-postgres-config-ac.c:230
-msgid "Group:"
-msgstr "Csoport:"
-
-#: gda-postgres-server/gda-postgres-config-ac.c:241
-msgid "Individual users rights"
-msgstr "Egyéni felhasználói jogok"
-
-#: gda-postgres-server/gda-postgres-config-ac.c:248
-msgid "User:"
-msgstr "Felhasználó:"
-
-#: gda-postgres-server/gda-postgres-config-ac.c:298
-msgid "Insert"
-msgstr "Beszúrás"
-
-#: gda-postgres-server/gda-postgres-config-ac.c:304
-msgid "Update/Delete"
-msgstr "Frissítés/törlés"
-
-#: gda-postgres-server/gda-postgres-config-ac.c:310
-msgid "Rule"
-msgstr "Szabály"
-
-#: gda-postgres-server/gda-postgres-config-ac.c:1098
-#: gda-postgres-server/gda-postgres-config-ac.c:1125
-msgid "Table"
-msgstr "Tábla"
-
-#: gda-postgres-server/gda-postgres-config-ac.c:1114
-msgid "Sequence"
-msgstr "Sorozat"
-
-#: gda-postgres-server/gda-postgres-config-ac.c:1123
-msgid "Index"
-msgstr "Index"
-
-#: gda-postgres-server/gda-postgres-config-main.c:286
-msgid "Name:"
-msgstr "Név:"
-
-#: gda-postgres-server/gda-postgres-config-main.c:293
-msgid "Password:"
-msgstr "Jelszó:"
-
-#: gda-postgres-server/gda-postgres-config-main.c:357
-#: gda-postgres-server/gda-postgres-config-main.c:376
-#: gda-postgres-server/gda-postgres-config-main.c:396
-msgid "Could not instantiate the gnome-db-control"
-msgstr "Nem tudom a gnome-db-control-t elindítani"
-
-#: gda-postgres-server/gda-postgres-config-users.c:119
-#: gda-postgres-server/gda-postgres-config-users.c:121
-msgid "Group(s)"
-msgstr "Csoport(ok)"
-
-#: gda-postgres-server/gda-postgres-config-users.c:119
-#: gda-postgres-server/gda-postgres-config-users.c:165
-msgid "Create DB"
-msgstr "Adatbázis készítése"
-
-#: gda-postgres-server/gda-postgres-config-users.c:120
-#: gda-postgres-server/gda-postgres-config-users.c:171
-msgid "Create users"
-msgstr "Felhasználók készítése"
-
-#: gda-postgres-server/gda-postgres-config-users.c:120
-#: gda-postgres-server/gda-postgres-config-users.c:177
-msgid "Valid until"
-msgstr "Érvényesség"
-
-#: gda-postgres-server/gda-postgres-config-users.c:125
-msgid "Known database users"
-msgstr "Ismert adatbázis felhasználók"
-
-#: gda-postgres-server/gda-postgres-config-users.c:208
-msgid "Save as new user"
-msgstr "Mentsd mint új felhasználó"
-
-#: gda-postgres-server/gda-postgres-config-users.c:213
-msgid "Save modified user"
-msgstr "Mentsd a módosított felhasználót"
-
-#: gda-postgres-server/gda-postgres-config-users.c:218
-msgid "Delete user"
-msgstr "Felhasználó törlése"
-
-#: gda-postgres-server/gda-postgres-config-users.c:436
-#: gda-postgres-server/gda-postgres-config-users.c:440
-msgid "Yes"
-msgstr "Igen"
-
-#: gda-postgres-server/gda-postgres-config-users.c:438
-#: gda-postgres-server/gda-postgres-config-users.c:442
-msgid "No"
-msgstr "Nem"
-
-#: gda-postgres-server/gda-postgres-connection.c:724
-#: gda-postgres-server/gda-postgres-connection.c:836
+#: providers/gda-postgres-server/gda-postgres-connection.c:888
+#: providers/gda-postgres-server/gda-postgres-connection.c:1000
 msgid "postgres_recset is NULL"
 msgstr "a postgres_recset NULL"
 
-#: gda-postgres-server/main-postgres.c:74
+#: providers/gda-postgres-server/main-postgres.c:69
 msgid "Could not register PostgreSQL provider implementation"
 msgstr "Nem tudom regisztrálni a PostgreSQL szolgáltatót"
 
-#: gda-rolodex/gda-rolodex-callbacks.c:28 testing/gda-ui-test3.c:52
-msgid "UI Test 3 Error"
-msgstr "3-as UI teszt hiba"
+#: providers/gda-sybase-server/gda-sybase-command.c:115
+msgid "Connection seems to be dead"
+msgstr "Úgy tûnik a kapcsolat megszakadt"
 
-#: gda-rolodex/gda-rolodex-main.c:91
+#: providers/gda-sybase-server/gda-sybase-command.c:135
+msgid "Filling command structure failed\n"
+msgstr "A parancsstruktúra feltöltése sikertelen\n"
+
+#: providers/gda-sybase-server/gda-sybase-command.c:147
+msgid "sending cmd failed"
+msgstr "cmd elküldése sikertelen"
+
+#: providers/gda-sybase-server/gda-sybase-command.c:154
+msgid "Allocating recordset failed"
+msgstr "recordset allokálása sikertelen"
+
+#: providers/gda-sybase-server/gda-sybase-command.c:164
+msgid "Getting recordset userdata failed"
+msgstr "A recordset userdata beolvasása sikertelen"
+
+#: providers/gda-sybase-server/gda-sybase-command.c:222
+msgid "Command execution finished, all results processed"
+msgstr "A parancs lefutott, minden eredmény feldolgozva"
+
+#: providers/gda-sybase-server/gda-sybase-command.c:226
+msgid "Command failed"
+msgstr "A parancs sikertelen"
+
+#: providers/gda-sybase-server/gda-sybase-command.c:230
+msgid "Execution of resultless command succeeded"
+msgstr "Az eredmény nélküli parancs végrehajtása sikeres"
+
+#: providers/gda-sybase-server/gda-sybase-command.c:246
 #, c-format
-msgid "Record %8.0f"
-msgstr "%8.0f. rekord"
+msgid "ct_results() returned %x"
+msgstr "A ct_results() a következõvel tért vissza: %x"
 
-#: gda-rolodex/gda-rolodex-main.c:277
-#, c-format
-msgid "We could not load the glade interface description! (%s)"
-msgstr "Nem tudjuk betölteni a glade interfész leírást! (%s)"
+#: providers/gda-sybase-server/gda-sybase-command.c:256
+msgid "No further results, command completly succeeded."
+msgstr "nincs több eredmény, a parancs sikeres volt"
 
-#: gda-rolodex/gda-rolodex-main.c:308
-msgid "Select the table name"
-msgstr "Táblanév kiválasztása"
+#: providers/gda-sybase-server/gda-sybase-command.c:260
+msgid "An error occured during command execution."
+msgstr "Hiba lépett fel a parancs vérgehajtása közben"
 
-#: gda-srv/gda-server-error.c:169
-msgid "Could not get pointer to server implementation"
-msgstr "Nem kapom meg a mutatót a szerverre"
-
-#: gda-srv/gda-server-impl-connection.c:106
-#: gda-srv/gda-server-impl-connection.c:115
-#: gda-srv/gda-server-impl-connection.c:122
-#: gda-srv/gda-server-impl-connection.c:131
-#: gda-srv/gda-server-impl-connection.c:138
-#: gda-srv/gda-server-impl-connection.c:147
-#: gda-srv/gda-server-impl-connection.c:154
-#: gda-srv/gda-server-impl-connection.c:163
-#: gda-srv/gda-server-impl-recordset.c:113
-#: gda-srv/gda-server-impl-recordset.c:122
-#: gda-srv/gda-server-impl-recordset.c:129
-#: gda-srv/gda-server-impl-recordset.c:144
-#: gda-srv/gda-server-impl-recordset.c:153
-#: gda-srv/gda-server-impl-recordset.c:160
-#: gda-srv/gda-server-impl-recordset.c:169
-#: gda-srv/gda-server-impl-recordset.c:176
-#: gda-srv/gda-server-impl-recordset.c:185
-#: gda-srv/gda-server-impl-recordset.c:192
-#: gda-srv/gda-server-impl-recordset.c:200
-#: gda-srv/gda-server-impl-recordset.c:209
-#: gda-srv/gda-server-impl-recordset.c:216
-#: gda-srv/gda-server-impl-recordset.c:224
-#: gda-srv/gda-server-impl-recordset.c:232
-#: gda-srv/gda-server-impl-recordset.c:274
-#: gda-srv/gda-server-impl-recordset.c:284
-#: gda-srv/gda-server-impl-recordset.c:292
-#: gda-srv/gda-server-impl-recordset.c:300
-#: gda-srv/gda-server-impl-recordset.c:308
-#: gda-srv/gda-server-impl-recordset.c:316
-#: gda-srv/gda-server-impl-recordset.c:370
-#: gda-srv/gda-server-impl-recordset.c:378
-#: gda-srv/gda-server-impl-recordset.c:387
-#: gda-srv/gda-server-impl-recordset.c:395
-#: gda-srv/gda-server-impl-recordset.c:403
-#, c-format
-msgid "%s not implemented"
-msgstr "%s nincs még megírva"
-
-#: gda-srv/gda-server-impl-connection.c:255
-#, c-format
-msgid "impl_GDA_Connection_open: opening connection with DSN: %s"
-msgstr "impl_GDA_Connection_open: kapcsolat megnyitása DSN-el: %s"
-
-#: gda-srv/gda-server-impl-recordset.c:240
-#: gda-srv/gda-server-impl-recordset.c:248
-#, c-format
-msgid "%s: not implemented"
-msgstr "%s: nincs még megírva"
-
-#: gda-srv/gda-server-impl-recordset.c:335
-#, c-format
-msgid "%s: text = '%s'"
-msgstr "%s: text = '%s'"
-
-#: gda-srv/gda-server-impl-recordset.c:496
-#, c-format
-msgid "%s: an error ocurred while fetching data"
-msgstr "%s: hiba lépett fel az adatok lekérdezése közben"
-
-#: gda-srv/gda-server-impl-recordset.c:535
-#, c-format
-msgid "%s: length = %d"
-msgstr "%s: length = %d"
-
-#: gda-srv/gda-server-impl-recordset.c:548
-#, c-format
-msgid "%s: sending field description for '%s'"
-msgstr "%s: elemleírást küldöm '%s'-hoz"
-
-#: gda-srv/gda-server-impl.c:117
-#, c-format
-msgid "Starting provider %s with no implementation functions"
-msgstr "%s szolgáltató indítása kellékfunkciók nélkül"
-
-#: gda-srv/gda-server-impl.c:149
-msgid ""
-"OAF doesn't know about our IID; indicates broken installation. Exiting..."
+#: providers/gda-sybase-server/gda-sybase-command.c:267
+msgid "Cmd execution returned unknown result, may be an error"
 msgstr ""
-"Az OAF nem tud az IID-drõl: rossz telepítésné lehet ez. Kilépek..."
+"A parancs végrehajtása ismeretlen hibával tért vissza, lehet, hogy hiba "
+"történt"
 
-#: gda-srv/gda-server-impl.c:152
-msgid ""
-"Another instance of this provider is already registered with OAF. Exiting..."
+#: providers/gda-sybase-server/gda-sybase-command.c:280
+msgid "No data returned, freeing recordset structure"
+msgstr "Nem kaptam vissza adatot, recordset struktúra felszabadítása"
+
+#: providers/gda-sybase-server/gda-sybase-command.c:311
+#: providers/gda-sybase-server/gda-sybase-command.c:323
+msgid "Freeing command structure failed"
+msgstr "A parancsstruktúra felszabadítása sikertelen"
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:149
+msgid "Error allocating error structure"
+msgstr "Hiba a hibastruktúra allokálásánál"
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:157
+msgid "Not enough memory for sybase_Connection"
+msgstr "Nincs elég memória a következõhöz: sybase_Connection"
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:422
+#, c-format
+msgid "schema_cols: table_name '%s'"
+msgstr "schema_cols: table_name '%s'"
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:438
+msgid "Could not allocate command structure"
+msgstr "Nem tudok parancs struktúrát allokálni"
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:460
+msgid "Could not allocate enough memory for query"
+msgstr "Nem tudok elég memóriát allokálni a lekérdezéshez"
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:474
+msgid "Could not get recordset in schema_cols"
+msgstr "Nem tudtam megkapni a recordset-et a schem_cols-ban"
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:506
+#: providers/gda-sybase-server/gda-sybase-connection.c:583
+#, c-format
+msgid "schema_tables: table name = '%s'"
+msgstr "schema_tables: table name = '%s'"
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:514
+#: providers/gda-sybase-server/gda-sybase-connection.c:591
+#, c-format
+msgid "schema_tables: table_schema = '%s'"
+msgstr "schema_tables: table_schema = '%s'"
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:519
+#, c-format
+msgid "schema_procedures: proc_catalog = '%s' UNUSED!\n"
+msgstr "schema_procedures: proc_catalog = '%s' UNUSED!\n"
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:523
+#, c-format
+msgid "schema_procs: invalid constraint type %d"
 msgstr ""
-"Másik ilyen szolgáltató be van regisztrálva az OAF-ba. Kilépek..."
 
-#: gda-srv/gda-server-impl.c:155
-msgid "Unknown error registering this provider with OAF. Exiting"
-msgstr "Nem ismert hiba lépett fel az OAF-ba regisztrálásnál. Kilépek"
+#: providers/gda-sybase-server/gda-sybase-connection.c:533
+msgid "Could not allocate cmd structure"
+msgstr "Nem tudok cmd struktúrát allokálni"
 
-#: gda-srv/gda-server-impl.c:162
-msgid "Could not get CORBA name service object"
-msgstr "Nem tudom a CORBA névkiszolgáló objektumot megkapni"
-
-#: gda-srv/gda-server-impl.c:169
+#: providers/gda-sybase-server/gda-sybase-connection.c:596
 #, c-format
-msgid "Registered with ID = %s"
-msgstr "Regisztrálva %s azonosítóval"
+msgid "schema_procedures: proc_catalog = '%s' UNUSED!"
+msgstr "schema_procedures: proc_catalog = '%s' UNUSED!"
 
-#: gda-srv/gda-server-impl.c:259
+#: providers/gda-sybase-server/gda-sybase-connection.c:600
 #, c-format
-msgid "CORBA system exception %s"
-msgstr "CORBA renszer kivétel: %s"
+msgid "schema_tables: invalid constraint type %d"
+msgstr ""
 
-#: gda-srv/gda-server-impl.c:262
+#: providers/gda-sybase-server/gda-sybase-connection.c:661
 #, c-format
-msgid "CORBA user exception: %s"
-msgstr "CORBA felhasználói kivétel: %s"
+msgid "Invalid or unsupported constraint type: %d"
+msgstr ""
 
-#: testing/controls_browser/gda-controls-browser.c:272
-msgid "Refresh all"
-msgstr "Mindent frissít"
+#: providers/gda-sybase-server/gda-sybase-connection.c:702
+msgid "Could not allocate Gda_ServerCommand"
+msgstr "Nem tudtam allokálni a következõt: Gda_ServerCommand"
 
-#: testing/controls_browser/gda-controls-browser.c:272
-msgid "Ok"
-msgstr "Ok"
+#: providers/gda-sybase-server/gda-sybase-connection.c:732
+#: providers/gda-sybase-server/gda-sybase-connection.c:737
+#, c-format
+msgid "connection status: %x"
+msgstr "kapcsolat állapota: %x"
 
-#: testing/controls_browser/gda-controls-browser.c:390
-msgid "GNOME-DB Controls browser"
-msgstr "GNOME-DB vezérlés böngészõ"
+#: providers/gda-sybase-server/gda-sybase-connection.c:733
+#, c-format
+msgid "return code: %x"
+msgstr "Visszatérési érték: %x"
 
-#: testing/controls_browser/gda-controls-browser.c:410
-msgid "New control"
-msgstr "Új vezérlés"
+#: providers/gda-sybase-server/gda-sybase-connection.c:770
+msgid "attempting reconnection"
+msgstr "újrakapcsolódás"
 
-#: testing/controls_browser/gda-controls-browser.c:417
-msgid "Close control"
-msgstr "Vezérlés zárása"
+#: providers/gda-sybase-server/gda-sybase-connection.c:909
+#, c-format
+msgid "Reconnected to '%s'"
+msgstr "Újrakapcsolódva: '%s'"
 
-#: testing/controls_browser/gda-controls-browser.c:430
-msgid "Controls"
-msgstr "Vezérlõk"
+#: providers/gda-sybase-server/gda-sybase-connection.c:911
+#, c-format
+msgid "Connected to %s"
+msgstr "Kapcsolódva %s-hez"
 
-#: testing/controls_browser/gda-controls-browser.c:465
-msgid "Control settings"
-msgstr "Vezérlõ beállítások"
+#: providers/gda-sybase-server/gda-sybase-connection.c:919
+#, c-format
+msgid "Selected database '%s'"
+msgstr "A kijelölt adatbázis: %s"
 
-#: testing/gda-client-test1.c:30 testing/gda-client-test10.c:30
-#: testing/gda-client-test11.c:30 testing/gda-client-test12.c:31
-#: testing/gda-client-test13.c:31 testing/gda-client-test14.c:30
-#: testing/gda-client-test2.c:31 testing/gda-client-test3.c:31
-#: testing/gda-client-test4.c:29 testing/gda-client-test5.c:31
-#: testing/gda-client-test6.c:28 testing/gda-client-test7.c:30
-#: testing/gda-client-test8.c:31 testing/gda-client-test9.c:30
-#: testing/gda-ui-test1.c:32 testing/gda-ui-test2.c:32
-#: testing/gda-ui-test3.c:30
-msgid "database provider"
-msgstr "Adatbázis-szolgáltató"
+#: providers/gda-sybase-server/gda-sybase-connection.c:948
+#, c-format
+msgid "%s: Could not allocate cmd structure"
+msgstr "%s: Nem tudtam cmd struktúrát allokálni"
 
-#: testing/gda-client-test1.c:30 testing/gda-client-test10.c:30
-#: testing/gda-client-test11.c:30 testing/gda-client-test12.c:31
-#: testing/gda-client-test13.c:31 testing/gda-client-test14.c:30
-#: testing/gda-client-test2.c:31 testing/gda-client-test3.c:31
-#: testing/gda-client-test4.c:29 testing/gda-client-test5.c:31
-#: testing/gda-client-test6.c:28 testing/gda-client-test7.c:30
-#: testing/gda-client-test8.c:31 testing/gda-client-test9.c:30
-#: testing/gda-ui-test1.c:32 testing/gda-ui-test2.c:32
-#: testing/gda-ui-test3.c:30
-msgid "PROVIDER"
-msgstr "SZOLGÁLTATÓ"
+#: providers/gda-sybase-server/gda-sybase-connection.c:957
+#, c-format
+msgid "%s: Could not allocate memory for cmd string"
+msgstr "%s: Nem tudtam memóriát allokálni a cmd karakterláncnak"
 
-#: testing/gda-client-test12.c:35 testing/gda-client-test13.c:35
-#: testing/gda-client-test4.c:33 testing/gda-client-test5.c:35
-#: testing/gda-client-test6.c:32
-msgid "table"
-msgstr "tábla"
+#: providers/gda-sybase-server/gda-sybase-connection.c:970
+#, c-format
+msgid "%s: ct_command failed"
+msgstr "%s: ct_command sikertlen"
 
-#: testing/gda-client-test12.c:35 testing/gda-client-test13.c:35
-#: testing/gda-client-test4.c:33 testing/gda-client-test6.c:32
-msgid "TABLENAME"
-msgstr "TABLANEV"
+#: providers/gda-sybase-server/gda-sybase-connection.c:979
+#, c-format
+msgid "%s: sending command failed"
+msgstr "%s: a parancs elküldése (az elküldõ parancs) sikertelen"
 
-#: testing/gda-client-test5.c:35
-msgid "TABLE NAME"
-msgstr "TABLA NEV"
+#: providers/gda-sybase-server/gda-sybase-connection.c:990
+#, c-format
+msgid "%s: selecting database failed"
+msgstr "%s: az adatbázis kijelölése sikertelen"
 
-#: testing/gda-ui-test3.c:97
-msgid "Logging in"
-msgstr "Belépés"
+#: providers/gda-sybase-server/gda-sybase-connection.c:1008
+#, c-format
+msgid "%s: use command failed"
+msgstr "%s: use parancs sikertelen"
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:1035
+msgid "Could not allocate locale structure"
+msgstr "Locale struktúra allokálása sikertelen"
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:1041
+#, c-format
+msgid "Could not set locale to '%s'"
+msgstr "A locale beállítása a következõre sikertelen: %s"
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:1047
+#, c-format
+msgid "Could not configure locale to be '%s'"
+msgstr "A locale beállítása a következõre sikertelen: %s"
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:1052
+msgid "Could not drop locale structure"
+msgstr "A locale struktúra droppolása sikertelen"
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:1065
+#, c-format
+msgid "Fatal error: %s\n"
+msgstr "Végzetes hiba: %s\n"
+
+#: providers/gda-sybase-server/gda-sybase-error.c:65
+#, c-format
+msgid "gda_sybase_error_make(%p,%p,%p,%p)"
+msgstr "gda_sybase_error_make(%p,%p,%p,%p)"
+
+#: providers/gda-sybase-server/gda-sybase-error.c:74
+#, c-format
+msgid "No error flag ist set, though %s is called. This may be a bug."
+msgstr "Nincs hiba jelzés beállítva, %s mégis meghívva. Ez lehet, hogy hiba."
+
+#: providers/gda-sybase-server/gda-sybase-error.c:138
+msgid "cs_diag() initialized"
+msgstr "cs_diag() inicializálva"
+
+#: providers/gda-sybase-server/gda-sybase-error.c:141
+msgid "Could not initialize cs_diag()"
+msgstr "cs_diag() inicializálása sikertelen"
+
+#: providers/gda-sybase-server/gda-sybase-error.c:148
+msgid "ct_diag() initialized"
+msgstr "ct_diag() inicializálva"
+
+#: providers/gda-sybase-server/gda-sybase-error.c:151
+msgid "Could not initialize ct_diag()"
+msgstr "ct_diag() inicializálása sikertelen"
+
+#: providers/gda-sybase-server/gda-sybase-error.c:185
+#, c-format
+msgid "%s could not find server implementation"
+msgstr "%s nem kapta meg a mutatót a szerverre"
+
+#: providers/gda-sybase-server/gda-sybase-error.c:191
+#, c-format
+msgid "%s could not get cnc userdata"
+msgstr "%s nem tudta megkapni a cnc userdata-t"
+
+#: providers/gda-sybase-server/gda-sybase-error.c:203
+msgid "Could not get # of messages"
+msgstr "Nem tudom megkapni az üzenetek számát"
+
+#: providers/gda-sybase-server/gda-sybase-error.c:208
+#, c-format
+msgid "%d ctlib messages to fetch"
+msgstr "%d ctlib üzenet"
+
+#: providers/gda-sybase-server/gda-sybase-error.c:210
+#, c-format
+msgid "%d ctlib message to fetch"
+msgstr "%d ctlib üzenet"
+
+#: providers/gda-sybase-server/gda-sybase-error.c:246
+msgid "error is nullpointer in gda_sybase_messages_handle"
+msgstr "a hiba nullpointer a gda_sybase_messages_handle"
+
+#: providers/gda-sybase-server/gda-sybase-error.c:271
+#: providers/gda-sybase-server/gda-sybase-error.c:338
+#: providers/gda-sybase-server/gda-sybase-error.c:381
+msgid "Could not get # of server messages"
+msgstr "Nem kaptam meg a kiszolgáló üzenetek számát"
+
+#: providers/gda-sybase-server/gda-sybase-error.c:279
+#, c-format
+msgid "Fetching %d client messages"
+msgstr "%d kliensüzenet letöltése"
+
+#: providers/gda-sybase-server/gda-sybase-error.c:281
+#, c-format
+msgid "Fetching %d client message"
+msgstr "%d kliensüzenet letöltése"
+
+#: providers/gda-sybase-server/gda-sybase-error.c:290
+#, c-format
+msgid "Could not get client msg # %d"
+msgstr "Nem tudtam megkapni a következõ kliensüzenetet: %d"
+
+#: providers/gda-sybase-server/gda-sybase-error.c:306
+msgid "Could not get # of client messages"
+msgstr "Nem tudtam megkapni a kliensüzenetek számát"
+
+#: providers/gda-sybase-server/gda-sybase-error.c:314
+msgid "Could not clear client messages"
+msgstr "Nem tudom törölni a kliensüzeneteket"
+
+#: providers/gda-sybase-server/gda-sybase-error.c:346
+#, c-format
+msgid "Fetching %d server messages"
+msgstr "%d kiszolgálóüzenet letölése"
+
+#: providers/gda-sybase-server/gda-sybase-error.c:348
+#, c-format
+msgid "Fetching %d server message"
+msgstr "%d kiszolgálóüzenet letöltése"
+
+#: providers/gda-sybase-server/gda-sybase-error.c:357
+#, c-format
+msgid "Could not get server msg # %d"
+msgstr "Nem tudtam megkapni a következõ kiszolgáló-üzenetet: %d"
+
+#: providers/gda-sybase-server/gda-sybase-error.c:389
+msgid "Could not clear server messages"
+msgstr "Nem tudtam törölni a kiszolgáló-üzeneteket"
+
+#: providers/gda-sybase-server/gda-sybase-error.c:411
+#: providers/gda-sybase-server/gda-sybase-error.c:447
+msgid "Could not get # of cslib messages"
+msgstr "Nem tudtam megkapni a cslib üzenetek számát"
+
+#: providers/gda-sybase-server/gda-sybase-error.c:419
+#, c-format
+msgid "Fetching %d cslib messages"
+msgstr "%d cslib üzenet letöltése"
+
+#: providers/gda-sybase-server/gda-sybase-error.c:421
+#, c-format
+msgid "Fetching %d cslib message"
+msgstr "%d cslib üzenet letöltése"
+
+#: providers/gda-sybase-server/gda-sybase-error.c:431
+#, c-format
+msgid "Could not get cslib msg # %d"
+msgstr "Nem tudtam megkapni a következõ cslib üzenetet: %d"
+
+#: providers/gda-sybase-server/gda-sybase-error.c:455
+msgid "Could not clear cslib messages"
+msgstr "Nem tudtam törölni a cslib üzeneteket"
+
+#: providers/gda-sybase-server/gda-sybase-error.c:587
+msgid "Server message:"
+msgstr "Kiszolgáló-üzenetek:"
+
+#: providers/gda-sybase-server/gda-sybase-error.c:596
+msgid "Client message:"
+msgstr "Kliens-üzenetek:"
+
+#: providers/gda-sybase-server/gda-sybase-error.c:603
+msgid "CS-Library error:"
+msgstr "CS-Programkönyvtár hiba:"
+
+#: providers/gda-sybase-server/gda-sybase-recordset.c:152
+#, c-format
+msgid "fetch error at row %d"
+msgstr "Hiba letöltése a következõ sornál: %d"
+
+#: providers/gda-sybase-server/gda-sybase-recordset.c:159
+#, c-format
+msgid "CS_END_DATA on row %d; canceling"
+msgstr "CS_END_DATA a következõ soron %d; mûvelet leállítása"
+
+#: providers/gda-sybase-server/gda-sybase-recordset.c:168
+#, c-format
+msgid "%s: Error (%d)"
+msgstr "%s: Hiba (%d)"
+
+#: providers/gda-sybase-server/gda-sybase-recordset.c:343
+msgid "Failed fetching # of columns"
+msgstr "Az oszlopok számának a letöltése sikertelen"
+
+#: providers/gda-sybase-server/gda-sybase-recordset.c:349
+#, c-format
+msgid "Counted %d columns"
+msgstr "%d oszlopot számoltam"
+
+#: providers/gda-sybase-server/gda-sybase-recordset.c:356
+#, c-format
+msgid "%s could not allocate datafmt info"
+msgstr "%s nem tudta a következõt allokálni: datafmt info"
+
+#: providers/gda-sybase-server/gda-sybase-recordset.c:366
+#, c-format
+msgid "%s could not allocate data fields"
+msgstr "%s nem tudott adatmezõket allokálni"
+
+#: providers/gda-sybase-server/gda-sybase-recordset.c:384
+#, c-format
+msgid "ct_describe on col # %d"
+msgstr "ct_describe a következõ oszlopra: %d"
+
+#: providers/gda-sybase-server/gda-sybase-recordset.c:391
+#, c-format
+msgid "ct_describe on col # %d failed"
+msgstr "sikertelen ct_describe a következõ oszlopra: %d"
+
+#: providers/gda-sybase-server/gda-sybase-recordset.c:397
+#, c-format
+msgid "ct_describe(%d): '%s', %d (%s)"
+msgstr "ct_describe(%d): '%s', %d (%s)"
+
+#: providers/gda-sybase-server/gda-sybase-recordset.c:406
+msgid "could not allocate data holder"
+msgstr "nem tudtam a következõt allokálni: data holder"
+
+#: providers/gda-sybase-server/gda-sybase-recordset.c:416
+msgid "could not ct_bind data holder to column"
+msgstr "nem tudtam ct_bind-olni a data holder-t az oszlophoz"
+
+#: providers/gda-sybase-server/gda-sybase-recordset.c:423
+msgid "illegal type detected, aborting"
+msgstr "illegális típus felismerve, kilépés"
+
+#: providers/gda-sybase-server/gda-sybase-recordset.c:429
+msgid "could not allocate field"
+msgstr "nem tudtam mezõt allokálni"
+
+#: providers/gda-sybase-server/main-sybase.c:74
+msgid "Could not register gda-sybase provider implementation"
+msgstr "Nem tudom regisztrálni a gda-sybase szolgáltatót"
+
+#: report/gda-report-engine.c:87
+#, c-format
+msgid "CORBA exception unloading report engine: %s"
+msgstr "CORBA kivétel a report engine eltávolításaok: %s"
+
+#: report/server/gda-report-server-main.c:43
+#: report/server/gda-report-server-main.c:50
+#, c-format
+msgid "Received signal %d, shutting down."
+msgstr ""
+"A következõ jelzést kaptam: %d\n"
+"Leállás."
+
+#: report/server/gda-report-server-main.c:54
+#, c-format
+msgid "Received signal %d, shutting down cleanly"
+msgstr ""
+"A következõ jelzést kaptam: %d\n"
+"Leállás (clean)"
+
+#: report/server/gda-report-server-main.c:96
+msgid "Failed to initialize OAF: please mail bug report to OAF maintainers"
+msgstr ""
+"Az OAF inicializálása sikertelen: küldj hibajelentést az OAF karbantartójának"
+
+#: report/server/gda-report-server-main.c:106
+msgid "Could not activate report engine"
+msgstr "Nem tudtam a report engine-t aktivalni"
+
+#: report/server/gda-report-server-main.c:123
+msgid ""
+"Another instance of the report engine is already registered with OAF. "
+"Exiting..."
+msgstr ""
+"Másik példánya a reporting engine-nek be van regisztrálva az OAF-ba. "
+"Kilépés..."
+
+#: report/server/gda-report-server-main.c:126
+msgid "Unknown error registering report engine with OAF. Exiting"
+msgstr ""
+"Nem ismert hiba lépett fel a report engine  OAF-ba regisztrálásnál. Kilépek"
+
+#: report/server/gda-report-server-main.c:130
+#, c-format
+msgid "Registered report engine with ID = %s"
+msgstr "Report engine regisztrálva a következõ azonosítóval: %s"
+
+#: tools/gda-run.c:34
+msgid "database name"
+msgstr "adatbázis név"
+
+#: tools/gda-run.c:34
+msgid "DATABASE"
+msgstr "ADATBÁZIS"
+
+#: tools/gda-run.c:35
+msgid "user name"
+msgstr "felhasználó név"
+
+#: tools/gda-run.c:35
+msgid "USER-NAME"
+msgstr "FELHASZNÁLÓ"
+
+#: tools/gda-run.c:36
+msgid "password"
+msgstr "jelszó"
+
+#: tools/gda-run.c:36
+msgid "PASSWORD"
+msgstr "JELSZÓ"
+
+#: tools/gda-run.c:37
+msgid "file name"
+msgstr "fájlnév"
+
+#: tools/gda-run.c:37
+msgid "FILE-NAME"
+msgstr "FÁJLNÉV"
+
+#: tools/gda-run.c:109
+#, c-format
+msgid "%s: misconfigured DSN entry"
+msgstr "%s: nem bekonfigurált DSN bejegyzés"
+
+#: tools/gda-run.c:124
+#, c-format
+msgid "%s: data source '%s' not found\n"
+msgstr "%s: a '%s' adatforrást nem találom\n"
+
+#~ msgid "Select Color"
+#~ msgstr "Szín választása"
+
+#~ msgid "Select File"
+#~ msgstr "Válassz egy fájlt"
+
+#~ msgid "Select Font"
+#~ msgstr "Válassz egy betûtípust"
+
+#~ msgid "Copyright The Free Software Foundation (C) 1998-2000"
+#~ msgstr "Copyright The Free Software Foundation (C) 1998-2000"
+
+#~ msgid ""
+#~ "This program is part of the GNOME project for LINUX. GNOME Data Access comes "
+#~ "with ABSOLUTELY NO WARRANTY. This is free software, and you are welcome to "
+#~ "redistribute it under the conditions of the GNU General Public Licence."
+#~ msgstr ""
+#~ "A program a GNOME projekt része, Linuxhoz. A GNOME Adatbázis elérés minden "
+#~ "GARANCIA NÉLKÜL jelenik meg. Ez egy nyílt forráskódú szoftver, minden újra "
+#~ "megjelentetést szabadon megtehetsz a GNU Nyilvános Licensz alapján."
+
+#~ msgid "Unable to execute Bug Report Tool"
+#~ msgstr "Nem tudom elindítani a Hibajelentõ Eszközt"
+
+#~ msgid "Object Name"
+#~ msgstr "Objektum név"
+
+#~ msgid "0 rows"
+#~ msgstr "0 sor"
+
+#~ msgid "%d rows"
+#~ msgstr "%d sor"
+
+#~ msgid "Tables"
+#~ msgstr "Táblák"
+
+#~ msgid "Views"
+#~ msgstr "Nézetek"
+
+#~ msgid "Procedures"
+#~ msgstr "Eljárások"
+
+#~ msgid "Types"
+#~ msgstr "Típusok"
+
+#~ msgid "Aggregates"
+#~ msgstr "Aggregátumok"
+
+#~ msgid "Data"
+#~ msgstr "Adatok"
+
+#~ msgid "Remove"
+#~ msgstr "Töröl"
+
+#~ msgid "Extra Info"
+#~ msgstr "Extra információ"
+
+#~ msgid "GDA Name"
+#~ msgstr "GDA Név"
+
+#~ msgid "Provider"
+#~ msgstr "GDA Szerver"
+
+#~ msgid "DSN"
+#~ msgstr "DSN"
+
+#~ msgid "Description"
+#~ msgstr "Leírás"
+
+#~ msgid "Username"
+#~ msgstr "Felhasználónév"
+
+#~ msgid "Config"
+#~ msgstr "Konfiguráció"
+
+#~ msgid "Global"
+#~ msgstr "Globális"
+
+#~ msgid "Error while saving configuration!"
+#~ msgstr "Hiba a beállítások mentésénél!"
+
+#~ msgid "Data source has no name!"
+#~ msgstr "Az adatforrásnak nincs neve!"
+
+#~ msgid "Error %d of %d"
+#~ msgstr "%s:%s hiba"
+
+#~ msgid "Show Help"
+#~ msgstr "Súgó"
+
+#~ msgid "Source"
+#~ msgstr "Forrás"
+
+#~ msgid "sqlstate"
+#~ msgstr "sqlstate"
+
+#~ msgid "Error 0 of 0"
+#~ msgstr "0 hiba a 0-ból"
+
+#~ msgid "Record View"
+#~ msgstr "Rekord nézet"
+
+#~ msgid "Copy"
+#~ msgstr "Másolás"
+
+#~ msgid "Copy selection to clipboard"
+#~ msgstr "Kijelölt szöveg vágólapra másolása"
+
+#~ msgid "Select all"
+#~ msgstr "Mindent kijelöl"
+
+#~ msgid "Select all rows"
+#~ msgstr "Minden sort kijelöl"
+
+#~ msgid "Clear selection"
+#~ msgstr "A kijelölés törlése"
+
+#~ msgid "Clear all selected rows"
+#~ msgstr "Minden kijelölt sor törlése"
+
+#~ msgid "Record view..."
+#~ msgstr "Rekord nézet..."
+
+#~ msgid "View recordset record-by-record"
+#~ msgstr "Rekordtömb megtekintése rekordról rekordra"
+
+#~ msgid "Refresh grid"
+#~ msgstr "Rács frissítése"
+
+#~ msgid "Refresh grid contents"
+#~ msgstr "Rács tartalom frissítése"
+
+#~ msgid "Print grid"
+#~ msgstr "Rács nyomtatása"
+
+#~ msgid "Print grid contents"
+#~ msgstr "Rács tartalom nyomtatása"
+
+#~ msgid "Show columns"
+#~ msgstr "Oszlopok mutatása"
+
+#~ msgid "Show column titles"
+#~ msgstr "Oszlopfejlécek mutatása"
+
+#~ msgid "Hide columns"
+#~ msgstr "Oszlopok elrejtése"
+
+#~ msgid "Hide column titles"
+#~ msgstr "Oszlopfejlécek elrejtése"
+
+#~ msgid "Entry %d of %d"
+#~ msgstr "%d bejegyzés a %d-bõl"
+
+#~ msgid "Date"
+#~ msgstr "Dátum"
+
+#~ msgid "Time"
+#~ msgstr "Idõpont"
+
+#~ msgid "Message"
+#~ msgstr "Üzenet"
+
+#~ msgid "Log Entry"
+#~ msgstr "Napló bejegyzés"
+
+#~ msgid "No datasource '%s' defined in your GDA configuration file"
+#~ msgstr "Nincs '%s' adatforrás definiálva a GDA konfigurációs fájlodban"
+
+#~ msgid "User Name"
+#~ msgstr "Felhasználónév"
+
+#~ msgid "GDA Datasource"
+#~ msgstr "GDA adatforrás"
+
+#~ msgid "Password"
+#~ msgstr "Jelszó"
+
+#~ msgid "Last Connections"
+#~ msgstr "Utolsó kapcsolatok"
+
+#~ msgid "Data Source Name"
+#~ msgstr "Adatforrás neve"
+
+#~ msgid "User name to use for the connection"
+#~ msgstr "Felhasználónév a kapcsolathoz"
+
+#~ msgid "Password to authenticate user"
+#~ msgstr "Felhasználó-azonosításhoz jelszó"
+
+#~ msgid "To open/close the connection"
+#~ msgstr "Kapcsolat nyitása/zárása"
+
+#~ msgid "Error Viewer"
+#~ msgstr "Hibanézõ"
+
+#~ msgid "Could not initialize %s component"
+#~ msgstr "Nem tudom a %s komponenst elindítani"
+
+#~ msgid "Font to be used for the grid"
+#~ msgstr "A rácsnál használatos betûtípus"
+
+#~ msgid "Could not initialize Bonobo"
+#~ msgstr "Nem tudom a Bonobo-t elindítani"
+
+#~ msgid "View requested to be activated but there is already an active view"
+#~ msgstr ""
+#~ "Az aktivizálásra szánt nézet aktivizálva lett, de már van aktív nézet"
+
+#~ msgid "Ready"
+#~ msgstr "Kész"
+
+#~ msgid "Could not bind object %s"
+#~ msgstr "Nem tudom a %s nevû objektumt elérni"
+
+#~ msgid "Unable to activate object %s"
+#~ msgstr "Nem tudom aktivizálni az '%s' objektumot"
+
+#~ msgid "Could not register control factory"
+#~ msgstr "Nem tudom regisztrálni vezérlõ factory-t"
+
+#~ msgid "control has no property bag"
+#~ msgstr "a vezérlésnek nincs beállítás tasakja"
+
+#~ msgid "property %s not found"
+#~ msgstr "A %s beállítás nem található"
+
+#~ msgid "Factory %s already existing"
+#~ msgstr "%s factory már van"
+
+#~ msgid "Could not register %s factory"
+#~ msgstr "Nem tudok regisztrálni %s factory-t"
+
+#~ msgid "GNOME-DB Builder"
+#~ msgstr "GNOME-DB Builder"
+
+#~ msgid "Disconnected from database"
+#~ msgstr "Az adatbázisról lekapcsolódva"
+
+#~ msgid "Database Browser"
+#~ msgstr "Adatbázis böngészõ"
+
+#~ msgid "There are no open connections"
+#~ msgstr "Nincsenek nyitott kapcsolatok"
+
+#~ msgid "Back"
+#~ msgstr "Vissza"
+
+#~ msgid "Go to previous document"
+#~ msgstr "Az elõzõ dokumentumra ugrik"
+
+#~ msgid "Forward"
+#~ msgstr "Következõ"
+
+#~ msgid "Go to next document"
+#~ msgstr "A következõ dokumentumra ugrik"
+
+#~ msgid "Home"
+#~ msgstr "Haza"
+
+#~ msgid "Go to table of contents"
+#~ msgstr "A tartalomjegyzékre urgik"
+
+#~ msgid "Help"
+#~ msgstr "Súgó"
+
+#~ msgid "Screen"
+#~ msgstr "Képernyõ"
+
+#~ msgid "New screen"
+#~ msgstr "Új képernyõ"
+
+#~ msgid "Report"
+#~ msgstr "Jelentés"
+
+#~ msgid "New report"
+#~ msgstr "Új jelentés"
+
+#~ msgid "Server"
+#~ msgstr "Szerver"
+
+#~ msgid "New server"
+#~ msgstr "Új szerver"
+
+#~ msgid "Repository"
+#~ msgstr "Repository"
+
+#~ msgid "New repository"
+#~ msgstr "Új repository"
+
+#~ msgid "Open existing screen"
+#~ msgstr "Meglévõ képernyõ megnyitása"
+
+#~ msgid "Open existing report"
+#~ msgstr "Meglévõ jelentés megnyitása"
+
+#~ msgid "Open existing server"
+#~ msgstr "Meglévõ szerver megnyitása"
+
+#~ msgid "Open existing repository"
+#~ msgstr "Meglévõ repository megnyitása"
+
+#~ msgid "Connect..."
+#~ msgstr "Kapcsolódás..."
+
+#~ msgid "Connect to database"
+#~ msgstr "Kapcsolódás az adatbázishoz"
+
+#~ msgid "Disconnect"
+#~ msgstr "Lekapcsolódás"
+
+#~ msgid "Close database connection"
+#~ msgstr "Adatbázis kapcsolat zárása"
+
+#~ msgid "Browse"
+#~ msgstr "Böngészés"
+
+#~ msgid "Open database browser"
+#~ msgstr "Adatbázis böngészõ megnyitása"
+
+#~ msgid "Import objects"
+#~ msgstr "Importálás"
+
+#~ msgid "Import database objects into repository"
+#~ msgstr "Adatbázis objektumok importálása a repository-ba"
+
+#~ msgid "New"
+#~ msgstr "Új"
+
+#~ msgid "Open"
+#~ msgstr "Megnyit"
+
+#~ msgid "Close"
+#~ msgstr "Bezár"
+
+#~ msgid "Close current window"
+#~ msgstr "Aktuális ablak bezárása"
+
+#~ msgid "Close all"
+#~ msgstr "Mindent bezár"
+
+#~ msgid "Close all open windows"
+#~ msgstr "Az összes megnyitott ablak zárása"
+
+#~ msgid "Quit"
+#~ msgstr "Kilépés"
+
+#~ msgid "Exit application"
+#~ msgstr "Kilépés a programból"
+
+#~ msgid "Undo"
+#~ msgstr "Vissza"
+
+#~ msgid "Undo last action"
+#~ msgstr "Utolsó mûvelet visszavonása"
+
+#~ msgid "Redo"
+#~ msgstr "Újra"
+
+#~ msgid "Revert last undone action"
+#~ msgstr "Visszavont mûvelet elvégzése"
+
+#~ msgid "Cut"
+#~ msgstr "Kivág"
+
+#~ msgid "Cut selected text/item"
+#~ msgstr "Kijelölt szöveg/elem kivágása vágólapra"
+
+#~ msgid "Copy selected text/item to the clipboard"
+#~ msgstr "Kijelölt szöveg/elem vágólapra másolása"
+
+#~ msgid "Paste"
+#~ msgstr "Beillesztés"
+
+#~ msgid "Paste clipboard contents"
+#~ msgstr "A vágólap tartalmának beillesztése"
+
+#~ msgid "Delete"
+#~ msgstr "Töröl"
+
+#~ msgid "Delete selected text/item"
+#~ msgstr "A kiválasztott szöveg/elem törlése"
+
+#~ msgid "New project"
+#~ msgstr "Új projekt"
+
+#~ msgid "Create a new project"
+#~ msgstr "Új projekt készítése"
+
+#~ msgid "Open project"
+#~ msgstr "Projekt megnyitása"
+
+#~ msgid "Open an existing project"
+#~ msgstr "Létezõ projektfájl megnyitása"
+
+#~ msgid "Save project"
+#~ msgstr "Projekt mentése"
+
+#~ msgid "Save current project"
+#~ msgstr "Jelenlegi projekt mentése"
+
+#~ msgid "Properties..."
+#~ msgstr "Beállítások..."
+
+#~ msgid "View project properties"
+#~ msgstr "Projekt tulajdonságai"
+
+#~ msgid "GNOME-DB Front End"
+#~ msgstr "GNOME-DB Felület"
+
+#~ msgid "The GNOME-DB front end"
+#~ msgstr "GNOME-DB felület"
+
+#~ msgid "SQL Front End"
+#~ msgstr "SQL felület"
+
+#~ msgid "The SQL front end"
+#~ msgstr "SQL felület"
+
+#~ msgid "GNOME-DB Manager"
+#~ msgstr "GNOME-DB menedzser"
+
+#~ msgid "The GNOME-DB configuration tool"
+#~ msgstr "A GNOME-DB konfigurációs eszköz"
+
+#~ msgid "About gnome-db..."
+#~ msgstr "Gnome-db névjegy..."
+
+#~ msgid "About this program"
+#~ msgstr "A programról"
+
+#~ msgid "Submit bug report"
+#~ msgstr "Hibajelentés feladása"
+
+#~ msgid "Edit"
+#~ msgstr "Szerkeszt"
+
+#~ msgid "Project"
+#~ msgstr "Projekt"
+
+#~ msgid "Database"
+#~ msgstr "Adatbázis"
+
+#~ msgid "Tools"
+#~ msgstr "Eszközök"
+
+#~ msgid "New Screen/Report"
+#~ msgstr "Új képernyõ/jelentés"
+
+#~ msgid "Open Screen/Report"
+#~ msgstr "Képernyõ/jelentés megnyitása"
+
+#~ msgid "Preferences"
+#~ msgstr "Beállítások"
+
+#~ msgid "Configure user preferences"
+#~ msgstr "Felhasználói beállítások"
+
+#~ msgid "Could not initialize Bonobo\n"
+#~ msgstr "Nem tudom a Bonobo-t elindítani\n"
+
+#~ msgid "Unable to execute '%s'"
+#~ msgstr "Nem tudom végrehajtani: '%s'"
+
+#~ msgid "Location"
+#~ msgstr "Hely"
+
+#~ msgid "Execute"
+#~ msgstr "Indít"
+
+#~ msgid "Execute batch file"
+#~ msgstr "Kötegfájl indítása"
+
+#~ msgid "Open file"
+#~ msgstr "Fájl megnyitása"
+
+#~ msgid "Save"
+#~ msgstr "Mentés"
+
+#~ msgid "Save file"
+#~ msgstr "Fájl mentése"
+
+#~ msgid "Clear"
+#~ msgstr "Törlés"
+
+#~ msgid "Clear command list"
+#~ msgstr "Parancslista törlése"
+
+#~ msgid ""
+#~ "Could not open file\n"
+#~ "'%s'"
+#~ msgstr ""
+#~ "Nem tudom megnyitni\n"
+#~ "a %s nevû fájlt"
+
+#~ msgid "No command selected"
+#~ msgstr "Nincs kijelölve parancs"
+
+#~ msgid "Command"
+#~ msgstr "Parancs"
+
+#~ msgid "Enter command text"
+#~ msgstr "Parancs beírása"
+
+#~ msgid "Insert at current position"
+#~ msgstr "Az aktuális pozícióba szúrás"
+
+#~ msgid "Open File"
+#~ msgstr "Fájl megnyitása"
+
+#~ msgid "Command separators"
+#~ msgstr "Parancs szeparátorok"
+
+#~ msgid "Append to current file"
+#~ msgstr "Jelenlegi fájlhoz fûz"
+
+#~ msgid "You must specify a file to be loaded"
+#~ msgstr "Meg kellene adnod egy fájlt betöltéshez"
+
+#~ msgid "You must specifiy the characters used as command separators"
+#~ msgstr "Meg kell adnod a parancsszeparátor karaktereket"
+
+#~ msgid "Add"
+#~ msgstr "Hozzáad"
+
+#~ msgid "Up"
+#~ msgstr "Fel"
+
+#~ msgid "Down"
+#~ msgstr "Le"
+
+#~ msgid "Options"
+#~ msgstr "Opciók"
+
+#~ msgid "Transaction Mode"
+#~ msgstr "Tranzakció mód"
+
+#~ msgid "Send as XML"
+#~ msgstr "XML-ként küld"
+
+#~ msgid "Batch"
+#~ msgstr "Kötegelt"
+
+#~ msgid "Connecting..."
+#~ msgstr "Kapcsolódás..."
+
+#~ msgid "Configuration file saved"
+#~ msgstr "A konfigurációs fájl elmentve"
+
+#~ msgid "Add Environment Variable"
+#~ msgstr "Környezeti változó hozzáadása"
+
+#~ msgid "Name"
+#~ msgstr "Név"
+
+#~ msgid "Value"
+#~ msgstr "Érték"
+
+#~ msgid "Editor Font"
+#~ msgstr "Szerkesztõ betûtípus"
+
+#~ msgid "Tab Position"
+#~ msgstr "Fül pozíció"
+
+#~ msgid "Top"
+#~ msgstr "Fent"
+
+#~ msgid "Bottom"
+#~ msgstr "Lent"
+
+#~ msgid "Left"
+#~ msgstr "Balra"
+
+#~ msgid "Right"
+#~ msgstr "Jobbra"
+
+#~ msgid "Grid"
+#~ msgstr "Rács"
+
+#~ msgid "Font"
+#~ msgstr "Betûtípus"
+
+#~ msgid "Foreground Color"
+#~ msgstr "Elõtér szín"
+
+#~ msgid "Background Color"
+#~ msgstr "Háttér szín"
+
+#~ msgid "Show row numbers"
+#~ msgstr "Sorszámok mutatása"
+
+#~ msgid "User Interface"
+#~ msgstr "Felhasználói interfész"
+
+#~ msgid "Environment"
+#~ msgstr "Környezet"
+
+#~ msgid "GDA"
+#~ msgstr "GDA"
+
+#~ msgid "SQL"
+#~ msgstr "SQL"
+
+#~ msgid "SQL Window"
+#~ msgstr "SQL Ablak"
+
+#~ msgid "Batch commands window"
+#~ msgstr "Kötegelt feldolgozás ablak"
+
+#~ msgid "Queries"
+#~ msgstr "Lekérdezések"
+
+#~ msgid "Query designer"
+#~ msgstr "Lekérdezés tervezõ"
+
+#~ msgid "Browser"
+#~ msgstr "Böngészõ"
+
+#~ msgid "Browse Database"
+#~ msgstr "Böngészés az adatbázisban"
+
+#~ msgid "Export"
+#~ msgstr "Exportál"
+
+#~ msgid "Export database"
+#~ msgstr "Adatbázis exportálás"
+
+#~ msgid "Import"
+#~ msgstr "Importál"
+
+#~ msgid "Import data into current database"
+#~ msgstr "Importálás az adatbázisba"
+
+#~ msgid "Close connection"
+#~ msgstr "Kapcsolat zárása"
+
+#~ msgid "Execute current command"
+#~ msgstr "Az aktuális parancs elindítása"
+
+#~ msgid "Select"
+#~ msgstr "Kiválaszt"
+
+#~ msgid "Select from previous commands"
+#~ msgstr "Az elõzõ parancsokból kiválasztás"
+
+#~ msgid "Load file into buffer"
+#~ msgstr "Fájl betöltése a pufferbe"
+
+#~ msgid "Save current file"
+#~ msgstr "Jelenlegi fájl mentése"
+
+#~ msgid "Cut selected text"
+#~ msgstr "Kijelölt szöveg kivágása vágólapra"
+
+#~ msgid "Copy selected text"
+#~ msgstr "Kijelölt szöveg másolása"
+
+#~ msgid "Clear window contents"
+#~ msgstr "Az ablak tartalmának törlése"
+
+#~ msgid "Start"
+#~ msgstr "Indít"
+
+#~ msgid "Start export"
+#~ msgstr "Exportálás indítása"
+
+#~ msgid "Clear all fields"
+#~ msgstr "Minden mezõ törlése"
+
+#~ msgid "Select all objects in database"
+#~ msgstr "Az összes objektum kiválasztása az adatbázisban"
+
+#~ msgid "Unselect"
+#~ msgstr "Kijelölés törlése"
+
+#~ msgid "Clear object selection"
+#~ msgstr "Az objektum-kijelölés törlése"
+
+#~ msgid "Foreign keys"
+#~ msgstr "Idegen kulcsok"
+
+#~ msgid "Object Identifiers"
+#~ msgstr "Objektum azonosítók"
+
+#~ msgid "Object Inheritance"
+#~ msgstr "Objektum öröklõdés"
+
+#~ msgid "Sequences"
+#~ msgstr "Sorozatok"
+
+#~ msgid "SQL (Standard)"
+#~ msgstr "SQL (Szabvány)"
+
+#~ msgid "SQL Sub-Selects"
+#~ msgstr "SQL Sub-select-ek"
+
+#~ msgid "Stored Procedures"
+#~ msgstr "Letárolt eljárások"
+
+#~ msgid "Transactions"
+#~ msgstr "Tranzakciók"
+
+#~ msgid "Triggers"
+#~ msgstr "Triggerek"
+
+#~ msgid "XML Queries"
+#~ msgstr "XML lekérdezések"
+
+#~ msgid "File name"
+#~ msgstr "Fájlnév"
+
+#~ msgid "Row %d - %d rows selected"
+#~ msgstr "%d sor - %d sor kiválasztva"
+
+#~ msgid "Select file"
+#~ msgstr "Válassz egy fájlt"
+
+#~ msgid ""
+#~ "Error reading from file\n"
+#~ "'%s'"
+#~ msgstr ""
+#~ "Fájl olvasási hiba\n"
+#~ "%s"
+
+#~ msgid "Command succeeded"
+#~ msgstr "A parancs végrehajtva"
+
+#~ msgid ""
+#~ "Error writing to file\n"
+#~ "'%s'"
+#~ msgstr ""
+#~ "Fájl írási hiba\n"
+#~ "%s"
+
+#~ msgid "Select Command"
+#~ msgstr "Parancs kijelölése"
+
+#~ msgid "Transaction started"
+#~ msgstr "Tranzakció elkezdõdött"
+
+#~ msgid "Begin transaction failed"
+#~ msgstr "Tranzakciókezdés sikertelen"
+
+#~ msgid "Data source does not support transactions"
+#~ msgstr "Az adatforrás nem kezel tranzakciókat"
+
+#~ msgid "Commit executed successfully"
+#~ msgstr "A parancs sikeresen lefutott"
+
+#~ msgid "Commit transaction failed"
+#~ msgstr "A tranzakció commit nem sikerült"
+
+#~ msgid "Rollback executed successfully"
+#~ msgstr "A rollback végrehajtódott"
+
+#~ msgid "Rollback transaction failed"
+#~ msgstr "A rollback nem sikerült"
+
+#~ msgid "Connection Properties"
+#~ msgstr "Kapcsolódási beállítások"
+
+#~ msgid "Properties"
+#~ msgstr "Beállítások"
+
+#~ msgid "Command Timeout"
+#~ msgstr "Parancs timeout"
+
+#~ msgid "Connect Timeout"
+#~ msgstr "Kapcsolódás timeout"
+
+#~ msgid "Trace File"
+#~ msgstr "Nyomkövetõfájl"
+
+#~ msgid "View"
+#~ msgstr "Nézet"
+
+#~ msgid "Version"
+#~ msgstr "Verzió"
+
+#~ msgid "Provider Features"
+#~ msgstr "Kiszolgáló tulajdonságok"
+
+#~ msgid "New database design"
+#~ msgstr "Új adatbázis-terv"
+
+#~ msgid "Open database design"
+#~ msgstr "Adatbázis-terv megnyitása"
+
+#~ msgid "Clear all entries"
+#~ msgstr "Minden mezõ törlése"
+
+#~ msgid "Close designer window"
+#~ msgstr "Bezárja az aktuális ablakot"
+
+#~ msgid "Select XML file"
+#~ msgstr "Válassz egy XML fájlt"
+
+#~ msgid "Designer"
+#~ msgstr "Tervezõ"
+
+#~ msgid "Data sources"
+#~ msgstr "Adatforrások"
+
+#~ msgid "Apply"
+#~ msgstr "Alkalmaz"
+
+#~ msgid "View selected entry"
+#~ msgstr "Kijelölt elem megtekintése"
+
+#~ msgid "Clear log file"
+#~ msgstr "Naplófájl törlése"
+
+#~ msgid "Refresh"
+#~ msgstr "Frissít"
+
+#~ msgid "Refresh log viewer"
+#~ msgstr "Napló nézet frissítése"
+
+#~ msgid "Close log window"
+#~ msgstr "Napló ablak zárása"
+
+#~ msgid "Error loading file '%s'"
+#~ msgstr "A fájl betöltése nem sikerült: '%s'"
+
+#~ msgid "Logs"
+#~ msgstr "Naplók"
+
+#~ msgid "Open Connection..."
+#~ msgstr "Új kapcsolat..."
+
+#~ msgid "Open a connection to a data source"
+#~ msgstr "Új kapcsolat nyitása az adatforráshoz"
+
+#~ msgid "Close current connection"
+#~ msgstr "Aktuális kapcsolat bezárása"
+
+#~ msgid "Disconnect all"
+#~ msgstr "Mindenhonnan lekapcsolódás"
+
+#~ msgid "Close all connections"
+#~ msgstr "Összes kapcsolat zárása"
+
+#~ msgid "SQL window"
+#~ msgstr "SQL ablak"
+
+#~ msgid "Query Designer"
+#~ msgstr "Lekérdezés-tervezõ"
+
+#~ msgid "Browse database"
+#~ msgstr "Böngészés az adatbázisban"
+
+#~ msgid "Begin transaction"
+#~ msgstr "Tranzakció kezdése"
+
+#~ msgid "Commit"
+#~ msgstr "Érvényesít"
+
+#~ msgid "Commit transaction"
+#~ msgstr "Tranzakció elküldése"
+
+#~ msgid "Rollback"
+#~ msgstr "Visszaállítás"
+
+#~ msgid "Discard all changes"
+#~ msgstr "A változások elvetése"
+
+#~ msgid "View connection properties"
+#~ msgstr "Kapcsolat tulajdonságai"
+
+#~ msgid "Configure"
+#~ msgstr "Konfigurálás"
+
+#~ msgid "Configure underlying database"
+#~ msgstr "Az adatbázis konfigurálása"
+
+#~ msgid "View logs"
+#~ msgstr "Naplók megtekintése"
+
+#~ msgid "View the different logs"
+#~ msgstr "Különbözõ naplók megtekintése"
+
+#~ msgid "Database designer"
+#~ msgstr "Adatbázis-tervezõ"
+
+#~ msgid "Open the database designer"
+#~ msgstr "Adatbázis-tervezõ megnyitása"
+
+#~ msgid "Service control"
+#~ msgstr "Szolgáltatás vezérlõ"
+
+#~ msgid "View service activity"
+#~ msgstr "Szolgáltatás-aktivitás megtekintése"
+
+#~ msgid "The GNOME-DB Development Environment"
+#~ msgstr "A GNOME-DB fejlesztõi környezet"
+
+#~ msgid "Preferences..."
+#~ msgstr "Beállítások..."
+
+#~ msgid "Data sources..."
+#~ msgstr "Adatforrások..."
+
+#~ msgid "Configure GDA data sources"
+#~ msgstr "A GDA adatforrások konfigurálása"
+
+#~ msgid "Save options"
+#~ msgstr "Beállítások mentése"
+
+#~ msgid "Save current configuration"
+#~ msgstr "Jelenlegi beállítások mentése"
+
+#~ msgid "Connect"
+#~ msgstr "Kapcsolat"
+
+#~ msgid "Exit Application"
+#~ msgstr "Kilépés a programból"
+
+#~ msgid "Activate"
+#~ msgstr "Aktivizál"
+
+#~ msgid "Activate selected service"
+#~ msgstr "A kiválasztott szolgáltatás aktivizálása"
+
+#~ msgid "Stop"
+#~ msgstr "Megállít"
+
+#~ msgid "Stop selected service"
+#~ msgstr "Kijelölt szolgáltatás leállítása"
+
+#~ msgid "Refresh service list"
+#~ msgstr "Szolgáltatáslisták frissítése"
+
+#~ msgid ""
+#~ "Could not find any installed services. Either you don't have\n"
+#~ "any services installed or I don't know the path to find them.\n"
+#~ "In either case, please check your GNOME-DB installation."
+#~ msgstr ""
+#~ "Nem találok egy telepített szolgáltatást sem. Lehet, hogy nincs\n"
+#~ "semmilyen szolgáltatás sem telepítve, vagy nem ismerem az útvonalát.\n"
+#~ "Mind a két esetben ellenõrizd a GNOME-DB telepítésed."
+
+#~ msgid "Service '%s' activated"
+#~ msgstr "A '%s' szolgáltatás aktivizálva"
+
+#~ msgid "Repo ID"
+#~ msgstr "Repo ID"
+
+#~ msgid "Type"
+#~ msgstr "Típus"
+
+#~ msgid "Service Control"
+#~ msgstr "Szolgáltatás vezérlõ"
+
+#~ msgid "Could not create DSN config component"
+#~ msgstr "Nem tudok DSN konfigurációs komponenst készíteni"
+
+#~ msgid "Select config component"
+#~ msgstr "Válassz konfigurációs komponenset"
+
+#~ msgid "You need Bonobo to load components!"
+#~ msgstr "Bonobora van szükséged a komponensek betöltéséhez!"
+
+#~ msgid "Add new data source"
+#~ msgstr "Az adatforrás hozzáadása"
+
+#~ msgid "Edit selected data source"
+#~ msgstr "A kijelölt adatforrás szerkesztése"
+
+#~ msgid "Remove selected data source"
+#~ msgstr "A kijelölt adatforrás törlése"
+
+#~ msgid "Browse selected data source"
+#~ msgstr "Böngészés az adatforrásban"
+
+#~ msgid "Data Source"
+#~ msgstr "Adatforrás"
+
+#~ msgid "Browse Data Source"
+#~ msgstr "Böngészés az datforrásban"
+
+#~ msgid "could not load browser control"
+#~ msgstr "Nem tudom a böngészõ vezérlõt betölteni"
+
+#~ msgid "Load config component"
+#~ msgstr "Konfigurációs komponens betöltése"
+
+#~ msgid "Module"
+#~ msgstr "Modul"
+
+#~ msgid "Users"
+#~ msgstr "Felhasználók"
+
+#~ msgid "User access rights"
+#~ msgstr "Felhasználói jogok"
+
+#~ msgid "All"
+#~ msgstr "Mind"
+
+#~ msgid "Data source not found in GDA configuration"
+#~ msgstr "A GDA konfigurációban nem találtam adatforrást"
+
+#~ msgid "Data Sources"
+#~ msgstr "Adatforrások"
+
+#~ msgid "Close configurator"
+#~ msgstr "Konfigurátor bezárása"
+
+#~ msgid "The GNOME-DB development environment"
+#~ msgstr "A GNOME-DB fejlesztõ felület"
+
+#~ msgid "Providers"
+#~ msgstr "Szolgáltatók"
+
+#~ msgid "View provider log"
+#~ msgstr "Szolgáltató napló megtekintése"
+
+#~ msgid "Install a new GDA provider"
+#~ msgstr "Új GDA szolgáltató telepítése"
+
+#~ msgid "Edit selected provider"
+#~ msgstr "A kijelölt szolgáltató szerkesztése"
+
+#~ msgid "Remove selected provider"
+#~ msgstr "A kiválasztott szolgáltató törlése"
+
+#~ msgid "Comments"
+#~ msgstr "Megjegyzések"
+
+#~ msgid "Could not create GnomeDbControl"
+#~ msgstr "Nem tudok GnomeDbControl-t készíteni"
+
+#~ msgid "Available databases"
+#~ msgstr "Elérhetõ adatbázisok"
+
+#~ msgid "Drop"
+#~ msgstr "Eldob"
+
+#~ msgid "Database name"
+#~ msgstr "Adatbázis neve"
+
+#~ msgid "Owner"
+#~ msgstr "Tulajdonos"
+
+#~ msgid "new instance %p created"
+#~ msgstr "új '%p' példány létrehozva"
+
+#~ msgid "DSN for the connection"
+#~ msgstr "DSN a kapcsolathoz"
+
+#~ msgid "User identity"
+#~ msgstr "Felhasználói azonosító"
+
+#~ msgid "User passord"
+#~ msgstr "Felhasználó jelszava"
+
+#~ msgid "Show/hide the user id"
+#~ msgstr "Használt ID mutatása/rejtése"
+
+#~ msgid "Give it TRUE to reset/start the component"
+#~ msgstr "TRUE-t adj a komponens reset/start-nak"
+
+#~ msgid "User name setting"
+#~ msgstr "Felhasználónév beállítás"
+
+#~ msgid "Group name setting"
+#~ msgstr "Csoportnév beállítás"
+
+#~ msgid "Object type setting"
+#~ msgstr "Objektum típus beállítás"
+
+#~ msgid "Object name setting"
+#~ msgstr "Objektum név beállítás"
+
+#~ msgid "Access rigths"
+#~ msgstr "Elérési jogok"
+
+#~ msgid "Indexes"
+#~ msgstr "Indexek"
+
+#~ msgid "All users rights"
+#~ msgstr "Minden felhasználói jog"
+
+#~ msgid "Groups rights"
+#~ msgstr "Csoport jogok"
+
+#~ msgid "Group:"
+#~ msgstr "Csoport:"
+
+#~ msgid "Individual users rights"
+#~ msgstr "Egyéni felhasználói jogok"
+
+#~ msgid "User:"
+#~ msgstr "Felhasználó:"
+
+#~ msgid "Insert"
+#~ msgstr "Beszúrás"
+
+#~ msgid "Update/Delete"
+#~ msgstr "Frissítés/törlés"
+
+#~ msgid "Rule"
+#~ msgstr "Szabály"
+
+#~ msgid "Table"
+#~ msgstr "Tábla"
+
+#~ msgid "Sequence"
+#~ msgstr "Sorozat"
+
+#~ msgid "Index"
+#~ msgstr "Index"
+
+#~ msgid "Name:"
+#~ msgstr "Név:"
+
+#~ msgid "Password:"
+#~ msgstr "Jelszó:"
+
+#~ msgid "Could not instantiate the gnome-db-control"
+#~ msgstr "Nem tudom a gnome-db-control-t elindítani"
+
+#~ msgid "Group(s)"
+#~ msgstr "Csoport(ok)"
+
+#~ msgid "Create DB"
+#~ msgstr "Adatbázis készítése"
+
+#~ msgid "Create users"
+#~ msgstr "Felhasználók készítése"
+
+#~ msgid "Valid until"
+#~ msgstr "Érvényesség"
+
+#~ msgid "Known database users"
+#~ msgstr "Ismert adatbázis felhasználók"
+
+#~ msgid "Save as new user"
+#~ msgstr "Mentsd mint új felhasználó"
+
+#~ msgid "Save modified user"
+#~ msgstr "Mentsd a módosított felhasználót"
+
+#~ msgid "Delete user"
+#~ msgstr "Felhasználó törlése"
+
+#~ msgid "Yes"
+#~ msgstr "Igen"
+
+#~ msgid "No"
+#~ msgstr "Nem"
+
+#~ msgid "UI Test 3 Error"
+#~ msgstr "3-as UI teszt hiba"
+
+#~ msgid "Record %8.0f"
+#~ msgstr "%8.0f. rekord"
+
+#~ msgid "We could not load the glade interface description! (%s)"
+#~ msgstr "Nem tudjuk betölteni a glade interfész leírást! (%s)"
+
+#~ msgid "Select the table name"
+#~ msgstr "Táblanév kiválasztása"
+
+#~ msgid "%s: not implemented"
+#~ msgstr "%s: nincs még megírva"
+
+#~ msgid "%s: text = '%s'"
+#~ msgstr "%s: text = '%s'"
+
+#~ msgid "Could not get CORBA name service object"
+#~ msgstr "Nem tudom a CORBA névkiszolgáló objektumot megkapni"
+
+#~ msgid "Refresh all"
+#~ msgstr "Mindent frissít"
+
+#~ msgid "Ok"
+#~ msgstr "Ok"
+
+#~ msgid "GNOME-DB Controls browser"
+#~ msgstr "GNOME-DB vezérlés böngészõ"
+
+#~ msgid "New control"
+#~ msgstr "Új vezérlés"
+
+#~ msgid "Close control"
+#~ msgstr "Vezérlés zárása"
+
+#~ msgid "Controls"
+#~ msgstr "Vezérlõk"
+
+#~ msgid "Control settings"
+#~ msgstr "Vezérlõ beállítások"
+
+#~ msgid "database provider"
+#~ msgstr "Adatbázis-szolgáltató"
+
+#~ msgid "PROVIDER"
+#~ msgstr "SZOLGÁLTATÓ"
+
+#~ msgid "table"
+#~ msgstr "tábla"
+
+#~ msgid "TABLENAME"
+#~ msgstr "TABLANEV"
+
+#~ msgid "TABLE NAME"
+#~ msgstr "TABLA NEV"
+
+#~ msgid "Logging in"
+#~ msgstr "Belépés"
