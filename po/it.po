@@ -7,14 +7,14 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-db\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-04-26 13:19+0200\n"
+"POT-Creation-Date: 2004-04-27 21:59+0200\n"
 "PO-Revision-Date: 2004-01-06 20:27+0100\n"
 "Last-Translator: Marco Ciampa <ciampix@libero.it>\n"
 "Language-Team: italiano <tp@lists.linux.it>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Report-Msgid-Bugs-To: \n"
 
 #: libgda/gda-client.c:312 libgda/gda-client.c:539 libgda/gda-connection.c:218
 #, c-format
@@ -208,16 +208,16 @@ msgstr "Impossibile aggiungere i dati dal nodo XML"
 #: libsql/sql_parser.c:59
 #, c-format
 msgid "Parse error near `%s'"
-msgstr ""
+msgstr "Errore di analisi vicino a `%s'"
 
 #: libsql/sql_parser.c:61
 #, c-format
 msgid "Syntax error near `%s'"
-msgstr ""
+msgstr "Errore di sintassi vicino a `%s'"
 
 #: libsql/sql_parser.c:358
 msgid "Empty query to parse"
-msgstr ""
+msgstr "Interrogazione da analizzare vuota"
 
 #: providers/firebird/gda-firebird-provider.c:187
 msgid "No database specified"
@@ -307,9 +307,9 @@ msgstr ""
 "Msg %d, Livello %d, Stato %d, Server %s, Linea %d\n"
 "%s\n"
 
-#: providers/freetds/gda-freetds-provider.c:1079 providers/freetds/utils.c:44
-#: providers/oracle/utils.c:74 providers/postgres/utils.c:53
-#: providers/sybase/gda-sybase-provider.c:765
+#: providers/bdb/utils.c:36 providers/freetds/gda-freetds-provider.c:1079
+#: providers/freetds/utils.c:44 providers/oracle/utils.c:74
+#: providers/postgres/utils.c:53 providers/sybase/gda-sybase-provider.c:765
 #: providers/sybase/gda-sybase-recordset.c:512
 #: providers/sybase/gda-sybase-recordset.c:534
 #: providers/sybase/gda-sybase-recordset.c:593 providers/sybase/utils.c:205
@@ -319,7 +319,7 @@ msgstr ""
 #: providers/sybase/utils.c:385 providers/sybase/utils.c:411
 #: providers/sybase/utils.c:445 providers/sybase/utils.c:462
 #: providers/sybase/utils.c:485 providers/sybase/utils.c:501
-#: providers/sybase/utils.c:539 providers/bdb/utils.c:36
+#: providers/sybase/utils.c:539
 msgid "Not available"
 msgstr "Non disponibile"
 
@@ -507,13 +507,12 @@ msgid "Users"
 msgstr "Utenti"
 
 #: providers/ibmdb2/gda-ibmdb2-types.c:154
-#, fuzzy
 msgid "[BLOB unsupported]"
-msgstr "Non supportati"
+msgstr "[BLOB non supportato]"
 
 #: providers/ibmdb2/gda-ibmdb2-types.c:157
 msgid "[Unsupported data]"
-msgstr ""
+msgstr "[dati non supportati]"
 
 #: providers/ibmdb2/libmain.c:39
 msgid "Provider for IBMDB2 databases"
@@ -529,13 +528,13 @@ msgstr "Provider per database DB2 IBM"
 msgid "Invalid LDAP handle"
 msgstr "Handle LDAP non valido"
 
+#: providers/bdb/gda-bdb-recordset.c:111
 #: providers/ldap/gda-ldap-recordset.c:69
 #: providers/mysql/gda-mysql-recordset.c:130
 #: providers/postgres/gda-postgres-recordset.c:193
 #: providers/postgres/gda-postgres-recordset.c:357
 #: providers/sqlite/gda-sqlite-recordset.c:165
 #: providers/sqlite/gda-sqlite-recordset.c:204
-#: providers/bdb/gda-bdb-recordset.c:111
 msgid "Row number out of range"
 msgstr "Numero riga fuori capacità"
 
@@ -1246,10 +1245,10 @@ msgstr "Il modello non ha almeno una chiave unica non modificata."
 msgid "Model doesn't have any non-unique values to update."
 msgstr "Il modello non ha nessun valore non unico da aggiornare."
 
+#: providers/bdb/gda-bdb-recordset.c:166
 #: providers/postgres/gda-postgres-recordset.c:363
 #: providers/sqlite/gda-sqlite-recordset.c:210
 #: providers/sqlite/gda-sqlite-recordset.c:242
-#: providers/bdb/gda-bdb-recordset.c:166
 msgid "Column number out of range"
 msgstr "Numero di colonna fuori parametri"
 
@@ -1344,7 +1343,7 @@ msgstr "Fallito l'invio dell'sql-command."
 msgid "GDA_IS_SYBASE_RECORDSET != TRUE"
 msgstr "GDA_IS_SYBASE_RECORDSET != TRUE"
 
-#. when you execute a stored procedure through openclient, this
+#. when you execute a stored procedure through openclient, this 
 #. part of the result set loop is where you fetch the return status
 #. of the executed stored procedure.  You fetch it like a CS_ROW_RESULT
 #: providers/sybase/gda-sybase-provider.c:712
@@ -2012,27 +2011,22 @@ msgid "\tgda_params ="
 msgstr "\tgda_params ="
 
 #: providers/bdb/gda-bdb-provider.c:154
-#, fuzzy
 msgid "The FILE parameter is not defined in the connection string."
-msgstr ""
-"Un FILENAME di database deve essere specificato nella connection_string"
+msgstr "Il parametro FILE non è definito nella stringa di connessione."
 
 #: providers/bdb/gda-bdb-provider.c:185
 msgid "-"
-msgstr ""
+msgstr "-"
 
 #: providers/bdb/gda-bdb-provider.c:242 providers/bdb/gda-bdb-provider.c:263
 #: providers/bdb/gda-bdb-provider.c:286
-#, fuzzy
 msgid "Invalid BDB handle"
-msgstr "Handle MDB non valido"
+msgstr "Handle BDB non valido"
 
 #: providers/bdb/gda-bdb-recordset.c:242
-#, fuzzy
 msgid "Database is empty"
-msgstr "Database"
+msgstr "Il database è vuoto"
 
 #: providers/bdb/libmain.c:39
-#, fuzzy
 msgid "Provider for Berkeley databases"
-msgstr "Provider per database Oracle"
+msgstr "Provider per database Berkeley"
