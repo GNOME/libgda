@@ -453,6 +453,31 @@ gda_field_set_double_value (GdaField *field, gdouble value)
 }
 
 /**
+ * gda_field_get_geometric_point_value
+ */
+GdaGeometricPoint *
+gda_field_get_geometric_point_value (GdaField *field)
+{
+	g_return_val_if_fail (field != NULL, NULL);
+	return gda_value_get_geometric_point (&field->value);
+}
+
+/**
+ * gda_field_set_geometric_point_value
+ */
+void
+gda_field_set_geometric_point_value (GdaField *field, GdaGeometricPoint *value)
+{
+	g_return_if_fail (field != NULL);
+	g_return_if_fail (value != NULL);
+
+	field->attributes.gdaType = GDA_TYPE_GEOMETRIC_POINT;
+	field->actualSize = sizeof (GdaGeometricPoint);
+
+	gda_value_set_geometric_point (&field->value, value);
+}
+
+/**
  * gda_field_get_integer_value
  */
 gint
@@ -630,8 +655,6 @@ gda_field_set_tinyint_value (GdaField *field, gchar value)
 
 	gda_value_set_tinyint (&field->value, value);
 }
-
-
 
 /**
  * gda_field_stringify

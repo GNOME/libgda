@@ -95,6 +95,13 @@ gda_value_new_double (gdouble val)
 }
 
 GdaValue *
+gda_value_new_geometric_point (GdaGeometricPoint *val)
+{
+	return bonobo_arg_new_from (GDA_VALUE_TYPE_GEOMETRIC_POINT, 
+					(gconstpointer) val);
+}
+
+GdaValue *
 gda_value_new_integer (gint val)
 {
 	return bonobo_arg_new_from (GDA_VALUE_TYPE_INTEGER, (gconstpointer) &val);
@@ -144,13 +151,6 @@ GdaValue *
 gda_value_new_tinyint (gchar val)
 {
 	return bonobo_arg_new_from (GDA_VALUE_TYPE_TINYINT, (gconstpointer) &val);
-}
-
-GdaValue *
-gda_value_new_geometric_point (GdaGeometricPoint *val)
-{
-	return bonobo_arg_new_from (GDA_VALUE_TYPE_GEOMETRIC_POINT, 
-					(gconstpointer) val);
 }
 
 /**
@@ -328,6 +328,36 @@ gda_value_set_double (GdaValue *value, gdouble val)
 		CORBA_free (value->_value);
 
 	value->_value = ORBit_copy_value (&val, BONOBO_ARG_DOUBLE);
+}
+
+/**
+ * gda_value_get_geometric_point
+ */
+GdaGeometricPoint *
+gda_value_get_geometric_point (GdaValue *value)
+{
+	g_return_val_if_fail (value != NULL, NULL);
+
+	return (GdaGeometricPoint *) value->_value;
+}
+
+/**
+ * gda_value_set_geometric_point
+ */
+void
+gda_value_set_geometric_point (GdaValue *value, GdaGeometricPoint *val)
+{
+	g_return_if_fail (value != NULL);
+	g_return_if_fail (val != NULL);
+
+	if (!gda_value_isa (value, GDA_VALUE_TYPE_GEOMETRIC_POINT)) {
+		clear_value (value);
+		value->_type = ORBit_RootObject_duplicate (GDA_VALUE_TYPE_GEOMETRIC_POINT);
+	}
+	else if (value->_value)
+		CORBA_free (value->_value);
+
+	value->_value = ORBit_copy_value (val, TC_GNOME_Database_GeometricPoint);
 }
 
 /**
@@ -561,36 +591,6 @@ gda_value_set_tinyint (GdaValue *value, gchar val)
 		CORBA_free (value->_value);
 
 	value->_value = ORBit_copy_value (&val, BONOBO_ARG_CHAR);
-}
-
-/**
- * gda_value_get_geometric_point
- */
-GdaGeometricPoint *
-gda_value_get_geometric_point (GdaValue *value)
-{
-	g_return_val_if_fail (value != NULL, NULL);
-
-	return (GdaGeometricPoint *) value->_value;
-}
-
-/**
- * gda_value_set_geometric_point
- */
-void
-gda_value_set_geometric_point (GdaValue *value, GdaGeometricPoint *val)
-{
-	g_return_if_fail (value != NULL);
-	g_return_if_fail (val != NULL);
-
-	if (!gda_value_isa (value, GDA_VALUE_TYPE_GEOMETRIC_POINT)) {
-		clear_value (value);
-		value->_type = ORBit_RootObject_duplicate (GDA_VALUE_TYPE_GEOMETRIC_POINT);
-	}
-	else if (value->_value)
-		CORBA_free (value->_value);
-
-	value->_value = ORBit_copy_value (val, TC_GNOME_Database_GeometricPoint);
 }
 
 /**

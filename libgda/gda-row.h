@@ -41,6 +41,7 @@ typedef GNOME_Database_Field           GdaField;
 #define GDA_TYPE_BINARY GNOME_Database_TYPE_BINARY
 #define GDA_TYPE_BOOLEAN GNOME_Database_TYPE_BOOLEAN
 #define GDA_TYPE_DATE GNOME_Database_TYPE_DATE
+#define GDA_TYPE_GEOMETRIC_POINT GNOME_Database_TYPE_GEOMETRIC_POINT
 #define GDA_TYPE_TIME GNOME_Database_TYPE_TIME
 #define GDA_TYPE_TIMESTAMP GNOME_Database_TYPE_TIMESTAMP
 #define GDA_TYPE_DOUBLE GNOME_Database_TYPE_DOUBLE
@@ -91,6 +92,8 @@ GDate              *gda_field_get_date_value (GdaField *field);
 void                gda_field_set_date_value (GdaField *field, GDate *date);
 gdouble             gda_field_get_double_value (GdaField *field);
 void                gda_field_set_double_value (GdaField *field, gdouble value);
+GdaGeometricPoint  *gda_field_get_geometric_point_value (GdaField *field);
+void                gda_field_set_geometric_point_value (GdaField *field, GdaGeometricPoint *value);
 gint                gda_field_get_integer_value (GdaField *field);
 void                gda_field_set_integer_value (GdaField *field, gint value);
 void                gda_field_set_null_value (GdaField *field);
@@ -106,6 +109,7 @@ time_t              gda_field_get_timestamp_value (GdaField *field);
 void                gda_field_set_timestamp_value (GdaField *field, time_t value);
 gchar               gda_field_get_tinyint_value (GdaField *field);
 void                gda_field_set_tinyint_value (GdaField *field, gchar value);
+
 gchar              *gda_field_stringify (GdaField *field);
 
 G_END_DECLS
