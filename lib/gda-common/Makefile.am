@@ -11,6 +11,7 @@ gda_common_headers = \
 	gda-corba.h \
 	gda-log.h \
 	gda-thread.h \
+	gda-util.h \
 	gda-xml-database.h \
 	gda-xml-file.h \
 	gda-xml-query.h \
@@ -23,6 +24,7 @@ libgda_common_la_SOURCES = \
 	gda-init.c \
 	gda-log.c \
 	gda-thread.c \
+	gda-util.c \
 	gda-xml-database.c \
 	gda-xml-file.c \
 	gda-xml-query.c

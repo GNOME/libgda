@@ -1,3 +1,7 @@
+2000-11-29	Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* added utility functions (moved from gnome-db lib)
+
 2000-11-24	Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* added correct license notices (LGPL) to source files

@@ -17,22 +17,20 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#if !defined(__gda_common_h__)
-#  define __gda_common_h__
+#if !defined(__gda_util_h__)
+#  define __gda_util_h__
 
-/*
- * This is the main header file for the libgda-common library
- */
+#include <glib.h>
 
-#include <gda-corba.h>
-#include <gda-log.h>
-#include <gda-config.h>
-#include <gda-thread.h>
-#include <gda-util.h>
-#include <gda-xml-file.h>
-#include <gda-xml-database.h>
-#include <gda-xml-query.h>
+#if defined(__cplusplus)
+extern "C" {
+#endif
 
-void gda_init (const gchar *app_id, const gchar *version, gint nargs, gchar *args[]);
+gchar*   gda_util_load_file (const gchar *filename);
+gboolean gda_util_save_file (const gchar *filename, const gchar *text);
+
+#if defined(__cplusplus)
+}
+#endif
 
 #endif
