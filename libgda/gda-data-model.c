@@ -605,12 +605,7 @@ gda_data_model_append_row (GdaDataModel *model, GdaRow *row)
 	g_return_val_if_fail (row != NULL, FALSE);
 
 	if (GDA_DATA_MODEL_GET_IFACE (model)->i_append_row) {
-		gboolean result;
-		
-		result = (GDA_DATA_MODEL_GET_IFACE (model)->i_append_row) (model, row);
-		if (result) 
-			gda_data_model_row_inserted (model, gda_row_get_number ((GdaRow *) row));
-		return result;
+		return (GDA_DATA_MODEL_GET_IFACE (model)->i_append_row) (model, row);
 	}
 	else {
 		g_warning ("%s() method not supported\n", __FUNCTION__);
@@ -635,12 +630,7 @@ gda_data_model_remove_row (GdaDataModel *model, const GdaRow *row)
 	g_return_val_if_fail (row != NULL, FALSE);
 
 	if (GDA_DATA_MODEL_GET_IFACE (model)->i_remove_row) {
-		gboolean result;
-		
-		result = (GDA_DATA_MODEL_GET_IFACE (model)->i_remove_row) (model, row);
-		if (result) 
-			gda_data_model_row_removed (model, gda_row_get_number ((GdaRow *) row));
-		return result;
+		return (GDA_DATA_MODEL_GET_IFACE (model)->i_remove_row) (model, row);
 	}
 	else {
 		g_warning ("%s() method not supported\n", __FUNCTION__);
@@ -667,12 +657,7 @@ gda_data_model_update_row (GdaDataModel *model, const GdaRow *row)
 	g_return_val_if_fail (row != NULL, FALSE);
 
 	if (GDA_DATA_MODEL_GET_IFACE (model)->i_update_row) {
-		gboolean result;
-		
-		result = (GDA_DATA_MODEL_GET_IFACE (model)->i_update_row) (model, row);
-		if (result) 
-			gda_data_model_row_updated (model, gda_row_get_number ((GdaRow *) row));
-		return result;
+		return (GDA_DATA_MODEL_GET_IFACE (model)->i_update_row) (model, row);
 	}
 	else {
 		g_warning ("%s() method not supported\n", __FUNCTION__);
