@@ -55,6 +55,7 @@ static void gda_postgres_recordset_finalize   (GObject *object);
 static const GdaValue *gda_postgres_recordset_get_value_at    (GdaDataModel *model, gint col, gint row);
 static GdaFieldAttributes *gda_postgres_recordset_describe    (GdaDataModel *model, gint col);
 static gint gda_postgres_recordset_get_n_rows 		      (GdaDataModel *model);
+static const GdaRow *gda_postgres_recordset_get_row 	      (GdaDataModel *model, gint rownum);
 
 static GObjectClass *parent_class = NULL;
 
@@ -86,6 +87,7 @@ gda_postgres_recordset_class_init (GdaPostgresRecordsetClass *klass)
 	model_class->get_n_rows = gda_postgres_recordset_get_n_rows;
 	model_class->describe_column = gda_postgres_recordset_describe;
 	model_class->get_value_at = gda_postgres_recordset_get_value_at;
+	model_class->get_row = gda_postgres_recordset_get_row;
 }
 
 static void
@@ -132,6 +134,7 @@ get_row (GdaPostgresRecordsetPrivate *priv, gint rownum)
 	GdaValue *value;
 	GdaRow *row;
 	gint i;
+	gchar *id;
 	
 	row = gda_row_new (priv->ncolumns);
 	for (i = 0; i < priv->ncolumns; i++) {
@@ -141,6 +144,10 @@ get_row (GdaPostgresRecordsetPrivate *priv, gint rownum)
 		value = gda_row_get_value (row, i);
 		gda_postgres_set_value (value, ftype, thevalue, isNull);
 	}
+
+	id = g_strdup_printf ("%d", rownum);
+	gda_row_set_id (row, id); // FIXME: by now, the rowid is just the row number
+	g_free (id);
 	return row;
 }
 
@@ -148,12 +155,46 @@ get_row (GdaPostgresRecordsetPrivate *priv, gint rownum)
  * Overrides
  */
 
+static const GdaRow *
+gda_postgres_recordset_get_row (GdaDataModel *model, gint row)
+{
+	GdaPostgresRecordset *recset = (GdaPostgresRecordset *) model;
+	GdaPostgresRecordsetPrivate *priv_data;
+	const GdaRow *row_list;
+	
+	g_return_val_if_fail (GDA_IS_POSTGRES_RECORDSET (recset), NULL);
+	g_return_val_if_fail (recset->priv != NULL, 0);
+
+	row_list = GDA_DATA_MODEL_CLASS (model)->get_row (model, row);
+	if (row_list != NULL)
+		return row_list;
+
+	priv_data = recset->priv;
+	if (!priv_data->pg_res) {
+		gda_connection_add_error_string (priv_data->cnc,
+						 _("Invalid PostgreSQL handle"));
+		return NULL;
+	}
+
+	if (row == priv_data->nrows)
+		return NULL; // For the last row don't add an error.
+
+	if (row < 0 || row > priv_data->nrows) {
+		gda_connection_add_error_string (priv_data->cnc,
+						_("Row number out of range"));
+		return NULL;
+	}
+
+	row_list = get_row (priv_data, row);
+
+	return row_list;
+}
+
 static const GdaValue *
 gda_postgres_recordset_get_value_at (GdaDataModel *model, gint col, gint row)
 {
 	GdaPostgresRecordset *recset = (GdaPostgresRecordset *) model;
 	GdaPostgresRecordsetPrivate *priv_data;
-	gint row_count;
 	PGresult *pg_res;
 	GdaRow *row_list;
 	const GdaValue *value;
@@ -173,12 +214,10 @@ gda_postgres_recordset_get_value_at (GdaDataModel *model, gint col, gint row)
 		return NULL;
 	}
 
-	row_count = priv_data->nrows;
-
-	if (row == row_count)
+	if (row == priv_data->nrows)
 		return NULL; // For the last row don't add an error.
 
-	if (row < 0 || row > row_count) {
+	if (row < 0 || row > priv_data->nrows) {
 		gda_connection_add_error_string (priv_data->cnc,
 						_("Row number out of range"));
 		return NULL;
@@ -191,8 +230,9 @@ gda_postgres_recordset_get_value_at (GdaDataModel *model, gint col, gint row)
 	}
 
 	row_list = get_row (priv_data, row);
-	gda_data_model_hash_insert_row (model, row, row_list);
-	return gda_data_model_hash_get_value_at (model, col, row);
+	gda_data_model_hash_insert_row (GDA_DATA_MODEL_HASH (model),
+					 row, row_list);
+	return gda_row_get_value (row_list, col);
 }
 
 static GdaFieldAttributes *

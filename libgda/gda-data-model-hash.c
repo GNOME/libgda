@@ -222,16 +222,15 @@ gda_data_model_hash_new (gint cols)
 const GdaValue *
 gda_data_model_hash_get_value_at (GdaDataModel *model, gint col, gint row)
 {
-	GdaRow *fields;
+	const GdaRow *fields;
 
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_HASH (model), NULL);
 
-	fields = g_hash_table_lookup (GDA_DATA_MODEL_HASH (model)->priv->rows,
-				      GINT_TO_POINTER (row));
+	fields = gda_data_model_hash_get_row (model, row);
 	if (fields == NULL)
 		return NULL;
 
-	return (const GdaValue *) gda_row_get_value (fields, col);
+	return (const GdaValue *) gda_row_get_value ((GdaRow *) fields, col);
 }
 
 /**
