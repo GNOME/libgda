@@ -1,3 +1,8 @@
+2004-10-10  Tomasz Kłoczko <kloczek@pld.org.pl>
+
+	* po/POTFILES.in: remove providers/sybase/main.c from file (never
+	used in dist resources).
+
 2004-10-10  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	Released 1.1.99.
