@@ -433,7 +433,7 @@ gda_server_provider_create_index (GdaServerProvider *provider,
 	g_return_val_if_fail (index != NULL, FALSE);
 	g_return_val_if_fail (CLASS (provider)->create_index != NULL, FALSE);
 
-	return CLASS (provider)->create_index (provider, cnc, table_name, index);
+	return CLASS (provider)->create_index (provider, cnc, index, table_name);
 }
 
 /**

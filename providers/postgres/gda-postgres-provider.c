@@ -25,6 +25,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <libgda/gda-data-model-array.h>
+#include <libgda/gda-data-model-column-index-attributes.h>
 #include "gda-postgres.h"
 #include "gda-postgres-provider.h"
 
@@ -939,14 +940,61 @@ gda_postgres_provider_create_index (GdaServerProvider *provider,
 				    const gchar *table_name)
 {
 	GdaPostgresProvider *pg_prv = (GdaPostgresProvider *) provider;
-	GdaDataModelColumnAttributes *dmca;
+	GdaDataModelColumnIndexAttributes *dmcia;
+	GString *sql;
+	GList *col_list;
+	gchar *index_name;
+	gint i;
+	gboolean retval;
 
 	g_return_val_if_fail (GDA_IS_POSTGRES_PROVIDER (pg_prv), FALSE);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (index != NULL, FALSE);
 	g_return_val_if_fail (table_name != NULL, FALSE);
 
-	return FALSE;
+	/* the 'CREATE INDEX' command in PostgreSQL is limited to
+	secondary non-primary indices only. Therefore use 'ALTER TABLE'
+	for PRIMARY and UNIQUE */
+
+	/* prepare the SQL command */
+	sql = g_string_new (" ");
+
+	/* get index name */
+	index_name = (gchar *) gda_data_model_index_get_name ((GdaDataModelIndex *) index);
+
+	/* determine type of index (PRIMARY, UNIQUE or INDEX) */
+	if (gda_data_model_index_get_primary_key ((GdaDataModelIndex *) index) == TRUE)
+		g_string_append_printf (sql, "ALTER TABLE %s ADD CONSTRAINT %s PRIMARY KEY (", table_name, index_name);
+	else if (gda_data_model_index_get_unique_key ((GdaDataModelIndex *) index) == TRUE)
+		g_string_append_printf (sql, "ALTER TABLE %s ADD CONSTRAINT %s UNIQUE (", table_name, index_name);
+	else
+		g_string_append_printf (sql, "CREATE INDEX %s ON %s (", index_name, table_name);
+
+	/* get the list of index columns */
+	col_list = gda_data_model_index_get_column_index_list ((GdaDataModelIndex *) index);
+
+	/* step through list */
+	for (i = 0; i < g_list_length ((GList *) col_list); i++) {
+
+		if (i > 0)
+			g_string_append_printf (sql, ", ");
+			
+		dmcia = (GdaDataModelColumnIndexAttributes *) g_list_nth_data ((GList *) col_list, i);
+
+		/* name */	
+		g_string_append_printf (sql, "\"%s\" ", gda_data_model_column_index_attributes_get_column_name (dmcia));
+	}
+
+	/* finish the SQL command */
+	g_string_append_printf (sql, ")");
+
+	/* execute sql command */
+	retval = gda_postgres_provider_single_command (pg_prv, cnc, sql->str);
+
+	/* clean up */
+	g_string_free (sql, TRUE);
+
+	return retval;
 }
 
 /* drop_index handler for the GdaPostgresProvider class */
@@ -956,21 +1004,33 @@ gda_postgres_provider_drop_index (GdaServerProvider *provider,
 				  const gchar *index_name,
 				  const gchar *table_name)
 {
-	gboolean retval;
-	gchar *sql;
+	gboolean retval = FALSE, retval_temp;
+	gchar *sql_alter;
+	gchar *sql_drop;
 
 	GdaPostgresProvider *pg_prv = (GdaPostgresProvider *) provider;
 
 	g_return_val_if_fail (GDA_IS_POSTGRES_PROVIDER (pg_prv), FALSE);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (index_name != NULL, FALSE);
-	/* Even though table name is not a valid option in PostgreSQL, be consistent */
 	g_return_val_if_fail (table_name != NULL, FALSE);
 
-	sql = g_strdup_printf ("DROP INDEX %s", index_name);
+	/* In PostgreSQL PRIMARY can only and UNIQUE can as well be defined as
+	   constraints. Therefore use 2 methods for removal */
+	sql_alter = g_strdup_printf ("ALTER TABLE %s DROP CONSTRAINT %s", table_name, index_name);
+	sql_drop  = g_strdup_printf ("DROP INDEX %s", index_name);
 
-	retval = gda_postgres_provider_single_command (pg_prv, cnc, sql);
-	g_free (sql);
+	retval_temp = gda_postgres_provider_single_command (pg_prv, cnc, sql_alter);
+	if (retval_temp == TRUE)
+		retval = TRUE;
+
+	retval_temp = gda_postgres_provider_single_command (pg_prv, cnc, sql_drop);
+	if (retval_temp == TRUE)
+		retval = TRUE;
+
+	/* clean up */
+	g_free (sql_alter);
+	g_free (sql_drop);
 
 	return retval;
 }

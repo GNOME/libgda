@@ -1,3 +1,13 @@
+2005-02-04  Bas Driessen <bas.driessen@xobas.com>
+
+	* providers/postgres/gda-postgres-provider.c: added function
+	gda_postgres_provider_create_index() and added DROP CONSTRAINT
+	method to gda_postgres_provider_drop_index().
+
+	* libgda/gda-server-provider.c
+	(gda_server_provider_create_index): 
+	bugfix; parameter 3 and 4 were mixed up.
+
 2005-02-03  Álvaro Peña <alvaropg@telefonica.net>
 
 	* libgda/gda-data-model.c: Removed the signals emits
