@@ -53,7 +53,7 @@ struct _GdaIBMDB2RecordsetPrivate
 {
         GdaConnection *cnc;
 	GdaIBMDB2ConnectionData *conn_data;
-	//      GdaValueType *column_types;
+	/* GdaValueType *column_types; */
 		
 	SQLHANDLE hstmt;
 		

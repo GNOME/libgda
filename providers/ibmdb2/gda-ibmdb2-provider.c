@@ -185,12 +185,12 @@ gda_ibmdb2_provider_open_connection (GdaServerProvider *provider,
 	                      (SQLCHAR *) t_user, SQL_NTS,
 	                      (SQLCHAR *) t_password, SQL_NTS);
 	if (conn_data->rc != SQL_SUCCESS) {
+		gda_ibmdb2_emit_error (cnc, conn_data->henv, conn_data->hdbc, SQL_NULL_HANDLE);
+		
 		conn_data->rc = SQLFreeHandle (SQL_HANDLE_DBC, conn_data->hdbc);
 		conn_data->rc = SQLFreeHandle (SQL_HANDLE_ENV, conn_data->henv);
 		g_free (conn_data);
 		conn_data = NULL;
-
-		gda_ibmdb2_emit_error (cnc, conn_data->henv, conn_data->hdbc, SQL_NULL_HANDLE);
 		
 		return FALSE;
 	}
@@ -206,8 +206,8 @@ gda_ibmdb2_provider_open_connection (GdaServerProvider *provider,
 	} else if (flag == SQL_FALSE) {
 		conn_data->GetInfo_supported = FALSE;
 
-		// GetInfo is needed for obtaining database name 
-		// is needed for tables schema
+		/* GetInfo is needed for obtaining database name */
+		/* is needed for tables schema */
 		gda_connection_add_error_string (cnc, _("SQLGetInfo is unsupported. Hence IBM DB2 Provider will not work.\n"));
 
 		conn_data->rc = SQLDisconnect (conn_data->hdbc);
@@ -468,10 +468,14 @@ process_sql_commands (GList *reclist, GdaConnection *cnc, const gchar *sql, GdaC
 				
 				g_list_foreach (reclist, (GFunc) g_object_unref, NULL);
 				g_list_free (reclist);
-				break;
+				
+				if (options == GDA_COMMAND_OPTION_STOP_ON_ERRORS) {
+					g_strfreev(arr);
+					return NULL;
+				}
 			}
 					
-			conn_data->rc = SQLExecDirect(conn_data->hstmt,(SQLCHAR*)sql, SQL_NTS);
+			conn_data->rc = SQLExecDirect(conn_data->hstmt,(SQLCHAR*)arr[n], SQL_NTS);
 			if (conn_data->rc != SQL_SUCCESS) {
 				gda_ibmdb2_emit_error(cnc, conn_data->henv, conn_data->hdbc, conn_data->hstmt);
 				
@@ -483,12 +487,15 @@ process_sql_commands (GList *reclist, GdaConnection *cnc, const gchar *sql, GdaC
 				
 				g_list_foreach (reclist, (GFunc) g_object_unref, NULL);
 				g_list_free (reclist);
-				
-				break;
+
+				if (options == GDA_COMMAND_OPTION_STOP_ON_ERRORS) {
+					g_strfreev(arr);
+					return NULL;
+				}
 			}
-			
+
 			recset = gda_ibmdb2_recordset_new (cnc, conn_data->hstmt);
-			
+
                     	if (GDA_IS_IBMDB2_RECORDSET (recset)) {
 				gda_data_model_set_command_text (recset, arr[n]);
 				gda_data_model_set_command_type (recset, GDA_COMMAND_TYPE_SQL);
@@ -496,13 +503,16 @@ process_sql_commands (GList *reclist, GdaConnection *cnc, const gchar *sql, GdaC
                     	} else {
 				g_list_foreach (reclist, (GFunc) g_object_unref, NULL);
 				g_list_free (reclist);
-				break;
 			}
-			
 			
 			conn_data->rc = SQLFreeHandle(SQL_HANDLE_STMT, conn_data->hstmt);
 			if (conn_data->rc != SQL_SUCCESS) {
 				gda_ibmdb2_emit_error(cnc, conn_data->henv, conn_data->hdbc, SQL_NULL_HANDLE);
+				
+				if (options == GDA_COMMAND_OPTION_STOP_ON_ERRORS) {
+					g_strfreev(arr);
+					return NULL;
+				}
 			}
 			conn_data->hstmt = SQL_NULL_HANDLE;
 			
@@ -834,7 +844,7 @@ static GdaDataModel
 	
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
-	// May be use SQLTables?
+	/* May be use SQLTables? */
         reclist = process_sql_commands (NULL, cnc,
 					"SELECT PROCNAME,PROCSCHEMA,LANGUAGE,REMARKS "
 					"FROM SYSCAT.PROCEDURES "

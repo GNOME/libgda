@@ -52,7 +52,7 @@ struct _GdaIBMDB2ProviderClass {
 struct _GdaIBMDB2ConnectionData {
 	SQLHANDLE henv;
 	SQLHANDLE hdbc;
-	SQLHANDLE hstmt; // Only for schema
+	SQLHANDLE hstmt; /* Only for schema */
 	gchar    *database;
 	gboolean GetInfo_supported;
 	gchar    *server_version;

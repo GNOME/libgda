@@ -1,3 +1,17 @@
+2003-02-11  Sergey N. Belinsky <sergey_be@mail.ru>
+
+	* providers/ibmdb2/gda-ibmdb2-types.[ch]:  added support of
+	BIGINT, REAL,  DOUBLE, LONGVARCHAR, DATE, TIME and TIMESTAMP
+	datatypes.
+	* providers/ibmdb2/gda-ibmdb2-recordset.[ch]: fix bug with NULL
+	return code in gda_ibmdb2_recordset_new.  
+	* providers/ibmdb2/gda-ibmdb2-provider.[ch]: added support of
+	GDA_COMMAND_OPTION_STOP_ON_ERRORS in queries.  
+	* providers/ibmdb2/utils.c: fix bug with zero errors in list.
+	* providers/ibmdb2/*.[ch]: in all sources of IBM DB2 provider
+	removed C++ like comments (#105037).
+	* testing/ibmdb2-test.[ch]: added some tests for IBM DB2 provider.
+
 2003-02-08  Steve Fosdick <gnomedb@pelvoux.demon.co.uk>
 
 	* providers/oracle/gda-oracle-provider.[ch]: Introduced a default namespace

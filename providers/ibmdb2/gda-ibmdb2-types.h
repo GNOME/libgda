@@ -33,8 +33,12 @@
 G_BEGIN_DECLS
 
 void gda_ibmdb2_set_gdavalue (GdaValue *value, GdaIBMDB2Field *field);
-const GdaValueType gda_ibmdb2_get_value_type (GdaIBMDB2Field *col);
+void gda_ibmdb2_set_gdavalue_by_date(GdaValue *value, DATE_STRUCT *date); 
+void gda_ibmdb2_set_gdavalue_by_time(GdaValue *value, TIME_STRUCT *time); 
+void gda_ibmdb2_set_gdavalue_by_timestamp(GdaValue *value, TIMESTAMP_STRUCT *timestamp);
+void gda_ibmdb2_set_gdavalue_by_numeric(GdaValue *value, SQL_NUMERIC_STRUCT *numeric);
 
+const GdaValueType gda_ibmdb2_get_value_type (GdaIBMDB2Field *col);
 
 G_END_DECLS
 

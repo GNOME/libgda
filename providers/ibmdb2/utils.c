@@ -51,13 +51,16 @@ gda_ibmdb2_make_error (SQLHANDLE henv, SQLHANDLE hdbc, SQLHANDLE hstmt)
 		if (rc == SQL_SUCCESS) {
     	 		error = gda_error_new ();
 			
-			//g_message("Error: %s\n", (gchar*)error_msg);
-			
+			/* g_log (G_LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "%s", (gchar*)error_msg); */
+				       			
 			gda_error_set_description (error, (gchar*)error_msg);
 			gda_error_set_number (error, native_error);
 			gda_error_set_source (error, "gda-ibmdb2");
 			gda_error_set_sqlstate (error, sql_state);
+		} else {
+			return NULL;
 		}
+		
 	}
 
 	return error;
@@ -73,5 +76,8 @@ gda_ibmdb2_emit_error (GdaConnection * cnc,
 	while ((error = gda_ibmdb2_make_error (henv, hdbc, hstmt))) {
 		list = g_list_append (list, error);
 	}
-	gda_connection_add_error_list (cnc, list);
+	
+	if (list) {
+		gda_connection_add_error_list (cnc, list);
+	}
 }

@@ -29,7 +29,7 @@
 #undef PARENT_TYPE
 #endif
 
-#define PARENT_TYPE GDA_TYPE_DATA_MODEL_HASH
+#define PARENT_TYPE GDA_TYPE_DATA_MODEL
 
 static void gda_ibmdb2_recordset_class_init (GdaIBMDB2RecordsetClass *klass);
 static void gda_ibmdb2_recordset_init       (GdaIBMDB2Recordset *recset, GdaIBMDB2RecordsetClass *klass);
@@ -288,7 +288,10 @@ gda_ibmdb2_recordset_new (GdaConnection *cnc, SQLHANDLE hstmt)
 	gint i;
 	gchar *tmp;
 	GdaRow *row;
-	
+	SQLSMALLINT ncols = 0;
+	SQLINTEGER  nrows = 0;
+	SQLINTEGER ind;
+
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (hstmt != SQL_NULL_HANDLE, NULL);
 
@@ -299,82 +302,85 @@ gda_ibmdb2_recordset_new (GdaConnection *cnc, SQLHANDLE hstmt)
 	recset->priv->hstmt = hstmt;
 	recset->priv->cnc = cnc;
 	recset->priv->ncols = 0;
-	recset->priv->nrows = -1;
+	recset->priv->nrows = 0;
 	recset->priv->conn_data = conn_data;
 
-	if (hstmt != SQL_NULL_HANDLE) {
+	if (hstmt == SQL_NULL_HANDLE) {
+		return GDA_DATA_MODEL (recset);
+	}
 		
-		SQLSMALLINT ncols = 0;
-		SQLINTEGER  nrows = 0;
-			
-		// Set number of columns
-		conn_data->rc = SQLNumResultCols (hstmt, &ncols);
+	/* Set number of columns */
+	conn_data->rc = SQLNumResultCols (hstmt, &ncols);
+	if (conn_data->rc != SQL_SUCCESS) {
+		gda_ibmdb2_emit_error (cnc, conn_data->henv, conn_data->hdbc, hstmt);
+	}
+
+	if (ncols == 0) {
+		return GDA_DATA_MODEL (recset);
+	}
+
+	recset->priv->ncols = ncols;
+	
+	/* Allocate fields info	*/
+	for (i = 0; i < ncols; i++) {
+		field = g_new0 (GdaIBMDB2Field, 1);
+		if (field != NULL) {
+			g_ptr_array_add (recset->priv->columns, field);
+		} else {
+			/* FIXME: Out of memory */
+		}
+	}
+
+	/* Fill field info for columns */
+	for (i = 0; i < ncols; i++) {
+		field = (GdaIBMDB2Field*) g_ptr_array_index (recset->priv->columns, i);
+		conn_data->rc = SQLDescribeCol (hstmt, (SQLUSMALLINT)i + 1, 
+						(SQLCHAR *)&field->column_name, 
+						sizeof(field->column_name), 
+						&field->column_name_len,
+						&field->column_type,
+						&field->column_size,
+						&field->column_scale,
+						&field->column_nullable);
 		if (conn_data->rc != SQL_SUCCESS) {
 			gda_ibmdb2_emit_error (cnc, conn_data->henv, conn_data->hdbc, hstmt);
 		}
-		recset->priv->ncols = ncols;
-		
-		// Allocate fields info	
-		for (i = 0; i < ncols; i++) {
-			field = g_new0 (GdaIBMDB2Field, 1);
-			if (field != NULL) {
-				g_ptr_array_add (recset->priv->columns, field);
-			} else {
-				// FIXME: Out of memory
-			}
-			
-		}
-		// Fill field info for columns
-		SQLINTEGER ind;
-		for (i = 0; i < ncols; i++) {
-			field = (GdaIBMDB2Field*) g_ptr_array_index (recset->priv->columns, i);
-			conn_data->rc = SQLDescribeCol (hstmt, (SQLUSMALLINT)i + 1, 
-							(SQLCHAR *)&field->column_name, 
-							sizeof(field->column_name), 
-							&field->column_name_len,
-							&field->column_type,
-							&field->column_size,
-							&field->column_scale,
-							&field->column_nullable);
-			if (conn_data->rc != SQL_SUCCESS) {
-				gda_ibmdb2_emit_error (cnc, conn_data->henv, conn_data->hdbc, hstmt);
-			}
-		
-			// g_message("Name: %s Type : %d Size : %d\n", (gchar*)field->column_name,
-			// (gint)field->column_type, (gint)field->column_size);
-			
-			field->column_data = g_new0(gchar, field->column_size);
-			
-			conn_data->rc = SQLBindCol (hstmt, (SQLUSMALLINT)i + 1, 
-						    SQL_C_DEFAULT,
-						    field->column_data, 
-						    field->column_size,
-						    &ind);
-			
-			if (conn_data->rc != SQL_SUCCESS) {
-				gda_ibmdb2_emit_error (cnc, conn_data->henv, conn_data->hdbc, hstmt);
-			}
-			
-			tmp = g_strndup (field->column_name, field->column_name_len);
-			gda_data_model_set_column_title (GDA_DATA_MODEL(recset), i, tmp);
-			g_free (tmp);
-
-		}
-		// Fetch all data from statement	
-		conn_data->rc = SQLFetch(hstmt);	
-
-		while (conn_data->rc != SQL_NO_DATA) {
-
-			row = gda_ibmdb2_create_current_row (recset);
 	
-			if (row) {
-				g_ptr_array_add(recset->priv->rows, row);
-				nrows++;
-			}
-			conn_data->rc = SQLFetch(hstmt);
+		/* g_message("Name: %s Type : %d Size : %d\n", (gchar*)field->column_name,
+		 (gint)field->column_type, (gint)field->column_size); */
+		
+		field->column_data = g_new0(gchar, field->column_size);
+		
+		conn_data->rc = SQLBindCol (hstmt, (SQLUSMALLINT)i + 1, 
+					    SQL_C_DEFAULT,
+					    field->column_data, 
+					    field->column_size,
+					    &ind);
+		
+		if (conn_data->rc != SQL_SUCCESS) {
+			gda_ibmdb2_emit_error (cnc, conn_data->henv, conn_data->hdbc, hstmt);
 		}
-		recset->priv->nrows = nrows;
+		
+		tmp = g_strndup (field->column_name, field->column_name_len);
+		gda_data_model_set_column_title (GDA_DATA_MODEL(recset), i, tmp);
+		g_free (tmp);
+
 	}
+
+	/* Fetch all data from statement */
+	conn_data->rc = SQLFetch(hstmt);	
+	
+	while (conn_data->rc != SQL_NO_DATA) {
+	
+		row = gda_ibmdb2_create_current_row (recset);
+
+		if (row) {
+			g_ptr_array_add(recset->priv->rows, row);
+			nrows++;
+		}
+		conn_data->rc = SQLFetch(hstmt);
+	}
+	recset->priv->nrows = nrows;
 	
 	return GDA_DATA_MODEL (recset);
 }

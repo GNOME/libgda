@@ -18,7 +18,9 @@ gda_test_SOURCES = \
 	freetds-test.c \
 	freetds-test.h \
 	sybase-test.c \
-	sybase-test.h
+	sybase-test.h \
+	ibmdb2-test.c \
+	ibmdb2-test.h
 
 gda_test_LDADD = \
 	$(top_builddir)/libgda/libgda-2.la \
