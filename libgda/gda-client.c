@@ -145,9 +145,7 @@ gda_client_finalize (GObject *object)
 	g_return_if_fail (GDA_IS_CLIENT (client));
 
 	/* free memory */
-	g_list_foreach (client->priv->connections, (GFunc) gda_connection_close, NULL);
-	g_list_free (client->priv->connections);
-	client->priv->connections = NULL;
+	gda_client_close_all_connections (client);
 
 	g_hash_table_foreach (client->priv->providers, (GHFunc) free_hash_provider, NULL);
 	g_hash_table_destroy (client->priv->providers);
@@ -330,4 +328,17 @@ gda_client_find_connection (GdaClient *client,
 	gda_config_free_data_source_info (dsn_info);
 
 	return NULL;
+}
+
+/**
+ * gda_client_close_all_connections
+ */
+void
+gda_client_close_all_connections (GdaClient *client)
+{
+	g_return_if_fail (GDA_IS_CLIENT (client));
+
+	g_list_foreach (client->priv->connections, (GFunc) g_object_unref, NULL);
+	g_list_free (client->priv->connections);
+	client->priv->connections = NULL;
 }

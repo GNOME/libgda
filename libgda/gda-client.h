@@ -67,6 +67,7 @@ GdaConnection *gda_client_find_connection (GdaClient *client,
 					   const gchar *dsn,
 					   const gchar *username,
 					   const gchar *password);
+void           gda_client_close_all_connections (GdaClient *client);
 
 G_END_DECLS
 
