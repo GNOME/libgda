@@ -1,5 +1,8 @@
 2001-09-01  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* gda-report-engine.[ch]: new files for the implementation of the
+	GNOME::Database::Report::Engine CORBA interface
+
 	* GNOME_GDA_Report.oaf.in: renamed to GNOME_Database_Report.server.in
 
 	* gda-report-document-factory.[ch]: removed, we don't need to implement

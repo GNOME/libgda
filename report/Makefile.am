@@ -1,4 +1,4 @@
-SUBDIRS = idl engine
+SUBDIRS = idl common engine
 
 INCLUDES = \
 	-I$(top_builddir)/lib/gda-common \
@@ -7,23 +7,11 @@ INCLUDES = \
 
 lib_LTLIBRARIES = libgda-report.la
 
-BUILT_SOURCES = \
-	GDA_Report.h \
-	GDA_Report-common.c \
-	GDA_Report-stubs.c \
-	GDA_Report-skels.c
-
-CLEANFILES += $(BUILT_SOURCES) gda-report.dtd
-
-$(BUILT_SOURCES): $(top_builddir)/report/idl/GDA_Report.idl
-	orbit-idl $(top_builddir)/report/idl/GDA_Report.idl
-
 gda_report_headers = \
 	gda-report-client.h \
 	gda-report.h
 	
 libgda_report_la_SOURCES = \
-	$(BUILT_SOURCES) \
 	$(gda_report_headers) \
 	gda-report-client.c
 
@@ -37,5 +25,3 @@ DTD_FILES=gda-report.dtd
 dtddir=$(datadir)/gda/dtd
 dtd_DATA=$(DTD_FILES)
 
-dist-hook:
-	cd $(distdir); rm -f $(BUILT_SOURCES)

@@ -22,7 +22,9 @@
 #if !defined(__gda_report_client_h__)
 #  define __gda_report_client_h__
 
+#include <bonobo/bonobo-object.h>
 #include <gda-common-defs.h>
+#include <GNOME_Database_Report.h>
 
 G_BEGIN_DECLS
 
@@ -31,21 +33,23 @@ typedef struct _GdaReportClientClass   GdaReportClientClass;
 typedef struct _GdaReportClientPrivate GdaReportClientPrivate;
 
 #define GDA_TYPE_REPORT_CLIENT            (gda_report_client_get_type ())
-#define GDA_REPORT_CLIENT(obj)            GTK_CHECK_CAST(obj, GDA_TYPE_REPORT_CLIENT, GdaReportClient)
-#define GDA_REPORT_CLIENT_CLASS(klass)    GTK_CHECK_CLASS_CAST(klass, GDA_TYPE_REPORT_CLIENT, GdaReportClientClass)
-#define GDA_IS_REPORT_CLIENT(obj)         GTK_CHECK_TYPE(obj, GDA_TYPE_REPORT_CLIENT)
-#define GDA_IS_REPORT_CLIENT_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_REPORT_CLIENT))
+#define GDA_REPORT_CLIENT(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_REPORT_CLIENT, GdaReportClient))
+#define GDA_REPORT_CLIENT_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_REPORT_CLIENT, GdaReportClientClass))
+#define GDA_IS_REPORT_CLIENT(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_REPORT_CLIENT))
+#define GDA_IS_REPORT_CLIENT_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GDA_TYPE_REPORT_CLIENT))
 
 struct _GdaReportClient {
-	GtkObject object;
+	BonoboObject object;
 	GdaReportClientPrivate *priv;
 };
 
 struct _GdaReportClientClass {
-	GtkObjectClass parent_class;
+	BonoboObjectClass parent_class;
+
+	POA_GNOME_Database_Report_Client__epv epv;
 };
 
-GtkType          gda_report_client_get_type (void);
+GType            gda_report_client_get_type (void);
 GdaReportClient *gda_report_client_construct (GdaReportClient *client,
 					      const gchar *engine_id);
 GdaReportClient *gda_report_client_new (void);

@@ -20,97 +20,71 @@
  * 	Carlos Perelló Marín <carlos@gnome-db.org>
  */
 
-#ifdef HAVE_CONFIG_H
 #include <config.h>
-#endif
+#include <gda-report-common.h>
 
-#include <signal.h>
-#include "gda-report-document-factory.h"
+static void setup_factory (void);
 
-static GdaReportDocumentFactory *document_factory;
-
-/*
- * Static functions
- */
-static void
-signal_handler (int signo) {
-	static gint in_fatal = 0;
-	
-	/* avoid loops */
-	if (in_fatal > 0) return;
-	++in_fatal;
-	
-	switch (signo) {
-		/* Fast cleanup only */
-		case SIGSEGV:
-		case SIGBUS:
-		case SIGILL:
-			gda_log_error(_("Received signal %d, shutting down."), signo);
-			abort();
-			break;
-		/* maybe it's more feasible to clean up more mess */
-		case SIGFPE:
-		case SIGPIPE:
-		case SIGTERM:
-			gda_log_error(_("Received signal %d, shutting down."), signo);
-			exit (1);
-			break;
-		case SIGHUP:
-			gda_log_error(_("Received signal %d, shutting down cleanly"), signo);
-			--in_fatal;
-			break;
-		default:
-			break;
-	}
-}
+static GList *object_list = NULL;
 
 int
 main (int argc, char *argv[])
 {
-	CORBA_ORB orb;
 	struct sigaction act;
 	sigset_t empty_mask;
 
 	bindtextdomain (PACKAGE, GDA_LOCALEDIR);
 	textdomain (PACKAGE);
 	
-	gnome_init_with_popt_table ("gda-report-engine", VERSION, argc, argv,
-				    oaf_popt_options, 0, NULL);
-	
-	/* session setup */
-	sigemptyset(&empty_mask);
-	act.sa_handler = signal_handler;
-	act.sa_mask = empty_mask;
-	act.sa_flags = 0;
-	sigaction(SIGTERM,  &act, 0);
-	sigaction(SIGILL,  &act, 0);
-	sigaction(SIGBUS,  &act, 0);
-	sigaction(SIGFPE,  &act, 0);
-	sigaction(SIGHUP,  &act, 0);
-	sigaction(SIGSEGV, &act, 0);
-	sigaction(SIGABRT, &act, 0);
-
-	act.sa_handler = SIG_IGN;
-	sigaction(SIGINT, &act, 0);
-
-	orb = oaf_init(argc, argv);
-
-	if (bonobo_init (orb, CORBA_OBJECT_NIL,
-			 CORBA_OBJECT_NIL) == FALSE) {
-		gda_log_error(_("The report engine could not initialize Bonobo.");
-	}
-	
-	document_factory = gda_report_document_factory_new ();
+	gda_init ("gda-report-engine", VERSION, argc, argv);
 	
 	/* initialize everything */
-/*	report_server_cache_init();
-	report_server_db_init();*/
+	setup_factory ();
 	
 	/* run the application */
-	bonobo_main ();
-	
-	bonobo_object_unref (BONOBO_OBJECT (document_factory));
-	document_factory = NULL;
+	gda_main_run (NULL, NULL);
 
 	return 0;
+}
+
+static void
+object_finalized_cb (GObject *object, gpointer user_data)
+{
+	g_return_if_fail (BONOBO_IS_OBJECT (object));
+
+	object_list = g_list_remove (object_list, object);
+	if (!object_list) {
+		/* if no more objects left, terminate */
+		gda_main_quit ();
+	}
+}
+
+static BonoboObject *
+factory_callback (BonoboGenericFactory *factory,
+		  const char *id,
+		  gpointer closure)
+{
+	BonoboObject *object;
+
+	g_return_val_if_fail (id != NULL, NULL);
+
+	if (!strcmp (id, GDA_COMPONENT_ID_REPORT))
+		object = gda_report_engine_new ();
+
+	if (BONOBO_IS_OBJECT (object)) {
+		object_list = g_list_append (object_list, object);
+		g_signal_connect (G_OBJECT (object), "finalize"
+				  G_CALLBACK (object_finalized_cb), NULL);
+	}
+}
+
+static void
+setup_factory (void)
+{
+	BonoboGenericFactory *factory;
+
+	factory = bonobo_generic_factory_new (
+		GDA_COMPONENT_ID_REPORT_FACTORY,
+		factory_callback,
+		NULL);
 }

@@ -19,17 +19,22 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <GDA_Report.h>
+#include <GNOME_Database_Report.h>
 #include "gda-report-client.h"
+#include "gda-report-common.h"
 
 struct _GdaReportClientPrivate {
-	GDA_Report_DocumentFactory corba_engine;
+	GNOME_Database_Report_DocumentFactory corba_engine;
 	gchar *engine_id;
 };
 
 static void gda_report_client_class_init (GdaReportClientClass *klass);
-static void gda_report_client_init       (GdaReportClient *client);
-static void gda_report_client_destroy    (GtkObject *object);
+static void gda_report_client_init       (GdaReportClient *client, GdaReportClientClass *klass);
+static void gda_report_client_finalize   (GObject *object);
+
+/*
+ * GNOME::Database::Report::Client CORBA implementation
+ */
 
 /*
  * GdaReportClient class implementation
@@ -37,21 +42,25 @@ static void gda_report_client_destroy    (GtkObject *object);
 static void
 gda_report_client_class_init (GdaReportClientClass *klass)
 {
-	GtkObjectClass *object_class = GTK_OBJECT_CLASS (klass);
+	POA_GNOME_Database_Report_Client__epv *epv;
+	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
-	object_class->destroy = gda_report_client_destroy;
+	object_class->finalize = gda_report_client_finalize;
+
+	/* set the epv */
+	epv = &klass->epv;
 }
 
 static void
-gda_report_client_init (GdaReportClient *client)
+gda_report_client_init (GdaReportClient *client, GdaReportClientClass *klass)
 {
 	client->priv = g_new0 (GdaReportClientPrivate, 1);
 }
 
 static void
-gda_report_client_destroy (GtkObject *object)
+gda_report_client_finalize (GObject *object)
 {
-	GtkObjectClass *parent_class;
+	GObjectClass *parent_class;
 	CORBA_Environment ev;
 
 	GdaReportClient *client = (GdaReportClient *) object;
@@ -67,31 +76,15 @@ gda_report_client_destroy (GtkObject *object)
 	g_free (client->priv);
 	client->priv = NULL;
 
-	parent_class = gtk_type_class (gtk_object_get_type ());
-	if (parent_class && parent_class->destroy)
-		parent_class->destroy (object);
+	parent_class = g_type_class_peek (BONOBO_TYPE_OBJECT);
+	if (parent_class && parent_class->finalize)
+		parent_class->finalize (object);
 }
 
-GtkType
-gda_report_client_get_type (void)
-{
-	static GtkType type = 0;
-
-        if (!type) {
-                GtkTypeInfo info = {
-                        "GdaReportClient",
-                        sizeof (GdaReportClient),
-                        sizeof (GdaReportClientClass),
-                        (GtkClassInitFunc) gda_report_client_class_init,
-                        (GtkObjectInitFunc) gda_report_client_init,
-                        (GtkArgSetFunc) NULL,
-                        (GtkArgSetFunc) NULL
-                };
-                type = gtk_type_unique (gtk_object_get_type (), &info);
-        }
-
-        return type;
-}
+BONOBO_TYPE_FUNC_FULL (GdaReportClient,
+		       GNOME_Database_Report_Client,
+		       BONOBO_TYPE_OBJECT,
+		       gda_report_client);
 
 /**
  * gda_report_client_construct
@@ -108,11 +101,15 @@ gda_report_client_construct (GdaReportClient *client, const gchar *engine_id)
 	/* activate engine component */
 	if (engine_id) {
 		client->priv->corba_engine = bonobo_get_object (
-			engine_id, "IDL:GDA/Report/Engine:1.0", &ev);
-		client->priv->engine_id = g_strdup (engine_id);
+			engine_id, "IDL:GNOME/Database/Report/Engine:1.0", &ev);
 	}
 	else {
+		client->priv->corba_engine bonobo_get_object (
+			GDA_COMPONENT_ID_REPORT,
+			"IDL:GNOME/Database/Report/Engine:1.0",
+			&ev);
 	}
+	client->priv->engine_id = g_strdup (engine_id);
 
 	if (BONOBO_EX (&ev) || engine_id == CORBA_OBJECT_NIL) {
 		gda_report_client_free (client);
@@ -130,8 +127,7 @@ gda_report_client_new (void)
 {
 	GdaReportClient *client;
 
-	client = GDA_REPORT_CLIENT (gtk_type_new (GDA_TYPE_REPORT_CLIENT));
-
+	client = GDA_REPORT_CLIENT (g_object_new (GDA_TYPE_REPORT_CLIENT, NULL));
 	return gda_report_client_construct (client, NULL);
 }
 
@@ -143,8 +139,7 @@ gda_report_client_new_with_engine (const gchar *engine_id)
 {
 	GdaReportClient *client;
 
-	client = GDA_REPORT_CLIENT (gtk_type_new (GDA_TYPE_REPORT_CLIENT));
-
+	client = GDA_REPORT_CLIENT (g_object_new (GDA_TYPE_REPORT_CLIENT, NULL));
 	return gda_report_client_construct (client, engine_id);
 }
 
@@ -155,5 +150,5 @@ void
 gda_report_client_free (GdaReportClient *client)
 {
 	g_return_if_fail (GDA_IS_REPORT_CLIENT (client));
-	gtk_object_unref (GTK_OBJECT (client));
+	g_object_unref (G_OBJECT (client));
 }

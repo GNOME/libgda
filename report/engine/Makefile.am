@@ -3,28 +3,15 @@ bin_PROGRAMS = gda-report-engine
 INCLUDES = \
 	-I$(top_builddir)/lib/gda-common \
 	-I$(top_builddir)/lib/gda-client \
-	-I$(top_builddir)/report \
+	-I$(top_builddir)/report/common \
 	$(GDA_CLIENT_CFLAGS)
 
-BUILT_SOURCES = \
-	GDA_Report.h \
-	GDA_Report-common.c \
-	GDA_Report-stubs.c \
-	GDA_Report-skels.c
-
-CLEANFILES += $(BUILT_SOURCES)
-
-$(BUILT_SOURCES): $(top_builddir)/report/idl/GDA_Report.idl
-	$(ORBIT_IDL) $(IDL_FLAGS) $(top_builddir)/report/idl/GDA_Report.idl
-
 gda_report_engine_SOURCES = \
-	$(BUILT_SOURCES) \
-	gda-report-document-factory.h \
-	gda-report-document-factory.c \
 	main.c
 
 gda_report_engine_LDADD = \
 	$(GDA_CLIENT_LIBS) \
+	$(top_builddir)/report/common/libgdareport-common.la \
 	$(top_builddir)/lib/gda-common/libgda-common.la \
 	$(top_builddir)/lib/gda-client/libgda-client.la
 
