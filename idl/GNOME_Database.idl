@@ -162,7 +162,7 @@ module GNOME {
 				      in string cnc_string,
 				      in string username,
 				      in string password) raises (DriverError);
-			boolean close () raises (DriverError);
+			boolean close (in Client client) raises (DriverError);
 
 			/* command execution */
 			RecordsetList executeCommand (in Command cmd,
