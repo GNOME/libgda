@@ -2,25 +2,19 @@
 gda-value
 
 <!-- ##### SECTION Short_Description ##### -->
-Functions for accesing #GdaValue.
+
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
-A #GdaValue holds the data for a (row, column) retrieved from a query to a
-database backend. The function provided here can get/set the data contained in
-it, obtain information about the type, get a string representation of the
-value...
-
-The functions gda_value_set_*() and gda_value_new_*() that receive a pointer
-to any data, get a newly allocated copy of the data.
 
 </para>
+
 
 <!-- ##### SECTION See_Also ##### -->
 <para>
-#GdaRow
 
 </para>
+
 
 <!-- ##### MACRO gda_value_get_type ##### -->
 <para>
@@ -37,7 +31,6 @@ to any data, get a newly allocated copy of the data.
 
 @value: 
 @type: 
-@Returns: 
 
 
 <!-- ##### MACRO TIMEZONE_INVALID ##### -->
@@ -605,68 +598,6 @@ to any data, get a newly allocated copy of the data.
 <para>
 
 </para>
-
-<informaltable pgwide="1">
-<tgroup cols="2" colsep="1" rowsep="1">
-<thead>
-<row>
-<entry align="center">Data type</entry>
-<entry align="center">String representation in printf() format</entry>
-</row>
-</thead>
-<tbody>
-<row>
-<entry>#GDA_VALUE_TYPE_BIGINT</entry><entry>"%%ld"</entry>
-</row>
-<row>
-<entry>#GDA_VALUE_TYPE_BOOLEAN</entry><entry>"TRUE" |
- "FALSE"</entry>
-</row>
-<row>
-<entry>#GDA_VALUE_TYPE_STRING</entry><entry>"%%s"</entry>
-</row>
-<row>
-<entry>#GDA_VALUE_TYPE_INTEGER</entry><entry>"%%d"</entry>
-</row>
-<row>
-<entry>#GDA_VALUE_TYPE_SMALLINT</entry><entry>"%%d"</entry>
-</row>
-<row>
-<entry>#GDA_VALUE_TYPE_SINGLE</entry><entry>"%%f"</entry>
-</row>
-<row>
-<entry>#GDA_VALUE_TYPE_DOUBLE</entry><entry>"%%f"</entry>
-</row>
-<row>
-<entry>#GDA_VALUE_TYPE_TIME (w/o  TZ)</entry><entry>"%%02u:%%02u:%%02u"</entry>
-</row>
-<row>
-<entry>#GDA_VALUE_TYPE_TIME (with TZ)</entry><entry>"%%02u:%%02u:%%02u%+03d" </entry>
-</row>
-<row>
-<entry>#GDA_VALUE_TYPE_DATE</entry><entry>"%%04u-%%02u-%%02u"</entry>
-</row>
-<row>
-<entry>#GDA_VALUE_TYPE_TIMESTAMP (w/o  TZ)</entry><entry>"%%04u-%%02u-%%02u %%02u:%%02u:%%02u.%%03d"</entry>
-</row>
-<row>
- <entry>#GDA_VALUE_TYPE_TIMESTAMP (with TZ)</entry><entry>"%%04u-%%02u-%%02u %%02u:%%02u:%%02u.%%03d%+03d"</entry>
-</row>
-<row>
-<entry>#GDA_VALUE_TYPE_GEOMETRIC_POINT</entry><entry>"(%.*g,%.*g)" (precision set to the maximum)</entry>
-</row>
-<row>
-<entry>#GDA_VALUE_TYPE_NULL</entry><entry>"NULL"</entry>
-</row>
-<row>
-<entry>#GDA_VALUE_TYPE_LIST</entry><entry>{ "%%s", "%%s"... }</entry>
-</row>
-<row>
-<entry>Not in the list</entry><entry>""</entry>
-</row>
-</tbody>
-</tgroup>
-</informaltable>
 
 @value: 
 @Returns: 

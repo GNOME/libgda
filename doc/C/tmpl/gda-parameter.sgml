@@ -115,15 +115,6 @@ Functions to manage parameters
 @param: 
 
 
-<!-- ##### FUNCTION gda_parameter_list_get_names ##### -->
-<para>
-
-</para>
-
-@plist: 
-@Returns: 
-
-
 <!-- ##### FUNCTION gda_parameter_list_find ##### -->
 <para>
 

@@ -24,6 +24,11 @@
 #include <libgda/gda-intl.h>
 #include "gda-sqlite-provider.h"
 
+const gchar *plugin_get_name (void);
+const gchar *plugin_get_description (void);
+GList *plugin_get_connection_params (void);
+GdaServerProvider *plugin_create_provider (void);
+
 const gchar *
 plugin_get_name (void)
 {
@@ -41,7 +46,7 @@ plugin_get_connection_params (void)
 {
 	GList *list = NULL;
 
-	list = g_list_append (list, g_strdup ("FILENAME"));
+	list = g_list_append (list, g_strdup ("URI"));
 
 	return list;
 }

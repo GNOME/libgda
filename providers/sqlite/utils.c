@@ -1,9 +1,9 @@
-/* GDA SQLite provider
- * Copyright (C) 1998-2002 The GNOME Foundation.
+/* GNOME DB Postgres Provider
+ * Copyright (C) 1998-2002 The GNOME Foundation
  *
  * AUTHORS:
- *	Rodrigo Moya <rodrigo@gnome-db.org>
- *	Carlos Perelló Marín <carlos@gnome-db.org>
+ *         Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+ *         Carlos Perello Marin <carlos@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -21,28 +21,28 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#if !defined(__gda_sqlite_h__)
-#  define __gda_sqlite_h__
+#include <config.h>
+#include <libgda/gda-intl.h>
+#include <stdlib.h>
+#include <string.h>
+#include "gda-sqlite.h"
 
-#include <glib/gmacros.h>
-#include <glib/gtypes.h>
-#include <libgda/gda-value.h>
-#include <sqlite.h>
+void
+gda_sqlite_set_value (GdaValue *value,
+		      GdaValueType type,
+		      const gchar *thevalue,
+		      gboolean isNull)
+{
+	if (isNull){
+		gda_value_set_null (value);
+		return;
+	}
 
-#define GDA_SQLITE_PROVIDER_ID          "GDA SQLite provider"
-
-typedef struct {
-	gint ncols;
-	gint nrows;
-	gchar **data;
-} SQLITEresult;
-
-typedef struct {
-	sqlite *connection;
-	gchar *file;
-} SQLITEcnc;
-
-void gda_sqlite_set_value (GdaValue *value, GdaValueType type,
-			   const gchar *thevalue, gboolean isNull);
-
-#endif
+	switch (type) {
+	case GDA_VALUE_TYPE_STRING :
+		gda_value_set_string (value, thevalue);
+		break;
+	default :
+		gda_value_set_string (value, thevalue);
+	}
+}

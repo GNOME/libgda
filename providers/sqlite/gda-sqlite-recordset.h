@@ -24,8 +24,9 @@
 #if !defined(__gda_sqlite_recordset_h__)
 #  define __gda_sqlite_recordset_h__
 
+#include <libgda/gda-data-model-hash.h>
+#include <libgda/gda-value.h>
 #include <libgda/gda-connection.h>
-#include <libgda/gda-data-model.h>
 #include "gda-sqlite.h"
 
 G_BEGIN_DECLS
@@ -36,22 +37,21 @@ G_BEGIN_DECLS
 #define GDA_IS_SQLITE_RECORDSET(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_SQLITE_RECORDSET))
 #define GDA_IS_SQLITE_RECORDSET_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GDA_TYPE_SQLITE_RECORDSET))
 
-typedef struct _GdaSqliteRecordset      GdaSqliteRecordset;
-typedef struct _GdaSqliteRecordsetClass GdaSqliteRecordsetClass;
+typedef struct _GdaSqliteRecordset        GdaSqliteRecordset;
+typedef struct _GdaSqliteRecordsetClass   GdaSqliteRecordsetClass;
+typedef struct _GdaSqliteRecordsetPrivate GdaSqliteRecordsetPrivate;
 
 struct _GdaSqliteRecordset {
-	GdaDataModel model;
-	GdaConnection *cnc;
-	SQLITE_Recordset *drecset;
-	GPtrArray *rows;
+	GdaDataModelHash model;
+	GdaSqliteRecordsetPrivate *priv;
 };
 
 struct _GdaSqliteRecordsetClass {
-	GdaDataModelClass parent_class;
+	GdaDataModelHashClass parent_class;
 };
 
-GType               gda_sqlite_recordset_get_type (void);
-GdaSqliteRecordset *gda_sqlite_recordset_new (GdaConnection *cnc, SQLITE_Recordset *srecset);
+GType         gda_sqlite_recordset_get_type (void);
+GdaDataModel *gda_sqlite_recordset_new (GdaConnection *cnc, SQLITEresult *sres);
 
 G_END_DECLS
 

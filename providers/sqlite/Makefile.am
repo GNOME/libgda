@@ -13,7 +13,9 @@ libgda_sqlite_la_SOURCES = \
 	gda-sqlite-recordset.c \
 	gda-sqlite-recordset.h \
 	gda-sqlite.h \
+	utils.c \
 	libmain.c
+
 libgda_sqlite_la_LDFLAGS = -export-dynamic -module -avoid-version
 libgda_sqlite_la_LIBADD = \
 	$(LIBGDA_LIBS) \
