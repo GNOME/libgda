@@ -384,7 +384,7 @@ gda_connection_begin_transaction (GdaConnection *cnc, const gchar *id)
 	CORBA_exception_init (&ev);
 
 	corba_res = GNOME_Database_Connection_beginTransaction (
-		cnc->priv->corba_cnc, id, &ev);
+		cnc->priv->corba_cnc, id ? id : "", &ev);
 	if (!corba_res || BONOBO_EX (&ev)) {
 		gda_connection_add_error_list (cnc, gda_error_list_from_exception (&ev));
 		CORBA_exception_free (&ev);
@@ -410,7 +410,7 @@ gda_connection_commit_transaction (GdaConnection *cnc, const gchar *id)
 	CORBA_exception_init (&ev);
 
 	corba_res = GNOME_Database_Connection_commitTransaction (
-		cnc->priv->corba_cnc, id, &ev);
+		cnc->priv->corba_cnc, id ? id : "", &ev);
 	if (!corba_res || BONOBO_EX (&ev)) {
 		gda_connection_add_error_list (cnc, gda_error_list_from_exception (&ev));
 		CORBA_exception_free (&ev);
@@ -436,7 +436,7 @@ gda_connection_rollback_transaction (GdaConnection *cnc, const gchar *id)
 	CORBA_exception_init (&ev);
 
 	corba_res = GNOME_Database_Connection_rollbackTransaction (
-		cnc->priv->corba_cnc, id, &ev);
+		cnc->priv->corba_cnc, id ? id : "", &ev);
 	if (!corba_res || BONOBO_EX (&ev)) {
 		gda_connection_add_error_list (cnc, gda_error_list_from_exception (&ev));
 		CORBA_exception_free (&ev);
