@@ -112,7 +112,6 @@ module GDA {
 		Command     createCommand();
 		Recordset   createRecordset();
 
-		DSNlist     listSources();
 		long        startLogging(in string filename);
 		long        stopLogging();
 		string      createTable(in string name, in RowAttributes columns) raises (NotSupported, DriverError);

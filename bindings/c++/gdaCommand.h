@@ -34,8 +34,8 @@ class gdaCommand {
 		gint setConnection(gdaConnection *a);
 		gchar *getText();
 		void setText(gchar *text);
-		gulong getCmdType();
-		void setCmdType(gulong flags);
+		GDA_CommandType getCmdType();
+		void setCmdType(GDA_CommandType type);
 		gdaRecordset *execute(gulong* reccount, gulong flags);
 		void createParameter(gchar* name, GDA_ParameterDirection inout, gdaValue *value);
 		glong getTimeout();

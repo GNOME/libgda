@@ -32,7 +32,6 @@ class gdaConnection {
 		Gda_Connection* getCStruct();
 		void setCStruct(Gda_Connection *cnc);
 		
-		GList* listProviders(void);
 		void setProvider(gchar* name);
 		const gchar* getProvider();
 		gboolean supports(GDA_Connection_Feature feature);
@@ -40,7 +39,6 @@ class gdaConnection {
 		gint open(gchar* dsn, gchar* user,gchar* pwd);	
 		void close();
 		gdaErrorList *getErrors();
-		GList* listDatasources();
 		gint beginTransaction();
 		gint commitTransaction();
 		gint rollbackTransaction();

@@ -66,45 +66,40 @@ typedef struct _Gda_ConnectionClass  Gda_ConnectionClass;
 #  define IS_GDA_CONNECTION_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_CONNECTION))
 #endif
 
-struct _Gda_Connection
-{
+struct _Gda_Connection {
 #ifdef HAVE_GOBJECT
-  GObject       object;
+	GObject       object;
 #else
-  GtkObject     object;
+	GtkObject     object;
 #endif
-  CORBA_Object  connection;
-  CORBA_ORB     orb;
-  GList*        commands;
-  GList*        recordsets;
-  gchar*        provider;
-  gchar*        default_db;
-  gchar*        database;
-  gchar*        user;
-  gchar*        passwd;
-  GList*        errors_head;
-  gint          is_open;
+	CORBA_Object  connection;
+	CORBA_ORB     orb;
+	GList*        commands;
+	GList*        recordsets;
+	gchar*        provider;
+	gchar*        default_db;
+	gchar*        database;
+	gchar*        user;
+	gchar*        passwd;
+	GList*        errors_head;
+	gint          is_open;
 };
 
-struct _Gda_ConnectionClass
-{
+struct _Gda_ConnectionClass {
 #ifdef HAVE_GOBJECT
-  GObjectClass   parent_class;
+	GObjectClass   parent_class;
 #else
-  GtkObjectClass parent_class;
+	GtkObjectClass parent_class;
 #endif
-  void           (*error)      (Gda_Connection*, GList*);
-  void           (*warning)    (Gda_Connection*, GList*);
-  void           (*open)       (Gda_Connection*);
-  void           (*close)      (Gda_Connection*);
+	void           (*error)      (Gda_Connection*, GList*);
+	void           (*warning)    (Gda_Connection*, GList*);
+	void           (*open)       (Gda_Connection*);
+	void           (*close)      (Gda_Connection*);
 };
 
-  
-
-typedef struct _Gda_Constraint_Element
-{
-  GDA_Connection_QType  type;
-  gchar*                value;
+typedef struct _Gda_Constraint_Element {
+	GDA_Connection_QType  type;
+	gchar*                value;
 } Gda_Constraint_Element;
 
 #ifdef HAVE_GOBJECT
@@ -115,7 +110,6 @@ guint              gda_connection_get_type            (void);
 
 Gda_Connection*    gda_connection_new                 (CORBA_ORB orb);
 void               gda_connection_free                (Gda_Connection* cnc);
-GList*             gda_connection_list_providers      (void);
 void               gda_connection_set_provider        (Gda_Connection* cnc, gchar* name);
 const gchar*       gda_connection_get_provider        (Gda_Connection* cnc);
 gboolean           gda_connection_supports            (Gda_Connection* cnc, GDA_Connection_Feature feature);
@@ -130,7 +124,6 @@ Gda_Recordset*     gda_connection_open_schema_array   (Gda_Connection* cnc,
 glong              gda_connection_modify_schema       (Gda_Connection *cnc,
                                                        GDA_Connection_QType t, ...);
 GList*             gda_connection_get_errors          (Gda_Connection* cnc);
-GList*             gda_connection_list_datasources    (Gda_Connection* cnc);
 gint               gda_connection_begin_transaction   (Gda_Connection* cnc);
 gint               gda_connection_commit_transaction  (Gda_Connection* cnc);
 gint               gda_connection_rollback_transaction (Gda_Connection* cnc);

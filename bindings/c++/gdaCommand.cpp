@@ -52,12 +52,12 @@ void gdaCommand::setText(gchar *text) {
 	gda_command_set_text(_gda_command,text);
 }
 
-gulong gdaCommand::getCmdType() {
+GDA_CommandType gdaCommand::getCmdType() {
 	return gda_command_get_cmd_type(_gda_command);
 }
 
-void gdaCommand::setCmdType(gulong flags) {
-	gda_command_set_cmd_type(_gda_command,flags);
+void gdaCommand::setCmdType(GDA_CommandType type) {
+	gda_command_set_cmd_type(_gda_command, type);
 }
 
 gdaRecordset* gdaCommand::execute(gulong* reccount, gulong flags) {

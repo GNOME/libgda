@@ -408,42 +408,6 @@ gda_connection_get_provider (Gda_Connection* cnc)
 }
 
 /**
- * gda_connection_list_datasources:
- * @cnc: the connection object:
- *
- * List all datasources which can be used with this connection object.
- *
- * Returns: a GList with the DSNs of all known data sources.
- */
-GList*
-gda_connection_list_datasources (Gda_Connection* cnc)
-{
-  CORBA_Environment       ev;
-  GDA_Connection_DSNlist* dsnlist;
-  GList*                  retval = 0;
-  gint                    idx;
-  
-  g_return_val_if_fail(IS_GDA_CONNECTION(cnc), 0);
-  
-  CORBA_exception_init(&ev);
-  if (!cnc->connection)
-    get_corba_connection(cnc);
-  dsnlist = GDA_Connection_listSources(cnc->connection, &ev);
-  if (!dsnlist || gda_connection_corba_exception(cnc, &ev))
-    return 0;
-  
-  for (idx = 0; idx < dsnlist->_length; idx++)
-    {
-      gchar* dsn = g_strdup(dsnlist->_buffer[idx]);
-      size_t endidx = strcspn(dsn, " \t");
-      dsn[endidx] = '\0';
-      retval = g_list_append(retval, dsn);
-    }
-  CORBA_free(dsnlist);
-  return retval;
-}
-
-/**
  * gda_connection_supports
  * @cnc: the connection object
  * @feature: feature to be tested

@@ -74,7 +74,7 @@ typedef struct {
 typedef struct {
 	Gda_ServerConnection* cnc;
 	gchar*                text;
-	gulong                type;
+	GDA_CommandType       type;
 	gint                  users;
 	
 	gpointer              user_data;
@@ -128,10 +128,10 @@ struct _Gda_ServerImplFunctions {
 	gint                 (*connection_commit_transaction)(Gda_ServerConnection *cnc);
 	gint                 (*connection_rollback_transaction)(Gda_ServerConnection *cnc);
 	Gda_ServerRecordset* (*connection_open_schema)(Gda_ServerConnection *cnc,
-                                                 Gda_ServerError *error,
-                                                 GDA_Connection_QType t,
-                                                 GDA_Connection_Constraint *constraints,
-                                                 gint length);
+	                                               Gda_ServerError *error,
+	                                               GDA_Connection_QType t,
+	                                               GDA_Connection_Constraint *constraints,
+	                                               gint length);
 	glong                (*connection_modify_schema)(Gda_ServerConnection *cnc,
                                                    GDA_Connection_QType t,
                                                    GDA_Connection_Constraint *constraints,
@@ -148,10 +148,10 @@ struct _Gda_ServerImplFunctions {
 	/* Command interface */
 	gboolean             (*command_new)(Gda_ServerCommand *cmd);
 	Gda_ServerRecordset* (*command_execute)(Gda_ServerCommand *cmd,
-                                          Gda_ServerError *error,
-                                          const GDA_CmdParameterSeq *params,
-                                          gulong *affected,
-                                          gulong options);
+	                                        Gda_ServerError *error,
+	                                        const GDA_CmdParameterSeq *params,
+	                                        gulong *affected,
+	                                        gulong options);
 	void                 (*command_free)(Gda_ServerCommand *cmd);
 
 	/* Recordset interface */
@@ -221,9 +221,9 @@ Gda_ServerConnection* gda_server_command_get_connection (Gda_ServerCommand *cmd)
 gchar*                gda_server_command_get_text (Gda_ServerCommand *cmd);
 void                  gda_server_command_set_text (Gda_ServerCommand *cmd,
                                                    const gchar *text);
-gulong                gda_server_command_get_type (Gda_ServerCommand *cmd);
+GDA_CommandType       gda_server_command_get_type (Gda_ServerCommand *cmd);
 void                  gda_server_command_set_type (Gda_ServerCommand *cmd,
-                                                   gulong type);
+                                                   GDA_CommandType type);
 gpointer              gda_server_command_get_user_data (Gda_ServerCommand *cmd);
 void                  gda_server_command_set_user_data (Gda_ServerCommand *cmd,
                                                         gpointer user_data);

@@ -94,8 +94,6 @@ GDA_Command impl_GDA_Connection_createCommand (impl_POA_GDA_Connection *servant,
                                                CORBA_Environment *ev);
 GDA_Recordset impl_GDA_Connection_createRecordset (impl_POA_GDA_Connection *servant,
                                                    CORBA_Environment *ev);
-GDA_Connection_DSNlist* impl_GDA_Connection_listSources (impl_POA_GDA_Connection *servant,
-                                                         CORBA_Environment *ev);
 CORBA_long impl_GDA_Connection_startLogging (impl_POA_GDA_Connection *servant,
                                              CORBA_char *filename,
                                              CORBA_Environment *ev);
@@ -110,10 +108,4 @@ CORBA_boolean impl_GDA_Connection_supports (impl_POA_GDA_Connection *servant,
                                             CORBA_Environment *ev);
 
 #endif
-
-
-
-
-
-
 

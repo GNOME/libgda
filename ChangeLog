@@ -1,3 +1,9 @@
+2000-12-21	Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* added support for the GDA_CommandType stuff, which will
+	allow to treat commands in different ways (SQL, TABLE,
+	XML, etc)
+
 2000-12-20  Stanislav Visnovsky  <visnovsky@nenya.ms.mff.cuni.cz>
 
 	* configure.in: Added Slovak [sk] to ALL_LINGUAS.

@@ -66,9 +66,9 @@ static POA_GDA_Connection__epv impl_GDA_Connection_epv =
   (gpointer) & impl_GDA_Connection_close,
   (gpointer) & impl_GDA_Connection_open,
   (gpointer) & impl_GDA_Connection_openSchema,
+  (gpointer) & impl_GDA_Connection_modifySchema,
   (gpointer) & impl_GDA_Connection_createCommand,
   (gpointer) & impl_GDA_Connection_createRecordset,
-  (gpointer) & impl_GDA_Connection_listSources,
   (gpointer) & impl_GDA_Connection_startLogging,
   (gpointer) & impl_GDA_Connection_stopLogging,
   (gpointer) & impl_GDA_Connection_createTable,
@@ -369,13 +369,6 @@ impl_GDA_Connection_createRecordset (impl_POA_GDA_Connection * servant,
     }
   rs->cnc = servant->cnc;
   return retval;
-}
-
-GDA_Connection_DSNlist *
-impl_GDA_Connection_listSources (impl_POA_GDA_Connection * servant,
-				 CORBA_Environment * ev)
-{
-  return CORBA_OBJECT_NIL;
 }
 
 CORBA_long

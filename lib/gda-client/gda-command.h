@@ -64,29 +64,27 @@ typedef struct _Gda_CommandClass Gda_CommandClass;
 #  define IS_GDA_COMMAND_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_COMMAND))
 #endif
 
-struct _Gda_Command
-{
+struct _Gda_Command {
 #ifdef HAVE_GOBJECT
-  GObject         object;
+	GObject         object;
 #else
-  GtkObject       object;
+	GtkObject       object;
 #endif
-  CORBA_Object    command;
-  CORBA_ORB       orb;
-  Gda_Connection* connection;
-  gchar*          text;
-  glong           type;
-  GList*          parameters;
-  gboolean        text_pending;
-  gboolean        type_pending;
+	CORBA_Object    command;
+	CORBA_ORB       orb;
+	Gda_Connection* connection;
+	gchar*          text;
+	GDA_CommandType type;
+	GList*          parameters;
+	gboolean        text_pending;
+	gboolean        type_pending;
 };
 
-struct _Gda_CommandClass
-{
+struct _Gda_CommandClass {
 #ifdef HAVE_GOBJECT
-  GObjectClass   parent_class;
+	GObjectClass   parent_class;
 #else
-  GtkObjectClass parent_class;
+	GtkObjectClass parent_class;
 #endif
 };
 
@@ -102,8 +100,8 @@ Gda_Connection* gda_command_get_connection   (Gda_Command* cmd);
 gint            gda_command_set_connection   (Gda_Command* cmd, Gda_Connection* cnc);
 gchar*          gda_command_get_text         (Gda_Command* cmd);
 void            gda_command_set_text         (Gda_Command* cmd, gchar* text);
-gulong          gda_command_get_cmd_type     (Gda_Command* cmd);
-void            gda_command_set_cmd_type     (Gda_Command* cmd, gulong flags);
+GDA_CommandType gda_command_get_cmd_type     (Gda_Command* cmd);
+void            gda_command_set_cmd_type     (Gda_Command* cmd, GDA_CommandType type);
 Gda_Recordset*  gda_command_execute          (Gda_Command* cmd, gulong* reccount, gulong flags);
 void            gda_command_create_parameter (Gda_Command* cmd,
                                               gchar* name,

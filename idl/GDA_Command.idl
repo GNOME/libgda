@@ -6,13 +6,22 @@
 #include "GDA_Parameter.idl"
 
 module GDA {
+	const unsigned long CMD_NORECORDS=0x80000000;
+	enum CommandType {
+		COMMAND_TYPE_TEXT,
+		COMMAND_TYPE_TABLE,
+		COMMAND_TYPE_TABLEDIRECT,
+		COMMAND_TYPE_STOREDPROCEDURE,
+		COMMAND_TYPE_FILE
+	};
+	
 	interface Command {
 
 		attribute long             cmdTimeout;
 		readonly attribute boolean prepared;
 		attribute long             state;
 		attribute string           text;
-		attribute unsigned long    type;
+		attribute CommandType      type;
 	
 		Recordset open (in CmdParameterSeq param, in CursorType ct, in LockType lt, out unsigned long affected)
 				  raises (DriverError);

@@ -12,19 +12,8 @@
 #include "GDA_Connection.idl"
 
 module GDA {
-
-	const unsigned long CMD_NORECORDS=0x80000000;
-	enum CommandType
-	{
-		CMD_TEXT1,
-		CMD_TABLE,
-		CMD_TABLEDIRECT,
-		CMD_STOREDPROCEDURE,
-		CMD_FILE
-	};
 	
-	enum AffectedRows
-	{
+	enum AffectedRows {
 		GDR_AFFECT_CURRENT,
 		GDR_AFFECT_GROUP,
 		GDR_AFFECT_ALL

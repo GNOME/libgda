@@ -44,10 +44,6 @@ void gdaConnection::setCStruct(Gda_Connection *cnc) {
 	_gda_connection = cnc;
 }
 		
-GList* gdaConnection::listProviders() {
-	return gda_connection_list_providers();
-}
-
 void gdaConnection::setProvider(gchar* name) {
 	gda_connection_set_provider(_gda_connection,name);
 }
@@ -76,10 +72,6 @@ gdaErrorList* gdaConnection::getErrors() {
 	gdaErrorList *a = NULL;
 	a = new gdaErrorList(gda_connection_get_errors(_gda_connection));
 	return a;
-}
-
-GList* gdaConnection::listDatasources() {
-	return gda_connection_list_datasources(_gda_connection);
 }
 
 gint gdaConnection::beginTransaction() {
