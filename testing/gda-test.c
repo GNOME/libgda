@@ -148,9 +148,14 @@ void list_tables(GdaConnection * cnc)
 	for (gda_recordset_move_first(rs); !gda_recordset_eof(rs);
 	     gda_recordset_move_next(rs)) {
 		for (i = 0; i < gda_recordset_rowsize(rs); i++) {
+			char *s_value = NULL;
+
 			field = gda_recordset_field_idx(rs, i);
-			g_print("%s=%s\t", gda_field_get_name(field),
-				gda_stringify_value(NULL, 0, field));
+			s_value = gda_stringify_value(NULL, 0, field);
+			g_print("%s=%s\t", gda_field_get_name(field), s_value);
+
+			g_free (s_value);
+			gda_field_free (field);
 		}
 		g_print("\n");
 	}
@@ -193,5 +198,6 @@ int main(int argc, char *argv[])
 	list_tables(cnc);
 	g_print("\nclosing connection...\n", provider);
 	gda_connection_free(cnc);
+	g_free (provider);
 	return (0);
 }

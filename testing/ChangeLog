@@ -1,3 +1,7 @@
+2002-05-07  Stéphane Raimbault <stephane.raimbault@deesse.univ-lemans.fr>
+
+	* gda-test.c: fixed some memory leaks.
+
 2001-07-08  Carlos Perelló Marín <carlos@gnome-db.org>
 
 	* gda*test.c: Changed the use of getline with fgets. It must
