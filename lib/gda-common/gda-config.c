@@ -263,8 +263,18 @@ gda_config_list_keys (const gchar *path)
       
       for (node = slist; node != NULL; node = g_slist_next(node))
         {
-          g_warning("adding key %s", (gchar *) node->data);
-          ret = g_list_append(ret, g_strdup((gchar *) node->data));
+          GConfEntry* entry = (GConfEntry *) node->data;
+          if (entry)
+            {
+              gchar* entry_name;
+              
+              entry_name = strrchr((const char *) gconf_entry_get_key(entry), '/');
+              if (entry_name)
+                {
+                  ret = g_list_append(ret, g_strdup(entry_name + 1));
+                }
+              gconf_entry_free(entry);
+            }
         }
       g_slist_free(slist);
     }
