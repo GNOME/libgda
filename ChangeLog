@@ -1,3 +1,10 @@
+2005-02-28  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	Fixes #129153
+
+	* report/libgda-report/gda-report-result.h: removed non-existing
+	function from header file.
+
 2005-02-28  Caolan McNamara <caolanm@redhat.com>
 
 	Fixes #166288
