@@ -17,6 +17,7 @@
  */
 
 #include <gda-client.h>
+#include <popt.h>
 
 static CORBA_ORB         orb;
 static CORBA_Environment ev;
