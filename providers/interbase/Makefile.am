@@ -10,6 +10,8 @@ INCLUDES = \
 libgda_interbase_la_SOURCES = \
 	gda-interbase-provider.c \
 	gda-interbase-provider.h \
+	gda-interbase-recordset.c \
+	gda-interbase-recordset.h \
 	libmain.c
 
 libgda_interbase_la_LDFLAGS = -export-dynamic -module -avoid-version

@@ -22,11 +22,13 @@
 #include <config.h>
 #include <libgda/gda-intl.h>
 #include "gda-interbase-provider.h"
+#include "gda-interbase-recordset.h"
 
 #define PARENT_TYPE GDA_TYPE_SERVER_PROVIDER
 
 #define CONNECTION_DATA "GDA_Interbase_ConnectionData"
 #define TRANSACTION_DATA "GDA_Interbase_TransactionData"
+#define STATEMENT_DATA "GDA_Interbase_StatementData"
 
 static void gda_interbase_provider_class_init (GdaInterbaseProviderClass *klass);
 static void gda_interbase_provider_init       (GdaInterbaseProvider *provider,
@@ -206,7 +208,7 @@ gda_interbase_provider_open_connection (GdaServerProvider *provider,
 		setenv ("ISC_PASSWORD", ib_password, 1);
 
 	if (isc_attach_database (icnc->status, strlen (ib_db), ib_db, &icnc->handle, 0, NULL)) {
-		gda_connection_add_error_string (cnc, _("Could not attach to database"));
+		gda_interbase_connection_make_error (cnc);
 		g_free (icnc);
 		return FALSE;
 	}
@@ -298,8 +300,33 @@ gda_interbase_provider_create_database (GdaServerProvider *provider,
 					GdaConnection *cnc,
 					const gchar *name)
 {
-	/* FIXME */
-	return FALSE;
+	gchar *sql;
+	GdaInterbaseConnection *icnc;
+	isc_db_handle db_handle = NULL;
+	isc_tr_handle tr_handle = NULL;
+
+	g_return_val_if_fail (GDA_IS_INTERBASE_PROVIDER (provider), FALSE);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (name != NULL, FALSE);
+
+	icnc = g_object_get_data (G_OBJECT (cnc), CONNECTION_DATA);
+	if (!icnc) {
+		gda_connection_add_error_string (cnc, _("Invalid Interbase handle"));
+		return FALSE;
+	}
+
+	/* build and execute the SQL command */
+	sql = g_strdup_printf ("CREATE DATABASE '%s'", name);
+	if (isc_dsql_execute_immediate (icnc->status, &db_handle, &tr_handle,
+					0, sql, 1, NULL)) {
+		gda_interbase_connection_make_error (cnc);
+		return FALSE;
+	}
+
+	/* we need to detach from the newly created database */
+	isc_detach_database (icnc->status, &db_handle);
+
+	return TRUE;
 }
 
 /* drop_database handler for the GdaInterbaseProvider class */
@@ -308,8 +335,16 @@ gda_interbase_provider_drop_database (GdaServerProvider *provider,
 				      GdaConnection *cnc,
 				      const gchar *name)
 {
-	/* FIXME */
 	return FALSE;
+}
+
+static GdaDataModel *
+run_sql (GdaConnection *cnc, GdaInterbaseConnection *icnc, isc_tr_handle *itr, const gchar *sql)
+{
+	GdaDataModel *model;
+
+	model = gda_interbase_recordset_new (cnc, itr, sql);
+	return model;
 }
 
 /* execute_command handler for the GdaInterbaseProvider class */
@@ -319,8 +354,40 @@ gda_interbase_provider_execute_command (GdaServerProvider *provider,
 					GdaCommand *cmd,
 					GdaParameterList *params)
 {
-	/* FIXME */
-	return NULL;
+	GdaInterbaseConnection *icnc;
+	isc_tr_handle *itr;
+	gchar **arr;
+	gint n;
+	GList *reclist = NULL;
+
+	g_return_val_if_fail (GDA_IS_INTERBASE_PROVIDER (provider), NULL);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+	g_return_val_if_fail (cmd != NULL, NULL);
+
+	icnc = g_object_get_data (G_OBJECT (cnc), CONNECTION_DATA);
+	if (!icnc) {
+		gda_connection_add_error_string (cnc, _("Invalid Interbase handle"));
+		return NULL;
+	}
+
+	itr = gda_interbase_command_get_transaction (cmd);
+
+	/* parse command */
+	switch (gda_command_get_command_type (cmd)) {
+	case GDA_COMMAND_TYPE_SQL :
+		arr = g_strsplit (gda_command_get_text (cmd), ";", 0);
+		if (arr) {
+			for (n = 0; arr[n]; n++) {
+				reclist = g_list_append (reclist,
+							 run_sql (cnc, icnc, itr, arr[n]));
+			}
+
+			g_strfreev (arr);
+		}
+		break;
+	}
+
+	return reclist;
 }
 
 /* begin_transaction handler for the GdaInterbaseProvider class */
@@ -353,7 +420,7 @@ gda_interbase_provider_begin_transaction (GdaServerProvider *provider,
 
 	if (isc_start_transaction (icnc->status, itr, 1, &icnc->handle,
 				   (unsigned short) sizeof (tpb), &tpb)) {
-		gda_interbase_make_error (cnc);
+		gda_interbase_connection_make_error (cnc);
 		g_free (itr);
 		return FALSE;
 	}
@@ -389,7 +456,7 @@ gda_interbase_provider_commit_transaction (GdaServerProvider *provider,
 	}
 
 	if (isc_commit_transaction (icnc->status, itr)) {
-		gda_interbase_make_error (cnc);
+		gda_interbase_connection_make_error (cnc);
 		result = FALSE;
 	}
 	else
@@ -427,7 +494,7 @@ gda_interbase_provider_rollback_transaction (GdaServerProvider *provider,
 	}
 
 	if (isc_rollback_transaction (icnc->status, itr)) {
-		gda_interbase_make_error (cnc);
+		gda_interbase_connection_make_error (cnc);
 		result = FALSE;
 	}
 	else
@@ -458,4 +525,39 @@ gda_interbase_provider_get_schema (GdaServerProvider *provider,
 {
 	/* FIXME */
 	return NULL;
+}
+
+void
+gda_interbase_connection_make_error (GdaConnection *cnc)
+{
+	GdaError *error;
+	GdaInterbaseConnection *icnc;
+
+	g_return_if_fail (GDA_IS_CONNECTION (cnc));
+
+	icnc = g_object_get_data (G_OBJECT (cnc), CONNECTION_DATA);
+	if (!icnc) {
+		gda_connection_add_error_string (cnc, _("Invalid Interbase handle"));
+		return;
+	}
+
+	error = gda_error_new ();
+	gda_error_set_number (error, isc_sqlcode (icnc->status));
+	gda_error_set_source (error, "[GDA Interbase]");
+
+	gda_connection_add_error (cnc, error);
+}
+
+isc_tr_handle *
+gda_interbase_command_get_transaction (GdaCommand *cmd)
+{
+	GdaTransaction *xaction;
+	isc_tr_handle *itr;
+
+	xaction = gda_command_get_transaction (cmd);
+	if (!GDA_IS_TRANSACTION (xaction))
+		return NULL;
+
+	itr = g_object_get_data (G_OBJECT (xaction), TRANSACTION_DATA);
+	return itr;
 }

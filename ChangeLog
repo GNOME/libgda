@@ -1,3 +1,21 @@
+2002-10-28  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	Fixes #95985
+
+	* configure.in: libmystrings is not needed for MySQL provider.
+
+2002-10-26  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* providers/interbase/gda-interbase-provider.c
+	(gda_interbase_connection_make_error): new function.
+	(gda_interbase_command_get_transaction): new function.
+	(gda_interbase_provider_open_connection): call the above function for
+	any database-related errors.
+	(gda_interbase_provider_create_database): implemented.
+
+	* providers/interbase/gda-interbase-recordset.[ch]: recordset
+	implementation for the Interbase provider.
+
 2002-10-25  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	Fixes #96758

@@ -47,6 +47,8 @@ struct _GdaInterbaseProviderClass {
 GType              gda_interbase_provider_get_type (void);
 GdaServerProvider *gda_interbase_provider_new (void);
 
+void               gda_interbase_connection_make_error (GdaConnection *cnc);
+
 G_END_DECLS
 
 #endif
