@@ -29,7 +29,7 @@ G_BEGIN_DECLS
 
 #define TDS_SCHEMA_DATABASES \
 	"SELECT name " \
-	"  FROM sysdatabases " \
+	"  FROM master..sysdatabases " \
 	" ORDER BY name"
 
 #define TDS_SCHEMA_FIELDS \

@@ -50,12 +50,14 @@ struct _GdaFreeTDSProviderClass {
 
 typedef struct _GdaFreeTDSConnectionData GdaFreeTDSConnectionData;
 struct _GdaFreeTDSConnectionData {
-	gint          rc;
-	GPtrArray     *msg_arr;
-	GPtrArray     *err_arr;
-	TDSLOGIN      *login;
-	TDSSOCKET     *tds;
-	TDSCONFIGINFO *config;
+	gint          rc;         // rc code of last operation
+	GPtrArray     *msg_arr;   // array containing msgs from server
+	GPtrArray     *err_arr;   // array containing error msgs from server
+	GString       *database;  // database we are connected to
+	
+	TDSLOGIN      *login;     // tds login struct
+	TDSSOCKET     *tds;       // connection handle
+	TDSCONFIGINFO *config;    // tds config struct
 };
 
 GType              gda_freetds_provider_get_type (void);

@@ -2,7 +2,7 @@
  * Copyright (C) 2002 The GNOME Foundation
  *
  * AUTHORS:
- *         Holger Thon <holger.thon@gnome-db-org>
+ *         Holger Thon <holger.thon@gnome-db.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -99,6 +99,8 @@ extern int (*g_tds_msg_handler)();
 extern int (*g_tds_err_handler)();
 
 static void gda_freetds_free_connection_data (GdaFreeTDSConnectionData *tds_cnc);
+
+static gboolean gda_freetds_execute_cmd (GdaConnection *cnc, const gchar *sql);
 
 static int gda_freetds_provider_tds_handle_message (void *aStruct,
                                                     const gboolean is_err_msg);
@@ -213,11 +215,14 @@ gda_freetds_provider_open_connection (GdaServerProvider *provider,
 	tds_set_user(tds_cnc->login, (char *) t_user);
 	tds_set_passwd(tds_cnc->login, (char *) t_password);
 	tds_set_app(tds_cnc->login, "libgda");
+	
 	if (t_hostaddr)
 		tds_set_host(tds_cnc->login, (char *) t_hostaddr);
+	
 	tds_set_library(tds_cnc->login, "TDS-Library");
 	if (t_host)
 		tds_set_server(tds_cnc->login, (char *) t_host);
+	
 	tds_set_charset(tds_cnc->login, "iso-1");
 	tds_set_language(tds_cnc->login, "us_english");
 	tds_set_packet(tds_cnc->login, 512);
@@ -282,18 +287,22 @@ gda_freetds_free_connection_data (GdaFreeTDSConnectionData *tds_cnc)
 
 			g_ptr_array_remove_index (tds_cnc->err_arr, 0);
 		}
+			
 		g_ptr_array_free (tds_cnc->err_arr, TRUE);
 		tds_cnc->err_arr = NULL;
 	}
+	
 	if (tds_cnc->msg_arr) {
 		while (tds_cnc->msg_arr->len > 0) {
 			msg = (GdaFreeTDSMessage *) g_ptr_array_index (tds_cnc->msg_arr, 0);
+					
 			if (msg != NULL) {
 				gda_freetds_message_free (msg);
 			}
 
 			g_ptr_array_remove_index (tds_cnc->msg_arr, 0);
 		}
+			
 		g_ptr_array_free (tds_cnc->msg_arr, TRUE);
 		tds_cnc->msg_arr = NULL;
 	}
@@ -347,14 +356,12 @@ static const gchar
 
 	tds_cnc = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_FREETDS_HANDLE);
 	g_return_val_if_fail (tds_cnc != NULL, NULL);
-	
-	if (tds_cnc->config) {
-		tds_free_config(tds_cnc->config);
-		tds_cnc->config = NULL;
-	}
-	tds_cnc->config = tds_get_config(tds_cnc->tds, tds_cnc->login);
-	
-	return tds_cnc->config->database;
+	g_return_val_if_fail (tds_cnc->tds != NULL, NULL);
+
+//	tds_cnc->rc = tds_process_env_chg(tds_cnc->tds);
+//	return (const gchar*) tds_cnc->tds->env->database;
+
+	return NULL;
 }
 
 static gboolean
@@ -362,12 +369,18 @@ gda_freetds_provider_change_database (GdaServerProvider *provider,
                                       GdaConnection *cnc,
                                       const gchar *name)
 {
+	gchar *sql_cmd = NULL;
+	gboolean ret = FALSE;
 	GdaFreeTDSProvider *tds_prov = (GdaFreeTDSProvider *) provider;
 
 	g_return_val_if_fail (GDA_IS_FREETDS_PROVIDER (tds_prov), FALSE);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	
-	return FALSE;
+	sql_cmd = g_strdup_printf("USE %s", name);
+	ret = gda_freetds_execute_cmd(cnc, sql_cmd);
+	g_free(sql_cmd);
+	
+	return ret;
 }
 
 static gboolean
@@ -548,28 +561,66 @@ static GdaDataModel
 			if (recset != NULL)
 				gda_data_model_set_column_title (GDA_DATA_MODEL (recset),
 				                                 0, _("Tables"));
+			
 			return recset;
 		case GDA_CONNECTION_SCHEMA_TYPES:
-			recset = gda_freetds_execute_query (cnc, TDS_SCHEMA_TYPES);
-			if (recset != NULL)
-				gda_data_model_set_column_title (GDA_DATA_MODEL (recset),
-				                                 0, _("Types"));
-			return recset;
+				recset = gda_freetds_execute_query (cnc, TDS_SCHEMA_TYPES);
+				if (recset != NULL)
+					gda_data_model_set_column_title (GDA_DATA_MODEL (recset),
+					                                 0, _("Types"));
+		
+				return recset;
 		case GDA_CONNECTION_SCHEMA_USERS:
 			recset = gda_freetds_execute_query (cnc, TDS_SCHEMA_TYPES);
 			if (recset != NULL)
 				gda_data_model_set_column_title (GDA_DATA_MODEL (recset),
 				                                 0, _("Users"));
+				
 			return recset;
 		case GDA_CONNECTION_SCHEMA_VIEWS:
 			recset = gda_freetds_execute_query (cnc, TDS_SCHEMA_VIEWS);
 			if (recset != NULL)
 				gda_data_model_set_column_title (GDA_DATA_MODEL (recset),
 				                                 0, _("Views"));
+
 			return recset;
 	}
 	
 	return NULL;
+}
+
+static gboolean
+gda_freetds_execute_cmd (GdaConnection *cnc, const gchar *sql)
+{
+	GdaFreeTDSConnectionData *tds_cnc;
+	GdaError *error;
+	
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+	tds_cnc = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_FREETDS_HANDLE);
+
+	g_return_val_if_fail (tds_cnc != NULL, FALSE);
+	g_return_val_if_fail (tds_cnc->tds != NULL, FALSE);
+
+	tds_cnc->rc = tds_submit_query (tds_cnc->tds, (gchar *) sql);
+	if (tds_cnc->rc != TDS_SUCCEED) {
+		error = gda_freetds_make_error (tds_cnc->tds, NULL);
+		gda_connection_add_error (cnc, error);
+		return FALSE;
+	}
+
+	// there should not be any result tokens
+	while ((tds_cnc->rc = tds_process_result_tokens (tds_cnc->tds)) 
+	       == TDS_SUCCEED) {
+		if (tds_cnc->tds->res_info->rows_exist) {
+			return FALSE;
+		}
+	}
+	
+	if ((tds_cnc->rc != TDS_FAIL) && (tds_cnc->rc != TDS_NO_MORE_RESULTS)) {
+		return FALSE;
+	}
+
+	return TRUE;
 }
 
 static GdaDataModel *
@@ -809,15 +860,20 @@ static int gda_freetds_provider_tds_handle_message (void *aStruct,
 	return TDS_SUCCEED;
 }
 
-static int gda_freetds_provider_tds_handle_info_msg (void *aStruct)
+static int
+gda_freetds_provider_tds_handle_info_msg (void *aStruct)
 {
 	return gda_freetds_provider_tds_handle_message (aStruct, FALSE);
 }
 
-static int gda_freetds_provider_tds_handle_err_msg (void *aStruct)
+static int
+gda_freetds_provider_tds_handle_err_msg (void *aStruct)
 {
 	return gda_freetds_provider_tds_handle_message (aStruct, TRUE);
 }
+
+static
+gda_freetds_provider_
 
 
 /////////////////////////////////////////////////////////////////////////////
