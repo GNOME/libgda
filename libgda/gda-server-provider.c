@@ -21,7 +21,8 @@
  */
 
 #include <config.h>
-#include "gda-server-provider.h"
+#include <bonobo/bonobo-exception.h>
+#include <libgda/gda-server-provider.h>
 
 #define PARENT_TYPE BONOBO_X_OBJECT_TYPE
 #define CLASS(provider) (GDA_SERVER_PROVIDER_CLASS (G_OBJECT_GET_CLASS (provider)))
@@ -53,7 +54,7 @@ impl_Provider_createConnection (PortableServer_Servant servant, CORBA_Environmen
 	GdaServerConnection *cnc;
 	GdaServerProvider *provider = (GdaServerProvider *) bonobo_x_object (servant);
 
-	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), CORBA_OBJECT_NIL);
+	bonobo_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), CORBA_OBJECT_NIL, ev);
 
 	cnc = gda_server_connection_new (provider);
 	if (GDA_IS_SERVER_CONNECTION (cnc))

@@ -61,10 +61,9 @@ impl_Connection_open (PortableServer_Servant servant,
 	gboolean result;
 	GdaQuarkList *params;
 	GNOME_Database_Client client_copy;
-	CORBA_Environment ev2;
 	GdaServerConnection *cnc = (GdaServerConnection *) bonobo_x_object (servant);
 
-	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), FALSE);
+	bonobo_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), FALSE, ev);
 
 	if (!cnc->priv->is_open) {
 		params = gda_quark_list_new_from_string (cnc_string);
@@ -86,9 +85,8 @@ impl_Connection_open (PortableServer_Servant servant,
 	result = TRUE;
 
 	/* add the new client to our list */
-	CORBA_exception_init (&ev2);
-	client_copy = CORBA_Object_duplicate (client, &ev2);
-	if (BONOBO_EX (&ev2))
+	client_copy = CORBA_Object_duplicate (client, ev);
+	if (BONOBO_EX (ev))
 		gda_log_error (_("Could not duplicate client object. Client won't get notifications"));
 	else {
 		cnc->priv->clients = g_list_append (cnc->priv->clients, client_copy);
@@ -110,19 +108,16 @@ impl_Connection_close (PortableServer_Servant servant,
 	GList *l;
 	GdaServerConnection *cnc = (GdaServerConnection *) bonobo_x_object (servant);
 
-	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), FALSE);
+	bonobo_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), FALSE, ev);
 
 	/* remove the client from our list */
 	for (l = g_list_first (cnc->priv->clients); l; l = l->next) {
 		GNOME_Database_Client tmp_client;
 		gboolean is_equal;
-		CORBA_Environment ev2;
-
-		CORBA_exception_init (&ev2);
 
 		tmp_client = (GNOME_Database_Client) l->data;
-		is_equal = CORBA_Object_is_equivalent (tmp_client, client, &ev2);
-		if (!BONOBO_EX (&ev2) && is_equal) {
+		is_equal = CORBA_Object_is_equivalent (tmp_client, client, ev);
+		if (!BONOBO_EX (ev) && is_equal) {
 			cnc->priv->clients = g_list_remove (cnc->priv->clients, tmp_client);
 			bonobo_object_release_unref (tmp_client, NULL);
 			gda_server_connection_notify_action (
@@ -157,7 +152,7 @@ impl_Connection_executeCommand (PortableServer_Servant servant,
 	GdaParameterList *param_list = NULL;
 	GdaServerConnection *cnc = (GdaServerConnection *) bonobo_x_object (servant);
 
-	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), NULL);
+	bonobo_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), NULL, ev);
 
 	recset_list = gda_server_provider_execute_command (cnc->priv->provider, cnc,
 							   (GdaCommand *) cmd, param_list);
@@ -192,7 +187,7 @@ impl_Connection_beginTransaction (PortableServer_Servant servant,
 	gboolean result;
 	GdaServerConnection *cnc = (GdaServerConnection *) bonobo_x_object (servant);
 
-	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), FALSE);
+	bonobo_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), FALSE, ev);
 
 	result = gda_server_provider_begin_transaction (cnc->priv->provider, cnc, trans_id);
 	if (!result)
@@ -217,7 +212,7 @@ impl_Connection_commitTransaction (PortableServer_Servant servant,
 	gboolean result;
 	GdaServerConnection *cnc = (GdaServerConnection *) bonobo_x_object (servant);
 
-	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), FALSE);
+	bonobo_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), FALSE, ev);
 
 	result = gda_server_provider_commit_transaction (cnc->priv->provider, cnc, trans_id);
 	if (!result)
@@ -241,7 +236,7 @@ impl_Connection_rollbackTransaction (PortableServer_Servant servant,
 	gboolean result;
 	GdaServerConnection *cnc = (GdaServerConnection *) bonobo_x_object (servant);
 
-	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), FALSE);
+	bonobo_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), FALSE, ev);
 
 	result = gda_server_provider_rollback_transaction (cnc->priv->provider, cnc, trans_id);
 	if (!result)

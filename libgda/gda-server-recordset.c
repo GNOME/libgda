@@ -96,7 +96,7 @@ impl_Recordset_describe (PortableServer_Servant servant, CORBA_Environment *ev)
 	GdaRowAttributes *attrs;
 	GdaServerRecordset *recset = (GdaServerRecordset *) bonobo_x_object (servant);
 
-	g_return_val_if_fail (GDA_IS_SERVER_RECORDSET (recset), NULL);
+	bonobo_return_val_if_fail (GDA_IS_SERVER_RECORDSET (recset), NULL, ev);
 
 	if (recset->priv->desc_func)
 		return recset->priv->desc_func (recset);
@@ -114,7 +114,7 @@ impl_Recordset_getRowCount (PortableServer_Servant servant, CORBA_Environment *e
 	GdaRow *row;
 	GdaServerRecordset *recset = (GdaServerRecordset *) bonobo_x_object (servant);
 
-	g_return_val_if_fail (GDA_IS_SERVER_RECORDSET (recset), 0);
+	bonobo_return_val_if_fail (GDA_IS_SERVER_RECORDSET (recset), 0, ev);
 
 	if (recset->priv->is_eof)
 		return recset->priv->rows->len;
@@ -135,7 +135,7 @@ impl_Recordset_moveFirst (PortableServer_Servant servant, CORBA_Environment *ev)
 {
 	GdaServerRecordset *recset = (GdaServerRecordset *) bonobo_x_object (servant);
 
-	g_return_val_if_fail (GDA_IS_SERVER_RECORDSET (recset), FALSE);
+	bonobo_return_val_if_fail (GDA_IS_SERVER_RECORDSET (recset), FALSE, ev);
 
 	recset->priv->current_pos = 0;
 	return TRUE;
@@ -146,7 +146,7 @@ impl_Recordset_moveNext (PortableServer_Servant servant, CORBA_Environment *ev)
 {
 	GdaServerRecordset *recset = (GdaServerRecordset *) bonobo_x_object (servant);
 
-	g_return_val_if_fail (GDA_IS_SERVER_RECORDSET (recset), FALSE);
+	bonobo_return_val_if_fail (GDA_IS_SERVER_RECORDSET (recset), FALSE, ev);
 
 	if (get_row (recset, recset->priv->current_pos + 1)) {
 		recset->priv->current_pos++;
@@ -161,7 +161,7 @@ impl_Recordset_movePrevious (PortableServer_Servant servant, CORBA_Environment *
 {
 	GdaServerRecordset *recset = (GdaServerRecordset *) bonobo_x_object (servant);
 
-	g_return_val_if_fail (GDA_IS_SERVER_RECORDSET (recset), FALSE);
+	bonobo_return_val_if_fail (GDA_IS_SERVER_RECORDSET (recset), FALSE, ev);
 
 	if (recset->priv->current_pos > 0) {
 		recset->priv->current_pos--;
@@ -176,11 +176,10 @@ impl_Recordset_moveLast (PortableServer_Servant servant, CORBA_Environment *ev)
 {
 	GdaServerRecordset *recset = (GdaServerRecordset *) bonobo_x_object (servant);
 
-	g_return_val_if_fail (GDA_IS_SERVER_RECORDSET (recset), FALSE);
+	bonobo_return_val_if_fail (GDA_IS_SERVER_RECORDSET (recset), FALSE, ev);
 
-	while (get_row (recset, recset->priv->current_pos)) {
+	while (get_row (recset, recset->priv->current_pos))
 		recset->priv->current_pos++;
-	}
 
 	return recset->priv->is_eof;
 }
@@ -192,7 +191,7 @@ impl_Recordset_fetch (PortableServer_Servant servant, CORBA_Environment *ev)
 	GdaRow *row_dup;
 	GdaServerRecordset *recset = (GdaServerRecordset *) bonobo_x_object (servant);
 
-	g_return_val_if_fail (GDA_IS_SERVER_RECORDSET (recset), NULL);
+	bonobo_return_val_if_fail (GDA_IS_SERVER_RECORDSET (recset), NULL, ev);
 
 	if (recset->priv->fetch_func) {
 		row = get_row (recset, recset->priv->current_pos);

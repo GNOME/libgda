@@ -1,3 +1,8 @@
+2001-12-20  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-server-connection.c:
+	* gda-server-provider.c: s/g_return*_if_fail/bonobo_return*_if_fail
+
 2001-12-19  Cleber Rodrigues <cleberrrjr@bol.com.br>
 
 	* gda-xql-*: ported GDA XML Query stuff to GNOME 2
