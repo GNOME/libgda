@@ -1,3 +1,10 @@
+2003-08-13  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* libgda/gda-config.[ch] (gda_config_save_data_source_info):
+	new function.
+
+	* configure.in: bumped version number.
+
 2003-08-10  Akira TAGOH <tagoh@gnome-db.org>
 
 	* configure.in: fixed typo to build the freetds backend correctly.
