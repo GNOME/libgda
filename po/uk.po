@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
 "POT-Creation-Date: 2003-03-07 17:08+0200\n"
-"PO-Revision-Date: 2003-03-07 11:30--500\n"
+"PO-Revision-Date: 2003-03-07 11:41--500\n"
 "Last-Translator: Yuriy Syrota <yuri@renome.rovno.ua>\n"
 "Language-Team: Ukrainian <uk@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -346,11 +346,11 @@ msgstr ""
 
 #: providers/freetds/gda-freetds-provider.c:208
 msgid "Error creating message container."
-msgstr ""
+msgstr "Помилка створення контейнера повідомлень."
 
 #: providers/freetds/gda-freetds-provider.c:215
 msgid "Error creating error container."
-msgstr ""
+msgstr "Помилка створення контейнера помилок."
 
 #: providers/freetds/gda-freetds-provider.c:253
 #: providers/freetds/gda-freetds-provider.c:255
@@ -394,9 +394,8 @@ msgstr "Повідомлення: %d, рівень: %d, стан: %d, серве
 #: providers/oracle/utils.c:71
 #: providers/postgres/utils.c:51
 #: providers/sybase/utils.c:171
-#, fuzzy
 msgid "Not available"
-msgstr "%p не є вірною таблицею"
+msgstr "Не доступно"
 
 #: providers/freetds/gda-freetds-recordset.c:362
 msgid "Error processing result rows.\n"
@@ -512,9 +511,8 @@ msgstr "Мова"
 #: providers/ibmdb2/gda-ibmdb2-provider.c:894
 #: providers/ibmdb2/gda-ibmdb2-provider.c:922
 #: providers/ibmdb2/gda-ibmdb2-provider.c:1003
-#, fuzzy
 msgid "SQL Definition"
-msgstr "Опис"
+msgstr "Означення SQL"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/ibmdb2/gda-ibmdb2-provider.c:919
@@ -567,9 +565,8 @@ msgstr "Коментарі"
 #: providers/postgres/gda-postgres-provider.c:1126
 #: providers/sqlite/gda-sqlite-provider.c:754
 #: providers/sybase/gda-sybase-provider.c:913
-#, fuzzy
 msgid "GDA type"
-msgstr "Тип даних"
+msgstr "Тип GDA"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/ibmdb2/gda-ibmdb2-provider.c:975
@@ -611,16 +608,14 @@ msgstr ""
 #: providers/ldap/gda-ldap-recordset.c:298
 #: providers/mysql/gda-mysql-recordset.c:303
 #: providers/oracle/gda-oracle-recordset.c:484
-#, fuzzy
 msgid "Could not retrieve column's information"
-msgstr "Не вдалося створити компонент з'єднання"
+msgstr "Не вдалось отримати інформацію про стовпчик"
 
 #: providers/ldap/gda-ldap-recordset.c:316
 #: providers/mysql/gda-mysql-recordset.c:321
 #: providers/oracle/gda-oracle-recordset.c:502
-#, fuzzy
 msgid "Could not retrieve column's value"
-msgstr "Не вдалося отримати файл з %s"
+msgstr "Не вдалось отримати значення стовпчика"
 
 #: providers/ldap/libmain.c:42
 msgid "Provider for LDAP directory"
@@ -659,7 +654,7 @@ msgstr "Транзакції не підтримуються постачаль�
 #: providers/postgres/gda-postgres-provider.c:1359
 #: providers/sqlite/gda-sqlite-provider.c:630
 msgid "Default value"
-msgstr ""
+msgstr "Значення без обумовлення"
 
 #: providers/mdb/gda-mdb-provider.c:547
 #: providers/mysql/gda-mysql-provider.c:702
@@ -675,7 +670,7 @@ msgstr "Тип повернення"
 
 #: providers/mdb/gda-mdb-provider.c:551
 msgid "# of args"
-msgstr ""
+msgstr "К-ть аргументів"
 
 #: providers/mdb/gda-mdb-provider.c:552
 #: providers/mysql/gda-mysql-provider.c:706
@@ -698,14 +693,12 @@ msgid "Definition"
 msgstr "Означення"
 
 #: providers/mdb/gda-mdb-provider.c:657
-#, fuzzy
 msgid "GDA Type"
-msgstr "Тип даних"
+msgstr "Тип GDA"
 
 #: providers/mdb/gda-mdb-provider.c:659
-#, fuzzy
 msgid "Boolean type"
-msgstr "Тип даних"
+msgstr "Логічний тип"
 
 #: providers/mdb/gda-mdb-provider.c:660
 msgid "1-byte integers"
