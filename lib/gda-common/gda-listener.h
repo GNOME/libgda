@@ -23,9 +23,7 @@
 #if !defined(__gda_listener_h__)
 #  define __gda_listener_h__
 
-#include <glib.h>
 #include <bonobo/bonobo-xobject.h>
-#include <GDA.h>
 #include <gda-common-defs.h>
 
 G_BEGIN_DECLS
@@ -35,10 +33,10 @@ typedef struct _GdaListenerClass GdaListenerClass;
 typedef struct _GdaListenerPrivate GdaListenerPrivate;
 
 #define GDA_TYPE_LISTENER            (gda_listener_get_type ())
-#define GDA_LISTENER(obj)            GTK_CHECK_CAST(obj, GDA_TYPE_LISTENER, GdaListener)
-#define GDA_LISTENER_CLASS(klass)    GTK_CHECK_CLASS_CAST(klass, GDA_TYPE_LISTENER, GdaListenerClass)
-#define GDA_IS_LISTENER(obj)         GTK_CHECK_TYPE(obj, GDA_TYPE_LISTENER)
-#define GDA_IS_LISTENER_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_LISTENER))
+#define GDA_LISTENER(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_LISTENER, GdaListener))
+#define GDA_LISTENER_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_LISTENER, GdaListenerClass))
+#define GDA_IS_LISTENER(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_LISTENER))
+#define GDA_IS_LISTENER_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GDA_TYPE_LISTENER))
 
 struct _GdaListener {
 	BonoboXObject object;

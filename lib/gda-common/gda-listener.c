@@ -27,7 +27,7 @@ struct _GdaListenerPrivate {
 
 static void gda_listener_class_init (GdaListenerClass * klass);
 static void gda_listener_init       (GdaListener * listener, GdaListenerClass *klass);
-static void gda_listener_destroy    (GObject * object);
+static void gda_listener_finalize   (GObject * object);
 
 enum {
 	NOTIFY_ACTION,
@@ -89,9 +89,9 @@ gda_listener_init (GdaListener * listener)
 }
 
 static void
-gda_listener_destroy (GtkObject * object)
+gda_listener_finalize (GObject * object)
 {
-	GtkObjectClass *parent_class;
+	GObjectClass *parent_class;
 	GdaListener *listener = (GdaListener *) object;
 
 	g_return_if_fail (GDA_IS_LISTENER (listener));
@@ -99,9 +99,9 @@ gda_listener_destroy (GtkObject * object)
 	/* free memory */
 	g_free (listener->priv);
 
-	parent_class = gtk_type_class (BONOBO_X_OBJECT_TYPE);
-	if (parent_class && parent_class->destroy)
-		parent_class->destroy (object);
+	parent_class = g_type_peek_class_parent (BONOBO_X_OBJECT_TYPE);
+	if (parent_class && parent_class->finalize)
+		parent_class->finalize (object);
 }
 
 GtkType

@@ -33,22 +33,16 @@ typedef struct _GdaError GdaError;
 typedef struct _GdaErrorClass GdaErrorClass;
 
 #define GDA_TYPE_ERROR            (gda_error_get_type())
-#define GDA_ERROR(obj)            GTK_CHECK_CAST(obj, GDA_TYPE_ERROR, GdaError)
-#define GDA_ERROR_CLASS(klass)    GTK_CHECK_CLASS_CAST(klass, GDA_TYPE_ERROR, GdaErrorClass)
-#define GDA_IS_ERROR(obj)         GTK_CHECK_TYPE(obj, GDA_TYPE_ERROR)
-#define GDA_IS_ERROR_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_ERROR))
+#define GDA_ERROR(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_ERROR, GdaError))
+#define GDA_ERROR_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_ERROR, GdaErrorClass))
+#define GDA_IS_ERROR(obj)         (G_TYPE_CHECK_INSTANCE_TYPE(obj, GDA_TYPE_ERROR))
+#define GDA_IS_ERROR_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), GDA_TYPE_ERROR))
+
+typedef struct _GdaErrorPrivate GdaErrorPrivate;
 
 struct _GdaError {
 	GObject object;
-
-	gchar *description;
-	glong number;
-	gchar *source;
-	gchar *helpurl;
-	gchar *helpctxt;
-	gchar *sqlstate;
-	gchar *native;
-	gchar *realcommand;
+	GdaErrorPrivate *priv;
 };
 
 struct _GdaErrorClass {
@@ -63,7 +57,8 @@ void          gda_error_to_exception (GdaError * error,
 				      CORBA_Environment * ev);
 void          gda_error_list_to_exception (GList * error_list,
 					   CORBA_Environment * ev);
-GDA_ErrorSeq *gda_error_list_to_corba_seq (GList * error_list);
+GNOME_Database_ErrorSeq *
+              gda_error_list_to_corba_seq (GList * error_list);
 void          gda_error_free (GdaError * error);
 void          gda_error_list_free (GList * errors);
 

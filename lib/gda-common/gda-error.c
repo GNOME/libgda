@@ -22,12 +22,16 @@
 #include "gda-error.h"
 #include "GNOME_Database.h"
 
-enum {
-	/* add signals here */
-	GDA_ERROR_LAST_SIGNAL
+struct _GdaErrorPrivate {
+	gchar *description;
+	glong number;
+	gchar *source;
+	gchar *helpurl;
+	gchar *helpctxt;
+	gchar *sqlstate;
+	gchar *native;
+	gchar *realcommand;
 };
-
-static gint gda_error_signals[GDA_ERROR_LAST_SIGNAL] = { 0, };
 
 static void gda_error_class_init (GdaErrorClass * klass);
 static void gda_error_init (GdaError * error, GdaErrorClass *klass);
@@ -39,16 +43,18 @@ gda_error_get_type (void)
 	static GType type = 0;
 
 	if (!type) {
-		GtkTypeInfo info = {
-			"GdaError",
-			sizeof (GdaError),
+		static const GTypeInfo info = {
 			sizeof (GdaErrorClass),
-			(GtkClassInitFunc) gda_error_class_init,
-			(GtkObjectInitFunc) gda_error_init,
-			(GtkArgSetFunc) NULL,
-			(GtkArgSetFunc) NULL,
+			(GBaseInitFunc) NULL,
+			(GBaseFinalizeFunc) NULL,
+			(GClassInitFunc) gda_error_class_init,
+			NULL,
+			NULL,
+			sizeof (GdaError),
+			0,
+			(GInstanceInitFunc) gda_error_init
 		};
-		type = gtk_type_unique (gtk_object_get_type (), &info);
+		type = g_type_register_static (G_TYPE_OBJECT, "GdaError", &info, 0);
 	}
 	return type;
 }
@@ -56,25 +62,16 @@ gda_error_get_type (void)
 static void
 gda_error_class_init (GdaErrorClass * klass)
 {
-	GtkObjectClass *object_class;
+	GObjectClass *object_class;
 
-	object_class = (GtkObjectClass *) klass;
-	object_class->destroy = gda_error_destroy;
+	object_class = (GObjectClass *) klass;
+	object_class->finalize = gda_error_finalize;
 }
 
 static void
 gda_error_init (GdaError * error, GdaErrorClass *klass)
 {
-	g_return_if_fail (GDA_IS_ERROR (error));
-
-	error->description = NULL;
-	error->number = -1;
-	error->source = NULL;
-	error->helpurl = NULL;
-	error->helpctxt = NULL;
-	error->sqlstate = NULL;
-	error->native = NULL;
-	error->realcommand = NULL;
+	error->priv = g_new0 (GdaErrorPrivate, 1);
 }
 
 /*
@@ -90,7 +87,7 @@ gda_error_new (void)
 {
 	GdaError *error;
 
-	error = GDA_ERROR (g_object_new (gda_error_get_type ()));
+	error = GDA_ERROR (g_object_new (GDA_TYPE_ERROR, NULL));
 	return error;
 }
 
@@ -115,87 +112,57 @@ gda_error_list_from_exception (CORBA_Environment * ev)
 	case CORBA_NO_EXCEPTION:
 		return NULL;
 	case CORBA_SYSTEM_EXCEPTION:{
-			CORBA_SystemException *sysexc;
+		CORBA_SystemException *sysexc;
 
-			sysexc = CORBA_exception_value (ev);
-			error = gda_error_new ();
-			error->source = g_strdup ("[CORBA System Exception]");
-			switch (sysexc->minor) {
-			case ex_CORBA_COMM_FAILURE:
-				error->description =
-					g_strdup_printf (_
-							 ("%s: The server didn't respond."),
-							 CORBA_exception_id
-							 (ev));
-				break;
-			default:
-				error->description =
-					g_strdup (_
-						  ("%s: An Error occured in the CORBA system."));
-				break;
-			}
-			all_errors = g_list_append (all_errors, error);
-			break;
-		}
+		sysexc = CORBA_exception_value (ev);
+		error = gda_error_new ();
+		gda_error_set_source (error, "[CORBA System Exception]");
+		gda_error_set_description (error,
+					   _("%s: An Error occured in the CORBA system."));
+		all_errors = g_list_append (all_errors, error);
+		break;
+	}
 	case CORBA_USER_EXCEPTION:{
-			if (strcmp
-			    (CORBA_exception_id (ev),
-			     ex_GDA_NotSupported) == 0) {
-				GDA_NotSupported *not_supported_error;
+		if (strcmp (CORBA_exception_id (ev), ex_GNOME_Database_NotSupported) == 0) {
+			GNOME_Database_NotSupported *not_supported_error;
 
-				not_supported_error =
-					(GDA_NotSupported *) ev->_params;
-				error = gda_error_new ();
-				gda_error_set_source (error,
-						      _
-						      ("[CORBA User Exception]"));
-				gda_error_set_description (error,
-							   not_supported_error->
-							   errormsg);
-				all_errors =
-					g_list_append (all_errors, error);
-			}
-			else if (strcmp
-				 (CORBA_exception_id (ev),
-				  ex_GDA_DriverError) == 0) {
-				GDA_ErrorSeq error_sequence =
-					((GDA_DriverError *) ev->_params)->
-					errors;
-				gint idx;
-
-				for (idx = 0; idx < error_sequence._length;
-				     idx++) {
-					GDA_Error *gda_error =
-						&error_sequence._buffer[idx];
-
-					error = gda_error_new ();
-					if (gda_error->source)
-						gda_error_set_source (error,
-								      gda_error->
-								      source);
-					gda_error_set_number (error,
-							      gda_error->
-							      number);
-					if (gda_error->sqlstate)
-						gda_error_set_sqlstate (error,
-									gda_error->
-									sqlstate);
-					if (gda_error->nativeMsg)
-						gda_error_set_native (error,
-								      gda_error->
-								      nativeMsg);
-					if (gda_error->description)
-						gda_error_set_description
-							(error,
-							 gda_error->
-							 description);
-					all_errors =
-						g_list_append (all_errors,
-							       error);
-				}
-			}
-			break;
+			not_supported_error = (GNOME_Database_NotSupported *) &ev->_any;
+			error = gda_error_new ();
+			gda_error_set_source (error,
+					      _("[CORBA User Exception]"));
+			gda_error_set_description (
+				error, not_supported_error->errormsg);
+			all_errors = g_list_append (all_errors, error);
 		}
+		else if (strcmp (CORBA_exception_id (ev), ex_GNOME_Database_DriverError) == 0) {
+			GNOME_Database_ErrorSeq error_sequence =
+				((GNOME_Database_DriverError *) &ev->_any)->errors;
+			gint idx;
+
+			for (idx = 0; idx < error_sequence._length; idx++) {
+				GNOME_Database_Error *gda_error =
+					&error_sequence._buffer[idx];
+
+				error = gda_error_new ();
+				if (gda_error->source)
+					gda_error_set_source (error,
+							      gda_error->source);
+				gda_error_set_number (error,
+						      gda_error->number);
+				if (gda_error->sqlstate)
+					gda_error_set_sqlstate (error,
+								gda_error->sqlstate);
+				if (gda_error->nativeMsg)
+					gda_error_set_native (error,
+							      gda_error->nativeMsg);
+				if (gda_error->description)
+					gda_error_set_description (error,
+								   gda_error->description);
+				all_errors = g_list_append (all_errors, error);
+			}
+		}
+		break;
+	}
 	default:
 		g_error (_("Unknown CORBA exception for connection"));
 	}
@@ -225,34 +192,35 @@ gda_error_to_exception (GdaError * error, CORBA_Environment * ev)
 void
 gda_error_list_to_exception (GList * error_list, CORBA_Environment * ev)
 {
-	GDA_DriverError *exception;
-	GDA_ErrorSeq *corba_errors;
+	GNOME_Database_DriverError *exception;
+	GNOME_Database_ErrorSeq *corba_errors;
 	gint count;
 
 	g_return_if_fail (ev != NULL);
 
-	exception = GDA_DriverError__alloc ();
+	exception = GNOME_Database_DriverError__alloc ();
 	corba_errors = gda_error_list_to_corba_seq (error_list);
-	memcpy (&exception->errors, corba_errors, sizeof (GDA_ErrorSeq));
+	memcpy (&exception->errors, corba_errors, sizeof (GNOME_Database_ErrorSeq));
 	exception->realcommand = CORBA_string_dup (g_get_prgname ());
-	CORBA_exception_set (ev, CORBA_USER_EXCEPTION, ex_GDA_DriverError,
+	CORBA_exception_set (ev, CORBA_USER_EXCEPTION,
+			     ex_GNOME_Database_DriverError,
 			     exception);
 }
 
-GDA_ErrorSeq *
+GNOME_Database_ErrorSeq *
 gda_error_list_to_corba_seq (GList * error_list)
 {
 	GList *l;
 	gint count;
 	gint i;
-	GDA_ErrorSeq *rc;
+	GNOME_Database_ErrorSeq *rc;
 
 	count = error_list != NULL ? g_list_length (error_list) : 0;
 
-	rc = GDA_ErrorSeq__alloc ();
+	rc = GNOME_Database_ErrorSeq__alloc ();
 	CORBA_sequence_set_release (rc, TRUE);
 	rc->_length = count;
-	rc->_buffer = CORBA_sequence_GDA_Error_allocbuf (count);
+	rc->_buffer = CORBA_sequence_GNOME_Database_Error_allocbuf (count);
 
 	for (l = g_list_first (error_list), i = 0;
 	     l != NULL; l = g_list_next (l), i++) {
@@ -268,7 +236,7 @@ gda_error_list_to_corba_seq (GList * error_list)
 
 			rc->_buffer[i].description =
 				CORBA_string_dup (desc ? desc : "<Null>");
-			rc->_buffer[i].number = error->number;
+			rc->_buffer[i].number = error->priv->number;
 			rc->_buffer[i].source =
 				CORBA_string_dup (source ? source : "<Null>");
 			rc->_buffer[i].sqlstate =
@@ -289,20 +257,23 @@ gda_error_finalize (GObject * object)
 
 	g_return_if_fail (GDA_IS_ERROR (error));
 
-	if (error->description)
-		g_free (error->description);
-	if (error->source)
-		g_free (error->source);
-	if (error->helpurl)
-		g_free (error->helpurl);
-	if (error->helpctxt)
-		g_free (error->helpctxt);
-	if (error->sqlstate)
-		g_free (error->sqlstate);
-	if (error->native)
-		g_free (error->native);
-	if (error->realcommand)
-		g_free (error->realcommand);
+	if (error->priv->description)
+		g_free (error->priv->description);
+	if (error->priv->source)
+		g_free (error->priv->source);
+	if (error->priv->helpurl)
+		g_free (error->priv->helpurl);
+	if (error->priv->helpctxt)
+		g_free (error->priv->helpctxt);
+	if (error->priv->sqlstate)
+		g_free (error->priv->sqlstate);
+	if (error->priv->native)
+		g_free (error->priv->native);
+	if (error->priv->realcommand)
+		g_free (error->priv->realcommand);
+
+	g_free (error->priv);
+	error->priv = NULL;
 
 	parent_class = g_type_peek_parent_class (g_object_get_type ());
 	if (parent_class && parent_class->finalize)
@@ -352,7 +323,7 @@ const gchar *
 gda_error_get_description (GdaError * error)
 {
 	g_return_val_if_fail (GDA_IS_ERROR (error), NULL);
-	return error->description;
+	return error->priv->description;
 }
 
 void
@@ -360,30 +331,30 @@ gda_error_set_description (GdaError * error, const gchar * description)
 {
 	g_return_if_fail (GDA_IS_ERROR (error));
 
-	if (error->description)
-		g_free (error->description);
-	error->description = g_strdup (description);
+	if (error->priv->description)
+		g_free (error->priv->description);
+	error->priv->description = g_strdup (description);
 }
 
 const glong
 gda_error_get_number (GdaError * error)
 {
 	g_return_val_if_fail (GDA_IS_ERROR (error), -1);
-	return error->number;
+	return error->priv->number;
 }
 
 void
 gda_error_set_number (GdaError * error, glong number)
 {
 	g_return_if_fail (GDA_IS_ERROR (error));
-	error->number = number;
+	error->priv->number = number;
 }
 
 const gchar *
 gda_error_get_source (GdaError * error)
 {
 	g_return_val_if_fail (GDA_IS_ERROR (error), 0);
-	return error->source;
+	return error->priv->source;
 }
 
 void
@@ -391,16 +362,16 @@ gda_error_set_source (GdaError * error, const gchar * source)
 {
 	g_return_if_fail (GDA_IS_ERROR (error));
 
-	if (error->source)
-		g_free (error->source);
-	error->source = g_strdup (source);
+	if (error->priv->source)
+		g_free (error->priv->source);
+	error->priv->source = g_strdup (source);
 }
 
 const gchar *
 gda_error_get_help_url (GdaError * error)
 {
 	g_return_val_if_fail (GDA_IS_ERROR (error), 0);
-	return error->helpurl;
+	return error->priv->helpurl;
 }
 
 void
@@ -408,16 +379,16 @@ gda_error_set_help_url (GdaError * error, const gchar * helpurl)
 {
 	g_return_if_fail (GDA_IS_ERROR (error));
 
-	if (error->helpurl)
-		g_free (error->helpurl);
-	error->helpurl = g_strdup (helpurl);
+	if (error->priv->helpurl)
+		g_free (error->priv->helpurl);
+	error->priv->helpurl = g_strdup (helpurl);
 }
 
 const gchar *
 gda_error_get_help_context (GdaError * error)
 {
 	g_return_val_if_fail (GDA_IS_ERROR (error), NULL);
-	return (const gchar *) error->helpctxt;
+	return (const gchar *) error->priv->helpctxt;
 }
 
 void
@@ -425,16 +396,16 @@ gda_error_set_help_context (GdaError * error, const gchar * helpctxt)
 {
 	g_return_if_fail (GDA_IS_ERROR (error));
 
-	if (error->helpctxt)
-		g_free (error->helpctxt);
-	error->helpctxt = g_strdup (helpctxt);
+	if (error->priv->helpctxt)
+		g_free (error->priv->helpctxt);
+	error->priv->helpctxt = g_strdup (helpctxt);
 }
 
 const gchar *
 gda_error_get_sqlstate (GdaError * error)
 {
 	g_return_val_if_fail (GDA_IS_ERROR (error), NULL);
-	return error->sqlstate;
+	return error->priv->sqlstate;
 }
 
 void
@@ -442,16 +413,16 @@ gda_error_set_sqlstate (GdaError * error, const gchar * sqlstate)
 {
 	g_return_if_fail (GDA_IS_ERROR (error));
 
-	if (error->sqlstate)
-		g_free (error->sqlstate);
-	error->sqlstate = g_strdup (sqlstate);
+	if (error->priv->sqlstate)
+		g_free (error->priv->sqlstate);
+	error->priv->sqlstate = g_strdup (sqlstate);
 }
 
 const gchar *
 gda_error_get_native (GdaError * error)
 {
 	g_return_val_if_fail (GDA_IS_ERROR (error), NULL);
-	return error->native;
+	return error->priv->native;
 }
 
 void
@@ -459,16 +430,16 @@ gda_error_set_native (GdaError * error, const gchar * native)
 {
 	g_return_if_fail (GDA_IS_ERROR (error));
 
-	if (error->native)
-		g_free (error->native);
-	error->native = g_strdup (native);
+	if (error->priv->native)
+		g_free (error->priv->native);
+	error->priv->native = g_strdup (native);
 }
 
 const gchar *
 gda_error_get_real_command (GdaError * error)
 {
 	g_return_val_if_fail (GDA_IS_ERROR (error), NULL);
-	return error->realcommand;
+	return error->priv->realcommand;
 }
 
 void
@@ -476,7 +447,7 @@ gda_error_set_real_command (GdaError * error, const gchar * realcommand)
 {
 	g_return_if_fail (GDA_IS_ERROR (error));
 
-	if (error->realcommand)
-		g_free (error->realcommand);
-	error->realcommand = g_strdup (realcommand);
+	if (error->priv->realcommand)
+		g_free (error->priv->realcommand);
+	error->priv->realcommand = g_strdup (realcommand);
 }
