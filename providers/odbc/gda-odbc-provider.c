@@ -222,7 +222,7 @@ gda_odbc_provider_open_connection (GdaServerProvider *provider,
 
 	/* get version info */
 
-	rc = SQLGetInfo ( priv_data->hdbc, SQL_DRIVER_VER,
+	rc = SQLGetInfo ( priv_data->hdbc, SQL_DBMS_VER,
 			priv_data->version, sizeof( priv_data->version ), NULL );
 
 	if ( !SQL_SUCCEEDED( rc )) {

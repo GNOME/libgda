@@ -1,3 +1,11 @@
+2003-01-10  Jon Willeke <willeke@users.sourceforge.net>
+
+	Fixes #131046
+
+	* providers/odbc/gda-odbc-provider.c
+	(gda_odbc_provider_open_connection): retrieve the DBMS version, not
+	the driver version.
+
 2004-01-10  Jon Willeke <willeke@users.sourceforge.net>
 
 	Fixes #130838
