@@ -113,6 +113,7 @@ gda_xml_item_destroy (GtkObject *object)
 	destroy_reflist (item->priv->reflist);
 	gda_xml_item_free (item->priv->parent);
 	g_free (item->priv);
+	item->priv = NULL;
 
 	parent_class = gtk_type_class (gtk_object_get_type ());
 	if (parent_class && parent_class->destroy)
