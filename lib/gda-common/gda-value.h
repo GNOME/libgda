@@ -24,7 +24,7 @@
 #if !defined(__gda_value_h__)
 #  define __gda_value_h__
 
-#include <gda-common-defs.h>
+#include <glib/gmacros.h>
 #include <GNOME_Database.h>
 
 G_BEGIN_DECLS

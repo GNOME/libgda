@@ -1,3 +1,7 @@
+2001-10-07  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* Makefile.am: adapted to new IDL files
+
 2001-09-11  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-data-model-list.[ch]: new data model-based class

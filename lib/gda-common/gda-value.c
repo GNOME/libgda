@@ -28,6 +28,10 @@
 
 /**
  * gda_value_new
+ *
+ * Create a new #GdaValue object.
+ *
+ * Returns: a pointer to the newly allocated object.
  */
 GdaValue *
 gda_value_new (void)

@@ -1,5 +1,8 @@
 /* GDA Common Library
- * Copyright (C) 2000 Rodrigo Moya
+ * Copyright (C) 1998-2001 The Free Software Foundation
+ *
+ * AUTHORS:
+ *	Rodrigo Moya <rodrigo@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -20,26 +23,7 @@
 #if !defined(__gda_common_h__)
 #  define __gda_common_h__
 
-/*
- * This is the main header file for the libgda-common library
- */
-
-#include <gda-config.h>
-#include <gda-corba.h>
-#include <gda-data-model.h>
-#include <gda-error.h>
-#include <gda-field.h>
-#include <gda-listener.h>
-#include <gda-log.h>
-#include <gda-quark-list.h>
-#include <gda-util.h>
-#include <gda-xml-document.h>
-#include <gda-xml-database.h>
-#include <gda-xml-atom-item.h>
-#include <gda-xml-bin-item.h>
-#include <gda-xml-item.h>
-#include <gda-xml-list-item.h>
-#include <gda-xml-util.h>
+#include <gda-value.h>
 
 G_BEGIN_DECLS
 
@@ -47,7 +31,7 @@ void gda_init (const gchar *app_id, const gchar *version, gint nargs, gchar *arg
 
 typedef void (* GdaInitFunc) (gpointer user_data);
 
-void gda_main_run (GdaInitFunc init_func, gpointer user_data);
+void gda_main_run  (GdaInitFunc init_func, gpointer user_data);
 void gda_main_quit (void);
 
 G_END_DECLS
