@@ -1,5 +1,5 @@
 # Italian Translation
-# Copyright (C) YEAR Free Software Foundation, Inc.
+# Copyright (C) 2000 Free Software Foundation, Inc.
 # Daniele Medri <madrid@linux.it>, 2000.
 # Clara Tattoni <clara.tattoni@libero.it>, 2001.
 # Marco Ciampa <ciampix@libero.it>, 2003.
@@ -11,11 +11,10 @@ msgstr ""
 "POT-Creation-Date: 2003-07-03 16:39+0200\n"
 "PO-Revision-Date: 2003-05-06 16:57+0200\n"
 "Last-Translator: Marco Ciampa <ciampix@libero.it>\n"
-"Language-Team: Italian <it@li.org>\n"
+"Language-Team: Italian <tp@lists.linux.it>, <it@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: KBabel 0.9.6\n"
 
 #: libgda/gda-client.c:312 libgda/gda-client.c:515 libgda/gda-connection.c:218
 #, c-format
@@ -770,9 +769,8 @@ msgid "Provider for Microsoft Access files"
 msgstr "Provider per file Microsoft Access"
 
 #: providers/msql/gda-msql-libmain.c:41
-#, fuzzy
 msgid "Provider for Hughes Technologies mSQL databases"
-msgstr "Provider per database PostgreSQL"
+msgstr "Provider per database mSQL della Hughes Technologies"
 
 #: providers/msql/gda-msql-provider.c:230
 #: providers/msql/gda-msql-provider.c:273
@@ -780,38 +778,34 @@ msgstr "Provider per database PostgreSQL"
 #: providers/msql/gda-msql-provider.c:551
 #: providers/msql/gda-msql-recordset.c:50
 #: providers/msql/gda-msql-recordset.c:138
-#, fuzzy
 msgid "Invalid mSQL handle"
-msgstr "Handle MySQL non valido"
+msgstr "Handle mSQL non valido"
 
 #: providers/msql/gda-msql-provider.c:318
 msgid "mSQL allows database creation only through the msqladmin tool."
-msgstr ""
+msgstr "mSQL permette la creazione del database solo attraverso lo strumento msqladmin"
 
 #: providers/msql/gda-msql-provider.c:331
 msgid "mSQL allows database drops only through the msqladmin tool."
-msgstr ""
+msgstr "mSQL permette la cancellazione del database sono attraverso lo strumento msqladmin"
 
 #: providers/msql/gda-msql-provider.c:376
 #: providers/msql/gda-msql-provider.c:389
 #: providers/msql/gda-msql-provider.c:402
 msgid "mSQL doesn't support transactions."
-msgstr ""
+msgstr "mSQL non supporta le transazioni"
 
 #: providers/msql/gda-msql-provider.c:486
-#, fuzzy
 msgid "Title"
-msgstr "Tabella"
+msgstr "Titolo"
 
 #: providers/msql/gda-msql-provider.c:536
-#, fuzzy
 msgid "Field Name"
 msgstr "Nome campo"
 
 #: providers/msql/gda-msql-provider.c:540
-#, fuzzy
 msgid "Not null"
-msgstr "Non null?"
+msgstr "Non null"
 
 #: providers/msql/gda-msql-provider.c:557
 #: providers/msql/gda-msql-provider.c:563
@@ -823,7 +817,6 @@ msgstr ""
 "parametri"
 
 #: providers/msql/gda-msql-recordset.c:57
-#, fuzzy
 msgid "Row number out of bounds"
 msgstr "Numero riga fuori capacità"
 
