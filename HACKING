@@ -1,0 +1,124 @@
+
+Hacking on libGDA
+-------------------
+
+   When writing libGDA, I have tried to write the code with various
+goals in mind: 
+
+	- code has to be maintainable.
+	- code needs to be documented.
+	- code has to be good.
+	- has to be extensible.
+	- code has to make sense.
+
+    When you submit code to me for inclusion in libGDA, or when you
+modify the sources directly on the CVS repository, please keep those
+things in mind.  Specifically, this means:
+
+	- Make sure your code does not generate warnings at all.
+	- Please follow the coding style used libGDA.
+
+The libGDA coding style.
+--------------------------
+
+   The coding style of libGDA is a mix of various styles, make
+yourself familiar with the GNU coding standards (shipped with most
+GNU/Linux systems as the standards.info file), then read the Linux
+kernel coding standards and ignore Linus' jokes.  Then look at the
+Gtk+ header files to get aquainted on how to write nice header files
+that are almost self documenting. 
+
+   Remember: Use 8 space tabs for indentation: that will keep your
+code honest as you will be forced to split your routines in more
+modular chunks (as detailed by Linus). 
+   
+   Emacs users can get the default indentation style with this:
+  (set-c-style "K&R")
+  (setq c-basic-offset 8)
+
+   Do not put a space between a closing parent and an opening bracket.
+
+   On top of that, you will have to:
+
+	- Follow the Gtk+ cleanliness conventions for function
+	  prototypes.
+
+	- Follow the Gtk+ namespace convention for function names. 
+	  module_submodule_operation
+
+	- Make sure your code does not have a single warning (with the
+	  default strong warnings that libGDA compiles with) before
+	  your code is submited.
+
+	- Every entry point to a public routine should use the
+	  g_return_if_fail and g_return_val_if_fail macros to verify
+	  that the parameters passed are valid.
+
+	- Use g_assert internally to establish pre-conditions on the
+	  non-exported routines.
+
+	- Under no circunstances use magic variables.  Use typedef
+	  enum { ... } type; to create enumerations.  Do not use
+	  integers to hold references to enumerations, the compiler
+	  can help catch various errors.
+
+	- Use g_warning to mark spots that need to be reviewed or are
+	  not finished to let me fix it eventually.
+
+	- Do not submit code that is just a temporary workaround for a
+	  full fledged feature.  i.e. don't submit a quick hack at
+	  "search text" which is not designed to be expanded upon.  I
+	  do not want to maintain limited features.
+
+	  It is better submit an implementation that has been designed
+	  to be expanded and enhanced, even if it is not completely finished.
+
+	- It is more important to be correct than to be fast.  
+
+	- Do not optimize unnecesarly.  Do profile, do look for the
+	  weak spots before applying "optimization by feeling".  This
+	  is not a Ouija-based project. 
+
+	- It is more important to keep the code maintainable and
+	  readable than to be fast.  If you have a great idea about
+	  optimizing the code, make sure it is implemented cleanly,
+	  that there is a clean and maintainable way to do it:  
+
+    - Fast code that is difficult to maintain has no place in
+	  libGDA and will be dropped.
+
+	- Do not overuse const; there is a great danger that const
+	  will be overused and whilst this makes the code more robust
+ 	 against idiot hackers, idiot hackers should not be committing.
+	  Furthermore const TypeName is strongly preferred to the synonym
+	  TypeName const.
+
+		ie. TypeName const * const non_array;	should be:
+
+		    const TypeName *non_array;          good.
+
+	- Your code should compile without warnings.
+
+	- When documenting a function in the comments, please follow
+	  the comment style of the existing code. 
+
+	- libGDA is intended to be run in various countries with
+	  different currency conventions, number formatting
+	  conventions and different languages.  Use the locale
+	  functions to make sure your code will work on countries that
+	  have different conventions than your country.  
+
+   All of this is to ensure the libGDA code will be kept within
+reasonable margins of maintainability for the future: Remember, in two
+years you will probably be far too busy to maintain your own
+contributions, and they might become a burden to the program maintainers.
+
+   Cleaning code in libGDA is more important than trying not to
+break existing code.  By all means, code clean ups are always
+welcome. 
+
+
+Rodrigo Moya (copied from Miguel de Icaza's Gnumeric HACKING)
+December, 2000
+
+
