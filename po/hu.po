@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda VERSION\n"
 "POT-Creation-Date: 2000-12-14 14:33+0100\n"
-"PO-Revision-Date: 2000-12-14 14:34+01:00\n"
+"PO-Revision-Date: 2001-01-24 15:15+0100\n"
 "Last-Translator: Emese Kovacs <emese@gnome.hu>\n"
 "Language-Team: Hungarian <hu@gnome.hu>\n"
 "MIME-Version: 1.0\n"
@@ -26,7 +26,7 @@ msgstr "%s adatforrást nem találtam"
 #: lib/gda-client/gda-connection.c:234 lib/gda-client/gda-error.c:179
 #, c-format
 msgid "%s: The server didn't respond."
-msgstr "%s: A szerver nem válaszol."
+msgstr "%s: A kiszolgáló nem válaszol."
 
 #: lib/gda-client/gda-connection.c:238 lib/gda-client/gda-error.c:183
 #, c-format
@@ -48,7 +48,7 @@ msgstr "<NULL>"
 
 #: lib/gda-client/gda-field.c:251 lib/gda-client/gda-field.c:253
 msgid "<Unknown GDA Type(NULL)>"
-msgstr "<Nem ismert GDA-típus(NULL)>"
+msgstr "<Ismeretlen GDA-típus(NULL)>"
 
 #: lib/gda-client/gda-field.c:266
 msgid "TRUE"
@@ -104,7 +104,7 @@ msgstr "A következõ nem érvényes táblanév: %p"
 
 #: lib/gda-server/gda-server-error.c:185
 msgid "Could not get pointer to server implementation"
-msgstr "Nem kapom meg a mutatót a szerverre"
+msgstr "Nem kapom meg a mutatót a kiszolgálóra"
 
 #: lib/gda-server/gda-server-impl-connection.c:123
 #: lib/gda-server/gda-server-impl-connection.c:132
@@ -177,7 +177,7 @@ msgstr "Másik ilyen szolgáltató be van regisztrálva az OAF-ba. Kilépek..."
 
 #: lib/gda-server/gda-server-impl.c:228
 msgid "Unknown error registering this provider with OAF. Exiting"
-msgstr "Nem ismert hiba lépett fel az OAF-ba regisztrálásnál. Kilépek"
+msgstr "Ismeretlen hiba lépett fel az OAF-ba regisztrálásnál. Kilépek"
 
 #: lib/gda-server/gda-server-impl.c:232
 #, c-format
@@ -306,7 +306,7 @@ msgid ""
 "options"
 msgstr ""
 "%s:%d: Nem adhatsz meg UNIX_SOCKET-et, ha HOST-ot vagy PORT-ot megadsz. "
-"Kérlek töröld a UNIX_SOCKET-et, vagy töröld mind a HOST és a PORT opciókat."
+"Kérlek töröld a UNIX_SOCKET-et, vagy töröld mind a HOST és a PORT beállításokat."
 
 #: providers/gda-mdb-server/gda-mdb-connection.c:147
 #, c-format
@@ -388,11 +388,11 @@ msgstr "hiba az OCIHandleAlloc()-ban HTYPE_ERROR"
 #: providers/gda-oracle-server/gda-oracle-connection.c:379
 #, c-format
 msgid "Unknown ORACLE type %ld"
-msgstr "Nem ismert ORACLE típus: %ld"
+msgstr "Ismeretlen ORACLE típus: %ld"
 
 #: providers/gda-oracle-server/gda-oracle-recordset.c:115
 msgid "Unknown ORACLE data type in fill_field_values"
-msgstr "Nem ismert ORACLE adattípus a fill_field_values-ban"
+msgstr "Ismeretlen ORACLE adattípus a fill_field_values-ban"
 
 #: providers/gda-oracle-server/gda-oracle-recordset.c:150
 msgid "recordset object being created without associated connection"
@@ -653,7 +653,7 @@ msgstr "ct_diag() inicializálása sikertelen"
 #: providers/gda-sybase-server/gda-sybase-error.c:185
 #, c-format
 msgid "%s could not find server implementation"
-msgstr "%s nem kapta meg a mutatót a szerverre"
+msgstr "%s nem kapta meg a mutatót a kiszolgálóra"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:191
 #, c-format
@@ -871,7 +871,7 @@ msgstr ""
 #: report/server/gda-report-server-main.c:126
 msgid "Unknown error registering report engine with OAF. Exiting"
 msgstr ""
-"Nem ismert hiba lépett fel a report engine  OAF-ba regisztrálásnál. Kilépek"
+"Ismeretlen hiba lépett fel a report engine  OAF-ba regisztrálásnál. Kilépek"
 
 #: report/server/gda-report-server-main.c:130
 #, c-format
@@ -1122,7 +1122,7 @@ msgstr "%s: a '%s' adatforrást nem találom\n"
 #~ msgstr "A rácsnál használatos betûtípus"
 
 #~ msgid "Could not initialize Bonobo"
-#~ msgstr "Nem tudom a Bonobo-t elindítani"
+#~ msgstr "A Bonobo inicializálása nem sikerült"
 
 #~ msgid "View requested to be activated but there is already an active view"
 #~ msgstr ""
@@ -1201,7 +1201,7 @@ msgstr "%s: a '%s' adatforrást nem találom\n"
 #~ msgstr "Szerver"
 
 #~ msgid "New server"
-#~ msgstr "Új szerver"
+#~ msgstr "Új kiszolgáló"
 
 #~ msgid "Repository"
 #~ msgstr "Repository"
@@ -1216,7 +1216,7 @@ msgstr "%s: a '%s' adatforrást nem találom\n"
 #~ msgstr "Meglévõ jelentés megnyitása"
 
 #~ msgid "Open existing server"
-#~ msgstr "Meglévõ szerver megnyitása"
+#~ msgstr "Meglévõ kiszolgáló megnyitása"
 
 #~ msgid "Open existing repository"
 #~ msgstr "Meglévõ repository megnyitása"
@@ -1511,7 +1511,7 @@ msgstr "%s: a '%s' adatforrást nem találom\n"
 #~ msgstr "Sorszámok mutatása"
 
 #~ msgid "User Interface"
-#~ msgstr "Felhasználói interfész"
+#~ msgstr "Felhasználói felület"
 
 #~ msgid "Environment"
 #~ msgstr "Környezet"
