@@ -56,6 +56,14 @@ GdaReportItem *gda_report_item_reportheader_new_from_dom (xmlNodePtr node);
 
 xmlNodePtr gda_report_item_reportheader_to_dom (GdaReportItem *item);
 
+gboolean gda_report_item_reportheader_remove (GdaReportItem *item);
+
+gboolean gda_report_item_reportheader_add_element (GdaReportItem *reportheader,
+						   GdaReportItem *element);
+
+GdaReportItem *gda_report_item_reportheader_get_label_by_id (GdaReportItem *reportheader,
+							     const gchar *id);
+
 gboolean gda_report_item_reportheader_set_active (GdaReportItem *item,
 						  const gchar *value);
 

@@ -31,6 +31,7 @@ void test_4 (void);
 void test_5 (void);
 void test_6 (void);
 void test_7 (void);
+void test_8 (void);
 
 
 int
@@ -46,6 +47,7 @@ main (int argc, char **argv)
 		g_print ("	5 -> Setting a reportheader attribute\n");
 		g_print ("	6 -> Setting new reportheader and reportfooter\n");
 		g_print ("	7 -> Working with pageheaderlist\n");
+		g_print ("	8 -> Creating a new report\n");
 		return 0;
 	}
 	
@@ -57,6 +59,7 @@ main (int argc, char **argv)
 	if (g_ascii_strncasecmp(argv[1], "5", 1) == 0) test_5();
 	if (g_ascii_strncasecmp(argv[1], "6", 1) == 0) test_6();
 	if (g_ascii_strncasecmp(argv[1], "7", 1) == 0) test_7();
+	if (g_ascii_strncasecmp(argv[1], "8", 1) == 0) test_8();
 
 	return 0;
 }
@@ -303,6 +306,7 @@ test_7 (void)
 	GdaReportItem *report;
 	GdaReportItem *pageheader;
 	GdaReportItem *pagefooter;
+	GdaReportItem *label;
 	GdaReportColor *color;
 	GdaReportNumber *width;
 	GdaReportNumber *height;
@@ -354,7 +358,51 @@ test_7 (void)
 	if (!gda_report_item_pagefooter_set_height (pagefooter, height)) 
 		g_print ("TEST: Error during set\n");	
 
+	g_print ("TEST: Removing l_publishing label\n"); 
+	label = gda_report_item_report_get_label_by_id (report, "l_publishing");
+	if (label != NULL)
+		gda_report_item_label_remove (label);
+	
 	g_print ("TEST: Saving results to test-7-result.xml\n");
 	gda_report_document_save_file ("test-7-result.xml", document);
 }
 
+
+void 
+test_8 (void) 
+{
+	GdaReportValid *validator;
+	GdaReportDocument  *document;
+	GdaReportItem *report;
+	GdaReportItem *reportheader;
+	GdaReportItem *label1;
+	GdaReportItem *label2;
+ 
+	validator = gda_report_valid_load ();
+	document = gda_report_document_new (validator);
+	report = gda_report_item_report_new (validator);
+	reportheader = gda_report_item_reportheader_new (validator);
+	label1 = gda_report_item_label_new (validator, "label1");
+	label2 = gda_report_item_label_new (validator, "label1");
+
+	g_print ("TEST: Setting reportheader to report.  \nIt should fail becouse report not belongs to a document\n"); 
+	if (!gda_report_item_report_set_reportheader (report, reportheader)) 
+		g_print ("TEST: Error during set\n");	
+
+	g_print ("TEST: Assigning the report to a document\n"); 
+	if (!gda_report_document_set_root_item (document, report)) 
+		g_print ("TEST: Error during set\n");	
+	
+	g_print ("TEST: Setting reportheader to report.  Now it should works\n"); 
+	if (!gda_report_item_report_set_reportheader (report, reportheader)) 
+		g_print ("TEST: Error during set\n");	
+	
+	g_print ("TEST: Adding a label to reportheader\n"); 
+	if (!gda_report_item_reportheader_add_element (reportheader, label1)) 
+		g_print ("TEST: Error during set\n");	
+	
+	g_print ("TEST: Adding a label with the same ID to reportheader\n"); 
+	if (!gda_report_item_reportheader_add_element (reportheader, label2)) 
+		g_print ("TEST: Error during set\n");	
+	
+}

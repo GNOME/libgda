@@ -1,5 +1,5 @@
 <!-- gda-report.dtd
-     Copyright (C) 2000-2002 Carlos Perello Marin <carlos@gnome-db.org>
+     Copyright (C) 2000-2003 Carlos Perello Marin <carlos@gnome-db.org>
                              Gerhard Dieringer
 			     Santi Camps <santi@gnome-db.org>
 
@@ -19,7 +19,7 @@
 <!ENTITY % halignment      "standard|left|center|right">
 <!ENTITY % valignment      "top|center|bottom">
 
-<!ELEMENT report (query?, reportheader?, pageheaderlist?, dataheader?,  datalist?, 
+<!ELEMENT report (querylist?, reportheader?, pageheaderlist?, dataheader?,  datalist?, 
                   datafooter?,   pagefooterlist?, reportfooter?)>
 <!ATTLIST report
   reportstyle     (form|list)       "list"
@@ -50,6 +50,13 @@
   linewidth       NMTOKEN           "0.05"
   linecolor       NMTOKENS          "0 0 0"
   linestyle       (%linestyle;)     "solid"
+>
+
+<!ELEMENT querylist ((query|sqlquery)+)>
+
+<!ELEMENT sqlquery (#PCDATA)>
+<!ATTLIST sqlquery
+  id		  ID		    #IMPLIED
 >
 
 <!ELEMENT reportheader ((%reportelement;)+)>
@@ -241,11 +248,11 @@
 
 <!ELEMENT reportdata (detail|(groupheader?,reportdata,groupfooter?))>
 
-
-<!ELEMENT detail ((%reportelement;)+)>
+<!ELEMENT detail ((%reportelement;)+, reportdata*)>
 <!ATTLIST detail 
   active          (yes|no)          "yes"
   visible         (yes|no)          "yes"
+  query           IDREF             #REQUIRED
   height          NMTOKEN           "2.0"
   bgcolor         NMTOKENS          #IMPLIED
   fgcolor         NMTOKENS          #IMPLIED
@@ -304,8 +311,8 @@
 <!ATTLIST groupfooter 
   active          (yes|no)          "yes"
   visible         (yes|no)          "yes"
-  height        NMTOKEN             "2.0"
-  newpage       (yes|no)            "no"
+  height          NMTOKEN           "2.0"
+  newpage         (yes|no)          "no"
   bgcolor         NMTOKENS          #IMPLIED
   fgcolor         NMTOKENS          #IMPLIED
   bordercolor     NMTOKENS          #IMPLIED
@@ -361,6 +368,7 @@
 
 <!ELEMENT label EMPTY>
 <!ATTLIST label 
+  id		  ID		    #IMPLIED
   active          (yes|no)          "yes"
   visible         (yes|no)          "yes"
   text            CDATA             #REQUIRED
@@ -385,10 +393,11 @@
 
 <!ELEMENT repfield EMPTY>
 <!ATTLIST repfield
+  id		  ID		    #IMPLIED
   active          (yes|no)          "yes"
   visible         (yes|no)          "yes"
   query           IDREF             #REQUIRED 
-  value           IDREF             #REQUIRED 
+  value           NMTOKEN           #REQUIRED 
   x               NMTOKEN           #REQUIRED
   y               NMTOKEN           #REQUIRED
   width           NMTOKEN           #REQUIRED

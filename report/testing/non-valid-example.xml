@@ -8,7 +8,8 @@
    <!-- This line should not be here -->
    <line x1="0" y1="26" x2="70" y2="26" linewidth="1"/>
       
-   <query id="gfoundation-library">
+   <querylist>
+     <query id="gfoundation-library">
 	<select>
 		<targetlist>
 			<target name="table_name" />
@@ -21,7 +22,8 @@
 			<value id="title"><field name="title" /></value>
 		</valuelist>
 	</select>
-  </query>
+    </query>
+  </querylist>
 
   <reportheader>
     <label text="Gnome Foundation Library" x="0" y="0" width="255" height="31" borderwidth="0"

@@ -1,3 +1,31 @@
+2003-01-23  Santi Camps <santi@gnome-db.org>
+
+	* libgda/report/libgda-report/Makefile.am: 
+	* libgda/report/libgda-report/gda-report.h: 
+	  new sources added
+	  
+	* libgda/report/testing/gda-report-test.c: some new tests added
+	* libgda/report/libgda-report/gda-report-item.[ch]: new generical functions 
+	  needed to manage the internal structure
+	* libgda/report/libgda-report/gda-report-item-report.c: not allow child 
+	  elements if parent element doesn't belong to a report-document
+	* libgda/report/gda-report.dtd.in: added suport for multiple queries, and
+	  for both xql and sql queries	  
+
+	* libgda/report/testing/valid-example.xml: 
+	* libgda/report/testing/non-valid-example.xml: 
+	* libgda/report/gda-report-example.xml: 
+	  modified due to changes in DTD
+
+	* libgda/report/libgda-report/gda-report-item-pageheader.[ch]: 
+	* libgda/report/libgda-report/gda-report-item-pagefooter.[ch]: 
+	* libgda/report/libgda-report/gda-report-item-repotheader.[ch]: 
+	* libgda/report/libgda-report/gda-report-item-repotfooter.[ch]: 
+	  functions to allow work with reportelements and _remove function
+	  
+	* libgda/report/libgda-report/gda-report-item-label.[ch]:
+	  All attributes implemented
+
 2003-01-22  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* libgda/gda-value.[ch] (gda_value_new_timestamp_from_timet): new function.

@@ -1,5 +1,5 @@
 /* GDA report libary
- * Copyright (C) 1998-2002 The GNOME Foundation.
+ * Copyright (C) 1998-2003 The GNOME Foundation.
  *
  * AUTHORS:
  *	Santi Camps <santi@gnome-db.org>
@@ -55,6 +55,14 @@ GdaReportItem *gda_report_item_pagefooter_new (GdaReportValid *valid);
 GdaReportItem *gda_report_item_pagefooter_new_from_dom (xmlNodePtr node);
 
 xmlNodePtr gda_report_item_pagefooter_to_dom (GdaReportItem *item);
+
+gboolean gda_report_item_pagefooter_add_element (GdaReportItem *pagefooter,
+				 	         GdaReportItem *element);
+
+GdaReportItem *gda_report_item_pagefooter_get_label_by_id (GdaReportItem *pagefooter,
+							   const gchar *id);
+
+gboolean gda_report_item_pagefooter_remove (GdaReportItem *item);
 
 gboolean gda_report_item_pagefooter_set_active (GdaReportItem *item,
 						  const gchar *value);

@@ -1,5 +1,5 @@
 /* GDA report libary
- * Copyright (C) 1998-2002 The GNOME Foundation.
+ * Copyright (C) 1998-2003 The GNOME Foundation.
  *
  * AUTHORS:
  *	Santi Camps <santi@gnome-db.org>
@@ -24,6 +24,7 @@
 #include <libgda/gda-log.h>
 #include <libgda/gda-util.h>
 #include <libgda-report/gda-report-valid.h>
+#include <libgda-report/gda-report-item-label.h>
 #include <libgda-report/gda-report-item-pageheader.h>
 
 static void gda_report_item_pageheader_class_init (GdaReportItemPageHeaderClass *klass);
@@ -130,6 +131,67 @@ gda_report_item_pageheader_to_dom (GdaReportItem *item)
 {
 	g_return_val_if_fail (GDA_REPORT_IS_ITEM_PAGEHEADER(item), NULL);
 	return gda_report_item_to_dom (item);
+}
+
+
+/*
+ * gda_report_item_pageheader_add_element
+ */
+gboolean
+gda_report_item_pageheader_add_element (GdaReportItem *pageheader,
+				        GdaReportItem *element)
+{
+	gchar *id;
+	
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM_PAGEHEADER(pageheader), FALSE);
+	
+	/* News kinds of elements should be added here */
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM_LABEL(element), FALSE);
+	
+	/* Child elements are only allowed when parent element belongs to a report document */
+	g_return_val_if_fail (gda_report_item_belongs_to_report_document(pageheader), FALSE);
+
+	id = gda_report_item_get_attribute (element, "id");
+	if (gda_report_item_get_child_by_id (
+		gda_report_item_get_report (pageheader), id) != NULL)
+	{
+		gda_log_error (_("An element with ID %s already exists in the report"), id);
+		return FALSE;
+	}	
+	return gda_report_item_add_child (pageheader, element);
+}
+
+
+
+/*
+ * gda_report_item_pageheader_get_label_by_id
+ */
+GdaReportItem *
+gda_report_item_pageheader_get_label_by_id (GdaReportItem *pageheader,
+				            const gchar *id)
+{
+	GdaReportItem *label;
+	
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM_PAGEHEADER (pageheader), NULL);
+	g_return_val_if_fail (id != NULL, NULL);
+	
+	label = gda_report_item_get_child_by_id (pageheader, id);
+	if (label != NULL)
+		return gda_report_item_label_new_from_dom (label->priv->node);
+	else
+		return NULL;
+}
+
+
+
+/*
+ * gda_report_item_pageheader_remove
+ */
+gboolean 
+gda_report_item_pageheader_remove (GdaReportItem *item)
+{
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM_PAGEHEADER(item), FALSE);
+	return gda_report_item_remove (item);
 }
 
 

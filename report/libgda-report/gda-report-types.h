@@ -25,6 +25,7 @@
 #  define __gda_report_types_h__
 
 #define ITEM_REPORT_NAME  		"report"
+#define ITEM_QUERYLIST_NAME  		"querylist"
 #define ITEM_QUERY_NAME  		"query"
 #define ITEM_REPORTHEADER_NAME		"reportheader"
 #define ITEM_REPORTFOOTER_NAME  	"reportfooter"

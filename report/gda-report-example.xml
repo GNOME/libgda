@@ -5,7 +5,8 @@
 -->
 
 <report borderstyle="solid" units="pt">
-   <query id="gfoundation-library">
+   <querylist>
+     <query id="gfoundation-library">
 	<select>
 		<targetlist>
 			<target name="table_name" />
@@ -18,7 +19,8 @@
 			<value id="title"><field name="title" /></value>
 		</valuelist>
 	</select>
-  </query>
+    </query>
+  </querylist>
 
   <reportheader>
     <label text="Gnome Foundation Library" x="0" y="0" width="255" height="31" borderwidth="0"
@@ -43,9 +45,9 @@
            borderstyle="none" fontsize="12" fontweight="bold"/>
       <label text="Author" x="254" y="5" width="96" height="20" borderwidth="0"
            borderstyle="none" fontsize="12" fontweight="bold"/>
-      <label text="Publishing" x="354" y="5" width="96" height="20" borderwidth="0"
+      <label id="l_publishing" text="Publishing" x="354" y="5" width="96" height="20" borderwidth="0"
            borderstyle="none" fontsize="12" fontweight="bold"/>
-      <label text="Price" x="450" y="5" width="70" height="20" borderwidth="0"
+      <label id="l_price" text="Price" x="450" y="5" width="70" height="20" borderwidth="0"
            borderstyle="none" fontsize="12" fontweight="bold"/>
     </pageheader>
   </pageheaderlist>

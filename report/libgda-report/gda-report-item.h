@@ -61,10 +61,12 @@ GType gda_report_item_get_type (void);
 GdaReportItem *gda_report_item_new (GdaReportValid *valid,
 				    const gchar *name);
 
-GdaReportItem *gda_report_item_new_child (GdaReportItem *parent, 
-				          const gchar *name);
+// GdaReportItem *gda_report_item_new_child (GdaReportItem *parent, 
+//				          const gchar *name);
 
 GdaReportItem *gda_report_item_new_from_dom (xmlNodePtr node);
+
+gboolean gda_report_item_remove (GdaReportItem *item);
 
 gboolean gda_report_item_add_previous (GdaReportItem *item,
 				       GdaReportItem *new_item);
@@ -89,6 +91,13 @@ gchar *gda_report_item_get_attribute (GdaReportItem *item,
 
 gchar *gda_report_item_get_inherit_attribute (GdaReportItem *item,
 				 	      const gchar *name);
+					      
+GdaReportItem *gda_report_item_get_child_by_id (GdaReportItem *parent,
+						const gchar *id);
+						
+gboolean gda_report_item_belongs_to_report_document (GdaReportItem *item);						
+
+GdaReportItem *gda_report_item_get_report (GdaReportItem *item);
 
 G_END_DECLS
 

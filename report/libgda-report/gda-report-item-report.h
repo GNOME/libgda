@@ -65,10 +65,6 @@ GdaReportItem *gda_report_item_report_get_reportfooter (GdaReportItem *item);
 
 gint gda_report_item_report_get_pageheaderlist_length (GdaReportItem *report);
 
-gboolean gda_report_item_report_set_nth_pageheader (GdaReportItem *report,
-						    GdaReportItem *pageheader,
-						    gint position);
-						    
 gboolean gda_report_item_report_add_nth_pageheader (GdaReportItem *report,
 						    GdaReportItem *pageheader,
 						    gint position);
@@ -78,10 +74,6 @@ GdaReportItem *gda_report_item_report_get_nth_pageheader (GdaReportItem *report,
 
 gint gda_report_item_report_get_pagefooterlist_length (GdaReportItem *report);
 
-gboolean gda_report_item_report_set_nth_pagefooter (GdaReportItem *report,
-						    GdaReportItem *pagefooter,
-						    gint position);
-						    
 gboolean gda_report_item_report_add_nth_pagefooter (GdaReportItem *report,
 						    GdaReportItem *pagefooter,
 						    gint position);
@@ -90,7 +82,10 @@ GdaReportItem *gda_report_item_report_get_nth_pagefooter (GdaReportItem *report,
 							  gint position);
 
 gboolean gda_report_item_report_set_reportstyle (GdaReportItem *item, 
-						const gchar* value);
+						const gchar *value);
+
+GdaReportItem *gda_report_item_report_get_label_by_id (GdaReportItem *report,
+						       const gchar *id);
 
 gchar *gda_report_item_report_get_reportstyle (GdaReportItem *item);
 

@@ -36,6 +36,8 @@ static void gda_report_item_finalize   (GObject *object);
 
 static GObjectClass *parent_class = NULL;
 
+xmlNodePtr gda_report_item_get_child_by_id_internal (xmlNodePtr parent,
+						     const gchar *id);
 
 /*
  * GdaReportItem class implementation
@@ -52,7 +54,7 @@ gda_report_item_class_init (GdaReportItemClass *klass)
 
 static void
 gda_report_item_init (GdaReportItem *item, 
-		         GdaReportItemClass *klass)
+		      GdaReportItemClass *klass)
 {
 	g_return_if_fail (GDA_REPORT_IS_ITEM (item));
 
@@ -131,7 +133,6 @@ gda_report_item_new (GdaReportValid *valid,
  * Creates a new item with the given name, as a child of the parent object
  *
  * Return: the new #GdaReportItem or NULL if there is some problem
- **/
 GdaReportItem *
 gda_report_item_new_child (GdaReportItem *parent,
 		           const gchar *name)
@@ -152,6 +153,7 @@ gda_report_item_new_child (GdaReportItem *parent,
 	
 	return item;
 }
+ **/
 
 
 /**
@@ -177,6 +179,23 @@ gda_report_item_new_from_dom (xmlNodePtr node)
 }
 
 
+/**
+ * gda_report_item_remove 
+ * @item: the #GdaReportItem to be removed
+ *
+ * Remove the current item from the report
+ *
+ * Returns: TRUE if all is ok, FALSE otherwise
+ **/
+gboolean 
+gda_report_item_remove (GdaReportItem *item)
+{
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM (item), FALSE);
+	xmlUnlinkNode (item->priv->node);
+	g_object_unref (G_OBJECT(item));
+	return TRUE;
+}
+
 
 /**
  * gda_report_item_add_previous
@@ -193,8 +212,6 @@ gda_report_item_add_previous (GdaReportItem *item,
 {
 	xmlNodePtr cur_node;
 	xmlNodePtr new_node;
-//	xmlNodePtr prev_node;
-//	xmlNodePtr parent_node;
 	
 	g_return_val_if_fail (GDA_REPORT_IS_ITEM (item), FALSE);
 	g_return_val_if_fail (GDA_REPORT_IS_ITEM (new_item), FALSE);
@@ -204,21 +221,6 @@ gda_report_item_add_previous (GdaReportItem *item,
 
 	new_node = xmlAddPrevSibling (cur_node, new_node);
 	return (new_node != NULL);
-/*
-	prev_node = cur_node->prev;
-	parent_node = cur_node->parent;
-
-	new_node->prev = prev_node;
-	new_node->next = cur_node;
-	new_node->parent = parent_node;
-	cur_node->prev = new_node;
-	if (prev_node != NULL)
-		prev_node->next = new_node;			
-	if (parent_node->children == cur_node)
-		parent_node->children = new_node;
-	
-	return TRUE;
-*/
 }
 
 
@@ -237,8 +239,6 @@ gda_report_item_add_next (GdaReportItem *item,
 {
 	xmlNodePtr cur_node;
 	xmlNodePtr new_node;
-//	xmlNodePtr next_node;
-//	xmlNodePtr parent_node;
 	
 	g_return_val_if_fail (GDA_REPORT_IS_ITEM (item), FALSE);
 	g_return_val_if_fail (GDA_REPORT_IS_ITEM (new_item), FALSE);
@@ -248,22 +248,6 @@ gda_report_item_add_next (GdaReportItem *item,
 
 	new_node = xmlAddNextSibling (cur_node, new_node);
 	return (new_node != NULL);
-
-	/*
-	next_node = cur_node->next;
-	parent_node = cur_node->parent;
-
-	new_node->next = next_node;
-	new_node->prev = cur_node;
-	new_node->parent = parent_node;
-	cur_node->next = new_node;
-	if (next_node != NULL)
-		next_node->prev = new_node;			
-	if (parent_node->last == cur_node)
-		parent_node->last = new_node;
-	
-	return TRUE;
-	*/
 }
 
 
@@ -306,9 +290,6 @@ gboolean gda_report_item_replace (GdaReportItem *item,
 {
 	xmlNodePtr cur_node;
 	xmlNodePtr new_node;
-//	xmlNodePtr next_node;
-//	xmlNodePtr prev_node;
-//	xmlNodePtr parent_node;
 	
 	g_return_val_if_fail (GDA_REPORT_IS_ITEM (item), FALSE);
 	g_return_val_if_fail (GDA_REPORT_IS_ITEM (new_item), FALSE);	
@@ -325,33 +306,6 @@ gboolean gda_report_item_replace (GdaReportItem *item,
 	}
 	else
 		return FALSE;
-
-/*
-	next_node = cur_node->next;
-	prev_node = cur_node->prev;
-	parent_node = cur_node->parent;
-
-	new_node->prev = prev_node;
-	new_node->next = next_node;
-	new_node->parent = parent_node;
-
-	if (prev_node != NULL)
-		prev_node->next = new_node;
-			
-	if (next_node != NULL)
-		next_node->prev = new_node;
-			
-	if (parent_node != NULL)
-	{
-		if (parent_node->children == cur_node)
-			parent_node->children = new_node;
-		if (parent_node->last == cur_node)
-			parent_node->last = new_node;
-	}
-	xmlFreeNode(cur_node);
-	
-	return TRUE;	
-*/	
 }
 
 
@@ -461,5 +415,91 @@ gda_report_item_get_inherit_attribute (GdaReportItem *item,
 		node = node->parent;
 	}	
 	return NULL;
+}
+
+
+/**
+ * gda_report_item_get_child_by_id
+ * @parent: a #GdaReportItem object
+ * @id: the id of the searched child item
+ *
+ * Searches for a child item with the given Id
+ *
+ * Returns: the child item if found, or NULL otherwise
+ **/
+GdaReportItem *
+gda_report_item_get_child_by_id (GdaReportItem *parent,
+				 const gchar *id)
+{
+	xmlNodePtr node;
+		
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM (parent), NULL);
+	node = gda_report_item_get_child_by_id_internal(parent->priv->node, id);
+	if (node != NULL)
+		return gda_report_item_new_from_dom(node);
+	else
+		return NULL;
+}
+
+
+xmlNodePtr 
+gda_report_item_get_child_by_id_internal (xmlNodePtr parent,
+					  const gchar *id)
+{
+	xmlNodePtr node;
+	xmlNodePtr child;
+	gchar *node_id;
+	
+	node = parent->children;
+	while (node != NULL)
+	{
+		// Is this one the node we are searching ?
+		node_id = xmlGetProp(node, "id");
+		if (node_id != NULL) 
+		{
+			if (g_strcasecmp(id, node_id) == 0)
+				return node;
+		}
+		
+		// Lets try with its children
+		child = gda_report_item_get_child_by_id_internal (node, id);
+		if (child != NULL) return child;
+		
+		// Then, the next sibling
+		node = node->next;
+	}
+	return NULL;
+}
+
+
+/**
+ * gda_report_item_belongs_to_report
+ * @item: a #GdaReportItem object
+ *
+ * Returns: TRUE if current item is assigned to a report document
+ *          FALSE otherwise
+ **/
+gboolean 
+gda_report_item_belongs_to_report_document (GdaReportItem *item)
+{
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM (item), FALSE);
+	return (item->priv->node->doc != NULL);
+}
+
+
+/**
+ * gda_report_item_get_report
+ * @item: a #GdaReportItem object
+ *
+ * Returns: The report to which current item is assigned to,
+ *          or NULL if it is not assigned yet
+ **/
+GdaReportItem * 
+gda_report_item_get_report (GdaReportItem *item)
+{
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM (item), NULL);
+	g_return_val_if_fail (item->priv->node->doc != NULL, NULL);
+	
+	return gda_report_item_new_from_dom (xmlDocGetRootElement(item->priv->node->doc));
 }
 
