@@ -32,7 +32,7 @@ sql_order_field *of;
 %token L_DISTINCT L_BETWEEN L_IN L_GROUP L_INSERT L_INTO L_VALUES L_UPDATE L_SET
 %token L_DOT L_COMMA L_NULL L_LBRACKET L_RBRACKET
 %token L_IDENT
-%token L_EQ L_IS L_LIKE L_GT L_LT L_GEQ L_LEQ L_DIFF
+%token L_EQ L_IS L_LIKE L_GT L_LT L_GEQ L_LEQ L_DIFF L_REGEXP L_REGEXP_CI L_NOTREGEXP L_NOTREGEXP_CI L_SIMILAR
 %token L_NOT L_AND L_OR
 %token L_MINUS L_PLUS L_TIMES L_DIV
 %token L_STRING L_TEXTUAL
@@ -192,19 +192,25 @@ set_item: field L_EQ field		{$$ = sql_build_condition ($1, $3, SQL_eq);}
 
 condition_operator: L_EQ		{$$ = SQL_eq;}
 	| L_IS				{$$ = SQL_is;}
-	| L_IS L_NOT			{$$ = SQL_isnot;}
 	| L_IN				{$$ = SQL_in;}
-	| L_NOT L_IN			{$$ = SQL_notin;}
 	| L_LIKE			{$$ = SQL_like;}
+	| L_SIMILAR                     {$$ = SQL_similar;}
 	| L_GT				{$$ = SQL_gt;}
 	| L_LT				{$$ = SQL_lt;}
 	| L_GEQ				{$$ = SQL_geq;}
 	| L_LEQ				{$$ = SQL_leq;}
 	| L_DIFF			{$$ = SQL_diff;}
+	| L_REGEXP			{$$ = SQL_regexp;}
+	| L_REGEXP_CI			{$$ = SQL_regexp_ci;}
+	| L_NOTREGEXP			{$$ = SQL_not_regexp;}
+	| L_NOTREGEXP_CI		{$$ = SQL_not_regexp_ci;}
 	;
 
-where_item: field condition_operator field 	{$$ = sql_build_condition ($1, $3, $2);}
-	| field L_BETWEEN field L_AND field   	{$$ = sql_build_condition_between ($1, $3, $5);}
+where_item: field condition_operator field 		{$$ = sql_build_condition ($1, $3, $2);}
+	| field L_BETWEEN field L_AND field   		{$$ = sql_build_condition_between ($1, $3, $5);}
+	| field L_NOT condition_operator field  	{$$ = sql_condition_negate (sql_build_condition ($1, $4, $3));}
+	| field L_NOT L_BETWEEN field L_AND field 	{$$ = sql_condition_negate (sql_build_condition_between ($1, $4, $6));}
+	| field L_IS L_NOT field			{$$ = sql_condition_negate (sql_build_condition ($1, $4, SQL_is));}
 	;
 
 param_spec: L_LSBRACKET param_spec_list L_RSBRACKET {$$ = $2;}

@@ -142,14 +142,17 @@ sql_destroy_condition (sql_condition * cond)
 	case SQL_eq:
 	case SQL_diff:
 	case SQL_is:
-	case SQL_isnot:
 	case SQL_in:
-	case SQL_notin:
 	case SQL_like:
 	case SQL_gt:
 	case SQL_lt:
 	case SQL_geq:
 	case SQL_leq:
+	case SQL_regexp:
+	case SQL_regexp_ci:
+	case SQL_not_regexp:
+	case SQL_not_regexp_ci:
+	case SQL_similar:
 		sql_destroy_field (cond->d.pair.left);
 		sql_destroy_field (cond->d.pair.right);
 		break;
@@ -505,14 +508,10 @@ sql_condition_op_stringify (sql_condition_operator op)
 		return memsql_strdup ("=");
 	case SQL_is:
 		return memsql_strdup ("is");
-	case SQL_isnot:
-		return memsql_strdup ("is not");
 	case SQL_like:
 		return memsql_strdup ("like");
 	case SQL_in:
 		return memsql_strdup ("in");
-	case SQL_notin:
-		return memsql_strdup ("not in");
 	case SQL_between:
 		return memsql_strdup ("between");
 	case SQL_gt:
@@ -525,6 +524,16 @@ sql_condition_op_stringify (sql_condition_operator op)
                 return memsql_strdup ("<=");
         case SQL_diff:
                 return memsql_strdup ("!=");
+	case SQL_regexp:
+		return memsql_strdup ("~");
+	case SQL_regexp_ci:
+		return memsql_strdup ("~*");
+	case SQL_not_regexp:
+		return memsql_strdup ("!~");
+	case SQL_not_regexp_ci:
+		return memsql_strdup ("!~*");
+	case SQL_similar:
+		return memsql_strdup ("similar to");
 	default:
 		fprintf (stderr, "Invalid condition op: %d\n", op);
 	}
@@ -541,9 +550,7 @@ sql_condition_stringify (sql_condition * cond)
 	switch (cond->op) {
 	case SQL_eq:
 	case SQL_is:
-	case SQL_isnot:
 	case SQL_in:
-	case SQL_notin:
 	case SQL_like:
 		retval =
 			memsql_strappend_free (sql_field_stringify (cond->d.pair.left),
@@ -1041,10 +1048,10 @@ sql_statement_append_where (sql_statement * statement, char *leftfield,
 	}
 	/* in case null passed in on the rightfield. Modify it to handle it correctly */
 	if (!rightfield) {
-		if (condopr == SQL_eq || condopr == SQL_like)
+		/*if (condopr == SQL_eq || condopr == SQL_like)
 			condopr = SQL_is;
 		else
-			condopr = SQL_isnot; /* FIXME */
+			condopr = SQL_isnot; *//* FIXME */
 		rightfield = memsql_strdup ("NULL");
 		freerightfield = TRUE;
 	}

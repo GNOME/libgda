@@ -68,6 +68,11 @@ char *string_buf_ptr;
 "<"		{return L_LT;}
 "="		{return L_EQ;}
 "is"		{return L_IS;}
+"~"		{return L_REGEXP;}
+"~*"		{return L_REGEXP_CI;}
+"!~"            {return L_NOTREGEXP;}
+"!~*"           {return L_NOTREGEXP_CI;}
+"SIMILAR TO"	{return L_SIMILAR;}
 
 "."		{return L_DOT;}
 "*"		{return L_TIMES;}

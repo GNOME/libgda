@@ -263,6 +263,7 @@ sql_build_condition (sql_field * left, sql_field * right,
 	retval = memsql_alloc (sizeof *retval);
 
 	retval->op = op;
+	retval->negated = FALSE;
 	retval->d.pair.left = left;
 	retval->d.pair.right = right;
 
@@ -278,13 +279,22 @@ sql_build_condition_between (sql_field * field, sql_field * lower,
 	retval = memsql_alloc (sizeof *retval);
 
 	retval->op = SQL_between;
-
+	retval->negated = FALSE;
 	retval->d.between.field = field;
 	retval->d.between.lower = lower;
 	retval->d.between.upper = upper;
 
 	return retval;
 }
+
+sql_condition *
+sql_condition_negate (sql_condition *cond)
+{
+	cond->negated = TRUE;
+
+	return cond;
+}
+
 
 sql_order_field *
 sql_order_field_build (GList * name, sql_ordertype order_type)

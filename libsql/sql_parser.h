@@ -182,22 +182,26 @@ typedef enum
 {
 	SQL_eq,
 	SQL_is,
-	SQL_isnot,
 	SQL_in,
 	SQL_like,
-	SQL_notin,
 	SQL_between,
 	SQL_gt,
 	SQL_lt,
 	SQL_geq,
 	SQL_leq,
-	SQL_diff
+	SQL_diff,
+	SQL_regexp,
+	SQL_regexp_ci,
+	SQL_not_regexp,
+	SQL_not_regexp_ci,
+	SQL_similar
 }
 sql_condition_operator;
 
 struct sql_condition
 {
 	sql_condition_operator op;
+	gboolean               negated;
 
 	union
 	{

@@ -51,6 +51,7 @@ sql_condition *sql_build_condition (sql_field * left, sql_field * right,
 sql_condition *sql_build_condition_between (sql_field * field,
 					    sql_field * lower,
 					    sql_field * upper);
+sql_condition *sql_condition_negate (sql_condition *cond);
 /* field order */
 sql_order_field *sql_order_field_build (GList * name, sql_ordertype order_type);
 

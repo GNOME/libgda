@@ -70,14 +70,8 @@ sql_display_condition (int indent, sql_condition * cond)
 	case SQL_is:
 		condstr = "IS";
 		break;
-	case SQL_isnot:
-		condstr = "IS NOT";
-		break;
 	case SQL_in:
 		condstr = "IN";
-		break;
-	case SQL_notin:
-		condstr = "NOT IN";
 		break;
 	case SQL_like:
 		condstr = "LIKE";
@@ -100,22 +94,43 @@ sql_display_condition (int indent, sql_condition * cond)
 	case SQL_between:
 		condstr = "BETWEEN";
 		break;
+	case SQL_regexp:
+		condstr = "~";
+		break;
+	case SQL_regexp_ci:
+		condstr = "~*";
+		break;
+	case SQL_not_regexp:
+		condstr = "!~";
+		break;
+	case SQL_not_regexp_ci:
+		condstr = "!~*";
+		break;
+	case SQL_similar:
+		condstr = "SIMILAR TO";
+		break;
 	default:
 		condstr = "UNKNOWN OPERATOR! (THIS IS AN ERROR)";
 	}
 
-	output ("op: %s", condstr);
+	if (cond->negated)
+		output ("op: NOT %s", condstr);
+	else
+		output ("op: %s", condstr);
 	switch (cond->op) {
 	case SQL_eq:
 	case SQL_is:
-	case SQL_isnot:
 	case SQL_in:
-	case SQL_notin:
 	case SQL_like:
 	case SQL_gt:
 	case SQL_lt:
 	case SQL_geq:
 	case SQL_leq:
+	case SQL_regexp:
+	case SQL_regexp_ci:
+	case SQL_not_regexp:
+	case SQL_not_regexp_ci:
+	case SQL_similar:
 		output ("left:");
 		sql_display_field (indent + 1, cond->d.pair.left);
 		output ("right:");
