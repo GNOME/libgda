@@ -1,7 +1,7 @@
 # Swedish translation of libgda.
-# Copyright (C) 1999, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
+# Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004 Free Software Foundation, Inc.
 # Andreas Hyden <a.hyden@cyberpoint.se>, 2000.
-# Christian Rose <menthos@menthos.com>, 2000, 2001, 2002, 2003.
+# Christian Rose <menthos@menthos.com>, 2000, 2001, 2002, 2003, 2004.
 #
 # $Id$
 #
@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-03-23 13:16+0100\n"
-"PO-Revision-Date: 2003-09-18 11:08+0200\n"
+"POT-Creation-Date: 2004-04-16 22:49+0200\n"
+"PO-Revision-Date: 2004-04-16 22:49+0200\n"
 "Last-Translator: Christian Rose <menthos@menthos.com>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -53,9 +53,8 @@ msgid "Id"
 msgstr "Id"
 
 #: libgda/gda-config.c:1195
-#, fuzzy
 msgid "Location"
-msgstr "Funktion"
+msgstr "Plats"
 
 #: libgda/gda-config.c:1196 libgda/gda-config.c:1455
 #: providers/ibmdb2/gda-ibmdb2-provider.c:863
@@ -101,9 +100,9 @@ msgid "Password"
 msgstr "Lösenord"
 
 #: libgda/gda-data-model.c:889
-#, fuzzy, c-format
+#, c-format
 msgid "Data model %p is not updatable"
-msgstr "Datamodellen %p är inte redigerbar"
+msgstr "Datamodellen %p är inte uppdateringsbar"
 
 #: libgda/gda-init.c:47
 msgid "Attempt to initialize an already initialized client"
@@ -390,7 +389,7 @@ msgstr "Funktion"
 #: providers/postgres/gda-postgres-provider.c:1196
 #: providers/postgres/gda-postgres-provider.c:1313
 #: providers/postgres/gda-postgres-provider.c:1946
-#: providers/sqlite/gda-sqlite-provider.c:751
+#: providers/sqlite/gda-sqlite-provider.c:788
 #: providers/sybase/gda-sybase-provider.c:1098
 msgid "Owner"
 msgstr "Ägare"
@@ -444,7 +443,7 @@ msgstr "Utlösare"
 #: providers/odbc/gda-odbc-provider.c:1360
 #: providers/oracle/gda-oracle-provider.c:2095
 #: providers/postgres/gda-postgres-provider.c:1135
-#: providers/sqlite/gda-sqlite-provider.c:750
+#: providers/sqlite/gda-sqlite-provider.c:787
 #: providers/sybase/gda-sybase-provider.c:1096
 msgid "Type"
 msgstr "Typ"
@@ -471,7 +470,7 @@ msgstr "Typ"
 #: providers/postgres/gda-postgres-provider.c:1197
 #: providers/postgres/gda-postgres-provider.c:1314
 #: providers/postgres/gda-postgres-provider.c:1947
-#: providers/sqlite/gda-sqlite-provider.c:752
+#: providers/sqlite/gda-sqlite-provider.c:789
 #: providers/sybase/gda-sybase-provider.c:1100
 msgid "Comments"
 msgstr "Kommentarer"
@@ -482,7 +481,7 @@ msgstr "Kommentarer"
 #: providers/odbc/gda-odbc-provider.c:1363
 #: providers/oracle/gda-oracle-provider.c:2097
 #: providers/postgres/gda-postgres-provider.c:1138
-#: providers/sqlite/gda-sqlite-provider.c:753
+#: providers/sqlite/gda-sqlite-provider.c:790
 #: providers/sybase/gda-sybase-provider.c:1102
 msgid "GDA type"
 msgstr "GDA-typ"
@@ -569,7 +568,7 @@ msgstr "Transaktioner stöds inte i MDB-leverantör"
 #: providers/odbc/gda-odbc-provider.c:949
 #: providers/oracle/gda-oracle-provider.c:1248
 #: providers/postgres/gda-postgres-provider.c:1363
-#: providers/sqlite/gda-sqlite-provider.c:621
+#: providers/sqlite/gda-sqlite-provider.c:658
 #: providers/xml/gda-xml-provider.c:489
 msgid "Field name"
 msgstr "Fältnamn"
@@ -579,7 +578,7 @@ msgstr "Fältnamn"
 #: providers/odbc/gda-odbc-provider.c:950
 #: providers/oracle/gda-oracle-provider.c:1249
 #: providers/postgres/gda-postgres-provider.c:1364
-#: providers/sqlite/gda-sqlite-provider.c:622
+#: providers/sqlite/gda-sqlite-provider.c:659
 #: providers/xml/gda-xml-provider.c:490
 msgid "Data type"
 msgstr "Datatyp"
@@ -589,7 +588,7 @@ msgstr "Datatyp"
 #: providers/odbc/gda-odbc-provider.c:951
 #: providers/oracle/gda-oracle-provider.c:1250
 #: providers/postgres/gda-postgres-provider.c:1365
-#: providers/sqlite/gda-sqlite-provider.c:623
+#: providers/sqlite/gda-sqlite-provider.c:660
 #: providers/xml/gda-xml-provider.c:491
 msgid "Size"
 msgstr "Storlek"
@@ -599,7 +598,7 @@ msgstr "Storlek"
 #: providers/odbc/gda-odbc-provider.c:952
 #: providers/oracle/gda-oracle-provider.c:1251
 #: providers/postgres/gda-postgres-provider.c:1366
-#: providers/sqlite/gda-sqlite-provider.c:624
+#: providers/sqlite/gda-sqlite-provider.c:661
 #: providers/xml/gda-xml-provider.c:492
 msgid "Scale"
 msgstr "Skala"
@@ -609,7 +608,7 @@ msgstr "Skala"
 #: providers/odbc/gda-odbc-provider.c:953
 #: providers/oracle/gda-oracle-provider.c:1252
 #: providers/postgres/gda-postgres-provider.c:1367
-#: providers/sqlite/gda-sqlite-provider.c:625
+#: providers/sqlite/gda-sqlite-provider.c:662
 #: providers/xml/gda-xml-provider.c:493
 msgid "Not null?"
 msgstr "Inte null?"
@@ -619,7 +618,7 @@ msgstr "Inte null?"
 #: providers/odbc/gda-odbc-provider.c:954
 #: providers/oracle/gda-oracle-provider.c:1253
 #: providers/postgres/gda-postgres-provider.c:1368
-#: providers/sqlite/gda-sqlite-provider.c:626
+#: providers/sqlite/gda-sqlite-provider.c:663
 #: providers/xml/gda-xml-provider.c:494
 msgid "Primary key?"
 msgstr "Primärnyckel?"
@@ -629,7 +628,7 @@ msgstr "Primärnyckel?"
 #: providers/odbc/gda-odbc-provider.c:955
 #: providers/oracle/gda-oracle-provider.c:1254
 #: providers/postgres/gda-postgres-provider.c:1369
-#: providers/sqlite/gda-sqlite-provider.c:627
+#: providers/sqlite/gda-sqlite-provider.c:664
 #: providers/xml/gda-xml-provider.c:495
 msgid "Unique index?"
 msgstr "Unikt index?"
@@ -639,7 +638,7 @@ msgstr "Unikt index?"
 #: providers/odbc/gda-odbc-provider.c:956
 #: providers/oracle/gda-oracle-provider.c:1255
 #: providers/postgres/gda-postgres-provider.c:1370
-#: providers/sqlite/gda-sqlite-provider.c:628
+#: providers/sqlite/gda-sqlite-provider.c:665
 #: providers/xml/gda-xml-provider.c:496
 msgid "References"
 msgstr "Referenser"
@@ -649,7 +648,7 @@ msgstr "Referenser"
 #: providers/odbc/gda-odbc-provider.c:957
 #: providers/oracle/gda-oracle-provider.c:1256
 #: providers/postgres/gda-postgres-provider.c:1371
-#: providers/sqlite/gda-sqlite-provider.c:629
+#: providers/sqlite/gda-sqlite-provider.c:666
 msgid "Default value"
 msgstr "Standardvärde"
 
@@ -751,9 +750,9 @@ msgstr "Kunde inte tolka kommandot \"%s\""
 #. parsing went fine, but there is no result
 #. (e.g. because of an invalid column name)
 #: providers/mdb/gda-mdb-provider.c:744
-#, fuzzy, c-format
+#, c-format
 msgid "Got no result for '%s' command"
-msgstr "Kunde inte tolka kommandot \"%s\""
+msgstr "Fick inget resultat för kommandot \"%s\""
 
 #: providers/mdb/gda-mdb-table.c:48 providers/xml/gda-xml-provider.c:519
 #, c-format
@@ -846,7 +845,7 @@ msgstr "Ogiltigt MYSQL-handtag"
 #: providers/oracle/gda-oracle-provider.c:857
 #: providers/oracle/gda-oracle-provider.c:939
 #: providers/oracle/gda-oracle-provider.c:1000
-#: providers/sqlite/gda-sqlite-provider.c:471
+#: providers/sqlite/gda-sqlite-provider.c:508
 msgid "Transactions are not supported in read-only mode"
 msgstr "Transaktioner stöds inte i skrivskyddat läge"
 
@@ -1202,19 +1201,19 @@ msgstr "Databaser"
 
 #: providers/postgres/gda-postgres-recordset.c:228
 msgid "Given row doesn't belong to the model."
-msgstr ""
+msgstr "Den givna raden hör inte till modellen."
 
 #: providers/postgres/gda-postgres-recordset.c:235
 msgid "Table name could not be guessed."
-msgstr ""
+msgstr "Tabellnamnet kunde inte gissas."
 
 #: providers/postgres/gda-postgres-recordset.c:287
 msgid "Model doesn't have at least one non-modified unique key."
-msgstr ""
+msgstr "Modellen har inte minst en omodifierad unik nyckel."
 
 #: providers/postgres/gda-postgres-recordset.c:291
 msgid "Model doesn't have any non-unique values to update."
-msgstr ""
+msgstr "Modellen har inga ickeunika värden att uppdatera."
 
 #: providers/postgres/gda-postgres-recordset.c:363
 #: providers/sqlite/gda-sqlite-recordset.c:210
@@ -1244,29 +1243,29 @@ msgid "Could not set empty_result_callbacks SQLite option"
 msgstr "Kunde inte ställa in SQLite-alternativet empty_result_callbacks"
 
 #: providers/sqlite/gda-sqlite-provider.c:242
-#: providers/sqlite/gda-sqlite-provider.c:342
-#: providers/sqlite/gda-sqlite-provider.c:553
-#: providers/sqlite/gda-sqlite-provider.c:718
+#: providers/sqlite/gda-sqlite-provider.c:379
+#: providers/sqlite/gda-sqlite-provider.c:590
+#: providers/sqlite/gda-sqlite-provider.c:755
 #: providers/sqlite/gda-sqlite-recordset.c:156
 #: providers/sqlite/gda-sqlite-recordset.c:195
 #: providers/sqlite/gda-sqlite-recordset.c:236
 msgid "Invalid SQLite handle"
 msgstr "Ogiltigt SQLite-handtag"
 
-#: providers/sqlite/gda-sqlite-provider.c:264
+#: providers/sqlite/gda-sqlite-provider.c:300
 msgid "Invalid SQLITE handle"
 msgstr "Ogiltigt SQLITE-handtag"
 
-#: providers/sqlite/gda-sqlite-provider.c:360
-#: providers/sqlite/gda-sqlite-provider.c:375
+#: providers/sqlite/gda-sqlite-provider.c:397
+#: providers/sqlite/gda-sqlite-provider.c:412
 msgid "Only one database per connection is allowed"
 msgstr "Endast en databas per anslutning är tillåten"
 
-#: providers/sqlite/gda-sqlite-provider.c:389
+#: providers/sqlite/gda-sqlite-provider.c:426
 msgid "To remove a SQLite database you should remove the database file by hand"
 msgstr "För att ta bort en SQLite-databas bör du ta bort databasfilen för hand"
 
-#: providers/sqlite/gda-sqlite-provider.c:663
+#: providers/sqlite/gda-sqlite-provider.c:700
 msgid "Could not retrieve information for field"
 msgstr "Kunde inte hämta information för fält"
 
@@ -1574,14 +1573,13 @@ msgid ") Message: "
 msgstr ") Meddelande: "
 
 #: providers/sybase/utils.c:244
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Sybase OpenClient Msg: severity(%ld), number(%ld), origin(%ld), layer(%ld): %"
 "s"
 msgstr ""
-"CT-klientfel:\n"
-"\tallvarlighet(%ld) lager(%ld) ursprung (%ld) nummer(%ld)\n"
-"\t%s"
+"Sybase OpenClient-meddelande: allvarlighet(%ld), nummer(%ld), ursprung(%ld), "
+"lager(%ld): %s"
 
 #: providers/sybase/utils.c:272
 msgid "call to cs_diag failed when attempting to clear the client messages"
@@ -1961,29 +1959,25 @@ msgid "\tgda_params ="
 msgstr "\tgda_params ="
 
 #: providers/bdb/gda-bdb-provider.c:154
-#, fuzzy
 msgid "The FILE parameter is not defined in the connection string."
-msgstr "En databas FILNAMN måste anges i anslutningssträngen"
+msgstr "Parametern FIL är inte angiven i anslutningssträngen."
 
 #: providers/bdb/gda-bdb-provider.c:185
 msgid "-"
-msgstr ""
+msgstr "-"
 
 #: providers/bdb/gda-bdb-provider.c:242 providers/bdb/gda-bdb-provider.c:263
 #: providers/bdb/gda-bdb-provider.c:286
-#, fuzzy
 msgid "Invalid BDB handle"
-msgstr "Ogiltigt MDB-handtag"
+msgstr "Ogiltigt BDB-handtag"
 
 #: providers/bdb/gda-bdb-recordset.c:242
-#, fuzzy
 msgid "Database is empty"
-msgstr "Databaser"
+msgstr "Databasen är tom"
 
 #: providers/bdb/libmain.c:39
-#, fuzzy
 msgid "Provider for Berkeley databases"
-msgstr "Leverantör för Oracle-databaser"
+msgstr "Leverantör för Berkeley-databaser"
 
 #~ msgid "Sybase OpenClient Msg: severity("
 #~ msgstr "Sybase OpenClient-meddelande: allvarlighet("
