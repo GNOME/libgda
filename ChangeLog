@@ -1,3 +1,10 @@
+2003-10-07  Laurent Sansonetti <laurent@datarescue.be>
+
+	* libgda/gda-quark-list.c:
+	* libgda/gda-quark-list.h: introduced gda_quark_list_clear() +
+	gda_quark_list_add_from_string() takes care of the 'cleanup'
+	boolean parameter. 
+
 2003-10-01  Murray Cumming  <murrayc@usa.net>
  
  	* libgda/Makefile.am: Use glib-mkenums to generate

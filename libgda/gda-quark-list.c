@@ -82,6 +82,22 @@ gda_quark_list_new_from_string (const gchar *string)
 }
 
 /**
+ * gda_quark_list_clear
+ * @qlist: a #GdaQuarkList.
+ *
+ * Remove all strings in the given #GdaQuarkList.
+ */
+static void
+gda_quark_list_clear(GdaQuarkList *qlist)
+{
+	g_return_if_fail (qlist != NULL);
+	
+	g_hash_table_foreach_remove (qlist->hash_table,
+				     (GHRFunc) free_hash_pair,
+				     g_free);
+}
+
+/**
  * gda_quark_list_free
  * @qlist: a #GdaQuarkList.
  *
@@ -92,9 +108,7 @@ gda_quark_list_free (GdaQuarkList *qlist)
 {
 	g_return_if_fail (qlist != NULL);
 
-	g_hash_table_foreach_remove (qlist->hash_table,
-				     (GHRFunc) free_hash_pair,
-				     g_free);
+	gda_quark_list_clear(qlist);
 	g_hash_table_destroy (qlist->hash_table);
 
 	g_free (qlist);
@@ -104,7 +118,7 @@ gda_quark_list_free (GdaQuarkList *qlist)
  * gda_quark_list_add_from_string
  * @qlist: a #GdaQuarkList.
  * @string: a connection string.
- * @cleanup: whther to cleanup the previous content or not.
+ * @cleanup: whether to cleanup the previous content or not.
  *
  * Add new key->value pairs from the given @string. If @cleanup is
  * set to TRUE, the previous contents will be discarded before adding
@@ -120,7 +134,8 @@ gda_quark_list_add_from_string (GdaQuarkList *qlist,
 	g_return_if_fail (qlist != NULL);
 	g_return_if_fail (string != NULL);
 
-	/* FIXME: remove all strings if cleanup != FALSE */
+	if (cleanup != FALSE)
+		gda_quark_list_clear(qlist);
 
 	arr = (gchar **) g_strsplit (string, ";", 0);
 	if (arr) {
