@@ -156,9 +156,43 @@ gda_postgres_provider_get_type (void)
 	return type;
 }
 
+static GdaType
+postgres_name_to_gda_type (const gchar *name)
+{
+	if (!strcmp (name, "bool"))
+		return GDA_TYPE_BOOLEAN;
+	else if (!strcmp (name, "int8"))
+		return GDA_TYPE_BIGINT;
+	else if (!strcmp (name, "int4") || !strcmp (name, "abstime") || !strcmp (name, "oid"))
+		return GDA_TYPE_INTEGER;
+	else if (!strcmp (name, "int2"))
+		return GDA_TYPE_SMALLINT;
+	else if (!strcmp (name, "float4"))
+		return GDA_TYPE_SINGLE;
+	else if (!strcmp (name, "float8"))
+		return GDA_TYPE_DOUBLE;
+	else if (!strcmp (name, "numeric"))
+		return GDA_TYPE_NUMERIC;
+	else if (!strncmp (name, "timestamp", 9))
+		return GDA_TYPE_TIMESTAMP;
+	else if (!strcmp (name, "date"))
+		return GDA_TYPE_DATE;
+	else if (!strncmp (name, "time", 4))
+		return GDA_TYPE_TIME;
+	else if (!strcmp (name, "point"))
+		return GDA_TYPE_GEOMETRIC_POINT;
+	/*TODO: by now, this one not supported
+	if (!strncmp (name, "bit", 3))
+		return GDA_TYPE_BINARY;
+	*/
+
+	return GDA_TYPE_STRING;
+}
+
 static int
 get_connection_type_list (GdaPostgresConnectionData *priv_td)
 {
+	GHashTable *h_table;
 	GdaPostgresTypeOid *td;
 	PGresult *pg_res;
 	gint nrows, i;
@@ -176,15 +210,19 @@ get_connection_type_list (GdaPostgresConnectionData *priv_td)
 	}
 
 	nrows = PQntuples (pg_res);
-	td = g_new0 (GdaPostgresTypeOid, nrows);
+	td = g_new (GdaPostgresTypeOid, nrows);
+	h_table = g_hash_table_new (g_str_hash, g_str_equal);
 	for (i = 0; i < nrows; i++) {
 		td[i].name = g_strdup (PQgetvalue (pg_res, i, 1));
 		td[i].oid = atoi (PQgetvalue (pg_res, i, 0));
+		td[i].type = postgres_name_to_gda_type (td[i].name);
+		g_hash_table_insert (h_table, td[i].name, &td[i].type);
 	}
 
 	PQclear (pg_res);
 	priv_td->ntypes = nrows;
 	priv_td->type_data = td;
+	priv_td->h_table = h_table;
 
 	return 0;
 }
@@ -266,7 +304,7 @@ gda_postgres_provider_open_connection (GdaServerProvider *provider,
 	pg_res = PQexec (pconn, "SET DATESTYLE TO 'ISO'");
 	PQclear (pg_res);
 
-	priv_data = g_new0 (GdaPostgresConnectionData, 1);
+	priv_data = g_new (GdaPostgresConnectionData, 1);
 	priv_data->pconn = pconn;
 	if (get_connection_type_list (priv_data) != 0) {
 		gda_server_connection_add_error (
@@ -301,6 +339,7 @@ gda_postgres_provider_close_connection (GdaServerProvider *provider, GdaServerCo
 	for (i = 0; i < priv_data->ntypes; i++)
 		g_free (priv_data->type_data[i].name);
 	
+	g_hash_table_destroy (priv_data->h_table);
 	g_free (priv_data->type_data);
 	g_free (priv_data);
 
@@ -729,7 +768,7 @@ gda_postgres_get_idx_data (PGconn *pconn, const gchar *tblname)
 
 	nidx = PQntuples (pg_idx);
 
-	idx_data = g_new0 (GdaPostgresIdxData, nidx);
+	idx_data = g_new (GdaPostgresIdxData, nidx);
 	for (i = 0; i < nidx; i++){
 		gchar **arr, **ptr;
 		gint ncolumns;
@@ -753,11 +792,12 @@ gda_postgres_get_idx_data (PGconn *pconn, const gchar *tblname)
 			ncolumns++;
 
 		idx_data[i].ncolumns = ncolumns;
-		idx_data[i].columns = g_new0 (gint, ncolumns);
+		idx_data[i].columns = g_new (gint, ncolumns);
 		for (k = 0; k < ncolumns; k++)
 			idx_data[i].columns[k] = atoi (arr[k]) - 1;
 
 		idx_list = g_list_append (idx_list, &idx_data[i]);
+		g_strfreev (arr);
 	}
 
 	PQclear (pg_idx);
@@ -815,7 +855,7 @@ gda_postgres_get_ref_data (PGconn *pconn, const gchar *tblname)
 
 	nref = PQntuples (pg_ref);
 
-	ref_data = g_new0 (GdaPostgresRefData, nref);
+	ref_data = g_new (GdaPostgresRefData, nref);
 	for (i = 0; i < nref; i++){
 		gchar **arr;
 		gchar *value;
@@ -827,6 +867,8 @@ gda_postgres_get_ref_data (PGconn *pconn, const gchar *tblname)
 			ref_data[i].reference = g_strdup_printf ("%s.%s", arr[2], arr[5]);
 			ref_list = g_list_append (ref_list, &ref_data[i]);
 		}
+
+		g_strfreev (arr);
 	}
 
 	PQclear (pg_ref);
@@ -905,7 +947,8 @@ gda_postgres_fill_md_data (const gchar *tblname, GdaServerRecordsetModel *recset
 
 		/* Data type */
 		thevalue = PQgetvalue(pg_res, i, 1);
-		type = gda_postgres_type_name_to_gda (thevalue);
+		type = gda_postgres_type_name_to_gda (priv_data->h_table, 
+						      thevalue);
 		value = gda_value_new_integer (type);
 		rowlist = g_list_append (rowlist, value);
 
@@ -977,7 +1020,6 @@ add_g_list_row (gpointer data, gpointer user_data)
 	GList *rowlist = data;
 	GdaServerRecordsetModel *recset = user_data;
 
-
 	gda_server_recordset_model_append_row (recset, rowlist);
 	g_list_foreach (rowlist, (GFunc) gda_value_free, NULL);
 	g_list_free (rowlist);
@@ -993,14 +1035,12 @@ get_postgres_fields_metadata (GdaServerConnection *cnc, GdaParameterList *params
 	const gchar *tblname;
 
 	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), NULL);
-	
 	g_return_val_if_fail (params != NULL, NULL);
 
 	par = gda_parameter_list_find (params, "name");
 	g_return_val_if_fail (par != NULL, NULL);
 
 	tblname = gda_value_get_string (gda_parameter_get_value (par));
-
 	g_return_val_if_fail (tblname != NULL, NULL);
 	
 	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE);

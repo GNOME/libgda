@@ -47,34 +47,13 @@ gda_postgres_make_error (PGconn *handle)
 }
 
 GdaType
-gda_postgres_type_name_to_gda (const gchar *name)
+gda_postgres_type_name_to_gda (GHashTable *h_table, const gchar *name)
 {
-	if (!strcmp (name, "bool"))
-		return GDA_TYPE_BOOLEAN;
-	if (!strcmp (name, "int8"))
-		return GDA_TYPE_BIGINT;
-	if (!strcmp (name, "int4") || !strcmp (name, "abstime") || !strcmp (name, "oid"))
-		return GDA_TYPE_INTEGER;
-	if (!strcmp (name, "int2"))
-		return GDA_TYPE_SMALLINT;
-	if (!strcmp (name, "float4"))
-		return GDA_TYPE_SINGLE;
-	if (!strcmp (name, "float8"))
-		return GDA_TYPE_DOUBLE;
-	if (!strcmp (name, "numeric"))
-		return GDA_TYPE_NUMERIC;
-	if (!strncmp (name, "timestamp", 9))
-		return GDA_TYPE_TIMESTAMP;
-	if (!strcmp (name, "date"))
-		return GDA_TYPE_DATE;
-	if (!strncmp (name, "time", 4))
-		return GDA_TYPE_TIME;
-	/*TODO: by now, this one not supported
-	if (!strncmp (name, "bit", 3))
-		return GDA_TYPE_BINARY;
-	*/
-	if (!strcmp (name, "point"))
-		return GDA_TYPE_GEOMETRIC_POINT;
+	GdaType *type;
+
+	type = g_hash_table_lookup (h_table, name);
+	if (type)
+		return *type;
 
 	return GDA_TYPE_STRING;
 }
@@ -91,7 +70,7 @@ gda_postgres_type_oid_to_gda (GdaPostgresTypeOid *type_data, gint ntypes, Oid po
 	if (type_data[i].oid != postgres_type)
 		return GDA_TYPE_STRING;
 
-	return gda_postgres_type_name_to_gda (type_data[i].name);
+	return type_data[i].type;
 }
 
 /* Makes a point from a string like "(3.2,5.6)" */

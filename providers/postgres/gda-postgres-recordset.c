@@ -33,6 +33,7 @@ typedef struct {
 	PGresult *pg_res;
 	gint ntypes;
 	GdaPostgresTypeOid *type_data;
+	GHashTable *h_table;
 } GdaPostgresRecordsetPrivate;
 
 /*
@@ -42,10 +43,12 @@ typedef struct {
 static void
 free_postgres_res (gpointer data)
 {
-	PGresult *pg_res = (PGresult *) data;
+	GdaPostgresRecordsetPrivate *priv_data = (GdaPostgresRecordsetPrivate *) data;
 
-	g_return_if_fail (pg_res != NULL);
-	PQclear (pg_res);
+	g_return_if_fail (priv_data != NULL);
+
+	PQclear (priv_data->pg_res);
+	g_free (priv_data);
 }
 
 static GdaRow *
@@ -172,10 +175,11 @@ gda_postgres_recordset_new (GdaServerConnection *cnc, PGresult *pg_res)
 
 	cnc_priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE);
 
-	priv_data = g_new0 (GdaPostgresRecordsetPrivate, 1);
+	priv_data = g_new (GdaPostgresRecordsetPrivate, 1);
 	priv_data->pg_res = pg_res;
 	priv_data->ntypes = cnc_priv_data->ntypes;
 	priv_data->type_data = cnc_priv_data->type_data;
+	priv_data->h_table = cnc_priv_data->h_table;
 
 	g_object_set_data_full (G_OBJECT (recset), OBJECT_DATA_RECSET_HANDLE,
 				priv_data, (GDestroyNotify) free_postgres_res);

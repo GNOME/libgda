@@ -50,7 +50,7 @@ void gda_postgres_set_field_data (GdaField *field, const gchar *fname,
 
 GdaType gda_postgres_type_oid_to_gda (GdaPostgresTypeOid *type_data, 
 				  gint ntypes, Oid postgres_type);
-GdaType gda_postgres_type_name_to_gda (const gchar *name);
+GdaType gda_postgres_type_name_to_gda (GHashTable *h_table, const gchar *name);
 
 G_END_DECLS
 

@@ -1,5 +1,13 @@
 2002-03-20  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
+	* providers/postgres/gda-postgres-provider.[ch]: 
+	* providers/postgres/gda-postgres-recordset.c: 
+	* providers/postgres/gda-postgres.h: 
+	* providers/postgres/utils.c: improved performance for type mapping
+	between PostgreSQL OIDs and GdaType. Fixed a couple of memory leaks.
+
+2002-03-20  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
 	* libgda/gda-value.c (gda_value_stringify): added support for
 	GDA_TYPE_NUMERIC.
 	* providers/postgres/gda-postgres-provider.c: added support for

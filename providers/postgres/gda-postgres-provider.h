@@ -53,12 +53,14 @@ struct _GdaPostgresProviderClass {
 typedef struct {
 	gchar *name;
 	Oid oid;
+	GdaType type;
 } GdaPostgresTypeOid;
 
 typedef struct {
 	PGconn *pconn;
 	gint ntypes;
 	GdaPostgresTypeOid *type_data;
+	GHashTable *h_table;
 } GdaPostgresConnectionData;
 
 
