@@ -38,9 +38,10 @@
  * if there is an error.
  */
 gchar *
-gda_file_load (const gchar *uri)
+gda_file_load (const gchar *uristr)
 {
 	GnomeVFSHandle *handle;
+	GnomeVFSURI *uri;
 	GnomeVFSResult result;
 	GnomeVFSFileSize size;
 	GString *str = NULL;
@@ -49,8 +50,13 @@ gda_file_load (const gchar *uri)
 
 	g_return_val_if_fail (uri != NULL, NULL);
 
+	uri = gnome_vfs_uri_new (uristr);
+	if (!uri)
+		return FALSE;
+
 	/* open the file */
-	result = gnome_vfs_open (&handle, uri, GNOME_VFS_OPEN_READ);
+	result = gnome_vfs_open_uri (&handle, uri, GNOME_VFS_OPEN_READ);
+	gnome_vfs_uri_unref (uri);
 	if (result != GNOME_VFS_OK)
 		return NULL;
 

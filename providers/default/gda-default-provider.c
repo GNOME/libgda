@@ -142,7 +142,7 @@ gda_default_provider_open_connection (GdaServerProvider *provider,
 				      const gchar *username,
 				      const gchar *password)
 {
-	const gchar *t_filename = NULL;
+	const gchar *t_uri = NULL;
 	GdaXmlDatabase *xmldb;
 	
 	GdaDefaultProvider *dfprv = (GdaDefaultProvider *) provider;
@@ -151,9 +151,9 @@ gda_default_provider_open_connection (GdaServerProvider *provider,
 	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), FALSE);
 
 	/* get all parameters received */
-	t_filename = gda_quark_list_find (params, "FILENAME");
+	t_uri = gda_quark_list_find (params, "URI");
 
-	if (!t_filename || *t_filename != '/') {
+	if (!t_uri) {
 		gda_server_connection_add_error_string (
 			cnc,
 			_("A full path must be specified on the "
@@ -162,7 +162,7 @@ gda_default_provider_open_connection (GdaServerProvider *provider,
 	}
 
 	/* open the given filename */
-	xmldb = gda_xml_database_new_from_uri ((const gchar *) t_filename);
+	xmldb = gda_xml_database_new_from_uri ((const gchar *) t_uri);
 	if (!xmldb) {
 		gda_server_connection_add_error_string (cnc, _("Could not open given file"));
 		return FALSE;
@@ -170,7 +170,7 @@ gda_default_provider_open_connection (GdaServerProvider *provider,
 
 	g_object_set_data (G_OBJECT (cnc), OBJECT_DATA_DEFAULT_HANDLE, xmldb);
 	
-	return FALSE;
+	return TRUE;
 }
 
 /* close_connection handler for the GdaDefaultProvider class */

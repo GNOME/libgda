@@ -18,7 +18,7 @@
 	<oaf_attribute name="description" type="string"
 	               _value="GDA Default Datasource Access"/>
 	<oaf_attribute name="gda_params" type="stringv">
-		<item value="FILENAME"/>
+		<item value="URI"/>
 	</oaf_attribute>
 </oaf_server>
 

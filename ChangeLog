@@ -1,5 +1,19 @@
 2002-03-18  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* providers/default/GNOME_Database_Provider_Default.server.in: use
+	URI instead of FILENAME, since we'll be able to support remote files.
+
+	* providers/default/gda-default-provider.c
+	(gda_default_provider_open_connection): use URI instead of FILENAME.
+
+	* libgda/gda-util.c (gda_file_load): create a GnomeVFSURI instead of
+	using the URI string directly.
+
+	* libgda/gda-init.c (gda_init): don't call
+	gnome_vfs_configuration_init, but gnome_vfs_init.
+
+2002-03-18  Rodrigo Moya <rodrigo@gnome-db.org>
+
 	* libgda/gda-xml-database.[ch] (gda_xml_database_reload): new function
 	(gda_xml_database_save): new function.
 	(gda_xml_database_new_from_uri): store the uri in our internal data.

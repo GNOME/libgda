@@ -247,9 +247,9 @@ gda_xml_database_new_from_uri (const gchar *uri)
 		else if (!strcmp (node->name, OBJECT_VIEWS_NODE))
 			process_views_node (xmldb, children);
 		else {
-			gda_log_error (_("Invalid XML database file '%s'"), uri);
-			g_object_unref (G_OBJECT (xmldb));
-			return NULL;
+			//gda_log_error (_("Invalid XML database file '%s'"), uri);
+			//g_object_unref (G_OBJECT (xmldb));
+			//return NULL;
 		}
 
 		node = node->next;
