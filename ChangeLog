@@ -1,3 +1,8 @@
+2005-01-15  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* libsql/Makefile.am: use GDA* for soname version. Added LIBADD
+	to fix test program compiling problem.
+	
 2005-01-11  Bas Driessen <bas.driessen@xobas.com>
 
 	* providers/postgres/gda-postgres-recordset.c
