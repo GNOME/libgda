@@ -1,3 +1,8 @@
+2002-09-18  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* report/libgda-report/gda-report-document.[ch]: fixed public
+	functions' names.
+
 2002-09-15  Holger Thon <holger.thon@gnome-db.org>
 
 	* providers/freetds/gda-freetds-provider.c: fixed compile error
