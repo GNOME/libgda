@@ -28,9 +28,9 @@ gda_report_engine_LDADD = \
 	$(top_builddir)/lib/gda-common/libgda-common.la \
 	$(top_builddir)/lib/gda-client/libgda-client.la
 
-oafdir=$(GDA_oafdir)
-oaf_in_files = GNOME_GDA_Report.oaf.in
-oaf_DATA = $(oaf_in_files:.oaf.in=.oaf)
-@XML_I18N_MERGE_OAF_RULE@
+serverdir=$(GDA_serverdir)
+server_in_files = GNOME_Database_Report.server.in
+server_DATA = $(server_in_files:.server.in=.server)
+@XML_I18N_MERGE_SERVER_RULE@
 
-EXTRA_DIST = $(oaf_in_files) $(oaf_DATA)
+EXTRA_DIST = $(server_in_files) $(server_DATA)
