@@ -36,6 +36,7 @@ typedef enum {
 typedef struct _GdaBlob GdaBlob;
 
 struct _GdaBlob {
+	/* Private */
 	gint (* open) (GdaBlob *blob, GdaBlobMode mode);
 
 	gint (* read) (GdaBlob *blob, gpointer buf, gint size,
@@ -54,8 +55,8 @@ struct _GdaBlob {
 
 	void (* free_data) (GdaBlob *blob);
 
-	/* Private */
 	gpointer priv_data;
+	/* */
 
 	/* Public */
 	gpointer user_data;

@@ -1,3 +1,15 @@
+2003-08-24  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
+	* doc/C/libgda-docs.sgml:
+	* doc/C/tmpl/gda-blob.sgml:
+	* libgda/gda-connection.c:
+	* libgda/gda-blob.h: added documentation for GdaBlob.
+
+	* libgda/gda-server-provider.c:
+	* libgda/gda-data-model.c: make them abstract.
+
+	* testing/postgres-test.c: fixed double free.
+
 2003-08-23  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* libgda/gda-data-model.[ch] (gda_data_model_add_data_from_xml_node):

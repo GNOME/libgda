@@ -203,7 +203,7 @@ gda_data_model_get_type (void)
 				0,
 				(GInstanceInitFunc) gda_data_model_init
 			};
-			type = g_type_register_static (PARENT_TYPE, "GdaDataModel", &info, 0);
+			type = g_type_register_static (PARENT_TYPE, "GdaDataModel", &info, G_TYPE_FLAG_ABSTRACT);
 		}
 	}
 

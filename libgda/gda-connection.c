@@ -899,7 +899,7 @@ gda_connection_get_errors (GdaConnection *cnc)
  * @cnc: a #GdaConnection object.
  * @blob: a user-allocated #GdaBlob structure.
  *
- * Creates a BLOB (Binary Large OBject).
+ * Creates a BLOB (Binary Large OBject) with read/write access.
  *
  * Returns: FALSE if the database does not support BLOBs. TRUE otherwise
  * and the GdaBlob is created and ready to be used.

@@ -119,7 +119,7 @@ gda_server_provider_get_type (void)
 			0,
 			(GInstanceInitFunc) gda_server_provider_init
 		};
-		type = g_type_register_static (PARENT_TYPE, "GdaServerProvider", &info, 0);
+		type = g_type_register_static (PARENT_TYPE, "GdaServerProvider", &info, G_TYPE_FLAG_ABSTRACT);
 	}
 	return type;
 }
@@ -423,7 +423,7 @@ gda_server_provider_get_schema (GdaServerProvider *provider,
  * @cnc: a #GdaConnection object.
  * @blob: a user-allocated #GdaBlob structure.
  *
- * Creates a BLOB (Binary Large OBject).
+ * Creates a BLOB (Binary Large OBject) with read/write access.
  *
  * Returns: FALSE if the database does not support BLOBs. TRUE otherwise
  * and the GdaBlob is created and ready to be used.

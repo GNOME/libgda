@@ -29,6 +29,7 @@
 <!ENTITY fullexample SYSTEM "examples/full_example.c" CDATA linespecific>
 <!entity migration.sgml system "migration.sgml">
 <!ENTITY libgda-batch SYSTEM "sgml/gda-batch.sgml">
+<!ENTITY libgda-blob SYSTEM "sgml/gda-blob.sgml">
 <!ENTITY libgda-client SYSTEM "sgml/gda-client.sgml">
 <!ENTITY libgda-command SYSTEM "sgml/gda-command.sgml">
 <!ENTITY libgda-config SYSTEM "sgml/gda-config.sgml">
@@ -149,7 +150,7 @@
     </authorgroup>
     <date>1999 February</date>
     <copyright>
-      <year>1999-2002</year>
+      <year>1999-2003</year>
       <holder>The GNOME Foundation</holder>
     </copyright>
     <abstract>
@@ -2077,6 +2078,7 @@
     </para>
     &libgda-init;
     &libgda-batch;
+    &libgda-blob;
     &libgda-client;
     &libgda-command;
     &libgda-config;

@@ -271,7 +271,6 @@ blob_tests (GdaConnection *cnc)
 	gda_blob_free_data (blob);
 	g_free (blob);
 	g_object_unref (G_OBJECT (xaction));
-	g_free (blob);
 }
 
 /* Postgres provider tests */
