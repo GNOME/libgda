@@ -1,5 +1,12 @@
 2002-11-07  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
+	* doc/C/libgda-docs.sgml: fixed tutorial example. Thanks to
+	calvaris and others for pointing this out.
+	* libgda/gda-row.c: added comment to the documentation of
+	gda_row_get_value.
+
+2002-11-07  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
 	* libgda/gda-client.c: check that provider is not null before doing the
 	lookup.
 
