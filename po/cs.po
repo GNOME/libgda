@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda HEAD\n"
-"POT-Creation-Date: 2002-10-23 22:48+0200\n"
-"PO-Revision-Date: 2002-10-14 18:01GMT\n"
+"POT-Creation-Date: 2002-10-25 06:02+0200\n"
+"PO-Revision-Date: 2002-10-25 11:00GMT\n"
 "Last-Translator: Michal Bukovjan <bukm@centrum.cz>\n"
 "Language-Team: Czech <cs@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -177,8 +177,7 @@ msgstr "Neplatný uzel XML"
 
 #: providers/default/gda-default-provider.c:191
 #: providers/sqlite/gda-sqlite-provider.c:200
-msgid ""
-"A full path must be specified on the connection string to open a database."
+msgid "A full path must be specified on the connection string to open a database."
 msgstr ""
 "Pro otevření databáze musí být v připojovacím řetězci zadaná úplná cesta k "
 "databázi"
@@ -433,17 +432,41 @@ msgstr "Nelze alokovat handle prostředí.\n"
 #. is needed for tables schema
 #: providers/ibmdb2/gda-ibmdb2-provider.c:191
 msgid "SQLGetInfo is unsupported. Hence IBM DB2 Provider will not work.\n"
-msgstr ""
-"SQLGetInfo není podporované. Poskytovatel IBM DB2 tudíž nebude fungovat.\n"
+msgstr "SQLGetInfo není podporované. Poskytovatel IBM DB2 tudíž nebude fungovat.\n"
 
 #: providers/ibmdb2/gda-ibmdb2-provider.c:205
 msgid "SQLGetFunctions gave unexpected return. Connection terminated.\n"
-msgstr ""
-"SQLGetFunctions vrátila neočekávanou hodnotu. Spojení bylo přerušeno.\n"
+msgstr "SQLGetFunctions vrátila neočekávanou hodnotu. Spojení bylo přerušeno.\n"
 
 #: providers/ibmdb2/libmain.c:39
 msgid "GDA provider for IBMDB2"
 msgstr "Poskytovatel GDA pro IBMDB2"
+
+#: providers/interbase/gda-interbase-provider.c:186
+msgid "No database specified"
+msgstr "Není zadána databáze"
+
+#: providers/interbase/gda-interbase-provider.c:209
+msgid "Could not attach to database"
+msgstr "Nelze se připojit k databázi"
+
+#: providers/interbase/gda-interbase-provider.c:233
+#: providers/interbase/gda-interbase-provider.c:260
+#: providers/interbase/gda-interbase-provider.c:278
+#: providers/interbase/gda-interbase-provider.c:347
+#: providers/interbase/gda-interbase-provider.c:381
+#: providers/interbase/gda-interbase-provider.c:419
+msgid "Invalid Interbase handle"
+msgstr "Neplatný handle Interbase"
+
+#: providers/interbase/gda-interbase-provider.c:387
+#: providers/interbase/gda-interbase-provider.c:425
+msgid "Invalid transaction handle"
+msgstr "Neplatný handle transakce"
+
+#: providers/interbase/libmain.c:39
+msgid "GDA provider for Interbase/Firebird databases"
+msgstr "Poskytovatel GDA pro databáze Interbase/Firebird"
 
 #: providers/mdb/gda-mdb-provider.c:188
 msgid "A database FILENAME must be specified in the connection_string"
@@ -468,8 +491,7 @@ msgid "GDA provider for MS Access files"
 msgstr "Poskytovatel GDA pro soubory MS Access"
 
 #: providers/mysql/gda-mysql-provider.c:215
-msgid ""
-"You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
+msgid "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
 msgstr "Nelze zadat UNIX_SOCKET pokud jste také zadali HOST nebo PORT."
 
 #: providers/mysql/gda-mysql-provider.c:290
@@ -1070,8 +1092,7 @@ msgstr "Testovací API pro klienta GDA"
 
 #: testing/client.c:182
 msgid "** ERROR: gda_config_get_data_source_list returned a NULL item\n"
-msgstr ""
-"** CHYBA: gda_config_get_data_source_list vrátilo prázdnou (NULL) položku\n"
+msgstr "** CHYBA: gda_config_get_data_source_list vrátilo prázdnou (NULL) položku\n"
 
 #: testing/client.c:186
 #, c-format
@@ -1080,8 +1101,7 @@ msgstr " Zdroj dat = %s, Uživatel = %s\n"
 
 #: testing/config.c:85
 msgid "** ERROR: gda_config_get_provider_list returned a NULL item\n"
-msgstr ""
-"** CHYBA: gda_config_get_provider_list vrátilo prázdnou (NULL) položku\n"
+msgstr "** CHYBA: gda_config_get_provider_list vrátilo prázdnou (NULL) položku\n"
 
 #: testing/config.c:89
 #, c-format
@@ -1122,3 +1142,4 @@ msgstr "\tgda_params ="
 
 #~ msgid "Unexpected identifier"
 #~ msgstr "Neočekávaný identifikátor"
+
