@@ -10,7 +10,7 @@
 #undef HAVE_MDB
 #undef HAVE_ORACLE
 #undef HAVE_PRIMEBASE
-#undef HAVE_TDS
+#undef HAVE_FREETDS
 #undef HAVE_SYBASE
 #undef SYBASE_DEBUG
 #undef HAVE_POSTGRES

@@ -284,13 +284,13 @@ then
 	then
 		AC_MSG_WARN(tds backend not used)
 	else
-		TDS_CFLAGS=-I${freetdsdir}/include
-		TDS_LIBS="-L${freetdsdir}/lib -lct"
-		AC_DEFINE(HAVE_TDS)
+		FREETDS_CFLAGS=-I${freetdsdir}/include
+		FREETDS_LIBS="-L${freetdsdir}/lib -lct"
+		AC_DEFINE(HAVE_FREETDS)
 	fi
 fi
 
-AM_CONDITIONAL(TDS, test x$freetdsdir != x)
+AM_CONDITIONAL(FREETDS, test x$freetdsdir != x)
 
 dnl Test for Sybase
 try_sybase=false
@@ -582,8 +582,8 @@ AC_SUBST(POSTGRES_LIBS)
 AC_SUBST(POSTGRES_CFLAGS)
 AC_SUBST(PRIMEBASE_LIBS)
 AC_SUBST(PRIMEBASE_CFLAGS)
-AC_SUBST(TDS_LIBS)
-AC_SUBST(TDS_CFLAGS)
+AC_SUBST(FREETDS_LIBS)
+AC_SUBST(FREETDS_CFLAGS)
 AC_SUBST(SYBASE_LIBS)
 AC_SUBST(SYBASE_CFLAGS)
 AC_SUBST(LDAP_LIBS)
