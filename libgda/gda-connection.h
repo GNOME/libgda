@@ -92,6 +92,7 @@ gboolean       gda_connection_supports (GdaConnection *cnc, GdaConnectionFeature
 
 typedef enum {
 	GDA_CONNECTION_SCHEMA_AGGREGATES = GNOME_Database_Connection_SCHEMA_AGGREGATES,
+	GDA_CONNECTION_SCHEMA_FIELDS = GNOME_Database_Connection_SCHEMA_FIELDS,
 	GDA_CONNECTION_SCHEMA_INDEXES = GNOME_Database_Connection_SCHEMA_INDEXES,
 	GDA_CONNECTION_SCHEMA_PROCEDURES = GNOME_Database_Connection_SCHEMA_PROCEDURES,
 	GDA_CONNECTION_SCHEMA_TABLES = GNOME_Database_Connection_SCHEMA_TABLES,

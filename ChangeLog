@@ -1,3 +1,8 @@
+2002-02-26  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* idl/GNOME_Database.idl:
+	* libgda/gda-connection.h: added SCHEMA_FIELDS.
+
 2002-02-26  Chris Chabot <chabotc@reviewboard.com>
 
 	* libgda.spec.in: added optional compilation of all the providers,
