@@ -1,3 +1,8 @@
+2002-03-14  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* idl/GNOME_Database.idl: changed Numeric type to match mike's
+	proposals.
+
 2002-03-13  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* idl/GNOME_Database.idl: added Numeric type.

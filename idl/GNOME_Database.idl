@@ -44,10 +44,9 @@ module GNOME {
 			double y;
 		};
 		struct Numeric {
-			long digits;
-			long decimals;
-			long intpart;
-			long decpart;
+			string number;
+			long decimalPrecision;
+			long width;
 		};
 		struct Time {
 			unsigned short hour;
