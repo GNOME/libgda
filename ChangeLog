@@ -1,5 +1,10 @@
 2002-05-09  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
+	* libgda/gda-data-model.c: use integers as key of hash table. Fixed
+	documentation of get_value_at.
+
+2002-05-09  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
 	* libgda/gda-command.h: added GDA_COMMAND_TYPE_SCHEMA.
 
 	* libgda/gda-data-model.[ch]: added get/set for command text and type.

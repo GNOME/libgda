@@ -4,6 +4,7 @@
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
+ *	Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -113,7 +114,8 @@ gda_data_model_init (GdaDataModel *model, GdaDataModelClass *klass)
 
 	model->priv = g_new (GdaDataModelPrivate, 1);
 	model->priv->notify_changes = TRUE;
-	model->priv->column_titles = g_hash_table_new (g_str_hash, g_str_equal);
+	model->priv->column_titles = g_hash_table_new (g_direct_hash,
+						       g_direct_equal);
 	model->priv->editing = FALSE;
 	model->priv->cmd_text = NULL;
 	model->priv->cmd_type = GDA_COMMAND_TYPE_INVALID;
@@ -122,7 +124,6 @@ gda_data_model_init (GdaDataModel *model, GdaDataModelClass *klass)
 static void
 free_hash_string (gpointer key, gpointer value, gpointer user_data)
 {
-	g_free (key);
 	g_free (value);
 }
 
@@ -134,7 +135,7 @@ gda_data_model_finalize (GObject *object)
 	g_return_if_fail (GDA_IS_DATA_MODEL (model));
 
 	/* free memory */
-	g_hash_table_foreach (model->priv->column_titles, (GHFunc) free_hash_string, NULL);
+	g_hash_table_foreach (model->priv->column_titles, free_hash_string, NULL);
 	g_hash_table_destroy (model->priv->column_titles);
 
 	g_free (model->priv->cmd_text);
@@ -300,11 +301,9 @@ gda_data_model_get_column_title (GdaDataModel *model, gint col)
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
 
 	n_cols = gda_data_model_get_n_columns (model);
-	if (col < n_cols && col >= 0) {
-		gchar *col_str = g_strdup_printf ("%d", col);
-		title = g_hash_table_lookup (model->priv->column_titles, col_str);
-		g_free (col_str);
-	}
+	if (col < n_cols && col >= 0)
+		title = g_hash_table_lookup (model->priv->column_titles,
+					     GINT_TO_POINTER (col));
 	else
 		title = "";
 
@@ -326,19 +325,14 @@ gda_data_model_set_column_title (GdaDataModel *model, gint col, const gchar *tit
 
 	n_cols = gda_data_model_get_n_columns (model);
 	if (col >= 0 && col < n_cols) {
-		gpointer orig_key;
-		gpointer orig_value;
-		gchar *col_str;
+		gpointer value;
 
-		col_str = g_strdup_printf ("%d", col);
-		if (g_hash_table_lookup_extended (model->priv->column_titles, col_str,
-			&orig_key, &orig_value)) {
-			g_hash_table_remove (model->priv->column_titles, &col);
-			g_free (orig_key);
-			g_free (orig_value);
-		}
+		value = g_hash_table_lookup (model->priv->column_titles,
+					     GINT_TO_POINTER (col));
+		g_free (value);
 
-		g_hash_table_insert (model->priv->column_titles, col_str, g_strdup (title));
+		g_hash_table_insert (model->priv->column_titles, 
+				     GINT_TO_POINTER (col), g_strdup (title));
 	}
 }
 
@@ -354,8 +348,7 @@ gda_data_model_set_column_title (GdaDataModel *model, gint col, const gchar *tit
  * This is the main function for accessing data in a model.
  *
  * Returns: a #GdaValue containing the value stored in the given
- * position, or NULL on error (out-of-bound position, etc). The
- * returned value should be freed with #gda_value_free
+ * position, or NULL on error (out-of-bound position, etc).
  */
 const GdaValue *
 gda_data_model_get_value_at (GdaDataModel *model, gint col, gint row)
