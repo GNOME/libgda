@@ -23,7 +23,7 @@
 
 #include <config.h>
 #include <libgda/gda-recordset.h>
-#include <gobject/gsignal.h>
+#include <glib-object.h>
 
 enum {
 	LAST_SIGNAL
