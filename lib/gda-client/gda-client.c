@@ -25,7 +25,7 @@
 #include <bonobo/bonobo-exception.h>
 #include <bonobo/bonobo-moniker-util.h>
 
-#define PARENT_TYPE G_TYPE_OBJECT
+#define PARENT_TYPE BONOBO_X_OBJECT_TYPE
 
 struct _GdaClientPrivate {
 	gchar *iid;
@@ -56,6 +56,18 @@ connection_finalized_cb (GObject *object, gpointer user_data)
 }
 
 /*
+ * CORBA methods implementation
+ */
+
+static void
+impl_Client_notifyAction (PortableServer_Servant servant,
+			  GNOME_Database_ActionId action,
+			  GNOME_Database_ParameterList *corba_params,
+			  CORBA_Environment *ev)
+{
+}
+
+/*
  * GdaClient class implementation
  */
 
@@ -63,10 +75,15 @@ static void
 gda_client_class_init (GdaClientClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
+	POA_GNOME_Database_Client__epv *epv;
 
 	parent_class = g_type_class_peek_parent (klass);
 
 	object_class->finalize = gda_client_finalize;
+
+	/* set the epv */
+	epv = &klass->epv;
+	epv->notifyAction = impl_Client_notifyAction;
 }
 
 static void
@@ -103,29 +120,10 @@ gda_client_finalize (GObject *object)
 	parent_class->finalize (object);
 }
 
-GType
-gda_client_get_type (void)
-{
-	static GType type = 0;
-
-	if (!type) {
-		if (type == 0) {
-			static GTypeInfo info = {
-				sizeof (GdaClientClass),
-				(GBaseInitFunc) NULL,
-				(GBaseFinalizeFunc) NULL,
-				(GClassInitFunc) gda_client_class_init,
-				NULL, NULL,
-				sizeof (GdaClient),
-				0,
-				(GInstanceInitFunc) gda_client_init
-			};
-			type = g_type_register_static (PARENT_TYPE, "GdaClient", &info, 0);
-		}
-	}
-
-	return type;
-}
+BONOBO_X_TYPE_FUNC_FULL (GdaClient,
+			 GNOME_Database_Client,
+			 PARENT_TYPE,
+			 gda_client)
 
 /**
  * gda_client_new

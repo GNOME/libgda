@@ -25,7 +25,8 @@
 #  define __gda_client_h__
 
 #include <gda-connection.h>
-#include <glib/gobject.h>
+#include <GNOME_Database.h>
+#include <bonobo/bonobo-xobject.h>
 
 G_BEGIN_DECLS
 
@@ -33,8 +34,18 @@ typedef struct _GdaClientClass   GdaClientClass;
 typedef struct _GdaClientPrivate GdaClientPrivate;
 
 struct _GdaClient {
-	GObject object;
+	BonoboXObject object;
 	GdaClientPrivate;
+};
+
+struct _GdaClientClass {
+	BonoboXObjectClass parent_class;
+	POA_GNOME_Database_Client__epv epv;
+
+	/* signals */
+	void (* action_notified) (GdaClient *client,
+				  GNOME_Database_ActionId action,
+				  GdaParameterList *params);
 };
 
 GType          gda_client_get_type (void);
