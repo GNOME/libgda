@@ -33,48 +33,42 @@ static gchar*
 static void
   gda_primebase_update_dsn_parameters(Gda_ServerConnection *cnc,
                                       const gchar *dsn);
-/*
-static const primebase_Types gda_primebase_type_list[GDA_PRIMEBASE_TYPE_CNT] = {
-  { "TINYINT",    A_TINYINT,   GDA_TypeSmallint }, //  8-bit
-  { "SMALLINT",   A_SMINT,     GDA_TypeSmallint }, // 16-bit
-  { "SMINT",      A_SMINT,     GDA_TypeSmallint }, // 16-bit
-  { "INTEGER",    A_INTEGER,   GDA_TypeInteger  }, // 32-bit
-  { "INT",        A_INTEGER,   GDA_TypeInteger  }, // 32-bit   ( 5)
-  
-  { "DECIMAL",    A_DECIMAL,   GDA_TypeDecimal     },
-  { "MONEY",      A_MONEY,     GDA_TypeCurrency    },
 
-  { "SMALLFLOAT", A_SMFLOAT,   GDA_TypeSingle      }, //  4-byte
-  { "SMFLOAT",    A_SMFLOAT,   GDA_TypeSingle      }, //  4-byte
-  { "REAL",       A_SMFLOAT,   GDA_TypeSingle      }, //  4-byte  (10)
-  { "FLOAT",      A_FLOAT,     GDA_TypeDouble      }, //  8-byte
-  // Just on 68k macs 
-  { "REAL10",     A_FLOAT10,   GDA_TypeDouble      }, // 10-byte
-  { "REAL12",     A_FLOAT12,   GDA_TypeDouble      }, // 12-byte
+static const primebase_Types gda_primebase_type_list[GDA_PRIMEBASE_TYPE_CNT] = {
+  { "TINYINT",    PB_TINYINT,   GDA_TypeSmallint }, //  8-bit
+  { "SMALLINT",   PB_SMINT,     GDA_TypeSmallint }, // 16-bit
+  { "SMINT",      PB_SMINT,     GDA_TypeSmallint }, // 16-bit
+  { "INTEGER",    PB_INTEGER,   GDA_TypeInteger  }, // 32-bit
+  { "INT",        PB_INTEGER,   GDA_TypeInteger  }, // 32-bit   ( 5)
+  
+  { "DECIMAL",    PB_DECIMAL,   GDA_TypeDecimal     },
+  { "MONEY",      PB_MONEY,     GDA_TypeCurrency    },
+
+  { "SMALLFLOAT", PB_SMFLOAT,   GDA_TypeSingle      }, //  4-byte
+  { "SMFLOAT",    PB_SMFLOAT,   GDA_TypeSingle      }, //  4-byte
+  { "REAL",       PB_SMFLOAT,   GDA_TypeSingle      }, //  4-byte  (10)
+  { "FLOAT",      PB_FLOAT,     GDA_TypeDouble      }, //  8-byte
 
   // What is on $maybe?
-  { "BOOLEAN",    A_BOOLEAN,   GDA_TypeBoolean     },
+  { "BOOLEAN",    PB_BOOLEAN,   GDA_TypeBoolean     },
   
-  { "DATE",       A_DATE,      GDA_TypeDbDate      }, //          (15)
-  { "TIME",       A_TIME,      GDA_TypeDbTime      },
-  { "TIMESTAMP",  A_TIMESTAMP, GDA_TypeDbTimestamp },
-  { "DATETIME",   A_TIMESTAMP, GDA_TypeDbTimestamp },
+  { "DATE",       PB_DATE,      GDA_TypeDbDate      }, //          (15)
+  { "TIME",       PB_TIME,      GDA_TypeDbTime      },
+  { "TIMESTAMP",  PB_TIMESTAMP, GDA_TypeDbTimestamp },
+  { "DATETIME",   PB_TIMESTAMP, GDA_TypeDbTimestamp },
 
-  { "CHAR",       A_CHAR,      GDA_TypeChar        },
-  { "VARCHAR",    A_VARCHAR,   GDA_TypeVarchar     }, //          (20)
+  { "CHAR",       PB_CHAR,      GDA_TypeChar        },
+  { "VARCHAR",    PB_VCHAR,     GDA_TypeVarchar     }, //          (20)
   
-  { "BINARY",     A_BIN,       GDA_TypeVarbin      },
-  { "BIN",        A_BIN,       GDA_TypeVarbin      },
-  { "VARBINARY",  A_VARBIN,    GDA_TypeVarbin      },
-  { "VARBIN",     A_VARBIN,    GDA_TypeVarbin      },
+  { "BINARY",     PB_BIN,       GDA_TypeVarbin      },
+  { "BIN",        PB_BIN,       GDA_TypeVarbin      },
+  { "VARBINARY",  PB_VBIN,      GDA_TypeVarbin      },
+  { "VARBIN",     PB_VBIN,      GDA_TypeVarbin      },
 
-  { "GENERIC",    A_GENERIC,   GDA_TypeVarchar     },
-  { "OBJNAME",    A_OBJNAME,   GDA_TypeVarchar     },
-  
   // This should ALWAYS be the LAST entry
-  { NULL,         A_GENERIC,   GDA_TypeNull        }
+  { NULL,         PBI_USER_TYPE,GDA_TypeNull        }
 };
-*/
+
 
 gboolean
 gda_primebase_connection_new (Gda_ServerConnection *cnc)
@@ -303,8 +297,6 @@ gda_primebase_connection_supports (Gda_ServerConnection *cnc,
 GDA_ValueType
 gda_primebase_connection_get_gda_type (Gda_ServerConnection *cnc, gulong sql_type)
 {
-  return -1;
-/*
   gint i = 0;
         
   while ((i < GDA_PRIMEBASE_TYPE_CNT)) {
@@ -315,7 +307,6 @@ gda_primebase_connection_get_gda_type (Gda_ServerConnection *cnc, gulong sql_typ
   }
         
   return gda_primebase_type_list[GDA_PRIMEBASE_TYPE_CNT - 1].gda_type;
-*/
 }
 
 gshort

@@ -35,43 +35,43 @@ gda_primebase_update_cell (Gda_ServerField *field, primebase_Recordset *prset,
   g_return_val_if_fail(data != NULL, FALSE);
 
   switch (gda_server_field_get_sql_type(field)) {
-  case A_BOOLEAN:
+  case PB_BOOLEAN:
     break;
-  case A_SMINT:
-  case A_INTEGER:
+  case PB_SMINT:
+  case PB_INTEGER:
     break;
-  case A_SMFLOAT:
+  case PB_SMFLOAT:
     break;
-  case A_FLOAT:
+  case PB_FLOAT:
     break;
-  case A_DATE:
+  case PB_DATE:
     ddate = (DALDatePtr) data;
 	 g_date_set_dmy(&date, ddate->day, ddate->month, ddate->year);
     gda_server_field_set_date(field, &date);
     break;
-  case A_TIME:
+  case PB_TIME:
 	 dtime = (DALTimePtr) data;
 	 time = ((dtime->hour * 60) + dtime->min) * 60 + dtime->sec;
 	 gda_server_field_set_time(field, time);
     break;
-  case A_TIMESTAMP:
+  case PB_TIMESTAMP:
     dts = (DALTimeStampPtr) data;
 	 gda_server_field_set_timestamp(field, &date, time);
     break;
-  case A_CHAR:
+  case PB_CHAR:
 	 gda_server_field_set_char(field, (gchar *) data);
     break;
-  case A_DECIMAL:
+  case PB_DECIMAL:
     break;
-  case A_MONEY:
+  case PB_MONEY:
     break;
-  case A_VARCHAR:
+  case PB_VCHAR:
     break;
-  case A_VARBIN:
+  case PB_VBIN:
     break;
-  case A_LONGCHAR:
+  case PB_LONGCHAR:
     break;
-  case A_LONGBIN:
+  case PB_LONGBIN:
     break;
   default:
   }

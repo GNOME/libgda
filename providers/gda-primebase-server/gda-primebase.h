@@ -43,7 +43,7 @@
 #endif
 
 #define MAX_DALSIZE (32L * 1024L)
-#define GDA_PRIMEBASE_TYPE_CNT 27
+#define GDA_PRIMEBASE_TYPE_CNT 23
 
 /*
  * Per-object specific structures
