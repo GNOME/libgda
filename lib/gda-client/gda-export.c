@@ -194,6 +194,18 @@ gda_export_new (GdaConnection *cnc)
 	return export;
 }
 
+void
+gda_export_free (GdaExport *export)
+{
+	g_return_if_fail (IS_GDA_EXPORT (export));
+
+#ifdef HAVE_GOBJECT
+	g_object_unref (export);
+#else
+	gtk_object_unref (GTK_OBJECT (object));
+#endif
+}
+
 /**
  * gda_export_get_tables
  * @cnc: a #GdaConnection object
