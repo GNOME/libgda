@@ -34,6 +34,18 @@ G_BEGIN_DECLS
 #define GDA_IS_CLIENT(obj)         (G_TYPE_CHECK_INSTANCE_TYPE(obj, GDA_TYPE_CLIENT))
 #define GDA_IS_CLIENT_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), GDA_TYPE_CLIENT))
 
+typedef enum {
+	GDA_CLIENT_EVENT_INVALID,
+
+	/* events usually notified by the library itself, and which the providers
+	   should notify on very special cases (like a transaction being started
+	   or committed via a BEGIN/COMMIT command directly sent to the
+	   execute_command method on the provider */
+	GDA_CLIENT_EVENT_ERROR,             /* params: "description" */
+	GDA_CLIENT_EVENT_CONNECTION_OPENED, /* params: "dsn", "username" */
+	GDA_CLIENT_EVENT_CONNECTION_CLOSED  /* params: "dsn" */
+} GdaClientEvent;
+
 typedef struct _GdaClientClass   GdaClientClass;
 typedef struct _GdaClientPrivate GdaClientPrivate;
 
@@ -47,9 +59,10 @@ struct _GdaClientClass {
 
 	/* signals */
 	void (* error) (GdaClient *client, GdaConnection *cnc, GList *error_list);
-	//void (* action_notified) (GdaClient *client,
-	//			  GdaActionId action,
-	//			  GdaParameterList *params);
+	void (* event_notification) (GdaClient *client,
+				     GdaConnection *cnc,
+				     GdaClientEvent event,
+				     GdaParameterList *params);
 };
 
 GType          gda_client_get_type (void);
@@ -70,6 +83,9 @@ GdaConnection *gda_client_find_connection (GdaClient *client,
 					   const gchar *username,
 					   const gchar *password);
 void           gda_client_close_all_connections (GdaClient *client);
+
+void           gda_client_notify_event (GdaClient *client, GdaConnection *cnc,
+					GdaClientEvent event, GdaParameterList *params);
 
 /*
  * Connection stack functions

@@ -199,29 +199,32 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider,
 			_("A full path must be specified on the "
 			  "connection string to open a database."));
 		return FALSE;
-	} else {
-		scnc = g_new0 (SQLITEcnc, 1);
-
-		scnc->connection = sqlite_open (t_filename, 0666, &errmsg);
-		scnc->file = g_strdup (t_filename);
-
-		if (!scnc->connection) {
-			gda_connection_add_error_string (cnc, errmsg);
-			
-			free (errmsg); /* must use free () for this pointer */
-			g_free (scnc->file);
-			g_free (scnc);
-			
-			return FALSE;
-		} else {
-
-			g_object_set_data (G_OBJECT (cnc),
-					   OBJECT_DATA_SQLITE_HANDLE,
-					   scnc);
-
-			return TRUE;
-		}
 	}
+
+	scnc = g_new0 (SQLITEcnc, 1);
+
+	scnc->connection = sqlite_open (t_filename, 0666, &errmsg);
+	scnc->file = g_strdup (t_filename);
+
+	if (!scnc->connection) {
+		gda_connection_add_error_string (cnc, errmsg);
+		
+		free (errmsg); /* must use free () for this pointer */
+		g_free (scnc->file);
+		g_free (scnc);
+			
+		return FALSE;
+	}
+
+	/* set SQLite library options */
+	if (!gda_sqlite_provider_single_command (sqlite_prv, cnc, "PRAGMA empty_result_callbacks = ON"))
+		gda_log_error (_("Could not set empty_result_callbacks SQLite option"));
+
+	g_object_set_data (G_OBJECT (cnc),
+			   OBJECT_DATA_SQLITE_HANDLE,
+			   scnc);
+
+	return TRUE;
 }
 
 /* close_connection handler for the GdaSqliteProvider class */
@@ -275,7 +278,6 @@ process_sql_commands (GList *reclist, GdaConnection *cnc,
 			gint status, i;
 
 			sres = g_new0 (SQLITEresult, 1);
-			
 			status = sqlite_get_table (scnc->connection, arr[n],
 						   &sres->data,
 						   &sres->nrows,

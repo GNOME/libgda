@@ -122,6 +122,7 @@ gda_connection_init (GdaConnection *cnc, GdaConnectionClass *klass)
 static void
 gda_connection_finalize (GObject *object)
 {
+	GdaParameterList *params;
 	GdaConnection *cnc = (GdaConnection *) object;
 
 	g_return_if_fail (GDA_IS_CONNECTION (cnc));
@@ -130,6 +131,12 @@ gda_connection_finalize (GObject *object)
 	if (cnc->priv->is_open) {
 		/* close the connection to the provider */
 		gda_server_provider_close_connection (cnc->priv->provider_obj, cnc);
+
+		params = gda_parameter_list_new ();
+		gda_parameter_list_add_parameter (params,
+						  gda_parameter_new_string ("dsn", gda_connection_get_dsn (cnc)));
+		gda_client_notify_event (cnc->priv->client, cnc, GDA_CLIENT_EVENT_CONNECTION_CLOSED, params);
+		gda_parameter_list_free (params);
 	}
 
 	g_object_unref (G_OBJECT (cnc->priv->provider_obj));
@@ -151,6 +158,7 @@ gda_connection_finalize (GObject *object)
 	/* chain to parent class */
 	parent_class->finalize (object);
 }
+
 /**
  * gda_connection_get_type
  * 
@@ -205,6 +213,7 @@ gda_connection_new (GdaClient *client,
 	GdaConnection *cnc;
 	GdaDataSourceInfo *dsn_info;
 	GdaQuarkList *params;
+	GdaParameterList *plist;
 	const char *real_username = NULL;
 	const char *real_password = NULL;
 
@@ -278,6 +287,14 @@ gda_connection_new (GdaClient *client,
 		return NULL;
 	}
 
+	/* notify action */
+	plist = gda_parameter_list_new ();
+	gda_parameter_list_add_parameter (plist, gda_parameter_new_string ("dsn", cnc->priv->dsn));
+	gda_parameter_list_add_parameter (plist, gda_parameter_new_string ("username", cnc->priv->username));
+	gda_client_notify_event (client, cnc, GDA_CLIENT_EVENT_CONNECTION_OPENED, plist);
+	gda_parameter_list_free (plist);
+
+	/* free memory */
 	gda_quark_list_free (params);
 	cnc->priv->is_open = TRUE;
 
@@ -499,7 +516,6 @@ gda_connection_add_error (GdaConnection *cnc, GdaError *error)
 
 	g_return_if_fail (GDA_IS_CONNECTION (cnc));
 	g_return_if_fail (GDA_IS_ERROR (error));
-	
 
 	err_list = cnc->priv->error_list;
 	gda_error_list_free (err_list);

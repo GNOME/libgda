@@ -53,8 +53,11 @@ static void gda_client_class_init (GdaClientClass *klass);
 static void gda_client_init       (GdaClient *client, GdaClientClass *klass);
 static void gda_client_finalize   (GObject *object);
 
+static void connection_error_cb (GdaConnection *cnc, GList *error_list, gpointer user_data);
+
 enum {
 	ERROR,
+	EVENT_NOTIFICATION,
 	LAST_SIGNAL
 };
 
@@ -84,7 +87,7 @@ emit_client_error (GdaClient *client, GdaConnection *cnc, const gchar *format, .
 	gda_error_set_source (error, "[GDA client]");
 
 	list = g_list_append (NULL, error);
-	g_signal_emit (G_OBJECT (client), gda_client_signals[ERROR], 0, cnc, list);
+	connection_error_cb (cnc, list, client);
 }
 
 static void
@@ -108,10 +111,22 @@ free_hash_provider (gpointer key, gpointer value, gpointer user_data)
 static void
 connection_error_cb (GdaConnection *cnc, GList *error_list, gpointer user_data)
 {
+	GdaParameterList *params;
+	GList *l;
 	GdaClient *client = (GdaClient *) user_data;
 
 	g_return_if_fail (GDA_IS_CLIENT (client));
 	g_signal_emit (G_OBJECT (client), gda_client_signals[ERROR], 0, cnc, error_list);
+
+	/* notify actions */
+	for (l = error_list; l != NULL; l = l->next) {
+		params = gda_parameter_list_new ();
+		gda_parameter_list_add_parameter (params,
+						  gda_parameter_new_string ("description",
+									    gda_error_get_description (l->data)));
+		gda_client_notify_event (client, cnc, GDA_CLIENT_EVENT_ERROR, params);
+		gda_parameter_list_free (params);
+	}
 }
 
 static void
@@ -182,6 +197,14 @@ gda_client_class_init (GdaClientClass *klass)
 			      NULL, NULL,
 			      gda_marshal_VOID__POINTER_POINTER,
 			      G_TYPE_NONE, 2, G_TYPE_POINTER, G_TYPE_POINTER);
+	gda_client_signals[EVENT_NOTIFICATION] =
+		g_signal_new ("event_notification",
+			      G_TYPE_FROM_CLASS (object_class),
+			      G_SIGNAL_RUN_LAST,
+			      G_STRUCT_OFFSET (GdaClientClass, error),
+			      NULL, NULL,
+			      gda_marshal_VOID__POINTER_INT_POINTER,
+			      G_TYPE_NONE, 3, G_TYPE_POINTER, G_TYPE_ENUM, G_TYPE_POINTER);
 
 	object_class->finalize = gda_client_finalize;
 }
@@ -284,6 +307,7 @@ gda_client_open_connection (GdaClient *client,
 	GdaConnection *cnc;
 	LoadedProvider *prv;
 	GdaDataSourceInfo *dsn_info;
+	GdaParameterList *params;
 
 	g_return_val_if_fail (GDA_IS_CLIENT (client), NULL);
 
@@ -298,6 +322,13 @@ gda_client_open_connection (GdaClient *client,
 	cnc = gda_client_find_connection (client, dsn, username, password);
 	if (cnc) {
 		g_object_ref (G_OBJECT (cnc));
+
+		params = gda_parameter_list_new ();
+		gda_parameter_list_add_parameter (params, gda_parameter_new_string ("dsn", dsn));
+		gda_parameter_list_add_parameter (params, gda_parameter_new_string ("username", username));
+		gda_client_notify_event (client, cnc, GDA_CLIENT_EVENT_CONNECTION_OPENED, params);
+		gda_parameter_list_free (params);
+
 		return cnc;
 	}
 
@@ -530,6 +561,28 @@ gda_client_close_all_connections (GdaClient *client)
 	g_list_foreach (client->priv->connections, (GFunc) g_object_unref, NULL);
 	g_list_free (client->priv->connections);
 	client->priv->connections = NULL;
+}
+
+/**
+ * gda_client_notify_event
+ * @client: a #GdaClient object.
+ * @cnc: a #GdaConnection object where the event has occurred.
+ * @event: event ID.
+ * @params: parameters associated with the event.
+ *
+ * Notify an event to the given #GdaClient's listeners. The event can be
+ * anything (see #GdaClientEvent) ranging from a connection opening
+ * operation, to changes made to a table in an underlying database.
+ */
+void
+gda_client_notify_event (GdaClient *client,
+			 GdaConnection *cnc,
+			 GdaClientEvent event,
+			 GdaParameterList *params)
+{
+	g_return_if_fail (GDA_IS_CLIENT (client));
+	g_signal_emit (G_OBJECT (client), gda_client_signals[EVENT_NOTIFICATION], 0,
+		       cnc, event, params);
 }
 
 /**

@@ -1,3 +1,18 @@
+2003-01-15  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* libgda/gda-marshal.list: added new marshal function.
+
+	* libgda/gda-client.[ch]: added GdaClientEvent enum type.
+	(gda_client_notify_event): new function.
+	(gda_client_class_init): added "event_notification" signal.
+	(gda_client_open_connection): added notification of events.
+	(emit_client_error): use connection_error_cb.
+	(connection_error_cb): notify ERROR action (to replace the "error"
+	signal in GdaClient soon).
+
+	* libgda/gda-connection.c (gda_connection_finalize,
+	gda_connection_new): added notification of events.
+
 2003-01-15  German Poo-Caaman~o <gpoo@ubiobio.cl>
 
 	* configure.in: Added LDAP files check.
