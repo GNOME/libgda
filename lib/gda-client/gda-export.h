@@ -27,6 +27,7 @@
 #include <gtk/gtkobject.h>
 #include <gda-common-defs.h>
 #include <gda-connection.h>
+#include <gda-xml-database.h>
 
 G_BEGIN_DECLS
 
@@ -58,6 +59,8 @@ struct _GdaExportClass {
 	void (*object_unselected) (GdaExport * exp,
 				   GDA_Connection_QType qtype,
 				   const gchar * name);
+	void (*finished) (GdaExport *exp, GdaXmlDatabase *xmldb);
+	void (*cancelled) (GdaExport *exp);
 };
 
 GtkType        gda_export_get_type (void);

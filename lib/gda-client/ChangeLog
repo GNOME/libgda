@@ -1,3 +1,9 @@
+2001-07-29  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-export.c (gda_export_run, gda_export_stop): implemented the
+	functions to run (asynchronously) the export process. When finished,
+	the GdaExport will emit its "finished" signal
+
 2001-07-25  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-export.c (gda_export_select_table_list): new function

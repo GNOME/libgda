@@ -28,11 +28,17 @@
 struct _GdaExportPrivate {
 	GdaConnection *cnc;
 	GHashTable *selected_tables;
+
+	gboolean running;
+	GList *tmp_tables;
+	GdaXmlDatabase *tmp_xmldb;
 };
 
 enum {
 	OBJECT_SELECTED,
 	OBJECT_UNSELECTED,
+	FINISHED,
+	CANCELLED,
 	LAST_SIGNAL
 };
 
@@ -94,6 +100,89 @@ get_object_list (GdaConnection * cnc, GDA_Connection_QType qtype)
 }
 
 /*
+ * Callbacks
+ */
+static gboolean
+run_export_cb (gpointer user_data)
+{
+	GList *item;
+	gint num_found = 0;
+	GdaCommand *cmd;
+	GdaRecordset *recset;
+	gulong reccount;
+	GdaExport *exp = (GdaExport *) user_data;
+
+	g_return_val_if_fail (GDA_IS_EXPORT (exp), FALSE);
+
+	/* see if we've got tables to export */
+	item = g_list_first (exp->priv->tmp_tables);
+	if (item) {
+		GdaXmlDatabaseTable *xml_table;
+		GdaXmlDatabaseField *xml_field;
+		GdaField *gda_field;
+		gint cnt;
+		gchar *name = (gchar *) item->data;
+
+		cmd = gda_command_new ();
+		gda_command_set_connection (cmd, exp->priv->cnc);
+		gda_command_set_cmd_type (cmd, GDA_COMMAND_TYPE_TABLE);
+		gda_command_set_text (cmd, name);
+
+		recset = gda_command_execute (cmd, &reccount, NULL);
+		if (!GDA_IS_RECORDSET (recset)) {
+			gda_command_free (cmd);
+			gda_export_stop (exp);
+			return FALSE;
+		}
+
+		/* add the table to the database */
+		xml_table = gda_xml_database_table_new (exp->priv->tmp_xmldb,
+							(const gchar *) name);
+		/* FIXME: set table owner */
+
+		for (cnt = 0; cnt < gda_recordset_rowsize (recset); cnt++) {
+			gchar *type;
+
+			gda_field = gda_recordset_field_idx (recset, cnt);
+			type = gda_fieldtype_2_string (NULL, 0, gda_field_type (gda_field));
+
+			xml_field = gda_xml_database_table_add_field (exp->priv->tmp_xmldb,
+								      xml_table,
+								      gda_field_name (gda_field));
+			gda_xml_database_field_set_gdatype (exp->priv->tmp_xmldb, xml_field, type);
+			gda_xml_database_field_set_size (exp->priv->tmp_xmldb, xml_field,
+							 gda_field_defined_size (gda_field));
+			gda_xml_database_field_set_scale (exp->priv->tmp_xmldb, xml_field,
+							  gda_field_scale (gda_field));
+
+			g_free (type);
+		}
+
+		/* FIXME: export data */
+
+		/* free memory */
+		gda_recordset_free (recset);
+		gda_command_free (cmd);
+
+		exp->priv->tmp_tables = g_list_remove (exp->priv->tmp_tables, name);
+		g_free (name);
+	}
+
+	/* if we didn't treat any object, we're finished */
+	if (!num_found) {
+		gtk_signal_emit (GTK_OBJECT (exp),
+				 gda_export_signals[FINISHED],
+				 exp->priv->tmp_xmldb);
+		gda_xml_database_free (exp->priv->tmp_xmldb);
+		exp->priv->tmp_xmldb = NULL;
+
+		return FALSE;
+	}
+
+	return TRUE;
+}
+
+/*
  * GdaExport class implementation
  */
 
@@ -129,19 +218,22 @@ gda_export_class_init (GdaExportClass * klass)
 		gtk_signal_new ("object_selected",
 				GTK_RUN_FIRST,
 				object_class->type,
-				GTK_SIGNAL_OFFSET (GdaExportClass,
-						   object_selected),
+				GTK_SIGNAL_OFFSET (GdaExportClass, object_selected),
 				gtk_marshal_NONE__INT_POINTER, GTK_TYPE_NONE,
 				2, GTK_TYPE_INT, GTK_TYPE_STRING);
 	gda_export_signals[OBJECT_UNSELECTED] =
 		gtk_signal_new ("object_unselected", GTK_RUN_FIRST,
 				object_class->type,
-				GTK_SIGNAL_OFFSET (GdaExportClass,
-						   object_unselected),
+				GTK_SIGNAL_OFFSET (GdaExportClass, object_unselected),
 				gtk_marshal_NONE__INT_POINTER, GTK_TYPE_NONE,
 				2, GTK_TYPE_INT, GTK_TYPE_STRING);
-	gtk_object_class_add_signals (object_class, gda_export_signals,
-				      LAST_SIGNAL);
+	gda_export_signals[FINISHED] =
+		gtk_signal_new ("finished", GTK_RUN_FIRST,
+				object_class->type,
+				GTK_SIGNAL_OFFSET (GdaExportClass, finished),
+				gtk_marshal_NONE__POINTER, GTK_TYPE_NONE,
+				1, GTK_TYPE_POINTER);
+	gtk_object_class_add_signals (object_class, gda_export_signals, LAST_SIGNAL);
 
 	object_class->destroy = gda_export_destroy;
 }
@@ -323,6 +415,50 @@ gda_export_unselect_table (GdaExport *exp, const gchar *table)
 				 gda_export_signals[OBJECT_UNSELECTED],
 				 GDA_Connection_GDCN_SCHEMA_TABLES, table);
 	}
+}
+
+/**
+ * gda_export_run
+ * @export: a #GdaExport object
+ *
+ * Starts the execution of the given export object. This means that, after
+ * calling this function, your application will lose control about the export
+ * process and will only receive notifications via the class signals
+ */
+void
+gda_export_run (GdaExport *exp)
+{
+	g_return_if_fail (GDA_IS_EXPORT (exp));
+	g_return_if_fail (exp->priv->running == FALSE);
+	g_return_if_fail (gda_connection_is_open (exp->priv->cnc));
+
+	exp->priv->running = TRUE;
+	exp->priv->tmp_tables = gda_util_hash_to_list (exp->priv->selected_tables);
+	exp->priv->tmp_xmldb = gda_xml_database_new ();
+
+	g_idle_add ((GSourceFunc) run_export_cb, exp);
+}
+
+/**
+ * gda_export_stop
+ * @export: a #GdaExport object
+ */
+void
+gda_export_stop (GdaExport *exp)
+{
+	g_return_if_fail (GDA_IS_EXPORT (exp));
+
+	exp->priv->running = FALSE;
+	if (exp->priv->tmp_tables != NULL) {
+		g_list_foreach (exp->priv->tmp_tables, (GFunc) g_free, NULL);
+		g_list_free (exp->priv->tmp_tables);
+		exp->priv->tmp_tables = NULL;
+	}
+	gda_xml_database_free (exp->priv->tmp_xmldb);
+
+	g_idle_remove_by_data (exp);
+
+	gtk_signal_emit (GTK_OBJECT (exp), gda_export_signals[CANCELLED]);
 }
 
 /**
