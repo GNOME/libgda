@@ -62,7 +62,7 @@ connection_error_cb (GdaConnection *cnc, GList *error_list, gpointer user_data)
 }
 
 static void
-connection_finalized_cb (GObject *object, gpointer user_data)
+cnc_weak_cb (gpointer user_data, GObject *object)
 {
 	GdaConnection *cnc = (GdaConnection *) object;
 	GdaClient *client = (GdaClient *) user_data;
@@ -253,8 +253,7 @@ gda_client_open_connection (GdaClient *client,
 
 	/* add list to our private list */
 	client->priv->connections = g_list_append (client->priv->connections, cnc);
-	g_signal_connect (G_OBJECT (cnc), "finalize",
-			  G_CALLBACK (connection_finalized_cb), client);
+	g_object_weak_ref (G_OBJECT (cnc), (GWeakNotify) cnc_weak_cb, client);
 	g_signal_connect (G_OBJECT (cnc), "error",
 			  G_CALLBACK (connection_error_cb), client);
 

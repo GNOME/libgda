@@ -1,3 +1,8 @@
+2001-12-20  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-client.c (cnc_weak_cb): added weak ref callback
+	(gda_client_open_connection): use g_object_weak_ref
+
 2001-12-20  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
 	* gda-connection.c: if 'id' is NULL in begin, commit or rollback
