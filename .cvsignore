@@ -17,3 +17,6 @@ config.status
 stamp-h
 libgda.spec
 stamp.h
+xml-i18n-update
+xml-i18n-merge
+xml-i18n-extract

@@ -15,4 +15,7 @@ dist-hook: libgda.spec
 
 EXTRA_DIST = \
 	COPYING \
-	libgda.spec.in
+	libgda.spec.in \
+	xml-i18n-extract \
+	xml-i18n-merge \
+	xml-i18n-update
