@@ -861,6 +861,7 @@ gda_data_model_to_xml_node (GdaDataModel *model, const gchar *name)
 		xmlSetProp (node, "name", name);
 
 	/* set the table structure */
+	rows = gda_data_model_get_n_rows (model);
 	cols = gda_data_model_get_n_columns (model);
 	for (i = 0; i < cols; i++) {
 		GdaFieldAttributes *fa;
@@ -883,9 +884,31 @@ gda_data_model_to_xml_node (GdaDataModel *model, const gchar *name)
 		xml_set_boolean (field, "isnull", gda_field_attributes_get_allow_null (fa));
 		xml_set_boolean (field, "auto_increment", gda_field_attributes_get_auto_increment (fa));
 		xmlSetProp (field, "references", gda_field_attributes_get_references (fa));
+		xml_set_int (field, "position", i);
 	}
 	
-	/* FIXME: add data to XML node */
+	/* add the model data to the XML output */
+	if (rows > 0) {
+		xmlNodePtr row, data, field;
+		gint r, c;
+
+		data = xmlNewChild (node, NULL, "data", NULL);
+		for (r = 0; r < rows; r++) {
+			row = xmlNewChild (data, NULL, "row", NULL);
+			xml_set_int (row, "position", r);
+			for (c = 0; c < cols; c++) {
+				const GdaValue *value;
+				gchar *str;
+
+				value = gda_data_model_get_value_at (model, c, r);
+				str = gda_value_stringify (value);
+				field = xmlNewChild (row, NULL, "field", str);
+				xml_set_int (field, "position", c);
+
+				g_free (str);
+			}
+		}
+	}
 
 	return node;
 }

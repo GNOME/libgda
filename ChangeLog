@@ -1,5 +1,10 @@
 2003-01-16  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* libgda/gda-data-model.c (gda_data_model_to_xml_node): added the
+	model data to the returned XML node.
+
+2003-01-16  Rodrigo Moya <rodrigo@gnome-db.org>
+
 	* libgda/gda-xml-database.[ch] (gda_xml_database_to_string): new
 	function.
 
