@@ -1,6 +1,6 @@
 SUBDIRS = sqlite
 
-bin_PROGRAMS = gda-default-srv
+bin_PROGRAMS = gda-default-srv-2
 
 INCLUDES = \
 	-I. \
@@ -8,13 +8,13 @@ INCLUDES = \
 	-I$(top_srcdir)/providers/default/sqlite \
 	-I$(top_builddir)/providers/default/sqlite
 
-gda_default_srv_SOURCES = \
+gda_default_srv_2_SOURCES = \
 	gda-default-provider.c \
 	gda-default-provider.h \
 	gda-default.h \
 	main.c
 	
-gda_default_srv_LDADD = \
+gda_default_srv_2_LDADD = \
 	$(LIBGDA_LIBS) \
 	$(top_builddir)/libgda/libgda-2.la \
 	$(top_builddir)/providers/default/sqlite/libsqlite.a

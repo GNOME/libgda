@@ -1,3 +1,9 @@
+2001-12-17  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* Makefile.am:
+	* GNOME_Database_Provider_Default.server.in: added '-2' suffix
+	to executable name
+
 2001-12-10  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-default-provider.c (gda_default_provider_open_connection):

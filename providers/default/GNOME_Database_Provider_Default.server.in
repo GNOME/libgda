@@ -2,7 +2,7 @@
 
 <oaf_server iid="OAFIID:GNOME_Database_Default_ComponentFactory"
             type="exe"
-            location="gda-default-srv">
+            location="gda-default-srv-2">
 	<oaf_attribute name="repo_ids" type="stringv">
 		<item value="IDL:GNOME/GenericFactory:1.0"/>
 	</oaf_attribute>
