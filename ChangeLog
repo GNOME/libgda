@@ -1,3 +1,8 @@
+2003-10-16  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* libgda/gda-connection.h: added FEATURE_UPDATABLE_CURSOR to
+	GdaConnectionFeature enumeration.
+
 2003-10-14  Murray Cumming  <murrayc@usa.net>
  
  	* libgda/gda-config.[h|c]: Register GdaProviderInfo and 
