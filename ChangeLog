@@ -1,5 +1,9 @@
 2005-02-28  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* libgda.pc.in: use libgda-3.
+
+2005-02-28  Rodrigo Moya <rodrigo@gnome-db.org>
+
 	* providers/*/Makefile.am: install providers to versioned directories.
 
 	* libgda/Makefile.am: changed LIBGDA_PLUGINDIR to point to versioned
