@@ -1,15 +1,15 @@
 # Swedish translation of libgda.
-# Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.
+# Copyright (C) 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
 # Andreas Hyden <a.hyden@cyberpoint.se>, 2000.
-# Christian Rose <menthos@menthos.com>, 2000, 2001.
+# Christian Rose <menthos@menthos.com>, 2000, 2001, 2002.
 #
 # $Id$
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2001-12-29 00:08+0100\n"
-"PO-Revision-Date: 2001-12-28 23:12+0100\n"
+"POT-Creation-Date: 2002-01-05 17:58+0100\n"
+"PO-Revision-Date: 2002-01-05 17:58+0100\n"
 "Last-Translator: Christian Rose <menthos@menthos.com>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -99,11 +99,11 @@ msgstr "Kunde inte notifiera klienten om åtgärden %d"
 msgid "No implementation for the fetch() method found"
 msgstr "Ingen implementation för fetch()-metoden hittades"
 
-#: libgda/gda-value.c:573
+#: libgda/gda-value.c:610
 msgid "TRUE"
 msgstr "SANT"
 
-#: libgda/gda-value.c:575
+#: libgda/gda-value.c:612
 msgid "FALSE"
 msgstr "FALSKT"
 
@@ -155,19 +155,23 @@ msgstr "Standardåtkomst för GDA-datakällor"
 msgid "Could not initiate Default component factory"
 msgstr "Kunde inte initiera standardkomponentfabrik"
 
-#: providers/mysql/gda-mysql-provider.c:171
+#: providers/mysql/gda-mysql-provider.c:173
 msgid ""
 "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
 msgstr ""
 "Du kan inte ange en UNIX_SOCKET om du också anger antingen en HOST eller en "
 "PORT."
 
-#: providers/mysql/gda-mysql-provider.c:242
-#: providers/mysql/gda-mysql-provider.c:321
-#: providers/mysql/gda-mysql-provider.c:350
-#: providers/mysql/gda-mysql-provider.c:379
+#: providers/mysql/gda-mysql-provider.c:244
+#: providers/mysql/gda-mysql-provider.c:323
+#: providers/mysql/gda-mysql-provider.c:352
+#: providers/mysql/gda-mysql-provider.c:381
 msgid "Invalid MYSQL handle"
 msgstr "Ogiltigt MYSQL-handtag"
+
+#: providers/mysql/gda-mysql-provider.c:460
+msgid "Type"
+msgstr "Typ"
 
 #: providers/mysql/GNOME_Database_Provider_MySQL.server.in.h:1
 msgid "GDA Datasource Access for MySQL"
