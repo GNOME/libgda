@@ -532,6 +532,11 @@ gda_mysql_provider_begin_transaction (GdaServerProvider *provider,
 		return FALSE;
 	}
 
+	if (gda_connection_get_options (cnc) & GDA_CONNECTION_OPTIONS_READ_ONLY) {
+		gda_connection_add_error_string (cnc, _("Transactions are not supported in read-only mode"));
+		return FALSE;
+	}
+
 	/* set isolation level */
 	switch (gda_transaction_get_isolation_level (xaction)) {
 	case GDA_TRANSACTION_ISOLATION_READ_COMMITTED :
@@ -584,6 +589,11 @@ gda_mysql_provider_commit_transaction (GdaServerProvider *provider,
 		return FALSE;
 	}
 
+	if (gda_connection_get_options (cnc) & GDA_CONNECTION_OPTIONS_READ_ONLY) {
+		gda_connection_add_error_string (cnc, _("Transactions are not supported in read-only mode"));
+		return FALSE;
+	}
+
 	rc = mysql_real_query (mysql, "COMMIT", strlen ("COMMIT"));
 	if (rc != 0) {
 		gda_connection_add_error (cnc, gda_mysql_make_error (mysql));
@@ -609,6 +619,11 @@ gda_mysql_provider_rollback_transaction (GdaServerProvider *provider,
 	mysql = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_MYSQL_HANDLE);
 	if (!mysql) {
 		gda_connection_add_error_string (cnc, _("Invalid MYSQL handle"));
+		return FALSE;
+	}
+
+	if (gda_connection_get_options (cnc) & GDA_CONNECTION_OPTIONS_READ_ONLY) {
+		gda_connection_add_error_string (cnc, _("Transactions are not supported in read-only mode"));
 		return FALSE;
 	}
 

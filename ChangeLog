@@ -1,5 +1,23 @@
 2003-01-09  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* providers/mysql/gda-mysql-provider.c
+	(gda_mysql_provider_begin_transaction):
+	(gda_mysql_provider_commit_transaction):
+	(gda_mysql_provider_rollback_transaction): don't allow transactions in
+	read-only connections.
+
+	* providers/oracle/gda-oracle-provider.c
+	(gda_oracle_provider_begin_transaction):
+	(gda_oracle_provider_commit_transaction):
+	(gda_oracle_provider_rollback_transaction): ditto.
+
+	* providers/sqlite/gda-sqlite-provider.c
+	(gda_sqlite_provider_begin_transaction):
+	(gda_sqlite_provider_commit_transaction):
+	(gda_sqlite_provider_rollback_transaction): ditto.
+
+2003-01-09  Rodrigo Moya <rodrigo@gnome-db.org>
+
 	Fixes #78847
 
 	* libgda/gda-connection.c (gda_connection_get_options): added missing

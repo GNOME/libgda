@@ -814,12 +814,17 @@ gda_oracle_provider_begin_transaction (GdaServerProvider *provider,
 	g_return_val_if_fail (xaction != NULL, FALSE);
 
 	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_ORACLE_HANDLE);
-	ora_xaction = g_new0 (GdaOracleTransaction, 1);
-
 	if (!priv_data) {
 		gda_connection_add_error_string (cnc, _("Invalid Oracle handle"));
 		return FALSE;
 	}
+
+	if (gda_connection_get_options (cnc) & GDA_CONNECTION_OPTIONS_READ_ONLY) {
+		gda_connection_add_error_string (cnc, _("Transactions are not supported in read-only mode"));
+		return FALSE;
+	}
+
+	ora_xaction = g_new0 (GdaOracleTransaction, 1);
 
 	/* allocate the Oracle transaction handle */
 	result = OCIHandleAlloc ((dvoid *) priv_data->henv,
@@ -891,8 +896,13 @@ gda_oracle_provider_commit_transaction (GdaServerProvider *provider,
 
 	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_ORACLE_HANDLE);
 	ora_xaction = g_object_get_data (G_OBJECT (xaction), OBJECT_DATA_ORACLE_HANDLE);
-	if (!priv_data) {
+	if (!priv_data || !ora_xaction) {
 		gda_connection_add_error_string (cnc, _("Invalid Oracle handle"));
+		return FALSE;
+	}
+
+	if (gda_connection_get_options (cnc) & GDA_CONNECTION_OPTIONS_READ_ONLY) {
+		gda_connection_add_error_string (cnc, _("Transactions are not supported in read-only mode"));
 		return FALSE;
 	}
 
@@ -947,8 +957,13 @@ gda_oracle_provider_rollback_transaction (GdaServerProvider *provider,
 
 	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_ORACLE_HANDLE);
 	ora_xaction = g_object_get_data (G_OBJECT (xaction), OBJECT_DATA_ORACLE_HANDLE);
-	if (!priv_data) {
+	if (!priv_data || !ora_xaction) {
 		gda_connection_add_error_string (cnc, _("Invalid Oracle handle"));
+		return FALSE;
+	}
+
+	if (gda_connection_get_options (cnc) & GDA_CONNECTION_OPTIONS_READ_ONLY) {
+		gda_connection_add_error_string (cnc, _("Transactions are not supported in read-only mode"));
 		return FALSE;
 	}
 

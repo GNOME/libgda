@@ -468,6 +468,11 @@ gda_sqlite_provider_begin_transaction (GdaServerProvider *provider,
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (GDA_IS_TRANSACTION (xaction), FALSE);
 
+	if (gda_connection_get_options (cnc) & GDA_CONNECTION_OPTIONS_READ_ONLY) {
+		gda_connection_add_error_string (cnc, _("Transactions are not supported in read-only mode"));
+		return FALSE;
+	}
+
 	name = gda_transaction_get_name (xaction);
 	if (name)
 		sql = g_strdup_printf ("BEGIN TRANSACTION %s", name);
