@@ -20,6 +20,7 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#include <bonobo/bonobo-i18n.h>
 #include "gda-server-recordset.h"
 
 #define PARENT_TYPE BONOBO_X_OBJECT_TYPE
@@ -28,7 +29,10 @@ struct _GdaServerRecordsetPrivate {
 	GdaServerConnection *cnc;
 	GdaServerRecordsetFetchFunc fetch_func;
 	GdaServerRecordsetDescribeFunc desc_func;
+
 	glong current_pos;
+	gboolean is_eof;
+	GPtrArray *rows;
 };
 
 static void gda_server_recordset_class_init (GdaServerRecordsetClass *klass);
@@ -37,6 +41,50 @@ static void gda_server_recordset_init       (GdaServerRecordset *recset,
 static void gda_server_recordset_finalize   (GObject *object);
 
 static GObjectClass *parent_class = NULL;
+
+/*
+ * Private functions
+ */
+
+static GdaRow *
+get_row (GdaServerRecordset *recset, glong pos)
+{
+	gint i;
+	GdaRow *row;
+
+	g_return_val_if_fail (GDA_IS_SERVER_RECORDSET (recset), NULL);
+	g_return_val_if_fail (pos >= 0, NULL);
+
+	/* if we've got all the rows from the provider, don't fetch */
+	if (recset->priv->is_eof && pos >= recset->priv->rows->len) {
+		recset->priv->is_eof = TRUE;
+		return NULL;
+	}
+
+	if (pos < recset->priv->rows->len) {
+		/* we've got the row already */
+		return g_ptr_array_index (recset->priv->rows, pos);
+	}
+
+	/* fetch all rows until the given one */
+	for (i = recset->priv->rows->len - 1; i <= pos; i++) {
+		if (recset->priv->fetch_func) {
+			if (i < 0)
+				i = 0;
+
+			row = recset->priv->fetch_func (recset, i);
+			if (!row) {
+				recset->priv->is_eof = TRUE;
+				return NULL;
+			}
+			g_ptr_array_add (recset->priv->rows, row);
+		}
+		else
+			g_ptr_array_add (recset->priv->rows, gda_row_new (0));
+	}
+
+	return g_ptr_array_index (recset->priv->rows, pos);
+}
 
 /*
  * CORBA methods implementation
@@ -50,37 +98,118 @@ impl_Recordset_describe (PortableServer_Servant servant, CORBA_Environment *ev)
 
 	g_return_val_if_fail (GDA_IS_SERVER_RECORDSET (recset), NULL);
 
-	
+	if (recset->priv->desc_func)
+		return recset->priv->desc_func (recset);
+
+	/* return an empty GdaRowAttributes */
+	attrs = gda_row_attributes_new (0);
+
+	return attrs;
 }
 
 static CORBA_long
 impl_Recordset_getRowCount (PortableServer_Servant servant, CORBA_Environment *ev)
 {
+	glong i;
+	GdaRow *row;
+	GdaServerRecordset *recset = (GdaServerRecordset *) bonobo_x_object (servant);
+
+	g_return_val_if_fail (GDA_IS_SERVER_RECORDSET (recset), 0);
+
+	if (recset->priv->is_eof)
+		return recset->priv->rows->len;
+
+	/* we don't have all rows, so get them */
+	i = 0;
+	do {
+		row = get_row (recset, i);
+		if (row)
+			i++;
+	} while (row != NULL);
+
+	return i;
 }
 
 static CORBA_boolean
 impl_Recordset_moveFirst (PortableServer_Servant servant, CORBA_Environment *ev)
 {
+	GdaServerRecordset *recset = (GdaServerRecordset *) bonobo_x_object (servant);
+
+	g_return_val_if_fail (GDA_IS_SERVER_RECORDSET (recset), FALSE);
+
+	recset->priv->current_pos = 0;
+	return TRUE;
 }
 
 static CORBA_boolean
 impl_Recordset_moveNext (PortableServer_Servant servant, CORBA_Environment *ev)
 {
+	GdaServerRecordset *recset = (GdaServerRecordset *) bonobo_x_object (servant);
+
+	g_return_val_if_fail (GDA_IS_SERVER_RECORDSET (recset), FALSE);
+
+	if (get_row (recset, recset->priv->current_pos + 1)) {
+		recset->priv->current_pos++;
+		return TRUE;
+	}
+
+	return FALSE;
 }
 
 static CORBA_boolean
 impl_Recordset_movePrevious (PortableServer_Servant servant, CORBA_Environment *ev)
 {
+	GdaServerRecordset *recset = (GdaServerRecordset *) bonobo_x_object (servant);
+
+	g_return_val_if_fail (GDA_IS_SERVER_RECORDSET (recset), FALSE);
+
+	if (recset->priv->current_pos > 0) {
+		recset->priv->current_pos--;
+		return TRUE;
+	}
+
+	return FALSE;
 }
 
 static CORBA_boolean
 impl_Recordset_moveLast (PortableServer_Servant servant, CORBA_Environment *ev)
 {
+	GdaServerRecordset *recset = (GdaServerRecordset *) bonobo_x_object (servant);
+
+	g_return_val_if_fail (GDA_IS_SERVER_RECORDSET (recset), FALSE);
+
+	while (get_row (recset, recset->priv->current_pos)) {
+		recset->priv->current_pos++;
+	}
+
+	return recset->priv->is_eof;
 }
 
 static GNOME_Database_Row *
 impl_Recordset_fetch (PortableServer_Servant servant, CORBA_Environment *ev)
 {
+	GdaRow *row;
+	GdaRow *row_dup;
+	GdaServerRecordset *recset = (GdaServerRecordset *) bonobo_x_object (servant);
+
+	g_return_val_if_fail (GDA_IS_SERVER_RECORDSET (recset), NULL);
+
+	if (recset->priv->fetch_func) {
+		row = get_row (recset, recset->priv->current_pos);
+		if (!row)
+			return NULL;
+	}
+	else {
+		/* return an empty GdaRow */
+		gda_server_connection_add_error_string (
+			gda_server_recordset_get_connection (recset),
+			_("No implementation for the fetch() method found"));
+		row = gda_row_new (0);
+	}
+
+	/* duplicate the object to be returned */
+
+	return row_dup;
 }
 
 /*
@@ -115,17 +244,31 @@ gda_server_recordset_init (GdaServerRecordset *recset, GdaServerRecordsetClass *
 
 	recset->priv = g_new0 (GdaServerRecordsetPrivate, 1);
 	recset->priv->cnc = NULL;
+	recset->priv->fetch_func = NULL;
+	recset->priv->desc_func = NULL;
 	recset->priv->current_pos = 0;
+	recset->priv->is_eof = FALSE;
+	recset->priv->rows = g_ptr_array_new ();
 }
 
 static void
 gda_server_recordset_finalize (GObject *object)
 {
+	gint i;
 	GdaServerRecordset *recset = (GdaServerRecordset *) object;
 
 	g_return_if_fail (GDA_IS_SERVER_RECORDSET (recset));
 
 	/* free memory */
+	for (i = 0; i < recset->priv->rows->len; i++) {
+		GdaRow *row;
+
+		row = g_ptr_array_index (recset->priv->rows, i);
+		g_ptr_array_remove_index (recset->priv->rows, i);
+		gda_row_free (row);
+	}
+	g_ptr_array_free (recset->priv->rows, TRUE);
+	
 	g_free (recset->priv);
 	recset->priv = NULL;
 

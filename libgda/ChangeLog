@@ -1,5 +1,17 @@
 2001-12-18  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* gda-server-recordset.c (impl_Recordset_moveFirst): implemented
+	(impl_Recordset_moveNext): implemented
+	(impl_Recordset_movePrevious): implemented
+	(impl_Recordset_moveLast): implemented
+
+2001-12-18  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-server-recordset.c (impl_Recordset_describe): implemented
+	(impl_Recordset_fetch): implemented
+
+2001-12-18  Rodrigo Moya <rodrigo@gnome-db.org>
+
 	* gda-row.[ch] (gda_row_get_field): new function
 
 	* gda-server-recordset.[ch] (impl_Recordset_getRowCount): new
