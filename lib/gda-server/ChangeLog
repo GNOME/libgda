@@ -3,6 +3,13 @@
 	* gda-server-error.[ch] (gda_server_error_make): moved to
 	gda-server-connection.c and removed this file
 
+	* gda-server-init.c: switched to bonobo-activation
+
+	* gda-server-connection.[ch]:
+	* gda-server-recordset.[ch]:
+	* gda-server.[ch]:
+	* gda-server-command.[ch]: switched to GObject
+
 2001-08-19  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-server-field.[ch]: moved to gda-common

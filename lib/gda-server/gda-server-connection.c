@@ -21,39 +21,37 @@
 #include "gda-server.h"
 #include "gda-server-private.h"
 
-static void gda_server_connection_init (GdaServerConnection * cnc);
-static void gda_server_connection_class_init (GdaServerConnectionClass *
-					      klass);
-static void gda_server_connection_destroy (GtkObject * object);
+#define PARENT_TYPE BONOBO_X_OBJECT_TYPE
+
+static void gda_server_connection_init       (GdaServerConnection *cnc, GdaServerConnectionClass *klass);
+static void gda_server_connection_class_init (GdaServerConnectionClass *klass);
+static void gda_server_connection_finalize   (GObject *object);
 
 /*
  * Stub implementations
  */
 CORBA_char *
-impl_GDA_Connection__get_version (PortableServer_Servant servant,
-				  CORBA_Environment * ev)
+impl_Connection__get_version (PortableServer_Servant servant,
+			      CORBA_Environment * ev)
 {
 	return CORBA_string_dup (VERSION);
 }
 
-GDA_ErrorSeq *
-impl_GDA_Connection__get_errors (PortableServer_Servant servant,
-				 CORBA_Environment * ev)
+GNOME_Database_ErrorSeq *
+impl_Connection__get_errors (PortableServer_Servant servant,
+			     CORBA_Environment * ev)
 {
-	GdaServerConnection *cnc =
-		GDA_SERVER_CONNECTION (bonobo_x_object (servant));
+	GdaServerConnection *cnc = GDA_SERVER_CONNECTION (bonobo_x_object (servant));
 
-	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc),
-			      CORBA_OBJECT_NIL);
+	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), CORBA_OBJECT_NIL);
 	return gda_error_list_to_corba_seq (cnc->errors);
 }
 
 CORBA_long
-impl_GDA_Connection_beginTransaction (PortableServer_Servant servant,
-				      CORBA_Environment * ev)
+impl_Connection_beginTransaction (PortableServer_Servant servant,
+				  CORBA_Environment * ev)
 {
-	GdaServerConnection *cnc =
-		(GdaServerConnection *) bonobo_x_object (servant);
+	GdaServerConnection *cnc = (GdaServerConnection *) bonobo_x_object (servant);
 
 	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), -1);
 
@@ -65,11 +63,10 @@ impl_GDA_Connection_beginTransaction (PortableServer_Servant servant,
 }
 
 CORBA_long
-impl_GDA_Connection_commitTransaction (PortableServer_Servant servant,
-				       CORBA_Environment * ev)
+impl_Connection_commitTransaction (PortableServer_Servant servant,
+				   CORBA_Environment * ev)
 {
-	GdaServerConnection *cnc =
-		(GdaServerConnection *) bonobo_x_object (servant);
+	GdaServerConnection *cnc = (GdaServerConnection *) bonobo_x_object (servant);
 
 	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), -1);
 
@@ -81,11 +78,10 @@ impl_GDA_Connection_commitTransaction (PortableServer_Servant servant,
 }
 
 CORBA_long
-impl_GDA_Connection_rollbackTransaction (PortableServer_Servant servant,
-					 CORBA_Environment * ev)
+impl_Connection_rollbackTransaction (PortableServer_Servant servant,
+				     CORBA_Environment * ev)
 {
-	GdaServerConnection *cnc =
-		(GdaServerConnection *) bonobo_x_object (servant);
+	GdaServerConnection *cnc = (GdaServerConnection *) bonobo_x_object (servant);
 
 	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), -1);
 
@@ -98,8 +94,8 @@ impl_GDA_Connection_rollbackTransaction (PortableServer_Servant servant,
 }
 
 CORBA_long
-impl_GDA_Connection_close (PortableServer_Servant servant,
-			   CORBA_Environment * ev)
+impl_Connection_close (PortableServer_Servant servant,
+		       CORBA_Environment * ev)
 {
 	GdaServerConnection *cnc = (GdaServerConnection *) bonobo_x_object (servant);
 
@@ -112,10 +108,11 @@ impl_GDA_Connection_close (PortableServer_Servant servant,
 }
 
 CORBA_long
-impl_GDA_Connection_open (PortableServer_Servant servant,
-			  CORBA_char * dsn,
-			  CORBA_char * user,
-			  CORBA_char * passwd, CORBA_Environment * ev)
+impl_Connection_open (PortableServer_Servant servant,
+		      CORBA_char * dsn,
+		      CORBA_char * user,
+		      CORBA_char * passwd,
+		      CORBA_Environment * ev)
 {
 	GdaServerConnection *cnc = (GdaServerConnection *) bonobo_x_object (servant);
 
@@ -131,25 +128,22 @@ impl_GDA_Connection_open (PortableServer_Servant servant,
 	return 0;
 }
 
-GDA_Recordset
-impl_GDA_Connection_openSchema (PortableServer_Servant servant,
-				GDA_Connection_QType t,
-				GDA_Connection_ConstraintSeq * constraints,
-				CORBA_Environment * ev)
+GNOME_Database_Recordset
+impl_Connection_openSchema (PortableServer_Servant servant,
+			    GNOME_Database_Connection_QType t,
+			    GNOME_Database_Connection_ConstraintSeq * constraints,
+			    CORBA_Environment * ev)
 {
-	GdaServerConnection *cnc =
-		(GdaServerConnection *) bonobo_x_object (servant);
+	GdaServerConnection *cnc = (GdaServerConnection *) bonobo_x_object (servant);
 	GdaServerRecordset *recset;
 	GdaError *e;
 
-	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc),
-			      CORBA_OBJECT_NIL);
+	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), CORBA_OBJECT_NIL);
 
 	e = gda_error_new ();
 	if ((recset = gda_server_connection_open_schema (cnc, e, t,
 							 constraints->_buffer,
-							 constraints->
-							 _length)) == 0) {
+							 constraints->_length)) == 0) {
 		gda_error_to_exception (e, ev);
 		gda_error_free (e);
 		return CORBA_OBJECT_NIL;
@@ -162,13 +156,12 @@ impl_GDA_Connection_openSchema (PortableServer_Servant servant,
 }
 
 CORBA_long
-impl_GDA_Connection_modifySchema (PortableServer_Servant servant,
-				  GDA_Connection_QType t,
-				  GDA_Connection_ConstraintSeq * constraints,
-				  CORBA_Environment * ev)
+impl_Connection_modifySchema (PortableServer_Servant servant,
+			      GNOME_Database_Connection_QType t,
+			      GNOME_Database_Connection_ConstraintSeq * constraints,
+			      CORBA_Environment * ev)
 {
-	GdaServerConnection *cnc =
-		(GdaServerConnection *) bonobo_x_object (servant);
+	GdaServerConnection *cnc = (GdaServerConnection *) bonobo_x_object (servant);
 
 	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), -1);
 
@@ -182,16 +175,14 @@ impl_GDA_Connection_modifySchema (PortableServer_Servant servant,
 	return 0;
 }
 
-GDA_Command
-impl_GDA_Connection_createCommand (PortableServer_Servant servant,
-				   CORBA_Environment * ev)
+GNOME_Database_Command
+impl_Connection_createCommand (PortableServer_Servant servant,
+			       CORBA_Environment * ev)
 {
 	GdaServerCommand *cmd;
-	GdaServerConnection *cnc =
-		(GdaServerConnection *) bonobo_x_object (servant);
+	GdaServerConnection *cnc = (GdaServerConnection *) bonobo_x_object (servant);
 
-	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc),
-			      CORBA_OBJECT_NIL);
+	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), CORBA_OBJECT_NIL);
 
 	cmd = gda_server_command_new (cnc);
 	if (!GDA_IS_SERVER_COMMAND (cmd)) {
@@ -202,16 +193,14 @@ impl_GDA_Connection_createCommand (PortableServer_Servant servant,
 	return bonobo_object_corba_objref (BONOBO_OBJECT (cmd));
 }
 
-GDA_Recordset
-impl_GDA_Connection_createRecordset (PortableServer_Servant servant,
-				     CORBA_Environment * ev)
+GNOME_Database_Recordset
+impl_Connection_createRecordset (PortableServer_Servant servant,
+				 CORBA_Environment * ev)
 {
 	GdaServerRecordset *recset;
-	GdaServerConnection *cnc =
-		(GdaServerConnection *) bonobo_x_object (servant);
+	GdaServerConnection *cnc = (GdaServerConnection *) bonobo_x_object (servant);
 
-	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc),
-			      CORBA_OBJECT_NIL);
+	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), CORBA_OBJECT_NIL);
 
 	recset = gda_server_recordset_new (cnc);
 	if (!GDA_IS_SERVER_RECORDSET (recset)) {
@@ -223,29 +212,28 @@ impl_GDA_Connection_createRecordset (PortableServer_Servant servant,
 }
 
 CORBA_long
-impl_GDA_Connection_startLogging (PortableServer_Servant servant,
-				  CORBA_char * filename,
-				  CORBA_Environment * ev)
+impl_Connection_startLogging (PortableServer_Servant servant,
+			      CORBA_char * filename,
+			      CORBA_Environment * ev)
 {
 	return -1;
 }
 
 CORBA_long
-impl_GDA_Connection_stopLogging (PortableServer_Servant servant,
-				 CORBA_Environment * ev)
+impl_Connection_stopLogging (PortableServer_Servant servant,
+			     CORBA_Environment * ev)
 {
 	return -1;
 }
 
 CORBA_char *
-impl_GDA_Connection_createTable (PortableServer_Servant servant,
-				 CORBA_char * name,
-				 GDA_RowAttributes * columns,
-				 CORBA_Environment * ev)
+impl_Connection_createTable (PortableServer_Servant servant,
+			     CORBA_char * name,
+			     GNOME_Database_RowAttributes * columns,
+			     CORBA_Environment * ev)
 {
 	CORBA_char *retval;
-	GdaServerConnection *cnc =
-		(GdaServerConnection *) bonobo_x_object (servant);
+	GdaServerConnection *cnc = (GdaServerConnection *) bonobo_x_object (servant);
 
 	g_return_if_fail (GDA_IS_SERVER_CONNECTION (cnc));
 
@@ -256,52 +244,47 @@ impl_GDA_Connection_createTable (PortableServer_Servant servant,
 }
 
 CORBA_boolean
-impl_GDA_Connection_supports (PortableServer_Servant servant,
-			      GDA_Connection_Feature feature,
-			      CORBA_Environment * ev)
+impl_Connection_supports (PortableServer_Servant servant,
+			  GNOME_Database_Connection_Feature feature,
+			  CORBA_Environment * ev)
 {
-	GdaServerConnection *cnc =
-		(GdaServerConnection *) bonobo_x_object (servant);
+	GdaServerConnection *cnc = (GdaServerConnection *) bonobo_x_object (servant);
 
 	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), FALSE);
 	return gda_server_connection_supports (cnc, feature);
 }
 
 CORBA_char *
-impl_GDA_Connection_sql2xml (PortableServer_Servant servant,
-			     CORBA_char * sql, CORBA_Environment * ev)
+impl_Connection_sql2xml (PortableServer_Servant servant,
+			 CORBA_char * sql, CORBA_Environment * ev)
 {
-	GdaServerConnection *cnc =
-		(GdaServerConnection *) bonobo_x_object (servant);
+	GdaServerConnection *cnc = (GdaServerConnection *) bonobo_x_object (servant);
 	return gda_server_connection_sql2xml (cnc, sql);
 }
 
 CORBA_char *
-impl_GDA_Connection_xml2sql (PortableServer_Servant servant,
-			     CORBA_char * xml, CORBA_Environment * ev)
+impl_Connection_xml2sql (PortableServer_Servant servant,
+			 CORBA_char * xml, CORBA_Environment * ev)
 {
-	GdaServerConnection *cnc =
-		(GdaServerConnection *) bonobo_x_object (servant);
+	GdaServerConnection *cnc = (GdaServerConnection *) bonobo_x_object (servant);
 	return gda_server_connection_xml2sql (cnc, xml);
 }
 
 void
-impl_GDA_Connection_addListener (PortableServer_Servant servant,
-				 GDA_Listener listener,
-				 CORBA_Environment * ev)
+impl_Connection_addListener (PortableServer_Servant servant,
+			     GNOME_Database_Listener listener,
+			     CORBA_Environment * ev)
 {
-	GdaServerConnection *cnc =
-		(GdaServerConnection *) bonobo_x_object (servant);
+	GdaServerConnection *cnc = (GdaServerConnection *) bonobo_x_object (servant);
 	gda_server_connection_add_listener (cnc, listener);
 }
 
 void
-impl_GDA_Connection_removeListener (PortableServer_Servant servant,
-				    GDA_Listener listener,
-				    CORBA_Environment * ev)
+impl_Connection_removeListener (PortableServer_Servant servant,
+				GNOME_Database_Listener listener,
+				CORBA_Environment * ev)
 {
-	GdaServerConnection *cnc =
-		(GdaServerConnection *) bonobo_x_object (servant);
+	GdaServerConnection *cnc = (GdaServerConnection *) bonobo_x_object (servant);
 	gda_server_connection_remove_listener (cnc, listener);
 }
 
@@ -325,39 +308,44 @@ free_error_list (GList * list)
 /*
  * GdaServerConnection class implementation
  */
+BONOBO_TYPE_FUNC_FULL (GdaServerConnection,
+		       GNOME_Database_Connection,
+		       PARENT_TYPE,
+		       gda_server_connection);
+
 static void
 gda_server_connection_class_init (GdaServerConnectionClass * klass)
 {
-	POA_GDA_Connection__epv *epv;
-	GtkObjectClass *object_class = (GtkObjectClass *) klass;
+	POA_GNOME_Database_Connection__epv *epv;
+	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
-	object_class->destroy = gda_server_connection_destroy;
+	object_class->finalize = gda_server_connection_finalize;
 
 	/* set the epv */
 	epv = &klass->epv;
-	epv->_get_version = impl_GDA_Connection__get_version;
-	epv->_get_errors = impl_GDA_Connection__get_errors;
-	epv->beginTransaction = impl_GDA_Connection_beginTransaction;
-	epv->commitTransaction = impl_GDA_Connection_commitTransaction;
-	epv->rollbackTransaction = impl_GDA_Connection_rollbackTransaction;
-	epv->close = impl_GDA_Connection_close;
-	epv->open = impl_GDA_Connection_open;
-	epv->openSchema = impl_GDA_Connection_openSchema;
-	epv->modifySchema = impl_GDA_Connection_modifySchema;
-	epv->createCommand = impl_GDA_Connection_createCommand;
-	epv->createRecordset = impl_GDA_Connection_createRecordset;
-	epv->startLogging = impl_GDA_Connection_startLogging;
-	epv->stopLogging = impl_GDA_Connection_stopLogging;
-	epv->createTable = impl_GDA_Connection_createTable;
-	epv->supports = impl_GDA_Connection_supports;
-	epv->sql2xml = impl_GDA_Connection_sql2xml;
-	epv->xml2sql = impl_GDA_Connection_xml2sql;
-	epv->addListener = impl_GDA_Connection_addListener;
-	epv->removeListener = impl_GDA_Connection_removeListener;
+	epv->_get_version = impl_Connection__get_version;
+	epv->_get_errors = impl_Connection__get_errors;
+	epv->beginTransaction = impl_Connection_beginTransaction;
+	epv->commitTransaction = impl_Connection_commitTransaction;
+	epv->rollbackTransaction = impl_Connection_rollbackTransaction;
+	epv->close = impl_Connection_close;
+	epv->open = impl_Connection_open;
+	epv->openSchema = impl_Connection_openSchema;
+	epv->modifySchema = impl_Connection_modifySchema;
+	epv->createCommand = impl_Connection_createCommand;
+	epv->createRecordset = impl_Connection_createRecordset;
+	epv->startLogging = impl_Connection_startLogging;
+	epv->stopLogging = impl_Connection_stopLogging;
+	epv->createTable = impl_Connection_createTable;
+	epv->supports = impl_Connection_supports;
+	epv->sql2xml = impl_Connection_sql2xml;
+	epv->xml2sql = impl_Connection_xml2sql;
+	epv->addListener = impl_Connection_addListener;
+	epv->removeListener = impl_Connection_removeListener;
 }
 
 static void
-gda_server_connection_init (GdaServerConnection * cnc)
+gda_server_connection_init (GdaServerConnection *cnc, GdaServerConnectionClass *klass)
 {
 	cnc->dsn = NULL;
 	cnc->username = NULL;
@@ -369,9 +357,9 @@ gda_server_connection_init (GdaServerConnection * cnc)
 }
 
 static void
-gda_server_connection_destroy (GtkObject * object)
+gda_server_connection_finalize (GObject *object)
 {
-	GtkObjectClass *parent_class;
+	GObjectClass *parent_class;
 	GdaServerConnection *cnc = (GdaServerConnection *) object;
 
 	g_return_if_fail (GDA_IS_SERVER_CONNECTION (cnc));
@@ -396,16 +384,15 @@ gda_server_connection_destroy (GtkObject * object)
 
 		CORBA_exception_init (&ev);
 		for (l = cnc->listeners; l != NULL; l = g_list_next (l)) {
-			GDA_Listener listener = (GDA_Listener) l->data;
+			GNOME_Database_Listener listener = (GNOME_Database_Listener) l->data;
 
 			if (listener != CORBA_OBJECT_NIL) {
-				GDA_Listener_notifyAction (listener,
-							   _
-							   ("Connection being closed"),
-							   GDA_LISTENER_ACTION_SHUTDOWN,
-							   _
-							   ("This connection is being closed, so all listeners are released"),
-							   &ev);
+				GNOME_Database_Listener_notifyAction (
+					listener,
+					_("Connection being closed"),
+					GNOME_Database_LISTENER_ACTION_SHUTDOWN,
+					_("This connection is being closed, so all listeners are released"),
+					&ev);
 				//CORBA_Object_release (listener, &ev);
 			}
 		}
@@ -425,34 +412,9 @@ gda_server_connection_destroy (GtkObject * object)
 		}
 	}
 
-	parent_class = gtk_type_class (BONOBO_X_OBJECT_TYPE);
-	if (parent_class && parent_class->destroy)
-		parent_class->destroy (object);
-}
-
-GtkType
-gda_server_connection_get_type (void)
-{
-	static GtkType type = 0;
-
-	if (!type) {
-		GtkTypeInfo info = {
-			"GdaServerConnection",
-			sizeof (GdaServerConnection),
-			sizeof (GdaServerConnectionClass),
-			(GtkClassInitFunc) gda_server_connection_class_init,
-			(GtkObjectInitFunc) gda_server_connection_init,
-			(GtkArgSetFunc) NULL,
-			(GtkArgSetFunc) NULL
-		};
-		type = bonobo_x_type_unique (BONOBO_X_OBJECT_TYPE,
-					     POA_GDA_Connection__init, NULL,
-					     GTK_STRUCT_OFFSET
-					     (GdaServerConnectionClass, epv),
-					     &info);
-	}
-
-	return type;
+	parent_class = g_type_class_peek (PARENT_TYPE);
+	if (parent_class && parent_class->finalize)
+		parent_class->finalize (object);
 }
 
 GdaServerConnection *
@@ -465,8 +427,7 @@ gda_server_connection_construct (GdaServerConnection * cnc,
 	cnc->server_impl = server_impl;
 
 	/* notify 'real' provider */
-	cnc->server_impl->connections =
-		g_list_append (cnc->server_impl->connections, (gpointer) cnc);
+	cnc->server_impl->connections = g_list_append (cnc->server_impl->connections, (gpointer) cnc);
 	if (cnc->server_impl->functions.connection_new != NULL) {
 		cnc->server_impl->functions.connection_new (cnc);
 	}
@@ -484,8 +445,7 @@ gda_server_connection_new (GdaServer * server_impl)
 
 	g_return_val_if_fail (server_impl != NULL, NULL);
 
-	cnc = GDA_SERVER_CONNECTION (gtk_type_new
-				     (gda_server_connection_get_type ()));
+	cnc = GDA_SERVER_CONNECTION (g_object_new (GDA_TYPE_SERVER_CONNECTION, NULL));
 	return gda_server_connection_construct (cnc, server_impl);
 }
 
@@ -502,11 +462,9 @@ gda_server_connection_open (GdaServerConnection * cnc,
 	g_return_val_if_fail (cnc != NULL, -1);
 	g_return_val_if_fail (dsn != NULL, -1);
 	g_return_val_if_fail (cnc->server_impl != NULL, -1);
-	g_return_val_if_fail (cnc->server_impl->functions.connection_open !=
-			      NULL, -1);
+	g_return_val_if_fail (cnc->server_impl->functions.connection_open != NULL, -1);
 
-	rc = cnc->server_impl->functions.connection_open (cnc, dsn, user,
-							  password);
+	rc = cnc->server_impl->functions.connection_open (cnc, dsn, user, password);
 	if (rc != -1) {
 		gda_server_connection_set_dsn (cnc, dsn);
 		gda_server_connection_set_username (cnc, user);
@@ -524,8 +482,7 @@ gda_server_connection_close (GdaServerConnection * cnc)
 {
 	g_return_if_fail (cnc != NULL);
 	g_return_if_fail (cnc->server_impl != NULL);
-	g_return_if_fail (cnc->server_impl->functions.connection_close !=
-			  NULL);
+	g_return_if_fail (cnc->server_impl->functions.connection_close != NULL);
 
 	cnc->server_impl->functions.connection_close (cnc);
 }
@@ -538,8 +495,7 @@ gda_server_connection_begin_transaction (GdaServerConnection * cnc)
 {
 	g_return_val_if_fail (cnc != NULL, -1);
 	g_return_val_if_fail (cnc->server_impl != NULL, -1);
-	g_return_val_if_fail (cnc->server_impl->functions.
-			      connection_begin_transaction != NULL, -1);
+	g_return_val_if_fail (cnc->server_impl->functions.connection_begin_transaction != NULL, -1);
 
 	return cnc->server_impl->functions.connection_begin_transaction (cnc);
 }
@@ -552,11 +508,9 @@ gda_server_connection_commit_transaction (GdaServerConnection * cnc)
 {
 	g_return_val_if_fail (cnc != NULL, -1);
 	g_return_val_if_fail (cnc->server_impl != NULL, -1);
-	g_return_val_if_fail (cnc->server_impl->functions.
-			      connection_commit_transaction != NULL, -1);
+	g_return_val_if_fail (cnc->server_impl->functions.connection_commit_transaction != NULL, -1);
 
-	return cnc->server_impl->functions.
-		connection_commit_transaction (cnc);
+	return cnc->server_impl->functions.connection_commit_transaction (cnc);
 }
 
 /**
@@ -567,11 +521,9 @@ gda_server_connection_rollback_transaction (GdaServerConnection * cnc)
 {
 	g_return_val_if_fail (cnc != NULL, -1);
 	g_return_val_if_fail (cnc->server_impl != NULL, -1);
-	g_return_val_if_fail (cnc->server_impl->functions.
-			      connection_rollback_transaction != NULL, -1);
+	g_return_val_if_fail (cnc->server_impl->functions.connection_rollback_transaction != NULL, -1);
 
-	return cnc->server_impl->functions.
-		connection_rollback_transaction (cnc);
+	return cnc->server_impl->functions.connection_rollback_transaction (cnc);
 }
 
 /**
@@ -580,14 +532,13 @@ gda_server_connection_rollback_transaction (GdaServerConnection * cnc)
 GdaServerRecordset *
 gda_server_connection_open_schema (GdaServerConnection * cnc,
 				   GdaError * error,
-				   GDA_Connection_QType t,
-				   GDA_Connection_Constraint * constraints,
+				   GNOME_Database_Connection_QType t,
+				   GNOME_Database_Connection_Constraint * constraints,
 				   gint length)
 {
 	g_return_val_if_fail (cnc != NULL, NULL);
 	g_return_val_if_fail (cnc->server_impl != NULL, NULL);
-	g_return_val_if_fail (cnc->server_impl->functions.
-			      connection_open_schema != NULL, NULL);
+	g_return_val_if_fail (cnc->server_impl->functions.connection_open_schema != NULL, NULL);
 
 	return cnc->server_impl->functions.connection_open_schema (cnc, error,
 								   t,
@@ -600,14 +551,13 @@ gda_server_connection_open_schema (GdaServerConnection * cnc,
  */
 glong
 gda_server_connection_modify_schema (GdaServerConnection * cnc,
-				     GDA_Connection_QType t,
-				     GDA_Connection_Constraint * constraints,
+				     GNOME_Database_Connection_QType t,
+				     GNOME_Database_Connection_Constraint * constraints,
 				     gint length)
 {
 	g_return_val_if_fail (cnc != NULL, -1);
 	g_return_val_if_fail (cnc->server_impl != NULL, -1);
-	g_return_val_if_fail (cnc->server_impl->functions.
-			      connection_modify_schema != NULL, -1);
+	g_return_val_if_fail (cnc->server_impl->functions.connection_modify_schema != NULL, -1);
 
 	return cnc->server_impl->functions.connection_modify_schema (cnc, t,
 								     constraints,
@@ -623,8 +573,7 @@ gda_server_connection_start_logging (GdaServerConnection * cnc,
 {
 	g_return_val_if_fail (cnc != NULL, -1);
 	g_return_val_if_fail (cnc->server_impl != NULL, -1);
-	g_return_val_if_fail (cnc->server_impl->functions.
-			      connection_start_logging != NULL, -1);
+	g_return_val_if_fail (cnc->server_impl->functions.connection_start_logging != NULL, -1);
 
 	return cnc->server_impl->functions.connection_start_logging (cnc,
 								     filename);
@@ -638,8 +587,7 @@ gda_server_connection_stop_logging (GdaServerConnection * cnc)
 {
 	g_return_val_if_fail (cnc != NULL, -1);
 	g_return_val_if_fail (cnc->server_impl != NULL, -1);
-	g_return_val_if_fail (cnc->server_impl->functions.
-			      connection_stop_logging != NULL, -1);
+	g_return_val_if_fail (cnc->server_impl->functions.connection_stop_logging != NULL, -1);
 
 	return cnc->server_impl->functions.connection_stop_logging (cnc);
 }
@@ -649,12 +597,11 @@ gda_server_connection_stop_logging (GdaServerConnection * cnc)
  */
 gchar *
 gda_server_connection_create_table (GdaServerConnection * cnc,
-				    GDA_RowAttributes * columns)
+				    GNOME_Database_RowAttributes * columns)
 {
 	g_return_val_if_fail (cnc != NULL, NULL);
 	g_return_val_if_fail (cnc->server_impl != NULL, NULL);
-	g_return_val_if_fail (cnc->server_impl->functions.
-			      connection_create_table != NULL, NULL);
+	g_return_val_if_fail (cnc->server_impl->functions.connection_create_table != NULL, NULL);
 	g_return_val_if_fail (columns != NULL, NULL);
 
 	return cnc->server_impl->functions.connection_create_table (cnc,
@@ -666,12 +613,11 @@ gda_server_connection_create_table (GdaServerConnection * cnc,
  */
 gboolean
 gda_server_connection_supports (GdaServerConnection * cnc,
-				GDA_Connection_Feature feature)
+				GNOME_Database_Connection_Feature feature)
 {
 	g_return_val_if_fail (cnc != NULL, FALSE);
 	g_return_val_if_fail (cnc->server_impl != NULL, FALSE);
-	g_return_val_if_fail (cnc->server_impl->functions.
-			      connection_supports != NULL, FALSE);
+	g_return_val_if_fail (cnc->server_impl->functions.connection_supports != NULL, FALSE);
 
 	return cnc->server_impl->functions.connection_supports (cnc, feature);
 }
@@ -679,14 +625,15 @@ gda_server_connection_supports (GdaServerConnection * cnc,
 /**
  * gda_server_connection_get_gda_type
  */
-GDA_ValueType
+GNOME_Database_ValueType
 gda_server_connection_get_gda_type (GdaServerConnection * cnc,
 				    gulong sql_type)
 {
-	g_return_val_if_fail (cnc != NULL, GDA_TypeNull);
-	g_return_val_if_fail (cnc->server_impl != NULL, GDA_TypeNull);
-	g_return_val_if_fail (cnc->server_impl->functions.
-			      connection_get_gda_type != NULL, GDA_TypeNull);
+	g_return_val_if_fail (cnc != NULL, GNOME_Database_TypeNull);
+	g_return_val_if_fail (cnc->server_impl != NULL, GNOME_Database_TypeNull);
+	g_return_val_if_fail (
+		cnc->server_impl->functions.connection_get_gda_type != NULL,
+		GNOME_Database_TypeNull);
 
 	return cnc->server_impl->functions.connection_get_gda_type (cnc,
 								    sql_type);
@@ -697,12 +644,11 @@ gda_server_connection_get_gda_type (GdaServerConnection * cnc,
  */
 gshort
 gda_server_connection_get_c_type (GdaServerConnection * cnc,
-				  GDA_ValueType type)
+				  GNOME_Database_ValueType type)
 {
 	g_return_val_if_fail (cnc != NULL, -1);
 	g_return_val_if_fail (cnc->server_impl != NULL, -1);
-	g_return_val_if_fail (cnc->server_impl->functions.
-			      connection_get_c_type != NULL, -1);
+	g_return_val_if_fail (cnc->server_impl->functions.connection_get_c_type != NULL, -1);
 
 	return cnc->server_impl->functions.connection_get_c_type (cnc, type);
 }
@@ -715,8 +661,7 @@ gda_server_connection_sql2xml (GdaServerConnection * cnc, const gchar * sql)
 {
 	g_return_if_fail (cnc != NULL);
 	g_return_if_fail (cnc->server_impl != NULL);
-	g_return_if_fail (cnc->server_impl->functions.connection_sql2xml !=
-			  NULL);
+	g_return_if_fail (cnc->server_impl->functions.connection_sql2xml != NULL);
 
 	return cnc->server_impl->functions.connection_sql2xml (cnc, sql);
 }
@@ -729,8 +674,7 @@ gda_server_connection_xml2sql (GdaServerConnection * cnc, const gchar * xml)
 {
 	g_return_if_fail (cnc != NULL);
 	g_return_if_fail (cnc->server_impl != NULL);
-	g_return_if_fail (cnc->server_impl->functions.connection_xml2sql !=
-			  NULL);
+	g_return_if_fail (cnc->server_impl->functions.connection_xml2sql != NULL);
 
 	return cnc->server_impl->functions.connection_xml2sql (cnc, xml);
 }
@@ -918,7 +862,7 @@ gda_server_connection_free (GdaServerConnection * cnc)
  */
 void
 gda_server_connection_add_listener (GdaServerConnection * cnc,
-				    GDA_Listener listener)
+				    GNOME_Database_Listener listener)
 {
 	g_return_if_fail (GDA_IS_SERVER_CONNECTION (cnc));
 	g_return_if_fail (listener != CORBA_OBJECT_NIL);
@@ -931,7 +875,7 @@ gda_server_connection_add_listener (GdaServerConnection * cnc,
  */
 void
 gda_server_connection_remove_listener (GdaServerConnection * cnc,
-				       GDA_Listener listener)
+				       GNOME_Database_Listener listener)
 {
 	g_return_if_fail (GDA_IS_SERVER_CONNECTION (cnc));
 	g_return_if_fail (listener != CORBA_OBJECT_NIL);

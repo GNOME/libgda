@@ -21,7 +21,7 @@
 #include "gda-server-private.h"
 #include <signal.h>
 #include <popt.h>
-#include <liboaf/liboaf.h>
+#include <bonobo-activation/bonobo-activation.h>
 
 /*
  * Private functions
@@ -100,16 +100,14 @@ gda_server_init (const gchar * app_id, const gchar * version, gint nargs,
 	poptContext pctx;
 
 	if (initialized) {
-		gda_log_error (_
-			       ("Attempt to initialize an already initialized provider"));
+		gda_log_error (_("Attempt to initialize an already initialized provider"));
 		return;
 	}
 
 	initialize_signals ();
-	gtk_type_init ();
 	g_set_prgname (app_id);
 
-	oaf_init (nargs, args);
+	bonobo_activation_init (nargs, args);
 
 	/* process commands */
 	pctx = poptGetContext (app_id, nargs, args, oaf_popt_options, 0);

@@ -1,4 +1,4 @@
-/* GNOME-DB
+/* GDA Server library
  * Copyright (c) 2000, 2001 by Vivien Malerba
  *
  * This program is free software; you can redistribute it and/or modify

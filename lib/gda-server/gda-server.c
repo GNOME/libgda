@@ -19,10 +19,12 @@
 
 #include "gda-server.h"
 #include "gda-server-private.h"
-#include <gtk/gtksignal.h>
-#include <liboaf/liboaf.h>
+#include <gobject/gsignal.h>
+#include <bonobo-activation/bonobo-activation.h>
 
-static void gda_server_destroy (GtkObject * object);
+static void gda_server_class_init    (GdaServerClass *klass);
+static void gda_server_instance_init (GdaServer *server, GdaServerClass *klass);
+static void gda_server_finalize      (GObject * object);
 
 static GList *server_list = NULL;
 
@@ -32,25 +34,24 @@ static GList *server_list = NULL;
 static void
 gda_server_class_init (GdaServerClass * klass)
 {
-	GtkObjectClass *object_class = (GtkObjectClass *) klass;
+	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
-	object_class->destroy = gda_server_destroy;
+	object_class->finalize = gda_server_finalize;
 }
 
 static void
-gda_server_instance_init (GdaServer * server_impl)
+gda_server_instance_init (GdaServer * server_impl, GdaServerClass *klass)
 {
 	g_return_if_fail (GDA_IS_SERVER (server_impl));
 
 	server_impl->name = NULL;
-	memset ((void *) &server_impl->functions, 0,
-		sizeof (GdaServerImplFunctions));
+	memset ((void *) &server_impl->functions, 0, sizeof (GdaServerImplFunctions));
 }
 
 static void
-gda_server_destroy (GtkObject * object)
+gda_server_finalize (GObject *object)
 {
-	GtkObjectClass *parent_class;
+	GObjectClass *parent_class;
 	GdaServer *server_impl = (GdaServer *) object;
 
 	g_return_if_fail (GDA_IS_SERVER (server_impl));
@@ -60,27 +61,29 @@ gda_server_destroy (GtkObject * object)
 		g_free ((gpointer) server_impl->name);
 	bonobo_object_unref (BONOBO_OBJECT (server_impl->connection_factory));
 
-	parent_class = gtk_type_class (gtk_object_get_type ());
-	if (parent_class && parent_class->destroy)
-		parent_class->destroy (object);
+	parent_class = g_type_class_peek (G_TYPE_OBJECT);
+	if (parent_class && parent_class->finalize)
+		parent_class->finalize (object);
 }
 
-GtkType
+GType
 gda_server_get_type (void)
 {
-	static guint type = 0;
+	static GType type = 0;
 
 	if (!type) {
-		GtkTypeInfo info = {
-			"GdaServer",
-			sizeof (GdaServer),
+		static const GTypeInfo info = {
 			sizeof (GdaServerClass),
-			(GtkClassInitFunc) gda_server_class_init,
-			(GtkObjectInitFunc) gda_server_instance_init,
-			(GtkArgSetFunc) NULL,
-			(GtkArgSetFunc) NULL,
+			(GBaseInitFunc) NULL,
+			(GBaseFinalizeFunc) NULL,
+			(GClassInitFunc) gda_server_class_init,
+			NULL,
+			NULL,
+			sizeof (GdaServer),
+			0,
+			(GInstanceInitFunc) gda_server_instance_init
 		};
-		type = gtk_type_unique (gtk_object_get_type (), &info);
+		type = g_type_register_static (G_TYPE_OBJECT, "GdaServer", &info, 0);
 	}
 	return type;
 }
@@ -115,7 +118,7 @@ gda_server_new (const gchar * name, GdaServerImplFunctions * functions)
 		return server_impl;
 
 	/* create provider instance */
-	server_impl = GDA_SERVER (gtk_type_new (gda_server_get_type ()));
+	server_impl = GDA_SERVER (g_object_new (GDA_TYPE_SERVER, NULL));
 	server_impl->name = g_strdup (name);
 	g_set_prgname (server_impl->name);
 	if (functions) {
@@ -124,20 +127,17 @@ gda_server_new (const gchar * name, GdaServerImplFunctions * functions)
 			sizeof (GdaServerImplFunctions));
 	}
 	else
-		gda_log_message (_
-				 ("Starting provider %s with no implementation functions"),
+		gda_log_message (_("Starting provider %s with no implementation functions"),
 				 name);
 
 	server_impl->connections = NULL;
 	server_impl->is_running = FALSE;
 
 	/* create CORBA connection factory */
-	server_impl->connection_factory =
-		bonobo_generic_factory_new (name, factory_function,
-					    server_impl);
-	bonobo_running_context_auto_exit_unref (BONOBO_OBJECT
-						(server_impl->
-						 connection_factory));
+	server_impl->connection_factory = bonobo_generic_factory_new (name, factory_function,
+								      server_impl);
+	bonobo_running_context_auto_exit_unref (
+		BONOBO_OBJECT (server_impl->connection_factory));
 	server_list = g_list_append (server_list, (gpointer) server_impl);
 
 	bonobo_activate ();
@@ -197,7 +197,7 @@ gda_server_stop (GdaServer * server_impl)
 	g_return_if_fail (GDA_IS_SERVER (server_impl));
 	g_return_if_fail (server_impl->is_running);
 
-	gtk_main_quit ();
+	bonobo_main_quit ();
 	server_impl->is_running = FALSE;
 }
 

@@ -21,7 +21,7 @@
 #  define __gda_server_connection_h__
 
 #include <bonobo/bonobo-xobject.h>
-#include <GDA.h>
+#include <GNOME_Database.h>
 #include <gda-common-defs.h>
 #include <gda-error.h>
 #include <gda-listener.h>
@@ -29,15 +29,14 @@
 typedef struct _GdaServerConnection GdaServerConnection;
 
 #include <gda-server-recordset.h>
-#include <gda-server-error.h>
 
 G_BEGIN_DECLS
 
 #define GDA_TYPE_SERVER_CONNECTION            (gda_server_connection_get_type())
-#define GDA_SERVER_CONNECTION(obj)            GTK_CHECK_CAST(obj, GDA_TYPE_SERVER_CONNECTION, GdaServerConnection)
-#define GDA_SERVER_CONNECTION_CLASS(klass)    GTK_CHECK_CLASS_CAST(klass, GDA_TYPE_SERVER_CONNECTION, GdaServerConnectionClass)
-#define GDA_IS_SERVER_CONNECTION(obj)         GTK_CHECK_TYPE(obj, GDA_TYPE_SERVER_CONNECTION)
-#define GDA_IS_SERVER_CONNECTION_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_SERVER_CONNECTION))
+#define GDA_SERVER_CONNECTION(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_SERVER_CONNECTION, GdaServerConnection))
+#define GDA_SERVER_CONNECTION_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_SERVER_CONNECTION, GdaServerConnectionClass))
+#define GDA_IS_SERVER_CONNECTION(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_SERVER_CONNECTION))
+#define GDA_IS_SERVER_CONNECTION_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GDA_TYPE_SERVER_CONNECTION))
 
 typedef struct _GdaServerConnectionClass GdaServerConnectionClass;
 
@@ -59,10 +58,10 @@ struct _GdaServerConnection {
 struct _GdaServerConnectionClass {
 	BonoboXObjectClass parent_class;
 
-	POA_GDA_Connection__epv epv;
+	POA_GNOME_Database_Connection__epv epv;
 };
 
-GtkType              gda_server_connection_get_type (void);
+GType                gda_server_connection_get_type (void);
 GdaServerConnection *gda_server_connection_new (GdaServer *server_impl);
 gchar               *gda_server_connection_get_dsn (GdaServerConnection * cnc);
 void                 gda_server_connection_set_dsn (GdaServerConnection * cnc,
@@ -92,24 +91,24 @@ gint                 gda_server_connection_commit_transaction (GdaServerConnecti
 gint                 gda_server_connection_rollback_transaction (GdaServerConnection *cnc);
 GdaServerRecordset  *gda_server_connection_open_schema (GdaServerConnection * cnc,
 							GdaError * error,
-							GDA_Connection_QType t,
-							GDA_Connection_Constraint *constraints,
+							GNOME_Database_Connection_QType t,
+							GNOME_Database_Connection_Constraint *constraints,
 							gint length);
 glong                gda_server_connection_modify_schema (GdaServerConnection * cnc,
-							  GDA_Connection_QType t,
-							  GDA_Connection_Constraint *constraints,
+							  GNOME_Database_Connection_QType t,
+							  GNOME_Database_Connection_Constraint *constraints,
 							  gint length);
 gint                 gda_server_connection_start_logging (GdaServerConnection * cnc,
 							  const gchar * filename);
 gint                 gda_server_connection_stop_logging (GdaServerConnection * cnc);
 gchar               *gda_server_connection_create_table (GdaServerConnection * cnc,
-							 GDA_RowAttributes *columns);
+							 GNOME_Database_RowAttributes *columns);
 gboolean             gda_server_connection_supports (GdaServerConnection * cnc,
-						     GDA_Connection_Feature feature);
-GDA_ValueType        gda_server_connection_get_gda_type (GdaServerConnection *cnc,
-							 gulong sql_type);
+						     GNOME_Database_Connection_Feature feature);
+GNOME_Database_ValueType gda_server_connection_get_gda_type (GdaServerConnection *cnc,
+							     gulong sql_type);
 gshort               gda_server_connection_get_c_type (GdaServerConnection * cnc,
-						       GDA_ValueType type);
+						       GNOME_Database_ValueType type);
 gchar               *gda_server_connection_sql2xml (GdaServerConnection * cnc,
 						    const gchar * sql);
 gchar               *gda_server_connection_xml2sql (GdaServerConnection * cnc,
@@ -120,9 +119,9 @@ void                 gda_server_connection_make_error (GdaError *error,
 						       gchar *where);
 
 void                 gda_server_connection_add_listener (GdaServerConnection * cnc,
-							 GDA_Listener listener);
+							 GNOME_Database_Listener listener);
 void                 gda_server_connection_remove_listener (GdaServerConnection * cnc,
-							    GDA_Listener listener);
+							    GNOME_Database_Listener listener);
 
 G_END_DECLS
 

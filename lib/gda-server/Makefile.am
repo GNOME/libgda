@@ -7,7 +7,6 @@ INCLUDES = \
 gda_server_headers = \
 	gda-server-connection.h \
 	gda-server-command.h \
-	gda-server-error.h \
 	gda-server-recordset.h \
 	gda-server.h 
 
@@ -16,7 +15,6 @@ libgda_server_2_la_SOURCES = \
 	gda-server-private.h \
 	gda-server-command.c \
 	gda-server-connection.c \
-	gda-server-error.c \
 	gda-server-init.c \
 	gda-server-recordset.c \
 	gda-builtin-res.c \

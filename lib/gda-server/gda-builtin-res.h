@@ -22,13 +22,11 @@
 #include <stdio.h>
 #include <glib.h>
 
-typedef struct _GdaBuiltin_Res_AttDesc
-{
+typedef struct _GdaBuiltin_Res_AttDesc {
 	char *name;		/* field name */
 	gulong typid;		/* type id */
 	int typlen;		/* type size */
-}
-GdaBuiltin_Res_AttDesc;
+} GdaBuiltin_Res_AttDesc;
 
 
 /* We use char* for Attribute values.
@@ -36,24 +34,20 @@ GdaBuiltin_Res_AttDesc;
    null (zero) byte after whatever the backend sends us.  
 */
 
-typedef struct _GdaBuiltin_Res_AttValue
-{
+typedef struct _GdaBuiltin_Res_AttValue {
 	int len;		/* length in bytes of the value */
 	char *value;		/* actual value, plus terminating zero byte */
-}
-GdaBuiltin_Res_AttValue;
+} GdaBuiltin_Res_AttValue;
 
 
-typedef struct _GdaBuiltin_Result
-{
+typedef struct _GdaBuiltin_Result {
 	int ntuples;
 	int numcols;
 	GdaBuiltin_Res_AttDesc *attDescs;
 	GdaBuiltin_Res_AttValue **tuples;
 
 	gulong default_typid;
-}
-GdaBuiltin_Result;
+} GdaBuiltin_Result;
 
 /* returns an empty GdaBuiltin_Result */
 GdaBuiltin_Result *GdaBuiltin_Result_new (guint ncols,
@@ -90,4 +84,5 @@ gint GdaBuiltin_Result_get_length (GdaBuiltin_Result * res,
 
 /* debug function */
 void GdaBuiltin_Result_dump (GdaBuiltin_Result * res);
+
 #endif
