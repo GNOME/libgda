@@ -21,6 +21,8 @@
  */
 
 #include <config.h>
+#include <glib/gdir.h>
+#include <gmodule.h>
 #include <libgda/gda-config.h>
 #include <libgda/gda-data-model-array.h>
 #include <libgda/gda-intl.h>
@@ -400,8 +402,68 @@ gda_config_remove_listener (guint id)
 GList *
 gda_config_get_provider_list (void)
 {
-	/* FIXME: implement */
-	return NULL;
+	GDir *dir;
+	GError *err = NULL;
+	const gchar *name;
+	GList *list = NULL;
+
+	/* read the plugin directory */
+	dir = g_dir_open (LIBGDA_PLUGINDIR, 0, &err);
+	if (err) {
+		gda_log_error (err->message);
+		g_error_free (err);
+		return NULL;
+	}
+
+	while ((name = g_dir_read_name (dir))) {
+		GdaProviderInfo *info;
+		GModule *handle;
+		gchar *path;
+		const gchar * (* plugin_get_name) (void);
+		const gchar * (* plugin_get_description) (void);
+		GList * (* plugin_get_cnc_params) (void);
+
+		path = g_build_path (G_DIR_SEPARATOR_S, LIBGDA_PLUGINDIR, name, NULL);
+		handle = g_module_open (path, G_MODULE_BIND_LAZY);
+		if (!handle) {
+			g_free (path);
+			continue;
+		}
+
+		g_module_symbol (handle, "plugin_get_name",
+				 (gpointer) &plugin_get_name);
+		g_module_symbol (handle, "plugin_get_description",
+				 (gpointer) &plugin_get_description);
+		g_module_symbol (handle, "plugin_get_connection_params",
+				 (gpointer) &plugin_get_cnc_params);
+
+		info = g_new0 (GdaProviderInfo, 1);
+		info->location = path;
+
+		if (plugin_get_name != NULL)
+			info->id = g_strdup (plugin_get_name ());
+		else
+			info->id = g_strdup (name);
+
+		if (plugin_get_description != NULL)
+			info->description = g_strdup (plugin_get_description ());
+		else
+			info->description = NULL;
+
+		if (plugin_get_cnc_params != NULL)
+			info->gda_params = plugin_get_cnc_params ();
+		else
+			info->gda_params = NULL;
+
+		list = g_list_append (list, info);
+
+		g_module_close (handle);
+	}
+
+	/* free memory */
+	g_dir_close (dir);
+
+	return list;
 }
 
 /**
@@ -463,12 +525,6 @@ gda_config_free_provider_info (GdaProviderInfo *provider_info)
 	g_free (provider_info->id);
 	g_free (provider_info->location);
 	g_free (provider_info->description);
-	g_free (provider_info->username);
-	g_free (provider_info->hostname);
-	g_free (provider_info->domain);
-
-	g_list_foreach (provider_info->repo_ids, (GFunc) g_free, NULL);
-	g_list_free (provider_info->repo_ids);
 	g_list_foreach (provider_info->gda_params, (GFunc) g_free, NULL);
 	g_list_free (provider_info->gda_params);
 

@@ -157,6 +157,15 @@ gda_postgres_provider_get_type (void)
 	return type;
 }
 
+GdaServerProvider *
+gda_postgres_provider_new (void)
+{
+	GdaPostgresProvider *provider;
+
+	provider = g_object_new (gda_postgres_provider_get_type (), NULL);
+	return GDA_SERVER_PROVIDER (provider);
+}
+
 static GdaValueType
 postgres_name_to_gda_type (const gchar *name)
 {

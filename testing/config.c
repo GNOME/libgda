@@ -90,17 +90,6 @@ list_all_providers (void)
 		g_print (_("\tlocation = %s\n"), info->location);
 		g_print (_("\tdescription = %s\n"), info->description);
 
-		g_print (_("\trepo_ids ="));
-		for (ll = info->repo_ids; ll != NULL; ll = ll->next) {
-			if (ll->data != NULL)
-				g_print (" %s", (const gchar *) ll->data);
-		}
-		g_print ("\n");
-
-		g_print (_("\tusername = %s\n"), info->username);
-		g_print (_("\thostname = %s\n"), info->hostname);
-		g_print (_("\tdomain = %s\n"), info->domain);
-
 		g_print (_("\tgda_params ="));
 		for (ll = info->gda_params; ll != NULL; ll = ll->next) {
 			if (ll->data != NULL)
@@ -146,7 +135,7 @@ test_config (void)
 {
 	/* test configuration API */
 	DISPLAY_MESSAGE ("Testing configuration API");
-	list_all_sections_and_keys ("/");
+	list_all_sections_and_keys ("/apps/libgda");
 
 	/* test providers' info retrieval API */
 	list_all_providers ();

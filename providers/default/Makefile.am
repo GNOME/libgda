@@ -10,7 +10,8 @@ libgda_default_la_SOURCES = \
 	gda-default-provider.h \
 	gda-default-recordset.c \
 	gda-default-recordset.h \
-	gda-default.h
+	gda-default.h \
+	libmain.c
 libgda_default_la_LDFLAGS = -export-dynamic -module -avoid-version
 libgda_default_la_LIBADD = \
 	$(LIBGDA_LIBS) \

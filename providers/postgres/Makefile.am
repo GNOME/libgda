@@ -11,6 +11,7 @@ libgda_postgres_la_SOURCES = \
 	gda-postgres-recordset.c \
 	gda-postgres-recordset.h \
 	gda-postgres.h \
+	libmain.c \
 	utils.c
 libgda_postgres_la_LDFLAGS = -export-dynamic -module -avoid-version
 libgda_postgres_la_LIBADD = \

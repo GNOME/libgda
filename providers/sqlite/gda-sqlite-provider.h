@@ -48,7 +48,8 @@ struct _GdaSqliteProviderClass {
 
 G_BEGIN_DECLS
 
-GType gda_sqlite_provider_get_type (void);
+GType              gda_sqlite_provider_get_type (void);
+GdaServerProvider *gda_sqlite_provider_new (void);
 
 G_END_DECLS
 

@@ -46,7 +46,8 @@ struct _GdaOdbcProviderClass {
 	GdaServerProviderClass parent_class;
 };
 
-GType gda_odbc_provider_get_type (void);
+GType              gda_odbc_provider_get_type (void);
+GdaServerProvider *gda_odbc_provider_new (void);
 
 G_END_DECLS
 

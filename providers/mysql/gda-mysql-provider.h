@@ -46,7 +46,8 @@ struct _GdaMysqlProviderClass {
 	GdaServerProviderClass parent_class;
 };
 
-GType gda_mysql_provider_get_type (void);
+GType              gda_mysql_provider_get_type (void);
+GdaServerProvider *gda_mysql_provider_new (void);
 
 G_END_DECLS
 

@@ -12,6 +12,7 @@ libgda_mysql_la_SOURCES = \
 	gda-mysql-recordset.c \
 	gda-mysql-recordset.h \
 	gda-mysql.h \
+	libmain.c \
 	utils.c
 libgda_mysql_la_LDFLAGS = -export-dynamic -module -avoid-version
 libgda_mysql_la_LBADD = \

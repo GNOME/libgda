@@ -21,38 +21,41 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#if !defined(__gda_postgres_h__)
-#  define __gda_postgres_h__
-
-#if defined(HAVE_CONFIG_H)
-#  include <config.h>
-#endif
-
-#include <glib/gmacros.h>
 #include <libgda/gda-intl.h>
-#include <libgda/gda-server-provider.h>
 #include "gda-postgres-provider.h"
-#include "gda-postgres-recordset.h"
 
-#define GDA_POSTGRES_PROVIDER_ID          "GDA PostgreSQL provider"
+const gchar *
+plugin_get_name (void)
+{
+	return "PostgreSQL";
+}
 
-G_BEGIN_DECLS
+const gchar *
+plugin_get_description (void)
+{
+	return _("GDA provider for PostgreSQL databases");
+}
 
-/*
- * Utility functions
- */
+GList *
+plugin_get_connection_params (void)
+{
+	GList *list = NULL;
 
-GdaError *gda_postgres_make_error (PGconn *pconn, PGresult *pg_res);
-void gda_postgres_set_field_data (GdaField *field, const gchar *fname,
-				  GdaValueType type, const gchar *value, 
-				  gint dbsize, gboolean isNull);
+	list = g_list_append (list, g_strdup ("DATABASE"));
+	list = g_list_append (list, g_strdup ("HOST"));
+	list = g_list_append (list, g_strdup ("HOSTADDR"));
+	list = g_list_append (list, g_strdup ("OPTIONS"));
+	list = g_list_append (list, g_strdup ("PASSWORD"));
+	list = g_list_append (list, g_strdup ("PORT"));
+	list = g_list_append (list, g_strdup ("REQUIRESSL"));
+	list = g_list_append (list, g_strdup ("TTY"));
+	list = g_list_append (list, g_strdup ("USER"));
 
-GdaValueType gda_postgres_type_oid_to_gda (GdaPostgresTypeOid *type_data, 
-					   gint ntypes, Oid postgres_type);
-GdaValueType gda_postgres_type_name_to_gda (GHashTable *h_table, const gchar *name);
-const gchar *gda_data_type_to_string (GdaValueType type);
+	return list;
+}
 
-G_END_DECLS
-
-#endif
-
+GdaServerProvider *
+plugin_create_provider (void)
+{
+	return gda_postgres_provider_new ();
+}

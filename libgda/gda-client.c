@@ -22,6 +22,7 @@
  */
 
 #include <config.h>
+#include <gmodule.h>
 #include <libgda/gda-client.h>
 #include <libgda/gda-config.h>
 #include <libgda/gda-intl.h>
@@ -29,6 +30,17 @@
 #include "gda-marshal.h"
 
 #define PARENT_TYPE G_TYPE_OBJECT
+
+typedef struct {
+	GModule *handle;
+	GdaServerProvider *provider;
+
+	/* entry points to the plugin */
+	const gchar * (* plugin_get_name) (void);
+	const gchar * (* plugin_get_description) (void);
+	GList * (* plugin_get_connection_params) (void);
+	GdaServerProvider * (* plugin_create_provider) (void);
+} LoadedProvider;
 
 struct _GdaClientPrivate {
 	GHashTable *providers;
@@ -109,10 +121,14 @@ static void
 free_hash_provider (gpointer key, gpointer value, gpointer user_data)
 {
 	gchar *iid = (gchar *) key;
-	GdaServerProvider *provider = (GdaServerProvider *) value;
+	LoadedProvider *prv = (LoadedProvider *) value;
 
 	g_free (iid);
-	g_object_unref (G_OBJECT (provider));
+	if (prv) {
+		g_module_close (prv->handle);
+		g_object_unref (G_OBJECT (prv->provider));
+		g_free (prv);
+	}
 }
 
 static void
@@ -180,7 +196,7 @@ gda_client_open_connection (GdaClient *client,
 			    const gchar *password)
 {
 	GdaConnection *cnc;
-	GdaServerProvider *provider;
+	LoadedProvider *prv;
 	GdaDataSourceInfo *dsn_info;
 
 	g_return_val_if_fail (GDA_IS_CLIENT (client), NULL);
@@ -200,18 +216,58 @@ gda_client_open_connection (GdaClient *client,
 	}
 
 	/* try to find provider in our hash table */
-	provider = g_hash_table_lookup (client->priv->providers, dsn_info->provider);
-	if (!provider) {
-		/* not found, so load the new provider */
-		/* FIXME: load GModule for this provider */
+	prv = g_hash_table_lookup (client->priv->providers, dsn_info->provider);
+	if (!prv) {
+		GdaProviderInfo *prv_info;
+
+		prv_info = gda_config_get_provider_by_name (dsn_info->provider);
+		if (!prv_info) {
+			gda_log_error (_("Provider %s is not installed"), dsn_info->provider);
+			gda_config_free_data_source_info (dsn_info);
+			return NULL;
+		}
+
+		/* load the new provider */
+		prv = g_new0 (LoadedProvider, 1);
+		prv->handle = g_module_open (prv_info->location, G_MODULE_BIND_LAZY);
+		if (!prv->handle) {
+			gda_log_error (_("Could not load %s provider"), dsn_info->provider);
+			gda_config_free_data_source_info (dsn_info);
+			g_free (prv);
+			return NULL;
+		}
+
+		g_module_symbol (prv->handle, "plugin_get_name",
+				 (gpointer) &prv->plugin_get_name);
+		g_module_symbol (prv->handle, "plugin_get_description",
+				 (gpointer) &prv->plugin_get_description);
+		g_module_symbol (prv->handle, "plugin_get_connection_params",
+				 (gpointer) &prv->plugin_get_connection_params);
+		g_module_symbol (prv->handle, "plugin_create_provider",
+				 (gpointer) &prv->plugin_create_provider);
+
+		if (!prv->plugin_create_provider) {
+			gda_log_error (_("Provider %s does not implement entry point"),
+				       dsn_info->provider);
+			gda_config_free_data_source_info (dsn_info);
+			g_free (prv);
+			return NULL;
+		}
+
+		prv->provider = prv->plugin_create_provider ();
+		if (!prv->provider) {
+			gda_log_error (_("Creation of GdaServerProvider failed"));
+			gda_config_free_data_source_info (dsn_info);
+			g_free (prv);
+			return NULL;
+		}
 
 		g_hash_table_insert (client->priv->providers,
 				     g_strdup (dsn_info->provider),
-				     provider);
+				     prv);
 	}
 
-	/* FIXME: get the GdaConnection from the ServerProvider object */
-	cnc = gda_connection_new (client, provider, dsn,
+	cnc = gda_connection_new (client, prv->provider, dsn,
 				  username ? username : "", password ? password : "");
 
 	if (!GDA_IS_CONNECTION (cnc)) {

@@ -4,6 +4,7 @@ INCLUDES = \
 	$(LIBGDA_CFLAGS) \
 	-I$(top_srcdir) \
 	-I$(top_builddir) \
+	-DLIBGDA_PLUGINDIR=\""$(prefix)/lib/libgda/providers"\" \
 	-DLIBGDA_LOCALEDIR=\""$(datadir)/locale"\"
 
 gda_marshal_built_files = gda-marshal.h gda-marshal.c

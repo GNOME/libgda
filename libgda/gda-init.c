@@ -19,6 +19,7 @@
 
 #include <config.h>
 #include <glib/gmain.h>
+#include <gmodule.h>
 #include <libgda/libgda.h>
 #include <libgda/gda-intl.h>
 #include <libgnomevfs/gnome-vfs.h>
@@ -48,6 +49,9 @@ gda_init (const gchar *app_id, const gchar *version, gint nargs, gchar *args[])
 
 	g_type_init ();
 	g_set_prgname (app_id);
+
+	if (!g_module_supported ())
+		g_error (_("libgda needs GModule. Finishing..."));
 
 	gnome_vfs_init ();
 

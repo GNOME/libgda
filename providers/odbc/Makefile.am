@@ -8,7 +8,8 @@ INCLUDES = \
 libgda_odbc_la_SOURCES = \
 	gda-odbc-provider.c \
 	gda-odbc-provider.h \
-	gda-odbc.h
+	gda-odbc.h \
+	libmain.c
 libgda_odbc_la_LDFLAGS = -export-dynamic -module -avoid-version
 libgda_odbc_la_LIBADD = \
 	$(LIBGDA_LIBS) \

@@ -126,6 +126,15 @@ gda_sqlite_provider_get_type (void)
 	return type;
 }
 
+GdaServerProvider *
+gda_sqlite_provider_new (void)
+{
+	GdaSqliteProvider *provider;
+
+	provider = g_object_new (gda_default_provider_get_type (), NULL);
+	return GDA_SERVER_PROVIDER (provider);
+}
+
 /* open_connection handler for the GdaSqliteProvider class */
 static gboolean
 gda_sqlite_provider_open_connection (GdaServerProvider *provider,

@@ -1,3 +1,28 @@
+2002-04-26  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* configure.in: added GModule to list of dependencies.
+
+	* libgda/Makefile.am: define LIBGDA_PLUGINDIR.
+
+	* libgda/gda-init.c (gda_init): check that GModule is supported.
+
+	* libgda/gda-config.h: removed CORBA-related fields in the
+	GdaProviderInfo structure.
+
+	* libgda/gda-config.c (gda_config_get_provider_list): implemented
+	for the new non-CORBA architecture.
+	(gda_config_free_provider_info): don't free non-existant-anymore
+	fields.
+
+	* libgda/gda-client.c (gda_client_open_connection): actually load
+	the different plugins containing the providers.
+
+	* testing/config.c: don't use non-existant-anymore fields. Also,
+	just list sections and keys for libgda, not all the GConf database.
+
+	* providers/*/*.server.in: removed unneeded files and implemented
+	plugin_* functions, that will be used to interact with the plugin.
+
 2002-04-22  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* libgda/gda-config.h: removed obsolte GdaComponentInfo structure.

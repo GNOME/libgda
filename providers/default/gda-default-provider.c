@@ -136,6 +136,15 @@ gda_default_provider_get_type (void)
 	return type;
 }
 
+GdaServerProvider *
+gda_default_provider_new (void)
+{
+	GdaDefaultProvider *provider;
+
+	provider = g_object_new (gda_default_provider_get_type (), NULL);
+	return GDA_SERVER_PROVIDER (provider);
+}
+
 /* open_connection handler for the GdaDefaultProvider class */
 static gboolean
 gda_default_provider_open_connection (GdaServerProvider *provider,

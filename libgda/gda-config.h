@@ -66,10 +66,6 @@ typedef struct {
 	gchar *id;
 	gchar *location;
 	gchar *description;
-	GList *repo_ids;
-	gchar *username;
-	gchar *hostname;
-	gchar *domain;
 	GList *gda_params;
 } GdaProviderInfo;
 
