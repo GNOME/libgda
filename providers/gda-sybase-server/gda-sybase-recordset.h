@@ -37,6 +37,14 @@
  * Per-object specific structures
  */
 
+
+typedef gint setStatus;
+
+#define SYBASE_DATA_RETURNED (setStatus) 1
+#define SYBASE_NO_DATA_RETURNED (setStatus) 0
+#define SYBASE_NO_DATA_RETURNED (setStatus) 0
+
+
 typedef struct _sybase_Field
 {
 	CS_INT indicator;
@@ -48,20 +56,28 @@ sybase_Field;
 
 typedef struct _sybase_Recordset
 {
-	GdaServerConnection *cnc;
-	GdaServerCommand *cmd;
-	sybase_Connection *scnc;
-	sybase_Command *scmd;
+		GdaServerConnection *cnc;
+		GdaServerCommand *cmd;
+		sybase_Connection *scnc;
+		sybase_Command *scmd;
+		
+		CS_RETCODE ret;
+		CS_RETCODE result_type;
+		CS_INT rows_cnt;
+		gboolean failed;
+		CS_INT colscnt;
+		CS_DATAFMT *datafmt;
+		sybase_Field *data;
 
-	CS_RETCODE ret;
-	CS_RETCODE result_type;
-	CS_INT rows_cnt;
-	gboolean failed;
-	CS_INT colscnt;
-	CS_DATAFMT *datafmt;
-	sybase_Field *data;
+		CS_INT index;
+		setStatus recordSetRowStatus;
+		
+
 }
 sybase_Recordset;
+
+
+
 
 gboolean gda_sybase_recordset_new (GdaServerRecordset *);
 gint gda_sybase_recordset_move_next (GdaServerRecordset *);
@@ -71,7 +87,7 @@ void gda_sybase_recordset_free (GdaServerRecordset *);
 
 void gda_sybase_init_recset_fields (GdaError *,
 				    GdaServerRecordset *,
-				    sybase_Recordset *, CS_RETCODE);
+				    sybase_Recordset *, CS_RETCODE, GdaServerConnection *);
 
 void gda_sybase_field_fill_values (GdaServerRecordset *, sybase_Recordset *);
 gint gda_sybase_row_result (gboolean forward,

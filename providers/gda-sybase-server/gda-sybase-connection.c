@@ -22,6 +22,12 @@
  */
 
 // $Log$
+// Revision 1.11.4.2  2001/11/22 12:12:26  rodrigo
+// 2001-11-22  Mike <wingert.3@postbox.acs.ohio-state.edu>
+//
+// 	* Make error handling work and fix some problems when valid queries
+// 	didn't return rows
+//
 // Revision 1.11.4.1  2001/09/16 20:12:39  rodrigo
 // 2001-09-16  Mike <wingert.3@postbox.acs.ohio-state.edu>
 //
@@ -182,8 +188,9 @@ gda_sybase_connection_new (GdaServerConnection * cnc)
 
 gint
 gda_sybase_connection_open (GdaServerConnection * cnc,
-			    const gchar * dsn,
-			    const gchar * user, const gchar * passwd)
+                            const gchar * dsn,
+                            const gchar * user, 
+                            const gchar * passwd)
 {
 	sybase_Connection *scnc = NULL;
 
@@ -208,6 +215,7 @@ void
 gda_sybase_connection_close (GdaServerConnection * cnc)
 {
 	sybase_Connection *scnc;
+  CS_RETCODE ret;
 
 	g_return_if_fail (cnc != NULL);
 	scnc = (sybase_Connection *)
@@ -215,39 +223,54 @@ gda_sybase_connection_close (GdaServerConnection * cnc)
 	g_return_if_fail (scnc != NULL);
 
 	// Close connection
-	if (scnc->cnc) {
-		if (SYB_CHK
-		    ((CS_INT *) & scnc->ret, ct_close (scnc->cnc, CS_UNUSED),
-		     NULL, NULL, cnc, NULL) != CS_SUCCEED) {
-			gda_sybase_cleanup (scnc, scnc->ret,
-					    "Could not close connection\n");
-			return;
-		}
-		if (SYB_CHK ((CS_INT *) & scnc->ret, ct_con_drop (scnc->cnc),
-			     NULL, NULL, cnc, NULL) != CS_SUCCEED) {
-			gda_sybase_cleanup (scnc, scnc->ret,
-					    "Could not drop connection structure\n");
-			return;
-		}
-		scnc->cnc = (CS_CONNECTION *) NULL;
-	}
+	if (scnc->cnc) 
+      {
+/* 		if (SYB_CHK */
+/* 		    ((CS_INT *) & scnc->ret, ct_close (scnc->cnc, CS_UNUSED), */
+/* 		     NULL, NULL, cnc, NULL) != CS_SUCCEED) { */
 
-	if (scnc->ctx) {
-		// Exit client library and drop context structure
-		if ((scnc->ret =
-		     ct_exit (scnc->ctx, CS_UNUSED)) != CS_SUCCEED) {
-			gda_sybase_cleanup (scnc, scnc->ret,
-					    "ct_exit failed");
-			return;
-		}
+          ret = ct_close(scnc->cnc, CS_UNUSED);
+          if (ret != CS_SUCCEED)
+              {
+                  sybase_chkerr(NULL,NULL,cnc,NULL,__PRETTY_FUNCTION__);             
+                  gda_sybase_cleanup (scnc, scnc->ret,
+                                      "Could not close connection\n");
+                  return;
+              }
 
-		if ((scnc->ret = cs_ctx_drop (scnc->ctx)) != CS_SUCCEED) {
-			gda_sybase_cleanup (scnc, scnc->ret,
-					    "cs_ctx_drop failed");
-			return;
-		}
-		scnc->ctx = (CS_CONTEXT *) NULL;
-	}
+/* 		if (SYB_CHK ((CS_INT *) & scnc->ret, ct_con_drop (scnc->cnc), */
+/* 			     NULL, NULL, cnc, NULL) != CS_SUCCEED) { */
+          ret = ct_con_drop (scnc->cnc);
+          if (ret != CS_SUCCEED)
+              {
+                  sybase_chkerr(NULL,NULL,cnc,NULL,__PRETTY_FUNCTION__); 
+                  gda_sybase_cleanup (scnc, scnc->ret,
+                                      "Could not drop connection structure\n");
+                  return;
+              }
+          scnc->cnc = (CS_CONNECTION *) NULL;
+      }
+	if (scnc->ctx) 
+      {
+          // Exit client library and drop context structure
+          if ((scnc->ret =
+               ct_exit (scnc->ctx, CS_UNUSED)) != CS_SUCCEED) 
+              {
+                  sybase_chkerr(NULL,NULL,cnc,NULL,__PRETTY_FUNCTION__); 
+                  gda_sybase_cleanup (scnc, scnc->ret,
+                                      "ct_exit failed");
+                  return;
+              }
+
+          if ((scnc->ret = cs_ctx_drop (scnc->ctx)) != CS_SUCCEED) 
+              {
+                  sybase_chkerr(NULL,NULL,cnc,NULL,__PRETTY_FUNCTION__); 
+                  gda_sybase_cleanup (scnc, scnc->ret,
+                                      "cs_ctx_drop failed");
+                  return;
+              }
+          scnc->ctx = (CS_CONTEXT *) NULL;
+      }
 }
 
 gint
@@ -333,17 +356,17 @@ gda_sybase_connection_supports (GdaServerConnection * cnc,
 
 	switch (feature) {
 	case GDA_Connection_FEATURE_SQL:
-		return TRUE;
 	case GDA_Connection_FEATURE_FOREIGN_KEYS:
-	case GDA_Connection_FEATURE_INHERITANCE:
-	case GDA_Connection_FEATURE_OBJECT_ID:
 	case GDA_Connection_FEATURE_PROCS:
-	case GDA_Connection_FEATURE_SEQUENCES:
 	case GDA_Connection_FEATURE_SQL_SUBSELECT:
 	case GDA_Connection_FEATURE_TRANSACTIONS:
 	case GDA_Connection_FEATURE_TRIGGERS:
 	case GDA_Connection_FEATURE_VIEWS:
+		return TRUE;
 	case GDA_Connection_FEATURE_XML_QUERIES:
+	case GDA_Connection_FEATURE_INHERITANCE:
+	case GDA_Connection_FEATURE_OBJECT_ID:
+	case GDA_Connection_FEATURE_SEQUENCES:
 	default:
 		return FALSE;
 	}
@@ -414,15 +437,17 @@ gda_sybase_connection_clear_user_data (GdaServerConnection * cnc,
 	// we do not touch CS_* variables and *_diag variables,
 	// as they are essential for the connection
 
-	scnc->serr.err_type = SYBASE_ERR_NONE;
+/* 	scnc->serr.err_type = SYBASE_ERR_NONE; */
 	if (force_set_null_pointers) {
-		scnc->serr.udeferr_msg = (gchar *) NULL;
-		scnc->database = (gchar *) NULL;
+
+/* 		scnc->serr.udeferr_msg = (gchar *) NULL; */
+      scnc->serr.eMessage = (gchar *) NULL;
+      scnc->database = (gchar *) NULL;
 	}
 	else {
-		if (scnc->serr.udeferr_msg) {
-			g_free ((gpointer) scnc->serr.udeferr_msg);
-		}
+/*  		if (scnc->serr.udeferr_msg) { */
+/*  			g_free ((gpointer) scnc->serr.udeferr_msg); */
+/*  		} */
 		if (scnc->database) {
 			g_free ((gpointer) scnc->database);
 		}
@@ -797,6 +822,8 @@ gda_sybase_connection_reopen (GdaServerConnection * cnc)
 	CS_BYTE *mempool;
 	CS_INT memsize = 131072;
 	gchar *dsn;
+	CS_RETCODE ret;
+  
 
 	// At least we need valid connection structs
 	g_return_val_if_fail (cnc != NULL, FALSE);
@@ -819,30 +846,35 @@ gda_sybase_connection_reopen (GdaServerConnection * cnc)
 	////////////////////////////////////////////////////////
 
 	// Create context info and initialize ctlib
+
 	if ((scnc->ret =
 	     cs_ctx_alloc (CS_VERSION_100, &scnc->ctx)) != CS_SUCCEED) {
-		gda_sybase_cleanup (scnc, scnc->ret,
-				    "Could not allocate context");
-		return FALSE;
+      gda_sybase_cleanup (scnc, scnc->ret,
+                          "Could not allocate context");
+      return FALSE;
 	}
+			
+
+
 	if ((scnc->ret = ct_init (scnc->ctx, CS_VERSION_100)) != CS_SUCCEED) {
 		gda_sybase_cleanup (scnc, scnc->ret,
 				    "Could not initialize client library");
 		return FALSE;
 	}
-	mempool = (CS_BYTE *) g_new0 (CS_BYTE, memsize);
-	if (!mempool) {
-		gda_sybase_cleanup (scnc, scnc->ret,
-				    "Could not allocate mempool");
-		return FALSE;
-	}
-	if ((scnc->ret = ct_config (scnc->ctx, CS_SET, CS_MEM_POOL,
-				    mempool, memsize, NULL)) != CS_SUCCEED) {
-		gda_sybase_cleanup (scnc, scnc->ret,
-				    "Could not initialize mempool");
-		g_free ((gpointer) mempool);
-		return FALSE;
-	}
+
+/*  	mempool = (CS_BYTE *) g_new0 (CS_BYTE, memsize); */
+/*  	if (!mempool) { */
+/*  		gda_sybase_cleanup (scnc, scnc->ret, */
+/*  				    "Could not allocate mempool"); */
+/*  		return FALSE; */
+/*  	} */
+/*  	if ((scnc->ret = ct_config (scnc->ctx, CS_SET, CS_MEM_POOL, */
+/*  				    mempool, memsize, NULL)) != CS_SUCCEED) { */
+/*  		gda_sybase_cleanup (scnc, scnc->ret, */
+/*  				    "Could not initialize mempool"); */
+/*  		g_free ((gpointer) mempool); */
+/*  		return FALSE; */
+/*  	} */
 
 	// locales must be set up before we have any connection,
 	// so get dsn and initialize locale if given
@@ -874,6 +906,7 @@ gda_sybase_connection_reopen (GdaServerConnection * cnc)
 		return FALSE;
 	}
 
+  /* this is for callbacks... */
 	/*
 	   if (gda_sybase_install_error_handlers(cnc) != 0) {
 	   return FALSE;
@@ -882,35 +915,72 @@ gda_sybase_connection_reopen (GdaServerConnection * cnc)
 
 	// We go on proceeding connection properties and dsn arguments
 	// set up application name, username and password
-	if (SYB_CHK ((CS_INT *) & scnc->ret,
-		     ct_con_props (scnc->cnc, CS_SET, CS_APPNAME,
-				   (CS_CHAR *) GDA_SYBASE_DEFAULT_APPNAME,
-				   CS_NULLTERM, NULL),
-		     NULL, NULL, cnc, NULL) != CS_SUCCEED) {
-		gda_sybase_cleanup (scnc, scnc->ret,
-				    "Could not set application name");
-		return FALSE;
-	}
-	if (SYB_CHK ((CS_INT *) & scnc->ret,
-		     ct_con_props (scnc->cnc, CS_SET, CS_USERNAME,
-				   (CS_CHAR *)
-				   gda_server_connection_get_username (cnc),
-				   CS_NULLTERM, NULL), NULL, NULL, cnc,
-		     NULL) != CS_SUCCEED) {
-		gda_sybase_cleanup (scnc, scnc->ret,
-				    "Could not set user name");
-		return FALSE;
-	}
-	if (SYB_CHK ((CS_INT *) & scnc->ret,
-		     ct_con_props (scnc->cnc, CS_SET, CS_PASSWORD,
-				   (CS_CHAR *)
-				   gda_server_connection_get_password (cnc),
-				   CS_NULLTERM, NULL), NULL, NULL, cnc,
-		     NULL) != CS_SUCCEED) {
-		gda_sybase_cleanup (scnc, scnc->ret,
-				    "Could not set password");
-		return FALSE;
-	}
+
+/* 	if (SYB_CHK ((CS_INT *) & scnc->ret, */
+/* 		     ct_con_props (scnc->cnc, CS_SET, CS_APPNAME, */
+/* 				   (CS_CHAR *) GDA_SYBASE_DEFAULT_APPNAME, */
+/* 				   CS_NULLTERM, NULL), */
+/* 		     NULL, NULL, cnc, NULL) != CS_SUCCEED) { */
+
+  ret = ct_con_props (scnc->cnc, 
+                      CS_SET, 
+                      CS_APPNAME, 
+                      (CS_CHAR *) GDA_SYBASE_DEFAULT_APPNAME, 
+                      CS_NULLTERM, 
+                      NULL);
+
+  if ((ret != CS_SUCCEED) ||
+						(sybase_chkerr(NULL,NULL,cnc,NULL,__PRETTY_FUNCTION__)))
+      {
+          gda_sybase_cleanup (scnc, scnc->ret,
+                              "Could not set application name");
+          return FALSE;
+      }
+
+/* 	if (SYB_CHK ((CS_INT *) & scnc->ret, */
+/* 		     ct_con_props (scnc->cnc, CS_SET, CS_USERNAME, */
+/* 				   (CS_CHAR *) */
+/* 				   gda_server_connection_get_username (cnc), */
+/* 				   CS_NULLTERM, NULL), NULL, NULL, cnc, */
+/* 		     NULL) != CS_SUCCEED) { */
+
+
+  ret = ct_con_props(scnc->cnc, 
+                     CS_SET, 
+                     CS_USERNAME, 
+                     (CS_CHAR *)gda_server_connection_get_username (cnc),
+                     CS_NULLTERM, 
+                     NULL);
+
+  if ((ret != CS_SUCCEED) || 
+						(sybase_chkerr(NULL,NULL,cnc,NULL,__PRETTY_FUNCTION__)))
+      {          
+          gda_sybase_cleanup (scnc, scnc->ret,
+                              "Could not set user name");
+          return FALSE;
+      }
+
+/* 	if (SYB_CHK ((CS_INT *) & scnc->ret, */
+/* 		     ct_con_props (scnc->cnc, CS_SET, CS_PASSWORD, */
+/* 				   (CS_CHAR *) */
+/* 				   gda_server_connection_get_password (cnc), */
+/* 				   CS_NULLTERM, NULL), NULL, NULL, cnc, */
+/* 		     NULL) != CS_SUCCEED) { */
+
+  ret = ct_con_props (scnc->cnc, 
+                      CS_SET, 
+                      CS_PASSWORD, 
+                      (CS_CHAR *)gda_server_connection_get_password (cnc),
+                      CS_NULLTERM, 
+                      NULL);
+  if ((ret != CS_SUCCEED)||
+						(sybase_chkerr(NULL,NULL,cnc,NULL,__PRETTY_FUNCTION__)))
+      {
+          
+          gda_sybase_cleanup (scnc, scnc->ret,
+                              "Could not set password");
+          return FALSE;
+      }
 
 	// Proceed further parameters given in dsn
 	if (((dsn = gda_server_connection_get_dsn (cnc)) != NULL) &&
@@ -919,25 +989,42 @@ gda_sybase_connection_reopen (GdaServerConnection * cnc)
 	}
 
 	// Connect
-	if (SYB_CHK ((CS_INT *) & scnc->ret,
-		     ct_connect (scnc->cnc, (CS_CHAR *) NULL, 0),
-		     NULL, NULL, cnc, NULL) != CS_SUCCEED) {
-		gda_sybase_cleanup (scnc, scnc->ret,
-				    (first_connection == FALSE)
-				    ? "Could not reconnect"
-				    : "Could not connect");
-		return FALSE;
-	}
+/* 	if (SYB_CHK ((CS_INT *) & scnc->ret, */
+/* 		     ct_connect (scnc->cnc, (CS_CHAR *) NULL, 0), */
+/* 		     NULL, NULL, cnc, NULL) != CS_SUCCEED) { */
+
+  ret = ct_connect (scnc->cnc, (CS_CHAR *) NULL, 0);
+
+  if ((ret != CS_SUCCEED)||
+						(sybase_chkerr(NULL,NULL,cnc,NULL,__PRETTY_FUNCTION__)))
+				{
+						
+          gda_sybase_cleanup (scnc, scnc->ret,
+                              (first_connection == FALSE)
+                              ? "Could not reconnect"
+                              : "Could not connect");
+          return FALSE;
+				}
 
 	// To test the connection, we ask for the servers name
-	if (SYB_CHK ((CS_INT *) & scnc->ret,
-		     ct_con_props (scnc->cnc, CS_GET, CS_SERVERNAME,
-				   &buf, CS_MAX_CHAR, NULL),
-		     NULL, NULL, cnc, NULL) != CS_SUCCEED) {
-		gda_sybase_cleanup (scnc, scnc->ret,
-				    "Could not request servername");
-		return FALSE;
-	}
+/* 	if (SYB_CHK ((CS_INT *) & scnc->ret, */
+/* 		     ct_con_props (scnc->cnc, CS_GET, CS_SERVERNAME, */
+/* 				   &buf, CS_MAX_CHAR, NULL), */
+/* 		     NULL, NULL, cnc, NULL) != CS_SUCCEED) { */
+
+  ret = ct_con_props (scnc->cnc, 
+                      CS_GET, 
+                      CS_SERVERNAME, 
+                      &buf, 
+                      CS_MAX_CHAR, 
+                      NULL);
+  if ((ret != CS_SUCCEED)||
+						(sybase_chkerr(NULL,NULL,cnc,NULL,__PRETTY_FUNCTION__)))
+				{								
+						gda_sybase_cleanup (scnc, scnc->ret,
+																										"Could not request servername");
+						return FALSE;
+				}
 	else {
 		if (first_connection == FALSE)
 			gda_log_message (_("Reconnected to '%s'"), buf);
@@ -969,150 +1056,240 @@ CS_RETCODE
 gda_sybase_connection_select_database (GdaServerConnection * cnc,
 				       const gchar * database)
 {
-	sybase_Connection *scnc = NULL;
-	CS_COMMAND *cmd = NULL;
-	gchar *sqlcmd = NULL;
-	CS_INT result_type;
-	gboolean okay = FALSE;
+		sybase_Connection *scnc = NULL;
+		CS_COMMAND *cmd = NULL;
+		gchar *sqlcmd = NULL;
+		CS_INT result_type;
+		gboolean okay = FALSE;
+  CS_RETCODE ret;
+  CS_RETCODE ret2; 
 
-	g_return_val_if_fail (cnc != NULL, CS_FAIL);
-	scnc = (sybase_Connection *)
-		gda_server_connection_get_user_data (cnc);
-	g_return_val_if_fail (scnc != NULL, CS_FAIL);
-	g_return_val_if_fail (scnc->cnc != NULL, CS_FAIL);
+		g_return_val_if_fail (cnc != NULL, CS_FAIL);
+		scnc = (sybase_Connection *)
+				gda_server_connection_get_user_data (cnc);
+		g_return_val_if_fail (scnc != NULL, CS_FAIL);
+		g_return_val_if_fail (scnc->cnc != NULL, CS_FAIL);
+		
+		/* 	if (SYB_CHK (NULL, ct_cmd_alloc (scnc->cnc, &cmd), */
+		/* 		     NULL, NULL, cnc, NULL) != CS_SUCCEED) { */
+		
+  ret = ct_cmd_alloc (scnc->cnc, &cmd);
+  if ((ret != CS_SUCCEED)||
+						(sybase_chkerr(NULL,NULL,cnc,NULL,__PRETTY_FUNCTION__)))
+				{						 
+						gda_log_error (_("%s: Could not allocate cmd structure"),
+																					__PRETTY_FUNCTION__);
+						return CS_FAIL;
+				}
+		
+		// Prepare cmd string
+		sqlcmd = g_strdup_printf ("use %s", database);
+		if (!sqlcmd) 
+				{
+						gda_log_error (_
+																					("%s: Could not allocate memory for cmd string"),
+																					__PRETTY_FUNCTION__);
+						
+						/* 		SYB_CHK (NULL, ct_cmd_drop (cmd), NULL, NULL, cnc, NULL); */
+						
+						ret = ct_cmd_drop(cmd);
+						if (ret != CS_SUCCEED)
+								sybase_chkerr(NULL,NULL,cnc,NULL,__PRETTY_FUNCTION__);
+						return CS_FAIL;          
+				}
+		// Pass cmd string to CS_COMMAND structure
+		/* 	if (SYB_CHK (NULL, ct_command (cmd, CS_LANG_CMD, sqlcmd, CS_NULLTERM, */
+		/* 				       CS_UNUSED), */
+		/* 		     NULL, NULL, cnc, NULL) != CS_SUCCEED) { */
+		
+  ret = ct_command (cmd, 
+                    CS_LANG_CMD, 
+                    sqlcmd, 
+                    CS_NULLTERM, 
+                    CS_UNUSED);
 
-	if (SYB_CHK (NULL, ct_cmd_alloc (scnc->cnc, &cmd),
-		     NULL, NULL, cnc, NULL) != CS_SUCCEED) {
-		gda_log_error (_("%s: Could not allocate cmd structure"),
-			       __PRETTY_FUNCTION__);
-		return CS_FAIL;
-	}
-
-	// Prepare cmd string
-	sqlcmd = g_strdup_printf ("use %s", database);
-	if (!sqlcmd) {
-		gda_log_error (_
-			       ("%s: Could not allocate memory for cmd string"),
-			       __PRETTY_FUNCTION__);
-		SYB_CHK (NULL, ct_cmd_drop (cmd), NULL, NULL, cnc, NULL);
-		return CS_FAIL;
-	}
-	// Pass cmd string to CS_COMMAND structure
-	if (SYB_CHK (NULL, ct_command (cmd, CS_LANG_CMD, sqlcmd, CS_NULLTERM,
-				       CS_UNUSED),
-		     NULL, NULL, cnc, NULL) != CS_SUCCEED) {
-		gda_log_error (_("%s: ct_command failed"),
-			       __PRETTY_FUNCTION__);
+  if ((ret != CS_SUCCEED)||
+						(sybase_chkerr(NULL,NULL,cnc,NULL,__PRETTY_FUNCTION__)))
+				{
+						
+						gda_log_error (_("%s: ct_command failed"),
+																					__PRETTY_FUNCTION__);
+						g_free ((gpointer) sqlcmd);         
+						/* SYB_CHK (NULL, ct_cmd_drop (cmd), NULL, NULL, cnc, NULL); */          
+						ret = ct_cmd_drop (cmd);  
+						if (ret != CS_SUCCEED)
+								sybase_chkerr(NULL,NULL,cnc,NULL,__PRETTY_FUNCTION__);
+						return CS_FAIL;
+				}
 		g_free ((gpointer) sqlcmd);
-		SYB_CHK (NULL, ct_cmd_drop (cmd), NULL, NULL, cnc, NULL);
+
+		// Send the command
+		/* 	if (SYB_CHK (NULL, ct_send (cmd), NULL, NULL, cnc, NULL) != */
+		/* 	    CS_SUCCEED) { */
+
+  ret = ct_send (cmd);
+  
+  if ((ret != CS_SUCCEED)||
+						(sybase_chkerr(NULL,NULL,cnc,NULL,__PRETTY_FUNCTION__)))
+				{						          
+						gda_log_error (_("%s: sending command failed"),
+																					__PRETTY_FUNCTION__);
+						/*           SYB_CHK (NULL, ct_cmd_drop (cmd), NULL, NULL, cnc, NULL); */
+						ret = ct_cmd_drop (cmd);  
+						if (ret != CS_SUCCEED)
+								sybase_chkerr(NULL,NULL,cnc,NULL,__PRETTY_FUNCTION__);
+						return CS_FAIL;
+				}
+
+  ret2 = ct_results (cmd, &result_type);
+
+  if ((ret2 != CS_SUCCEED)||
+						(sybase_chkerr(NULL,NULL,cnc,NULL,__PRETTY_FUNCTION__)))
+				{						
+						ret = ct_cmd_drop (cmd);  						
+						sybase_chkerr(NULL,NULL,cnc,NULL,__PRETTY_FUNCTION__);          
+						return CS_FAIL;
+				}
+		/* 	while (CS_SUCCEED == SYB_CHK (NULL, ct_results (cmd, &result_type), */
+		/* 				      NULL, NULL, cnc, NULL) */
+  while ((ret2 == CS_SUCCEED)||(ret2 == CS_FAIL))
+				{
+						switch (result_type) 
+								{
+								case CS_CMD_FAIL:
+										gda_log_error (_("%s: selecting database failed"),
+																									__PRETTY_FUNCTION__);
+										break;
+								case CS_CMD_SUCCEED:
+										okay = TRUE;
+										break;
+								default:
+										break;
+								}
+						ret2 = ct_results (cmd, &result_type);
+						sybase_chkerr(NULL,NULL,cnc,NULL,__PRETTY_FUNCTION__);
+				}
+  
+		/* 	SYB_CHK (NULL, ct_cmd_drop (cmd), NULL, NULL, cnc, NULL); */
+  
+		if ((okay) && (!sybase_chkerr(NULL,NULL,cnc,NULL,__PRETTY_FUNCTION__))) 
+				{
+						return CS_SUCCEED;
+				}
+
+		gda_log_error (_("%s: use command failed"), __PRETTY_FUNCTION__);
 		return CS_FAIL;
-	}
-	g_free ((gpointer) sqlcmd);
-
-	// Send the command
-	if (SYB_CHK (NULL, ct_send (cmd), NULL, NULL, cnc, NULL) !=
-	    CS_SUCCEED) {
-		gda_log_error (_("%s: sending command failed"),
-			       __PRETTY_FUNCTION__);
-		SYB_CHK (NULL, ct_cmd_drop (cmd), NULL, NULL, cnc, NULL);
-		return CS_FAIL;
-	}
-
-	while (CS_SUCCEED == SYB_CHK (NULL, ct_results (cmd, &result_type),
-				      NULL, NULL, cnc, NULL)
-		) {
-		switch (result_type) {
-		case CS_CMD_FAIL:
-			gda_log_error (_("%s: selecting database failed"),
-				       __PRETTY_FUNCTION__);
-			break;
-		case CS_CMD_SUCCEED:
-			okay = TRUE;
-			break;
-		default:
-			break;
-		}
-	}
-
-	SYB_CHK (NULL, ct_cmd_drop (cmd), NULL, NULL, cnc, NULL);
-
-	if (okay) {
-		return CS_SUCCEED;
-	}
-
-	gda_log_error (_("%s: use command failed"), __PRETTY_FUNCTION__);
-	return CS_FAIL;
 }
 
 // Select locale for connection; we just need a CS_CONTEXT at this time
 static gboolean
 gda_sybase_set_locale (GdaServerConnection * cnc, const gchar * dsn)
 {
-	sybase_Connection *scnc;
-	CS_LOCALE *locale;
-	CS_RETCODE ret = CS_FAIL;
-	gchar *targ_locale = NULL;
+		sybase_Connection *scnc;
+		CS_LOCALE *locale;
+		CS_RETCODE ret = CS_FAIL;
+		gchar *targ_locale = NULL;
 
-	g_return_val_if_fail (cnc != NULL, FALSE);
-	scnc = (sybase_Connection *)
-		gda_server_connection_get_user_data (cnc);
-	g_return_val_if_fail (scnc != NULL, FALSE);
-	g_return_val_if_fail (scnc->ctx != NULL, FALSE);
+		g_return_val_if_fail (cnc != NULL, FALSE);
+		scnc = (sybase_Connection *)
+				gda_server_connection_get_user_data (cnc);
+		g_return_val_if_fail (scnc != NULL, FALSE);
+		g_return_val_if_fail (scnc->ctx != NULL, FALSE);
 
-	if ((targ_locale = get_option (dsn, "LOCALE=")) == NULL) {
-		return TRUE;
-	}
+		if ((targ_locale = get_option (dsn, "LOCALE=")) == NULL) {
+				return TRUE;
+		}
 
 #ifdef SYBASE_DEBUG
-	gda_log_message ("locale = '%s'", targ_locale);
+		gda_log_message ("locale = '%s'", targ_locale);
 #endif
 
-	if ((ret = cs_loc_alloc (scnc->ctx, &locale)) != CS_SUCCEED) {
-		gda_log_error (_("Could not allocate locale structure"));
-		return FALSE;
-	}
-	if ((ret = cs_locale (scnc->ctx, CS_SET, locale, CS_LC_ALL,
-			      (CS_CHAR *) targ_locale, CS_NULLTERM, NULL))
-	    != CS_SUCCEED) {
-		gda_log_error (_("Could not set locale to '%s'"),
-			       targ_locale);
-		cs_loc_drop (scnc->ctx, locale);
-		return FALSE;
-	}
-	if ((ret = cs_config (scnc->ctx, CS_SET, CS_LOC_PROP, locale,
-			      CS_UNUSED, NULL)) != CS_SUCCEED) {
-		gda_log_error (_("Could not configure locale to be '%s'"),
-			       targ_locale);
-		cs_loc_drop (scnc->ctx, locale);
-		return FALSE;
-	}
-	if ((ret = cs_loc_drop (scnc->ctx, locale)) != CS_SUCCEED) {
-		gda_log_error (_("Could not drop locale structure"));
-		return FALSE;
-	}
-	gda_log_message ("Selected locale '%s'", targ_locale);
-	return TRUE;
+/*  		if (((ret = cs_loc_alloc (scnc->ctx, &locale)) != CS_SUCCEED)|| */
+/*  						(sybase_chkerr(NULL,NULL,cnc,NULL,__PRETTY_FUNCTION__))) */
+
+		ret = cs_loc_alloc (scnc->ctx, &locale);
+		if ((ret != CS_SUCCEED)||
+						(sybase_chkerr(NULL,NULL,cnc,NULL,__PRETTY_FUNCTION__)))
+				{
+						gda_log_error (_("Could not allocate locale structure"));
+						return FALSE;
+				}
+
+/*  		if ((ret = cs_locale (scnc->ctx, CS_SET, locale, CS_LC_ALL, */
+/*  																								(CS_CHAR *) targ_locale, CS_NULLTERM, NULL)) */
+/*  						!= CS_SUCCEED) { */
+
+		ret = cs_locale (scnc->ctx, 
+																			CS_SET, 
+																			locale, 
+																			CS_LC_ALL, 
+																			(CS_CHAR *) targ_locale, 
+																			CS_NULLTERM, 
+																			NULL);
+
+		if ((ret != CS_SUCCEED)||
+						(sybase_chkerr(NULL,NULL,cnc,NULL,__PRETTY_FUNCTION__)))
+				{
+						gda_log_error (_("Could not set locale to '%s'"),
+																					targ_locale);
+						cs_loc_drop (scnc->ctx, locale);
+						return FALSE;
+				}
+
+
+/*  		if ((ret = cs_config (scnc->ctx, CS_SET, CS_LOC_PROP, locale, */
+/*  																								CS_UNUSED, NULL)) != CS_SUCCEED) { */
+				
+		ret = cs_config (scnc->ctx, 
+																			CS_SET, 
+																			CS_LOC_PROP, 
+																			locale, 
+																			CS_UNUSED, 
+																			NULL);
+
+		if ((ret !=  CS_SUCCEED)||
+						(sybase_chkerr(NULL,NULL,cnc,NULL,__PRETTY_FUNCTION__)))
+				{
+						gda_log_error (_("Could not configure locale to be '%s'"),
+																					targ_locale);
+						cs_loc_drop (scnc->ctx, locale);
+						return FALSE;
+				}
+
+/*  		if ((ret = cs_loc_drop (scnc->ctx, locale)) != CS_SUCCEED) { */
+
+		ret = cs_loc_drop (scnc->ctx, locale);
+
+		if ((ret != CS_SUCCEED)||
+						(sybase_chkerr(NULL,NULL,cnc,NULL,__PRETTY_FUNCTION__)))
+				{
+						gda_log_error (_("Could not drop locale structure"));
+						return FALSE;
+				}
+
+		gda_log_message ("Selected locale '%s'", targ_locale);
+		return TRUE;
 }
 
 // drop remaining cs/ctlib structures and exit
 void
 gda_sybase_cleanup (sybase_Connection * scnc, CS_RETCODE ret,
-		    const gchar * msg)
+																				const gchar * msg)
 {
-	g_return_if_fail (scnc != NULL);
+		g_return_if_fail (scnc != NULL);
 
-	gda_log_error (_("Fatal error: %s\n"), msg);
+		gda_log_error (_("Fatal error: %s\n"), msg);
 
-	if (scnc->cnc != NULL) {
-		ct_con_drop (scnc->cnc);
-		scnc->cnc = NULL;
-	}
+		if (scnc->cnc != NULL) {
+				ct_con_drop (scnc->cnc);
+				scnc->cnc = NULL;
+		}
 
-	if (scnc->ctx != NULL) {
-		ct_exit (scnc->ctx, CS_FORCE_EXIT);
-		cs_ctx_drop (scnc->ctx);
-		scnc->ctx = NULL;
-	}
+		if (scnc->ctx != NULL) {
+				ct_exit (scnc->ctx, CS_FORCE_EXIT);
+				cs_ctx_drop (scnc->ctx);
+				scnc->ctx = NULL;
+		}
 }
 
 /*
@@ -1124,83 +1301,85 @@ gda_sybase_cleanup (sybase_Connection * scnc, CS_RETCODE ret,
 static gint
 gda_sybase_init_dsn_properties (GdaServerConnection * cnc, const gchar * dsn)
 {
-	sybase_Connection *scnc;
-	gchar *ptr_s, *ptr_e;
+		sybase_Connection *scnc;
+		gchar *ptr_s, *ptr_e;
 
-	g_return_val_if_fail (cnc != NULL, -1);
-	scnc = (sybase_Connection *)
-		gda_server_connection_get_user_data (cnc);
+		g_return_val_if_fail (cnc != NULL, -1);
+		scnc = (sybase_Connection *)
+				gda_server_connection_get_user_data (cnc);
 
-	if (scnc) {
-		/* parse connection string */
-		ptr_s = (gchar *) dsn;
-		while (ptr_s && *ptr_s) {
-			ptr_e = strchr (ptr_s, ';');
+		if (scnc) 
+				{
+						/* parse connection string */
+						ptr_s = (gchar *) dsn;
+						while (ptr_s && *ptr_s) 
+								{
+										ptr_e = strchr (ptr_s, ';');
+										
+										if (ptr_e)
+												*ptr_e = '\0';
+										
+										// HOST implies HOSTNAME ;-)
+										if (strncasecmp (ptr_s, "HOST", strlen ("HOST")) == 0)												
+												scnc->ret =
+														ct_con_props (scnc->cnc, CS_SET,
+																												CS_HOSTNAME,
+																												(CS_CHAR *)
+																												get_value (ptr_s),
+																												CS_NULLTERM, NULL); 											
+										else if (strncasecmp
+																			(ptr_s, "USERNAME",
+																				strlen ("USERNAME")) == 0)
+												
+												scnc->ret =
+														ct_con_props (scnc->cnc, CS_SET,
+																												CS_USERNAME,
+																												(CS_CHAR *)
+																												get_value (ptr_s),
+																												CS_NULLTERM, NULL);						
+										else if (strncasecmp
+																			(ptr_s, "APPNAME", strlen ("APPNAME")) == 0)
+												scnc->ret =
+														ct_con_props (scnc->cnc, CS_SET,
+																												CS_APPNAME,
+																												(CS_CHAR *)
+																												get_value (ptr_s),
+																												CS_NULLTERM, NULL);
+										else if (strncasecmp
+																			(ptr_s, "PASSWORD",
+																				strlen ("PASSWORD")) == 0)
+												scnc->ret =
+														ct_con_props (scnc->cnc, CS_SET,
+																												CS_PASSWORD,
+																												(CS_CHAR *)
+																												get_value (ptr_s),
+																												CS_NULLTERM, NULL);
+										else if (strncasecmp
+																			(ptr_s, "DATABASE",
+																				strlen ("DATABASE")) == 0) {
+												scnc->ret = CS_SUCCEED;
+												if (scnc->database) {
+														g_free ((gpointer) scnc->database);
+												}
+												scnc->database =
+														g_strdup_printf ("%s",
+																															get_value (ptr_s));
+										}
 
-			if (ptr_e)
-				*ptr_e = '\0';
-
-			// HOST implies HOSTNAME ;-)
-			if (strncasecmp (ptr_s, "HOST", strlen ("HOST")) == 0)
-				scnc->ret =
-					ct_con_props (scnc->cnc, CS_SET,
-						      CS_HOSTNAME,
-						      (CS_CHAR *)
-						      get_value (ptr_s),
-						      CS_NULLTERM, NULL);
-			else if (strncasecmp
-				 (ptr_s, "USERNAME",
-				  strlen ("USERNAME")) == 0)
-				scnc->ret =
-					ct_con_props (scnc->cnc, CS_SET,
-						      CS_USERNAME,
-						      (CS_CHAR *)
-						      get_value (ptr_s),
-						      CS_NULLTERM, NULL);
-			else if (strncasecmp
-				 (ptr_s, "APPNAME", strlen ("APPNAME")) == 0)
-				scnc->ret =
-					ct_con_props (scnc->cnc, CS_SET,
-						      CS_APPNAME,
-						      (CS_CHAR *)
-						      get_value (ptr_s),
-						      CS_NULLTERM, NULL);
-			else if (strncasecmp
-				 (ptr_s, "PASSWORD",
-				  strlen ("PASSWORD")) == 0)
-				scnc->ret =
-					ct_con_props (scnc->cnc, CS_SET,
-						      CS_PASSWORD,
-						      (CS_CHAR *)
-						      get_value (ptr_s),
-						      CS_NULLTERM, NULL);
-			else if (strncasecmp
-				 (ptr_s, "DATABASE",
-				  strlen ("DATABASE")) == 0) {
-				scnc->ret = CS_SUCCEED;
-				if (scnc->database) {
-					g_free ((gpointer) scnc->database);
-				}
-				scnc->database =
-					g_strdup_printf ("%s",
-							 get_value (ptr_s));
-			}
-
-			sybase_chkerr (NULL, NULL, cnc, NULL,
-				       __PRETTY_FUNCTION__);
-			if (scnc->ret != CS_SUCCEED) {
-				gda_sybase_cleanup (scnc, scnc->ret,
-						    "Could not proceed dsn settings.\n");
-				return -1;
-			}
-
-			ptr_s = ptr_e;
-			if (ptr_s)
-				ptr_s++;
-		}
-	}
-
-	return 0;
+										sybase_chkerr (NULL, NULL, cnc, NULL,
+																									__PRETTY_FUNCTION__);
+										if (scnc->ret != CS_SUCCEED) {
+												gda_sybase_cleanup (scnc, scnc->ret,
+																																"Could not proceed dsn settings.\n");
+												return -1;
+										}
+										
+										ptr_s = ptr_e;
+										if (ptr_s)
+												ptr_s++;
+								}
+				}		
+		return 0;
 }
 
 /*
@@ -1210,36 +1389,36 @@ gda_sybase_init_dsn_properties (GdaServerConnection * cnc, const gchar * dsn)
 static gchar *
 get_value (gchar * ptr)
 {
-	while (*ptr && (*ptr != '='))
-		ptr++;
+		while (*ptr && (*ptr != '='))
+				ptr++;
 
-	if (!*ptr) {
-		return NULL;
-	}
-	ptr++;
-	if (!*ptr) {
-		return NULL;
-	}
-	while (*ptr && isspace (*ptr))
+		if (!*ptr) {
+				return NULL;
+		}
 		ptr++;
+		if (!*ptr) {
+				return NULL;
+		}
+		while (*ptr && isspace (*ptr))
+				ptr++;
 
-	return (g_strdup (ptr));
+		return (g_strdup (ptr));
 }
 
 static gchar *
 get_option (const gchar * dsn, const gchar * opt_name)
 {
-	gchar *ptr = NULL;
-	gchar *opt = NULL;
+		gchar *ptr = NULL;
+		gchar *opt = NULL;
 
-	if (!(opt = strstr (dsn, opt_name))) {
-		return NULL;
-	}
-	opt += strlen (opt_name);
-	ptr = strchr (opt, ';');
+		if (!(opt = strstr (dsn, opt_name))) {
+				return NULL;
+		}
+		opt += strlen (opt_name);
+		ptr = strchr (opt, ';');
 
-	if (ptr)
-		*ptr = '\0';
+		if (ptr)
+				*ptr = '\0';
 
-	return (g_strdup (opt));
+		return (g_strdup (opt));
 }

@@ -1,3 +1,8 @@
+2001-11-22  Mike <wingert.3@postbox.acs.ohio-state.edu>
+
+	* Make error handling work and fix some problems when valid queries
+	didn't return rows
+
 2001-09-16  Mike <wingert.3@postbox.acs.ohio-state.edu>
 
 	* adapted to new GdaError API

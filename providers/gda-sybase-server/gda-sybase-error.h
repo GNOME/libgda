@@ -42,57 +42,70 @@
 gint gda_sybase_install_error_handlers (GdaServerConnection *);
 
 void gda_sybase_error_make (GdaError * error,
-			    GdaServerRecordset * recset,
-			    GdaServerConnection * cnc, gchar * where);
+                            GdaServerRecordset * recset,
+                            GdaServerConnection * cnc, 
+                            gchar * where);
 
-void gda_sybase_cleanup (sybase_Connection *, CS_RETCODE, const gchar *);
 
 gboolean gda_sybase_messages_install (GdaServerConnection *);
 void gda_sybase_messages_uninstall (GdaServerConnection *);
 
-void sybase_chkerr (GdaError *,
-		    GdaServerRecordset *,
-		    GdaServerConnection *, GdaServerCommand *, gchar *);
-CS_RETCODE sybase_exec_chk (CS_RETCODE *,
-			    CS_RETCODE,
-			    GdaError *,
-			    GdaServerRecordset *,
-			    GdaServerConnection *,
-			    GdaServerCommand *, gchar *);
+gboolean  sybase_chkerr (GdaError *,
+                         GdaServerRecordset *,
+                         GdaServerConnection *, 
+                         GdaServerCommand *, 
+                         gchar *);
 
-#ifdef SYBASE_DEBUG
-#define SYB_CHK(retptr, retcode, err, rec, cnc, cmd) \
-	sybase_exec_chk(retptr, retcode, err, rec, cnc, cmd, \
-                   g_strdup_printf("%s at line %d (%s): ", __FILE__, __LINE__, \
-	                __PRETTY_FUNCTION__))
-#else
-#define SYB_CHK(retptr, retcode, err, rec, cnc, cmd) \
-	sybase_exec_chk(retptr, retcode, err, rec, cnc, cmd, \
-						 __PRETTY_FUNCTION__)
-#endif
+/*  CS_RETCODE sybase_exec_chk (CS_RETCODE *, */
+/*  																												CS_RETCODE, */
+/*  																												GdaError *, */
+/*  																												GdaServerRecordset *, */
+/*  																												GdaServerConnection *, */
+/*  																												GdaServerCommand *, gchar *); */
 
-void gda_sybase_messages_handle (GdaError *,
-				 GdaServerRecordset *,
-				 GdaServerConnection *, gchar * where);
-void gda_sybase_messages_handle_clientmsg (GdaError *,
-					   GdaServerRecordset *,
-					   GdaServerConnection *,
-					   gchar * where);
-void gda_sybase_messages_handle_servermsg (GdaError *,
-					   GdaServerRecordset *,
-					   GdaServerConnection *,
-					   gchar * where);
-void gda_sybase_messages_handle_csmsg (GdaError *,
-				       GdaServerRecordset *,
-				       GdaServerConnection *, gchar * where);
+/*  #ifdef SYBASE_DEBUG */
+/*  #define SYB_CHK(retptr, retcode, err, rec, cnc, cmd) \ */
+/*  	sybase_exec_chk(retptr, retcode, err, rec, cnc, cmd, \ */
+/*                     g_strdup_printf("%s at line %d (%s): ", __FILE__, __LINE__, \ */
+/*  	                __PRETTY_FUNCTION__)) */
+/*  #else */
+/*  #define SYB_CHK(retptr, retcode, err, rec, cnc, cmd) \ */
+/*  	sybase_exec_chk(retptr, retcode, err, rec, cnc, cmd, \ */
+/*  						 __PRETTY_FUNCTION__) */
+/*  #endif */
+
+/*  void gda_sybase_messages_handle (GdaError *, */
+/*  																																	GdaServerRecordset *, */
+/*  																																	GdaServerConnection *,  */
+/*  																																	gchar * where); */
+
+
+gboolean gda_sybase_messages_handle_clientmsg (GdaError *,
+                                               GdaServerRecordset *,
+                                               GdaServerConnection *,
+                                               gchar * where);
+
+gboolean gda_sybase_messages_handle_servermsg (GdaError *,
+                                               GdaServerRecordset *,
+                                               GdaServerConnection *,
+                                               gchar * where);
+gboolean gda_sybase_messages_handle_csmsg (GdaError *,
+                                           GdaServerRecordset *,
+                                           GdaServerConnection *, 
+                                           gchar * where);
+
 
 // Don't forget to FREE the results :-)
-gchar *g_sprintf_clientmsg (const gchar *, CS_CLIENTMSG *);
-gchar *g_sprintf_servermsg (const gchar *, CS_SERVERMSG *);
+gchar *g_sprintf_clientmsg (const gchar *, 
+                            CS_CLIENTMSG *);
+gchar *g_sprintf_servermsg (const gchar *, 
+                            CS_SERVERMSG *);
 
-void gda_sybase_log_clientmsg (const gchar *, CS_CLIENTMSG *);
-void gda_sybase_log_servermsg (const gchar *, CS_SERVERMSG *);
+void gda_sybase_log_clientmsg (const gchar *, 
+                               CS_CLIENTMSG *);
+void gda_sybase_log_servermsg (const gchar *, 
+                               CS_SERVERMSG *);
 
-void gda_sybase_debug_msg (gint, const gchar *);
+void gda_sybase_debug_msg (gchar *);
 
 #endif

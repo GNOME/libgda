@@ -44,11 +44,15 @@
 
 typedef struct _sybase_Error
 {
-	guint err_type;
-	CS_CLIENTMSG cslib_msg;
-	CS_CLIENTMSG client_msg;
-	CS_SERVERMSG server_msg;
-	gchar *udeferr_msg;
+/*  	guint err_type; */
+
+/*  	CS_CLIENTMSG cslib_msg; */
+/*  	CS_CLIENTMSG client_msg; */
+/*  	CS_SERVERMSG server_msg */;
+/*  	gchar *udeferr_msg; */
+
+		gchar *eMessage;
+
 }
 sybase_Error;
 
@@ -111,5 +115,9 @@ gboolean gda_sybase_connection_dead (GdaServerConnection *);
 gboolean gda_sybase_connection_reopen (GdaServerConnection *);
 CS_RETCODE gda_sybase_connection_select_database (GdaServerConnection *,
 						  const gchar * dbname);
+
+void gda_sybase_cleanup (sybase_Connection *, 
+                         CS_RETCODE, 
+                         const gchar *);
 
 #endif
