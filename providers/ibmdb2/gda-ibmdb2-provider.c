@@ -29,9 +29,9 @@
 
 #define OBJECT_DATA_IBMDB2_HANDLE "GDA_IBMDB2_IBMDB2Handle"
 
-/////////////////////////////////////////////////////////////////////////////
-// Private declarations and functions
-/////////////////////////////////////////////////////////////////////////////
+/*
+ * Private declarations and functions
+ */
 
 static GObjectClass *parent_class = NULL;
 
@@ -120,10 +120,12 @@ gda_ibmdb2_provider_open_connection (GdaServerProvider *provider,
 	if (t_alias == NULL)
 		t_alias = "sample";
 	
-//	if ((t_host == NULL) || (t_user == NULL) || (t_password == NULL)) {
-//		gda_connection_add_error_string (cnc, _("You must at least provide host, user and password to connect."));
-//		return FALSE;
-//	}
+/*
+	if ((t_host == NULL) || (t_user == NULL) || (t_password == NULL)) {
+		gda_connection_add_error_string (cnc, _("You must at least provide host, user and password to connect."));
+		return FALSE;
+	}
+*/
 	
 	db2 = g_new0 (GdaIBMDB2ConnectionData, 1);
 	g_return_val_if_fail (db2 != NULL, FALSE);
@@ -185,8 +187,9 @@ gda_ibmdb2_provider_open_connection (GdaServerProvider *provider,
 	} else if (flag == SQL_FALSE) {
 		db2->GetInfo_supported = FALSE;
 
-		// GetInfo is needed for obtaining database name 
-		// is needed for tables schema
+		/* GetInfo is needed for obtaining database name 
+		 * is needed for tables schema
+		 */
 		gda_connection_add_error_string (cnc, _("SQLGetInfo is unsupported. Hence IBM DB2 Provider will not work.\n"));
 
 		db2->rc = SQLDisconnect (db2->hdbc);
@@ -226,7 +229,7 @@ gda_ibmdb2_provider_close_connection (GdaServerProvider *provider,
 		g_free (db2->database);
 		db2->database = NULL;
 	}
-	// FIXME: error handling
+	/* FIXME: error handling */
 	db2->rc = SQLDisconnect (db2->hdbc);
 	db2->rc = SQLFreeHandle (SQL_HANDLE_DBC, db2->hdbc);
 	db2->rc = SQLFreeHandle (SQL_HANDLE_ENV, db2->henv);
@@ -444,9 +447,9 @@ gda_ibmdb2_provider_finalize (GObject *object)
 }
 
 
-/////////////////////////////////////////////////////////////////////////////
-// Public functions                                                       
-/////////////////////////////////////////////////////////////////////////////
+/*
+ * Public functions                                                       
+ */
 
 GType
 gda_ibmdb2_provider_get_type (void)

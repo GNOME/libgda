@@ -34,9 +34,9 @@
 
 #define OBJECT_DATA_FREETDS_HANDLE "GDA_FreeTDS_FreeTDSHandle"
 
-/////////////////////////////////////////////////////////////////////////////
-// Private declarations and functions
-/////////////////////////////////////////////////////////////////////////////
+/*
+ * Private declarations and functions
+ */
 
 static GObjectClass *parent_class = NULL;
 
@@ -166,7 +166,7 @@ gda_freetds_provider_open_connection (GdaServerProvider *provider,
 	t_password = gda_quark_list_find (params, "PASSWORD");
 	t_port = gda_quark_list_find (params, "PORT");
 	
-	// These shall override environment variables or previous settings
+	/* These shall override environment variables or previous settings */
 	tds_majver = gda_quark_list_find (params, "TDS_MAJVER");
 	tds_minver = gda_quark_list_find (params, "TDS_MINVER");
 	
@@ -189,8 +189,8 @@ gda_freetds_provider_open_connection (GdaServerProvider *provider,
 	if (tds_port)
 		t_port = tds_port;
 	
-	// sanity check
-	// FreeTDS SIGSEGV on NULL pointers
+	/* sanity check */
+	/* FreeTDS SIGSEGV on NULL pointers */
 	if ((t_user == NULL) || (t_host == NULL) || (t_password == NULL)) {
 		error = gda_freetds_make_error(NULL, _("Connection aborted. You must provide at least a host, username and password using DSN 'QUERY=;USER=;PASSWORD='."));
 		gda_connection_add_error(cnc, error);
@@ -216,21 +216,21 @@ gda_freetds_provider_open_connection (GdaServerProvider *provider,
 		return FALSE;
 	}
 
-	// allocate login
+	/* allocate login */
 	tds_cnc->login = tds_alloc_login();
 	if (! tds_cnc->login) {
 		gda_freetds_free_connection_data (tds_cnc);
 		return FALSE;
 	}
 	
-	// set tds version
+	/* set tds version */
 	if ((tds_majver != NULL) & (tds_minver != NULL))
 		tds_set_version(tds_cnc->login,
 		                (short) atoi (tds_majver),
 		                (short) atoi (tds_minver)
 		               );
 
-	// apply connection settings
+	/* apply connection settings */
 	tds_set_user(tds_cnc->login, (char *) t_user);
 	tds_set_passwd(tds_cnc->login, (char *) t_password);
 	tds_set_app(tds_cnc->login, "libgda");
@@ -246,7 +246,7 @@ gda_freetds_provider_open_connection (GdaServerProvider *provider,
 	tds_set_language(tds_cnc->login, "us_english");
 	tds_set_packet(tds_cnc->login, 512);
 
-	// Version 0.60 api uses context additionaly
+	/* Version 0.60 api uses context additionaly */
 #ifdef HAVE_FREETDS_VER0_6X
 	tds_cnc->ctx = tds_alloc_context();
 	if (! tds_cnc->ctx) {
@@ -256,12 +256,12 @@ gda_freetds_provider_open_connection (GdaServerProvider *provider,
 		gda_connection_add_error(cnc, error);
 		return FALSE;
 	}
-	// Initialize callbacks which are now in context struct
+	/* Initialize callbacks which are now in context struct */
 	tds_cnc->ctx->msg_handler = gda_freetds_provider_tds_handle_info_msg;
 	tds_cnc->ctx->err_handler = gda_freetds_provider_tds_handle_err_msg;
 #endif
 
-	// establish connection; change in 0.6x api
+	/* establish connection; change in 0.6x api */
 #ifndef HAVE_FREETDS_VER0_6X
 	tds_cnc->tds = tds_connect(tds_cnc->login, NULL);
 #else
@@ -275,7 +275,7 @@ gda_freetds_provider_open_connection (GdaServerProvider *provider,
 		return FALSE;
 	}
 
-	// try to receive connection info for sanity check
+	/* try to receive connection info for sanity check */
 #ifndef HAVE_FREETDS_VER0_6X
 	tds_cnc->config = tds_get_config(tds_cnc->tds, tds_cnc->login);
 #else
@@ -290,10 +290,10 @@ gda_freetds_provider_open_connection (GdaServerProvider *provider,
 		return FALSE;
 	}
 
-	// Pass cnc pointer to tds (user data ptr) for reuse in callbacks
+	/* Pass cnc pointer to tds (user data ptr) for reuse in callbacks */
 	tds_set_parent (tds_cnc->tds, (void *) cnc);
-	// set cnc object handle; 
-	// thus make calls to e.g. gda_freetds_execute_cmd possible
+	/* set cnc object handle; */
+	/* thus make calls to e.g. gda_freetds_execute_cmd possible */
 	g_object_set_data (G_OBJECT (cnc), OBJECT_DATA_FREETDS_HANDLE, tds_cnc);
 	
 	if ((t_database != NULL)
@@ -307,10 +307,11 @@ gda_freetds_provider_open_connection (GdaServerProvider *provider,
 		return FALSE;
 	}
 
-	// fixme: these have been removed in debian sid
-	// 
-	// tds_cnc->is_sybase = TDS_IS_SYBASE (tds_cnc->tds);
-	// tds_cnc->srv_ver = tds_cnc->tds->product_version;
+	/* fixme: these have been removed in debian sid
+	 * 
+	 * tds_cnc->is_sybase = TDS_IS_SYBASE (tds_cnc->tds);
+	 * tds_cnc->srv_ver = tds_cnc->tds->product_version;
+	 */
 	
 	tds_cnc->rc = TDS_SUCCEED;
 
@@ -337,14 +338,14 @@ gda_freetds_free_connection_data (GdaFreeTDSConnectionData *tds_cnc)
 		tds_cnc->config = NULL;
 	}
 	if (tds_cnc->tds) {
-		// clear tds user data pointer
+		/* clear tds user data pointer */
 		tds_set_parent (tds_cnc->tds, NULL);
 		tds_free_socket (tds_cnc->tds);
 		tds_cnc->tds = NULL;
 	}
 #ifdef HAVE_FREETDS_VER0_6X
 	if (tds_cnc->ctx) {
-		// Clear callback handler
+		/* Clear callback handler */
 		tds_cnc->ctx->msg_handler = NULL;
 		tds_cnc->ctx->err_handler = NULL;
 		tds_free_context (tds_cnc->ctx);
@@ -575,7 +576,7 @@ gda_freetds_provider_supports (GdaServerProvider *provider,
 		case GDA_CONNECTION_FEATURE_VIEWS:
 			return TRUE;
 
-	//FIXME: Implement missing 
+	/* FIXME: Implement missing */
 		case GDA_CONNECTION_FEATURE_AGGREGATES:
 		case GDA_CONNECTION_FEATURE_INDEXES:
 		case GDA_CONNECTION_FEATURE_INHERITANCE:
@@ -651,7 +652,7 @@ static GdaDataModel
 			GdaRow *row = (GdaRow *) gda_data_model_get_row (model,
 			                                                 i);
 			
-			// first fix gda_type
+			/* first fix gda_type */
 			if (row) {
 				value = gda_row_get_value (row, 2);
 				
@@ -668,15 +669,16 @@ static GdaDataModel
 				}
 				
 				gda_type = gda_freetds_get_value_type (&col);
-				// col 3: type -> clear and set
-				//   step 1: make sure value is cleared
+				/* col 3: type -> clear and set
+				 *   step 1: make sure value is cleared
+				 */
 				gda_value_set_null (value);
 				memset (value, 0, sizeof(GdaValue));
-				//   step 2: set type of gdavalue
+				/*   step 2: set type of gdavalue */
 				value->type = GDA_VALUE_TYPE_TYPE;
 				value->value.v_type = gda_type;
 				
-				// col 2: comment -> clear
+				/* col 2: comment -> clear */
 				value = gda_row_get_value (row, 2);
 				gda_value_set_string (value, "");
 			}
@@ -735,7 +737,7 @@ static GdaDataModel
 			return recset;
 			break;
 
-		// FIXME: Implement aggregates, indexes, sequences and triggers
+		/* FIXME: Implement aggregates, indexes, sequences and triggers */
 		case GDA_CONNECTION_SCHEMA_AGGREGATES:
 		case GDA_CONNECTION_SCHEMA_INDEXES:
 		case GDA_CONNECTION_SCHEMA_PARENT_TABLES:
@@ -769,7 +771,7 @@ gda_freetds_execute_cmd (GdaConnection *cnc, const gchar *sql)
 		return FALSE;
 	}
 
-	// there should not be any result tokens
+	/* there should not be any result tokens */
 	while ((tds_cnc->rc = tds_process_result_tokens (tds_cnc->tds)) 
 	       == TDS_SUCCEED) {
 		if (tds_cnc->tds->res_info->rows_exist) {
@@ -820,7 +822,7 @@ gda_freetds_execute_query (GdaConnection *cnc, const gchar* sql)
 	return recset;
 }
 
-// make sure to g_free() result after use
+/* make sure to g_free() result after use */
 static gchar *
 gda_freetds_get_stringresult_of_query (GdaConnection *cnc, 
                                        const gchar *sql,
@@ -831,7 +833,7 @@ gda_freetds_get_stringresult_of_query (GdaConnection *cnc,
 	GdaValue        *value = NULL;
 	gchar           *ret = NULL;
 
-	// GDA_IS_CONNECTION (cnc) validation in function call
+	/* GDA_IS_CONNECTION (cnc) validation in function call */
 	model = gda_freetds_execute_query (cnc, sql);
 	
 	if (model) {
@@ -911,7 +913,7 @@ static GList* gda_freetds_provider_process_sql_commands(GList         *reclist,
 	g_return_val_if_fail (tds_cnc != NULL, NULL);
 	g_return_val_if_fail (tds_cnc->tds != NULL, NULL);
 
-//	arr = gda_freetds_split_commandlist(sql);
+/*	arr = gda_freetds_split_commandlist(sql); */
 	arr = g_strsplit (sql, ";", 0);
 	if (arr) {
 		gint n = 0;
@@ -999,8 +1001,9 @@ gda_freetds_provider_finalize (GObject *object)
 	parent_class->finalize (object);
 }
 
-// FIXME: rewrite this function to suit new callback parameters
-//        (0.6x code)
+/* FIXME: rewrite this function to suit new callback parameters
+ *        (0.6x code)
+ */
 static int gda_freetds_provider_tds_handle_message (void *aStruct,
                                                     const gboolean is_err_msg)
 {
@@ -1014,7 +1017,7 @@ static int gda_freetds_provider_tds_handle_message (void *aStruct,
 	g_return_val_if_fail (tds->msg_info != NULL, TDS_SUCCEED);
 	cnc = (GdaConnection *) tds_get_parent (tds);
 	
-	// what if we cannot determine where the message belongs to?
+	/* what if we cannot determine where the message belongs to? */
 	g_return_val_if_fail (((GDA_IS_CONNECTION (cnc)) || (cnc == NULL)),
 	                      TDS_SUCCEED);
 
@@ -1026,7 +1029,7 @@ static int gda_freetds_provider_tds_handle_message (void *aStruct,
 	                      tds->msg_info->line_number,
 	                      tds->msg_info->message ? tds->msg_info->message : "");
 
-	// if errormessage, proceed
+	/* if errormessage, proceed */
 	if (is_err_msg == TRUE) {
 		if (cnc != NULL) {
 			error = gda_error_new ();
@@ -1057,7 +1060,7 @@ static int gda_freetds_provider_tds_handle_message (void *aStruct,
 }
 
 #ifdef HAVE_FREETDS_VER0_6X
-// FIXME: rewrite tds_handle_message as well/use new parameters here
+/* FIXME: rewrite tds_handle_message as well/use new parameters here */
 static int
 gda_freetds_provider_tds_handle_info_msg (TDSCONTEXT *ctx, TDSSOCKET *tds,
                                           TDSMSGINFO *msg)
@@ -1073,7 +1076,7 @@ gda_freetds_provider_tds_handle_info_msg (void *aStruct)
 #endif
 
 #ifdef HAVE_FREETDS_VER0_6X
-// FIXME: rewrite tds_handle_message as well/use new parameters here
+/* FIXME: rewrite tds_handle_message as well/use new parameters here */
 static int
 gda_freetds_provider_tds_handle_err_msg (TDSCONTEXT *ctx, TDSSOCKET *tds,
                                          TDSMSGINFO *msg)
@@ -1088,9 +1091,9 @@ gda_freetds_provider_tds_handle_err_msg (void *aStruct)
 }
 #endif
 
-/////////////////////////////////////////////////////////////////////////////
-// Public functions                                                       
-/////////////////////////////////////////////////////////////////////////////
+/*
+ * Public functions                                                       
+ */
 
 GType
 gda_freetds_provider_get_type (void)
@@ -1121,8 +1124,10 @@ gda_freetds_provider_new (void)
 
 	provider = g_object_new (gda_freetds_provider_get_type (), NULL);
 
-//	if (! gda_log_is_enabled())
-//		gda_log_enable();
+/*
+	if (! gda_log_is_enabled())
+		gda_log_enable();
+*/
 	
 	return GDA_SERVER_PROVIDER (provider);
 }

@@ -31,47 +31,50 @@
 #include "gda-sybase.h"
 #include "gda-sybase-types.h"
 
-// NULL means we have no corresponding server type name
-// illegal type should always be last type
+/* NULL means we have no corresponding server type name */
+/* illegal type should always be last type */
 const sybase_Types gda_sybase_type_list[GDA_SYBASE_TYPE_CNT] = {
-  // Binary types
-  { "binary",        CS_BINARY_TYPE,      GDA_VALUE_TYPE_BINARY },    //   1
-  { NULL,            CS_LONGBINARY_TYPE,  GDA_VALUE_TYPE_BINARY },    //   2
-  { "varbinary",     CS_VARBINARY_TYPE,   GDA_VALUE_TYPE_BINARY },    //   3
-  // Boolean types
-  { "boolean",       CS_BIT_TYPE,         GDA_VALUE_TYPE_BOOLEAN },   //   4
-  // Character types
-  { "char",          CS_CHAR_TYPE,        GDA_VALUE_TYPE_STRING },    //   5
-  { NULL,            CS_LONGCHAR_TYPE,    GDA_VALUE_TYPE_STRING },    //   6
-  { "varchar",       CS_VARCHAR_TYPE,     GDA_VALUE_TYPE_STRING },    //   7
-  // Datetime types
-  { "datetime",      CS_DATETIME_TYPE,    GDA_VALUE_TYPE_TIMESTAMP }, //   8
-  { "smalldatetime", CS_DATETIME4_TYPE,   GDA_VALUE_TYPE_TIMESTAMP }, //   9
-  // Numeric types
-  { "tinyint",       CS_TINYINT_TYPE,     GDA_VALUE_TYPE_TINYINT },   //  10
-  { "smallint",      CS_SMALLINT_TYPE,    GDA_VALUE_TYPE_SMALLINT },  //  11
-  { "int",           CS_INT_TYPE,         GDA_VALUE_TYPE_INTEGER },   //  12
-  { "decimal",       CS_DECIMAL_TYPE,     GDA_VALUE_TYPE_NUMERIC },   //  13
-  { "numeric",       CS_NUMERIC_TYPE,     GDA_VALUE_TYPE_NUMERIC },   //  14
-  { "float",         CS_FLOAT_TYPE,       GDA_VALUE_TYPE_DOUBLE },    //  15
-  { "real",          CS_REAL_TYPE,        GDA_VALUE_TYPE_SINGLE },    //  16
-  { "text",          CS_TEXT_TYPE,        GDA_VALUE_TYPE_STRING },    //  17
-  { "image",         CS_IMAGE_TYPE,       GDA_VALUE_TYPE_BINARY },    //  18
+  /* Binary types */
+  { "binary",        CS_BINARY_TYPE,      GDA_VALUE_TYPE_BINARY },    /*   1 */
+  { NULL,            CS_LONGBINARY_TYPE,  GDA_VALUE_TYPE_BINARY },    /*   2 */
+  { "varbinary",     CS_VARBINARY_TYPE,   GDA_VALUE_TYPE_BINARY },    /*   3 */
+  /* Boolean types */
+  { "boolean",       CS_BIT_TYPE,         GDA_VALUE_TYPE_BOOLEAN },   /*   4 */
+  /* Character types */
+  { "char",          CS_CHAR_TYPE,        GDA_VALUE_TYPE_STRING },    /*   5 */
+  { NULL,            CS_LONGCHAR_TYPE,    GDA_VALUE_TYPE_STRING },    /*   6 */
+  { "varchar",       CS_VARCHAR_TYPE,     GDA_VALUE_TYPE_STRING },    /*   7 */
+  /* Datetime types */
+  { "datetime",      CS_DATETIME_TYPE,    GDA_VALUE_TYPE_TIMESTAMP }, /*   8 */
+  { "smalldatetime", CS_DATETIME4_TYPE,   GDA_VALUE_TYPE_TIMESTAMP }, /*   9 */
+  /* Numeric types */
+  { "tinyint",       CS_TINYINT_TYPE,     GDA_VALUE_TYPE_TINYINT },   /*  10 */
+  { "smallint",      CS_SMALLINT_TYPE,    GDA_VALUE_TYPE_SMALLINT },  /*  11 */
+  { "int",           CS_INT_TYPE,         GDA_VALUE_TYPE_INTEGER },   /*  12 */
+  { "decimal",       CS_DECIMAL_TYPE,     GDA_VALUE_TYPE_NUMERIC },   /*  13 */
+  { "numeric",       CS_NUMERIC_TYPE,     GDA_VALUE_TYPE_NUMERIC },   /*  14 */
+  { "float",         CS_FLOAT_TYPE,       GDA_VALUE_TYPE_DOUBLE },    /*  15 */
+  { "real",          CS_REAL_TYPE,        GDA_VALUE_TYPE_SINGLE },    /*  16 */
+  { "text",          CS_TEXT_TYPE,        GDA_VALUE_TYPE_STRING },    /*  17 */
+  { "image",         CS_IMAGE_TYPE,       GDA_VALUE_TYPE_BINARY },    /*  18 */
 
-  // Security types
-  { "boundary",      CS_BOUNDARY_TYPE,    GDA_VALUE_TYPE_BINARY },    //  19
-  { "sensitivity",   CS_SENSITIVITY_TYPE, GDA_VALUE_TYPE_BINARY },    //  20
+  /* Security types */
+  { "boundary",      CS_BOUNDARY_TYPE,    GDA_VALUE_TYPE_BINARY },    /*  19 */
+  { "sensitivity",   CS_SENSITIVITY_TYPE, GDA_VALUE_TYPE_BINARY },    /*  20 */
 
-// Types unsupported by gda-srv are reported as varchar and at the end
-// of this list
-	// Money types
-  { "money",         CS_MONEY_TYPE,       GDA_VALUE_TYPE_STRING },    //  21
-  { "smallmoney",    CS_MONEY4_TYPE,      GDA_VALUE_TYPE_STRING },    //  22
-//{ "money",         CS_MONEY_TYPE,       GDA_VALUE_TYPE_MONEY },     //  23
-//{ "smallmoney",    CS_MONEY4_TYPE,      GDA_VALUE_TYPE_MONEY },     //  22
+/* Types unsupported by gda-srv are reported as varchar and at the end
+ * of this list
+ */
+	/* Money types */
+  { "money",         CS_MONEY_TYPE,       GDA_VALUE_TYPE_STRING },    /*  21 */
+  { "smallmoney",    CS_MONEY4_TYPE,      GDA_VALUE_TYPE_STRING },    /*  22 */
+#if 0
+  { "money",         CS_MONEY_TYPE,       GDA_VALUE_TYPE_MONEY },     /*  23 */
+  { "smallmoney",    CS_MONEY4_TYPE,      GDA_VALUE_TYPE_MONEY },     /*  22 */
+#endif
 	
 	
-  { NULL,            CS_ILLEGAL_TYPE,     GDA_VALUE_TYPE_UNKNOWN }    //  23
+  { NULL,            CS_ILLEGAL_TYPE,     GDA_VALUE_TYPE_UNKNOWN }    /*  23 */
 };
 
 
@@ -104,11 +107,13 @@ gda_sybase_set_gda_value (GdaSybaseConnectionData *scnc,
 	}
 
 	switch (field->fmt.datatype) {
-		// FIXME: binary datatypes
-//		case CS_BINARY_TYPE:
-//		case CS_LONGBINARY_TYPE:
-//		case CS_VARBINARY_TYPE:
-//			break;
+		/* FIXME: binary datatypes */
+/*
+		case CS_BINARY_TYPE:
+		case CS_LONGBINARY_TYPE:
+		case CS_VARBINARY_TYPE:
+			break;
+*/
 		case CS_BIT_TYPE:
 			gda_value_set_boolean (value, (gboolean) *field->data);
 			return TRUE;
@@ -141,13 +146,15 @@ gda_sybase_set_gda_value (GdaSybaseConnectionData *scnc,
 			gda_value_set_integer (value, *field->data);
 			return TRUE;
 			break;
-		// FIXME: implement numeric types
-//		case CS_DECIMAL_TYPE,
-//		     CS_NUMERIC_TYPE:
-//			memset (&numeric, 0, sizeof (numeric));
-//
-//			gda_value_set_numeric (value, numeric);
-//			break;
+		/* FIXME: implement numeric types */
+/*
+		case CS_DECIMAL_TYPE,
+		     CS_NUMERIC_TYPE:
+			memset (&numeric, 0, sizeof (numeric));
+
+			gda_value_set_numeric (value, numeric);
+			break;
+*/
 		case CS_FLOAT_TYPE:
 			gda_value_set_double (value, (gdouble) *field->data);
 			return TRUE;
@@ -161,14 +168,16 @@ gda_sybase_set_gda_value (GdaSybaseConnectionData *scnc,
 			gda_value_set_string (value, field->data);
 			return TRUE;
 			break;
-		// FIXME: implement those types
-//		case CS_IMAGE_TYPE:
-//		case CS_BOUNDARY_TYPE:
-//		case CS_SENSITIVITY_TYPE:
+		/* FIXME: implement those types */
+/*
+		case CS_IMAGE_TYPE:
+		case CS_BOUNDARY_TYPE:
+		case CS_SENSITIVITY_TYPE:
+*/
 		case CS_MONEY_TYPE:
 		case CS_MONEY4_TYPE:
 		default:
-			// try cs_convert data to CS_CHAR_TYPE
+			/* try cs_convert data to CS_CHAR_TYPE */
 			success = gda_sybase_set_value_general (scnc, value,
 			                                        field);
 			break;
@@ -248,20 +257,20 @@ gda_sybase_set_value_by_datetime(GdaValue *value, CS_DATETIME *dt)
 		g_date_set_dmy (&date, 1, 1, 1900);
 		g_date_add_days(&date, (guint) dt->dtdays);
 
-		realhours = dt->dttime / 1080000; // div (60 * 60 * 300)
+		realhours = dt->dttime / 1080000; /* div (60 * 60 * 300) */
 		timestamp.hour = (gushort) (realhours % 24);
 
-		// this should not happen...
+		/* this should not happen... */
 		if (realhours > 23) {
 			g_date_add_days (&date, (guint) (realhours / 24));
 		}
 		remainder = dt->dttime - (realhours * 1080000);
-		timestamp.minute = (gushort) (remainder / 18000); // (div 60*300)
+		timestamp.minute = (gushort) (remainder / 18000); /* (div 60*300) */
 		remainder = remainder - (timestamp.minute * 18000);
 		timestamp.second = (gushort) (remainder / 300);
 		remainder = remainder - (timestamp.second * 300);
 		
-		// FIXME: What is correct fraction for timestamp?
+		/* FIXME: What is correct fraction for timestamp? */
 		timestamp.fraction = remainder / 3;
 		
 		timestamp.year = g_date_get_year (&date);
@@ -295,7 +304,7 @@ gda_sybase_set_value_by_datetime4(GdaValue *value, CS_DATETIME4 *dt4)
 		timestamp.hour = (gushort) realhours % 24;
 		timestamp.minute = (gushort) (dt4->minutes - (realhours * 60));
 		
-		// this should not happen...
+		/* this should not happen... */
 		if (realhours > 23) {
 			g_date_add_days (&date, (guint) (realhours / 24));
 		}

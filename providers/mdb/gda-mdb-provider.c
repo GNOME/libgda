@@ -244,7 +244,7 @@ gda_mdb_provider_close_connection (GdaServerProvider *provider, GdaConnection *c
 		mdb_cnc->server_version = NULL;
 	}
 
-	//mdb_free_handle (mdb_cnc->mdb);
+	/* mdb_free_handle (mdb_cnc->mdb); */
 
 	g_free (mdb_cnc);
 	g_object_set_data (G_OBJECT (cnc), OBJECT_DATA_MDB_HANDLE, NULL);

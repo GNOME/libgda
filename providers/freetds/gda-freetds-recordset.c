@@ -37,9 +37,9 @@
 
 #define PARENT_TYPE GDA_TYPE_DATA_MODEL
 
-/////////////////////////////////////////////////////////////////////////////
-// Private declarations and functions
-/////////////////////////////////////////////////////////////////////////////
+/*
+ * Private declarations and functions
+ */
 
 static GObjectClass *parent_class = NULL;
 
@@ -58,9 +58,9 @@ static const GdaValue *gda_freetds_recordset_get_value_at (GdaDataModel *model,
                                                            gint         col,
                                                            gint         row);
 
-// Private utility functions
+/* Private utility functions */
 
-// w/o results
+/* w/o results */
 static TDSCOLINFO *gda_freetds_dup_tdscolinfo (TDSCOLINFO *col);
 static GdaRow *gda_freetds_get_current_row(GdaFreeTDSRecordset *recset);
 
@@ -102,7 +102,7 @@ static GdaFieldAttributes
 	                                  gda_freetds_get_value_type (colinfo));
 	gda_field_attributes_set_defined_size (attribs, colinfo->column_size);
 
-	// FIXME:
+	/* FIXME: */
 	gda_field_attributes_set_references (attribs, "");
 	gda_field_attributes_set_primary_key (attribs, FALSE);
 	gda_field_attributes_set_unique_key (attribs, FALSE);
@@ -243,8 +243,10 @@ static GdaRow
 	g_return_val_if_fail (GDA_IS_FREETDS_RECORDSET (recset), NULL);
 	g_return_val_if_fail (recset->priv != NULL, NULL);
 	g_return_val_if_fail (recset->priv->res != NULL, NULL);
-//	g_return_val_if_fail (recset->priv->colcnt 
-//	                      != recset->priv->res->num_cols, NULL);
+/*
+	g_return_val_if_fail (recset->priv->colcnt 
+	                      != recset->priv->res->num_cols, NULL);
+*/
 
 	row = gda_row_new(GDA_DATA_MODEL (recset), recset->priv->res->num_cols);
 	g_return_val_if_fail (row != NULL, NULL);
@@ -275,7 +277,7 @@ static TDSCOLINFO
 	if (copy) {
 		memcpy(copy, col, sizeof(TDSCOLINFO));
 		
-		// set pointers to NULL
+		/* set pointers to NULL */
 		copy->column_nullbind = NULL;
 		copy->varaddr = NULL;
 		copy->column_lenbind = NULL;
@@ -285,9 +287,9 @@ static TDSCOLINFO
 	return copy;
 }
 
-/////////////////////////////////////////////////////////////////////////////
-// Public functions                                                       
-/////////////////////////////////////////////////////////////////////////////
+/*
+ * Public functions                                                       
+ */
 
 GType
 gda_freetds_recordset_get_type (void)

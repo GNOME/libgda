@@ -98,10 +98,10 @@ define_columns (GdaOracleRecordsetPrivate *priv)
 		}
 
 		switch (ora_value->sql_type) {
-		case SQLT_NUM: // Numerics are coerced to string
+		case SQLT_NUM: /* Numerics are coerced to string */
 			ora_value->sql_type = SQLT_CHR;
 			break;
-		case SQLT_DAT: // Convert SQLT_DAT to OCIDate
+		case SQLT_DAT: /* Convert SQLT_DAT to OCIDate */
 			ora_value->sql_type = SQLT_ODT;
 			break;
 		}
@@ -294,7 +294,7 @@ gda_oracle_recordset_get_n_rows (GdaDataModel *model)
 					(ub4) OCI_DEFAULT);
 	}
 
-	// reset the result set to the beginning
+	/* reset the result set to the beginning */
 	result = OCIStmtExecute (priv_data->cdata->hservice,
 				priv_data->hstmt,
 				priv_data->cdata->herr,

@@ -70,7 +70,7 @@ struct _GdaSybaseProviderClass {
 };
 
 typedef struct _GdaSybaseConnectionData {
-	GdaConnection  *gda_cnc; // "parent"
+	GdaConnection  *gda_cnc; /* "parent" */
 	gchar          *server_version;
 	
 	CS_CONTEXT     *context;
@@ -78,10 +78,10 @@ typedef struct _GdaSybaseConnectionData {
 	CS_CONNECTION  *connection;
 	CS_CHAR        *mempool;
 
-	CS_RETCODE     ret;      // for client operations
-	CS_RETCODE     rret;     // for ct_result operations
-	CS_RETCODE     mret;     // for message operations(cs_diag/ct_diag)
-	CS_INT         res_type; // resulttype of query in progress
+	CS_RETCODE     ret;      /* for client operations */
+	CS_RETCODE     rret;     /* for ct_result operations */
+	CS_RETCODE     mret;     /* for message operations(cs_diag/ct_diag) */
+	CS_INT         res_type; /* resulttype of query in progress */
 } GdaSybaseConnectionData;
 
 GType              gda_sybase_provider_get_type (void);

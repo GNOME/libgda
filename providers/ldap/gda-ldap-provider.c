@@ -419,10 +419,10 @@ get_ldap_types (GdaConnection *cnc, GdaParameterList *params)
 
 	/* create the recordset */
 	recset = (GdaDataModelArray *) gda_data_model_array_new (1);
-	//gda_server_recordset_model_set_field_defined_size (recset, 0, 32);
+	/* gda_server_recordset_model_set_field_defined_size (recset, 0, 32); */
 	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 0, _("Type"));
-	//gda_server_recordset_model_set_field_scale (recset, 0, 0);
-	//gda_server_recordset_model_set_field_gdatype (recset, 0, GDA_TYPE_STRING);
+	/* gda_server_recordset_model_set_field_scale (recset, 0, 0); */
+	/* gda_server_recordset_model_set_field_gdatype (recset, 0, GDA_TYPE_STRING); */
 
 	/* fill the recordset */
 	add_string_row (recset, "blob");

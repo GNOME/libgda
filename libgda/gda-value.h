@@ -83,7 +83,7 @@ typedef struct {
 	gushort hour;
 	gushort minute;
 	gushort second;
-	glong timezone;	// # of seconds to the east UTC
+	glong timezone;	/* # of seconds to the east UTC */
 } GdaTime;
 
 typedef struct {
@@ -94,7 +94,7 @@ typedef struct {
 	gushort minute;
 	gushort second;
 	gulong fraction;
-	glong timezone;	// # of seconds to the east UTC
+	glong timezone;	/* # of seconds to the east UTC */
 } GdaTimestamp;
 
 typedef GList GdaValueList;

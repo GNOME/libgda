@@ -109,7 +109,7 @@ make_timestamp (GdaTimestamp *timestamp, const gchar *value)
 	value += 3;
 	timestamp->second = atoi (value);
 	value += 3;
-	timestamp->fraction = atol (value) * 10; // I have only hundredths of second
+	timestamp->fraction = atol (value) * 10; /* I have only hundredths of second */
 	value += 3;
 	timestamp->timezone = atol (value) * 60 * 60;
 }
@@ -182,10 +182,10 @@ set_from_string (GdaValue *value, const gchar *as_string)
 		}
 		break;	
 	case GDA_VALUE_TYPE_NUMERIC :
-		//FIXME: what test whould i do for numeric?
+		/* FIXME: what test whould i do for numeric? */
 		numeric.number = g_strdup (as_string);
-		numeric.precision = 0; //FIXME
-		numeric.width = 0; //FIXME
+		numeric.precision = 0; /* FIXME */
+		numeric.width = 0; /* FIXME */
 		gda_value_set_numeric (value, &numeric);
 		g_free (numeric.number);
 		retval = TRUE;
@@ -203,7 +203,7 @@ set_from_string (GdaValue *value, const gchar *as_string)
 		g_date_free (gdate);
 		break;
 	case GDA_VALUE_TYPE_GEOMETRIC_POINT :
-		//FIXME: add more checks to make_point
+		/* FIXME: add more checks to make_point */
 		make_point (&point, as_string);
 		gda_value_set_geometric_point (value, &point);
 		break;
@@ -214,20 +214,20 @@ set_from_string (GdaValue *value, const gchar *as_string)
 		gda_value_set_null (value);
 		break;
 	case GDA_VALUE_TYPE_TIMESTAMP :
-		//FIXME: add more checks to make_timestamp
+		/* FIXME: add more checks to make_timestamp */
 		make_timestamp (&timestamp, as_string);
 		gda_value_set_timestamp (value, &timestamp);
 		break;
 	case GDA_VALUE_TYPE_TIME :
-		//FIXME: add more checks to make_time
+		/* FIXME: add more checks to make_time */
 		make_time (&timegda, as_string);
 		gda_value_set_time (value, &timegda);
 		break;
 	case GDA_VALUE_TYPE_TYPE :
 		value->value.v_type = gda_type_from_string (as_string);
 		break;
-	case GDA_VALUE_TYPE_LIST : //FIXME
-	case GDA_VALUE_TYPE_MONEY : //FIXME
+	case GDA_VALUE_TYPE_LIST : /* FIXME */
+	case GDA_VALUE_TYPE_MONEY : /* FIXME */
 	default :
 		gda_value_set_string (value, as_string);
 		retval = TRUE;
@@ -1787,7 +1787,7 @@ gda_value_compare (const GdaValue *value1, const GdaValue *value2)
 		retval = (gint) value1->value.v_bigint - value2->value.v_bigint;
 		break;
 	case GDA_VALUE_TYPE_BINARY :
-		//FIXME
+		/* FIXME */
 		retval = 0;
 		break;
 	case GDA_VALUE_TYPE_BOOLEAN :
@@ -1861,7 +1861,7 @@ gda_value_compare (const GdaValue *value1, const GdaValue *value2)
 		retval = value1->value.v_type == value2->value.v_type ? 0 : -1;
 		break;
 	default :
-		//FIXME
+		/* FIXME */
 		retval = -1;
 		break;
 	}

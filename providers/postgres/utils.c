@@ -123,7 +123,7 @@ make_timestamp (GdaTimestamp *timestamp, const gchar *value)
 	value += 3;
 	timestamp->second = atoi (value);
 	value += 3;
-	timestamp->fraction = atol (value) * 10; // I have only hundredths of second
+	timestamp->fraction = atol (value) * 10; /* I have only hundredths of second */
 	value += 3;
 	timestamp->timezone = atol (value) * 60 * 60;
 }
@@ -172,8 +172,8 @@ gda_postgres_set_value (GdaValue *value,
 		break;
 	case GDA_VALUE_TYPE_NUMERIC :
 		numeric.number = g_strdup (thevalue);
-		numeric.precision = 0; //FIXME
-		numeric.width = 0; //FIXME
+		numeric.precision = 0; /* FIXME */
+		numeric.width = 0; /* FIXME */
 		gda_value_set_numeric (value, &numeric);
 		g_free (numeric.number);
 		break;

@@ -234,7 +234,7 @@ gda_default_provider_get_server_version (GdaServerProvider *provider, GdaConnect
 	g_return_val_if_fail (GDA_IS_DEFAULT_PROVIDER (dfprv), NULL);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
-	return VERSION; // FIXME
+	return VERSION; /* FIXME */
 }
 
 /* get_database handler for the GdaDefaultProvider class */
@@ -307,7 +307,7 @@ process_table_commands (GList *reclist, GdaConnection *cnc, const gchar *str)
 			if (GDA_IS_TABLE (table))
 				reclist = g_list_append (reclist, table);
 			else {
-				// FIXME: what to do on errors?
+				/* FIXME: what to do on errors? */
 			}
 
 			n++;
@@ -491,10 +491,12 @@ get_table_fields (GdaConnection *cnc, GdaXmlDatabase *xmldb, GdaParameterList *p
 		gint defined_size =  (fields_desc[i].type == GDA_VALUE_TYPE_STRING) ? 64 : 
 			(fields_desc[i].type == GDA_VALUE_TYPE_INTEGER) ? sizeof (gint) : 1;
 
-		//gda_server_recordset_model_set_field_defined_size (recset, i, defined_size);
+		/* gda_server_recordset_model_set_field_defined_size (recset, i, defined_size); */
 		gda_data_model_set_column_title (GDA_DATA_MODEL (recset), i, _(fields_desc[i].name));
-		//gda_server_recordset_model_set_field_scale (recset, i, 0);
-		//gda_server_recordset_model_set_field_gdatype (recset, i, fields_desc[i].type);
+/*
+		gda_server_recordset_model_set_field_scale (recset, i, 0);
+		gda_server_recordset_model_set_field_gdatype (recset, i, fields_desc[i].type);
+*/
 	}
 
 	cols = gda_data_model_get_n_columns (GDA_DATA_MODEL (table));
@@ -571,10 +573,12 @@ get_tables (GdaConnection *cnc, GdaXmlDatabase *xmldb)
 	g_return_val_if_fail (GDA_IS_XML_DATABASE (xmldb), NULL);
 
 	recset = GDA_DATA_MODEL_ARRAY (gda_data_model_array_new (1));
-	//gda_server_recordset_model_set_field_defined_size (recset, 0, 256);
+	/* gda_server_recordset_model_set_field_defined_size (recset, 0, 256); */
 	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 0, _("Name"));
-	//gda_server_recordset_model_set_field_scale (recset, 0, 0);
-	//gda_server_recordset_model_set_field_gdatype (recset, 0, GDA_TYPE_STRING);
+/*
+	gda_server_recordset_model_set_field_scale (recset, 0, 0);
+	gda_server_recordset_model_set_field_gdatype (recset, 0, GDA_TYPE_STRING);
+*/
 
 	tables = gda_xml_database_get_tables (xmldb);
 	if (tables != NULL) {
@@ -608,10 +612,12 @@ get_types (GdaConnection *cnc)
 
 	/* create the recordset */
 	recset = GDA_DATA_MODEL_ARRAY (gda_data_model_array_new (1));
-	//gda_server_recordset_model_set_field_defined_size (recset, 0, 32);
+	/* gda_server_recordset_model_set_field_defined_size (recset, 0, 32); */
 	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 0, _("Name"));
-	//gda_server_recordset_model_set_field_scale (recset, 0, 0);
-	//gda_server_recordset_model_set_field_gdatype (recset, 0, GDA_TYPE_STRING);
+/*
+	gda_server_recordset_model_set_field_scale (recset, 0, 0);
+	gda_server_recordset_model_set_field_gdatype (recset, 0, GDA_TYPE_STRING);
+*/
 
 	/* fill the recordset */
 	add_string_row (recset, "bigint");

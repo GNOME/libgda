@@ -40,8 +40,8 @@
 
 #include "gda-sybase-provider.h"
 
-// share schema queries with freetds provider
-//#include "../freetds/gda-tds-schemas.h"
+/* share schema queries with freetds provider */
+/* #include "../freetds/gda-tds-schemas.h" */
 #include "gda-sybase-schemas.h"
 
 #define GDA_SYBASE_PROVIDER_ID		"GDA sybase provider"

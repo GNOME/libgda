@@ -29,7 +29,7 @@
 #include <libgda/gda-server-provider.h>
 #include <sqlcli1.h>
 #include "gda-ibmdb2-provider.h"
-//#include "gda-ibmdb2-recordset.h"
+/* #include "gda-ibmdb2-recordset.h" */
 
 #define GDA_IBMDB2_PROVIDER_ID          "GDA IBMDB2 provider"
 

@@ -44,7 +44,7 @@ typedef struct _sybase_Types {
   gchar            *name;
   CS_INT           sql_type;
   GdaValueType     gda_type;
-//  sybase_conv_Func conv_sql2gda;
+/*  sybase_conv_Func conv_sql2gda; */
 } sybase_Types;
 
 #define GDA_SYBASE_TYPE_CNT 23

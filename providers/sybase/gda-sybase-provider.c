@@ -189,31 +189,32 @@ void
 gda_sybase_connection_data_free(GdaSybaseConnectionData *sconn)
 {
 	if (sconn) {
-		// if a GdaConnection is associated with the data,
-		// clear the handle
+		/* if a GdaConnection is associated with the data, */
+		/* clear the handle */
 		if (GDA_IS_CONNECTION (sconn->gda_cnc)) {
-			// we do not check if the handle is the same,
-			// because it must be identical (connection_open)
+			/* we do not check if the handle is the same,
+			 * because it must be identical (connection_open)
+			 */
 			g_object_set_data (G_OBJECT (sconn->gda_cnc), 
 			                   OBJECT_DATA_SYBASE_HANDLE, NULL);
-			// is just a reference copy
+			/* is just a reference copy */
 			sconn->gda_cnc = NULL;
 		}
 		if (sconn->server_version) {
 			g_free (sconn->server_version);
 			sconn->server_version = NULL;
 		}
-		// drop command structure
+		/* drop command structure */
 		if (sconn->cmd) {
 			sconn->ret = ct_cmd_drop (sconn->cmd);
 			sconn->cmd = NULL;
 		}
-		// drop connection
+		/* drop connection */
 		if (sconn->connection) {
 			sconn->ret = ct_con_drop (sconn->connection);
 			sconn->connection = NULL;
 		}
-		// exit library and drop context
+		/* exit library and drop context */
 		if (sconn->context) {
 			sconn->ret = ct_exit (sconn->context, CS_UNUSED);
 			sconn->ret = cs_ctx_drop (sconn->context);
@@ -489,7 +490,7 @@ gda_sybase_provider_close_connection (GdaServerProvider *provider,
 	sconn = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_SYBASE_HANDLE);
 	g_return_val_if_fail (sconn != NULL, FALSE);
 
-	// close connection before freeing data
+	/* close connection before freeing data */
 	if (sconn->connection != NULL) {
 		sconn->ret = ct_close(sconn->connection, CS_UNUSED);
 	}
@@ -611,8 +612,9 @@ gda_sybase_provider_process_sql_commands(GList         *reclist,
 		return NULL;
 	}
 
-	// FIXME: ; in values bug
-	//        e.g. SELECT * from x where y LIKE '%foo; bar%'
+	/* FIXME: ; in values bug
+	 *        e.g. SELECT * from x where y LIKE '%foo; bar%'
+	 */
 	arr = g_strsplit (sql, ";", 0);
 	if (arr) {
 		gint n = 0;
@@ -627,7 +629,7 @@ gda_sybase_provider_process_sql_commands(GList         *reclist,
 			}
 
 
-			// execute _single_ sql query (one stmt)
+			/* execute _single_ sql query (one stmt) */
 			scnc->ret = ct_command (scnc->cmd, CS_LANG_CMD,
 			                        arr[n], CS_NULLTERM, CS_UNUSED);
 			if (scnc->ret != CS_SUCCEED) {
@@ -648,17 +650,19 @@ gda_sybase_provider_process_sql_commands(GList         *reclist,
 				return reclist;
 			}
 
-			// now comes the ugly part: 
-			//   dealing with multiple resultsets
+			/* now comes the ugly part: 
+			 *   dealing with multiple resultsets
+			 */
 			
-			// part 1: process results in while-loop
+			/* part 1: process results in while-loop */
 			while ((scnc->rret = ct_results (scnc->cmd,
 			                                 &scnc->res_type
                                                         )
 			       ) == CS_SUCCEED) {
-				// gda_sybase_recordset_new ()
-				// just returns a datamodel, 
-				// if we have a query with results...
+				/* gda_sybase_recordset_new ()
+				 * just returns a datamodel, 
+				 * if we have a query with results...
+				 */
 				recset = gda_sybase_recordset_new (cnc, TRUE);
 				
 				if (GDA_IS_SYBASE_RECORDSET (recset)) {
@@ -668,7 +672,7 @@ gda_sybase_provider_process_sql_commands(GList         *reclist,
 	                        } else {
 				}
 
-				// this is done within gda_sybase_recordset_new()
+				/* this is done within gda_sybase_recordset_new() */
 /*				switch (scnc->res_type) {
 					case CS_ROW_RESULT:
 						break;
@@ -698,7 +702,7 @@ gda_sybase_provider_process_sql_commands(GList         *reclist,
 */
 			}
 
-			// part 2: have a look at the final returncode
+			/* part 2: have a look at the final returncode */
 			switch (scnc->rret) {
 				case CS_END_RESULTS:
 					break;
@@ -723,7 +727,7 @@ gda_sybase_provider_process_sql_commands(GList         *reclist,
 	return reclist;
 }
 
-// Executes a resultless sql statement
+/* Executes a resultless sql statement */
 static gboolean
 gda_sybase_execute_cmd (GdaConnection *cnc, const gchar *sql)
 {
@@ -772,7 +776,7 @@ gda_sybase_execute_cmd (GdaConnection *cnc, const gchar *sql)
 		return FALSE;
 	}
 
-	// proceed result codes, ct_cancel unexpected resultsets
+	/* proceed result codes, ct_cancel unexpected resultsets */
 	while ((scnc->ret = ct_results (scnc->cmd, &res_type)) == CS_SUCCEED) {
 		switch (res_type) {
 			case CS_CMD_SUCCEED:
@@ -798,7 +802,7 @@ gda_sybase_execute_cmd (GdaConnection *cnc, const gchar *sql)
 			default:
 				ret = FALSE;
 		}
-		// cancel all result processing on failure
+		/* cancel all result processing on failure */
 		if (!ret) {
 			scnc->ret = ct_cancel (NULL, scnc->cmd,
 			                       CS_CANCEL_ALL);
@@ -859,7 +863,7 @@ gda_sybase_provider_get_database (GdaServerProvider *provider,
 
 
 	
-//	ret = ct_send(sconn->connection, cmd);
+/*	ret = ct_send(sconn->connection, cmd); */
 
 	sconn->ret = ct_cmd_drop (cmd);
 	if (sconn->ret != CS_SUCCEED) {
@@ -914,7 +918,7 @@ gda_sybase_provider_get_types (GdaConnection *cnc,
 
 			value_list = g_list_append (value_list,
 			               gda_value_new_string (gda_sybase_type_list[i].name));
-			// FIXME: owner
+			/* FIXME: owner */
 	                value_list = g_list_append (value_list,
 			               gda_value_new_string (""));
 	                value_list = g_list_append (value_list, 
@@ -967,8 +971,10 @@ gda_sybase_provider_get_schema (GdaServerProvider *provider,
 			return recset;
 			break;
 		case GDA_CONNECTION_SCHEMA_TYPES:
-//			recset = gda_sybase_execute_query (cnc, TDS_SCHEMA_TYPES);
-//			TDS_FIXMODEL_SCHEMA_TYPES (recset)
+/*
+			recset = gda_sybase_execute_query (cnc, TDS_SCHEMA_TYPES);
+			TDS_FIXMODEL_SCHEMA_TYPES (recset)
+*/
 			recset = gda_sybase_provider_get_types (cnc, params);
 	
 			return recset;
@@ -986,7 +992,7 @@ gda_sybase_provider_get_schema (GdaServerProvider *provider,
 			return recset;
 			break;
 
-		// FIXME: Implement aggregates, indexes, sequences and triggers
+		/* FIXME: Implement aggregates, indexes, sequences and triggers */
 		case GDA_CONNECTION_SCHEMA_AGGREGATES:
 		case GDA_CONNECTION_SCHEMA_INDEXES:
 		case GDA_CONNECTION_SCHEMA_PARENT_TABLES:
@@ -1090,7 +1096,7 @@ gda_sybase_provider_supports (GdaServerProvider *provider,
 		case GDA_CONNECTION_FEATURE_SQL:
 			return TRUE;
 
-	//FIXME: Implement missing 
+	/* FIXME: Implement missing */
 		case GDA_CONNECTION_FEATURE_AGGREGATES:
 		case GDA_CONNECTION_FEATURE_INDEXES:
 		case GDA_CONNECTION_FEATURE_INHERITANCE:

@@ -152,6 +152,6 @@ do_sybase_test (GdaConnection *cnc)
 	g_list_foreach (list, (GFunc) g_object_unref, NULL);
 	g_list_free (list);
 	/* Clean up */
-//	g_print ("\t\tDrop table: %s\n", drop_table (cnc) ? "OK" : "Error");
+/*	g_print ("\t\tDrop table: %s\n", drop_table (cnc) ? "OK" : "Error"); */
 }
 

@@ -37,14 +37,14 @@
 #define LIBGDA_USER_CONFIG_FILE LIBGDA_USER_CONFIG_DIR G_DIR_SEPARATOR_S \
 				"config"
 
-//FIXME: many functions are not thread safe!
+/* FIXME: many functions are not thread safe! */
 
 typedef struct {
     gchar *name;
     gchar *type;
     gchar *value;
-    //gchar *mtime;
-    //gchar *muser;
+    /* gchar *mtime; */
+    /* gchar *muser; */
 } gda_config_entry;
 
 typedef struct {
@@ -217,8 +217,9 @@ gda_config_parse_config_file (gchar *buffer, gint len)
 static gda_config_client *
 get_config_client ()
 {
-	//FIXME: if we're updating or writing config_client,
-	//	 wait until the operation finishes
+	/* FIXME: if we're updating or writing config_client,
+	 *	  wait until the operation finishes
+	 */
 	if (config_client == NULL){
 		gint len;
 		gchar *full_file;

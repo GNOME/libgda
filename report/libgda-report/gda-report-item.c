@@ -496,7 +496,7 @@ gda_report_item_get_child_by_id_internal (xmlNodePtr parent,
 	node = parent->children;
 	while (node != NULL)
 	{
-		// Is this one the node we are searching ?
+		/* Is this one the node we are searching ? */
 		node_id = xmlGetProp(node, "id");
 		if (node_id != NULL) 
 		{
@@ -504,11 +504,11 @@ gda_report_item_get_child_by_id_internal (xmlNodePtr parent,
 				return node;
 		}
 		
-		// Lets try with its children
+		/* Lets try with its children */
 		child = gda_report_item_get_child_by_id_internal (node, id);
 		if (child != NULL) return child;
 		
-		// Then, the next sibling
+		/* Then, the next sibling */
 		node = node->next;
 	}
 	return NULL;

@@ -398,8 +398,8 @@ gda_oracle_set_value (GdaValue *value,
 		break;
 	case GDA_VALUE_TYPE_NUMERIC:
 		numeric.number = ora_value->value;
-		numeric.precision = 5; // FIXME
-		numeric.width = 5; // FIXME
+		numeric.precision = 5; /* FIXME */
+		numeric.width = 5; /* FIXME */
 		gda_value_set_numeric (value, &numeric);
 		break;
 	case GDA_VALUE_TYPE_DATE:
@@ -425,7 +425,7 @@ gda_oracle_set_value (GdaValue *value,
 	case GDA_VALUE_TYPE_TIME:
 		break;
 	case GDA_VALUE_TYPE_BINARY:
-		// FIXME
+		/* FIXME */
 		break;
 	default:
 		gda_value_set_string (value, ora_value->value);

@@ -177,8 +177,8 @@ gda_sybase_make_error (GdaSybaseConnectionData *scnc, gchar *fmt, ...)
 void
 sybase_debug_msg(gchar *fmt, ...)
 {
-// FIXME: remove comment after reviewing error code
-//#ifdef SYBASE_DEBUG
+/* FIXME: remove comment after reviewing error code */
+/* #ifdef SYBASE_DEBUG */
 	va_list args;
 	const size_t buf_size = 4096;
 	char buf[buf_size + 1];
@@ -188,8 +188,8 @@ sybase_debug_msg(gchar *fmt, ...)
 	va_end(args);
 	
 	gda_log_message("Sybase: %s", buf);
-// FIXME: remove comment after reviewing error code
-//#endif
+/* FIXME: remove comment after reviewing error code */
+/* #endif */
 }
 
 void

@@ -120,10 +120,10 @@ gda_select_class_init (GdaSelectClass *klass)
 	parent_class = g_type_class_peek_parent (klass);
 
 	object_class->finalize = gda_select_finalize;
-	// we use the get_n_rows and get_n_columns of the base class
+	/* we use the get_n_rows and get_n_columns of the base class */
 	model_class->describe_column = gda_select_describe_column;
 	model_class->get_row = gda_select_get_row;
-	// we use the get_value_at of the base class
+	/* we use the get_value_at of the base class */
 	model_class->is_editable = gda_select_is_editable;
 	model_class->append_row = gda_select_append_row;
 }

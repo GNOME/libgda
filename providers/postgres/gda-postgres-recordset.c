@@ -147,7 +147,7 @@ get_row (GdaDataModel *model, GdaPostgresRecordsetPrivate *priv, gint rownum)
 	}
 
 	id = g_strdup_printf ("%d", rownum);
-	gda_row_set_id (row, id); // FIXME: by now, the rowid is just the row number
+	gda_row_set_id (row, id); /* FIXME: by now, the rowid is just the row number */
 	g_free (id);
 	return row;
 }
@@ -178,7 +178,7 @@ gda_postgres_recordset_get_row (GdaDataModel *model, gint row)
 	}
 
 	if (row == priv_data->nrows)
-		return NULL; // For the last row don't add an error.
+		return NULL; /* For the last row don't add an error. */
 
 	if (row < 0 || row > priv_data->nrows) {
 		gda_connection_add_error_string (priv_data->cnc,
@@ -218,7 +218,7 @@ gda_postgres_recordset_get_value_at (GdaDataModel *model, gint col, gint row)
 	}
 
 	if (row == priv_data->nrows)
-		return NULL; // For the last row don't add an error.
+		return NULL; /* For the last row don't add an error. */
 
 	if (row < 0 || row > priv_data->nrows) {
 		gda_connection_add_error_string (priv_data->cnc,
@@ -278,12 +278,12 @@ gda_postgres_recordset_describe (GdaDataModel *model, gint col)
 	gda_field_attributes_set_scale (field_attrs, scale);
 	gda_field_attributes_set_gdatype (field_attrs, ftype);
 
-	// PQfsize() == -1 => variable length
+	/* PQfsize() == -1 => variable length */
 	gda_field_attributes_set_defined_size (field_attrs, PQfsize (pg_res, col));
 	gda_field_attributes_set_references (field_attrs, "");
 	gda_field_attributes_set_primary_key (field_attrs, FALSE);
 	gda_field_attributes_set_unique_key (field_attrs, FALSE);
-	//FIXME: set_allow_null?
+	/* FIXME: set_allow_null? */
 
 	return field_attrs;
 }

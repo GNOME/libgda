@@ -55,20 +55,20 @@ gda_freetds_set_gdavalue_by_datetime (GdaValue     *field,
 		g_date_set_dmy (&date, 1, 1, 1900);
 		g_date_add_days (&date, (guint) dt->dtdays);
 
-		realhours = dt->dttime / 1080000; // div (60 * 60 * 300)
+		realhours = dt->dttime / 1080000; /* div (60 * 60 * 300) */
 		timestamp.hour = (gushort) (realhours % 24);
 
-		// this should not happen...
+		/* this should not happen... */
 		if (realhours > 23) {
 			g_date_add_days (&date, (guint) (realhours / 24));
 		}
 		remainder = dt->dttime - (realhours * 1080000);
-		timestamp.minute = (gushort) (remainder / 18000); // (div 60*300)
+		timestamp.minute = (gushort) (remainder / 18000); /* (div 60*300) */
 		remainder = remainder - (timestamp.minute * 18000);
 		timestamp.second = (gushort) (remainder / 300);
 		remainder = remainder - (timestamp.second * 300);
 		
-		// FIXME: What is correct fraction for timestamp?
+		/* FIXME: What is correct fraction for timestamp? */
 		timestamp.fraction = remainder / 3;
 		
 		timestamp.year = g_date_get_year (&date);
@@ -105,7 +105,7 @@ gda_freetds_set_gdavalue_by_datetime4 (GdaValue      *field,
 		timestamp.hour = (gushort) realhours % 24;
 		timestamp.minute = (gushort) (dt4->minutes - (realhours * 60));
 		
-		// this should not happen...
+		/* this should not happen... */
 		if (realhours > 23) {
 			g_date_add_days (&date, (guint) (realhours / 24));
 		}
@@ -118,9 +118,9 @@ gda_freetds_set_gdavalue_by_datetime4 (GdaValue      *field,
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////
-// Public functions
-/////////////////////////////////////////////////////////////////////////////
+/*
+ * Public functions
+ */
 
 const GdaValueType
 gda_freetds_get_value_type (TDSCOLINFO *col)
@@ -199,17 +199,18 @@ gda_freetds_set_gdavalue (GdaValue *field, gchar *val, TDSCOLINFO *col,
 	g_return_if_fail (field != NULL);
 	g_return_if_fail (col != NULL);
 
-	// perhaps remove ifdef later on
-	// tds_cnc is just needed for context structure of 0.6x api for now
+	/* perhaps remove ifdef later on
+	 * tds_cnc is just needed for context structure of 0.6x api for now
+	 */
 #ifdef HAVE_FREETDS_VER0_6X
 	g_return_if_fail (tds_cnc != NULL);
 	g_return_if_fail (tds_cnc->ctx != NULL);
 
-	// make sure conv union is empty
+	/* make sure conv union is empty */
 	memset((void *) &tds_conv, 0, sizeof(tds_conv));
 #endif
 	
-	// Handle null fields
+	/* Handle null fields */
 	if (val == NULL) {
 		gda_value_set_null (field);
 	} else {
@@ -229,7 +230,7 @@ gda_freetds_set_gdavalue (GdaValue *field, gchar *val, TDSCOLINFO *col,
 				                      (gconstpointer ) (&((TDS_VARBINARY *) val)->array),
 						      (glong) ((TDS_VARBINARY *) val)->len);
 				break;
-			// FIXME: TDS_VARCHAR returned for which types?
+			/* FIXME: TDS_VARCHAR returned for which types? */
 			case SYBCHAR:
 			case SYBNVARCHAR:
 			case SYBVARCHAR:
@@ -307,7 +308,7 @@ gda_freetds_set_gdavalue (GdaValue *field, gchar *val, TDSCOLINFO *col,
 				}
 				txt = g_new0 (gchar, col_size);
 
-				// tds_convert api changed to 0.6x
+				/* tds_convert api changed to 0.6x */
 #ifndef HAVE_FREETDS_VER0_6X
 				tds_convert (col->column_type, val,
 				             col->column_size, SYBCHAR,

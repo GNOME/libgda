@@ -176,7 +176,7 @@ gda_command_set_options (GdaCommand *cmd, GdaCommandOptions options)
 		   GDA_COMMAND_OPTION_STOP_ON_ERRORS;
 
 	if ((options & err_mask) == err_mask)
-		return;	// Conflicting options!
+		return;	/* Conflicting options! */
 
 	cmd->options = options;
 }

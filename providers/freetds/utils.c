@@ -61,7 +61,7 @@ gchar
 	g_return_val_if_fail(cmdlist != NULL, NULL);
 
 	while (akt_pos < strlen(cmdlist)) {
-		// assume \ is escape character
+		/* assume \ is escape character */
 		if ((akt_pos == 0) || (cmdlist[akt_pos - 1] != esc)) {
 			if ((single_quotes == 0) & (cmdlist[akt_pos] == ';')) {
 				if (akt_pos > last_pos) {
@@ -72,8 +72,8 @@ gchar
 				}
 				last_pos = akt_pos + 1;
 			}
-			// semicolons in quotes will not split as they are
-			// part of the query
+			/* semicolons in quotes will not split as they are */
+			/* part of the query */
 			if (cmdlist[akt_pos] == '\'') {
 				single_quotes = 1 - single_quotes;
 			}

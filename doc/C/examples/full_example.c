@@ -370,9 +370,9 @@
       gda_init ("TestGDA", "0.1", argc, argv);
     
       save_ds ();
-      //  remove_ds();
+      /*  remove_ds(); */
     
       gda_main_run ((GdaInitFunc) do_stuff, (gpointer) NULL);
-      //  do_stuff();
+      /*  do_stuff(); */
     
     }

@@ -1219,7 +1219,7 @@ get_postgres_indexes (GdaConnection *cnc, GdaParameterList *params)
 
 	recset = GDA_DATA_MODEL (reclist->data);
 	g_list_free (reclist);
-	// Set it here instead of the SQL query to allow i18n
+	/* Set it here instead of the SQL query to allow i18n */
 	gda_data_model_set_column_title (recset, 0, _("Indexes"));
 
 	return recset;
@@ -1336,7 +1336,7 @@ get_postgres_triggers (GdaConnection *cnc, GdaParameterList *params)
 
 	recset = GDA_DATA_MODEL (reclist->data);
 	g_list_free (reclist);
-	// Set it here instead of the SQL query to allow i18n
+	/* Set it here instead of the SQL query to allow i18n */
 	gda_data_model_set_column_title (recset, 0, _("Triggers"));
 
 	return recset;
@@ -1467,7 +1467,7 @@ gda_postgres_get_ref_data (GdaPostgresConnectionData *priv_data, const gchar *tb
 	PGresult *pg_ref;
 	gint lentblname;
 
-	// WARNING: don't know a better way to get references :-(
+	/* WARNING: don't know a better way to get references :-( */
 	lentblname = strlen (tblname);
 
 	if (priv_data->version_float < 7.3) 
@@ -1764,7 +1764,7 @@ get_postgres_databases (GdaConnection *cnc, GdaParameterList *params)
 
 	recset = GDA_DATA_MODEL (reclist->data);
 	g_list_free (reclist);
-	// Set it here instead of the SQL query to allow i18n
+	/* Set it here instead of the SQL query to allow i18n */
 	gda_data_model_set_column_title (recset, 0, _("Databases"));
 
 	return recset;
@@ -1799,7 +1799,7 @@ get_postgres_users (GdaConnection *cnc, GdaParameterList *params)
 
 	recset = GDA_DATA_MODEL (reclist->data);
 	g_list_free (reclist);
-	// Set it here instead of the SQL query to allow i18n
+	/* Set it here instead of the SQL query to allow i18n */
 	gda_data_model_set_column_title (recset, 0, _("Users"));
 
 	return recset;

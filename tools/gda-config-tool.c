@@ -59,8 +59,8 @@ typedef struct {
  */
 static const gchar *prompt_gda = "gda> ";
 static const gchar *prompt_config = "config> ";
-//static const gchar *prompt_query = "query> ";
-//static const gchar *prompt_query_cont = "-> ";
+/* static const gchar *prompt_query = "query> "; */
+/* static const gchar *prompt_query_cont = "-> "; */
 
 enum {
 	ACTION_NONE = 0,
@@ -610,7 +610,7 @@ config_add_section (const gchar *line)
 	}
 	
 	section = g_new0 (gda_config_section, 1);
-	section->path = section_name; // no need to free it
+	section->path = section_name; /* no need to free it */
 	section->entries = NULL;
 	config_data = g_list_append (config_data, section);
 	current_section = g_list_last (config_data);
@@ -1333,7 +1333,7 @@ batch_options ()
 	CmdResult result;
 	gchar *line;
 
-	// don't care about return value of this one
+	/* don't care about return value of this one */
 	(void) config_load_file (cmdArgs.config_file);
 	
 	line = g_strdup_printf ("\"/apps/libgda/Datasources/%s\"", cmdArgs.name);

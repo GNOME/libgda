@@ -61,8 +61,9 @@ GType gda_report_item_get_type (void);
 GdaReportItem *gda_report_item_new (GdaReportValid *valid,
 				    const gchar *name);
 
-// GdaReportItem *gda_report_item_new_child (GdaReportItem *parent, 
-//				          const gchar *name);
+/* GdaReportItem *gda_report_item_new_child (GdaReportItem *parent, 
+				          const gchar *name);
+*/
 
 GdaReportItem *gda_report_item_new_from_dom (xmlNodePtr node);
 

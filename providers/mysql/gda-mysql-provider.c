@@ -1118,14 +1118,18 @@ get_table_fields (GdaConnection *cnc, GdaParameterList *params)
 	/* fill in the recordset to be returned */
 	recset = (GdaDataModelArray *) gda_data_model_array_new (9);
 	for (r = 0; r < sizeof (fields_desc) / sizeof (fields_desc[0]); r++) {
-		//gint defined_size =  (fields_desc[r].type == GDA_VALUE_TYPE_STRING) ? 64 : 
-		//	(fields_desc[r].type == GDA_VALUE_TYPE_INTEGER) ? sizeof (gint) : 1;
+/*
+		gint defined_size =  (fields_desc[r].type == GDA_VALUE_TYPE_STRING) ? 64 : 
+			(fields_desc[r].type == GDA_VALUE_TYPE_INTEGER) ? sizeof (gint) : 1;
+*/
 
-		//gda_server_recordset_model_set_field_defined_size (recset, r, defined_size);
+		/* gda_server_recordset_model_set_field_defined_size (recset, r, defined_size); */
 		gda_data_model_set_column_title (GDA_DATA_MODEL (recset), r,
 						_(fields_desc[r].name));
-		//gda_server_recordset_model_set_field_scale (recset, r, 0);
-		//gda_server_recordset_model_set_field_gdatype (recset, r, fields_desc[r].type);
+/*
+		gda_server_recordset_model_set_field_scale (recset, r, 0);
+		gda_server_recordset_model_set_field_gdatype (recset, r, fields_desc[r].type);
+*/
 	}
 	
 	for (r = 0; r < rows; r++) {

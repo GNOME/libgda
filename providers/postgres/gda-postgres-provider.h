@@ -48,7 +48,7 @@ struct _GdaPostgresProviderClass {
 	GdaServerProviderClass parent_class;
 };
 
-// Connection data.
+/* Connection data. */
 typedef struct {
 	gchar              *name;
 	Oid                 oid;
