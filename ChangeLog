@@ -1,3 +1,7 @@
+2001-08-27  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* configure.in: call gnome-autogen.sh
+
 2001-08-17  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* configure.in: use AM_GLIB_GNU_GETTEXT

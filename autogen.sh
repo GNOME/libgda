@@ -14,4 +14,8 @@ PKG_NAME="GNU Data Access"
     exit 1
 }
 
-. $srcdir/macros/autogen.sh
+gnome_autogen=`which gnome-autogen.sh`
+test -z "$gnome_autogen"
+
+USE_GNOME2_MACROS=1 . $gnome_autogen
+
