@@ -53,6 +53,16 @@ dnl ******************************
 AC_PATH_PROG(GLIB_GENMARSHAL, glib-genmarshal)
 
 dnl ******************************
+dnl Scrollkeeper
+dnl ******************************
+AC_PATH_PROG(SCROLLKEEPER_CONFIG, scrollkeeper-config,no)
+if test x$SCROLLKEEPER_CONFIG = xno; then
+   AC_MSG_ERROR(Couldn't find scrollkeeper-config -- please install the scrollkeeper package)
+fi
+SCROLLKEEPER_LOCALSTATE_DIR=`scrollkeeper-config --pkglocalstatedir`
+AC_SUBST(SCROLLKEEPER_LOCALSTATE_DIR)
+
+dnl ******************************
 dnl Translations
 dnl ******************************
 GETTEXT_PACKAGE=libgda-2
@@ -641,6 +651,7 @@ report/libgda-report/Makefile
 tools/Makefile
 testing/Makefile
 doc/Makefile
+doc/libgda-C.omf
 doc/C/Makefile
 data/Makefile
 stamp.h

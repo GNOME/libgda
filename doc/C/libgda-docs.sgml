@@ -2,6 +2,7 @@
 
 <!ENTITY LIBGDA          "<application>libgda</application>">
 <!ENTITY GNOMEDB         "<application>GNOME-DB</application>">
+<!ENTITY igalia          '<ulink url="http://www.igalia.com">Igalia, S.L.</ulink>'>
 <!ENTITY API             "<acronym>API</acronym>">
 <!ENTITY DBMS            "<acronym>DBMS</acronym>">
 <!ENTITY DSN             "<acronym>DSN</acronym>">
@@ -25,6 +26,8 @@
 <!ENTITY GDADATAMODEL    "<xref linkend='libgda-GdaDataModel'>">
 <!ENTITY GDADATAMODELARRAY "<xref linkend='libgda-GdaDataModelArray'>">
 <!ENTITY GDADATAMODELHASH "<xref linkend='libgda-GdaDataModelHash'>">
+<!ENTITY fullexample SYSTEM "examples/full_example.c" CDATA linespecific>
+<!--<!entity migration.sgml system "migration.sgml">-->
 <!ENTITY libgda-batch SYSTEM "sgml/gda-batch.sgml">
 <!ENTITY libgda-client SYSTEM "sgml/gda-client.sgml">
 <!ENTITY libgda-command SYSTEM "sgml/gda-command.sgml">
@@ -109,6 +112,26 @@
 	  <address><email>zeroone@worldonline.co.za</email></address>
 	</affiliation>
 	<contrib>GDP compliancy, FDL, added markup, English and syntax
+        </contrib>
+      </author>
+      <author>
+	<firstname>Xabier</firstname>
+	<surname>Rodríguez Calvar</surname>
+	<affiliation>
+          <orgname>&igalia;</orgname>
+	  <address><email>xrcalvar@igalia.com</email></address>
+	</affiliation>
+	<contrib>How to begin
+        </contrib>
+      </author>
+      <author>
+	<firstname>José</firstname>
+	<surname>Dapena Paz</surname>
+	<affiliation>
+          <orgname>&igalia;</orgname>
+	  <address><email>jdapena@igalia.com</email></address>
+	</affiliation>
+	<contrib>Some examples
         </contrib>
       </author>
     </authorgroup>
@@ -347,6 +370,50 @@
         send an email to <email>gnome-db-list-request@gnome.org</email> with 
         the subject SUBSCRIBE, if you are not already subscribed).
       </para>
+      <sect2 ID="installation-debian">
+        <title>Debian installation</title>
+          <para>
+            If you are using <ULINK URL="http://www.debian.org">Debian</ULINK> you
+	    will need to install a few packages in the following way:
+	  </para>
+          <PROGRAMLISTING>
+            <SYSTEMITEM CLASS="prompt">$</SYSTEMITEM> <USERINPUT> apt-get install <EMPHASIS>package-names</EMPHASIS></USERINPUT>
+          </PROGRAMLISTING>
+          <para>
+            These are the packages you will need for this:
+          </para>
+          <ITEMIZEDLIST>
+            <LISTITEM>libgda2-1</LISTITEM>
+            <LISTITEM>libgda2-common</LISTITEM>
+            <LISTITEM>libgda2-dev</LISTITEM>
+            <LISTITEM>libgda2-doc</LISTITEM>
+            <LISTITEM>libgda2-dbg</LISTITEM>
+          </ITEMIZEDLIST>
+          <para>
+            You can obtain information about any packages with:
+          </para>
+          <PROGRAMLISTING>
+            <SYSTEMITEM CLASS="prompt">$</SYSTEMITEM> <USERINPUT> apt-cache show <EMPHASIS>package-names</EMPHASIS></USERINPUT>
+          </PROGRAMLISTING>
+          <para>
+            If you cannot find this packages, you must include in
+            <filename class="directory">/etc/apt/sources.list</filename>
+            a line like this:
+          </para>
+          <PROGRAMLISTING>
+            deb http://gluck.debian.org/~kov/debian woody gnome2
+          </PROGRAMLISTING>
+      </sect2>
+    </sect1>
+    <sect1 ID="compiling">
+      <title>Compiling with the library</title>
+        <para>
+          To compile you will need to set the C flags and to link the library, so we recommend
+          to use the <EMPHASIS>pkg-config</EMPHASIS> command.
+        </para>
+        <PROGRAMLISTING>
+          <SYSTEMITEM CLASS="prompt">$</SYSTEMITEM> <USERINPUT> gcc -o main `pkg-config --cflags --libs libgda` main.c</USERINPUT>
+        </PROGRAMLISTING>
     </sect1>
     <sect1 id="installation-configuring">
       <title>Configuring</title>
@@ -359,7 +426,8 @@
         <title>Configuration for development</title>
         <para>
           If you want to develop applications using &LIBGDA;, you should 
-          install the libgda-dev[el] package if you do a &RPM; or Debian-based
+          install the libgda-dev[el] package if you do a &RPM; or <LINK
+	  LINKEND="installation-debian">Debian-based</LINK>
           installation. If you compiled the source code, development files are
           installed in your system.
         </para>
@@ -373,6 +441,12 @@
           <envar>LD_LIBRARY_PATH</envar> (or 
           <filename>/etc/ld.so.conf</filename> file).
         </para>
+        <para>
+          You have to include a headers file, and it is:
+        </para>
+        <programlisting>
+#include &lt;libgda/libgda.h&gt;
+        </programlisting>
       </sect2>
       <sect2 id="installation-client">
         <title>Configuration for accessing a database</title>
@@ -499,6 +573,165 @@
 	    </calloutlist>
 	  </programlistingco>
 	</para>
+        <para>
+          The &XML; configuration file (<filename
+	  class="directory">~/.libgda/config</filename>) is not
+	  recommended to be modificated by hand and, about our example, it is
+	  something like this:
+        </para>
+	<programlisting>
+&lt;?xml version="1.0"?&gt;
+&lt;libgda-config&gt;
+  &lt;section path="/apps/libgda/Datasources/sales"&gt;
+    &lt;entry name="DSN" type="string" value="PORT=1111;DATABASE=test;HOST=localhost"/&gt;
+    &lt;entry name="Description" type="string" value="MySQL Test Database in native mode"/&gt;
+    &lt;entry name="Password" type="string" value="password"/&gt;
+    &lt;entry name="Provider" type="string" value="MySQL"/&gt;
+    &lt;entry name="Username" type="string" value="username"/&gt;
+  &lt;/section&gt;
+&lt;/libgda-config&gt;
+        </programlisting>
+        <sect3 ID="data-sources-API-functions">
+        <title>Managing data sources with API functions</title>
+          <sect4>
+            <title>Create data sources</title>
+            <para>
+                      To create a data source you must use the function <LINK
+              LINKEND="gda-config-save-data-source"><EMPHASIS>gda-config-save-data-source ()
+              </EMPHASIS></LINK>
+            </para>
+            <para>
+                      Here you see how to create a data source named
+              <EMPHASIS>foo_ds</EMPHASIS>. If you do not need to give an username or password to
+              enter the database, you could put <EMPHASIS>NULL</EMPHASIS>.
+            </para>
+            <programlisting>
+            gda_config_save_data_source ("foo_ds", "PostgreSQL", "DATABASE=foo_db",
+                                         "description of foo_ds", "foo_username, "foo_password");
+            gda_config_save_data_source ("other_foo_ds", "MySQL", "DATABASE=other_foo_db,HOST=db.foo.com",
+                                         "description of other_foo_ds", "foo", NULL);
+            </programlisting>
+            <para>
+              For more details about provider specific information see in the section about
+              <LINK LINKEND="installation-provider">providers specific information</LINK>.
+            </para>
+          </sect4>
+          <sect4>
+            <title>Removing data sources</title>
+            <para>
+                      To remove a data source you must use the function <LINK
+              LINKEND="gda-config-remove-data-source"><EMPHASIS>gda-config-remove-data-source ()
+              </EMPHASIS></LINK>
+            </para>
+            <para>
+                      Here you see how to remove a data source named
+              <EMPHASIS>foo_ds</EMPHASIS>.
+            </para>
+            <programlisting>
+            gda_config_remove_data_source("foo_ds");
+            </programlisting>
+          </sect4>
+          <sect4>
+            <title>Listing avaliable data sources</title>
+            <para>
+                      To list avaliable data sources you must use the function <LINK
+              LINKEND="gda-config-get-data-source-list"><EMPHASIS>gda_config_get_data_source_list ()
+              </EMPHASIS></LINK>
+            </para>
+            <para>
+              Here you see a function which lists the avaliable data sources.
+            </para>
+            <PROGRAMLISTINGCO>
+              <AREASPEC UNITS="LINECOLUMN">
+                <AREA ID="gda-config-get-data-source-list-1" COORDS="8 1">
+                <AREA ID="gda-config-get-data-source-list-2" COORDS="21 1">
+              </AREASPEC>
+              <programlisting>
+              void
+              list_datasources (void)
+              {
+                GList *ds_list;
+                GList *node;
+                GdaDataSourceInfo *info;
+              
+                ds_list = gda_config_get_data_source_list ();
+              
+                g_print ("\n");
+                for (node = g_list_first (ds_list); node != NULL; node = g_list_next (node))
+                  {
+                    info = (GdaDataSourceInfo *) node->data;
+              
+                    g_print
+                      ("NAME: %s PROVIDER: %s CNC: %s DESC: %s USER: %s PASSWORD: %s\n",
+                       info->name, info->provider, info->cnc_string, info->description,
+                       info->username, info->password);
+              
+                  }
+                g_print ("\n");
+              
+                gda_config_free_data_source_list (ds_list);
+              
+              }
+              </programlisting>
+              <CALLOUTLIST>
+                <CALLOUT AREAREFS="gda-config-get-data-source-list-1">
+                  <PARA>Our function.</PARA>
+                </CALLOUT>
+                <CALLOUT AREAREFS="gda-config-get-data-source-list-2">
+                  <PARA>Note that you must free the list when you finish using it.</PARA>
+                </CALLOUT>
+              </CALLOUTLIST>
+            </PROGRAMLISTINGCO>
+          </sect4>
+          <sect4>
+            <title>Listing avaliable providers</title>
+            <para>
+              To list the avaliable data sources you must use the function <LINK
+              LINKEND="gda-config-get-provider-list"><EMPHASIS>gda_config_get_provider_list ()
+              </EMPHASIS></LINK>
+            </para>
+            <para>
+              Here you see a function which lists avaliable providers.
+            </para>
+            <PROGRAMLISTINGCO>
+              <AREASPEC UNITS="LINECOLUMN">
+                <AREA ID="gda-config-get-provider-list-1" COORDS="8 1">
+                <AREA ID="gda-config-get-provider-list-2" COORDS="19 1">
+              </AREASPEC>
+              <programlisting>
+              void
+              list_providers (void)
+              {
+                GList *prov_list;
+                GList *node;
+                GdaProviderInfo *info;
+              
+                prov_list = gda_config_get_provider_list ();
+              
+                for (node = g_list_first (prov_list); node != NULL;
+                     node = g_list_next (node))
+                  {
+                    info = (GdaProviderInfo *) node->data;
+              
+                    g_print ("ID: %s\n", info->id);
+              
+                  }
+              
+                gda_config_free_provider_list (prov_list);
+              
+              }
+              </programlisting>
+              <CALLOUTLIST>
+                <CALLOUT AREAREFS="gda-config-get-provider-list-1">
+                  <PARA>Our function.</PARA>
+                </CALLOUT>
+                <CALLOUT AREAREFS="gda-config-get-provider-list-2">
+                  <PARA>Note that you must free the list when you finish using it.</PARA>
+                </CALLOUT>
+              </CALLOUTLIST>
+            </PROGRAMLISTINGCO>
+          </sect4>
+        </sect3>
       </sect2>
       <sect2 id="installation-provider">
         <title>Provider's specific information</title>
@@ -710,7 +943,872 @@
       </sect2>
     </sect1>
   </chapter>
-  
+  <chapter ID="connecting">
+    <title>Beginning</title>
+    <sect1 ID="initializing">
+      <title>Initializing</title>
+      <para>
+        First of all you have to initialize the gda library, i.e. to call the
+        <LINK LINKEND="gda-init"><EMPHASIS>gda_init ()</EMPHASIS></LINK> function.
+      </para>
+      <programlisting>
+        gda_init ("TestGDA", "0.1", argc, argv);
+      </programlisting>
+      <para>
+        After initializing you can work as usual or make a function with the whole
+        stuff, calling <LINK LINKEND="gda-main-run">gda_main_run()</LINK>. Note that
+        if you use this way you will need to call <LINK
+        LINKEND="gda-main-quit">gda_main_quit()</LINK> in order to finish the program.
+      </para>
+      <PROGRAMLISTING>
+      void
+      do_stuff ()
+      {
+        GdaClient *client;
+        GdaConnection *connection;
+      
+        list_providers ();
+        list_datasources ();
+      
+        client = gda_client_new ();
+      
+        g_print ("CONNECTING\n");
+        connection = gda_client_open_connection (client, "calvaris", NULL, NULL);
+        g_print ("CONNECTED\n");
+      
+        proving_errors (connection);
+      
+        process_accounts(connection);
+      
+        process_accounts2(connection);
+      
+        gda_client_close_all_connections (client);
+      
+        gda_main_quit();
+      }
+      
+      
+      int
+      main (int argc, char **argv)
+      {
+      
+        g_print ("STARTING\n");
+        gda_init ("TestGDA", "0.1", argc, argv);
+      
+        save_ds ();
+        //  remove_ds();
+      
+        gda_main_run ((GdaInitFunc) do_stuff, (gpointer) NULL);
+        //  do_stuff();
+      }
+      </PROGRAMLISTING>
+    </sect1>
+    <sect1 ID="connections">
+      <title>Connecting</title>
+      <para>
+                To connect you need to use two functions. We use
+        <LINK LINKEND="gda-client-new"><EMPHASIS>gda_client_new ()</EMPHASIS></LINK>
+        to create a connection pool and use
+        <LINK LINKEND="gda-client-open-connection"><EMPHASIS>gda_client_open_connection ()</EMPHASIS></LINK>
+        to create the specific connections to the different data sources.
+      </para>
+      <PROGRAMLISTINGCO>
+        <AREASPEC UNITS="LINECOLUMN">
+          <AREA ID="connecting-1" COORDS="10 1">
+          <AREA ID="connecting-2" COORDS="13 1">
+          <AREA ID="connecting-3" COORDS="20 1">
+        </AREASPEC>
+        <programlisting>
+        void
+        do_stuff ()
+        {
+          GdaClient *client;
+          GdaConnection *connection;
+        
+          list_providers ();
+          list_datasources ();
+        
+          client = gda_client_new ();
+        
+          g_print ("CONNECTING\n");
+          connection = gda_client_open_connection (client, "calvaris", NULL, NULL);
+          g_print ("CONNECTED\n");
+        
+          proving_errors (connection);
+        
+          process_accounts(connection);
+        
+          gda_client_close_all_connections (client);
+        
+        }
+        </programlisting>
+        <CALLOUTLIST>
+          <CALLOUT AREAREFS="connecting-1">
+            <PARA>Creates the connection pool.</PARA>
+          </CALLOUT>
+          <CALLOUT AREAREFS="connecting-2">
+            <para>
+              Creates the connection to calvaris data source with the default username and
+              password you have specify when
+              <LINK LINKEND="installation-client">creating the data source</LINK>. However, you
+              can specify them if you want.
+            </para>
+          </callout>
+          <CALLOUT AREAREFS="connecting-3">
+            <para>
+              It's a good practice to close connections when you finish using them. It
+              doesn't mean that you must close them each time you use them. It's better
+              open the connections when program starts and use them during the whole
+              execution.
+            </para>
+          </callout>
+        </CALLOUTLIST>
+      </PROGRAMLISTINGCO>
+    </sect1>
+  </chapter>
+  <chapter ID="processing-queries">
+    <title>Processing queries</title>
+    <sect1>
+      <title>Executing sentences</title>
+      <sect2 ID="building-commands">
+        <title>Building commands</title>
+        <para>
+          Before invoking a query you have to build the structure containing the
+          command and you can do this with <LINK LINKEND="gda-command-new">
+          <EMPHASIS>gda_command_new ()</EMPHASIS></LINK>.
+        </para>
+        <para>
+          The command type we most commonly use is <LINK
+          LINKEND="GdaCommandType">GDA_COMMAND_TYPE_SQL</LINK> because we will only
+          focus on &SQL; queries<footnote>There are other command types, as &XML; and so on.
+          </footnote>
+        </para>
+        <PROGRAMLISTINGCO>
+          <AREASPEC UNITS="LINECOLUMN">
+            <AREA ID="GdaCommandOptions-1" COORDS="2 1">
+            <AREA ID="GdaCommandOptions-2" COORDS="3 1">
+          </AREASPEC>
+          <programlisting>
+          typedef enum {
+                  GDA_COMMAND_OPTION_IGNORE_ERRORS  = 1,
+                  GDA_COMMAND_OPTION_STOP_ON_ERRORS = 1 &lt;&lt; 1,
+                  GDA_COMMAND_OPTION_BAD_OPTION     = 1 &lt;&lt; 2
+          } <LINK LINKEND="GdaCommandOptions">GdaCommandOptions</LINK>;
+          </programlisting>
+          <CALLOUTLIST>
+            <CALLOUT AREAREFS="GdaCommandOptions-1">
+              <PARA>
+                        Ignores all errors and executes all sentences returning data models.
+                For failed sentences, it returns an empty data model.
+              </PARA>
+            </CALLOUT>
+            <CALLOUT AREAREFS="GdaCommandOptions-2">
+              <para>
+                Stops when finding and error and doesn't return data models.
+              </para>
+            </callout>
+          </CALLOUTLIST>
+        </PROGRAMLISTINGCO>
+        <para>
+          Here you see an example of creating a command:
+        </para>
+        <PROGRAMLISTINGCO>
+          <AREASPEC UNITS="LINECOLUMN">
+            <AREA ID="gda-command-new-1" COORDS="7 1">
+            <AREA ID="gda-command-new-2" COORDS="8 1">
+            <AREA ID="gda-command-new-3" COORDS="10 1">
+          </AREASPEC>
+          <programlisting>
+          gint
+          execute_sql_non_query (GdaConnection *connection, const gchar * buffer)
+          {
+            GdaCommand *command;
+            gint number;
+          
+            command = gda_command_new (buffer, GDA_COMMAND_TYPE_SQL, GDA_COMMAND_OPTION_STOP_ON_ERRORS);
+            number  = gda_connection_execute_non_query (connection, command, NULL);
+          
+            gda_command_free (command);
+          
+            return (number);
+          }
+          </programlisting>
+          <CALLOUTLIST>
+            <CALLOUT AREAREFS="gda-command-new-1">
+              <PARA>
+                Our function. You can give it several comma-separated sentences.
+              </PARA>
+            </CALLOUT>
+            <CALLOUT AREAREFS="gda-command-new-2">
+              <para>
+                We will see it <LINK LINKEND="making-queries">later</LINK>.
+              </para>
+            </callout>
+            <CALLOUT AREAREFS="gda-command-new-3">
+              <para>
+                It is a good practice to free the commands.
+              </para>
+            </callout>
+          </CALLOUTLIST>
+        </PROGRAMLISTINGCO>
+      </sect2>
+      <sect2 ID="making-queries">
+        <title>Making <EMPHASIS>non queries</EMPHASIS></title>
+        <para>
+          <EMPHASIS>Non queries</EMPHASIS> are queries that does not return data, only the
+          number of rows affected, as a DELETE or an UPDATE. We use <LINK
+          LINKEND="gda-connection-execute-non-query"><EMPHASIS>
+          gda_connection_execute_non_query()</EMPHASIS></LINK>
+        </para>
+        <programlisting>
+        gint
+        execute_sql_non_query (GdaConnection *connection, const gchar * buffer)
+        {
+          GdaCommand *command;
+          gint number;
+        
+          command = gda_command_new (buffer, GDA_COMMAND_TYPE_SQL, GDA_COMMAND_OPTION_STOP_ON_ERRORS);
+          number  = gda_connection_execute_non_query (connection, command, NULL);
+        
+          gda_command_free (command);
+        
+          return (number);
+        }
+        </programlisting>
+      </sect2>
+      <sect2 ID="normal-queries">
+        <title>Making normal queries</title>
+        <para>
+          Normal queries are queries that return data (<LINK
+          LINKEND="data-model">data models</LINK>). You have two ways to do this:
+        </para>
+        <ITEMIZEDLIST>
+          <LISTITEM>
+            <LINK LINKEND="gda-connection-execute-single-command">
+              gda_data_model_execute_single_command()</LINK>
+          </LISTITEM>
+          <LISTITEM>
+            <LINK LINKEND="gda-connection-execute-command">
+              gda_data_model_execute_command()</LINK>
+          </LISTITEM>
+        </ITEMIZEDLIST>
+        <para>
+          You can use the first way when you want to invoke only a single command.
+          Second way is used to execute several comma-separated sentences. It is recommended
+          to use <LINK LINKEND="gda-connection-execute-single-command">
+          gda_connection_execute_single_command ()</LINK>. Here you see an
+          example:
+        </para>
+        <PROGRAMLISTINGCO>
+          <AREASPEC UNITS="LINECOLUMN">
+            <AREA ID="normal-query-1" COORDS="13 1">
+            <AREA ID="normal-query-2" COORDS="15 1">
+          </AREASPEC>
+          <programlisting>
+          gboolean
+          execute_sql_command (GdaConnection *connection, const gchar * buffer)
+          {
+            GdaCommand *command;
+            GList *list;
+            GList *node;
+            gboolean errors=FALSE;
+          
+            GdaDataModel *dm;
+          
+          
+            command = gda_command_new (buffer, GDA_COMMAND_TYPE_SQL, GDA_COMMAND_OPTION_STOP_ON_ERRORS);
+            list = gda_connection_execute_command (connection, command, NULL);
+            if (list!=NULL)
+              for (node=g_list_first(list); node != NULL; node=g_list_next(node))
+                {
+                  dm=(GdaDataModel *) node->data;
+                  if (dm == NULL)
+                    {
+                      errors=TRUE;
+                    }
+                  else
+                    {
+                      show_table (dm);
+                      g_object_unref(dm);
+                    }
+                }
+            else
+              {
+                errors=TRUE;
+              }
+            gda_command_free (command);
+          
+            return (errors);
+          }
+          </programlisting>
+          <CALLOUTLIST>
+            <CALLOUT AREAREFS="normal-query-1">
+              <PARA>
+                Executes de query and obtains a list of <LINK LINKEND="data-model">data models</LINK>
+              </PARA>
+            </CALLOUT>
+            <CALLOUT AREAREFS="normal-query-2">
+              <PARA>
+                Loop for moving through the list of data models. If you use <LINK
+                LINKEND="gda-connection-execute-single-command">
+                gda_connection_execute_single_command()</LINK>, you should not need to use a loop,
+                because this function would return a <LINK LINKEND="data-model">data model</LINK>.
+              </PARA>
+            </CALLOUT>
+          </CALLOUTLIST>
+        </PROGRAMLISTINGCO>
+      </sect2>
+      </sect1>
+      
+    <sect1 ID="data-model">
+      <title>Managing <EMPHASIS>data models</EMPHASIS></title>
+      <para>
+        Each time we execute a normal query, we will obtain a <LINK
+        LINKEND="libgda-GdaDataModel"><EMPHASIS>GdaDataModel
+        </EMPHASIS></LINK> object, which is the way to see what the query returned. As
+        <LINK
+        LINKEND="libgda-GdaDataModel">GdaDataModel</LINK> is an object, we can manage it with <LINK
+        LINKEND="libgda-GdaDataModel">GdaDataModel</LINK> class.
+      </para>
+      <para>
+        Before continuing, we must say that it is possible to modify a data model, but as we
+        are accessing using &SQL;, it is not recommended to modify it, so modifications on the
+        database must be done using &SQL;.
+      </para>
+      <para>
+        Let's see the functions we need:
+      </para>
+      <ITEMIZEDLIST>
+        <LISTITEM>
+          <LINK LINKEND="gda-data-model-get-n-rows">gda_data_model_get_n_rows()</LINK>
+        </LISTITEM>
+        <LISTITEM>
+          <LINK LINKEND="gda-data-model-get-n-columns">gda_data_model_get_n_columns()</LINK>
+        </LISTITEM>
+        <LISTITEM>
+          <LINK LINKEND="gda-data-model-describe-column">gda_data_model_describe_column()</LINK>
+        </LISTITEM>
+        <LISTITEM>
+          <LINK LINKEND="gda-data-model-get-column-title">gda_data_model_get_column_title()</LINK>
+        </LISTITEM>
+        <LISTITEM>
+          <LINK LINKEND="gda-data-model-get-column-position">gda_data_model_get_column_position()</LINK>
+        </LISTITEM>
+        <LISTITEM>
+          <LINK LINKEND="gda-data-model-get-row">gda_data_model_get_row()</LINK>
+        </LISTITEM>
+        <LISTITEM>
+          <LINK LINKEND="gda-data-model-get-value-at">gda_data_model_get_value_at()</LINK>
+        </LISTITEM>
+        <LISTITEM>
+          <LINK LINKEND="gda-row-get-value">gda_row_get_value()</LINK>
+        </LISTITEM>
+      </ITEMIZEDLIST>
+      <para>
+        This functions are very easy to use, so let's see some clear 
+        examples:
+      </para>
+      <sect2>
+        <title>Example using direct cell access</title>
+        <para>
+          This function accesses the data model by directly accessing cells (using
+          <LINK LINKEND="gda-data-model-get-value-at">gda_data_model_get_value_at ()
+          </LINK>)
+        </para>
+        <PROGRAMLISTINGCO>
+          <AREASPEC UNITS="LINECOLUMN">
+            <AREA ID="data-model-1-1" COORDS="8 1">
+            <AREA ID="data-model-1-2" COORDS="13 1">
+            <AREA ID="data-model-1-3" COORDS="18 1">
+          </AREASPEC>
+          <programlisting>
+          void
+          show_table (GdaDataModel * dm)
+          {
+            gint row_id;
+            gint column_id;
+            GdaValue *value;
+          
+            for (column_id = 0; column_id < gda_data_model_get_n_columns (dm);
+                 column_id++)
+              g_print("%s\t",gda_data_model_get_column_title (dm, column_id));
+            g_print("\n");
+          
+            for (row_id = 0; row_id < gda_data_model_get_n_rows (dm); row_id++)
+              {
+                for (column_id = 0; column_id < gda_data_model_get_n_columns (dm);
+                     column_id++)
+                  {
+                    value =
+                      (GdaValue *) gda_data_model_get_value_at (dm, column_id, row_id);
+                    g_print ("%s\t", gda_value_stringify (value));
+                  }
+                g_print("\n");
+              }
+          }
+          </programlisting>
+          <CALLOUTLIST>
+            <CALLOUT AREAREFS="data-model-1-1">
+              <PARA>
+                Loop for writing column names.
+              </PARA>
+            </CALLOUT>
+            <CALLOUT AREAREFS="data-model-1-2">
+              <PARA>
+                Double loop accessing values using
+                <LINK
+                LINKEND="gda-data-model-get-value-at">gda_data_model_get_value_at ()
+                </LINK>
+              </PARA>
+            </CALLOUT>
+            <CALLOUT AREAREFS="data-model-1-3">
+              <PARA>
+                Data returned is a <LINK LINKEND="libgda-gda-value">GdaValue</LINK> object.
+              </PARA>
+            </CALLOUT>
+          </CALLOUTLIST>
+        </PROGRAMLISTINGCO>
+      </sect2>
+      <sect2>
+        <title>Example using row access</title>
+        <para>
+          This function accesses the data model by accessing rows (using
+          <LINK LINKEND="gda-data-model-get-row">gda_data_model_get_row ()
+          </LINK> and
+          <LINK LINKEND="gda-row-get-value"> gda_row_get_value ()
+          </LINK>)
+        </para>
+        <PROGRAMLISTINGCO>
+          <AREASPEC UNITS="LINECOLUMN">
+            <AREA ID="data-model-2-1" COORDS="10 1">
+            <AREA ID="data-model-2-2" COORDS="15 1">
+            <AREA ID="data-model-2-3" COORDS="18 1">
+          </AREASPEC>
+          <programlisting>
+            <ANCHOR ID="show_table2">
+          void
+          show_table2 (GdaDataModel * dm)
+          {
+            gint row_id;
+            gint column_id;
+            GdaValue *value;
+            GdaRow *row;
+          
+            for (column_id = 0; column_id < gda_data_model_get_n_columns (dm);
+                 column_id++)
+              g_print("%s\t",gda_data_model_get_column_title (dm, column_id));
+            g_print("\n");
+          
+            for (row_id = 0; row_id < gda_data_model_get_n_rows (dm); row_id++)
+              {
+                row = (GdaRow *) gda_data_model_get_row (dm, row_id);
+                for (column_id = 0; column_id < gda_data_model_get_n_columns (dm);
+                     column_id++)
+                  {
+                    value = gda_row_get_value (row, column_id);
+                    string=gda_value_stringify (value);
+                    g_print ("%s\t", string);
+                    gda_value_free(value);
+                    g_free(string);
+                  }
+                g_print ("\n");
+              }
+          }
+          </programlisting>
+          <CALLOUTLIST>
+            <CALLOUT AREAREFS="data-model-2-1">
+              <PARA>
+                Loop for writing column names.
+              </PARA>
+            </CALLOUT>
+            <CALLOUT AREAREFS="data-model-2-2">
+              <PARA>
+                Outer loop obtaining rows using
+                <LINK
+                LINKEND="gda-data-model-get-row">gda_data_model_get_row ()
+                </LINK>
+              </PARA>
+            </CALLOUT>
+            <CALLOUT AREAREFS="data-model-2-3">
+              <PARA>
+                Inner loop obtaining the value using
+                <LINK
+                LINKEND="gda-row-get-value">gda_row_get_value ()
+                </LINK>. Notice that <LINK
+                LINKEND="gda-row-get-value">gda_row_get_value ()</LINK>
+                doesn't return a <EMPHASIS>const <LINK
+                LINKEND="libgda-gda-value">GdaValue</LINK></EMPHASIS>, so we
+                have to free it. 
+              </PARA>
+            </CALLOUT>
+          </CALLOUTLIST>
+        </PROGRAMLISTINGCO>
+        
+      </sect2>
+      <sect2>
+        <title>Freeing data models</title>
+        <para>
+          When you finish using data models you must free it, but GdaDataModel class
+          does not have a function to do it, so you have to use <EMPHASIS>g_object_unref
+          ()</EMPHASIS>.
+        </para>
+      </sect2>
+    </sect1>
+    <sect1 ID="gdavalue">
+      <title>Managing values</title>
+      <para>
+        Values returned by functions of managing data are <LINK
+        LINKEND="libgda-gda-value">GdaValue</LINK> objects. <LINK
+        LINKEND="libgda-gda-value">GdaValue</LINK> class has many functions
+        to access data, so we show the most important ones 
+        of them:
+      </para>
+      <ITEMIZEDLIST>
+        <LISTITEM>
+          <LINK LINKEND="gda-value-free">gda_value_free()</LINK>
+        </LISTITEM>
+        <LISTITEM>
+          <LINK LINKEND="gda-value-is-null">gda_value_is_null()</LINK>
+        </LISTITEM>
+        <LISTITEM>
+          <LINK LINKEND="gda-value-copy">gda_value_copy()</LINK>
+        </LISTITEM>
+        <LISTITEM>
+          <LINK LINKEND="gda-value-compare">gda_value_compare()</LINK>
+        </LISTITEM>
+        <LISTITEM>
+          <LINK LINKEND="gda-value-stringify">gda_value_stringify()</LINK>
+        </LISTITEM>
+      </ITEMIZEDLIST>
+      <para>
+        There are many functions to know what is the type of a value and to manage values,
+        that can be seen in <LINK
+        LINKEND="libgda-gda-value">GdaValue</LINK> class.
+      </para>
+      <para>
+        We will return to the examples about last section to notice some
+        important details: 
+      </para>
+      <PROGRAMLISTINGCO>
+        <AREASPEC UNITS="LINECOLUMN">
+          <AREA ID="gda-value-1" COORDS="10 1">
+          <AREA ID="gda-value-2" COORDS="15 1">
+          <AREA ID="gda-value-3" COORDS="18 1">
+          <AREA ID="gda-value-4" COORDS="22 1">
+        </AREASPEC>
+        <programlisting>
+        void
+        show_table2 (GdaDataModel * dm)
+        {
+          gint row_id;
+          gint column_id;
+          GdaValue *value;
+          GdaRow *row;
+          gchar *string;
+        
+          for (column_id = 0; column_id < gda_data_model_get_n_columns (dm);
+               column_id++)
+            g_print("%s\t",gda_data_model_get_column_title (dm, column_id));
+          g_print("\n");
+        
+          for (row_id = 0; row_id < gda_data_model_get_n_rows (dm); row_id++)
+            {
+              row = (GdaRow *) gda_data_model_get_row (dm, row_id);
+              for (column_id = 0; column_id < gda_data_model_get_n_columns (dm);
+                   column_id++)
+                {
+                  value = gda_row_get_value (row, column_id);
+                  string=gda_value_stringify (value);
+                  g_print ("%s\t", string);
+                  gda_value_free(value);
+                  g_free(string);
+                }
+              g_print ("\n");
+            }
+        }
+        </programlisting>
+        <CALLOUTLIST>
+          <CALLOUT AREAREFS="gda-value-1">
+            <PARA>
+              Loop for writing column names.
+            </PARA>
+          </CALLOUT>
+          <CALLOUT AREAREFS="gda-value-2">
+            <PARA>
+              Outer loop obtaining rows using
+              <LINK
+              LINKEND="gda-data-model-get-row">gda_data_model_get_row ()
+              </LINK>
+            </PARA>
+          </CALLOUT>
+          <CALLOUT AREAREFS="gda-value-3">
+            <PARA>
+              Inner loop obtaining the value using
+              <LINK
+              LINKEND="gda-row-get-value">gda_row_get_value ()
+              </LINK>. Notice that <LINK
+              LINKEND="gda-row-get-value">gda_row_get_value ()
+              </LINK> doesn't return a
+              <EMPHASIS>const <LINK
+              LINKEND="libgda-gda-value">GdaValue</LINK></EMPHASIS>, so we
+              have to free it. 
+            </PARA>
+           </CALLOUT>
+          <CALLOUT AREAREFS="gda-value-4">
+            <PARA>
+              We have the difference here. As you can see above, <LINK
+              LINKEND="gda-value-stringify">gda_value_stringify ()</LINK> does not return a
+              <EMPHASIS>const</EMPHASIS> gchar *, so you have to free it. First way is quite
+              attractive but it is not good.
+            </PARA>
+          </CALLOUT>
+        </CALLOUTLIST>
+      </PROGRAMLISTINGCO>
+    </sect1>
+  </chapter>
+  <chapter>
+    <title>Transactions and batch processes</title>
+    <sect1 ID="transactions">
+      <title>Managing transactions</title>
+      <para>
+        The special functions we need to do this are defined in the
+        <LINK LINKEND="libgda-GdaTransaction">GdaTransaction</LINK>,
+        <LINK LINKEND="libgda-GdaConnection">GdaConnection</LINK> and
+        <LINK LINKEND="libgda-gda-command">GdaCommand</LINK>
+        classes, and they are:
+      </para>
+      <ITEMIZEDLIST>
+        <LISTITEM>
+          <LINK LINKEND="gda-transaction-new">gda_transaction_new ()</LINK>
+        </LISTITEM>
+        <LISTITEM>
+          <LINK LINKEND="gda-connection-begin-transaction">gda_connection_begin_transaction ()</LINK>
+        </LISTITEM>
+        <LISTITEM>
+          <LINK LINKEND="gda-connection-commit-transaction">gda_connection_commit_transaction ()</LINK>
+        </LISTITEM>
+        <LISTITEM>
+          <LINK LINKEND="gda-connection-rollback-transaction">gda_connection_rollback_transaction ()</LINK>
+        </LISTITEM>
+        <LISTITEM>
+          <LINK LINKEND="gda-command-set-transaction">gda_command_set_transaction ()</LINK>
+        </LISTITEM>
+      </ITEMIZEDLIST>
+      <para>
+        Things you have to do to manage transactions are:
+      </para>
+      <ORDEREDLIST NUMERATION="arabic">
+        <LISTITEM><para>Create transaction</para></LISTITEM>
+        <LISTITEM><para>Link transaction to a connection</para></LISTITEM>
+        <LISTITEM>
+          <para>For each command you want to execute:</para>
+          <ORDEREDLIST NUMERATION="loweralpha">
+            <LISTITEM><para>Create command</para></LISTITEM>
+            <LISTITEM><para>Link transaction to command</para></LISTITEM>
+            <LISTITEM><para>Execute command</para></LISTITEM>
+            <LISTITEM><para>Free command</para></LISTITEM>
+          </ORDEREDLIST>
+        </LISTITEM>
+        <LISTITEM><para>Commit o rollback transaction</para></LISTITEM>
+        <LISTITEM><para>Free transaction</para></LISTITEM>
+      </ORDEREDLIST>
+      <para>
+        Here you can see an example:
+      </para>
+      <PROGRAMLISTINGCO>
+        <AREASPEC UNITS="LINECOLUMN">
+          <AREA ID="transactions-1" COORDS="6 1">
+          <AREA ID="transactions-2" COORDS="7 1">
+          <AREA ID="transactions-3" COORDS="14 1">
+          <AREA ID="transactions-4" COORDS="27 1">
+          <AREA ID="transactions-5" COORDS="28 1">
+          <AREA ID="transactions-6" COORDS="51 1">
+        </AREASPEC>
+        <programlisting>
+        void process_accounts(GdaConnection *connection)
+        {
+          GdaTransaction *transaction_one, *transaction_two;
+          GdaCommand *command;
+        
+          transaction_one=gda_transaction_new("accounts1");
+          gda_connection_begin_transaction(connection,transaction_one);
+        
+          command=gda_command_new (
+                                   "UPDATE accounts SET balance=balance+50"
+                                   "WHERE account_code=456",
+                                   GDA_COMMAND_TYPE_SQL,
+                                   GDA_COMMAND_OPTION_STOP_ON_ERRORS);
+          gda_command_set_transaction(command,transaction_one);
+          gda_connection_execute_non_query(connection,command,NULL);
+          gda_command_free(command);
+        
+          command=gda_command_new (
+                                   "UPDATE accounts SET balance=balance-50"
+                                   "WHERE account_code=12",
+                                   GDA_COMMAND_TYPE_SQL,
+                                   GDA_COMMAND_OPTION_STOP_ON_ERRORS);
+          gda_command_set_transaction(command,transaction_one);
+          gda_connection_execute_non_query(connection,command,NULL);
+          gda_command_free(command);
+        
+          gda_connection_commit_transaction(connection,transaction_one);
+          g_object_unref(transaction_one);
+        
+          transaction_two=gda_transaction_new("accounts2");
+          gda_connection_begin_transaction(connection,transaction_two);
+        
+          command=gda_command_new (
+                                   "UPDATE accounts SET balance=balance+400"
+                                   "WHERE account_code=456",
+                                   GDA_COMMAND_TYPE_SQL,
+                                   GDA_COMMAND_OPTION_STOP_ON_ERRORS);
+          gda_command_set_transaction(command,transaction_two);
+          gda_connection_execute_non_query(connection,command,NULL);
+          gda_command_free(command);
+        
+          command=gda_command_new (
+                                   "UPDATE accounts SET balance=balance-400"
+                                   "WHERE account_code=12",
+                                   GDA_COMMAND_TYPE_SQL,
+                                   GDA_COMMAND_OPTION_STOP_ON_ERRORS);
+          gda_command_set_transaction(command,transaction_two);
+          gda_connection_execute_non_query(connection,command,NULL);
+          gda_command_free(command);
+        
+          gda_connection_rollback_transaction(connection,transaction_two);
+          g_object_unref(transaction_one);
+        
+          execute_sql_command(connection,"SELECT * FROM accounts");
+        }
+        </programlisting>
+        <CALLOUTLIST>
+          <CALLOUT AREAREFS="transactions-1">
+            <PARA>
+              Creates first transaction.
+            </PARA>
+          </CALLOUT>
+          <CALLOUT AREAREFS="transactions-2">
+            <PARA>
+              Links it to connection.
+            </PARA>
+          </CALLOUT>
+          <CALLOUT AREAREFS="transactions-3">
+            <PARA>
+              Links command to transaction.
+            </PARA>
+          </CALLOUT>
+          <CALLOUT AREAREFS="transactions-4">
+            <PARA>
+              Makes commit on transaction.
+            </PARA>
+          </CALLOUT>
+          <CALLOUT AREAREFS="transactions-5">
+            <PARA>
+              Frees transaction.
+            </PARA>
+          </CALLOUT>
+          <CALLOUT AREAREFS="transactions-6">
+            <PARA>
+              Makes rollback on second transaction.
+            </PARA>
+          </CALLOUT>
+        </CALLOUTLIST>
+      </PROGRAMLISTINGCO>
+    </sect1><!--
+    <sect1 ID="batch">
+      <title>Batch</title>
+      
+      <para>
+      Batch processes are supposed to be also a simple way to manage transactions,
+      but I could not work on it because it is not included in the library.
+      </para>
+      
+    </sect1>
+      -->
+  </chapter>
+  <chapter ID="managing-errors">
+    <title>Managing errors</title>
+    <para>
+      You can manage errors with <LINK
+      LINKEND="libgda-GdaError">GdaError</LINK> class and obtain them with
+      function <LINK
+      LINKEND="gda-connection-get-errors"><EMPHASIS>gda_connection_get_errors()
+      </EMPHASIS></LINK><footnote>If you cannot see the link in <LINK
+      LINKEND="gda-connection-get-errors">gda_connection_get_errors()</LINK>,
+      it means that it is not included in the documentation yet.</footnote>
+      so let's see them and an example: 
+    </para>
+    <para>
+      Here you see the functions to manage errors:
+    </para>
+    <ITEMIZEDLIST>
+      <LISTITEM>
+        <LINK LINKEND="gda-error-get-description">gda_error_get_description()</LINK>
+      </LISTITEM>
+      <LISTITEM>
+        <LINK LINKEND="gda-error-get-number">gda_error_get_number()</LINK>
+      </LISTITEM>
+      <LISTITEM>
+        <LINK LINKEND="gda-error-get-source">gda_error_get_source()</LINK>
+      </LISTITEM>
+      <LISTITEM>
+        <LINK LINKEND="gda-error-get-sqlstate">gda_error_get_sqlstate()</LINK>
+      </LISTITEM>
+    </ITEMIZEDLIST>
+    <para>
+      Here you can see an example of using this:
+    </para>
+    <PROGRAMLISTINGCO>
+      <AREASPEC UNITS="LINECOLUMN">
+        <AREA ID="errors-1" COORDS="8 1">
+        <AREA ID="errors-2" COORDS="10 1">
+      </AREASPEC>
+      <programlisting>
+      gboolean
+      get_errors (GdaConnection *connection)
+      {
+        GList *list;
+        GList *node;
+        GdaError *error;
+      
+        list = (GList *) gda_connection_get_errors (connection);
+      
+        for (node = g_list_first (list); node != NULL; node = g_list_next (node))
+          {
+            error = (GdaError *) node->data;
+            g_print ("Error no: %d\t", gda_error_get_number (error));
+            g_print ("desc: %s\t", gda_error_get_description (error));
+            g_print ("source: %s\t", gda_error_get_source (error));
+            g_print ("sqlstate: %s\n", gda_error_get_sqlstate (error));
+          }
+      }
+      </programlisting>
+      <CALLOUTLIST>
+        <CALLOUT AREAREFS="errors-1">
+          <PARA>
+            Obtains errors list.
+          </PARA>
+        </CALLOUT>
+        <CALLOUT AREAREFS="errors-2">
+          <PARA>
+            Loop for getting error information.
+          </PARA>
+        </CALLOUT>
+      </CALLOUTLIST>
+    </PROGRAMLISTINGCO>
+  </chapter>
+  <chapter ID="main_example">
+    <title>Full example</title>
+    <PROGRAMLISTING>
+<inlinegraphic entityref="fullexample"></inlinegraphic>
+    </PROGRAMLISTING>
+  </chapter>
+  <!--
+  <chapter ID="migration">
+  <title>Some formulae for migration from old version</title>
+    &migration.sgml;
+  </chapter>
+  -->
   <chapter id="libgda-api">
     <title>&LIBGDA; API Reference</title>
     <para>

@@ -60,6 +60,8 @@ gda_init (const gchar *app_id, const gchar *version, gint nargs, gchar *args[])
 		g_error (_("libgda needs GModule. Finishing..."));
 
 	initialized = TRUE;
+
+	g_message (_("libgda successfully initialized"));
 }
 
 typedef struct {

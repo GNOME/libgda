@@ -1,0 +1,25 @@
+<?xml version="1.0" standalone="no"?>
+<omf> 
+  <resource>
+    <creator>
+      Rodrigo Moya
+    </creator>
+    <maintainer>
+      rodrigo@gnome-db.org (Rodrigo Moya)
+    </maintainer>
+    <title>
+      libgda (GNOME/GNU Data Access) Manual
+    </title>
+    <date>August 2002</date>
+    <subject category="GNOME|Development"/>
+    <description>
+      Complete manual for the use of libgda tools and programs,
+      as well as for the complete API.
+    </description>
+    <type>user's guide</type>
+    <format mime="text/html"/>
+    <identifier url="file:/@prefix@/share/gtk-doc/html/index.html"/>
+    <language code="C"/>
+    <rights type="GNU FDL" license.version="1.1"/>
+  </resource>
+</omf>
