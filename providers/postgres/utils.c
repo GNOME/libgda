@@ -254,7 +254,7 @@ gda_postgres_set_field_data (GdaField *field, const gchar *fname,
 		g_date_set_parse (gdate, value);
 		if (!g_date_valid (gdate)) {
 			g_warning ("Could not parse '%s' "
-				"Setting date to 01/01/0001!\n", field);
+				"Setting date to 01/01/0001!\n", value);
 			g_date_clear (gdate, 1);
 			g_date_set_dmy (gdate, 1, 1, 1);
 		}

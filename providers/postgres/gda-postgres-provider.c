@@ -23,6 +23,7 @@
 
 #include "gda-postgres.h"
 #include "gda-postgres-provider.h"
+#include <stdlib.h>
 
 static void gda_postgres_provider_class_init (GdaPostgresProviderClass *klass);
 static void gda_postgres_provider_init       (GdaPostgresProvider *provider,
@@ -199,7 +200,6 @@ gda_postgres_provider_open_connection (GdaServerProvider *provider,
 	GList *type_list;
 	PGconn *pconn;
 	PGresult *pg_res;
-	GdaError *error;
 
 	GdaPostgresProvider *pg_prv = (GdaPostgresProvider *) provider;
 
@@ -271,7 +271,7 @@ gda_postgres_provider_open_connection (GdaServerProvider *provider,
 	return TRUE;
 }
 
-void
+static void
 free_type_list (gpointer data, gpointer user_data)
 {
 	GdaPostgresTypeDataPrivate *priv_td;
@@ -386,6 +386,7 @@ gda_postgres_provider_execute_command (GdaServerProvider *provider,
 		reclist = process_sql_commands (reclist, cnc, str);
 		g_free (str);
 		break;
+	default:
 	}
 
 	return reclist;
