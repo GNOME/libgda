@@ -48,11 +48,11 @@ static const primebase_Types gda_primebase_type_list[GDA_PRIMEBASE_TYPE_CNT] = {
   { "SMFLOAT",    A_SMFLOAT,   GDA_TypeSingle      }, //  4-byte
   { "REAL",       A_SMFLOAT,   GDA_TypeSingle      }, //  4-byte  (10)
   { "FLOAT",      A_FLOAT,     GDA_TypeDouble      }, //  8-byte
-  // Just on 68k macs
+  /* Just on 68k macs */
   { "REAL10",     A_FLOAT10,   GDA_TypeDouble      }, // 10-byte
   { "REAL12",     A_FLOAT12,   GDA_TypeDouble      }, // 12-byte
 
-  // What's on $maybe?
+  /* What's on $maybe? */
   { "BOOLEAN",    A_BOOLEAN,   GDA_TypeBoolean     },
   
   { "DATE",       A_DATE,      GDA_TypeDbDate      }, //          (15)

@@ -22,6 +22,14 @@
  */
 
 // $Log$
+// Revision 1.3.2.1  2001/02/12 21:56:43  rodrigo
+// 2001-02-11	Rodrigo Moya <rodrigo@gnome-db.org>
+//
+// 	* providers/gda-primebase-server/gda-primebase-connection.c,
+// 	providers/gda-tds-server/gda-tds-connection.c: removed some C++
+// 	comments, as the ones containing the ' character makes xgettext
+// 	complain (from Christian Rose's patch)
+//
 // Revision 1.3  2000/11/27 17:50:28  rodrigo
 // 2000-11-27	Rodrigo Moya <rodrigo@gnome-db.org>
 //
@@ -781,8 +789,8 @@ gda_tds_connection_reopen(Gda_ServerConnection *cnc)
     return FALSE;
   }
   
-  // Now we've got an initialized CS_CONTEXT and an allocated CS_COMMAND
-  // and maybe setup the locale, so we can setup error handling
+  /* Now we've got an initialized CS_CONTEXT and an allocated CS_COMMAND
+     and maybe setup the locale, so we can setup error handling */
   
   if (gda_tds_install_error_handlers(cnc) != 0) {
     return FALSE;
