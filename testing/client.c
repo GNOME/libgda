@@ -84,12 +84,15 @@ open_connection (GdaClient *client,
 		 _("Supported") : _("Not supported"));
 
 	/* show connection schemas */
+	show_schema (cnc, GDA_CONNECTION_SCHEMA_DATABASES, _("Databases"));
 	show_schema (cnc, GDA_CONNECTION_SCHEMA_PROCEDURES, _("Stored procedures"));
 	show_schema (cnc, GDA_CONNECTION_SCHEMA_TABLES, _("Connection Tables"));
 	show_schema (cnc, GDA_CONNECTION_SCHEMA_TYPES, _("Available types"));
 	show_schema (cnc, GDA_CONNECTION_SCHEMA_VIEWS, _("Views"));
 	show_schema (cnc, GDA_CONNECTION_SCHEMA_INDEXES, _("Indexes"));
 	show_schema (cnc, GDA_CONNECTION_SCHEMA_AGGREGATES, _("Aggregates"));
+	show_schema (cnc, GDA_CONNECTION_SCHEMA_USERS, _("Users"));
+	show_schema (cnc, GDA_CONNECTION_SCHEMA_SEQUENCES, _("Sequences"));
 	show_schema (cnc, GDA_CONNECTION_SCHEMA_TRIGGERS, _("Triggers"));
 
 	/* test transactions */

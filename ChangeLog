@@ -1,3 +1,15 @@
+2002-03-31  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* idl/GNOME_Database.idl: added SCHEMA_USERS, SCHEMA_SEQUENCES,
+	and SCHEMA_DATABASES.
+
+	* providers/mysql/gda-mysql-provider.c (get_mysql_databases):
+	implemented SCHEMA_DATABASES schema.
+
+	* libgda/gda-connection.h: added new schemas.
+
+	* testing/client.c (open_connection): add tests for new schemas.
+
 2002-03-31  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
 	* libgda/gda-data-model.c:

@@ -589,6 +589,24 @@ get_mysql_aggregates (GdaServerConnection *cnc, GdaParameterList *params)
 }
 
 static GdaServerRecordset *
+get_mysql_databases (GdaServerConnection *cnc, GdaParameterList *params)
+{
+	GList *reclist;
+	GdaServerRecordset *recset;
+
+	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), NULL);
+
+	reclist = process_sql_commands (NULL, cnc, "show databases");
+	if (!reclist)
+		return NULL;
+
+	recset = GDA_SERVER_RECORDSET (reclist->data);
+	g_list_free (reclist);
+
+	return recset;
+}
+
+static GdaServerRecordset *
 get_mysql_tables (GdaServerConnection *cnc, GdaParameterList *params)
 {
 	GList *reclist;
@@ -809,6 +827,8 @@ gda_mysql_provider_get_schema (GdaServerProvider *provider,
 	switch (schema) {
 	case GNOME_Database_Connection_SCHEMA_AGGREGATES :
 		return get_mysql_aggregates (cnc, params);
+	case GNOME_Database_Connection_SCHEMA_DATABASES :
+		return get_mysql_databases (cnc, params);
 	case GNOME_Database_Connection_SCHEMA_FIELDS :
 		return get_table_fields (cnc, params);
 	case GNOME_Database_Connection_SCHEMA_TABLES :
