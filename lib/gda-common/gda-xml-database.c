@@ -194,7 +194,7 @@ gda_xml_database_free (GdaXmlDatabase * xmldb)
 gboolean
 gda_xml_database_save (GdaXmlDatabase * xmldb, const gchar * filename)
 {
-	g_return_if_fail (GDA_IS_XML_DATABASE (xmldb));
+	g_return_val_if_fail (GDA_IS_XML_DATABASE (xmldb), FALSE);
 
 	if (!xmlSaveFile (filename, GDA_XML_DOCUMENT (xmldb)->doc)) {
 	}

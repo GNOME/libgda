@@ -31,6 +31,13 @@
 @freedoc: 
 @Returns: 
 
+<!-- ##### MACRO gda_xml_database_get_views ##### -->
+<para>
+
+</para>
+
+@_xmldb_: 
+
 <!-- ##### FUNCTION gda_xml_file_construct ##### -->
 <para>
 

@@ -58,6 +58,7 @@ import/export features of libgda.
 
 @xmldb: 
 @filename: 
+@Returns: 
 
 
 <!-- ##### FUNCTION gda_xml_database_changed ##### -->
@@ -68,19 +69,14 @@ import/export features of libgda.
 @xmldb: 
 
 
-<!-- ##### MACRO gda_xml_database_get_tables ##### -->
+<!-- ##### FUNCTION gda_xml_database_get_tables ##### -->
 <para>
 
 </para>
 
-@_xmldb_: 
-
-
-<!-- ##### MACRO gda_xml_database_get_views ##### -->
-<para>
-
-</para>
-
+@xmldb: 
+@Returns: 
+<!-- # Unused Parameters # -->
 @_xmldb_: 
 
 
@@ -90,8 +86,10 @@ import/export features of libgda.
 </para>
 
 @xmldb: 
-@tname: 
+@name: 
 @Returns: 
+<!-- # Unused Parameters # -->
+@tname: 
 
 
 <!-- ##### FUNCTION gda_xml_database_table_remove ##### -->
@@ -100,6 +98,8 @@ import/export features of libgda.
 </para>
 
 @xmldb: 
+@table: 
+<!-- # Unused Parameters # -->
 @tname: 
 
 
@@ -109,8 +109,10 @@ import/export features of libgda.
 </para>
 
 @xmldb: 
-@tname: 
+@name: 
 @Returns: 
+<!-- # Unused Parameters # -->
+@tname: 
 
 
 <!-- ##### FUNCTION gda_xml_database_table_get_name ##### -->
@@ -130,6 +132,8 @@ import/export features of libgda.
 
 @xmldb: 
 @table: 
+@name: 
+<!-- # Unused Parameters # -->
 @tname: 
 
 

@@ -27,14 +27,12 @@
 #  include <gtk/gtksignal.h>
 #endif
 
-struct _GdaExportPrivate
-{
+struct _GdaExportPrivate {
 	GdaConnection *cnc;
 	GHashTable *selected_tables;
 };
 
-enum
-{
+enum {
 	OBJECT_SELECTED,
 	OBJECT_UNSELECTED,
 	LAST_SIGNAL
@@ -43,8 +41,8 @@ enum
 static gint gda_export_signals[LAST_SIGNAL] = { 0, };
 
 static void gda_export_class_init (GdaExportClass * klass);
-static void gda_export_init (GdaExport * exp);
-static void gda_export_destroy (GdaExport * destroy);
+static void gda_export_init       (GdaExport * exp);
+static void gda_export_destroy    (GtkObject *object);
 
 /*
  * Private functions
@@ -57,7 +55,7 @@ free_hash_entry (gpointer key, gpointer value, gpointer user_data)
 }
 
 static void
-destroy_hash_table (GHashTable ** hash_table)
+destroy_hash_table (GHashTable **hash_table)
 {
 	g_return_if_fail (*hash_table != NULL);
 
@@ -154,9 +152,12 @@ gda_export_init (GdaExport * exp)
 }
 
 static void
-gda_export_destroy (GdaExport * exp)
+gda_export_destroy (GtkObject *object)
 {
 	GtkObjectClass *parent_class;
+	GdaExport *exp = (GdaExport *) exp;
+
+	g_return_if_fail (GDA_IS_EXPORT (exp));
 
 	destroy_hash_table (&exp->priv->selected_tables);
 
@@ -201,12 +202,7 @@ void
 gda_export_free (GdaExport * exp)
 {
 	g_return_if_fail (GDA_IS_EXPORT (exp));
-
-#ifdef HAVE_GOBJECT
-	g_object_unref (exp);
-#else
 	gtk_object_unref (GTK_OBJECT (exp));
-#endif
 }
 
 /**
@@ -333,6 +329,7 @@ gda_export_set_connection (GdaExport * exp, GdaConnection * cnc)
 		gda_connection_free (exp->priv->cnc);
 		exp->priv->cnc = NULL;
 	}
+	destroy_hash_table (&exp->priv->selected_tables);
 
 	if (GDA_IS_CONNECTION (cnc)) {
 		exp->priv->cnc = cnc;

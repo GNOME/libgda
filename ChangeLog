@@ -1,3 +1,8 @@
+2001-07-22  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* configure.in: remove glib-2.0 check until we can compile
+	everything with that version
+
 2001-07-12  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* configure.in: remove Perl checkings, since they are no longer
