@@ -1,0 +1,492 @@
+# libgda ko.po
+# Copyright (C) 2002 THE libgda'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the libgda package.
+# Young-Ho, Cha <ganadist@chollian.net>, 2002.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: libgda VERSION\n"
+"POT-Creation-Date: 2002-04-25 17:23-0400\n"
+"PO-Revision-Date: 2002-05-01 13:08+0900\n"
+"Last-Translator: Young-Ho, Cha <ganadist@chollian.net>\n"
+"Language-Team: Korean <gnome-kr-translation@lists.sourceforge.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: libgda/gda-client.c:191 libgda/gda-client.c:262 libgda/gda-connection.c:207
+#, c-format
+msgid "Data source %s not found in configuration"
+msgstr "데이터 소스 %s는 설정에서 찾을 수 없습니다"
+
+#. gda_server_recordset_model_set_field_defined_size (recset, 0, 256);
+#: libgda/gda-config.c:615 providers/default/gda-default-provider.c:435
+#: providers/default/gda-default-provider.c:455
+#: providers/default/gda-default-provider.c:491
+#: providers/mysql/gda-mysql-provider.c:441
+msgid "Name"
+msgstr "이름"
+
+#: libgda/gda-config.c:616
+msgid "Provider"
+msgstr "제공자"
+
+#: libgda/gda-config.c:617
+msgid "Connection string"
+msgstr "연결 문자열"
+
+#: libgda/gda-config.c:618
+msgid "Description"
+msgstr "설명"
+
+#: libgda/gda-config.c:619
+msgid "Username"
+msgstr "사용자이름"
+
+#: libgda/gda-init.c:42
+msgid "Attempt to initialize an already initialized client"
+msgstr "이미 초기화된 클라이언트에 다시 초기화 하려합니다"
+
+#: libgda/gda-table.c:233
+#, c-format
+msgid "There is already a field called %s"
+msgstr ""
+
+#: libgda/gda-value.c:1030
+msgid "TRUE"
+msgstr ""
+
+#: libgda/gda-value.c:1032
+msgid "FALSE"
+msgstr ""
+
+#: libgda/gda-xml-database.c:228
+#, c-format
+msgid "Could not load file at %s"
+msgstr "%s에서 파일을 읽을 수 없습니다"
+
+#: libgda/gda-xml-database.c:237
+#, c-format
+msgid "Could not parse file at %s"
+msgstr "%s에서 파일을 분석할 수 없습니다"
+
+#: libgda/gda-xml-database.c:247
+#, c-format
+msgid "Invalid XML database file '%s'"
+msgstr "잘못된 XML 데이터베이스 파일 '%s'"
+
+#: libgda/gda-xml-database.c:466 libgda/gda-xml-database.c:502
+#: libgda/gda-xml-database.c:543
+#, c-format
+msgid "Table %s already exists"
+msgstr "테이블 %s 는 이미 있습니다"
+
+#: libgda/gda-xml-database.c:536
+msgid "Invalid node"
+msgstr "잘못된 노드"
+
+#: libgda/gda-xml-database.c:568
+#, c-format
+msgid "Duplicated <data> node for table %s"
+msgstr "테이블 %s에서 중복된 <data> 노드"
+
+#: libgda/gda-xml-database.c:575
+msgid "Invalid XML node"
+msgstr "잘못된 XML 노드"
+
+#: providers/default/gda-default-provider.c:160
+#: providers/sqlite/gda-sqlite-provider.c:153
+msgid ""
+"A full path must be specified on the connection string to open a database."
+msgstr ""
+"데이터베이스를 열기 위해 연결 문자열에 전체 경로가 지정되어야 합니다."
+
+#: providers/default/gda-default-provider.c:334
+#: providers/mysql/gda-mysql-provider.c:730
+#: providers/postgres/gda-postgres-provider.c:728
+msgid "Field name"
+msgstr "필드 이름"
+
+#: providers/default/gda-default-provider.c:335
+#: providers/mysql/gda-mysql-provider.c:731
+#: providers/postgres/gda-postgres-provider.c:729
+msgid "Data type"
+msgstr "데이터 형식"
+
+#: providers/default/gda-default-provider.c:336
+#: providers/mysql/gda-mysql-provider.c:732
+#: providers/postgres/gda-postgres-provider.c:730
+msgid "Size"
+msgstr "크기"
+
+#: providers/default/gda-default-provider.c:337
+#: providers/mysql/gda-mysql-provider.c:733
+#: providers/postgres/gda-postgres-provider.c:731
+msgid "Scale"
+msgstr "규모"
+
+#: providers/default/gda-default-provider.c:338
+#: providers/mysql/gda-mysql-provider.c:734
+#: providers/postgres/gda-postgres-provider.c:732
+msgid "Not null?"
+msgstr "널 아님?"
+
+#: providers/default/gda-default-provider.c:339
+#: providers/mysql/gda-mysql-provider.c:735
+#: providers/postgres/gda-postgres-provider.c:733
+msgid "Primary key?"
+msgstr "기본 키?"
+
+#: providers/default/gda-default-provider.c:340
+#: providers/mysql/gda-mysql-provider.c:736
+#: providers/postgres/gda-postgres-provider.c:734
+msgid "Unique index?"
+msgstr "단일 색인?"
+
+#: providers/default/gda-default-provider.c:341
+#: providers/mysql/gda-mysql-provider.c:737
+#: providers/postgres/gda-postgres-provider.c:735
+msgid "References"
+msgstr "참조"
+
+#: providers/default/gda-default-provider.c:351
+#: providers/default/gda-default-provider.c:357
+msgid "Invalid argument"
+msgstr "잘못된 인자"
+
+#: providers/default/gda-default-provider.c:364
+#, c-format
+msgid "Table %s not found"
+msgstr "테이블 %s를 찾을 수 없습니다"
+
+#: providers/default/gda-default-provider.c:389
+msgid "Could not get description for column"
+msgstr "열에 대한 설명을 얻을 수 없습니다"
+
+#: providers/default/GNOME_Database_Provider_Default.server.in.h:1
+msgid "Default component factory"
+msgstr "기본 구성요소 팩토리"
+
+#: providers/default/GNOME_Database_Provider_Default.server.in.h:2
+msgid "GDA Default Datasource Access"
+msgstr "GDA 기본 데이터소스 접근"
+
+#: providers/mysql/gda-mysql-provider.c:174
+msgid ""
+"You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
+msgstr ""
+"HOST나 PORT가 입력되어 있으면 UNIX_SOCKET을 입력할 수 없습니다."
+
+#: providers/mysql/gda-mysql-provider.c:245
+#: providers/mysql/gda-mysql-provider.c:324
+#: providers/mysql/gda-mysql-provider.c:352
+#: providers/mysql/gda-mysql-provider.c:380
+msgid "Invalid MYSQL handle"
+msgstr "잘못된 MYSQL 처리"
+
+#. gda_server_recordset_model_set_field_defined_size (recset, 0, 32);
+#: providers/mysql/gda-mysql-provider.c:632
+#: providers/postgres/gda-postgres-provider.c:614
+msgid "Type"
+msgstr "형식"
+
+#: providers/mysql/gda-mysql-provider.c:745
+#: providers/mysql/gda-mysql-recordset.c:64
+#: providers/mysql/gda-mysql-recordset.c:168
+msgid "Invalid MySQL handle"
+msgstr "잘못된 MySQL 처리"
+
+#: providers/mysql/gda-mysql-provider.c:754
+#: providers/mysql/gda-mysql-provider.c:762
+msgid "You need to specify the name of the table"
+msgstr "테이블의 이름을 지정하여야 합니다"
+
+#: providers/mysql/gda-mysql-recordset.c:77
+#: providers/postgres/gda-postgres-recordset.c:85
+#: providers/sqlite/gda-sqlite-recordset.c:75
+msgid "Row number out of range"
+msgstr "열 번호 범위 넘음"
+
+#: providers/mysql/GNOME_Database_Provider_MySQL.server.in.h:1
+msgid "GDA Datasource Access for MySQL"
+msgstr "MySQL용 GDA 데이터소스 접근"
+
+#: providers/mysql/GNOME_Database_Provider_MySQL.server.in.h:2
+msgid "MySQL component factory"
+msgstr "MySQL 구성요소 팩토리"
+
+#: providers/odbc/GNOME_Database_Provider_ODBC.server.in.h:1
+msgid "GDA Datasource Access for ODBC"
+msgstr "ODBC용 GDA 데이터소스 접근"
+
+#: providers/odbc/GNOME_Database_Provider_ODBC.server.in.h:2
+msgid "ODBC component factory"
+msgstr "ODBC 구성요소 팩토리"
+
+#: providers/oracle/gda-oracle-connection.c:79
+msgid "Could not initialize Oracle environment"
+msgstr "Oracle 환경을 초기화할 수 없습니다"
+
+#: providers/oracle/gda-oracle-connection.c:89
+msgid "Could not initialize Oracle error handler"
+msgstr "Oracle 오류 처리 초기화를 할 수 없습니다"
+
+#: providers/oracle/gda-oracle-connection.c:100
+msgid "Could not initialize Oracle server handle"
+msgstr "Oracle 서버 처리 초기화를 할 수 없습니다"
+
+#: providers/oracle/gda-oracle-connection.c:111
+msgid "Could not initialize Oracle service context"
+msgstr "Oracle 서비스 환경을 초기화 할 수 없습니다"
+
+#: providers/oracle/GNOME_Database_Provider_Oracle.server.in.h:1
+msgid "GDA Datasource Access for Oracle"
+msgstr "Oracle용 GDA 데이터소스 접근"
+
+#: providers/oracle/GNOME_Database_Provider_Oracle.server.in.h:2
+msgid "Oracle component factory"
+msgstr "Oracle 구성요소 팩토리"
+
+#: providers/oracle/main.c:48
+msgid "Could not initiate Oracle component factory"
+msgstr "Oracle 구성요소 팩토리를 초기화 할 수 없습니다"
+
+#: providers/oracle/main.c:74
+msgid "Could not initialize OCI library"
+msgstr "OCI라이브러리를 초기화 할 수 없습니다"
+
+#: providers/postgres/gda-postgres-provider.c:361
+#: providers/postgres/gda-postgres-provider.c:499
+#: providers/postgres/gda-postgres-recordset.c:72
+#: providers/postgres/gda-postgres-recordset.c:128
+msgid "Invalid PostgreSQL handle"
+msgstr "잘못된 PostgreSQL 처리"
+
+#: providers/postgres/GNOME_Database_Provider_Postgres.server.in.h:1
+msgid "GDA Datasource Access for Postgres"
+msgstr "Postgres용 GDA 데이터소스 접근"
+
+#: providers/postgres/GNOME_Database_Provider_Postgres.server.in.h:2
+msgid "Postgres component factory"
+msgstr "Postgres 구성요소 팩토리"
+
+#: providers/postgres/utils.c:47
+msgid "NO DESCRIPTION"
+msgstr "설명 없음"
+
+#: providers/postgres/utils.c:52
+msgid "Not available"
+msgstr "사용 불가"
+
+#: providers/sqlite/gda-sqlite-provider.c:211
+#: providers/sqlite/gda-sqlite-recordset.c:64
+msgid "Invalid SQLITE handle"
+msgstr "잘못된 SQLITE 처리"
+
+#: providers/sqlite/gda-sqlite-recordset.c:115
+msgid "Invalid Sqlite handle"
+msgstr "잘못된 Sqlite 처리"
+
+#: providers/sqlite/GNOME_Database_Provider_SQLite.server.in.h:1
+msgid "GDA SQLite Datasource Access"
+msgstr "SQLite용 GDA 데이터소스 접근"
+
+#: providers/sqlite/GNOME_Database_Provider_SQLite.server.in.h:2
+msgid "SQLite component factory"
+msgstr "SQLite 구성요소 팩토리"
+
+#: providers/sybase/GNOME_Database_Provider_Sybase.server.in.h:1
+msgid "GDA Datasource Access for Sybase"
+msgstr "Sybase용 GDA 데이터소스 접근"
+
+#: providers/sybase/GNOME_Database_Provider_Sybase.server.in.h:2
+msgid "Sybase component factory"
+msgstr "Sybase 구성요소 팩토리"
+
+#: providers/sybase/main.c:52
+msgid "Could not initiate Sybase component factory"
+msgstr "Sybase 구성요소 팩토리를 초기화 할 수 없습니다"
+
+#: report/gda-report-engine.c:68 report/libgda-report/gda-report-client.c:196
+#: report/libgda-report/gda-report-client.c:210
+#, c-format
+msgid "CORBA exception: %s"
+msgstr "CORBA 예외: %s"
+
+#: report/gda-report-engine.c:106
+msgid "Could not create global GDA client"
+msgstr "전역 GDA 클라이언트를 만들 수 없습니다"
+
+#: report/GNOME_Database_Report.server.in.h:1
+msgid "GDA Report engine"
+msgstr "GDA 보고서 엔진"
+
+#: report/GNOME_Database_Report.server.in.h:2
+msgid "GDA Report engine factory"
+msgstr "GDA 보고서 엔진 팩토리"
+
+#: report/job.c:44
+msgid "Could not parse XML report"
+msgstr "XML 보고서를 분석할 수 없습니다"
+
+#: report/libgda-report/gda-report-client.c:142
+msgid "Could not activate report engine"
+msgstr "보고서 엔진을 활성화 할 수 없습니다"
+
+#: report/libgda-report/gda-report-client.c:183
+msgid "Could not create BonoboStreamMem object"
+msgstr "BonoboStreamMem 개체를 만들 수 없습니다"
+
+#: report/libgda-report/gda-report-document.c:138
+msgid "Could not parse XML document"
+msgstr "XML 문서를 분석할 수 없습니다"
+
+#: report/libgda-report/gda-report-document.c:163
+#, c-format
+msgid "Could not get file from %s"
+msgstr "%s에서 파일을 가져올 수 없습니다"
+
+#: report/main.c:47
+msgid "Could not initiate Report component factory"
+msgstr "보고서 구성요소 팩토리를 초기화 할 수 없습니다"
+
+#: testing/client.c:39
+msgid "\t\tNONE\n"
+msgstr "\t\tNONE\n"
+
+#: testing/client.c:78
+#, c-format
+msgid "** ERROR: could not open connection to %s\n"
+msgstr "** 오류: %s에 연결을 열 수 없습니다\n"
+
+#. show provider features
+#: testing/client.c:83
+msgid "\tProvider capabilities...\n"
+msgstr "\t제공자 특성...\n"
+
+#: testing/client.c:84
+#, c-format
+msgid "\t\tTransactions: %s\n"
+msgstr "\t\t트랜잭션: %s\n"
+
+#: testing/client.c:86
+msgid "Supported"
+msgstr "지원됨"
+
+#: testing/client.c:86
+msgid "Not supported"
+msgstr "지원하지 않음"
+
+#. show connection schemas
+#: testing/client.c:89
+msgid "Databases"
+msgstr "데이터베이스"
+
+#: testing/client.c:90
+msgid "Stored procedures"
+msgstr "저장된 프로시져"
+
+#: testing/client.c:91
+msgid "Connection Tables"
+msgstr "연결 테이블"
+
+#: testing/client.c:92
+msgid "Available types"
+msgstr "사용 가능한 형식"
+
+#: testing/client.c:93
+msgid "Views"
+msgstr "보기"
+
+#: testing/client.c:94
+msgid "Indexes"
+msgstr "색인"
+
+#: testing/client.c:95
+msgid "Aggregates"
+msgstr "집합"
+
+#: testing/client.c:96
+msgid "Users"
+msgstr "사용자"
+
+#: testing/client.c:97
+msgid "Sequences"
+msgstr "시퀀스"
+
+#: testing/client.c:98
+msgid "Triggers"
+msgstr "트리거"
+
+#. test transactions
+#: testing/client.c:101 testing/client.c:109
+msgid "\tStarting transaction..."
+msgstr "\t트랜잭션 시작 중..."
+
+#: testing/client.c:103 testing/client.c:107 testing/client.c:111
+#: testing/client.c:115
+msgid "Error"
+msgstr "오류"
+
+#: testing/client.c:105
+msgid "\tFinishing transaction..."
+msgstr "\t트랜잭션 끝내는 중..."
+
+#: testing/client.c:113
+msgid "\tRolling back transaction..."
+msgstr "\t트랜잭션 롤백 중..."
+
+#: testing/client.c:134
+msgid "Testing GDA client API"
+msgstr "GDA 클라이언트 API 시험중"
+
+#: testing/client.c:143
+msgid "** ERROR: gda_config_get_data_source_list returned a NULL item\n"
+msgstr "** 오류: gda_config_get_data_source_list 가 NULL 항목을 반환했습니다\n"
+
+#: testing/client.c:147
+#, c-format
+msgid " Data source = %s, User = %s\n"
+msgstr " 데이터 소스 = %s, 사용자 = %s\n"
+
+#: testing/config.c:85
+msgid "** ERROR: gda_config_get_provider_list returned a NULL item\n"
+msgstr "** 오류: gda_config_get_provider_list 가 NULL 항목을 반환했습니다\n"
+
+#: testing/config.c:89
+#, c-format
+msgid " Provider = %s\n"
+msgstr " 제공자 = %s\n"
+
+#: testing/config.c:90
+#, c-format
+msgid "\tlocation = %s\n"
+msgstr "\t위치 = %s\n"
+
+#: testing/config.c:91
+#, c-format
+msgid "\tdescription = %s\n"
+msgstr "\t설명 = %s\n"
+
+#: testing/config.c:93
+msgid "\trepo_ids ="
+msgstr "\trepo_ids ="
+
+#: testing/config.c:100
+#, c-format
+msgid "\tusername = %s\n"
+msgstr "\t사용자이름 = %s\n"
+
+#: testing/config.c:101
+#, c-format
+msgid "\thostname = %s\n"
+msgstr "\t호스트이름 = %s\n"
+
+#: testing/config.c:102
+#, c-format
+msgid "\tdomain = %s\n"
+msgstr "\t도메인 = %s\n"
+
+#: testing/config.c:104
+msgid "\tgda_params ="
+msgstr "\tgda_params ="
