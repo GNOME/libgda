@@ -1,3 +1,7 @@
+2002-06-19  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* POTFILES.in: removed missing file.
+
 2002-06-18  Ole Laursen  <olau@hardworking.dk>
 
 	* da.po: Updated Danish translation.
