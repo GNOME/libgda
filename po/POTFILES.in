@@ -1,4 +1,3 @@
-libgda/gda-batch.c
 libgda/gda-client.c
 libgda/gda-command.c
 libgda/gda-config.c
@@ -7,7 +6,6 @@ libgda/gda-data-model-array.c
 libgda/gda-data-model.c
 libgda/gda-data-model-list.c
 libgda/gda-error.c
-libgda/gda-export.c
 libgda/gda-init.c
 libgda/gda-log.c
 libgda/gda-parameter.c
