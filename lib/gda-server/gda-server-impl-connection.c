@@ -269,8 +269,6 @@ impl_GDA_Connection_open (impl_POA_GDA_Connection * servant,
 			  CORBA_char * passwd,
 			  CORBA_Environment * ev)
 {
-  g_return_val_if_fail(servant->cnc != NULL, -1);
-
   gda_log_message(_("impl_GDA_Connection_open: opening connection with DSN: %s"), dsn);
   if (gda_server_connection_open(servant->cnc, dsn, user, passwd) != 0)
     {
