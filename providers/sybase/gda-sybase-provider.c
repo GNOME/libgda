@@ -787,8 +787,9 @@ gda_sybase_execute_cmd (GdaConnection *cnc, const gchar *sql)
 				scnc->ret = ct_cancel (NULL, scnc->cmd,
 				                       CS_CANCEL_CURRENT);
 				if (scnc->ret != CS_SUCCEED) {
-					error = gda_sybase_make_error (scnc,
-					     _("execute_cmd(): ct_cancel failed"));
+					error = gda_sybase_make_error (
+						scnc,
+						_("%s: %s failed"), __FUNCTION__, "ct_cancel");
 					gda_connection_add_error (cnc, error);
 					ret = FALSE;
 				}
@@ -802,8 +803,9 @@ gda_sybase_execute_cmd (GdaConnection *cnc, const gchar *sql)
 			scnc->ret = ct_cancel (NULL, scnc->cmd,
 			                       CS_CANCEL_ALL);
 			if (scnc->ret != CS_SUCCEED) {
-				error = gda_sybase_make_error (scnc,
-					     _("execute_cmd(): ct_cancel failed"));
+				error = gda_sybase_make_error (
+					scnc,
+					_("%s: %s failed"), __FUNCTION__, "ct_cancel");
 				gda_connection_add_error (cnc, error);
 			}
 		}
@@ -812,8 +814,9 @@ gda_sybase_execute_cmd (GdaConnection *cnc, const gchar *sql)
 	if (scnc->ret == CS_END_RESULTS) {
 		scnc->ret = ct_cmd_drop (scnc->cmd);
 		if (scnc->ret != CS_SUCCEED) {
-			error = gda_sybase_make_error (scnc,
-				     _("execute_cmd(): ct_cmd_drop() failed"));
+			error = gda_sybase_make_error (
+				scnc,
+				_("%s: %s failed"), __FUNCTION__, "ct_cmd_drop");
 			gda_connection_add_error (cnc, error);
 			ret = FALSE;
 		} else {
