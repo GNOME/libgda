@@ -42,6 +42,7 @@
 #endif
 
 static GHashTable* factories = NULL;
+static GtkObjectClass *parent_class = NULL;
 
 enum {
 	CONNECTION_ERROR,
@@ -143,7 +144,9 @@ static void
 gda_connection_class_init (GdaConnectionClass* klass)
 {
 	GtkObjectClass*   object_class;
-	
+
+	parent_class = gtk_type_class(gtk_object_get_type());
+
 	object_class = (GtkObjectClass*) klass;
 	
 	gda_connection_signals[CONNECTION_ERROR] = gtk_signal_new("error",
@@ -172,6 +175,7 @@ gda_connection_class_init (GdaConnectionClass* klass)
 							    GTK_TYPE_NONE, 0);
 
 	gtk_object_class_add_signals(object_class, gda_connection_signals, LAST_SIGNAL);
+	object_class->destroy = gda_connection_destroy;
 	klass->error   = gda_connection_real_error;
 	klass->warning = gda_connection_real_warning;
 	klass->close   = NULL;
@@ -324,10 +328,6 @@ gda_connection_new (CORBA_ORB orb)
 	cnc = GDA_CONNECTION (g_object_new (GDA_TYPE_CONNECTION, NULL));
 #else
 	cnc = gtk_type_new(gda_connection_get_type());
-	gtk_signal_connect(GTK_OBJECT(cnc),
-					   "destroy",
-					   GTK_SIGNAL_FUNC(gda_connection_destroy),
-					   NULL);
 #endif
 	cnc->orb = orb;
 	return cnc;
@@ -365,6 +365,9 @@ gda_connection_destroy (GtkObject *object, gpointer user_data)
 		g_free(cnc->user);
 	if (cnc->passwd)
 		g_free(cnc->passwd);
+
+	if (GTK_OBJECT_CLASS(parent_class)->destroy)
+		GTK_OBJECT_CLASS(parent_class)->destroy(object);
 }
 #endif
 
@@ -562,8 +565,6 @@ void
 gda_connection_close (GdaConnection* cnc)
 {
 	CORBA_Environment     ev;
-	
-	g_print("%s: %d: %s called\n", __FILE__, __LINE__, __PRETTY_FUNCTION__);
 	
 	g_return_if_fail(cnc != NULL);
 	g_return_if_fail(gda_connection_is_open(cnc));

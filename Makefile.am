@@ -1,5 +1,6 @@
 SUBDIRS = \
 	po \
+	intl \
 	macros \
 	doc \
 	idl \

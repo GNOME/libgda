@@ -1,3 +1,7 @@
+2001-05-04  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* configure.in: use AM_GNU_GETTEXT instead of AM_GNOME_GETTEXT
+
 2001-05-03  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* providers/gda-default-server/*: basic default provider
