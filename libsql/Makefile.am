@@ -32,3 +32,5 @@ sql_parse_test_DEPENDENCIES =
 sql_parse_test_LDADD = 
 
 tests: sql_parse_test
+
+EXTRA_DIST=parser.y lexer.l
