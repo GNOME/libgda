@@ -1,3 +1,22 @@
+2002-01-22  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
+	* idl/GNOME_Database.idl: moved declarations of Command* before
+	Recordset. Added getCommandText() and getCommandType() to the
+	Recordset interface.
+
+	* libgda/gda-recordset.[ch] (gda_recordset_command_type):
+	(gda_recordset_command_text): new functions to retrieve the text and
+	type of the query that generated the recordset.
+
+	* libgda/gda-server-recordset.[ch] (impl_Recordset_getCommandText):
+	(impl_Recordset_getCommandType): new functions.
+
+	* providers/postgres/gda-postgres-provider.c (process_sql_commands):
+	sets the command type and text for each recordset.
+
+	* testing/models.c (display_recordset_data): display the type and text
+	of the query. Now it works for postgres provider.
+
 2002-01-21  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
 	* idl/GNOME_Database.idl:

@@ -344,8 +344,11 @@ process_sql_commands (GList *reclist, GdaServerConnection *cnc,
 			    status == PGRES_TUPLES_OK 			||
 			    status == PGRES_COMMAND_OK) {
 				recset = gda_postgres_recordset_new (cnc, pg_res);
-				if (GDA_IS_SERVER_RECORDSET (recset))
+				if (GDA_IS_SERVER_RECORDSET (recset)) {
+					gda_server_recordset_set_command_text (recset, arr[n]);
+					gda_server_recordset_set_command_type (recset, GDA_COMMAND_TYPE_SQL);
 					reclist = g_list_append (reclist, recset);
+				}
 			} else {
 				gda_server_connection_add_error (
 					cnc, gda_postgres_make_error (pconn));

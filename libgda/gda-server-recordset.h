@@ -24,6 +24,7 @@
 #  define __gda_server_recordset_h__
 
 #include <libgda/gda-row.h>
+#include <libgda/gda-command.h>
 #include <libgda/gda-server-connection.h>
 #include <bonobo/bonobo-xobject.h>
 
@@ -63,6 +64,13 @@ void                 gda_server_recordset_set_fetch_func (GdaServerRecordset *re
 							  GdaServerRecordsetFetchFunc func);
 void                 gda_server_recordset_set_describe_func (GdaServerRecordset *recset,
 							     GdaServerRecordsetDescribeFunc func);
+
+const gchar         *gda_server_recordset_get_command_text (GdaServerRecordset *recset);
+void 		     gda_server_recordset_set_command_text (GdaServerRecordset *recset,
+								const gchar *cmd_text);
+GdaCommandType	     gda_server_recordset_get_command_type (GdaServerRecordset *recset);
+void 		     gda_server_recordset_set_command_type (GdaServerRecordset *recset,
+								GdaCommandType cmd_type);
 
 G_END_DECLS
 

@@ -23,6 +23,7 @@
 #include <bonobo/bonobo-exception.h>
 #include <bonobo/bonobo-i18n.h>
 #include <libgda/gda-server-recordset.h>
+#include <libgda/gda-command.h>
 
 #define PARENT_TYPE BONOBO_OBJECT_TYPE
 
@@ -34,6 +35,8 @@ struct _GdaServerRecordsetPrivate {
 	glong current_pos;
 	gboolean is_eof;
 	GPtrArray *rows;
+	gchar *cmd_text;
+	GdaCommandType cmd_type;
 };
 
 static void gda_server_recordset_class_init (GdaServerRecordsetClass *klass);
@@ -210,6 +213,34 @@ impl_Recordset_fetch (PortableServer_Servant servant, CORBA_Environment *ev)
 	return row;
 }
 
+static CORBA_string
+impl_Recordset_getCommandText (PortableServer_Servant servant,
+			       CORBA_Environment *ev)
+{
+	const gchar *string;
+
+	GdaServerRecordset *recset = (GdaServerRecordset *) 
+					bonobo_object (servant);
+
+	bonobo_return_val_if_fail (GDA_IS_SERVER_RECORDSET (recset),
+					NULL, ev);
+
+	string = gda_server_recordset_get_command_text (recset);
+	return CORBA_string_dup (string ? string : "");
+}
+
+static GdaCommandType
+impl_Recordset_getCommandType (PortableServer_Servant servant,
+			       CORBA_Environment *ev)
+{
+	GdaServerRecordset *recset = (GdaServerRecordset *) bonobo_object (servant);
+
+	bonobo_return_val_if_fail (GDA_IS_SERVER_RECORDSET (recset),
+				GDA_COMMAND_TYPE_INVALID, ev);
+
+	return gda_server_recordset_get_command_type (recset);
+}
+
 /*
  * GdaServerRecordset class implementation
  */
@@ -233,6 +264,8 @@ gda_server_recordset_class_init (GdaServerRecordsetClass *klass)
 	epv->movePrevious = impl_Recordset_movePrevious;
 	epv->moveLast = impl_Recordset_moveLast;
 	epv->fetch = impl_Recordset_fetch;
+	epv->getCommandText = impl_Recordset_getCommandText;
+	epv->getCommandType = impl_Recordset_getCommandType;
 }
 
 static void
@@ -247,6 +280,8 @@ gda_server_recordset_init (GdaServerRecordset *recset, GdaServerRecordsetClass *
 	recset->priv->current_pos = 0;
 	recset->priv->is_eof = FALSE;
 	recset->priv->rows = g_ptr_array_new ();
+	recset->priv->cmd_text = NULL;
+	recset->priv->cmd_type = GDA_COMMAND_TYPE_INVALID;
 }
 
 static void
@@ -266,6 +301,9 @@ gda_server_recordset_finalize (GObject *object)
 		gda_row_free (row);
 	}
 	g_ptr_array_free (recset->priv->rows, TRUE);
+
+	if (recset->priv->cmd_text)
+		g_free (recset->priv->cmd_text);
 	
 	g_free (recset->priv);
 	recset->priv = NULL;
@@ -342,3 +380,52 @@ gda_server_recordset_set_describe_func (GdaServerRecordset *recset,
 	g_return_if_fail (GDA_IS_SERVER_RECORDSET (recset));
 	recset->priv->desc_func = func;
 }
+
+/**
+ * gda_server_recordset_get_command_text
+ */
+const gchar *
+gda_server_recordset_get_command_text (GdaServerRecordset *recset)
+{
+	g_return_val_if_fail (GDA_IS_SERVER_RECORDSET (recset), NULL);
+	return recset->priv->cmd_text;
+}
+
+/**
+ * gda_server_recordset_set_command_text
+ */
+void
+gda_server_recordset_set_command_text (GdaServerRecordset *recset,
+				       const gchar *cmd_text)
+{
+	g_return_if_fail (GDA_IS_SERVER_RECORDSET (recset));
+	g_return_if_fail (cmd_text != NULL);
+
+	if (recset->priv->cmd_text)
+		g_free (recset->priv->cmd_text);
+
+	recset->priv->cmd_text = g_strdup (cmd_text);
+}
+
+/**
+ * gda_server_recordset_get_command_type
+ */
+GdaCommandType
+gda_server_recordset_get_command_type (GdaServerRecordset *recset)
+{
+	g_return_val_if_fail (GDA_IS_SERVER_RECORDSET (recset),
+				GDA_COMMAND_TYPE_INVALID);
+	return recset->priv->cmd_type;
+}
+
+/**
+ * gda_server_recordset_set_command_type
+ */
+void
+gda_server_recordset_set_command_type (GdaServerRecordset *recset,
+				       GdaCommandType cmd_type)
+{
+	g_return_if_fail (GDA_IS_SERVER_RECORDSET (recset));
+	recset->priv->cmd_type = cmd_type;
+}
+

@@ -83,38 +83,6 @@ module GNOME {
 		};
 
 		/*
-		 * The Recordset interface contains all information
-		 * about a set of rows returned by the underlying
-		 * provider as a result of executing a command
-		 */
-		struct FieldAttributes {
-			long    definedSize;
-			string  name;
-			long    scale;
-			Type    gdaType;
-		};
-		struct Field {
-			long actualSize;
-			Value value;
-			FieldAttributes attributes;
-		};
-		typedef sequence<FieldAttributes> RowAttributes;
-		typedef sequence<Field> Row;
-
-		interface Recordset : Bonobo::Unknown {
-			RowAttributes describe () raises (DriverError);
-			long getRowCount ();
-
-			boolean moveFirst () raises (DriverError);
-			boolean moveNext () raises (DriverError);
-			boolean movePrevious () raises (DriverError);
-			boolean moveLast () raises (DriverError);
-
-			Row fetch () raises (DriverError);
-		};
-		typedef sequence<Recordset> RecordsetList;
-
-		/*
 		 * The Command struct contains information about a
 		 * command to be executed on the server
 		 */
@@ -138,6 +106,40 @@ module GNOME {
 			CommandType type;
 			CommandOptions options;
 		};
+
+		/*
+		 * The Recordset interface contains all information
+		 * about a set of rows returned by the underlying
+		 * provider as a result of executing a command
+		 */
+		struct FieldAttributes {
+			long    definedSize;
+			string  name;
+			long    scale;
+			Type    gdaType;
+		};
+		struct Field {
+			long actualSize;
+			Value value;
+			FieldAttributes attributes;
+		};
+		typedef sequence<FieldAttributes> RowAttributes;
+		typedef sequence<Field> Row;
+
+		interface Recordset : Bonobo::Unknown {
+			RowAttributes describe () raises (DriverError);
+			long getRowCount ();
+			string getCommandText ();
+			CommandType getCommandType ();
+
+			boolean moveFirst () raises (DriverError);
+			boolean moveNext () raises (DriverError);
+			boolean movePrevious () raises (DriverError);
+			boolean moveLast () raises (DriverError);
+
+			Row fetch () raises (DriverError);
+		};
+		typedef sequence<Recordset> RecordsetList;
 
 		/*
 		 * The Client interface is implemented by GDA clients,

@@ -22,6 +22,34 @@
 
 #include "models.h"
 
+static const char *
+command_type_to_string (GdaCommandType cmd_type)
+{
+	const gchar *type_name;
+
+	switch (cmd_type) {
+		case GDA_COMMAND_TYPE_SQL :
+			type_name = "SQL";
+			break;
+		case GDA_COMMAND_TYPE_XML :
+			type_name = "XML";
+			break;
+		case GDA_COMMAND_TYPE_PROCEDURE :
+			type_name = "PROCEDURE";
+			break;
+		case GDA_COMMAND_TYPE_TABLE :
+			type_name = "TABLE";
+			break;
+		case GDA_COMMAND_TYPE_INVALID :
+			type_name = "INVALID!";
+			break;
+		default:
+			type_name = "Unknown type.";
+	}
+
+	return type_name;
+}
+
 /*
  * display_recordset_data
  * @model: a recordset with the data to display.
@@ -36,6 +64,8 @@ display_recordset_data (GdaDataModel *model)
 {
 	gint cols, rows;
 	gint c, r;
+	GdaCommandType cmd_type;
+	const gchar *cmd_text, *type_text;
 
 	g_return_if_fail (GDA_IS_RECORDSET (model));
 
@@ -44,6 +74,12 @@ display_recordset_data (GdaDataModel *model)
 
 	g_print ("Displaying recordset %p, with %d columns and %d rows:\n",
 		 model, cols, rows);
+
+	cmd_type = gda_recordset_get_command_type (GDA_RECORDSET (model));
+	type_text = command_type_to_string (cmd_type);
+	cmd_text = gda_recordset_get_command_text (GDA_RECORDSET (model));
+	g_print ("The query (type '%s') leading up to this result was:\n\t'%s'\n\n",
+			type_text, cmd_text ? cmd_text : "<null>");
 
 	for (r = 0; r < rows; r++) {
 		g_print ("\tRow %02d -------\n", r);

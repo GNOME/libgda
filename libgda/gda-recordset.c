@@ -37,6 +37,8 @@ struct _GdaRecordsetPrivate {
 
 	gint row_count;
 	gboolean load_completed;
+	gchar *cmd_text;
+	GdaCommandType cmd_type;
 };
 
 static void gda_recordset_class_init (GdaRecordsetClass *klass);
@@ -204,6 +206,8 @@ gda_recordset_init (GdaRecordset *recset, GdaRecordsetClass *klass)
 	recset->priv->timeout_id = -1;
 	recset->priv->row_count = -1;
 	recset->priv->load_completed = FALSE;
+	recset->priv->cmd_text = NULL;
+	recset->priv->cmd_type = GDA_COMMAND_TYPE_INVALID;
 }
 
 static void
@@ -228,10 +232,26 @@ gda_recordset_finalize (GObject * object)
 	if (recset->priv->attributes != NULL)
 		CORBA_free (recset->priv->attributes);
 
+	if (recset->priv->cmd_text != NULL)
+		CORBA_free (recset->priv->cmd_text);
+
 	g_free (recset->priv);
 	recset->priv = NULL;
 
 	parent_class->finalize (object);
+}
+
+const gchar *
+gda_recordset_get_command_text (GdaRecordset *recset) {
+	g_return_val_if_fail (GDA_IS_RECORDSET (recset), NULL);
+	return recset->priv->cmd_text;
+}
+
+GdaCommandType
+gda_recordset_get_command_type (GdaRecordset *recset) {
+	g_return_val_if_fail (GDA_IS_RECORDSET (recset), GDA_COMMAND_TYPE_INVALID);
+	return recset->priv->cmd_type;
+
 }
 
 /**
@@ -295,6 +315,12 @@ gda_recordset_new (GdaConnection *cnc, GNOME_Database_Recordset corba_recset)
 
 		recset->priv->load_completed = TRUE;
 	}
+
+	recset->priv->cmd_text = GNOME_Database_Recordset_getCommandText (
+					recset->priv->corba_recset, &ev);
+
+	recset->priv->cmd_type = GNOME_Database_Recordset_getCommandType (
+					recset->priv->corba_recset, &ev);
 
 	return recset;
 }

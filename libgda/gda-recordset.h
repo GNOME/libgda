@@ -53,6 +53,9 @@ GType         gda_recordset_get_type (void);
 GdaRecordset *gda_recordset_new (GdaConnection *cnc,
 				 GNOME_Database_Recordset corba_recset);
 
+const gchar   *gda_recordset_get_command_text (GdaRecordset *recset);
+GdaCommandType gda_recordset_get_command_type (GdaRecordset *recset);
+
 G_END_DECLS
 
 #endif
