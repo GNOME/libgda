@@ -122,9 +122,9 @@ maintainer-clean-local: clean
 	cd $(srcdir) && rm -rf sgml $(DOC_MODULE)-decl-list.txt $(DOC_MODULE)-decl.txt
 
 install-data-local:
-	$(mkinstalldirs) $(DOC_DIR)
+	$(mkinstalldirs) $(DESTDIR)$(DOC_DIR)
 	for i in $(DOC_DIR_INSTALL_FILES); do		  \
-		$(INSTALL_DATA) $(srcdir)/$$i $(DOC_DIR); \
+		$(INSTALL_DATA) $(srcdir)/$$i $(DESTDIR)$(DOC_DIR); \
 	done
 
 dist-hook:

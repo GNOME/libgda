@@ -29,10 +29,10 @@ dist-hook:
 	-cp libgda.html $(distdir)
 
 install-data-local: libgda.html
-	$(mkinstalldirs) $(libgdaptbr_helpdir)/images
+	$(mkinstalldirs) $(DESTDIR)$(libgdaptbr_helpdir)/images
 	-for file in $(srcdir)/libgda/*.html $(srcdir)/libgda/*.css; do \
 	basefile=`basename $$file`; \
-	$(INSTALL_DATA) $(srcdir)/$$file $(libgdaptbr_helpdir)/$$basefile; \
+	$(INSTALL_DATA) $(srcdir)/$$file $(DESTDIR)$(libgdaptbr_helpdir)/$$basefile; \
 	done
 
 libgda.ps: libgda.sgml
