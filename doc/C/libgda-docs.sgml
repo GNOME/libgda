@@ -2363,7 +2363,7 @@
 	  <para>
 	    Retrieves a row from the data model. This function is very important
 	    for the implementation of editable data models. What this function
-	    returns is a <xref linkend"GdaRow">GdaRow</xref>, which providers
+	    returns is a <xref linkend="GdaRow">GdaRow</xref>, which providers
 	    should uniquely identify (via <xref linkend="gda-row-set-id">gda_row_set_id</xref>).
 	    This is needed so that later on, client applications can use the same
 	    <xref linkend="GdaRow">GdaRow</xref> returned by this method in
