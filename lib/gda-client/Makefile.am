@@ -24,7 +24,6 @@ GDA-stubs.c GDA-common.c GDA.h: $(IDLFILES)
 gda_client_headers = \
 	gda-batch.h \
 	gda-command.h \
-	gda-commandP.h \
 	gda-connection-pool.h \
 	gda-connection.h \
 	gda-error.h \
