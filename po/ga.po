@@ -74,7 +74,7 @@ msgstr ""
 #: providers/odbc/gda-odbc-provider.c:1298
 #: providers/postgres/gda-postgres-provider.c:1118
 msgid "Description"
-msgstr ""
+msgstr "Tuarascail"
 
 #: libgda/gda-config.c:1404
 msgid "Username"
@@ -82,7 +82,7 @@ msgstr "Úsáidtheoir"
 
 #: libgda/gda-config.c:1405
 msgid "Password"
-msgstr ""
+msgstr "Pasfhocal"
 
 #: libgda/gda-data-model.c:711
 #, c-format
@@ -176,7 +176,7 @@ msgstr ""
 
 #: libgda/gda-xml-database.c:724
 msgid "Invalid node"
-msgstr ""
+msgstr "Módh neamhbhailí"
 
 #: libgda/gda-xml-database.c:766
 #, c-format
@@ -185,7 +185,7 @@ msgstr ""
 
 #: libgda/gda-xml-database.c:773
 msgid "Invalid XML node"
-msgstr ""
+msgstr "Módh Neamhbhailí XML"
 
 #: libgda/gda-xml-database.c:782
 msgid "Could not add the data from the XML node"
@@ -371,7 +371,7 @@ msgstr ""
 #: providers/sqlite/gda-sqlite-provider.c:750
 #: providers/sybase/gda-sybase-provider.c:1098
 msgid "Owner"
-msgstr ""
+msgstr "Úinear"
 
 #: providers/ibmdb2/gda-ibmdb2-provider.c:777
 msgid "Database"
@@ -425,7 +425,7 @@ msgstr ""
 #: providers/sqlite/gda-sqlite-provider.c:749
 #: providers/sybase/gda-sybase-provider.c:1096
 msgid "Type"
-msgstr ""
+msgstr "Saghas"
 
 #: providers/ibmdb2/gda-ibmdb2-provider.c:948
 #: providers/ldap/gda-ldap-provider.c:329 providers/mdb/gda-mdb-provider.c:549
@@ -470,7 +470,7 @@ msgstr "Saghas GDA"
 #: providers/oracle/gda-oracle-provider.c:1825
 #: providers/postgres/gda-postgres-provider.c:1904 testing/client.c:137
 msgid "Users"
-msgstr "Úsáidtheoirí"
+msgstr "Úsáidtheoir;i"
 
 #: providers/ibmdb2/libmain.c:39
 msgid "Provider for IBMDB2 databases"
@@ -619,7 +619,7 @@ msgstr ""
 #: providers/sqlite/gda-sqlite-provider.c:627
 #: providers/xml/gda-xml-provider.c:496
 msgid "References"
-msgstr "Roghnachais"
+msgstr ""
 
 #: providers/mdb/gda-mdb-provider.c:498 providers/msql/gda-msql-provider.c:544
 #: providers/mysql/gda-mysql-provider.c:1078
@@ -628,7 +628,7 @@ msgstr "Roghnachais"
 #: providers/postgres/gda-postgres-provider.c:1371
 #: providers/sqlite/gda-sqlite-provider.c:628
 msgid "Default value"
-msgstr ""
+msgstr "Luath loiceád"
 
 #: providers/mdb/gda-mdb-provider.c:547
 #: providers/mysql/gda-mysql-provider.c:703
@@ -770,7 +770,7 @@ msgstr ""
 
 #: providers/msql/gda-msql-provider.c:486
 msgid "Title"
-msgstr "Tidéal"
+msgstr "Tideál"
 
 #: providers/msql/gda-msql-provider.c:536
 msgid "Field Name"
@@ -862,7 +862,7 @@ msgstr ""
 #: providers/odbc/gda-odbc-provider.c:1296
 #: providers/oracle/gda-oracle-provider.c:2193 testing/client.c:134
 msgid "Views"
-msgstr "Amharcanna"
+msgstr "Radharcanna"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/odbc/gda-odbc-provider.c:1348
@@ -1020,12 +1020,12 @@ msgstr ""
 #: providers/oracle/gda-oracle-provider.c:1156
 #: providers/postgres/gda-postgres-provider.c:1315
 msgid "OutType"
-msgstr ""
+msgstr "SaghasAschur"
 
 #: providers/oracle/gda-oracle-provider.c:1157
 #: providers/postgres/gda-postgres-provider.c:1316
 msgid "InType"
-msgstr ""
+msgstr "SaghasInchur"
 
 #: providers/oracle/gda-oracle-provider.c:1441
 msgid "Could not allocate the Oracle describe handle"
@@ -1097,7 +1097,7 @@ msgstr ""
 #: providers/oracle/gda-oracle-provider.c:2177
 #: providers/postgres/gda-postgres-provider.c:1235 testing/client.c:135
 msgid "Indexes"
-msgstr ""
+msgstr "Inneacsaí"
 
 #: providers/oracle/gda-oracle-provider.c:2180
 msgid "Procedures"
@@ -1320,7 +1320,7 @@ msgstr ""
 #: providers/sybase/gda-sybase-provider.c:930
 #, c-format
 msgid "%s: %s failed"
-msgstr ""
+msgstr "%s: teip %s"
 
 #: providers/sybase/gda-sybase-provider.c:974
 msgid "could not allocate cmd structure to find current database."
@@ -1460,7 +1460,7 @@ msgstr ""
 #: providers/sybase/utils.c:60
 #, c-format
 msgid "OS error: %s"
-msgstr ""
+msgstr "Earraidh OS: %s"
 
 #: providers/sybase/utils.c:70
 msgid "Call: Client callback."
@@ -1488,7 +1488,7 @@ msgstr ""
 #: providers/sybase/utils.c:100
 #, c-format
 msgid "\tServer name: %s\n"
-msgstr "\tAinm Freastalaí: %s\n"
+msgstr "\tAinm freastalaí: %s\n"
 
 #: providers/sybase/utils.c:103
 #, c-format
@@ -1510,11 +1510,11 @@ msgstr ""
 
 #: providers/sybase/utils.c:230
 msgid "OS_Error:("
-msgstr "Earraidh_OS:("
+msgstr ""
 
 #: providers/sybase/utils.c:232
 msgid ") Message: "
-msgstr ") Scéal: "
+msgstr ""
 
 #: providers/sybase/utils.c:245
 msgid "Sybase OpenClient Msg: severity("
@@ -1567,7 +1567,7 @@ msgstr ""
 
 #: providers/sybase/utils.c:363
 msgid "Line"
-msgstr ""
+msgstr "Lín"
 
 #: providers/sybase/utils.c:446
 msgid "call to ct_diag failed when attempting to the amount of client messages"
@@ -1580,7 +1580,7 @@ msgstr ""
 
 #: providers/sybase/utils.c:476
 msgid "Layer"
-msgstr ""
+msgstr "Sraith"
 
 #: providers/sybase/utils.c:478
 msgid "Origin"
@@ -1793,7 +1793,7 @@ msgstr ""
 #: testing/client.c:113
 #, c-format
 msgid "\t\tUsers: %s\n"
-msgstr "\t\tÚsáideoirí: %s\n"
+msgstr ""
 
 #: testing/client.c:116
 #, c-format
@@ -1850,7 +1850,7 @@ msgstr ""
 #: testing/client.c:147 testing/client.c:151 testing/client.c:155
 #: testing/client.c:159
 msgid "Error"
-msgstr "Earraidh"
+msgstr ""
 
 #: testing/client.c:149
 msgid "\tFinishing transaction..."
@@ -1890,14 +1890,14 @@ msgstr ""
 #: testing/config.c:90
 #, c-format
 msgid "\tdescription = %s\n"
-msgstr "\tcur síos = %s\n"
+msgstr "\ttuarascail = %s\n"
 
 #: testing/config.c:92
 msgid "\tgda_params ="
 msgstr ""
 
 msgid "Default"
-msgstr "Loicéad"
+msgstr "Loicead"
 
 msgid "Username set."
 msgstr ""
