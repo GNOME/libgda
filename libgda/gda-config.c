@@ -122,13 +122,26 @@ gda_config_read_entries (xmlNodePtr cur)
 static GList *
 gda_config_parse_config_file (gchar *buffer, gint len)
 {
+	static gboolean memsetup_done = FALSE;
 	xmlDocPtr doc;
 	xmlNodePtr cur;
 	GList *list = NULL;
 	gda_config_section *section;
+	gint sp_len;
+	const gchar *section_path = GDA_CONFIG_SECTION_DATASOURCES;
 
 	g_return_val_if_fail (buffer != NULL, NULL);
 	g_return_val_if_fail (len != 0, NULL);
+
+	sp_len = strlen (section_path);
+
+	if (memsetup_done == FALSE) {
+		memsetup_done = TRUE;
+		xmlMemSetup (g_free,
+			     (xmlMallocFunc) g_malloc,
+			     (xmlReallocFunc) g_realloc,
+			     g_strdup);
+	}
 
 	xmlDoValidityCheckingDefaultValue = FALSE;
 	xmlKeepBlanksDefault(0);
@@ -152,24 +165,29 @@ gda_config_parse_config_file (gchar *buffer, gint len)
 		return NULL;
 	}
 
-	cur = cur->xmlChildrenNode;
-	while (cur != NULL) {
-		if (!strcmp(cur->name, "section")){
-			section = g_new (gda_config_section, 1);
-			section->path = xmlGetProp (cur, "path");
-			if (section->path != NULL){
-				section->entries = gda_config_read_entries (cur);
-				list = g_list_append (list, section);
-			} else {
-				g_warning ("section without 'path'!");
-				g_free (section);
-			}
-		} else {
-			g_warning ("'section' expected, got '%s'. Ignoring...",
-				   cur->name);
+	for (cur = cur->xmlChildrenNode; cur != NULL; cur = cur->next) {
+		if (strcmp(cur->name, "section")) {
+			g_warning ("'section' expected, got '%s'. Ignoring...", cur->name);
+			continue;
 		}
 
-		cur = cur->next;
+		section = g_new (gda_config_section, 1);
+		section->path = xmlGetProp (cur, "path");
+		if (section->path != NULL &&
+		    !strncmp (section->path, section_path, sp_len)){
+			section->entries = gda_config_read_entries (cur);
+			if (section->entries == NULL) {
+				g_free (section->path);
+				g_free (section);
+				continue;
+			}
+			
+			list = g_list_append (list, section);
+		} else {
+			g_warning ("Ignoring section '%s'.", section->path);
+			g_free (section->path);
+			g_free (section);
+		}
 	}
 
 	xmlFreeDoc (doc);
@@ -730,6 +748,7 @@ gda_config_remove_section (const gchar *path)
  * @path: path to the configuration entry
  *
  * Remove the given entry from the configuration database
+ * If the section is empty, also remove the section.
  */
 void
 gda_config_remove_key (const gchar *path)
@@ -754,23 +773,33 @@ gda_config_remove_key (const gchar *path)
 	entry = NULL;
 	cfg_client = get_config_client ();
 	section = gda_config_search_section (cfg_client->user, section_path);
-	if (section){
-		for (le = section->entries; le; le = le->next){
-			entry = le->data;
-			if (!strcmp (entry->name, ptr_last_dash + 1))
-				break;
+	if (section == NULL) {
+		g_free (section_path);
+		return;
+	}
 
-			entry = NULL;
-		}
+	for (le = section->entries; le; le = le->next){
+		entry = le->data;
+		if (!strcmp (entry->name, ptr_last_dash + 1))
+			break;
+
+		entry = NULL;
 	}
 
 	g_free (section_path);
-	if (entry != NULL){
-		section->entries = g_list_remove (section->entries, entry);
-		free_entry (entry, NULL);
-		write_config_file ();
-		do_notify (path);
+
+	if (entry == NULL)
+		return;
+
+	section->entries = g_list_remove (section->entries, entry);
+	free_entry (entry, NULL);
+	if (section->entries == NULL) {
+		cfg_client->user = g_list_remove (cfg_client->user, section);
+		free_section (section, NULL);
 	}
+
+	write_config_file ();
+	do_notify (path);
 }
 
 /**
