@@ -5,10 +5,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: 2.4\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2003-11-30 12:21+0100\n"
-"PO-Revision-Date: 2003-11-13 21:40+0000\n"
+"Project-Id-Version: 2.6\n"
+"Report-Msgid-Bugs-To: Duarte Loreto <happyguy_pt@hotmail.com>\n"
+"POT-Creation-Date: 2003-11-30 22:15+0000\n"
+"PO-Revision-Date: 2003-11-30 22:20+0000\n"
 "Last-Translator: Duarte Loreto <happyguy_pt@hotmail.com>\n"
 "Language-Team: Portuguese <gnome_pt@yahoogroups.com>\n"
 "MIME-Version: 1.0\n"
@@ -85,7 +85,7 @@ msgstr "Utilizador"
 msgid "Password"
 msgstr "Senha"
 
-#: libgda/gda-data-model.c:721
+#: libgda/gda-data-model.c:711
 #, c-format
 msgid "Data model %p is not editable"
 msgstr "Modelo de dados %p não é editável"
@@ -735,9 +735,9 @@ msgstr "Incapaz de parsear comando '%s'"
 #. parsing went fine, but there is no result
 #. (e.g. because of an invalid column name)
 #: providers/mdb/gda-mdb-provider.c:744
-#, fuzzy, c-format
+#, c-format
 msgid "Got no result for '%s' command"
-msgstr "Incapaz de parsear comando '%s'"
+msgstr "Nenhum resultado obtido para o comando '%s'"
 
 #: providers/mdb/gda-mdb-table.c:48 providers/xml/gda-xml-provider.c:519
 #, c-format
