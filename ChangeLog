@@ -284,7 +284,6 @@
 
 	* providers/sybase/gda-sybase-provider.c: Fixed typo.
 
->>>>>>> 1.429
 2002-12-16  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	Should fix #101046
@@ -506,7 +505,6 @@
 	* providers/freetds/gda-tds-schemas.h: added query for server
 	version
 
->>>>>>> 1.403
 2002-10-29  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* libgda/gda-connection.[ch] (gda_connection_new): added
