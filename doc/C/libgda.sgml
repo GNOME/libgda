@@ -1,11 +1,8 @@
 <?xml version='1.0'?>
-<!DOCTYPE book PUBLIC "-//GNOME//DTD DocBook PNG Variant V1.1//EN"[
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+    "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd" [
 <!ENTITY LIBGDA          "<application>libgda</application>">
 <!ENTITY GNOMEDB         "<application>GNOME-DB</application>">
-<!ENTITY GDA-GDA-COMMON  SYSTEM "gda-common.sgml">
-<!ENTITY GDA-GDA-CLNT    SYSTEM "gda-clnt.sgml">
-<!ENTITY GDA-GDA-CLNT-UI SYSTEM "gda-clnt-ui.sgml">
-<!ENTITY GDA-GDA-SRV     SYSTEM "gda-srv.sgml">
 <!ENTITY FDL-INC         SYSTEM "fdl-appendix.sgml">
 <!ENTITY API             "<acronym>API</acronym>">
 <!ENTITY DBMS            "<acronym>DBMS</acronym>">
@@ -28,11 +25,9 @@
 <!ENTITY INFOR           "<application>Informix</application>">
 ]>
 
-
-
 <book id="index">
   <bookinfo>
-    <title>GNU Data Access maunal</title>
+    <title>GNOME Data Access manual</title>
     <authorgroup>
       <author>
         <firstname>Michael</firstname>
@@ -73,7 +68,7 @@
 
     <abstract>
       <para>
-        GNU Data Access (&GDA;) is an architecture whose 
+        GNOME Data Access (&GDA;) is an architecture whose 
         purpose is to provide universal access to many different kinds and
         types of data sources. This goes from traditional relational database
         systems, to any imaginable kind of data source such as a mail server,
@@ -128,7 +123,7 @@
       to the database for special tasks.
     </para>
     <para>
-      GNU Data Access (&GDA;) is defined as a set of &CORBA; &IDL; interfaces.
+      GNOME Data Access (&GDA;) is defined as a set of &CORBA; &IDL; interfaces.
       The level of abstraction provided by &GDA; makes it possible to access
       any kind of data source, provided that a &CORBA; server implementing 
       those &IDL; interfaces and accessing this particular data source is
@@ -150,7 +145,7 @@
       internals without having to modify applications using the libraries, as
       well as, most importantly, keeps application developers away from the
       continous changes in the different &CORBA;-related &API;s being used,
-      such as <systemitem class="resource">OAF</systemitem>,
+      such as <systemitem class="resource">Bonobo</systemitem>,
       <systemitem class="resource">GConf</systemitem>...
     </para>
     <para>
@@ -165,7 +160,7 @@
       class="osname">Linux</systemitem>), and does not depend on other 
       libraries apart from <systemitem class="resource">ORBit</systemitem>, 
       <systemitem class="resource">GConf</systemitem>, 
-      <systemitem class="resource">OAF</systemitem> and 
+      <systemitem class="resource">Bonobo</systemitem> and 
       <systemitem class="resource">Glib</systemitem>, which makes it a very
       lightweight system also ideal for applications to be run on 
       hardware-limited systems. It was once part of the &GNOMEDB; project, and

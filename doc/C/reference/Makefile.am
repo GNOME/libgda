@@ -1,5 +1,3 @@
-SUBDIRS=libgda-common libgda-client
-
 DOC_MODULE=libgda-reference
 
 DOC_MAIN_SGML_FILE=libgda-reference.sgml

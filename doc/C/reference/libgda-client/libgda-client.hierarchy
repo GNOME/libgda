@@ -1,8 +1,0 @@
-GtkObject
-  GdaBatch
-  GdaCommand
-  GdaConnectionPool
-  GdaConnection
-  GdaExport
-  GdaField
-  GdaRecordset

@@ -1,3 +1,10 @@
+2001-11-19  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* reference/libgda-reference.sgml:
+	* libgda.sgml: replaced DTD entry for DocBook-XML
+
+	* libgda.sgml: started new manual
+
 2001-09-04  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* reference/*: added a reference to the new GdaDataModel class

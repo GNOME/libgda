@@ -1,8 +1,0 @@
-GtkObject
-  GdaError
-  BonoboObject
-    BonoboXObject
-      GdaListener
-  GdaThread
-  GdaXmlDocument
-    GdaXmlDatabase

@@ -1,4 +1,6 @@
-<!DOCTYPE book PUBLIC "-//Davenport//DTD DocBook V3.0//EN"[
+<?xml version="1.0"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+     "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd" [
 <!ENTITY libgda-common-reference SYSTEM "libgda-common/libgda-common-docs.sgml">
 <!ENTITY libgda-client-reference SYSTEM "libgda-client/libgda-client-docs.sgml">
 
