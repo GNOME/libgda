@@ -9,3 +9,4 @@ GDA_Report-stubs.c
 .deps
 .libs
 libgda-report.la
+gda-report.dtd
