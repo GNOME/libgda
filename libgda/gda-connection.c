@@ -582,6 +582,44 @@ gda_connection_execute_single_command (GdaConnection *cnc,
 }
 
 /**
+ * gda_connection_execute_non_query
+ * @cnc: a #GdaConnection object.
+ * @cmd: a #GdaCommand.
+ * @params: parameter list.
+ *
+ * Execute a single command on the underlying database, and get the
+ * number of rows affected.
+ *
+ * Returns: the number of affected rows by the executed command,
+ * or -1 on error.
+ */
+gint
+gda_connection_execute_non_query (GdaConnection *cnc,
+				  GdaCommand *cmd,
+				  GdaParameterList *params)
+{
+	GList *reclist;
+	GdaDataModel *model;
+	gint result = -1;
+
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), -1);
+	g_return_val_if_fail (cmd != NULL, -1);
+
+	reclist = gda_connection_execute_command (cnc, cmd, params);
+	if (!reclist)
+		return -1;
+
+	model = (GdaDataModel *) reclist->data;
+	if (GDA_IS_DATA_MODEL (model))
+		result = gda_data_model_get_n_rows (model);
+
+	g_list_foreach (reclist, (GFunc) g_object_unref, NULL);
+	g_list_free (reclist);
+
+	return result;
+}
+
+/**
  * gda_connection_begin_transaction
  * @cnc: a #GdaConnection object.
  * @id: transaction id.
