@@ -1,5 +1,15 @@
 2002-10-28  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	Fixes #96810
+
+	* providers/oracle/gda-oracle-provider.c (get_oracle_tables):
+	separated retrieval of table schema, and added all missing fields.
+
+	* providers/mysql/gda-mysql-provider.c (get_mysql_tables): set column
+	titles on the data model being created.
+
+2002-10-28  Rodrigo Moya <rodrigo@gnome-db.org>
+
 	Fixes #95985
 
 	* configure.in: libmystrings is not needed for MySQL provider.

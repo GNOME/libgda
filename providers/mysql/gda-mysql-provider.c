@@ -843,6 +843,10 @@ get_mysql_tables (GdaConnection *cnc, GdaParameterList *params)
 
 	/* add the extra information */
 	model = gda_data_model_array_new (4);
+	gda_data_model_set_column_title (GDA_DATA_MODEL (model), 0, _("Name"));
+	gda_data_model_set_column_title (GDA_DATA_MODEL (model), 1, _("Owner"));
+	gda_data_model_set_column_title (GDA_DATA_MODEL (model), 2, _("Comments"));
+	gda_data_model_set_column_title (GDA_DATA_MODEL (model), 3, "SQL");
 	rows = gda_data_model_get_n_rows (GDA_DATA_MODEL (recset));
 	for (r = 0; r < rows; r++) {
 		GList *value_list = NULL;

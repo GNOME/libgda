@@ -1515,6 +1515,37 @@ get_oracle_databases (GdaConnection *cnc, GdaParameterList *params)
 
 	return recset;
 }
+
+static GdaDataModel *
+get_oracle_tables (GdaConnection *cnc, GdaParameterList *params)
+{
+	GList *reclist;
+	GdaDataModel *recset;
+	gchar *sql = g_strdup_printf ("SELECT TABLE_NAME AS '%s',"
+				      " OWNER AS '%s' "
+				      " NULL AS '%s' "
+				      " NULL AS 'SQL' "
+				      " FROM ALL_TABLES "
+				      " ORDER BY TABLE_NAME",
+				      _("Name"), _("Owner"), _("Comments"));
+
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+
+	reclist = process_sql_commands (NULL, cnc, sql, NULL, 
+					GDA_COMMAND_OPTION_STOP_ON_ERRORS);
+
+	g_free (sql);
+
+	if (!reclist)
+		return NULL;
+
+	recset = GDA_DATA_MODEL (reclist->data);
+	g_list_free (reclist);
+
+	
+	return recset;
+}
+
 /*
  * get_oracle_objects
  *
@@ -1552,10 +1583,6 @@ get_oracle_objects (GdaConnection *cnc, GdaParameterList *params, GdaConnectionS
 		gda_parameter_list_add_parameter (query_params, 
 			gda_parameter_new_string (":OBJ_TYPE", "SEQUENCE"));
 		break;
-	case GDA_CONNECTION_SCHEMA_TABLES:
-		gda_parameter_list_add_parameter (query_params, 
-			gda_parameter_new_string (":OBJ_TYPE", "TABLE"));
-		break;
 	case GDA_CONNECTION_SCHEMA_TRIGGERS:
 		gda_parameter_list_add_parameter (query_params, 
 			gda_parameter_new_string (":OBJ_TYPE", "TRIGGER"));
@@ -1569,7 +1596,7 @@ get_oracle_objects (GdaConnection *cnc, GdaParameterList *params, GdaConnectionS
 	}
 
 	reclist = process_sql_commands (NULL, cnc, sql, query_params,
-			GDA_COMMAND_OPTION_STOP_ON_ERRORS);
+					GDA_COMMAND_OPTION_STOP_ON_ERRORS);
 
 	gda_parameter_list_free (query_params);
 	g_free (sql);
@@ -1691,8 +1718,7 @@ gda_oracle_provider_get_schema (GdaServerProvider *provider,
 		gda_data_model_set_column_title (recset, 0, _("Sequences"));
 		break;
 	case GDA_CONNECTION_SCHEMA_TABLES :
-		recset = get_oracle_objects (cnc, params, schema);
-		gda_data_model_set_column_title (recset, 0, _("Tables"));
+		recset = get_oracle_tables (cnc, params);
 		break;
 	case GDA_CONNECTION_SCHEMA_TRIGGERS :
 		recset = get_oracle_objects (cnc, params, schema);
