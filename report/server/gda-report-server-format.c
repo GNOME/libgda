@@ -18,36 +18,36 @@
 
 #include <gda-report-server.h>
 
-static PortableServer_ServantBase__epv impl_GDA_Report_Format_base_epv =
+static PortableServer_ServantBase__epv impl_GDA_ReportFormat_base_epv =
 {
   NULL,			/* _private data */
   NULL,			/* finalize routine */
   NULL,			/* default_POA routine */
 };
-static POA_GDA_Report_Format__epv impl_GDA_Report_Format_epv =
+static POA_GDA_ReportFormat__epv impl_GDA_ReportFormat_epv =
 {
   NULL,			/* _private */
-  (gpointer) & impl_GDA_Report_Format_getRootElement,
-  (gpointer) & impl_GDA_Report_Format_getStream,
+  (gpointer) & impl_GDA_ReportFormat_getRootElement,
+  (gpointer) & impl_GDA_ReportFormat_getStream,
 };
-static POA_GDA_Report_Format__vepv impl_GDA_Report_Format_vepv =
+static POA_GDA_ReportFormat__vepv impl_GDA_ReportFormat_vepv =
 {
-  &impl_GDA_Report_Format_base_epv,
-  &impl_GDA_Report_Format_epv,
+  &impl_GDA_ReportFormat_base_epv,
+  &impl_GDA_ReportFormat_epv,
 };
 
 /*
  * Stub implementations
  */
-GDA_Report_Format
-impl_GDA_Report_Format__create (PortableServer_POA poa, CORBA_Environment * ev)
+GDA_ReportFormat
+impl_GDA_ReportFormat__create (PortableServer_POA poa, CORBA_Environment * ev)
 {
-  GDA_Report_Format retval;
-  impl_POA_GDA_Report_Format *newservant;
+  GDA_ReportFormat retval;
+  impl_POA_GDA_ReportFormat *newservant;
   PortableServer_ObjectId *objid;
 
-  newservant = g_new0(impl_POA_GDA_Report_Format, 1);
-  newservant->servant.vepv = &impl_GDA_Report_Format_vepv;
+  newservant = g_new0(impl_POA_GDA_ReportFormat, 1);
+  newservant->servant.vepv = &impl_GDA_ReportFormat_vepv;
   newservant->poa = poa;
   
   /* create XML root node */
@@ -55,7 +55,7 @@ impl_GDA_Report_Format__create (PortableServer_POA poa, CORBA_Environment * ev)
   newservant->format_xmldoc->root = xmlNewDocNode(newservant->format_xmldoc, NULL, "report", NULL);
   
   /* activate CORBA object */
-  POA_GDA_Report_Format__init((PortableServer_Servant) newservant, ev);
+  POA_GDA_ReportFormat__init((PortableServer_Servant) newservant, ev);
   objid = PortableServer_POA_activate_object(poa, newservant, ev);
   CORBA_free(objid);
   retval = PortableServer_POA_servant_to_reference(poa, newservant, ev);
@@ -64,7 +64,7 @@ impl_GDA_Report_Format__create (PortableServer_POA poa, CORBA_Environment * ev)
 }
 
 void
-impl_GDA_Report_Format__destroy (impl_POA_GDA_Report_Format *servant, CORBA_Environment *ev)
+impl_GDA_ReportFormat__destroy (impl_POA_GDA_ReportFormat *servant, CORBA_Environment *ev)
 {
   PortableServer_ObjectId *objid;
 
@@ -78,18 +78,18 @@ impl_GDA_Report_Format__destroy (impl_POA_GDA_Report_Format *servant, CORBA_Envi
   PortableServer_POA_deactivate_object(servant->poa, objid, ev);
   CORBA_free(objid);
 
-  POA_GDA_Report_Format__fini((PortableServer_Servant) servant, ev);
+  POA_GDA_ReportFormat__fini((PortableServer_Servant) servant, ev);
   g_free(servant);
 }
 
-GDA_Report_Element
-impl_GDA_Report_Format_getRootElement (impl_POA_GDA_Report_Format *servant, CORBA_Environment *ev)
+GDA_ReportElement
+impl_GDA_ReportFormat_getRootElement (impl_POA_GDA_ReportFormat *servant, CORBA_Environment *ev)
 {
-  GDA_Report_Element retval;
+  GDA_ReportElement retval;
   
   g_return_val_if_fail(!CORBA_Object_is_nil(servant, ev), CORBA_OBJECT_NIL);
   
-  retval = impl_GDA_Report_Element__create(servant->poa, NULL, NULL, ev);
+  retval = impl_GDA_ReportElement__create(servant->poa, NULL, NULL, ev);
   if (gda_corba_handle_exception(ev))
     {
       //retval->element_xmlnode = servant->format_xmldoc->root;
@@ -98,36 +98,35 @@ impl_GDA_Report_Format_getRootElement (impl_POA_GDA_Report_Format *servant, CORB
   return CORBA_OBJECT_NIL;
 }
 
-GDA_Report_Stream
-impl_GDA_Report_Format_getStream (impl_POA_GDA_Report_Format *servant, CORBA_Environment *ev)
+GDA_ReportStream
+impl_GDA_ReportFormat_getStream (impl_POA_GDA_ReportFormat *servant, CORBA_Environment *ev)
 {
-/* FIXME: retval must be a pointer? */
-  GDA_Report_Stream retval;
+  GDA_ReportStream retval;
   xmlChar*         xml = NULL;
   gint             size;
   
   g_return_val_if_fail(!CORBA_Object_is_nil(servant, ev), CORBA_OBJECT_NIL);
   
   /* create the stream to be returned */
-  retval = impl_GDA_Report_Engine_createStream(servant->poa, ev);
+  retval = impl_GDA_ReportEngine_createStream(servant->poa, ev);
   xmlDocDumpMemory(servant->format_xmldoc, &xml, &size);
   if (xml)
     {
-      GDA_Report_StreamChunk* chunk;
+      GDA_ReportStreamChunk* chunk;
       
-      /* create the StreamChunk object */
-      chunk = GDA_Report_StreamChunk__alloc();
+      /* create the ReportStreamChunk object */
+      chunk = GDA_ReportStreamChunk__alloc();
       chunk->_buffer = g_memdup((gpointer) xml, size);
       chunk->_length = size;
-      if (impl_GDA_Report_Stream_writeChunk(retval, chunk, size, ev) < 0)
+      if (impl_GDA_ReportStream_writeChunk(retval, chunk, size, ev) < 0)
         {
           gda_log_error(_("Error while writing to stream %p"), retval);
-          GDA_Report_StreamChunk__free(chunk, chunk->_buffer, TRUE);
+          GDA_ReportStreamChunk__free(chunk, chunk->_buffer, TRUE);
           CORBA_Object_release(retval, ev);
           return CORBA_OBJECT_NIL;
         }
       gda_log_message(_("Wrote %d bytes to stream %p"), size, retval);
-      GDA_Report_StreamChunk__free(chunk, chunk->_buffer, TRUE);
+      GDA_ReportStreamChunk__free(chunk, chunk->_buffer, TRUE);
     }
   return retval;
 }

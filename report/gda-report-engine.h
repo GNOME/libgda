@@ -23,14 +23,14 @@
 extern "C" {
 #endif
 
-typedef struct _Gda_Report_Engine Gda_Report_Engine;
+typedef struct _Gda_ReportEngine Gda_ReportEngine;
 
-Gda_Report_Engine* gda_report_engine_load          (void);
-void              gda_report_engine_unload        (Gda_Report_Engine *engine);
+Gda_ReportEngine* gda_report_engine_load          (void);
+void              gda_report_engine_unload        (Gda_ReportEngine *engine);
 
-GList*            gda_report_engine_query_reports (Gda_Report_Engine *engine,
+GList*            gda_report_engine_query_reports (Gda_ReportEngine *engine,
                                                    const gchar *condition,
-                                                   Gda_Report_Flags flags);
+                                                   Gda_ReportFlags flags);
 
 #if defined(__cplusplus)
 }

@@ -25,7 +25,7 @@
 typedef enum
 {
   GDA_REPORT_FLAGS_NONE,
-} Gda_Report_Flags;
+} Gda_ReportFlags;
 
 #include <gda-report-defs.h>
 #include <gda-report-engine.h>

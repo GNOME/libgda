@@ -20,110 +20,109 @@
 #define __gda_report_idl__
 
 module GDA {
-	module Report {
-		/*
-		 * Report I/O operations
-		 */
-		typedef sequence<octet> StreamChunk;
-		interface Stream {
-			StreamChunk readChunk (in long start, in long size);
-			long writeChunk (in StreamChunk data, in long size);
-			long getLength ();
-		};
 	
-		/*
-		 * Report structure
-		 */
-		struct Attribute {
-			string name;
-			string value;
-		};
-		typedef sequence<Attribute> AttributeList;
+	/*
+	 * Report I/O operations
+	 */
+	typedef sequence<octet> ReportStreamChunk;
+	interface ReportStream {
+		ReportStreamChunk readChunk (in long start, in long size);
+		long writeChunk (in ReportStreamChunk data, in long size);
+		long getLength ();
+	};
 	
-		interface Element;
-		typedef sequence<Element> ElementList;
-		enum ContentType {
-			AnElement,
-			PCDATA
-		};
-		union VE switch (ContentType) {
-			case AnElement :
-				ElementList elem_list;
-			case PCDATA :
-				string contents;
-		};
-		interface Element {
-			readonly attribute AttributeList attr_list;
-			readonly attribute VE contents;
-		
-			void      addAttribute (in string name, in string value);
-			void      removeAttribute (in string name);
-			Attribute getAttribute (in string name);
-			void      setAttribute (in string name, in string value);
-		
-			Element   addChild    (in string name);
-			void      removeChild (in Element child);
-			ElementList getChildren ();
-		
-			string    getName ();
-			void      setName (in string name);
-		};
+	/*
+	 * Report structure
+	 */
+	struct ReportAttribute {
+		string name;
+		string value;
+	};
+	typedef sequence<ReportAttribute> ReportAttributeList;
 	
-		interface Format {	
-			Element getRootElement ();
-			Stream  getStream ();
-		};
-
-		/*
-		 * Report output format
-		 */
-		interface Converter {
-			readonly attribute string format;
-		};
-		typedef sequence<Converter> ConverterList;
+	interface ReportElement;
+	typedef sequence<ReportElement> ReportElementList;
+	enum ReportContentType {
+		AnElement,
+		PCDATA
+	};
+	union VE switch (ReportContentType) {
+		case AnElement :
+			ReportElementList elem_list;
+		case PCDATA :
+			string contents;
+	};
+	interface ReportElement {
+		readonly attribute ReportAttributeList attr_list;
+		readonly attribute VE contents;
+		
+		void              addAttribute (in string name, in string value);
+		void              removeAttribute (in string name);
+		ReportAttribute   getAttribute (in string name);
+		void              setAttribute (in string name, in string value);
+		
+		ReportElement     addChild (in string name);
+		void              removeChild (in ReportElement child);
+		ReportElementList getChildren ();
+		
+		string            getName ();
+		void              setName (in string name);
+	};
 	
-		interface Output : Format {
-			Stream convert (in string format, in long flags);
-		};
+	interface ReportFormat {	
+		ReportElement getRootElement ();
+		ReportStream  getStream ();
+	};
+	
+	/*
+	 * Report output format
+	 */
+	interface ReportConverter {
+		readonly attribute string format;
+	};
+	typedef sequence<ReportConverter> ReportConverterList;
+	
+	interface ReportOutput : ReportFormat {
+		ReportStream convert (in string format, in long flags);
+	};
+	
+	struct ReportParam {
+		string name;
+		any value;
+	};
+	typedef sequence<ReportParam> ReportParamList;
+	
+	interface Report {
+		attribute string                name;
+		attribute string                description;
+		readonly attribute ReportFormat format;
+		readonly attribute boolean      isLocked;
 
-		struct Param {
-			string name;
-			any value;
-		};
-		typedef sequence<Param> ParamList;
-		interface Report {
-			attribute string           name;
-			attribute string           description;
-			readonly attribute Format  format;
-			readonly attribute boolean isLocked;
+		ReportOutput run (in ReportParamList params, in long flags);
+		
+		/* for shared I/O access */
+		void lock   ();
+		void unlock ();
+	};
+	typedef sequence<Report> ReportList;
 
-			Output run (in ParamList params, in long flags);
-
-			/* for shared I/O access */
-			void lock   ();
-			void unlock ();
-		};
+	/*
+	 * The report engine
+	 */
+	interface ReportEngine {
+		readonly attribute ReportConverterList conv_list;
 		
-		typedef sequence<Report> List;
-
-		/*
-		 * The report engine
-		 */
-		interface Engine {
-			readonly attribute ConverterList conv_list;
+		ReportList      queryReports (in string condition, in long flags);
+		Report          openReport (in string rep_name);
 		
-			List      queryReports (in string condition, in long flags);
-			Report    openReport (in string rep_name);
+		Report          addReport (in string rep_name, in string description);
+		void            removeReport (in string rep_name);
 		
-			Report    addReport (in string rep_name, in string description);
-			void      removeReport (in string rep_name);
+		boolean         registerConverter (in string format, in ReportConverter converter);
+		void            unregisterConverter (in ReportConverter converter);
+		ReportConverter findConverter (in string format);
 		
-			boolean   registerConverter (in string format, in Converter converter);
-			void      unregisterConverter (in Converter converter);
-			Converter findConverter (in string format);
-		
-			Stream    createStream ();
-		};
+		ReportStream    createStream ();
 	};
 };
 
