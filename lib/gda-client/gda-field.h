@@ -1,6 +1,6 @@
 /* GDA client libary
  * Copyright (C) 1998,1999 Michael Lausch
- * Copyright (C) 2000 Rodrigo Moya
+ * Copyright (C) 2000-2001 Rodrigo Moya
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -28,7 +28,7 @@
 
 G_BEGIN_DECLS
 
-typedef struct _GdaField GdaField;
+typedef struct _GdaField      GdaField;
 typedef struct _GdaFieldClass GdaFieldClass;
 
 #define GDA_TYPE_FIELD            (gda_field_get_type())
@@ -65,7 +65,7 @@ time_t  gda_field_get_timestamp_value    (GdaField *field);
 #define gda_field_get_string_value(f)    ((f)->real_value->_u.v._u.lvc)
 #define gda_field_get_single_value(fld)  ((fld)->real_value->_u.v._u.f)
 #define gda_field_get_smallint_value(f)  ((f)->real_value->_u.v._u.si)
-#define gda_field_get_ubingint_value(f)  ((f)->real_value->_u.v._u.ull)
+#define gda_field_get_ubigint_value(f)  ((f)->real_value->_u.v._u.ull)
 #define gda_field_get_usmallint_value(f) ((f)->real_value->_u.v._u.us)
 
 guint         gda_field_get_type (void);

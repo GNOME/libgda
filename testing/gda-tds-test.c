@@ -126,7 +126,7 @@ list_tables (GdaConnection* cnc)
       for (i = 0; i < gda_recordset_rowsize (rs); i++)
 	{
 	  field = gda_recordset_field_idx (rs, i);
-	  g_print ("%s=%s\t", gda_field_name (field),
+	  g_print ("%s=%s\t", gda_field_get_name (field),
 		   gda_stringify_value (NULL, 0, field));
 	}
       g_print ("\n");

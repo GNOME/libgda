@@ -3357,12 +3357,223 @@
 @cnc: 
 @flags: 
 
+<!-- ##### FUNCTION gda_field_actual_size ##### -->
+<para>
+
+</para>
+
+@f: 
+@Returns: 
+
+<!-- ##### MACRO gda_field_bigint ##### -->
+<para>
+
+</para>
+
+@f: 
+
+<!-- ##### MACRO gda_field_boolean ##### -->
+<para>
+
+</para>
+
+@f: 
+
+<!-- ##### MACRO gda_field_bstr ##### -->
+<para>
+
+</para>
+
+@f: 
+
+<!-- ##### MACRO gda_field_cType ##### -->
+<para>
+
+</para>
+
+@f: 
+
+<!-- ##### MACRO gda_field_date ##### -->
+<para>
+
+</para>
+
+@f: 
+
+<!-- ##### MACRO gda_field_dbdate ##### -->
+<para>
+
+</para>
+
+@f: 
+
+<!-- ##### MACRO gda_field_dbtime ##### -->
+<para>
+
+</para>
+
+@f: 
+
+<!-- ##### MACRO gda_field_dec ##### -->
+<para>
+
+</para>
+
+@f: 
+
+<!-- ##### MACRO gda_field_defined_size ##### -->
+<para>
+
+</para>
+
+@f: 
+
+<!-- ##### MACRO gda_field_double ##### -->
+<para>
+
+</para>
+
+@f: 
+
+<!-- ##### MACRO gda_field_fixbin ##### -->
+<para>
+
+</para>
+
+@f: 
+
+<!-- ##### MACRO gda_field_fixbin_length ##### -->
+<para>
+
+</para>
+
+@f: 
+
 <!-- ##### FUNCTION gda_field_get_type ##### -->
 <para>
 
 </para>
 
 @Returns: 
+
+<!-- ##### MACRO gda_field_integer ##### -->
+<para>
+
+</para>
+
+@f: 
+
+<!-- ##### MACRO gda_field_isnull ##### -->
+<para>
+
+</para>
+
+@f: 
+
+<!-- ##### MACRO gda_field_longvarchar ##### -->
+<para>
+
+</para>
+
+@f: 
+
+<!-- ##### MACRO gda_field_name ##### -->
+<para>
+
+</para>
+
+@f: 
+
+<!-- ##### MACRO gda_field_nativeType ##### -->
+<para>
+
+</para>
+
+@f: 
+
+<!-- ##### MACRO gda_field_scale ##### -->
+<para>
+
+</para>
+
+@f: 
+
+<!-- ##### MACRO gda_field_single ##### -->
+<para>
+
+</para>
+
+@fld: 
+
+<!-- ##### MACRO gda_field_smallint ##### -->
+<para>
+
+</para>
+
+@f: 
+
+<!-- ##### MACRO gda_field_timestamp ##### -->
+<para>
+
+</para>
+
+@f: 
+
+<!-- ##### MACRO gda_field_tinyint ##### -->
+<para>
+
+</para>
+
+@f: 
+
+<!-- ##### MACRO gda_field_type ##### -->
+<para>
+
+</para>
+
+@f: 
+
+<!-- ##### MACRO gda_field_typechar ##### -->
+<para>
+
+</para>
+
+@f: 
+
+<!-- ##### MACRO gda_field_typecode ##### -->
+<para>
+
+</para>
+
+@f: 
+
+<!-- ##### MACRO gda_field_ubingint ##### -->
+<para>
+
+</para>
+
+@f: 
+
+<!-- ##### MACRO gda_field_usmallint ##### -->
+<para>
+
+</para>
+
+@f: 
+
+<!-- ##### MACRO gda_field_varbin ##### -->
+<para>
+
+</para>
+
+@f: 
+
+<!-- ##### MACRO gda_field_varbin_length ##### -->
+<para>
+
+</para>
+
+@f: 
 
 <!-- ##### FUNCTION gda_recordset_get_type ##### -->
 <para>

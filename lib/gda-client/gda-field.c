@@ -224,7 +224,7 @@ gda_stringify_value (gchar * bfr, gint maxlen, GdaField * f)
 	if (bfr)
 		retval = bfr;
 
-	if (gda_field_isnull (f))
+	if (gda_field_is_null (f))
 		return g_strdup (_("<NULL>"));
 
 	switch (f->attributes->gdaType) {
@@ -240,12 +240,12 @@ gda_stringify_value (gchar * bfr, gint maxlen, GdaField * f)
 			retval = g_new0 (gchar, 20);
 			maxlen = 20;
 		}
-		g_snprintf (retval, maxlen, "%Ld", gda_field_bigint (f));
+		g_snprintf (retval, maxlen, "%Ld", gda_field_get_bigint_value (f));
 		break;
 	case GDA_TypeBoolean:
 		{
 			gchar *retstr;
-			if (gda_field_boolean (f))
+			if (gda_field_get_boolean_value (f))
 				retstr = _("TRUE");
 			else
 				retstr = _("FALSE");
@@ -406,7 +406,7 @@ gda_stringify_value (gchar * bfr, gint maxlen, GdaField * f)
 		}
 		g_print ("stringify for valuetype [%d]'%s' NYI\n",
 			 f->attributes->gdaType,
-			 gda_fieldtype_2_string (0, 20, gda_field_type (f)));
+			 gda_fieldtype_2_string (0, 20, gda_field_get_gdatype (f)));
 		retval[0] = '\0';
 		break;
 	}
@@ -502,10 +502,10 @@ gda_field_actual_size (GdaField * f)
 {
 	g_return_val_if_fail (GDA_IS_FIELD (f), 0);
 
-	if (gda_field_isnull (f))
+	if (gda_field_is_null (f))
 		return 0;
 
-	switch (gda_field_type (f)) {
+	switch (gda_field_get_gdatype (f)) {
 	case GDA_TypeTinyint:
 		return sizeof (CORBA_char);
 	case GDA_TypeBigint:
@@ -523,7 +523,7 @@ gda_field_actual_size (GdaField * f)
 	case GDA_TypeCurrency:
 	case GDA_TypeDecimal:
 	case GDA_TypeNumeric:
-		return strlen (gda_field_longvarchar (f));
+		return strlen (gda_field_get_string_value (f));
 	case GDA_TypeDouble:
 		return sizeof (CORBA_double);
 		/* case GDA_TypeError: NYI */
@@ -533,15 +533,15 @@ gda_field_actual_size (GdaField * f)
 	case GDA_TypeVarwchar:
 	case GDA_TypeLongvarwchar:
 	case GDA_TypeLongvarbin:
-		return gda_field_varbin_length (f);
+		return -1;
 	case GDA_TypeFixbin:
 	case GDA_TypeFixwchar:
 	case GDA_TypeFixchar:
-		return gda_field_fixbin_length (f);
+		return -1;
 	case GDA_TypeChar:
 	case GDA_TypeVarchar:
 	case GDA_TypeLongvarchar:
-		return strlen (gda_field_longvarchar (f));
+		return strlen (gda_field_get_string_value (f));
 	case GDA_TypeSingle:
 		return sizeof (CORBA_float);
 	case GDA_TypeSmallint:
@@ -554,6 +554,6 @@ gda_field_actual_size (GdaField * f)
 		break;
 	}
 	g_warning ("gda_field_actual_size: unknown GDA Type %d\n",
-		   gda_field_type (f));
+		   gda_field_get_gdatype (f));
 	return -1;
 }

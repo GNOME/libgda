@@ -60,8 +60,8 @@ fi
 
 # Bonobo checks
 AM_PATH_BONOBO(1.0,,AC_MSG_ERROR(Bonobo >= 1.0 is needed to compile GNOME-DB))
-gda_bonobo_cflags=`gnome-config --cflags bonobo`
-gda_bonobo_libs=`gnome-config --libs bonobo`
+gda_bonobo_cflags=`gnome-config --cflags bonobox`
+gda_bonobo_libs=`gnome-config --libs bonobox`
 
 dnl Check for libxml
 AC_MSG_CHECKING(for libxml)

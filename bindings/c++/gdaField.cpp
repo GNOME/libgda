@@ -161,7 +161,7 @@ Field::getSmallInt ()
 gulong
 Field::getUBigInt ()
 {
-	return gda_field_get_ubingint_value (_gda_field);
+	return gda_field_get_bigint_value (_gda_field);
 }
 
 guint
