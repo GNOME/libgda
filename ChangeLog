@@ -1,4 +1,11 @@
-2004-09-28 Dru <andru@treshna.com>
+2004-09-25  Caolan McNamara <caolanm@redhat.com>
+
+	Fixes #150231
+
+	* configure.in: improved ODBC, MySQL and PostgreSQL detection.
+
+2004-09-25 Dru <andru@treshna.com>
+
 	* libsql/parser.y: Fixed not null issue in where statements
 	* libsql/sample_sql_statements: Added examples that broke stuff.
 	* libsql/sql_parser.c: Fixed bug 152874, sql statements
@@ -8,6 +15,7 @@
 	  comments.
 
 2004-09-14 Dru <andru@treshna.com>
+	
 	* libgda/gda-value.c: Improved documentation.
 	* libsql/sql_parser.c: Added support function for helping
 	  decode the where statements. Removed some obsolete code.

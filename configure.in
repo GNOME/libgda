@@ -188,31 +188,37 @@ fi
 odbcdir=""
 if test $try_odbc = true
 then
-	AC_MSG_CHECKING(for ODBC files)
-	for d in $dir /usr /usr/local
-	do
-		if test -f $d/$lib/libodbc.so -a -f $d/include/sql.h
-		then
-			AC_MSG_RESULT(found ODBC in $d)
-			odbclib="-lodbc"
-			odbcdir=$d
-			break
-		fi
-		if test -f $d/$lib/libiodbc.so -a -f $d/include/sql.h
-		then
-			AC_MSG_RESULT(found iODBC in $d)
-			odbclib="-liodbc"
-			odbcdir=$d
-			break
-		fi
-	done
-	if test x$odbcdir = x
-	then
-		AC_MSG_WARN(ODBC backend not used)
+	AC_CHECK_HEADER(sql.h, odbc_ok=yes, odbc_ok=no, [])
+	if test $odbc_ok = yes ; then
+		odbcdir=yes
+		ODBC_LIBS="-lodbc"
 	else
-		AC_DEFINE(HAVE_ODBC)
-		ODBC_CFLAGS="-I${odbcdir}/include"
-		ODBC_LIBS="-L${odbcdir}/lib ${odbclib}"
+		AC_MSG_CHECKING(for ODBC files)
+		for d in $dir /usr /usr/local
+		do
+			if test -f $d/$lib/libodbc.so -a -f $d/include/sql.h
+			then
+				AC_MSG_RESULT(found ODBC in $d)
+				odbclib="-lodbc"
+				odbcdir=$d
+				break
+			fi
+			if test -f $d/$lib/libiodbc.so -a -f $d/include/sql.h
+			then
+				AC_MSG_RESULT(found iODBC in $d)
+				odbclib="-liodbc"
+				odbcdir=$d
+				break
+			fi
+		done
+		if test x$odbcdir = x
+		then
+			AC_MSG_WARN(ODBC backend not used)
+		else
+			AC_DEFINE(HAVE_ODBC)
+			ODBC_CFLAGS="-I${odbcdir}/include"
+			ODBC_LIBS="-L${odbcdir}/lib ${odbclib}"
+		fi
 	fi
 fi
 
@@ -235,37 +241,46 @@ fi
 mysqldir=""
 if test $try_mysql = true
 then
-	AC_MSG_CHECKING(for MySQL files)
-	for d in $dir /usr /usr/local /usr/local/mysql /opt/mysql /opt/packages/mysql
-	do
-		if test -f $d/include/mysql/mysql.h
+	AC_PATH_PROG(MYSQL_CONFIG, mysql_config)
+
+	if test x$MYSQL_CONFIG = xno; then
+		AC_MSG_CHECKING(for MySQL files)
+		for d in $dir /usr /usr/local /usr/local/mysql /opt/mysql /opt/packages/mysql
+		do
+			if test -f $d/include/mysql/mysql.h
+			then
+				mysqldir_suffix=/mysql
+			else
+				mysqldir_suffix=
+			fi
+			if test -f $d/$lib/mysql/libmysqlclient.a -o -f $d/$lib/mysql/libmysqlclient.so
+			then
+				AC_MSG_RESULT(found mysql in $d)
+				mysqldir=$d
+				mysqllibdir_suffix=/mysql
+				break
+			fi
+			if test -f $d/$lib/libmysqlclient.a -o -f $d/$lib/libmysqlclient.so
+			then
+				AC_MSG_RESULT(found mysql in $d)
+				mysqldir=$d
+				mysqllibdir_suffix=
+				break
+			fi
+		done
+		if test x$mysqldir = x
 		then
-			mysqldir_suffix=/mysql
+			AC_MSG_WARN(MySQL backend not used)
 		else
-			mysqldir_suffix=
+			AC_DEFINE(HAVE_MYSQL)
+			MYSQL_CFLAGS="-I${mysqldir}/include${mysqldir_suffix}"
+			MYSQL_LIBS="-L${mysqldir}/lib${mysqllibdir_suffix} -lmysqlclient"
 		fi
-		if test -f $d/$lib/mysql/libmysqlclient.a -o -f $d/$lib/mysql/libmysqlclient.so
-		then
-			AC_MSG_RESULT(found mysql in $d)
-			mysqldir=$d
-			mysqllibdir_suffix=/mysql
-			break
-		fi
-		if test -f $d/$lib/libmysqlclient.a -o -f $d/$lib/libmysqlclient.so
-		then
-			AC_MSG_RESULT(found mysql in $d)
-			mysqldir=$d
-			mysqllibdir_suffix=
-			break
-		fi
-	done
-	if test x$mysqldir = x
-	then
-		AC_MSG_WARN(MySQL backend not used)
 	else
+		mysqldir=yes
 		AC_DEFINE(HAVE_MYSQL)
-		MYSQL_CFLAGS="-I${mysqldir}/include${mysqldir_suffix}"
-		MYSQL_LIBS="-L${mysqldir}/lib${mysqllibdir_suffix} -lmysqlclient"
+		MYSQL_CFLAGS=`$MYSQL_CONFIG --cflags`
+		MYSQL_LIBS=`$MYSQL_CONFIG --libs`
 	fi
 fi
 
@@ -351,35 +366,41 @@ fi
 postgresdir=""
 if test $try_postgres = true
 then
-	AC_MSG_CHECKING(for Postgres files)
-	for d in $dir /usr /usr/local/postgres /opt/postgres /opt/packages/postgres /disk/postgres /usr/local/pgsql
-	do
-		if test -f $d/$lib/libpq.so
-		then
-			AC_MSG_RESULT(found Postgres in $d)
-			postgresdir=$d
-			break
-		fi
-	done
-	if test x$postgresdir = x
-	then
-		AC_MSG_WARN(Postgres backend not used)
+	AC_CHECK_HEADER(libpq-fe.h, pq_ok=yes, pq_ok=no, [])
+	if test $pq_ok = yes ; then
+		postgresdir=yes
+		POSTGRES_LIBS="-lpq"
 	else
-		if test -f ${postgresdir}/include/libpq-fe.h
+		AC_MSG_CHECKING(for Postgres files)
+		for d in $dir /usr /usr/local/postgres /opt/postgres /opt/packages/postgres /disk/postgres /usr/local/pgsql
+		do
+			if test -f $d/$lib/libpq.so
+			then
+				AC_MSG_RESULT(found Postgres in $d)
+				postgresdir=$d
+				break
+			fi
+		done
+		if test x$postgresdir = x
 		then
-			POSTGRES_CFLAGS=-I${postgresdir}/include
-		elif test -f ${postgresdir}/include/pgsql/libpq-fe.h
-		then
-			POSTGRES_CFLAGS=-I${postgresdir}/include/pgsql
-		elif test -f ${postgresdir}/include/postgresql/libpq-fe.h
-		then
-			POSTGRES_CFLAGS=-I${postgresdir}/include/postgresql
+			AC_MSG_WARN(Postgres backend not used)
 		else
-			AC_MSG_WARN(Postgres include files not found, backend not used)
-			postgresdir=""
+			if test -f ${postgresdir}/include/libpq-fe.h
+			then
+				POSTGRES_CFLAGS=-I${postgresdir}/include
+			elif test -f ${postgresdir}/include/pgsql/libpq-fe.h
+			then
+				POSTGRES_CFLAGS=-I${postgresdir}/include/pgsql
+			elif test -f ${postgresdir}/include/postgresql/libpq-fe.h
+			then
+				POSTGRES_CFLAGS=-I${postgresdir}/include/postgresql
+			else
+				AC_MSG_WARN(Postgres include files not found, backend not used)
+				postgresdir=""
+			fi
+			POSTGRES_LIBS="-L${postgresdir}/lib -lpq"
+			AC_DEFINE(HAVE_POSTGRES)
 		fi
-		POSTGRES_LIBS="-L${postgresdir}/lib -lpq"
-		AC_DEFINE(HAVE_POSTGRES)
 	fi
 fi
 
