@@ -108,9 +108,8 @@ fill_field_values (GdaServerRecordset * recset,
 				switch (gda_server_field_get_sql_type (field)) {
 				case FIELD_TYPE_TINY:
 				case FIELD_TYPE_SHORT:
-					gda_server_field_set_smallint (field,
-								       atoi
-								       (thevalue));
+					gda_server_field_set_smallint (
+						field, atoi (thevalue));
 					break;
 				case FIELD_TYPE_INT24:
 				case FIELD_TYPE_LONG:
@@ -194,8 +193,8 @@ fill_field_values (GdaServerRecordset * recset,
 				}
 			}
 			else {	/* NULL value */
-
-				gda_server_field_set_actual_length ((GdaServerField *) node->data, 0);
+				gda_server_field_set_varchar (
+					(GdaServerField *) node->data, _("<NULL>"));
 			}
 		}
 	}

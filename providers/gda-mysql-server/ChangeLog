@@ -1,3 +1,8 @@
+2001-10-07  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-mysql-recordset.c (fill_field_values): don't return NULL
+	values to the CORBA-generated code
+
 2001-09-28  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-mysql-recordset.c (fill_field_values): manage more data types
