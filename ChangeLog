@@ -1,3 +1,12 @@
+2001-05-29  Drazen Kacar <dave@arsdigita.com>
+
+	* configure.in: fixed some constructs that are not understood
+	by Solaris' /bin/sh.
+	Run glib-config-2.0 in a subshell, for not getting the error message
+	* tools/gda-buildserver.in: added a newline to the end of file to
+	make Solaris' sed happy
+	(fixes bug #55388)
+
 2001-05-22  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* libgda-spec.in: pass the (hopefully) correct oafdir value

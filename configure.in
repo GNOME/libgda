@@ -23,7 +23,7 @@ dnl
 
 dnl We need either glib 1.3 (GObject) or gtk+ (GtkObject)
 AC_MSG_CHECKING(whether glib 1.3 or newer should be used)
-if glib-config-2.0 --version > /dev/null 2>&1
+if (glib-config-2.0 --version) > /dev/null 2>&1
 then
 	AC_MSG_RESULT(yes)
 	ifdef([AM_PATH_GLIB_2_0],
@@ -68,7 +68,7 @@ then
 		use_gconf=true
 	fi
 fi
-if ! $use_gconf
+if test -z $use_gconf
 then
 	AC_MSG_ERROR([
 *** GConf $gconfminver or later is necessary in order to build libgda.])
@@ -154,7 +154,7 @@ then
 else
 	perl_val=false
 fi
-AM_CONDITIONAL(WITH_PERL, test $perl_val == true)
+AM_CONDITIONAL(WITH_PERL, test $perl_val = true)
 
 dnl
 dnl checking for GOB (Gtk Object Builder)
