@@ -1,3 +1,8 @@
+2004-08-21  Jeronimo Albi <jeronimoalbi@yahoo.com.ar>
+	* samples/sample-firebird.c: Added example code for Firebird provider.
+	* providers/firebird/gda-firebird-recordset.c: Corrected a problem with Firebird 
+	  date and datetime year part, fixes bug #150635
+
 2004-08-21  Kjartan Maraas  <kmaraas@gnome.org>
 
 	* configure.in: Add «nb» to ALL_LINGUAS.

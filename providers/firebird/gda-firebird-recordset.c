@@ -503,6 +503,7 @@ fb_gda_value_fill (GdaValue *gda_value,
 			a_date_time = g_malloc0 (sizeof (struct tm));
 			isc_decode_timestamp ((ISC_TIMESTAMP *) field_data, a_date_time);
 			a_date_time->tm_mon ++;
+			a_date_time->tm_year += 1900;
 			a_times.hour = a_date_time->tm_hour;
 			a_times.minute = a_date_time->tm_min;
 			a_times.second = a_date_time->tm_sec;
@@ -532,6 +533,7 @@ fb_gda_value_fill (GdaValue *gda_value,
 			a_date_time = g_malloc0 (sizeof (struct tm));
 			isc_decode_sql_date ((ISC_DATE *) field_data, a_date_time);
 			a_date_time->tm_mon++;
+			a_date_time->tm_year += 1900;
 			a_date.year = a_date_time->tm_year;
 			a_date.month = a_date_time->tm_mon;
 			a_date.day = a_date_time->tm_mday;
@@ -941,7 +943,7 @@ gda_firebird_recordset_new (GdaConnection *cnc,
 	if (fb_sql_prepare (fcnc, recset, ftr, sql)) {
 
 		/* ... and then execute it */
-		if (! fb_sql_execute (fcnc, recset, ftr, sql)) {
+		if (!fb_sql_execute (fcnc, recset, ftr, sql)) {
 			gda_firebird_connection_make_error (cnc, fb_sql_get_statement_type (fcnc, recset));
 
 			/* Free Firebirds sql allocated space */

@@ -58,7 +58,7 @@ typedef struct {
 
 
 GType			gda_firebird_recordset_get_type (void);
-GdaFirebirdRecordset 	*gda_firebird_recordset_new (GdaConnection *cnc, 
+GdaFirebirdRecordset 	*gda_firebird_recordset_new (GdaConnection *cnc,
 				 		     isc_tr_handle *ftr,
 						     const gchar *sql);
 

@@ -153,6 +153,7 @@ gda_firebird_provider_new (void)
 	return GDA_SERVER_PROVIDER (fprv);
 }
 
+
 /*
  *  fb_server_get_version
  *
@@ -199,7 +200,7 @@ fb_get_types (GdaConnection *cnc,
 	      GdaParameterList *params)
 {
 	GdaDataModelArray *recset;
-	GList *value_list = NULL;	
+	GList *value_list;
 	gint i;
 	struct {
 		const gchar *name;
@@ -227,10 +228,13 @@ fb_get_types (GdaConnection *cnc,
 	recset = (GdaDataModelArray *) gda_data_model_array_new (4);
 	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 0, _("Type"));
 	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 1, _("Owner"));
+	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 2, _("Comments"));
 	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 3, _("GDA type"));
-
+	
 	/* Fill the recordset with each of the values from the array defined above */
-	for (i = 0; i < sizeof (types) / sizeof (types[0]); i++) {
+	for (i = 0; i < (sizeof (types) / sizeof (types[0])); i++) {
+		value_list = NULL;
+		
 		value_list = g_list_append (value_list, gda_value_new_string (types[i].name));
 		value_list = g_list_append (value_list, gda_value_new_string (types[i].owner));
 		value_list = g_list_append (value_list, gda_value_new_string (types[i].comments));
@@ -420,7 +424,7 @@ fb_set_index_field_metadata (GdaConnection *cnc,
 		sql = g_strdup_printf (
 				"SELECT A.RDB$FIELD_NAME, I.RDB$UNIQUE_FLAG, B.RDB$CONSTRAINT_TYPE "
 				"FROM RDB$INDEX_SEGMENTS A, RDB$RELATION_CONSTRAINTS B, RDB$INDICES I "
-				"WHERE ((B.RDB$CONSTRAINT_TYPE IN('PRIMARY KEY','UNIQUE','FOREIGN KEY')) "
+				"WHERE ((B.RDB$CONSTRAINT_TYPE = 'PRIMARY KEY') "
 				"OR (I.RDB$UNIQUE_FLAG = 1)) AND (A.RDB$INDEX_NAME = B.RDB$INDEX_NAME) "
 				"AND (B.RDB$RELATION_NAME = '%s') AND (A.RDB$INDEX_NAME = I.RDB$INDEX_NAME) "
 				"ORDER BY A.RDB$FIELD_POSITION",
@@ -435,17 +439,14 @@ fb_set_index_field_metadata (GdaConnection *cnc,
 			for (i = 0; i < gda_data_model_get_n_rows (GDA_DATA_MODEL (reclist->data)); i++) {
 				value = (GdaValue *) gda_data_model_get_value_at (GDA_DATA_MODEL (reclist->data), 0, i);
 				field_name = (gchar *) gda_value_get_string (value);
-				j = 0;
-				recset_value = (GdaValue *) gda_data_model_get_value_at (recset, 0, j);
-				recset_field_name = (gchar *) gda_value_get_string (recset_value);
-				
+				j = -1;
+
 				/* Find column in @recset by name */
-				for (j = 0; (strcmp (recset_field_name, field_name)) 
-					    && (j < gda_data_model_get_n_rows (recset)); /*nop*/) {
+				do {
+					j++;
 					recset_value = (GdaValue *) gda_data_model_get_value_at (recset, 0, j);
 					recset_field_name = (gchar *) gda_value_get_string (recset_value);
-					j++;
-				}
+				} while (strcmp (recset_field_name, field_name) && (j < gda_data_model_get_n_rows (recset)));
 				
 				/* Set recset values */
 				if (!strcmp (recset_field_name, field_name)) {
@@ -502,7 +503,7 @@ fb_set_field_metadata (GdaRow *row)
 {
 	GList *value_list = NULL;
 	GdaValue *value;
-	gchar *the_value;
+	gchar *the_value, *tmp_value;
 	gshort scale, short_value;
 
 	g_return_val_if_fail (row != NULL, NULL);
@@ -521,22 +522,26 @@ fb_set_field_metadata (GdaRow *row)
 	
 	/* Set data type */
 	value = gda_row_get_value (row, 1);
-	the_value = (gchar *) gda_value_get_string (value);
-	the_value = g_strchomp (the_value);
-
+	tmp_value = (gchar *) gda_value_get_string (value);
+	tmp_value = g_strchomp (tmp_value);
+	the_value = g_ascii_strdown (tmp_value, -1);
+	g_free (tmp_value);
+	
 	/* Set correct value name */
-	if (!strcmp (the_value, "LONG") && (scale < 0))
-		value_list = g_list_append (value_list, gda_value_new_string ("DECIMAL"));
-	else if (!strcmp (the_value, "LONG"))
-		value_list = g_list_append (value_list, gda_value_new_string ("INTEGER"));
-	else if (!strcmp (the_value, "INT64"))
-		value_list = g_list_append (value_list, gda_value_new_string ("NUMERIC"));
-	else if (!strcmp (the_value, "VARYING"))
-		value_list = g_list_append (value_list, gda_value_new_string ("VARCHAR"));
-	else if (!strcmp (the_value, "TEXT"))
-		value_list = g_list_append (value_list, gda_value_new_string ("CHAR"));
-	else if (!strcmp (the_value, "SHORT"))
-		value_list = g_list_append (value_list, gda_value_new_string ("SMALLINT"));
+	if (!strcmp (the_value, "long") && (scale < 0))
+		value_list = g_list_append (value_list, gda_value_new_string ("decimal"));
+	else if (!strcmp (the_value, "long"))
+		value_list = g_list_append (value_list, gda_value_new_string ("integer"));
+	else if (!strcmp (the_value, "int64"))
+		value_list = g_list_append (value_list, gda_value_new_string ("numeric"));
+	else if (!strcmp (the_value, "varying"))
+		value_list = g_list_append (value_list, gda_value_new_string ("varchar"));
+	else if (!strcmp (the_value, "text"))
+		value_list = g_list_append (value_list, gda_value_new_string ("char"));
+	else if (!strcmp (the_value, "short"))
+		value_list = g_list_append (value_list, gda_value_new_string ("smallint"));
+	else if (!strcmp (the_value, "double"))
+		value_list = g_list_append (value_list, gda_value_new_string ("double precision"));
 	else
 		value_list = g_list_append (value_list, gda_value_new_string (the_value));
 
