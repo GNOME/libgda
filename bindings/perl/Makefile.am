@@ -15,3 +15,10 @@ PERL_FILES = \
 EXTRA_DIST = $(PERL_FILES)
 
 all:
+	cd Gnome/GDA/Common && perl Makefile.PL && make
+	cd Gnome/GDA/Client && perl Makefile.PL && make
+
+# installation is made to /usr/local/lib/site_perl and /usr/local/man
+install-data-local:
+	cd Gnome/GDA/Common && make install
+	cd Gnome/GDA/Client && make install
