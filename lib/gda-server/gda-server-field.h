@@ -67,7 +67,7 @@ void            gda_server_field_set_smallint (GdaServerField * field,
 					       gshort val);
 void            gda_server_field_set_integer (GdaServerField * field, gint val);
 void            gda_server_field_set_longvarchar (GdaServerField * field,
-				       gchar * val);
+						  gchar * val);
 void            gda_server_field_set_char (GdaServerField * field, gchar * val);
 void            gda_server_field_set_varchar (GdaServerField * field,
 					      gchar * val);
