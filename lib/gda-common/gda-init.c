@@ -21,6 +21,11 @@
 #include "gda-common.h"
 #include <bonobo-activation/bonobo-activation.h>
 
+/* Include the marshalers here */
+#include "gda-marshal.h"
+#include "gda-marshal.c"
+/* end of marshalers */
+
 /**
  * gda_init
  */

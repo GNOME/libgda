@@ -20,8 +20,21 @@ IDL_FILES = \
 	$(top_builddir)/idl/GNOME_Database_Parameter.idl \
 	$(top_builddir)/idl/GNOME_Database_Recordset.idl
 
-GNOME_Database-skels.c GNOME_Database-stubs.c GNOME_Database-common.c GNOME_Database.h: $(IDLFILES) $(ORBIT_IDL)
+gda_corba_built_files = \
+	GNOME_Database-skels.c \
+	GNOME_Database-stubs.c \
+	GNOME_Database-common.c \
+	GNOME_Database.h
+
+$(gda_corba_built_files): $(IDLFILES) $(ORBIT_IDL)
 	$(ORBIT_IDL) -I$(top_builddir)/idl -I$(BONOBO_ACTIVATION_IDL_DIR) $(top_builddir)/idl/GNOME_Database.idl
+
+gda_marshal_built_files = gda-marshal.h gda-marshal.c
+
+gda-marshal.h: gda-marshal.list $(GLIB_GENMARSHAL)
+	$(GLIB_GENMARSHAL) $< --header --prefix=gda_marshal > $@
+gda-marshal.c: gda-marshal.list $(GLIB_GENMARSHAL)
+	$(GLIB_GENMARSHAL) $< --body --prefix=gda_marshal > $@
 
 gda_common_headers = \
 	gda-common-defs.h \
@@ -32,6 +45,7 @@ gda_common_headers = \
 	gda-field.h \
 	gda-listener.h \
 	gda-log.h \
+	gda-marshal.h \
 	gda-quark-list.h \
 	gda-util.h \
 	gda-value.h \
@@ -44,6 +58,8 @@ gda_common_headers = \
 	gda-xml-util.h \
 	gda-common.h \
 	GNOME_Database.h
+
+$(libgda_common_2_la_OBJECTS): GNOME_Database.h $(gda_marshal_built_files)
 
 libgda_common_2_la_SOURCES = \
 	$(gda_common_headers) \
@@ -76,9 +92,12 @@ libgda_common_2_la_LIBADD=\
 gdaincludedir=$(includedir)/gnome/2/gda
 gdainclude_HEADERS=$(gda_common_headers)
 
+CLEANFILES = $(gda_marshal_built_files) $(gda_corba_built_sources)
+
 dist-hook:
-	cd $(distdir); rm -f $(BUILT_SOURCES)
+	cd $(distdir); rm -f $(gda_marshal_built_files) $(gda_corba_built_sources)
 
 EXTRA_DIST = \
+	gda-marshal.list \
 	gda-xml-query.dtd \
 	gda-xml-query.xsl
