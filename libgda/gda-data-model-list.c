@@ -54,6 +54,13 @@ gda_data_model_list_get_n_columns (GdaDataModel *model)
 	return 1;
 }
 
+static const GdaRow *
+gda_data_model_list_get_row (GdaDataModel *model, gint row)
+{
+	g_return_val_if_fail (GDA_IS_DATA_MODEL_LIST (model), NULL);
+	return gda_data_model_get_row (GDA_DATA_MODEL (GDA_DATA_MODEL_LIST (model)->priv->rows), row);
+}
+
 static const GdaValue *
 gda_data_model_list_get_value_at (GdaDataModel *model, gint col, gint row)
 {
@@ -92,6 +99,7 @@ gda_data_model_list_class_init (GdaDataModelListClass *klass)
 	model_class->get_n_rows = gda_data_model_list_get_n_rows;
 	model_class->get_n_columns = gda_data_model_list_get_n_columns;
 	model_class->describe_column = NULL;
+	model_class->get_row = gda_data_model_list_get_row;
 	model_class->get_value_at = gda_data_model_list_get_value_at;
 	model_class->is_editable = gda_data_model_list_is_editable;
 	model_class->append_row = gda_data_model_list_append_row;
@@ -189,7 +197,7 @@ const GdaRow *
 gda_data_model_list_append_value (GdaDataModelList *model, const GdaValue *value)
 {
 	GList *values;
-	GdaRow *row;
+	const GdaRow *row;
 
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_LIST (model), NULL);
 	g_return_val_if_fail (value != NULL, NULL);

@@ -66,6 +66,17 @@ gda_data_model_array_describe_column (GdaDataModel *model, gint col)
 	return NULL;
 }
 
+static const GdaRow *
+gda_data_model_array_get_row (GdaDataModel *model, gint row)
+{
+	g_return_val_if_fail (GDA_IS_DATA_MODEL_ARRAY (model), NULL);
+
+	if (row >= GDA_DATA_MODEL_ARRAY (model)->priv->rows->len)
+		return NULL;
+
+	return (const GdaRow *) g_ptr_array_index (GDA_DATA_MODEL_ARRAY (model)->priv->rows, row);
+}
+
 static const GdaValue *
 gda_data_model_array_get_value_at (GdaDataModel *model, gint col, gint row)
 {
@@ -140,6 +151,7 @@ gda_data_model_array_class_init (GdaDataModelArrayClass *klass)
 	model_class->get_n_rows = gda_data_model_array_get_n_rows;
 	model_class->get_n_columns = gda_data_model_array_get_n_columns;
 	model_class->describe_column = gda_data_model_array_describe_column;
+	model_class->get_row = gda_data_model_array_get_row;
 	model_class->get_value_at = gda_data_model_array_get_value_at;
 	model_class->is_editable = gda_data_model_array_is_editable;
 	model_class->append_row = gda_data_model_array_append_row;

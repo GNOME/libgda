@@ -1,3 +1,17 @@
+2002-05-17  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* libgda/gda-data-model-list.c:
+	* libgda/gda-data-model-array.c:
+	* libgda/gda-data-model-hash.c:
+	* libgda/gda-data-model.[ch]: added 'get_row' method to
+	GdaDataModel class.
+
+	* libgda/gda-select.c (fill_data): implemented retrieval of data
+	from the source data model.
+
+	* providers/mysql/gda-mysql-recordset.c (gda_mysql_recordset_get_row):
+	new method implementation.
+
 2002-05-16  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* libgda/gda-select.[ch]: added basic implementation.

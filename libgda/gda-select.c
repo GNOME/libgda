@@ -241,7 +241,13 @@ fill_data (GdaSelect *sel)
 	}
 
 	if (res) {
-		/* FIXME: implement getting data */
+		gint rows, r;
+		const GdaRow *fields;
+
+		rows = gda_data_model_get_n_rows (sel->priv->source_model);
+		for (r = 0; r < rows; r++) {
+			fields = gda_data_model_get_row (sel->priv->source_model, r);
+		}
 	}
 
 	/* free memory */
@@ -264,6 +270,19 @@ gda_select_describe_column (GdaDataModel *model, gint col)
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (sel->priv->source_model), NULL);
 
 	return gda_data_model_describe_column (sel->priv->source_model, col);
+}
+
+static const GdaRow *
+gda_select_get_row (GdaDataModel *model, gint row)
+{
+	GdaSelect *sel = (GdaSelect *) model;
+
+	g_return_val_if_fail (GDA_IS_SELECT (sel), NULL);
+
+	/* FIXME: identify this row, so that it can be updated and changes
+	   proxied to the source_model */
+
+	return GDA_DATA_MODEL_CLASS (parent_class)->get_row (model, row);
 }
 
 static gboolean
@@ -308,6 +327,7 @@ gda_select_class_init (GdaSelectClass *klass)
 	object_class->finalize = gda_select_finalize;
 	// we use the get_n_rows and get_n_columns of the base class
 	model_class->describe_column = gda_select_describe_column;
+	model_class->get_row = gda_select_get_row;
 	// we use the get_value_at of the base class
 	model_class->is_editable = gda_select_is_editable;
 	model_class->append_row = gda_select_append_row;

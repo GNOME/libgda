@@ -195,35 +195,24 @@ gda_mysql_recordset_describe_column (GdaDataModel *model, gint col)
 	return attrs;
 }
 
-static const GdaValue *
-gda_mysql_recordset_get_value_at (GdaDataModel *model, gint col, gint row)
+static const GdaRow *
+gda_mysql_recordset_get_row (GdaDataModel *model, gint row)
 {
 	gint rows;
-	gint cols;
 	gint fetched_rows;
 	gint i;
 	GdaRow *fields = NULL;
-	GdaValue *f;
 	GdaMysqlRecordset *recset = (GdaMysqlRecordset *) model;
 
 	g_return_val_if_fail (GDA_IS_MYSQL_RECORDSET (recset), NULL);
 
 	rows = mysql_num_rows (recset->mysql_res);
-	cols = mysql_num_fields (recset->mysql_res);
 	fetched_rows = recset->rows->len;
 
-	if (col >= cols)
-		return NULL;
 	if (row >= rows)
 		return NULL;
-	if (row < fetched_rows) {
-		fields = g_ptr_array_index (recset->rows, row);
-		if (!fields)
-			return NULL;
-
-		f = gda_row_get_value (fields, col);
-		return (const GdaValue *) f;
-	}
+	if (row < fetched_rows)
+		return (const GdaRow *) g_ptr_array_index (recset->rows, row);
 
 	gda_data_model_freeze (GDA_DATA_MODEL (recset));
 
@@ -237,8 +226,24 @@ gda_mysql_recordset_get_value_at (GdaDataModel *model, gint col, gint row)
 
 	gda_data_model_thaw (GDA_DATA_MODEL (recset));
 
-	f = gda_row_get_value (fields, col);
-	return (const GdaValue *) f;
+	return (const GdaRow *) fields;
+}
+
+static const GdaValue *
+gda_mysql_recordset_get_value_at (GdaDataModel *model, gint col, gint row)
+{
+	gint cols;
+	const GdaRow *fields;
+	GdaMysqlRecordset *recset = (GdaMysqlRecordset *) model;
+
+	g_return_val_if_fail (GDA_IS_MYSQL_RECORDSET (recset), NULL);
+	
+	cols = mysql_num_fields (recset->mysql_res);
+	if (col >= cols)
+		return NULL;
+
+	fields = gda_mysql_recordset_get_row (model, row);
+	return fields != NULL ? gda_row_get_value (fields, col) : NULL;
 }
 
 static gboolean
@@ -268,6 +273,7 @@ gda_mysql_recordset_class_init (GdaMysqlRecordsetClass *klass)
 	model_class->get_n_rows = gda_mysql_recordset_get_n_rows;
 	model_class->get_n_columns = gda_mysql_recordset_get_n_columns;
 	model_class->describe_column = gda_mysql_recordset_describe_column;
+	model_class->get_row = gda_mysql_recordset_get_row;
 	model_class->get_value_at = gda_mysql_recordset_get_value_at;
 	model_class->is_editable = gda_mysql_recordset_is_editable;
 	model_class->append_row = gda_mysql_recordset_append_row;

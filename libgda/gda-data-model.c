@@ -24,6 +24,7 @@
 
 #include <libgda/gda-intl.h>
 #include <libgda/gda-data-model.h>
+#include <libgda/gda-log.h>
 
 #define PARENT_TYPE G_TYPE_OBJECT
 #define CLASS(model) (GDA_DATA_MODEL_CLASS (G_OBJECT_GET_CLASS (model)))
@@ -105,6 +106,7 @@ gda_data_model_class_init (GdaDataModelClass *klass)
 	klass->get_n_rows = NULL;
 	klass->get_n_columns = NULL;
 	klass->describe_column = NULL;
+	klass->get_row = NULL;
 	klass->get_value_at = NULL;
 	klass->is_editable = NULL;
 	klass->append_row = NULL;
@@ -373,6 +375,24 @@ gda_data_model_get_column_position (GdaDataModel *model, const gchar *title)
 	}
 
 	return -1;
+}
+
+/**
+ * gda_data_model_get_row
+ * @model: a #GdaDataModel object.
+ * @row: row number.
+ *
+ * Retrieve a given row from a data model.
+ *
+ * Returns: a #GdaRow object.
+ */
+const GdaRow *
+gda_data_model_get_row (GdaDataModel *model, gint row)
+{
+	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
+	g_return_val_if_fail (CLASS (model)->get_row != NULL, NULL);
+
+	return CLASS (model)->get_row (model, row);
 }
 
 /**
