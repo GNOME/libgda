@@ -2,14 +2,14 @@
 # Copyright (C) 2000 Free Software Foundation, Inc.
 # Daniele Medri <madrid@linux.it>, 2000.
 # Clara Tattoni <clara.tattoni@libero.it>, 2001.
-# Marco Ciampa <ciampix@libero.it>, 2003, 2004.
+# Marco Ciampa <ciampix@libero.it>, 2003-2005
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-db\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-11-09 17:19+0100\n"
-"PO-Revision-Date: 2004-11-09 18:14+0100\n"
+"POT-Creation-Date: 2005-01-24 15:03+0100\n"
+"PO-Revision-Date: 2005-01-24 15:05+0100\n"
 "Last-Translator: Marco Ciampa <ciampix@libero.it>\n"
 "Language-Team: italiano <tp@lists.linux.it>\n"
 "MIME-Version: 1.0\n"
@@ -39,23 +39,23 @@ msgstr "Impossibile creare l'oggetto GdaServerProvider dal plugin"
 msgid "Temporary data source created by libgda. Don't remove it"
 msgstr "Sorgente dati temporanea creata da libgda. Non rimuoverla."
 
-#: libgda/gda-config.c:1092
+#: libgda/gda-config.c:1093
 #, c-format
 msgid "Error: %s"
 msgstr "Errore: %s"
 
-#: libgda/gda-config.c:1205 providers/odbc/gda-odbc-provider.c:1137
+#: libgda/gda-config.c:1206 providers/odbc/gda-odbc-provider.c:1137
 #: providers/oracle/gda-oracle-provider.c:1153
 #: providers/postgres/gda-postgres-provider.c:945
 #: providers/postgres/gda-postgres-provider.c:1412
 msgid "Id"
 msgstr "Id"
 
-#: libgda/gda-config.c:1206
+#: libgda/gda-config.c:1207
 msgid "Location"
 msgstr "Locazione"
 
-#: libgda/gda-config.c:1207 libgda/gda-config.c:1532
+#: libgda/gda-config.c:1208 libgda/gda-config.c:1533
 #: providers/firebird/gda-firebird-provider.c:322
 #: providers/ibmdb2/gda-ibmdb2-provider.c:863
 #: providers/ibmdb2/gda-ibmdb2-provider.c:892
@@ -67,7 +67,7 @@ msgstr "Locazione"
 msgid "Description"
 msgstr "Descrizione"
 
-#: libgda/gda-config.c:1529 providers/firebird/gda-firebird-provider.c:730
+#: libgda/gda-config.c:1530 providers/firebird/gda-firebird-provider.c:730
 #: providers/ldap/gda-ldap-provider.c:327 providers/mdb/gda-mdb-provider.c:457
 #: providers/mdb/gda-mdb-provider.c:594 providers/mdb/gda-mdb-provider.c:654
 #: providers/msql/gda-msql-provider.c:471
@@ -83,23 +83,23 @@ msgstr "Descrizione"
 msgid "Name"
 msgstr "Nome"
 
-#: libgda/gda-config.c:1530
+#: libgda/gda-config.c:1531
 msgid "Provider"
 msgstr "Fornitore"
 
-#: libgda/gda-config.c:1531
+#: libgda/gda-config.c:1532
 msgid "Connection string"
 msgstr "Stringa di connessione"
 
-#: libgda/gda-config.c:1533
+#: libgda/gda-config.c:1534
 msgid "Username"
 msgstr "Nome utente"
 
-#: libgda/gda-config.c:1534
+#: libgda/gda-config.c:1535
 msgid "Password"
 msgstr "Password"
 
-#: libgda/gda-data-model.c:880
+#: libgda/gda-data-model.c:837
 #, c-format
 msgid "Data model %p is not updatable"
 msgstr "Il modello dati %p non è aggiornabile"
@@ -112,17 +112,17 @@ msgstr "Tentativo di inizializzare un client già inizializzato"
 msgid "libgda needs GModule. Finishing..."
 msgstr "lbgda necessita di GModule. Fine programma..."
 
-#: libgda/gda-select.c:393
+#: libgda/gda-select.c:395
 #, c-format
 msgid "Could not parse SQL string '%s'"
 msgstr "Non è possibile analizzare la stringa SQL '%s'"
 
-#: libgda/gda-select.c:397
+#: libgda/gda-select.c:399
 #, c-format
 msgid "SQL command is not a SELECT (is '%s'"
 msgstr "Il comando SQL non è SELECT (è '%s'"
 
-#: libgda/gda-table.c:284
+#: libgda/gda-table.c:286
 #, c-format
 msgid "There is already a field called %s"
 msgstr "C'è già un campo chiamato %s"
@@ -232,8 +232,8 @@ msgstr "Interrogazione da analizzare vuota"
 #: providers/firebird/gda-firebird-provider.c:1207
 #: providers/firebird/gda-firebird-provider.c:1241
 #: providers/firebird/gda-firebird-provider.c:1279
-#: providers/firebird/gda-firebird-recordset.c:694
-#: providers/firebird/gda-firebird-recordset.c:896
+#: providers/firebird/gda-firebird-recordset.c:695
+#: providers/firebird/gda-firebird-recordset.c:897
 msgid "Invalid Firebird handle"
 msgstr "Handle Firebird non valido"
 
@@ -539,20 +539,20 @@ msgstr "Nessun database specificato"
 msgid "Invalid transaction handle"
 msgstr "Handle transazionale non valido"
 
-#: providers/firebird/gda-firebird-recordset.c:345
-#: providers/firebird/gda-firebird-recordset.c:386
+#: providers/firebird/gda-firebird-recordset.c:346
+#: providers/firebird/gda-firebird-recordset.c:387
 msgid "Statement already prepared."
 msgstr "Comando già preparato."
 
-#: providers/firebird/gda-firebird-recordset.c:349
+#: providers/firebird/gda-firebird-recordset.c:350
 msgid "Transaction not initialized."
 msgstr "Transazione non inizializzata."
 
-#: providers/firebird/gda-firebird-recordset.c:456
+#: providers/firebird/gda-firebird-recordset.c:457
 msgid "Firebird's ARRAY datatype not supported yet!\n"
 msgstr "Il tipo di dato ARRAY di Firebird non è ancora supportato!\n"
 
-#: providers/firebird/gda-firebird-recordset.c:565
+#: providers/firebird/gda-firebird-recordset.c:566
 msgid "Unknown Firebird's field value!\n"
 msgstr "Valore campo Firebird sconosciuto!\n"
 
@@ -562,7 +562,7 @@ msgstr "Fornitore per database Firebird"
 
 #: providers/firebird/libmain.c:49 providers/freetds/libmain.c:48
 #: providers/ibmdb2/libmain.c:48 providers/msql/gda-msql-libmain.c:56
-#: providers/mysql/libmain.c:50 providers/postgres/libmain.c:50
+#: providers/mysql/libmain.c:50 providers/postgres/libmain.c:51
 #: providers/sybase/libmain.c:49
 msgid "Database Name"
 msgstr "Nome database"
@@ -661,9 +661,9 @@ msgstr ""
 #: providers/freetds/gda-freetds-provider.c:1079 providers/freetds/utils.c:44
 #: providers/oracle/utils.c:74 providers/postgres/utils.c:53
 #: providers/sybase/gda-sybase-provider.c:765
-#: providers/sybase/gda-sybase-recordset.c:512
-#: providers/sybase/gda-sybase-recordset.c:534
-#: providers/sybase/gda-sybase-recordset.c:593 providers/sybase/utils.c:205
+#: providers/sybase/gda-sybase-recordset.c:513
+#: providers/sybase/gda-sybase-recordset.c:535
+#: providers/sybase/gda-sybase-recordset.c:594 providers/sybase/utils.c:205
 #: providers/sybase/utils.c:223 providers/sybase/utils.c:239
 #: providers/sybase/utils.c:255 providers/sybase/utils.c:275
 #: providers/sybase/utils.c:316 providers/sybase/utils.c:333
@@ -702,12 +702,12 @@ msgstr "Host"
 msgid "Host name of the machine where the database is located"
 msgstr "Nome host della macchina dov'è collocato il database"
 
-#: providers/freetds/libmain.c:56 providers/postgres/libmain.c:62
+#: providers/freetds/libmain.c:56 providers/postgres/libmain.c:63
 #: providers/sybase/libmain.c:61
 msgid "Host Address"
 msgstr "Indirizzo host"
 
-#: providers/freetds/libmain.c:57 providers/postgres/libmain.c:63
+#: providers/freetds/libmain.c:57 providers/postgres/libmain.c:64
 #: providers/sybase/libmain.c:62
 msgid "IP address of the host to connect to"
 msgstr "Indirizzo IP dell'host a cui connettersi"
@@ -721,7 +721,7 @@ msgid "Extra options to use on the connection"
 msgstr "Opzioni extra da usare per la connessione"
 
 #: providers/freetds/libmain.c:64 providers/ldap/libmain.c:64
-#: providers/mysql/libmain.c:58 providers/postgres/libmain.c:70
+#: providers/mysql/libmain.c:58 providers/postgres/libmain.c:71
 #: providers/sybase/libmain.c:69
 msgid "Port"
 msgstr "Porta"
@@ -857,11 +857,11 @@ msgid "Provider for IBMDB2 databases"
 msgstr "Provider per database DB2 IBM"
 
 #: providers/ibmdb2/libmain.c:49 providers/msql/gda-msql-libmain.c:57
-#: providers/postgres/libmain.c:51 providers/sybase/libmain.c:50
+#: providers/postgres/libmain.c:52 providers/sybase/libmain.c:50
 msgid "Name of the database to use"
 msgstr "Nome del database da usare"
 
-#: providers/ibmdb2/libmain.c:52 providers/postgres/libmain.c:66
+#: providers/ibmdb2/libmain.c:52 providers/postgres/libmain.c:67
 #: providers/sybase/libmain.c:65
 msgid "Extra Options"
 msgstr "Opzioni extra"
@@ -882,36 +882,36 @@ msgstr "Handle LDAP non valido"
 
 #: providers/ldap/gda-ldap-recordset.c:69
 #: providers/mysql/gda-mysql-recordset.c:145
-#: providers/postgres/gda-postgres-recordset.c:196
-#: providers/postgres/gda-postgres-recordset.c:476
-#: providers/sqlite/gda-sqlite-recordset.c:165
-#: providers/sqlite/gda-sqlite-recordset.c:204
+#: providers/postgres/gda-postgres-recordset.c:200
+#: providers/postgres/gda-postgres-recordset.c:585
+#: providers/sqlite/gda-sqlite-recordset.c:166
+#: providers/sqlite/gda-sqlite-recordset.c:205
 #: providers/bdb/gda-bdb-recordset.c:111
 msgid "Row number out of range"
 msgstr "Numero riga fuori capacità"
 
 #: providers/ldap/gda-ldap-recordset.c:283
-#: providers/msql/gda-msql-recordset.c:229
+#: providers/msql/gda-msql-recordset.c:230
 #: providers/mysql/gda-mysql-recordset.c:326
-#: providers/oracle/gda-oracle-recordset.c:469
-#: providers/postgres/gda-postgres-recordset.c:242
+#: providers/oracle/gda-oracle-recordset.c:471
+#: providers/postgres/gda-postgres-recordset.c:246
 msgid "Attempt to insert a row with an invalid number of columns"
 msgstr "Tentativo di inserire una riga con un numero di colonne non valido"
 
 #: providers/ldap/gda-ldap-recordset.c:298
-#: providers/msql/gda-msql-recordset.c:241
+#: providers/msql/gda-msql-recordset.c:242
 #: providers/mysql/gda-mysql-recordset.c:341
-#: providers/oracle/gda-oracle-recordset.c:484
-#: providers/postgres/gda-postgres-recordset.c:257
+#: providers/oracle/gda-oracle-recordset.c:486
+#: providers/postgres/gda-postgres-recordset.c:261
 msgid "Could not retrieve column's information"
 msgstr "Impossibile recuperare le informazioni della colonna"
 
 #: providers/ldap/gda-ldap-recordset.c:316
-#: providers/msql/gda-msql-recordset.c:255
+#: providers/msql/gda-msql-recordset.c:256
 #: providers/mysql/gda-mysql-recordset.c:359
-#: providers/oracle/gda-oracle-recordset.c:502
-#: providers/postgres/gda-postgres-recordset.c:277
-#: providers/postgres/gda-postgres-recordset.c:288
+#: providers/oracle/gda-oracle-recordset.c:504
+#: providers/postgres/gda-postgres-recordset.c:281
+#: providers/postgres/gda-postgres-recordset.c:292
 msgid "Could not retrieve column's value"
 msgstr "Impossibile recuperare il valore della colonna"
 
@@ -928,7 +928,7 @@ msgid "LDAP flags"
 msgstr "Flags LDAP"
 
 #: providers/ldap/libmain.c:60 providers/msql/gda-msql-libmain.c:60
-#: providers/mysql/libmain.c:54 providers/postgres/libmain.c:58
+#: providers/mysql/libmain.c:54 providers/postgres/libmain.c:59
 #: providers/sybase/libmain.c:53 providers/sybase/libmain.c:57
 msgid "Host Name"
 msgstr "Nome host"
@@ -1071,7 +1071,7 @@ msgid "Provider for Hughes Technologies mSQL databases"
 msgstr "Provider per database mSQL della Hughes Technologies"
 
 #: providers/msql/gda-msql-libmain.c:61 providers/mysql/libmain.c:55
-#: providers/postgres/libmain.c:59 providers/sybase/libmain.c:54
+#: providers/postgres/libmain.c:60 providers/sybase/libmain.c:54
 #: providers/sybase/libmain.c:58
 msgid "Name of the host to connect to"
 msgstr "Nome dell'host su cui connettersi"
@@ -1080,8 +1080,8 @@ msgstr "Nome dell'host su cui connettersi"
 #: providers/msql/gda-msql-provider.c:286
 #: providers/msql/gda-msql-provider.c:307
 #: providers/msql/gda-msql-provider.c:578
-#: providers/msql/gda-msql-recordset.c:50
-#: providers/msql/gda-msql-recordset.c:140
+#: providers/msql/gda-msql-recordset.c:51
+#: providers/msql/gda-msql-recordset.c:141
 msgid "Invalid mSQL handle"
 msgstr "Handle mSQL non valido"
 
@@ -1115,7 +1115,7 @@ msgstr "Nome campo"
 msgid "Not null"
 msgstr "Non null"
 
-#: providers/msql/gda-msql-recordset.c:57
+#: providers/msql/gda-msql-recordset.c:58
 msgid "Row number out of bounds"
 msgstr "Numero riga fuori capacità"
 
@@ -1292,9 +1292,9 @@ msgstr ""
 #: providers/oracle/gda-oracle-provider.c:934
 #: providers/oracle/gda-oracle-provider.c:995
 #: providers/oracle/gda-oracle-provider.c:1142
-#: providers/oracle/gda-oracle-recordset.c:167
-#: providers/oracle/gda-oracle-recordset.c:390
-#: providers/oracle/gda-oracle-recordset.c:591
+#: providers/oracle/gda-oracle-recordset.c:169
+#: providers/oracle/gda-oracle-recordset.c:392
+#: providers/oracle/gda-oracle-recordset.c:593
 msgid "Invalid Oracle handle"
 msgstr "Handle Oracle non valido"
 
@@ -1462,52 +1462,52 @@ msgstr "Procedure"
 msgid "Sequences"
 msgstr "Sequenze"
 
-#: providers/oracle/gda-oracle-recordset.c:72
+#: providers/oracle/gda-oracle-recordset.c:74
 msgid "Could not get the Oracle parameter"
 msgstr "Impossibile ottenere il parametro Oracle"
 
-#: providers/oracle/gda-oracle-recordset.c:82
+#: providers/oracle/gda-oracle-recordset.c:84
 msgid "Could not get the parameter defined size"
 msgstr "Impossibile ottenere l'ampiezza del parametro definito"
 
-#: providers/oracle/gda-oracle-recordset.c:95
+#: providers/oracle/gda-oracle-recordset.c:97
 msgid "Could not get the parameter data type"
 msgstr "Impossibile ottenere il parametro tipo dati"
 
-#: providers/oracle/gda-oracle-recordset.c:128
+#: providers/oracle/gda-oracle-recordset.c:130
 msgid "Could not define by position"
 msgstr "Impossibile definire per posizione"
 
-#: providers/oracle/gda-oracle-recordset.c:173
-#: providers/postgres/gda-postgres-recordset.c:599
+#: providers/oracle/gda-oracle-recordset.c:175
+#: providers/postgres/gda-postgres-recordset.c:708
 msgid "Column out of range"
 msgstr "Colonne oltre misura"
 
-#: providers/oracle/gda-oracle-recordset.c:185
+#: providers/oracle/gda-oracle-recordset.c:187
 msgid "Could not get the Oracle parameter information"
 msgstr "Impossibile ottenere le informazioni di parametro Oracle"
 
-#: providers/oracle/gda-oracle-recordset.c:195
+#: providers/oracle/gda-oracle-recordset.c:197
 msgid "Could not get the Oracle column name"
 msgstr "Impossibile ottenere il nome colonna Oracle"
 
-#: providers/oracle/gda-oracle-recordset.c:210
+#: providers/oracle/gda-oracle-recordset.c:212
 msgid "Could not get the Oracle column data type"
 msgstr "Impossibile ottenere il tipo dati colonna"
 
-#: providers/oracle/gda-oracle-recordset.c:222
+#: providers/oracle/gda-oracle-recordset.c:224
 msgid "Could not get the Oracle column scale"
 msgstr "Impossibile ottenere scala colonna Oracle"
 
-#: providers/oracle/gda-oracle-recordset.c:234
+#: providers/oracle/gda-oracle-recordset.c:236
 msgid "Could not get the Oracle column nullable attribute"
 msgstr "Impossibile ottenere l'attributo colonna annullabile Oracle"
 
-#: providers/oracle/gda-oracle-recordset.c:246
+#: providers/oracle/gda-oracle-recordset.c:248
 msgid "Could not get the Oracle defined size"
 msgstr "Impossibile ottenere l'ampiezza definita Oracle"
 
-#: providers/oracle/gda-oracle-recordset.c:355
+#: providers/oracle/gda-oracle-recordset.c:357
 msgid "Could not fetch a row"
 msgstr "Impossibile caricare una riga"
 
@@ -1528,20 +1528,22 @@ msgstr "Nome della configurazione TNS da usare per la connessione"
 #: providers/postgres/gda-postgres-provider.c:676
 #: providers/postgres/gda-postgres-provider.c:775
 #: providers/postgres/gda-postgres-provider.c:886
-#: providers/postgres/gda-postgres-recordset.c:187
-#: providers/postgres/gda-postgres-recordset.c:467
-#: providers/postgres/gda-postgres-recordset.c:593
+#: providers/postgres/gda-postgres-recordset.c:191
+#: providers/postgres/gda-postgres-recordset.c:576
+#: providers/postgres/gda-postgres-recordset.c:702
 #: providers/postgres/utils.c:178
 msgid "Invalid PostgreSQL handle"
 msgstr "Handle PostgreSQL non valido"
 
 #: providers/postgres/gda-postgres-provider.c:823
 msgid "Transactions are not supported in read uncommitted isolation level"
-msgstr "Le transazioni non sono supportate in livello isolato di lettura senza commit"
+msgstr ""
+"Le transazioni non sono supportate in livello isolato di lettura senza commit"
 
 #: providers/postgres/gda-postgres-provider.c:826
 msgid "Transactions are not supported in repeatable read isolation level"
-msgstr "Le transazioni non sono supportate in livello isolato di lettura ripetibile"
+msgstr ""
+"Le transazioni non sono supportate in livello isolato di lettura ripetibile"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/postgres/gda-postgres-provider.c:1294
@@ -1553,64 +1555,70 @@ msgstr "Vista"
 msgid "Databases"
 msgstr "Database"
 
-#: providers/postgres/gda-postgres-recordset.c:234
-#: providers/postgres/gda-postgres-recordset.c:350
+#: providers/postgres/gda-postgres-recordset.c:238
+#: providers/postgres/gda-postgres-recordset.c:358
+#: providers/postgres/gda-postgres-recordset.c:457
 msgid "Table name could not be guessed."
 msgstr "Il nome della tabella non può essere indovinato."
 
-#: providers/postgres/gda-postgres-recordset.c:343
+#: providers/postgres/gda-postgres-recordset.c:351
+#: providers/postgres/gda-postgres-recordset.c:450
 msgid "Given row doesn't belong to the model."
 msgstr "La riga data non appartiene al modello."
 
-#: providers/postgres/gda-postgres-recordset.c:402
+#: providers/postgres/gda-postgres-recordset.c:391
+msgid "Model doesn't have at least one unique key."
+msgstr "Il modello non ha almeno una chiave unica."
+
+#: providers/postgres/gda-postgres-recordset.c:509
 msgid "Model doesn't have at least one non-modified unique key."
 msgstr "Il modello non ha almeno una chiave unica non modificata."
 
-#: providers/postgres/gda-postgres-recordset.c:406
+#: providers/postgres/gda-postgres-recordset.c:513
 msgid "Model doesn't have any non-unique values to update."
 msgstr "Il modello non ha nessun valore non unico da aggiornare."
 
-#: providers/postgres/gda-postgres-recordset.c:482
-#: providers/sqlite/gda-sqlite-recordset.c:210
-#: providers/sqlite/gda-sqlite-recordset.c:242
+#: providers/postgres/gda-postgres-recordset.c:591
+#: providers/sqlite/gda-sqlite-recordset.c:211
+#: providers/sqlite/gda-sqlite-recordset.c:243
 #: providers/bdb/gda-bdb-recordset.c:166
 msgid "Column number out of range"
 msgstr "Numero di colonna fuori parametri"
 
-#: providers/postgres/gda-postgres-recordset.c:709
+#: providers/postgres/gda-postgres-recordset.c:823
 #, c-format
 msgid "Tuples:\"%s\""
 msgstr "Tuple:\"%s\""
 
-#: providers/postgres/libmain.c:41
+#: providers/postgres/libmain.c:42
 msgid "Provider for PostgreSQL databases"
 msgstr "Provider per database PostgreSQL"
 
-#: providers/postgres/libmain.c:54
+#: providers/postgres/libmain.c:55
 msgid "Search Path"
 msgstr "Percorso di ricerca"
 
-#: providers/postgres/libmain.c:55
+#: providers/postgres/libmain.c:56
 msgid "Search path"
 msgstr "Percorso di ricerca"
 
-#: providers/postgres/libmain.c:67
+#: providers/postgres/libmain.c:68
 msgid "Extra PostgreSQL options to use for the connection"
 msgstr "Opzioni extra PostgreSQL da usare per la connessione"
 
-#: providers/postgres/libmain.c:71 providers/sybase/libmain.c:70
+#: providers/postgres/libmain.c:72 providers/sybase/libmain.c:70
 msgid "Port number to use for the connection"
 msgstr "Numero porta da usare per la connessione"
 
-#: providers/postgres/libmain.c:74
+#: providers/postgres/libmain.c:75
 msgid "Require SSL"
 msgstr "Richiede SSL"
 
-#: providers/postgres/libmain.c:75
+#: providers/postgres/libmain.c:76
 msgid "Whether to require SSL or not when connecting"
 msgstr "Uso di SSL per la connessione"
 
-#: providers/postgres/libmain.c:78 providers/postgres/libmain.c:79
+#: providers/postgres/libmain.c:79 providers/postgres/libmain.c:80
 msgid "TTY"
 msgstr "TTY"
 
@@ -1629,9 +1637,9 @@ msgstr "Ipossibile impostare l'opzione SQLite empty_result_callbacks"
 #: providers/sqlite/gda-sqlite-provider.c:379
 #: providers/sqlite/gda-sqlite-provider.c:590
 #: providers/sqlite/gda-sqlite-provider.c:755
-#: providers/sqlite/gda-sqlite-recordset.c:156
-#: providers/sqlite/gda-sqlite-recordset.c:195
-#: providers/sqlite/gda-sqlite-recordset.c:236
+#: providers/sqlite/gda-sqlite-recordset.c:157
+#: providers/sqlite/gda-sqlite-recordset.c:196
+#: providers/sqlite/gda-sqlite-recordset.c:237
 msgid "Invalid SQLite handle"
 msgstr "Handle SQLite non valido"
 
@@ -1783,67 +1791,67 @@ msgstr ""
 "Non è possibile abbandonare la struttura comandi per trovare il database "
 "corrente."
 
-#: providers/sybase/gda-sybase-recordset.c:315
+#: providers/sybase/gda-sybase-recordset.c:316
 msgid "Could not allocate datamodel. No results will be returned."
 msgstr ""
 "Non è possibile allocare il modello dati. Non verrà restituito nessun "
 "risultato."
 
-#: providers/sybase/gda-sybase-recordset.c:318
+#: providers/sybase/gda-sybase-recordset.c:319
 msgid "ct_cancel() failed."
 msgstr "ct_cancel() fallito."
 
-#: providers/sybase/gda-sybase-recordset.c:331
+#: providers/sybase/gda-sybase-recordset.c:332
 #, c-format
 msgid "%s failed while processing a row result."
 msgstr "%s fallito durante l'elaborazione di una riga di risultato."
 
-#: providers/sybase/gda-sybase-recordset.c:339
+#: providers/sybase/gda-sybase-recordset.c:340
 #, c-format
 msgid "%s returned <= 0 columns."
 msgstr "%s ha restituito <=0 colonne."
 
-#: providers/sybase/gda-sybase-recordset.c:359
-#: providers/sybase/gda-sybase-recordset.c:549
+#: providers/sybase/gda-sybase-recordset.c:360
+#: providers/sybase/gda-sybase-recordset.c:550
 msgid "Could not allocate structure for column metainformation."
 msgstr ""
 "Impossibile allocare una struttura per le metainformazioni delle colonne."
 
-#: providers/sybase/gda-sybase-recordset.c:363
-#: providers/sybase/gda-sybase-recordset.c:553
+#: providers/sybase/gda-sybase-recordset.c:364
+#: providers/sybase/gda-sybase-recordset.c:554
 #, c-format
 msgid "Could not call %s while processing row resultset."
 msgstr ""
 "Impossibile chiamare %s durante l'elaborazione della riga di risultato."
 
-#: providers/sybase/gda-sybase-recordset.c:382
-#: providers/sybase/gda-sybase-recordset.c:403
+#: providers/sybase/gda-sybase-recordset.c:383
+#: providers/sybase/gda-sybase-recordset.c:404
 #, c-format
 msgid "Could not run %s on column %d"
 msgstr "Non è possibile eseguire %s sulla colonna %d"
 
-#: providers/sybase/gda-sybase-recordset.c:391
+#: providers/sybase/gda-sybase-recordset.c:392
 #, c-format
 msgid "Could not allocate data placeholder for column %d"
 msgstr "Impossibile allocare il contenitore dei dati per la colonna %d"
 
-#: providers/sybase/gda-sybase-recordset.c:422
+#: providers/sybase/gda-sybase-recordset.c:423
 #, c-format
 msgid "Could not run %s to cancel processing row resultset."
 msgstr ""
 "Impossibile eseguire %s per annullare l'elaborazione della riga di risultato."
 
-#: providers/sybase/gda-sybase-recordset.c:438
+#: providers/sybase/gda-sybase-recordset.c:439
 #, c-format
 msgid "%s failed on row %d"
 msgstr "%s fallito sulla riga %d"
 
-#: providers/sybase/gda-sybase-recordset.c:465
+#: providers/sybase/gda-sybase-recordset.c:466
 #, c-format
 msgid "%s terminated with unexpected return code."
 msgstr "%s è terminato con un codice di ritorno inaspettato."
 
-#: providers/sybase/gda-sybase-recordset.c:509
+#: providers/sybase/gda-sybase-recordset.c:510
 msgid ""
 "an error occured when calling ct_diag attempting to retrieve a server "
 "message count for resultset"
@@ -1851,11 +1859,11 @@ msgstr ""
 "si è verificato un errore durante la chiamata di ct_diag nel tentativo di "
 "recuperare un conteggio messaggi del server per il risultato"
 
-#: providers/sybase/gda-sybase-recordset.c:518
+#: providers/sybase/gda-sybase-recordset.c:519
 msgid "attempting to make recordset and msg count != 1 !"
 msgstr "tentativo di rendere il recordset e il conteggio messaggi !=1 !"
 
-#: providers/sybase/gda-sybase-recordset.c:531
+#: providers/sybase/gda-sybase-recordset.c:532
 msgid ""
 "an error occured when calling ct_diag attempting to retrieve a server "
 "message for recordset"
@@ -1863,7 +1871,7 @@ msgstr ""
 "si è verificato un errore durante la chiamata di ct_diag nel tentativo di "
 "recuperare un messaggio server per il recordset"
 
-#: providers/sybase/gda-sybase-recordset.c:590 providers/sybase/utils.c:408
+#: providers/sybase/gda-sybase-recordset.c:591 providers/sybase/utils.c:408
 msgid "call to ct_diag failed when attempting to clear the server messages"
 msgstr ""
 "la chiamata a ct_diag è fallita nel tentativo di cancellare i messaggi del "
