@@ -32,6 +32,7 @@
 #include <orb/orbit.h>
 #include <GDA.h>
 #include <gda-error.h>
+#include <gda-listener.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -148,6 +149,12 @@ gchar*             gda_connection_sql2xml             (GdaConnection *cnc,
                                                        const gchar *sql);
 gchar*             gda_connection_xml2sql             (GdaConnection *cnc,
                                                        const gchar *xml);
+
+/* listeners */
+void               gda_connection_add_listener        (GdaConnection *cnc,
+						       GdaListener *listener);
+void               gda_connection_remove_listener     (GdaConnection *cnc,
+						       GdaListener *listener);
 
 #ifdef __cplusplus
 }

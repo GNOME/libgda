@@ -1,5 +1,8 @@
 2001-07-14  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* gda-connection.c (gda_connection_add_listener): new function
+	(gda_connection_remove_listener): new function
+
 	* gda-connection.c (gda_connection_new_from_dsn): use the user
 	configured in the DSN if no user name is given in the call to this
 	function

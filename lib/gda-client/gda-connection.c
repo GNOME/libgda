@@ -19,10 +19,10 @@
  */
 
 #include "config.h"
-#include "gda-connection.h"
-#include "gda-command.h"
 #include "gda-config.h"
 #include "gda-corba.h"
+#include "gda-connection.h"
+#include "gda-command.h"
 
 #ifndef HAVE_GOBJECT
 #  include <gtk/gtksignal.h>
@@ -1075,4 +1075,40 @@ gda_connection_xml2sql (GdaConnection *cnc, const gchar *xml)
 	if (gda_connection_corba_exception(cnc, &ev) == 0)
 		return (gchar *) sql;
 	return NULL;
+}
+
+/**
+ * gda_connection_add_listener
+ */
+void
+gda_connection_add_listener (GdaConnection *cnc, GdaListener *listener)
+{
+	CORBA_Environment ev;
+
+	g_return_if_fail (GDA_IS_CONNECTION (cnc));
+	g_return_if_fail (GDA_IS_LISTENER (listener));
+
+	CORBA_exception_init (&ev);
+	GDA_Connection_addListener (cnc->connection,
+				    bonobo_object_corba_objref (BONOBO_OBJECT (listener)),
+				    &ev);
+	CORBA_exception_free (&ev);
+}
+
+/**
+ * gda_connection_remove_listener
+ */
+void
+gda_connection_remove_listener (GdaConnection *cnc, GdaListener *listener)
+{
+	CORBA_Environment ev;
+
+	g_return_if_fail (GDA_IS_CONNECTION (cnc));
+	g_return_if_fail (GDA_IS_LISTENER (listener));
+
+	CORBA_exception_init (&ev);
+	GDA_Connection_removeListener (cnc->connection,
+				       bonobo_object_corba_objref (BONOBO_OBJECT (listener)),
+				       &ev);
+	CORBA_exception_free (&ev);
 }
