@@ -1,3 +1,7 @@
+2001-12-29  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-connection.h: added new schemas to GdaConnectionSchema
+
 2001-12-27  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-server-provider.[ch]: added getSchema virtual function

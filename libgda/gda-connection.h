@@ -88,7 +88,10 @@ typedef enum {
 gboolean       gda_connection_supports (GdaConnection *cnc, GdaConnectionFeature feature);
 
 typedef enum {
-	GDA_CONNECTION_SCHEMA_TABLES = GNOME_Database_Connection_SCHEMA_TABLES
+	GDA_CONNECTION_SCHEMA_PROCEDURES = GNOME_Database_Connection_SCHEMA_PROCEDURES,
+	GDA_CONNECTION_SCHEMA_TABLES = GNOME_Database_Connection_SCHEMA_TABLES,
+	GDA_CONNECTION_SCHEMA_TYPES = GNOME_Database_Connection_SCHEMA_TYPES,
+	GDA_CONNECTION_SCHEMA_VIEWS = GNOME_Database_Connection_SCHEMA_VIEWS
 } GdaConnectionSchema;
 
 GdaDataModel *gda_connection_get_schema (GdaConnection *cnc,
