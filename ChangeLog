@@ -1,3 +1,8 @@
+2004-02-18  Sergey N. Belinsky <sergey_be@mail.ru>
+	* gda-ibmdb2-recordset.c: Fixed size of data. Clean up data after use.
+	* gda-ibmdb2-types.[ch]: Fixed NUMERIC datatype. Message for unsupported datatypes.
+	* libmain.c: Removed unused options.
+
 2004-02-15  Vivien Malerba <malerba@gnome-db.org>
 	* libgda/gda-value.c: bugs fixes in gda_value_compare()
 
