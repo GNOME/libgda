@@ -879,11 +879,12 @@ gda_mysql_recordset_new (GdaConnection *cnc, MYSQL_RES *mysql_res, MYSQL *mysql)
 	model->priv->cnc = cnc;
 	model->priv->row_sync = FALSE;
 	model->priv->ncolumns = 0;
-	if (mysql_res == NULL)
+	if (mysql_res == NULL) {
 		model->priv->mysql_res_rows = mysql_affected_rows (mysql);
-	else
+		return model;
+	} else {
 		model->priv->mysql_res_rows = mysql_num_rows (model->priv->mysql_res);
-
+	}
 	mysql_fields = mysql_fetch_fields (model->priv->mysql_res);
 	if (mysql_fields != NULL) {
 		gint i;
