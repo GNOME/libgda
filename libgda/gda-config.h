@@ -24,7 +24,7 @@
 #  define __gda_config_h__
 
 #include <glib/gmacros.h>
-#include <gda-parameter.h>
+#include <libgda/gda-parameter.h>
 
 G_BEGIN_DECLS
 

@@ -49,6 +49,7 @@ struct _GdaDataModelClass {
 	/* virtual methods */
 	gint (* get_n_rows) (GdaDataModel *model);
 	gint (* get_n_columns) (GdaDataModel *model);
+	const gchar * (* get_column_title) (GdaDataModel *model, gint col);
 	const GdaValue * (* get_value_at) (GdaDataModel *model, gint col, gint row);
 };
 
@@ -57,6 +58,7 @@ GType           gda_data_model_get_type (void);
 void            gda_data_model_changed (GdaDataModel *model);
 gint            gda_data_model_get_n_rows (GdaDataModel *model);
 gint            gda_data_model_get_n_columns (GdaDataModel *model);
+const gchar    *gda_data_model_get_column_title (GdaDataModel *model, gint col);
 const GdaValue *gda_data_model_get_value_at (GdaDataModel *model, gint col, gint row);
 
 G_END_DECLS

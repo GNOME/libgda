@@ -24,7 +24,7 @@
 #if !defined(__libgda_h__)
 #  define __libgda_h__
 
-#include <libgda/gda-batch.h>
+//#include <libgda/gda-batch.h>
 #include <libgda/gda-client.h>
 #include <libgda/gda-command.h>
 #include <libgda/gda-config.h>

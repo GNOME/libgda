@@ -24,8 +24,8 @@
 #if !defined(__gda_client_h__)
 #  define __gda_client_h__
 
-#include <gda-connection.h>
-#include <GNOME_Database.h>
+#include <libgda/gda-connection.h>
+#include <libgda/GNOME_Database.h>
 #include <bonobo/bonobo-xobject.h>
 
 G_BEGIN_DECLS

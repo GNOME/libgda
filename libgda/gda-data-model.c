@@ -61,6 +61,7 @@ gda_data_model_class_init (GdaDataModelClass *klass)
 	object_class->finalize = gda_data_model_finalize;
 	klass->get_n_rows = NULL;
 	klass->get_n_columns = NULL;
+	klass->get_column_title = NULL;
 	klass->get_value_at = NULL;
 }
 
@@ -149,7 +150,20 @@ gda_data_model_get_n_columns (GdaDataModel *model)
 
 	return CLASS (model)->get_n_columns (model);
 }
- 
+
+/**
+ * gda_data_model_get_column_title
+ * @model: a #GdaDataModel object.
+ * @col: column number.
+ *
+ * Return the title for the given column in a data model object.
+ */
+const gchar *
+gda_data_model_get_column_title (GdaDataModel *model, gint col)
+{
+	return "FIXME";
+}
+
 /**
  * gda_data_model_get_value_at
  * @model: a #GdaDataModel object.

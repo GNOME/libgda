@@ -1,5 +1,7 @@
 2001-11-03  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* gda-data-model.[ch] (gda_data_model_get_column_title): new function
+
 	* Makefile.am: don't install headers in $includedir/gnome-2.0
 
 	* gda-value.c (gda_value_new): return the created structure
