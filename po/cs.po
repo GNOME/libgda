@@ -1,15 +1,16 @@
 # libgda cs.po Czech translation
 # Copyright (C) 2002 Free Software Foundation
+# Copyright (C) 2004 Miloslav Trmac <mitr@volny.cz>
 # This file is distributed under the same license as the libgda package.
 # Michal Bukovjan <bukm@centrum.cz>, 2002.
-# Miloslav Trmac <mitr@volny.cz>, 2003.
+# Miloslav Trmac <mitr@volny.cz>, 2003, 2004.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda HEAD\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-01-17 00:08+0100\n"
-"PO-Revision-Date: 2003-11-28 18:04+0100\n"
+"POT-Creation-Date: 2004-01-24 04:53+0100\n"
+"PO-Revision-Date: 2004-01-27 16:21+0100\n"
 "Last-Translator: Miloslav Trmac <mitr@volny.cz>\n"
 "Language-Team: Czech <cs@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -97,7 +98,7 @@ msgstr "Pokus o inicializaci již inicializovaného klienta"
 
 #: libgda/gda-init.c:58
 msgid "libgda needs GModule. Finishing..."
-msgstr "Program libgda potřebuje GModule. Končím..."
+msgstr "libgda potřebuje GModule. Končím..."
 
 #: libgda/gda-select.c:393
 #, c-format
@@ -1421,9 +1422,7 @@ msgstr "%s skončilo s neočekávaným návratovým kódem."
 msgid ""
 "an error occured when calling ct_diag attempting to retrieve a server "
 "message count for resultset"
-msgstr ""
-"při volání cg_diag při pokuzu získat počet zpráv serveru pro resultset došlo "
-"k chybě"
+msgstr "při volání cg_diag při pokusu získat počet zpráv serveru pro resultset došlo k chybě"
 
 #: providers/sybase/gda-sybase-recordset.c:518
 msgid "attempting to make recordset and msg count != 1 !"
@@ -1724,7 +1723,7 @@ msgstr "Položka s ID %s není repfield"
 
 #: report/libgda-report/gda-report-item.c:276
 msgid "Error setting parent -> child relation"
-msgstr "Chyba při nastavenování vztahu rodič -> potomek"
+msgstr "Chyba při nastavování vztahu rodič -> potomek"
 
 #: report/libgda-report/gda-report-item.c:375
 #, c-format
