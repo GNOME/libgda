@@ -134,15 +134,3 @@ gda_log_error (const gchar * format, ...)
 	syslog (LOG_USER | LOG_ERR, msg);
 	g_free (msg);
 }
-
-/**
- * gda_log_clean_all
- * @prgname: program name
- *
- * Clears the entire log for the given program name.
- */
-void
-gda_log_clean_all (const gchar * prgname)
-{
-  /* FIXME: implement me */
-}

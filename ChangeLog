@@ -1,5 +1,12 @@
 2003-12-09  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	Fixes #128933
+
+	* libgda/gda-log.[ch] (gda_log_clean_*): removed unimplemented
+	functions.
+
+2003-12-09  Rodrigo Moya <rodrigo@gnome-db.org>
+
 	Fixes #128929
 
 	* libgda/gda-client.h: added missing space in function prototype
