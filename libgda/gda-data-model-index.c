@@ -80,7 +80,7 @@ gda_data_model_index_copy (GdaDataModelIndex *dmi)
 	dmi_copy->references = g_strdup (dmi->references);
 
 	/* g_list_copy (shallow copy) not good enough */
-	for (i = 0; i <= g_list_length (dmi->col_idx_list); i++) 
+	for (i = 0; i < g_list_length (dmi->col_idx_list); i++) 
 		dmi_copy->col_idx_list = g_list_append (dmi_copy->col_idx_list, 
 			(GdaDataModelColumnIndexAttributes *) 
 			gda_data_model_column_index_attributes_copy (g_list_nth_data (dmi->col_idx_list, i)));
@@ -106,7 +106,7 @@ gda_data_model_index_free (GdaDataModelIndex *dmi)
 	g_free (dmi->references);
 
 	/* free column index attributes list */	
-	for (i = 0; i <= g_list_length (dmi->col_idx_list); i++) 
+	for (i = 0; i < g_list_length (dmi->col_idx_list); i++) 
 		gda_data_model_column_index_attributes_free (g_list_nth_data (dmi->col_idx_list, i));
 
 	g_list_free (dmi->col_idx_list);
@@ -157,7 +157,7 @@ gda_data_model_index_equal (const GdaDataModelIndex *lhs,
 	if ((lhs->references == 0) != (rhs->references == 0))
 		return FALSE;
 
-	for (i = 0; i <= g_list_length (lhs->col_idx_list); i++) 
+	for (i = 0; i < g_list_length (lhs->col_idx_list); i++) 
 		if (gda_data_model_column_index_attributes_equal (g_list_nth_data (lhs->col_idx_list, i), 
 							    g_list_nth_data (rhs->col_idx_list, i)) == FALSE)
 			return FALSE;
@@ -344,7 +344,7 @@ gda_data_model_index_set_column_index_list (GdaDataModelIndex *dmi, GList *col_i
 	if (dmi->col_idx_list != NULL) {
 
 		/* free column index attributes list */	
-		for (i = 0; i <= g_list_length (dmi->col_idx_list); i++) 
+		for (i = 0; i < g_list_length (dmi->col_idx_list); i++) 
 			gda_data_model_column_index_attributes_free (g_list_nth_data (dmi->col_idx_list, i));
 
 		g_list_free (dmi->col_idx_list);
@@ -354,7 +354,7 @@ gda_data_model_index_set_column_index_list (GdaDataModelIndex *dmi, GList *col_i
 	if (col_idx_list) {
 
 		/* g_list_copy (shallow copy) not good enough */
-		for (i = 0; i <= g_list_length (col_idx_list); i++) 
+		for (i = 0; i < g_list_length (col_idx_list); i++) 
 			dmi->col_idx_list = g_list_append (dmi->col_idx_list, 
 				(GdaDataModelColumnIndexAttributes *) 
 				gda_data_model_column_index_attributes_copy (g_list_nth_data (col_idx_list, i)));

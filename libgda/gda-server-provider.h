@@ -3,6 +3,7 @@
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
+ *	Bas Driessen <bas.driessen@xobas.com>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -26,6 +27,7 @@
 #include <libgda/gda-command.h>
 #include <libgda/gda-connection.h>
 #include <libgda/gda-data-model.h>
+#include <libgda/gda-data-model-index.h>
 #include <libgda/gda-quark-list.h>
 #include <libgda/gda-transaction.h>
 
@@ -83,6 +85,14 @@ struct _GdaServerProviderClass {
 				   const GList *attributes_list);
 	gboolean (* drop_table) (GdaServerProvider *provider,
 				 GdaConnection *cnc,
+				 const gchar *table_name);
+	gboolean (* create_index) (GdaServerProvider *provider,
+				   GdaConnection *cnc,
+				   const GdaDataModelIndex *index,
+				   const gchar *table_name);
+	gboolean (* drop_index) (GdaServerProvider *provider,
+				 GdaConnection *cnc,
+				 const gchar *index_name,
 				 const gchar *table_name);
 
 	GList * (* execute_command) (GdaServerProvider *provider,
@@ -155,6 +165,14 @@ gboolean gda_server_provider_create_table (GdaServerProvider *provider,
 					   const GList *attributes_list);
 gboolean gda_server_provider_drop_table (GdaServerProvider *provider,
 					 GdaConnection *cnc,
+					 const gchar *table_name);
+gboolean gda_server_provider_create_index (GdaServerProvider *provider,
+					   GdaConnection *cnc,
+					   const GdaDataModelIndex *index,
+					   const gchar *table_name);
+gboolean gda_server_provider_drop_index (GdaServerProvider *provider,
+					 GdaConnection *cnc,
+					 const gchar *index_name,
 					 const gchar *table_name);
 
 GList   *gda_server_provider_execute_command (GdaServerProvider *provider,

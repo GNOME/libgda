@@ -1,3 +1,25 @@
+2005-02-03  Bas Driessen <bas.driessen@xobas.com>
+
+	* libgda/gda-connection.[ch]: new prototypes and functions
+	gda_connection_create_index() and gda_connection_drop_index().
+
+	* libgda/gda-server-provider.[ch]: new prototypes and functions
+	gda_connection_create_index() and gda_connection_drop_index().
+
+	* providers/postgres/gda-postgres-provider.c: added prototype and function
+	gda_postgres_provider_drop_index() and prototype and skeleton function 
+	gda_postgres_provider_create_index().
+
+	* providers/mysql/gda-mysql-provider.c: added prototype and function
+	gda_mysql_provider_drop_index() and prototype and skeleton function 
+	gda_mysql_provider_create_index().
+
+	* doc/C: added create/drop index to documentation.
+
+	* libgda/gda-data-model-column-index-attributes: minor bugfixes.
+
+	* libgda/gda-data-model-index: minor bugfixes.
+
 2005-02-02  Bas Driessen <bas.driessen@xobas.com>
 
 	* libgda/: introduced GdaDataModelIndex to hold index

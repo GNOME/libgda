@@ -4,6 +4,7 @@
  * AUTHORS:
  *      Michael Lausch <michael@lausch.at>
  *	Rodrigo Moya <rodrigo@gnome-db.org>
+ *	Bas Driessen <bas.driessen@xobas.com>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -711,7 +712,7 @@ gda_connection_create_table (GdaConnection *cnc, const gchar *table_name, const 
 /**
  * gda_connection_drop_table
  * @cnc: a #GdaConnection object.
- * @table_name: name of the table to be removed
+ * @table_name: name of the table to be removed.
  *
  * Drops a table from the database.
  *
@@ -724,6 +725,46 @@ gda_connection_drop_table (GdaConnection *cnc, const gchar *table_name)
 	g_return_val_if_fail (table_name != NULL, FALSE);
 
 	return gda_server_provider_drop_table (cnc->priv->provider_obj, cnc, table_name);
+}
+
+/**
+ * gda_connection_create_index
+ * @cnc: a #GdaConnection object.
+ * @index: a #GdaDataModelIndex object containing all index details.
+ * @table_name: name of the table to create index for.
+ *
+ * Creates an index for a given table on the given connection from the specified set of fields.
+ *
+ * Returns: %TRUE if successful, %FALSE otherwise.
+ */
+gboolean
+gda_connection_create_index (GdaConnection *cnc, const GdaDataModelIndex *index, const gchar *table_name)
+{
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (index != NULL, FALSE);
+	g_return_val_if_fail (table_name != NULL, FALSE);
+
+	return gda_server_provider_create_index (cnc->priv->provider_obj, cnc, index, table_name);
+}
+
+/**
+ * gda_connection_drop_index
+ * @cnc: a #GdaConnection object.
+ * @index_name: name of the index to be removed.
+ * @table_name: name of the table of index to be removed from.
+ *
+ * Drops an index from a table from the database.
+ *
+ * Returns: %TRUE if successful, %FALSE otherwise.
+ */
+gboolean
+gda_connection_drop_index (GdaConnection *cnc, const gchar *index_name, const gchar *table_name)
+{
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (index_name != NULL, FALSE);
+	g_return_val_if_fail (table_name != NULL, FALSE);
+
+	return gda_server_provider_drop_index (cnc->priv->provider_obj, cnc, index_name, table_name);
 }
 
 /**

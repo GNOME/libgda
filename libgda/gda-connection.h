@@ -4,6 +4,7 @@
  * AUTHORS:
  *      Michael Lausch <michael@lausch.at>
  *	Rodrigo Moya <rodrigo@gnome-db.org>
+ *	Bas Driessen <bas.driessen@xobas.com>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -26,6 +27,7 @@
 
 #include <libgda/gda-command.h>
 #include <libgda/gda-data-model.h>
+#include <libgda/gda-data-model-index.h>
 #include <libgda/gda-error.h>
 #include <libgda/gda-parameter.h>
 #include <libgda/gda-transaction.h>
@@ -98,6 +100,10 @@ gboolean             gda_connection_drop_database (GdaConnection *cnc, const gch
 gboolean             gda_connection_create_table (GdaConnection *cnc, const gchar *table_name,
 						  const GList *attributes_list);
 gboolean             gda_connection_drop_table (GdaConnection *cnc, const gchar *table_name);
+gboolean             gda_connection_create_index (GdaConnection *cnc, const GdaDataModelIndex *index,
+						  const gchar *table_name);
+gboolean             gda_connection_drop_index (GdaConnection *cnc, const gchar *index_name,
+						const gchar *table_name);
 
 GList               *gda_connection_execute_command (GdaConnection *cnc,
 						     GdaCommand *cmd,

@@ -138,7 +138,7 @@ gda_data_model_column_index_attributes_equal (const GdaDataModelColumnIndexAttri
  * Returns: the column name of @dmcia.
  */
 const gchar *
-gda_data_model_column_index_attributes_get_name (GdaDataModelColumnIndexAttributes *dmcia)
+gda_data_model_column_index_attributes_get_column_name (GdaDataModelColumnIndexAttributes *dmcia)
 {
 	g_return_val_if_fail (dmcia != NULL, NULL);
 	return (const gchar *) dmcia->column_name;
@@ -152,7 +152,7 @@ gda_data_model_column_index_attributes_get_name (GdaDataModelColumnIndexAttribut
  * Sets the name of @dmcia to @column_name.
  */
 void
-gda_data_model_column_index_attributes_set_name (GdaDataModelColumnIndexAttributes *dmcia, const gchar *column_name)
+gda_data_model_column_index_attributes_set_column_name (GdaDataModelColumnIndexAttributes *dmcia, const gchar *column_name)
 {
 	g_return_if_fail (dmcia != NULL);
 	g_return_if_fail (column_name != NULL);

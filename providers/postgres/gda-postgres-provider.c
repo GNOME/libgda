@@ -66,6 +66,16 @@ static gboolean gda_postgres_provider_drop_table (GdaServerProvider *provider,
 						     GdaConnection *cnc,
 						     const gchar *table_name);
 
+static gboolean gda_postgres_provider_create_index (GdaServerProvider *provider,
+						    GdaConnection *cnc,
+						    const GdaDataModelIndex *index,
+						    const gchar *table_name);
+
+static gboolean gda_postgres_provider_drop_index (GdaServerProvider *provider,
+						     GdaConnection *cnc,
+						     const gchar *index_name,
+						     const gchar *table_name);
+
 static GList *gda_postgres_provider_execute_command (GdaServerProvider *provider,
 						     GdaConnection *cnc,
 						     GdaCommand *cmd,
@@ -155,6 +165,8 @@ gda_postgres_provider_class_init (GdaPostgresProviderClass *klass)
 	provider_class->drop_database = gda_postgres_provider_drop_database;
 	provider_class->create_table = gda_postgres_provider_create_table;
 	provider_class->drop_table = gda_postgres_provider_drop_table;
+	provider_class->create_index = gda_postgres_provider_create_index;
+	provider_class->drop_index = gda_postgres_provider_drop_index;
 	provider_class->execute_command = gda_postgres_provider_execute_command;
 	provider_class->get_last_insert_id = gda_postgres_provider_get_last_insert_id;
 	provider_class->begin_transaction = gda_postgres_provider_begin_transaction;
@@ -912,6 +924,50 @@ gda_postgres_provider_drop_table (GdaServerProvider *provider,
 	g_return_val_if_fail (table_name != NULL, FALSE);
 
 	sql = g_strdup_printf ("DROP TABLE %s", table_name);
+
+	retval = gda_postgres_provider_single_command (pg_prv, cnc, sql);
+	g_free (sql);
+
+	return retval;
+}
+
+/* create_index handler for the GdaPostgresProvider class */
+static gboolean
+gda_postgres_provider_create_index (GdaServerProvider *provider,
+				    GdaConnection *cnc,
+				    const GdaDataModelIndex *index,
+				    const gchar *table_name)
+{
+	GdaPostgresProvider *pg_prv = (GdaPostgresProvider *) provider;
+	GdaDataModelColumnAttributes *dmca;
+
+	g_return_val_if_fail (GDA_IS_POSTGRES_PROVIDER (pg_prv), FALSE);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (index != NULL, FALSE);
+	g_return_val_if_fail (table_name != NULL, FALSE);
+
+	return FALSE;
+}
+
+/* drop_index handler for the GdaPostgresProvider class */
+static gboolean
+gda_postgres_provider_drop_index (GdaServerProvider *provider,
+				  GdaConnection *cnc,
+				  const gchar *index_name,
+				  const gchar *table_name)
+{
+	gboolean retval;
+	gchar *sql;
+
+	GdaPostgresProvider *pg_prv = (GdaPostgresProvider *) provider;
+
+	g_return_val_if_fail (GDA_IS_POSTGRES_PROVIDER (pg_prv), FALSE);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (index_name != NULL, FALSE);
+	/* Even though table name is not a valid option in PostgreSQL, be consistent */
+	g_return_val_if_fail (table_name != NULL, FALSE);
+
+	sql = g_strdup_printf ("DROP INDEX %s", index_name);
 
 	retval = gda_postgres_provider_single_command (pg_prv, cnc, sql);
 	g_free (sql);

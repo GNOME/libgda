@@ -3,6 +3,7 @@
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
+ *	Bas Driessen <bas.driessen@xobas.com>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -69,6 +70,8 @@ gda_server_provider_class_init (GdaServerProviderClass *klass)
 	klass->drop_database = NULL;
 	klass->create_table = NULL;
 	klass->drop_table = NULL;
+	klass->create_index = NULL;
+	klass->drop_index = NULL;
 	klass->execute_command = NULL;
 	klass->get_last_insert_id = NULL;
 	klass->begin_transaction = NULL;
@@ -404,6 +407,60 @@ gda_server_provider_drop_table (GdaServerProvider *provider,
 	g_return_val_if_fail (CLASS (provider)->drop_table != NULL, FALSE);
 
 	return CLASS (provider)->drop_table (provider, cnc, table_name);
+}
+
+/**
+ * gda_server_provider_create_index:
+ * @provider: a #GdaServerProvider object.
+ * @cnc: a #GdaConnection object.
+ * @index: a #GdaDataModelIndex object containing all index information.
+ * @table_name: name of the table to create index for.
+ *
+ * Proxy the call to the create_index method on the #GdaServerProvider class
+ * to the corresponding provider.
+ *
+ * Returns: %TRUE if successful, %FALSE otherwise.
+ */
+gboolean
+gda_server_provider_create_index (GdaServerProvider *provider,
+				  GdaConnection *cnc,
+				  const GdaDataModelIndex *index,
+				  const gchar *table_name)
+{
+	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), FALSE);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (table_name != NULL, FALSE);
+	g_return_val_if_fail (index != NULL, FALSE);
+	g_return_val_if_fail (CLASS (provider)->create_index != NULL, FALSE);
+
+	return CLASS (provider)->create_index (provider, cnc, table_name, index);
+}
+
+/**
+ * gda_server_provider_drop_index:
+ * @provider: a #GdaServerProvider object.
+ * @cnc: a #GdaConnection object.
+ * @index_name: name of the index to remove.
+ * @table_name: name of the table index to remove from.
+ *
+ * Proxy the call to the drop_index method on the #GdaServerProvider class
+ * to the corresponding provider.
+ *
+ * Returns: %TRUE if successful, %FALSE otherwise.
+ */
+gboolean
+gda_server_provider_drop_index (GdaServerProvider *provider,
+				GdaConnection *cnc,
+				const gchar *index_name,
+				const gchar *table_name)
+{
+	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), FALSE);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (index_name != NULL, FALSE);
+	g_return_val_if_fail (table_name != NULL, FALSE);
+	g_return_val_if_fail (CLASS (provider)->drop_index != NULL, FALSE);
+
+	return CLASS (provider)->drop_index (provider, cnc, index_name, table_name);
 }
 
 /**
