@@ -1,5 +1,5 @@
 # Swedish translation of libgda.
-# Copyright (C) 1999-2001 Free Software Foundation, Inc.
+# Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.
 # Andreas Hyden <a.hyden@cyberpoint.se>, 2000.
 # Christian Rose <menthos@menthos.com>, 2000-2001.
 #
@@ -8,8 +8,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2001-05-27 14:38+0200\n"
-"PO-Revision-Date: 2001-02-05 02:42+0100\n"
+"POT-Creation-Date: 2001-06-01 04:28+0200\n"
+"PO-Revision-Date: 2001-06-01 04:36+0200\n"
 "Last-Translator: Christian Rose <menthos@menthos.com>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -285,8 +285,6 @@ msgstr "GDA-datakälleåtkomst för Mail"
 #: providers/gda-mysql-server/gda-mysql-connection.c:239
 #: providers/gda-oracle-server/gda-oracle-connection.c:295
 #: providers/gda-postgres-server/gda-postgres-connection.c:477
-#: providers/gda-sybase-server/gda-sybase-connection.c:283
-#: providers/gda-tds-server/gda-tds-connection.c:288
 #, c-format
 msgid "Unhandled SCHEMA_QTYPE %d"
 msgstr "Ej hanterad SCHEMA_QTYPE %d"
@@ -360,8 +358,8 @@ msgstr "GDA-datakälleåtkomst för MySQL"
 #: providers/gda-mysql-server/gda-mysql-connection.c:153
 #, c-format
 msgid ""
-"Opening connection with user=%s, password=%s, host=%s, port=%s, unix_socket=%"
-"s"
+"Opening connection with user=%s, password=%s, host=%s, port=%s, "
+"unix_socket=%s"
 msgstr ""
 "Öppnar anslutning med användare=%s, lösenord=%s, värd=%s, port=%s, "
 "unix_socket=%s"
@@ -451,7 +449,6 @@ msgstr "Kunde inte registrera PostgreSQL-leverantörsinformation"
 msgid "GDA Datasource Access for Sybase"
 msgstr "GDA-datakälleåtkomst för Sybase"
 
-#.      gda_server_error_make(error, 0, cnc, "connection seems to be dead");
 #: providers/gda-sybase-server/gda-sybase-command.c:127
 #: providers/gda-tds-server/gda-tds-command.c:116
 msgid "Connection seems to be dead"
@@ -525,10 +522,6 @@ msgstr "Ingen data returnerad, frigör postsamlingsstrukturen"
 msgid "Freeing command structure failed"
 msgstr "Frigörning av kommandostrukturen misslyckades"
 
-#: providers/gda-sybase-server/gda-sybase-connection.c:171
-msgid "Not enough memory for sybase_Connection"
-msgstr "Inte tillräckligt med minne för sybase_Connection"
-
 #: providers/gda-sybase-server/gda-sybase-connection.c:448
 #: providers/gda-tds-server/gda-tds-connection.c:447
 #, c-format
@@ -545,11 +538,32 @@ msgstr "Kunde inte allokera kommandostruktur"
 msgid "Could not allocate enough memory for query"
 msgstr "Kunde inte allokera tillräckligt med minne för fråga"
 
-#. 		gda_server_error_make(error, NULL, cnc, __PRETTY_FUNCTION__);
 #: providers/gda-sybase-server/gda-sybase-connection.c:500
 #: providers/gda-tds-server/gda-tds-connection.c:499
 msgid "Could not get recordset in schema_cols"
 msgstr "Kunde inte hämta postsamling i schema_cols"
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:532
+#: providers/gda-sybase-server/gda-sybase-connection.c:609
+#: providers/gda-tds-server/gda-tds-connection.c:531
+#: providers/gda-tds-server/gda-tds-connection.c:608
+#, c-format
+msgid "schema_tables: table name = '%s'"
+msgstr "schema_tables: tabellnamn = \"%s\""
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:540
+#: providers/gda-sybase-server/gda-sybase-connection.c:617
+#: providers/gda-tds-server/gda-tds-connection.c:539
+#: providers/gda-tds-server/gda-tds-connection.c:616
+#, c-format
+msgid "schema_tables: table_schema = '%s'"
+msgstr "schema_tables: table_schema = \"%s\""
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:545
+#: providers/gda-tds-server/gda-tds-connection.c:544
+#, c-format
+msgid "schema_procedures: proc_catalog = '%s' UNUSED!\n"
+msgstr "schema_procedures: proc_catalog = \"%s\" OANVÄND!\n"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:549
 #: providers/gda-tds-server/gda-tds-connection.c:548
@@ -561,6 +575,12 @@ msgstr "schema_procs: ogiltig restriktionstyp %d"
 #: providers/gda-tds-server/gda-tds-connection.c:558
 msgid "Could not allocate cmd structure"
 msgstr "Kunde inte allokera kommandostruktur"
+
+#: providers/gda-sybase-server/gda-sybase-connection.c:622
+#: providers/gda-tds-server/gda-tds-connection.c:621
+#, c-format
+msgid "schema_procedures: proc_catalog = '%s' UNUSED!"
+msgstr "schema_procedures: proc_catalog = \"%s\" OANVÄND!"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:626
 #: providers/gda-tds-server/gda-tds-connection.c:625
@@ -908,23 +928,24 @@ msgid "GDA Datasource Access for primebase"
 msgstr "GDA-datakälleåtkomst för Primebase"
 
 #: providers/gda-primebase-server/gda-primebase-connection.c:158
-#, fuzzy, c-format
+#, c-format
 msgid "Could not connect to '%s@%s:%s' with connparm '%s'"
-msgstr "%2ld: Ansluten till \"%s@%s\" med anslutningsparametrar: \"%s\""
+msgstr "Kunde inte ansluta till \"%s@%s:%s\" med anslutningsparametern: \"%s\""
 
 #: providers/gda-primebase-server/gda-primebase-connection.c:162
-#, fuzzy, c-format
+#, c-format
 msgid "%2ld: Connected to '%s@%s:%s' with connparm: '%s'"
-msgstr "%2ld: Ansluten till \"%s@%s\" med anslutningsparametrar: \"%s\""
+msgstr "%2ld: Ansluten till \"%s@%s:%s\" med anslutningsparameter: \"%s\""
 
 #: providers/gda-primebase-server/gda-primebase-connection.c:168
 msgid "Could not get PBIConnectionInfo(), disconnecting"
-msgstr ""
+msgstr "Kunde inte få PBIConnectionInfo(), kopplar från"
 
 #: providers/gda-primebase-server/gda-primebase-connection.c:172
-#, fuzzy, c-format
+#, c-format
 msgid "%2ld: ConInfo: '%s@%s', Cl v%x, Srv '%s' v%x, Brand '%s'"
-msgstr "%2ld: Anslutningsinfo: %s@%s, klient-API v%x, status: %x"
+msgstr ""
+"%2ld: Anslutningsinfo: \"%s@%s\", klient v%x, server \"%s\" v%x, märke \"%s\""
 
 #: providers/gda-primebase-server/gda-primebase-connection.c:376
 msgid "Not enough memory for primebase_Error structure."
@@ -943,11 +964,6 @@ msgstr "Kunde inte registrera PRIMEBASE-leverantörsimplementation"
 msgid "GDA Datasource Access for Sybase/MS SQL"
 msgstr "GDA-datakälleåtkomst för Sybase/MS SQL"
 
-#: providers/gda-tds-server/gda-tds-connection.c:167
-msgid "Not enough memory for tds_Connection"
-msgstr "Inte tillräckligt med minne för tds_Connection"
-
-#. Fixme: replace "dummy" with buf when CS_GET CS_SERVERNAME works
 #: providers/gda-tds-server/gda-tds-connection.c:896
 #, c-format
 msgid "Reconnected to %s"
@@ -1009,6 +1025,38 @@ msgstr "Okänt fel vid registrering av denna rapportmotor hos OAF. Avslutar"
 msgid "Registered report engine with ID = %s"
 msgstr "Registrerade rapportmotor med ID = %s"
 
+#: tools/gda-run.c:34
+msgid "database name"
+msgstr "databasnamn"
+
+#: tools/gda-run.c:34
+msgid "DATABASE"
+msgstr "DATABAS"
+
+#: tools/gda-run.c:35
+msgid "user name"
+msgstr "användarnamn"
+
+#: tools/gda-run.c:35
+msgid "USER-NAME"
+msgstr "ANVÄNDARNAMN"
+
+#: tools/gda-run.c:36
+msgid "password"
+msgstr "lösenord"
+
+#: tools/gda-run.c:36
+msgid "PASSWORD"
+msgstr "LÖSENORD"
+
+#: tools/gda-run.c:37
+msgid "file name"
+msgstr "filnamn"
+
+#: tools/gda-run.c:37
+msgid "FILE-NAME"
+msgstr "FILNAMN"
+
 #: tools/gda-run.c:109
 #, c-format
 msgid "%s: misconfigured DSN entry"
@@ -1019,6 +1067,12 @@ msgstr "%s: felaktigt konfigurerad DSN-post"
 msgid "%s: data source '%s' not found\n"
 msgstr "%s: datakällan \"%s\" kunde inte hittas\n"
 
+#~ msgid "Not enough memory for sybase_Connection"
+#~ msgstr "Inte tillräckligt med minne för sybase_Connection"
+
+#~ msgid "Not enough memory for tds_Connection"
+#~ msgstr "Inte tillräckligt med minne för tds_Connection"
+
 #~ msgid "%s: length = %d"
 #~ msgstr "%s: längd = %d"
 
@@ -1028,18 +1082,6 @@ msgstr "%s: datakällan \"%s\" kunde inte hittas\n"
 #~ msgid "Error allocating error structure"
 #~ msgstr "Fel vid allokering av felstruktur"
 
-#~ msgid "schema_tables: table name = '%s'"
-#~ msgstr "schema_tables: tabellnamn = \"%s\""
-
-#~ msgid "schema_tables: table_schema = '%s'"
-#~ msgstr "schema_tables: table_schema = \"%s\""
-
-#~ msgid "schema_procedures: proc_catalog = '%s' UNUSED!\n"
-#~ msgstr "schema_procedures: proc_catalog = \"%s\" OANVÄND!\n"
-
-#~ msgid "schema_procedures: proc_catalog = '%s' UNUSED!"
-#~ msgstr "schema_procedures: proc_catalog = \"%s\" OANVÄND!"
-
 #~ msgid "An error occured."
 #~ msgstr "Ett fel inträffade."
 
@@ -1048,30 +1090,6 @@ msgstr "%s: datakällan \"%s\" kunde inte hittas\n"
 
 #~ msgid "No according field found"
 #~ msgstr "Inget överensstämmande fält hittades"
-
-#~ msgid "database name"
-#~ msgstr "databasnamn"
-
-#~ msgid "DATABASE"
-#~ msgstr "DATABAS"
-
-#~ msgid "user name"
-#~ msgstr "användarnamn"
-
-#~ msgid "USER-NAME"
-#~ msgstr "ANVÄNDARNAMN"
-
-#~ msgid "password"
-#~ msgstr "lösenord"
-
-#~ msgid "PASSWORD"
-#~ msgstr "LÖSENORD"
-
-#~ msgid "file name"
-#~ msgstr "filnamn"
-
-#~ msgid "FILE-NAME"
-#~ msgstr "FILNAMN"
 
 #~ msgid "Fetchong %d cslib message"
 #~ msgstr "Hämtar %d cslib-meddelande"
