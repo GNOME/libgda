@@ -1,3 +1,8 @@
+2001-08-22  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-xmldb-test.c: new test program to test the GdaXmlDatabase
+	class
+
 2001-07-08  Carlos Perelló Marín <carlos@gnome-db.org>
 
 	* gda*test.c: Changed the use of getline with fgets. It must
