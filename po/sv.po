@@ -8,8 +8,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2002-02-10 20:00+0100\n"
-"PO-Revision-Date: 2002-01-27 01:39+0100\n"
+"POT-Creation-Date: 2002-03-02 00:15+0100\n"
+"PO-Revision-Date: 2002-03-02 00:15+0100\n"
 "Last-Translator: Christian Rose <menthos@menthos.com>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -30,31 +30,31 @@ msgstr "Kunde inte aktivera objektet %s"
 msgid "Could not create connection component"
 msgstr "Kunde inte skapa anslutningskomponent"
 
-#: libgda/gda-config.c:508
+#: libgda/gda-config.c:511
 msgid "Could not query CORBA components"
 msgstr "Kunde inte fråga CORBA-komponenter"
 
-#: libgda/gda-config.c:615
+#: libgda/gda-config.c:618
 msgid "Could not query CORBA providers"
 msgstr "Kunde inte fråga CORBA-leverantörer"
 
-#: libgda/gda-config.c:865
+#: libgda/gda-config.c:868
 msgid "Name"
 msgstr "Namn"
 
-#: libgda/gda-config.c:866
+#: libgda/gda-config.c:869
 msgid "Provider"
 msgstr "Leverantör"
 
-#: libgda/gda-config.c:867
+#: libgda/gda-config.c:870
 msgid "Connection string"
 msgstr "Anslutningssträng"
 
-#: libgda/gda-config.c:868
+#: libgda/gda-config.c:871
 msgid "Description"
 msgstr "Beskrivning"
 
-#: libgda/gda-config.c:869
+#: libgda/gda-config.c:872
 msgid "Username"
 msgstr "Användarnamn"
 
@@ -209,14 +209,12 @@ msgid "GDA Datasource Access for ODBC"
 msgstr "GDA-datakälleåtkomst för ODBC"
 
 #: providers/odbc/GNOME_Database_Provider_ODBC.server.in.h:2
-#, fuzzy
 msgid "ODBC component factory"
-msgstr "Oracle-komponentfabrik"
+msgstr "ODBC-komponentfabrik"
 
 #: providers/odbc/main.c:49
-#, fuzzy
 msgid "Could not initiate ODBC component factory"
-msgstr "Kunde inte initiera Oracle-komponentfabrik"
+msgstr "Kunde inte initiera ODBC-komponentfabrik"
 
 #: providers/oracle/gda-oracle-connection.c:77
 msgid "Could not initialize Oracle environment"
@@ -477,33 +475,41 @@ msgstr "Vyer"
 msgid "Indexes"
 msgstr "Index"
 
+#: testing/client.c:92
+msgid "Aggregates"
+msgstr "Aggregat"
+
+#: testing/client.c:93
+msgid "Triggers"
+msgstr "Utlösare"
+
 #. test transactions
-#: testing/client.c:94 testing/client.c:102
+#: testing/client.c:96 testing/client.c:104
 msgid "\tStarting transaction..."
 msgstr "\tStartar transaktion..."
 
-#: testing/client.c:96 testing/client.c:100 testing/client.c:104
-#: testing/client.c:108
+#: testing/client.c:98 testing/client.c:102 testing/client.c:106
+#: testing/client.c:110
 msgid "Error"
 msgstr "Fel"
 
-#: testing/client.c:98
+#: testing/client.c:100
 msgid "\tFinishing transaction..."
 msgstr "\tSlutförde transaktion..."
 
-#: testing/client.c:106
+#: testing/client.c:108
 msgid "\tRolling back transaction..."
 msgstr "\tÅterställer transaktion..."
 
-#: testing/client.c:127
+#: testing/client.c:129
 msgid "Testing GDA client API"
 msgstr "Testar GDA-klient-API"
 
-#: testing/client.c:136
+#: testing/client.c:138
 msgid "** ERROR: gda_config_get_data_source_list returned a NULL item\n"
 msgstr "** FEL: gda_config_get_data_source_list returnerade ett NULL-objekt\n"
 
-#: testing/client.c:140
+#: testing/client.c:142
 #, c-format
 msgid " Data source = %s, User = %s\n"
 msgstr " Datakälla = %s, användare = %s\n"
