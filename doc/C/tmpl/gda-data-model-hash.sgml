@@ -33,13 +33,15 @@ until the one requested).
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_data_model_hash_set_n_columns ##### -->
+<!-- ##### FUNCTION gda_data_model_hash_get_value_at ##### -->
 <para>
 
 </para>
 
 @model: 
-@cols: 
+@col: 
+@row: 
+@Returns: 
 
 
 <!-- ##### FUNCTION gda_data_model_hash_clear ##### -->
@@ -50,15 +52,13 @@ until the one requested).
 @model: 
 
 
-<!-- ##### FUNCTION gda_data_model_hash_get_value_at ##### -->
+<!-- ##### FUNCTION gda_data_model_hash_set_n_columns ##### -->
 <para>
 
 </para>
 
 @model: 
-@col: 
-@row: 
-@Returns: 
+@cols: 
 
 
 <!-- ##### FUNCTION gda_data_model_hash_insert_row ##### -->

@@ -59,6 +59,7 @@ gda_connection_get_password
 gda_connection_add_error
 gda_connection_add_error_string
 gda_connection_add_error_list
+gda_connection_create_database
 gda_connection_execute_command
 gda_connection_execute_single_command
 gda_connection_begin_transaction
@@ -200,6 +201,7 @@ GdaServerProviderPrivate
 <TITLE>GdaServerProvider</TITLE>
 gda_server_provider_open_connection
 gda_server_provider_close_connection
+gda_server_provider_create_database
 gda_server_provider_execute_command
 gda_server_provider_begin_transaction
 gda_server_provider_commit_transaction
@@ -638,9 +640,9 @@ GDA_XQL_VALUEREF_GET_CLASS
 GdaDataModelHashPrivate
 <TITLE>GdaDataModelHash</TITLE>
 gda_data_model_hash_new
-gda_data_model_hash_set_n_columns
-gda_data_model_hash_clear
 gda_data_model_hash_get_value_at
+gda_data_model_hash_clear
+gda_data_model_hash_set_n_columns
 gda_data_model_hash_insert_row
 <SUBSECTION Standard>
 GDA_DATA_MODEL_HASH
