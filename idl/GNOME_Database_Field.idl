@@ -8,29 +8,28 @@ module Database {
 	enum ValueType {
 		TypeNull,    TypeBigint, TypeBinary,
 		TypeBoolean, TypeBstr,   TypeChar,
-		TypeCurrency,TypeDate,   TypeDbDate,
-		TypeDbTime,  TypeDbTimestamp, TypeDecimal,
+		TypeCurrency, TypeDate, 
+		TypeTime,  TypeTimestamp, TypeDecimal,
 		TypeDouble,  TypeError,  TypeInteger,
 		TypeLongvarbin, TypeLongvarchar, TypeLongvarwchar,
 		TypeNumeric, TypeSingle, TypeSmallint,
-		TypeTinyint, TypeUBigint, TypeUSmallint,
+		TypeTinyint, 
 		TypeVarchar, TypeVarbin,  TypeVarwchar,
 		TypeFixchar, TypeFixbin,  TypeFixwchar,
 		TypeUnknown, TypeLastValue
 	};
 
-	typedef long Date;
-	struct  DbDate{
+	struct Date{
 		short year;
 		unsigned short month;
 		unsigned short day;
 	};
-	struct DbTime {
+	struct Time {
 		unsigned short hour;
 		unsigned short minute;
 		unsigned short second;
 	};
-	struct DbTimestamp {
+	struct Timestamp {
 		short year;
 		unsigned short month;
 		unsigned short day;
@@ -39,7 +38,6 @@ module Database {
 		unsigned short second;
 		unsigned long  fraction;
 	};
-	typedef sequence<octet> VarBinString; 
 	
 	typedef any Value;
 	struct FieldAttributes {

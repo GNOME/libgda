@@ -1,3 +1,8 @@
+2001-08-19  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* GNOME_Database_Field.idl: replaced the use of unions with cleaner
+	CORBA_any's, and removed redundat data types
+
 2001-08-17  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* GDA*.idl -> GNOME_Database*.idl
