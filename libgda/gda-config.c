@@ -1165,6 +1165,50 @@ gda_config_get_provider_by_name (const gchar *name)
 }
 
 /**
+ * gda_config_get_provider_model
+ *
+ * Fills and returns a new #GdaDataModel object using information from all 
+ * providers which are currently installed in the system.
+ *
+ * Rows are separated in 3 columns: 
+ * 'Id', 'Location' and 'Description'. 
+ *
+ * Returns: a new #GdaDataModel object. 
+ */
+GdaDataModel *
+gda_config_get_provider_model (void)
+{
+	GList *prov_list;
+	GList *l;
+	GdaDataModel *model;
+
+	model = gda_data_model_array_new (3);
+	gda_data_model_set_column_title (model, 0, _("Id"));
+	gda_data_model_set_column_title (model, 1, _("Location"));
+	gda_data_model_set_column_title (model, 2, _("Description"));
+
+	/* convert the returned GList into a GdaDataModelArray */
+	prov_list = gda_config_get_provider_list ();
+	for (l = prov_list; l != NULL; l = l->next) {
+		GList *value_list = NULL;
+		GdaProviderInfo *prov_info = (GdaProviderInfo *) l->data;
+
+		g_assert (prov_info != NULL);
+
+		value_list = g_list_append (value_list, gda_value_new_string (prov_info->id));
+		value_list = g_list_append (value_list, gda_value_new_string (prov_info->location));
+		value_list = g_list_append (value_list, gda_value_new_string (prov_info->description));
+
+		gda_data_model_append_row (GDA_DATA_MODEL (model), value_list);
+	}
+	
+	/* free memory */
+	gda_config_free_provider_list (prov_list);
+	
+	return model;
+}
+
+/**
  * gda_provider_info_copy
  * @src: provider information to get a copy from.
  *

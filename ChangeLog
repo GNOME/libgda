@@ -1,3 +1,8 @@
+2003-10-27  Laurent Sansonetti <laurent@datarescue.be>
+
+	* libgda/gda-config.[c.h] (gda_config_get_provider_model):
+	New function.
+
 2003-10-26  Laurent Sansonetti <laurent@datarescue.be>
 
 	* libgda/gda-data-model.c (gda_data_model_to_xml):

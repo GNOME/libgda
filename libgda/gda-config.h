@@ -79,7 +79,7 @@ void             gda_config_free_provider_info (GdaProviderInfo *provider_info);
 GList           *gda_config_get_provider_list (void);
 void             gda_config_free_provider_list (GList *list);
 GdaProviderInfo *gda_config_get_provider_by_name (const gchar *name);
-
+GdaDataModel    *gda_config_get_provider_model (void);
 
 /*
  * Data sources configuration
