@@ -265,8 +265,6 @@ AM_CONDITIONAL(POSTGRES, test x$postgresdir != x)
 
 dnl Test for freetds provider
 dnl
-dnl remains disabled unless /etc/freetds/compile_gda_tds_provider exists
-dnl
 try_freetds=true
 AC_ARG_WITH(tds,
 [  --with-tds=<directory>	use freetds library in <directory>],[
@@ -276,22 +274,8 @@ then
 elif test $withval = yes
 then
 	dir="/usr/local/freetds"
-dnl	if test -f /etc/freetds/compile_gda_tds_provider
-dnl	then
-dnl		try_freetds=true
-dnl	else
-dnl		AC_MSG_WARN(freetds backend disabled)
-dnl		try_freetds=false
-dnl	fi
 else
 	dir=$withval
-dnl	if test -f /etc/freetds/compile_gda_tds_provider
-dnl	then
-dnl		try_freetds=true
-dnl	else
-dnl		AC_MSG_WARN(freetds backend disabled)
-dnl		try_freetds=false
-dnl	fi
 fi
 ])
 freetdsdir=""
@@ -300,10 +284,10 @@ then
 	AC_MSG_CHECKING(for freetds files)
 	for d in $dir /usr/local/freetds /usr /opt/freetds /opt/packages/freetds /opt/freetds-0.50
 	do
-		if test -f $d/include/tds.h
+		if test -f "$d/include/tds.h" -a -e "$d/lib/libtds.so"
 		then
 			AC_MSG_RESULT(found freetds in $d)
-			freetdsdir=$d
+			freetdsdir="$d"
 			break
 		fi
 	done
@@ -311,13 +295,65 @@ then
 	then
 		AC_MSG_WARN(tds backend not used)
 	else
-		FREETDS_CFLAGS=-I${freetdsdir}/include
+		FREETDS_CFLAGS="-I${freetdsdir}/include"
 		FREETDS_LIBS="-L${freetdsdir}/lib -ltds"
 		AC_DEFINE(HAVE_FREETDS)
 	fi
 fi
 
 AM_CONDITIONAL(FREETDS, test x$freetdsdir != x)
+
+dnl Test for IBM DB2
+try_ibmdb2=true
+AC_ARG_WITH(ibmdb2,
+[  --with-ibmdb2=<directory>	use IBM DB2 backend in <directory>],[
+if test $withval = no
+then
+	try_ibmdb2=false
+elif test $withval=yes
+then
+	if test -z "$DB2DIR"
+	then
+		dir="/usr/IBMdb2/V7.1"
+	else
+		dir="$DB2DIR"
+	fi
+else
+	dir=$withval
+fi
+])
+if test $try_ibmdb2 = true
+then
+	AC_MSG_CHECKING(for IBM DB2 files)
+	if test -f "$dir/include/sqlcli1.h" -a -e "$dir/lib/libdb2.so"
+	then
+		ibmdb2dir="$dir"
+		break
+	fi
+	for d in /usr/IBMdb2 /usr/local/IBMdb2 /opt/IBMdb2 /opt/packages/IBMdb2
+	do
+		for v in V5.0 V.6.1 V7.1
+		do
+			if test -f "$d/$v/include/sqlcli1.h" -a -e "$d/$v/lib/libdb2.so"
+			then
+				ibmdb2dir="$d/$v"
+				break
+			fi
+		done
+	done
+	if test x$ibmdb2dir = x
+	then
+		AC_MSG_WARN(IBM DB2 backend not used)
+	else
+		AC_MSG_RESULT(found IBM DB2 in $ibmdb2dir)
+		AC_DEFINE(HAVE_IBMDB2)
+		AC_MSG_WARN(IBM DB2 Provider does not work yet)
+		IBMDB2_CFLAGS="-I${ibmdb2dir}/include"
+		IBMDB2_LIBS="-L${ibmdb2dir}/lib -Wl,-rpath,${ibmdb2dir}/lib -ldb2"
+	fi
+fi
+
+AM_CONDITIONAL(IBMDB2, test x$ibmdb2dir != x)
 
 dnl Test for Sybase
 try_sybase=false
@@ -611,6 +647,8 @@ AC_SUBST(PRIMEBASE_LIBS)
 AC_SUBST(PRIMEBASE_CFLAGS)
 AC_SUBST(FREETDS_LIBS)
 AC_SUBST(FREETDS_CFLAGS)
+AC_SUBST(IBMDB2_LIBS)
+AC_SUBST(IBMDB2_CFLAGS)
 AC_SUBST(SYBASE_LIBS)
 AC_SUBST(SYBASE_CFLAGS)
 AC_SUBST(LDAP_LIBS)
@@ -636,6 +674,7 @@ libsql/Makefile
 libgda/Makefile
 providers/Makefile
 providers/default/Makefile
+providers/ibmdb2/Makefile
 providers/freetds/Makefile
 providers/interbase/Makefile
 providers/mdb/Makefile
