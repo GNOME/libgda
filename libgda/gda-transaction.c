@@ -27,6 +27,7 @@
 
 struct _GdaTransactionPrivate {
 	gchar *name;
+	GdaTransactionIsolation level;
 };
 
 static void gda_transaction_class_init (GdaTransactionClass *klass);
@@ -54,6 +55,7 @@ gda_transaction_init (GdaTransaction *xaction, GdaTransactionClass *klass)
 	/* allocate private structure */
 	xaction->priv = g_new (GdaTransactionPrivate, 1);
 	xaction->priv->name = NULL;
+	xaction->priv->level = GDA_TRANSACTION_ISOLATION_UNKNOWN;
 }
 
 static void
@@ -119,6 +121,38 @@ gda_transaction_new (const gchar *name)
 		gda_transaction_set_name (xaction, name);
 
 	return xaction;
+}
+
+/**
+ * gda_transaction_get_isolation_level
+ * @xaction: a #GdaTransaction object.
+ *
+ * Get the isolation level for the given transaction. This specifies
+ * the locking behavior for the database connection during the given
+ * transaction.
+ *
+ * Returns: the isolation level.
+ */
+GdaTransactionIsolation
+gda_transaction_get_isolation_level (GdaTransaction *xaction)
+{
+	g_return_val_if_fail (GDA_IS_TRANSACTION (xaction), GDA_TRANSACTION_ISOLATION_UNKNOWN);
+	return xaction->priv->level;
+}
+
+/**
+ * gda_transaction_set_isolation_level
+ * @xaction: a #GdaTransaction object.
+ * @level: the isolation level.
+ *
+ * Set the isolation level for the given transaction.
+ */
+void
+gda_transaction_set_isolation_level (GdaTransaction *xaction,
+				     GdaTransactionIsolation level)
+{
+	g_return_if_fail (GDA_IS_TRANSACTION (xaction));
+	xaction->priv->level = level;
 }
 
 /**

@@ -29,6 +29,34 @@ GdaTransaction
 @Returns: 
 
 
+<!-- ##### ENUM GdaTransactionIsolation ##### -->
+<para>
+
+</para>
+
+@GDA_TRANSACTION_ISOLATION_UNKNOWN: 
+@GDA_TRANSACTION_ISOLATION_READ_COMMITTED: 
+@GDA_TRANSACTION_ISOLATION_READ_UNCOMMITTED: 
+@GDA_TRANSACTION_ISOLATION_REPEATABLE_READ: 
+
+<!-- ##### FUNCTION gda_transaction_get_isolation_level ##### -->
+<para>
+
+</para>
+
+@xaction: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_transaction_set_isolation_level ##### -->
+<para>
+
+</para>
+
+@xaction: 
+@level: 
+
+
 <!-- ##### FUNCTION gda_transaction_get_name ##### -->
 <para>
 

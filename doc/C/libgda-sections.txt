@@ -734,6 +734,9 @@ GDA_XQL_VALUEREF_GET_CLASS
 GdaTransactionPrivate
 <TITLE>GdaTransaction</TITLE>
 gda_transaction_new
+GdaTransactionIsolation
+gda_transaction_get_isolation_level
+gda_transaction_set_isolation_level
 gda_transaction_get_name
 gda_transaction_set_name
 <SUBSECTION Standard>

@@ -1,3 +1,9 @@
+2002-08-24  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* libgda/gda-transaction.[ch]: added isolation level support.
+	(gda_transaction_get_isolation_level): new function.
+	(gda_transaction_set_isolation_level): new function.
+
 2002-08-23  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* providers/mysql/gda-mysql-provider.c (get_mysql_tables): set the

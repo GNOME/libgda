@@ -50,8 +50,19 @@ struct _GdaTransactionClass {
 GType           gda_transaction_get_type (void);
 GdaTransaction *gda_transaction_new (const gchar *name);
 
-const gchar    *gda_transaction_get_name (GdaTransaction *xaction);
-void            gda_transaction_set_name (GdaTransaction *xaction, const gchar *name);
+typedef enum {
+	GDA_TRANSACTION_ISOLATION_UNKNOWN,
+	GDA_TRANSACTION_ISOLATION_READ_COMMITTED,
+	GDA_TRANSACTION_ISOLATION_READ_UNCOMMITTED,
+	GDA_TRANSACTION_ISOLATION_REPEATABLE_READ
+} GdaTransactionIsolation;
+
+GdaTransactionIsolation gda_transaction_get_isolation_level (GdaTransaction *xaction);
+void                    gda_transaction_set_isolation_level (GdaTransaction *xaction,
+							     GdaTransactionIsolation level);
+
+const gchar            *gda_transaction_get_name (GdaTransaction *xaction);
+void                    gda_transaction_set_name (GdaTransaction *xaction, const gchar *name);
 
 G_END_DECLS
 
