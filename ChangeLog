@@ -1,3 +1,8 @@
+2004-10-27 Dru <andru@treshna.com>
+	
+	* libsql/sql_parser.c: Fixing sql_statement_get_tables() to
+	work correctly.
+
 2004-10-26 Dru <andru@treshna.com>
 	
 	* libsql/sql_parser.c:

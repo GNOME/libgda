@@ -736,8 +736,8 @@ sql_table_stringify(sql_table * table)
 
 	case SQL_tablefunction:
 		retval =
-		    memsql_strappend_free(memsql_strdup(table->d.function.funcname),
-		                          memsql_strdup("("));
+		    memsql_strappend_free(
+			memsql_strdup(table->d.function.funcname),		                          memsql_strdup("("));
 		for (walk = table->d.function.funcarglist; walk != NULL;
 		        walk = walk->next)
 			{
@@ -1319,6 +1319,7 @@ sql_statement_get_tables(sql_statement * statement)
 	GList *retval = NULL;
 	GList *walk;
 	gchar *temp1, *temp2;
+	sql_table *table;
 	sql_select_statement *select;
 
 	if (!statement)
@@ -1331,9 +1332,10 @@ sql_statement_get_tables(sql_statement * statement)
 
 	for (walk = select->from; walk != NULL; walk = walk->next)
 		{
-		temp1 = sql_table_stringify(walk->data);
-		temp2 = g_strdup(temp1);
-		memsql_free(temp1);
+		table = walk->data;
+/*		temp1 = sql_table_stringify(walk->data); */
+		temp2 = g_strdup(table->d.simple);
+/*		memsql_free(temp1); */
 
 		retval = g_list_append(retval, temp2);
 		}
