@@ -1,3 +1,9 @@
+2002-10-12  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* libgda/gda-select.c (gda_select_run): commented out call to
+	sql_statement_destroy, since this function seems to be missing in
+	libsql.
+
 2002-10-10  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* libgda/gda-select.c: changed the list of source data models to be

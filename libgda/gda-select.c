@@ -317,13 +317,13 @@ gda_select_run (GdaSelect *sel)
 	}
 	if (sqlst->type != SQL_select) {
 		gda_log_error (_("SQL command is not a SELECT (is '%s'"), sel->priv->sql);
-		sql_statement_destroy (sqlst);
+		//sql_statement_destroy (sqlst);
 		return FALSE;
 	}
 
 	/* FIXME */
 
-	sql_statement_destroy (sqlst);
+	//sql_statement_destroy (sqlst);
 	sel->priv->changed = FALSE;
 
 	return sel->priv->run_result;
