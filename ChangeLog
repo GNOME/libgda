@@ -1,3 +1,8 @@
+2002-04-27  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* libgda/gda-server-recordset-model.[ch]: removed files I forgot to
+	remove.
+
 2002-04-26  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* configure.in: added GModule to list of dependencies.

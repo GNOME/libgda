@@ -174,48 +174,6 @@ gda-config
 @id: 
 
 
-<!-- ##### ENUM GdaComponentType ##### -->
-<para>
-
-</para>
-
-@GDA_COMPONENT_TYPE_INVALID: 
-@GDA_COMPONENT_TYPE_EXE: 
-@GDA_COMPONENT_TYPE_SHLIB: 
-@GDA_COMPONENT_TYPE_FACTORY: 
-
-<!-- ##### TYPEDEF GdaComponentInfo ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### FUNCTION gda_config_get_component_list ##### -->
-<para>
-
-</para>
-
-@query: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_config_free_component_list ##### -->
-<para>
-
-</para>
-
-@list: 
-
-
-<!-- ##### FUNCTION gda_config_get_component_data_model ##### -->
-<para>
-
-</para>
-
-@query: 
-@Returns: 
-
-
 <!-- ##### TYPEDEF GdaProviderInfo ##### -->
 <para>
 
