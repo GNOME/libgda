@@ -1,4 +1,4 @@
-/* GNOME DB libary
+/* GDA client libary
  * Copyright (C) 1998,1999 Michael Lausch
  * Copyright (C) 2000 Rodrigo Moya
  *
@@ -20,7 +20,16 @@
 #ifndef __gda_command_h__
 #define __gda_command_h__ 1
 
-#include <gtk/gtk.h>
+#include <glib.h>
+
+#ifdef HAVE_GOBJECT
+#  include <glib-object.h>
+#else
+#  include <gtk/gtk.h>
+#endif
+
+#include <orb/orbit.h>
+#include <gda.h>
 
 #if defined(__cplusplus)
 extern "C" {
@@ -29,18 +38,38 @@ extern "C" {
 /* The command object. Holds and executes an SQL query or other,
  * datasource specific operations.
  */
+
 typedef struct _Gda_Command      Gda_Command;
 typedef struct _Gda_CommandClass Gda_CommandClass;
 
+#include <gda-recordset.h>   /* these two need the definitions above */
+#include <gda-connection.h>
+
 #define GDA_TYPE_COMMAND            (gda_command_get_type())
-#define GDA_COMMAND(obj)            GTK_CHECK_CAST(obj, GDA_TYPE_COMMAND, Gda_Command)
-#define GDA_COMMAND_CLASS(klass)    GTK_CHECK_CLASS_CAST(klass, GDA_TYPE_COMMAND, Gda_CommandClass)
-#define IS_GDA_COMMAND(obj)         GTK_CHECK_TYPE(obj, GDA_TYPE_COMMAND)
-#define IS_GDA_COMMAND_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_COMMAND))
+
+#ifdef HAVE_GOBJECT
+#  define GDA_COMMAND(obj) \
+            G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_COMMAND, Gda_Command)
+#  define GDA_COMMAND_CLASS(klass) \
+            G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_COMMAND, Gda_CommandClass)
+#  define IS_GDA_COMMAND(obj) \
+            G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_COMMAND)
+#  define IS_GDA_COMMAND_CLASS(klass) \
+            G_TYPE_CHECK_CLASS_TYPE (klass, GDA_TYPE_COMMAND)
+#else
+#  define GDA_COMMAND(obj)            GTK_CHECK_CAST(obj, GDA_TYPE_COMMAND, Gda_Command)
+#  define GDA_COMMAND_CLASS(klass)    GTK_CHECK_CLASS_CAST(klass, GDA_TYPE_COMMAND, Gda_CommandClass)
+#  define IS_GDA_COMMAND(obj)         GTK_CHECK_TYPE(obj, GDA_TYPE_COMMAND)
+#  define IS_GDA_COMMAND_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_COMMAND))
+#endif
 
 struct _Gda_Command
 {
+#ifdef HAVE_GOBJECT
+  GObject         object;
+#else
   GtkObject       object;
+#endif
   CORBA_Object    command;
   CORBA_ORB       orb;
   Gda_Connection* connection;
@@ -53,10 +82,19 @@ struct _Gda_Command
 
 struct _Gda_CommandClass
 {
+#ifdef HAVE_GOBJECT
+  GObjectClass   parent_class;
+#else
   GtkObjectClass parent_class;
+#endif
 };
 
+#ifdef HAVE_GOBJECT
+GType           gda_command_get_type         (void);
+#else
 guint           gda_command_get_type         (void);
+#endif
+
 Gda_Command*    gda_command_new              (void);
 void            gda_command_free             (Gda_Command* cmd);
 Gda_Connection* gda_command_get_connection   (Gda_Command* cmd);

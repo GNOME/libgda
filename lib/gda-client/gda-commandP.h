@@ -1,4 +1,4 @@
-/* GNOME DB libary
+/* GDA client libary
  * Copyright (C) 1998,1999 Michael Lausch
  *
  * This library is free software; you can redistribute it and/or

@@ -19,11 +19,9 @@
  */
 
 #include "config.h"
+#include "gda-field.h"
 #include <stdio.h>
 #include <time.h>
-
-#include "gda.h"
-#include "gda-field.h"
 
 #ifdef ENABLE_NLS
 #  include <libintl.h>
@@ -47,12 +45,43 @@ enum
 
 static guint gda_field_signals[GDA_FIELD_LAST_SIGNAL] = { 0, };
 
+#ifdef HAVE_GOBJECT
+static void gda_field_class_init (Gda_FieldClass *klass, gpointer data);
+static void gda_field_init       (Gda_Field *field, Gda_FieldClass *klass);
+#else
 static void gda_field_class_init (Gda_FieldClass *klass);
 static void gda_field_init       (Gda_Field *field);
+#endif
 
 #define ENUM_TO_STR(e) case (e): strncpy(bfr, #e, length); break
 #define min(a,b)       (a) < (b) ? (a) : (b)
 
+#ifdef HAVE_GOBJECT
+GType
+gda_field_get_type (void)
+{
+  static GType type = 0;
+
+  if (!type)
+    {
+      GTypeInfo info =
+      {
+        sizeof (Gda_FieldClass),               /* class_size */
+        NULL,                                  /* base_init */
+        NULL,                                  /* base_finalize */
+        (GClassInitFunc) gda_field_class_init, /* class_init */
+        NULL,                                  /* class_finalize */
+        NULL,                                  /* class_data */
+        sizeof (Gda_Field),                    /* instance_size */
+        0,                                     /* n_preallocs */
+        (GInstanceInitFunc) gda_field_init,    /* instance_init */
+        NULL,                                  /* value_table */
+      };
+      type = g_type_register_static (G_TYPE_OBJECT, "Gda_Field", &info);
+    }
+  return type;
+}
+#else
 guint
 gda_field_get_type (void)
 {
@@ -74,8 +103,14 @@ gda_field_get_type (void)
     }
   return gda_field_type;
 }
+#endif
 
-
+#ifdef HAVE_GOBJECT
+static void
+gda_field_class_init (Gda_FieldClass *klass, gpointer data)
+{
+}
+#else
 static void
 gda_field_class_init (Gda_FieldClass* klass)
 {
@@ -83,9 +118,14 @@ gda_field_class_init (Gda_FieldClass* klass)
 
   object_class = (GtkObjectClass*) klass;  
 }
+#endif
 
 static void
+#ifdef HAVE_GOBJECT
+gda_field_init (Gda_Field *field, Gda_FieldClass *klass)
+#else
 gda_field_init (Gda_Field* field)
+#endif
 {
 }
 
@@ -394,10 +434,12 @@ gda_stringify_value(gchar* bfr, gint maxlen, Gda_Field* f)
 Gda_Field *
 gda_field_new (void)
 {
-  Gda_Field* rc = GDA_FIELD(gtk_type_new(gda_field_get_type()));
-  return (rc);
+#ifdef HAVE_GOBJECT
+  return GDA_FIELD (g_object_new (GDA_TYPE_FIELD, NULL));
+#else
+  return GDA_FIELD(gtk_type_new(gda_field_get_type()));
+#endif
 }
-
 
 /**
  * gda_field_free:
@@ -410,7 +452,11 @@ void
 gda_field_free (Gda_Field* f)
 {
   g_return_if_fail(IS_GDA_FIELD(f));
-  g_free(f);
+#ifdef HAVE_GOBJECT
+  g_object_unref (G_OBJECT (f));
+#else
+  gtk_object_destroy (GTK_OBJECT (f));
+#endif
 }
 
 /**

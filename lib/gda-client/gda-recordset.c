@@ -1,4 +1,4 @@
-/* GNOME DB libary
+/* GDA client libary
  * Copyright (C) 1998,1999 Michael Lausch
  * Copyright (C) 1999 Rodrigo Moya
  *
@@ -17,7 +17,8 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include <gda-client.h>
+#include "config.h"
+#include "gda-recordset.h"
 
 enum
 {
@@ -29,8 +30,16 @@ enum
 
 static gint gda_recordset_signals[LAST_SIGNAL] = {0, };
 
+#ifdef HAVE_GOBJECT
+static void   gda_recordset_class_init (Gda_RecordsetClass *klass,
+                                        gpointer data);
+static void   gda_recordset_init       (Gda_Recordset *rs,
+                                        Gda_RecordsetClass *klass);
+#else
 static void   gda_recordset_class_init (Gda_RecordsetClass *);
 static void   gda_recordset_init       (Gda_Recordset *);
+#endif
+
 static void   gda_recordset_real_error (Gda_Recordset *, GList *);
 static gulong fetch_and_store          (Gda_Recordset* rs, gint count, gpointer bookmark);
 static gulong fetch_and_dont_store     (Gda_Recordset* rs, gint count, gpointer bookmark);
@@ -43,6 +52,7 @@ static gulong fetch_and_dont_store     (Gda_Recordset* rs, gint count, gpointer 
 /* per default fetch 64 rows at a time */
 #define GDA_DEFAULT_CACHESIZE 64
 
+#ifndef HAVE_GOBJECT
 static void
 gda_recset_value_changed (GtkAdjustment* adj)
 {
@@ -80,6 +90,7 @@ gda_recset_value_changed (GtkAdjustment* adj)
       adj->upper = adj->value;
     }
 }
+#endif
 
 static void
 gda_recordset_real_error (Gda_Recordset *rs, GList *error_list)
@@ -94,6 +105,32 @@ gda_recordset_real_error (Gda_Recordset *rs, GList *error_list)
     }
 }
 
+#ifdef HAVE_GOBJECT
+GType
+gda_recordset_get_type (void)
+{
+  static GType type = 0;
+
+  if (!type)
+    {
+      GTypeInfo info =
+      {
+        sizeof (Gda_RecordsetClass),               /* class_size */
+	NULL,                                      /* base_init */
+	NULL,                                      /* base_finalize */
+        (GClassInitFunc) gda_recordset_class_init, /* class_init */
+	NULL,                                      /* class_finalize */
+	NULL,                                      /* class_data */
+        sizeof (Gda_Recordset),                    /* instance_size */
+	0,                                         /* n_preallocs */
+        (GInstanceInitFunc) gda_recordset_init,    /* instance_init */
+	NULL,                                      /* value_table */
+      };
+      type = g_type_register_static (G_TYPE_OBJECT, "Gda_Recordset", &info);
+    }
+  return type;
+}
+#else
 guint
 gda_recordset_get_type (void)
 {
@@ -116,7 +153,18 @@ gda_recordset_get_type (void)
     }
   return (gda_recordset_type);
 }
+#endif
 
+#ifdef HAVE_GOBJECT
+static void
+gda_recordset_class_init (Gda_RecordsetClass *klass, gpointer data)
+{
+  /* FIXME: No signals in GObject yet */
+  klass->error = gda_recordset_real_error;
+  klass->eof = NULL;
+  klass->bof = NULL;
+}
+#else
 typedef void (*GtkSignal_NONE__INT_POINTER)(GtkObject,
 					    guint  arg1,
 					    gpointer arg2,
@@ -156,11 +204,16 @@ gda_recordset_class_init (Gda_RecordsetClass *klass)
   klass->bof   = 0;
   adjustment_class->value_changed = gda_recset_value_changed;
 }
+#endif
 
 static void
+#ifdef HAVE_GOBJECT
+gda_recordset_init (Gda_Recordset *rs,
+                    Gda_RecordsetClass *klass)
+#else
 gda_recordset_init (Gda_Recordset *rs)
+#endif
 {
-
   rs->external_cmd     = 0;
   rs->internal_cmd     = 0;
   rs->corba_rs         = CORBA_OBJECT_NIL;
@@ -181,9 +234,11 @@ gda_recordset_init (Gda_Recordset *rs)
   rs->cursor_type      = GDA_OPEN_FWDONLY;
   rs->name             = 0;
   
+#ifndef HAVE_GOBJECT
   GTK_ADJUSTMENT(rs)->upper = G_MAXFLOAT;
   GTK_ADJUSTMENT(rs)->lower = 1;
   GTK_ADJUSTMENT(rs)->value = 0;
+#endif
 }
 
 static void
@@ -220,13 +275,14 @@ row_by_idx (Gda_Recordset* rs, gint idx)
  *
  * Returns: the allocated recordset object
  */
-GtkObject*
+Gda_Recordset *
 gda_recordset_new (void)
 {
-  Gda_Recordset* rs;
-
-  rs = gtk_type_new(gda_recordset_get_type());
-  return GTK_OBJECT(rs);
+#ifdef HAVE_GOBJECT
+  return GDA_RECORDSET (g_object_new (GDA_TYPE_RECORDSET, NULL));
+#else
+  return GDA_RECORDSET (gtk_type_new(gda_recordset_get_type()));
+#endif
 }
 
 /**
@@ -248,7 +304,11 @@ gda_recordset_free (Gda_Recordset* rs)
     {
       gda_command_free(rs->internal_cmd);
     }
-  g_free(rs);
+#ifdef HAVE_GOBJECT
+  g_object_unref (G_OBJECT (rs));
+#else
+  gtk_object_destroy (GTK_OBJECT (rs));
+#endif
 }
 
 /**
@@ -479,8 +539,21 @@ gda_recordset_move (Gda_Recordset* rs, gint count, gpointer bookmark)
   g_return_val_if_fail(IS_GDA_RECORDSET(rs), GDA_RECORDSET_INVALID_POSITION);
   g_return_val_if_fail(rs->corba_rs != NULL, GDA_RECORDSET_INVALID_POSITION);
   g_return_val_if_fail(rs->open, GDA_RECORDSET_INVALID_POSITION);
-  
+
+#ifdef HAVE_GOBJECT
+  if (rs->cursor_type == GDA_OPEN_FWDONLY && count < 0)
+    return rs->current_index;
+
+  if (count == 0)
+    return rs->current_index;
+    
+  if (rs->cursor_location == GDA_USE_CLIENT_CURSOR)
+    fetch_and_store(rs, count, 0);
+  else
+    fetch_and_dont_store(rs, count, 0);
+#else
   gtk_adjustment_set_value(GTK_ADJUSTMENT(rs), rs->current_index + count);
+#endif
   return rs->current_index;
 }
 
@@ -771,7 +844,11 @@ gda_recordset_open (Gda_Recordset* rs,
   g_return_val_if_fail(IS_GDA_RECORDSET(rs), -1);
   g_return_val_if_fail(!rs->open, -1);
 
+#ifdef HAVE_GOBJECT
+  gda_recordset_init (rs, NULL);    /* FIXME: calling the constructor here */
+#else                               /* is not very beautiful */
   gda_recordset_init(rs);
+#endif
   corba_parameters = __gda_command_get_params(cmd);
   rs->cursor_type = cursor_type;
   rs->lock_type   = lock_type;
@@ -947,4 +1024,3 @@ gda_recordset_set_cursortype(Gda_Recordset* rs, GDA_CursorType type)
   
   rs->cursor_type = type;
 }
-

@@ -1,4 +1,4 @@
-/* GNOME DB libary
+/* GDA client libary
  * Copyright (C) 1998,1999 Michael Lausch
  * Copyright (C) 1999,2000 Rodrigo Moya
  *
@@ -17,7 +17,8 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include <gda-client.h>
+#include "config.h"
+#include "gda-command.h"
 
 enum
 {
@@ -33,8 +34,13 @@ typedef struct _Parameter
 
 static gint gda_command_signals[GDA_COMMAND_LAST_SIGNAL] = { 0, };
 
+#ifdef HAVE_GOBJECT
+static void gda_command_class_init (Gda_CommandClass *klass, gpointer data);
+static void gda_command_init       (Gda_Command *cmd, Gda_CommandClass *klass);
+#else
 static void gda_command_class_init (Gda_CommandClass *klass);
 static void gda_command_init       (Gda_Command *cmd);
+#endif
 
 static void
 release_connection_object (Gda_Command* cmd, Gda_Connection* cnc)
@@ -42,6 +48,32 @@ release_connection_object (Gda_Command* cmd, Gda_Connection* cnc)
   cmd->connection->commands = g_list_remove(cmd->connection->commands, cmd);
 }
 
+#ifdef HAVE_GOBJECT
+GType
+gda_command_get_type (void)
+{
+  static GType type = 0;
+
+  if (!type)
+    {
+      GTypeInfo info =
+      {
+        sizeof (Gda_CommandClass),               /* class_size */
+	NULL,                                    /* base_init */
+	NULL,                                    /* base_finalize */
+        (GClassInitFunc) gda_command_class_init, /* class_init */
+	NULL,                                    /* class_finalize */
+	NULL,                                    /* class_data */
+        sizeof (Gda_Command),                    /* instance_size */
+	0,                                       /* n_preallocs */
+        (GInstanceInitFunc) gda_command_init,    /* instance_init */
+	NULL,                                    /* value_table */
+      };
+      type = g_type_register_static (G_TYPE_OBJECT, "Gda_Command", &info);
+    }
+  return type;
+}
+#else
 guint
 gda_command_get_type (void)
 {
@@ -63,7 +95,14 @@ gda_command_get_type (void)
     }
   return gda_command_type;
 }
+#endif
 
+#ifdef HAVE_GOBJECT
+static void
+gda_command_class_init (Gda_CommandClass *klass, gpointer data)
+{
+}
+#else
 static void
 gda_command_class_init (Gda_CommandClass* klass)
 {
@@ -71,9 +110,14 @@ gda_command_class_init (Gda_CommandClass* klass)
 
   object_class = (GtkObjectClass*) klass;
 }
+#endif
 
 static void
+#ifdef HAVE_GOBJECT
+gda_command_init (Gda_Command *cmd, Gda_CommandClass *klass)
+#else
 gda_command_init (Gda_Command* cmd)
+#endif
 {
   g_return_if_fail(IS_GDA_COMMAND(cmd));
 }
@@ -88,12 +132,12 @@ gda_command_init (Gda_Command* cmd)
 Gda_Command *
 gda_command_new (void)
 {
-  Gda_Command* cmd;
-
-  cmd = GDA_COMMAND(gtk_type_new(gda_command_get_type()));
-  return (cmd);
+#ifdef HAVE_GOBJECT
+  return GDA_COMMAND (g_object_new (GDA_TYPE_COMMAND, NULL));
+#else
+  return GDA_COMMAND(gtk_type_new(gda_command_get_type()));
+#endif
 }
-
 
 /**
  * gda_command_free:
@@ -125,7 +169,11 @@ gda_command_free (Gda_Command* cmd)
       CORBA_Object_release(cmd->command, &ev);
       gda_connection_corba_exception(gda_command_get_connection(cmd), &ev);
     }
-  g_free(cmd);
+#ifdef HAVE_GOBJECT
+  g_object_unref (G_OBJECT (cmd));
+#else
+  gtk_object_destroy (GTK_OBJECT (cmd));
+#endif
 }
 
 /**
@@ -349,7 +397,7 @@ __gda_command_get_params (Gda_Command* cmd)
             }
           else
             {
-              fprintf(stderr,"Got NULL param value\n");
+              g_print("Got NULL param value\n");
             }
           ptr = g_list_next(ptr);
           idx++;

@@ -18,8 +18,8 @@
  */
 
 #include "config.h"
-#include "gda.h"
 #include "gda-error.h"
+#include "gda.h"
 
 #ifdef ENABLE_NLS
 #  include <libintl.h>
@@ -44,9 +44,40 @@ enum
 
 static gint gda_error_signals[GDA_ERROR_LAST_SIGNAL] = { 0, };
 
+#ifdef HAVE_GOBJECT
+static void gda_error_class_init (Gda_ErrorClass *klass, gpointer data);
+static void gda_error_init       (Gda_Error *error, Gda_ErrorClass *klass);
+#else
 static void gda_error_class_init (Gda_ErrorClass *klass);
 static void gda_error_init       (Gda_Error *error);
+#endif
 
+#ifdef HAVE_GOBJECT
+GType
+gda_error_get_type (void)
+{
+  static GType type = 0;
+
+  if (!type)
+    {
+      GTypeInfo info =
+      {
+        sizeof (Gda_ErrorClass),               /* class_size */
+	NULL,                                  /* base_init */
+	NULL,                                  /* base_finalize */
+        (GClassInitFunc) gda_error_class_init, /* class_init */
+	NULL,                                  /* class_finalize */
+	NULL,                                  /* class_data */
+        sizeof (Gda_Error),                    /* instance_size */
+	0,                                     /* n_preallocs */
+        (GInstanceInitFunc) gda_error_init,    /* instance_init */
+	NULL,                                  /* value_table */
+      };
+      type = g_type_register_static (G_TYPE_OBJECT, "Gda_Error", &info);
+    }
+  return type;
+}
+#else
 guint
 gda_error_get_type (void)
 {
@@ -68,8 +99,14 @@ gda_error_get_type (void)
     }
   return gda_error_type;
 }
+#endif
 
-
+#ifdef HAVE_GOBJECT
+static void
+gda_error_class_init (Gda_ErrorClass *klass, gpointer data)
+{
+}
+#else
 static void
 gda_error_class_init (Gda_ErrorClass* klass)
 {
@@ -77,9 +114,14 @@ gda_error_class_init (Gda_ErrorClass* klass)
 
   object_class = (GtkObjectClass*) klass;
 }
+#endif
 
 static void
+#ifdef HAVE_GOBJECT
+gda_error_init (Gda_Error *error, Gda_ErrorClass *klass)
+#else
 gda_error_init (Gda_Error* error)
+#endif
 {
   g_return_if_fail(IS_GDA_ERROR(error));
   
@@ -103,7 +145,11 @@ gda_error_new (void)
 {
   Gda_Error* error;
 
+#ifdef HAVE_GOBJECT
+  error = GDA_ERROR (g_object_new (GDA_TYPE_ERROR, NULL));
+#else
   error = GDA_ERROR(gtk_type_new(gda_error_get_type()));
+#endif
   return error;
 }
 
@@ -206,6 +252,12 @@ gda_error_free (Gda_Error* error)
 
   if (error->nativeMsg)
     g_free(error->nativeMsg);
+
+#ifdef HAVE_GOBJECT
+  g_object_unref (G_OBJECT (error));
+#else
+  gtk_object_destroy (GTK_OBJECT (error));
+#endif
 }
 
 /**

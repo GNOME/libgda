@@ -1,4 +1,4 @@
-/* GNOME DB libary
+/* GDA client libary
  * Copyright (C) 1998,1999 Michael Lausch
  * Copyright (C) 2000 Rodrigo Moya
  *
@@ -20,14 +20,6 @@
 #if !defined(__gda_client_h__)
 #  define __gda_client_h__
 
-#if defined(HAVE_CONFIG_H)
-#  include <config.h>
-#endif
-#include <orb/orb.h>
-#include <gtk/gtk.h>
-#include <liboaf/liboaf.h>
-
-#include <gda.h>
 #include <gda-common.h>
 #include <gda-connection.h>
 #include <gda-connection-pool.h>

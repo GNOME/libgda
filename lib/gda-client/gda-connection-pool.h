@@ -1,4 +1,4 @@
-/* GNOME DB library
+/* GDA client library
  * Copyright (C) 1998,1999 Michael Lausch
  * Copyright (C) 2000 Rodrigo Moya
  *
@@ -20,6 +20,14 @@
 #if !defined(__gda_connection_pool_h__)
 #  define __gda_connection_pool_h__
 
+#include <glib.h>
+
+#ifdef HAVE_GOBJECT
+#  include <glib-object.h>
+#else
+#  include <gtk/gtk.h>
+#endif
+
 #include <gda-connection.h>
 
 #if defined(__cplusplus)
@@ -30,27 +38,53 @@ typedef struct _Gda_ConnectionPool      Gda_ConnectionPool;
 typedef struct _Gda_ConnectionPoolClass Gda_ConnectionPoolClass;
 
 #define GDA_TYPE_CONNECTION_POOL            (gda_connection_pool_get_type())
-#define GDA_CONNECTION_POOL(obj)            GTK_CHECK_CAST(obj, GDA_TYPE_CONNECTION_POOL, Gda_ConnectionPool)
-#define GDA_CONNECTION_POOL_CLASS(klass)    GTK_CHECK_CLASS_CAST(klass, GDA_TYPE_CONNECTION_POOL, GdaConnectionPoolClass)
-#define IS_GDA_CONNECTION_POOL(obj)         GTK_CHECK_TYPE(obj, GDA_TYPE_CONNECTION_POOL)
-#define IS_GDA_CONNECTION_POOL_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_CONNECTION_POOL))
+
+#ifdef HAVE_GOBJECT
+#  define GDA_CONNECTION_POOL(obj) \
+            G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_CONNECTION_POOL, \
+                                        Gda_ConnectionPool)
+#  define GDA_CONNECTION_POOL_CLASS(klass) \
+            G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_CONNECTION_POOL, \
+                                     Gda_ConnectionPoolClass)
+#  define IS_GDA_CONNECTION_POOL(obj) \
+            G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_CONNECTION_POOL)
+#  define IS_GDA_CONNECTION_POOL_CLASS(klass) \
+            G_TYPE_CHECK_CLASS_TYPE (klass, GDA_TYPE_CONNECTION_POOL)
+#else
+#  define GDA_CONNECTION_POOL(obj)            GTK_CHECK_CAST(obj, GDA_TYPE_CONNECTION_POOL, Gda_ConnectionPool)
+#  define GDA_CONNECTION_POOL_CLASS(klass)    GTK_CHECK_CLASS_CAST(klass, GDA_TYPE_CONNECTION_POOL, GdaConnectionPoolClass)
+#  define IS_GDA_CONNECTION_POOL(obj)         GTK_CHECK_TYPE(obj, GDA_TYPE_CONNECTION_POOL)
+#  define IS_GDA_CONNECTION_POOL_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_CONNECTION_POOL))
+#endif
 
 struct _Gda_ConnectionPool
 {
+#ifdef HAVE_GOBJECT
+  GObject   object;
+#else
   GtkObject object;
-
+#endif
   GList*    connections;
 };
 
 struct _Gda_ConnectionPoolClass
 {
+#ifdef HAVE_GOBJECT
+  GObjectClass   parent_class;
+  GObjectClass   *parent;
+#else
   GtkObjectClass parent_class;
-
+#endif
   /* signals */
   void (*new_connection)(Gda_ConnectionPool *pool, Gda_Connection *cnc);
 };
 
+#ifdef HAVE_GOBJECT
+GType               gda_connection_pool_get_type        (void);
+#else
 GtkType             gda_connection_pool_get_type        (void);
+#endif
+
 Gda_ConnectionPool* gda_connection_pool_new             (void);
 void                gda_connection_pool_free            (Gda_ConnectionPool *pool);
 

@@ -1,4 +1,4 @@
-/* GNOME DB libary
+/* GDA client libary
  * Copyright (C) 1998,1999 Michael Lausch
  * Copyright (C) 2000 Rodrigo Moya
  *
@@ -20,21 +20,48 @@
 #ifndef __gda_field_h__
 #define __gda_field_h__ 1
 
+#include <glib.h>
+
+#ifdef HAVE_GOBJECT
+#  include <glib-object.h>
+#else
+#  include <gtk/gtk.h>
+#endif
+
 #include <gda.h>
-#include <gtk/gtk.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 typedef struct _Gda_Field      Gda_Field;
 typedef struct _Gda_FieldClass Gda_FieldClass;
 
 #define GDA_TYPE_FIELD            (gda_field_get_type())
-#define GDA_FIELD(obj)            GTK_CHECK_CAST(obj, GDA_TYPE_FIELD, Gda_Field)
-#define GDA_FIELD_CLASS(klass)    GTK_CHECK_CLASS_CAST(klass, GDA_TYPE_FIELD, GdaFieldClass)
-#define IS_GDA_FIELD(obj)         GTK_CHECK_TYPE(obj, GDA_TYPE_FIELD)
-#define IS_GDA_FIELD_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_FIELD))
+
+#ifdef HAVE_GOBJECT
+#  define GDA_FIELD(obj) \
+            G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_FIELD, Gda_Field)
+#  define GDA_FIELD_CLASS(klass) \
+            G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_FIELD, Gda_FieldClass)
+#  define IS_GDA_FIELD(obj) \
+            G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_FIELD)
+#  define IS_GDA_FIELD_CLASS(klass) \
+            G_TYPE_CHECK_CLASS_TYPE (klass, GDA_TYPE_FIELD)
+#else
+#  define GDA_FIELD(obj)            GTK_CHECK_CAST(obj, GDA_TYPE_FIELD, Gda_Field)
+#  define GDA_FIELD_CLASS(klass)    GTK_CHECK_CLASS_CAST(klass, GDA_TYPE_FIELD, GdaFieldClass)
+#  define IS_GDA_FIELD(obj)         GTK_CHECK_TYPE(obj, GDA_TYPE_FIELD)
+#  define IS_GDA_FIELD_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_FIELD))
+#endif
 
 struct _Gda_Field
 {
+#ifdef HAVE_GOBJECT
+  GObject              object;
+#else
   GtkObject            object;
+#endif
   GDA_FieldAttributes* attributes;
   gint                 actual_length;
   GDA_FieldValue*      real_value;
@@ -44,7 +71,11 @@ struct _Gda_Field
 
 struct _Gda_FieldClass
 {
+#ifdef HAVE_GOBJECT
+  GObjectClass parent_class;
+#else
   GtkObjectClass parent_class;
+#endif
 };
 
 #define gda_field_isnull(f)         (f->real_value ? (f)->real_value->_d : 1)
@@ -84,5 +115,9 @@ gint          gda_field_actual_size     (Gda_Field* f);
 #define       gda_field_type(f)         (f->attributes->gdaType)
 #define       gda_field_cType(f)        (f->attributes->cType)
 #define       gda_field_nativeType(f)   (f->attributes->nativeType)
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

@@ -1,4 +1,4 @@
-/* GNOME DB libary
+/* GDA client libary
  * Copyright (C) 1998,1999 Michael Lausch
  * Copyright (C) 2000 Rodrigo Moya
  *
@@ -20,28 +20,58 @@
 #ifndef __gda_connection_h__
 #define __gda_connection_h__ 1
 
-/* Data Structures and Prototypes for the Gnome DB Access Client
- * Library
- */
-typedef struct _Gda_Connection       Gda_Connection;
-typedef struct _Gda_ConnectionClass  Gda_ConnectionClass;
+#include <glib.h>
 
-#include <gda-recordset.h>
+#ifdef HAVE_GOBJECT
+#  include <glib-object.h>
+#else
+#  include <gtk/gtk.h>
+#endif
+
+#include <orb/orbit.h>
+#include <gda.h>
 #include <gda-error.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /*
  * The connection object. The base of all acceess to data sources.
  */
 
+typedef struct _Gda_Connection       Gda_Connection;
+typedef struct _Gda_ConnectionClass  Gda_ConnectionClass;
+
+#include <gda-recordset.h>    /* this one needs the definitions above */
+
 #define GDA_TYPE_CONNECTION            (gda_connection_get_type())
-#define GDA_CONNECTION(obj)            GTK_CHECK_CAST(obj, GDA_TYPE_CONNECTION, Gda_Connection)
-#define GDA_CONNECTION_CLASS(klass)    GTK_CHECK_CLASS_CAST(klass, GDA_TYPE_CONNECTION, GdaConnectionClass)
-#define IS_GDA_CONNECTION(obj)         GTK_CHECK_TYPE(obj, GDA_TYPE_CONNECTION)
-#define IS_GDA_CONNECTION_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_CONNECTION))
+
+#ifdef HAVE_GOBJECT
+#  define GDA_CONNECTION(obj) \
+            G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_CONNECTION, \
+                                        Gda_Connection)
+#  define GDA_CONNECTION_CLASS(klass) \
+            G_TYPE_CHECK_CLASS_CAST (obj, GDA_TYPE_CONNECTION, \
+                                     Gda_ConnectionClass)
+#  define IS_GDA_CONNECTION(obj) \
+            G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_CONNECTION)
+#  define IS_GDA_CONNECTION_CLASS(klass) \
+            G_TYPE_CHECK_CLASS_TYPE (klass, GDA_TYPE_CONNECTION)
+#else
+#  define GDA_CONNECTION(obj)            GTK_CHECK_CAST(obj, GDA_TYPE_CONNECTION, Gda_Connection)
+#  define GDA_CONNECTION_CLASS(klass)    GTK_CHECK_CLASS_CAST(klass, GDA_TYPE_CONNECTION, GdaConnectionClass)
+#  define IS_GDA_CONNECTION(obj)         GTK_CHECK_TYPE(obj, GDA_TYPE_CONNECTION)
+#  define IS_GDA_CONNECTION_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_CONNECTION))
+#endif
 
 struct _Gda_Connection
 {
+#ifdef HAVE_GOBJECT
+  GObject       object;
+#else
   GtkObject     object;
+#endif
   CORBA_Object  connection;
   CORBA_ORB     orb;
   GList*        commands;
@@ -57,7 +87,11 @@ struct _Gda_Connection
 
 struct _Gda_ConnectionClass
 {
+#ifdef HAVE_GOBJECT
+  GObjectClass   parent_class;
+#else
   GtkObjectClass parent_class;
+#endif
   void           (*error)      (Gda_Connection*, GList*);
   void           (*warning)    (Gda_Connection*, GList*);
   void           (*open)       (Gda_Connection*);
@@ -72,8 +106,12 @@ typedef struct _Gda_Constraint_Element
   gchar*                value;
 } Gda_Constraint_Element;
 
-
+#ifdef HAVE_GOBJECT
+GType              gda_connection_get_type            (void);
+#else
 guint              gda_connection_get_type            (void);
+#endif
+
 Gda_Connection*    gda_connection_new                 (CORBA_ORB orb);
 void               gda_connection_free                (Gda_Connection* cnc);
 GList*             gda_connection_list_providers      (void);
@@ -117,7 +155,8 @@ void               gda_connection_set_cursor_location (Gda_Connection* cnc, GDA_
 
 gchar*             gda_connection_get_version         (Gda_Connection *cnc);
 
+#ifdef __cplusplus
+}
 #endif
 
-
-
+#endif
