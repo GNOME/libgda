@@ -2,10 +2,12 @@
 gda-command
 
 <!-- ##### SECTION Short_Description ##### -->
-
+Functions that deals with #GdaCommand.
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
+The #GdaCommand structure holds data needed to issue a command to the
+providers.
 
 </para>
 
@@ -25,10 +27,12 @@ gda-command
 
 </para>
 
-@GDA_COMMAND_TYPE_SQL: 
+@GDA_COMMAND_TYPE_SQL: the text of the command is composed of zero or more SQL
+sentences.
 @GDA_COMMAND_TYPE_XML: 
 @GDA_COMMAND_TYPE_PROCEDURE: 
-@GDA_COMMAND_TYPE_TABLE: 
+@GDA_COMMAND_TYPE_TABLE: the text of the command is composed of zero or more
+table names.
 @GDA_COMMAND_TYPE_INVALID: 
 
 <!-- ##### FUNCTION gda_command_new ##### -->
@@ -39,6 +43,8 @@ gda-command
 @text: 
 @type: 
 @Returns: 
+<!-- # Unused Parameters # -->
+@option: 
 
 
 <!-- ##### FUNCTION gda_command_free ##### -->
