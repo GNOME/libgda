@@ -1,3 +1,8 @@
+2001-05-14  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-mysql-recordset.c (fill_field_values): also manage
+	BLOB fields
+
 2001-03-13  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-mysql-connection.c (gda_mysql_connection_supports): respond to more
