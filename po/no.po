@@ -1,39 +1,39 @@
-# Norwegian translation of gnome-db (bokmål dialect).
-# Copyright (C) 1999 Free Software Foundation, Inc.
-# Kjartan Maraas <kmaraas@online.no>, 1999.
+# Norwegian translation of libgda (bokmål dialect).
+# Copyright (C) 1999-2004 Free Software Foundation, Inc.
+# Kjartan Maraas <kmaraas@gnome.org>, 1999-2004.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-db 0.0.91\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-01-17 00:08+0100\n"
-"PO-Revision-Date: 2003-09-06 20:38+0200\n"
-"Last-Translator: Kjartan Maraas <kmaraas@online.no>\n"
-"Language-Team: Norwegian <no@li.org>\n"
+"POT-Creation-Date: 2004-01-31 14:48+0100\n"
+"PO-Revision-Date: 2004-01-31 14:49+0100\n"
+"Last-Translator: Kjartan Maraas <kmaraas@gnome.org>\n"
+"Language-Team: Norwegian <i18n-nb@lister.ping.uio.no>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8-bit\n"
 
-#: libgda/gda-client.c:312 libgda/gda-client.c:517 libgda/gda-connection.c:218
+#: libgda/gda-client.c:312 libgda/gda-client.c:518 libgda/gda-connection.c:218
 #, c-format
 msgid "Data source %s not found in configuration"
 msgstr "Datakilde «%s» ble ikke funnet i konfigurasjonen"
 
-#: libgda/gda-client.c:339
+#: libgda/gda-client.c:340
 #, c-format
 msgid "Could not find provider %s in the current setup"
 msgstr "Kunne ikke hente tilbyder %s i aktivt oppsett"
 
-#: libgda/gda-client.c:369
+#: libgda/gda-client.c:370
 #, c-format
 msgid "Provider %s does not implement entry function"
 msgstr "Tilbyder %s implementerer ikke inngangsfunksjonen"
 
-#: libgda/gda-client.c:379
+#: libgda/gda-client.c:380
 msgid "Could not create GdaServerProvider object from plugin"
 msgstr "Kunne ikke opprette GdaServerProvider-objekt fra tillegg"
 
-#: libgda/gda-client.c:444
+#: libgda/gda-client.c:445
 msgid "Temporary data source created by libgda. Don't remove it"
 msgstr ""
 
@@ -728,9 +728,9 @@ msgstr "Kunne ikke tolke kommando «%s»"
 #. parsing went fine, but there is no result
 #. (e.g. because of an invalid column name)
 #: providers/mdb/gda-mdb-provider.c:744
-#, fuzzy, c-format
+#, c-format
 msgid "Got no result for '%s' command"
-msgstr "Kunne ikke tolke kommando «%s»"
+msgstr "Fikk ikke resultat for «%s»-kommando"
 
 #: providers/mdb/gda-mdb-table.c:48 providers/xml/gda-xml-provider.c:519
 #, c-format
@@ -1381,9 +1381,9 @@ msgstr "Kunne ikke allokere struktur for metainformasjon om kolonne."
 
 #: providers/sybase/gda-sybase-recordset.c:363
 #: providers/sybase/gda-sybase-recordset.c:553
-#, fuzzy, c-format
+#, c-format
 msgid "Could not call %s while processing row resultset."
-msgstr "Kunne ikke hente antall kolonner i resultatsettet"
+msgstr "Kunne ikke kalle %s mens resultatsett for rad prosesseres."
 
 #: providers/sybase/gda-sybase-recordset.c:382
 #: providers/sybase/gda-sybase-recordset.c:403
@@ -1397,9 +1397,10 @@ msgid "Could not allocate data placeholder for column %d"
 msgstr "Kunne ikke allokere dataplassholder for kolonne %d"
 
 #: providers/sybase/gda-sybase-recordset.c:422
-#, fuzzy, c-format
+#, c-format
 msgid "Could not run %s to cancel processing row resultset."
-msgstr "Kunne ikke hente antall kolonner i resultatsettet"
+msgstr ""
+"Kunne ikke kjøre %s for å avbryte prosessering av resultatsett for rad."
 
 #: providers/sybase/gda-sybase-recordset.c:438
 #, c-format
