@@ -3,6 +3,7 @@
  *
  * AUTHORS:
  *         Rodrigo Moya <rodrigo@gnome-db.org>
+ *         Albi Jeronimo <jeronimoalbi@yahoo.com.ar>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -30,13 +31,13 @@ GdaServerProvider *plugin_create_provider (void);
 const gchar *
 plugin_get_name (void)
 {
-	return "FireBird";
+	return "Firebird";
 }
 
 const gchar *
 plugin_get_description (void)
 {
-	return _("Provider for FireBird databases");
+	return _("Provider for Firebird databases");
 }
 
 GList *
@@ -47,6 +48,9 @@ plugin_get_connection_params (void)
 	list = g_list_append (list, g_strdup ("DATABASE"));
 	list = g_list_append (list, g_strdup ("PASSWORD"));
 	list = g_list_append (list, g_strdup ("USER"));
+	list = g_list_append (list, g_strdup ("CHARACTER_SET"));	/* Default: NONE */
+	list = g_list_append (list, g_strdup ("SQL_DIALECT"));  	/* Default: 3 */
+	list = g_list_append (list, g_strdup ("PAGE_SIZE"));		/* Default: 4096 */
 
 	return list;
 }

@@ -1,3 +1,42 @@
+2004-08-01  Jeronimo Albi <jeronimoalbi@yahoo.com.ar>
+
+	* providers/firebird/gda-firebird-provider.c:
+	(fb_get_fields_metadata, fb_type_name_to_gda_type,
+	 fb_set_fields_metadata, fb_set_index_field_metadata): New fuctions.
+	(gda_firebird_provider_get_schema): GDA_CONNECTION_SCHEMA_FIELDS is working.
+
+	* providers/firebird/gda-firebird-recordset.c:
+	(fb_sql_type_to_gda_type): New fuction.
+
+2004-08-01  Jeronimo Albi <jeronimoalbi@yahoo.com.ar>
+
+	* providers/firebird/gda-firebird-provider.c:
+	(fb_server_get_version): New fuction.
+	(gda_firebird_provider_get_server_version): Now returns server version.
+
+2004-08-01  Jeronimo Albi <jeronimoalbi@yahoo.com.ar>
+
+	* providers/firebird/gda-firebird-provider.c:
+	(fb_get_types, fb_sqlerror_get_description, fb_get_tables): New functions.
+	Change database connection routines for a more secure method of connection.
+	(gda_firebird_provider_create_database, gda_firebird_provider_execute_command,
+	 gda_firebird_provider_drop_database): Are working now.
+	(gda_firebird_provider_get_schema): Is working now for GDA_CONNECTION_SCHEMA_TYPES,
+	GDA_CONNECTION_SCHEMA_TABLES and GDA_CONNECTION_SCHEMA_VIEWS.
+	(gda_firebird_connection_make_error): Added description of error (Firebirds's SQL
+	error message) when adding error to GdaConnection.
+
+	* providers/firebird/gda-firebird-recordset.c:
+	(fb_sql_result_free, fb_sql_result_columns_malloc, fb_sql_result_set_columns_number,
+	 fb_sql_get_statement_type, fb_sql_prepare, fb_sql_unprepare, fb_sql_execute,
+	 fb_sql_affected_rows, fb_gda_value_fill, fb_sql_fetch_row): New fuctions.
+	Added recordset support.
+	Added Firebird's data types (except Blob and Array).
+
+	* providers/firebird/libmain.c:
+	Add CHARACTER_SET, SQL_DIALECT and PAGE_SIZE to list of connection params.
+	Changed name of provider to "Firebird", instead of "FireBird".
+
 2004-07-31  Dani Baeyens <daniel.baeyens@hispalinux.es>
 	
 	* doc/C/Makefile.am, doc/C/libgda-docs.sgml,

@@ -2,6 +2,7 @@
  * Copyright (C) 1998-2002 The GNOME Foundation
  *
  * AUTHORS:
+ *         Albi Jeronimo <jeronimoalbi@yahoo.com.ar>
  *         Rodrigo Moya <rodrigo@gnome-db.org>
  *
  * This library is free software; you can redistribute it and/or
@@ -25,13 +26,20 @@
 #include <libgda/gda-server-provider.h>
 #include <ibase.h>
 
+
 G_BEGIN_DECLS
+
+#define CONNECTION_DATA "GDA_Firebird_ConnectionData"
+#define TRANSACTION_DATA "GDA_Firebird_TransactionData"
+#define STATEMENT_DATA "GDA_Firebird_StatementData"
 
 #define GDA_TYPE_FIREBIRD_PROVIDER            (gda_firebird_provider_get_type())
 #define GDA_FIREBIRD_PROVIDER(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_FIREBIRD_PROVIDER, GdaFirebirdProvider))
 #define GDA_FIREBIRD_PROVIDER_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_FIREBIRD_PROVIDER, GdaFirebirdProviderClass))
 #define GDA_IS_FIREBIRD_PROVIDER(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_FIREBIRD_PROVIDER))
 #define GDA_IS_FIREBIRD_PROVIDER_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GDA_TYPE_FIREBIRD_PROVIDER))
+
+#define PARENT_TYPE GDA_TYPE_SERVER_PROVIDER
 
 typedef struct _GdaFirebirdProvider      GdaFirebirdProvider;
 typedef struct _GdaFirebirdProviderClass GdaFirebirdProviderClass;
@@ -47,7 +55,8 @@ struct _GdaFirebirdProviderClass {
 GType              gda_firebird_provider_get_type (void);
 GdaServerProvider *gda_firebird_provider_new (void);
 
-void               gda_firebird_connection_make_error (GdaConnection *cnc);
+void               gda_firebird_connection_make_error (GdaConnection *cnc, 
+						       const gint statement_type);
 
 G_END_DECLS
 
