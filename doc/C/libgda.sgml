@@ -340,7 +340,7 @@
           other information about itself.
         </para>
         <para>
-          If, on the orher hand, your provider is another machine, you'll have to create the
+          If, on the orher hand, your provider is on another machine, you'll have to create the
           <filename>.oafinfo</filename> yourself. For this, you'll need to check the OAF
           installation docs.
         </para>
