@@ -156,7 +156,7 @@ fi
 %files
 %defattr(-, root, root)
 
-%doc AUTHORS COPYING ChangeLog NEWS README TODO
+%doc AUTHORS COPYING ChangeLog NEWS README
 %{prefix}/bin/gda-test
 %{prefix}/lib/libgda-common.so*
 %{prefix}/lib/libgda-client.so*
