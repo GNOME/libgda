@@ -26,6 +26,10 @@
 #define PARENT_TYPE G_TYPE_OBJECT
 #define CLASS(model) (GDA_DATA_MODEL_CLASS (G_OBJECT_GET_CLASS (model)))
 
+struct _GdaDataModelPrivate {
+	gboolean notify_changes;
+};
+
 static void gda_data_model_class_init (GdaDataModelClass *klass);
 static void gda_data_model_init       (GdaDataModel *model, GdaDataModelClass *klass);
 static void gda_data_model_finalize   (GObject *object);
@@ -69,13 +73,24 @@ static void
 gda_data_model_init (GdaDataModel *model, GdaDataModelClass *klass)
 {
 	g_return_if_fail (GDA_IS_DATA_MODEL (model));
+
+	model->priv = g_new0 (GdaDataModelPrivate, 1);
+	model->priv->notify_changes = TRUE;
 }
 
 static void
 gda_data_model_finalize (GObject *object)
 {
+	GdaDataModel *model = (GdaDataModel *) object;
+
+	g_return_if_fail (GDA_IS_DATA_MODEL (model));
+
+	/* free memory */
+	g_free (model->priv);
+	model->priv = NULL;
+
 	/* chain to parent class */
-	parent_class->finalize;
+	parent_class->finalize (object);
 }
 
 GType
@@ -116,9 +131,38 @@ void
 gda_data_model_changed (GdaDataModel *model)
 {
 	g_return_if_fail (GDA_IS_DATA_MODEL (model));
-	g_signal_emit (G_OBJECT (model),
-		       gda_data_model_signals[CHANGED],
-		       0);
+
+	if (model->priv->notify_changes) {
+		g_signal_emit (G_OBJECT (model),
+			       gda_data_model_signals[CHANGED],
+			       0);
+	}
+}
+
+/**
+ * gda_data_model_freeze
+ * @model: a #GdaDataModel object.
+ *
+ * Disable notifications of changes on the given data model. To
+ * re-enable notifications again, you should call the
+ * #gda_data_model_thaw function.
+ */
+void
+gda_data_model_freeze (GdaDataModel *model)
+{
+	g_return_if_fail (GDA_IS_DATA_MODEL (model));
+	model->priv->notify_changes = FALSE;
+}
+
+/**
+ * gda_data_model_thaw
+ * @model: a #GdaDataModel object.
+ *
+ * Re-enable notifications of changes on the given data model.
+ */
+void
+gda_data_model_thaw (GdaDataModel *model)
+{
 }
 
 /**

@@ -35,9 +35,11 @@ G_BEGIN_DECLS
 
 typedef struct _GdaDataModel        GdaDataModel;
 typedef struct _GdaDataModelClass   GdaDataModelClass;
+typedef struct _GdaDataModelPrivate GdaDataModelPrivate;
 
 struct _GdaDataModel {
 	GObject object;
+	GdaDataModelPrivate *priv;
 };
 
 struct _GdaDataModelClass {
@@ -56,6 +58,9 @@ struct _GdaDataModelClass {
 GType           gda_data_model_get_type (void);
 
 void            gda_data_model_changed (GdaDataModel *model);
+void            gda_data_model_freeze (GdaDataModel *model);
+void            gda_data_model_thaw (GdaDataModel *model);
+
 gint            gda_data_model_get_n_rows (GdaDataModel *model);
 gint            gda_data_model_get_n_columns (GdaDataModel *model);
 const gchar    *gda_data_model_get_column_title (GdaDataModel *model, gint col);
