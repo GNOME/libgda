@@ -803,7 +803,7 @@ gda_freetds_execute_cmd (GdaConnection *cnc, const gchar *sql)
 
 	/* there should not be any result tokens */
 #ifdef HAVE_FREETDS_VER0_6X
-	while ((tds_cnc->rc = tds_process_result_tokens (tds_cnc->tds, &tds_cnc->result_type))
+	while ((tds_cnc->rc = tds_process_result_tokens (tds_cnc->tds, &tds_cnc->result_type, NULL))
 #else
 	while ((tds_cnc->rc = tds_process_result_tokens (tds_cnc->tds)) 
 #endif
