@@ -79,17 +79,25 @@ struct _Gda_ReportEngineClass {
 #endif
 
 #ifdef HAVE_GOBJECT
-GType			gda_report_engine_get_type	(void);
+GType		  gda_report_engine_get_type	(void);
 #else
-GtkType			gda_report_engine_get_type	(void);
+GtkType		  gda_report_engine_get_type	(void);
 #endif
 
-Gda_ReportEngine*	gda_report_engine_new		(void);
-void			gda_report_engine_free		(Gda_ReportEngine *engine);
+Gda_ReportEngine* gda_report_engine_new			 (void);
+void		  gda_report_engine_free		 (Gda_ReportEngine *engine);
 
-GList*			gda_report_engine_query_reports	(Gda_ReportEngine *engine,
-							 const gchar *condition,
-							 Gda_ReportFlags flags);
+GList*		  gda_report_engine_query_reports        (Gda_ReportEngine *engine,
+							  const gchar *condition,
+							  Gda_ReportFlags flags);
+gboolean	  gda_report_engine_register_converter	 (Gda_ReportEngine *engine,
+							  gchar *format,
+							  gchar *converter);
+void		  gda_report_engine_unregister_converter (Gda_ReportEngine *engine,
+							  gchar *converter);
+gchar*		  gda_report_engine_find_converter	 (Gda_ReportEngine *engine,
+							  gchar* format);
+		
 
 #if defined(__cplusplus)
 }

@@ -22,7 +22,11 @@ libgda_ldap_la_SOURCES = \
 	gda-ldap-recordset.c \
 	gda-ldap.h
 
-EXTRA_DIST = GNOME_GDA_Provider_LDAP.oafinfo
+oafdir=$(GDA_oafdir)
 
-oafinfodir=$(GDA_oafinfodir)
-oafinfo_DATA=GNOME_GDA_Provider_LDAP.oafinfo
+oaf_in_files = GNOME_GDA_Provider_LDAP.oaf.in
+oaf_DATA = $(oaf_in_files:.oaf.in=.oaf)
+
+@XML_I18N_MERGE_OAF_RULE@
+
+EXTRA_DIST=$(oaf_in_files) $(oaf_DATA)

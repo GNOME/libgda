@@ -34,7 +34,10 @@ gda_report_server_LDADD = \
 	$(top_builddir)/lib/gda-common/libgda-common.la \
 	$(top_builddir)/lib/gda-client/libgda-client.la
 
-oafinfodir=$(GDA_oafinfodir)
-oafinfo_DATA=GNOME_GDA_Report.oafinfo
+oafdir=$(GDA_oafdir)
+oaf_in_files = GNOME_GDA_Report.oaf.in
+oaf_DATA = $(oaf_in_files:.oaf.in=.oaf)
 
-EXTRA_DIST = GNOME_GDA_Report.oafinfo
+@XML_I18N_MERGE_OAF_RULE@
+
+EXTRA_DIST = $(oaf_in_files) $(oaf_DATA)

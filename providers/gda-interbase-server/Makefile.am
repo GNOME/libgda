@@ -22,7 +22,11 @@ libgda_interbase_la_SOURCES = \
 	gda-interbase-recordset.c \
 	gda-interbase.h
 
-EXTRA_DIST = GNOME_GDA_Provider_InterBase.oafinfo
+oafdir = $(GDA_oafdir)
 
-oafinfodir=$(GDA_oafinfodir)
-oafinfo_DATA=GNOME_GDA_Provider_InterBase.oafinfo
+oaf_in_files = GNOME_GDA_Provider_InterBase.oaf.in
+oaf_DATA = $(oaf_in_files:.oaf.in=.oaf)
+
+@XML_I18N_MERGE_OAF_RULE@
+
+EXTRA_DIST=$(oaf_in_files) $(oaf_DATA)

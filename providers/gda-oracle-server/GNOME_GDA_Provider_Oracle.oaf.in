@@ -1,21 +1,15 @@
 <oaf_info>
 
-<oaf_server iid="OAFIID:GNOME_GDA_Provider_Postgres_ConnectionFactory"
+<oaf_server iid="OAFIID:GNOME_GDA_Provider_Oracle_ConnectionFactory"
             type="exe"
-            location="gda-postgres-srv">
+            location="gda-oracle-srv">
 	<oaf_attribute name="repo_ids" type="stringv">
 		<item value="IDL:GDA/ConnectionFactory:1.0"/>
 	</oaf_attribute>
 	<oaf_attribute name="description" type="string"
-	               value="GDA Datasource Access for Postgres"/>
+	               _value="GDA Datasource Access for Oracle"/>
 	<oaf_attribute name="gda_params" type="stringv">
-		<item value="HOST"/>
 		<item value="DATABASE"/>
-		<item value="PORT"/>
-		<item value="OPTIONS"/>
-		<item value="TTY"/>
-		<item value="LOGIN"/>
-		<item value="PASSWORD"/>
 	</oaf_attribute>
 </oaf_server>
 

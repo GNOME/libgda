@@ -7,7 +7,7 @@
 		<item value="IDL:GDA/ConnectionFactory:1.0"/>
 	</oaf_attribute>
 	<oaf_attribute name="description" type="string"
-	               value="GDA Datasource Access for Interbase"/>
+	               _value="GDA Datasource Access for Interbase"/>
 </oaf_server>
 
 </oaf_info>

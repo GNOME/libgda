@@ -1,13 +1,13 @@
 <oaf_info>
 
-<oaf_server iid="OAFIID:GNOME_GDA_Provider_Mail_ConnectionFactory"
+<oaf_server iid="OAFIID:GNOME_GDA_Provider_MDB_ConnectionFactory"
             type="exe"
-            location="gda-mail-srv">
+            location="gda-mdb-srv">
 	<oaf_attribute name="repo_ids" type="stringv">
 		<item value="IDL:GDA/ConnectionFactory:1.0"/>
 	</oaf_attribute>
 	<oaf_attribute name="description" type="string"
-	               value="GDA Datasource Access for Mail"/>
+	               _value="GDA Datasource Access for MDB (MS Access) files"/>
 </oaf_server>
 
 </oaf_info>

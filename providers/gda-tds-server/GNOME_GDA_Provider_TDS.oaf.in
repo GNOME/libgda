@@ -1,14 +1,18 @@
 <oaf_info>
 
-<oaf_server iid="OAFIID:GNOME_GDA_Provider_Oracle_ConnectionFactory"
+<oaf_server iid="OAFIID:GNOME_GDA_Provider_TDS_ConnectionFactory"
             type="exe"
-            location="gda-oracle-srv">
+            location="gda-tds-srv">
 	<oaf_attribute name="repo_ids" type="stringv">
 		<item value="IDL:GDA/ConnectionFactory:1.0"/>
 	</oaf_attribute>
 	<oaf_attribute name="description" type="string"
-	               value="GDA Datasource Access for Oracle"/>
+	               _value="GDA Datasource Access for Sybase/MS SQL"/>
 	<oaf_attribute name="gda_params" type="stringv">
+		<item value="HOST"/>
+		<item value="USERNAME"/>
+		<item value="APPNAME"/>
+		<item value="PASSWORD"/>
 		<item value="DATABASE"/>
 	</oaf_attribute>
 </oaf_server>

@@ -1,13 +1,13 @@
 <oaf_info>
 
-<oaf_server iid="OAFIID:GNOME_GDA_Provider_MDB_ConnectionFactory"
+<oaf_server iid="OAFIID:GNOME_GDA_Provider_ODBC_ConnectionFactory"
             type="exe"
-            location="gda-mdb-srv">
+            location="gda-odbc-srv">
 	<oaf_attribute name="repo_ids" type="stringv">
 		<item value="IDL:GDA/ConnectionFactory:1.0"/>
 	</oaf_attribute>
 	<oaf_attribute name="description" type="string"
-	               value="GDA Datasource Access for MDB (MS Access) files"/>
+	               _value="GDA Datasource Access for ODBC"/>
 </oaf_server>
 
 </oaf_info>

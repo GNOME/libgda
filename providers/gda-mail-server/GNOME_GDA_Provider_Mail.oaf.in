@@ -1,13 +1,13 @@
 <oaf_info>
 
-<oaf_server iid="OAFIID:GNOME_GDA_Provider_ODBC_ConnectionFactory"
+<oaf_server iid="OAFIID:GNOME_GDA_Provider_Mail_ConnectionFactory"
             type="exe"
-            location="gda-odbc-srv">
+            location="gda-mail-srv">
 	<oaf_attribute name="repo_ids" type="stringv">
 		<item value="IDL:GDA/ConnectionFactory:1.0"/>
 	</oaf_attribute>
 	<oaf_attribute name="description" type="string"
-	               value="GDA Datasource Access for ODBC"/>
+	               _value="GDA Datasource Access for Mail"/>
 </oaf_server>
 
 </oaf_info>

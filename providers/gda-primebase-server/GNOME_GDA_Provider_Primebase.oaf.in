@@ -7,7 +7,7 @@
                 <item value="IDL:GDA/ConnectionFactory:1.0"/>
         </oaf_attribute>
         <oaf_attribute name="description" type="string"
-                      value="GDA Datasource Access for primebase"/>
+                      _value="GDA Datasource Access for primebase"/>
         <oaf_attribute name="gda_params" type="stringv">
                 <item value="DATABASE"/>
         </oaf_attribute>

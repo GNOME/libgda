@@ -21,7 +21,11 @@ libgda_mail_la_SOURCES = \
 	gda-mail-recordset.c \
 	gda-mail.h
 
-EXTRA_DIST = GNOME_GDA_Provider_Mail.oafinfo
+oafdir=$(GDA_oafdir)
 
-oafinfodir=$(GDA_oafinfodir)
-oafinfo_DATA=GNOME_GDA_Provider_Mail.oafinfo
+oaf_in_files = GNOME_GDA_Provider_Mail.oaf.in
+oaf_DATA = $(oaf_in_files:.oaf.in=.oaf)
+
+@XML_I18N_MERGE_OAF_RULE@
+
+EXTRA_DIST=$(oaf_in_files) $(oaf_DATA)

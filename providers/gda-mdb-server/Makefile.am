@@ -22,7 +22,11 @@ libgda_mdb_la_SOURCES = \
 	gda-mdb-recordset.c \
 	gda-mdb.h
 
-EXTRA_DIST = GNOME_GDA_Provider_MDB.oafinfo
+oafdir=$(GDA_oafdir)
 
-oafinfodir=$(GDA_oafinfodir)
-oafinfo_DATA=GNOME_GDA_Provider_MDB.oafinfo
+oaf_in_files = GNOME_GDA_Provider_MDB.oaf.in
+oaf_DATA = $(oaf_in_files:.oaf.in=.oaf)
+
+@XML_I18N_MERGE_OAF_RULE@
+
+EXTRA_DIST=$(oaf_in_files) $(oaf_DATA)

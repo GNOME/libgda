@@ -660,10 +660,10 @@ AC_SUBST(MDB_CFLAGS)
 AC_SUBST(CAMEL_LIBS)
 AC_SUBST(CAMEL_CFLAGS)
 
-GDA_oafinfodir=`oaf-config --prefix`/share/oaf
+GDA_oafdir=`oaf-config --prefix`/share/oaf
 
 AC_SUBST(ORBIT_IDL)
-AC_SUBST(GDA_oafinfodir)
+AC_SUBST(GDA_oafdir)
 
 AC_OUTPUT([
 Makefile

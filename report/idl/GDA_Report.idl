@@ -95,6 +95,7 @@ module GDA {
 	interface Report {
 		attribute string                name;
 		attribute string                description;
+		attribute ReportElement		elements;	/* The main ReportElement */
 		readonly attribute ReportFormat format;
 		readonly attribute boolean      isLocked;
 

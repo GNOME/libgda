@@ -7,7 +7,7 @@
 		<item value="IDL:GDA/ConnectionFactory:1.0"/>
 	</oaf_attribute>
 	<oaf_attribute name="description" type="string"
-	               value="GDA Datasource Access for MySQL"/>
+	               _value="GDA Datasource Access for MySQL"/>
 	<oaf_attribute name="gda_params" type="stringv">
 		<item value="HOST"/>
 		<item value="DATABASE"/>

@@ -7,7 +7,7 @@
 		<item value="IDL:GDA/Report:1.0"/>
 	</oaf_attribute>
 	<oaf_attribute name="description" type="string"
-	               value="GDA Distributed Report Engine"/>
+	               _value="GDA Distributed Report Engine"/>
 </oaf_server>
 
 </oaf_info>

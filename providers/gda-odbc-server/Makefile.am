@@ -22,7 +22,11 @@ libgda_odbc_la_SOURCES = \
 	gda-odbc-recordset.c \
 	gda-odbc.h
 
-EXTRA_DIST = GNOME_GDA_Provider_ODBC.oafinfo gda-odbc.spec.in
+oafdir=$(GDA_oafdir)
 
-oafinfodir=$(GDA_oafinfodir)
-oafinfo_DATA=GNOME_GDA_Provider_ODBC.oafinfo
+oaf_in_files = GNOME_GDA_Provider_ODBC.oaf.in
+oaf_DATA = $(oaf_in_files:.oaf.in=.oaf)
+
+@XML_I18N_MERGE_OAF_RULE@
+
+EXTRA_DIST=$(oaf_in_files) $(oaf_DATA) gda-odbc.spec.in
