@@ -1,3 +1,7 @@
+2000-10-26	Rodrigo Moya <rodrigo@linuxave.net>
+
+	* applied Michael's patch to help in build problems: clean and start again
+
 2000-10-21	Rodrigo Moya <rodrigo@linuxave.net>
 
 	* added missing _() and N_() declarations which were missing after
