@@ -5,15 +5,15 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-db 0.0.91\n"
-"POT-Creation-Date: 2002-06-01 23:11+0200\n"
-"PO-Revision-Date: 2002-06-01 23:21+0200\n"
+"POT-Creation-Date: 2002-06-04 08:10+0200\n"
+"PO-Revision-Date: 2002-06-04 08:11+0200\n"
 "Last-Translator: Kjartan Maraas <kmaraas@online.no>\n"
 "Language-Team: Norwegian <no@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8-bit\n"
 
-#: libgda/gda-client.c:226 libgda/gda-client.c:384 libgda/gda-connection.c:206
+#: libgda/gda-client.c:226 libgda/gda-client.c:383 libgda/gda-connection.c:208
 #, c-format
 msgid "Data source %s not found in configuration"
 msgstr "Datakilde «%s» ble ikke funnet i konfigurasjonen"
@@ -38,28 +38,32 @@ msgid "Creation of GdaServerProvider failed"
 msgstr "Oppretting av GdaServerProvider feilet"
 
 #. gda_server_recordset_model_set_field_defined_size (recset, 0, 256);
-#: libgda/gda-config.c:1189 providers/default/gda-default-provider.c:463
+#: libgda/gda-config.c:1244 providers/default/gda-default-provider.c:463
 #: providers/default/gda-default-provider.c:485
 #: providers/default/gda-default-provider.c:522
 #: providers/mysql/gda-mysql-provider.c:550
 msgid "Name"
 msgstr "Navn"
 
-#: libgda/gda-config.c:1190
+#: libgda/gda-config.c:1245
 msgid "Provider"
 msgstr "Tilbyder"
 
-#: libgda/gda-config.c:1191
+#: libgda/gda-config.c:1246
 msgid "Connection string"
 msgstr "Tilkoblingsstreng"
 
-#: libgda/gda-config.c:1192
+#: libgda/gda-config.c:1247
 msgid "Description"
 msgstr "Beskrivelse"
 
-#: libgda/gda-config.c:1193
+#: libgda/gda-config.c:1248
 msgid "Username"
 msgstr "Brukernavn"
+
+#: libgda/gda-config.c:1249
+msgid "Password"
+msgstr "Passord"
 
 #: libgda/gda-data-model.c:583
 #, c-format
