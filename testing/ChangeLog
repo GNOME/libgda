@@ -1,3 +1,8 @@
+2002-01-02  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
+	* client.c: also lists procedures and views (if any). Shows the number
+	of procedures, tables, types and views.
+	
 2001-12-30  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* client.c (show_schemas): added types schema

@@ -30,16 +30,17 @@ show_schema (GdaConnection *cnc, GdaConnectionSchema schema, const gchar *label)
 	gint r, c;
 	gint row_count, col_count;
 
-	g_print ("\t%s\n", label);
-
 	model = gda_connection_get_schema (cnc, schema, NULL);
 	if (!GDA_IS_DATA_MODEL (model)) {
+		g_print ("\t%s\n", label);
 		g_print ("\t\tNONE\n");
 		return;
 	}
 
 	row_count = gda_data_model_get_n_rows (model);
 	col_count = gda_data_model_get_n_columns (model);
+	g_print ("\t%s %d\n", label, row_count);
+
 	for (r = 0; r < row_count; r++) {
 		g_print ("\t");
 		for (c = 0; c < col_count; c++) {
@@ -81,8 +82,10 @@ open_connection (GdaClient *client,
 		 _("Supported") : _("Not supported"));
 
 	/* show connection schemas */
+	show_schema (cnc, GDA_CONNECTION_SCHEMA_PROCEDURES, "Stored procedures");
 	show_schema (cnc, GDA_CONNECTION_SCHEMA_TABLES, "Connection Tables");
 	show_schema (cnc, GDA_CONNECTION_SCHEMA_TYPES, "Available types");
+	show_schema (cnc, GDA_CONNECTION_SCHEMA_VIEWS, "Views");
 
 	/* test transactions */
 	g_print ("\tStarting transaction...");
