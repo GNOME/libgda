@@ -104,7 +104,6 @@
 	* providers/mysql/gda-mysql-recordset.c (gda_mysql_recordset_get_row):
 	new method implementation.
 
->>>>>>> 1.261
 2002-05-16  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* libgda/gda-select.[ch]: added basic implementation.
