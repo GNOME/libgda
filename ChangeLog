@@ -1,3 +1,11 @@
+2004-05-10  Murray Cumming  <murrayc@murrayc@.com>
+
+ 	* libgda/gda-util.c (gda_type_to_string): Added case statements for 
+ 	types that were not already handled, such as the unsigned types. 
+ 	Changed the default to unknown rather than string.
+ 	* libgda/gda-util.c (gda_type_from_string): Added case statements for
+ 	remaining types.
+
 2004-04-23  Murray Cumming  <murrayc@murrayc.com>
  
  	* libgda/gda-client.c: (gda_client_notify_error_event, 
