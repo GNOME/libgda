@@ -260,7 +260,7 @@ gda_server_provider_get_database (GdaServerProvider *provider,
  * Proxy the call to the change_database method on the
  " #GdaServerProvider class to the corresponding provider.
  *
- * Returns: TRUE if successful, FALSE otherwise.
+ * Returns: %TRUE if successful, %FALSE otherwise.
  */
 gboolean
 gda_server_provider_change_database (GdaServerProvider *provider,
@@ -284,7 +284,7 @@ gda_server_provider_change_database (GdaServerProvider *provider,
  * Proxy the call to the create_database method on the
  * #GdaServerProvider class to the corresponding provider.
  *
- * Returns: TRUE if successful, FALSE otherwise.
+ * Returns: %TRUE if successful, %FALSE otherwise.
  */
 gboolean
 gda_server_provider_create_database (GdaServerProvider *provider,
@@ -308,7 +308,7 @@ gda_server_provider_create_database (GdaServerProvider *provider,
  * Proxy the call to the drop_database method on the
  * #GdaServerProvider class to the corresponding provider.
  *
- * Returns: TRUE if successful, FALSE otherwise.
+ * Returns: %TRUE if successful, %FALSE otherwise.
  */
 gboolean
 gda_server_provider_drop_database (GdaServerProvider *provider,
@@ -425,7 +425,7 @@ gda_server_provider_get_schema (GdaServerProvider *provider,
  *
  * Creates a BLOB (Binary Large OBject) with read/write access.
  *
- * Returns: FALSE if the database does not support BLOBs. TRUE otherwise
+ * Returns: %FALSE if the database does not support BLOBs. %TRUE otherwise
  * and the GdaBlob is created and ready to be used.
  */
 gboolean

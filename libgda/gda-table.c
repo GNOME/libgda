@@ -161,9 +161,9 @@ gda_table_get_type (void)
 
 /**
  * gda_table_new
- * @name: Name for the new table.
+ * @name: name for the new table.
  *
- * Create a new #GdaTable object, which is an in-memory representation
+ * Creates a new #GdaTable object, which is an in-memory representation
  * of an entire table. It is mainly used by the #GdaXmlDatabase class,
  * but you can also use it in your applications for whatever you may need
  * it.
@@ -185,11 +185,11 @@ gda_table_new (const gchar *name)
 
 /**
  * gda_table_new_from_model
- * @name: Name for the new table.
- * @model: Model to create the table from.
- * @add_data: Whether to add model's data or not.
+ * @name: name for the new table.
+ * @model: model to create the table from.
+ * @add_data: whether to add model's data or not.
  *
- * Create a #GdaTable object from the given #GdaDataModel. This
+ * Creates a #GdaTable object from the given #GdaDataModel. This
  * is very useful to maintain an in-memory copy of a given
  * recordset obtained from a database. This is also used when
  * exporting data to a #GdaXmlDatabase object.
@@ -229,11 +229,9 @@ gda_table_new_from_model (const gchar *name, const GdaDataModel *model, gboolean
 
 /**
  * gda_table_get_name
- * @table: A #GdaTable object.
+ * @table: a #GdaTable object.
  *
- * Get the name of the given #GdaTable.
- *
- * Returns: the name of the table.
+ * Returns: the name of the given #GdaTable.
  */
 const gchar *
 gda_table_get_name (GdaTable *table)
@@ -244,10 +242,10 @@ gda_table_get_name (GdaTable *table)
 
 /**
  * gda_table_set_name
- * @table: A #GdaTable object.
- * @name: New name for the table.
+ * @table: a #GdaTable object.
+ * @name: new name for the table.
  *
- * Set the name of the given #GdaTable.
+ * Sets the name of the given #GdaTable.
  */
 void
 gda_table_set_name (GdaTable *table, const gchar *name)
@@ -263,8 +261,8 @@ gda_table_set_name (GdaTable *table, const gchar *name)
 
 /**
  * gda_table_add_field
- * @table: A #GdaTable object.
- * @fa: Attributes for the new field.
+ * @table: a #GdaTable object.
+ * @fa: attributes for the new field.
  *
  * Adds a field to the given #GdaTable.
  */
@@ -304,10 +302,16 @@ gda_table_add_field (GdaTable *table, const GdaFieldAttributes *fa)
 
 /**
  * gda_table_add_data_from_model
+ * @table: a #GdaTable object.
+ * @model: a #GdaDataModel object.
+ *
+ * Adds data in the given @table from the given @model.
  */
 void
 gda_table_add_data_from_model (GdaTable *table, const GdaDataModel *model)
 {
 	g_return_if_fail (GDA_IS_TABLE (table));
 	g_return_if_fail (GDA_IS_DATA_MODEL (model));
+
+    /* FIXME: implement me */
 }

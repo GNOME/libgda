@@ -69,7 +69,7 @@ Exporting of databases
 </para>
 
 @exp: 
-@tables: 
+@list: 
 
 
 <!-- ##### FUNCTION gda_export_unselect_table ##### -->

@@ -261,9 +261,9 @@ gda_export_finalize (GObject *object)
 
 /**
  * gda_export_new
- * @cnc: a #GdaConnection object
+ * @cnc: a #GdaConnection object.
  *
- * Create a new #GdaExport object, which allows you to easily add
+ * Creates a new #GdaExport object, which allows you to easily add
  * exporting functionality to your programs.
  *
  * It works by first having a #GdaConnection object associated
@@ -273,9 +273,9 @@ gda_export_finalize (GObject *object)
  *
  * When you're done, you just run the export (#gda_export_run), first
  * connecting to the different signals that will let you be
- * informed of the export process progress
+ * informed of the export process progress.
  *
- * Returns: a newly allocated #GdaExport object
+ * Returns: a newly allocated #GdaExport object.
  */
 GdaExport *
 gda_export_new (GdaConnection * cnc)
@@ -291,16 +291,16 @@ gda_export_new (GdaConnection * cnc)
 
 /**
  * gda_export_get_tables
- * @cnc: a #GdaConnection object
+ * @exp: a #GdaExport object.
  *
- * Return a list of all tables that exist in the #GdaConnection
- * being used. This function is useful when you're building,
- * for example, a list for the user to select which tables he/she
- * wants in the export process.
+ * Returns a list of all tables that exist in the #GdaConnection
+ * being used by the given #GdaExport object.. This function is 
+ * useful when you're building, for example, a list for the user 
+ * to select which tables he/she wants in the export process.
  *
  * You are responsible to free the returned value yourself.
  *
- * Returns: a GList containing the names of all the tables
+ * Returns: a GList containing the names of all the tables.
  */
 GList *
 gda_export_get_tables (GdaExport * exp)
@@ -313,14 +313,14 @@ gda_export_get_tables (GdaExport * exp)
 
 /**
  * gda_export_get_selected_tables
- * @export: a #GdaExport object
+ * @exp: a #GdaExport object.
  *
- * Return a list with the names of all the currently selected objects
+ * Returns a list with the names of all the currently selected objects
  * in the given #GdaExport object.
  *
  * You are responsible to free the returned value yourself.
  *
- * Returns: a #GList containing the names of the selected tables
+ * Returns: a #GList containing the names of the selected tables.
  */
 GList *
 gda_export_get_selected_tables (GdaExport * exp)
@@ -333,10 +333,10 @@ gda_export_get_selected_tables (GdaExport * exp)
 
 /**
  * gda_export_select_table
- * @export: a #GdaExport object
- * @table: name of the table
+ * @exp: a #GdaExport object.
+ * @table: name of the table.
  *
- * Add the given table to the list of selected tables
+ * Adds the given @table to the list of selected tables.
  */
 void
 gda_export_select_table (GdaExport *exp, const gchar *table)
@@ -361,11 +361,11 @@ gda_export_select_table (GdaExport *exp, const gchar *table)
 
 /**
  * gda_export_select_table_list
- * @exp: a #GdaExport object
- * @list: list of tables to be selected
+ * @exp: a #GdaExport object.
+ * @list: list of tables to be selected.
  *
- * Adds all the tables contained in the given list to the list of
- * selected tables
+ * Adds all the tables contained in the given @list to the list of
+ * selected tables.
  */
 void
 gda_export_select_table_list (GdaExport *exp, GList *list)
@@ -381,10 +381,10 @@ gda_export_select_table_list (GdaExport *exp, GList *list)
 
 /**
  * gda_export_unselect_table
- * @exp: a #GdaExport object
- * @table: name of the table
+ * @exp: a #GdaExport object.
+ * @table: name of the table.
  *
- * Remove the given table name from the list of selected tables
+ * Removes the given table name from the list of selected tables.
  */
 void
 gda_export_unselect_table (GdaExport *exp, const gchar *table)
@@ -408,12 +408,12 @@ gda_export_unselect_table (GdaExport *exp, const gchar *table)
 
 /**
  * gda_export_run
- * @export: a #GdaExport object
- * @flags: execution flags
+ * @exp: a #GdaExport object.
+ * @flags: execution flags.
  *
  * Starts the execution of the given export object. This means that, after
  * calling this function, your application will lose control about the export
- * process and will only receive notifications via the class signals
+ * process and will only receive notifications via the class signals.
  */
 void
 gda_export_run (GdaExport *exp, GdaExportFlags flags)
@@ -432,7 +432,9 @@ gda_export_run (GdaExport *exp, GdaExportFlags flags)
 
 /**
  * gda_export_stop
- * @export: a #GdaExport object
+ * @exp: a #GdaExport object.
+ *
+ * Stops execution of the given export object.
  */
 void
 gda_export_stop (GdaExport *exp)
@@ -455,12 +457,9 @@ gda_export_stop (GdaExport *exp)
 
 /**
  * gda_export_get_connection
- * @export: a #GdaExport object
+ * @exp: a #GdaExport object.
  *
- * Return the #GdaConnection object associated with the given
- * #GdaExport
- *
- * Returns: the #GdaConnection object being used
+ * Returns: the #GdaConnection object associated with the given #GdaExport.
  */
 GdaConnection *
 gda_export_get_connection (GdaExport * exp)
@@ -471,6 +470,10 @@ gda_export_get_connection (GdaExport * exp)
 
 /**
  * gda_export_set_connection
+ * @exp: a #GdaExport object.
+ * @cnc: a #GdaConnection object.
+ * 
+ * Associates the given #GdaConnection with the given #GdaExport. 
  */
 void
 gda_export_set_connection (GdaExport *exp, GdaConnection * cnc)

@@ -120,7 +120,7 @@ gda_xml_connection_get_type (void)
 /**
  * gda_xml_connection_new
  *
- * Create a new #GdaXmlConnection object, which lets you parse and/or
+ * Creates a new #GdaXmlConnection object, which lets you parse and/or
  * create .connection files, which are XML files used to specify all
  * parameters needed to open a database connection, and which can
  * be used to store user's connection preferences, or for automatic
@@ -141,7 +141,7 @@ gda_xml_connection_new (void)
  * gda_xml_connection_new_from_file
  * @filename: name of file to create the #GdaXmlConnection object from.
  *
- * Create a #GdaXmlConnection object from the contents of @filename,
+ * Creates a #GdaXmlConnection object from the contents of @filename,
  * which must be a correct .connection file.
  *
  * Returns: the newly created object.
@@ -166,7 +166,7 @@ gda_xml_connection_new_from_file (const gchar *filename)
  * gda_xml_connection_new_from_string
  * @string: XML string to create the #GdaXmlConnection object from.
  *
- * Create a #GdaXmlConnection object from the given XML string.
+ * Creates a #GdaXmlConnection object from the given XML string.
  *
  * Returns: the newly created object.
  */
@@ -188,6 +188,12 @@ gda_xml_connection_new_from_string (const gchar *string)
 
 /**
  * gda_xml_connection_set_from_file
+ * @xmlcnc: a #GdaXmlConnection object.
+ * @filename: name of a XML file.
+ *
+ * Loads a XML file into the given #GdaXmlConnection object.
+ *
+ * Returns: %TRUE if successful, %FALSE otherwise.
  */
 gboolean
 gda_xml_connection_set_from_file (GdaXmlConnection *xmlcnc, const gchar *filename)
@@ -210,9 +216,9 @@ gda_xml_connection_set_from_file (GdaXmlConnection *xmlcnc, const gchar *filenam
  * @xmlcnc: a #GdaXmlConnection object.
  * @string: XML connection file contents.
  *
- * Load a XML string into the given #GdaXmlConnection object.
+ * Loads a XML string into the given #GdaXmlConnection object.
  *
- * Returns: TRUE if successful, FALSE otherwise.
+ * Returns: %TRUE if successful, %FALSE otherwise.
  */
 gboolean
 gda_xml_connection_set_from_string (GdaXmlConnection *xmlcnc, const gchar *string)
@@ -259,9 +265,7 @@ gda_xml_connection_set_from_string (GdaXmlConnection *xmlcnc, const gchar *strin
  * gda_xml_connection_get_dsn
  * @xmlcnc: a #GdaXmlConnection object.
  *
- * Get the data source name for the given #GdaXmlConnection object.
- *
- * Returns: the name of the data source.
+ * Returns: the data source name for the given #GdaXmlConnection object.
  */
 const gchar *
 gda_xml_connection_get_dsn (GdaXmlConnection *xmlcnc)
@@ -275,7 +279,7 @@ gda_xml_connection_get_dsn (GdaXmlConnection *xmlcnc)
  * @xmlcnc: a #GdaXmlConnection object.
  * @dsn: data source name.
  *
- * Set the data source name for the given #GdaXmlConnection object.
+ * Sets the data source name for the given #GdaXmlConnection object.
  */
 void
 gda_xml_connection_set_dsn (GdaXmlConnection *xmlcnc, const gchar *dsn)
@@ -291,9 +295,7 @@ gda_xml_connection_set_dsn (GdaXmlConnection *xmlcnc, const gchar *dsn)
  * gda_xml_connection_get_username
  * @xmlcnc: a #GdaXmlConnection object.
  *
- * Get the username defined in the #GdaXmlConnection object.
- *
- * Returns: the user name.
+ * Returns: the user name defined in the #GdaXmlConnection object.
  */
 const gchar *
 gda_xml_connection_get_username (GdaXmlConnection *xmlcnc)
@@ -307,7 +309,7 @@ gda_xml_connection_get_username (GdaXmlConnection *xmlcnc)
  * @xmlcnc: a #GdaXmlConnection object.
  * @username: new user name.
  *
- * Set the user name for the given #GdaXmlConnection object.
+ * Sets the user name for the given #GdaXmlConnection object.
  */
 void
 gda_xml_connection_set_username (GdaXmlConnection *xmlcnc, const gchar *username)
@@ -323,9 +325,7 @@ gda_xml_connection_set_username (GdaXmlConnection *xmlcnc, const gchar *username
  * gda_xml_connection_get_password
  * @xmlcnc: a #GdaXmlConnection object.
  *
- * Get the password defined in the #GdaXmlConnection object.
- *
- * Returns: the password.
+ * Returns: the password defined in the #GdaXmlConnection object.
  */
 const gchar *
 gda_xml_connection_get_password (GdaXmlConnection *xmlcnc)
@@ -339,7 +339,7 @@ gda_xml_connection_get_password (GdaXmlConnection *xmlcnc)
  * @xmlcnc: a #GdaXmlConnection object.
  * @password: new password.
  *
- * Set the password for the given #GdaXmlConnection object.
+ * Sets the password for the given #GdaXmlConnection object.
  */
 void
 gda_xml_connection_set_password (GdaXmlConnection *xmlcnc, const gchar *password)

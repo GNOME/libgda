@@ -216,6 +216,8 @@ gda_data_model_list_get_type (void)
 
 /**
  * gda_data_model_list_new
+ *
+ * Returns: a newly allocated #GdaDataModel.
  */
 GdaDataModel *
 gda_data_model_list_new (void)
@@ -228,6 +230,10 @@ gda_data_model_list_new (void)
 
 /**
  * gda_data_model_list_new_from_string_list
+ * @list: a list of strings.
+ *
+ * Returns: a newly allocated #GdaDataModel which contains a set of
+ * #GdaValue according to the given @list.
  */
 GdaDataModel *
 gda_data_model_list_new_from_string_list (const GList *list)
@@ -252,6 +258,12 @@ gda_data_model_list_new_from_string_list (const GList *list)
 
 /**
  * gda_data_model_list_append_value
+ * @model: the #GdaDataModelList which is gonna hold the row.
+ * @value: a #GdaValue which will be used to fill the row.
+ *
+ * Inserts a row in the @model, using @value.
+ *
+ * Returns: the #GdaRow which has been inserted, or %NULL on failure.
  */
 const GdaRow *
 gda_data_model_list_append_value (GdaDataModelList *model, const GdaValue *value)

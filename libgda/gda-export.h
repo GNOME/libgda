@@ -72,7 +72,7 @@ GdaExport     *gda_export_new (GdaConnection *cnc);
 GList         *gda_export_get_tables (GdaExport *exp);
 GList         *gda_export_get_selected_tables (GdaExport *exp);
 void           gda_export_select_table (GdaExport *exp, const gchar *table);
-void           gda_export_select_table_list (GdaExport *exp, GList *tables);
+void           gda_export_select_table_list (GdaExport *exp, GList *list);
 void           gda_export_unselect_table (GdaExport *exp, const gchar *table);
 
 void           gda_export_run (GdaExport *exp, GdaExportFlags flags);

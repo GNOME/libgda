@@ -132,9 +132,12 @@ gda_xml_document_get_type (void)
 
 /**
  * gda_xml_document_new
- * @root_doc: root document new
+ * @root_doc: root document. 
  *
- * Create a new #GdaXmlDocument object, with a root document of type @root_doc
+ * Creates a new #GdaXmlDocument object, with a root document of type 
+ * @root_doc.
+ *
+ * Returns: a newly allocated object.
  */
 GdaXmlDocument *
 gda_xml_document_new (const gchar * root_doc)
@@ -163,10 +166,10 @@ gda_xml_document_construct (GdaXmlDocument * xmldoc, const gchar * root_doc)
 
 /**
  * gda_xml_document_get_compress_mode
- * @xmldoc: a #GdaXmlDocument object
+ * @xmldoc: a #GdaXmlDocument object.
  *
  * Returns the compression mode being used by the given
- * XML document
+ * XML document.
  */
 gint
 gda_xml_document_get_compress_mode (GdaXmlDocument *xmldoc)
@@ -177,6 +180,10 @@ gda_xml_document_get_compress_mode (GdaXmlDocument *xmldoc)
 
 /**
  * gda_xml_document_set_compress_mode
+ * @xmldoc: a #GdaXmlDocument object.
+ * @mode: a compression mode.
+ *
+ * Sets the compression mode that the given XML document should use.
  */
 void
 gda_xml_document_set_compress_mode (GdaXmlDocument *xmldoc, gint mode)
@@ -194,7 +201,7 @@ gda_xml_document_set_compress_mode (GdaXmlDocument *xmldoc, gint mode)
  * translates the in-memory document structure, transforms it to
  * XML and saves, in the given file, the resulting XML output.
  *
- * Returns: TRUE if successful, FALSE on error.
+ * Returns: %TRUE if successful, %FALSE on error.
  */
 gboolean
 gda_xml_document_to_file (GdaXmlDocument *xmldoc, const gchar *uri)
@@ -214,6 +221,9 @@ gda_xml_document_to_file (GdaXmlDocument *xmldoc, const gchar *uri)
 
 /**
  * gda_xml_document_stringify
+ * @xmldoc: a #GdaXmlDocument object.
+ *
+ * Returns: a string representation of the given XML document.
  */
 gchar *
 gda_xml_document_stringify (GdaXmlDocument *xmldoc)

@@ -217,6 +217,9 @@ gda_data_model_array_get_type (void)
 
 /**
  * gda_data_model_array_new
+ * @cols: number of columns for rows in this data model.
+ *
+ * Returns: a pointer to the newly created #GdaDataModel.
  */
 GdaDataModel *
 gda_data_model_array_new (gint cols)
@@ -230,6 +233,11 @@ gda_data_model_array_new (gint cols)
 
 /**
  * gda_data_model_array_set_n_columns
+ * @model: the #GdaDataModelArray.
+ * @cols: number of columns for rows this data model should use.
+ *
+ * Sets the number of columns for rows inserted in this model. 
+ * @cols must be greated than or equal to 0.
  */
 void
 gda_data_model_array_set_n_columns (GdaDataModelArray *model, gint cols)
@@ -241,6 +249,9 @@ gda_data_model_array_set_n_columns (GdaDataModelArray *model, gint cols)
 
 /**
  * gda_data_model_array_clear
+ * @model: the model to clear.
+ *
+ * Frees all the rows inserted in @model.
  */
 void
 gda_data_model_array_clear (GdaDataModelArray *model)

@@ -44,7 +44,7 @@ free_hash_pair (gpointer key, gpointer value, gpointer user_data)
 /**
  * gda_quark_list_new
  *
- * Create a new #GdaQuarkList, which is a set of key->value pairs,
+ * Creates a new #GdaQuarkList, which is a set of key->value pairs,
  * very similar to GLib's GHashTable, but with the only purpose to
  * make easier the parsing and creation of data source connection
  * strings.
@@ -66,7 +66,7 @@ gda_quark_list_new (void)
  * gda_quark_list_new_from_string
  * @string: a connection string.
  *
- * Create a new #GdaQuarkList given a connection string.
+ * Creates a new #GdaQuarkList given a connection string.
  *
  * Returns: the newly created #GdaQuarkList.
  */
@@ -85,7 +85,7 @@ gda_quark_list_new_from_string (const gchar *string)
  * gda_quark_list_clear
  * @qlist: a #GdaQuarkList.
  *
- * Remove all strings in the given #GdaQuarkList.
+ * Removes all strings in the given #GdaQuarkList.
  */
 void
 gda_quark_list_clear(GdaQuarkList *qlist)
@@ -101,7 +101,7 @@ gda_quark_list_clear(GdaQuarkList *qlist)
  * gda_quark_list_free
  * @qlist: a #GdaQuarkList.
  *
- * Release all memory occupied by the given #GdaQuarkList.
+ * Releases all memory occupied by the given #GdaQuarkList.
  */
 void
 gda_quark_list_free (GdaQuarkList *qlist)
@@ -120,8 +120,8 @@ gda_quark_list_free (GdaQuarkList *qlist)
  * @string: a connection string.
  * @cleanup: whether to cleanup the previous content or not.
  *
- * Add new key->value pairs from the given @string. If @cleanup is
- * set to TRUE, the previous contents will be discarded before adding
+ * Adds new key->value pairs from the given @string. If @cleanup is
+ * set to %TRUE, the previous contents will be discarded before adding
  * the new pairs.
  */
 void
@@ -164,9 +164,9 @@ gda_quark_list_add_from_string (GdaQuarkList *qlist,
  * @qlist: a #GdaQuarkList.
  * @name: the name of the value to search for.
  *
- * Search for the value identified by @name in the given #GdaQuarkList.
+ * Searches for the value identified by @name in the given #GdaQuarkList.
  *
- * Returns: the value associated with the given key if found, or NULL
+ * Returns: the value associated with the given key if found, or %NULL
  * if not found.
  */
 const gchar *
@@ -186,7 +186,7 @@ gda_quark_list_find (GdaQuarkList *qlist, const gchar *name)
  * @qlist: a #GdaQuarkList structure.
  * @name: an entry name.
  *
- * Remove an entry from the #GdaQuarkList, given its name.
+ * Removes an entry from the #GdaQuarkList, given its name.
  */
 void
 gda_quark_list_remove (GdaQuarkList *qlist, const gchar *name)

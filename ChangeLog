@@ -1,3 +1,10 @@
+2003-10-18  Laurent Sansonetti <laurent@datarescue.be>
+
+	* libgda/*.c:
+	* doc/C/tmpl/*.sgml:
+	Added some missing entries in the API reference, and fixed existing 
+	ones.
+
 2003-10-18  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* libgda/Makefile.am: added gda-marshal.c to built_files.
@@ -7,7 +14,7 @@
 	* providers/mysql/gda-mysql-provider.c: 
 	  - add #include <libgda/gda-util.h> 
 	  - minor cosmatic fixes to stop some compiler warnings.
-	* providers/mysql/gda-mysql-recordset.c
+	* providers/mysql/gda-mysql-recordset.c:
 	  - fixed possible memory leak by moving gda_row_new() a few line down.
 	  - commented out variable "lengths", which doesn't seem to be used
 	    anywhere.

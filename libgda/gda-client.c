@@ -258,7 +258,7 @@ gda_client_get_type (void)
 /**
  * gda_client_new
  *
- * Create a new #GdaClient object, which is the entry point for libgda
+ * Creates a new #GdaClient object, which is the entry point for libgda
  * client applications. This object, once created, can be used for
  * opening new database connections and activating other services
  * available to GDA clients.
@@ -280,9 +280,9 @@ gda_client_new (void)
  * @dsn: data source name.
  * @username: user name.
  * @password: password for @username.
- * @options: Options for the connection.
+ * @options: options for the connection (see #GdaConnectionOptions).
  *
- * Establish a connection to a data source. The connection will be opened
+ * Establishes a connection to a data source. The connection will be opened
  * if no identical connection is available in the #GdaClient connection pool,
  * and re-used if available. If you dont want to share the connection,
  * specify #GDA_CONNECTION_OPTIONS_DONT_SHARE as one of the flags in
@@ -413,13 +413,14 @@ gda_client_open_connection (GdaClient *client,
  * @client: a #GdaClient object.
  * @provider_id: provider ID to connect to.
  * @cnc_string: connection string.
+ * @options: options for the connection (see #GdaConnectionOptions).
  *
- * Open a connection given a provider ID and a connection string. This
+ * Opens a connection given a provider ID and a connection string. This
  * allows applications to open connections without having to create
  * a data source in the configuration. The format of @cnc_string is
- * similar to postgresql and mysql connection strings.
+ * similar to PostgreSQL and MySQL connection strings.
  *
- * Returns: the opened connection if successful, NULL if there is
+ * Returns: the opened connection if successful, %NULL if there is
  * an error.
  */
 GdaConnection *
@@ -468,7 +469,7 @@ gda_client_open_connection_from_string (GdaClient *client,
  * gda_client_get_connection_list
  * @client: a #GdaClient object.
  *
- * Get the list of all open connections in the given #GdaClient object.
+ * Gets the list of all open connections in the given #GdaClient object.
  * The GList returned is an internal pointer, so DON'T TRY TO
  * FREE IT.
  *
@@ -488,14 +489,14 @@ gda_client_get_connection_list (GdaClient *client)
  * @username: user name.
  * @password: password for @username.
  *
- * Look for an open connection given a data source name (per libgda
+ * Looks for an open connection given a data source name (per libgda
  * configuration), a username and a password.
  *
  * This function iterates over the list of open connections in the
  * given #GdaClient and looks for one that matches the given data source
  * name, username and password.
  *
- * Returns: a pointer to the found connection, or NULL if it could not
+ * Returns: a pointer to the found connection, or %NULL if it could not
  * be found.
  */
 GdaConnection *
@@ -542,7 +543,7 @@ gda_client_find_connection (GdaClient *client,
  * gda_client_close_all_connections
  * @client: a #GdaClient object.
  *
- * Close all connections opened by the given #GdaClient object.
+ * Closes all connections opened by the given #GdaClient object.
  */
 void
 gda_client_close_all_connections (GdaClient *client)
@@ -568,7 +569,7 @@ gda_client_close_all_connections (GdaClient *client)
  * @event: event ID.
  * @params: parameters associated with the event.
  *
- * Notify an event to the given #GdaClient's listeners. The event can be
+ * Notifies an event to the given #GdaClient's listeners. The event can be
  * anything (see #GdaClientEvent) ranging from a connection opening
  * operation, to changes made to a table in an underlying database.
  */
@@ -592,7 +593,7 @@ gda_client_notify_event (GdaClient *client,
  * @cnc: a #GdaConnection object.
  * @error: the error to be notified.
  *
- * Notify the given #GdaClient of the #GDA_CLIENT_EVENT_ERROR event.
+ * Notifies the given #GdaClient of the #GDA_CLIENT_EVENT_ERROR event.
  */
 void
 gda_client_notify_error_event (GdaClient *client, GdaConnection *cnc, GdaError *error)
@@ -615,7 +616,8 @@ gda_client_notify_error_event (GdaClient *client, GdaConnection *cnc, GdaError *
  * @client: a #GdaClient object.
  * @cnc: a #GdaConnection object.
  *
- * Notify the given #GdaClient of the #GDA_CLIENT_EVENT_CONNECTION_OPENED event.
+ * Notifies the given #GdaClient of the #GDA_CLIENT_EVENT_CONNECTION_OPENED 
+ * event.
  */
 void
 gda_client_notify_connection_opened_event (GdaClient *client, GdaConnection *cnc)
@@ -631,7 +633,8 @@ gda_client_notify_connection_opened_event (GdaClient *client, GdaConnection *cnc
  * @client: a #GdaClient object.
  * @cnc: a #GdaConnection object.
  *
- * Notify the given #GdaClient of the #GDA_CLIENT_EVENT_CONNECTION_CLOSED event.
+ * Notifies the given #GdaClient of the #GDA_CLIENT_EVENT_CONNECTION_CLOSED 
+ * event.
  */
 void
 gda_client_notify_connection_closed_event (GdaClient *client, GdaConnection *cnc)
@@ -648,7 +651,8 @@ gda_client_notify_connection_closed_event (GdaClient *client, GdaConnection *cnc
  * @cnc: a #GdaConnection object.
  * @xaction: a #GdaTransaction object.
  *
- * Notify the given #GdaClient of the #GDA_CLIENT_EVENT_TRANSACTION_STARTED event.
+ * Notifies the given #GdaClient of the #GDA_CLIENT_EVENT_TRANSACTION_STARTED
+ * event.
  */
 void
 gda_client_notify_transaction_started_event (GdaClient *client, GdaConnection *cnc, GdaTransaction *xaction)
@@ -672,7 +676,8 @@ gda_client_notify_transaction_started_event (GdaClient *client, GdaConnection *c
  * @cnc: a #GdaConnection object.
  * @xaction: a #GdaTransaction object.
  *
- * Notify the given #GdaClient of the #GDA_CLIENT_EVENT_TRANSACTION_COMMITTED event.
+ * Notifies the given #GdaClient of the #GDA_CLIENT_EVENT_TRANSACTION_COMMITTED
+ * event.
  */
 void
 gda_client_notify_transaction_committed_event (GdaClient *client, GdaConnection *cnc, GdaTransaction *xaction)
@@ -696,7 +701,8 @@ gda_client_notify_transaction_committed_event (GdaClient *client, GdaConnection 
  * @cnc: a #GdaConnection object.
  * @xaction: a #GdaTransaction object.
  *
- * Notify the given #GdaClient of the #GDA_CLIENT_EVENT_TRANSACTION_CANCELLED event.
+ * Notifies the given #GdaClient of the #GDA_CLIENT_EVENT_TRANSACTION_CANCELLED 
+ * event.
  */
 void
 gda_client_notify_transaction_cancelled_event (GdaClient *client, GdaConnection *cnc, GdaTransaction *xaction)
@@ -719,7 +725,7 @@ gda_client_notify_transaction_cancelled_event (GdaClient *client, GdaConnection 
  * @client: a #GdaClient object.
  * @xaction: a #GdaTransaction object.
  *
- * Start a transaction on all connections being managed by the given
+ * Starts a transaction on all connections being managed by the given
  * #GdaClient. It is important to note that this operates on all
  * connections opened within a #GdaClient, which could not be what
  * you're looking for.
@@ -728,8 +734,8 @@ gda_client_notify_transaction_cancelled_event (GdaClient *client, GdaConnection 
  * #gda_connection_begin_transaction, #gda_connection_commit_transaction
  * and #gda_connection_rollback_transaction.
  *
- * Returns: TRUE if all transactions could be started successfully,
- * or FALSE if one of them fails.
+ * Returns: %TRUE if all transactions could be started successfully,
+ * or %FALSE if one of them fails.
  */
 gboolean
 gda_client_begin_transaction (GdaClient *client, GdaTransaction *xaction)
@@ -754,7 +760,7 @@ gda_client_begin_transaction (GdaClient *client, GdaTransaction *xaction)
  * @client: a #GdaClient object.
  * @xaction: a #GdaTransaction object.
  *
- * Commit a running transaction on all connections being managed by the given
+ * Commits a running transaction on all connections being managed by the given
  * #GdaClient. It is important to note that this operates on all
  * connections opened within a #GdaClient, which could not be what
  * you're looking for.
@@ -763,8 +769,8 @@ gda_client_begin_transaction (GdaClient *client, GdaTransaction *xaction)
  * #gda_connection_begin_transaction, #gda_connection_commit_transaction
  * and #gda_connection_rollback_transaction.
  *
- * Returns: TRUE if all transactions could be committed successfully,
- * or FALSE if one of them fails.
+ * Returns: %TRUE if all transactions could be committed successfully,
+ * or %FALSE if one of them fails.
  */
 gboolean
 gda_client_commit_transaction (GdaClient *client, GdaTransaction *xaction)
@@ -798,8 +804,8 @@ gda_client_commit_transaction (GdaClient *client, GdaTransaction *xaction)
  * #gda_connection_begin_transaction, #gda_connection_commit_transaction
  * and #gda_connection_rollback_transaction.
  *
- * Returns: TRUE if all transactions could be cancelled successfully,
- * or FALSE if one of them fails.
+ * Returns: %TRUE if all transactions could be cancelled successfully,
+ * or %FALSE if one of them fails.
  */
 gboolean
 gda_client_rollback_transaction (GdaClient *client, GdaTransaction *xaction)

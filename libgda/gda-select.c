@@ -205,8 +205,8 @@ gda_select_get_type (void)
 /**
  * gda_select_new
  *
- * Create a new #GdaSelect object, which allows programs to filter
- * #GdaDataModel's based on a given SQL SELECT command..
+ * Creates a new #GdaSelect object, which allows programs to filter
+ * #GdaDataModel's based on a given SQL SELECT command.
  *
  * A #GdaSelect is just another #GdaDataModel-based class, so it
  * can be used in the same way any other data model class is.
@@ -228,7 +228,7 @@ gda_select_new (void)
  * @name: name to identify the data model (usually a table name).
  * @source: a #GdaDataModel from which to get data.
  *
- * Add a data model as a source of data for the #GdaSelect object. When
+ * Adds a data model as a source of data for the #GdaSelect object. When
  * the select object is run (via #gda_select_run), it will parse the SQL
  * and get the required data from the source data models.
  */
@@ -261,7 +261,7 @@ gda_select_add_source (GdaSelect *sel, const gchar *name, const GdaDataModel *so
  * @sel: a #GdaSelect object.
  * @sql: the SQL command to be used for filtering rows.
  *
- * Set the SQL command to be used on the given #GdaSelect object
+ * Sets the SQL command to be used on the given #GdaSelect object
  * for filtering rows from the source data model (which is
  * set with #gda_select_set_source).
  */
@@ -360,7 +360,7 @@ populate_from_single_table (GdaSelect *sel, const gchar *table_name, GList *sql_
  * gda_select_run
  * @sel: a #GdaSelect object.
  *
- * Run the query and fill in the #GdaSelect object with the
+ * Runs the query and fills in the #GdaSelect object with the
  * rows that matched the SQL command (which can be set with
  * #gda_select_set_sql) associated with this #GdaSelect
  * object.
@@ -369,7 +369,7 @@ populate_from_single_table (GdaSelect *sel, const gchar *table_name, GList *sql_
  * the #GdaSelect object will contain the matched rows, which
  * can then be accessed like a normal #GdaDataModel.
  *
- * Returns: TRUE if successful, FALSE if there was an error.
+ * Returns: %TRUE if successful, %FALSE if there was an error.
  */
 gboolean
 gda_select_run (GdaSelect *sel)

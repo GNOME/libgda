@@ -34,7 +34,7 @@ struct _GdaRow {
 
 /**
  * gda_row_new
- * model: the #GdaDataModel this row belongs to.
+ * @model: the #GdaDataModel this row belongs to.
  * @count: number of #GdaValue in the new #GdaRow.
  *
  * Creates a #GdaRow which can hold @count #GdaValue.
@@ -60,9 +60,10 @@ gda_row_new (GdaDataModel *model, gint count)
 
 /**
  * gda_row_new_from_list
+ * @model: a #GdaDataModel.
  * @values: a list of #GdaValue's.
  *
- * Create a #GdaRow from a list of #GdaValue's.
+ * Creates a #GdaRow from a list of #GdaValue's.
  *
  * Returns: the newly created row.
  */
@@ -110,7 +111,7 @@ gda_row_free (GdaRow *row)
  * gda_row_get_model
  * @row: a #GdaRow.
  *
- * Get the #GdaDataModel the given #GdaRow belongs to.
+ * Gets the #GdaDataModel the given #GdaRow belongs to.
  *
  * Returns: a #GdaDataModel.
  */
@@ -125,7 +126,7 @@ gda_row_get_model (GdaRow *row)
  * gda_row_get_number
  * @row: a #GdaRow.
  *
- * Get the number of the given row, that is, its position in its containing
+ * Gets the number of the given row, that is, its position in its containing
  * data model.
  *
  * Returns: the row number, or -1 if there was an error.
@@ -142,7 +143,7 @@ gda_row_get_number (GdaRow *row)
  * @row: a #GdaRow.
  * @number: the new row number.
  *
- * Set the row number for the given row.
+ * Sets the row number for the given row.
  */
 void
 gda_row_set_number (GdaRow *row, gint number)
@@ -155,7 +156,7 @@ gda_row_set_number (GdaRow *row, gint number)
  * gda_row_get_id
  * @row: a #GdaRow (which contains #GdaValue).
  *
- * Return the unique identifier for this row. This identifier is
+ * Returns the unique identifier for this row. This identifier is
  * assigned by the different providers, to uniquely identify
  * rows returned to clients. If there is no ID, this means that
  * the row has not been created by a provider, or that it the
@@ -173,10 +174,10 @@ gda_row_get_id (GdaRow *row)
 
 /**
  * gda_row_set_id
- * @row: A #GdaRow (which contains #GdaValue).
- * @id: New identifier for the row.
+ * @row: a #GdaRow (which contains #GdaValue).
+ * @id: new identifier for the row.
  *
- * Assign a new identifier to the given row. This function is
+ * Assigns a new identifier to the given row. This function is
  * usually called by providers.
  */
 void
@@ -212,9 +213,9 @@ gda_row_get_value (GdaRow *row, gint num)
 
 /**
  * gda_row_get_length
- * @row: a #GdaRow
+ * @row: a #GdaRow.
  *
- * Gets the number of columns that the row has.
+ * Returns: the number of columns that the @row has.
  */
 gint
 gda_row_get_length (GdaRow *row)
