@@ -150,38 +150,54 @@ This package includes the GDA Sybase provider.
 %build
 %if %{FREETDS}
 CONFIG="$CONFIG --with-freetds"
+%else
+CONFIG="$CONFIG --without-freetds"
 %endif
 
 %if %{IBMDB2}
 CONFIG="$CONFIG --with-ibmdb2"
+%else
+CONFIG="$CONFIG --without-ibmdb2"
 %endif
 
 %if %{MYSQL}
 CONFIG="$CONFIG --with-mysql"
+%else
+CONFIG="$CONFIG --without-mysql"
 %endif
 
 %if %{POSTGRES}
 CONFIG="$CONFIG --with-postgres"
+%else
+CONFIG="$CONFIG --without-postgres"
 %endif
 
 %if %{ODBC}
 CONFIG="$CONFIG --with-odbc"
+%else
+CONFIG="$CONFIG --without-odbc"
 %endif
 
 %if %{ORACLE}
 CONFIG="$CONFIG --with-oracle"
+%else
+CONFIG="$CONFIG --without-oracle"
 %endif
 
 %if %{SQLITE}
 CONFIG="$CONFIG --with-sqlite"
+%else
+CONFIG="$CONFIG --without-sqlite"
 %endif
 
 %if %{SYBASE}
 CONFIG="$CONFIG --with-sybase"
+%else
+CONFIG="$CONFIG --without-sybase"
 %endif
 
 
-%configure $CONFIG
+%configure $CONFIG --disable-gtk-doc
 make %{?_smp_mflags}
 
 %install
@@ -192,7 +208,13 @@ rm -rf %{buildroot}
 
 %post -p /sbin/ldconfig
 
+%post devel
+if which scrollkeeper-update >/dev/null 2>&1; then scrollkeeper-update; fi
+
 %postun -p /sbin/ldconfig
+
+%postun devel
+if which scrollkeeper-update >/dev/null 2>&1; then scrollkeeper-update; fi
 
 %clean
 rm -rf %{buildroot}
@@ -209,11 +231,13 @@ rm -rf %{buildroot}
 %dir %{_libdir}/libgda
 %dir %{_libdir}/libgda/providers
 %{_libdir}/libgda/providers/libgda-default.so
-%{_mandir}/man1/gda-config-tool.1*
+%{_mandir}/man1/*
+%{_mandir}/man5/*
 
 %files devel
 %defattr(-,root,root)
 %doc %{_datadir}/gtk-doc/html/libgda
+%{_datadir}/omf/*
 %{_includedir}/libgda
 %{_includedir}/libgda-report
 %{_libdir}/*.a
@@ -263,6 +287,12 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jan 28 2003 Yanko Kaneti <yaneti@declera.com>
+- Remove the idl path
+- Include gda-config man page
+- add --without-* for disabled providers
+- package and use the omf/scrollkeeper bits
+
 * Tue Dec 31 2002 David Hollis <dhollis@davehollis.com>
 - Added sqlite-devel buildreq
 - Include gda-config-tool man page
