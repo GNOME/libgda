@@ -1,3 +1,9 @@
+2004-08-18  José María Casanova Crespo <jmcasanova@igalia.com>
+
+	* providers/postgres/gda-postgres-provider.c
+	(gda_postgres_provider_begin_transaction): improved support of
+	transaction modes.
+
 2004-08-17  Alan Knowles <alan@akbkhome.com>
 
 	* libgda/gda-connection.[ch] (gda_connection_escape_string):

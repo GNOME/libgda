@@ -778,12 +778,56 @@ gda_postgres_provider_begin_transaction (GdaServerProvider *provider,
 				         GdaConnection *cnc,
 					 GdaTransaction *xaction)
 {
+        gboolean result;
 	GdaPostgresProvider *pg_prv = (GdaPostgresProvider *) provider;
+	GdaPostgresConnectionData *priv_data;
+
+	gchar * write_option=NULL;
+	gchar * isolation_level=NULL;
 
 	g_return_val_if_fail (GDA_IS_POSTGRES_PROVIDER (pg_prv), FALSE);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (GDA_IS_TRANSACTION (xaction), FALSE);
 
-	return gda_postgres_provider_single_command (pg_prv, cnc, "BEGIN"); 
+	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE);
+	if (priv_data->version_float >= 6.5){
+	        if (gda_connection_get_options (cnc) & GDA_CONNECTION_OPTIONS_READ_ONLY) {
+	                if (priv_data->version_float >= 7.4){
+		                write_option = "READ ONLY";
+           	        } 
+                        else {
+		                gda_connection_add_error_string (cnc, _("Transactions are not supported in read-only mode"));
+				return FALSE;
+			}
+		}
+		switch (gda_transaction_get_isolation_level (xaction)) {
+		case GDA_TRANSACTION_ISOLATION_READ_COMMITTED :
+		        isolation_level = g_strconcat ("SET TRANSACTION ISOLATION LEVEL READ COMMITTED ", write_option, NULL);
+			g_message ("Begin transaction read committed");
+		        break;
+		case GDA_TRANSACTION_ISOLATION_READ_UNCOMMITTED :
+		        gda_connection_add_error_string (cnc, _("Transactions are not supported in read uncommitted isolation level"));
+		        return FALSE;
+		case GDA_TRANSACTION_ISOLATION_REPEATABLE_READ :
+		        gda_connection_add_error_string (cnc, _("Transactions are not supported in repeatable read isolation level"));
+		        return FALSE;
+		case GDA_TRANSACTION_ISOLATION_SERIALIZABLE :
+		        isolation_level = g_strconcat ("SET TRANSACTION ISOLATION LEVEL SERIALIZABLE ", write_option, NULL);
+			g_message ("Begin transaction serializable");
+		        break;
+		default: 
+		        isolation_level = NULL;
+		}
+	}
+
+	result = gda_postgres_provider_single_command (pg_prv, cnc, "BEGIN"); 
+	if (result&&isolation_level != NULL) {
+	        result=gda_postgres_provider_single_command (pg_prv, cnc, isolation_level) ;
+		g_message (isolation_level);
+	} 
+	g_free(isolation_level);
+
+	return result;
 }
 
 static gboolean 
