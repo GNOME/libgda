@@ -229,7 +229,7 @@ gda_client_open_connection (GdaClient *client,
 
 	CORBA_exception_free (&ev);
 
-	cnc = gda_connection_new (client, corba_cnc, dsn_info->cnc_string, username, password);
+	cnc = gda_connection_new (client, corba_cnc, dsn_info->cnc_string, username ? username : "", password ? password : "");
 	gda_config_free_data_source_info (dsn_info);
 
 	if (!GDA_IS_CONNECTION (cnc))

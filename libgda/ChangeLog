@@ -1,5 +1,8 @@
 2001-11-23  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* gda-client.c (gda_client_open_connection): don't pass NULL
+	to ORBit functions
+
 	* gda-xml-document.c:
 	* gda-recordset.c: include glib-object.h, not gobject/*.h
 
