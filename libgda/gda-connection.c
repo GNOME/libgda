@@ -21,8 +21,11 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#include <bonobo/bonobo-i18n.h>
 #include <libgda/gda-client.h>
+#include <libgda/gda-config.h>
 #include <libgda/gda-connection.h>
+#include <libgda/gda-log.h>
 #include <libgda/gda-recordset.h>
 #include <bonobo/bonobo-exception.h>
 
@@ -31,7 +34,7 @@
 struct _GdaConnectionPrivate {
 	GdaClient *client;
 	GNOME_Database_Connection corba_cnc;
-	gchar *cnc_string;
+	gchar *dsn;
 	gchar *username;
 	gchar *password;
 	gboolean is_open;
@@ -98,7 +101,7 @@ gda_connection_init (GdaConnection *cnc, GdaConnectionClass *klass)
 	cnc->priv = g_new0 (GdaConnectionPrivate, 1);
 	cnc->priv->client = NULL;
 	cnc->priv->corba_cnc = CORBA_OBJECT_NIL;
-	cnc->priv->cnc_string = NULL;
+	cnc->priv->dsn = NULL;
 	cnc->priv->username = NULL;
 	cnc->priv->password = NULL;
 	cnc->priv->is_open = FALSE;
@@ -129,7 +132,7 @@ gda_connection_finalize (GObject *object)
 		cnc->priv->corba_cnc = CORBA_OBJECT_NIL;
 	}
 
-	g_free (cnc->priv->cnc_string);
+	g_free (cnc->priv->dsn);
 	g_free (cnc->priv->username);
 	g_free (cnc->priv->password);
 
@@ -171,26 +174,45 @@ gda_connection_get_type (void)
 
 /**
  * gda_connection_new
+ * @client: a #GdaClient object.
+ * @corba_cnc: a CORBA GNOME::Database::Connection object.
+ * @dsn: GDA data source to connect to.
+ * @username: user name to use to connect.
+ * @password: password for @username.
+ *
+ * This function creates a new #GdaConnection object. It is not
+ * intended to be used directly by applications (use
+ * #gda_client_open_connection instead).
+ *
+ * Returns: a newly allocated #GdaConnection object.
  */
 GdaConnection *
 gda_connection_new (GdaClient *client,
 		    GNOME_Database_Connection corba_cnc,
-		    const gchar *cnc_string,
+		    const gchar *dsn,
 		    const gchar *username,
 		    const gchar *password)
 {
 	GdaConnection *cnc;
 	CORBA_Environment ev;
 	CORBA_boolean corba_res;
+	GdaDataSourceInfo *dsn_info;
 
 	g_return_val_if_fail (GDA_IS_CLIENT (client), NULL);
 	g_return_val_if_fail (corba_cnc != CORBA_OBJECT_NIL, NULL);
+
+	/* get the data source info */
+	dsn_info = gda_config_find_data_source (dsn);
+	if (!dsn_info) {
+		gda_log_error (_("Data source %s not found in configuration"), dsn);
+		return NULL;
+	}
 
 	cnc = g_object_new (GDA_TYPE_CONNECTION, NULL);
 
 	gda_connection_set_client (cnc, client);
 	cnc->priv->corba_cnc = corba_cnc;
-	cnc->priv->cnc_string = g_strdup (cnc_string);
+	cnc->priv->dsn = g_strdup (dsn);
 	cnc->priv->username = g_strdup (username);
 	cnc->priv->password = g_strdup (password);
 
@@ -200,9 +222,11 @@ gda_connection_new (GdaClient *client,
 	corba_res = GNOME_Database_Connection_open (
 		cnc->priv->corba_cnc,
 		bonobo_object_corba_objref (BONOBO_OBJECT (cnc->priv->client)),
-		(const CORBA_char *) cnc->priv->cnc_string,
+		(const CORBA_char *) dsn_info->cnc_string,
 		(const CORBA_char *) cnc->priv->username,
 		(const CORBA_char *) cnc->priv->password, &ev);
+	gda_config_free_data_source_info (dsn_info);
+
 	if (!corba_res || BONOBO_EX (&ev)) {
 		gda_connection_add_error_list (cnc, gda_error_list_from_exception (&ev));
 		CORBA_exception_free (&ev);
@@ -258,17 +282,17 @@ gda_connection_set_client (GdaConnection *cnc, GdaClient *client)
 }
 
 /**
- * gda_connection_get_string
+ * gda_connection_get_dsn
  * @cnc: A #GdaConnection object
  *
- * Returns the connection string used to open the given connection
- * object.
+ * Returns the data source name the connection object is connected
+ * to.
  */
 const gchar *
-gda_connection_get_string (GdaConnection *cnc)
+gda_connection_get_dsn (GdaConnection *cnc)
 {
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
-	return (const gchar *) cnc->priv->cnc_string;
+	return (const gchar *) cnc->priv->dsn;
 }
 
 /**

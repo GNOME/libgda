@@ -58,7 +58,7 @@ struct _GdaConnectionClass {
 GType          gda_connection_get_type (void);
 GdaConnection *gda_connection_new (GdaClient *client,
 				   GNOME_Database_Connection corba_cnc,
-				   const gchar *cnc_string,
+				   const gchar *dsn,
 				   const gchar *username,
 				   const gchar *password);
 gboolean       gda_connection_close (GdaConnection *cnc);
@@ -67,7 +67,7 @@ gboolean       gda_connection_is_open (GdaConnection *cnc);
 GdaClient     *gda_connection_get_client (GdaConnection *cnc);
 void           gda_connection_set_client (GdaConnection *cnc, GdaClient *client);
 
-const gchar   *gda_connection_get_string (GdaConnection *cnc);
+const gchar   *gda_connection_get_dsn (GdaConnection *cnc);
 const gchar   *gda_connection_get_username (GdaConnection *cnc);
 const gchar   *gda_connection_get_password (GdaConnection *cnc);
 

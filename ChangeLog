@@ -1,3 +1,11 @@
+2002-01-25  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* libgda/gda-connection.[ch] (gda_connection_new): use the GDA dsn
+	name, not the connection string.
+	(gda_connection_get_dsn): renamed from gda_connection_get_string
+
+	* libgda/gda-client.c: adapted to changes in gda-connection.*
+
 2002-01-25  Cleber Rodrigues <cleberrrjr@bol.com.br>
 
 	* libgda/gda-connection.* 

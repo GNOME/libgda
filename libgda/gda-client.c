@@ -243,7 +243,7 @@ gda_client_open_connection (GdaClient *client,
 
 	CORBA_exception_free (&ev);
 
-	cnc = gda_connection_new (client, corba_cnc, dsn_info->cnc_string,
+	cnc = gda_connection_new (client, corba_cnc, dsn,
 				  username ? username : "", password ? password : "");
 
 	if (!GDA_IS_CONNECTION (cnc)) {
@@ -296,14 +296,14 @@ gda_client_find_connection (GdaClient *client,
 	}
 
 	for (l = client->priv->connections; l; l = l->next) {
-		const gchar *tmp_str, *tmp_usr, *tmp_pwd;
+		const gchar *tmp_dsn, *tmp_usr, *tmp_pwd;
 
 		cnc = GDA_CONNECTION (l->data);
-		tmp_str = gda_connection_get_string (cnc);
+		tmp_dsn = gda_connection_get_dsn (cnc);
 		tmp_usr = gda_connection_get_username (cnc);
 		tmp_pwd = gda_connection_get_password (cnc);
 
-		if (((!tmp_str && !dsn_info->cnc_string) || !strcmp (tmp_str, dsn_info->cnc_string)) &&
+		if (((!tmp_dsn && !dsn_info->cnc_string) || !strcmp (tmp_dsn, dsn_info->cnc_string)) &&
 		    ((!tmp_usr && !username) || !strcmp (tmp_usr, username)) &&
 		    ((!tmp_pwd && !password) || !strcmp (tmp_pwd, password))) {
 			gda_config_free_data_source_info (dsn_info);
