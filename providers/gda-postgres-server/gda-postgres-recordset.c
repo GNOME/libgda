@@ -668,7 +668,7 @@ fill_field_values (GdaServerRecordset *recset, POSTGRES_Recordset *prc)
 					if (stm) {
 						GDate *date;
 
-						date = g_date_new_dmy(stm->tm_mday, stm->tm_mon,
+						date = g_date_new_dmy(stm->tm_mday, stm->tm_mon + 1,
 											  stm->tm_year+1900);
 						gda_server_field_set_date(field, date);
 						g_date_free(date);
