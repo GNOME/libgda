@@ -1923,9 +1923,3 @@ msgstr "\tdescrizione = %s\n"
 msgid "\tgda_params ="
 msgstr "\tgda_params ="
 
-#~ msgid "Default"
-#~ msgstr "Predefinito"
-
-#~ msgid "Default provider, based on XML"
-#~ msgstr "Fornitore predefinito, in base all'XML"
-
