@@ -13,6 +13,7 @@
     &libgda-command-h;
     &libgda-connection-pool-h;
     &libgda-connection-h;
+    &libgda-data-model-recordset-h;
     &libgda-export-h;
     &libgda-recordset-h;
     &libgda-value-h;

@@ -97,7 +97,7 @@ gda_data_model_recordset_finalize (GObject *object)
 	g_return_if_fail (GDA_IS_DATA_MODEL_RECORDSET (model));
 
 	/* free memory */
-	g_idle_add_remove_by_data (model);
+	g_idle_remove_by_data (model);
 	if (GDA_IS_RECORDSET (model->priv->recset))
 		gda_recordset_free (model->priv->recset);
 

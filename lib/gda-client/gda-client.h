@@ -25,6 +25,7 @@
 #include <gda-connection.h>
 #include <gda-connection-pool.h>
 #include <gda-command.h>
+#include <gda-data-model-recordset.h>
 #include <gda-recordset.h>
 #include <gda-error.h>
 #include <gda-batch.h>
