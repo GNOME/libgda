@@ -22,6 +22,11 @@
  */
 
 // $Log$
+// Revision 1.4.4.1  2001/09/21 10:33:35  rodrigo
+// 2001-09-21  Dmitry G. Mastrukov <dmitry@taurussoft.org>
+//
+// 	* s/GdaServerError/GdaError
+//
 // Revision 1.4  2001/07/18 23:05:43  vivien
 // Ran indent -br -i8 on the files
 //
@@ -59,7 +64,7 @@ GdaServerConnection *gda_tds_callback_get_connection (const CS_CONTEXT *,
 						      const CS_CONNECTION *);
 
 void
-gda_tds_error_make (GdaServerError * error,
+gda_tds_error_make (GdaError * error,
 		    GdaServerRecordset * recset,
 		    GdaServerConnection * cnc, gchar * where)
 {

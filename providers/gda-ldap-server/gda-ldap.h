@@ -75,7 +75,7 @@ gint gda_ldap_connection_commit_transaction (GdaServerConnection * cnc);
 gint gda_ldap_connection_rollback_transaction (GdaServerConnection * cnc);
 GdaServerRecordset *gda_ldap_connection_open_schema (GdaServerConnection *
 						     cnc,
-						     GdaServerError * error,
+						     GdaError * error,
 						     GDA_Connection_QType t,
 						     GDA_Connection_Constraint
 						     * constraints,
@@ -103,7 +103,7 @@ void gda_ldap_connection_free (GdaServerConnection * cnc);
 
 gboolean gda_ldap_command_new (GdaServerCommand * cmd);
 GdaServerRecordset *gda_ldap_command_execute (GdaServerCommand * cmd,
-					      GdaServerError * error,
+					      GdaError * error,
 					      const GDA_CmdParameterSeq *
 					      params, gulong * affected,
 					      gulong options);
@@ -115,7 +115,7 @@ gint gda_ldap_recordset_move_prev (GdaServerRecordset * recset);
 gint gda_ldap_recordset_close (GdaServerRecordset * recset);
 void gda_ldap_recordset_free (GdaServerRecordset * recset);
 
-void gda_ldap_error_make (GdaServerError * error,
+void gda_ldap_error_make (GdaError * error,
 			  GdaServerRecordset * recset,
 			  GdaServerConnection * cnc, gchar * where);
 

@@ -20,7 +20,7 @@
 #include "gda-mail.h"
 #include <ctype.h>
 
-typedef GdaServerRecordset *(*schema_ops_fn) (GdaServerError *,
+typedef GdaServerRecordset *(*schema_ops_fn) (GdaError *,
 					      GdaServerConnection *,
 					      GDA_Connection_Constraint *,
 					      gint);
@@ -91,7 +91,7 @@ gda_mail_connection_rollback_transaction (GdaServerConnection * cnc)
 
 GdaServerRecordset *
 gda_mail_connection_open_schema (GdaServerConnection * cnc,
-				 GdaServerError * error,
+				 GdaError * error,
 				 GDA_Connection_QType t,
 				 GDA_Connection_Constraint * constraints,
 				 gint length)
@@ -190,7 +190,7 @@ gda_mail_connection_free (GdaServerConnection * cnc)
 }
 
 void
-gda_mail_error_make (GdaServerError * error,
+gda_mail_error_make (GdaError * error,
 		     GdaServerRecordset * recset,
 		     GdaServerConnection * cnc, gchar * where)
 {

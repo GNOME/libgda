@@ -69,7 +69,7 @@ gint gda_tds_recordset_move_prev (GdaServerRecordset *);
 gint gda_tds_recordset_close (GdaServerRecordset *);
 void gda_tds_recordset_free (GdaServerRecordset *);
 
-void gda_tds_init_recset_fields (GdaServerError *,
+void gda_tds_init_recset_fields (GdaError *,
 				 GdaServerRecordset *,
 				 tds_Recordset *, CS_RETCODE);
 

@@ -22,6 +22,11 @@
  */
 
 // $Log$
+// Revision 1.4.4.1  2001/09/21 10:33:36  rodrigo
+// 2001-09-21  Dmitry G. Mastrukov <dmitry@taurussoft.org>
+//
+// 	* s/GdaServerError/GdaError
+//
 // Revision 1.4  2001/07/18 23:05:43  vivien
 // Ran indent -br -i8 on the files
 //
@@ -354,7 +359,7 @@ gda_tds_recordset_free (GdaServerRecordset * recset)
 }
 
 void
-gda_tds_init_recset_fields (GdaServerError * err,
+gda_tds_init_recset_fields (GdaError * err,
 			    GdaServerRecordset * recset,
 			    tds_Recordset * trecset, CS_RETCODE result_type)
 {

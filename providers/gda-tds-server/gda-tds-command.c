@@ -22,6 +22,11 @@
  */
 
 // $Log$
+// Revision 1.4.4.1  2001/09/21 10:33:35  rodrigo
+// 2001-09-21  Dmitry G. Mastrukov <dmitry@taurussoft.org>
+//
+// 	* s/GdaServerError/GdaError
+//
 // Revision 1.4  2001/07/18 23:05:43  vivien
 // Ran indent -br -i8 on the files
 //
@@ -87,7 +92,7 @@ gda_tds_command_new (GdaServerCommand * cmd)
 
 GdaServerRecordset *
 gda_tds_command_execute (GdaServerCommand * cmd,
-			 GdaServerError * error,
+			 GdaError * error,
 			 const GDA_CmdParameterSeq * params,
 			 gulong * affected, gulong options)
 {

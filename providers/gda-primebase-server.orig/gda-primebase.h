@@ -107,7 +107,7 @@ gint gda_primebase_connection_rollback_transaction (GdaServerConnection *
 						    cnc);
 GdaServerRecordset *gda_primebase_connection_open_schema (GdaServerConnection
 							  * cnc,
-							  GdaServerError *
+							  GdaError *
 							  error,
 							  GDA_Connection_QType
 							  t,
@@ -137,7 +137,7 @@ void gda_primebase_connection_free (GdaServerConnection * cnc);
 
 gboolean gda_primebase_command_new (GdaServerCommand * cmd);
 GdaServerRecordset *gda_primebase_command_execute (GdaServerCommand * cmd,
-						   GdaServerError * error,
+						   GdaError * error,
 						   const GDA_CmdParameterSeq *
 						   params, gulong * affected,
 						   gulong options);
@@ -152,7 +152,7 @@ void gda_primebase_recordset_free (GdaServerRecordset * recset);
 primebase_Error *gda_primebase_get_error (long, gboolean);
 void gda_primebase_free_error (primebase_Error *);
 
-void gda_primebase_error_make (GdaServerError * error,
+void gda_primebase_error_make (GdaError * error,
 			       GdaServerRecordset * recset,
 			       GdaServerConnection * cnc, gchar * where);
 

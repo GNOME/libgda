@@ -75,7 +75,7 @@ gint gda_interbase_connection_rollback_transaction (GdaServerConnection *
 						    cnc);
 GdaServerRecordset *gda_interbase_connection_open_schema (GdaServerConnection
 							  * cnc,
-							  GdaServerError *
+							  GdaError *
 							  error,
 							  GDA_Connection_QType
 							  t,
@@ -105,7 +105,7 @@ void gda_interbase_connection_free (GdaServerConnection * cnc);
 
 gboolean gda_interbase_command_new (GdaServerCommand * cmd);
 GdaServerRecordset *gda_interbase_command_execute (GdaServerCommand * cmd,
-						   GdaServerError * error,
+						   GdaError * error,
 						   const GDA_CmdParameterSeq *
 						   params, gulong * affected,
 						   gulong options);
@@ -117,7 +117,7 @@ gint gda_interbase_recordset_move_prev (GdaServerRecordset * recset);
 gint gda_interbase_recordset_close (GdaServerRecordset * recset);
 void gda_interbase_recordset_free (GdaServerRecordset * recset);
 
-void gda_interbase_error_make (GdaServerError * error,
+void gda_interbase_error_make (GdaError * error,
 			       GdaServerRecordset * recset,
 			       GdaServerConnection * cnc, gchar * where);
 

@@ -41,7 +41,7 @@
 
 gint gda_tds_install_error_handlers (GdaServerConnection *);
 
-void gda_tds_error_make (GdaServerError * error,
+void gda_tds_error_make (GdaError * error,
 			 GdaServerRecordset * recset,
 			 GdaServerConnection * cnc, gchar * where);
 

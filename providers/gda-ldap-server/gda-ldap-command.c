@@ -33,7 +33,7 @@ gda_ldap_command_new (GdaServerCommand * cmd)
 
 GdaServerRecordset *
 gda_ldap_command_execute (GdaServerCommand * cmd,
-			  GdaServerError * error,
+			  GdaError * error,
 			  const GDA_CmdParameterSeq * params,
 			  gulong * affected, gulong options)
 {

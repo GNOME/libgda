@@ -1,3 +1,7 @@
+2001-09-21  Dmitry G. Mastrukov <dmitry@taurussoft.org>
+
+	* s/GdaServerError/GdaError
+
 2001-07-05  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* adapted all providers to new API names in libgda-server

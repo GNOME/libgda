@@ -22,6 +22,11 @@
  */
 
 // $Log$
+// Revision 1.7.4.1  2001/09/21 10:33:35  rodrigo
+// 2001-09-21  Dmitry G. Mastrukov <dmitry@taurussoft.org>
+//
+// 	* s/GdaServerError/GdaError
+//
 // Revision 1.7  2001/07/18 23:05:43  vivien
 // Ran indent -br -i8 on the files
 //
@@ -75,7 +80,7 @@
 #include "gda-tds.h"
 #include "ctype.h"
 
-typedef GdaServerRecordset *(*schema_ops_fn) (GdaServerError *,
+typedef GdaServerRecordset *(*schema_ops_fn) (GdaError *,
 					      GdaServerConnection *,
 					      GDA_Connection_Constraint *,
 					      gint);
@@ -85,16 +90,16 @@ schema_ops_fn schema_ops[GDA_Connection_GDCN_SCHEMA_LAST] = {
 };
 
 // schema definitions
-static GdaServerRecordset *schema_cols (GdaServerError *,
+static GdaServerRecordset *schema_cols (GdaError *,
 					GdaServerConnection *,
 					GDA_Connection_Constraint *, gint);
-static GdaServerRecordset *schema_procs (GdaServerError *,
+static GdaServerRecordset *schema_procs (GdaError *,
 					 GdaServerConnection *,
 					 GDA_Connection_Constraint *, gint);
-static GdaServerRecordset *schema_tables (GdaServerError *,
+static GdaServerRecordset *schema_tables (GdaError *,
 					  GdaServerConnection *,
 					  GDA_Connection_Constraint *, gint);
-static GdaServerRecordset *schema_types (GdaServerError *,
+static GdaServerRecordset *schema_types (GdaError *,
 					 GdaServerConnection *,
 					 GDA_Connection_Constraint *, gint);
 
@@ -261,7 +266,7 @@ gda_tds_connection_rollback_transaction (GdaServerConnection * cnc)
 
 GdaServerRecordset *
 gda_tds_connection_open_schema (GdaServerConnection * cnc,
-				GdaServerError * error,
+				GdaError * error,
 				GDA_Connection_QType t,
 				GDA_Connection_Constraint * constraints,
 				gint length)
@@ -413,7 +418,7 @@ gda_tds_connection_clear_user_data (GdaServerConnection * cnc,
  */
 
 static GdaServerRecordset *
-schema_cols (GdaServerError * error,
+schema_cols (GdaError * error,
 	     GdaServerConnection * cnc,
 	     GDA_Connection_Constraint * constraints, gint length)
 {
@@ -496,7 +501,7 @@ schema_cols (GdaServerError * error,
 }
 
 static GdaServerRecordset *
-schema_procs (GdaServerError * error,
+schema_procs (GdaError * error,
 	      GdaServerConnection * cnc,
 	      GDA_Connection_Constraint * constraints, gint length)
 {
@@ -572,7 +577,7 @@ schema_procs (GdaServerError * error,
 }
 
 static GdaServerRecordset *
-schema_tables (GdaServerError * error,
+schema_tables (GdaError * error,
 	       GdaServerConnection * cnc,
 	       GDA_Connection_Constraint * constraints, gint length)
 {
@@ -648,7 +653,7 @@ schema_tables (GdaServerError * error,
 }
 
 static GdaServerRecordset *
-schema_types (GdaServerError * error,
+schema_types (GdaError * error,
 	      GdaServerConnection * cnc,
 	      GDA_Connection_Constraint * constraints, gint length)
 {
