@@ -1,5 +1,10 @@
 2002-06-02  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
+	* tools/gda-config-tool.c: fixed leaks. Beautified help output.
+	Added support for adding/editing an entry.
+
+2002-06-02  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
 	* configure.in: added check for readline/history and popt.
 
 	* tools/Makefile.am: 
