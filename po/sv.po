@@ -8,8 +8,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2001-10-24 15:07+0200\n"
-"PO-Revision-Date: 2001-10-24 15:08+0200\n"
+"POT-Creation-Date: 2001-11-05 01:06+0100\n"
+"PO-Revision-Date: 2001-11-05 01:08+0100\n"
 "Last-Translator: Christian Rose <menthos@menthos.com>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -222,7 +222,7 @@ msgstr "GDA-datakälleåtkomst för LDAP"
 msgid "LDAP provider connection factory"
 msgstr "Fabrik för LDAP-leverantörsanslutning"
 
-#: providers/gda-interbase-server/gda-interbase-connection.c:288
+#: providers/gda-interbase-server/gda-interbase-connection.c:331
 #: providers/gda-ldap-server/gda-ldap-connection.c:293
 #: providers/gda-mdb-server/gda-mdb-connection.c:372
 #: providers/gda-mysql-server/gda-mysql-connection.c:490
@@ -237,7 +237,7 @@ msgid "error '%s' at %s"
 msgstr "fel \"%s\" vid %s"
 
 #. gda_error_set_help_file (error, _("Not available"));
-#: providers/gda-interbase-server/gda-interbase-connection.c:294
+#: providers/gda-interbase-server/gda-interbase-connection.c:337
 #: providers/gda-ldap-server/gda-ldap-connection.c:298
 #: providers/gda-ldap-server/gda-ldap-connection.c:299
 #: providers/gda-mdb-server/gda-mdb-connection.c:377
@@ -259,7 +259,7 @@ msgstr "fel \"%s\" vid %s"
 msgid "Not available"
 msgstr "Inte tillgänglig"
 
-#: providers/gda-interbase-server/gda-interbase-connection.c:295
+#: providers/gda-interbase-server/gda-interbase-connection.c:338
 #: providers/gda-ldap-server/gda-ldap-connection.c:300
 #: providers/gda-mdb-server/gda-mdb-connection.c:378
 #: providers/gda-mysql-server/gda-mysql-connection.c:500
@@ -283,10 +283,10 @@ msgstr "GDA-datakälleåtkomst för Interbase"
 msgid "InterBase provider connection factory"
 msgstr "Fabrik för InterBase-leverantörsanslutning"
 
-#: providers/gda-interbase-server/gda-interbase-connection.c:286
+#: providers/gda-interbase-server/gda-interbase-connection.c:327
 #, c-format
-msgid "Error code %ld"
-msgstr "Felkod %ld"
+msgid "Error code %ld (%s)"
+msgstr "Felkod %ld (%s)"
 
 #: providers/gda-interbase-server/main-interbase.c:74
 msgid "Could not register INTERBASE provider implementation"
