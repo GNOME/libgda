@@ -21,9 +21,10 @@
 <!ENTITY SYBASE          "<application>Sybase</application>">
 <!ENTITY MSACC           "<application>MS Access</application>">
 <!ENTITY INFOR           "<application>Informix</application>">
-<!ENTITY GDADATAMODEL    "<xref linkend='libgda-GdaDataModel'/">
-<!ENTITY GDADATAMODELARRAY "<xref linkend='libgda-GdaDataModelArray'/">
-<!ENTITY GDADATAMODELHASH "<xref linkend='libgda-GdaDataModelHash'/">
+<!ENTITY GDASERVERPROVIDER "<xref linkend='libgda-GdaServerProvider'>">
+<!ENTITY GDADATAMODEL    "<xref linkend='libgda-GdaDataModel'>">
+<!ENTITY GDADATAMODELARRAY "<xref linkend='libgda-GdaDataModelArray'>">
+<!ENTITY GDADATAMODELHASH "<xref linkend='libgda-GdaDataModelHash'>">
 <!ENTITY libgda-batch SYSTEM "sgml/gda-batch.sgml">
 <!ENTITY libgda-client SYSTEM "sgml/gda-client.sgml">
 <!ENTITY libgda-command SYSTEM "sgml/gda-command.sgml">
@@ -769,7 +770,7 @@
     <title>Introduction</title>
     <para>
        For each different data source supported by &LIBGDA; there must be a
-       GObject that implements the virtual methods defined in GdaServerProvider
+       GObject that implements the virtual methods defined in &GDASERVERPROVIDER;
        class.
     </para>
     <para>
@@ -788,7 +789,7 @@
     <sect1 id="libgda-provider-class">
       <title>The GdaServerProvider class</title>
       <para>
-	The GdaServerProvider is the class you should implement for adding
+	The &GDASERVERPROVIDER; is the class you should implement for adding
 	a new provider. This class is just a typical GObject-based class,
 	with a set of virtual methods, that are the ones that you must
 	implement. These virtual methods are declared in the class structure,
