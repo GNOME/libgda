@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 2.0\n"
-"POT-Creation-Date: 2001-12-29 00:08+0100\n"
-"PO-Revision-Date: 2001-12-29 04:10+0000\n"
+"POT-Creation-Date: 2002-01-02 23:41+0000\n"
+"PO-Revision-Date: 2002-01-02 23:42+0000\n"
 "Last-Translator: Duarte Loreto <happyguy_pt@hotmail.com>\n"
 "Language-Team: Portuguese <none@none.org>\n"
 "MIME-Version: 1.0\n"
@@ -151,18 +151,22 @@ msgstr "Acesso de Fonte de Dados de Defeito GDA"
 msgid "Could not initiate Default component factory"
 msgstr "Incapaz de inicializar fábrica de componentes de Defeito"
 
-#: providers/mysql/gda-mysql-provider.c:171
+#: providers/mysql/gda-mysql-provider.c:173
 msgid ""
 "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
 msgstr ""
 "Não pode indicar um UNIX_SOCKET se também indicar ou um SERVIDOR ou PORTO."
 
-#: providers/mysql/gda-mysql-provider.c:242
-#: providers/mysql/gda-mysql-provider.c:321
-#: providers/mysql/gda-mysql-provider.c:350
-#: providers/mysql/gda-mysql-provider.c:379
+#: providers/mysql/gda-mysql-provider.c:244
+#: providers/mysql/gda-mysql-provider.c:323
+#: providers/mysql/gda-mysql-provider.c:352
+#: providers/mysql/gda-mysql-provider.c:381
 msgid "Invalid MYSQL handle"
 msgstr "Handle MYSQL inválida"
+
+#: providers/mysql/gda-mysql-provider.c:460
+msgid "Type"
+msgstr "Tipo"
 
 #: providers/mysql/GNOME_Database_Provider_MySQL.server.in.h:1
 msgid "GDA Datasource Access for MySQL"
