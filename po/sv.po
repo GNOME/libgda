@@ -8,8 +8,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2002-03-27 00:18+0100\n"
-"PO-Revision-Date: 2002-03-07 01:57+0100\n"
+"POT-Creation-Date: 2002-04-02 00:53+0200\n"
+"PO-Revision-Date: 2002-04-02 00:53+0200\n"
 "Last-Translator: Christian Rose <menthos@menthos.com>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -38,7 +38,7 @@ msgstr "Kunde inte fråga CORBA-komponenter"
 msgid "Could not query CORBA providers"
 msgstr "Kunde inte fråga CORBA-leverantörer"
 
-#: libgda/gda-config.c:869 providers/default/gda-default-provider.c:417
+#: libgda/gda-config.c:869 providers/default/gda-default-provider.c:420
 #: providers/mysql/gda-mysql-provider.c:446
 msgid "Name"
 msgstr "Namn"
@@ -64,15 +64,15 @@ msgstr "Användarnamn"
 msgid "%s: An Error occured in the CORBA system."
 msgstr "%s: Ett fel inträffade i CORBA-systemet."
 
-#: libgda/gda-error.c:156
+#: libgda/gda-error.c:162
 msgid "Unknown CORBA exception for connection"
 msgstr "Okänt CORBA-undantag för anslutning"
 
-#: libgda/gda-init.c:44
+#: libgda/gda-init.c:45
 msgid "Attempt to initialize an already initialized client"
 msgstr "Försök att initiera en redan initierad klient"
 
-#: libgda/gda-init.c:56
+#: libgda/gda-init.c:57
 msgid "Could not initialize Bonobo"
 msgstr "Kunde inte initiera Bonobo"
 
@@ -86,12 +86,12 @@ msgstr "Vet inte hur man skapar komponenter med IID %s"
 msgid "Could not create component of type %s"
 msgstr "Kunde inte skapa komponent av typen %s"
 
-#: libgda/gda-server-connection.c:90
+#: libgda/gda-server-connection.c:91
 msgid "Could not duplicate client object. Client won't get notifications"
 msgstr ""
 "Kunde inte duplicera klientobjekt. Klienten kommer inte att få notifieringar"
 
-#: libgda/gda-server-connection.c:450
+#: libgda/gda-server-connection.c:451
 #, c-format
 msgid "Could not notify client about action %d"
 msgstr "Kunde inte notifiera klienten om åtgärden %d"
@@ -100,53 +100,53 @@ msgstr "Kunde inte notifiera klienten om åtgärden %d"
 msgid "No implementation for the fetch() method found"
 msgstr "Ingen implementation för fetch()-metoden hittades"
 
-#: libgda/gda-table.c:229
+#: libgda/gda-table.c:230
 #, c-format
 msgid "There is already a field called %s"
 msgstr "Det finns redan ett fält med namnet %s"
 
-#: libgda/gda-value.c:981
+#: libgda/gda-value.c:985
 msgid "TRUE"
 msgstr "SANT"
 
-#: libgda/gda-value.c:983
+#: libgda/gda-value.c:987
 msgid "FALSE"
 msgstr "FALSKT"
 
-#: libgda/gda-xml-database.c:225
+#: libgda/gda-xml-database.c:226
 #, c-format
 msgid "Could not load file at %s"
 msgstr "Kunde inte läsa in filen vid %s"
 
-#: libgda/gda-xml-database.c:234
+#: libgda/gda-xml-database.c:235
 #, c-format
 msgid "Could not parse file at %s"
 msgstr "Kunde inte tolka filen vid %s"
 
-#: libgda/gda-xml-database.c:244
+#: libgda/gda-xml-database.c:245
 #, c-format
 msgid "Invalid XML database file '%s'"
 msgstr "Ogiltig XML-databasfil \"%s\""
 
-#: libgda/gda-xml-database.c:432 libgda/gda-xml-database.c:473
+#: libgda/gda-xml-database.c:433 libgda/gda-xml-database.c:474
 #, c-format
 msgid "Table %s already exists"
 msgstr "Tabellen %s finns redan"
 
-#: libgda/gda-xml-database.c:466
+#: libgda/gda-xml-database.c:467
 msgid "Invalid node"
 msgstr "Ogiltig nod"
 
-#: libgda/gda-xml-database.c:498
+#: libgda/gda-xml-database.c:499
 #, c-format
 msgid "Duplicated <data> node for table %s"
 msgstr "Duplicerad <data>-nod för tabellen %s"
 
-#: libgda/gda-xml-database.c:505
+#: libgda/gda-xml-database.c:506
 msgid "Invalid XML node"
 msgstr "Ogiltig XML-nod"
 
-#: providers/default/gda-default-provider.c:159
+#: providers/default/gda-default-provider.c:160
 #: providers/sqlite/gda-sqlite-provider.c:152
 msgid ""
 "A full path must be specified on the connection string to open a database."
@@ -154,75 +154,71 @@ msgstr ""
 "En fullständig sökväg måste anges i anslutningssträngen för att öppna en "
 "databas."
 
-#: providers/default/gda-default-provider.c:333
-#: providers/mysql/gda-mysql-provider.c:717
-#: providers/postgres/gda-postgres-provider.c:724
-#, fuzzy
-msgid "Field name"
-msgstr "filnamn"
-
 #: providers/default/gda-default-provider.c:334
-#: providers/mysql/gda-mysql-provider.c:718
+#: providers/mysql/gda-mysql-provider.c:735
 #: providers/postgres/gda-postgres-provider.c:725
-msgid "Data type"
-msgstr ""
+msgid "Field name"
+msgstr "Fältnamn"
 
 #: providers/default/gda-default-provider.c:335
-#: providers/mysql/gda-mysql-provider.c:719
+#: providers/mysql/gda-mysql-provider.c:736
 #: providers/postgres/gda-postgres-provider.c:726
-msgid "Size"
-msgstr ""
+msgid "Data type"
+msgstr "Datatyp"
 
 #: providers/default/gda-default-provider.c:336
-#: providers/mysql/gda-mysql-provider.c:720
+#: providers/mysql/gda-mysql-provider.c:737
 #: providers/postgres/gda-postgres-provider.c:727
-#, fuzzy
-msgid "Scale"
-msgstr "Falskt"
+msgid "Size"
+msgstr "Storlek"
 
 #: providers/default/gda-default-provider.c:337
-#: providers/mysql/gda-mysql-provider.c:721
+#: providers/mysql/gda-mysql-provider.c:738
 #: providers/postgres/gda-postgres-provider.c:728
-msgid "Not null?"
-msgstr ""
+msgid "Scale"
+msgstr "Skala"
 
 #: providers/default/gda-default-provider.c:338
-#: providers/mysql/gda-mysql-provider.c:722
+#: providers/mysql/gda-mysql-provider.c:739
 #: providers/postgres/gda-postgres-provider.c:729
-msgid "Primary key?"
-msgstr ""
+msgid "Not null?"
+msgstr "Inte null?"
 
 #: providers/default/gda-default-provider.c:339
-#: providers/mysql/gda-mysql-provider.c:723
+#: providers/mysql/gda-mysql-provider.c:740
 #: providers/postgres/gda-postgres-provider.c:730
-msgid "Unique index?"
-msgstr ""
+msgid "Primary key?"
+msgstr "Primärnyckel?"
 
 #: providers/default/gda-default-provider.c:340
-#: providers/mysql/gda-mysql-provider.c:724
+#: providers/mysql/gda-mysql-provider.c:741
 #: providers/postgres/gda-postgres-provider.c:731
+msgid "Unique index?"
+msgstr "Unikt index?"
+
+#: providers/default/gda-default-provider.c:341
+#: providers/mysql/gda-mysql-provider.c:742
+#: providers/postgres/gda-postgres-provider.c:732
 msgid "References"
-msgstr ""
+msgstr "Referenser"
 
-#: providers/default/gda-default-provider.c:350
-#: providers/default/gda-default-provider.c:356
-#, fuzzy
+#: providers/default/gda-default-provider.c:351
+#: providers/default/gda-default-provider.c:357
 msgid "Invalid argument"
-msgstr "Ogiltig nod"
+msgstr "Ogiltigt argument"
 
-#: providers/default/gda-default-provider.c:363
-#, fuzzy, c-format
+#: providers/default/gda-default-provider.c:364
+#, c-format
 msgid "Table %s not found"
-msgstr "Objektet med id %s kunde inte hittas"
+msgstr "Tabellen %s kunde inte hittas"
 
-#: providers/default/gda-default-provider.c:388
-#, fuzzy
+#: providers/default/gda-default-provider.c:389
 msgid "Could not get description for column"
-msgstr "Kunde inte skapa anslutningskomponent"
+msgstr "Kunde inte hämta beskrivningen för kolumnen"
 
-#: providers/default/gda-default-provider.c:472
-#: providers/mysql/gda-mysql-provider.c:619
-#: providers/postgres/gda-postgres-provider.c:613
+#: providers/default/gda-default-provider.c:475
+#: providers/mysql/gda-mysql-provider.c:637
+#: providers/postgres/gda-postgres-provider.c:614
 msgid "Type"
 msgstr "Typ"
 
@@ -320,7 +316,7 @@ msgid "Could not initialize OCI library"
 msgstr "Kunde inte initiera OCI-bibliotek"
 
 #: providers/postgres/gda-postgres-provider.c:360
-#: providers/postgres/gda-postgres-provider.c:498
+#: providers/postgres/gda-postgres-provider.c:499
 #: providers/postgres/gda-postgres-recordset.c:71
 #: providers/postgres/gda-postgres-recordset.c:128
 msgid "Invalid PostgreSQL handle"
@@ -338,84 +334,13 @@ msgstr "Postgres-komponentfabrik"
 msgid "Could not initiate PostgreSQL component factory"
 msgstr "Kunde inte initiera PostgreSQL-komponentfabrik"
 
-#: providers/postgres/utils.c:39
+#: providers/postgres/utils.c:45
 msgid "NO DESCRIPTION"
 msgstr "INGEN BESKRIVNING"
 
-#: providers/postgres/utils.c:44
+#: providers/postgres/utils.c:50
 msgid "Not available"
 msgstr "Inte tillgänglig"
-
-#: providers/postgres/utils.c:240
-#, fuzzy
-msgid "NULL"
-msgstr "<NULL>"
-
-#: providers/postgres/utils.c:243
-msgid "big integer"
-msgstr ""
-
-#: providers/postgres/utils.c:246
-msgid "binary"
-msgstr ""
-
-#: providers/postgres/utils.c:249
-msgid "boolean"
-msgstr ""
-
-#: providers/postgres/utils.c:252
-msgid "date"
-msgstr ""
-
-#: providers/postgres/utils.c:255
-msgid "double precision"
-msgstr ""
-
-#: providers/postgres/utils.c:258
-msgid "geometric point"
-msgstr ""
-
-#: providers/postgres/utils.c:261
-msgid "integer"
-msgstr ""
-
-#: providers/postgres/utils.c:264
-msgid "list of values"
-msgstr ""
-
-#: providers/postgres/utils.c:267
-#, fuzzy
-msgid "numeric"
-msgstr "nummer"
-
-#: providers/postgres/utils.c:270
-msgid "single precision"
-msgstr ""
-
-#: providers/postgres/utils.c:273
-msgid "small integer"
-msgstr ""
-
-#: providers/postgres/utils.c:276
-msgid "string"
-msgstr ""
-
-#: providers/postgres/utils.c:279
-msgid "time"
-msgstr ""
-
-#: providers/postgres/utils.c:282
-msgid "timestamp"
-msgstr ""
-
-#: providers/postgres/utils.c:285
-msgid "tiny integer"
-msgstr ""
-
-#: providers/postgres/utils.c:288
-#, fuzzy
-msgid "Unknown type"
-msgstr "Okänd schematyp"
 
 #: providers/sqlite/gda-sqlite-provider.c:211
 #: providers/sqlite/gda-sqlite-recordset.c:63
@@ -522,60 +447,72 @@ msgstr "Stöds inte"
 
 #. show connection schemas
 #: testing/client.c:87
+msgid "Databases"
+msgstr "Databaser"
+
+#: testing/client.c:88
 msgid "Stored procedures"
 msgstr "Lagrade procedurer"
 
-#: testing/client.c:88
+#: testing/client.c:89
 msgid "Connection Tables"
 msgstr "Anslutningstabeller"
 
-#: testing/client.c:89
+#: testing/client.c:90
 msgid "Available types"
 msgstr "Tillgängliga typer"
 
-#: testing/client.c:90
+#: testing/client.c:91
 msgid "Views"
 msgstr "Vyer"
 
-#: testing/client.c:91
+#: testing/client.c:92
 msgid "Indexes"
 msgstr "Index"
 
-#: testing/client.c:92
+#: testing/client.c:93
 msgid "Aggregates"
 msgstr "Aggregat"
 
-#: testing/client.c:93
+#: testing/client.c:94
+msgid "Users"
+msgstr "Användare"
+
+#: testing/client.c:95
+msgid "Sequences"
+msgstr "Sekvenser"
+
+#: testing/client.c:96
 msgid "Triggers"
 msgstr "Utlösare"
 
 #. test transactions
-#: testing/client.c:96 testing/client.c:104
+#: testing/client.c:99 testing/client.c:107
 msgid "\tStarting transaction..."
 msgstr "\tStartar transaktion..."
 
-#: testing/client.c:98 testing/client.c:102 testing/client.c:106
-#: testing/client.c:110
+#: testing/client.c:101 testing/client.c:105 testing/client.c:109
+#: testing/client.c:113
 msgid "Error"
 msgstr "Fel"
 
-#: testing/client.c:100
+#: testing/client.c:103
 msgid "\tFinishing transaction..."
 msgstr "\tSlutförde transaktion..."
 
-#: testing/client.c:108
+#: testing/client.c:111
 msgid "\tRolling back transaction..."
 msgstr "\tÅterställer transaktion..."
 
-#: testing/client.c:129
+#: testing/client.c:132
 msgid "Testing GDA client API"
 msgstr "Testar GDA-klient-API"
 
-#: testing/client.c:138
+#: testing/client.c:141
 msgid "** ERROR: gda_config_get_data_source_list returned a NULL item\n"
 msgstr "** FEL: gda_config_get_data_source_list returnerade ett NULL-objekt\n"
 
-#: testing/client.c:142
+#: testing/client.c:145
 #, c-format
 msgid " Data source = %s, User = %s\n"
 msgstr " Datakälla = %s, användare = %s\n"
@@ -626,6 +563,9 @@ msgstr "\tdomän = %s\n"
 #: testing/config.c:106
 msgid "\tgda_params ="
 msgstr "\tgda_params ="
+
+#~ msgid "NULL"
+#~ msgstr "NULL"
 
 #~ msgid "Bad formed document at %s"
 #~ msgstr "Felaktigt dokument vid %s"
@@ -1210,9 +1150,6 @@ msgstr "\tgda_params ="
 
 #~ msgid "schema_procedures: proc_catalog = '%s' UNUSED!"
 #~ msgstr "schema_procedures: proc_catalog = \"%s\" OANVÄND!"
-
-#~ msgid "database name"
-#~ msgstr "databasnamn"
 
 #~ msgid "DATABASE"
 #~ msgstr "DATABAS"
