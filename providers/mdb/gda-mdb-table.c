@@ -29,7 +29,7 @@ gda_mdb_table_new (GdaMdbConnection *mdb_cnc, const gchar *name)
 	MdbCatalogEntry *entry;
 	MdbTableDef *mdb_table;
 	MdbColumn *mdb_col;
-	GdaFieldAttributes *fa;
+	GdaDataModelColumnAttributes *fa;
 	GdaTable *table = NULL;
 
 	g_return_val_if_fail (mdb_cnc != NULL, NULL);
@@ -58,14 +58,14 @@ gda_mdb_table_new (GdaMdbConnection *mdb_cnc, const gchar *name)
 	for (i = 0; i < mdb_table->num_cols; i++) {
 		mdb_col = g_ptr_array_index (mdb_table->columns, i);
 
-		fa = gda_field_attributes_new ();
-		gda_field_attributes_set_name (fa, mdb_col->name);
-		gda_field_attributes_set_gdatype (fa, gda_mdb_type_to_gda (mdb_col->col_type));
-		gda_field_attributes_set_defined_size (fa, mdb_col->col_size);
+		fa = gda_data_model_column_attributes_new ();
+		gda_data_model_column_attributes_set_name (fa, mdb_col->name);
+		gda_data_model_column_attributes_set_gdatype (fa, gda_mdb_type_to_gda (mdb_col->col_type));
+		gda_data_model_column_attributes_set_defined_size (fa, mdb_col->col_size);
 
-		gda_table_add_field (table, (const GdaFieldAttributes *) fa);
+		gda_table_add_field (table, (const GdaDataModelColumnAttributes *) fa);
 
-		gda_field_attributes_free (fa);
+		gda_data_model_column_attributes_free (fa);
 	}
 
 	return table;

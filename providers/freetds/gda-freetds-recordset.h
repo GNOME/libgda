@@ -1,8 +1,9 @@
 /* GDA DB FreeTDS provider
- * Copyright (C) 2002 The GNOME Foundation
+ * Copyright (C) 2002 - 2004 The GNOME Foundation
  *
  * AUTHORS:
- *      Holger Thon <holger.thon@gnome-db.org>
+ *         Holger Thon <holger.thon@gnome-db.org>
+ *         Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -24,6 +25,7 @@
 #  define __gda_freetds_recordset_h__
 
 #include <libgda/gda-data-model.h>
+#include <libgda/gda-data-model-base.h>
 #include <libgda/gda-value.h>
 #include <tds.h>
 
@@ -40,12 +42,12 @@ typedef struct _GdaFreeTDSRecordsetClass   GdaFreeTDSRecordsetClass;
 typedef struct _GdaFreeTDSRecordsetPrivate GdaFreeTDSRecordsetPrivate;
 
 struct _GdaFreeTDSRecordset {
-	GdaDataModel model;
+	GdaDataModelBase model;
 	GdaFreeTDSRecordsetPrivate *priv;
 };
 
 struct _GdaFreeTDSRecordsetClass {
-	GdaDataModelClass parent_class;
+	GdaDataModelBaseClass parent_class;
 };
 
 struct _GdaFreeTDSRecordsetPrivate {

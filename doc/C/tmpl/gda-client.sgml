@@ -23,6 +23,22 @@ Database client access
  #GdaConnection.
 </para>
 
+<!-- ##### STRUCT GdaClient ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SIGNAL GdaClient::event-notification ##### -->
+<para>
+
+</para>
+
+@gdaclient: the object which received the signal.
+@arg1: 
+@arg2: 
+@arg3: 
+
 <!-- ##### ENUM GdaClientEvent ##### -->
 <para>
 
@@ -35,12 +51,6 @@ Database client access
 @GDA_CLIENT_EVENT_TRANSACTION_STARTED: 
 @GDA_CLIENT_EVENT_TRANSACTION_COMMITTED: 
 @GDA_CLIENT_EVENT_TRANSACTION_CANCELLED: 
-
-<!-- ##### STRUCT GdaClientPrivate ##### -->
-<para>
-
-</para>
-
 
 <!-- ##### FUNCTION gda_client_new ##### -->
 <para>

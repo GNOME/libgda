@@ -1,3 +1,17 @@
+2005-01-09  Vivien Malerba <malerba@gnome-db.org>
+	* libgda/: Implemented GdaDataModel as an interface, and added a GdaDataModelBase class to serve
+	  as a base class in relpacement of the previous GdaDataModel
+
+	* libgda/gda-value.[ch]: added gda_value_compare_ext() which like gda_value_compare(), 
+	  compares two values of the same type, except that NULL values and values of type 
+	  GDA_VALUE_TYPE_NULL are considered equals, and that a NULL value can be compared to a non NULL
+	  value.
+
+	* libgda/: replaced GdaField with GdaDataModelColumnAttributes which is easier to understand
+	  and avoids mis-understandings
+
+	* doc/C: improved documentation
+
 2005-01-07  Bas Driessen <bas.driessen@xobas.com>
 
 	* libgda/gda-data-model-hash.c (gda_data_model_hash_append_row):

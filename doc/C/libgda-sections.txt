@@ -1,8 +1,8 @@
 <SECTION>
 <FILE>gda-client</FILE>
-GdaClientEvent
-GdaClientPrivate
 <TITLE>GdaClient</TITLE>
+GdaClient
+GdaClientEvent
 gda_client_new
 gda_client_open_connection
 gda_client_open_connection_from_string
@@ -30,9 +30,6 @@ GDA_IS_CLIENT_CLASS
 
 <SECTION>
 <FILE>gda-connection</FILE>
-GdaConnectionPrivate
-GdaServerProvider
-GdaClient
 <TITLE>GdaConnection</TITLE>
 GdaConnectionOptions
 gda_connection_new
@@ -80,8 +77,8 @@ GDA_IS_CONNECTION_CLASS
 
 <SECTION>
 <FILE>gda-data-model-array</FILE>
-GdaDataModelArrayPrivate
 <TITLE>GdaDataModelArray</TITLE>
+GdaDataModelArray
 gda_data_model_array_new
 gda_data_model_array_set_n_columns
 gda_data_model_array_clear
@@ -96,8 +93,8 @@ GDA_IS_DATA_MODEL_ARRAY_CLASS
 
 <SECTION>
 <FILE>gda-data-model-hash</FILE>
-GdaDataModelHashPrivate
 <TITLE>GdaDataModelHash</TITLE>
+GdaDataModelHash
 gda_data_model_hash_new
 gda_data_model_hash_get_value_at
 gda_data_model_hash_clear
@@ -115,8 +112,8 @@ GDA_IS_DATA_MODEL_HASH_CLASS
 
 <SECTION>
 <FILE>gda-data-model-list</FILE>
-GdaDataModelListPrivate
 <TITLE>GdaDataModelList</TITLE>
+GdaDataModelList
 gda_data_model_list_new
 gda_data_model_list_new_from_string_list
 gda_data_model_list_append_value
@@ -131,8 +128,8 @@ GDA_IS_DATA_MODEL_LIST_CLASS
 
 <SECTION>
 <FILE>gda-data-model</FILE>
-GdaDataModelPrivate
 <TITLE>GdaDataModel</TITLE>
+GdaDataModel
 gda_data_model_changed
 gda_data_model_row_inserted
 gda_data_model_row_updated
@@ -179,6 +176,13 @@ GDA_TYPE_DATA_MODEL
 gda_data_model_get_type
 GDA_DATA_MODEL_CLASS
 GDA_IS_DATA_MODEL_CLASS
+</SECTION>
+
+<SECTION>
+<FILE>gda-data-model-base</FILE>
+<TITLE>GdaDataModelBase</FILE>
+GdaDataModelBase
+gda_data_model_base_get_type
 </SECTION>
 
 <SECTION>
@@ -232,8 +236,8 @@ GDA_IS_EXPORT_CLASS
 
 <SECTION>
 <FILE>gda-select</FILE>
-GdaSelectPrivate
 <TITLE>GdaSelect</TITLE>
+GdaSelect
 gda_select_new
 gda_select_add_source
 gda_select_set_sql
@@ -249,8 +253,8 @@ GDA_IS_SELECT_CLASS
 
 <SECTION>
 <FILE>gda-server-provider</FILE>
-GdaServerProviderPrivate
 <TITLE>GdaServerProvider</TITLE>
+GdaServerProvider
 gda_server_provider_get_version
 gda_server_provider_open_connection
 gda_server_provider_close_connection
@@ -280,8 +284,8 @@ GDA_IS_SERVER_PROVIDER_CLASS
 
 <SECTION>
 <FILE>gda-table</FILE>
-GdaTablePrivate
 <TITLE>GdaTable</TITLE>
+GdaTable
 gda_table_new
 gda_table_new_from_model
 gda_table_get_name
@@ -299,8 +303,8 @@ GDA_IS_TABLE_CLASS
 
 <SECTION>
 <FILE>gda-transaction</FILE>
-GdaTransactionPrivate
 <TITLE>GdaTransaction</TITLE>
+GdaTransaction
 gda_transaction_new
 GdaTransactionIsolation
 gda_transaction_get_isolation_level
@@ -1427,6 +1431,7 @@ GDA_IS_REPORT_VALID_CLASS
 
 <SECTION>
 <FILE>gda-command</FILE>
+<TITLE>Commands</TITLE>
 GdaCommandOptions
 GDA_COMMAND_DEFAULT_OPTION
 GdaCommandType
@@ -1448,6 +1453,7 @@ gda_command_set_transaction
 
 <SECTION>
 <FILE>gda-config</FILE>
+<TITLE>Configuration</TITLE
 gda_config_get_string
 gda_config_get_int
 gda_config_get_float
@@ -1496,44 +1502,46 @@ GDA_CONFIG_KEY_MAX_LAST_CONNECTIONS
 
 <SECTION>
 <FILE>gda-field</FILE>
-GdaFieldAttributes
+<TITLE>GdaField</TITLE>
+GdaDataModelColumnAttributes
 GdaField
-GDA_TYPE_FIELD_ATTRIBUTES
-gda_field_attributes_get_type
-gda_field_attributes_new
-gda_field_attributes_copy
-gda_field_attributes_free
-gda_field_attributes_equal
-gda_field_attributes_get_defined_size
-gda_field_attributes_set_defined_size
-gda_field_attributes_get_name
-gda_field_attributes_set_name
-gda_field_attributes_get_table
-gda_field_attributes_set_table
-gda_field_attributes_get_caption
-gda_field_attributes_set_caption
-gda_field_attributes_get_scale
-gda_field_attributes_set_scale
-gda_field_attributes_get_gdatype
-gda_field_attributes_set_gdatype
-gda_field_attributes_get_allow_null
-gda_field_attributes_set_allow_null
-gda_field_attributes_get_primary_key
-gda_field_attributes_set_primary_key
-gda_field_attributes_get_unique_key
-gda_field_attributes_set_unique_key
-gda_field_attributes_get_references
-gda_field_attributes_set_references
-gda_field_attributes_get_auto_increment
-gda_field_attributes_set_auto_increment
-gda_field_attributes_get_position
-gda_field_attributes_set_position
-gda_field_attributes_get_default_value
-gda_field_attributes_set_default_value
+GDA_TYPE_DATA_MODEL_COLUMN_ATTRIVUTES
+gda_data_model_column_attributes_get_type
+gda_data_model_column_attributes_new
+gda_data_model_column_attributes_copy
+gda_data_model_column_attributes_free
+gda_data_model_column_attributes_equal
+gda_data_model_column_attributes_get_defined_size
+gda_data_model_column_attributes_set_defined_size
+gda_data_model_column_attributes_get_name
+gda_data_model_column_attributes_set_name
+gda_data_model_column_attributes_get_table
+gda_data_model_column_attributes_set_table
+gda_data_model_column_attributes_get_caption
+gda_data_model_column_attributes_set_caption
+gda_data_model_column_attributes_get_scale
+gda_data_model_column_attributes_set_scale
+gda_data_model_column_attributes_get_gdatype
+gda_data_model_column_attributes_set_gdatype
+gda_data_model_column_attributes_get_allow_null
+gda_data_model_column_attributes_set_allow_null
+gda_data_model_column_attributes_get_primary_key
+gda_data_model_column_attributes_set_primary_key
+gda_data_model_column_attributes_get_unique_key
+gda_data_model_column_attributes_set_unique_key
+gda_data_model_column_attributes_get_references
+gda_data_model_column_attributes_set_references
+gda_data_model_column_attributes_get_auto_increment
+gda_data_model_column_attributes_set_auto_increment
+gda_data_model_column_attributes_get_position
+gda_data_model_column_attributes_set_position
+gda_data_model_column_attributes_get_default_value
+gda_data_model_column_attributes_set_default_value
 </SECTION>
 
 <SECTION>
 <FILE>gda-log</FILE>
+<TITLE>Logging</TITLE>
 gda_log_enable
 gda_log_disable
 gda_log_is_enabled
@@ -1543,6 +1551,7 @@ gda_log_error
 
 <SECTION>
 <FILE>gda-parameter</FILE>
+<TITLE>GdaParameter</TITLE>
 GdaParameter
 GDA_TYPE_PARAMETER
 gda_parameter_get_type
@@ -1572,6 +1581,7 @@ gda_parameter_list_get_length
 
 <SECTION>
 <FILE>gda-quark-list</FILE>
+<TITLE>Quark lists</TITLE>
 GdaQuarkList
 GDA_TYPE_QUARK_LIST
 gda_quark_list_get_type
@@ -1587,7 +1597,7 @@ gda_quark_list_clear
 
 <SECTION>
 <FILE>gda-row</FILE>
-GdaDataModel
+<TITLE>GdaRow</TITLE>
 GdaRow
 GDA_TYPE_ROW
 gda_row_get_type
@@ -1606,6 +1616,7 @@ gda_row_get_length
 
 <SECTION>
 <FILE>gda-util</FILE>
+<TITLE>Utility functions</TITLE>
 gda_type_to_string
 gda_type_from_string
 gda_string_hash_to_list
@@ -1616,6 +1627,7 @@ gda_file_save
 
 <SECTION>
 <FILE>gda-value</FILE>
+<TITLE>GdaValue</TITLE>
 TIMEZONE_INVALID
 GdaValueType
 GdaDate
@@ -1727,6 +1739,7 @@ gda_xql_new_attr
 
 <SECTION>
 <FILE>libgda</FILE>
+<TITLE>Libgda Initialization</TITLE>
 gda_init
 GdaInitFunc
 gda_main_run
@@ -1757,6 +1770,7 @@ GDA_TYPE_VALUE_TYPE
 
 <SECTION>
 <FILE>gda-blob</FILE>
+<TITLE>BLOBs</TITLE>
 GdaBlobMode
 GdaBlob
 gda_blob_open

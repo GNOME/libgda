@@ -1,9 +1,10 @@
 /* GDA SQLite provider
- * Copyright (C) 1998-2002 The GNOME Foundation.
+ * Copyright (C) 1998 - 2004 The GNOME Foundation.
  *
  * AUTHORS:
- *	Rodrigo Moya <rodrigo@gnome-db.org>
- *      Carlos Perelló Marín <carlos@gnome-db.org>
+ *	   Rodrigo Moya <rodrigo@gnome-db.org>
+ *         Carlos Perelló Marín <carlos@gnome-db.org>
+ *         Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -44,10 +45,10 @@ static void gda_sqlite_recordset_init       (GdaSqliteRecordset *recset,
 					     GdaSqliteRecordsetClass *klass);
 static void gda_sqlite_recordset_finalize   (GObject *object);
 
-static gint gda_sqlite_recordset_get_n_rows (GdaDataModel *model);
-static GdaFieldAttributes *gda_sqlite_recordset_describe_column (GdaDataModel *model, gint col);
-static const GdaRow *gda_sqlite_recordset_get_row (GdaDataModel *model, gint row);
-static const GdaValue *gda_sqlite_recordset_get_value_at (GdaDataModel *model, gint col, gint row);
+static gint gda_sqlite_recordset_get_n_rows (GdaDataModelBase *model);
+static GdaDataModelColumnAttributes *gda_sqlite_recordset_describe_column (GdaDataModelBase *model, gint col);
+static const GdaRow *gda_sqlite_recordset_get_row (GdaDataModelBase *model, gint row);
+static const GdaValue *gda_sqlite_recordset_get_value_at (GdaDataModelBase *model, gint col, gint row);
 
 static GObjectClass *parent_class = NULL;
 
@@ -71,7 +72,7 @@ static void
 gda_sqlite_recordset_class_init (GdaSqliteRecordsetClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
-	GdaDataModelClass *model_class = GDA_DATA_MODEL_CLASS (klass);
+	GdaDataModelBaseClass *model_class = GDA_DATA_MODEL_BASE_CLASS (klass);
 
 	parent_class = g_type_class_peek_parent (klass);
 
@@ -102,7 +103,7 @@ gda_sqlite_recordset_finalize (GObject *object)
 }
 
 static GdaRow *
-get_row (GdaDataModel *model, GdaSqliteRecordsetPrivate *priv, gint rownum)
+get_row (GdaDataModelBase *model, GdaSqliteRecordsetPrivate *priv, gint rownum)
 {
         gchar *thevalue;
         GdaValueType ftype;
@@ -112,7 +113,7 @@ get_row (GdaDataModel *model, GdaSqliteRecordsetPrivate *priv, gint rownum)
         gint i;
         gchar *id;
         
-        row = gda_row_new (model, priv->ncolumns);
+        row = gda_row_new (GDA_DATA_MODEL (model), priv->ncolumns);
 	
         for (i = 0; i < priv->ncolumns; i++) {
                 thevalue = priv->sres->data[((rownum + 1) * priv->ncolumns) + i];
@@ -137,7 +138,7 @@ get_row (GdaDataModel *model, GdaSqliteRecordsetPrivate *priv, gint rownum)
  */
 
 static const GdaRow *
-gda_sqlite_recordset_get_row (GdaDataModel *model, gint row)
+gda_sqlite_recordset_get_row (GdaDataModelBase *model, gint row)
 {
 	GdaSqliteRecordset *recset = (GdaSqliteRecordset *) model;
 	GdaSqliteRecordsetPrivate *priv_data;
@@ -146,7 +147,7 @@ gda_sqlite_recordset_get_row (GdaDataModel *model, gint row)
 	g_return_val_if_fail (GDA_IS_SQLITE_RECORDSET (recset), NULL);
 	g_return_val_if_fail (recset->priv != NULL, NULL);
 
-	row_list = GDA_DATA_MODEL_CLASS (model)->get_row (model, row);
+	row_list = GDA_DATA_MODEL_BASE_CLASS (model)->get_row (model, row);
 	if (row_list != NULL)
 		return row_list;
 
@@ -172,7 +173,7 @@ gda_sqlite_recordset_get_row (GdaDataModel *model, gint row)
 }
 
 static const GdaValue *
-gda_sqlite_recordset_get_value_at (GdaDataModel *model, gint col, gint row)
+gda_sqlite_recordset_get_value_at (GdaDataModelBase *model, gint col, gint row)
 {
 	GdaSqliteRecordset *recset = (GdaSqliteRecordset *) model;
 	GdaSqliteRecordsetPrivate *priv_data;
@@ -183,7 +184,7 @@ gda_sqlite_recordset_get_value_at (GdaDataModel *model, gint col, gint row)
 	g_return_val_if_fail (GDA_IS_SQLITE_RECORDSET (recset), NULL);
 	g_return_val_if_fail (recset->priv != NULL, NULL);
 
-	value = gda_data_model_hash_get_value_at (model, col, row);
+	value = gda_data_model_hash_get_value_at (GDA_DATA_MODEL_HASH (model), col, row);
 	if (value != NULL)
 		return value;
 	
@@ -217,13 +218,13 @@ gda_sqlite_recordset_get_value_at (GdaDataModel *model, gint col, gint row)
 	return gda_row_get_value (row_list, col);
 }
 
-static GdaFieldAttributes *
-gda_sqlite_recordset_describe_column (GdaDataModel *model, gint col)
+static GdaDataModelColumnAttributes *
+gda_sqlite_recordset_describe_column (GdaDataModelBase *model, gint col)
 {
 	GdaSqliteRecordset *recset = (GdaSqliteRecordset *) model;
 	GdaSqliteRecordsetPrivate *priv_data;
 	SQLITEresult *sres;
-	GdaFieldAttributes *field_attrs;
+	GdaDataModelColumnAttributes *field_attrs;
 
 	g_return_val_if_fail (GDA_IS_SQLITE_RECORDSET (recset), NULL);
 	g_return_val_if_fail (recset->priv != NULL, NULL);
@@ -243,21 +244,21 @@ gda_sqlite_recordset_describe_column (GdaDataModel *model, gint col)
 		return NULL;
 	}
 
-	field_attrs = gda_field_attributes_new ();
-	gda_field_attributes_set_name (field_attrs, sres->data[col]);
-	gda_field_attributes_set_scale (field_attrs, 0);
-	gda_field_attributes_set_gdatype (field_attrs, GDA_VALUE_TYPE_STRING);
-	gda_field_attributes_set_defined_size (field_attrs, strlen (sres->data[col]));
-	gda_field_attributes_set_primary_key (field_attrs, FALSE);
-	gda_field_attributes_set_unique_key (field_attrs, FALSE);
-	gda_field_attributes_set_allow_null (field_attrs, TRUE);
-	gda_field_attributes_set_auto_increment (field_attrs, FALSE);
+	field_attrs = gda_data_model_column_attributes_new ();
+	gda_data_model_column_attributes_set_name (field_attrs, sres->data[col]);
+	gda_data_model_column_attributes_set_scale (field_attrs, 0);
+	gda_data_model_column_attributes_set_gdatype (field_attrs, GDA_VALUE_TYPE_STRING);
+	gda_data_model_column_attributes_set_defined_size (field_attrs, strlen (sres->data[col]));
+	gda_data_model_column_attributes_set_primary_key (field_attrs, FALSE);
+	gda_data_model_column_attributes_set_unique_key (field_attrs, FALSE);
+	gda_data_model_column_attributes_set_allow_null (field_attrs, TRUE);
+	gda_data_model_column_attributes_set_auto_increment (field_attrs, FALSE);
 
 	return field_attrs;
 }
 
 static gint
-gda_sqlite_recordset_get_n_rows (GdaDataModel *model)
+gda_sqlite_recordset_get_n_rows (GdaDataModelBase *model)
 {
 	GdaSqliteRecordset *recset = (GdaSqliteRecordset *) model;
 

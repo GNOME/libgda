@@ -96,7 +96,7 @@ gboolean             gda_connection_change_database (GdaConnection *cnc, const g
 gboolean             gda_connection_create_database (GdaConnection *cnc, const gchar *name);
 gboolean             gda_connection_drop_database (GdaConnection *cnc, const gchar *name);
 gboolean             gda_connection_create_table (GdaConnection *cnc, const gchar *table_name,
-						  const GdaFieldAttributes *attributes[]);
+						  const GdaDataModelColumnAttributes *attributes[]);
 gboolean             gda_connection_drop_table (GdaConnection *cnc, const gchar *table_name);
 
 GList               *gda_connection_execute_command (GdaConnection *cnc,

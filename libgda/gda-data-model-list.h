@@ -1,8 +1,9 @@
 /* GDA common library
- * Copyright (C) 1998-2002 The GNOME Foundation.
+ * Copyright (C) 1998 - 2004 The GNOME Foundation.
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
+ *      Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -24,6 +25,7 @@
 #  define __gda_data_model_list_h__
 
 #include <libgda/gda-data-model.h>
+#include <libgda/gda-data-model-base.h>
 
 G_BEGIN_DECLS
 
@@ -38,20 +40,20 @@ typedef struct _GdaDataModelListClass   GdaDataModelListClass;
 typedef struct _GdaDataModelListPrivate GdaDataModelListPrivate;
 
 struct _GdaDataModelList {
-	GdaDataModel model;
+	GdaDataModelBase model;
 	GdaDataModelListPrivate *priv;
 };
 
 struct _GdaDataModelListClass {
-	GdaDataModelClass parent_class;
+	GdaDataModelBaseClass parent_class;
 };
 
-GType         gda_data_model_list_get_type (void);
-GdaDataModel *gda_data_model_list_new (void);
+GType         gda_data_model_list_get_type             (void);
+GdaDataModel *gda_data_model_list_new                  (void);
 GdaDataModel *gda_data_model_list_new_from_string_list (const GList *list);
 
-const GdaRow *gda_data_model_list_append_value (GdaDataModelList *model,
-						const GdaValue *value);
+const GdaRow *gda_data_model_list_append_value         (GdaDataModelList *model,
+							const GdaValue *value);
 
 G_END_DECLS
 

@@ -699,7 +699,7 @@ gda_connection_drop_database (GdaConnection *cnc, const gchar *name)
  * Returns: %TRUE if successful, %FALSE otherwise.
  */
 gboolean
-gda_connection_create_table (GdaConnection *cnc, const gchar *table_name, const GdaFieldAttributes *attributes[])
+gda_connection_create_table (GdaConnection *cnc, const gchar *table_name, const GdaDataModelColumnAttributes *attributes[])
 {
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (table_name != NULL, FALSE);

@@ -1,8 +1,8 @@
 <!-- ##### SECTION Title ##### -->
-gda-row
+GdaDataModel rows
 
 <!-- ##### SECTION Short_Description ##### -->
-Functions for accessing #GdaRow
+Row for a #GdaDataModel object
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
@@ -13,14 +13,6 @@ Functions for accessing #GdaRow
 <para>
 
 </para>
-
-<!-- ##### STRUCT GdaDataModel ##### -->
-<para>
-
-</para>
-
-@object: 
-@priv: 
 
 <!-- ##### STRUCT GdaRow ##### -->
 <para>

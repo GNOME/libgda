@@ -1,8 +1,9 @@
 /* GDA Postgres provider
- * Copyright (C) 1998-2002 The GNOME Foundation
+ * Copyright (C) 1998 - 2004 The GNOME Foundation
  *
  * AUTHORS:
- *      Nick Gorham <nick@lurcher.org>
+ *         Nick Gorham <nick@lurcher.org>
+ *         Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -45,10 +46,10 @@ static void gda_odbc_recordset_init       (GdaOdbcRecordset *recset,
 					       GdaOdbcRecordsetClass *klass);
 static void gda_odbc_recordset_finalize   (GObject *object);
 
-static const GdaValue *gda_odbc_recordset_get_value_at    (GdaDataModel *model, gint col, gint row);
-static GdaFieldAttributes *gda_odbc_recordset_describe    (GdaDataModel *model, gint col);
-static gint gda_odbc_recordset_get_n_rows 		  (GdaDataModel *model);
-static const GdaRow *gda_odbc_recordset_get_row 	  (GdaDataModel *model, gint rownum);
+static const GdaValue *gda_odbc_recordset_get_value_at    (GdaDataModelBase *model, gint col, gint row);
+static GdaDataModelColumnAttributes *gda_odbc_recordset_describe    (GdaDataModelBase *model, gint col);
+static gint gda_odbc_recordset_get_n_rows 		  (GdaDataModelBase *model);
+static const GdaRow *gda_odbc_recordset_get_row 	  (GdaDataModelBase *model, gint rownum);
 
 static GObjectClass *parent_class = NULL;
 
@@ -72,7 +73,7 @@ static void
 gda_odbc_recordset_class_init (GdaOdbcRecordsetClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
-	GdaDataModelClass *model_class = GDA_DATA_MODEL_CLASS (klass);
+	GdaDataModelBaseClass *model_class = GDA_DATA_MODEL_BASE_CLASS (klass);
 
 	parent_class = g_type_class_peek_parent (klass);
 
@@ -116,7 +117,7 @@ get_row (GdaOdbcRecordsetPrivate *priv, gint rownum)
  */
 
 static const GdaRow *
-gda_odbc_recordset_get_row (GdaDataModel *model, gint row)
+gda_odbc_recordset_get_row (GdaDataModelBase *model, gint row)
 {
 	/* FIXME: Write this */
 
@@ -124,15 +125,15 @@ gda_odbc_recordset_get_row (GdaDataModel *model, gint row)
 }
 
 static const GdaValue *
-gda_odbc_recordset_get_value_at (GdaDataModel *model, gint col, gint row)
+gda_odbc_recordset_get_value_at (GdaDataModelBase *model, gint col, gint row)
 {
 	/* FIXME: Write this */
 
 	return NULL;
 }
 
-static GdaFieldAttributes *
-gda_odbc_recordset_describe (GdaDataModel *model, gint col)
+static GdaDataModelColumnAttributes *
+gda_odbc_recordset_describe (GdaDataModelBase *model, gint col)
 {
 	/* FIXME: Write this */
 
@@ -140,7 +141,7 @@ gda_odbc_recordset_describe (GdaDataModel *model, gint col)
 }
 
 static gint
-gda_odbc_recordset_get_n_rows (GdaDataModel *model)
+gda_odbc_recordset_get_n_rows (GdaDataModelBase *model)
 {
 	/* FIXME: Write this */
 

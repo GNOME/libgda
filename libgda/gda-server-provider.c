@@ -371,7 +371,7 @@ gboolean
 gda_server_provider_create_table (GdaServerProvider *provider,
 				  GdaConnection *cnc,
 				  const gchar *table_name,
-				  const GdaFieldAttributes *attributes[])
+				  const GdaDataModelColumnAttributes *attributes[])
 {
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), FALSE);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);

@@ -1,5 +1,5 @@
 /* GDA Oracle provider
- * Copyright (C) 2002 The GNOME Foundation.
+ * Copyright (C) 2002 - 2004 The GNOME Foundation.
  *
  * AUTHORS:
  * 	Tim Coleman <tim@timcoleman.com>
@@ -48,12 +48,12 @@ typedef struct _GdaOracleRecordsetPrivate GdaOracleRecordsetPrivate;
 typedef struct _GdaOracleValue            GdaOracleValue;
 
 struct _GdaOracleRecordset {
-	GdaDataModel model;
+	GdaDataModelBase model;
 	GdaOracleRecordsetPrivate *priv;
 };
 
 struct _GdaOracleRecordsetClass {
-	GdaDataModelClass parent_class;
+	GdaDataModelBaseClass parent_class;
 };
 
 struct _GdaOracleValue {

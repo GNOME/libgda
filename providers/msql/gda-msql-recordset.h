@@ -1,8 +1,9 @@
 /* GDA mSQL Provider
- * Copyright (C) 1998-2002 The GNOME Foundation
+ * Copyright (C) 1998 - 2004 The GNOME Foundation
  *
  * AUTHORS:
  * 	   Danilo Schoeneberg <dj@starfire-programming.net
+ *         Vivien Malerba <malerba@gnome-db.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -24,6 +25,7 @@
 
 #include <libgda/gda-connection.h>
 #include <libgda/gda-data-model.h>
+#include <libgda/gda-data-model-base.h>
 
 G_BEGIN_DECLS
 
@@ -46,16 +48,16 @@ typedef struct _GdaMsqlRecordset      GdaMsqlRecordset;
 typedef struct _GdaMsqlRecordsetClass GdaMsqlRecordsetClass;
 
 struct _GdaMsqlRecordset {
-  GdaDataModel     model;
-  GPtrArray       *rows;
-  GdaConnection   *cnc;
-  m_result        *res;
-  int              sock;
-  int              n_rows;
+	GdaDataModelBase model;
+	GPtrArray       *rows;
+	GdaConnection   *cnc;
+	m_result        *res;
+	int              sock;
+	int              n_rows;
 };
 
 struct _GdaMsqlRecordsetClass {
-  GdaDataModelClass parent_class;
+	GdaDataModelBaseClass parent_class;
 };
 
 GType             gda_msql_recordset_get_type(void);

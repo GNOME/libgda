@@ -1,8 +1,9 @@
 /* GDA common library
- * Copyright (C) 1998-2002 The GNOME Foundation.
+ * Copyright (C) 1998 - 2004 The GNOME Foundation.
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
+ *      Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -24,6 +25,7 @@
 #  define __gda_data_model_array_h__
 
 #include <libgda/gda-data-model.h>
+#include <libgda/gda-data-model-base.h>
 
 G_BEGIN_DECLS
 
@@ -38,18 +40,18 @@ typedef struct _GdaDataModelArrayClass   GdaDataModelArrayClass;
 typedef struct _GdaDataModelArrayPrivate GdaDataModelArrayPrivate;
 
 struct _GdaDataModelArray {
-	GdaDataModel model;
+	GdaDataModelBase model;
 	GdaDataModelArrayPrivate *priv;
 };
 
 struct _GdaDataModelArrayClass {
-	GdaDataModelClass parent_class;
+	GdaDataModelBaseClass parent_class;
 };
 
-GType         gda_data_model_array_get_type (void);
-GdaDataModel *gda_data_model_array_new (gint cols);
+GType         gda_data_model_array_get_type      (void);
+GdaDataModel *gda_data_model_array_new           (gint cols);
 void          gda_data_model_array_set_n_columns (GdaDataModelArray *model, gint cols);
-void          gda_data_model_array_clear (GdaDataModelArray *model);
+void          gda_data_model_array_clear         (GdaDataModelArray *model);
 
 G_END_DECLS
 

@@ -18,7 +18,7 @@ until the one requested).
 
 </para>
 
-<!-- ##### STRUCT GdaDataModelHashPrivate ##### -->
+<!-- ##### STRUCT GdaDataModelHash ##### -->
 <para>
 
 </para>
@@ -30,17 +30,6 @@ until the one requested).
 </para>
 
 @cols: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_data_model_hash_get_value_at ##### -->
-<para>
-
-</para>
-
-@model: 
-@col: 
-@row: 
 @Returns: 
 
 
@@ -71,15 +60,5 @@ until the one requested).
 @row: 
 <!-- # Unused Parameters # -->
 @values: 
-
-
-<!-- ##### FUNCTION gda_data_model_hash_get_row ##### -->
-<para>
-
-</para>
-
-@model: 
-@row: 
-@Returns: 
 
 

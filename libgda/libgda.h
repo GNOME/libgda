@@ -34,7 +34,7 @@
 #include <libgda/gda-data-model-hash.h>
 #include <libgda/gda-data-model-list.h>
 #include <libgda/gda-error.h>
-#include <libgda/gda-field.h>
+#include <libgda/gda-data-model-column-attributes.h>
 #include <libgda/gda-log.h>
 #include <libgda/gda-parameter.h>
 #include <libgda/gda-quark-list.h>

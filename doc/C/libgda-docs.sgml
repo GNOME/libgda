@@ -24,10 +24,10 @@
 <!ENTITY SYBASE          "<application>Sybase</application>">
 <!ENTITY MSACC           "<application>MS Access</application>">
 <!ENTITY INFOR           "<application>Informix</application>">
-<!ENTITY GDASERVERPROVIDER "<xref linkend='libgda-GdaServerProvider'>GdaServerProvider</xref>">
-<!ENTITY GDADATAMODEL    "<xref linkend='libgda-GdaDataModel'>GdaDataModel</xref>">
-<!ENTITY GDADATAMODELARRAY "<xref linkend='libgda-GdaDataModelArray'>GdaDataModelArray</xref>">
-<!ENTITY GDADATAMODELHASH "<xref linkend='libgda-GdaDataModelHash'>GdaDataModelHash</xref>">
+<!ENTITY GDASERVERPROVIDER "<xref linkend='GdaServerProvider'>GdaServerProvider</xref>">
+<!ENTITY GDADATAMODEL    "<xref linkend='GdaDataModel'>GdaDataModel</xref>">
+<!ENTITY GDADATAMODELARRAY "<xref linkend='GdaDataModelArray'>GdaDataModelArray</xref>">
+<!ENTITY GDADATAMODELHASH "<xref linkend='GdaDataModelHash'>GdaDataModelHash</xref>">
 <!ENTITY fullexample SYSTEM "examples/full_example.c">
 <!ENTITY migration.sgml SYSTEM "migration.sgml">
 <!ENTITY libgda-blob SYSTEM "xml/gda-blob.xml">
@@ -38,6 +38,7 @@
 <!ENTITY libgda-data-model-array SYSTEM "xml/gda-data-model-array.xml">
 <!ENTITY libgda-data-model-hash SYSTEM "xml/gda-data-model-hash.xml">
 <!ENTITY libgda-data-model-list SYSTEM "xml/gda-data-model-list.xml">
+<!ENTITY libgda-data-model-base SYSTEM "xml/gda-data-model-base.xml">
 <!ENTITY libgda-data-model SYSTEM "xml/gda-data-model.xml">
 <!ENTITY libgda-error SYSTEM "xml/gda-error.xml">
 <!ENTITY libgda-export SYSTEM "xml/gda-export.xml">
@@ -1341,11 +1342,11 @@
       <title>Managing <emphasis>data models</emphasis></title>
       <para>
         Each time we execute a normal query, we will obtain a <link
-        linkend="libgda-GdaDataModel"><emphasis>GdaDataModel
+        linkend="GdaDataModel"><emphasis>GdaDataModel
         </emphasis></link> object, which is the way to see what the query returned. As
         <link
-        linkend="libgda-GdaDataModel">GdaDataModel</link> is an object, we can manage it with <link
-        linkend="libgda-GdaDataModel">GdaDataModel</link> class.
+        linkend="GdaDataModel">GdaDataModel</link> is an object, we can manage it with <link
+        linkend="GdaDataModel">GdaDataModel</link> class.
       </para>
       <para>
         Before continuing, we must say that it is possible to modify a data model, but as we
@@ -1982,7 +1983,7 @@
         <title>Executing normal queries</title>
         <para>
           A normal query is a query that return data. This is made as a
-          <link linkend="libgda-GdaDataModel">data model</link>, analogous
+          <link linkend="GdaDataModel">data model</link>, analogous
           to <emphasis>GdaRecordset</emphasis> in the old
           version<footnote><para>Now you have a <link
           linkend="libgda-provider-recordset">GdaRecordset</link> class,
@@ -1995,7 +1996,7 @@
           ()</link> and needs the parameters of <link
           linkend="migration-executing-non-queries">non queries</link>. The
           difference is that now the function returns the <link
-          linkend="libgda-GdaDataModel">data model</link> or
+          linkend="GdaDataModel">data model</link> or
           <emphasis>NULL</emphasis> in case of error.
         </para>
         <para>
@@ -2012,7 +2013,7 @@
       <title>Managing data</title>
       <para>
         As we have said before, data is obtained as <link
-        linkend="libgda-GdaDataModel">data models</link>. We can consider
+        linkend="GdaDataModel">data models</link>. We can consider
         it as a representation of the table.
       </para>
       <para>
@@ -2040,7 +2041,7 @@
         <title>Something important about data models</title>
         <para>
           As you can see viewing <link
-          linkend="libgda-GdaDataModel">GdaDataModel</link> class, it has
+          linkend="GdaDataModel">GdaDataModel</link> class, it has
           not a <link linkend="data-model-free">free</link> method, so we
           have to free it using <literal>g_object_unref</literal>.
         </para>
@@ -2094,27 +2095,28 @@
       The following sections describe the API available for &GDA; applications.
     </para>
     &libgda-init;
-    &libgda-blob;
-    &libgda-client;
-    &libgda-command;
     &libgda-config;
+    &libgda-client;
     &libgda-connection;
+    &libgda-command;
+    &libgda-data-model;
     &libgda-data-model-array;
     &libgda-data-model-hash;
     &libgda-data-model-list;
-    &libgda-data-model;
+    &libgda-data-model-base;
+    &libgda-field;
+    &libgda-row;
+    &libgda-value;
     &libgda-error;
     &libgda-export;
-    &libgda-field;
     &libgda-log;
     &libgda-parameter;
     &libgda-quark-list;
-    &libgda-row;
     &libgda-select;
     &libgda-table;
     &libgda-transaction;
     &libgda-util;
-    &libgda-value;
+    &libgda-blob;
     &libgda-xml-connection;
     &libgda-xml-database;
     &libgda-xml-document;

@@ -1,9 +1,10 @@
 /* GDA SQLite provider
- * Copyright (C) 1998-2002 The GNOME Foundation.
+ * Copyright (C) 1998 - 2004 The GNOME Foundation.
  *
  * AUTHORS:
- *	Rodrigo Moya <rodrigo@gnome-db.org>
- *      Carlos Perelló Marín <carlos@gnome-db.org>
+ *	   Rodrigo Moya <rodrigo@gnome-db.org>
+ *         Carlos Perelló Marín <carlos@gnome-db.org>
+ *         Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as

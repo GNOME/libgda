@@ -1,8 +1,9 @@
 /* GDA library
- * Copyright (C) 1998-2002 The GNOME Foundation.
+ * Copyright (C) 1998 - 2004 The GNOME Foundation.
  *
  * AUTHORS:
  * 	Rodrigo Moya <rodrigo@gnome-db.org>
+ *      Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -23,6 +24,7 @@
 #include <libgda/gda-intl.h>
 #include <libgda/gda-log.h>
 #include <libgda/gda-table.h>
+#include <libgda/gda-data-model.h>
 
 #define PARENT_TYPE GDA_TYPE_DATA_MODEL_ARRAY
 
@@ -44,26 +46,26 @@ static GObjectClass *parent_class = NULL;
 typedef struct {
 	GdaTable *table;
 	gint col_to_search;
-	GdaFieldAttributes *fa;
+	GdaDataModelColumnAttributes *fa;
 } DescColData;
 
 static void
 search_field_in_hash (gpointer key, gpointer value, gpointer user_data)
 {
 	DescColData *cb_data = user_data;
-	GdaFieldAttributes *fa = value;
+	GdaDataModelColumnAttributes *fa = value;
 
 	if (cb_data->fa)
 		return;
-	if (gda_field_attributes_get_position (fa) == cb_data->col_to_search)
+	if (gda_data_model_column_attributes_get_position (fa) == cb_data->col_to_search)
 		cb_data->fa = fa;
 }
 
-static GdaFieldAttributes *
-gda_table_describe_column (GdaDataModel *model, gint col)
+static GdaDataModelColumnAttributes *
+gda_table_describe_column (GdaDataModelBase *model, gint col)
 {
 	DescColData cb_data;
-	GdaFieldAttributes *new_fa;
+	GdaDataModelColumnAttributes *new_fa;
 	GdaTable *table = (GdaTable *) model;
 
 	g_return_val_if_fail (GDA_IS_TABLE (table), NULL);
@@ -78,7 +80,7 @@ gda_table_describe_column (GdaDataModel *model, gint col)
 	if (!cb_data.fa)
 		return NULL;
 
-	new_fa = gda_field_attributes_copy (cb_data.fa);
+	new_fa = gda_data_model_column_attributes_copy (cb_data.fa);
 	return new_fa;
 }
 
@@ -86,7 +88,7 @@ static void
 gda_table_class_init (GdaTableClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
-	GdaDataModelClass *model_class = GDA_DATA_MODEL_CLASS (klass);
+	GdaDataModelBaseClass *model_class = GDA_DATA_MODEL_BASE_CLASS (klass);
 
 	parent_class = g_type_class_peek_parent (klass);
 
@@ -109,7 +111,7 @@ static gboolean
 remove_field_hash (gpointer key, gpointer value, gpointer user_data)
 {
 	g_free (key);
-	gda_field_attributes_free (value);
+	gda_data_model_column_attributes_free (value);
 	return TRUE;
 }
 
@@ -213,11 +215,11 @@ gda_table_new_from_model (const gchar *name, const GdaDataModel *model, gboolean
 	/* add the columns description */
 	cols = gda_data_model_get_n_columns (GDA_DATA_MODEL (model));
 	for (n = 0; n < cols; n++) {
-		GdaFieldAttributes *fa;
+		GdaDataModelColumnAttributes *fa;
 
 		fa = gda_data_model_describe_column (GDA_DATA_MODEL (model), n);
-		gda_table_add_field (table, (const GdaFieldAttributes *) fa);
-		gda_field_attributes_free (fa);
+		gda_table_add_field (table, (const GdaDataModelColumnAttributes *) fa);
+		gda_data_model_column_attributes_free (fa);
 	}
 
 	/* add the data */
@@ -267,15 +269,15 @@ gda_table_set_name (GdaTable *table, const gchar *name)
  * Adds a field to the given #GdaTable.
  */
 void
-gda_table_add_field (GdaTable *table, const GdaFieldAttributes *fa)
+gda_table_add_field (GdaTable *table, const GdaDataModelColumnAttributes *fa)
 {
 	const gchar *name;
-	GdaFieldAttributes *new_fa;
+	GdaDataModelColumnAttributes *new_fa;
 
 	g_return_if_fail (GDA_IS_TABLE (table));
 	g_return_if_fail (fa != NULL);
 
-	name = gda_field_attributes_get_name ((GdaFieldAttributes *) fa);
+	name = gda_data_model_column_attributes_get_name ((GdaDataModelColumnAttributes *) fa);
 	if (!name || !*name)
 		return;
 
@@ -286,14 +288,14 @@ gda_table_add_field (GdaTable *table, const GdaFieldAttributes *fa)
 	}
 
 	/* add the new field to the table */
-	new_fa = gda_field_attributes_new ();
-	gda_field_attributes_set_table (new_fa, table->priv->name);
-	gda_field_attributes_set_position (new_fa, g_hash_table_size (table->priv->fields));
-	gda_field_attributes_set_defined_size (new_fa, gda_field_attributes_get_defined_size ((GdaFieldAttributes *) fa));
-	gda_field_attributes_set_name (new_fa, name);
-	gda_field_attributes_set_scale (new_fa, gda_field_attributes_get_scale ((GdaFieldAttributes *) fa));
-	gda_field_attributes_set_gdatype (new_fa, gda_field_attributes_get_gdatype ((GdaFieldAttributes *) fa));
-	gda_field_attributes_set_allow_null (new_fa, gda_field_attributes_get_allow_null ((GdaFieldAttributes *) fa));
+	new_fa = gda_data_model_column_attributes_new ();
+	gda_data_model_column_attributes_set_table (new_fa, table->priv->name);
+	gda_data_model_column_attributes_set_position (new_fa, g_hash_table_size (table->priv->fields));
+	gda_data_model_column_attributes_set_defined_size (new_fa, gda_data_model_column_attributes_get_defined_size ((GdaDataModelColumnAttributes *) fa));
+	gda_data_model_column_attributes_set_name (new_fa, name);
+	gda_data_model_column_attributes_set_scale (new_fa, gda_data_model_column_attributes_get_scale ((GdaDataModelColumnAttributes *) fa));
+	gda_data_model_column_attributes_set_gdatype (new_fa, gda_data_model_column_attributes_get_gdatype ((GdaDataModelColumnAttributes *) fa));
+	gda_data_model_column_attributes_set_allow_null (new_fa, gda_data_model_column_attributes_get_allow_null ((GdaDataModelColumnAttributes *) fa));
 
 	g_hash_table_insert (table->priv->fields, g_strdup (name), new_fa);
 	gda_data_model_array_set_n_columns (GDA_DATA_MODEL_ARRAY (table),

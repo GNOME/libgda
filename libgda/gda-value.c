@@ -1,5 +1,5 @@
 /* GDA common library
- * Copyright (C) 1998-2002 The GNOME Foundation.
+ * Copyright (C) 1998 - 2005 The GNOME Foundation.
  *
  * AUTHORS:
  *	Michael Lausch <michael@lausch.at>
@@ -2333,6 +2333,36 @@ gda_value_compare (GdaValue *value1, GdaValue *value2)
 	}
 
 	return retval;
+}
+
+/**
+ * gda_value_compare_ext
+ * @value1: a #GdaValue to compare.
+ * @value2: the other #GdaValue to be compared to @value1.
+ *
+ * Like gda_value_compare(), compares two values of the same type, except that NULL values and values
+ * of type GDA_VALUE_TYPE_NULL are considered equals
+ *
+ * Returns: 0 if both contain the same value, an integer less than 0 if @value1 is less than @value2 or
+ * an integer greater than 0 if @value1 is greater than @value2.
+ */
+gint
+gda_value_compare_ext (GdaValue *value1, GdaValue *value2)
+{
+	if (!value1 || (value1->type == GDA_VALUE_TYPE_NULL)) {
+		/* value1 represents a NULL value */
+		if (!value2 || (value2->type == GDA_VALUE_TYPE_NULL))
+			return 0;
+		else
+			return 1;
+	}
+	else {
+		/* value1 does not represents a NULL value */
+		if (!value2 || (value2->type == GDA_VALUE_TYPE_NULL))
+			return -1;
+		else
+			return gda_value_compare (value1, value2);
+	}
 }
 
 /*

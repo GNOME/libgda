@@ -1,9 +1,10 @@
 /* GDA FireBird Provider
- * Copyright (C) 1998-2002 The GNOME Foundation
+ * Copyright (C) 1998 - 2004 The GNOME Foundation
  *
  * AUTHORS:
  *         Albi Jeronimo <jeronimoalbi@yahoo.com.ar>
  *         Rodrigo Moya <rodrigo@gnome-db.org>
+ *         Vivien Malerba <malerba@gnome-db.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -34,7 +35,7 @@
 #undef PARENT_TYPE
 #endif
                                                                                                                             
-#define PARENT_TYPE GDA_TYPE_DATA_MODEL
+#define PARENT_TYPE GDA_TYPE_DATA_MODEL_BASE
 
 struct _GdaFirebirdRecordsetPrivate {
 	GdaConnection *cnc;
@@ -56,21 +57,21 @@ static void 			gda_firebird_recordset_init (GdaFirebirdRecordset *recset,
 							     GdaFirebirdRecordsetClass *klass);
 static void 			gda_firebird_recordset_finalize (GObject *object);
 
-static gint			gda_firebird_recordset_get_n_rows (GdaDataModel *model);
-static gint			gda_firebird_recordset_get_n_columns (GdaDataModel *model);
-static GdaFieldAttributes	*gda_firebird_recordset_describe_column (GdaDataModel *model,
+static gint			gda_firebird_recordset_get_n_rows (GdaDataModelBase *model);
+static gint			gda_firebird_recordset_get_n_columns (GdaDataModelBase *model);
+static GdaDataModelColumnAttributes	*gda_firebird_recordset_describe_column (GdaDataModelBase *model,
 									 gint col);
-static const GdaRow 		*gda_firebird_recordset_get_row (GdaDataModel *model,
+static const GdaRow 		*gda_firebird_recordset_get_row (GdaDataModelBase *model,
 								 gint row);
-static const GdaValue 		*gda_firebird_recordset_get_value_at (GdaDataModel *model,
+static const GdaValue 		*gda_firebird_recordset_get_value_at (GdaDataModelBase *model,
 								      gint col,
 								      gint row);
-static gboolean			gda_firebird_recordset_is_updatable (GdaDataModel *model);
-static const GdaRow 		*gda_firebird_recordset_append_row (GdaDataModel *model,
+static gboolean			gda_firebird_recordset_is_updatable (GdaDataModelBase *model);
+static const GdaRow 		*gda_firebird_recordset_append_row (GdaDataModelBase *model,
 								    const GList *values);
-static gboolean			gda_firebird_recordset_remove_row (GdaDataModel *model,
+static gboolean			gda_firebird_recordset_remove_row (GdaDataModelBase *model,
 								   const GdaRow *row);
-static gboolean			gda_firebird_recordset_update_row (GdaDataModel *model,
+static gboolean			gda_firebird_recordset_update_row (GdaDataModelBase *model,
 								   const GdaRow *row);
 
 
@@ -630,7 +631,7 @@ fb_sql_fetch_row (GdaFirebirdConnection *fcnc,
 /**********************************************/
 
 static gint
-gda_firebird_recordset_get_n_rows (GdaDataModel *model)
+gda_firebird_recordset_get_n_rows (GdaDataModelBase *model)
 {
 	GdaFirebirdRecordset *recset = (GdaFirebirdRecordset *) model;
 	
@@ -640,7 +641,7 @@ gda_firebird_recordset_get_n_rows (GdaDataModel *model)
 }
                                                                                                                             
 static gint
-gda_firebird_recordset_get_n_columns (GdaDataModel *model)
+gda_firebird_recordset_get_n_columns (GdaDataModelBase *model)
 {
 	GdaFirebirdRecordset *recset = (GdaFirebirdRecordset *) model;
 	
@@ -649,11 +650,11 @@ gda_firebird_recordset_get_n_columns (GdaDataModel *model)
 	return (recset->priv->ncolumns);
 }
 
-static GdaFieldAttributes *
-gda_firebird_recordset_describe_column (GdaDataModel *model, 
+static GdaDataModelColumnAttributes *
+gda_firebird_recordset_describe_column (GdaDataModelBase *model, 
 					gint col)
 {
-	GdaFieldAttributes *fa;
+	GdaDataModelColumnAttributes *fa;
 	GdaFirebirdRecordset *recset = (GdaFirebirdRecordset *) model;
 
 	g_return_val_if_fail (GDA_IS_FIREBIRD_RECORDSET (recset), NULL);
@@ -661,26 +662,26 @@ gda_firebird_recordset_describe_column (GdaDataModel *model,
 	if (col >= recset->priv->ncolumns)
 		return NULL;
 
-	fa = gda_field_attributes_new ();
-	gda_field_attributes_set_name (fa, (const gchar *) recset->priv->sql_result->sqlvar[col].sqlname);
-	gda_field_attributes_set_defined_size (fa, (glong) recset->priv->sql_result->sqlvar[col].sqllen);
-	gda_field_attributes_set_table (fa, (const gchar *) recset->priv->sql_result->sqlvar[col].relname);
-	gda_field_attributes_set_scale (fa, (glong) (recset->priv->sql_result->sqlvar[col].sqlscale * -1));
-	gda_field_attributes_set_gdatype (fa, fb_sql_type_to_gda_type (
+	fa = gda_data_model_column_attributes_new ();
+	gda_data_model_column_attributes_set_name (fa, (const gchar *) recset->priv->sql_result->sqlvar[col].sqlname);
+	gda_data_model_column_attributes_set_defined_size (fa, (glong) recset->priv->sql_result->sqlvar[col].sqllen);
+	gda_data_model_column_attributes_set_table (fa, (const gchar *) recset->priv->sql_result->sqlvar[col].relname);
+	gda_data_model_column_attributes_set_scale (fa, (glong) (recset->priv->sql_result->sqlvar[col].sqlscale * -1));
+	gda_data_model_column_attributes_set_gdatype (fa, fb_sql_type_to_gda_type (
 							recset->priv->sql_result->sqlvar[col].sqltype,
 							(recset->priv->sql_result->sqlvar[col].sqlscale < 0)));
-	gda_field_attributes_set_position (fa, col);
+	gda_data_model_column_attributes_set_position (fa, col);
 	
 	/* FIXME */
-	gda_field_attributes_set_allow_null (fa, TRUE);
-	gda_field_attributes_set_primary_key (fa, FALSE);
-	gda_field_attributes_set_unique_key (fa, FALSE);
+	gda_data_model_column_attributes_set_allow_null (fa, TRUE);
+	gda_data_model_column_attributes_set_primary_key (fa, FALSE);
+	gda_data_model_column_attributes_set_unique_key (fa, FALSE);
 	
 	return fa;
 }
 
 static const GdaRow *
-gda_firebird_recordset_get_row (GdaDataModel *model, 
+gda_firebird_recordset_get_row (GdaDataModelBase *model, 
 				gint row)
 {
 	GdaRow *fields = NULL;
@@ -724,7 +725,7 @@ gda_firebird_recordset_get_row (GdaDataModel *model,
 }
 
 static const GdaValue *
-gda_firebird_recordset_get_value_at (GdaDataModel *model, 
+gda_firebird_recordset_get_value_at (GdaDataModelBase *model, 
 				     gint col,
 				     gint row)
 {
@@ -744,27 +745,27 @@ gda_firebird_recordset_get_value_at (GdaDataModel *model,
 }
 
 static gboolean
-gda_firebird_recordset_is_updatable (GdaDataModel *model)
+gda_firebird_recordset_is_updatable (GdaDataModelBase *model)
 {
 	return FALSE;
 }
                                                                                                                             
 static const GdaRow *
-gda_firebird_recordset_append_row (GdaDataModel *model,
+gda_firebird_recordset_append_row (GdaDataModelBase *model,
 				   const GList *values)
 {
 	return NULL;
 }
 
 static gboolean
-gda_firebird_recordset_remove_row (GdaDataModel *model,
+gda_firebird_recordset_remove_row (GdaDataModelBase *model,
 				   const GdaRow *row)
 {
 	return FALSE;
 }
                                                                                                                             
 static gboolean
-gda_firebird_recordset_update_row (GdaDataModel *model,
+gda_firebird_recordset_update_row (GdaDataModelBase *model,
 				   const GdaRow *row)
 {
 	return FALSE;
@@ -837,7 +838,7 @@ static void
 gda_firebird_recordset_class_init (GdaFirebirdRecordsetClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
-	GdaDataModelClass *model_class = GDA_DATA_MODEL_CLASS (klass);
+	GdaDataModelBaseClass *model_class = GDA_DATA_MODEL_BASE_CLASS (klass);
 
 	parent_class = g_type_class_peek_parent (klass);
 

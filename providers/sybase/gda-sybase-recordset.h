@@ -1,9 +1,10 @@
 /* GDA Sybase provider
- * Copyright (C) 1998-2002 The GNOME Foundation.
+ * Copyright (C) 1998 - 2004 The GNOME Foundation.
  *
  * AUTHORS:
  *         Mike Wingert <wingert.3@postbox.acs.ohio-state.edu>
  *         Holger Thon <holger.thon@gnome-db.org>
+ *         Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -25,6 +26,7 @@
 #  define __gda_sybase_recordset_h__
 
 #include <libgda/gda-data-model.h>
+#include <libgda/gda-data-model-base.h>
 #include <libgda/gda-value.h>
 #include <ctpublic.h>
 #include <cspublic.h>
@@ -45,12 +47,12 @@ typedef struct _GdaSybaseField            GdaSybaseField;
 typedef struct _GdaSybaseRecordsetPrivate GdaSybaseRecordsetPrivate;
 
 struct _GdaSybaseRecordset {
-	GdaDataModel model;
+	GdaDataModelBase model;
 	GdaSybaseRecordsetPrivate *priv;
 };
 
 struct _GdaSybaseRecordsetClass {
-	GdaDataModelClass parent_class;
+	GdaDataModelBaseClass parent_class;
 };
 
 struct _GdaSybaseField {

@@ -183,7 +183,7 @@ gda_quark_list_add_from_string (GdaQuarkList *qlist,
 	if (arr) {
 		gint n = 0;
 
-		while (arr[n]) {
+		while (arr[n] && (* (arr[n]))) {
 			gchar **pair;
 
 			pair = (gchar **) g_strsplit (arr[n], "=", 2);

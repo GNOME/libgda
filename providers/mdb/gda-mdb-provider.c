@@ -750,7 +750,7 @@ gda_mdb_provider_execute_sql (GdaMdbProvider *mdbprv, GdaConnection *cnc, const 
 	/* allocate bound data */
 	for (c = 0; c < mdb_SQL->num_columns; c++) {
 		MdbSQLColumn *sqlcol;
-		GdaFieldAttributes *fa;
+		GdaDataModelColumnAttributes *fa;
 
 		bound_data[c] = (gchar *) malloc (MDB_BIND_SIZE);
 		bound_data[c][0] = '\0';
@@ -758,14 +758,14 @@ gda_mdb_provider_execute_sql (GdaMdbProvider *mdbprv, GdaConnection *cnc, const 
 
 		/* set description for the field */
 		sqlcol = g_ptr_array_index (mdb_SQL->columns, c);
-		fa = gda_field_attributes_new ();
-		gda_field_attributes_set_name (fa, sqlcol->name);
-		gda_field_attributes_set_defined_size (fa, sqlcol->disp_size);
-		gda_field_attributes_set_gdatype (fa, gda_mdb_type_to_gda (sqlcol->bind_type));
+		fa = gda_data_model_column_attributes_new ();
+		gda_data_model_column_attributes_set_name (fa, sqlcol->name);
+		gda_data_model_column_attributes_set_defined_size (fa, sqlcol->disp_size);
+		gda_data_model_column_attributes_set_gdatype (fa, gda_mdb_type_to_gda (sqlcol->bind_type));
 
 		/* and add it to the table */
-		gda_table_add_field (model, (const GdaFieldAttributes *) fa);
-		gda_field_attributes_free (fa);
+		gda_table_add_field (model, (const GdaDataModelColumnAttributes *) fa);
+		gda_data_model_column_attributes_free (fa);
 	}
 
 	/* read data */

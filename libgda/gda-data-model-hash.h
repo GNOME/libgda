@@ -1,9 +1,10 @@
 /* GDA common library
- * Copyright (C) 1998-2002 The GNOME Foundation.
+ * Copyright (C) 1998 - 2004 The GNOME Foundation.
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
  *	Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+ *      Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -25,6 +26,7 @@
 #  define __gda_data_model_hash_h__
 
 #include <libgda/gda-data-model.h>
+#include <libgda/gda-data-model-base.h>
 
 G_BEGIN_DECLS
 
@@ -39,29 +41,25 @@ typedef struct _GdaDataModelHashClass   GdaDataModelHashClass;
 typedef struct _GdaDataModelHashPrivate GdaDataModelHashPrivate;
 
 struct _GdaDataModelHash {
-	GdaDataModel model;
+	GdaDataModelBase model;
 	GdaDataModelHashPrivate *priv;
 };
 
 struct _GdaDataModelHashClass {
-	GdaDataModelClass parent_class;
+	GdaDataModelBaseClass parent_class;
 };
 
-GType         gda_data_model_hash_get_type (void);
-GdaDataModel *gda_data_model_hash_new (gint cols);
-const GdaValue *gda_data_model_hash_get_value_at (GdaDataModel *model,
-						  gint col,
-						  gint row);
+GType         gda_data_model_hash_get_type      (void);
+GdaDataModel *gda_data_model_hash_new           (gint cols);
 
-void	      gda_data_model_hash_clear (GdaDataModelHash *model);
+void	      gda_data_model_hash_clear         (GdaDataModelHash *model);
 void	      gda_data_model_hash_set_n_columns (GdaDataModelHash *model,
 						 gint cols);
 
-void 	      gda_data_model_hash_insert_row (GdaDataModelHash *model,
-					      gint rownum, 
-					      GdaRow *row);
+void 	      gda_data_model_hash_insert_row    (GdaDataModelHash *model,
+						 gint rownum, 
+						 GdaRow *row);
 
-const GdaRow *gda_data_model_hash_get_row (GdaDataModel *model, gint row);
 
 G_END_DECLS
 

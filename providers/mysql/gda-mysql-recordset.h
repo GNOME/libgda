@@ -1,5 +1,5 @@
 /* GDA MySQL provider
- * Copyright (C) 1998-2002 The GNOME Foundation.
+ * Copyright (C) 1998 - 2004 The GNOME Foundation.
  *
  * AUTHORS:
  *      Michael Lausch <michael@lausch.at>
@@ -27,6 +27,7 @@
 
 #include <libgda/gda-connection.h>
 #include <libgda/gda-data-model.h>
+#include <libgda/gda-data-model-base.h>
 
 G_BEGIN_DECLS
 
@@ -40,7 +41,7 @@ typedef struct _GdaMysqlRecordset      GdaMysqlRecordset;
 typedef struct _GdaMysqlRecordsetClass GdaMysqlRecordsetClass;
 
 struct _GdaMysqlRecordset {
-	GdaDataModel model;
+	GdaDataModelBase model;
 	GPtrArray *rows;
 	GdaConnection *cnc;
 	MYSQL_RES *mysql_res;
@@ -48,7 +49,7 @@ struct _GdaMysqlRecordset {
 };
 
 struct _GdaMysqlRecordsetClass {
-	GdaDataModelClass parent_class;
+	GdaDataModelBaseClass parent_class;
 };
 
 GType              gda_mysql_recordset_get_type (void);

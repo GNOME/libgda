@@ -24,12 +24,10 @@
 #if !defined(__gda_row_h__)
 #  define __gda_row_h__
 
-#include <libgda/gda-field.h>
+#include <libgda/gda-data-model-column-attributes.h>
+#include <libgda/global-decl.h>
 
 G_BEGIN_DECLS
-
-typedef struct _GdaDataModel GdaDataModel;
-typedef struct _GdaRow GdaRow;
 
 #define GDA_TYPE_ROW (gda_row_get_type())
 

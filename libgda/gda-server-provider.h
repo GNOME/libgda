@@ -80,7 +80,7 @@ struct _GdaServerProviderClass {
 	gboolean (* create_table) (GdaServerProvider *provider,
 				   GdaConnection *cnc,
 				   const gchar *table_name,
-				   const GdaFieldAttributes *attributes[]);
+				   const GdaDataModelColumnAttributes *attributes[]);
 	gboolean (* drop_table) (GdaServerProvider *provider,
 				 GdaConnection *cnc,
 				 const gchar *table_name);
@@ -152,7 +152,7 @@ gboolean gda_server_provider_drop_database (GdaServerProvider *provider,
 gboolean gda_server_provider_create_table (GdaServerProvider *provider,
 					   GdaConnection *cnc,
 					   const gchar *table_name,
-					   const GdaFieldAttributes *attributes[]);
+					   const GdaDataModelColumnAttributes *attributes[]);
 gboolean gda_server_provider_drop_table (GdaServerProvider *provider,
 					 GdaConnection *cnc,
 					 const gchar *table_name);

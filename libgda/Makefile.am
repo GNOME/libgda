@@ -23,10 +23,11 @@ gda_headers = \
 	gda-connection.h \
 	gda-data-model.h \
 	gda-data-model-array.h \
+	gda-data-model-base.h \
 	gda-data-model-hash.h \
 	gda-data-model-list.h \
 	gda-error.h \
-	gda-field.h \
+	gda-data-model-column-attributes.h \
 	gda-log.h \
 	gda-parameter.h \
 	gda-quark-list.h \
@@ -61,6 +62,7 @@ gda_headers = \
 	gda-xql-dml.h \
 	gda-xql-join.h \
 	gda-xql-update.h \
+	global-decl.h \
 	libgda.h
 
 libgda_sources =  \
@@ -72,12 +74,13 @@ libgda_sources =  \
 	gda-connection.c \
 	gda-data-model.c \
 	gda-data-model-array.c \
+	gda-data-model-base.c \
 	gda-data-model-hash.c \
 	gda-data-model-list.c \
 	gda-error.c \
 	gda-export.c \
 	gda-export.h \
-	gda-field.c \
+	gda-data-model-column-attributes.c \
 	gda-init.c \
 	gda-intl.h \
 	gda-log.c \

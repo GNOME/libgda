@@ -1,8 +1,9 @@
 /* GDA Oracle provider
- * Copyright (C) 1998-2002 The GNOME Foundation.
+ * Copyright (C) 1998 - 2004 The GNOME Foundation.
  *
  * AUTHORS:
  * 	Tim Coleman <tim@timcoleman.com>
+ *      Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -25,9 +26,10 @@
 #include "gda-oracle.h"
 #include "gda-oracle-recordset.h"
 #include "gda-oracle-provider.h"
+#include <libgda/gda-data-model.h>
 #include <oci.h>
 
-#define PARENT_TYPE GDA_TYPE_DATA_MODEL
+#define PARENT_TYPE GDA_TYPE_DATA_MODEL_BASE
 
 struct _GdaOracleRecordsetPrivate {
 	GdaConnection *cnc;
@@ -140,12 +142,12 @@ define_columns (GdaOracleRecordsetPrivate *priv)
  * GdaOracleRecordset class implementation
  */
 
-static GdaFieldAttributes *
-gda_oracle_recordset_describe_column (GdaDataModel *model, gint col)
+static GdaDataModelColumnAttributes *
+gda_oracle_recordset_describe_column (GdaDataModelBase *model, gint col)
 {
 	GdaOracleRecordset *recset = (GdaOracleRecordset *) model;
 	GdaOracleRecordsetPrivate *priv_data;
-	GdaFieldAttributes *field_attrs;
+	GdaDataModelColumnAttributes *field_attrs;
 	OCIParam *pard;
 	gchar *pgchar_dummy;
 	glong col_name_len;
@@ -174,7 +176,7 @@ gda_oracle_recordset_describe_column (GdaDataModel *model, gint col)
 		return NULL;
 	}
 
-	field_attrs = gda_field_attributes_new ();
+	field_attrs = gda_data_model_column_attributes_new ();
 
 	result = OCIParamGet ((dvoid *) priv_data->hstmt,
 				(ub4) OCI_HTYPE_STMT,
@@ -248,21 +250,21 @@ gda_oracle_recordset_describe_column (GdaDataModel *model, gint col)
 		return NULL;
 	}
 
-	gda_field_attributes_set_name (field_attrs, name_buffer);
-	gda_field_attributes_set_scale (field_attrs, scale);
-	gda_field_attributes_set_gdatype (field_attrs, oracle_sqltype_to_gda_type (sql_type));
-	gda_field_attributes_set_defined_size (field_attrs, defined_size);
+	gda_data_model_column_attributes_set_name (field_attrs, name_buffer);
+	gda_data_model_column_attributes_set_scale (field_attrs, scale);
+	gda_data_model_column_attributes_set_gdatype (field_attrs, oracle_sqltype_to_gda_type (sql_type));
+	gda_data_model_column_attributes_set_defined_size (field_attrs, defined_size);
 
 	/* FIXME */
-	gda_field_attributes_set_references (field_attrs, "");
+	gda_data_model_column_attributes_set_references (field_attrs, "");
 
 	/* FIXME */
-	gda_field_attributes_set_primary_key (field_attrs, FALSE); 
+	gda_data_model_column_attributes_set_primary_key (field_attrs, FALSE); 
 
 	/* FIXME */
-	gda_field_attributes_set_unique_key (field_attrs, FALSE);
+	gda_data_model_column_attributes_set_unique_key (field_attrs, FALSE);
 
-	gda_field_attributes_set_allow_null (field_attrs, !(nullable == 0));
+	gda_data_model_column_attributes_set_allow_null (field_attrs, !(nullable == 0));
 	
 	OCIDescriptorFree ((dvoid *) pard, OCI_DTYPE_PARAM);
 
@@ -270,7 +272,7 @@ gda_oracle_recordset_describe_column (GdaDataModel *model, gint col)
 }
 
 static gint
-gda_oracle_recordset_get_n_rows (GdaDataModel *model)
+gda_oracle_recordset_get_n_rows (GdaDataModelBase *model)
 {
 	GdaOracleRecordset *recset = (GdaOracleRecordset *) model;
 	GdaOracleRecordsetPrivate *priv_data;
@@ -317,7 +319,7 @@ gda_oracle_recordset_get_n_rows (GdaDataModel *model)
 }
 
 static gint
-gda_oracle_recordset_get_n_columns (GdaDataModel *model)
+gda_oracle_recordset_get_n_columns (GdaDataModelBase *model)
 {
 	GdaOracleRecordset *recset = (GdaOracleRecordset *) model;
 	g_return_val_if_fail (GDA_IS_ORACLE_RECORDSET (model), 0);
@@ -372,7 +374,7 @@ fetch_row (GdaOracleRecordset *recset, gint rownum)
 }
 
 static const GdaRow *
-gda_oracle_recordset_get_row (GdaDataModel *model, gint row)
+gda_oracle_recordset_get_row (GdaDataModelBase *model, gint row)
 {
 	GdaOracleRecordset *recset = (GdaOracleRecordset *) model;
 	GdaOracleRecordsetPrivate *priv_data;
@@ -414,7 +416,7 @@ gda_oracle_recordset_get_row (GdaDataModel *model, gint row)
 }
 
 static const GdaValue *
-gda_oracle_recordset_get_value_at (GdaDataModel *model, gint col, gint row)
+gda_oracle_recordset_get_value_at (GdaDataModelBase *model, gint col, gint row)
 {
 	GdaOracleRecordset *recset = (GdaOracleRecordset *) model;
 	GdaOracleRecordsetPrivate *priv_data;
@@ -433,20 +435,20 @@ gda_oracle_recordset_get_value_at (GdaDataModel *model, gint col, gint row)
 }
 
 static gboolean
-gda_oracle_recordset_is_updatable (GdaDataModel *model)
+gda_oracle_recordset_is_updatable (GdaDataModelBase *model)
 {
 	GdaCommandType cmd_type;
 	GdaOracleRecordset *recset = (GdaOracleRecordset *) model;
 
 	g_return_val_if_fail (GDA_IS_ORACLE_RECORDSET (recset), FALSE);
 
-	cmd_type = gda_data_model_get_command_type (model);
+	cmd_type = gda_data_model_get_command_type (GDA_DATA_MODEL (model));
 
 	return cmd_type == GDA_COMMAND_TYPE_TABLE ? TRUE : FALSE;
 }
 
 static const GdaRow *
-gda_oracle_recordset_append_row (GdaDataModel *model, const GList *values)
+gda_oracle_recordset_append_row (GdaDataModelBase *model, const GList *values)
 {
 	GString *sql;
 	GdaRow *row;
@@ -457,8 +459,8 @@ gda_oracle_recordset_append_row (GdaDataModel *model, const GList *values)
 
 	g_return_val_if_fail (GDA_IS_ORACLE_RECORDSET (recset), NULL);
 	g_return_val_if_fail (values != NULL, NULL);
-	g_return_val_if_fail (gda_data_model_is_updatable (model), NULL);
-	g_return_val_if_fail (gda_data_model_has_changed (model), NULL);
+	g_return_val_if_fail (gda_data_model_is_updatable (GDA_DATA_MODEL (model)), NULL);
+	g_return_val_if_fail (gda_data_model_has_changed (GDA_DATA_MODEL (model)), NULL);
 	g_return_val_if_fail (recset->priv != NULL, 0);
 
 	priv_data = recset->priv;
@@ -471,11 +473,11 @@ gda_oracle_recordset_append_row (GdaDataModel *model, const GList *values)
 	}
 
 	sql = g_string_new ("INSERT INTO ");
-	sql = g_string_append (sql, gda_data_model_get_command_text (model));
+	sql = g_string_append (sql, gda_data_model_get_command_text (GDA_DATA_MODEL (model)));
 	sql = g_string_append (sql, "(");
 
 	for (i = 0; i < priv_data->ncolumns; i += 1) {
-		GdaFieldAttributes *fa;
+		GdaDataModelColumnAttributes *fa;
 
 		fa = gda_data_model_describe_column (model, i);
 		if (!fa) {
@@ -488,7 +490,7 @@ gda_oracle_recordset_append_row (GdaDataModel *model, const GList *values)
 
 		if (i != 0) 
 			sql = g_string_append (sql, ", ");
-		sql = g_string_append (sql, gda_field_attributes_get_name (fa));
+		sql = g_string_append (sql, gda_data_model_column_attributes_get_name (fa));
 	}
 	sql = g_string_append (sql, ") VALUES (");
 
@@ -525,13 +527,13 @@ gda_oracle_recordset_append_row (GdaDataModel *model, const GList *values)
 }
 
 static gboolean
-gda_oracle_recordset_remove_row (GdaDataModel *model, const GdaRow *row)
+gda_oracle_recordset_remove_row (GdaDataModelBase *model, const GdaRow *row)
 {
 	return FALSE;
 }
 
 static gboolean
-gda_oracle_recordset_update_row (GdaDataModel *model, const GdaRow *row)
+gda_oracle_recordset_update_row (GdaDataModelBase *model, const GdaRow *row)
 {
 	return FALSE;
 }
@@ -552,7 +554,7 @@ static void
 gda_oracle_recordset_class_init (GdaOracleRecordsetClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
-	GdaDataModelClass *model_class = GDA_DATA_MODEL_CLASS (klass);
+	GdaDataModelBaseClass *model_class = GDA_DATA_MODEL_BASE_CLASS (klass);
 
 	parent_class = g_type_class_peek_parent (klass);
 

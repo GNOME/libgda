@@ -1,8 +1,8 @@
 <!-- ##### SECTION Title ##### -->
-gda-field
+GdaDataModel columns
 
 <!-- ##### SECTION Short_Description ##### -->
-Management of database fields
+Management of #GdaDataModel fields
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
@@ -14,7 +14,7 @@ Management of database fields
 
 </para>
 
-<!-- ##### STRUCT GdaFieldAttributes ##### -->
+<!-- ##### STRUCT GdaDataModelColumnAttributes ##### -->
 <para>
 
 </para>
@@ -44,22 +44,14 @@ Management of database fields
 @value: 
 @attributes: 
 
-<!-- ##### MACRO GDA_TYPE_FIELD_ATTRIBUTES ##### -->
+<!-- ##### MACRO GDA_TYPE_DATA_MODEL_COLUMN_ATTRIVUTES ##### -->
 <para>
 
 </para>
 
 
 
-<!-- ##### FUNCTION gda_field_attributes_get_type ##### -->
-<para>
-
-</para>
-
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_field_attributes_new ##### -->
+<!-- ##### FUNCTION gda_data_model_column_attributes_get_type ##### -->
 <para>
 
 </para>
@@ -67,7 +59,15 @@ Management of database fields
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_field_attributes_copy ##### -->
+<!-- ##### FUNCTION gda_data_model_column_attributes_new ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION gda_data_model_column_attributes_copy ##### -->
 <para>
 
 </para>
@@ -76,7 +76,7 @@ Management of database fields
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_field_attributes_free ##### -->
+<!-- ##### FUNCTION gda_data_model_column_attributes_free ##### -->
 <para>
 
 </para>
@@ -84,7 +84,7 @@ Management of database fields
 @fa: 
 
 
-<!-- ##### FUNCTION gda_field_attributes_equal ##### -->
+<!-- ##### FUNCTION gda_data_model_column_attributes_equal ##### -->
 <para>
 
 </para>
@@ -94,7 +94,7 @@ Management of database fields
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_field_attributes_get_defined_size ##### -->
+<!-- ##### FUNCTION gda_data_model_column_attributes_get_defined_size ##### -->
 <para>
 
 </para>
@@ -103,7 +103,7 @@ Management of database fields
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_field_attributes_set_defined_size ##### -->
+<!-- ##### FUNCTION gda_data_model_column_attributes_set_defined_size ##### -->
 <para>
 
 </para>
@@ -114,7 +114,7 @@ Management of database fields
 @fs: 
 
 
-<!-- ##### FUNCTION gda_field_attributes_get_name ##### -->
+<!-- ##### FUNCTION gda_data_model_column_attributes_get_name ##### -->
 <para>
 
 </para>
@@ -123,7 +123,7 @@ Management of database fields
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_field_attributes_set_name ##### -->
+<!-- ##### FUNCTION gda_data_model_column_attributes_set_name ##### -->
 <para>
 
 </para>
@@ -132,7 +132,7 @@ Management of database fields
 @name: 
 
 
-<!-- ##### FUNCTION gda_field_attributes_get_table ##### -->
+<!-- ##### FUNCTION gda_data_model_column_attributes_get_table ##### -->
 <para>
 
 </para>
@@ -141,7 +141,7 @@ Management of database fields
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_field_attributes_set_table ##### -->
+<!-- ##### FUNCTION gda_data_model_column_attributes_set_table ##### -->
 <para>
 
 </para>
@@ -150,7 +150,7 @@ Management of database fields
 @table: 
 
 
-<!-- ##### FUNCTION gda_field_attributes_get_caption ##### -->
+<!-- ##### FUNCTION gda_data_model_column_attributes_get_caption ##### -->
 <para>
 
 </para>
@@ -159,7 +159,7 @@ Management of database fields
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_field_attributes_set_caption ##### -->
+<!-- ##### FUNCTION gda_data_model_column_attributes_set_caption ##### -->
 <para>
 
 </para>
@@ -168,7 +168,7 @@ Management of database fields
 @caption: 
 
 
-<!-- ##### FUNCTION gda_field_attributes_get_scale ##### -->
+<!-- ##### FUNCTION gda_data_model_column_attributes_get_scale ##### -->
 <para>
 
 </para>
@@ -177,7 +177,7 @@ Management of database fields
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_field_attributes_set_scale ##### -->
+<!-- ##### FUNCTION gda_data_model_column_attributes_set_scale ##### -->
 <para>
 
 </para>
@@ -186,7 +186,7 @@ Management of database fields
 @scale: 
 
 
-<!-- ##### FUNCTION gda_field_attributes_get_gdatype ##### -->
+<!-- ##### FUNCTION gda_data_model_column_attributes_get_gdatype ##### -->
 <para>
 
 </para>
@@ -195,7 +195,7 @@ Management of database fields
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_field_attributes_set_gdatype ##### -->
+<!-- ##### FUNCTION gda_data_model_column_attributes_set_gdatype ##### -->
 <para>
 
 </para>
@@ -204,7 +204,7 @@ Management of database fields
 @type: 
 
 
-<!-- ##### FUNCTION gda_field_attributes_get_allow_null ##### -->
+<!-- ##### FUNCTION gda_data_model_column_attributes_get_allow_null ##### -->
 <para>
 
 </para>
@@ -213,7 +213,7 @@ Management of database fields
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_field_attributes_set_allow_null ##### -->
+<!-- ##### FUNCTION gda_data_model_column_attributes_set_allow_null ##### -->
 <para>
 
 </para>
@@ -222,7 +222,7 @@ Management of database fields
 @allow: 
 
 
-<!-- ##### FUNCTION gda_field_attributes_get_primary_key ##### -->
+<!-- ##### FUNCTION gda_data_model_column_attributes_get_primary_key ##### -->
 <para>
 
 </para>
@@ -231,7 +231,7 @@ Management of database fields
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_field_attributes_set_primary_key ##### -->
+<!-- ##### FUNCTION gda_data_model_column_attributes_set_primary_key ##### -->
 <para>
 
 </para>
@@ -240,7 +240,7 @@ Management of database fields
 @pk: 
 
 
-<!-- ##### FUNCTION gda_field_attributes_get_unique_key ##### -->
+<!-- ##### FUNCTION gda_data_model_column_attributes_get_unique_key ##### -->
 <para>
 
 </para>
@@ -249,7 +249,7 @@ Management of database fields
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_field_attributes_set_unique_key ##### -->
+<!-- ##### FUNCTION gda_data_model_column_attributes_set_unique_key ##### -->
 <para>
 
 </para>
@@ -258,7 +258,7 @@ Management of database fields
 @uk: 
 
 
-<!-- ##### FUNCTION gda_field_attributes_get_references ##### -->
+<!-- ##### FUNCTION gda_data_model_column_attributes_get_references ##### -->
 <para>
 
 </para>
@@ -267,7 +267,7 @@ Management of database fields
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_field_attributes_set_references ##### -->
+<!-- ##### FUNCTION gda_data_model_column_attributes_set_references ##### -->
 <para>
 
 </para>
@@ -276,7 +276,7 @@ Management of database fields
 @ref: 
 
 
-<!-- ##### FUNCTION gda_field_attributes_get_auto_increment ##### -->
+<!-- ##### FUNCTION gda_data_model_column_attributes_get_auto_increment ##### -->
 <para>
 
 </para>
@@ -285,7 +285,7 @@ Management of database fields
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_field_attributes_set_auto_increment ##### -->
+<!-- ##### FUNCTION gda_data_model_column_attributes_set_auto_increment ##### -->
 <para>
 
 </para>
@@ -294,7 +294,7 @@ Management of database fields
 @is_auto: 
 
 
-<!-- ##### FUNCTION gda_field_attributes_get_position ##### -->
+<!-- ##### FUNCTION gda_data_model_column_attributes_get_position ##### -->
 <para>
 
 </para>
@@ -303,7 +303,7 @@ Management of database fields
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_field_attributes_set_position ##### -->
+<!-- ##### FUNCTION gda_data_model_column_attributes_set_position ##### -->
 <para>
 
 </para>
@@ -312,7 +312,7 @@ Management of database fields
 @position: 
 
 
-<!-- ##### FUNCTION gda_field_attributes_get_default_value ##### -->
+<!-- ##### FUNCTION gda_data_model_column_attributes_get_default_value ##### -->
 <para>
 
 </para>
@@ -321,7 +321,7 @@ Management of database fields
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_field_attributes_set_default_value ##### -->
+<!-- ##### FUNCTION gda_data_model_column_attributes_set_default_value ##### -->
 <para>
 
 </para>

@@ -1,9 +1,10 @@
 /* GDA Sybase provider
- * Copyright (C) 1998-2002 The GNOME Foundation.
+ * Copyright (C) 1998 - 2004 The GNOME Foundation.
  *
  * AUTHORS:
  *         Mike Wingert <wingert.3@postbox.acs.ohio-state.edu>
  *         Holger Thon <holger.thon@gnome-db.org>
+ *         Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -38,7 +39,7 @@
 #  undef PARENT_TYPE
 #endif
 
-#define PARENT_TYPE GDA_TYPE_DATA_MODEL
+#define PARENT_TYPE GDA_TYPE_DATA_MODEL_BASE
 
 static GObjectClass *parent_class = NULL;
 
@@ -47,22 +48,22 @@ static void gda_sybase_recordset_init (GdaSybaseRecordset *recset,
                                        GdaSybaseRecordsetClass *klass);
 static void gda_sybase_recordset_finalize (GObject *object);
 
-static GdaFieldAttributes *gda_sybase_recordset_describe_column (GdaDataModel *model,
+static GdaDataModelColumnAttributes *gda_sybase_recordset_describe_column (GdaDataModelBase *model,
                                                                  gint col);
-static gint gda_sybase_recordset_get_n_rows (GdaDataModel *model);
-static gint gda_sybase_recordset_get_n_columns (GdaDataModel *model);
-static const GdaRow *gda_sybase_recordset_get_row (GdaDataModel *model,
+static gint gda_sybase_recordset_get_n_rows (GdaDataModelBase *model);
+static gint gda_sybase_recordset_get_n_columns (GdaDataModelBase *model);
+static const GdaRow *gda_sybase_recordset_get_row (GdaDataModelBase *model,
                                                    gint row);
-static const GdaValue *gda_sybase_recordset_get_value_at (GdaDataModel *model,
+static const GdaValue *gda_sybase_recordset_get_value_at (GdaDataModelBase *model,
                                                           gint col,
                                                           gint row);
 
-static GdaFieldAttributes *
-gda_sybase_recordset_describe_column (GdaDataModel *model, gint col)
+static GdaDataModelColumnAttributes *
+gda_sybase_recordset_describe_column (GdaDataModelBase *model, gint col)
 {
 	GdaSybaseRecordset *recset = (GdaSybaseRecordset *) model;
 	CS_DATAFMT         *colinfo = NULL;
-	GdaFieldAttributes *attribs = NULL;
+	GdaDataModelColumnAttributes *attribs = NULL;
 	gchar              name[256];
 
 	g_return_val_if_fail (GDA_IS_SYBASE_RECORDSET (recset), NULL);
@@ -78,7 +79,7 @@ gda_sybase_recordset_describe_column (GdaDataModel *model, gint col)
 		return NULL;
 	}
 
-	attribs = gda_field_attributes_new ();
+	attribs = gda_data_model_column_attributes_new ();
 
 	if (!attribs) {
 		return NULL;
@@ -88,27 +89,27 @@ gda_sybase_recordset_describe_column (GdaDataModel *model, gint col)
 	        colinfo->namelen);
 	//name[colinfo->namelen + 1] = '\0';
 
-	gda_field_attributes_set_name (attribs, name);
-	gda_field_attributes_set_scale (attribs, colinfo->scale);
-	gda_field_attributes_set_gdatype (attribs,
+	gda_data_model_column_attributes_set_name (attribs, name);
+	gda_data_model_column_attributes_set_scale (attribs, colinfo->scale);
+	gda_data_model_column_attributes_set_gdatype (attribs,
 	         gda_sybase_get_value_type (colinfo->datatype));
-	gda_field_attributes_set_defined_size (attribs, colinfo->maxlength);
+	gda_data_model_column_attributes_set_defined_size (attribs, colinfo->maxlength);
 
 	// FIXME:
-	gda_field_attributes_set_references (attribs, "");
-	gda_field_attributes_set_primary_key (attribs, FALSE);
-	//gda_field_attributes_set_primary_key (attribs,
+	gda_data_model_column_attributes_set_references (attribs, "");
+	gda_data_model_column_attributes_set_primary_key (attribs, FALSE);
+	//gda_data_model_column_attributes_set_primary_key (attribs,
 	//         (colinfo->status & CS_KEY) == CS_KEY);
-	gda_field_attributes_set_unique_key (attribs, FALSE);
+	gda_data_model_column_attributes_set_unique_key (attribs, FALSE);
 	
-	gda_field_attributes_set_allow_null (attribs,
+	gda_data_model_column_attributes_set_allow_null (attribs,
 	         (colinfo->status & CS_CANBENULL) == CS_CANBENULL);
 	
 	return attribs;
 }
 
 static gint
-gda_sybase_recordset_get_n_rows (GdaDataModel *model)
+gda_sybase_recordset_get_n_rows (GdaDataModelBase *model)
 {
 	GdaSybaseRecordset *recset = (GdaSybaseRecordset *) model;
 
@@ -117,7 +118,7 @@ gda_sybase_recordset_get_n_rows (GdaDataModel *model)
 }
 
 static gint
-gda_sybase_recordset_get_n_columns (GdaDataModel *model)
+gda_sybase_recordset_get_n_columns (GdaDataModelBase *model)
 {
 	GdaSybaseRecordset *recset = (GdaSybaseRecordset *) model;
 
@@ -126,7 +127,7 @@ gda_sybase_recordset_get_n_columns (GdaDataModel *model)
 }
 
 static const GdaRow *
-gda_sybase_recordset_get_row (GdaDataModel *model, gint row)
+gda_sybase_recordset_get_row (GdaDataModelBase *model, gint row)
 {
 	GdaSybaseRecordset *recset = (GdaSybaseRecordset *) model;
 
@@ -143,7 +144,7 @@ gda_sybase_recordset_get_row (GdaDataModel *model, gint row)
 }
 
 static const GdaValue *
-gda_sybase_recordset_get_value_at (GdaDataModel *model, gint col, gint row)
+gda_sybase_recordset_get_value_at (GdaDataModelBase *model, gint col, gint row)
 {
 	GdaSybaseRecordset *recset = (GdaSybaseRecordset *) model;
 	const GdaRow *fields;
@@ -162,7 +163,7 @@ static void
 gda_sybase_recordset_class_init (GdaSybaseRecordsetClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
-	GdaDataModelClass *model_class = GDA_DATA_MODEL_CLASS (klass);
+	GdaDataModelBaseClass *model_class = GDA_DATA_MODEL_BASE_CLASS (klass);
 
 	parent_class = g_type_class_peek_parent (klass);
 

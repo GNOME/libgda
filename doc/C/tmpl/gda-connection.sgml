@@ -21,28 +21,6 @@ Management of connections to data sources
 
 </para>
 
-<!-- ##### STRUCT GdaConnectionPrivate ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### STRUCT GdaServerProvider ##### -->
-<para>
-
-</para>
-
-@object: 
-@priv: 
-
-<!-- ##### STRUCT GdaClient ##### -->
-<para>
-
-</para>
-
-@object: 
-@priv: 
-
 <!-- ##### ENUM GdaConnectionOptions ##### -->
 <para>
 

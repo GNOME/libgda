@@ -1,9 +1,10 @@
 /* GDA FireBird Provider
- * Copyright (C) 1998-2002 The GNOME Foundation
+ * Copyright (C) 1998 - 2004 The GNOME Foundation
  *
  * AUTHORS:
  *         Albi Jeronimo <jeronimoalbi@yahoo.com.ar>
  *         Rodrigo Moya <rodrigo@gnome-db.org>
+ *         Vivien Malerba <malerba@gnome-db.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -40,12 +41,12 @@ typedef struct _GdaFirebirdRecordsetClass   GdaFirebirdRecordsetClass;
 typedef struct _GdaFirebirdRecordsetPrivate GdaFirebirdRecordsetPrivate;
 
 struct _GdaFirebirdRecordset {
-	GdaDataModel model;
+	GdaDataModelBase model;
 	GdaFirebirdRecordsetPrivate *priv;
 };
 
 struct _GdaFirebirdRecordsetClass {
-	GdaDataModelClass parent_class;
+	GdaDataModelBaseClass parent_class;
 };
 
 typedef struct {

@@ -1,9 +1,9 @@
 /* GDA LDAP provider
- * Copyright (C) 1998-2003 The GNOME Foundation.
+ * Copyright (C) 1998 - 2004 The GNOME Foundation.
  *
  * AUTHORS:
  *      Michael Lausch <michael@lausch.at>
- *	    Rodrigo Moya <rodrigo@gnome-db.org>
+ *	Rodrigo Moya <rodrigo@gnome-db.org>
  *      Vivien Malerba <malerba@gnome-db.org>
  *      German Poo-Caaman~o <gpoo@ubiobio.cl>
  *
@@ -27,7 +27,7 @@
 #  define __gda_ldap_recordset_h__
 
 #include <libgda/gda-connection.h>
-#include <libgda/gda-data-model.h>
+#include <libgda/gda-data-model-base.h>
 #include <ldap.h>
 
 G_BEGIN_DECLS
@@ -42,17 +42,17 @@ typedef struct _GdaLdapRecordset      GdaLdapRecordset;
 typedef struct _GdaLdapRecordsetClass GdaLdapRecordsetClass;
 
 struct _GdaLdapRecordset {
-	GdaDataModel model;
+	GdaDataModelBase model;
 	GPtrArray *rows;
 	GdaConnection *cnc;
 	LDAPMessage *ldap_res;
 };
 
 struct _GdaLdapRecordsetClass {
-	GdaDataModelClass parent_class;
+	GdaDataModelBaseClass parent_class;
 };
 
-GType              gda_ldap_recordset_get_type (void);
+GType             gda_ldap_recordset_get_type (void);
 GdaLdapRecordset *gda_ldap_recordset_new (GdaConnection *cnc, LDAPMessage *ldap_res);
 
 G_END_DECLS

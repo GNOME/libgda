@@ -41,11 +41,11 @@ static void gda_bdb_recordset_init       (GdaBdbRecordset *recset,
 					  GdaBdbRecordsetClass *klass);
 static void gda_bdb_recordset_finalize   (GObject *object);
 
-static const GdaValue *gda_bdb_recordset_get_value_at (GdaDataModel *model, 
+static const GdaValue *gda_bdb_recordset_get_value_at (GdaDataModelBase *model, 
 						       gint col,
 						       gint row);
-static gint gda_bdb_recordset_get_n_rows 	      (GdaDataModel *model);
-static const GdaRow *gda_bdb_recordset_get_row 	      (GdaDataModel *model,
+static gint gda_bdb_recordset_get_n_rows 	      (GdaDataModelBase *model);
+static const GdaRow *gda_bdb_recordset_get_row 	      (GdaDataModelBase *model,
 						       gint rownum);
 
 static GObjectClass *parent_class = NULL;
@@ -70,7 +70,7 @@ static void
 gda_bdb_recordset_class_init (GdaBdbRecordsetClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
-	GdaDataModelClass *model_class = GDA_DATA_MODEL_CLASS (klass);
+	GdaDataModelBaseClass *model_class = GDA_DATA_MODEL_BASE_CLASS (klass);
 
 	parent_class = g_type_class_peek_parent (klass);
 
@@ -94,7 +94,7 @@ gda_bdb_recordset_finalize (GObject * object)
 }
 
 static const GdaRow *
-gda_bdb_recordset_get_row (GdaDataModel *model, gint row_num)
+gda_bdb_recordset_get_row (GdaDataModelBase *model, gint row_num)
 {
 	GdaBdbRecordset *recset;
 	DBT key, data;
@@ -139,7 +139,7 @@ gda_bdb_recordset_get_row (GdaDataModel *model, gint row_num)
 		}
 	}
  
-	row = gda_row_new (model, 2);
+	row = gda_row_new (GDA_DATA_MODEL (model), 2);
 	gda_value_set_binary ((GdaValue *) gda_row_get_value (row, 0),
 			      key.data, key.size);
 	gda_value_set_binary ((GdaValue *) gda_row_get_value (row, 1),
@@ -149,7 +149,7 @@ gda_bdb_recordset_get_row (GdaDataModel *model, gint row_num)
 }
 
 static const GdaValue *
-gda_bdb_recordset_get_value_at (GdaDataModel *model, gint col_num, gint row_num)
+gda_bdb_recordset_get_value_at (GdaDataModelBase *model, gint col_num, gint row_num)
 {
 	GdaBdbRecordset *recset;
 	GdaRow *row;
@@ -171,7 +171,7 @@ gda_bdb_recordset_get_value_at (GdaDataModel *model, gint col_num, gint row_num)
 }
 
 static gint
-gda_bdb_recordset_get_n_rows (GdaDataModel *model)
+gda_bdb_recordset_get_n_rows (GdaDataModelBase *model)
 {
 	GdaBdbRecordset *recset = (GdaBdbRecordset *) model;
 

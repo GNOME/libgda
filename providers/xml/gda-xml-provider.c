@@ -528,7 +528,7 @@ get_table_fields (GdaConnection *cnc, GdaXmlDatabase *xmldb, GdaParameterList *p
 
 	cols = gda_data_model_get_n_columns (GDA_DATA_MODEL (table));
 	for (i = 0; i < cols; i++) {
-		GdaFieldAttributes *fa;
+		GdaDataModelColumnAttributes *fa;
 		GList *value_list = NULL;
 
 		fa = gda_data_model_describe_column (GDA_DATA_MODEL (table), i);
@@ -540,16 +540,16 @@ get_table_fields (GdaConnection *cnc, GdaXmlDatabase *xmldb, GdaParameterList *p
 			return NULL;
 		}
 
-		value_list = g_list_append (value_list, gda_value_new_string (gda_field_attributes_get_name (fa)));
-		value_list = g_list_append (value_list, gda_value_new_string (gda_type_to_string (gda_field_attributes_get_gdatype (fa))));
-		value_list = g_list_append (value_list, gda_value_new_integer (gda_field_attributes_get_defined_size (fa)));
-		value_list = g_list_append (value_list, gda_value_new_integer (gda_field_attributes_get_scale (fa)));
+		value_list = g_list_append (value_list, gda_value_new_string (gda_data_model_column_attributes_get_name (fa)));
+		value_list = g_list_append (value_list, gda_value_new_string (gda_type_to_string (gda_data_model_column_attributes_get_gdatype (fa))));
+		value_list = g_list_append (value_list, gda_value_new_integer (gda_data_model_column_attributes_get_defined_size (fa)));
+		value_list = g_list_append (value_list, gda_value_new_integer (gda_data_model_column_attributes_get_scale (fa)));
 		value_list = g_list_append (value_list, gda_value_new_boolean (FALSE));
 		value_list = g_list_append (value_list, gda_value_new_boolean (FALSE));
 		value_list = g_list_append (value_list, gda_value_new_boolean (FALSE));
 		value_list = g_list_append (value_list, gda_value_new_string (""));
 
-		gda_field_attributes_free (fa);
+		gda_data_model_column_attributes_free (fa);
 	}
 
 	return GDA_DATA_MODEL (recset);

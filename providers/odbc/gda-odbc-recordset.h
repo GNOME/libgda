@@ -1,5 +1,5 @@
 /* GDA DB Postgres provider
- * Copyright (C) 1998-2002 The GNOME Foundation
+ * Copyright (C) 1998 - 2004 The GNOME Foundation
  *
  * AUTHORS:
  *      Michael Lausch <michael@lausch.at>

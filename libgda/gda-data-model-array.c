@@ -1,8 +1,9 @@
 /* GDA library
- * Copyright (C) 1998-2002 The GNOME Foundation.
+ * Copyright (C) 1998 - 2004 The GNOME Foundation.
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
+ *      Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -23,7 +24,7 @@
 #include <glib/garray.h>
 #include <libgda/gda-data-model-array.h>
 
-#define PARENT_TYPE GDA_TYPE_DATA_MODEL
+#define PARENT_TYPE GDA_TYPE_DATA_MODEL_BASE
 
 struct _GdaDataModelArrayPrivate {
 	/* number of columns in each row */
@@ -45,21 +46,21 @@ static GObjectClass *parent_class = NULL;
  */
 
 static gint
-gda_data_model_array_get_n_rows (GdaDataModel *model)
+gda_data_model_array_get_n_rows (GdaDataModelBase *model)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_ARRAY (model), -1);
 	return GDA_DATA_MODEL_ARRAY (model)->priv->rows->len;
 }
 
 static gint
-gda_data_model_array_get_n_columns (GdaDataModel *model)
+gda_data_model_array_get_n_columns (GdaDataModelBase *model)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_ARRAY (model), -1);
 	return GDA_DATA_MODEL_ARRAY (model)->priv->number_of_columns;
 }
 
-static GdaFieldAttributes *
-gda_data_model_array_describe_column (GdaDataModel *model, gint col)
+static GdaDataModelColumnAttributes *
+gda_data_model_array_describe_column (GdaDataModelBase *model, gint col)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_ARRAY (model), NULL);
 
@@ -67,7 +68,7 @@ gda_data_model_array_describe_column (GdaDataModel *model, gint col)
 }
 
 static const GdaRow *
-gda_data_model_array_get_row (GdaDataModel *model, gint row)
+gda_data_model_array_get_row (GdaDataModelBase *model, gint row)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_ARRAY (model), NULL);
 
@@ -78,7 +79,7 @@ gda_data_model_array_get_row (GdaDataModel *model, gint row)
 }
 
 static const GdaValue *
-gda_data_model_array_get_value_at (GdaDataModel *model, gint col, gint row)
+gda_data_model_array_get_value_at (GdaDataModelBase *model, gint col, gint row)
 {
 	GdaRow *fields;
 
@@ -99,14 +100,14 @@ gda_data_model_array_get_value_at (GdaDataModel *model, gint col, gint row)
 }
 
 static gboolean
-gda_data_model_array_is_updatable (GdaDataModel *model)
+gda_data_model_array_is_updatable (GdaDataModelBase *model)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_ARRAY (model), FALSE);
 	return TRUE;
 }
 
 static const GdaRow *
-gda_data_model_array_append_row (GdaDataModel *model, const GList *values)
+gda_data_model_array_append_row (GdaDataModelBase *model, const GList *values)
 {
 	gint len;
 	GdaRow *row = NULL;
@@ -118,24 +119,25 @@ gda_data_model_array_append_row (GdaDataModel *model, const GList *values)
 	if (len != GDA_DATA_MODEL_ARRAY (model)->priv->number_of_columns)
 		return NULL;
 
-	row = gda_row_new_from_list (model, values);
+	row = gda_row_new_from_list (GDA_DATA_MODEL (model), values);
 	if (row) {
 		g_ptr_array_add (GDA_DATA_MODEL_ARRAY (model)->priv->rows, row);
 		gda_row_set_number (row, GDA_DATA_MODEL_ARRAY (model)->priv->rows->len - 1);
-		gda_data_model_row_inserted (model, GDA_DATA_MODEL_ARRAY (model)->priv->rows->len - 1);
+		gda_data_model_row_inserted (GDA_DATA_MODEL (model), 
+					     GDA_DATA_MODEL_ARRAY (model)->priv->rows->len - 1);
 	}
 
 	return (const GdaRow *) row;
 }
 
 static gboolean
-gda_data_model_array_remove_row (GdaDataModel *model, const GdaRow *row)
+gda_data_model_array_remove_row (GdaDataModelBase *model, const GdaRow *row)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_ARRAY (model), FALSE);
 	g_return_val_if_fail (row != NULL, FALSE);
 
 	if (g_ptr_array_remove (GDA_DATA_MODEL_ARRAY (model)->priv->rows, (gpointer) row)) {
-		gda_data_model_row_removed (model, gda_row_get_number (row));
+		gda_data_model_row_removed (GDA_DATA_MODEL (model), gda_row_get_number (row));
 		return TRUE;
 	}
 
@@ -143,7 +145,7 @@ gda_data_model_array_remove_row (GdaDataModel *model, const GdaRow *row)
 }
 
 static gboolean
-gda_data_model_array_update_row (GdaDataModel *model, const GdaRow *row)
+gda_data_model_array_update_row (GdaDataModelBase *model, const GdaRow *row)
 {
 	gint i;
 	GdaDataModelArrayPrivate *priv;
@@ -157,7 +159,7 @@ gda_data_model_array_update_row (GdaDataModel *model, const GdaRow *row)
 		if (priv->rows->pdata[i] == row) {
 			gda_row_free (priv->rows->pdata[i]);
 			priv->rows->pdata[i] = gda_row_copy ((GdaRow *) row);
-			gda_data_model_row_updated (model, i);
+			gda_data_model_row_updated (GDA_DATA_MODEL (model), i);
 
 			return TRUE;
 		}
@@ -167,7 +169,7 @@ gda_data_model_array_update_row (GdaDataModel *model, const GdaRow *row)
 }
 
 static gboolean
-gda_data_model_array_append_column (GdaDataModel *model, const GdaFieldAttributes *attrs)
+gda_data_model_array_append_column (GdaDataModelBase *model, const GdaDataModelColumnAttributes *attrs)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_ARRAY (model), FALSE);
 	g_return_val_if_fail (attrs != NULL, FALSE);
@@ -176,7 +178,7 @@ gda_data_model_array_append_column (GdaDataModel *model, const GdaFieldAttribute
 }
 
 static gboolean
-gda_data_model_array_update_column (GdaDataModel *model, gint col, const GdaFieldAttributes *attrs)
+gda_data_model_array_update_column (GdaDataModelBase *model, gint col, const GdaDataModelColumnAttributes *attrs)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_ARRAY (model), FALSE);
 	g_return_val_if_fail (attrs != NULL, FALSE);
@@ -185,7 +187,7 @@ gda_data_model_array_update_column (GdaDataModel *model, gint col, const GdaFiel
 }
 
 static gboolean
-gda_data_model_array_remove_column (GdaDataModel *model, gint col)
+gda_data_model_array_remove_column (GdaDataModelBase *model, gint col)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_ARRAY (model), FALSE);
 
@@ -196,7 +198,7 @@ static void
 gda_data_model_array_class_init (GdaDataModelArrayClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
-	GdaDataModelClass *model_class = GDA_DATA_MODEL_CLASS (klass);
+	GdaDataModelBaseClass *model_class = GDA_DATA_MODEL_BASE_CLASS (klass);
 
 	parent_class = g_type_class_peek_parent (klass);
 

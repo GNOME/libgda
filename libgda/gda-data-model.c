@@ -1,10 +1,11 @@
 /* 
  * GDA common library
- * Copyright (C) 1998-2002 The GNOME Foundation.
+ * Copyright (C) 1998 - 2004 The GNOME Foundation.
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
  *	Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+ *      Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -26,26 +27,16 @@
 #include <libgda/gda-data-model.h>
 #include <libgda/gda-log.h>
 #include <libgda/gda-util.h>
-#include <libgda/gda-xml-database.h>
+#include <libgda/gda-row.h>
 #include <string.h>
 
 #define PARENT_TYPE G_TYPE_OBJECT
 #define CLASS(model) (GDA_DATA_MODEL_CLASS (G_OBJECT_GET_CLASS (model)))
 
-struct _GdaDataModelPrivate {
-	gboolean notify_changes;
-	GHashTable *column_titles;
-	gchar *cmd_text;
-	GdaCommandType cmd_type;
 
-	/* update mode */
-	gboolean updating;
-};
+static void gda_data_model_iface_init (gpointer g_class);
 
-static void gda_data_model_class_init (GdaDataModelClass *klass);
-static void gda_data_model_init       (GdaDataModel *model, GdaDataModelClass *klass);
-static void gda_data_model_finalize   (GObject *object);
-
+/* signals */
 enum {
 	CHANGED,
 	ROW_INSERTED,
@@ -56,165 +47,11 @@ enum {
 	COLUMN_REMOVED,
 	BEGIN_UPDATE,
 	CANCEL_UPDATE,
-	END_UPDATE,
+	COMMIT_UPDATE,
 	LAST_SIGNAL
 };
 
 static guint gda_data_model_signals[LAST_SIGNAL];
-static GObjectClass *parent_class = NULL;
-
-/*
- * GdaDataModel class implementation
- */
-
-static void
-gda_data_model_class_init (GdaDataModelClass *klass)
-{
-	GObjectClass *object_class = G_OBJECT_CLASS (klass);
-
-	parent_class = g_type_class_peek_parent (klass);
-
-	gda_data_model_signals[CHANGED] =
-		g_signal_new ("changed",
-                              G_TYPE_FROM_CLASS (object_class),
-                              G_SIGNAL_RUN_LAST,
-                              G_STRUCT_OFFSET (GdaDataModelClass, changed),
-                              NULL, NULL,
-                              g_cclosure_marshal_VOID__VOID,
-                              G_TYPE_NONE, 0);
-	gda_data_model_signals[ROW_INSERTED] =
-		g_signal_new ("row_inserted",
-                              G_TYPE_FROM_CLASS (object_class),
-                              G_SIGNAL_RUN_LAST,
-                              G_STRUCT_OFFSET (GdaDataModelClass, row_inserted),
-                              NULL, NULL,
-                              g_cclosure_marshal_VOID__INT,
-                              G_TYPE_NONE, 1, G_TYPE_INT);
-	gda_data_model_signals[ROW_UPDATED] =
-		g_signal_new ("row_updated",
-                              G_TYPE_FROM_CLASS (object_class),
-                              G_SIGNAL_RUN_LAST,
-                              G_STRUCT_OFFSET (GdaDataModelClass, row_updated),
-                              NULL, NULL,
-                              g_cclosure_marshal_VOID__INT,
-                              G_TYPE_NONE, 1, G_TYPE_INT);
-	gda_data_model_signals[ROW_REMOVED] =
-		g_signal_new ("row_removed",
-                              G_TYPE_FROM_CLASS (object_class),
-                              G_SIGNAL_RUN_LAST,
-                              G_STRUCT_OFFSET (GdaDataModelClass, row_removed),
-                              NULL, NULL,
-                              g_cclosure_marshal_VOID__INT,
-                              G_TYPE_NONE, 1, G_TYPE_INT);
-	gda_data_model_signals[COLUMN_INSERTED] =
-		g_signal_new ("column_inserted",
-                              G_TYPE_FROM_CLASS (object_class),
-                              G_SIGNAL_RUN_LAST,
-                              G_STRUCT_OFFSET (GdaDataModelClass, column_inserted),
-                              NULL, NULL,
-                              g_cclosure_marshal_VOID__INT,
-                              G_TYPE_NONE, 1, G_TYPE_INT);
-	gda_data_model_signals[COLUMN_UPDATED] =
-		g_signal_new ("column_updated",
-                              G_TYPE_FROM_CLASS (object_class),
-                              G_SIGNAL_RUN_LAST,
-                              G_STRUCT_OFFSET (GdaDataModelClass, column_updated),
-                              NULL, NULL,
-                              g_cclosure_marshal_VOID__INT,
-                              G_TYPE_NONE, 1, G_TYPE_INT);
-	gda_data_model_signals[COLUMN_REMOVED] =
-		g_signal_new ("column_removed",
-                              G_TYPE_FROM_CLASS (object_class),
-                              G_SIGNAL_RUN_LAST,
-                              G_STRUCT_OFFSET (GdaDataModelClass, column_removed),
-                              NULL, NULL,
-                              g_cclosure_marshal_VOID__INT,
-                              G_TYPE_NONE, 1, G_TYPE_INT);
-	gda_data_model_signals[BEGIN_UPDATE] =
-		g_signal_new ("begin_update",
-                              G_TYPE_FROM_CLASS (object_class),
-                              G_SIGNAL_RUN_LAST,
-                              G_STRUCT_OFFSET (GdaDataModelClass, begin_update),
-                              NULL, NULL,
-                              g_cclosure_marshal_VOID__VOID,
-                              G_TYPE_NONE, 0);
-	gda_data_model_signals[CANCEL_UPDATE] =
-		g_signal_new ("cancel_update",
-                              G_TYPE_FROM_CLASS (object_class),
-                              G_SIGNAL_RUN_LAST,
-                              G_STRUCT_OFFSET (GdaDataModelClass, cancel_update),
-                              NULL, NULL,
-                              g_cclosure_marshal_VOID__VOID,
-                              G_TYPE_NONE, 0);
-	gda_data_model_signals[END_UPDATE] =
-		g_signal_new ("end_update",
-                              G_TYPE_FROM_CLASS (object_class),
-                              G_SIGNAL_RUN_LAST,
-                              G_STRUCT_OFFSET (GdaDataModelClass, end_update),
-                              NULL, NULL,
-                              g_cclosure_marshal_VOID__VOID,
-                              G_TYPE_NONE, 0);
-
-	object_class->finalize = gda_data_model_finalize;
-	klass->changed = NULL;
-	klass->begin_update = NULL;
-	klass->cancel_update = NULL;
-	klass->end_update = NULL;
-	klass->get_n_rows = NULL;
-	klass->get_n_columns = NULL;
-	klass->describe_column = NULL;
-	klass->get_row = NULL;
-	klass->get_value_at = NULL;
-	klass->is_updatable = NULL;
-	klass->append_row = NULL;
-	klass->remove_row = NULL;
-	klass->update_row = NULL;
-	klass->append_column = NULL;
-	klass->remove_column = NULL;
-	klass->update_column = NULL;
-}
-
-static void
-gda_data_model_init (GdaDataModel *model, GdaDataModelClass *klass)
-{
-	g_return_if_fail (GDA_IS_DATA_MODEL (model));
-
-	model->priv = g_new (GdaDataModelPrivate, 1);
-	model->priv->notify_changes = TRUE;
-	model->priv->column_titles = g_hash_table_new (g_direct_hash,
-						       g_direct_equal);
-	model->priv->updating = FALSE;
-	model->priv->cmd_text = NULL;
-	model->priv->cmd_type = GDA_COMMAND_TYPE_INVALID;
-}
-
-static void
-free_hash_string (gpointer key, gpointer value, gpointer user_data)
-{
-	g_free (value);
-}
-
-static void
-gda_data_model_finalize (GObject *object)
-{
-	GdaDataModel *model = (GdaDataModel *) object;
-
-	g_return_if_fail (GDA_IS_DATA_MODEL (model));
-
-	/* free memory */
-	g_hash_table_foreach (model->priv->column_titles, free_hash_string, NULL);
-	g_hash_table_destroy (model->priv->column_titles);
-	model->priv->column_titles = NULL;
-
-	g_free (model->priv->cmd_text);
-	model->priv->cmd_text = NULL;
-
-	g_free (model->priv);
-	model->priv = NULL;
-
-	/* chain to parent class */
-	parent_class->finalize (object);
-}
 
 GType
 gda_data_model_get_type (void)
@@ -222,22 +59,122 @@ gda_data_model_get_type (void)
 	static GType type = 0;
 
 	if (!type) {
-		if (type == 0) {
-			static GTypeInfo info = {
-				sizeof (GdaDataModelClass),
-				(GBaseInitFunc) NULL,
-				(GBaseFinalizeFunc) NULL,
-				(GClassInitFunc) gda_data_model_class_init,
-				NULL, NULL,
-				sizeof (GdaDataModel),
-				0,
-				(GInstanceInitFunc) gda_data_model_init
-			};
-			type = g_type_register_static (PARENT_TYPE, "GdaDataModel", &info, G_TYPE_FLAG_ABSTRACT);
-		}
+		static const GTypeInfo info = {
+			sizeof (GdaDataModelIface),
+			(GBaseInitFunc) gda_data_model_iface_init,
+			(GBaseFinalizeFunc) NULL,
+			(GClassInitFunc) NULL,
+			NULL,
+			NULL,
+			0,
+			0,
+			(GInstanceInitFunc) NULL
+		};
+		
+		type = g_type_register_static (G_TYPE_INTERFACE, "GdaDataModel", &info, 0);
+		g_type_interface_add_prerequisite (type, G_TYPE_OBJECT);
 	}
-
 	return type;
+}
+
+static void
+gda_data_model_iface_init (gpointer g_class)
+{
+	static gboolean initialized = FALSE;
+
+	if (! initialized) {
+		gda_data_model_signals[CHANGED] =
+			g_signal_new ("changed",
+				      GDA_TYPE_DATA_MODEL,
+				      G_SIGNAL_RUN_LAST,
+				      G_STRUCT_OFFSET (GdaDataModelIface, changed),
+				      NULL, NULL,
+				      g_cclosure_marshal_VOID__VOID,
+				      G_TYPE_NONE, 0);
+		gda_data_model_signals[ROW_INSERTED] =
+			g_signal_new ("row_inserted",
+				      GDA_TYPE_DATA_MODEL,
+				      G_SIGNAL_RUN_LAST,
+				      G_STRUCT_OFFSET (GdaDataModelIface, row_inserted),
+				      NULL, NULL,
+				      g_cclosure_marshal_VOID__INT,
+				      G_TYPE_NONE, 1, G_TYPE_INT);
+		gda_data_model_signals[ROW_UPDATED] =
+			g_signal_new ("row_updated",
+				      GDA_TYPE_DATA_MODEL,
+				      G_SIGNAL_RUN_LAST,
+				      G_STRUCT_OFFSET (GdaDataModelIface, row_updated),
+				      NULL, NULL,
+				      g_cclosure_marshal_VOID__INT,
+				      G_TYPE_NONE, 1, G_TYPE_INT);
+		gda_data_model_signals[ROW_REMOVED] =
+			g_signal_new ("row_removed",
+				      GDA_TYPE_DATA_MODEL,
+				      G_SIGNAL_RUN_LAST,
+				      G_STRUCT_OFFSET (GdaDataModelIface, row_removed),
+				      NULL, NULL,
+				      g_cclosure_marshal_VOID__INT,
+				      G_TYPE_NONE, 1, G_TYPE_INT);
+		gda_data_model_signals[COLUMN_INSERTED] =
+			g_signal_new ("column_inserted",
+				      GDA_TYPE_DATA_MODEL,
+				      G_SIGNAL_RUN_LAST,
+				      G_STRUCT_OFFSET (GdaDataModelIface, column_inserted),
+				      NULL, NULL,
+				      g_cclosure_marshal_VOID__INT,
+				      G_TYPE_NONE, 1, G_TYPE_INT);
+		gda_data_model_signals[COLUMN_UPDATED] =
+			g_signal_new ("column_updated",
+				      GDA_TYPE_DATA_MODEL,
+				      G_SIGNAL_RUN_LAST,
+				      G_STRUCT_OFFSET (GdaDataModelIface, column_updated),
+				      NULL, NULL,
+				      g_cclosure_marshal_VOID__INT,
+				      G_TYPE_NONE, 1, G_TYPE_INT);
+		gda_data_model_signals[COLUMN_REMOVED] =
+			g_signal_new ("column_removed",
+				      GDA_TYPE_DATA_MODEL,
+				      G_SIGNAL_RUN_LAST,
+				      G_STRUCT_OFFSET (GdaDataModelIface, column_removed),
+				      NULL, NULL,
+				      g_cclosure_marshal_VOID__INT,
+				      G_TYPE_NONE, 1, G_TYPE_INT);
+		gda_data_model_signals[BEGIN_UPDATE] =
+			g_signal_new ("begin_update",
+				      GDA_TYPE_DATA_MODEL,
+				      G_SIGNAL_RUN_LAST,
+				      G_STRUCT_OFFSET (GdaDataModelIface, begin_update),
+				      NULL, NULL,
+				      g_cclosure_marshal_VOID__VOID,
+				      G_TYPE_NONE, 0);
+		gda_data_model_signals[CANCEL_UPDATE] =
+			g_signal_new ("cancel_update",
+				      GDA_TYPE_DATA_MODEL,
+				      G_SIGNAL_RUN_LAST,
+				      G_STRUCT_OFFSET (GdaDataModelIface, cancel_update),
+				      NULL, NULL,
+				      g_cclosure_marshal_VOID__VOID,
+				      G_TYPE_NONE, 0);
+		gda_data_model_signals[COMMIT_UPDATE] =
+			g_signal_new ("commit_update",
+				      GDA_TYPE_DATA_MODEL,
+				      G_SIGNAL_RUN_LAST,
+				      G_STRUCT_OFFSET (GdaDataModelIface, commit_update),
+				      NULL, NULL,
+				      g_cclosure_marshal_VOID__VOID,
+				      G_TYPE_NONE, 0);
+
+		initialized = TRUE;
+	}
+}
+
+static gboolean
+do_notify_changes (GdaDataModel *model)
+{
+	gboolean notify_changes = TRUE;
+	if (GDA_DATA_MODEL_GET_IFACE (model)->i_get_notify)
+		notify_changes = (GDA_DATA_MODEL_GET_IFACE (model)->i_get_notify) (model);
+	return notify_changes;
 }
 
 /**
@@ -254,12 +191,11 @@ void
 gda_data_model_changed (GdaDataModel *model)
 {
 	g_return_if_fail (GDA_IS_DATA_MODEL (model));
-
-	if (model->priv->notify_changes) {
+	
+	if (do_notify_changes (model)) 
 		g_signal_emit (G_OBJECT (model),
 			       gda_data_model_signals[CHANGED],
 			       0);
-	}
 }
 
 /**
@@ -274,7 +210,7 @@ gda_data_model_row_inserted (GdaDataModel *model, gint row)
 {
 	g_return_if_fail (GDA_IS_DATA_MODEL (model));
 
-	if (model->priv->notify_changes) {
+	if (do_notify_changes (model)) {
 		g_signal_emit (G_OBJECT (model),
 			       gda_data_model_signals[ROW_INSERTED],
 			       0, row);
@@ -295,7 +231,7 @@ gda_data_model_row_updated (GdaDataModel *model, gint row)
 {
 	g_return_if_fail (GDA_IS_DATA_MODEL (model));
 
-	if (model->priv->notify_changes) {
+	if (do_notify_changes (model)) {
 		g_signal_emit (G_OBJECT (model),
 			       gda_data_model_signals[ROW_UPDATED],
 			       0, row);
@@ -316,7 +252,7 @@ gda_data_model_row_removed (GdaDataModel *model, gint row)
 {
 	g_return_if_fail (GDA_IS_DATA_MODEL (model));
 
-	if (model->priv->notify_changes) {
+	if (do_notify_changes (model)) {
 		g_signal_emit (G_OBJECT (model),
 			       gda_data_model_signals[ROW_REMOVED],
 			       0, row);
@@ -337,7 +273,7 @@ gda_data_model_column_inserted (GdaDataModel *model, gint col)
 {
 	g_return_if_fail (GDA_IS_DATA_MODEL (model));
 
-	if (model->priv->notify_changes) {
+	if (do_notify_changes (model)) {
 		g_signal_emit (G_OBJECT (model),
 			       gda_data_model_signals[COLUMN_INSERTED],
 			       0, col);
@@ -358,7 +294,7 @@ gda_data_model_column_updated (GdaDataModel *model, gint col)
 {
 	g_return_if_fail (GDA_IS_DATA_MODEL (model));
 
-	if (model->priv->notify_changes) {
+	if (do_notify_changes (model)) {
 		g_signal_emit (G_OBJECT (model),
 			       gda_data_model_signals[COLUMN_UPDATED],
 			       0, col);
@@ -379,7 +315,7 @@ gda_data_model_column_removed (GdaDataModel *model, gint col)
 {
 	g_return_if_fail (GDA_IS_DATA_MODEL (model));
 
-	if (model->priv->notify_changes) {
+	if (do_notify_changes (model)) {
 		g_signal_emit (G_OBJECT (model),
 			       gda_data_model_signals[COLUMN_REMOVED],
 			       0, col);
@@ -400,7 +336,11 @@ void
 gda_data_model_freeze (GdaDataModel *model)
 {
 	g_return_if_fail (GDA_IS_DATA_MODEL (model));
-	model->priv->notify_changes = FALSE;
+	
+	if (GDA_DATA_MODEL_GET_IFACE (model)->i_set_notify)
+		(GDA_DATA_MODEL_GET_IFACE (model)->i_set_notify) (model, FALSE);
+	else
+		g_warning ("%s() method not supported\n", __FUNCTION__);
 }
 
 /**
@@ -413,7 +353,11 @@ void
 gda_data_model_thaw (GdaDataModel *model)
 {
 	g_return_if_fail (GDA_IS_DATA_MODEL (model));
-	model->priv->notify_changes = TRUE;
+
+	if (GDA_DATA_MODEL_GET_IFACE (model)->i_set_notify)
+		(GDA_DATA_MODEL_GET_IFACE (model)->i_set_notify) (model, TRUE);
+	else
+		g_warning ("%s() method not supported\n", __FUNCTION__);
 }
 
 /**
@@ -426,9 +370,13 @@ gint
 gda_data_model_get_n_rows (GdaDataModel *model)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), -1);
-	g_return_val_if_fail (CLASS (model)->get_n_rows != NULL, -1);
 
-	return CLASS (model)->get_n_rows (model);
+	if (GDA_DATA_MODEL_GET_IFACE (model)->i_get_n_rows)
+		return (GDA_DATA_MODEL_GET_IFACE (model)->i_get_n_rows) (model);
+	else {
+		g_warning ("%s() method not supported\n", __FUNCTION__);
+		return -1;
+	}
 }
 
 /**
@@ -441,9 +389,13 @@ gint
 gda_data_model_get_n_columns (GdaDataModel *model)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), -1);
-	g_return_val_if_fail (CLASS (model)->get_n_columns != NULL, -1);
-
-	return CLASS (model)->get_n_columns (model);
+	
+	if (GDA_DATA_MODEL_GET_IFACE (model)->i_get_n_columns)
+		return (GDA_DATA_MODEL_GET_IFACE (model)->i_get_n_columns) (model);
+	else {
+		g_warning ("%s() method not supported\n", __FUNCTION__);
+		return -1;
+	}
 }
 
 /**
@@ -453,39 +405,22 @@ gda_data_model_get_n_columns (GdaDataModel *model)
  *
  * Queries the underlying data model implementation for a description
  * of a given column. That description is returned in the form of
- * a #GdaFieldAttributes structure, which contains all the information
+ * a #GdaDataModelColumnAttributes structure, which contains all the information
  * about the given column in the data model.
  *
  * Returns: the description of the column.
  */
-GdaFieldAttributes *
+GdaDataModelColumnAttributes *
 gda_data_model_describe_column (GdaDataModel *model, gint col)
 {
-	GdaFieldAttributes *fa;
-
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
-	g_return_val_if_fail (CLASS (model)->describe_column != NULL, NULL);
 
-	fa = CLASS (model)->describe_column (model, col);
-	if (!fa) {
-		const GdaValue *value;
-
-		/* we generate a basic FieldAttributes structure */
-		fa = gda_field_attributes_new ();
-		gda_field_attributes_set_defined_size (fa, 0);
-		gda_field_attributes_set_name (fa, g_hash_table_lookup (model->priv->column_titles,
-									GINT_TO_POINTER (col)));
-		gda_field_attributes_set_scale (fa, 0);
-		value = gda_data_model_get_value_at (model, col, 0);
-		if (value == NULL)
-			gda_field_attributes_set_gdatype (fa, GDA_VALUE_TYPE_STRING);
-		else
-			gda_field_attributes_set_gdatype (fa, gda_value_get_type (value));
-
-		gda_field_attributes_set_allow_null (fa, TRUE);
+	if (GDA_DATA_MODEL_GET_IFACE (model)->i_describe_column)
+		return (GDA_DATA_MODEL_GET_IFACE (model)->i_describe_column) (model, col);
+	else {
+		g_warning ("%s() method not supported\n", __FUNCTION__);
+		return NULL;
 	}
-
-	return fa;
 }
 
 /**
@@ -498,34 +433,14 @@ gda_data_model_describe_column (GdaDataModel *model, gint col)
 const gchar *
 gda_data_model_get_column_title (GdaDataModel *model, gint col)
 {
-	gint n_cols;
-	gchar *title;
-
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
 
-	n_cols = gda_data_model_get_n_columns (model);
-	if (col < n_cols && col >= 0){
-		title = g_hash_table_lookup (model->priv->column_titles,
-					     GINT_TO_POINTER (col));
-		if (title == NULL) {
-			GdaFieldAttributes *fa;
-
-			fa = gda_data_model_describe_column (model, col);
-			if (fa) {
-				gda_data_model_set_column_title (model, col, title);
-				gda_field_attributes_free (fa);
-
-				return g_hash_table_lookup (model->priv->column_titles,
-							    GINT_TO_POINTER (col));
-			}
-			else
-				title = "";
-		}
+	if (GDA_DATA_MODEL_GET_IFACE (model)->i_get_column_title)
+		return (GDA_DATA_MODEL_GET_IFACE (model)->i_get_column_title) (model, col);
+	else {
+		g_warning ("%s() method not supported\n", __FUNCTION__);
+		return NULL;
 	}
-	else
-		title = "";
-
-	return (const gchar *) title;
 }
 
 /**
@@ -539,25 +454,12 @@ gda_data_model_get_column_title (GdaDataModel *model, gint col)
 void
 gda_data_model_set_column_title (GdaDataModel *model, gint col, const gchar *title)
 {
-	gint n_cols;
-
 	g_return_if_fail (GDA_IS_DATA_MODEL (model));
 
-	n_cols = gda_data_model_get_n_columns (model);
-	if (col >= 0 && col < n_cols) {
-		gpointer key, value;
-
-		if (g_hash_table_lookup_extended (model->priv->column_titles,
-						  GINT_TO_POINTER (col),
-						  &key, &value)) {
-			g_hash_table_remove (model->priv->column_titles,
-					     GINT_TO_POINTER (col));
-			g_free (value);
-		}
-
-		g_hash_table_insert (model->priv->column_titles, 
-				     GINT_TO_POINTER (col), g_strdup (title));
-	}
+	if (GDA_DATA_MODEL_GET_IFACE (model)->i_set_column_title)
+		(GDA_DATA_MODEL_GET_IFACE (model)->i_set_column_title) (model, col, title);
+	else 
+		g_warning ("%s() method not supported\n", __FUNCTION__);
 }
 
 /**
@@ -574,23 +476,14 @@ gda_data_model_set_column_title (GdaDataModel *model, gint col, const gchar *tit
 gint
 gda_data_model_get_column_position (GdaDataModel *model, const gchar *title)
 {
-	gint n_cols;
-	gint i;
-
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), -1);
-	g_return_val_if_fail (title != NULL, -1);
 
-	n_cols = gda_data_model_get_n_columns (model);
-	for (i = 0; i < n_cols; i++) {
-		gpointer value;
-
-		value = g_hash_table_lookup (model->priv->column_titles,
-					     GINT_TO_POINTER (i));
-		if (value && !strcmp (title, (const char *) value))
-			return i;
+	if (GDA_DATA_MODEL_GET_IFACE (model)->i_get_column_pos)
+		return (GDA_DATA_MODEL_GET_IFACE (model)->i_get_column_pos) (model, title);
+	else {
+		g_warning ("%s() method not supported\n", __FUNCTION__);
+		return -1;
 	}
-
-	return -1;
 }
 
 /**
@@ -606,9 +499,13 @@ const GdaRow *
 gda_data_model_get_row (GdaDataModel *model, gint row)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
-	g_return_val_if_fail (CLASS (model)->get_row != NULL, NULL);
 
-	return CLASS (model)->get_row (model, row);
+	if (GDA_DATA_MODEL_GET_IFACE (model)->i_get_row)
+		return (GDA_DATA_MODEL_GET_IFACE (model)->i_get_row) (model, row);
+	else {
+		g_warning ("%s() method not supported\n", __FUNCTION__);
+		return NULL;
+	}
 }
 
 /**
@@ -629,9 +526,13 @@ const GdaValue *
 gda_data_model_get_value_at (GdaDataModel *model, gint col, gint row)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
-	g_return_val_if_fail (CLASS (model)->get_value_at != NULL, NULL);
 
-	return CLASS (model)->get_value_at (model, col, row);
+	if (GDA_DATA_MODEL_GET_IFACE (model)->i_get_value_at)
+		return (GDA_DATA_MODEL_GET_IFACE (model)->i_get_value_at) (model, col, row);
+	else {
+		g_warning ("%s() method not supported\n", __FUNCTION__);
+		return NULL;
+	}
 }
 
 /**
@@ -646,9 +547,11 @@ gboolean
 gda_data_model_is_updatable (GdaDataModel *model)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
-	g_return_val_if_fail (CLASS (model)->is_updatable != NULL, FALSE);
 
-	return CLASS (model)->is_updatable (model);
+	if (GDA_DATA_MODEL_GET_IFACE (model)->i_is_updatable)
+		return (GDA_DATA_MODEL_GET_IFACE (model)->i_is_updatable) (model);
+	else 
+		return FALSE;
 }
 
 /**
@@ -665,14 +568,18 @@ gda_data_model_is_updatable (GdaDataModel *model)
 const GdaRow *
 gda_data_model_append_row (GdaDataModel *model, const GList *values)
 {
-	const GdaRow *row;
-
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
-	g_return_val_if_fail (CLASS (model)->append_row != NULL, NULL);
 
-	row = CLASS (model)->append_row (model, values);
-	gda_data_model_row_inserted (model, gda_row_get_number ((GdaRow *) row));
-	return row;
+	if (GDA_DATA_MODEL_GET_IFACE (model)->i_append_row) {
+		const GdaRow *row;
+		row = (GDA_DATA_MODEL_GET_IFACE (model)->i_append_row) (model, values);
+		gda_data_model_row_inserted (model, gda_row_get_number ((GdaRow *) row));
+		return row;
+	}
+	else {
+		g_warning ("%s() method not supported\n", __FUNCTION__);
+		return NULL;
+	}
 }
 
 /**
@@ -688,18 +595,21 @@ gda_data_model_append_row (GdaDataModel *model, const GList *values)
 gboolean
 gda_data_model_remove_row (GdaDataModel *model, const GdaRow *row)
 {
-	gboolean result;
-
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
 	g_return_val_if_fail (row != NULL, FALSE);
-	g_return_val_if_fail (CLASS (model)->remove_row != NULL, FALSE);
 
-	result = CLASS (model)->remove_row (model, row);
-	if (result) {
-		gda_data_model_row_removed (model, gda_row_get_number ((GdaRow *) row));
+	if (GDA_DATA_MODEL_GET_IFACE (model)->i_remove_row) {
+		gboolean result;
+		
+		result = (GDA_DATA_MODEL_GET_IFACE (model)->i_remove_row) (model, row);
+		if (result) 
+			gda_data_model_row_removed (model, gda_row_get_number ((GdaRow *) row));
+		return result;
 	}
-
-	return result;
+	else {
+		g_warning ("%s() method not supported\n", __FUNCTION__);
+		return FALSE;
+	}
 }
 
 /**
@@ -719,38 +629,44 @@ gda_data_model_update_row (GdaDataModel *model, const GdaRow *row)
 
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
 	g_return_val_if_fail (row != NULL, FALSE);
-	g_return_val_if_fail (CLASS (model)->update_row != NULL, FALSE);
 
-	result = CLASS (model)->update_row (model, row);
-	if (result) {
-		gda_data_model_row_updated (model, gda_row_get_number ((GdaRow *) row));
+	if (GDA_DATA_MODEL_GET_IFACE (model)->i_update_row) {
+		gboolean result;
+		
+		result = (GDA_DATA_MODEL_GET_IFACE (model)->i_update_row) (model, row);
+		if (result) 
+			gda_data_model_row_updated (model, gda_row_get_number ((GdaRow *) row));
+		return result;
 	}
-	return result;
+	else {
+		g_warning ("%s() method not supported\n", __FUNCTION__);
+		return FALSE;
+	}
 }
 
 /**
  * gda_data_model_append_column
  * @model: a #GdaDataModel object.
- * @attrs: a #GdaFieldAttributes describing the column to add.
+ * @attrs: a #GdaDataModelColumnAttributes describing the column to add.
  *
  * Appends a column to the given data model.  If successful, the position of
  * the new column in the data model is set on @col, and you can grab it using
- * @gda_field_attributes_get_position.
+ * @gda_data_model_column_attributes_get_position.
  *
  * Returns: %TRUE if successful, %FALSE otherwise.
  */
 gboolean
-gda_data_model_append_column (GdaDataModel *model, const GdaFieldAttributes *attrs)
+gda_data_model_append_column (GdaDataModel *model, const GdaDataModelColumnAttributes *attrs)
 {
-	gboolean result;
-	
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
-	g_return_val_if_fail (CLASS (model)->append_column != NULL, FALSE);
 	g_return_val_if_fail (attrs != NULL, FALSE);
-
-	result = CLASS (model)->append_column (model, attrs);
-
-	return result;
+	
+	if (GDA_DATA_MODEL_GET_IFACE (model)->i_append_column) 
+		return (GDA_DATA_MODEL_GET_IFACE (model)->i_append_column) (model, attrs);
+	else {
+		g_warning ("%s() method not supported\n", __FUNCTION__);
+		return FALSE;
+	}
 }
 
 /**
@@ -766,14 +682,14 @@ gda_data_model_append_column (GdaDataModel *model, const GdaFieldAttributes *att
 gboolean
 gda_data_model_remove_column (GdaDataModel *model, gint col)
 {
-	gboolean result;
-
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
-	g_return_val_if_fail (CLASS (model)->remove_column != NULL, FALSE);
 
-	result = CLASS (model)->remove_column (model, col);
-
-	return result;
+	if (GDA_DATA_MODEL_GET_IFACE (model)->i_remove_column) 
+		return (GDA_DATA_MODEL_GET_IFACE (model)->i_remove_column) (model, col);
+	else {
+		g_warning ("%s() method not supported\n", __FUNCTION__);
+		return FALSE;
+	}
 }
 
 /**
@@ -788,17 +704,17 @@ gda_data_model_remove_column (GdaDataModel *model, gint col)
  * Returns: %TRUE if successful, %FALSE otherwise.
  */
 gboolean
-gda_data_model_update_column (GdaDataModel *model, gint col, const GdaFieldAttributes *attrs)
+gda_data_model_update_column (GdaDataModel *model, gint col, const GdaDataModelColumnAttributes *attrs)
 {
-	gboolean result;
-
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
-	g_return_val_if_fail (CLASS (model)->update_column != NULL, FALSE);
 	g_return_val_if_fail (attrs != NULL, FALSE);
 
-	result = CLASS (model)->update_column (model, col, attrs);
-
-	return result;
+	if (GDA_DATA_MODEL_GET_IFACE (model)->i_update_column) 
+		return (GDA_DATA_MODEL_GET_IFACE (model)->i_update_column) (model, col, attrs);
+	else {
+		g_warning ("%s() method not supported\n", __FUNCTION__);
+		return FALSE;
+	}
 }
 
 /**
@@ -849,7 +765,7 @@ gda_data_model_foreach (GdaDataModel *model,
  * Checks whether this data model is in updating mode or not. Updating
  * mode is set to %TRUE when @gda_data_model_begin_update has been
  * called successfully, and is not set back to %FALSE until either
- * @gda_data_model_cancel_update or @gda_data_model_end_update have
+ * @gda_data_model_cancel_update or @gda_data_model_commit_update have
  * been called.
  *
  * Returns: %TRUE if updating mode, %FALSE otherwise.
@@ -858,7 +774,13 @@ gboolean
 gda_data_model_has_changed (GdaDataModel *model)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
-	return model->priv->updating;
+
+	if (GDA_DATA_MODEL_GET_IFACE (model)->i_has_changed) 
+		return (GDA_DATA_MODEL_GET_IFACE (model)->i_has_changed) (model);
+	else {
+		g_warning ("%s() method not supported\n", __FUNCTION__);
+		return FALSE;
+	}
 }
 
 /**
@@ -874,18 +796,19 @@ gboolean
 gda_data_model_begin_update (GdaDataModel *model)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
-	g_return_val_if_fail (model->priv->updating == FALSE, FALSE);
 
 	if (!gda_data_model_is_updatable (model)) {
 		gda_log_error (_("Data model %p is not updatable"), model);
 		return FALSE;
 	}
 
-	model->priv->updating = TRUE;
+	if (GDA_DATA_MODEL_GET_IFACE (model)->i_begin_changes) 
+		(GDA_DATA_MODEL_GET_IFACE (model)->i_begin_changes) (model);
+	
 	g_signal_emit (G_OBJECT (model),
 		       gda_data_model_signals[BEGIN_UPDATE], 0);
-
-	return model->priv->updating;
+	
+	return TRUE;
 }
 
 /**
@@ -901,17 +824,23 @@ gboolean
 gda_data_model_cancel_update (GdaDataModel *model)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
-	g_return_val_if_fail (model->priv->updating, FALSE);
 
-	g_signal_emit (G_OBJECT (model),
-		       gda_data_model_signals[CANCEL_UPDATE], 0);
-	model->priv->updating = FALSE;
-
-	return TRUE;
+	if (GDA_DATA_MODEL_GET_IFACE (model)->i_cancel_changes) {
+		gboolean status;
+		status = (GDA_DATA_MODEL_GET_IFACE (model)->i_cancel_changes) (model);
+		if (status)
+			g_signal_emit (G_OBJECT (model),
+				       gda_data_model_signals[CANCEL_UPDATE], 0);
+		return status;
+	}
+	else {
+		g_warning ("%s() method not supported\n", __FUNCTION__);
+		return FALSE;
+	}
 }
 
 /**
- * gda_data_model_end_update
+ * gda_data_model_commit_update
  * @model: a #GdaDataModel object.
  *
  * Approves all modifications and send them to the underlying
@@ -920,15 +849,22 @@ gda_data_model_cancel_update (GdaDataModel *model)
  * Returns: %TRUE on success, %FALSE if there was an error.
  */
 gboolean
-gda_data_model_end_update (GdaDataModel *model)
+gda_data_model_commit_update (GdaDataModel *model)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
-	g_return_val_if_fail (model->priv->updating, FALSE);
 
-	g_signal_emit (G_OBJECT (model), gda_data_model_signals[END_UPDATE], 0);
-	model->priv->updating = FALSE;
-
-	return TRUE;
+	if (GDA_DATA_MODEL_GET_IFACE (model)->i_commit_changes) {
+		gboolean status;
+		status = (GDA_DATA_MODEL_GET_IFACE (model)->i_commit_changes) (model);
+		if (status)
+			g_signal_emit (G_OBJECT (model),
+				       gda_data_model_signals[COMMIT_UPDATE], 0);
+		return status;
+	}
+	else {
+		g_warning ("%s() method not supported\n", __FUNCTION__);
+		return FALSE;
+	}
 }
 
 static gchar *
@@ -1094,7 +1030,7 @@ gda_data_model_to_xml_node (GdaDataModel *model, const gchar *name)
 	rows = gda_data_model_get_n_rows (model);
 	cols = gda_data_model_get_n_columns (model);
 	for (i = 0; i < cols; i++) {
-		GdaFieldAttributes *fa;
+		GdaDataModelColumnAttributes *fa;
 		xmlNodePtr field;
 
 		fa = gda_data_model_describe_column (model, i);
@@ -1104,16 +1040,16 @@ gda_data_model_to_xml_node (GdaDataModel *model, const gchar *name)
 		}
 
 		field = xmlNewChild (node, NULL, "field", NULL);
-		xmlSetProp (field, "name", gda_field_attributes_get_name (fa));
-		xmlSetProp (field, "caption", gda_field_attributes_get_caption (fa));
-		xmlSetProp (field, "gdatype", gda_type_to_string (gda_field_attributes_get_gdatype (fa)));
-		xml_set_int (field, "size", gda_field_attributes_get_defined_size (fa));
-		xml_set_int (field, "scale", gda_field_attributes_get_scale (fa));
-		xml_set_boolean (field, "pkey", gda_field_attributes_get_primary_key (fa));
-		xml_set_boolean (field, "unique", gda_field_attributes_get_unique_key (fa));
-		xml_set_boolean (field, "isnull", gda_field_attributes_get_allow_null (fa));
-		xml_set_boolean (field, "auto_increment", gda_field_attributes_get_auto_increment (fa));
-		xmlSetProp (field, "references", gda_field_attributes_get_references (fa));
+		xmlSetProp (field, "name", gda_data_model_column_attributes_get_name (fa));
+		xmlSetProp (field, "caption", gda_data_model_column_attributes_get_caption (fa));
+		xmlSetProp (field, "gdatype", gda_type_to_string (gda_data_model_column_attributes_get_gdatype (fa)));
+		xml_set_int (field, "size", gda_data_model_column_attributes_get_defined_size (fa));
+		xml_set_int (field, "scale", gda_data_model_column_attributes_get_scale (fa));
+		xml_set_boolean (field, "pkey", gda_data_model_column_attributes_get_primary_key (fa));
+		xml_set_boolean (field, "unique", gda_data_model_column_attributes_get_unique_key (fa));
+		xml_set_boolean (field, "isnull", gda_data_model_column_attributes_get_allow_null (fa));
+		xml_set_boolean (field, "auto_increment", gda_data_model_column_attributes_get_auto_increment (fa));
+		xmlSetProp (field, "references", gda_data_model_column_attributes_get_references (fa));
 		xml_set_int (field, "position", i);
 	}
 	
@@ -1256,7 +1192,11 @@ const gchar *
 gda_data_model_get_command_text (GdaDataModel *model)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
-	return model->priv->cmd_text;
+
+	if (GDA_DATA_MODEL_GET_IFACE (model)->i_get_command)
+		return (GDA_DATA_MODEL_GET_IFACE (model)->i_get_command) (model, NULL);
+	else
+		return NULL;
 }
 
 /**
@@ -1265,16 +1205,19 @@ gda_data_model_get_command_text (GdaDataModel *model)
  * @txt: the command text.
  *
  * Sets the command text of the given @model.
+ *
+ * Returns: %TRUE if successful, %FALSE otherwise.
  */
-void
+gboolean
 gda_data_model_set_command_text (GdaDataModel *model, const gchar *txt)
 {
 	g_return_if_fail (GDA_IS_DATA_MODEL (model));
 	g_return_if_fail (txt != NULL);
-
-	if (model->priv->cmd_text)
-		g_free (model->priv->cmd_text);
-	model->priv->cmd_text = g_strdup (txt);
+	
+	if (GDA_DATA_MODEL_GET_IFACE (model)->i_set_command)
+		return (GDA_DATA_MODEL_GET_IFACE (model)->i_set_command) (model, txt, -1);
+	else
+		return FALSE;
 }
 
 /**
@@ -1289,7 +1232,14 @@ GdaCommandType
 gda_data_model_get_command_type (GdaDataModel *model)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), GDA_COMMAND_TYPE_INVALID);
-	return model->priv->cmd_type;
+
+	if (GDA_DATA_MODEL_GET_IFACE (model)->i_get_command) {
+		GdaCommandType type;
+		(GDA_DATA_MODEL_GET_IFACE (model)->i_get_command) (model, &type);
+		return type;
+	}
+	else
+		return GDA_COMMAND_TYPE_INVALID;
 }
 
 /**
@@ -1298,11 +1248,16 @@ gda_data_model_get_command_type (GdaDataModel *model)
  * @type: the type of the command (one of #GdaCommandType)
  *
  * Sets the type of command that generated this data model.
+ *
+ * Returns: %TRUE if successful, %FALSE otherwise.
  */
-void
+gboolean
 gda_data_model_set_command_type (GdaDataModel *model, GdaCommandType type)
 {
 	g_return_if_fail (GDA_IS_DATA_MODEL (model));
-	model->priv->cmd_type = type;
+	if (GDA_DATA_MODEL_GET_IFACE (model)->i_set_command)
+		return (GDA_DATA_MODEL_GET_IFACE (model)->i_set_command) (model, NULL, type);
+	else
+		return FALSE;
 }
 

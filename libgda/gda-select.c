@@ -1,8 +1,9 @@
 /* GDA common library
- * Copyright (C) 1998-2002 The GNOME Foundation.
+ * Copyright (C) 1998 - 2004 The GNOME Foundation.
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
+ *      Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -26,6 +27,7 @@
 #include <libgda/gda-intl.h>
 #include <libgda/gda-log.h>
 #include <libgda/gda-select.h>
+#include <libgda/gda-data-model.h>
 #include <libgda/gda-value.h>
 #include <string.h>
 
@@ -61,8 +63,8 @@ data_model_changed_cb (GdaDataModel *model, gpointer user_data)
  * GdaSelect class implementation
  */
 
-static GdaFieldAttributes *
-gda_select_describe_column (GdaDataModel *model, gint col)
+static GdaDataModelColumnAttributes *
+gda_select_describe_column (GdaDataModelBase *model, gint col)
 {
 	GList *l;
 	GdaSelect *sel = (GdaSelect *) model;
@@ -74,11 +76,11 @@ gda_select_describe_column (GdaDataModel *model, gint col)
 	if (!l)
 		return NULL;
 
-	return gda_field_attributes_copy ((GdaFieldAttributes *) l->data);
+	return gda_data_model_column_attributes_copy ((GdaDataModelColumnAttributes *) l->data);
 }
 
 static const GdaRow *
-gda_select_get_row (GdaDataModel *model, gint row)
+gda_select_get_row (GdaDataModelBase *model, gint row)
 {
 	GdaSelect *sel = (GdaSelect *) model;
 
@@ -87,11 +89,11 @@ gda_select_get_row (GdaDataModel *model, gint row)
 	/* FIXME: identify this row, so that it can be updated and changes
 	   proxied to the source_model */
 
-	return GDA_DATA_MODEL_CLASS (parent_class)->get_row (model, row);
+	return GDA_DATA_MODEL_BASE_CLASS (parent_class)->get_row (model, row);
 }
 
 static gboolean
-gda_select_is_updatable (GdaDataModel *model)
+gda_select_is_updatable (GdaDataModelBase *model)
 {
 	GdaSelect *sel = (GdaSelect *) model;
 
@@ -101,7 +103,7 @@ gda_select_is_updatable (GdaDataModel *model)
 }
 
 static const GdaRow *
-gda_select_append_row (GdaDataModel *model, const GList *values)
+gda_select_append_row (GdaDataModelBase *model, const GList *values)
 {
 	GdaSelect *sel = (GdaSelect *) model;
 
@@ -114,7 +116,7 @@ static void
 gda_select_class_init (GdaSelectClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
-	GdaDataModelClass *model_class = GDA_DATA_MODEL_CLASS (klass);
+	GdaDataModelBaseClass *model_class = GDA_DATA_MODEL_BASE_CLASS (klass);
 
 	parent_class = g_type_class_peek_parent (klass);
 
@@ -159,7 +161,7 @@ gda_select_finalize (GObject *object)
 
 	/* free memory */
 	if (sel->priv->field_descriptions) {
-		g_list_foreach (sel->priv->field_descriptions, (GFunc) gda_field_attributes_free, NULL);
+		g_list_foreach (sel->priv->field_descriptions, (GFunc) gda_data_model_column_attributes_free, NULL);
 		g_list_free (sel->priv->field_descriptions);
 		sel->priv->field_descriptions = NULL;
 	}
@@ -321,7 +323,7 @@ populate_from_single_table (GdaSelect *sel, const gchar *table_name, GList *sql_
 		GList *value_list = NULL;
 
 		for (c = 0; c < cols; c++) {
-			GdaFieldAttributes *fa;
+			GdaDataModelColumnAttributes *fa;
 
 			fa = gda_data_model_describe_column (table, c);
 
@@ -349,7 +351,7 @@ populate_from_single_table (GdaSelect *sel, const gchar *table_name, GList *sql_
 			}
 		}
 
-		GDA_DATA_MODEL_CLASS (parent_class)->append_row (GDA_DATA_MODEL (sel), value_list);
+		GDA_DATA_MODEL_BASE_CLASS (parent_class)->append_row (GDA_DATA_MODEL_BASE (sel), value_list);
 
 		g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
 		g_list_free (value_list);
@@ -384,7 +386,7 @@ gda_select_run (GdaSelect *sel)
 		return sel->priv->run_result;
 
 	gda_data_model_array_clear (GDA_DATA_MODEL_ARRAY (sel));
-	g_list_foreach (sel->priv->field_descriptions, (GFunc) gda_field_attributes_free, NULL);
+	g_list_foreach (sel->priv->field_descriptions, (GFunc) gda_data_model_column_attributes_free, NULL);
 	g_list_free (sel->priv->field_descriptions);
 
 	/* parse the SQL command */

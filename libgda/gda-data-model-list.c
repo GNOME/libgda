@@ -1,8 +1,9 @@
 /* GDA common library
- * Copyright (C) 1998-2002 The GNOME Foundation.
+ * Copyright (C) 1998 - 2004 The GNOME Foundation.
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
+ *      Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -23,7 +24,7 @@
 #include <libgda/gda-data-model-array.h>
 #include <libgda/gda-data-model-list.h>
 
-#define PARENT_TYPE GDA_TYPE_DATA_MODEL
+#define PARENT_TYPE GDA_TYPE_DATA_MODEL_BASE
 
 struct _GdaDataModelListPrivate {
 	GdaDataModelArray *rows;
@@ -41,28 +42,28 @@ static GObjectClass *parent_class = NULL;
  */
 
 static gint
-gda_data_model_list_get_n_rows (GdaDataModel *model)
+gda_data_model_list_get_n_rows (GdaDataModelBase *model)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_LIST (model), -1);
 	return gda_data_model_get_n_rows (GDA_DATA_MODEL (GDA_DATA_MODEL_LIST (model)->priv->rows));
 }
 
 static gint
-gda_data_model_list_get_n_columns (GdaDataModel *model)
+gda_data_model_list_get_n_columns (GdaDataModelBase *model)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_LIST (model), -1);
 	return 1;
 }
 
 static const GdaRow *
-gda_data_model_list_get_row (GdaDataModel *model, gint row)
+gda_data_model_list_get_row (GdaDataModelBase *model, gint row)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_LIST (model), NULL);
 	return gda_data_model_get_row (GDA_DATA_MODEL (GDA_DATA_MODEL_LIST (model)->priv->rows), row);
 }
 
 static const GdaValue *
-gda_data_model_list_get_value_at (GdaDataModel *model, gint col, gint row)
+gda_data_model_list_get_value_at (GdaDataModelBase *model, gint col, gint row)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_LIST (model), NULL);
 	g_return_val_if_fail (col == 0, NULL);
@@ -71,14 +72,14 @@ gda_data_model_list_get_value_at (GdaDataModel *model, gint col, gint row)
 }
 
 static gboolean
-gda_data_model_list_is_updatable (GdaDataModel *model)
+gda_data_model_list_is_updatable (GdaDataModelBase *model)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_LIST (model), FALSE);
 	return TRUE;
 }
 
 static const GdaRow *
-gda_data_model_list_append_row (GdaDataModel *model, const GList *values)
+gda_data_model_list_append_row (GdaDataModelBase *model, const GList *values)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_LIST (model), NULL);
 	g_return_val_if_fail (values != NULL, NULL);
@@ -88,7 +89,7 @@ gda_data_model_list_append_row (GdaDataModel *model, const GList *values)
 }
 
 static gboolean
-gda_data_model_list_remove_row (GdaDataModel *model, const GdaRow *row)
+gda_data_model_list_remove_row (GdaDataModelBase *model, const GdaRow *row)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_LIST (model), FALSE);
 	g_return_val_if_fail (row != NULL, FALSE);
@@ -100,7 +101,7 @@ static void
 gda_data_model_list_class_init (GdaDataModelListClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
-	GdaDataModelClass *model_class = GDA_DATA_MODEL_CLASS (klass);
+	GdaDataModelBaseClass *model_class = GDA_DATA_MODEL_BASE_CLASS (klass);
 
 	parent_class = g_type_class_peek_parent (klass);
 

@@ -1,8 +1,9 @@
 /* GDA DB IBM DB2 provider
- * Copyright (C) 1998-2003 The GNOME Foundation
+ * Copyright (C) 1998 - 2004 The GNOME Foundation
  *
  * AUTHORS:
- *	Sergey N. Belinsky <sergey_be@mail.ru>
+ *         Sergey N. Belinsky <sergey_be@mail.ru>
+ *         Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -41,12 +42,12 @@ typedef struct _GdaIBMDB2RecordsetPrivate GdaIBMDB2RecordsetPrivate;
 typedef struct _GdaIBMDB2Field            GdaIBMDB2Field;
 
 struct _GdaIBMDB2Recordset {
-	GdaDataModel model;
+	GdaDataModelBase model;
 	GdaIBMDB2RecordsetPrivate *priv;
 };
 
 struct _GdaIBMDB2RecordsetClass {
-	GdaDataModelClass parent_class;
+	GdaDataModelBaseClass parent_class;
 };
 
 struct _GdaIBMDB2RecordsetPrivate

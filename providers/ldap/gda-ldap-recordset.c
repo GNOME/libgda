@@ -1,9 +1,9 @@
 /* GDA LDAP provider
- * Copyright (C) 1998-2003 The GNOME Foundation.
+ * Copyright (C) 1998 - 2004 The GNOME Foundation.
  *
  * AUTHORS:
  *      Michael Lausch <michael@lausch.at>
- *	    Rodrigo Moya <rodrigo@gnome-db.org>
+ *      Rodrigo Moya <rodrigo@gnome-db.org>
  *      Vivien Malerba <malerba@gnome-db.org>
  *      German Poo-Caaman~o <gpoo@ubiobio.cl>
  *
@@ -28,7 +28,7 @@
 #include "gda-ldap.h"
 #include "gda-ldap-recordset.h"
 
-#define PARENT_TYPE GDA_TYPE_DATA_MODEL
+#define PARENT_TYPE GDA_TYPE_DATA_MODEL_BASE
 
 static void gda_ldap_recordset_class_init (GdaLdapRecordsetClass *klass);
 static void gda_ldap_recordset_init       (GdaLdapRecordset *recset,
@@ -143,7 +143,7 @@ fetch_row (GdaDataModel *model, GdaLdapRecordset *recset, gulong rownum)
  */
 
 static gint
-gda_ldap_recordset_get_n_rows (GdaDataModel *model)
+gda_ldap_recordset_get_n_rows (GdaDataModelBase *model)
 {
 	GdaLdapRecordset *recset = (GdaLdapRecordset *) model;
 
@@ -153,7 +153,7 @@ gda_ldap_recordset_get_n_rows (GdaDataModel *model)
 }
 
 static gint
-gda_ldap_recordset_get_n_columns (GdaDataModel *model)
+gda_ldap_recordset_get_n_columns (GdaDataModelBase *model)
 {
 	GdaLdapRecordset *recset = (GdaLdapRecordset *) model;
 
@@ -162,11 +162,11 @@ gda_ldap_recordset_get_n_columns (GdaDataModel *model)
 	return 1; /* FIXME */
 }
 
-static GdaFieldAttributes *
-gda_ldap_recordset_describe_column (GdaDataModel *model, gint col)
+static GdaDataModelColumnAttributes *
+gda_ldap_recordset_describe_column (GdaDataModelBase *model, gint col)
 {
 	gint field_count = 0;
-	GdaFieldAttributes *attrs;
+	GdaDataModelColumnAttributes *attrs;
 /*	LDAP_FIELD *ldap_fields;*/
 	GdaLdapRecordset *recset = (GdaLdapRecordset *) model;
 
@@ -177,28 +177,28 @@ gda_ldap_recordset_describe_column (GdaDataModel *model, gint col)
 		return NULL;
 	}
 
-	/* create the GdaFieldAttributes to be returned */
+	/* create the GdaDataModelColumnAttributes to be returned */
 	/*field_count = ldap_num_fields (recset->ldap_res);*/
 	if (col >= field_count)
 		return NULL;
 
-	attrs = gda_field_attributes_new ();
+	attrs = gda_data_model_column_attributes_new ();
 
 	/*ldap_fields = ldap_fetch_field (recset->ldap_res);*/
 /*	if (!ldap_fields)
 		return NULL;
 */
 /*	if (ldap_fields[col].name)
-		gda_field_attributes_set_name (attrs, ldap_fields[col].name);
-	gda_field_attributes_set_defined_size (attrs, ldap_fields[col].max_length);
-	gda_field_attributes_set_scale (attrs, ldap_fields[col].decimals);
-	gda_field_attributes_set_gdatype (attrs, gda_ldap_type_to_gda (ldap_fields[col].type));
+		gda_data_model_column_attributes_set_name (attrs, ldap_fields[col].name);
+	gda_data_model_column_attributes_set_defined_size (attrs, ldap_fields[col].max_length);
+	gda_data_model_column_attributes_set_scale (attrs, ldap_fields[col].decimals);
+	gda_data_model_column_attributes_set_gdatype (attrs, gda_ldap_type_to_gda (ldap_fields[col].type));
 */
 	return attrs;
 }
 
 static const GdaRow *
-gda_ldap_recordset_get_row (GdaDataModel *model, gint row)
+gda_ldap_recordset_get_row (GdaDataModelBase *model, gint row)
 {
 	gint rows = 0;
 	gint fetched_rows = 0;
@@ -219,7 +219,7 @@ gda_ldap_recordset_get_row (GdaDataModel *model, gint row)
 	gda_data_model_freeze (GDA_DATA_MODEL (recset));
 
 	for (i = fetched_rows; i <= row; i++) {
-		fields = fetch_row (model, recset, i);
+		fields = fetch_row (GDA_DATA_MODEL (model), recset, i);
 		if (!fields)
 			return NULL;
 
@@ -232,7 +232,7 @@ gda_ldap_recordset_get_row (GdaDataModel *model, gint row)
 }
 
 static const GdaValue *
-gda_ldap_recordset_get_value_at (GdaDataModel *model, gint col, gint row)
+gda_ldap_recordset_get_value_at (GdaDataModelBase *model, gint col, gint row)
 {
 	gint cols = 0;
 	const GdaRow *fields;
@@ -249,19 +249,19 @@ gda_ldap_recordset_get_value_at (GdaDataModel *model, gint col, gint row)
 }
 
 static gboolean
-gda_ldap_recordset_is_updatable (GdaDataModel *model)
+gda_ldap_recordset_is_updatable (GdaDataModelBase *model)
 {
 	GdaCommandType cmd_type;
 	GdaLdapRecordset *recset = (GdaLdapRecordset *) model;
 
 	g_return_val_if_fail (GDA_IS_LDAP_RECORDSET (recset), FALSE);
 	
-	cmd_type = gda_data_model_get_command_type (model);
+	cmd_type = gda_data_model_get_command_type (GDA_DATA_MODEL (model));
 	return cmd_type == GDA_COMMAND_TYPE_TABLE ? TRUE : FALSE;
 }
 
 static const GdaRow *
-gda_ldap_recordset_append_row (GdaDataModel *model, const GList *values)
+gda_ldap_recordset_append_row (GdaDataModelBase *model, const GList *values)
 {
 	GString *sql;
 	GdaRow *row;
@@ -273,8 +273,8 @@ gda_ldap_recordset_append_row (GdaDataModel *model, const GList *values)
 
 	g_return_val_if_fail (GDA_IS_LDAP_RECORDSET (recset), NULL);
 	g_return_val_if_fail (values != NULL, NULL);
-	g_return_val_if_fail (gda_data_model_is_updatable (model), NULL);
-	g_return_val_if_fail (gda_data_model_has_changed (model), NULL);
+	g_return_val_if_fail (gda_data_model_is_updatable (GDA_DATA_MODEL (model)), NULL);
+	g_return_val_if_fail (gda_data_model_has_changed (GDA_DATA_MODEL (model)), NULL);
 
 /*	cols = ldap_num_fields (recset->ldap_res);*/
 	if (cols != g_list_length ((GList *) values)) {
@@ -286,12 +286,12 @@ gda_ldap_recordset_append_row (GdaDataModel *model, const GList *values)
 
 	/* prepare the SQL command */
 	sql = g_string_new ("INSERT INTO ");
-	sql = g_string_append (sql, gda_data_model_get_command_text (model));
+	sql = g_string_append (sql, gda_data_model_get_command_text (GDA_DATA_MODEL (model)));
 	sql = g_string_append (sql, "(");
 	for (i = 0; i < cols; i++) {
-		GdaFieldAttributes *fa;
+		GdaDataModelColumnAttributes *fa;
 
-		fa = gda_data_model_describe_column (model, i);
+		fa = gda_data_model_describe_column (GDA_DATA_MODEL (model), i);
 		if (!fa) {
 			gda_connection_add_error_string (
 				recset->cnc,
@@ -302,7 +302,7 @@ gda_ldap_recordset_append_row (GdaDataModel *model, const GList *values)
 
 		if (i != 0)
 			sql = g_string_append (sql, ", ");
-		sql = g_string_append (sql, gda_field_attributes_get_name (fa));
+		sql = g_string_append (sql, gda_data_model_column_attributes_get_name (fa));
 	}
 	sql = g_string_append (sql, ") VALUES (");
 
@@ -337,20 +337,20 @@ gda_ldap_recordset_append_row (GdaDataModel *model, const GList *values)
 	}
 */
 	/* append the row to the data model */
-	row = gda_row_new_from_list (model, values);
+	row = gda_row_new_from_list (GDA_DATA_MODEL (model), values);
 	g_ptr_array_add (recset->rows, row);
 
 	return (const GdaRow *) row;
 }
 
 static gboolean
-gda_ldap_recordset_remove_row (GdaDataModel *model, const GdaRow *row)
+gda_ldap_recordset_remove_row (GdaDataModelBase *model, const GdaRow *row)
 {
 	return FALSE;
 }
 
 static gboolean
-gda_ldap_recordset_update_row (GdaDataModel *model, const GdaRow *row)
+gda_ldap_recordset_update_row (GdaDataModelBase *model, const GdaRow *row)
 {
 	return FALSE;
 }
@@ -359,7 +359,7 @@ static void
 gda_ldap_recordset_class_init (GdaLdapRecordsetClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
-	GdaDataModelClass *model_class = GDA_DATA_MODEL_CLASS (klass);
+	GdaDataModelBaseClass *model_class = GDA_DATA_MODEL_BASE_CLASS (klass);
 
 	parent_class = g_type_class_peek_parent (klass);
 

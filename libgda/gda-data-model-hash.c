@@ -1,9 +1,10 @@
 /* GDA library
- * Copyright (C) 1998-2002 The GNOME Foundation.
+ * Copyright (C) 1998 - 2004 The GNOME Foundation.
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
  *	Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+ *      Vivien Malerba <malerba@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -24,7 +25,7 @@
 #include <glib/ghash.h>
 #include <libgda/gda-data-model-hash.h>
 
-#define PARENT_TYPE GDA_TYPE_DATA_MODEL
+#define PARENT_TYPE GDA_TYPE_DATA_MODEL_BASE
 
 struct _GdaDataModelHashPrivate {
 	/* number of columns in each row */
@@ -46,21 +47,44 @@ static GObjectClass *parent_class = NULL;
  */
 
 static gint
-gda_data_model_hash_get_n_rows (GdaDataModel *model)
+gda_data_model_hash_get_n_rows (GdaDataModelBase *model)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_HASH (model), -1);
 	return g_hash_table_size (GDA_DATA_MODEL_HASH (model)->priv->rows);
 }
 
 static gint
-gda_data_model_hash_get_n_columns (GdaDataModel *model)
+gda_data_model_hash_get_n_columns (GdaDataModelBase *model)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_HASH (model), -1);
 	return GDA_DATA_MODEL_HASH (model)->priv->number_of_columns;
 }
 
-static GdaFieldAttributes *
-gda_data_model_hash_describe_column (GdaDataModel *model, gint col)
+static const GdaRow *
+gda_data_model_hash_get_row (GdaDataModelBase *model, gint row)
+{
+	g_return_val_if_fail (GDA_IS_DATA_MODEL_HASH (model), NULL);
+
+	return (const GdaRow *) g_hash_table_lookup (GDA_DATA_MODEL_HASH (model)->priv->rows,
+						     GINT_TO_POINTER (row));
+}
+
+static const GdaValue *
+gda_data_model_hash_get_value_at (GdaDataModelBase *model, gint col, gint row)
+{
+	const GdaRow *fields;
+
+	g_return_val_if_fail (GDA_IS_DATA_MODEL_HASH (model), NULL);
+
+	fields = gda_data_model_hash_get_row (model, row);
+	if (fields == NULL)
+		return NULL;
+
+	return (const GdaValue *) gda_row_get_value ((GdaRow *) fields, col);
+}
+
+static GdaDataModelColumnAttributes *
+gda_data_model_hash_describe_column (GdaDataModelBase *model, gint col)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_HASH (model), NULL);
 
@@ -68,14 +92,14 @@ gda_data_model_hash_describe_column (GdaDataModel *model, gint col)
 }
 
 static gboolean
-gda_data_model_hash_is_updatable (GdaDataModel *model)
+gda_data_model_hash_is_updatable (GdaDataModelBase *model)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_HASH (model), FALSE);
 	return TRUE;
 }
 
 static const GdaRow *
-gda_data_model_hash_append_row (GdaDataModel *model, const GList *values)
+gda_data_model_hash_append_row (GdaDataModelBase *model, const GList *values)
 {
 	GdaRow *row;
 	gint cols, rownum;
@@ -88,26 +112,26 @@ gda_data_model_hash_append_row (GdaDataModel *model, const GList *values)
 		return NULL;
 
 	/* create the GdaRow to add */
-	row = gda_row_new_from_list (model, values);
+	row = gda_row_new_from_list (GDA_DATA_MODEL (model), values);
 
 	/* get the new row number */
-	rownum = gda_data_model_get_n_rows (model);
+	rownum = gda_data_model_get_n_rows (GDA_DATA_MODEL (model));
 
 	if (row) {
 		gda_data_model_hash_insert_row (
 			GDA_DATA_MODEL_HASH (model),
 			rownum,
 			row);
+
 		gda_row_set_number (row, rownum);
-		gda_data_model_row_inserted (model, rownum);
-		gda_data_model_changed (model);
+		gda_data_model_row_inserted (GDA_DATA_MODEL (model), rownum);
 	}
 
 	return row;
 }
 
 static gboolean
-gda_data_model_hash_remove_row (GdaDataModel *model, const GdaRow *row)
+gda_data_model_hash_remove_row (GdaDataModelBase *model, const GdaRow *row)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_HASH (model), FALSE);
 	return FALSE;
@@ -123,7 +147,7 @@ static void
 gda_data_model_hash_class_init (GdaDataModelHashClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
-	GdaDataModelClass *model_class = GDA_DATA_MODEL_CLASS (klass);
+	GdaDataModelBaseClass *model_class = GDA_DATA_MODEL_BASE_CLASS (klass);
 
 	parent_class = g_type_class_peek_parent (klass);
 
@@ -217,29 +241,6 @@ gda_data_model_hash_new (gint cols)
 }
 
 /**
- * gda_data_model_hash_get_value_at
- * @model: the #GdaDataModelHash to retrieve the value from.
- * @col: column number (starting from 0).
- * @row: row number (starting from 0).
- *
- * Retrieves the value at a specified column and row.
- * Returns: a pointer to a #GdaValue.
- */
-const GdaValue *
-gda_data_model_hash_get_value_at (GdaDataModel *model, gint col, gint row)
-{
-	const GdaRow *fields;
-
-	g_return_val_if_fail (GDA_IS_DATA_MODEL_HASH (model), NULL);
-
-	fields = gda_data_model_hash_get_row (model, row);
-	if (fields == NULL)
-		return NULL;
-
-	return (const GdaValue *) gda_row_get_value ((GdaRow *) fields, col);
-}
-
-/**
  * gda_data_model_hash_insert_row
  * @model: the #GdaDataModelHash which is gonna hold the row.
  * @rownum: the number of the row.
@@ -270,24 +271,6 @@ gda_data_model_hash_insert_row (GdaDataModelHash *model,
 			     GINT_TO_POINTER (rownum), row);
 	gda_data_model_row_inserted (GDA_DATA_MODEL (model), rownum);
 	gda_data_model_changed (GDA_DATA_MODEL (model));
-}
-
-/**
- * gda_data_model_hash_get_row
- * @model: the GdaDataModelHash
- * @row: row number
- *
- * Retrieves a row from the underlying hash table.
- *
- * Returns: a #GdaRow or NULL if the requested row is not in the hash table.
- */
-const GdaRow *
-gda_data_model_hash_get_row (GdaDataModel *model, gint row)
-{
-	g_return_val_if_fail (GDA_IS_DATA_MODEL_HASH (model), NULL);
-
-	return (const GdaRow *) g_hash_table_lookup (GDA_DATA_MODEL_HASH (model)->priv->rows,
-						     GINT_TO_POINTER (row));
 }
 
 /**
