@@ -21,6 +21,6 @@ serverdir=$(libdir)/bonobo/servers
 server_in_files = GNOME_Database_Provider_MySQL.server.in
 server_DATA = $(server_in_files:.server.in=.server)
 
-@XML_I18N_MERGE_SERVER_RULE@
+@INTLTOOL_SERVER_RULE@
 
 EXTRA_DIST=$(server_in_files) $(server_DATA)

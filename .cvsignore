@@ -18,12 +18,7 @@ stamp-h
 libgda.spec
 libgda.pc
 stamp.h
-xml-i18n-update
-xml-i18n-merge
-xml-i18n-extract
-xml-i18n-update.in
-xml-i18n-merge.in
-xml-i18n-extract.in
+intltool-*
 control-stamp
 configure-stamp
 build-stamp

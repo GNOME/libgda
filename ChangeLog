@@ -1,5 +1,11 @@
 2001-11-04  Carlos Perelló Marín <carlos@gnome-db.org>
 
+	* configure.in:
+	* Makefile.am:
+	* */*/Makefile.am: Migrated to intltool
+
+2001-11-04  Carlos Perelló Marín <carlos@gnome-db.org>
+
 	* acconfig.h, configure.in: Adapted to use GLIB_GETTEXT
 
 2001-11-04  Carlos Perelló Marín <carlos@gnome-db.org>
