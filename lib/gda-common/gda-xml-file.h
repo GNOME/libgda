@@ -28,9 +28,9 @@
 #  include <gtk/gtk.h>
 #endif
 
-#include <gnome-xml/tree.h>
-#include <gnome-xml/parser.h>
-#include <gnome-xml/valid.h>
+#include <tree.h>
+#include <parser.h>
+#include <valid.h>
 
 #if defined(__cplusplus)
 extern "C" {

@@ -1,3 +1,8 @@
+2000-11-01  Reinhard Müller  <reinhard.mueller@bitsmart.com>
+
+	* gda-xml-file.h: removed directory part from gnome-xml includes
+	because the directory is already given from xml-config
+
 2000-10-26	Rodrigo Moya <rodrigo@linuxave.net>
 
 	* gda-config.[ch]: added gda_dsn_copy function
