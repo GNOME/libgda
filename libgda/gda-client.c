@@ -549,8 +549,15 @@ gda_client_close_all_connections (GdaClient *client)
 {
 	g_return_if_fail (GDA_IS_CLIENT (client));
 
-	g_list_foreach (client->priv->connections, (GFunc) g_object_unref, NULL);
-	g_list_free (client->priv->connections);
+	while (client->priv->connections != NULL) {
+		GdaConnection *cnc = client->priv->connections->data;
+
+		g_assert (GDA_IS_CONNECTION (cnc));
+
+		client->priv->connections = g_list_remove (client->priv->connections, cnc);
+		g_object_unref (cnc);
+	}
+
 	client->priv->connections = NULL;
 }
 
@@ -572,8 +579,11 @@ gda_client_notify_event (GdaClient *client,
 			 GdaParameterList *params)
 {
 	g_return_if_fail (GDA_IS_CLIENT (client));
-	g_signal_emit (G_OBJECT (client), gda_client_signals[EVENT_NOTIFICATION], 0,
-		       cnc, event, params);
+
+	if (g_list_find (client->priv->connections, cnc)) {
+		g_signal_emit (G_OBJECT (client), gda_client_signals[EVENT_NOTIFICATION], 0,
+			       cnc, event, params);
+	}
 }
 
 /**
