@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2002-03-07 00:28+0100\n"
+"POT-Creation-Date: 2002-03-07 11:19+0100\n"
 "PO-Revision-Date: 2000-11-13 19:36+0100\n"
 "Last-Translator: Andraz Tori <andraz.tori1@guest.arnes.si>\n"
 "Language-Team: Slovenian <sl@li.org>\n"
@@ -14,12 +14,10 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #: libgda/gda-client.c:200 libgda/gda-client.c:310 libgda/gda-connection.c:213
-#, c-format
 msgid "Data source %s not found in configuration"
 msgstr "Vir podatkov %s ni bil v nastavitvah ni bil najden"
 
 #: libgda/gda-client.c:237
-#, c-format
 msgid "Could not activate object %s"
 msgstr "Nisem uspel aktivirati predmeta %s"
 
@@ -78,23 +76,25 @@ msgid "Don't know how to create components with IID %s"
 msgstr "Ne znam ustvariti komponent z IID %s"
 
 #: libgda/gda-server.c:122
-#, c-format
 msgid "Could not create component of type %s"
 msgstr "Nisem mogel ustvariti komponente vrste %s"
 
 #: libgda/gda-server-connection.c:90
 msgid "Could not duplicate client object. Client won't get notifications"
-msgstr ""
-"Nisem mogel podvojiti predmeta odjemalca. Odjemalec ne bo dobival obvestil"
+msgstr "Nisem mogel podvojiti predmeta odjemalca. Odjemalec ne bo dobival obvestil"
 
 #: libgda/gda-server-connection.c:440
-#, c-format
 msgid "Could not notify client about action %d"
 msgstr "Nisem mogel obvestiti odjemalca o dejanju %d"
 
 #: libgda/gda-server-recordset.c:207
 msgid "No implementation for the fetch() method found"
 msgstr "Implementacija metode fetch() ni bila najdena"
+
+#: libgda/gda-table.c:229
+#, c-format
+msgid "There is already a field called %s"
+msgstr "Polje z imenom %s že obstaja"
 
 #: libgda/gda-value.c:926
 msgid "TRUE"
@@ -105,22 +105,18 @@ msgid "FALSE"
 msgstr "NERESNIČNO"
 
 #: libgda/gda-xml-database.c:214
-#, c-format
 msgid "Could not load file at %s"
 msgstr "Nisem mogel naložiti datoteke %s"
 
 #: libgda/gda-xml-database.c:223
-#, c-format
 msgid "Could not parse file at %s"
 msgstr "Nisem mogel razlčleniti datoteke %s"
 
 #: libgda/gda-xml-database.c:232 libgda/gda-xml-database.c:249
-#, c-format
 msgid "Invalid XML database file '%s'"
 msgstr "Neveljavna datoteka zbirke podatkov XML '%s'"
 
 #: libgda/gda-xml-database.c:293 libgda/gda-xml-database.c:333
-#, c-format
 msgid "Table %s already exists"
 msgstr "Tabela %s že obstaja"
 
@@ -141,7 +137,8 @@ msgstr "Neveljaven list XML"
 #: providers/sqlite/gda-sqlite-provider.c:152
 msgid ""
 "A full path must be specified on the connection string to open a database."
-msgstr "Niz povezave mora navesti polno pot za odprtje zbirke podatkov."
+msgstr ""
+"Niz povezave mora navesti polno pot za odprtje zbirke podatkov."
 
 #: providers/default/GNOME_Database_Provider_Default.server.in.h:1
 msgid "Default component factory"
@@ -303,7 +300,6 @@ msgstr "Ne morem inicializirati tovarne komponent Sybase"
 
 #: report/gda-report-engine.c:67 report/libgda-report/gda-report-client.c:195
 #: report/libgda-report/gda-report-client.c:209
-#, c-format
 msgid "CORBA exception: %s"
 msgstr "Izjema v sistemu CORBA: %s"
 
@@ -336,7 +332,6 @@ msgid "Could not parse XML document"
 msgstr "Nisem mogel razčleniti dokumenta XML"
 
 #: report/libgda-report/gda-report-document.c:162
-#, c-format
 msgid "Could not get file from %s"
 msgstr "Nisem mogel dobiti datoteke od %s"
 
@@ -349,7 +344,6 @@ msgid "\t\tNONE\n"
 msgstr "\t\tBREZ\n"
 
 #: testing/client.c:76
-#, c-format
 msgid "** ERROR: could not open connection to %s\n"
 msgstr "** NAPAKA: nisem mogel odpreti povezave z %s\n"
 
@@ -427,7 +421,6 @@ msgid "** ERROR: gda_config_get_data_source_list returned a NULL item\n"
 msgstr "** NAPAKA: gda_config_get_data_source_list je vrnil predmet NULL\n"
 
 #: testing/client.c:142
-#, c-format
 msgid " Data source = %s, User = %s\n"
 msgstr " Vir podatkov= %s, uporabnik = %s\n"
 
@@ -460,7 +453,6 @@ msgid "\trepo_ids ="
 msgstr "\trepo_ids ="
 
 #: testing/config.c:102
-#, c-format
 msgid "\tusername = %s\n"
 msgstr "\tuporabniško ime = %s\n"
 
@@ -477,9 +469,6 @@ msgstr "\tdomena = %s\n"
 #: testing/config.c:106
 msgid "\tgda_params ="
 msgstr "\tparametri_gda ="
-
-#~ msgid "There is already a field called %s"
-#~ msgstr "Polje z imenom %s že obstaja"
 
 #, fuzzy
 #~ msgid "Bad formed document at %s"
