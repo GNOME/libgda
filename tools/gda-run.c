@@ -1,5 +1,8 @@
 /* GDA - Batch execution utility
- * Copyright (c) 2000-2001 by Rodrigo Moya
+ * Copyright (C) 1998-2002 The GNOME Foundation.
+ *
+ * AUTHORS:
+ * 	Rodrigo Moya <rodrigo@gnome-db.org>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

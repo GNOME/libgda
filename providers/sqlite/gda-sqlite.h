@@ -1,5 +1,5 @@
 /* GDA Default provider
- * Copyright (C) 2001 The Free Software Foundation, Inc.
+ * Copyright (C) 1998-2002 The GNOME Foundation.
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>

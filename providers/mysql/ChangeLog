@@ -1,3 +1,7 @@
+2002-01-11  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
+	* *.[ch]: assigned copyright to the GNOME Foundation.
+
 2002-01-03  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* utils.c (gda_mysql_type_to_gda): when we can't resolve the types,

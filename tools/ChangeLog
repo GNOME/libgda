@@ -1,3 +1,7 @@
+2002-01-11  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
+	* gda-run.c: assigned copyright to the GNOME Foundation.
+
 2002-01-08  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-buildclient.in:

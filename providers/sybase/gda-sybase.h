@@ -1,5 +1,5 @@
-/* GDA MySQL provider
- * Copyright (C) 1998-2001 The Free Software Foundation
+/* GDA Sybase provider
+ * Copyright (C) 1998-2002 The GNOME Foundation.
  *
  * AUTHORS:
 	*  Mike Wingert <wingert.3@postbox.acs.ohio-state.edu>

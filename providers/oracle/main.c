@@ -1,5 +1,5 @@
 /* GDA ORACLE Provider
- * Copyright (C) 2000-2001 The GNOME Foundation
+ * Copyright (C) 2000-2002 The GNOME Foundation
  *
  * AUTHORS:
  *      Rodrigo Moya <rodrigo@gnome-db.org>

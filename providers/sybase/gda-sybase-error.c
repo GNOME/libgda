@@ -1,5 +1,5 @@
 /* GDA sybase provider
- * Copyright (C) 1998-2001 The Free Software Foundation
+ * Copyright (C) 1998-2002 The GNOME Foundation.
  *
  * AUTHORS:
  *      mike wingert <wingert.3@postbox.acs.ohio-state.edu>

@@ -1,3 +1,7 @@
+2002-01-11  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
+	* *.[ch]: assigned copyright to the GNOME Foundation.
+
 2001-12-30  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* sqlite/Makefile.am: don't fail when copying lempar.c for distcheck
