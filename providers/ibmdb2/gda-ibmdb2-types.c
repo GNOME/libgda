@@ -97,6 +97,9 @@ gda_ibmdb2_get_value_type (GdaIBMDB2Field *col)
 void
 gda_ibmdb2_set_gdavalue (GdaValue *value, GdaIBMDB2Field *field)
 {
+	GdaNumeric numeric;
+
+
 	g_return_if_fail (value != NULL);
 	g_return_if_fail (field != NULL);
 
@@ -104,7 +107,6 @@ gda_ibmdb2_set_gdavalue (GdaValue *value, GdaIBMDB2Field *field)
 		gda_value_set_null (value);
 	} else {
 		/* FIXME */
-		/* printf("Type = %d\n", field->column_type); */
 		switch (field->column_type) {
 			case SQL_SMALLINT:
 				gda_value_set_smallint (value, *((gshort*)field->column_data));
@@ -136,7 +138,11 @@ gda_ibmdb2_set_gdavalue (GdaValue *value, GdaIBMDB2Field *field)
 				break;
 			case SQL_NUMERIC:
 			case SQL_DECIMAL:
-				gda_ibmdb2_set_gdavalue_by_numeric (value, (SQL_NUMERIC_STRUCT*)field->column_data);
+				numeric.width = field->column_size;
+				numeric.precision = field->column_scale;
+				numeric.number = g_strdup ((char*)field->column_data);
+				gda_value_set_numeric (value, &numeric);
+				g_free (numeric.number);
 				break;
 			case SQL_VARCHAR:
 			case SQL_LONGVARCHAR:
@@ -144,8 +150,11 @@ gda_ibmdb2_set_gdavalue (GdaValue *value, GdaIBMDB2Field *field)
 			case SQL_CHAR:
 				gda_value_set_string (value, (gchar*)field->column_data);
 				break;
+			case SQL_BLOB:
+				gda_value_set_string (value, _("[BLOB unsupported]"));
+				break;
 			default:
-				gda_value_set_string (value, field->column_data);
+				gda_value_set_string (value, _("[Unsupported data]"));
 		}
 	}
 }
@@ -153,6 +162,8 @@ gda_ibmdb2_set_gdavalue (GdaValue *value, GdaIBMDB2Field *field)
 void gda_ibmdb2_set_gdavalue_by_date (GdaValue *value, DATE_STRUCT *date)
 {
 	GdaDate tmp;
+
+        g_return_if_fail (value != NULL);
 	
 	tmp.year = date->year;
 	tmp.month = date->month;
@@ -164,6 +175,8 @@ void gda_ibmdb2_set_gdavalue_by_date (GdaValue *value, DATE_STRUCT *date)
 void gda_ibmdb2_set_gdavalue_by_time (GdaValue *value, TIME_STRUCT *time)
 {
 	GdaTime tmp;
+
+        g_return_if_fail (value != NULL);
 	
 	tmp.hour = time->hour;
 	tmp.minute = time->minute;
@@ -176,6 +189,8 @@ void gda_ibmdb2_set_gdavalue_by_time (GdaValue *value, TIME_STRUCT *time)
 void gda_ibmdb2_set_gdavalue_by_timestamp (GdaValue *value, TIMESTAMP_STRUCT *timestamp)
 {
 	GdaTimestamp tmp;
+
+        g_return_if_fail (value != NULL);
 	
 	tmp.year = timestamp->year;
 	tmp.month = timestamp->month;
@@ -189,11 +204,3 @@ void gda_ibmdb2_set_gdavalue_by_timestamp (GdaValue *value, TIMESTAMP_STRUCT *ti
 	gda_value_set_timestamp (value, &tmp);
 }
 
-void gda_ibmdb2_set_gdavalue_by_numeric (GdaValue *value, SQL_NUMERIC_STRUCT *numeric)
-{
-	GdaNumeric tmp;
-	/* FIXME */
-	tmp.precision = 0;
-	tmp.width = 0;
-	tmp.number = NULL;
-}

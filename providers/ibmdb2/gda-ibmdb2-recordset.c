@@ -249,7 +249,7 @@ gda_ibmdb2_create_current_row(GdaIBMDB2Recordset *recset)
                 value = gda_row_get_value (row, i);
                 field = (GdaIBMDB2Field *) g_ptr_array_index (recset->priv->columns, i);
 
-                gda_ibmdb2_set_gdavalue(value,field);
+                gda_ibmdb2_set_gdavalue(value, field);
         }
         return row;
 }
@@ -352,12 +352,12 @@ gda_ibmdb2_recordset_new (GdaConnection *cnc, SQLHANDLE hstmt)
 		/* g_message("Name: %s Type : %d Size : %d\n", (gchar*)field->column_name,
 		 (gint)field->column_type, (gint)field->column_size); */
 		
-		field->column_data = g_new0(gchar, field->column_size);
+		field->column_data = g_new0(gchar, field->column_size + 1);
 		
 		conn_data->rc = SQLBindCol (hstmt, (SQLUSMALLINT)i + 1, 
 					    SQL_C_DEFAULT,
 					    field->column_data, 
-					    field->column_size,
+					    field->column_size + field->column_scale + 1,
 					    &ind);
 		
 		if (conn_data->rc != SQL_SUCCESS) {
@@ -380,6 +380,14 @@ gda_ibmdb2_recordset_new (GdaConnection *cnc, SQLHANDLE hstmt)
 		if (row) {
 			g_ptr_array_add(recset->priv->rows, row);
 			nrows++;
+		}
+		/* Free old bind data */
+		
+		for(i = 0; i < ncols; i++)
+		{
+			field = (GdaIBMDB2Field*) g_ptr_array_index (recset->priv->columns, i);
+			memset (field->column_data, 0, field->column_size);
+
 		}
 		conn_data->rc = SQLFetch(hstmt);
 	}
