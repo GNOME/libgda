@@ -11,17 +11,17 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda.release-1-0-branch.sk\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2003-09-23 13:02+0200\n"
+"POT-Creation-Date: 2003-11-24 23:21+0100\n"
 "PO-Revision-Date: 2003-09-24 09:16+0200\n"
 "Last-Translator: Stanislav Visnovsky <visnovsky@kde.org>\n"
 "Language-Team: Slovak <sk-i18n@linux.sk>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=ISO-8859-2\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Report-Msgid-Bugs-To: \n"
 "X-Generator: KBabel 1.2\n"
 
-#: libgda/gda-client.c:312 libgda/gda-client.c:516 libgda/gda-connection.c:218
+#: libgda/gda-client.c:312 libgda/gda-client.c:517 libgda/gda-connection.c:218
 #, c-format
 msgid "Data source %s not found in configuration"
 msgstr "Zdroj dát %s nebol nájdený v konfigurácii"
@@ -40,7 +40,7 @@ msgstr "Poskytovateµ %s neimplementuje vstupný bod"
 msgid "Could not create GdaServerProvider object from plugin"
 msgstr "Nie je mo¾né vytvori» objekt GdaServerProvider z modulu"
 
-#: libgda/gda-client.c:443
+#: libgda/gda-client.c:444
 msgid "Temporary data source created by libgda. Don't remove it"
 msgstr "Doèasný zdroj dát vytvorený pomocou libgda. Neodstraòujte ho."
 
@@ -49,7 +49,30 @@ msgstr "Doèasný zdroj dát vytvorený pomocou libgda. Neodstraòujte ho."
 msgid "Error: %s"
 msgstr "Chyba: %s"
 
-#: libgda/gda-config.c:1323 providers/ldap/gda-ldap-provider.c:327
+#: libgda/gda-config.c:1186 providers/odbc/gda-odbc-provider.c:1031
+#: providers/oracle/gda-oracle-provider.c:1153
+#: providers/postgres/gda-postgres-provider.c:846
+#: providers/postgres/gda-postgres-provider.c:1312
+msgid "Id"
+msgstr "Id"
+
+#: libgda/gda-config.c:1187
+#, fuzzy
+msgid "Location"
+msgstr "Funkcia"
+
+#: libgda/gda-config.c:1188 libgda/gda-config.c:1447
+#: providers/ibmdb2/gda-ibmdb2-provider.c:863
+#: providers/ibmdb2/gda-ibmdb2-provider.c:892
+#: providers/ibmdb2/gda-ibmdb2-provider.c:920
+#: providers/ibmdb2/gda-ibmdb2-provider.c:1001
+#: providers/odbc/gda-odbc-provider.c:1142
+#: providers/odbc/gda-odbc-provider.c:1298
+#: providers/postgres/gda-postgres-provider.c:1118
+msgid "Description"
+msgstr "Popis"
+
+#: libgda/gda-config.c:1444 providers/ldap/gda-ldap-provider.c:327
 #: providers/mdb/gda-mdb-provider.c:457 providers/mdb/gda-mdb-provider.c:594
 #: providers/mdb/gda-mdb-provider.c:654 providers/msql/gda-msql-provider.c:448
 #: providers/mysql/gda-mysql-provider.c:701
@@ -65,42 +88,32 @@ msgstr "Chyba: %s"
 msgid "Name"
 msgstr "Meno"
 
-#: libgda/gda-config.c:1324
+#: libgda/gda-config.c:1445
 msgid "Provider"
 msgstr "Poskytovateµ"
 
-#: libgda/gda-config.c:1325
+#: libgda/gda-config.c:1446
 msgid "Connection string"
 msgstr "Re»azec spojenia"
 
-#: libgda/gda-config.c:1326 providers/ibmdb2/gda-ibmdb2-provider.c:863
-#: providers/ibmdb2/gda-ibmdb2-provider.c:892
-#: providers/ibmdb2/gda-ibmdb2-provider.c:920
-#: providers/ibmdb2/gda-ibmdb2-provider.c:1001
-#: providers/odbc/gda-odbc-provider.c:1142
-#: providers/odbc/gda-odbc-provider.c:1298
-#: providers/postgres/gda-postgres-provider.c:1118
-msgid "Description"
-msgstr "Popis"
-
-#: libgda/gda-config.c:1327
+#: libgda/gda-config.c:1448
 msgid "Username"
 msgstr "Meno pou¾ívateµa"
 
-#: libgda/gda-config.c:1328
+#: libgda/gda-config.c:1449
 msgid "Password"
 msgstr "Heslo"
 
-#: libgda/gda-data-model.c:687
+#: libgda/gda-data-model.c:691
 #, c-format
 msgid "Data model %p is not editable"
 msgstr "Nidek dát %p nie je mo¾né upravi»"
 
-#: libgda/gda-init.c:48
+#: libgda/gda-init.c:47
 msgid "Attempt to initialize an already initialized client"
 msgstr "Pokus o inicializáciu u¾ inicializovaného klienta"
 
-#: libgda/gda-init.c:59
+#: libgda/gda-init.c:58
 msgid "libgda needs GModule. Finishing..."
 msgstr "libgda vy¾aduje GModule. Konèím..."
 
@@ -114,87 +127,87 @@ msgstr "Nie je mo¾né spracova» re»azec SQL '%s'"
 msgid "SQL command is not a SELECT (is '%s'"
 msgstr "Príkaz SQL nie je SELECT (je '%s'"
 
-#: libgda/gda-table.c:286
+#: libgda/gda-table.c:284
 #, c-format
 msgid "There is already a field called %s"
 msgstr "U¾ je definované pole nazvané %s"
 
-#: libgda/gda-util.c:147
+#: libgda/gda-util.c:153
 #, c-format
 msgid "Could not parse SQL command '%s'"
 msgstr "Nie je mo¾né spracova» príkaz SQL '%s'"
 
-#: libgda/gda-util.c:180
+#: libgda/gda-util.c:186
 #, c-format
 msgid "Error while reading %s: %s"
 msgstr "Chyba poèas èítania %s: %s"
 
-#: libgda/gda-util.c:206
+#: libgda/gda-util.c:212
 #, c-format
 msgid "Could not create file %s"
 msgstr "Nie je mo¾né vytvori» súbor %s"
 
-#: libgda/gda-value.c:1982
+#: libgda/gda-value.c:1954
 msgid "TRUE"
 msgstr "TRUE"
 
-#: libgda/gda-value.c:1984
+#: libgda/gda-value.c:1956
 msgid "FALSE"
 msgstr "FALSE"
 
-#: libgda/gda-value.c:2053
+#: libgda/gda-value.c:2025
 #, c-format
 msgid "(GObject of type '%s'"
 msgstr "(GObject typu '%s'"
 
-#: libgda/gda-value.c:2056
+#: libgda/gda-value.c:2028
 msgid "NULL GObject"
 msgstr "NULL GObject"
 
-#: libgda/gda-xml-database.c:271
+#: libgda/gda-xml-database.c:279
 #, c-format
 msgid "Could not load file at %s"
 msgstr "Nie je mo¾né naèíta» súbor %s"
 
-#: libgda/gda-xml-database.c:280
+#: libgda/gda-xml-database.c:288
 #, c-format
 msgid "Could not parse file at %s"
 msgstr "Nie je mo¾né spracova» súbor %s"
 
-#: libgda/gda-xml-database.c:290
+#: libgda/gda-xml-database.c:298
 #, c-format
 msgid "Invalid XML database file '%s'"
 msgstr "Neplatný XML súbor databázy '%s'"
 
-#: libgda/gda-xml-database.c:536
+#: libgda/gda-xml-database.c:541
 #, c-format
 msgid "Could not create a XML node from table %s"
 msgstr "Nie je mo¾né vytvori» uzol XML z tabuµky %s"
 
-#: libgda/gda-xml-database.c:554
+#: libgda/gda-xml-database.c:559
 msgid "Could not dump XML file to memory"
 msgstr "Nie je mo¾né naèíta» do pamäti súbor XML"
 
-#: libgda/gda-xml-database.c:647 libgda/gda-xml-database.c:684
-#: libgda/gda-xml-database.c:728
+#: libgda/gda-xml-database.c:650 libgda/gda-xml-database.c:687
+#: libgda/gda-xml-database.c:731
 #, c-format
 msgid "Table %s already exists"
 msgstr "Tabuµka %s u¾ existuje"
 
-#: libgda/gda-xml-database.c:721
+#: libgda/gda-xml-database.c:724
 msgid "Invalid node"
 msgstr "Neplatný uzol"
 
-#: libgda/gda-xml-database.c:763
+#: libgda/gda-xml-database.c:766
 #, c-format
 msgid "Duplicated <data> node for table %s"
 msgstr "Duplikovaný uzol <data> pre tabuµku %s"
 
-#: libgda/gda-xml-database.c:770
+#: libgda/gda-xml-database.c:773
 msgid "Invalid XML node"
 msgstr "Neplatný XML uzol"
 
-#: libgda/gda-xml-database.c:779
+#: libgda/gda-xml-database.c:782
 msgid "Could not add the data from the XML node"
 msgstr "Nie je mo¾né prida» dáta z uzlu XML"
 
@@ -293,12 +306,12 @@ msgstr ""
 #: providers/sybase/gda-sybase-recordset.c:534
 #: providers/sybase/gda-sybase-recordset.c:593 providers/sybase/utils.c:205
 #: providers/sybase/utils.c:223 providers/sybase/utils.c:239
-#: providers/sybase/utils.c:259 providers/sybase/utils.c:279
-#: providers/sybase/utils.c:320 providers/sybase/utils.c:337
-#: providers/sybase/utils.c:389 providers/sybase/utils.c:415
-#: providers/sybase/utils.c:449 providers/sybase/utils.c:466
-#: providers/sybase/utils.c:489 providers/sybase/utils.c:505
-#: providers/sybase/utils.c:543
+#: providers/sybase/utils.c:255 providers/sybase/utils.c:275
+#: providers/sybase/utils.c:316 providers/sybase/utils.c:333
+#: providers/sybase/utils.c:385 providers/sybase/utils.c:411
+#: providers/sybase/utils.c:445 providers/sybase/utils.c:462
+#: providers/sybase/utils.c:485 providers/sybase/utils.c:501
+#: providers/sybase/utils.c:539
 msgid "Not available"
 msgstr "Nie je k dispozícii"
 
@@ -323,7 +336,7 @@ msgid "Provider for TDS-based databases (using FreeTDS)"
 msgstr "Poskytovateµ pre databáze zalo¾ené na TDS (pomocou FreeTDS)"
 
 #: providers/freetds/utils.c:40 providers/oracle/utils.c:67
-#: providers/postgres/utils.c:48 providers/sybase/utils.c:538
+#: providers/postgres/utils.c:48 providers/sybase/utils.c:534
 msgid "NO DESCRIPTION"
 msgstr "®IADNY POPIS"
 
@@ -500,9 +513,9 @@ msgid "Invalid LDAP handle"
 msgstr "Neplatný handle LDAP"
 
 #: providers/ldap/gda-ldap-recordset.c:69
-#: providers/mysql/gda-mysql-recordset.c:69
-#: providers/postgres/gda-postgres-recordset.c:189
-#: providers/postgres/gda-postgres-recordset.c:229
+#: providers/mysql/gda-mysql-recordset.c:130
+#: providers/postgres/gda-postgres-recordset.c:193
+#: providers/postgres/gda-postgres-recordset.c:357
 #: providers/sqlite/gda-sqlite-recordset.c:165
 #: providers/sqlite/gda-sqlite-recordset.c:204
 msgid "Row number out of range"
@@ -510,21 +523,21 @@ msgstr "Neplatný poèet riadkov"
 
 #: providers/ldap/gda-ldap-recordset.c:283
 #: providers/msql/gda-msql-recordset.c:229
-#: providers/mysql/gda-mysql-recordset.c:294
+#: providers/mysql/gda-mysql-recordset.c:309
 #: providers/oracle/gda-oracle-recordset.c:469
 msgid "Attempt to insert a row with an invalid number of columns"
 msgstr "Pokus o vlo¾enie riadku s neplatným poètom ståpcov"
 
 #: providers/ldap/gda-ldap-recordset.c:298
 #: providers/msql/gda-msql-recordset.c:241
-#: providers/mysql/gda-mysql-recordset.c:309
+#: providers/mysql/gda-mysql-recordset.c:324
 #: providers/oracle/gda-oracle-recordset.c:484
 msgid "Could not retrieve column's information"
 msgstr "Nie je mo¾né získa» informácie o ståpci"
 
 #: providers/ldap/gda-ldap-recordset.c:316
 #: providers/msql/gda-msql-recordset.c:255
-#: providers/mysql/gda-mysql-recordset.c:327
+#: providers/mysql/gda-mysql-recordset.c:342
 #: providers/oracle/gda-oracle-recordset.c:502
 msgid "Could not retrieve column's value"
 msgstr "Nie je mo¾né získa» hodnotu ståpca"
@@ -535,7 +548,8 @@ msgstr "Poskytovateµ pre adresár LDAP"
 
 #: providers/mdb/gda-mdb-provider.c:205
 msgid "A database FILENAME must be specified in the connection_string"
-msgstr "Pre otvorenie databáze FILENAME musíte zada» celú cestu v re»azci spojenia."
+msgstr ""
+"Pre otvorenie databáze FILENAME musíte zada» celú cestu v re»azci spojenia."
 
 #: providers/mdb/gda-mdb-provider.c:214
 #: providers/xbase/gda-xbase-provider.c:223
@@ -797,31 +811,33 @@ msgstr "V zozname parametrov nie je zadané meno tabuµky"
 msgid "Row number out of bounds"
 msgstr "Poèet riadkov mimo rozsah"
 
-#: providers/mysql/gda-mysql-provider.c:218
-msgid "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
-msgstr "Nemô¾ete poskytova» UNIX_SOCKET ak tie¾ poskytujete HOSTITE¥ alebo a PORT."
+#: providers/mysql/gda-mysql-provider.c:219
+msgid ""
+"You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
+msgstr ""
+"Nemô¾ete poskytova» UNIX_SOCKET ak tie¾ poskytujete HOSTITE¥ alebo a PORT."
 
-#: providers/mysql/gda-mysql-provider.c:294
+#: providers/mysql/gda-mysql-provider.c:295
 #: providers/mysql/gda-mysql-provider.c:1085
-#: providers/mysql/gda-mysql-recordset.c:58
-#: providers/mysql/gda-mysql-recordset.c:180
+#: providers/mysql/gda-mysql-recordset.c:119
+#: providers/mysql/gda-mysql-recordset.c:192
 msgid "Invalid MySQL handle"
 msgstr "Neplatný handle MySQL"
 
-#: providers/mysql/gda-mysql-provider.c:310
-#: providers/mysql/gda-mysql-provider.c:380
-#: providers/mysql/gda-mysql-provider.c:403
-#: providers/mysql/gda-mysql-provider.c:434
-#: providers/mysql/gda-mysql-provider.c:466
-#: providers/mysql/gda-mysql-provider.c:534
-#: providers/mysql/gda-mysql-provider.c:591
-#: providers/mysql/gda-mysql-provider.c:624
+#: providers/mysql/gda-mysql-provider.c:311
+#: providers/mysql/gda-mysql-provider.c:381
+#: providers/mysql/gda-mysql-provider.c:404
+#: providers/mysql/gda-mysql-provider.c:435
+#: providers/mysql/gda-mysql-provider.c:467
+#: providers/mysql/gda-mysql-provider.c:535
+#: providers/mysql/gda-mysql-provider.c:592
+#: providers/mysql/gda-mysql-provider.c:625
 msgid "Invalid MYSQL handle"
 msgstr "Neplatný handle MYSQL"
 
-#: providers/mysql/gda-mysql-provider.c:539
-#: providers/mysql/gda-mysql-provider.c:596
-#: providers/mysql/gda-mysql-provider.c:629
+#: providers/mysql/gda-mysql-provider.c:540
+#: providers/mysql/gda-mysql-provider.c:597
+#: providers/mysql/gda-mysql-provider.c:630
 #: providers/oracle/gda-oracle-provider.c:857
 #: providers/oracle/gda-oracle-provider.c:939
 #: providers/oracle/gda-oracle-provider.c:1000
@@ -851,13 +867,6 @@ msgstr "Nepodarilo sa zavola» SQLAllocEnv()..."
 #: providers/odbc/gda-odbc-provider.c:574
 msgid "Invalid Odbc handle"
 msgstr "Neplatný handle ODBC"
-
-#: providers/odbc/gda-odbc-provider.c:1031
-#: providers/oracle/gda-oracle-provider.c:1153
-#: providers/postgres/gda-postgres-provider.c:846
-#: providers/postgres/gda-postgres-provider.c:1312
-msgid "Id"
-msgstr "Id"
 
 #: providers/odbc/gda-odbc-provider.c:1035
 #: providers/postgres/gda-postgres-provider.c:850
@@ -1129,7 +1138,7 @@ msgid "Could not define by position"
 msgstr "Nie je mo¾né definova» pomocou pozície"
 
 #: providers/oracle/gda-oracle-recordset.c:173
-#: providers/postgres/gda-postgres-recordset.c:268
+#: providers/postgres/gda-postgres-recordset.c:476
 msgid "Column out of range"
 msgstr "Neplatný ståpec"
 
@@ -1169,9 +1178,9 @@ msgstr "Poskytovateµ pre databáze Oracle"
 #: providers/postgres/gda-postgres-provider.c:581
 #: providers/postgres/gda-postgres-provider.c:652
 #: providers/postgres/gda-postgres-provider.c:787
-#: providers/postgres/gda-postgres-recordset.c:180
-#: providers/postgres/gda-postgres-recordset.c:220
-#: providers/postgres/gda-postgres-recordset.c:262
+#: providers/postgres/gda-postgres-recordset.c:184
+#: providers/postgres/gda-postgres-recordset.c:348
+#: providers/postgres/gda-postgres-recordset.c:470
 #: providers/postgres/utils.c:178
 msgid "Invalid PostgreSQL handle"
 msgstr "Neplatný handle PostgreSQL"
@@ -1186,13 +1195,29 @@ msgstr "Pohµad"
 msgid "Databases"
 msgstr "Databáze"
 
+#: providers/postgres/gda-postgres-recordset.c:228
+msgid "Given row doesn't belong to the model."
+msgstr ""
+
 #: providers/postgres/gda-postgres-recordset.c:235
+msgid "Table name could not be guessed."
+msgstr ""
+
+#: providers/postgres/gda-postgres-recordset.c:287
+msgid "Model doesn't have at least one non-modified unique key."
+msgstr ""
+
+#: providers/postgres/gda-postgres-recordset.c:291
+msgid "Model doesn't have any non-unique values to update."
+msgstr ""
+
+#: providers/postgres/gda-postgres-recordset.c:363
 #: providers/sqlite/gda-sqlite-recordset.c:210
 #: providers/sqlite/gda-sqlite-recordset.c:242
 msgid "Column number out of range"
 msgstr "Neplatný poèet ståpcov"
 
-#: providers/postgres/gda-postgres-recordset.c:358
+#: providers/postgres/gda-postgres-recordset.c:581
 #, c-format
 msgid "Tuples:\"%s\""
 msgstr "N-tice: \"%s\""
@@ -1202,7 +1227,8 @@ msgid "Provider for PostgreSQL databases"
 msgstr "Poskytovateµ pre databáze PostgreSQL"
 
 #: providers/sqlite/gda-sqlite-provider.c:198
-msgid "A full path must be specified on the connection string to open a database."
+msgid ""
+"A full path must be specified on the connection string to open a database."
 msgstr "Pre otvorenie databáze musíte zada» celú cestu v re»azci spojenia."
 
 #: providers/sqlite/gda-sqlite-provider.c:220
@@ -1292,7 +1318,9 @@ msgstr "Nájdený nepodporovaný typ výsledku"
 msgid ""
 "an error occured when calling ct_diag attempting to test if there is a "
 "server message for resultset"
-msgstr "volanie ct_diag zlyhalo pri testovaní, èi existuje správa serveru pre recordset"
+msgstr ""
+"volanie ct_diag zlyhalo pri testovaní, èi existuje správa serveru pre "
+"recordset"
 
 #: providers/sybase/gda-sybase-provider.c:793
 #, c-format
@@ -1330,7 +1358,8 @@ msgstr "%s: %s zlyhalo"
 
 #: providers/sybase/gda-sybase-provider.c:974
 msgid "could not allocate cmd structure to find current database."
-msgstr "nie je mo¾né alokova» ¹truktúru pre príkaz pre nájdenie aktuálnej databáze."
+msgstr ""
+"nie je mo¾né alokova» ¹truktúru pre príkaz pre nájdenie aktuálnej databáze."
 
 #: providers/sybase/gda-sybase-provider.c:985
 msgid "could not execute command to get current database."
@@ -1351,7 +1380,9 @@ msgstr "nie je mo¾né získa» dáta pre nájdenie aktuálnej databáze."
 
 #: providers/sybase/gda-sybase-provider.c:1058
 msgid "could not drop cmd structure to find current database."
-msgstr "nie je mo¾né odstráni» ¹truktúru príkazu pomocou pre nájdenie aktuálnej databáze."
+msgstr ""
+"nie je mo¾né odstráni» ¹truktúru príkazu pomocou pre nájdenie aktuálnej "
+"databáze."
 
 #: providers/sybase/gda-sybase-recordset.c:315
 msgid "Could not allocate datamodel. No results will be returned."
@@ -1424,7 +1455,7 @@ msgid ""
 "message for recordset"
 msgstr "volanie ct_diag zlyhalo pri získaní správy serveru pre recordset"
 
-#: providers/sybase/gda-sybase-recordset.c:590 providers/sybase/utils.c:412
+#: providers/sybase/gda-sybase-recordset.c:590 providers/sybase/utils.c:408
 msgid "call to ct_diag failed when attempting to clear the server messages"
 msgstr "volanie ct_diag zlyhalo pri èistení správ serveru"
 
@@ -1518,7 +1549,8 @@ msgid "call to cs_diag failed when attempting to the amount of client messages"
 msgstr "volanie cs_diag zlyhalo pri zis»ovaní poètu správ klienta"
 
 #: providers/sybase/utils.c:220
-msgid "an error occured when calling cs_diag attempting to retrieve a client message"
+msgid ""
+"an error occured when calling cs_diag attempting to retrieve a client message"
 msgstr "volanie cs_diag zlyhalo pri získaní správy klienta"
 
 #: providers/sybase/utils.c:230
@@ -1529,83 +1561,79 @@ msgstr "Chyba OS:("
 msgid ") Message: "
 msgstr ") Správa: "
 
-#: providers/sybase/utils.c:245
-msgid "Sybase OpenClient Msg: severity("
-msgstr "Sybase OpenClient Msg: dôle¾itos»("
+#: providers/sybase/utils.c:244
+#, fuzzy, c-format
+msgid ""
+"Sybase OpenClient Msg: severity(%ld), number(%ld), origin(%ld), layer(%ld): %"
+"s"
+msgstr ""
+"Chyba CT-Client:\n"
+"\tzáva¾nos»(%ld) vrstva(%ld) pôvod (%ld) èíslo(%ld)\n"
+"\t%s"
 
-#: providers/sybase/utils.c:247
-msgid "), number("
-msgstr "), poèet("
-
-#: providers/sybase/utils.c:249
-msgid "), origin("
-msgstr "), pôvod("
-
-#: providers/sybase/utils.c:251
-msgid "), layer("
-msgstr "), vrstva("
-
-#: providers/sybase/utils.c:276
+#: providers/sybase/utils.c:272
 msgid "call to cs_diag failed when attempting to clear the client messages"
 msgstr "volanie cs_diag zlyhalo pri èistení správ klienta"
 
-#: providers/sybase/utils.c:317
+#: providers/sybase/utils.c:313
 msgid "call to ct_diag failed when attempting to the amount of server messages"
 msgstr "volanie ct_diag() zlyhalo pri urèovaní poètu správ serveru"
 
-#: providers/sybase/utils.c:334
-msgid "an error occured when calling ct_diag attempting to retrieve a server message"
+#: providers/sybase/utils.c:330
+msgid ""
+"an error occured when calling ct_diag attempting to retrieve a server message"
 msgstr "nastala chyba pri volaní ct_diag pri pokuse o získanie správy serveru"
 
-#: providers/sybase/utils.c:346
+#: providers/sybase/utils.c:342
 msgid "Server:"
 msgstr "Server:"
 
-#: providers/sybase/utils.c:350
+#: providers/sybase/utils.c:346
 msgid "Stored Procedure:"
 msgstr "Ulo¾ená procedúra:"
 
-#: providers/sybase/utils.c:354
+#: providers/sybase/utils.c:350
 msgid "Number"
 msgstr "Poèet"
 
-#: providers/sybase/utils.c:357 providers/sybase/utils.c:474
+#: providers/sybase/utils.c:353 providers/sybase/utils.c:470
 msgid "Severity"
 msgstr "Dôle¾itos»"
 
-#: providers/sybase/utils.c:360
+#: providers/sybase/utils.c:356
 msgid "State"
 msgstr "Stav"
 
-#: providers/sybase/utils.c:363
+#: providers/sybase/utils.c:359
 msgid "Line"
 msgstr "Riadok"
 
-#: providers/sybase/utils.c:446
+#: providers/sybase/utils.c:442
 msgid "call to ct_diag failed when attempting to the amount of client messages"
 msgstr "volanie ct_diag() zlyhalo pri urèovaní poètu správ klienta"
 
-#: providers/sybase/utils.c:463
-msgid "an error occured when calling ct_diag attempting to retrieve a client message"
+#: providers/sybase/utils.c:459
+msgid ""
+"an error occured when calling ct_diag attempting to retrieve a client message"
 msgstr "nastala chyba pri volaní ct_diag pri pokuse o získanie správy klienta"
 
-#: providers/sybase/utils.c:476
+#: providers/sybase/utils.c:472
 msgid "Layer"
 msgstr "Vrstva"
 
-#: providers/sybase/utils.c:478
+#: providers/sybase/utils.c:474
 msgid "Origin"
 msgstr "Pôvod"
 
-#: providers/sybase/utils.c:480
+#: providers/sybase/utils.c:476
 msgid "Message Number"
 msgstr "Poèet správ"
 
-#: providers/sybase/utils.c:502
+#: providers/sybase/utils.c:498
 msgid "call to ct_diag failed when attempting to clear the client messages"
 msgstr "volanie ct_diag() zlyhal pri èistení správ klienta."
 
-#: providers/sybase/utils.c:523
+#: providers/sybase/utils.c:519
 msgid "Operation not possible, connection busy."
 msgstr "Operácia nie je mo¾ná, spojenie zaneprázdnené."
 
@@ -1912,3 +1940,14 @@ msgstr "\tpopis = %s\n"
 msgid "\tgda_params ="
 msgstr "\tgda_params ="
 
+#~ msgid "Sybase OpenClient Msg: severity("
+#~ msgstr "Sybase OpenClient Msg: dôle¾itos»("
+
+#~ msgid "), number("
+#~ msgstr "), poèet("
+
+#~ msgid "), origin("
+#~ msgstr "), pôvod("
+
+#~ msgid "), layer("
+#~ msgstr "), vrstva("

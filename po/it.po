@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-db\n"
-"POT-Creation-Date: 2003-11-24 02:12+0100\n"
+"POT-Creation-Date: 2003-11-24 23:21+0100\n"
 "PO-Revision-Date: 2003-09-04 01:12GMT\n"
 "Last-Translator: Marco Ciampa <ciampix@libero.it>\n"
 "Language-Team: italiano <tp@lists.linux.it>\n"
@@ -1311,7 +1311,7 @@ msgstr "Fallito l'invio dell'sql-command."
 msgid "GDA_IS_SYBASE_RECORDSET != TRUE"
 msgstr "GDA_IS_SYBASE_RECORDSET != TRUE"
 
-#. when you execute a stored procedure through openclient, this 
+#. when you execute a stored procedure through openclient, this
 #. part of the result set loop is where you fetch the return status
 #. of the executed stored procedure.  You fetch it like a CS_ROW_RESULT
 #: providers/sybase/gda-sybase-provider.c:712
@@ -1589,8 +1589,12 @@ msgstr ") messaggio: "
 
 #: providers/sybase/utils.c:244
 #, c-format
-msgid "Sybase OpenClient Msg: severity(%ld), number(%ld), origin(%ld), layer(%ld): %s"
-msgstr "Msg Sybase OpenClient: importanza(%ld), numero(%ld), origine(%ld), livello(%ld): %s"
+msgid ""
+"Sybase OpenClient Msg: severity(%ld), number(%ld), origin(%ld), layer(%ld): %"
+"s"
+msgstr ""
+"Msg Sybase OpenClient: importanza(%ld), numero(%ld), origine(%ld), livello(%"
+"ld): %s"
 
 #: providers/sybase/utils.c:272
 msgid "call to cs_diag failed when attempting to clear the client messages"
@@ -1973,4 +1977,3 @@ msgstr "\tdescrizione = %s\n"
 #: testing/config.c:92
 msgid "\tgda_params ="
 msgstr "\tgda_params ="
-

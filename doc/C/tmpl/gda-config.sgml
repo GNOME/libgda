@@ -185,11 +185,15 @@ Access/Management of libgda configuration
 @id: 
 
 
-<!-- ##### TYPEDEF GdaProviderInfo ##### -->
+<!-- ##### STRUCT GdaProviderInfo ##### -->
 <para>
 
 </para>
 
+@id: 
+@location: 
+@description: 
+@gda_params: 
 
 <!-- ##### FUNCTION gda_config_get_provider_list ##### -->
 <para>
@@ -224,11 +228,17 @@ Access/Management of libgda configuration
 @provider_info: 
 
 
-<!-- ##### TYPEDEF GdaDataSourceInfo ##### -->
+<!-- ##### STRUCT GdaDataSourceInfo ##### -->
 <para>
 
 </para>
 
+@name: 
+@provider: 
+@cnc_string: 
+@description: 
+@username: 
+@password: 
 
 <!-- ##### FUNCTION gda_config_get_data_source_list ##### -->
 <para>

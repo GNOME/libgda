@@ -52,41 +52,63 @@ Data values
 @GDA_VALUE_TYPE_UINTEGER: 
 @GDA_VALUE_TYPE_UNKNOWN: 
 
-<!-- ##### TYPEDEF GdaDate ##### -->
+<!-- ##### STRUCT GdaDate ##### -->
 <para>
 
 </para>
 
+@year: 
+@month: 
+@day: 
 
-<!-- ##### TYPEDEF GdaGeometricPoint ##### -->
+<!-- ##### STRUCT GdaGeometricPoint ##### -->
 <para>
 
 </para>
 
+@x: 
+@y: 
 
-<!-- ##### TYPEDEF GdaMoney ##### -->
+<!-- ##### STRUCT GdaMoney ##### -->
 <para>
 
 </para>
 
+@currency: 
+@amount: 
 
-<!-- ##### TYPEDEF GdaNumeric ##### -->
+<!-- ##### STRUCT GdaNumeric ##### -->
 <para>
 
 </para>
 
+@number: 
+@precision: 
+@width: 
 
-<!-- ##### TYPEDEF GdaTime ##### -->
+<!-- ##### STRUCT GdaTime ##### -->
 <para>
 
 </para>
 
+@hour: 
+@minute: 
+@second: 
+@timezone: 
 
-<!-- ##### TYPEDEF GdaTimestamp ##### -->
+<!-- ##### STRUCT GdaTimestamp ##### -->
 <para>
 
 </para>
 
+@year: 
+@month: 
+@day: 
+@hour: 
+@minute: 
+@second: 
+@fraction: 
+@timezone: 
 
 <!-- ##### TYPEDEF GdaValueList ##### -->
 <para>
@@ -94,11 +116,13 @@ Data values
 </para>
 
 
-<!-- ##### TYPEDEF GdaValue ##### -->
+<!-- ##### STRUCT GdaValue ##### -->
 <para>
 
 </para>
 
+@type: 
+@binary_length: 
 
 <!-- ##### FUNCTION gda_value_new_null ##### -->
 <para>
