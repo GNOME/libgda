@@ -716,15 +716,6 @@ gda_config_list_sections (const gchar *path)
 
 	len = strlen (path);
 	cfg_client = get_config_client ();
-	if (cfg_client->global){
-		for (list = cfg_client->global; list; list = list->next){
-			section = list->data;
-			if (section && len < strlen (section->path) && 
-			    !strncmp (path, section->path, len))
-				ret = g_list_append (ret, g_strdup (section->path + len + 1));
-		}
-	}
-
 	if (cfg_client->user){
 		for (list = cfg_client->user; list; list = list->next){
 			section = list->data;
@@ -734,6 +725,20 @@ gda_config_list_sections (const gchar *path)
 		}
 	}
 		
+	if (cfg_client->global){
+		for (list = cfg_client->global; list; list = list->next){
+			section = list->data;
+			if (section && len < strlen (section->path) && 
+			    !strncmp (path, section->path, len)){
+				if (!g_list_find_custom (ret, 
+							 section->path + len + 1,
+							 (GCompareFunc) strcmp))
+					ret = g_list_append (ret, 
+							g_strdup (section->path + len + 1));
+			}
+		}
+	}
+
         return ret;
 }
 
@@ -762,19 +767,6 @@ gda_config_list_keys (const gchar * path)
 
 	len = strlen (path);
 	cfg_client = get_config_client ();
-	if (cfg_client->global){
-		for (ls = cfg_client->global; ls; ls = ls->next){
-			section = ls->data;
-			if (!strcmp (path, section->path))
-				for (le = section->entries; le; le = le->next){
-					entry = le->data;
-					if (entry && entry->name)
-						ret = g_list_append (ret,
-						      g_strdup (entry->name));
-				}
-		}
-	}
-
 	if (cfg_client->user){
 		for (ls = cfg_client->user; ls; ls = ls->next){
 			section = ls->data;
@@ -788,6 +780,22 @@ gda_config_list_keys (const gchar * path)
 		}
 	}
 		
+	if (cfg_client->global){
+		for (ls = cfg_client->global; ls; ls = ls->next){
+			section = ls->data;
+			if (!strcmp (path, section->path))
+				for (le = section->entries; le; le = le->next){
+					entry = le->data;
+					if (entry && entry->name)
+						if (!g_list_find_custom (ret, 
+							 entry->name,
+							 (GCompareFunc) strcmp))
+							ret = g_list_append (ret,
+							      g_strdup (entry->name));
+				}
+		}
+	}
+
         return ret;
 }
 

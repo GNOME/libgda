@@ -1,3 +1,9 @@
+2002-05-01  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
+	* libgda/gda-config.c:
+	* libgda/gda-recordset.c: fixes to correctly overwrite global
+	configuration with the one provided by the user.
+
 2002-05-01  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* libgda/gda-recordset.c (gda_recordset_get_connection): added missing
