@@ -57,13 +57,7 @@ main (gint argc, gchar *argv[])
 
   /* initialize CORBA stuff */
   CORBA_exception_init(&ev);
-#if defined(USING_OAF)
   gda_server_init("gda-interbase-srv", VERSION, argc, argv);
-#else
-  orb = gnome_CORBA_init("gda-interbase-srv", VERSION, &argc, argv,
-			 GNORBA_INIT_SERVER_FUNC, &ev);
-#endif
-  gda_server_impl_exception(&ev);
 
   /* register the server implementation */
   server_impl = gda_server_impl_new("OAFIID:gda-interbase:f3dee204-4e44-4505-8ca8-9703c4473c0f",

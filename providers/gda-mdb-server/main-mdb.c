@@ -57,14 +57,7 @@ main (gint argc, gchar *argv[])
   CORBA_ORB         orb;
 
   /* initialize CORBA stuff */
-#if defined(USING_OAF)
   gda_server_init("gda-mysql-srv", VERSION, argc, argv);
-#else
-  CORBA_exception_init(&ev);
-  orb = gnome_CORBA_init("gda-mysql-srv", VERSION, &argc, argv,
-			 GNORBA_INIT_SERVER_FUNC, &ev);
-  gda_server_impl_exception(&ev);
-#endif
 
   /* register the server implementation */
   server_impl = gda_server_impl_new("OAFIID:gda-mdb:b7df028e-fb20-44c5-a47b-e98167c5720e",

@@ -61,14 +61,7 @@ main (gint argc, gchar *argv[])
   CORBA_ORB         orb;
 
   /* initialize CORBA stuff */
-#if USING_OAF
   gda_server_init("gda-sybase-srv", VERSION, argc, argv);
-#else
-  CORBA_exception_init(&ev);
-  orb = gnome_CORBA_init("gda-sybase-srv", VERSION, &argc, argv,
-			 GNORBA_INIT_SERVER_FUNC, &ev);
-  gda_server_impl_exception(&ev);
-#endif
 
   /* register the server implementation */
   server_impl = gda_server_impl_new("OAFIID:gda-sybase:f212f5f3-8365-4c52-b1c1-b67f9e7b2550",

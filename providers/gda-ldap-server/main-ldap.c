@@ -56,14 +56,7 @@ main (gint argc, gchar *argv[])
   CORBA_ORB         orb;
 
   /* initialize CORBA stuff */
-#if defined(USING_OAF)
   gda_server_init("gda-ldap-srv", VERSION, argc, argv);
-#else
-  CORBA_exception_init(&ev);
-  orb = gnome_CORBA_init("gda-ldap-srv", VERSION, &argc, argv,
-			 GNORBA_INIT_SERVER_FUNC, &ev);
-  gda_server_impl_exception(&ev);
-#endif
 
   /* register the server implementation */
   server_impl = gda_server_impl_new("OAFIID:gda-ldap:99216286-7c05-438f-8fe8-5bcc2223f5d7",

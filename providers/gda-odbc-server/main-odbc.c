@@ -56,14 +56,7 @@ main (gint argc, gchar *argv[])
   CORBA_ORB         orb;
 
   /* initialize CORBA stuff */
-#if defined(USING_OAF)
   gda_server_init("gda-odbc-srv", VERSION, argc, argv);
-#else
-  CORBA_exception_init(&ev);
-  orb = gnome_CORBA_init("gda-odbc-srv", VERSION, &argc, argv,
-			 GNORBA_INIT_SERVER_FUNC, &ev);
-  gda_server_impl_exception(&ev);
-#endif
 
   /* register the server implementation */
   server_impl = gda_server_impl_new("OAFIID:gda-odbc:b0d1eb1f-73d4-441c-a5b7-3bd5fc0ff7f3",

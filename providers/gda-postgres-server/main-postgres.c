@@ -56,14 +56,7 @@ main(int argc, char* argv[])
   CORBA_ORB         orb;
 
   /* initialize CORBA stuff */
-#if defined(USING_OAF)
   gda_server_init("gda-postgres-srv", VERSION, argc, argv);
-#else
-  CORBA_exception_init(&ev);
-  orb = gnome_CORBA_init("gda-postgres-srv", VERSION, &argc, argv,
-			 GNORBA_INIT_SERVER_FUNC, &ev);
-  gda_server_impl_exception(&ev);
-#endif
 
   /* register the server implementation */
   server_impl = gda_server_impl_new("OAFIID:gda-postgres:b04e9dc2-1cc8-4027-8cf9-27dcb6a2a63f",
