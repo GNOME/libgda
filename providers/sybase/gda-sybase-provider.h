@@ -39,6 +39,20 @@
 
 G_BEGIN_DECLS
 
+/* Set used client version in CS_GDA_VERSION to latest available */
+#if defined (CS_CURRENT_VERSION)
+#  define CS_GDA_VERSION CS_CURRENT_VERSION
+#elif defined (CS_VERSION_125)
+#  define CS_GDA_VERSION CS_VERSION_125
+#elif defined (CS_VERSION_120)
+#  define CS_GDA_VERSION CS_VERSION_120
+#elif defined(CS_VERSION_110)
+#  define CS_GDA_VERSION CS_VERSION_110
+#else
+#  define CS_GDA_VERSION CS_VERSION_100
+#endif
+
+
 #define GDA_TYPE_SYBASE_PROVIDER            (gda_sybase_provider_get_type())
 #define GDA_SYBASE_PROVIDER(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_SYBASE_PROVIDER, GdaSybaseProvider))
 #define GDA_SYBASE_PROVIDER_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_SYBASE_PROVIDER, GdaSybaseProviderClass))
@@ -57,12 +71,21 @@ struct _GdaSybaseProviderClass {
 };
 
 typedef struct _GdaSybaseConnectionData {
+	GdaConnection  *cnc; // "parent"
+	
 	CS_CONTEXT     *context;
 	CS_CONNECTION  *connection;
+	CS_CHAR        *mempool;
+
+	CS_RETCODE     ret;  // for client operations
+	CS_RETCODE     mret; // for message operations(cs_diag/ct_diag)
 } GdaSybaseConnectionData;
 
 GType              gda_sybase_provider_get_type (void);
 GdaServerProvider *gda_sybase_provider_new (void);
+
+GdaSybaseConnectionData *gda_sybase_connection_data_new(void);
+void gda_sybase_connection_data_free(GdaSybaseConnectionData *);
 
 G_END_DECLS
 

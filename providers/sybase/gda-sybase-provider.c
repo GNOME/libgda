@@ -28,7 +28,7 @@
 #if defined(HAVE_CONFIG_H)
 #  include <config.h>
 #endif
-
+#include <string.h>
 #include "gda-sybase.h"
 
 #define PARENT_TYPE GDA_TYPE_SERVER_PROVIDER
@@ -113,13 +113,14 @@ gda_sybase_provider_class_init (GdaSybaseProviderClass *klass)
 	provider_class->open_connection = gda_sybase_provider_open_connection;
 	provider_class->rollback_transaction = gda_sybase_provider_rollback_transaction;
 	provider_class->supports = gda_sybase_provider_supports;
+
+	setlocale(LC_ALL, "C");
 }
 
 static void
 gda_sybase_provider_init (GdaSybaseProvider *myprv, 
 			  GdaSybaseProviderClass *klass)
 {
-	setlocale (LC_ALL, "");
 }
 
 static void
@@ -157,6 +158,57 @@ gda_sybase_provider_get_type (void)
 	return type;
 }
 
+GdaServerProvider *
+gda_sybase_provider_new (void)
+{
+	GdaSybaseProvider *provider;
+
+	provider = g_object_new (gda_sybase_provider_get_type (), NULL);
+
+	return GDA_SERVER_PROVIDER (provider);
+}
+
+GdaSybaseConnectionData *
+gda_sybase_connection_data_new(void)
+{
+	GdaSybaseConnectionData *sconn = g_new0 (GdaSybaseConnectionData, 1);
+
+	return sconn;
+}
+
+/* this function just frees the connection structure. 
+ * make sure, connection is already closed [ct_close(sconn->connection);] */
+void 
+gda_sybase_connection_data_free(GdaSybaseConnectionData *sconn)
+{
+	if (sconn) {
+		// if a GdaConnection is associated with the data,
+		// clear the handle
+		if (GDA_IS_CONNECTION (sconn->cnc)) {
+			// we do not check if the handle is the same,
+			// because it must be identical (connection_open)
+			g_object_set_data (G_OBJECT (sconn->cnc), 
+			                   OBJECT_DATA_SYBASE_HANDLE, NULL);
+			// is just a reference copy
+			sconn->cnc = NULL;
+		}
+		// drop connection
+		if (sconn->connection) {
+			sconn->ret = ct_con_drop (sconn->connection);
+			sconn->connection = NULL;
+		}
+		// exit library and drop context
+		if (sconn->context) {
+			sconn->ret = ct_exit (sconn->context, CS_UNUSED);
+			sconn->ret = cs_ctx_drop (sconn->context);
+			sconn->context = NULL;
+		}
+		sconn->ret = CS_SUCCEED;
+		g_free (sconn);
+		sconn = NULL;
+	}
+}
+
 /* open_connection handler for the GdaSybaseProvider class */
 static gboolean
 gda_sybase_provider_open_connection (GdaServerProvider *provider,
@@ -166,13 +218,16 @@ gda_sybase_provider_open_connection (GdaServerProvider *provider,
 				     const gchar *password)
 {
 		
-	sybase_connection *sconn;
-	CS_RETCODE ret;
+	GdaSybaseConnectionData *sconn = NULL;
+	CS_LOCALE   *locale = NULL;
 	const gchar *t_host = NULL;
 	const gchar *t_db = NULL;
 	const gchar *t_user = NULL;
-	const gchar *t_password = NULL;		
-	CS_CHAR buf[500];
+	const gchar *t_password = NULL;
+	const gchar *t_locale = NULL;
+	CS_CHAR buf[CS_MAX_CHAR + 1];
+
+	memset(&buf, 0, sizeof(buf));
 		
 	/* the logic to connect to the database */
 
@@ -183,7 +238,7 @@ gda_sybase_provider_open_connection (GdaServerProvider *provider,
 	else
 		t_user = gda_quark_list_find (params, "USERNAME");
 
-	
+		
 	if (password)
 		t_password = g_strdup(password);
 	else
@@ -194,170 +249,213 @@ gda_sybase_provider_open_connection (GdaServerProvider *provider,
 	if (!t_host)
 		t_host = gda_quark_list_find (params, "HOST");
 
+	t_locale = gda_quark_list_find (params, "LOCALE");
+
 	sybase_debug_msg ("username: '%s', password '%s'",
 	                  (t_user != NULL) ? t_user : "(NULL)",
 	                  (t_password != NULL) ? t_password : "(NULL)");
-
-	sconn = g_new(sybase_connection,1);
-	sconn->context = NULL;
-	sconn->connection = NULL;
-
-	ret = cs_ctx_alloc (CS_VERSION_100, &sconn->context);
-	if (ret != CS_SUCCEED) {
-		g_free((gpointer)sconn);
+	
+	sconn = g_new0 (GdaSybaseConnectionData, 1);
+	if (!sconn) {
+		sybase_debug_msg (_("Out of memory. Allocating connection structure failed."));
 		return FALSE;
 	}
-	ret = ct_init (sconn->context, CS_VERSION_100);
-	if (ret != CS_SUCCEED) {
-		if (sconn->context) {
-			ct_con_drop (sconn->connection);
-		}
-		g_free((gpointer)sconn);
+
+	/* CS_GDA_VERSION is set to the latest CS_VERSION available
+	 * alloc context */
+	sconn->ret = cs_ctx_alloc (CS_GDA_VERSION, &sconn->context);
+	if (sconn->ret != CS_SUCCEED) {
+		g_free (sconn);
+		sconn = NULL;
 		return FALSE;
-	}				
+	}
+	sybase_debug_msg(_("Context allocated."));
+	/* init client-lib */
+	sconn->ret = ct_init (sconn->context, CS_GDA_VERSION);
+	if (sconn->ret != CS_SUCCEED) {
+		gda_sybase_connection_data_free (sconn);
+		return FALSE;
+	}
+	sybase_debug_msg(_("Client library initialized."));
+
+	/* apply locale before connection */
+	if (t_locale) {
+		sconn->ret = cs_loc_alloc (sconn->context, &locale);
+		/* locale setting should not make connection fail
+		 * 
+		 * avoid nested if clauses because of same condition */
+		if (sconn->ret == CS_SUCCEED) {
+			sconn->ret = cs_locale (sconn->context,
+			                        CS_SET,
+			                        locale,
+			                        CS_LC_ALL,
+			                        (CS_CHAR *) t_locale,
+			                        CS_NULLTERM,
+			                        NULL);
+		}
+		if (sconn->ret == CS_SUCCEED) {
+			sconn->ret = cs_config (sconn->context,
+			                        CS_SET,
+			                        CS_LOC_PROP,
+			                        locale,
+			                        CS_UNUSED,
+			                        NULL);
+		}
+		if (sconn->ret == CS_SUCCEED) {
+			sybase_debug_msg (_("Locale set to '%s'."), t_locale);
+		}
+		if (locale) {
+			sconn->ret = cs_loc_drop (sconn->context,
+			                          locale);
+			locale = NULL;
+		}
+	}
+
+	/* Initialize callback handlers */
+	/*   cs */
+	sconn->ret = cs_config (sconn->context, CS_SET, CS_MESSAGE_CB,
+	                        (CS_VOID *) gda_sybase_csmsg_callback,
+	                         CS_UNUSED, NULL);
+	if (sconn->ret != CS_SUCCEED) {
+		sybase_debug_msg(_("Could not initialize cslib callback"));
+		gda_sybase_connection_data_free (sconn);
+		return FALSE;
+	}
+	sybase_debug_msg(_("CS-lib callback initialized."));
+	/*   ct-cli */
+	sconn->ret = ct_callback (sconn->context, NULL, CS_SET,
+	                          CS_CLIENTMSG_CB,
+	                          (CS_VOID *) gda_sybase_clientmsg_callback);
+	if (sconn->ret != CS_SUCCEED) {
+		sybase_debug_msg(_("Could not initialize ct-client callback"));
+		gda_sybase_connection_data_free (sconn);
+		return FALSE;
+	}
+	sybase_debug_msg(_("CT-Client callback initialized."));
+	
+	/*   ct-srv */
+	sconn->ret = ct_callback (sconn->context, NULL, CS_SET, 
+	                          CS_SERVERMSG_CB,
+	                          (CS_VOID *) gda_sybase_servermsg_callback);
+	if (sconn->ret != CS_SUCCEED) {
+		sybase_debug_msg(_("Could not initialize ct-server callback"));
+		gda_sybase_connection_data_free (sconn);
+		return FALSE;
+	}
+	sybase_debug_msg(_("CT-Server callback initialized."));
+
 	/* allocate the connection structure */
-	ret = ct_con_alloc(sconn->context, &sconn->connection);
-	if (ret != CS_SUCCEED) {
-		if (sconn->connection != NULL) {
-			ct_con_drop (sconn->connection);
-			sconn->connection = NULL;
-		}
-		if (sconn->context != NULL) {
-			ct_exit (sconn->context, CS_FORCE_EXIT);
-			cs_ctx_drop (sconn->context);
-			sconn->context = NULL;
-		}
+	sconn->ret = ct_con_alloc(sconn->context, &sconn->connection);
+	if (sconn->ret != CS_SUCCEED) {
+		gda_sybase_connection_data_free (sconn);
 		return FALSE;
-	}						
-	ret = cs_diag (sconn->context, 
-		       CS_INIT, 
-		       CS_UNUSED, 
-		       CS_UNUSED,
-		       NULL);		
-	if (ret != CS_SUCCEED) {
-		if (sconn->connection != NULL)  {
-			ct_con_drop (sconn->connection);
-			sconn->connection = NULL;
-		}
-		if (sconn->context != NULL) {
-			ct_exit (sconn->context, CS_FORCE_EXIT);
-			cs_ctx_drop (sconn->context);
-			sconn->context = NULL;
-		}
+	}
+	sybase_debug_msg(_("Connection allocated."));
+	/* init inline error handling for cs-lib */
+/*	sconn->ret = cs_diag (sconn->context, 
+	                      CS_INIT, 
+	                      CS_UNUSED, 
+	                      CS_UNUSED,
+	                      NULL);		
+	if (sconn->ret != CS_SUCCEED) {
+		gda_sybase_connection_data_free (sconn);
 		return FALSE;
-	}						
-	ret = ct_diag (sconn->connection, 
-		       CS_INIT, 
-		       CS_UNUSED, 
-		       CS_UNUSED,
-		       NULL);
-	if (ret != CS_SUCCEED) {
-		if (sconn->connection != NULL) {
-			ct_con_drop (sconn->connection);
-			sconn->connection = NULL;
-		}
-		if (sconn->context != NULL) {
-			ct_exit (sconn->context, CS_FORCE_EXIT);
-			cs_ctx_drop (sconn->context);
-			sconn->context = NULL;
-		}
+	}
+	sybase_debug_msg(_("Error handling for cs-lib initialized.")); */
+	/* init inline error handling for ct-lib */
+/*	sconn->ret = ct_diag (sconn->connection, 
+	                      CS_INIT, 
+	                      CS_UNUSED, 
+	                      CS_UNUSED,
+	                      NULL);
+	if (sconn->ret != CS_SUCCEED) {
+		gda_sybase_connection_data_free (sconn);
 		return FALSE;
-	}								
-	ret = ct_con_props (sconn->connection, 
-			    CS_SET, 
-			    CS_APPNAME, 
-			    (CS_CHAR *) "libgda test", 
-			    CS_NULLTERM, 
-			    NULL);		
-	if (ret != CS_SUCCEED) {
-		if (sconn->connection != NULL) {
-			ct_con_drop (sconn->connection);
-			sconn->connection = NULL;
-		}
-		if (sconn->context != NULL) {
-			ct_exit (sconn->context, CS_FORCE_EXIT);
-			cs_ctx_drop (sconn->context);
-			sconn->context = NULL;
-		}
-		return FALSE;
-	}						
+	}
+	sybase_debug_msg(_("Error handling for ct-lib initialized.")); */
 
-
-	ret = ct_con_props(sconn->connection, 
-			   CS_SET, 
-			   CS_USERNAME, 
-			   (CS_CHAR *) t_user,
-			   CS_NULLTERM, 
-			   NULL);
-
-	if (ret != CS_SUCCEED) {
-		if (sconn->connection != NULL) {
-			ct_con_drop (sconn->connection);
-			sconn->connection = NULL;
-		}
-		if (sconn->context != NULL) {
-			ct_exit (sconn->context, CS_FORCE_EXIT);
-			cs_ctx_drop (sconn->context);
-			sconn->context = NULL;
-		}
+	/* set object data for error handling routines */
+	sconn->cnc = cnc; /* circular reference for freeing */
+	g_object_set_data (G_OBJECT (cnc), OBJECT_DATA_SYBASE_HANDLE, sconn);
+	/* now first check possible, do so */
+	
+	/* set appname */
+	sconn->ret = ct_con_props (sconn->connection, 
+	                           CS_SET, 
+	                           CS_APPNAME, 
+	                           (CS_CHAR *) "gda-sybase provider", 
+	                           CS_NULLTERM, 
+	                           NULL);
+	if (sconn->ret != CS_SUCCEED) {
+		gda_sybase_connection_data_free (sconn);
 		return FALSE;
-	}								
-	ret = ct_con_props (sconn->connection, 
-			    CS_SET, 
-			    CS_PASSWORD, 
-			    (CS_CHAR *) t_password,
-			    CS_NULLTERM, 
-			    NULL);
+	}
+	sybase_debug_msg(_("Appname set."));
 
-	if (ret != CS_SUCCEED) {
-		if (sconn->connection != NULL) {
-			ct_con_drop (sconn->connection);
-			sconn->connection = NULL;
-		}
-		if (sconn->context != NULL) {
-			ct_exit (sconn->context, CS_FORCE_EXIT);
-			cs_ctx_drop (sconn->context);
-			sconn->context = NULL;
-		}
+	/* set username */
+	sconn->ret = ct_con_props (sconn->connection, 
+	                           CS_SET, 
+	                           CS_USERNAME, 
+	                           (CS_CHAR *) t_user,
+	                           CS_NULLTERM, 
+	                           NULL);
+	if (sconn->ret != CS_SUCCEED) {
+		gda_sybase_connection_data_free (sconn);
 		return FALSE;
-	}						
-	ret = ct_connect (sconn->connection, 
-			  (CS_CHAR *) NULL, 
-			  0);
-	if (ret != CS_SUCCEED) {
-		if (sconn->connection != NULL) {
-			ct_con_drop (sconn->connection);
-			sconn->connection = NULL;
+	}
+	sybase_debug_msg(_("Username set."));
+
+	/* assume null-length passwords as passwordless logins */
+	if ((t_password != NULL) && (strlen(t_password) > 0)) {
+		sconn->ret = ct_con_props (sconn->connection, 
+		                           CS_SET, 
+		                           CS_PASSWORD, 
+		                           (CS_CHAR *) t_password,
+		                           CS_NULLTERM, 
+		                           NULL);
+		if (sconn->ret != CS_SUCCEED) {
+			gda_sybase_connection_data_free (sconn);
+			return FALSE;
 		}
-		if (sconn->context != NULL) {
-			ct_exit (sconn->context, CS_FORCE_EXIT);
-			cs_ctx_drop (sconn->context);
-			sconn->context = NULL;
+		sybase_debug_msg(_("Password set."));
+	} else {
+		sconn->ret = ct_con_props (sconn->connection, 
+		                           CS_SET, 
+		                           CS_PASSWORD, 
+		                           (CS_CHAR *) NULL,
+		                           CS_NULLTERM, 
+		                           NULL);
+		if (sconn->ret != CS_SUCCEED) {
+			gda_sybase_connection_data_free (sconn);
+			return FALSE;
 		}
+		sybase_debug_msg(_("Empty password set."));
+	}
+	sconn->ret = ct_connect (sconn->connection, 
+	                         (t_host) ? ((CS_CHAR *) t_host)
+	                                  : ((CS_CHAR *) NULL), 
+	                         (t_host) ? strlen(t_host) : 0);
+	if (sconn->ret != CS_SUCCEED) {
+		gda_sybase_connection_data_free (sconn);
 		return FALSE;
-	}						
+	}
+	sybase_debug_msg(_("Connected."));
+
 	/* get the hostname from SQL server as a test */
-	ret = ct_con_props (sconn->connection, 
-			    CS_GET, 
-			    CS_SERVERNAME, 
-			    &buf, 
-			    CS_MAX_CHAR, 
-			    NULL);		
-	if (ret != CS_SUCCEED) {
-		if (sconn->connection != NULL)  {
-			ct_con_drop (sconn->connection);
-			sconn->connection = NULL;
-		}
-		if (sconn->context != NULL) {
-			ct_exit (sconn->context, CS_FORCE_EXIT);
-			cs_ctx_drop (sconn->context);
-			sconn->context = NULL;
-		}
+	sconn->ret = ct_con_props (sconn->connection, 
+	                           CS_GET, 
+	                           CS_SERVERNAME, 
+	                           &buf,
+	                           CS_MAX_CHAR, 
+	                           NULL);
+	if (sconn->ret != CS_SUCCEED) {
+		gda_sybase_connection_data_free (sconn);
+		
 		return FALSE;
-	}						
+	}
 //	return TRUE;
 
-	g_object_set_data (G_OBJECT (cnc), OBJECT_DATA_SYBASE_HANDLE, sconn);
+	sybase_debug_msg (_("Finally connected."));
 
 	return TRUE;
 }
@@ -367,21 +465,18 @@ static gboolean
 gda_sybase_provider_close_connection (GdaServerProvider *provider, 
 				      GdaConnection *cnc)
 {
-	sybase_connection *sconn;
+	GdaSybaseConnectionData *sconn;
 	g_return_val_if_fail (GDA_IS_SYBASE_PROVIDER (provider), FALSE);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	sconn = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_SYBASE_HANDLE);
+	g_return_val_if_fail (sconn != NULL, FALSE);
+
+	// close connection before freeing data
 	if (sconn->connection != NULL) {
-		ct_con_drop (sconn->connection);
-		sconn->connection = NULL;
+		sconn->ret = ct_close(sconn->connection, CS_UNUSED);
 	}
-	if (sconn->context != NULL) {
-		ct_exit (sconn->context, CS_FORCE_EXIT);
-		cs_ctx_drop (sconn->context);
-		sconn->context = NULL;
-	}
-	g_free (sconn);
-	sconn = NULL;
+	gda_sybase_connection_data_free (sconn);
+	
 	g_object_set_data (G_OBJECT (cnc), OBJECT_DATA_SYBASE_HANDLE, NULL);
 	return TRUE;
 }

@@ -86,6 +86,18 @@ gchar *sprintf_clientmsg(const gchar *,
 gchar *sprintf_servermsg(const gchar *,
 																									CS_SERVERMSG *);
 */
+
+gboolean sybase_check_messages(GdaConnection *cnc);
+
+CS_RETCODE CS_PUBLIC gda_sybase_csmsg_callback (CS_CONTEXT *context,
+                                                CS_CLIENTMSG *msg);
+CS_RETCODE CS_PUBLIC gda_sybase_clientmsg_callback (CS_CONTEXT *context,
+                                                    CS_CONNECTION *conn,
+                                                    CS_CLIENTMSG *msg);
+CS_RETCODE CS_PUBLIC gda_sybase_servermsg_callback (CS_CONTEXT *context,
+                                                    CS_CONNECTION *conn,
+                                                    CS_SERVERMSG *msg);
+
 void sybase_debug_msg(gchar *fmt, ...);
 
 
