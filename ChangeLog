@@ -1,3 +1,9 @@
+2003-05-10  Danilo Schoeneberg <dj@starfire-programming.net>
+
+	* configure.in:
+	* providers/Makefile.am:
+	* providers/msql/*: first version of mSQL provider.
+
 2003-05-08  C.J. Collier <cjcollier@colliertech.org>
 
 	* doc/C/libgda-docs.sgml: removed extra space in hyperlinks, some

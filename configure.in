@@ -210,6 +210,60 @@ fi
 
 AM_CONDITIONAL(MYSQL, test x$mysqldir != x)
 
+dnl Test for mSQL
+try_msql=true
+AC_ARG_WITH(mysql,
+[  --with-mSQL=<directory>	use mSQL backend in <directory>],[
+if test $withval = no
+then
+	try_msql=false
+elif test $withval = yes
+then
+	dir="/usr/local"
+else
+	dir=$withval
+fi
+])
+msqldir=""
+if test $try_msql = true
+then
+	AC_MSG_CHECKING(for mSQL files)
+	for d in $dir /usr /usr/local /usr/local/msql /opt/msql /opt/packages/msql
+	do
+		if test -f $d/include/msql/msql.h
+		then
+			msqldir_suffix=/msql
+		else
+			msqldir_suffix=
+		fi
+		if test -f $d/lib/msql/libmsql.a -o -f $d/lib/msql/libmsql.so
+		then
+			AC_MSG_RESULT(found mSQL in $d)
+			msqldir=$d
+			msqllibdir_suffix=/msql
+			break
+		fi
+		if test -f $d/lib/libmsql.a -o -f $d/lib/libmsql.so
+		then
+			AC_MSG_RESULT(found mSQL in $d)
+			msqldir=$d
+			msqllibdir_suffix=
+			break
+		fi
+	done
+	if test x$msqldir = x
+	then
+		AC_MSG_WARN(mSQL backend not used)
+	else
+		AC_DEFINE(HAVE_MSQL)
+		MSQL_CFLAGS="-I${msqldir}/include${msqldir_suffix}"
+		MSQL_LIBS="-L${msqldir}/lib${msqllibdir_suffix} -lmsql"
+	fi
+fi
+
+AM_CONDITIONAL(MSQL, test x$msqldir != x)
+
+
 dnl Test for PostgreSQL
 try_postgres=true
 AC_ARG_WITH(postgres,
@@ -762,6 +816,8 @@ AC_SUBST(ODBC_LIBS)
 AC_SUBST(ODBC_CFLAGS)
 AC_SUBST(MYSQL_LIBS)
 AC_SUBST(MYSQL_CFLAGS)
+AC_SUBST(MSQL_LIBS)
+AC_SUBST(MSQL_CFLAGS)
 AC_SUBST(POSTGRES_LIBS)
 AC_SUBST(POSTGRES_CFLAGS)
 AC_SUBST(PRIMEBASE_LIBS)
@@ -802,6 +858,7 @@ providers/freetds/Makefile
 providers/firebird/Makefile
 providers/mdb/Makefile
 providers/mysql/Makefile
+providers/msql/Makefile
 providers/odbc/Makefile
 providers/oracle/Makefile
 providers/postgres/Makefile
@@ -833,6 +890,7 @@ echo "      FreeTDS = `if test x$freetdsdir != x; then echo yes; else echo no; f
 echo "      IBM DB2 = `if test x$ibmdb2dir != x; then echo yes; else echo no; fi`"
 echo "      MDB (MS Access) = `if test x$mdbdir != x; then echo yes; else echo no; fi`"
 echo "      MySQL = `if test x$mysqldir != x; then echo yes; else echo no; fi`"
+echo "      mSQL = `if test x$msqldir != x; then echo yes; else echo no; fi`"
 echo "      ODBC = `if test x$odbcdir != x; then echo yes; else echo no; fi`"
 echo "      Oracle = `if test x$oracledir != x; then echo yes; else echo no; fi`"
 echo "      PostgreSQL = `if test x$postgresdir != x; then echo yes; else echo no; fi`"
