@@ -1,3 +1,7 @@
+2002-01-12  Abel Cheung <maddog@linux.org.hk>
+
+	* Makefile.am: Add DESTDIR support.
+
 2001-05-31  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* added Spanish translation of the libgda manual by
