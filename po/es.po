@@ -9,7 +9,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2002-07-07 23:22+0200\n"
+"POT-Creation-Date: 2002-07-23 22:02+0200\n"
 "PO-Revision-Date: 2002-06-05 22:51GMT -03:00\n"
 "Last-Translator: Pablo Gonzalo del Campo <pablodc@bigfoot.com>\n"
 "Language-Team: español <traductores@es.gnome.org>\n"
@@ -145,11 +145,11 @@ msgstr "Error leyendo %s: %s"
 msgid "Could not create file %s"
 msgstr "No se ha podido crear el archivo %s"
 
-#: libgda/gda-value.c:1315
+#: libgda/gda-value.c:1346
 msgid "TRUE"
 msgstr "VERDADERO"
 
-#: libgda/gda-value.c:1317
+#: libgda/gda-value.c:1348
 msgid "FALSE"
 msgstr "FALSO"
 
@@ -189,8 +189,7 @@ msgstr "Nodo XML inválido"
 
 #: providers/default/gda-default-provider.c:173
 #: providers/sqlite/gda-sqlite-provider.c:186
-msgid ""
-"A full path must be specified on the connection string to open a database."
+msgid "A full path must be specified on the connection string to open a database."
 msgstr ""
 "Una ruta completa debe ser especificada en la cadena de conexión para abrir "
 "la base de datos."
@@ -200,58 +199,58 @@ msgid "Not Implemented"
 msgstr "No implementado"
 
 #: providers/default/gda-default-provider.c:361
-#: providers/mysql/gda-mysql-provider.c:873
+#: providers/mysql/gda-mysql-provider.c:941
 #: providers/oracle/gda-oracle-provider.c:1056
-#: providers/postgres/gda-postgres-provider.c:829
+#: providers/postgres/gda-postgres-provider.c:835
 msgid "Field name"
 msgstr "Nombre del campo"
 
 #: providers/default/gda-default-provider.c:362
-#: providers/mysql/gda-mysql-provider.c:874
+#: providers/mysql/gda-mysql-provider.c:942
 #: providers/oracle/gda-oracle-provider.c:1057
-#: providers/postgres/gda-postgres-provider.c:830
+#: providers/postgres/gda-postgres-provider.c:836
 msgid "Data type"
 msgstr "Tipo de dato"
 
 #: providers/default/gda-default-provider.c:363
-#: providers/mysql/gda-mysql-provider.c:875
+#: providers/mysql/gda-mysql-provider.c:943
 #: providers/oracle/gda-oracle-provider.c:1058
-#: providers/postgres/gda-postgres-provider.c:831
+#: providers/postgres/gda-postgres-provider.c:837
 msgid "Size"
 msgstr "Tamaño"
 
 #: providers/default/gda-default-provider.c:364
-#: providers/mysql/gda-mysql-provider.c:876
+#: providers/mysql/gda-mysql-provider.c:944
 #: providers/oracle/gda-oracle-provider.c:1059
-#: providers/postgres/gda-postgres-provider.c:832
+#: providers/postgres/gda-postgres-provider.c:838
 msgid "Scale"
 msgstr "Escala"
 
 #: providers/default/gda-default-provider.c:365
-#: providers/mysql/gda-mysql-provider.c:877
+#: providers/mysql/gda-mysql-provider.c:945
 #: providers/oracle/gda-oracle-provider.c:1060
-#: providers/postgres/gda-postgres-provider.c:833
+#: providers/postgres/gda-postgres-provider.c:839
 msgid "Not null?"
 msgstr "¿No nulo?"
 
 #: providers/default/gda-default-provider.c:366
-#: providers/mysql/gda-mysql-provider.c:878
+#: providers/mysql/gda-mysql-provider.c:946
 #: providers/oracle/gda-oracle-provider.c:1061
-#: providers/postgres/gda-postgres-provider.c:834
+#: providers/postgres/gda-postgres-provider.c:840
 msgid "Primary key?"
 msgstr "¿Clave primaria?"
 
 #: providers/default/gda-default-provider.c:367
-#: providers/mysql/gda-mysql-provider.c:879
+#: providers/mysql/gda-mysql-provider.c:947
 #: providers/oracle/gda-oracle-provider.c:1062
-#: providers/postgres/gda-postgres-provider.c:835
+#: providers/postgres/gda-postgres-provider.c:841
 msgid "Unique index?"
 msgstr "¿Índice Único?"
 
 #: providers/default/gda-default-provider.c:368
-#: providers/mysql/gda-mysql-provider.c:880
+#: providers/mysql/gda-mysql-provider.c:948
 #: providers/oracle/gda-oracle-provider.c:1063
-#: providers/postgres/gda-postgres-provider.c:836
+#: providers/postgres/gda-postgres-provider.c:842
 msgid "References"
 msgstr "Referencias"
 
@@ -297,10 +296,8 @@ msgid "GDA provider for MS Access files"
 msgstr "Proveedor GDA para archivos MS Access"
 
 #: providers/mysql/gda-mysql-provider.c:198
-msgid ""
-"You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
-msgstr ""
-"No puede proveer un UNIX_SOCKET si al mismo tiempo provee un HOST o un PORT."
+msgid "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
+msgstr "No puede proveer un UNIX_SOCKET si al mismo tiempo provee un HOST o un PORT."
 
 #: providers/mysql/gda-mysql-provider.c:269
 #: providers/mysql/gda-mysql-provider.c:319
@@ -313,20 +310,36 @@ msgstr ""
 msgid "Invalid MYSQL handle"
 msgstr "Manejador MYSQL inválido"
 
-#. gda_server_recordset_model_set_field_defined_size (recset, 0, 32);
-#: providers/mysql/gda-mysql-provider.c:775
+#. 2nd, the owner
+#: providers/mysql/gda-mysql-provider.c:779
+msgid "Unknown"
+msgstr "Desconocido"
+
+#: providers/mysql/gda-mysql-provider.c:846
 #: providers/oracle/gda-oracle-provider.c:1563
 msgid "Type"
 msgstr "Tipo"
 
-#: providers/mysql/gda-mysql-provider.c:888
+#: providers/mysql/gda-mysql-provider.c:847
+msgid "Owner"
+msgstr "Propietario"
+
+#: providers/mysql/gda-mysql-provider.c:848
+msgid "Comments"
+msgstr "Comentarios"
+
+#: providers/mysql/gda-mysql-provider.c:849
+msgid "GDA type"
+msgstr "Tipo de GDA"
+
+#: providers/mysql/gda-mysql-provider.c:956
 #: providers/mysql/gda-mysql-recordset.c:58
 #: providers/mysql/gda-mysql-recordset.c:174
 msgid "Invalid MySQL handle"
 msgstr "Manejador MySQL inválido"
 
-#: providers/mysql/gda-mysql-provider.c:897
-#: providers/mysql/gda-mysql-provider.c:905
+#: providers/mysql/gda-mysql-provider.c:965
+#: providers/mysql/gda-mysql-provider.c:973
 msgid "You need to specify the name of the table"
 msgstr "Necesita especificar el nombre de la tabla"
 
@@ -450,8 +463,7 @@ msgstr "No se ha podido ejecutar la sentencia de Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:574
 msgid "Could not get the number of columns in the result set"
-msgstr ""
-"No se ha podido obtener la cantidad de columnas en el conjunto de resultado"
+msgstr "No se ha podido obtener la cantidad de columnas en el conjunto de resultado"
 
 #: providers/oracle/gda-oracle-provider.c:591
 msgid "Could not get the parameter descripter in the result set"
@@ -461,8 +473,7 @@ msgstr ""
 
 #: providers/oracle/gda-oracle-provider.c:603
 msgid "Could not get the column name in the result set"
-msgstr ""
-"No se ha podido obtener el nombre de la columna en el conjunto de resultado"
+msgstr "No se ha podido obtener el nombre de la columna en el conjunto de resultado"
 
 #: providers/oracle/gda-oracle-provider.c:749
 #: providers/oracle/gda-oracle-provider.c:825
@@ -541,13 +552,13 @@ msgstr "No se ha podido obtener el atributo de nulidad del campo Oracle"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/oracle/gda-oracle-provider.c:1459
-#: providers/postgres/gda-postgres-provider.c:1197 testing/client.c:123
+#: providers/postgres/gda-postgres-provider.c:1203 testing/client.c:123
 msgid "Users"
 msgstr "Usuarios"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/oracle/gda-oracle-provider.c:1651
-#: providers/postgres/gda-postgres-provider.c:767 testing/client.c:121
+#: providers/postgres/gda-postgres-provider.c:773 testing/client.c:121
 msgid "Indexes"
 msgstr "Índices"
 
@@ -557,25 +568,25 @@ msgstr "Procedimientos"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/oracle/gda-oracle-provider.c:1659
-#: providers/postgres/gda-postgres-provider.c:1225 testing/client.c:124
+#: providers/postgres/gda-postgres-provider.c:1231 testing/client.c:124
 msgid "Sequences"
 msgstr "Secuencias"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/oracle/gda-oracle-provider.c:1663
-#: providers/postgres/gda-postgres-provider.c:672
+#: providers/postgres/gda-postgres-provider.c:678
 msgid "Tables"
 msgstr "Tablas"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/oracle/gda-oracle-provider.c:1667
-#: providers/postgres/gda-postgres-provider.c:818 testing/client.c:125
+#: providers/postgres/gda-postgres-provider.c:824 testing/client.c:125
 msgid "Triggers"
 msgstr "Disparadores"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/oracle/gda-oracle-provider.c:1671
-#: providers/postgres/gda-postgres-provider.c:742 testing/client.c:120
+#: providers/postgres/gda-postgres-provider.c:748 testing/client.c:120
 msgid "Views"
 msgstr "Vistas"
 
@@ -625,9 +636,8 @@ msgid "Could not get the Oracle defined size"
 msgstr "No se ha podido obtener el tamaño definido de Oracle"
 
 #: providers/oracle/gda-oracle-recordset.c:353
-#, fuzzy
 msgid "Could not fetch a row"
-msgstr "No se ha podido obtener el archivo desde %s"
+msgstr "No se ha podido obtener un fila"
 
 #: providers/oracle/libmain.c:34
 msgid "GDA provider for Oracle databases"
@@ -641,34 +651,34 @@ msgstr "SIN DESCRIPCIÓN"
 msgid "Not available"
 msgstr "No está disponible"
 
-#: providers/postgres/gda-postgres-provider.c:382
-#: providers/postgres/gda-postgres-provider.c:453
-#: providers/postgres/gda-postgres-provider.c:587
+#: providers/postgres/gda-postgres-provider.c:388
+#: providers/postgres/gda-postgres-provider.c:459
+#: providers/postgres/gda-postgres-provider.c:593
 #: providers/postgres/gda-postgres-recordset.c:175
 #: providers/postgres/gda-postgres-recordset.c:215
 #: providers/postgres/gda-postgres-recordset.c:257
 msgid "Invalid PostgreSQL handle"
 msgstr "Manejador PostgresSQL inválido"
 
-#: providers/postgres/gda-postgres-provider.c:711
+#: providers/postgres/gda-postgres-provider.c:717
 msgid "Types"
 msgstr "Tipos"
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:793 testing/client.c:122
+#: providers/postgres/gda-postgres-provider.c:799 testing/client.c:122
 msgid "Aggregates"
 msgstr "Agregados"
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:1172 testing/client.c:116
+#: providers/postgres/gda-postgres-provider.c:1178 testing/client.c:116
 msgid "Databases"
 msgstr "Bases de datos"
 
-#: providers/postgres/gda-postgres-provider.c:1265
+#: providers/postgres/gda-postgres-provider.c:1271
 msgid "Table name"
 msgstr "Nombre de la tabla"
 
-#: providers/postgres/gda-postgres-provider.c:1266
+#: providers/postgres/gda-postgres-provider.c:1272
 msgid "Sequence"
 msgstr "Secuencia"
 
@@ -677,6 +687,11 @@ msgstr "Secuencia"
 #: providers/sqlite/gda-sqlite-recordset.c:245
 msgid "Column number out of range"
 msgstr "Número de columna fuera de rango"
+
+#: providers/postgres/gda-postgres-recordset.c:353
+#, c-format
+msgid "Tuples:\"%s\""
+msgstr "Tuples:«%s»"
 
 #: providers/postgres/libmain.c:41
 msgid "GDA provider for PostgreSQL databases"
@@ -992,3 +1007,4 @@ msgstr "\tgda_params ="
 
 #~ msgid "\tdomain = %s\n"
 #~ msgstr "\tdominio = %s\n"
+
