@@ -70,6 +70,7 @@ typedef struct {
 	/* Internal data types not returned */
 	gchar              *avoid_types;
 	gchar              *avoid_types_oids;
+	gchar              *any_type_oid; /* oid for the 'any' data type, used to fetch aggregates and functions */
 } GdaPostgresConnectionData;
 
 /* NOTE ABOUT THE POSTGRES VERSIONS:

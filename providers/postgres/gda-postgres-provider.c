@@ -236,7 +236,7 @@ get_connection_type_list (GdaPostgresConnectionData *priv_td)
 {
 	GHashTable *h_table;
 	GdaPostgresTypeOid *td;
-	PGresult *pg_res, *pg_res_avoid;
+	PGresult *pg_res, *pg_res_avoid, *pg_res_anyoid = NULL;
 	gint nrows, i;
 	gchar *avoid_types = NULL;
 	GString *string;
@@ -260,7 +260,7 @@ get_connection_type_list (GdaPostgresConnectionData *priv_td)
 	}
 	else {
 		gchar *query;
-		avoid_types = "'any', 'anyarray', 'cid', 'cstring', 'int2vector', 'internal', 'language_handler', 'oid', 'oidvector', 'opaque', 'record', 'refcursor', 'regclass', 'regoper', 'regoperator', 'regproc', 'regprocedure', 'regtype', 'SET', 'smgr', 'tid', 'trigger', 'unknown', 'void', 'xid'";
+		avoid_types = "'any', 'anyarray', 'anyelement', 'cid', 'cstring', 'int2vector', 'internal', 'language_handler', 'oid', 'oidvector', 'opaque', 'record', 'refcursor', 'regclass', 'regoper', 'regoperator', 'regproc', 'regprocedure', 'regtype', 'SET', 'smgr', 'tid', 'trigger', 'unknown', 'void', 'xid'";
 
 		/* main query to fetch infos about the data types */
 		query = g_strdup_printf (
@@ -279,18 +279,26 @@ get_connection_type_list (GdaPostgresConnectionData *priv_td)
 		g_free (query);
 
 		/* query to fetch non returned data types */
-		query = g_strdup_printf ("SELECT t.oid FROM pg_catalog.pg_type t WHERE t.typname in (%s)", 
+		query = g_strdup_printf ("SELECT t.oid FROM pg_catalog.pg_type t WHERE t.typname in (%s)",
 					 avoid_types);
 		pg_res_avoid = PQexec (priv_td->pconn, query);
 		g_free (query);
+
+		/* query to fetch the oid of the 'any' data type */
+		pg_res_anyoid = PQexec (priv_td->pconn, 
+					"SELECT t.oid FROM pg_catalog.pg_type t WHERE t.typname = 'any'");
 	}
 
 	if (!pg_res || (PQresultStatus (pg_res) != PGRES_TUPLES_OK) ||
-	    !pg_res_avoid || (PQresultStatus (pg_res_avoid) != PGRES_TUPLES_OK)) {
+	    !pg_res_avoid || (PQresultStatus (pg_res_avoid) != PGRES_TUPLES_OK) ||
+	    ((priv_td->version_float >= 7.3) && 
+	     (!pg_res_anyoid || (PQresultStatus (pg_res_anyoid) != PGRES_TUPLES_OK)))) {
 		if (pg_res)
 			PQclear (pg_res);
 		if (pg_res_avoid)
 			PQclear (pg_res_avoid);
+		if (pg_res_anyoid)
+			PQclear (pg_res_anyoid);
 		return -1;
 	}
 
@@ -325,7 +333,14 @@ get_connection_type_list (GdaPostgresConnectionData *priv_td)
 	priv_td->avoid_types = avoid_types;
 	priv_td->avoid_types_oids = string->str;
 	g_string_free (string, FALSE);
-	
+
+	/* make a string of the oid of type 'any' */
+	priv_td->any_type_oid = "";
+	if (pg_res_anyoid) {
+		if (PQntuples (pg_res_anyoid) == 1) 
+			priv_td->any_type_oid = g_strdup (PQgetvalue (pg_res_anyoid, 0, 0));
+		PQclear (pg_res_anyoid);
+	}
 	return 0;
 }
 
@@ -990,12 +1005,12 @@ gda_postgres_fill_procs_data (GdaDataModelArray *recset,
 			 "AND p.prorettype <> 'pg_catalog.cstring'::pg_catalog.regtype "
 			 "AND p.proargtypes[0] <> 'pg_catalog.cstring'::pg_catalog.regtype "
 			 "AND t.oid in (SELECT ty.oid FROM pg_catalog.pg_type ty WHERE ty.typrelid = 0 AND "
-			 "ty.typname !~ '^_' AND ty.oid not in (%s)) "
+			 "ty.typname !~ '^_' AND (ty.oid not in (%s) OR ty.oid = '%s')) "
 			 "AND p.proretset = 'f' "
 			 "AND NOT p.proisagg "
 			 "AND pg_catalog.pg_function_is_visible(p.oid) "
 			 "ORDER BY proname, pronargs",
-			 priv_data->avoid_types_oids);
+			 priv_data->avoid_types_oids, priv_data->any_type_oid);
 
 	pg_res = PQexec(priv_data->pconn, query);
 	g_free (query);
@@ -1051,7 +1066,7 @@ gda_postgres_fill_procs_data (GdaDataModelArray *recset,
 			while (ptr && *ptr && insert) {
 				const GdaPostgresTypeOid *typeoid = NULL;
 
-				if (*ptr == '0') {
+				if (!strcmp (ptr, priv_data->any_type_oid)) {
 					thevalue = "-";
 				}
 				else {
@@ -1364,24 +1379,25 @@ get_postgres_aggregates (GdaConnection *cnc, GdaParameterList *params)
 
 			query = g_strdup_printf (
                                   "SELECT p.proname, p.oid, u.usename, pg_catalog.obj_description(p.oid),"
+				  "typo.typname,"
 				  "CASE p.proargtypes[0] "
 				  "WHEN 'pg_catalog.\"any\"'::pg_catalog.regtype "
 				  "THEN CAST('-' AS pg_catalog.text) "
 				  "ELSE typi.typname "
 				  "END,"
-				  "typo.typname, NULL "
+				  "NULL "
 				  "FROM pg_catalog.pg_proc p, pg_catalog.pg_user u, pg_catalog.pg_namespace n, "
 				  "pg_catalog.pg_type typi, pg_catalog.pg_type typo "
 				  "WHERE u.usesysid=p.proowner "
 				  "AND n.oid = p.pronamespace "
 				  "AND p.prorettype = typo.oid "
-				  "AND typo.oid NOT IN (%s) "
+				  "AND (typo.oid NOT IN (%s) OR typo.oid='%s') "
 				  "AND p.proargtypes[0] = typi.oid "
-				  "AND typi.oid NOT IN (%s) "
+				  "AND (typi.oid NOT IN (%s) OR typi.oid='%s') "
 				  "AND p.proisagg "
 				  "AND pg_catalog.pg_function_is_visible(p.oid) "
-				  "ORDER BY 2", priv_data->avoid_types_oids, 
-				  priv_data->avoid_types_oids);
+				  "ORDER BY 2", priv_data->avoid_types_oids, priv_data->any_type_oid,
+				  priv_data->avoid_types_oids, priv_data->any_type_oid);
 			reclist = process_sql_commands (NULL, cnc, query, GDA_COMMAND_OPTION_STOP_ON_ERRORS);
 			g_free (query);
 		}

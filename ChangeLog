@@ -1,3 +1,11 @@
+2004-08-20  Vivien Malerba <malerba@gnome-db.org>
+	* libsql/parser.y: bug fixed to allow the alias specification for any
+	  target in queries
+	* libsql/sql_tree.c: bug fixed with uninitialized allocated memory
+	* providers/postgres/gda-postgres-provider.c: fixed a bug with the 'anyelement'
+	  data type which we don't want, and fixed another bug where aggregates and functions
+	  accepting any data type for one argument were not returned in the schemas requests.
+
 2004-08-18  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* libgda/gda-client.c (gda_client_find_connection): use the correct
