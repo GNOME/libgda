@@ -216,13 +216,11 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider,
 		return FALSE;
 	}
 
+	g_object_set_data (G_OBJECT (cnc), OBJECT_DATA_SQLITE_HANDLE, scnc);
+
 	/* set SQLite library options */
 	if (!gda_sqlite_provider_single_command (sqlite_prv, cnc, "PRAGMA empty_result_callbacks = ON"))
-		gda_log_error (_("Could not set empty_result_callbacks SQLite option"));
-
-	g_object_set_data (G_OBJECT (cnc),
-			   OBJECT_DATA_SQLITE_HANDLE,
-			   scnc);
+		gda_connection_add_error_string (cnc, _("Could not set empty_result_callbacks SQLite option"));
 
 	return TRUE;
 }
@@ -548,7 +546,7 @@ gda_sqlite_provider_single_command (const GdaSqliteProvider *provider,
 	gboolean result;
 	gint status;
 	gchar *errmsg = NULL;
-
+	
 	scnc = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_SQLITE_HANDLE);
 
 	if (!scnc) {
