@@ -305,7 +305,8 @@ gda_postgres_provider_close_connection (GdaServerProvider *provider, GdaServerCo
 }
 
 static GList *
-process_sql_commands (GList *reclist, GdaServerConnection *cnc, const gchar *sql)
+process_sql_commands (GList *reclist, GdaServerConnection *cnc,
+		      const gchar *sql, GdaCommandOptions options)
 {
 	GdaPostgresConnectionPrivate *priv_data;
 	PGconn *pconn;
@@ -339,7 +340,8 @@ process_sql_commands (GList *reclist, GdaServerConnection *cnc, const gchar *sql
 			} 
 			
 			status = PQresultStatus(pg_res);
-			if (status == PGRES_TUPLES_OK ||
+			if (options & GDA_COMMAND_OPTION_IGNORE_ERRORS	||
+			    status == PGRES_TUPLES_OK 			||
 			    status == PGRES_COMMAND_OK) {
 				recset = gda_postgres_recordset_new (cnc, pg_res);
 				if (GDA_IS_SERVER_RECORDSET (recset))
@@ -372,18 +374,21 @@ gda_postgres_provider_execute_command (GdaServerProvider *provider,
 	GList *reclist = NULL;
 	gchar *str;
 	GdaPostgresProvider *pg_prv = (GdaPostgresProvider *) provider;
+	GdaCommandOptions options;
 
 	g_return_val_if_fail (GDA_IS_POSTGRES_PROVIDER (pg_prv), NULL);
 	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (cmd != NULL, NULL);
 
+	options = gda_command_get_options (cmd);
 	switch (gda_command_get_command_type (cmd)) {
 	case GDA_COMMAND_TYPE_SQL :
-		reclist = process_sql_commands (reclist, cnc, gda_command_get_text (cmd));
+		reclist = process_sql_commands (reclist, cnc, gda_command_get_text (cmd),
+						options);
 		break;
 	case GDA_COMMAND_TYPE_TABLE :
 		str = g_strdup_printf ("SELECT * FROM %s", gda_command_get_text (cmd));
-		reclist = process_sql_commands (reclist, cnc, str);
+		reclist = process_sql_commands (reclist, cnc, str, options);
 		g_free (str);
 		break;
 	default:
@@ -489,7 +494,8 @@ get_postgres_procedures (GdaServerConnection *cnc, GdaParameterList *params)
 	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), NULL);
 
 	reclist = process_sql_commands (NULL, cnc, 
-			"SELECT proname FROM pg_proc ORDER BY proname");
+			"SELECT proname FROM pg_proc ORDER BY proname",
+			GDA_COMMAND_OPTION_STOP_ON_ERRORS);
 
 	if (!reclist)
 		return NULL;
@@ -510,7 +516,8 @@ get_postgres_tables (GdaServerConnection *cnc, GdaParameterList *params)
 
 	reclist = process_sql_commands (NULL, cnc, 
 			"SELECT relname FROM pg_class WHERE relkind = 'r' AND "
-			"relname !~ '^pg_' ORDER BY relname");
+			"relname !~ '^pg_' ORDER BY relname",
+			GDA_COMMAND_OPTION_STOP_ON_ERRORS);
 
 	if (!reclist)
 		return NULL;
@@ -577,7 +584,8 @@ get_postgres_views (GdaServerConnection *cnc, GdaParameterList *params)
 
 	reclist = process_sql_commands (NULL, cnc, 
 			"SELECT relname FROM pg_class WHERE relkind = 'v' AND "
-			"relname !~ '^pg_' ORDER BY relname");
+			"relname !~ '^pg_' ORDER BY relname",
+			GDA_COMMAND_OPTION_STOP_ON_ERRORS);
 
 	if (!reclist)
 		return NULL;
