@@ -1,19 +1,20 @@
 # set the defines below to build support for the selected sql layer(s)
 # defaults (and package names) are set for redhat 7.x
 # with postgres, mysql and odbc installed
+%define           FREETDS  0
 %define           MYSQL    1
-%define           POSTGRES 1
 %define           ODBC     1
 %define           ORACLE   0
-%define           SYBASE   0
+%define           POSTGRES 1
 %define           SQLITE   0
-%define           TDS      0
+%define           SYBASE   0
 
 Summary:          Library for writing gnome database programs
 Name:             libgda
-Version:          @version@
+Version:          @VERSION@
 Release:          1
 Source:           %{name}-%{version}.tar.gz
+URL:              http://www.gnome-db.org/
 Group:            System Environment/Libraries
 License:          LGPL
 BuildRoot:        %{_tmppath}/%{name}-%{version}-root
@@ -35,15 +36,22 @@ BuildRequires:    libxml2-devel
 BuildRequires:    GConf2-devel
 BuildRequires:    libxslt-devel >= 1.0.9
 BuildRequires:    gnome-vfs2-devel
+BuildRequires:    ncurses-devel
+
+%if %{FREETDS}
+BuildRequires:    freetds-devel
+%endif
 
 %if %{MYSQL}
-Requires:         mysqlclient9
-BuildRequires:    mysqlclient9, mysql-devel
+BuildRequires:    mysql-devel
 %endif
 
 %if %{POSTGRES}
-Requires:         postgresql-libs
-BuildRequires:    postgresql-libs, postgresql-devel
+BuildRequires:    postgresql-devel
+%endif
+
+%if %{ODBC}
+BuildRequires:    unixODBC-devel
 %endif
 
 
@@ -78,10 +86,83 @@ Requires:         gnome-vfs2-devel
 This package contains the header files and libraries needed to write
 or compile programs that use libgda.
 
+%if %{FREETDS}
+%package -n gda-freetds
+Summary:	GDA FreeTDS Provider
+Group:		System Environment/Libraries
+%description -n gda-freetds
+This package includes the GDA FreeTDS provider.
+%endif
+
+%if %{IBMDB2}
+%package -n gda-ibmdb2
+Summary:	GDA IBM DB2 Provider
+Group:		System Environment/Libraries
+%description -n gda-ibmdb2
+This package includes the GDA IBM DB2 provider.
+%endif
+
+%if %{MYSQL}
+%package -n gda-mysql
+Summary:	GDA MySQL Provider
+Group:		System Environment/Libraries
+%description -n gda-mysql
+This package includes the GDA MySQL provider.
+%endif
+
+%if %{ODBC}
+%package -n gda-odbc
+Summary:	GDA ODBC Provider
+Group:		System Environment/Libraries
+%description -n gda-odbc
+This package includes the GDA ODBC provider.
+%endif
+
+%if %{ORACLE}
+%package -n gda-oracle
+Summary:	GDA Oracle Provider
+Group:		System Environment/Libraries
+%description -n gda-oracle
+This package includes the GDA Oracle provider.
+%endif
+
+%if %{POSTGRES}
+%package -n gda-postgres
+Summary:	GDA PostgreSQL Provider
+Group:		System Environment/Libraries
+%description -n gda-postgres
+This package includes the GDA PostgreSQL provider.
+%endif
+
+%if %{SQLITE}
+%package -n gda-sqlite
+Summary:	GDA SQLite Provider
+Group:		System Environment/Libraries
+%description -n gda-sqlite
+This package includes the GDA SQLite provider.
+%endif
+
+%if %{SYBASE}
+%package -n gda-sybase
+Summary:	GDA Sybase Provider
+Group:		System Environment/Libraries
+%description -n gda-sybase
+This package includes the GDA Sybase provider.
+%endif
+
+
 %prep
 %setup -q -n %{name}-%{version}
 
 %build
+%if %{FREETDS}
+CONFIG="$CONFIG --with-freetds"
+%endif
+
+%if %{IBMDB2}
+CONFIG="$CONFIG --with-ibmdb2"
+%endif
+
 %if %{MYSQL}
 CONFIG="$CONFIG --with-mysql"
 %endif
@@ -98,16 +179,12 @@ CONFIG="$CONFIG --with-odbc"
 CONFIG="$CONFIG --with-oracle"
 %endif
 
-%if %{SYBASE}
-CONFIG="$CONFIG --with-sybase"
-%endif
-
-%if %{TDS}
-CONFIG="$CONFIG --with-tds"
-%endif
-
 %if %{SQLITE}
 CONFIG="$CONFIG --with-sqlite"
+%endif
+
+%if %{SYBASE}
+CONFIG="$CONFIG --with-sybase"
 %endif
 
 
@@ -121,11 +198,6 @@ rm -rf %{buildroot}
 %find_lang libgda-2
 
 %post -p /sbin/ldconfig
-export GCONF_CONFIG_SOURCE=`gconftool-2 --get-default-source`
-
-for SCHEMA in %{_sysconfdir}/gconf/schemas/libgda.schemas; do
-/usr/bin/gconftool-2 --makefile-install-rule $SCHEMA > /dev/null 2>&1
-done
 
 %postun -p /sbin/ldconfig
 
@@ -135,25 +207,87 @@ rm -rf %{buildroot}
 %files -f libgda-2.lang
 %defattr(-,root,root)
 %doc AUTHORS COPYING ChangeLog README NEWS
-%doc %{_datadir}/gnome/help/libgda
-%{_sysconfdir}/gconf/schemas/libgda.schemas
+#%doc %{_datadir}/gnome/help/libgda
+%dir %{_sysconfdir}/libgda
+%config(noreplace) %{_sysconfdir}/libgda/config
 %{_bindir}/*
+%{_datadir}/idl/libgda
+%{_datadir}/libgda
 %{_libdir}/*.so.*
-%{_libdir}/bonobo/servers/*
-%{_datadir}/idl
-%{_datadir}/libgda/dtd/*
+%dir %{_libdir}/libgda
+%dir %{_libdir}/libgda/providers
+%{_libdir}/libgda/providers/libgda-default.so
 
 %files devel
 %defattr(-,root,root)
 %doc %{_datadir}/gtk-doc/html/libgda
-%{_includedir}/libgda/*
-%{_includedir}/libgda-report/*
+%{_includedir}/libgda
+%{_includedir}/libgda-report
+%{_libdir}/*.a
+%{_libdir}/*.la
 %{_libdir}/*.so
-%{_libdir}/*a
 %{_libdir}/pkgconfig/*
+
+%if %{FREETDS}
+%files -n gda-freetds
+%{_libdir}/libgda/providers/libgda-freetds.so
+%endif
+
+%if %{IBMDB2}
+%files -n gda-ibmdb2
+%{_libdir}/libgda/providers/libgda-ibmdb2.so
+%endif
+
+%if %{MYSQL}
+%files -n gda-mysql
+%{_libdir}/libgda/providers/libgda-mysql.so
+%endif
+
+%if %{ODBC}
+%files -n gda-odbc
+%{_libdir}/libgda/providers/libgda-odbc.so
+%endif
+
+%if %{ORACLE}
+%files -n gda-oracle
+%{_libdir}/libgda/providers/libgda-oracle.so
+%endif
+
+%if %{POSTGRES}
+%files -n gda-postgres
+%{_libdir}/libgda/providers/libgda-postgres.so
+%endif
+
+%if %{SQLITE}
+%files -n gda-sqlite
+%{_libdir}/libgda/providers/libgda-sqlite.so
+%endif
+
+%if %{SYBASE}
+%files -n gda-sybase
+%{_libdir}/libgda/providers/libgda-sybase.so
+%endif
 
 
 %changelog
+* Mon Aug 19 2002 Ben Liblit <liblit@acm.org>
+- Fixed version number substitutions
+
+- Removed some explicit "Requires:" prerequisites that RPM will figure
+  out on its own.  Removed explicit dependency on older MySQL client
+  libraries
+
+- Required that the ODBC development package be installed if we are
+  building the ODBC provider
+
+- Created distinct subpackages for each provider, conditional on that
+  provider actually being enabled; some of these will need to be
+  updated as the family of available providers changes
+
+- Updated files list to match what "make install" actually installs
+
+- Added URL tag pointing to GNOME-DB project's web site
+
 * Tue Feb 26 2002 Chris Chabot <chabotc@reviewboard.com>
 - Added defines and configure flags for all supported DB types
 

@@ -1,3 +1,29 @@
+2002-08-19  Ben Liblit  <liblit@acm.org>
+
+	* configure.in: assume that the readline library depends upon the
+	curses library
+
+	* libgda.spec.in: fix version number substitutions
+
+	* libgda.spec.in: remove some explicit "Requires:" prerequisites
+	that RPM will figure out on its own; remove explicit dependency on
+	older MySQL client libraries
+
+	* libgda.spec.in: require that the ODBC development package be
+	installed if we are building the ODBC provider
+
+	* libgda.spec.in: create distinct subpackages for each provider,
+	conditional on that provider actually being enabled; some of these
+	will need to be updated as the family of available providers
+	changes
+
+	* libgda.spec.in: update files list to match what "make install"
+	actually installs
+
+	* Makefile.am: no need to explicitly list "*.in" files for
+	distribution, as automake takes care of these implicitly; use
+	standard $(EXTRA_DIST) list for distributing spec file
+
 2002-08-18  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* providers/default/gda-default-provider.c

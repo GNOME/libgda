@@ -612,7 +612,7 @@ AM_CONDITIONAL(MDB, test x$mdbdir != x)
 dnl ******************************
 dnl Check for readline/history/popt
 dnl ******************************
-AC_CHECK_LIB(readline,readline, READLINE_LIB=-lreadline)
+AC_CHECK_LIB(readline,readline, READLINE_LIB='-lreadline -lcurses', , -lcurses)
 AM_CONDITIONAL(READLINE_LIB, test ! "x$READLINE_LIB" = "x")
 AC_SUBST(READLINE_LIB)
 
