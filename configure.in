@@ -44,6 +44,9 @@ AC_PROG_CC
 AC_PROG_CXX
 AC_STDC_HEADERS
 AM_PROG_LIBTOOL
+AM_PROG_YACC
+AC_CHECK_PROGS(YACC, 'bison -y' byacc, yacc)
+AM_PROG_LEX
 
 dnl ******************************
 dnl glib-genmarshal
@@ -623,5 +626,6 @@ testing/Makefile
 doc/Makefile
 doc/C/Makefile
 data/Makefile
+libsql/Makefile
 stamp.h
 ])

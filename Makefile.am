@@ -7,6 +7,7 @@ SUBDIRS = \
 	tools \
 	testing \
 	data \
+	libsql \
 	doc
 
 dist-hook: libgda.spec

@@ -12,15 +12,15 @@ lexer.c: lexer.l parser.c
 
 noinst_PROGRAMS = sql_parse_test
 
-lib_LTLIBRARIES = libbondsql.la
+lib_LTLIBRARIES = libgdasql.la
 
-libbondsql_la_SOURCES = parser.c lexer.c sql_parser.c mem.c sql_display.c \
+libgdasql_la_SOURCES = parser.c lexer.c sql_parser.c mem.c sql_display.c \
 		sql_tree.c 
-libbondsqlincdir = $(include)/bond
-libbondsqlinc_HEADERS = 
-libbondsql_la_LDFLAGS = `glib-config --libs`
+libgdasqlincdir = $(include)/bond
+libgdasqlinc_HEADERS = 
+libgdasql_la_LDFLAGS = `glib-config --libs`
 
-sql_parse_test_SOURCES=$(libbondsql_la_SOURCES) sql_parse_test.c
+sql_parse_test_SOURCES=$(libgdasql_la_SOURCES) sql_parse_test.c
 sql_parse_test_LDFLAGS = `glib-config --libs`
 sql_parse_test_DEPENDENCIES =
 sql_parse_test_LDADD = 

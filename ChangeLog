@@ -14,6 +14,10 @@
 	the parser for garbage collection etc.
 	* libsql/sqltree.[ch]: Code used for building and parsing the 
 	sql tree (the more complex SQL statements).  
+	* libsql/Makefile.am autoconf makefile for generating libgdasql 
+	library.
+	* Makefile.am: Adding in libsql directory for compiling
+	* configure.in: Have Makefile generated for libsql/Makefile.am
 	
 2002-06-17  Carlos Perelló Marín <carlos@gnome-db.org>
 
