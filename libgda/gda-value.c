@@ -1356,6 +1356,9 @@ gda_value_stringify (GdaValue *value)
 	case GDA_VALUE_TYPE_SMALLINT:
 		retval = g_strdup_printf ("%d", gda_value_get_smallint (value));
 		break;
+	case GDA_VALUE_TYPE_TINYINT:
+		retval = g_strdup_printf ("%d", gda_value_get_tinyint (value));
+		break;
 	case GDA_VALUE_TYPE_SINGLE:
 		retval = g_strdup_printf ("%f", gda_value_get_single (value));
 		break;
