@@ -17,14 +17,22 @@
  */
 
 #include <gda-common.h>
+#include <stdlib.h>
 
-#define OBJECT_DATABASE "database"
-#define OBJECT_TABLE    "table"
-#define OBJECT_FIELD    "field"
-#define OBJECT_VIEW     "view"
+#define OBJECT_DATABASE    "database"
+#define OBJECT_DATA        "data"
+#define OBJECT_FIELD       "field"
+#define OBJECT_ROW         "row"
+#define OBJECT_TABLE       "table"
+#define OBJECT_TABLES_NODE "tables"
+#define OBJECT_VIEW        "view"
+#define OBJECT_VIEWS_NODE  "views"
 
-#define PROPERTY_NAME   "name"
-#define PROPERTY_OWNER  "owner"
+#define PROPERTY_GDATYPE "gdatype"
+#define PROPERTY_NAME    "name"
+#define PROPERTY_OWNER   "owner"
+#define PROPERTY_SCALE   "scale"
+#define PROPERTY_SIZE    "size"
 
 static void gda_xml_database_init       (Gda_XmlDatabase *xmldb);
 static void gda_xml_database_class_init (Gda_XmlDatabaseClass *klass);
@@ -131,9 +139,9 @@ gda_xml_database_new_from_file (const gchar *filename)
       node = GDA_XML_FILE(xmldb)->root->childs;
       while (node)
         {
-        	if (!strcmp(node->name, "tables"))
+        	if (!strcmp(node->name, OBJECT_TABLES_NODE))
         	  xmldb->tables = node;
-        	else if (!strcmp(node->name, "views"))
+        	else if (!strcmp(node->name, OBJECT_VIEWS_NODE))
         	  xmldb->views = node;
         	node = node->next;
         }
@@ -481,4 +489,92 @@ gda_xml_database_field_set_name (Gda_XmlDatabase *xmldb, xmlNodePtr field, const
       xmlSetProp(field, PROPERTY_NAME, name);
       gda_xml_database_changed(xmldb);
     }
+}
+
+/**
+ * gda_xml_database_field_get_gdatype
+ */
+const gchar *
+gda_xml_database_field_get_gdatype (Gda_XmlDatabase *xmldb, xmlNodePtr field)
+{
+  g_return_val_if_fail(GDA_IS_XML_DATABASE(xmldb), NULL);
+  g_return_val_if_fail(field != NULL, NULL);
+  return xmlGetProp(field, PROPERTY_GDATYPE);
+}
+
+/**
+ * gda_xml_database_field_set_gdatype
+ */
+void
+gda_xml_database_field_set_gdatype (Gda_XmlDatabase *xmldb, xmlNodePtr field, const gchar *type)
+{
+  g_return_if_fail(field != NULL);
+  g_return_if_fail(type != NULL);
+  
+  xmlSetProp(field, PROPERTY_GDATYPE, type);
+  gda_xml_database_changed(xmldb);
+}
+
+/**
+ * gda_xml_database_field_get_size
+ */
+gint
+gda_xml_database_field_get_size (Gda_XmlDatabase *xmldb, xmlNodePtr field)
+{
+  gchar* size;
+  
+  g_return_val_if_fail(GDA_IS_XML_DATABASE(xmldb), -1);
+  g_return_val_if_fail(field != NULL, -1);
+  
+  size = xmlGetProp(field, PROPERTY_SIZE);
+  return size ? atoi(size) : -1;
+}
+
+/**
+ * gda_xml_database_field_set_size
+ */
+void
+gda_xml_database_field_set_size (Gda_XmlDatabase *xmldb, xmlNodePtr field, gint size)
+{
+  gchar* str;
+  
+  g_return_if_fail(GDA_IS_XML_DATABASE(xmldb));
+  g_return_if_fail(field != NULL);
+  
+  str = g_strdup_printf("%d", size);
+  xmlSetProp(field, PROPERTY_SIZE, str);
+  g_free((gpointer) str);
+  gda_xml_database_changed(xmldb);
+}
+
+/**
+ * gda_xml_database_field_get_scale
+ */
+gint
+gda_xml_database_field_get_scale (Gda_XmlDatabase *xmldb, xmlNodePtr field)
+{
+  gchar* scale;
+  
+  g_return_val_if_fail(GDA_IS_XML_DATABASE(xmldb), -1);
+  g_return_val_if_fail(field != NULL, -1);
+  
+  scale = xmlGetProp(field, PROPERTY_SCALE);
+  return scale ? atoi(scale) : -1;
+}
+
+/**
+ * gda_xml_database_field_set_scale
+ */
+void
+gda_xml_database_field_set_scale (Gda_XmlDatabase *xmldb, xmlNodePtr field, gint scale)
+{
+  gchar* str;
+  
+  g_return_if_fail(GDA_IS_XML_DATABASE(xmldb));
+  g_return_if_fail(field != NULL);
+  
+  str = g_strdup_printf("%d", scale);
+  xmlSetProp(field, PROPERTY_SCALE, str);
+  g_free((gpointer) str);
+  gda_xml_database_changed(xmldb);
 }

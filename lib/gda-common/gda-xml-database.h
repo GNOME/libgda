@@ -92,6 +92,12 @@ xmlNodePtr   gda_xml_database_table_find_field     (Gda_XmlDatabase *xmldb,
                                                     const gchar *fname);
 const gchar* gda_xml_database_field_get_name       (Gda_XmlDatabase *xmldb, xmlNodePtr field);
 void         gda_xml_database_field_set_name       (Gda_XmlDatabase *xmldb, xmlNodePtr field, const gchar *name);
+const gchar* gda_xml_database_field_get_gdatype    (Gda_XmlDatabase *xmldb, xmlNodePtr field);
+void         gda_xml_database_field_set_gdatype    (Gda_XmlDatabase *xmldb, xmlNodePtr field, const gchar *type);
+gint         gda_xml_database_field_get_size       (Gda_XmlDatabase *xmldb, xmlNodePtr field);
+void         gda_xml_database_field_set_size       (Gda_XmlDatabase *xmldb, xmlNodePtr field, gint size);
+gint         gda_xml_database_field_get_scale      (Gda_XmlDatabase *xmldb, xmlNodePtr field);
+void         gda_xml_database_field_set_scale      (Gda_XmlDatabase *xmldb, xmlNodePtr field, gint scale);
 
 END_GNOME_DECLS
 
