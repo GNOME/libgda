@@ -1,3 +1,8 @@
+2001-05-18  Kjartan Maraas  <kmaraas@gnome.org>
+
+	* no.po: Updated Norwegian translation.
+	* POTFILES.in: Add a few missing files.
+	
 2001-03-14  Carlos Perelló Marín <carlos@gnome-db.org>
 
         * es.po: Updated Spanish translation by Antonio

@@ -10,6 +10,7 @@ lib/gda-common/gda-corba.c
 lib/gda-common/gda-init.c
 lib/gda-common/gda-log.c
 lib/gda-common/gda-thread.c
+lib/gda-common/gda-util.c
 lib/gda-common/gda-xml-database.c
 lib/gda-common/gda-xml-file.c
 lib/gda-common/gda-xml-query.c
@@ -83,6 +84,7 @@ providers/gda-tds-server/gda-tds-recordset.c
 providers/gda-tds-server/gda-tds-types.c
 providers/gda-tds-server/main-tds.c
 report/gda-report-engine.c
+report/gda-report-stream.c
 report/server/GNOME_GDA_Report.oaf.in
 report/server/gda-report-server-main.c
 tools/gda-run.c
