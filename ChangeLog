@@ -1,3 +1,8 @@
+2002-01-27  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* libgda/gda-config.[ch]: made GDA_CONFIG_* defines public, as they'll
+	be used outside libgda.
+
 2002-01-26  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* libgda/gda-config.[ch] (gda_config_get_provider_by_name): new

@@ -126,6 +126,14 @@ void               gda_config_save_data_source (const gchar *name,
 						const gchar *description,
 						const gchar *username);
 
+/*
+ * GDA configuration sections/keys
+ */
+#define GDA_CONFIG_SECTION_DATASOURCES       "/apps/libgda/Datasources"
+#define GDA_CONFIG_SECTION_LAST_CONNECTIONS  "/apps/libgda/LastConnections"
+
+#define GDA_CONFIG_KEY_MAX_LAST_CONNECTIONS  "/apps/libgda/MaxLastConnections"
+
 G_END_DECLS
 
 #endif
