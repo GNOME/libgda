@@ -210,6 +210,9 @@ set_from_string (GdaValue *value, const gchar *as_string)
 		make_time (&timegda, as_string);
 		gda_value_set_time (value, &timegda);
 		break;
+	case GDA_VALUE_TYPE_TYPE :
+		value->value.v_type = gda_type_from_string (as_string);
+		break;
 	case GDA_VALUE_TYPE_LIST : //FIXME
 	case GDA_VALUE_TYPE_BINARY : //FIXME
 	default :
@@ -525,6 +528,26 @@ gda_value_new_tinyint (gchar val)
 }
 
 /**
+ * gda_value_new_type
+ * @val: Value to set for the new #GdaValue.
+ *
+ * Make a new #GdaValue of type #GDA_VALUE_TYPE_TYPE with value @val.
+ *
+ * Returns: the newly created #GdaValue.
+ */
+GdaValue *
+gda_value_new_type (GdaValueType val)
+{
+	GdaValue *value;
+
+	value = g_new0 (GdaValue, 1);
+	value->type = GDA_VALUE_TYPE_TYPE;
+	value->value.v_type = val;
+
+	return value;
+}
+
+/**
  * gda_value_new_from_string
  * @as_string: stringified representation of the value.
  * @type: tha new value type.
@@ -649,6 +672,9 @@ gda_value_copy (const GdaValue *value)
 		break;
 	case GDA_VALUE_TYPE_TINYINT :
 		copy->value.v_tinyint = value->value.v_tinyint;
+		break;
+	case GDA_VALUE_TYPE_TYPE :
+		copy->value.v_type = value->value.v_type;
 		break;
 	default :
 		memset (&copy->value, 0, sizeof (copy->value));
@@ -1274,6 +1300,11 @@ gda_value_set_from_value (GdaValue *value, const GdaValue *from)
 	case GDA_VALUE_TYPE_TINYINT :
 		gda_value_set_tinyint (value, gda_value_get_tinyint ((GdaValue *) from));
 		break;
+	case GDA_VALUE_TYPE_TYPE :
+		clear_value (value);
+		value->type = GDA_VALUE_TYPE_TYPE;
+		value->value.v_type = from->value.v_type;
+		break;
 	default :
 		return FALSE;
 	}
@@ -1403,6 +1434,9 @@ gda_value_stringify (GdaValue *value)
 	case GDA_VALUE_TYPE_NULL:
 		retval = g_strdup ("NULL");
 		break;
+	case GDA_VALUE_TYPE_TYPE :
+		retval = g_strdup (gda_type_to_string (value->value.v_type));
+		break;
 	default:
 		retval = g_strdup ("");
 	}
@@ -1491,6 +1525,9 @@ gda_value_compare (const GdaValue *value1, const GdaValue *value2)
 		break;
 	case GDA_VALUE_TYPE_TINYINT :
 		retval = value1->value.v_tinyint - value2->value.v_tinyint;
+		break;
+	case GDA_VALUE_TYPE_TYPE :
+		retval = value1->value.v_type == value2->value.v_type ? 0 : -1;
 		break;
 	default :
 		//FIXME

@@ -51,6 +51,7 @@ typedef enum {
 	GDA_VALUE_TYPE_TIME,
 	GDA_VALUE_TYPE_TIMESTAMP,
 	GDA_VALUE_TYPE_TINYINT,
+	GDA_VALUE_TYPE_TYPE,
 	GDA_VALUE_TYPE_UNKNOWN
 } GdaValueType;
 
@@ -108,6 +109,7 @@ typedef struct {
 		GdaTime v_time;
 		GdaTimestamp v_timestamp;
 		gchar v_tinyint;
+		GdaValueType v_type;
 	} value;
 } GdaValue;
 
@@ -127,6 +129,7 @@ GdaValue     *gda_value_new_string (const gchar *val);
 GdaValue     *gda_value_new_time (const GdaTime *val);
 GdaValue     *gda_value_new_timestamp (const GdaTimestamp *val);
 GdaValue     *gda_value_new_tinyint (gchar val);
+GdaValue     *gda_value_new_type (GdaValueType val);
 GdaValue     *gda_value_new_from_string (const gchar *as_string,
 					 GdaValueType type);
 

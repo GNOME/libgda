@@ -1,3 +1,25 @@
+2002-07-09  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* doc/C/libgda-docs.sgml: added documentation about the format of
+	the schema data models.
+
+	* libgda/gda-value.h: added GDA_VALUE_TYPE_TYPE, for specifying
+	GdaValueType's in GdaValue's.
+
+	* libgda/gda-value.c (gda_value_new_type): new function.
+	(set_from_string): manage GDA_VALUE_TYPE_TYPE.
+	(gda_value_copy): ditto.
+	(gda_value_set_from_value): ditto.
+	(gda_value_stringify): ditto.
+	(gda_value_compare): ditto.
+
+	* providers/mysql/gda-mysql-provider.c (get_mysql_tables): retrieve
+	extra data.
+	(get_mysql_types): added new fields for TYPES schema.
+
+	* providers/mysql/gda-mysql-recordset.c (fetch_row): don't pass NULL
+	values to ato* functions.
+
 2002-07-08  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	Released 0.8.192

@@ -749,51 +749,119 @@ get_mysql_tables (GdaConnection *cnc, GdaParameterList *params)
 {
 	GList *reclist;
 	GdaMysqlRecordset *recset;
+	GdaDataModelArray *model;
+	gint rows, r;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
-	reclist = process_sql_commands (NULL, cnc, "show tables");
+	reclist = process_sql_commands (NULL, cnc, "show table status");
 	if (!reclist)
 		return NULL;
 
-	recset = GDA_MYSQL_RECORDSET (reclist->data);
+	recset = (GdaMysqlRecordset *) reclist->data;
 	g_list_free (reclist);
+	if (!GDA_IS_MYSQL_RECORDSET (recset))
+		return NULL;
 
-	return GDA_DATA_MODEL (recset);
+	/* add the extra information */
+	model = gda_data_model_array_new (4);
+	rows = gda_data_model_get_n_rows (GDA_DATA_MODEL (recset));
+	for (r = 0; r < rows; r++) {
+		GList *value_list = NULL;
+		gchar *name;
+		gchar *str;
+
+		/* 1st, the name of the table */
+		name = gda_value_stringify (gda_data_model_get_value_at (GDA_DATA_MODEL (recset), 0, r));
+		value_list = g_list_append (value_list, gda_value_new_string (name));
+
+		/* 2nd, the owner */
+		value_list = g_list_append (value_list, gda_value_new_string (_("Unknown")));
+
+		/* 3rd, the comments */
+		str = gda_value_stringify (gda_data_model_get_value_at (GDA_DATA_MODEL (recset), 14, r));
+		value_list = g_list_append (value_list, gda_value_new_string (str));
+		g_free (str);
+
+		/* 4th, the SQL command */
+		str = g_strdup_printf ("SHOW CREATE TABLE %s", name);
+		reclist = process_sql_commands (NULL, cnc, str);
+		g_free (str);
+		if (reclist && GDA_IS_DATA_MODEL (reclist->data)) {
+			str = gda_value_stringify (
+				gda_data_model_get_value_at (GDA_DATA_MODEL (reclist->data), 1, 0));
+			value_list = g_list_append (value_list, gda_value_new_string (str));
+
+			g_free (str);
+			g_list_foreach (reclist, (GFunc) g_object_unref, NULL);
+			g_list_free (reclist);
+		}
+		else
+			value_list = g_list_append (value_list, gda_value_new_string (""));
+
+		gda_data_model_append_row (GDA_DATA_MODEL (model), value_list);
+
+		g_free (name);
+		g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
+		g_list_free (value_list);
+	}
+
+	return GDA_DATA_MODEL (model);
 }
 
 static GdaDataModel *
 get_mysql_types (GdaConnection *cnc, GdaParameterList *params)
 {
 	GdaDataModelArray *recset;
+	gint i;
+	struct {
+		const gchar *name;
+		const gchar *owner;
+		const gchar *comments;
+		GdaValueType type;
+	} types[] = {
+		{ "blob", "", "Binary blob", GDA_VALUE_TYPE_BINARY },
+		{ "date", "", "Date", GDA_VALUE_TYPE_DATE },
+		{ "datetime", "", "Date and time", GDA_VALUE_TYPE_TIMESTAMP },
+		{ "decimal", "", "Decimal number", GDA_VALUE_TYPE_DOUBLE },
+		{ "double", "", "Double precision number", GDA_VALUE_TYPE_DOUBLE },
+		{ "enum", "", "Enumeration", GDA_VALUE_TYPE_STRING },
+		{ "float", "", "Single precision number", GDA_VALUE_TYPE_SINGLE },
+		{ "int24", "", "24 bit integer", GDA_VALUE_TYPE_BIGINT },
+		{ "long", "", "Long integer", GDA_VALUE_TYPE_INTEGER },
+		{ "longlong", "", "Extra long integer", GDA_VALUE_TYPE_BIGINT },
+		{ "set", "", "Set", GDA_VALUE_TYPE_STRING },
+		{ "short", "", "Short integer", GDA_VALUE_TYPE_SMALLINT },
+		{ "string", "", "String", GDA_VALUE_TYPE_STRING },
+		{ "time", "", "Time", GDA_VALUE_TYPE_TIME },
+		{ "timestamp", "", "Time stamp", GDA_VALUE_TYPE_TIMESTAMP },
+		{ "tiny", "", "Tiny integer", GDA_VALUE_TYPE_SMALLINT },
+		{ "year", "", "Year", GDA_VALUE_TYPE_INTEGER }
+	};
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
 	/* create the recordset */
-	recset = (GdaDataModelArray *) gda_data_model_array_new (1);
-	//gda_server_recordset_model_set_field_defined_size (recset, 0, 32);
+	recset = (GdaDataModelArray *) gda_data_model_array_new (4);
 	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 0, _("Type"));
-	//gda_server_recordset_model_set_field_scale (recset, 0, 0);
-	//gda_server_recordset_model_set_field_gdatype (recset, 0, GDA_TYPE_STRING);
+	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 1, _("Owner"));
+	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 2, _("Comments"));
+	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 3, _("GDA type"));
 
 	/* fill the recordset */
-	add_string_row (recset, "blob");
-	add_string_row (recset, "date");
-	add_string_row (recset, "datetime");
-	add_string_row (recset, "decimal");
-	add_string_row (recset, "double");
-	add_string_row (recset, "enum");
-	add_string_row (recset, "float");
-	add_string_row (recset, "int24");
-	add_string_row (recset, "long");
-	add_string_row (recset, "longlong");
-	add_string_row (recset, "set");
-	add_string_row (recset, "short");
-	add_string_row (recset, "string");
-	add_string_row (recset, "time");
-	add_string_row (recset, "timestamp");
-	add_string_row (recset, "tiny");
-	add_string_row (recset, "year");
+	for (i = 0; i < sizeof (types) / sizeof (types[0]); i++) {
+		GList *value_list = NULL;
+
+		value_list = g_list_append (value_list, gda_value_new_string (types[i].name));
+		value_list = g_list_append (value_list, gda_value_new_string (types[i].owner));
+		value_list = g_list_append (value_list, gda_value_new_string (types[i].comments));
+		value_list = g_list_append (value_list, gda_value_new_type (types[i].type));
+
+		gda_data_model_append_row (GDA_DATA_MODEL (recset), value_list);
+
+		g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
+		g_list_free (value_list);
+	}
 
 	return GDA_DATA_MODEL (recset);
 }

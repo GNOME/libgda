@@ -91,24 +91,24 @@ fetch_row (GdaMysqlRecordset *recset, gulong rownum)
 		switch (mysql_fields[i].type) {
 		case FIELD_TYPE_DECIMAL :
 		case FIELD_TYPE_DOUBLE :
-			gda_value_set_double (field, atof (thevalue));
+			gda_value_set_double (field, thevalue ? atof (thevalue) : 0.0);
 			break;
 		case FIELD_TYPE_FLOAT :
-			gda_value_set_single (field, atof (thevalue));
+			gda_value_set_single (field, thevalue ? atof (thevalue) : 0.0);
 			break;
 		case FIELD_TYPE_LONG :
 		case FIELD_TYPE_YEAR :
-			gda_value_set_integer (field, atol (thevalue));
+			gda_value_set_integer (field, thevalue ? atol (thevalue) : 0);
 			break;
 		case FIELD_TYPE_LONGLONG :
 		case FIELD_TYPE_INT24 :
-			gda_value_set_bigint (field, atoll (thevalue));
+			gda_value_set_bigint (field, thevalue ? atoll (thevalue) : 0);
 			break;
 		case FIELD_TYPE_SHORT :
-			gda_value_set_smallint (field, atoi (thevalue));
+			gda_value_set_smallint (field, thevalue ? atoi (thevalue) : 0);
 			break;
 		case FIELD_TYPE_TINY :
-			gda_value_set_tinyint (field, atoi (thevalue));
+			gda_value_set_tinyint (field, thevalue ? atoi (thevalue) : 0);
 			break;
 		case FIELD_TYPE_TINY_BLOB :
 		case FIELD_TYPE_MEDIUM_BLOB :

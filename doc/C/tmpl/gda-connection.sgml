@@ -269,6 +269,15 @@ Management of connections to data sources
 @id: 
 
 
+<!-- ##### FUNCTION gda_connection_get_errors ##### -->
+<para>
+
+</para>
+
+@cnc: 
+@Returns: 
+
+
 <!-- ##### ENUM GdaConnectionFeature ##### -->
 <para>
 

@@ -36,6 +36,15 @@ Functions for managing errors
 @error: 
 
 
+<!-- ##### FUNCTION gda_error_list_copy ##### -->
+<para>
+
+</para>
+
+@errors: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_error_list_free ##### -->
 <para>
 

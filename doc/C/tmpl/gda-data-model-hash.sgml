@@ -73,3 +73,13 @@ until the one requested).
 @values: 
 
 
+<!-- ##### FUNCTION gda_data_model_hash_get_row ##### -->
+<para>
+
+</para>
+
+@model: 
+@row: 
+@Returns: 
+
+

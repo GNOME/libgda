@@ -299,6 +299,13 @@ Access/Management of libgda configuration
 @name: 
 
 
+<!-- ##### MACRO GDA_CONFIG_BASE ##### -->
+<para>
+
+</para>
+
+
+
 <!-- ##### MACRO GDA_CONFIG_SECTION_DATASOURCES ##### -->
 <para>
 

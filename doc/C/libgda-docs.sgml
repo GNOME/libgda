@@ -772,91 +772,179 @@
 	a new provider. This class is just a typical GObject-based class,
 	with a set of virtual methods, that are the ones that you must
 	implement. These virtual methods are declared in the class structure,
-	in the <filename>gda-server-provider.h</filename> file. They are:
-       </para>
-       <itemizedlist>
-	<listitem>
-	   <para>open_connection</para>
+	in the <filename>gda-server-provider.h</filename> file. They are
+	explained in detail in the following subsections.
+      </para>
+      <sect2 id="libgda-provider-open-connection">
+	<title>open_connection</title>
 	   <para>
 	   Sets up the connection to the database backend using the parameters
 	   received as arguments and returns a boolean TRUE if the connection
 	   is successfully established, otherwise FALSE.
-	   </para>
-	</listitem>
-	<listitem>
-	   <para>close_connection</para>
-	   <para>
-	   Frees the resources allocated for the connection and returns TRUE
-	   if everything is ok
-	   </para>
-	</listitem>
-	<listitem>
-	  <para>get_database</para>
-	  <para>
-	    Returns the name of the currently open database for a given
-	    connection.
-	  </para>
-	</listitem>
-	<listitem>
-	  <para>change_database</para>
-	  <para>
-	    Change the database being used in the active connection.
-	  </para>
-	</listitem>
-	<listitem>
-	   <para>create_database</para>
-	   <para>
-	    Creates a new database whose name is received in a parameter.	
-	   </para>
-	</listitem>
-	<listitem>
-	  <para>drop_database</para>
-	  <para>
-	    Drops an existing database whose name is received in a parameter.
-	  </para>
-	</listitem>
-	<listitem>
-	   <para>execute_command</para>
-	   <para>
-	   Executes a command and returns a GList of &GDADATAMODEL; with the
-	   results.
-	   </para>
-	</listitem>
-	<listitem>
-	   <para>begin_transaction</para>
-	   <para>
-	   Initiates a transaction if the DB backend supports transactions.
-	   </para>
-	</listitem>
-	<listitem>
-	   <para>commit_transaction</para>
-	   <para>
-	   Commits a transaction if the DB backend supports transactions.
-	   </para>
-	</listitem>
-	<listitem>
-	   <para>rollback_transaction</para>
-	   <para>
-	   Rollback a transaction if the DB backend supports transactions.
-	   </para>
-	</listitem>
-	<listitem>
-	   <para>supports</para>
-	   <para>
-	   Tests if a given feature is supported by the provider and the
-	   DB backend. You can view the list of features in <filename>
-	   gda-connection.h</filename>, enumeration GdaConnectionFeature.
-	   </para>
-	</listitem>
-	<listitem>
-	   <para>get_schema</para>
-	   <para>
-	   Returns a &GDADATAMODEL; with the schema information requested.
-	   You can view the list of features in <filename>
-	   gda-connection.h</filename>, enumeration GdaConnectionSchema.
-	   </para>
-	</listitem>
-       </itemizedlist>
+	</para>
+      </sect2>
+	<sect2 id="libgda-provider-close-connection">
+	<title>close_connection</title>
+	<para>
+	  Frees the resources allocated for the connection and returns TRUE
+	  if everything is ok
+	</para>
+      </sect2>
+      <sect2 id="libgda-provider-get-database">
+	<title>get_database</title>
+	<para>
+	  Returns the name of the currently open database for a given
+	  connection.
+	</para>
+      </sect2>
+      <sect2 id="libgda-provider-change-database">
+	<title>change_database</title>
+	<para>
+	  Change the database being used in the active connection.
+	</para>
+      </sect2>
+      <sect2 id="libgda-provider-create-database">
+	<title>create_database</title>
+	<para>
+	  Creates a new database whose name is received in a parameter.	
+	</para>
+      </sect2>
+      <sect2 id="libgda-provider-drop-database">
+	<title>drop_database</title>
+	<para>
+	  Drops an existing database whose name is received in a parameter.
+	</para>
+      </sect2>
+      <sect2 id="libgda-provider-execute-command">
+	<title>execute_command</title>
+	<para>
+	  Executes a command and returns a GList of &GDADATAMODEL; with the
+	  results.
+	</para>
+      </sect2>
+      <sect2 id="libgda-provider-begin-transaction">
+	<title>begin_transaction</title>
+	<para>
+	  Initiates a transaction if the DB backend supports transactions.
+	</para>
+      </sect2>
+      <sect2 id="libgda-provider-commit-transaction">
+	<title>commit_transaction</title>
+	<para>
+	  Commits a transaction if the DB backend supports transactions.
+	</para>
+      </sect2>
+      <sect2 id="libgda-provider-rollback-transaction">
+	<title>rollback_transaction</title>
+	<para>
+	  Rollback a transaction if the DB backend supports transactions.
+	</para>
+      </sect2>
+      <sect2 id="libgda-provider-supports">
+	<title>supports</title>
+	<para>
+	  Tests if a given feature is supported by the provider and the
+	  DB backend. You can view the list of features in <filename>
+	  gda-connection.h</filename>, enumeration GdaConnectionFeature.
+	</para>
+      </sect2>
+      <sect2 id="libgda-provider-get-schema">
+	<title>get_schema</title>
+	<para>
+	  Returns a &GDADATAMODEL; with the schema information requested.
+	  You can view the list of features in <filename>
+	  gda-connection.h</filename>, enumeration GdaConnectionSchema.
+	  This schema information is what describes the objects in the
+	  database, and is the way applications can manage the structure
+	  of several database systems without knowing anything about
+	  their specific way of retrieving this information.
+	</para>
+	<para>
+	  The <function>get_schema</function> virtual method gets a
+	  <type>GdaConnectionSchema</type> argument, which describes
+	  the kind of schema the client making the call is interested
+	  in, along with a <type>GdaParameterList</type> argument,
+	  which contains the list of arguments sent by the user to
+	  explicitly provide more information for the search.
+	</para>
+	<para>
+	  The information to be returned for each schema, along with
+	  the supported parameters, is described in the following table.
+	</para>
+	<table frame="all">
+	  <title>Standard Schema and supported parameters</title>
+	  <tgroup cols="4" colsep="1" rowsep="1" align="justify">
+	    <colspec colname="c1">
+	    <colspec colname="c2">
+	    <colspec colname="c3">
+	    <colspec colname="c4">
+	    <thead>
+	      <row>
+		<entry>Object type</entry>
+		<entry>GDA identifier</entry>
+		<entry>Supported Parameters</entry>
+		<entry>Returned fields</entry>
+	      </row>
+	    </thead>
+	    <tbody>
+	      <row>
+		<entry>Tables</entry>
+		<entry><parameter>GDA_CONNECTION_SCHEMA_TABLES</parameter></entry>
+		<entry>"name" (name of table, optional)</entry>
+		<entry>name, owner, comments, SQL definition
+	      </row>
+	      <row>
+		<entry>Tables' parents</entry>
+		<entry><parameter>GDA_CONNECTION_SCHEMA_PARENT_TABLES</parameter></entry>
+		<entry>"name" (name of table, optional)</entry>
+		<entry>name, order of inheritance</entry>
+	      </row>
+	      <row>
+		<entry>Views</entry>
+		<entry><parameter>GDA_CONNECTION_SCHEMA_VIEWS</parameter></entry>
+		<entry>"name" (name of view, optional)</entry>
+		<entry>name, owner, comments, SQL definition</entry>
+	      </row>
+	      <row>
+		<entry>Table (or view) fields</entry>
+		<entry><parameter>GDA_CONNECTION_SCHEMA_FIELDS</parameter></entry>
+		<entry>"name" (name of table (or view), required)</entry>
+		<entry>name, type, size, scale, not null?, primary key?, unique index?, references</entry>
+	      </row>
+	      <row>
+		<entry>Sequences</entry>
+		<entry><parameter>GDA_CONNECTION_SCHEMA_SEQUENCES</parameter></entry>
+		<entry>"name" (name of sequence, optional)</entry>
+		<entry>name, owner, comments, SQL definition</entry>
+	      </row>
+	      <row>
+		<entry>Procedures</entry>
+		<entry><parameter>GDA_CONNECTION_SCHEMA_PROCEDURES</parameter></entry>
+		<entry>"name" (name of procedure, optional)</entry>
+		<entry>name, owner, comments, return type, number of arguments, SQL definition</entry>
+	      </row>
+	      <row>
+		<entry>Procedure parameters</entry>
+		<entry><parameter>GDA_CONNECTION_SCHEMA_PROCEDURE_PARAMS</parameter></entry>
+		<entry>"name" (name of procedure, required)</entry>
+		<entry>name, usage (in, out, inout), type</entry>
+	      </row>
+	      <row>
+		<entry>Aggregates</entry>
+		<entry><parameter>GDA_CONNECTION_SCHEMA_AGGREGATES</parameter></entry>
+		<entry>"name" (name of aggregate, optional)</entry>
+		<entry>name, owner, comments, return type, in type, SQL definition</entry>
+	      </row>
+	      <row>
+		<entry>Types</entry>
+		<entry><parameter>GDA_CONNECTION_SCHEMA_TYPES</parameter></entry>
+		<entry>"name" (name of type, optional)</entry>
+		<entry>name, owner, comments, GDA type</entry>
+	      </row>
+	    </tbody>
+	  </tgroup>
+	</table>
+      </sect2>
     </sect1>
     <sect1 id="libgda-provider-recordset">
       <title>The recordset class</title>

@@ -70,6 +70,7 @@ gda_connection_execute_non_query
 gda_connection_begin_transaction
 gda_connection_commit_transaction
 gda_connection_rollback_transaction
+gda_connection_get_errors
 GdaConnectionFeature
 gda_connection_supports
 GdaConnectionSchema
@@ -108,6 +109,7 @@ gda_data_model_hash_get_value_at
 gda_data_model_hash_clear
 gda_data_model_hash_set_n_columns
 gda_data_model_hash_insert_row
+gda_data_model_hash_get_row
 <SUBSECTION Standard>
 GDA_DATA_MODEL_HASH
 GDA_IS_DATA_MODEL_HASH
@@ -180,6 +182,7 @@ GdaErrorPrivate
 <TITLE>GdaError</TITLE>
 gda_error_new
 gda_error_free
+gda_error_list_copy
 gda_error_list_free
 gda_error_get_description
 gda_error_set_description
@@ -864,6 +867,7 @@ gda_config_free_data_source_list
 gda_config_get_data_source_model
 gda_config_save_data_source
 gda_config_remove_data_source
+GDA_CONFIG_BASE
 GDA_CONFIG_SECTION_DATASOURCES
 GDA_CONFIG_SECTION_LAST_CONNECTIONS
 GDA_CONFIG_KEY_MAX_LAST_CONNECTIONS
