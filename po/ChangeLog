@@ -1,3 +1,7 @@
+2001-10-14  Carlos Perelló Marín <carlos@gnome-db.org>
+
+        * pt.po: Added by Duarte Loreto <happyguy_pt@hotmail.com>
+
 2001-10-10  Carlos Perelló Marín <carlos@gnome-db.org>
 
 	* *.po: distcheck.
