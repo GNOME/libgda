@@ -395,9 +395,19 @@ gda_server_connection_notify_action (GdaServerConnection *cnc,
 		client = (GNOME_Database_Client) l->data;
 		if (client != CORBA_OBJECT_NIL) {
 			CORBA_Environment ev;
+			GNOME_Database_ParameterList *corba_list;
+			guint length;
+
+			length = gda_parameter_list_get_length (params);
+
+			corba_list = GNOME_Database_ParameterList__alloc ();
+			CORBA_sequence_set_release (corba_list, TRUE);
+			corba_list->_buffer = GNOME_Database_ParameterList_allocbuf (length);
+
+			/* FIXME: put all parameters in 'params' into the CORBA sequence */
 
 			CORBA_exception_init (&ev);
-			GNOME_Database_Client_notifyAction (client, action, NULL, &ev);
+			//GNOME_Database_Client_notifyAction (client, action, corba_list, &ev);
 			if (BONOBO_EX (&ev)) {
 				gda_log_error (_("Could not notify client about action %d"),
 					       action);

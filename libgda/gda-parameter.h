@@ -45,6 +45,7 @@ void              gda_parameter_list_add_parameter (GdaParameterList *plist,
 						    GdaParameter *param);
 GdaParameter     *gda_parameter_list_find (GdaParameterList *plist, const gchar *name);
 void              gda_parameter_list_clear (GdaParameterList *plist);
+guint             gda_parameter_list_get_length (GdaParameterList *plist);
 
 G_END_DECLS
 

@@ -1,5 +1,10 @@
 2001-12-09  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* gda-server-connection.c (gda_server_connection_notify_action):
+	disable, as it is not working right now
+
+	* gda-parameter.[ch] (gda_parameter_list_get_length): new function
+
 	* gda-client.[ch]: added "error" signal to GdaClient class
 
 	* gda-connection.[ch]: added "error" signal to GdaConnection class

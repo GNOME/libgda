@@ -196,3 +196,13 @@ gda_parameter_list_clear (GdaParameterList *plist)
 	g_return_if_fail (plist != NULL);
 	g_hash_table_foreach_remove (plist->hash, (GHRFunc) free_hash_param, NULL);
 }
+
+/**
+ * gda_parameter_list_get_length
+ */
+guint
+gda_parameter_list_get_length (GdaParameterList *plist)
+{
+	g_return_val_if_fail (plist != NULL, -1);
+	return g_hash_table_size (plist->hash);
+}
