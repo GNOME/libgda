@@ -176,7 +176,7 @@ gda_server_field_set_time (GdaServerField * field, GTime val)
 	g_return_if_fail (field != NULL);
 
 	field->value->_d = GDA_TypeDbTime;
-	stm = localtime (&val);
+	stm = localtime ((time_t *) &val);
 	if (stm) {
 		field->value->_u.dbt.hour = stm->tm_hour;
 		field->value->_u.dbt.minute = stm->tm_min;
@@ -203,7 +203,7 @@ gda_server_field_set_timestamp (GdaServerField * field, GDate * dat,
 	g_return_if_fail (field != 0);
 
 	field->value->_d = GDA_TypeDbTimestamp;
-	stm = localtime (&tim);
+	stm = localtime ((time_t *) &tim);
 	memset (&field->value->_u.dbtstamp, 0,
 		sizeof (field->value->_u.dbtstamp));
 	if (dat) {

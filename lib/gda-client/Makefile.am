@@ -2,7 +2,7 @@ lib_LTLIBRARIES = libgda-client.la
 
 INCLUDES = \
 	$(GDA_CLIENT_CFLAGS) \
-	-I. \
+	-I$(top_srcdir)/lib/gda-common \
 	-I$(top_builddir)/lib/gda-common \
 	-DDTDINSTALLDIR=\""$(datadir)/gda/dtd"\"
 

@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda 0.2.9\n"
-"POT-Creation-Date: 2001-09-21 12:43+0200\n"
+"POT-Creation-Date: 2001-09-25 23:18+0200\n"
 "PO-Revision-Date: 2001-09-21 12:46CET\n"
 "Last-Translator: Stanislav Visnovsky <visnovsky@nenya.ms.mff.cuni.cz>\n"
 "Language-Team: Slovak <sk-i18n@lists.linux.sk>\n"
@@ -24,16 +24,16 @@ msgstr "nie je možné otvoriť spojenie s %s"
 msgid "Data source %s not found"
 msgstr "Zdroj dát %s nenájdený"
 
-#: lib/gda-client/gda-connection.c:447
+#: lib/gda-client/gda-connection.c:448
 #, c-format
 msgid "Database '%s' not found in system configuration"
 msgstr "Databáza '%s' nebola nájdená v systémovej konfigurácii"
 
-#: lib/gda-client/gda-connection.c:451 lib/gda-client/gda-connection.c:468
+#: lib/gda-client/gda-connection.c:452 lib/gda-client/gda-connection.c:469
 msgid "[GDA Client Library]"
 msgstr "[klientská knižnice GDA]"
 
-#: lib/gda-client/gda-connection.c:467
+#: lib/gda-client/gda-connection.c:468
 msgid "Could not open CORBA factory"
 msgstr "Nie je možné otvoriť CORBA factory"
 
@@ -133,7 +133,7 @@ msgstr "tabuľka %s už existuje"
 msgid "%p is not a valid table"
 msgstr "%p nie je platná tabuľka"
 
-#: lib/gda-common/gda-xml-item.c:385
+#: lib/gda-common/gda-xml-item.c:386
 #, c-format
 msgid "Item with id %s not found"
 msgstr "Položka s id %s nenájdená"
@@ -1031,4 +1031,3 @@ msgstr "%s: zdroj dát '%s' nenájdený\n"
 #: tools/templates/main-srv.c.tmpl:60
 msgid "Could not register <PROVIDER-NAME> provider implementation"
 msgstr "Nie je možné registrovať implementáciu <PROVIDER-NAME> poskytovateľa"
-

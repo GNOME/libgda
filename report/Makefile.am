@@ -1,7 +1,9 @@
 SUBDIRS = idl engine
 
 INCLUDES = \
+	-I$(top_srcdir)/lib/gda-common \
 	-I$(top_builddir)/lib/gda-common \
+	-I$(top_srcdir)/lib/gda-client \
 	-I$(top_builddir)/lib/gda-client \
 	$(GDA_CLIENT_CFLAGS)
 
@@ -15,8 +17,8 @@ BUILT_SOURCES = \
 
 CLEANFILES += $(BUILT_SOURCES) gda-report.dtd
 
-$(BUILT_SOURCES): $(top_builddir)/report/idl/GDA_Report.idl
-	orbit-idl $(top_builddir)/report/idl/GDA_Report.idl
+$(BUILT_SOURCES): $(top_srcdir)/report/idl/GDA_Report.idl
+	orbit-idl $(top_srcdir)/report/idl/GDA_Report.idl
 
 gda_report_headers = \
 	gda-report-client.h \

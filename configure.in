@@ -180,7 +180,7 @@ do
 	else
 		mysqldir_suffix=
 	fi
-	if test -f $d/lib/mysql/libmysqlclient.a -o -f $d/lib/libmysqlclient.so
+	if test -f $d/lib/mysql/libmysqlclient.a -o -f $d/lib/mysql/libmysqlclient.so
 	then
 		AC_MSG_RESULT(found mysql in $d)
 		mysqldir=$d

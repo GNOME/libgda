@@ -3,9 +3,10 @@ noinst_LIBRARIES = libgda-sybase.a
 
 INCLUDES = \
 	$(SYBASE_CFLAGS) \
-	-I. \
 	$(GDA_PROVIDER_CFLAGS) \
+	-I$(top_srcdir)/lib/gda-common \
 	-I$(top_builddir)/lib/gda-common \
+	-I$(top_srcdir)/lib/gda-server \
 	-I$(top_builddir)/lib/gda-server 
 
 gda_sybase_srv_SOURCES = main-sybase.c

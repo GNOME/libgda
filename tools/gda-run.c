@@ -89,7 +89,7 @@ main (int argc, char *argv[])
   gchar*     real_dsn = 0;
 
   /* initialization */
-  gda_init("gda-run", VERSION, &argc, argv);
+  gda_init("gda-run", VERSION, argc, argv);
   orb = gda_corba_get_orb();
 
   /* check parameters */
@@ -141,7 +141,7 @@ main (int argc, char *argv[])
     {
       /* run batch job */
       if (!gda_batch_start(job))
-        fprintf("%s: there were errors running transaction\n", argv[0]);
+        fprintf(stderr, "%s: there were errors running transaction\n", argv[0]);
     }
   else fprintf(stderr, "%s: error loading file %s\n", argv[0], file);
 

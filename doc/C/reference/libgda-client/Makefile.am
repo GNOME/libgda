@@ -6,7 +6,9 @@ DOC_SOURCE_DIR=$(top_builddir)/lib/gda-client
 
 CFLAGS =" \
 	-I$(top_builddir) \
+	-I$(top_srcdir)/lib/gda-common \
 	-I$(top_builddir)/lib/gda-common \
+	-I$(top_srcdir)/lib/gda-client \
 	-I$(top_builddir)/lib/gda-client \
 	$(GDA_CLIENT_CFLAGS) \
 	"
@@ -28,22 +30,22 @@ DOC_DIR_INSTALL_FILES = \
 	 libgda-client-sections.txt
 
 SOURCE_FILES = \
-	$(top_builddir)/lib/gda-client/gda-batch.c \
-	$(top_builddir)/lib/gda-client/gda-batch.h \
-	$(top_builddir)/lib/gda-client/gda-client.h \
-	$(top_builddir)/lib/gda-client/gda-command.c \
-	$(top_builddir)/lib/gda-client/gda-command.h \
-	$(top_builddir)/lib/gda-client/gda-connection-pool.c \
-	$(top_builddir)/lib/gda-client/gda-connection-pool.h \
-	$(top_builddir)/lib/gda-client/gda-connection.c \
-	$(top_builddir)/lib/gda-client/gda-connection.h \
-	$(top_builddir)/lib/gda-client/gda-export.c \
-	$(top_builddir)/lib/gda-client/gda-export.h \
-	$(top_builddir)/lib/gda-client/gda-field.c \
-	$(top_builddir)/lib/gda-client/gda-field.h \
-	$(top_builddir)/lib/gda-client/gda-recordset.c \
-	$(top_builddir)/lib/gda-client/gda-recordset.h \
-	$(top_builddir)/lib/gda-client/gda-value.h
+	$(top_srcdir)/lib/gda-client/gda-batch.c \
+	$(top_srcdir)/lib/gda-client/gda-batch.h \
+	$(top_srcdir)/lib/gda-client/gda-client.h \
+	$(top_srcdir)/lib/gda-client/gda-command.c \
+	$(top_srcdir)/lib/gda-client/gda-command.h \
+	$(top_srcdir)/lib/gda-client/gda-connection-pool.c \
+	$(top_srcdir)/lib/gda-client/gda-connection-pool.h \
+	$(top_srcdir)/lib/gda-client/gda-connection.c \
+	$(top_srcdir)/lib/gda-client/gda-connection.h \
+	$(top_srcdir)/lib/gda-client/gda-export.c \
+	$(top_srcdir)/lib/gda-client/gda-export.h \
+	$(top_srcdir)/lib/gda-client/gda-field.c \
+	$(top_srcdir)/lib/gda-client/gda-field.h \
+	$(top_srcdir)/lib/gda-client/gda-recordset.c \
+	$(top_srcdir)/lib/gda-client/gda-recordset.h \
+	$(top_srcdir)/lib/gda-client/gda-value.h
 
 IGNORED_HEADER_FILES =
 

@@ -237,7 +237,7 @@ gda_stringify_value (gchar * bfr, gint maxlen, GdaField * f)
 		break;
 	case GDA_TypeBigint:
 		if (!bfr) {
-			retval = g_new0 (gchar, 20);
+			retval = g_new (gchar, 20);
 			maxlen = 20;
 		}
 		g_snprintf (retval, maxlen, "%Ld", gda_field_get_bigint_value (f));
@@ -279,15 +279,19 @@ gda_stringify_value (gchar * bfr, gint maxlen, GdaField * f)
 	case GDA_TypeLongvarchar:
 	case GDA_TypeVarchar:
 		if (!bfr) {
-			retval = g_strdup (f->real_value->_u.v._u.lvc);
+			if (f->real_value->_u.v._u.lvc != NULL)
+				retval = g_strdup (f->real_value->_u.v._u.lvc);
+			else
+				retval = g_strdup (_("<NULL>"));
 		}
 		else {
-			strncpy (retval, f->real_value->_u.v._u.lvc,
-				 min (maxlen,
-				      strlen (f->real_value->_u.v._u.lvc)));
-			retval[min
-			       (maxlen,
-				strlen (f->real_value->_u.v._u.lvc))] = '\0';
+			if (f->real_value->_u.v._u.lvc != NULL) {
+				strncpy (retval, f->real_value->_u.v._u.lvc,
+					 min (maxlen, strlen (f->real_value->_u.v._u.lvc)));
+				retval[min (maxlen, strlen (f->real_value->_u.v._u.lvc))] = '\0';
+			}
+			else
+				retval = g_strdup (_("<NULL>"));
 		}
 		break;
 	case GDA_TypeInteger:
@@ -452,7 +456,7 @@ gda_field_get_date_value (GdaField *field)
 	if (field->attributes->gdaType == GDA_TypeDate) {
 		struct tm *stm;
 
-		stm = localtime ((time_t) &field->real_value->_u.v._u.d);
+		stm = localtime ((time_t *) &field->real_value->_u.v._u.d);
 		if (stm != NULL) {
 			dt = g_date_new_dmy (stm->tm_mday,
 					     stm->tm_mon,

@@ -2,9 +2,10 @@ bin_PROGRAMS = gda-ldap-srv
 noinst_LIBRARIES = libgda-ldap.a
 
 INCLUDES = \
-	-I. \
 	$(GDA_PROVIDER_CFLAGS) \
+	-I$(top_srcdir)/lib/gda-common \
 	-I$(top_builddir)/lib/gda-common \
+	-I$(top_srcdir)/lib/gda-server \
 	-I$(top_builddir)/lib/gda-server \
 	$(LDAP_CFLAGS)
 

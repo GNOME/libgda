@@ -4,9 +4,10 @@ bin_PROGRAMS = gda-run
 bin_SCRIPTS = gda-config gda-buildserver gda-buildclient
 
 INCLUDES = \
-	-I. \
 	$(GDA_CLIENT_CFLAGS) \
+	-I$(top_srcdir)/lib/gda-common \
 	-I$(top_builddir)/lib/gda-common \
+	-I$(top_srcdir)/lib/gda-client \
 	-I$(top_builddir)/lib/gda-client
 
 gda_run_SOURCES = gda-run.c

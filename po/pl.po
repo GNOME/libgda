@@ -9,7 +9,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2001-09-16 22:13+0200\n"
+"POT-Creation-Date: 2001-09-25 23:18+0200\n"
 "PO-Revision-Date: 2001-08-08 10:53+0200\n"
 "Last-Translator: GNOME PL Team <translators@gnome.pl>\n"
 "Language-Team: Polish <pl@li.org>\n"
@@ -28,16 +28,16 @@ msgstr "nie mo¿na nawi±zaæ po³±czenia z %s"
 msgid "Data source %s not found"
 msgstr "Nie odnaleziono ¼ród³a danych %s"
 
-#: lib/gda-client/gda-connection.c:447
+#: lib/gda-client/gda-connection.c:448
 #, c-format
 msgid "Database '%s' not found in system configuration"
 msgstr "Nie odnaleziono bazy danych \"%s\" w konfiguracji systemu"
 
-#: lib/gda-client/gda-connection.c:451 lib/gda-client/gda-connection.c:468
+#: lib/gda-client/gda-connection.c:452 lib/gda-client/gda-connection.c:469
 msgid "[GDA Client Library]"
 msgstr "[Biblioteka kliencka GDA]"
 
-#: lib/gda-client/gda-connection.c:467
+#: lib/gda-client/gda-connection.c:468
 msgid "Could not open CORBA factory"
 msgstr "Nie mo¿na otworzyæ generatora Corby"
 
@@ -137,7 +137,7 @@ msgstr "tabela %s ju¿ istnieje"
 msgid "%p is not a valid table"
 msgstr "%p nie jest poprawn± tabel±"
 
-#: lib/gda-common/gda-xml-item.c:385
+#: lib/gda-common/gda-xml-item.c:386
 #, c-format
 msgid "Item with id %s not found"
 msgstr "Nie odnaleziono elementu z id %s"
@@ -234,7 +234,7 @@ msgstr "Generator po³±czeñ z dostarczycielem danych - LDAP"
 #: providers/gda-oracle-server/gda-oracle-connection.c:479
 #: providers/gda-postgres-server/gda-postgres-connection.c:767
 #: providers/gda-sybase-server/gda-sybase-error.c:132
-#: providers/gda-tds-server/gda-tds-error.c:123
+#: providers/gda-tds-server/gda-tds-error.c:128
 #, c-format
 msgid "error '%s' at %s"
 msgstr "b³±d \"%s\" w %s"
@@ -257,8 +257,8 @@ msgstr "b³±d \"%s\" w %s"
 #: providers/gda-primebase-server/gda-primebase-connection.c:375
 #: providers/gda-primebase-server/gda-primebase-connection.c:376
 #: providers/gda-sybase-server/gda-sybase-error.c:142
-#: providers/gda-tds-server/gda-tds-error.c:132
-#: providers/gda-tds-server/gda-tds-error.c:133
+#: providers/gda-tds-server/gda-tds-error.c:137
+#: providers/gda-tds-server/gda-tds-error.c:138
 msgid "Not available"
 msgstr "Niedostêpne"
 
@@ -270,7 +270,7 @@ msgstr "Niedostêpne"
 #: providers/gda-postgres-server/gda-postgres-connection.c:777
 #: providers/gda-primebase-server/gda-primebase-connection.c:377
 #: providers/gda-sybase-server/gda-sybase-error.c:143
-#: providers/gda-tds-server/gda-tds-error.c:134
+#: providers/gda-tds-server/gda-tds-error.c:139
 msgid "error"
 msgstr "b³±d"
 
@@ -306,7 +306,7 @@ msgstr "Generator po³±czeñ z dostarczycielem danych - poczta"
 #: providers/gda-mail-server/gda-mail-connection.c:107
 #: providers/gda-mdb-server/gda-mdb-connection.c:224
 #: providers/gda-sybase-server/gda-sybase-connection.c:290
-#: providers/gda-tds-server/gda-tds-connection.c:278
+#: providers/gda-tds-server/gda-tds-connection.c:283
 #, c-format
 msgid "Unhandled SCHEMA_QTYPE %d"
 msgstr "Nieobs³ugiwane SCHEMA_QTYPE %d"
@@ -327,7 +327,7 @@ msgstr "Generator po³±czeñ z dostarczycielem danych - MDB"
 #: providers/gda-mdb-server/gda-mdb-command.c:86
 #: providers/gda-mysql-server/gda-mysql-command.c:144
 #: providers/gda-sybase-server/gda-sybase-command.c:141
-#: providers/gda-tds-server/gda-tds-command.c:120
+#: providers/gda-tds-server/gda-tds-command.c:125
 #, c-format
 msgid "executing command '%s'"
 msgstr "Wykonywanie polecenia \"%s\""
@@ -366,7 +366,7 @@ msgstr "mysql_recset ma warto¶æ NULL"
 #: providers/gda-mdb-server/gda-mdb-connection.c:469
 #: providers/gda-mysql-server/gda-mysql-connection.c:838
 #: providers/gda-sybase-server/gda-sybase-connection.c:469
-#: providers/gda-tds-server/gda-tds-connection.c:448
+#: providers/gda-tds-server/gda-tds-connection.c:453
 msgid "No table name given for SCHEMA_COLS"
 msgstr "Nie podano nazwy tabeli dla SCHEMA_COLS"
 
@@ -512,76 +512,76 @@ msgstr "Generator po³±czeñ z dostarczycielem danych - Sybase"
 
 #.      gda_server_error_make(error, 0, cnc, "connection seems to be dead");
 #: providers/gda-sybase-server/gda-sybase-command.c:136
-#: providers/gda-tds-server/gda-tds-command.c:116
+#: providers/gda-tds-server/gda-tds-command.c:121
 msgid "Connection seems to be dead"
 msgstr "Po³±czenie wydaje siê byæ martwe"
 
 #: providers/gda-sybase-server/gda-sybase-command.c:153
-#: providers/gda-tds-server/gda-tds-command.c:130
+#: providers/gda-tds-server/gda-tds-command.c:135
 msgid "Filling command structure failed\n"
 msgstr "Nie powiod³o siê wype³nienie struktury polecenia\n"
 
 #: providers/gda-sybase-server/gda-sybase-command.c:162
-#: providers/gda-tds-server/gda-tds-command.c:137
+#: providers/gda-tds-server/gda-tds-command.c:142
 msgid "sending cmd failed"
 msgstr "wys³anie polecenia nie powiod³o siê"
 
 #: providers/gda-sybase-server/gda-sybase-command.c:169
-#: providers/gda-tds-server/gda-tds-command.c:144
+#: providers/gda-tds-server/gda-tds-command.c:149
 msgid "Allocating recordset failed"
 msgstr "Nie powiod³o siê zaalokowanie obiektu zbioru rekordów"
 
 #: providers/gda-sybase-server/gda-sybase-command.c:181
-#: providers/gda-tds-server/gda-tds-command.c:153
+#: providers/gda-tds-server/gda-tds-command.c:158
 msgid "Getting recordset userdata failed"
 msgstr "Nie powiod³o siê pobranie danych u¿ytkownika zbioru rekordów"
 
 #: providers/gda-sybase-server/gda-sybase-command.c:241
-#: providers/gda-tds-server/gda-tds-command.c:210
+#: providers/gda-tds-server/gda-tds-command.c:215
 msgid "Command execution finished, all results processed"
 msgstr ""
 "Zakoñczy³o siê wykonanie polecenia, wszystkie wyniki zosta³y przetworzone"
 
 #: providers/gda-sybase-server/gda-sybase-command.c:245
-#: providers/gda-tds-server/gda-tds-command.c:214
+#: providers/gda-tds-server/gda-tds-command.c:219
 msgid "Command failed"
 msgstr "Wykonanie polecenia nie powiod³o siê"
 
 #: providers/gda-sybase-server/gda-sybase-command.c:250
-#: providers/gda-tds-server/gda-tds-command.c:219
+#: providers/gda-tds-server/gda-tds-command.c:224
 msgid "Execution of resultless command succeeded"
 msgstr "Wykonanie polecenia nie zwracaj±cego wyniku zakoñczy³o siê pomy¶lnie"
 
 #: providers/gda-sybase-server/gda-sybase-command.c:268
-#: providers/gda-tds-server/gda-tds-command.c:237
+#: providers/gda-tds-server/gda-tds-command.c:242
 #, c-format
 msgid "ct_results() returned %x"
 msgstr "ct_results() zwróci³o %x"
 
 #: providers/gda-sybase-server/gda-sybase-command.c:280
-#: providers/gda-tds-server/gda-tds-command.c:249
+#: providers/gda-tds-server/gda-tds-command.c:254
 msgid "No further results, command completly succeeded."
 msgstr "Brak dalszych wyników, polecenie zosta³o zakoñczone."
 
 #: providers/gda-sybase-server/gda-sybase-command.c:285
-#: providers/gda-tds-server/gda-tds-command.c:254
+#: providers/gda-tds-server/gda-tds-command.c:259
 msgid "An error occured during command execution."
 msgstr "Podczas wykonania polecenia wyst±pi³ b³±d."
 
 #: providers/gda-sybase-server/gda-sybase-command.c:291
-#: providers/gda-tds-server/gda-tds-command.c:258
+#: providers/gda-tds-server/gda-tds-command.c:263
 msgid "Cmd execution returned unknown result, may be an error"
 msgstr "Wykonanie polecenia zwróci³o nieznany wynik, który mo¿e byæ b³êdem"
 
 #: providers/gda-sybase-server/gda-sybase-command.c:304
-#: providers/gda-tds-server/gda-tds-command.c:269
+#: providers/gda-tds-server/gda-tds-command.c:274
 msgid "No data returned, freeing recordset structure"
 msgstr "Brak zwróconych danych, zwalnianie struktury zbioru rekordów"
 
 #: providers/gda-sybase-server/gda-sybase-command.c:336
 #: providers/gda-sybase-server/gda-sybase-command.c:348
-#: providers/gda-tds-server/gda-tds-command.c:300
-#: providers/gda-tds-server/gda-tds-command.c:310
+#: providers/gda-tds-server/gda-tds-command.c:305
+#: providers/gda-tds-server/gda-tds-command.c:315
 msgid "Freeing command structure failed"
 msgstr "Nie powiod³o siê zwolnienie struktury polecenia"
 
@@ -590,71 +590,71 @@ msgid "Not enough memory for sybase_Connection"
 msgstr "Brak pamiêci na sybase_Connection"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:458
-#: providers/gda-tds-server/gda-tds-connection.c:437
+#: providers/gda-tds-server/gda-tds-connection.c:442
 #, c-format
 msgid "schema_cols: table_name '%s'"
 msgstr "schema_cols: table_name \"%s\""
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:475
-#: providers/gda-tds-server/gda-tds-connection.c:454
+#: providers/gda-tds-server/gda-tds-connection.c:459
 msgid "Could not allocate command structure"
 msgstr "Nie mo¿na zaalokowaæ struktury polecenia"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:498
-#: providers/gda-tds-server/gda-tds-connection.c:477
+#: providers/gda-tds-server/gda-tds-connection.c:482
 msgid "Could not allocate enough memory for query"
 msgstr "Nie mo¿na zaalokowaæ wystarczaj±cej ilo¶ci pamiêci na zapytanie"
 
 #.          gda_server_error_make(error, NULL, cnc, __PRETTY_FUNCTION__);
 #: providers/gda-sybase-server/gda-sybase-connection.c:513
-#: providers/gda-tds-server/gda-tds-connection.c:492
+#: providers/gda-tds-server/gda-tds-connection.c:497
 msgid "Could not get recordset in schema_cols"
 msgstr "Nie mo¿na pobraæ zbioru rekordów w schema_cols"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:562
-#: providers/gda-tds-server/gda-tds-connection.c:541
+#: providers/gda-tds-server/gda-tds-connection.c:546
 #, c-format
 msgid "schema_procs: invalid constraint type %d"
 msgstr "schema_procs: niew³a¶ciwy typ powi±zania %d"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:572
-#: providers/gda-tds-server/gda-tds-connection.c:551
+#: providers/gda-tds-server/gda-tds-connection.c:556
 msgid "Could not allocate cmd structure"
 msgstr "Nie mo¿na zaalokowaæ struktury polecenia"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:638
-#: providers/gda-tds-server/gda-tds-connection.c:617
+#: providers/gda-tds-server/gda-tds-connection.c:622
 #, c-format
 msgid "schema_tables: invalid constraint type %d"
 msgstr "schema_tables: niew³a¶ciwy typ dowi±zania %d"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:700
-#: providers/gda-tds-server/gda-tds-connection.c:679
+#: providers/gda-tds-server/gda-tds-connection.c:684
 #, c-format
 msgid "Invalid or unsupported constraint type: %d"
 msgstr "Niew³a¶ciwy lub nie obs³ugiwany typ dowi±zania: %d"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:743
-#: providers/gda-tds-server/gda-tds-connection.c:722
+#: providers/gda-tds-server/gda-tds-connection.c:727
 msgid "Could not allocate GdaServerCommand"
 msgstr "Nie mo¿na zaalokowaæ GdaServerCommand"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:774
 #: providers/gda-sybase-server/gda-sybase-connection.c:779
-#: providers/gda-tds-server/gda-tds-connection.c:752
 #: providers/gda-tds-server/gda-tds-connection.c:757
+#: providers/gda-tds-server/gda-tds-connection.c:762
 #, c-format
 msgid "connection status: %x"
 msgstr "stan po³±czenia: %x"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:775
-#: providers/gda-tds-server/gda-tds-connection.c:753
+#: providers/gda-tds-server/gda-tds-connection.c:758
 #, c-format
 msgid "return code: %x"
 msgstr "kod powrotu: %x"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:813
-#: providers/gda-tds-server/gda-tds-connection.c:788
+#: providers/gda-tds-server/gda-tds-connection.c:793
 msgid "attempting reconnection"
 msgstr "ponowne nawi±zywanie po³±czenia"
 
@@ -664,37 +664,37 @@ msgid "Reconnected to '%s'"
 msgstr "Ponownie nawi±zano po³±czenie z \"%s\""
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:945
-#: providers/gda-tds-server/gda-tds-connection.c:890
+#: providers/gda-tds-server/gda-tds-connection.c:895
 #, c-format
 msgid "Connected to %s"
 msgstr "Nawi±zano po³±czenie z %s"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:957
-#: providers/gda-tds-server/gda-tds-connection.c:904
+#: providers/gda-tds-server/gda-tds-connection.c:909
 #, c-format
 msgid "Selected database '%s'"
 msgstr "Wybrano bazê danych \"%s\""
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:986
-#: providers/gda-tds-server/gda-tds-connection.c:930
+#: providers/gda-tds-server/gda-tds-connection.c:935
 #, c-format
 msgid "%s: Could not allocate cmd structure"
 msgstr "%s: Nie mo¿na zaalokowaæ struktury polecenia"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:995
-#: providers/gda-tds-server/gda-tds-connection.c:939
+#: providers/gda-tds-server/gda-tds-connection.c:944
 #, c-format
 msgid "%s: Could not allocate memory for cmd string"
 msgstr "%s: Nie mo¿na zaalokowaæ pamiêci na tekst polecenia"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:1004
-#: providers/gda-tds-server/gda-tds-connection.c:947
+#: providers/gda-tds-server/gda-tds-connection.c:952
 #, c-format
 msgid "%s: ct_command failed"
 msgstr "%s: b³±d ct_command"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:1015
-#: providers/gda-tds-server/gda-tds-connection.c:957
+#: providers/gda-tds-server/gda-tds-connection.c:962
 #, c-format
 msgid "%s: sending command failed"
 msgstr "%s: Wys³anie polecenia nie powiod³o siê"
@@ -710,29 +710,29 @@ msgid "%s: use command failed"
 msgstr "%s: polecenie nie zosta³o wykonane"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:1071
-#: providers/gda-tds-server/gda-tds-connection.c:1020
+#: providers/gda-tds-server/gda-tds-connection.c:1025
 msgid "Could not allocate locale structure"
 msgstr "Nie mo¿na zaalokowaæ struktury ustawieñ narodowych"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:1077
-#: providers/gda-tds-server/gda-tds-connection.c:1026
+#: providers/gda-tds-server/gda-tds-connection.c:1031
 #, c-format
 msgid "Could not set locale to '%s'"
 msgstr "Nie mo¿na przyj±æ ustawieñ narodowych \"%s\""
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:1084
-#: providers/gda-tds-server/gda-tds-connection.c:1033
+#: providers/gda-tds-server/gda-tds-connection.c:1038
 #, c-format
 msgid "Could not configure locale to be '%s'"
 msgstr "Nie mo¿na przyj±æ ustawieñ narodowych \"%s\""
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:1090
-#: providers/gda-tds-server/gda-tds-connection.c:1039
+#: providers/gda-tds-server/gda-tds-connection.c:1044
 msgid "Could not drop locale structure"
 msgstr "Nie mo¿na zwolniæ struktury ustawieñ narodowych"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:1104
-#: providers/gda-tds-server/gda-tds-connection.c:1052
+#: providers/gda-tds-server/gda-tds-connection.c:1057
 #, c-format
 msgid "Fatal error: %s\n"
 msgstr "Powa¿ny b³±d: %s\n"
@@ -743,7 +743,7 @@ msgid "gda_sybase_error_make(%p,%p,%p,%p)"
 msgstr "gda_sybase_error_make(%p,%p,%p,%p)"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:90
-#: providers/gda-tds-server/gda-tds-error.c:81
+#: providers/gda-tds-server/gda-tds-error.c:86
 #, c-format
 msgid "No error flag ist set, though %s is called. This may be a bug."
 msgstr ""
@@ -867,96 +867,96 @@ msgid "Could not clear cslib messages"
 msgstr "Nie mo¿na wyczy¶ciæ komunikatów cslib"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:646
-#: providers/gda-tds-server/gda-tds-error.c:269
+#: providers/gda-tds-server/gda-tds-error.c:274
 msgid "Server message:"
 msgstr "Komunikat serwera:"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:654
-#: providers/gda-tds-server/gda-tds-error.c:277
+#: providers/gda-tds-server/gda-tds-error.c:282
 msgid "Client message:"
 msgstr "Komunikat klienta:"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:661
-#: providers/gda-tds-server/gda-tds-error.c:284
+#: providers/gda-tds-server/gda-tds-error.c:289
 msgid "CS-Library error:"
 msgstr "B³±d biblioteli cslib"
 
 #: providers/gda-sybase-server/gda-sybase-recordset.c:203
-#: providers/gda-tds-server/gda-tds-recordset.c:194
+#: providers/gda-tds-server/gda-tds-recordset.c:199
 #, c-format
 msgid "fetch error at row %d"
 msgstr "b³±d przy pobieraniu wiersza %d"
 
 #: providers/gda-sybase-server/gda-sybase-recordset.c:210
-#: providers/gda-tds-server/gda-tds-recordset.c:201
+#: providers/gda-tds-server/gda-tds-recordset.c:206
 #, c-format
 msgid "CS_END_DATA on row %d; canceling"
 msgstr "CS_END_DATA w wierszu %d; anulowanie;"
 
 #: providers/gda-sybase-server/gda-sybase-recordset.c:218
-#: providers/gda-tds-server/gda-tds-recordset.c:208
+#: providers/gda-tds-server/gda-tds-recordset.c:213
 #, c-format
 msgid "%s: Error (%d)"
 msgstr "%s: B³±d (%d)"
 
 #: providers/gda-sybase-server/gda-sybase-recordset.c:391
-#: providers/gda-tds-server/gda-tds-recordset.c:382
+#: providers/gda-tds-server/gda-tds-recordset.c:387
 msgid "Failed fetching # of columns"
 msgstr "Pobranie liczby kolumn nie powiod³o siê"
 
 #: providers/gda-sybase-server/gda-sybase-recordset.c:398
-#: providers/gda-tds-server/gda-tds-recordset.c:390
+#: providers/gda-tds-server/gda-tds-recordset.c:395
 #, c-format
 msgid "Counted %d columns"
 msgstr "Zliczono %d kolumn"
 
 #: providers/gda-sybase-server/gda-sybase-recordset.c:405
-#: providers/gda-tds-server/gda-tds-recordset.c:397
+#: providers/gda-tds-server/gda-tds-recordset.c:402
 #, c-format
 msgid "%s could not allocate datafmt info"
 msgstr "%s: nie mo¿na zaalokowaæ informacji datafmt"
 
 #: providers/gda-sybase-server/gda-sybase-recordset.c:415
-#: providers/gda-tds-server/gda-tds-recordset.c:407
+#: providers/gda-tds-server/gda-tds-recordset.c:412
 #, c-format
 msgid "%s could not allocate data fields"
 msgstr "%s: nie mo¿na zaalokowaæ pól danych"
 
 #: providers/gda-sybase-server/gda-sybase-recordset.c:433
-#: providers/gda-tds-server/gda-tds-recordset.c:425
+#: providers/gda-tds-server/gda-tds-recordset.c:430
 #, c-format
 msgid "ct_describe on col # %d"
 msgstr "ct_describe w kolumnie # %d"
 
 #: providers/gda-sybase-server/gda-sybase-recordset.c:440
-#: providers/gda-tds-server/gda-tds-recordset.c:432
+#: providers/gda-tds-server/gda-tds-recordset.c:437
 #, c-format
 msgid "ct_describe on col # %d failed"
 msgstr "b³±d funkcji ct_describe w kolumnie # %d"
 
 #: providers/gda-sybase-server/gda-sybase-recordset.c:447
-#: providers/gda-tds-server/gda-tds-recordset.c:439
+#: providers/gda-tds-server/gda-tds-recordset.c:444
 #, c-format
 msgid "ct_describe(%d): '%s', %d (%s)"
 msgstr "ct_describe(%d): '%s', %d (%s)"
 
 #: providers/gda-sybase-server/gda-sybase-recordset.c:459
-#: providers/gda-tds-server/gda-tds-recordset.c:450
+#: providers/gda-tds-server/gda-tds-recordset.c:455
 msgid "could not allocate data holder"
 msgstr "nie mo¿na zaalokowaæ uchwytu danych"
 
 #: providers/gda-sybase-server/gda-sybase-recordset.c:472
-#: providers/gda-tds-server/gda-tds-recordset.c:463
+#: providers/gda-tds-server/gda-tds-recordset.c:468
 msgid "could not ct_bind data holder to column"
 msgstr "nie mo¿na zwi±zaæ uchwytu danych z kolumn± (ct_bind)"
 
 #: providers/gda-sybase-server/gda-sybase-recordset.c:479
-#: providers/gda-tds-server/gda-tds-recordset.c:470
+#: providers/gda-tds-server/gda-tds-recordset.c:475
 msgid "illegal type detected, aborting"
 msgstr "wykryto niepoprawny typ, rezygnacja"
 
 #: providers/gda-sybase-server/gda-sybase-recordset.c:486
-#: providers/gda-tds-server/gda-tds-recordset.c:477
+#: providers/gda-tds-server/gda-tds-recordset.c:482
 msgid "could not allocate field"
 msgstr "nie mo¿na zaalokowaæ pola"
 
@@ -1008,17 +1008,17 @@ msgstr "Dostêp do ¼ród³a danych GDA - Sybase/MS SQL"
 msgid "TDS provider connection factory"
 msgstr "Generator po³±czeñ z dostarczycielem danych - TDS"
 
-#: providers/gda-tds-server/gda-tds-connection.c:160
+#: providers/gda-tds-server/gda-tds-connection.c:165
 msgid "Not enough memory for tds_Connection"
 msgstr "Brak pamiêci na tds_Connection"
 
 #. Fixme: replace "dummy" with buf when CS_GET CS_SERVERNAME works
-#: providers/gda-tds-server/gda-tds-connection.c:888
+#: providers/gda-tds-server/gda-tds-connection.c:893
 #, c-format
 msgid "Reconnected to %s"
 msgstr "Ponownie nawi±zano po³±czenie z %s"
 
-#: providers/gda-tds-server/gda-tds-error.c:70
+#: providers/gda-tds-server/gda-tds-error.c:75
 #, c-format
 msgid "gda_tds_error_make(%p,%p,%p,%p)"
 msgstr "gda_tds_error_make(%p,%p,%p,%p)"

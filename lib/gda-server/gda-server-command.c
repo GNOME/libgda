@@ -47,7 +47,7 @@ impl_GDA_Command__get_text (PortableServer_Servant servant,
 
 void
 impl_GDA_Command__set_text (PortableServer_Servant servant,
-			    CORBA_char * value, CORBA_Environment * ev)
+			    const CORBA_char * value, CORBA_Environment * ev)
 {
 	GdaServerCommand *cmd =
 		(GdaServerCommand *) bonobo_x_object (servant);
@@ -77,9 +77,9 @@ impl_GDA_Command__set_type (PortableServer_Servant servant,
 
 GDA_Recordset
 impl_GDA_Command_open (PortableServer_Servant servant,
-		       GDA_CmdParameterSeq * param,
-		       GDA_CursorType ct,
-		       GDA_LockType lt,
+		       const GDA_CmdParameterSeq * param,
+		       const GDA_CursorType ct,
+		       const GDA_LockType lt,
 		       CORBA_unsigned_long * affected, CORBA_Environment * ev)
 {
 	GdaError *error;

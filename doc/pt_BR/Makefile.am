@@ -14,9 +14,8 @@ libgdaptbr_help_DATA =         \
 
 all:
 
-libgda.html: libgda/libgda.html
-	-cp libgda/libgda.html .
-	-cp libgda/libgda.html libgda/index.html
+libgda.html: libgda/index.html
+	-cp libgda/index.html libgda.html
 
 libgda/libgda.html: $(SGML_FILES)
 	-db2html libgda.sgml

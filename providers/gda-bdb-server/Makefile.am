@@ -4,7 +4,9 @@ noinst_LIBRARIES = libgda-bdb.a
 INCLUDES = \
 	-I. \
 	$(GDA_PROVIDER_CFLAGS) \
+	-I$(top_srcdir)/lib/gda-common \
 	-I$(top_builddir)/lib/gda-common \
+	-I$(top_srcdir)/lib/gda-server \
 	-I$(top_builddir)/lib/gda-server
 
 gda_bdb_srv_SOURCES = main-bdb.c

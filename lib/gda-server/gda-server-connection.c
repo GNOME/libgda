@@ -113,9 +113,9 @@ impl_GDA_Connection_close (PortableServer_Servant servant,
 
 CORBA_long
 impl_GDA_Connection_open (PortableServer_Servant servant,
-			  CORBA_char * dsn,
-			  CORBA_char * user,
-			  CORBA_char * passwd, CORBA_Environment * ev)
+			  const CORBA_char * dsn,
+			  const CORBA_char * user,
+			  const CORBA_char * passwd, CORBA_Environment * ev)
 {
 	GdaServerConnection *cnc = (GdaServerConnection *) bonobo_x_object (servant);
 
@@ -133,8 +133,8 @@ impl_GDA_Connection_open (PortableServer_Servant servant,
 
 GDA_Recordset
 impl_GDA_Connection_openSchema (PortableServer_Servant servant,
-				GDA_Connection_QType t,
-				GDA_Connection_ConstraintSeq * constraints,
+				const GDA_Connection_QType t,
+				const GDA_Connection_ConstraintSeq * constraints,
 				CORBA_Environment * ev)
 {
 	GdaServerConnection *cnc =
@@ -163,8 +163,8 @@ impl_GDA_Connection_openSchema (PortableServer_Servant servant,
 
 CORBA_long
 impl_GDA_Connection_modifySchema (PortableServer_Servant servant,
-				  GDA_Connection_QType t,
-				  GDA_Connection_ConstraintSeq * constraints,
+				  const GDA_Connection_QType t,
+				  const GDA_Connection_ConstraintSeq * constraints,
 				  CORBA_Environment * ev)
 {
 	GdaServerConnection *cnc =
@@ -224,7 +224,7 @@ impl_GDA_Connection_createRecordset (PortableServer_Servant servant,
 
 CORBA_long
 impl_GDA_Connection_startLogging (PortableServer_Servant servant,
-				  CORBA_char * filename,
+				  const CORBA_char * filename,
 				  CORBA_Environment * ev)
 {
 	return -1;
@@ -239,8 +239,8 @@ impl_GDA_Connection_stopLogging (PortableServer_Servant servant,
 
 CORBA_char *
 impl_GDA_Connection_createTable (PortableServer_Servant servant,
-				 CORBA_char * name,
-				 GDA_RowAttributes * columns,
+				 const CORBA_char * name,
+				 const GDA_RowAttributes * columns,
 				 CORBA_Environment * ev)
 {
 	CORBA_char *retval;
@@ -249,7 +249,7 @@ impl_GDA_Connection_createTable (PortableServer_Servant servant,
 
 	g_return_if_fail (GDA_IS_SERVER_CONNECTION (cnc));
 
-	retval = gda_server_connection_create_table (cnc, columns);
+	retval = gda_server_connection_create_table (cnc, (GDA_RowAttributes *) columns);
 	if (!retval)
 		gda_error_list_to_exception (cnc->errors, ev);
 	return retval;
@@ -269,7 +269,7 @@ impl_GDA_Connection_supports (PortableServer_Servant servant,
 
 CORBA_char *
 impl_GDA_Connection_sql2xml (PortableServer_Servant servant,
-			     CORBA_char * sql, CORBA_Environment * ev)
+			     const CORBA_char * sql, CORBA_Environment * ev)
 {
 	GdaServerConnection *cnc =
 		(GdaServerConnection *) bonobo_x_object (servant);
@@ -278,7 +278,7 @@ impl_GDA_Connection_sql2xml (PortableServer_Servant servant,
 
 CORBA_char *
 impl_GDA_Connection_xml2sql (PortableServer_Servant servant,
-			     CORBA_char * xml, CORBA_Environment * ev)
+			     const CORBA_char * xml, CORBA_Environment * ev)
 {
 	GdaServerConnection *cnc =
 		(GdaServerConnection *) bonobo_x_object (servant);

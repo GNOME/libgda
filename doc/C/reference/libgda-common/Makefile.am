@@ -6,6 +6,7 @@ DOC_SOURCE_DIR=$(top_builddir)/lib/gda-common
 
 CFLAGS =" \
 	-I$(top_builddir) \
+	-I$(top_srcdir)/lib/gda-common \
 	-I$(top_builddir)/lib/gda-common \
 	$(GDA_CLIENT_CFLAGS) \
 	"
@@ -26,39 +27,39 @@ DOC_DIR_INSTALL_FILES = \
 	 libgda-common-sections.txt
 
 SOURCE_FILES = \
-	$(top_builddir)/lib/gda-common/gda-common-defs.h \
-	$(top_builddir)/lib/gda-common/gda-common.h \
-	$(top_builddir)/lib/gda-common/gda-config.c \
-	$(top_builddir)/lib/gda-common/gda-config.h \
-	$(top_builddir)/lib/gda-common/gda-corba.c \
-	$(top_builddir)/lib/gda-common/gda-corba.h \
-	$(top_builddir)/lib/gda-common/gda-error.c \
-	$(top_builddir)/lib/gda-common/gda-error.h \
-	$(top_builddir)/lib/gda-common/gda-init.c \
-	$(top_builddir)/lib/gda-common/gda-listener.c \
-	$(top_builddir)/lib/gda-common/gda-listener.h \
-	$(top_builddir)/lib/gda-common/gda-log.c \
-	$(top_builddir)/lib/gda-common/gda-log.h \
-	$(top_builddir)/lib/gda-common/gda-quark-list.c \
-	$(top_builddir)/lib/gda-common/gda-quark-list.h \
-	$(top_builddir)/lib/gda-common/gda-thread.c \
-	$(top_builddir)/lib/gda-common/gda-thread.h \
-	$(top_builddir)/lib/gda-common/gda-util.c \
-	$(top_builddir)/lib/gda-common/gda-util.h \
-	$(top_builddir)/lib/gda-common/gda-xml-atom-item.c \
-	$(top_builddir)/lib/gda-common/gda-xml-atom-item.h \
-	$(top_builddir)/lib/gda-common/gda-xml-bin-item.c \
-	$(top_builddir)/lib/gda-common/gda-xml-bin-item.h \
-	$(top_builddir)/lib/gda-common/gda-xml-database.c \
-	$(top_builddir)/lib/gda-common/gda-xml-database.h \
-	$(top_builddir)/lib/gda-common/gda-xml-document.c \
-	$(top_builddir)/lib/gda-common/gda-xml-document.h \
-	$(top_builddir)/lib/gda-common/gda-xml-item.c \
-	$(top_builddir)/lib/gda-common/gda-xml-item.h \
-	$(top_builddir)/lib/gda-common/gda-xml-list-item.c \
-	$(top_builddir)/lib/gda-common/gda-xml-list-item.h \
-	$(top_builddir)/lib/gda-common/gda-xml-util.c \
-	$(top_builddir)/lib/gda-common/gda-xml-util.h
+	$(top_srcdir)/lib/gda-common/gda-common-defs.h \
+	$(top_srcdir)/lib/gda-common/gda-common.h \
+	$(top_srcdir)/lib/gda-common/gda-config.c \
+	$(top_srcdir)/lib/gda-common/gda-config.h \
+	$(top_srcdir)/lib/gda-common/gda-corba.c \
+	$(top_srcdir)/lib/gda-common/gda-corba.h \
+	$(top_srcdir)/lib/gda-common/gda-error.c \
+	$(top_srcdir)/lib/gda-common/gda-error.h \
+	$(top_srcdir)/lib/gda-common/gda-init.c \
+	$(top_srcdir)/lib/gda-common/gda-listener.c \
+	$(top_srcdir)/lib/gda-common/gda-listener.h \
+	$(top_srcdir)/lib/gda-common/gda-log.c \
+	$(top_srcdir)/lib/gda-common/gda-log.h \
+	$(top_srcdir)/lib/gda-common/gda-quark-list.c \
+	$(top_srcdir)/lib/gda-common/gda-quark-list.h \
+	$(top_srcdir)/lib/gda-common/gda-thread.c \
+	$(top_srcdir)/lib/gda-common/gda-thread.h \
+	$(top_srcdir)/lib/gda-common/gda-util.c \
+	$(top_srcdir)/lib/gda-common/gda-util.h \
+	$(top_srcdir)/lib/gda-common/gda-xml-atom-item.c \
+	$(top_srcdir)/lib/gda-common/gda-xml-atom-item.h \
+	$(top_srcdir)/lib/gda-common/gda-xml-bin-item.c \
+	$(top_srcdir)/lib/gda-common/gda-xml-bin-item.h \
+	$(top_srcdir)/lib/gda-common/gda-xml-database.c \
+	$(top_srcdir)/lib/gda-common/gda-xml-database.h \
+	$(top_srcdir)/lib/gda-common/gda-xml-document.c \
+	$(top_srcdir)/lib/gda-common/gda-xml-document.h \
+	$(top_srcdir)/lib/gda-common/gda-xml-item.c \
+	$(top_srcdir)/lib/gda-common/gda-xml-item.h \
+	$(top_srcdir)/lib/gda-common/gda-xml-list-item.c \
+	$(top_srcdir)/lib/gda-common/gda-xml-list-item.h \
+	$(top_srcdir)/lib/gda-common/gda-xml-util.c \
+	$(top_srcdir)/lib/gda-common/gda-xml-util.h
  
 IGNORED_HEADER_FILES = 
 
