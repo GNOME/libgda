@@ -112,7 +112,10 @@ fill_field_values (GdaServerRecordset * recset,
 								       atoi
 								       (thevalue));
 					break;
+				case FIELD_TYPE_INT24:
 				case FIELD_TYPE_LONG:
+				case FIELD_TYPE_LONGLONG:
+				case FIELD_TYPE_YEAR:
 					gda_server_field_set_integer (field,
 								      atoi
 								      (thevalue));
@@ -129,6 +132,9 @@ fill_field_values (GdaServerRecordset * recset,
 								     (thevalue));
 					break;
 				case FIELD_TYPE_DATE:
+				case FIELD_TYPE_TIMESTAMP:
+				case FIELD_TYPE_TIME:
+				case FIELD_TYPE_DATETIME:
 					stm = str_to_tmstruct_date2
 						(thevalue);
 					if (stm) {
@@ -173,17 +179,17 @@ fill_field_values (GdaServerRecordset * recset,
 								 FALSE);
 					}
 					else {
-						gda_server_field_set_boolean
-							(field, FALSE);
+						gda_server_field_set_boolean (field, FALSE);
 						/* tell it the bool value is not valid */
-						gda_server_field_set_actual_length
-							(field, 0);
+						gda_server_field_set_actual_length (field, 0);
 					}
 					break;
 				case FIELD_TYPE_STRING:
+				case FIELD_TYPE_VAR_STRING:
+				case FIELD_TYPE_ENUM:
+				case FIELD_TYPE_SET:
 				default:
-					gda_server_field_set_varchar (field,
-								      thevalue);
+					gda_server_field_set_varchar (field, thevalue);
 					break;
 				}
 			}

@@ -1,3 +1,7 @@
+2001-09-28  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-mysql-recordset.c (fill_field_values): manage more data types
+
 2001-09-28  Gonzalo Paniagua Javier <gonzalo@torresquevedo.hispalinux.es>
 
 	* gda-mysql-connection.c: set correctly error messages when failing
