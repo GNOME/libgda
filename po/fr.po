@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda 1.0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2003-11-30 12:21+0100\n"
+"POT-Creation-Date: 2004-01-17 00:08+0100\n"
 "PO-Revision-Date: 2003-09-20 12:57+0200\n"
 "Last-Translator: Baptiste MILLE-MATHIAS <bmm80@ifrance.com>\n"
 "Language-Team: GNOME French Team <gnomefr@traduc.org>\n"
@@ -87,7 +87,7 @@ msgstr "Nom d'utilisateur"
 msgid "Password"
 msgstr "Mot de passe"
 
-#: libgda/gda-data-model.c:721
+#: libgda/gda-data-model.c:711
 #, c-format
 msgid "Data model %p is not editable"
 msgstr "Le modèle de données %p n'est pas éditable"
@@ -376,7 +376,7 @@ msgstr "Fonction"
 #: providers/postgres/gda-postgres-provider.c:1196
 #: providers/postgres/gda-postgres-provider.c:1313
 #: providers/postgres/gda-postgres-provider.c:1946
-#: providers/sqlite/gda-sqlite-provider.c:752
+#: providers/sqlite/gda-sqlite-provider.c:750
 #: providers/sybase/gda-sybase-provider.c:1098
 msgid "Owner"
 msgstr "Propriétaire"
@@ -430,7 +430,7 @@ msgstr "Triggers"
 #: providers/odbc/gda-odbc-provider.c:1254
 #: providers/oracle/gda-oracle-provider.c:2095
 #: providers/postgres/gda-postgres-provider.c:1135
-#: providers/sqlite/gda-sqlite-provider.c:751
+#: providers/sqlite/gda-sqlite-provider.c:749
 #: providers/sybase/gda-sybase-provider.c:1096
 msgid "Type"
 msgstr "Type"
@@ -457,7 +457,7 @@ msgstr "Type"
 #: providers/postgres/gda-postgres-provider.c:1197
 #: providers/postgres/gda-postgres-provider.c:1314
 #: providers/postgres/gda-postgres-provider.c:1947
-#: providers/sqlite/gda-sqlite-provider.c:753
+#: providers/sqlite/gda-sqlite-provider.c:751
 #: providers/sybase/gda-sybase-provider.c:1100
 msgid "Comments"
 msgstr "Commentaires"
@@ -468,7 +468,7 @@ msgstr "Commentaires"
 #: providers/odbc/gda-odbc-provider.c:1257
 #: providers/oracle/gda-oracle-provider.c:2097
 #: providers/postgres/gda-postgres-provider.c:1138
-#: providers/sqlite/gda-sqlite-provider.c:754
+#: providers/sqlite/gda-sqlite-provider.c:752
 #: providers/sybase/gda-sybase-provider.c:1102
 msgid "GDA type"
 msgstr "Type GDA"
@@ -558,7 +558,7 @@ msgstr "Le fournisseur MDB ne gère pas les transactions"
 #: providers/odbc/gda-odbc-provider.c:914
 #: providers/oracle/gda-oracle-provider.c:1248
 #: providers/postgres/gda-postgres-provider.c:1363
-#: providers/sqlite/gda-sqlite-provider.c:622
+#: providers/sqlite/gda-sqlite-provider.c:620
 #: providers/xml/gda-xml-provider.c:489
 msgid "Field name"
 msgstr "Nom du champ"
@@ -568,7 +568,7 @@ msgstr "Nom du champ"
 #: providers/odbc/gda-odbc-provider.c:915
 #: providers/oracle/gda-oracle-provider.c:1249
 #: providers/postgres/gda-postgres-provider.c:1364
-#: providers/sqlite/gda-sqlite-provider.c:623
+#: providers/sqlite/gda-sqlite-provider.c:621
 #: providers/xml/gda-xml-provider.c:490
 msgid "Data type"
 msgstr "Type de donnée"
@@ -578,7 +578,7 @@ msgstr "Type de donnée"
 #: providers/odbc/gda-odbc-provider.c:916
 #: providers/oracle/gda-oracle-provider.c:1250
 #: providers/postgres/gda-postgres-provider.c:1365
-#: providers/sqlite/gda-sqlite-provider.c:624
+#: providers/sqlite/gda-sqlite-provider.c:622
 #: providers/xml/gda-xml-provider.c:491
 msgid "Size"
 msgstr "Taille"
@@ -588,7 +588,7 @@ msgstr "Taille"
 #: providers/odbc/gda-odbc-provider.c:917
 #: providers/oracle/gda-oracle-provider.c:1251
 #: providers/postgres/gda-postgres-provider.c:1366
-#: providers/sqlite/gda-sqlite-provider.c:625
+#: providers/sqlite/gda-sqlite-provider.c:623
 #: providers/xml/gda-xml-provider.c:492
 msgid "Scale"
 msgstr "Échelle"
@@ -598,7 +598,7 @@ msgstr "Échelle"
 #: providers/odbc/gda-odbc-provider.c:918
 #: providers/oracle/gda-oracle-provider.c:1252
 #: providers/postgres/gda-postgres-provider.c:1367
-#: providers/sqlite/gda-sqlite-provider.c:626
+#: providers/sqlite/gda-sqlite-provider.c:624
 #: providers/xml/gda-xml-provider.c:493
 msgid "Not null?"
 msgstr "Non null ?"
@@ -608,7 +608,7 @@ msgstr "Non null ?"
 #: providers/odbc/gda-odbc-provider.c:919
 #: providers/oracle/gda-oracle-provider.c:1253
 #: providers/postgres/gda-postgres-provider.c:1368
-#: providers/sqlite/gda-sqlite-provider.c:627
+#: providers/sqlite/gda-sqlite-provider.c:625
 #: providers/xml/gda-xml-provider.c:494
 msgid "Primary key?"
 msgstr "Clé primaire ?"
@@ -618,7 +618,7 @@ msgstr "Clé primaire ?"
 #: providers/odbc/gda-odbc-provider.c:920
 #: providers/oracle/gda-oracle-provider.c:1254
 #: providers/postgres/gda-postgres-provider.c:1369
-#: providers/sqlite/gda-sqlite-provider.c:628
+#: providers/sqlite/gda-sqlite-provider.c:626
 #: providers/xml/gda-xml-provider.c:495
 msgid "Unique index?"
 msgstr "Index unique ?"
@@ -628,7 +628,7 @@ msgstr "Index unique ?"
 #: providers/odbc/gda-odbc-provider.c:921
 #: providers/oracle/gda-oracle-provider.c:1255
 #: providers/postgres/gda-postgres-provider.c:1370
-#: providers/sqlite/gda-sqlite-provider.c:629
+#: providers/sqlite/gda-sqlite-provider.c:627
 #: providers/xml/gda-xml-provider.c:496
 msgid "References"
 msgstr "Références"
@@ -638,7 +638,7 @@ msgstr "Références"
 #: providers/odbc/gda-odbc-provider.c:922
 #: providers/oracle/gda-oracle-provider.c:1256
 #: providers/postgres/gda-postgres-provider.c:1371
-#: providers/sqlite/gda-sqlite-provider.c:630
+#: providers/sqlite/gda-sqlite-provider.c:628
 msgid "Default value"
 msgstr "Valeur par défaut"
 
@@ -838,7 +838,7 @@ msgstr "Gestion MySQL non valide"
 #: providers/oracle/gda-oracle-provider.c:857
 #: providers/oracle/gda-oracle-provider.c:939
 #: providers/oracle/gda-oracle-provider.c:1000
-#: providers/sqlite/gda-sqlite-provider.c:472
+#: providers/sqlite/gda-sqlite-provider.c:470
 msgid "Transactions are not supported in read-only mode"
 msgstr "Les transactions ne sont pas gérées dans le mode lecture seule"
 
@@ -1229,36 +1229,36 @@ msgstr ""
 "Un chemin complet doit être spécifié sur la chaîne de connexion pour ouvrir "
 "une base de données."
 
-#: providers/sqlite/gda-sqlite-provider.c:220
+#: providers/sqlite/gda-sqlite-provider.c:222
 msgid "Could not set empty_result_callbacks SQLite option"
 msgstr "Impossible de définir le paramètre SQLite empty_result_callbacks"
 
-#: providers/sqlite/gda-sqlite-provider.c:243
-#: providers/sqlite/gda-sqlite-provider.c:343
-#: providers/sqlite/gda-sqlite-provider.c:554
-#: providers/sqlite/gda-sqlite-provider.c:719
+#: providers/sqlite/gda-sqlite-provider.c:241
+#: providers/sqlite/gda-sqlite-provider.c:341
+#: providers/sqlite/gda-sqlite-provider.c:552
+#: providers/sqlite/gda-sqlite-provider.c:717
 #: providers/sqlite/gda-sqlite-recordset.c:156
 #: providers/sqlite/gda-sqlite-recordset.c:195
 #: providers/sqlite/gda-sqlite-recordset.c:236
 msgid "Invalid SQLite handle"
 msgstr "Gestion SQLite non valide"
 
-#: providers/sqlite/gda-sqlite-provider.c:265
+#: providers/sqlite/gda-sqlite-provider.c:263
 msgid "Invalid SQLITE handle"
 msgstr "Gestion SQLITE non valide"
 
-#: providers/sqlite/gda-sqlite-provider.c:361
-#: providers/sqlite/gda-sqlite-provider.c:376
+#: providers/sqlite/gda-sqlite-provider.c:359
+#: providers/sqlite/gda-sqlite-provider.c:374
 msgid "Only one database per connection is allowed"
 msgstr "Il est uniquement permis une base de données par connexion"
 
-#: providers/sqlite/gda-sqlite-provider.c:390
+#: providers/sqlite/gda-sqlite-provider.c:388
 msgid "To remove a SQLite database you should remove the database file by hand"
 msgstr ""
 "Pour suppirmier une base de données SQLite vous devez\n"
 "supprimer les fichiers de cette base à la main"
 
-#: providers/sqlite/gda-sqlite-provider.c:664
+#: providers/sqlite/gda-sqlite-provider.c:662
 msgid "Could not retrieve information for field"
 msgstr "Impossible de récupérer les informations du champ"
 

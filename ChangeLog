@@ -1,3 +1,7 @@
+2004-01-16  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	Released 1.0.3
+
 2004-01-15  Nikolai Weibull <ruby-gnome2-devel-en-list@pcppopper.org>
 
 	* providers/sqlite/gda-sqlite-provider.c

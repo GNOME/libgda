@@ -14,6 +14,7 @@ gda-marshal.h: gda-marshal.list $(GLIB_GENMARSHAL)
 	$(GLIB_GENMARSHAL) $< --header --prefix=gda_marshal > $@
 gda-marshal.c: gda-marshal.list $(GLIB_GENMARSHAL)
 	$(GLIB_GENMARSHAL) $< --body --prefix=gda_marshal > $@
+gda-init.c: gda-marshal.c gda-marshal.h
 
 gda_headers = \
 	gda-blob.h \
