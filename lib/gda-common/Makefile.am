@@ -33,6 +33,7 @@ gda_common_headers = \
 	gda-log.h \
 	gda-quark-list.h \
 	gda-util.h \
+	gda-value.h \
 	gda-xml-atom-item.h \
 	gda-xml-bin-item.h \
 	gda-xml-database.h \
@@ -58,6 +59,7 @@ libgda_common_2_la_SOURCES = \
 	gda-log.c \
 	gda-quark-list.c \
 	gda-util.c \
+	gda-value.c \
 	gda-xml-atom-item.c \
 	gda-xml-bin-item.c \
 	gda-xml-database.c \
