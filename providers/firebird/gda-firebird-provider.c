@@ -22,6 +22,7 @@
 
 #include <libgda/gda-intl.h>
 #include <libgda/gda-data-model-array.h>
+#include <libgda/gda-command.h>
 #include <glib/gprintf.h>
 #include <string.h>
 #include "gda-firebird-provider.h"
@@ -131,7 +132,7 @@ gda_firebird_provider_get_type (void)
 			(GBaseInitFunc) NULL,
 			(GBaseFinalizeFunc) NULL,
 			(GClassInitFunc) gda_firebird_provider_class_init,
-			NULL, 
+			NULL,
 			NULL,
 			sizeof (GdaFirebirdProvider),
 			0,
@@ -173,7 +174,7 @@ fb_server_get_version (GdaFirebirdConnection *fcnc)
 	};
 	
 	/* Try to get datbase version */
-	if (! isc_database_info (fcnc->status, &(fcnc->handle), sizeof (fdb_info), fdb_info, 
+	if (! isc_database_info (fcnc->status, &(fcnc->handle), sizeof (fdb_info), fdb_info,
 				 sizeof (buffer), buffer)) {
 		p_buffer = buffer;
 		if (*p_buffer != isc_info_end) {
@@ -257,7 +258,7 @@ fb_get_types (GdaConnection *cnc,
  *
  *  @show_views: If TRUE only return views, else return tables
  *
- *  Function looks for the following parameters in list: 
+ *  Function looks for the following parameters in list:
  *    systables (gboolean)
  *
  *  Returns: A GdaDataModel containing Firebird's tables/views
@@ -326,13 +327,13 @@ fb_get_tables (GdaConnection *cnc,
 				row = (GdaRow *) gda_data_model_get_row (GDA_DATA_MODEL (reclist->data), i);
 				value = gda_row_get_value (row, 0);
 				value_list = g_list_append (
-						value_list, 
+						value_list,
 						gda_value_new_string ((gchar *) gda_value_get_string (value)));
 
 				/* Get owner of table */
 				value = gda_row_get_value (row, 1);
 				value_list = g_list_append (
-						value_list, 
+						value_list,
 						gda_value_new_string ((gchar *) gda_value_get_string (value)));
 				
 				/* FIXME: Set correct values */
@@ -361,7 +362,7 @@ fb_get_tables (GdaConnection *cnc,
 /*
  *  fb_type_name_to_gda_type
  *
- *  Function convert a string containing the name of Firebird's 
+ *  Function convert a string containing the name of Firebird's
  *  data type to it's corresponding gda data type.
  *
  *  Returns: The GdaValueType corresponding to @name Firebird's
@@ -398,14 +399,14 @@ fb_type_name_to_gda_type (const gchar *name)
 
 
 /*
- *  fb_set_index_field_metadata
+ *  fb_set_index_field_metad
  *
  *  Sets primary key and unique key properties for fields
  *  in @recset.
  *  This function is called from #fb_get_fields_metadata.
  */
 static void
-fb_set_index_field_metadata (GdaConnection *cnc, 
+fb_set_index_field_metadata (GdaConnection *cnc,
 			     GdaDataModel *recset,
 			     const gchar *table_name)
 {
@@ -491,7 +492,7 @@ fb_set_index_field_metadata (GdaConnection *cnc,
 
 
 /*
- *  fb_set_field_metadata
+ *  fb_set_field_metad
  *
  *  Fill a list with metadata values from @row.
  *  This function is called from #fb_get_fields_metadata.
@@ -515,7 +516,7 @@ fb_set_field_metadata (GdaRow *row)
 	
 	/* Get Scale (number of decimals) */
 	value = gda_row_get_value (row, 4);
-	if (!gda_value_is_null (value)) 
+	if (!gda_value_is_null (value))
 		scale = gda_value_get_smallint (value);
 	else
 		scale = 0;
@@ -586,12 +587,12 @@ fb_set_field_metadata (GdaRow *row)
 
 
 /*
- *  fb_get_fields_metadata
+ *  fb_get_fields_metad
  *
  *  @params must contain a parameter named "name" with
  *  name of table to describe. ... :-)
  *
- *  Returns: A GdaDataModel containing table metadata
+ *  Returns: A GdaDataModel containing table metad
  */
 static GdaDataModel *
 fb_get_fields_metadata (GdaConnection *cnc,
@@ -626,7 +627,7 @@ fb_get_fields_metadata (GdaConnection *cnc,
 	
 	par = gda_parameter_list_find (params, "name");
 	if (!par) {
-		gda_connection_add_error_string (cnc, 
+		gda_connection_add_error_string (cnc,
 				_("Table name is needed but none specified in parameter list"));
 		return NULL;
 	}
@@ -700,7 +701,7 @@ fb_add_aggregate_row (GdaDataModelArray *recset,
 	list = g_list_append (list, gda_value_new_string (str));
 	/* 3rd the owner */
 	list = g_list_append (list, gda_value_new_string (NULL));
-	/* 4th the comments */ 
+	/* 4th the comments */
 	list = g_list_append (list, gda_value_new_string (comments));
 	/* 5th the return type */
 	list = g_list_append (list, gda_value_new_string (_("UNKNOWN")));
@@ -784,8 +785,8 @@ fb_sqlerror_get_description (GdaFirebirdConnection *fcnc,
 	gchar *tmp_msg;
 	char buffer[512];
 	short sql_code;
-	long * ptr_status_vector = fcnc->status;                                                                                                    
-                                                                                                                            
+	long * ptr_status_vector = fcnc->status;
+
 	/* Get error message */
 	isc_interprete (buffer, &ptr_status_vector);
 	tmp_msg = g_strdup ((gchar *) buffer);
@@ -793,26 +794,26 @@ fb_sqlerror_get_description (GdaFirebirdConnection *fcnc,
 	/* Look for more messages */
 	while (isc_interprete (buffer, &ptr_status_vector))
 		tmp_msg = g_strconcat (tmp_msg, "\n", (gchar *) buffer, NULL);
-                                                                                                                            
+
 	if (statement_type != 0) {
 		sql_code = isc_sqlcode (fcnc->status);
 		isc_sql_interprete (sql_code, buffer, sizeof (buffer));
 		tmp_msg = g_strconcat  (tmp_msg, "\n", (gchar *) buffer, NULL);
 	}
-									                                                                                                                            
+									
 	return tmp_msg;
 }
 
 void
 gda_firebird_connection_make_error (GdaConnection *cnc,
 				    const gint statement_type)
-{                                                                                                                          
+{
 	GdaError *error;
 	GdaFirebirdConnection *fcnc;
 	gchar *description;
 
 	g_return_if_fail (GDA_IS_CONNECTION (cnc));
-                                                                                                                            
+
 	fcnc = g_object_get_data (G_OBJECT (cnc), CONNECTION_DATA);
 	if (!fcnc) {
 		gda_connection_add_error_string (cnc, _("Invalid Firebird handle"));
@@ -899,11 +900,11 @@ gda_firebird_provider_open_connection (GdaServerProvider *provider,
 		strcpy (dpb, fb_charset);
 		dpb += strlen (fb_charset);
 	}
-                                                                                                                            
+
 	/* Save dpb length */
 	fcnc->dpb_length = dpb - fcnc->dpb_buffer;
 
-	if (isc_attach_database (fcnc->status, strlen (fb_db), fb_db, &(fcnc->handle), fcnc->dpb_length, 
+	if (isc_attach_database (fcnc->status, strlen (fb_db), fb_db, &(fcnc->handle), fcnc->dpb_length,
 				 fcnc->dpb_buffer)) {
 		gda_firebird_connection_make_error (cnc, 0);
 		g_free (fcnc);
@@ -994,22 +995,6 @@ gda_firebird_provider_change_database (GdaServerProvider *provider,
 	return FALSE;
 }
 
-/* Return Firebird transaction handle */
-static isc_tr_handle *
-gda_firebird_command_get_transaction (GdaCommand *cmd)
-{
-	GdaTransaction *xaction;
-	isc_tr_handle *ftr;
-
-	xaction = gda_command_get_transaction (cmd);
-	if (!GDA_IS_TRANSACTION (xaction))
-		return NULL;
-
-	ftr = g_object_get_data (G_OBJECT (xaction), TRANSACTION_DATA);
-	
-	return ftr;
-}
-
 /* create_database handler for the GdaFirebirdProvider class */
 static gboolean
 gda_firebird_provider_create_database (GdaServerProvider *provider,
@@ -1049,7 +1034,7 @@ gda_firebird_provider_create_database (GdaServerProvider *provider,
 	
 	/* Valid values = 1024, 2048, 4096 and 8192 */
 	if (!fb_page_size)
-		fb_page_size = "4096"; 
+		fb_page_size = "4096";
 		
 	fb_char_set = (gchar *) gda_quark_list_find (params, "CHARACTER_SET");
 	
@@ -1057,7 +1042,7 @@ gda_firebird_provider_create_database (GdaServerProvider *provider,
 		fb_char_set = "NONE";
 	
 	/* Create database */	
-	sql = g_strdup_printf ("CREATE DATABASE '%s' USER '%s' PASSWORD '%s' PAGE_SIZE %s DEFAULT CHARACTER SET %s;", 
+	sql = g_strdup_printf ("CREATE DATABASE '%s' USER '%s' PASSWORD '%s' PAGE_SIZE %s DEFAULT CHARACTER SET %s;",
 				name, fb_user, fb_password, fb_page_size, fb_char_set);
 				
 	/* NOTE: Transaction and Database handles should be NULL in this case */
@@ -1152,21 +1137,45 @@ gda_firebird_provider_execute_command (GdaServerProvider *provider,
 {
 	isc_tr_handle *ftr;
 	GList *reclist = NULL;
+	gboolean commit_tr;
+	GdaTransaction *xaction;
 
 	g_return_val_if_fail (GDA_IS_FIREBIRD_PROVIDER (provider), NULL);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (cmd != NULL, NULL);
+	
+	commit_tr = FALSE;
 
-	ftr = gda_firebird_command_get_transaction (cmd);
+	/* Get transaction */
+	xaction = gda_command_get_transaction (cmd);
+	if (!GDA_IS_TRANSACTION (xaction))
+		xaction = gda_transaction_new ("local_tr");
 
-	/* parse command */
+	/* Get transaction handle */
+	ftr = g_object_get_data (G_OBJECT (xaction), TRANSACTION_DATA);
+	
+	/* Begin transaction if it was not already started  */
+	if (!ftr) {
+
+		/* Start transaction */
+		commit_tr = gda_firebird_provider_begin_transaction (provider, cnc, xaction);
+	
+		/* Get transaction handle */
+		ftr = g_object_get_data (G_OBJECT (xaction), TRANSACTION_DATA);
+	}
+	
+	/* Parse command */
 	switch (gda_command_get_command_type (cmd)) {
-		case GDA_COMMAND_TYPE_SQL :
-	  		reclist = gda_firebird_provider_run_sql (reclist, cnc, ftr, gda_command_get_text (cmd));
+		case GDA_COMMAND_TYPE_SQL:
+			reclist = gda_firebird_provider_run_sql (reclist, cnc, ftr, gda_command_get_text (cmd));
 			break;
-		default: 
+		default:
 			break;
 	}
+
+	/* Commit transaction if it was not started directly by programmer */
+	if (commit_tr)
+		gda_firebird_provider_commit_transaction (provider, cnc, xaction);
 
 	return reclist;
 }
@@ -1295,7 +1304,7 @@ gda_firebird_provider_supports (GdaServerProvider *provider,
 {
 	g_return_val_if_fail (GDA_IS_FIREBIRD_PROVIDER (provider), FALSE);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-                                                                                                                            
+
 	switch (feature) {
 		case GDA_CONNECTION_FEATURE_VIEWS:
 		case GDA_CONNECTION_FEATURE_SQL:
@@ -1307,10 +1316,10 @@ gda_firebird_provider_supports (GdaServerProvider *provider,
 		case GDA_CONNECTION_FEATURE_PROCEDURES:
 		case GDA_CONNECTION_FEATURE_USERS:
 		case GDA_CONNECTION_FEATURE_BLOBS:
-		default: 
+		default:
 			break;
 	}
-    
+
 	return FALSE;
 }
 

@@ -1,3 +1,9 @@
+2004-08-31  Jeronimo Albi <jeronimoalbi@yahoo.com.ar>
+
+	* providers/firebird/gda-firebird-provider.c:
+	  (gda_firebird_provider_execute_command): Added support for
+	  "transparent transactions".
+
 2004-08-26  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	Fixes #151054
