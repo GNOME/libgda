@@ -1,3 +1,8 @@
+2003-03-17  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
+	* providers/postgres/gda-postgres-provider.c: small fix by David
+	Martin Carreño (david@aspl.es).
+
 2003-03-16  Roozbeh Pournader  <roozbeh@sharif.edu>
 
 	* configure.in: Added "fa" to ALL_LINGUAS.
