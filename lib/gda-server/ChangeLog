@@ -1,3 +1,10 @@
+2001-07-24  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-server-recordset.c (impl_GDA_Recordset_moveNext,
+	impl_GDA_Recordset_movePrev): new CORBA methods
+
+	(impl_GDA_Recordset_move): removed
+
 2001-07-21  Rodrigo Moya <rodrigo@gnome-db.org>
 
         * *.h: s/#if defined(__cplusplus).../G_BEGIN_END_DECLS

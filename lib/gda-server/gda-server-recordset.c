@@ -39,20 +39,10 @@ CORBA_long
 impl_GDA_Recordset_close (PortableServer_Servant servant,
 			  CORBA_Environment * ev)
 {
-	GdaServerRecordset *recset =
-		(GdaServerRecordset *) bonobo_x_object (servant);
+	GdaServerRecordset *recset = (GdaServerRecordset *) bonobo_x_object (servant);
 
 	g_return_val_if_fail (GDA_IS_SERVER_RECORDSET (recset), -1);
 	return gda_server_recordset_close (recset);
-}
-
-CORBA_long
-impl_GDA_Recordset_move (PortableServer_Servant servant,
-			 CORBA_long count,
-			 CORBA_long bookmark, CORBA_Environment * ev)
-{
-	gda_log_error (_("%s not implemented"), __PRETTY_FUNCTION__);
-	return 0;
 }
 
 CORBA_long
@@ -69,6 +59,38 @@ impl_GDA_Recordset_moveLast (PortableServer_Servant servant,
 {
 	gda_log_error (_("%s not implemented"), __PRETTY_FUNCTION__);
 	return 0;
+}
+
+CORBA_long
+impl_GDA_Recordset_moveNext (PortableServer_Servant servant,
+			     CORBA_Environment *ev)
+{
+	CORBA_long ret;
+	GdaServerRecordset *recset = (GdaServerRecordset *) bonobo_x_object (servant);
+
+	g_return_val_if_fail (GDA_IS_SERVER_RECORDSET (recset), -1);
+
+	ret = gda_server_recordset_move_next (recset);
+	if (ret != 0)
+		gda_error_list_to_exception (recset->cnc->errors, ev);
+
+	return ret;
+}
+
+CORBA_long
+impl_GDA_Recordset_movePrev (PortableServer_Servant servant,
+			     CORBA_Environment *ev)
+{
+	CORBA_long ret;
+	GdaServerRecordset *recset = (GdaServerRecordset *) bonobo_x_object (servant);
+
+	g_return_val_if_fail (GDA_IS_SERVER_RECORDSET (recset), -1);
+
+	ret = gda_server_recordset_move_prev (recset);
+	if (ret != 0)
+		gda_error_list_to_exception (recset->cnc->errors, ev);
+
+	return ret;
 }
 
 CORBA_long
@@ -245,9 +267,10 @@ gda_server_recordset_class_init (GdaServerRecordsetClass * klass)
 	epv = &klass->epv;
 	epv->getRowCount = impl_GDA_Recordset_getRowCount;
 	epv->close = impl_GDA_Recordset_close;
-	epv->move = impl_GDA_Recordset_move;
 	epv->moveFirst = impl_GDA_Recordset_moveFirst;
 	epv->moveLast = impl_GDA_Recordset_moveLast;
+	epv->moveNext = impl_GDA_Recordset_moveNext;
+	epv->movePrev = impl_GDA_Recordset_movePrev;
 	epv->reQuery = impl_GDA_Recordset_reQuery;
 	epv->supports = impl_GDA_Recordset_supports;
 	epv->fetch = impl_GDA_Recordset_fetch;
@@ -443,11 +466,9 @@ gda_server_recordset_move_next (GdaServerRecordset * recset)
 	g_return_val_if_fail (recset != NULL, -1);
 	g_return_val_if_fail (recset->cnc != NULL, -1);
 	g_return_val_if_fail (recset->cnc->server_impl != NULL, -1);
-	g_return_val_if_fail (recset->cnc->server_impl->functions.
-			      recordset_move_next != NULL, -1);
+	g_return_val_if_fail (recset->cnc->server_impl->functions.recordset_move_next != NULL, -1);
 
-	return recset->cnc->server_impl->functions.
-		recordset_move_next (recset);
+	return recset->cnc->server_impl->functions.recordset_move_next (recset);
 }
 
 /**
@@ -459,11 +480,9 @@ gda_server_recordset_move_prev (GdaServerRecordset * recset)
 	g_return_val_if_fail (recset != NULL, -1);
 	g_return_val_if_fail (recset->cnc != NULL, -1);
 	g_return_val_if_fail (recset->cnc->server_impl != NULL, -1);
-	g_return_val_if_fail (recset->cnc->server_impl->functions.
-			      recordset_move_prev != NULL, -1);
+	g_return_val_if_fail (recset->cnc->server_impl->functions.recordset_move_prev != NULL, -1);
 
-	return recset->cnc->server_impl->functions.
-		recordset_move_prev (recset);
+	return recset->cnc->server_impl->functions.recordset_move_prev (recset);
 }
 
 /**
