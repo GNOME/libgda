@@ -1,3 +1,9 @@
+2004-04-16  Denis Loginov <dloginov@crl.nmsu.edu>
+
+	* providers/postgres/gda-postgres-provider.c (gda_postgres_fill_md_data):
+	Fixed the "Not Null?" columns, so that it indeed returns the "Not null"
+	and not its inverse.
+
 2004-04-17  Adam Weinbegrer  <adamw@gnome.org>
 
 	* configure.in: Added en_CA to ALL_LINGUAS.
