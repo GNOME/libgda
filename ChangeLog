@@ -1,3 +1,12 @@
+2002-02-18  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* idl/GNOME_Database.idl: added more properties to the
+	FieldAttributes struct.
+
+	* libgda/gda-row.[ch] (gda_field_attributes_set_allow_null),
+	(gda_field_attributes_get_allow_null), (gda_field_set_allow_null),
+	(gda_field_get_allow_null): new functions.
+
 2002-02-10  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	Released 0.8.103 version.

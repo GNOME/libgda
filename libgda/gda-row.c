@@ -249,6 +249,35 @@ gda_field_attributes_set_gdatype (GdaFieldAttributes *fa, GdaType type)
 }
 
 /**
+ * gda_field_attributes_get_allow_null
+ * @fa: a #GdaFieldAttributes.
+ *
+ * Get the 'allow null' flag of the given field attributes.
+ *
+ * Returns: whether the given field allows null values or not.
+ */
+gboolean
+gda_field_attributes_get_allow_null (GdaFieldAttributes *fa)
+{
+	g_return_val_if_fail (fa != NULL, FALSE);
+	return fa->allowNull;
+}
+
+/**
+ * gda_field_attributes_set_allow_null
+ * @fa: a #GdaFieldAttributes.
+ * @allow:
+ *
+ * Sets the 'allow null' flag of the given field attributes.
+ */
+void
+gda_field_attributes_set_allow_null (GdaFieldAttributes *fa, gboolean allow)
+{
+	g_return_if_fail (fa != NULL);
+	fa->allowNull = allow;
+}
+
+/**
  * gda_field_get_actual_size
  * @field: a #GdaField
  *
@@ -386,6 +415,29 @@ gda_field_set_gdatype (GdaField *field, GdaType type)
 {
 	g_return_if_fail (field != NULL);
 	field->attributes.gdaType = type;
+}
+
+/**
+ * gda_field_get_allow_null
+ * @field: a #GdaField.
+ */
+gboolean
+gda_field_get_allow_null (GdaField *field)
+{
+	g_return_val_if_fail (field != NULL, FALSE);
+	return field->attributes.allowNull;
+}
+
+/**
+ * gda_field_set_allow_null
+ * @field: a #GdaField.
+ * @allow:
+ */
+void
+gda_field_set_allow_null (GdaField *field, gboolean allow)
+{
+	g_return_if_fail (field != NULL);
+	field->attributes.allowNull = allow;
 }
 
 /**

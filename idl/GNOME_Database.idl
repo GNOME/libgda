@@ -117,6 +117,10 @@ module GNOME {
 			string  name;
 			long    scale;
 			Type    gdaType;
+			boolean allowNull;
+			boolean autoIncrement;
+			long    autoIncrementStart;
+			long    autoIncrementStep;
 		};
 		struct Field {
 			long actualSize;

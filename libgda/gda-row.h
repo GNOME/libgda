@@ -70,6 +70,8 @@ glong               gda_field_attributes_get_scale (GdaFieldAttributes *fa);
 void                gda_field_attributes_set_scale (GdaFieldAttributes *fa, glong scale);
 GdaType             gda_field_attributes_get_gdatype (GdaFieldAttributes *fa);
 void                gda_field_attributes_set_gdatype (GdaFieldAttributes *fa, GdaType type);
+gboolean            gda_field_attributes_get_allow_null (GdaFieldAttributes *fa);
+void                gda_field_attributes_set_allow_null (GdaFieldAttributes *fa, gboolean allow);
 
 glong               gda_field_get_actual_size (GdaField *field);
 void                gda_field_set_actual_size (GdaField *field, glong size);
@@ -81,6 +83,8 @@ glong               gda_field_get_scale (GdaField *field);
 void                gda_field_set_scale (GdaField *field, glong scale);
 GdaType             gda_field_get_gdatype (GdaField *field);
 void                gda_field_set_gdatype (GdaField *field, GdaType type);
+gboolean            gda_field_get_allow_null (GdaField *field);
+void                gda_field_set_allow_null (GdaField *field, gboolean allow);
 gboolean            gda_field_is_null (GdaField *field);
 GdaValue           *gda_field_get_value (GdaField *field);
 void                gda_field_set_value (GdaField *field, const GdaValue *value);
