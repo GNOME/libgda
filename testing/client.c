@@ -115,6 +115,8 @@ open_connection (GdaClient *client,
 		 _("Supported") : _("Not supported"));
 
 	/* show connection schemas */
+	g_print (_("\n\tProvider reports version: %s\n\n"),
+			gda_connection_get_server_version (cnc));
 	show_schema (cnc, GDA_CONNECTION_SCHEMA_DATABASES, _("Databases"));
 	show_schema (cnc, GDA_CONNECTION_SCHEMA_PROCEDURES, _("Stored procedures"));
 	show_schema (cnc, GDA_CONNECTION_SCHEMA_TABLES, _("Connection Tables"));

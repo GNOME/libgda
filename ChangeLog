@@ -1,3 +1,13 @@
+2002-08-18  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
+	* providers/postgres/gda-postgres-provider.c: implemented
+	get_server_version.
+
+	* providers/postgres/gda-postgres-provider.h: added version to
+	private connection data.
+
+	* testing/client.c: display server version.
+
 2002-08-18  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* providers/default/gda-default-provider.c

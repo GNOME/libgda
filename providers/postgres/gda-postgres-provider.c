@@ -356,6 +356,10 @@ gda_postgres_provider_open_connection (GdaServerProvider *provider,
 		return FALSE;
 	}
 	
+	pg_res = PQexec (pconn, "SELECT version ()");
+	priv_data->version = g_strdup (PQgetvalue(pg_res, 0, 0));
+	PQclear (pg_res);
+
 	g_object_set_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE, priv_data);
 
 	return TRUE;
@@ -384,6 +388,7 @@ gda_postgres_provider_close_connection (GdaServerProvider *provider, GdaConnecti
 	
 	g_hash_table_destroy (priv_data->h_table);
 	g_free (priv_data->type_data);
+	g_free (priv_data->version);
 	g_free (priv_data);
 
 	g_object_set_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE, NULL);
@@ -395,11 +400,18 @@ static const gchar *
 gda_postgres_provider_get_server_version (GdaServerProvider *provider, GdaConnection *cnc)
 {
 	GdaPostgresProvider *pg_prv = (GdaPostgresProvider *) provider;
+	GdaPostgresConnectionData *priv_data;
 
 	g_return_val_if_fail (GDA_IS_POSTGRES_PROVIDER (pg_prv), NULL);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
-	return "PostgreSQL version x.xx.xx"; // FIXME!!
+	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE);
+	if (!priv_data) {
+		gda_connection_add_error_string (cnc, _("Invalid PostgreSQL handle"));
+		return NULL;
+	}
+
+	return priv_data->version;
 }
 
 static GList *

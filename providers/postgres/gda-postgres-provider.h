@@ -60,6 +60,7 @@ typedef struct {
 	gint ntypes;
 	GdaPostgresTypeOid *type_data;
 	GHashTable *h_table;
+	gchar *version;
 } GdaPostgresConnectionData;
 
 
