@@ -1,3 +1,9 @@
+2004-04-28  Álvaro Peña  <apg@esware.com>
+
+	* libgda/gda-data-model.c: (export_to_separated),
+	(gda_data_model_to_xml_node): don't use gda_value_stringify
+	for boolean values
+
 2004-04-26  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	Released 1.1.2
