@@ -7,8 +7,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-db\n"
-"POT-Creation-Date: 2003-05-05 12:16+0200\n"
-"PO-Revision-Date: 2003-05-06 11:52+0200\n"
+"POT-Creation-Date: 2003-05-06 17:01+0200\n"
+"PO-Revision-Date: 2003-05-06 16:57+0200\n"
 "Last-Translator: Marco Ciampa <ciampix@libero.it>\n"
 "Language-Team: Italian <it@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -192,8 +192,11 @@ msgstr "Nodo XML non valido"
 
 #: providers/default/gda-default-provider.c:190
 #: providers/sqlite/gda-sqlite-provider.c:198
-msgid "A full path must be specified on the connection string to open a database."
-msgstr "Sulla stringa di connessione per aprire un database deve essere specificato un percorso completo. "
+msgid ""
+"A full path must be specified on the connection string to open a database."
+msgstr ""
+"Sulla stringa di connessione per aprire un database deve essere specificato "
+"un percorso completo. "
 
 #: providers/default/gda-default-provider.c:252
 #: providers/default/gda-default-provider.c:267
@@ -338,8 +341,8 @@ msgid ""
 "Connection aborted. You must provide at least a host, username and password "
 "using DSN 'QUERY=;USER=;PASSWORD='."
 msgstr ""
-"Connessione abortita. E' necessario fornire almeno un host, un nome utente e una password "
-"usando DNS 'QUERY=;USER=;PASSWORD='"
+"Connessione abortita. E' necessario fornire almeno un host, un nome utente e "
+"una password usando DNS 'QUERY=;USER=;PASSWORD='"
 
 #: providers/freetds/gda-freetds-provider.c:210
 msgid "Error creating message container."
@@ -437,7 +440,8 @@ msgstr "Non è possibile allocare un handle di ambiente.\n"
 #. is needed for tables schema
 #: providers/ibmdb2/gda-ibmdb2-provider.c:211
 msgid "SQLGetInfo is unsupported. Hence IBM DB2 Provider will not work.\n"
-msgstr "SQLGetInfo non è supportato. Perciò il provider DB2 IBM non funzionerà.\n"
+msgstr ""
+"SQLGetInfo non è supportato. Perciò il provider DB2 IBM non funzionerà.\n"
 
 #: providers/ibmdb2/gda-ibmdb2-provider.c:451
 #: providers/ibmdb2/gda-ibmdb2-provider.c:581
@@ -627,7 +631,8 @@ msgstr "Provider per directory LDAP"
 
 #: providers/mdb/gda-mdb-provider.c:205
 msgid "A database FILENAME must be specified in the connection_string"
-msgstr "Un FILENAME di database deve essere specificato nella connection_string"
+msgstr ""
+"Un FILENAME di database deve essere specificato nella connection_string"
 
 #: providers/mdb/gda-mdb-provider.c:214
 #: providers/xbase/gda-xbase-provider.c:223
@@ -755,10 +760,10 @@ msgid "Provider for Microsoft Access files"
 msgstr "Provider per file Microsoft Access"
 
 #: providers/mysql/gda-mysql-provider.c:218
-msgid "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
+msgid ""
+"You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
 msgstr ""
-"Impossibile fornire una UNIX_SOCKET se si è già fornito un HOST o una "
-"PORTA."
+"Impossibile fornire una UNIX_SOCKET se si è già fornito un HOST o una PORTA."
 
 #: providers/mysql/gda-mysql-provider.c:294
 #: providers/mysql/gda-mysql-provider.c:1085
@@ -797,7 +802,9 @@ msgstr "SQL"
 #: providers/mysql/gda-mysql-provider.c:1094
 #: providers/mysql/gda-mysql-provider.c:1102
 msgid "Table name is needed but none specified in parameter list"
-msgstr "Il nome tabella è necessario ma non è stato specificato nell'elenco del parametri"
+msgstr ""
+"Il nome tabella è necessario ma non è stato specificato nell'elenco del "
+"parametri"
 
 #: providers/mysql/libmain.c:41
 msgid "Provider for MySQL databases"
@@ -868,7 +875,7 @@ msgstr "Impossibile allocare l'handle di errore Oracle"
 msgid "Could not allocate the Oracle server handle"
 msgstr "Non è possibile allocare l'handle del server Oracle"
 
-#: providers/oracle/gda-oracle-provider.c:26
+#: providers/oracle/gda-oracle-provider.c:269
 msgid "Could not allocate the Oracle session handle"
 msgstr "Impossibile allocare l'handle di sessione Oracle"
 
@@ -878,7 +885,8 @@ msgstr "Non è possibile connettersi al server Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:315
 msgid "Could not set the Oracle server attribute in the service context"
-msgstr "Impossibile impostare l'attributo server Oracle nel contesto di servizio"
+msgstr ""
+"Impossibile impostare l'attributo server Oracle nel contesto di servizio"
 
 #: providers/oracle/gda-oracle-provider.c:331
 msgid "Could not set the Oracle username attribute"
@@ -894,7 +902,9 @@ msgstr "Impossibile iniziare la sessione Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:380
 msgid "Could not set the Oracle session attribute in the service context"
-msgstr "Non è possibile impostare l'attributo di sessione Oracle nel contesto di servizio"
+msgstr ""
+"Non è possibile impostare l'attributo di sessione Oracle nel contesto di "
+"servizio"
 
 #: providers/oracle/gda-oracle-provider.c:466
 #: providers/oracle/gda-oracle-provider.c:498
@@ -931,7 +941,8 @@ msgstr "Impossibile ottenere il tipo di comando Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:610
 msgid "Could not set the Oracle statement pre-fetch row count"
-msgstr "Impossibile impostare il conteggio di righe di pre-fetch del comando Oracle"
+msgstr ""
+"Impossibile impostare il conteggio di righe di pre-fetch del comando Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:627
 msgid "Could not execute the Oracle statement"
@@ -1189,7 +1200,9 @@ msgstr "E' permesso solo un database per connessione"
 
 #: providers/sqlite/gda-sqlite-provider.c:390
 msgid "To remove a SQLite database you should remove the database file by hand"
-msgstr "Per rimuovere un database SQLite è necessario rimuovere il file di database a mano"
+msgstr ""
+"Per rimuovere un database SQLite è necessario rimuovere il file di database "
+"a mano"
 
 #: providers/sqlite/gda-sqlite-provider.c:664
 msgid "Could not retrieve information for field"
@@ -1201,7 +1214,8 @@ msgstr "Provider per database SQLite"
 
 #: providers/sybase/gda-sybase-provider.c:291
 msgid "Out of memory. Allocating connection structure failed."
-msgstr "Memoria esaurita. Fallita l'allocazione della struttura di connessione."
+msgstr ""
+"Memoria esaurita. Fallita l'allocazione della struttura di connessione."
 
 #: providers/sybase/gda-sybase-provider.c:336
 #, c-format
@@ -1213,8 +1227,8 @@ msgid ""
 "Cmd structure already in use. Command will not be executed because of "
 "blocked connection."
 msgstr ""
-"Struttura comandi già in uso. I comandi non saranno eseguiti a causa del blocco "
-"della connessione."
+"Struttura comandi già in uso. I comandi non saranno eseguiti a causa del "
+"blocco della connessione."
 
 #: providers/sybase/gda-sybase-provider.c:656
 #, c-format
@@ -1236,7 +1250,7 @@ msgstr "Fallito l'invio dell'sql-command."
 msgid "GDA_IS_SYBASE_RECORDSET != TRUE"
 msgstr "GDA_IS_SYBASE_RECORDSET != TRUE"
 
-#. when you execute a stored procedure through openclient, this
+#. when you execute a stored procedure through openclient, this 
 #. part of the result set loop is where you fetch the return status
 #. of the executed stored procedure.  You fetch it like a CS_ROW_RESULT
 #: providers/sybase/gda-sybase-provider.c:712
@@ -1252,8 +1266,8 @@ msgid ""
 "an error occured when calling ct_diag attempting to test if there is a "
 "server message for resultset"
 msgstr ""
-"si è verificato un errore durante la chiamata di ct_diag nel tentativo di verificare "
-"se c'è un messaggio del server per il risultato"
+"si è verificato un errore durante la chiamata di ct_diag nel tentativo di "
+"verificare se c'è un messaggio del server per il risultato"
 
 #: providers/sybase/gda-sybase-provider.c:793
 #, c-format
@@ -1291,7 +1305,9 @@ msgstr "%s: %s fallito"
 
 #: providers/sybase/gda-sybase-provider.c:974
 msgid "could not allocate cmd structure to find current database."
-msgstr "Non è possibile allocare la struttura comandi per cercare il database corrente."
+msgstr ""
+"Non è possibile allocare la struttura comandi per cercare il database "
+"corrente."
 
 #: providers/sybase/gda-sybase-provider.c:985
 msgid "could not execute command to get current database."
@@ -1303,7 +1319,8 @@ msgstr "Non è possibile inviare il comando per ottenere il database corrente."
 
 #: providers/sybase/gda-sybase-provider.c:1016
 msgid "could not bind variable to get current database."
-msgstr "Impossibile collegarsi alla variabile per ottenere il database corrente."
+msgstr ""
+"Impossibile collegarsi alla variabile per ottenere il database corrente."
 
 #: providers/sybase/gda-sybase-provider.c:1029
 #: providers/sybase/gda-sybase-provider.c:1044
@@ -1312,11 +1329,15 @@ msgstr "impossibile estrarre dati per trovare il database corrente."
 
 #: providers/sybase/gda-sybase-provider.c:1058
 msgid "could not drop cmd structure to find current database."
-msgstr "Non è possibile abbandonare la struttura comandi per trovare il database corrente."
+msgstr ""
+"Non è possibile abbandonare la struttura comandi per trovare il database "
+"corrente."
 
 #: providers/sybase/gda-sybase-recordset.c:315
 msgid "Could not allocate datamodel. No results will be returned."
-msgstr "Non è possibile allocare il modello dati. Non verrà restituito nessun risultato."
+msgstr ""
+"Non è possibile allocare il modello dati. Non verrà restituito nessun "
+"risultato."
 
 #: providers/sybase/gda-sybase-recordset.c:318
 msgid "ct_cancel() failed."
@@ -1335,13 +1356,15 @@ msgstr "%s ha restituito <=0 colonne."
 #: providers/sybase/gda-sybase-recordset.c:359
 #: providers/sybase/gda-sybase-recordset.c:549
 msgid "Could not allocate structure for column metainformation."
-msgstr "Impossibile allocare una struttura per le metainformazioni delle colonne."
+msgstr ""
+"Impossibile allocare una struttura per le metainformazioni delle colonne."
 
 #: providers/sybase/gda-sybase-recordset.c:363
 #: providers/sybase/gda-sybase-recordset.c:553
 #, c-format
 msgid "Could not call %s while processing row resultset."
-msgstr "Impossibile chiamare %s durante l'elaborazione della riga di risultato."
+msgstr ""
+"Impossibile chiamare %s durante l'elaborazione della riga di risultato."
 
 #: providers/sybase/gda-sybase-recordset.c:382
 #: providers/sybase/gda-sybase-recordset.c:403
@@ -1357,7 +1380,8 @@ msgstr "Impossibile allocare il contenitore dei dati per la colonna %d"
 #: providers/sybase/gda-sybase-recordset.c:422
 #, c-format
 msgid "Could not run %s to cancel processing row resultset."
-msgstr "Impossibile eseguire %s per annullare l'elaborazione della riga di risultato."
+msgstr ""
+"Impossibile eseguire %s per annullare l'elaborazione della riga di risultato."
 
 #: providers/sybase/gda-sybase-recordset.c:438
 #, c-format
@@ -1374,8 +1398,8 @@ msgid ""
 "an error occured when calling ct_diag attempting to retrieve a server "
 "message count for resultset"
 msgstr ""
-"è occorso un errore durante la chiamata di ct_diag nel tentativo di recuperare un conteggio "
-"messaggi del server per il risultato"
+"si è verificato un errore durante la chiamata di ct_diag nel tentativo di "
+"recuperare un conteggio messaggi del server per il risultato"
 
 #: providers/sybase/gda-sybase-recordset.c:518
 msgid "attempting to make recordset and msg count != 1 !"
@@ -1386,12 +1410,14 @@ msgid ""
 "an error occured when calling ct_diag attempting to retrieve a server "
 "message for recordset"
 msgstr ""
-"è occorso un errore durante la chiamata di ct_diag nel tentativo di recuperare "
-"un messaggio server per il recordset"
+"si è verificato un errore durante la chiamata di ct_diag nel tentativo di "
+"recuperare un messaggio server per il recordset"
 
 #: providers/sybase/gda-sybase-recordset.c:590 providers/sybase/utils.c:412
 msgid "call to ct_diag failed when attempting to clear the server messages"
-msgstr "la chiamata a ct_diag è fallita nel tentativo di cancellare i messaggi del server"
+msgstr ""
+"la chiamata a ct_diag è fallita nel tentativo di cancellare i messaggi del "
+"server"
 
 #: providers/sybase/gda-sybase-types.c:94
 #: providers/sybase/gda-sybase-types.c:97
@@ -1428,7 +1454,7 @@ msgid ""
 "\t%s"
 msgstr ""
 "Errore CS-Library:\n"
-"\t severità(%ld) strato(%ld) origine(%ld) numero(%ld)\n"
+"\t importanza(%ld) strato(%ld) origine(%ld) numero(%ld)\n"
 "\t%s"
 
 #: providers/sybase/utils.c:60
@@ -1448,7 +1474,7 @@ msgid ""
 "\t%s"
 msgstr ""
 "Errore CT-Client:\n"
-"\t severità(%ld) strato(%ld) origine(%ld) numero(%ld)\n"
+"\t importanza(%ld) strato(%ld) origine(%ld) numero(%ld)\n"
 "\t%s"
 
 #: providers/sybase/utils.c:90
@@ -1462,7 +1488,7 @@ msgid ""
 "\tnumber(%ld) severity(%ld) state(%ld) line(%ld)"
 msgstr ""
 "Messaggio CT-Server:\n"
-"\tnumero(%ld) severità(%ld) stato(%ld) linea(%ld)"
+"\tnumero(%ld) importanza(%ld) stato(%ld) linea(%ld)"
 
 #: providers/sybase/utils.c:100
 #, c-format
@@ -1472,255 +1498,270 @@ msgstr "\tNome server: %s\n"
 #: providers/sybase/utils.c:103
 #, c-format
 msgid "\tProcedure name: %s\n"
-msgstr "\tNome procedura: %s\n "
+msgstr ""
+"\tNome procedura: %s\n"
+" "
 
 #: providers/sybase/utils.c:147
 msgid "ct_diag() failed determining # of client messages."
-msgstr "ct_diag() ha fallito il tentativo di determinare in n° di messaggi del client."
+msgstr ""
+"ct_diag() ha fallito il tentativo di determinare in n° di messaggi del "
+"client."
 
 #: providers/sybase/utils.c:202
 msgid "call to cs_diag failed when attempting to the amount of client messages"
 msgstr ""
+"chiamata a cs_diag fallita nel tentativo di contare i messaggi del client"
 
 #: providers/sybase/utils.c:220
-msgid "an error occured when calling cs_diag attempting to retrieve a client message"
+msgid ""
+"an error occured when calling cs_diag attempting to retrieve a client message"
 msgstr ""
+"si è verificato un errore durante la chiamata a cs_diag nel tentativo di "
+"ricevere un messaggio del client"
 
 #: providers/sybase/utils.c:230
-#, fuzzy
 msgid "OS_Error:("
-msgstr "errore"
+msgstr "errore SO:("
 
 #: providers/sybase/utils.c:232
-#, fuzzy
 msgid ") Message: "
-msgstr "Messaggio del Server:"
+msgstr ") messaggio: "
 
 #: providers/sybase/utils.c:245
 msgid "Sybase OpenClient Msg: severity("
-msgstr ""
+msgstr "Messaggio Sybase OpenClient: importanza("
 
 #: providers/sybase/utils.c:247
 msgid "), number("
-msgstr ""
+msgstr "), numero("
 
 #: providers/sybase/utils.c:249
 msgid "), origin("
-msgstr ""
+msgstr "), origine("
 
 #: providers/sybase/utils.c:251
 msgid "), layer("
-msgstr ""
+msgstr "), strato("
 
 #: providers/sybase/utils.c:276
 msgid "call to cs_diag failed when attempting to clear the client messages"
 msgstr ""
+"chiamata a cs_diag fallita nel tentativo di cancellare i messaggi del client"
 
 #: providers/sybase/utils.c:317
 msgid "call to ct_diag failed when attempting to the amount of server messages"
 msgstr ""
+"chiamata a ct_diag fallita nel tentativo di sommare i messaggi del server"
 
 #: providers/sybase/utils.c:334
-msgid "an error occured when calling ct_diag attempting to retrieve a server message"
+msgid ""
+"an error occured when calling ct_diag attempting to retrieve a server message"
 msgstr ""
+"si è verificato un errore durante la chiamata a ct_diag nel tentativo di "
+"recuperare un messaggio del server"
 
 #: providers/sybase/utils.c:346
-#, fuzzy
 msgid "Server:"
-msgstr "Messaggio del Server:"
+msgstr "Server:"
 
 #: providers/sybase/utils.c:350
 msgid "Stored Procedure:"
-msgstr ""
+msgstr "Stored Procedure:"
 
 #: providers/sybase/utils.c:354
 msgid "Number"
-msgstr ""
+msgstr "Numero"
 
 #: providers/sybase/utils.c:357 providers/sybase/utils.c:474
 msgid "Severity"
-msgstr ""
+msgstr "Importanza"
 
 #: providers/sybase/utils.c:360
-#, fuzzy
 msgid "State"
-msgstr "No"
+msgstr "Stato"
 
 #: providers/sybase/utils.c:363
 msgid "Line"
-msgstr ""
+msgstr "Linea"
 
 #: providers/sybase/utils.c:446
 msgid "call to ct_diag failed when attempting to the amount of client messages"
 msgstr ""
+"chiamata a ct_diag fallita nel tentativo di sommare i messaggi del client"
 
 #: providers/sybase/utils.c:463
-msgid "an error occured when calling ct_diag attempting to retrieve a client message"
+msgid ""
+"an error occured when calling ct_diag attempting to retrieve a client message"
 msgstr ""
+"si è verificato un errore durante la chiamata a ct_diag nel tentativo di "
+"recuperare un messaggio del client"
 
 #: providers/sybase/utils.c:476
 msgid "Layer"
-msgstr ""
+msgstr "Strato"
 
 #: providers/sybase/utils.c:478
 msgid "Origin"
-msgstr ""
+msgstr "Origine"
 
 #: providers/sybase/utils.c:480
 msgid "Message Number"
-msgstr ""
+msgstr "Numero messaggio"
 
 #: providers/sybase/utils.c:502
 msgid "call to ct_diag failed when attempting to clear the client messages"
 msgstr ""
+"chiamata a ct_diag fallita nel tentativo di cancellare i messaggi del client"
 
 #: providers/sybase/utils.c:523
 msgid "Operation not possible, connection busy."
-msgstr ""
+msgstr "Operazione impossibile, connessione occupata."
 
 #: providers/xbase/gda-xbase-provider.c:185
 msgid "Either FILENAME or DIRECTORY can be specified, but not both or neither"
 msgstr ""
+"E' possibile specificare FILENAME o DIRECTORY, ma non tutti e due o nessuno "
+"dei due"
 
 #: providers/xbase/gda-xbase-provider.c:232
 msgid "Either FILENAME or DIRECTORY must be specified in the connection string"
 msgstr ""
+"O FILENAME o DIRECTORY devono essere specificati nella stringa di connessione"
 
 #: providers/xbase/gda-xbase-provider.c:261
 #: providers/xbase/gda-xbase-provider.c:379
-#, fuzzy
 msgid "Invalid Xbase handle"
-msgstr "Database selezionato '%s'"
+msgstr "Handle Xbase non valido"
 
 #: providers/xbase/libmain.c:39
 msgid "Provider for Xbase (dBase, FoxPro, etc) files"
-msgstr ""
+msgstr "Provider per file Xbase (dBase, FoxPro, etc)"
 
 #: report/libgda-report/gda-report-document.c:171
-#, fuzzy
 msgid "Could not parse XML document"
-msgstr "Non è possibile impostare locale a '%s'"
+msgstr "Impossibile analizzare il documento XML"
 
 #: report/libgda-report/gda-report-document.c:181
 msgid "XML document is not valid"
-msgstr ""
+msgstr "Il documento XML non è valido"
 
 #: report/libgda-report/gda-report-document.c:208
-#, fuzzy, c-format
+#, c-format
 msgid "Could not get file from %s"
-msgstr "Non è possibile impostare locale a '%s'"
+msgstr "Impossibile ottenere il file da %s"
 
 #: report/libgda-report/gda-report-item.c:276
 msgid "Error setting parent -> child relation"
-msgstr ""
+msgstr "Errore nell'impostare la relazione genitore -> figlio"
 
 #: report/libgda-report/gda-report-item.c:375
 #, c-format
 msgid "Error setting value %s to attribute %s of item %s"
-msgstr ""
+msgstr "Errore nell'impostare il valore %s all'attributo %s dell'elemento %s"
 
 #: report/libgda-report/gda-report-valid.c:130
-#, fuzzy, c-format
+#, c-format
 msgid "could not get DTD from %s"
-msgstr "Non è possibile impostare locale a '%s'"
+msgstr "impossibile ottenere la DTD da %s"
 
 #: report/libgda-report/gda-report-valid.c:231
 #, c-format
 msgid "Error validating element %s"
-msgstr ""
+msgstr "Errore durante la validazione dell'elemento %s"
 
 #: report/libgda-report/gda-report-valid.c:269
 #, c-format
 msgid "No declaration for attribute %s of element %s\n"
-msgstr ""
+msgstr "Nessuna dichiarazione per l'attributo %s dell'elemento %s\n"
 
 #: report/libgda-report/gda-report-valid.c:283
 #, c-format
 msgid "Value \"%s\" for attribute %s of %s is not among the enumerated set\n"
-msgstr ""
+msgstr "Il valore \"%s\" per l'attributo %s di %s non è nel set enumerato\n"
 
 #: testing/client.c:42
 msgid "\t\tNONE\n"
-msgstr ""
+msgstr "\t\tNESSUNO\n"
 
 #: testing/client.c:82
 #, c-format
 msgid "** ERROR: could not open connection to %s\n"
-msgstr ""
+msgstr "** ERRORE: impossibile aprire la connessione a %s\n"
 
 #. show provider features
 #: testing/client.c:87
 msgid "\tProvider capabilities...\n"
-msgstr ""
+msgstr "\tCapacità del provider...\n"
 
 #: testing/client.c:88
 #, c-format
 msgid "\t\tAggregates: %s\n"
-msgstr ""
+msgstr "\t\tAgrregati: %s\n"
 
 #: testing/client.c:90 testing/client.c:93 testing/client.c:96
 #: testing/client.c:99 testing/client.c:102 testing/client.c:105
 #: testing/client.c:108 testing/client.c:111 testing/client.c:114
 #: testing/client.c:117 testing/client.c:120
 msgid "Supported"
-msgstr ""
+msgstr "Supportati"
 
 #: testing/client.c:90 testing/client.c:93 testing/client.c:96
 #: testing/client.c:99 testing/client.c:102 testing/client.c:105
 #: testing/client.c:108 testing/client.c:111 testing/client.c:114
 #: testing/client.c:117 testing/client.c:120
 msgid "Not supported"
-msgstr ""
+msgstr "Non supportati"
 
 #: testing/client.c:91
 #, c-format
 msgid "\t\tIndexes: %s\n"
-msgstr ""
+msgstr "\t\tIndicizzati: %s\n"
 
 #: testing/client.c:94
 #, c-format
 msgid "\t\tNamespaces: %s\n"
-msgstr ""
+msgstr "\t\tSpazio dei nomi: %s\n"
 
 #: testing/client.c:97
 #, c-format
 msgid "\t\tProcedures: %s\n"
-msgstr ""
+msgstr "\t\tProcedure: %s\n"
 
 #: testing/client.c:100
 #, c-format
 msgid "\t\tSequences: %s\n"
-msgstr ""
+msgstr "\t\tSequenze: %s\n"
 
 #: testing/client.c:103
 #, c-format
 msgid "\t\tSQL: %s\n"
-msgstr ""
+msgstr "\t\tSQL: %s\n"
 
 #: testing/client.c:106
 #, c-format
 msgid "\t\tTransactions: %s\n"
-msgstr ""
+msgstr "\t\tTransazioni: %s\n"
 
 #: testing/client.c:109
 #, c-format
 msgid "\t\tTriggers: %s\n"
-msgstr ""
+msgstr "\t\tTrigger: %s\n"
 
 #: testing/client.c:112
 #, c-format
 msgid "\t\tUsers: %s\n"
-msgstr ""
+msgstr "\t\tUtenti: %s\n"
 
 #: testing/client.c:115
 #, c-format
 msgid "\t\tViews: %s\n"
-msgstr ""
+msgstr "\t\tViste: %s\n"
 
 #: testing/client.c:118
 #, c-format
 msgid "\t\tXML queries: %s\n"
-msgstr ""
+msgstr "\t\tQuery XML: %s\n"
 
 #. show connection schemas
 #: testing/client.c:123
@@ -1730,85 +1771,88 @@ msgid ""
 "\tProvider reports version: %s\n"
 "\n"
 msgstr ""
+"\n"
+"\tIl provider riporta la versione: %s\n"
+"\n"
 
 #: testing/client.c:125
 msgid "Namespaces"
-msgstr ""
+msgstr "Spazi di nomi"
 
 #: testing/client.c:127
 msgid "Stored procedures"
-msgstr ""
+msgstr "Stored procedure"
 
 #: testing/client.c:128
-#, fuzzy
 msgid "Connection Tables"
-msgstr "La connessione sembra essere morta"
+msgstr "Tabelle di connessione"
 
 #: testing/client.c:129
 msgid "Available types"
-msgstr ""
+msgstr "Tipi disponibili"
 
 #: testing/client.c:132
 msgid "Aggregates"
-msgstr ""
+msgstr "Aggregati"
 
 #: testing/client.c:136
 msgid "Languages"
-msgstr ""
+msgstr "Linguaggi"
 
 #: testing/client.c:141 testing/client.c:149
 msgid "\tStarting transaction..."
-msgstr ""
+msgstr "\tInizio transazione..."
 
 #: testing/client.c:143 testing/client.c:147 testing/client.c:151
 #: testing/client.c:155
-#, fuzzy
 msgid "Error"
-msgstr "errore"
+msgstr "Errore"
 
 #: testing/client.c:145
 msgid "\tFinishing transaction..."
-msgstr ""
+msgstr "\tFine transazione..."
 
 #: testing/client.c:153
 msgid "\tRolling back transaction..."
-msgstr ""
+msgstr "\tRoll back della transazione..."
 
 #: testing/client.c:184
 msgid "Testing GDA client API"
-msgstr ""
+msgstr "Prova dell'API del client GDA"
 
 #: testing/client.c:193
 msgid "** ERROR: gda_config_get_data_source_list returned a NULL item\n"
 msgstr ""
+"** ERRORE: gda_config_get_data_source_list ha restituito un elemento NULL\n"
 
 #: testing/client.c:197
-#, fuzzy, c-format
+#, c-format
 msgid " Data source = %s, User = %s\n"
-msgstr "Sorgente dati %s non trovata"
+msgstr " Sorgente dati = %s, Utente = %s\n"
 
 #: testing/config.c:84
 msgid "** ERROR: gda_config_get_provider_list returned a NULL item\n"
 msgstr ""
+"** ERRORE: gda_config_get_provider_list ha restituito un elemento NULL\n"
 
 #: testing/config.c:88
 #, c-format
 msgid " Provider = %s\n"
-msgstr ""
+msgstr " Provider = %s\n"
 
 #: testing/config.c:89
 #, c-format
 msgid "\tlocation = %s\n"
-msgstr ""
+msgstr "\tposizione = %s\n"
 
 #: testing/config.c:90
 #, c-format
 msgid "\tdescription = %s\n"
-msgstr ""
+msgstr "\tdescrizione = %s\n"
 
 #: testing/config.c:92
 msgid "\tgda_params ="
-msgstr ""
+msgstr "\tgda_params ="
 
 #: report/libgda-report/gda-report-item-detail.c:160
 #: report/libgda-report/gda-report-item-pagefooter.c:171
@@ -1818,7 +1862,7 @@ msgstr ""
 #: report/libgda-report/gda-report-item-reportheader.c:171
 #, c-format
 msgid "An element with ID %s already exists in the report"
-msgstr ""
+msgstr "Un elemento con ID %s esiste già nel report"
 
 #: report/libgda-report/gda-report-item-detail.c:185
 #: report/libgda-report/gda-report-item-pagefooter.c:196
@@ -1828,7 +1872,7 @@ msgstr ""
 #: report/libgda-report/gda-report-item-reportheader.c:196
 #, c-format
 msgid "Item with ID %s is not a label"
-msgstr ""
+msgstr "L'elemento con ID %s non è un'etichetta"
 
 #: report/libgda-report/gda-report-item-detail.c:214
 #: report/libgda-report/gda-report-item-pagefooter.c:224
@@ -1838,570 +1882,4 @@ msgstr ""
 #: report/libgda-report/gda-report-item-reportheader.c:224
 #, c-format
 msgid "Item with ID %s is not a repfield"
-msgstr ""
-
-#, fuzzy
-#~ msgid "Context allocated."
-#~ msgstr "Non è possibile allocare il campo"
-
-#, fuzzy
-#~ msgid "Client library initialized."
-#~ msgstr "ct_diag() initializzato"
-
-#, fuzzy
-#~ msgid "Could not initialize cslib callback"
-#~ msgstr "Impossibile inizializzare ct_diag()"
-
-#, fuzzy
-#~ msgid "Could not initialize ct-client callback"
-#~ msgstr "Impossibile inizializzare ct_diag()"
-
-#, fuzzy
-#~ msgid "Could not initialize ct-server callback"
-#~ msgstr "Impossibile inizializzare ct_diag()"
-
-#, fuzzy
-#~ msgid "Connection allocated."
-#~ msgstr "La connessione sembra essere morta"
-
-#, fuzzy
-#~ msgid "Username set."
-#~ msgstr "user name"
-
-#, fuzzy
-#~ msgid "Password set."
-#~ msgstr "password"
-
-#, fuzzy
-#~ msgid "Connected."
-#~ msgstr "Connesso a %s"
-
-#, fuzzy
-#~ msgid ""
-#~ "Connection already in use. Could not allocate command structure in %s()."
-#~ msgstr "Non è possibile allocare la struttura comandi"
-
-#, fuzzy
-#~ msgid "%d messages fetched."
-#~ msgstr "%d messaggi di ctlib da scaricare"
-
-#, fuzzy
-#~ msgid "Could not allocate environment handle."
-#~ msgstr "Non è possibile inizializzare cs_diag()"
-
-#, fuzzy
-#~ msgid "Could not set autocommit to off.\n"
-#~ msgstr "Non è possibile impostare locale a '%s'"
-
-#, fuzzy
-#~ msgid "MESSAGE: %s"
-#~ msgstr "MESSAGGIO: "
-
-#, fuzzy
-#~ msgid "ERROR: %s"
-#~ msgstr "ERRORE: "
-
-#, fuzzy
-#~ msgid "Field Name"
-#~ msgstr "nome file"
-
-#, fuzzy
-#~ msgid "Could not load %s provider"
-#~ msgstr "Impossibile registrare l'implementazione per il provider ORACLE"
-
-#, fuzzy
-#~ msgid "Could not load report file at %s"
-#~ msgstr "Non è possibile impostare locale a '%s'"
-
-#, fuzzy
-#~ msgid "Could not parse report file at %s"
-#~ msgstr "Non è possibile impostare locale a '%s'"
-
-#, fuzzy
-#~ msgid "Invalid report file '%s'"
-#~ msgstr "Database selezionato '%s'"
-
-#, fuzzy
-#~ msgid "An error occurred during fetch"
-#~ msgstr "Si è verificato un errore durante l'esecuzione del comando."
-
-#, fuzzy
-#~ msgid "CORBA exception: %s"
-#~ msgstr "Eccezione dell'utente CORBA: %s"
-
-#, fuzzy
-#~ msgid "Could not create global GDA client"
-#~ msgstr "Impossibile aprire una connessione a %s"
-
-#, fuzzy
-#~ msgid "Could not parse XML report"
-#~ msgstr "Non è possibile impostare locale a '%s'"
-
-#, fuzzy
-#~ msgid "Could not activate report engine"
-#~ msgstr "Non è possibile allocare il campo"
-
-#, fuzzy
-#~ msgid "Could not create BonoboStreamMem object"
-#~ msgstr "Impossibile aprire una connessione a %s"
-
-#, fuzzy
-#~ msgid "Could not initiate Report component factory"
-#~ msgstr ""
-#~ "Impossibile registrare l'implementazione per il provider della Posta"
-
-#, fuzzy
-#~ msgid "Could not activate object %s"
-#~ msgstr "Non è possibile allocare il campo"
-
-#~ msgid "%s: An Error occured in the CORBA system."
-#~ msgstr "%s: Si è verificato un errore nel sistema CORBA."
-
-#, fuzzy
-#~ msgid "Could not initialize Bonobo"
-#~ msgstr "Impossibile inizializzare ct_diag()"
-
-#, fuzzy
-#~ msgid "Could not notify client about action %d"
-#~ msgstr "Non è possibile avere il client msg # %d"
-
-#, fuzzy
-#~ msgid "Default component factory"
-#~ msgstr "Impossibile aprire una connessione a %s"
-
-#, fuzzy
-#~ msgid "Could not initiate Default component factory"
-#~ msgstr ""
-#~ "Impossibile registrare l'implementazione per il provider della Posta"
-
-#, fuzzy
-#~ msgid "Could not initiate MySQL component factory"
-#~ msgstr "Impossibile registrare l'implementazione per il provider MySQL"
-
-#, fuzzy
-#~ msgid "ODBC component factory"
-#~ msgstr "Impossibile aprire una connessione a %s"
-
-#, fuzzy
-#~ msgid "Could not initiate ODBC component factory"
-#~ msgstr "Impossibile registrare l'implementazione di gda-sysbase provider"
-
-#, fuzzy
-#~ msgid "Oracle component factory"
-#~ msgstr "Impossibile aprire una connessione a %s"
-
-#, fuzzy
-#~ msgid "Postgres component factory"
-#~ msgstr "Impossibile aprire una connessione a %s"
-
-#, fuzzy
-#~ msgid "Could not initiate PostgreSQL component factory"
-#~ msgstr "Impossibile registrare l'implementazione per il provider MySQL"
-
-#, fuzzy
-#~ msgid "NULL"
-#~ msgstr "<NULL>"
-
-#, fuzzy
-#~ msgid "Unknown type"
-#~ msgstr "Tipo ORACLE sconosciuto %ld"
-
-#, fuzzy
-#~ msgid "SQLite component factory"
-#~ msgstr "Impossibile aprire una connessione a %s"
-
-#, fuzzy
-#~ msgid "Could not initiate Sqlite component factory"
-#~ msgstr "Impossibile registrare l'implementazione di gda-sysbase provider"
-
-#, fuzzy
-#~ msgid "Client Message: "
-#~ msgstr "Messaggio del Client:"
-
-#, fuzzy
-#~ msgid "Informational Client  Message: "
-#~ msgstr "Messaggio del Client:"
-
-#, fuzzy
-#~ msgid "Informational Server  Message: "
-#~ msgstr "Messaggio del Server:"
-
-#~ msgid "CORBA System exception: %s"
-#~ msgstr "Eccezione del sistema CORBA: %s"
-
-#~ msgid "True"
-#~ msgstr "Si"
-
-#, fuzzy
-#~ msgid "[CORBA User Exception]"
-#~ msgstr "Eccezione dell'utente CORBA: %s"
-
-#~ msgid "<Unknown GDA Type(NULL)>"
-#~ msgstr "<Tipo GDA sconosciuto (NULL)>"
-
-#~ msgid "Saving log...x"
-#~ msgstr "Salvataggio del log...x"
-
-#~ msgid "Received signal %d, shutting down"
-#~ msgstr "Ricevuto segnale %d, arresto in corso"
-
-#~ msgid "Received signal %d. Ignoring"
-#~ msgstr "Ricevuto il segnale %d, ignorato"
-
-#~ msgid "Attempt to initialize an already initialized provider"
-#~ msgstr "Tentativo di inizializzazione di un provider già inizializzato"
-
-#~ msgid "CORBA system exception %s"
-#~ msgstr "Eccezione del sistema CORBA %s"
-
-#~ msgid "error '%s' at %s"
-#~ msgstr "errore '%s' in %s"
-
-#~ msgid "Could not register LDAP provider implementation"
-#~ msgstr "Impossibile registrare l'implementazione del server LDAP"
-
-#~ msgid "Error code %ld"
-#~ msgstr "Codice di errore %ld"
-
-#~ msgid "Could not register INTERBASE provider implementation"
-#~ msgstr "Impossibile registrare l'impelmentazione per il provider INTERBASE"
-
-#~ msgid "Unhandled SCHEMA_QTYPE %d"
-#~ msgstr "SCHEMA_QTYPE non gestito %d"
-
-#~ msgid "Could not register Mail provider implementation"
-#~ msgstr ""
-#~ "Impossibile registrare l'implementazione per il provider della Posta"
-
-#~ msgid "executing command '%s'"
-#~ msgstr "esecuzione del comando '%s'"
-
-#~ msgid "info '%s'"
-#~ msgstr "informazioni su '%s'"
-
-#~ msgid ""
-#~ "%s:%d: You cannot provide a UNIX_SOCKET if you also provide either a HOST "
-#~ "or a PORT. Please remove the UNIX_SOCKET, or remove both the HOST and "
-#~ "PORT options"
-#~ msgstr ""
-#~ "%s:%d: impossibile fornire una UNIX_SOCKET se si è già fornito un HOST o "
-#~ "una PORTA. Rimuovere la UNIX_SOCKET, oppure rimuovere entrambe le opzioni "
-#~ "HOST e PORTA"
-
-#~ msgid "%s:%d: You must  provide the filename with the MS Access database"
-#~ msgstr ""
-#~ "%s:%d: bisogna fornire il nome del file con il database di MS Access"
-
-#~ msgid "Opening connection with filename=%s, user=%s, password=%s"
-#~ msgstr "Connessione in corso con file=%s, utente=%s, password=%s"
-
-#~ msgid "mysql_recset is NULL"
-#~ msgstr "mysql_recset è NULL"
-
-#~ msgid "No table name given for SCHEMA_COLS"
-#~ msgstr "Nessun nome formito per  SCHEMA_COLS"
-
-#~ msgid ""
-#~ "Opening connection with user=%s, password=%s, host=%s, port=%s, "
-#~ "unix_socket=%s"
-#~ msgstr ""
-#~ "Apertura di una connessione per l'utente=%s, password=%s, host=%s, porta=%"
-#~ "s, unix_socket=%s"
-
-#~ msgid "gda_odbc_connection_open_schema: Unhandled SCHEMA_QTYPE %d\n"
-#~ msgstr "gda_odbc_connection_open_schema: SCHEMA_QTYPE %d non gestito\n"
-
-#~ msgid "no text"
-#~ msgstr "testo assente"
-
-#~ msgid "Could not register ODBC provider implementation"
-#~ msgstr "Impossibile registrare l'implementazione per il provider ODBC"
-
-#~ msgid "command object being created without associated connection"
-#~ msgstr "il comando è stato creato senza una connessione associata"
-
-#~ msgid "Executing command '%s'"
-#~ msgstr "Esecuzione del comando '%s'"
-
-#~ msgid "error in OCIHandleAlloc() HTYPE_SVCCTX"
-#~ msgstr "errore in OCIHandleAlloc() HTYPE_SERVER"
-
-#~ msgid "error in OCIHandleAlloc() HTYPE_SERVER"
-#~ msgstr "errore in OCIHandleAlloc() HTYPE_SERVER"
-
-#~ msgid "error in OCIHandleAlloc() HTYPE_ERROR"
-#~ msgstr "errore in OCIHandleAlloc() HTYPE_ERROR"
-
-#~ msgid "Unknown ORACLE type %ld"
-#~ msgstr "Tipo ORACLE sconosciuto %ld"
-
-#~ msgid "Unknown ORACLE data type in fill_field_values"
-#~ msgstr "Tipo di dato ORACLE sconosciuto in fill_field_values"
-
-#~ msgid "postgres_recset is NULL"
-#~ msgstr "postgres_recset è NULL"
-
-#~ msgid "Could not register PostgreSQL provider implementation"
-#~ msgstr "Impossibile registrare l'implementazione per il provider PostgreSQL"
-
-#~ msgid "Connection seems to be dead"
-#~ msgstr "La connessione sembra essere morta"
-
-#~ msgid "sending cmd failed"
-#~ msgstr "invio del comando fallito"
-
-#~ msgid "Command execution finished, all results processed"
-#~ msgstr ""
-#~ "Esecuzione del comando terminata, tutti i risultati sonon stati processati"
-
-#~ msgid "Command failed"
-#~ msgstr "Comando fallito"
-
-#~ msgid "Execution of resultless command succeeded"
-#~ msgstr "Comandi senza risultati eseguiti con successo"
-
-#~ msgid "No further results, command completly succeeded."
-#~ msgstr "Non ci sono ulteriori risultati, comando completato con successo."
-
-#~ msgid "Cmd execution returned unknown result, may be an error"
-#~ msgstr ""
-#~ "L'esecuzione del comando ha fornito un risultato sconosciuto, può essere "
-#~ "un errore"
-
-#, fuzzy
-#~ msgid "No data returned, freeing recordset structure"
-#~ msgstr "Nessun dato fornito, "
-
-#~ msgid "Not enough memory for sybase_Connection"
-#~ msgstr "Memoria insufficiente per sybase_Connection"
-
-#~ msgid "schema_cols: table_name '%s'"
-#~ msgstr "schema_cols: table_name '%s'"
-
-#~ msgid "Could not allocate enough memory for query"
-#~ msgstr "Impossibile allocare abbastanza memoria per la query"
-
-#~ msgid "connection status: %x"
-#~ msgstr "stato della connessione: %x"
-
-#~ msgid "return code: %x"
-#~ msgstr "codice di ritorno: %x"
-
-#~ msgid "Reconnected to '%s'"
-#~ msgstr "Riconnesso a %s"
-
-#~ msgid "%s: Could not allocate memory for cmd string"
-#~ msgstr "%s: non è possibile allocare memoria per la linea di comando"
-
-#~ msgid "%s: selecting database failed"
-#~ msgstr "%s: selezione di un database fallito"
-
-#~ msgid "Could not configure locale to be '%s'"
-#~ msgstr "Non è possibile configurare locale a '%s'"
-
-#~ msgid "gda_sybase_error_make(%p,%p,%p,%p)"
-#~ msgstr "gda_sybase_error_make(%p,%p,%p,%p)"
-
-#~ msgid "cs_diag() initialized"
-#~ msgstr "cs_diag() initializzato"
-
-#~ msgid "Could not initialize ct_diag()"
-#~ msgstr "Impossibile inizializzare ct_diag()"
-
-#~ msgid "%s could not find server implementation"
-#~ msgstr "%s impossibile trovare l'implementazione del server"
-
-#~ msgid "%s could not get cnc userdata"
-#~ msgstr "%s impossibile avere cnc userdata"
-
-#~ msgid "Could not get # of messages"
-#~ msgstr "Impossibile avere il numero dei messaggi"
-
-#~ msgid "%d ctlib message to fetch"
-#~ msgstr "%d messaggio di ctlib da scaricare"
-
-#~ msgid "error is nullpointer in gda_sybase_messages_handle"
-#~ msgstr "l'errore è un puntatore nullo in gda_sybase_messages_handle"
-
-#~ msgid "Could not get # of server messages"
-#~ msgstr "Impossibile avere il numero di messaggi del server"
-
-#~ msgid "Fetching %d client messages"
-#~ msgstr "Scaricamento %d messaggi del client"
-
-#~ msgid "Fetching %d client message"
-#~ msgstr "Scaricamento %d messaggio del client"
-
-#~ msgid "Could not clear client messages"
-#~ msgstr "Impossibile azzerare i messaggi del client"
-
-#~ msgid "Fetching %d server messages"
-#~ msgstr "Scaricamento %d messaggi del server"
-
-#~ msgid "Fetching %d server message"
-#~ msgstr "Scaricamento %d messaggio del server"
-
-#~ msgid "Could not get server msg # %d"
-#~ msgstr "Impossibile prendere il messaggio del server numero %d"
-
-#~ msgid "Could not get # of cslib messages"
-#~ msgstr "Impossibile avere il numero dei messaggi di cslib"
-
-#~ msgid "Fetching %d cslib messages"
-#~ msgstr "Scaricamento %d messaggi di cslib"
-
-#~ msgid "Fetching %d cslib message"
-#~ msgstr "Scaricamento %d messaggo di cslib"
-
-#~ msgid "Could not get cslib msg # %d"
-#~ msgstr "Impossibile avere il  messaggio numero %d di cslib"
-
-#~ msgid "Could not clear cslib messages"
-#~ msgstr "Impossibile azzerare i messaggi di cslib"
-
-#~ msgid "CS-Library error:"
-#~ msgstr "Errore di CS-Library:"
-
-#~ msgid "fetch error at row %d"
-#~ msgstr "trovato un errore alla riga %d"
-
-#~ msgid "CS_END_DATA on row %d; canceling"
-#~ msgstr "CS_END_DATA alla riga %d; annullo in corso"
-
-#~ msgid "%s: Error (%d)"
-#~ msgstr "%s Errore: (%d)"
-
-#~ msgid "Failed fetching # of columns"
-#~ msgstr "Tentativo di trovare il numero di colonne fallito"
-
-#~ msgid "%s could not allocate datafmt info"
-#~ msgstr "%s non è possibile allocare le informazioni datafmt"
-
-#~ msgid "%s could not allocate data fields"
-#~ msgstr "%s non è possibile allocare i campi dei dati"
-
-#~ msgid "ct_describe on col # %d"
-#~ msgstr "ct_describe sulla col num %d"
-
-#~ msgid "ct_describe on col # %d failed"
-#~ msgstr "ct_describe sulla col num %d fallito"
-
-#~ msgid "ct_describe(%d): '%s', %d (%s)"
-#~ msgstr "\"ct_describe(%d): '%s', %d (%s)"
-
-#~ msgid "illegal type detected, aborting"
-#~ msgstr "è stato riconosciuto un dato di tipo illegale, interruzione"
-
-#, fuzzy
-#~ msgid "Could not connect to '%s@%s:%s' with connparm '%s'"
-#~ msgstr "Impossibile aprire una connessione a %s"
-
-#, fuzzy
-#~ msgid "Not enough memory for primebase_Error structure."
-#~ msgstr "Memoria insufficiente per sybase_Connection"
-
-#, fuzzy
-#~ msgid "Could not register PRIMEBASE provider implementation"
-#~ msgstr "Impossibile registrare l'impelmentazione per il provider INTERBASE"
-
-#, fuzzy
-#~ msgid "Not enough memory for tds_Connection"
-#~ msgstr "Memoria insufficiente per sybase_Connection"
-
-#, fuzzy
-#~ msgid "Reconnected to %s"
-#~ msgstr "Riconnesso a %s"
-
-#, fuzzy
-#~ msgid "gda_tds_error_make(%p,%p,%p,%p)"
-#~ msgstr "gda_sybase_error_make(%p,%p,%p,%p)"
-
-#, fuzzy
-#~ msgid "Could not register gda-tds provider implementation"
-#~ msgstr "Impossibile registrare l'implementazione di gda-sysbase provider"
-
-#~ msgid "%s: misconfigured DSN entry"
-#~ msgstr "%s: voce DNS malconfigurata "
-
-#~ msgid "%s: data source '%s' not found\n"
-#~ msgstr "%s: sorgente dati '%s' non trovata\n"
-
-#, fuzzy
-#~ msgid "Could not register <PROVIDER-NAME> provider implementation"
-#~ msgstr "Impossibile registrare l'impelmentazione per il provider INTERBASE"
-
-#~ msgid "%s: The server didn't respond."
-#~ msgstr "%s: Il server non ha risposto."
-
-#~ msgid "thread is already running"
-#~ msgstr "il è thread già in esecuzione"
-
-#~ msgid "impl_GDA_Connection_open: opening connection with DSN: %s"
-#~ msgstr "impl_GDA_Connection_open: apertura di una connessione con DSN: %s"
-
-#~ msgid "%s: an error ocurred while fetching data"
-#~ msgstr "%s: si è verificato un errore nella raccolta dati"
-
-#~ msgid ""
-#~ "OAF doesn't know about our IID; indicates broken installation. Exiting..."
-#~ msgstr ""
-#~ "OAF non conosce questa IID; indice di un'installazione non corretta.  "
-#~ "Chiusura in corso... "
-
-#~ msgid ""
-#~ "Another instance of this provider is already registered with OAF. "
-#~ "Exiting..."
-#~ msgstr ""
-#~ "Un'altra istanza di questo provider è già registrata con OAF. Chiusura in "
-#~ "corso..."
-
-#~ msgid "Unknown error registering this provider with OAF. Exiting"
-#~ msgstr ""
-#~ "Errore sconosciuto nella registrazione di questo provider con OAF. "
-#~ "hiusura in corso... "
-
-#~ msgid "Registered with ID = %s"
-#~ msgstr "Registrato con ID = %s"
-
-#~ msgid "Received signal %d, shutting down."
-#~ msgstr "Ricevuto il segnale %d, arresto in corso."
-
-#, fuzzy
-#~ msgid "Received signal %d, shutting down cleanly"
-#~ msgstr "Ricevuto segnale %d, arresto in corso"
-
-#~ msgid "Failed to initialize OAF: please mail bug report to OAF maintainers"
-#~ msgstr ""
-#~ "Inizializzazione di OAF non riuscita: inviare un bug report ai "
-#~ "mantenitori di OAF. "
-
-#~ msgid "%s: length = %d"
-#~ msgstr "%s: lunghezza = %d"
-
-#~ msgid "%s: sending field description for '%s'"
-#~ msgstr "%s: invio della descrizione del campo per '%s'"
-
-#~ msgid "schema_tables: table name = '%s'"
-#~ msgstr "schema_tables: table name = '%s'"
-
-#~ msgid "schema_tables: table_schema = '%s'"
-#~ msgstr "schema_tables: table_schema = '%s'"
-
-#~ msgid "schema_procedures: proc_catalog = '%s' UNUSED!\n"
-#~ msgstr "schema_procedures: proc_catalog = '%s' NON USATO!\n"
-
-#~ msgid "schema_procedures: proc_catalog = '%s' UNUSED!"
-#~ msgstr "schema_procedures: proc_catalog = '%s' NON USATO!"
-
-#~ msgid "DATABASE"
-#~ msgstr "DATABASE"
-
-#~ msgid "USER-NAME"
-#~ msgstr "USER-NAME"
-
-#~ msgid "PASSWORD"
-#~ msgstr "PASSWORD"
-
-#~ msgid "FILE-NAME"
-#~ msgstr "NOME-FILE"
-
+msgstr "L'elemento con ID %s non è un repfield"
