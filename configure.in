@@ -79,9 +79,6 @@ dnl ******************************
 GNOME_COMPILE_WARNINGS(maximum)
 CFLAGS="$CFLAGS $WARN_CFLAGS"
 CPPFLAGS="$CPPFLAGS $WARN_FLAGS"
-AC_SUBST(CFLAGS)
-AC_SUBST(CPPFLAGS)
-AC_SUBST(LDFLAGS)
 
 PKG_CHECK_MODULES(LIBGDA, glib-2.0 >= 2.0.0 gobject-2.0 >= 2.0.0 gthread-2.0 >= 2.0.0 gmodule-2.0 >= 2.0.0 libxml-2.0 libxslt >= 1.0.9)
 AC_SUBST(LIBGDA_CFLAGS)
