@@ -1,3 +1,7 @@
+2001-10-27  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* GNOME_Database.idl: fixed
+
 2001-10-12  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* GNOME_Database.idl: added the ::Client interface, to be used by

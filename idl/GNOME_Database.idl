@@ -106,14 +106,14 @@ module GNOME {
 		typedef sequence<Field> Row;
 
 		interface Recordset : Bonobo::Unknown {
-			RowAttributes describe ();
+			RowAttributes describe () raises (DriverError);
 
-			boolean moveFirst ();
-			boolean moveNext ();
-			boolean movePrevious ();
-			boolean moveLast ();
+			boolean moveFirst () raises (DriverError);
+			boolean moveNext () raises (DriverError);
+			boolean movePrevious () raises (DriverError);
+			boolean moveLast () raises (DriverError);
 
-			Row fetch ();
+			Row fetch () raises (DriverError);
 		};
 		typedef sequence<Recordset> RecordsetList;
 
@@ -144,7 +144,7 @@ module GNOME {
 			ACTION_CLIENT_EXITED,
 			ACTION_TRANSACTION_STARTED,
 			ACTION_TRANSACTION_FINISHED,
-			ACTION_TRANSACTION_ABORTED,
+			ACTION_TRANSACTION_ABORTED
 		};
 
 		interface Client : Bonobo::Unknown {
@@ -162,18 +162,18 @@ module GNOME {
 			boolean open (in Client client,
 				      in string cnc_string,
 				      in string username,
-				      in string password) raise DriverError;
-			boolean close (in Client client) raise DriverError;
+				      in string password) raises (DriverError);
+			boolean close () raises (DriverError);
 
 			/* command execution */
 			RecordsetList executeCommand (in Command cmd,
 						      in ParameterList params)
-				raise DriverError;
+				raises (DriverError);
 
 			/* transactions */
-			boolean beginTransaction (TransactionId id) raise DriverError;
-			boolean commitTransaction (TransactionId id) raise DriverError;
-			boolean rollbackTransaction (TransactionId id) raise DriverError;
+			boolean beginTransaction (in TransactionId id) raises (DriverError);
+			boolean commitTransaction (in TransactionId id) raises (DriverError);
+			boolean rollbackTransaction (in TransactionId id) raises (DriverError);
 		};
 
 		/*
