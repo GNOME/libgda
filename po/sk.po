@@ -5,14 +5,14 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda 0.2.2\n"
-"POT-Creation-Date: 2001-01-24 13:15+0100\n"
-"PO-Revision-Date: 2001-01-24 13:17CET\n"
+"POT-Creation-Date: 2001-02-05 13:59+0100\n"
+"PO-Revision-Date: 2001-02-05 14:02CET\n"
 "Last-Translator: Stanislav Visnovsky <visnovsky@nenya.ms.mff.cuni.cz>\n"
 "Language-Team: Slovak <sk-i18n@rak.isternet.sk>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=ISO-8859-2\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: KBabel 0.8pre\n"
+"X-Generator: KBabel 0.8\n"
 
 #: lib/gda-client/gda-connection-pool.c:267
 #, c-format
@@ -207,6 +207,10 @@ msgstr "Zachytený signál %d. Ignorujem"
 msgid "Attempt to initialize an already initialized provider"
 msgstr "Pokus o inicializáciu u¾ inicializovaného poskytovateµa"
 
+#: providers/gda-ldap-server/GNOME_GDA_Provider_LDAP.oaf.in.h:1
+msgid "GDA Datasource Access for LDAP"
+msgstr "GDA prístup k zdroju dát pre LDAP"
+
 #: providers/gda-interbase-server/gda-interbase-connection.c:261
 #: providers/gda-ldap-server/gda-ldap-connection.c:272
 #: providers/gda-mdb-server/gda-mdb-connection.c:360
@@ -262,6 +266,10 @@ msgstr "chyba"
 msgid "Could not register LDAP provider implementation"
 msgstr "Nie je mo¾né registrova» implementáciu LDAP poskytovateµa"
 
+#: providers/gda-interbase-server/GNOME_GDA_Provider_InterBase.oaf.in.h:1
+msgid "GDA Datasource Access for Interbase"
+msgstr "GDA prístup k zdroju dát pre Interbase"
+
 #: providers/gda-interbase-server/gda-interbase-connection.c:260
 #, c-format
 msgid "Error code %ld"
@@ -270,6 +278,10 @@ msgstr "Kód chyby %ld"
 #: providers/gda-interbase-server/main-interbase.c:70
 msgid "Could not register INTERBASE provider implementation"
 msgstr "Nie je mo¾né registrova» implementáciu INTERBASE poskytovateµa"
+
+#: providers/gda-mail-server/GNOME_GDA_Provider_Mail.oaf.in.h:1
+msgid "GDA Datasource Access for Mail"
+msgstr "GDA prístup k zdroju dát pre Mail"
 
 #: providers/gda-mail-server/gda-mail-connection.c:108
 #: providers/gda-mdb-server/gda-mdb-connection.c:224
@@ -285,6 +297,10 @@ msgstr "Nespracované SCHEMA_QTYPE %d"
 #: providers/gda-mail-server/main-mail.c:70
 msgid "Could not register Mail provider implementation"
 msgstr "Nie je mo¾né registrova» implementáciu mail poskytovateµa"
+
+#: providers/gda-mdb-server/GNOME_GDA_Provider_MDB.oaf.in.h:1
+msgid "GDA Datasource Access for MDB (MS Access) files"
+msgstr "GDA prístup k zdroju dát pre súbory MDB (MS Access)"
 
 #. execute command
 #: providers/gda-mdb-server/gda-mdb-command.c:86
@@ -340,6 +356,10 @@ msgstr "Nezadané meno tabuµky pre SCHEMA_COLS"
 msgid "Could not register MySQL provider implementation"
 msgstr "Nie je mo¾né registrova» implementáciu MySQL poskytovateµa"
 
+#: providers/gda-mysql-server/GNOME_GDA_Provider_MySQL.oaf.in.h:1
+msgid "GDA Datasource Access for MySQL"
+msgstr "GDA prístup k zdroju dát pre MySQL"
+
 #: providers/gda-mysql-server/gda-mysql-connection.c:162
 #, c-format
 msgid ""
@@ -348,6 +368,10 @@ msgid ""
 msgstr ""
 "Otváram spojenie s pou¾ívateµom=%s, heslom=%s, hostiteµom=%s, portom=%s, "
 "unix_socket=%s"
+
+#: providers/gda-odbc-server/GNOME_GDA_Provider_ODBC.oaf.in.h:1
+msgid "GDA Datasource Access for ODBC"
+msgstr "GDA prístup k zdroju dát pre ODBC"
 
 #: providers/gda-odbc-server/gda-odbc-connection.c:280
 #, c-format
@@ -366,6 +390,10 @@ msgstr "¾iadny text"
 #: providers/gda-odbc-server/main-odbc.c:69
 msgid "Could not register ODBC provider implementation"
 msgstr "Nie je mo¾né registrova» implementáciu ODBC poskytovateµa"
+
+#: providers/gda-oracle-server/GNOME_GDA_Provider_Oracle.oaf.in.h:1
+msgid "GDA Datasource Access for Oracle"
+msgstr "GDA prístup k zdroju dát pre Oracle"
 
 #: providers/gda-oracle-server/gda-oracle-command.c:185
 msgid "Could not allocate statement handle"
@@ -409,6 +437,10 @@ msgstr "objekt recordset vytvorený bez asociovaného spojenia"
 msgid "Could not register ORACLE provider implementation"
 msgstr "Nie je mo¾né registrova» implementáciu ORACLE poskytovateµa"
 
+#: providers/gda-postgres-server/GNOME_GDA_Provider_Postgres.oaf.in.h:1
+msgid "GDA Datasource Access for Postgres"
+msgstr "GDA prístup k zdroju dát pre Postgres"
+
 #: providers/gda-postgres-server/gda-postgres-connection.c:888
 #: providers/gda-postgres-server/gda-postgres-connection.c:1000
 msgid "postgres_recset is NULL"
@@ -417,6 +449,10 @@ msgstr "postgres_recset je NULL"
 #: providers/gda-postgres-server/main-postgres.c:69
 msgid "Could not register PostgreSQL provider implementation"
 msgstr "Nie je mo¾né registrova» implementáciu PostgreSQL poskytovateµa"
+
+#: providers/gda-sybase-server/GNOME_GDA_Provider_Sybase.oaf.in.h:1
+msgid "GDA Datasource Access for Sybase"
+msgstr "GDA prístup k zdroju dát pre Sybase"
 
 #: providers/gda-sybase-server/gda-sybase-command.c:115
 #: providers/gda-tds-server/gda-tds-command.c:110
@@ -904,6 +940,10 @@ msgstr "nie je mo¾né alokova» pole"
 msgid "Could not register gda-sybase provider implementation"
 msgstr "Nie je mo¾né registrova» implementáciu gda-sybase poskytovateµa"
 
+#: providers/gda-primebase-server/GNOME_GDA_Provider_Primebase.oaf.in.h:1
+msgid "GDA Datasource Access for primebase"
+msgstr "GDA prístup k zdroju dát pre primebase"
+
 #: providers/gda-primebase-server/gda-primebase-command.c:128
 msgid "An error occured."
 msgstr "Nastala chyba."
@@ -940,6 +980,10 @@ msgstr "Nenájdené ¾iadne odpovedajúce pole"
 msgid "Could not register PRIMEBASE provider implementation"
 msgstr "Nie je mo¾né registrova» implementáciu PRIMEBASE poskytovateµa"
 
+#: providers/gda-tds-server/GNOME_GDA_Provider_TDS.oaf.in.h:1
+msgid "GDA Datasource Access for Sybase/MS SQL"
+msgstr "GDA prístup k zdroju dát pre Sybase/MS SQL"
+
 #: providers/gda-tds-server/gda-tds-connection.c:137
 msgid "Not enough memory for tds_Connection"
 msgstr "Nedostatok pamäti pre tds_Connection"
@@ -958,10 +1002,14 @@ msgstr "gda_tds_error_make(%p,%p,%p,%p)"
 msgid "Could not register gda-tds provider implementation"
 msgstr "Nie je mo¾né registrova» implementáciu gda-tds poskytovateµa"
 
-#: report/gda-report-engine.c:207
+#: report/gda-report-engine.c:209
 #, c-format
 msgid "CORBA exception unloading report engine: %s"
 msgstr "Výnimka CORBA pri uvoµòovaní report engine: %s"
+
+#: report/server/GNOME_GDA_Report.oaf.in.h:1
+msgid "GDA Distributed Report Engine"
+msgstr "GDA Distrubuovaný report engine"
 
 #: report/server/gda-report-server-main.c:41
 #: report/server/gda-report-server-main.c:48
