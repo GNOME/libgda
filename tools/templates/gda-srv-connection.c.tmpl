@@ -1,0 +1,109 @@
+/* GNOME DB <provider-name> Provider
+ * Copyright (C) 2000 <your-name>
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this library; if not, write to the Free
+ * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ */
+
+#include "gda-<provider-name>.h"
+
+gboolean
+gda_<provider-name>_connection_new (Gda_ServerConnection *cnc)
+{
+}
+
+gint
+gda_<provider-name>_connection_open (Gda_ServerConnection *cnc,
+			  const gchar *dsn,
+			  const gchar *user,
+			  const gchar *password)
+{
+}
+
+void
+gda_<provider-name>_connection_close (Gda_ServerConnection *cnc)
+{
+}
+
+gint
+gda_<provider-name>_connection_begin_transaction (Gda_ServerConnection *cnc)
+{
+}
+
+gint
+gda_<provider-name>_connection_commit_transaction (Gda_ServerConnection *cnc)
+{
+}
+
+gint
+gda_<provider-name>_connection_rollback_transaction (Gda_ServerConnection *cnc)
+{
+}
+
+Gda_ServerRecordset *
+gda_<provider-name>_connection_open_schema (Gda_ServerConnection *cnc,
+				 Gda_ServerError *error,
+				 GDA_Connection_QType t,
+				 GDA_Connection_Constraint *constraints,
+				 gint length)
+{
+}
+
+gint
+gda_<provider-name>_connection_start_logging (Gda_ServerConnection *cnc,
+				   const gchar *filename)
+{
+}
+
+gint
+gda_<provider-name>_connection_stop_logging (Gda_ServerConnection *cnc)
+{
+}
+
+gchar *
+gda_<provider-name>_connection_create_table (Gda_ServerConnection *cnc,
+				       GDA_RowAttributes *columns)
+{
+}
+
+gboolean
+gda_<provider-name>_connection_supports (Gda_ServerConnection *cnc,
+				   GDA_Connection_Feature feature)
+{
+}
+
+GDA_ValueType
+gda_<provider-name>_connection_get_gda_type (Gda_ServerConnection *cnc, gulong sql_type)
+{
+}
+
+gshort
+gda_<provider-name>_connection_get_c_type (Gda_ServerConnection *cnc, GDA_ValueType type)
+{
+}
+
+void
+gda_<provider-name>_connection_free (Gda_ServerConnection *cnc)
+{
+}
+
+void
+gda_<provider-name>_error_make (Gda_ServerError *error,
+		     Gda_ServerRecordset *recset,
+		     Gda_ServerConnection *cnc,
+		     gchar *where)
+{
+}
+
+

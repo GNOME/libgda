@@ -1,3 +1,5 @@
+SUBDIRS = templates
+
 bin_PROGRAMS = gda-run
 bin_SCRIPTS = gda-config gda-buildserver gda-buildclient
 
