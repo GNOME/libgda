@@ -1,191 +1,140 @@
-# Note that this is NOT a relocatable package
-# defaults for redhat
-%define name	@PACKAGE@
-%define ver	@VERSION@
+# set the defines below to build support for the selected sql layer(s)
+%define          MYSQL 1
+%define          POSTGRES 1
+%define          ODBC 1
 
-%define  RELEASE 1
-%define  rel     %{?CUSTOM_RELEASE} %{!?CUSTOM_RELEASE:%RELEASE}
+Summary:         Library for writing gnome database programs
+Name:            libgda
+Version:         @version@
+Release:         1
+Source:          %{name}-%{version}.tar.gz
+Group:           System Environment/Libraries
+License:         LGPL
+BuildRoot:       %{_tmppath}/%{name}-%{version}-root
+BuildRequires:   pkgconfig >= 0.8
+Requires:        ORBit2 >= 2.3.91
+Requires:        glib2 >= 1.3.10
+Requires:        bonobo-activation >= 0.7.0
+Requires:        libbonobo
+Requires:        libxml2
+Requires:        GConf2
+Requires:        libxslt >= 1.0.9
+Requires:        gnome-vfs2
+Prereq:          GConf2
+BuildRequires:   ORBit2-devel >= 2.3.91
+BuildRequires:   glib2-devel >= 1.3.10
+BuildRequires:   bonobo-activation-devel >= 0.7.0
+BuildRequires:   libbonobo-devel
+BuildRequires:   libxml2-devel
+BuildRequires:   GConf2-devel
+BuildRequires:   libxslt-devel >= 1.0.9
+BuildRequires:   gnome-vfs2-devel
 
-Summary: GNU Data Access
-Name: 		%name
-Version:	%ver
-Release: 	%rel
-Copyright: 	GPL
-Group: 		Applications/Databases
-Source:		ftp://ftp.gnome-db.org/pub/gnome-db/sources/%{ver}/%{name}-%{ver}.tar.gz
-BuildRoot: 	%{_tmppath}/%{name}-%{ver}-root
-URL: 		http://www.gnome-db.org
-BuildPrereq: GConf-devel >= 0.11, libxml-devel >= 1.8 , oaf-devel >= 0.6, ORBit-devel >= 0.5, glib-devel >= 1.2, gtk+-devel >= 1.2
-%define add_incs -I/usr/include/popt -I/usr/include/tcl -I/usr/include/gdbm
-%description
-GNU Data Access is an attempt to provide uniform access to
-different kinds of data sources (databases, information
-servers, mail spools, etc).
-It is a complete architecture that provides all you need to
-access your data.
-
-libgda was part of the GNOME-DB project
-(http://www.gnome.org/projects/gnome-db), but has been
-separated from it to allow non-GNOME applications to be
-developed based on it.
-
-%package devel
-Summary: GNU Data Access Development
-Group: 		Applications/Databases
-Requires:	%name = %{PACKAGE_VERSION}
-
-%description devel
-GNU Data Access is an attempt to provide uniform access to
- different kinds of data sources (databases, information
- servers, mail spools, etc).
- It is a complete architecture that provides all you need to
- access your data.
- .
- libgda was part of the GNOME-DB project
- (http://www.gnome.org/projects/gnome-db), but has been
- separated from it to allow non-GNOME applications to be
- developed based on it.
-
-%package -n gda-odbc
-Summary: GDA ODBC Provider
-Group:		Applications/Databases
-Requires:	%name = %{PACKAGE_VERSION}
-BuildPrereq:	unixODBC-devel >= 1.8.12
-
-%description -n gda-odbc
-GNU Data Access is an attempt to provide uniform access to
- different kinds of data sources (databases, information
- servers, mail spools, etc).
- It is a complete architecture that provides all you need to
- access your data.
- .
- libgda was part of the GNOME-DB project
- (http://www.gnome.org/projects/gnome-db), but has been
- separated from it to allow non-GNOME applications to be
- developed based on it.
-
- This package includes the GDA ODBC provider
-
-%package -n gda-postgres
-Summary: GDA PostgreSQL Provider
-Group:		Applications/Databases
-Requires:	%name = %{PACKAGE_VERSION}
-BuildPrereq:	postgresql-devel >= 6.5
-
-%description -n gda-postgres
-GNU Data Access is an attempt to provide uniform access to
- different kinds of data sources (databases, information
- servers, mail spools, etc).
- It is a complete architecture that provides all you need to
- access your data.
- .
- libgda was part of the GNOME-DB project
- (http://www.gnome.org/projects/gnome-db), but has been
- separated from it to allow non-GNOME applications to be
- developed based on it.
-
- This package includes the GDA PostgreSQL provider
-
-%package -n gda-mysql
-Summary: GDA MySQL Provider
-Group:		Applications/Databases
-Requires:	%name = %{PACKAGE_VERSION}
-BuildPrereq:	mysql-devel >= 3.22
-
-%description -n gda-mysql
-GNU Data Access is an attempt to provide uniform access to
- different kinds of data sources (databases, information
- servers, mail spools, etc).
- It is a complete architecture that provides all you need to
- access your data.
- .
- libgda was part of the GNOME-DB project
- (http://www.gnome.org/projects/gnome-db), but has been
- separated from it to allow non-GNOME applications to be
- developed based on it.
-
- This package includes the GDA MySQL provider
-
-%changelog
-* Thu May 31 2001 Serge Pavlovsky <pal@re.com.ua>
-- Cleaned
-
-* Sat Sep 2 2000 Rodrigo Moya <rodrigo@linuxave.net>
-- Initial spec imported from old GNOME-DB spec
-
-%prep
-%setup
-
-%build
-
-# libtool workaround for alphalinux
-%ifarch alpha
-  ARCH_FLAGS="--host=alpha-redhat-linux"
+%if %{MYSQL}
+Requires:        mysqlclient9
+BuildRequires:   mysqlclient9, mysql-devel
 %endif
 
-export CFLAGS="%optflags %add_incs" 
-# Needed for snapshot releases.
-if [ ! -f configure ]; then
-  ./autogen.sh $ARCH_FLAGS --prefix=%{_prefix} --with-odbc=%{_prefix} --with-postgres=yes --with-mysql=yes
-else
-  ./configure $ARCH_FLAGS --prefix=%{_prefix} --with-odbc=%{_prefix} --with-postgres=yes --with-mysql=yes
-fi
+%if %{POSTGRES}
+Requires:        postgresql-libs
+BuildRequires:   postgresql-libs, postgresql-devel
+%endif
 
-if [ "$SMP" != "" ]; then
-  (make "MAKE=make -k -j $SMP"; exit 0)
-  make
-else
-  make
-fi
+
+%description
+libgda is a library that eases the task of writing
+gnome database programs.
+
+
+%package devel
+Summary:         Development libraries and header files for libgda.
+Group:           Development/Libraries
+Requires:        %name = %{version}
+Requires:        pkgconfig >= 0.8
+Requires:        ORBit2 >= 2.3.91
+Requires:        ORBit2-devel >= 2.3.91
+Requires:        glib2 >= 1.3.10
+Requires:        glib2-devel >= 1.3.10
+Requires:        bonobo-activation >= 0.7.0
+Requires:        bonobo-activation-devel >= 0.7.0
+Requires:        libbonobo
+Requires:        libbonobo-devel
+Requires:        libxml2
+Requires:        libxml2-devel
+Requires:        GConf2
+Requires:        GConf2-devel
+Requires:        libxslt >= 1.0.9
+Requires:        libxslt-devel >= 1.0.9
+Requires:        gnome-vfs2
+Requires:        gnome-vfs2-devel
+
+%description devel
+This package contains the header files and libraries needed to write
+or compile programs that use libgda.
+
+%prep
+%setup -q -n %{name}-%{version}
+
+%build
+%if %{MYSQL}
+CONFIG="$CONFIG --with-mysql"
+%endif
+
+%if %{POSTGRES}
+CONFIG="$CONFIG --with-postgres"
+%endif
+
+%if %{ODBC}
+CONFIG="$CONFIG --with-odbc"
+%endif
+
+%configure $CONFIG
+make %{?_smp_mflags}
 
 %install
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
+%makeinstall
 
-make DESTDIR=%{buildroot} install
-%find_lang %name --with-gnome
-
-%clean
-rm -rf $RPM_BUILD_ROOT
+%find_lang libgda-2
 
 %post -p /sbin/ldconfig
-							  
+export GCONF_CONFIG_SOURCE=`gconftool-2 --get-default-source`
+
+for SCHEMA in %{_sysconfdir}/gconf/schemas/libgda.schemas; do
+/usr/bin/gconftool-2 --makefile-install-rule $SCHEMA > /dev/null 2>&1
+done
+
 %postun -p /sbin/ldconfig
-							  
-%files -f %{name}.lang
-%defattr(-, root, root)
-%doc AUTHORS COPYING ChangeLog NEWS README
-%{_bindir}/gda-default-srv
-%{_bindir}/gda-test
-%{_bindir}/gda-run
-%{_libdir}/lib*.so.*
-%{_datadir}/gnome/html/*
-%{_datadir}/gda
-%{_datadir}/oaf/GNOME_GDA_Provider_Default.oaf
-%{_datadir}/idl/*
+
+%clean
+rm -rf %{buildroot}
+
+%files -f libgda-2.lang
+%defattr(-,root,root)
+%doc AUTHORS COPYING ChangeLog README NEWS
+%doc %{_datadir}/gnome/help/libgda
+%{_sysconfdir}/gconf/schemas/libgda.schemas
+%{_bindir}/*
+%{_libdir}/*.so.*
+%{_libdir}/bonobo/servers/*
+%{_datadir}/idl
+%{_datadir}/libgda/dtd/*
 
 %files devel
-%defattr(-, root, root)
+%defattr(-,root,root)
+%doc %{_datadir}/gtk-doc/html/libgda
+%{_includedir}/libgda/*
+%{_includedir}/libgda-report/*
+%{_libdir}/*.so
+%{_libdir}/*a
+%{_libdir}/pkgconfig/*
 
-%{_bindir}/gda-build*
-%{_bindir}/gda-config
-%{_libdir}/lib*.*a
-%{_libdir}/lib*.so
-%{_includedir}/*
 
-%files -n gda-odbc
-%defattr(-, root, root)
+%changelog
+* Mon Feb 25 2002 Chris Chabot <chabotc@reviewboard.com>
+- Cleaned up formatting
+- Added Requirements
+- Added defines for postgres, mysql, odbc support
 
-%{_bindir}/gda-odbc-srv
-%{_datadir}/oaf/GNOME_GDA_Provider_ODBC.oaf
-
-%files -n gda-postgres
-%defattr(-, root, root)
-
-%{_bindir}/gda-postgres-srv
-%{_datadir}/oaf/GNOME_GDA_Provider_Postgres.oaf
-
-%files -n gda-mysql
-%defattr(-, root, root)
-
-%{_bindir}/gda-mysql-srv
-%{_datadir}/oaf/GNOME_GDA_Provider_MySQL.oaf
+* Thu Feb 21 2002 Chris Chabot <chabotc@reviewboard.com>
+- Initial spec file

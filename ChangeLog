@@ -1,3 +1,7 @@
+2002-02-26  Chris Chabot <chabotc@reviewboard.com>
+
+	* libgda.spec.in: new version.
+
 2002-02-26  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
 	* providers/postgres/gda-postgres-provider.c (get_postgres_triggers):
