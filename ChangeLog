@@ -1,3 +1,11 @@
+10/09/2000	Akira TAGOH <tagoh@gnome.gr.jp>
+
+	* configure.in: deleted lib/gda-client/gda-report.dtd entry.
+
+	* lib/gda-client/Makefile.am: Added a rule to generate gda-report.dtd.
+
+	* lib/gda-client/gda-report.dtd.in: Modified a path prefix.
+
 09/09/2000	Carlos Perelló Marín <carlos@hispalinux.es>
 
 	* integrated the gda-report.dtd with autoconf (but it

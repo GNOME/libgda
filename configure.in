@@ -540,7 +540,6 @@ idl/Makefile
 lib/Makefile
 lib/gda-common/Makefile
 lib/gda-client/Makefile
-lib/gda-client/gda-report.dtd
 lib/gda-server/Makefile
 bindings/Makefile
 bindings/c++/Makefile

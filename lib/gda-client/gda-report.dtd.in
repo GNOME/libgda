@@ -6,7 +6,7 @@
      reportviewer's DTD (http://www.mutinybaysoftware.com)
 -->
 
-<!ENTITY % query SYSTEM "@datadir@/gda/dtd/gda-xml-query.dtd">
+<!ENTITY % query SYSTEM "@dtddir@/gda-xml-query.dtd">
 %query;
 
 

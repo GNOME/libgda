@@ -55,4 +55,7 @@ DTD_FILES = gda-report.dtd
 dtddir=$(datadir)/gda/dtd
 dtd_DATA=$(DTD_FILES)
 
+%.dtd: %.dtd.in
+	sed 's,\@dtddir\@,$(dtddir),' $< > $@
+
 EXTRA_DIST = $(DTD_FILES)
