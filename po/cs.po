@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda HEAD\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-08-02 12:37+0200\n"
-"PO-Revision-Date: 2004-08-02 19:00+0200\n"
+"POT-Creation-Date: 2004-08-08 20:03+0200\n"
+"PO-Revision-Date: 2004-08-08 23:40+0200\n"
 "Last-Translator: Miloslav Trmac <mitr@volny.cz>\n"
 "Language-Team: Czech <cs@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -216,7 +216,7 @@ msgstr "Chyba zpracovávání poblíž `%s'"
 msgid "Syntax error near `%s'"
 msgstr "Chyba syntaxe poblíž `%s'"
 
-#: libsql/sql_parser.c:361
+#: libsql/sql_parser.c:371
 msgid "Empty query to parse"
 msgstr "Zpracováván prázdný dotaz"
 
@@ -429,6 +429,8 @@ msgstr "Je třeba název tabulky, ale v seznamu parametrů žádný není"
 #: providers/firebird/gda-firebird-provider.c:1086
 #: providers/firebird/gda-firebird-provider.c:1120
 #: providers/firebird/gda-firebird-provider.c:1158
+#: providers/firebird/gda-firebird-recordset.c:724
+#: providers/firebird/gda-firebird-recordset.c:926
 msgid "Invalid Firebird handle"
 msgstr "Neplatný handle Firebird"
 
@@ -440,6 +442,27 @@ msgstr "Není zadána databáze"
 #: providers/firebird/gda-firebird-provider.c:1164
 msgid "Invalid transaction handle"
 msgstr "Neplatný handle transakce"
+
+#: providers/firebird/gda-firebird-recordset.c:380
+#: providers/firebird/gda-firebird-recordset.c:420
+msgid "Statement already prepared."
+msgstr "Příkaz je již připraven."
+
+#: providers/firebird/gda-firebird-recordset.c:384
+msgid "Transaction not initialized."
+msgstr "Transakce neinicializována."
+
+#: providers/firebird/gda-firebird-recordset.c:489
+msgid "Firebird's ARRAY datatype not supported yet !\n"
+msgstr "Typ dat Firebirdu ARRAY ještě není podporován!\n"
+
+#: providers/firebird/gda-firebird-recordset.c:494
+msgid "Firebird's BLOB datatype not supported yet !\n"
+msgstr "Typ dat Firebirdu BLOB ještě není podporován!\n"
+
+#: providers/firebird/gda-firebird-recordset.c:595
+msgid "Unknown Firebird's field value !\n"
+msgstr "Neznámá hodnota pole Firebirdu!\n"
 
 #: providers/firebird/libmain.c:40
 msgid "Provider for Firebird databases"
