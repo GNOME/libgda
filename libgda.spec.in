@@ -181,19 +181,19 @@ fi
 
 %{prefix}/bin/gda-odbc-srv
 %{prefix}/lib/libgda-odbc.so*
-%{prefix}/share/oaf/gda-odbc.oafinfo
+%{prefix}/share/oaf/GNOME_GDA_Provider_ODBC.oafinfo
 
 %files -n gda-postgres
 %defattr(-, root, root)
 
 %{prefix}/bin/gda-postgres-srv
 %{prefix}/lib/libgda-postgres.so*
-%{prefix}/share/oaf/gda-postgres.oafinfo
+%{prefix}/share/oaf/GNOME_GDA_Provider_Postgres.oafinfo
 
 %files -n gda-mysql
 %defattr(-, root, root)
 
 %{prefix}/bin/gda-mysql-srv
 %{prefix}/lib/libgda-mysql.so*
-%{prefix}/share/oaf/gda-mysql.oafinfo
+%{prefix}/share/oaf/GNOME_GDA_Provider_MySQL.oafinfo
 
