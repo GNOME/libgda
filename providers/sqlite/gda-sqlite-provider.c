@@ -21,6 +21,7 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#include <stdlib.h>
 #include "gda-default.h"
 #include "gda-default-recordset.h"
 #include <libgda/gda-row.h>
@@ -127,7 +128,6 @@ gda_default_provider_open_connection (GdaServerProvider *provider,
 
 	sqlite *sqlite;
 	
-	GdaError *error;
 	GdaDefaultProvider *dfprv = (GdaDefaultProvider *) provider;
 
 	g_return_val_if_fail (GDA_IS_DEFAULT_PROVIDER (dfprv), FALSE);
