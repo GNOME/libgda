@@ -185,7 +185,6 @@ gda_oracle_provider_open_connection (GdaServerProvider *provider,
 
         GdaOracleProvider *ora_prv = (GdaOracleProvider *) provider;
 	GdaOracleConnectionData *priv_data;
-	g_log("gda-oracle", G_LOG_LEVEL_DEBUG, "open_connection called");
 
 	g_return_val_if_fail (GDA_IS_ORACLE_PROVIDER (ora_prv), FALSE);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
@@ -213,7 +212,6 @@ gda_oracle_provider_open_connection (GdaServerProvider *provider,
 			_("Could not initialize Oracle"));
 		return FALSE;
 	}
-	g_log("gda-oracle", G_LOG_LEVEL_DEBUG, "open_connection(1)");
 	
 	/* initialize the Oracle environment */
 	result = OCIEnvInit ((OCIEnv **) & priv_data->henv, 
@@ -225,8 +223,6 @@ gda_oracle_provider_open_connection (GdaServerProvider *provider,
 			_("Could not initialize the Oracle environment"));
 		return FALSE;
 	}
-	g_log("gda-oracle", G_LOG_LEVEL_DEBUG, "open_connection(2)");
-
 
 	/* create the service context */
 	result = OCIHandleAlloc ((dvoid *) priv_data->henv,
@@ -237,7 +233,6 @@ gda_oracle_provider_open_connection (GdaServerProvider *provider,
 	if (!gda_oracle_check_result (result, cnc, priv_data, OCI_HTYPE_ENV,
 			_("Could not allocate the Oracle service handle")))
 		return FALSE;
-	g_log("gda-oracle", G_LOG_LEVEL_DEBUG, "open_connection(3)");
 
 	/* create the error handle */
 	result = OCIHandleAlloc ((dvoid *) priv_data->henv, 
@@ -250,7 +245,6 @@ gda_oracle_provider_open_connection (GdaServerProvider *provider,
 		OCIHandleFree ((dvoid *) priv_data->hservice, OCI_HTYPE_SVCCTX);
 		return FALSE;
 	}
-	g_log("gda-oracle", G_LOG_LEVEL_DEBUG, "open_connection(4)");
 			
 	/* we use the Multiple Sessions/Connections OCI paradigm for this server */
 	result = OCIHandleAlloc ((dvoid *) priv_data->henv,
@@ -264,7 +258,6 @@ gda_oracle_provider_open_connection (GdaServerProvider *provider,
 		OCIHandleFree ((dvoid *) priv_data->hservice, OCI_HTYPE_SVCCTX);
 		return FALSE;
 	}
-	g_log("gda-oracle", G_LOG_LEVEL_DEBUG, "open_connection(5)");
 
 	/* create the session handle */
 	result = OCIHandleAlloc ((dvoid *) priv_data->henv,
@@ -279,7 +272,6 @@ gda_oracle_provider_open_connection (GdaServerProvider *provider,
 		OCIHandleFree ((dvoid *) priv_data->hservice, OCI_HTYPE_SVCCTX);
 		return FALSE;
 	}
-	g_log("gda-oracle", G_LOG_LEVEL_DEBUG, "open_connection(6)");
 
 	/* if the username isn't provided, try to find it in the DSN */
 
@@ -311,7 +303,6 @@ gda_oracle_provider_open_connection (GdaServerProvider *provider,
 		OCIHandleFree ((dvoid *) priv_data->hservice, OCI_HTYPE_SVCCTX);
 		return FALSE;
 	}
-	g_log("gda-oracle", G_LOG_LEVEL_DEBUG, "open_connection(7)");
 
 	/* set the server attribute in the service context */
 	result = OCIAttrSet ((dvoid *) priv_data->hservice, 
@@ -328,8 +319,6 @@ gda_oracle_provider_open_connection (GdaServerProvider *provider,
 		OCIHandleFree ((dvoid *) priv_data->hservice, OCI_HTYPE_SVCCTX);
 		return FALSE;
 	}
-	g_log("gda-oracle", G_LOG_LEVEL_DEBUG, "open_connection(8)");
-	g_log("gda-oracle", G_LOG_LEVEL_DEBUG, "username='%s'", username);
 	
 	/* set the username attribute */
 	result = OCIAttrSet ((dvoid *) priv_data->hsession, 
@@ -346,7 +335,6 @@ gda_oracle_provider_open_connection (GdaServerProvider *provider,
 		OCIHandleFree ((dvoid *) priv_data->hservice, OCI_HTYPE_SVCCTX);
 		return FALSE;
 	}
-	g_log("gda-oracle", G_LOG_LEVEL_DEBUG, "open_connection(9)");
 
 	/* set the password attribute */
 	result = OCIAttrSet ((dvoid *) priv_data->hsession, 
@@ -363,7 +351,6 @@ gda_oracle_provider_open_connection (GdaServerProvider *provider,
 		OCIHandleFree ((dvoid *) priv_data->hservice, OCI_HTYPE_SVCCTX);
 		return FALSE;
 	}
-	g_log("gda-oracle", G_LOG_LEVEL_DEBUG, "open_connection(10)");
 
 	/* begin the session */
 	result = OCISessionBegin (priv_data->hservice,
@@ -381,7 +368,6 @@ gda_oracle_provider_open_connection (GdaServerProvider *provider,
 		priv_data->hsession = NULL;
 		return FALSE;
 	}
-	g_log("gda-oracle", G_LOG_LEVEL_DEBUG, "open_connection(11)");
 
 	/* set the session attribute in the service context */
 	result = OCIAttrSet ((dvoid *) priv_data->hservice,
@@ -407,7 +393,6 @@ gda_oracle_provider_open_connection (GdaServerProvider *provider,
 	/* attach the oracle connection data to the gda connection object */
 	g_object_set_data (G_OBJECT (cnc), OBJECT_DATA_ORACLE_HANDLE, priv_data);
 
-	g_log("gda-oracle", G_LOG_LEVEL_DEBUG, "open connection success");
 	return TRUE;
 }
 
@@ -1420,7 +1405,6 @@ gda_oracle_fill_md_data (const gchar *tblname,
 	    fq_tblname = tblname;
 	else
 	    fq_tblname = g_strjoin(".", owner, tblname, NULL);
-	g_log("gda-oracle", G_LOG_LEVEL_DEBUG, "full name is '%s'",fq_tblname);
 	
 	/* Describe the table */
 	result = OCIDescribeAny (priv_data->hservice,
@@ -1837,7 +1821,6 @@ get_oracle_tables (GdaConnection *cnc, GdaParameterList *params)
 	par = gda_parameter_list_find (params, "namespace");
     if (par)
     {
-	g_log("gda-oracle", G_LOG_LEVEL_DEBUG, "parameterised get_tables");
 	namespace = gda_value_get_string ((GdaValue *) gda_parameter_get_value (par));
 	upc_namespace = g_ascii_strup(namespace, -1);
 
@@ -1870,7 +1853,6 @@ get_oracle_tables (GdaConnection *cnc, GdaParameterList *params)
 		{ N_("Comments"), GDA_VALUE_TYPE_STRING },
 		{ N_("SQL"),      GDA_VALUE_TYPE_STRING }
 	};
-	g_log("gda-oracle", G_LOG_LEVEL_DEBUG, "default get_tables");
 	priv_data = g_object_get_data(G_OBJECT(cnc),OBJECT_DATA_ORACLE_HANDLE);
 	if (priv_data->tables == NULL)
 	    if (gda_oracle_table_tree(cnc) == NULL)
@@ -1881,7 +1863,6 @@ get_oracle_tables (GdaConnection *cnc, GdaParameterList *params)
 
 	g_tree_foreach(priv_data->tables, get_tables_foreach, recset);
     }
-    g_log("gda-oracle", G_LOG_LEVEL_DEBUG, "get_tables returning %p", recset);
     return recset;
 }
 
@@ -1902,7 +1883,6 @@ get_oracle_views (GdaConnection *cnc, GdaParameterList *params)
 	par = gda_parameter_list_find (params, "namespace");
     if (par)
     {
-	g_log("gda-oracle", G_LOG_LEVEL_DEBUG, "parameterised get_views");
 	namespace = gda_value_get_string ((GdaValue *) gda_parameter_get_value (par));
 	upc_namespace = g_ascii_strup(namespace, -1);
 
@@ -1935,7 +1915,6 @@ get_oracle_views (GdaConnection *cnc, GdaParameterList *params)
 		{ N_("Comments"), GDA_VALUE_TYPE_STRING },
 		{ N_("SQL"),      GDA_VALUE_TYPE_STRING }
 	};
-	g_log("gda-oracle", G_LOG_LEVEL_DEBUG, "default get_views");
 	priv_data = g_object_get_data(G_OBJECT(cnc),OBJECT_DATA_ORACLE_HANDLE);
 	if (priv_data->views == NULL)
 	    if (gda_oracle_view_tree(cnc) == NULL)
@@ -1946,7 +1925,6 @@ get_oracle_views (GdaConnection *cnc, GdaParameterList *params)
 	
 	g_tree_foreach(priv_data->views, get_tables_foreach, recset);
     }
-    g_log("gda-oracle", G_LOG_LEVEL_DEBUG, "get_views returning %p", recset);
 	return recset;
 }
 

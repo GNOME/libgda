@@ -1,5 +1,11 @@
 2003-04-18  Steve Fosdick <gnomedb@pelvoux.demon.co.uk>
 
+	* libgda/providers/oracle/gda-oracle-provider.c: Removed debugging
+	messages and added local variable declaration for Emacs to help
+	keep to the coding style.
+	
+2003-04-18  Steve Fosdick <gnomedb@pelvoux.demon.co.uk>
+
 	* libgda/providers/oracle/gda-oracle-provider.c: Fixed the
 	handling of usernames and password so that if the
 	username/password supplied at connection time is blank and so
