@@ -47,9 +47,9 @@ gda_postgres_make_error (PGconn *handle)
 //TODO: This one just copied from MySQL provider!
 //Should be converted to PostgreSQL types!
 GdaType
-gda_postgres_type_to_gda (enum enum_field_types postgres_type)
+gda_postgres_type_to_gda (int postgres_type)
 {
-	switch (postgres_type) {
+/*	switch (postgres_type) {
 	case FIELD_TYPE_DATE :
 		return GDA_TYPE_DATE;
 	case FIELD_TYPE_DECIMAL :
@@ -86,7 +86,7 @@ gda_postgres_type_to_gda (enum enum_field_types postgres_type)
 	case FIELD_TYPE_SET :
 		break;
 	}
-
+*/
 	return GDA_TYPE_UNKNOWN;
 }
 

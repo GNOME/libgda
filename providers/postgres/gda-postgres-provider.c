@@ -46,6 +46,22 @@ static GList *gda_postgres_provider_execute_command (GdaServerProvider *provider
 						  GdaCommand *cmd,
 						  GdaParameterList *params);
 
+static gboolean gda_postgres_provider_begin_transaction (GdaServerProvider *provider,
+						     GdaServerConnection *cnc,
+						     const gchar *trans_id);
+
+static gboolean gda_postgres_provider_commit_transaction (GdaServerProvider *provider,
+						     GdaServerConnection *cnc,
+						     const gchar *trans_id);
+
+static gboolean gda_postgres_provider_rollback_transaction (GdaServerProvider *provider,
+						     GdaServerConnection *cnc,
+						     const gchar *trans_id);
+
+static gboolean gda_postgres_provider_single_command (const GdaPostgresProvider *provider,
+						      GdaServerConnection *cnc,
+						      const gchar *command);
+
 static GObjectClass *parent_class = NULL;
 
 /*
@@ -63,22 +79,22 @@ gda_postgres_provider_class_init (GdaPostgresProviderClass *klass)
 	provider_class->open_connection = gda_postgres_provider_open_connection;
 	provider_class->close_connection = gda_postgres_provider_close_connection;
 	provider_class->execute_command = gda_postgres_provider_execute_command;
-	provider_class->begin_transaction = NULL;
-	provider_class->commit_transaction = NULL;
-	provider_class->rollback_transaction = NULL;
+	provider_class->begin_transaction = gda_postgres_provider_begin_transaction;
+	provider_class->commit_transaction = gda_postgres_provider_commit_transaction;
+	provider_class->rollback_transaction = gda_postgres_provider_rollback_transaction;
 }
 
 static void
-gda_postgres_provider_init (GdaPostgresProvider *myprv, GdaPostgresProviderClass *klass)
+gda_postgres_provider_init (GdaPostgresProvider *pg_prv, GdaPostgresProviderClass *klass)
 {
 }
 
 static void
 gda_postgres_provider_finalize (GObject *object)
 {
-	GdaPostgresProvider *myprv = (GdaPostgresProvider *) object;
+	GdaPostgresProvider *pg_prv = (GdaPostgresProvider *) object;
 
-	g_return_if_fail (GDA_IS_POSTGRES_PROVIDER (myprv));
+	g_return_if_fail (GDA_IS_POSTGRES_PROVIDER (pg_prv));
 
 	/* chain to parent class */
 	parent_class->finalize(object);
@@ -123,13 +139,13 @@ gda_postgres_provider_open_connection (GdaServerProvider *provider,
 	const gchar *pq_tty;
 	const gchar *pq_login;
 	const gchar *pq_pwd;
-	PGconn *pc;
-	PGresult *res;
+	PGconn *pconn;
+	PGresult *pg_res;
 	GdaError *error;
 
-	GdaPostgresProvider *myprv = (GdaPostgresProvider *) provider;
+	GdaPostgresProvider *pg_prv = (GdaPostgresProvider *) provider;
 
-	g_return_val_if_fail (GDA_IS_POSTGRES_PROVIDER (myprv), FALSE);
+	g_return_val_if_fail (GDA_IS_POSTGRES_PROVIDER (pg_prv), FALSE);
 	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), FALSE);
 
 	/* parse connection string */
@@ -143,26 +159,26 @@ gda_postgres_provider_open_connection (GdaServerProvider *provider,
 
 
 	/* actually establish the connection */
-	pc = PQsetdbLogin (pq_host, pq_port, pq_options, pq_tty, pq_db,
+	pconn = PQsetdbLogin (pq_host, pq_port, pq_options, pq_tty, pq_db,
 		      pq_login, pq_pwd);
 
-	if (PQstatus (pc) != CONNECTION_OK) {
-		gda_postgres_make_error (pc);
+	if (PQstatus (pconn) != CONNECTION_OK) {
+		gda_postgres_make_error (pconn);
 		return FALSE;
 	}
 
 	/*
 	 * Sets the DATE format for all the current session to DD-MM-YYYY
 	 */
-	res = PQexec (pc, "SET DATESTYLE TO 'SQL, US'");
-	PQclear (res);
+	pg_res = PQexec (pconn, "SET DATESTYLE TO 'SQL, US'");
+	PQclear (pg_res);
 	/*
 	 * the TIMEZONE is left to what is the default, without trying to impose
 	 * one. Otherwise the command would be:
 	 * "SET TIME ZONE '???'" or "SET TIME ZONE DEFAULT"
 	 */
 
-	g_object_set_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE, pc);
+	g_object_set_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE, pconn);
 	return TRUE;
 }
 
@@ -172,9 +188,9 @@ gda_postgres_provider_close_connection (GdaServerProvider *provider, GdaServerCo
 {
 	PGconn *pconn;
 
-	GdaPostgresProvider *myprv = (GdaPostgresProvider *) provider;
+	GdaPostgresProvider *pg_prv = (GdaPostgresProvider *) provider;
 
-	g_return_val_if_fail (GDA_IS_POSTGRES_PROVIDER (myprv), FALSE);
+	g_return_val_if_fail (GDA_IS_POSTGRES_PROVIDER (pg_prv), FALSE);
 	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), FALSE);
 
 	pconn = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE);
@@ -195,7 +211,7 @@ static GList *
 process_sql_commands (GList *reclist, GdaServerConnection *cnc, const gchar *sql)
 {
 	PGconn *pconn;
-	gchar *arr;
+	gchar **arr;
 
 	pconn = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE);
 	if (!pconn) {
@@ -246,9 +262,9 @@ gda_postgres_provider_execute_command (GdaServerProvider *provider,
 {
 	GList *reclist = NULL;
 	gchar *str;
-	GdaPostgresProvider *myprv = (GdaPostgresProvider *) provider;
+	GdaPostgresProvider *pg_prv = (GdaPostgresProvider *) provider;
 
-	g_return_val_if_fail (GDA_IS_POSTGRES_PROVIDER (myprv), NULL);
+	g_return_val_if_fail (GDA_IS_POSTGRES_PROVIDER (pg_prv), NULL);
 	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (cmd != NULL, NULL);
 
@@ -264,5 +280,69 @@ gda_postgres_provider_execute_command (GdaServerProvider *provider,
 	}
 
 	return reclist;
+}
+
+static gboolean 
+gda_postgres_provider_begin_transaction (GdaServerProvider *provider,
+				         GdaServerConnection *cnc,
+					 const gchar *trans_id)
+{
+	GdaPostgresProvider *pg_prv = (GdaPostgresProvider *) provider;
+
+	g_return_val_if_fail (GDA_IS_POSTGRES_PROVIDER (pg_prv), FALSE);
+	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), FALSE);
+
+	return gda_postgres_provider_single_command (pg_prv, cnc, "BEGIN"); 
+}
+
+static gboolean 
+gda_postgres_provider_commit_transaction (GdaServerProvider *provider,
+					  GdaServerConnection *cnc,
+					  const gchar *trans_id)
+{
+	GdaPostgresProvider *pg_prv = (GdaPostgresProvider *) provider;
+
+	g_return_val_if_fail (GDA_IS_POSTGRES_PROVIDER (pg_prv), FALSE);
+	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), FALSE);
+
+	return gda_postgres_provider_single_command (pg_prv, cnc, "COMMIT"); 
+}
+
+static gboolean 
+gda_postgres_provider_rollback_transaction (GdaServerProvider *provider,
+					    GdaServerConnection *cnc,
+					    const gchar *trans_id)
+{
+	GdaPostgresProvider *pg_prv = (GdaPostgresProvider *) provider;
+
+	g_return_val_if_fail (GDA_IS_POSTGRES_PROVIDER (pg_prv), FALSE);
+	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), FALSE);
+
+	return gda_postgres_provider_single_command (pg_prv, cnc, "ROLLBACK"); 
+}
+
+/* Really does the BEGIN/ROLLBACK/COMMIT */
+static gboolean 
+gda_postgres_provider_single_command (const GdaPostgresProvider *provider,
+				      GdaServerConnection *cnc,
+				      const gchar *command)
+{
+	PGconn *pconn;
+	PGresult *pg_res;
+	gboolean result;
+
+	pconn = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE);
+	if (!pconn) {
+		gda_server_connection_add_error_string (cnc, _("Invalid PostgreSQL handle"));
+		return FALSE;
+	}
+
+	pg_res = PQexec(pconn, command);
+	result = PQresultStatus(pg_res) == PGRES_COMMAND_OK;
+	PQclear (pg_res);
+	if (result == FALSE)
+		gda_postgres_make_error (pconn);
+
+	return result;
 }
 

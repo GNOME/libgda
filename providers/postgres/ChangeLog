@@ -1,3 +1,18 @@
+2001-12-20  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
+	* gda-postgres-provider.c: some cosmetic changes, implementation of
+	begin, commit and rollback.
+
+	* gda-postgres-recordset.c: commented out some portions of code
+	related to data types so as the code compiles ok.
+
+	* gda-postgres.h: added include for gda-postgres-recordset.h needed by
+	gda-postgres-provider.c. Changed the declaration of 
+	gda_postgres_type_to_gda() to make the code compile.
+
+	* utils.c: make the code compile but gda_postgres_type_to_gda()
+	unuseful. I will finish it later.
+	
 2001-12-19  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* GNOME_Database_Provider_Postgres.server.in: fixed gda_params

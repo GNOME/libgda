@@ -31,8 +31,9 @@
 #include <glib/gmacros.h>
 #include <bonobo/bonobo-i18n.h>
 #include <libgda/gda-server.h>
-#include <gda-postgres-provider.h>
 #include <libpq-fe.h>
+#include "gda-postgres-provider.h"
+#include "gda-postgres-recordset.h"
 
 #define GDA_POSTGRES_COMPONENT_FACTORY_ID "OAFIID:GNOME_Database_Postgres_ComponentFactory"
 #define GDA_POSTGRES_PROVIDER_ID          "OAFIID:GNOME_Database_Postgres_Provider"
@@ -45,7 +46,7 @@ G_BEGIN_DECLS
 
 GdaError *gda_postgres_make_error (PGconn *cnc);
 //TODO: see utils.c
-GdaType gda_postgres_type_to_gda (enum enum_field_types postgres_type);
+GdaType gda_postgres_type_to_gda (int postgres_type);//(enum enum_field_types postgres_type);
 
 G_END_DECLS
 
