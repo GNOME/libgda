@@ -22,6 +22,10 @@
  */
 
 // $Log$
+// Revision 1.2  2000/10/06 19:24:45  menthos
+// Added Swedish entry to configure.in and changed some C++-style comments causing problems to
+// C-style.
+//
 // Revision 1.1.1.1  2000/08/10 09:32:39  rodrigo
 // First version of libgda separated from GNOME-DB
 //
@@ -185,7 +189,7 @@ gda_sybase_recordset_new(Gda_ServerRecordset *recset)
   srecset->scnc = (sybase_Connection *) NULL;
   srecset->scmd = (sybase_Command *) NULL;
 
-  // We don't know the rowcount yet, so we initialize with null pointer
+  /* We don't know the rowcount yet, so we initialize with null pointer */
   srecset->datafmt = (CS_DATAFMT *) NULL;
   srecset->data = (sybase_Field *) NULL;
 
@@ -322,7 +326,7 @@ gda_sybase_init_recset_fields (Gda_ServerError *err,
   g_return_if_fail(srecset->scmd->cmd != NULL);
   g_return_if_fail(srecset->scnc != NULL);
   g_return_if_fail(srecset->scnc->cnc != NULL);
-  // Yes we mean ==, because we don't want to overwrite any existing data
+  /* Yes we mean ==, because we don't want to overwrite any existing data */
   g_return_if_fail(srecset->data == NULL);
 
   srecset->ret = result_type;
@@ -366,7 +370,7 @@ gda_sybase_init_recset_fields (Gda_ServerError *err,
     }
   }
 
-  // set sybase's resulttype
+  /* set sybase's resulttype */
   srecset->result_type = result_type;
   srecset->failed = FALSE;
   datafmt = srecset->datafmt;
@@ -419,7 +423,7 @@ gda_sybase_init_recset_fields (Gda_ServerError *err,
       gda_log_error(_("illegal type detected, aborting"));
       srecset->failed = TRUE;
       return;
-    } else { // well, let's allocate and fill in fielddata of column colnr
+    } else { /* well, let's allocate and fill in fielddata of column colnr */
       field = gda_server_field_new();
       if (!field) {
 	gda_log_error(_("could not allocate field"));

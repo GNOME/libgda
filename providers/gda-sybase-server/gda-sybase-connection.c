@@ -22,6 +22,10 @@
  */
 
 // $Log$
+// Revision 1.4  2000/10/06 19:24:45  menthos
+// Added Swedish entry to configure.in and changed some C++-style comments causing problems to
+// C-style.
+//
 // Revision 1.3  2000/10/04 08:43:14  rodrigo
 // Fixed untranslatable strings
 //
@@ -787,16 +791,17 @@ gda_sybase_connection_reopen(Gda_ServerConnection *cnc)
     return FALSE;
   }
   
-  // Now we've got an initialized CS_CONTEXT and an allocated CS_COMMAND
-  // and maybe setup the locale, so we can setup error handling
-  //   For inline messages handling:
-  //     Uncomment all following gda_sybase_messages_install conditions
-  //     for handling messages inline.
-  //     Do comment all conditions with gda_sybase_install_error_messages then!
-  //
-  //   For callback messages handling:
-  //     Uncomment all following gda_sybase_install_error_messages conditions.
-  //     Do comment all conditions with gda_sybase_messages_install then!
+  /* Now we've got an initialized CS_CONTEXT and an allocated CS_COMMAND
+     and maybe setup the locale, so we can setup error handling
+       For inline messages handling:
+         Uncomment all following gda_sybase_messages_install conditions
+	 for handling messages inline.
+	 Do comment all conditions with gda_sybase_install_error_messages then!
+
+       For callback messages handling:
+         Uncomment all following gda_sybase_install_error_messages conditions.
+	 Do comment all conditions with gda_sybase_messages_install then!
+  */
   if (gda_sybase_messages_install(cnc) != TRUE) {
     return FALSE;
   }

@@ -1,3 +1,12 @@
+2000-10-06  Christian Rose  <menthos@menthos.com>
+
+	* configure.in: Added Swedish (sv) to ALL_LINGUAS.
+
+	* providers/gda-sybase-server/gda-sybase-command.c,
+	  providers/gda-sybase-server/gda-sybase-connection.c,
+	  providers/gda-sybase-server/gda-sybase-recordset.c:
+	  Changed some C++-style comments causing gettext problems to C-style.
+
 2000-09-28  Jesus Bravo Alvarez  <jba@pobox.com>
 
 	* configure.in: Added Galician (gl) to ALL_LINGUAS.

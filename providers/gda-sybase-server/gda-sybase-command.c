@@ -22,6 +22,10 @@
  */
 
 // $Log$
+// Revision 1.2  2000/10/06 19:24:45  menthos
+// Added Swedish entry to configure.in and changed some C++-style comments causing problems to
+// C-style.
+//
 // Revision 1.1.1.1  2000/08/10 09:32:37  rodrigo
 // First version of libgda separated from GNOME-DB
 //
@@ -166,24 +170,26 @@ gda_sybase_command_execute (Gda_ServerCommand *cmd,
   srecset->scnc = scnc;
   srecset->scmd = scmd;
   
-  // Fetching results is a bit tricky,
-  // because sybase can have multiple result types outstanding on one query.
-  // If we do not fetch all results, the command structure having results
-  // blocks the connection (i.e. all commands using the same connection).
-  // If we want to cleanly perform the query, we'd need to either hack
-  // the ct_results loop into gda_sybase_recordset_move_next func
-  // or proceed the results within here, storing the result data redundant
-  // in srecset. In 2nd case, we'd have resultdata at least twice in memory.
-  // On the other hand, we could return a correct affected result, because+       // sybase just can return a CS_ROW_COUNT after all rows have been fetched.
-  //
-  // We have to keep our eyes on recset pointer we return, though.
-  // At the moment, we try to just fetch the row results and first cursor
-  // results, which is not clean, but saves memory:
-  // 1. switch ct_results
-  // 2. if row/cursor result: init recordset(ct_res_info/ct_bind)
-  //    if succeed: return recordset
-  // 3. gda will ct_fetch result using gda_sybase_recordset_move_next()
-  // If anything fails or is unknown, ct_cancel all results of current cmd 
+  /* Fetching results is a bit tricky,
+     because sybase can have multiple result types outstanding on one query.
+     If we do not fetch all results, the command structure having results
+     blocks the connection (i.e. all commands using the same connection).
+     If we want to cleanly perform the query, we'd need to either hack
+     the ct_results loop into gda_sybase_recordset_move_next func
+     or proceed the results within here, storing the result data redundant
+     in srecset. In 2nd case, we'd have resultdata at least twice in memory.
+     On the other hand, we could return a correct affected result, because+
+     sybase just can return a CS_ROW_COUNT after all rows have been fetched.
+
+     We have to keep our eyes on recset pointer we return, though.
+     At the moment, we try to just fetch the row results and first cursor
+     results, which is not clean, but saves memory:
+     1. switch ct_results
+     2. if row/cursor result: init recordset(ct_res_info/ct_bind)
+        if succeed: return recordset
+     3. gda will ct_fetch result using gda_sybase_recordset_move_next()
+     If anything fails or is unknown, ct_cancel all results of current cmd
+  */
   while (SYB_CHK((CS_INT *) &scnc->ret, ct_results(scmd->cmd, &result_type),
 		 error, recset, cnc, cmd
 		 ) == CS_SUCCEED
