@@ -25,6 +25,7 @@
 #include <libgda/gda-data-model-array.h>
 #include <libgda/gda-intl.h>
 #include <libgda/gda-row.h>
+#include <libgda/gda-select.h>
 #include <libgda/gda-util.h>
 #include "gda-xml.h"
 #include "gda-xml-recordset.h"
@@ -36,44 +37,44 @@
 
 static void gda_xml_provider_class_init (GdaXmlProviderClass *klass);
 static void gda_xml_provider_init       (GdaXmlProvider *provider,
-					     GdaXmlProviderClass *klass);
+					 GdaXmlProviderClass *klass);
 static void gda_xml_provider_finalize   (GObject *object);
 
 static const gchar *gda_xml_provider_get_version (GdaServerProvider *provider);
 static gboolean gda_xml_provider_open_connection (GdaServerProvider *provider,
-						      GdaConnection *cnc,
-						      GdaQuarkList *params,
-						      const gchar *username,
-						      const gchar *password);
+						  GdaConnection *cnc,
+						  GdaQuarkList *params,
+						  const gchar *username,
+						  const gchar *password);
 static gboolean gda_xml_provider_close_connection (GdaServerProvider *provider,
-						       GdaConnection *cnc);
+						   GdaConnection *cnc);
 static const gchar *gda_xml_provider_get_server_version (GdaServerProvider *provider,
-							     GdaConnection *cnc);
+							 GdaConnection *cnc);
 static const gchar *gda_xml_provider_get_database (GdaServerProvider *provider,
-						       GdaConnection *cnc);
+						   GdaConnection *cnc);
 static gboolean gda_xml_provider_create_database (GdaServerProvider *provider,
-						      GdaConnection *cnc,
-						      const gchar *name);
+						  GdaConnection *cnc,
+						  const gchar *name);
 static GList *gda_xml_provider_execute_command (GdaServerProvider *provider,
-						    GdaConnection *cnc,
-						    GdaCommand *cmd,
-						    GdaParameterList *params);
+						GdaConnection *cnc,
+						GdaCommand *cmd,
+						GdaParameterList *params);
 static gboolean gda_xml_provider_begin_transaction (GdaServerProvider *provider,
-							GdaConnection *cnc,
-							GdaTransaction *xaction);
+						    GdaConnection *cnc,
+						    GdaTransaction *xaction);
 static gboolean gda_xml_provider_commit_transaction (GdaServerProvider *provider,
-							 GdaConnection *cnc,
-							 GdaTransaction *xaction);
+						     GdaConnection *cnc,
+						     GdaTransaction *xaction);
 static gboolean gda_xml_provider_rollback_transaction (GdaServerProvider *provider,
-							   GdaConnection *cnc,
-							   GdaTransaction *xaction);
+						       GdaConnection *cnc,
+						       GdaTransaction *xaction);
 static gboolean gda_xml_provider_supports (GdaServerProvider *provider,
-					       GdaConnection *cnc,
-					       GdaConnectionFeature feature);
+					   GdaConnection *cnc,
+					   GdaConnectionFeature feature);
 static GdaDataModel *gda_xml_provider_get_schema (GdaServerProvider *provider,
-						      GdaConnection *cnc,
-						      GdaConnectionSchema schema,
-						      GdaParameterList *params);
+						  GdaConnection *cnc,
+						  GdaConnectionSchema schema,
+						  GdaParameterList *params);
 
 static GObjectClass *parent_class = NULL;
 
@@ -282,12 +283,36 @@ process_sql_commands (GList *reclist, GdaConnection *cnc, const gchar *sql)
 	arr = g_strsplit (sql, ";", 0);
 	if (arr) {
 		gint n = 0;
+		GList *tables, *l;
 
+		tables = gda_xml_database_get_tables (xmldb);
 		while (arr[n]) {
+			GdaSelect *select;
+
+			/* create the GdaSelect and add the sources */
+			select = (GdaSelect *) gda_select_new ();
+			gda_select_set_sql (select, arr[n]);
+
+			for (l = tables; l != NULL; l = l->next) {
+				GdaTable *table;
+
+				table = gda_xml_database_find_table (xmldb, l->data);
+				if (table) {
+					gda_select_add_source (select,
+							       l->data,
+							       (const GdaDataModel *) table);
+				}
+			}
+
+			/* run the SQL */
+			if (gda_select_run (select))
+				reclist = g_list_append (reclist, select);
+
 			n++;
 		}
 
 		g_strfreev (arr);
+		gda_xml_database_free_table_list (tables);
 	}
 
 	return reclist;
@@ -359,22 +384,22 @@ gda_xml_provider_execute_command (GdaServerProvider *provider,
 	g_return_val_if_fail (cmd != NULL, NULL);
 
 	switch (gda_command_get_command_type (cmd)) {
-		case GDA_COMMAND_TYPE_SQL:
-			reclist = process_sql_commands (reclist, cnc,
-							gda_command_get_text (cmd));
-			break;
-		case GDA_COMMAND_TYPE_XML:
-			/* FIXME: Implement */
-			return NULL;
-		case GDA_COMMAND_TYPE_PROCEDURE:
-			/* FIXME: Implement */
-			return NULL;
-		case GDA_COMMAND_TYPE_TABLE:
-			reclist = process_table_commands (reclist, cnc,
-							  gda_command_get_text (cmd));
-			break;
-		case GDA_COMMAND_TYPE_INVALID:
-			return NULL;
+	case GDA_COMMAND_TYPE_SQL:
+		reclist = process_sql_commands (reclist, cnc,
+						gda_command_get_text (cmd));
+		break;
+	case GDA_COMMAND_TYPE_XML:
+		/* FIXME: Implement */
+		return NULL;
+	case GDA_COMMAND_TYPE_PROCEDURE:
+		/* FIXME: Implement */
+		return NULL;
+	case GDA_COMMAND_TYPE_TABLE:
+		reclist = process_table_commands (reclist, cnc,
+						  gda_command_get_text (cmd));
+		break;
+	default:
+		return NULL;
 	}
 
 	return reclist;
@@ -498,15 +523,7 @@ get_table_fields (GdaConnection *cnc, GdaXmlDatabase *xmldb, GdaParameterList *p
 	/* fill in the recordset to be returned */
 	recset = GDA_DATA_MODEL_ARRAY (gda_data_model_array_new (8));
 	for (i = 0; i < sizeof (fields_desc) / sizeof (fields_desc[0]); i++) {
-		gint defined_size =  (fields_desc[i].type == GDA_VALUE_TYPE_STRING) ? 64 : 
-			(fields_desc[i].type == GDA_VALUE_TYPE_INTEGER) ? sizeof (gint) : 1;
-
-		/* gda_server_recordset_model_set_field_defined_size (recset, i, defined_size); */
 		gda_data_model_set_column_title (GDA_DATA_MODEL (recset), i, _(fields_desc[i].name));
-/*
-		gda_server_recordset_model_set_field_scale (recset, i, 0);
-		gda_server_recordset_model_set_field_gdatype (recset, i, fields_desc[i].type);
-*/
 	}
 
 	cols = gda_data_model_get_n_columns (GDA_DATA_MODEL (table));

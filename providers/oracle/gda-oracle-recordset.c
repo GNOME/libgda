@@ -636,8 +636,8 @@ gda_oracle_recordset_get_type (void)
 
 GdaOracleRecordset *
 gda_oracle_recordset_new (GdaConnection *cnc, 
-				GdaOracleConnectionData *cdata,
-				OCIStmt *stmthp)
+			  GdaOracleConnectionData *cdata,
+			  OCIStmt *stmthp)
 {
 	GdaOracleRecordset *recset;
 	ub4 parcount;
@@ -646,11 +646,11 @@ gda_oracle_recordset_new (GdaConnection *cnc,
 	g_return_val_if_fail (cdata != NULL, NULL);
 
 	OCIAttrGet ((dvoid *) stmthp,
-			(ub4) OCI_HTYPE_STMT,
-			(dvoid *) &parcount, 
-			0,
-			(ub4) OCI_ATTR_PARAM_COUNT,
-			cdata->herr);
+		    (ub4) OCI_HTYPE_STMT,
+		    (dvoid *) &parcount, 
+		    0,
+		    (ub4) OCI_ATTR_PARAM_COUNT,
+		    cdata->herr);
 
 	recset = g_object_new (GDA_TYPE_ORACLE_RECORDSET, NULL);
 	recset->priv->nrows = -1;
