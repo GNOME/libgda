@@ -1,14 +1,15 @@
 # libgda fr.po
-# Copyright (C) 2000-2001 Free Software Foundation, Inc.
+# Copyright (C) 2000-2002 Free Software Foundation, Inc.
 # Christophe Merlet (RedFox) <redfox@eikonex.org>, 2000-2001.
+# Frederic Riss <frederic.riss@laposte.net>, 2002.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: libgda 0.2.4\n"
-"POT-Creation-Date: 2002-01-25 01:10+0100\n"
-"PO-Revision-Date: 2001-02-13 12:43+0100\n"
-"Last-Translator: Christophe Merlet (RedFox) <redfox@eikonex.org>\n"
-"Language-Team: GNOME French Team <gnomefr@gnomefr.traduc.org>\n"
+"Project-Id-Version: libgda 0.2.96\n"
+"POT-Creation-Date: 2002-02-02 13:53+0100\n"
+"PO-Revision-Date: 2002-02-02 13:51+0100\n"
+"Last-Translator: Frederic Riss <frederic.riss@laposte.net>\n"
+"Language-Team: GNOME French Team <gnomefr@traduc.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=ISO-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -31,7 +32,7 @@ msgstr ""
 
 #: lib/gda-client/gda-connection.c:437 lib/gda-client/gda-connection.c:454
 msgid "[GDA Client Library]"
-msgstr ""
+msgstr "[Librairie cliente GDA]"
 
 #: lib/gda-client/gda-connection.c:453
 msgid "Could not open CORBA factory"
@@ -48,14 +49,12 @@ msgid "<Unknown GDA Type(NULL)>"
 msgstr "<Type GDA inconnu(NUL)>"
 
 #: lib/gda-client/gda-field.c:264
-#, fuzzy
 msgid "true"
-msgstr "Vrai"
+msgstr "vrai"
 
 #: lib/gda-client/gda-field.c:266
-#, fuzzy
 msgid "false"
-msgstr "Faux"
+msgstr "faux"
 
 #: lib/gda-common/gda-corba.c:88
 #, c-format
@@ -81,22 +80,20 @@ msgid "%s: An Error occured in the CORBA system."
 msgstr "%s : Une erreur est apparue dans le système CORBA"
 
 #: lib/gda-common/gda-error.c:152
-#, fuzzy
 msgid "[CORBA User Exception]"
-msgstr "Exception de l'utilisateur CORBA : %s"
+msgstr "[Exception utilisateur CORBA]"
 
 #: lib/gda-common/gda-error.c:201
 msgid "Unknown CORBA exception for connection"
-msgstr ""
+msgstr "Exception CORBA inconnue lors de la connexion"
 
 #: lib/gda-common/gda-init.c:55
 msgid "Attempt to initialize an already initialized client"
 msgstr "Tentative d'initialiser un client déjà initialisé"
 
 #: lib/gda-common/gda-init.c:64 lib/gda-server/gda-server-init.c:121
-#, fuzzy
 msgid "Could not initialize Bonobo"
-msgstr "Ne peut initialiser ct_diag()"
+msgstr "Ne peut initialiser Bonobo"
 
 #: lib/gda-common/gda-log.c:48
 msgid "Saving log...x"
@@ -116,18 +113,18 @@ msgid "thread is already running"
 msgstr "le thread déjà en fonctionnement"
 
 #: lib/gda-common/gda-util.c:113
-#, fuzzy, c-format
+#, c-format
 msgid "Could not open file %s"
-msgstr "Ne peut définir la locale pour « %s »"
+msgstr "Impossible d'ouvrir le fichier %s"
 
 #: lib/gda-common/gda-util.c:138
-#, fuzzy, c-format
+#, c-format
 msgid "Could not create file %s"
-msgstr "ne peut allouer le champ"
+msgstr "Impossible de créer le fichier %s"
 
 #: lib/gda-common/gda-xml-database.c:166
 msgid "bad formed document"
-msgstr ""
+msgstr "document mal formé"
 
 #: lib/gda-common/gda-xml-database.c:267
 #, c-format
@@ -140,18 +137,17 @@ msgid "%p is not a valid table"
 msgstr "%p n'est pas une table valide"
 
 #: lib/gda-common/gda-xml-item.c:386
-#, fuzzy, c-format
+#, c-format
 msgid "Item with id %s not found"
-msgstr "Sources de données %s non trouvée"
+msgstr "Élément d'identifiant %s introuvable"
 
 #: lib/gda-server/gda-server-connection.c:404
-#, fuzzy
 msgid "Connection being closed"
-msgstr "La connexion semble morte"
+msgstr "Fermeture de la connexion "
 
 #: lib/gda-server/gda-server-connection.c:407
 msgid "This connection is being closed, so all listeners are released"
-msgstr ""
+msgstr "Cette connexion se ferme, donc tous les observateurs sont libérés"
 
 #: lib/gda-server/gda-server-error.c:41
 msgid "Could not get pointer to server implementation"
@@ -195,40 +191,35 @@ msgid "CORBA user exception: %s"
 msgstr "Exception de l'utilisateur CORBA : %s"
 
 #: providers/gda-default-server/GNOME_GDA_Provider_Default.oaf.in.h:1
-#, fuzzy
 msgid "Default provider connection factory"
-msgstr "ne peut ouvrir de connexion sur %s"
+msgstr "Usine à fournisseur par défaut"
 
 #: providers/gda-default-server/GNOME_GDA_Provider_Default.oaf.in.h:2
-#, fuzzy
 msgid "GDA Default Datasource Access"
-msgstr "Propriétées du Serveur GDA"
+msgstr "Accès à la Source de Données par Défaut GDA"
 
 #: providers/gda-default-server/gda-default-connection.c:127
 msgid "You must specify a directory for the database to be stored"
-msgstr ""
+msgstr "Vous devez spécifier un répertoire pour stocker la base de données"
 
 #: providers/gda-default-server/gda-default-connection.c:235
 #: providers/gda-mysql-server/gda-mysql-connection.c:283
 #: providers/gda-oracle-server/gda-oracle-connection.c:334
 #: providers/gda-postgres-server/gda-postgres-connection.c:486
-#, fuzzy
 msgid "Unknown schema type"
-msgstr "Type ORACLE %ld inconnu"
+msgstr "Type de schéma inconnu"
 
 #: providers/gda-default-server/main-default.c:70
-#, fuzzy
 msgid "Could not register Default provider implementation"
-msgstr "Ne peut enregistrer l'implémentation du fournisseur de courrier"
+msgstr "Ne peut enregistrer l'implémentation du fournisseur par défaut"
 
 #: providers/gda-ldap-server/GNOME_GDA_Provider_LDAP.oaf.in.h:1
-#, fuzzy
 msgid "GDA Datasource Access for LDAP"
-msgstr "Propriétées du Serveur GDA"
+msgstr "Accès à une source LDAP pour GDA"
 
 #: providers/gda-ldap-server/GNOME_GDA_Provider_LDAP.oaf.in.h:2
 msgid "LDAP provider connection factory"
-msgstr ""
+msgstr "Usine à fournisseur de connexion LDAP"
 
 #: providers/gda-interbase-server/gda-interbase-connection.c:331
 #: providers/gda-ldap-server/gda-ldap-connection.c:293
@@ -284,31 +275,29 @@ msgid "Could not register LDAP provider implementation"
 msgstr "Ne peut enregistrer l'implémentation du serveur LDAP"
 
 #: providers/gda-interbase-server/GNOME_GDA_Provider_InterBase.oaf.in.h:1
-#, fuzzy
 msgid "GDA Datasource Access for Interbase"
-msgstr "Propriétées du serveur source GDA"
+msgstr "Accès à une source Interbase pour GDA"
 
 #: providers/gda-interbase-server/GNOME_GDA_Provider_InterBase.oaf.in.h:2
 msgid "InterBase provider connection factory"
-msgstr ""
+msgstr "Usine à fournisseur de connexion InterBase"
 
 #: providers/gda-interbase-server/gda-interbase-connection.c:327
-#, fuzzy, c-format
+#, c-format
 msgid "Error code %ld (%s)"
-msgstr "Code d'erreur %ld"
+msgstr "Code d'erreur %ld (%s)"
 
 #: providers/gda-interbase-server/main-interbase.c:74
 msgid "Could not register INTERBASE provider implementation"
 msgstr "Ne peut enregistrer l'implémentation du fournisseur INTERBASE"
 
 #: providers/gda-mail-server/GNOME_GDA_Provider_Mail.oaf.in.h:1
-#, fuzzy
 msgid "GDA Datasource Access for Mail"
-msgstr "Propriétées du Serveur GDA"
+msgstr "Accès à une source de courier électronique pour GDA"
 
 #: providers/gda-mail-server/GNOME_GDA_Provider_Mail.oaf.in.h:2
 msgid "Mail provider connection factory"
-msgstr ""
+msgstr "Usine à fournisseur de connexion Courier"
 
 #: providers/gda-mail-server/gda-mail-connection.c:107
 #: providers/gda-mdb-server/gda-mdb-connection.c:224
@@ -323,13 +312,12 @@ msgid "Could not register Mail provider implementation"
 msgstr "Ne peut enregistrer l'implémentation du fournisseur de courrier"
 
 #: providers/gda-mdb-server/GNOME_GDA_Provider_MDB.oaf.in.h:1
-#, fuzzy
 msgid "GDA Datasource Access for MDB (MS Access) files"
-msgstr "Propriétées du Serveur GDA"
+msgstr "Accès à une source MDB (MS Access) pour GDA"
 
 #: providers/gda-mdb-server/GNOME_GDA_Provider_MDB.oaf.in.h:2
 msgid "MDB provider connection factory"
-msgstr ""
+msgstr "Usine à fournisseur de connexion MDB"
 
 #. execute command
 #: providers/gda-mdb-server/gda-mdb-command.c:86
@@ -386,23 +374,20 @@ msgid "Could not register MySQL provider implementation"
 msgstr "Ne peut enregistrer l'implémentation du fournisseur MySQL"
 
 #: providers/gda-mysql-server/GNOME_GDA_Provider_MySQL.oaf.in.h:1
-#, fuzzy
 msgid "GDA Datasource Access for MySQL"
-msgstr "Propriétées du Serveur GDA"
+msgstr "Accès à une source MySQL pour GDA"
 
 #: providers/gda-mysql-server/GNOME_GDA_Provider_MySQL.oaf.in.h:2
 msgid "MySQL provider connection factory"
-msgstr ""
+msgstr "Usine à fournisseur de connexion MySQL"
 
 #: providers/gda-mysql-server/gda-mysql-connection.c:175
-#, fuzzy
 msgid ""
 "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a "
 "PORT. Please remove the UNIX_SOCKET, or remove both the HOST and PORT options"
 msgstr ""
-"%s:%d: Vous ne pouvez fournir un UNIX_SOCKET si vous fournissez aussi un "
-"HOTE ou un PORT. Veuillez supprimer l'UNIX_SOCKET, ou supprimer les options "
-"HOTE et PORT"
+"Vous ne pouvez fournir un UNIX_SOCKET si vous fournissez aussi un HOTE ou un "
+"PORT. Veuillez supprimer l'UNIX_SOCKET, ou supprimer les options HOTE et PORT"
 
 #: providers/gda-mysql-server/gda-mysql-connection.c:191
 #, c-format
@@ -415,20 +400,19 @@ msgstr ""
 
 #: providers/gda-mysql-server/gda-mysql-connection.c:623
 msgid "Unknown"
-msgstr ""
+msgstr "Inconnu"
 
 #: providers/gda-mysql-server/gda-mysql-connection.c:656
 msgid "No MYSQL_Connection for GdaServerConnection"
-msgstr ""
+msgstr "Pas de MYSQL_Connection pour GdaServerConnection"
 
 #: providers/gda-odbc-server/GNOME_GDA_Provider_ODBC.oaf.in.h:1
-#, fuzzy
 msgid "GDA Datasource Access for ODBC"
-msgstr "Propriétées du Serveur GDA"
+msgstr "Accès à une source ODBC pour GDA"
 
 #: providers/gda-odbc-server/GNOME_GDA_Provider_ODBC.oaf.in.h:2
 msgid "ODBC provider connection factory"
-msgstr ""
+msgstr "Usine à fournisseur de connexion ODBC"
 
 #: providers/gda-odbc-server/gda-odbc-connection.c:277
 #, c-format
@@ -449,13 +433,12 @@ msgid "Could not register ODBC provider implementation"
 msgstr "Ne peut enregistrer l'implémentation du fournisseur ODBC"
 
 #: providers/gda-oracle-server/GNOME_GDA_Provider_Oracle.oaf.in.h:1
-#, fuzzy
 msgid "GDA Datasource Access for Oracle"
-msgstr "Propriétées du Serveur GDA"
+msgstr "Accès à une source Oracle pour GDA"
 
 #: providers/gda-oracle-server/GNOME_GDA_Provider_Oracle.oaf.in.h:2
 msgid "Oracle provider connection factory"
-msgstr ""
+msgstr "Usine à fournisseur de connexion ODBC"
 
 #: providers/gda-oracle-server/gda-oracle-command.c:191
 msgid "Could not allocate statement handle"
@@ -500,13 +483,12 @@ msgid "Could not register ORACLE provider implementation"
 msgstr "Ne peut enregistrer l'implémentation du fournisseur ORACLE"
 
 #: providers/gda-postgres-server/GNOME_GDA_Provider_Postgres.oaf.in.h:1
-#, fuzzy
 msgid "GDA Datasource Access for Postgres"
-msgstr "Propriétées du serveur source GDA"
+msgstr "Accès à une source Postgres pour GDA"
 
 #: providers/gda-postgres-server/GNOME_GDA_Provider_Postgres.oaf.in.h:2
 msgid "Postgres provider connection factory"
-msgstr ""
+msgstr "Usine à fournisseur de connexion Postgres"
 
 #: providers/gda-postgres-server/gda-postgres-connection.c:888
 #: providers/gda-postgres-server/gda-postgres-connection.c:1005
@@ -518,13 +500,12 @@ msgid "Could not register PostgreSQL provider implementation"
 msgstr "Ne peut enregistrer l'implémentation du fournisseur PostgreSQL"
 
 #: providers/gda-sybase-server/GNOME_GDA_Provider_Sybase.oaf.in.h:1
-#, fuzzy
 msgid "GDA Datasource Access for Sybase"
-msgstr "Propriétées du Serveur GDA"
+msgstr "Accès à une source Sybase pour GDA"
 
 #: providers/gda-sybase-server/GNOME_GDA_Provider_Sybase.oaf.in.h:2
 msgid "Sybase provider connection factory"
-msgstr ""
+msgstr "Usine à fournisseur de connexion Sybase"
 
 #.      gda_server_error_make(error, 0, cnc, "connection seems to be dead");
 #: providers/gda-sybase-server/gda-sybase-command.c:160
@@ -741,41 +722,37 @@ msgid "Could not get # of messages"
 msgstr "Ne peut obtenir le nombre de messages"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:356
-#, fuzzy
 msgid "ct_diag failed, Could not get # of client messages(1)"
-msgstr "Ne peut obtenir le nombre de messages du client"
+msgstr ""
+"ct_diag échoué, Impossible de récupérer le nombre de messages du client (1)"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:381
-#, fuzzy
 msgid "Could not get client msg #"
-msgstr "Ne peut obtenir le message du client n° %d"
+msgstr "Ne peut obtenir le nombre de messages du client"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:394
 #: providers/gda-sybase-server/gda-sybase-error.c:396
 #: providers/gda-sybase-server/gda-sybase-error.c:688
 #: providers/gda-sybase-server/gda-sybase-error.c:690
-#, fuzzy
 msgid "Client Message:"
 msgstr "Message du client :"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:424
-#, fuzzy
 msgid "ct_diag failed, Could not get # of client messages(2)"
-msgstr "Ne peut obtenir le nombre de messages du client"
+msgstr ""
+"ct_diag échoué, Impossible de récupérer le nombre de messages du client (2)"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:442
 msgid "Could not clear client messages"
 msgstr "Ne peut effacer les messages du client"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:486
-#, fuzzy
 msgid "Could not get # of server messages(1)"
-msgstr "Ne peut obtenir le nombre de messages du serveur"
+msgstr "Impossible d'obtenir le nombre de messages du serveur (1)"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:510
-#, fuzzy
 msgid "Could not get server msg #"
-msgstr "Ne peut obtenir le message du serveur n° %d"
+msgstr "Impossible d'obtenir le nombre de messages du serveur"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:570
 msgid "Could not get # of server messages"
@@ -800,14 +777,12 @@ msgid "Fetching %d cslib message"
 msgstr "Récupération de %d message cslib"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:672
-#, fuzzy
 msgid "Could not get cslib msg #"
-msgstr "Ne peut obtenir le message n° %d"
+msgstr "Impossible de récupérer le nombre de messages cslib"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:711
-#, fuzzy
 msgid "Could not get # of cslib messages(2)"
-msgstr "Ne peut obtenir le nombre de messages cslib"
+msgstr "Ne peut obtenir le nombre de messages cslib (2)"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:729
 msgid "Could not clear cslib messages"
@@ -815,26 +790,23 @@ msgstr "Ne peut effacer les messages cslib"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:761
 msgid "SYB"
-msgstr ""
+msgstr "SYB"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:763
 msgid "severity"
-msgstr ""
+msgstr "sévérité"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:765
-#, fuzzy
 msgid "number"
-msgstr "Nombre"
+msgstr "nombre"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:767
-#, fuzzy
 msgid "origin"
-msgstr "Login"
+msgstr "origine"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:769
-#, fuzzy
 msgid "layer"
-msgstr "Effacer"
+msgstr "couche"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:776
 #, c-format
@@ -843,6 +815,9 @@ msgid ""
 "\tOperating system error number(%ld):\n"
 "\t%s"
 msgstr ""
+"\n"
+"Erreur de système d'exploitation numéro (%ld) :\n"
+"        %s"
 
 #: providers/gda-sybase-server/gda-sybase-recordset.c:219
 #: providers/gda-tds-server/gda-tds-recordset.c:199
@@ -922,28 +897,27 @@ msgid "Could not register gda-sybase provider implementation"
 msgstr "Ne peut enregistrer l'implémentation du fournisseur gda-sybase"
 
 #: providers/gda-primebase-server/GNOME_GDA_Provider_Primebase.oaf.in.h:1
-#, fuzzy
 msgid "GDA Datasource Access for primebase"
-msgstr "Propriétées du serveur source GDA"
+msgstr "Accès à une source Primebase pour GDA"
 
 #: providers/gda-primebase-server/gda-primebase-connection.c:157
-#, fuzzy, c-format
+#, c-format
 msgid "Could not connect to '%s@%s:%s' with connparm '%s'"
-msgstr "Ne peut se connecter à « %s »"
+msgstr "Impossible de se connecter à « %s@%s:%s » avec connparm « %s »"
 
 #: providers/gda-primebase-server/gda-primebase-connection.c:163
 #, c-format
 msgid "%2ld: Connected to '%s@%s:%s' with connparm: '%s'"
-msgstr ""
+msgstr "%2ld ; Connecté à : « %s@%s:%s » avec connparm : « %s »"
 
 #: providers/gda-primebase-server/gda-primebase-connection.c:171
 msgid "Could not get PBIConnectionInfo(), disconnecting"
-msgstr ""
+msgstr "Impossible d'obtenir PBIConnectionInfo(), déconnexion"
 
 #: providers/gda-primebase-server/gda-primebase-connection.c:176
 #, c-format
 msgid "%2ld: ConInfo: '%s@%s', Cl v%x, Srv '%s' v%x, Brand '%s'"
-msgstr ""
+msgstr "%2ld : ConIfo : « %s@%s », Cl v%x, Srv « %s » x%x, Brand « %s »"
 
 #: providers/gda-primebase-server/gda-primebase-connection.c:390
 msgid "Not enough memory for primebase_Error structure."
@@ -952,20 +926,19 @@ msgstr "Pas assez de mémoire pour la structure primebase_Error"
 #: providers/gda-primebase-server/gda-primebase-connection.c:397
 #, c-format
 msgid "%2ld: ERROR: %ld (%ld) : %s.\n"
-msgstr ""
+msgstr "%2ld : ERREUR : %ld (%ld) : %s.\n"
 
 #: providers/gda-primebase-server/main-primebase.c:73
 msgid "Could not register PRIMEBASE provider implementation"
 msgstr "Ne peut enregistrer l'implémentation du fournisseur PRIMEBASE"
 
 #: providers/gda-tds-server/GNOME_GDA_Provider_TDS.oaf.in.h:1
-#, fuzzy
 msgid "GDA Datasource Access for Sybase/MS SQL"
-msgstr "Propriétées du Serveur GDA"
+msgstr "Accès à une source Sybase/MS SQL pour GDA"
 
 #: providers/gda-tds-server/GNOME_GDA_Provider_TDS.oaf.in.h:2
 msgid "TDS provider connection factory"
-msgstr ""
+msgstr "Usine à fournisseur de connexion TDS"
 
 #: providers/gda-tds-server/gda-tds-command.c:135
 msgid "Filling command structure failed\n"
@@ -1059,9 +1032,8 @@ msgid "%s: data source '%s' not found\n"
 msgstr "%s : source de données « %s » non trouvé\n"
 
 #: tools/templates/main-srv.c.tmpl:60
-#, fuzzy
 msgid "Could not register <PROVIDER-NAME> provider implementation"
-msgstr "Ne peut enregistrer l'implémentation du fournisseur PRIMEBASE"
+msgstr "Ne peut enregistrer l'implémentation <PROVIDER-NAME>"
 
 #~ msgid "gda_sybase_error_make(%p,%p,%p,%p)"
 #~ msgstr "gda_sybase_error_make(%p,%p,%p,%p)"
