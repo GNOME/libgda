@@ -51,6 +51,19 @@ gda_row_free (GdaRow *row)
 }
 
 /**
+ * gda_row_get_field
+ */
+GdaField *
+gda_row_get_field (GdaRow *row, gint num)
+{
+	g_return_val_if_fail (row != NULL, NULL);
+	g_return_val_if_fail (num >= 0, NULL);
+	g_return_val_if_fail (num < row->_length, NULL);
+
+	return &row->_buffer[num];
+}
+
+/**
  * gda_row_attributes_new
  */
 GdaRowAttributes *

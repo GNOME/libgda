@@ -49,7 +49,7 @@ struct _GdaServerRecordsetClass {
 	POA_GNOME_Database_Recordset__epv epv;
 };
 
-typedef GdaRow * (* GdaServerRecordsetFetchFunc) (GdaServerRecordset *recset, glong row);
+typedef GdaRow * (* GdaServerRecordsetFetchFunc) (GdaServerRecordset *recset, gulong rownum);
 typedef GdaRowAttributes * (* GdaServerRecordsetDescribeFunc) (GdaServerRecordset *recset);
 
 GType                gda_server_recordset_get_type (void);

@@ -45,9 +45,17 @@ static GObjectClass *parent_class = NULL;
 static GNOME_Database_RowAttributes *
 impl_Recordset_describe (PortableServer_Servant servant, CORBA_Environment *ev)
 {
+	GdaRowAttributes *attrs;
 	GdaServerRecordset *recset = (GdaServerRecordset *) bonobo_x_object (servant);
 
 	g_return_val_if_fail (GDA_IS_SERVER_RECORDSET (recset), NULL);
+
+	
+}
+
+static CORBA_long
+impl_Recordset_getRowCount (PortableServer_Servant servant, CORBA_Environment *ev)
+{
 }
 
 static CORBA_boolean
@@ -92,6 +100,7 @@ gda_server_recordset_class_init (GdaServerRecordsetClass *klass)
 	/* set the epv */
 	epv = &klass->epv;
 	epv->describe = impl_Recordset_describe;
+	epv->getRowCount = impl_Recordset_getRowCount;
 	epv->moveFirst = impl_Recordset_moveFirst;
 	epv->moveNext = impl_Recordset_moveNext;
 	epv->movePrevious = impl_Recordset_movePrevious;

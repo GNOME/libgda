@@ -53,6 +53,7 @@ typedef GNOME_Database_Field           GdaField;
 
 GdaRow             *gda_row_new (gint count);
 void                gda_row_free (GdaRow *row);
+GdaField           *gda_row_get_field (GdaRow *row, gint num);
 
 GdaRowAttributes   *gda_row_attributes_new (gint count);
 void                gda_row_attributes_free (GdaRowAttributes *attrs);

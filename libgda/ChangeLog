@@ -1,3 +1,10 @@
+2001-12-18  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-row.[ch] (gda_row_get_field): new function
+
+	* gda-server-recordset.[ch] (impl_Recordset_getRowCount): new
+	CORBA method added
+
 2001-12-17  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-field.[ch]: removed, moved all functions to gda-row
