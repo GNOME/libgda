@@ -27,5 +27,5 @@ install-sh
 missing
 mkinstalldirs
 INSTALL
-
+autom4te.cache
 stamp-h1
