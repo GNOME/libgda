@@ -1,3 +1,7 @@
+2004-09-25  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* libgda/Makefile.am: install gda-log.h with the other headers.
+
 2004-09-25  Szalai Ferenc <szferi@einstein.ki.iif.hu>
 
 	* libgda/gda-connection.c (gda_connection_new): use const where needed.

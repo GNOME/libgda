@@ -27,6 +27,7 @@ gda_headers = \
 	gda-data-model-list.h \
 	gda-error.h \
 	gda-field.h \
+	gda-log.h \
 	gda-parameter.h \
 	gda-quark-list.h \
 	gda-row.h \
