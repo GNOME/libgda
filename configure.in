@@ -35,8 +35,23 @@ AC_MSG_CHECKING(for OAF)
 if oaf-config --libs > /dev/null 2>&1
 then
 	AC_MSG_RESULT(found)
+	AC_DEFINE(USING_OAF)
 	gda_oaf_libs=`oaf-config --libs`
 	gda_oaf_cflags=`oaf-config --cflags`
+	
+	dnl Test for old version of OAF
+	AM_PATH_OAF(0.4.0)
+	if test "x$OAF_CFLAGS" = "x"
+	then
+		AC_DEFINE(USING_OLD_OAF)
+	else
+		oaf_prefix=`oaf-config --prefix`
+		oaf_test=`grep OAF_P_STRING ${oaf_prefix}/include/liboaf/oaf.h`
+		if test "x$oaf_test" = "x"
+		then
+			AC_DEFINE(USING_OLD_OAF)
+		fi
+	fi
 else
 	AC_MSG_ERROR(not found)
 fi
@@ -426,10 +441,10 @@ AM_GNU_GETTEXT
 dnl
 dnl Variables
 dnl
-GDA_CLIENT_LIBS="$gda_xml_libs $gda_oaf_libs"
-GDA_CLIENT_CFLAGS="$gda_xml_cflags $gda_oaf_cflags"
-GDA_PROVIDER_LIBS="$gda_xml_libs $gda_oaf_libs"
-GDA_PROVIDER_CFLAGS="$gda_xml_cflags $gda_oaf_cflags"
+GDA_CLIENT_LIBS="$gda_xml_libs $gda_oaf_libs `gnome-config --libs gnomeui`"
+GDA_CLIENT_CFLAGS="$gda_xml_cflags $gda_oaf_cflags `gnome-config --cflags gnomeui`"
+GDA_PROVIDER_LIBS="$gda_xml_libs $gda_oaf_libs `gnome-config --libs gnomeui`"
+GDA_PROVIDER_CFLAGS="$gda_xml_cflags $gda_oaf_cflags `gnome-config --cflags gnomeui`"
 
 AC_SUBST(CFLAGS)
 AC_SUBST(CXXFLAGS)
@@ -466,12 +481,14 @@ Makefile
 macros/Makefile
 po/Makefile.in
 doc/Makefile
+intl/Makefile
 idl/Makefile
 lib/Makefile
 lib/gda-common/Makefile
 lib/gda-client/Makefile
 lib/gda-server/Makefile
 bindings/Makefile
+bindings/c++/Makefile
 providers/Makefile
 providers/gda-odbc-server/Makefile
 providers/gda-mysql-server/Makefile

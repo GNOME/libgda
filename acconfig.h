@@ -12,3 +12,5 @@
 #undef HAVE_SYBASE
 #undef SYBASE_DEBUG
 #undef HAVE_POSTGRES
+#undef USING_OAF
+#undef USING_OLD_OAF
