@@ -1,3 +1,7 @@
+2001-07-19  Carlos Perelló Marín <carlos@gnome-db.org>
+
+	* *.idl: Sorry, the rename will be done in the near future, not now.
+
 2001-07-18  Carlos Perelló Marín <carlos@gnome-db.org>
 
 	* GNOME_Database_Report.idl: Copied from libgda-bonobo && merged

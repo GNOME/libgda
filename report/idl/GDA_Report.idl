@@ -1,4 +1,4 @@
-/* GNOME_Database_Report.idl
+/* GDA_Report.idl
  * Copyright (C) 2001, The Free Software Foundation
  *
  * Authors:
@@ -7,14 +7,13 @@
  * GNOME Database Report Engine interfaces.
  */
 
-#ifndef __GNOME_Database_Report_idl__
-#define __GNOME_Database_Report_idl__
+#ifndef __GDA_Report_idl__
+#define __GDA_Report_idl__
 
 #include <Bonobo.idl>
 #include <oaf-factory.idl>
 
-module GNOME {
-module Database {
+module GDA {
 	module Report {
 
 		enum PositionFreq {
@@ -371,7 +370,7 @@ module Database {
 
 		typedef sequence<Document> DocumentList;
 
-		interface Factory : GNOME::ObjectFactory {
+		interface DocumentFactory : GNOME::ObjectFactory {
 
 			DocumentList getReports ();
 		};
