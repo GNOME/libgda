@@ -1,6 +1,9 @@
 noinst_PROGRAMS = lemon
 noinst_LIBRARIES = libsqlite.a
 
+INCLUDES = \
+	-DOS_UNIX=1
+
 lemon_SOURCES = lemon.c
 
 libsqlite_a_SOURCES = \
