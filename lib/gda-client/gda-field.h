@@ -72,7 +72,7 @@ guint         gda_field_get_type (void);
 GdaField     *gda_field_new (void);
 void          gda_field_free (GdaField *field);
 
-gint          gda_field_get_actual_size (GdaField * f);
+gint          gda_field_actual_size (GdaField * f);
 #define       gda_field_get_defined_size(f) (f->attributes->definedSize)
 #define       gda_field_get_name(f)         (f->attributes->name)
 #define       gda_field_get_scale(f)        (f->attributes->scale)

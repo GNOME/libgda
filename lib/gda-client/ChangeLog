@@ -1,3 +1,9 @@
+2001-12-06  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-field.h: gda_field_get_actual_size renamed to
+	gda_field_actual_size, as this is the name of the function in
+	the .c file, pointed out by Kuba <kpuchar@poczta.onet.pl>
+
 2001-11-22  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-connection.c: don't include bonobo.h, but only the needed
