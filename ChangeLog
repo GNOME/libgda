@@ -1,3 +1,16 @@
+2002-09-24  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* providers/sqlite/gda-sqlite-provider.c
+	(gda_sqlite_provider_supports): we also support triggers.
+	(get_types): implemented types schema.
+	(get_tables): implemented tables schema.
+	(get_table_fields): implemented fields schema.
+
+	* providers/sqlite/gda-sqlite-provider.c (get_row): get correctly
+	the fields' values from the SQLITEresult structure.
+	(gda_sqlite_recordset_describe_column): set more properties on the
+	returned GdaFieldAttributes.
+
 2002-09-23  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* providers/sqlite/gda-sqlite-provider.c

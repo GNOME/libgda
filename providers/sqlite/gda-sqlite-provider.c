@@ -580,12 +580,177 @@ gda_sqlite_provider_supports (GdaServerProvider *provider,
 	case GDA_CONNECTION_FEATURE_AGGREGATES :
 	case GDA_CONNECTION_FEATURE_INDEXES :
 	case GDA_CONNECTION_FEATURE_PROCEDURES :
+	case GDA_CONNECTION_FEATURE_TRIGGERS :
 	case GDA_CONNECTION_FEATURE_VIEWS :
 		return TRUE;
 	default:
 	}
 
 	return FALSE;
+}
+
+static void
+add_type_row (GdaDataModelArray *recset, const gchar *name,
+	      const gchar *owner, const gchar *comments,
+	      GdaValueType type)
+{
+	GList *value_list;
+
+	value_list = g_list_append (NULL, gda_value_new_string (name));
+	value_list = g_list_append (value_list, gda_value_new_string (owner));
+	value_list = g_list_append (value_list, gda_value_new_string (comments));
+	value_list = g_list_append (value_list, gda_value_new_type (type));
+
+	gda_data_model_append_row (GDA_DATA_MODEL (recset), value_list);
+
+	g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
+	g_list_free (value_list);
+}
+
+static GdaDataModel *
+get_table_fields (GdaConnection *cnc, GdaParameterList *params)
+{
+	struct {
+		gchar *col_name;
+		GdaValueType type;
+	} cols[9] = {
+		{ N_("Field name")	, GDA_VALUE_TYPE_STRING  },
+		{ N_("Data type")	, GDA_VALUE_TYPE_STRING  },
+		{ N_("Size")		, GDA_VALUE_TYPE_INTEGER },
+		{ N_("Scale")		, GDA_VALUE_TYPE_INTEGER },
+		{ N_("Not null?")	, GDA_VALUE_TYPE_BOOLEAN },
+		{ N_("Primary key?")	, GDA_VALUE_TYPE_BOOLEAN },
+		{ N_("Unique index?")	, GDA_VALUE_TYPE_BOOLEAN },
+		{ N_("References")	, GDA_VALUE_TYPE_STRING  },
+		{ N_("Default value")   , GDA_VALUE_TYPE_STRING  }
+	};
+	GdaParameter *par;
+	const gchar *tblname;
+	GList *reclist;
+	GdaDataModelArray *recset;
+	gchar *sql;
+	gint i;
+
+	par = gda_parameter_list_find (params, "name");
+	g_return_val_if_fail (par != NULL, NULL);
+
+	tblname = gda_value_get_string ((GdaValue *) gda_parameter_get_value (par));
+	g_return_val_if_fail (tblname != NULL, NULL);
+
+	/* get the table */
+	sql = g_strdup_printf ("SELECT * FROM %s", tblname);
+	reclist = process_sql_commands (NULL, cnc, sql, 0);
+	g_free (sql);
+
+	if (!reclist)
+		return NULL;
+
+	/* create the recordset to return */
+	recset = GDA_DATA_MODEL_ARRAY (gda_data_model_array_new (sizeof cols / sizeof cols[0]));
+	for (i = 0; i < sizeof cols / sizeof cols[0]; i++)
+		gda_data_model_set_column_title (GDA_DATA_MODEL (recset), i, _(cols[i].col_name));
+
+	for (i = 0; i < gda_data_model_get_n_columns (GDA_DATA_MODEL (reclist->data)); i++) {
+		GdaFieldAttributes *fa;
+		GList *value_list;
+
+		fa = gda_data_model_describe_column (GDA_DATA_MODEL (reclist->data), i);
+		if (!fa) {
+			gda_connection_add_error_string (cnc, _("Could not retrieve information for field"));
+			g_object_unref (G_OBJECT (recset));
+			recset = NULL;
+			break;
+		}
+
+		value_list = g_list_append (
+			NULL,
+			gda_value_new_string (gda_field_attributes_get_name (fa)));
+		value_list = g_list_append (
+			value_list,
+			gda_value_new_string (gda_type_to_string (gda_field_attributes_get_gdatype (fa))));
+		value_list = g_list_append (
+			value_list,
+			gda_value_new_integer (gda_field_attributes_get_defined_size (fa)));
+		value_list = g_list_append (
+			value_list,
+			gda_value_new_integer (gda_field_attributes_get_scale (fa)));
+		value_list = g_list_append (
+			value_list,
+			gda_value_new_boolean (!gda_field_attributes_get_allow_null (fa)));
+		value_list = g_list_append (
+			value_list,
+			gda_value_new_boolean (gda_field_attributes_get_primary_key (fa)));
+		value_list = g_list_append (
+			value_list,
+			gda_value_new_boolean (gda_field_attributes_get_unique_key (fa)));
+		value_list = g_list_append (
+			value_list,
+			gda_value_new_string (gda_field_attributes_get_references (fa)));
+		value_list = g_list_append (value_list, gda_value_new_string (NULL));
+
+		gda_data_model_append_row (GDA_DATA_MODEL (recset), value_list);
+
+		g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
+		g_list_free (value_list);
+	}
+
+	/* free memory */
+	g_list_foreach (reclist, (GFunc) g_object_unref, NULL);
+	g_list_free (reclist);
+
+	return recset ? GDA_DATA_MODEL (recset) : NULL;
+}
+
+static GdaDataModel *
+get_tables (GdaConnection *cnc)
+{
+	SQLITEcnc *scnc;
+	GList *reclist;
+	gchar *sql;
+	GdaDataModel *model;
+
+	scnc = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_SQLITE_HANDLE);
+	if (!scnc) {
+		gda_connection_add_error_string (cnc, _("Invalid SQLite handle"));
+		return FALSE;
+	}
+
+	sql = g_strdup_printf ("SELECT name, 'system', NULL, sql "
+			       " FROM (SELECT * FROM sqlite_master UNION ALL "
+			       "       SELECT * FROM sqlite_temp_master) "
+			       " WHERE type = 'table' "
+			       " ORDER BY name");
+
+	reclist = process_sql_commands (NULL, cnc, sql, 0);
+	g_free (sql);
+
+	if (!reclist)
+		return NULL;
+
+	model = GDA_DATA_MODEL (reclist->data);
+	g_object_ref (G_OBJECT (model));
+
+	g_list_foreach (reclist, (GFunc) g_object_unref, NULL);
+	g_list_free (reclist);
+
+	return model;
+}
+
+static GdaDataModel *
+get_types (void)
+{
+	GdaDataModelArray *recset;
+
+	/* create the recordset */
+	recset = GDA_DATA_MODEL_ARRAY (gda_data_model_array_new (4));
+	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 0, _("Type"));
+	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 1, _("Owner"));
+	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 2, _("Comments"));
+	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 3, _("GDA type"));
+
+	add_type_row (recset, "string", "system", "Character string", GDA_VALUE_TYPE_STRING);
+
+	return GDA_DATA_MODEL (recset);
 }
 
 static GdaDataModel *
@@ -598,7 +763,14 @@ gda_sqlite_provider_get_schema (GdaServerProvider *provider,
         g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
 	switch (schema) {
-		default:
+	case GDA_CONNECTION_SCHEMA_FIELDS :
+		return get_table_fields (cnc, params);
+	case GDA_CONNECTION_SCHEMA_TABLES :
+		return get_tables (cnc);
+	case GDA_CONNECTION_SCHEMA_TYPES :
+		return get_types ();
+	default:
 	}
+
 	return NULL;
 }

@@ -917,7 +917,7 @@ get_postgres_types (GdaConnection *cnc, GdaParameterList *params)
 
 	/* create the recordset */
 	recset = GDA_DATA_MODEL_ARRAY (gda_data_model_array_new (4));
-	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 0, _("Types"));
+	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 0, _("Type"));
 	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 1, _("Owner"));
 	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 2, _("Comments"));
 	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 3, _("GDA type"));

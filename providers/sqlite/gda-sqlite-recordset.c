@@ -45,10 +45,10 @@ static void gda_sqlite_recordset_init       (GdaSqliteRecordset *recset,
 					     GdaSqliteRecordsetClass *klass);
 static void gda_sqlite_recordset_finalize   (GObject *object);
 
-static const GdaValue *gda_sqlite_recordset_get_value_at (GdaDataModel *model, gint col, gint row);
-static GdaFieldAttributes *gda_sqlite_recordset_describe (GdaDataModel *model, gint col);
 static gint gda_sqlite_recordset_get_n_rows (GdaDataModel *model);
+static GdaFieldAttributes *gda_sqlite_recordset_describe_column (GdaDataModel *model, gint col);
 static const GdaRow *gda_sqlite_recordset_get_row (GdaDataModel *model, gint row);
+static const GdaValue *gda_sqlite_recordset_get_value_at (GdaDataModel *model, gint col, gint row);
 
 static GObjectClass *parent_class = NULL;
 
@@ -78,7 +78,7 @@ gda_sqlite_recordset_class_init (GdaSqliteRecordsetClass *klass)
 
 	object_class->finalize = gda_sqlite_recordset_finalize;
 	model_class->get_n_rows = gda_sqlite_recordset_get_n_rows;
-	model_class->describe_column = gda_sqlite_recordset_describe;
+	model_class->describe_column = gda_sqlite_recordset_describe_column;
 	model_class->get_value_at = gda_sqlite_recordset_get_value_at;
 	model_class->get_row = gda_sqlite_recordset_get_row;
 }
@@ -112,16 +112,14 @@ get_row (GdaSqliteRecordsetPrivate *priv, gint rownum)
         GdaRow *row;
         gint i;
         gchar *id;
-	gulong rowpos;
         
         row = gda_row_new (priv->ncolumns);
-	rowpos = (priv->ncolumns - 1) + (rownum * priv->ncolumns);
 	
         for (i = 0; i < priv->ncolumns; i++) {
-                thevalue = priv->sres->data[rowpos + i];
+                thevalue = priv->sres->data[((rownum + 1) * priv->ncolumns) + i];
 		/* FIXME: Add detection of types */
                 ftype = GDA_VALUE_TYPE_STRING;
-                isNull = *thevalue != '\0' ? FALSE : TRUE;
+                isNull = thevalue && *thevalue != '\0' ? FALSE : TRUE;
                 value = gda_row_get_value (row, i);
                 gda_sqlite_set_value (value, ftype, thevalue, isNull);
         }
@@ -221,7 +219,7 @@ gda_sqlite_recordset_get_value_at (GdaDataModel *model, gint col, gint row)
 }
 
 static GdaFieldAttributes *
-gda_sqlite_recordset_describe (GdaDataModel *model, gint col)
+gda_sqlite_recordset_describe_column (GdaDataModel *model, gint col)
 {
 	GdaSqliteRecordset *recset = (GdaSqliteRecordset *) model;
 	GdaSqliteRecordsetPrivate *priv_data;
@@ -248,15 +246,13 @@ gda_sqlite_recordset_describe (GdaDataModel *model, gint col)
 
 	field_attrs = gda_field_attributes_new ();
 	gda_field_attributes_set_name (field_attrs, sres->data[col]);
-
 	gda_field_attributes_set_scale (field_attrs, 0);
 	gda_field_attributes_set_gdatype (field_attrs, GDA_VALUE_TYPE_STRING);
-	
 	gda_field_attributes_set_defined_size (field_attrs, strlen (sres->data[col]));
-/*	gda_field_attributes_set_references (field_attrs, "");
 	gda_field_attributes_set_primary_key (field_attrs, FALSE);
 	gda_field_attributes_set_unique_key (field_attrs, FALSE);
-*/
+	gda_field_attributes_set_allow_null (field_attrs, TRUE);
+	gda_field_attributes_set_auto_increment (field_attrs, FALSE);
 
 	return field_attrs;
 }
