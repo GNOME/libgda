@@ -335,7 +335,7 @@ gda_mdb_provider_begin_transaction (GdaServerProvider *provider,
 				    GdaConnection *cnc,
 				    GdaTransaction *xaction)
 {
-	gda_connection_add_error (cnc, _("Transactions not supported in MDB provider"));
+	gda_connection_add_error_string (cnc, _("Transactions not supported in MDB provider"));
 	return FALSE;
 }
 
@@ -345,7 +345,7 @@ gda_mdb_provider_commit_transaction (GdaServerProvider *provider,
 				     GdaConnection *cnc,
 				     GdaTransaction *xaction)
 {
-	gda_connection_add_error (cnc, _("Transactions not supported in MDB provider"));
+	gda_connection_add_error_string (cnc, _("Transactions not supported in MDB provider"));
 	return FALSE;
 }
 
@@ -355,7 +355,7 @@ gda_mdb_provider_rollback_transaction (GdaServerProvider *provider,
 				       GdaConnection *cnc,
 				       GdaTransaction *xaction)
 {
-	gda_connection_add_error (cnc, _("Transactions not supported in MDB provider"));
+	gda_connection_add_error_string (cnc, _("Transactions not supported in MDB provider"));
 	return FALSE;
 }
 

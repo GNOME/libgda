@@ -324,8 +324,11 @@ get_ldap_tables (GdaConnection *cnc, GdaParameterList *params)
 	if (!ldap)
 		return FALSE;
 
-	recset = (GdaDataModelArray *) gda_data_model_array_new (1);
-	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 0, _("Table"));
+	recset = (GdaDataModelArray *) gda_data_model_array_new (4);
+	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 0, _("Name"));
+	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 1, _("Owner"));
+	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 2, _("Comments"));
+	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 3, "SQL");
 
 	result =
 	    ldap_search_s (ldap, "", LDAP_SCOPE_BASE, "(objectclass=*)",
@@ -384,9 +387,20 @@ get_ldap_tables (GdaConnection *cnc, GdaParameterList *params)
 				oc = ldap_str2objectclass(vals[i], &retcode, &errp, 0x03);
 				if (oc) {
 					for (j = 0; oc->oc_names[j] != NULL; j++) {
+						GList *value_list = NULL;
+
 						/* fill the recordset */
-						add_string_row (recset, oc->oc_names[j]);
+						value_list = g_list_append (value_list,
+									    gda_value_new_string (oc->oc_names[j]));
+						value_list = g_list_append (value_list, gda_value_new_string (""));
+						value_list = g_list_append (value_list, gda_value_new_string (""));
+						value_list = g_list_append (value_list, gda_value_new_string (""));
+
+						gda_data_model_append_row (GDA_DATA_MODEL (recset), value_list);
 						/*printf ("%s\n", oc->oc_names[j]);*/
+
+						g_list_foreach (value_list, gda_value_free, NULL);
+						g_list_free (value_list);
 					}
 				}
 			}

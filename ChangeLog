@@ -1,5 +1,19 @@
 2003-01-15  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* libgda/gda-client.c (gda_client_class_init): use G_TYPE_INT instead
+	of G_TYPE_ENUM.
+
+	* providers/mdb/gda-mdb-provider.c
+	(gda_mdb_provider_begin_transaction,
+	gda_mdb_provider_commit_transaction,
+	gda_mdb_provider_rollback_transaction): call add_error_string instead
+	of add_error.
+
+	* providers/ldap/gda-ldap-provider.c (get_ldap_tables): return the
+	correct number of columns for the TABLES schema.
+
+2003-01-15  Rodrigo Moya <rodrigo@gnome-db.org>
+
 	* libgda/gda-marshal.list: added new marshal function.
 
 	* libgda/gda-client.[ch]: added GdaClientEvent enum type.

@@ -204,7 +204,7 @@ gda_client_class_init (GdaClientClass *klass)
 			      G_STRUCT_OFFSET (GdaClientClass, error),
 			      NULL, NULL,
 			      gda_marshal_VOID__POINTER_INT_POINTER,
-			      G_TYPE_NONE, 3, G_TYPE_POINTER, G_TYPE_ENUM, G_TYPE_POINTER);
+			      G_TYPE_NONE, 3, G_TYPE_POINTER, G_TYPE_INT, G_TYPE_POINTER);
 
 	object_class->finalize = gda_client_finalize;
 }
