@@ -114,7 +114,7 @@ void                gda_field_set_timestamp_value (GdaField *field, GdaTimestamp
 gchar               gda_field_get_tinyint_value (GdaField *field);
 void                gda_field_set_tinyint_value (GdaField *field, gchar value);
 
-gchar              *gda_field_stringify (const GdaField *field);
+gchar              *gda_field_stringify (GdaField *field);
 
 G_END_DECLS
 

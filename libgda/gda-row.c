@@ -899,7 +899,7 @@ gda_field_set_tinyint_value (GdaField *field, gchar value)
  * Returns: the string representation of the value stored in @field.
  */
 gchar *
-gda_field_stringify (const GdaField *field)
+gda_field_stringify (GdaField *field)
 {
 	g_return_val_if_fail (field != NULL, NULL);
 	return gda_value_stringify ((GdaValue *) &field->value);
