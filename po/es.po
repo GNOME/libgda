@@ -1,3 +1,5 @@
+# translation of es.po to 
+# translation of es.po to Español
 # translation of libgda.HEAD.es.po to Spanish
 # Libgda Spanish Translation
 # Copyright © 2002-2003 Free Software Foundation, Inc.
@@ -7,20 +9,22 @@
 # Carlos Perelló Marín <carlos@gnome-db.org>, 2001.
 # Antonio de la Torre <adltorre@terra.es>, 2001.
 # Pablo Gonzalo del Campo <pablodc@bigfoot.com>,2002-2003.
-# Francisco Javier F. Serrador <serrador@arrakis.es>, 2003
+# Francisco Javier F. Serrador <serrador@arrakis.es>, 2003.
+# Jorge Bernal <koke@sindominio.net>, 2004.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: libgda.HEAD.es\n"
+"Project-Id-Version: es\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2004-08-08 20:17+0200\n"
-"PO-Revision-Date: 2004-05-17 12:07+0200\n"
-"Last-Translator: Francisco Javier F. Serrador <serrador@arrakis.es>\n"
-"Language-Team: Spanish <traductores@es.gnome.org>\n"
+"PO-Revision-Date: 2004-11-18 14:10+0100\n"
+"Last-Translator: \n"
+"Language-Team:  <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: KBabel 1.0.1\n"
+"X-Generator: KBabel 1.3.1\n"
+"Plural-Forms:  nplurals=2; plural=(n != 1);\n"
 
 #: libgda/gda-client.c:312 libgda/gda-client.c:539 libgda/gda-connection.c:218
 #, c-format
@@ -219,7 +223,7 @@ msgstr "Error de parseo cerca de «%s»"
 #: libsql/sql_parser.c:61
 #, c-format
 msgid "Syntax error near `%s'"
-msgstr "Error sintéctico cerca de «%s»"
+msgstr "Error sintáctico cerca de «%s»"
 
 #: libsql/sql_parser.c:371
 msgid "Empty query to parse"
@@ -453,27 +457,25 @@ msgstr "Manejador de transacción inválido"
 #: providers/firebird/gda-firebird-recordset.c:380
 #: providers/firebird/gda-firebird-recordset.c:420
 msgid "Statement already prepared."
-msgstr ""
+msgstr "Declaración preparada."
 
 #: providers/firebird/gda-firebird-recordset.c:384
-#, fuzzy
 msgid "Transaction not initialized."
-msgstr "Llamada reversa de CT-Server inicializada."
+msgstr "Transacción no inicializada."
 
 #: providers/firebird/gda-firebird-recordset.c:489
 msgid "Firebird's ARRAY datatype not supported yet !\n"
-msgstr ""
+msgstr "¡Tipo de datos ARRAY de Firebird no soportado todavía!\n"
 
 #: providers/firebird/gda-firebird-recordset.c:494
 msgid "Firebird's BLOB datatype not supported yet !\n"
-msgstr ""
+msgstr "¡Tipo de datos BLOB de Firebird no soportado todavía!.\n"
 
 #: providers/firebird/gda-firebird-recordset.c:595
 msgid "Unknown Firebird's field value !\n"
-msgstr ""
+msgstr "¡Valor del campo de Firebird desconocido!\n"
 
 #: providers/firebird/libmain.c:40
-#, fuzzy
 msgid "Provider for Firebird databases"
 msgstr "Proveedor para bases de datos FireBird"
 
@@ -870,7 +872,7 @@ msgstr ""
 #: providers/msql/gda-msql-provider.c:331
 msgid "mSQL allows database drops only through the msqladmin tool."
 msgstr ""
-"mSQL permite drops en la base de datos sólo a través de la herramiente "
+"mSQL permite drops en la base de datos sólo a través de la herramienta "
 "msqladmin."
 
 #: providers/msql/gda-msql-provider.c:376
@@ -896,10 +898,8 @@ msgid "Row number out of bounds"
 msgstr "Número de fila fuera de rango"
 
 #: providers/mysql/gda-mysql-provider.c:223
-msgid ""
-"You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
-msgstr ""
-"No puede proveer un UNIX_SOCKET si al mismo tiempo provee un HOST o un PORT."
+msgid "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a PORT."
+msgstr "No puede proveer un UNIX_SOCKET si al mismo tiempo provee un HOST o un PORT."
 
 #: providers/mysql/gda-mysql-provider.c:299
 #: providers/mysql/gda-mysql-provider.c:1110
@@ -1075,8 +1075,7 @@ msgstr "No se ha podido ejecutar la sentencia de Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:640
 msgid "Could not get the number of columns in the result set"
-msgstr ""
-"No se ha podido obtener la cantidad de columnas en el conjunto de resultado"
+msgstr "No se ha podido obtener la cantidad de columnas en el conjunto de resultado"
 
 #: providers/oracle/gda-oracle-provider.c:657
 msgid "Could not get the parameter descripter in the result set"
@@ -1086,8 +1085,7 @@ msgstr ""
 
 #: providers/oracle/gda-oracle-provider.c:669
 msgid "Could not get the column name in the result set"
-msgstr ""
-"No se ha podido obtener el nombre de la columna en el conjunto de resultado"
+msgstr "No se ha podido obtener el nombre de la columna en el conjunto de resultado"
 
 #: providers/oracle/gda-oracle-provider.c:815
 #: providers/oracle/gda-oracle-provider.c:896
@@ -1301,7 +1299,7 @@ msgstr "El nombre de la tabla no pudo ser adivinado."
 
 #: providers/postgres/gda-postgres-recordset.c:287
 msgid "Model doesn't have at least one non-modified unique key."
-msgstr "El modelo no tiene almente una clave única no medificada."
+msgstr "El modelo no tiene al menos una clave única no modificada."
 
 #: providers/postgres/gda-postgres-recordset.c:291
 msgid "Model doesn't have any non-unique values to update."
@@ -1317,15 +1315,14 @@ msgstr "Número de columna fuera de rango"
 #: providers/postgres/gda-postgres-recordset.c:584
 #, c-format
 msgid "Tuples:\"%s\""
-msgstr "Tuples:«%s»"
+msgstr "Tuplas:«%s»"
 
 #: providers/postgres/libmain.c:41
 msgid "Provider for PostgreSQL databases"
 msgstr "Proveedor para bases de datos PostgreSQL"
 
 #: providers/sqlite/gda-sqlite-provider.c:199
-msgid ""
-"A full path must be specified on the connection string to open a database."
+msgid "A full path must be specified on the connection string to open a database."
 msgstr ""
 "Una ruta completa debe ser especificada en la cadena de conexión para abrir "
 "la base de datos."
@@ -1465,18 +1462,15 @@ msgstr ""
 
 #: providers/sybase/gda-sybase-provider.c:985
 msgid "could not execute command to get current database."
-msgstr ""
-"No se ha podido ejecutar el comando para obtener la base de datos actual."
+msgstr "No se ha podido ejecutar el comando para obtener la base de datos actual."
 
 #: providers/sybase/gda-sybase-provider.c:993
 msgid "could not send command to get current database."
-msgstr ""
-"No se ha podido enviar el comando para obtener la base de datos actual."
+msgstr "No se ha podido enviar el comando para obtener la base de datos actual."
 
 #: providers/sybase/gda-sybase-provider.c:1016
 msgid "could not bind variable to get current database."
-msgstr ""
-"No se ha podido asignar la variable para obtener la base de datos actual."
+msgstr "No se ha podido asignar la variable para obtener la base de datos actual."
 
 #: providers/sybase/gda-sybase-provider.c:1029
 #: providers/sybase/gda-sybase-provider.c:1044
@@ -1491,8 +1485,7 @@ msgstr ""
 
 #: providers/sybase/gda-sybase-recordset.c:315
 msgid "Could not allocate datamodel. No results will be returned."
-msgstr ""
-"No se ha podido asignar el modelo de datos. No se devolverán los resultados."
+msgstr "No se ha podido asignar el modelo de datos. No se devolverán los resultados."
 
 #: providers/sybase/gda-sybase-recordset.c:318
 msgid "ct_cancel() failed."
@@ -1511,8 +1504,7 @@ msgstr "%s ha devuelto <= 0 columnas."
 #: providers/sybase/gda-sybase-recordset.c:359
 #: providers/sybase/gda-sybase-recordset.c:549
 msgid "Could not allocate structure for column metainformation."
-msgstr ""
-"No se ha podido asignar la estructura para la metainformación de la columna."
+msgstr "No se ha podido asignar la estructura para la meta-información de la columna."
 
 #: providers/sybase/gda-sybase-recordset.c:363
 #: providers/sybase/gda-sybase-recordset.c:553
@@ -1560,8 +1552,7 @@ msgstr ""
 
 #: providers/sybase/gda-sybase-recordset.c:518
 msgid "attempting to make recordset and msg count != 1 !"
-msgstr ""
-"se esta intentando crear un conjunto de registros y la cuenta de msg != 1"
+msgstr "se esta intentando crear un conjunto de registros y la cuenta de msg != 1"
 
 #: providers/sybase/gda-sybase-recordset.c:531
 msgid ""
@@ -1669,8 +1660,7 @@ msgstr ""
 "mensajes del cliente"
 
 #: providers/sybase/utils.c:220
-msgid ""
-"an error occured when calling cs_diag attempting to retrieve a client message"
+msgid "an error occured when calling cs_diag attempting to retrieve a client message"
 msgstr ""
 "ha ocurrido un error al llamar a cs_diag cuando intentaba recuperara un "
 "mensaje del cliente"
@@ -1705,8 +1695,7 @@ msgstr ""
 "mensajes del servidor"
 
 #: providers/sybase/utils.c:330
-msgid ""
-"an error occured when calling ct_diag attempting to retrieve a server message"
+msgid "an error occured when calling ct_diag attempting to retrieve a server message"
 msgstr ""
 "ha ocurrido un error al llamar a ct_diag cuando se intentaba recuperar un "
 "mensaje del servidor"
@@ -1742,8 +1731,7 @@ msgstr ""
 "mensajes del cliente"
 
 #: providers/sybase/utils.c:459
-msgid ""
-"an error occured when calling ct_diag attempting to retrieve a client message"
+msgid "an error occured when calling ct_diag attempting to retrieve a client message"
 msgstr ""
 "ha ocurrido un error al llamar a ct_diag cuando se intentaba recuperar un "
 "mensaje del cliente"
@@ -1778,8 +1766,7 @@ msgstr ""
 
 #: providers/xbase/gda-xbase-provider.c:232
 msgid "Either FILENAME or DIRECTORY must be specified in the connection string"
-msgstr ""
-"Deben especificarse el ARCHIVO o el DIRECTORIO en la cadena de conexión"
+msgstr "Deben especificarse el ARCHIVO o el DIRECTORIO en la cadena de conexión"
 
 #: providers/xbase/gda-xbase-provider.c:261
 #: providers/xbase/gda-xbase-provider.c:379
@@ -1796,7 +1783,7 @@ msgid ""
 "the XML provider."
 msgstr ""
 "Debe especificarse una ruta completa en la cadena de conexión para abrir "
-"unabase de datos en un proveedor XML."
+"una base de datos en un proveedor XML."
 
 #: providers/xml/gda-xml-provider.c:222 providers/xml/gda-xml-provider.c:244
 msgid "Invalid XML handle"
@@ -2182,278 +2169,3 @@ msgstr "La base de datos está vacía"
 msgid "Provider for Berkeley databases"
 msgstr "Proveedor para bases datos Berkeley"
 
-#~ msgid "Sybase OpenClient Msg: severity("
-#~ msgstr "Msj de OpenClient de Sybase: severidad("
-
-#~ msgid "), number("
-#~ msgstr "), número("
-
-#~ msgid "), origin("
-#~ msgstr "), origen("
-
-#~ msgid "), layer("
-#~ msgstr "), capa("
-
-#~ msgid "Default"
-#~ msgstr "Predeterminado"
-
-#~ msgid "Default provider, based on XML"
-#~ msgstr "Proveedor predeterminado, basado en XML"
-
-#~ msgid "about to open connection"
-#~ msgstr "a punto de abrir la conexión"
-
-#~ msgid "Context allocated."
-#~ msgstr "Contexto asignado."
-
-#~ msgid "Client library initialized."
-#~ msgstr "Biblioteca del cliente inicializada."
-
-#~ msgid "Could not initialize cslib callback"
-#~ msgstr "No se pudo inicializar la llamada reversa de cslib"
-
-#~ msgid "CS-lib callback initialized."
-#~ msgstr "Llamada reversa de CS-lib inicializada."
-
-#~ msgid "Could not initialize ct-client callback"
-#~ msgstr "No se ha podido inicializar la llamada reversa de ct-client"
-
-#~ msgid "CT-Client callback initialized."
-#~ msgstr "Llamada reversa de CT-Client inicializada."
-
-#~ msgid "Could not initialize ct-server callback"
-#~ msgstr "No se ha podido inicializar la llamada reversa de ct-server"
-
-#~ msgid "Connection allocated."
-#~ msgstr "Conexión asignada."
-
-#~ msgid "Appname set."
-#~ msgstr "Nombre de aplicación definido."
-
-#~ msgid "Username set."
-#~ msgstr "Usuario definido."
-
-#~ msgid "Password set."
-#~ msgstr "Contraseña definida."
-
-#~ msgid "Empty password set."
-#~ msgstr "Contraseña en blanco definida."
-
-#~ msgid "Connected."
-#~ msgstr "Conectado."
-
-#~ msgid "Finally connected."
-#~ msgstr "Finalmente conectado."
-
-#~ msgid ""
-#~ "Connection already in use. Could not allocate command structure in %s()."
-#~ msgstr ""
-#~ "La conexión ya esta siendo usada. No se ha podido asignar la estructura "
-#~ "de comando en %s()"
-
-#~ msgid "Failed dropping command structure in %s()."
-#~ msgstr "Ha fallado la liberación de la estructura de comando en %s()."
-
-#~ msgid "%d messages fetched."
-#~ msgstr "%d mensajes recogidos."
-
-#~ msgid "Could not allocate environment handle."
-#~ msgstr "No se ha podido asignar el manejador de ambiente."
-
-#~ msgid "Could not set autocommit to off.\n"
-#~ msgstr "No se ha podido desactivar el «autocommit».\n"
-
-#~ msgid "SQLGetFunctions gave unexpected return. Connection terminated.\n"
-#~ msgstr ""
-#~ "SQLGetFunctions ha obtenido un retorno inesperado. Conexión finalizada.\n"
-
-#~ msgid "MESSAGE: %s"
-#~ msgstr "MENSAJE: %s"
-
-#~ msgid "ERROR: %s"
-#~ msgstr "ERROR: %s"
-
-#~ msgid "GDA provider for IBMDB2"
-#~ msgstr "Proveedor GDA para IBMDB2"
-
-#~ msgid "GDA provider for Interbase/Firebird databases"
-#~ msgstr "Proveedor GDA para bases de datos Interbase/Firebird"
-
-#~ msgid "Table Name"
-#~ msgstr "Nombre de la Tabla"
-
-#~ msgid "Tables"
-#~ msgstr "Tablas"
-
-#~ msgid "Types"
-#~ msgstr "Tipos"
-
-#~ msgid "Data Type"
-#~ msgstr "Tipo de dato"
-
-#~ msgid "Precision"
-#~ msgstr "Precisión"
-
-#~ msgid "Identity"
-#~ msgstr "Identidad"
-
-#~ msgid "Nullable"
-#~ msgstr "Anulable"
-
-#~ msgid "Domain"
-#~ msgstr "Dominio"
-
-#~ msgid "Provider %s is not installed"
-#~ msgstr "El proveedor %s no esta instalado"
-
-#~ msgid "Could not load %s provider"
-#~ msgstr "No se ha podido cargar el proveedor %s"
-
-#~ msgid "Creation of GdaServerProvider failed"
-#~ msgstr "Ha fallado la creación de GdaServerProvider"
-
-#~ msgid "Unexpected float value"
-#~ msgstr "Valor flotante inesperado"
-
-#~ msgid "Unexpected symbol '='"
-#~ msgstr "Símbolo inesperado «=»"
-
-#~ msgid "Unexpected symbol '<'"
-#~ msgstr "Símbolo inesperado «<»"
-
-#~ msgid "Unexpected symbol '>'"
-#~ msgstr "Símbolo inesperado «>»"
-
-#~ msgid "Found a non-numeric value after a '-' sign"
-#~ msgstr "Encontrado un valor no numérico luego de un signo «-»"
-
-#~ msgid "Unexpected identifier"
-#~ msgstr "Identificador inesperado"
-
-#~ msgid "Unknown"
-#~ msgstr "Desconocido"
-
-#~ msgid "You need to specify the name of the table"
-#~ msgstr "Necesita especificar el nombre de la tabla"
-
-#~ msgid "Table name"
-#~ msgstr "Nombre de la tabla"
-
-#~ msgid "An error occurred during fetch"
-#~ msgstr "Ha ocurrido un error durante la obtención de datos"
-
-#~ msgid "CORBA exception: %s"
-#~ msgstr "Excepción CORBA: %s"
-
-#~ msgid "Could not create global GDA client"
-#~ msgstr "No se pudo crear el cliente global-GDA"
-
-#~ msgid "GDA Report engine"
-#~ msgstr "Motor de Reporte GDA"
-
-#~ msgid "GDA Report engine factory"
-#~ msgstr "Origen de motor de GDA-Report"
-
-#~ msgid "Could not parse XML report"
-#~ msgstr "No se pudo analizar el reporte XML"
-
-#~ msgid "Could not activate report engine"
-#~ msgstr "No se pudo activar el motor de reporte"
-
-#~ msgid "Could not initiate Report component factory"
-#~ msgstr "No se pudo inicializar el origen de componente Report"
-
-#~ msgid "Could not activate object %s"
-#~ msgstr "No se pudo activar el objeto %s"
-
-#~ msgid "Could not query CORBA components"
-#~ msgstr "No se pudo consultar los componentes CORBA"
-
-#~ msgid "%s: An Error occured in the CORBA system."
-#~ msgstr "%s: Ha ocurrido un error en el sistema CORBA."
-
-#~ msgid "Unknown CORBA exception for connection"
-#~ msgstr "Excepción CORBA desconocida durante la conexión"
-
-#~ msgid "Could not initialize Bonobo"
-#~ msgstr "No se pudo inicializar Bonobo"
-
-#~ msgid "Don't know how to create components with IID %s"
-#~ msgstr "No sé como crear componentes con ID %s"
-
-#~ msgid "Could not duplicate client object. Client won't get notifications"
-#~ msgstr ""
-#~ "No se pudo duplicar el objeto cliente. El Cliente no obtendrá "
-#~ "notificaciones"
-
-#~ msgid "Could not notify client about action %d"
-#~ msgstr "No se pudo notificar al cliente acerca de la acción %d"
-
-#~ msgid "No implementation for the fetch() method found"
-#~ msgstr "No se encontró la implementación para el método fetch"
-
-#~ msgid "Default component factory"
-#~ msgstr "Origen de componente por omisión"
-
-#~ msgid "GDA Default Datasource Access"
-#~ msgstr "Acceso de Fuente de datos GDA por omisión"
-
-#~ msgid "Could not initiate Default component factory"
-#~ msgstr "No se pudo inicializar el origen de componente por omisión"
-
-#~ msgid "GDA Datasource Access for MySQL"
-#~ msgstr "Fuente de datos GDA para MySQL"
-
-#~ msgid "MySQL component factory"
-#~ msgstr "Origen de componente MySQL"
-
-#~ msgid "Could not initiate MySQL component factory"
-#~ msgstr "No se pudo inicializar el origen de componente MySQL"
-
-#~ msgid "GDA Datasource Access for ODBC"
-#~ msgstr "Acceso de Fuente de datos GDA para ODBC"
-
-#~ msgid "ODBC component factory"
-#~ msgstr "Origen de componente ODBC"
-
-#~ msgid "Could not initiate ODBC component factory"
-#~ msgstr "No se pudo inicializar el origen de componente ODBC"
-
-#~ msgid "GDA Datasource Access for Oracle"
-#~ msgstr "Fuente de datos GDA para Oracle"
-
-#~ msgid "Oracle component factory"
-#~ msgstr "Origen de componente Oracle"
-
-#~ msgid "GDA Datasource Access for Postgres"
-#~ msgstr "Acceso de la Fuente de Datos GDA para Postgres"
-
-#~ msgid "Postgres component factory"
-#~ msgstr "Origen de componente Postgres"
-
-#~ msgid "Could not initiate PostgreSQL component factory"
-#~ msgstr "No se pudo inicializar el origen de componente PostgresSQL"
-
-#~ msgid "SQLite component factory"
-#~ msgstr "Origen de componente SQLite"
-
-#~ msgid "Could not initiate Sqlite component factory"
-#~ msgstr "No se pudo inicializar el origen de componente Sqlite"
-
-#~ msgid "GDA Datasource Access for Sybase"
-#~ msgstr "Acceso de la Fuente de Datos GDA para Sybase"
-
-#~ msgid "Sybase component factory"
-#~ msgstr "Origen de componente Sybase"
-
-#~ msgid "\ttype = %s\n"
-#~ msgstr "\ttipo = %s\n"
-
-#~ msgid "\trepo_ids ="
-#~ msgstr "\trepo_ids ="
-
-#~ msgid "\thostname = %s\n"
-#~ msgstr "\tequipo = %s\n"
-
-#~ msgid "\tdomain = %s\n"
-#~ msgstr "\tdominio = %s\n"
