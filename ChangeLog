@@ -1,5 +1,9 @@
 2001-02-18  Carlos Perelló Marín <carlos@gnome-db.org>
 
+	* AUTHORS: Updated my email.
+
+2001-02-18  Carlos Perelló Marín <carlos@gnome-db.org>
+
 	* configure.in: Added a version check for GOB, I don't know
 	  if we must have the 1.0.5 version, perhaps an old one could
 	  work, but it must be almost >= than 0.93.4 (actual Ximian version)
