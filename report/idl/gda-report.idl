@@ -1,0 +1,121 @@
+/* GDA Report Engine
+ * Copyright (C) 2000 Rodrigo Moya
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this library; if not, write to the Free
+ * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ */
+
+#ifndef __gda_report_idl__
+#define __gda_report_idl__
+
+module GDA {
+	
+	/*
+	 * Report I/O operations
+	 */
+	interface ReportStream {
+		readonly attribute any contents;
+		
+		any getChunk (in long start, in long stop);
+	};
+	
+	/*
+	 * Report structure
+	 */
+	struct Attribute {
+		string name;
+		string value;
+	};
+	typedef sequence<Attribute> AttributeList;
+	
+	enum ContentType {
+		AnElement,
+		PCDATA
+	};
+	union VE switch (ContentType) {
+		case AnElement:
+			ElementList elem_list;
+		case PCDATA:
+			string contents;
+	}
+	interface ReportElement {
+		attribute string name;
+		attribute AttributeList attr_list;
+		attribute VE contents;
+		
+		void      addAttribute (in string name, in string value);
+		void      removeAttribute (in string name);
+		Attribute getAttribute (in string name);
+		void      setAttribute (in string name, in string value);
+		
+		ReportElement addChild (in string name);
+		void          removeChild (in string name);
+	};
+	typedef sequence<ReportElement> ElementList;
+	
+	interface ReportFormat {
+		readonly attribute string xml;
+		
+		ElementList  getStructure ();
+		ReportStream getStream ();
+	};
+	
+	/*
+	 * Report output format
+	 */
+	enum Converter {
+		TO_PDF,
+		TO_PS,
+		TO_HTML,
+		TO_LATEX
+	};
+	interface ReportOutput : ReportFormat {
+		ReportStream convert (in Converter format, in long flags);
+	};
+	
+	struct Param {
+		string name;
+		any value;
+	};
+	typedef sequence<Param> ParamList;
+	
+	interface Report {
+		attribute string       name;
+		attribute string       description;
+		attribute ReportFormat format;
+		attribute boolean      is_locked;
+		
+		void         fromStream (in ReportStream stream);
+		void         fromXML (in string xml);
+		ReportOutput run (in ParamList params, in long flags);
+		
+		/* for shared I/O access */
+		void lock   ();
+		void unlock ();
+	};
+	typedef sequence<Report> ReportList;
+
+	/*
+	 * The report engine
+	 */
+	interface ReportEngine {
+		ReportList queryReports (in string condition, in long flags);
+		Report     openReport (in string rep_name);
+		
+		Report     addReport (in string rep_name, in string description);
+		void       removeReport (in string rep_name);
+	};
+};
+
+#endif
