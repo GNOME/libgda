@@ -1,3 +1,7 @@
+2001-12-30  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* sqlite/Makefile.am: don't fail when copying lempar.c for distcheck
+
 2001-12-22  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-default-provider.c: added missing #include's
