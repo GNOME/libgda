@@ -268,6 +268,12 @@ gda_xml_database_table_new (GdaXmlDatabase *xmldb, const gchar *name)
 		return table;
 	}
 
+	/* create the TABLES node if it's not present */
+	if (xmldb->priv->tables == NULL) {
+		xmldb->priv->tables = xmlNewNode (NULL, OBJECT_TABLES_NODE);
+		xmlAddChild (GDA_XML_DOCUMENT (xmldb)->root, xmldb->priv->tables);
+	}
+
 	table = xmlNewNode (NULL, OBJECT_TABLE);
 	xmlNewProp (table, PROPERTY_NAME, name);
 	xmlAddChild (xmldb->priv->tables, table);
@@ -312,6 +318,8 @@ gda_xml_database_table_find (GdaXmlDatabase *xmldb, const gchar *name)
 
 	g_return_val_if_fail (GDA_IS_XML_DATABASE (xmldb), NULL);
 	g_return_val_if_fail (name != NULL, NULL);
+	g_return_val_if_fail (xmldb->priv != NULL, NULL);
+	g_return_val_if_fail (xmldb->priv->tables, NULL);
 
 	for (node = xmldb->priv->tables->xmlChildrenNode;
 	     node != NULL;
