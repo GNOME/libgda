@@ -51,8 +51,10 @@ gda_server_provider_class_init (GdaServerProviderClass *klass)
 	parent_class = g_type_class_peek_parent (klass);
 
 	object_class->finalize = gda_server_provider_finalize;
+	klass->get_version = NULL;
 	klass->open_connection = NULL;
 	klass->close_connection = NULL;
+	klass->get_server_version = NULL;
 	klass->get_database = NULL;
 	klass->change_database = NULL;
 	klass->create_database = NULL;
@@ -112,6 +114,25 @@ gda_server_provider_get_type (void)
 		type = g_type_register_static (PARENT_TYPE, "GdaServerProvider", &info, 0);
 	}
 	return type;
+}
+
+/**
+ * gda_server_provider_get_version
+ * @provider: a #GdaServerProvider object.
+ *
+ * Get the version of the given provider.
+ *
+ * Returns: a string containing the version identification.
+ */
+const gchar *
+gda_server_provider_get_version (GdaServerProvider *provider)
+{
+	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
+
+	if (CLASS (provider)->get_version != NULL)
+		return CLASS (provider)->get_version (provider);
+
+	return VERSION;
 }
 
 /**
@@ -186,6 +207,19 @@ gda_server_provider_close_connection (GdaServerProvider *provider, GdaConnection
 		g_object_unref (G_OBJECT (provider));
 
 	return retcode;
+}
+
+/**
+ * gda_server_provider_get_server_version
+ * @
+ */
+const gchar *
+gda_server_provider_get_server_version (GdaServerProvider *provider, GdaConnection *cnc)
+{
+	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
+	g_return_val_if_fail (CLASS (provider)->get_server_version != NULL, NULL);
+
+	return CLASS (provider)->get_server_version (provider, cnc);
 }
 
 /**

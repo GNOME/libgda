@@ -33,6 +33,7 @@ static void gda_postgres_provider_init       (GdaPostgresProvider *provider,
 					      GdaPostgresProviderClass *klass);
 static void gda_postgres_provider_finalize   (GObject *object);
 
+static const gchar *gda_postgres_provider_get_version (GdaServerProvider *provider);
 static gboolean gda_postgres_provider_open_connection (GdaServerProvider *provider,
 						       GdaConnection *cnc,
 						       GdaQuarkList *params,
@@ -41,6 +42,8 @@ static gboolean gda_postgres_provider_open_connection (GdaServerProvider *provid
 
 static gboolean gda_postgres_provider_close_connection (GdaServerProvider *provider,
 							GdaConnection *cnc);
+static const gchar *gda_postgres_provider_get_server_version (GdaServerProvider *provider,
+							      GdaConnection *cnc);
 static const gchar *gda_postgres_provider_get_database (GdaServerProvider *provider,
 							GdaConnection *cnc);
 static gboolean gda_postgres_provider_create_database (GdaServerProvider *provider,
@@ -116,8 +119,10 @@ gda_postgres_provider_class_init (GdaPostgresProviderClass *klass)
 	parent_class = g_type_class_peek_parent (klass);
 
 	object_class->finalize = gda_postgres_provider_finalize;
+	provider_class->get_version = gda_postgres_provider_get_version;
 	provider_class->open_connection = gda_postgres_provider_open_connection;
 	provider_class->close_connection = gda_postgres_provider_close_connection;
+	provider_class->get_server_version = gda_postgres_provider_get_server_version;
 	provider_class->get_database = gda_postgres_provider_get_database;
 	provider_class->create_database = gda_postgres_provider_create_database;
 	provider_class->drop_database = gda_postgres_provider_drop_database;
@@ -250,6 +255,16 @@ get_connection_type_list (GdaPostgresConnectionData *priv_td)
 	return 0;
 }
 
+/* get_version handler for the GdaPostgresProvider class */
+static const gchar *
+gda_postgres_provider_get_version (GdaServerProvider *provider)
+{
+	GdaPostgresProvider *pg_prv = (GdaPostgresProvider *) provider;
+
+	g_return_val_if_fail (GDA_IS_POSTGRES_PROVIDER (pg_prv), NULL);
+	return VERSION;
+}
+
 /* open_connection handler for the GdaPostgresProvider class */
 static gboolean
 gda_postgres_provider_open_connection (GdaServerProvider *provider,
@@ -373,6 +388,18 @@ gda_postgres_provider_close_connection (GdaServerProvider *provider, GdaConnecti
 
 	g_object_set_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE, NULL);
 	return TRUE;
+}
+
+/* get_server_version handler for the GdaPostgresProvider class */
+static const gchar *
+gda_postgres_provider_get_server_version (GdaServerProvider *provider, GdaConnection *cnc)
+{
+	GdaPostgresProvider *pg_prv = (GdaPostgresProvider *) provider;
+
+	g_return_val_if_fail (GDA_IS_POSTGRES_PROVIDER (pg_prv), NULL);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+
+	return "PostgreSQL version x.xx.xx"; // FIXME!!
 }
 
 static GList *

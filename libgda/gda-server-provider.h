@@ -52,6 +52,8 @@ struct _GdaServerProviderClass {
 	void (* last_connection_gone) (GdaServerProvider *provider);
 
 	/* virtual methods */
+	const gchar * (* get_version) (GdaServerProvider *provider);
+
 	gboolean (* open_connection) (GdaServerProvider *provider,
 				      GdaConnection *cnc,
 				      GdaQuarkList *params,
@@ -60,6 +62,8 @@ struct _GdaServerProviderClass {
 	gboolean (* close_connection) (GdaServerProvider *provider,
 				       GdaConnection *cnc);
 
+	const gchar * (* get_server_version) (GdaServerProvider *provider,
+					      GdaConnection *cnc);
 	const gchar * (* get_database) (GdaServerProvider *provider,
 					GdaConnection *cnc);
 	gboolean (* change_database) (GdaServerProvider *provider,
@@ -98,6 +102,7 @@ struct _GdaServerProviderClass {
 };
 
 GType    gda_server_provider_get_type (void);
+const gchar *gda_server_provider_get_version (GdaServerProvider *provider);
 gboolean gda_server_provider_open_connection (GdaServerProvider *provider,
 					      GdaConnection *cnc,
 					      GdaQuarkList *params,
@@ -106,6 +111,8 @@ gboolean gda_server_provider_open_connection (GdaServerProvider *provider,
 gboolean gda_server_provider_close_connection (GdaServerProvider *provider,
 					       GdaConnection *cnc);
 
+const gchar *gda_server_provider_get_server_version (GdaServerProvider *provider,
+						     GdaConnection *cnc);
 const gchar *gda_server_provider_get_database (GdaServerProvider *provider,
 					       GdaConnection *cnc);
 gboolean gda_server_provider_change_database (GdaServerProvider *provider,

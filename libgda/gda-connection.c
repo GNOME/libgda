@@ -341,6 +341,21 @@ gda_connection_set_client (GdaConnection *cnc, GdaClient *client)
 }
 
 /**
+ * gda_connection_get_server_version
+ * @cnc: A #GdaConnection object.
+ *
+ * Get the version string of the underlying database server.
+ *
+ * Returns: the server version string.
+ */
+const gchar *
+gda_connection_get_server_version (GdaConnection *cnc)
+{
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+	return gda_server_provider_get_server_version (cnc->priv->provider_obj, cnc);
+}
+
+/**
  * gda_connection_get_database
  * @cnc: A #GdaConnection object.
  *
@@ -495,7 +510,7 @@ gda_connection_add_error_string (GdaConnection *cnc, const gchar *str, ...)
 	error = gda_error_new ();
 	gda_error_set_description (error, sz);
 	gda_error_set_number (error, -1);
-	gda_error_set_source (error, g_get_prgname ());
+	gda_error_set_source (error, gda_connection_get_provider (cnc));
 	gda_error_set_sqlstate (error, "-1");
 	
 	gda_connection_add_error (cnc, error);

@@ -39,6 +39,7 @@ static void gda_mysql_provider_init       (GdaMysqlProvider *provider,
 					   GdaMysqlProviderClass *klass);
 static void gda_mysql_provider_finalize   (GObject *object);
 
+static const gchar *gda_mysql_provider_get_version (GdaServerProvider *provider);
 static gboolean gda_mysql_provider_open_connection (GdaServerProvider *provider,
 						    GdaConnection *cnc,
 						    GdaQuarkList *params,
@@ -46,6 +47,8 @@ static gboolean gda_mysql_provider_open_connection (GdaServerProvider *provider,
 						    const gchar *password);
 static gboolean gda_mysql_provider_close_connection (GdaServerProvider *provider,
 						     GdaConnection *cnc);
+static const gchar *gda_mysql_provider_get_server_version (GdaServerProvider *provider,
+							   GdaConnection *cnc);
 static const gchar *gda_mysql_provider_get_database (GdaServerProvider *provider,
 						     GdaConnection *cnc);
 static gboolean gda_mysql_provider_change_database (GdaServerProvider *provider,
@@ -93,8 +96,10 @@ gda_mysql_provider_class_init (GdaMysqlProviderClass *klass)
 	parent_class = g_type_class_peek_parent (klass);
 
 	object_class->finalize = gda_mysql_provider_finalize;
+	provider_class->get_version = gda_mysql_provider_get_version;
 	provider_class->open_connection = gda_mysql_provider_open_connection;
 	provider_class->close_connection = gda_mysql_provider_close_connection;
+	provider_class->get_server_version = gda_mysql_provider_get_server_version;
 	provider_class->get_database = gda_mysql_provider_get_database;
 	provider_class->change_database = gda_mysql_provider_change_database;
 	provider_class->create_database = gda_mysql_provider_create_database;
@@ -152,6 +157,17 @@ gda_mysql_provider_new (void)
 
 	provider = g_object_new (gda_mysql_provider_get_type (), NULL);
 	return GDA_SERVER_PROVIDER (provider);
+}
+
+/* get_version handler for the GdaMysqlProvider class */
+static const gchar *
+gda_mysql_provider_get_version (GdaServerProvider *provider)
+{
+	GdaMysqlProvider *myprv = (GdaMysqlProvider *) provider;
+
+	g_return_val_if_fail (GDA_IS_MYSQL_PROVIDER (myprv), NULL);
+
+	return VERSION;
 }
 
 /* open_connection handler for the GdaMysqlProvider class */
@@ -257,6 +273,25 @@ gda_mysql_provider_close_connection (GdaServerProvider *provider, GdaConnection 
 	g_object_set_data (G_OBJECT (cnc), OBJECT_DATA_MYSQL_HANDLE, NULL);
 
 	return TRUE;
+}
+
+/* get_server_version handler for the GdaMysqlProvider class */
+static const gchar *
+gda_mysql_provider_get_server_version (GdaServerProvider *provider, GdaConnection *cnc)
+{
+	MYSQL *mysql;
+	GdaMysqlProvider *myprv = (GdaMysqlProvider *) provider;
+
+	g_return_val_if_fail (GDA_IS_MYSQL_PROVIDER (myprv), NULL);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+	
+	mysql = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_MYSQL_HANDLE);
+	if (!mysql) {
+		gda_connection_add_error_string (cnc, _("Invalid MySQL handle"));
+		return FALSE;
+	}
+
+	return (const gchar *) mysql->server_version;
 }
 
 static GList *

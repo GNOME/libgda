@@ -1,3 +1,21 @@
+2002-08-17  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* libgda/gda-server-provider.[ch] (gda_server_provider_get_version):
+	new function.
+	(gda_server_provider_get_server_version): new function.
+
+	* libgda/gda-connection.c (gda_connection_add_error_string): set error
+	source to be the name of the provider, not the program name.
+	(gda_connection_get_server_version): new function.
+
+	* providers/mysql/gda-mysql-provider.c
+	 (gda_mysql_provider_get_version,
+	  gda_mysql_provider_get_server_version):
+	* providers/postgres/gda-postgres-provider.c
+	 (gda_postgres_provider_get_version,
+	  gda_postgres_provider_get_server_version): implemented new class
+	methods.
+
 2002-08-16  Holger Thon <holger.thon@gnome-db.org>
 
 	* libgda/providers/ibmdb2/core{1,2}.log:
