@@ -1,3 +1,9 @@
+2002-05-12  Carlos Perello Marin <carlos@gnome-db.org>
+
+	* macros/*: Imported directly the macros dir. This way we don't need
+	to download it inside the GNOME 2.0 branch. NOTE: We should update
+	this dir when we saw any bugfixes at macros share dir.
+
 2001-11-27  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* configure.in: 0.2.93 is out, long live 0.2.94
