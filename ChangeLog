@@ -1,3 +1,7 @@
+2003-08-10  Akira TAGOH <tagoh@gnome-db.org>
+
+	* configure.in: fixed typo to build the freetds backend correctly.
+
 2003-08-06  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	Released 0.91.0

@@ -354,13 +354,13 @@ then
 	AC_MSG_CHECKING(for freetds files)
 	for d in $dir /usr/local/freetds /usr /opt/freetds /opt/packages/freetds /opt/freetds-0.50
 	do
-		if test -f "$d/$include/tds.h" -a -e "$d/$lib/libtds.so" -a -f "$d/include/tdsver.h"
+		if test -f "$d/include/tds.h" -a -e "$d/$lib/libtds.so" -a -f "$d/include/tdsver.h"
 		then
 			AC_MSG_RESULT(found freetds in $d)
 			freetdsdir="$d"
-			freetds_incdir="$d/$include"
+			freetds_incdir="$d/include"
 			break
-		elif test -f "$d/$include/freetds/tds.h" -a -e "$d/$lib/libtds.so" -a -f "$d/include/freetds/tdsver.h"
+		elif test -f "$d/include/freetds/tds.h" -a -e "$d/$lib/libtds.so" -a -f "$d/include/freetds/tdsver.h"
 		then
 			AC_MSG_RESULT(found freetds in $d and includes in $d/include/freetds)
 			freetdsdir="$d"
