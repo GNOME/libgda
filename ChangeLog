@@ -1,5 +1,9 @@
 2004-12-28  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	Released 1.2.0.
+
+2004-12-28  Rodrigo Moya <rodrigo@gnome-db.org>
+
 	* autogen.sh: changed to require automake >= 1.9.
 
 	* configure.in: incremented library versions.
