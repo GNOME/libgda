@@ -1,3 +1,15 @@
+2001-12-25  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-server-connection.c (gda_server_connection_class_init): also
+	initialize the supports function pointer
+
+	* gda-xml-database.[ch] (gda_xml_database_new_from_uri): renamed
+	from gda_xml_database_new_from_file, so that we can get the file
+	from any place supported by GnomeVFS
+	(gda_xml_database_save): removed, not needed anymore, there is
+	gda_xml_document_to_file, which even now works with GnomeVFS
+	(gda_xml_database_free): removed
+
 2001-12-23  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-row.c (gda_row_new): initialize all GdaField's to be

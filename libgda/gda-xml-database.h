@@ -49,11 +49,8 @@ struct _GdaXmlDatabaseClass {
 GType           gda_xml_database_get_type (void);
 
 GdaXmlDatabase *gda_xml_database_new (void);
-GdaXmlDatabase *gda_xml_database_new_from_file (const gchar *filename);
-void            gda_xml_database_free (GdaXmlDatabase * xmldb);
+GdaXmlDatabase *gda_xml_database_new_from_uri (const gchar *uri);
 
-gboolean        gda_xml_database_save (GdaXmlDatabase * xmldb,
-				       const gchar * filename);
 void            gda_xml_database_changed (GdaXmlDatabase * xmldb);
 
 /*

@@ -82,6 +82,7 @@ gda_server_provider_class_init (GdaServerProviderClass *klass)
 	klass->begin_transaction = NULL;
 	klass->commit_transaction = NULL;
 	klass->rollback_transaction = NULL;
+	klass->supports = NULL;
 
 	/* set the epv */
 	epv = &klass->epv;

@@ -288,6 +288,7 @@ gda_server_connection_class_init (GdaServerConnectionClass *klass)
 	epv->beginTransaction = (gpointer) impl_Connection_beginTransaction;
 	epv->commitTransaction = (gpointer) impl_Connection_commitTransaction;
 	epv->rollbackTransaction = (gpointer) impl_Connection_rollbackTransaction;
+	epv->supports = (gpointer) impl_Connection_supports;
 }
 
 static void

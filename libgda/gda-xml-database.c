@@ -145,61 +145,51 @@ gda_xml_database_new (void)
 }
 
 /**
- * gda_xml_database_new_from_file
+ * gda_xml_database_new_from_uri
  */
 GdaXmlDatabase *
-gda_xml_database_new_from_file (const gchar * filename)
+gda_xml_database_new_from_uri (const gchar *uri)
 {
 	GdaXmlDatabase *xmldb;
+	gchar *body;
+	xmlNodePtr node;
 
+	g_return_val_if_fail (uri != NULL, NULL);
+
+	/* load the file from the given URI */
+	body = gda_file_load (uri);
+	if (!body) {
+		gda_log_error (_("Could not load file at %s"), uri);
+		return NULL;
+	}
+
+	/* parse the loaded XML file */
 	xmldb = GDA_XML_DATABASE (g_object_new (GDA_TYPE_XML_DATABASE, NULL));
 
-	GDA_XML_DOCUMENT (xmldb)->doc = xmlParseFile (filename);
-	if (GDA_XML_DOCUMENT (xmldb)->doc) {
-		xmlNodePtr node;
-		GDA_XML_DOCUMENT (xmldb)->root =
-			xmlDocGetRootElement (GDA_XML_DOCUMENT (xmldb)->doc);
-		node = GDA_XML_DOCUMENT (xmldb)->root->xmlChildrenNode;
-		while (node) {
-			if (!strcmp (node->name, OBJECT_TABLES_NODE)) {
-				if (xmldb->priv->tables != NULL) {
-					g_warning (_("bad formed document"));
-					gda_xml_database_free (xmldb);
-					return NULL;
-				}
-				xmldb->priv->tables = node;
+	GDA_XML_DOCUMENT (xmldb)->doc = xmlParseMemory (body, strlen (body));
+	g_free (body);
+
+	if (!GDA_XML_DOCUMENT (xmldb)->doc) {
+		gda_log_error (_("Could not parse file at %s"), uri);
+		g_object_unref (G_OBJECT (xmldb));
+		return NULL;
+	}
+
+	GDA_XML_DOCUMENT (xmldb)->root = xmlDocGetRootElement (GDA_XML_DOCUMENT (xmldb)->doc);
+	node = GDA_XML_DOCUMENT (xmldb)->root->xmlChildrenNode;
+	while (node) {
+		if (!strcmp (node->name, OBJECT_TABLES_NODE)) {
+			if (xmldb->priv->tables != NULL) {
+				gda_log_error (_("Bad formed document at %s"), uri);
+				g_object_unref (G_OBJECT (xmldb));
+				return NULL;
 			}
-			node = node->next;
+			xmldb->priv->tables = node;
 		}
+		node = node->next;
 	}
+
 	return xmldb;
-}
-
-/**
- * gda_xml_database_free
- * @xmldb: XML database
- *
- * Destroys the given XML database
- */
-void
-gda_xml_database_free (GdaXmlDatabase * xmldb)
-{
-	g_return_if_fail (GDA_IS_XML_DATABASE (xmldb));
-	g_object_unref (G_OBJECT (xmldb));
-}
-
-/**
- * gda_xml_database_save
- */
-gboolean
-gda_xml_database_save (GdaXmlDatabase * xmldb, const gchar * filename)
-{
-	g_return_val_if_fail (GDA_IS_XML_DATABASE (xmldb), FALSE);
-
-	if (!xmlSaveFile (filename, GDA_XML_DOCUMENT (xmldb)->doc)) {
-	}
-
-	return TRUE;
 }
 
 /**
