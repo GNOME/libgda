@@ -6,7 +6,8 @@ INCLUDES = \
 	-I. \
 	-I$(top_builddir)/lib/gda-common
 
-BUILT_SOURCES = GDA-skels.c GDA-common.c GDA.h
+BUILT_SOURCES = GDA-skels.c GDA-stubs.c GDA-common.c GDA.h
+CLEANFILES += $(BUILT_SOURCES)
 IDL_FILES = \
 	$(top_builddir)/idl/GDA.idl \
 	$(top_builddir)/idl/GDA_Command.idl \
@@ -16,7 +17,7 @@ IDL_FILES = \
 	$(top_builddir)/idl/GDA_Parameter.idl \
 	$(top_builddir)/idl/GDA_Recordset.idl
 
-GDA-skels.c GDA-common.c GDA.h: $(IDLFILES)
+GDA-skels.c GDA-stubs.c GDA-common.c GDA.h: $(IDLFILES)
 	$(ORBIT_IDL) -I$(top_sourcedir)/idl -I`oaf-config --prefix`/share/idl $(top_builddir)/idl/GDA.idl
 
 gda_server_headers = \

@@ -1,3 +1,9 @@
+2001-01-05	Carlos Perelló Marín <carlos@gnome-db.org>
+
+	* Makefile.am: Added the rule to erase the idl generated
+	  files and added a reference to GDA-stubs.c as an idl
+	  generated file.
+
 2000-12-20	Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* fixed OAF servers' deactivation
