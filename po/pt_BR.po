@@ -13,13 +13,13 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda.HEAD.pt_BR\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-02-07 12:45+0100\n"
-"PO-Revision-Date: 2005-01-29 02:58-0200\n"
+"POT-Creation-Date: 2005-02-17 22:52+0100\n"
+"PO-Revision-Date: 2005-02-18 00:26-0200\n"
 "Last-Translator: Afonso Celso Medina <medina@maua.br>\n"
 "Language-Team: Portuguese/Brazil <gnome-l10n-br@listas.cipsga.org.br>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
+"Content-Transfer-Encoding: 8bit"
 
 #: libgda/gda-client.c:312 libgda/gda-client.c:539 libgda/gda-connection.c:219
 #, c-format
@@ -127,7 +127,7 @@ msgstr "Impossível analisar a string SQL '%s'"
 msgid "SQL command is not a SELECT (is '%s'"
 msgstr "O comando SQL não é um SELECT (é '%s'"
 
-#: libgda/gda-table.c:286
+#: libgda/gda-table.c:308
 #, c-format
 msgid "There is already a field called %s"
 msgstr "Já existe um campo chamado %s"
@@ -164,52 +164,57 @@ msgstr "(GObject do tipo '%s'"
 msgid "NULL GObject"
 msgstr "GObject NULL"
 
-#: libgda/gda-xml-database.c:279
+#: libgda/gda-xml-database.c:290
 #, c-format
 msgid "Could not load file at %s"
 msgstr "Impossível carregar arquivo em %s"
 
-#: libgda/gda-xml-database.c:288
+#: libgda/gda-xml-database.c:299
 #, c-format
 msgid "Could not parse file at %s"
 msgstr "Impossível analisar arquivo em %s"
 
-#: libgda/gda-xml-database.c:298
+#: libgda/gda-xml-database.c:309
 #, c-format
 msgid "Invalid XML database file '%s'"
 msgstr "Arquivo de banco de dados XML '%s' inválido"
 
-#: libgda/gda-xml-database.c:541
+#: libgda/gda-xml-database.c:552
 #, c-format
 msgid "Could not create a XML node from table %s"
 msgstr "Impossível criar um nó XML a partir da tabela %s"
 
-#: libgda/gda-xml-database.c:559
+#: libgda/gda-xml-database.c:570
 msgid "Could not dump XML file to memory"
 msgstr "Impossível despejar o arquivo XML para a memória"
 
-#: libgda/gda-xml-database.c:650 libgda/gda-xml-database.c:687
-#: libgda/gda-xml-database.c:731
+#: libgda/gda-xml-database.c:661 libgda/gda-xml-database.c:699
+#: libgda/gda-xml-database.c:744
 #, c-format
 msgid "Table %s already exists"
 msgstr "Tabela %s já existe"
 
-#: libgda/gda-xml-database.c:724
+#: libgda/gda-xml-database.c:737
 msgid "Invalid node"
 msgstr "Nó inválido"
 
-#: libgda/gda-xml-database.c:766
+#: libgda/gda-xml-database.c:779
 #, c-format
 msgid "Duplicated <data> node for table %s"
 msgstr "Nó <data> duplicado para a tabela %s"
 
-#: libgda/gda-xml-database.c:773
+#: libgda/gda-xml-database.c:786
 msgid "Invalid XML node"
 msgstr "Nó XML inválido"
 
-#: libgda/gda-xml-database.c:782
+#: libgda/gda-xml-database.c:795
 msgid "Could not add the data from the XML node"
 msgstr "Impossível adicionar o dado a partir do nó XML"
+
+#: libgda/gda-xml-database.c:817
+#, c-format
+msgid "Table %s doesn't exist"
+msgstr "A tabela %s não existe"
 
 #: libsql/sql_parser.c:60
 #, c-format
@@ -2537,3 +2542,4 @@ msgstr "Nome do banco de dados"
 #: providers/bdb/libmain.c:53
 msgid "Name of the database in the database file to be used"
 msgstr "Nome do banco de dados no arquivo de banco de dados a ser utilizado"
+
