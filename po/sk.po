@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda 0.2.2\n"
 "POT-Creation-Date: 2000-12-22 14:14+0100\n"
-"PO-Revision-Date: 2000-12-20 22:03CET\n"
+"PO-Revision-Date: 2001-01-03 09:41CET\n"
 "Last-Translator: Stanislav Visnovsky <visnovsky@nenya.ms.mff.cuni.cz>\n"
 "Language-Team: Slovak <sk-i18n@rak.isternet.sk>\n"
 "MIME-Version: 1.0\n"
@@ -158,7 +158,7 @@ msgstr "%s: då¾ka = %d"
 #: lib/gda-server/gda-server-impl-recordset.c:459
 #, c-format
 msgid "%s: sending field description for '%s'"
-msgstr "%s: posielanie popis poµa pre '%s'"
+msgstr "%s: posielanie popisu poµa pre '%s'"
 
 #: lib/gda-server/gda-server-impl.c:184
 #, c-format
@@ -167,13 +167,11 @@ msgstr "Spú¹»am poskytovateµa %s bez implementaèných funkcií"
 
 #: lib/gda-server/gda-server-impl.c:210
 #: report/server/gda-report-server-main.c:120
-msgid ""
-"OAF doesn't know about our IID; indicates broken installation. Exiting..."
+msgid "OAF doesn't know about our IID; indicates broken installation. Exiting..."
 msgstr "OAF nepozná na¹e IID, asi po¹kodená in¹talácia. Konèím..."
 
 #: lib/gda-server/gda-server-impl.c:213
-msgid ""
-"Another instance of this provider is already registered with OAF. Exiting..."
+msgid "Another instance of this provider is already registered with OAF. Exiting..."
 msgstr "Iná in¹tancia tohoto poskytovateµa je u¾ registrovaná u OAF. Konèím..."
 
 #: lib/gda-server/gda-server-impl.c:216
@@ -198,12 +196,12 @@ msgstr "Pou¾ívateµská výnimka CORBA: %s"
 #: lib/gda-server/gda-server-init.c:63 lib/gda-server/gda-server-init.c:69
 #, c-format
 msgid "Received signal %d, shutting down"
-msgstr "Zachytený signál %s, vypínam"
+msgstr "Zachytený signál %d, vypínam"
 
 #: lib/gda-server/gda-server-init.c:73
 #, c-format
 msgid "Received signal %d. Ignoring"
-msgstr "Zachytený signál %s. Ignorujem"
+msgstr "Zachytený signál %d. Ignorujem"
 
 #: lib/gda-server/gda-server-init.c:123
 msgid "Attempt to initialize an already initialized provider"
@@ -286,7 +284,7 @@ msgstr "Nie je mo¾né registrova» implementáciu mail poskytovateµa"
 #: providers/gda-sybase-server/gda-sybase-command.c:120
 #, c-format
 msgid "executing command '%s'"
-msgstr "vykonávam príka '%s'"
+msgstr "vykonávam príkaz '%s'"
 
 #: providers/gda-mdb-server/gda-mdb-command.c:88
 #: providers/gda-mysql-server/gda-mysql-command.c:89
@@ -474,7 +472,7 @@ msgstr "Chyba pri alokovaní chybovej ¹truktúry"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:157
 msgid "Not enough memory for sybase_Connection"
-msgstr "Nedostatok pamäte pre sybase_Connection"
+msgstr "Nedostatok pamäti pre sybase_Connection"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:422
 #, c-format
@@ -487,7 +485,7 @@ msgstr "Nie je mo¾né alokova» ¹truktúru pre príkaz"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:460
 msgid "Could not allocate enough memory for query"
-msgstr "Nie je mo¾né alokova» dostatok pamäte pre otázku"
+msgstr "Nie je mo¾né alokova» dostatok pamäti pre otázku"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:474
 msgid "Could not get recordset in schema_cols"
@@ -551,12 +549,12 @@ msgstr "návratový kód: %x"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:770
 msgid "attempting reconnection"
-msgstr "pokus o znovuspojenie"
+msgstr "pokus o znovu-spojenie"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:909
 #, c-format
 msgid "Reconnected to '%s'"
-msgstr "Znovuspojený s '%s'"
+msgstr "Znovu-spojený s '%s'"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:911
 #, c-format
@@ -635,7 +633,7 @@ msgstr ""
 
 #: providers/gda-sybase-server/gda-sybase-error.c:138
 msgid "cs_diag() initialized"
-msgstr "cs_diag() initializovaná"
+msgstr "cs_diag() inicializovaná"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:141
 msgid "Could not initialize cs_diag()"
@@ -643,7 +641,7 @@ msgstr "Nie je mo¾né inicializova» cs_diag()"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:148
 msgid "ct_diag() initialized"
-msgstr "ct_diag() initializovaná"
+msgstr "ct_diag() inicializovaná"
 
 #: providers/gda-sybase-server/gda-sybase-error.c:151
 msgid "Could not initialize ct_diag()"
@@ -803,7 +801,7 @@ msgstr "ct_describe na ståpci # %d"
 #: providers/gda-sybase-server/gda-sybase-recordset.c:391
 #, c-format
 msgid "ct_describe on col # %d failed"
-msgstr "ct_describe na ståci %d zlyhala"
+msgstr "ct_describe na ståpci %d zlyhala"
 
 #: providers/gda-sybase-server/gda-sybase-recordset.c:397
 #, c-format
@@ -848,8 +846,7 @@ msgstr "Zachytený signál %d, èisto vypínam."
 
 #: report/server/gda-report-server-main.c:96
 msgid "Failed to initialize OAF: please mail bug report to OAF maintainers"
-msgstr ""
-"Nepodarilo sa inicializova» OAF: prosím, odo¹lite správu o chybe správcom OAF"
+msgstr "Nepodarilo sa inicializova» OAF: prosím, odo¹lite správu o chybe správcom OAF"
 
 #: report/server/gda-report-server-main.c:106
 msgid "Could not activate report engine"
@@ -911,3 +908,4 @@ msgstr "%s: chyba v konfigurácii polo¾ky DSN"
 #, c-format
 msgid "%s: data source '%s' not found\n"
 msgstr "%s: zdroj dát '%s' nenájdený\n"
+
