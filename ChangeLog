@@ -1,3 +1,10 @@
+2002-12-16  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	Should fix #101046
+
+	* providers/oracle/gda-oracle-provider.c (get_oracle_tables): use
+	double quotes instead of single quotes for aliases in SELECT command.
+
 2002-12-15  Vivien Malerba <malerba@gnome-db.org>
 
 	* providers/postgres/gda-postgres-provider.c: implemented the tables
