@@ -1,7 +1,10 @@
 /* XmlQuery: the xml query object
- * Copyright (C) 2000 Gerhard Dieringer
+ * Copyright (C) 2000-2002 The GNOME Foundation.
  *
- * This library is free software; you can redistribute it and/or
+ * AUTHORS:
+ * 	Gerhard Dieringer <gdieringer@compuserve.com>
+ * 	Cleber Rodrigues <cleber@gnome-db.org>
+ *
  * modify it under the terms of the GNU Library General Public
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.

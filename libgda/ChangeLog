@@ -1,3 +1,7 @@
+2002-01-11  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
+	* *.[ch]: Assign copyright to the GNOME Foundation.
+
 2002-01-10  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-server-connection.c (gda_server_connection_add_error_string):

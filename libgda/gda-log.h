@@ -1,5 +1,5 @@
 /* GDA Common Library
- * Copyright (C) 2000 Rodrigo Moya
+ * Copyright (C) 1998-2002 The GNOME Foundation.
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as

@@ -1,6 +1,9 @@
 /* GdaXql: the xml query object
- * Copyright (C) 2000 Gerhard Dieringer
- * deGOBified by Cleber Rodrigues (cleber@gnome-db.org)
+ * Copyright (C) 2000-2002 The GNOME Foundation.
+ *
+ * AUTHORS:
+ * 	Gerhard Dieringer <gdieringer@compuserve.com>
+ * 	Cleber Rodrigues <cleber@gnome-db.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public

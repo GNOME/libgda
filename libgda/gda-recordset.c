@@ -1,5 +1,5 @@
 /* GDA libary
- * Copyright (C) 1998-2001 The Free Software Foundation
+ * Copyright (C) 1998-2002 The GNOME Foundation.
  *
  * AUTHORS:
  *	Michael Lausch <michael@lausch.at>

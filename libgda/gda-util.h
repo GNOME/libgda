@@ -1,5 +1,5 @@
 /* GDA common library
- * Copyright (C) 1999-2001 The Free Software Foundation
+ * Copyright (C) 1998-2002 The GNOME Foundation.
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>

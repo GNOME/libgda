@@ -1,5 +1,8 @@
 /* GDA library
- * Copyright (C) 1999, 2000 Rodrigo Moya
+ * Copyright (C) 1998-2002 The GNOME Foundation.
+ *
+ * AUTHORS:
+ * 	Rodrigo Moya <rodrigo@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as

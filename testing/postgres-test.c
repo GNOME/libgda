@@ -1,5 +1,5 @@
 /* GDA - Test suite
- * Copyright (C) 1998-2001 The Free Software Foundation
+ * Copyright (C) 1998-2002 The GNOME Foundation
  *
  * AUTHORS:
  *	Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
