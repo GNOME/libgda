@@ -50,6 +50,9 @@ typedef struct {
 	OCISvcCtx *hservice;
 	OCISession *hsession;
 	sword stmt_type;
+        gchar *schema;
+        GTree *tables;
+        GTree *views;
 } GdaOracleConnectionData;
 
 typedef struct {

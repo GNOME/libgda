@@ -24,6 +24,7 @@
 #include <libgda/gda-data-model-array.h>
 #include <libgda/gda-intl.h>
 #include <stdlib.h>
+#include <string.h>
 #include "gda-oracle.h"
 #include "gda-oracle-provider.h"
 #include "gda-oracle-recordset.h"
@@ -379,6 +380,10 @@ gda_oracle_provider_open_connection (GdaServerProvider *provider,
 		return FALSE;
 	}
 
+	priv_data->schema = g_ascii_strup(ora_username, -1);
+	priv_data->tables = NULL;
+	priv_data->views = NULL;
+	
 	/* attach the oracle connection data to the gda connection object */
 	g_object_set_data (G_OBJECT (cnc), OBJECT_DATA_ORACLE_HANDLE, priv_data);
 
@@ -422,6 +427,12 @@ gda_oracle_provider_close_connection (GdaServerProvider *provider, GdaConnection
 		OCIHandleFree ((dvoid *) priv_data->herr, OCI_HTYPE_ERROR);
 	if (priv_data->henv)
 		OCIHandleFree ((dvoid *) priv_data->henv, OCI_HTYPE_ENV);
+	if (priv_data->schema)
+	    g_free(priv_data->schema);
+	if (priv_data->tables)
+	    g_tree_destroy(priv_data->tables);
+	if (priv_data->views)
+	    g_tree_destroy(priv_data->views);
 							
 	g_free (priv_data);
 	g_object_set_data (G_OBJECT (cnc), OBJECT_DATA_ORACLE_HANDLE, NULL);
@@ -1093,6 +1104,73 @@ get_oracle_aggregates (GdaConnection *cnc, GdaParameterList *params)
 	return GDA_DATA_MODEL (recset);
 }
 
+static GTree *
+gda_oracle_table_tree(GdaConnection *cnc)
+{
+    GdaOracleConnectionData *priv_data;
+    GTree *tree;
+    GList *reclist;
+    GdaDataModel *recset;
+    GdaRow *row;
+    GdaValue *value;
+    int i;
+    gchar *name, *owner;
+
+    reclist = process_sql_commands (NULL, cnc,
+				    "SELECT TABLE_NAME,OWNER "
+				    "FROM ALL_TABLES "
+				    "ORDER BY TABLE_NAME",
+				    NULL, GDA_COMMAND_OPTION_STOP_ON_ERRORS);
+    if (!reclist)
+	return NULL;
+    recset = reclist->data;
+    priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_ORACLE_HANDLE);
+    tree = g_tree_new(strcmp);
+    for (i = 0; (row = gda_data_model_get_row(recset, i)); i++) {
+	value = gda_row_get_value(row, 0);
+	name = gda_value_stringify (value);
+	value = gda_row_get_value(row, 1);
+	owner = gda_value_stringify (value);
+	if (strcmp(owner, priv_data->schema) == 0 ||
+	    g_tree_lookup(tree, name) == NULL) {
+	    g_tree_insert(tree, name, owner);
+	}
+    }
+    priv_data->tables = tree;
+    return tree;
+}
+     
+static GTree *
+gda_oracle_view_tree(GdaConnection *cnc)
+{
+    GdaOracleConnectionData *priv_data;
+    GTree *tree;
+    GList *reclist;
+    GdaDataModel *recset;
+    GdaRow *row;
+    GdaValue *value;
+    int i;
+    gchar *name;
+
+    reclist = process_sql_commands (NULL, cnc,
+				    "SELECT VIEW_NAME "
+				    "FROM USER_VIEWS "
+				    "ORDER BY VIEW_NAME",
+				    NULL, GDA_COMMAND_OPTION_STOP_ON_ERRORS);
+    if (!reclist)
+	return NULL;
+    recset = reclist->data;
+    priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_ORACLE_HANDLE);
+    tree = g_tree_new(strcmp);
+    for (i = 0; (row = gda_data_model_get_row(recset, i)); i++) {
+	value = gda_row_get_value(row, 0);
+	name = gda_value_stringify (value);
+	g_tree_insert(tree, name, priv_data->schema);
+    }
+    priv_data->views = tree;
+    return tree;
+}
+
 static GdaDataModelArray *
 gda_oracle_init_md_recset (GdaConnection *cnc)
 {
@@ -1262,12 +1340,21 @@ gda_oracle_fill_md_data (const gchar *tblname,
 	GList *list = NULL;
 	gint result;
 	GHashTable *h_table_index;
+	gchar *upc_tblname, *owner, *fq_tblname;
 	ub4 one = 1;
 	text *syn_schema, *syn_name, *syn_link;
 	ub4  syn_schema_len, syn_name_len, syn_link_len;
 	gchar *syn_points_to, *syn_ptr;
 
 	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_ORACLE_HANDLE);
+
+	/* get a list of table/views to resolve owner conflicts */
+	if (priv_data->tables == NULL)
+	    if (gda_oracle_table_tree(cnc) == NULL)
+		return NULL;
+	if (priv_data->views == NULL)
+	    if (gda_oracle_view_tree(cnc) == NULL)
+		return NULL;
 
 	/* Allocate the Describe handle */
 	result = OCIHandleAlloc ((dvoid *) priv_data->henv,
@@ -1291,11 +1378,22 @@ gda_oracle_fill_md_data (const gchar *tblname,
 		return NULL;
 	}
 
+	/* look up the table name to get the fully qualified name. */
+	upc_tblname = g_ascii_strup(tblname, -1);
+	if ((owner = g_tree_lookup(priv_data->tables, upc_tblname)) == NULL)
+	    owner = g_tree_lookup(priv_data->views, upc_tblname);
+	g_free(upc_tblname);
+	if (owner == NULL)
+	    fq_tblname = tblname;
+	else
+	    fq_tblname = g_strjoin(".", owner, tblname, NULL);
+	g_log("gda-oracle", G_LOG_LEVEL_DEBUG, "full name is '%s'",fq_tblname);
+	
 	/* Describe the table */
 	result = OCIDescribeAny (priv_data->hservice,
 				priv_data->herr,
-				(text *) tblname,
-				strlen (tblname),
+				(text *) fq_tblname,
+				strlen (fq_tblname),
 				OCI_OTYPE_NAME,
 				0,
 				OCI_PTYPE_UNK,
@@ -1303,6 +1401,8 @@ gda_oracle_fill_md_data (const gchar *tblname,
 	if (!gda_oracle_check_result (result, cnc, priv_data, OCI_HTYPE_ERROR,
 			_("Could not describe the Oracle table"))) {
 		OCIHandleFree ((dvoid *) dschp, OCI_HTYPE_DESCRIBE);
+		if (fq_tblname != tblname)
+		    g_free(fq_tblname);
 		return NULL;
 	}
 
@@ -1316,6 +1416,8 @@ gda_oracle_fill_md_data (const gchar *tblname,
 	if (!gda_oracle_check_result (result, cnc, priv_data, OCI_HTYPE_ERROR,
 			_("Could not get the Oracle parameter handle"))) {
 		OCIHandleFree ((dvoid *) dschp, OCI_HTYPE_DESCRIBE);
+		if (fq_tblname != tblname)
+		    g_free(fq_tblname);
 		return NULL;
 	}
 
@@ -1329,6 +1431,8 @@ gda_oracle_fill_md_data (const gchar *tblname,
 	if (!gda_oracle_check_result (result, cnc, priv_data, OCI_HTYPE_ERROR,
 			_("Could not get described object type"))) {
 		OCIHandleFree ((dvoid *) dschp, OCI_HTYPE_DESCRIBE);
+		if (fq_tblname != tblname)
+		    g_free(fq_tblname);
 		return NULL;
 	}
 	if (obj_type == OCI_PTYPE_SYN) {
@@ -1342,6 +1446,8 @@ gda_oracle_fill_md_data (const gchar *tblname,
 	    if (!gda_oracle_check_result (result, cnc, priv_data, OCI_HTYPE_ERROR,
 			_("Could not get synonym referred-to schema"))) {
 		OCIHandleFree ((dvoid *) dschp, OCI_HTYPE_DESCRIBE);
+		if (fq_tblname != tblname)
+		    g_free(fq_tblname);
 		return NULL;
 	    }
 	    result = OCIAttrGet ((dvoid *) parmh,
@@ -1353,6 +1459,8 @@ gda_oracle_fill_md_data (const gchar *tblname,
 	    if (!gda_oracle_check_result (result, cnc, priv_data, OCI_HTYPE_ERROR,
 			_("Could not get synonym referred-to name"))) {
 		OCIHandleFree ((dvoid *) dschp, OCI_HTYPE_DESCRIBE);
+		if (fq_tblname != tblname)
+		    g_free(fq_tblname);
 		return NULL;
 	    }
 	    result = OCIAttrGet ((dvoid *) parmh,
@@ -1364,12 +1472,16 @@ gda_oracle_fill_md_data (const gchar *tblname,
 	    if (!gda_oracle_check_result (result, cnc, priv_data, OCI_HTYPE_ERROR,
 			_("Could not get synonym referred-to dblink"))) {
 		OCIHandleFree ((dvoid *) dschp, OCI_HTYPE_DESCRIBE);
+		if (fq_tblname != tblname)
+		    g_free(fq_tblname);
 		return NULL;
 	    }
 	    /* combine the synonym attributes into a single name */
-	    syn_points_to = g_malloc(syn_schema_len+syn_name_len+syn_link_len+4);
-	    strncpy(syn_points_to, syn_schema, syn_schema_len);
-	    syn_ptr = syn_points_to + syn_schema_len;
+	    if (fq_tblname != tblname)
+		g_free(fq_tblname);
+	    fq_tblname = g_malloc(syn_schema_len+syn_name_len+syn_link_len+4);
+	    strncpy(fq_tblname, syn_schema, syn_schema_len);
+	    syn_ptr = fq_tblname + syn_schema_len;
 	    *syn_ptr++ = '.';
 	    strncpy(syn_ptr, syn_name, syn_name_len);
 	    syn_ptr += syn_name_len;
@@ -1407,6 +1519,7 @@ gda_oracle_fill_md_data (const gchar *tblname,
 	if (!gda_oracle_check_result (result, cnc, priv_data, OCI_HTYPE_ERROR,
 			_("Could not get the Oracle parameter handle"))) {
 		OCIHandleFree ((dvoid *) dschp, OCI_HTYPE_DESCRIBE);
+		g_free(fq_tblname);
 		return NULL;
 	}
 	}
@@ -1421,6 +1534,8 @@ gda_oracle_fill_md_data (const gchar *tblname,
 	if (!gda_oracle_check_result (result, cnc, priv_data, OCI_HTYPE_ERROR,
 			_("Could not get the number of columns in the table"))) {
 		OCIHandleFree ((dvoid *) dschp, OCI_HTYPE_DESCRIBE);
+		if (fq_tblname != tblname)
+		    g_free(fq_tblname);
 		return NULL;
 	}
 
@@ -1433,10 +1548,12 @@ gda_oracle_fill_md_data (const gchar *tblname,
 	if (!gda_oracle_check_result (result, cnc, priv_data, OCI_HTYPE_ERROR,
 			_("Could not get the column list"))) {
 		OCIHandleFree ((dvoid *) dschp, OCI_HTYPE_DESCRIBE);
+		if (fq_tblname != tblname)
+		    g_free(fq_tblname);
 		return NULL;
 	}
 
-	h_table_index = get_oracle_index_data (cnc, tblname);
+	h_table_index = get_oracle_index_data (cnc, fq_tblname);
 
 	for (i = 1; i <= numcols; i += 1) {
 		text *strp;
@@ -1462,6 +1579,8 @@ gda_oracle_fill_md_data (const gchar *tblname,
 		if (!gda_oracle_check_result (result, cnc, priv_data, OCI_HTYPE_ERROR,
 				_("Could not get the Oracle column handle"))) {
 			OCIHandleFree ((dvoid *) dschp, OCI_HTYPE_DESCRIBE);
+			if (fq_tblname != tblname)
+			    g_free(fq_tblname);
 			return NULL;
 		}
 		
@@ -1476,6 +1595,8 @@ gda_oracle_fill_md_data (const gchar *tblname,
 				_("Could not get the Oracle field name"))) {
 			OCIDescriptorFree ((dvoid *) colhd, OCI_DTYPE_PARAM);
 			OCIHandleFree ((dvoid *) dschp, OCI_HTYPE_DESCRIBE);
+			if (fq_tblname != tblname)
+			    g_free(fq_tblname);
 			return NULL;
 		}
 
@@ -1496,12 +1617,12 @@ gda_oracle_fill_md_data (const gchar *tblname,
 				_("Could not get the Oracle field data type"))) {
 			OCIDescriptorFree ((dvoid *) colhd, OCI_DTYPE_PARAM);
 			OCIHandleFree ((dvoid *) dschp, OCI_HTYPE_DESCRIBE);
+			if (fq_tblname != tblname)
+			    g_free(fq_tblname);
 			return NULL;
 		}
 
 		typename = oracle_sqltype_to_string (type);
-		g_log("gda-oracle", G_LOG_LEVEL_DEBUG,
-		      "type for %s is %d, %s", colname, type, typename);
 		value = gda_value_new_string (typename);
 		rowlist = g_list_append (rowlist, value);
 
@@ -1516,6 +1637,8 @@ gda_oracle_fill_md_data (const gchar *tblname,
 				_("Could not get the Oracle field defined size"))) {
 			OCIDescriptorFree ((dvoid *) colhd, OCI_DTYPE_PARAM);
 			OCIHandleFree ((dvoid *) dschp, OCI_HTYPE_DESCRIBE);
+			if (fq_tblname != tblname)
+			    g_free(fq_tblname);
 			return NULL;
 		}
 
@@ -1533,6 +1656,8 @@ gda_oracle_fill_md_data (const gchar *tblname,
 				_("Could not get the Oracle field scale"))) {
 			OCIDescriptorFree ((dvoid *) colhd, OCI_DTYPE_PARAM);
 			OCIHandleFree ((dvoid *) dschp, OCI_HTYPE_DESCRIBE);
+			if (fq_tblname != tblname)
+			    g_free(fq_tblname);
 			return NULL;
 		}
 
@@ -1550,6 +1675,8 @@ gda_oracle_fill_md_data (const gchar *tblname,
 				_("Could not get the Oracle field nullable attribute"))) {
 			OCIDescriptorFree ((dvoid *) colhd, OCI_DTYPE_PARAM);
 			OCIHandleFree ((dvoid *) dschp, OCI_HTYPE_DESCRIBE);
+			if (fq_tblname != tblname)
+			    g_free(fq_tblname);
 			return NULL;
 		}
 
@@ -1597,6 +1724,8 @@ gda_oracle_fill_md_data (const gchar *tblname,
 	}
 
 	OCIHandleFree ((dvoid *) dschp, OCI_HTYPE_DESCRIBE);
+	if (fq_tblname != tblname)
+	    g_free(fq_tblname);
 	return list;
 }
 
@@ -1645,24 +1774,53 @@ get_oracle_databases (GdaConnection *cnc, GdaParameterList *params)
 	return recset;
 }
 
+static gboolean
+get_tables_foreach(gpointer key, gpointer value, gpointer data)
+{
+    GList *cols = NULL;
+    
+    cols = g_list_append(cols, gda_value_new_string((const gchar *)key));
+    cols = g_list_append(cols, gda_value_new_string((const gchar *)value));
+    cols = g_list_append(cols, gda_value_new_string(""));
+    cols = g_list_append(cols, gda_value_new_string(""));
+    gda_data_model_append_row((GdaDataModel *)data, cols);
+    return FALSE;
+}
+
 static GdaDataModel *
 get_oracle_tables (GdaConnection *cnc, GdaParameterList *params)
 {
-	GList *reclist;
 	GdaDataModel *recset;
-	gchar *sql = g_strdup_printf ("SELECT TABLE_NAME AS \"%s\","
-				      " OWNER AS \"%s\", "
-				      " NULL AS \"%s\", "
-				      " NULL AS \"SQL\" "
-				      " FROM ALL_TABLES "
-				      " ORDER BY TABLE_NAME",
-				      _("Name"), _("Owner"), _("Comments"));
+    GdaParameter *par = NULL;
+    const gchar  *namespace, *upc_namespace;
+    GList *reclist;
+    gchar *sql;
+    GdaOracleConnectionData *priv_data;
+    gint i;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
+    if (params)
+	par = gda_parameter_list_find (params, "namespace");
+    if (par)
+    {
+	g_log("gda-oracle", G_LOG_LEVEL_DEBUG, "parameterised get_tables");
+	namespace = gda_value_get_string ((GdaValue *) gda_parameter_get_value (par));
+	upc_namespace = g_ascii_strup(namespace, -1);
+
+	sql = g_strdup_printf ("SELECT TABLE_NAME AS \"%s\","
+			       "OWNER AS \"%s\","
+			       "NULL AS \"%s\","
+			       "NULL AS \"SQL\" "
+			       "FROM ALL_TABLES "
+			       "WHERE OWNER=\"%s\" "
+			       "ORDER BY TABLE_NAME",
+			       _("Name"), _("Owner"), _("Comments"),
+			       upc_namespace);
+
 	reclist = process_sql_commands (NULL, cnc, sql, NULL, 
 					GDA_COMMAND_OPTION_STOP_ON_ERRORS);
-
+	g_free(upc_namespace);
 	g_free (sql);
 
 	if (!reclist)
@@ -1670,8 +1828,92 @@ get_oracle_tables (GdaConnection *cnc, GdaParameterList *params)
 
 	recset = GDA_DATA_MODEL (reclist->data);
 	g_list_free (reclist);
+    }
+    else
+    {
+	GdaOracleColData cols[4] = {
+		{ N_("Name"),     GDA_VALUE_TYPE_STRING },
+		{ N_("Owner"),    GDA_VALUE_TYPE_STRING },
+		{ N_("Comments"), GDA_VALUE_TYPE_STRING },
+		{ N_("SQL"),      GDA_VALUE_TYPE_STRING }
+	};
+	g_log("gda-oracle", G_LOG_LEVEL_DEBUG, "default get_tables");
+	priv_data = g_object_get_data(G_OBJECT(cnc),OBJECT_DATA_ORACLE_HANDLE);
+	if (priv_data->tables == NULL)
+	    if (gda_oracle_table_tree(cnc) == NULL)
+		return NULL;
+	recset = GDA_DATA_MODEL_ARRAY (gda_data_model_array_new (sizeof cols / sizeof cols[0]));
+	for (i = 0; i < sizeof cols / sizeof cols[0]; i += 1)
+	    gda_data_model_set_column_title (GDA_DATA_MODEL (recset), i, _(cols[i].col_name));
 
+	g_tree_foreach(priv_data->tables, get_tables_foreach, recset);
+    }
+    g_log("gda-oracle", G_LOG_LEVEL_DEBUG, "get_tables returning %p", recset);
+    return recset;
+}
+
+static GdaDataModel *
+get_oracle_views (GdaConnection *cnc, GdaParameterList *params)
+{
+    GdaDataModel *recset;
+    GdaParameter *par = NULL;
+    const gchar  *namespace, *upc_namespace;
+    GList *reclist;
+    gchar *sql;
+    GdaOracleConnectionData *priv_data;
+    gint i;
+    
+    g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	
+    if (params)
+	par = gda_parameter_list_find (params, "namespace");
+    if (par)
+    {
+	g_log("gda-oracle", G_LOG_LEVEL_DEBUG, "parameterised get_views");
+	namespace = gda_value_get_string ((GdaValue *) gda_parameter_get_value (par));
+	upc_namespace = g_ascii_strup(namespace, -1);
+
+	sql = g_strdup_printf ("SELECT VIEW_NAME AS \"%s\","
+			       "OWNER AS \"%s\","
+			       "NULL AS \"%s\","
+			       "NULL AS \"SQL\" "
+			       "FROM ALL_VIEWS "
+			       "WHERE OWNER=\"%s\" "
+			       "ORDER BY VIEW_NAME",
+			       _("Name"), _("Owner"), _("Comments"),
+			       upc_namespace);
+
+	reclist = process_sql_commands (NULL, cnc, sql, NULL, 
+					GDA_COMMAND_OPTION_STOP_ON_ERRORS);
+	g_free(upc_namespace);
+	g_free (sql);
+
+	if (!reclist)
+		return NULL;
+	
+	recset = GDA_DATA_MODEL (reclist->data);
+	g_list_free (reclist);
+    }
+    else
+    {
+	GdaOracleColData cols[4] = {
+		{ N_("Name"),     GDA_VALUE_TYPE_STRING },
+		{ N_("Owner"),    GDA_VALUE_TYPE_STRING },
+		{ N_("Comments"), GDA_VALUE_TYPE_STRING },
+		{ N_("SQL"),      GDA_VALUE_TYPE_STRING }
+	};
+	g_log("gda-oracle", G_LOG_LEVEL_DEBUG, "default get_views");
+	priv_data = g_object_get_data(G_OBJECT(cnc),OBJECT_DATA_ORACLE_HANDLE);
+	if (priv_data->views == NULL)
+	    if (gda_oracle_view_tree(cnc) == NULL)
+		return NULL;
+	recset = GDA_DATA_MODEL_ARRAY (gda_data_model_array_new (sizeof cols / sizeof cols[0]));
+	for (i = 0; i < sizeof cols / sizeof cols[0]; i += 1)
+	    gda_data_model_set_column_title (GDA_DATA_MODEL (recset), i, _(cols[i].col_name));
+	
+	g_tree_foreach(priv_data->views, get_tables_foreach, recset);
+    }
+    g_log("gda-oracle", G_LOG_LEVEL_DEBUG, "get_views returning %p", recset);
 	return recset;
 }
 
@@ -1861,7 +2103,7 @@ gda_oracle_provider_get_schema (GdaServerProvider *provider,
 		gda_data_model_set_column_title (recset, 0, _("Triggers"));
 		break;
 	case GDA_CONNECTION_SCHEMA_VIEWS :
-		recset = get_oracle_objects (cnc, params, schema, 4);
+		recset = get_oracle_views(cnc, params);
 		gda_data_model_set_column_title (recset, 0, _("Views"));
 		break;
 	default :
