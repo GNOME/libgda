@@ -623,6 +623,23 @@ gda_odbc_provider_supports (GdaServerProvider *provider,
 		}
 		break;
 
+	case GDA_CONNECTION_FEATURE_NAMESPACES :
+		rc = SQLGetInfo( priv_data -> hdbc, SQL_OWNER_USAGE, 
+				&ival, sizeof( ival ), NULL );
+
+		if ( SQL_SUCCEEDED( rc )) {
+			if ( ival ) {
+				return TRUE;
+			}
+			else {
+				return FALSE;
+			}
+		}
+		else {
+			return FALSE;
+		}
+		break;
+
 	case GDA_CONNECTION_FEATURE_PROCEDURES :
 		rc = SQLGetInfo( priv_data -> hdbc, SQL_PROCEDURES, 
 				yn, sizeof( yn ), NULL );
@@ -930,6 +947,77 @@ get_odbc_fields_metadata (GdaConnection *cnc, GdaParameterList *params)
 	if ( SQL_SUCCEEDED( rc ))
 	{
 		rc = get_columns_rs( priv_data, recset );
+
+		if ( rc != SQL_NO_DATA )
+		{
+			gda_odbc_emit_error ( cnc, priv_data->henv,
+						priv_data->hdbc, priv_data->hstmt );
+			SQLFreeStmt( priv_data->hstmt, SQL_CLOSE );
+			return NULL;
+		}
+	}
+
+	SQLFreeStmt( priv_data->hstmt, SQL_CLOSE );
+
+	return GDA_DATA_MODEL (recset);
+}
+
+static SQLRETURN 
+get_namespaces_rs( GdaOdbcConnectionData *priv_data, GdaDataModelArray *recset )
+{
+	SQLRETURN rc;
+
+	while( SQL_SUCCEEDED(( rc = SQLFetch ( priv_data->hstmt)))) {
+		GList *value_list = NULL;
+		SQLCHAR value[ 256 ];
+		SQLINTEGER ind;
+
+		/* owner */
+		rc = SQLGetData ( priv_data->hstmt, 2, SQL_C_CHAR,
+					value, sizeof( value ), &ind );
+
+		if ( SQL_SUCCEEDED( rc ) && ind >= 0 ) {
+			value_list = g_list_append (value_list, gda_value_new_string ( value ));
+		}
+		else {
+			value_list = g_list_append (value_list, gda_value_new_string (""));
+		}
+
+
+		gda_data_model_append_row (GDA_DATA_MODEL (recset), value_list);
+
+		g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
+		g_list_free (value_list);
+	}
+
+	return rc;
+}
+
+static GdaDataModel *
+get_odbc_namespaces (GdaConnection *cnc, GdaParameterList *params)
+{
+	GdaDataModelArray *recset;
+	GdaOdbcConnectionData *priv_data;
+	SQLRETURN rc;
+
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+
+	/* create the recordset */
+	recset = GDA_DATA_MODEL_ARRAY (gda_data_model_array_new (1));
+	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 0, _("Owner"));
+
+	/* fill the recordset */
+	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_ODBC_HANDLE);
+
+	/* generate the results */
+	rc = SQLTables ( priv_data->hstmt, NULL, 0,
+						(SQLCHAR*) "%", SQL_NTS,
+						NULL, 0,
+						NULL, 0 );
+
+	if ( SQL_SUCCEEDED( rc ))
+	{
+		rc = get_namespaces_rs( priv_data, recset );
 
 		if ( rc != SQL_NO_DATA )
 		{
@@ -1372,6 +1460,10 @@ gda_odbc_provider_get_schema (GdaServerProvider *provider,
 		return get_odbc_indexes (cnc, params);
 	case GDA_CONNECTION_SCHEMA_FIELDS:
 		return get_odbc_fields_metadata (cnc, params);
+	case GDA_CONNECTION_SCHEMA_NAMESPACES:
+		if ( !gda_odbc_provider_supports (provider, cnc, GDA_CONNECTION_FEATURE_NAMESPACES) )
+			return NULL;
+		return get_odbc_namespaces (cnc, params);
 	case GDA_CONNECTION_SCHEMA_PROCEDURES:
 		return get_odbc_procedures (cnc, params);
 	case GDA_CONNECTION_SCHEMA_TABLES:

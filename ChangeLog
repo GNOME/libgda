@@ -1,4 +1,10 @@
-2004-01-02 Laurent Sansonetti <lrz@gnome.org>
+2004-01-09  Jon Willeke <willeke@users.sourceforge.net>
+
+	Fixes #130938
+
+	* providers/odbc/gda-odbc-provider.c: added support for NAMESPACES.
+
+2004-01-02  Laurent Sansonetti <lrz@gnome.org>
 
 	* libgda/gda-util.c (gda_file_save): added O_TRUNC flag.
 
