@@ -384,6 +384,7 @@ process_sql_commands (GList *reclist, GdaServerConnection *cnc,
 			
 			status = PQresultStatus(pg_res);
 			if (options & GDA_COMMAND_OPTION_IGNORE_ERRORS	||
+			    status == PGRES_EMPTY_QUERY			||
 			    status == PGRES_TUPLES_OK 			||
 			    status == PGRES_COMMAND_OK) {
 				recset = gda_postgres_recordset_new (cnc, pg_res);

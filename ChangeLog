@@ -1,3 +1,8 @@
+2002-03-29  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
+	* providers/postgres/gda-postgres-provider.c (process_sql_commands):
+	One-liner to solve bug #74404.
+
 2002-03-25  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* providers/default/gda-default-provider.c (get_table_fields):
