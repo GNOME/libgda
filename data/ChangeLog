@@ -1,0 +1,5 @@
+2001-12-09  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* added data/ directory, where all data files will be kept
+
+	* libgda.schemas: GConf schema file

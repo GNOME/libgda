@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<gconfschemafile>
+  <schemalist>
+  
+    <schema>
+      <applyto>/apps/libgda/MaxLastConnections</applyto>
+      <key>/schemas/apps/libgda/MaxLastConnections</key>
+      <owner>gnome</owner>
+      <type>int</type>
+      <default>10</default>
+      <locale name="C">
+        <short>Number of connections to keep in history</short>
+	<long></long>
+      </locale>
+    </schema>
+    
+    <schema>
+      <applyto>/apps/libgda/Datasources</applyto>
+      <key>/schemas/apps/libgda/MaxLastConnections</key>
+      <owner>gnome</owner>
+      <type>directory</type>
+      <locale name="C">
+        <short>Section for data sources configuration</short>
+	<long></long>
+      </locale>
+    </schema>
+    
+  </schemalist>
+</gconfschemafile>
