@@ -1,3 +1,8 @@
+2001-11-02  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* Makefile.am: changed directory names to something shorter
+	(s/gda-postgres-server/postgres)
+
 2001-08-31  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* first successful compilation on a GNOME 2 environment

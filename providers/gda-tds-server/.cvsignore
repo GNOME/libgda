@@ -1,9 +1,0 @@
-Makefile
-Makefile.in
-*.oaf
-*.o
-*.lo
-libgda-tds.la
-gda-tds-srv
-.deps
-.libs

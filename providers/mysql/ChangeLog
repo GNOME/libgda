@@ -1,3 +1,8 @@
+2001-11-02  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* moved to new location, for not complicating more the
+	refactoring
+
 2001-10-12  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-mysql-provider.[ch]: new class for implementing the

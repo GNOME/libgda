@@ -1,29 +1,29 @@
 if ODBC
-GDA_ODBC_SERVER=gda-odbc-server
+GDA_ODBC_SERVER=odbc
 endif
 
 if MYSQL
-GDA_MYSQL_SERVER=gda-mysql-server
+GDA_MYSQL_SERVER=mysql
 endif
 
 if POSTGRES
-GDA_POSTGRES_SERVER=gda-postgres-server
+GDA_POSTGRES_SERVER=postgres
 endif
 
 if SYBASE
-GDA_SYBASE_SERVER=gda-sybase-server
+GDA_SYBASE_SERVER=sybase
 endif
 
 if TDS
-GDA_TDS_SERVER=gda-tds-server
+GDA_TDS_SERVER=freetds
 endif
 
 if ORACLE
-GDA_ORACLE_SERVER=gda-oracle-server
+GDA_ORACLE_SERVER=oracle
 endif
 
 if INTERBASE
-GDA_INTERBASE_SERVER=gda-interbase-server
+GDA_INTERBASE_SERVER=interbase
 endif
 
 SUBDIRS = \
@@ -34,4 +34,4 @@ SUBDIRS = \
 	$(GDA_TDS_SERVER) \
 	$(GDA_ORACLE_SERVER) \
 	$(GDA_INTERBASE_SERVER) \
-	gda-default-server
+	default
