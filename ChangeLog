@@ -1,5 +1,8 @@
 2002-05-14  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* libgda/gda-log.c (gda_log_message, gda_log_error): made them show
+	the error message at least.
+
 	* Makefile.am:
 	* configure.in: re-activated report directory.
 

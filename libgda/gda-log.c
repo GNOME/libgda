@@ -18,8 +18,12 @@
  */
 
 #include <config.h>
-#include <libgda/gda-log.h>
+#include <stdarg.h>
+#include <stdio.h>
 #include <time.h>
+#include <glib/gmessages.h>
+#include <libgda/gda-intl.h>
+#include <libgda/gda-log.h>
 
 static gboolean log_enabled = TRUE;
 
@@ -63,8 +67,19 @@ gda_log_is_enabled (void)
  * Logs the given message in the GDA log file
  */
 void
-gda_log_message (const gchar * format, ...)
+gda_log_message (const gchar *format, ...)
 {
+	va_list args;
+	gchar sz[2048];
+
+	g_return_if_fail (format != NULL);
+
+	/* build the message string */
+	va_start (args, format);
+	vsprintf (sz, format, args);
+	va_end (args);
+
+	g_message (_("MESSAGE: %s"), sz);
 }
 
 /**
@@ -73,6 +88,17 @@ gda_log_message (const gchar * format, ...)
 void
 gda_log_error (const gchar * format, ...)
 {
+	va_list args;
+	gchar sz[2048];
+
+	g_return_if_fail (format != NULL);
+
+	/* build the message string */
+	va_start (args, format);
+	vsprintf (sz, format, args);
+	va_end (args);
+
+	g_message (_("ERROR: %s"), sz);
 }
 
 /**
