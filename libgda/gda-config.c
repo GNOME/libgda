@@ -1318,43 +1318,49 @@ gda_config_save_data_source (const gchar *name,
 			     const gchar *username,
 			     const gchar *password)
 {
-	gchar *tmp;
+	GString *str;
+	gint trunc_len;
 
 	g_return_if_fail (name != NULL);
 	g_return_if_fail (provider != NULL);
 
+	str = g_string_new ("");
+	g_string_printf (str, "%s/%s/", GDA_CONFIG_SECTION_DATASOURCES, name);
+	trunc_len = strlen (str->str);
+	
 	/* set the provider */
-	tmp = g_strdup_printf ("%s/%s/Provider", GDA_CONFIG_SECTION_DATASOURCES, name);
-	gda_config_set_string (tmp, provider);
-	g_free (tmp);
+	g_string_append (str, "Provider");
+	gda_config_set_string (str->str, provider);
+	g_string_truncate (str, trunc_len);
 
 	/* set the connection string */
 	if (cnc_string) {
-		tmp = g_strdup_printf ("%s/%s/DSN", GDA_CONFIG_SECTION_DATASOURCES, name);
-		gda_config_set_string (tmp, cnc_string);
-		g_free (tmp);
+		g_string_append (str, "DSN");
+		gda_config_set_string (str->str, cnc_string);
+		g_string_truncate (str, trunc_len);
 	}
 
 	/* set the description */
 	if (description) {
-		tmp = g_strdup_printf ("%s/%s/Description", GDA_CONFIG_SECTION_DATASOURCES, name);
-		gda_config_set_string (tmp, description);
-		g_free (tmp);
+		g_string_append (str, "Description");
+		gda_config_set_string (str->str, description);
+		g_string_truncate (str, trunc_len);
 	}
 
 	/* set the username */
 	if (username) {
-		tmp = g_strdup_printf ("%s/%s/Username", GDA_CONFIG_SECTION_DATASOURCES, name);
-		gda_config_set_string (tmp, username);
-		g_free (tmp);
+		g_string_append (str, "Username");
+		gda_config_set_string (str->str, username);
+		g_string_truncate (str, trunc_len);
 	}
 
 	/* set the password */
 	if (password) {
-		tmp = g_strdup_printf ("%s/%s/Password", GDA_CONFIG_SECTION_DATASOURCES, name);
-		gda_config_set_string (tmp, password);
-		g_free (tmp);
+		g_string_append (str, "Password");
+		gda_config_set_string (str->str, password);
+		g_string_truncate (str, trunc_len);
 	}
+	g_string_free (str, TRUE);
 }
 
 /**

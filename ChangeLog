@@ -1,3 +1,10 @@
+2002-06-25  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
+	* libgda/gda-config.c:
+	(gda_config_save_data_source): copied from gnome-db-config.c.
+
+	* libgda/gda-config.h: added GDA_CONFIG_BASE.
+
 2002-06-21  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* libsql/Makefile.am: missing header files to SOURCES.

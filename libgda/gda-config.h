@@ -105,6 +105,7 @@ void               gda_config_remove_data_source (const gchar *name);
 /*
  * GDA configuration sections/keys
  */
+#define GDA_CONFIG_BASE			     "/apps/libgda"
 #define GDA_CONFIG_SECTION_DATASOURCES       "/apps/libgda/Datasources"
 #define GDA_CONFIG_SECTION_LAST_CONNECTIONS  "/apps/libgda/LastConnections"
 
