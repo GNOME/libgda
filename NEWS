@@ -1,7 +1,28 @@
-libgda 0.8.105, ????-??-??
+libgda 0.8.105, 2002-03-26
 --------------------------
 
  - Added Numeric type to IDL (mike, rodrigo)
+ - Implemented SCHEMA_FIELDS for the PostgreSQL provider (gonzalo)
+ - Improved and made GdaXmlDatabase usable (rodrigo)
+ - Started new default provider, based on GdaXmlDatabase (rodrigo)
+ - Fixed parameters management (gonzalo, rodrigo)
+ - Fixed cleaning up of error list in providers (rodrigo)
+ - Improved performance for type mapping in PostgreSQL provider (gonzalo)
+ - Fixed referencing in GdaClient (rodrigo)
+ - Fixed wrong return of errors in PostgreSQL provider (gonzalo)
+ - Added support for exporting data models to comma and tab separated
+   files (rodrigo)
+ - Implemented SCHEMA_AGGREGATES in MySQL provider (rodrigo)
+ - Implemented SCHEMA_FIELDS in MySQL provider (rodrigo)
+ - Fixed some crashes in the MySQL provider (rodrigo)
+ - Updated translations:
+	- de (chrisime)
+        - ms (sebol)
+        - pl (chyla)
+        - ru (frob)
+        - sk (stano)
+        - uk (rasta)
+        - zh_CN (lark)
 
 libgda 0.8.104, 2002-03-07
 --------------------------
