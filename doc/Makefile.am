@@ -1,3 +1,0 @@
-SUBDIRS = C es pt_BR
-
-EXTRA_DIST = NAMESPACE

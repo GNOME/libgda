@@ -1,4 +1,0 @@
-2001-04-28  Rodrigo Moya <rodrigo@gnome-db.org>
-
-	* applied patch from Kuba (kpuchar@poczta.onet.pl) which wraps
-	all C++ classes in the gda namespace

@@ -1,7 +1,6 @@
 SUBDIRS = \
 	po \
 	intl \
-	macros \
 	idl \
 	lib \
 	bindings \

@@ -1,7 +1,0 @@
-*.o
-*.lo
-Makefile
-Makefile.in
-.deps
-.libs
-libgda-server.la

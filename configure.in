@@ -1,15 +1,18 @@
+AC_PREREQ(2.50b)
 AC_INIT(lib/gda-common/gda-common.h)
 
 AM_INIT_AUTOMAKE(libgda,0.2.90)
 
 AM_MAINTAINER_MODE
 AM_CONFIG_HEADER(config.h)
-AM_ACLOCAL_INCLUDE(macros)
 AM_PROG_XML_I18N_TOOLS
 
-dnl
+GNOME_COMMON_INIT
+GNOME_PLATFORM_GNOME_2(yes, force)
+
+dnl ******************************
 dnl Checks for programs
-dnl
+dnl ******************************
 AC_PROG_CC
 AC_ISC_POSIX
 AC_STDC_HEADERS
@@ -17,92 +20,24 @@ AC_ARG_PROGRAM
 AM_PROG_LIBTOOL
 AC_PROG_CXX
 
-dnl
-dnl Checks for libraries
-dnl
-
-AM_PATH_GLIB(1.2.0,,AC_MSG_ERROR(glib test failed),gthread)
-AM_PATH_GTK(1.0.0,,AC_MSG_ERROR(gtk+ test failed))
-gda_base_libs="$GLIB_LIBS $GTK_LIBS"
-gda_base_cflags="$GLIB_CFLAGS $GTK_CFLAGS"
-
-dnl Check for ORBit
-AC_MSG_CHECKING(for ORBit)
-if orbit-config --libs > /dev/null 2>&1
-then
-	AC_MSG_RESULT(found)
-	ORBIT_IDL=`which orbit-idl`
-else
-	AC_MSG_ERROR(not found)
-fi
-
-dnl Check for GConf
-use_gconf=false
-gconfminver="0.9"
-AC_MSG_CHECKING(for GConf >= $gconfminver)
-if gconf-config --libs gconf > /dev/null 2>&1
-then
-	gconfver=`gconf-config --version | awk 'BEGIN {FS="."}{printf "%d", $1*1000+$2}'`
-	if test "$gconfver" -ge 9
-	then
-		AC_MSG_RESULT(found)
-		gda_gconf_libs=`gconf-config --libs gconf`
-		gda_gconf_cflags=`gconf-config --cflags gconf`
-
-		use_gconf=true
-	fi
-fi
-if test -z $use_gconf
-then
-	AC_MSG_ERROR([
-*** GConf $gconfminver or later is necessary in order to build libgda.])
-fi
-
-# Bonobo checks
-AM_PATH_BONOBO(1.0,,AC_MSG_ERROR(Bonobo >= 1.0 is needed to compile GNOME-DB))
-gda_bonobo_cflags=`gnome-config --cflags bonobo`
-gda_bonobo_libs=`gnome-config --libs bonobo`
-
-dnl Check for libxml
-AC_MSG_CHECKING(for libxml)
-if xml-config --libs > /dev/null 2>&1
-then
-	gda_xml_libs=`xml-config --libs`
-	gda_xml_cflags=`xml-config --cflags`
-	AC_MSG_RESULT(found)
-else
-	AC_MSG_ERROR(not found)
-fi
-
-dnl Check for libxslt
-AC_MSG_CHECKING(for libxslt)
-if xslt-config --libs > /dev/null 2>&1
-then
-	AC_MSG_RESULT(found)
-	gda_xslt_libs=`xslt-config --libs`
-	gda_xslt_cflags=`xslt-config --cflags`
-else
-	AC_MSG_WARN(not found)
-fi
-
-dnl
-dnl checking for GOB (Gtk Object Builder)
-dnl
-GOB_CHECK(1.0.5)
+dnl ******************************
+dnl orbit-idl
+dnl ******************************
+ORBIT_IDL="`$PKG_CONFIG --variable=orbit_idl ORBit-2.0`"
+AC_SUBST(ORBIT_IDL)
 
 dnl ******************************
 dnl gtk-doc
 dnl ******************************
-
 AC_CHECK_PROG(GTKDOC, gtkdoc-mkdb, true, false)
 AM_CONDITIONAL(HAVE_GTK_DOC, $GTKDOC)
 AC_SUBST(HAVE_GTK_DOC)
 
 AM_CONDITIONAL(ENABLE_GTK_DOC, $GTKDOC)
 
-dnl
+dnl ******************************
 dnl Checks for providers
-dnl
+dnl ******************************
 
 dnl Test for ODBC
 AC_ARG_WITH(odbc,
@@ -577,23 +512,20 @@ dnl
 dnl Translations
 dnl
 ALL_LINGUAS="ca da de el es fi fr ga gl hu it ja nl no pl pt_BR ru sk sl sv uk"
+AM_GNOME2_GETTEXT
 
-AM_GNU_GETTEXT
-
-dnl
+dnl **************************
 dnl Variables
-dnl
-GDA_CLIENT_LIBS="$gda_base_libs $gda_xml_libs $gda_gconf_libs $gda_bonobo_libs"
-GDA_CLIENT_CFLAGS="$gda_base_cflags $gda_xml_cflags $gda_gconf_cflags $gda_bonobo_cflags"
-GDA_PROVIDER_LIBS="$gda_base_libs $gda_xml_libs $gda_gconf_libs $gda_bonobo_libs"
-GDA_PROVIDER_CFLAGS="$gda_base_cflags $gda_xml_cflags $gda_gconf_cflags $gda_bonobo_cflags"
-XML_LIBS="$gda_xslt_libs"
-XML_CFLAGS="$gda_xslt_cflags"
-
-AC_SUBST(GDA_CLIENT_LIBS)
+dnl **************************
+PKG_CHECK_MODULES(GDA_CLIENT, ORBit-2.0 >= 2.3.91 ORBit-CosNaming-2.0 >= 2.3.91 glib-2.0 >= 1.3.1 gobject-2.0 >= 1.3.1 gthread-2.0 >= 1.3.1 oaf-2.0 >= 0.7.0 libbonobo-2.0 libxml-2.0 gconf-2.0)
 AC_SUBST(GDA_CLIENT_CFLAGS)
-AC_SUBST(GDA_PROVIDER_LIBS)
+AC_SUBST(GDA_CLIENT_LIBS)
+
+PKG_CHECK_MODULES(GDA_PROVIDER, ORBit-2.0 >= 2.3.91 ORBit-CosNaming-2.0 >= 2.3.91
+glib-2.0 >= 1.3.1 gobject-2.0 >= 1.3.1 gthread-2.0 >= 1.3.1 oaf-2.0 >= 0.7.0 libbonobo-2.0 libxml-2.0 gconf-2.0)
 AC_SUBST(GDA_PROVIDER_CFLAGS)
+AC_SUBST(GDA_PROVIDER_LIBS)
+
 AC_SUBST(ODBC_LIBS)
 AC_SUBST(ODBC_CFLAGS)
 AC_SUBST(MYSQL_LIBS)
@@ -616,18 +548,13 @@ AC_SUBST(MDB_LIBS)
 AC_SUBST(MDB_CFLAGS)
 AC_SUBST(CAMEL_LIBS)
 AC_SUBST(CAMEL_CFLAGS)
-AC_SUBST(XML_LIBS)
-AC_SUBST(XML_CFLAGS)
 
 GDA_oafdir=`oaf-config --prefix`/share/oaf
-
-AC_SUBST(ORBIT_IDL)
 AC_SUBST(GDA_oafdir)
 
 AC_OUTPUT([
 Makefile
 libgda.spec
-macros/Makefile
 po/Makefile.in
 intl/Makefile
 idl/Makefile

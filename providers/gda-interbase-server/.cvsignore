@@ -1,9 +1,0 @@
-Makefile
-Makefile.in
-*.oaf
-*.o
-*.lo
-libgda-interbase.la
-gda-interbase-srv
-.deps
-.libs

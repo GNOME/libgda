@@ -1,9 +1,0 @@
-Makefile
-Makefile.in
-*.oaf
-*.o
-*.lo
-libgda-ldap.la
-gda-ldap-srv
-.deps
-.libs

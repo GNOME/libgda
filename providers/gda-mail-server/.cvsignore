@@ -1,9 +1,0 @@
-Makefile
-Makefile.in
-*.oaf
-*.o
-*.lo
-libgda-mail.la
-gda-mail-srv
-.deps
-.libs
