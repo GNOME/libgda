@@ -1,0 +1,4 @@
+2000-09-25	Akira TAGOH <tagoh@gnome.gr.jp>
+
+* POTFILES.in: not implement python binding.
+

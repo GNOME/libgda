@@ -1,11 +1,3 @@
-bindings/python/gda-clnt/gda_clnt.c
-bindings/python/gda-clnt/gda_clnt_batch.c
-bindings/python/gda-clnt/gda_clnt_command.c
-bindings/python/gda-clnt/gda_clnt_connection.c
-bindings/python/gda-common/gda_common.c
-bindings/python/gda-common/gda_common_dsn.c
-bindings/python/gda-common/gda_common_log.c
-bindings/python/gda-common/gda_common_server.c
 lib/gda-client/gda-batch.c
 lib/gda-client/gda-command.c
 lib/gda-client/gda-connection-pool.c
