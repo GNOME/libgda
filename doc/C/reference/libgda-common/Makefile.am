@@ -34,6 +34,8 @@ SOURCE_FILES = \
 	$(top_builddir)/lib/gda-common/gda-corba.h \
 	$(top_builddir)/lib/gda-common/gda-error.c \
 	$(top_builddir)/lib/gda-common/gda-error.h \
+	$(top_builddir)/lib/gda-common/gda-field.c \
+	$(top_builddir)/lib/gda-common/gda-field.h \
 	$(top_builddir)/lib/gda-common/gda-init.c \
 	$(top_builddir)/lib/gda-common/gda-listener.c \
 	$(top_builddir)/lib/gda-common/gda-listener.h \

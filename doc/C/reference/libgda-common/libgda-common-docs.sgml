@@ -15,6 +15,7 @@
 	&libgda-config-h;
 	&libgda-corba-h;
 	&libgda-error-h;
+	&libgda-field-h;
 	&libgda-listener-h;
 	&libgda-log-h;
 	&libgda-quark-list-h;
