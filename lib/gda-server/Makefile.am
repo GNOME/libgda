@@ -17,7 +17,7 @@ IDL_FILES = \
 	$(top_builddir)/idl/gda-recordset.idl
 
 gda-skels.c gda-common.c gda.h: $(IDLFILES)
-	$(ORBIT_IDL) -I$(datadir)/idl -I$(top_builddir)/idl `gnome-config --cflags idl` $(top_builddir)/idl/gda.idl
+	$(ORBIT_IDL) -I$(top_sourcedir)/idl -I`oaf-config --prefix`/share/idl $(top_builddir)/idl/gda.idl
 
 gda_server_headers = \
 	gda-server-impl.h \
