@@ -23,6 +23,7 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#include "libgda/libgda.h"
 #include "gda-sybase.h"
 
 GdaServer *gda_sybase_server = NULL;

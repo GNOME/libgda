@@ -22,6 +22,7 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#include "libgda/libgda.h"
 #include "gda-postgres.h"
 
 GdaServer *gda_postgres_server = NULL;

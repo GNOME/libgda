@@ -22,6 +22,7 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#include "libgda/libgda.h"
 #include "gda-mysql.h"
 
 GdaServer *gda_mysql_server = NULL;

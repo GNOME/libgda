@@ -19,6 +19,7 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include "libgda/libgda.h"
 #include "gda-oracle.h"
 
 GdaServer *gda_oracle_server = NULL;
