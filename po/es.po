@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: es\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2005-02-07 12:45+0100\n"
-"PO-Revision-Date: 2005-01-20 09:50+0100\n"
+"PO-Revision-Date: 2005-03-31 18:41+0200\n"
 "Last-Translator: Jorge Bernal <koke@amedias.org>\n"
 "Language-Team: Spanish <traductores@es.gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -1181,20 +1181,19 @@ msgstr "Número de columna fuera de rango"
 
 #: providers/mysql/gda-mysql-recordset.c:437
 #: providers/mysql/gda-mysql-recordset.c:567
-#, fuzzy
 msgid "Table name could not be guessed"
-msgstr "El nombre de la tabla no pudo ser adivinado."
+msgstr "El nombre de la tabla no se pudo adivinar."
 
 #: providers/mysql/gda-mysql-recordset.c:459
 #: providers/mysql/gda-mysql-recordset.c:465
 #: providers/mysql/gda-mysql-recordset.c:582
 #: providers/mysql/gda-mysql-recordset.c:588
 msgid "Can not synchronize array with MySQL result set"
-msgstr ""
+msgstr "No se puede sincronizar la matriz con el juego de resultados de MySQL"
 
 #: providers/mysql/gda-mysql-recordset.c:521
 msgid "Can not append row to data model"
-msgstr ""
+msgstr "No se puede añadir la fila al modelo de datos"
 
 #: providers/mysql/gda-mysql-recordset.c:560
 #: providers/mysql/gda-mysql-recordset.c:706
@@ -1205,13 +1204,12 @@ msgstr "La fila dada no pertenece al modelo."
 
 #: providers/mysql/gda-mysql-recordset.c:638
 #: providers/postgres/gda-postgres-recordset.c:373
-#, fuzzy
 msgid "Model doesn't have at least one unique key."
-msgstr "El modelo no tiene al menos una clave única no modificada."
+msgstr "El modelo no tiene al menos una clave única."
 
 #: providers/mysql/gda-mysql-recordset.c:666
 msgid "Can not remove row from data model"
-msgstr ""
+msgstr "No se puede quitar la fila del modelo de datos"
 
 #: providers/mysql/gda-mysql-recordset.c:713
 #: providers/postgres/gda-postgres-recordset.c:236
@@ -1221,12 +1219,10 @@ msgid "Table name could not be guessed."
 msgstr "El nombre de la tabla no pudo ser adivinado."
 
 #: providers/mysql/gda-mysql-recordset.c:787
-#, fuzzy
 msgid "Model does not have at least one non-modified unique key."
 msgstr "El modelo no tiene al menos una clave única no modificada."
 
 #: providers/mysql/gda-mysql-recordset.c:797
-#, fuzzy
 msgid "Model does not have any non-unique values to update."
 msgstr "El modelo no tiene ningún valor no único para actualizar."
 
