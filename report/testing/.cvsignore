@@ -1,0 +1,7 @@
+Makefile
+Makefile.in
+*-result.xml
+*.o
+gda-report-test
+.libs
+.deps
