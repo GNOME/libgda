@@ -46,7 +46,7 @@ static void gda_sqlite_recordset_init       (GdaSqliteRecordset *recset,
 static void gda_sqlite_recordset_finalize   (GObject *object);
 
 static gint gda_sqlite_recordset_get_n_rows (GdaDataModelBase *model);
-static GdaDataModelColumnAttributes *gda_sqlite_recordset_describe_column (GdaDataModelBase *model, gint col);
+static GdaColumn *gda_sqlite_recordset_describe_column (GdaDataModelBase *model, gint col);
 static const GdaRow *gda_sqlite_recordset_get_row (GdaDataModelBase *model, gint row);
 static const GdaValue *gda_sqlite_recordset_get_value_at (GdaDataModelBase *model, gint col, gint row);
 
@@ -222,13 +222,13 @@ gda_sqlite_recordset_get_value_at (GdaDataModelBase *model, gint col, gint row)
 	return gda_row_get_value (row_list, col);
 }
 
-static GdaDataModelColumnAttributes *
+static GdaColumn *
 gda_sqlite_recordset_describe_column (GdaDataModelBase *model, gint col)
 {
 	GdaSqliteRecordset *recset = (GdaSqliteRecordset *) model;
 	GdaSqliteRecordsetPrivate *priv_data;
 	SQLITEresult *sres;
-	GdaDataModelColumnAttributes *field_attrs;
+	GdaColumn *field_attrs;
 
 	g_return_val_if_fail (GDA_IS_SQLITE_RECORDSET (recset), NULL);
 	g_return_val_if_fail (recset->priv != NULL, NULL);
@@ -248,15 +248,15 @@ gda_sqlite_recordset_describe_column (GdaDataModelBase *model, gint col)
 		return NULL;
 	}
 
-	field_attrs = gda_data_model_column_attributes_new ();
-	gda_data_model_column_attributes_set_name (field_attrs, sres->data[col]);
-	gda_data_model_column_attributes_set_scale (field_attrs, 0);
-	gda_data_model_column_attributes_set_gdatype (field_attrs, GDA_VALUE_TYPE_STRING);
-	gda_data_model_column_attributes_set_defined_size (field_attrs, strlen (sres->data[col]));
-	gda_data_model_column_attributes_set_primary_key (field_attrs, FALSE);
-	gda_data_model_column_attributes_set_unique_key (field_attrs, FALSE);
-	gda_data_model_column_attributes_set_allow_null (field_attrs, TRUE);
-	gda_data_model_column_attributes_set_auto_increment (field_attrs, FALSE);
+	field_attrs = gda_column_new ();
+	gda_column_set_name (field_attrs, sres->data[col]);
+	gda_column_set_scale (field_attrs, 0);
+	gda_column_set_gdatype (field_attrs, GDA_VALUE_TYPE_STRING);
+	gda_column_set_defined_size (field_attrs, strlen (sres->data[col]));
+	gda_column_set_primary_key (field_attrs, FALSE);
+	gda_column_set_unique_key (field_attrs, FALSE);
+	gda_column_set_allow_null (field_attrs, TRUE);
+	gda_column_set_auto_increment (field_attrs, FALSE);
 
 	return field_attrs;
 }

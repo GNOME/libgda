@@ -538,7 +538,7 @@ gda_mysql_provider_create_table (GdaServerProvider *provider,
 {
 	MYSQL *mysql;
 	GdaMysqlProvider *myprv = (GdaMysqlProvider *) provider;
-	GdaDataModelColumnAttributes *dmca;
+	GdaColumn *dmca;
 	GdaDataModelIndex *dmi;
 	GString *sql;
 	gint i, rc;
@@ -569,25 +569,25 @@ gda_mysql_provider_create_table (GdaServerProvider *provider,
 		if (i>0)
 			g_string_append_printf (sql, ", ");
 
-		dmca = (GdaDataModelColumnAttributes *) g_list_nth_data ((GList *) attributes_list, i);
+		dmca = (GdaColumn *) g_list_nth_data ((GList *) attributes_list, i);
 
 		/* name */
-		g_string_append_printf (sql, "`%s` ", gda_data_model_column_attributes_get_name (dmca));
+		g_string_append_printf (sql, "`%s` ", gda_column_get_name (dmca));
 
 		/* data type */
-		value_type = gda_data_model_column_attributes_get_gdatype (dmca);
+		value_type = gda_column_get_gdatype (dmca);
 		mysql_data_type = gda_mysql_type_from_gda (value_type);
 		g_string_append_printf (sql, "%s", mysql_data_type);
 		g_free(mysql_data_type);
 
 		/* size */
-		size = gda_data_model_column_attributes_get_defined_size (dmca);
+		size = gda_column_get_defined_size (dmca);
 		if (value_type == GDA_VALUE_TYPE_STRING)
 			g_string_append_printf (sql, "(%ld)", size);
 		else if (value_type == GDA_VALUE_TYPE_NUMERIC)
 			g_string_append_printf (sql, "(%ld,%ld)",
-				gda_data_model_column_attributes_get_defined_size (dmca),
-				gda_data_model_column_attributes_get_scale (dmca));
+				gda_column_get_defined_size (dmca),
+				gda_column_get_scale (dmca));
 		else if (value_type == GDA_VALUE_TYPE_MONEY)
 			g_string_append_printf (sql, "(%ld)", size);
 
@@ -628,32 +628,32 @@ gda_mysql_provider_create_table (GdaServerProvider *provider,
 		}
 
 		/* NULL */
-		if (gda_data_model_column_attributes_get_allow_null (dmca) == TRUE)
+		if (gda_column_get_allow_null (dmca) == TRUE)
 			g_string_append_printf (sql, " NULL");
 		else
 			g_string_append_printf (sql, " NOT NULL");
 
 		/* auto increment */
-		if (gda_data_model_column_attributes_get_auto_increment (dmca) == TRUE)
+		if (gda_column_get_auto_increment (dmca) == TRUE)
 			g_string_append_printf (sql, "AUTO_INCREMENT");
 
 		/* (primary) key */
-		if (gda_data_model_column_attributes_get_primary_key (dmca) == TRUE)
+		if (gda_column_get_primary_key (dmca) == TRUE)
 			g_string_append_printf (sql, " PRIMARY KEY");
 		else
-			if (gda_data_model_column_attributes_get_unique_key (dmca) == TRUE)
+			if (gda_column_get_unique_key (dmca) == TRUE)
 				g_string_append_printf (sql, " UNIQUE");
 			
 		/* default value (in case of string, user needs to add "'" around the field) */
-                if (gda_data_model_column_attributes_get_default_value (dmca) != NULL) {
-			default_value = gda_value_stringify ((GdaValue *) gda_data_model_column_attributes_get_default_value (dmca));
+                if (gda_column_get_default_value (dmca) != NULL) {
+			default_value = gda_value_stringify ((GdaValue *) gda_column_get_default_value (dmca));
 			if ((default_value != NULL) && (*default_value != '\0'))
 				g_string_append_printf (sql, " DEFAULT %s", default_value);
 		}
 
 		/* any additional parameters */
-		if (gda_data_model_column_attributes_get_references (dmca) != NULL) {
-			references = (gchar *) gda_data_model_column_attributes_get_references (dmca);
+		if (gda_column_get_references (dmca) != NULL) {
+			references = (gchar *) gda_column_get_references (dmca);
 			if ((references != NULL) && (*references != '\0'))
 				g_string_append_printf (sql, " %s", references);
 		}

@@ -49,7 +49,7 @@ static void gda_freetds_recordset_init       (GdaFreeTDSRecordset *recset,
                                               GdaFreeTDSRecordsetClass *klass);
 static void gda_freetds_recordset_finalize   (GObject *object);
 
-static GdaDataModelColumnAttributes *gda_freetds_recordset_describe_column (GdaDataModelBase *model,
+static GdaColumn *gda_freetds_recordset_describe_column (GdaDataModelBase *model,
                                                                   gint col);
 static gint gda_freetds_recordset_get_n_rows (GdaDataModelBase *model);
 static gint gda_freetds_recordset_get_n_columns (GdaDataModelBase *model);
@@ -66,12 +66,12 @@ static TDSCOLINFO *gda_freetds_dup_tdscolinfo (TDSCOLINFO *col);
 static GdaRow *gda_freetds_get_current_row(GdaFreeTDSRecordset *recset);
 
 
-static GdaDataModelColumnAttributes
+static GdaColumn
 *gda_freetds_recordset_describe_column (GdaDataModelBase *model, gint col)
 {
 	GdaFreeTDSRecordset *recset = (GdaFreeTDSRecordset *) model;
 	TDSCOLINFO          *colinfo = NULL;
-	GdaDataModelColumnAttributes  *attribs = NULL;
+	GdaColumn  *attribs = NULL;
 	gchar               name[256];
 
 	g_return_val_if_fail (GDA_IS_FREETDS_RECORDSET (recset), NULL);
@@ -87,7 +87,7 @@ static GdaDataModelColumnAttributes
 		return NULL;
 	}
 	
-	attribs = gda_data_model_column_attributes_new ();
+	attribs = gda_column_new ();
 
 	if (!attribs) {
 		return NULL;
@@ -97,18 +97,18 @@ static GdaDataModelColumnAttributes
 	        colinfo->column_namelen);
 	name[colinfo->column_namelen] = '\0';
 
-	gda_data_model_column_attributes_set_name (attribs, name);
-	gda_data_model_column_attributes_set_scale (attribs, colinfo->column_scale);
-	gda_data_model_column_attributes_set_gdatype (attribs,
+	gda_column_set_name (attribs, name);
+	gda_column_set_scale (attribs, colinfo->column_scale);
+	gda_column_set_gdatype (attribs,
 	                                  gda_freetds_get_value_type (colinfo));
-	gda_data_model_column_attributes_set_defined_size (attribs, colinfo->column_size);
+	gda_column_set_defined_size (attribs, colinfo->column_size);
 
 	/* FIXME: */
-	gda_data_model_column_attributes_set_references (attribs, "");
-	gda_data_model_column_attributes_set_primary_key (attribs, FALSE);
-	gda_data_model_column_attributes_set_unique_key (attribs, FALSE);
+	gda_column_set_references (attribs, "");
+	gda_column_set_primary_key (attribs, FALSE);
+	gda_column_set_unique_key (attribs, FALSE);
 
-	gda_data_model_column_attributes_set_allow_null (attribs, 
+	gda_column_set_allow_null (attribs, 
 	                                     !(colinfo->column_nullable == 0));
 	
 	return attribs;

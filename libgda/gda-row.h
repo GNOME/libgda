@@ -24,7 +24,7 @@
 #if !defined(__gda_row_h__)
 #  define __gda_row_h__
 
-#include <libgda/gda-data-model-column-attributes.h>
+#include <libgda/gda-column.h>
 #include <libgda/global-decl.h>
 
 G_BEGIN_DECLS

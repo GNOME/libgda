@@ -29,6 +29,7 @@
 #include <libxml/tree.h>
 #include <libgda/gda-command.h>
 #include <libgda/global-decl.h>
+#include <libgda/gda-column.h>
 #include <libgda/gda-value.h>
 
 G_BEGIN_DECLS
@@ -50,7 +51,7 @@ struct _GdaDataModelIface {
 	gint                 (* i_get_n_rows)      (GdaDataModel *model);
 	gint                 (* i_get_n_columns)   (GdaDataModel *model);
 
-	GdaDataModelColumnAttributes  *(* i_describe_column) (GdaDataModel *model, gint col);
+	GdaColumn  *(* i_describe_column) (GdaDataModel *model, gint col);
 	const gchar         *(* i_get_column_title)(GdaDataModel *model, gint col);
 	void                 (* i_set_column_title)(GdaDataModel *model, gint col, const gchar *title);
 	gint                 (* i_get_column_pos)  (GdaDataModel *model, const gchar *title);
@@ -69,9 +70,9 @@ struct _GdaDataModelIface {
 	gboolean             (* i_remove_row)      (GdaDataModel *model, const GdaRow *row);
 	gboolean             (* i_update_row)      (GdaDataModel *model, const GdaRow *row);
 
-	gboolean             (* i_append_column)   (GdaDataModel *model, const GdaDataModelColumnAttributes *attrs);
+	gboolean             (* i_append_column)   (GdaDataModel *model, const GdaColumn *attrs);
 	gboolean             (* i_update_column)   (GdaDataModel *model, gint col,
-						  const GdaDataModelColumnAttributes *attrs);
+						  const GdaColumn *attrs);
 	gboolean             (* i_remove_column)   (GdaDataModel *model, gint col);
 
 	void                 (* i_set_notify)      (GdaDataModel *model, gboolean do_notify_changes);
@@ -109,7 +110,7 @@ void                          gda_data_model_thaw                   (GdaDataMode
 
 gint                          gda_data_model_get_n_rows             (GdaDataModel *model);
 gint                          gda_data_model_get_n_columns          (GdaDataModel *model);
-GdaDataModelColumnAttributes *gda_data_model_describe_column        (GdaDataModel *model, gint col);
+GdaColumn *gda_data_model_describe_column        (GdaDataModel *model, gint col);
 const gchar                  *gda_data_model_get_column_title       (GdaDataModel *model, gint col);
 void                          gda_data_model_set_column_title       (GdaDataModel *model, gint col, const gchar *title);
 gint                          gda_data_model_get_column_position    (GdaDataModel *model, const gchar *title);
@@ -121,9 +122,9 @@ const GdaRow                 *gda_data_model_append_values          (GdaDataMode
 gboolean                      gda_data_model_append_row             (GdaDataModel *model, GdaRow *row);
 gboolean                      gda_data_model_remove_row             (GdaDataModel *model, const GdaRow *row);
 gboolean                      gda_data_model_update_row             (GdaDataModel *model, const GdaRow *row);
-gboolean	              gda_data_model_append_column          (GdaDataModel *model, const GdaDataModelColumnAttributes *attrs);
+gboolean	              gda_data_model_append_column          (GdaDataModel *model, const GdaColumn *attrs);
 gboolean	              gda_data_model_update_column          (GdaDataModel *model, gint col,
-								     const GdaDataModelColumnAttributes *attrs);
+								     const GdaColumn *attrs);
 gboolean	              gda_data_model_remove_column          (GdaDataModel *model, gint col);
 
 void                          gda_data_model_foreach                (GdaDataModel *model, GdaDataModelForeachFunc func,

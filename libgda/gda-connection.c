@@ -693,14 +693,14 @@ gda_connection_drop_database (GdaConnection *cnc, const gchar *name)
  * gda_connection_create_table
  * @cnc: a #GdaConnection object.
  * @table_name: name of the table to be created.
- * @attributes_list: list of #GdaDataModelColumnAttributes for all fields in the table.
+ * @attributes_list: list of #GdaColumn for all fields in the table.
  * @index_list: list of #GdaDataModelIndex of all (multi column) index entries of a table.
  *
  * Creates a table on the given connection from the specified set of fields. In case of
- * none or single column index only, the various index fields can be set in #GdaDataModelColumnAttributes
- * and @index_list can be set to NULL. Index related values set in #GdaDataModelColumnAttributes
+ * none or single column index only, the various index fields can be set in #GdaColumn
+ * and @index_list can be set to NULL. Index related values set in #GdaColumn
  * should not overlap settings in @index_list. A table can only have one Primary Key for instance.
- * Either set it in #GdaDataModelColumnAttributes that is part of @attributes_list or in 
+ * Either set it in #GdaColumn that is part of @attributes_list or in 
  * #GdaDataModelColumnIndexAttributes that is part of @index_list.
  *
  * Returns: %TRUE if successful, %FALSE otherwise.

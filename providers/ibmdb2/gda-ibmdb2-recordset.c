@@ -38,7 +38,7 @@ static void gda_ibmdb2_recordset_init       (GdaIBMDB2Recordset *recset, GdaIBMD
 static void gda_ibmdb2_recordset_finalize   (GObject *object);
 
 static const GdaValue 		*gda_ibmdb2_recordset_get_value_at (GdaDataModelBase *model, gint col, gint row);
-static GdaDataModelColumnAttributes 	*gda_ibmdb2_recordset_describe     (GdaDataModelBase *model, gint col);
+static GdaColumn 	*gda_ibmdb2_recordset_describe     (GdaDataModelBase *model, gint col);
 static gint			gda_ibmdb2_recordset_get_n_rows    (GdaDataModelBase *model);
 static gint			gda_ibmdb2_recordset_get_n_columns (GdaDataModelBase *model);
 static const GdaRow 		*gda_ibmdb2_recordset_get_row 	   (GdaDataModelBase *model, gint rownum);
@@ -171,12 +171,12 @@ gda_ibmdb2_recordset_get_value_at (GdaDataModelBase *model, gint col, gint row)
 	
 }
 
-static GdaDataModelColumnAttributes *
+static GdaColumn *
 gda_ibmdb2_recordset_describe (GdaDataModelBase *model, gint col)
 {
 	GdaIBMDB2Recordset *recset = (GdaIBMDB2Recordset *) model;
         GdaIBMDB2Field     *field = NULL;
-        GdaDataModelColumnAttributes *attribs = NULL;
+        GdaColumn *attribs = NULL;
 
         g_return_val_if_fail (GDA_IS_IBMDB2_RECORDSET (recset), NULL);
         g_return_val_if_fail (recset->priv != NULL, NULL);
@@ -191,21 +191,21 @@ gda_ibmdb2_recordset_describe (GdaDataModelBase *model, gint col)
                 return NULL;
         }
 
-        attribs = gda_data_model_column_attributes_new ();
+        attribs = gda_column_new ();
 	if (!attribs) {
                 return NULL;
         }
 	
-	gda_data_model_column_attributes_set_name (attribs, field->column_name);
-	gda_data_model_column_attributes_set_scale (attribs, field->column_scale);
-        gda_data_model_column_attributes_set_gdatype (attribs, gda_ibmdb2_get_value_type (field));
-        gda_data_model_column_attributes_set_defined_size (attribs, field->column_size);
+	gda_column_set_name (attribs, field->column_name);
+	gda_column_set_scale (attribs, field->column_scale);
+        gda_column_set_gdatype (attribs, gda_ibmdb2_get_value_type (field));
+        gda_column_set_defined_size (attribs, field->column_size);
 
-        gda_data_model_column_attributes_set_unique_key (attribs, FALSE);
-	gda_data_model_column_attributes_set_references (attribs, "");
-        gda_data_model_column_attributes_set_primary_key (attribs, FALSE);
+        gda_column_set_unique_key (attribs, FALSE);
+	gda_column_set_references (attribs, "");
+        gda_column_set_primary_key (attribs, FALSE);
 
-        gda_data_model_column_attributes_set_allow_null (attribs, field->column_nullable == SQL_NULLABLE);
+        gda_column_set_allow_null (attribs, field->column_nullable == SQL_NULLABLE);
 
 	return attribs;
 }

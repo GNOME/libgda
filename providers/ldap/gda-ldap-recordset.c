@@ -162,11 +162,11 @@ gda_ldap_recordset_get_n_columns (GdaDataModelBase *model)
 	return 1; /* FIXME */
 }
 
-static GdaDataModelColumnAttributes *
+static GdaColumn *
 gda_ldap_recordset_describe_column (GdaDataModelBase *model, gint col)
 {
 	gint field_count = 0;
-	GdaDataModelColumnAttributes *attrs;
+	GdaColumn *attrs;
 /*	LDAP_FIELD *ldap_fields;*/
 	GdaLdapRecordset *recset = (GdaLdapRecordset *) model;
 
@@ -177,22 +177,22 @@ gda_ldap_recordset_describe_column (GdaDataModelBase *model, gint col)
 		return NULL;
 	}
 
-	/* create the GdaDataModelColumnAttributes to be returned */
+	/* create the GdaColumn to be returned */
 	/*field_count = ldap_num_fields (recset->ldap_res);*/
 	if (col >= field_count)
 		return NULL;
 
-	attrs = gda_data_model_column_attributes_new ();
+	attrs = gda_column_new ();
 
 	/*ldap_fields = ldap_fetch_field (recset->ldap_res);*/
 /*	if (!ldap_fields)
 		return NULL;
 */
 /*	if (ldap_fields[col].name)
-		gda_data_model_column_attributes_set_name (attrs, ldap_fields[col].name);
-	gda_data_model_column_attributes_set_defined_size (attrs, ldap_fields[col].max_length);
-	gda_data_model_column_attributes_set_scale (attrs, ldap_fields[col].decimals);
-	gda_data_model_column_attributes_set_gdatype (attrs, gda_ldap_type_to_gda (ldap_fields[col].type));
+		gda_column_set_name (attrs, ldap_fields[col].name);
+	gda_column_set_defined_size (attrs, ldap_fields[col].max_length);
+	gda_column_set_scale (attrs, ldap_fields[col].decimals);
+	gda_column_set_gdatype (attrs, gda_ldap_type_to_gda (ldap_fields[col].type));
 */
 	return attrs;
 }
@@ -289,7 +289,7 @@ gda_ldap_recordset_append_values (GdaDataModelBase *model, const GList *values)
 	sql = g_string_append (sql, gda_data_model_get_command_text (GDA_DATA_MODEL (model)));
 	sql = g_string_append (sql, "(");
 	for (i = 0; i < cols; i++) {
-		GdaDataModelColumnAttributes *fa;
+		GdaColumn *fa;
 
 		fa = gda_data_model_describe_column (GDA_DATA_MODEL (model), i);
 		if (!fa) {
@@ -302,7 +302,7 @@ gda_ldap_recordset_append_values (GdaDataModelBase *model, const GList *values)
 
 		if (i != 0)
 			sql = g_string_append (sql, ", ");
-		sql = g_string_append (sql, gda_data_model_column_attributes_get_name (fa));
+		sql = g_string_append (sql, gda_column_get_name (fa));
 	}
 	sql = g_string_append (sql, ") VALUES (");
 

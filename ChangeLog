@@ -1,3 +1,8 @@
+2005-03-03  Álvaro Peña  <alvaropg@telefonica.net>
+
+	* *: Changed GdaDataModelColumnAttributes name to
+	GdaColumn
+
 2005-02-28  Loic Minier <lool+gnome@via.ecp.fr>
 
 	Fixes #168641

@@ -48,7 +48,7 @@ static void gda_sybase_recordset_init (GdaSybaseRecordset *recset,
                                        GdaSybaseRecordsetClass *klass);
 static void gda_sybase_recordset_finalize (GObject *object);
 
-static GdaDataModelColumnAttributes *gda_sybase_recordset_describe_column (GdaDataModelBase *model,
+static GdaColumn *gda_sybase_recordset_describe_column (GdaDataModelBase *model,
                                                                  gint col);
 static gint gda_sybase_recordset_get_n_rows (GdaDataModelBase *model);
 static gint gda_sybase_recordset_get_n_columns (GdaDataModelBase *model);
@@ -58,12 +58,12 @@ static const GdaValue *gda_sybase_recordset_get_value_at (GdaDataModelBase *mode
                                                           gint col,
                                                           gint row);
 
-static GdaDataModelColumnAttributes *
+static GdaColumn *
 gda_sybase_recordset_describe_column (GdaDataModelBase *model, gint col)
 {
 	GdaSybaseRecordset *recset = (GdaSybaseRecordset *) model;
 	CS_DATAFMT         *colinfo = NULL;
-	GdaDataModelColumnAttributes *attribs = NULL;
+	GdaColumn *attribs = NULL;
 	gchar              name[256];
 
 	g_return_val_if_fail (GDA_IS_SYBASE_RECORDSET (recset), NULL);
@@ -79,7 +79,7 @@ gda_sybase_recordset_describe_column (GdaDataModelBase *model, gint col)
 		return NULL;
 	}
 
-	attribs = gda_data_model_column_attributes_new ();
+	attribs = gda_column_new ();
 
 	if (!attribs) {
 		return NULL;
@@ -89,20 +89,20 @@ gda_sybase_recordset_describe_column (GdaDataModelBase *model, gint col)
 	        colinfo->namelen);
 	//name[colinfo->namelen + 1] = '\0';
 
-	gda_data_model_column_attributes_set_name (attribs, name);
-	gda_data_model_column_attributes_set_scale (attribs, colinfo->scale);
-	gda_data_model_column_attributes_set_gdatype (attribs,
+	gda_column_set_name (attribs, name);
+	gda_column_set_scale (attribs, colinfo->scale);
+	gda_column_set_gdatype (attribs,
 	         gda_sybase_get_value_type (colinfo->datatype));
-	gda_data_model_column_attributes_set_defined_size (attribs, colinfo->maxlength);
+	gda_column_set_defined_size (attribs, colinfo->maxlength);
 
 	// FIXME:
-	gda_data_model_column_attributes_set_references (attribs, "");
-	gda_data_model_column_attributes_set_primary_key (attribs, FALSE);
-	//gda_data_model_column_attributes_set_primary_key (attribs,
+	gda_column_set_references (attribs, "");
+	gda_column_set_primary_key (attribs, FALSE);
+	//gda_column_set_primary_key (attribs,
 	//         (colinfo->status & CS_KEY) == CS_KEY);
-	gda_data_model_column_attributes_set_unique_key (attribs, FALSE);
+	gda_column_set_unique_key (attribs, FALSE);
 	
-	gda_data_model_column_attributes_set_allow_null (attribs,
+	gda_column_set_allow_null (attribs,
 	         (colinfo->status & CS_CANBENULL) == CS_CANBENULL);
 	
 	return attribs;

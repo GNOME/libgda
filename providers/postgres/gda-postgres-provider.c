@@ -825,7 +825,7 @@ gda_postgres_provider_create_table (GdaServerProvider *provider,
 				    const GList *index_list)
 {
 	GdaPostgresProvider *pg_prv = (GdaPostgresProvider *) provider;
-	GdaDataModelColumnAttributes *dmca;
+	GdaColumn *dmca;
 	GdaDataModelIndex *dmi;
 	GString *sql;
 	gint i;
@@ -848,17 +848,17 @@ gda_postgres_provider_create_table (GdaServerProvider *provider,
 		if (i>0)
 			g_string_append_printf (sql, ", ");
 			
-		dmca = (GdaDataModelColumnAttributes *) g_list_nth_data ((GList *) attributes_list, i);
+		dmca = (GdaColumn *) g_list_nth_data ((GList *) attributes_list, i);
 
 		/* name */	
-		g_string_append_printf (sql, "\"%s\" ", gda_data_model_column_attributes_get_name (dmca));
+		g_string_append_printf (sql, "\"%s\" ", gda_column_get_name (dmca));
 
 		/* data type; force serial to be used when auto_increment is set */
-		if (gda_data_model_column_attributes_get_auto_increment (dmca) == TRUE) {
+		if (gda_column_get_auto_increment (dmca) == TRUE) {
 			g_string_append_printf (sql, "serial");
 			value_type = GDA_VALUE_TYPE_INTEGER;
 		} else {
-			value_type = gda_data_model_column_attributes_get_gdatype (dmca);
+			value_type = gda_column_get_gdatype (dmca);
 			postgres_data_type = postgres_name_from_gda_type (value_type);
 			g_string_append_printf (sql, "%s", postgres_data_type);
 			g_free(postgres_data_type);
@@ -866,35 +866,35 @@ gda_postgres_provider_create_table (GdaServerProvider *provider,
 
 		/* size */
 		if (value_type == GDA_VALUE_TYPE_STRING)
-			g_string_append_printf (sql, "(%ld)", gda_data_model_column_attributes_get_defined_size (dmca));
+			g_string_append_printf (sql, "(%ld)", gda_column_get_defined_size (dmca));
 		else if (value_type == GDA_VALUE_TYPE_NUMERIC)
 			g_string_append_printf (sql, "(%ld,%ld)", 
-				gda_data_model_column_attributes_get_defined_size (dmca),
-				gda_data_model_column_attributes_get_scale (dmca));
+				gda_column_get_defined_size (dmca),
+				gda_column_get_scale (dmca));
 		
 		/* NULL */
-		if (gda_data_model_column_attributes_get_allow_null (dmca) == TRUE)
+		if (gda_column_get_allow_null (dmca) == TRUE)
 			g_string_append_printf (sql, " NULL");
 		else
 			g_string_append_printf (sql, " NOT NULL");
 	
 		/* (primary) key */
-		if (gda_data_model_column_attributes_get_primary_key (dmca) == TRUE)
+		if (gda_column_get_primary_key (dmca) == TRUE)
 			g_string_append_printf (sql, " PRIMARY KEY");
 		else
-			if (gda_data_model_column_attributes_get_unique_key (dmca) == TRUE)
+			if (gda_column_get_unique_key (dmca) == TRUE)
 				g_string_append_printf (sql, " UNIQUE");
 
 		/* default value (in case of string, user needs to add "'" around the field) */
-		if (gda_data_model_column_attributes_get_default_value (dmca) != NULL) {
-			default_value = gda_value_stringify ((GdaValue *) gda_data_model_column_attributes_get_default_value (dmca));
+		if (gda_column_get_default_value (dmca) != NULL) {
+			default_value = gda_value_stringify ((GdaValue *) gda_column_get_default_value (dmca));
 			if ((default_value != NULL) && (*default_value != '\0'))
 				g_string_append_printf (sql, " DEFAULT %s", default_value);
 		}
 
 		/* any additional parameters */			
-		if (gda_data_model_column_attributes_get_references (dmca) != NULL) {
-			references = (gchar *) gda_data_model_column_attributes_get_references (dmca);
+		if (gda_column_get_references (dmca) != NULL) {
+			references = (gchar *) gda_column_get_references (dmca);
 			if ((references != NULL) && (*references != '\0'))
 				g_string_append_printf (sql, " %s", references);
 		}

@@ -63,7 +63,7 @@ data_model_changed_cb (GdaDataModel *model, gpointer user_data)
  * GdaSelect class implementation
  */
 
-static GdaDataModelColumnAttributes *
+static GdaColumn *
 gda_select_describe_column (GdaDataModelBase *model, gint col)
 {
 	GList *l;
@@ -76,7 +76,7 @@ gda_select_describe_column (GdaDataModelBase *model, gint col)
 	if (!l)
 		return NULL;
 
-	return gda_data_model_column_attributes_copy ((GdaDataModelColumnAttributes *) l->data);
+	return gda_column_copy ((GdaColumn *) l->data);
 }
 
 static const GdaRow *
@@ -161,7 +161,7 @@ gda_select_finalize (GObject *object)
 
 	/* free memory */
 	if (sel->priv->field_descriptions) {
-		g_list_foreach (sel->priv->field_descriptions, (GFunc) gda_data_model_column_attributes_free, NULL);
+		g_list_foreach (sel->priv->field_descriptions, (GFunc) gda_column_free, NULL);
 		g_list_free (sel->priv->field_descriptions);
 		sel->priv->field_descriptions = NULL;
 	}
@@ -323,7 +323,7 @@ populate_from_single_table (GdaSelect *sel, const gchar *table_name, GList *sql_
 		GList *value_list = NULL;
 
 		for (c = 0; c < cols; c++) {
-			GdaDataModelColumnAttributes *fa;
+			GdaColumn *fa;
 
 			fa = gda_data_model_describe_column (table, c);
 
@@ -337,7 +337,7 @@ populate_from_single_table (GdaSelect *sel, const gchar *table_name, GList *sql_
 				}
 			} else {
 				for (l = sql_fields; l != NULL; l = l->next) {
-					if (!strcmp ((const char *) l->data, fa->name)) {
+					if (!strcmp ((const char *) l->data, gda_column_get_name (fa))) {
 						value_list = g_list_append (
 							value_list,
 							gda_value_copy (
@@ -386,7 +386,7 @@ gda_select_run (GdaSelect *sel)
 		return sel->priv->run_result;
 
 	gda_data_model_array_clear (GDA_DATA_MODEL_ARRAY (sel));
-	g_list_foreach (sel->priv->field_descriptions, (GFunc) gda_data_model_column_attributes_free, NULL);
+	g_list_foreach (sel->priv->field_descriptions, (GFunc) gda_column_free, NULL);
 	g_list_free (sel->priv->field_descriptions);
 
 	/* parse the SQL command */

@@ -52,7 +52,7 @@ struct _GdaDataModelBaseClass {
 	/* virtual methods */
 	gint                (* get_n_rows)      (GdaDataModelBase *model);
 	gint                (* get_n_columns)   (GdaDataModelBase *model);
-	GdaDataModelColumnAttributes *(* describe_column) (GdaDataModelBase *model, gint col);
+	GdaColumn *(* describe_column) (GdaDataModelBase *model, gint col);
 	const GdaRow       *(* get_row)         (GdaDataModelBase *model, gint row);
 	const GdaValue     *(* get_value_at)    (GdaDataModelBase *model, gint col, gint row);
 	
@@ -61,9 +61,9 @@ struct _GdaDataModelBaseClass {
 	gboolean            (* append_row)      (GdaDataModelBase *model, GdaRow *row);
 	gboolean            (* remove_row)      (GdaDataModelBase *model, const GdaRow *row);
 	gboolean            (* update_row)      (GdaDataModelBase *model, const GdaRow *row);
-	gboolean            (* append_column)   (GdaDataModelBase *model, const GdaDataModelColumnAttributes *attrs);
+	gboolean            (* append_column)   (GdaDataModelBase *model, const GdaColumn *attrs);
 	gboolean            (* update_column)   (GdaDataModelBase *model, gint col,
-						 const GdaDataModelColumnAttributes *attrs);
+						 const GdaColumn *attrs);
 	gboolean            (* remove_column)   (GdaDataModelBase *model, gint col);
 };
 

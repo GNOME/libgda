@@ -26,7 +26,7 @@
 #include <libgda/gda-intl.h>
 #include <libgda/gda-data-model.h>
 #include <libgda/gda-data-model-base.h>
-#include <libgda/gda-data-model-column-attributes.h>
+#include <libgda/gda-column.h>
 #include <libgda/gda-log.h>
 #include <libgda/gda-util.h>
 #include <libxml/parser.h>
@@ -55,7 +55,7 @@ static void gda_data_model_base_finalize   (GObject *object);
 static void                 gda_data_model_base_data_model_init (GdaDataModelIface *iface);
 static gint                 gda_data_model_base_get_n_rows      (GdaDataModel *model);
 static gint                 gda_data_model_base_get_n_columns   (GdaDataModel *model);
-static GdaDataModelColumnAttributes  *gda_data_model_base_describe_column (GdaDataModel *model, gint col);
+static GdaColumn  *gda_data_model_base_describe_column (GdaDataModel *model, gint col);
 static const gchar         *gda_data_model_base_get_column_title(GdaDataModel *model, gint col);
 static void                 gda_data_model_base_set_column_title(GdaDataModel *model, gint col, const gchar *title);
 static gint                 gda_data_model_base_get_column_pos  (GdaDataModel *model, const gchar *title);
@@ -70,9 +70,9 @@ static const GdaRow        *gda_data_model_base_append_values   (GdaDataModel *m
 static gboolean             gda_data_model_base_append_row      (GdaDataModel *model, GdaRow *row);
 static gboolean             gda_data_model_base_remove_row      (GdaDataModel *model, const GdaRow *row);
 static gboolean             gda_data_model_base_update_row      (GdaDataModel *model, const GdaRow *row);
-static gboolean             gda_data_model_base_append_column   (GdaDataModel *model, const GdaDataModelColumnAttributes *attrs);
+static gboolean             gda_data_model_base_append_column   (GdaDataModel *model, const GdaColumn *attrs);
 static gboolean             gda_data_model_base_update_column   (GdaDataModel *model, gint col,
-								 const GdaDataModelColumnAttributes *attrs);
+								 const GdaColumn *attrs);
 static gboolean             gda_data_model_base_remove_column   (GdaDataModel *model, gint col);
 static void                 gda_data_model_base_set_notify      (GdaDataModel *model, gboolean do_notify_changes);
 static gboolean             gda_data_model_base_get_notify      (GdaDataModel *model);
@@ -216,10 +216,10 @@ gda_data_model_base_get_n_columns (GdaDataModel *model)
 	return CLASS (model)->get_n_columns (GDA_DATA_MODEL_BASE (model));
 }
 
-static GdaDataModelColumnAttributes *
+static GdaColumn *
 gda_data_model_base_describe_column (GdaDataModel *model, gint col)
 {
-	GdaDataModelColumnAttributes *fa;
+	GdaColumn *fa;
 
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_BASE (model), NULL);
 	g_return_val_if_fail (CLASS (model)->describe_column != NULL, NULL);
@@ -229,18 +229,18 @@ gda_data_model_base_describe_column (GdaDataModel *model, gint col)
 		const GdaValue *value;
 
 		/* we generate a basic FieldAttributes structure */
-		fa = gda_data_model_column_attributes_new ();
-		gda_data_model_column_attributes_set_defined_size (fa, 0);
-		gda_data_model_column_attributes_set_name (fa, g_hash_table_lookup (GDA_DATA_MODEL_BASE (model)->priv->column_titles,
+		fa = gda_column_new ();
+		gda_column_set_defined_size (fa, 0);
+		gda_column_set_name (fa, g_hash_table_lookup (GDA_DATA_MODEL_BASE (model)->priv->column_titles,
 									GINT_TO_POINTER (col)));
-		gda_data_model_column_attributes_set_scale (fa, 0);
+		gda_column_set_scale (fa, 0);
 		value = gda_data_model_base_get_value_at (model, col, 0);
 		if (value == NULL)
-			gda_data_model_column_attributes_set_gdatype (fa, GDA_VALUE_TYPE_STRING);
+			gda_column_set_gdatype (fa, GDA_VALUE_TYPE_STRING);
 		else
-			gda_data_model_column_attributes_set_gdatype (fa, gda_value_get_type (value));
+			gda_column_set_gdatype (fa, gda_value_get_type (value));
 
-		gda_data_model_column_attributes_set_allow_null (fa, TRUE);
+		gda_column_set_allow_null (fa, TRUE);
 	}
 
 	return fa;
@@ -288,12 +288,12 @@ gda_data_model_base_get_column_title (GdaDataModel *model, gint col)
 		title = g_hash_table_lookup (mb->priv->column_titles,
 					     GINT_TO_POINTER (col));
 		if (title == NULL) {
-			GdaDataModelColumnAttributes *fa;
+			GdaColumn *fa;
 
 			fa = gda_data_model_base_describe_column (model, col);
 			if (fa) {
 				gda_data_model_base_set_column_title (model, col, title);
-				gda_data_model_column_attributes_free (fa);
+				gda_column_free (fa);
 
 				return g_hash_table_lookup (mb->priv->column_titles,
 							    GINT_TO_POINTER (col));
@@ -454,7 +454,7 @@ gda_data_model_base_update_row (GdaDataModel *model, const GdaRow *row)
 }
 
 static gboolean
-gda_data_model_base_append_column (GdaDataModel *model, const GdaDataModelColumnAttributes *attrs)
+gda_data_model_base_append_column (GdaDataModel *model, const GdaColumn *attrs)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_BASE (model), FALSE);
 	g_return_val_if_fail (CLASS (model)->append_column != NULL, FALSE);
@@ -465,7 +465,7 @@ gda_data_model_base_append_column (GdaDataModel *model, const GdaDataModelColumn
 
 static gboolean
 gda_data_model_base_update_column (GdaDataModel *model, gint col,
-				   const GdaDataModelColumnAttributes *attrs)
+				   const GdaColumn *attrs)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_BASE (model), FALSE);
 	g_return_val_if_fail (CLASS (model)->update_column != NULL, FALSE);

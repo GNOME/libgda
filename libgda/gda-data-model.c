@@ -405,12 +405,12 @@ gda_data_model_get_n_columns (GdaDataModel *model)
  *
  * Queries the underlying data model implementation for a description
  * of a given column. That description is returned in the form of
- * a #GdaDataModelColumnAttributes structure, which contains all the information
+ * a #GdaColumn structure, which contains all the information
  * about the given column in the data model.
  *
  * Returns: the description of the column.
  */
-GdaDataModelColumnAttributes *
+GdaColumn *
 gda_data_model_describe_column (GdaDataModel *model, gint col)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
@@ -668,16 +668,16 @@ gda_data_model_update_row (GdaDataModel *model, const GdaRow *row)
 /**
  * gda_data_model_append_column
  * @model: a #GdaDataModel object.
- * @attrs: a #GdaDataModelColumnAttributes describing the column to add.
+ * @attrs: a #GdaColumn describing the column to add.
  *
  * Appends a column to the given data model.  If successful, the position of
  * the new column in the data model is set on @col, and you can grab it using
- * @gda_data_model_column_attributes_get_position.
+ * @gda_column_get_position.
  *
  * Returns: %TRUE if successful, %FALSE otherwise.
  */
 gboolean
-gda_data_model_append_column (GdaDataModel *model, const GdaDataModelColumnAttributes *attrs)
+gda_data_model_append_column (GdaDataModel *model, const GdaColumn *attrs)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
 	g_return_val_if_fail (attrs != NULL, FALSE);
@@ -725,7 +725,7 @@ gda_data_model_remove_column (GdaDataModel *model, gint col)
  * Returns: %TRUE if successful, %FALSE otherwise.
  */
 gboolean
-gda_data_model_update_column (GdaDataModel *model, gint col, const GdaDataModelColumnAttributes *attrs)
+gda_data_model_update_column (GdaDataModel *model, gint col, const GdaColumn *attrs)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
 	g_return_val_if_fail (attrs != NULL, FALSE);
@@ -1051,7 +1051,7 @@ gda_data_model_to_xml_node (GdaDataModel *model, const gchar *name)
 	rows = gda_data_model_get_n_rows (model);
 	cols = gda_data_model_get_n_columns (model);
 	for (i = 0; i < cols; i++) {
-		GdaDataModelColumnAttributes *fa;
+		GdaColumn *fa;
 		xmlNodePtr field;
 
 		fa = gda_data_model_describe_column (model, i);
@@ -1061,16 +1061,16 @@ gda_data_model_to_xml_node (GdaDataModel *model, const gchar *name)
 		}
 
 		field = xmlNewChild (node, NULL, "field", NULL);
-		xmlSetProp (field, "name", gda_data_model_column_attributes_get_name (fa));
-		xmlSetProp (field, "caption", gda_data_model_column_attributes_get_caption (fa));
-		xmlSetProp (field, "gdatype", gda_type_to_string (gda_data_model_column_attributes_get_gdatype (fa)));
-		xml_set_int (field, "size", gda_data_model_column_attributes_get_defined_size (fa));
-		xml_set_int (field, "scale", gda_data_model_column_attributes_get_scale (fa));
-		xml_set_boolean (field, "pkey", gda_data_model_column_attributes_get_primary_key (fa));
-		xml_set_boolean (field, "unique", gda_data_model_column_attributes_get_unique_key (fa));
-		xml_set_boolean (field, "isnull", gda_data_model_column_attributes_get_allow_null (fa));
-		xml_set_boolean (field, "auto_increment", gda_data_model_column_attributes_get_auto_increment (fa));
-		xmlSetProp (field, "references", gda_data_model_column_attributes_get_references (fa));
+		xmlSetProp (field, "name", gda_column_get_name (fa));
+		xmlSetProp (field, "caption", gda_column_get_caption (fa));
+		xmlSetProp (field, "gdatype", gda_type_to_string (gda_column_get_gdatype (fa)));
+		xml_set_int (field, "size", gda_column_get_defined_size (fa));
+		xml_set_int (field, "scale", gda_column_get_scale (fa));
+		xml_set_boolean (field, "pkey", gda_column_get_primary_key (fa));
+		xml_set_boolean (field, "unique", gda_column_get_unique_key (fa));
+		xml_set_boolean (field, "isnull", gda_column_get_allow_null (fa));
+		xml_set_boolean (field, "auto_increment", gda_column_get_auto_increment (fa));
+		xmlSetProp (field, "references", gda_column_get_references (fa));
 		xml_set_int (field, "position", i);
 	}
 	

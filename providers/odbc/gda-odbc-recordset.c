@@ -47,7 +47,7 @@ static void gda_odbc_recordset_init       (GdaOdbcRecordset *recset,
 static void gda_odbc_recordset_finalize   (GObject *object);
 
 static const GdaValue *gda_odbc_recordset_get_value_at    (GdaDataModelBase *model, gint col, gint row);
-static GdaDataModelColumnAttributes *gda_odbc_recordset_describe    (GdaDataModelBase *model, gint col);
+static GdaColumn *gda_odbc_recordset_describe    (GdaDataModelBase *model, gint col);
 static gint gda_odbc_recordset_get_n_rows 		  (GdaDataModelBase *model);
 static const GdaRow *gda_odbc_recordset_get_row 	  (GdaDataModelBase *model, gint rownum);
 
@@ -132,7 +132,7 @@ gda_odbc_recordset_get_value_at (GdaDataModelBase *model, gint col, gint row)
 	return NULL;
 }
 
-static GdaDataModelColumnAttributes *
+static GdaColumn *
 gda_odbc_recordset_describe (GdaDataModelBase *model, gint col)
 {
 	/* FIXME: Write this */

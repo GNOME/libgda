@@ -2385,7 +2385,7 @@
 	  <para>describe_column</para>
 	  <para>
 	    Returns information about a given column, in the form of
-	    a <link linkend="GdaDataModelColumnAttributes">GdaDataModelColumnAttributes</link>.
+	    a <link linkend="GdaColumn">GdaColumn</link>.
 	  </para>
 	</listitem>
 	<listitem>

@@ -129,10 +129,10 @@ static gint gda_msql_recordset_numcols(GdaDataModel *model) {
 }
 
 
-static GdaDataModelColumnAttributes 
+static GdaColumn 
 *gda_msql_recordset_describe_column(GdaDataModelBase *model,gint col) {
 	gint                field_count;
-	GdaDataModelColumnAttributes *attrs;
+	GdaColumn *attrs;
 	m_field            *msql_field;
 	GdaMsqlRecordset   *rs=(GdaMsqlRecordset*)model;
   
@@ -143,25 +143,25 @@ static GdaDataModelColumnAttributes
 	}
 	field_count=msqlNumFields(rs->res);
 	if (col>=field_count) return NULL;
-	attrs=gda_data_model_column_attributes_new();
+	attrs=gda_column_new();
 	msqlFieldSeek(rs->res,col);
 	msql_field=msqlFetchField(rs->res);
 	if (!msql_field) {
-		gda_data_model_column_attributes_free(attrs);
+		gda_column_free(attrs);
 		return NULL;
 	}
-	if (msql_field->name) gda_data_model_column_attributes_set_name(attrs,msql_field->name);
-	gda_data_model_column_attributes_set_defined_size(attrs,msql_field->length);
-	gda_data_model_column_attributes_set_table(attrs,msql_field->table);
+	if (msql_field->name) gda_column_set_name(attrs,msql_field->name);
+	gda_column_set_defined_size(attrs,msql_field->length);
+	gda_column_set_table(attrs,msql_field->table);
 	if (msql_field->type==MONEY_TYPE) {
-		gda_data_model_column_attributes_set_scale(attrs,2);
+		gda_column_set_scale(attrs,2);
 	}
-	gda_data_model_column_attributes_set_gdatype(attrs,
+	gda_column_set_gdatype(attrs,
 					 gda_msql_type_to_gda(msql_field->type));
-	gda_data_model_column_attributes_set_allow_null(attrs,!IS_NOT_NULL(msql_field->flags));
-	gda_data_model_column_attributes_set_primary_key(attrs,1!=1);
-	gda_data_model_column_attributes_set_unique_key(attrs,IS_UNIQUE(msql_field->flags));
-	gda_data_model_column_attributes_set_auto_increment(attrs,1!=1);
+	gda_column_set_allow_null(attrs,!IS_NOT_NULL(msql_field->flags));
+	gda_column_set_primary_key(attrs,1!=1);
+	gda_column_set_unique_key(attrs,IS_UNIQUE(msql_field->flags));
+	gda_column_set_auto_increment(attrs,1!=1);
 	return attrs;
 }
 
@@ -234,7 +234,7 @@ static const GdaRow
 	sql=g_string_append(sql,gda_data_model_get_command_text(model));
 	sql=g_string_append(sql,"(");
 	for(i=0;i<cols;i++) {
-		GdaDataModelColumnAttributes *fa;
+		GdaColumn *fa;
     
 		fa=gda_data_model_describe_column(model,i);
 		if (!fa) {
@@ -244,7 +244,7 @@ static const GdaRow
 			return NULL;
 		}
 		if (i) sql=g_string_append(sql,",");
-		sql=g_string_append(sql,gda_data_model_column_attributes_get_name(fa));
+		sql=g_string_append(sql,gda_column_get_name(fa));
 	}
 	sql=g_string_append(sql,") VALUES (");
 	for (lst=(GList*)values,i=0;i<cols;i++,lst=lst->next) {

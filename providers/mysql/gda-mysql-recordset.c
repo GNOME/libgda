@@ -46,7 +46,7 @@ static void gda_mysql_recordset_init       (GdaMysqlRecordset *recset,
 static void gda_mysql_recordset_finalize   (GObject *object);
 
 static gint gda_mysql_recordset_get_n_rows			     (GdaDataModelBase *model);
-static GdaDataModelColumnAttributes *gda_mysql_recordset_describe_column (GdaDataModelBase *model, gint col);
+static GdaColumn *gda_mysql_recordset_describe_column (GdaDataModelBase *model, gint col);
 static const GdaRow *gda_mysql_recordset_get_row		     (GdaDataModelBase *model, gint row);
 static const GdaValue *gda_mysql_recordset_get_value_at		     (GdaDataModelBase *model, gint col, gint row);
 static gboolean gda_mysql_recordset_is_updatable		     (GdaDataModelBase *model);
@@ -255,13 +255,13 @@ gda_mysql_recordset_get_n_rows (GdaDataModelBase *model)
 		return GDA_DATA_MODEL_BASE_CLASS (parent_class)->get_n_rows (model);
 }
 
-static GdaDataModelColumnAttributes *
+static GdaColumn *
 gda_mysql_recordset_describe_column (GdaDataModelBase *model, gint col)
 {
 	GdaMysqlRecordset *recset = (GdaMysqlRecordset *) model;
 	GdaMysqlRecordsetPrivate *priv_data;
 	gint field_count;
-	GdaDataModelColumnAttributes *attrs;
+	GdaColumn *attrs;
 	MYSQL_FIELD *mysql_field;
 
 	g_return_val_if_fail (GDA_IS_MYSQL_RECORDSET (recset), NULL);
@@ -274,7 +274,7 @@ gda_mysql_recordset_describe_column (GdaDataModelBase *model, gint col)
 		return NULL;
 	}
 
-	/* create the GdaDataModelColumnAttributes to be returned */
+	/* create the GdaColumn to be returned */
 	field_count = mysql_num_fields (priv_data->mysql_res);
 	if (col >= field_count)
 		return NULL;
@@ -283,24 +283,24 @@ gda_mysql_recordset_describe_column (GdaDataModelBase *model, gint col)
 	if (!mysql_field)
 		return NULL;
 
-	attrs = gda_data_model_column_attributes_new ();
+	attrs = gda_column_new ();
 
 	if (mysql_field->name)
-		gda_data_model_column_attributes_set_name (attrs, mysql_field->name);
-	gda_data_model_column_attributes_set_defined_size (attrs, mysql_field->length);
-	gda_data_model_column_attributes_set_table (attrs, mysql_field->table);
-	/* gda_data_model_column_attributes_set_caption(attrs, ); */
-	gda_data_model_column_attributes_set_scale (attrs, mysql_field->decimals);
-	gda_data_model_column_attributes_set_gdatype (attrs, gda_mysql_type_to_gda (mysql_field->type,
+		gda_column_set_name (attrs, mysql_field->name);
+	gda_column_set_defined_size (attrs, mysql_field->length);
+	gda_column_set_table (attrs, mysql_field->table);
+	/* gda_column_set_caption(attrs, ); */
+	gda_column_set_scale (attrs, mysql_field->decimals);
+	gda_column_set_gdatype (attrs, gda_mysql_type_to_gda (mysql_field->type,
 									mysql_field->flags & UNSIGNED_FLAG));
-	gda_data_model_column_attributes_set_allow_null (attrs, !IS_NOT_NULL (mysql_field->flags));
-	gda_data_model_column_attributes_set_primary_key (attrs, IS_PRI_KEY (mysql_field->flags));
-	gda_data_model_column_attributes_set_unique_key (attrs, mysql_field->flags & UNIQUE_KEY_FLAG);
-	/* gda_data_model_column_attributes_set_references(attrs, ); */
-	gda_data_model_column_attributes_set_auto_increment (attrs, mysql_field->flags & AUTO_INCREMENT_FLAG);
+	gda_column_set_allow_null (attrs, !IS_NOT_NULL (mysql_field->flags));
+	gda_column_set_primary_key (attrs, IS_PRI_KEY (mysql_field->flags));
+	gda_column_set_unique_key (attrs, mysql_field->flags & UNIQUE_KEY_FLAG);
+	/* gda_column_set_references(attrs, ); */
+	gda_column_set_auto_increment (attrs, mysql_field->flags & AUTO_INCREMENT_FLAG);
 	/* attrs->auto_increment_start */
 	/* attrs->auto_increment_step  */
-	gda_data_model_column_attributes_set_position (attrs, col);
+	gda_column_set_position (attrs, col);
 
 	return attrs;
 }
@@ -531,7 +531,7 @@ gda_mysql_recordset_remove_row (GdaDataModelBase *model, const GdaRow *row)
 	GdaMysqlRecordset *recset = (GdaMysqlRecordset *) model;
 	GdaMysqlRecordsetPrivate *priv_data;
 	GdaRow *row_list;
-	GdaDataModelColumnAttributes *attrs;
+	GdaColumn *attrs;
 	MYSQL *mysql;
 	MYSQL_FIELD *mysql_field;
 	gint i, fetched_rows, rc, colnum, uk;
@@ -682,7 +682,7 @@ gda_mysql_recordset_update_row (GdaDataModelBase *model, const GdaRow *row)
 	MYSQL *mysql;
 	MYSQL_FIELD *mysql_field;
 	MYSQL_ROW mysql_row;
-	GdaDataModelColumnAttributes *attrs;
+	GdaColumn *attrs;
 
 	g_return_val_if_fail (GDA_IS_MYSQL_RECORDSET (recset), FALSE);
 	g_return_val_if_fail (row != NULL, FALSE);
@@ -747,8 +747,8 @@ gda_mysql_recordset_update_row (GdaDataModelBase *model, const GdaRow *row)
 
 		/* unique column: we won't update it, but we will use it as
 		   an index */
-		if (gda_data_model_column_attributes_get_primary_key (attrs) ||
-		    gda_data_model_column_attributes_get_unique_key (attrs)) 
+		if (gda_column_get_primary_key (attrs) ||
+		    gda_column_get_unique_key (attrs)) 
 		{
 			/* checks if it hasn't be modified anyway */
 			if (oldval == NULL ||
@@ -779,7 +779,7 @@ gda_mysql_recordset_update_row (GdaDataModelBase *model, const GdaRow *row)
 		}
 
 		g_free (newval);
-		gda_data_model_column_attributes_free (attrs);
+		gda_column_free (attrs);
 	}
 
 	if (uk == 0) {

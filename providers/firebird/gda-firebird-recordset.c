@@ -59,7 +59,7 @@ static void 			gda_firebird_recordset_finalize (GObject *object);
 
 static gint			gda_firebird_recordset_get_n_rows (GdaDataModelBase *model);
 static gint			gda_firebird_recordset_get_n_columns (GdaDataModelBase *model);
-static GdaDataModelColumnAttributes	*gda_firebird_recordset_describe_column (GdaDataModelBase *model,
+static GdaColumn	*gda_firebird_recordset_describe_column (GdaDataModelBase *model,
 									 gint col);
 static const GdaRow 		*gda_firebird_recordset_get_row (GdaDataModelBase *model,
 								 gint row);
@@ -650,11 +650,11 @@ gda_firebird_recordset_get_n_columns (GdaDataModelBase *model)
 	return (recset->priv->ncolumns);
 }
 
-static GdaDataModelColumnAttributes *
+static GdaColumn *
 gda_firebird_recordset_describe_column (GdaDataModelBase *model, 
 					gint col)
 {
-	GdaDataModelColumnAttributes *fa;
+	GdaColumn *fa;
 	GdaFirebirdRecordset *recset = (GdaFirebirdRecordset *) model;
 
 	g_return_val_if_fail (GDA_IS_FIREBIRD_RECORDSET (recset), NULL);
@@ -662,20 +662,20 @@ gda_firebird_recordset_describe_column (GdaDataModelBase *model,
 	if (col >= recset->priv->ncolumns)
 		return NULL;
 
-	fa = gda_data_model_column_attributes_new ();
-	gda_data_model_column_attributes_set_name (fa, (const gchar *) recset->priv->sql_result->sqlvar[col].sqlname);
-	gda_data_model_column_attributes_set_defined_size (fa, (glong) recset->priv->sql_result->sqlvar[col].sqllen);
-	gda_data_model_column_attributes_set_table (fa, (const gchar *) recset->priv->sql_result->sqlvar[col].relname);
-	gda_data_model_column_attributes_set_scale (fa, (glong) (recset->priv->sql_result->sqlvar[col].sqlscale * -1));
-	gda_data_model_column_attributes_set_gdatype (fa, fb_sql_type_to_gda_type (
+	fa = gda_column_new ();
+	gda_column_set_name (fa, (const gchar *) recset->priv->sql_result->sqlvar[col].sqlname);
+	gda_column_set_defined_size (fa, (glong) recset->priv->sql_result->sqlvar[col].sqllen);
+	gda_column_set_table (fa, (const gchar *) recset->priv->sql_result->sqlvar[col].relname);
+	gda_column_set_scale (fa, (glong) (recset->priv->sql_result->sqlvar[col].sqlscale * -1));
+	gda_column_set_gdatype (fa, fb_sql_type_to_gda_type (
 							recset->priv->sql_result->sqlvar[col].sqltype,
 							(recset->priv->sql_result->sqlvar[col].sqlscale < 0)));
-	gda_data_model_column_attributes_set_position (fa, col);
+	gda_column_set_position (fa, col);
 	
 	/* FIXME */
-	gda_data_model_column_attributes_set_allow_null (fa, TRUE);
-	gda_data_model_column_attributes_set_primary_key (fa, FALSE);
-	gda_data_model_column_attributes_set_unique_key (fa, FALSE);
+	gda_column_set_allow_null (fa, TRUE);
+	gda_column_set_primary_key (fa, FALSE);
+	gda_column_set_unique_key (fa, FALSE);
 	
 	return fa;
 }

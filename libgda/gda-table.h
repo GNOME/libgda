@@ -59,12 +59,12 @@ GdaTable    *gda_table_new_from_model (const gchar *name,
 const gchar *gda_table_get_name (GdaTable *table);
 void         gda_table_set_name (GdaTable *table, const gchar *name);
 
-void         gda_table_add_field (GdaTable *table, const GdaDataModelColumnAttributes *fa);
+void         gda_table_add_field (GdaTable *table, const GdaColumn *fa);
 void         gda_table_add_data_from_model (GdaTable *table, const GdaDataModel *model);
 
 GList       *gda_table_get_columns (GdaTable *table);
 
-GdaDataModelColumnAttributes *gda_table_find_column (GdaTable *table, const gchar *name);
+GdaColumn *gda_table_find_column (GdaTable *table, const gchar *name);
 
 G_END_DECLS
 

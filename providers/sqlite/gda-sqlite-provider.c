@@ -692,7 +692,7 @@ get_table_fields (GdaConnection *cnc, GdaParameterList *params)
 		gda_data_model_set_column_title (GDA_DATA_MODEL (recset), i, _(cols[i].col_name));
 
 	for (i = 0; i < gda_data_model_get_n_columns (GDA_DATA_MODEL (reclist->data)); i++) {
-		GdaDataModelColumnAttributes *fa;
+		GdaColumn *fa;
 		GList *value_list = NULL;
 
 		fa = gda_data_model_describe_column (GDA_DATA_MODEL (reclist->data), i);
@@ -705,28 +705,28 @@ get_table_fields (GdaConnection *cnc, GdaParameterList *params)
 
 		value_list = g_list_append (
 			value_list,
-			gda_value_new_string (gda_data_model_column_attributes_get_name (fa)));
+			gda_value_new_string (gda_column_get_name (fa)));
 		value_list = g_list_append (
 			value_list,
-			gda_value_new_string (gda_type_to_string (gda_data_model_column_attributes_get_gdatype (fa))));
+			gda_value_new_string (gda_type_to_string (gda_column_get_gdatype (fa))));
 		value_list = g_list_append (
 			value_list,
-			gda_value_new_integer (gda_data_model_column_attributes_get_defined_size (fa)));
+			gda_value_new_integer (gda_column_get_defined_size (fa)));
 		value_list = g_list_append (
 			value_list,
-			gda_value_new_integer (gda_data_model_column_attributes_get_scale (fa)));
+			gda_value_new_integer (gda_column_get_scale (fa)));
 		value_list = g_list_append (
 			value_list,
-			gda_value_new_boolean (!gda_data_model_column_attributes_get_allow_null (fa)));
+			gda_value_new_boolean (!gda_column_get_allow_null (fa)));
 		value_list = g_list_append (
 			value_list,
-			gda_value_new_boolean (gda_data_model_column_attributes_get_primary_key (fa)));
+			gda_value_new_boolean (gda_column_get_primary_key (fa)));
 		value_list = g_list_append (
 			value_list,
-			gda_value_new_boolean (gda_data_model_column_attributes_get_unique_key (fa)));
+			gda_value_new_boolean (gda_column_get_unique_key (fa)));
 		value_list = g_list_append (
 			value_list,
-			gda_value_new_string (gda_data_model_column_attributes_get_references (fa)));
+			gda_value_new_string (gda_column_get_references (fa)));
 		value_list = g_list_append (value_list, gda_value_new_string (NULL));
 
 		gda_data_model_append_values (GDA_DATA_MODEL (recset), value_list);

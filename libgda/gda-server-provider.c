@@ -363,7 +363,7 @@ gda_server_provider_drop_database (GdaServerProvider *provider,
  * @provider: a #GdaServerProvider object.
  * @cnc: a #GdaConnection object.
  * @table_name: name of the table to create.
- * @attributes_list: list of #GdaDataModelColumnAttributes for all fields in the table.
+ * @attributes_list: list of #GdaColumn for all fields in the table.
  * @index_list: list of #GdaDataModelIndex for all (additional) indexes in the table.
  *
  * Proxy the call to the create_table method on the #GdaServerProvider class

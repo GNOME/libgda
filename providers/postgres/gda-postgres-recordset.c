@@ -55,7 +55,7 @@ static void gda_postgres_recordset_init       (GdaPostgresRecordset *recset,
 static void gda_postgres_recordset_finalize   (GObject *object);
 
 static const GdaValue *gda_postgres_recordset_get_value_at    (GdaDataModelBase *model, gint col, gint row);
-static GdaDataModelColumnAttributes *gda_postgres_recordset_describe    (GdaDataModelBase *model, gint col);
+static GdaColumn *gda_postgres_recordset_describe    (GdaDataModelBase *model, gint col);
 static gint gda_postgres_recordset_get_n_rows 		      (GdaDataModelBase *model);
 static const GdaRow *gda_postgres_recordset_get_row 	      (GdaDataModelBase *model, gint rownum);
 static gboolean gda_postgres_recordset_append_row	      (GdaDataModelBase *model, GdaRow *row);
@@ -347,7 +347,7 @@ gda_postgres_recordset_remove_row (GdaDataModelBase *model, const GdaRow *row)
 	     colnum != gda_data_model_get_n_columns (GDA_DATA_MODEL(model));
 	     colnum++)
 	{
-		GdaDataModelColumnAttributes *attrs = gda_data_model_describe_column (GDA_DATA_MODEL(model), colnum);
+		GdaColumn *attrs = gda_data_model_describe_column (GDA_DATA_MODEL(model), colnum);
 		const gchar *column_name = PQfname (pg_res, colnum);
 		gchar *curval = gda_value_stringify (gda_row_get_value ((GdaRow *) row, colnum));
 
@@ -451,7 +451,7 @@ gda_postgres_recordset_update_row (GdaDataModelBase *model, const GdaRow *row)
 	     colnum != gda_data_model_get_n_columns (GDA_DATA_MODEL (model));
 	     colnum++) 
 	{
-		GdaDataModelColumnAttributes *attrs = gda_data_model_describe_column (GDA_DATA_MODEL (model), colnum);
+		GdaColumn *attrs = gda_data_model_describe_column (GDA_DATA_MODEL (model), colnum);
 		column_name = PQfname (pg_res, colnum);
 		newval = gda_value_stringify (gda_row_get_value ((GdaRow *) row, colnum));
 
@@ -464,8 +464,8 @@ gda_postgres_recordset_update_row (GdaDataModelBase *model, const GdaRow *row)
 
 		/* unique column: we won't update it, but we will use it as
 		   an index */
-		if (gda_data_model_column_attributes_get_primary_key (attrs) ||
-		    gda_data_model_column_attributes_get_unique_key (attrs)) 
+		if (gda_column_get_primary_key (attrs) ||
+		    gda_column_get_unique_key (attrs)) 
 		{
 			/* checks if it hasn't be modified anyway */
 			if (oldval == NULL ||
@@ -493,7 +493,7 @@ gda_postgres_recordset_update_row (GdaDataModelBase *model, const GdaRow *row)
 		}
 
 		g_free (newval);
-		gda_data_model_column_attributes_free (attrs);
+		gda_column_free (attrs);
 	}
 
 	if (uk == 0) {
@@ -673,7 +673,7 @@ static gboolean check_constraint (const GdaDataModelBase *model,
 	return state;
 }
 
-static GdaDataModelColumnAttributes *
+static GdaColumn *
 gda_postgres_recordset_describe (GdaDataModelBase *model, gint col)
 {
 	GdaPostgresRecordset *recset = (GdaPostgresRecordset *) model;
@@ -681,7 +681,7 @@ gda_postgres_recordset_describe (GdaDataModelBase *model, gint col)
 	PGresult *pg_res;
 	GdaValueType ftype;
 	gint scale;
-	GdaDataModelColumnAttributes *field_attrs;
+	GdaColumn *field_attrs;
 	gboolean ispk = FALSE, isuk = FALSE;
 
 	g_return_val_if_fail (GDA_IS_POSTGRES_RECORDSET (recset), NULL);
@@ -701,8 +701,8 @@ gda_postgres_recordset_describe (GdaDataModelBase *model, gint col)
 		return NULL;
 	}
 
-	field_attrs = gda_data_model_column_attributes_new ();
-	gda_data_model_column_attributes_set_name (field_attrs, PQfname (pg_res, col));
+	field_attrs = gda_column_new ();
+	gda_column_set_name (field_attrs, PQfname (pg_res, col));
 
 	ftype = gda_postgres_type_oid_to_gda (priv_data->type_data,
 					      priv_data->ntypes, 
@@ -711,16 +711,16 @@ gda_postgres_recordset_describe (GdaDataModelBase *model, gint col)
 	scale = (ftype == GDA_VALUE_TYPE_DOUBLE) ? DBL_DIG :
 		(ftype == GDA_VALUE_TYPE_SINGLE) ? FLT_DIG : 0;
 
-	gda_data_model_column_attributes_set_scale (field_attrs, scale);
-	gda_data_model_column_attributes_set_gdatype (field_attrs, ftype);
+	gda_column_set_scale (field_attrs, scale);
+	gda_column_set_gdatype (field_attrs, ftype);
 
 	/* PQfsize() == -1 => variable length */
-	gda_data_model_column_attributes_set_defined_size (field_attrs,
+	gda_column_set_defined_size (field_attrs,
 					       PQfsize (pg_res, col));
 					       
-	gda_data_model_column_attributes_set_references (field_attrs, "");
+	gda_column_set_references (field_attrs, "");
 
-	gda_data_model_column_attributes_set_table (field_attrs,
+	gda_column_set_table (field_attrs,
 					priv_data->table_name);
 
 	if (priv_data->table_name) {
@@ -735,8 +735,8 @@ gda_postgres_recordset_describe (GdaDataModelBase *model, gint col)
 					 'u');
 	}
 	
-	gda_data_model_column_attributes_set_primary_key (field_attrs, ispk);
-	gda_data_model_column_attributes_set_unique_key (field_attrs, isuk);
+	gda_column_set_primary_key (field_attrs, ispk);
+	gda_column_set_unique_key (field_attrs, isuk);
 	/* FIXME: set_allow_null? */
 
 	return field_attrs;

@@ -36,7 +36,7 @@ fetch_func (GdaDataModel *recset, gulong rownum)
 	return NULL;
 }
 
-static GdaDataModelColumnAttributes *
+static GdaColumn *
 describe_func (GdaDataModel *recset)
 {
 	return NULL;

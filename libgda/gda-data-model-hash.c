@@ -97,7 +97,7 @@ gda_data_model_hash_get_value_at (GdaDataModelBase *model, gint col, gint row)
 	return (const GdaValue *) gda_row_get_value ((GdaRow *) fields, col);
 }
 
-static GdaDataModelColumnAttributes *
+static GdaColumn *
 gda_data_model_hash_describe_column (GdaDataModelBase *model, gint col)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_HASH (model), NULL);

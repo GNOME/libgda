@@ -59,7 +59,7 @@ gda_data_model_array_get_n_columns (GdaDataModelBase *model)
 	return GDA_DATA_MODEL_ARRAY (model)->priv->number_of_columns;
 }
 
-static GdaDataModelColumnAttributes *
+static GdaColumn *
 gda_data_model_array_describe_column (GdaDataModelBase *model, gint col)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_ARRAY (model), NULL);
@@ -198,7 +198,7 @@ gda_data_model_array_update_row (GdaDataModelBase *model, const GdaRow *row)
 }
 
 static gboolean
-gda_data_model_array_append_column (GdaDataModelBase *model, const GdaDataModelColumnAttributes *attrs)
+gda_data_model_array_append_column (GdaDataModelBase *model, const GdaColumn *attrs)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_ARRAY (model), FALSE);
 	g_return_val_if_fail (attrs != NULL, FALSE);
@@ -207,7 +207,7 @@ gda_data_model_array_append_column (GdaDataModelBase *model, const GdaDataModelC
 }
 
 static gboolean
-gda_data_model_array_update_column (GdaDataModelBase *model, gint col, const GdaDataModelColumnAttributes *attrs)
+gda_data_model_array_update_column (GdaDataModelBase *model, gint col, const GdaColumn *attrs)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_ARRAY (model), FALSE);
 	g_return_val_if_fail (attrs != NULL, FALSE);

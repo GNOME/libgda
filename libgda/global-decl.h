@@ -24,6 +24,5 @@
 typedef struct _GdaRow              GdaRow;
 typedef struct _GdaDataModelIface   GdaDataModelIface;
 typedef struct _GdaDataModel        GdaDataModel;
-typedef struct _GdaDataModelColumnAttributes  GdaDataModelColumnAttributes;
 
 #endif
