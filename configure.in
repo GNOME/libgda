@@ -145,6 +145,11 @@ fi
 AM_CONDITIONAL(WITH_PERL, test $perl_val == true)
 
 dnl
+dnl checking for GOB (Gtk Object Builder)
+dnl
+GOB_CHECK
+
+dnl
 dnl Checks for providers
 dnl
 
@@ -632,6 +637,8 @@ GDA_CLIENT_LIBS="$gda_base_libs $gda_xml_libs $gda_gconf_libs $gda_oaf_libs"
 GDA_CLIENT_CFLAGS="$gda_base_cflags $gda_xml_cflags $gda_gconf_cflags $gda_oaf_cflags"
 GDA_PROVIDER_LIBS="$gda_base_libs $gda_xml_libs $gda_gconf_libs $gda_oaf_libs"
 GDA_PROVIDER_CFLAGS="$gda_base_cflags $gda_xml_cflags $gda_gconf_cflags $gda_oaf_cflags"
+XML_LIBS="$gda_xml_libs"
+XML_CFLAGS="$gda_xml_cflags"
 
 AC_SUBST(GDA_CLIENT_LIBS)
 AC_SUBST(GDA_CLIENT_CFLAGS)
@@ -659,6 +666,8 @@ AC_SUBST(MDB_LIBS)
 AC_SUBST(MDB_CFLAGS)
 AC_SUBST(CAMEL_LIBS)
 AC_SUBST(CAMEL_CFLAGS)
+AC_SUBST(XML_LIBS)
+AC_SUBST(XML_CFLAGS)
 
 GDA_oafdir=`oaf-config --prefix`/share/oaf
 
@@ -677,6 +686,8 @@ intl/Makefile
 idl/Makefile
 lib/Makefile
 lib/gda-common/Makefile
+lib/gda-common/gda-xml-query/Makefile
+lib/gda-common/gda-xml-query/testing/Makefile
 lib/gda-client/Makefile
 lib/gda-server/Makefile
 bindings/Makefile

@@ -1,6 +1,6 @@
 Michael Lausch <michael@lausch.at> (founder of the project, libgda-client, gda-odbc, gda-mysql)
 Rodrigo Moya <rodrigo@gnome-db.org> (libgda-common, libgda-client, libgda-server, report, gda-postgres, gda-mysql)
-Vivien Malerba <malerba@linuxave.net> (gda-postgres, libgda-common, queries)
+Vivien Malerba <malerba@gnome-db.org> (gda-postgres, libgda-common, queries)
 Stephan Heinze <stephan.heinze@xcom.de> (gda-oracle)
 Nick Gorham <nick@lurcher.org> (gda-odbc)
 Chris Wiegand <cwiegand@urgentmail.com> (C++ bindings)
