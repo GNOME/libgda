@@ -22,6 +22,12 @@
  */
 
 // $Log$
+// Revision 1.2  2001/04/07 08:49:31  rodrigo
+// 2001-04-07  Rodrigo Moya <rodrigo@gnome-db.org>
+//
+// 	* objects renaming (Gda_* to Gda*) to conform to the GNOME
+// 	naming standards
+//
 // Revision 1.1.1.1  2000/08/10 09:32:39  rodrigo
 // First version of libgda separated from GNOME-DB
 //
@@ -132,7 +138,7 @@ sybase_get_type_name(const CS_INT sql_type)
 }
 
 void
-gda_sybase_field_set_datetime(Gda_ServerField *field, CS_DATETIME *dt)
+gda_sybase_field_set_datetime(GdaServerField *field, CS_DATETIME *dt)
 {
   GDate  *date;
   GTime  time;
@@ -146,7 +152,7 @@ gda_sybase_field_set_datetime(Gda_ServerField *field, CS_DATETIME *dt)
 }
 
 void
-gda_sybase_field_set_datetime4(Gda_ServerField *field, CS_DATETIME4 *dt)
+gda_sybase_field_set_datetime4(GdaServerField *field, CS_DATETIME4 *dt)
 {
   GDate *date;
   GTime time;
@@ -162,7 +168,7 @@ gda_sybase_field_set_datetime4(Gda_ServerField *field, CS_DATETIME4 *dt)
 #define SYBASE_CONVBUF_SIZE 1024
 
 void
-gda_sybase_field_set_general(Gda_ServerField       *field,
+gda_sybase_field_set_general(GdaServerField       *field,
                              sybase_Field          *sfield,
                              sybase_Connection     *scnc)
 {

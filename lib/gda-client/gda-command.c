@@ -34,15 +34,15 @@ typedef struct _Parameter {
 static gint gda_command_signals[GDA_COMMAND_LAST_SIGNAL] = { 0, };
 
 #ifdef HAVE_GOBJECT
-static void gda_command_class_init (Gda_CommandClass *klass, gpointer data);
-static void gda_command_init       (Gda_Command *cmd, Gda_CommandClass *klass);
+static void gda_command_class_init (GdaCommandClass *klass, gpointer data);
+static void gda_command_init       (GdaCommand *cmd, GdaCommandClass *klass);
 #else
-static void gda_command_class_init (Gda_CommandClass *klass);
-static void gda_command_init       (Gda_Command *cmd);
+static void gda_command_class_init (GdaCommandClass *klass);
+static void gda_command_init       (GdaCommand *cmd);
 #endif
 
 static void
-release_connection_object (Gda_Command* cmd, Gda_Connection* cnc) {
+release_connection_object (GdaCommand* cmd, GdaConnection* cnc) {
 	cmd->connection->commands = g_list_remove(cmd->connection->commands, cmd);
 }
 
@@ -53,18 +53,18 @@ gda_command_get_type (void) {
 	
 	if (!type) {
 		GTypeInfo info = {
-			sizeof (Gda_CommandClass),               /* class_size */
+			sizeof (GdaCommandClass),               /* class_size */
 			NULL,                                    /* base_init */
 			NULL,                                    /* base_finalize */
 			(GClassInitFunc) gda_command_class_init, /* class_init */
 			NULL,                                    /* class_finalize */
 			NULL,                                    /* class_data */
-			sizeof (Gda_Command),                    /* instance_size */
+			sizeof (GdaCommand),                    /* instance_size */
 			0,                                       /* n_preallocs */
 			(GInstanceInitFunc) gda_command_init,    /* instance_init */
 			NULL,                                    /* value_table */
 		};
-		type = g_type_register_static (G_TYPE_OBJECT, "Gda_Command", &info, 0);
+		type = g_type_register_static (G_TYPE_OBJECT, "GdaCommand", &info, 0);
 	}
 	return type;
 }
@@ -76,8 +76,8 @@ gda_command_get_type (void) {
 	if (!gda_command_type) {
 		GtkTypeInfo gda_command_info = {
 			"GdaCommand",
-			sizeof (Gda_Command),
-			sizeof (Gda_CommandClass),
+			sizeof (GdaCommand),
+			sizeof (GdaCommandClass),
 			(GtkClassInitFunc) gda_command_class_init,
 			(GtkObjectInitFunc) gda_command_init,
 			(GtkArgSetFunc)NULL,
@@ -91,20 +91,20 @@ gda_command_get_type (void) {
 
 #ifdef HAVE_GOBJECT
 static void
-gda_command_class_init (Gda_CommandClass *klass, gpointer data) {
+gda_command_class_init (GdaCommandClass *klass, gpointer data) {
 }
 #else
 static void
-gda_command_class_init (Gda_CommandClass* klass) {
+gda_command_class_init (GdaCommandClass* klass) {
 	GtkObjectClass* object_class = (GtkObjectClass*) klass;
 }
 #endif
 
 static void
 #ifdef HAVE_GOBJECT
-gda_command_init (Gda_Command *cmd, Gda_CommandClass *klass)  {
+gda_command_init (GdaCommand *cmd, GdaCommandClass *klass)  {
 #else
-gda_command_init (Gda_Command* cmd) {
+gda_command_init (GdaCommand* cmd) {
 #endif
 	g_return_if_fail(IS_GDA_COMMAND(cmd));
 }
@@ -116,7 +116,7 @@ gda_command_init (Gda_Command* cmd) {
  *
  * Returns: a pointer to the command object
  */
-Gda_Command *
+GdaCommand *
 gda_command_new (void) {
 #ifdef HAVE_GOBJECT
 	return GDA_COMMAND (g_object_new (GDA_TYPE_COMMAND, NULL));
@@ -134,7 +134,7 @@ gda_command_new (void) {
  *
  */
 void
-gda_command_free (Gda_Command* cmd) {
+gda_command_free (GdaCommand* cmd) {
 	CORBA_Environment ev;
 	
 	g_return_if_fail(IS_GDA_COMMAND(cmd));
@@ -172,7 +172,7 @@ gda_command_free (Gda_Command* cmd) {
  * Returns: -1 on error, 0 on success
  */
 gint
-gda_command_set_connection (Gda_Command* cmd, Gda_Connection* cnc) {
+gda_command_set_connection (GdaCommand* cmd, GdaConnection* cnc) {
 	CORBA_Environment ev;
 	
 	g_return_val_if_fail(IS_GDA_COMMAND(cmd), -1);
@@ -207,8 +207,8 @@ gda_command_set_connection (Gda_Command* cmd, Gda_Connection* cnc) {
  *
  * Returns: a pointer to the #gda_Connection object
  */
-Gda_Connection *
-gda_command_get_connection (Gda_Command* cmd) {
+GdaConnection *
+gda_command_get_connection (GdaCommand* cmd) {
 	g_return_val_if_fail(IS_GDA_COMMAND(cmd), NULL);
 
 	return cmd->connection;
@@ -216,7 +216,7 @@ gda_command_get_connection (Gda_Command* cmd) {
 
 /**
  * gda_command_set_text:
- * @cmd: the #Gda_Command object
+ * @cmd: the #GdaCommand object
  * @text: the command to perform. There are some special texts
  * which are reckognized by the servers. See the server documantation
  * for a list of special commands.
@@ -226,7 +226,7 @@ gda_command_get_connection (Gda_Command* cmd) {
  *
  */
 void
-gda_command_set_text (Gda_Command* cmd, gchar* text) {
+gda_command_set_text (GdaCommand* cmd, gchar* text) {
 	CORBA_Environment ev;
 	
 	g_return_if_fail(IS_GDA_COMMAND(cmd));
@@ -247,7 +247,7 @@ gda_command_set_text (Gda_Command* cmd, gchar* text) {
 
 /**
  * gda_command_get_text:
- * @cmd: the #Gda_Command object
+ * @cmd: the #GdaCommand object
  *
  * Gets the command string which is executed when the gda_command_execute()
  * function is called.
@@ -255,7 +255,7 @@ gda_command_set_text (Gda_Command* cmd, gchar* text) {
  * Returns: a reference to the command string.
  */
 gchar *
-gda_command_get_text (Gda_Command* cmd) {
+gda_command_get_text (GdaCommand* cmd) {
 	gchar* txt;
 	CORBA_Environment ev;
 	
@@ -272,7 +272,7 @@ gda_command_get_text (Gda_Command* cmd) {
 
 /**
  * gda_command_set_cmd_type:
- * @cmd: the #Gda_Command object
+ * @cmd: the #GdaCommand object
  * @type: the type of the command. See the provider specification
  * which command type is understood and the semantics of the different 
  * types.
@@ -282,7 +282,7 @@ gda_command_get_text (Gda_Command* cmd) {
  *
  */
 void
-gda_command_set_cmd_type (Gda_Command* cmd, GDA_CommandType type) {
+gda_command_set_cmd_type (GdaCommand* cmd, GDA_CommandType type) {
 	CORBA_Environment ev;
 	
 	g_return_if_fail(IS_GDA_COMMAND(cmd));
@@ -301,14 +301,14 @@ gda_command_set_cmd_type (Gda_Command* cmd, GDA_CommandType type) {
 
 /**
  * gda_command_get_cmd_type:
- * @cmd: the #Gda_Command object
+ * @cmd: the #GdaCommand object
  *
  * Gets the type of the command 
  *
  * Returns: the type of the command
  */
 GDA_CommandType
-gda_command_get_cmd_type (Gda_Command* cmd) {
+gda_command_get_cmd_type (GdaCommand* cmd) {
 	GDA_CommandType type;
 	CORBA_Environment ev;
 	
@@ -325,7 +325,7 @@ gda_command_get_cmd_type (Gda_Command* cmd) {
 
 
 GDA_CmdParameterSeq*
-__gda_command_get_params (Gda_Command* cmd) {
+__gda_command_get_params (GdaCommand* cmd) {
 	GDA_CmdParameterSeq*      corba_parameters;
 	gint                      parameter_count;
 	GList*                    ptr;
@@ -374,16 +374,16 @@ __gda_command_get_params (Gda_Command* cmd) {
  * @flags: flags to categorize the command.
  *
  * This function executes the command which has been set with
- * gda_command_set_text(). It returns a #Gda_Recordset pointer which holds the
+ * gda_command_set_text(). It returns a #GdaRecordset pointer which holds the
  * results from this query. If the command doesn't return any results, like
  * insert, or updaste statements in SQL, an empty result set is returnd.
  *
  * Returns: a pointer to a recordset or a NULL pointer if there was an error.
  */
-Gda_Recordset *
-gda_command_execute (Gda_Command* cmd, gulong* reccount, gulong flags) {
+GdaRecordset *
+gda_command_execute (GdaCommand* cmd, gulong* reccount, gulong flags) {
 	gint rc;
-	Gda_Recordset* rs;
+	GdaRecordset* rs;
 	
 	g_return_val_if_fail(IS_GDA_COMMAND(cmd), 0);
 	g_return_val_if_fail(reccount != NULL, 0);
@@ -430,7 +430,7 @@ gda_command_execute (Gda_Command* cmd, gulong* reccount, gulong flags) {
  * value parameter if it's not a simple data type (integer, float, ...)
  */
 void
-gda_command_create_parameter (Gda_Command* cmd,
+gda_command_create_parameter (GdaCommand* cmd,
                               gchar* name,
                               GDA_ParameterDirection inout,
                               GDA_Value* value) {
@@ -454,7 +454,7 @@ gda_command_create_parameter (Gda_Command* cmd,
  * command object
  */
 glong
-gda_command_get_timeout (Gda_Command *cmd) {
+gda_command_get_timeout (GdaCommand *cmd) {
 	CORBA_Environment ev;
 	glong ret;
 	
@@ -474,7 +474,7 @@ gda_command_get_timeout (Gda_Command *cmd) {
  * Sets the timeout for the given command
  */
 void
-gda_command_set_timeout (Gda_Command *cmd, glong timeout) {
+gda_command_set_timeout (GdaCommand *cmd, glong timeout) {
 	CORBA_Environment ev;
 	
 	g_return_if_fail(IS_GDA_COMMAND(cmd));

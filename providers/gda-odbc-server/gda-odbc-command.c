@@ -200,22 +200,22 @@ value_2_inputsize(GDA_Value* v)
  * Public functions
  */
 gboolean
-gda_odbc_command_new (Gda_ServerCommand *cmd)
+gda_odbc_command_new (GdaServerCommand *cmd)
 {
   return TRUE;
 }
 
-Gda_ServerRecordset *
-gda_odbc_command_execute (Gda_ServerCommand *cmd,
-			  Gda_ServerError *error,
+GdaServerRecordset *
+gda_odbc_command_execute (GdaServerCommand *cmd,
+			  GdaServerError *error,
 			  const GDA_CmdParameterSeq *params,
 			  gulong *affected,
 			  gulong options)
 {
-  Gda_ServerRecordset*      recset = NULL;
+  GdaServerRecordset*      recset = NULL;
   ODBC_Connection*          od_cnc;
   ODBC_Recordset*           odbc_recset;
-  Gda_ServerConnection*     cnc;
+  GdaServerConnection*     cnc;
   SQLRETURN                 rc;
   gchar*                    cmd_string;
   SQLSMALLINT               nparams;
@@ -398,6 +398,6 @@ gda_odbc_command_execute (Gda_ServerCommand *cmd,
 }
 
 void
-gda_odbc_command_free (Gda_ServerCommand *cmd)
+gda_odbc_command_free (GdaServerCommand *cmd)
 {
 }

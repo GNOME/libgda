@@ -22,10 +22,10 @@
  * Private functions
  */
 static void
-init_recordset_fields (Gda_ServerRecordset *recset,
+init_recordset_fields (GdaServerRecordset *recset,
                        INTERBASE_Recordset *ib_recset,
                        INTERBASE_Connection *ib_cnc,
-                       Gda_ServerConnection *cnc) {
+                       GdaServerConnection *cnc) {
 	gint num_cols, i;
 	
 	g_return_if_fail(recset != NULL);
@@ -50,7 +50,7 @@ init_recordset_fields (Gda_ServerRecordset *recset,
 	
 	/* get fields description */
 	for (i = 0; i < num_cols; i++) {
-		Gda_ServerField* field = gda_server_field_new();
+		GdaServerField* field = gda_server_field_new();
 		
 		gda_server_field_set_name(field, ib_recset->sqlda->sqlvar[i].sqlname);
 		gda_server_field_set_sql_type(field, ib_recset->sqlda->sqlvar[i].sqltype);
@@ -67,7 +67,7 @@ init_recordset_fields (Gda_ServerRecordset *recset,
  * Public functions
  */
 gboolean
-gda_interbase_command_new (Gda_ServerCommand *cmd) {
+gda_interbase_command_new (GdaServerCommand *cmd) {
 	isc_stmt_handle       stmt = NULL;
 	INTERBASE_Connection* ib_cnc;
 	
@@ -86,13 +86,13 @@ gda_interbase_command_new (Gda_ServerCommand *cmd) {
 	return FALSE;
 }
 
-Gda_ServerRecordset *
-gda_interbase_command_execute (Gda_ServerCommand *cmd,
-                               Gda_ServerError *error,
+GdaServerRecordset *
+gda_interbase_command_execute (GdaServerCommand *cmd,
+                               GdaServerError *error,
                                const GDA_CmdParameterSeq *params,
                                gulong *affected,
                                gulong options) {
-	Gda_ServerRecordset*  recset;
+	GdaServerRecordset*  recset;
 	INTERBASE_Connection* ib_cnc;
 	
 	g_return_val_if_fail(cmd != NULL, NULL);
@@ -147,7 +147,7 @@ gda_interbase_command_execute (Gda_ServerCommand *cmd,
 }
 
 void
-gda_interbase_command_free (Gda_ServerCommand *cmd) {
+gda_interbase_command_free (GdaServerCommand *cmd) {
 	INTERBASE_Connection* ib_cnc;
 	
 	g_return_if_fail(cmd != NULL);

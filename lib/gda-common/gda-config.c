@@ -302,17 +302,17 @@ gda_config_free_list (GList *list)
 /**
  * gda_provider_new:
  *
- * Allocates memory for a new Gda_Provider object and initializes struct 
+ * Allocates memory for a new GdaProvider object and initializes struct 
  * members.
  *
- * Returns: a pointer to a new Gda_Provider object.
+ * Returns: a pointer to a new GdaProvider object.
  */
-Gda_Provider *
+GdaProvider *
 gda_provider_new (void)
 {
-  Gda_Provider* retval;
+  GdaProvider* retval;
 
-  retval = g_new0(Gda_Provider, 1);
+  retval = g_new0(GdaProvider, 1);
   return retval;
 }
 
@@ -324,10 +324,10 @@ gda_provider_new (void)
  *
  * Returns: a pointer to the newly allocated provider object
  */
-Gda_Provider *
-gda_provider_copy (Gda_Provider* provider)
+GdaProvider *
+gda_provider_copy (GdaProvider* provider)
 {
-  Gda_Provider* retval;
+  GdaProvider* retval;
 
   retval = gda_provider_new();
   
@@ -348,7 +348,7 @@ gda_provider_copy (Gda_Provider* provider)
  * allocated to struct members.
  */
 void
-gda_provider_free (Gda_Provider* provider)
+gda_provider_free (GdaProvider* provider)
 {
   if (provider->name) g_free((gpointer) provider->name);
   if (provider->comment) g_free((gpointer) provider->comment);
@@ -377,7 +377,7 @@ gda_provider_free (Gda_Provider* provider)
  * gda_provider_list:
  *
  * Searches the CORBA database for GDA providers and returns a Glist of 
- * Gda_Provider structs. 
+ * GdaProvider structs. 
  *
  * Returns: a GList of GDA providers structs
  */
@@ -388,7 +388,7 @@ gda_provider_list (void)
   OAF_ServerInfoList* servlist;
   CORBA_Environment   ev;
   gint                i;
-  Gda_Provider*         provider;
+  GdaProvider*         provider;
 
   CORBA_exception_init(&ev);
   servlist = oaf_query("repo_ids.has('IDL:GDA/ConnectionFactory:1.0')", NULL, &ev);
@@ -440,9 +440,9 @@ gda_provider_list (void)
 
 /**
  * gda_provider_free_list
- * @list: list of #Gda_Provider structures
+ * @list: list of #GdaProvider structures
  *
- * Frees a list of #Gda_Provider structures previously returned by
+ * Frees a list of #GdaProvider structures previously returned by
  * a call to #gda_provider_list
  */
 void
@@ -452,7 +452,7 @@ gda_provider_free_list (GList *list)
 
   while ((node = g_list_first(list)))
     {
-      Gda_Provider* provider = (Gda_Provider *) node->data;
+      GdaProvider* provider = (GdaProvider *) node->data;
       list = g_list_remove(list, (gpointer) provider);
       gda_provider_free(provider);
     }
@@ -462,18 +462,18 @@ gda_provider_free_list (GList *list)
  * gda_provider_find_by_name
  * @name: provider name
  *
- * Returns a #Gda_Provider structure describing the given provider. This function
+ * Returns a #GdaProvider structure describing the given provider. This function
  * searches all the providers present on your system
  * and tries to find the specified provider.
  *
  * Returns: a pointer to the provider structure, or NULL on error
  */
-Gda_Provider *
+GdaProvider *
 gda_provider_find_by_name (const gchar *name)
 {
   GList*      list;
   GList*      node;
-  Gda_Provider* provider = NULL;
+  GdaProvider* provider = NULL;
 
   g_return_val_if_fail(name, NULL);
 
@@ -481,9 +481,9 @@ gda_provider_find_by_name (const gchar *name)
   node = g_list_first(list);
   while (node)
     {
-      if (!strcmp(name, GDA_PROVIDER_NAME((Gda_Provider *) node->data)))
+      if (!strcmp(name, GDA_PROVIDER_NAME((GdaProvider *) node->data)))
         {
-          provider = gda_provider_copy((Gda_Provider *) node->data);
+          provider = gda_provider_copy((GdaProvider *) node->data);
           break;
         }
       node = g_list_next(node);
@@ -509,7 +509,7 @@ gda_list_datasources (void)
   dsns = node = gda_dsn_list();
   while (node)
     {
-      Gda_Dsn* dsn = (Gda_Dsn *) node->data;
+      GdaDsn* dsn = (GdaDsn *) node->data;
       if (dsn)
         {
           res = g_list_append(res, g_strdup(GDA_DSN_GDA_NAME(dsn)));
@@ -537,7 +537,7 @@ gda_list_datasources_for_provider (gchar* provider)
   dsns = node = gda_dsn_list();
   while (node)
     {
-      Gda_Dsn* dsn = (Gda_Dsn *) node->data;
+      GdaDsn* dsn = (GdaDsn *) node->data;
       if (dsn && !strcmp(GDA_DSN_PROVIDER(dsn), provider))
         {
           res = g_list_append(res, g_strdup(GDA_DSN_GDA_NAME(dsn)));
@@ -568,7 +568,7 @@ get_config_string (const gchar *format, ...)
  * gda_dsn_list
  *
  * Returns a list of all available data sources. The returned value is
- * a GList of #Gda_Dsn structures
+ * a GList of #GdaDsn structures
  */
 GList *
 gda_dsn_list (void)
@@ -580,7 +580,7 @@ gda_dsn_list (void)
   datasources = gda_config_list_sections(GDA_CONFIG_SECTION_DATASOURCES);
   for (node = datasources; node != NULL; node = g_list_next(node))
     {
-      Gda_Dsn* dsn;
+      GdaDsn* dsn;
       gchar*   name;
       
       name = (gchar *) node->data;
@@ -607,7 +607,7 @@ gda_dsn_list (void)
  * @dsn: data source
  */
 void
-gda_dsn_free (Gda_Dsn *dsn)
+gda_dsn_free (GdaDsn *dsn)
 {
   g_return_if_fail(dsn != NULL);
 
@@ -623,10 +623,10 @@ gda_dsn_free (Gda_Dsn *dsn)
 /**
  * gda_dsn_copy
  */
-Gda_Dsn *
-gda_dsn_copy (Gda_Dsn *dsn)
+GdaDsn *
+gda_dsn_copy (GdaDsn *dsn)
 {
-  Gda_Dsn* ret;
+  GdaDsn* ret;
 
   g_return_val_if_fail(dsn != NULL, NULL);
 
@@ -645,19 +645,19 @@ gda_dsn_copy (Gda_Dsn *dsn)
  * gda_dsn_find_by_name
  * @dsn_name: data source name
  */
-Gda_Dsn *
+GdaDsn *
 gda_dsn_find_by_name (const gchar *dsn_name)
 {
   GList*   list;
   gboolean found = FALSE;
-  Gda_Dsn* rc = NULL;
+  GdaDsn* rc = NULL;
 
   g_return_val_if_fail(dsn_name != NULL, NULL);
 
   list = gda_dsn_list();
   while (list)
     {
-      Gda_Dsn* dsn = (Gda_Dsn *) list->data;
+      GdaDsn* dsn = (GdaDsn *) list->data;
       if (dsn && !found)
         {
           if (!g_strcasecmp(GDA_DSN_GDA_NAME(dsn), dsn_name))
@@ -680,7 +680,7 @@ gda_dsn_find_by_name (const gchar *dsn_name)
  * @name: new data source name
  */
 void
-gda_dsn_set_name (Gda_Dsn *dsn, const gchar *name)
+gda_dsn_set_name (GdaDsn *dsn, const gchar *name)
 {
   g_return_if_fail(dsn != NULL);
   g_return_if_fail(name != NULL);
@@ -695,7 +695,7 @@ gda_dsn_set_name (Gda_Dsn *dsn, const gchar *name)
  * @provider: provider name
  */
 void
-gda_dsn_set_provider (Gda_Dsn *dsn, const gchar *provider)
+gda_dsn_set_provider (GdaDsn *dsn, const gchar *provider)
 {
   g_return_if_fail(dsn != NULL);
   g_return_if_fail(provider != NULL);
@@ -711,7 +711,7 @@ gda_dsn_set_provider (Gda_Dsn *dsn, const gchar *provider)
  * @dsn_str: DSN connection string
  */
 void
-gda_dsn_set_dsn (Gda_Dsn *dsn, const gchar *dsn_str)
+gda_dsn_set_dsn (GdaDsn *dsn, const gchar *dsn_str)
 {
   g_return_if_fail(dsn != NULL);
   g_return_if_fail(dsn_str != NULL);
@@ -726,7 +726,7 @@ gda_dsn_set_dsn (Gda_Dsn *dsn, const gchar *dsn_str)
  * @description: DSN description
  */
 void
-gda_dsn_set_description (Gda_Dsn *dsn, const gchar *description)
+gda_dsn_set_description (GdaDsn *dsn, const gchar *description)
 {
   g_return_if_fail(dsn != NULL);
   g_return_if_fail(description != NULL);
@@ -741,7 +741,7 @@ gda_dsn_set_description (Gda_Dsn *dsn, const gchar *description)
  * @username: user name
  */
 void
-gda_dsn_set_username (Gda_Dsn *dsn, const gchar *username)
+gda_dsn_set_username (GdaDsn *dsn, const gchar *username)
 {
   g_return_if_fail(dsn != NULL);
   g_return_if_fail(username != NULL);
@@ -756,7 +756,7 @@ gda_dsn_set_username (Gda_Dsn *dsn, const gchar *username)
  * @config: configurator
  */
 void
-gda_dsn_set_config (Gda_Dsn *dsn, const gchar *config)
+gda_dsn_set_config (GdaDsn *dsn, const gchar *config)
 {
   g_return_if_fail(dsn != NULL);
   g_return_if_fail(config != NULL);
@@ -771,7 +771,7 @@ gda_dsn_set_config (Gda_Dsn *dsn, const gchar *config)
  * @is_global: global flag
  */
 void
-gda_dsn_set_global (Gda_Dsn *dsn, gboolean is_global)
+gda_dsn_set_global (GdaDsn *dsn, gboolean is_global)
 {
   g_return_if_fail(dsn != NULL);
   dsn->is_global = is_global;
@@ -784,7 +784,7 @@ gda_dsn_set_global (Gda_Dsn *dsn, gboolean is_global)
  * Saves the given data source into the GDA configuration
  */
 gboolean
-gda_dsn_save (Gda_Dsn *dsn)
+gda_dsn_save (GdaDsn *dsn)
 {
   g_return_val_if_fail(dsn != NULL, FALSE);
 
@@ -832,7 +832,7 @@ gda_dsn_save (Gda_Dsn *dsn)
  * @dsn: data source
  */
 gboolean
-gda_dsn_remove (Gda_Dsn *dsn)
+gda_dsn_remove (GdaDsn *dsn)
 {
   gchar* tmp;
 
@@ -858,7 +858,7 @@ gda_dsn_free_list (GList *list)
 
   while ((node = g_list_first(list)))
     {
-      Gda_Dsn* dsn = (Gda_Dsn *) node->data;
+      GdaDsn* dsn = (GdaDsn *) node->data;
       list = g_list_remove(list, (gpointer) dsn);
       gda_dsn_free(dsn);
     }

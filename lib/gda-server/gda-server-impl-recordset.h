@@ -38,7 +38,7 @@ typedef struct
   CORBA_char*          attr_source;
   CORBA_long           attr_status;
 
-  Gda_ServerRecordset* recset;
+  GdaServerRecordset* recset;
 } impl_POA_GDA_Recordset;
 
 /*

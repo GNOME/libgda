@@ -614,8 +614,8 @@ msgstr "Neplatný alebo nepodporovaný typ obmedzenia: %d"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:702
 #: providers/gda-tds-server/gda-tds-connection.c:693
-msgid "Could not allocate Gda_ServerCommand"
-msgstr "Nie je mo¾né alokova» Gda_ServerCommand"
+msgid "Could not allocate GdaServerCommand"
+msgstr "Nie je mo¾né alokova» GdaServerCommand"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:732
 #: providers/gda-sybase-server/gda-sybase-connection.c:737

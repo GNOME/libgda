@@ -23,7 +23,7 @@
  * Private functions
  */
 void
-gda_mysql_init_recset_fields (Gda_ServerRecordset *recset, MYSQL_Recordset *mysql_recset)
+gda_mysql_init_recset_fields (GdaServerRecordset *recset, MYSQL_Recordset *mysql_recset)
 {
 	gint max_fieldidx;
 	gint fieldidx;
@@ -35,7 +35,7 @@ gda_mysql_init_recset_fields (Gda_ServerRecordset *recset, MYSQL_Recordset *mysq
 	max_fieldidx = mysql_num_fields(mysql_recset->mysql_res);
 	for (fieldidx = 0; fieldidx < max_fieldidx; fieldidx++) {
 		MYSQL_FIELD*     mysql_field;
-		Gda_ServerField* field;
+		GdaServerField* field;
 		
 		mysql_field = mysql_fetch_field(mysql_recset->mysql_res);
 		field = gda_server_field_new();
@@ -54,22 +54,22 @@ gda_mysql_init_recset_fields (Gda_ServerRecordset *recset, MYSQL_Recordset *mysq
  * Public functions
  */
 gboolean
-gda_mysql_command_new (Gda_ServerCommand *cmd)
+gda_mysql_command_new (GdaServerCommand *cmd)
 {
 	return TRUE;
 }
 
-Gda_ServerRecordset *
-gda_mysql_command_execute (Gda_ServerCommand *cmd,
-                           Gda_ServerError *error,
+GdaServerRecordset *
+gda_mysql_command_execute (GdaServerCommand *cmd,
+                           GdaServerError *error,
                            const GDA_CmdParameterSeq *params,
                            gulong *affected,
                            gulong options)
 {
 	gint                  rc;
 	gchar*                cmd_string;
-	Gda_ServerConnection* cnc;
-	Gda_ServerRecordset*  recset = NULL;
+	GdaServerConnection* cnc;
+	GdaServerRecordset*  recset = NULL;
 	MYSQL_Connection*     mysql_cnc;
 	
 	cnc = gda_server_command_get_connection(cmd);
@@ -125,6 +125,6 @@ gda_mysql_command_execute (Gda_ServerCommand *cmd,
 }
 
 void
-gda_mysql_command_free (Gda_ServerCommand *cmd)
+gda_mysql_command_free (GdaServerCommand *cmd)
 {
 }

@@ -38,11 +38,11 @@
 
 typedef struct
 {
-  Gda_Thread* thr;
+  GdaThread* thr;
   gpointer    user_data;
 } thread_data_t;
 
-/* Gda_Thread object signals */
+/* GdaThread object signals */
 enum
 {
   LAST_SIGNAL
@@ -72,16 +72,16 @@ thread_func (gpointer data)
 }
 
 /*
- * Gda_Thread object implementation
+ * GdaThread object implementation
  */
 #ifdef HAVE_GOBJECT
 static void
-gda_thread_class_init (Gda_ThreadClass *klass, gpointer data)
+gda_thread_class_init (GdaThreadClass *klass, gpointer data)
 {
 }
 #else
 static void
-gda_thread_class_init (Gda_ThreadClass *klass)
+gda_thread_class_init (GdaThreadClass *klass)
 {
    GtkObjectClass* object_class = (GtkObjectClass *) klass;
 }
@@ -89,9 +89,9 @@ gda_thread_class_init (Gda_ThreadClass *klass)
 
 static void
 #ifdef HAVE_GOBJECT
-gda_thread_init (Gda_Thread *thr, Gda_ThreadClass *klass)
+gda_thread_init (GdaThread *thr, GdaThreadClass *klass)
 #else
-gda_thread_init (Gda_Thread *thr)
+gda_thread_init (GdaThread *thr)
 #endif
 {
   g_return_if_fail(IS_GDA_THREAD(thr));
@@ -109,18 +109,18 @@ gda_thread_get_type (void)
     {
       GTypeInfo info =
       {
-        sizeof (Gda_ThreadClass),               /* class_size */
+        sizeof (GdaThreadClass),               /* class_size */
         NULL,                                   /* base_init */
         NULL,                                   /* base_finalize */
         (GClassInitFunc) gda_thread_class_init, /* class_init */
         NULL,                                   /* class_finalize */
         NULL,                                   /* class_data */
-        sizeof (Gda_Thread),                    /* instance_size */
+        sizeof (GdaThread),                    /* instance_size */
         0,                                      /* n_preallocs */
         (GInstanceInitFunc) gda_thread_init,    /* instance_init */
         NULL,                                   /* value_table */
       };
-      type = g_type_register_static (G_TYPE_OBJECT, "Gda_Thread", &info, 0);
+      type = g_type_register_static (G_TYPE_OBJECT, "GdaThread", &info, 0);
     }
   return type;
 }
@@ -134,9 +134,9 @@ gda_thread_get_type (void)
     {
       GtkTypeInfo info =
       {
-        "Gda_Thread",
-        sizeof (Gda_Thread),
-        sizeof (Gda_ThreadClass),
+        "GdaThread",
+        sizeof (GdaThread),
+        sizeof (GdaThreadClass),
         (GtkClassInitFunc) gda_thread_class_init,
         (GtkObjectInitFunc) gda_thread_init,
         (GtkArgSetFunc) NULL,
@@ -152,14 +152,14 @@ gda_thread_get_type (void)
  * gda_thread_new
  * @func: function to be called
  *
- * Create a new #Gda_Thread object. This function just creates the internal
+ * Create a new #GdaThread object. This function just creates the internal
  * structures and initializes all the data, but does not start the thread.
  * To do so, you must use #gda_thread_start.
  */
-Gda_Thread *
-gda_thread_new (Gda_ThreadFunc func)
+GdaThread *
+gda_thread_new (GdaThreadFunc func)
 {
-  Gda_Thread* thr;
+  GdaThread* thr;
 
   /* initialize GLib threads */
   if (!g_thread_supported()) g_thread_init(NULL);
@@ -177,7 +177,7 @@ gda_thread_new (Gda_ThreadFunc func)
  * gda_thread_free
  */
 void
-gda_thread_free (Gda_Thread *thr)
+gda_thread_free (GdaThread *thr)
 {
   g_return_if_fail(IS_GDA_THREAD(thr));
 
@@ -192,11 +192,11 @@ gda_thread_free (Gda_Thread *thr)
 
 /**
  * gda_thread_start
- * @thr: a #Gda_Thread object
+ * @thr: a #GdaThread object
  * @user_data: data to pass to signals
  */
 void
-gda_thread_start (Gda_Thread *thr, gpointer user_data)
+gda_thread_start (GdaThread *thr, gpointer user_data)
 {
   g_return_if_fail(IS_GDA_THREAD(thr));
   
@@ -215,7 +215,7 @@ gda_thread_start (Gda_Thread *thr, gpointer user_data)
  * gda_thread_stop
  */
 void
-gda_thread_stop (Gda_Thread *thr)
+gda_thread_stop (GdaThread *thr)
 {
   g_return_if_fail(IS_GDA_THREAD(thr));
   g_return_if_fail(gda_thread_is_running(thr));
@@ -226,12 +226,12 @@ gda_thread_stop (Gda_Thread *thr)
 
 /**
  * gda_thread_is_running
- * @thr: a #Gda_Thread object
+ * @thr: a #GdaThread object
  *
  * Checks whether the given thread object is running or not
  */
 gboolean
-gda_thread_is_running (Gda_Thread *thr)
+gda_thread_is_running (GdaThread *thr)
 {
   g_return_val_if_fail(IS_GDA_THREAD(thr), FALSE);
   return thr->is_running;

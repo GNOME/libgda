@@ -26,13 +26,13 @@
  * Public functions
  */
 gboolean
-gda_<provider-name>_command_new (Gda_ServerCommand *cmd) {
+gda_<provider-name>_command_new (GdaServerCommand *cmd) {
 	return TRUE;
 }
 
-Gda_ServerRecordset *
-gda_<provider-name>_command_execute (Gda_ServerCommand *cmd,
-                                     Gda_ServerError *error,
+GdaServerRecordset *
+gda_<provider-name>_command_execute (GdaServerCommand *cmd,
+                                     GdaServerError *error,
                                      const GDA_CmdParameterSeq *params,
                                      gulong *affected,
                                      gulong options) {

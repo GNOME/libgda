@@ -60,56 +60,56 @@ typedef struct
 /*
  * Server implementation prototypes
  */
-gboolean gda_mail_connection_new (Gda_ServerConnection * cnc);
-gint gda_mail_connection_open (Gda_ServerConnection * cnc,
+gboolean gda_mail_connection_new (GdaServerConnection * cnc);
+gint gda_mail_connection_open (GdaServerConnection * cnc,
 							   const gchar * dsn,
 							   const gchar * user,
 							   const gchar * password);
-void gda_mail_connection_close (Gda_ServerConnection * cnc);
-gint gda_mail_connection_begin_transaction (Gda_ServerConnection * cnc);
-gint gda_mail_connection_commit_transaction (Gda_ServerConnection * cnc);
-gint gda_mail_connection_rollback_transaction (Gda_ServerConnection * cnc);
-Gda_ServerRecordset* gda_mail_connection_open_schema (Gda_ServerConnection * cnc,
-													  Gda_ServerError * error,
+void gda_mail_connection_close (GdaServerConnection * cnc);
+gint gda_mail_connection_begin_transaction (GdaServerConnection * cnc);
+gint gda_mail_connection_commit_transaction (GdaServerConnection * cnc);
+gint gda_mail_connection_rollback_transaction (GdaServerConnection * cnc);
+GdaServerRecordset* gda_mail_connection_open_schema (GdaServerConnection * cnc,
+													  GdaServerError * error,
 													  GDA_Connection_QType t,
 													  GDA_Connection_Constraint * constraints,
 													  gint length);
-glong gda_mail_connection_modify_schema (Gda_ServerConnection *cnc,
+glong gda_mail_connection_modify_schema (GdaServerConnection *cnc,
                                          GDA_Connection_QType t,
                                          GDA_Connection_Constraint *constraints,
                                          gint length);
-gint gda_mail_connection_start_logging (Gda_ServerConnection * cnc,
+gint gda_mail_connection_start_logging (GdaServerConnection * cnc,
 										const gchar * filename);
-gint gda_mail_connection_stop_logging (Gda_ServerConnection * cnc);
-gchar* gda_mail_connection_create_table (Gda_ServerConnection * cnc,
+gint gda_mail_connection_stop_logging (GdaServerConnection * cnc);
+gchar* gda_mail_connection_create_table (GdaServerConnection * cnc,
 										 GDA_RowAttributes * columns);
-gboolean gda_mail_connection_supports (Gda_ServerConnection * cnc,
+gboolean gda_mail_connection_supports (GdaServerConnection * cnc,
 									   GDA_Connection_Feature feature);
-GDA_ValueType gda_mail_connection_get_gda_type (Gda_ServerConnection * cnc,
+GDA_ValueType gda_mail_connection_get_gda_type (GdaServerConnection * cnc,
 												gulong sql_type);
-gshort gda_mail_connection_get_c_type (Gda_ServerConnection * cnc,
+gshort gda_mail_connection_get_c_type (GdaServerConnection * cnc,
 									   GDA_ValueType type);
-gchar* gda_mail_connection_sql2xml (Gda_ServerConnection *cnc, const gchar *sql);
-gchar* gda_mail_connection_xml2sql (Gda_ServerConnection *cnc, const gchar *xml);
-void gda_mail_connection_free (Gda_ServerConnection * cnc);
+gchar* gda_mail_connection_sql2xml (GdaServerConnection *cnc, const gchar *sql);
+gchar* gda_mail_connection_xml2sql (GdaServerConnection *cnc, const gchar *xml);
+void gda_mail_connection_free (GdaServerConnection * cnc);
 
-gboolean gda_mail_command_new (Gda_ServerCommand * cmd);
-Gda_ServerRecordset* gda_mail_command_execute (Gda_ServerCommand * cmd,
-											   Gda_ServerError * error,
+gboolean gda_mail_command_new (GdaServerCommand * cmd);
+GdaServerRecordset* gda_mail_command_execute (GdaServerCommand * cmd,
+											   GdaServerError * error,
 											   const GDA_CmdParameterSeq * params,
 											   gulong * affected,
 											   gulong options);
-void gda_mail_command_free (Gda_ServerCommand * cmd);
+void gda_mail_command_free (GdaServerCommand * cmd);
 
-gboolean gda_mail_recordset_new       (Gda_ServerRecordset * recset);
-gint     gda_mail_recordset_move_next (Gda_ServerRecordset * recset);
-gint     gda_mail_recordset_move_prev (Gda_ServerRecordset * recset);
-gint     gda_mail_recordset_close     (Gda_ServerRecordset * recset);
-void     gda_mail_recordset_free      (Gda_ServerRecordset * recset);
+gboolean gda_mail_recordset_new       (GdaServerRecordset * recset);
+gint     gda_mail_recordset_move_next (GdaServerRecordset * recset);
+gint     gda_mail_recordset_move_prev (GdaServerRecordset * recset);
+gint     gda_mail_recordset_close     (GdaServerRecordset * recset);
+void     gda_mail_recordset_free      (GdaServerRecordset * recset);
 
-void gda_mail_error_make (Gda_ServerError * error,
-						  Gda_ServerRecordset * recset,
-						  Gda_ServerConnection * cnc,
+void gda_mail_error_make (GdaServerError * error,
+						  GdaServerRecordset * recset,
+						  GdaServerConnection * cnc,
 						  gchar * where);
 
 #endif

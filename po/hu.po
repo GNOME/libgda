@@ -538,8 +538,8 @@ msgid "Invalid or unsupported constraint type: %d"
 msgstr ""
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:702
-msgid "Could not allocate Gda_ServerCommand"
-msgstr "Nem tudtam allokálni a következõt: Gda_ServerCommand"
+msgid "Could not allocate GdaServerCommand"
+msgstr "Nem tudtam allokálni a következõt: GdaServerCommand"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:732
 #: providers/gda-sybase-server/gda-sybase-connection.c:737

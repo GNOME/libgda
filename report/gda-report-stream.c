@@ -31,27 +31,27 @@ gda_report_stream_signals[LAST_SIGNAL] = {0, };
 
 
 #ifdef HAVE_GOBJECT
-static void    gda_report_stream_class_init    (Gda_ReportStreamClass *klass,
+static void    gda_report_stream_class_init    (GdaReportStreamClass *klass,
 						gpointer data);
-static void    gda_report_stream_init          (Gda_ReportStream *object,
-						Gda_ReportStreamClass *klass);
+static void    gda_report_stream_init          (GdaReportStream *object,
+						GdaReportStreamClass *klass);
 #else
-static void    gda_report_stream_class_init    (Gda_ReportStreamClass* klass);
-static void    gda_report_stream_init          (Gda_ReportStream* object);
+static void    gda_report_stream_class_init    (GdaReportStreamClass* klass);
+static void    gda_report_stream_init          (GdaReportStream* object);
 #endif
 
-static void    gda_report_stream_real_error    (Gda_ReportStream* object, GList* errors);
-static void    gda_report_stream_real_warning  (Gda_ReportStream* object, GList* errors);
+static void    gda_report_stream_real_error    (GdaReportStream* object, GList* errors);
+static void    gda_report_stream_real_warning  (GdaReportStream* object, GList* errors);
 
 static void
-gda_report_stream_real_error (Gda_ReportStream* object, GList* errors)
+gda_report_stream_real_error (GdaReportStream* object, GList* errors)
 {
 	g_print("%s: %d: %s called\n", __FILE__, __LINE__, __PRETTY_FUNCTION__);
 	object->errors_head = g_list_concat(object->errors_head, errors);
 }
 
 static void
-gda_report_stream_real_warning (Gda_ReportStream* object, GList* warnings)
+gda_report_stream_real_warning (GdaReportStream* object, GList* warnings)
 {
 	g_print("%s: %d: %s called\n", __FILE__, __LINE__, __PRETTY_FUNCTION__);
 }
@@ -64,18 +64,18 @@ gda_report_stream_get_type (void)
 
 	if (!type) {
 		GTypeInfo info = {
-			sizeof (Gda_ReportStreamClass),			/* class_size */
+			sizeof (GdaReportStreamClass),			/* class_size */
 			NULL,						/* base_init */
 			NULL,						/* base_finalize */
 			(GClassInitFunc) gda_report_stream_class_init,	/* class_init */
 			NULL,						/* class_finalize */
 			NULL,						/* class_data */
-			sizeof (Gda_ReportStream),			/* instance_size */
+			sizeof (GdaReportStream),			/* instance_size */
 			0,						/* n_preallocs */
 			(GInstanceInitFunc) gda_report_stream_init,	/* instance_init */
 			NULL,						/* value_table */
 		};
-		type = g_type_register_static (G_TYPE_OBJECT, "Gda_ReportStream", &info);
+		type = g_type_register_static (G_TYPE_OBJECT, "GdaReportStream", &info);
 	}
 	return type;
 }
@@ -87,9 +87,9 @@ gda_report_stream_get_type (void)
 
 	if (!gda_report_stream_type) {
 		GtkTypeInfo gda_report_stream_info = {
-			"Gda_ReportStream",
-			sizeof (Gda_ReportStream),
-			sizeof (Gda_ReportStreamClass),
+			"GdaReportStream",
+			sizeof (GdaReportStream),
+			sizeof (GdaReportStreamClass),
 			(GtkClassInitFunc) gda_report_stream_class_init,
 			(GtkObjectInitFunc) gda_report_stream_init,
 			(GtkArgSetFunc)NULL,
@@ -104,7 +104,7 @@ gda_report_stream_get_type (void)
 
 #ifdef HAVE_GOBJECT
 static void
-gda_report_stream_class_init (Gda_ReportStreamClass *klass, gpointer data)
+gda_report_stream_class_init (GdaReportStreamClass *klass, gpointer data)
 {
 	/* FIXME: No GObject signals yet */
 	klass->error = gda_report_stream_real_error;
@@ -112,7 +112,7 @@ gda_report_stream_class_init (Gda_ReportStreamClass *klass, gpointer data)
 }
 #else
 static void
-gda_report_stream_class_init (Gda_ReportStreamClass* klass)
+gda_report_stream_class_init (GdaReportStreamClass* klass)
 {
 	GtkObjectClass*   object_class = GTK_OBJECT_CLASS(klass);
   
@@ -120,14 +120,14 @@ gda_report_stream_class_init (Gda_ReportStreamClass* klass)
 				gtk_signal_new("error",
 						GTK_RUN_FIRST,
 						object_class->type,
-						GTK_SIGNAL_OFFSET(Gda_ReportStreamClass, error),
+						GTK_SIGNAL_OFFSET(GdaReportStreamClass, error),
 						gtk_marshal_NONE__POINTER,
 						GTK_TYPE_NONE, 1, GTK_TYPE_POINTER);
 	gda_report_stream_signals[REPORT_STREAM_WARNING] = \
 				gtk_signal_new("warning",
 						GTK_RUN_LAST,
 						object_class->type,
-						GTK_SIGNAL_OFFSET(Gda_ReportStreamClass, warning),
+						GTK_SIGNAL_OFFSET(GdaReportStreamClass, warning),
 						gtk_marshal_NONE__POINTER,
 						GTK_TYPE_NONE, 1, GTK_TYPE_POINTER);
 	gtk_object_class_add_signals(object_class, gda_report_stream_signals, LAST_SIGNAL);
@@ -138,9 +138,9 @@ gda_report_stream_class_init (Gda_ReportStreamClass* klass)
 
 static void
 #ifdef HAVE_GOBJECT
-gda_report_stream_init (Gda_ReportStream* object, Gda_ReportStreamClass *klass)
+gda_report_stream_init (GdaReportStream* object, GdaReportStreamClass *klass)
 #else
-gda_report_stream_init (Gda_ReportStream *object)
+gda_report_stream_init (GdaReportStream *object)
 #endif
 {
 	g_return_if_fail(GDA_REPORT_STREAM_IS_OBJECT(object));
@@ -158,11 +158,11 @@ gda_report_stream_init (Gda_ReportStream *object)
  *
  * Returns: the pointer to the allocated object
  */
-Gda_ReportStream*
-gda_report_stream_new (Gda_ReportEngine* engine)
+GdaReportStream*
+gda_report_stream_new (GdaReportEngine* engine)
 {
 	CORBA_Environment ev;
-	Gda_ReportStream* object;
+	GdaReportStream* object;
 	
 	g_return_val_if_fail(IS_GDA_REPORT_ENGINE(engine), NULL);
 
@@ -190,7 +190,7 @@ gda_report_stream_new (Gda_ReportEngine* engine)
  *
  */
 void
-gda_report_stream_free (Gda_ReportStream* object)
+gda_report_stream_free (GdaReportStream* object)
 {
 	CORBA_Environment ev;
 	
@@ -225,7 +225,7 @@ gda_report_stream_free (Gda_ReportStream* object)
  *
  */
 gint32
-gda_report_stream_readChunk (Gda_ReportStream* object, guchar** data, gint32 start, gint32 size)
+gda_report_stream_readChunk (GdaReportStream* object, guchar** data, gint32 start, gint32 size)
 {
 	CORBA_Environment ev;
 	GDA_ReportStreamChunk *chunk;
@@ -267,7 +267,7 @@ gda_report_stream_readChunk (Gda_ReportStream* object, guchar** data, gint32 sta
  *
  */
 gint32
-gda_report_stream_writeChunk (Gda_ReportStream* object, guchar* data, gint32 size)
+gda_report_stream_writeChunk (GdaReportStream* object, guchar* data, gint32 size)
 {
 	CORBA_Environment ev;
 	GDA_ReportStreamChunk chunk;
@@ -299,7 +299,7 @@ gda_report_stream_writeChunk (Gda_ReportStream* object, guchar* data, gint32 siz
  *
  */
 gint32
-gda_report_stream_length (Gda_ReportStream* object)
+gda_report_stream_length (GdaReportStream* object)
 {
 	CORBA_Environment ev;
 	gint32            size;

@@ -24,11 +24,11 @@
 class gdaField {
 	public:
 		gdaField();
-		gdaField(Gda_Field *f);
+		gdaField(GdaField *f);
 		~gdaField();
 
-		Gda_Field *getCStruct();
-		void setCStruct(Gda_Field *f);
+		GdaField *getCStruct();
+		void setCStruct(GdaField *f);
 
 		gdaValue *realValue();
 		gdaValue *origValue();
@@ -68,7 +68,7 @@ class gdaField {
 		glong nativeType();
 
 	private:
-		Gda_Field *_gda_field;
+		GdaField *_gda_field;
 };
 
 #endif

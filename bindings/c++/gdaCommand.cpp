@@ -27,11 +27,11 @@ gdaCommand::~gdaCommand() {
 	if (_gda_command) gda_command_free(_gda_command);
 }
 
-Gda_Command *gdaCommand::getCStruct() {
+GdaCommand *gdaCommand::getCStruct() {
 	return _gda_command;
 }
 
-void gdaCommand::setCStruct(Gda_Command *cmd) {
+void gdaCommand::setCStruct(GdaCommand *cmd) {
 	_gda_command = cmd;
 }
 		

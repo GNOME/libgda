@@ -58,7 +58,7 @@ typedef struct _tds_Connection {
   gboolean        cs_diag; // wether we can use cs_diag for cslib messages
   gboolean        ct_diag; // wether we can use ct_diag for ctlib messages
   
-  Gda_ServerError *error;
+  GdaServerError *error;
   tds_Error    serr;
   
   gchar           *database;
@@ -67,41 +67,41 @@ typedef struct _tds_Connection {
 /*
  * Server implementation prototypes
  */
-gboolean gda_tds_connection_new (Gda_ServerConnection *cnc);
-gint gda_tds_connection_open (Gda_ServerConnection *cnc, const gchar *dsn,
+gboolean gda_tds_connection_new (GdaServerConnection *cnc);
+gint gda_tds_connection_open (GdaServerConnection *cnc, const gchar *dsn,
                                  const gchar *user, const gchar *passwd);
-void gda_tds_connection_close (Gda_ServerConnection *cnc);
-gint gda_tds_connection_begin_transaction (Gda_ServerConnection *cnc);
-gint gda_tds_connection_commit_transaction (Gda_ServerConnection *cnc);
-gint gda_tds_connection_rollback_transaction (Gda_ServerConnection *cnc);
-Gda_ServerRecordset* gda_tds_connection_open_schema (Gda_ServerConnection *cnc,
-                                     Gda_ServerError *error,
+void gda_tds_connection_close (GdaServerConnection *cnc);
+gint gda_tds_connection_begin_transaction (GdaServerConnection *cnc);
+gint gda_tds_connection_commit_transaction (GdaServerConnection *cnc);
+gint gda_tds_connection_rollback_transaction (GdaServerConnection *cnc);
+GdaServerRecordset* gda_tds_connection_open_schema (GdaServerConnection *cnc,
+                                     GdaServerError *error,
                                      GDA_Connection_QType t,
                                      GDA_Connection_Constraint *constraints,
                                      gint length);
-glong gda_tds_connection_modify_schema (Gda_ServerConnection *cnc,
+glong gda_tds_connection_modify_schema (GdaServerConnection *cnc,
                                    GDA_Connection_QType t,
                                    GDA_Connection_Constraint *constraints,
                                    gint length);
-gint gda_tds_connection_start_logging (Gda_ServerConnection *cnc,
+gint gda_tds_connection_start_logging (GdaServerConnection *cnc,
                                        const gchar *filename);
-gint gda_tds_connection_stop_logging (Gda_ServerConnection *cnc);
-gchar* gda_tds_connection_create_table (Gda_ServerConnection *cnc,
+gint gda_tds_connection_stop_logging (GdaServerConnection *cnc);
+gchar* gda_tds_connection_create_table (GdaServerConnection *cnc,
                                         GDA_RowAttributes *columns);
-gboolean gda_tds_connection_supports(Gda_ServerConnection *,
+gboolean gda_tds_connection_supports(GdaServerConnection *,
                                      GDA_Connection_Feature feature);
-const GDA_ValueType gda_tds_connection_get_gda_type(Gda_ServerConnection *,
+const GDA_ValueType gda_tds_connection_get_gda_type(GdaServerConnection *,
                                                     gulong);
-const gshort gda_tds_connection_get_c_type(Gda_ServerConnection *,
+const gshort gda_tds_connection_get_c_type(GdaServerConnection *,
                                            GDA_ValueType type);
-gchar* gda_tds_connection_sql2xml (Gda_ServerConnection *cnc, const gchar *sql);
-gchar* gda_tds_connection_xml2sql (Gda_ServerConnection *cnc, const gchar *xml);
-void gda_tds_connection_free (Gda_ServerConnection *cnc);
-void gda_tds_connection_clear_user_data(Gda_ServerConnection *, gboolean);
+gchar* gda_tds_connection_sql2xml (GdaServerConnection *cnc, const gchar *sql);
+gchar* gda_tds_connection_xml2sql (GdaServerConnection *cnc, const gchar *xml);
+void gda_tds_connection_free (GdaServerConnection *cnc);
+void gda_tds_connection_clear_user_data(GdaServerConnection *, gboolean);
 
-gboolean gda_tds_connection_dead(Gda_ServerConnection *);
-gboolean gda_tds_connection_reopen(Gda_ServerConnection *);
-CS_RETCODE gda_tds_connection_select_database(Gda_ServerConnection *,
+gboolean gda_tds_connection_dead(GdaServerConnection *);
+gboolean gda_tds_connection_reopen(GdaServerConnection *);
+CS_RETCODE gda_tds_connection_select_database(GdaServerConnection *,
                                               const gchar * dbname);
 
 #endif

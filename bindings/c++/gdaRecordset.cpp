@@ -20,16 +20,16 @@
 #include "gdaRecordset.h"
 
 gdaRecordset::gdaRecordset() {
-	_gda_recordset = (Gda_Recordset *) gda_recordset_new();
+	_gda_recordset = (GdaRecordset *) gda_recordset_new();
 	cnc = NULL;
 }
 
-gdaRecordset::gdaRecordset(Gda_Recordset *rst, gdaConnection *cnca) {
+gdaRecordset::gdaRecordset(GdaRecordset *rst, gdaConnection *cnca) {
 	_gda_recordset = rst;
 	cnc = cnca;
 }
 
-gdaRecordset::gdaRecordset(Gda_Recordset *rst, Gda_Connection *cnca) {
+gdaRecordset::gdaRecordset(GdaRecordset *rst, GdaConnection *cnca) {
 	_gda_recordset = rst;
 	cnc = new gdaConnection();
 	cnc->setCStruct(cnca);
@@ -39,11 +39,11 @@ gdaRecordset::~gdaRecordset() {
 	if (_gda_recordset) gda_recordset_free(_gda_recordset);
 }
 
-Gda_Recordset* gdaRecordset::getCStruct() {
+GdaRecordset* gdaRecordset::getCStruct() {
 	return _gda_recordset;
 }
 
-void gdaRecordset::setCStruct(Gda_Recordset *rst) {
+void gdaRecordset::setCStruct(GdaRecordset *rst) {
 	_gda_recordset = rst;
 }
 
@@ -134,7 +134,7 @@ gdaConnection* gdaRecordset::getConnection() {
 	return cnc;
 }
 
-gint gdaRecordset::addField(Gda_Field* field) {
+gint gdaRecordset::addField(GdaField* field) {
 	return gda_recordset_add_field(_gda_recordset,field);
 }
 

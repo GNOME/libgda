@@ -22,6 +22,12 @@
  */
 
 // $Log$
+// Revision 1.2  2001/04/07 08:49:34  rodrigo
+// 2001-04-07  Rodrigo Moya <rodrigo@gnome-db.org>
+//
+// 	* objects renaming (Gda_* to Gda*) to conform to the GNOME
+// 	naming standards
+//
 // Revision 1.1  2000/11/04 23:42:17  holger
 // 2000-11-05  Holger Thon <gnome-dms@users.sourceforge.net>
 //
@@ -126,7 +132,7 @@ tds_get_type_name(const CS_INT sql_type)
 }
 
 void
-gda_tds_field_set_datetime(Gda_ServerField *field, CS_DATETIME *dt)
+gda_tds_field_set_datetime(GdaServerField *field, CS_DATETIME *dt)
 {
   GDate  *date;
   GTime  time;
@@ -140,7 +146,7 @@ gda_tds_field_set_datetime(Gda_ServerField *field, CS_DATETIME *dt)
 }
 
 void
-gda_tds_field_set_datetime4(Gda_ServerField *field, CS_DATETIME4 *dt)
+gda_tds_field_set_datetime4(GdaServerField *field, CS_DATETIME4 *dt)
 {
   GDate *date;
   GTime time;
@@ -156,7 +162,7 @@ gda_tds_field_set_datetime4(Gda_ServerField *field, CS_DATETIME4 *dt)
 #define TDS_CONVBUF_SIZE 1024
 
 void
-gda_tds_field_set_general(Gda_ServerField       *field,
+gda_tds_field_set_general(GdaServerField       *field,
                              tds_Field          *sfield,
                              tds_Connection     *scnc)
 {

@@ -37,27 +37,27 @@
 extern "C" {
 #endif
 
-typedef struct _Gda_XmlFile      Gda_XmlFile;
-typedef struct _Gda_XmlFileClass Gda_XmlFileClass;
+typedef struct _GdaXmlFile      GdaXmlFile;
+typedef struct _GdaXmlFileClass GdaXmlFileClass;
 
 #define GDA_TYPE_XML_FILE            (gda_xml_file_get_type())
 #ifdef HAVE_GOBJECT
 #  define GDA_XML_FILE(obj) \
-          G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_XML_FILE, Gda_XmlFile)
+          G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_XML_FILE, GdaXmlFile)
 #  define GDA_XML_FILE_CLASS(klass) \
-          G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_XML_FILE, Gda_XmlFileClass)
+          G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_XML_FILE, GdaXmlFileClass)
 #  define GDA_IS_XML_FILE(obj) \
           G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_XML_FILE)
 #  define GDA_IS_XML_FILE_CLASS(klass) \
           GTK_CHECK_CLASS_TYPE ((klass), GDA_TYPE_XML_FILE)
 #else
-#  define GDA_XML_FILE(obj)            GTK_CHECK_CAST(obj, GDA_TYPE_XML_FILE, Gda_XmlFile)
-#  define GDA_XML_FILE_CLASS(klass)    GTK_CHECK_CLASS_CAST(klass, GDA_TYPE_XML_FILE, Gda_XmlFileClass)
+#  define GDA_XML_FILE(obj)            GTK_CHECK_CAST(obj, GDA_TYPE_XML_FILE, GdaXmlFile)
+#  define GDA_XML_FILE_CLASS(klass)    GTK_CHECK_CLASS_CAST(klass, GDA_TYPE_XML_FILE, GdaXmlFileClass)
 #  define GDA_IS_XML_FILE(obj)         GTK_CHECK_TYPE(obj, GDA_TYPE_XML_FILE)
 #  define GDA_IS_XML_FILE_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_XML_FILE))
 #endif
 
-struct _Gda_XmlFile
+struct _GdaXmlFile
 {
 #ifdef HAVE_GOBJECT
   GObject         object;
@@ -70,7 +70,7 @@ struct _Gda_XmlFile
   xmlValidCtxtPtr context;
 };
 
-struct _Gda_XmlFileClass
+struct _GdaXmlFileClass
 {
 #ifdef HAVE_GOBJECT
   GObjectClass  parent_class;
@@ -79,8 +79,8 @@ struct _Gda_XmlFileClass
   GtkObjectClass parent_class;
 #endif
 
-  void (* warning) (Gda_XmlFile *q, const char *msg);
-  void (* error)   (Gda_XmlFile *q, const char *msg);
+  void (* warning) (GdaXmlFile *q, const char *msg);
+  void (* error)   (GdaXmlFile *q, const char *msg);
 };
 
 #ifdef HAVE_GOBJECT
@@ -89,18 +89,18 @@ GType        gda_xml_file_get_type      (void);
 GtkType      gda_xml_file_get_type      (void);
 #endif
 
-Gda_XmlFile* gda_xml_file_new           (const gchar *root_doc);
-/*Gda_XmlFile* gda_xml_file_new_from_file (const gchar *filename);*/
+GdaXmlFile* gda_xml_file_new           (const gchar *root_doc);
+/*GdaXmlFile* gda_xml_file_new_from_file (const gchar *filename);*/
 
 /* output the structure */
-gint           gda_xml_file_to_file          (Gda_XmlFile *f, 
+gint           gda_xml_file_to_file          (GdaXmlFile *f, 
 					      const gchar *filename);
-gchar*         gda_xml_file_stringify        (Gda_XmlFile *f);
+gchar*         gda_xml_file_stringify        (GdaXmlFile *f);
 
 /* 
  * Used by objects inheriting this one. Do not call directely
  */
-void         gda_xml_file_construct(Gda_XmlFile *xmlfile, 
+void         gda_xml_file_construct(GdaXmlFile *xmlfile, 
 				    const gchar *root_doc);
 
 #if defined(__cplusplus)

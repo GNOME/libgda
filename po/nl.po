@@ -620,8 +620,8 @@ msgstr "Niet ondersteund of ongeldig beperkt type: %d"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:702
 #: providers/gda-tds-server/gda-tds-connection.c:693
-msgid "Could not allocate Gda_ServerCommand"
-msgstr "Kon Gda_ServerCommand niet toewijzen"
+msgid "Could not allocate GdaServerCommand"
+msgstr "Kon GdaServerCommand niet toewijzen"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:732
 #: providers/gda-sybase-server/gda-sybase-connection.c:737

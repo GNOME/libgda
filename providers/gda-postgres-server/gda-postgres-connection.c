@@ -21,11 +21,11 @@
 #include "gda-postgres.h"
 #include <ctype.h>
 
-typedef Gda_ServerRecordset* (*schema_ops_fn)(Gda_ServerError *,
-					      Gda_ServerConnection *,
+typedef GdaServerRecordset* (*schema_ops_fn)(GdaServerError *,
+					      GdaServerConnection *,
 					      GDA_Connection_Constraint *,
 					      gint );
-typedef struct _Gda_connection_data 
+typedef struct _Gdaconnection_data 
 {
   gchar *dsn;
   gchar *user;
@@ -34,20 +34,20 @@ typedef struct _Gda_connection_data
 		    which will have to be destroyed when the struct is 
 		    destroyed*/
   POSTGRES_Types_Array *types_array;
-} Gda_connection_data;
+} Gdaconnection_data;
 
 
 static void                 initialize_schema_ops (void);
-static gint                 execute_command (Gda_ServerConnection *cnc, gchar *cmd);
+static gint                 execute_command (GdaServerConnection *cnc, gchar *cmd);
 static gboolean             gda_postgres_connection_is_type_known (POSTGRES_Connection *cnc,
 								   gulong sql_type);
 static gchar*               gda_postgres_connection_get_type_name(POSTGRES_Connection *cnc, 
 								  gulong oid);
-static void                 add_replacement_function(Gda_ServerRecordset *recset,
+static void                 add_replacement_function(GdaServerRecordset *recset,
 						     POSTGRES_Recordset_Replacement *repl,
 						     gchar *sql_type);
 static gfloat               get_postmaster_version(PGconn *conn);
-static Gda_connection_data *find_connection_data(POSTGRES_Connection *cnc);
+static Gdaconnection_data *find_connection_data(POSTGRES_Connection *cnc);
 
 
 schema_ops_fn schema_ops[GDA_Connection_GDCN_SCHEMA_LAST] =
@@ -108,7 +108,7 @@ GSList *global_connection_data_list = NULL;
  * Public functions
  */
 gboolean
-gda_postgres_connection_new (Gda_ServerConnection *cnc)
+gda_postgres_connection_new (GdaServerConnection *cnc)
 {
   static gboolean initialized = FALSE;
   POSTGRES_Connection *c;
@@ -220,7 +220,7 @@ static gfloat get_postmaster_version(PGconn *conn)
 
 /* open new connection to database server */
 gint
-gda_postgres_connection_open (Gda_ServerConnection *cnc, 
+gda_postgres_connection_open (GdaServerConnection *cnc, 
 			      const gchar *dsn,
 			      const gchar *user, 
 			      const gchar *password)
@@ -231,7 +231,7 @@ gda_postgres_connection_open (Gda_ServerConnection *cnc,
   gint i, j, cmp, length;
   gboolean found;
   GSList *list;
-  Gda_connection_data *data=NULL;
+  Gdaconnection_data *data=NULL;
 
   g_return_val_if_fail(cnc != NULL, -1);
 
@@ -290,7 +290,7 @@ gda_postgres_connection_open (Gda_ServerConnection *cnc,
       list = global_connection_data_list;
       while (list && !found)
 	{
-	  data = (Gda_connection_data *)(list->data);
+	  data = (Gdaconnection_data *)(list->data);
 	  if (!strcmp(data->dsn, dsn) && !strcmp(data->user, user))
 	    found = TRUE;
 	  else
@@ -375,7 +375,7 @@ gda_postgres_connection_open (Gda_ServerConnection *cnc,
 	  PQclear(res);
 
 	  /* create a new struct for other similar connections */
-	  data = (Gda_connection_data *) g_malloc(sizeof(Gda_connection_data));
+	  data = (Gdaconnection_data *) g_malloc(sizeof(Gdaconnection_data));
 	  data->n_types = added_types_index;
 	  data->dsn = g_strdup(dsn);
 	  data->user = g_strdup(user);
@@ -404,12 +404,12 @@ gda_postgres_connection_open (Gda_ServerConnection *cnc,
 
 
 void
-gda_postgres_connection_close (Gda_ServerConnection *cnc)
+gda_postgres_connection_close (GdaServerConnection *cnc)
 {
   POSTGRES_Connection *c;
   gboolean found;
   GSList *list;
-  Gda_connection_data *data=NULL;
+  Gdaconnection_data *data=NULL;
 
   g_return_if_fail(cnc != NULL);
 
@@ -422,7 +422,7 @@ gda_postgres_connection_close (Gda_ServerConnection *cnc)
 	  found = FALSE;
 	  while (list && !found)
 	    {
-	      data = (Gda_connection_data*)(list->data);
+	      data = (Gdaconnection_data*)(list->data);
 	      if (c->types_array == data->types_array)
 		found = TRUE;
 	      else
@@ -472,30 +472,30 @@ gda_postgres_connection_close (Gda_ServerConnection *cnc)
 
 /* BEGIN TRANS */
 gint
-gda_postgres_connection_begin_transaction (Gda_ServerConnection *cnc)
+gda_postgres_connection_begin_transaction (GdaServerConnection *cnc)
 {
   return (execute_command(cnc, "BEGIN"));
 }
 
 /* COMMIT */
 gint
-gda_postgres_connection_commit_transaction (Gda_ServerConnection *cnc)
+gda_postgres_connection_commit_transaction (GdaServerConnection *cnc)
 {
   return (execute_command(cnc, "COMMIT"));
 }
 
 /* ROLLBACK */
 gint
-gda_postgres_connection_rollback_transaction (Gda_ServerConnection *cnc)
+gda_postgres_connection_rollback_transaction (GdaServerConnection *cnc)
 {
   return (execute_command(cnc, "ROLLBACK"));
 }
 
 
 /* schemas */
-Gda_ServerRecordset *
-gda_postgres_connection_open_schema (Gda_ServerConnection *cnc,
-                                     Gda_ServerError *error,
+GdaServerRecordset *
+gda_postgres_connection_open_schema (GdaServerConnection *cnc,
+                                     GdaServerError *error,
                                      GDA_Connection_QType t,
                                      GDA_Connection_Constraint *constraints,
                                      gint length)
@@ -513,7 +513,7 @@ gda_postgres_connection_open_schema (Gda_ServerConnection *cnc,
 }
 
 glong
-gda_postgres_connection_modify_schema (Gda_ServerConnection *cnc,
+gda_postgres_connection_modify_schema (GdaServerConnection *cnc,
                                    GDA_Connection_QType t,
                                    GDA_Connection_Constraint *constraints,
                                    gint length)
@@ -523,7 +523,7 @@ gda_postgres_connection_modify_schema (Gda_ServerConnection *cnc,
 
 /* logging */
 gint
-gda_postgres_connection_start_logging (Gda_ServerConnection *cnc, 
+gda_postgres_connection_start_logging (GdaServerConnection *cnc, 
 				       const gchar *filename)
 {
   FILE *f;
@@ -559,7 +559,7 @@ gda_postgres_connection_start_logging (Gda_ServerConnection *cnc,
 }
 
 gint
-gda_postgres_connection_stop_logging (Gda_ServerConnection *cnc)
+gda_postgres_connection_stop_logging (GdaServerConnection *cnc)
 {
   POSTGRES_Connection *pc;
 
@@ -576,7 +576,7 @@ gda_postgres_connection_stop_logging (Gda_ServerConnection *cnc)
 }
 
 gchar *
-gda_postgres_connection_create_table (Gda_ServerConnection *cnc,
+gda_postgres_connection_create_table (GdaServerConnection *cnc,
 				      GDA_RowAttributes *columns)
 {
   return NULL;
@@ -584,7 +584,7 @@ gda_postgres_connection_create_table (Gda_ServerConnection *cnc,
 
 
 gboolean
-gda_postgres_connection_supports (Gda_ServerConnection* cnc,
+gda_postgres_connection_supports (GdaServerConnection* cnc,
 				  GDA_Connection_Feature feature)
 {
   gboolean retval;
@@ -616,7 +616,7 @@ gda_postgres_connection_get_gda_type_psql (POSTGRES_Connection *cnc,
   GDA_ValueType gda_type = GDA_TypeVarchar; /* default value */
   gboolean found;
   gint i, max=0;
-  Gda_connection_data *data;
+  Gdaconnection_data *data;
 
   g_return_val_if_fail((cnc != NULL), GDA_TypeNull);
   g_return_val_if_fail((cnc->types_array != NULL), GDA_TypeNull);
@@ -640,7 +640,7 @@ gda_postgres_connection_get_gda_type_psql (POSTGRES_Connection *cnc,
 }
 
 GDA_ValueType           
-gda_postgres_connection_get_gda_type (Gda_ServerConnection *cnc, 
+gda_postgres_connection_get_gda_type (GdaServerConnection *cnc, 
 				      gulong sql_type)
 {
   POSTGRES_Connection *pc;
@@ -658,7 +658,7 @@ gda_postgres_connection_get_c_type_from_sql (POSTGRES_Connection *cnc,
   POSTGRES_CType c_type = SQL_C_CHAR; /* default value */
   gboolean found;
   gint i, max=0;
-  Gda_connection_data *data;
+  Gdaconnection_data *data;
 
   g_return_val_if_fail((cnc != NULL), SQL_C_CHAR);
   g_return_val_if_fail((cnc->types_array != NULL), SQL_C_CHAR);
@@ -688,7 +688,7 @@ gda_postgres_connection_get_c_type_psql (POSTGRES_Connection *cnc,
   POSTGRES_CType c_type = SQL_C_CHAR; /* default value */
   gboolean found;
   gint i, max=0;
-  Gda_connection_data *data;
+  Gdaconnection_data *data;
 
   g_return_val_if_fail((cnc != NULL), SQL_C_CHAR);
   g_return_val_if_fail((cnc->types_array != NULL), SQL_C_CHAR);
@@ -713,7 +713,7 @@ gda_postgres_connection_get_c_type_psql (POSTGRES_Connection *cnc,
 }
 
 gshort
-gda_postgres_connection_get_c_type (Gda_ServerConnection *cnc, 
+gda_postgres_connection_get_c_type (GdaServerConnection *cnc, 
 				    GDA_ValueType gda_type)
 {
   POSTGRES_Connection *pc;
@@ -724,19 +724,19 @@ gda_postgres_connection_get_c_type (Gda_ServerConnection *cnc,
 }
 
 gchar *
-gda_postgres_connection_sql2xml (Gda_ServerConnection *cnc, const gchar *sql)
+gda_postgres_connection_sql2xml (GdaServerConnection *cnc, const gchar *sql)
 {
   return NULL;
 }
 
 gchar *
-gda_postgres_connection_xml2sql (Gda_ServerConnection *cnc, const gchar *xml)
+gda_postgres_connection_xml2sql (GdaServerConnection *cnc, const gchar *xml)
 {
   return NULL;
 }
 
 void
-gda_postgres_connection_free (Gda_ServerConnection *cnc)
+gda_postgres_connection_free (GdaServerConnection *cnc)
 {
   POSTGRES_Connection *pc;
   g_return_if_fail(cnc != 0);
@@ -761,9 +761,9 @@ gda_postgres_connection_free (Gda_ServerConnection *cnc)
 
 
 void
-gda_postgres_error_make (Gda_ServerError *error,
-			 Gda_ServerRecordset *recset, /* can be NULL! */
-			 Gda_ServerConnection *cnc,
+gda_postgres_error_make (GdaServerError *error,
+			 GdaServerRecordset *recset, /* can be NULL! */
+			 GdaServerConnection *cnc,
 			 gchar *where)
 {
   POSTGRES_Connection* pc;
@@ -804,15 +804,15 @@ gda_postgres_error_make (Gda_ServerError *error,
 /*
  * Schema functions
  */
-static Gda_ServerRecordset *
-schema_tables (Gda_ServerError *error,
-               Gda_ServerConnection *cnc,
+static GdaServerRecordset *
+schema_tables (GdaServerError *error,
+               GdaServerConnection *cnc,
                GDA_Connection_Constraint *constraint,
                gint length)
 {
 
-  Gda_ServerRecordset*       recset = 0;
-  Gda_ServerCommand*         cmd;
+  GdaServerRecordset*       recset = 0;
+  GdaServerCommand*         cmd;
 
   GString*                   query;
   GDA_Connection_Constraint* ptr;
@@ -902,14 +902,14 @@ schema_tables (Gda_ServerError *error,
 
 
 
-static Gda_ServerRecordset *
-schema_columns (Gda_ServerError *error,
-                Gda_ServerConnection *cnc, 
+static GdaServerRecordset *
+schema_columns (GdaServerError *error,
+                GdaServerConnection *cnc, 
 		GDA_Connection_Constraint *constraint,
                 gint length)
 {
-  Gda_ServerCommand *cmd;
-  Gda_ServerRecordset *recset = 0;
+  GdaServerCommand *cmd;
+  GdaServerRecordset *recset = 0;
   GDA_Connection_Constraint *ptr;
   gulong affected;
   gchar *table_qualifier = 0, *table_owner = 0, *table_name = 0, 
@@ -1013,15 +1013,15 @@ schema_columns (Gda_ServerError *error,
 }
 
 
-static Gda_ServerRecordset *
-schema_tab_parents (Gda_ServerError *error,
-		    Gda_ServerConnection *cnc,
+static GdaServerRecordset *
+schema_tab_parents (GdaServerError *error,
+		    GdaServerConnection *cnc,
 		    GDA_Connection_Constraint *constraint,
 		    gint length)
 {
   GString*                   query;
-  Gda_ServerCommand*         cmd;
-  Gda_ServerRecordset*       recset = 0;
+  GdaServerCommand*         cmd;
+  GdaServerRecordset*       recset = 0;
   POSTGRES_Connection*       pc;
   GDA_Connection_Constraint* ptr;
   gint                       cnt, oid;
@@ -1093,9 +1093,9 @@ schema_tab_parents (Gda_ServerError *error,
 }
 
 
-static Gda_ServerRecordset *
-schema_procedures (Gda_ServerError *error,
-                   Gda_ServerConnection *cnc,
+static GdaServerRecordset *
+schema_procedures (GdaServerError *error,
+                   GdaServerConnection *cnc,
                    GDA_Connection_Constraint *constraint,
                    gint length)
 {
@@ -1103,14 +1103,14 @@ schema_procedures (Gda_ServerError *error,
   gint                       cnt, i, cntnt, cntntsym;
   GDA_Connection_Constraint* ptr;
   POSTGRES_Connection        *pc;
-  Gda_ServerRecordset*       recset = 0;
+  GdaServerRecordset*       recset = 0;
   gchar*                     proc_name = 0;
   gchar*                     proc_owner = 0;
   GString*                   query=NULL;
   GString*                   and_value=NULL;
   gboolean                   where;
   gulong                     affected;
-  Gda_Builtin_Result*        bres;
+  GdaBuiltin_Result*        bres;
   PGresult                   *res, *notypes, *notypes_sym;
   gchar                      **row;
   gint                       nbcols; /* nb of cols in the bres */
@@ -1243,24 +1243,24 @@ schema_procedures (Gda_ServerError *error,
   g_string_append(query, "ORDER BY proname, prorettype");
 
   /* build the builtin result and tell the columns types */
-  bres = Gda_Builtin_Result_new(nbcols, "result", 0, -1);
-  Gda_Builtin_Result_set_att(bres, 0, "Name", 
+  bres = GdaBuiltin_Result_new(nbcols, "result", 0, -1);
+  GdaBuiltin_Result_set_att(bres, 0, "Name", 
 	        gda_postgres_connection_get_sql_type(pc, "varchar"), -1);
-  Gda_Builtin_Result_set_att(bres, 1, "Object Id", 
+  GdaBuiltin_Result_set_att(bres, 1, "Object Id", 
 		gda_postgres_connection_get_sql_type(pc, "varchar"), -1);
   if (extra_info)
     {
-      Gda_Builtin_Result_set_att(bres, 2, "Owner", 
+      GdaBuiltin_Result_set_att(bres, 2, "Owner", 
 		gda_postgres_connection_get_sql_type(pc, "varchar"), -1);
-      Gda_Builtin_Result_set_att(bres, 3, "Comments", 
+      GdaBuiltin_Result_set_att(bres, 3, "Comments", 
 		gda_postgres_connection_get_sql_type(pc, "varchar"), -1);
-      Gda_Builtin_Result_set_att(bres, 4, "Number of Args.", 
+      GdaBuiltin_Result_set_att(bres, 4, "Number of Args.", 
 		gda_postgres_connection_get_sql_type(pc, "int2"), 4);
-      Gda_Builtin_Result_set_att(bres, 5, "Sql Def.", 
+      GdaBuiltin_Result_set_att(bres, 5, "Sql Def.", 
 		gda_postgres_connection_get_sql_type(pc, "varchar"), -1);
     }
   else
-    Gda_Builtin_Result_set_att(bres, 2, "Comments", 
+    GdaBuiltin_Result_set_att(bres, 2, "Comments", 
 		gda_postgres_connection_get_sql_type(pc, "varchar"), -1);
 
   /* run the query, get a PGresult, and for each tuple:
@@ -1386,7 +1386,7 @@ schema_procedures (Gda_ServerError *error,
 	{
 	  for (j=0; j<nbcols; j++)
 	    row[j] = PQgetvalue(res, i, j);
-	  Gda_Builtin_Result_add_row(bres, row);      
+	  GdaBuiltin_Result_add_row(bres, row);      
 	}
     }
   PQclear(res);
@@ -1415,19 +1415,19 @@ schema_procedures (Gda_ServerError *error,
   return (recset);
 }
 
-static Gda_ServerRecordset *
-schema_proc_params (Gda_ServerError *error,
-		    Gda_ServerConnection *cnc,
+static GdaServerRecordset *
+schema_proc_params (GdaServerError *error,
+		    GdaServerConnection *cnc,
 		    GDA_Connection_Constraint *constraint,
 		    gint length)
 {
   gint                       cnt;
   GDA_Connection_Constraint* ptr;
-  Gda_ServerRecordset*       recset = 0;
+  GdaServerRecordset*       recset = 0;
   gchar*                     proc_name = 0;
   gchar*                     query;
   gulong                     affected;
-  Gda_Builtin_Result*        bres;
+  GdaBuiltin_Result*        bres;
   PGresult*                  res;
   gchar                      *row[2];
   GSList*                    list;
@@ -1459,11 +1459,11 @@ schema_proc_params (Gda_ServerError *error,
 
   /* building initial builtin result */
   pc = (POSTGRES_Connection *) gda_server_connection_get_user_data(cnc);
-  bres = Gda_Builtin_Result_new(2, "result", 0, -1);
-  Gda_Builtin_Result_set_att(bres, 0, "InOut", 
+  bres = GdaBuiltin_Result_new(2, "result", 0, -1);
+  GdaBuiltin_Result_set_att(bres, 0, "InOut", 
 			     gda_postgres_connection_get_sql_type(pc, "varchar"),
 			     -1);
-  Gda_Builtin_Result_set_att(bres, 1, "Type", 
+  GdaBuiltin_Result_set_att(bres, 1, "Type", 
 			  gda_postgres_connection_get_sql_type(pc, "varchar"),
 			     -1);
 
@@ -1492,7 +1492,7 @@ schema_proc_params (Gda_ServerError *error,
   row[1] = gda_postgres_connection_get_type_name(pc, 
 						 atoi(PQgetvalue(res, 0, 0)));
   if (row[1])
-    Gda_Builtin_Result_add_row(bres, row);
+    GdaBuiltin_Result_add_row(bres, row);
   list = convert_tabular_to_list(PQgetvalue(res, 0, 1));
   PQclear(res);
   row[0] = "in";
@@ -1501,7 +1501,7 @@ schema_proc_params (Gda_ServerError *error,
       row[1] = gda_postgres_connection_get_type_name(pc, 
 						 atoi((gchar*)(list->data)));
       if (row[1])
-	Gda_Builtin_Result_add_row(bres, row);
+	GdaBuiltin_Result_add_row(bres, row);
       if (list->data)
 	g_free(list->data);
       list = g_slist_remove_link(list, list);
@@ -1520,15 +1520,15 @@ schema_proc_params (Gda_ServerError *error,
 }
 
 /* Updated to work with Postgres 7.0.x */
-static Gda_ServerRecordset *
-schema_aggregates (Gda_ServerError *error,
-                   Gda_ServerConnection *cnc,
+static GdaServerRecordset *
+schema_aggregates (GdaServerError *error,
+                   GdaServerConnection *cnc,
                    GDA_Connection_Constraint *constraint,
                    gint length)
 {
   GString*                   query;
-  Gda_ServerCommand*         cmd;
-  Gda_ServerRecordset*       recset = 0;
+  GdaServerCommand*         cmd;
+  GdaServerRecordset*       recset = 0;
   GDA_Connection_Constraint* ptr;
   gint                       cnt;
   GString*                   and_condition = 0;
@@ -1641,15 +1641,15 @@ schema_aggregates (Gda_ServerError *error,
 
 
 
-static Gda_ServerRecordset *
-schema_sequences (Gda_ServerError *error,
-		  Gda_ServerConnection *cnc,
+static GdaServerRecordset *
+schema_sequences (GdaServerError *error,
+		  GdaServerConnection *cnc,
 		  GDA_Connection_Constraint *constraint,
 		  gint length)
 {
   GString*                   query;
-  Gda_ServerCommand*         cmd;
-  Gda_ServerRecordset*       recset = 0;
+  GdaServerCommand*         cmd;
+  GdaServerRecordset*       recset = 0;
   GDA_Connection_Constraint* ptr;
   gboolean                   extra_info = FALSE;
   gint                       cnt;
@@ -1730,17 +1730,17 @@ schema_sequences (Gda_ServerError *error,
   return (recset);
 }
 
-static Gda_ServerRecordset *
-schema_types (Gda_ServerError *error,
-              Gda_ServerConnection *cnc,
+static GdaServerRecordset *
+schema_types (GdaServerError *error,
+              GdaServerConnection *cnc,
               GDA_Connection_Constraint *constraint,
               gint length)
 {
   gboolean                   extra_info = FALSE;
   gint                       cnt;
   GDA_Connection_Constraint* ptr;
-  Gda_ServerCommand*         cmd;
-  Gda_ServerRecordset*       recset;
+  GdaServerCommand*         cmd;
+  GdaServerRecordset*       recset;
   GString *query=NULL, *and_condition=NULL;
   gulong                     affected;
   POSTGRES_Connection       *pc;
@@ -1839,17 +1839,17 @@ schema_types (Gda_ServerError *error,
 }
 
 
-static Gda_ServerRecordset *
-schema_views (Gda_ServerError *error,
-              Gda_ServerConnection *cnc,
+static GdaServerRecordset *
+schema_views (GdaServerError *error,
+              GdaServerConnection *cnc,
               GDA_Connection_Constraint *constraint,
               gint length)
 {
   gchar*                     query = 0;
   gchar*                     view_name = 0;
   gint cnt;
-  Gda_ServerCommand*         cmd;
-  Gda_ServerRecordset*       recset = 0;
+  GdaServerCommand*         cmd;
+  GdaServerRecordset*       recset = 0;
   GDA_Connection_Constraint* ptr;
   gboolean                   extra_info = FALSE;
   gulong                     affected;
@@ -1935,7 +1935,7 @@ schema_views (Gda_ServerError *error,
  * Other functions
  */
 static gint
-execute_command (Gda_ServerConnection *cnc, gchar *cmd)
+execute_command (GdaServerConnection *cnc, gchar *cmd)
 {
   POSTGRES_Connection *pc;
   g_return_val_if_fail(cnc != 0, -1);
@@ -2002,7 +2002,7 @@ gda_postgres_connection_get_sql_type(POSTGRES_Connection *cnc,
   gulong oid = 0; /* default return value */
   gboolean found;
   gint i, max=0;
-  Gda_connection_data *data;
+  Gdaconnection_data *data;
 
   g_return_val_if_fail((cnc != NULL), 0);
   g_return_val_if_fail((cnc->types_array != NULL), 0);
@@ -2027,10 +2027,10 @@ gda_postgres_connection_get_sql_type(POSTGRES_Connection *cnc,
 }
 
 /* returns the connection data or NULL if none */
-static Gda_connection_data *find_connection_data(POSTGRES_Connection *cnc)
+static Gdaconnection_data *find_connection_data(POSTGRES_Connection *cnc)
 {
   GSList *list;
-  Gda_connection_data *data, *retval = NULL;
+  Gdaconnection_data *data, *retval = NULL;
   g_return_val_if_fail((cnc != NULL), NULL);
 
   if (cnc->types_array)
@@ -2038,7 +2038,7 @@ static Gda_connection_data *find_connection_data(POSTGRES_Connection *cnc)
       list = global_connection_data_list;
       while (list && !retval)
 	{
-	  data = (Gda_connection_data*)(list->data);
+	  data = (Gdaconnection_data*)(list->data);
 	  if (cnc->types_array == data->types_array)
 	    retval = data;
 	  else
@@ -2055,7 +2055,7 @@ static gchar* gda_postgres_connection_get_type_name(POSTGRES_Connection *cnc,
   gchar* str=NULL; /* default value */
   gboolean found;
   gint i, max=0;
-  Gda_connection_data *data;
+  Gdaconnection_data *data;
 
   g_return_val_if_fail((cnc != NULL), NULL);
   g_return_val_if_fail((cnc->types_array != NULL), NULL);
@@ -2085,7 +2085,7 @@ gda_postgres_connection_is_type_known (POSTGRES_Connection *cnc,
 {
   gboolean found;
   gint i, max=0;
-  Gda_connection_data *data;
+  Gdaconnection_data *data;
 
   g_return_val_if_fail((cnc != NULL), FALSE);
   g_return_val_if_fail((cnc->types_array != NULL), FALSE);
@@ -2107,14 +2107,14 @@ gda_postgres_connection_is_type_known (POSTGRES_Connection *cnc,
 }
 
 
-static void add_replacement_function(Gda_ServerRecordset *recset,
+static void add_replacement_function(GdaServerRecordset *recset,
 				     POSTGRES_Recordset_Replacement *repl,
 				     gchar *sql_type)
 {
   POSTGRES_Recordset *prc;
   POSTGRES_Connection *pc;
   gulong sqltype;
-  Gda_ServerField *field;
+  GdaServerField *field;
 
   g_return_if_fail(sql_type != NULL);
   g_return_if_fail(repl != NULL);
@@ -2129,6 +2129,6 @@ static void add_replacement_function(Gda_ServerRecordset *recset,
   prc->replacements = g_slist_append(prc->replacements, repl);
 
   /* Now set the right sql_type value of the field */
-  field = (Gda_ServerField *) g_list_nth_data(recset->fields, repl->colnum);
+  field = (GdaServerField *) g_list_nth_data(recset->fields, repl->colnum);
   gda_server_field_set_sql_type(field, sqltype);
 }

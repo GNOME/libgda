@@ -18,8 +18,8 @@
 
 #include "gda-interbase.h"
 
-static Gda_ServerImpl*         server_impl = NULL;
-static Gda_ServerImplFunctions server_impl_functions =
+static GdaServerImpl*         server_impl = NULL;
+static GdaServerImplFunctions server_impl_functions =
 {
   gda_interbase_connection_new,
   gda_interbase_connection_open,

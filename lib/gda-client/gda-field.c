@@ -47,11 +47,11 @@ enum
 static guint gda_field_signals[GDA_FIELD_LAST_SIGNAL] = { 0, };
 
 #ifdef HAVE_GOBJECT
-static void gda_field_class_init (Gda_FieldClass *klass, gpointer data);
-static void gda_field_init       (Gda_Field *field, Gda_FieldClass *klass);
+static void gda_field_class_init (GdaFieldClass *klass, gpointer data);
+static void gda_field_init       (GdaField *field, GdaFieldClass *klass);
 #else
-static void gda_field_class_init (Gda_FieldClass *klass);
-static void gda_field_init       (Gda_Field *field);
+static void gda_field_class_init (GdaFieldClass *klass);
+static void gda_field_init       (GdaField *field);
 #endif
 
 #define ENUM_TO_STR(e) case (e): strncpy(bfr, #e, length); break
@@ -67,18 +67,18 @@ gda_field_get_type (void)
     {
       GTypeInfo info =
       {
-        sizeof (Gda_FieldClass),               /* class_size */
+        sizeof (GdaFieldClass),               /* class_size */
         NULL,                                  /* base_init */
         NULL,                                  /* base_finalize */
         (GClassInitFunc) gda_field_class_init, /* class_init */
         NULL,                                  /* class_finalize */
         NULL,                                  /* class_data */
-        sizeof (Gda_Field),                    /* instance_size */
+        sizeof (GdaField),                    /* instance_size */
         0,                                     /* n_preallocs */
         (GInstanceInitFunc) gda_field_init,    /* instance_init */
         NULL,                                  /* value_table */
       };
-      type = g_type_register_static (G_TYPE_OBJECT, "Gda_Field", &info, 0);
+      type = g_type_register_static (G_TYPE_OBJECT, "GdaField", &info, 0);
     }
   return type;
 }
@@ -93,8 +93,8 @@ gda_field_get_type (void)
       GtkTypeInfo gda_field_info =
       {
         "GdaField",
-        sizeof (Gda_Field),
-        sizeof (Gda_FieldClass),
+        sizeof (GdaField),
+        sizeof (GdaFieldClass),
         (GtkClassInitFunc) gda_field_class_init,
         (GtkObjectInitFunc) gda_field_init,
         (GtkArgSetFunc) NULL,
@@ -108,12 +108,12 @@ gda_field_get_type (void)
 
 #ifdef HAVE_GOBJECT
 static void
-gda_field_class_init (Gda_FieldClass *klass, gpointer data)
+gda_field_class_init (GdaFieldClass *klass, gpointer data)
 {
 }
 #else
 static void
-gda_field_class_init (Gda_FieldClass* klass)
+gda_field_class_init (GdaFieldClass* klass)
 {
   GtkObjectClass*   object_class;
 
@@ -123,9 +123,9 @@ gda_field_class_init (Gda_FieldClass* klass)
 
 static void
 #ifdef HAVE_GOBJECT
-gda_field_init (Gda_Field *field, Gda_FieldClass *klass)
+gda_field_init (GdaField *field, GdaFieldClass *klass)
 #else
-gda_field_init (Gda_Field* field)
+gda_field_init (GdaField* field)
 #endif
 {
 }
@@ -230,7 +230,7 @@ gda_string_2_fieldtype (gchar *type)
 }
 
 gchar*
-gda_stringify_value(gchar* bfr, gint maxlen, Gda_Field* f)
+gda_stringify_value(gchar* bfr, gint maxlen, GdaField* f)
 {
   gchar*     retval = 0;
   gchar      tmp[40];
@@ -432,7 +432,7 @@ gda_stringify_value(gchar* bfr, gint maxlen, Gda_Field* f)
  *
  * Returns: the pointer to the new field object.
  */
-Gda_Field *
+GdaField *
 gda_field_new (void)
 {
 #ifdef HAVE_GOBJECT
@@ -444,13 +444,13 @@ gda_field_new (void)
 
 /**
  * gda_field_free:
- * @f: a pointer to a Gda_Field object
+ * @f: a pointer to a GdaField object
  *
  * Free the memory allocated for this field object.
  *
  */
 void
-gda_field_free (Gda_Field* f)
+gda_field_free (GdaField* f)
 {
   g_return_if_fail(IS_GDA_FIELD(f));
 #ifdef HAVE_GOBJECT
@@ -470,7 +470,7 @@ gda_field_free (Gda_Field* f)
  * the field has a NULL value.
  */
 gint
-gda_field_actual_size (Gda_Field* f)
+gda_field_actual_size (GdaField* f)
 {
   g_return_val_if_fail(IS_GDA_FIELD(f), 0);
   

@@ -41,8 +41,8 @@ extern "C" {
  * The connection object. The base of all acceess to data sources.
  */
 
-typedef struct _Gda_Connection       Gda_Connection;
-typedef struct _Gda_ConnectionClass  Gda_ConnectionClass;
+typedef struct _GdaConnection       GdaConnection;
+typedef struct _GdaConnectionClass  GdaConnectionClass;
 
 #include <gda-recordset.h>    /* this one needs the definitions above */
 
@@ -51,22 +51,22 @@ typedef struct _Gda_ConnectionClass  Gda_ConnectionClass;
 #ifdef HAVE_GOBJECT
 #  define GDA_CONNECTION(obj) \
             G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_CONNECTION, \
-                                        Gda_Connection)
+                                        GdaConnection)
 #  define GDA_CONNECTION_CLASS(klass) \
             G_TYPE_CHECK_CLASS_CAST (obj, GDA_TYPE_CONNECTION, \
-                                     Gda_ConnectionClass)
+                                     GdaConnectionClass)
 #  define IS_GDA_CONNECTION(obj) \
             G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_CONNECTION)
 #  define IS_GDA_CONNECTION_CLASS(klass) \
             G_TYPE_CHECK_CLASS_TYPE (klass, GDA_TYPE_CONNECTION)
 #else
-#  define GDA_CONNECTION(obj)            GTK_CHECK_CAST(obj, GDA_TYPE_CONNECTION, Gda_Connection)
+#  define GDA_CONNECTION(obj)            GTK_CHECK_CAST(obj, GDA_TYPE_CONNECTION, GdaConnection)
 #  define GDA_CONNECTION_CLASS(klass)    GTK_CHECK_CLASS_CAST(klass, GDA_TYPE_CONNECTION, GdaConnectionClass)
 #  define IS_GDA_CONNECTION(obj)         GTK_CHECK_TYPE(obj, GDA_TYPE_CONNECTION)
 #  define IS_GDA_CONNECTION_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_CONNECTION))
 #endif
 
-struct _Gda_Connection {
+struct _GdaConnection {
 #ifdef HAVE_GOBJECT
 	GObject       object;
 #else
@@ -85,22 +85,22 @@ struct _Gda_Connection {
 	gint          is_open;
 };
 
-struct _Gda_ConnectionClass {
+struct _GdaConnectionClass {
 #ifdef HAVE_GOBJECT
 	GObjectClass   parent_class;
 #else
 	GtkObjectClass parent_class;
 #endif
-	void           (*error)      (Gda_Connection*, GList*);
-	void           (*warning)    (Gda_Connection*, GList*);
-	void           (*open)       (Gda_Connection*);
-	void           (*close)      (Gda_Connection*);
+	void           (*error)      (GdaConnection*, GList*);
+	void           (*warning)    (GdaConnection*, GList*);
+	void           (*open)       (GdaConnection*);
+	void           (*close)      (GdaConnection*);
 };
 
-typedef struct _Gda_Constraint_Element {
+typedef struct _GdaConstraint_Element {
 	GDA_Connection_QType  type;
 	gchar*                value;
-} Gda_Constraint_Element;
+} GdaConstraint_Element;
 
 #ifdef HAVE_GOBJECT
 GType              gda_connection_get_type            (void);
@@ -108,55 +108,55 @@ GType              gda_connection_get_type            (void);
 guint              gda_connection_get_type            (void);
 #endif
 
-Gda_Connection*    gda_connection_new                 (CORBA_ORB orb);
-void               gda_connection_free                (Gda_Connection* cnc);
-void               gda_connection_set_provider        (Gda_Connection* cnc, gchar* name);
-const gchar*       gda_connection_get_provider        (Gda_Connection* cnc);
-gboolean           gda_connection_supports            (Gda_Connection* cnc, GDA_Connection_Feature feature);
-void               gda_connection_set_default_db      (Gda_Connection* cnc, gchar* dsn);
-gint               gda_connection_open                (Gda_Connection* cnc, gchar* dsn, gchar* user,gchar* pwd );
-void               gda_connection_close               (Gda_Connection* cnc);
-Gda_Recordset*     gda_connection_open_schema         (Gda_Connection* cnc,
+GdaConnection*    gda_connection_new                 (CORBA_ORB orb);
+void               gda_connection_free                (GdaConnection* cnc);
+void               gda_connection_set_provider        (GdaConnection* cnc, gchar* name);
+const gchar*       gda_connection_get_provider        (GdaConnection* cnc);
+gboolean           gda_connection_supports            (GdaConnection* cnc, GDA_Connection_Feature feature);
+void               gda_connection_set_default_db      (GdaConnection* cnc, gchar* dsn);
+gint               gda_connection_open                (GdaConnection* cnc, gchar* dsn, gchar* user,gchar* pwd );
+void               gda_connection_close               (GdaConnection* cnc);
+GdaRecordset*     gda_connection_open_schema         (GdaConnection* cnc,
                                                        GDA_Connection_QType t, ...);
-Gda_Recordset*     gda_connection_open_schema_array   (Gda_Connection* cnc,
+GdaRecordset*     gda_connection_open_schema_array   (GdaConnection* cnc,
                                                        GDA_Connection_QType t,
-                                                       Gda_Constraint_Element*);
-glong              gda_connection_modify_schema       (Gda_Connection *cnc,
+                                                       GdaConstraint_Element*);
+glong              gda_connection_modify_schema       (GdaConnection *cnc,
                                                        GDA_Connection_QType t, ...);
-GList*             gda_connection_get_errors          (Gda_Connection* cnc);
-gint               gda_connection_begin_transaction   (Gda_Connection* cnc);
-gint               gda_connection_commit_transaction  (Gda_Connection* cnc);
-gint               gda_connection_rollback_transaction (Gda_Connection* cnc);
-Gda_Recordset*     gda_connection_execute             (Gda_Connection* cnc, gchar* txt, gulong* reccount, gulong flags);
-gint               gda_connection_start_logging       (Gda_Connection* cnc, gchar* filename);
-gint               gda_connection_stop_logging        (Gda_Connection* cnc);
-gchar*             gda_connection_create_recordset    (Gda_Connection* cnc, Gda_Recordset* rs);
+GList*             gda_connection_get_errors          (GdaConnection* cnc);
+gint               gda_connection_begin_transaction   (GdaConnection* cnc);
+gint               gda_connection_commit_transaction  (GdaConnection* cnc);
+gint               gda_connection_rollback_transaction (GdaConnection* cnc);
+GdaRecordset*     gda_connection_execute             (GdaConnection* cnc, gchar* txt, gulong* reccount, gulong flags);
+gint               gda_connection_start_logging       (GdaConnection* cnc, gchar* filename);
+gint               gda_connection_stop_logging        (GdaConnection* cnc);
+gchar*             gda_connection_create_recordset    (GdaConnection* cnc, GdaRecordset* rs);
 
-gint               gda_connection_corba_exception     (Gda_Connection* cnc, CORBA_Environment* ev);
-void               gda_connection_add_single_error    (Gda_Connection* cnc, Gda_Error* error);
-void               gda_connection_add_errorlist       (Gda_Connection* cnc, GList* list);
+gint               gda_connection_corba_exception     (GdaConnection* cnc, CORBA_Environment* ev);
+void               gda_connection_add_single_error    (GdaConnection* cnc, GdaError* error);
+void               gda_connection_add_errorlist       (GdaConnection* cnc, GList* list);
 
 #define            gda_connection_is_open(cnc)        ((cnc) ? GDA_CONNECTION(cnc)->is_open : FALSE)
 #define            gda_connection_get_dsn(cnc)        ((cnc) ? GDA_CONNECTION(cnc)->database : 0)
 #define            gda_connection_get_user(cnc)       ((cnc) ? GDA_CONNECTION(cnc)->user : 0)
 #define            gda_connection_get_password(cnc)   ((cnc) ? GDA_CONNECTION(cnc)->passwd : 0)
 
-glong              gda_connection_get_flags           (Gda_Connection* cnc);
-void               gda_connection_set_flags           (Gda_Connection* cnc, glong flags);
-glong              gda_connection_get_cmd_timeout     (Gda_Connection* cnc);
-void               gda_connection_set_cmd_timeout     (Gda_Connection* cnc, glong cmd_timeout);
-glong              gda_connection_get_connect_timeout (Gda_Connection* cnc);
-void               gda_connection_set_connect_timeout (Gda_Connection* cnc, glong timeout);
+glong              gda_connection_get_flags           (GdaConnection* cnc);
+void               gda_connection_set_flags           (GdaConnection* cnc, glong flags);
+glong              gda_connection_get_cmd_timeout     (GdaConnection* cnc);
+void               gda_connection_set_cmd_timeout     (GdaConnection* cnc, glong cmd_timeout);
+glong              gda_connection_get_connect_timeout (GdaConnection* cnc);
+void               gda_connection_set_connect_timeout (GdaConnection* cnc, glong timeout);
 
-GDA_CursorLocation gda_connection_get_cursor_location (Gda_Connection* cnc);
-void               gda_connection_set_cursor_location (Gda_Connection* cnc, GDA_CursorLocation cursor);
+GDA_CursorLocation gda_connection_get_cursor_location (GdaConnection* cnc);
+void               gda_connection_set_cursor_location (GdaConnection* cnc, GDA_CursorLocation cursor);
 
-gchar*             gda_connection_get_version         (Gda_Connection *cnc);
+gchar*             gda_connection_get_version         (GdaConnection *cnc);
 
 /* conversion routines */
-gchar*             gda_connection_sql2xml             (Gda_Connection *cnc,
+gchar*             gda_connection_sql2xml             (GdaConnection *cnc,
                                                        const gchar *sql);
-gchar*             gda_connection_xml2sql             (Gda_Connection *cnc,
+gchar*             gda_connection_xml2sql             (GdaConnection *cnc,
                                                        const gchar *xml);
 
 #ifdef __cplusplus

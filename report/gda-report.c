@@ -31,27 +31,27 @@ gda_report_signals[LAST_SIGNAL] = {0, };
 
 
 #ifdef HAVE_GOBJECT
-static void    gda_report_class_init   (Gda_ReportClass *klass,
+static void    gda_report_class_init   (GdaReportClass *klass,
 					gpointer data);
-static void    gda_report_init         (Gda_Report *object,
-					Gda_ReportClass *klass);
+static void    gda_report_init         (GdaReport *object,
+					GdaReportClass *klass);
 #else
-static void    gda_report_class_init   (Gda_ReportClass* klass);
-static void    gda_report_init         (Gda_Report* object);
+static void    gda_report_class_init   (GdaReportClass* klass);
+static void    gda_report_init         (GdaReport* object);
 #endif
 
-static void    gda_report_real_error   (Gda_Report* object, GList* errors);
-static void    gda_report_real_warning (Gda_Report* object, GList* errors);
+static void    gda_report_real_error   (GdaReport* object, GList* errors);
+static void    gda_report_real_warning (GdaReport* object, GList* errors);
 
 static void
-gda_report_real_error (Gda_Report* object, GList* errors)
+gda_report_real_error (GdaReport* object, GList* errors)
 {
   g_print("%s: %d: %s called\n", __FILE__, __LINE__, __PRETTY_FUNCTION__);
   object->errors_head = g_list_concat(object->errors_head, errors);
 }
 
 static void
-gda_report_real_warning (Gda_Report* object, GList* warnings)
+gda_report_real_warning (GdaReport* object, GList* warnings)
 {
   g_print("%s: %d: %s called\n", __FILE__, __LINE__, __PRETTY_FUNCTION__);
 }
@@ -64,18 +64,18 @@ gda_report_get_type (void)
 
 	if (!type) {
 		GTypeInfo info = {
-			sizeof (Gda_ReportClass),		/* class_size */
+			sizeof (GdaReportClass),		/* class_size */
 			NULL,					/* base_init */
 			NULL,					/* base_finalize */
 			(GClassInitFunc) gda_report_class_init,	/* class_init */
 			NULL,					/* class_finalize */
 			NULL,					/* class_data */
-			sizeof (Gda_Report),			/* instance_size */
+			sizeof (GdaReport),			/* instance_size */
 			0,					/* n_preallocs */
 			(GInstanceInitFunc) gda_report_init,	/* instance_init */
 			NULL,					/* value_table */
 		};
-		type = g_type_register_static (G_TYPE_OBJECT, "Gda_Report", &info);
+		type = g_type_register_static (G_TYPE_OBJECT, "GdaReport", &info);
 	}
 	return type;
 }
@@ -87,9 +87,9 @@ gda_report_get_type (void)
 
 	if (!gda_report_type) {
 		GtkTypeInfo gda_report_info = {
-			"Gda_Report",
-			sizeof (Gda_Report),
-			sizeof (Gda_ReportClass),
+			"GdaReport",
+			sizeof (GdaReport),
+			sizeof (GdaReportClass),
 			(GtkClassInitFunc) gda_report_class_init,
 			(GtkObjectInitFunc) gda_report_init,
 			(GtkArgSetFunc)NULL,
@@ -104,7 +104,7 @@ gda_report_get_type (void)
 
 #ifdef HAVE_GOBJECT
 static void
-gda_report_class_init (Gda_ReportClass *klass, gpointer data)
+gda_report_class_init (GdaReportClass *klass, gpointer data)
 {
 	/* FIXME: No GObject signals yet */
 	klass->error = gda_report_real_error;
@@ -112,7 +112,7 @@ gda_report_class_init (Gda_ReportClass *klass, gpointer data)
 }
 #else
 static void
-gda_report_class_init (Gda_ReportClass* klass)
+gda_report_class_init (GdaReportClass* klass)
 {
 	GtkObjectClass*   object_class = GTK_OBJECT_CLASS(klass);
   
@@ -120,14 +120,14 @@ gda_report_class_init (Gda_ReportClass* klass)
 				gtk_signal_new("error",
 						GTK_RUN_FIRST,
 						object_class->type,
-						GTK_SIGNAL_OFFSET(Gda_ReportClass, error),
+						GTK_SIGNAL_OFFSET(GdaReportClass, error),
 						gtk_marshal_NONE__POINTER,
 						GTK_TYPE_NONE, 1, GTK_TYPE_POINTER);
 	gda_report_signals[REPORT_WARNING] = \
 				gtk_signal_new("warning",
 						GTK_RUN_LAST,
 						object_class->type,
-						GTK_SIGNAL_OFFSET(Gda_ReportClass, warning),
+						GTK_SIGNAL_OFFSET(GdaReportClass, warning),
 						gtk_marshal_NONE__POINTER,
 						GTK_TYPE_NONE, 1, GTK_TYPE_POINTER);
 	gtk_object_class_add_signals(object_class, gda_report_signals, LAST_SIGNAL);
@@ -138,9 +138,9 @@ gda_report_class_init (Gda_ReportClass* klass)
 
 static void
 #ifdef HAVE_GOBJECT
-gda_report_init (Gda_Report* object, Gda_ReportClass *klass)
+gda_report_init (GdaReport* object, GdaReportClass *klass)
 #else
-gda_report_init (Gda_Report *object)
+gda_report_init (GdaReport *object)
 #endif
 {
 	g_return_if_fail(GDA_IS_REPORT(object));
@@ -160,10 +160,10 @@ gda_report_init (Gda_Report *object)
  *
  * Returns: the pointer to the allocated object
  */
-Gda_Report*
+GdaReport*
 gda_report_new (gchar* rep_name, gchar* description)
 {
-	Gda_Report* object;
+	GdaReport* object;
 	
 #ifdef HAVE_GOBJECT
 	object = GDA_REPORT (g_object_new (GDA_TYPE_REPORT, NULL));
@@ -190,7 +190,7 @@ gda_report_new (gchar* rep_name, gchar* description)
  *
  */
 void
-gda_report_free (Gda_Report* object)
+gda_report_free (GdaReport* object)
 {
 	CORBA_Environment ev;
 	
@@ -225,7 +225,7 @@ gda_report_free (Gda_Report* object)
  *
  */
 gchar*
-gda_report_get_name (Gda_Report* object)
+gda_report_get_name (GdaReport* object)
 {
 
 	g_return_if_fail(IS_GDA_REPORT(object));
@@ -244,7 +244,7 @@ gda_report_get_name (Gda_Report* object)
  *
  */
 gint
-gda_report_set_name (Gda_Report* object, gchar* name)
+gda_report_set_name (GdaReport* object, gchar* name)
 {
 	CORBA_Environment ev;
 	
@@ -275,7 +275,7 @@ gda_report_set_name (Gda_Report* object, gchar* name)
  *
  */
 gchar*
-gda_report_get_description (Gda_Report* object)
+gda_report_get_description (GdaReport* object)
 {
 
 	g_return_if_fail(IS_GDA_REPORT(object));
@@ -294,7 +294,7 @@ gda_report_get_description (Gda_Report* object)
  *
  */
 gint
-gda_report_set_description (Gda_Report* object, gchar* description)
+gda_report_set_description (GdaReport* object, gchar* description)
 {
 	CORBA_Environment ev;
 	
@@ -324,11 +324,11 @@ gda_report_set_description (Gda_Report* object, gchar* description)
  * Return: The main ReportElement
  *
  */
-Gda_ReportElement*
-gda_report_get_elements (Gda_Report* object)
+GdaReportElement*
+gda_report_get_elements (GdaReport* object)
 {
 	CORBA_Environment ev;
-	Gda_ReportElement *element;
+	GdaReportElement *element;
 	gchar* elementName;
 	
 	g_return_val_if_fail(IS_GDA_REPORT(object), NULL);
@@ -360,7 +360,7 @@ gda_report_get_elements (Gda_Report* object)
  *
  */
 gint
-gda_report_set_elements (Gda_Report* object, Gda_ReportElement* element)
+gda_report_set_elements (GdaReport* object, GdaReportElement* element)
 {
 	CORBA_Environment ev;
 	
@@ -384,8 +384,8 @@ gda_report_set_elements (Gda_Report* object, Gda_ReportElement* element)
  * Return: The format of the Report Object.
  *
  */
-Gda_ReportFormat*
-gda_report_get_format (Gda_Report* object)
+GdaReportFormat*
+gda_report_get_format (GdaReport* object)
 {
 	/* FIXME: Implement me, please!!! */
 	return NULL;
@@ -399,7 +399,7 @@ gda_report_get_format (Gda_Report* object)
  *
  */
 gboolean
-gda_report_isLocked (Gda_Report* object)
+gda_report_isLocked (GdaReport* object)
 {
 	CORBA_Environment ev;
 	gboolean locked;
@@ -425,8 +425,8 @@ gda_report_isLocked (Gda_Report* object)
  * Return: The result of running the report.
  *
  */
-Gda_ReportOutput*
-gda_report_run (Gda_Report* object, GList param, gint32 flags)
+GdaReportOutput*
+gda_report_run (GdaReport* object, GList param, gint32 flags)
 {
 	/* FIXME: Implement me, please!!! */
 	return NULL;
@@ -439,7 +439,7 @@ gda_report_run (Gda_Report* object, GList param, gint32 flags)
  *
  */
 void
-gda_report_lock (Gda_Report* object)
+gda_report_lock (GdaReport* object)
 {
 	CORBA_Environment ev;
 	
@@ -460,7 +460,7 @@ gda_report_lock (Gda_Report* object)
  *
  */
 void
-gda_report_unlock (Gda_Report* object)
+gda_report_unlock (GdaReport* object)
 {
 	CORBA_Environment ev;
 	

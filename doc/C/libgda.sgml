@@ -470,7 +470,7 @@
       </para>
       <para>
         The <filename>gda-common</filename> library includes a class, called
-        <classname>Gda_XmlDatabase</classname>, which offers a way for
+        <classname>GdaXmlDatabase</classname>, which offers a way for
         programatically read and modify one of these XML files.
       </para>
     </sect1>
@@ -548,7 +548,7 @@
 	   changes in the client source code.
       </para>
       <para>
-        The client may then create <classname>Gda_Command</classname> objects
+        The client may then create <classname>GdaCommand</classname> objects
         which are used to do actual queries to the providers. For SQL-like
 	   providers, the query is the actual SQL statement. Of course the 
 	   provider is free to change the statements (conversion between
@@ -560,7 +560,7 @@
       </para>
       <para>
 	   The result of a query is accessed through an object of type
-	   <classname>Gda_Recordset</classname>. The actual data rows might be stored on the
+	   <classname>GdaRecordset</classname>. The actual data rows might be stored on the
 	   client side, the provider side or in the database server. This
 	   depends on various flags and options used when the recordset
 	   is created. Positions in a recordset are defined through
@@ -578,18 +578,18 @@
     <sect1 id="gda-client-objects">
       <title>Overview of the GDA Objects</title>
       <para>
-        The main class for GDA is the <classname>Gda_Connection</classname> class. Objects
+        The main class for GDA is the <classname>GdaConnection</classname> class. Objects
 	   of this class establish the connection to the CORBA server
 	   and they are needed for nearly all activity on the client
 	   side. Each object has a direct or indirect pointer to a
 	   connection object.
       </para>
       <para>
-	   Another very important class is the <classname>Gda_Command</classname> class. It's
+	   Another very important class is the <classname>GdaCommand</classname> class. It's
 	   used to store a command string and is used to execute this
 	   command on the CORBA server. It has a reference to a
 	   connection object. The <function>execute</function> function returns an object of 
-	   the <classname>Gda_Recordset</classname> class.  This class is responsible for
+	   the <classname>GdaRecordset</classname> class.  This class is responsible for
 	   buffering and caching and managing the memory of the data
 	   items returned from the server.
       </para>
@@ -629,7 +629,7 @@
 	   information. If the datasource is a database, such metainformation are 
 	   the names of the tables, the columns, user rights, and so on. The
 	   results from a meta information query is represented as a
-	   <classname>Gda_Recordset</classname>. The problem is that most of the time the client is only
+	   <classname>GdaRecordset</classname>. The problem is that most of the time the client is only
 	   interested in some part of the information. The client wants to query
 	   the data source about the indices for a table, not all indices for all 
 	   tables. Therefore it is possible to pass constraints to the meta
@@ -811,7 +811,7 @@
       <title>Batch Jobs</title>
       <para>
         The client library provides a very interesting object: the
-        <classname>Gda_Batch</classname>
+        <classname>GdaBatch</classname>
         object, which is an abstract class which allows you to treat a series
         of commands as a unique entity. It offers this feature along with
         a real transaction support (if the underlying database supports it). All
@@ -821,7 +821,7 @@
         support in your applications with just a few lines of code.
       </para>
       <para>
-        But, the <classname>Gda_Batch</classname> object is flexible enough to be used as a simple
+        But, the <classname>GdaBatch</classname> object is flexible enough to be used as a simple
         batch job, ignoring errors if this fits your needs, and disabling
         database transactions. In this case, the best way to use the object
         is to connect to it's different signals, which let you know at any moment
@@ -986,7 +986,7 @@
         <itemizedlist>
           <listitem>
             <para>
-              the <classname>Gda_ServerConnection</classname> object: this is the main
+              the <classname>GdaServerConnection</classname> object: this is the main
               object and handles everything
               regarding a connection to the DBMS (given the DB name, user name, password, etc).
               Usually the client will use only one of this kind of object.
@@ -994,13 +994,13 @@
           </listitem>
           <listitem>
             <para>
-              the <classname>Gda_ServerCommand</classname> object: this object is
+              the <classname>GdaServerCommand</classname> object: this object is
               used to prepare a query to be executed.
             </para>
           </listitem>
           <listitem>
             <para>
-              the <classname>Gda_ServerRecordset</classname> object: every time a
+              the <classname>GdaServerRecordset</classname> object: every time a
               command is executed, an object of this
               type is returned, and can then be examined to see what the results of the command
               were. Under &Libgda;, the recordset is examined in a sequential way, row after row
@@ -1010,10 +1010,10 @@
           </listitem>
           <listitem>
             <para>
-              the <classname>Gda_ServerField</classname> object: for every column, an object of
+              the <classname>GdaServerField</classname> object: for every column, an object of
               this kind is used. It
               describes the column name, the data type, and its contents. Each
-              <classname>Gda_ServerField</classname> object
+              <classname>GdaServerField</classname> object
               will be initialized when the recordset is created, and a new value will be stored in 
               it every time a new row is examined. The <filename>gda-server</filename> will then
               use these objects to
@@ -1030,7 +1030,7 @@
         <itemizedlist>
           <listitem>
             <para>
-              1- a <classname>Gda_ServerConnection</classname> is created
+              1- a <classname>GdaServerConnection</classname> is created
             </para>
           </listitem>
           <listitem>
@@ -1040,23 +1040,23 @@
           </listitem>
           <listitem>
             <para>
-              3 - a <classname>Gda_ServerCommand</classname> is created
+              3 - a <classname>GdaServerCommand</classname> is created
             </para>
           </listitem>
           <listitem>
             <para>
-              4 - the actual command is set in the <classname>Gda_ServerCommand</classname> object
+              4 - the actual command is set in the <classname>GdaServerCommand</classname> object
             </para>
           </listitem>
           <listitem>
             <para>
               5- the command is executed, and if no error occurs, a
-              <classname>Gda_ServerRecordset</classname> is created and returned
+              <classname>GdaServerRecordset</classname> is created and returned
             </para>
           </listitem>
           <listitem>
             <para>
-              6 - the <classname>Gda_ServerCommand</classname> can safely be destroyed
+              6 - the <classname>GdaServerCommand</classname> can safely be destroyed
             </para>
           </listitem>
           <listitem>
@@ -1066,13 +1066,13 @@
           </listitem>
           <listitem>
             <para>
-              8- the <classname>Gda_ServerRecordset</classname> is destroyed
+              8- the <classname>GdaServerRecordset</classname> is destroyed
             </para>
           </listitem>
           <listitem>
             <para>
               9- the connection can be closed, and the
-              <classname>Gda_ServerConnection</classname> can be destroyed.
+              <classname>GdaServerConnection</classname> can be destroyed.
             </para>
           </listitem>
         </itemizedlist>
@@ -1126,7 +1126,7 @@
         <para>
           So, for the most common ones where a &Libgda; data type exists, it will be used, and
           otherwise 
-          the <classname>Gda_TypeUnknown</classname> will be used (and then is it up to
+          the <classname>GdaTypeUnknown</classname> will be used (and then is it up to
           the application programmer using
           &Libgda; to take good care of that information).
         </para>
@@ -1179,7 +1179,7 @@
         <title>.c files</title>
         <para>
           Usually there is one .c file for the implementation of the different DBMS structures mentionned
-          above, except for the <classname>Gda_ServerField</classname> object, which is
+          above, except for the <classname>GdaServerField</classname> object, which is
           entirely managed by the <filename>gda-server</filename>
           library, and one for the program itself.
         </para>

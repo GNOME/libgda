@@ -24,7 +24,7 @@ gdaConnection::gdaConnection() {
 	_gda_connection = NULL;
 }
 
-gdaConnection::gdaConnection(Gda_Connection *a) {
+gdaConnection::gdaConnection(GdaConnection *a) {
 	_gda_connection = a;
 }
 
@@ -36,11 +36,11 @@ gdaConnection::~gdaConnection() {
 	if (_gda_connection) gda_connection_free(_gda_connection);
 }
 
-Gda_Connection* gdaConnection::getCStruct() {
+GdaConnection* gdaConnection::getCStruct() {
 	return _gda_connection;
 }
 
-void gdaConnection::setCStruct(Gda_Connection *cnc) {
+void gdaConnection::setCStruct(GdaConnection *cnc) {
 	_gda_connection = cnc;
 }
 		
@@ -87,7 +87,7 @@ gint gdaConnection::rollbackTransaction() {
 }
 
 gdaRecordset* gdaConnection::execute(gchar* txt, gulong* reccount, gulong flags) {
-	Gda_Recordset *b = NULL;
+	GdaRecordset *b = NULL;
 	gdaRecordset *a = NULL;
 	b = gda_connection_execute(_gda_connection,txt,reccount,flags);
 	a = new gdaRecordset(b,this);

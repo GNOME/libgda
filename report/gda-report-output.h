@@ -33,31 +33,31 @@ extern "C" {
 #include <GDA_Report.h>
 #include <gda-report-format.h>
 
-typedef struct _Gda_ReportOutput       Gda_ReportOutput;
-typedef struct _Gda_ReportOutputClass  Gda_ReportOutputClass;
+typedef struct _GdaReportOutput       GdaReportOutput;
+typedef struct _GdaReportOutputClass  GdaReportOutputClass;
 
-struct _Gda_ReportOutput {
-	Gda_ReportFormat	object;
+struct _GdaReportOutput {
+	GdaReportFormat	object;
 	
 	GDA_ReportOutput	corba_report_output;
 	GList*		errors_head;
 };
 
-struct _Gda_ReportOutputClass {
-	Gda_ReportFormatClass	parent_class;
+struct _GdaReportOutputClass {
+	GdaReportFormatClass	parent_class;
 	
-	void (* warning) (Gda_ReportOutput* object, GList* errors);
-	void (* error)   (Gda_ReportOutput* object, GList* errors);
+	void (* warning) (GdaReportOutput* object, GList* errors);
+	void (* error)   (GdaReportOutput* object, GList* errors);
 };
 
 #define GDA_TYPE_REPORT_OUTPUT          (gda_report_output_get_type())
 #ifdef HAVE_GOBJECT
-#define GDA_REPORT_OUTPUT(obj) G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_REPORT_OUTPUT, Gda_ReportOutput)
-#define GDA_REPORT_OUTPUT_CLASS(klass) G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_REPORT_OUTPUT, Gda_ReportOutputClass)
+#define GDA_REPORT_OUTPUT(obj) G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_REPORT_OUTPUT, GdaReportOutput)
+#define GDA_REPORT_OUTPUT_CLASS(klass) G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_REPORT_OUTPUT, GdaReportOutputClass)
 #define GDA_IS_REPORT_OUTPUT(obj) G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_REPORT_OUTPUT)
 #define GDA_IS_REPORT_OUTPUT_CLASS(klass) G_TYPE_CHECK_CLASS_TYPE ((klass), GDA_TYPE_REPORT_OUTPUT)
 #else
-#define GDA_REPORT_OUTPUT(obj)    GTK_CHECK_CAST(obj, GDA_TYPE_REPORT_OUTPUT, Gda_ReportOutput)
+#define GDA_REPORT_OUTPUT(obj)    GTK_CHECK_CAST(obj, GDA_TYPE_REPORT_OUTPUT, GdaReportOutput)
 #define GDA_REPORT_OUTPUT_CLASS(klass)  GTK_CHECK_CLASS_CAST(klass, GDA_TYPE_REPORT_OUTPUT, GdaReportReportClass)
 #define GDA_IS_REPORT_OUTPUT(obj)       GTK_CHECK_TYPE(obj, GDA_TYPE_REPORT_OUTPUT)
 #define GDA_IS_REPORT_OUTPUT_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_REPORT_OUTPUT))
@@ -69,9 +69,9 @@ GType			gda_report_output_get_type	(void);
 GtkType			gda_report_output_get_type	(void);
 #endif
 
-void			gda_report_output_free		(Gda_ReportOutput* object);
+void			gda_report_output_free		(GdaReportOutput* object);
 
-Gda_ReportStream*	gda_report_output_convert	(gchar* format, glong flags);
+GdaReportStream*	gda_report_output_convert	(gchar* format, glong flags);
 
 #if defined(__cplusplus)
 }

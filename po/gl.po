@@ -620,8 +620,8 @@ msgstr "Tipo de restricción non válida ou non soportada: %d"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:702
 #: providers/gda-tds-server/gda-tds-connection.c:693
-msgid "Could not allocate Gda_ServerCommand"
-msgstr "Non foi posible asignar memoria para Gda_ServerCommand"
+msgid "Could not allocate GdaServerCommand"
+msgstr "Non foi posible asignar memoria para GdaServerCommand"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:732
 #: providers/gda-sybase-server/gda-sybase-connection.c:737

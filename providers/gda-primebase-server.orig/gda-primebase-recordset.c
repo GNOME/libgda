@@ -19,7 +19,7 @@
 #include "gda-primebase.h"
 
 gboolean
-gda_primebase_update_cell (Gda_ServerField *field, primebase_Recordset *prset,
+gda_primebase_update_cell (GdaServerField *field, primebase_Recordset *prset,
                            gpointer *data)
 {
   DALDatePtr      ddate = NULL;
@@ -77,7 +77,7 @@ gda_primebase_update_cell (Gda_ServerField *field, primebase_Recordset *prset,
 }
 
 gboolean
-gda_primebase_recordset_new (Gda_ServerRecordset *recset)
+gda_primebase_recordset_new (GdaServerRecordset *recset)
 {
   primebase_Recordset *precset = NULL;
 
@@ -92,12 +92,12 @@ gda_primebase_recordset_new (Gda_ServerRecordset *recset)
 }
 
 gint
-gda_primebase_recordset_move_next (Gda_ServerRecordset *recset)
+gda_primebase_recordset_move_next (GdaServerRecordset *recset)
 {
   primebase_Recordset  *prset = NULL;
-  Gda_ServerConnection *cnc  = NULL;
+  GdaServerConnection *cnc  = NULL;
   primebase_Connection *pcnc = NULL;
-  Gda_ServerField      *field = NULL;
+  GdaServerField      *field = NULL;
   gint                 col = 0;
 
   g_return_val_if_fail(recset != NULL, -1);
@@ -209,19 +209,19 @@ gda_primebase_recordset_move_next (Gda_ServerRecordset *recset)
 }
 
 gint
-gda_primebase_recordset_move_prev (Gda_ServerRecordset *recset)
+gda_primebase_recordset_move_prev (GdaServerRecordset *recset)
 {
   return -1;
 }
 
 gint
-gda_primebase_recordset_close (Gda_ServerRecordset *recset)
+gda_primebase_recordset_close (GdaServerRecordset *recset)
 {
   return -1;
 }
 
 void
-gda_primebase_recordset_free (Gda_ServerRecordset *recset)
+gda_primebase_recordset_free (GdaServerRecordset *recset)
 {
   primebase_Recordset *precset = NULL;
 

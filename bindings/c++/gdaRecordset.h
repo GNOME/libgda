@@ -24,12 +24,12 @@
 class gdaRecordset {
 	public:
 		gdaRecordset();
-		gdaRecordset(Gda_Recordset *rst, gdaConnection *cnc); // convenience functions!
-		gdaRecordset(Gda_Recordset *rst, Gda_Connection *cnc); // convenience functions!
+		gdaRecordset(GdaRecordset *rst, gdaConnection *cnc); // convenience functions!
+		gdaRecordset(GdaRecordset *rst, GdaConnection *cnc); // convenience functions!
 		~gdaRecordset();
 
-		Gda_Recordset* getCStruct();
-		void setCStruct(Gda_Recordset *rst);
+		GdaRecordset* getCStruct();
+		void setCStruct(GdaRecordset *rst);
 
 		void setName(gchar* name);
 		void getName(gchar* name);
@@ -52,7 +52,7 @@ class gdaRecordset {
 		gint open(gchar* txt, gdaConnection *cnc, GDA_CursorType cursor_type, GDA_LockType lock_type, gulong options);
 		gint setConnection(gdaConnection *cnc);
 		gdaConnection *getConnection();
-		gint addField(Gda_Field* field);
+		gint addField(GdaField* field);
 		GDA_CursorLocation getCursorloc();
 		void setCursorloc(GDA_CursorLocation loc );
 		GDA_CursorType getCursortype();
@@ -60,7 +60,7 @@ class gdaRecordset {
 
 	private:
 		gdaConnection *cnc;
-		Gda_Recordset* _gda_recordset;
+		GdaRecordset* _gda_recordset;
 };
 
 #endif // __gda_bindings_cpp_gdaRecordsetH

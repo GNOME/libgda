@@ -35,32 +35,32 @@ extern "C" {
 #define GDA_TYPE_THREAD    (gda_thread_get_type())
 #ifdef HAVE_GOBJECT
 #  define GDA_THREAD(obj) \
-          G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_THREAD, Gda_Thread)
+          G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_THREAD, GdaThread)
 #  define IS_GDA_THREAD(obj) \
           G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_THREAD)
 #else
-#  define GDA_THREAD(obj)    GTK_CHECK_CAST(obj, GDA_TYPE_THREAD, Gda_Thread)
+#  define GDA_THREAD(obj)    GTK_CHECK_CAST(obj, GDA_TYPE_THREAD, GdaThread)
 #  define IS_GDA_THREAD(obj) GTK_CHECK_TYPE(obj, GDA_TYPE_THREAD)
 #endif
 
-typedef struct _Gda_Thread      Gda_Thread;
-typedef struct _Gda_ThreadClass Gda_ThreadClass;
+typedef struct _GdaThread      GdaThread;
+typedef struct _GdaThreadClass GdaThreadClass;
 
-typedef gpointer (*Gda_ThreadFunc)(Gda_Thread *thr, gpointer user_data);
+typedef gpointer (*GdaThreadFunc)(GdaThread *thr, gpointer user_data);
 
-struct _Gda_Thread
+struct _GdaThread
 {
 #ifdef HAVE_GOBJECT
   GObject        object;
 #else
   GtkObject      object;
 #endif
-  Gda_ThreadFunc func;
+  GdaThreadFunc func;
   gulong         tid;
   gboolean       is_running;
 };
 
-struct _Gda_ThreadClass
+struct _GdaThreadClass
 {
 #ifdef HAVE_GOBJECT
   GObjectClass parent_class;
@@ -75,11 +75,11 @@ GType       gda_thread_get_type   (void);
 GtkType     gda_thread_get_type   (void);
 #endif
 
-Gda_Thread* gda_thread_new        (Gda_ThreadFunc func);
-void        gda_thread_free       (Gda_Thread *thr);
-void        gda_thread_start      (Gda_Thread *thr, gpointer user_data);
-void        gda_thread_stop       (Gda_Thread *thr);
-gboolean    gda_thread_is_running (Gda_Thread *thr);
+GdaThread* gda_thread_new        (GdaThreadFunc func);
+void        gda_thread_free       (GdaThread *thr);
+void        gda_thread_start      (GdaThread *thr, gpointer user_data);
+void        gda_thread_stop       (GdaThread *thr);
+gboolean    gda_thread_is_running (GdaThread *thr);
 
 #if defined(__cplusplus)
 }

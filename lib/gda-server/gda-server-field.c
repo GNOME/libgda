@@ -24,10 +24,10 @@
 /**
  * gda_server_field_new
  */
-Gda_ServerField *
+GdaServerField *
 gda_server_field_new (void)
 {
-  Gda_ServerField* field = g_new0(Gda_ServerField, 1);
+  GdaServerField* field = g_new0(GdaServerField, 1);
   field->value = g_new0(GDA_Value, 1);
   return field;
 }
@@ -36,7 +36,7 @@ gda_server_field_new (void)
  * gda_server_field_set_name
  */
 void
-gda_server_field_set_name (Gda_ServerField *field, const gchar *name)
+gda_server_field_set_name (GdaServerField *field, const gchar *name)
 {
   g_return_if_fail(field != NULL);
 
@@ -48,7 +48,7 @@ gda_server_field_set_name (Gda_ServerField *field, const gchar *name)
  * gda_server_field_get_sql_type
  */
 gulong
-gda_server_field_get_sql_type (Gda_ServerField *field)
+gda_server_field_get_sql_type (GdaServerField *field)
 {
   g_return_val_if_fail(field != NULL, 0);
   return field->sql_type;
@@ -58,7 +58,7 @@ gda_server_field_get_sql_type (Gda_ServerField *field)
  * gda_server_field_set_sql_type
  */
 void
-gda_server_field_set_sql_type (Gda_ServerField *field, gulong sql_type)
+gda_server_field_set_sql_type (GdaServerField *field, gulong sql_type)
 {
   g_return_if_fail(field != NULL);
   field->sql_type = sql_type;
@@ -68,7 +68,7 @@ gda_server_field_set_sql_type (Gda_ServerField *field, gulong sql_type)
  * gda_server_field_set_defined_length
  */
 void
-gda_server_field_set_defined_length (Gda_ServerField *field, glong length)
+gda_server_field_set_defined_length (GdaServerField *field, glong length)
 {
   g_return_if_fail(field != NULL);
   field->defined_length = length;
@@ -78,7 +78,7 @@ gda_server_field_set_defined_length (Gda_ServerField *field, glong length)
  * gda_server_field_set_actual_length
  */
 void
-gda_server_field_set_actual_length (Gda_ServerField *field, glong length)
+gda_server_field_set_actual_length (GdaServerField *field, glong length)
 {
   g_return_if_fail(field != NULL);
   field->actual_length = length;
@@ -88,7 +88,7 @@ gda_server_field_set_actual_length (Gda_ServerField *field, glong length)
  * gda_server_field_set_scale
  */
 void
-gda_server_field_set_scale (Gda_ServerField *field, gshort scale)
+gda_server_field_set_scale (GdaServerField *field, gshort scale)
 {
   g_return_if_fail(field != NULL);
   field->num_scale = scale;
@@ -98,7 +98,7 @@ gda_server_field_set_scale (Gda_ServerField *field, gshort scale)
  * gda_server_field_get_user_data
  */
 gpointer
-gda_server_field_get_user_data (Gda_ServerField *field)
+gda_server_field_get_user_data (GdaServerField *field)
 {
   g_return_val_if_fail(field != NULL, NULL);
   return field->user_data;
@@ -108,7 +108,7 @@ gda_server_field_get_user_data (Gda_ServerField *field)
  * gda_server_field_set_user_data
  */
 void
-gda_server_field_set_user_data (Gda_ServerField *field, gpointer user_data)
+gda_server_field_set_user_data (GdaServerField *field, gpointer user_data)
 {
   g_return_if_fail(field != NULL);
   field->user_data = user_data;
@@ -118,7 +118,7 @@ gda_server_field_set_user_data (Gda_ServerField *field, gpointer user_data)
  * gda_server_field_free
  */
 void
-gda_server_field_free (Gda_ServerField *field)
+gda_server_field_free (GdaServerField *field)
 {
   g_return_if_fail(field != NULL);
 
@@ -131,7 +131,7 @@ gda_server_field_free (Gda_ServerField *field)
  * gda_server_field_set_boolean
  */
 void
-gda_server_field_set_boolean (Gda_ServerField *field, gboolean val)
+gda_server_field_set_boolean (GdaServerField *field, gboolean val)
 {
   g_return_if_fail(field != NULL);
 
@@ -144,7 +144,7 @@ gda_server_field_set_boolean (Gda_ServerField *field, gboolean val)
  * gda_server_field_set_date
  */
 void
-gda_server_field_set_date (Gda_ServerField *field, GDate *val)
+gda_server_field_set_date (GdaServerField *field, GDate *val)
 {
   g_return_if_fail(field != NULL);
 
@@ -169,7 +169,7 @@ gda_server_field_set_date (Gda_ServerField *field, GDate *val)
  * gda_server_field_set_time
  */
 void
-gda_server_field_set_time (Gda_ServerField *field, GTime val)
+gda_server_field_set_time (GdaServerField *field, GTime val)
 {
   struct tm* stm;
 
@@ -197,7 +197,7 @@ gda_server_field_set_time (Gda_ServerField *field, GTime val)
  * gda_server_field_set_timestamp
  */
 void
-gda_server_field_set_timestamp (Gda_ServerField *field, GDate *dat, GTime tim)
+gda_server_field_set_timestamp (GdaServerField *field, GDate *dat, GTime tim)
 {
   struct tm* stm;
 
@@ -226,7 +226,7 @@ gda_server_field_set_timestamp (Gda_ServerField *field, GDate *dat, GTime tim)
  * gda_server_field_set_smallint
  */
 void
-gda_server_field_set_smallint (Gda_ServerField *field, gshort val)
+gda_server_field_set_smallint (GdaServerField *field, gshort val)
 {
   g_return_if_fail(field != NULL);
 
@@ -239,7 +239,7 @@ gda_server_field_set_smallint (Gda_ServerField *field, gshort val)
  * gda_server_field_set_integer
  */
 void
-gda_server_field_set_integer (Gda_ServerField *field, gint val)
+gda_server_field_set_integer (GdaServerField *field, gint val)
 {
   g_return_if_fail(field != NULL);
 
@@ -252,7 +252,7 @@ gda_server_field_set_integer (Gda_ServerField *field, gint val)
  * gda_server_set_long_varchar
  */
 void
-gda_server_field_set_longvarchar (Gda_ServerField *field, gchar *val)
+gda_server_field_set_longvarchar (GdaServerField *field, gchar *val)
 {
   g_return_if_fail(field != NULL);
 
@@ -274,7 +274,7 @@ gda_server_field_set_longvarchar (Gda_ServerField *field, gchar *val)
  * gda_server_field_set_char
  */
 void
-gda_server_field_set_char (Gda_ServerField *field, gchar *val)
+gda_server_field_set_char (GdaServerField *field, gchar *val)
 {
   g_return_if_fail(field != NULL);
 
@@ -296,7 +296,7 @@ gda_server_field_set_char (Gda_ServerField *field, gchar *val)
  * gda_server_field_set_varchar
  */
 void
-gda_server_field_set_varchar (Gda_ServerField *field, gchar *val)
+gda_server_field_set_varchar (GdaServerField *field, gchar *val)
 {
   g_return_if_fail(field != NULL);
 
@@ -318,7 +318,7 @@ gda_server_field_set_varchar (Gda_ServerField *field, gchar *val)
  * gda_server_field_set_single
  */
 void
-gda_server_field_set_single (Gda_ServerField *field, gfloat val)
+gda_server_field_set_single (GdaServerField *field, gfloat val)
 {
   g_return_if_fail(field != NULL);
 
@@ -331,7 +331,7 @@ gda_server_field_set_single (Gda_ServerField *field, gfloat val)
  * gda_server_field_set_double
  */
 void
-gda_server_field_set_double (Gda_ServerField *field, gdouble val)
+gda_server_field_set_double (GdaServerField *field, gdouble val)
 {
   g_return_if_fail(field != NULL);
 
@@ -344,7 +344,7 @@ gda_server_field_set_double (Gda_ServerField *field, gdouble val)
  * gda_server_field_set_varbin
  */
 void
-gda_server_field_set_varbin (Gda_ServerField *field, gpointer val, glong size)
+gda_server_field_set_varbin (GdaServerField *field, gpointer val, glong size)
 {
   g_return_if_fail(field != NULL);
 

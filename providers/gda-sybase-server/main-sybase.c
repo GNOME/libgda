@@ -23,8 +23,8 @@
 
 #include "gda-sybase.h"
 
-static Gda_ServerImpl*         server_impl = NULL;
-static Gda_ServerImplFunctions server_impl_functions =
+static GdaServerImpl*         server_impl = NULL;
+static GdaServerImplFunctions server_impl_functions =
 {
   gda_sybase_connection_new,
   gda_sybase_connection_open,

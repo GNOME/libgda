@@ -23,7 +23,7 @@ gdaField::gdaField() {
 	_gda_field = NULL;
 }
 
-gdaField::gdaField(Gda_Field *f) {
+gdaField::gdaField(GdaField *f) {
 	_gda_field = f;
 }
 
@@ -32,11 +32,11 @@ gdaField::~gdaField() {
 // FIXME What?! no gda_field_free?!?!
 }
 
-Gda_Field *gdaField::getCStruct() {
+GdaField *gdaField::getCStruct() {
 	return _gda_field;
 }
 
-void gdaField::setCStruct(Gda_Field *f) {
+void gdaField::setCStruct(GdaField *f) {
 	_gda_field = f;
 }
 

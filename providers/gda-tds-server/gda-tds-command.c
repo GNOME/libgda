@@ -22,6 +22,12 @@
  */
 
 // $Log$
+// Revision 1.3  2001/04/07 08:49:34  rodrigo
+// 2001-04-07  Rodrigo Moya <rodrigo@gnome-db.org>
+//
+// 	* objects renaming (Gda_* to Gda*) to conform to the GNOME
+// 	naming standards
+//
 // Revision 1.2  2000/11/21 19:57:13  holger
 // 2000-11-21 Holger Thon <holger@gidayu.max.uni-duisburg.de>
 //
@@ -44,9 +50,9 @@
  * Public functions
  */
 gboolean
-gda_tds_command_new (Gda_ServerCommand *cmd)
+gda_tds_command_new (GdaServerCommand *cmd)
 {
-  Gda_ServerConnection *cnc = NULL;
+  GdaServerConnection *cnc = NULL;
   tds_Command       *tcmd = NULL;
   tds_Connection    *tcnc = NULL;
 
@@ -77,15 +83,15 @@ gda_tds_command_new (Gda_ServerCommand *cmd)
   return TRUE;
 }
 
-Gda_ServerRecordset *
-gda_tds_command_execute (Gda_ServerCommand *cmd,
-                            Gda_ServerError *error,
+GdaServerRecordset *
+gda_tds_command_execute (GdaServerCommand *cmd,
+                            GdaServerError *error,
                             const GDA_CmdParameterSeq *params,
                             gulong *affected,
                             gulong options)
 {
-  Gda_ServerConnection* cnc = NULL;
-  Gda_ServerRecordset*  recset = NULL;
+  GdaServerConnection* cnc = NULL;
+  GdaServerRecordset*  recset = NULL;
   tds_Connection*    tcnc = NULL;
   tds_Command*       tcmd = NULL;
   tds_Recordset*     trecset = NULL;
@@ -260,9 +266,9 @@ gda_tds_command_execute (Gda_ServerCommand *cmd,
 }
 
 void
-gda_tds_command_free (Gda_ServerCommand *cmd)
+gda_tds_command_free (GdaServerCommand *cmd)
 {
-  Gda_ServerConnection *cnc = NULL;
+  GdaServerConnection *cnc = NULL;
   tds_Connection    *tcnc = NULL;
   tds_Command       *tcmd = NULL;
   

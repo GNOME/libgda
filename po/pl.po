@@ -537,7 +537,7 @@ msgid "Invalid or unsupported constraint type: %d"
 msgstr ""
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:1
-msgid "Could not allocate Gda_ServerCommand"
+msgid "Could not allocate GdaServerCommand"
 msgstr ""
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:1

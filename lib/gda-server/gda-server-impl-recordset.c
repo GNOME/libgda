@@ -92,7 +92,7 @@ static POA_GDA_Recordset__vepv impl_GDA_Recordset_vepv =
  */
 GDA_Recordset
 impl_GDA_Recordset__create (PortableServer_POA poa,
-			    Gda_ServerRecordset *recset,
+			    GdaServerRecordset *recset,
 			    CORBA_Environment *ev)
 {
   GDA_Recordset retval;
@@ -320,11 +320,11 @@ impl_GDA_Recordset_fetch (impl_POA_GDA_Recordset * servant,
                           CORBA_long count,
                           CORBA_Environment * ev)
 {
-  Gda_ServerRecordset* rs = servant->recset;
+  GdaServerRecordset* rs = servant->recset;
   GDA_Row*                 row;
   GDA_Recordset_Chunk*     chunk;
   GDA_Field*               field;
-  Gda_ServerField*         server_field;
+  GdaServerField*         server_field;
   GList*                   ptr;
   gint                     rowidx = 0;
   gint                     colidx;
@@ -402,7 +402,7 @@ impl_GDA_Recordset_fetch (impl_POA_GDA_Recordset * servant,
   if (rc < 0)
     {
       GDA_DriverError*          exception = GDA_DriverError__alloc();
-      Gda_ServerConnection* cnc = rs->cnc;
+      GdaServerConnection* cnc = rs->cnc;
 
       gda_log_error(_("%s: an error ocurred while fetching data"), __PRETTY_FUNCTION__);
       exception->errors._length = g_list_length(cnc->errors);
@@ -432,10 +432,10 @@ GDA_RowAttributes *
 impl_GDA_Recordset_describe (impl_POA_GDA_Recordset * servant,
 			     CORBA_Environment * ev)
 {
-  Gda_ServerRecordset* rs = servant->recset;
+  GdaServerRecordset* rs = servant->recset;
   GDA_RowAttributes*       rc;
   GList*                   ptr;
-  Gda_ServerField*     server_field;
+  GdaServerField*     server_field;
   GDA_FieldAttributes*     field;
   gint                     idx;
 
@@ -453,7 +453,7 @@ impl_GDA_Recordset_describe (impl_POA_GDA_Recordset * servant,
     {
       field = &rc->_buffer[idx];
       
-      server_field = (Gda_ServerField *)(ptr->data);
+      server_field = (GdaServerField *)(ptr->data);
 
       field->name = CORBA_string_dup(server_field->name);
       gda_log_message(_("%s: sending field description for '%s'"),

@@ -36,7 +36,7 @@ static gint gda_xml_file_signals[GDA_XML_FILE_LAST_SIGNAL] = { 0, 0 };
 #ifdef HAVE_GOBJECT
 static void gda_xml_file_finalize (GObject *object);
 #else
-static void gda_xml_file_destroy    (Gda_XmlFile *xmlfile);
+static void gda_xml_file_destroy    (GdaXmlFile *xmlfile);
 #endif
 
 /* errors handling */
@@ -44,11 +44,11 @@ static void (gda_xml_file_error_def) (void *ctx, const char *msg, ...);
 static void (gda_xml_file_warn_def) (void *ctx, const char *msg, ...);
 
 /*
- * Gda_XmlFile object implementation
+ * GdaXmlFile object implementation
  */
 #ifdef HAVE_GOBJECT
 static void
-gda_xml_file_class_init (Gda_XmlFileClass *klass, gpointer data)
+gda_xml_file_class_init (GdaXmlFileClass *klass, gpointer data)
 {
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
@@ -60,7 +60,7 @@ gda_xml_file_class_init (Gda_XmlFileClass *klass, gpointer data)
 }
 #else
 static void
-gda_xml_file_class_init (Gda_XmlFileClass *klass)
+gda_xml_file_class_init (GdaXmlFileClass *klass)
 {
   GtkObjectClass* object_class = GTK_OBJECT_CLASS(klass);
 
@@ -68,7 +68,7 @@ gda_xml_file_class_init (Gda_XmlFileClass *klass)
     gtk_signal_new ("warning",
                     GTK_RUN_FIRST,
                     object_class->type,
-                    GTK_SIGNAL_OFFSET (Gda_XmlFileClass, warning),
+                    GTK_SIGNAL_OFFSET (GdaXmlFileClass, warning),
                     gtk_marshal_NONE__POINTER, GTK_TYPE_NONE, 1, 
 		    GTK_TYPE_POINTER);
 
@@ -76,7 +76,7 @@ gda_xml_file_class_init (Gda_XmlFileClass *klass)
     gtk_signal_new ("error",
                     GTK_RUN_FIRST,
                     object_class->type,
-                    GTK_SIGNAL_OFFSET (Gda_XmlFileClass, error),
+                    GTK_SIGNAL_OFFSET (GdaXmlFileClass, error),
                     gtk_marshal_NONE__POINTER, GTK_TYPE_NONE, 1, 
 		    GTK_TYPE_POINTER);
 
@@ -92,9 +92,9 @@ gda_xml_file_class_init (Gda_XmlFileClass *klass)
 
 static void
 #ifdef HAVE_GOBJECT
-gda_xml_file_init (Gda_XmlFile *xmlfile, Gda_XmlFileClass* klass)
+gda_xml_file_init (GdaXmlFile *xmlfile, GdaXmlFileClass* klass)
 #else
-gda_xml_file_init (Gda_XmlFile *xmlfile)
+gda_xml_file_init (GdaXmlFile *xmlfile)
 #endif
 {
   /* might change in future versions of libxml */
@@ -118,18 +118,18 @@ gda_xml_file_get_type (void)
     {
       GTypeInfo info =
       {
-        sizeof (Gda_XmlFileClass),                /* class_size */
+        sizeof (GdaXmlFileClass),                /* class_size */
         NULL,                                     /* base_init */
         NULL,                                     /* base_finalize */
         (GClassInitFunc) gda_xml_file_class_init, /* class_init */
         NULL,                                     /* class_finalize */
         NULL,                                     /* class_data */
-        sizeof (Gda_XmlFile),                     /* instance_size */
+        sizeof (GdaXmlFile),                     /* instance_size */
         0,                                        /* n_preallocs */
         (GInstanceInitFunc) gda_xml_file_init,    /* instance_init */
         NULL,                                     /* value_table */
       };
-      type = g_type_register_static (G_TYPE_OBJECT, "Gda_XmlFile", &info, 0);
+      type = g_type_register_static (G_TYPE_OBJECT, "GdaXmlFile", &info, 0);
     }
   return (type);
 }
@@ -142,9 +142,9 @@ gda_xml_file_get_type (void)
     {
       GtkTypeInfo gda_xml_file_info =
       {
-        "Gda_XmlFile",
-        sizeof(Gda_XmlFile),
-        sizeof(Gda_XmlFileClass),
+        "GdaXmlFile",
+        sizeof(GdaXmlFile),
+        sizeof(GdaXmlFileClass),
         (GtkClassInitFunc) gda_xml_file_class_init,
         (GtkObjectInitFunc) gda_xml_file_init,
         (GtkArgSetFunc) 0,
@@ -160,12 +160,12 @@ gda_xml_file_get_type (void)
  * gda_xml_file_new
  * @root_doc: root document new
  *
- * Create a new #Gda_XmlFile object, with a root document of type @root_doc
+ * Create a new #GdaXmlFile object, with a root document of type @root_doc
  */
-Gda_XmlFile *
+GdaXmlFile *
 gda_xml_file_new (const gchar *root_doc)
 {
-  Gda_XmlFile* xmlfile;
+  GdaXmlFile* xmlfile;
 
 #ifdef HAVE_GOBJECT
   xmlfile = GDA_XML_FILE (g_object_new (GDA_TYPE_XML_FILE, NULL));
@@ -178,7 +178,7 @@ gda_xml_file_new (const gchar *root_doc)
   return xmlfile;
 }
 
-void gda_xml_file_construct(Gda_XmlFile *xmlfile, const gchar *root_doc)
+void gda_xml_file_construct(GdaXmlFile *xmlfile, const gchar *root_doc)
 {
   /* initialize XML document */
   xmlfile->doc = xmlNewDoc("1.0");
@@ -195,16 +195,16 @@ void gda_xml_file_construct(Gda_XmlFile *xmlfile, const gchar *root_doc)
 static void
 gda_xml_file_finalize (GObject *object)
 {
-  Gda_XmlFile *xmlfile = GDA_XML_FILE (object);
-  Gda_XmlFileClass *klass =
-    G_TYPE_INSTANCE_GET_CLASS (object, GDA_XML_FILE_CLASS, Gda_XmlFileClass);
+  GdaXmlFile *xmlfile = GDA_XML_FILE (object);
+  GdaXmlFileClass *klass =
+    G_TYPE_INSTANCE_GET_CLASS (object, GDA_XML_FILE_CLASS, GdaXmlFileClass);
 
   xmlFreeDoc (xmlfile->doc);
   klass->parent->finalize (object);
 }
 #else
 static void
-gda_xml_file_destroy (Gda_XmlFile *xmlfile)
+gda_xml_file_destroy (GdaXmlFile *xmlfile)
 {
   g_return_if_fail(GDA_IS_XML_FILE(xmlfile));
 
@@ -216,12 +216,12 @@ gda_xml_file_destroy (Gda_XmlFile *xmlfile)
  * gda_xml_file_new_from_file
  * @filename: file name
  *
- * Load a #Gda_XmlFile from the given @filename
+ * Load a #GdaXmlFile from the given @filename
  */
-/* Gda_XmlFile * */
+/* GdaXmlFile * */
 /* gda_xml_file_new_from_file (const gchar *filename) */
 /* { */
-/*   Gda_XmlFile* xmlfile; */
+/*   GdaXmlFile* xmlfile; */
 
 /*   xmlfile = GDA_XML_FILE(gtk_type_new(gda_xml_file_get_type())); */
 
@@ -235,7 +235,7 @@ gda_xml_file_destroy (Gda_XmlFile *xmlfile)
 /*   return xmlfile; */
 /* } */
 
-gchar* gda_xml_file_stringify(Gda_XmlFile *f)
+gchar* gda_xml_file_stringify(GdaXmlFile *f)
 {
   xmlChar *str;
   gint i;
@@ -246,7 +246,7 @@ gchar* gda_xml_file_stringify(Gda_XmlFile *f)
 
 
 
-gint  gda_xml_file_to_file(Gda_XmlFile *f, const gchar *filename)
+gint  gda_xml_file_to_file(GdaXmlFile *f, const gchar *filename)
 {
   g_return_val_if_fail(GDA_IS_XML_FILE(f), -1);
   g_return_val_if_fail((filename != NULL), -1);

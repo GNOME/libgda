@@ -35,7 +35,7 @@ int map_cols( ODBC_Recordset *odbc_recset, int col )
 }
 
 static void
-fill_field_values (Gda_ServerRecordset *recset, ODBC_Recordset *odbc_recset)
+fill_field_values (GdaServerRecordset *recset, ODBC_Recordset *odbc_recset)
 {
   SQLSMALLINT   i;
   GList*        node;
@@ -50,7 +50,7 @@ fill_field_values (Gda_ServerRecordset *recset, ODBC_Recordset *odbc_recset)
     node = g_list_nth(gda_server_recordset_get_fields(recset), i);
     if ( node )
     {
-      Gda_ServerField* field = (Gda_ServerField *) node->data;
+      GdaServerField* field = (GdaServerField *) node->data;
 
       switch (gda_server_field_get_sql_type(field))
       {
@@ -61,7 +61,7 @@ fill_field_values (Gda_ServerRecordset *recset, ODBC_Recordset *odbc_recset)
                       SQL_C_CHAR, txt, sizeof( txt ), &len );
               gda_server_field_set_varchar(field, txt);
               if ( len >= 0 )
-                gda_server_field_set_actual_length((Gda_ServerField *) node->data, len );
+                gda_server_field_set_actual_length((GdaServerField *) node->data, len );
           }
           break;
 
@@ -95,7 +95,7 @@ fill_field_values (Gda_ServerRecordset *recset, ODBC_Recordset *odbc_recset)
               }
               while( SQL_SUCCEEDED( rc ));
               if ( total >= 0 )
-                gda_server_field_set_actual_length((Gda_ServerField *) node->data, total );
+                gda_server_field_set_actual_length((GdaServerField *) node->data, total );
           }
           break;
 
@@ -132,7 +132,7 @@ fill_field_values (Gda_ServerRecordset *recset, ODBC_Recordset *odbc_recset)
               }
               while( SQL_SUCCEEDED( rc ));
               if ( total >= 0 )
-                gda_server_field_set_actual_length((Gda_ServerField *) node->data, total );
+                gda_server_field_set_actual_length((GdaServerField *) node->data, total );
           }
           break;
 
@@ -144,7 +144,7 @@ fill_field_values (Gda_ServerRecordset *recset, ODBC_Recordset *odbc_recset)
                       SQL_C_CHAR, txt, sizeof( txt ), &len );
               gda_server_field_set_varchar(field, txt);
               if ( len >= 0 )
-                gda_server_field_set_actual_length((Gda_ServerField *) node->data, len );
+                gda_server_field_set_actual_length((GdaServerField *) node->data, len );
           }
           break;
 
@@ -201,7 +201,7 @@ fill_field_values (Gda_ServerRecordset *recset, ODBC_Recordset *odbc_recset)
           {
               rc = SQLGetData( odbc_recset->hstmt, map_cols( odbc_recset, i ) + 1, 
                       SQL_C_TYPE_DATE, &field->value->_u.dbd, sizeof( SQL_TIME_STRUCT ), &len );
-              gda_server_field_set_actual_length((Gda_ServerField *) node->data, 
+              gda_server_field_set_actual_length((GdaServerField *) node->data, 
                       sizeof( SQL_DATE_STRUCT ));
               field->value->_d = GDA_TypeDbDate;
           }
@@ -212,7 +212,7 @@ fill_field_values (Gda_ServerRecordset *recset, ODBC_Recordset *odbc_recset)
           {
               rc = SQLGetData( odbc_recset->hstmt, map_cols( odbc_recset, i ) + 1, 
                       SQL_C_TYPE_TIME, &field->value->_u.dbt, sizeof( SQL_TIME_STRUCT ), &len );
-              gda_server_field_set_actual_length((Gda_ServerField *) node->data, 
+              gda_server_field_set_actual_length((GdaServerField *) node->data, 
                       sizeof( SQL_TIME_STRUCT ));
               field->value->_d = GDA_TypeDbTime;
           }
@@ -223,7 +223,7 @@ fill_field_values (Gda_ServerRecordset *recset, ODBC_Recordset *odbc_recset)
           {
               rc = SQLGetData( odbc_recset->hstmt, map_cols( odbc_recset, 1 ) + 1, 
                       SQL_C_TYPE_TIMESTAMP, &field->value->_u.dbtstamp, sizeof( SQL_TIMESTAMP_STRUCT ), &len );
-              gda_server_field_set_actual_length((Gda_ServerField *) node->data, 
+              gda_server_field_set_actual_length((GdaServerField *) node->data, 
                       sizeof( SQL_TIMESTAMP_STRUCT ));
               field->value->_d = GDA_TypeDbTimestamp;
           }
@@ -233,7 +233,7 @@ fill_field_values (Gda_ServerRecordset *recset, ODBC_Recordset *odbc_recset)
           {
               rc = SQLGetData( odbc_recset->hstmt, map_cols( odbc_recset, i ) + 1, 
                       SQL_C_DATE, &field->value->_u.dbd, sizeof( TIME_STRUCT ), &len );
-              gda_server_field_set_actual_length((Gda_ServerField *) node->data, 
+              gda_server_field_set_actual_length((GdaServerField *) node->data, 
                       sizeof( DATE_STRUCT ));
               field->value->_d = GDA_TypeDbDate;
           }
@@ -243,7 +243,7 @@ fill_field_values (Gda_ServerRecordset *recset, ODBC_Recordset *odbc_recset)
           {
               rc = SQLGetData( odbc_recset->hstmt, map_cols( odbc_recset, i ) + 1, 
                       SQL_C_TIME, &field->value->_u.dbt, sizeof( TIME_STRUCT ), &len );
-              gda_server_field_set_actual_length((Gda_ServerField *) node->data, 
+              gda_server_field_set_actual_length((GdaServerField *) node->data, 
                       sizeof( TIME_STRUCT ));
               field->value->_d = GDA_TypeDbTime;
           }
@@ -253,7 +253,7 @@ fill_field_values (Gda_ServerRecordset *recset, ODBC_Recordset *odbc_recset)
           {
               rc = SQLGetData( odbc_recset->hstmt, map_cols( odbc_recset, 1 ) + 1, 
                       SQL_C_TIMESTAMP, &field->value->_u.dbtstamp, sizeof( TIMESTAMP_STRUCT ), &len );
-              gda_server_field_set_actual_length((Gda_ServerField *) node->data, 
+              gda_server_field_set_actual_length((GdaServerField *) node->data, 
                       sizeof( TIMESTAMP_STRUCT ));
               field->value->_d = GDA_TypeDbTimestamp;
           }
@@ -266,23 +266,23 @@ fill_field_values (Gda_ServerRecordset *recset, ODBC_Recordset *odbc_recset)
               char txt[ 1024 ];
               rc = SQLGetData( odbc_recset->hstmt, map_cols( odbc_recset, i ) + 1, SQL_C_CHAR, txt, sizeof( txt ), &len );
               gda_server_field_set_char(field, txt);
-              gda_server_field_set_actual_length((Gda_ServerField *) node->data, len );
+              gda_server_field_set_actual_length((GdaServerField *) node->data, len );
           }
       }
       if ( len == SQL_NULL_DATA )
       {
-        gda_server_field_set_actual_length((Gda_ServerField *) node->data, 0);
+        gda_server_field_set_actual_length((GdaServerField *) node->data, 0);
       }
     }
     else
     {
-      gda_server_field_set_actual_length((Gda_ServerField *) node->data, 0);
+      gda_server_field_set_actual_length((GdaServerField *) node->data, 0);
     }
   }
 }
 
 gboolean
-gda_odbc_recordset_new (Gda_ServerRecordset *recset)
+gda_odbc_recordset_new (GdaServerRecordset *recset)
 {
   ODBC_Recordset* odbc_recset;
 
@@ -297,7 +297,7 @@ gda_odbc_recordset_new (Gda_ServerRecordset *recset)
 }
 
 gint
-gda_odbc_recordset_move_next (Gda_ServerRecordset *recset)
+gda_odbc_recordset_move_next (GdaServerRecordset *recset)
 {
   ODBC_Recordset* odbc_recset;
 
@@ -330,7 +330,7 @@ gda_odbc_recordset_move_next (Gda_ServerRecordset *recset)
 }
 
 gint
-gda_odbc_recordset_move_prev (Gda_ServerRecordset *recset)
+gda_odbc_recordset_move_prev (GdaServerRecordset *recset)
 {
   ODBC_Recordset* odbc_recset;
 
@@ -367,7 +367,7 @@ gda_odbc_recordset_move_prev (Gda_ServerRecordset *recset)
 }
 
 gint
-gda_odbc_recordset_close (Gda_ServerRecordset *recset)
+gda_odbc_recordset_close (GdaServerRecordset *recset)
 {
   ODBC_Recordset* odbc_recset;
 
@@ -395,7 +395,7 @@ gda_odbc_recordset_close (Gda_ServerRecordset *recset)
 }
 
 void
-gda_odbc_recordset_free (Gda_ServerRecordset *recset)
+gda_odbc_recordset_free (GdaServerRecordset *recset)
 {
   ODBC_Recordset* odbc_recset;
 
@@ -408,8 +408,8 @@ gda_odbc_recordset_free (Gda_ServerRecordset *recset)
   }
 }
 
-Gda_ServerRecordset*
-gda_odbc_describe_recset(Gda_ServerRecordset* recset, ODBC_Recordset* odbc_recset)
+GdaServerRecordset*
+gda_odbc_describe_recset(GdaServerRecordset* recset, ODBC_Recordset* odbc_recset)
 {
   SQLRETURN         rc;
   SQLSMALLINT       ncols;
@@ -431,7 +431,7 @@ gda_odbc_describe_recset(Gda_ServerRecordset* recset, ODBC_Recordset* odbc_recse
 
   for (i = 0; i < ( odbc_recset -> mapped_cols ? odbc_recset -> mapped_cols : ncols ); i++)
    {
-    Gda_ServerField* field;
+    GdaServerField* field;
     SQLCHAR           colname[128];
     SQLSMALLINT       colnamelen;
     SQLSMALLINT       sql_type;

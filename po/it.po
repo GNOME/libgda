@@ -623,8 +623,8 @@ msgstr ""
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:702
 #: providers/gda-tds-server/gda-tds-connection.c:685
-msgid "Could not allocate Gda_ServerCommand"
-msgstr "Impossiobile allocare Gda_ServerCommand"
+msgid "Could not allocate GdaServerCommand"
+msgstr "Impossiobile allocare GdaServerCommand"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:732
 #: providers/gda-sybase-server/gda-sybase-connection.c:737

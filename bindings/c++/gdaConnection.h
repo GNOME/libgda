@@ -25,12 +25,12 @@
 class gdaConnection {
 	public:
 		gdaConnection();
-		gdaConnection(Gda_Connection *a);
+		gdaConnection(GdaConnection *a);
 		gdaConnection(CORBA_ORB orb);
 		~gdaConnection();
 		
-		Gda_Connection* getCStruct();
-		void setCStruct(Gda_Connection *cnc);
+		GdaConnection* getCStruct();
+		void setCStruct(GdaConnection *cnc);
 		
 		void setProvider(gchar* name);
 		const gchar* getProvider();
@@ -64,7 +64,7 @@ class gdaConnection {
 		gchar* getVersion();
 			
 	private:
-		Gda_Connection* _gda_connection;
+		GdaConnection* _gda_connection;
 };
 
 #endif // __gda_bindings_cpp_gdaConnectionH

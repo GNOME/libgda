@@ -615,8 +615,8 @@ msgstr "Ugyldig eller ikke støttet begrensningstype: %d"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:702
 #: providers/gda-tds-server/gda-tds-connection.c:685
-msgid "Could not allocate Gda_ServerCommand"
-msgstr "Kunne ikke allokere Gda_ServerCommand"
+msgid "Could not allocate GdaServerCommand"
+msgstr "Kunne ikke allokere GdaServerCommand"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:732
 #: providers/gda-sybase-server/gda-sybase-connection.c:737

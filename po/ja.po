@@ -603,8 +603,8 @@ msgstr "制約タイプは無効またはサポートしていません: %d"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:722
 #: providers/gda-tds-server/gda-tds-connection.c:721
-msgid "Could not allocate Gda_ServerCommand"
-msgstr "Gda_ServerCommand の割り当てることが出来ませんでした"
+msgid "Could not allocate GdaServerCommand"
+msgstr "GdaServerCommand の割り当てることが出来ませんでした"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:752
 #: providers/gda-sybase-server/gda-sybase-connection.c:757

@@ -24,11 +24,11 @@
 class gdaCommand {
 	public:
 		gdaCommand();
-		gdaCommand(Gda_Command *cmd);
+		gdaCommand(GdaCommand *cmd);
 		~gdaCommand();
 
-		Gda_Command *getCStruct();
-		void setCStruct(Gda_Command *cmd);
+		GdaCommand *getCStruct();
+		void setCStruct(GdaCommand *cmd);
 		
 		gdaConnection *getConnection();
 		gint setConnection(gdaConnection *a);
@@ -43,7 +43,7 @@ class gdaCommand {
 
 	private:
 		gdaConnection *cnc;
-		Gda_Command* _gda_command;
+		GdaCommand* _gda_command;
 };
 
 #endif

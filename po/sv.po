@@ -619,8 +619,8 @@ msgstr "Ogiltig eller ej stödd restriktionstyp: %d"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:702
 #: providers/gda-tds-server/gda-tds-connection.c:693
-msgid "Could not allocate Gda_ServerCommand"
-msgstr "Kunde inte allokera Gda_ServerCommand"
+msgid "Could not allocate GdaServerCommand"
+msgstr "Kunde inte allokera GdaServerCommand"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:732
 #: providers/gda-sybase-server/gda-sybase-connection.c:737

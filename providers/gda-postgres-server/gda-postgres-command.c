@@ -18,31 +18,31 @@
 
 #include "gda-postgres.h"
 
-static Gda_ServerRecordset *init_recset_fields (Gda_ServerRecordset *recset, 
+static GdaServerRecordset *init_recset_fields (GdaServerRecordset *recset, 
 						POSTGRES_Recordset *prc);
 
 /*
  * Public functions
  */
 gboolean
-gda_postgres_command_new (Gda_ServerCommand *cmd)
+gda_postgres_command_new (GdaServerCommand *cmd)
 {
   /* no structure POSTGRES_Command because everything inside this struct is held
-     in the Gda_ServerCommand object */
+     in the GdaServerCommand object */
   return TRUE;
 }
 
-Gda_ServerRecordset *
-gda_postgres_command_execute (Gda_ServerCommand *cmd,
-			      Gda_ServerError *error,
+GdaServerRecordset *
+gda_postgres_command_execute (GdaServerCommand *cmd,
+			      GdaServerError *error,
 			      const GDA_CmdParameterSeq *params,
 			      gulong *affected,
 			      gulong options)
 {
-  Gda_ServerConnection* cnc;
+  GdaServerConnection* cnc;
   POSTGRES_Connection *pc;
   gchar*                cmd_string;
-  Gda_ServerRecordset*  recset = NULL;
+  GdaServerRecordset*  recset = NULL;
 
   cnc = gda_server_command_get_connection(cmd);
   if (cnc)
@@ -101,12 +101,12 @@ gda_postgres_command_execute (Gda_ServerCommand *cmd,
   return (0);
 }
 
-Gda_ServerRecordset *
-gda_postgres_command_build_recset_with_builtin (Gda_ServerConnection *cnc,
-						Gda_Builtin_Result *res,  
+GdaServerRecordset *
+gda_postgres_command_build_recset_with_builtin (GdaServerConnection *cnc,
+						GdaBuiltin_Result *res,  
 						gulong *affected)
 {
-  Gda_ServerRecordset *recset;
+  GdaServerRecordset *recset;
   POSTGRES_Recordset  *prc;
 
   recset = gda_server_recordset_new(cnc);
@@ -117,7 +117,7 @@ gda_postgres_command_build_recset_with_builtin (Gda_ServerConnection *cnc,
   gda_server_recordset_set_at_begin(recset, TRUE);
   gda_server_recordset_set_at_end(recset, FALSE);
   prc->pos = 0;
-  *affected = Gda_Builtin_Result_get_nbtuples(res);
+  *affected = GdaBuiltin_Result_get_nbtuples(res);
   return (init_recset_fields(recset, prc));
 }
 
@@ -130,8 +130,8 @@ gda_postgres_cmd_set_connection (POSTGRES_Command *cmd,
   return (rc);
 }
 
-static Gda_ServerRecordset *
-init_recset_fields (Gda_ServerRecordset *recset, POSTGRES_Recordset *prc)
+static GdaServerRecordset *
+init_recset_fields (GdaServerRecordset *recset, POSTGRES_Recordset *prc)
 {
   register gint cnt;
   guint ncols;
@@ -139,12 +139,12 @@ init_recset_fields (Gda_ServerRecordset *recset, POSTGRES_Recordset *prc)
   if (prc->pq_data)
     ncols = PQnfields(prc->pq_data);
   else
-    ncols = Gda_Builtin_Result_get_nbfields(prc->btin_res);
+    ncols = GdaBuiltin_Result_get_nbfields(prc->btin_res);
   /* check parameters */
   g_return_val_if_fail(recset != NULL, NULL);
   for (cnt = 0; cnt < ncols; cnt++)
     {
-      Gda_ServerField *f = gda_server_field_new();
+      GdaServerField *f = gda_server_field_new();
       if (prc->pq_data)
 	{
 	  gda_server_field_set_name(f, PQfname(prc->pq_data, cnt));
@@ -152,11 +152,11 @@ init_recset_fields (Gda_ServerRecordset *recset, POSTGRES_Recordset *prc)
 	}
       else
 	{
-	  gda_server_field_set_name(f, Gda_Builtin_Result_get_fname
+	  gda_server_field_set_name(f, GdaBuiltin_Result_get_fname
 				    (prc->btin_res, cnt));
 	  /* The Sql Type will be modified when there is 
 	     a replacement function*/
-	  gda_server_field_set_sql_type(f, Gda_Builtin_Result_get_ftype(prc->btin_res, cnt));
+	  gda_server_field_set_sql_type(f, GdaBuiltin_Result_get_ftype(prc->btin_res, cnt));
 	}
 
       f->c_type = 
@@ -171,7 +171,7 @@ init_recset_fields (Gda_ServerRecordset *recset, POSTGRES_Recordset *prc)
       /*if (prc->pq_data)
 	f->defined_length = f->actual_length = PQfsize(prc->pq_data, cnt);
 	else
-	f->defined_length = f->actual_length = Gda_Builtin_Result_get_fsize
+	f->defined_length = f->actual_length = GdaBuiltin_Result_get_fsize
 	(prc->btin_res, cnt);;*/
       /*f->malloced = 0;*/
 
@@ -184,6 +184,6 @@ init_recset_fields (Gda_ServerRecordset *recset, POSTGRES_Recordset *prc)
 
 
 void
-gda_postgres_command_free (Gda_ServerCommand *cmd)
+gda_postgres_command_free (GdaServerCommand *cmd)
 {
 }

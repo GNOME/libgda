@@ -46,11 +46,11 @@ enum
 static gint gda_error_signals[GDA_ERROR_LAST_SIGNAL] = { 0, };
 
 #ifdef HAVE_GOBJECT
-static void gda_error_class_init (Gda_ErrorClass *klass, gpointer data);
-static void gda_error_init       (Gda_Error *error, Gda_ErrorClass *klass);
+static void gda_error_class_init (GdaErrorClass *klass, gpointer data);
+static void gda_error_init       (GdaError *error, GdaErrorClass *klass);
 #else
-static void gda_error_class_init (Gda_ErrorClass *klass);
-static void gda_error_init       (Gda_Error *error);
+static void gda_error_class_init (GdaErrorClass *klass);
+static void gda_error_init       (GdaError *error);
 #endif
 
 #ifdef HAVE_GOBJECT
@@ -63,18 +63,18 @@ gda_error_get_type (void)
     {
       GTypeInfo info =
       {
-        sizeof (Gda_ErrorClass),               /* class_size */
+        sizeof (GdaErrorClass),               /* class_size */
 	NULL,                                  /* base_init */
 	NULL,                                  /* base_finalize */
         (GClassInitFunc) gda_error_class_init, /* class_init */
 	NULL,                                  /* class_finalize */
 	NULL,                                  /* class_data */
-        sizeof (Gda_Error),                    /* instance_size */
+        sizeof (GdaError),                    /* instance_size */
 	0,                                     /* n_preallocs */
         (GInstanceInitFunc) gda_error_init,    /* instance_init */
 	NULL,                                  /* value_table */
       };
-      type = g_type_register_static (G_TYPE_OBJECT, "Gda_Error", &info, 0);
+      type = g_type_register_static (G_TYPE_OBJECT, "GdaError", &info, 0);
     }
   return type;
 }
@@ -89,8 +89,8 @@ gda_error_get_type (void)
       GtkTypeInfo gda_error_info =
       {
         "GdaError",
-        sizeof (Gda_Error),
-        sizeof (Gda_ErrorClass),
+        sizeof (GdaError),
+        sizeof (GdaErrorClass),
         (GtkClassInitFunc) gda_error_class_init,
         (GtkObjectInitFunc) gda_error_init,
         (GtkArgSetFunc) NULL,
@@ -104,12 +104,12 @@ gda_error_get_type (void)
 
 #ifdef HAVE_GOBJECT
 static void
-gda_error_class_init (Gda_ErrorClass *klass, gpointer data)
+gda_error_class_init (GdaErrorClass *klass, gpointer data)
 {
 }
 #else
 static void
-gda_error_class_init (Gda_ErrorClass* klass)
+gda_error_class_init (GdaErrorClass* klass)
 {
   GtkObjectClass*   object_class;
 
@@ -119,9 +119,9 @@ gda_error_class_init (Gda_ErrorClass* klass)
 
 static void
 #ifdef HAVE_GOBJECT
-gda_error_init (Gda_Error *error, Gda_ErrorClass *klass)
+gda_error_init (GdaError *error, GdaErrorClass *klass)
 #else
-gda_error_init (Gda_Error* error)
+gda_error_init (GdaError* error)
 #endif
 {
   g_return_if_fail(IS_GDA_ERROR(error));
@@ -141,10 +141,10 @@ gda_error_init (Gda_Error* error)
  *
  * Returns: the error object.
  */
-Gda_Error *
+GdaError *
 gda_error_new (void)
 {
-  Gda_Error* error;
+  GdaError* error;
 
 #ifdef HAVE_GOBJECT
   error = GDA_ERROR (g_object_new (GDA_TYPE_ERROR, NULL));
@@ -158,7 +158,7 @@ GList*
 gda_errors_from_exception (CORBA_Environment* ev)
 {
   GList*     all_errors = 0;
-  Gda_Error* error;
+  GdaError* error;
 
   g_return_val_if_fail(ev != 0, 0);
   
@@ -235,7 +235,7 @@ gda_errors_from_exception (CORBA_Environment* ev)
  *
  */
 void
-gda_error_free (Gda_Error* error)
+gda_error_free (GdaError* error)
 {
   g_return_if_fail(IS_GDA_ERROR(error));
   
@@ -278,7 +278,7 @@ gda_error_list_free (GList* errors)
   
   while (ptr)
     {
-      Gda_Error* error = ptr->data;
+      GdaError* error = ptr->data;
       gda_error_free(error);
       ptr = g_list_next(ptr);
     }
@@ -287,49 +287,49 @@ gda_error_list_free (GList* errors)
 
  
 const gchar*
-gda_error_description (Gda_Error* error)
+gda_error_description (GdaError* error)
 {
   g_return_val_if_fail(IS_GDA_ERROR(error), 0);
   return error->description;
 }
 
 const glong
-gda_error_number (Gda_Error* error)
+gda_error_number (GdaError* error)
 {
   g_return_val_if_fail(IS_GDA_ERROR(error), 0);
   return error->number;
 }
 
 const gchar*
-gda_error_source (Gda_Error* error)
+gda_error_source (GdaError* error)
 {
   g_return_val_if_fail(IS_GDA_ERROR(error), 0);
   return error->source;
 }
 
 const gchar*
-gda_error_helpurl (Gda_Error* error)
+gda_error_helpurl (GdaError* error)
 {
   g_return_val_if_fail(IS_GDA_ERROR(error), 0);
   return error->helpurl;
 }
 
 const gchar*
-gda_error_sqlstate (Gda_Error* error)
+gda_error_sqlstate (GdaError* error)
 {
   g_return_val_if_fail(IS_GDA_ERROR(error), 0);
   return error->sqlstate;
 }
 
 const gchar*
-gda_error_nativeMsg (Gda_Error* error)
+gda_error_nativeMsg (GdaError* error)
 {
   g_return_val_if_fail(IS_GDA_ERROR(error), 0);
   return error->nativeMsg;
 }
 
 const gchar*
-gda_error_realcommand (Gda_Error* error)
+gda_error_realcommand (GdaError* error)
 {
   g_return_val_if_fail(IS_GDA_ERROR(error), 0);
   return error->realcommand;

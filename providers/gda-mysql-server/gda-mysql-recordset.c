@@ -62,7 +62,7 @@ str_to_tmstruct_date2(gchar *date)
 }
 
 static void
-fill_field_values (Gda_ServerRecordset *recset, MYSQL_Recordset *mysql_recset)
+fill_field_values (GdaServerRecordset *recset, MYSQL_Recordset *mysql_recset)
 {
   gint   rowlength;
   gint   fieldidx;
@@ -87,7 +87,7 @@ fill_field_values (Gda_ServerRecordset *recset, MYSQL_Recordset *mysql_recset)
 	{
 	  if (mysql_recset->array[fieldidx])
 	    {
-	      Gda_ServerField* field = (Gda_ServerField *) node->data;
+	      GdaServerField* field = (GdaServerField *) node->data;
 	      switch (gda_server_field_get_sql_type(field))
 		{
 		case FIELD_TYPE_TINY :
@@ -128,14 +128,14 @@ fill_field_values (Gda_ServerRecordset *recset, MYSQL_Recordset *mysql_recset)
 	    }
 	  else /* NULL value */
 	    {
-	      gda_server_field_set_actual_length((Gda_ServerField *) node->data, 0);
+	      gda_server_field_set_actual_length((GdaServerField *) node->data, 0);
 	    }
 	}
     }
 }
 
 gboolean
-gda_mysql_recordset_new (Gda_ServerRecordset *recset)
+gda_mysql_recordset_new (GdaServerRecordset *recset)
 {
   MYSQL_Recordset* mysql_recset;
 
@@ -146,7 +146,7 @@ gda_mysql_recordset_new (Gda_ServerRecordset *recset)
 }
 
 gint
-gda_mysql_recordset_move_next (Gda_ServerRecordset *recset)
+gda_mysql_recordset_move_next (GdaServerRecordset *recset)
 {
   MYSQL_Recordset* mysql_recset;
 
@@ -172,13 +172,13 @@ gda_mysql_recordset_move_next (Gda_ServerRecordset *recset)
 }
 
 gint
-gda_mysql_recordset_move_prev (Gda_ServerRecordset *recset)
+gda_mysql_recordset_move_prev (GdaServerRecordset *recset)
 {
   return -1;
 }
 
 gint
-gda_mysql_recordset_close (Gda_ServerRecordset *recset)
+gda_mysql_recordset_close (GdaServerRecordset *recset)
 {
   MYSQL_Recordset* mysql_recset;
 
@@ -195,7 +195,7 @@ gda_mysql_recordset_close (Gda_ServerRecordset *recset)
 }
 
 void
-gda_mysql_recordset_free (Gda_ServerRecordset *recset)
+gda_mysql_recordset_free (GdaServerRecordset *recset)
 {
   MYSQL_Recordset* mysql_recset;
 

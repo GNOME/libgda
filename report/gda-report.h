@@ -36,41 +36,41 @@ extern "C" {
 #include <gda-report-format.h>
 #include <gda-report-output.h>
 
-typedef struct _Gda_Report       Gda_Report;
-typedef struct _Gda_ReportClass  Gda_ReportClass;
+typedef struct _GdaReport       GdaReport;
+typedef struct _GdaReportClass  GdaReportClass;
 
-struct _Gda_Report {
+struct _GdaReport {
 #ifdef HAVE_GOBJECT
 	GObject		object;
 #else
 	GtkObject	object;
 #endif
 	GDA_Report	corba_report;
-	Gda_ReportEngine* engine;
+	GdaReportEngine* engine;
 	gchar*		rep_name;
 	gchar*		description;
 	GList*		errors_head;
 };
 
-struct _Gda_ReportClass {
+struct _GdaReportClass {
 #ifdef HAVE_GOBJECT
 	GObjectClass	parent_class;
 	GObjectClass	*parent;
 #else
 	GtkObjectClass	parent_class;
 #endif
-	void (* warning) (Gda_Report* object, GList* errors);
-	void (* error)   (Gda_Report* object, GList* errors);
+	void (* warning) (GdaReport* object, GList* errors);
+	void (* error)   (GdaReport* object, GList* errors);
 };
 
 #define GDA_TYPE_REPORT          (gda_report_get_type())
 #ifdef HAVE_GOBJECT
-#define GDA_REPORT(obj) G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_REPORT, Gda_Report)
-#define GDA_REPORT_CLASS(klass) G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_REPORT, Gda_ReportClass)
+#define GDA_REPORT(obj) G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_REPORT, GdaReport)
+#define GDA_REPORT_CLASS(klass) G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_REPORT, GdaReportClass)
 #define GDA_IS_REPORT(obj) G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_REPORT)
 #define GDA_IS_REPORT_CLASS(klass) G_TYPE_CHECK_CLASS_TYPE ((klass), GDA_TYPE_REPORT)
 #else
-#define GDA_REPORT(obj)          GTK_CHECK_CAST(obj, GDA_TYPE_REPORT, Gda_Report)
+#define GDA_REPORT(obj)          GTK_CHECK_CAST(obj, GDA_TYPE_REPORT, GdaReport)
 #define GDA_REPORT_CLASS(klass)  GTK_CHECK_CLASS_CAST(klass, GDA_TYPE_REPORT, GdaReportClass)
 #define GDA_IS_REPORT(obj)       GTK_CHECK_TYPE(obj, GDA_TYPE_REPORT)
 #define GDA_IS_REPORT_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_REPORT))
@@ -82,25 +82,25 @@ GType			gda_report_get_type		(void);
 GtkType			gda_report_get_type		(void);
 #endif
 
-Gda_Report*		gda_report_new			(gchar* rep_name, gchar* description);
-void			gda_report_free			(Gda_Report* object);
+GdaReport*		gda_report_new			(gchar* rep_name, gchar* description);
+void			gda_report_free			(GdaReport* object);
 
-gchar*			gda_report_get_name		(Gda_Report* object);
-gint			gda_report_set_name		(Gda_Report* object, gchar* name);
+gchar*			gda_report_get_name		(GdaReport* object);
+gint			gda_report_set_name		(GdaReport* object, gchar* name);
 
-gchar*			gda_report_get_description	(Gda_Report* object);
-gint			gda_report_set_description	(Gda_Report* object, gchar* description);
+gchar*			gda_report_get_description	(GdaReport* object);
+gint			gda_report_set_description	(GdaReport* object, gchar* description);
 
-Gda_ReportElement*	gda_report_get_elements		(Gda_Report* object);
-gint			gda_report_set_elements		(Gda_Report* object, Gda_ReportElement* element);
+GdaReportElement*	gda_report_get_elements		(GdaReport* object);
+gint			gda_report_set_elements		(GdaReport* object, GdaReportElement* element);
 
-Gda_ReportFormat*	gda_report_get_format		(Gda_Report* object);
+GdaReportFormat*	gda_report_get_format		(GdaReport* object);
 
-Gda_ReportOutput*	gda_report_run			(Gda_Report* object, GList param, gint32 flags);
+GdaReportOutput*	gda_report_run			(GdaReport* object, GList param, gint32 flags);
 							 
-gboolean		gda_report_isLocked		(Gda_Report* object);
-void			gda_report_lock			(Gda_Report* object);
-void			gda_report_unlock		(Gda_Report* object);
+gboolean		gda_report_isLocked		(GdaReport* object);
+void			gda_report_lock			(GdaReport* object);
+void			gda_report_unlock		(GdaReport* object);
 
 
 #if defined(__cplusplus)

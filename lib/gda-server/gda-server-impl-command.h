@@ -38,7 +38,7 @@ typedef struct {
 	GDA_CommandType     attr_type;
 	
 	/* added fields */
-	Gda_ServerCommand*  cmd;
+	GdaServerCommand*  cmd;
 } impl_POA_GDA_Command;
 
 /*

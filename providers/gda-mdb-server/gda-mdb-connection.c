@@ -19,17 +19,17 @@
 #include "mdbtools.h"
 #include <ctype.h>
 
-typedef Gda_ServerRecordset* (*schema_ops_fn)(Gda_ServerError *,
-					      Gda_ServerConnection *,
+typedef GdaServerRecordset* (*schema_ops_fn)(GdaServerError *,
+					      GdaServerConnection *,
 					      GDA_Connection_Constraint *,
 					      gint );
 
-static Gda_ServerRecordset* schema_tables (Gda_ServerError *error,
-					   Gda_ServerConnection *cnc,
+static GdaServerRecordset* schema_tables (GdaServerError *error,
+					   GdaServerConnection *cnc,
 					   GDA_Connection_Constraint *constraints,
 					   gint length);
-static Gda_ServerRecordset* schema_columns (Gda_ServerError *error,
-					    Gda_ServerConnection *cnc,
+static GdaServerRecordset* schema_columns (GdaServerError *error,
+					    GdaServerConnection *cnc,
 					    GDA_Connection_Constraint *constraints,
 					    gint length);
 
@@ -42,7 +42,7 @@ schema_ops_fn schema_ops[GDA_Connection_GDCN_SCHEMA_LAST] =
  * Public functions
  */
 gboolean
-gda_mdb_connection_new (Gda_ServerConnection *cnc)
+gda_mdb_connection_new (GdaServerConnection *cnc)
 {
   static gboolean   initialized = FALSE;
   MdbHandle *mdb_cnc;
@@ -75,7 +75,7 @@ get_value (gchar* ptr)
 }
 
 gint
-gda_mdb_connection_open (Gda_ServerConnection *cnc,
+gda_mdb_connection_open (GdaServerConnection *cnc,
 			   const gchar *dsn,
 			   const gchar *user,
 			   const gchar *password)
@@ -176,7 +176,7 @@ gda_mdb_connection_open (Gda_ServerConnection *cnc,
 }
 
 void
-gda_mysql_connection_close (Gda_ServerConnection *cnc)
+gda_mysql_connection_close (GdaServerConnection *cnc)
 {
   MYSQL_Connection* mysql_cnc;
 
@@ -190,26 +190,26 @@ gda_mysql_connection_close (Gda_ServerConnection *cnc)
 }
 
 gint
-gda_mysql_connection_begin_transaction (Gda_ServerConnection *cnc)
+gda_mysql_connection_begin_transaction (GdaServerConnection *cnc)
 {
   return -1;
 }
 
 gint
-gda_mysql_connection_commit_transaction (Gda_ServerConnection *cnc)
+gda_mysql_connection_commit_transaction (GdaServerConnection *cnc)
 {
   return -1;
 }
 
 gint
-gda_mysql_connection_rollback_transaction (Gda_ServerConnection *cnc)
+gda_mysql_connection_rollback_transaction (GdaServerConnection *cnc)
 {
   return -1;
 }
 
-Gda_ServerRecordset *
-gda_mysql_connection_open_schema (Gda_ServerConnection *cnc,
-				 Gda_ServerError *error,
+GdaServerRecordset *
+gda_mysql_connection_open_schema (GdaServerConnection *cnc,
+				 GdaServerError *error,
 				 GDA_Connection_QType t,
 				 GDA_Connection_Constraint *constraints,
 				 gint length)
@@ -226,7 +226,7 @@ gda_mysql_connection_open_schema (Gda_ServerConnection *cnc,
 }
 
 glong
-gda_mdb_connection_modify_schema (Gda_ServerConnection *cnc,
+gda_mdb_connection_modify_schema (GdaServerConnection *cnc,
                                   GDA_Connection_QType t,
                                   GDA_Connection_Constraint *constraints,
                                   gint length)
@@ -235,27 +235,27 @@ gda_mdb_connection_modify_schema (Gda_ServerConnection *cnc,
 }
 
 gint
-gda_mysql_connection_start_logging (Gda_ServerConnection *cnc,
+gda_mysql_connection_start_logging (GdaServerConnection *cnc,
 				   const gchar *filename)
 {
   return -1;
 }
 
 gint
-gda_mysql_connection_stop_logging (Gda_ServerConnection *cnc)
+gda_mysql_connection_stop_logging (GdaServerConnection *cnc)
 {
   return -1;
 }
 
 gchar *
-gda_mysql_connection_create_table (Gda_ServerConnection *cnc,
+gda_mysql_connection_create_table (GdaServerConnection *cnc,
 				       GDA_RowAttributes *columns)
 {
   return NULL;
 }
 
 gboolean
-gda_mysql_connection_supports (Gda_ServerConnection *cnc,
+gda_mysql_connection_supports (GdaServerConnection *cnc,
 				   GDA_Connection_Feature feature)
 {
   g_return_val_if_fail(cnc != NULL, FALSE);
@@ -265,7 +265,7 @@ gda_mysql_connection_supports (Gda_ServerConnection *cnc,
 }
 
 GDA_ValueType
-gda_mysql_connection_get_gda_type (Gda_ServerConnection *cnc, gulong sql_type)
+gda_mysql_connection_get_gda_type (GdaServerConnection *cnc, gulong sql_type)
 {
   g_return_val_if_fail(cnc != NULL, GDA_TypeNull);
 
@@ -318,7 +318,7 @@ gda_mysql_connection_get_gda_type (Gda_ServerConnection *cnc, gulong sql_type)
 }
 
 gshort
-gda_mysql_connection_get_c_type (Gda_ServerConnection *cnc, GDA_ValueType type)
+gda_mysql_connection_get_c_type (GdaServerConnection *cnc, GDA_ValueType type)
 {
   g_return_val_if_fail(cnc != NULL, -1);
 
@@ -329,19 +329,19 @@ gda_mysql_connection_get_c_type (Gda_ServerConnection *cnc, GDA_ValueType type)
 }
 
 gchar *
-gda_mdb_connection_sql2xml (Gda_ServerConnection *cnc, const gchar *sql)
+gda_mdb_connection_sql2xml (GdaServerConnection *cnc, const gchar *sql)
 {
   return NULL;
 }
 
 gchar *
-gda_mdb_connection_xml2sql (Gda_ServerConnection *cnc, const gchar *xml)
+gda_mdb_connection_xml2sql (GdaServerConnection *cnc, const gchar *xml)
 {
   return NULL;
 }
 
 void
-gda_mysql_connection_free (Gda_ServerConnection *cnc)
+gda_mysql_connection_free (GdaServerConnection *cnc)
 {
   MYSQL_Connection* mysql_cnc;
 
@@ -356,9 +356,9 @@ gda_mysql_connection_free (Gda_ServerConnection *cnc)
 }
 
 void
-gda_mysql_error_make (Gda_ServerError *error,
-		      Gda_ServerRecordset *recset,
-		      Gda_ServerConnection *cnc,
+gda_mysql_error_make (GdaServerError *error,
+		      GdaServerRecordset *recset,
+		      GdaServerConnection *cnc,
 		      gchar *where)
 {
   MYSQL_Connection* mysql_cnc;
@@ -383,13 +383,13 @@ gda_mysql_error_make (Gda_ServerError *error,
 /*
  * Schema functions
  */
-static Gda_ServerRecordset *
-schema_tables (Gda_ServerError *error,
-	       Gda_ServerConnection *cnc,
+static GdaServerRecordset *
+schema_tables (GdaServerError *error,
+	       GdaServerConnection *cnc,
 	       GDA_Connection_Constraint *constraints,
 	       gint length)
 {
-  Gda_ServerRecordset* recset;
+  GdaServerRecordset* recset;
   MYSQL_Recordset*     mysql_recset;
   MYSQL_Connection*    mysql_cnc;
 
@@ -428,14 +428,14 @@ schema_tables (Gda_ServerError *error,
   return NULL;
 }
 
-static Gda_ServerRecordset *
-schema_columns (Gda_ServerError *error,
-	       Gda_ServerConnection *cnc,
+static GdaServerRecordset *
+schema_columns (GdaServerError *error,
+	       GdaServerConnection *cnc,
 	       GDA_Connection_Constraint *constraints,
 	       gint length)
 {
-  Gda_ServerCommand*         cmd;
-  Gda_ServerRecordset*       recset;
+  GdaServerCommand*         cmd;
+  GdaServerRecordset*       recset;
   gchar*                     query;
   gchar*                     table_name = NULL;
   GDA_Connection_Constraint* ptr;

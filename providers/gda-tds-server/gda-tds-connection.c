@@ -22,6 +22,12 @@
  */
 
 // $Log$
+// Revision 1.6  2001/04/07 08:49:34  rodrigo
+// 2001-04-07  Rodrigo Moya <rodrigo@gnome-db.org>
+//
+// 	* objects renaming (Gda_* to Gda*) to conform to the GNOME
+// 	naming standards
+//
 // Revision 1.5  2001/02/14 17:32:00  rodrigo
 // 2001-02-14	Rodrigo Moya <rodrigo@gnome-db.org>
 //
@@ -66,8 +72,8 @@
 #include "gda-tds.h"
 #include "ctype.h"
 
-typedef Gda_ServerRecordset* (*schema_ops_fn)(Gda_ServerError *,
-                                              Gda_ServerConnection *,
+typedef GdaServerRecordset* (*schema_ops_fn)(GdaServerError *,
+                                              GdaServerConnection *,
                                               GDA_Connection_Constraint *,
                                               gint);
 
@@ -76,24 +82,24 @@ schema_ops_fn schema_ops[GDA_Connection_GDCN_SCHEMA_LAST] = {
 };
 
 // schema definitions
-static Gda_ServerRecordset*
-schema_cols (Gda_ServerError *,
-             Gda_ServerConnection *,
+static GdaServerRecordset*
+schema_cols (GdaServerError *,
+             GdaServerConnection *,
              GDA_Connection_Constraint *,
              gint);
-static Gda_ServerRecordset*
-schema_procs(Gda_ServerError *,
-             Gda_ServerConnection *,
+static GdaServerRecordset*
+schema_procs(GdaServerError *,
+             GdaServerConnection *,
              GDA_Connection_Constraint *,
              gint);
-static Gda_ServerRecordset*
-schema_tables (Gda_ServerError *,
-               Gda_ServerConnection *,
+static GdaServerRecordset*
+schema_tables (GdaServerError *,
+               GdaServerConnection *,
                GDA_Connection_Constraint *,
                gint);
-static Gda_ServerRecordset*
-schema_types (Gda_ServerError *,
-              Gda_ServerConnection *,
+static GdaServerRecordset*
+schema_types (GdaServerError *,
+              GdaServerConnection *,
               GDA_Connection_Constraint *,
               gint);
 
@@ -101,9 +107,9 @@ schema_types (Gda_ServerError *,
 
 // Further non-public definitions
 static gint
-gda_tds_init_dsn_properties(Gda_ServerConnection *, const gchar *);
+gda_tds_init_dsn_properties(GdaServerConnection *, const gchar *);
 static gboolean
-gda_tds_set_locale(Gda_ServerConnection *, const gchar *);
+gda_tds_set_locale(GdaServerConnection *, const gchar *);
 
 //  utility functions
 static gchar *
@@ -113,7 +119,7 @@ get_option(const gchar *dsn, const gchar *opt_name);
 
 
 gboolean
-gda_tds_connection_new(Gda_ServerConnection *cnc)
+gda_tds_connection_new(GdaServerConnection *cnc)
 {
   static gboolean initialized;
   tds_Connection *tcnc = NULL;
@@ -166,7 +172,7 @@ gda_tds_connection_new(Gda_ServerConnection *cnc)
 }
 
 gint
-gda_tds_connection_open(Gda_ServerConnection *cnc,
+gda_tds_connection_open(GdaServerConnection *cnc,
                         const gchar* dsn,
                         const gchar* user,
                         const gchar* passwd)
@@ -197,7 +203,7 @@ gda_tds_connection_open(Gda_ServerConnection *cnc,
 }
 
 void
-gda_tds_connection_close(Gda_ServerConnection *cnc)
+gda_tds_connection_close(GdaServerConnection *cnc)
 {
   tds_Connection *tcnc;
   
@@ -244,29 +250,29 @@ gda_tds_connection_close(Gda_ServerConnection *cnc)
 }
 
 gint
-gda_tds_connection_begin_transaction(Gda_ServerConnection *cnc)
+gda_tds_connection_begin_transaction(GdaServerConnection *cnc)
 {
   // FIXME: Implement transaction code
   return -1;
 }
 
 gint
-gda_tds_connection_commit_transaction(Gda_ServerConnection *cnc)
+gda_tds_connection_commit_transaction(GdaServerConnection *cnc)
 {
   // FIXME: Implement transaction code
   return -1;
 }
 
 gint
-gda_tds_connection_rollback_transaction(Gda_ServerConnection *cnc)
+gda_tds_connection_rollback_transaction(GdaServerConnection *cnc)
 {
   // FIXME: Implement transaction code
   return -1;
 }
 
-Gda_ServerRecordset *
-gda_tds_connection_open_schema (Gda_ServerConnection *cnc,
-                                Gda_ServerError *error,
+GdaServerRecordset *
+gda_tds_connection_open_schema (GdaServerConnection *cnc,
+                                GdaServerError *error,
                                 GDA_Connection_QType t,
                                 GDA_Connection_Constraint *constraints,
                                 gint length)
@@ -286,7 +292,7 @@ gda_tds_connection_open_schema (Gda_ServerConnection *cnc,
 }
 
 glong
-gda_tds_connection_modify_schema (Gda_ServerConnection *cnc,
+gda_tds_connection_modify_schema (GdaServerConnection *cnc,
                                    GDA_Connection_QType t,
                                    GDA_Connection_Constraint *constraints,
                                    gint length)
@@ -295,7 +301,7 @@ gda_tds_connection_modify_schema (Gda_ServerConnection *cnc,
 }
 
 gint
-gda_tds_connection_start_logging(Gda_ServerConnection *cnc,
+gda_tds_connection_start_logging(GdaServerConnection *cnc,
                                     const gchar *filename)
 {
   // FIXME: Implement gda logging facility
@@ -303,14 +309,14 @@ gda_tds_connection_start_logging(Gda_ServerConnection *cnc,
 }
 
 gint
-gda_tds_connection_stop_logging(Gda_ServerConnection *cnc)
+gda_tds_connection_stop_logging(GdaServerConnection *cnc)
 {
   // FIXME: Implement gda logging facility
   return -1;
 }
 
 gchar *
-gda_tds_connection_create_table (Gda_ServerConnection *cnc,
+gda_tds_connection_create_table (GdaServerConnection *cnc,
                                    GDA_RowAttributes *columns)
 {
   // FIXME: Implement creation of tables
@@ -318,7 +324,7 @@ gda_tds_connection_create_table (Gda_ServerConnection *cnc,
 }
 
 gboolean
-gda_tds_connection_supports(Gda_ServerConnection *cnc,
+gda_tds_connection_supports(GdaServerConnection *cnc,
                                GDA_Connection_Feature feature)
 {
   g_return_val_if_fail(cnc != NULL, FALSE);
@@ -344,40 +350,40 @@ gda_tds_connection_supports(Gda_ServerConnection *cnc,
 }
 
 const GDA_ValueType
-gda_tds_connection_get_gda_type(Gda_ServerConnection *cnc,
+gda_tds_connection_get_gda_type(GdaServerConnection *cnc,
                                    gulong sql_type)
 {
   return tds_get_gda_type((CS_INT) sql_type);
 }
 
 const CS_INT
-gda_tds_connection_get_sql_type (Gda_ServerConnection *cnc,
+gda_tds_connection_get_sql_type (GdaServerConnection *cnc,
                                     GDA_ValueType gda_type)
 {
   return tds_get_sql_type(gda_type);
 }
 
 const gshort
-gda_tds_connection_get_c_type (Gda_ServerConnection *cnc,
+gda_tds_connection_get_c_type (GdaServerConnection *cnc,
                                   GDA_ValueType gda_type)
 {
   return tds_get_c_type(gda_type);
 }
 
 gchar *
-gda_tds_connection_sql2xml (Gda_ServerConnection *cnc, const gchar *sql)
+gda_tds_connection_sql2xml (GdaServerConnection *cnc, const gchar *sql)
 {
   return NULL;
 }
 
 gchar *
-gda_tds_connection_xml2sql (Gda_ServerConnection *cnc, const gchar *xml)
+gda_tds_connection_xml2sql (GdaServerConnection *cnc, const gchar *xml)
 {
   return NULL;
 }
 
 void
-gda_tds_connection_free (Gda_ServerConnection *cnc)
+gda_tds_connection_free (GdaServerConnection *cnc)
 {
   tds_Connection* tcnc;
   
@@ -392,7 +398,7 @@ gda_tds_connection_free (Gda_ServerConnection *cnc)
 }
 
 void
-gda_tds_connection_clear_user_data(Gda_ServerConnection *cnc,
+gda_tds_connection_clear_user_data(GdaServerConnection *cnc,
                                    gboolean force_set_null_pointers) {
   tds_Connection *tcnc = NULL;
 
@@ -415,15 +421,15 @@ gda_tds_connection_clear_user_data(Gda_ServerConnection *cnc,
  * Schema functions
  */
 
-static Gda_ServerRecordset *
-schema_cols (Gda_ServerError *error,
-             Gda_ServerConnection *cnc,
+static GdaServerRecordset *
+schema_cols (GdaServerError *error,
+             GdaServerConnection *cnc,
              GDA_Connection_Constraint *constraints,
              gint length)
 {
   gchar*                     query = NULL;
-  Gda_ServerCommand*         cmd = NULL;
-  Gda_ServerRecordset*       recset = NULL;
+  GdaServerCommand*         cmd = NULL;
+  GdaServerRecordset*       recset = NULL;
   GDA_Connection_Constraint* ptr = NULL;
   gint                       cnt;
   gulong                     affected = 0;
@@ -496,15 +502,15 @@ schema_cols (Gda_ServerError *error,
   return NULL;
 }
 
-static Gda_ServerRecordset *
-schema_procs (Gda_ServerError *error,
-              Gda_ServerConnection *cnc,
+static GdaServerRecordset *
+schema_procs (GdaServerError *error,
+              GdaServerConnection *cnc,
               GDA_Connection_Constraint *constraints,
               gint length)
 {
   GString*                   query = NULL;
-  Gda_ServerCommand*         cmd = NULL;
-  Gda_ServerRecordset*       recset = NULL;
+  GdaServerCommand*         cmd = NULL;
+  GdaServerRecordset*       recset = NULL;
   GDA_Connection_Constraint* ptr = NULL;
   gboolean                   extra_info = FALSE;
   gint                       cnt;
@@ -573,15 +579,15 @@ schema_procs (Gda_ServerError *error,
   return recset; 
 }
 
-static Gda_ServerRecordset *
-schema_tables (Gda_ServerError *error,
-               Gda_ServerConnection *cnc,
+static GdaServerRecordset *
+schema_tables (GdaServerError *error,
+               GdaServerConnection *cnc,
                GDA_Connection_Constraint *constraints,
                gint length)
 {
   GString*                   query = NULL;
-  Gda_ServerCommand*         cmd = NULL;
-  Gda_ServerRecordset*       recset = NULL;
+  GdaServerCommand*         cmd = NULL;
+  GdaServerRecordset*       recset = NULL;
   GDA_Connection_Constraint* ptr = NULL;
   gboolean                   extra_info = FALSE;
   gint                       cnt;
@@ -650,14 +656,14 @@ schema_tables (Gda_ServerError *error,
   return recset; 
 }
 
-static Gda_ServerRecordset *
-schema_types(Gda_ServerError *error,
-             Gda_ServerConnection *cnc,
+static GdaServerRecordset *
+schema_types(GdaServerError *error,
+             GdaServerConnection *cnc,
              GDA_Connection_Constraint *constraints,
              gint length)
 {
-  Gda_ServerCommand         *cmd = NULL;
-  Gda_ServerRecordset       *rec = NULL;
+  GdaServerCommand         *cmd = NULL;
+  GdaServerRecordset       *rec = NULL;
   GDA_Connection_Constraint *ptr = NULL;
   gint                      i   = 0;
   GString                   *query = NULL;
@@ -718,7 +724,7 @@ schema_types(Gda_ServerError *error,
     rec = gda_server_command_execute(cmd, error, NULL, &affected, 0);
     return rec;
   } else {
-    gda_log_error(_("Could not allocate Gda_ServerCommand"));
+    gda_log_error(_("Could not allocate GdaServerCommand"));
     g_string_free(query, TRUE);
   }
   
@@ -735,7 +741,7 @@ where o.type = 'V'
 */
 
 gboolean
-gda_tds_connection_dead(Gda_ServerConnection *cnc)
+gda_tds_connection_dead(GdaServerConnection *cnc)
 {
   tds_Connection *tcnc;
   CS_INT            con_status = 0;
@@ -763,10 +769,10 @@ gda_tds_connection_dead(Gda_ServerConnection *cnc)
   return TRUE;
 }
 
-// do NOT call this before having freed Gda_ServerCommand structures
+// do NOT call this before having freed GdaServerCommand structures
 // associated to the given connection
 gboolean
-gda_tds_connection_reopen(Gda_ServerConnection *cnc)
+gda_tds_connection_reopen(GdaServerConnection *cnc)
 {
   tds_Connection    *tcnc;
   gboolean             first_connection = TRUE;
@@ -909,7 +915,7 @@ gda_tds_connection_reopen(Gda_ServerConnection *cnc)
 }
 
 CS_RETCODE
-gda_tds_connection_select_database(Gda_ServerConnection *cnc,
+gda_tds_connection_select_database(GdaServerConnection *cnc,
                                    const gchar *database)
 {
   tds_Connection *tcnc = NULL;
@@ -993,7 +999,7 @@ gda_tds_connection_select_database(Gda_ServerConnection *cnc,
 
 // Select locale for connection; we just need a CS_CONTEXT at this time
 static gboolean
-gda_tds_set_locale(Gda_ServerConnection *cnc, const gchar *dsn)
+gda_tds_set_locale(GdaServerConnection *cnc, const gchar *dsn)
 {
   tds_Connection *tcnc;
   CS_LOCALE         *locale;
@@ -1065,7 +1071,7 @@ gda_tds_cleanup(tds_Connection *tcnc, CS_RETCODE ret, const gchar *msg)
  */
 
 static gint
-gda_tds_init_dsn_properties(Gda_ServerConnection *cnc, const gchar *dsn)
+gda_tds_init_dsn_properties(GdaServerConnection *cnc, const gchar *dsn)
 {
   tds_Connection *tcnc;
   gchar             *ptr_s, *ptr_e;

@@ -22,6 +22,12 @@
  */
 
 // $Log$
+// Revision 1.3  2001/04/07 08:49:34  rodrigo
+// 2001-04-07  Rodrigo Moya <rodrigo@gnome-db.org>
+//
+// 	* objects renaming (Gda_* to Gda*) to conform to the GNOME
+// 	naming standards
+//
 // Revision 1.2  2000/11/21 19:57:14  holger
 // 2000-11-21 Holger Thon <holger@gidayu.max.uni-duisburg.de>
 //
@@ -36,7 +42,7 @@
 
 #include "gda-tds.h"
 
-void gda_tds_field_fill_values(Gda_ServerRecordset *rec,
+void gda_tds_field_fill_values(GdaServerRecordset *rec,
                                   tds_Recordset *srec)
 {
   CS_INT i  = 0;
@@ -50,7 +56,7 @@ void gda_tds_field_fill_values(Gda_ServerRecordset *rec,
   for (i = 0; i < srec->colscnt; i++) {
     entry = g_list_nth(gda_server_recordset_get_fields(rec), i);
     if (entry) {
-      Gda_ServerField *field = (Gda_ServerField *) entry->data;
+      GdaServerField *field = (GdaServerField *) entry->data;
       if (field) {
         if (srec->data[i].data) {
           switch (gda_server_field_get_sql_type(field)) {
@@ -122,7 +128,7 @@ void gda_tds_field_fill_values(Gda_ServerRecordset *rec,
 
 gint
 gda_tds_row_result(gboolean            forward,
-                      Gda_ServerRecordset *recset,
+                      GdaServerRecordset *recset,
                       tds_Recordset    *trecset,
                       CS_COMMAND          *cmd)
 {
@@ -172,7 +178,7 @@ gda_tds_row_result(gboolean            forward,
 }
 
 gboolean
-gda_tds_recordset_new(Gda_ServerRecordset *recset)
+gda_tds_recordset_new(GdaServerRecordset *recset)
 {
   tds_Recordset *trecset = NULL;
 
@@ -195,7 +201,7 @@ gda_tds_recordset_new(Gda_ServerRecordset *recset)
 }
 
 gint
-gda_tds_recordset_move_next (Gda_ServerRecordset *recset)
+gda_tds_recordset_move_next (GdaServerRecordset *recset)
 {
   tds_Recordset *trecset  = NULL;
   CS_COMMAND       *cmd      = NULL;
@@ -241,7 +247,7 @@ gda_tds_recordset_move_next (Gda_ServerRecordset *recset)
 }
 
 gint
-gda_tds_recordset_move_prev (Gda_ServerRecordset *recset)
+gda_tds_recordset_move_prev (GdaServerRecordset *recset)
 {
   g_return_val_if_fail(recset != NULL, -1);
   gda_server_recordset_set_at_begin(recset, FALSE);
@@ -251,7 +257,7 @@ gda_tds_recordset_move_prev (Gda_ServerRecordset *recset)
 }
 
 gint
-gda_tds_recordset_close (Gda_ServerRecordset *recset)
+gda_tds_recordset_close (GdaServerRecordset *recset)
 {
   tds_Recordset *trecset = NULL;
   CS_INT           colnr = 0;
@@ -278,7 +284,7 @@ gda_tds_recordset_close (Gda_ServerRecordset *recset)
 }
 
 void
-gda_tds_recordset_free (Gda_ServerRecordset *recset)
+gda_tds_recordset_free (GdaServerRecordset *recset)
 {
   tds_Recordset *trecset = NULL;
   CS_INT           colnr = 0;
@@ -306,8 +312,8 @@ gda_tds_recordset_free (Gda_ServerRecordset *recset)
 }
 
 void
-gda_tds_init_recset_fields (Gda_ServerError *err,
-                            Gda_ServerRecordset *recset,
+gda_tds_init_recset_fields (GdaServerError *err,
+                            GdaServerRecordset *recset,
                             tds_Recordset *trecset,
                             CS_RETCODE result_type)
 {
@@ -370,7 +376,7 @@ gda_tds_init_recset_fields (Gda_ServerError *err,
   datafmt = trecset->datafmt;
 
   for (colnr = 0; colnr < trecset->colscnt; colnr++) {
-    Gda_ServerField* field;
+    GdaServerField* field;
 
     // Initialize user data fmt pointer to datafmt pointer for colnr
     trecset->data[colnr].fmt = &trecset->datafmt[colnr];

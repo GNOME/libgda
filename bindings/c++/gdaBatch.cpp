@@ -23,7 +23,7 @@ gdaBatch::gdaBatch() {
 	_gda_batch = gda_batch_new();
 }
 
-gdaBatch::gdaBatch(Gda_Batch *a) {
+gdaBatch::gdaBatch(GdaBatch *a) {
 	_gda_batch = a;
 }
 
@@ -31,11 +31,11 @@ gdaBatch::~gdaBatch() {
 	if (_gda_batch) gda_batch_free(_gda_batch);
 }
 
-void gdaBatch::setCStruct(Gda_Batch *job) {
+void gdaBatch::setCStruct(GdaBatch *job) {
 	_gda_batch = job;
 }
 
-Gda_Batch *gdaBatch::getCStruct() {
+GdaBatch *gdaBatch::getCStruct() {
 	return _gda_batch;
 }
 

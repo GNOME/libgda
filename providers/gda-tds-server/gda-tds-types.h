@@ -48,9 +48,9 @@ const GDA_ValueType tds_get_gda_type(const CS_INT);
 const CS_INT        tds_get_sql_type(const GDA_ValueType);
 const gchar         *tds_get_type_name(const CS_INT);
 
-void gda_tds_field_set_datetime(Gda_ServerField *, CS_DATETIME *);
-void gda_tds_field_set_datetime4(Gda_ServerField *, CS_DATETIME4 *);
-void gda_tds_field_set_general(Gda_ServerField    *,
+void gda_tds_field_set_datetime(GdaServerField *, CS_DATETIME *);
+void gda_tds_field_set_datetime4(GdaServerField *, CS_DATETIME4 *);
+void gda_tds_field_set_general(GdaServerField    *,
                                tds_Field          *,
                                tds_Connection     *);
 

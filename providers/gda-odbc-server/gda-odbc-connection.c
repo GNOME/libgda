@@ -20,8 +20,8 @@
 #include <GDA.h>
 #include <ctype.h>
 
-typedef Gda_ServerRecordset* (*schema_ops_fn)(Gda_ServerRecordset*,
-					     Gda_ServerConnection*,
+typedef GdaServerRecordset* (*schema_ops_fn)(GdaServerRecordset*,
+					     GdaServerConnection*,
 					     GDA_Connection_Constraint* constraints,
 					     gint length);
 
@@ -29,33 +29,33 @@ typedef Gda_ServerRecordset* (*schema_ops_fn)(Gda_ServerRecordset*,
  * schema opts prototypes
  */
 
-static Gda_ServerRecordset*  schema_tables(Gda_ServerRecordset*  recset,
-					  Gda_ServerConnection* cnc,
+static GdaServerRecordset*  schema_tables(GdaServerRecordset*  recset,
+					  GdaServerConnection* cnc,
 					  GDA_Connection_Constraint* constraints,
 					  gint length);
 
-static Gda_ServerRecordset*  schema_columns(Gda_ServerRecordset*  recset,
-					  Gda_ServerConnection* cnc,
+static GdaServerRecordset*  schema_columns(GdaServerRecordset*  recset,
+					  GdaServerConnection* cnc,
 					  GDA_Connection_Constraint* constraints,
 					  gint length);
 
-static Gda_ServerRecordset*  schema_types(Gda_ServerRecordset*   recset,
-					 Gda_ServerConnection*  cnc,
+static GdaServerRecordset*  schema_types(GdaServerRecordset*   recset,
+					 GdaServerConnection*  cnc,
 					 GDA_Connection_Constraint*  constraint,
 					 gint length);
 
-static Gda_ServerRecordset*  schema_views(Gda_ServerRecordset* recset,
-					 Gda_ServerConnection* cnc,
+static GdaServerRecordset*  schema_views(GdaServerRecordset* recset,
+					 GdaServerConnection* cnc,
 					 GDA_Connection_Constraint* constraint,
 					 gint length);
 
-static Gda_ServerRecordset*  schema_indexes(Gda_ServerRecordset* recset,
-					 Gda_ServerConnection* cnc,
+static GdaServerRecordset*  schema_indexes(GdaServerRecordset* recset,
+					 GdaServerConnection* cnc,
 					 GDA_Connection_Constraint* constraint,
 					 gint length);
 
-static Gda_ServerRecordset*  schema_procedures(Gda_ServerRecordset* recset,
-					 Gda_ServerConnection* cnc,
+static GdaServerRecordset*  schema_procedures(GdaServerRecordset* recset,
+					 GdaServerConnection* cnc,
 					 GDA_Connection_Constraint* constraint,
 					 gint length);
 
@@ -76,7 +76,7 @@ initialize_schema_ops(void)
 }
 
 gboolean
-gda_odbc_connection_new (Gda_ServerConnection *cnc)
+gda_odbc_connection_new (GdaServerConnection *cnc)
 {
   ODBC_Connection* od_cnc;
 
@@ -92,13 +92,13 @@ gda_odbc_connection_new (Gda_ServerConnection *cnc)
 }
 
 gint
-gda_odbc_connection_open (Gda_ServerConnection *cnc,
+gda_odbc_connection_open (GdaServerConnection *cnc,
 			  const gchar *dsn,
 			  const gchar *user,
 			  const gchar *password)
 {
   ODBC_Connection* od_cnc;
-  Gda_ServerError* error;
+  GdaServerError* error;
   SQLRETURN rc;
 
   g_return_val_if_fail(cnc != NULL, -1);
@@ -149,7 +149,7 @@ gda_odbc_connection_open (Gda_ServerConnection *cnc,
 }
 
 void
-gda_odbc_connection_close (Gda_ServerConnection *cnc)
+gda_odbc_connection_close (GdaServerConnection *cnc)
 {
   ODBC_Connection* od_cnc;
 
@@ -168,7 +168,7 @@ gda_odbc_connection_close (Gda_ServerConnection *cnc)
 }
 
 gint
-gda_odbc_connection_begin_transaction (Gda_ServerConnection *cnc)
+gda_odbc_connection_begin_transaction (GdaServerConnection *cnc)
 {
   ODBC_Connection* od_cnc;
 
@@ -200,7 +200,7 @@ gda_odbc_connection_begin_transaction (Gda_ServerConnection *cnc)
 }
 
 gint
-gda_odbc_connection_commit_transaction (Gda_ServerConnection *cnc)
+gda_odbc_connection_commit_transaction (GdaServerConnection *cnc)
 {
   ODBC_Connection* od_cnc;
 
@@ -228,7 +228,7 @@ gda_odbc_connection_commit_transaction (Gda_ServerConnection *cnc)
 }
 
 gint
-gda_odbc_connection_rollback_transaction (Gda_ServerConnection *cnc)
+gda_odbc_connection_rollback_transaction (GdaServerConnection *cnc)
 {
   ODBC_Connection* od_cnc;
 
@@ -255,14 +255,14 @@ gda_odbc_connection_rollback_transaction (Gda_ServerConnection *cnc)
   return -1;
 }
 
-Gda_ServerRecordset *
-gda_odbc_connection_open_schema (Gda_ServerConnection *cnc,
-				 Gda_ServerError *error,
+GdaServerRecordset *
+gda_odbc_connection_open_schema (GdaServerConnection *cnc,
+				 GdaServerError *error,
 				 GDA_Connection_QType t,
 				 GDA_Connection_Constraint *constraints,
 				 gint length)
 {
-  Gda_ServerRecordset* rs;
+  GdaServerRecordset* rs;
   schema_ops_fn fn = schema_ops[t];
 
   g_return_val_if_fail(cnc != NULL, NULL);
@@ -284,7 +284,7 @@ gda_odbc_connection_open_schema (Gda_ServerConnection *cnc,
 }
 
 glong
-gda_odbc_connection_modify_schema (Gda_ServerConnection *cnc,
+gda_odbc_connection_modify_schema (GdaServerConnection *cnc,
                                    GDA_Connection_QType t,
                                    GDA_Connection_Constraint *constraints,
                                    gint length)
@@ -293,7 +293,7 @@ gda_odbc_connection_modify_schema (Gda_ServerConnection *cnc,
 }
 
 gint
-gda_odbc_connection_start_logging (Gda_ServerConnection *cnc,
+gda_odbc_connection_start_logging (GdaServerConnection *cnc,
 				   const gchar *filename)
 {
   ODBC_Connection* od_cnc;
@@ -326,7 +326,7 @@ gda_odbc_connection_start_logging (Gda_ServerConnection *cnc,
 }
 
 gint
-gda_odbc_connection_stop_logging (Gda_ServerConnection *cnc)
+gda_odbc_connection_stop_logging (GdaServerConnection *cnc)
 {
   ODBC_Connection* od_cnc;
 
@@ -358,7 +358,7 @@ gda_odbc_connection_stop_logging (Gda_ServerConnection *cnc)
 }
 
 gchar *
-gda_odbc_connection_create_table (Gda_ServerConnection *cnc,
+gda_odbc_connection_create_table (GdaServerConnection *cnc,
 				       GDA_RowAttributes *columns)
 {
   g_return_val_if_fail(cnc != NULL, NULL);
@@ -366,7 +366,7 @@ gda_odbc_connection_create_table (Gda_ServerConnection *cnc,
 }
 
 gboolean
-gda_odbc_connection_supports (Gda_ServerConnection *cnc,
+gda_odbc_connection_supports (GdaServerConnection *cnc,
 				   GDA_Connection_Feature feature)
 {
   g_return_val_if_fail(cnc != NULL, FALSE);
@@ -417,7 +417,7 @@ gda_odbc_connection_supports (Gda_ServerConnection *cnc,
 }
 
 GDA_ValueType
-gda_odbc_connection_get_gda_type (Gda_ServerConnection *cnc, gulong sql_type)
+gda_odbc_connection_get_gda_type (GdaServerConnection *cnc, gulong sql_type)
 {
   g_return_val_if_fail(cnc != NULL, GDA_TypeNull);
 
@@ -492,7 +492,7 @@ gda_odbc_connection_get_gda_type (Gda_ServerConnection *cnc, gulong sql_type)
 }
 
 gshort
-gda_odbc_connection_get_c_type (Gda_ServerConnection *cnc, GDA_ValueType type)
+gda_odbc_connection_get_c_type (GdaServerConnection *cnc, GDA_ValueType type)
 {
   g_return_val_if_fail(cnc != NULL, -1);
 
@@ -568,19 +568,19 @@ gda_odbc_connection_get_c_type (Gda_ServerConnection *cnc, GDA_ValueType type)
 }
 
 gchar *
-gda_odbc_connection_sql2xml (Gda_ServerConnection *cnc, const gchar *sql)
+gda_odbc_connection_sql2xml (GdaServerConnection *cnc, const gchar *sql)
 {
   return NULL;
 }
 
 gchar *
-gda_odbc_connection_xml2sql (Gda_ServerConnection *cnc, const gchar *xml)
+gda_odbc_connection_xml2sql (GdaServerConnection *cnc, const gchar *xml)
 {
   return NULL;
 }
 
 void
-gda_odbc_connection_free (Gda_ServerConnection *cnc)
+gda_odbc_connection_free (GdaServerConnection *cnc)
 {
   ODBC_Connection* od_cnc;
 
@@ -594,9 +594,9 @@ gda_odbc_connection_free (Gda_ServerConnection *cnc)
 }
 
 void
-gda_odbc_error_make (Gda_ServerError *error,
-		     Gda_ServerRecordset *recset,
-		     Gda_ServerConnection *cnc,
+gda_odbc_error_make (GdaServerError *error,
+		     GdaServerRecordset *recset,
+		     GdaServerConnection *cnc,
 		     gchar *where)
 {
   ODBC_Connection*  od_cnc;
@@ -677,15 +677,15 @@ gda_odbc_error_make (Gda_ServerError *error,
     }
 }
 
-static Gda_ServerRecordset*  schema_tables(Gda_ServerRecordset*  recset,
-					  Gda_ServerConnection* cnc,
+static GdaServerRecordset*  schema_tables(GdaServerRecordset*  recset,
+					  GdaServerConnection* cnc,
 					  GDA_Connection_Constraint* constraints,
 					  gint length)
 {
   ODBC_Recordset*   odbc_recset;
   ODBC_Connection*  od_cnc;
   SQLRETURN         rc;
-  Gda_ServerError*  error;
+  GdaServerError*  error;
   gchar*            table_qualifier = NULL;
   gchar*            table_owner     = NULL;
   gchar*            table_name      = NULL;
@@ -764,15 +764,15 @@ static Gda_ServerRecordset*  schema_tables(Gda_ServerRecordset*  recset,
   return gda_odbc_describe_recset(recset, odbc_recset);
 }
 
-static Gda_ServerRecordset*  schema_columns(Gda_ServerRecordset*  recset,
-					 Gda_ServerConnection* cnc,
+static GdaServerRecordset*  schema_columns(GdaServerRecordset*  recset,
+					 GdaServerConnection* cnc,
 					 GDA_Connection_Constraint* constraints,
 					 gint length)
 {
   ODBC_Recordset*   odbc_recset;
   ODBC_Connection*  od_cnc;
   SQLRETURN         rc;
-  Gda_ServerError*  error;
+  GdaServerError*  error;
   gchar*            table_qualifier = NULL;
   gchar*            table_owner     = NULL;
   gchar*            table_name      = NULL;
@@ -857,15 +857,15 @@ static Gda_ServerRecordset*  schema_columns(Gda_ServerRecordset*  recset,
   return gda_odbc_describe_recset(recset, odbc_recset);
 }
 
-static Gda_ServerRecordset*  schema_types(Gda_ServerRecordset*   recset,
-					 Gda_ServerConnection*  cnc,
+static GdaServerRecordset*  schema_types(GdaServerRecordset*   recset,
+					 GdaServerConnection*  cnc,
 					 GDA_Connection_Constraint*  constraint,
 					 gint length)
 {
   ODBC_Recordset*   odbc_recset;
   ODBC_Connection*  od_cnc;
   SQLRETURN         rc;
-  Gda_ServerError*  error;
+  GdaServerError*  error;
 
   g_return_val_if_fail( recset != NULL, NULL );
   g_return_val_if_fail( cnc != NULL, NULL );
@@ -907,15 +907,15 @@ static Gda_ServerRecordset*  schema_types(Gda_ServerRecordset*   recset,
   return gda_odbc_describe_recset(recset, odbc_recset);
 }
 
-static Gda_ServerRecordset*  schema_views(Gda_ServerRecordset* recset,
-					 Gda_ServerConnection* cnc,
+static GdaServerRecordset*  schema_views(GdaServerRecordset* recset,
+					 GdaServerConnection* cnc,
 					 GDA_Connection_Constraint* constraint,
 					 gint length)
 {
   ODBC_Recordset*   odbc_recset;
   ODBC_Connection*  od_cnc;
   SQLRETURN         rc;
-  Gda_ServerError*  error;
+  GdaServerError*  error;
 
   g_return_val_if_fail( recset != NULL, NULL );
   g_return_val_if_fail( cnc != NULL, NULL );
@@ -963,15 +963,15 @@ static Gda_ServerRecordset*  schema_views(Gda_ServerRecordset* recset,
   return gda_odbc_describe_recset(recset, odbc_recset);
 }
 
-static Gda_ServerRecordset*  schema_indexes(Gda_ServerRecordset* recset,
-					 Gda_ServerConnection* cnc,
+static GdaServerRecordset*  schema_indexes(GdaServerRecordset* recset,
+					 GdaServerConnection* cnc,
 					 GDA_Connection_Constraint* constraint,
 					 gint length)
 {
   ODBC_Recordset*   odbc_recset;
   ODBC_Connection*  od_cnc;
   SQLRETURN         rc;
-  Gda_ServerError*  error;
+  GdaServerError*  error;
 
   g_return_val_if_fail( recset != NULL, NULL );
   g_return_val_if_fail( cnc != NULL, NULL );
@@ -1016,15 +1016,15 @@ static Gda_ServerRecordset*  schema_indexes(Gda_ServerRecordset* recset,
   return gda_odbc_describe_recset(recset, odbc_recset);
 }
 
-static Gda_ServerRecordset*  schema_procedures(Gda_ServerRecordset* recset,
-					 Gda_ServerConnection* cnc,
+static GdaServerRecordset*  schema_procedures(GdaServerRecordset* recset,
+					 GdaServerConnection* cnc,
 					 GDA_Connection_Constraint* constraint,
 					 gint length)
 {
   ODBC_Recordset*   odbc_recset;
   ODBC_Connection*  od_cnc;
   SQLRETURN         rc;
-  Gda_ServerError*  error;
+  GdaServerError*  error;
 
   g_return_val_if_fail( recset != NULL, NULL );
   g_return_val_if_fail( cnc != NULL, NULL );

@@ -18,8 +18,8 @@
 
 #include "gda-primebase.h"
 
-typedef Gda_ServerRecordset* (*schema_ops_fn)(Gda_ServerError *,
-                                              Gda_ServerConnection *,
+typedef GdaServerRecordset* (*schema_ops_fn)(GdaServerError *,
+                                              GdaServerConnection *,
                                               GDA_Connection_Constraint *,
                                               gint);
 
@@ -31,7 +31,7 @@ static gchar*
   get_value (gchar* ptr);
 
 static void
-  gda_primebase_update_dsn_parameters(Gda_ServerConnection *cnc,
+  gda_primebase_update_dsn_parameters(GdaServerConnection *cnc,
                                       const gchar *dsn);
 
 static const primebase_Types gda_primebase_type_list[GDA_PRIMEBASE_TYPE_CNT] = {
@@ -71,7 +71,7 @@ static const primebase_Types gda_primebase_type_list[GDA_PRIMEBASE_TYPE_CNT] = {
 
 
 gboolean
-gda_primebase_connection_new (Gda_ServerConnection *cnc)
+gda_primebase_connection_new (GdaServerConnection *cnc)
 {
   static gboolean initialized;
   gint   i = 0;
@@ -116,7 +116,7 @@ gda_primebase_connection_new (Gda_ServerConnection *cnc)
 }
 
 gint
-gda_primebase_connection_open (Gda_ServerConnection *cnc,
+gda_primebase_connection_open (GdaServerConnection *cnc,
                                const gchar *dsn,
                                const gchar *user,
                                const gchar *password)
@@ -178,7 +178,7 @@ gda_primebase_connection_open (Gda_ServerConnection *cnc,
 }
 
 void
-gda_primebase_connection_close (Gda_ServerConnection *cnc)
+gda_primebase_connection_close (GdaServerConnection *cnc)
 {
   primebase_Connection *pcnc = NULL;
   
@@ -191,26 +191,26 @@ gda_primebase_connection_close (Gda_ServerConnection *cnc)
 }
 
 gint
-gda_primebase_connection_begin_transaction (Gda_ServerConnection *cnc)
+gda_primebase_connection_begin_transaction (GdaServerConnection *cnc)
 {
   return -1;
 }
 
 gint
-gda_primebase_connection_commit_transaction (Gda_ServerConnection *cnc)
+gda_primebase_connection_commit_transaction (GdaServerConnection *cnc)
 {
   return -1;
 }
 
 gint
-gda_primebase_connection_rollback_transaction (Gda_ServerConnection *cnc)
+gda_primebase_connection_rollback_transaction (GdaServerConnection *cnc)
 {
   return -1;
 }
 
-Gda_ServerRecordset *
-gda_primebase_connection_open_schema (Gda_ServerConnection *cnc,
-				 Gda_ServerError *error,
+GdaServerRecordset *
+gda_primebase_connection_open_schema (GdaServerConnection *cnc,
+				 GdaServerError *error,
 				 GDA_Connection_QType t,
 				 GDA_Connection_Constraint *constraints,
 				 gint length)
@@ -219,7 +219,7 @@ gda_primebase_connection_open_schema (Gda_ServerConnection *cnc,
 }
 
 glong
-gda_primebase_connection_modify_schema (Gda_ServerConnection *cnc,
+gda_primebase_connection_modify_schema (GdaServerConnection *cnc,
                                         GDA_Connection_QType t,
                                         GDA_Connection_Constraint *constraints,
                                         gint length)
@@ -228,7 +228,7 @@ gda_primebase_connection_modify_schema (Gda_ServerConnection *cnc,
 }
 
 gint
-gda_primebase_connection_start_logging (Gda_ServerConnection *cnc,
+gda_primebase_connection_start_logging (GdaServerConnection *cnc,
 				   const gchar *filename)
 {
   primebase_Connection *pcnc = NULL;
@@ -248,7 +248,7 @@ gda_primebase_connection_start_logging (Gda_ServerConnection *cnc,
 }
 
 gint
-gda_primebase_connection_stop_logging (Gda_ServerConnection *cnc)
+gda_primebase_connection_stop_logging (GdaServerConnection *cnc)
 {
   primebase_Connection *pcnc = NULL;
 
@@ -262,13 +262,13 @@ gda_primebase_connection_stop_logging (Gda_ServerConnection *cnc)
 }
 
 gchar *
-gda_primebase_connection_create_table (Gda_ServerConnection *cnc,
+gda_primebase_connection_create_table (GdaServerConnection *cnc,
 				       GDA_RowAttributes *columns)
 {
 }
 
 gboolean
-gda_primebase_connection_supports (Gda_ServerConnection *cnc,
+gda_primebase_connection_supports (GdaServerConnection *cnc,
 				   GDA_Connection_Feature feature)
 {
   g_return_val_if_fail(cnc != NULL, FALSE);
@@ -294,7 +294,7 @@ gda_primebase_connection_supports (Gda_ServerConnection *cnc,
 }
 
 GDA_ValueType
-gda_primebase_connection_get_gda_type (Gda_ServerConnection *cnc, gulong sql_type)
+gda_primebase_connection_get_gda_type (GdaServerConnection *cnc, gulong sql_type)
 {
   gint i = 0;
         
@@ -309,32 +309,32 @@ gda_primebase_connection_get_gda_type (Gda_ServerConnection *cnc, gulong sql_typ
 }
 
 gshort
-gda_primebase_connection_get_c_type (Gda_ServerConnection *cnc, GDA_ValueType type)
+gda_primebase_connection_get_c_type (GdaServerConnection *cnc, GDA_ValueType type)
 {
   return -1;
 }
 
 gchar *
-gda_primebase_connection_sql2xml (Gda_ServerConnection *cnc, const gchar *sql)
+gda_primebase_connection_sql2xml (GdaServerConnection *cnc, const gchar *sql)
 {
   return NULL;
 }
 
 gchar *
-gda_primebase_connection_xml2sql (Gda_ServerConnection *cnc, const gchar *xml)
+gda_primebase_connection_xml2sql (GdaServerConnection *cnc, const gchar *xml)
 {
   return NULL;
 }
 
 void
-gda_primebase_connection_free (Gda_ServerConnection *cnc)
+gda_primebase_connection_free (GdaServerConnection *cnc)
 {
 }
 
 void
-gda_primebase_error_make (Gda_ServerError *error,
-                          Gda_ServerRecordset *recset,
-                          Gda_ServerConnection *cnc,
+gda_primebase_error_make (GdaServerError *error,
+                          GdaServerRecordset *recset,
+                          GdaServerConnection *cnc,
                           gchar *where)
 {
   primebase_Connection *pcnc  = NULL;
@@ -395,7 +395,7 @@ void gda_primebase_free_error(primebase_Error *perr)
 }
 
 void
-gda_primebase_update_dsn_parameters(Gda_ServerConnection *cnc,
+gda_primebase_update_dsn_parameters(GdaServerConnection *cnc,
                                     const gchar *dsn)
 {
   primebase_Connection *pcnc = NULL;

@@ -34,10 +34,10 @@ extern "C" {
 #include <gda-report-element.h>
 #include <gda-report-stream.h>
 
-typedef struct _Gda_ReportFormat       Gda_ReportFormat;
-typedef struct _Gda_ReportFormatClass  Gda_ReportFormatClass;
+typedef struct _GdaReportFormat       GdaReportFormat;
+typedef struct _GdaReportFormatClass  GdaReportFormatClass;
 
-struct _Gda_ReportFormat {
+struct _GdaReportFormat {
 #ifdef HAVE_GOBJECT
 	GObject		object;
 #else
@@ -47,25 +47,25 @@ struct _Gda_ReportFormat {
 	GList*		errors_head;
 };
 
-struct _Gda_ReportFormatClass {
+struct _GdaReportFormatClass {
 #ifdef HAVE_GOBJECT
 	GObjectClass	parent_class;
 	GObjectClass	*parent;
 #else
 	GtkObjectClass	parent_class;
 #endif
-	void (* warning) (Gda_ReportFormat* object, GList* errors);
-	void (* error)   (Gda_ReportFormat* object, GList* errors);
+	void (* warning) (GdaReportFormat* object, GList* errors);
+	void (* error)   (GdaReportFormat* object, GList* errors);
 };
 
 #define GDA_TYPE_REPORT_FORMAT          (gda_report_format_get_type())
 #ifdef HAVE_GOBJECT
-#define GDA_REPORT_FORMAT(obj) G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_REPORT_FORMAT, Gda_ReportFormat)
-#define GDA_REPORT_FORMAT_CLASS(klass) G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_REPORT_FORMAT, Gda_ReportFormatClass)
+#define GDA_REPORT_FORMAT(obj) G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_REPORT_FORMAT, GdaReportFormat)
+#define GDA_REPORT_FORMAT_CLASS(klass) G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_REPORT_FORMAT, GdaReportFormatClass)
 #define GDA_IS_REPORT_FORMAT(obj) G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_REPORT_FORMAT)
 #define GDA_IS_REPORT_FORMAT_CLASS(klass) G_TYPE_CHECK_CLASS_TYPE ((klass), GDA_TYPE_REPORT_FORMAT)
 #else
-#define GDA_REPORT_FORMAT(obj)    GTK_CHECK_CAST(obj, GDA_TYPE_REPORTFORMAT, Gda_ReportFormat)
+#define GDA_REPORT_FORMAT(obj)    GTK_CHECK_CAST(obj, GDA_TYPE_REPORTFORMAT, GdaReportFormat)
 #define GDA_REPORT_FORMAT_CLASS(klass)  GTK_CHECK_CLASS_CAST(klass, GDA_TYPE_REPORT_FORMAT, GdaReportFormatClass)
 #define GDA_IS_REPORT_FORMAT(obj)       GTK_CHECK_TYPE(obj, GDA_TYPE_REPORT_FORMAT)
 #define GDA_IS_REPORT_FORMAT_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_REPORT_FORMAT))
@@ -77,10 +77,10 @@ GType			gda_report_format_get_type	(void);
 GtkType			gda_report_format_get_type	(void);
 #endif
 
-void			gda_report_format_free		(Gda_ReportFormat* object);
+void			gda_report_format_free		(GdaReportFormat* object);
 
-Gda_ReportElement*	gda_report_format_get_root_element	(void);
-Gda_ReportStream*	gda_report_format_get_stream		(void);
+GdaReportElement*	gda_report_format_get_root_element	(void);
+GdaReportStream*	gda_report_format_get_stream		(void);
 
 #if defined(__cplusplus)
 }

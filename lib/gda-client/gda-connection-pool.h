@@ -35,30 +35,30 @@
 extern "C" {
 #endif
 
-typedef struct _Gda_ConnectionPool      Gda_ConnectionPool;
-typedef struct _Gda_ConnectionPoolClass Gda_ConnectionPoolClass;
+typedef struct _GdaConnectionPool      GdaConnectionPool;
+typedef struct _GdaConnectionPoolClass GdaConnectionPoolClass;
 
 #define GDA_TYPE_CONNECTION_POOL            (gda_connection_pool_get_type())
 
 #ifdef HAVE_GOBJECT
 #  define GDA_CONNECTION_POOL(obj) \
             G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_CONNECTION_POOL, \
-                                        Gda_ConnectionPool)
+                                        GdaConnectionPool)
 #  define GDA_CONNECTION_POOL_CLASS(klass) \
             G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_CONNECTION_POOL, \
-                                     Gda_ConnectionPoolClass)
+                                     GdaConnectionPoolClass)
 #  define IS_GDA_CONNECTION_POOL(obj) \
             G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_CONNECTION_POOL)
 #  define IS_GDA_CONNECTION_POOL_CLASS(klass) \
             G_TYPE_CHECK_CLASS_TYPE (klass, GDA_TYPE_CONNECTION_POOL)
 #else
-#  define GDA_CONNECTION_POOL(obj)            GTK_CHECK_CAST(obj, GDA_TYPE_CONNECTION_POOL, Gda_ConnectionPool)
+#  define GDA_CONNECTION_POOL(obj)            GTK_CHECK_CAST(obj, GDA_TYPE_CONNECTION_POOL, GdaConnectionPool)
 #  define GDA_CONNECTION_POOL_CLASS(klass)    GTK_CHECK_CLASS_CAST(klass, GDA_TYPE_CONNECTION_POOL, GdaConnectionPoolClass)
 #  define IS_GDA_CONNECTION_POOL(obj)         GTK_CHECK_TYPE(obj, GDA_TYPE_CONNECTION_POOL)
 #  define IS_GDA_CONNECTION_POOL_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_CONNECTION_POOL))
 #endif
 
-struct _Gda_ConnectionPool
+struct _GdaConnectionPool
 {
 #ifdef HAVE_GOBJECT
 	GObject   object;
@@ -68,7 +68,7 @@ struct _Gda_ConnectionPool
 	GList*    connections;
 };
 
-struct _Gda_ConnectionPoolClass
+struct _GdaConnectionPoolClass
 {
 #ifdef HAVE_GOBJECT
 	GObjectClass   parent_class;
@@ -77,7 +77,7 @@ struct _Gda_ConnectionPoolClass
 	GtkObjectClass parent_class;
 #endif
   /* signals */
-	void (*open)(Gda_ConnectionPool *pool, Gda_Connection *cnc);
+	void (*open)(GdaConnectionPool *pool, GdaConnection *cnc);
 };
 
 #ifdef HAVE_GOBJECT
@@ -86,16 +86,16 @@ GType               gda_connection_pool_get_type (void);
 GtkType             gda_connection_pool_get_type (void);
 #endif
 
-Gda_ConnectionPool* gda_connection_pool_new (void);
-void                gda_connection_pool_free (Gda_ConnectionPool *pool);
+GdaConnectionPool* gda_connection_pool_new (void);
+void                gda_connection_pool_free (GdaConnectionPool *pool);
 
-Gda_Connection*     gda_connection_pool_open_connection (Gda_ConnectionPool *pool,
+GdaConnection*     gda_connection_pool_open_connection (GdaConnectionPool *pool,
 														 const gchar *gda_name,
 														 const gchar *username,
 														 const gchar *password);
-void                gda_connection_pool_close_connection (Gda_ConnectionPool *pool,
-														  Gda_Connection *cnc);
-void                gda_connection_pool_close_all (Gda_ConnectionPool *pool);
+void                gda_connection_pool_close_connection (GdaConnectionPool *pool,
+														  GdaConnection *cnc);
+void                gda_connection_pool_close_all (GdaConnectionPool *pool);
 
 #if defined(__cplusplus)
 }

@@ -23,7 +23,7 @@ gdaError::gdaError() {
 	_gda_error = gda_error_new();
 }
 
-gdaError::gdaError(Gda_Error *e) {
+gdaError::gdaError(GdaError *e) {
 	_gda_error = e;
 }
 
@@ -31,11 +31,11 @@ gdaError::~gdaError() {
 	if (_gda_error) gda_error_free(_gda_error);
 }
 
-Gda_Error *gdaError::getCStruct() {
+GdaError *gdaError::getCStruct() {
 	return _gda_error;
 }
 
-void gdaError::setCStruct(Gda_Error *e) {
+void gdaError::setCStruct(GdaError *e) {
 	_gda_error = e;
 }
 

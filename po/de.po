@@ -621,8 +621,8 @@ msgstr "Ungültiger oder nicht unterstützter Konstantentyp: %d"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:702
 #: providers/gda-tds-server/gda-tds-connection.c:685
-msgid "Could not allocate Gda_ServerCommand"
-msgstr "Gda_ServerCommand konnte nicht erreicht werden"
+msgid "Could not allocate GdaServerCommand"
+msgstr "GdaServerCommand konnte nicht erreicht werden"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:732
 #: providers/gda-sybase-server/gda-sybase-connection.c:737

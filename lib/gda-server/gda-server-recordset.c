@@ -23,14 +23,14 @@
 /**
  * gda_server_recordset_new
  */
-Gda_ServerRecordset *
-gda_server_recordset_new (Gda_ServerConnection *cnc)
+GdaServerRecordset *
+gda_server_recordset_new (GdaServerConnection *cnc)
 {
-  Gda_ServerRecordset* recset;
+  GdaServerRecordset* recset;
 
   g_return_val_if_fail(cnc != NULL, NULL);
 
-  recset = g_new0(Gda_ServerRecordset, 1);
+  recset = g_new0(GdaServerRecordset, 1);
   recset->cnc = cnc;
   recset->fields = NULL;
   recset->position = -1;
@@ -49,8 +49,8 @@ gda_server_recordset_new (Gda_ServerConnection *cnc)
 /**
  * gda_server_recordset_get_connection
  */
-Gda_ServerConnection *
-gda_server_recordset_get_connection (Gda_ServerRecordset *recset)
+GdaServerConnection *
+gda_server_recordset_get_connection (GdaServerRecordset *recset)
 {
   g_return_val_if_fail(recset != NULL, NULL);
   return recset->cnc;
@@ -60,7 +60,7 @@ gda_server_recordset_get_connection (Gda_ServerRecordset *recset)
  * gda_server_recordset_add_field
  */
 void
-gda_server_recordset_add_field (Gda_ServerRecordset *recset, Gda_ServerField *field)
+gda_server_recordset_add_field (GdaServerRecordset *recset, GdaServerField *field)
 {
   g_return_if_fail(recset != NULL);
   g_return_if_fail(field != NULL);
@@ -72,7 +72,7 @@ gda_server_recordset_add_field (Gda_ServerRecordset *recset, Gda_ServerField *fi
  * gda_server_recordset_get_fields
  */
 GList *
-gda_server_recordset_get_fields (Gda_ServerRecordset *recset)
+gda_server_recordset_get_fields (GdaServerRecordset *recset)
 {
   g_return_val_if_fail(recset != NULL, NULL);
   return recset->fields;
@@ -82,7 +82,7 @@ gda_server_recordset_get_fields (Gda_ServerRecordset *recset)
  * gda_server_recordset_is_at_begin
  */
 gboolean
-gda_server_recordset_is_at_begin (Gda_ServerRecordset *recset)
+gda_server_recordset_is_at_begin (GdaServerRecordset *recset)
 {
   g_return_val_if_fail(recset != NULL, FALSE);
   return recset->at_begin;
@@ -92,7 +92,7 @@ gda_server_recordset_is_at_begin (Gda_ServerRecordset *recset)
  * gda_server_recordset_set_at_begin
  */
 void
-gda_server_recordset_set_at_begin (Gda_ServerRecordset *recset, gboolean at_begin)
+gda_server_recordset_set_at_begin (GdaServerRecordset *recset, gboolean at_begin)
 {
   g_return_if_fail(recset != NULL);
   recset->at_begin = at_begin;
@@ -102,7 +102,7 @@ gda_server_recordset_set_at_begin (Gda_ServerRecordset *recset, gboolean at_begi
  * gda_server_recordset_is_at_end
  */
 gboolean
-gda_server_recordset_is_at_end (Gda_ServerRecordset *recset)
+gda_server_recordset_is_at_end (GdaServerRecordset *recset)
 {
   g_return_val_if_fail(recset != NULL, FALSE);
   return recset->at_end;
@@ -112,7 +112,7 @@ gda_server_recordset_is_at_end (Gda_ServerRecordset *recset)
  * gda_server_recordset_set_at_end
  */
 void
-gda_server_recordset_set_at_end (Gda_ServerRecordset *recset, gboolean at_end)
+gda_server_recordset_set_at_end (GdaServerRecordset *recset, gboolean at_end)
 {
   g_return_if_fail(recset != NULL);
   recset->at_end = at_end;
@@ -122,7 +122,7 @@ gda_server_recordset_set_at_end (Gda_ServerRecordset *recset, gboolean at_end)
  * gda_server_recordset_get_user_data
  */
 gpointer
-gda_server_recordset_get_user_data (Gda_ServerRecordset *recset)
+gda_server_recordset_get_user_data (GdaServerRecordset *recset)
 {
   g_return_val_if_fail(recset != NULL, NULL);
   return recset->user_data;
@@ -132,7 +132,7 @@ gda_server_recordset_get_user_data (Gda_ServerRecordset *recset)
  * gda_server_recordset_set_user_data
  */
 void
-gda_server_recordset_set_user_data (Gda_ServerRecordset *recset, gpointer user_data)
+gda_server_recordset_set_user_data (GdaServerRecordset *recset, gpointer user_data)
 {
   g_return_if_fail(recset != NULL);
   recset->user_data = user_data;
@@ -142,7 +142,7 @@ gda_server_recordset_set_user_data (Gda_ServerRecordset *recset, gpointer user_d
  * gda_server_recordset_free
  */
 void
-gda_server_recordset_free (Gda_ServerRecordset *recset)
+gda_server_recordset_free (GdaServerRecordset *recset)
 {
   g_return_if_fail(recset != NULL);
 
@@ -165,7 +165,7 @@ gda_server_recordset_free (Gda_ServerRecordset *recset)
  * gda_server_recordset_move_next
  */
 gint
-gda_server_recordset_move_next (Gda_ServerRecordset *recset)
+gda_server_recordset_move_next (GdaServerRecordset *recset)
 {
   g_return_val_if_fail(recset != NULL, -1);
   g_return_val_if_fail(recset->cnc != NULL, -1);
@@ -179,7 +179,7 @@ gda_server_recordset_move_next (Gda_ServerRecordset *recset)
  * gda_server_recordset_move_prev
  */
 gint
-gda_server_recordset_move_prev (Gda_ServerRecordset *recset)
+gda_server_recordset_move_prev (GdaServerRecordset *recset)
 {
   g_return_val_if_fail(recset != NULL, -1);
   g_return_val_if_fail(recset->cnc != NULL, -1);
@@ -193,7 +193,7 @@ gda_server_recordset_move_prev (Gda_ServerRecordset *recset)
  * gda_server_recordset_close
  */
 gint
-gda_server_recordset_close (Gda_ServerRecordset *recset)
+gda_server_recordset_close (GdaServerRecordset *recset)
 {
   g_return_val_if_fail(recset != NULL, -1);
   g_return_val_if_fail(recset->cnc != NULL, -1);

@@ -24,11 +24,11 @@
 class gdaError {
 	public:
 		gdaError();
-		gdaError(Gda_Error *e);
+		gdaError(GdaError *e);
 		~gdaError();
 
-		Gda_Error *getCStruct();
-		void setCStruct(Gda_Error *e);
+		GdaError *getCStruct();
+		void setCStruct(GdaError *e);
 		
 		const gchar* description();
 		const glong number();
@@ -39,7 +39,7 @@ class gdaError {
 		const gchar* realcommand();
 
 	private:
-		Gda_Error* _gda_error;
+		GdaError* _gda_error;
 };
 
 #endif

@@ -48,9 +48,9 @@ const GDA_ValueType sybase_get_gda_type(const CS_INT);
 const CS_INT        sybase_get_sql_type(const GDA_ValueType);
 const gchar         *sybase_get_type_name(const CS_INT);
 
-void gda_sybase_field_set_datetime(Gda_ServerField *, CS_DATETIME *);
-void gda_sybase_field_set_datetime4(Gda_ServerField *, CS_DATETIME4 *);
-void gda_sybase_field_set_general(Gda_ServerField       *,
+void gda_sybase_field_set_datetime(GdaServerField *, CS_DATETIME *);
+void gda_sybase_field_set_datetime4(GdaServerField *, CS_DATETIME4 *);
+void gda_sybase_field_set_general(GdaServerField       *,
                                   sybase_Field          *,
                                   sybase_Connection     *);
 

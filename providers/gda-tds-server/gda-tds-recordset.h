@@ -45,8 +45,8 @@ typedef struct _tds_Field {
 } tds_Field;
 
 typedef struct _tds_Recordset {
-  Gda_ServerConnection *cnc;
-  Gda_ServerCommand    *cmd;
+  GdaServerConnection *cnc;
+  GdaServerCommand    *cmd;
   tds_Connection *tcnc;
   tds_Command    *tcmd;
 	
@@ -59,21 +59,21 @@ typedef struct _tds_Recordset {
   tds_Field *data;
 } tds_Recordset;
 
-gboolean gda_tds_recordset_new       (Gda_ServerRecordset *);
-gint     gda_tds_recordset_move_next (Gda_ServerRecordset *);
-gint     gda_tds_recordset_move_prev (Gda_ServerRecordset *);
-gint     gda_tds_recordset_close     (Gda_ServerRecordset *);
-void     gda_tds_recordset_free      (Gda_ServerRecordset *);
+gboolean gda_tds_recordset_new       (GdaServerRecordset *);
+gint     gda_tds_recordset_move_next (GdaServerRecordset *);
+gint     gda_tds_recordset_move_prev (GdaServerRecordset *);
+gint     gda_tds_recordset_close     (GdaServerRecordset *);
+void     gda_tds_recordset_free      (GdaServerRecordset *);
 
-void     gda_tds_init_recset_fields (Gda_ServerError *,
-                                     Gda_ServerRecordset *,
+void     gda_tds_init_recset_fields (GdaServerError *,
+                                     GdaServerRecordset *,
                                      tds_Recordset *,
                                      CS_RETCODE);
 
-void gda_tds_field_fill_values(Gda_ServerRecordset *,
+void gda_tds_field_fill_values(GdaServerRecordset *,
                                tds_Recordset *);
 gint gda_tds_row_result(gboolean forward,
-                        Gda_ServerRecordset *,
+                        GdaServerRecordset *,
                         tds_Recordset *,
                         CS_COMMAND *);
 

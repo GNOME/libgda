@@ -22,6 +22,12 @@
  */
 
 // $Log$
+// Revision 1.5  2001/04/07 08:49:31  rodrigo
+// 2001-04-07  Rodrigo Moya <rodrigo@gnome-db.org>
+//
+// 	* objects renaming (Gda_* to Gda*) to conform to the GNOME
+// 	naming standards
+//
 // Revision 1.4  2001/03/08 17:56:15  holger
 // Holger Thon <holger.thon@gnome-db.org>  Mar 8th, 2001
 //
@@ -54,9 +60,9 @@
  * Public functions
  */
 gboolean
-gda_sybase_command_new (Gda_ServerCommand *cmd)
+gda_sybase_command_new (GdaServerCommand *cmd)
 {
-  Gda_ServerConnection *cnc = NULL;
+  GdaServerConnection *cnc = NULL;
   sybase_Command       *scmd = NULL;
   sybase_Connection    *scnc = NULL;
 
@@ -88,15 +94,15 @@ gda_sybase_command_new (Gda_ServerCommand *cmd)
   return TRUE;
 }
 
-Gda_ServerRecordset *
-gda_sybase_command_execute (Gda_ServerCommand *cmd,
-                            Gda_ServerError *error,
+GdaServerRecordset *
+gda_sybase_command_execute (GdaServerCommand *cmd,
+                            GdaServerError *error,
                             const GDA_CmdParameterSeq *params,
                             gulong *affected,
                             gulong options)
 {
-  Gda_ServerConnection* cnc = NULL;
-  Gda_ServerRecordset*  recset = NULL;
+  GdaServerConnection* cnc = NULL;
+  GdaServerRecordset*  recset = NULL;
   sybase_Connection*    scnc = NULL;
   sybase_Command*       scmd = NULL;
   sybase_Recordset*     srecset = NULL;
@@ -292,9 +298,9 @@ gda_sybase_command_execute (Gda_ServerCommand *cmd,
 }
 
 void
-gda_sybase_command_free (Gda_ServerCommand *cmd)
+gda_sybase_command_free (GdaServerCommand *cmd)
 {
-  Gda_ServerConnection *cnc = NULL;
+  GdaServerConnection *cnc = NULL;
   sybase_Connection    *scnc = NULL;
   sybase_Command       *scmd = NULL;
   

@@ -45,12 +45,12 @@ typedef struct _tds_Command {
  * Server implementation prototypes
  */
 
-gboolean gda_tds_command_new (Gda_ServerCommand *cmd);
-Gda_ServerRecordset* gda_tds_command_execute (Gda_ServerCommand *cmd,
-                                              Gda_ServerError *error,
+gboolean gda_tds_command_new (GdaServerCommand *cmd);
+GdaServerRecordset* gda_tds_command_execute (GdaServerCommand *cmd,
+                                              GdaServerError *error,
                                               const GDA_CmdParameterSeq *params,
                                               gulong *affected,
                                               gulong options);
-void gda_tds_command_free (Gda_ServerCommand *cmd);
+void gda_tds_command_free (GdaServerCommand *cmd);
 
 #endif

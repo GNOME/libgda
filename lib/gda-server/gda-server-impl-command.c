@@ -105,7 +105,7 @@ impl_GDA_Parameter_appendChunk (impl_POA_GDA_Parameter * servant,
 
 GDA_Command
 impl_GDA_Command__create (PortableServer_POA poa,
-                          Gda_ServerCommand* cmd,
+                          GdaServerCommand* cmd,
                           CORBA_Environment * ev) {
 	GDA_Command retval;
 	impl_POA_GDA_Command *newservant;
@@ -207,8 +207,8 @@ impl_GDA_Command_open (impl_POA_GDA_Command * servant,
                        CORBA_unsigned_long * affected,
                        CORBA_Environment * ev) {
 	GDA_Recordset        retval;
-	Gda_ServerRecordset* recset;
-	Gda_ServerError*     error;
+	GdaServerRecordset* recset;
+	GdaServerError*     error;
 	gulong               laffected = 0;
 	
 	error = gda_server_error_new();

@@ -475,7 +475,7 @@
       </para>
       <para>
         A biblioteca <filename>gda-common</filename> inclui um classe, chamada
-	<classname>Gda_XmlDataabse</classname>, que oferece uma maneira de
+	<classname>GdaXmlDataabse</classname>, que oferece uma maneira de
 	ler e modificar estes arquivos.
       </para>
     </sect1>
@@ -555,7 +555,7 @@
 	um provedor LDAP e um provedor ODBC sem mudan&ccedil;as no c&oacute;digo fonte.
       </para>
       <para>
-        O cliente pode entrar criar objetos <classname>Gda_Commanda</classname>
+        O cliente pode entrar criar objetos <classname>GdaCommanda</classname>
 	que s&atilde;o usados para fazer as consultas aos provedores. Para provedores
 	tipo SQL, a consulta &eacute; o comando SQL. &Eacute; claro que o provedor &eacute; livre
 	para alterar os estes comandos (convers&atilde;o entre dialetos SQL) e alguns
@@ -566,7 +566,7 @@
       </para>
       <para>
            O resultado de uma consulta &eacute; acessado atrav&eacute;s de 
-	   objetos de tipo <classname>Gda_Recordset</classname>. Os dados 
+	   objetos de tipo <classname>GdaRecordset</classname>. Os dados 
 	   resultados da consultados podem estar armazenados no cliente, 
 	   no  provedor ou no servidor de banco de dados. Isso depende
 	   de v&aacute;rias op&ccedil;&otilde;es (flags) usadas quando o conjunto de registros
@@ -586,17 +586,17 @@
     <sect1 id="gda-client-objects">
       <title>Vis&atilde;o geral dos objetos GDA</title>
       <para>
-        A classe principal em GDA &eacute; a <classname>Gda_Connection</classname>. Objetos
+        A classe principal em GDA &eacute; a <classname>GdaConnection</classname>. Objetos
 	desta classe estabelecem conex&otilde;es com o servidor CORBA
 	e s&atilde;o necess&aacute;rios para quase tudo que o cliente vai fazer.
 	Cada objeto tem um pointeiro direto ou indireto a um desses objetos.
       </para>
       <para>
-           Outra classe muito importante &eacute; a <classname>Gda_Command</classname>.
+           Outra classe muito importante &eacute; a <classname>GdaCommand</classname>.
 	   Ela &eacute; usada para armazenar uma string com um comando e tamb&eacute;m
 	   para executar este comando no servidor CORBA. Esta classe mant&eacute;m
 	   uma refer&ecirc;ncia ao objeto de conex&atilde;o. A <function>execute</function> retorna
-	   um objeto de classe <classname>Gda_Recordset</classname>. Esta classe &eacute;
+	   um objeto de classe <classname>GdaRecordset</classname>. Esta classe &eacute;
 	   respons&aacute;vel por buffering e caching e gerencimento de mem&oacute;ria dos
 	   dados retornados pelo servidor.
       </para>
@@ -637,7 +637,7 @@
 	   suas meta-informa&ccedil;&otilde;es. Se a fonte de dados &eacute; um banco de dados,
 	   tal meta-informa&ccedil;&atilde;o &eacute; o nome das tableas, colunas, permiss&otilde;es dos
 	   usu&aacute;rios, etc. O resultado de uma consulta a meta-informa&ccedil;&atilde;o de
-	   uma fonte de dados &eacute; representada atrav&eacute;s do <classname>Gda_Recordset</classname>.
+	   uma fonte de dados &eacute; representada atrav&eacute;s do <classname>GdaRecordset</classname>.
 	   O problema &eacute; que na maioria das vezes o cliente est&aacute; interessado em
 	   apenas parte dessa informa&ccedil;&atilde;o. O cliente quer consultar a fonte de
 	   dados sobre os &iacute;ndices de uma tabela, e n&atilde;o de todas as tabelas.
@@ -818,7 +818,7 @@
     <sect1 id="gda-client-batch">
       <title>Comandos Em S&eacute;rie</title>
       <para>
-        A biblioteca cliente oferece um objeto muito interessante: <classname>Gda_Batch</classname>,
+        A biblioteca cliente oferece um objeto muito interessante: <classname>GdaBatch</classname>,
 	que &eacute; uma classe que permite que voc&ecirc; trate uma s&eacute;rie de objetos como um
 	&uacute;nica entidade. Ela oferece este recurso com suporte real a transa&ccedil;&otilde;es
 	(se o banco de dados sendo usado suportar). As altera&ccedil;&otilde;es no banco de dados s&oacute; 
@@ -828,7 +828,7 @@
 	linhas de c&oacute;digo.
       </para>
       <para>
-        Por&eacute;m, o objeto <classname>Gda_Batch</classname> &eacute; flex&iacute;vel bastante para ser usado como
+        Por&eacute;m, o objeto <classname>GdaBatch</classname> &eacute; flex&iacute;vel bastante para ser usado como
 	um simples conjunto de comandos, ignorando erros se &eacute; o que o voc&ecirc; quer, e
 	desabilitando o suporte a transa&ccedil;&otilde;es do seu banco de dados. Nesse caso, a
 	melhor maneira de usar o objeto &eacute; conect&aacute;-lo &aacute; seus diferentes sinais, o que
@@ -970,7 +970,7 @@
         <itemizedlist>
           <listitem>
             <para>
-	      o objeto <classname>Gda_ServerConnection</classname>: este &eacute; o objeto mais
+	      o objeto <classname>GdaServerConnection</classname>: este &eacute; o objeto mais
 	      importante e cuida de toda a parte da conex&atilde;o a fonte de dados (no caso de
 	      um banco de dados, o nome do banco de dados, usu&aacute;rio, senha, etc).
 	      Geralmente o cliente apenas usa um desse tipo de objeto.
@@ -978,13 +978,13 @@
           </listitem>
           <listitem>
             <para>
-	      o objeto <classname>Gda_ServerCommand</classname>: este objeto &eacute;
+	      o objeto <classname>GdaServerCommand</classname>: este objeto &eacute;
 	      usado para preparar uma consulta para ser executada.
             </para>
           </listitem>
           <listitem>
             <para>
-	      o objeto <classname>Gda_ServerRecordset</classname>: cada vez que um
+	      o objeto <classname>GdaServerRecordset</classname>: cada vez que um
 	      comando &eacute; executado, um desses objetos &eacute; retornado, e podem ser examinados
 	      para ver-se os resultados do comando. Sob a &Libgda;, um conjunto de registros
 	      &eacute; examinado de maneira sequ&ecirc;ncial, linha ap&oacute;s linha (para alguns sistemas de
@@ -995,9 +995,9 @@
           </listitem>
           <listitem>
             <para>
-              o objeto <classname>Gda_ServerField</classname>: para cada coluna, um desses
+              o objeto <classname>GdaServerField</classname>: para cada coluna, um desses
 	      objetos &eacute; usado. Ele descreve o nome da coluna, o tipo de dado, e seu conte&uacute;do.
-	      Cada objeto <classname>Gda_ServerField</classname> &eacute; inicializado quando o
+	      Cada objeto <classname>GdaServerField</classname> &eacute; inicializado quando o
 	      conjunto de registros &eacute; criado, e seu valor ser&aacute; atualizado cada vez que uma nova
 	      linha &eacute; examinada. O <filename>gda-server</filename> usar&aacute; estes objetos para
 	      enviar o conte&uacute;do para o cliente CORBA.
@@ -1013,7 +1013,7 @@
         <itemizedlist>
           <listitem>
             <para>
-              1- um <classname>Gda_ServerConnection</classname> &eacute; criado
+              1- um <classname>GdaServerConnection</classname> &eacute; criado
             </para>
           </listitem>
           <listitem>
@@ -1023,23 +1023,23 @@
           </listitem>
           <listitem>
             <para>
-              3 - um <classname>Gda_ServerCommand</classname> &eacute; criado
+              3 - um <classname>GdaServerCommand</classname> &eacute; criado
             </para>
           </listitem>
           <listitem>
             <para>
-              4 - o comando &eacute; colocado no objeto <classname>Gda_ServerCommand</classname>
+              4 - o comando &eacute; colocado no objeto <classname>GdaServerCommand</classname>
             </para>
           </listitem>
           <listitem>
             <para>
               5- o comando &eacute; executado, e se nenhum erro ocorrer, um objeto
-              <classname>Gda_ServerRecordset</classname> &eacute; criado e retornado
+              <classname>GdaServerRecordset</classname> &eacute; criado e retornado
             </para>
           </listitem>
           <listitem>
             <para>
-              6 - o <classname>Gda_ServerCommand</classname> pode ser destru&iacute;do sem problemas
+              6 - o <classname>GdaServerCommand</classname> pode ser destru&iacute;do sem problemas
             </para>
           </listitem>
           <listitem>
@@ -1050,12 +1050,12 @@
           </listitem>
           <listitem>
             <para>
-              8- o <classname>Gda_ServerRecordset</classname> &eacute; destru&iacute;do
+              8- o <classname>GdaServerRecordset</classname> &eacute; destru&iacute;do
             </para>
           </listitem>
           <listitem>
             <para>
-              9- a conex&atilde;o &eacute; fechada, e o <classname>Gda_ServerConnection</classname> pode
+              9- a conex&atilde;o &eacute; fechada, e o <classname>GdaServerConnection</classname> pode
 	      ser destru&iacute;do.
             </para>
           </listitem>
@@ -1110,7 +1110,7 @@
         </para>
         <para>
 	  Ent&atilde;o, para os tipos mais comuns onde um tipo de dado &Libgda; existe, este ser&aacute; usado,
-	  e de maneira contr&aacute;ria, o tipo <classname>Gda_TypeUnknown</classname> ser&aacute; usado (o uso
+	  e de maneira contr&aacute;ria, o tipo <classname>GdaTypeUnknown</classname> ser&aacute; usado (o uso
 	    correto destes dados fica por conta do programador da aplica&ccedil;&atilde;o).
         </para>
       </sect2>
@@ -1161,7 +1161,7 @@
         <title>Arquivos .c</title>
         <para>
 	  Geralmente h&aacute; apenas um arquivo .c para a implementa&ccedil;&atilde;o das diferentes estruturas de um
-	  sistema de banco de dados, como  mencionado acima, exceto pelo objeto <classname>Gda_ServerField</classname>
+	  sistema de banco de dados, como  mencionado acima, exceto pelo objeto <classname>GdaServerField</classname>
 	  que &eacute; totalmente controlado pela biblioteca <filename>gda-server</filename>, e um para
 	  o programa.
         </para>

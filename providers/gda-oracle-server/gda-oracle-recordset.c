@@ -23,7 +23,7 @@
  * Private functions
  */
 static gboolean
-fill_field_values (Gda_ServerRecordset *recset)
+fill_field_values (GdaServerRecordset *recset)
 {
   GList* node;
 
@@ -32,7 +32,7 @@ fill_field_values (Gda_ServerRecordset *recset)
   /* traverse all fields */
   for (node = g_list_first(recset->fields); node != NULL; node = g_list_next(node))
     {
-      Gda_ServerField* field = (Gda_ServerField *) node->data;
+      GdaServerField* field = (GdaServerField *) node->data;
       ORACLE_Field*    ora_field;
 
       ora_field = (ORACLE_Field *) gda_server_field_get_user_data(field);
@@ -130,9 +130,9 @@ fill_field_values (Gda_ServerRecordset *recset)
  * Public functions
  */
 gboolean
-gda_oracle_recordset_new (Gda_ServerRecordset *recset)
+gda_oracle_recordset_new (GdaServerRecordset *recset)
 {
-  Gda_ServerConnection* cnc;
+  GdaServerConnection* cnc;
   ORACLE_Recordset*  ora_recset;
   ORACLE_Connection* ora_cnc;
 
@@ -152,7 +152,7 @@ gda_oracle_recordset_new (Gda_ServerRecordset *recset)
 }
 
 gint
-gda_oracle_recordset_move_next (Gda_ServerRecordset *recset)
+gda_oracle_recordset_move_next (GdaServerRecordset *recset)
 {
   ub4               status;
   ORACLE_Recordset* ora_recset;
@@ -188,7 +188,7 @@ gda_oracle_recordset_move_next (Gda_ServerRecordset *recset)
 }
 
 gint
-gda_oracle_recordset_move_prev (Gda_ServerRecordset *recset)
+gda_oracle_recordset_move_prev (GdaServerRecordset *recset)
 {
   ub4               status;
   ORACLE_Recordset* ora_recset;
@@ -224,14 +224,14 @@ gda_oracle_recordset_move_prev (Gda_ServerRecordset *recset)
 }
 
 gint
-gda_oracle_recordset_close (Gda_ServerRecordset *recset)
+gda_oracle_recordset_close (GdaServerRecordset *recset)
 {
   g_return_val_if_fail(recset != NULL, -1);
   return 0;
 }
 
 void
-gda_oracle_recordset_free (Gda_ServerRecordset *recset)
+gda_oracle_recordset_free (GdaServerRecordset *recset)
 {
   ORACLE_Recordset* ora_recset;
 
@@ -246,7 +246,7 @@ gda_oracle_recordset_free (Gda_ServerRecordset *recset)
       for (node = g_list_first(recset->fields); node != NULL; node = g_list_next(node))
 	{
 	  ORACLE_Field*    ora_field;
-	  Gda_ServerField* field = (Gda_ServerField *) node->data;
+	  GdaServerField* field = (GdaServerField *) node->data;
 	  if (field)
 	    {
 	      ora_field = (ORACLE_Field *) gda_server_field_get_user_data(field);

@@ -598,7 +598,7 @@ gchar * replace_TABLE_FIELD_with_iskey(POSTGRES_Recordset *recset,
 
 
 static void
-fill_field_values (Gda_ServerRecordset *recset, POSTGRES_Recordset *prc)
+fill_field_values (GdaServerRecordset *recset, POSTGRES_Recordset *prc)
 {
   register gint cnt = 0;
   gulong row = prc->pos;
@@ -623,7 +623,7 @@ fill_field_values (Gda_ServerRecordset *recset, POSTGRES_Recordset *prc)
   fprintf(stderr,"getting data from row %ld\n", row);
   while (node != NULL)
     {
-      Gda_ServerField *field = (Gda_ServerField *) node->data;
+      GdaServerField *field = (GdaServerField *) node->data;
       struct tm *stm;
 
       if (field != 0)
@@ -665,7 +665,7 @@ fill_field_values (Gda_ServerRecordset *recset, POSTGRES_Recordset *prc)
                 tmpstr = PQgetvalue(prc->pq_data, row, cnt);
             }
           else
-            tmpstr = Gda_Builtin_Result_get_value(prc->btin_res, row, cnt);
+            tmpstr = GdaBuiltin_Result_get_value(prc->btin_res, row, cnt);
           if (tmpstr)
             {
               if (repl)
@@ -746,7 +746,7 @@ fill_field_values (Gda_ServerRecordset *recset, POSTGRES_Recordset *prc)
 		 tinterval, reltime */
 	      
 	      /* We don't use gda_server_field_set_timestamp
-		 ((Gda_ServerField *field, GDate *dat, GTime tim); 
+		 ((GdaServerField *field, GDate *dat, GTime tim); 
 		 we use direct modifications in memory.
 	      */
 	      
@@ -922,7 +922,7 @@ fill_field_values (Gda_ServerRecordset *recset, POSTGRES_Recordset *prc)
 
 /* create a new result set object */
 gboolean
-gda_postgres_recordset_new (Gda_ServerRecordset *recset)
+gda_postgres_recordset_new (GdaServerRecordset *recset)
 {
   POSTGRES_Recordset *rc;
   POSTGRES_Connection *pc;
@@ -937,7 +937,7 @@ gda_postgres_recordset_new (Gda_ServerRecordset *recset)
 }
 
 gint
-gda_postgres_recordset_move_next (Gda_ServerRecordset *recset)
+gda_postgres_recordset_move_next (GdaServerRecordset *recset)
 {
   POSTGRES_Recordset *prc;
   gint ntuples;
@@ -950,7 +950,7 @@ gda_postgres_recordset_move_next (Gda_ServerRecordset *recset)
       if (prc->pq_data)
         ntuples = PQntuples(prc->pq_data);
       else
-        ntuples = Gda_Builtin_Result_get_nbtuples(prc->btin_res);
+        ntuples = GdaBuiltin_Result_get_nbtuples(prc->btin_res);
 
       /* check if we can fetch forward */
       if (prc->pos < ntuples)
@@ -974,7 +974,7 @@ gda_postgres_recordset_move_next (Gda_ServerRecordset *recset)
 
 
 gint
-gda_postgres_recordset_move_prev (Gda_ServerRecordset *recset)
+gda_postgres_recordset_move_prev (GdaServerRecordset *recset)
 {
   POSTGRES_Recordset *prc;
 
@@ -1004,7 +1004,7 @@ gda_postgres_recordset_move_prev (Gda_ServerRecordset *recset)
 
 
 gint
-gda_postgres_recordset_close (Gda_ServerRecordset *recset)
+gda_postgres_recordset_close (GdaServerRecordset *recset)
 {
   POSTGRES_Recordset *prc;
 
@@ -1022,7 +1022,7 @@ gda_postgres_recordset_close (Gda_ServerRecordset *recset)
 
       /* if there is a builtin result, free it */
       if (prc->btin_res)
-        Gda_Builtin_Result_free(prc->btin_res);
+        GdaBuiltin_Result_free(prc->btin_res);
 
       /* free the list of replacements */
       while (prc->replacements)
@@ -1038,7 +1038,7 @@ gda_postgres_recordset_close (Gda_ServerRecordset *recset)
 
 
 void
-gda_postgres_recordset_free (Gda_ServerRecordset *recset)
+gda_postgres_recordset_free (GdaServerRecordset *recset)
 {
   POSTGRES_Recordset *prc;
 

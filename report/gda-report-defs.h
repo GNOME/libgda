@@ -23,9 +23,9 @@
 
 #define GDA_REPORT_OAFIID "OAFIID:GNOME_GDA_ReportEngine"
 
-typedef struct _Gda_ReportAttribute Gda_ReportAttribute;
+typedef struct _GdaReportAttribute GdaReportAttribute;
 
-struct _Gda_ReportAttribute {
+struct _GdaReportAttribute {
 	gchar* name;
 	gchar* value;
 };

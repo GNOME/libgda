@@ -34,44 +34,44 @@
 extern "C" {
 #endif
 
-typedef struct _Gda_ReportStream       Gda_ReportStream;
-typedef struct _Gda_ReportStreamClass  Gda_ReportStreamClass;
+typedef struct _GdaReportStream       GdaReportStream;
+typedef struct _GdaReportStreamClass  GdaReportStreamClass;
 
-struct _Gda_ReportStream {
+struct _GdaReportStream {
 #ifdef HAVE_GOBJECT
 	GObject		object;
 #else
 	GtkObject	object;
 #endif
 	GDA_ReportStream  corba_reportstream;
-	Gda_ReportEngine* engine;
+	GdaReportEngine* engine;
 	GList*		errors_head;
 	gint32		seek;
 };
 
-struct _Gda_ReportStreamClass {
+struct _GdaReportStreamClass {
 #ifdef HAVE_GOBJECT
 	GObjectClass	parent_class;
 	GObjectClass	*parent;
 #else
 	GtkObjectClass	parent_class;
 #endif
-	void (* warning) (Gda_ReportStream* object, GList* errors);
-	void (* error)   (Gda_ReportStream* object, GList* errors);
+	void (* warning) (GdaReportStream* object, GList* errors);
+	void (* error)   (GdaReportStream* object, GList* errors);
 };
 
 #define GDA_TYPE_REPORT_STREAM          (gda_reportstream_get_type())
 #ifdef HAVE_GOBJECT
 #define GDA_REPORT_STREAM(obj) \
-		G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_REPORT_STREAM, Gda_ReportStream)
+		G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_REPORT_STREAM, GdaReportStream)
 #define GDA_REPORT_STREAM_CLASS(klass) \
-		G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_REPORT_STREAM, Gda_ReportStreamClass)
+		G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_REPORT_STREAM, GdaReportStreamClass)
 #define GDA_IS_REPORT_STREAM(obj) \
 		G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_REPORT_STREAM)
 #define GDA_IS_REPORT_STREAM_CLASS(klass) \
 		G_TYPE_CHECK_CLASS_TYPE ((klass), GDA_TYPE_REPORT_STREAM)
 #else
-#define GDA_REPORT_STREAM(obj)          GTK_CHECK_CAST(obj, GDA_TYPE_REPORT_STREAM, Gda_ReportStream)
+#define GDA_REPORT_STREAM(obj)          GTK_CHECK_CAST(obj, GDA_TYPE_REPORT_STREAM, GdaReportStream)
 #define GDA_REPORT_STREAM_CLASS(klass)  GTK_CHECK_CLASS_CAST(klass, GDA_TYPE_REPORT_STREAM, GdaReportStreamClass)
 #define GDA_IS_REPORT_STREAM(obj)       GTK_CHECK_TYPE(obj, GDA_TYPE_REPORT_STREAM)
 #define GDA_IS_REPORT_STREAM_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_REPORT_STREAM))
@@ -83,14 +83,14 @@ GType			gda_report_stream_get_type	(void);
 GtkType			gda_report_stream_get_type	(void);
 #endif
 
-Gda_ReportStream*	gda_report_stream_new		(Gda_ReportEngine* engine);
-void			gda_report_stream_free		(Gda_ReportStream* object);
+GdaReportStream*	gda_report_stream_new		(GdaReportEngine* engine);
+void			gda_report_stream_free		(GdaReportStream* object);
 
-gint32			gda_report_stream_readChunk	(Gda_ReportStream* object, guchar** data,
+gint32			gda_report_stream_readChunk	(GdaReportStream* object, guchar** data,
 							 gint32 start, gint32 size);
-gint32			gda_report_stream_writeChunk	(Gda_ReportStream* object, guchar* data,
+gint32			gda_report_stream_writeChunk	(GdaReportStream* object, guchar* data,
 							 gint32 size);
-gint32			gda_report_stream_length	(Gda_ReportStream* object);
+gint32			gda_report_stream_length	(GdaReportStream* object);
 
 #if defined(__cplusplus)
 }

@@ -38,17 +38,17 @@
  * gda_server_error_new
  * @cnc: connection object
  */
-Gda_ServerError *
+GdaServerError *
 gda_server_error_new (void)
 {
-  return g_new0(Gda_ServerError, 1);
+  return g_new0(GdaServerError, 1);
 }
 
 /**
  * gda_server_error_get_description
  */
 gchar *
-gda_server_error_get_description (Gda_ServerError *error)
+gda_server_error_get_description (GdaServerError *error)
 {
   g_return_val_if_fail(error != NULL, NULL);
   return error->description;
@@ -58,7 +58,7 @@ gda_server_error_get_description (Gda_ServerError *error)
  * gda_server_error_set_description
  */
 void
-gda_server_error_set_description (Gda_ServerError *error, const gchar *description)
+gda_server_error_set_description (GdaServerError *error, const gchar *description)
 {
   g_return_if_fail(error != NULL);
 
@@ -70,7 +70,7 @@ gda_server_error_set_description (Gda_ServerError *error, const gchar *descripti
  * gda_server_error_get_number
  */
 glong
-gda_server_error_get_number (Gda_ServerError *error)
+gda_server_error_get_number (GdaServerError *error)
 {
   g_return_val_if_fail(error != NULL, -1);
   return error->number;
@@ -80,7 +80,7 @@ gda_server_error_get_number (Gda_ServerError *error)
  * gda_server_error_set_number
  */
 void
-gda_server_error_set_number (Gda_ServerError *error, glong number)
+gda_server_error_set_number (GdaServerError *error, glong number)
 {
   g_return_if_fail(error != NULL);
   error->number = number;
@@ -90,7 +90,7 @@ gda_server_error_set_number (Gda_ServerError *error, glong number)
  * gda_server_error_set_source
  */
 void
-gda_server_error_set_source (Gda_ServerError *error, const gchar *source)
+gda_server_error_set_source (GdaServerError *error, const gchar *source)
 {
   g_return_if_fail(error != NULL);
 
@@ -102,7 +102,7 @@ gda_server_error_set_source (Gda_ServerError *error, const gchar *source)
  * gda_server_error_set_help_file
  */
 void
-gda_server_error_set_help_file (Gda_ServerError *error, const gchar *helpfile)
+gda_server_error_set_help_file (GdaServerError *error, const gchar *helpfile)
 {
   g_return_if_fail(error != NULL);
 
@@ -114,7 +114,7 @@ gda_server_error_set_help_file (Gda_ServerError *error, const gchar *helpfile)
  * gda_server_error_set_help_context
  */
 void
-gda_server_error_set_help_context (Gda_ServerError *error, const gchar *helpctxt)
+gda_server_error_set_help_context (GdaServerError *error, const gchar *helpctxt)
 {
   g_return_if_fail(error != NULL);
 
@@ -126,7 +126,7 @@ gda_server_error_set_help_context (Gda_ServerError *error, const gchar *helpctxt
  * gda_server_error_set_sqlstate
  */
 void
-gda_server_error_set_sqlstate (Gda_ServerError *error, const gchar *sqlstate)
+gda_server_error_set_sqlstate (GdaServerError *error, const gchar *sqlstate)
 {
   g_return_if_fail(error != NULL);
 
@@ -138,7 +138,7 @@ gda_server_error_set_sqlstate (Gda_ServerError *error, const gchar *sqlstate)
  * gda_server_error_set_native
  */
 void
-gda_server_error_set_native (Gda_ServerError *error, const gchar *native)
+gda_server_error_set_native (GdaServerError *error, const gchar *native)
 {
   g_return_if_fail(error != NULL);
 
@@ -151,7 +151,7 @@ gda_server_error_set_native (Gda_ServerError *error, const gchar *native)
  * @error: error object
  */
 void
-gda_server_error_free (Gda_ServerError *error)
+gda_server_error_free (GdaServerError *error)
 {
   g_return_if_fail(error != NULL);
 
@@ -168,12 +168,12 @@ gda_server_error_free (Gda_ServerError *error)
  * gda_server_error_make
  */
 void
-gda_server_error_make (Gda_ServerError *error,
-		       Gda_ServerRecordset *recset,
-		       Gda_ServerConnection *cnc,
+gda_server_error_make (GdaServerError *error,
+		       GdaServerRecordset *recset,
+		       GdaServerConnection *cnc,
 		       gchar *where)
 {
-  Gda_ServerConnection* cnc_to_use = NULL;
+  GdaServerConnection* cnc_to_use = NULL;
 
   g_return_if_fail(error != NULL);
 

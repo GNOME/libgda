@@ -20,8 +20,8 @@
 #include "gda-mail.h"
 #include <ctype.h>
 
-typedef Gda_ServerRecordset * (*schema_ops_fn)(Gda_ServerError *,
-											   Gda_ServerConnection *,
+typedef GdaServerRecordset * (*schema_ops_fn)(GdaServerError *,
+											   GdaServerConnection *,
 											   GDA_Connection_Constraint *,
 											   gint);
 
@@ -34,7 +34,7 @@ schema_ops_fn schema_ops[GDA_Connection_GDCN_SCHEMA_LAST] =
  * Public functions
  */
 gboolean
-gda_mail_connection_new (Gda_ServerConnection * cnc)
+gda_mail_connection_new (GdaServerConnection * cnc)
 {
 	g_return_val_if_fail(cnc != NULL, FALSE);
 
@@ -57,7 +57,7 @@ get_value (gchar * ptr)
 }
 
 gint
-gda_mail_connection_open (Gda_ServerConnection * cnc,
+gda_mail_connection_open (GdaServerConnection * cnc,
 						  const gchar * dsn,
 						  const gchar * user,
 						  const gchar * password)
@@ -68,31 +68,31 @@ gda_mail_connection_open (Gda_ServerConnection * cnc,
 }
 
 void
-gda_mail_connection_close (Gda_ServerConnection * cnc)
+gda_mail_connection_close (GdaServerConnection * cnc)
 {
 }
 
 gint
-gda_mail_connection_begin_transaction (Gda_ServerConnection * cnc)
+gda_mail_connection_begin_transaction (GdaServerConnection * cnc)
 {
 	return -1;
 }
 
 gint
-gda_mail_connection_commit_transaction (Gda_ServerConnection * cnc)
+gda_mail_connection_commit_transaction (GdaServerConnection * cnc)
 {
 	return -1;
 }
 
 gint
-gda_mail_connection_rollback_transaction (Gda_ServerConnection * cnc)
+gda_mail_connection_rollback_transaction (GdaServerConnection * cnc)
 {
 	return -1;
 }
 
-Gda_ServerRecordset *
-gda_mail_connection_open_schema (Gda_ServerConnection * cnc,
-								 Gda_ServerError * error,
+GdaServerRecordset *
+gda_mail_connection_open_schema (GdaServerConnection * cnc,
+								 GdaServerError * error,
 								 GDA_Connection_QType t,
 								 GDA_Connection_Constraint * constraints,
 								 gint length)
@@ -111,7 +111,7 @@ gda_mail_connection_open_schema (Gda_ServerConnection * cnc,
 }
 
 glong
-gda_mail_connection_modify_schema (Gda_ServerConnection *cnc,
+gda_mail_connection_modify_schema (GdaServerConnection *cnc,
                                    GDA_Connection_QType t,
                                    GDA_Connection_Constraint *constraints,
                                    gint length)
@@ -120,27 +120,27 @@ gda_mail_connection_modify_schema (Gda_ServerConnection *cnc,
 }
 
 gint
-gda_mail_connection_start_logging (Gda_ServerConnection * cnc,
+gda_mail_connection_start_logging (GdaServerConnection * cnc,
 								   const gchar * filename)
 {
 	return -1;
 }
 
 gint
-gda_mail_connection_stop_logging (Gda_ServerConnection * cnc)
+gda_mail_connection_stop_logging (GdaServerConnection * cnc)
 {
 	return -1;
 }
 
 gchar *
-gda_mail_connection_create_table (Gda_ServerConnection * cnc,
+gda_mail_connection_create_table (GdaServerConnection * cnc,
 								  GDA_RowAttributes * columns)
 {
 	return NULL;
 }
 
 gboolean
-gda_mail_connection_supports (Gda_ServerConnection * cnc,
+gda_mail_connection_supports (GdaServerConnection * cnc,
 							  GDA_Connection_Feature feature)
 {
 	g_return_val_if_fail(cnc != NULL, FALSE);
@@ -151,7 +151,7 @@ gda_mail_connection_supports (Gda_ServerConnection * cnc,
 }
 
 GDA_ValueType
-gda_mail_connection_get_gda_type (Gda_ServerConnection * cnc, gulong sql_type)
+gda_mail_connection_get_gda_type (GdaServerConnection * cnc, gulong sql_type)
 {
 	g_return_val_if_fail(cnc != NULL, GDA_TypeNull);
 
@@ -163,7 +163,7 @@ gda_mail_connection_get_gda_type (Gda_ServerConnection * cnc, gulong sql_type)
 }
 
 gshort
-gda_mail_connection_get_c_type (Gda_ServerConnection * cnc, GDA_ValueType type)
+gda_mail_connection_get_c_type (GdaServerConnection * cnc, GDA_ValueType type)
 {
 	g_return_val_if_fail(cnc != NULL, -1);
 
@@ -174,26 +174,26 @@ gda_mail_connection_get_c_type (Gda_ServerConnection * cnc, GDA_ValueType type)
 }
 
 gchar *
-gda_mail_connection_sql2xml (Gda_ServerConnection *cnc, const gchar *sql)
+gda_mail_connection_sql2xml (GdaServerConnection *cnc, const gchar *sql)
 {
   return NULL;
 }
 
 gchar *
-gda_mail_connection_xml2sql (Gda_ServerConnection *cnc, const gchar *xml)
+gda_mail_connection_xml2sql (GdaServerConnection *cnc, const gchar *xml)
 {
   return NULL;
 }
 
 void
-gda_mail_connection_free (Gda_ServerConnection * cnc)
+gda_mail_connection_free (GdaServerConnection * cnc)
 {
 }
 
 void
-gda_mail_error_make (Gda_ServerError * error,
-					 Gda_ServerRecordset * recset,
-					 Gda_ServerConnection * cnc,
+gda_mail_error_make (GdaServerError * error,
+					 GdaServerRecordset * recset,
+					 GdaServerConnection * cnc,
 					 gchar * where)
 {
 }

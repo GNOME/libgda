@@ -26,7 +26,7 @@
  * Public functions
  */
 gboolean
-gda_primebase_command_new (Gda_ServerCommand *cmd)
+gda_primebase_command_new (GdaServerCommand *cmd)
 {
   primebase_Command    *pcmd = NULL;
 
@@ -41,15 +41,15 @@ gda_primebase_command_new (Gda_ServerCommand *cmd)
   return TRUE;
 }
 
-Gda_ServerRecordset *
-gda_primebase_command_execute (Gda_ServerCommand *cmd,
-                               Gda_ServerError *error,
+GdaServerRecordset *
+gda_primebase_command_execute (GdaServerCommand *cmd,
+                               GdaServerError *error,
                                const GDA_CmdParameterSeq *params,
                                gulong *affected,
                                gulong options)
 {
-  Gda_ServerRecordset  *recset = NULL;
-  Gda_ServerConnection *cnc = NULL;
+  GdaServerRecordset  *recset = NULL;
+  GdaServerConnection *cnc = NULL;
   primebase_Connection *pcnc = NULL;
   primebase_Command    *pcmd = NULL;
   primebase_Recordset  *prset = NULL;
@@ -121,7 +121,7 @@ gda_primebase_command_execute (Gda_ServerCommand *cmd,
 }
 
 void
-gda_primebase_command_free (Gda_ServerCommand *cmd)
+gda_primebase_command_free (GdaServerCommand *cmd)
 {
   primebase_Command *pcmd = NULL;
   

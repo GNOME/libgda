@@ -22,6 +22,12 @@
  */
 
 // $Log$
+// Revision 1.3  2001/04/07 08:49:31  rodrigo
+// 2001-04-07  Rodrigo Moya <rodrigo@gnome-db.org>
+//
+// 	* objects renaming (Gda_* to Gda*) to conform to the GNOME
+// 	naming standards
+//
 // Revision 1.2  2000/12/14 13:10:01  bansz
 // Typo fix
 //
@@ -48,14 +54,14 @@ static CS_RETCODE CS_PUBLIC
 gda_sybase_csmsg_callback(CS_CONTEXT *, CS_CLIENTMSG *);
 
 
-Gda_ServerConnection *
+GdaServerConnection *
 gda_sybase_callback_get_connection(const CS_CONTEXT *,
 				   const CS_CONNECTION *);
 
 void
-gda_sybase_error_make(Gda_ServerError *error,
-                      Gda_ServerRecordset *recset,
-                      Gda_ServerConnection *cnc,
+gda_sybase_error_make(GdaServerError *error,
+                      GdaServerRecordset *recset,
+                      GdaServerConnection *cnc,
                       gchar *where)
 {
   sybase_Connection* scnc = NULL;
@@ -123,7 +129,7 @@ gda_sybase_error_make(Gda_ServerError *error,
 }
 
 gboolean
-gda_sybase_messages_install(Gda_ServerConnection *cnc)
+gda_sybase_messages_install(GdaServerConnection *cnc)
 {
   sybase_Connection *scnc = NULL;
   
@@ -156,20 +162,20 @@ gda_sybase_messages_install(Gda_ServerConnection *cnc)
 }
 
 void
-gda_sybase_messages_uninstall(Gda_ServerConnection *cnc)
+gda_sybase_messages_uninstall(GdaServerConnection *cnc)
 {
   // Seems the diag info is dropped with the context/connection structure
 }
 
 void
-sybase_chkerr(Gda_ServerError      *error,
-              Gda_ServerRecordset  *recset,
-	      Gda_ServerConnection *_cnc,
-	      Gda_ServerCommand    *_cmd,
+sybase_chkerr(GdaServerError      *error,
+              GdaServerRecordset  *recset,
+	      GdaServerConnection *_cnc,
+	      GdaServerCommand    *_cmd,
 	      gchar                *where)
 {
-  Gda_ServerConnection *cnc = NULL;
-  Gda_ServerCommand    *cmd = NULL;
+  GdaServerConnection *cnc = NULL;
+  GdaServerCommand    *cmd = NULL;
   sybase_Connection    *scnc = NULL;
   sybase_Command       *scmd = NULL;
   sybase_Recordset     *srecset = NULL;
@@ -225,10 +231,10 @@ sybase_chkerr(Gda_ServerError      *error,
 CS_RETCODE
 sybase_exec_chk(CS_RETCODE *retvar,
                 CS_RETCODE retval,
-                Gda_ServerError *err,
-                Gda_ServerRecordset *rec,
-                Gda_ServerConnection *cnc,
-                Gda_ServerCommand *cmd,
+                GdaServerError *err,
+                GdaServerRecordset *rec,
+                GdaServerConnection *cnc,
+                GdaServerCommand *cmd,
                 gchar *where)
 {
   sybase_chkerr(err, rec, cnc, cmd, where);
@@ -237,9 +243,9 @@ sybase_exec_chk(CS_RETCODE *retvar,
 }
 
 void
-gda_sybase_messages_handle(Gda_ServerError      *error,
-                           Gda_ServerRecordset  *recset,
-                           Gda_ServerConnection *cnc,
+gda_sybase_messages_handle(GdaServerError      *error,
+                           GdaServerRecordset  *recset,
+                           GdaServerConnection *cnc,
 			   gchar                *where)
 {
   if (error == NULL) {
@@ -250,9 +256,9 @@ gda_sybase_messages_handle(Gda_ServerError      *error,
 }
 
 void
-gda_sybase_messages_handle_clientmsg(Gda_ServerError      *error,
-                                     Gda_ServerRecordset  *recset,
-                                     Gda_ServerConnection *cnc,
+gda_sybase_messages_handle_clientmsg(GdaServerError      *error,
+                                     GdaServerRecordset  *recset,
+                                     GdaServerConnection *cnc,
                                      gchar                *where)
 {
   sybase_Connection *scnc = NULL;
@@ -316,12 +322,12 @@ gda_sybase_messages_handle_clientmsg(Gda_ServerError      *error,
 }
 
 void
-gda_sybase_messages_handle_servermsg(Gda_ServerError      *error,
-                                     Gda_ServerRecordset  *recset,
-                                     Gda_ServerConnection *cnc,
+gda_sybase_messages_handle_servermsg(GdaServerError      *error,
+                                     GdaServerRecordset  *recset,
+                                     GdaServerConnection *cnc,
                                      gchar                *where)
 {
-  Gda_ServerError   *serverr = error;
+  GdaServerError   *serverr = error;
   sybase_Connection *scnc = NULL;
   CS_RETCODE         ret = CS_SUCCEED;
   CS_INT             msgcur = 0;
@@ -391,9 +397,9 @@ gda_sybase_messages_handle_servermsg(Gda_ServerError      *error,
 }
 
 void
-gda_sybase_messages_handle_csmsg(Gda_ServerError      *error,
-                                 Gda_ServerRecordset  *recset,
-                                 Gda_ServerConnection *cnc,
+gda_sybase_messages_handle_csmsg(GdaServerError      *error,
+                                 GdaServerRecordset  *recset,
+                                 GdaServerConnection *cnc,
                                  gchar                *where)
 {
   sybase_Connection *scnc = NULL;
@@ -513,7 +519,7 @@ g_sprintf_servermsg(const gchar *head, CS_SERVERMSG *msg)
  */
 
 gint
-gda_sybase_install_error_handlers(Gda_ServerConnection *cnc)
+gda_sybase_install_error_handlers(GdaServerConnection *cnc)
 {
   sybase_Connection    *scnc = NULL;
   
@@ -568,7 +574,7 @@ gda_sybase_log_servermsg(const gchar *head, CS_SERVERMSG *msg)
  * These do nothing so far
  */
 
-Gda_ServerConnection *
+GdaServerConnection *
 gda_sybase_callback_get_connection(const CS_CONTEXT *ctx,
                                    const CS_CONNECTION *cnc)
 {

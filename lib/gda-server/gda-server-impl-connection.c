@@ -204,7 +204,7 @@ CORBA_long
 impl_GDA_Connection_beginTransaction (impl_POA_GDA_Connection * servant,
 				      CORBA_Environment * ev)
 {
-  Gda_ServerConnection* cnc = servant->cnc;
+  GdaServerConnection* cnc = servant->cnc;
   GDA_NotSupported*     exception;
 
   if (gda_server_connection_begin_transaction(cnc) != -1)
@@ -219,7 +219,7 @@ CORBA_long
 impl_GDA_Connection_commitTransaction (impl_POA_GDA_Connection * servant,
 				       CORBA_Environment * ev)
 {
-  Gda_ServerConnection* cnc = servant->cnc;
+  GdaServerConnection* cnc = servant->cnc;
   GDA_NotSupported*         exception;
 
   if (gda_server_connection_commit_transaction(cnc) != -1)
@@ -234,7 +234,7 @@ CORBA_long
 impl_GDA_Connection_rollbackTransaction (impl_POA_GDA_Connection * servant,
 					 CORBA_Environment * ev)
 {
-  Gda_ServerConnection* cnc = servant->cnc;
+  GdaServerConnection* cnc = servant->cnc;
   GDA_NotSupported*         exception;
 
   if (gda_server_connection_rollback_transaction(cnc) != -1)
@@ -290,10 +290,10 @@ impl_GDA_Connection_openSchema (impl_POA_GDA_Connection * servant,
 				GDA_Connection_ConstraintSeq * constraints,
 				CORBA_Environment * ev)
 {
-  Gda_ServerConnection* cnc = servant->cnc;
+  GdaServerConnection* cnc = servant->cnc;
   GDA_Recordset             new_recset;
-  Gda_ServerRecordset*  recset;
-  Gda_ServerError       e;
+  GdaServerRecordset*  recset;
+  GdaServerError       e;
 
   gda_log_message("impl_GDA_Connection_openSchema: constraints->_length = %d\n",
 		  constraints->_length);
@@ -322,7 +322,7 @@ impl_GDA_Connection_modifySchema (impl_POA_GDA_Connection * servant,
                                   GDA_Connection_ConstraintSeq * constraints,
                                   CORBA_Environment * ev)
 {
-  Gda_ServerConnection* cnc = servant->cnc;
+  GdaServerConnection* cnc = servant->cnc;
 
   if (gda_server_connection_modify_schema(cnc, t, constraints->_buffer, constraints->_length)
       != 0)
@@ -344,7 +344,7 @@ impl_GDA_Connection_createCommand (impl_POA_GDA_Connection * servant,
 				   CORBA_Environment * ev)
 {
   GDA_Command retval;
-  Gda_ServerCommand* cmd = gda_server_command_new(servant->cnc);
+  GdaServerCommand* cmd = gda_server_command_new(servant->cnc);
 
   retval = impl_GDA_Command__create(servant->poa, cmd, ev);
   if (gda_server_impl_exception(ev))
@@ -361,7 +361,7 @@ impl_GDA_Connection_createRecordset (impl_POA_GDA_Connection * servant,
 				     CORBA_Environment * ev)
 {
   GDA_Recordset            retval;
-  Gda_ServerRecordset* rs = gda_server_recordset_new(servant->cnc);
+  GdaServerRecordset* rs = gda_server_recordset_new(servant->cnc);
 
   retval = impl_GDA_Recordset__create(servant->poa, rs, ev);
   if (gda_server_impl_exception(ev))
@@ -378,7 +378,7 @@ impl_GDA_Connection_startLogging (impl_POA_GDA_Connection * servant,
 				  CORBA_char * filename,
 				  CORBA_Environment * ev)
 {
-  Gda_ServerConnection *cnc = servant->cnc;
+  GdaServerConnection *cnc = servant->cnc;
 
   if (gda_server_connection_start_logging(cnc, filename) != -1)
     return (0);
@@ -390,7 +390,7 @@ CORBA_long
 impl_GDA_Connection_stopLogging (impl_POA_GDA_Connection * servant,
 				 CORBA_Environment * ev)
 {
-  Gda_ServerConnection *cnc = servant->cnc;
+  GdaServerConnection *cnc = servant->cnc;
 
   if (gda_server_connection_stop_logging(cnc) != -1)
     return (0);

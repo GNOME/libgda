@@ -24,11 +24,11 @@
 /*
  * Private functions
  */
-static Gda_ServerRecordset *
-init_recordset_fields (Gda_ServerRecordset *recset,
+static GdaServerRecordset *
+init_recordset_fields (GdaServerRecordset *recset,
                        ORACLE_Recordset *ora_recset,
                        ORACLE_Command *ora_cmd,
-                       Gda_ServerError *error) {
+                       GdaServerError *error) {
 	g_return_val_if_fail(recset != NULL, recset);
 	g_return_val_if_fail(ora_recset != NULL, recset);
 	g_return_val_if_fail(ora_cmd != NULL, recset);
@@ -49,7 +49,7 @@ init_recordset_fields (Gda_ServerRecordset *recset,
 			glong            col_name_len;
 			gchar            name_buffer[ORA_NAME_BUFFER_SIZE + 1];
 			gchar*           pgchar_dummy;
-			Gda_ServerField* field;
+			GdaServerField* field;
 			ORACLE_Field*    ora_field;
 			
 			field = gda_server_field_new();
@@ -129,7 +129,7 @@ init_recordset_fields (Gda_ServerRecordset *recset,
 				return recset;
 			}
 			
-			/* add field to Gda_ServerRecordset structure */
+			/* add field to GdaServerRecordset structure */
 			gda_server_recordset_add_field(recset, field);
 			
 			/* retrieve next field */
@@ -156,9 +156,9 @@ init_recordset_fields (Gda_ServerRecordset *recset,
  * Public functions
  */
 gboolean
-gda_oracle_command_new (Gda_ServerCommand *cmd) {
+gda_oracle_command_new (GdaServerCommand *cmd) {
 	ORACLE_Command*       ora_cmd;
-	Gda_ServerConnection* cnc;
+	GdaServerConnection* cnc;
 	ORACLE_Connection*    ora_cnc;
 	
 	g_return_val_if_fail(cmd != NULL, FALSE);
@@ -177,7 +177,7 @@ gda_oracle_command_new (Gda_ServerCommand *cmd) {
 		                                  OCI_HTYPE_STMT,
 		                                  (size_t) 0,
 		                                  (dvoid **) NULL)) {
-			Gda_ServerError* error = gda_server_error_new();
+			GdaServerError* error = gda_server_error_new();
 			gda_server_error_make(error,
 			                      0,
 			                      gda_server_command_get_connection(cmd),
@@ -190,13 +190,13 @@ gda_oracle_command_new (Gda_ServerCommand *cmd) {
 	return TRUE;
 }
 
-Gda_ServerRecordset *
-gda_oracle_command_execute (Gda_ServerCommand *cmd,
-                            Gda_ServerError *error,
+GdaServerRecordset *
+gda_oracle_command_execute (GdaServerCommand *cmd,
+                            GdaServerError *error,
                             const GDA_CmdParameterSeq *params,
                             gulong *affected,
                             gulong options) {
-	Gda_ServerRecordset* recset = NULL;
+	GdaServerRecordset* recset = NULL;
 	
 	/* create recordset to be returned */
 	recset = gda_server_recordset_new(gda_server_command_get_connection(cmd));
@@ -267,7 +267,7 @@ gda_oracle_command_execute (Gda_ServerCommand *cmd,
 }
 
 void
-gda_oracle_command_free (Gda_ServerCommand *cmd)
+gda_oracle_command_free (GdaServerCommand *cmd)
 {
   ORACLE_Command* ora_cmd;
 

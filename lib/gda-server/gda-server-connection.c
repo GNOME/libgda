@@ -27,7 +27,7 @@ free_error_list (GList *list) {
 	g_return_if_fail(list != NULL);
 	
 	while ((node = g_list_first(list))) {
-		Gda_ServerError* error = (Gda_ServerError *) node->data;
+		GdaServerError* error = (GdaServerError *) node->data;
 		list = g_list_remove(list, (gpointer) error);
 		gda_server_error_free(error);
 	}
@@ -36,15 +36,15 @@ free_error_list (GList *list) {
 /**
  * gda_server_connection_new
  */
-Gda_ServerConnection *
-gda_server_connection_new (Gda_ServerImpl *server_impl)
+GdaServerConnection *
+gda_server_connection_new (GdaServerImpl *server_impl)
 {
-	Gda_ServerConnection* cnc;
+	GdaServerConnection* cnc;
 	
 	g_return_val_if_fail(server_impl != NULL, NULL);
 	
 	/* FIXME: could be possible to share connections */
-	cnc = g_new0(Gda_ServerConnection, 1);
+	cnc = g_new0(GdaServerConnection, 1);
 	cnc->server_impl = server_impl;
 	cnc->users = 1;
 	
@@ -61,7 +61,7 @@ gda_server_connection_new (Gda_ServerImpl *server_impl)
  * gda_server_connection_open
  */
 gint
-gda_server_connection_open (Gda_ServerConnection *cnc,
+gda_server_connection_open (GdaServerConnection *cnc,
                             const gchar *dsn,
                             const gchar *user,
                             const gchar *password)
@@ -87,7 +87,7 @@ gda_server_connection_open (Gda_ServerConnection *cnc,
  * gda_server_connection_close
  */
 void
-gda_server_connection_close (Gda_ServerConnection *cnc)
+gda_server_connection_close (GdaServerConnection *cnc)
 {
 	g_return_if_fail(cnc != NULL);
 	g_return_if_fail(cnc->server_impl != NULL);
@@ -100,7 +100,7 @@ gda_server_connection_close (Gda_ServerConnection *cnc)
  * gda_server_connection_begin_transaction
  */
 gint
-gda_server_connection_begin_transaction (Gda_ServerConnection *cnc)
+gda_server_connection_begin_transaction (GdaServerConnection *cnc)
 {
 	g_return_val_if_fail(cnc != NULL, -1);
 	g_return_val_if_fail(cnc->server_impl != NULL, -1);
@@ -113,7 +113,7 @@ gda_server_connection_begin_transaction (Gda_ServerConnection *cnc)
  * gda_server_connection_commit_transaction
  */
 gint
-gda_server_connection_commit_transaction (Gda_ServerConnection *cnc)
+gda_server_connection_commit_transaction (GdaServerConnection *cnc)
 {
 	g_return_val_if_fail(cnc != NULL, -1);
 	g_return_val_if_fail(cnc->server_impl != NULL, -1);
@@ -126,7 +126,7 @@ gda_server_connection_commit_transaction (Gda_ServerConnection *cnc)
  * gda_server_connection_rollback_transaction
  */
 gint
-gda_server_connection_rollback_transaction (Gda_ServerConnection *cnc)
+gda_server_connection_rollback_transaction (GdaServerConnection *cnc)
 {
 	g_return_val_if_fail(cnc != NULL, -1);
 	g_return_val_if_fail(cnc->server_impl != NULL, -1);
@@ -138,9 +138,9 @@ gda_server_connection_rollback_transaction (Gda_ServerConnection *cnc)
 /**
  * gda_server_connection_open_schema
  */
-Gda_ServerRecordset *
-gda_server_connection_open_schema (Gda_ServerConnection *cnc,
-                                   Gda_ServerError *error,
+GdaServerRecordset *
+gda_server_connection_open_schema (GdaServerConnection *cnc,
+                                   GdaServerError *error,
                                    GDA_Connection_QType t,
                                    GDA_Connection_Constraint *constraints,
                                    gint length)
@@ -156,7 +156,7 @@ gda_server_connection_open_schema (Gda_ServerConnection *cnc,
  * gda_server_connection_modify_schema
  */
 glong
-gda_server_connection_modify_schema (Gda_ServerConnection *cnc,
+gda_server_connection_modify_schema (GdaServerConnection *cnc,
                                      GDA_Connection_QType t,
                                      GDA_Connection_Constraint *constraints,
                                      gint length)
@@ -172,7 +172,7 @@ gda_server_connection_modify_schema (Gda_ServerConnection *cnc,
  * gda_server_connection_start_logging
  */
 gint
-gda_server_connection_start_logging (Gda_ServerConnection *cnc, const gchar *filename)
+gda_server_connection_start_logging (GdaServerConnection *cnc, const gchar *filename)
 {
 	g_return_val_if_fail(cnc != NULL, -1);
 	g_return_val_if_fail(cnc->server_impl != NULL, -1);
@@ -185,7 +185,7 @@ gda_server_connection_start_logging (Gda_ServerConnection *cnc, const gchar *fil
  * gda_server_connection_stop_logging
  */
 gint
-gda_server_connection_stop_logging (Gda_ServerConnection *cnc)
+gda_server_connection_stop_logging (GdaServerConnection *cnc)
 {
 	g_return_val_if_fail(cnc != NULL, -1);
 	g_return_val_if_fail(cnc->server_impl != NULL, -1);
@@ -198,7 +198,7 @@ gda_server_connection_stop_logging (Gda_ServerConnection *cnc)
  * gda_server_connection_create_table
  */
 gchar *
-gda_server_connection_create_table (Gda_ServerConnection *cnc, GDA_RowAttributes *columns)
+gda_server_connection_create_table (GdaServerConnection *cnc, GDA_RowAttributes *columns)
 {
 	g_return_val_if_fail(cnc != NULL, NULL);
 	g_return_val_if_fail(cnc->server_impl != NULL, NULL);
@@ -212,7 +212,7 @@ gda_server_connection_create_table (Gda_ServerConnection *cnc, GDA_RowAttributes
  * gda_server_connection_supports
  */
 gboolean
-gda_server_connection_supports (Gda_ServerConnection *cnc, GDA_Connection_Feature feature)
+gda_server_connection_supports (GdaServerConnection *cnc, GDA_Connection_Feature feature)
 {
 	g_return_val_if_fail(cnc != NULL, FALSE);
 	g_return_val_if_fail(cnc->server_impl != NULL, FALSE);
@@ -225,7 +225,7 @@ gda_server_connection_supports (Gda_ServerConnection *cnc, GDA_Connection_Featur
  * gda_server_connection_get_gda_type
  */
 GDA_ValueType
-gda_server_connection_get_gda_type (Gda_ServerConnection *cnc, gulong sql_type)
+gda_server_connection_get_gda_type (GdaServerConnection *cnc, gulong sql_type)
 {
 	g_return_val_if_fail(cnc != NULL, GDA_TypeNull);
 	g_return_val_if_fail(cnc->server_impl != NULL, GDA_TypeNull);
@@ -238,7 +238,7 @@ gda_server_connection_get_gda_type (Gda_ServerConnection *cnc, gulong sql_type)
  * gda_server_connection_get_c_type
  */
 gshort
-gda_server_connection_get_c_type (Gda_ServerConnection *cnc, GDA_ValueType type)
+gda_server_connection_get_c_type (GdaServerConnection *cnc, GDA_ValueType type)
 {
 	g_return_val_if_fail(cnc != NULL, -1);
 	g_return_val_if_fail(cnc->server_impl != NULL, -1);
@@ -251,7 +251,7 @@ gda_server_connection_get_c_type (Gda_ServerConnection *cnc, GDA_ValueType type)
  * gda_server_connection_sql2xml
  */
 gchar *
-gda_server_connection_sql2xml (Gda_ServerConnection *cnc, const gchar *sql)
+gda_server_connection_sql2xml (GdaServerConnection *cnc, const gchar *sql)
 {
 	g_return_if_fail(cnc != NULL);
 	g_return_if_fail(cnc->server_impl != NULL);
@@ -264,7 +264,7 @@ gda_server_connection_sql2xml (Gda_ServerConnection *cnc, const gchar *sql)
  * gda_server_connection_xml2sql
  */
 gchar *
-gda_server_connection_xml2sql (Gda_ServerConnection *cnc, const gchar *xml)
+gda_server_connection_xml2sql (GdaServerConnection *cnc, const gchar *xml)
 {
 	g_return_if_fail(cnc != NULL);
 	g_return_if_fail(cnc->server_impl != NULL);
@@ -277,7 +277,7 @@ gda_server_connection_xml2sql (Gda_ServerConnection *cnc, const gchar *xml)
  * gda_server_connection_get_dsn
  */
 gchar *
-gda_server_connection_get_dsn (Gda_ServerConnection *cnc)
+gda_server_connection_get_dsn (GdaServerConnection *cnc)
 {
 	g_return_val_if_fail(cnc != NULL, NULL);
 	return cnc->dsn;
@@ -287,7 +287,7 @@ gda_server_connection_get_dsn (Gda_ServerConnection *cnc)
  * gda_server_connection_set_dsn
  */
 void
-gda_server_connection_set_dsn (Gda_ServerConnection *cnc, const gchar *dsn)
+gda_server_connection_set_dsn (GdaServerConnection *cnc, const gchar *dsn)
 {
 	g_return_if_fail(cnc != NULL);
 	
@@ -302,7 +302,7 @@ gda_server_connection_set_dsn (Gda_ServerConnection *cnc, const gchar *dsn)
  * gda_server_connection_get_username
  */
 gchar *
-gda_server_connection_get_username (Gda_ServerConnection *cnc)
+gda_server_connection_get_username (GdaServerConnection *cnc)
 {
 	g_return_val_if_fail(cnc != NULL, NULL);
 	return cnc->username;
@@ -312,7 +312,7 @@ gda_server_connection_get_username (Gda_ServerConnection *cnc)
  * gda_server_connection_set_username
  */
 void
-gda_server_connection_set_username (Gda_ServerConnection *cnc, const gchar *username)
+gda_server_connection_set_username (GdaServerConnection *cnc, const gchar *username)
 {
 	g_return_if_fail(cnc != NULL);
 	
@@ -325,7 +325,7 @@ gda_server_connection_set_username (Gda_ServerConnection *cnc, const gchar *user
  * gda_server_connection_get_password
  */
 gchar *
-gda_server_connection_get_password (Gda_ServerConnection *cnc)
+gda_server_connection_get_password (GdaServerConnection *cnc)
 {
 	g_return_val_if_fail(cnc != NULL, NULL);
 	return cnc->password;
@@ -335,7 +335,7 @@ gda_server_connection_get_password (Gda_ServerConnection *cnc)
  * gda_server_connection_set_password
  */
 void
-gda_server_connection_set_password (Gda_ServerConnection *cnc, const gchar *password)
+gda_server_connection_set_password (GdaServerConnection *cnc, const gchar *password)
 {
 	g_return_if_fail(cnc != NULL);
 	
@@ -348,7 +348,7 @@ gda_server_connection_set_password (Gda_ServerConnection *cnc, const gchar *pass
  * gda_server_connection_add_error
  */
 void
-gda_server_connection_add_error (Gda_ServerConnection *cnc, Gda_ServerError *error)
+gda_server_connection_add_error (GdaServerConnection *cnc, GdaServerError *error)
 {
 	g_return_if_fail(cnc != NULL);
 	g_return_if_fail(error != NULL);
@@ -364,9 +364,9 @@ gda_server_connection_add_error (Gda_ServerConnection *cnc, Gda_ServerError *err
  * Adds a new error to the given connection from a given error string
  */
 void
-gda_server_connection_add_error_string (Gda_ServerConnection *cnc, const gchar *msg)
+gda_server_connection_add_error_string (GdaServerConnection *cnc, const gchar *msg)
 {
-	Gda_ServerError* error;
+	GdaServerError* error;
 	
 	g_return_if_fail(cnc != NULL);
 	g_return_if_fail(msg != NULL);
@@ -381,7 +381,7 @@ gda_server_connection_add_error_string (Gda_ServerConnection *cnc, const gchar *
  * gda_server_connection_get_user_data
  */
 gpointer
-gda_server_connection_get_user_data (Gda_ServerConnection *cnc)
+gda_server_connection_get_user_data (GdaServerConnection *cnc)
 {
 	g_return_val_if_fail(cnc != NULL, NULL);
 	return cnc->user_data;
@@ -391,7 +391,7 @@ gda_server_connection_get_user_data (Gda_ServerConnection *cnc)
  * gda_server_connection_set_user_data
  */
 void
-gda_server_connection_set_user_data (Gda_ServerConnection *cnc, gpointer user_data)
+gda_server_connection_set_user_data (GdaServerConnection *cnc, gpointer user_data)
 {
 	g_return_if_fail(cnc != NULL);
 	cnc->user_data = user_data;
@@ -401,7 +401,7 @@ gda_server_connection_set_user_data (Gda_ServerConnection *cnc, gpointer user_da
  * gda_server_connection_free
  */
 void
-gda_server_connection_free (Gda_ServerConnection *cnc)
+gda_server_connection_free (GdaServerConnection *cnc)
 {
 	g_return_if_fail(cnc != NULL);
 	

@@ -32,14 +32,14 @@
 extern "C" {
 #endif
 
-typedef struct _Gda_ReportEngine Gda_ReportEngine;
-typedef struct _Gda_ReportEngineClass Gda_ReportEngineClass;
+typedef struct _GdaReportEngine GdaReportEngine;
+typedef struct _GdaReportEngineClass GdaReportEngineClass;
 
 typedef enum {
 	GDA_REPORT_FLAGS_NONE,
-} Gda_ReportFlags;
+} GdaReportFlags;
 
-struct _Gda_ReportEngine {
+struct _GdaReportEngine {
 #ifdef HAVE_GOBJECT
 	GObject		object;
 #else
@@ -49,30 +49,30 @@ struct _Gda_ReportEngine {
 	GList*		errors_head;
 };
 
-struct _Gda_ReportEngineClass {
+struct _GdaReportEngineClass {
 #ifdef HAVE_GOBJECT
 	GObjectClass	parent_class;
 	GObjectClass	*parent;
 #else
 	GtkObjectClass	parent_class;
 #endif
-	void (* warning) (Gda_ReportEngine* object, GList* errors);
-	void (* error)   (Gda_ReportEngine* object, GList* errors);
+	void (* warning) (GdaReportEngine* object, GList* errors);
+	void (* error)   (GdaReportEngine* object, GList* errors);
 };
 
 
 #define GDA_TYPE_REPORT_ENGINE          (gda_report_engine_get_type())
 #ifdef HAVE_GOBJECT
 #define GDA_REPORT_ENGINE(obj) \
-		G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_REPORT_ENGINE, Gda_ReportEngine)
+		G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_REPORT_ENGINE, GdaReportEngine)
 #define GDA_REPORT_ENGINE_CLASS(klass) \
-		G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_REPORT_ENGINE, Gda_ReportEngineClass)
+		G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_REPORT_ENGINE, GdaReportEngineClass)
 #define GDA_IS_REPORT_ENGINE(obj) \
 		G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_REPORT_ENGINE)
 #define GDA_IS_REPORT_ENGINE_CLASS(klass) \
 		G_TYPE_CHECK_CLASS_TYPE ((klass), GDA_TYPE_REPORT_ENGINE)
 #else
-#define GDA_REPORT_ENGINE(obj)          GTK_CHECK_CAST(obj, GDA_TYPE_REPORT_ENGINE, Gda_ReportEngine)
+#define GDA_REPORT_ENGINE(obj)          GTK_CHECK_CAST(obj, GDA_TYPE_REPORT_ENGINE, GdaReportEngine)
 #define GDA_REPORT_ENGINE_CLASS(klass)  GTK_CHECK_CLASS_CAST(klass, GDA_TYPE_REPORT_ENGINE, GdaReportEngineClass)
 #define GDA_IS_REPORT_ENGINE(obj)       GTK_CHECK_TYPE(obj, GDA_TYPE_REPORT_ENGINE)
 #define GDA_IS_REPORT_ENGINE_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_REPORT_ENGINE))
@@ -84,18 +84,18 @@ GType		  gda_report_engine_get_type	(void);
 GtkType		  gda_report_engine_get_type	(void);
 #endif
 
-Gda_ReportEngine* gda_report_engine_new			 (void);
-void		  gda_report_engine_free		 (Gda_ReportEngine *engine);
+GdaReportEngine* gda_report_engine_new			 (void);
+void		  gda_report_engine_free		 (GdaReportEngine *engine);
 
-GList*		  gda_report_engine_query_reports        (Gda_ReportEngine *engine,
+GList*		  gda_report_engine_query_reports        (GdaReportEngine *engine,
 							  const gchar *condition,
-							  Gda_ReportFlags flags);
-gboolean	  gda_report_engine_register_converter	 (Gda_ReportEngine *engine,
+							  GdaReportFlags flags);
+gboolean	  gda_report_engine_register_converter	 (GdaReportEngine *engine,
 							  gchar *format,
 							  gchar *converter);
-void		  gda_report_engine_unregister_converter (Gda_ReportEngine *engine,
+void		  gda_report_engine_unregister_converter (GdaReportEngine *engine,
 							  gchar *converter);
-gchar*		  gda_report_engine_find_converter	 (Gda_ReportEngine *engine,
+gchar*		  gda_report_engine_find_converter	 (GdaReportEngine *engine,
 							  gchar* format);
 		
 

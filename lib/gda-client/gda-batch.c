@@ -26,7 +26,7 @@
 #  include <gtk/gtksignal.h>
 #endif
 
-/* Gda_Batch object signals */
+/* GdaBatch object signals */
 enum
 {
   GDA_BATCH_BEGIN_TRANSACTION,
@@ -38,11 +38,11 @@ enum
 static gint gda_batch_signals[GDA_BATCH_LAST_SIGNAL] = { 0, };
 
 #ifdef HAVE_GOBJECT
-static void gda_batch_class_init (Gda_BatchClass *klass, gpointer data);
-static void gda_batch_init       (Gda_Batch *job, Gda_BatchClass *klass);
+static void gda_batch_class_init (GdaBatchClass *klass, gpointer data);
+static void gda_batch_init       (GdaBatch *job, GdaBatchClass *klass);
 #else
-static void gda_batch_class_init (Gda_BatchClass *klass);
-static void gda_batch_init       (Gda_Batch *job);
+static void gda_batch_class_init (GdaBatchClass *klass);
+static void gda_batch_init       (GdaBatch *job);
 #endif
 
 #ifdef HAVE_GOBJECT
@@ -55,18 +55,18 @@ gda_batch_get_type (void)
     {
       GTypeInfo info =
       {
-        sizeof (Gda_BatchClass),               /* class_size */
+        sizeof (GdaBatchClass),               /* class_size */
         NULL,                                  /* base_init */
         NULL,                                  /* base_finalize */
         (GClassInitFunc) gda_batch_class_init, /* class_init */
         NULL,                                  /* class_finalize */
         NULL,                                  /* class_data */
-        sizeof (Gda_Batch),                    /* instance_size */
+        sizeof (GdaBatch),                    /* instance_size */
         0,                                     /* n_preallocs */
         (GInstanceInitFunc) gda_batch_init,    /* instance_init */
         NULL,                                  /* value_table */
       };
-      type = g_type_register_static (G_TYPE_OBJECT, "Gda_Batch", &info, 0);
+      type = g_type_register_static (G_TYPE_OBJECT, "GdaBatch", &info, 0);
     }
   return type;
 }
@@ -81,8 +81,8 @@ gda_batch_get_type (void)
       GtkTypeInfo gda_batch_info =
       {
         "GdaBatch",
-        sizeof (Gda_Batch),
-        sizeof (Gda_BatchClass),
+        sizeof (GdaBatch),
+        sizeof (GdaBatchClass),
         (GtkClassInitFunc) gda_batch_class_init,
         (GtkObjectInitFunc) gda_batch_init,
         (GtkArgSetFunc)NULL,
@@ -96,7 +96,7 @@ gda_batch_get_type (void)
 
 #ifdef HAVE_GOBJECT
 static void
-gda_batch_class_init (Gda_BatchClass *klass, gpointer data)
+gda_batch_class_init (GdaBatchClass *klass, gpointer data)
 {
   /* FIXME: No signals yet in GObject */
   klass->begin_transaction = NULL;
@@ -106,7 +106,7 @@ gda_batch_class_init (Gda_BatchClass *klass, gpointer data)
 }
 #else
 static void
-gda_batch_class_init (Gda_BatchClass* klass)
+gda_batch_class_init (GdaBatchClass* klass)
 {
   GtkObjectClass* object_class;
 
@@ -116,28 +116,28 @@ gda_batch_class_init (Gda_BatchClass* klass)
             gtk_signal_new("begin_transaction",
                            GTK_RUN_LAST,
                            object_class->type,
-                           GTK_SIGNAL_OFFSET(Gda_BatchClass, begin_transaction),
+                           GTK_SIGNAL_OFFSET(GdaBatchClass, begin_transaction),
                            gtk_signal_default_marshaller,
                            GTK_TYPE_NONE, 0);
   gda_batch_signals[GDA_BATCH_COMMIT_TRANSACTION] =
             gtk_signal_new("commit_transaction",
                            GTK_RUN_LAST,
                            object_class->type,
-                           GTK_SIGNAL_OFFSET(Gda_BatchClass, commit_transaction),
+                           GTK_SIGNAL_OFFSET(GdaBatchClass, commit_transaction),
                            gtk_signal_default_marshaller,
                            GTK_TYPE_NONE, 0);
   gda_batch_signals[GDA_BATCH_ROLLBACK_TRANSACTION] =
             gtk_signal_new("rollback_transaction",
                            GTK_RUN_LAST,
                            object_class->type,
-                           GTK_SIGNAL_OFFSET(Gda_BatchClass, rollback_transaction),
+                           GTK_SIGNAL_OFFSET(GdaBatchClass, rollback_transaction),
                            gtk_signal_default_marshaller,
                            GTK_TYPE_NONE, 0);
   gda_batch_signals[GDA_BATCH_EXECUTE_COMMAND] =
             gtk_signal_new("execute_command",
                            GTK_RUN_LAST,
                            object_class->type,
-                           GTK_SIGNAL_OFFSET(Gda_BatchClass, execute_command),
+                           GTK_SIGNAL_OFFSET(GdaBatchClass, execute_command),
                            gtk_marshal_NONE__POINTER,
                            GTK_TYPE_NONE, 1, GTK_TYPE_STRING);
   gtk_object_class_add_signals(object_class, gda_batch_signals, GDA_BATCH_LAST_SIGNAL);
@@ -150,9 +150,9 @@ gda_batch_class_init (Gda_BatchClass* klass)
 
 static void
 #ifdef HAVE_GOBJECT
-gda_batch_init (Gda_Batch *job, Gda_BatchClass *klass)
+gda_batch_init (GdaBatch *job, GdaBatchClass *klass)
 #else
-gda_batch_init (Gda_Batch *job)
+gda_batch_init (GdaBatch *job)
 #endif
 {
   g_return_if_fail(IS_GDA_BATCH(job));
@@ -166,7 +166,7 @@ gda_batch_init (Gda_Batch *job)
 /**
  * gda_batch_new
  *
- * Creates a new #Gda_Batch object, which can be used in applications
+ * Creates a new #GdaBatch object, which can be used in applications
  * to simulate a transaction, that is, a series of commands which will
  * be committed only if only all of them succeed. If any of the commands
  * return an error when executed, all the changes are rolled back (by
@@ -178,7 +178,7 @@ gda_batch_init (Gda_Batch *job)
  *
  * Returns: a pointer to the new object, or NULL on error
  */
-Gda_Batch *
+GdaBatch *
 gda_batch_new (void)
 {
 #ifdef HAVE_GOBJECT
@@ -190,12 +190,12 @@ gda_batch_new (void)
 
 /**
  * gda_batch_free
- * @job: a #Gda_Batch object
+ * @job: a #GdaBatch object
  *
  * Destroy the given batch job object
  */
 void
-gda_batch_free (Gda_Batch *job)
+gda_batch_free (GdaBatch *job)
 {
   g_return_if_fail(IS_GDA_BATCH(job));
 
@@ -209,7 +209,7 @@ gda_batch_free (Gda_Batch *job)
 
 /**
  * gda_batch_load_file
- * @job: a #Gda_Batch object
+ * @job: a #GdaBatch object
  * @filename: file name
  * @clean: clean up
  *
@@ -220,7 +220,7 @@ gda_batch_free (Gda_Batch *job)
  * Returns: TRUE if successful, or FALSE on error
  */
 gboolean
-gda_batch_load_file (Gda_Batch *job, const gchar *filename, gboolean clean)
+gda_batch_load_file (GdaBatch *job, const gchar *filename, gboolean clean)
 {
   FILE* fp;
 
@@ -270,13 +270,13 @@ gda_batch_load_file (Gda_Batch *job, const gchar *filename, gboolean clean)
 
 /**
  * gda_batch_add_command
- * @job: a #Gda_Batch object
+ * @job: a #GdaBatch object
  * @cmd: command string
  *
  * Adds a command to the list of commands to be executed
  */
 void
-gda_batch_add_command (Gda_Batch *job, const gchar *cmd)
+gda_batch_add_command (GdaBatch *job, const gchar *cmd)
 {
   gchar* str;
 
@@ -289,13 +289,13 @@ gda_batch_add_command (Gda_Batch *job, const gchar *cmd)
 
 /**
  * gda_batch_clear
- * job: a #Gda_Batch object
+ * job: a #GdaBatch object
  *
- * Clears the given #Gda_Batch object. This means eliminating the
+ * Clears the given #GdaBatch object. This means eliminating the
  * list of commands
  */
 void
-gda_batch_clear (Gda_Batch *job)
+gda_batch_clear (GdaBatch *job)
 {
   g_return_if_fail(IS_GDA_BATCH(job));
 
@@ -309,7 +309,7 @@ gda_batch_clear (Gda_Batch *job)
 
 /**
  * gda_batch_start
- * @job: a #Gda_Batch object
+ * @job: a #GdaBatch object
  *
  * Start the batch job execution. This function will return when
  * the series of commands is completed, or when an error is found
@@ -317,7 +317,7 @@ gda_batch_clear (Gda_Batch *job)
  * Returns: TRUE if all goes well, or FALSE on error
  */
 gboolean
-gda_batch_start (Gda_Batch *job)
+gda_batch_start (GdaBatch *job)
 {
   GList* node;
 
@@ -355,7 +355,7 @@ gda_batch_start (Gda_Batch *job)
       gchar* cmd = (gchar *) node->data;
       if (cmd && strlen(cmd) > 0)
         {
-          Gda_Recordset* recset;
+          GdaRecordset* recset;
           gulong         reccount;
 
           /* execute command */
@@ -406,14 +406,14 @@ gda_batch_start (Gda_Batch *job)
 
 /**
  * gda_batch_stop
- * @job: a #Gda_Batch object
+ * @job: a #GdaBatch object
  *
- * Stop the execution of the given #Gda_Batch object. This cancels the
- * the transaction (discarding all changes) if the #Gda_Batch object
+ * Stop the execution of the given #GdaBatch object. This cancels the
+ * the transaction (discarding all changes) if the #GdaBatch object
  * is in transaction mode
  */
 void
-gda_batch_stop (Gda_Batch *job)
+gda_batch_stop (GdaBatch *job)
 {
   g_return_if_fail(IS_GDA_BATCH(job));
 
@@ -425,10 +425,10 @@ gda_batch_stop (Gda_Batch *job)
 
 /**
  * gda_batch_is_running
- * @job: a #Gda_Batch object
+ * @job: a #GdaBatch object
  */
 gboolean
-gda_batch_is_running (Gda_Batch *job)
+gda_batch_is_running (GdaBatch *job)
 {
   g_return_val_if_fail(IS_GDA_BATCH(job), FALSE);
   return job->is_running;
@@ -436,13 +436,13 @@ gda_batch_is_running (Gda_Batch *job)
 
 /**
  * gda_batch_get_connection
- * @job: a #Gda_Batch object
+ * @job: a #GdaBatch object
  *
- * Return the #Gda_Connection object associated with the given
+ * Return the #GdaConnection object associated with the given
  * batch job
  */
-Gda_Connection *
-gda_batch_get_connection (Gda_Batch *job)
+GdaConnection *
+gda_batch_get_connection (GdaBatch *job)
 {
   g_return_val_if_fail(IS_GDA_BATCH(job), 0);
   return job->cnc;
@@ -450,13 +450,13 @@ gda_batch_get_connection (Gda_Batch *job)
 
 /**
  * gda_batch_set_connection
- * @job: a #Gda_Batch object
- * @cnc: a #Gda_Connection object
+ * @job: a #GdaBatch object
+ * @cnc: a #GdaConnection object
  *
- * Associate a #Gda_Connection object to the given batch job
+ * Associate a #GdaConnection object to the given batch job
  */
 void
-gda_batch_set_connection (Gda_Batch *job, Gda_Connection *cnc)
+gda_batch_set_connection (GdaBatch *job, GdaConnection *cnc)
 {
   g_return_if_fail(IS_GDA_BATCH(job));
   job->cnc = cnc;
@@ -464,9 +464,9 @@ gda_batch_set_connection (Gda_Batch *job, Gda_Connection *cnc)
 
 /**
  * gda_batch_get_transaction_mode
- * @job: a #Gda_Batch object
+ * @job: a #GdaBatch object
  *
- * Returns the transaction mode for the given #Gda_Batch object.
+ * Returns the transaction mode for the given #GdaBatch object.
  * This mode specifies how the series of commands are treated. If
  * in transaction mode (TRUE), the execution is stopped whenever an
  * error is found, discarding all changes, whereas all data is
@@ -476,7 +476,7 @@ gda_batch_set_connection (Gda_Batch *job, Gda_Connection *cnc)
  * continues until the end regardless of any error found.
  */
 gboolean
-gda_batch_get_transaction_mode (Gda_Batch *job)
+gda_batch_get_transaction_mode (GdaBatch *job)
 {
   g_return_val_if_fail(IS_GDA_BATCH(job), FALSE);
   return job->transaction_mode;
@@ -484,14 +484,14 @@ gda_batch_get_transaction_mode (Gda_Batch *job)
 
 /**
  * gda_batch_set_transaction_mode
- * @job: a #Gda_Batch object
+ * @job: a #GdaBatch object
  * @mode: transaction mode
  *
- * Enable/disable transaction mode for the given #Gda_Batch
+ * Enable/disable transaction mode for the given #GdaBatch
  * object. Transaction mode is enabled by default
  */
 void
-gda_batch_set_transaction_mode (Gda_Batch *job, gboolean mode)
+gda_batch_set_transaction_mode (GdaBatch *job, gboolean mode)
 {
   g_return_if_fail(IS_GDA_BATCH(job));
   job->transaction_mode = mode;

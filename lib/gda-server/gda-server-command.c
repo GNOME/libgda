@@ -23,13 +23,13 @@
 /**
  * gda_server_command_new
  */
-Gda_ServerCommand *
-gda_server_command_new (Gda_ServerConnection *cnc) {
-	Gda_ServerCommand* cmd;
+GdaServerCommand *
+gda_server_command_new (GdaServerConnection *cnc) {
+	GdaServerCommand* cmd;
 	
 	g_return_val_if_fail(cnc != NULL, NULL);
 	
-	cmd = g_new0(Gda_ServerCommand, 1);
+	cmd = g_new0(GdaServerCommand, 1);
 	cmd->cnc = cnc;
 	cmd->users = 1;
 	
@@ -45,8 +45,8 @@ gda_server_command_new (Gda_ServerConnection *cnc) {
 /**
  * gda_server_command_get_connection
  */
-Gda_ServerConnection *
-gda_server_command_get_connection (Gda_ServerCommand *cmd) {
+GdaServerConnection *
+gda_server_command_get_connection (GdaServerCommand *cmd) {
 	g_return_val_if_fail(cmd != NULL, NULL);
 	return cmd->cnc;
 }
@@ -55,7 +55,7 @@ gda_server_command_get_connection (Gda_ServerCommand *cmd) {
  * gda_server_command_get_text
  */
 gchar *
-gda_server_command_get_text (Gda_ServerCommand *cmd) {
+gda_server_command_get_text (GdaServerCommand *cmd) {
 	g_return_val_if_fail(cmd != NULL, NULL);
 	return cmd->text;
 }
@@ -64,7 +64,7 @@ gda_server_command_get_text (Gda_ServerCommand *cmd) {
  * gda_server_command_set_text
  */
 void
-gda_server_command_set_text (Gda_ServerCommand *cmd, const gchar *text) {
+gda_server_command_set_text (GdaServerCommand *cmd, const gchar *text) {
 	g_return_if_fail(cmd != NULL);
 	
 	if (cmd->text) g_free((gpointer) cmd->text);
@@ -76,7 +76,7 @@ gda_server_command_set_text (Gda_ServerCommand *cmd, const gchar *text) {
  * gda_server_command_get_type
  */
 GDA_CommandType
-gda_server_command_get_type (Gda_ServerCommand *cmd) {
+gda_server_command_get_type (GdaServerCommand *cmd) {
 	g_return_val_if_fail(cmd != NULL, 0);
 	return cmd->type;
 }
@@ -85,7 +85,7 @@ gda_server_command_get_type (Gda_ServerCommand *cmd) {
  * gda_server_command_set_type
  */
 void
-gda_server_command_set_type (Gda_ServerCommand *cmd, GDA_CommandType type) {
+gda_server_command_set_type (GdaServerCommand *cmd, GDA_CommandType type) {
 	g_return_if_fail(cmd != NULL);
 	cmd->type = type;
 }
@@ -94,7 +94,7 @@ gda_server_command_set_type (Gda_ServerCommand *cmd, GDA_CommandType type) {
  * gda_server_command_get_user_data
  */
 gpointer
-gda_server_command_get_user_data (Gda_ServerCommand *cmd) {
+gda_server_command_get_user_data (GdaServerCommand *cmd) {
 	g_return_val_if_fail(cmd != NULL, NULL);
 	return cmd->user_data;
 }
@@ -103,7 +103,7 @@ gda_server_command_get_user_data (Gda_ServerCommand *cmd) {
  * gda_server_command_set_user_data
  */
 void
-gda_server_command_set_user_data (Gda_ServerCommand *cmd, gpointer user_data) {
+gda_server_command_set_user_data (GdaServerCommand *cmd, gpointer user_data) {
 	g_return_if_fail(cmd != NULL);
 	cmd->user_data = user_data;
 }
@@ -112,7 +112,7 @@ gda_server_command_set_user_data (Gda_ServerCommand *cmd, gpointer user_data) {
  * gda_server_command_free
  */
 void
-gda_server_command_free (Gda_ServerCommand *cmd) {
+gda_server_command_free (GdaServerCommand *cmd) {
 	g_return_if_fail(cmd != NULL);
 	
 	if ((cmd->cnc != NULL) &&
@@ -132,13 +132,13 @@ gda_server_command_free (Gda_ServerCommand *cmd) {
 /**
  * gda_server_command_execute
  */
-Gda_ServerRecordset *
-gda_server_command_execute (Gda_ServerCommand *cmd,
-                            Gda_ServerError *error,
+GdaServerRecordset *
+gda_server_command_execute (GdaServerCommand *cmd,
+                            GdaServerError *error,
                             const GDA_CmdParameterSeq *params,
                             gulong *affected,
                             gulong options) {
-	Gda_ServerRecordset* recset;
+	GdaServerRecordset* recset;
 	
 	g_return_val_if_fail(cmd != NULL, NULL);
 	g_return_val_if_fail(cmd->cnc != NULL, NULL);

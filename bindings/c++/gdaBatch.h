@@ -24,11 +24,11 @@
 class gdaBatch {
 	public:
 		gdaBatch();
-		gdaBatch(Gda_Batch *a);
+		gdaBatch(GdaBatch *a);
 		~gdaBatch();
 
-		Gda_Batch *getCStruct();
-		void setCStruct(Gda_Batch *job);
+		GdaBatch *getCStruct();
+		void setCStruct(GdaBatch *job);
 
 		gboolean loadFile(const gchar *filename, gboolean clean);
 		void addCommand(const gchar *cmd);
@@ -44,7 +44,7 @@ class gdaBatch {
 		void setTransactionMode(gboolean mode);
 
 	private:
-		Gda_Batch* _gda_batch;
+		GdaBatch* _gda_batch;
 		gdaConnection *cnc;
 
 };

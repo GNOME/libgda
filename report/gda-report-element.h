@@ -33,10 +33,10 @@ extern "C" {
 #include <GDA_Report.h>
 #include <gda-report-defs.h>
 
-typedef struct _Gda_ReportElement       Gda_ReportElement;
-typedef struct _Gda_ReportElementClass  Gda_ReportElementClass;
+typedef struct _GdaReportElement       GdaReportElement;
+typedef struct _GdaReportElementClass  GdaReportElementClass;
 
-struct _Gda_ReportElement {
+struct _GdaReportElement {
 #ifdef HAVE_GOBJECT
 	GObject		object;
 #else
@@ -47,25 +47,25 @@ struct _Gda_ReportElement {
 	GList*		errors_head;
 };
 
-struct _Gda_ReportElementClass {
+struct _GdaReportElementClass {
 #ifdef HAVE_GOBJECT
 	GObjectClass	parent_class;
 	GObjectClass	*parent;
 #else
 	GtkObjectClass	parent_class;
 #endif
-	void (* warning) (Gda_ReportElement* object, GList* errors);
-	void (* error)   (Gda_ReportElement* object, GList* errors);
+	void (* warning) (GdaReportElement* object, GList* errors);
+	void (* error)   (GdaReportElement* object, GList* errors);
 };
 
 #define GDA_TYPE_REPORT_ELEMENT          (gda_report_element_get_type())
 #ifdef HAVE_GOBJECT
-#define GDA_REPORT_ELEMENT(obj) G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_REPORT_ELEMENT, Gda_ReportElement)
-#define GDA_REPORT_ELEMENT_CLASS(klass) G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_REPORT_ELEMENT, Gda_ReportElementClass)
+#define GDA_REPORT_ELEMENT(obj) G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_REPORT_ELEMENT, GdaReportElement)
+#define GDA_REPORT_ELEMENT_CLASS(klass) G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_REPORT_ELEMENT, GdaReportElementClass)
 #define GDA_IS_REPORT_ELEMENT(obj) G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_REPORT_ELEMENT)
 #define GDA_IS_REPORT_ELEMENT_CLASS(klass) G_TYPE_CHECK_CLASS_TYPE ((klass), GDA_TYPE_REPORT_ELEMENT)
 #else
-#define GDA_REPORT_ELEMENT(obj)          GTK_CHECK_CAST(obj, GDA_TYPE_REPORT_ELEMENT, Gda_ReportElement)
+#define GDA_REPORT_ELEMENT(obj)          GTK_CHECK_CAST(obj, GDA_TYPE_REPORT_ELEMENT, GdaReportElement)
 #define GDA_REPORT_ELEMENT_CLASS(klass)  GTK_CHECK_CLASS_CAST(klass, GDA_TYPE_REPORT_ELEMENT, GdaReportElementClass)
 #define GDA_IS_REPORT_ELEMENT(obj)       GTK_CHECK_TYPE(obj, GDA_TYPE_REPORT_ELEMENT)
 #define GDA_IS_REPORT_ELEMENT_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_REPORT_ELEMENT))
@@ -77,18 +77,18 @@ GType			gda_report_element_get_type	(void);
 GtkType			gda_report_element_get_type	(void);
 #endif
 
-Gda_ReportElement*	gda_report_element_new		(gchar* name);
-void			gda_report_element_free		(Gda_ReportElement* object);
+GdaReportElement*	gda_report_element_new		(gchar* name);
+void			gda_report_element_free		(GdaReportElement* object);
 
-gchar*			gda_report_element_get_name	(Gda_ReportElement* object);
-gint			gda_report_element_set_name	(Gda_ReportElement* object, gchar* name);
+gchar*			gda_report_element_get_name	(GdaReportElement* object);
+gint			gda_report_element_set_name	(GdaReportElement* object, gchar* name);
 
 gint			gda_report_element_add_attribute	(gchar* name, gchar* value);
 gint			gda_report_element_remove_attribute	(gchar* name);
-Gda_ReportAttribute*	gda_report_element_get_attribute	(gchar* name);
+GdaReportAttribute*	gda_report_element_get_attribute	(gchar* name);
 gint			gda_report_element_set_attribute	(gchar* name, gchar* value);
-Gda_ReportElement*	gda_report_element_add_child		(gchar* name);
-gint			gda_report_element_remove_child		(Gda_ReportElement* child);
+GdaReportElement*	gda_report_element_add_child		(gchar* name);
+gint			gda_report_element_remove_child		(GdaReportElement* child);
 GList*			gda_report_element_get_children		(void);
 
 #if defined(__cplusplus)

@@ -1,3 +1,15 @@
+2001-04-07  gettextize  <bug-gnu-utils@gnu.org>
+
+	* Makefile.in.in: Upgrade to gettext-0.10.36.
+
+2001-04-07  gettextize  <bug-gnu-utils@gnu.org>
+
+	* Makefile.in.in: Upgrade to gettext-0.10.36.
+
+2001-04-07  gettextize  <bug-gnu-utils@gnu.org>
+
+	* Makefile.in.in: Upgrade to gettext-0.10.36.
+
 2001-04-07  Akira TAGOH <tagoh@gnome-db.org>
 
 	* ja.po: Updated Japanese translation.

@@ -19,8 +19,8 @@
 
 #include "gda-mysql.h"
 
-static Gda_ServerImpl*         server_impl = NULL;
-static Gda_ServerImplFunctions server_impl_functions =
+static GdaServerImpl*         server_impl = NULL;
+static GdaServerImplFunctions server_impl_functions =
 {
   gda_mysql_connection_new,
   gda_mysql_connection_open,

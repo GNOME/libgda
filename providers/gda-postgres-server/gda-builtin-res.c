@@ -18,19 +18,19 @@
 
 #include <gda-builtin-res.h>
 
-Gda_Builtin_Result* Gda_Builtin_Result_new(guint ncols,
+GdaBuiltin_Result* GdaBuiltin_Result_new(guint ncols,
 					   gchar *default_name,
 					   gulong default_typid, 
 					   int default_typlen)
 {
-  Gda_Builtin_Result *res;
-  Gda_Builtin_Res_AttDesc *attdesc;
+  GdaBuiltin_Result *res;
+  GdaBuiltin_Res_AttDesc *attdesc;
   guint i;
 
-  res = g_new(Gda_Builtin_Result, 1);
+  res = g_new(GdaBuiltin_Result, 1);
   res->ntuples = 0;
   res->numcols = ncols;
-  res->attDescs = g_new(Gda_Builtin_Res_AttDesc, ncols);
+  res->attDescs = g_new(GdaBuiltin_Res_AttDesc, ncols);
   for (i=0; i<ncols; i++)
     {
       attdesc = res->attDescs+i;
@@ -43,10 +43,10 @@ Gda_Builtin_Result* Gda_Builtin_Result_new(guint ncols,
   return res;
 }
 
-void Gda_Builtin_Result_free(Gda_Builtin_Result* res)
+void GdaBuiltin_Result_free(GdaBuiltin_Result* res)
 {
   gint i, j;
-  Gda_Builtin_Res_AttValue *val;
+  GdaBuiltin_Res_AttValue *val;
 
   /* attributes */
   if (res->attDescs)
@@ -77,13 +77,13 @@ void Gda_Builtin_Result_free(Gda_Builtin_Result* res)
     }
 }
 
-void Gda_Builtin_Result_set_att(Gda_Builtin_Result* res,
+void GdaBuiltin_Result_set_att(GdaBuiltin_Result* res,
 				guint col,
 				gchar *fieldname,
 				gulong typid, 
 				int typlen)
 {
-  Gda_Builtin_Res_AttDesc *attdesc;
+  GdaBuiltin_Res_AttDesc *attdesc;
   
   attdesc = res->attDescs+col;
   if (attdesc->name)
@@ -93,22 +93,22 @@ void Gda_Builtin_Result_set_att(Gda_Builtin_Result* res,
   attdesc->typlen = typlen;
 }
 
-guint Gda_Builtin_Result_add_row(Gda_Builtin_Result* res,
+guint GdaBuiltin_Result_add_row(GdaBuiltin_Result* res,
 				 gchar **row)
 {
-  Gda_Builtin_Res_AttValue *newval;
+  GdaBuiltin_Res_AttValue *newval;
   guint i;
 
   res->ntuples ++;
   if (res->tuples)
-    res->tuples = g_renew(Gda_Builtin_Res_AttValue *, res->tuples, 
+    res->tuples = g_renew(GdaBuiltin_Res_AttValue *, res->tuples, 
 			  res->ntuples);
   else
-    res->tuples = g_new(Gda_Builtin_Res_AttValue *, res->ntuples);
+    res->tuples = g_new(GdaBuiltin_Res_AttValue *, res->ntuples);
 
   /* memory for that tuple */
   *(res->tuples+(res->ntuples-1)) = 
-    g_new(Gda_Builtin_Res_AttValue, res->numcols);
+    g_new(GdaBuiltin_Res_AttValue, res->numcols);
   /* filling the new tuple */
   /*fprintf(stderr, "New values at %p\n", *(res->tuples+(res->ntuples-1)));*/
   for (i=0; i<res->numcols; i++)
@@ -122,7 +122,7 @@ guint Gda_Builtin_Result_add_row(Gda_Builtin_Result* res,
   return res->ntuples-1; /* rows start at 0 */
 }
 
-guint Gda_Builtin_Result_get_nbtuples(Gda_Builtin_Result* res)
+guint GdaBuiltin_Result_get_nbtuples(GdaBuiltin_Result* res)
 {
   if (res)
     return res->ntuples;
@@ -130,7 +130,7 @@ guint Gda_Builtin_Result_get_nbtuples(Gda_Builtin_Result* res)
     return 0;
 }
 
-guint Gda_Builtin_Result_get_nbfields(Gda_Builtin_Result* res)
+guint GdaBuiltin_Result_get_nbfields(GdaBuiltin_Result* res)
 {
   if (res)
     return res->numcols;
@@ -138,7 +138,7 @@ guint Gda_Builtin_Result_get_nbfields(Gda_Builtin_Result* res)
     return 0;
 }
 
-gchar* Gda_Builtin_Result_get_fname(Gda_Builtin_Result* res,
+gchar* GdaBuiltin_Result_get_fname(GdaBuiltin_Result* res,
 				    guint col)
 {
   if (!res)
@@ -149,7 +149,7 @@ gchar* Gda_Builtin_Result_get_fname(Gda_Builtin_Result* res,
   return (res->attDescs+col)->name;
 }
 
-gulong Gda_Builtin_Result_get_ftype(Gda_Builtin_Result* res,
+gulong GdaBuiltin_Result_get_ftype(GdaBuiltin_Result* res,
 				    guint col)
 {
   if (!res)
@@ -160,7 +160,7 @@ gulong Gda_Builtin_Result_get_ftype(Gda_Builtin_Result* res,
   return (res->attDescs+col)->typid;
 }
 
-gint Gda_Builtin_Result_get_fsize(Gda_Builtin_Result* res,
+gint GdaBuiltin_Result_get_fsize(GdaBuiltin_Result* res,
 				  guint col)
 {
   if (!res)
@@ -171,7 +171,7 @@ gint Gda_Builtin_Result_get_fsize(Gda_Builtin_Result* res,
   return (res->attDescs+col)->typlen;
 }
 
-gint Gda_Builtin_Result_get_length(Gda_Builtin_Result* res,
+gint GdaBuiltin_Result_get_length(GdaBuiltin_Result* res,
 				   guint row, guint col)
 {
   if (!res)
@@ -182,7 +182,7 @@ gint Gda_Builtin_Result_get_length(Gda_Builtin_Result* res,
   return ((*(res->tuples+row)) + col)->len;
 }
 
-gchar* Gda_Builtin_Result_get_value(Gda_Builtin_Result* res,
+gchar* GdaBuiltin_Result_get_value(GdaBuiltin_Result* res,
 				    guint row, guint col)
 {
   if (!res)
@@ -193,24 +193,24 @@ gchar* Gda_Builtin_Result_get_value(Gda_Builtin_Result* res,
   return ((*(res->tuples+row)) + col)->value;
 }
 
-void Gda_Builtin_Result_dump(Gda_Builtin_Result* res)
+void GdaBuiltin_Result_dump(GdaBuiltin_Result* res)
 {
   gint i, j;
-  Gda_Builtin_Res_AttValue *val;
+  GdaBuiltin_Res_AttValue *val;
 
   if (!res)
     {
-      fprintf(stderr, "Gda_Builtin_Result_dump: Result is NULL\n");
+      fprintf(stderr, "GdaBuiltin_Result_dump: Result is NULL\n");
       return;
     }
 
   if (res->ntuples == 0)
     {
-      fprintf(stderr, "Gda_Builtin_Result_dump: Result is empty\n");
+      fprintf(stderr, "GdaBuiltin_Result_dump: Result is empty\n");
       return;
     }
 
-  fprintf(stderr, "Gda_Builtin_Result_dump: Result has %d tuples\n",
+  fprintf(stderr, "GdaBuiltin_Result_dump: Result has %d tuples\n",
 	  res->ntuples);
   for (i=0; i<res->ntuples; i++)
     {

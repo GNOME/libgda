@@ -551,8 +551,8 @@ msgstr "Неправильный или неподдерживаемый тип ограничения: %d"
 
 # fe/fe_log.c:92
 #: providers/gda-sybase-server/gda-sybase-connection.c:683
-msgid "Could not allocate Gda_ServerCommand"
-msgstr "Не удалось получить Gda_ServerCommand"
+msgid "Could not allocate GdaServerCommand"
+msgstr "Не удалось получить GdaServerCommand"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:713
 #: providers/gda-sybase-server/gda-sybase-connection.c:718

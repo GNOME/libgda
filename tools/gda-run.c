@@ -25,7 +25,7 @@
 
 static CORBA_ORB         orb;
 static CORBA_Environment ev;
-static Gda_Connection*   cnc;
+static GdaConnection*   cnc;
 static gchar*            datasource = 0;
 static gchar*            username = 0;
 static gchar*            password = 0;
@@ -55,7 +55,7 @@ Exception (CORBA_Environment *ev)
 }
 
 static void
-cnc_error_cb (Gda_Connection *cnc, GList *errors, gpointer data)
+cnc_error_cb (GdaConnection *cnc, GList *errors, gpointer data)
 {
   GList* node;
 
@@ -64,7 +64,7 @@ cnc_error_cb (Gda_Connection *cnc, GList *errors, gpointer data)
   node = g_list_first(errors);
   while (node)
     {
-      Gda_Error* err = GDA_ERROR(node->data);
+      GdaError* err = GDA_ERROR(node->data);
       if (err)
         {
           fprintf(stderr, "%s: error: %s\n", g_get_prgname(), gda_error_description(err));
@@ -83,7 +83,7 @@ usage (void)
 int
 main (int argc, char *argv[])
 {
-  Gda_Batch* job;
+  GdaBatch* job;
   GList*     list, *node;
   gboolean   found = FALSE;
   gchar*     real_dsn = 0;
@@ -100,17 +100,17 @@ main (int argc, char *argv[])
 
   while (node)
     {
-      if (!g_strcasecmp(datasource, GDA_DSN_GDA_NAME((Gda_Dsn *) node->data)))
+      if (!g_strcasecmp(datasource, GDA_DSN_GDA_NAME((GdaDsn *) node->data)))
         {
-          gda_connection_set_provider(cnc, GDA_DSN_PROVIDER((Gda_Dsn *) node->data));
-          real_dsn = g_strdup(GDA_DSN_DSN((Gda_Dsn *) node->data));
+          gda_connection_set_provider(cnc, GDA_DSN_PROVIDER((GdaDsn *) node->data));
+          real_dsn = g_strdup(GDA_DSN_DSN((GdaDsn *) node->data));
           if (!real_dsn)
             {
               fprintf(stderr, _("%s: misconfigured DSN entry"), argv[0]);
               exit(-1);
             }
           if (!username)
-            username = g_strdup(GDA_DSN_USERNAME((Gda_Dsn *) node->data));
+            username = g_strdup(GDA_DSN_USERNAME((GdaDsn *) node->data));
           if (!password)
             password = g_strdup("");
           found = TRUE;

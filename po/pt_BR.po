@@ -626,8 +626,8 @@ msgstr "Limite inválido ou não suportado, digite: %d"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:702
 #: providers/gda-tds-server/gda-tds-connection.c:693
-msgid "Could not allocate Gda_ServerCommand"
-msgstr "Não pôde alocar comando Gda_Server"
+msgid "Could not allocate GdaServerCommand"
+msgstr "Não pôde alocar comando GdaServer"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:732
 #: providers/gda-sybase-server/gda-sybase-connection.c:737

@@ -39,11 +39,11 @@
 #define TDS_ERR_USERDEF   4
 #define TDS_ERR_UNDEFINED 5
 
-gint gda_tds_install_error_handlers(Gda_ServerConnection *);
+gint gda_tds_install_error_handlers(GdaServerConnection *);
 
-void gda_tds_error_make (Gda_ServerError *error,
-                         Gda_ServerRecordset *recset,
-                         Gda_ServerConnection *cnc,
+void gda_tds_error_make (GdaServerError *error,
+                         GdaServerRecordset *recset,
+                         GdaServerConnection *cnc,
                          gchar *where);
 
 void     gda_tds_cleanup(tds_Connection *, CS_RETCODE, const gchar *);

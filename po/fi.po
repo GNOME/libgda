@@ -615,8 +615,8 @@ msgstr "Rajoitetyyppi: %d ei voimassa tai tuettu"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:702
 #: providers/gda-tds-server/gda-tds-connection.c:693
-msgid "Could not allocate Gda_ServerCommand"
-msgstr "Gda_ServerCommandia ei voi varata"
+msgid "Could not allocate GdaServerCommand"
+msgstr "GdaServerCommandia ei voi varata"
 
 #: providers/gda-sybase-server/gda-sybase-connection.c:732
 #: providers/gda-sybase-server/gda-sybase-connection.c:737

@@ -25,7 +25,7 @@ typedef struct
 } VARY;
 
 static void
-fill_field_values (Gda_ServerRecordset *recset)
+fill_field_values (GdaServerRecordset *recset)
 {
   XSQLVAR*             var;
   GList*               node;
@@ -33,14 +33,14 @@ fill_field_values (Gda_ServerRecordset *recset)
 
   g_return_if_fail(recset != NULL);
 
-  /* get Gda_ServerRecordset associated data */
+  /* get GdaServerRecordset associated data */
   ib_recset = (INTERBASE_Recordset *) gda_server_recordset_get_user_data(recset);
   if (ib_recset)
     {
       gint cnt = 0;
       for (node = g_list_first(recset->fields); node != NULL; node = g_list_next(node))
 	{
-	  Gda_ServerField* field = (Gda_ServerField *) node->data;
+	  GdaServerField* field = (GdaServerField *) node->data;
 	  if (field)
 	    {
 	      /* fill field value with the correct attributes */
@@ -126,7 +126,7 @@ fill_field_values (Gda_ServerRecordset *recset)
 }
 
 gboolean
-gda_interbase_recordset_new (Gda_ServerRecordset *recset)
+gda_interbase_recordset_new (GdaServerRecordset *recset)
 {
   INTERBASE_Recordset* ib_recset;
 
@@ -144,7 +144,7 @@ gda_interbase_recordset_new (Gda_ServerRecordset *recset)
 }
 
 gint
-gda_interbase_recordset_move_next (Gda_ServerRecordset *recset)
+gda_interbase_recordset_move_next (GdaServerRecordset *recset)
 {
   INTERBASE_Recordset*  ib_recset;
   INTERBASE_Connection* ib_cnc;
@@ -178,7 +178,7 @@ gda_interbase_recordset_move_next (Gda_ServerRecordset *recset)
 }
 
 gint
-gda_interbase_recordset_move_prev (Gda_ServerRecordset *recset)
+gda_interbase_recordset_move_prev (GdaServerRecordset *recset)
 {
   INTERBASE_Recordset* ib_recset;
 
@@ -189,13 +189,13 @@ gda_interbase_recordset_move_prev (Gda_ServerRecordset *recset)
 }
 
 gint
-gda_interbase_recordset_close (Gda_ServerRecordset *recset)
+gda_interbase_recordset_close (GdaServerRecordset *recset)
 {
   return -1;
 }
 
 void
-gda_interbase_recordset_free (Gda_ServerRecordset *recset)
+gda_interbase_recordset_free (GdaServerRecordset *recset)
 {
   INTERBASE_Recordset* ib_recset;
 

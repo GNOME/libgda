@@ -45,8 +45,8 @@ typedef struct _sybase_Field {
 } sybase_Field;
 
 typedef struct _sybase_Recordset {
-  Gda_ServerConnection *cnc;
-  Gda_ServerCommand    *cmd;
+  GdaServerConnection *cnc;
+  GdaServerCommand    *cmd;
   sybase_Connection *scnc;
   sybase_Command    *scmd;
 	
@@ -59,21 +59,21 @@ typedef struct _sybase_Recordset {
   sybase_Field *data;
 } sybase_Recordset;
 
-gboolean gda_sybase_recordset_new       (Gda_ServerRecordset *);
-gint     gda_sybase_recordset_move_next (Gda_ServerRecordset *);
-gint     gda_sybase_recordset_move_prev (Gda_ServerRecordset *);
-gint     gda_sybase_recordset_close     (Gda_ServerRecordset *);
-void     gda_sybase_recordset_free      (Gda_ServerRecordset *);
+gboolean gda_sybase_recordset_new       (GdaServerRecordset *);
+gint     gda_sybase_recordset_move_next (GdaServerRecordset *);
+gint     gda_sybase_recordset_move_prev (GdaServerRecordset *);
+gint     gda_sybase_recordset_close     (GdaServerRecordset *);
+void     gda_sybase_recordset_free      (GdaServerRecordset *);
 
-void     gda_sybase_init_recset_fields (Gda_ServerError *,
-                                        Gda_ServerRecordset *,
+void     gda_sybase_init_recset_fields (GdaServerError *,
+                                        GdaServerRecordset *,
                                         sybase_Recordset *,
                                         CS_RETCODE);
 
-void gda_sybase_field_fill_values(Gda_ServerRecordset *,
+void gda_sybase_field_fill_values(GdaServerRecordset *,
                                   sybase_Recordset *);
 gint gda_sybase_row_result(gboolean forward,
-                           Gda_ServerRecordset *,
+                           GdaServerRecordset *,
                            sybase_Recordset *,
                            CS_COMMAND *);
 

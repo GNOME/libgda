@@ -49,16 +49,16 @@ intro ()
 /* Print errors and exit program
 /* ------------------------------------------------------------------------- */
 int
-die (Gda_Connection* cnc)
+die (GdaConnection* cnc)
 {
   GList* errors;
   GList* node;
-  Gda_Error* error;
+  GdaError* error;
 
   errors = gda_connection_get_errors (cnc);
   for (node = g_list_first (errors); node; node = g_list_next (node))
     {
-      error = (Gda_Error*) node->data;
+      error = (GdaError*) node->data;
       g_print ("%s\n", gda_error_description (error));
     }
   gda_error_list_free (errors);
@@ -73,7 +73,7 @@ list_providers ()
 {
   GList* list;
   GList* node;
-  Gda_Provider* provider;
+  GdaProvider* provider;
   int i = 0;
 
   list = gda_provider_list ();
@@ -97,7 +97,7 @@ list_providers ()
 	   g_list_length (list));
   for (node = g_list_first (list); node; node = g_list_next (node))
     {
-      provider = (Gda_Provider*) node->data;
+      provider = (GdaProvider*) node->data;
       g_print ("%d: %s\n", ++i, GDA_PROVIDER_NAME (provider));
     }
   gda_provider_free_list (list);
@@ -107,11 +107,11 @@ list_providers ()
 /* List all primebase dbms
 /* ------------------------------------------------------------------------- */
 void
-list_dbms (Gda_Connection* cnc)
+list_dbms (GdaConnection* cnc)
 {
-  Gda_Recordset* rs;
-  Gda_Command* cmd;
-  Gda_Field* field;
+  GdaRecordset* rs;
+  GdaCommand* cmd;
+  GdaField* field;
   gint i;
   glong affected;
 
@@ -144,7 +144,7 @@ int
 main (int argc, char* argv[])
 {
   gchar* provider;
-  Gda_Connection* cnc;
+  GdaConnection* cnc;
   gchar* dsn = NULL;
   gchar* user = NULL;
   gchar* password = NULL;

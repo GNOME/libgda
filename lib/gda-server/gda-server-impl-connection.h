@@ -36,7 +36,7 @@ typedef struct
   CORBA_char*           attr_version;
   GDA_ErrorSeq          attr_errors;
 
-  Gda_ServerConnection* cnc;
+  GdaServerConnection* cnc;
 } impl_POA_GDA_Connection;
 
 /*

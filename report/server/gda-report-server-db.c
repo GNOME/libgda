@@ -20,7 +20,7 @@
 #include <gda-connection-pool.h>
 #include <gda-connection.h>
 
-static Gda_ConnectionPool* connection_pool = NULL;
+static GdaConnectionPool* connection_pool = NULL;
 
 /*
  * Public functions

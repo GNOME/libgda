@@ -22,6 +22,12 @@
  */
 
 // $Log$
+// Revision 1.3  2001/04/07 08:49:31  rodrigo
+// 2001-04-07  Rodrigo Moya <rodrigo@gnome-db.org>
+//
+// 	* objects renaming (Gda_* to Gda*) to conform to the GNOME
+// 	naming standards
+//
 // Revision 1.2  2000/10/06 19:24:45  menthos
 // Added Swedish entry to configure.in and changed some C++-style comments causing problems to
 // C-style.
@@ -39,7 +45,7 @@
 
 #include "gda-sybase.h"
 
-void gda_sybase_field_fill_values(Gda_ServerRecordset *rec,
+void gda_sybase_field_fill_values(GdaServerRecordset *rec,
                                   sybase_Recordset *srec)
 {
   CS_INT i  = 0;
@@ -53,7 +59,7 @@ void gda_sybase_field_fill_values(Gda_ServerRecordset *rec,
   for (i = 0; i < srec->colscnt; i++) {
     entry = g_list_nth(gda_server_recordset_get_fields(rec), i);
     if (entry) {
-      Gda_ServerField *field = (Gda_ServerField *) entry->data;
+      GdaServerField *field = (GdaServerField *) entry->data;
       if (field) {
 	if (srec->data[i].data) {
 	  switch (gda_server_field_get_sql_type(field)) {
@@ -125,7 +131,7 @@ void gda_sybase_field_fill_values(Gda_ServerRecordset *rec,
 
 gint
 gda_sybase_row_result(gboolean            forward,
-                      Gda_ServerRecordset *recset,
+                      GdaServerRecordset *recset,
                       sybase_Recordset    *srecset,
                       CS_COMMAND          *cmd)
 {
@@ -176,7 +182,7 @@ gda_sybase_row_result(gboolean            forward,
 }
 
 gboolean
-gda_sybase_recordset_new(Gda_ServerRecordset *recset)
+gda_sybase_recordset_new(GdaServerRecordset *recset)
 {
   sybase_Recordset *srecset = NULL;
 
@@ -199,7 +205,7 @@ gda_sybase_recordset_new(Gda_ServerRecordset *recset)
 }
 
 gint
-gda_sybase_recordset_move_next (Gda_ServerRecordset *recset)
+gda_sybase_recordset_move_next (GdaServerRecordset *recset)
 {
   sybase_Recordset *srecset  = NULL;
   CS_COMMAND       *cmd      = NULL;
@@ -246,7 +252,7 @@ gda_sybase_recordset_move_next (Gda_ServerRecordset *recset)
 }
 
 gint
-gda_sybase_recordset_move_prev (Gda_ServerRecordset *recset)
+gda_sybase_recordset_move_prev (GdaServerRecordset *recset)
 {
   g_return_val_if_fail(recset != NULL, -1);
   gda_server_recordset_set_at_begin(recset, FALSE);
@@ -256,7 +262,7 @@ gda_sybase_recordset_move_prev (Gda_ServerRecordset *recset)
 }
 
 gint
-gda_sybase_recordset_close (Gda_ServerRecordset *recset)
+gda_sybase_recordset_close (GdaServerRecordset *recset)
 {
   sybase_Recordset *srecset = NULL;
   CS_INT           colnr = 0;
@@ -283,7 +289,7 @@ gda_sybase_recordset_close (Gda_ServerRecordset *recset)
 }
 
 void
-gda_sybase_recordset_free (Gda_ServerRecordset *recset)
+gda_sybase_recordset_free (GdaServerRecordset *recset)
 {
   sybase_Recordset *srecset = NULL;
   CS_INT           colnr = 0;
@@ -311,8 +317,8 @@ gda_sybase_recordset_free (Gda_ServerRecordset *recset)
 }
 
 void
-gda_sybase_init_recset_fields (Gda_ServerError *err,
-                               Gda_ServerRecordset *recset,
+gda_sybase_init_recset_fields (GdaServerError *err,
+                               GdaServerRecordset *recset,
                                sybase_Recordset *srecset,
 			       CS_RETCODE result_type)
 {
@@ -376,7 +382,7 @@ gda_sybase_init_recset_fields (Gda_ServerError *err,
   datafmt = srecset->datafmt;
 
   for (colnr = 0; colnr < srecset->colscnt; colnr++) {
-    Gda_ServerField* field;
+    GdaServerField* field;
 
     // Initialize user data fmt pointer to datafmt pointer for colnr
     srecset->data[colnr].fmt = &srecset->datafmt[colnr];

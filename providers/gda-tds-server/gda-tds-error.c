@@ -22,6 +22,12 @@
  */
 
 // $Log$
+// Revision 1.3  2001/04/07 08:49:34  rodrigo
+// 2001-04-07  Rodrigo Moya <rodrigo@gnome-db.org>
+//
+// 	* objects renaming (Gda_* to Gda*) to conform to the GNOME
+// 	naming standards
+//
 // Revision 1.2  2000/11/21 19:57:14  holger
 // 2000-11-21 Holger Thon <holger@gidayu.max.uni-duisburg.de>
 //
@@ -46,14 +52,14 @@ static CS_RETCODE CS_PUBLIC
   gda_tds_csmsg_callback(CS_CONTEXT *, CS_CLIENTMSG *);
 
 
-Gda_ServerConnection *
+GdaServerConnection *
 gda_tds_callback_get_connection(const CS_CONTEXT *,
                                 const CS_CONNECTION *);
 
 void
-gda_tds_error_make(Gda_ServerError *error,
-                      Gda_ServerRecordset *recset,
-                      Gda_ServerConnection *cnc,
+gda_tds_error_make(GdaServerError *error,
+                      GdaServerRecordset *recset,
+                      GdaServerConnection *cnc,
                       gchar *where)
 {
   tds_Connection* scnc = NULL;
@@ -177,7 +183,7 @@ g_sprintf_servermsg(const gchar *head, CS_SERVERMSG *msg)
  */
 
 gint
-gda_tds_install_error_handlers(Gda_ServerConnection *cnc)
+gda_tds_install_error_handlers(GdaServerConnection *cnc)
 {
   tds_Connection    *scnc = NULL;
   
@@ -232,7 +238,7 @@ gda_tds_log_servermsg(const gchar *head, CS_SERVERMSG *msg)
  * These do nothing so far
  */
 
-Gda_ServerConnection *
+GdaServerConnection *
 gda_tds_callback_get_connection(const CS_CONTEXT *ctx,
                                 const CS_CONNECTION *cnc)
 {
