@@ -12,6 +12,7 @@ libgda/gda-util.c
 libgda/gda-value.c
 libgda/gda-xml-database.c
 libsql/sql_parser.c
+providers/firebird/gda-firebird-blob.c
 providers/firebird/gda-firebird-provider.c
 providers/firebird/gda-firebird-recordset.c
 providers/firebird/libmain.c

@@ -1,3 +1,7 @@
+2004-09-05  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* POTFILES.in: added gda-firebird-blob.c.
+
 2004-09-03  Raphael Higino <raphaelh@cvs.gnome.org>
 
 	* pt_BR.po: Updated Brazilian Portuguese translation.
