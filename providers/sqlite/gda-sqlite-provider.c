@@ -45,7 +45,6 @@ static gboolean gda_sqlite_provider_open_connection (GdaServerProvider *provider
 						     const gchar *password);
 static gboolean gda_sqlite_provider_close_connection (GdaServerProvider *provider,
 						      GdaConnection *cnc);
-
 static const gchar *gda_sqlite_provider_get_server_version (GdaServerProvider *provider,
 							    GdaConnection *cnc);
 static const gchar *gda_sqlite_provider_get_database (GdaServerProvider *provider,
@@ -657,7 +656,7 @@ get_table_fields (GdaConnection *cnc, GdaParameterList *params)
 
 	for (i = 0; i < gda_data_model_get_n_columns (GDA_DATA_MODEL (reclist->data)); i++) {
 		GdaFieldAttributes *fa;
-		GList *value_list;
+		GList *value_list = NULL;
 
 		fa = gda_data_model_describe_column (GDA_DATA_MODEL (reclist->data), i);
 		if (!fa) {
@@ -668,7 +667,7 @@ get_table_fields (GdaConnection *cnc, GdaParameterList *params)
 		}
 
 		value_list = g_list_append (
-			NULL,
+			value_list,
 			gda_value_new_string (gda_field_attributes_get_name (fa)));
 		value_list = g_list_append (
 			value_list,

@@ -277,6 +277,19 @@ gda_mdb_provider_get_server_version (GdaServerProvider *provider,
 static const gchar *
 gda_mdb_provider_get_database (GdaServerProvider *provider, GdaConnection *cnc)
 {
+	GdaMdbConnection *mdb_cnc;
+	GdaMdbProvider *mdb_prv = (GdaMdbProvider *) provider;
+
+	g_return_val_if_fail (GDA_IS_MDB_PROVIDER (mdb_prv), NULL);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+
+	mdb_cnc = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_MDB_HANDLE);
+	if (!mdb_cnc) {
+		gda_connection_add_error_string (cnc, _("Invalid MDB handle"));
+		return NULL;
+	}
+
+	return (const gchar *) mdb_cnc->mdb->f->filename;
 }
 
 /* change_database handler for the GdaMdbProvider class */
@@ -285,6 +298,7 @@ gda_mdb_provider_change_database (GdaServerProvider *provider,
 				  GdaConnection *cnc,
 				  const gchar *name)
 {
+	return FALSE;
 }
 
 /* create_database handler for the GdaMdbProvider class */
@@ -293,6 +307,7 @@ gda_mdb_provider_create_database (GdaServerProvider *provider,
 				  GdaConnection *cnc,
 				  const gchar *name)
 {
+	return FALSE;
 }
 
 /* drop_database handler for the GdaMdbProvider class */
@@ -301,6 +316,7 @@ gda_mdb_provider_drop_database (GdaServerProvider *provider,
 				GdaConnection *cnc,
 				const gchar *name)
 {
+	return FALSE;
 }
 
 /* execute_command handler for the GdaMdbProvider class */
@@ -319,6 +335,7 @@ gda_mdb_provider_begin_transaction (GdaServerProvider *provider,
 				    GdaConnection *cnc,
 				    GdaTransaction *xaction)
 {
+	gda_connection_add_error (cnc, _("Transactions not supported in MDB provider"));
 	return FALSE;
 }
 
@@ -328,6 +345,7 @@ gda_mdb_provider_commit_transaction (GdaServerProvider *provider,
 				     GdaConnection *cnc,
 				     GdaTransaction *xaction)
 {
+	gda_connection_add_error (cnc, _("Transactions not supported in MDB provider"));
 	return FALSE;
 }
 
@@ -337,6 +355,7 @@ gda_mdb_provider_rollback_transaction (GdaServerProvider *provider,
 				       GdaConnection *cnc,
 				       GdaTransaction *xaction)
 {
+	gda_connection_add_error (cnc, _("Transactions not supported in MDB provider"));
 	return FALSE;
 }
 
@@ -349,12 +368,103 @@ gda_mdb_provider_supports (GdaServerProvider *provider,
 	g_return_val_if_fail (GDA_IS_MDB_PROVIDER (provider), FALSE);
 
 	switch (feature) {
+	case GDA_CONNECTION_FEATURE_INDEXES :
 	case GDA_CONNECTION_FEATURE_PROCEDURES :
 	case GDA_CONNECTION_FEATURE_SQL :
 		return TRUE;
+	default :
 	}
 
 	return FALSE;
+}
+
+static GdaDataModel *
+get_mdb_databases (GdaMdbConnection *mdb_cnc)
+{
+	GdaDataModel *model;
+	GList l;
+
+	g_return_val_if_fail (mdb_cnc != NULL, NULL);
+	g_return_val_if_fail (mdb_cnc->mdb != NULL, NULL);
+
+	model = gda_data_model_list_new ();
+	gda_data_model_set_column_title (model, 0, _("Name"));
+
+	l.prev = l.next = NULL;
+	l.data = gda_value_new_string (mdb_cnc->mdb->f->filename);
+	gda_data_model_append_row (model, &l);
+
+	gda_value_free (l.data);
+
+	return model;
+}
+
+static GdaDataModel *
+get_mdb_fields (GdaMdbConnection *mdb_cnc, GdaParameterList *params)
+{
+	GdaParameter *par;
+	const gchar *table_name;
+	GdaDataModel *model;
+	MdbCatalogEntry *entry;
+	MdbTableDef *mdb_table;
+	MdbColumn *mdb_col;
+	gint i, j;
+
+	g_return_val_if_fail (mdb_cnc != NULL, NULL);
+	g_return_val_if_fail (mdb_cnc->mdb != NULL, NULL);
+
+	par = gda_parameter_list_find (params, "name");
+	g_return_val_if_fail (par != NULL, NULL);
+
+	table_name = gda_value_get_string ((GdaValue *) gda_parameter_get_value (par));
+	g_return_val_if_fail (table_name != NULL, NULL);
+
+	/* create the data model */
+	model = gda_data_model_array_new (9);
+	gda_data_model_set_column_title (model, 0, _("Field name"));
+	gda_data_model_set_column_title (model, 1, _("Data type"));
+	gda_data_model_set_column_title (model, 2, _("Size"));
+	gda_data_model_set_column_title (model, 3, _("Scale"));
+	gda_data_model_set_column_title (model, 4, _("Not null?"));
+	gda_data_model_set_column_title (model, 5, _("Primary key?"));
+	gda_data_model_set_column_title (model, 6, _("Unique index?"));
+	gda_data_model_set_column_title (model, 7, _("References"));
+	gda_data_model_set_column_title (model, 8, _("Default value"));
+
+	/* fill in the data model with the information for the table */
+	for (i = 0; i < mdb_cnc->mdb->num_catalog; i++) {
+		entry = g_ptr_array_index (mdb_cnc->mdb->catalog, i);
+		if (entry->object_type == MDB_TABLE &&
+		    !strcmp (entry->object_name, table_name)) {
+			mdb_table = mdb_read_table (entry);
+			mdb_read_columns (mdb_table);
+
+			for (j = 0; j < mdb_table->num_cols; j++) {
+				GList *value_list = NULL;
+
+				mdb_col = g_ptr_array_index (mdb_table->columns, j);
+
+				value_list = g_list_append (value_list, gda_value_new_string (mdb_col->name));
+				value_list = g_list_append (
+					value_list,
+					gda_value_new_string (mdb_get_objtype_string (mdb_col->col_type)));
+				value_list = g_list_append (value_list, gda_value_new_integer (mdb_col->col_size));
+				value_list = g_list_append (value_list, gda_value_new_integer (mdb_col->col_scale));
+				value_list = g_list_append (value_list, gda_value_new_boolean (FALSE));
+				value_list = g_list_append (value_list, gda_value_new_boolean (FALSE));
+				value_list = g_list_append (value_list, gda_value_new_boolean (FALSE));
+				value_list = g_list_append (value_list, gda_value_new_string (NULL));
+				value_list = g_list_append (value_list, gda_value_new_string (NULL));
+
+				gda_data_model_append_row (model, value_list);
+
+				g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
+				g_list_free (value_list);
+			}
+		}
+	}
+
+	return model;
 }
 
 static GdaDataModel *
@@ -469,16 +579,16 @@ add_type (GdaDataModel *model, const gchar *typname, const gchar *owner,
 static GdaDataModel *
 get_mdb_types (GdaMdbConnection *mdb_cnc)
 {
-	GdaDataModelArray *model;
+	GdaDataModel *model;
 
 	g_return_val_if_fail (mdb_cnc != NULL, NULL);
 	g_return_val_if_fail (mdb_cnc->mdb != NULL, NULL);
 
-	model = (GdaDataModelArray *) gda_data_model_array_new (4);
-	gda_data_model_set_column_title (GDA_DATA_MODEL (model), 0, _("Name"));
-	gda_data_model_set_column_title (GDA_DATA_MODEL (model), 1, _("Owner"));
-	gda_data_model_set_column_title (GDA_DATA_MODEL (model), 2, _("Comments"));
-	gda_data_model_set_column_title (GDA_DATA_MODEL (model), 3, _("GDA Type"));
+	model = gda_data_model_array_new (4);
+	gda_data_model_set_column_title (model, 0, _("Name"));
+	gda_data_model_set_column_title (model, 1, _("Owner"));
+	gda_data_model_set_column_title (model, 2, _("Comments"));
+	gda_data_model_set_column_title (model, 3, _("GDA Type"));
 
 	add_type (model, "boolean", NULL, _("Boolean type"), GDA_VALUE_TYPE_BOOLEAN);
 	add_type (model, "byte", NULL, _("1-byte integers"), GDA_VALUE_TYPE_TINYINT);
@@ -516,6 +626,10 @@ gda_mdb_provider_get_schema (GdaServerProvider *provider,
 	}
 
 	switch (schema) {
+	case GDA_CONNECTION_SCHEMA_DATABASES :
+		return get_mdb_databases (mdb_cnc);
+	case GDA_CONNECTION_SCHEMA_FIELDS :
+		return get_mdb_fields (mdb_cnc, params);
 	case GDA_CONNECTION_SCHEMA_PROCEDURES :
 		return get_mdb_procedures (mdb_cnc);
 	case GDA_CONNECTION_SCHEMA_TABLES :

@@ -1,3 +1,14 @@
+2003-01-15  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* providers/mdb/gda-mdb-provider.c (gda_mdb_provider_get_database):
+	implemented.
+	(gda_mdb_provider_begin_transaction, gda_mdb_provider_commit_transaction,
+	gda_mdb_provider_rollback_transaction): added error about transactions
+	not being supported.
+	(gda_mdb_provider_supports): added more features we support.
+	(get_mdb_databases): implemented DATABASES schema.
+	(get_mdb_fields): implemented FIELDS schema.
+
 2003-01-13  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
 	* libgda/gda-client.c: don't unref the providers twice. Fixed with
