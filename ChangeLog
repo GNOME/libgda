@@ -1,5 +1,9 @@
 2002-02-22  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* providers/postgres/gda-postgres-provider.c (get_postgres_triggers):
+	support SCHEMA_TRIGGERS.
+	(get_postgres_aggregates): support SCHEMA_AGGREGATES.
+
 	* libgda/gda-parameter.[ch]:
 	* libgda/gda-client.c:
 	* libgda/gda-connection.c:

@@ -623,6 +623,50 @@ get_postgres_indexes (GdaServerConnection *cnc, GdaParameterList *params)
 	return recset;
 }
 
+static GdaServerRecordset *
+get_postgres_aggregates (GdaServerConnection *cnc, GdaParameterList *params)
+{
+	GList *reclist;
+	GdaServerRecordset *recset;
+
+	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), NULL);
+
+	reclist = process_sql_commands (NULL, cnc, 
+			"SELECT a.aggname || '(' || t.typname || ')' AS \"Name\" "
+			" FROM pg_aggregate a, pg_type t  WHERE a.aggbasetype = t.oid "
+			" ORDER BY a.aggname",
+			GDA_COMMAND_OPTION_STOP_ON_ERRORS);
+
+	if (!reclist)
+		return NULL;
+
+	recset = GDA_SERVER_RECORDSET (reclist->data);
+	g_list_free (reclist);
+
+	return recset;
+}
+
+static GdaServerRecordset *
+get_postgres_triggers (GdaServerConnection *cnc, GdaParameterList *params)
+{
+	GList *reclist;
+	GdaServerRecordset *recset;
+
+	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), NULL);
+
+	reclist = process_sql_commands (NULL, cnc, 
+			"SELECT tgname FROM pg_trigger ORDER BY tgname ",
+			GDA_COMMAND_OPTION_STOP_ON_ERRORS);
+
+	if (!reclist)
+		return NULL;
+
+	recset = GDA_SERVER_RECORDSET (reclist->data);
+	g_list_free (reclist);
+
+	return recset;
+}
+
 /* get_schema handler for the GdaPostgresProvider class */
 static GdaServerRecordset *
 gda_postgres_provider_get_schema (GdaServerProvider *provider,
@@ -644,6 +688,10 @@ gda_postgres_provider_get_schema (GdaServerProvider *provider,
 		return get_postgres_views (cnc, params);
 	case GNOME_Database_Connection_SCHEMA_INDEXES :
 		return get_postgres_indexes (cnc, params);
+	case GNOME_Database_Connection_SCHEMA_AGGREGATES :
+		return get_postgres_aggregates (cnc, params);
+	case GNOME_Database_Connection_SCHEMA_TRIGGERS :
+		return get_postgres_triggers (cnc, params);
 	}
 
 	return NULL;
