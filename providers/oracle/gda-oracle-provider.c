@@ -1227,6 +1227,7 @@ g_string_right_trim (GString * input)
 static GHashTable *
 get_oracle_index_data (GdaConnection *cnc, const gchar *tblname)
 {
+	gchar *sql;
 	GList *reclist;
 	GdaDataModel *recset;
 	GdaOracleIndexData *index_data;
@@ -1239,30 +1240,29 @@ get_oracle_index_data (GdaConnection *cnc, const gchar *tblname)
 	GdaValue *value;
 	gint i;
 
-
-	gchar *sql = g_strdup ("SELECT substr (c1.column_name,1,30) column_name, "
-				"con.constraint_type constraint_type, "
-				"'' uniqueness, "
-				"c2.table_name reference "
-				"FROM user_cons_columns c1, user_cons_columns c2, user_constraints con "
-				"WHERE con.constraint_name = c1.constraint_name " 
-				"AND con.constraint_type = 'R' "
-				"AND con.constraint_type IS NOT NULL "
-				"AND c1.table_name = upper (:TBLNAME) "
-				"AND con.r_constraint_name = c2.constraint_name "
-				"UNION "
-				"SELECT substr (c.column_name,1,30) column_name, "
-				"t.constraint_type constraint_type, "
-				"substr (i.uniqueness, 1, 6) uniqueness, "
-				"'' reference "
-				"FROM user_indexes i, user_ind_columns c, user_constraints t "
-				"WHERE i.table_name = upper (:TBLNAME) "
-				"AND t.constraint_type != 'R' "
-				"AND i.index_name = c.index_name "
-				"AND i.index_name = t.constraint_name "
-				"ORDER BY 1" );
-
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+
+	sql = g_strdup ("SELECT substr (c1.column_name,1,30) column_name, "
+			"con.constraint_type constraint_type, "
+			"'' uniqueness, "
+			"c2.table_name reference "
+			"FROM user_cons_columns c1, user_cons_columns c2, user_constraints con "
+			"WHERE con.constraint_name = c1.constraint_name " 
+			"AND con.constraint_type = 'R' "
+			"AND con.constraint_type IS NOT NULL "
+			"AND c1.table_name = upper (:TBLNAME) "
+			"AND con.r_constraint_name = c2.constraint_name "
+			"UNION "
+			"SELECT substr (c.column_name,1,30) column_name, "
+			"t.constraint_type constraint_type, "
+			"substr (i.uniqueness, 1, 6) uniqueness, "
+			"'' reference "
+			"FROM user_indexes i, user_ind_columns c, user_constraints t "
+			"WHERE i.table_name = upper (:TBLNAME) "
+			"AND t.constraint_type != 'R' "
+			"AND i.index_name = c.index_name "
+			"AND i.index_name = t.constraint_name "
+			"ORDER BY 1" );
 
 	gda_parameter_list_add_parameter (query_params, 
 			gda_parameter_new_string (":TBLNAME", tblname));
@@ -1578,7 +1578,7 @@ gda_oracle_fill_md_data (const gchar *tblname,
 		ub2 type;
 		gchar *colname;
 		gchar *typename;
-		ub2 nullable;
+		ub1 nullable;
 		ub2 defined_size;
 		ub2 scale;
 
@@ -1686,7 +1686,7 @@ gda_oracle_fill_md_data (const gchar *tblname,
 					(ub4) OCI_DTYPE_PARAM,
 					(dvoid *) &nullable,
 					(ub4 *) 0,
-					(ub4) OCI_ATTR_DATA_SIZE,
+					(ub4) OCI_ATTR_IS_NULL,
 					(OCIError *) priv_data->herr);
 		if (!gda_oracle_check_result (result, cnc, priv_data, OCI_HTYPE_ERROR,
 				_("Could not get the Oracle field nullable attribute"))) {
@@ -2000,37 +2000,56 @@ get_oracle_objects (GdaConnection *cnc, GdaParameterList *params, GdaConnectionS
 	return recset;
 }
 
+typedef struct
+{
+    const gchar  *name;
+    GdaValueType type;
+} ora_native_type;
+
+static const ora_native_type ora_type_tab[] =
+{
+	{ "BFILE",     GDA_VALUE_TYPE_STRING    },
+	{ "BLOB",      GDA_VALUE_TYPE_STRING    },
+	{ "CHAR",      GDA_VALUE_TYPE_STRING    },
+	{ "CLOB",      GDA_VALUE_TYPE_STRING    },
+	{ "DATE",      GDA_VALUE_TYPE_TIMESTAMP },
+	{ "LONG",      GDA_VALUE_TYPE_STRING    },
+	{ "NCHAR",     GDA_VALUE_TYPE_STRING    },
+	{ "NCLOB",     GDA_VALUE_TYPE_STRING    },
+	{ "NUMERIC",   GDA_VALUE_TYPE_NUMERIC   },
+	{ "NVARCHAR2", GDA_VALUE_TYPE_STRING    },
+	{ "TIMESTAMP", GDA_VALUE_TYPE_TIMESTAMP },
+	{ "VARCHAR2",  GDA_VALUE_TYPE_STRING    },
+};
+static const ora_native_type *
+ora_type_end = ora_type_tab+sizeof(ora_type_tab)/sizeof(ora_native_type);
+
 static GdaDataModel *
 get_oracle_types (GdaConnection *cnc, GdaParameterList *params)
 {
-	GdaDataModelArray *recset;
+    GdaDataModelArray *recset;
+    ora_native_type   *otp;
+    GList             *value_list;
+    
+    /* create the recordset */
+    recset = GDA_DATA_MODEL_ARRAY (gda_data_model_array_new (4));
+    gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 0, _("Type"));
+    gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 1, _("Owner"));
+    gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 2, _("Comments"));    gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 3, _("GDA type"));
+    /* fill the recordset */
+    for (otp = ora_type_tab; otp < ora_type_end; otp++)
+    {
+        value_list = NULL;
+        value_list = g_list_append (value_list, gda_value_new_string (otp->name));
+        value_list = g_list_append (value_list, gda_value_new_string ("SYS"));
+        value_list = g_list_append (value_list, gda_value_new_string ("NULL"));
+        value_list = g_list_append (value_list, gda_value_new_type (otp->type));
 
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
-
-	/* create the recordset */
-	recset = (GdaDataModelArray *) gda_data_model_array_new (1);
-	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 0, _("Type"));
-
-	/* fill the recordset */
-	add_string_row (recset, "blob");
-	add_string_row (recset, "date");
-	add_string_row (recset, "datetime");
-	add_string_row (recset, "decimal");
-	add_string_row (recset, "double");
-	add_string_row (recset, "enum");
-	add_string_row (recset, "float");
-	add_string_row (recset, "int24");
-	add_string_row (recset, "long");
-	add_string_row (recset, "longlong");
-	add_string_row (recset, "set");
-	add_string_row (recset, "short");
-	add_string_row (recset, "string");
-	add_string_row (recset, "time");
-	add_string_row (recset, "timestamp");
-	add_string_row (recset, "tiny");
-	add_string_row (recset, "year");
-
-	return GDA_DATA_MODEL (recset);
+	gda_data_model_append_row (GDA_DATA_MODEL (recset), value_list);
+        g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
+        g_list_free (value_list);
+    }
+    return GDA_DATA_MODEL (recset);
 }
 
 static void 

@@ -1,5 +1,11 @@
 2003-04-18  Steve Fosdick <gnomedb@pelvoux.demon.co.uk>
 
+	* Improved support for types and fixed bug which caused the Null?
+	column to always show "Yes" regardless of whether nulls were
+	actually allowed.
+	
+2003-04-18  Steve Fosdick <gnomedb@pelvoux.demon.co.uk>
+
 	* Oracle Provider - changed error handling -
 	gda_oracle_check_result is now a macro rather than a function and
 	therefore has access to the compiler __FILE__ and __LINE__ macros
