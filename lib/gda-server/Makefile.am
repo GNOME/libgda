@@ -33,20 +33,14 @@ libgda_server_la_SOURCES = \
 	gda-server-connection.c \
 	gda-server-error.c \
 	gda-server-field.c \
-	gda-server-impl-command.c \
-	gda-server-impl-command.h \
-	gda-server-impl-connection.c \
-	gda-server-impl-connection.h \
 	gda-server-impl-factory.c \
-	gda-server-impl-factory.h \
-	gda-server-impl-recordset.c \
-	gda-server-impl-recordset.h \
 	gda-server-impl.c \
 	gda-server-init.c \
 	gda-server-recordset.c \
 	gda-builtin-res.c \
 	gda-builtin-res.h \
-	$(gda_server_headers)
+	$(gda_server_headers) \
+	gda-server-private.h
 libgda_server_la_LIBADD = -lpopt
 
 gdaincludedir=$(includedir)/gda

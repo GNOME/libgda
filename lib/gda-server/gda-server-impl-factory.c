@@ -19,7 +19,7 @@
 
 #include "config.h"
 #include "gda-server-impl.h"
-#include "gda-server-impl-factory.h"
+#include "gda-server-private.h"
 
 /*
  * epv structures
