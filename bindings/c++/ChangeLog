@@ -1,3 +1,8 @@
+2001-12-11  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* fixed a couple of things that were left when incorrectly applying
+	Kuba's patch
+
 2001-12-07  Kuba <kpuchar@poczta.onet.pl>
 
 	* finally applied correctly the patch

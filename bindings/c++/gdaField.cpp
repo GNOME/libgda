@@ -374,7 +374,7 @@ Field::actualSize ()
 {
 	g_assert (isValid ());
 
-	return gda_field_get_actual_size (_gda_field);
+	return gda_field_actual_size (_gda_field);
 }
 
 glong

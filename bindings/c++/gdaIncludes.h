@@ -18,18 +18,7 @@
 
 #ifndef __gda_bindings_cpp_gdaIncludesH
 #define __gda_bindings_cpp_gdaIncludesH
-/*
-namespace gda {
-	class Batch;
-	class Command;
-	class Connection;
-	class Error;
-	class ErrorList;
-	class Field;
-	class Recordset;
-	class Value;
-};
-*/
+
 extern "C" {
 
 // hack to remove nasty compiler warnings
