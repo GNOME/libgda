@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2002-03-21 10:16+0200\n"
-"PO-Revision-Date: 2002-03-21 09:28+0200\n"
+"POT-Creation-Date: 2002-03-26 21:29+0200\n"
+"PO-Revision-Date: 2002-03-26 20:31+0200\n"
 "Last-Translator: Yuriy Syrota <yuri@renome.rovno.ua>\n"
 "Language-Team: Ukrainian <uk@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -38,7 +38,8 @@ msgid "Could not query CORBA providers"
 msgstr "Не вдалось зробити запит на отримання постачальників CORBA"
 
 #: libgda/gda-config.c:869
-#: providers/default/gda-default-provider.c:331
+#: providers/default/gda-default-provider.c:417
+#: providers/mysql/gda-mysql-provider.c:446
 msgid "Name"
 msgstr "Назва"
 
@@ -89,7 +90,7 @@ msgstr "Не вдалося створити компонент типу %s"
 msgid "Could not duplicate client object. Client won't get notifications"
 msgstr "Не вдалося здублювати клієнтський об'єкт. Клієнт не отримуватиме сповіщень."
 
-#: libgda/gda-server-connection.c:445
+#: libgda/gda-server-connection.c:450
 #, c-format
 msgid "Could not notify client about action %d"
 msgstr "Не вдалося сповістити клієнта про дію %d"
@@ -111,38 +112,38 @@ msgstr "ІСТИНА"
 msgid "FALSE"
 msgstr "ХИБНІСТЬ"
 
-#: libgda/gda-xml-database.c:214
+#: libgda/gda-xml-database.c:225
 #, c-format
 msgid "Could not load file at %s"
 msgstr "Не вдалося завантажити файл на %s"
 
-#: libgda/gda-xml-database.c:223
+#: libgda/gda-xml-database.c:234
 #, c-format
 msgid "Could not parse file at %s"
 msgstr "Не вдалося проаналізувати файл на %s"
 
-#: libgda/gda-xml-database.c:233
-#: libgda/gda-xml-database.c:250
+#: libgda/gda-xml-database.c:244
+#: libgda/gda-xml-database.c:263
 #, c-format
 msgid "Invalid XML database file '%s'"
 msgstr "Невірний XML-файл бази даних \"%s\""
 
-#: libgda/gda-xml-database.c:369
-#: libgda/gda-xml-database.c:410
+#: libgda/gda-xml-database.c:432
+#: libgda/gda-xml-database.c:473
 #, c-format
 msgid "Table %s already exists"
 msgstr "Таблиця %s вже існує"
 
-#: libgda/gda-xml-database.c:403
+#: libgda/gda-xml-database.c:466
 msgid "Invalid node"
 msgstr "Неправильний вузол"
 
-#: libgda/gda-xml-database.c:435
+#: libgda/gda-xml-database.c:498
 #, c-format
 msgid "Duplicated <data> node for table %s"
 msgstr ""
 
-#: libgda/gda-xml-database.c:442
+#: libgda/gda-xml-database.c:505
 msgid "Invalid XML node"
 msgstr "Неправильний XML-вузол"
 
@@ -151,9 +152,73 @@ msgstr "Неправильний XML-вузол"
 msgid "A full path must be specified on the connection string to open a database."
 msgstr "У рядку з'єднання з відкритою базою даних необхідно вказати повний шлях."
 
-#: providers/default/gda-default-provider.c:167
-msgid "Could not open given file"
-msgstr "Не вдалося відрити вказаний файл"
+#: providers/default/gda-default-provider.c:333
+#: providers/mysql/gda-mysql-provider.c:717
+#: providers/postgres/gda-postgres-provider.c:724
+msgid "Field name"
+msgstr "Назва поля"
+
+#: providers/default/gda-default-provider.c:334
+#: providers/mysql/gda-mysql-provider.c:718
+#: providers/postgres/gda-postgres-provider.c:725
+msgid "Data type"
+msgstr "Тип даних"
+
+#: providers/default/gda-default-provider.c:335
+#: providers/mysql/gda-mysql-provider.c:719
+#: providers/postgres/gda-postgres-provider.c:726
+msgid "Size"
+msgstr "Розмір"
+
+#: providers/default/gda-default-provider.c:336
+#: providers/mysql/gda-mysql-provider.c:720
+#: providers/postgres/gda-postgres-provider.c:727
+msgid "Scale"
+msgstr "Масштаб"
+
+#: providers/default/gda-default-provider.c:337
+#: providers/mysql/gda-mysql-provider.c:721
+#: providers/postgres/gda-postgres-provider.c:728
+msgid "Not null?"
+msgstr ""
+
+#: providers/default/gda-default-provider.c:338
+#: providers/mysql/gda-mysql-provider.c:722
+#: providers/postgres/gda-postgres-provider.c:729
+msgid "Primary key?"
+msgstr "Первинний ключ?"
+
+#: providers/default/gda-default-provider.c:339
+#: providers/mysql/gda-mysql-provider.c:723
+#: providers/postgres/gda-postgres-provider.c:730
+msgid "Unique index?"
+msgstr "Унікальний індекс?"
+
+#: providers/default/gda-default-provider.c:340
+#: providers/mysql/gda-mysql-provider.c:724
+#: providers/postgres/gda-postgres-provider.c:731
+msgid "References"
+msgstr "Посилання"
+
+#: providers/default/gda-default-provider.c:350
+#: providers/default/gda-default-provider.c:356
+msgid "Invalid argument"
+msgstr "Неправильний арґумент"
+
+#: providers/default/gda-default-provider.c:363
+#, c-format
+msgid "Table %s not found"
+msgstr ""
+
+#: providers/default/gda-default-provider.c:388
+msgid "Could not get description for column"
+msgstr "Не вдалося отримати опис стовпчика"
+
+#: providers/default/gda-default-provider.c:472
+#: providers/mysql/gda-mysql-provider.c:619
+#: providers/postgres/gda-postgres-provider.c:613
+msgid "Type"
+msgstr "Тип"
 
 #: providers/default/main.c:48
 msgid "Could not initiate Default component factory"
@@ -170,18 +235,13 @@ msgstr "Ви не можете вказати UNIX_SOCKET, якщо ви вже 
 msgid "Invalid MYSQL handle"
 msgstr ""
 
-#: providers/mysql/gda-mysql-provider.c:464
-#: providers/postgres/gda-postgres-provider.c:613
-msgid "Type"
-msgstr "Тип"
-
 #: providers/mysql/gda-mysql-recordset.c:63
-#: providers/mysql/gda-mysql-recordset.c:170
+#: providers/mysql/gda-mysql-recordset.c:167
 msgid "Invalid MySQL handle"
 msgstr ""
 
 #: providers/mysql/gda-mysql-recordset.c:76
-#: providers/postgres/gda-postgres-recordset.c:82
+#: providers/postgres/gda-postgres-recordset.c:84
 #: providers/sqlite/gda-sqlite-recordset.c:74
 msgid "Row number out of range"
 msgstr ""
@@ -199,9 +259,8 @@ msgid "Could not initialize Oracle environment"
 msgstr "Не вдалося ініціалізувати середовище Oracle"
 
 #: providers/oracle/gda-oracle-connection.c:87
-#, fuzzy
 msgid "Could not initialize Oracle error handler"
-msgstr "Не вдалося ініціалізувати Bonobo"
+msgstr "Не вдалося ініціалізувати обробника помилок Oracle"
 
 #: providers/oracle/gda-oracle-connection.c:98
 #, fuzzy
@@ -224,41 +283,9 @@ msgstr "Не вдалося ініціалізувати бібліотеку OC
 #: providers/postgres/gda-postgres-provider.c:360
 #: providers/postgres/gda-postgres-provider.c:498
 #: providers/postgres/gda-postgres-recordset.c:71
-#: providers/postgres/gda-postgres-recordset.c:126
+#: providers/postgres/gda-postgres-recordset.c:128
 msgid "Invalid PostgreSQL handle"
 msgstr ""
-
-#: providers/postgres/gda-postgres-provider.c:724
-msgid "Field name"
-msgstr "Назва поля"
-
-#: providers/postgres/gda-postgres-provider.c:725
-msgid "Data type"
-msgstr "Тип даних"
-
-#: providers/postgres/gda-postgres-provider.c:726
-msgid "Size"
-msgstr "Розмір"
-
-#: providers/postgres/gda-postgres-provider.c:727
-msgid "Scale"
-msgstr "Масштаб"
-
-#: providers/postgres/gda-postgres-provider.c:728
-msgid "Not null?"
-msgstr ""
-
-#: providers/postgres/gda-postgres-provider.c:729
-msgid "Primary key?"
-msgstr "Первинний ключ?"
-
-#: providers/postgres/gda-postgres-provider.c:730
-msgid "Unique index?"
-msgstr "Унікальний індекс?"
-
-#: providers/postgres/gda-postgres-provider.c:731
-msgid "References"
-msgstr "Посилання"
 
 #: providers/postgres/main.c:49
 msgid "Could not initiate PostgreSQL component factory"
@@ -272,6 +299,74 @@ msgstr "НЕМАЄ ОПИСУ"
 #, fuzzy
 msgid "Not available"
 msgstr "%p не є вірною таблицею"
+
+#: providers/postgres/utils.c:240
+msgid "NULL"
+msgstr ""
+
+#: providers/postgres/utils.c:243
+msgid "big integer"
+msgstr ""
+
+#: providers/postgres/utils.c:246
+msgid "binary"
+msgstr ""
+
+#: providers/postgres/utils.c:249
+msgid "boolean"
+msgstr ""
+
+#: providers/postgres/utils.c:252
+msgid "date"
+msgstr ""
+
+#: providers/postgres/utils.c:255
+msgid "double precision"
+msgstr ""
+
+#: providers/postgres/utils.c:258
+msgid "geometric point"
+msgstr ""
+
+#: providers/postgres/utils.c:261
+msgid "integer"
+msgstr ""
+
+#: providers/postgres/utils.c:264
+msgid "list of values"
+msgstr ""
+
+#: providers/postgres/utils.c:267
+msgid "numeric"
+msgstr ""
+
+#: providers/postgres/utils.c:270
+msgid "single precision"
+msgstr ""
+
+#: providers/postgres/utils.c:273
+msgid "small integer"
+msgstr ""
+
+#: providers/postgres/utils.c:276
+msgid "string"
+msgstr ""
+
+#: providers/postgres/utils.c:279
+msgid "time"
+msgstr ""
+
+#: providers/postgres/utils.c:282
+msgid "timestamp"
+msgstr ""
+
+#: providers/postgres/utils.c:285
+msgid "tiny integer"
+msgstr ""
+
+#: providers/postgres/utils.c:288
+msgid "Unknown type"
+msgstr "Невідомий тип"
 
 #: providers/sqlite/gda-sqlite-provider.c:211
 #: providers/sqlite/gda-sqlite-recordset.c:63
