@@ -1,5 +1,5 @@
 /* GDA library
- * Copyright (C) 1998-2002 The GNOME Foundation.
+ * Copyright (C) 1998-2005 The GNOME Foundation.
  *
  * AUTHORS:
  *      Michael Lausch <michael@lausch.at>
@@ -692,20 +692,20 @@ gda_connection_drop_database (GdaConnection *cnc, const gchar *name)
  * gda_connection_create_table
  * @cnc: a #GdaConnection object.
  * @table_name: name of the table to be created.
- * @attributes: description of all fields for the new table.
+ * @attributes_list: list of #GdaDataModelColumnAttributes for all fields in the table.
  *
  * Creates a table on the given connection from the specified set of fields.
  *
  * Returns: %TRUE if successful, %FALSE otherwise.
  */
 gboolean
-gda_connection_create_table (GdaConnection *cnc, const gchar *table_name, const GdaDataModelColumnAttributes *attributes[])
+gda_connection_create_table (GdaConnection *cnc, const gchar *table_name, const GList *attributes_list)
 {
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (table_name != NULL, FALSE);
-	g_return_val_if_fail (attributes != NULL, FALSE);
+	g_return_val_if_fail (attributes_list != NULL, FALSE);
 
-	return gda_server_provider_create_table (cnc->priv->provider_obj, cnc, table_name, attributes);
+	return gda_server_provider_create_table (cnc->priv->provider_obj, cnc, table_name, attributes_list);
 }
 
 /**

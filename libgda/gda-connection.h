@@ -1,5 +1,5 @@
 /* GDA client library
- * Copyright (C) 1998-2002 The GNOME Foundation.
+ * Copyright (C) 1998-2005 The GNOME Foundation.
  *
  * AUTHORS:
  *      Michael Lausch <michael@lausch.at>
@@ -96,7 +96,7 @@ gboolean             gda_connection_change_database (GdaConnection *cnc, const g
 gboolean             gda_connection_create_database (GdaConnection *cnc, const gchar *name);
 gboolean             gda_connection_drop_database (GdaConnection *cnc, const gchar *name);
 gboolean             gda_connection_create_table (GdaConnection *cnc, const gchar *table_name,
-						  const GdaDataModelColumnAttributes *attributes[]);
+						  const GList *attributes_list);
 gboolean             gda_connection_drop_table (GdaConnection *cnc, const gchar *table_name);
 
 GList               *gda_connection_execute_command (GdaConnection *cnc,

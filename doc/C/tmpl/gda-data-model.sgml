@@ -383,6 +383,15 @@ Basic data model class
 @Returns: 
 
 
+<!-- ##### FUNCTION gda_data_model_commit_update ##### -->
+<para>
+
+</para>
+
+@model: 
+@Returns: 
+
+
 <!-- ##### FUNCTION gda_data_model_to_comma_separated ##### -->
 <para>
 

@@ -1,3 +1,34 @@
+2005-01-29  Bas Driessen <bas.driessen@xobas.com>
+
+	* providers/postgres/gda-postgres-provider.c: added prototypes and functions
+	gda_postgres_provider_create_table(), gda_postgres_provider_drop_table()
+	and postgres_name_from_gda_type().
+
+	* providers/mysql/gda-mysql-provider.c: added prototypes
+	for gda_mysql_provider_create_table() and gda_mysql_provider_drop_table().
+
+	* libgda/gda-connection.[ch]
+	(gda_connection_create_table): changed last parameter
+	to type GList.
+	
+	* libgda/gda-server-provider.[ch]
+	(gda_server_provider_create_table): changed last parameter
+	to type GList.
+
+	* doc/C/libgda-sections.txt: renamed function
+	gda_data_model_end_update to gda_data_model_commit_update.
+
+	* doc/C/tmpl/gda-data-model.sgml: inserted section for new
+	function gda_data_model_commit_update.
+
+	* doc/C/tmpl/gda-connection.sgml: renamed parameter 
+	attributes to attributes_list for gda_connection_create_table
+	entry.
+
+	* doc/C/tmpl/gda-server-provider.sgml: renamed parameter
+	attributes to attributes_list for gda_server_provider_create_table
+	entry.
+
 2005-01-25  Bas Driessen <bas.driessen@xobas.com>
 
 	* libgda/gda-data-model-array.c: introduced new 

@@ -1,5 +1,5 @@
 /* GDA library
- * Copyright (C) 1998-2002 The GNOME Foundation.
+ * Copyright (C) 1998-2005 The GNOME Foundation.
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
@@ -360,7 +360,7 @@ gda_server_provider_drop_database (GdaServerProvider *provider,
  * @provider: a #GdaServerProvider object.
  * @cnc: a #GdaConnection object.
  * @table_name: name of the table to create.
- * @attributes: list of attributes for all fields in the table.
+ * @attributes_list: list of #GdaDataModelColumnAttributes for all fields in the table.
  *
  * Proxy the call to the create_table method on the #GdaServerProvider class
  * to the corresponding provider.
@@ -371,15 +371,15 @@ gboolean
 gda_server_provider_create_table (GdaServerProvider *provider,
 				  GdaConnection *cnc,
 				  const gchar *table_name,
-				  const GdaDataModelColumnAttributes *attributes[])
+				  const GList *attributes_list)
 {
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), FALSE);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (table_name != NULL, FALSE);
-	g_return_val_if_fail (attributes != NULL, FALSE);
+	g_return_val_if_fail (attributes_list != NULL, FALSE);
 	g_return_val_if_fail (CLASS (provider)->create_table != NULL, FALSE);
 
-	return CLASS (provider)->create_table (provider, cnc, table_name, attributes);
+	return CLASS (provider)->create_table (provider, cnc, table_name, attributes_list);
 }
 
 /**

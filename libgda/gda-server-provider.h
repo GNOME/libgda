@@ -1,5 +1,5 @@
 /* GDA library
- * Copyright (C) 1998-2002 The GNOME Foundation.
+ * Copyright (C) 1998-2005 The GNOME Foundation.
  *
  * AUTHORS:
  *	Rodrigo Moya <rodrigo@gnome-db.org>
@@ -80,7 +80,7 @@ struct _GdaServerProviderClass {
 	gboolean (* create_table) (GdaServerProvider *provider,
 				   GdaConnection *cnc,
 				   const gchar *table_name,
-				   const GdaDataModelColumnAttributes *attributes[]);
+				   const GList *attributes_list);
 	gboolean (* drop_table) (GdaServerProvider *provider,
 				 GdaConnection *cnc,
 				 const gchar *table_name);
@@ -152,7 +152,7 @@ gboolean gda_server_provider_drop_database (GdaServerProvider *provider,
 gboolean gda_server_provider_create_table (GdaServerProvider *provider,
 					   GdaConnection *cnc,
 					   const gchar *table_name,
-					   const GdaDataModelColumnAttributes *attributes[]);
+					   const GList *attributes_list);
 gboolean gda_server_provider_drop_table (GdaServerProvider *provider,
 					 GdaConnection *cnc,
 					 const gchar *table_name);

@@ -113,7 +113,7 @@ Base class for implementing new providers
 @provider: 
 @cnc: 
 @table_name: 
-@attributes: 
+@attributes_list: 
 @Returns: 
 
 

@@ -219,7 +219,7 @@ Management of connections to data sources
 
 @cnc: 
 @table_name: 
-@attributes: 
+@attributes_list: 
 @Returns: 
 
 

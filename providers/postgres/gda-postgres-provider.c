@@ -1,10 +1,11 @@
 /* GNOME DB Postgres Provider
- * Copyright (C) 1998-2002 The GNOME Foundation
+ * Copyright (C) 1998-2005 The GNOME Foundation
  *
  * AUTHORS:
  *         Vivien Malerba <malerba@gnome-db.org>
  *         Rodrigo Moya <rodrigo@gnome-db.org>
  *         Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+ *         Bas Driessen <bas.driessen@xobas.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -59,7 +60,7 @@ static gboolean gda_postgres_provider_drop_database (GdaServerProvider *provider
 static gboolean gda_postgres_provider_create_table (GdaServerProvider *provider,
 						    GdaConnection *cnc,
 						    const gchar *table_name,
-						    const GdaDataModelColumnAttributes *attributes[]);
+						    const GList *attributes_list);
 
 static gboolean gda_postgres_provider_drop_table (GdaServerProvider *provider,
 						     GdaConnection *cnc,
@@ -245,6 +246,67 @@ postgres_name_to_gda_type (const gchar *name)
 		return GDA_VALUE_TYPE_BINARY;
 
 	return GDA_VALUE_TYPE_STRING;
+}
+
+static gchar *
+postgres_name_from_gda_type (const GdaValueType type)
+{
+	switch (type) {
+	case GDA_VALUE_TYPE_NULL :
+		return g_strdup_printf ("text");
+	case GDA_VALUE_TYPE_BIGINT :
+		return g_strdup_printf ("int8");
+	case GDA_VALUE_TYPE_BIGUINT :
+		return g_strdup_printf ("int8");
+	case GDA_VALUE_TYPE_BINARY :
+		return g_strdup_printf ("bytea");
+	case GDA_VALUE_TYPE_BLOB :
+		return g_strdup_printf ("oid");
+	case GDA_VALUE_TYPE_BOOLEAN :
+		return g_strdup_printf ("bool");
+	case GDA_VALUE_TYPE_DATE :
+		return g_strdup_printf ("data");
+	case GDA_VALUE_TYPE_DOUBLE :
+		return g_strdup_printf ("float8");
+	case GDA_VALUE_TYPE_GEOMETRIC_POINT :
+		return g_strdup_printf ("point");
+	case GDA_VALUE_TYPE_GOBJECT :
+		return g_strdup_printf ("text");
+	case GDA_VALUE_TYPE_INTEGER :
+		return g_strdup_printf ("int4");
+	case GDA_VALUE_TYPE_LIST :
+		return g_strdup_printf ("varchar");
+	case GDA_VALUE_TYPE_MONEY :
+		return g_strdup_printf ("money");
+	case GDA_VALUE_TYPE_NUMERIC :
+		return g_strdup_printf ("numeric");
+	case GDA_VALUE_TYPE_SINGLE :
+		return g_strdup_printf ("float4");
+	case GDA_VALUE_TYPE_SMALLINT :
+		return g_strdup_printf ("int2");
+	case GDA_VALUE_TYPE_SMALLUINT :
+		return g_strdup_printf ("int2");
+	case GDA_VALUE_TYPE_STRING :
+		return g_strdup_printf ("varchar");
+	case GDA_VALUE_TYPE_TIME :
+		return g_strdup_printf ("time");
+	case GDA_VALUE_TYPE_TIMESTAMP :
+		return g_strdup_printf ("timestamp");
+	case GDA_VALUE_TYPE_TINYINT :
+		return g_strdup_printf ("smallint");
+	case GDA_VALUE_TYPE_TINYUINT :
+		return g_strdup_printf ("smallint");
+	case GDA_VALUE_TYPE_TYPE :
+		return g_strdup_printf ("int2");
+        case GDA_VALUE_TYPE_UINTEGER :
+		return g_strdup_printf ("int4");
+	case GDA_VALUE_TYPE_UNKNOWN :
+		return g_strdup_printf ("text");
+	default :
+		return g_strdup_printf ("text");
+	}
+
+	return g_strdup_printf ("text");
 }
 
 static int
@@ -744,10 +806,95 @@ static gboolean
 gda_postgres_provider_create_table (GdaServerProvider *provider,
 				    GdaConnection *cnc,
 				    const gchar *table_name,
-				    const GdaDataModelColumnAttributes *attributes[])
+				    const GList *attributes_list)
 {
+	GdaPostgresProvider *pg_prv = (GdaPostgresProvider *) provider;
+	GdaDataModelColumnAttributes *dmca;
+	GString *sql;
+	gint i;
+	gchar *postgres_data_type, *default_value, *references;
+	GdaValueType value_type;
+	gboolean retval;
 
-	return FALSE;
+	g_return_val_if_fail (GDA_IS_POSTGRES_PROVIDER (pg_prv), FALSE);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (table_name != NULL, FALSE);
+	g_return_val_if_fail (attributes_list != NULL, FALSE);
+
+	/* prepare the SQL command */
+	sql = g_string_new ("CREATE TABLE ");
+	g_string_append_printf (sql, "%s (", table_name);
+
+	/* step through list */
+	for (i=0; i<g_list_length ((GList *) attributes_list); i++) {
+
+		if (i>0)
+			g_string_append_printf (sql, ", ");
+			
+		dmca = (GdaDataModelColumnAttributes *) g_list_nth_data ((GList *) attributes_list, i);
+
+		/* name */	
+		g_string_append_printf (sql, "\"%s\" ", gda_data_model_column_attributes_get_name (dmca));
+
+		/* data type; force serial to be used when auto_increment is set */
+		if (gda_data_model_column_attributes_get_auto_increment (dmca) == TRUE) {
+			g_string_append_printf (sql, "serial");
+			value_type = GDA_VALUE_TYPE_INTEGER;
+		} else {
+			value_type = gda_data_model_column_attributes_get_gdatype (dmca);
+			postgres_data_type = postgres_name_from_gda_type (value_type);
+			g_string_append_printf (sql, "%s", postgres_data_type);
+			g_free(postgres_data_type);
+		}
+
+		/* size */
+		if (value_type == GDA_VALUE_TYPE_STRING)
+			g_string_append_printf (sql, "(%ld)", gda_data_model_column_attributes_get_defined_size (dmca));
+		else if (value_type == GDA_VALUE_TYPE_NUMERIC)
+			g_string_append_printf (sql, "(%ld,%ld)", 
+				gda_data_model_column_attributes_get_defined_size (dmca),
+				gda_data_model_column_attributes_get_scale (dmca));
+		
+		/* NULL */
+		if (gda_data_model_column_attributes_get_allow_null (dmca) == TRUE)
+			g_string_append_printf (sql, " NULL");
+		else
+			g_string_append_printf (sql, " NOT NULL");
+	
+		/* primary key */
+		if (gda_data_model_column_attributes_get_primary_key (dmca) == TRUE)
+			g_string_append_printf (sql, " PRIMARY KEY");
+
+		/* unique key */
+		if (gda_data_model_column_attributes_get_unique_key (dmca) == TRUE)
+			g_string_append_printf (sql, " UNIQUE");
+
+		/* default value (in case of string, user needs to add "'" around the field) */
+		if (gda_data_model_column_attributes_get_default_value (dmca) != NULL) {
+			default_value = gda_value_stringify ((GdaValue *) gda_data_model_column_attributes_get_default_value (dmca));
+			if ((default_value != NULL) && (*default_value != '\0'))
+				g_string_append_printf (sql, " DEFAULT %s", default_value);
+		}
+
+		/* any additional parameters */			
+		if (gda_data_model_column_attributes_get_references (dmca) != NULL) {
+			references = (gchar *) gda_data_model_column_attributes_get_references (dmca);
+			if ((references != NULL) && (*references != '\0'))
+				g_string_append_printf (sql, " %s", references);
+		}
+	}
+
+	/* finish the SQL command */
+	g_string_append_printf (sql, ")");
+
+	/* execute sql command */
+	retval = gda_postgres_provider_single_command (pg_prv, cnc, sql->str);
+
+	/* clean up */
+	g_string_free (sql, TRUE);
+
+	/* return */
+	return retval;
 }
 
 /* drop_table handler for the GdaPostgresProvider class */
@@ -763,6 +910,7 @@ gda_postgres_provider_drop_table (GdaServerProvider *provider,
 
 	g_return_val_if_fail (GDA_IS_POSTGRES_PROVIDER (pg_prv), FALSE);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (table_name != NULL, FALSE);
 
 	sql = g_strdup_printf ("DROP TABLE %s", table_name);
 

@@ -160,7 +160,7 @@ gda_data_model_foreach
 gda_data_model_has_changed
 gda_data_model_begin_update
 gda_data_model_cancel_update
-gda_data_model_end_update
+gda_data_model_commit_update
 gda_data_model_to_comma_separated
 gda_data_model_to_tab_separated
 gda_data_model_to_xml
