@@ -598,7 +598,9 @@ gda_config_set_string (const gchar *path, const gchar *new_value)
 		g_free (section_path);
 	} else {
 		g_free (entry->value);
+		g_free (entry->type);
 		entry->value = g_strdup (new_value);
+		entry->type = g_strdup ("string");
 	}
 
 	write_config_file ();
@@ -642,7 +644,9 @@ gda_config_set_int (const gchar *path, gint new_value)
 		g_free (section_path);
 	} else {
 		g_free (entry->value);
+		g_free (entry->type);
 		entry->value = g_strdup_printf ("%d", new_value);
+		entry->type = g_strdup ("long");
 	}
 
 	write_config_file ();
@@ -686,7 +690,9 @@ gda_config_set_float (const gchar * path, gdouble new_value)
 		g_free (section_path);
 	} else {
 		g_free (entry->value);
+		g_free (entry->type);
 		entry->value = g_strdup_printf ("%f", new_value);
+		entry->type = g_strdup ("float");
 	}
 
 	write_config_file ();
@@ -730,7 +736,9 @@ gda_config_set_boolean (const gchar *path, gboolean new_value)
 		g_free (section_path);
 	} else {
 		g_free (entry->value);
+		g_free (entry->type);
 		entry->value = g_strdup_printf ("%d", new_value);
+		entry->type = g_strdup ("bool");
 	}
 
 	write_config_file ();
