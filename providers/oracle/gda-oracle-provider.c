@@ -1522,8 +1522,8 @@ get_oracle_tables (GdaConnection *cnc, GdaParameterList *params)
 	GList *reclist;
 	GdaDataModel *recset;
 	gchar *sql = g_strdup_printf ("SELECT TABLE_NAME AS '%s',"
-				      " OWNER AS '%s' "
-				      " NULL AS '%s' "
+				      " OWNER AS '%s', "
+				      " NULL AS '%s', "
 				      " NULL AS 'SQL' "
 				      " FROM ALL_TABLES "
 				      " ORDER BY TABLE_NAME",
