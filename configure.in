@@ -500,6 +500,7 @@ libgda.spec
 macros/Makefile
 po/Makefile.in
 doc/Makefile
+doc/C/Makefile
 intl/Makefile
 idl/Makefile
 lib/Makefile
