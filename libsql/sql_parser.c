@@ -590,6 +590,17 @@ sql_condition_stringify(sql_condition * cond)
 	case SQL_eq:
 	case SQL_is:
 	case SQL_in:
+        case SQL_gt:
+	case SQL_lt:
+	case SQL_geq:
+	case SQL_leq:
+	case SQL_diff:
+	case SQL_regexp:
+	case SQL_regexp_ci:
+	case SQL_not_regexp:
+	case SQL_not_regexp_ci:
+	case SQL_similar:
+	case SQL_not:
 	case SQL_like:
 		retval =
 		    memsql_strappend_free(sql_field_stringify(cond->d.pair.left),
@@ -619,7 +630,7 @@ sql_condition_stringify(sql_condition * cond)
 		break;
 
 	default:
-		fprintf(stderr, "Invalid  condition type: %d\n", cond->op);
+		fprintf(stderr, "Invalid condition type: %d\n", cond->op);
 		retval = NULL;
 		}
 

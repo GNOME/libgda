@@ -1,3 +1,12 @@
+2004-09-28 Dru <andru@treshna.com>
+	* libsql/parser.y: Fixed not null issue in where statements
+	* libsql/sample_sql_statements: Added examples that broke stuff.
+	* libsql/sql_parser.c: Fixed bug 152874, sql statements
+	  with complex where statements were often failing to 
+	  generate properly.
+	* providers/postgres/gda-postgres-recordset.c: Added minor
+	  comments.
+
 2004-09-14 Dru <andru@treshna.com>
 	* libgda/gda-value.c: Improved documentation.
 	* libsql/sql_parser.c: Added support function for helping

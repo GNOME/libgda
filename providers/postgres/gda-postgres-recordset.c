@@ -155,6 +155,7 @@ get_row (GdaDataModel *model, GdaPostgresRecordsetPrivate *priv, gint rownum)
 
 	gda_row_set_number (row, rownum);
 	id = g_strdup_printf ("%d", rownum);
+   	/* Use oid or figure out primary keys ? could use libsql to add oid to every query. */
 	gda_row_set_id (row, id); /* FIXME: by now, the rowid is just the row number */
 	g_free (id);
 	return row;
@@ -381,6 +382,10 @@ static gchar *guess_table_name (GdaPostgresRecordset *recset)
 	PGconn *pg_conn;
 	gchar *table_name = NULL;
 	
+   
+   	/* This code should be changed to use libsql, its proberly faster
+	 * in long run to store a parsed sql statement and then
+	 * just grab the tablename from that. */
 	pg_res = recset->priv->pg_res;
 	cnc_priv_data = g_object_get_data (G_OBJECT (recset->priv->cnc),
 					   OBJECT_DATA_POSTGRES_HANDLE);

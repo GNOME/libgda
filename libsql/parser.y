@@ -216,6 +216,7 @@ condition_operator: L_EQ		{$$ = SQL_eq;}
 	| L_REGEXP_CI			{$$ = SQL_regexp_ci;}
 	| L_NOTREGEXP			{$$ = SQL_not_regexp;}
 	| L_NOTREGEXP_CI		{$$ = SQL_not_regexp_ci;}
+	| L_NOT				{$$ = SQL_not;}
 	;
 
 where_item: field condition_operator field 		{$$ = sql_build_condition ($1, $3, $2);}

@@ -23,3 +23,4 @@ SELECT * FROM roomavailable(24,NULL,NULL,'2004-01-01','2004-01-04')
 select * from b where b = 'b\'a'
 select * from c, d where d.fieldname = Now()
 selcet * from b where b = '14' order by field1 
+select * from invoice where id> 5 and invoice < 10 and invoice != 6
