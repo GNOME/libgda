@@ -98,6 +98,8 @@ gboolean       gda_connection_begin_transaction (GdaConnection *cnc, GdaTransact
 gboolean       gda_connection_commit_transaction (GdaConnection *cnc, GdaTransaction *xaction);
 gboolean       gda_connection_rollback_transaction (GdaConnection *cnc, GdaTransaction *xaction);
 
+const GList   *gda_connection_get_errors (GdaConnection *cnc);
+
 typedef enum {
 	GDA_CONNECTION_FEATURE_AGGREGATES,
 	GDA_CONNECTION_FEATURE_INDEXES,

@@ -140,8 +140,7 @@ gda_connection_finalize (GObject *object)
 	g_free (cnc->priv->username);
 	g_free (cnc->priv->password);
 
-	g_list_foreach (cnc->priv->error_list, (GFunc) gda_error_free, NULL);
-	g_list_free (cnc->priv->error_list);
+	gda_error_list_free (cnc->priv->error_list);
 
 	g_list_foreach (cnc->priv->recset_list, (GFunc) g_object_unref, NULL);
 
@@ -446,17 +445,25 @@ gda_connection_get_password (GdaConnection *cnc)
  * function, the connection object (and the associated #GdaClient object)
  * emits the "error" signal, to which clients can connect to be
  * informed of errors.
+ *
+ * @error is stored internally, so you don't need to unref it.
  */
 void
 gda_connection_add_error (GdaConnection *cnc, GdaError *error)
 {
+	GList *err_list;
+
 	g_return_if_fail (GDA_IS_CONNECTION (cnc));
 	g_return_if_fail (GDA_IS_ERROR (error));
+	
 
-	cnc->priv->error_list = g_list_append (cnc->priv->error_list, error);
+	err_list = cnc->priv->error_list;
+	gda_error_list_free (err_list);
+	
+	err_list = g_list_append (NULL, error);
+	cnc->priv->error_list = err_list;
 
 	g_signal_emit (G_OBJECT (cnc), gda_connection_signals[ERROR], 0, cnc->priv->error_list);
-	cnc->priv->error_list = NULL;
 }
 
 /**
@@ -505,6 +512,8 @@ gda_connection_add_error_string (GdaConnection *cnc, const gchar *str, ...)
  * signal. The only difference is that, instead of a notification
  * for each error, this function only does one notification for
  * the whole list of errors.
+ *
+ * @error_list is copied to an internal list and freed.
  */
 void
 gda_connection_add_error_list (GdaConnection *cnc, GList *error_list)
@@ -514,16 +523,15 @@ gda_connection_add_error_list (GdaConnection *cnc, GList *error_list)
 	g_return_if_fail (GDA_IS_CONNECTION (cnc));
 	g_return_if_fail (error_list != NULL);
 
-	for (l = error_list; l; l = l->next) {
-		GdaError *error = GDA_ERROR (l->data);
-		cnc->priv->error_list = g_list_append (cnc->priv->error_list, error);
-	}
+	l = cnc->priv->error_list;
+	gda_error_list_free (l);
+	l = gda_error_list_copy (error_list);
 
+	cnc->priv->error_list = l;
 	/* notify errors */
-	g_signal_emit (G_OBJECT (cnc), gda_connection_signals[ERROR], 0, cnc->priv->error_list);
-	cnc->priv->error_list = NULL;
+	g_signal_emit (G_OBJECT (cnc), gda_connection_signals[ERROR], 0, l);
 
-	g_list_free (error_list);
+	gda_error_list_free (error_list);
 }
 
 /**
@@ -793,3 +801,21 @@ gda_connection_get_schema (GdaConnection *cnc,
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	return gda_server_provider_get_schema (cnc->priv->provider_obj, cnc, schema, params);
 }
+
+/**
+ * gda_connection_get_errors
+ * @cnc: a #GdaConnection.
+ *
+ * Retrieves a list of the last errors ocurred in the connection.
+ * You can make a copy of the list using #gda_error_list_copy.
+ * 
+ * Returns: a GList of #GdaError.
+ *
+ */
+const GList *
+gda_connection_get_errors (GdaConnection *cnc)
+{
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+	return cnc->priv->error_list;
+}
+

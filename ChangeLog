@@ -1,3 +1,25 @@
+2002-07-01  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
+	* libgda/gda-connection.c:
+	(gda_connection_finalize):
+	(gda_connection_add_error):
+	(gda_connection_add_error_list): keep the error list stored for later
+	retrieval. Use gda_error_list_(copy|free).
+
+	(gda_connection_get_errors): returns a the latest error(s) ocurred in
+	the connection.
+	
+	* libgda/gda-connection.h: added prototype for
+	gda_connection_get_errors ().
+
+	* libgda/gda-error.c:
+	(gda_error_list_copy): makes new copy of a GList of GdaError by using
+	g_list_copy and then g_object_ref on the data.
+
+	(gda_error_list_free): use g_list_foreach.
+
+	* libgda/gda-error.h: added prototype for gda_error_list_copy.
+
 2002-06-25  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
 	* libgda/gda-config.c:

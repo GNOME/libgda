@@ -50,6 +50,7 @@ struct _GdaErrorClass {
 GType         gda_error_get_type (void);
 GdaError     *gda_error_new (void);
 void          gda_error_free (GdaError * error);
+GList        *gda_error_list_copy (const GList * errors);
 void          gda_error_list_free (GList * errors);
 
 const gchar  *gda_error_get_description (GdaError *error);

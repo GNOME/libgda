@@ -132,6 +132,29 @@ gda_error_free (GdaError *error)
 }
 
 /**
+ * gda_error_list_copy:
+ * @errors: a glist holding error objects.
+ *
+ * Creates a new list which contains the same errors as @errors and
+ * adds a reference for each error in the list.
+ *
+ * You must free the list using #gda_error_list_free
+ * Returns: a list of errors
+ */
+GList *
+gda_error_list_copy (const GList * errors)
+{
+	GList *l;
+	GList *new_list;
+
+	new_list = g_list_copy (errors);
+	for (l = new_list; l; l = l->next)
+		g_object_ref (G_OBJECT (l->data));
+
+	return new_list;
+}
+
+/**
  * gda_error_list_free:
  * @errors: a glist holding error objects.
  *
@@ -142,15 +165,7 @@ gda_error_free (GdaError *error)
 void
 gda_error_list_free (GList * errors)
 {
-	GList *ptr = errors;
-
-	g_return_if_fail (errors != 0);
-
-	while (ptr) {
-		GdaError *error = ptr->data;
-		gda_error_free (error);
-		ptr = g_list_next (ptr);
-	}
+	g_list_foreach (errors, (GFunc) gda_error_free, NULL);
 	g_list_free (errors);
 }
 
