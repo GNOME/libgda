@@ -1,3 +1,8 @@
+2002-01-20  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
+	* libgda/gda-command.h: changed parameter name in gda-command.h  to
+	match the name in gda-command.c so as gtk-doc recognizes it.
+
 2002-01-20  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* ChangeLog: merged all ChangeLog's into a single file

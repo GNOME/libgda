@@ -54,7 +54,7 @@ void           gda_command_set_text (GdaCommand *cmd, const gchar *text);
 GdaCommandType gda_command_get_command_type (GdaCommand *cmd);
 void           gda_command_set_command_type (GdaCommand *cmd, GdaCommandType type);
 GdaCommandOptions gda_command_get_options (GdaCommand *cmd);
-void           gda_command_set_options (GdaCommand *cmd, GdaCommandOptions option);
+void           gda_command_set_options (GdaCommand *cmd, GdaCommandOptions options);
 
 G_END_DECLS
 
