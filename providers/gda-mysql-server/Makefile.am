@@ -22,7 +22,7 @@ libgda_mysql_la_SOURCES = \
 	gda-mysql-recordset.c \
 	gda-mysql.h
 
-EXTRA_DIST = gda-mysql.oafinfo
+EXTRA_DIST = gda-mysql.oafinfo gda-mysql.spec.in
 
 oafinfodir=$(GDA_oafinfodir)
 oafinfo_DATA=gda-mysql.oafinfo

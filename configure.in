@@ -545,8 +545,11 @@ bindings/Makefile
 bindings/c++/Makefile
 providers/Makefile
 providers/gda-odbc-server/Makefile
+providers/gda-odbc-server/gda-odbc.spec
 providers/gda-mysql-server/Makefile
+providers/gda-mysql-server/gda-mysql.spec
 providers/gda-postgres-server/Makefile
+providers/gda-postgres-server/gda-postgres.spec
 providers/gda-sybase-server/Makefile
 providers/gda-ldap-server/Makefile
 providers/gda-oracle-server/Makefile

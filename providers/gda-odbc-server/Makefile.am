@@ -22,7 +22,7 @@ libgda_odbc_la_SOURCES = \
 	gda-odbc-recordset.c \
 	gda-odbc.h
 
-EXTRA_DIST = gda-odbc.oafinfo
+EXTRA_DIST = gda-odbc.oafinfo gda-odbc.spec.in
 
 oafinfodir=$(GDA_oafinfodir)
 oafinfo_DATA=gda-odbc.oafinfo

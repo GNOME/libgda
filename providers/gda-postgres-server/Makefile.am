@@ -24,7 +24,7 @@ libgda_postgres_la_SOURCES = \
 	gda-postgres-recordset.c \
 	gda-postgres.h
 
-EXTRA_DIST = gda-postgres.oafinfo
+EXTRA_DIST = gda-postgres.oafinfo gda-postgres.spec.in
 
 oafinfodir=$(GDA_oafinfodir)
 oafinfo_DATA=gda-postgres.oafinfo
