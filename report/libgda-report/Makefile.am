@@ -14,7 +14,8 @@ BUILT_SOURCES = \
 	GNOME_Database_Report.h
 
 CLEANFILES += $(BUILT_SOURCES)
-IDL_FILES = \
+IDLFILES = \
+	$(top_builddir)/idl/GNOME_Database.idl \
 	$(top_builddir)/report/idl/GNOME_Database_Report.idl
 
 gda_report_corba_built_files = \

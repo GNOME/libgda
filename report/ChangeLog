@@ -1,3 +1,8 @@
+2002-01-13  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* libgda-report/Makefile.am: fixed so that orbit-idl regenerates
+	the skels and stubs when the IDL files change
+
 2002-01-11  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
 	* *.[ch]: assigned copyright to GNOME Foundation.
