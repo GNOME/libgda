@@ -844,11 +844,43 @@ gda_server_connection_add_error_string (GdaServerConnection * cnc,
 	g_return_if_fail (msg != NULL);
 
 	error = gda_error_new ();
-	gda_server_error_make (error, NULL, cnc, __PRETTY_FUNCTION__);
+	gda_server_connection_make_error (error, NULL, cnc, __PRETTY_FUNCTION__);
 	gda_error_set_description (error, msg);
 	gda_error_set_native (error, msg);
 
 	cnc->errors = g_list_append (cnc->errors, (gpointer) error);
+}
+
+/**
+ * gda_server_connection_make_error
+ */
+void
+gda_server_connection_make_error (GdaError *error,
+				  GdaServerRecordset *recset,
+				  GdaServerConnection *cnc,
+				  gchar *where)
+{
+	GdaServerConnection *cnc_to_use = NULL;
+
+	g_return_if_fail (error != NULL);
+
+	if (cnc)
+		cnc_to_use = cnc;
+	else if (recset)
+		cnc_to_use = recset->cnc;
+
+	if (!cnc_to_use) {
+		gda_log_message (_("Could not get pointer to server implementation"));
+		return;
+	}
+
+	g_return_if_fail (cnc_to_use->server_impl != NULL);
+	g_return_if_fail (cnc_to_use->server_impl->functions.error_make != NULL);
+
+	cnc_to_use->server_impl->functions.error_make (error, recset, cnc,
+						       where);
+
+	gda_server_connection_add_error (cnc_to_use, error);
 }
 
 /**

@@ -1,3 +1,8 @@
+2001-08-22  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* gda-server-error.[ch] (gda_server_error_make): moved to
+	gda-server-connection.c and removed this file
+
 2001-08-19  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* gda-server-field.[ch]: moved to gda-common
