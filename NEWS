@@ -1,3 +1,51 @@
+libgda 1.3.1, 2005-03-21
+------------------------
+
+ - Improved GdaRow API (Vivien)
+ - Fixed #167573 (Rodrigo)
+ - Added gda_xml_database_remove_table function (Álvaro)
+ - Fixed libsql build (Rodrigo)
+ - Upgraded SQLite provider to SQLite3 (Denis)
+ - Install providers in versioned directories for parallel installation (Rodrigo)
+ - Use libgda*-3 as library names (Rodrigo)
+ - Fixed #129153 (Rodrigo)
+ - Renamed GdaDataModelColumnAttributes to GdaColumn (Álvaro)
+ - Renamed GdaDataModelColumnIndexAttributes to GdaColumnAttributes (Álvaro)
+ - Code cleanup for data model classes (Bas)
+ - Cleanup auto* build noise (Bas)
+ - Replace gda_connection_escape_string with more generic
+   gda_connection_value_to_sql_string (Alan)
+ - Updated translations:
+        - cs (Miroslav)
+        - de (Frank)
+        - en_CA (Adam)
+        - en_GB (David)
+        - it (Marco)
+	- pt (Duarte)
+	- pt_BR (Raphael)
+
+libgda 1.2.1, 2005-03-03
+------------------------
+
+ - Fixed includedir in spec file (Aaron)
+ - Set row number in appended row for GdaDataModelHash (Bas)
+ - Fixes in 'update_row'/'remove_row' methods for PostgreSQL provider (Bas)
+ - Fixed intltool detection (Rodrigo)
+ - Fixed deletion of rows in GdaDataModelHash (Bas)
+ - Improve table name guessing in PostgreSQL updates (Bas)
+ - Allow USER and PASSWORD parameters in MySQL connection string (Bas)
+ - Removed extra emission of signals in data model base class (Álvaro)
+ - Renumber rows after deletion in GdaDataModelHash (Álvaro)
+ - Added "name_changed" signal in GdaTable class (Álvaro)
+ - Fixed #167700 (Caolan)
+ - Fixed #160666 (Rodrigo)
+ - Fixed #162856 (Jorge)
+ - Fixed #166286 (Caolan)
+ - Fixed #166288 (Caolan)
+ - Fixed #129153 (Rodrigo)
+ - Fixed #167500 (Denis)
+ - Fixed #168641 (Loïc)
+
 libgda 1.3.0, 2005-02-07
 ------------------------
 

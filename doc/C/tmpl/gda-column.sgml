@@ -19,22 +19,28 @@ Management of #GdaDataModel column attributes
 
 </para>
 
-@defined_size: 
-@name: 
-@table: 
-@caption: 
-@scale: 
-@dbms_type: 
-@gda_type: 
-@allow_null: 
-@primary_key: 
-@unique_key: 
-@references: 
-@auto_increment: 
-@auto_increment_start: 
-@auto_increment_step: 
-@position: 
-@default_value: 
+
+<!-- ##### SIGNAL GdaColumn::name-changed ##### -->
+<para>
+
+</para>
+
+@gdacolumn: the object which received the signal.
+@arg1: 
+
+<!-- ##### STRUCT GdaColumn ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SIGNAL GdaColumn::name-changed ##### -->
+<para>
+
+</para>
+
+@gdacolumn: the object which received the signal.
+@arg1: 
 
 <!-- ##### FUNCTION gda_column_get_type ##### -->
 <para>
@@ -57,8 +63,10 @@ Management of #GdaDataModel column attributes
 
 </para>
 
-@fa: 
+@column: 
 @Returns: 
+<!-- # Unused Parameters # -->
+@fa: 
 
 
 <!-- ##### FUNCTION gda_column_free ##### -->
@@ -66,6 +74,8 @@ Management of #GdaDataModel column attributes
 
 </para>
 
+@column: 
+<!-- # Unused Parameters # -->
 @fa: 
 
 
@@ -84,8 +94,10 @@ Management of #GdaDataModel column attributes
 
 </para>
 
-@fa: 
+@column: 
 @Returns: 
+<!-- # Unused Parameters # -->
+@fa: 
 
 
 <!-- ##### FUNCTION gda_column_set_defined_size ##### -->
@@ -93,9 +105,10 @@ Management of #GdaDataModel column attributes
 
 </para>
 
-@fa: 
+@column: 
 @size: 
 <!-- # Unused Parameters # -->
+@fa: 
 @fs: 
 
 
@@ -104,8 +117,10 @@ Management of #GdaDataModel column attributes
 
 </para>
 
-@fa: 
+@column: 
 @Returns: 
+<!-- # Unused Parameters # -->
+@fa: 
 
 
 <!-- ##### FUNCTION gda_column_set_name ##### -->
@@ -113,8 +128,10 @@ Management of #GdaDataModel column attributes
 
 </para>
 
-@fa: 
+@column: 
 @name: 
+<!-- # Unused Parameters # -->
+@fa: 
 
 
 <!-- ##### FUNCTION gda_column_get_table ##### -->
@@ -122,8 +139,10 @@ Management of #GdaDataModel column attributes
 
 </para>
 
-@fa: 
+@column: 
 @Returns: 
+<!-- # Unused Parameters # -->
+@fa: 
 
 
 <!-- ##### FUNCTION gda_column_set_table ##### -->
@@ -131,8 +150,10 @@ Management of #GdaDataModel column attributes
 
 </para>
 
-@fa: 
+@column: 
 @table: 
+<!-- # Unused Parameters # -->
+@fa: 
 
 
 <!-- ##### FUNCTION gda_column_get_caption ##### -->
@@ -140,8 +161,10 @@ Management of #GdaDataModel column attributes
 
 </para>
 
-@fa: 
+@column: 
 @Returns: 
+<!-- # Unused Parameters # -->
+@fa: 
 
 
 <!-- ##### FUNCTION gda_column_set_caption ##### -->
@@ -149,8 +172,10 @@ Management of #GdaDataModel column attributes
 
 </para>
 
-@fa: 
+@column: 
 @caption: 
+<!-- # Unused Parameters # -->
+@fa: 
 
 
 <!-- ##### FUNCTION gda_column_get_scale ##### -->
@@ -158,8 +183,10 @@ Management of #GdaDataModel column attributes
 
 </para>
 
-@fa: 
+@column: 
 @Returns: 
+<!-- # Unused Parameters # -->
+@fa: 
 
 
 <!-- ##### FUNCTION gda_column_set_scale ##### -->
@@ -167,8 +194,10 @@ Management of #GdaDataModel column attributes
 
 </para>
 
-@fa: 
+@column: 
 @scale: 
+<!-- # Unused Parameters # -->
+@fa: 
 
 
 <!-- ##### FUNCTION gda_column_get_gdatype ##### -->
@@ -176,8 +205,10 @@ Management of #GdaDataModel column attributes
 
 </para>
 
-@fa: 
+@column: 
 @Returns: 
+<!-- # Unused Parameters # -->
+@fa: 
 
 
 <!-- ##### FUNCTION gda_column_set_gdatype ##### -->
@@ -185,8 +216,10 @@ Management of #GdaDataModel column attributes
 
 </para>
 
-@fa: 
+@column: 
 @type: 
+<!-- # Unused Parameters # -->
+@fa: 
 
 
 <!-- ##### FUNCTION gda_column_get_allow_null ##### -->
@@ -194,8 +227,10 @@ Management of #GdaDataModel column attributes
 
 </para>
 
-@fa: 
+@column: 
 @Returns: 
+<!-- # Unused Parameters # -->
+@fa: 
 
 
 <!-- ##### FUNCTION gda_column_set_allow_null ##### -->
@@ -203,8 +238,10 @@ Management of #GdaDataModel column attributes
 
 </para>
 
-@fa: 
+@column: 
 @allow: 
+<!-- # Unused Parameters # -->
+@fa: 
 
 
 <!-- ##### FUNCTION gda_column_get_primary_key ##### -->
@@ -212,8 +249,10 @@ Management of #GdaDataModel column attributes
 
 </para>
 
-@fa: 
+@column: 
 @Returns: 
+<!-- # Unused Parameters # -->
+@fa: 
 
 
 <!-- ##### FUNCTION gda_column_set_primary_key ##### -->
@@ -221,8 +260,10 @@ Management of #GdaDataModel column attributes
 
 </para>
 
-@fa: 
+@column: 
 @pk: 
+<!-- # Unused Parameters # -->
+@fa: 
 
 
 <!-- ##### FUNCTION gda_column_get_unique_key ##### -->
@@ -230,8 +271,10 @@ Management of #GdaDataModel column attributes
 
 </para>
 
-@fa: 
+@column: 
 @Returns: 
+<!-- # Unused Parameters # -->
+@fa: 
 
 
 <!-- ##### FUNCTION gda_column_set_unique_key ##### -->
@@ -239,8 +282,10 @@ Management of #GdaDataModel column attributes
 
 </para>
 
-@fa: 
+@column: 
 @uk: 
+<!-- # Unused Parameters # -->
+@fa: 
 
 
 <!-- ##### FUNCTION gda_column_get_references ##### -->
@@ -248,8 +293,10 @@ Management of #GdaDataModel column attributes
 
 </para>
 
-@fa: 
+@column: 
 @Returns: 
+<!-- # Unused Parameters # -->
+@fa: 
 
 
 <!-- ##### FUNCTION gda_column_set_references ##### -->
@@ -257,8 +304,10 @@ Management of #GdaDataModel column attributes
 
 </para>
 
-@fa: 
+@column: 
 @ref: 
+<!-- # Unused Parameters # -->
+@fa: 
 
 
 <!-- ##### FUNCTION gda_column_get_auto_increment ##### -->
@@ -266,8 +315,10 @@ Management of #GdaDataModel column attributes
 
 </para>
 
-@fa: 
+@column: 
 @Returns: 
+<!-- # Unused Parameters # -->
+@fa: 
 
 
 <!-- ##### FUNCTION gda_column_set_auto_increment ##### -->
@@ -275,8 +326,10 @@ Management of #GdaDataModel column attributes
 
 </para>
 
-@fa: 
+@column: 
 @is_auto: 
+<!-- # Unused Parameters # -->
+@fa: 
 
 
 <!-- ##### FUNCTION gda_column_get_position ##### -->
@@ -284,8 +337,10 @@ Management of #GdaDataModel column attributes
 
 </para>
 
-@fa: 
+@column: 
 @Returns: 
+<!-- # Unused Parameters # -->
+@fa: 
 
 
 <!-- ##### FUNCTION gda_column_set_position ##### -->
@@ -293,8 +348,10 @@ Management of #GdaDataModel column attributes
 
 </para>
 
-@fa: 
+@column: 
 @position: 
+<!-- # Unused Parameters # -->
+@fa: 
 
 
 <!-- ##### FUNCTION gda_column_get_default_value ##### -->
@@ -302,8 +359,10 @@ Management of #GdaDataModel column attributes
 
 </para>
 
-@fa: 
+@column: 
 @Returns: 
+<!-- # Unused Parameters # -->
+@fa: 
 
 
 <!-- ##### FUNCTION gda_column_set_default_value ##### -->
@@ -311,7 +370,9 @@ Management of #GdaDataModel column attributes
 
 </para>
 
-@fa: 
+@column: 
 @default_value: 
+<!-- # Unused Parameters # -->
+@fa: 
 
 

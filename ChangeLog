@@ -1,4 +1,8 @@
-2005-03-19 Alan Knowles<alan@akbkhome.com>
+2005-03-21  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	Released 1.3.1.
+
+2005-03-19  Alan Knowles <alan@akbkhome.com>
 
 	* libgda/gda-connection.c
 	* libgda/gda-connection.h
@@ -16,8 +20,6 @@
 	  gda_data_model_update_row will add slashes to 's, so if you
 	  where already doing this, you may end up with double slashes.
 	- It only works with postgres and mysql at present. 
-
-
 
 2005-03-18  Bas Driessen <bas.driessen@xobas.com>
 
@@ -128,7 +130,8 @@
 
 2005-02-11  Vivien Malerba <malerba@gnome-db.org>
 	
-	* libgda/gda-row.[ch]: added gda_row_set_is_default() and gda_row_get_is_default()
+	* libgda/gda-row.[ch]: added gda_row_set_is_default() and
+	gda_row_get_is_default()
 
 2005-02-10  Álvaro Peña  <alvaropg@telefonica.net>
 

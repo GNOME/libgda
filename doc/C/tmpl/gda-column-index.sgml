@@ -19,16 +19,11 @@ Management of #GdaDataModel column index attributes
 
 </para>
 
-@column_name: 
-@defined_size: 
-@sorting: 
-@references: 
 
-<!-- ##### MACRO GDA_TYPE_DATA_MODEL_COLUMN_INDEX_ATTRIBUTES ##### -->
+<!-- ##### STRUCT GdaColumnIndex ##### -->
 <para>
 
 </para>
-
 
 
 <!-- ##### FUNCTION gda_column_index_get_type ##### -->
