@@ -126,8 +126,8 @@
       </para>
       <para>
         This universality is obtained through the use of
-        &CORBA; as the mechanism for communication between
-        the different components in the architecture.
+        an easily extensible plugin system as the mechanism for
+	communication between the different components in the architecture.
       </para>
     </abstract>
     <legalnotice id="legalnotice">
@@ -173,30 +173,19 @@
       to the database for special tasks.
     </para>
     <para>
-      GNOME Data Access (&GDA;) is defined as a set of &CORBA; &IDL; interfaces.
+      GNOME Data Access (&GDA;) is defined as a set of plugin interfaces.
       The level of abstraction provided by &GDA; makes it possible to access
-      any kind of data source, provided that a &CORBA; server implementing 
-      those &IDL; interfaces and accessing this particular data source is
+      any kind of data source, provided that a plugin implementing 
+      those interfaces and accessing this particular data source is
       written.
     </para>
     <para>
-      &LIBGDA; is an implementation of the &GDA; &CORBA; interfaces, using
-      <ulink url="http://www.labs.redhat.com/orbit/" type="http">ORBit</ulink>
-      as the &CORBA; implementation. So, in theory, it would be possible to 
-      implement &LIBGDA; for another &CORBA; &ORB; or operating system, 
-      provided that &CORBA; support is present on that system.
-    </para>
-    <para>
-      It offers a wrapper around the &CORBA; internals, thus making it easier
-      for programmers to make use of all the power provided by &CORBA; without
-      even knowing about it. It comes along with several libraries, for both
-      clients and servers, as a C implementation of this wrapper. This level of
+      It offers a wrapper around the database internals, thus making it easier
+      for programmers to make use of all the power provided by many RDBMS without
+      even knowing about it. It comes along with a library, for both
+      clients and servers, as a C implementation of this architecture. This level of
       abstraction would make possible to, at a later time, change all the
-      internals without having to modify applications using the libraries, as
-      well as, most importantly, keeps application developers away from the
-      continous changes in the different &CORBA;-related &API;s being used,
-      such as <systemitem class="resource">Bonobo</systemitem>,
-      <systemitem class="resource">GConf</systemitem>...
+      internals without having to modify applications using the libraries.
     </para>
     <para>
       Along with these libraries (and associated header files and language 
@@ -208,9 +197,7 @@
       &LIBGDA; is implemented for <systemitem class="osname">UNIX
       </systemitem>-like operating systems (including <systemitem 
       class="osname">Linux</systemitem>), and does not depend on other 
-      libraries apart from <systemitem class="resource">ORBit</systemitem>, 
-      <systemitem class="resource">GConf</systemitem>, 
-      <systemitem class="resource">Bonobo</systemitem> and 
+      libraries apart from  <systemitem class="resource">libxml2</systemitem> and 
       <systemitem class="resource">Glib</systemitem>, which makes it a very
       lightweight system also ideal for applications to be run on 
       hardware-limited systems. It was once part of the &GNOMEDB; project, and
@@ -224,63 +211,22 @@
     <title>&LIBGDA; architecture</title>
     <para>
       &LIBGDA; is composed of three independant layers. The lower level is
-      covered by the &GDA; providers, which are &CORBA; servers whose task is
+      covered by the &GDA; providers, which are plugins whose task is
       to map the <acronym>RDBMS</acronym>-specific &API; to the &GDA; model.
-      That is, they are &CORBA; objects implementing the &GDA; &CORBA;
-      interfaces.
+      That is, they are objects implementing the &GDA; interfaces.
     </para>
     <para>
-      Then, in a midlle layer, are the client libraries: a &CORBA; client
-      library, which hides all the &CORBA; complexity to client applications,
+      Then, in a midlle layer, are the client libraries: an easy-to-use and
+      full featured library which offers access to all the architecure,
       also including several utility functions to help you on the development
-      of applications based on &GDA;.
+      of applications based on &GDA;. This library, although targeted to client
+      applications, also includes a set of helper classes and functions to help
+      in the addition of new providers to the &LIBGDA; architecture.
     </para>
     <para>
       Finally, at the upper level sit all the client applications provided in
       the suite, as well as any application that may make use of the client
       libraries.
-    </para>
-    <para>
-      &LIBGDA; is &CORBA; based and uses
-      <ulink url="http://www.labs.redhat.com/orbit/" type="http">ORBit</ulink>
-      as the &CORBA; implementation. Basically the system provides an &IDL;
-      file as the interface to the client. For every different data source type
-      (&ODBC;,&SYBASE;, &INFOR;, &MYSQL;, &LDAP;, ...) a server must be
-       written. This server ideally is a shared library which is linked with a
-      small driver program to form a standalone &CORBA; server. The shared
-      driver approach makes it possible to use the server as a library for the
-      client, reducing round trip time (no sockets and context switches
-      required).
-    </para>
-    <para>
-      The advantage of using a &CORBA; server is, that the
-      server may run on another machine, balancing the load. This is possible
-      because <systemitem class="resource">ORBit</systemitem> is small and
-      fast. You can use the same server from a &CORBA; aware scripting language
-      and you might do tracing and transaction control in the server, without
-      needing to change the client. The drawback is that if such a provider
-      crashes all the clients are disconnected from the database. To overcome
-      this problem it is possible for each client to request a new copy of the 
-      provider (although the client &API; doesn't yet provide this flag).
-    </para>
-    <para>
-      The other type of providers are <emphasis>shared library</emphasis>
-      providers. These providers are linked to the client when the client
-      requests something from the provider. The disadvantage is that the
-      server is hosted on the same machine as the client. But a server crash
-      only affects one client. The startup cost is comparable to an executable
-      provider. The big advantage of this sort of providers is that debugging
-      the provider code is simpler, since you must not attach &GDA; to a 
-      running provider and you also can catch errors during server
-      initialization.
-    </para>
-    <para>
-      Per default every &GDA; provider is available as an
-      executable and as a shared library. The build process and the conventions
-      used to implement the provider make sure that the executable and the
-      shared library are made and installed. Thus, &GDA;
-      providers are implemented in shared libraries, which are then linked with
-      a small program which just acts as a driver for the shared library.
     </para>
   </chapter>
   
@@ -293,7 +239,7 @@
         </ulink> and <ulink url="http://www.debian.org" type="http">Debian
         </ulink> packages are available, so you shouldn't have any problem
         installing it. For a standard installation, there is are no further
-        steps, but, you'd better know all the &CORBA; and &GDA; configuration
+        steps, but, you'd better know configuration
         options, just in case you come across a non-standard installation, or 
         in case of problems during a standard installation.
       </para>
@@ -382,6 +328,12 @@
             are installed
           </para>
         </listitem>
+	<listitem>
+          <para>
+            <userinput>--with-sqlite=&lt;directory&gt;</userinput>: Specify
+            directory where the SQLite libraries are installed
+          </para>
+        </listitem>
       </itemizedlist>
       <para>
         Providers are not installed by default, so you must specifically add
@@ -438,14 +390,8 @@
           local installation, once you have installed the &GDA; provider (by 
           compiling it or by installing its &RPM; or Debian package), the 
           provider is visible in your machine. This is because the provider
-          package provides an <filename>.oafinfo</filename> file in which it
-          specifies the location and other information about itself.
-        </para>
-        <para>
-          If, on the orher hand, your provider is on another machine, you'll 
-          have to create the <filename>.server</filename> yourself. For this,
-          you'll need to check the <systemitem class="resource">OAF
-          </systemitem> installation documentation.
+          installs itself in a well known location that makes &LIBGDA;
+	  itself know about the new provider.
         </para>
         <para>
           Then, the next step is to configure the data sources you want
@@ -491,17 +437,16 @@
             </areaspec>
 	    <programlisting>
 	      [sales]
-	      Provider=OAFIID:GNOME_Database_Provider_MySQL_ComponentFactory
+	      Provider=MySQL
               DSN=DATABASE=test;HOST=localhost;PORT=1111
 	      Description=MySQL Test Database in native mode
-	      Configurator=None
 	    </programlisting>
 	    <calloutlist>
 	      <callout arearefs="provider">
 		<para>
     		  The provider for this database is the gda-mysql
 		  provider. The value of this entry is used as the
-		  object ID for the OAF activation.
+		  object ID for the plugin activation.
 		</para>
 	      </callout>
 	      <callout arearefs="dsn">
@@ -540,7 +485,8 @@
             a string of the form "FILENAME=/directory/for/the/database". When
             you	first connect to the new data source, the &GDA; default 
             provider will create the database, in the directory you specified
-            in the &DSN; string, if it does not exist.
+            in the &DSN; string, if it does not exist. This default provider
+	    uses XML as the format for that file.
 	  </para>
 	</sect3>
 	<sect3 id="installation-provider-odbc">
@@ -877,42 +823,110 @@
     <sect1 id="libgda-provider-recordset">
       <title>The recordset class</title>
       <para>
-      You have to extend one of &GDADATAMODEL;, &GDADATAMODELARRAY; or
-      &GDADATAMODELHASH;. The easiest to extend are the last two. They both
-      derive from &GDADATAMODEL;.
+	You have to extend one of &GDADATAMODEL;, &GDADATAMODELARRAY; or
+	&GDADATAMODELHASH;. The easiest to extend are the last two. They both
+	derive from &GDADATAMODEL;.
       </para>
       <para>
-      Here is the list of methods that you have to override. If you use
-      &GDADATAMODELHASH;, you don't need to override 
-      append_row.
+	Here is the list of methods that you have to override. If you use
+	&GDADATAMODELHASH;, you don't need to override 
+	append_row.
       </para>
       <itemizedlist>
 	<listitem>
-	<para>get_n_rows</para>
+	  <para>get_n_rows</para>
+	  <para>
+	    Returns the number of rows in the data model.
+	  </para>
 	</listitem>
 	<listitem>
-	<para>get_n_columns</para>
+	  <para>get_n_columns</para>
+	  <para>
+	    Returns the number of columns in the data model. If the provider
+	    can know in advance the number of rows the database server has
+	    returned, this function should just return that, and not
+	    retrieve any data. On the other hand, if it can't it should
+	    either retrieve all data, or move to the last record in the
+	    recordset and retrieve the row number, if the underlying
+	    data source allows it.
+	  </para>
 	</listitem>
 	<listitem>
-	<para>describe_column</para>
+	  <para>describe_column</para>
+	  <para>
+	    Returns information about a given column, in the form of
+	    a <xref linkend="GdaFieldAttributes">GdaFieldAttributes</xref>.
+	  </para>
 	</listitem>
 	<listitem>
-	<para>get_row</para>
+	  <para>get_row</para>
+	  <para>
+	    Retrieves a row from the data model. This function is very important
+	    for the implementation of editable data models. What this function
+	    returns is a <xref linkend"GdaRow">GdaRow</xref>, which providers
+	    should uniquely identify (via <xref linkend="gda-row-set-id">gda_row_set_id</xref>).
+	    This is needed so that later on, client applications can use the same
+	    <xref linkend="GdaRow">GdaRow</xref> returned by this method in
+	    the <function>update_row</function> and <function>remove_row</function>
+	    methods.
+	  </para>
 	</listitem>
 	<listitem>
-	<para>get_value_at</para>
+	  <para>get_value_at</para>
+	  <para>
+	    Returns the value stored in a given cell of the data model.
+	  </para>
 	</listitem>
 	<listitem>
-	<para>is_editable</para>
+	  <para>is_editable</para>
+	  <para>
+	    Checks whether the data model can be modified or not. If the provider
+	    supports the edition of data models, it should return TRUE in this
+	    function. If it doesn't (for instance, because it can't uniquely identify
+	    rows in the data model), it should return FALSE.
+	  </para>
+	  <para>
+	    Before a data model can be edited, client applications must call the
+	    <xref linkend="gda-data-model-begin-edit">gda_data_model_begin_edit</xref>
+	    function, which emits the "begin_edit" signal on the
+	    <xref linkend="GdaDataModel">GdaDataModel</xref> class. So, providers
+	    should connect to this signal to be informed when the data model
+	    starts being editing. In the callback connected to that signal,
+	    it should start a transaction, for instance.
+	  </para>
+	  <para>
+	    In a similar way, there are 2 other signals that provider's data model
+	    implementations should pay attention to. Those are "end_edit" and
+	    "cancel_edit". In "end_edit", if all went ok, providers should
+	    COMMIT the transaction started in "begin_edit". In "cancel_edit",
+	    a ROLLBACK should be made.
+	  </para>
 	</listitem>
 	<listitem>
-	<para>append_row</para>
+	  <para>append_row</para>
+	  <para>
+	    Appends a row to the data model. Usually, this means, in the provider,
+	    executing an INSERT SQL command on the table being read by the
+	    data model.
+	  </para>
 	</listitem>
 	<listitem>
-	<para>update_row</para>
+	  <para>update_row</para>
+	  <para>
+	    Updates an existing row in the data model. The row should have been
+	    uniquely identified in the provider code, as explained for the
+	    get_row method.
+	  </para>
 	</listitem>
 	<listitem>
-	<para>remove_row</para>
+	  <para>remove_row</para>
+	  <para>
+	    Removes a row from the data model. Usually, this means, in the provider,
+	    executing a DELETE SQL command on the table being read by the data model.
+	    The row should have been
+	    uniquely identified in the provider code, as explained for the
+	    get_row method.
+	  </para>
 	</listitem>
       </itemizedlist>
     </sect1>
