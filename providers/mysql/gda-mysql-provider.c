@@ -44,6 +44,16 @@ static GList *gda_mysql_provider_execute_command (GdaServerProvider *provider,
 						  GdaServerConnection *cnc,
 						  GdaCommand *cmd,
 						  GdaParameterList *params);
+static gboolean gda_mysql_provider_begin_transaction (GdaServerProvider *provider,
+						      GdaServerConnection *cnc,
+						      const gchar *trans_id);
+static gboolean gda_mysql_provider_commit_transaction (GdaServerProvider *provider,
+						       GdaServerConnection *cnc,
+						       const gchar *trans_id);
+
+static gboolean gda_mysql_provider_rollback_transaction (GdaServerProvider *provider,
+							 GdaServerConnection *cnc,
+							 const gchar *trans_id);
 
 static GObjectClass *parent_class = NULL;
 
@@ -63,9 +73,9 @@ gda_mysql_provider_class_init (GdaMysqlProviderClass *klass)
 	provider_class->open_connection = gda_mysql_provider_open_connection;
 	provider_class->close_connection = gda_mysql_provider_close_connection;
 	provider_class->execute_command = gda_mysql_provider_execute_command;
-	provider_class->begin_transaction = NULL;
-	provider_class->commit_transaction = NULL;
-	provider_class->rollback_transaction = NULL;
+	provider_class->begin_transaction = gda_mysql_provider_begin_transaction;
+	provider_class->commit_transaction = gda_mysql_provider_commit_transaction;
+	provider_class->rollback_transaction = gda_mysql_provider_rollback_transaction;
 }
 
 static void
@@ -283,4 +293,91 @@ gda_mysql_provider_execute_command (GdaServerProvider *provider,
 	}
 
 	return reclist;
+}
+
+/* begin_transaction handler for the GdaMysqlProvider class */
+static gboolean
+gda_mysql_provider_begin_transaction (GdaServerProvider *provider,
+				      GdaServerConnection *cnc,
+				      const gchar *trans_id)
+{
+	MYSQL *mysql;
+	gint rc;
+	GdaMysqlProvider *myprv = (GdaMysqlProvider *) provider;
+
+	g_return_val_if_fail (GDA_IS_MYSQL_PROVIDER (myprv), FALSE);
+	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), FALSE);
+
+	mysql = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_MYSQL_HANDLE);
+	if (!mysql) {
+		gda_server_connection_add_error_string (cnc, _("Invalid MYSQL handle"));
+		return FALSE;
+	}
+
+	rc = mysql_real_query (mysql, "BEGIN", strlen ("BEGIN"));
+	if (rc != 0) {
+		gda_server_connection_add_error (
+			cnc, gda_mysql_make_error (mysql));
+		return FALSE;
+	}
+
+	return TRUE;
+}
+
+/* commit_transaction handler for the GdaMysqlProvider class */
+static gboolean
+gda_mysql_provider_commit_transaction (GdaServerProvider *provider,
+				       GdaServerConnection *cnc,
+				       const gchar *trans_id)
+{
+	MYSQL *mysql;
+	gint rc;
+	GdaMysqlProvider *myprv = (GdaMysqlProvider *) provider;
+
+	g_return_val_if_fail (GDA_IS_MYSQL_PROVIDER (myprv), FALSE);
+	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), FALSE);
+
+	mysql = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_MYSQL_HANDLE);
+	if (!mysql) {
+		gda_server_connection_add_error_string (cnc, _("Invalid MYSQL handle"));
+		return FALSE;
+	}
+
+	rc = mysql_real_query (mysql, "COMMIT", strlen ("COMMIT"));
+	if (rc != 0) {
+		gda_server_connection_add_error (
+			cnc, gda_mysql_make_error (mysql));
+		return FALSE;
+	}
+
+	return TRUE;
+}
+
+/* rollback_transaction handler for the GdaMysqlProvider class */
+static gboolean
+gda_mysql_provider_rollback_transaction (GdaServerProvider *provider,
+					 GdaServerConnection *cnc,
+					 const gchar *trans_id)
+{
+	MYSQL *mysql;
+	gint rc;
+	GdaMysqlProvider *myprv = (GdaMysqlProvider *) provider;
+
+	g_return_val_if_fail (GDA_IS_MYSQL_PROVIDER (myprv), FALSE);
+	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), FALSE);
+
+	mysql = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_MYSQL_HANDLE);
+	if (!mysql) {
+		gda_server_connection_add_error_string (cnc, _("Invalid MYSQL handle"));
+		return FALSE;
+	}
+
+	rc = mysql_real_query (mysql, "ROLLBACK", strlen ("ROLLBACK"));
+	if (rc != 0) {
+		gda_server_connection_add_error (
+			cnc, gda_mysql_make_error (mysql));
+		return FALSE;
+	}
+
+	return TRUE;
 }
