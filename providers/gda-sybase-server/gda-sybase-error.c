@@ -22,6 +22,9 @@
  */
 
 // $Log$
+// Revision 1.2  2000/12/14 13:10:01  bansz
+// Typo fix
+//
 // Revision 1.1.1.1  2000/08/10 09:32:38  rodrigo
 // First version of libgda separated from GNOME-DB
 //
@@ -415,7 +418,7 @@ gda_sybase_messages_handle_csmsg(Gda_ServerError      *error,
   if (msgcnt > 1) {
     gda_log_message(_("Fetching %d cslib messages"), msgcnt);
   } else {
-    gda_log_message(_("Fetchong %d cslib message"), msgcnt);
+    gda_log_message(_("Fetching %d cslib message"), msgcnt);
   } 
 #endif
 	
