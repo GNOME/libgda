@@ -21,6 +21,7 @@
  */
 
 #include <glib/gdataset.h>
+#include <glib-object.h>
 #include <libsql/sql_parser.h>
 #include <libgda/gda-intl.h>
 #include <libgda/gda-log.h>
@@ -32,8 +33,10 @@
 
 struct _GdaSelectPrivate {
 	GList *field_descriptions;
-	GList *source_models;
+	GHashTable *source_models;
 	gchar *sql;
+	gboolean changed;
+	gboolean run_result;
 };
 
 static void gda_select_class_init (GdaSelectClass *klass);
@@ -45,6 +48,14 @@ static GObjectClass *parent_class = NULL;
 /*
  * Private functions
  */
+
+static void
+data_model_changed_cb (GdaDataModel *model, gpointer user_data)
+{
+	GdaSelect *sel = GDA_SELECT (user_data);
+
+	sel->priv->changed = TRUE;
+}
 
 /*
  * GdaSelect class implementation
@@ -127,8 +138,19 @@ gda_select_init (GdaSelect *sel, GdaSelectClass *klass)
 	/* allocate internal structure */
 	sel->priv = g_new0 (GdaSelectPrivate, 1);
 	sel->priv->field_descriptions = NULL;
-	sel->priv->source_models = NULL;
+	sel->priv->source_models = g_hash_table_new (g_str_hash, g_str_equal);
 	sel->priv->sql = NULL;
+	sel->priv->changed = FALSE;
+	sel->priv->run_result = TRUE;
+}
+
+static void
+free_source_model (gpointer key, gpointer value, GdaSelect *sel)
+{
+	g_signal_handlers_disconnect_by_func (G_OBJECT (value), data_model_changed_cb, sel);
+
+	g_free (key);
+	g_object_unref (G_OBJECT (value));
 }
 
 static void
@@ -146,11 +168,9 @@ gda_select_finalize (GObject *object)
 		sel->priv->field_descriptions = NULL;
 	}
 
-	if (sel->priv->source_models) {
-		g_list_foreach (sel->priv->source_models, (GFunc) g_object_unref, NULL);
-		g_list_free (sel->priv->source_models);
-		sel->priv->source_models = NULL;
-	}
+	g_hash_table_foreach (sel->priv->source_models, (GHFunc) free_source_model, sel);
+	g_hash_table_destroy (sel->priv->source_models);
+	sel->priv->source_models = NULL;
 
 	if (sel->priv->sql) {
 		g_free (sel->priv->sql);
@@ -209,6 +229,7 @@ gda_select_new (void)
 /**
  * gda_select_add_source
  * @sel: a #GdaSelect object.
+ * @name: name to identify the data model (usually a table name).
  * @source: a #GdaDataModel from which to get data.
  *
  * Add a data model as a source of data for the #GdaSelect object. When
@@ -216,13 +237,27 @@ gda_select_new (void)
  * and get the required data from the source data models.
  */
 void
-gda_select_add_source (GdaSelect *sel, const GdaDataModel *source)
+gda_select_add_source (GdaSelect *sel, const gchar *name, const GdaDataModel *source)
 {
+	gpointer key, value;
+
 	g_return_if_fail (GDA_IS_SELECT (sel));
 	g_return_if_fail (GDA_IS_DATA_MODEL (source));
 
+	/* search for a data model with the same name */
+	if (g_hash_table_lookup_extended (sel->priv->source_models, name, &key, &value)) {
+		g_hash_table_remove (sel->priv->source_models, name);
+
+		free_source_model (key, value, sel);
+	}
+
+	g_signal_connect (G_OBJECT (source), "changed",
+			  G_CALLBACK (data_model_changed_cb), sel);
+
 	g_object_ref (G_OBJECT (source));
-	sel->priv->source_models = g_list_append (sel->priv->source_models, source);
+	g_hash_table_insert (sel->priv->source_models, g_strdup (name), source);
+
+	sel->priv->changed = TRUE;
 }
 
 /**
@@ -242,6 +277,8 @@ gda_select_set_sql (GdaSelect *sel, const gchar *sql)
 	if (sel->priv->sql)
 		g_free (sel->priv->sql);
 	sel->priv->sql = g_strdup (sql);
+
+	sel->priv->changed = TRUE;
 }
 
 /**
@@ -262,10 +299,32 @@ gda_select_set_sql (GdaSelect *sel, const gchar *sql)
 gboolean
 gda_select_run (GdaSelect *sel)
 {
+	sql_statement *sqlst;
+
 	g_return_val_if_fail (GDA_IS_SELECT (sel), FALSE);
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (sel->priv->source_models), FALSE);
 
+	if (!sel->priv->changed)
+		return sel->priv->run_result;
+
 	gda_data_model_array_clear (GDA_DATA_MODEL_ARRAY (sel));
+
+	/* parse the SQL command */
+	sqlst = sql_parse (sel->priv->sql);
+	if (!sqlst) {
+		gda_log_error (_("Could not parse SQL string '%s'"), sel->priv->sql);
+		return FALSE;
+	}
+	if (sqlst->type != SQL_select) {
+		gda_log_error (_("SQL command is not a SELECT (is '%s'"), sel->priv->sql);
+		sql_statement_destroy (sqlst);
+		return FALSE;
+	}
+
 	/* FIXME */
-	return NULL;
+
+	sql_statement_destroy (sqlst);
+	sel->priv->changed = FALSE;
+
+	return sel->priv->run_result;
 }

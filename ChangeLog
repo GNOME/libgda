@@ -1,5 +1,16 @@
 2002-10-10  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* libgda/gda-select.c: changed the list of source data models to be
+	a hash table, for better searching. Added 'changed' member to keep
+	track of changes in the data.
+	(free_source_model): new function to free the hash table's items.
+	(gda_select_add_source): added 'name' parameter so that data models
+	are uniquely identified. Set the 'changed' member when actually making
+	a change.
+	(gda_select_set_sql): Set the 'changed' member.
+
+2002-10-10  Rodrigo Moya <rodrigo@gnome-db.org>
+
 	* libgda/gda-select.[ch] (gda_select_add_source): new function.
 
 	* libgda/gda-client.[ch]: added support for using it as a connection
