@@ -2,7 +2,7 @@
  * Copyright (C) 1998-2002 The GNOME Foundation.
  *
  * AUTHORS:
- *	Santi Camps <scamps@users.sourceforge.net>
+ *	Santi Camps <santi@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -26,6 +26,8 @@
 #include <glib-object.h>
 #include <libgda-report/gda-report-item.h>
 #include <libgda-report/gda-report-types.h>
+#include <libgda-report/gda-report-item-reportheader.h>
+#include <libgda-report/gda-report-item-reportfooter.h>
 
 
 G_BEGIN_DECLS
@@ -54,148 +56,155 @@ GdaReportItem *gda_report_item_report_new (GdaReportValid *valid);
 
 GdaReportItem *gda_report_item_report_new_from_dom (xmlNodePtr node);
 
-gboolean gda_report_item_report_set_reportstyle (GdaReportItemReport *item, 
+gboolean gda_report_item_report_set_reportheader (GdaReportItem *report,
+						  GdaReportItem *header);
+
+GdaReportItem *gda_report_item_report_get_reportheader (GdaReportItem *item);
+
+gboolean gda_report_item_report_set_reportfooter (GdaReportItem *report,
+						  GdaReportItem *footer);
+
+GdaReportItem *gda_report_item_report_get_reportfooter (GdaReportItem *item);
+
+gboolean gda_report_item_report_set_reportstyle (GdaReportItem *item, 
 						const gchar* value);
 
-GdaReportItem *gda_report_item_report_get_reportheader (GdaReportItemReport *item);
+gchar *gda_report_item_report_get_reportstyle (GdaReportItem *item);
 
-gchar *gda_report_item_report_get_reportstyle (GdaReportItemReport *item);
-
-gboolean gda_report_item_report_set_pagesize (GdaReportItemReport *item,
+gboolean gda_report_item_report_set_pagesize (GdaReportItem *item,
 					      const gchar *value);
 
-gchar *gda_report_item_report_get_pagesize (GdaReportItemReport *item);
+gchar *gda_report_item_report_get_pagesize (GdaReportItem *item);
 
-gboolean gda_report_item_report_set_orientation (GdaReportItemReport *item,
+gboolean gda_report_item_report_set_orientation (GdaReportItem *item,
 				                 const gchar *value);
 						 
-gchar *gda_report_item_report_get_orientation (GdaReportItemReport *item);
+gchar *gda_report_item_report_get_orientation (GdaReportItem *item);
 						 
-gboolean gda_report_item_report_set_units (GdaReportItemReport *item,
+gboolean gda_report_item_report_set_units (GdaReportItem *item,
 				           const gchar *value);
 					   
-gchar *gda_report_item_report_get_units (GdaReportItemReport *item);
+gchar *gda_report_item_report_get_units (GdaReportItem *item);
 
-gboolean gda_report_item_report_set_topmargin (GdaReportItemReport *item,
+gboolean gda_report_item_report_set_topmargin (GdaReportItem *item,
 				               GdaReportNumber *number);
 
-GdaReportNumber *gda_report_item_report_get_topmargin (GdaReportItemReport *item);
+GdaReportNumber *gda_report_item_report_get_topmargin (GdaReportItem *item);
 
-gboolean gda_report_item_report_set_bottommargin (GdaReportItemReport *item,
+gboolean gda_report_item_report_set_bottommargin (GdaReportItem *item,
 				                  GdaReportNumber *number);
 
-GdaReportNumber *gda_report_item_report_get_bottommargin (GdaReportItemReport *item);
+GdaReportNumber *gda_report_item_report_get_bottommargin (GdaReportItem *item);
 
-gboolean gda_report_item_report_set_leftmargin (GdaReportItemReport *item,
+gboolean gda_report_item_report_set_leftmargin (GdaReportItem *item,
 				                GdaReportNumber *number);
 
-GdaReportNumber *gda_report_item_report_get_leftmargin (GdaReportItemReport *item);
+GdaReportNumber *gda_report_item_report_get_leftmargin (GdaReportItem *item);
 
-gboolean gda_report_item_report_set_rightmargin (GdaReportItemReport *item,
+gboolean gda_report_item_report_set_rightmargin (GdaReportItem *item,
 				                 GdaReportNumber *number);
 
-GdaReportNumber *gda_report_item_report_get_rightmargin (GdaReportItemReport *item);
+GdaReportNumber *gda_report_item_report_get_rightmargin (GdaReportItem *item);
 
-gboolean gda_report_item_report_set_bgcolor (GdaReportItemReport *item,
+gboolean gda_report_item_report_set_bgcolor (GdaReportItem *item,
 	 			             GdaReportColor *color);
 
-GdaReportColor *gda_report_item_report_get_bgcolor (GdaReportItemReport *item);
+GdaReportColor *gda_report_item_report_get_bgcolor (GdaReportItem *item);
 
-gboolean gda_report_item_report_set_fgcolor (GdaReportItemReport *item,
+gboolean gda_report_item_report_set_fgcolor (GdaReportItem *item,
 	 			             GdaReportColor *color);
 
-GdaReportColor *gda_report_item_report_get_fgcolor (GdaReportItemReport *item);
+GdaReportColor *gda_report_item_report_get_fgcolor (GdaReportItem *item);
 
-gboolean gda_report_item_report_set_bordercolor (GdaReportItemReport *item,
+gboolean gda_report_item_report_set_bordercolor (GdaReportItem *item,
 	 			                 GdaReportColor *color);
 
-GdaReportColor *gda_report_item_report_get_bordercolor (GdaReportItemReport *item);
+GdaReportColor *gda_report_item_report_get_bordercolor (GdaReportItem *item);
 
-gboolean gda_report_item_report_set_borderwidth (GdaReportItemReport *item,
+gboolean gda_report_item_report_set_borderwidth (GdaReportItem *item,
 						 GdaReportNumber *number);
 						 
-GdaReportNumber *gda_report_item_report_get_borderwidth (GdaReportItemReport *item);
+GdaReportNumber *gda_report_item_report_get_borderwidth (GdaReportItem *item);
 
-gboolean gda_report_item_report_set_borderstyle (GdaReportItemReport *item,
+gboolean gda_report_item_report_set_borderstyle (GdaReportItem *item,
 						 const gchar *value);
 
-gchar * gda_report_item_report_get_borderstyle (GdaReportItemReport *item);
+gchar * gda_report_item_report_get_borderstyle (GdaReportItem *item);
 
-gboolean gda_report_item_report_set_fontfamily (GdaReportItemReport *item,
+gboolean gda_report_item_report_set_fontfamily (GdaReportItem *item,
 					        const gchar *value);
 
-gchar *gda_report_item_report_get_fontfamily (GdaReportItemReport *item);
+gchar *gda_report_item_report_get_fontfamily (GdaReportItem *item);
 
-gboolean gda_report_item_report_set_fontsize (GdaReportItemReport *item,
+gboolean gda_report_item_report_set_fontsize (GdaReportItem *item,
 					      GdaReportNumber *number);
 					      
-GdaReportNumber *gda_report_item_report_get_fontsize (GdaReportItemReport *item);
+GdaReportNumber *gda_report_item_report_get_fontsize (GdaReportItem *item);
 					      
-gboolean gda_report_item_report_set_fontweight (GdaReportItemReport *item,
+gboolean gda_report_item_report_set_fontweight (GdaReportItem *item,
 					        const gchar *value);
 
-gchar *gda_report_item_report_get_fontweight (GdaReportItemReport *item);
+gchar *gda_report_item_report_get_fontweight (GdaReportItem *item);
 
-gboolean gda_report_item_report_set_fontitalic (GdaReportItemReport *item,
+gboolean gda_report_item_report_set_fontitalic (GdaReportItem *item,
 					        const gchar *value);
 						
-gchar *gda_report_item_report_get_fontitalic (GdaReportItemReport *item);
+gchar *gda_report_item_report_get_fontitalic (GdaReportItem *item);
 						
-gboolean gda_report_item_report_set_halignment (GdaReportItemReport *item,
+gboolean gda_report_item_report_set_halignment (GdaReportItem *item,
 					        const gchar *value);
 						
-gchar *gda_report_item_report_get_halignment (GdaReportItemReport *item);
+gchar *gda_report_item_report_get_halignment (GdaReportItem *item);
 
-gboolean gda_report_item_report_set_valignment (GdaReportItemReport *item,
+gboolean gda_report_item_report_set_valignment (GdaReportItem *item,
 					        const gchar *value);
 						
-gchar *gda_report_item_report_get_valignment (GdaReportItemReport *item);
+gchar *gda_report_item_report_get_valignment (GdaReportItem *item);
 
-gboolean gda_report_item_report_set_wordwrap (GdaReportItemReport *item,
+gboolean gda_report_item_report_set_wordwrap (GdaReportItem *item,
 					      const gchar *value);
 
-gchar *gda_report_item_report_get_wordwrap (GdaReportItemReport *item);
+gchar *gda_report_item_report_get_wordwrap (GdaReportItem*item);
 
-gboolean gda_report_item_report_set_negvaluecolor (GdaReportItemReport *item,
+gboolean gda_report_item_report_set_negvaluecolor (GdaReportItem *item,
 						   GdaReportColor *color);
 
-GdaReportColor *gda_report_item_report_get_negvaluecolor (GdaReportItemReport *item);
+GdaReportColor *gda_report_item_report_get_negvaluecolor (GdaReportItem *item);
 
-gboolean gda_report_item_report_set_dateformat (GdaReportItemReport *item,
+gboolean gda_report_item_report_set_dateformat (GdaReportItem *item,
 					        const gchar *value);
 						
-gchar *gda_report_item_report_get_dateformat (GdaReportItemReport *item);
+gchar *gda_report_item_report_get_dateformat (GdaReportItem *item);
 
-gboolean gda_report_item_report_set_precision (GdaReportItemReport *item,
+gboolean gda_report_item_report_set_precision (GdaReportItem *item,
 					       GdaReportNumber *number);
 
-GdaReportNumber *gda_report_item_report_get_precision (GdaReportItemReport *item);
+GdaReportNumber *gda_report_item_report_get_precision (GdaReportItem *item);
 
-gboolean gda_report_item_report_set_currency (GdaReportItemReport *item,
+gboolean gda_report_item_report_set_currency (GdaReportItem *item,
 					      const gchar *value);
 
-gchar *gda_report_item_report_get_currency (GdaReportItemReport *item);
+gchar *gda_report_item_report_get_currency (GdaReportItem *item);
 
-gboolean gda_report_item_report_set_commaseparator (GdaReportItemReport *item,
+gboolean gda_report_item_report_set_commaseparator (GdaReportItem *item,
 						    const gchar *value);
 
-gchar *gda_report_item_report_get_commaseparator (GdaReportItemReport *item);
+gchar *gda_report_item_report_get_commaseparator (GdaReportItem *item);
 
-gboolean gda_report_item_report_set_linewidth (GdaReportItemReport *item,
+gboolean gda_report_item_report_set_linewidth (GdaReportItem *item,
 					       GdaReportNumber *number);
 
-GdaReportNumber *gda_report_item_report_get_linewidth (GdaReportItemReport *item);
+GdaReportNumber *gda_report_item_report_get_linewidth (GdaReportItem *item);
 
-gboolean gda_report_item_report_set_linecolor (GdaReportItemReport *item,
+gboolean gda_report_item_report_set_linecolor (GdaReportItem *item,
 					       GdaReportColor *color);
 
-GdaReportColor *gda_report_item_report_get_linecolor (GdaReportItemReport *item);
+GdaReportColor *gda_report_item_report_get_linecolor (GdaReportItem *item);
 
-gboolean gda_report_item_report_set_linestyle (GdaReportItemReport *item,
+gboolean gda_report_item_report_set_linestyle (GdaReportItem *item,
 					       const gchar *value);
-					       gchar * 
 
-gda_report_item_report_get_linestyle (GdaReportItemReport *item);
+gchar *gda_report_item_report_get_linestyle (GdaReportItem *item);
 
 
 G_END_DECLS

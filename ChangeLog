@@ -1,3 +1,23 @@
+2003-01-18  Santi Camps <santi@gnome-db.org>
+
+	* libgda/configure.in: added libgda/report/testing/Makefile
+	* libgda/report/Makefile.am: added subdir testing
+	* libgda/report/*: 
+	* libgda/report/libgda-report/*: 
+	* libgda/report/testing/*: 
+		Changed my contact e-mail to santi@gnome-db.org
+	* libgda/report/testing/gda-report-test.c: some new tests
+	* libgda/report/libgda-report/Makefile.am: new sources added
+	* libgda/report/libgda-report/gda-report.h: new sources added
+	* libgda/report/libgda-report/gda-report-item.[ch]: new functions to add
+	  sibling items and to replace items
+	* libgda/report/libgda-report/gda-report-item-report.c:
+	  Set and get reportheader and reportfooter 
+	* libgda/report/libgda-report/gda-report-item-reportheader.[ch]:
+	  All attributes implemented
+	* libgda/report/libgda-report/gda-report-item-reportfooter.[ch]:
+	  All attributes implemented
+
 2003-01-17  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* libgda/gda-data-model-array.c (gda_data_model_array_append_row):

@@ -1,4 +1,4 @@
-SUBDIRS = libgda-report
+SUBDIRS = libgda-report testing
 
 DTD_FILES=gda-report.dtd 
 dtddir=$(datadir)/libgda/xml

@@ -3,7 +3,7 @@
  *
  * AUTHORS:
  *	Carlos Perelló Marín <carlos@gnome-db.org>
- *	Santi Camps <scamps@users.sourceforge.net>
+ *	Santi Camps <santi@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as

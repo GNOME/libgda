@@ -2,7 +2,7 @@
  * Copyright (C) 1998-2002 The GNOME Foundation.
  *
  * AUTHORS:
- *	Santi Camps <scamps@users.sourceforge.net>
+ *	Santi Camps <santi@gnome-db.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -29,6 +29,7 @@ void test_2 (void);
 void test_3 (void);
 void test_4 (void);
 void test_5 (void);
+void test_6 (void);
 
 
 int
@@ -42,6 +43,7 @@ main (int argc, char **argv)
 		g_print ("	3 -> Working with numerical attributes\n");
 		g_print ("	4 -> Working with color attributes\n");
 		g_print ("	5 -> Setting a reportheader attribute\n");
+		g_print ("	6 -> Setting new reportheader and reportfooter\n");
 		return 0;
 	}
 	
@@ -51,6 +53,7 @@ main (int argc, char **argv)
 	if (g_ascii_strncasecmp(argv[1], "3", 1) == 0) test_3();
 	if (g_ascii_strncasecmp(argv[1], "4", 1) == 0) test_4();
 	if (g_ascii_strncasecmp(argv[1], "5", 1) == 0) test_5();
+	if (g_ascii_strncasecmp(argv[1], "6", 1) == 0) test_6();
 
 	return 0;
 }
@@ -78,17 +81,17 @@ test_1 (void)
 	if (!gda_report_item_set_attribute (item, "non-valid-attribute", "some-value")) 
 		g_print ("TEST: Error during set\n");
 
-	g_print ("TEST: Current reportstyle is: %s\n", gda_report_item_report_get_reportstyle (GDA_REPORT_ITEM_REPORT(item)));
+	g_print ("TEST: Current reportstyle is: %s\n", gda_report_item_report_get_reportstyle (item));
 
 	g_print ("TEST: Setting reportstyle to non-valid-value\n"); 
-	if (!gda_report_item_report_set_reportstyle (GDA_REPORT_ITEM_REPORT(item), "non-valid-value")) 
+	if (!gda_report_item_report_set_reportstyle (item, "non-valid-value")) 
 		g_print ("TEST: Error during set\n");
 	
 	g_print ("TEST: Setting reportstyle to 'form' \n");
-	if (!gda_report_item_report_set_reportstyle (GDA_REPORT_ITEM_REPORT(item), "form")) 
+	if (!gda_report_item_report_set_reportstyle (item, "form")) 
 		g_print ("TEST: Error during set\n");
 	
-	g_print ("TEST: Current reportstyle is: %s\n", gda_report_item_report_get_reportstyle (GDA_REPORT_ITEM_REPORT(item)));
+	g_print ("TEST: Current reportstyle is: %s\n", gda_report_item_report_get_reportstyle (item));
 
 	g_print ("TEST: Saving results to test-1-result.xml\n");
 	gda_report_document_save_file ("test-1-result.xml", document);
@@ -122,13 +125,13 @@ test_3 (void)
 		return;
 	}
 	
-	g_print ("TEST: Current topmargin is: %s\n", gda_report_types_number_to_value(gda_report_item_report_get_topmargin (GDA_REPORT_ITEM_REPORT(item))));
+	g_print ("TEST: Current topmargin is: %s\n", gda_report_types_number_to_value(gda_report_item_report_get_topmargin (item)));
 
 	g_print ("TEST: Setting topmargin to 4.75\n"); 
-	if (!gda_report_item_report_set_topmargin (GDA_REPORT_ITEM_REPORT(item), gda_report_types_number_new(4.75))) 
+	if (!gda_report_item_report_set_topmargin (item, gda_report_types_number_new(4.75))) 
 		g_print ("TEST: Error during set\n");
 	
-	g_print ("TEST: Current topmargin is: %s\n", gda_report_types_number_to_value(gda_report_item_report_get_topmargin (GDA_REPORT_ITEM_REPORT(item))));
+	g_print ("TEST: Current topmargin is: %s\n", gda_report_types_number_to_value(gda_report_item_report_get_topmargin (item)));
 
 	g_print ("TEST: Saving results to test-3-result.xml\n");
 	gda_report_document_save_file ("test-3-result.xml", document);
@@ -153,15 +156,15 @@ test_4 (void)
 		return;
 	}
 	
-	color = gda_report_item_report_get_bgcolor (GDA_REPORT_ITEM_REPORT(item));
+	color = gda_report_item_report_get_bgcolor (item);
 	g_print ("TEST: Current bgcolor is: %s\n", gda_report_types_color_to_value(color));
 
 	g_print ("TEST: Setting bgcolor to 127 127 127\n"); 
 	color = gda_report_types_color_new (127, 127, 127);
-	if (!gda_report_item_report_set_bgcolor (GDA_REPORT_ITEM_REPORT(item), color)) 
+	if (!gda_report_item_report_set_bgcolor (item, color)) 
 		g_print ("TEST: Error during set\n");
 	
-	color = gda_report_item_report_get_bgcolor (GDA_REPORT_ITEM_REPORT(item));
+	color = gda_report_item_report_get_bgcolor (item);
 	g_print ("TEST: Current bgcolor is: %s\n", gda_report_types_color_to_value(color));
 
 	g_print ("TEST: Saving results to test-4-result.xml\n");
@@ -177,6 +180,7 @@ test_5 (void)
 	GdaReportItem *report;
 	GdaReportItem *reportheader;
 	GdaReportColor *color;
+	GdaReportNumber *width;
  
 	validator = gda_report_valid_load ();
 	document = gda_report_document_new_from_uri ("valid-example.xml", validator);
@@ -188,28 +192,101 @@ test_5 (void)
 		return;
 	}
 	
-	reportheader = gda_report_item_report_get_reportheader (GDA_REPORT_ITEM_REPORT(report));
+	reportheader = gda_report_item_report_get_reportheader (report);
 	if (reportheader == NULL)
 	{
 		g_print ("TEST: Can't get reportheader \n");
 		return;
 	}
 	
-	color = gda_report_item_reportheader_get_bgcolor (GDA_REPORT_ITEM_REPORTHEADER(reportheader));
+	color = gda_report_item_reportheader_get_bgcolor (reportheader);
 	if (color == NULL)
 		g_print ("TEST: Current bgcolor is NULL \n");
 	else
 		g_print ("TEST: Current bgcolor is: %s\n", gda_report_types_color_to_value(color));
 
+	width = gda_report_item_reportheader_get_linewidth (reportheader);
+	if (width == NULL)
+		g_print ("TEST: Current linewidth is NULL \n");
+	else
+		g_print ("TEST: Current linewidth is: %s\n", gda_report_types_number_to_value(width));
+
 	g_print ("TEST: Setting bgcolor to 127 127 127\n"); 
 	color = gda_report_types_color_new (127, 127, 127);
-	if (!gda_report_item_reportheader_set_bgcolor (GDA_REPORT_ITEM_REPORTHEADER(reportheader), color)) 
+	if (!gda_report_item_reportheader_set_bgcolor (reportheader, color)) 
 		g_print ("TEST: Error during set\n");
 	
-	color = gda_report_item_reportheader_get_bgcolor (GDA_REPORT_ITEM_REPORTHEADER(reportheader));
+	g_print ("TEST: Setting linewidth to 1.75\n"); 
+	width = gda_report_types_number_new (1.75);
+	if (!gda_report_item_reportheader_set_linewidth (reportheader, width)) 
+		g_print ("TEST: Error during set\n");
+	
+	color = gda_report_item_reportheader_get_bgcolor (reportheader);
 	g_print ("TEST: Current bgcolor is: %s\n", gda_report_types_color_to_value(color));
+
+	width = gda_report_item_reportheader_get_linewidth (reportheader);
+	g_print ("TEST: Current linewidth is: %s\n", gda_report_types_number_to_value(width));
 
 	g_print ("TEST: Saving results to test-5-result.xml\n");
 	gda_report_document_save_file ("test-5-result.xml", document);
+}
+
+
+
+void 
+test_6 (void) 
+{
+	GdaReportValid *validator;
+	GdaReportDocument  *document;
+	GdaReportItem *report;
+	GdaReportItem *reportheader;
+	GdaReportItem *reportfooter;
+	GdaReportColor *color;
+	GdaReportNumber *width;
+ 
+	validator = gda_report_valid_load ();
+	document = gda_report_document_new_from_uri ("valid-example.xml", validator);
+
+	report = gda_report_document_get_root_item (document);
+	if (report == NULL) 
+	{
+		g_print ("TEST: Can't get root node \n");
+		return;
+	}
+	
+	reportheader = gda_report_item_reportheader_new (validator);
+	if (reportheader == NULL)
+	{
+		g_print ("TEST: Can't create a  reportheader \n");
+		return;
+	}
+	
+	reportfooter = gda_report_item_reportfooter_new (validator);
+	if (reportheader == NULL)
+	{
+		g_print ("TEST: Can't create a reportfooter \n");
+		return;
+	}
+	
+	g_print ("TEST: Setting reportheader bgcolor to 127 127 127\n"); 
+	color = gda_report_types_color_new (127, 127, 127);
+	if (!gda_report_item_reportheader_set_bgcolor (reportheader, color)) 
+		g_print ("TEST: Error during set\n");
+	
+	g_print ("TEST: Setting reportfooter linewidth to 1.75\n"); 
+	width = gda_report_types_number_new (1.75);
+	if (!gda_report_item_reportfooter_set_linewidth (reportfooter, width)) 
+		g_print ("TEST: Error during set\n");
+	
+	g_print ("TEST: Setting new reportheader to report\n"); 
+	if (!gda_report_item_report_set_reportheader (report, reportheader))
+		g_print ("TEST: Error during set\n");
+
+	g_print ("TEST: Setting new reportfooter to report\n"); 
+	if (!gda_report_item_report_set_reportfooter (report, reportfooter)) 
+		g_print ("TEST: Error during set\n");
+
+	g_print ("TEST: Saving results to test-6-result.xml\n");
+	gda_report_document_save_file ("test-6-result.xml", document);
 }
 

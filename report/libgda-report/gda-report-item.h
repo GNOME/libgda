@@ -2,7 +2,7 @@
  * Copyright (C) 1998-2002 The GNOME Foundation.
  *
  * AUTHORS:
- *	Santi Camps <scamps@users.sourceforge.net>
+ *	Santi Camps <santi@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -66,10 +66,19 @@ GdaReportItem *gda_report_item_new_child (GdaReportItem *parent,
 
 GdaReportItem *gda_report_item_new_from_dom (xmlNodePtr node);
 
-xmlNodePtr gda_report_item_to_dom (GdaReportItem *item);
+gboolean gda_report_item_add_previous (GdaReportItem *item,
+				       GdaReportItem *new_item);
 
-gboolean gda_report_item_set_parent (GdaReportItem *parent,
-				     GdaReportItem *child);
+gboolean gda_report_item_add_next (GdaReportItem *item,
+				   GdaReportItem *new_item);
+
+gboolean gda_report_item_add_child (GdaReportItem *parent,
+				    GdaReportItem *child);
+
+gboolean gda_report_item_replace (GdaReportItem *item,
+				  GdaReportItem *new_item);
+
+xmlNodePtr gda_report_item_to_dom (GdaReportItem *item);
 
 gboolean gda_report_item_set_attribute (GdaReportItem *item,
 	 			        const gchar *name,

@@ -2,7 +2,7 @@
  * Copyright (C) 1998-2002 The GNOME Foundation.
  *
  * AUTHORS:
- *	Santi Camps <scamps@users.sourceforge.net>
+ *	Santi Camps <santi@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -177,6 +177,184 @@ gda_report_item_new_from_dom (xmlNodePtr node)
 }
 
 
+
+/**
+ * gda_report_item_add_previous
+ * @item: the referential #GdaReportItem
+ * @new_item: the #GdaReportItem to be added
+ *
+ * Sets new_item as the previous sibling of item
+ *
+ * Returns: TRUE if all is ok, FALSE otherwise
+ **/
+gboolean 
+gda_report_item_add_previous (GdaReportItem *item,
+			      GdaReportItem *new_item)
+{
+	xmlNodePtr cur_node;
+	xmlNodePtr new_node;
+//	xmlNodePtr prev_node;
+//	xmlNodePtr parent_node;
+	
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM (item), FALSE);
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM (new_item), FALSE);
+
+	cur_node = item->priv->node;
+	new_node = new_item->priv->node;
+
+	new_node = xmlAddPrevSibling (cur_node, new_node);
+	return (new_node != NULL);
+/*
+	prev_node = cur_node->prev;
+	parent_node = cur_node->parent;
+
+	new_node->prev = prev_node;
+	new_node->next = cur_node;
+	new_node->parent = parent_node;
+	cur_node->prev = new_node;
+	if (prev_node != NULL)
+		prev_node->next = new_node;			
+	if (parent_node->children == cur_node)
+		parent_node->children = new_node;
+	
+	return TRUE;
+*/
+}
+
+
+/**
+ * gda_report_item_add_next
+ * @item: the referential #GdaReportItem
+ * @new_item: the #GdaReportItem to be added
+ *
+ * Sets new_item as the next sibling of item
+ *
+ * Returns: TRUE if all is ok, FALSE otherwise
+ **/
+gboolean 
+gda_report_item_add_next (GdaReportItem *item,
+			  GdaReportItem *new_item)
+{
+	xmlNodePtr cur_node;
+	xmlNodePtr new_node;
+//	xmlNodePtr next_node;
+//	xmlNodePtr parent_node;
+	
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM (item), FALSE);
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM (new_item), FALSE);
+
+	cur_node = item->priv->node;
+	new_node = new_item->priv->node;
+
+	new_node = xmlAddNextSibling (cur_node, new_node);
+	return (new_node != NULL);
+
+	/*
+	next_node = cur_node->next;
+	parent_node = cur_node->parent;
+
+	new_node->next = next_node;
+	new_node->prev = cur_node;
+	new_node->parent = parent_node;
+	cur_node->next = new_node;
+	if (next_node != NULL)
+		next_node->prev = new_node;			
+	if (parent_node->last == cur_node)
+		parent_node->last = new_node;
+	
+	return TRUE;
+	*/
+}
+
+
+/**
+ * gda_report_item_add_child
+ * @parent: a #GdaReportItem
+ * @child: an already created #GdaReportItem
+ *
+ * Sets child item as a child of parent item
+ *
+ * Returns: TRUE if all is ok, FALSE otherwise
+ **/
+gboolean
+gda_report_item_add_child (GdaReportItem *parent,
+			   GdaReportItem *child)
+{
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM (parent), FALSE);
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM (child), FALSE);
+
+	if (xmlAddChild (parent->priv->node, child->priv->node) == NULL)
+	{
+		gda_log_error (_("Error setting parent -> child relation"));
+		return FALSE;
+	}	
+	return TRUE;
+}
+
+
+/**
+ * gda_report_item_replace
+ * @item: the #GdaReportItem to be replaced
+ * @new_item: the new #GdaReportItem
+ *
+ * Replace item for new_item 
+ *
+ * Returns: TRUE if all is ok, FALSE otherwise
+ **/
+gboolean gda_report_item_replace (GdaReportItem *item,
+				  GdaReportItem *new_item)
+{
+	xmlNodePtr cur_node;
+	xmlNodePtr new_node;
+//	xmlNodePtr next_node;
+//	xmlNodePtr prev_node;
+//	xmlNodePtr parent_node;
+	
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM (item), FALSE);
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM (new_item), FALSE);	
+	
+	cur_node = item->priv->node;
+	new_node = new_item->priv->node;
+	
+	if (cur_node == new_node) return TRUE;
+
+	if (xmlReplaceNode (cur_node, new_node) != NULL)
+	{
+		xmlFreeNode(cur_node);	
+		return TRUE;
+	}
+	else
+		return FALSE;
+
+/*
+	next_node = cur_node->next;
+	prev_node = cur_node->prev;
+	parent_node = cur_node->parent;
+
+	new_node->prev = prev_node;
+	new_node->next = next_node;
+	new_node->parent = parent_node;
+
+	if (prev_node != NULL)
+		prev_node->next = new_node;
+			
+	if (next_node != NULL)
+		next_node->prev = new_node;
+			
+	if (parent_node != NULL)
+	{
+		if (parent_node->children == cur_node)
+			parent_node->children = new_node;
+		if (parent_node->last == cur_node)
+			parent_node->last = new_node;
+	}
+	xmlFreeNode(cur_node);
+	
+	return TRUE;	
+*/	
+}
+
+
 /**
  * gda_report_item_to_dom
  * @item: a #GdaReportItem
@@ -188,28 +366,6 @@ gda_report_item_to_dom (GdaReportItem *item)
 {
 	g_return_val_if_fail (GDA_REPORT_IS_ITEM (item), NULL);
 	return item->priv->node;
-}
-
-
-/**
- * gda_report_item_set_parent
- * @parent: a #GdaReportItem
- * @child: an already created #GdaReportItem
- *
- * Sets child item as a child of parent item
- *
- * Returns: TRUE if all is ok, FALSE otherwise
- **/
-gboolean
-gda_report_item_set_parent (GdaReportItem *parent,
-			    GdaReportItem *child)
-{
-	if (xmlAddChild (parent->priv->node, child->priv->node) == NULL)
-	{
-		gda_log_error (_("Error setting parent -> child relation"));
-		return FALSE;
-	}	
-	return TRUE;
 }
 
 

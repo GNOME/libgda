@@ -809,6 +809,7 @@ providers/ldap/Makefile
 report/Makefile
 report/gda-report.dtd
 report/libgda-report/Makefile
+report/testing/Makefile
 tools/Makefile
 testing/Makefile
 doc/Makefile

@@ -2,7 +2,7 @@
  * Copyright (C) 1998-2002 The GNOME Foundation.
  *
  * AUTHORS:
- *	Santi Camps <scamps@users.sourceforge.net>
+ *	Santi Camps <santi@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -24,15 +24,15 @@
 #include <libgda/gda-log.h>
 #include <libgda/gda-util.h>
 #include <libgda-report/gda-report-valid.h>
-#include <libgda-report/gda-report-item-reportheader.h>
 #include <libgda-report/gda-report-item-report.h>
 
-#define ITEM_REPORT_NAME	"report"
+#define ITEM_REPORT_NAME  "report"
 
-static void gda_report_item_report_class_init (GdaReportItemReportClass *klass);
-static void gda_report_item_report_init       (GdaReportItemReport *valid,
-					       GdaReportItemReportClass *klass);
-static void gda_report_item_report_finalize   (GObject *object);
+static void gda_report_item_report_class_init (GdaReportItemReportClass *
+					       klass);
+static void gda_report_item_report_init (GdaReportItemReport * valid,
+					 GdaReportItemReportClass * klass);
+static void gda_report_item_report_finalize (GObject * object);
 
 static GdaReportItemClass *parent_class = NULL;
 
@@ -40,7 +40,7 @@ static GdaReportItemClass *parent_class = NULL;
  * GdaReportItemReport class implementation
  */
 static void
-gda_report_item_report_class_init (GdaReportItemReportClass *klass)
+gda_report_item_report_class_init (GdaReportItemReportClass * klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
@@ -50,20 +50,20 @@ gda_report_item_report_class_init (GdaReportItemReportClass *klass)
 
 
 static void
-gda_report_item_report_init (GdaReportItemReport *item, 
-		      	     GdaReportItemReportClass *klass)
+gda_report_item_report_init (GdaReportItemReport * item,
+			     GdaReportItemReportClass * klass)
 {
-	
+
 }
 
 
 static void
-gda_report_item_report_finalize (GObject *object)
+gda_report_item_report_finalize (GObject * object)
 {
 	g_return_if_fail (GDA_REPORT_IS_ITEM_REPORT (object));
 
-	if(G_OBJECT_CLASS(parent_class)->finalize) \
-                (* G_OBJECT_CLASS(parent_class)->finalize)(object);
+	if (G_OBJECT_CLASS (parent_class)->finalize)
+		(*G_OBJECT_CLASS (parent_class)->finalize) (object);
 }
 
 
@@ -72,7 +72,8 @@ gda_report_item_report_get_type (void)
 {
 	static GType type = 0;
 
-	if (!type) {
+	if (!type)
+	{
 		static const GTypeInfo info = {
 			sizeof (GdaReportItemReportClass),
 			(GBaseInitFunc) NULL,
@@ -84,7 +85,9 @@ gda_report_item_report_get_type (void)
 			0,
 			(GInstanceInitFunc) gda_report_item_report_init
 		};
-		type = g_type_register_static (GDA_REPORT_TYPE_ITEM, "GdaReportItemReport", &info, 0);
+		type = g_type_register_static (GDA_REPORT_TYPE_ITEM,
+					       "GdaReportItemReport", &info,
+					       0);
 	}
 	return type;
 }
@@ -94,13 +97,14 @@ gda_report_item_report_get_type (void)
  * gda_report_item_report_new
  */
 GdaReportItem *
-gda_report_item_report_new (GdaReportValid *valid)
+gda_report_item_report_new (GdaReportValid * valid)
 {
-	GdaReportItem *item;
-	
+	GdaReportItemReport *item;
+
 	item = g_object_new (GDA_REPORT_TYPE_ITEM_REPORT, NULL);
-	item = gda_report_item_new (valid, ITEM_REPORT_NAME);
-	return item;
+	GDA_REPORT_ITEM (item)->priv->valid = valid;
+	GDA_REPORT_ITEM (item)->priv->node = xmlNewNode (NULL, ITEM_REPORT_NAME);
+	return GDA_REPORT_ITEM(item);
 }
 
 
@@ -110,14 +114,55 @@ gda_report_item_report_new (GdaReportValid *valid)
 GdaReportItem *
 gda_report_item_report_new_from_dom (xmlNodePtr node)
 {
-	GdaReportItem *item;
+	GdaReportItemReport *item;
 
 	g_return_val_if_fail (node != NULL, NULL);
 	item = g_object_new (GDA_REPORT_TYPE_ITEM_REPORT, NULL);
-	GDA_REPORT_ITEM(item)->priv->valid = gda_report_valid_new_from_dom(xmlGetIntSubset(node->doc));
-	GDA_REPORT_ITEM(item)->priv->node = node;	
-	
-	return item;	
+	GDA_REPORT_ITEM (item)->priv->valid =
+		gda_report_valid_new_from_dom (xmlGetIntSubset (node->doc));
+	GDA_REPORT_ITEM (item)->priv->node = node;
+
+	return GDA_REPORT_ITEM(item);
+}
+
+
+/*
+ * gda_report_item_report_set_reportheader
+ */
+gboolean
+gda_report_item_report_set_reportheader (GdaReportItem *report,
+					 GdaReportItem *header)
+{
+	xmlNodePtr cur;
+
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT (report), FALSE);
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORTHEADER (header),
+			      FALSE);
+
+	cur = report->priv->node->children;
+	if (cur == NULL)
+		/* report has no children, this will be the first one */
+		return gda_report_item_add_child (report, header);
+
+	while (cur != NULL)
+	{
+		if (!xmlNodeIsText (cur))
+		{
+			/* reportheader already exists, we will replace it */
+			if (g_ascii_strcasecmp (cur->name, "reportheader") == 0)
+				return gda_report_item_replace
+					(gda_report_item_new_from_dom (cur), header);
+
+			/* We want reportheader to be the next element to query, if it exists */
+			/* there is no reportheader, and query is previus to current node */
+			if ((g_ascii_strcasecmp (cur->name, "reportheader") != 0)
+			    && (g_ascii_strcasecmp (cur->name, "query") != 0))
+				return gda_report_item_add_previous
+					(gda_report_item_new_from_dom (cur), header);
+		}
+		cur = cur->next;
+	}
+	return FALSE;
 }
 
 
@@ -125,14 +170,14 @@ gda_report_item_report_new_from_dom (xmlNodePtr node)
  * gda_report_item_report_get_reportheader
  */
 GdaReportItem *
-gda_report_item_report_get_reportheader (GdaReportItemReport *item)
+gda_report_item_report_get_reportheader (GdaReportItem * item)
 {
 	xmlNodePtr node;
-	
-	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT(item), NULL);
-	node = xmlGetLastChild (GDA_REPORT_ITEM(item)->priv->node);
-	while ((node != NULL) && (g_ascii_strcasecmp(node->name, "reportheader") != 0)) 
-		node = node->prev;
+
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT (item), NULL);
+	node = item->priv->node->children;
+	while ((node != NULL) && (g_ascii_strcasecmp (node->name, "reportheader") != 0))
+		node = node->next;
 
 	if (node == NULL)
 	{
@@ -140,111 +185,169 @@ gda_report_item_report_get_reportheader (GdaReportItemReport *item)
 		return NULL;
 	}
 	else
-		return gda_report_item_reportheader_new_from_dom(node);
+		return gda_report_item_reportheader_new_from_dom (node);
+}
+
+
+/*
+ * gda_report_item_report_set_reporthfooter
+ */
+gboolean
+gda_report_item_report_set_reportfooter (GdaReportItem *report,
+					 GdaReportItem *footer)
+{
+	xmlNodePtr cur;
+
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT (report), FALSE);
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORTFOOTER (footer), FALSE);
+
+	cur = report->priv->node->last;
+	if (cur != NULL)
+	{
+		while (xmlNodeIsText (cur)) cur = cur->prev;
+
+		if (g_ascii_strcasecmp (cur->name, "reportfooter") == 0)
+			/* reportfooter already exists, we will replace it */
+			return gda_report_item_replace (gda_report_item_new_from_dom (cur), footer);
+		else
+			/* We want reportfooter to be the last element */
+			/* the last is not a reportfooter, so we will add it as next */
+			return gda_report_item_add_next	(gda_report_item_new_from_dom (cur), footer);
+	}
+	else
+		/* report has no children, this will be the first one */
+		return gda_report_item_add_child (report, footer);
+
+	return FALSE;
+}
+
+
+/*
+ * gda_report_item_report_get_reportfooter
+ */
+GdaReportItem *
+gda_report_item_report_get_reportfooter (GdaReportItem *item)
+{
+	xmlNodePtr node;
+
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT (item), NULL);
+	
+	node = item->priv->node->last;
+	while ((node != NULL) && (g_ascii_strcasecmp (node->name, "reportfooter") != 0))
+		node = node->prev;
+
+	if (node == NULL)
+	{
+		gda_log_error ("There is no report footer in this report \n");
+		return NULL;
+	}
+	else
+		return gda_report_item_reportfooter_new_from_dom (node);
 }
 
 
 /*
  * gda_report_item_report_set_reportstyle
  */
-gboolean 
-gda_report_item_report_set_reportstyle (GdaReportItemReport *item,
-					const gchar *value)
+gboolean
+gda_report_item_report_set_reportstyle (GdaReportItem *item,
+					const gchar * value)
 {
-	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT(item), FALSE);
-	return gda_report_item_set_attribute (GDA_REPORT_ITEM(item), "reportstyle", value); 
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT (item), FALSE);
+	return gda_report_item_set_attribute (item, "reportstyle", value);
 }
 
 
 /*
  * gda_report_item_report_get_reportstyle 
  */
-gchar * 
-gda_report_item_report_get_reportstyle (GdaReportItemReport *item)
+gchar *
+gda_report_item_report_get_reportstyle (GdaReportItem *item)
 {
-	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT(item), NULL);
-	return gda_report_item_get_attribute (GDA_REPORT_ITEM(item), "reportstyle");
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT (item), NULL);
+	return gda_report_item_get_attribute (item, "reportstyle");
 }
 
 
 /*
  * gda_report_item_report_set_pagesize
  */
-gboolean 
-gda_report_item_report_set_pagesize (GdaReportItemReport *item,
-				     const gchar *value)
+gboolean
+gda_report_item_report_set_pagesize (GdaReportItem *item,
+				     const gchar * value)
 {
-	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT(item), FALSE);
-	return gda_report_item_set_attribute (GDA_REPORT_ITEM(item), "pagesize", value); 
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT (item), FALSE);
+	return gda_report_item_set_attribute (item, "pagesize", value);
 }
 
 
 /*
  * gda_report_item_report_get_pagesize
  */
-gchar * 
-gda_report_item_report_get_pagesize (GdaReportItemReport *item)
+gchar *
+gda_report_item_report_get_pagesize (GdaReportItem *item)
 {
-	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT(item), NULL);
-	return gda_report_item_get_attribute (GDA_REPORT_ITEM(item), "pagesize");
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT (item), NULL);
+	return gda_report_item_get_attribute (item, "pagesize");
 }
 
 
 /*
  * gda_report_item_report_set_orientation
  */
-gboolean 
-gda_report_item_report_set_orientation (GdaReportItemReport *item,
-				        const gchar *value)
+gboolean
+gda_report_item_report_set_orientation (GdaReportItem *item,
+					const gchar *value)
 {
-	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT(item), FALSE);
-	return gda_report_item_set_attribute (GDA_REPORT_ITEM(item), "orientation", value); 
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT (item), FALSE);
+	return gda_report_item_set_attribute (item, "orientation", value);
 }
 
 
 /*
  * gda_report_item_report_get_orientation
  */
-gchar * 
-gda_report_item_report_get_orientation (GdaReportItemReport *item)
+gchar *
+gda_report_item_report_get_orientation (GdaReportItem *item)
 {
-	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT(item), NULL);
-	return gda_report_item_get_attribute (GDA_REPORT_ITEM(item), "orientation");
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT (item), NULL);
+	return gda_report_item_get_attribute (item, "orientation");
 }
 
 
 /*
  * gda_report_item_report_set_units
  */
-gboolean 
-gda_report_item_report_set_units (GdaReportItemReport *item,
+gboolean
+gda_report_item_report_set_units (GdaReportItem *item,
 				  const gchar *value)
 {
-	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT(item), FALSE);
-	return gda_report_item_set_attribute (GDA_REPORT_ITEM(item), "units", value); 
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT (item), FALSE);
+	return gda_report_item_set_attribute (item, "units", value);
 }
 
 
 /*
  * gda_report_item_report_get_units
  */
-gchar * 
-gda_report_item_report_get_units (GdaReportItemReport *item)
+gchar *
+gda_report_item_report_get_units (GdaReportItem *item)
 {
-	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT(item), NULL);
-	return gda_report_item_get_attribute (GDA_REPORT_ITEM(item), "units");
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT (item), NULL);
+	return gda_report_item_get_attribute (item, "units");
 }
 
 
 /*
  * gda_report_item_report_set_topmargin
  */
-gboolean 
-gda_report_item_report_set_topmargin (GdaReportItemReport *item,
+gboolean
+gda_report_item_report_set_topmargin (GdaReportItem *item,
 				      GdaReportNumber *number)
 {
-	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT(item), FALSE);
-	return gda_report_item_set_attribute (GDA_REPORT_ITEM(item), "topmargin", gda_report_types_number_to_value(number)); 
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT (item), FALSE);
+	return gda_report_item_set_attribute (item, "topmargin",
+					      gda_report_types_number_to_value(number));
 }
 
 
@@ -252,22 +355,24 @@ gda_report_item_report_set_topmargin (GdaReportItemReport *item,
  * gda_report_item_report_get_topmargin
  */
 GdaReportNumber *
-gda_report_item_report_get_topmargin (GdaReportItemReport *item)
+gda_report_item_report_get_topmargin (GdaReportItem *item)
 {
-	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT(item), 0);
-	return gda_report_types_value_to_number (gda_report_item_get_attribute (GDA_REPORT_ITEM(item), "topmargin"));
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT (item), NULL);
+	return gda_report_types_value_to_number (
+			gda_report_item_get_attribute (item, "topmargin"));
 }
 
 
 /*
  * gda_report_item_report_set_bottommargin
  */
-gboolean 
-gda_report_item_report_set_bottommargin (GdaReportItemReport *item,
-				         GdaReportNumber *number)
+gboolean
+gda_report_item_report_set_bottommargin (GdaReportItem *item,
+					 GdaReportNumber *number)
 {
-	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT(item), FALSE);
-	return gda_report_item_set_attribute (GDA_REPORT_ITEM(item), "bottommargin", gda_report_types_number_to_value(number)); 
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT (item), FALSE);
+	return gda_report_item_set_attribute (item, "bottommargin",
+					      gda_report_types_number_to_value(number));
 }
 
 
@@ -275,22 +380,24 @@ gda_report_item_report_set_bottommargin (GdaReportItemReport *item,
  * gda_report_item_report_get_bottommargin
  */
 GdaReportNumber *
-gda_report_item_report_get_bottommargin (GdaReportItemReport *item)
+gda_report_item_report_get_bottommargin (GdaReportItem *item)
 {
-	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT(item), 0);
-	return gda_report_types_value_to_number (gda_report_item_get_attribute (GDA_REPORT_ITEM(item), "bottommargin"));
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT (item), NULL);
+	return gda_report_types_value_to_number (
+			gda_report_item_get_attribute(item, "bottommargin"));
 }
 
 
 /*
  * gda_report_item_report_set_leftmargin
  */
-gboolean 
-gda_report_item_report_set_leftmargin (GdaReportItemReport *item,
+gboolean
+gda_report_item_report_set_leftmargin (GdaReportItem *item,
 				       GdaReportNumber *number)
 {
-	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT(item), FALSE);
-	return gda_report_item_set_attribute (GDA_REPORT_ITEM(item), "leftmargin", gda_report_types_number_to_value(number)); 
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT (item), FALSE);
+	return gda_report_item_set_attribute (item, "leftmargin",
+					      gda_report_types_number_to_value(number));
 }
 
 
@@ -298,22 +405,23 @@ gda_report_item_report_set_leftmargin (GdaReportItemReport *item,
  * gda_report_item_report_get_leftmargin
  */
 GdaReportNumber *
-gda_report_item_report_get_leftmargin (GdaReportItemReport *item)
+gda_report_item_report_get_leftmargin (GdaReportItem *item)
 {
-	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT(item), 0);
-	return gda_report_types_value_to_number(gda_report_item_get_attribute (GDA_REPORT_ITEM(item), "leftmargin"));
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT (item), NULL);
+	return gda_report_types_value_to_number (gda_report_item_get_attribute(item, "leftmargin"));
 }
 
 
 /*
  * gda_report_item_report_set_rightmargin
  */
-gboolean 
-gda_report_item_report_set_rightmargin (GdaReportItemReport *item,
-				        GdaReportNumber *number)
+gboolean
+gda_report_item_report_set_rightmargin (GdaReportItem *item,
+					GdaReportNumber *number)
 {
-	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT(item), FALSE);
-	return gda_report_item_set_attribute (GDA_REPORT_ITEM(item), "rightmargin", gda_report_types_number_to_value(number)); 
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT (item), FALSE);
+	return gda_report_item_set_attribute (item, "rightmargin",
+					      gda_report_types_number_to_value(number));
 }
 
 
@@ -321,100 +429,105 @@ gda_report_item_report_set_rightmargin (GdaReportItemReport *item,
  * gda_report_item_report_get_rightmargin
  */
 GdaReportNumber *
-gda_report_item_report_get_rightmargin (GdaReportItemReport *item)
+gda_report_item_report_get_rightmargin (GdaReportItem *item)
 {
-	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT(item), 0);
-	return gda_report_types_value_to_number (gda_report_item_get_attribute (GDA_REPORT_ITEM(item), "rigthmargin"));
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT (item), NULL);
+	return gda_report_types_value_to_number (
+			gda_report_item_get_attribute (item, "rigthmargin"));
 }
 
 
 /*
  * gda_report_item_report_set_bgcolor
  */
-gboolean 
-gda_report_item_report_set_bgcolor (GdaReportItemReport *item,
+gboolean
+gda_report_item_report_set_bgcolor (GdaReportItem *item,
 				    GdaReportColor *color)
 {
 	gchar *value;
-	
-	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT(item), FALSE);
+
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT (item), FALSE);
 	value = gda_report_types_color_to_value (color);
-	return gda_report_item_set_attribute (GDA_REPORT_ITEM(item), "bgcolor", value);
+	return gda_report_item_set_attribute (item, "bgcolor", value);
 }
 
 
 /*
  * gda_report_item_report_get_bgcolor
  */
-GdaReportColor * 
-gda_report_item_report_get_bgcolor (GdaReportItemReport *item)
+GdaReportColor *
+gda_report_item_report_get_bgcolor (GdaReportItem *item)
 {
-	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT(item), NULL);
-	return gda_report_types_value_to_color (gda_report_item_get_attribute (GDA_REPORT_ITEM(item), "bgcolor"));
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT (item), NULL);
+	return gda_report_types_value_to_color (
+			gda_report_item_get_attribute(item, "bgcolor"));
 }
 
 
 /*
  * gda_report_item_report_set_fgcolor
  */
-gboolean 
-gda_report_item_report_set_fgcolor (GdaReportItemReport *item,
+gboolean
+gda_report_item_report_set_fgcolor (GdaReportItem *item,
 				    GdaReportColor *color)
 {
 	gchar *value;
-	
-	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT(item), FALSE);
+
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT (item), FALSE);
 	value = gda_report_types_color_to_value (color);
-	return gda_report_item_set_attribute (GDA_REPORT_ITEM(item), "fgcolor", value);
+	return gda_report_item_set_attribute (item, "fgcolor", value);
 }
 
 
 /*
  * gda_report_item_report_get_fgcolor
  */
-GdaReportColor * 
-gda_report_item_report_get_fgcolor (GdaReportItemReport *item)
+GdaReportColor *
+gda_report_item_report_get_fgcolor (GdaReportItem *item)
 {
-	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT(item), NULL);
-	return gda_report_types_value_to_color (gda_report_item_get_attribute (GDA_REPORT_ITEM(item), "fgcolor"));
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT (item), NULL);
+	return gda_report_types_value_to_color (
+			gda_report_item_get_attribute(item, "fgcolor"));
 }
 
 
 /*
  * gda_report_item_report_set_bordercolor
  */
-gboolean 
-gda_report_item_report_set_bordercolor (GdaReportItemReport *item,
-  				        GdaReportColor *color)
+gboolean
+gda_report_item_report_set_bordercolor (GdaReportItem *item,
+					GdaReportColor *color)
 {
 	gchar *value;
-	
-	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT(item), FALSE);
+
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT (item), FALSE);
 	value = gda_report_types_color_to_value (color);
-	return gda_report_item_set_attribute (GDA_REPORT_ITEM(item), "bordercolor", value);
+	return gda_report_item_set_attribute (item, "bordercolor", value);
 }
 
 
 /*
  * gda_report_item_report_get_bordercolor
  */
-GdaReportColor * 
-gda_report_item_report_get_bordercolor (GdaReportItemReport *item)
+GdaReportColor *
+gda_report_item_report_get_bordercolor (GdaReportItem *item)
 {
-	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT(item), NULL);
-	return gda_report_types_value_to_color (gda_report_item_get_attribute (GDA_REPORT_ITEM(item), "bordercolor"));
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT (item), NULL);
+	return gda_report_types_value_to_color (
+			gda_report_item_get_attribute(item, "bordercolor"));
 }
 
 
 /*
  * gda_report_item_report_set_borderwidth
  */
-gboolean 
-gda_report_item_report_set_borderwidth (GdaReportItemReport *item,
-				        GdaReportNumber *number)
+gboolean
+gda_report_item_report_set_borderwidth (GdaReportItem * item,
+					GdaReportNumber * number)
 {
-	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT(item), FALSE);
-	return gda_report_item_set_attribute (GDA_REPORT_ITEM(item), "borderwidth", gda_report_types_number_to_value(number)); 
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT (item), FALSE);
+	return gda_report_item_set_attribute (item, "borderwidth",
+					      gda_report_types_number_to_value(number));
 }
 
 
@@ -422,68 +535,70 @@ gda_report_item_report_set_borderwidth (GdaReportItemReport *item,
  * gda_report_item_report_get_borderwidth
  */
 GdaReportNumber *
-gda_report_item_report_get_borderwidth (GdaReportItemReport *item)
+gda_report_item_report_get_borderwidth (GdaReportItem * item)
 {
-	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT(item), 0);
-	return gda_report_types_value_to_number (gda_report_item_get_attribute (GDA_REPORT_ITEM(item), "rigthmargin"));
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT (item), NULL);
+	return gda_report_types_value_to_number (
+			gda_report_item_get_attribute (item, "rigthmargin"));
 }
 
 
 /*
  * gda_report_item_report_set_borderstyle
  */
-gboolean 
-gda_report_item_report_set_borderstyle (GdaReportItemReport *item,
+gboolean
+gda_report_item_report_set_borderstyle (GdaReportItem *item,
 					const gchar *value)
 {
-	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT(item), FALSE);
-	return gda_report_item_set_attribute (GDA_REPORT_ITEM(item), "borderstyle", value); 
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT (item), FALSE);
+	return gda_report_item_set_attribute (item, "borderstyle", value);
 }
 
 
 /*
  * gda_report_item_report_get_borderstyle
  */
-gchar * 
-gda_report_item_report_get_borderstyle (GdaReportItemReport *item)
+gchar *
+gda_report_item_report_get_borderstyle (GdaReportItem *item)
 {
-	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT(item), NULL);
-	return gda_report_item_get_attribute (GDA_REPORT_ITEM(item), "borderstyle");
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT (item), NULL);
+	return gda_report_item_get_attribute (item, "borderstyle");
 }
 
 
 /*
  * gda_report_item_report_set_fontfamily
  */
-gboolean 
-gda_report_item_report_set_fontfamily (GdaReportItemReport *item,
+gboolean
+gda_report_item_report_set_fontfamily (GdaReportItem *item,
 				       const gchar *value)
 {
-	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT(item), FALSE);
-	return gda_report_item_set_attribute (GDA_REPORT_ITEM(item), "fontfamily", value); 
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT (item), FALSE);
+	return gda_report_item_set_attribute (item, "fontfamily", value);
 }
 
 
 /*
  * gda_report_item_report_get_fontfamily
  */
-gchar * 
-gda_report_item_report_get_fontfamily (GdaReportItemReport *item)
+gchar *
+gda_report_item_report_get_fontfamily (GdaReportItem *item)
 {
-	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT(item), NULL);
-	return gda_report_item_get_attribute (GDA_REPORT_ITEM(item), "fontfamily");
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT (item), NULL);
+	return gda_report_item_get_attribute (item, "fontfamily");
 }
 
 
 /*
  * gda_report_item_report_set_fontsize
  */
-gboolean 
-gda_report_item_report_set_fontsize (GdaReportItemReport *item,
+gboolean
+gda_report_item_report_set_fontsize (GdaReportItem *item,
 				     GdaReportNumber *number)
 {
-	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT(item), FALSE);
-	return gda_report_item_set_attribute (GDA_REPORT_ITEM(item), "fontsize", gda_report_types_number_to_value(number)); 
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT (item), FALSE);
+	return gda_report_item_set_attribute (item, "fontsize",
+					      gda_report_types_number_to_value(number));
 }
 
 
@@ -491,186 +606,189 @@ gda_report_item_report_set_fontsize (GdaReportItemReport *item,
  * gda_report_item_report_get_fontsize
  */
 GdaReportNumber *
-gda_report_item_report_get_fontsize (GdaReportItemReport *item)
+gda_report_item_report_get_fontsize (GdaReportItem *item)
 {
-	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT(item), 0);
-	return gda_report_types_value_to_number (gda_report_item_get_attribute (GDA_REPORT_ITEM(item), "rigthmargin"));
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT (item), NULL);
+	return gda_report_types_value_to_number (
+			gda_report_item_get_attribute(item, "rigthmargin"));
 }
 
 
 /*
  * gda_report_item_report_set_fontweight
  */
-gboolean 
-gda_report_item_report_set_fontweight (GdaReportItemReport *item,
+gboolean
+gda_report_item_report_set_fontweight (GdaReportItem *item,
 				       const gchar *value)
 {
-	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT(item), FALSE);
-	return gda_report_item_set_attribute (GDA_REPORT_ITEM(item), "fontweight", value); 
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT (item), FALSE);
+	return gda_report_item_set_attribute (item, "fontweight", value);
 }
 
 
 /*
  * gda_report_item_report_get_fontweight
  */
-gchar * 
-gda_report_item_report_get_fontweight (GdaReportItemReport *item)
+gchar *
+gda_report_item_report_get_fontweight (GdaReportItem *item)
 {
-	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT(item), NULL);
-	return gda_report_item_get_attribute (GDA_REPORT_ITEM(item), "fontweight");
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT (item), NULL);
+	return gda_report_item_get_attribute (item, "fontweight");
 }
 
 
 /*
  * gda_report_item_report_set_fontitalic
  */
-gboolean 
-gda_report_item_report_set_fontitalic (GdaReportItemReport *item,
+gboolean
+gda_report_item_report_set_fontitalic (GdaReportItem *item,
 				       const gchar *value)
 {
-	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT(item), FALSE);
-	return gda_report_item_set_attribute (GDA_REPORT_ITEM(item), "fontitalic", value); 
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT (item), FALSE);
+	return gda_report_item_set_attribute (item, "fontitalic", value);
 }
 
 
 /*
  * gda_report_item_report_get_fontitalic
  */
-gchar * 
-gda_report_item_report_get_fontitalic (GdaReportItemReport *item)
+gchar *
+gda_report_item_report_get_fontitalic (GdaReportItem *item)
 {
-	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT(item), NULL);
-	return gda_report_item_get_attribute (GDA_REPORT_ITEM(item), "fontitalic");
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT (item), NULL);
+	return gda_report_item_get_attribute (item, "fontitalic");
 }
 
 
 /*
  * gda_report_item_report_set_halignment
  */
-gboolean 
-gda_report_item_report_set_halignment (GdaReportItemReport *item,
+gboolean
+gda_report_item_report_set_halignment (GdaReportItem *item,
 				       const gchar *value)
 {
-	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT(item), FALSE);
-	return gda_report_item_set_attribute (GDA_REPORT_ITEM(item), "halignment", value); 
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT (item), FALSE);
+	return gda_report_item_set_attribute (item, "halignment", value);
 }
 
 
 /*
  * gda_report_item_report_get_halignment
  */
-gchar * 
-gda_report_item_report_get_halignment (GdaReportItemReport *item)
+gchar *
+gda_report_item_report_get_halignment (GdaReportItem *item)
 {
-	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT(item), NULL);
-	return gda_report_item_get_attribute (GDA_REPORT_ITEM(item), "halignment");
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT (item), NULL);
+	return gda_report_item_get_attribute (item, "halignment");
 }
 
 
 /*
  * gda_report_item_report_set_valignment
  */
-gboolean 
-gda_report_item_report_set_valignment (GdaReportItemReport *item,
+gboolean
+gda_report_item_report_set_valignment (GdaReportItem *item,
 				       const gchar *value)
 {
-	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT(item), FALSE);
-	return gda_report_item_set_attribute (GDA_REPORT_ITEM(item), "valignment", value); 
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT (item), FALSE);
+	return gda_report_item_set_attribute (item, "valignment", value);
 }
 
 
 /*
  * gda_report_item_report_get_valignment
  */
-gchar * 
-gda_report_item_report_get_valignment (GdaReportItemReport *item)
+gchar *
+gda_report_item_report_get_valignment (GdaReportItem *item)
 {
-	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT(item), NULL);
-	return gda_report_item_get_attribute (GDA_REPORT_ITEM(item), "valignment");
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT (item), NULL);
+	return gda_report_item_get_attribute (item, "valignment");
 }
 
 
 /*
  * gda_report_item_report_set_wordwrap
  */
-gboolean 
-gda_report_item_report_set_wordwrap (GdaReportItemReport *item,
-    			             const gchar *value)
+gboolean
+gda_report_item_report_set_wordwrap (GdaReportItem *item,
+				     const gchar *value)
 {
-	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT(item), FALSE);
-	return gda_report_item_set_attribute (GDA_REPORT_ITEM(item), "wordwrap", value); 
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT (item), FALSE);
+	return gda_report_item_set_attribute (item, "wordwrap", value);
 }
 
 
 /*
  * gda_report_item_report_get_wordwrap
  */
-gchar * 
-gda_report_item_report_get_wordwrap (GdaReportItemReport *item)
+gchar *
+gda_report_item_report_get_wordwrap (GdaReportItem *item)
 {
-	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT(item), NULL);
-	return gda_report_item_get_attribute (GDA_REPORT_ITEM(item), "wordwrap");
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT (item), NULL);
+	return gda_report_item_get_attribute (item, "wordwrap");
 }
 
 
 /*
  * gda_report_item_report_set_negvaluecolor
  */
-gboolean 
-gda_report_item_report_set_negvaluecolor (GdaReportItemReport *item,
-   				          GdaReportColor *color)
+gboolean
+gda_report_item_report_set_negvaluecolor (GdaReportItem * item,
+					  GdaReportColor * color)
 {
 	gchar *value;
-	
-	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT(item), FALSE);
+
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT (item), FALSE);
 	value = gda_report_types_color_to_value (color);
-	return gda_report_item_set_attribute (GDA_REPORT_ITEM(item), "negvaluecolor", value);
+	return gda_report_item_set_attribute (item, "negvaluecolor", value);
 }
 
 
 /*
  * gda_report_item_report_get_negvaluecolor
  */
-GdaReportColor * 
-gda_report_item_report_get_negvaluecolor (GdaReportItemReport *item)
+GdaReportColor *
+gda_report_item_report_get_negvaluecolor (GdaReportItem *item)
 {
-	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT(item), NULL);
-	return gda_report_types_value_to_color (gda_report_item_get_attribute (GDA_REPORT_ITEM(item), "negvaluecolor"));
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT (item), NULL);
+	return gda_report_types_value_to_color (
+			gda_report_item_get_attribute(item, "negvaluecolor"));
 }
 
 
 /*
  * gda_report_item_report_set_dateformat
  */
-gboolean 
-gda_report_item_report_set_dateformat (GdaReportItemReport *item,
-     			               const gchar *value)
+gboolean
+gda_report_item_report_set_dateformat (GdaReportItem *item,
+				       const gchar *value)
 {
-	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT(item), FALSE);
-	return gda_report_item_set_attribute (GDA_REPORT_ITEM(item), "dateformat", value); 
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT (item), FALSE);
+	return gda_report_item_set_attribute (item, "dateformat", value);
 }
 
 
 /*
  * gda_report_item_report_get_dateformat
  */
-gchar * 
-gda_report_item_report_get_dateformat (GdaReportItemReport *item)
+gchar *
+gda_report_item_report_get_dateformat (GdaReportItem *item)
 {
-	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT(item), NULL);
-	return gda_report_item_get_attribute (GDA_REPORT_ITEM(item), "dateformat");
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT (item), NULL);
+	return gda_report_item_get_attribute (item, "dateformat");
 }
 
 
 /*
  * gda_report_item_report_set_precision
  */
-gboolean 
-gda_report_item_report_set_precision (GdaReportItemReport *item,
+gboolean
+gda_report_item_report_set_precision (GdaReportItem *item,
 				      GdaReportNumber *number)
 {
-	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT(item), FALSE);
-	return gda_report_item_set_attribute (GDA_REPORT_ITEM(item), "precision", gda_report_types_number_to_value(number)); 
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT (item), FALSE);
+	return gda_report_item_set_attribute (item, "precision",
+					      gda_report_types_number_to_value(number));
 }
 
 
@@ -678,68 +796,70 @@ gda_report_item_report_set_precision (GdaReportItemReport *item,
  * gda_report_item_report_get_precision
  */
 GdaReportNumber *
-gda_report_item_report_get_precision (GdaReportItemReport *item)
+gda_report_item_report_get_precision (GdaReportItem *item)
 {
-	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT(item), 0);
-	return gda_report_types_value_to_number (gda_report_item_get_attribute (GDA_REPORT_ITEM(item), "rigthmargin"));
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT (item), NULL);
+	return gda_report_types_value_to_number (
+			gda_report_item_get_attribute(item, "rigthmargin"));
 }
 
 
 /*
  * gda_report_item_report_set_currency
  */
-gboolean 
-gda_report_item_report_set_currency (GdaReportItemReport *item,
-  			             const gchar *value)
+gboolean
+gda_report_item_report_set_currency (GdaReportItem *item,
+				     const gchar *value)
 {
-	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT(item), FALSE);
-	return gda_report_item_set_attribute (GDA_REPORT_ITEM(item), "currency", value); 
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT (item), FALSE);
+	return gda_report_item_set_attribute (item, "currency", value);
 }
 
 
 /*
  * gda_report_item_report_get_currency
  */
-gchar * 
-gda_report_item_report_get_currency (GdaReportItemReport *item)
+gchar *
+gda_report_item_report_get_currency (GdaReportItem *item)
 {
-	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT(item), NULL);
-	return gda_report_item_get_attribute (GDA_REPORT_ITEM(item), "currency");
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT (item), NULL);
+	return gda_report_item_get_attribute (item, "currency");
 }
 
 
 /*
  * gda_report_item_report_set_commaseparator
  */
-gboolean 
-gda_report_item_report_set_commaseparator (GdaReportItemReport *item,
+gboolean
+gda_report_item_report_set_commaseparator (GdaReportItem *item,
 					   const gchar *value)
 {
-	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT(item), FALSE);
-	return gda_report_item_set_attribute (GDA_REPORT_ITEM(item), "commaseparator", value); 
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT (item), FALSE);
+	return gda_report_item_set_attribute (item, "commaseparator", value);
 }
 
 
 /*
  * gda_report_item_report_get_commaseparator
  */
-gchar * 
-gda_report_item_report_get_commaseparator (GdaReportItemReport *item)
+gchar *
+gda_report_item_report_get_commaseparator (GdaReportItem *item)
 {
-	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT(item), NULL);
-	return gda_report_item_get_attribute (GDA_REPORT_ITEM(item), "commaseparator");
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT (item), NULL);
+	return gda_report_item_get_attribute (item, "commaseparator");
 }
 
 
 /*
  * gda_report_item_report_set_linewidth
  */
-gboolean 
-gda_report_item_report_set_linewidth (GdaReportItemReport *item,
+gboolean
+gda_report_item_report_set_linewidth (GdaReportItem *item,
 				      GdaReportNumber *number)
 {
-	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT(item), FALSE);
-	return gda_report_item_set_attribute (GDA_REPORT_ITEM(item), "linewidth", gda_report_types_number_to_value(number)); 
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT (item), FALSE);
+	return gda_report_item_set_attribute (item, "linewidth",
+					      gda_report_types_number_to_value(number));
 }
 
 
@@ -747,36 +867,38 @@ gda_report_item_report_set_linewidth (GdaReportItemReport *item,
  * gda_report_item_report_get_linewidth
  */
 GdaReportNumber *
-gda_report_item_report_get_linewidth (GdaReportItemReport *item)
+gda_report_item_report_get_linewidth (GdaReportItem *item)
 {
-	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT(item), 0);
-	return gda_report_types_value_to_number (gda_report_item_get_attribute (GDA_REPORT_ITEM(item), "rigthmargin"));
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT (item), NULL);
+	return gda_report_types_value_to_number (
+			gda_report_item_get_attribute(item, "rigthmargin"));
 }
 
 
 /*
  * gda_report_item_report_set_linecolor
  */
-gboolean 
-gda_report_item_report_set_linecolor (GdaReportItemReport *item,
+gboolean
+gda_report_item_report_set_linecolor (GdaReportItem *item,
 				      GdaReportColor *color)
 {
 	gchar *value;
-	
-	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT(item), FALSE);
+
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT (item), FALSE);
 	value = gda_report_types_color_to_value (color);
-	return gda_report_item_set_attribute (GDA_REPORT_ITEM(item), "linecolor", value);
+	return gda_report_item_set_attribute (item, "linecolor", value);
 }
 
 
 /*
  * gda_report_item_report_get_linecolor
  */
-GdaReportColor * 
-gda_report_item_report_get_linecolor (GdaReportItemReport *item)
+GdaReportColor *
+gda_report_item_report_get_linecolor (GdaReportItem *item)
 {
-	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT(item), NULL);
-	return gda_report_types_value_to_color (gda_report_item_get_attribute (GDA_REPORT_ITEM(item), "linecolor"));
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT (item), NULL);
+	return gda_report_types_value_to_color (
+			gda_report_item_get_attribute(item, "linecolor"));
 }
 
 
@@ -784,21 +906,21 @@ gda_report_item_report_get_linecolor (GdaReportItemReport *item)
 /*
  * gda_report_item_report_set_linestyle
  */
-gboolean 
-gda_report_item_report_set_linestyle (GdaReportItemReport *item,
-		 		      const gchar *value)
+gboolean
+gda_report_item_report_set_linestyle (GdaReportItem *item,
+				      const gchar *value)
 {
-	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT(item), FALSE);
-	return gda_report_item_set_attribute (GDA_REPORT_ITEM(item), "linestyle", value); 
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT (item), FALSE);
+	return gda_report_item_set_attribute (item, "linestyle", value);
 }
 
 
 /*
  * gda_report_item_report_get_linestyle
  */
-gchar * 
-gda_report_item_report_get_linestyle (GdaReportItemReport *item)
+gchar *
+gda_report_item_report_get_linestyle (GdaReportItem *item)
 {
-	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT(item), NULL);
-	return gda_report_item_get_attribute (GDA_REPORT_ITEM(item), "linestyle");
+	g_return_val_if_fail (GDA_REPORT_IS_ITEM_REPORT (item), NULL);
+	return gda_report_item_get_attribute (item, "linestyle");
 }
