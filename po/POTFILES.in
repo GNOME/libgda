@@ -11,7 +11,6 @@ libgda/gda-export.c
 libgda/gda-field.c
 libgda/gda-init.c
 libgda/gda-log.c
-libgda/gda-marshal.c
 libgda/gda-parameter.c
 libgda/gda-quark-list.c
 libgda/gda-recordset.c

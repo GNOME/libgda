@@ -1,5 +1,9 @@
 2001-11-04  Carlos Perelló Marín <carlos@gnome-db.org>
 
+	* POTFILES.in: Removed libgda/gda-marshal.c. It's a generated file.
+
+2001-11-04  Carlos Perelló Marín <carlos@gnome-db.org>
+
 	* POTFILES.in: Sync.
 
 2001-10-13  Valek Filippov <frob@df.ru>
