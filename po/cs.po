@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda HEAD\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2003-09-11 00:35+0200\n"
-"PO-Revision-Date: 2003-08-30 14:57+0200\n"
+"POT-Creation-Date: 2003-09-18 20:25+0200\n"
+"PO-Revision-Date: 2003-09-19 01:45+0200\n"
 "Last-Translator: Miloslav Trmac <mitr@volny.cz>\n"
 "Language-Team: Czech <cs@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -234,37 +234,45 @@ msgstr "Chyba při vytváření kontejneru zprávy."
 msgid "Error creating error container."
 msgstr "Chyba při vytváření kontejneru chyby."
 
-#: providers/freetds/gda-freetds-provider.c:255
-#: providers/freetds/gda-freetds-provider.c:257
+#: providers/freetds/gda-freetds-provider.c:258
+#: providers/freetds/gda-freetds-provider.c:260
 msgid "Allocating tds context failed."
 msgstr "Alokace kontextu tds selhala."
 
 #: providers/freetds/gda-freetds-provider.c:275
 #: providers/freetds/gda-freetds-provider.c:277
+msgid "Allocating tds socket failed."
+msgstr "Alokace socketu tds selhala."
+
+#. gda_freetds_free_connection_data (tds_cnc);
+#: providers/freetds/gda-freetds-provider.c:283
+#: providers/freetds/gda-freetds-provider.c:285
+#: providers/freetds/gda-freetds-provider.c:292
+#: providers/freetds/gda-freetds-provider.c:294
 msgid "Establishing connection failed."
 msgstr "Vytváření spojení selhalo."
 
-#: providers/freetds/gda-freetds-provider.c:291
-#: providers/freetds/gda-freetds-provider.c:292
+#: providers/freetds/gda-freetds-provider.c:308
+#: providers/freetds/gda-freetds-provider.c:309
 msgid "Failed getting connection info."
 msgstr "Selhalo získání informací o spojení."
 
-#: providers/freetds/gda-freetds-provider.c:781
-#: providers/freetds/gda-freetds-provider.c:782
+#: providers/freetds/gda-freetds-provider.c:798
+#: providers/freetds/gda-freetds-provider.c:799
 msgid "Query did not succeed in execute_cmd()."
 msgstr "Dotaz neuspěl při volání execute_cmd()."
 
-#: providers/freetds/gda-freetds-provider.c:795
-#: providers/freetds/gda-freetds-provider.c:797
+#: providers/freetds/gda-freetds-provider.c:812
+#: providers/freetds/gda-freetds-provider.c:814
 msgid "Unexpected result tokens in execute_cmd()."
 msgstr "Neočekávané symboly s výsledkem při volání execute_cmd()."
 
-#: providers/freetds/gda-freetds-provider.c:805
-#: providers/freetds/gda-freetds-provider.c:806
+#: providers/freetds/gda-freetds-provider.c:822
+#: providers/freetds/gda-freetds-provider.c:823
 msgid "Unexpected return in execute_cmd()."
 msgstr "Neočekávaný návrat z volání execute_cmd()."
 
-#: providers/freetds/gda-freetds-provider.c:1043
+#: providers/freetds/gda-freetds-provider.c:1060
 #, c-format
 msgid ""
 "Msg %d, Level %d, State %d, Server %s, Line %d\n"
@@ -273,7 +281,7 @@ msgstr ""
 "Zpráva %d, Úroveň %d, Stav %d, Server %s, Řádek %d\n"
 "%s\n"
 
-#: providers/freetds/gda-freetds-provider.c:1062 providers/freetds/utils.c:44
+#: providers/freetds/gda-freetds-provider.c:1079 providers/freetds/utils.c:44
 #: providers/oracle/utils.c:74 providers/postgres/utils.c:53
 #: providers/sybase/gda-sybase-provider.c:765
 #: providers/sybase/gda-sybase-recordset.c:512
