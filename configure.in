@@ -4,8 +4,8 @@ AM_INIT_AUTOMAKE(libgda,0.2.4)
 
 AM_MAINTAINER_MODE
 AM_CONFIG_HEADER(config.h)
-AM_ACLOCAL_INCLUDE(macros)
 AM_PROG_XML_I18N_TOOLS
+AM_ACLOCAL_INCLUDE(macros)
 
 dnl
 dnl Checks for programs
@@ -116,45 +116,40 @@ else
 	AC_MSG_ERROR(not found)
 fi
 
+dnl
 dnl Check for Perl
+dnl
 AC_CHECK_PROG(perl_val, perl, true, false)
 if $perl_val
 then
-	AC_MSG_CHECKING(for Perl CORBA::ORBit module)
-	perl -e 'eval { require CORBA::ORBit; }; if ($@) { exit(1); } else { exit(0); }'
-	if test "x$?" = "x0"; then
+	AC_MSG_CHECKING(for perl ExtUtils::Embed module)
+	perl -e 'eval { require ExtUtils::Embed }; if ($@) { exit(1); } else { exit(0); }'
+	if test "x$?" = "x0"
+	then
 		AC_MSG_RESULT(found)
-		
-		AC_MSG_CHECKING(for Perl Gtk:: module)
-		perl -e 'eval { require Gtk; }; if ($@) { exit(1); } else { exit(0); }'
-		if test "x$?" = "x0"; then
-			AC_MSG_RESULT(found)
-			
-			dnl Use Gtk to figure out the other options.
-			PERL_CCCDLFLAGS=`perl -MConfig -e 'print $Config{cccdlflags},"\n";'`
-			PERL_LDDLFLAGS=`perl -MConfig -e 'print $Config{lddlflags},"\n";'`
-			PERL_CC=`perl -MConfig -e 'print $Config{cc},"\n";'`
-			PERL_LD=`perl -MConfig -e 'print $Config{ld},"\n";'`
-			PERL_CCOPTS=`perl -MGtk -MCORBA::ORBit -e ccopts`
-			PERL_LDOPTS=`perl -MGtk -MCORBA::ORBit -e ldopts`
-			AC_SUBST(PERL_CCCDLFLAGS)
-			AC_SUBST(PERL_LDDLFLAGS)
-			AC_SUBST(PERL_CC)
-			AC_SUBST(PERL_LD)
-			AC_SUBST(PERL_CCOPTS)
-			AC_SUBST(PERL_LDOPTS)
-			perl_val=true
-			AC_DEFINE(HAVE_PERL)
-		else
-			AC_MSG_RESULT(not found)
-		fi
+
+		dnl Use ExtUtils::Embed to figure out the other options.
+		PERL_CCCDLFLAGS=`perl -MConfig -e 'print $Config{cccdlflags},"\n";'`
+		PERL_LDDLFLAGS=`perl -MConfig -e 'print $Config{lddlflags},"\n";'`
+		PERL_CC=`perl -MConfig -e 'print $Config{cc},"\n";'`
+		PERL_LD=`perl -MConfig -e 'print $Config{ld},"\n";'`
+		PERL_CCOPTS=`perl -MExtUtils::Embed -e ccopts`
+		PERL_LDOPTS=`perl -MExtUtils::Embed -e ldopts`
+		AC_SUBST(PERL_CCCDLFLAGS)
+		AC_SUBST(PERL_LDDLFLAGS)
+		AC_SUBST(PERL_CC)
+		AC_SUBST(PERL_LD)
+		AC_SUBST(PERL_CCOPTS)
+		AC_SUBST(PERL_LDOPTS)
+		AC_DEFINE(HAVE_PERL)
+		perl_val=true
 	else
 		AC_MSG_RESULT(not found)
+		perl_val=false
 	fi
-else
-	perl_val=false
 fi
-AM_CONDITIONAL(WITH_PERL, test $perl_val = true)
+
+AM_CONDITIONAL(WITH_PERL, test $perl_val == true)
 
 dnl
 dnl checking for GOB (Gtk Object Builder)
@@ -650,7 +645,7 @@ dnl Translations
 dnl
 ALL_LINGUAS="ca da de el es fi fr ga gl hu it ja nl no pl pt_BR ru sk sl sv uk"
 
-AM_GNOME_GETTEXT
+AM_GNU_GETTEXT
 
 dnl
 dnl Variables
@@ -731,15 +726,14 @@ providers/gda-oracle-server/Makefile
 providers/gda-interbase-server/Makefile
 providers/gda-mdb-server/Makefile
 providers/gda-mail-server/Makefile
-providers/gda-bdb-server/Makefile
 tools/Makefile
 tools/gda-config
 tools/gda-buildserver
 tools/gda-buildclient
 tools/templates/Makefile
-report/Makefile
-report/gda-report.dtd
-report/idl/Makefile
-report/server/Makefile
+dnl report/Makefile
+dnl report.dtd
+dnl report/idl/Makefile
+dnl report/server/Makefile
 testing/Makefile
 stamp.h],[sed -e "/POTFILES =/r po/POTFILES" po/Makefile.in > po/Makefile])

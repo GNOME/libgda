@@ -1,3 +1,5 @@
+SUBDIRS = reference
+
 SGML_FILES = \
 	libgda.sgml \
 	fdl-appendix.sgml

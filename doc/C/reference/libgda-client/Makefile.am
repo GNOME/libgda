@@ -89,7 +89,8 @@ EXTRA_DIST = \
 	 libgda-client.signals \
 	 libgda-client.types \
 	 libgda-client-decl.txt \
-	 libgda-client-sections.txt
+	 libgda-client-sections.txt \
+	 libgda-client-docs.sgml
 
 all: $(sgml_generated)
 

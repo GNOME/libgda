@@ -148,7 +148,8 @@ EXTRA_DIST = \
 	 libgda-common.signals \
 	 libgda-common.types \
 	 libgda-common-decl.txt \
-	 libgda-common-sections.txt
+	 libgda-common-sections.txt \
+	 libgda-common-docs.sgml
 
 all: $(sgml_generated)
 
