@@ -6,6 +6,10 @@ INCLUDES = \
 	$(ORACLE_CFLAGS)
 
 gda_oracle_srv_2_SOURCES = \
+	gda-oracle-connection.c \
+	gda-oracle-connection.h \
+	gda-oracle-provider.c \
+	gda-oracle-provider.h \
 	main.c
 gda_oracle_srv_2_LDADD = \
 	$(LIBGDA_LIBS) \

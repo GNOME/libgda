@@ -1,3 +1,11 @@
 2001-12-20  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* gda-oracle-connection.[ch]: Oracle connection-specific data
+	management functions
+
+	* gda-oracle-provider.[ch]: Oracle implementation for the
+	GNOME::Database::Provider interface
+
+	* gda-oracle.h: main header file
+
 	* started GNOME 2 port for the Oracle provider
