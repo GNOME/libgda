@@ -9,8 +9,9 @@ SUBDIRS = \
 	providers \
 	tools
 
-dist-hook: gda.spec
-	cp gda.spec $(distdir)
+dist-hook: libgda.spec
+	cp libgda.spec $(distdir)
 
 EXTRA_DIST = \
-	COPYING
+	COPYING \
+	libgda.spec.in

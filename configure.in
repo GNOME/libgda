@@ -496,6 +496,7 @@ AC_SUBST(GDA_oafinfodir)
 
 AC_OUTPUT([
 Makefile
+libgda.spec
 macros/Makefile
 po/Makefile.in
 doc/Makefile

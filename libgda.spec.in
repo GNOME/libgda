@@ -1,0 +1,119 @@
+# Note that this is NOT a relocatable package
+# defaults for redhat
+%define name	@PACKAGE@
+%define ver	@VERSION@
+%define prefix     /usr
+%define sysconfdir /etc
+
+%define  RELEASE 1
+%define  rel     %{?CUSTOM_RELEASE} %{!?CUSTOM_RELEASE:%RELEASE}
+
+Summary: GDA
+Name: 		%name
+Version:	%ver
+Release: 	%rel
+Copyright: 	GPL
+Group: 		Applications/Databases
+Source:		ftp://ftp.gnome.org/pub/GNOME/sources/gnome-db/%{name}-%{ver}.tar.gz
+BuildRoot: 	/var/tmp/%{name}-%{ver}-root
+URL: 		http://www.gnome.org/projects/gnome-db/
+DocDir: 	%{prefix}/doc
+
+%description
+GNU Data Access is an attempt to provide uniform access to
+different kinds of data sources (databases, information
+servers, mail spools, etc).
+It is a complete architecture that provides all you need to
+access your data.
+
+libgda was part of the GNOME-DB project
+(http://www.gnome.org/projects/gnome-db), but has been
+separated from it to allow non-GNOME applications to be
+developed based on it.
+
+%package devel
+Summary: GNOME DB Development
+Group: 		Applications/Databases
+Requires:	%name = %{PACKAGE_VERSION}
+
+%description devel
+GNU Data Access is an attempt to provide uniform access to
+ different kinds of data sources (databases, information
+ servers, mail spools, etc).
+ It is a complete architecture that provides all you need to
+ access your data.
+ .
+ libgda was part of the GNOME-DB project
+ (http://www.gnome.org/projects/gnome-db), but has been
+ separated from it to allow non-GNOME applications to be
+ developed based on it.
+
+%changelog
+* Sat Sep 2 2000 Rodrigo Moya <rodrigo@linuxave.net>
+- Initial spec imported from old GNOME-DB spec
+
+%prep
+%setup
+
+%build
+
+# libtool workaround for alphalinux
+%ifarch alpha
+  ARCH_FLAGS="--host=alpha-redhat-linux"
+%endif
+
+# Needed for snapshot releases.
+if [ ! -f configure ]; then
+  CFLAGS="$RPM_OPT_FLAGS" ./autogen.sh $ARCH_FLAGS --prefix=%{prefix} --sysconfdir=%{sysconfdir} %{servers}
+else
+  CFLAGS="$RPM_OPT_FLAGS" ./configure $ARCH_FLAGS --prefix=%{prefix} --sysconfdir=%{sysconfdir} %{servers}
+fi
+
+if [ "$SMP" != "" ]; then
+  (make "MAKE=make -k -j $SMP"; exit 0)
+  make
+else
+  make
+fi
+
+%install
+rm -rf $RPM_BUILD_ROOT
+
+make prefix=$RPM_BUILD_ROOT%{prefix} sysconfdir=$RPM_BUILD_ROOT%{sysconfdir} \
+oafinfodir=$RPM_BUILD_ROOT%{prefix}/share/oaf \
+idldir=$RPM_BUILD_ROOT%{prefix}/share/idl \
+install
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%post
+if ! grep %{prefix}/lib /etc/ld.so.conf > /dev/null ; then
+  echo "%{prefix}/lib" >> /etc/ld.so.conf
+fi
+/sbin/ldconfig
+							  
+%postun
+/sbin/ldconfig
+							  
+%files
+%defattr(-, root, root)
+
+%doc AUTHORS COPYING ChangeLog NEWS README TODO
+%{prefix}/lib/libgda-common.so*
+%{prefix}/lib/libgda-client.so*
+%{prefix}/lib/libgda-server.so*
+%{prefix}/share/gda/dtd/*
+
+%files devel
+%defattr(-, root, root)
+
+%{prefix}/bin/gda-build*
+%{prefix}/bin/gda-run
+%{prefix}/bin/gda-config
+%{prefix}/lib/libgda-common.*
+%{prefix}/lib/libgda-client.*
+%{prefix}/lib/libgda-server.*
+%{prefix}/include/gda/*
+%{prefix}/share/idl/*
+
