@@ -625,6 +625,23 @@ get_tables (GdaConnection *cnc, GdaXmlDatabase *xmldb)
 	return GDA_DATA_MODEL (recset);
 }
 
+static void
+add_type_row (GdaDataModelArray *recset, const gchar *type, const gchar *owner,
+	      const gchar *comments, GdaValueType gda_type)
+{
+	GList *value_list = NULL;
+
+	value_list = g_list_append (value_list, gda_value_new_string (type));
+	value_list = g_list_append (value_list, gda_value_new_string (owner));
+	value_list = g_list_append (value_list, gda_value_new_string (comments));
+	value_list = g_list_append (value_list, gda_value_new_type (gda_type));
+
+	gda_data_model_append_row (GDA_DATA_MODEL (recset), value_list);
+
+	g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
+	g_list_free (value_list);
+}
+
 static GdaDataModel *
 get_types (GdaConnection *cnc)
 {
@@ -633,25 +650,35 @@ get_types (GdaConnection *cnc)
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
 	/* create the recordset */
-	recset = GDA_DATA_MODEL_ARRAY (gda_data_model_array_new (1));
-	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 0, _("Name"));
+	recset = GDA_DATA_MODEL_ARRAY (gda_data_model_array_new (4));
+	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 0, _("Type"));
+	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 0, _("Type"));
+	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 1, _("Owner"));
+	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 2, _("Comments"));
+	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 3, _("GDA type"));
 
 	/* fill the recordset */
-	add_string_row (recset, "bigint");
-	add_string_row (recset, "binary");
-	add_string_row (recset, "boolean");
-	add_string_row (recset, "date");
-	add_string_row (recset, "double");
-	add_string_row (recset, "integer");
-	add_string_row (recset, "list");
-	add_string_row (recset, "numeric");
-	add_string_row (recset, "point");
-	add_string_row (recset, "single");
-	add_string_row (recset, "smallint");
-	add_string_row (recset, "string");
-	add_string_row (recset, "time");
-	add_string_row (recset, "timestamp");
-	add_string_row (recset, "tinyint");
+	add_type_row (recset, "bigint", NULL, _("Big integer"), GDA_VALUE_TYPE_BIGINT);
+	add_type_row (recset, "biguint", NULL, _("Big unsigned integer"), GDA_VALUE_TYPE_BIGUINT);
+	add_type_row (recset, "binary", NULL, _("Binary"), GDA_VALUE_TYPE_BINARY);
+	add_type_row (recset, "boolean", NULL, _("Boolean"), GDA_VALUE_TYPE_BOOLEAN);
+	add_type_row (recset, "date", NULL, _("Date"), GDA_VALUE_TYPE_DATE);
+	add_type_row (recset, "double", NULL, _("Double precision"), GDA_VALUE_TYPE_DOUBLE);
+	add_type_row (recset, "integer", NULL, _("Integer"), GDA_VALUE_TYPE_INTEGER);
+	add_type_row (recset, "list", NULL, _("List"), GDA_VALUE_TYPE_LIST);
+	add_type_row (recset, "money", NULL, _("Money"), GDA_VALUE_TYPE_MONEY);
+	add_type_row (recset, "numeric", NULL, _("Numeric"), GDA_VALUE_TYPE_NUMERIC);
+	add_type_row (recset, "point", NULL, _("Point"), GDA_VALUE_TYPE_GEOMETRIC_POINT);
+	add_type_row (recset, "single", NULL, _("Single precision"), GDA_VALUE_TYPE_SINGLE);
+	add_type_row (recset, "smallint", NULL, _("Small integer"), GDA_VALUE_TYPE_SMALLINT);
+	add_type_row (recset, "smalluint", NULL, _("Small unsigned integer"), GDA_VALUE_TYPE_SMALLUINT);
+	add_type_row (recset, "string", NULL, _("String"), GDA_VALUE_TYPE_STRING);
+	add_type_row (recset, "time", NULL, _("Time"), GDA_VALUE_TYPE_TIME);
+	add_type_row (recset, "timestamp", NULL, _("Timestamp"), GDA_VALUE_TYPE_TIMESTAMP);
+	add_type_row (recset, "tinyint", NULL, _("Tiny integer"), GDA_VALUE_TYPE_TINYINT);
+	add_type_row (recset, "tinyuint", NULL, _("Tiny unsigned integer"), GDA_VALUE_TYPE_TINYUINT);
+	add_type_row (recset, "type", NULL, _("Type"), GDA_VALUE_TYPE_TYPE);
+	add_type_row (recset, "uinteger", NULL, _("Unsigned integer"), GDA_VALUE_TYPE_UINTEGER);
 
 	return GDA_DATA_MODEL (recset);
 }
