@@ -58,35 +58,41 @@ static GList *
 define_columns (GdaOracleRecordsetPrivate *priv)
 {
 	GList *fields = NULL;
-	GdaOracleValue *ora_value;
 	gint i;
+	gint result;
 
 	for (i = 0; i < priv->ncolumns; i += 1) {
-		ora_value = g_new0 (GdaOracleValue, 1);
-                if (OCI_SUCCESS != 
-			OCIParamGet (priv->hstmt,
+		GdaOracleValue *ora_value = g_new0 (GdaOracleValue, 1);
+
+		result = OCIParamGet (priv->hstmt,
 					OCI_HTYPE_STMT,
 					priv->cdata->herr,
 					(dvoid **) &(ora_value->pard),
-					(ub4) i+1)) {
-			gda_connection_add_error_string (priv->cnc, 
-				_("Could not get the Oracle parameter"));
-			break;
-		}
+					(ub4) i+1);
+		if (!gda_oracle_check_result (result, priv->cnc, priv->cdata, OCI_HTYPE_ERROR,
+				_("Could not get the Oracle parameter")))
+			return NULL;
 
-		OCIAttrGet ((dvoid *) (ora_value->pard),
-				OCI_DTYPE_PARAM,
-				&(ora_value->defined_size),
-				0,
-				OCI_ATTR_DATA_SIZE,
-				priv->cdata->herr);
+		result = OCIAttrGet ((dvoid *) (ora_value->pard),
+					OCI_DTYPE_PARAM,
+					&(ora_value->defined_size),
+					0,
+					OCI_ATTR_DATA_SIZE,
+					priv->cdata->herr);
+		if (!gda_oracle_check_result (result, priv->cnc, priv->cdata, OCI_HTYPE_ERROR,
+				_("Could not get the parameter defined size")))
+			return NULL;
 
-		OCIAttrGet ((dvoid *) (ora_value->pard),
-				OCI_DTYPE_PARAM,
-				&(ora_value->sql_type),
-				0,
-				OCI_ATTR_DATA_TYPE,
-				priv->cdata->herr);
+		result = OCIAttrGet ((dvoid *) (ora_value->pard),
+					OCI_DTYPE_PARAM,
+					&(ora_value->sql_type),
+					0,
+					OCI_ATTR_DATA_TYPE,
+					priv->cdata->herr);
+
+		if (!gda_oracle_check_result (result, priv->cnc, priv->cdata, OCI_HTYPE_ERROR,
+				_("Could not get the parameter data type")))
+			return NULL;
 
 		switch (ora_value->sql_type) {
 		case SQLT_NUM: // Numerics are coerced to string
@@ -102,8 +108,7 @@ define_columns (GdaOracleRecordsetPrivate *priv)
 		ora_value->indicator = 0;
 		ora_value->gda_type = oracle_sqltype_to_gda_type (ora_value->sql_type);
 
-		if (OCI_SUCCESS !=
-			OCIDefineByPos ((OCIStmt *) priv->hstmt,
+		result = OCIDefineByPos ((OCIStmt *) priv->hstmt,
 					(OCIDefine **) &(ora_value->hdef),
 					(OCIError *) priv->cdata->herr,
 					(ub4) i + 1,
@@ -113,10 +118,11 @@ define_columns (GdaOracleRecordsetPrivate *priv)
 					(dvoid *) &(ora_value->indicator),
 					(ub2 *) 0,
 					(ub2 *) 0, 
-					(ub4) OCI_DEFAULT)) {
-			gda_connection_add_error_string (priv->cnc, _("Could not define by position"));
+					(ub4) OCI_DEFAULT);
+		if (!gda_oracle_check_result (result, priv->cnc, priv->cdata, OCI_HTYPE_ERROR,
+				_("Could not define by position")))
 			return NULL;
-		}
+
 		fields = g_list_append (fields, ora_value);
 	}
 	return fields;
@@ -142,6 +148,7 @@ gda_oracle_recordset_describe_column (GdaDataModel *model, gint col)
 	sb1 scale;
 	ub1 nullable;
 	ub2 defined_size;
+	gint result;
 
 	g_return_val_if_fail (GDA_IS_ORACLE_RECORDSET (recset), NULL);
 	g_return_val_if_fail (recset->priv != NULL, NULL);
@@ -162,54 +169,67 @@ gda_oracle_recordset_describe_column (GdaDataModel *model, gint col)
 
 	field_attrs = gda_field_attributes_new ();
 
-	if (OCI_SUCCESS !=
-		OCIParamGet ((dvoid *) priv_data->hstmt,
+	result = OCIParamGet ((dvoid *) priv_data->hstmt,
 				(ub4) OCI_HTYPE_STMT,
 				(OCIError *) priv_data->cdata->herr,
 				(dvoid **) &pard,
-				(ub4) col + 1)) {
-		gda_connection_add_error_string (priv_data->cnc, 
-						_("Could not retrieve the parameter information from Oracle"));
+				(ub4) col + 1);
+	if (!gda_oracle_check_result (result, priv_data->cnc, priv_data->cdata, OCI_HTYPE_ERROR,
+			_("Could not get the Oracle parameter information")))
 		return NULL;
-	}
 
-	OCIAttrGet ((dvoid *) pard,
-			(ub4) OCI_DTYPE_PARAM,
-			(dvoid **) &pgchar_dummy,
-			(ub4 *) & col_name_len,
-			(ub4) OCI_ATTR_NAME,
-			(OCIError *) priv_data->cdata->herr);
+	result = OCIAttrGet ((dvoid *) pard,
+				(ub4) OCI_DTYPE_PARAM,
+				(dvoid **) &pgchar_dummy,
+				(ub4 *) & col_name_len,
+				(ub4) OCI_ATTR_NAME,
+				(OCIError *) priv_data->cdata->herr);
+	if (!gda_oracle_check_result (result, priv_data->cnc, priv_data->cdata, OCI_HTYPE_ERROR,
+			_("Could not get the Oracle column name")))
+		return NULL;
 
 	memcpy (name_buffer, pgchar_dummy, col_name_len);
 	name_buffer[col_name_len] = '\0';
 
-	OCIAttrGet ((dvoid *) pard,
-			(ub4) OCI_DTYPE_PARAM,
-			(dvoid *) &sql_type,
-			(ub4 *) 0,
-			(ub4) OCI_ATTR_DATA_TYPE,
-			(OCIError *) priv_data->cdata->herr);
+	result = OCIAttrGet ((dvoid *) pard,
+				(ub4) OCI_DTYPE_PARAM,
+				(dvoid *) &sql_type,
+				(ub4 *) 0,
+				(ub4) OCI_ATTR_DATA_TYPE,
+				(OCIError *) priv_data->cdata->herr);
+	if (!gda_oracle_check_result (result, priv_data->cnc, priv_data->cdata, OCI_HTYPE_ERROR,
+			_("Could not get the Oracle column data type")))
+		return NULL;
 
-	OCIAttrGet ((dvoid *) pard,
-			(ub4) OCI_DTYPE_PARAM,
-			(sb1 *) &scale,
-			(ub4 *) 0,
-			(ub4) OCI_ATTR_SCALE,
-			(OCIError *) priv_data->cdata->herr);
+	result = OCIAttrGet ((dvoid *) pard,
+				(ub4) OCI_DTYPE_PARAM,
+				(sb1 *) &scale,
+				(ub4 *) 0,
+				(ub4) OCI_ATTR_SCALE,
+				(OCIError *) priv_data->cdata->herr);
+	if (!gda_oracle_check_result (result, priv_data->cnc, priv_data->cdata, OCI_HTYPE_ERROR,
+			_("Could not get the Oracle column scale")))
+		return NULL;
 
-	OCIAttrGet ((dvoid *) pard,
-			(ub4) OCI_DTYPE_PARAM,
-			(ub1 *) &nullable,
-			(ub4 *) 0,
-			(ub4) OCI_ATTR_IS_NULL,
-			(OCIError *) priv_data->cdata->herr);
+	result = OCIAttrGet ((dvoid *) pard,
+				(ub4) OCI_DTYPE_PARAM,
+				(ub1 *) &nullable,
+				(ub4 *) 0,
+				(ub4) OCI_ATTR_IS_NULL,
+				(OCIError *) priv_data->cdata->herr);
+	if (!gda_oracle_check_result (result, priv_data->cnc, priv_data->cdata, OCI_HTYPE_ERROR,
+			_("Could not get the Oracle column nullable attribute")))
+		return NULL;
 
-	OCIAttrGet ((dvoid *) pard,
-			OCI_DTYPE_PARAM,
-			&defined_size,
-			0,
-			OCI_ATTR_DATA_SIZE,
-			priv_data->cdata->herr);
+	result = OCIAttrGet ((dvoid *) pard,
+				OCI_DTYPE_PARAM,
+				&defined_size,
+				0,
+				OCI_ATTR_DATA_SIZE,
+				priv_data->cdata->herr);
+	if (!gda_oracle_check_result (result, priv_data->cnc, priv_data->cdata, OCI_HTYPE_ERROR,
+			_("Could not get the Oracle defined size")))
+		return NULL;
 
 	gda_field_attributes_set_name (field_attrs, name_buffer);
 	gda_field_attributes_set_scale (field_attrs, scale);
@@ -408,7 +428,6 @@ gda_oracle_recordset_append_row (GdaDataModel *model, const GList *values)
 	GString *sql;
 	GdaRow *row;
 	gint i;
-	gint rc;
 	GList *l;
 	GdaOracleRecordset *recset = (GdaOracleRecordset *) model;
 	GdaOracleRecordsetPrivate *priv_data;

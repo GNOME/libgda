@@ -1,3 +1,12 @@
+2002-06-20  Tim Coleman <tim@timcoleman.com>
+
+	* providers/oracle/gda-oracle-provider.c:
+	* providers/oracle/gda-oracle-recordset.c:
+	Implement a consistent error handling style.
+	* providers/oracle/gda-oracle.h:
+	Add error handling functions.
+	Fix the retrieval of dates, which was a small bug.
+
 2002-06-20  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* libsql/Makefile.am: EXTRA_DIST needed files, or make distcheck

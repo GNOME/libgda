@@ -30,25 +30,37 @@
 #include <stdlib.h>
 #include <string.h>
 #include "gda-oracle.h"
+#include "gda-oracle-provider.h"
 
+/* 
+ * gda_oracle_make_error
+ * This function uses OCIErrorGet to get a description of the error to
+ * display.  The parameters are one of an OCIError or a OCIEnv handle
+ * depending on the type, which is either OCI_HTYPE_ERROR or OCI_HTYPE_ENV.
+ * Read the documentation on OCIErrorGet to understand why this is
+ *
+ * If the handle is NULL, which is an unhappy situation, it will set the
+ * error description to "NO DESCRIPTION".
+ *
+ * The error number is set to the Oracle error code.
+ */
 GdaError *
-gda_oracle_make_error (GdaOracleConnectionData *handle)
+gda_oracle_make_error (dvoid *hndlp, ub4 type)
 {
 	GdaError *error;
 	gchar errbuf[512];
-	ub4 buflen;
 	ub4 errcode;
 
 	error = gda_error_new ();
 
-	if (handle != NULL) {
-		OCIErrorGet ((dvoid *) handle->herr, 
+	if (hndlp != NULL) {
+		OCIErrorGet ((dvoid *) hndlp,
 				(ub4) 1, 
 				(text *) NULL, 
 				&errcode, 
 				errbuf, 
 				(ub4) sizeof (errbuf), 
-				(ub4) OCI_HTYPE_ERROR);
+				(ub4) type);
 	
 		gda_error_set_description (error, errbuf);	
 	} else {
@@ -60,6 +72,43 @@ gda_oracle_make_error (GdaOracleConnectionData *handle)
 	gda_error_set_sqlstate (error, _("Not available"));
 	
 	return error;
+}
+
+/* 
+ * gda_oracle_check_result
+ * This function is used for checking the result of an OCI
+ * call.  The result itself is the return value, and we
+ * need the GdaConnection and GdaOracleConnectionData to do
+ * our thing.  The type is OCI_HTYPE_ENV or OCI_HTYPE_ERROR
+ * as described for OCIErrorGet.
+ *
+ * The return value is true if there is no error, or false otherwise
+ *
+ * If the return value is OCI_SUCCESS or OCI_SUCCESS_WITH_INFO,
+ * we return TRUE.  Otherwise, if it is OCI_ERROR, try to get the
+ * Oracle error message using gda_oracle_make_error.  Otherwise,
+ * make an error using the given message.
+ */
+gboolean 
+gda_oracle_check_result (gint result, GdaConnection *cnc, 
+		GdaOracleConnectionData *priv_data, ub4 type, const gchar *msg)
+{
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+
+	switch (result) {
+	case OCI_SUCCESS:
+	case OCI_SUCCESS_WITH_INFO:
+		return TRUE;
+	case OCI_ERROR:
+		if (type == OCI_HTYPE_ERROR) 
+			gda_connection_add_error (cnc, gda_oracle_make_error (priv_data->herr, type));
+		if (type == OCI_HTYPE_ENV)
+			gda_connection_add_error (cnc, gda_oracle_make_error (priv_data->henv, type));
+		break;
+	default:
+		gda_connection_add_error_string (cnc, msg);
+	}
+	return FALSE;
 }
 
 GdaValueType 
@@ -289,7 +338,7 @@ gda_value_to_oracle_value (GdaValue *value)
 		ora_value->sql_type = SQLT_ODT;
 		oci_date = (OCIDate *) 0;
 		gda_date = gda_value_get_date (value);
-		ora_value->defined_size = 7;
+		ora_value->defined_size = sizeof (OCIDate);
 		OCIDateSetDate (oci_date, gda_date->year, gda_date->month, gda_date->day);
 		break;
 	default :
@@ -311,6 +360,9 @@ gda_oracle_set_value (GdaValue *value,
 	GDate *gdate;
 	GdaDate date;
 	GdaNumeric numeric;
+	sb2 year;
+	ub1 month;
+	ub1 day;
 
 	gchar string_buffer[ora_value->defined_size+1];
 
@@ -353,9 +405,12 @@ gda_oracle_set_value (GdaValue *value,
 		gdate = g_date_new ();
 		g_date_clear (gdate, 1);
 		OCIDateGetDate ((CONST OCIDate *) ora_value->value,
-				(sb2 *) &date.year,
-				(ub1 *) &date.month,
-				(ub1 *) &date.day);
+				(sb2 *) &year,
+				(ub1 *) &month,
+				(ub1 *) &day);
+		date.year = year;
+		date.month = month;
+		date.day = day;
 		gda_value_set_date (value, &date);
 		g_date_free (gdate);
 		break;
@@ -375,3 +430,4 @@ gda_oracle_set_value (GdaValue *value,
 		gda_value_set_string (value, ora_value->value);
 	}
 }
+

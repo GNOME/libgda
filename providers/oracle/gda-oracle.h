@@ -50,14 +50,24 @@ G_BEGIN_DECLS
  * Utility functions
  */
 
-GdaError *gda_oracle_make_error (GdaOracleConnectionData *handle);
+GdaError *gda_oracle_make_error (dvoid *hndlp, ub4 type);
 void gda_oracle_set_value (GdaValue *value, 
 				GdaOracleValue *thevalue,
 				GdaConnection *cnc);
+
 gchar *gda_oracle_value_to_sql_string (GdaValue *value);
+
 GdaValueType  oracle_sqltype_to_gda_type (const ub2 sqltype);
+
 gchar *oracle_sqltype_to_string (const ub2 sqltype);
+
 GdaOracleValue *gda_value_to_oracle_value (GdaValue *value);
+
+gboolean gda_oracle_check_result (gint result, 
+				GdaConnection *cnc, 
+				GdaOracleConnectionData *priv_data,
+				ub4 type, 
+				const gchar *msg);
 
 
 G_END_DECLS

@@ -165,6 +165,7 @@ gda_oracle_provider_open_connection (GdaServerProvider *provider,
         gchar *ora_tnsname;
 	gchar *ora_username;
 	gchar *ora_password;
+	gint result;
 
         GdaOracleProvider *ora_prv = (GdaOracleProvider *) provider;
 	GdaOracleConnectionData *priv_data;
@@ -175,75 +176,69 @@ gda_oracle_provider_open_connection (GdaServerProvider *provider,
 	priv_data = g_new0 (GdaOracleConnectionData, 1);
 
         /* initialize Oracle */
-	if (OCI_SUCCESS != 
-		OCIInitialize ((ub4) OCI_DEFAULT,
+	result = OCIInitialize ((ub4) OCI_DEFAULT,
 				(dvoid *) 0,
 				(dvoid * (*)(dvoid *, size_t)) 0,
 				(dvoid * (*)(dvoid *, dvoid *, size_t)) 0,
-				(void (*)(dvoid *, dvoid *)) 0)) {
-		gda_connection_add_error_string (
-			cnc, _("Could not initialize Oracle "));
+				(void (*)(dvoid *, dvoid *)) 0);
+
+	if (result != OCI_SUCCESS) { 
+		gda_connection_add_error_string (cnc, 
+			_("Could not initialize Oracle"));
 		return FALSE;
 	}
 
 	/* initialize the Oracle environment */
-	if (OCI_SUCCESS != 
-		OCIEnvInit ((OCIEnv **) & priv_data->henv, 
+	result = OCIEnvInit ((OCIEnv **) & priv_data->henv, 
 				(ub4) OCI_DEFAULT, 
 				(size_t) 0, 
-				(dvoid **) 0)) {
-		gda_connection_add_error_string (
-			cnc, _("Could not initialize Oracle environment"));
+				(dvoid **) 0);
+	if (result != OCI_SUCCESS) {
+		gda_connection_add_error_string (cnc, 
+			_("Could not initialize the Oracle environment"));
 		return FALSE;
 	}
 
+
 	/* create the service context */
-	if (OCI_SUCCESS !=
-		OCIHandleAlloc ((dvoid *) priv_data->henv,
+	result = OCIHandleAlloc ((dvoid *) priv_data->henv,
 				(dvoid **) &priv_data->hservice,
 				(ub4) OCI_HTYPE_SVCCTX,
 				(size_t) 0,
-				(dvoid **) 0)) {
-		gda_connection_add_error_string (
-			cnc, _("Could not initialize Oracle service context"));
+				(dvoid **) 0);
+	if (!gda_oracle_check_result (result, cnc, priv_data, OCI_HTYPE_ENV,
+			_("Could not allocate the Oracle service handle")))
 		return FALSE;
-	}
 
 	/* create the error handle */
-	if (OCI_SUCCESS != 
-		OCIHandleAlloc ((dvoid *) priv_data->henv, 
+	result = OCIHandleAlloc ((dvoid *) priv_data->henv, 
 				(dvoid **) &(priv_data->herr), 
 				(ub4) OCI_HTYPE_ERROR, 
 				(size_t) 0, 
-				(dvoid **) 0)) {
-		gda_connection_add_error_string (
-			cnc, _("Could not initialize Oracle error handle"));
+				(dvoid **) 0);
+	if (!gda_oracle_check_result (result, cnc, priv_data, OCI_HTYPE_ENV,
+			_("Could not allocate the Oracle error handle")))
 		return FALSE;
-	}
 			
 	/* we use the Multiple Sessions/Connections OCI paradigm for this server */
-	if (OCI_SUCCESS !=
-		OCIHandleAlloc ((dvoid *) priv_data->henv,
+	result = OCIHandleAlloc ((dvoid *) priv_data->henv,
 				(dvoid **) & priv_data->hserver,
 				(ub4) OCI_HTYPE_SERVER, 
 				(size_t) 0,
-				(dvoid **) 0)) {
-		gda_connection_add_error_string (
-			cnc, _("Could not initialize Oracle server handle"));
+				(dvoid **) 0);
+	if (!gda_oracle_check_result (result, cnc, priv_data, OCI_HTYPE_ENV,
+			_("Could not allocate the Oracle server handle")))
 		return FALSE;
-	}
 
 	/* create the session handle */
-	if (OCI_SUCCESS != 
-		OCIHandleAlloc ((dvoid *) priv_data->henv,
+	result = OCIHandleAlloc ((dvoid *) priv_data->henv,
 				(dvoid **) &priv_data->hsession,
 				(ub4) OCI_HTYPE_SESSION,
 				(size_t) 0,
-				(dvoid **) 0)) {
-		gda_connection_add_error_string (
-			cnc, _("Could not initialize Oracle session handle"));
+				(dvoid **) 0);
+	if (!gda_oracle_check_result (result, cnc, priv_data, OCI_HTYPE_ENV,
+			_("Could not allocate the Oracle session handle")))
 		return FALSE;
-	}
 
 	/* if the username isn't provided, try to find it in the DSN */
 	if (strlen(username) > 0)
@@ -262,85 +257,72 @@ gda_oracle_provider_open_connection (GdaServerProvider *provider,
         g_assert (priv_data != NULL);
 
         /* attach to Oracle server */
-	if (OCI_SUCCESS != 
-		OCIServerAttach (priv_data->hserver,
+	result = OCIServerAttach (priv_data->hserver,
 				priv_data->herr,
 				(text *) ora_tnsname,
 				(ub4) strlen (ora_tnsname),
-				OCI_DEFAULT)) {
-		gda_connection_add_error_string (
-			cnc, _("Could not attach to the Oracle server"));
+				OCI_DEFAULT);
+	if (!gda_oracle_check_result (result, cnc, priv_data, OCI_HTYPE_ERROR,
+			_("Could not attach to the Oracle server")))
 		return FALSE;
-	}
 
 	/* set the server attribute in the service context */
-	if (OCI_SUCCESS != 
-		OCIAttrSet ((dvoid *) priv_data->hservice, 
+	result = OCIAttrSet ((dvoid *) priv_data->hservice, 
 				(ub4) OCI_HTYPE_SVCCTX,
 				(dvoid *) priv_data->hserver, 
 				(ub4) 0,
 				(ub4) OCI_ATTR_SERVER, 
-				priv_data->herr)) {
-		gda_connection_add_error_string (
-			cnc, _("Could not set the Oracle server attribute in the service context"));
+				priv_data->herr);
+	if (!gda_oracle_check_result (result, cnc, priv_data, OCI_HTYPE_ERROR,
+			_("Could not set the Oracle server attribute in the service context")))
 		return FALSE;
-	}
 	
 	/* set the username attribute */
-	if (OCI_SUCCESS != 
-		OCIAttrSet ((dvoid *) priv_data->hsession, 
+	result = OCIAttrSet ((dvoid *) priv_data->hsession, 
 				(ub4) OCI_HTYPE_SESSION, 
 				(dvoid *) ora_username,
 				(ub4) strlen (ora_username), 
 				(ub4) OCI_ATTR_USERNAME,
-				priv_data->herr)) {
-		gda_connection_add_error_string (
-			cnc, _("Could not set the Oracle username attribute"));
+				priv_data->herr);
+	if (!gda_oracle_check_result (result, cnc, priv_data, OCI_HTYPE_ERROR,
+			_("Could not set the Oracle username attribute")))
 		return FALSE;
-	}
 
 	/* set the password attribute */
-	if (OCI_SUCCESS != 
-		OCIAttrSet ((dvoid *) priv_data->hsession, 
+	result = OCIAttrSet ((dvoid *) priv_data->hsession, 
 				(ub4) OCI_HTYPE_SESSION, 
 				(dvoid *) ora_password,
 				(ub4) strlen (ora_password), 
 				(ub4) OCI_ATTR_PASSWORD,
-				priv_data->herr)) {
-		gda_connection_add_error_string (
-			cnc, _("Could not set the Oracle password attribute"));
+				priv_data->herr);
+	if (!gda_oracle_check_result (result, cnc, priv_data, OCI_HTYPE_ERROR,
+			_("Could not set the Oracle password attribute")))
 		return FALSE;
-	}
 
 	/* begin the session */
-	if (OCI_SUCCESS != 
-		OCISessionBegin (priv_data->hservice,
+	result = OCISessionBegin (priv_data->hservice,
 				priv_data->herr,
 				priv_data->hsession,
 				(ub4) OCI_CRED_RDBMS,
-				(ub4) OCI_DEFAULT)) {
+				(ub4) OCI_DEFAULT);
+	if (!gda_oracle_check_result (result, cnc, priv_data, OCI_HTYPE_ERROR,
+			_("Could not begin the Oracle session"))) {
 		OCIServerDetach (priv_data->hserver, priv_data->herr, OCI_DEFAULT);
 		OCIHandleFree ((dvoid *) priv_data->hsession, OCI_HTYPE_SESSION);
 		priv_data->hsession = NULL;
-		
-		gda_connection_add_error_string (
-			cnc, _("Could not initialize the Oracle connection"));
 		return FALSE;
 	}
 
 	/* set the session attribute in the service context */
-	if (OCI_SUCCESS != 
-		OCIAttrSet ((dvoid *) priv_data->hservice,
+	result = OCIAttrSet ((dvoid *) priv_data->hservice,
 				(ub4) OCI_HTYPE_SVCCTX,
 				(dvoid *) priv_data->hsession,
 				(ub4) 0, 
 				(ub4) OCI_ATTR_SESSION,
-				priv_data->herr)) {
-		gda_connection_add_error_string (
-			cnc, _("Could not set the Oracle session attribute in the service context"));
+				priv_data->herr);
+	if (!gda_oracle_check_result (result, cnc, priv_data, OCI_HTYPE_ERROR,
+			_("Could not set the Oracle session attribute in the service context")))
 		return FALSE;
-	
-	}
 
 	/* attach the oracle connection data to the gda connection object */
 	g_object_set_data (G_OBJECT (cnc), OBJECT_DATA_ORACLE_HANDLE, priv_data);
@@ -354,6 +336,7 @@ gda_oracle_provider_close_connection (GdaServerProvider *provider, GdaConnection
 {
 	GdaOracleConnectionData *priv_data;
 	GdaOracleProvider *ora_prv = (GdaOracleProvider *) provider;
+	gint result;
 
 	g_return_val_if_fail (GDA_IS_ORACLE_PROVIDER (ora_prv), FALSE);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
@@ -363,13 +346,13 @@ gda_oracle_provider_close_connection (GdaServerProvider *provider, GdaConnection
 		return FALSE;
 
 	/* end the session */
-	if (OCI_SUCCESS != 
+	if ((result =
 		OCISessionEnd (priv_data->hservice,
 				priv_data->herr,
 				priv_data->hsession,
-				OCI_DEFAULT)) {
-		gda_connection_add_error_string (
-			cnc, _("Could not end the Oracle session"));
+				OCI_DEFAULT))) {
+		gda_connection_add_error (cnc, 
+			gda_oracle_make_error (priv_data->herr, OCI_HTYPE_ERROR));
 		return FALSE;
 	}
 
@@ -391,7 +374,18 @@ gda_oracle_provider_close_connection (GdaServerProvider *provider, GdaConnection
 	return TRUE;
 }
 
-/* prepare_oracle_statement prepares the Oracle statement handle for use */
+/* 
+ * prepare_oracle_statement prepares the Oracle statement handle for use 
+ *
+ * Its parameters are the connection object, a list of parameters to be bound,
+ * and the SQL statement to be prepared.
+ *
+ * It's generally good style to name your parameters beginning with a colon (:)
+ * i.e. :parameter_name.  This will avoid confusion.
+ *
+ * IMPORTANT: If you pass in a parameter in this list that isn't in the statement
+ * it will still try to perform a bind anyway.
+ */
 static OCIStmt *
 prepare_oracle_statement (GdaConnection *cnc, GdaParameterList *params, gchar *sql)
 {
@@ -408,37 +402,25 @@ prepare_oracle_statement (GdaConnection *cnc, GdaParameterList *params, gchar *s
 	}
 
 	/* Allocate an oracle statement handle */
-	if ((result =
-		OCIHandleAlloc ((dvoid *) priv_data->henv,
+	result = OCIHandleAlloc ((dvoid *) priv_data->henv,
 				(dvoid **) &stmthp,
 				(ub4) OCI_HTYPE_STMT,
 				(size_t) 0,
-				(dvoid **) 0))) {
-		switch (result) {
-		case OCI_SUCCESS_WITH_INFO:
-			break;
-		default:
-			gda_connection_add_error (cnc, gda_oracle_make_error (priv_data));
-			return NULL;
-		}
-	}
+				(dvoid **) 0);
+	if (!gda_oracle_check_result (result, cnc, priv_data, OCI_HTYPE_ENV,
+			_("Could not allocate the Oracle statement handle")))
+		return NULL;
 	
 	/* Prepare the statement */
-	if ((result = 
-		OCIStmtPrepare ((dvoid *) stmthp,
+	result = OCIStmtPrepare ((dvoid *) stmthp,
 				(dvoid *) priv_data->herr,
 				(text *) sql,
 				(ub4) strlen(sql),
 				(ub4) OCI_NTV_SYNTAX,
-				(ub4) OCI_DEFAULT))) {
-		switch (result) {
-		case OCI_SUCCESS_WITH_INFO:
-			break;
-		default:
-			gda_connection_add_error (cnc, gda_oracle_make_error (priv_data));
-			return NULL;
-		}
-	}
+				(ub4) OCI_DEFAULT);
+	if (!gda_oracle_check_result (result, cnc, priv_data, OCI_HTYPE_ERROR,
+			_("Could not prepare the Oracle statement")))
+		return NULL;
 
 	/* Bind parameters */
 	if (params != NULL) {
@@ -452,8 +434,7 @@ prepare_oracle_statement (GdaConnection *cnc, GdaParameterList *params, gchar *s
 			GdaOracleValue *ora_value = gda_value_to_oracle_value (gda_value);
 			OCIBind *bindpp = (OCIBind *) 0;
 
-			if ((result =
-				OCIBindByName ((dvoid *) stmthp,
+			result = OCIBindByName ((dvoid *) stmthp,
 						(OCIBind **) &bindpp,
 						(OCIError *) priv_data->herr,
 						(text *) parm_name,
@@ -466,15 +447,10 @@ prepare_oracle_statement (GdaConnection *cnc, GdaParameterList *params, gchar *s
 						(ub2) 0,
 						(ub4) 0,
 						(ub4 *) 0,
-						(ub4) OCI_DEFAULT))) {
-				switch (result) {
-				case OCI_SUCCESS_WITH_INFO:
-					break;
-				default:
-					gda_connection_add_error (cnc, gda_oracle_make_error (priv_data));
-					return NULL;
-				}
-			}
+						(ub4) OCI_DEFAULT);
+			if (!gda_oracle_check_result (result, cnc, priv_data, OCI_HTYPE_ERROR,
+					_("Could not bind the Oracle statement parameter")))
+				return NULL;
 		}
 	}
 	return stmthp;
@@ -509,44 +485,42 @@ process_sql_commands (GList *reclist, GdaConnection *cnc,
 			/* prepare the statement for execution */
 			OCIStmt *stmthp = prepare_oracle_statement (cnc, params, arr[n]);
 
-			if (OCI_SUCCESS != 
-				OCIAttrGet (stmthp,
+			result = OCIAttrGet (stmthp,
 						OCI_HTYPE_STMT,
 						(dvoid *) &priv_data->stmt_type,
 						NULL,
 						OCI_ATTR_STMT_TYPE,
-						priv_data->herr)) {
-				gda_connection_add_error_string (
-					cnc, _("Could not get the Oracle statement type"));
+						priv_data->herr);
+			if (!gda_oracle_check_result (result, cnc, priv_data, OCI_HTYPE_ERROR,
+					_("Could not get the Oracle statement type")))
 				return NULL;
-			}
 				
 
-			if ((result = OCIStmtExecute (priv_data->hservice,
+			result = OCIStmtExecute (priv_data->hservice,
 						stmthp,
 						priv_data->herr,
 						(ub4) ((OCI_STMT_SELECT == priv_data->stmt_type) ? 0 : 1),
 						(ub4) 0,
 						(CONST OCISnapshot *) NULL,
 						(OCISnapshot *) NULL,
-						OCI_DEFAULT))) {
-				switch (result) {
-				case OCI_NO_DATA:
-					continue;
-				default:
-					gda_connection_add_error_string (
-						cnc, _("Could not execute the Oracle command"));
-					return NULL;
-				}
-			}
+						OCI_DEFAULT);
+			if (result == OCI_NO_DATA) 
+				continue;
+
+			if (!gda_oracle_check_result (result, cnc, priv_data, OCI_HTYPE_ERROR,
+					_("Could not execute the Oracle statement")))
+				return NULL;
 
 			/* get the number of columns in the result set */
-			OCIAttrGet ((dvoid *) stmthp,
-					(ub4) OCI_HTYPE_STMT,
-					(dvoid *) &ncolumns,
-					(ub4 *) 0,
-					(ub4) OCI_ATTR_PARAM_COUNT,
-					priv_data->herr);
+			result = OCIAttrGet ((dvoid *) stmthp,
+						(ub4) OCI_HTYPE_STMT,
+						(dvoid *) &ncolumns,
+						(ub4 *) 0,
+						(ub4) OCI_ATTR_PARAM_COUNT,
+						priv_data->herr);
+			if (!gda_oracle_check_result (result, cnc, priv_data, OCI_HTYPE_ERROR,
+					_("Could not get the number of columns in the result set")))
+				return NULL;
 
 			for (i = 0; i < ncolumns; i += 1) {
 				text *pgchar_dummy = (text *) 0;
@@ -554,25 +528,25 @@ process_sql_commands (GList *reclist, GdaConnection *cnc,
 				OCIParam *pard = (OCIParam *) 0;
 				gchar *name_buffer;
 
-				if (OCI_SUCCESS != 
-					OCIParamGet ((dvoid *) stmthp,
+				result = OCIParamGet ((dvoid *) stmthp,
 							OCI_HTYPE_STMT,
 							priv_data->herr,
 							(dvoid **) &pard,
-							(ub4) i + 1)) {
+							(ub4) i + 1);
+				if (!gda_oracle_check_result (result, cnc, priv_data, OCI_HTYPE_ERROR,
+						_("Could not get the parameter descripter in the result set")))
 					return NULL;
-				}
-				if (OCI_SUCCESS != 
-					OCIAttrGet ((dvoid *) pard,
+
+				result = OCIAttrGet ((dvoid *) pard,
 							(ub4) OCI_DTYPE_PARAM,
 							(dvoid **) &pgchar_dummy,
 							(ub4 *) &col_name_len,
 							(ub4) OCI_ATTR_NAME,
-							(OCIError *) priv_data->herr)) {
-					gda_connection_add_error_string (
-						cnc, _("Could not get the column name"));
+							(OCIError *) priv_data->herr);
+				if (!gda_oracle_check_result (result, cnc, priv_data, OCI_HTYPE_ERROR,
+						_("Could not get the column name in the result set")))
 					return NULL;
-				}
+
 				name_buffer = g_malloc0 (col_name_len + 1);
 				memcpy (name_buffer, pgchar_dummy, col_name_len);
 				name_buffer[col_name_len] = '\0';
@@ -686,6 +660,7 @@ gda_oracle_provider_execute_command (GdaServerProvider *provider,
 	gchar *str;
 	GdaOracleProvider *ora_prv = (GdaOracleProvider *) provider;
 	GdaOracleConnectionData *priv_data;
+	gint result;
 
 	GdaCommandOptions options;
 	GdaTransaction *xaction;
@@ -706,16 +681,15 @@ gda_oracle_provider_execute_command (GdaServerProvider *provider,
 	if (xaction != NULL) {
 		GdaOracleTransaction *ora_xaction = g_object_get_data (G_OBJECT (xaction), OBJECT_DATA_ORACLE_HANDLE);
 		/* attach a transaction */
-		if (OCI_SUCCESS !=
-			OCIAttrSet ((dvoid *) priv_data->hservice,
+		result = OCIAttrSet ((dvoid *) priv_data->hservice,
 					OCI_HTYPE_SVCCTX,
 					(dvoid *) ora_xaction->txnhp,
 					0,
 					OCI_ATTR_TRANS,
-					priv_data->herr)) {
-			gda_connection_add_error (cnc, gda_oracle_make_error (priv_data));
-			return FALSE;
-		}
+					priv_data->herr);
+		if (!gda_oracle_check_result (result, cnc, priv_data, OCI_HTYPE_ERROR,
+				_("Could not attach the transaction to the service context")))
+			return NULL;
 	}
 
 	switch (gda_command_get_command_type (cmd)) {
@@ -743,6 +717,7 @@ gda_oracle_provider_begin_transaction (GdaServerProvider *provider,
 	GdaOracleProvider *ora_prv = (GdaOracleProvider *) provider;
 	GdaOracleTransaction *ora_xaction;
 	gchar *xaction_name;
+	gint result;
 
 	g_return_val_if_fail (GDA_IS_ORACLE_PROVIDER (ora_prv), FALSE);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
@@ -757,51 +732,47 @@ gda_oracle_provider_begin_transaction (GdaServerProvider *provider,
 	}
 
 	/* allocate the Oracle transaction handle */
-	if (OCI_SUCCESS !=
-		OCIHandleAlloc ((dvoid *) priv_data->henv,
+	result = OCIHandleAlloc ((dvoid *) priv_data->henv,
 				(dvoid **) &(ora_xaction->txnhp),
 				(ub4) OCI_HTYPE_TRANS,
 				(size_t) 0,
-				(dvoid **) 0)) {
-		gda_connection_add_error (cnc, gda_oracle_make_error (priv_data));
+				(dvoid **) 0);
+	if (!gda_oracle_check_result (result, cnc, priv_data, OCI_HTYPE_ENV,
+			_("Could not allocate the Oracle transaction handle")))
 		return FALSE;
-	}
 
 	/* set the transaction name if applicable */
  	xaction_name = gda_transaction_get_name (xaction);
-	if (OCI_SUCCESS !=
-		OCIAttrSet ((dvoid *) ora_xaction->txnhp,
+	result = OCIAttrSet ((dvoid *) ora_xaction->txnhp,
 				OCI_HTYPE_TRANS,
 				(text *) xaction_name,
 				strlen (xaction_name),
 				OCI_ATTR_TRANS_NAME,
-				priv_data->herr)) {
-		gda_connection_add_error (cnc, gda_oracle_make_error (priv_data));
+				priv_data->herr);
+	if (!gda_oracle_check_result (result, cnc, priv_data, OCI_HTYPE_ERROR,
+			_("Could not set the Oracle transaction name")))
 		return FALSE;
-	}
 	
 
 	/* attach the transaction to the service context */
-	if (OCI_SUCCESS !=
-		OCIAttrSet ((dvoid *) priv_data->hservice,
+	result = OCIAttrSet ((dvoid *) priv_data->hservice,
 				OCI_HTYPE_SVCCTX,
 				(dvoid *) ora_xaction->txnhp,
 				0,
 				OCI_ATTR_TRANS,
-				priv_data->herr)) {
-		gda_connection_add_error (cnc, gda_oracle_make_error (priv_data));
+				priv_data->herr);
+	if (!gda_oracle_check_result (result, cnc, priv_data, OCI_HTYPE_ERROR,
+			_("Could not attach the transaction to the service context")))
 		return FALSE;
-	}
 
 	/* start the transaction */
-        if (OCI_SUCCESS != 
-		OCITransStart (priv_data->hservice, 
+	result = OCITransStart (priv_data->hservice, 
 				priv_data->herr, 
 				60, 
-				OCI_TRANS_NEW)) {
-		gda_connection_add_error (cnc, gda_oracle_make_error (priv_data));
+				OCI_TRANS_NEW);
+	if (!gda_oracle_check_result (result, cnc, priv_data, OCI_HTYPE_ERROR,
+			_("Could not start the Oracle transaction")))
 		return FALSE;
-	}
 
 	g_object_set_data (G_OBJECT (xaction), OBJECT_DATA_ORACLE_HANDLE, ora_xaction);
 	return TRUE;
@@ -816,6 +787,7 @@ gda_oracle_provider_commit_transaction (GdaServerProvider *provider,
 	GdaOracleConnectionData *priv_data;
 	GdaOracleProvider *ora_prv = (GdaOracleProvider *) provider;
 	GdaOracleTransaction *ora_xaction;
+	gint result;
 
 	g_return_val_if_fail (GDA_IS_ORACLE_PROVIDER (ora_prv), FALSE);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
@@ -829,35 +801,32 @@ gda_oracle_provider_commit_transaction (GdaServerProvider *provider,
 	}
 
 	/* attach the transaction to the service context */
-	if (OCI_SUCCESS !=
-		OCIAttrSet ((dvoid *) priv_data->hservice,
+	result = OCIAttrSet ((dvoid *) priv_data->hservice,
 				OCI_HTYPE_SVCCTX,
 				(dvoid *) ora_xaction->txnhp,
 				0,
 				OCI_ATTR_TRANS,
-				priv_data->herr)) {
-		gda_connection_add_error (cnc, gda_oracle_make_error (priv_data));
+				priv_data->herr);
+	if (!gda_oracle_check_result (result, cnc, priv_data, OCI_HTYPE_ERROR,
+			_("Could not attach the transaction to the service context")))
 		return FALSE;
-	}
 	
 
 	/* prepare to commit.  This may return OCI_SUCCESS_WITH_INFO.?? */
-	if (OCI_SUCCESS != 
-		OCITransPrepare (priv_data->hservice,
-				priv_data->herr,
-				(ub4) 0)) {
-		gda_connection_add_error (cnc, gda_oracle_make_error (priv_data));
+	result = OCITransPrepare (priv_data->hservice,
+					priv_data->herr,
+					(ub4) 0);
+	if (!gda_oracle_check_result (result, cnc, priv_data, OCI_HTYPE_ERROR,
+			_("Could not prepare the transaction to commit")))
 		return FALSE;
-	}
 
 	/* commit */
-	if (OCI_SUCCESS != 
-		OCITransCommit (priv_data->hservice, 
+	result = OCITransCommit (priv_data->hservice, 
 				priv_data->herr, 
-				OCI_DEFAULT)) {
-		gda_connection_add_error (cnc, gda_oracle_make_error (priv_data));
+				OCI_DEFAULT);
+	if (!gda_oracle_check_result (result, cnc, priv_data, OCI_HTYPE_ERROR,
+			_("Could not commit the Oracle transaction")))
 		return FALSE;
-	}
 
 	return TRUE;
 
@@ -872,6 +841,7 @@ gda_oracle_provider_rollback_transaction (GdaServerProvider *provider,
 	GdaOracleConnectionData *priv_data;
 	GdaOracleProvider *ora_prv = (GdaOracleProvider *) provider;
 	GdaOracleTransaction *ora_xaction;
+	gint result;
 
 	g_return_val_if_fail (GDA_IS_ORACLE_PROVIDER (ora_prv), FALSE);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
@@ -886,24 +856,22 @@ gda_oracle_provider_rollback_transaction (GdaServerProvider *provider,
 	}
 
 	/* attach the transaction to the service context */
-	if (OCI_SUCCESS !=
-		OCIAttrSet ((dvoid *) priv_data->hservice,
+	result = OCIAttrSet ((dvoid *) priv_data->hservice,
 				OCI_HTYPE_SVCCTX,
 				(dvoid *) ora_xaction->txnhp,
 				0,
 				OCI_ATTR_TRANS,
-				priv_data->herr)) {
-		gda_connection_add_error (cnc, gda_oracle_make_error (priv_data));
+				priv_data->herr);
+	if (!gda_oracle_check_result (result, cnc, priv_data, OCI_HTYPE_ERROR,
+			_("Could not attach the transaction to the service context")))
 		return FALSE;
-	}
 
-	if (OCI_SUCCESS != 
-		OCITransRollback (priv_data->hservice, 
+	result = OCITransRollback (priv_data->hservice, 
 				priv_data->herr, 
-				OCI_DEFAULT)) {
-		gda_connection_add_error (cnc, gda_oracle_make_error (priv_data));
+				OCI_DEFAULT);
+	if (!gda_oracle_check_result (result, cnc, priv_data, OCI_HTYPE_ERROR,
+			_("Could not rollback the Oracle transaction")))
 		return FALSE;
-	}
 
 	return TRUE;
 }
@@ -1038,8 +1006,9 @@ gda_oracle_init_md_recset (GdaConnection *cnc)
 static GList *
 gda_oracle_fill_md_data (const gchar *tblname, 
 			GdaDataModelArray *recset,
-			GdaOracleConnectionData *priv_data)
+			GdaConnection *cnc)
 {
+	GdaOracleConnectionData *priv_data;
 	OCIDescribe *dschp = (OCIDescribe *) 0;
 	OCIParam *parmh;    /* parameter handle */
 	OCIParam *collsthd; /* handle to list of columns */
@@ -1047,61 +1016,64 @@ gda_oracle_fill_md_data (const gchar *tblname,
 	gint i;
 	ub2 numcols;
 	GList *list = NULL;
+	gint result;
+
+	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_ORACLE_HANDLE);
 
 	/* Allocate the Describe handle */
-	if (OCI_SUCCESS != 
-		OCIHandleAlloc ((dvoid *) priv_data->henv,
+	result = OCIHandleAlloc ((dvoid *) priv_data->henv,
 				(dvoid **) &dschp,
 				(ub4) OCI_HTYPE_DESCRIBE,
 				(size_t) 0, 
-				(dvoid **) 0)) {
+				(dvoid **) 0);
+	if (!gda_oracle_check_result (result, cnc, priv_data, OCI_HTYPE_ENV,
+			_("Could not allocate the Oracle describe handle")))
 		return NULL;
-	}
 
 	/* Describe the table */
-	if (OCI_SUCCESS != 
-		OCIDescribeAny (priv_data->hservice,
+	result = OCIDescribeAny (priv_data->hservice,
 				priv_data->herr,
 				(text *) tblname,
 				strlen (tblname),
 				OCI_OTYPE_NAME,
 				0,
 				OCI_PTYPE_TABLE,
-				(OCIDescribe *) dschp)) {
+				(OCIDescribe *) dschp);
+	if (!gda_oracle_check_result (result, cnc, priv_data, OCI_HTYPE_ERROR,
+			_("Could not describe the Oracle table")))
 		return NULL;
-	}
 
 	/* Get the parameter handle */
-	if (OCI_SUCCESS != 
-		OCIAttrGet ((dvoid *) dschp,
+	result = OCIAttrGet ((dvoid *) dschp,
 				(ub4) OCI_HTYPE_DESCRIBE, 
 				(dvoid **) &parmh,
 				(ub4 *) 0,
 				(ub4) OCI_ATTR_PARAM,
-				(OCIError *) priv_data->herr)) {
+				(OCIError *) priv_data->herr);
+	if (!gda_oracle_check_result (result, cnc, priv_data, OCI_HTYPE_ERROR,
+			_("Could not get the Oracle parameter handle")))
 		return NULL;
-	}
 
 	/* Get the number of columns */
-	if (OCI_SUCCESS !=
-		OCIAttrGet ((dvoid *) parmh,
+	result = OCIAttrGet ((dvoid *) parmh,
 				(ub4) OCI_DTYPE_PARAM,
 				(dvoid *) &numcols,
 				(ub4 *) 0,
 				(ub4) OCI_ATTR_NUM_COLS,
-				(OCIError *) priv_data->herr)) {
+				(OCIError *) priv_data->herr);
+	if (!gda_oracle_check_result (result, cnc, priv_data, OCI_HTYPE_ERROR,
+			_("Could not get the number of columns in the table")))
 		return NULL;
-	}
 
-	if (OCI_NO_DATA ==
-		OCIAttrGet ((dvoid *) parmh,
+	result = OCIAttrGet ((dvoid *) parmh,
 				(ub4) OCI_DTYPE_PARAM,
 				(dvoid *) &collsthd,
 				(ub4 *) 0,
 				(ub4) OCI_ATTR_LIST_COLUMNS,
-				(OCIError *) priv_data->herr)) {
+				(OCIError *) priv_data->herr);
+	if (!gda_oracle_check_result (result, cnc, priv_data, OCI_HTYPE_ERROR,
+			_("Could not get the column list")))
 		return NULL;
-	}
 
 	for (i = 1; i <= numcols; i += 1) {
 		text *strp;
@@ -1117,25 +1089,25 @@ gda_oracle_fill_md_data (const gchar *tblname,
 		GList *rowlist = NULL;
 
 		/* Get the column handle */
-		if (OCI_SUCCESS != 
-			OCIParamGet ((dvoid *) collsthd,
+		result = OCIParamGet ((dvoid *) collsthd,
 					(ub4) OCI_DTYPE_PARAM,
 					(OCIError *) priv_data->herr,
 					(dvoid **) &colhd,
-					(ub2) i)) {
+					(ub2) i);
+		if (!gda_oracle_check_result (result, cnc, priv_data, OCI_HTYPE_ERROR,
+				_("Could not get the Oracle column handle")))
 			return NULL;
-		}
 		
 		/* Field name */
-		if (OCI_SUCCESS !=
-			OCIAttrGet ((dvoid *) colhd,
+		result = OCIAttrGet ((dvoid *) colhd,
 					(ub4) OCI_DTYPE_PARAM,
 					(dvoid *) &strp,
 					(ub4 *) &sizep,
 					(ub4) OCI_ATTR_NAME,
-					(OCIError *) priv_data->herr)) {
+					(OCIError *) priv_data->herr);
+		if (!gda_oracle_check_result (result, cnc, priv_data, OCI_HTYPE_ERROR,
+				_("Could not get the Oracle field name")))
 			return NULL;
-		}
 
 		colname = g_malloc0 (sizep + 1);
 		memcpy (colname, strp, (size_t) sizep);
@@ -1145,56 +1117,59 @@ gda_oracle_fill_md_data (const gchar *tblname,
 
 		/* Data type */
 		typename = g_malloc0 (31);
-		if (OCI_SUCCESS !=
-			OCIAttrGet ((dvoid *)colhd,
+		result = OCIAttrGet ((dvoid *)colhd,
 					(ub4) OCI_DTYPE_PARAM,
 					(dvoid *) &type,
 					(ub4 *) 0,
 					(ub4) OCI_ATTR_DATA_TYPE,
-					(OCIError *) priv_data->herr)) {
+					(OCIError *) priv_data->herr);
+		if (!gda_oracle_check_result (result, cnc, priv_data, OCI_HTYPE_ERROR,
+				_("Could not get the Oracle field data type")))
 			return NULL;
-		}
 
 		typename = oracle_sqltype_to_string (type);
 		value = gda_value_new_string (typename);
 		rowlist = g_list_append (rowlist, value);
 
 		/* Defined Size */
-		if (OCI_SUCCESS !=
-			OCIAttrGet ((dvoid *)colhd,
+		result = OCIAttrGet ((dvoid *)colhd,
 					(ub4) OCI_DTYPE_PARAM,
 					(dvoid *) &defined_size,
 					(ub4 *) 0,
 					(ub4) OCI_ATTR_DATA_SIZE,
-					(OCIError *) priv_data->herr)) {
+					(OCIError *) priv_data->herr);
+		if (!gda_oracle_check_result (result, cnc, priv_data, OCI_HTYPE_ERROR,
+				_("Could not get the Oracle field defined size")))
 			return NULL;
-		}
+
 		value = gda_value_new_integer (defined_size);
 		rowlist = g_list_append (rowlist, value);
 
 		/* Scale */
-		if (OCI_SUCCESS !=
-			OCIAttrGet ((dvoid *)colhd,
+		result = OCIAttrGet ((dvoid *)colhd,
 					(ub4) OCI_DTYPE_PARAM,
 					(dvoid *) &scale,
 					(ub4 *) 0,
 					(ub4) OCI_ATTR_SCALE,
-					(OCIError *) priv_data->herr)) {
+					(OCIError *) priv_data->herr);
+		if (!gda_oracle_check_result (result, cnc, priv_data, OCI_HTYPE_ERROR,
+				_("Could not get the Oracle field scale")))
 			return NULL;
-		}
+
 		value = gda_value_new_integer (scale);
 		rowlist = g_list_append (rowlist, value);
 
 		/* Not null? */
-		if (OCI_SUCCESS !=
-			OCIAttrGet ((dvoid *)colhd,
+		result = OCIAttrGet ((dvoid *)colhd,
 					(ub4) OCI_DTYPE_PARAM,
 					(dvoid *) &nullable,
 					(ub4 *) 0,
 					(ub4) OCI_ATTR_DATA_SIZE,
-					(OCIError *) priv_data->herr)) {
+					(OCIError *) priv_data->herr);
+		if (!gda_oracle_check_result (result, cnc, priv_data, OCI_HTYPE_ERROR,
+				_("Could not get the Oracle field nullable attribute")))
 			return NULL;
-		}
+
 		value = gda_value_new_boolean (nullable > 0);
 		rowlist = g_list_append (rowlist, value);
 
@@ -1239,49 +1214,64 @@ get_oracle_users (GdaConnection *cnc, GdaParameterList *params)
 	return recset;
 }
 
+/*
+ * get_oracle_objects
+ *
+ * This function gets the objects of the given schema type from the
+ * database.  This is done by quering against the USER_OBJECTS
+ * table which the OBJECT_TYPE parameter set to the appropriate
+ * value.  This makes use of parameter binding, so it is a good
+ * test to see if that is working for strings
+ *
+ * We effectively ignore the GdaParameterList we are given
+ * because I don't want to rely on it being empty, and I can't
+ * see any use for any user passed parameters at this point.
+ */
 static GdaDataModel *
 get_oracle_objects (GdaConnection *cnc, GdaParameterList *params, GdaConnectionSchema schema)
 {
 	GList *reclist;
 	GdaDataModel *recset;
-	gchar *sql = "SELECT OBJECT_NAME FROM USER_OBJECTS WHERE OBJECT_TYPE=:OBJ_TYPE";
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+	GdaParameterList *query_params = gda_parameter_list_new ();
+        GString *sql = g_string_new ("SELECT OBJECT_NAME FROM USER_OBJECTS WHERE OBJECT_TYPE=:OBJ_TYPE");
 
-	if (!params)
-		params = gda_parameter_list_new ();
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
 	/* add the object type parameter */
 	switch (schema) {
 	case GDA_CONNECTION_SCHEMA_INDEXES:
-		gda_parameter_list_add_parameter (params, 
+		gda_parameter_list_add_parameter (query_params, 
 			gda_parameter_new_string (":OBJ_TYPE", "INDEX"));
 		break;
 	case GDA_CONNECTION_SCHEMA_PROCEDURES:
-		gda_parameter_list_add_parameter (params, 
+		gda_parameter_list_add_parameter (query_params, 
 			gda_parameter_new_string (":OBJ_TYPE", "PROCEDURE"));
 		break;
 	case GDA_CONNECTION_SCHEMA_SEQUENCES:
-		gda_parameter_list_add_parameter (params, 
+		gda_parameter_list_add_parameter (query_params, 
 			gda_parameter_new_string (":OBJ_TYPE", "SEQUENCE"));
 		break;
 	case GDA_CONNECTION_SCHEMA_TABLES:
-		gda_parameter_list_add_parameter (params, 
+		gda_parameter_list_add_parameter (query_params, 
 			gda_parameter_new_string (":OBJ_TYPE", "TABLE"));
 		break;
 	case GDA_CONNECTION_SCHEMA_TRIGGERS:
-		gda_parameter_list_add_parameter (params, 
+		gda_parameter_list_add_parameter (query_params, 
 			gda_parameter_new_string (":OBJ_TYPE", "TRIGGER"));
 		break;
 	case GDA_CONNECTION_SCHEMA_VIEWS:
-		gda_parameter_list_add_parameter (params, 
+		gda_parameter_list_add_parameter (query_params, 
 			gda_parameter_new_string (":OBJ_TYPE", "VIEW"));
 		break;
 	default:
 		return NULL;
 	}
 
-	reclist = process_sql_commands (NULL, cnc, sql, params,
+	reclist = process_sql_commands (NULL, cnc, sql->str, query_params,
 			GDA_COMMAND_OPTION_STOP_ON_ERRORS);
+
+	gda_parameter_list_free (query_params);
+	g_string_free (sql);
 
 	if (!reclist)
 		return NULL;
@@ -1340,7 +1330,6 @@ static GdaDataModel *
 get_oracle_fields_metadata (GdaConnection *cnc, GdaParameterList *params)
 {
 	GList *list;
-	GdaOracleConnectionData *priv_data;
 	GdaDataModelArray *recset;
 	GdaParameter *par;
 	const gchar *tblname;
@@ -1354,10 +1343,9 @@ get_oracle_fields_metadata (GdaConnection *cnc, GdaParameterList *params)
 	tblname = gda_value_get_string ((GdaValue *) gda_parameter_get_value (par));
 	g_return_val_if_fail (tblname != NULL, NULL);
 
-	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_ORACLE_HANDLE);
 
 	recset = gda_oracle_init_md_recset (cnc);
-	list = gda_oracle_fill_md_data (tblname, recset, priv_data);
+	list = gda_oracle_fill_md_data (tblname, recset, cnc);
 	g_list_foreach (list, add_g_list_row, recset);
 	g_list_free (list);
 
@@ -1376,41 +1364,44 @@ gda_oracle_provider_get_schema (GdaServerProvider *provider,
 
 	switch (schema) {
 	case GDA_CONNECTION_SCHEMA_AGGREGATES :
-		return get_oracle_aggregates (cnc, params);
+		recset = get_oracle_aggregates (cnc, params);
+		break;
 	case GDA_CONNECTION_SCHEMA_FIELDS :
-		return get_oracle_fields_metadata (cnc, params);
+		recset = get_oracle_fields_metadata (cnc, params);
+		break;
 	case GDA_CONNECTION_SCHEMA_TYPES :
-		return get_oracle_types (cnc, params);
+		recset = get_oracle_types (cnc, params);
+		break;
 	case GDA_CONNECTION_SCHEMA_USERS :
-		return get_oracle_users (cnc, params);
-	case GDA_CONNECTION_SCHEMA_DATABASES :
-		return NULL;
+		recset = get_oracle_users (cnc, params);
+		break;
 	case GDA_CONNECTION_SCHEMA_INDEXES :
 		recset = get_oracle_objects (cnc, params, schema);
 		gda_data_model_set_column_title (recset, 0, _("Indexes"));
-		return recset;
+		break;
 	case GDA_CONNECTION_SCHEMA_PROCEDURES :
 		recset = get_oracle_objects (cnc, params, schema);
 		gda_data_model_set_column_title (recset, 0, _("Procedures"));
-		return recset;
+		break;
 	case GDA_CONNECTION_SCHEMA_SEQUENCES :
 		recset = get_oracle_objects (cnc, params, schema);
 		gda_data_model_set_column_title (recset, 0, _("Sequences"));
-		return recset;
+		break;
 	case GDA_CONNECTION_SCHEMA_TABLES :
 		recset = get_oracle_objects (cnc, params, schema);
 		gda_data_model_set_column_title (recset, 0, _("Tables"));
-		return recset;
+		break;
 	case GDA_CONNECTION_SCHEMA_TRIGGERS :
 		recset = get_oracle_objects (cnc, params, schema);
 		gda_data_model_set_column_title (recset, 0, _("Triggers"));
-		return recset;
+		break;
 	case GDA_CONNECTION_SCHEMA_VIEWS :
 		recset = get_oracle_objects (cnc, params, schema);
 		gda_data_model_set_column_title (recset, 0, _("Views"));
-		return recset;
+		break;
 	default :
+		recset = NULL;
 	}
 
-	return NULL;
+	return recset;
 }
