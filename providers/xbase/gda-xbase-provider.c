@@ -78,6 +78,7 @@ static GdaDataModel *gda_xbase_provider_get_schema (GdaServerProvider *provider,
 static GObjectClass *parent_class = NULL;
 
 typedef struct {
+	gboolean using_directory;
 	GHashTable *databases;
 } GdaXbaseProviderData;
 
@@ -180,9 +181,9 @@ gda_xbase_provider_open_connection (GdaServerProvider *provider,
 	p_filename = gda_quark_list_find (params, "FILENAME");
 	p_directory = gda_quark_list_find (params, "DIRECTORY");
 
-	if (p_filename && p_directory) {
+	if ((p_filename && p_directory)) {
 		gda_connection_add_error_string (
-			cnc, _("Either FILENAME or DIRECTORY can be specified, but not both"));
+			cnc, _("Either FILENAME or DIRECTORY can be specified, but not both or neither"));
 		return FALSE;
 	}
 
@@ -194,12 +195,39 @@ gda_xbase_provider_open_connection (GdaServerProvider *provider,
 
 	/* open all databases */
 	if (p_filename) {
+		pdata->using_directory = FALSE;
 		xdb = gda_xbase_database_open (cnc, p_filename);
-		if (!xdb) {
+		if (xdb) {
+			g_hash_table_insert (pdata->databases, gda_xbase_database_get_name (xdb), xdb);
+		} else {
 			gda_xbase_provider_close_connection (provider, cnc);
 			return FALSE;
 		}
 	} else if (p_directory) {
+		GDir *dir;
+		GError *error;
+
+		pdata->using_directory = TRUE;
+		dir = g_dir_open (p_directory, 0, &error);
+		if (error) {
+			gda_connection_add_error_string (cnc, error->message);
+			g_error_free (error);
+			return FALSE;
+		}
+
+		while ((p_filename = g_dir_read_name (dir))) {
+			gchar *s = g_build_path (p_directory, p_filename);
+			xdb = gda_xbase_database_open (cnc, p_filename);
+			if (xdb) {
+				g_hash_table_insert (pdata->databases, gda_xbase_database_get_name (xdb), xdb);
+			} else {
+				gda_connection_add_error_string (cnc, _("Could not open file %s"), s);
+			}
+
+			g_free (s);
+		}
+
+		g_dir_close (dir);
 	} else {
 		gda_connection_add_error_string (
 			cnc, _("Either FILENAME or DIRECTORY must be specified in the connection string"));

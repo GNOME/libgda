@@ -25,7 +25,7 @@
 #include <libgda/gda-log.h>
 #include <libgda/gda-table.h>
 
-#define PARENT_TYPE GDA_TYPE_DATA_MODEL
+#define PARENT_TYPE GDA_TYPE_DATA_MODEL_ARRAY
 
 struct _GdaTablePrivate {
 	gchar *name;

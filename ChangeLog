@@ -1,3 +1,15 @@
+2002-12-26  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* libgda/gda-table.c: fixed typo in PARENT_TYPE #define (now really
+	subclassing GdaDataModelArray, and not GdaDataModel.
+
+2002-12-23  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* providers/xbase/gda-xbase-provider.c
+	(gda_xbase_provider_open_connection): added the connection to the hash
+	table of databases, and added code to read all .mdb files in the
+	specified directory.
+
 2002-12-22  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* testing/client.c (open_connection): added missing schemas.
