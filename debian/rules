@@ -14,8 +14,7 @@ add_flags=$(GDA_WITH_PRIMEBASE) $(GDA_WITH_SYBASE) $(GDA_WITH_TDS)
 
 constrol: control-stamp
 control-stamp:
-	test -e debian/control-nonfree/control.orig || cp $(CTRL) debian/control-nonfree/control.orig
-	cp debian/control-nonfree/control.orig $(CTRL)
+	cp $(CTRL).orig $(CTRL) 
 	test -n "$(GDA_WITH_PRIMEBASE)" || cat debian/control-nonfree/gda-primebase.control >> $(CTRL)
 	test -n "$(GDA_WITH_SYBASE)" || cat debian/control-nonfree/gda-sybase.control >> $(CTRL)
 	test -n "$(GDA_WITH_TDS)" || cat debian/control-nonfree/gda-tds.control >> $(CTRL)
