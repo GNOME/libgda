@@ -293,7 +293,7 @@ process_sql_commands (GList *reclist, GdaConnection *cnc, GdaCommand *cmd)
 				for ( i = 1; i <= ncols; i ++ ) {
 					SQLCHAR name[ 256 ];
 					SQLSMALLINT nlen;
-					rc = SQLDescribeCol( priv_data->hstmt, 1,
+					rc = SQLDescribeCol( priv_data->hstmt, i,
 							name, sizeof( name ), &nlen, NULL, 
 							NULL, NULL, NULL );
 					if ( !SQL_SUCCEEDED( rc )) {

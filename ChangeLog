@@ -1,5 +1,12 @@
 2004-01-09  Jon Willeke <willeke@users.sourceforge.net>
 
+	Fixes #130945
+
+	* providers/odbc/gda-odbc-provider.c (process_sql_commands): use
+	correct counter.
+
+2004-01-09  Jon Willeke <willeke@users.sourceforge.net>
+
 	Fixes #130938
 
 	* providers/odbc/gda-odbc-provider.c: added support for NAMESPACES.
