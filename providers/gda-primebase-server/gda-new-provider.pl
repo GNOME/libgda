@@ -106,7 +106,7 @@ EO_MAKEFILEAM
 		$source =~ s/-srv(.*).tmpl/-$provider\1/;
 		if ((($source =~ m|\.c$|) || ($source =~ m|\.h$|)) &&
 		    ($source !~ m|main-$provider.c|)) {
-			print MAKEFILEAM " \\ \n";
+			print MAKEFILEAM " \\\n";
 			printf(MAKEFILEAM "\t%s", $source);
 		}
 	}

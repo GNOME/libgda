@@ -16,10 +16,10 @@ gda_primebase_srv_LDADD = \
 	$(top_builddir)/providers/gda-primebase-server/libgda-primebase.la \
 	$(PRIMEBASE_LIBS)
 
-libgda_primebase_la_SOURCES = \ 
-	gda-primebase-command.c \ 
-	gda-primebase-connection.c \ 
-	gda-primebase-recordset.c \ 
+libgda_primebase_la_SOURCES = \
+	gda-primebase-command.c \
+	gda-primebase-connection.c \
+	gda-primebase-recordset.c \
 	gda-primebase.h
 
 EXTRA_DIST = gda-primebase.oafinfo

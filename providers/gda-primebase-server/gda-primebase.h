@@ -24,18 +24,48 @@
 #endif
 
 #include <gda-server.h>
+#include <dalapi.h>
+#include <daltypes.h>
+
+#ifdef ENABLE_NLS
+#  include <libintl.h>
+#  define _(String) gettext (String)
+#  define N_(String) (String)
+#else
+/* Stubs that do something close enough.  */
+#  define textdomain(String)
+#  define gettext(String) (String)
+#  define dgettext(Domain,Message) (Message)
+#  define dcgettext(Domain,Message,Type) (Message)
+#  define bindtextdomain(Domain,Directory)
+#  define _(String) (String)
+#  define N_(String) (String)
+#endif
+
+#define MAX_DALSIZE (32L * 1024L)
+#define GDA_PRIMEBASE_TYPE_CNT 27
 
 /*
  * Per-object specific structures
  */
 typedef struct
 {
+  long perr, serr;
+  long snum;
+  char  msg[256];
+} primebase_Error;
+
+typedef struct
+{
   long sid;   // The connections' session id
   long snum;  // The current session number active of the connection
+
+  gint state;
 
   gchar *host;
   gchar *db;
   gchar *connparm;
+  primebase_Error *err;
 } primebase_Connection;
 
 typedef struct
@@ -44,7 +74,18 @@ typedef struct
 
 typedef struct
 {
+  gboolean initialized;
+  gshort   type, len, places, flags;
+  gint     col_cnt;
+  gchar    *buffer;
 } primebase_Recordset;
+
+typedef struct
+{
+  gchar         *name;
+  short         sql_type;
+  GDA_ValueType gda_type;
+} primebase_Types;
 
 /*
  * Server implementation prototypes
@@ -63,6 +104,10 @@ Gda_ServerRecordset* gda_primebase_connection_open_schema (Gda_ServerConnection 
 							       GDA_Connection_QType t,
 							       GDA_Connection_Constraint *constraints,
 							       gint length);
+glong gda_primebase_connection_modify_schema (Gda_ServerConnection *cnc,
+                                   GDA_Connection_QType t,
+                                   GDA_Connection_Constraint *constraints,
+                                   gint length);
 gint gda_primebase_connection_start_logging (Gda_ServerConnection *cnc,
 					     const gchar *filename);
 gint gda_primebase_connection_stop_logging (Gda_ServerConnection *cnc);
@@ -89,6 +134,9 @@ gint     gda_primebase_recordset_move_next (Gda_ServerRecordset *recset);
 gint     gda_primebase_recordset_move_prev (Gda_ServerRecordset *recset);
 gint     gda_primebase_recordset_close     (Gda_ServerRecordset *recset);
 void     gda_primebase_recordset_free      (Gda_ServerRecordset *recset);
+
+primebase_Error *gda_primebase_get_error(long, gboolean);
+void gda_primebase_free_error(primebase_Error *);
 
 void gda_primebase_error_make (Gda_ServerError *error,
 			       Gda_ServerRecordset *recset,

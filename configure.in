@@ -251,9 +251,31 @@ then
 else
 	dir="/opt/primebase/sdk"
 fi
-if test -d $dir
+primebasedir=""
+AC_MSG_CHECKING(for PrimeBase SDK)
+for d in $dir /opt/primebase /usr/local/primebase
+do
+	if test -e ${d}/dalapi.h -a -e ${d}/libpbcl.a
+	then
+		primebasedir=${d}
+		PRIMEBASE_LIBS="-lm -lnsl -L$d -lpbcl"
+		PRIMEBASE_CFLAGS="-I${d}"
+		AC_DEFINE(HAVE_PRIMEBASE)
+		break
+	elif test -e ${d}/include/dalapi.h -a -e ${d}/lib/libpbcl.a
+	then
+		primebasedir=${d}
+		PRIMEBASE_LIBS="-lm -lnsl -L${d}/lib -lpbcl"
+		PRIMEBASE_CFLAGS="-I${d}/include"
+		AC_DEFINE(HAVE_PRIMEBASE)
+		break
+	fi
+done
+if test x$primebasedir != x
 then
-	AC_DEFINE(HAVE_PRIMEBASE)
+	AC_MSG_RESULT(found PrimeBase SDK in $primebasedir)
+else
+	AC_MSG_RESULT(not found)
 fi
 ])
 AM_CONDITIONAL(PRIMEBASE, test x$primebasedir != x)
