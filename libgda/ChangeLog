@@ -1,5 +1,8 @@
 2002-01-02  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
+	* gda-server-recordset.c (get_row): fixed counter on row retrieval
+	loop, which was getting always 1 row more
+
 	* Makefile.am: s/IDLFILES/IDL_FILES, so that ORBit-generated files
 	are regenerated when the IDL files change
 

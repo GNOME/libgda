@@ -68,7 +68,7 @@ get_row (GdaServerRecordset *recset, glong pos)
 	}
 
 	/* fetch all rows until the given one */
-	for (i = recset->priv->rows->len - 1; i <= pos; i++) {
+	for (i = recset->priv->rows->len; i <= pos; i++) {
 		if (recset->priv->fetch_func) {
 			if (i < 0)
 				i = 0;
