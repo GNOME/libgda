@@ -397,7 +397,7 @@ gda_postgres_provider_open_connection (GdaServerProvider *provider,
 	else
 		pq_user = username;
 
-	if (!pq_pwd || pq_pwd != '\0')
+	if (!password || password != '\0')
 		pq_pwd = gda_quark_list_find (params, "PASSWORD");
 	else
 		pq_pwd = password;

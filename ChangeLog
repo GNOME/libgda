@@ -1,3 +1,8 @@
+2003-02-15  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
+	* providers/postgres/gda-postgres-provider.c: applied fix to get the
+	correct password (thanks to david@aspl.es).
+
 2003-02-11  Sergey N. Belinsky <sergey_be@mail.ru>
 
 	* providers/ibmdb2/gda-ibmdb2-types.[ch]:  added support of
