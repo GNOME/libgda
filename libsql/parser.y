@@ -24,6 +24,7 @@ sql_field_item *fi;
 sql_table *t;
 sql_condition *c;
 sql_where *w;
+param_spec *ps;
 }
 
 %token L_SELECT L_FROM L_WHERE L_AS L_JOIN L_ON L_ORDER L_BY 
@@ -33,18 +34,22 @@ sql_where *w;
 %token L_EQ L_IS L_LIKE
 %token L_NOT L_AND L_OR
 %token L_MINUS L_PLUS L_TIMES L_DIV
-%token L_STRING
+%token L_STRING L_TEXTUAL
 %token L_DELETE
 
+%token L_LSBRACKET L_RSBRACKET
+%token L_PNAME L_PTYPE L_PISPARAM L_PDESCR L_PNULLOK
+
 %type <v> select_statement insert_statement update_statement delete_statement
-%type <str> L_IDENT opt_table_as L_STRING
-%type <list> fields_list tables_list field_name dotted_name opt_orderby opt_groupby opt_fields_list set_list
+%type <str> L_IDENT opt_table_as L_STRING L_TEXTUAL
+%type <list> fields_list tables_list field_name dotted_name opt_orderby opt_groupby opt_fields_list set_list param_spec param_spec_list
 %type <f> field
 %type <fi> field_raw
 %type <t> table table_simple
 %type <i> logic_operator condition_operator field_op opt_distinct
 %type <w> where_list opt_where
 %type <c> where_item set_item
+%type <ps> param_spec_item
 
 %left L_AND L_OR
 
@@ -59,6 +64,8 @@ statement: select_statement	{sql_result = sql_statement_build (SQL_select, $1);}
 	
 select_statement: L_SELECT opt_distinct fields_list L_FROM tables_list opt_where opt_orderby opt_groupby
 			{$$ = sql_select_statement_build ($2, $3, $5, $6, $7, $8);}
+	| L_SELECT opt_distinct fields_list opt_where opt_orderby opt_groupby
+			{$$ = sql_select_statement_build ($2, $3, NULL, $4, $5, $6);}
 	;
 
 insert_statement: L_INSERT L_INTO table opt_fields_list L_VALUES L_LBRACKET fields_list L_RBRACKET
@@ -107,6 +114,8 @@ tables_list: table			{$$ = g_list_append (NULL, $1);}
 
 field: field_raw			{$$ = sql_field_build ($1);}
 	| field_raw L_AS L_IDENT	{$$ = sql_field_set_as (sql_field_build ($1), $3);}
+	| field_raw param_spec		{$$ = sql_field_set_param_spec (sql_field_build ($1), $2);}
+	| field_raw param_spec L_AS L_IDENT        {$$ = sql_field_set_as (sql_field_set_param_spec (sql_field_build ($1), $2), $4);}
 	;
 
 dotted_name: L_IDENT			{$$ = g_list_append (NULL, memsql_strdup ($1)); memsql_free ($1);}
@@ -130,6 +139,7 @@ field_raw: field_name			{$$ = sql_field_item_build ($1);}
 	| select_statement		{$$ = sql_field_item_build_select ($1);}
 	| L_LBRACKET field_raw L_RBRACKET	{$$ = $2;}
 	| L_IDENT L_LBRACKET fields_list L_RBRACKET	{$$ = sql_field_build_function($1, $3); }
+        | L_IDENT L_LBRACKET L_RBRACKET     {$$ = sql_field_build_function($1, NULL); }
 	;
 
 table: table_simple opt_table_as		{$$ = sql_table_set_as ($1, $2);}
@@ -173,5 +183,20 @@ where_item: field condition_operator field
 			{$$ = sql_build_condition_between ($1, $3, $5);}
 	;
 
+param_spec: L_LSBRACKET param_spec_list L_RSBRACKET {$$ = $2;}
+	;
+
+param_spec_list: param_spec_item 			{$$ = g_list_append (NULL, $1);}
+	| param_spec_item param_spec_list		{$$ = g_list_prepend ($2, $1);}
+	|						{;}
+	;
+
+
+param_spec_item: L_PNAME L_EQ L_TEXTUAL      	{$$ = param_spec_build (PARAM_name, $3);}
+	| L_PDESCR L_EQ L_TEXTUAL		{$$ = param_spec_build (PARAM_descr, $3);}
+	| L_PTYPE L_EQ L_TEXTUAL		{$$ = param_spec_build (PARAM_type, $3);}
+	| L_PISPARAM L_EQ L_TEXTUAL		{$$ = param_spec_build (PARAM_isparam, $3);}
+	| L_PNULLOK L_EQ L_TEXTUAL		{$$ = param_spec_build (PARAM_nullok, $3);}
+	;
 %%
 

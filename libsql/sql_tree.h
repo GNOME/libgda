@@ -15,6 +15,7 @@ sql_field_item *sql_field_item_build_select(sql_select_statement * select);
 sql_field_item *sql_field_build_function(gchar *funcname, GList *funcarglist);
 sql_field *sql_field_build(sql_field_item * item);
 sql_field *sql_field_set_as(sql_field * field, char *as);
+sql_field *sql_field_set_param_spec(sql_field * field, GList *param_spec);
 sql_table *sql_table_build(char *tablename);
 sql_table *sql_table_build_join(sql_table * left, sql_table * right, sql_condition * cond);
 sql_table *sql_table_build_select(sql_select_statement * select);
@@ -25,4 +26,5 @@ sql_where *sql_where_build_pair(sql_where * left, sql_where * right, sql_logic_o
 sql_condition *sql_build_condition(sql_field * left, sql_field * right, sql_condition_operator op);
 sql_condition *sql_build_condition_between(sql_field * field, sql_field * lower, sql_field * upper);
 
+param_spec *param_spec_build (param_spec_type type, char *content);
 #endif /* SQL_TREE_H */

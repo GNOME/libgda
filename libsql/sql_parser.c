@@ -6,6 +6,10 @@
 #include "sql_tree.h"
 #include "mem.h"
 
+#ifndef _()
+#define _(x) (x) 
+#endif
+
 extern char *sqltext;
 extern void sql_switch_to_buffer(void *buffer);
 extern void *sql_scan_string(const char *string);
@@ -13,12 +17,16 @@ extern void *sql_scan_string(const char *string);
 int sqlerror(char *error);
 
 sql_statement *sql_result;
+GError **sql_error;
+
 int sqlparse(void);
 
 static int sql_destroy_select(sql_select_statement * select);
 static int sql_destroy_insert(sql_insert_statement * insert);
 static char *sql_select_stringify(sql_select_statement * select);
 static int sql_destroy_field(sql_field * field);
+static int sql_destroy_param_spec(param_spec *pspec);
+
 static char *sql_field_stringify(sql_field * field);
 
 /**
@@ -29,7 +37,14 @@ static char *sql_field_stringify(sql_field * field);
 int
 sqlerror(char *string)
    {
-   fprintf(stderr, "SQL Parser error: %s near `%s'\n", string, sqltext);
+   if (sql_error) {
+      if (!strcmp (string, "parse error"))
+         g_set_error (sql_error, 0, 0, _("Parse error near `%s'\n"), sqltext);
+      if (!strcmp (string, "syntax error"))
+         g_set_error (sql_error, 0, 0, _("Syntax error near `%s'\n"), sqltext);
+   }
+   else
+      fprintf(stderr, "SQL Parser error: %s near `%s'\n", string, sqltext);
    return 0;
    }
 
@@ -80,7 +95,25 @@ sql_destroy_field(sql_field * field)
 
    sql_destroy_field_item(field->item);
    memsql_free(field->as);
+   if (field->param_spec) {
+	   GList *walk;
+	   for (walk = field->param_spec; walk != NULL; walk = walk->next)
+		   sql_destroy_param_spec ((param_spec*) walk->data);
+	   g_list_free(field->param_spec);
+   }
    memsql_free(field);
+   return 0;
+   }
+
+
+static int
+sql_destroy_param_spec(param_spec *pspec)
+   {
+   if (!pspec)
+      return 0;
+
+   memsql_free(pspec->content);
+   memsql_free(pspec);
    return 0;
    }
 
@@ -283,8 +316,9 @@ sql_destroy(sql_statement * statement)
    }
 
 /**
- * sql_parse:
+ * sql_parse_with_error:
  * @sqlquery: A SQL query string. ie SELECT * FROM FOO
+ * @error: a place where to store an error, or %NULL
  * 
  * Generate in memory a structure of the @sqlquery in an easy
  * to view way.  You can also modify the returned structure and
@@ -296,15 +330,19 @@ sql_destroy(sql_statement * statement)
  * Returns: A generated sql_statement or %NULL on error.
  */
 sql_statement *
-sql_parse(char *sqlquery)
+sql_parse_with_error(char *sqlquery, GError **error)
    {
    if (sqlquery == NULL)
       {
-      fprintf(stderr, "SQL parse error, you can not specify NULL");
+      if (error)
+	  g_set_error(error, 0, 0, _("Empty query to parse"));
+      else
+          fprintf(stderr, "SQL parse error, you can not specify NULL");
       return NULL;
 
       }
 
+   sql_error = error;
    sql_switch_to_buffer(sql_scan_string(sqlquery));
 
    if (sqlparse() == 0)
@@ -314,9 +352,29 @@ sql_parse(char *sqlquery)
       }
    else
       {
-      fprintf(stderr, "Error on SQL statement: %s\n", sqlquery);
+      if (!error)
+         fprintf(stderr, "Error on SQL statement: %s\n", sqlquery);
       return NULL;
       }
+   }
+
+/**
+ * sql_parse:
+ * @sqlquery: A SQL query string. ie SELECT * FROM FOO
+ *
+ * Generate in memory a structure of the @sqlquery in an easy
+ * to view way.  You can also modify the returned structure and
+ * regenerate the sql query using sql_stringify().  The structure
+ * contains information on what type of sql statement it is, what
+ * tables its getting from, what fields are selected, the where clause,
+ * joins etc.
+ *
+ * Returns: A generated sql_statement or %NULL on error.
+ */
+sql_statement *
+sql_parse(char *sqlquery)
+   {
+	return sql_parse_with_error (sqlquery, NULL);
    }
 
 static char *

@@ -4,6 +4,9 @@
 #include <glib.h>
 #define YY_NO_UNISTD_H
 
+/* 
+ * global SQL statement structures 
+ */
 typedef enum
 {
    SQL_select,
@@ -59,6 +62,10 @@ typedef struct
         }
 sql_delete_statement;
 
+
+/* 
+ * Fields structures
+ */
 typedef enum
 {
    SQL_name,
@@ -106,9 +113,31 @@ typedef struct
    {
    sql_field_item *item;
    char *as;
+   GList *param_spec;
    }
 sql_field;
 
+typedef enum
+{
+   PARAM_name,
+   PARAM_descr,
+   PARAM_type,
+   PARAM_isparam,
+   PARAM_nullok
+} param_spec_type;
+
+typedef struct
+   {
+   param_spec_type type;
+   char *content;
+   }
+param_spec;
+
+
+
+/*
+ * Tables structures
+ */
 typedef enum
 {
    SQL_simple,
@@ -136,6 +165,10 @@ struct sql_table
    char *as;
    };
 
+
+/*
+ * Conditions structures
+ */
 typedef enum
 {
    SQL_eq,
@@ -208,6 +241,7 @@ struct sql_where
 int sql_display(sql_statement * statement);
 int sql_destroy(sql_statement * statement);
 sql_statement *sql_parse(char *sql_statement);
+sql_statement *sql_parse_with_error (char *sql_statement, GError **error);
 
 char *sql_stringify(sql_statement * statement);
 int sql_statement_append_field(sql_statement * statement, char *tablename, char *fieldname);

@@ -1,3 +1,9 @@
+2004-03-05  Vivien Malerba <malerba@gnome-db.org>
+	* libsql/*: * Improved lexer rules for functions and SELECT without a FROM clause
+		    * Added extra syntax to specify parameters: between [] after a field, can contain
+		      :name, :descr, :type, :isparam, :nullok attributes.
+		    * Added strings recognized between double quotes (example: "a good' string").
+
 2004-03-04  Laurent Sansonetti <lrz@gnome.org>
 
 	Fixes #132216

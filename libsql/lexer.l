@@ -24,6 +24,7 @@ char *string_buf_ptr;
 %option yylineno
 %option caseless
 %x STRING
+%x TEXTUAL
 %%
 "select"	{return L_SELECT;}
 "insert"	{return L_INSERT;}
@@ -40,7 +41,7 @@ char *string_buf_ptr;
 "as"		{return L_AS;}
 "join"		{return L_JOIN;}
 "like"		{return L_LIKE;}
-"set"			{return L_SET;}
+"set"		{return L_SET;}
 "on"		{return L_ON;}
 "by"		{return L_BY;}
 "in"		{return L_IN;}
@@ -68,6 +69,7 @@ char *string_buf_ptr;
 [a-zA-Z0-9_]+	{sqllval.str = memsql_strdup (sqltext); return L_IDENT;}
 [ \t\n\r]	{;}
 \'		{string_buf_ptr = string_buf; BEGIN(STRING);}
+<STRING>\\'     {*string_buf_ptr++='\\'; *string_buf_ptr++='\'';}
 <STRING>\'		{BEGIN(INITIAL);
 		 *string_buf_ptr = '\0';
 		 sqllval.str = memsql_strappend_free (memsql_strdup ("'"), memsql_strappend_free (memsql_strdup (string_buf), memsql_strdup ("'")));
@@ -80,4 +82,28 @@ char *string_buf_ptr;
 <STRING>\\f	{*string_buf_ptr++='\f';}
 <STRING>\\(.|\n)	{*string_buf_ptr++=sqltext[0];}
 <STRING>.	{*string_buf_ptr++=sqltext[0];}
+
+"["		{return L_LSBRACKET;}
+"]"             {return L_RSBRACKET;}
+
+":name"		{return L_PNAME;}
+":descr"        {return L_PDESCR;}
+":type"		{return L_PTYPE;}
+":isparam"	{return L_PISPARAM;}
+":nullok"       {return L_PNULLOK;}
+
+\"		{string_buf_ptr = string_buf; BEGIN(TEXTUAL);}
+<TEXTUAL>\"              {BEGIN(INITIAL);
+                 *string_buf_ptr = '\0';
+                 sqllval.str = memsql_strdup (string_buf);
+                 return L_TEXTUAL;
+                }
+<TEXTUAL>\\n     {*string_buf_ptr++='\n';}
+<TEXTUAL>\\t     {*string_buf_ptr++='\t';}
+<TEXTUAL>\\r     {*string_buf_ptr++='\r';}
+<TEXTUAL>\\b     {*string_buf_ptr++='\b';}
+<TEXTUAL>\\f     {*string_buf_ptr++='\f';}
+<TEXTUAL>\\(.|\n)        {*string_buf_ptr++=sqltext[0];}
+<TEXTUAL>.       {*string_buf_ptr++=sqltext[0];}
+
 %%

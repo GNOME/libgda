@@ -136,6 +136,7 @@ sql_field_build(sql_field_item * item)
    retval = memsql_alloc(sizeof * retval);
    retval->as = NULL;
    retval->item = item;
+   retval->param_spec = NULL;
 
    return retval;
    }
@@ -145,6 +146,25 @@ sql_field_set_as(sql_field * field, char *as)
    {
    field->as = as;
    return field;
+   }
+
+sql_field *
+sql_field_set_param_spec(sql_field * field, GList *param_spec)
+   {
+   field->param_spec = param_spec;
+   return field;
+   }
+
+param_spec *
+param_spec_build (param_spec_type type, char *content)
+   {
+   param_spec *retval;
+
+   retval = memsql_alloc(sizeof * retval);
+   retval->type = type;
+   retval->content = content;
+
+   return retval;
    }
 
 sql_table *
