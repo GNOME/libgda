@@ -1,5 +1,7 @@
 2001-11-02  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* configure.in: removed tools/templates directory
+
 	* libgda.pc.in: new file to replace libgda-client.pc.in and
 	libgda-server.pc.in
 

@@ -462,7 +462,6 @@ providers/mysql/Makefile
 tools/Makefile
 tools/gda-buildserver
 tools/gda-buildclient
-tools/templates/Makefile
 report/Makefile
 report/gda-report.dtd
 report/idl/Makefile
