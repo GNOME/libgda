@@ -2107,6 +2107,9 @@ gda_value_compare (GdaValue *value1, GdaValue *value2)
 	g_return_val_if_fail (value1->type == value2->type, -1);
 
 	switch (value1->type) {
+        case GDA_VALUE_TYPE_NULL:
+		retval = 0;
+                break;
 	case GDA_VALUE_TYPE_BIGINT :
 		retval = (gint) value1->value.v_bigint - value2->value.v_bigint;
 		break;
@@ -2165,9 +2168,18 @@ gda_value_compare (GdaValue *value1, GdaValue *value2)
 			retval = -1; /* FIXME: do currency conversions to compare? */
 		break;
 	case GDA_VALUE_TYPE_NUMERIC :
-		retval = memcmp (&value1->value.v_numeric,
-				 &value2->value.v_numeric,
-				 sizeof (GdaNumeric));
+                if (value1->value.v_numeric.number) {
+			if (value2->value.v_numeric.number)
+				retval = strcmp (value1->value.v_numeric.number, value2->value.v_numeric.number);
+			else
+				retval = 1;
+		}
+		else {
+			if (value2->value.v_numeric.number)
+				retval = -1;
+			else
+				retval = 0;
+		}
 		break;
 	case GDA_VALUE_TYPE_SINGLE :
 		retval = (gint) value1->value.v_single - value2->value.v_single;
