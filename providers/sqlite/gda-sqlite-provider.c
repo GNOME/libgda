@@ -185,17 +185,57 @@ gda_default_provider_close_connection (GdaServerProvider *provider,
 	return TRUE;
 }
 
-static GdaRow *
-gda_default_provider_fetch_func (GdaServerRecordset *recset, glong row)
+static GList *
+process_sql_commands (GList *reclist, GdaServerConnection *cnc, const gchar *sql)
 {
-	return NULL;
+	sqlite *sqlite;
+	gchar  *errmsg;
+	gchar **arr;
+
+	sqlite = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_DEFAULT_HANDLE);
+	if (!sqlite) {
+		gda_server_connection_add_error_string (cnc,
+						        _("Invalid DEFAULT handle"));
+		return NULL;
+	}
+
+	/* parse SQL string, which can contain several commands, separated by ';' */
+	arr = g_strsplit (sql, ";", 0);
+	if (arr) {
+		gint n = 0;
+
+		while (arr[n]) {
+			DEFAULT_Recordset *drecset;
+			GdaServerRecordset *recset;
+
+			drecset = g_new0 (DEFAULT_Recordset, 1);
+			
+			if (sqlite_get_table (sqlite, arr[n], &drecset->data,
+					      &drecset->nrows, &drecset->ncols,
+					      &errmsg) != SQLITE_OK) {
+
+				GdaError *error = gda_error_new ();
+				gda_error_set_description (error, errmsg);
+				gda_server_connection_add_error (cnc, error);
+				
+				free (errmsg);
+
+				break;
+			}
+
+			recset = gda_default_recordset_new (cnc, drecset);
+			if (GDA_IS_SERVER_RECORDSET (recset))
+				reclist = g_list_append (reclist, recset);
+
+			n++;
+		}
+
+		g_strfreev (arr);
+	}
+
+	return reclist;
 }
 
-static GdaRowAttributes *
-gda_default_provider_describe_func (GdaServerRecordset *recset)
-{
-	return NULL;
-}
 
 /* execute_command handler for the GdaDefaultProvider class */
 static GList *
@@ -204,12 +244,8 @@ gda_default_provider_execute_command (GdaServerProvider *provider,
 				      GdaCommand *cmd,
 				      GdaParameterList *params)
 {
-	sqlite *sqlite;
-	GList  *list = NULL;
+	GList  *reclist = NULL;
 	gchar  *cmd_string = NULL;
-	gchar  *errmsg = NULL;
-	GdaServerRecordset *recset = NULL;
-	DEFAULT_Recordset *drecset;
 	
 	GdaDefaultProvider *dfprv = (GdaDefaultProvider *) provider;
 
@@ -217,13 +253,10 @@ gda_default_provider_execute_command (GdaServerProvider *provider,
 	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (cmd != NULL, NULL);
 
-	sqlite = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_DEFAULT_HANDLE);
-	if (!sqlite)
-		return NULL;
-
 	switch (gda_command_get_command_type (cmd)) {
 		case GDA_COMMAND_TYPE_SQL:
-			cmd_string = g_strdup (gda_command_get_text (cmd));
+			reclist = process_sql_commands (reclist, cnc,
+							gda_command_get_text (cmd));
 			break;
 		case GDA_COMMAND_TYPE_XML:
 			/* FIXME: Implement */
@@ -234,41 +267,13 @@ gda_default_provider_execute_command (GdaServerProvider *provider,
 		case GDA_COMMAND_TYPE_TABLE:
 			cmd_string = g_strdup_printf ("SELECT * FROM %s",
 						      gda_command_get_text (cmd));
+			reclist = process_sql_commands (reclist, cnc,
+							cmd_string);
+			g_free (cmd_string);
 			break;
 		case GDA_COMMAND_TYPE_INVALID:
 			return NULL;
 	}
 
-	drecset = g_new0 (DEFAULT_Recordset, 1);
-	
-	/* Execute the command */
-	if (sqlite_get_table (sqlite, cmd_string, &drecset->data,
-			      &drecset->nrows, &drecset->ncols,
-			      &errmsg) == SQLITE_OK) {
-
-		if (drecset->data) {
-
-			recset = gda_server_recordset_new (cnc,
-							   gda_default_provider_fetch_func,
-							   gda_default_provider_describe_func);
-			g_object_set_data (G_OBJECT (recset),
-					   OBJECT_DATA_DEFAULT_RECORDSET,
-					   drecset);
-			g_list_append (list, recset);
-			
-		}
-		
-	} else {
-		GdaError *error = gda_error_new ();
-		gda_error_set_description (error, errmsg);
-		gda_server_connection_add_error (cnc, error);
-		g_free (drecset);
-	}
-
-	if (cmd_string)
-		g_free (cmd_string);
-	if (errmsg)
-		free (errmsg);
-
-	return list;
+	return reclist;
 }

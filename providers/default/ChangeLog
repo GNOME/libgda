@@ -1,3 +1,9 @@
+2001-12-22  Carlos Perelló Marín <carlos@gnome-db.org>
+
+	* gda-default-provider.c: Finished the implementation of execute
+	command for SQL queries.
+	* gda-default-recordset.[ch]: Added to create new default-recordset.
+
 2001-12-20  Carlos Perelló Marín <carlos@gnome-db.org>
 
 	* sqlite/Makefile.am: Defined OS_UNIX=1

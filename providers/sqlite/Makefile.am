@@ -11,6 +11,8 @@ INCLUDES = \
 gda_default_srv_2_SOURCES = \
 	gda-default-provider.c \
 	gda-default-provider.h \
+	gda-default-recordset.c \
+	gda-default-recordset.h \
 	gda-default.h \
 	main.c
 	
