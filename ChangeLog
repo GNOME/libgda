@@ -1,3 +1,8 @@
+2002-06-06  Tim Coleman <tim@timcoleman.com>
+
+	* providers/oracle/*: first working version of the Oracle provider
+	for the new API.
+
 2002-06-06  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
 	* providers/postgres/gda-postgres-provider.c: 

@@ -1,21 +1,22 @@
-/* GDA ORACLE Provider
+/* GNOME DB Oracle Provider
  * Copyright (C) 2000-2002 The GNOME Foundation
  *
  * AUTHORS:
- *      Rodrigo Moya <rodrigo@gnome-db.org>
+ *         Rodrigo Moya <rodrigo@gnome-db.org>
+ *         Tim Coleman <tim@timcoleman.com>
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful,
+ * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * Library General Public License for more details.
  *
- * You should have received a copy of the GNU General Public
- * License along with this program; if not, write to the Free
+ * You should have received a copy of the GNU Library General Public
+ * License along with this library; if not, write to the Free
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
@@ -23,8 +24,7 @@
 #  define __gda_oracle_provider_h__
 
 #include <libgda/gda-server-provider.h>
-
-G_BEGIN_DECLS
+#include <oci.h>
 
 #define GDA_TYPE_ORACLE_PROVIDER            (gda_oracle_provider_get_type())
 #define GDA_ORACLE_PROVIDER(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_ORACLE_PROVIDER, GdaOracleProvider))
@@ -43,8 +43,28 @@ struct _GdaOracleProviderClass {
 	GdaServerProviderClass parent_class;
 };
 
-GType gda_oracle_provider_get_type (void);
+typedef struct {
+	OCIEnv *henv;
+	OCIError *herr;
+	OCIServer *hserver;
+	OCISvcCtx *hservice;
+	OCISession *hsession;
+	OCIStmt *hstmt;
+	sword stmt_type;
+} GdaOracleConnectionData;
+
+typedef struct {
+	OCITrans *txnhp;
+} GdaOracleTransaction;
+
+G_BEGIN_DECLS
+
+GType                gda_oracle_provider_get_type (void);
+GdaServerProvider   *gda_oracle_provider_new (void);
+GdaValueType  oracle_sqltype_to_gda_type (const ub2 sqltype);
+
 
 G_END_DECLS
 
 #endif
+
