@@ -1,6 +1,9 @@
 /* GDA library
- * Copyright (C) 1998,1999 Michael Lausch
- * Copyright (C) 1999-2001 Rodrigo Moya
+ * Copyright (C) 1998-2001 The Free Software Foundation
+ *
+ * AUTHORS:
+ *      Michael Lausch <michael@lausch.at>
+ *      Rodrigo Moya <rodrigo@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -21,13 +24,10 @@
 #if !defined(__gda_recordset_h__)
 #  define __gda_recordset_h__
 
-#include <libgda/gda-data-model.h>
+#include <libgda/gda-data-model-array.h>
 #include <libgda/gda-field.h>
 
 G_BEGIN_DECLS
-
-typedef struct _GdaRecordset      GdaRecordset;
-typedef struct _GdaRecordsetClass GdaRecordsetClass;
 
 #define GDA_TYPE_RECORDSET            (gda_recordset_get_type())
 #define GDA_RECORDSET(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_RECORDSET, GdaRecordset))
@@ -35,16 +35,20 @@ typedef struct _GdaRecordsetClass GdaRecordsetClass;
 #define GDA_IS_RECORDSET(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_RECORDSET))
 #define GDA_IS_RECORDSET_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GDA_TYPE_RECORDSET))
 
+typedef struct _GdaRecordset        GdaRecordset;
+typedef struct _GdaRecordsetClass   GdaRecordsetClass;
+typedef struct _GdaRecordsetPrivate GdaRecordsetPrivate;
+
 struct _GdaRecordset {
-	GdaDataModel model;
+	GdaDataModelArray model;
+	GdaRecordsetPrivate *priv;
 };
 
 struct _GdaRecordsetClass {
-	GdaDataModelClass parent_class;
+	GdaDataModelArrayClass parent_class;
 };
 
 GType         gda_recordset_get_type (void);
-
 GdaRecordset *gda_recordset_new (void);
 
 G_END_DECLS

@@ -411,6 +411,91 @@ gda_config_free_list (GList * list)
         }
 }
 
+typedef struct {
+	guint id;
+	GdaConfigListenerFunc func;
+	gpointer user_data;
+} config_listener_data_t;
+
+static GList *config_listeners = NULL;
+
+static void
+config_listener_func (GConfEngine *conf, guint id, GConfEntry *entry, gpointer user_data)
+{
+	config_listener_data_t *listener_data = (config_listener_data_t *) user_data;
+
+	g_return_if_fail (entry != NULL);
+	g_return_if_fail (listener_data != NULL);
+	g_return_if_fail (listener_data->func != NULL);
+
+	listener_data->func (entry->key, listener_data->user_data);
+}
+
+/**
+ * gda_config_add_listener
+ * @path: configuration path to listen to.
+ * @func: callback function.
+ * @user_data: data to be passed to the callback function.
+ *
+ * Installs a configuration listener, which is a callback function
+ * which will be called every time a change occurs on a given
+ * configuration entry.
+ *
+ * Returns: the ID of the listener, which you will need for
+ * calling #gda_config_remove_listener. If an error occurs,
+ * 0 is returned.
+ */
+guint
+gda_config_add_listener (const gchar *path, GdaConfigListenerFunc func, gpointer user_data)
+{
+	config_listener_data_t *listener_data;
+	GError *err;
+
+	g_return_val_if_fail (path != NULL, 0);
+	g_return_val_if_fail (func != NULL, 0);
+
+	listener_data = g_new0 (config_listener_data_t, 1);
+	listener_data->func = func;
+	listener_data->user_data = user_data;
+
+	listener_data->id = gconf_engine_notify_add (get_conf_engine (),
+						     path,
+						     (GConfNotifyFunc) config_listener_func,
+						     listener_data->user_data,
+						     &err);
+	if (listener_data->id == 0) {
+		g_free (listener_data);
+		return 0;
+	}
+
+	config_listeners = g_list_prepend (config_listeners, listener_data);
+
+	return listener_data->id;
+}
+
+/**
+ * gda_config_remove_listener
+ */
+void
+gda_config_remove_listener (guint id)
+{
+	GList *l;
+
+	for (l = config_listeners; l != NULL; l = l->next) {
+		config_listener_data_t *listener_data = l->data;
+
+		if (!listener_data)
+			continue;
+
+		if (listener_data->id == id) {
+			gconf_engine_notify_remove (get_conf_engine (), id);
+			config_listeners = g_list_remove (config_listeners, listener_data);
+			g_free (listener_data);
+			break;
+		}
+	}
+}
+
 /**
  * gda_config_get_component_list
  * @query: condition for components to be retrieved.

@@ -50,6 +50,13 @@ GList   *gda_config_list_keys (const gchar *path);
 
 void     gda_config_free_list (GList *list);
 
+typedef void (* GdaConfigListenerFunc) (const gchar *path, gpointer user_data);
+
+guint    gda_config_add_listener (const gchar *path,
+				  GdaConfigListenerFunc func,
+				  gpointer user_data);
+void     gda_config_remove_listener (guint id);
+
 /*
  * CORBA components configuration
  */
