@@ -641,7 +641,7 @@ static GdaDataModel
 				return recset;
 			break;
 		case GDA_CONNECTION_SCHEMA_USERS:
-			recset = gda_freetds_execute_query (cnc, TDS_SCHEMA_TYPES);
+			recset = gda_freetds_execute_query (cnc, TDS_SCHEMA_USERS);
 			if (recset != NULL)
 				gda_data_model_set_column_title (GDA_DATA_MODEL (recset),
 				                                 0, _("Users"));
