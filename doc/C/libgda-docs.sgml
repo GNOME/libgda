@@ -721,7 +721,7 @@
           <sect4>
             <title>Listing available providers</title>
             <para>
-              To list the available data sources you must use the function <LINK
+              To list the available providers you must use the function <LINK
               LINKEND="gda-config-get-provider-list"><EMPHASIS>gda_config_get_provider_list ()
               </EMPHASIS></LINK>
             </para>
@@ -900,37 +900,40 @@
 	     <itemizedlist>
 	       <listitem>
 	         <para>
-	           HOST:
+	           HOST: name of the host where the database server is running.
 		 </para>
                </listitem>
 	       <listitem>
 	         <para>
-	           DATABASE:
+	           PORT: port number for connecting to the database server.
 		 </para>
                </listitem>
 	       <listitem>
 	         <para>
-	           USERNAME:
+	           UNIX_SOCKET: socket file for connecting to the database server
+	           (should not be defined with HOST and/or PORT).
 		 </para>
                </listitem>
 	       <listitem>
 	         <para>
-	           PASSWORD:
+	           DATABASE: name of the database you want to access.
 		 </para>
                </listitem>
 	       <listitem>
 	         <para>
-	           PORT:
+	           USER: employ the specified user name for logging in to the
+	           server.
 		 </para>
                </listitem>
 	       <listitem>
 	         <para>
-	           UNIX_SOCKET:
+	           PASSWORD: employ the specified password when connecting to the 
+	           database server.
 		 </para>
                </listitem>
 	       <listitem>
 	         <para>
-	           FLAGS:
+	           USE_SSL: will use SSL (encrypted protocol) if specified and set to 1.
 		 </para>
                </listitem>
 	     </itemizedlist>
@@ -1110,7 +1113,7 @@
             <para>
               It's a good practice to close connections when you finish using them. It
               doesn't mean that you must close them each time you use them. It's better
-              open the connections when program starts and use them during the whole
+              to open the connections when program starts and use them during the whole
               execution. This function frees the <LINK LINKEND="libgda-GdaConnection">GdaConnection</LINK>
               objects attached to the <LINK LINKEND="libgda-GdaClient">GdaClient</LINK>.
             </para>
@@ -1666,7 +1669,7 @@
             <LISTITEM><para>Free command</para></LISTITEM>
           </ORDEREDLIST>
         </LISTITEM>
-        <LISTITEM><para>Commit o rollback transaction</para></LISTITEM>
+        <LISTITEM><para>Commit or rollback transaction</para></LISTITEM>
         <LISTITEM><para>Free transaction</para></LISTITEM>
       </ORDEREDLIST>
       <para>
