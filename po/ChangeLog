@@ -1,3 +1,7 @@
+2002-12-14  Christophe Merlet  <redfox@redfoxcenter.org>
+
+	* fr.po: Updated French translation.
+
 2002-06-04  Pablo Saratxaga  <pablo@mandrakesoft.com>
 
 	* vi.po: Added Vietnamese file
@@ -10,7 +14,7 @@
 
         * pt.po: Updated Portuguese translation
 
-2002-02-02  Christophe Merlet  <redfox@eikonex.org>
+2002-02-02  Christophe Merlet  <christophe@merlet.net>
 
 	* fr.po: Updated French translation from work of
 	Frederic Riss <frederic.riss@laposte.net>.
@@ -181,7 +185,7 @@
 
 	* ja.po: Updated Japanese translation.
 
-2001-02-13  Christophe Merlet  <redfox@eikonex.org>
+2001-02-13  Christophe Merlet  <christophe@merlet.net>
 
 	* fr.po: Updated French translation
 
@@ -235,7 +239,7 @@
 
 	* POTFILES.in: Marked more files to translate
 
-2001-01-11  Christophe Merlet  <redfox@eikonex.org>
+2001-01-11  Christophe Merlet  <christophe@merlet.net>
 
 	* fr.po: Updated French translation
 
