@@ -130,17 +130,20 @@ impl_GDA_Connection_openSchema (PortableServer_Servant servant,
 {
 	GdaServerConnection* cnc = (GdaServerConnection *) bonobo_x_object (servant);
 	GdaServerRecordset* recset;
-	GdaError e;
+	GdaError *e;
 
 	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), CORBA_OBJECT_NIL);
 
-	memset (&e, '\0', sizeof(e));
-	if ((recset = gda_server_connection_open_schema (cnc, &e, t,
+	e = gda_error_new ();
+	if ((recset = gda_server_connection_open_schema (cnc, e, t,
 							 constraints->_buffer,
 							 constraints->_length)) == 0) {
 		gda_error_to_exception (&e, ev);
 		return CORBA_OBJECT_NIL;
 	}
+
+	/* free memory */
+	gda_error_free (e);
 
 	return bonobo_object_corba_objref (BONOBO_OBJECT (recset));;
 }

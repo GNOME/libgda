@@ -89,8 +89,7 @@ impl_GDA_Command_open (PortableServer_Servant servant,
 	error = gda_error_new ();
 	recset = gda_server_command_execute (cmd, error, param, &laffected, 0);
 	if (!GDA_IS_SERVER_RECORDSET (recset)) {
-		if (error->description)
-			gda_error_to_exception (error, ev);
+		gda_error_to_exception (error, ev);
 		gda_error_free (error);
 		return CORBA_OBJECT_NIL;
 	}
@@ -143,7 +142,7 @@ gda_server_command_destroy (GtkObject *object)
 	    (cmd->cnc->server_impl->functions.command_free != NULL)) {
 		cmd->cnc->server_impl->functions.command_free(cmd);
 	}
-	
+
 	cmd->cnc->commands = g_list_remove(cmd->cnc->commands, (gpointer) cmd);
 	if (cmd->text)
 		g_free((gpointer) cmd->text);
@@ -190,7 +189,7 @@ gda_server_command_new (GdaServerConnection *cnc)
 	
 	cmd = GDA_SERVER_COMMAND (gtk_type_new (gda_server_command_get_type ()));
 	cmd->cnc = cnc;
-	
+
 	if ((cmd->cnc->server_impl != NULL) &&
 	    (cmd->cnc->server_impl->functions.command_new != NULL)) {
 		cmd->cnc->server_impl->functions.command_new(cmd);

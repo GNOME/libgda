@@ -179,6 +179,7 @@ impl_GDA_Recordset_fetch (PortableServer_Servant servant,
 		g_free(row);
 	}
 	g_list_free (tmp_rows);
+
 	return chunk;
 }
 
@@ -212,7 +213,7 @@ impl_GDA_Recordset_describe (PortableServer_Servant servant,
 		field->scale = server_field->num_scale;
 		field->gdaType = gda_server_connection_get_gda_type (rs->cnc, server_field->sql_type);
 		field->nativeType = server_field->sql_type;
-		field->cType = gda_server_connection_get_c_type(rs->cnc, field->gdaType);
+		field->cType = gda_server_connection_get_c_type (rs->cnc, field->gdaType);
 		ptr = g_list_next(ptr);
 		idx++;
 	}
@@ -266,9 +267,9 @@ gda_server_recordset_destroy (GtkObject *object)
 	if ((recset->cnc != NULL) &&
 	    (recset->cnc->server_impl != NULL) &&
 	    (recset->cnc->server_impl->functions.recordset_free != NULL))
-		recset->cnc->server_impl->functions.recordset_free(recset);
+		recset->cnc->server_impl->functions.recordset_free (recset);
 
-	g_list_foreach(recset->fields, (GFunc) gda_server_field_free, NULL);
+	g_list_foreach (recset->fields, (GFunc) gda_server_field_free, NULL);
 
 	parent_class = gtk_type_class (BONOBO_X_OBJECT_TYPE);
 	if (parent_class && parent_class->destroy)
@@ -314,7 +315,7 @@ gda_server_recordset_new (GdaServerConnection *cnc)
   
 	if ((recset->cnc->server_impl != NULL) &&
 	    (recset->cnc->server_impl->functions.recordset_new != NULL))
-		recset->cnc->server_impl->functions.recordset_new(recset);
+		recset->cnc->server_impl->functions.recordset_new (recset);
 
 	return recset;
 }
