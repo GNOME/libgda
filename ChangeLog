@@ -40,7 +40,18 @@
 	library.
 	* Makefile.am: Adding in libsql directory for compiling
 	* configure.in: Have Makefile generated for libsql/Makefile.am
-	
+
+2002-06-17  Tim Coleman <tim@timcoleman.com>
+
+	* providers/oracle/gda-oracle.h:
+	* providers/oracle/gda-oracle-provider.c:
+	* providers/oracle/gda-oracle-provider.h:
+	* providers/oracle/gda-oracle-recordset.c:
+	* providers/oracle/gda-oracle-recordset.h:
+	* providers/oracle/utils.c: Various changes to update GDA oracle
+	  provider to properly retrieve data, support transactions (untested)
+	  and parameters for queries.
+
 2002-06-17  Carlos Perelló Marín <carlos@gnome-db.org>
 
 	* doc/C/tmpl/gda-command.sgml: Automatic update.
