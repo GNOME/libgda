@@ -225,6 +225,7 @@ gda_xml_database_new_from_uri (const gchar *uri)
 	}
 
 	xmldb = g_object_new (GDA_TYPE_XML_DATABASE, NULL);
+	xmldb->priv->uri = g_strdup (uri);
 
 	/* parse the file */
 	root = xmlDocGetRootElement (doc);
@@ -270,6 +271,81 @@ gda_xml_database_changed (GdaXmlDatabase * xmldb)
 	g_signal_emit (G_OBJECT (xmldb),
 		       xmldb_signals[GDA_XML_DATABASE_CHANGED],
 		       0);
+}
+
+/**
+ * gda_xml_database_reload
+ * @xmldb: XML database.
+ *
+ * Reload the given XML database from its original place, discarding
+ * all changes that may have happened.
+ */
+void
+gda_xml_database_reload (GdaXmlDatabase *xmldb)
+{
+	/* FIXME: implement */
+}
+
+/**
+ * gda_xml_database_save
+ * @xmldb: XML database.
+ * @uri: URI to save the XML database to.
+ *
+ * Save the given XML database to disk.
+ */
+gboolean
+gda_xml_database_save (GdaXmlDatabase *xmldb, const gchar *uri)
+{
+	g_return_val_if_fail (GDA_IS_XML_DATABASE (xmldb), FALSE);
+
+	/* FIXME: implement */
+	return FALSE;
+}
+
+static void
+add_table_to_list (gpointer key, gpointer value, gpointer user_data)
+{
+	gchar *name = (gchar *) key;
+	GList **list = (GList **) user_data;
+
+	*list = g_list_append (*list, g_strdup (name));
+}
+
+/**
+ * gda_xml_database_get_tables
+ * @xmldb: XML database.
+ *
+ * Return a list of all table names present in the given database.
+ * You must free the returned GList when you no longer need it, by
+ * using the #gda_xml_database_free_table_list function.
+ *
+ * Returns: a GList of strings.
+ */
+GList *
+gda_xml_database_get_tables (GdaXmlDatabase *xmldb)
+{
+	GList *list = NULL;
+
+	g_return_val_if_fail (GDA_IS_XML_DATABASE (xmldb), NULL);
+
+	g_hash_table_foreach (xmldb->priv->tables, (GHFunc) add_table_to_list, &list);
+	return list;
+}
+
+/**
+ * gda_xml_database_free_table_list
+ * @list: list of tables, as returned by #gda_xml_database_get_tables.
+ *
+ * Free a GList of strings returned by #gda_xml_database_get_tables.
+ */
+void
+gda_xml_database_free_table_list (GList *list)
+{
+	GList *l;
+
+	for (l = list; l != NULL; l = l->next)
+		g_free (l->data);
+	g_list_free (list);
 }
 
 /**
@@ -328,8 +404,9 @@ gda_xml_database_new_table_from_node (GdaXmlDatabase *xmldb, xmlNodePtr node)
 		return NULL;
 	}
 
+	name = xmlGetProp (node, PROPERTY_NAME);
 	table = gda_table_new (name);
-	if (!table) {
+	if (table) {
 		gda_log_error (_("Table %s already exists"), name);
 		return NULL;
 	}

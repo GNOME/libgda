@@ -57,7 +57,11 @@ GdaXmlDatabase *gda_xml_database_new (void);
 GdaXmlDatabase *gda_xml_database_new_from_uri (const gchar *uri);
 
 void            gda_xml_database_changed (GdaXmlDatabase *xmldb);
+void            gda_xml_database_reload (GdaXmlDatabase *xmldb);
+gboolean        gda_xml_database_save (GdaXmlDatabase *xmldb, const gchar *uri);
 
+GList          *gda_xml_database_get_tables (GdaXmlDatabase *xmldb);
+void            gda_xml_database_free_table_list (GList *list);
 GdaTable       *gda_xml_database_new_table (GdaXmlDatabase *xmldb, const gchar *name);
 GdaTable       *gda_xml_database_new_table_from_node (GdaXmlDatabase *xmldb,
 						      xmlNodePtr xmlnode);

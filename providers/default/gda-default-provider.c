@@ -22,10 +22,11 @@
  */
 
 #include <stdlib.h>
-#include "gda-default.h"
-#include "gda-default-recordset.h"
 #include <libgda/gda-row.h>
 #include <libgda/gda-server-recordset.h>
+#include <libgda/gda-server-recordset-model.h>
+#include "gda-default.h"
+#include "gda-default-recordset.h"
 
 #define PARENT_TYPE GDA_TYPE_SERVER_PROVIDER
 
@@ -48,6 +49,22 @@ static GList *gda_default_provider_execute_command (GdaServerProvider *provider,
 						    GdaServerConnection *cnc,
 						    GdaCommand *cmd,
 						    GdaParameterList *params);
+static gboolean gda_default_provider_begin_transaction (GdaServerProvider *provider,
+							GdaServerConnection *cnc,
+							const gchar *trans_id);
+static gboolean gda_default_provider_commit_transaction (GdaServerProvider *provider,
+							 GdaServerConnection *cnc,
+							 const gchar *trans_id);
+static gboolean gda_default_provider_rollback_transaction (GdaServerProvider *provider,
+							   GdaServerConnection *cnc,
+							   const gchar *trans_id);
+static gboolean gda_default_provider_supports (GdaServerProvider *provider,
+					       GdaServerConnection *cnc,
+					       GNOME_Database_Feature feature);
+static GdaServerRecordset *gda_default_provider_get_schema (GdaServerProvider *provider,
+							    GdaServerConnection *cnc,
+							    GNOME_Database_Connection_Schema schema,
+							    GdaParameterList *params);
 
 static GObjectClass *parent_class = NULL;
 
@@ -67,9 +84,11 @@ gda_default_provider_class_init (GdaDefaultProviderClass *klass)
 	provider_class->open_connection = gda_default_provider_open_connection;
 	provider_class->close_connection = gda_default_provider_close_connection;
 	provider_class->execute_command = gda_default_provider_execute_command;
-	provider_class->begin_transaction = NULL;
-	provider_class->commit_transaction = NULL;
-	provider_class->rollback_transaction = NULL;
+	provider_class->begin_transaction = gda_default_provider_begin_transaction;
+	provider_class->commit_transaction = gda_default_provider_commit_transaction;
+	provider_class->rollback_transaction = gda_default_provider_rollback_transaction;
+	provider_class->supports = gda_default_provider_supports;
+	provider_class->get_schema = gda_default_provider_get_schema;
 }
 
 static void
@@ -124,7 +143,7 @@ gda_default_provider_open_connection (GdaServerProvider *provider,
 				      const gchar *password)
 {
 	const gchar *t_filename = NULL;
-	gchar *errmsg = NULL;
+	GdaXmlDatabase *xmldb;
 	
 	GdaDefaultProvider *dfprv = (GdaDefaultProvider *) provider;
 
@@ -135,13 +154,22 @@ gda_default_provider_open_connection (GdaServerProvider *provider,
 	t_filename = gda_quark_list_find (params, "FILENAME");
 
 	if (!t_filename || *t_filename != '/') {
-		gda_server_connection_add_error_string ( cnc,
-				_("A full path must be specified on the "
-				"connection string to open a database."));
+		gda_server_connection_add_error_string (
+			cnc,
+			_("A full path must be specified on the "
+			  "connection string to open a database."));
 		return FALSE;
 	}
 
-	/* FIXME: open connection */
+	/* open the given filename */
+	xmldb = gda_xml_database_new_from_uri ((const gchar *) t_filename);
+	if (!xmldb) {
+		gda_server_connection_add_error_string (cnc, _("Could not open given file"));
+		return FALSE;
+	}
+
+	g_object_set_data (G_OBJECT (cnc), OBJECT_DATA_DEFAULT_HANDLE, xmldb);
+	
 	return FALSE;
 }
 
@@ -150,11 +178,17 @@ static gboolean
 gda_default_provider_close_connection (GdaServerProvider *provider,
 				       GdaServerConnection *cnc)
 {
+	GdaXmlDatabase *xmldb;
 	GdaDefaultProvider *dfprv = (GdaDefaultProvider *) provider;
 
 	g_return_val_if_fail (GDA_IS_DEFAULT_PROVIDER (dfprv), FALSE);
 	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), FALSE);
 
+	xmldb = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_DEFAULT_HANDLE);
+	if (!xmldb)
+		return FALSE;
+
+	g_object_unref (G_OBJECT (xmldb));
 	g_object_set_data (G_OBJECT (cnc), OBJECT_DATA_DEFAULT_HANDLE, NULL);
 
 	return TRUE;
@@ -163,7 +197,6 @@ gda_default_provider_close_connection (GdaServerProvider *provider,
 static GList *
 process_sql_commands (GList *reclist, GdaServerConnection *cnc, const gchar *sql)
 {
-	gchar  *errmsg;
 	gchar **arr;
 
 	/* parse SQL string, which can contain several commands, separated by ';' */
@@ -189,9 +222,7 @@ gda_default_provider_execute_command (GdaServerProvider *provider,
 				      GdaCommand *cmd,
 				      GdaParameterList *params)
 {
-	GList  *reclist = NULL;
-	gchar  *cmd_string = NULL;
-	
+	GList *reclist = NULL;
 	GdaDefaultProvider *dfprv = (GdaDefaultProvider *) provider;
 
 	g_return_val_if_fail (GDA_IS_DEFAULT_PROVIDER (dfprv), NULL);
@@ -210,15 +241,141 @@ gda_default_provider_execute_command (GdaServerProvider *provider,
 			/* FIXME: Implement */
 			return NULL;
 		case GDA_COMMAND_TYPE_TABLE:
-			cmd_string = g_strdup_printf ("SELECT * FROM %s",
-						      gda_command_get_text (cmd));
-			reclist = process_sql_commands (reclist, cnc,
-							cmd_string);
-			g_free (cmd_string);
 			break;
 		case GDA_COMMAND_TYPE_INVALID:
 			return NULL;
 	}
 
 	return reclist;
+}
+
+/* begin_transaction handler for the GdaDefaultProvider class */
+static gboolean
+gda_default_provider_begin_transaction (GdaServerProvider *provider,
+					GdaServerConnection *cnc,
+					const gchar *trans_id)
+{
+	GdaXmlDatabase *xmldb;
+	GdaDefaultProvider *dfprv = (GdaDefaultProvider *) provider;
+
+	g_return_val_if_fail (GDA_IS_DEFAULT_PROVIDER (dfprv), FALSE);
+
+	xmldb = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_DEFAULT_HANDLE);
+	if (!xmldb)
+		return FALSE;
+
+	return gda_xml_database_save (xmldb, NULL);
+}
+
+/* commit_transaction handler for the GdaDefaultProvider class */
+static gboolean
+gda_default_provider_commit_transaction (GdaServerProvider *provider,
+					 GdaServerConnection *cnc,
+					 const gchar *trans_id)
+{
+	GdaXmlDatabase *xmldb;
+	GdaDefaultProvider *dfprv = (GdaDefaultProvider *) provider;
+
+	g_return_val_if_fail (GDA_IS_DEFAULT_PROVIDER (dfprv), FALSE);
+
+	xmldb = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_DEFAULT_HANDLE);
+	if (!xmldb)
+		return FALSE;
+
+	return gda_xml_database_save (xmldb, NULL);
+}
+
+/* rollback_transaction handler for the GdaDefaultProvider class */
+static gboolean
+gda_default_provider_rollback_transaction (GdaServerProvider *provider,
+					   GdaServerConnection *cnc,
+					   const gchar *trans_id)
+{
+	GdaXmlDatabase *xmldb;
+	GdaDefaultProvider *dfprv = (GdaDefaultProvider *) provider;
+
+	g_return_val_if_fail (GDA_IS_DEFAULT_PROVIDER (dfprv), FALSE);
+
+	xmldb = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_DEFAULT_HANDLE);
+	if (!xmldb)
+		return FALSE;
+
+	gda_xml_database_reload (xmldb);
+	return TRUE;
+}
+
+/* supports handler for the GdaDefaultProvider class */
+static gboolean
+gda_default_provider_supports (GdaServerProvider *provider,
+			       GdaServerConnection *cnc,
+			       GNOME_Database_Feature feature)
+{
+	if (feature == GNOME_Database_FEATURE_TRANSACTIONS
+	    && feature == GNOME_Database_FEATURE_XML_QUERIES)
+		return TRUE;
+
+	return FALSE;
+}
+
+static GdaServerRecordset *
+get_tables (GdaServerConnection *cnc, GdaXmlDatabase *xmldb)
+{
+	GdaServerRecordsetModel *recset;
+	GList *tables;
+
+	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), NULL);
+	g_return_val_if_fail (GDA_IS_XML_DATABASE (xmldb), NULL);
+
+	recset = GDA_SERVER_RECORDSET_MODEL (gda_server_recordset_model_new (cnc, 1));
+	gda_server_recordset_model_set_field_defined_size (recset, 0, 256);
+	gda_server_recordset_model_set_field_name (recset, 0, _("Name"));
+	gda_server_recordset_model_set_field_scale (recset, 0, 0);
+	gda_server_recordset_model_set_field_gdatype (recset, 0, GDA_TYPE_STRING);
+
+	tables = gda_xml_database_get_tables (xmldb);
+	if (tables != NULL) {
+		GList *l;
+
+		for (l = tables; l != NULL; l = l->next) {
+			GList *value_list;
+			GdaValue *value;
+
+			value = gda_value_new_string ((const gchar *) l->data);
+			value_list = g_list_append (NULL, value);
+			gda_server_recordset_model_append_row (recset,
+							       (const GList *) value_list);
+
+			gda_value_free (value);
+			g_list_free (value_list);
+		}
+
+		gda_xml_database_free_table_list (tables);
+	}
+
+	return GDA_SERVER_RECORDSET (recset);
+}
+
+/* get_schema handler for the GdaDefaultProvider class */
+static GdaServerRecordset *
+gda_default_provider_get_schema (GdaServerProvider *provider,
+				 GdaServerConnection *cnc,
+				 GNOME_Database_Connection_Schema schema,
+				 GdaParameterList *params)
+{
+	GdaXmlDatabase *xmldb;
+	GdaDefaultProvider *dfprv = (GdaDefaultProvider *) provider;
+
+	g_return_val_if_fail (GDA_IS_DEFAULT_PROVIDER (dfprv), NULL);
+
+	xmldb = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_DEFAULT_HANDLE);
+	if (!xmldb)
+		return NULL;
+
+	switch (schema) {
+	case GNOME_Database_Connection_SCHEMA_TABLES :
+		return get_tables (cnc, xmldb);
+	default :
+	}
+
+	return NULL;
 }

@@ -28,6 +28,7 @@
 #include <glib/gmacros.h>
 #include <bonobo/bonobo-i18n.h>
 #include <libgda/gda-server.h>
+#include <libgda/gda-xml-database.h>
 #include <gda-default-provider.h>
 
 #define GDA_DEFAULT_COMPONENT_FACTORY_ID "OAFIID:GNOME_Database_Default_ComponentFactory"

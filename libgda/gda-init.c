@@ -57,6 +57,8 @@ gda_init (const gchar *app_id, const gchar *version, gint nargs, gchar *args[])
 
 	bonobo_activate ();
 
+	gnome_vfs_configuration_init ();
+
 	initialized = TRUE;
 }
 

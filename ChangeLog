@@ -1,3 +1,16 @@
+2002-03-18  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* libgda/gda-xml-database.[ch] (gda_xml_database_reload): new function
+	(gda_xml_database_save): new function.
+	(gda_xml_database_new_from_uri): store the uri in our internal data.
+	(gda_xml_database_get_tables): new function.
+	(gda_xml_database_free_table_list): new function.
+
+	* libgda/gda-init.c (gda_init): call gnome_vfs_configuration_init.
+
+	* providers/default/*: more work on the new default provider, based
+	on the GdaXmlDatabase class.
+
 2002-03-18  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
 	* providers/postgres/gda-postgres-provider.c:
