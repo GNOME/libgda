@@ -420,7 +420,11 @@ gda_client_open_connection (GdaClient *client,
  * Opens a connection given a provider ID and a connection string. This
  * allows applications to open connections without having to create
  * a data source in the configuration. The format of @cnc_string is
- * similar to PostgreSQL and MySQL connection strings.
+ * similar to PostgreSQL and MySQL connection strings. It is a ;-separated
+ * series of key=value pairs. Do not add extra whitespace after the ; 
+ * separator. The possible keys depend on the provider, but
+ * these keys should work with all providers:
+ * USER, PASSWORD, HOST, DATABASE, PORT
  *
  * Returns: the opened connection if successful, %NULL if there is
  * an error.

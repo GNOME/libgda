@@ -1,3 +1,8 @@
+2004-04-23  Murray Cumming  <murrayc@murrayc.com>
+
+	* libgda/gda-client.c (gda_client_open_connection_from_string): 
+	Added documentation about the cnc_string format.
+
 2004-04-22  Robert Davis <rdavis@unico.com>
 
 	* providers/freetds/gda-freetds-provider.c
