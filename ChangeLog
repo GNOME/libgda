@@ -1,3 +1,17 @@
+2003-10-16  Paisa Seeluangsawat <paisa@users.sf.net>
+
+	* providers/mysql/gda-mysql-provider.c: 
+	  - add #include <libgda/gda-util.h> 
+	  - minor cosmatic fixes to stop some compiler warnings.
+	* providers/mysql/gda-mysql-recordset.c
+	  - fixed possible memory leak by moving gda_row_new() a few line down.
+	  - commented out variable "lengths", which doesn't seem to be used
+	    anywhere.
+	  - handle FIELD_TYPE_BLOB length correctly
+	  - distinguish SQL NULL from 0, 0.0, "".
+	  - factored the code for mysql data -> GdaValue conversion into
+	    fill_gda_value()
+
 2003-10-16  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* libgda/gda-connection.h: added FEATURE_UPDATABLE_CURSOR to

@@ -78,6 +78,7 @@ gda_mysql_type_to_gda (enum enum_field_types mysql_type)
 		return GDA_VALUE_TYPE_BINARY;
 	case FIELD_TYPE_VAR_STRING :
 	case FIELD_TYPE_STRING :
+		/* FIXME: Check for BINARY flags and use blob */
 		return GDA_VALUE_TYPE_STRING;
 	case FIELD_TYPE_NULL :
 	case FIELD_TYPE_NEWDATE :

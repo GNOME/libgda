@@ -23,6 +23,7 @@
  */
 
 #include <libgda/gda-data-model-array.h>
+#include <libgda/gda-util.h>
 #include <libgda/gda-intl.h>
 #include <stdlib.h>
 #include <string.h>
@@ -350,8 +351,8 @@ process_sql_commands (GList *reclist, GdaConnection *cnc, const gchar *sql)
 			mysql_res = mysql_store_result (mysql);
 			recset = gda_mysql_recordset_new (cnc, mysql_res, mysql);
 			if (GDA_IS_MYSQL_RECORDSET (recset)) {
-				gda_data_model_set_command_text (recset, arr[n]);
-				gda_data_model_set_command_type (recset, GDA_COMMAND_TYPE_SQL);
+				gda_data_model_set_command_text ( (GdaDataModel*) recset, arr[n]);
+				gda_data_model_set_command_type ( (GdaDataModel*) recset, GDA_COMMAND_TYPE_SQL);
 				reclist = g_list_append (reclist, recset);
 			}
 
@@ -663,7 +664,6 @@ gda_mysql_provider_supports (GdaServerProvider *provider,
 static void
 add_aggregate_row (GdaDataModelArray *recset, const gchar *str, const gchar *comments)
 {
-	GdaValue *value;
 	GList *list;
 
 	g_return_if_fail (GDA_IS_DATA_MODEL_ARRAY (recset));
@@ -870,7 +870,7 @@ get_mysql_tables (GdaConnection *cnc, GdaParameterList *params)
 {
 	GList *reclist;
 	GdaMysqlRecordset *recset;
-	GdaDataModelArray *model;
+	GdaDataModel *model;
 	gint rows, r;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
@@ -886,10 +886,10 @@ get_mysql_tables (GdaConnection *cnc, GdaParameterList *params)
 
 	/* add the extra information */
 	model = gda_data_model_array_new (4);
-	gda_data_model_set_column_title (GDA_DATA_MODEL (model), 0, _("Name"));
-	gda_data_model_set_column_title (GDA_DATA_MODEL (model), 1, _("Owner"));
-	gda_data_model_set_column_title (GDA_DATA_MODEL (model), 2, _("Comments"));
-	gda_data_model_set_column_title (GDA_DATA_MODEL (model), 3, "SQL");
+	gda_data_model_set_column_title (model, 0, _("Name"));
+	gda_data_model_set_column_title (model, 1, _("Owner"));
+	gda_data_model_set_column_title (model, 2, _("Comments"));
+	gda_data_model_set_column_title (model, 3, "SQL");
 	rows = gda_data_model_get_n_rows (GDA_DATA_MODEL (recset));
 	for (r = 0; r < rows; r++) {
 		GList *value_list = NULL;
@@ -924,14 +924,14 @@ get_mysql_tables (GdaConnection *cnc, GdaParameterList *params)
 		else
 			value_list = g_list_append (value_list, gda_value_new_string (""));
 
-		gda_data_model_append_row (GDA_DATA_MODEL (model), value_list);
+		gda_data_model_append_row (model, value_list);
 
 		g_free (name);
 		g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
 		g_list_free (value_list);
 	}
 
-	return GDA_DATA_MODEL (model);
+	return model;
 }
 
 static GdaDataModel *

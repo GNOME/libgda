@@ -41,6 +41,66 @@ static GObjectClass *parent_class = NULL;
  * Private functions
  */
 
+void
+fill_gda_value (GdaValue *gda_value, enum enum_field_types type, gchar *value, unsigned long length)
+{
+	if (!value) {
+		gda_value_set_null (gda_value);
+		return;
+	}
+
+	switch (type) {
+	case FIELD_TYPE_DECIMAL :
+	case FIELD_TYPE_DOUBLE :
+		gda_value_set_double (gda_value, atof (value));
+		break;
+	case FIELD_TYPE_FLOAT :
+		gda_value_set_single (gda_value, atof (value));
+		break;
+	case FIELD_TYPE_LONG :
+	case FIELD_TYPE_YEAR :
+		gda_value_set_integer (gda_value, atol (value));
+		break;
+	case FIELD_TYPE_LONGLONG :
+	case FIELD_TYPE_INT24 :
+		gda_value_set_bigint (gda_value, atoll (value));
+		break;
+	case FIELD_TYPE_SHORT :
+		gda_value_set_smallint (gda_value, atoi (value));
+		break;
+	case FIELD_TYPE_TINY :
+		gda_value_set_tinyint (gda_value, atoi (value));
+		break;
+	case FIELD_TYPE_TINY_BLOB :
+	case FIELD_TYPE_MEDIUM_BLOB :
+	case FIELD_TYPE_LONG_BLOB :
+	case FIELD_TYPE_BLOB :
+		gda_value_set_binary (gda_value, value, length);
+		break;
+	case FIELD_TYPE_VAR_STRING :
+	case FIELD_TYPE_STRING :
+		/* FIXME: we might get "[VAR]CHAR(20) BINARY" type with \0 inside
+		   We should check for BINARY flag and treat it like a BLOB
+		 */
+		gda_value_set_string (gda_value, value);
+		break;
+	case FIELD_TYPE_DATE :
+	case FIELD_TYPE_NULL :
+	case FIELD_TYPE_NEWDATE :
+	case FIELD_TYPE_ENUM :
+	case FIELD_TYPE_TIMESTAMP :
+	case FIELD_TYPE_DATETIME :
+	case FIELD_TYPE_TIME :
+	case FIELD_TYPE_SET : /* FIXME */
+		gda_value_set_string (gda_value, value);
+		break;
+	default :
+		g_printerr ("Unknown MySQL datatype.  This is fishy, but continueing anyway.\n");
+		gda_value_set_string (gda_value, value);
+	}
+}
+
+
 static GdaRow *
 fetch_row (GdaMysqlRecordset *recset, gulong rownum)
 {
@@ -48,9 +108,10 @@ fetch_row (GdaMysqlRecordset *recset, gulong rownum)
 	gint field_count;
 	gint row_count;
 	gint i;
-	unsigned long *lengths;
 	MYSQL_FIELD *mysql_fields;
 	MYSQL_ROW mysql_row;
+	unsigned long *mysql_lengths;
+
 
 	g_return_val_if_fail (GDA_IS_MYSQL_RECORDSET (recset), NULL);
 
@@ -71,68 +132,19 @@ fetch_row (GdaMysqlRecordset *recset, gulong rownum)
 	}
 
 	mysql_data_seek (recset->mysql_res, rownum);
+	mysql_fields = mysql_fetch_fields (recset->mysql_res);
+	mysql_row = mysql_fetch_row (recset->mysql_res);
+	mysql_lengths = mysql_fetch_lengths (recset->mysql_res);
+	if (!mysql_row || !mysql_lengths)
+		return NULL;
+	
 	row = gda_row_new (GDA_DATA_MODEL (recset), field_count);
 
-	lengths = recset->mysql_res->lengths;
-	mysql_fields = mysql_fetch_fields (recset->mysql_res);
-
-	mysql_row = mysql_fetch_row (recset->mysql_res);
-	if (!mysql_row)
-		return NULL;
-
 	for (i = 0; i < field_count; i++) {
-		GdaValue *field;
-		gchar *thevalue;
-
-		field = (GdaValue*) gda_row_get_value (row, i);
-
-		thevalue = mysql_row[i];
-
-		switch (mysql_fields[i].type) {
-		case FIELD_TYPE_DECIMAL :
-		case FIELD_TYPE_DOUBLE :
-			gda_value_set_double (field, thevalue ? atof (thevalue) : 0.0);
-			break;
-		case FIELD_TYPE_FLOAT :
-			gda_value_set_single (field, thevalue ? atof (thevalue) : 0.0);
-			break;
-		case FIELD_TYPE_LONG :
-		case FIELD_TYPE_YEAR :
-			gda_value_set_integer (field, thevalue ? atol (thevalue) : 0);
-			break;
-		case FIELD_TYPE_LONGLONG :
-		case FIELD_TYPE_INT24 :
-			gda_value_set_bigint (field, thevalue ? atoll (thevalue) : 0);
-			break;
-		case FIELD_TYPE_SHORT :
-			gda_value_set_smallint (field, thevalue ? atoi (thevalue) : 0);
-			break;
-		case FIELD_TYPE_TINY :
-			gda_value_set_tinyint (field, thevalue ? atoi (thevalue) : 0);
-			break;
-		case FIELD_TYPE_TINY_BLOB :
-		case FIELD_TYPE_MEDIUM_BLOB :
-		case FIELD_TYPE_LONG_BLOB :
-		case FIELD_TYPE_BLOB :
-			gda_value_set_binary (field, thevalue, mysql_fields[i].max_length);
-			break;
-		case FIELD_TYPE_VAR_STRING :
-		case FIELD_TYPE_STRING :
-			gda_value_set_string (field, thevalue ? thevalue : "");
-			break;
-		case FIELD_TYPE_DATE :
-		case FIELD_TYPE_NULL :
-		case FIELD_TYPE_NEWDATE :
-		case FIELD_TYPE_ENUM :
-		case FIELD_TYPE_TIMESTAMP :
-		case FIELD_TYPE_DATETIME :
-		case FIELD_TYPE_TIME :
-		case FIELD_TYPE_SET : /* FIXME */
-			gda_value_set_string (field, thevalue ? thevalue : "");
-			break;
-		default :
-			gda_value_set_string (field, thevalue ? thevalue : "");
-		}
+		fill_gda_value ((GdaValue*) gda_row_get_value (row, i),
+			    mysql_fields[i].type,
+			    mysql_row[i],
+			    mysql_lengths[i]);
 	}
 
 	return row;
@@ -186,24 +198,27 @@ gda_mysql_recordset_describe_column (GdaDataModel *model, gint col)
 	if (col >= field_count)
 		return NULL;
 
-	attrs = gda_field_attributes_new ();
-
 	mysql_field = mysql_fetch_field_direct (recset->mysql_res, col);
-	if (!mysql_field) {
-		gda_field_attributes_free (attrs);
+	if (!mysql_field)
 		return NULL;
-	}
+
+	attrs = gda_field_attributes_new ();
 
 	if (mysql_field->name)
 		gda_field_attributes_set_name (attrs, mysql_field->name);
 	gda_field_attributes_set_defined_size (attrs, mysql_field->length);
 	gda_field_attributes_set_table (attrs, mysql_field->table);
+	/* gda_field_attributes_set_caption(attrs, ); */
 	gda_field_attributes_set_scale (attrs, mysql_field->decimals);
 	gda_field_attributes_set_gdatype (attrs, gda_mysql_type_to_gda (mysql_field->type));
 	gda_field_attributes_set_allow_null (attrs, !IS_NOT_NULL (mysql_field->flags));
 	gda_field_attributes_set_primary_key (attrs, IS_PRI_KEY (mysql_field->flags));
 	gda_field_attributes_set_unique_key (attrs, mysql_field->flags & UNIQUE_KEY_FLAG);
+	/* gda_field_attributes_set_references(attrs, ); */
 	gda_field_attributes_set_auto_increment (attrs, mysql_field->flags & AUTO_INCREMENT_FLAG);
+	/* attrs->auto_increment_start */
+	/* attrs->auto_increment_step  */
+	gda_field_attributes_set_position (attrs, col);
 
 	return attrs;
 }
