@@ -19,7 +19,7 @@
 
 #ifndef __gda_report_stream_h__
 #define __gda_report_stream_h__
-/*
+
 #include <glib.h>
 #include <orb/orbit.h>
 #include <gda-error.h>
@@ -30,7 +30,7 @@
 #else
 #  include <gtk/gtk.h>
 #endif
-*/
+
 #if defined(__cplusplus)
 extern "C" {
 #endif
@@ -87,7 +87,7 @@ GType			gda_report_stream_get_type	(void);
 GtkType			gda_report_stream_get_type	(void);
 #endif
 
-Gda_ReportStream*	gda_report_stream_new		(CORBA_ORB orb);
+Gda_ReportStream*	gda_report_stream_new		(Gda_ReportEngine* engine);
 void			gda_report_stream_free		(Gda_ReportStream* object);
 
 gint			gda_report_stream_readChunk	(Gda_ReportStream* object, gchar* data,
