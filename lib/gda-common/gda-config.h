@@ -26,6 +26,8 @@
 extern "C" {
 #endif
 
+#define GDA_CONFIG_SECTION_DATASOURCES "/gda/Datasources"
+
 /*
  * Configuration system access
  */
@@ -58,14 +60,10 @@ typedef struct _Gda_Provider
   gchar*         comment;
   gchar*         location;
   gchar*         repo_id;
-#if defined(USING_OAF)
   gchar*         type;
   gchar*         username;
   gchar*         hostname;
   gchar*         domain;
-#else
-  GoadServerType type;
-#endif
   gchar*         main_config;
   gchar*         users_list_config;
   gchar*         users_ac_config;
@@ -78,11 +76,9 @@ typedef struct _Gda_Provider
 #define GDA_PROVIDER_COMMENT(srv)           ((srv) ? (srv)->comment : 0)
 #define GDA_PROVIDER_LOCATION(srv)          ((srv) ? (srv)->location : 0)
 #define GDA_PROVIDER_REPO_ID(srv)           ((srv) ? (srv)->repo_id : 0)
-#if defined(USING_OAF)
-#  define GDA_PROVIDER_USERNAME(srv)        ((srv) ? (srv)->username : 0)
-#  define GDA_PROVIDER_HOSTNAME(srv)        ((srv) ? (srv)->hostname : 0)
-#  define GDA_PROVIDER_DOMAIN(srv)          ((srv) ? (srv)->domain : 0)
-#endif
+#define GDA_PROVIDER_USERNAME(srv)        ((srv) ? (srv)->username : 0)
+#define GDA_PROVIDER_HOSTNAME(srv)        ((srv) ? (srv)->hostname : 0)
+#define GDA_PROVIDER_DOMAIN(srv)          ((srv) ? (srv)->domain : 0)
 #define GDA_PROVIDER_MAIN_CONFIG(srv)       ((srv) ? (srv)->main_config : 0)
 #define GDA_PROVIDER_USERS_LIST_CONFIG(srv) ((srv) ? (srv)->users_list_config : 0)
 #define GDA_PROVIDER_USERS_AC_CONFIG(srv)   ((srv) ? (srv)->users_ac_config : 0)

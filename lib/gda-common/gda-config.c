@@ -17,8 +17,7 @@
  */
 
 #include "gda-common.h"
-#if defined(USING_GCONF)
-#  include <gconf/gconf.h>
+#include <gconf/gconf.h>
 
 static GConfEngine* conf_engine = NULL;
 
@@ -31,7 +30,6 @@ get_conf_engine (void)
     }
   return conf_engine;
 }
-#endif
 
 /**
  * gda_config_get_string
@@ -40,11 +38,7 @@ get_conf_engine (void)
 gchar *
 gda_config_get_string (const gchar *path)
 {
-#if defined(USING_GCONF)
   return gconf_get_string(get_conf_engine(), path, NULL);
-#else
-  return gnome_config_get_string(path);
-#endif
 }
 
 /**
@@ -54,11 +48,7 @@ gda_config_get_string (const gchar *path)
 gint
 gda_config_get_int (const gchar *path)
 {
-#if defined(USING_GCONF)
   return gconf_get_int(get_conf_engine(), path, NULL);
-#else
-  return gnome_config_get_int(path);
-#endif
 }
 
 /**
@@ -68,11 +58,7 @@ gda_config_get_int (const gchar *path)
 gdouble
 gda_config_get_float (const gchar *path)
 {
-#if defined(USING_GCONF)
   return gconf_get_float(get_conf_engine(), path, NULL);
-#else
-  return gnome_config_get_float(path);
-#endif
 }
 
 /**
@@ -82,11 +68,7 @@ gda_config_get_float (const gchar *path)
 gboolean
 gda_config_get_boolean (const gchar *path)
 {
-#if defined(USING_GCONF)
   return gconf_get_bool(get_conf_engine(), path, NULL);
-#else
-  return gnome_config_get_bool(path);
-#endif
 }
 
 /**
@@ -97,11 +79,7 @@ gda_config_get_boolean (const gchar *path)
 void
 gda_config_set_string (const gchar *path, const gchar *new_value)
 {
-#if defined(USING_GCONF)
   gconf_set_string(get_conf_engine(), path, new_value, NULL);
-#else
-  gnome_config_set_string(path, new_value);
-#endif
 }
 
 /**
@@ -112,11 +90,7 @@ gda_config_set_string (const gchar *path, const gchar *new_value)
 void
 gda_config_set_int (const gchar *path, gint new_value)
 {
-#if defined(USING_GCONF)
   gconf_set_int(get_conf_engine(), path, new_value, NULL);
-#else
-  gnome_config_set_int(path, new_value);
-#endif
 }
 
 /**
@@ -127,11 +101,7 @@ gda_config_set_int (const gchar *path, gint new_value)
 void
 gda_config_set_float (const gchar *path, gdouble new_value)
 {
-#if defined(USING_GCONF)
   gconf_set_float(get_conf_engine(), path, new_value, NULL);
-#else
-  gnome_config_set_float(path, new_value);
-#endif
 }
 
 /**
@@ -142,11 +112,7 @@ gda_config_set_float (const gchar *path, gdouble new_value)
 void
 gda_config_set_boolean (const gchar *path, gboolean new_value)
 {
-#if defined(USING_GCONF)
   gconf_set_bool(get_conf_engine(), path, new_value, NULL);
-#else
-  gnome_config_set_bool(path, new_value);
-#endif
 }
 
 /**
@@ -158,10 +124,6 @@ gda_config_set_boolean (const gchar *path, gboolean new_value)
 void
 gda_config_remove_section (const gchar *path)
 {
-#if defined(USING_GCONF)
-#else
-  gnome_config_clean_section(path);
-#endif
 }
 
 /**
@@ -173,11 +135,7 @@ gda_config_remove_section (const gchar *path)
 void
 gda_config_remove_key (const gchar *path)
 {
-#if defined(USING_GCONF)
   gconf_unset(get_conf_engine(), path, NULL);
-#else
-  gnome_config_clean_key(path);
-#endif
 }
 
 /**
@@ -190,11 +148,7 @@ gda_config_remove_key (const gchar *path)
 gboolean
 gda_config_has_section (const gchar *path)
 {
-#if defined(USING_GCONF)
   return gconf_dir_exists(get_conf_engine(), path, NULL);
-#else
-  return gnome_config_has_section(path);
-#endif
 }
 
 /**
@@ -205,12 +159,8 @@ gda_config_has_section (const gchar *path)
 void
 gda_config_commit (void)
 {
-#if defined(USING_GCONF)
   /* FIXME: is that correct? */
-  gconf_suggest_sync(get_conf_engine(), NULL);
-#else
-  gnome_config_sync();
-#endif
+  //gconf_suggest_sync(get_conf_engine(), NULL);
 }
 
 /**
@@ -221,11 +171,7 @@ gda_config_commit (void)
 void
 gda_config_rollback (void)
 {
-#if defined(USING_GCONF)
   /* FIXME: how to do it? */
-#else
-  gnome_config_drop_all();
-#endif
 }
 
 /**
@@ -241,17 +187,10 @@ GList *
 gda_config_list_sections (const gchar *path)
 {
   GList*   ret = NULL;
-#if defined(USING_GCONF)
   GSList*  slist;
-#else
-  gpointer iterator;
-  gchar*   key = NULL;
-  gchar*   name = NULL;
-#endif
 
   g_return_val_if_fail(path != NULL, NULL);
   
-#if defined(USING_GCONF)
   slist = gconf_all_dirs(get_conf_engine(), path, NULL);
   if (slist)
     {
@@ -259,17 +198,10 @@ gda_config_list_sections (const gchar *path)
       
       for (node = slist; node != NULL; node = g_slist_next(node))
         {
-          ret = g_list_append(ret, node->data);
+          ret = g_list_append(ret, g_strdup(node->data));
         }
       g_slist_free(slist);
     }
-#else
-  iterator = gnome_config_init_iterator_sections(path);
-  while ((iterator = gnome_config_iterator_next(iterator, &key, &name)))
-    {
-      ret = g_list_append(ret, g_strdup(key));
-    }
-#endif
   return ret;
 }
 
@@ -327,11 +259,7 @@ gda_provider_copy (Gda_Provider* provider)
   if (provider->comment) retval->comment = g_strdup(provider->comment);
   if (provider->location) retval->location = g_strdup(provider->location);
   if (provider->repo_id) retval->repo_id = g_strdup(provider->repo_id);
-#if defined(USING_OAF)
   if (provider->type) retval->type = g_strdup(provider->type);
-#else
-  retval->type = provider->type;
-#endif
   if (provider->main_config)
     retval->main_config = g_strdup(provider->main_config);
   if (provider->users_list_config)
@@ -360,12 +288,10 @@ gda_provider_free (Gda_Provider* provider)
   if (provider->comment) g_free((gpointer) provider->comment);
   if (provider->location) g_free((gpointer) provider->location);
   if (provider->repo_id) g_free((gpointer) provider->repo_id);
-#if defined(USING_OAF)
   if (provider->type) g_free((gpointer) provider->type);
   if (provider->username) g_free((gpointer) provider->username);
   if (provider->hostname) g_free((gpointer) provider->hostname);
   if (provider->domain) g_free((gpointer) provider->domain);
-#endif
   if (provider->main_config) g_free((gpointer) provider->main_config);
   if (provider->users_list_config) g_free((gpointer) provider->users_list_config);
   if (provider->users_ac_config) g_free((gpointer) provider->users_ac_config);
@@ -387,88 +313,50 @@ GList *
 gda_provider_list (void)
 {
   GList*              retval = NULL;
-#if defined(USING_OAF)
   OAF_ServerInfoList* servlist;
   CORBA_Environment   ev;
-#else
-  GoadServerList*     servlist;
-  GoadServer*         slist;
-#endif
   gint                i;
   Gda_Provider*         provider;
 
-#if defined(USING_OAF)
   CORBA_exception_init(&ev);
   servlist = oaf_query("repo_ids.has('IDL:GDA/ConnectionFactory:1.0')", NULL, &ev);
   if (servlist)
     {
       for (i = 0; i < servlist->_length; i++)
-	{
-	  provider = gda_provider_new();
-	  provider->name = g_strdup(servlist->_buffer[i].iid);
-	  provider->location = g_strdup(servlist->_buffer[i].location_info);
-# if defined(USING_OLD_OAF)
-	  provider->comment = gda_corba_get_oaf_attribute(servlist->_buffer[i].attrs, "description");
-	  provider->repo_id = gda_corba_get_oaf_attribute(servlist->_buffer[i].attrs, "repo_ids");
-# else
-	  provider->comment = gda_corba_get_oaf_attribute(servlist->_buffer[i].props, "description");
-	  provider->repo_id = gda_corba_get_oaf_attribute(servlist->_buffer[i].props, "repo_ids");
-# endif
-	  provider->type = g_strdup(servlist->_buffer[i].server_type);
-	  provider->username = g_strdup(servlist->_buffer[i].username);
-	  provider->hostname = g_strdup(servlist->_buffer[i].hostname);
-	  provider->domain = g_strdup(servlist->_buffer[i].domain);
+        {
+          provider = gda_provider_new();
+          provider->name = g_strdup(servlist->_buffer[i].iid);
+          provider->location = g_strdup(servlist->_buffer[i].location_info);
 #if defined(USING_OLD_OAF)
-	  provider->main_config = gda_corba_get_oaf_attribute(servlist->_buffer[i].attrs, "gda-main-config");
-	  provider->users_list_config = gda_corba_get_oaf_attribute(servlist->_buffer[i].attrs, "gda-users-list-config");
-	  provider->users_ac_config = gda_corba_get_oaf_attribute(servlist->_buffer[i].attrs, "gda-users-ac-config");
-	  provider->db_config = gda_corba_get_oaf_attribute(servlist->_buffer[i].attrs, "gda-db-config");
-	  provider->dsn_config = gda_corba_get_oaf_attribute(servlist->_buffer[i].attrs, "gda-dsn-config");
+          provider->comment = gda_corba_get_oaf_attribute(servlist->_buffer[i].attrs, "description");
+          provider->repo_id = gda_corba_get_oaf_attribute(servlist->_buffer[i].attrs, "repo_ids");
+# else
+          provider->comment = gda_corba_get_oaf_attribute(servlist->_buffer[i].props, "description");
+          provider->repo_id = gda_corba_get_oaf_attribute(servlist->_buffer[i].props, "repo_ids");
+# endif
+          provider->type = g_strdup(servlist->_buffer[i].server_type);
+          provider->username = g_strdup(servlist->_buffer[i].username);
+          provider->hostname = g_strdup(servlist->_buffer[i].hostname);
+          provider->domain = g_strdup(servlist->_buffer[i].domain);
+#if defined(USING_OLD_OAF)
+          provider->main_config = gda_corba_get_oaf_attribute(servlist->_buffer[i].attrs, "gda-main-config");
+          provider->users_list_config = gda_corba_get_oaf_attribute(servlist->_buffer[i].attrs, "gda-users-list-config");
+          provider->users_ac_config = gda_corba_get_oaf_attribute(servlist->_buffer[i].attrs, "gda-users-ac-config");
+          provider->db_config = gda_corba_get_oaf_attribute(servlist->_buffer[i].attrs, "gda-db-config");
+          provider->dsn_config = gda_corba_get_oaf_attribute(servlist->_buffer[i].attrs, "gda-dsn-config");
 #else
-	  provider->main_config = gda_corba_get_oaf_attribute(servlist->_buffer[i].props, "gda-main-config");
-	  provider->users_list_config = gda_corba_get_oaf_attribute(servlist->_buffer[i].props, "gda-users-list-config");
-	  provider->users_ac_config = gda_corba_get_oaf_attribute(servlist->_buffer[i].props, "gda-users-ac-config");
-	  provider->db_config = gda_corba_get_oaf_attribute(servlist->_buffer[i].props, "gda-db-config");
-	  provider->dsn_config = gda_corba_get_oaf_attribute(servlist->_buffer[i].props, "gda-dsn-config");
+          provider->main_config = gda_corba_get_oaf_attribute(servlist->_buffer[i].props, "gda-main-config");
+          provider->users_list_config = gda_corba_get_oaf_attribute(servlist->_buffer[i].props, "gda-users-list-config");
+          provider->users_ac_config = gda_corba_get_oaf_attribute(servlist->_buffer[i].props, "gda-users-ac-config");
+          provider->db_config = gda_corba_get_oaf_attribute(servlist->_buffer[i].props, "gda-db-config");
+          provider->dsn_config = gda_corba_get_oaf_attribute(servlist->_buffer[i].props, "gda-dsn-config");
 #endif
-	  retval = g_list_append(retval, (gpointer) provider);
-	}
+          retval = g_list_append(retval, (gpointer) provider);
+        }
+
       /* FIXME: free servlist */
     }
   CORBA_exception_free(&ev);
-#else  
-  servlist = goad_server_list_get();
-  slist = servlist->list;
-  for (i = 0; slist[i].repo_id; i++)
-    {
-      int j;
-      gboolean is_match = FALSE;
-
-      for(j = 0; slist[i].repo_id[j] && !is_match; j++)
-	if (strcmp(slist[i].repo_id[j], "IDL:GDA/ConnectionFactory:1.0")  == 0)
-	  {
-	    is_match = TRUE;
-	    break;
-	  }
-      if (is_match)
-	{
-	  fprintf(stderr,"Found provider '%s'\n", slist[i].server_id);
-	  provider = gda_provider_new();
-	  provider->name     = g_strdup(slist[i].server_id);
-	  provider->location = g_strdup(slist[i].location_info);
-	  provider->comment  = g_strdup(slist[i].description);
-	  provider->repo_id  = g_strdup(*(slist[i].repo_id));
-	  provider->type     = slist[i].type;
-	  provider->main_config = g_strdup_printf("%s-config", provider->name);
-	  provider->users_list_config = g_strdup_printf("%s-users-list", provider->name);
-	  provider->users_ac_config = g_strdup_printf("%s-users-ac", provider->name);
-	  provider->db_config = g_strdup_printf("%s-db", provider->name);
-	  provider->dsn_config = g_strdup_printf("%s-dsn", provider->name);
-	  retval = g_list_append(retval, provider);
-	}
-    }
-  goad_server_list_free(servlist);
-#endif
 
   return retval;
 }
@@ -596,7 +484,7 @@ get_config_string (const gchar *format, ...)
   vsprintf(buffer, format, args);
   va_end(args);
 
-  return gnome_config_get_string(buffer);
+  return gda_config_get_string(buffer);
 }
 
 /**
@@ -608,86 +496,33 @@ get_config_string (const gchar *format, ...)
 GList *
 gda_dsn_list (void)
 {
-  gpointer gda_iterator;
-  GList*   datasources = 0;
-  gchar*   gda_name;
-  gchar*   section_name;
-  gchar*   global_gdalib;
-  gchar*   str;
+  GList* datasources = NULL;
+  GList* ret = NULL;
+  GList* node;
+
+  datasources = gda_config_list_sections(GDA_CONFIG_SECTION_DATASOURCES);
+  for (node = datasources; node != NULL; node = g_list_next(node))
+    {
+      Gda_Dsn* dsn;
+      gchar*   name;
+      
+      name = (gchar *) node->data;
+      if (name)
+        {
+          dsn = gda_dsn_new();
+          gda_dsn_set_name(dsn, name);
+          gda_dsn_set_provider(dsn, get_config_string("%s/%s/Provider", GDA_CONFIG_SECTION_DATASOURCES, name));
+          gda_dsn_set_dsn(dsn, get_config_string("%s/%s/DSN", GDA_CONFIG_SECTION_DATASOURCES, name));
+          gda_dsn_set_description(dsn, get_config_string("%s/%s/Description", GDA_CONFIG_SECTION_DATASOURCES, name));
+          gda_dsn_set_username(dsn, get_config_string("%s/%s/Username", GDA_CONFIG_SECTION_DATASOURCES, name));
+          
+          /* add datasource to return list */
+          ret = g_list_append(ret, (gpointer) dsn);
+        }
+    }
+  gda_config_free_list(datasources);
   
-  /* first get local data sources */
-  gda_iterator = gnome_config_init_iterator("/gdalib/Datasources");
-  while ((gda_iterator = gnome_config_iterator_next(gda_iterator, &gda_name, &section_name)))
-    {
-      Gda_Dsn* dsn = gda_dsn_new();
-
-      dsn->gda_name = g_strdup(section_name);
-      dsn->provider = get_config_string("/gdalib/%s/Provider", dsn->gda_name);
-      dsn->dsn_str = get_config_string("/gdalib/%s/DSN", dsn->gda_name);
-      dsn->description = get_config_string("/gdalib/%s/Description", dsn->gda_name);
-      dsn->username = get_config_string("/gdalib/%s/Username", dsn->gda_name);
-      dsn->config = get_config_string("/gdalib/%s/Configurator", dsn->gda_name);
-      dsn->is_global = FALSE;
-
-      datasources = g_list_append(datasources, (gpointer) dsn);
-    }
-
-  /* then, global data sources */
-  global_gdalib = g_strdup_printf("=%s/gdalib=", GDA_CONFIG_DIR);
-  str = g_strdup_printf("%s/Datasources", global_gdalib);
-  gda_iterator = gnome_config_init_iterator(str);
-  while ((gda_iterator = gnome_config_iterator_next(gda_iterator, &gda_name, &section_name)))
-    {
-      Gda_Dsn* dsn = NULL;
-      GList*   node;
-
-      /* look if the DSN already exists in user config */
-      node = g_list_first(datasources);
-      while (node)
-	{
-	  Gda_Dsn* dsn_tmp = (Gda_Dsn *) node->data;
-	  if (dsn_tmp)
-	    {
-	      if (!g_strcasecmp(GDA_DSN_GDA_NAME(dsn_tmp), gda_name))
-		{
-		  /* only fill info not supplied in the user config */
-		  if (!dsn_tmp->provider)
-		    dsn_tmp->provider = get_config_string("%s/%s/Provider", global_gdalib, dsn->gda_name);
-		  if (!dsn_tmp->dsn_str)
-		    dsn->dsn_str = get_config_string("%s/%s/DSN", global_gdalib, dsn->gda_name);
-		  if (!dsn_tmp->description)
-		    dsn->description = get_config_string("%s/%s/Description", global_gdalib, dsn->gda_name);
-		  if (!dsn_tmp->username)
-		    dsn->username = get_config_string("%s/%s/Username", global_gdalib, dsn->gda_name);
-		  if (!dsn_tmp->config)
-		    dsn->config = get_config_string("%s/%s/Configurator", global_gdalib, dsn->gda_name);
-		  dsn->is_global = TRUE;
-
-		  dsn = dsn_tmp;
-		  break;
-		}
-	    }
-	  node = g_list_next(node);
-	}
-      if (!dsn)
-	{
-	  dsn = gda_dsn_new();
-
-	  dsn->gda_name = g_strdup(section_name);
-	  dsn->provider = get_config_string("%s/%s/Provider", global_gdalib, dsn->gda_name);
-	  dsn->dsn_str = get_config_string("%s/%s/DSN", global_gdalib, dsn->gda_name);
-	  dsn->description = get_config_string("%s/%s/Description", global_gdalib, dsn->gda_name);
-	  dsn->username = get_config_string("%s/%s/Username", global_gdalib, dsn->gda_name);
-	  dsn->config = get_config_string("%s/%s/Configurator", global_gdalib, dsn->gda_name);
-	  dsn->is_global = TRUE;
-
-	  datasources = g_list_append(datasources, (gpointer) dsn);
-	}
-      node = g_list_next(node);
-    }
-  g_free((gpointer) str);
-  g_free((gpointer) global_gdalib);
-  return datasources;
+  return ret;
 }
 
 /**
@@ -726,14 +561,14 @@ gda_dsn_find_by_name (const gchar *dsn_name)
     {
       Gda_Dsn* dsn = (Gda_Dsn *) list->data;
       if (dsn && !found)
-	{
-	  if (!g_strcasecmp(GDA_DSN_GDA_NAME(dsn), dsn_name))
-	    {
-	      rc = dsn;
-	      found = TRUE;
-	    }
-	  else gda_dsn_free(dsn);
-	}
+        {
+          if (!g_strcasecmp(GDA_DSN_GDA_NAME(dsn), dsn_name))
+            {
+              rc = dsn;
+              found = TRUE;
+            }
+          else gda_dsn_free(dsn);
+        }
       else gda_dsn_free(dsn);
       list = g_list_next(list);
     }
@@ -860,35 +695,33 @@ gda_dsn_save (Gda_Dsn *dsn)
       gchar* config_prefix;
       gchar* tmp;
 
-      if (dsn->is_global)
-	config_prefix = g_strdup_printf("=%s/gdalib=", GDA_CONFIG_DIR);
-      else config_prefix = g_strdup("/gdalib");
+      config_prefix = g_strdup(GDA_CONFIG_SECTION_DATASOURCES);
 
-      tmp = g_strdup_printf("%s/Datasources/%s", config_prefix, dsn->gda_name);
-      gnome_config_set_string(tmp, GDA_DSN_GDA_NAME(dsn));
+      tmp = g_strdup_printf("%s/%s", config_prefix, dsn->gda_name);
+      gda_config_set_string(tmp, GDA_DSN_GDA_NAME(dsn));
       g_free((gpointer) tmp);
 
       tmp = g_strdup_printf("%s/%s/Provider", config_prefix, dsn->gda_name);
-      gnome_config_set_string(tmp, GDA_DSN_PROVIDER(dsn));
+      gda_config_set_string(tmp, GDA_DSN_PROVIDER(dsn));
       g_free((gpointer) tmp);
 
       tmp = g_strdup_printf("%s/%s/DSN", config_prefix, dsn->gda_name);
-      gnome_config_set_string(tmp, GDA_DSN_DSN(dsn));
+      gda_config_set_string(tmp, GDA_DSN_DSN(dsn));
       g_free((gpointer) tmp);
 
       tmp = g_strdup_printf("%s/%s/Description", config_prefix, dsn->gda_name);
-      gnome_config_set_string(tmp, GDA_DSN_DESCRIPTION(dsn));
+      gda_config_set_string(tmp, GDA_DSN_DESCRIPTION(dsn));
       g_free((gpointer) tmp);
 
       tmp = g_strdup_printf("%s/%s/Username", config_prefix, dsn->gda_name);
-      gnome_config_set_string(tmp, GDA_DSN_USERNAME(dsn));
+      gda_config_set_string(tmp, GDA_DSN_USERNAME(dsn));
       g_free((gpointer) tmp);
 
       tmp = g_strdup_printf("%s/%s/Configurator", config_prefix, dsn->gda_name);
       gnome_config_set_string(tmp, GDA_DSN_CONFIG(dsn));
       g_free((gpointer) tmp);
 
-      gnome_config_sync();
+      gda_config_commit();
       g_free((gpointer) config_prefix);
       return TRUE;
     }
@@ -903,25 +736,15 @@ gda_dsn_save (Gda_Dsn *dsn)
 gboolean
 gda_dsn_remove (Gda_Dsn *dsn)
 {
-  gchar* config_prefix;
   gchar* tmp;
 
   g_return_val_if_fail(dsn != NULL, FALSE);
 
-  if (dsn->is_global)
-    config_prefix = g_strdup_printf("=%s/gdalib=", GDA_CONFIG_DIR);
-  else config_prefix = g_strdup("/gdalib");
-
-  tmp = g_strdup_printf("%s/Datasources/%s", config_prefix, GDA_DSN_GDA_NAME(dsn));
-  gnome_config_clean_key(tmp);
+  tmp = g_strdup_printf("%s/%s", GDA_CONFIG_SECTION_DATASOURCES, GDA_DSN_GDA_NAME(dsn));
+  gda_config_remove_section(tmp);
+  gda_config_commit();
   g_free((gpointer) tmp);
 
-  tmp = g_strdup_printf("%s/%s", config_prefix, GDA_DSN_GDA_NAME(dsn));
-  gnome_config_clean_section(tmp);
-  gnome_config_sync();
-  g_free((gpointer) tmp);
-
-  g_free((gpointer) config_prefix);
   return TRUE;
 }
 

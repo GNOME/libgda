@@ -344,7 +344,7 @@ gda_xml_database_table_field_count (Gda_XmlDatabase *xmldb, xmlNodePtr table)
   
   for (xmlnode = table->childs; xmlnode != NULL; xmlnode = xmlnode->next)
     {
-      cnt++;
+      if (!strcmp(xmlnode->name, OBJECT_FIELD)) cnt++;
     }
   return cnt;
 }
