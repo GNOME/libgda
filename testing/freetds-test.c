@@ -131,8 +131,8 @@ do_freetds_test (GdaConnection *cnc)
 //			create_table (cnc) ? "OK" : "Error");
 
 	/* Inserts values */
-	g_print ("\t\tInsert values for all known types: %s\n",
-				 insert_data (cnc) ? "OK" : "Error");
+//	g_print ("\t\tInsert values for all known types: %s\n",
+//				 insert_data (cnc) ? "OK" : "Error");
 
 	/* Selects values */
 	list = select_data (cnc);
