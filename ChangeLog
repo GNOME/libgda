@@ -1,3 +1,8 @@
+2002-05-01  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* libgda/gda-config.c (gda_config_search_entry): check pointers
+	before calling strcmp().
+
 2002-05-01  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
 	* data/config: added URI= to the DSN entry.

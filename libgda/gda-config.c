@@ -223,8 +223,11 @@ gda_config_search_entry (GList *sections, const gchar *path, const gchar *type)
 	if (section){
 		for (le = section->entries; le; le = le->next){
 			entry = le->data;
-			if (!strcmp (entry->type, type) && 
+			if (type != NULL &&
+			    !strcmp (entry->type, type) && 
 			    !strcmp (entry->name, ptr_last_dash + 1))
+				break;
+			else if (!strcmp (entry->name, ptr_last_dash + 1))
 				break;
 
 			entry = NULL;
