@@ -254,7 +254,10 @@ fi
 AM_CONDITIONAL(POSTGRES, test x$postgresdir != x)
 
 dnl Test for freetds provider
-try_freetds=false
+dnl
+dnl remains disabled unless /etc/freetds/compile_gda_tds_provider exists
+dnl
+try_freetds=true
 AC_ARG_WITH(tds,
 [  --with-tds=<directory>	use freetds library in <directory>],[
 if test $withval = no
@@ -263,17 +266,31 @@ then
 elif test $withval = yes
 then
 	dir="/usr/local/freetds"
+	if test -f /etc/freetds/compile_gda_tds_provider
+	then
+		try_freetds=true
+	else
+		AC_MSG_WARN(freetds backend disabled)
+		try_freetds=false
+	fi
 else
 	dir=$withval
+	if test -f /etc/freetds/compile_gda_tds_provider
+	then
+		try_freetds=true
+	else
+		AC_MSG_WARN(freetds backend disabled)
+		try_freetds=false
+	fi
 fi
 ])
 freetdsdir=""
 if test $try_freetds = true
 then
 	AC_MSG_CHECKING(for freetds files)
-	for d in $dir /usr/local/freetds /opt/freetds /opt/packages/freetds /opt/freetds-0.50
+	for d in $dir /usr/local/freetds /usr /opt/freetds /opt/packages/freetds /opt/freetds-0.50
 	do
-		if test -f $d/include/ctpublic.h
+		if test -f $d/include/tds.h
 		then
 			AC_MSG_RESULT(found freetds in $d)
 			freetdsdir=$d
@@ -285,7 +302,7 @@ then
 		AC_MSG_WARN(tds backend not used)
 	else
 		FREETDS_CFLAGS=-I${freetdsdir}/include
-		FREETDS_LIBS="-L${freetdsdir}/lib -lct"
+		FREETDS_LIBS="-L${freetdsdir}/lib -ltds"
 		AC_DEFINE(HAVE_FREETDS)
 	fi
 fi
