@@ -56,6 +56,10 @@ static gboolean gda_mysql_provider_rollback_transaction (GdaServerProvider *prov
 static gboolean gda_mysql_provider_supports (GdaServerProvider *provider,
 					     GdaServerConnection *cnc,
 					     GNOME_Database_Feature feature);
+static GdaServerRecordset *gda_mysql_provider_get_schema (GdaServerProvider *provider,
+							  GdaServerConnection *cnc,
+							  GNOME_Database_Connection_Schema schema,
+							  GdaParameterList *params);
 
 static GObjectClass *parent_class = NULL;
 
@@ -79,6 +83,7 @@ gda_mysql_provider_class_init (GdaMysqlProviderClass *klass)
 	provider_class->commit_transaction = gda_mysql_provider_commit_transaction;
 	provider_class->rollback_transaction = gda_mysql_provider_rollback_transaction;
 	provider_class->supports = gda_mysql_provider_supports;
+	provider_class->get_schema = gda_mysql_provider_get_schema;
 }
 
 static void
@@ -402,4 +407,40 @@ gda_mysql_provider_supports (GdaServerProvider *provider,
 	}
 
 	return FALSE;
+}
+
+static GdaServerRecordset *
+get_mysql_tables (GdaServerConnection *cnc, GdaParameterList *params)
+{
+	GList *reclist;
+	GdaServerRecordset *recset;
+
+	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), NULL);
+
+	reclist = process_sql_commands (NULL, cnc, "show tables");
+	if (!reclist)
+		return NULL;
+
+	recset = GDA_SERVER_RECORDSET (reclist->data);
+	g_list_free (reclist);
+
+	return recset;
+}
+
+/* get_schema handler for the GdaMysqlProvider class */
+static GdaServerRecordset *
+gda_mysql_provider_get_schema (GdaServerProvider *provider,
+			       GdaServerConnection *cnc,
+			       GNOME_Database_Connection_Schema schema,
+			       GdaParameterList *params)
+{
+	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
+	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), NULL);
+
+	switch (schema) {
+	case GNOME_Database_Connection_SCHEMA_TABLES :
+		return get_mysql_tables (cnc, params);
+	}
+
+	return NULL;
 }
