@@ -1,0 +1,13 @@
+<oaf_info>
+
+<oaf_server iid="OAFIID:report-engine:963e541e-4142-4d87-b62f-35ed31e545d9"
+            type="exe"
+            location="gda-report">
+	<oaf_attribute name="repo_ids" type="stringv">
+		<item value="IDL:GDA/Report:1.0"/>
+	</oaf_attribute>
+	<oaf_attribute name="description" type="string"
+	               value="GDA Distributed Report Engine"/>
+</oaf_server>
+
+</oaf_info>

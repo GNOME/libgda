@@ -19,3 +19,8 @@ gda_report_LDADD = \
 	$(GDA_CLIENT_LIBS) \
 	$(top_builddir)/lib/gda-common/libgda-common.la \
 	$(top_builddir)/lib/gda-client/libgda-client.la
+
+oafinfodir=$(GDA_oafinfodir)
+oafinfo_DATA=gda-report.oafinfo
+
+EXTRA_DIST = gda-report.oafinfo
