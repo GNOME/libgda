@@ -1,3 +1,15 @@
+2004-09-09 21:21  Dru <andru@treshna.com>
+
+        * sql_parser.c: When getting a list of where statements it will
+          return the join's as well now.
+
+2004-09-09 18:47  Dru <andru@treshna.com>
+
+        * .cvsignore, Makefile.am, sql_parse_test.c, sql_parser.c,
+          sql_parser.h, sql_parser_test.c: Added function to get a list of
+          where clauses in a sql statement.  Readded test code to check to
+          see if the function works ok.
+
 2004-09-02  Jeronimo Albi <jeronimoalbi@yahoo.com.ar>
 	
 	* providers/firebird/gda-firebird-blob.c: New File.
