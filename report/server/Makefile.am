@@ -2,6 +2,7 @@ bin_PROGRAMS = gda-report
 
 INCLUDES = \
 	-I$(top_builddir)/lib/gda-common \
+	-I$(top_builddir)/report \
 	$(GDA_CLIENT_CFLAGS)
 
 GDA_Report.h GDA_Report-common.c GDA_Report-skels.c: $(top_builddir)/report/idl/GDA_Report.idl

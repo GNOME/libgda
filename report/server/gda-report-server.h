@@ -20,6 +20,41 @@
 #  define __gda_report_server_h__
 
 #include <gda-common.h>
+#include <gda-report-defs.h>
 #include <GDA_Report.h>
+
+/*
+ * The report engine
+ */
+typedef struct
+{
+  POA_GDA_ReportEngine servant;
+  PortableServer_POA poa;
+} impl_POA_GDA_ReportEngine;
+
+extern POA_GDA_ReportEngine__vepv impl_GDA_ReportEngine_vepv;
+
+GDA_ReportEngine server_engine__create(PortableServer_POA poa, CORBA_Environment *ev);
+void report_server_engine__destroy (impl_POA_GDA_ReportEngine *servant, CORBA_Environment *ev);
+GDA_ReportList *server_engine_queryReports (impl_POA_GDA_ReportEngine *servant,
+                                            CORBA_char * condition,
+                                            CORBA_long flags,
+                                            CORBA_Environment * ev);
+GDA_Report server_engine_openReport (impl_POA_GDA_ReportEngine * servant,
+                                     CORBA_char * rep_name,
+                                     CORBA_Environment * ev);
+GDA_Report server_engine_addReport (impl_POA_GDA_ReportEngine * servant,
+                                    CORBA_char * rep_name,
+                                    CORBA_char * description,
+                                    CORBA_Environment * ev);
+void server_engine_removeReport (impl_POA_GDA_ReportEngine * servant,
+                                 CORBA_char * rep_name,
+                                 CORBA_Environment * ev);
+
+/*
+ * Global variables
+ */
+extern PortableServer_POA glb_the_poa;
+extern GDA_ReportEngine   glb_engine;
 
 #endif
