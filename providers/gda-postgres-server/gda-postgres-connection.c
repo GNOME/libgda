@@ -24,6 +24,16 @@ typedef Gda_ServerRecordset* (*schema_ops_fn)(Gda_ServerError *,
 					      Gda_ServerConnection *,
 					      GDA_Connection_Constraint *,
 					      gint );
+typedef struct _Gda_connection_data 
+{
+  gchar *dsn;
+  gchar *user;
+  guint nreg; /* number of registered users of that structure */
+  guint n_types; /* total number of data types 
+		    which will have to be destroyed when the struct is 
+		    destroyed*/
+  POSTGRES_Types_Array *types_array;
+} Gda_connection_data;
 
 
 static void                 initialize_schema_ops (void);
@@ -35,6 +45,9 @@ static gchar*               gda_postgres_connection_get_type_name(POSTGRES_Conne
 static void                 add_replacement_function(Gda_ServerRecordset *recset,
 						     POSTGRES_Recordset_Replacement *repl,
 						     gchar *sql_type);
+static gfloat               get_postmaster_version(PGconn *conn);
+static Gda_connection_data *find_connection_data(POSTGRES_Connection *cnc);
+
 
 schema_ops_fn schema_ops[GDA_Connection_GDCN_SCHEMA_LAST] =
 {
@@ -42,32 +55,35 @@ schema_ops_fn schema_ops[GDA_Connection_GDCN_SCHEMA_LAST] =
 };
 
 
-typedef struct _Gda_connection_data 
-{
-  gchar *dsn;
-  gchar *user;
-  guint nreg;
-  POSTGRES_Types_Array *types_array;
-  gfloat version; /* postmaster version */
-} Gda_connection_data;
 
+
+
+/* hidden data types */
+#define IN_PG_TYPES_HIDDEN "('SET', 'cid', 'int2vector', 'oidvector', 'regproc', 'smgr', 'tid', 'unknown', 'xid')"
+
+/* These are the data types for which we are able to make a conversion with 
+   C type and GDA type. For the other data types, the C type will be
+   SQL_C_CHAR and the Gda type GDA_TypeVarchar as returned by
+   gda_postgres_connection_get_c_type() and
+   gda_postgres_connection_get_gda_type() 
+*/
 
 #define POSTGRES_Types_Array_Nb 23
 POSTGRES_Types_Array types_array[POSTGRES_Types_Array_Nb] = 
 {
-  {"datetime", 0, GDA_TypeDbTimestamp, SQL_C_TIMESTAMP},
-  {"timestamp", 0, GDA_TypeDbTimestamp, SQL_C_TIMESTAMP},
-  {"abstime", 0, GDA_TypeDbTimestamp, SQL_C_TIMESTAMP}, 
-  {"bool", 0, GDA_TypeBoolean, SQL_C_BIT},
+  {"datetime", 0, GDA_TypeDbTimestamp, SQL_C_TIMESTAMP},   /* DO NOT REMOVE */
+  {"timestamp", 0, GDA_TypeDbTimestamp, SQL_C_TIMESTAMP},  /* DO NOT REMOVE */
+  {"abstime", 0, GDA_TypeDbTimestamp, SQL_C_TIMESTAMP},    /* DO NOT REMOVE */
+  {"bool", 0, GDA_TypeBoolean, SQL_C_BIT},                 /* DO NOT REMOVE */
   {"bpchar", 0, GDA_TypeChar, SQL_C_CHAR}, 
   {"char", 0, GDA_TypeChar, SQL_C_CHAR},
   {"date", 0, GDA_TypeDbDate, SQL_C_DATE},
   {"float4", 0, GDA_TypeSingle, SQL_C_FLOAT}, 
   {"float8", 0, GDA_TypeDouble, SQL_C_DOUBLE}, 
-  {"int2", 0, GDA_TypeSmallint, SQL_C_SSHORT},
+  {"int2", 0, GDA_TypeSmallint, SQL_C_SSHORT},             /* DO NOT REMOVE */
   {"int4", 0, GDA_TypeInteger, SQL_C_SLONG},
   {"text", 0, GDA_TypeLongvarchar, SQL_C_CHAR}, 
-  {"varchar", 0 , GDA_TypeVarchar, SQL_C_CHAR},
+  {"varchar", 0 , GDA_TypeVarchar, SQL_C_CHAR},            /* DO NOT REMOVE */
   {"char2", 0, GDA_TypeChar, SQL_C_CHAR},
   {"char4", 0, GDA_TypeChar, SQL_C_CHAR},
   {"char8", 0, GDA_TypeChar, SQL_C_CHAR},
@@ -131,6 +147,8 @@ get_value(gchar* ptr)
   return (g_strdup(ptr));
 }
 
+/* returns the version as for example 6.53 or 7.02 for 6.5.3 or 7.0.2 
+   so that versions can be numerically compared */
 static gfloat get_postmaster_version(PGconn *conn)
 {
   PGresult *res;
@@ -234,15 +252,24 @@ gda_postgres_connection_open (Gda_ServerConnection *cnc,
 
       /* actually establish the connection */
       pc->pq_conn = PQsetdbLogin(pc->pq_host, pc->pq_port, pc->pq_options,
-				  pc->pq_tty, pc->pq_db, pc->pq_login, pc->pq_pwd);
+				 pc->pq_tty, pc->pq_db, pc->pq_login, 
+				 pc->pq_pwd);
       fprintf(stderr, "gda_postgres_connection_open(): DSN=%s\n\tpc=%p and "
 	      "pq_conn=%p\n", dsn, pc, pc->pq_conn);
       if (PQstatus(pc->pq_conn) != CONNECTION_OK)
 	{
-	  gda_server_error_make(gda_server_error_new(), 0, cnc, __PRETTY_FUNCTION__);
+	  Gda_ServerRecordset *recset;
+
+	  recset = gda_server_recordset_new(cnc);
+	  gda_server_error_make(gda_server_error_new(), recset, cnc, 
+				__PRETTY_FUNCTION__);
 	  return (-1);
 	}
       
+      /* set the version of postgres for that connection */
+      pc->version = get_postmaster_version(pc->pq_conn);
+      g_print("POSTMASTER VERSION: %f\n", pc->version);
+
       /*
        * is there already a types_array filled (same dsn, same user)? 
        */
@@ -268,56 +295,79 @@ gda_postgres_connection_open (Gda_ServerConnection *cnc,
 	   * now loads the correspondance between postgres 
 	   * data types and GDA types 
 	   */
-	  gfloat version;
-	  version = get_postmaster_version(pc->pq_conn);
-	  g_print("POSTMASTER VERSION: %f\n", version);
-
-	  pc->types_array = g_malloc(sizeof(types_array));
-	  memcpy(pc->types_array, types_array, sizeof(types_array));
+	  guint added_types_index;
+       
 	  res = PQexec(pc->pq_conn,
 		       "SELECT typname, oid FROM pg_type "
-		       "WHERE typrelid = 0 ORDER BY typname");
+		       "WHERE typrelid = 0 AND typname !~ '^_.*' "
+		       "AND typname not in " IN_PG_TYPES_HIDDEN " "
+		       "ORDER BY typname");
+
 	  if (!res || (PQresultStatus(res) != PGRES_TUPLES_OK))
 	    {
 	      if (res) 
 		PQclear(res);
+	      pc->types_array = NULL;
 	      gda_server_error_make(gda_server_error_new(), 0, cnc, 
 				    __PRETTY_FUNCTION__);
 	      return (-1);
 	    }
 
 	  length = PQntuples(res);
-	  for (i=0; i<POSTGRES_Types_Array_Nb; i++) {
-	    j = 0;
-	    found = FALSE;
-	    while ((j<length) && !found) 
-	      {
-		cmp = strcmp(PQgetvalue(res, j, 0), 
-			     pc->types_array[i].postgres_type); 
-		if (!cmp) 
-		  {
-		    pc->types_array[i].oid = atoi(PQgetvalue(res, j, 1));
-		    /*fprintf(stderr, "Postgres type %s found, oid=%ld!\n",  
-		      pc->types_array[i].postgres_type, 
-		      pc->types_array[i].oid);*/
-		    found = TRUE;
-		  }
-		else
-		  if (cmp > 0) 
-		    j = length; /* so we leave the while */
-		j++;
-	      }
-	    /*if (!found) 
-	      fprintf(stderr, "Postgres type %s not found!\n",  
-	      pc->types_array[i].postgres_type);*/
-	  }
+	  /* allocation for types array (static and dynamic parts togather */
+	  pc->types_array = g_new0(POSTGRES_Types_Array, length);
+
+	  /* we don't do any memcopy because some of the declared data types
+	     in the array might not exist in the real DB. */
+	  added_types_index = 0;
+
+	  /* filling the array */
+	  for (i=0; i<length; i++)
+	    {
+	      j=0;
+	      found = FALSE;
+	      /* trying to find it in the declared array */
+	      while (!found && (j<POSTGRES_Types_Array_Nb))
+		{
+		  cmp = strcmp(PQgetvalue(res, i, 0), 
+			       types_array[j].postgres_type); 
+		  if (!cmp) 
+		    {
+		      POSTGRES_Types_Array *pty;
+
+		      found = TRUE;
+		      pty = pc->types_array + added_types_index;
+		      pty->postgres_type = g_strdup(PQgetvalue(res, i, 0));
+		      pty->oid = atoi(PQgetvalue(res, i, 1));
+		      pty->gda_type = types_array[j].gda_type;
+		      pty->c_type = types_array[j].c_type;
+		      added_types_index ++;
+		    }
+		  j++;
+		}
+	      if (!found) /* then insert the type at the end as an add-on */
+		{
+		  POSTGRES_Types_Array *pty;
+
+		  pty = pc->types_array + added_types_index;
+		  pty->postgres_type = g_strdup(PQgetvalue(res, i, 0));
+		  pty->oid = atoi(PQgetvalue(res, i, 1));
+		  pty->gda_type = GDA_TypeVarchar;
+		  pty->c_type = SQL_C_CHAR;
+		  added_types_index ++;
+		}
+	    }
+
+
 	  PQclear(res);
+
+	  /* create a new struct for other similar connections */
 	  data = (Gda_connection_data *) g_malloc(sizeof(Gda_connection_data));
+	  data->n_types = added_types_index;
 	  data->dsn = g_strdup(dsn);
 	  data->user = g_strdup(user);
 	  data->nreg = 1;
 	  data->types_array = pc->types_array;
-	  data->version = version;
 	  global_connection_data_list = 
 	    g_slist_append(global_connection_data_list, data);
 	}
@@ -369,9 +419,20 @@ gda_postgres_connection_close (Gda_ServerConnection *cnc)
 	    { 
 	      if (data->nreg == 1)
 		{
+		  guint i;
+		  POSTGRES_Types_Array *pty;
+
 		  g_free(data->dsn);
 		  g_free(data->user);
-		  g_free(data->types_array);
+		  /* liberating the memory for data ALL the types */
+		  for (i=0; i<data->n_types; i++)
+		    {
+		      pty = c->types_array + i;
+		      g_free(pty->postgres_type);
+		    }
+		  /* now free one chunck because was reallocated as one */
+		  g_free(data->types_array); 
+
 		  global_connection_data_list = 
 		    g_slist_remove_link(global_connection_data_list, list);
 		  g_free(data);
@@ -531,26 +592,30 @@ GDA_ValueType
 gda_postgres_connection_get_gda_type_psql (POSTGRES_Connection *cnc, 
 					   gulong sql_type)
 {
-  GDA_ValueType gda_type = GDA_TypeVarchar;
+  GDA_ValueType gda_type = GDA_TypeVarchar; /* default value */
   gboolean found;
-  gint i;
+  gint i, max=0;
+  Gda_connection_data *data;
 
-  if (cnc)
+  g_return_val_if_fail((cnc != NULL), GDA_TypeNull);
+  g_return_val_if_fail((cnc->types_array != NULL), GDA_TypeNull);
+
+  data = find_connection_data(cnc);
+  if (data)
+    max = data->n_types;
+
+  found = FALSE;
+  i = 0;
+  while ((i< max) && !found) 
     {
-      found = FALSE;
-      i = 0;
-      while ((i< POSTGRES_Types_Array_Nb) && !found) 
+      if (cnc->types_array[i].oid == sql_type) 
 	{
-	  if (cnc->types_array[i].oid == sql_type) 
-	    {
-	      gda_type = cnc->types_array[i].gda_type;
-	      found = TRUE;
-	    }
-	  i++;
+	  gda_type = cnc->types_array[i].gda_type;
+	  found = TRUE;
 	}
-      return gda_type;
+      i++;
     }
-  return GDA_TypeNull;
+  return gda_type;
 }
 
 GDA_ValueType           
@@ -569,13 +634,21 @@ POSTGRES_CType
 gda_postgres_connection_get_c_type_from_sql (POSTGRES_Connection *cnc, 
 					     gulong sql_type)
 {
-  POSTGRES_CType c_type = SQL_C_CHAR;
+  POSTGRES_CType c_type = SQL_C_CHAR; /* default value */
   gboolean found;
-  gint i;
+  gint i, max=0;
+  Gda_connection_data *data;
+
+  g_return_val_if_fail((cnc != NULL), SQL_C_CHAR);
+  g_return_val_if_fail((cnc->types_array != NULL), SQL_C_CHAR);
+
+  data = find_connection_data(cnc);
+  if (data)
+    max = data->n_types;
 
   found = FALSE;
   i = 0;
-  while ((i< POSTGRES_Types_Array_Nb) && !found) 
+  while ((i< max) && !found) 
     {
       if (cnc->types_array[i].oid == sql_type) 
 	{
@@ -591,24 +664,30 @@ gshort
 gda_postgres_connection_get_c_type_psql (POSTGRES_Connection *cnc, 
 					 GDA_ValueType gda_type)
 {
-  POSTGRES_CType c_type = SQL_C_CHAR;
+  POSTGRES_CType c_type = SQL_C_CHAR; /* default value */
   gboolean found;
-  gint i;
+  gint i, max=0;
+  Gda_connection_data *data;
 
-  if (cnc)
+  g_return_val_if_fail((cnc != NULL), SQL_C_CHAR);
+  g_return_val_if_fail((cnc->types_array != NULL), SQL_C_CHAR);
+
+  data = find_connection_data(cnc);
+  if (data)
+    max = data->n_types;
+
+  found = FALSE;
+  i = 0;
+  while ((i< max) && !found) 
     {
-      found = FALSE;
-      i = 0;
-      while ((i< POSTGRES_Types_Array_Nb) && !found) 
+      if (cnc->types_array[i].gda_type == gda_type) 
 	{
-	  if (cnc->types_array[i].gda_type == gda_type) 
-	    {
-	      c_type = cnc->types_array[i].c_type;
-	      found = TRUE;
-	    }
-	  i++;
+	  c_type = cnc->types_array[i].c_type;
+	  found = TRUE;
 	}
+      i++;
     }
+
   return c_type;
 }
 
@@ -998,6 +1077,8 @@ schema_procedures (Gda_ServerError *error,
   gchar                      **row;
   gint                       nbcols; /* nb of cols in the bres */
 
+  pc = (POSTGRES_Connection *) gda_server_connection_get_user_data(cnc);
+
   /* process constraints */
   ptr = constraint;
   for (cnt = 0; cnt < length && ptr != 0; cnt++)
@@ -1041,20 +1122,38 @@ schema_procedures (Gda_ServerError *error,
     }
 
   /* build the query */
+
+  /* differences between Postgres V6.5.x and 7.0.x: 
+   * the function oid8types is replaced by oidvectortypes and the returned 
+   value is changed from say 18 18 0 0 0 0 0 0 to 18 18, and can even be
+   empty.
+  */
 #define IN_PG_PROCS_NON_ALLOWED "('abstime', 'array_assgn', 'array_clip', 'array_in', 'array_ref', 'array_set', 'bpcharin', 'btabstimecmp', 'btcharcmp', 'btfloat4cmp', 'btfloat8cmp', 'btint24cmp', 'btint2cmp', 'btint42cmp', 'btint4cmp', 'btnamecmp', 'bttextcmp', 'byteaGetBit', 'byteaGetByte', 'byteaGetSize', 'byteaSetBit', 'byteaSetByte', 'date', 'date_cmp', 'datetime', 'datetime_cmp', 'float8', 'hashbpchar', 'hashchar', 'hashfloat4', 'hashfloat8', 'hashint2', 'hashint4', 'hashname', 'hashtext', 'hashvarchar', 'int', 'int2', 'int4', 'lo_close', 'lo_lseek', 'lo_tell', 'loread', 'lowrite', 'pg_get_ruledef', 'pg_get_userbyid', 'pg_get_viewdef', 'pqtest', 'time_cmp', 'timestamp', 'userfntest', 'varcharcmp', 'varcharin', 'xideq', 'keyfirsteq')"
   where = FALSE;
   if (extra_info)
     {
-      query = g_string_new("SELECT p.proname AS \"Name\", "
-			   "p.oid AS \"Object Id\", "
-			   "u.usename AS \"Owner\", "
-			   "obj_description(p.oid) AS \"Comments\", "
-			   "p.pronargs AS \"Number of args\", "
-			   "p.oid AS \"SQL Def.\", "
-			   "p.prorettype, p.proargtypes " /* for checking */
-			   "FROM pg_proc p, pg_user u "
-			   "WHERE u.usesysid=p.proowner AND "
-			   "(pronargs = 0 or oid8types(p.proargtypes)!= '') ");
+      if (pc->version < 7.0)
+	query = g_string_new("SELECT p.proname AS \"Name\", "
+			     "p.oid AS \"Object Id\", "
+			     "u.usename AS \"Owner\", "
+			     "obj_description(p.oid) AS \"Comments\", "
+			     "p.pronargs AS \"Number of args\", "
+			     "p.oid AS \"SQL Def.\", "
+			     "p.prorettype, p.proargtypes " /* for checking */
+			     "FROM pg_proc p, pg_user u "
+			     "WHERE u.usesysid=p.proowner AND "
+			     "(pronargs = 0 or oid8types(p.proargtypes)!= '') ");
+      else
+	query = g_string_new("SELECT p.proname AS \"Name\", "
+			     "p.oid AS \"Object Id\", "
+			     "u.usename AS \"Owner\", "
+			     "obj_description(p.oid) AS \"Comments\", "
+			     "p.pronargs AS \"Number of args\", "
+			     "p.oid AS \"SQL Def.\", "
+			     "p.prorettype, p.proargtypes " /* for checking */
+			     "FROM pg_proc p, pg_user u "
+			     "WHERE u.usesysid=p.proowner AND "
+			     "(pronargs = 0 or oidvectortypes(p.proargtypes)!= '') ");
       where = TRUE;
       nbcols = 6;
     }
@@ -1078,8 +1177,10 @@ schema_procedures (Gda_ServerError *error,
 	}
       else
 	g_string_append(query, "AND ");
-      g_string_append(query, 
-		      "(pronargs = 0 or oid8types(p.proargtypes)!= '') ");
+      if (pc->version < 7.0)
+	g_string_append(query, "(pronargs = 0 or oid8types(p.proargtypes)!= '') ");
+      else
+	g_string_append(query, "(pronargs = 0 or oidvectortypes(p.proargtypes)!= '') ");
       
       nbcols = 3;
     }
@@ -1103,8 +1204,7 @@ schema_procedures (Gda_ServerError *error,
   g_string_append(query, "p.proname NOT IN " IN_PG_PROCS_NON_ALLOWED " ");
   g_string_append(query, "ORDER BY proname, prorettype");
 
-  /* build the bres */
-  pc = (POSTGRES_Connection *) gda_server_connection_get_user_data(cnc);
+  /* build the builtin result and tell the columns types */
   bres = Gda_Builtin_Result_new(nbcols, "result", 0, -1);
   Gda_Builtin_Result_set_att(bres, 0, "Name", 
 	        gda_postgres_connection_get_sql_type(pc, "varchar"), -1);
@@ -1117,7 +1217,7 @@ schema_procedures (Gda_ServerError *error,
       Gda_Builtin_Result_set_att(bres, 3, "Comments", 
 		gda_postgres_connection_get_sql_type(pc, "varchar"), -1);
       Gda_Builtin_Result_set_att(bres, 4, "Number of Args.", 
-		gda_postgres_connection_get_sql_type(pc, "int"), 4);
+		gda_postgres_connection_get_sql_type(pc, "int2"), 4);
       Gda_Builtin_Result_set_att(bres, 5, "Sql Def.", 
 		gda_postgres_connection_get_sql_type(pc, "varchar"), -1);
     }
@@ -1125,8 +1225,8 @@ schema_procedures (Gda_ServerError *error,
     Gda_Builtin_Result_set_att(bres, 2, "Comments", 
 		gda_postgres_connection_get_sql_type(pc, "varchar"), -1);
 
-  /* do the query, get a PGresult, and for each tuple:
-     - see if the function is authorized (not in le result of notypes)
+  /* run the query, get a PGresult, and for each tuple:
+     - see if the function is authorized (not in the result of notypes)
      - see if all the parameters and return type are in the known postgres 
        types. If that is the case, add the tuple to the builtin result. 
      Then clear the PGresult */
@@ -1134,40 +1234,67 @@ schema_procedures (Gda_ServerError *error,
   fprintf(stderr, "Query: %s\n", query->str);
   g_string_free(query, TRUE);
 
-  /* REM: contents of notypes and of notype_sym have en empty intersection */
+  /* REM: contents of PGresults notypes and of notype_sym have en empty intersection */
   /* notypes is the list of functions' oid which can be obtained 
      using operators */
-  notypes =PQexec(pc->pq_conn, 
-		  "SELECT distinct text(oprcode) FROM "
-		  "pg_operator ORDER BY oprcode");
   /* notypes_sym is the list of functions' oid which are synonyms with other 
      functions */
-  notypes_sym = PQexec(pc->pq_conn, 
-		       "select p.oid from pg_proc p where text(p.proname)!=p.prosrc and p.prosrc in (select text(proname) from pg_proc where text(proname)= p.prosrc) order by p.oid");
+
+  /* before grouping here is what we had:
+     notypes =PQexec(pc->pq_conn, 
+                     "SELECT distinct text(oprcode) as oprcode FROM "
+                     "pg_operator ORDER BY oprcode");
+     notypes_sym = PQexec(pc->pq_conn, 
+                     "select p.oid from pg_proc p where text(p.proname)!=p.prosrc and "
+                     "p.prosrc in (select text(proname) from "
+                     "pg_proc where text(proname)= p.prosrc) order by p.oid");
+  */
+
+  /* notypes and notypes_sym are unioned so we have one PGresult which is already sorted */
+
+  if (pc->version < 7.0)
+    notypes =PQexec(pc->pq_conn, 
+		    "select distinct int4(text(oprcode)) as code FROM "
+		    "pg_operator UNION "
+		    "select p.oid as code from pg_proc p where "
+		    "text(p.proname)!=p.prosrc and p.prosrc IN "
+		    "(select text(proname) from pg_proc where text(proname)= "
+		    "p.prosrc) order by code");
+  else
+    notypes =PQexec(pc->pq_conn, 
+		    "select distinct int4(text(oprcode)) as code FROM "
+		    "pg_operator UNION "
+		    "select p.oid as code from pg_proc p where "
+		    "text(p.proname)!=p.prosrc and p.prosrc IN "
+		    "(select text(proname) from pg_proc where text(proname)= "
+		    "p.prosrc) order by code");
+
   if ((!res || (PQresultStatus(res) != PGRES_TUPLES_OK) ||
        (PQntuples(res) < 1)) ||
       (!notypes || (PQresultStatus(notypes) != PGRES_TUPLES_OK) ||
-       (PQntuples(notypes) < 1)) ||
-      (!notypes_sym || (PQresultStatus(notypes_sym) != PGRES_TUPLES_OK) ||
-       (PQntuples(notypes_sym) < 1)))
+       (PQntuples(notypes) < 1)))
+      /* || (!notypes_sym || (PQresultStatus(notypes_sym) != PGRES_TUPLES_OK) ||
+       (PQntuples(notypes_sym) < 1))*/
     {
 
-      fprintf(stderr, "Error: res=%p and notypes=%p and notypes_syn=%p\n", 
-	      res, notypes, notypes_sym);
+      /*fprintf(stderr, "Error: res=%p and notypes=%p and notypes_syn=%p\n", 
+	      res, notypes, notypes_sym);*/
+      fprintf(stderr, "Error: res=%p and notypes=%p\n", res, notypes);
       if (res)
 	PQclear(res);
       if (notypes)
 	PQclear(notypes);
-      if (notypes_sym)
-	PQclear(notypes_sym);
+      /*if (notypes_sym)
+	PQclear(notypes_sym);*/
       return NULL;
     }
   
   cnt = PQntuples(res);
   cntnt = PQntuples(notypes);
-  cntntsym = PQntuples(notypes_sym);
+  /*cntntsym = PQntuples(notypes_sym);*/
   row = g_new(gchar*, nbcols);
-  for (i=0; i<cnt; i++)
+
+  for (i=0; i<cnt; i++) /* for every funtion returned */
     {
       gboolean insert = TRUE, cont;
       GSList *list;
@@ -1189,24 +1316,26 @@ schema_procedures (Gda_ServerError *error,
 	}
 
       /* check if the proc is not in the list of notypes_sym */
-      cont = TRUE;
-      j = 0;
-      while ((j<cntntsym) && insert && cont)
-	{
-	  gint cmpres;
-	  cmpres = atoi(PQgetvalue(res, i, 1)) - /* object id is tested */
-	    atoi(PQgetvalue(notypes_sym, j, 0));
-	  if (!cmpres)
-	    insert = FALSE;
-	  if (cmpres < 0)
-	    cont = FALSE;
-	  j++;
-	}
+      /* cont = TRUE; */
+/*       j = 0; */
+/*       while ((j<cntntsym) && insert && cont) */
+/* 	{ */
+/* 	  gint cmpres; */
+/* 	  cmpres = atoi(PQgetvalue(res, i, 1)) -  */
+/* 	    atoi(PQgetvalue(notypes_sym, j, 0)); */
+/* 	  if (!cmpres) */
+/* 	    insert = FALSE; */
+/* 	  if (cmpres < 0) */
+/* 	    cont = FALSE; */
+/* 	  j++; */
+/* 	} */
+
 
       /* check if PROC is ok:
        * the return type is in col nbcols 
        * and the arg types is in col nbcols+1 
        */
+      /* checking on the OUT params */
       if (insert && !gda_postgres_connection_is_type_known(pc, 
 				  atoi(PQgetvalue(res, i, nbcols))))
 	insert = FALSE;
@@ -1223,7 +1352,7 @@ schema_procedures (Gda_ServerError *error,
 	    }
 	}
       
-      /* if OK, we put it into bres */
+      /* if OK, we put it into builtin result */
       if (insert)
 	{
 	  for (j=0; j<nbcols; j++)
@@ -1233,7 +1362,7 @@ schema_procedures (Gda_ServerError *error,
     }
   PQclear(res);
   PQclear(notypes);
-  PQclear(notypes_sym);
+  /*PQclear(notypes_sym);*/
   g_free(row);
 
   /* build the recset */
@@ -1354,6 +1483,7 @@ schema_proc_params (Gda_ServerError *error,
   */
 }
 
+/* Updated to work with Postgres 7.0.x */
 static Gda_ServerRecordset *
 schema_aggregates (Gda_ServerError *error,
                    Gda_ServerConnection *cnc,
@@ -1402,7 +1532,8 @@ schema_aggregates (Gda_ServerError *error,
       ptr++;
     }
 
-  /* build the query */
+  /* build the query: no difference between postgres versions. */
+  /* 1st: aggregates that work on a particular type */
   query = g_string_new("SELECT a.aggname AS \"Name\", "
 		       "a.oid AS \"Object Id\", "
 		       "t.typname as \"IN Type\", ");
@@ -1421,6 +1552,27 @@ schema_aggregates (Gda_ServerError *error,
       g_string_free(and_condition, TRUE);
     }
 
+  /* 2nd: aggregates that work on any type */
+  g_string_append(query, " UNION ");
+  g_string_append(query, "SELECT a.aggname AS \"Name\", "
+		  "a.oid AS \"Object Id\", "
+		  "'---' as \"IN Type\", ");
+  if (extra_info) 
+    g_string_append(query, "b.usename AS \"Owner\", "
+                    "obj_description(a.oid) AS \"Comments\", "
+                    "a.oid AS \"SQL\" ");
+  else 
+    g_string_append(query, "obj_description(a.oid) AS \"Comments\" ");
+
+  g_string_append(query, "FROM pg_aggregate a, pg_user b "
+		  "WHERE a.aggbasetype = 0 AND b.usesysid=a.aggowner ");
+  if (and_condition)
+    {
+      g_string_append(query, and_condition->str);
+      g_string_free(and_condition, TRUE);
+    }
+
+  /* then ordering */
   g_string_append(query, "ORDER BY aggname, typname");		  
 
 
@@ -1555,8 +1707,13 @@ schema_types (Gda_ServerError *error,
   Gda_ServerRecordset*       recset;
   GString *query=NULL, *and_condition=NULL;
   gulong                     affected;
+  POSTGRES_Connection       *pc;
 
-#define IN_PG_TYPES_ALLOWED "('abstime', 'bool', 'box', 'bpchar', 'bytea', 'char', 'cidr', 'circle', 'date', 'datetime', 'filename', 'float4', 'float8', 'inet', 'int2', 'int4', 'int8', 'line', 'lseg', 'macaddr', 'money', 'name', 'numeric', 'path', 'point', 'polygon', 'reltime', 'text', 'time', 'timespan', 'timestamp', 'tinterval', 'varchar')"
+  pc = (POSTGRES_Connection *) gda_server_connection_get_user_data(cnc);
+
+  /* added 'timez' for V7.0.x */
+/*#define IN_PG_TYPES_ALLOWED "('abstime', 'bool', 'box', 'bpchar', 'bytea', 'char', 'cidr', 'circle', 'date', 'datetime', 'filename', 'float4', 'float8', 'inet', 'int2', 'int4', 'int8', 'line', 'lseg', 'macaddr', 'money', 'name', 'numeric', 'path', 'point', 'polygon', 'reltime', 'text', 'time', 'timespan', 'timestamp', 'tinterval', 'varchar', 'timez')"*/
+
 
   /* process constraints */
   ptr = constraint;
@@ -1580,7 +1737,8 @@ schema_types (Gda_ServerError *error,
           extra_info = TRUE;
           break;
         default :
-          fprintf(stderr, "schema_types: invalid constraint type %d\n", ptr->ctype);
+          fprintf(stderr, "schema_types: invalid constraint type %d\n", 
+		  ptr->ctype);
           return (0);
         }
       ptr++;
@@ -1609,8 +1767,11 @@ schema_types (Gda_ServerError *error,
       g_string_sprintfa(query, "%s", and_condition->str);
       g_string_free(and_condition, TRUE);
     }
-  g_string_append(query, "AND (typname in " IN_PG_TYPES_ALLOWED 
-		  " OR (usename != 'postgres')) AND b.usesysid=a.typowner ");
+  g_string_append(query, "AND typname not in " IN_PG_TYPES_HIDDEN 
+		  " AND b.usesysid=a.typowner ");
+  
+  g_string_append(query, "AND typname !~ '^_.*' ");
+ 
   g_string_append(query, /*"AND obj_description(a.oid) is not null "*/
 		  "ORDER BY typname");
 
@@ -1802,13 +1963,21 @@ gulong
 gda_postgres_connection_get_sql_type(POSTGRES_Connection *cnc, 
 				     gchar *postgres_type)
 {
-  gulong oid = 0;
+  gulong oid = 0; /* default return value */
   gboolean found;
-  gint i;
+  gint i, max=0;
+  Gda_connection_data *data;
+
+  g_return_val_if_fail((cnc != NULL), 0);
+  g_return_val_if_fail((cnc->types_array != NULL), 0);
+
+  data = find_connection_data(cnc);
+  if (data)
+    max = data->n_types;
 
   found = FALSE;
   i = 0;
-  while ((i< POSTGRES_Types_Array_Nb) && !found) 
+  while ((i< max) && !found) 
     {
       if (!strcmp(cnc->types_array[i].postgres_type, postgres_type)) 
 	{
@@ -1821,16 +1990,47 @@ gda_postgres_connection_get_sql_type(POSTGRES_Connection *cnc,
   return oid;
 }
 
+/* returns the connection data or NULL if none */
+static Gda_connection_data *find_connection_data(POSTGRES_Connection *cnc)
+{
+  GSList *list;
+  Gda_connection_data *data, *retval = NULL;
+  g_return_val_if_fail((cnc != NULL), NULL);
+
+  if (cnc->types_array)
+    {
+      list = global_connection_data_list;
+      while (list && !retval)
+	{
+	  data = (Gda_connection_data*)(list->data);
+	  if (cnc->types_array == data->types_array)
+	    retval = data;
+	  else
+	    list = g_slist_next(list);
+	}
+    }
+
+  return retval;
+}
+
 static gchar* gda_postgres_connection_get_type_name(POSTGRES_Connection *cnc, 
 						    gulong oid)
 {
-  gchar* str=NULL;
+  gchar* str=NULL; /* default value */
   gboolean found;
-  gint i;
+  gint i, max=0;
+  Gda_connection_data *data;
+
+  g_return_val_if_fail((cnc != NULL), NULL);
+  g_return_val_if_fail((cnc->types_array != NULL), NULL);
+
+  data = find_connection_data(cnc);
+  if (data)
+    max = data->n_types;
 
   found = FALSE;
   i = 0;
-  while ((i< POSTGRES_Types_Array_Nb) && !found) 
+  while ((i< max) && !found) 
     {
       if (cnc->types_array[i].oid == oid) 
 	{
@@ -1848,11 +2048,20 @@ gda_postgres_connection_is_type_known (POSTGRES_Connection *cnc,
                                        gulong sql_type)
 {
   gboolean found;
-  gint i;
+  gint i, max=0;
+  Gda_connection_data *data;
+
+  g_return_val_if_fail((cnc != NULL), FALSE);
+  g_return_val_if_fail((cnc->types_array != NULL), FALSE);
+
+  data = find_connection_data(cnc);
+  if (data)
+    max = data->n_types;
 
   found = FALSE;
+
   i = 0;
-  while ((i< POSTGRES_Types_Array_Nb) && !found)
+  while ((i< max) && !found)
     {
       if (cnc->types_array[i].oid == sql_type)
         found = TRUE;
