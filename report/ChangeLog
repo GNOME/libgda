@@ -1,5 +1,6 @@
 2000-11-12	Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* fixed gda-report-stream.[ch] to make them compile
 	* moved the 2 files that were in the client/ subdirectory
 	to its correct place
 
