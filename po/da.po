@@ -14,48 +14,48 @@ msgstr ""
 "Content-Type: text/plain; charset=ISO-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: lib/gda-client/gda-connection-pool.c:169
+#: lib/gda-client/gda-connection-pool.c:266
 #, c-format
 msgid "could not open connection to %s"
 msgstr "Kunne ikke åbne forbindelse til '%s'"
 
-#: lib/gda-client/gda-connection-pool.c:180
+#: lib/gda-client/gda-connection-pool.c:279
 #, c-format
 msgid "Data source %s not found"
 msgstr "Datakilde %s ikke fundet"
 
-#: lib/gda-client/gda-connection.c:162 lib/gda-client/gda-error.c:116
+#: lib/gda-client/gda-connection.c:233 lib/gda-client/gda-error.c:178
 #, c-format
 msgid "%s: The server didn't respond."
 msgstr "%s: Serveren svarede ikke."
 
-#: lib/gda-client/gda-connection.c:166 lib/gda-client/gda-error.c:120
+#: lib/gda-client/gda-connection.c:237 lib/gda-client/gda-error.c:182
 #, c-format
 msgid "%s: An Error occured in the CORBA system."
 msgstr "%s: En fejl skete i CORBA-systemet."
 
-#: lib/gda-client/gda-connection.c:449
+#: lib/gda-client/gda-connection.c:528
 #, c-format
 msgid "Database '%s' not found in system configuration"
 msgstr "Database '%s' ikke fundet i systemkonfiguration"
 
-#: lib/gda-client/gda-connection.c:465
+#: lib/gda-client/gda-connection.c:544
 msgid "Could not open CORBA factory"
 msgstr "Kunne ikke åbne CORBA fabrik"
 
-#: lib/gda-client/gda-field.c:187
+#: lib/gda-client/gda-field.c:244
 msgid "<NULL>"
 msgstr "<NULL>"
 
-#: lib/gda-client/gda-field.c:193 lib/gda-client/gda-field.c:195
+#: lib/gda-client/gda-field.c:250 lib/gda-client/gda-field.c:252
 msgid "<Unknown GDA Type(NULL)>"
 msgstr "<Ukendt GDA type(NULL)>"
 
-#: lib/gda-client/gda-field.c:208
+#: lib/gda-client/gda-field.c:265
 msgid "TRUE"
 msgstr "TRUE"
 
-#: lib/gda-client/gda-field.c:209
+#: lib/gda-client/gda-field.c:266
 msgid "FALSE"
 msgstr "FALSE"
 
@@ -72,7 +72,7 @@ msgstr "Sand"
 msgid "False"
 msgstr "Falsk"
 
-#: lib/gda-common/gda-init.c:62
+#: lib/gda-common/gda-init.c:58
 msgid "Attempt to initialize an already initialized client"
 msgstr "Forsøg på at initiere en allerede initieret klient"
 
@@ -107,64 +107,55 @@ msgstr "%p er ikke en gyldig tabel"
 msgid "Could not get pointer to server implementation"
 msgstr "Kunne ikke få peger til tjeneste-implementation"
 
-#: lib/gda-server/gda-server-impl-connection.c:121
-#: lib/gda-server/gda-server-impl-connection.c:130
-#: lib/gda-server/gda-server-impl-connection.c:137
-#: lib/gda-server/gda-server-impl-connection.c:146
-#: lib/gda-server/gda-server-impl-connection.c:153
-#: lib/gda-server/gda-server-impl-connection.c:162
-#: lib/gda-server/gda-server-impl-connection.c:169
-#: lib/gda-server/gda-server-impl-connection.c:178
-#: lib/gda-server/gda-server-impl-recordset.c:129
-#: lib/gda-server/gda-server-impl-recordset.c:138
-#: lib/gda-server/gda-server-impl-recordset.c:145
-#: lib/gda-server/gda-server-impl-recordset.c:160
-#: lib/gda-server/gda-server-impl-recordset.c:169
-#: lib/gda-server/gda-server-impl-recordset.c:176
-#: lib/gda-server/gda-server-impl-recordset.c:185
-#: lib/gda-server/gda-server-impl-recordset.c:192
-#: lib/gda-server/gda-server-impl-recordset.c:201
-#: lib/gda-server/gda-server-impl-recordset.c:208
-#: lib/gda-server/gda-server-impl-recordset.c:216
-#: lib/gda-server/gda-server-impl-recordset.c:225
-#: lib/gda-server/gda-server-impl-recordset.c:232
-#: lib/gda-server/gda-server-impl-recordset.c:240
-#: lib/gda-server/gda-server-impl-recordset.c:248
-#: lib/gda-server/gda-server-impl-recordset.c:290
-#: lib/gda-server/gda-server-impl-recordset.c:300
-#: lib/gda-server/gda-server-impl-recordset.c:308
-#: lib/gda-server/gda-server-impl-recordset.c:316
-#: lib/gda-server/gda-server-impl-recordset.c:324
-#: lib/gda-server/gda-server-impl-recordset.c:332
-#: lib/gda-server/gda-server-impl-recordset.c:341
-#: lib/gda-server/gda-server-impl-recordset.c:349
-#: lib/gda-server/gda-server-impl-recordset.c:357
+#: lib/gda-server/gda-server-impl-connection.c:122
+#: lib/gda-server/gda-server-impl-connection.c:131
+#: lib/gda-server/gda-server-impl-connection.c:138
+#: lib/gda-server/gda-server-impl-connection.c:147
+#: lib/gda-server/gda-server-impl-connection.c:154
+#: lib/gda-server/gda-server-impl-connection.c:163
+#: lib/gda-server/gda-server-impl-connection.c:170
+#: lib/gda-server/gda-server-impl-connection.c:179
+#: lib/gda-server/gda-server-impl-recordset.c:125
+#: lib/gda-server/gda-server-impl-recordset.c:134
+#: lib/gda-server/gda-server-impl-recordset.c:141
+#: lib/gda-server/gda-server-impl-recordset.c:156
+#: lib/gda-server/gda-server-impl-recordset.c:165
+#: lib/gda-server/gda-server-impl-recordset.c:172
+#: lib/gda-server/gda-server-impl-recordset.c:181
+#: lib/gda-server/gda-server-impl-recordset.c:188
+#: lib/gda-server/gda-server-impl-recordset.c:197
+#: lib/gda-server/gda-server-impl-recordset.c:204
+#: lib/gda-server/gda-server-impl-recordset.c:212
+#: lib/gda-server/gda-server-impl-recordset.c:221
+#: lib/gda-server/gda-server-impl-recordset.c:228
+#: lib/gda-server/gda-server-impl-recordset.c:236
+#: lib/gda-server/gda-server-impl-recordset.c:244
+#: lib/gda-server/gda-server-impl-recordset.c:272
+#: lib/gda-server/gda-server-impl-recordset.c:280
+#: lib/gda-server/gda-server-impl-recordset.c:288
+#: lib/gda-server/gda-server-impl-recordset.c:296
+#: lib/gda-server/gda-server-impl-recordset.c:304
+#: lib/gda-server/gda-server-impl-recordset.c:313
 #, c-format
 msgid "%s not implemented"
 msgstr "%s ikke implementeret"
 
-#: lib/gda-server/gda-server-impl-connection.c:270
+#: lib/gda-server/gda-server-impl-connection.c:271
 #, c-format
 msgid "impl_GDA_Connection_open: opening connection with DSN: %s"
 msgstr "impl_GDA_Connection_open: åbner forbindelse med DSN: %s"
 
-#: lib/gda-server/gda-server-impl-recordset.c:256
-#: lib/gda-server/gda-server-impl-recordset.c:264
-#, c-format
-msgid "%s: not implemented"
-msgstr "%s: ikke implementeret"
-
-#: lib/gda-server/gda-server-impl-recordset.c:450
+#: lib/gda-server/gda-server-impl-recordset.c:406
 #, c-format
 msgid "%s: an error ocurred while fetching data"
 msgstr "%s: en fejl skete ved hentning af data"
 
-#: lib/gda-server/gda-server-impl-recordset.c:489
+#: lib/gda-server/gda-server-impl-recordset.c:445
 #, c-format
 msgid "%s: length = %d"
 msgstr "%s: længde = %d"
 
-#: lib/gda-server/gda-server-impl-recordset.c:502
+#: lib/gda-server/gda-server-impl-recordset.c:458
 #, c-format
 msgid "%s: sending field description for '%s'"
 msgstr "%s: sender felt-beskrivelse for '%s'"
@@ -207,17 +198,17 @@ msgstr "CORBA system undtagelse %s"
 msgid "CORBA user exception: %s"
 msgstr "CORBA bruger undtagelse %s"
 
-#: lib/gda-server/gda-server-init.c:65 lib/gda-server/gda-server-init.c:71
+#: lib/gda-server/gda-server-init.c:62 lib/gda-server/gda-server-init.c:68
 #, c-format
 msgid "Received signal %d, shutting down"
 msgstr "Modtog signal %d, lukker ned"
 
-#: lib/gda-server/gda-server-init.c:75
+#: lib/gda-server/gda-server-init.c:72
 #, c-format
 msgid "Received signal %d. Ignoring"
 msgstr "Modtog signal %d. Ignorerer"
 
-#: lib/gda-server/gda-server-init.c:123
+#: lib/gda-server/gda-server-init.c:122
 msgid "Attempt to initialize an already initialized provider"
 msgstr "Forsøg på at initiere en allerede initieret udbyder"
 
@@ -295,7 +286,7 @@ msgstr "Kunne ikke registrere Mail udbyderimplementation"
 #. execute command
 #: providers/gda-mdb-server/gda-mdb-command.c:86
 #: providers/gda-mysql-server/gda-mysql-command.c:87
-#: providers/gda-sybase-server/gda-sybase-command.c:116
+#: providers/gda-sybase-server/gda-sybase-command.c:120
 #, c-format
 msgid "executing command '%s'"
 msgstr "Udfører kommando '%s'"
@@ -350,8 +341,7 @@ msgid ""
 "Opening connection with user=%s, password=%s, host=%s, port=%s, "
 "unix_socket=%s"
 msgstr ""
-"Åbner forbindelse med user=%s, password=%s, host=%s, port=%s, "
-"unix_socket=%s"
+"Åbner forbindelse med user=%s, password=%s, host=%s, port=%s, unix_socket=%s"
 
 #: providers/gda-odbc-server/gda-odbc-connection.c:280
 #, c-format
@@ -422,61 +412,61 @@ msgstr "postgres_recset er NULL"
 msgid "Could not register PostgreSQL provider implementation"
 msgstr "Kunne ikke registrere PostgreSQL udbyderimplementation"
 
-#: providers/gda-sybase-server/gda-sybase-command.c:111
+#: providers/gda-sybase-server/gda-sybase-command.c:115
 msgid "Connection seems to be dead"
 msgstr "Forbindelsen ser ud til at være død"
 
-#: providers/gda-sybase-server/gda-sybase-command.c:131
+#: providers/gda-sybase-server/gda-sybase-command.c:135
 msgid "Filling command structure failed\n"
 msgstr "Udfyldelse af kommandostruktur mislykkedes\n"
 
-#: providers/gda-sybase-server/gda-sybase-command.c:143
+#: providers/gda-sybase-server/gda-sybase-command.c:147
 msgid "sending cmd failed"
 msgstr "Sender cmd mislykkedes"
 
-#: providers/gda-sybase-server/gda-sybase-command.c:150
+#: providers/gda-sybase-server/gda-sybase-command.c:154
 msgid "Allocating recordset failed"
 msgstr "Allokering af postsæt mislykkedes"
 
-#: providers/gda-sybase-server/gda-sybase-command.c:160
+#: providers/gda-sybase-server/gda-sybase-command.c:164
 msgid "Getting recordset userdata failed"
 msgstr "Hentning af postsæt brugerdata mislykkedes"
 
-#: providers/gda-sybase-server/gda-sybase-command.c:218
+#: providers/gda-sybase-server/gda-sybase-command.c:222
 msgid "Command execution finished, all results processed"
 msgstr "Kommandoudførsel afsluttet, alle resultater behandlet"
 
-#: providers/gda-sybase-server/gda-sybase-command.c:222
+#: providers/gda-sybase-server/gda-sybase-command.c:226
 msgid "Command failed"
 msgstr "Kommando mislykkedes"
 
-#: providers/gda-sybase-server/gda-sybase-command.c:226
+#: providers/gda-sybase-server/gda-sybase-command.c:230
 msgid "Execution of resultless command succeeded"
 msgstr "Udførsel af resultatløs kommando lykkedes"
 
-#: providers/gda-sybase-server/gda-sybase-command.c:242
+#: providers/gda-sybase-server/gda-sybase-command.c:246
 #, c-format
 msgid "ct_results() returned %x"
 msgstr "ct_results() returnerede %x"
 
-#: providers/gda-sybase-server/gda-sybase-command.c:252
+#: providers/gda-sybase-server/gda-sybase-command.c:256
 msgid "No further results, command completly succeeded."
 msgstr "Ingen yderligere resultater, kommando lykkedes helt."
 
-#: providers/gda-sybase-server/gda-sybase-command.c:256
+#: providers/gda-sybase-server/gda-sybase-command.c:260
 msgid "An error occured during command execution."
 msgstr "EN fejl skete ved udførsel af kommando."
 
-#: providers/gda-sybase-server/gda-sybase-command.c:263
+#: providers/gda-sybase-server/gda-sybase-command.c:267
 msgid "Cmd execution returned unknown result, may be an error"
 msgstr "Kommandoudførsel returnerede ukendt resultat, kan være en fejl"
 
-#: providers/gda-sybase-server/gda-sybase-command.c:276
+#: providers/gda-sybase-server/gda-sybase-command.c:280
 msgid "No data returned, freeing recordset structure"
 msgstr "Ingen data returneret, frigiver postsæt-struktur"
 
-#: providers/gda-sybase-server/gda-sybase-command.c:307
-#: providers/gda-sybase-server/gda-sybase-command.c:319
+#: providers/gda-sybase-server/gda-sybase-command.c:311
+#: providers/gda-sybase-server/gda-sybase-command.c:323
 msgid "Freeing command structure failed"
 msgstr "Frigivning af postsæt-struktur mislykkedes"
 
@@ -840,7 +830,7 @@ msgstr "Kunne ikke allokere felt"
 msgid "Could not register gda-sybase provider implementation"
 msgstr "Kunne ikke registrere gda-sybase udbyderimplementation"
 
-#: report/gda-report-engine.c:86
+#: report/gda-report-engine.c:87
 #, c-format
 msgid "CORBA exception unloading report engine: %s"
 msgstr "CORBA undtagelse ved lukning af rapportmaskine: %s"
@@ -858,7 +848,8 @@ msgstr "Modtog signal %d, lukker ned på rigtig måde"
 
 #: report/server/gda-report-server-main.c:96
 msgid "Failed to initialize OAF: please mail bug report to OAF maintainers"
-msgstr "Mislykkedes at initialisere OAF: send venligst fejlrapport til "
+msgstr ""
+"Mislykkedes at initialisere OAF: send venligst fejlrapport til "
 "vedligeholderne af OAF"
 
 #: report/server/gda-report-server-main.c:106
@@ -882,44 +873,47 @@ msgstr "Ukendt fejl under registrering af rapportmaskine med OAF. Afslutter"
 msgid "Registered report engine with ID = %s"
 msgstr "Registrerede rapportmaskine med id = %s"
 
-#: tools/gda-run.c:29
+#: tools/gda-run.c:30
 msgid "database name"
 msgstr "Databasenavn"
 
-#: tools/gda-run.c:29
+#: tools/gda-run.c:30
 msgid "DATABASE"
 msgstr "DATABASE"
 
-#: tools/gda-run.c:30
+#: tools/gda-run.c:31
 msgid "user name"
 msgstr "brugernavn"
 
-#: tools/gda-run.c:30
+#: tools/gda-run.c:31
 msgid "USER-NAME"
 msgstr "BRUGERNAVN"
 
-#: tools/gda-run.c:31
+#: tools/gda-run.c:32
 msgid "password"
 msgstr "adgangskode"
 
-#: tools/gda-run.c:31
+#: tools/gda-run.c:32
 msgid "PASSWORD"
 msgstr "ADGANGSKODE"
 
-#: tools/gda-run.c:32
+#: tools/gda-run.c:33
 msgid "file name"
 msgstr "filnavn"
 
-#: tools/gda-run.c:32
+#: tools/gda-run.c:33
 msgid "FILE-NAME"
 msgstr "FILNAVN"
 
-#: tools/gda-run.c:104
+#: tools/gda-run.c:105
 #, c-format
 msgid "%s: misconfigured DSN entry"
 msgstr "%s: fejlkonfigureret DSN indgang"
 
-#: tools/gda-run.c:119
+#: tools/gda-run.c:120
 #, c-format
 msgid "%s: data source '%s' not found\n"
 msgstr "%s: datakilde '%s' ikke fundet\n"
+
+#~ msgid "%s: not implemented"
+#~ msgstr "%s: ikke implementeret"
