@@ -1,3 +1,7 @@
+2002-06-16  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* POTFILES.in: removed missing file and added its replacement.
+
 2002-06-10  Changwoo Ryu  <cwryu@debian.org>
 
 	* ko.po: Added Korean translation from Young-Ho Cha

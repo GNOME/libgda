@@ -31,7 +31,7 @@ providers/mysql/libmain.c
 providers/mysql/utils.c
 providers/odbc/libmain.c
 providers/oracle/gda-oracle-connection.c
-providers/oracle/main.c
+providers/oracle/libmain.c
 providers/postgres/gda-postgres-provider.c
 providers/postgres/gda-postgres-recordset.c
 providers/postgres/libmain.c
