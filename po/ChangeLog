@@ -1,15 +1,8 @@
-2001-09-13  gettextize  <bug-gnu-utils@gnu.org>
+2001-09-16  Kjartan Maraas  <kmaraas@gnome.org>
 
-	* Makefile.in.in: Upgrade to gettext-0.10.39.
-
-2001-09-13  gettextize  <bug-gnu-utils@gnu.org>
-
-	* Makefile.in.in: Upgrade to gettext-0.10.39.
-
-2001-09-11  gettextize  <bug-gnu-utils@gnu.org>
-
-	* Makefile.in.in: Upgrade to gettext-0.10.39.
-
+	* no.po: Updated Norwegian (bokmål) translation.
+	* nn.po: Added Norwegian (nynorsk) translation.
+	
 2001-08-19  Stanislav Visnovsky  <visnovsky@nenya.ms.mff.cuni.cz>
 
 	* sk.po: Updated Slovak translation.
@@ -56,64 +49,6 @@
 2001-04-29  Christian Meyer  <chrisime@gnome.org>
 
 	* de.po: Updated German translation.
-
-2001-04-28  gettextize  <bug-gnu-utils@gnu.org>
-
-	* Makefile.in.in: Upgrade to gettext-0.10.37.
-
-2001-04-24  gettextize  <bug-gnu-utils@gnu.org>
-
-	* Makefile.in.in: Upgrade to gettext-0.10.36.
-
-2001-04-18  gettextize  <bug-gnu-utils@gnu.org>
-
-	* Makefile.in.in: Upgrade to gettext-0.10.36.
-
-2001-04-18  gettextize  <bug-gnu-utils@gnu.org>
-
-	* Makefile.in.in: Upgrade to gettext-0.10.36.
-
-2001-04-18  gettextize  <bug-gnu-utils@gnu.org>
-
-	* Makefile.in.in: Upgrade to gettext-0.10.36.
-
-2001-04-18  gettextize  <bug-gnu-utils@gnu.org>
-
-	* Makefile.in.in: Upgrade to gettext-0.10.36.
-	* cat-id-tbl.c: Remove file.
-	* stamp-cat-id: Remove file.
-
-2001-04-16  gettextize  <bug-gnu-utils@gnu.org>
-
-	* Makefile.in.in: Upgrade to gettext-0.10.36.
-	* cat-id-tbl.c: Remove file.
-	* stamp-cat-id: Remove file.
-
-2001-04-15  gettextize  <bug-gnu-utils@gnu.org>
-
-	* Makefile.in.in: Upgrade to gettext-0.10.36.
-
-2001-04-15  gettextize  <bug-gnu-utils@gnu.org>
-
-	* Makefile.in.in: Upgrade to gettext-0.10.36.
-
-2001-04-15  gettextize  <bug-gnu-utils@gnu.org>
-
-	* Makefile.in.in: Upgrade to gettext-0.10.36.
-	* cat-id-tbl.c: Remove file.
-	* stamp-cat-id: Remove file.
-
-2001-04-07  gettextize  <bug-gnu-utils@gnu.org>
-
-	* Makefile.in.in: Upgrade to gettext-0.10.36.
-
-2001-04-07  gettextize  <bug-gnu-utils@gnu.org>
-
-	* Makefile.in.in: Upgrade to gettext-0.10.36.
-
-2001-04-07  gettextize  <bug-gnu-utils@gnu.org>
-
-	* Makefile.in.in: Upgrade to gettext-0.10.36.
 
 2001-04-07  Akira TAGOH <tagoh@gnome-db.org>
 

@@ -19,6 +19,8 @@ lib/gda-server/gda-server-error.c
 lib/gda-server/gda-server-field.c
 lib/gda-server/gda-server-init.c
 lib/gda-server/gda-server-recordset.c
+lib/gda-server/gda-server.c
+providers/gda-default-server/GNOME_GDA_Provider_Default.oaf.in
 providers/gda-default-server/gda-default-connection.c
 providers/gda-default-server/main-default.c
 providers/gda-ldap-server/GNOME_GDA_Provider_LDAP.oaf.in

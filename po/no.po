@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-db 0.0.91\n"
-"POT-Creation-Date: 2001-08-10 10:18+0200\n"
-"PO-Revision-Date: 2001-08-10 10:23+0200\n"
+"POT-Creation-Date: 2001-09-16 08:44+0200\n"
+"PO-Revision-Date: 2001-09-16 08:45+0200\n"
 "Last-Translator: Kjartan Maraas <kmaraas@online.no>\n"
 "Language-Team: Norwegian <no@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -36,19 +36,19 @@ msgstr "[GDA klientbibliotek]"
 msgid "Could not open CORBA factory"
 msgstr "Kunne ikke åpne CORBA factory"
 
-#: lib/gda-client/gda-field.c:230
+#: lib/gda-client/gda-field.c:228
 msgid "<NULL>"
 msgstr "<NULL>"
 
-#: lib/gda-client/gda-field.c:235 lib/gda-client/gda-field.c:238
+#: lib/gda-client/gda-field.c:233 lib/gda-client/gda-field.c:236
 msgid "<Unknown GDA Type(NULL)>"
 msgstr "<Ukjent GDA-type(NULL)>"
 
-#: lib/gda-client/gda-field.c:251
+#: lib/gda-client/gda-field.c:249
 msgid "TRUE"
 msgstr "SANN"
 
-#: lib/gda-client/gda-field.c:253
+#: lib/gda-client/gda-field.c:251
 msgid "FALSE"
 msgstr "USANN"
 
@@ -170,6 +170,29 @@ msgstr "Forsøk på å initiere en allerede initiert tilbyder"
 #, c-format
 msgid "%s not implemented"
 msgstr "%s er ikke implementert"
+
+#: lib/gda-server/gda-server.c:128
+#, c-format
+msgid "Starting provider %s with no implementation functions"
+msgstr "Starter tilbyder %s uten implemenasjonsfunksjoner"
+
+#: lib/gda-server/gda-server.c:214
+#, c-format
+msgid "CORBA system exception %s"
+msgstr "CORBA systemunntak %s"
+
+#: lib/gda-server/gda-server.c:218
+#, c-format
+msgid "CORBA user exception: %s"
+msgstr "CORBA-brukerunntak: %s"
+
+#: providers/gda-default-server/GNOME_GDA_Provider_Default.oaf.in.h:1
+msgid "Default provider connection factory"
+msgstr "Standard tilbyder tilkoblingsfactory"
+
+#: providers/gda-default-server/GNOME_GDA_Provider_Default.oaf.in.h:2
+msgid "GDA Default Datasource Access"
+msgstr "GDA forvalgt datakildeaksess"
 
 #: providers/gda-default-server/gda-default-connection.c:127
 msgid "You must specify a directory for the database to be stored"
@@ -356,7 +379,10 @@ msgstr "MySQL tilbyder tilkoblingsfactory"
 msgid ""
 "You cannot provide a UNIX_SOCKET if you also provide either a HOST or a "
 "PORT. Please remove the UNIX_SOCKET, or remove both the HOST and PORT options"
-msgstr "Du kan ikke tilby en UNIX_SOCKET hvis du også tilbyr enten en VERT eller en PORT. Vennligst fjern UNIX_SOCKET, eller fjern både VERT og PORT alternativene."
+msgstr ""
+"Du kan ikke tilby en UNIX_SOCKET hvis du også tilbyr enten en VERT eller en "
+"PORT. Vennligst fjern UNIX_SOCKET, eller fjern både VERT og PORT "
+"alternativene."
 
 #: providers/gda-mysql-server/gda-mysql-connection.c:190
 #, c-format
@@ -1009,9 +1035,6 @@ msgstr "Kunne ikke registrere <TILBYDER-NAVN> tilbyderimplementasjon"
 #~ msgid "%s: an error ocurred while fetching data"
 #~ msgstr "%s: en feil oppsto under henting av data"
 
-#~ msgid "Starting provider %s with no implementation functions"
-#~ msgstr "Starter tilbyder %s uten implemenasjonsfunksjoner"
-
 #~ msgid ""
 #~ "OAF doesn't know about our IID; indicates broken installation. Exiting..."
 #~ msgstr ""
@@ -1030,9 +1053,6 @@ msgstr "Kunne ikke registrere <TILBYDER-NAVN> tilbyderimplementasjon"
 
 #~ msgid "Registered with ID = %s"
 #~ msgstr "Registrert med ID = %s"
-
-#~ msgid "CORBA system exception %s"
-#~ msgstr "CORBA systemunntak %s"
 
 #~ msgid "CORBA exception unloading report engine: %s"
 #~ msgstr "CORBA-unntak ved frigjøring av rapportmotoren: %s"
