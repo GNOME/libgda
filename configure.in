@@ -549,7 +549,7 @@ if test $try_sqlite = true
 then
 	AC_MSG_CHECKING(for sqlite files)
 	sqlitedir=""
-	for d in $dir /usr /opt/sqlite
+	for d in $dir /usr /usr/local /opt/sqlite
 	do
 		if test -f $d/include/sqlite.h
 		then
@@ -587,7 +587,7 @@ fi
 if test $try_mdb = true
 then
 	AC_MSG_CHECKING(for MDB Tools files)
-	sqlitedir=""
+	mdbdir=""
 	for d in $dir /usr /usr/local /opt/gnome
 	do
 		if test -f $d/include/mdbtools.h

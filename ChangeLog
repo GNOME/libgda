@@ -1,3 +1,8 @@
+2002-09-28  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
+
+	* configure.in: fixed variable name and added /usr/local to SQLite
+	auto-search. Thanks to Vladimir Vukicevic.
+
 2002-09-26  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* bindings/c++/*: removed obsolete bindings. Current ones are in gtkmm
