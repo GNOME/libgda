@@ -1,3 +1,13 @@
+2002-10-29  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	Fixes #96810
+
+	* providers/oracle/gda-oracle-provider.c (get_oracle_tables):
+	separated retrieval of table schema, and added all missing fields.
+
+	* providers/mysql/gda-mysql-provider.c (get_mysql_tables): set column
+	titles on the data model being created.
+
 2002-10-29  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
 	* libsql/parser.y: a couple of fixes to make bison not to complain.
