@@ -70,7 +70,7 @@ dnl ******************************
 GETTEXT_PACKAGE=libgda-2
 AC_SUBST(GETTEXT_PACKAGE)
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE")
-ALL_LINGUAS="az ca cs da de el es fa fi fr ga gl hu it ja ko ml ms nl no pl pt pt_BR ru sk sl sr sr@Latn sv tr uk vi zh_CN zh_TW"
+ALL_LINGUAS="az ca cs da de el es fa fi fr ga gl hr hu it ja ko ml ms nl no pl pt pt_BR ru sk sl sr sr@Latn sv tr uk vi zh_CN zh_TW"
 AM_GLIB_GNU_GETTEXT
 
 dnl ******************************

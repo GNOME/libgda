@@ -1,3 +1,7 @@
+2004-02-11  Robert Sedak  <robert.sedak@sk.htnet.hr>
+
+        * configure.in: Added "hr" (Croatian) to ALL_LINGUAS.
+
 2004-01-25  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	Fixes #132213
