@@ -849,11 +849,8 @@ sql_select_stringify(sql_select_statement * select)
 			nexttable = walk->next->data;
 			/* If its not a join add a , into sql statement */
 			if (nexttable->join_type == SQL_cross_join)
-			{
-				printf("Adding tables , \n\n\n");
 				tables = memsql_strappend_free(tables, 
 					memsql_strdup(", "));
-			}
 			}
 		}
 
