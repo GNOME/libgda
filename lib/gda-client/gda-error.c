@@ -19,7 +19,7 @@
 
 #include "config.h"
 #include "gda-error.h"
-#include "gda.h"
+#include "GDA.h"
 
 #ifdef ENABLE_NLS
 #  include <libintl.h>

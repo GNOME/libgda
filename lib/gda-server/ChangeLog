@@ -1,3 +1,7 @@
+2000-11-05	Rodrigo Moya <rodrigo@linuxave.net>
+
+	* adapted to new IDL file names (gda -> GDA)
+
 2000-10-21	Rodrigo Moya <rodrigo@linuxave.net>
 
 	* replaced the GNOME_GenericFactory (from gnorba times) with the

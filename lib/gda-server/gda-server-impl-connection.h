@@ -19,7 +19,7 @@
 #if !defined(__gda_server_impl_connection_h__)
 #  define __gda_server_impl_connection_h__
 
-#include <gda.h>
+#include <GDA.h>
 
 /*
  * App-specific servant structures

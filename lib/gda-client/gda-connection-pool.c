@@ -20,7 +20,7 @@
 #include "config.h"
 #include "gda-connection-pool.h"
 #include "gda-common.h"
-#include "gda.h"
+#include "GDA.h"
 
 #ifdef ENABLE_NLS
 #  include <libintl.h>

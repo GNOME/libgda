@@ -10,16 +10,16 @@ INCLUDES = \
 BUILT_SOURCES = gda-stubs.c gda-common.c gda.h
 CLEANFILES += $(BUILT_SOURCES)
 IDL_FILES = \
-	$(top_builddir)/idl/gda.idl \
-	$(top_builddir)/idl/gda-command.idl \
-	$(top_builddir)/idl/gda-connection.idl \
-	$(top_builddir)/idl/gda-error.idl \
-	$(top_builddir)/idl/gda-fieldx.idl \
-	$(top_builddir)/idl/gda-parameter.idl \
-	$(top_builddir)/idl/gda-recordset.idl
+	$(top_builddir)/idl/GDA.idl \
+	$(top_builddir)/idl/GDA_Command.idl \
+	$(top_builddir)/idl/GDA_Connection.idl \
+	$(top_builddir)/idl/GDA_Error.idl \
+	$(top_builddir)/idl/GDA_Fieldx.idl \
+	$(top_builddir)/idl/GDA_Parameter.idl \
+	$(top_builddir)/idl/GDA_Recordset.idl
 
-gda-stubs.c gda-common.c gda.h: $(IDLFILES)
-	$(ORBIT_IDL) -I$(top_sourcedir)/idl -I`oaf-config --prefix`/share/idl $(top_builddir)/idl/gda.idl
+GDA-stubs.c GDA-common.c GDA.h: $(IDLFILES)
+	$(ORBIT_IDL) -I$(top_sourcedir)/idl -I`oaf-config --prefix`/share/idl $(top_builddir)/idl/GDA.idl
 
 gda_client_headers = \
 	gda-batch.h \
@@ -32,12 +32,12 @@ gda_client_headers = \
 	gda-recordset.h \
 	gda-value.h \
 	gda-client.h \
-	gda.h
+	GDA.h
 
 libgda_client_la_SOURCES = \
 	$(gda_client_headers) \
-	gda-stubs.c \
-	gda-common.c \
+	GDA-stubs.c \
+	GDA-common.c \
 	gda-batch.c \
 	gda-command.c \
 	gda-connection-pool.c \

@@ -29,7 +29,7 @@
 #endif
 
 #include <orb/orbit.h>
-#include <gda.h>
+#include <GDA.h>
 
 #if defined(__cplusplus)
 extern "C" {

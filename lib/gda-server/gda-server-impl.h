@@ -28,7 +28,7 @@
 #endif
 
 #include <orb/orbit.h>
-#include <gda.h>
+#include <GDA.h>
 #include <gda-common.h>
 
 #if defined(__cplusplus)

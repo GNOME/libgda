@@ -28,7 +28,7 @@
 #  include <gtk/gtk.h>
 #endif
 
-#include <gda.h>
+#include <GDA.h>
 
 #ifdef __cplusplus
 extern "C" {

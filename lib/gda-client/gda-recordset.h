@@ -29,7 +29,7 @@
 #endif
 
 #include <orb/orbit.h>
-#include <gda.h>
+#include <GDA.h>
 #include <gda-field.h>
 
 #ifdef __cplusplus
