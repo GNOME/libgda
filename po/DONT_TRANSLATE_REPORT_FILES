@@ -1,0 +1,7 @@
+Please, we are developing it at this moment, we change the strings 
+very often and it isn't builded with libgda (yet), so don't add its files
+into POTFILES.in
+
+Thanks.
+
+Carlos Perelló Marín.

@@ -78,7 +78,5 @@ providers/gda-tds-server/gda-tds-error.c
 providers/gda-tds-server/gda-tds-recordset.c
 providers/gda-tds-server/gda-tds-types.c
 providers/gda-tds-server/main-tds.c
-report/engine/GNOME_GDA_Report.oaf.in
-report/engine/main.c
 tools/gda-run.c
 tools/templates/main-srv.c.tmpl

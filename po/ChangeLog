@@ -1,3 +1,8 @@
+2001-07-27  Carlos Perelló Marín <carlos@gnome-db.org>
+
+	* DONT_TRANSLATE_REPORT_FILES: Added.
+	* POTFILES.in: Removed the libgda/report/* files.
+
 2001-07-27  Abel Cheung  <maddog@linux.org.hk>
 
 	* POTFILES.in: Remove non-existant files to let libgda.pot build
