@@ -1527,6 +1527,8 @@ GList *
 sql_statement_get_wherejoin(sql_statement * statement)
 	{
 	sql_select_statement *select;
+	sql_table *table;
+	GList *walk;
 	GList *retlist = NULL;
 
 	if (statement->type != SQL_select)
@@ -1539,6 +1541,12 @@ sql_statement_get_wherejoin(sql_statement * statement)
 	/* Get where statements */
 	sql_statement_get_wherejoin_rec(select->where,&retlist);
 	/* Get joins statements */
+	for (walk=g_list_first(select->from);walk!=NULL;walk=walk->next)
+		{
+		table = walk->data;
+		if (table->join_cond)
+			sql_statement_get_wherejoin_rec(table->join_cond,&retlist);
+		}
 	return retlist;
 	}
 
@@ -1601,5 +1609,7 @@ sql_statement_test_wherejoin(void)
 	wherelist = sql_statement_get_wherejoin(statement);
 	if (g_list_length(wherelist)==2)
 		printf("Number of where is correct.\n");
+	sql_statement_free_wherejoin(&wherelist);
+	sql_destroy(statement);
 	return 0;
 	}
