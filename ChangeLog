@@ -1,3 +1,7 @@
+2002-06-18  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* providers/oracle/gda-oracle-connection.[ch]: removed unused files.
+
 2002-06-18  Andrew Hill <andru@treshna.com>
 
 	* libsql/: Import SQL parser into libgda.  the test programme 
