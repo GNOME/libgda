@@ -1,49 +1,49 @@
 # Copyright (C) 1999-2002 Free Software Foundation, Inc.
-# Valek Filippov <frob@df.ru>, 1999-2002.
+# Valek Filippov <frob@df.ru>, 1999-2002? 2003
 # Dmitry G. Mastrukov <dmitry@taurussoft.org>, 2002
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda-2\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2003-06-08 20:20+0200\n"
-"PO-Revision-Date: 2002-12-11 11:36+0300\n"
-"Last-Translator: Dmitry G. Mastrukov <dmitry@taurussoft.org>\n"
+"POT-Creation-Date: 2003-06-28 16:04+0400\n"
+"PO-Revision-Date: 2003-06-28 16:24+0400\n"
+"Last-Translator: Valek Filippov <frob@df.ru>\n"
 "Language-Team: Russian <gnome-cyr@gnome.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8-bit\n"
+"Report-Msgid-Bugs-To: \n"
 
-#: libgda/gda-client.c:309 libgda/gda-client.c:511 libgda/gda-connection.c:218
+#: libgda/gda-client.c:312 libgda/gda-client.c:515 libgda/gda-connection.c:218
 #, c-format
 msgid "Data source %s not found in configuration"
 msgstr "Источник данных %s не найден в конфигурации"
 
-#: libgda/gda-client.c:334
+#: libgda/gda-client.c:339
 #, c-format
 msgid "Could not find provider %s in the current setup"
 msgstr "Не удалось обнаружить провайдера %s в текущей конфигурации"
 
-#: libgda/gda-client.c:363
+#: libgda/gda-client.c:368
 #, c-format
 msgid "Provider %s does not implement entry function"
 msgstr "Провайдер %s не предоставляет функцию точки входа"
 
 # fe/fe_editor.c:175 fe/fe_editor.c:212
-#: libgda/gda-client.c:373
+#: libgda/gda-client.c:378
 msgid "Could not create GdaServerProvider object from plugin"
 msgstr "Не удалось создать объект GdaServerProvider из дополнения"
 
-#: libgda/gda-client.c:438
+#: libgda/gda-client.c:442
 msgid "Temporary data source created by libgda. Don't remove it"
 msgstr ""
 "Это временный источник базы данных, созданный библиотекой libgda. Не "
 "удаляйте его"
 
 #: libgda/gda-config.c:1073
-#, fuzzy, c-format
+#, c-format
 msgid "Error: %s"
-msgstr "Ошибка"
+msgstr "Ошибка: %s"
 
 #. gda_server_recordset_model_set_field_defined_size (recset, 0, 256);
 #: libgda/gda-config.c:1323 providers/default/gda-default-provider.c:557
@@ -51,7 +51,7 @@ msgstr "Ошибка"
 #: providers/default/gda-default-provider.c:616
 #: providers/ldap/gda-ldap-provider.c:327 providers/mdb/gda-mdb-provider.c:457
 #: providers/mdb/gda-mdb-provider.c:594 providers/mdb/gda-mdb-provider.c:654
-#: providers/msql/gda-msql-provider.c:445
+#: providers/msql/gda-msql-provider.c:448
 #: providers/mysql/gda-mysql-provider.c:701
 #: providers/mysql/gda-mysql-provider.c:889
 #: providers/odbc/gda-odbc-provider.c:733
@@ -136,23 +136,23 @@ msgid "Could not create file %s"
 msgstr "Не удалось создать файл %s"
 
 # gda-clnt/gda-field.c:117
-#: libgda/gda-value.c:1650
+#: libgda/gda-value.c:1922
 msgid "TRUE"
 msgstr "ИСТИННО"
 
 # gda-clnt/gda-field.c:119
-#: libgda/gda-value.c:1652
+#: libgda/gda-value.c:1924
 msgid "FALSE"
 msgstr "ЛОЖНО"
 
-#: libgda/gda-value.c:1712
+#: libgda/gda-value.c:1993
 #, c-format
 msgid "(GObject of type '%s'"
-msgstr ""
+msgstr "(GObject типа \"%s\""
 
-#: libgda/gda-value.c:1715
+#: libgda/gda-value.c:1996
 msgid "NULL GObject"
-msgstr ""
+msgstr "Пустой GObject"
 
 # fe/fe_editor.c:175 fe/fe_editor.c:212
 #: libgda/gda-xml-database.c:235
@@ -229,7 +229,7 @@ msgid "Field name"
 msgstr "Имя поля"
 
 #: providers/default/gda-default-provider.c:455
-#: providers/mdb/gda-mdb-provider.c:491 providers/msql/gda-msql-provider.c:535
+#: providers/mdb/gda-mdb-provider.c:491 providers/msql/gda-msql-provider.c:537
 #: providers/mysql/gda-mysql-provider.c:1070
 #: providers/odbc/gda-odbc-provider.c:915
 #: providers/oracle/gda-oracle-provider.c:1249
@@ -239,7 +239,7 @@ msgid "Data type"
 msgstr "Тип данных"
 
 #: providers/default/gda-default-provider.c:456
-#: providers/mdb/gda-mdb-provider.c:492 providers/msql/gda-msql-provider.c:536
+#: providers/mdb/gda-mdb-provider.c:492 providers/msql/gda-msql-provider.c:538
 #: providers/mysql/gda-mysql-provider.c:1071
 #: providers/odbc/gda-odbc-provider.c:916
 #: providers/oracle/gda-oracle-provider.c:1250
@@ -249,7 +249,7 @@ msgid "Size"
 msgstr "Размер"
 
 #: providers/default/gda-default-provider.c:457
-#: providers/mdb/gda-mdb-provider.c:493 providers/msql/gda-msql-provider.c:537
+#: providers/mdb/gda-mdb-provider.c:493 providers/msql/gda-msql-provider.c:539
 #: providers/mysql/gda-mysql-provider.c:1072
 #: providers/odbc/gda-odbc-provider.c:917
 #: providers/oracle/gda-oracle-provider.c:1251
@@ -269,7 +269,7 @@ msgid "Not null?"
 msgstr "Значение не нулевое?"
 
 #: providers/default/gda-default-provider.c:459
-#: providers/mdb/gda-mdb-provider.c:495 providers/msql/gda-msql-provider.c:539
+#: providers/mdb/gda-mdb-provider.c:495 providers/msql/gda-msql-provider.c:541
 #: providers/mysql/gda-mysql-provider.c:1074
 #: providers/odbc/gda-odbc-provider.c:919
 #: providers/oracle/gda-oracle-provider.c:1253
@@ -279,7 +279,7 @@ msgid "Primary key?"
 msgstr "Первичный ключ?"
 
 #: providers/default/gda-default-provider.c:460
-#: providers/mdb/gda-mdb-provider.c:496 providers/msql/gda-msql-provider.c:540
+#: providers/mdb/gda-mdb-provider.c:496 providers/msql/gda-msql-provider.c:542
 #: providers/mysql/gda-mysql-provider.c:1075
 #: providers/odbc/gda-odbc-provider.c:920
 #: providers/oracle/gda-oracle-provider.c:1254
@@ -289,7 +289,7 @@ msgid "Unique index?"
 msgstr "Уникальный индекс?"
 
 #: providers/default/gda-default-provider.c:461
-#: providers/mdb/gda-mdb-provider.c:497 providers/msql/gda-msql-provider.c:541
+#: providers/mdb/gda-mdb-provider.c:497 providers/msql/gda-msql-provider.c:543
 #: providers/mysql/gda-mysql-provider.c:1076
 #: providers/odbc/gda-odbc-provider.c:921
 #: providers/oracle/gda-oracle-provider.c:1255
@@ -315,14 +315,12 @@ msgid "Could not get description for column"
 msgstr "Не удалось получить описание для столбца"
 
 #: providers/default/libmain.c:33
-#, fuzzy
 msgid "Default"
 msgstr "Исходное значение"
 
 #: providers/default/libmain.c:39
-#, fuzzy
 msgid "Default provider, based on XML"
-msgstr "Исходный провайдер библиотеки GDA, основанный на формате XML"
+msgstr "Исходный провайдер, основанный на формате XML"
 
 #: providers/firebird/gda-firebird-provider.c:187
 msgid "No database specified"
@@ -337,9 +335,8 @@ msgstr "База данных не указана"
 #: providers/firebird/gda-firebird-provider.c:447
 #: providers/firebird/gda-firebird-provider.c:485
 #: providers/firebird/gda-firebird-provider.c:539
-#, fuzzy
 msgid "Invalid Firebird handle"
-msgstr "Внутренний обработчик недопустим"
+msgstr "Неправильный обработчик Firebird"
 
 #: providers/firebird/gda-firebird-provider.c:453
 #: providers/firebird/gda-firebird-provider.c:491
@@ -347,9 +344,8 @@ msgid "Invalid transaction handle"
 msgstr "Обработчик транзакции недопустим"
 
 #: providers/firebird/libmain.c:39
-#, fuzzy
 msgid "Provider for FireBird databases"
-msgstr "Провайдер GDA для доступа базам данных Interbase/Firebird"
+msgstr "Провайдер для доступа к базам данных Firebird"
 
 #: providers/freetds/gda-freetds-provider.c:197
 msgid ""
@@ -443,9 +439,8 @@ msgstr ""
 "tds_process_row_tokens\n"
 
 #: providers/freetds/libmain.c:39
-#, fuzzy
 msgid "Provider for TDS-based databases (using FreeTDS)"
-msgstr "Провайдер GDA для доступа к базам данных TDS (используя FreeTDS)"
+msgstr "Провайдер для доступа к базам данных TDS (используя FreeTDS)"
 
 #: providers/freetds/utils.c:40 providers/oracle/utils.c:67
 #: providers/postgres/utils.c:46 providers/sybase/utils.c:538
@@ -468,13 +463,12 @@ msgstr ""
 #: providers/ibmdb2/gda-ibmdb2-provider.c:580
 #: providers/ibmdb2/gda-ibmdb2-provider.c:688
 #: providers/ibmdb2/gda-ibmdb2-provider.c:763
-#, fuzzy
 msgid "Invalid IBM DB2 handle"
-msgstr "Обработчик MDB недопустим"
+msgstr "Неправильный обработчик IBM DB2"
 
 #: providers/ibmdb2/gda-ibmdb2-provider.c:741
 msgid "Function"
-msgstr ""
+msgstr "Функция"
 
 #: providers/ibmdb2/gda-ibmdb2-provider.c:742
 #: providers/ibmdb2/gda-ibmdb2-provider.c:832
@@ -485,8 +479,8 @@ msgstr ""
 #: providers/ibmdb2/gda-ibmdb2-provider.c:1000
 #: providers/ldap/gda-ldap-provider.c:328 providers/mdb/gda-mdb-provider.c:548
 #: providers/mdb/gda-mdb-provider.c:595 providers/mdb/gda-mdb-provider.c:655
-#: providers/msql/gda-msql-provider.c:446
-#: providers/msql/gda-msql-provider.c:484
+#: providers/msql/gda-msql-provider.c:449
+#: providers/msql/gda-msql-provider.c:487
 #: providers/mysql/gda-mysql-provider.c:703
 #: providers/mysql/gda-mysql-provider.c:890
 #: providers/mysql/gda-mysql-provider.c:972
@@ -513,14 +507,12 @@ msgid "Owner"
 msgstr "Владелец"
 
 #: providers/ibmdb2/gda-ibmdb2-provider.c:777
-#, fuzzy
 msgid "Database"
-msgstr "Базы данных"
+msgstr "База данных"
 
 #: providers/ibmdb2/gda-ibmdb2-provider.c:831
-#, fuzzy
 msgid "Index"
-msgstr "Индексы"
+msgstr "Индекс"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/ibmdb2/gda-ibmdb2-provider.c:833
@@ -541,14 +533,13 @@ msgstr "Хранимая процедура"
 
 #: providers/ibmdb2/gda-ibmdb2-provider.c:862
 msgid "Language"
-msgstr ""
+msgstr "Язык"
 
 #: providers/ibmdb2/gda-ibmdb2-provider.c:893
 #: providers/ibmdb2/gda-ibmdb2-provider.c:921
 #: providers/ibmdb2/gda-ibmdb2-provider.c:1002
-#, fuzzy
 msgid "SQL Definition"
-msgstr "Описание"
+msgstr "Описание SQL"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/ibmdb2/gda-ibmdb2-provider.c:918
@@ -572,8 +563,8 @@ msgstr "Тип"
 #: providers/ibmdb2/gda-ibmdb2-provider.c:948
 #: providers/ldap/gda-ldap-provider.c:329 providers/mdb/gda-mdb-provider.c:549
 #: providers/mdb/gda-mdb-provider.c:596 providers/mdb/gda-mdb-provider.c:656
-#: providers/msql/gda-msql-provider.c:447
-#: providers/msql/gda-msql-provider.c:485
+#: providers/msql/gda-msql-provider.c:450
+#: providers/msql/gda-msql-provider.c:488
 #: providers/mysql/gda-mysql-provider.c:704
 #: providers/mysql/gda-mysql-provider.c:891
 #: providers/mysql/gda-mysql-provider.c:973
@@ -597,7 +588,7 @@ msgid "Comments"
 msgstr "Комментарии"
 
 #: providers/ibmdb2/gda-ibmdb2-provider.c:949
-#: providers/msql/gda-msql-provider.c:486
+#: providers/msql/gda-msql-provider.c:489
 #: providers/mysql/gda-mysql-provider.c:974
 #: providers/odbc/gda-odbc-provider.c:1257
 #: providers/oracle/gda-oracle-provider.c:2097
@@ -615,9 +606,8 @@ msgid "Users"
 msgstr "Пользователи"
 
 #: providers/ibmdb2/libmain.c:39
-#, fuzzy
 msgid "Provider for IBMDB2 databases"
-msgstr "Провайдер GDA для доступа к базам данных MySQL"
+msgstr "Провайдер для доступа к базам данных IBM DB2"
 
 #: providers/ldap/gda-ldap-provider.c:257
 #: providers/ldap/gda-ldap-provider.c:490
@@ -626,9 +616,8 @@ msgstr "Провайдер GDA для доступа к базам данных 
 #: providers/ldap/gda-ldap-provider.c:587
 #: providers/ldap/gda-ldap-recordset.c:58
 #: providers/ldap/gda-ldap-recordset.c:176
-#, fuzzy
 msgid "Invalid LDAP handle"
-msgstr "Обработчик MDB недопустим"
+msgstr "Неправильный обработчик LDAP"
 
 #: providers/ldap/gda-ldap-recordset.c:69
 #: providers/mysql/gda-mysql-recordset.c:69
@@ -640,7 +629,7 @@ msgid "Row number out of range"
 msgstr "Номер строки находится вне диапазона"
 
 #: providers/ldap/gda-ldap-recordset.c:283
-#: providers/msql/gda-msql-recordset.c:219
+#: providers/msql/gda-msql-recordset.c:227
 #: providers/mysql/gda-mysql-recordset.c:288
 #: providers/oracle/gda-oracle-recordset.c:469
 msgid "Attempt to insert a row with an invalid number of columns"
@@ -648,7 +637,7 @@ msgstr "Произошла попытка вставить запись с не�
 
 # fe/fe_editor.c:175 fe/fe_editor.c:212
 #: providers/ldap/gda-ldap-recordset.c:298
-#: providers/msql/gda-msql-recordset.c:231
+#: providers/msql/gda-msql-recordset.c:239
 #: providers/mysql/gda-mysql-recordset.c:303
 #: providers/oracle/gda-oracle-recordset.c:484
 msgid "Could not retrieve column's information"
@@ -656,7 +645,7 @@ msgstr "Не удалось извлечь информацию о столбц�
 
 # fe/fe_editor.c:175 fe/fe_editor.c:212
 #: providers/ldap/gda-ldap-recordset.c:316
-#: providers/msql/gda-msql-recordset.c:245
+#: providers/msql/gda-msql-recordset.c:253
 #: providers/mysql/gda-mysql-recordset.c:321
 #: providers/oracle/gda-oracle-recordset.c:502
 msgid "Could not retrieve column's value"
@@ -664,7 +653,7 @@ msgstr "Не удалось извлечь значение столбца"
 
 #: providers/ldap/libmain.c:42
 msgid "Provider for LDAP directory"
-msgstr ""
+msgstr "Провайдер для доступа к каталогам LDAP"
 
 #: providers/mdb/gda-mdb-provider.c:205
 msgid "A database FILENAME must be specified in the connection_string"
@@ -686,9 +675,9 @@ msgstr "Обработчик MDB недопустим"
 #: providers/mdb/gda-mdb-provider.c:404 providers/mdb/gda-mdb-provider.c:414
 #: providers/mdb/gda-mdb-provider.c:424
 msgid "Transactions not supported in MDB provider"
-msgstr ""
+msgstr "Провайдером MDB транзакции не поддерживаются"
 
-#: providers/mdb/gda-mdb-provider.c:498 providers/msql/gda-msql-provider.c:542
+#: providers/mdb/gda-mdb-provider.c:498 providers/msql/gda-msql-provider.c:544
 #: providers/mysql/gda-mysql-provider.c:1077
 #: providers/odbc/gda-odbc-provider.c:922
 #: providers/oracle/gda-oracle-provider.c:1256
@@ -700,7 +689,7 @@ msgstr "Исходное значение"
 #: providers/mdb/gda-mdb-provider.c:547
 #: providers/mysql/gda-mysql-provider.c:702
 msgid "ID"
-msgstr ""
+msgstr "Идентификатор"
 
 #: providers/mdb/gda-mdb-provider.c:550
 #: providers/mysql/gda-mysql-provider.c:705
@@ -710,9 +699,8 @@ msgid "Return type"
 msgstr "Тип возвращаемого значения"
 
 #: providers/mdb/gda-mdb-provider.c:551
-#, fuzzy
 msgid "# of args"
-msgstr "Nb аргументов"
+msgstr "Число аргументов"
 
 #: providers/mdb/gda-mdb-provider.c:552
 #: providers/mysql/gda-mysql-provider.c:706
@@ -736,125 +724,115 @@ msgid "Definition"
 msgstr "Описание"
 
 #: providers/mdb/gda-mdb-provider.c:657
-#, fuzzy
 msgid "GDA Type"
 msgstr "Тип GDA"
 
 #: providers/mdb/gda-mdb-provider.c:659
-#, fuzzy
 msgid "Boolean type"
-msgstr "Тип возвращаемого значения"
+msgstr "Логический тип"
 
 #: providers/mdb/gda-mdb-provider.c:660
 msgid "1-byte integers"
-msgstr ""
+msgstr "Однобайтовые целые"
 
 #: providers/mdb/gda-mdb-provider.c:661
 msgid "Double precision values"
-msgstr ""
+msgstr "Значения с удвоенной точностью"
 
 #: providers/mdb/gda-mdb-provider.c:662
 msgid "Single precision values"
-msgstr ""
+msgstr "Значения с одинарной точностью"
 
 #: providers/mdb/gda-mdb-provider.c:663
 msgid "32-bit integers"
-msgstr ""
+msgstr "32-битные целые"
 
 #: providers/mdb/gda-mdb-provider.c:664
 msgid "64-bit integers"
-msgstr ""
+msgstr "64-битные целые"
 
 #: providers/mdb/gda-mdb-provider.c:665
 msgid "Variable length character strings"
-msgstr ""
+msgstr "Строка символов переменной длины"
 
 #: providers/mdb/gda-mdb-provider.c:666
 msgid "Money amounts"
-msgstr ""
+msgstr "Денежные единицы"
 
 #: providers/mdb/gda-mdb-provider.c:667
 msgid "OLE object"
-msgstr ""
+msgstr "Объект OLE"
 
 #: providers/mdb/gda-mdb-provider.c:668
 msgid "FIXME"
 msgstr ""
 
 #: providers/mdb/gda-mdb-provider.c:669
-#, fuzzy
 msgid "Date/time value"
-msgstr "Исходное значение"
+msgstr "Значение даты/времени"
 
 #: providers/mdb/gda-mdb-provider.c:670
 msgid "Character strings"
-msgstr ""
+msgstr "Строка символов"
 
 # fe/fe_editor.c:175 fe/fe_editor.c:212
 #. end unsafe
 #: providers/mdb/gda-mdb-provider.c:737
-#, fuzzy, c-format
+#, c-format
 msgid "Could not parse '%s' command"
-msgstr "Не удалось разобрать команду \"%s\" языка SQL"
+msgstr "Не удалось разобрать команду \"%s\""
 
 #: providers/mdb/libmain.c:36
-#, fuzzy
 msgid "Provider for Microsoft Access files"
-msgstr "Провайдер GDA для доступа к файлам формата MS Access"
+msgstr "Провайдер для доступа к файлам формата MS Access"
 
 #: providers/msql/gda-msql-libmain.c:41
-#, fuzzy
 msgid "Provider for Hughes Technologies mSQL databases"
-msgstr "Провайдер GDA для доступа к базам данных PostgreSQL"
+msgstr "Провайдер для доступа к базам данных Hughes Technologies mSQL"
 
-#: providers/msql/gda-msql-provider.c:228
-#: providers/msql/gda-msql-provider.c:270
-#: providers/msql/gda-msql-provider.c:290
-#: providers/msql/gda-msql-provider.c:549
-#: providers/msql/gda-msql-recordset.c:67
-#: providers/msql/gda-msql-recordset.c:130
-#, fuzzy
+#: providers/msql/gda-msql-provider.c:230
+#: providers/msql/gda-msql-provider.c:273
+#: providers/msql/gda-msql-provider.c:293
+#: providers/msql/gda-msql-provider.c:551
+#: providers/msql/gda-msql-recordset.c:50
+#: providers/msql/gda-msql-recordset.c:138
 msgid "Invalid mSQL handle"
-msgstr "Обработчик MySQL недопустим"
+msgstr "Неправильный обработчик mSQL"
 
-#: providers/msql/gda-msql-provider.c:315
+#: providers/msql/gda-msql-provider.c:318
 msgid "mSQL allows database creation only through the msqladmin tool."
-msgstr ""
+msgstr "mSQL допускает создание баз данных только с помощью программы msqladmin."
 
-#: providers/msql/gda-msql-provider.c:328
+#: providers/msql/gda-msql-provider.c:331
 msgid "mSQL allows database drops only through the msqladmin tool."
-msgstr ""
+msgstr "mSQL допускает удаление баз данных только с помощью программы msqladmin."
 
-#: providers/msql/gda-msql-provider.c:373
-#: providers/msql/gda-msql-provider.c:386
-#: providers/msql/gda-msql-provider.c:399
+#: providers/msql/gda-msql-provider.c:376
+#: providers/msql/gda-msql-provider.c:389
+#: providers/msql/gda-msql-provider.c:402
 msgid "mSQL doesn't support transactions."
-msgstr ""
+msgstr "mSQL не поддерживает транзакции."
 
-#: providers/msql/gda-msql-provider.c:483
-#, fuzzy
+#: providers/msql/gda-msql-provider.c:486
 msgid "Title"
-msgstr "Таблица"
+msgstr "Заголовок"
 
-#: providers/msql/gda-msql-provider.c:534
-#, fuzzy
+#: providers/msql/gda-msql-provider.c:536
 msgid "Field Name"
 msgstr "Имя поля"
 
-#: providers/msql/gda-msql-provider.c:538
-#, fuzzy
+#: providers/msql/gda-msql-provider.c:540
 msgid "Not null"
-msgstr "Значение не нулевое?"
+msgstr "Не нулевое"
 
-#: providers/msql/gda-msql-provider.c:555
-#: providers/msql/gda-msql-provider.c:561
+#: providers/msql/gda-msql-provider.c:557
+#: providers/msql/gda-msql-provider.c:563
 #: providers/mysql/gda-mysql-provider.c:1094
 #: providers/mysql/gda-mysql-provider.c:1102
 msgid "Table name is needed but none specified in parameter list"
 msgstr "Требуется имя таблицы, но оно не определено в списке параметров"
 
-#: providers/msql/gda-msql-recordset.c:74
-#, fuzzy
+#: providers/msql/gda-msql-recordset.c:57
 msgid "Row number out of bounds"
 msgstr "Номер строки находится вне диапазона"
 
@@ -890,18 +868,17 @@ msgstr "Обработчик MySQL недопустим"
 #: providers/oracle/gda-oracle-provider.c:1000
 #: providers/sqlite/gda-sqlite-provider.c:472
 msgid "Transactions are not supported in read-only mode"
-msgstr ""
+msgstr "В режиме \"только-чтение\" транзакции не поддерживаются"
 
 #: providers/mysql/gda-mysql-provider.c:707
 #: providers/oracle/gda-oracle-provider.c:1913
 #: providers/oracle/gda-oracle-provider.c:1975
 msgid "SQL"
-msgstr ""
+msgstr "SQL"
 
 #: providers/mysql/libmain.c:41
-#, fuzzy
 msgid "Provider for MySQL databases"
-msgstr "Провайдер GDA для доступа к базам данных MySQL"
+msgstr "Провайдер для доступа к базам данных MySQL"
 
 #: providers/odbc/gda-odbc-provider.c:183
 msgid "Unable to SQLAllocEnv()..."
@@ -913,9 +890,8 @@ msgstr ""
 #: providers/odbc/gda-odbc-provider.c:513
 #: providers/odbc/gda-odbc-provider.c:544
 #: providers/odbc/gda-odbc-provider.c:574
-#, fuzzy
 msgid "Invalid Odbc handle"
-msgstr "Обработчик Oracle недопустим"
+msgstr "Обработчик Odbc недопустим"
 
 #: providers/odbc/gda-odbc-provider.c:1031
 #: providers/oracle/gda-oracle-provider.c:1153
@@ -942,9 +918,8 @@ msgid "Sequence"
 msgstr "Последовательность"
 
 #: providers/odbc/libmain.c:41
-#, fuzzy
 msgid "Provider for ODBC data sources"
-msgstr "Мост GDA для доступа к источникам данных ODBC"
+msgstr "Провайдер для доступа к источникам данных ODBC"
 
 #: providers/oracle/gda-oracle-provider.c:196
 msgid "No TNS name supplied"
@@ -1032,9 +1007,8 @@ msgid "Could not get the Oracle statement type"
 msgstr "Не удалось получить тип выражения Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:610
-#, fuzzy
 msgid "Could not set the Oracle statement pre-fetch row count"
-msgstr "Не удалось получить тип выражения Oracle"
+msgstr ""
 
 #: providers/oracle/gda-oracle-provider.c:627
 msgid "Could not execute the Oracle statement"
@@ -1106,9 +1080,8 @@ msgid "Could not allocate the Oracle describe handle"
 msgstr "Не удалось распределить обработчик описания Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:1451
-#, fuzzy
 msgid "Could not set describe handle attribute"
-msgstr "Не удалось установить атрибут пароля Oracle"
+msgstr ""
 
 # fe/fe_editor.c:175 fe/fe_editor.c:212
 #: providers/oracle/gda-oracle-provider.c:1478
@@ -1122,25 +1095,21 @@ msgid "Could not get the Oracle parameter handle"
 msgstr "Не удалось получить обработчик параметра Oracle"
 
 #: providers/oracle/gda-oracle-provider.c:1508
-#, fuzzy
 msgid "Could not get described object type"
-msgstr "Не удалось получить тип данных поля Oracle"
+msgstr ""
 
 #: providers/oracle/gda-oracle-provider.c:1523
-#, fuzzy
 msgid "Could not get synonym referred-to schema"
-msgstr "Не удалось получить масштаб поля Oracle"
+msgstr ""
 
 #: providers/oracle/gda-oracle-provider.c:1536
-#, fuzzy
 msgid "Could not get synonym referred-to name"
-msgstr "Не удалось получить наименование поля Oracle"
+msgstr ""
 
 # fe/fe_editor.c:175 fe/fe_editor.c:212
 #: providers/oracle/gda-oracle-provider.c:1549
-#, fuzzy
 msgid "Could not get synonym referred-to dblink"
-msgstr "Не удалось получить описание для столбца"
+msgstr ""
 
 # fe/fe_editor.c:175 fe/fe_editor.c:212
 #: providers/oracle/gda-oracle-provider.c:1611
@@ -1249,9 +1218,8 @@ msgid "Could not fetch a row"
 msgstr "Не удалось извлечь запись"
 
 #: providers/oracle/libmain.c:34
-#, fuzzy
 msgid "Provider for Oracle databases"
-msgstr "Провайдер GDA для доступа базам данных Oracle"
+msgstr "Провайдер для доступа базам данных Oracle"
 
 #: providers/postgres/gda-postgres-provider.c:554
 #: providers/postgres/gda-postgres-provider.c:571
@@ -1285,9 +1253,8 @@ msgid "Tuples:\"%s\""
 msgstr "Данные: \"%s\""
 
 #: providers/postgres/libmain.c:41
-#, fuzzy
 msgid "Provider for PostgreSQL databases"
-msgstr "Провайдер GDA для доступа к базам данных PostgreSQL"
+msgstr "Провайдер для доступа к базам данных PostgreSQL"
 
 #: providers/sqlite/gda-sqlite-provider.c:220
 msgid "Could not set empty_result_callbacks SQLite option"
@@ -1323,9 +1290,8 @@ msgid "Could not retrieve information for field"
 msgstr "Не удалось извлечь информацию о поле"
 
 #: providers/sqlite/libmain.c:41
-#, fuzzy
 msgid "Provider for SQLite databases"
-msgstr "Провайдер GDA для доступа к базам данных SQLite"
+msgstr "Провайдер для доступа к базам данных SQLite"
 
 #: providers/sybase/gda-sybase-provider.c:291
 msgid "Out of memory. Allocating connection structure failed."
@@ -1349,13 +1315,12 @@ msgstr ""
 
 # fe/fe_editor.c:175 fe/fe_editor.c:212
 #: providers/sybase/gda-sybase-provider.c:670
-#, fuzzy
 msgid "Could not prepare command structure."
-msgstr "Не удалось разобрать команду \"%s\" языка SQL"
+msgstr "Не удалось подготовить структуру команды."
 
 #: providers/sybase/gda-sybase-provider.c:680
 msgid "Sending sql-command failed."
-msgstr ""
+msgstr "Отправка команды SQL не удалась."
 
 #: providers/sybase/gda-sybase-provider.c:706
 #: providers/sybase/gda-sybase-provider.c:724
@@ -1396,19 +1361,18 @@ msgid "Command structure already in use. %s failed."
 msgstr ""
 
 #: providers/sybase/gda-sybase-provider.c:858
-#, fuzzy
 msgid "Could not allocate command structure."
-msgstr "Не удалось распределить обработчик окружения."
+msgstr "Не удалось распределить структуру команды."
 
 # fe/fe_editor.c:175 fe/fe_editor.c:212
 #: providers/sybase/gda-sybase-provider.c:867
-#, fuzzy, c-format
+#, c-format
 msgid "Could not prepare command structure with %s."
-msgstr "Не удалось разобрать команду \"%s\" языка SQL"
+msgstr ""
 
 #: providers/sybase/gda-sybase-provider.c:877
 msgid "Sending command failed."
-msgstr ""
+msgstr "Отправка команды не удалась."
 
 #: providers/sybase/gda-sybase-provider.c:902
 #: providers/sybase/gda-sybase-provider.c:919
@@ -1418,42 +1382,35 @@ msgid "%s: %s failed"
 msgstr ""
 
 #: providers/sybase/gda-sybase-provider.c:974
-#, fuzzy
 msgid "could not allocate cmd structure to find current database."
-msgstr "Не удалось распределить обработчик окружения."
+msgstr ""
 
 #: providers/sybase/gda-sybase-provider.c:985
-#, fuzzy
 msgid "could not execute command to get current database."
-msgstr "Не удалось распределить обработчик окружения."
+msgstr ""
 
 # fe/fe_editor.c:175 fe/fe_editor.c:212
 #: providers/sybase/gda-sybase-provider.c:993
-#, fuzzy
 msgid "could not send command to get current database."
-msgstr "Не удалось разобрать команду \"%s\" языка SQL"
+msgstr ""
 
 #: providers/sybase/gda-sybase-provider.c:1016
-#, fuzzy
 msgid "could not bind variable to get current database."
-msgstr "Не удалось обнаружить провайдера %s в текущей конфигурации"
+msgstr ""
 
 #: providers/sybase/gda-sybase-provider.c:1029
 #: providers/sybase/gda-sybase-provider.c:1044
-#, fuzzy
 msgid "could not fetch data to find current database."
-msgstr "Не удалось подсоединиться к базе данных"
+msgstr ""
 
 # fe/fe_editor.c:175 fe/fe_editor.c:212
 #: providers/sybase/gda-sybase-provider.c:1058
-#, fuzzy
 msgid "could not drop cmd structure to find current database."
-msgstr "Не удалось разобрать команду \"%s\" языка SQL"
+msgstr ""
 
 #: providers/sybase/gda-sybase-recordset.c:315
-#, fuzzy
 msgid "Could not allocate datamodel. No results will be returned."
-msgstr "Не удалось распределить обработчик сервера Oracle"
+msgstr ""
 
 #: providers/sybase/gda-sybase-recordset.c:318
 msgid "ct_cancel() failed."
@@ -1472,32 +1429,31 @@ msgstr ""
 # fe/fe_editor.c:175 fe/fe_editor.c:212
 #: providers/sybase/gda-sybase-recordset.c:359
 #: providers/sybase/gda-sybase-recordset.c:549
-#, fuzzy
 msgid "Could not allocate structure for column metainformation."
-msgstr "Не удалось извлечь информацию о столбце"
+msgstr ""
 
 #: providers/sybase/gda-sybase-recordset.c:363
 #: providers/sybase/gda-sybase-recordset.c:553
-#, fuzzy, c-format
+#, c-format
 msgid "Could not call %s while processing row resultset."
-msgstr "Не удалось получить число столбцов в результирующем наборе"
+msgstr ""
 
 # fe/fe_editor.c:175 fe/fe_editor.c:212
 #: providers/sybase/gda-sybase-recordset.c:382
 #: providers/sybase/gda-sybase-recordset.c:403
-#, fuzzy, c-format
+#, c-format
 msgid "Could not run %s on column %d"
-msgstr "Не удалось разобрать команду \"%s\" языка SQL"
+msgstr ""
 
 #: providers/sybase/gda-sybase-recordset.c:391
-#, fuzzy, c-format
+#, c-format
 msgid "Could not allocate data placeholder for column %d"
-msgstr "Не удалось распределить обработчик ошибок Oracle"
+msgstr ""
 
 #: providers/sybase/gda-sybase-recordset.c:422
-#, fuzzy, c-format
+#, c-format
 msgid "Could not run %s to cancel processing row resultset."
-msgstr "Не удалось получить число столбцов в результирующем наборе"
+msgstr ""
 
 #: providers/sybase/gda-sybase-recordset.c:438
 #, c-format
@@ -1545,9 +1501,8 @@ msgid "data conversion failed for type %d"
 msgstr ""
 
 #: providers/sybase/libmain.c:40
-#, fuzzy
 msgid "GDA provider for sybase databases (using OpenClient)"
-msgstr "Провайдер GDA для доступа к базам данных TDS (используя FreeTDS)"
+msgstr "Провайдер GDA для доступа к базам данных Sybase (c использованием OpenClient)"
 
 #: providers/sybase/main.c:52
 msgid "Could not initiate Sybase component factory"
@@ -1568,7 +1523,7 @@ msgstr ""
 #: providers/sybase/utils.c:60
 #, c-format
 msgid "OS error: %s"
-msgstr ""
+msgstr "Ошибка OS: %s"
 
 #: providers/sybase/utils.c:70
 msgid "Call: Client callback."
@@ -1594,14 +1549,14 @@ msgid ""
 msgstr ""
 
 #: providers/sybase/utils.c:100
-#, fuzzy, c-format
+#, c-format
 msgid "\tServer name: %s\n"
-msgstr "\t\tПоследовательности: %s\n"
+msgstr "\tИмя сервера: %s\n"
 
 #: providers/sybase/utils.c:103
-#, fuzzy, c-format
+#, c-format
 msgid "\tProcedure name: %s\n"
-msgstr "\t\tХранимые процедуры: %s\n"
+msgstr "\tНазвание процедуры: %s\n"
 
 #: providers/sybase/utils.c:147
 msgid "ct_diag() failed determining # of client messages."
@@ -1617,13 +1572,12 @@ msgid ""
 msgstr ""
 
 #: providers/sybase/utils.c:230
-#, fuzzy
 msgid "OS_Error:("
-msgstr "Ошибка"
+msgstr "Ошибка OS:("
 
 #: providers/sybase/utils.c:232
 msgid ") Message: "
-msgstr ""
+msgstr ") Сообщение: "
 
 #: providers/sybase/utils.c:245
 msgid "Sybase OpenClient Msg: severity("
@@ -1631,7 +1585,7 @@ msgstr ""
 
 #: providers/sybase/utils.c:247
 msgid "), number("
-msgstr ""
+msgstr "), номер("
 
 #: providers/sybase/utils.c:249
 msgid "), origin("
@@ -1639,7 +1593,7 @@ msgstr ""
 
 #: providers/sybase/utils.c:251
 msgid "), layer("
-msgstr ""
+msgstr "), слой("
 
 #: providers/sybase/utils.c:276
 msgid "call to cs_diag failed when attempting to clear the client messages"
@@ -1656,30 +1610,27 @@ msgstr ""
 
 #: providers/sybase/utils.c:346
 msgid "Server:"
-msgstr ""
+msgstr "Сервер:"
 
 #: providers/sybase/utils.c:350
-#, fuzzy
 msgid "Stored Procedure:"
-msgstr "Хранимые процедуры"
+msgstr "Сохранённые процедура:"
 
 #: providers/sybase/utils.c:354
-#, fuzzy
 msgid "Number"
-msgstr "Наименование"
+msgstr "Номер"
 
 #: providers/sybase/utils.c:357 providers/sybase/utils.c:474
 msgid "Severity"
-msgstr ""
+msgstr "Важность"
 
 #: providers/sybase/utils.c:360
-#, fuzzy
 msgid "State"
-msgstr "Масштаб"
+msgstr "Состояние"
 
 #: providers/sybase/utils.c:363
 msgid "Line"
-msgstr ""
+msgstr "Линия"
 
 #: providers/sybase/utils.c:446
 msgid "call to ct_diag failed when attempting to the amount of client messages"
@@ -1692,7 +1643,7 @@ msgstr ""
 
 #: providers/sybase/utils.c:476
 msgid "Layer"
-msgstr ""
+msgstr "Слой"
 
 #: providers/sybase/utils.c:478
 msgid "Origin"
@@ -1700,7 +1651,7 @@ msgstr ""
 
 #: providers/sybase/utils.c:480
 msgid "Message Number"
-msgstr ""
+msgstr "Номер сообщения"
 
 #: providers/sybase/utils.c:502
 msgid "call to ct_diag failed when attempting to clear the client messages"
@@ -1708,27 +1659,24 @@ msgstr ""
 
 #: providers/sybase/utils.c:523
 msgid "Operation not possible, connection busy."
-msgstr ""
+msgstr "Операция невозможна, соединение занято."
 
 #: providers/xbase/gda-xbase-provider.c:185
 msgid "Either FILENAME or DIRECTORY can be specified, but not both or neither"
 msgstr ""
 
 #: providers/xbase/gda-xbase-provider.c:232
-#, fuzzy
 msgid "Either FILENAME or DIRECTORY must be specified in the connection string"
-msgstr "Наименование базы данных должно быть указано в строке соединения."
+msgstr ""
 
 #: providers/xbase/gda-xbase-provider.c:261
 #: providers/xbase/gda-xbase-provider.c:379
-#, fuzzy
 msgid "Invalid Xbase handle"
-msgstr "Обработчик баз данных Interbase недопустим"
+msgstr "Обработчик Xbase недопустим"
 
 #: providers/xbase/libmain.c:39
-#, fuzzy
 msgid "Provider for Xbase (dBase, FoxPro, etc) files"
-msgstr "Провайдер GDA для доступа базам данных Oracle"
+msgstr "Провайдер для доступа к файлам XBase (dBase, FoxPro и т.д.)"
 
 # fe/fe_editor.c:175 fe/fe_editor.c:212
 #: report/libgda-report/gda-report-document.c:171
@@ -1786,9 +1734,9 @@ msgstr ""
 
 # fe/fe_editor.c:175 fe/fe_editor.c:212
 #: report/libgda-report/gda-report-valid.c:130
-#, fuzzy, c-format
+#, c-format
 msgid "could not get DTD from %s"
-msgstr "Не удалось получить файл с %s"
+msgstr ""
 
 #: report/libgda-report/gda-report-valid.c:231
 #, c-format
@@ -1844,9 +1792,9 @@ msgid "\t\tIndexes: %s\n"
 msgstr "\t\tИндексы: %s\n"
 
 #: testing/client.c:94
-#, fuzzy, c-format
+#, c-format
 msgid "\t\tNamespaces: %s\n"
-msgstr "\t\tПользователи: %s\n"
+msgstr ""
 
 #: testing/client.c:97
 #, c-format
@@ -1922,7 +1870,7 @@ msgstr "Агрегаты"
 
 #: testing/client.c:136
 msgid "Languages"
-msgstr ""
+msgstr "Языки"
 
 #: testing/client.c:141 testing/client.c:149
 msgid "\tStarting transaction..."
@@ -1979,55 +1927,3 @@ msgstr "\tописание = %s\n"
 #: testing/config.c:92
 msgid "\tgda_params ="
 msgstr "\tпараметры gda ="
-
-#, fuzzy
-#~ msgid "about to open connection"
-#~ msgstr "** ОШИБКА: не удалось открыть соединение с %s\n"
-
-#, fuzzy
-#~ msgid "Could not initialize cslib callback"
-#~ msgstr "Не удалось инициализировать Oracle"
-
-#, fuzzy
-#~ msgid "CS-lib callback initialized."
-#~ msgstr "Библиотека libgda успешно инициализирована"
-
-#, fuzzy
-#~ msgid "Could not initialize ct-client callback"
-#~ msgstr "Не удалось инициализировать Oracle"
-
-#, fuzzy
-#~ msgid "Could not initialize ct-server callback"
-#~ msgstr "Не удалось инициализировать Oracle"
-
-#, fuzzy
-#~ msgid "Connection allocated."
-#~ msgstr "Таблицы соединений"
-
-#, fuzzy
-#~ msgid "Username set."
-#~ msgstr "Имя пользователя"
-
-#, fuzzy
-#~ msgid "Password set."
-#~ msgstr "Пароль"
-
-#~ msgid "MESSAGE: %s"
-#~ msgstr "СООБЩЕНИЕ: s"
-
-#~ msgid "ERROR: %s"
-#~ msgstr "Ошибка: %s"
-
-# fe/fe_editor.c:175 fe/fe_editor.c:212
-#~ msgid "Could not set autocommit to off.\n"
-#~ msgstr "Не удалось отключить значение autocommit.\n"
-
-#~ msgid "SQLGetFunctions gave unexpected return. Connection terminated.\n"
-#~ msgstr ""
-#~ "Функция SQLGetInfo вернула неожиданное значение. Соединение завершено.\n"
-
-#~ msgid "GDA provider for IBMDB2"
-#~ msgstr "Провайдер GDA для доступа к базам данных IBM DB2"
-
-#~ msgid "Table Name"
-#~ msgstr "Имя таблицы"
