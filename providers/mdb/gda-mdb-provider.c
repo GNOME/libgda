@@ -214,7 +214,7 @@ gda_mdb_provider_open_connection (GdaServerProvider *provider,
 		return FALSE;
 	}
 
-	mdb_read_catalog (mdb_cnc->mdb, MDB_TABLE);
+	mdb_read_catalog (mdb_cnc->mdb, MDB_ANY);
 
 	g_object_set_data (G_OBJECT (cnc), OBJECT_DATA_MDB_HANDLE, mdb_cnc);
 
@@ -268,7 +268,7 @@ gda_mdb_provider_get_server_version (GdaServerProvider *provider,
 	}
 
 	if (!mdb_cnc->server_version)
-		mdb_cnc->server_version = g_strdup_printf ("Microsoft Jet %d", mdb_cnc->mdb->jet_version);
+		mdb_cnc->server_version = g_strdup_printf ("Microsoft Jet %d", mdb_cnc->mdb->f->jet_version);
 
 	return (const gchar *) mdb_cnc->server_version;
 }
@@ -355,6 +355,54 @@ gda_mdb_provider_supports (GdaServerProvider *provider,
 	}
 
 	return FALSE;
+}
+
+static GdaDataModel *
+get_mdb_procedures (GdaMdbConnection *mdb_cnc)
+{
+	gint i;
+	GdaDataModelArray *model;
+
+	g_return_val_if_fail (mdb_cnc != NULL, NULL);
+	g_return_val_if_fail (mdb_cnc->mdb != NULL, NULL);
+
+	model = (GdaDataModelArray *) gda_data_model_array_new (8);
+	gda_data_model_set_column_title (GDA_DATA_MODEL (model), 0, _("Procedure"));
+	gda_data_model_set_column_title (GDA_DATA_MODEL (model), 1, _("ID"));
+	gda_data_model_set_column_title (GDA_DATA_MODEL (model), 2, _("Owner"));
+	gda_data_model_set_column_title (GDA_DATA_MODEL (model), 3, _("Comments"));
+	gda_data_model_set_column_title (GDA_DATA_MODEL (model), 4, _("Return type"));
+	gda_data_model_set_column_title (GDA_DATA_MODEL (model), 5, _("# of args"));
+	gda_data_model_set_column_title (GDA_DATA_MODEL (model), 6, _("Args types"));
+	gda_data_model_set_column_title (GDA_DATA_MODEL (model), 7, _("Definition"));
+
+	for (i = 0; i < mdb_cnc->mdb->num_catalog; i++) {
+		GdaValue *value;
+		MdbCatalogEntry *entry;
+
+		entry = g_ptr_array_index (mdb_cnc->mdb->catalog, i);
+
+ 		/* if it's a table */
+		if (entry->object_type == MDB_MODULE) {
+			GList *value_list = NULL;
+
+			value_list = g_list_append (value_list, gda_value_new_string (entry->object_name));
+			value_list = g_list_append (value_list, gda_value_new_string (NULL));
+			value_list = g_list_append (value_list, gda_value_new_string (NULL));
+			value_list = g_list_append (value_list, gda_value_new_string (NULL));
+			value_list = g_list_append (value_list, gda_value_new_string (NULL));
+			value_list = g_list_append (value_list, gda_value_new_integer (0));
+			value_list = g_list_append (value_list, gda_value_new_string (NULL));
+			value_list = g_list_append (value_list, gda_value_new_string (NULL));
+
+			gda_data_model_append_row (GDA_DATA_MODEL (model), value_list);
+
+			g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
+			g_list_free (value_list);
+		}
+	}
+
+	return GDA_DATA_MODEL (model);
 }
 
 static GdaDataModel *
@@ -468,6 +516,8 @@ gda_mdb_provider_get_schema (GdaServerProvider *provider,
 	}
 
 	switch (schema) {
+	case GDA_CONNECTION_SCHEMA_PROCEDURES :
+		return get_mdb_procedures (mdb_cnc);
 	case GDA_CONNECTION_SCHEMA_TABLES :
 		return get_mdb_tables (mdb_cnc);
 	case GDA_CONNECTION_SCHEMA_TYPES :

@@ -1,3 +1,10 @@
+2003-01-10  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* providers/mdb/gda-mdb-provider.c (get_mdb_procedures): implemented
+	GDA_CONNECTION_SCHEMA_PROCEDURES.
+	(gda_mdb_provider_open_connection): read the all catalogs.
+	(gda_mdb_provider_get_server_version): adapted to mdb-tools CVS.
+
 2003-01-09  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	Fixes #87321
