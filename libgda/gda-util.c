@@ -27,12 +27,59 @@
  * gda_file_load
  * @uri: URI for the file to be loaded.
  *
- * NOT IMPLEMENTED YET!
+ * Loads a file, specified by the given @uri, and returns the file
+ * contents as a string. The @uri argument can specify any transfer
+ * method (file:, http:, ftp:, etc) supported by GnomeVFS on your
+ * system.
+ *
+ * It is the caller's responsibility to free the returned value.
+ *
+ * Returns: the file contents as a newly-allocated string, or NULL
+ * if there is an error.
  */
 gchar *
 gda_file_load (const gchar *uri)
 {
-	return NULL;
+	GnomeVFSHandle *handle;
+	GnomeVFSResult result;
+	GnomeVFSFileSize size;
+	GString *str = NULL;
+	gchar *retval = NULL;
+	gchar buffer[8193];
+
+	g_return_val_if_fail (uri != NULL, NULL);
+
+	/* open the file */
+	result = gnome_vfs_open (&handle, uri, GNOME_VFS_OPEN_READ);
+	if (result != GNOME_VFS_OK)
+		return NULL;
+
+	memset (buffer, 0, sizeof (buffer));
+	result = gnome_vfs_read (handle, (gpointer) buffer, sizeof (buffer) - 1, &size);
+	while (result == GNOME_VFS_OK) {
+		if (!str)
+			str = g_string_new (buffer);
+		else
+			str = g_string_append (str, buffer);
+
+		memset (buffer, 0, sizeof (buffer));
+		result = gnome_vfs_read (handle, (gpointer) buffer,
+					 sizeof (buffer) - 1, &size);
+	}
+
+	if (result == GNOME_VFS_ERROR_EOF) {
+		retval = str->str;
+		g_string_free (str, FALSE);
+	}
+	else {
+		retval = NULL;
+		g_string_free (str, TRUE);
+	}
+
+	/* close file */
+	gnome_vfs_close (handle);
+
+	return retval;
 }
 
 /**

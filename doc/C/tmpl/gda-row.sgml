@@ -128,10 +128,10 @@ Functions for accesing #GdaRow.
 
 </para>
 
-@fa: 
+@fs: 
 @size: 
 <!-- # Unused Parameters # -->
-@fs: 
+@fa: 
 
 
 <!-- ##### FUNCTION gda_field_attributes_get_name ##### -->
