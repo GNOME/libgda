@@ -22,7 +22,6 @@
 #define __gda_batch_h__ 1
 
 #include <glib.h>
-
 #ifdef HAVE_GOBJECT
 #  include <glib-object.h>
 #else
@@ -30,20 +29,18 @@
 #endif
 
 #include <orb/orbit.h>
+#include <gda-common-defs.h>
 #include <gda-connection.h>
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif
+G_BEGIN_DECLS
 
 /* The batch job object. Provides a way of managing a series
  * of commands as a simple object, allowing the execution
  * of what is known as "transactions".
  */
 
-	typedef struct _GdaBatch GdaBatch;
-	typedef struct _GdaBatchClass GdaBatchClass;
+typedef struct _GdaBatch GdaBatch;
+typedef struct _GdaBatchClass GdaBatchClass;
 
 #define GDA_TYPE_BATCH            (gda_batch_get_type())
 
@@ -63,57 +60,54 @@ extern "C"
 #define GDA_IS_BATCH_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_BATCH))
 #endif
 
-	struct _GdaBatch
-	{
+struct _GdaBatch {
 #ifdef HAVE_GOBJECT
-		GObject object;
+	GObject object;
 #else
-		GtkObject object;
+	GtkObject object;
 #endif
-		GdaConnection *cnc;
-		gboolean transaction_mode;
-		gboolean is_running;
-		GList *commands;
-	};
+	GdaConnection *cnc;
+	gboolean transaction_mode;
+	gboolean is_running;
+	GList *commands;
+};
 
-	struct _GdaBatchClass
-	{
+struct _GdaBatchClass {
+{
 #ifdef HAVE_GOBJECT
-		GObjectClass parent_class;
+	GObjectClass parent_class;
 #else
-		GtkObjectClass parent_class;
+	GtkObjectClass parent_class;
 #endif
-		void (*begin_transaction) (GdaBatch * job);
-		void (*commit_transaction) (GdaBatch * job);
-		void (*rollback_transaction) (GdaBatch * job);
-		void (*execute_command) (GdaBatch * job, const gchar * cmd);
-	};
+	void (*begin_transaction) (GdaBatch * job);
+	void (*commit_transaction) (GdaBatch * job);
+	void (*rollback_transaction) (GdaBatch * job);
+	void (*execute_command) (GdaBatch * job, const gchar * cmd);
+};
 
 #ifdef HAVE_GOBJECT
-	GType gda_batch_get_type (void);
+GType gda_batch_get_type (void);
 #else
-	guint gda_batch_get_type (void);
+guint gda_batch_get_type (void);
 #endif
 
-	GdaBatch *gda_batch_new (void);
-	void gda_batch_free (GdaBatch * job);
+GdaBatch *gda_batch_new (void);
+void gda_batch_free (GdaBatch * job);
 
-	gboolean gda_batch_load_file (GdaBatch * job, const gchar * filename,
-				      gboolean clean);
-	void gda_batch_add_command (GdaBatch * job, const gchar * cmd);
-	void gda_batch_clear (GdaBatch * job);
+gboolean gda_batch_load_file (GdaBatch * job, const gchar * filename,
+			      gboolean clean);
+void gda_batch_add_command (GdaBatch * job, const gchar * cmd);
+void gda_batch_clear (GdaBatch * job);
 
-	gboolean gda_batch_start (GdaBatch * job);
-	void gda_batch_stop (GdaBatch * job);
-	gboolean gda_batch_is_running (GdaBatch * job);
+gboolean gda_batch_start (GdaBatch * job);
+void gda_batch_stop (GdaBatch * job);
+gboolean gda_batch_is_running (GdaBatch * job);
 
-	GdaConnection *gda_batch_get_connection (GdaBatch * job);
-	void gda_batch_set_connection (GdaBatch * job, GdaConnection * cnc);
-	gboolean gda_batch_get_transaction_mode (GdaBatch * job);
-	void gda_batch_set_transaction_mode (GdaBatch * job, gboolean mode);
+GdaConnection *gda_batch_get_connection (GdaBatch * job);
+void gda_batch_set_connection (GdaBatch * job, GdaConnection * cnc);
+gboolean gda_batch_get_transaction_mode (GdaBatch * job);
+void gda_batch_set_transaction_mode (GdaBatch * job, gboolean mode);
 
-#ifdef __cplusplus
-}
-#endif
+G_END_DECLS
 
 #endif
