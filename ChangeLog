@@ -1,3 +1,7 @@
+2003-06-03  David T Hollis <dhollis@davehollis.com>
+
+	* libgda.spec.in: fixed normal and build requirements.
+
 2003-06-03  Steve Fosdick  <gnomedb@pelvoux.demon.co.uk>
 
 	* Oracle Provider - fixed a statement handle leak which caused
