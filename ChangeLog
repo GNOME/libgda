@@ -1,3 +1,8 @@
+2002-02-20  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* libgda/gda-connection.h:
+	* idl/GNOME_Database.idl: added SCHEMA_AGGREGATES.
+
 2002-02-18  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* idl/GNOME_Database.idl: added more properties to the

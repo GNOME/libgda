@@ -197,6 +197,7 @@ module GNOME {
 
 			/* schemas */
 			enum Schema {
+				SCHEMA_AGGREGATES,
 				SCHEMA_INDEXES,
 				SCHEMA_PROCEDURES,
 				SCHEMA_TABLES,
