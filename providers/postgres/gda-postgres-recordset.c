@@ -427,9 +427,11 @@ gda_postgres_recordset_update_row (GdaDataModel *model, const GdaRow *row)
 {
 	GdaPostgresRecordset *recset = (GdaPostgresRecordset *) model;
 	GdaPostgresRecordsetPrivate *priv_data;
-	gint colnum, uk, nuk;
+	gint colnum, rownum, uk, nuk;
 	PGresult *pg_res, *pg_upd_res;
 	gchar *query, *query_where, *query_set, *tmp;
+	gchar *oldval, *newval;
+	const gchar *column_name;
 	GdaPostgresConnectionData *cnc_priv_data;
 	PGconn *pg_conn;
 	gboolean status = FALSE;
@@ -457,6 +459,8 @@ gda_postgres_recordset_update_row (GdaDataModel *model, const GdaRow *row)
 		return FALSE;
 	}
 
+	rownum = gda_row_get_number ((GdaRow *) row);
+
 	query_where = g_strdup ("WHERE TRUE ");
 	query_set = g_strdup ("SET ");
 
@@ -465,9 +469,15 @@ gda_postgres_recordset_update_row (GdaDataModel *model, const GdaRow *row)
 	     colnum++) 
 	{
 		GdaFieldAttributes *attrs = gda_data_model_describe_column (model, colnum);
-		const gchar *column_name = PQfname (pg_res, colnum);
-		gchar *newval = gda_value_stringify (gda_row_get_value ((GdaRow *) row, colnum));
-		const gchar *oldval = PQgetvalue (pg_res, gda_row_get_number ((GdaRow *) row), colnum);
+		column_name = PQfname (pg_res, colnum);
+		newval = gda_value_stringify (gda_row_get_value ((GdaRow *) row, colnum));
+
+		/* for data from mysql result we can retrieve original values to avoid
+		   unique columns to be updated */
+		if (rownum < priv_data->nrows)
+			oldval = PQgetvalue (pg_res, gda_row_get_number ((GdaRow *) row), colnum);
+		else
+			oldval = newval;
 
 		/* unique column: we won't update it, but we will use it as
 		   an index */

@@ -1,3 +1,9 @@
+2005-01-25  Bas Driessen <bas.driessen@xobas.com>
+
+	* providers/postgres/gda-postgres-recordset.c:
+	(gda_postgres_recordset_update_row):
+	Fixed updating of an appended row.
+	
 2005-01-24  Bas Driessen <bas.driessen@xobas.com>
 
 	* providers/mysql/gda-mysql-provider.c
