@@ -1,5 +1,28 @@
 2002-08-16  Holger Thon <holger.thon@gnome-db.org>
 
+	* libgda/providers/ibmdb2/core{1,2}.log:
+	* libgda/providers/ibmdb2/TODO:
+	added corelogs, added SIGSEGV problem to TODO to remember
+	* libgda/providers/ibmdb2/TODO:
+	todo added
+
+	* libgda/gda-client.c:
+	* libgda/gda-data-model.c:
+	* libgda/gda-select.c:
+	* libgda/gda-server-provider.c:
+	* libgda/gda-xml-connection.c:
+	* libgda/gda-xml-database.c:
+	* libgda/gda-xql-delete.c:
+	* libgda/gda-xql-dml.c:
+	* libgda/gda-xml-document.c:
+	* libgda/gda-xql-insert.c:
+	* libgda/gda-xql-select.c:
+	* gda-xql-update.c:
+	added string.h include
+	
+	* libgda/gda-value.c:
+	added libgda/gda-util.h include
+	
 	* providers/mysql/gda-mysql-provider.c:
 	* providers/mysql/gda-mysql-recordset.c: added string.h to includes
 	* providers/mysql/libmain.c: fixed compile warnings
