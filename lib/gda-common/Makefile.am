@@ -1,8 +1,7 @@
-lib_LTLIBRARIES = libgda-common.la
+lib_LTLIBRARIES = libgda-common-2.la
 
 INCLUDES = \
 	$(GDA_CLIENT_CFLAGS) \
-	$(GDA_PROVIDER_CFLAGS) \
 	-I.
 
 BUILT_SOURCES = GDA-skels.c GDA-stubs.c GDA-common.c GDA.h
@@ -40,7 +39,7 @@ gda_common_headers = \
 	gda-common.h \
 	GDA.h
 
-libgda_common_la_SOURCES = \
+libgda_common_2_la_SOURCES = \
 	$(gda_common_headers) \
 	gda-common-private.h \
 	GDA-common.c \
@@ -63,11 +62,10 @@ libgda_common_la_SOURCES = \
 	gda-xml-list-item.c \
 	gda-xml-util.c
 
-libgda_common_la_LIBADD=\
+libgda_common_2_la_LIBADD=\
 	$(GDA_CLIENT_LIBS) 
-#	$(top_builddir)/lib/gda-common/gda-xml-query/libxmlquery.a
 
-gdaincludedir=$(includedir)/gda
+gdaincludedir=$(includedir)/gnome/2/gda
 gdainclude_HEADERS=$(gda_common_headers)
 
 dist-hook:

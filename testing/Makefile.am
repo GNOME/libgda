@@ -26,8 +26,8 @@ gda_tds_test_SOURCES = \
 	gda-tds-test.c
 
 gda_test_LDADD = \
-	$(top_builddir)/lib/gda-common/libgda-common.la \
-	$(top_builddir)/lib/gda-client/libgda-client.la \
+	$(top_builddir)/lib/gda-common/libgda-common-2.la \
+	$(top_builddir)/lib/gda-client/libgda-client-2.la \
 	$(GDA_CLIENT_LIBS)
 
 gda_primebase_test_LDADD = $(gda_test_LDADD)

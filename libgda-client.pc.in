@@ -1,0 +1,13 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+includedir=@includedir@
+idldir=@datadir@/idl
+
+Name: libgda-client
+Description: libgda-client
+Requires: glib-2.0 ORBit-2.0 bonobo-activation-2.0 libxml-2.0
+Version: @VERSION@
+Libs: -L${libdir} -lgda-common-2 -lgda-client-2
+Cflags: -I${includedir}/gnome/2/gda
+

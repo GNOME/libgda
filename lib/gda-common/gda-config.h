@@ -1,4 +1,4 @@
-/* GNOME DB Common Library
+/* GDA Common Library
  * Copyright (C) 2000 Rodrigo Moya
  *
  * This Library is free software; you can redistribute it and/or
@@ -20,7 +20,6 @@
 #if !defined(__gda_config_h__)
 #  define __gda_config_h__
 
-#include <glib.h>
 #include <gda-common-defs.h>
 
 G_BEGIN_DECLS
@@ -34,27 +33,27 @@ G_BEGIN_DECLS
 /*
  * Configuration system access
  */
-gchar *gda_config_get_string (const gchar * path);
-gint gda_config_get_int (const gchar * path);
-gdouble gda_config_get_float (const gchar * path);
+gchar   *gda_config_get_string (const gchar * path);
+gint     gda_config_get_int (const gchar * path);
+gdouble  gda_config_get_float (const gchar * path);
 gboolean gda_config_get_boolean (const gchar * path);
-void gda_config_set_string (const gchar * path,
-			    const gchar * new_value);
-void gda_config_set_int (const gchar * path, gint new_value);
-void gda_config_set_float (const gchar * path, gdouble new_value);
-void gda_config_set_boolean (const gchar * path, gboolean new_value);
+void     gda_config_set_string (const gchar * path,
+		  	    const gchar * new_value);
+void     gda_config_set_int (const gchar * path, gint new_value);
+void     gda_config_set_float (const gchar * path, gdouble new_value);
+void     gda_config_set_boolean (const gchar * path, gboolean new_value);
 
-void gda_config_remove_section (const gchar * path);
-void gda_config_remove_key (const gchar * path);
+void     gda_config_remove_section (const gchar * path);
+void     gda_config_remove_key (const gchar * path);
 
 gboolean gda_config_has_section (const gchar * path);
 gboolean gda_config_has_key (const gchar * path);
-void gda_config_commit (void);
-void gda_config_rollback (void);
+void     gda_config_commit (void);
+void     gda_config_rollback (void);
 
-GList *gda_config_list_sections (const gchar * path);
-GList *gda_config_list_keys (const gchar * path);
-void gda_config_free_list (GList * list);
+GList   *gda_config_list_sections (const gchar * path);
+GList   *gda_config_list_keys (const gchar * path);
+void     gda_config_free_list (GList * list);
 
 /*
  * Providers
@@ -83,10 +82,10 @@ typedef struct _GdaProvider {
 
 GdaProvider *gda_provider_new (void);
 GdaProvider *gda_provider_copy (GdaProvider * provider);
-void gda_provider_free (GdaProvider * provider);
+void         gda_provider_free (GdaProvider * provider);
 
-GList *gda_provider_list (void);
-void gda_provider_free_list (GList * list);
+GList       *gda_provider_list (void);
+void         gda_provider_free_list (GList * list);
 GdaProvider *gda_provider_find_by_name (const gchar * name);
 
 /*
@@ -114,24 +113,24 @@ typedef struct _GdaDsn {
 #define GDA_DSN_IS_GLOBAL(dsn)   ((dsn) ? (dsn)->is_global : FALSE)
 
 #define  gda_dsn_new() g_new0(GdaDsn, 1)
-void gda_dsn_free (GdaDsn * dsn);
-GdaDsn *gda_dsn_copy (GdaDsn * dsn);
+void     gda_dsn_free (GdaDsn * dsn);
+GdaDsn  *gda_dsn_copy (GdaDsn * dsn);
 
-GdaDsn *gda_dsn_find_by_name (const gchar * dsn_name);
-void gda_dsn_set_name (GdaDsn * dsn, const gchar * name);
-void gda_dsn_set_provider (GdaDsn * dsn, const gchar * provider);
-void gda_dsn_set_dsn (GdaDsn * dsn, const gchar * dsn_str);
-void gda_dsn_set_description (GdaDsn * dsn,
+GdaDsn  *gda_dsn_find_by_name (const gchar * dsn_name);
+void     gda_dsn_set_name (GdaDsn * dsn, const gchar * name);
+void     gda_dsn_set_provider (GdaDsn * dsn, const gchar * provider);
+void     gda_dsn_set_dsn (GdaDsn * dsn, const gchar * dsn_str);
+void     gda_dsn_set_description (GdaDsn * dsn,
 			      const gchar * description);
-void gda_dsn_set_username (GdaDsn * dsn, const gchar * username);
-void gda_dsn_set_config (GdaDsn * dsn, const gchar * config);
-void gda_dsn_set_global (GdaDsn * dsn, gboolean is_global);
+void     gda_dsn_set_username (GdaDsn * dsn, const gchar * username);
+void     gda_dsn_set_config (GdaDsn * dsn, const gchar * config);
+void     gda_dsn_set_global (GdaDsn * dsn, gboolean is_global);
 
 gboolean gda_dsn_save (GdaDsn * dsn);
 gboolean gda_dsn_remove (GdaDsn * dsn);
 
-GList *gda_dsn_list (void);
-void gda_dsn_free_list (GList * list);
+GList   *gda_dsn_list (void);
+void     gda_dsn_free_list (GList * list);
 
 /*
  * Private functions

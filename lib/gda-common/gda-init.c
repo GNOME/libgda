@@ -17,29 +17,9 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include "config.h"
-
-/* FIXME: This should really have it's own header file */
+#include "gda-common-private.h"
 #include "gda-common.h"
-
-#include <gtk/gtk.h>
-#include <liboaf/liboaf.h>
-#include <gda-log.h>
-
-#ifdef ENABLE_NLS
-#  include <libintl.h>
-#  define _(String) gettext (String)
-#  define N_(String) (String)
-#else
-/* Stubs that do something close enough.  */
-#  define textdomain(String)
-#  define gettext(String) (String)
-#  define dgettext(Domain,Message) (Message)
-#  define dcgettext(Domain,Message,Type) (Message)
-#  define bindtextdomain(Domain,Directory)
-#  define _(String) (String)
-#  define N_(String) (String)
-#endif
+#include <bonobo-activation/bonobo-activation.h>
 
 /**
  * gda_init
@@ -56,10 +36,10 @@ gda_init (const gchar * app_id, const gchar * version, gint nargs,
 		return;
 	}
 
-	gtk_type_init ();
+	g_type_init ();
 	g_set_prgname (app_id);
 
-	oaf_init (nargs, args);
+	bonobo_activation_init (nargs, args);
 	if (!bonobo_init (gda_corba_get_orb (), NULL, NULL))
 		g_error (_("Could not initialize Bonobo"));
 

@@ -19,7 +19,6 @@
  */
 
 #include "gda-common-private.h"
-#include "config.h"
 #include "gda-error.h"
 #include "GDA.h"
 
@@ -31,13 +30,13 @@ enum {
 static gint gda_error_signals[GDA_ERROR_LAST_SIGNAL] = { 0, };
 
 static void gda_error_class_init (GdaErrorClass * klass);
-static void gda_error_init (GdaError * error);
-static void gda_error_destroy (GtkObject * object);
+static void gda_error_init (GdaError * error, GdaErrorClass *klass);
+static void gda_error_finalize (GObject * object);
 
-guint
+GType
 gda_error_get_type (void)
 {
-	static guint type = 0;
+	static GType type = 0;
 
 	if (!type) {
 		GtkTypeInfo info = {
@@ -64,7 +63,7 @@ gda_error_class_init (GdaErrorClass * klass)
 }
 
 static void
-gda_error_init (GdaError * error)
+gda_error_init (GdaError * error, GdaErrorClass *klass)
 {
 	g_return_if_fail (GDA_IS_ERROR (error));
 
@@ -91,7 +90,7 @@ gda_error_new (void)
 {
 	GdaError *error;
 
-	error = GDA_ERROR (gtk_type_new (gda_error_get_type ()));
+	error = GDA_ERROR (g_object_new (gda_error_get_type ()));
 	return error;
 }
 
@@ -283,9 +282,9 @@ gda_error_list_to_corba_seq (GList * error_list)
 }
 
 static void
-gda_error_destroy (GtkObject * object)
+gda_error_finalize (GObject * object)
 {
-	GtkObjectClass *parent_class;
+	GObjectClass *parent_class;
 	GdaError *error = (GdaError *) object;
 
 	g_return_if_fail (GDA_IS_ERROR (error));
@@ -305,8 +304,9 @@ gda_error_destroy (GtkObject * object)
 	if (error->realcommand)
 		g_free (error->realcommand);
 
-	parent_class = gtk_type_class (gtk_object_get_type ());
-	parent_class->destroy (object);
+	parent_class = g_type_peek_parent_class (g_object_get_type ());
+	if (parent_class && parent_class->finalize)
+		parent_class->finalize (object);
 }
 
 /**
@@ -319,7 +319,7 @@ gda_error_destroy (GtkObject * object)
 void
 gda_error_free (GdaError * error)
 {
-	gtk_object_destroy (GTK_OBJECT (error));
+	g_object_unref (G_OBJECT (error));
 }
 
 /**

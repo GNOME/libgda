@@ -18,9 +18,8 @@
  */
 
 #include "config.h"
-
 #include <gconf/gconf.h>
-#include <liboaf/liboaf.h>
+#include <bonobo-activation/bonobo-activation.h>
 #include "gda-config.h"
 #include "gda-corba.h"
 

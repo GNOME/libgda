@@ -11,8 +11,8 @@ INCLUDES = \
 gda_mysql_srv_SOURCES = main-mysql.c
 gda_mysql_srv_LDADD = \
 	$(GDA_PROVIDER_LIBS) \
-	$(top_builddir)/lib/gda-common/libgda-common.la \
-	$(top_builddir)/lib/gda-server/libgda-server.la \
+	$(top_builddir)/lib/gda-common/libgda-common-2.la \
+	$(top_builddir)/lib/gda-server/libgda-server-2.la \
 	$(top_builddir)/providers/gda-mysql-server/libgda-mysql.a \
 	$(MYSQL_LIBS)
 

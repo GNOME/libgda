@@ -12,8 +12,8 @@ gda_sybase_srv_SOURCES = main-sybase.c
 gda_sybase_srv_LDADD = \
 	$(SYBASE_LIBS) \
 	$(GDA_PROVIDER_LIBS) \
-	$(top_builddir)/lib/gda-common/libgda-common.la \
-	$(top_builddir)/lib/gda-server/libgda-server.la \
+	$(top_builddir)/lib/gda-common/libgda-common-2.la \
+	$(top_builddir)/lib/gda-server/libgda-server-2.la \
 	$(top_builddir)/providers/gda-sybase-server/libgda-sybase.a 
 
 libgda_sybase_a_SOURCES = \

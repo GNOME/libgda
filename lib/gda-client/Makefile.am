@@ -1,4 +1,4 @@
-lib_LTLIBRARIES = libgda-client.la
+lib_LTLIBRARIES = libgda-client-2.la
 
 INCLUDES = \
 	$(GDA_CLIENT_CFLAGS) \
@@ -17,7 +17,7 @@ gda_client_headers = \
 	gda-value.h \
 	gda-client.h 
 
-libgda_client_la_SOURCES = \
+libgda_client_2_la_SOURCES = \
 	$(gda_client_headers) \
 	gda-batch.c \
 	gda-command.c \
@@ -26,8 +26,8 @@ libgda_client_la_SOURCES = \
 	gda-export.c \
 	gda-field.c \
 	gda-recordset.c 
-libgda_client_la_LIBADD =
+libgda_client_2_la_LIBADD =
 
-gdaincludedir=$(includedir)/gda
+gdaincludedir=$(includedir)/gnome/2/gda
 gdainclude_HEADERS=$(gda_client_headers)
 

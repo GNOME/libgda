@@ -20,19 +20,16 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include <gtk/gtksignal.h>
 #include "gda-listener.h"
 
-struct _GdaListenerPrivate
-{
+struct _GdaListenerPrivate {
 };
 
 static void gda_listener_class_init (GdaListenerClass * klass);
-static void gda_listener_init (GdaListener * listener);
-static void gda_listener_destroy (GtkObject * object);
+static void gda_listener_init       (GdaListener * listener, GdaListenerClass *klass);
+static void gda_listener_destroy    (GObject * object);
 
-enum
-{
+enum {
 	NOTIFY_ACTION,
 	LAST_SIGNAL
 };

@@ -1,108 +1,67 @@
+AC_PREREQ(2.52)
 AC_INIT(lib/gda-common/gda-common.h)
 
 AM_CONFIG_HEADER(config.h)
-AM_INIT_AUTOMAKE(libgda,0.2.90)
+AM_INIT_AUTOMAKE(libgda2,0.3.1)
+
 AM_MAINTAINER_MODE
-AM_ACLOCAL_INCLUDE(macros)
+
+if test -z "$CERTIFIED_GNOMIE";
+then
+	echo "You need a GNOME 2 environment to compile libgda HEAD"
+	exit 1
+fi
+
 AM_PROG_XML_I18N_TOOLS
 
-dnl
+GNOME_COMMON_INIT
+GNOME_PLATFORM_GNOME_2(yes, force)
+
+dnl ******************************
 dnl Checks for programs
-dnl
+dnl ******************************
 AC_ISC_POSIX
 AC_PROG_CC
 AC_PROG_CXX
 AC_STDC_HEADERS
-
-AM_PROG_XML_I18N_TOOLS
 AM_PROG_LIBTOOL
 
-dnl
+ORBIT_IDL="`$PKG_CONFIG --variable=orbit_idl ORBit-2.0`"
+AC_SUBST(ORBIT_IDL)
+
+dnl ******************************
+dnl Translations
+dnl ******************************
+ALL_LINGUAS="ca da de el es fi fr ga gl hu it ja nl no pl pt_BR ru sk sl sv uk"
+AM_GLIB_GNU_GETTEXT
+
+dnl ******************************
 dnl Checks for libraries
-dnl
+dnl ******************************
+AC_SUBST(CFLAGS)
+AC_SUBST(CPPFLAGS)
+AC_SUBST(LDFLAGS)
 
-AM_PATH_GLIB(1.2.0,,AC_MSG_ERROR(glib test failed),gthread)
-AM_PATH_GTK(1.0.0,,AC_MSG_ERROR(gtk+ test failed))
-gda_base_libs="$GLIB_LIBS $GTK_LIBS"
-gda_base_cflags="$GLIB_CFLAGS $GTK_CFLAGS"
+PKG_CHECK_MODULES(GDA_CLIENT, ORBit-2.0 >= 2.3.91 glib-2.0 >= 1.3.1 gobject-2.0 >= 1.3.1 gthread-2.0 >= 1.3.1 bonobo-activation-2.0 >= 0.7.0 libxslt-2.0)
+AC_SUBST(GDA_CLIENT_CFLAGS)
+AC_SUBST(GDA_CLIENT_LIBS)
 
-dnl Check for ORBit
-AC_MSG_CHECKING(for ORBit)
-if orbit-config --libs > /dev/null 2>&1
-then
-	AC_MSG_RESULT(found)
-	ORBIT_IDL=`which orbit-idl`
-else
-	AC_MSG_ERROR(not found)
-fi
-
-dnl Check for GConf
-use_gconf=false
-gconfminver="0.9"
-AC_MSG_CHECKING(for GConf >= $gconfminver)
-if gconf-config --libs gconf > /dev/null 2>&1
-then
-	gconfver=`gconf-config --version | awk 'BEGIN {FS="."}{printf "%d", $1*1000+$2}'`
-	if test "$gconfver" -ge 9
-	then
-		AC_MSG_RESULT(found)
-		gda_gconf_libs=`gconf-config --libs gconf`
-		gda_gconf_cflags=`gconf-config --cflags gconf`
-
-		use_gconf=true
-	fi
-fi
-if test -z $use_gconf
-then
-	AC_MSG_ERROR([
-*** GConf $gconfminver or later is necessary in order to build libgda.])
-fi
-
-# Bonobo checks
-AM_PATH_BONOBO(1.0,,AC_MSG_ERROR(Bonobo >= 1.0 is needed to compile GNOME-DB))
-gda_bonobo_cflags=`gnome-config --cflags bonobo`
-gda_bonobo_libs=`gnome-config --libs bonobo`
-
-dnl Check for libxml
-AC_MSG_CHECKING(for libxml)
-if xml-config --libs > /dev/null 2>&1
-then
-	gda_xml_libs=`xml-config --libs`
-	gda_xml_cflags=`xml-config --cflags`
-	AC_MSG_RESULT(found)
-else
-	AC_MSG_ERROR(not found)
-fi
-
-dnl Check for libxslt
-AC_MSG_CHECKING(for libxslt)
-if xslt-config --libs > /dev/null 2>&1
-then
-	AC_MSG_RESULT(found)
-	gda_xslt_libs=`xslt-config --libs`
-	gda_xslt_cflags=`xslt-config --cflags`
-else
-	AC_MSG_WARN(not found)
-fi
-
-dnl
-dnl checking for GOB (Gtk Object Builder)
-dnl
-GOB_CHECK(1.0.5)
+PKG_CHECK_MODULES(GDA_PROVIDER, ORBit-2.0 >= 2.3.91 glib-2.0 >= 1.3.1 gobject-2.0 >= 1.3.1 gthread-2.0 >= 1.3.1 bonobo-activation-2.0 >= 0.7.0 libxslt-2.0)
+AC_SUBST(GDA_PROVIDER_CFLAGS)
+AC_SUBST(GDA_PROVIDER_LIBS)
 
 dnl ******************************
 dnl gtk-doc
 dnl ******************************
-
 AC_CHECK_PROG(GTKDOC, gtkdoc-mkdb, true, false)
 AM_CONDITIONAL(HAVE_GTK_DOC, $GTKDOC)
 AC_SUBST(HAVE_GTK_DOC)
 
 AM_CONDITIONAL(ENABLE_GTK_DOC, $GTKDOC)
 
-dnl
+dnl ******************************
 dnl Checks for providers
-dnl
+dnl ******************************
 
 dnl Test for ODBC
 AC_ARG_WITH(odbc,
@@ -238,43 +197,6 @@ fi
 
 AM_CONDITIONAL(POSTGRES, test x$postgresdir != x)
 
-dnl Check for Primebase
-AC_ARG_WITH(primebase,
-[  --with-primebase=<directory>	use primebase sdk in <directory>],[
-if test $withval != yes
-then
-	dir=$withval
-else
-	dir="/opt/primebase/sdk"
-fi
-primebasedir=""
-AC_MSG_CHECKING(for PrimeBase SDK >= 4.0 Pre-final)
-for d in $dir /opt/primebase /usr/local/primebase
-do
-	if test -e ${d}/lib/libpbvm.so
-	then
-		for i in sdk include
-		do
-			if test -e ${d}/${i}/pbapi.h
-			then
-				primebasedir=${d}
-				PRIMEBASE_LIBS="-lm -lnsl -L${d}/lib -lpbvm"
-				PRIMEBASE_CFLAGS="-I${d}/${i}"
-				AC_DEFINE(HAVE_PRIMEBASE)
-				break
-			fi
-		done
-	fi
-done
-if test x$primebasedir != x
-then
-	AC_MSG_RESULT(found PrimeBase SDK in $primebasedir)
-else
-	AC_MSG_RESULT(not found)
-fi
-])
-AM_CONDITIONAL(PRIMEBASE, test x$primebasedir != x)
-
 dnl Test for freetds provider
 AC_ARG_WITH(tds,
 [  --with-tds=<directory>	use freetds library in <directory>],[
@@ -396,55 +318,6 @@ else
        enable_sybase_debug=no
 fi
 
-dnl test for LDAP
-AC_ARG_WITH(ldap,
-[  --with-ldap=<directory>	use LDAP backend in <directory>],[
-if test $withval != yes
-then
-	dir=$withval
-else
-	dir="/usr/local"
-fi
-AC_MSG_CHECKING(for LDAP files)
-ldapdir=""
-for d in $dir /usr /usr/local/ldap /opt/ldap /opt/packages/ldap /usr/local/openldap /opt/openldap /opt/packages/openldap
-do
-	if test -f $d/lib/libldap.so
-	then
-		AC_MSG_RESULT(found LDAP in $d)
-		LDAP_LIBS="-lldap -llber"
-		ldapdir=$d
-		break
-	fi
-	if test -f $d/lib/libopenldap.so
-	then
-		AC_MSG_RESULT(found OpenLDAP in $d)
-		LDAP_LIBS="-lopenldap -llber-openldap"
-		ldapdir=$d
-		break
-	fi
-done
-if test x$ldapdir = x
-then
-	AC_MSG_WARN(LDAP backend not used)
-else
-	if test -f ${ldapdir}/include/ldap.h
-	then
-		LDAP_CFLAGS="-I${ldapdir}/include"
-	elif test -f ${ldapdir}/include/openldap/ldap.h
-	then
-		LDAP_CFLAGS="-I${ldapdir}/include/openldap"
-	else
-		AC_MSG_WARN(LDAP include files not found. backend not used)
-		ldapdir=""
-	fi
-	AC_DEFINE(HAVE_LDAP)
-	LDAP_LIBS="-L${ldapdir}/lib ${LDAP_LIBS}"
-fi
-])
-
-AM_CONDITIONAL(LDAP, test x$ldapdir != x)
-
 dnl test for ORACLE
 AC_ARG_WITH(oracle,
 [  --with-oracle=<directory>	use ORACLE backend in <directoty>],[
@@ -510,92 +383,12 @@ fi
 
 AM_CONDITIONAL(INTERBASE, test x$interbasedir != x)
 
-dnl test for MDB libraries
-AC_ARG_WITH(mdb,
-[  --with-mdb=<directory>	use MDB libraries in <directoty>],[
-if test $withval != yes
-then
-	dir=$withval
-else
-	dir="/usr/local"
-fi
-AC_MSG_CHECKING(for MDB installation)
-for d in $dir /usr/local/mdbtools /usr/local /usr /opt/mdbtools
-do
-	if test -f $d/include/mdbtools.h
-	then
-		AC_MSG_RESULT(found MDB in $d)
-		mdbdir=$d
-		break
-	fi
-done
-if test x$mdbdir = x
-then
-	AC_MSG_WARN(MDB libraries not used)
-else
-	AC_DEFINE(HAVE_MDB)
-	MDB_CFLAGS="-I${mdbdir}/include"
-	MDB_LIBS="-L{mdbdir}/lib -lmdb"
-fi
-])
-
-AM_CONDITIONAL(MDB, test x$mdbdir != x)
-
-dnl test for Camel
-AC_ARG_WITH(camel,
-[  --with-camel=<directory>	use Mail backend in <directory>],[
-if test $withval != yes
-then
-	dir=$withval
-else
-	dir="/usr/local"
-fi
-AC_MSG_CHECKING(for Camel files)
-cameldir=""
-for d in $dir /usr /usr/local
-do
-	if test -f $d/bin/evolution
-	then
-		AC_MSG_RESULT(found Camel in $d)
-		cameldir=$d
-		break
-	fi
-done
-if test x$cameldir = x
-then
-	AC_MSG_WARN(Mail backend not used)
-else
-	CAMEL_CFLAGS="-I$d/include"
-	CAMEL_LIBS="-L${cameldir}/lib -lcamel"
-	AC_DEFINE(HAVE_CAMEL)
-fi
-])
-
-AM_CONDITIONAL(MAIL, test x$cameldir != x)
-
-dnl
-dnl Translations
-dnl
-ALL_LINGUAS="ca da de el es fi fr ga gl hu it ja nl no pl pt_BR ru sk sl sv uk"
-
-AM_GNU_GETTEXT
-
-dnl
+dnl ******************************
 dnl Variables
-dnl
-GDA_CLIENT_LIBS="$gda_base_libs $gda_xml_libs $gda_gconf_libs $gda_bonobo_libs"
-GDA_CLIENT_CFLAGS="$gda_base_cflags $gda_xml_cflags $gda_gconf_cflags $gda_bonobo_cflags"
-GDA_PROVIDER_LIBS="$gda_base_libs $gda_xml_libs $gda_gconf_libs $gda_bonobo_libs"
-GDA_PROVIDER_CFLAGS="$gda_base_cflags $gda_xml_cflags $gda_gconf_cflags $gda_bonobo_cflags"
-XML_LIBS="$gda_xslt_libs"
-XML_CFLAGS="$gda_xslt_cflags"
+dnl ******************************
 IDL_FLAGS=`gnome-config --cflags idl`
 
 AC_SUBST(IDL_FLAGS)
-AC_SUBST(GDA_CLIENT_LIBS)
-AC_SUBST(GDA_CLIENT_CFLAGS)
-AC_SUBST(GDA_PROVIDER_LIBS)
-AC_SUBST(GDA_PROVIDER_CFLAGS)
 AC_SUBST(ODBC_LIBS)
 AC_SUBST(ODBC_CFLAGS)
 AC_SUBST(MYSQL_LIBS)
@@ -623,21 +416,17 @@ AC_SUBST(XML_CFLAGS)
 
 GDA_oafdir=`oaf-config --prefix`/share/oaf
 
-AC_SUBST(ORBIT_IDL)
 AC_SUBST(GDA_oafdir)
 
 AC_OUTPUT([
 Makefile
 libgda.spec
-macros/Makefile
+libgda-client.pc
+libgda-server.pc
 po/Makefile.in
-intl/Makefile
 idl/Makefile
 lib/Makefile
-dnl lib/gda-xml/Makefile
 lib/gda-common/Makefile
-dnl lib/gda-common/gda-xml-query/Makefile
-dnl lib/gda-common/gda-xml-query/testing/Makefile
 lib/gda-client/Makefile
 lib/gda-server/Makefile
 bindings/Makefile
@@ -656,7 +445,6 @@ providers/gda-interbase-server/Makefile
 providers/gda-mdb-server/Makefile
 providers/gda-mail-server/Makefile
 tools/Makefile
-tools/gda-config
 tools/gda-buildserver
 tools/gda-buildclient
 tools/templates/Makefile
@@ -673,4 +461,4 @@ doc/C/reference/libgda-common/Makefile
 doc/C/reference/libgda-client/Makefile
 doc/pt_BR/Makefile
 stamp.h
-],[sed -e "/POTFILES =/r po/POTFILES" po/Makefile.in > po/Makefile])
+])

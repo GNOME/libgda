@@ -10,8 +10,8 @@ INCLUDES = \
 gda_default_srv_SOURCES = main-default.c
 gda_default_srv_LDADD = \
 	$(GDA_PROVIDER_LIBS) \
-	$(top_builddir)/lib/gda-common/libgda-common.la \
-	$(top_builddir)/lib/gda-server/libgda-server.la \
+	$(top_builddir)/lib/gda-common/libgda-common-2.la \
+	$(top_builddir)/lib/gda-server/libgda-server-2.la \
 	$(top_builddir)/providers/gda-default-server/libgda-default.a \
 	$(top_builddir)/providers/gda-default-server/libsqlite.a \
 	-lgdbm

@@ -1,9 +1,7 @@
-lib_LTLIBRARIES = libgda-server.la
+lib_LTLIBRARIES = libgda-server-2.la
 
 INCLUDES = \
-	$(GDA_CLIENT_CFLAGS) \
 	$(GDA_PROVIDER_CFLAGS) \
-	-I. \
 	-I$(top_builddir)/lib/gda-common
 
 gda_server_headers = \
@@ -14,7 +12,7 @@ gda_server_headers = \
 	gda-server-recordset.h \
 	gda-server.h 
 
-libgda_server_la_SOURCES = \
+libgda_server_2_la_SOURCES = \
 	$(gda_server_headers) \
 	gda-server-private.h \
 	gda-server-command.c \
@@ -26,10 +24,8 @@ libgda_server_la_SOURCES = \
 	gda-builtin-res.c \
 	gda-builtin-res.h \
 	gda-server.c 
-libgda_server_la_LIBADD = -lpopt
+libgda_server_2_la_LIBADD = -lpopt
 
-gdaincludedir=$(includedir)/gda
+gdaincludedir=$(includedir)/gnome/2/gda
 gdainclude_HEADERS=$(gda_server_headers)
 
-dist-hook:
-	cd $(distdir); rm -f $(BUILT_SOURCES)

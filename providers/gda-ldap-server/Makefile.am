@@ -11,8 +11,8 @@ INCLUDES = \
 gda_ldap_srv_SOURCES = main-ldap.c
 gda_ldap_srv_LDADD = \
 	$(GDA_PROVIDER_LIBS) \
-	$(top_builddir)/lib/gda-common/libgda-common.la \
-	$(top_builddir)/lib/gda-server/libgda-server.la \
+	$(top_builddir)/lib/gda-common/libgda-common-2.la \
+	$(top_builddir)/lib/gda-server/libgda-server-2.la \
 	$(top_builddir)/providers/gda-ldap-server/libgda-ldap.a \
 	$(LDAP_LIBS)
 

@@ -21,10 +21,6 @@
 #if !defined(__gda_error_h__)
 #  define __gda_error_h__
 
-#include <glib.h>
-#include <gtk/gtkobject.h>
-#include <orb/orb.h>
-#include <GDA.h>
 #include <gda-common-defs.h>
 
 G_BEGIN_DECLS
@@ -43,7 +39,7 @@ typedef struct _GdaErrorClass GdaErrorClass;
 #define GDA_IS_ERROR_CLASS(klass) (GTK_CHECK_CLASS_TYPE((klass), GDA_TYPE_ERROR))
 
 struct _GdaError {
-	GtkObject object;
+	GObject object;
 
 	gchar *description;
 	glong number;
@@ -56,10 +52,10 @@ struct _GdaError {
 };
 
 struct _GdaErrorClass {
-	GtkObjectClass parent_class;
+	GObjectClass parent_class;
 };
 
-guint gda_error_get_type (void);
+GType gda_error_get_type (void);
 
 GdaError *gda_error_new (void);
 GList *gda_error_list_from_exception (CORBA_Environment * ev);

@@ -20,20 +20,8 @@
 #if !defined(__gda_common_defs_h__)
 #  define __gda_common_defs_h__
 
-#ifdef __cplusplus
-#  if !defined(G_BEGIN_DECLS)
-#    define G_BEGIN_DECLS extern "C" {
-#  endif
-#  if !defined(G_END_DECLS)
-#    define G_END_DECLS }
-#  endif
-#else
-#  if !defined(G_BEGIN_DECLS)
-#    define G_BEGIN_DECLS
-#  endif
-#  if !defined(G_END_DECLS)
-#    define G_END_DECLS
-#  endif
-#endif
+#include <glib/gmacros.h>
+#include <glib-object.h>
+#include <GDA.h>
 
 #endif

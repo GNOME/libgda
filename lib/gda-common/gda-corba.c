@@ -17,23 +17,8 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include "config.h"
+#include "gda-common-private.h"
 #include "gda-corba.h"
-
-#ifdef ENABLE_NLS
-#  include <libintl.h>
-#  define _(String) gettext (String)
-#  define N_(String) (String)
-#else
-/* Stubs that do something close enough. */
-#  define textdomain(String)
-#  define gettext(String) (String)
-#  define dgettext(Domain,Message) (Message)
-#  define dcgettext(Domain,Message,Type) (Message)
-#  define bindtextdomain(Domain,Directory)
-#  define _(String) (String)
-#  define N_(String) (String)
-#endif
 
 /**
  * gda_corba_get_orb
@@ -45,7 +30,7 @@
 CORBA_ORB
 gda_corba_get_orb (void)
 {
-	return oaf_orb_get ();
+	return bonobo_activation_orb_get ();
 }
 
 /**
@@ -59,7 +44,7 @@ CORBA_Object
 gda_corba_get_name_service (void)
 {
 	CORBA_Environment ev;
-	return oaf_name_service_get (&ev);
+	return bonobo_activation_name_service_get (&ev);
 }
 
 /**
@@ -156,18 +141,19 @@ gda_corba_get_oaf_attribute (CORBA_sequence_OAF_Property props,
 }
 
 /**
- * gda_corba_oafiid_is_active
+ * gda_corba_id_is_active
+ * @id: component ID
  */
 gboolean
-gda_corba_oafiid_is_active (const gchar * oafiid)
+gda_corba_id_is_active (const gchar *id)
 {
 	OAF_ServerInfoList *servlist;
 	CORBA_Environment ev;
 	gchar *query;
 
-	g_return_val_if_fail (oafiid != NULL, FALSE);
+	g_return_val_if_fail (id != NULL, FALSE);
 
-	query = g_strdup_printf ("iid = '%s' AND _active = 'true'", oafiid);
+	query = g_strdup_printf ("iid = '%s' AND _active = 'true'", id);
 	CORBA_exception_init (&ev);
 	servlist = oaf_query (query, NULL, &ev);
 	g_free ((gpointer) query);
