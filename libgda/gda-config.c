@@ -27,7 +27,7 @@
 #include <bonobo-activation/bonobo-activation-server-info.h>
 #include <bonobo/bonobo-i18n.h>
 #include <bonobo/bonobo-exception.h>
-#include <gconf/gconf.h>
+#include <gconf/gconf-client.h>
 #include <string.h>
 
 #define GDA_CONFIG_SECTION_DATASOURCES       "/apps/libgda/Datasources"
@@ -39,7 +39,7 @@ static GList *activation_property_to_list (Bonobo_ActivationProperty *prop);
 static GdaParameter *activation_property_to_parameter (Bonobo_ActivationProperty *prop);
 static gchar *activation_property_to_string (Bonobo_ActivationProperty *prop);
 
-static GConfEngine *conf_engine = NULL;
+static GConfClient *conf_client = NULL;
 
 /*
  * Private functions
@@ -136,16 +136,16 @@ activation_property_to_string (Bonobo_ActivationProperty *prop)
 	return NULL;
 }
 
-static GConfEngine *
-get_conf_engine (void)
+static GConfClient *
+get_conf_client (void)
 {
-        if (!conf_engine) {
+        if (!conf_client) {
                 /* initialize GConf */
                 if (!gconf_is_initialized ())
                         gconf_init (0, NULL, NULL);
-                conf_engine = gconf_engine_get_default ();
+                conf_client = gconf_client_get_default ();
         }
-        return conf_engine;
+        return conf_client;
 }
 
 /**
@@ -160,7 +160,7 @@ get_conf_engine (void)
 gchar *
 gda_config_get_string (const gchar *path)
 {
-        return gconf_engine_get_string (get_conf_engine (), path, NULL);
+        return gconf_client_get_string (get_conf_client (), path, NULL);
 }
 
 /**
@@ -174,7 +174,7 @@ gda_config_get_string (const gchar *path)
 gint
 gda_config_get_int (const gchar *path)
 {
-        return gconf_engine_get_int (get_conf_engine (), path, NULL);
+        return gconf_client_get_int (get_conf_client (), path, NULL);
 }
 
 /**
@@ -188,7 +188,7 @@ gda_config_get_int (const gchar *path)
 gdouble
 gda_config_get_float (const gchar *path)
 {
-        return gconf_engine_get_float (get_conf_engine (), path, NULL);
+        return gconf_client_get_float (get_conf_client (), path, NULL);
 }
 
 /**
@@ -202,7 +202,7 @@ gda_config_get_float (const gchar *path)
 gboolean
 gda_config_get_boolean (const gchar *path)
 {
-        return gconf_engine_get_bool (get_conf_engine (), path, NULL);
+        return gconf_client_get_bool (get_conf_client (), path, NULL);
 }
 
 /**
@@ -215,7 +215,7 @@ gda_config_get_boolean (const gchar *path)
 void
 gda_config_set_string (const gchar *path, const gchar *new_value)
 {
-        gconf_engine_set_string (get_conf_engine (), path, new_value, NULL);
+        gconf_client_set_string (get_conf_client (), path, new_value, NULL);
 }
 
 /**
@@ -228,7 +228,7 @@ gda_config_set_string (const gchar *path, const gchar *new_value)
 void
 gda_config_set_int (const gchar *path, gint new_value)
 {
-        gconf_engine_set_int (get_conf_engine (), path, new_value, NULL);
+        gconf_client_set_int (get_conf_client (), path, new_value, NULL);
 }
 
 /**
@@ -241,7 +241,7 @@ gda_config_set_int (const gchar *path, gint new_value)
 void
 gda_config_set_float (const gchar * path, gdouble new_value)
 {
-        gconf_engine_set_float (get_conf_engine (), path, new_value, NULL);
+        gconf_client_set_float (get_conf_client (), path, new_value, NULL);
 }
 
 /**
@@ -255,7 +255,7 @@ void
 gda_config_set_boolean (const gchar *path, gboolean new_value)
 {
         g_return_if_fail (path != NULL);
-        gconf_engine_set_bool (get_conf_engine (), path, new_value, NULL);
+        gconf_client_set_bool (get_conf_client (), path, new_value, NULL);
 }
 
 /**
@@ -268,7 +268,7 @@ void
 gda_config_remove_section (const gchar *path)
 {
         g_return_if_fail (path != NULL);
-        gconf_engine_remove_dir (get_conf_engine (), path, NULL);
+        gconf_client_remove_dir (get_conf_client (), path, NULL);
 }
 
 /**
@@ -280,7 +280,7 @@ gda_config_remove_section (const gchar *path)
 void
 gda_config_remove_key (const gchar *path)
 {
-        gconf_engine_unset (get_conf_engine (), path, NULL);
+        gconf_client_unset (get_conf_client (), path, NULL);
 }
 
 /**
@@ -295,7 +295,7 @@ gda_config_remove_key (const gchar *path)
 gboolean
 gda_config_has_section (const gchar *path)
 {
-        return gconf_engine_dir_exists (get_conf_engine (), path, NULL);
+        return gconf_client_dir_exists (get_conf_client (), path, NULL);
 }
 
 /**
@@ -313,7 +313,7 @@ gda_config_has_key (const gchar *path)
 
         g_return_val_if_fail (path != NULL, FALSE);
 
-        value = gconf_engine_get (get_conf_engine (), path, NULL);
+        value = gconf_client_get (get_conf_client (), path, NULL);
         if (value) {
                 gconf_value_free (value);
                 return TRUE;
@@ -340,7 +340,7 @@ gda_config_list_sections (const gchar *path)
 
         g_return_val_if_fail (path != NULL, NULL);
 
-        slist = gconf_engine_all_dirs (get_conf_engine (), path, NULL);
+        slist = gconf_client_all_dirs (get_conf_client (), path, NULL);
         if (slist) {
                 GSList *node;
 
@@ -375,7 +375,7 @@ gda_config_list_keys (const gchar * path)
 
         g_return_val_if_fail (path != NULL, NULL);
 
-        slist = gconf_engine_all_entries (get_conf_engine (), path, NULL);
+        slist = gconf_client_all_entries (get_conf_client (), path, NULL);
         if (slist) {
                 GSList *node;
 
@@ -423,10 +423,8 @@ typedef struct {
 	gpointer user_data;
 } config_listener_data_t;
 
-static GList *config_listeners = NULL;
-
 static void
-config_listener_func (GConfEngine *conf, guint id, GConfEntry *entry, gpointer user_data)
+config_listener_func (GConfClient *conf, guint id, GConfEntry *entry, gpointer user_data)
 {
 	config_listener_data_t *listener_data = (config_listener_data_t *) user_data;
 
@@ -464,17 +462,16 @@ gda_config_add_listener (const gchar *path, GdaConfigListenerFunc func, gpointer
 	listener_data->func = func;
 	listener_data->user_data = user_data;
 
-	listener_data->id = gconf_engine_notify_add (get_conf_engine (),
+	listener_data->id = gconf_client_notify_add (get_conf_client (),
 						     path,
-						     (GConfNotifyFunc) config_listener_func,
+						     (GConfClientNotifyFunc) config_listener_func,
 						     listener_data->user_data,
+						     (GFreeFunc) g_free,
 						     &err);
 	if (listener_data->id == 0) {
 		g_free (listener_data);
 		return 0;
 	}
-
-	config_listeners = g_list_prepend (config_listeners, listener_data);
 
 	return listener_data->id;
 }
@@ -487,19 +484,7 @@ gda_config_remove_listener (guint id)
 {
 	GList *l;
 
-	for (l = config_listeners; l != NULL; l = l->next) {
-		config_listener_data_t *listener_data = l->data;
-
-		if (!listener_data)
-			continue;
-
-		if (listener_data->id == id) {
-			gconf_engine_notify_remove (get_conf_engine (), id);
-			config_listeners = g_list_remove (config_listeners, listener_data);
-			g_free (listener_data);
-			break;
-		}
-	}
+	gconf_client_notify_remove (get_conf_client (), id);
 }
 
 /**
