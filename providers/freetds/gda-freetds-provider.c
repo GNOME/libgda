@@ -315,6 +315,10 @@ gda_freetds_free_connection_data (GdaFreeTDSConnectionData *tds_cnc)
 
 	g_return_if_fail (tds_cnc != NULL);
 
+	if (tds_cnc->server_version) {
+		g_free (tds_cnc->server_version);
+		tds_cnc->server_version = NULL;
+	}
 	if (tds_cnc->config) {
 		tds_free_config(tds_cnc->config);
 		tds_cnc->config = NULL;
@@ -577,17 +581,29 @@ static const gchar
 {
 	GdaFreeTDSProvider *tds_prov = (GdaFreeTDSProvider *) provider;
 	GdaFreeTDSConnectionData *tds_cnc = NULL;
-	GdaDataModel *recset = NULL;
+	GdaDataModel *model = NULL;
 	
 	g_return_val_if_fail (GDA_IS_FREETDS_PROVIDER (tds_prov), NULL);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	tds_cnc = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_FREETDS_HANDLE);
 	g_return_val_if_fail (tds_cnc != NULL, NULL);
 
-//	recset = gda_freetds_execute_query (cnc, TDS_QUERY_SERVER_VERSION);
+	if (!tds_cnc->server_version) {
+		model = gda_freetds_execute_query (cnc, TDS_QUERY_SERVER_VERSION);
+		if (model) {
+			if ((gda_data_model_get_n_columns (model) == 1)
+			    && (gda_data_model_get_n_rows (model) == 1)) {
+				GdaValue *value;
+                                
+				value = (GdaValue *) gda_data_model_get_value_at
+					                     (model, 0, 0);
+                                tds_cnc->server_version = gda_value_stringify ((GdaValue *) value);
+                        }
+			g_object_unref (model);
+		}
+	}
 
-	// FIXME:
-	return NULL;
+	return (const gchar *) tds_cnc->server_version;
 }
 
 static const gchar
