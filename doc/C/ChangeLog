@@ -1,3 +1,7 @@
+2001-01-19	Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* removed lang="es" from <book> tag
+
 2000-12-10	Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* fixed some outdated things
