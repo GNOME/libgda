@@ -1,3 +1,7 @@
+2003-07-21  Juergen "George" Sawinski <jsaw@gmx.net>
+
+	* configure.in: added missing LDAP_CFLAGS.
+
 2003-07-15  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* libgda/gda-select.c (gda_select_run): implemented basic cases...

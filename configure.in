@@ -793,6 +793,7 @@ then
 	then
 		AC_MSG_WARN(LDAP backend not used)
 	else
+		LDAP_CFLAGS="-I${ldapdir}/include"
 		LDAP_LIBS="-L${ldapdir}/lib -lldap -llber"
 		AC_DEFINE(HAVE_LDAP)
 	fi
