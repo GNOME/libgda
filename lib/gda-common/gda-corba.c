@@ -49,59 +49,6 @@ gda_corba_get_name_service (void)
 #endif
 }
 
-# if defined(USING_OLD_OAF)
-/* FIXME: This definitions should abolish it in the future. */
-gchar *
-gda_corba_get_oaf_attribute (CORBA_sequence_OAF_Attribute attrs, const gchar *name)
-{
-  gchar* ret = NULL;
-  gint   i, j;
-
-  g_return_val_if_fail(name != NULL, NULL);
-
-  for (i = 0; i < attrs._length; i++)
-    {
-      if (!g_strcasecmp(attrs._buffer[i].name, name))
-        {
-          switch (attrs._buffer[i].v._d)
-            {
-            case OAF_A_STRING :
-              return g_strdup(attrs._buffer[i].v._u.value_string);
-            case OAF_A_NUMBER :
-              return g_strdup_printf("%f", attrs._buffer[i].v._u.value_number);
-            case OAF_A_BOOLEAN :
-              return g_strdup(attrs._buffer[i].v._u.value_boolean ?
-                              _("True") : _("False"));
-            case OAF_A_STRINGV :
-              {
-                GNOME_stringlist strlist;
-                GString*         str = NULL;
-                
-                strlist = attrs._buffer[i].v._u.value_stringv;
-                for (j = 0; j < strlist._length; j++)
-                  {
-                    if (!str)
-                      str = g_string_new(strlist._buffer[j]);
-                    else
-                      {
-                        str = g_string_append(str, ";");
-                        str = g_string_append(str, strlist._buffer[j]);
-                      }
-                  }
-                if (str)
-                  {
-                    ret = g_strdup(str->str);
-                    g_string_free(str, TRUE);
-                  }
-                return ret;
-              }
-            }
-        }
-    }
-
-  return ret;
-}
-# else /* OAF version 0.4.0 or higher */
 gchar *
 gda_corba_get_oaf_attribute (CORBA_sequence_OAF_Property props, const gchar *name)
 {
@@ -152,4 +99,3 @@ gda_corba_get_oaf_attribute (CORBA_sequence_OAF_Property props, const gchar *nam
 
   return ret;
 }
-# endif /* defined(USING_OLD_OAF) */

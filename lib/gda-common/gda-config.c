@@ -352,30 +352,17 @@ gda_provider_list (void)
           provider = gda_provider_new();
           provider->name = g_strdup(servlist->_buffer[i].iid);
           provider->location = g_strdup(servlist->_buffer[i].location_info);
-#if defined(USING_OLD_OAF)
-          provider->comment = gda_corba_get_oaf_attribute(servlist->_buffer[i].attrs, "description");
-          provider->repo_id = gda_corba_get_oaf_attribute(servlist->_buffer[i].attrs, "repo_ids");
-# else
           provider->comment = gda_corba_get_oaf_attribute(servlist->_buffer[i].props, "description");
           provider->repo_id = gda_corba_get_oaf_attribute(servlist->_buffer[i].props, "repo_ids");
-# endif
           provider->type = g_strdup(servlist->_buffer[i].server_type);
           provider->username = g_strdup(servlist->_buffer[i].username);
           provider->hostname = g_strdup(servlist->_buffer[i].hostname);
           provider->domain = g_strdup(servlist->_buffer[i].domain);
-#if defined(USING_OLD_OAF)
-          provider->main_config = gda_corba_get_oaf_attribute(servlist->_buffer[i].attrs, "gda-main-config");
-          provider->users_list_config = gda_corba_get_oaf_attribute(servlist->_buffer[i].attrs, "gda-users-list-config");
-          provider->users_ac_config = gda_corba_get_oaf_attribute(servlist->_buffer[i].attrs, "gda-users-ac-config");
-          provider->db_config = gda_corba_get_oaf_attribute(servlist->_buffer[i].attrs, "gda-db-config");
-          provider->dsn_config = gda_corba_get_oaf_attribute(servlist->_buffer[i].attrs, "gda-dsn-config");
-#else
           provider->main_config = gda_corba_get_oaf_attribute(servlist->_buffer[i].props, "gda-main-config");
           provider->users_list_config = gda_corba_get_oaf_attribute(servlist->_buffer[i].props, "gda-users-list-config");
           provider->users_ac_config = gda_corba_get_oaf_attribute(servlist->_buffer[i].props, "gda-users-ac-config");
           provider->db_config = gda_corba_get_oaf_attribute(servlist->_buffer[i].props, "gda-db-config");
           provider->dsn_config = gda_corba_get_oaf_attribute(servlist->_buffer[i].props, "gda-dsn-config");
-#endif
           retval = g_list_append(retval, (gpointer) provider);
         }
 

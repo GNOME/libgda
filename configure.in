@@ -40,6 +40,7 @@ then
 	if test "$gconfver" -ge 9
 	then
 		AC_DEFINE(USING_GCONF)
+		AC_MSG_RESULT(found)
 		gda_gconf_libs=`gconf-config --libs gconf`
 		gda_gconf_cflags=`gconf-config --cflags gconf`
 
@@ -53,22 +54,24 @@ then
 fi
 
 dnl Check for OAF
-AC_MSG_CHECKING(for OAF)
+use_oaf=false
+oafminver="0.5.0"
+AC_MSG_CHECKING(for OAF >= $oafminver)
 if oaf-config --libs > /dev/null 2>&1
 then
-	AC_MSG_RESULT(found)
-	AC_DEFINE(USING_OAF)
-	gda_oaf_libs=`oaf-config --libs`
-	gda_oaf_cflags=`oaf-config --cflags`
-	
-	dnl Test for old version of OAF
-	AM_PATH_OAF(0.5.0)
-	if test "x$OAF_CFLAGS" = "x"
+	oafver=`oaf-config --version | awk 'BEGIN {FS="."}{printf "%d", $1*10000+$2*100+$3}'`
+	if test "$oafver" -ge 500
 	then
-		AC_DEFINE(USING_OLD_OAF)
-	fi
+		AC_DEFINE(USING_OAF)
+		AC_MSG_RESULT(found)
+		gda_oaf_libs=`oaf-config --libs`
+		gda_oaf_cflags=`oaf-config --cflags`
+
+		use_oaf=true
+	fi	
 else
-	AC_MSG_ERROR(not found)
+	AC_MSG_ERROR([
+*** OAF $oafminver or later is necessary in order to build libgda.])
 fi
 
 dnl Check for libxml

@@ -15,4 +15,3 @@
 #undef HAVE_CAMEL
 #undef USING_GCONF
 #undef USING_OAF
-#undef USING_OLD_OAF
