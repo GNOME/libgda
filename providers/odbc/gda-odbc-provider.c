@@ -1316,7 +1316,7 @@ get_types_rs( GdaOdbcConnectionData *priv_data, GdaDataModelArray *recset, const
 		value_list = g_list_append (value_list, gda_value_new_string (""));
 
 		/* GDA Type */
-		rc = SQLGetData ( priv_data->hstmt, 1, SQL_C_LONG,
+		rc = SQLGetData ( priv_data->hstmt, 2, SQL_C_LONG,
 					&ival, sizeof( ival ), &ind );
 
 		if ( SQL_SUCCEEDED( rc ) && ind >= 0 ) {
