@@ -66,7 +66,8 @@ main (gint argc, gchar *argv[])
   gda_server_impl_exception(&ev);
 
   /* register the server implementation */
-  server_impl = gda_server_impl_new("gda-interbase", &server_impl_functions);
+  server_impl = gda_server_impl_new("OAFIID:gda-interbase:f3dee204-4e44-4505-8ca8-9703c4473c0f",
+                                    &server_impl_functions);
   if (server_impl)
     {
       gda_server_impl_start(server_impl);

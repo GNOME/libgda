@@ -66,7 +66,8 @@ main (gint argc, gchar *argv[])
 #endif
 
   /* register the server implementation */
-  server_impl = gda_server_impl_new("gda-odbc", &server_impl_functions);
+  server_impl = gda_server_impl_new("OAFIID:gda-odbc:b0d1eb1f-73d4-441c-a5b7-3bd5fc0ff7f3",
+                                    &server_impl_functions);
   if (server_impl)
     {
       gda_server_impl_start(server_impl);

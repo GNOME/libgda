@@ -93,11 +93,7 @@ gda_server_impl_new (const gchar *name, Gda_ServerImplFunctions *functions)
   PortableServer_POA     root_poa;
   CORBA_char*            objref;
   CORBA_ORB              orb;
-#if defined(USING_OAF)
   OAF_RegistrationResult result;
-#else
-  CORBA_Object           name_service;
-#endif
 
   g_return_val_if_fail(name != NULL, NULL);
 
@@ -107,13 +103,13 @@ gda_server_impl_new (const gchar *name, Gda_ServerImplFunctions *functions)
 
   /* create provider instance */
   server_impl = GDA_SERVER_IMPL(gtk_type_new(gda_server_impl_get_type()));
-  server_impl->name = g_strdup_printf("OAFIID:%s:b04e9dc2-1cc8-4027-8cf9-27dcb6a2a63f", name);
+  server_impl->name = g_strdup(name);
   g_set_prgname(server_impl->name);
   if (functions)
     {
       memcpy((void *) &server_impl->functions,
-	     (const void *) functions,
-	     sizeof(Gda_ServerImplFunctions));
+             (const void *) functions,
+             sizeof(Gda_ServerImplFunctions));
     }
   else gda_log_message(_("Starting provider %s with no implementation functions"), name);
 
@@ -121,11 +117,7 @@ gda_server_impl_new (const gchar *name, Gda_ServerImplFunctions *functions)
   server_impl->is_running = FALSE;
 
   /* create CORBA connection factory */
-#if defined(USING_OAF)
-  orb = oaf_orb_get();
-#else
-  orb = gnome_CORBA_ORB();
-#endif
+  orb = gda_corba_get_orb();
   server_impl->ev = g_new0(CORBA_Environment, 1);
   server_impl->root_poa = (PortableServer_POA)
     CORBA_ORB_resolve_initial_references(orb, "RootPOA", server_impl->ev);
@@ -139,34 +131,23 @@ gda_server_impl_new (const gchar *name, Gda_ServerImplFunctions *functions)
 				      server_impl->ev);
   gda_server_impl_exception(server_impl->ev);
 
-#if defined(USING_OAF)
   /* register server with OAF */
   result = oaf_active_server_register(server_impl->name, server_impl->connection_factory_obj);
   if (result != OAF_REG_SUCCESS)
     {
       switch (result)
-	{
-	case OAF_REG_NOT_LISTED :
-	  gda_log_error(_("OAF doesn't know about our IID; indicates broken installation. Exiting..."));
-	  break;
-	case OAF_REG_ALREADY_ACTIVE :
-	  gda_log_error(_("Another instance of this provider is already registered with OAF. Exiting..."));
-	  break;
-	default :
-	  gda_log_error(_("Unknown error registering this provider with OAF. Exiting"));
-	}
+        {
+        case OAF_REG_NOT_LISTED :
+          gda_log_error(_("OAF doesn't know about our IID; indicates broken installation. Exiting..."));
+          break;
+        case OAF_REG_ALREADY_ACTIVE :
+          gda_log_error(_("Another instance of this provider is already registered with OAF. Exiting..."));
+          break;
+        default :
+          gda_log_error(_("Unknown error registering this provider with OAF. Exiting"));
+        }
       exit(-1);
     }
-#else
-  name_service = gda_corba_get_name_service();
-  if (CORBA_Object_is_nil(name_service, server_impl->ev))
-    gda_log_error(_("Could not get CORBA name service object"));
-  else
-    {
-      goad_server_register(name_service, server_impl->connection_factory_obj,
-			   server_impl->name, "object", server_impl->ev);
-    }
-#endif
   gda_log_message(_("Registered with ID = %s"), objref);
   
   server_list = g_list_append(server_list, (gpointer) server_impl);

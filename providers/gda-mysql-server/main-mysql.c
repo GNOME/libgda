@@ -67,7 +67,8 @@ main (gint argc, gchar *argv[])
 #endif
 
   /* register the server implementation */
-  server_impl = gda_server_impl_new("gda-mysql", &server_impl_functions);
+  server_impl = gda_server_impl_new("OAFIID:gda-mysql:78212cda-11b9-4d07-a277-9e411700a54b",
+                                    &server_impl_functions);
   if (server_impl)
     {
       gda_server_impl_start(server_impl);

@@ -66,7 +66,8 @@ main (gint argc, gchar *argv[])
 #endif
 
   /* register the server implementation */
-  server_impl = gda_server_impl_new("gda-ldap", &server_impl_functions);
+  server_impl = gda_server_impl_new("OAFIID:gda-ldap:99216286-7c05-438f-8fe8-5bcc2223f5d7",
+                                    &server_impl_functions);
   if (server_impl)
     {
       gda_server_impl_start(server_impl);

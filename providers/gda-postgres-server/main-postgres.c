@@ -66,7 +66,8 @@ main(int argc, char* argv[])
 #endif
 
   /* register the server implementation */
-  server_impl = gda_server_impl_new("gda-postgres", &server_impl_functions);
+  server_impl = gda_server_impl_new("OAFIID:gda-postgres:b04e9dc2-1cc8-4027-8cf9-27dcb6a2a63f",
+                                    &server_impl_functions);
   if (server_impl)
     {
       gda_server_impl_start(server_impl);

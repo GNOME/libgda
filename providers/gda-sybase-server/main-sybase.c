@@ -71,7 +71,8 @@ main (gint argc, gchar *argv[])
 #endif
 
   /* register the server implementation */
-  server_impl = gda_server_impl_new("gda-sybase", &server_impl_functions);
+  server_impl = gda_server_impl_new("OAFIID:gda-sybase:f212f5f3-8365-4c52-b1c1-b67f9e7b2550",
+                                    &server_impl_functions);
   if (server_impl)
     {
       gda_server_impl_start(server_impl);
