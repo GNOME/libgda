@@ -8,15 +8,15 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"POT-Creation-Date: 2002-06-17 10:31+0200\n"
-"PO-Revision-Date: 2002-06-17 10:31+0200\n"
+"POT-Creation-Date: 2002-06-19 20:35+0200\n"
+"PO-Revision-Date: 2002-06-19 20:39+0200\n"
 "Last-Translator: Christian Rose <menthos@menthos.com>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: libgda/gda-client.c:226 libgda/gda-client.c:412 libgda/gda-connection.c:208
+#: libgda/gda-client.c:226 libgda/gda-client.c:413 libgda/gda-connection.c:214
 #, c-format
 msgid "Data source %s not found in configuration"
 msgstr "Datakällan %s hittades inte i konfigurationen"
@@ -40,35 +40,36 @@ msgstr "%s-leverantören implementerar inte startpunkt"
 msgid "Creation of GdaServerProvider failed"
 msgstr "Skapandet av GdaServerProvider misslyckades"
 
-#: libgda/gda-client.c:340
+#: libgda/gda-client.c:341
 msgid "Temporary data source created by libgda. Don't remove it"
 msgstr "Temporär datakälla skapad av libgda. Ta inte bort den"
 
 #. gda_server_recordset_model_set_field_defined_size (recset, 0, 256);
-#: libgda/gda-config.c:1247 providers/default/gda-default-provider.c:463
+#: libgda/gda-config.c:1270 providers/default/gda-default-provider.c:463
 #: providers/default/gda-default-provider.c:485
 #: providers/default/gda-default-provider.c:522
 #: providers/mysql/gda-mysql-provider.c:584
+#: providers/oracle/gda-oracle-provider.c:965
 msgid "Name"
 msgstr "Namn"
 
-#: libgda/gda-config.c:1248
+#: libgda/gda-config.c:1271
 msgid "Provider"
 msgstr "Leverantör"
 
-#: libgda/gda-config.c:1249
+#: libgda/gda-config.c:1272
 msgid "Connection string"
 msgstr "Anslutningssträng"
 
-#: libgda/gda-config.c:1250
+#: libgda/gda-config.c:1273
 msgid "Description"
 msgstr "Beskrivning"
 
-#: libgda/gda-config.c:1251
+#: libgda/gda-config.c:1274
 msgid "Username"
 msgstr "Användarnamn"
 
-#: libgda/gda-config.c:1252
+#: libgda/gda-config.c:1275
 msgid "Password"
 msgstr "Lösenord"
 
@@ -77,11 +78,11 @@ msgstr "Lösenord"
 msgid "Data model %p is not editable"
 msgstr "Datamodellen %p är inte redigerbar"
 
-#: libgda/gda-init.c:42
+#: libgda/gda-init.c:49
 msgid "Attempt to initialize an already initialized client"
 msgstr "Försök att initiera en redan initierad klient"
 
-#: libgda/gda-init.c:53
+#: libgda/gda-init.c:60
 msgid "libgda needs GModule. Finishing..."
 msgstr "libgda behöver GModule. Avslutar..."
 
@@ -198,48 +199,56 @@ msgstr "Inte implementerat"
 
 #: providers/default/gda-default-provider.c:361
 #: providers/mysql/gda-mysql-provider.c:873
+#: providers/oracle/gda-oracle-provider.c:1022
 #: providers/postgres/gda-postgres-provider.c:829
 msgid "Field name"
 msgstr "Fältnamn"
 
 #: providers/default/gda-default-provider.c:362
 #: providers/mysql/gda-mysql-provider.c:874
+#: providers/oracle/gda-oracle-provider.c:1023
 #: providers/postgres/gda-postgres-provider.c:830
 msgid "Data type"
 msgstr "Datatyp"
 
 #: providers/default/gda-default-provider.c:363
 #: providers/mysql/gda-mysql-provider.c:875
+#: providers/oracle/gda-oracle-provider.c:1024
 #: providers/postgres/gda-postgres-provider.c:831
 msgid "Size"
 msgstr "Storlek"
 
 #: providers/default/gda-default-provider.c:364
 #: providers/mysql/gda-mysql-provider.c:876
+#: providers/oracle/gda-oracle-provider.c:1025
 #: providers/postgres/gda-postgres-provider.c:832
 msgid "Scale"
 msgstr "Skala"
 
 #: providers/default/gda-default-provider.c:365
 #: providers/mysql/gda-mysql-provider.c:877
+#: providers/oracle/gda-oracle-provider.c:1026
 #: providers/postgres/gda-postgres-provider.c:833
 msgid "Not null?"
 msgstr "Inte null?"
 
 #: providers/default/gda-default-provider.c:366
 #: providers/mysql/gda-mysql-provider.c:878
+#: providers/oracle/gda-oracle-provider.c:1027
 #: providers/postgres/gda-postgres-provider.c:834
 msgid "Primary key?"
 msgstr "Primärnyckel?"
 
 #: providers/default/gda-default-provider.c:367
 #: providers/mysql/gda-mysql-provider.c:879
+#: providers/oracle/gda-oracle-provider.c:1028
 #: providers/postgres/gda-postgres-provider.c:835
 msgid "Unique index?"
 msgstr "Unikt index?"
 
 #: providers/default/gda-default-provider.c:368
 #: providers/mysql/gda-mysql-provider.c:880
+#: providers/oracle/gda-oracle-provider.c:1029
 #: providers/postgres/gda-postgres-provider.c:836
 msgid "References"
 msgstr "Referenser"
@@ -303,6 +312,7 @@ msgstr "Ogiltigt MYSQL-handtag"
 
 #. gda_server_recordset_model_set_field_defined_size (recset, 0, 32);
 #: providers/mysql/gda-mysql-provider.c:775
+#: providers/oracle/gda-oracle-provider.c:1304
 msgid "Type"
 msgstr "Typ"
 
@@ -326,14 +336,17 @@ msgid "Row number out of range"
 msgstr "Radnummer utanför intervallet"
 
 #: providers/mysql/gda-mysql-recordset.c:281
+#: providers/oracle/gda-oracle-recordset.c:427
 msgid "Attempt to insert a row with an invalid number of columns"
 msgstr "Försök att infoga en rad med ett ogiltigt antal kolumner"
 
 #: providers/mysql/gda-mysql-recordset.c:296
+#: providers/oracle/gda-oracle-recordset.c:442
 msgid "Could not retrieve column's information"
 msgstr "Kunde inte hämta kolumninformation"
 
 #: providers/mysql/gda-mysql-recordset.c:314
+#: providers/oracle/gda-oracle-recordset.c:460
 msgid "Could not retrieve column's value"
 msgstr "Kunde inte hämta kolumnvärde"
 
@@ -345,25 +358,156 @@ msgstr "GDA-leverantör för MySQL-databaser"
 msgid "GDA bridge to ODBC data sources"
 msgstr "GDA-brygga till ODBC-datakällor"
 
-#: providers/oracle/gda-oracle-connection.c:79
+#: providers/oracle/gda-oracle-provider.c:185
+msgid "Could not initialize Oracle "
+msgstr "Kunde inte initiera Oracle "
+
+#: providers/oracle/gda-oracle-provider.c:196
 msgid "Could not initialize Oracle environment"
 msgstr "Kunde inte initiera Oracle-miljö"
 
-#: providers/oracle/gda-oracle-connection.c:89
-msgid "Could not initialize Oracle error handler"
-msgstr "Kunde inte initiera Oracle-felhanterare"
+#: providers/oracle/gda-oracle-provider.c:208
+msgid "Could not initialize Oracle service context"
+msgstr "Kunde inte initiera Oracle-tjänstesammanhang"
 
-#: providers/oracle/gda-oracle-connection.c:100
+#: providers/oracle/gda-oracle-provider.c:220
+msgid "Could not initialize Oracle error handle"
+msgstr "Kunde inte initiera Oracle-felhandtag"
+
+#: providers/oracle/gda-oracle-provider.c:232
 msgid "Could not initialize Oracle server handle"
 msgstr "Kunde inte initiera Oracle-serverhandtag"
 
-#: providers/oracle/gda-oracle-connection.c:111
-msgid "Could not initialize Oracle service context"
-msgstr "Kunde inte initiera Oracle-tjänstesammanhang"
+#: providers/oracle/gda-oracle-provider.c:244
+msgid "Could not initialize Oracle session handle"
+msgstr "Kunde inte initiera Oracle-sessionshandtag"
+
+#: providers/oracle/gda-oracle-provider.c:272
+msgid "Could not attach to the Oracle server"
+msgstr "Kunde inte ansluta till Oracle-servern"
+
+#: providers/oracle/gda-oracle-provider.c:285
+msgid "Could not set the Oracle server attribute in the service context"
+msgstr "Kunde inte ställa in Oracle-serverattributet i tjänstesammanhanget"
+
+#: providers/oracle/gda-oracle-provider.c:298
+msgid "Could not set the Oracle username attribute"
+msgstr "Kunde inte ställa in Oracle-användarnamnsattributet"
+
+#: providers/oracle/gda-oracle-provider.c:311
+msgid "Could not set the Oracle password attribute"
+msgstr "Kunde inte ställa in Oracle-lösenordsattributet"
+
+#: providers/oracle/gda-oracle-provider.c:327
+msgid "Could not initialize the Oracle connection"
+msgstr "Kunde inte initiera Oracle-anslutningen"
+
+#: providers/oracle/gda-oracle-provider.c:340
+msgid "Could not set the Oracle session attribute in the service context"
+msgstr "Kunde inte ställa in Oracle-sessionsattributet i tjänstesammanhanget"
+
+#: providers/oracle/gda-oracle-provider.c:372
+msgid "Could not end the Oracle session"
+msgstr "Kunde inte avsluta Oracle-sessionen"
+
+#: providers/oracle/gda-oracle-provider.c:406
+#: providers/oracle/gda-oracle-provider.c:494
+#: providers/oracle/gda-oracle-provider.c:624
+#: providers/oracle/gda-oracle-provider.c:647
+#: providers/oracle/gda-oracle-provider.c:670
+#: providers/oracle/gda-oracle-provider.c:699
+#: providers/oracle/gda-oracle-provider.c:755
+#: providers/oracle/gda-oracle-provider.c:827
+#: providers/oracle/gda-oracle-provider.c:884
+#: providers/oracle/gda-oracle-recordset.c:153
+#: providers/oracle/gda-oracle-recordset.c:347
+msgid "Invalid Oracle handle"
+msgstr "Ogiltigt Oracle-handtag"
+
+#: providers/oracle/gda-oracle-provider.c:520
+msgid "Could not get the Oracle statement type"
+msgstr "Kunde inte få tag i Oracle-satstypen"
+
+#: providers/oracle/gda-oracle-provider.c:538
+msgid "Could not execute the Oracle command"
+msgstr "Kunde inte köra Oracle-kommandot"
+
+#: providers/oracle/gda-oracle-provider.c:573
+msgid "Could not get the column name"
+msgstr "Kunde inte få tag i kolumnamnet"
+
+#. Set it here instead of the SQL query to allow i18n
+#: providers/oracle/gda-oracle-provider.c:1237
+#: providers/postgres/gda-postgres-provider.c:1197 testing/client.c:123
+msgid "Users"
+msgstr "Användare"
+
+#. Set it here instead of the SQL query to allow i18n
+#: providers/oracle/gda-oracle-provider.c:1390
+#: providers/postgres/gda-postgres-provider.c:767 testing/client.c:121
+msgid "Indexes"
+msgstr "Index"
+
+#: providers/oracle/gda-oracle-provider.c:1394
+msgid "Procedures"
+msgstr "Procedurer"
+
+#. Set it here instead of the SQL query to allow i18n
+#: providers/oracle/gda-oracle-provider.c:1398
+#: providers/postgres/gda-postgres-provider.c:1225 testing/client.c:124
+msgid "Sequences"
+msgstr "Sekvenser"
+
+#. Set it here instead of the SQL query to allow i18n
+#: providers/oracle/gda-oracle-provider.c:1402
+#: providers/postgres/gda-postgres-provider.c:672
+msgid "Tables"
+msgstr "Tabeller"
+
+#. Set it here instead of the SQL query to allow i18n
+#: providers/oracle/gda-oracle-provider.c:1406
+#: providers/postgres/gda-postgres-provider.c:818 testing/client.c:125
+msgid "Triggers"
+msgstr "Utlösare"
+
+#. Set it here instead of the SQL query to allow i18n
+#: providers/oracle/gda-oracle-provider.c:1410
+#: providers/postgres/gda-postgres-provider.c:742 testing/client.c:120
+msgid "Views"
+msgstr "Vyer"
+
+#: providers/oracle/gda-oracle-recordset.c:73
+msgid "Could not get the Oracle parameter"
+msgstr "Kunde inte få tag i Oracle-parametern"
+
+#: providers/oracle/gda-oracle-recordset.c:117
+msgid "Could not define by position"
+msgstr "Kunde inte definiera efter position"
+
+#: providers/oracle/gda-oracle-recordset.c:159
+#: providers/postgres/gda-postgres-recordset.c:261
+msgid "Column out of range"
+msgstr "Kolumn utanför intervallet"
+
+#: providers/oracle/gda-oracle-recordset.c:172
+msgid "Could not retrieve the parameter information from Oracle"
+msgstr "Kunde inte hämta parameterinformationen från Oracle"
+
+#: providers/oracle/gda-oracle-recordset.c:313
+msgid "An error occurred during fetch"
+msgstr "Ett fel inträffade under hämtandet"
 
 #: providers/oracle/libmain.c:34
 msgid "GDA provider for Oracle databases"
 msgstr "GDA-leverantör för Oracle-databaser"
+
+#: providers/oracle/utils.c:55 providers/postgres/utils.c:47
+msgid "NO DESCRIPTION"
+msgstr "INGEN BESKRIVNING"
+
+#: providers/oracle/utils.c:60 providers/postgres/utils.c:52
+msgid "Not available"
+msgstr "Inte tillgänglig"
 
 #: providers/postgres/gda-postgres-provider.c:382
 #: providers/postgres/gda-postgres-provider.c:453
@@ -374,24 +518,9 @@ msgstr "GDA-leverantör för Oracle-databaser"
 msgid "Invalid PostgreSQL handle"
 msgstr "Ogiltigt PostgreSQL-handtag"
 
-#. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:672
-msgid "Tables"
-msgstr "Tabeller"
-
 #: providers/postgres/gda-postgres-provider.c:711
 msgid "Types"
 msgstr "Typer"
-
-#. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:742 testing/client.c:120
-msgid "Views"
-msgstr "Vyer"
-
-#. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:767 testing/client.c:121
-msgid "Indexes"
-msgstr "Index"
 
 #. Set it here instead of the SQL query to allow i18n
 #: providers/postgres/gda-postgres-provider.c:793 testing/client.c:122
@@ -399,24 +528,9 @@ msgid "Aggregates"
 msgstr "Aggregat"
 
 #. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:818 testing/client.c:125
-msgid "Triggers"
-msgstr "Utlösare"
-
-#. Set it here instead of the SQL query to allow i18n
 #: providers/postgres/gda-postgres-provider.c:1172 testing/client.c:116
 msgid "Databases"
 msgstr "Databaser"
-
-#. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:1197 testing/client.c:123
-msgid "Users"
-msgstr "Användare"
-
-#. Set it here instead of the SQL query to allow i18n
-#: providers/postgres/gda-postgres-provider.c:1225 testing/client.c:124
-msgid "Sequences"
-msgstr "Sekvenser"
 
 #: providers/postgres/gda-postgres-provider.c:1265
 msgid "Table name"
@@ -432,21 +546,9 @@ msgstr "Sekvens"
 msgid "Column number out of range"
 msgstr "Kolumnnummer utanför intervallet"
 
-#: providers/postgres/gda-postgres-recordset.c:261
-msgid "Column out of range"
-msgstr "Kolumn utanför intervallet"
-
 #: providers/postgres/libmain.c:41
 msgid "GDA provider for PostgreSQL databases"
 msgstr "GDA-leverantör för PostgreSQL-databaser"
-
-#: providers/postgres/utils.c:47
-msgid "NO DESCRIPTION"
-msgstr "INGEN BESKRIVNING"
-
-#: providers/postgres/utils.c:52
-msgid "Not available"
-msgstr "Inte tillgänglig"
 
 #: providers/sqlite/gda-sqlite-provider.c:246
 msgid "Invalid SQLITE handle"
@@ -629,9 +731,6 @@ msgstr "\tbeskrivning = %s\n"
 msgid "\tgda_params ="
 msgstr "\tgda_params ="
 
-#~ msgid "Could not initiate Oracle component factory"
-#~ msgstr "Kunde inte initiera Oracle-komponentfabrik"
-
 #~ msgid "Could not initialize OCI library"
 #~ msgstr "Kunde inte initiera OCI-bibliotek"
 
@@ -768,9 +867,6 @@ msgstr "\tgda_params ="
 
 #~ msgid "Invalid DEFAULT handle"
 #~ msgstr "Ogiltigt DEFAULT-handtag"
-
-#~ msgid "Invalid Default handle"
-#~ msgstr "Ogiltigt standardhandtag"
 
 #~ msgid "ct_diag 1 failed in sybase_check_clientmsg"
 #~ msgstr "ct_diag 1 misslyckades i sybase_check_clientmsg"
@@ -1049,9 +1145,6 @@ msgstr "\tgda_params ="
 #~ msgid "Invalid or unsupported constraint type: %d"
 #~ msgstr "Ogiltig eller ej stödd restriktionstyp: %d"
 
-#~ msgid "Could not allocate GdaServerCommand"
-#~ msgstr "Kunde inte allokera GdaServerCommand"
-
 #~ msgid "connection status: %x"
 #~ msgstr "anslutningsstatus: %x"
 
@@ -1246,9 +1339,6 @@ msgstr "\tgda_params ="
 
 #~ msgid "No further results, command completly succeeded."
 #~ msgstr "Inga ytterligare resultat, kommandot lyckades helt."
-
-#~ msgid "An error occured during command execution."
-#~ msgstr "Ett fel inträffade under kommandokörningen."
 
 #~ msgid "Cmd execution returned unknown result, may be an error"
 #~ msgstr "Kommandokörningen returnerade ett okänt resultat, kan vara ett fel"
