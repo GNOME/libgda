@@ -21,7 +21,7 @@
  */
 
 #include <config.h>
-#include <bonobo/bonobo-i18n.h>
+#include <libgda/gda-intl.h>
 #include "gda-test.h"
 #include "postgres-test.h"
 

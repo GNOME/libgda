@@ -23,7 +23,7 @@
  */
 
 #include <config.h>
-#include <bonobo/bonobo-i18n.h>
+#include <libgda/gda-intl.h>
 #include <stdlib.h>
 #include <string.h>
 #include "gda-postgres.h"
@@ -54,19 +54,19 @@ gda_postgres_make_error (PGconn *pconn, PGresult *pg_res)
 	return error;
 }
 
-GdaType
+GdaValueType
 gda_postgres_type_name_to_gda (GHashTable *h_table, const gchar *name)
 {
-	GdaType *type;
+	GdaValueType *type;
 
 	type = g_hash_table_lookup (h_table, name);
 	if (type)
 		return *type;
 
-	return GDA_TYPE_STRING;
+	return GDA_VALUE_TYPE_STRING;
 }
 
-GdaType
+GdaValueType
 gda_postgres_type_oid_to_gda (GdaPostgresTypeOid *type_data, gint ntypes, Oid postgres_type)
 {
 	gint i;
@@ -76,7 +76,7 @@ gda_postgres_type_oid_to_gda (GdaPostgresTypeOid *type_data, gint ntypes, Oid po
 			break;
 
 	if (type_data[i].oid != postgres_type)
-		return GDA_TYPE_STRING;
+		return GDA_VALUE_TYPE_STRING;
 
 	return type_data[i].type;
 }
@@ -131,8 +131,8 @@ make_timestamp (GdaTimestamp *timestamp, const gchar *value)
 
 void 
 gda_postgres_set_field_data (GdaField *field, const gchar *fname,
-				GdaType type, const gchar *value, 
-				gint dbsize, gboolean isNull)
+			     GdaValueType type, const gchar *value, 
+			     gint dbsize, gboolean isNull)
 {
 	GDate *gdate;
 	GdaDate date;
@@ -151,52 +151,52 @@ gda_postgres_set_field_data (GdaField *field, const gchar *fname,
 	gda_field_set_name (field, fname);
 	// dbsize == -1 => variable length
 	gda_field_set_defined_size (field, dbsize);
-	scale = (type == GDA_TYPE_DOUBLE) ? DBL_DIG :
-		(type == GDA_TYPE_SINGLE) ? FLT_DIG : 0;
+	scale = (type == GDA_VALUE_TYPE_DOUBLE) ? DBL_DIG :
+		(type == GDA_VALUE_TYPE_SINGLE) ? FLT_DIG : 0;
 	gda_field_set_scale (field, scale);
 
 	if (isNull) 
-		type = GDA_TYPE_NULL;
+		type = GDA_VALUE_TYPE_NULL;
 
 	switch (type) {
-	case GDA_TYPE_BOOLEAN :
+	case GDA_VALUE_TYPE_BOOLEAN :
 		gda_field_set_gdatype (field, type);
 		gda_field_set_boolean_value (field, 
 				(*value == 't') ? TRUE : FALSE);
 		break;
-	case GDA_TYPE_STRING :
+	case GDA_VALUE_TYPE_STRING :
 		gda_field_set_gdatype (field, type);
 		gda_field_set_string_value (field, value);
 		break;
-	case GDA_TYPE_BIGINT :
+	case GDA_VALUE_TYPE_BIGINT :
 		gda_field_set_gdatype (field, type);
 		gda_field_set_bigint_value (field, atoll (value));
 		break;
-	case GDA_TYPE_INTEGER :
+	case GDA_VALUE_TYPE_INTEGER :
 		gda_field_set_gdatype (field, type);
 		gda_field_set_integer_value (field, atol (value));
 		break;
-	case GDA_TYPE_SMALLINT :
+	case GDA_VALUE_TYPE_SMALLINT :
 		gda_field_set_gdatype (field, type);
 		gda_field_set_smallint_value (field, atoi (value));
 		break;
-	case GDA_TYPE_SINGLE :
+	case GDA_VALUE_TYPE_SINGLE :
 		gda_field_set_gdatype (field, type);
 		gda_field_set_single_value (field, atof (value));
 		break;
-	case GDA_TYPE_DOUBLE :
+	case GDA_VALUE_TYPE_DOUBLE :
 		gda_field_set_gdatype (field, type);
 		gda_field_set_double_value (field, atof (value));
 		break;
-	case GDA_TYPE_NUMERIC :
+	case GDA_VALUE_TYPE_NUMERIC :
 		numeric.number = g_strdup (value);
-		numeric.decimalPrecision = 0; //FIXME
+		numeric.precision = 0; //FIXME
 		numeric.width = 0; //FIXME
 		gda_field_set_gdatype (field, type);
 		gda_field_set_numeric_value (field, &numeric);
 		g_free (numeric.number);
 		break;
-	case GDA_TYPE_DATE :
+	case GDA_VALUE_TYPE_DATE :
 		gda_field_set_gdatype (field, type);
 		gdate = g_date_new ();
 		g_date_set_parse (gdate, value);
@@ -212,29 +212,29 @@ gda_postgres_set_field_data (GdaField *field, const gchar *fname,
 		gda_field_set_date_value (field, &date);
 		g_date_free (gdate);
 		break;
-	case GDA_TYPE_GEOMETRIC_POINT :
+	case GDA_VALUE_TYPE_GEOMETRIC_POINT :
 		make_point (&point, value);
 		gda_field_set_geometric_point_value (field, &point);
 		gda_field_set_gdatype (field, type);
 		break;
-	case GDA_TYPE_NULL :
+	case GDA_VALUE_TYPE_NULL :
 		gda_field_set_gdatype (field, type);
 		gda_field_set_null_value (field);
 		break;
-	case GDA_TYPE_TIMESTAMP :
+	case GDA_VALUE_TYPE_TIMESTAMP :
 		make_timestamp (&timestamp, value);
 		gda_field_set_timestamp_value (field, &timestamp);
 		gda_field_set_gdatype (field, type);
 		break;
-	case GDA_TYPE_TIME :
+	case GDA_VALUE_TYPE_TIME :
 		make_time (&timegda, value);
 		gda_field_set_time_value (field, &timegda);
 		gda_field_set_gdatype (field, type);
 		break;
-	case GDA_TYPE_BINARY : //FIXME
+	case GDA_VALUE_TYPE_BINARY : //FIXME
 	default :
 		gda_field_set_string_value (field, value);
-		gda_field_set_gdatype (field, GDA_TYPE_STRING);
+		gda_field_set_gdatype (field, GDA_VALUE_TYPE_STRING);
 	}
 }
 

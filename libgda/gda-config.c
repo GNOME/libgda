@@ -23,114 +23,16 @@
 #include <config.h>
 #include <libgda/gda-config.h>
 #include <libgda/gda-data-model-array.h>
+#include <libgda/gda-intl.h>
 #include <libgda/gda-log.h>
-#include <bonobo-activation/bonobo-activation.h>
-#include <bonobo-activation/bonobo-activation-server-info.h>
-#include <bonobo/bonobo-i18n.h>
-#include <bonobo/bonobo-exception.h>
 #include <gconf/gconf-client.h>
 #include <string.h>
-
-static GList *activation_property_to_list (Bonobo_ActivationProperty *prop);
-static GdaParameter *activation_property_to_parameter (Bonobo_ActivationProperty *prop);
-static gchar *activation_property_to_string (Bonobo_ActivationProperty *prop);
 
 static GConfClient *conf_client = NULL;
 
 /*
  * Private functions
  */
-
-static GList *
-activation_property_to_list (Bonobo_ActivationProperty *prop)
-{
-	GList *list = NULL;
-
-	g_return_val_if_fail (prop != NULL, NULL);
-
-	if (prop->v._d == Bonobo_ACTIVATION_P_STRING)
-		list = g_list_append (list, g_strdup (prop->v._u.value_string));
-	else if (prop->v._d == Bonobo_ACTIVATION_P_STRINGV) {
-		gint j;
-		Bonobo_StringList strlist = prop->v._u.value_stringv;
-
-		for (j = 0; j < strlist._length; j++) {
-			gchar *str = g_strdup (strlist._buffer[j]);
-			list = g_list_append (list, str);
-		}
-	}
-
-	return list;
-}
-
-static GdaParameter *
-activation_property_to_parameter (Bonobo_ActivationProperty *prop)
-{
-	GdaParameter *param;
-	gchar *str;
-
-	g_return_val_if_fail (prop != NULL, NULL);
-
-	switch (prop->v._d) {
-	case Bonobo_ACTIVATION_P_STRING :
-		param = gda_parameter_new ((const gchar *) prop->name, GDA_VALUE_TYPE_STRING);
-		gda_value_set_string (gda_parameter_get_value (param),
-				      prop->v._u.value_string);
-		break;
-	case Bonobo_ACTIVATION_P_NUMBER :
-		param = gda_parameter_new ((const gchar *) prop->name, GDA_VALUE_TYPE_DOUBLE);
-		gda_value_set_double (gda_parameter_get_value (param),
-				      prop->v._u.value_number);
-		break;
-	case Bonobo_ACTIVATION_P_BOOLEAN :
-		param = gda_parameter_new ((const gchar *) prop->name, GDA_VALUE_TYPE_BOOLEAN);
-		gda_value_set_boolean (gda_parameter_get_value (param),
-				       prop->v._u.value_boolean);
-		break;
-	case Bonobo_ACTIVATION_P_STRINGV :
-		param = gda_parameter_new ((const gchar *) prop->name, GDA_VALUE_TYPE_STRING);
-		str = activation_property_to_string (prop);
-		if (str) {
-			gda_value_set_string (gda_parameter_get_value (param), str);
-			g_free (str);
-		}
-		break;
-	default :
-		param = NULL;
-	}
-
-	return param;
-}
-
-static gchar *
-activation_property_to_string (Bonobo_ActivationProperty *prop)
-{
-	g_return_val_if_fail (prop != NULL, NULL);
-
-	if (prop->v._d == Bonobo_ACTIVATION_P_STRING)
-		return g_strdup (prop->v._u.value_string);
-	else if (prop->v._d == Bonobo_ACTIVATION_P_STRINGV) {
-		gint j;
-		GString *str = NULL;
-		Bonobo_StringList strlist = prop->v._u.value_stringv;
-
-		for (j = 0; j < strlist._length; j++) {
-			if (!str)
-				str = g_string_new (strlist._buffer[j]);
-			else {
-				str = g_string_append (str, ";");
-				str = g_string_append (str, strlist._buffer[j]);
-			}
-		}
-		if (str) {
-			gchar *ret = g_strdup (str->str);
-			g_string_free (str, TRUE);
-			return ret;
-		}
-	}
-
-	return NULL;
-}
 
 static GConfClient *
 get_conf_client (void)
@@ -486,115 +388,6 @@ gda_config_remove_listener (guint id)
 }
 
 /**
- * gda_config_get_component_list
- * @query: condition for components to be retrieved.
- *
- * Return a list of all components currently installed in
- * the system that match the given query (see
- * BonoboActivation documentation). Each of the nodes
- * in the returned GList is a #GdaComponentInfo. To free
- * the returned list, call the #gda_config_free_component_list
- * function.
- *
- * Returns: a GList of #GdaComponentInfo structures.
- */
-GList *
-gda_config_get_component_list (const gchar *query)
-{
-	CORBA_Environment ev;
-	Bonobo_ServerInfoList *server_list;
-	gint i;
-	GList *list = NULL;
-
-	CORBA_exception_init (&ev);
-
-	server_list = bonobo_activation_query (query, NULL, &ev);
-	if (BONOBO_EX (&ev)) {
-		gda_log_error (_("Could not query CORBA components"));
-		CORBA_exception_free (&ev);
-		return NULL;
-	}
-
-	/* create the list to be returned from the CORBA sequence */
-	for (i = 0; i < server_list->_length; i++) {
-		GdaComponentInfo *comp_info;
-		gint j;
-		Bonobo_ServerInfo *bonobo_info = &server_list->_buffer[i];
-
-		comp_info = g_new0 (GdaComponentInfo, 1);
-
-		comp_info->id = g_strdup (bonobo_info->iid);
-		comp_info->location = g_strdup (bonobo_info->location_info);
-		comp_info->description = activation_property_to_string (
-			(Bonobo_ActivationProperty *)
-			bonobo_server_info_prop_find (bonobo_info, "description"));
-		comp_info->repo_ids = activation_property_to_list (
-			bonobo_server_info_prop_find (bonobo_info, "repo_ids"));
-		comp_info->username = g_strdup (bonobo_info->username);
-		comp_info->hostname = g_strdup (bonobo_info->hostname);
-		comp_info->domain = g_strdup (bonobo_info->domain);
-
-		if (!strcmp (bonobo_info->server_type, "exe"))
-			comp_info->type = GDA_COMPONENT_TYPE_EXE;
-		else if (!strcmp (bonobo_info->server_type, "shlib"))
-			comp_info->type = GDA_COMPONENT_TYPE_SHLIB;
-		else if (!strcmp (bonobo_info->server_type, "factory"))
-			comp_info->type = GDA_COMPONENT_TYPE_FACTORY;
-		else
-			comp_info->type = GDA_COMPONENT_TYPE_INVALID;
-
-		/* get all properties */
-		comp_info->properties = gda_parameter_list_new ();
-		for (j = 0; j < bonobo_info->props._length; j++) {
-			GdaParameter *param;
-
-			param = activation_property_to_parameter (
-				&bonobo_info->props._buffer[j]);
-			if (param != NULL) {
-				gda_parameter_list_add_parameter (
-					comp_info->properties, param);
-			}
-		}
-
-		list = g_list_append (list, comp_info);
-	}
-
-	CORBA_free (server_list);
-
-	return list;
-}
-
-/**
- * gda_config_free_component_list
- */
-void
-gda_config_free_component_list (GList *list)
-{
-	GList *l;
-
-	for (l = g_list_first (list); l; l = l->next) {
-		GdaComponentInfo *comp_info = (GdaComponentInfo *) l->data;
-
-		if (comp_info != NULL) {
-			g_free (comp_info->id);
-			g_free (comp_info->location);
-			g_free (comp_info->description);
-			g_free (comp_info->username);
-			g_free (comp_info->hostname);
-			g_free (comp_info->domain);
-
-			g_list_foreach (comp_info->repo_ids, (GFunc) g_free, NULL);
-			g_list_free (comp_info->repo_ids);
-			gda_parameter_list_free (comp_info->properties);
-
-			g_free (comp_info);
-		}
-	}
-
-	g_list_free (list);
-}
-
-/**
  * gda_config_get_provider_list
  *
  * Return a list of all providers currently installed in
@@ -607,56 +400,8 @@ gda_config_free_component_list (GList *list)
 GList *
 gda_config_get_provider_list (void)
 {
-	CORBA_Environment ev;
-	Bonobo_ServerInfoList *server_list;
-	gint i;
-	GList *list = NULL;
-
-	CORBA_exception_init (&ev);
-
-	server_list = bonobo_activation_query (
-		"repo_ids.has('IDL:GNOME/Database/Provider:1.0')", NULL, &ev);
-	if (BONOBO_EX (&ev)) {
-		gda_log_error (_("Could not query CORBA providers"));
-		CORBA_exception_free (&ev);
-		return NULL;
-	}
-
-	/* create the list to be returned from the CORBA sequence */
-	for (i = 0; i < server_list->_length; i++) {
-		GdaProviderInfo *provider_info;
-		Bonobo_ServerInfo *bonobo_info = &server_list->_buffer[i];
-
-		provider_info = g_new0 (GdaProviderInfo, 1);
-
-		provider_info->id = g_strdup (bonobo_info->iid);
-		provider_info->location = g_strdup (bonobo_info->location_info);
-		provider_info->description = activation_property_to_string (
-			(Bonobo_ActivationProperty *)
-			bonobo_server_info_prop_find (bonobo_info, "description"));
-		provider_info->repo_ids = activation_property_to_list (
-			bonobo_server_info_prop_find (bonobo_info, "repo_ids"));
-		provider_info->username = g_strdup (bonobo_info->username);
-		provider_info->hostname = g_strdup (bonobo_info->hostname);
-		provider_info->domain = g_strdup (bonobo_info->domain);
-		provider_info->gda_params = activation_property_to_list (
-			bonobo_server_info_prop_find (bonobo_info, "gda_params"));
-
-		if (!strcmp (bonobo_info->server_type, "exe"))
-			provider_info->type = GDA_COMPONENT_TYPE_EXE;
-		else if (!strcmp (bonobo_info->server_type, "shlib"))
-			provider_info->type = GDA_COMPONENT_TYPE_SHLIB;
-		else if (!strcmp (bonobo_info->server_type, "factory"))
-			provider_info->type = GDA_COMPONENT_TYPE_FACTORY;
-		else
-			provider_info->type = GDA_COMPONENT_TYPE_INVALID;
-
-		list = g_list_append (list, provider_info);
-	}
-
-	CORBA_free (server_list);
-
-	return list;
+	/* FIXME: implement */
+	return NULL;
 }
 
 /**

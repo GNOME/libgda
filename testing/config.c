@@ -21,7 +21,6 @@
  */
 
 #include <config.h>
-#include <bonobo/bonobo-i18n.h>
 #include "gda-test.h"
 #include <string.h>
 

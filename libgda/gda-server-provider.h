@@ -24,10 +24,9 @@
 #  define __gda_server_provider_h__
 
 #include <libgda/gda-command.h>
+#include <libgda/gda-connection.h>
+#include <libgda/gda-data-model.h>
 #include <libgda/gda-quark-list.h>
-#include <libgda/gda-server-connection.h>
-#include <libgda/gda-server-recordset.h>
-#include <bonobo/bonobo-xobject.h>
 
 G_BEGIN_DECLS
 
@@ -41,83 +40,82 @@ typedef struct _GdaServerProviderClass   GdaServerProviderClass;
 typedef struct _GdaServerProviderPrivate GdaServerProviderPrivate;
 
 struct _GdaServerProvider {
-	BonoboObject object;
+	GObject object;
 	GdaServerProviderPrivate *priv;
 };
 
 struct _GdaServerProviderClass {
-	BonoboObjectClass parent_class;
-	POA_GNOME_Database_Provider__epv epv;
+	GObjectClass parent_class;
 
 	/* signals */
 	void (* last_connection_gone) (GdaServerProvider *provider);
 
 	/* virtual methods */
 	gboolean (* open_connection) (GdaServerProvider *provider,
-				      GdaServerConnection *cnc,
+				      GdaConnection *cnc,
 				      GdaQuarkList *params,
 				      const gchar *username,
 				      const gchar *password);
 	gboolean (* close_connection) (GdaServerProvider *provider,
-				       GdaServerConnection *cnc);
+				       GdaConnection *cnc);
 
 	GList * (* execute_command) (GdaServerProvider *provider,
-				     GdaServerConnection *cnc,
+				     GdaConnection *cnc,
 				     GdaCommand *cmd,
 				     GdaParameterList *params);
 
 	gboolean (* begin_transaction) (GdaServerProvider *provider,
-					GdaServerConnection *cnc,
+					GdaConnection *cnc,
 					const gchar *trans_id);
 	gboolean (* commit_transaction) (GdaServerProvider *provider,
-					 GdaServerConnection *cnc,
+					 GdaConnection *cnc,
 					 const gchar *trans_id);
 	gboolean (* rollback_transaction) (GdaServerProvider *provider,
-					   GdaServerConnection *cnc,
+					   GdaConnection *cnc,
 					   const gchar *trans_id);
 
 	gboolean (* supports) (GdaServerProvider *provider,
-			       GdaServerConnection *cnc,
-			       GNOME_Database_Feature feature);
+			       GdaConnection *cnc,
+			       GdaConnectionFeature feature);
 
-	GdaServerRecordset * (* get_schema) (GdaServerProvider *provider,
-					     GdaServerConnection *cnc,
-					     GNOME_Database_Connection_Schema schema,
-					     GdaParameterList *params);
+	GdaDataModel * (* get_schema) (GdaServerProvider *provider,
+				       GdaConnection *cnc,
+				       GdaConnectionSchema schema,
+				       GdaParameterList *params);
 };
 
 GType    gda_server_provider_get_type (void);
 gboolean gda_server_provider_open_connection (GdaServerProvider *provider,
-					      GdaServerConnection *cnc,
+					      GdaConnection *cnc,
 					      GdaQuarkList *params,
 					      const gchar *username,
 					      const gchar *password);
 gboolean gda_server_provider_close_connection (GdaServerProvider *provider,
-					       GdaServerConnection *cnc);
+					       GdaConnection *cnc);
 
 GList   *gda_server_provider_execute_command (GdaServerProvider *provider,
-					      GdaServerConnection *cnc,
+					      GdaConnection *cnc,
 					      GdaCommand *cmd,
 					      GdaParameterList *params);
 
 gboolean gda_server_provider_begin_transaction (GdaServerProvider *provider,
-						GdaServerConnection *cnc,
+						GdaConnection *cnc,
 						const gchar *trans_id);
 gboolean gda_server_provider_commit_transaction (GdaServerProvider *provider,
-						 GdaServerConnection *cnc,
+						 GdaConnection *cnc,
 						 const gchar *trans_id);
 gboolean gda_server_provider_rollback_transaction (GdaServerProvider *provider,
-						   GdaServerConnection *cnc,
+						   GdaConnection *cnc,
 						   const gchar *trans_id);
 
 gboolean gda_server_provider_supports (GdaServerProvider *provider,
-				       GdaServerConnection *cnc,
-				       GNOME_Database_Feature feature);
+				       GdaConnection *cnc,
+				       GdaConnectionFeature feature);
 
-GdaServerRecordset *gda_server_provider_get_schema (GdaServerProvider *provider,
-						    GdaServerConnection *cnc,
-						    GNOME_Database_Connection_Schema schema,
-						    GdaParameterList *params);
+GdaDataModel *gda_server_provider_get_schema (GdaServerProvider *provider,
+					      GdaConnection *cnc,
+					      GdaConnectionSchema schema,
+					      GdaParameterList *params);
 
 G_END_DECLS
 

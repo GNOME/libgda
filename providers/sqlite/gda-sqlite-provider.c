@@ -26,38 +26,39 @@
 #endif
 
 #include <stdlib.h>
-#include <bonobo/bonobo-i18n.h>
+#include <libgda/gda-intl.h>
 #include "gda-sqlite.h"
 #include "gda-sqlite-provider.h"
+#include "gda-sqlite-recordset.h"
 
 static void gda_sqlite_provider_class_init (GdaSqliteProviderClass *klass);
 static void gda_sqlite_provider_init       (GdaSqliteProvider *provider,
-					     GdaSqliteProviderClass *klass);
+					    GdaSqliteProviderClass *klass);
 static void gda_sqlite_provider_finalize   (GObject *object);
 
 static gboolean gda_sqlite_provider_open_connection (GdaServerProvider *provider,
-						      GdaServerConnection *cnc,
-						      GdaQuarkList *params,
-						      const gchar *username,
-						      const gchar *password);
+						     GdaConnection *cnc,
+						     GdaQuarkList *params,
+						     const gchar *username,
+						     const gchar *password);
 static gboolean gda_sqlite_provider_close_connection (GdaServerProvider *provider,
-						       GdaServerConnection *cnc);
+						      GdaConnection *cnc);
 static GList *gda_sqlite_provider_execute_command (GdaServerProvider *provider,
-						    GdaServerConnection *cnc,
-						    GdaCommand *cmd,
-						    GdaParameterList *params);
+						   GdaConnection *cnc,
+						   GdaCommand *cmd,
+						   GdaParameterList *params);
 static gboolean gda_sqlite_provider_begin_transaction (GdaServerProvider *provider,
-						       GdaServerConnection *cnc,
+						       GdaConnection *cnc,
 						       const gchar *trans_id);
 static gboolean gda_sqlite_provider_commit_transaction (GdaServerProvider *provider,
-							GdaServerConnection *cnc,
+							GdaConnection *cnc,
 							const gchar *trans_id);
 static gboolean gda_sqlite_provider_rollback_transaction (GdaServerProvider *provider,
-							  GdaServerConnection * cnc,
+							  GdaConnection * cnc,
 							  const gchar *trans_id);
 static gboolean gda_sqlite_provider_supports (GdaServerProvider *provider,
-					      GdaServerConnection *cnc,
-					      GNOME_Database_Feature feature);
+					      GdaConnection *cnc,
+					      GdaConnectionFeature feature);
 
 static GObjectClass *parent_class = NULL;
 
@@ -86,8 +87,7 @@ gda_sqlite_provider_class_init (GdaSqliteProviderClass *klass)
 }
 
 static void
-gda_sqlite_provider_init (GdaSqliteProvider *myprv,
-			   GdaSqliteProviderClass *klass)
+gda_sqlite_provider_init (GdaSqliteProvider *sqlite_prv, GdaSqliteProviderClass *klass)
 {
 }
 
@@ -129,10 +129,10 @@ gda_sqlite_provider_get_type (void)
 /* open_connection handler for the GdaSqliteProvider class */
 static gboolean
 gda_sqlite_provider_open_connection (GdaServerProvider *provider,
-				      GdaServerConnection *cnc,
-				      GdaQuarkList *params,
-				      const gchar *username,
-				      const gchar *password)
+				     GdaConnection *cnc,
+				     GdaQuarkList *params,
+				     const gchar *username,
+				     const gchar *password)
 {
 	const gchar *t_filename = NULL;
 	gchar *errmsg = NULL;
@@ -142,15 +142,16 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider,
 	GdaSqliteProvider *sqliteprv = (GdaSqliteProvider *) provider;
 
 	g_return_val_if_fail (GDA_IS_SQLITE_PROVIDER (sqliteprv), FALSE);
-	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 
 	/* get all parameters received */
 	t_filename = gda_quark_list_find (params, "FILENAME");
 
 	if (!t_filename || *t_filename != '/') {
-		gda_server_connection_add_error_string ( cnc,
-				_("A full path must be specified on the "
-				"connection string to open a database."));
+		gda_connection_add_error_string (
+			cnc,
+			_("A full path must be specified on the "
+			  "connection string to open a database."));
 		return FALSE;
 	} else {
 
@@ -160,7 +161,7 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider,
 		g_free ((gpointer) t_filename);
 		
 		if (!sqlite) {
-			gda_server_connection_add_error_string (cnc, errmsg);
+			gda_connection_add_error_string (cnc, errmsg);
 			
 			free (errmsg); /* must use free () for this pointer */
 			
@@ -178,14 +179,14 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider,
 /* close_connection handler for the GdaSqliteProvider class */
 static gboolean
 gda_sqlite_provider_close_connection (GdaServerProvider *provider,
-				       GdaServerConnection *cnc)
+				      GdaConnection *cnc)
 {
 	sqlite *sqlite;
 	
 	GdaSqliteProvider *dfprv = (GdaSqliteProvider *) provider;
 
 	g_return_val_if_fail (GDA_IS_SQLITE_PROVIDER (dfprv), FALSE);
-	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 
 	sqlite = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_SQLITE_HANDLE);
 	if (!sqlite)
@@ -198,7 +199,7 @@ gda_sqlite_provider_close_connection (GdaServerProvider *provider,
 }
 
 static GList *
-process_sql_commands (GList *reclist, GdaServerConnection *cnc,
+process_sql_commands (GList *reclist, GdaConnection *cnc,
 		      const gchar *sql, GdaCommandOptions options)
 {
 	sqlite *sqlite;
@@ -207,8 +208,7 @@ process_sql_commands (GList *reclist, GdaServerConnection *cnc,
 
 	sqlite = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_SQLITE_HANDLE);
 	if (!sqlite) {
-		gda_server_connection_add_error_string (cnc,
-						        _("Invalid SQLITE handle"));
+		gda_connection_add_error_string (cnc, _("Invalid SQLITE handle"));
 		return NULL;
 	}
 
@@ -219,7 +219,7 @@ process_sql_commands (GList *reclist, GdaServerConnection *cnc,
 
 		while (arr[n]) {
 			SQLITE_Recordset *srecset;
-			GdaServerRecordset *recset;
+			GdaRecordset *recset;
 			gint status;
 
 			srecset = g_new0 (SQLITE_Recordset, 1);
@@ -233,17 +233,17 @@ process_sql_commands (GList *reclist, GdaServerConnection *cnc,
 			    status == SQLITE_OK) {
 
 				recset = gda_sqlite_recordset_new (cnc, srecset);
-				if (GDA_IS_SERVER_RECORDSET (recset)) {
-					gda_server_recordset_set_command_text (recset, arr[n]);
-					gda_server_recordset_set_command_type (recset, GDA_COMMAND_TYPE_SQL);
+				if (GDA_IS_RECORDSET (recset)) {
+					gda_recordset_set_command_text (recset, arr[n]);
+					gda_recordset_set_command_type (recset, GDA_COMMAND_TYPE_SQL);
 					reclist = g_list_append (reclist, recset);
 				}
 			} else {
 				GdaError *error = gda_error_new ();
 				gda_error_set_description (error, errmsg);
-				gda_server_connection_add_error (cnc, error);
-				g_list_foreach (reclist, (GFunc) g_object_unref,
-						NULL);
+				gda_connection_add_error (cnc, error);
+
+				g_list_foreach (reclist, (GFunc) g_object_unref, NULL);
 				g_list_free (reclist);
 				free (errmsg);
 
@@ -263,9 +263,9 @@ process_sql_commands (GList *reclist, GdaServerConnection *cnc,
 /* execute_command handler for the GdaSqliteProvider class */
 static GList *
 gda_sqlite_provider_execute_command (GdaServerProvider *provider,
-				      GdaServerConnection *cnc,
-				      GdaCommand *cmd,
-				      GdaParameterList *params)
+				     GdaConnection *cnc,
+				     GdaCommand *cmd,
+				     GdaParameterList *params)
 {
 	GList  *reclist = NULL;
 	gchar  *cmd_string = NULL;
@@ -273,7 +273,7 @@ gda_sqlite_provider_execute_command (GdaServerProvider *provider,
 	GdaCommandOptions options;
 
 	g_return_val_if_fail (GDA_IS_SQLITE_PROVIDER (sqlite_prv), NULL);
-	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), NULL);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (cmd != NULL, NULL);
 
 	options = gda_command_get_options (cmd);
@@ -290,10 +290,8 @@ gda_sqlite_provider_execute_command (GdaServerProvider *provider,
 		/* FIXME: Implement me */
 		return NULL;
 	case GDA_COMMAND_TYPE_TABLE:
-		cmd_string = g_strdup_printf ("SELECT * FROM %s",
-					      gda_command_get_text (cmd));
-		reclist = process_sql_commands (reclist, cnc,
-						cmd_string, options);
+		cmd_string = g_strdup_printf ("SELECT * FROM %s", gda_command_get_text (cmd));
+		reclist = process_sql_commands (reclist, cnc, cmd_string, options);
 		g_free (cmd_string);
 		break;
 	case GDA_COMMAND_TYPE_INVALID:
@@ -305,13 +303,13 @@ gda_sqlite_provider_execute_command (GdaServerProvider *provider,
 
 static gboolean
 gda_sqlite_provider_begin_transaction (GdaServerProvider *provider,
-				       GdaServerConnection *cnc,
+				       GdaConnection *cnc,
 				       const gchar *trans_id)
 {
 	GdaSqliteProvider *sqlite_prv = (GdaSqliteProvider *) provider;
 
 	g_return_val_if_fail (GDA_IS_SQLITE_PROVIDER (sqlite_prv), FALSE);
-	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 
 	/* FIXME: Implement me */
 	return TRUE;
@@ -319,13 +317,13 @@ gda_sqlite_provider_begin_transaction (GdaServerProvider *provider,
 
 static gboolean
 gda_sqlite_provider_commit_transaction (GdaServerProvider *provider,
-					GdaServerConnection *cnc,
+					GdaConnection *cnc,
 					const gchar *trans_id)
 {
 	GdaSqliteProvider *sqlite_prv = (GdaSqliteProvider *) provider;
 
 	g_return_val_if_fail (GDA_IS_SQLITE_PROVIDER (sqlite_prv), FALSE);
-	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 
 	/* FIXME: Implement me */
 	return TRUE;
@@ -333,13 +331,13 @@ gda_sqlite_provider_commit_transaction (GdaServerProvider *provider,
 
 static gboolean
 gda_sqlite_provider_rollback_transaction (GdaServerProvider *provider,
-					  GdaServerConnection *cnc,
+					  GdaConnection *cnc,
 					  const gchar *trans_id)
 {
 	GdaSqliteProvider *sqlite_prv = (GdaSqliteProvider *) provider;
 
 	g_return_val_if_fail (GDA_IS_SQLITE_PROVIDER (sqlite_prv), FALSE);
-	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 
 	/* FIXME: Implement me */
 	return TRUE;
@@ -347,15 +345,15 @@ gda_sqlite_provider_rollback_transaction (GdaServerProvider *provider,
 
 static gboolean
 gda_sqlite_provider_supports (GdaServerProvider *provider,
-			      GdaServerConnection *cnc,
-			      GNOME_Database_Feature feature)
+			      GdaConnection *cnc,
+			      GdaConnectionFeature feature)
 {
 	GdaSqliteProvider *sqlite_prv = (GdaSqliteProvider *) provider;
 
 	g_return_val_if_fail (GDA_IS_SQLITE_PROVIDER (sqlite_prv), FALSE);
 
 	switch (feature) {
-	case GNOME_Database_FEATURE_SQL :
+	case GDA_CONNECTION_FEATURE_SQL :
 		//case GNOME_Database_FEATURE_TRANSACTIONS :
 		/* FIXME: Change it when we implement the transactions */
 		return TRUE;

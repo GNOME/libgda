@@ -25,7 +25,6 @@
 #  define __gda_postgres_provider_h__
 
 #include <libgda/gda-server-provider.h>
-#include <libgda/gda-server-recordset-model.h>
 #include <libpq-fe.h>
 
 #define GDA_TYPE_POSTGRES_PROVIDER            (gda_postgres_provider_get_type())
@@ -53,7 +52,7 @@ struct _GdaPostgresProviderClass {
 typedef struct {
 	gchar *name;
 	Oid oid;
-	GdaType type;
+	GdaValueType type;
 } GdaPostgresTypeOid;
 
 typedef struct {

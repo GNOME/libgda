@@ -24,7 +24,7 @@
 #  define __gda_test_h__
 
 #include <libgda/libgda.h>
-#include <bonobo/bonobo-i18n.h>
+#include <libgda/gda-intl.h>
 
 G_BEGIN_DECLS
 

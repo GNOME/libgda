@@ -24,7 +24,7 @@
  */
 
 #include <config.h>
-#include <bonobo/bonobo-i18n.h>
+#include <libgda/gda-intl.h>
 #include <string.h>
 #include "gda-postgres.h"
 
@@ -53,7 +53,7 @@ free_postgres_res (gpointer data)
 }
 
 static GdaRow *
-fetch_func (GdaServerRecordset *recset, gulong rownum)
+fetch_func (GdaRecordset *recset, gulong rownum)
 {
 	GdaPostgresRecordsetPrivate *priv_data;
 	GdaRow *row;
@@ -62,13 +62,13 @@ fetch_func (GdaServerRecordset *recset, gulong rownum)
 	gint i;
 	PGresult *pg_res;
 
-	g_return_val_if_fail (GDA_IS_SERVER_RECORDSET (recset), NULL);
+	g_return_val_if_fail (GDA_IS_RECORDSET (recset), NULL);
 
 	priv_data = g_object_get_data (G_OBJECT (recset), OBJECT_DATA_RECSET_HANDLE);
 	pg_res = priv_data->pg_res;
 	if (!pg_res) {
-		gda_server_connection_add_error_string (
-			gda_server_recordset_get_connection (recset),
+		gda_connection_add_error_string (
+			gda_recordset_get_connection (recset),
 			_("Invalid PostgreSQL handle"));
 		return NULL;
 	}
@@ -80,8 +80,8 @@ fetch_func (GdaServerRecordset *recset, gulong rownum)
 		return NULL; // For the last row don't add an error.
 
 	if (rownum < 0 || rownum > row_count) {
-		gda_server_connection_add_error_string (
-			gda_server_recordset_get_connection (recset),
+		gda_connection_add_error_string (
+			gda_recordset_get_connection (recset),
 			_("Row number out of range"));
 		return NULL;
 	}
@@ -91,7 +91,7 @@ fetch_func (GdaServerRecordset *recset, gulong rownum)
 	for (i = 0; i < field_count; i++) {
 		GdaField *field;
 		gchar *thevalue;
-		GdaType ftype;
+		GdaValueType ftype;
 		gboolean isNull;
 
 		field = gda_row_get_field (row, i);
@@ -100,18 +100,17 @@ fetch_func (GdaServerRecordset *recset, gulong rownum)
 		ftype = gda_postgres_type_oid_to_gda (priv_data->type_data,
 						      priv_data->ntypes, 
 						      PQftype (pg_res, i));
-		isNull = *thevalue != '\0' ? 
-				FALSE : PQgetisnull (pg_res, rownum, i);
+		isNull = *thevalue != '\0' ? FALSE : PQgetisnull (pg_res, rownum, i);
 
 		gda_postgres_set_field_data (field, PQfname (pg_res, i), ftype,
-					thevalue, PQfsize (pg_res, i), isNull);
+					     thevalue, PQfsize (pg_res, i), isNull);
 	}
 
 	return row;
 }
 
 static GdaRowAttributes *
-describe_func (GdaServerRecordset *recset)
+describe_func (GdaRecordset *recset)
 {
 	GdaPostgresRecordsetPrivate *priv_data;
 	PGresult *pg_res;
@@ -119,13 +118,13 @@ describe_func (GdaServerRecordset *recset)
 	gint i;
 	GdaRowAttributes *attrs;
 
-	g_return_val_if_fail (GDA_IS_SERVER_RECORDSET (recset), NULL);
+	g_return_val_if_fail (GDA_IS_RECORDSET (recset), NULL);
 
 	priv_data = g_object_get_data (G_OBJECT (recset), OBJECT_DATA_RECSET_HANDLE);
 	pg_res = priv_data->pg_res;
 	if (!pg_res) {
-		gda_server_connection_add_error_string (
-			gda_server_recordset_get_connection (recset),
+		gda_connection_add_error_string (
+			gda_recordset_get_connection (recset),
 			_("Invalid PostgreSQL handle"));
 		return NULL;
 	}
@@ -136,7 +135,7 @@ describe_func (GdaServerRecordset *recset)
 	
 	for (i = 0; i < field_count; i++) {
 		GdaFieldAttributes *field_attrs;
-		GdaType ftype;
+		GdaValueType ftype;
 		gint scale;
 
 		field_attrs = gda_row_attributes_get_field (attrs, i);
@@ -146,8 +145,8 @@ describe_func (GdaServerRecordset *recset)
 						      priv_data->ntypes, 
 						      PQftype (pg_res, i));
 
-		scale = (ftype == GDA_TYPE_DOUBLE) ? DBL_DIG :
-			(ftype == GDA_TYPE_SINGLE) ? FLT_DIG : 0;
+		scale = (ftype == GDA_VALUE_TYPE_DOUBLE) ? DBL_DIG :
+			(ftype == GDA_VALUE_TYPE_SINGLE) ? FLT_DIG : 0;
 
 		gda_field_attributes_set_scale (field_attrs, scale);
 		gda_field_attributes_set_gdatype (field_attrs, ftype);
@@ -167,17 +166,17 @@ describe_func (GdaServerRecordset *recset)
  * Public functions
  */
 
-GdaServerRecordset *
-gda_postgres_recordset_new (GdaServerConnection *cnc, PGresult *pg_res)
+GdaRecordset *
+gda_postgres_recordset_new (GdaConnection *cnc, PGresult *pg_res)
 {
-	GdaServerRecordset *recset;
+	GdaRecordset *recset;
 	GdaPostgresRecordsetPrivate *priv_data;
 	GdaPostgresConnectionData *cnc_priv_data;
 
-	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), NULL);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (pg_res != NULL, NULL);
 
-	recset = gda_server_recordset_new (cnc, fetch_func, describe_func);
+	recset = gda_recordset_new (cnc, fetch_func, describe_func);
 
 	cnc_priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE);
 

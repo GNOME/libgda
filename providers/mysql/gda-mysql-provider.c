@@ -23,8 +23,8 @@
  */
 
 #include <config.h>
-#include <bonobo/bonobo-i18n.h>
-#include <libgda/gda-server-recordset-model.h>
+#include <libgda/gda-data-model-array.h>
+#include <libgda/gda-intl.h>
 #include <stdlib.h>
 #include "gda-mysql.h"
 #include "gda-mysql-recordset.h"
@@ -39,32 +39,32 @@ static void gda_mysql_provider_init       (GdaMysqlProvider *provider,
 static void gda_mysql_provider_finalize   (GObject *object);
 
 static gboolean gda_mysql_provider_open_connection (GdaServerProvider *provider,
-						    GdaServerConnection *cnc,
+						    GdaConnection *cnc,
 						    GdaQuarkList *params,
 						    const gchar *username,
 						    const gchar *password);
 static gboolean gda_mysql_provider_close_connection (GdaServerProvider *provider,
-						     GdaServerConnection *cnc);
+						     GdaConnection *cnc);
 static GList *gda_mysql_provider_execute_command (GdaServerProvider *provider,
-						  GdaServerConnection *cnc,
+						  GdaConnection *cnc,
 						  GdaCommand *cmd,
 						  GdaParameterList *params);
 static gboolean gda_mysql_provider_begin_transaction (GdaServerProvider *provider,
-						      GdaServerConnection *cnc,
+						      GdaConnection *cnc,
 						      const gchar *trans_id);
 static gboolean gda_mysql_provider_commit_transaction (GdaServerProvider *provider,
-						       GdaServerConnection *cnc,
+						       GdaConnection *cnc,
 						       const gchar *trans_id);
 static gboolean gda_mysql_provider_rollback_transaction (GdaServerProvider *provider,
-							 GdaServerConnection *cnc,
+							 GdaConnection *cnc,
 							 const gchar *trans_id);
 static gboolean gda_mysql_provider_supports (GdaServerProvider *provider,
-					     GdaServerConnection *cnc,
-					     GNOME_Database_Feature feature);
-static GdaServerRecordset *gda_mysql_provider_get_schema (GdaServerProvider *provider,
-							  GdaServerConnection *cnc,
-							  GNOME_Database_Connection_Schema schema,
-							  GdaParameterList *params);
+					     GdaConnection *cnc,
+					     GdaConnectionFeature feature);
+static GdaDataModel *gda_mysql_provider_get_schema (GdaServerProvider *provider,
+						    GdaConnection *cnc,
+						    GdaConnectionSchema schema,
+						    GdaParameterList *params);
 
 static GObjectClass *parent_class = NULL;
 
@@ -123,9 +123,7 @@ gda_mysql_provider_get_type (void)
 			0,
 			(GInstanceInitFunc) gda_mysql_provider_init
 		};
-		type = g_type_register_static (PARENT_TYPE,
-					       "GdaMysqlProvider",
-					       &info, 0);
+		type = g_type_register_static (PARENT_TYPE, "GdaMysqlProvider", &info, 0);
 	}
 
 	return type;
@@ -134,7 +132,7 @@ gda_mysql_provider_get_type (void)
 /* open_connection handler for the GdaMysqlProvider class */
 static gboolean
 gda_mysql_provider_open_connection (GdaServerProvider *provider,
-				    GdaServerConnection *cnc,
+				    GdaConnection *cnc,
 				    GdaQuarkList *params,
 				    const gchar *username,
 				    const gchar *password)
@@ -154,7 +152,7 @@ gda_mysql_provider_open_connection (GdaServerProvider *provider,
 	GdaMysqlProvider *myprv = (GdaMysqlProvider *) provider;
 
 	g_return_val_if_fail (GDA_IS_MYSQL_PROVIDER (myprv), FALSE);
-	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 
 	/* get all parameters received */
 	t_host = gda_quark_list_find (params, "HOST");
@@ -172,7 +170,7 @@ gda_mysql_provider_open_connection (GdaServerProvider *provider,
 
 	/* we can't have both a host/pair AND a unix_socket */
 	if ((t_host || t_port) && t_unix_socket) {
-		gda_server_connection_add_error_string (
+		gda_connection_add_error_string (
 			cnc, _("You cannot provide a UNIX_SOCKET if you also provide"
 			       " either a HOST or a PORT."));
 		return FALSE;
@@ -196,7 +194,7 @@ gda_mysql_provider_open_connection (GdaServerProvider *provider,
 				    t_flags ? atoi (t_flags) : 0);
 	if (!mysql) {
 		error = gda_mysql_make_error (mysql);
-		gda_server_connection_add_error (cnc, error);
+		gda_connection_add_error (cnc, error);
 
 		return FALSE;
 	}
@@ -205,7 +203,7 @@ gda_mysql_provider_open_connection (GdaServerProvider *provider,
 	if (err != 0) {
 		error = gda_mysql_make_error (mysql);
 		mysql_close (mysql);
-		gda_server_connection_add_error (cnc, error);
+		gda_connection_add_error (cnc, error);
 
 		return FALSE;
 	}
@@ -218,13 +216,13 @@ gda_mysql_provider_open_connection (GdaServerProvider *provider,
 
 /* close_connection handler for the GdaMysqlProvider class */
 static gboolean
-gda_mysql_provider_close_connection (GdaServerProvider *provider, GdaServerConnection *cnc)
+gda_mysql_provider_close_connection (GdaServerProvider *provider, GdaConnection *cnc)
 {
 	MYSQL *mysql;
 	GdaMysqlProvider *myprv = (GdaMysqlProvider *) provider;
 
 	g_return_val_if_fail (GDA_IS_MYSQL_PROVIDER (myprv), FALSE);
-	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 
 	mysql = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_MYSQL_HANDLE);
 	if (!mysql)
@@ -237,14 +235,14 @@ gda_mysql_provider_close_connection (GdaServerProvider *provider, GdaServerConne
 }
 
 static GList *
-process_sql_commands (GList *reclist, GdaServerConnection *cnc, const gchar *sql)
+process_sql_commands (GList *reclist, GdaConnection *cnc, const gchar *sql)
 {
 	MYSQL *mysql;
 	gchar **arr;
 
 	mysql = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_MYSQL_HANDLE);
 	if (!mysql) {
-		gda_server_connection_add_error_string (cnc, _("Invalid MYSQL handle"));
+		gda_connection_add_error_string (cnc, _("Invalid MYSQL handle"));
 		return NULL;
 	}
 
@@ -256,18 +254,17 @@ process_sql_commands (GList *reclist, GdaServerConnection *cnc, const gchar *sql
 		while (arr[n]) {
 			gint rc;
 			MYSQL_RES *mysql_res;
-			GdaServerRecordset *recset;
+			GdaRecordset *recset;
 
 			rc = mysql_real_query (mysql, arr[n], strlen (arr[n]));
 			if (rc != 0) {
-				gda_server_connection_add_error (
-					cnc, gda_mysql_make_error (mysql));
+				gda_connection_add_error (cnc, gda_mysql_make_error (mysql));
 				break;
 			}
 
 			mysql_res = mysql_store_result (mysql);
 			recset = gda_mysql_recordset_new (cnc, mysql_res);
-			if (GDA_IS_SERVER_RECORDSET (recset))
+			if (GDA_IS_RECORDSET (recset))
 				reclist = g_list_append (reclist, recset);
 
 			n++;
@@ -282,7 +279,7 @@ process_sql_commands (GList *reclist, GdaServerConnection *cnc, const gchar *sql
 /* execute_command handler for the GdaMysqlProvider class */
 static GList *
 gda_mysql_provider_execute_command (GdaServerProvider *provider,
-				    GdaServerConnection *cnc,
+				    GdaConnection *cnc,
 				    GdaCommand *cmd,
 				    GdaParameterList *params)
 {
@@ -291,7 +288,7 @@ gda_mysql_provider_execute_command (GdaServerProvider *provider,
 	GdaMysqlProvider *myprv = (GdaMysqlProvider *) provider;
 
 	g_return_val_if_fail (GDA_IS_MYSQL_PROVIDER (myprv), NULL);
-	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), NULL);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (cmd != NULL, NULL);
 
 	switch (gda_command_get_command_type (cmd)) {
@@ -312,7 +309,7 @@ gda_mysql_provider_execute_command (GdaServerProvider *provider,
 /* begin_transaction handler for the GdaMysqlProvider class */
 static gboolean
 gda_mysql_provider_begin_transaction (GdaServerProvider *provider,
-				      GdaServerConnection *cnc,
+				      GdaConnection *cnc,
 				      const gchar *trans_id)
 {
 	MYSQL *mysql;
@@ -320,18 +317,17 @@ gda_mysql_provider_begin_transaction (GdaServerProvider *provider,
 	GdaMysqlProvider *myprv = (GdaMysqlProvider *) provider;
 
 	g_return_val_if_fail (GDA_IS_MYSQL_PROVIDER (myprv), FALSE);
-	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 
 	mysql = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_MYSQL_HANDLE);
 	if (!mysql) {
-		gda_server_connection_add_error_string (cnc, _("Invalid MYSQL handle"));
+		gda_connection_add_error_string (cnc, _("Invalid MYSQL handle"));
 		return FALSE;
 	}
 
 	rc = mysql_real_query (mysql, "BEGIN", strlen ("BEGIN"));
 	if (rc != 0) {
-		gda_server_connection_add_error (
-			cnc, gda_mysql_make_error (mysql));
+		gda_connection_add_error (cnc, gda_mysql_make_error (mysql));
 		return FALSE;
 	}
 
@@ -341,7 +337,7 @@ gda_mysql_provider_begin_transaction (GdaServerProvider *provider,
 /* commit_transaction handler for the GdaMysqlProvider class */
 static gboolean
 gda_mysql_provider_commit_transaction (GdaServerProvider *provider,
-				       GdaServerConnection *cnc,
+				       GdaConnection *cnc,
 				       const gchar *trans_id)
 {
 	MYSQL *mysql;
@@ -349,18 +345,17 @@ gda_mysql_provider_commit_transaction (GdaServerProvider *provider,
 	GdaMysqlProvider *myprv = (GdaMysqlProvider *) provider;
 
 	g_return_val_if_fail (GDA_IS_MYSQL_PROVIDER (myprv), FALSE);
-	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 
 	mysql = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_MYSQL_HANDLE);
 	if (!mysql) {
-		gda_server_connection_add_error_string (cnc, _("Invalid MYSQL handle"));
+		gda_connection_add_error_string (cnc, _("Invalid MYSQL handle"));
 		return FALSE;
 	}
 
 	rc = mysql_real_query (mysql, "COMMIT", strlen ("COMMIT"));
 	if (rc != 0) {
-		gda_server_connection_add_error (
-			cnc, gda_mysql_make_error (mysql));
+		gda_connection_add_error (cnc, gda_mysql_make_error (mysql));
 		return FALSE;
 	}
 
@@ -370,7 +365,7 @@ gda_mysql_provider_commit_transaction (GdaServerProvider *provider,
 /* rollback_transaction handler for the GdaMysqlProvider class */
 static gboolean
 gda_mysql_provider_rollback_transaction (GdaServerProvider *provider,
-					 GdaServerConnection *cnc,
+					 GdaConnection *cnc,
 					 const gchar *trans_id)
 {
 	MYSQL *mysql;
@@ -378,18 +373,17 @@ gda_mysql_provider_rollback_transaction (GdaServerProvider *provider,
 	GdaMysqlProvider *myprv = (GdaMysqlProvider *) provider;
 
 	g_return_val_if_fail (GDA_IS_MYSQL_PROVIDER (myprv), FALSE);
-	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 
 	mysql = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_MYSQL_HANDLE);
 	if (!mysql) {
-		gda_server_connection_add_error_string (cnc, _("Invalid MYSQL handle"));
+		gda_connection_add_error_string (cnc, _("Invalid MYSQL handle"));
 		return FALSE;
 	}
 
 	rc = mysql_real_query (mysql, "ROLLBACK", strlen ("ROLLBACK"));
 	if (rc != 0) {
-		gda_server_connection_add_error (
-			cnc, gda_mysql_make_error (mysql));
+		gda_connection_add_error (cnc, gda_mysql_make_error (mysql));
 		return FALSE;
 	}
 
@@ -399,16 +393,16 @@ gda_mysql_provider_rollback_transaction (GdaServerProvider *provider,
 /* supports handler for the GdaMysqlProvider class */
 static gboolean
 gda_mysql_provider_supports (GdaServerProvider *provider,
-			     GdaServerConnection *cnc,
-			     GNOME_Database_Feature feature)
+			     GdaConnection *cnc,
+			     GdaConnectionFeature feature)
 {
 	GdaMysqlProvider *myprv = (GdaMysqlProvider *) provider;
 
 	g_return_val_if_fail (GDA_IS_MYSQL_PROVIDER (myprv), FALSE);
 
 	switch (feature) {
-	case GNOME_Database_FEATURE_SQL :
-	case GNOME_Database_FEATURE_TRANSACTIONS :
+	case GDA_CONNECTION_FEATURE_SQL :
+	case GDA_CONNECTION_FEATURE_TRANSACTIONS :
 		return TRUE;
 	default :
 	}
@@ -417,36 +411,36 @@ gda_mysql_provider_supports (GdaServerProvider *provider,
 }
 
 static void
-add_string_row (GdaServerRecordsetModel *recset, const gchar *str)
+add_string_row (GdaDataModelArray *recset, const gchar *str)
 {
 	GdaValue *value;
 	GList list;
 
-	g_return_if_fail (GDA_IS_SERVER_RECORDSET_MODEL (recset));
+	g_return_if_fail (GDA_IS_DATA_MODEL_ARRAY (recset));
 
 	value = gda_value_new_string (str);
 	list.data = value;
 	list.next = NULL;
 	list.prev = NULL;
 
-	gda_server_recordset_model_append_row (recset, &list);
+	gda_data_model_array_append_row (recset, &list);
 
 	gda_value_free (value);
 }
 
-static GdaServerRecordset *
-get_mysql_aggregates (GdaServerConnection *cnc, GdaParameterList *params)
+static GdaDataModel *
+get_mysql_aggregates (GdaConnection *cnc, GdaParameterList *params)
 {
-	GdaServerRecordsetModel *recset;
+	GdaDataModelArray *recset;
 
-	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), NULL);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
 	/* create the recordset */
-	recset = (GdaServerRecordsetModel *) gda_server_recordset_model_new (cnc, 1);
-	gda_server_recordset_model_set_field_defined_size (recset, 0, 32);
-	gda_server_recordset_model_set_field_name (recset, 0, _("Name"));
-	gda_server_recordset_model_set_field_scale (recset, 0, 0);
-	gda_server_recordset_model_set_field_gdatype (recset, 0, GDA_TYPE_STRING);
+	recset = (GdaDataModelArray *) gda_data_model_array_new (1);
+	//gda_server_recordset_model_set_field_defined_size (recset, 0, 32);
+	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 0, _("Name"));
+	//gda_server_recordset_model_set_field_scale (recset, 0, 0);
+	//gda_server_recordset_model_set_field_gdatype (recset, 0, GDA_TYPE_STRING);
 
 	/* fill the recordset */
 	add_string_row (recset, "abs");
@@ -586,58 +580,58 @@ get_mysql_aggregates (GdaServerConnection *cnc, GdaParameterList *params)
 	add_string_row (recset, "year");
 	add_string_row (recset, "yearweek");
 
-	return GDA_SERVER_RECORDSET (recset);
+	return GDA_DATA_MODEL (recset);
 }
 
-static GdaServerRecordset *
-get_mysql_databases (GdaServerConnection *cnc, GdaParameterList *params)
+static GdaDataModel *
+get_mysql_databases (GdaConnection *cnc, GdaParameterList *params)
 {
 	GList *reclist;
-	GdaServerRecordset *recset;
+	GdaRecordset *recset;
 
-	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), NULL);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
 	reclist = process_sql_commands (NULL, cnc, "show databases");
 	if (!reclist)
 		return NULL;
 
-	recset = GDA_SERVER_RECORDSET (reclist->data);
+	recset = GDA_RECORDSET (reclist->data);
 	g_list_free (reclist);
 
-	return recset;
+	return GDA_DATA_MODEL (recset);
 }
 
-static GdaServerRecordset *
-get_mysql_tables (GdaServerConnection *cnc, GdaParameterList *params)
+static GdaDataModel *
+get_mysql_tables (GdaConnection *cnc, GdaParameterList *params)
 {
 	GList *reclist;
-	GdaServerRecordset *recset;
+	GdaRecordset *recset;
 
-	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), NULL);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
 	reclist = process_sql_commands (NULL, cnc, "show tables");
 	if (!reclist)
 		return NULL;
 
-	recset = GDA_SERVER_RECORDSET (reclist->data);
+	recset = GDA_RECORDSET (reclist->data);
 	g_list_free (reclist);
 
-	return recset;
+	return GDA_DATA_MODEL (recset);
 }
 
-static GdaServerRecordset *
-get_mysql_types (GdaServerConnection *cnc, GdaParameterList *params)
+static GdaDataModel *
+get_mysql_types (GdaConnection *cnc, GdaParameterList *params)
 {
-	GdaServerRecordsetModel *recset;
+	GdaDataModelArray *recset;
 
-	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), NULL);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
 	/* create the recordset */
-	recset = (GdaServerRecordsetModel *) gda_server_recordset_model_new (cnc, 1);
-	gda_server_recordset_model_set_field_defined_size (recset, 0, 32);
-	gda_server_recordset_model_set_field_name (recset, 0, _("Type"));
-	gda_server_recordset_model_set_field_scale (recset, 0, 0);
-	gda_server_recordset_model_set_field_gdatype (recset, 0, GDA_TYPE_STRING);
+	recset = (GdaDataModelArray *) gda_data_model_array_new (1);
+	//gda_server_recordset_model_set_field_defined_size (recset, 0, 32);
+	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 0, _("Type"));
+	//gda_server_recordset_model_set_field_scale (recset, 0, 0);
+	//gda_server_recordset_model_set_field_gdatype (recset, 0, GDA_TYPE_STRING);
 
 	/* fill the recordset */
 	add_string_row (recset, "blob");
@@ -658,7 +652,7 @@ get_mysql_types (GdaServerConnection *cnc, GdaParameterList *params)
 	add_string_row (recset, "tiny");
 	add_string_row (recset, "year");
 
-	return GDA_SERVER_RECORDSET (recset);
+	return GDA_DATA_MODEL (recset);
 }
 
 static GList *
@@ -718,53 +712,63 @@ field_row_to_value_list (MYSQL_ROW mysql_row)
 	return value_list;
 }
 
-static GdaServerRecordset *
-get_table_fields (GdaServerConnection *cnc, GdaParameterList *params)
+static GdaDataModel *
+get_table_fields (GdaConnection *cnc, GdaParameterList *params)
 {
 	const gchar *table_name;
 	GdaParameter *par;
 	gchar *cmd_str;
-	GdaServerRecordsetModel *recset;
+	GdaDataModelArray *recset;
 	gint rows, r;
 	gint rc;
 	MYSQL *mysql;
 	MYSQL_RES *mysql_res;
 	struct {
 		const gchar *name;
-		GdaType type;
+		GdaValueType type;
 	} fields_desc[8] = {
-		{ N_("Field name")	, GDA_TYPE_STRING  },
-		{ N_("Data type")	, GDA_TYPE_STRING  },
-		{ N_("Size")		, GDA_TYPE_INTEGER },
-		{ N_("Scale")		, GDA_TYPE_INTEGER },
-		{ N_("Not null?")	, GDA_TYPE_BOOLEAN },
-		{ N_("Primary key?")	, GDA_TYPE_BOOLEAN },
-		{ N_("Unique index?")	, GDA_TYPE_BOOLEAN },
-		{ N_("References")	, GDA_TYPE_STRING  }
+		{ N_("Field name")	, GDA_VALUE_TYPE_STRING  },
+		{ N_("Data type")	, GDA_VALUE_TYPE_STRING  },
+		{ N_("Size")		, GDA_VALUE_TYPE_INTEGER },
+		{ N_("Scale")		, GDA_VALUE_TYPE_INTEGER },
+		{ N_("Not null?")	, GDA_VALUE_TYPE_BOOLEAN },
+		{ N_("Primary key?")	, GDA_VALUE_TYPE_BOOLEAN },
+		{ N_("Unique index?")	, GDA_VALUE_TYPE_BOOLEAN },
+		{ N_("References")	, GDA_VALUE_TYPE_STRING  }
 	};
 
-	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), NULL);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (params != NULL, NULL);
 
 	mysql = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_MYSQL_HANDLE);
-	if (!mysql)
+	if (!mysql) {
+		gda_connection_add_error_string (cnc, _("Invalid MySQL handle"));
 		return NULL;
+	}
 
 	/* get parameters sent by client */
 	par = gda_parameter_list_find (params, "name");
-	if (!par)
+	if (!par) {
+		gda_connection_add_error_string (
+			cnc,
+			_("You need to specify the name of the table"));
 		return NULL;
+	}
 
-	table_name = gda_value_get_string (gda_parameter_get_value (par));
-	if (!table_name)
+	table_name = gda_value_get_string ((GdaValue *) gda_parameter_get_value (par));
+	if (!table_name) {
+		gda_connection_add_error_string (
+			cnc,
+			_("You need to specify the name of the table"));
 		return NULL;
+	}
 
 	/* execute command on server */	
 	cmd_str = g_strdup_printf ("SHOW COLUMNS FROM %s", table_name);
 	rc = mysql_real_query (mysql, cmd_str, strlen (cmd_str));
 	g_free (cmd_str);
 	if (rc != 0) {
-		gda_server_connection_add_error (cnc, gda_mysql_make_error (mysql));
+		gda_connection_add_error (cnc, gda_mysql_make_error (mysql));
 		return NULL;
 	}
 
@@ -772,15 +776,16 @@ get_table_fields (GdaServerConnection *cnc, GdaParameterList *params)
 	rows = mysql_num_rows (mysql_res);
 
 	/* fill in the recordset to be returned */
-	recset = gda_server_recordset_model_new (cnc, 8);
+	recset = (GdaDataModelArray *) gda_data_model_array_new (8);
 	for (r = 0; r < sizeof (fields_desc) / sizeof (fields_desc[0]); r++) {
-		gint defined_size =  (fields_desc[r].type == GDA_TYPE_STRING) ? 64 : 
-			(fields_desc[r].type == GDA_TYPE_INTEGER) ? sizeof (gint) : 1;
+		//gint defined_size =  (fields_desc[r].type == GDA_VALUE_TYPE_STRING) ? 64 : 
+		//	(fields_desc[r].type == GDA_VALUE_TYPE_INTEGER) ? sizeof (gint) : 1;
 
-		gda_server_recordset_model_set_field_defined_size (recset, r, defined_size);
-		gda_server_recordset_model_set_field_name (recset, r, _(fields_desc[r].name));
-		gda_server_recordset_model_set_field_scale (recset, r, 0);
-		gda_server_recordset_model_set_field_gdatype (recset, r, fields_desc[r].type);
+		//gda_server_recordset_model_set_field_defined_size (recset, r, defined_size);
+		gda_data_model_set_column_title (GDA_DATA_MODEL (recset), r,
+						_(fields_desc[r].name));
+		//gda_server_recordset_model_set_field_scale (recset, r, 0);
+		//gda_server_recordset_model_set_field_gdatype (recset, r, fields_desc[r].type);
 	}
 	
 	for (r = 0; r < rows; r++) {
@@ -791,7 +796,7 @@ get_table_fields (GdaServerConnection *cnc, GdaParameterList *params)
 		mysql_row = mysql_fetch_row (mysql_res);
 		if (!mysql_row) {
 			mysql_free_result (mysql_res);
-			bonobo_object_unref (BONOBO_OBJECT (recset));
+			g_object_unref (G_OBJECT (recset));
 
 			return NULL;
 		}
@@ -799,42 +804,42 @@ get_table_fields (GdaServerConnection *cnc, GdaParameterList *params)
 		value_list = field_row_to_value_list (mysql_row);
 		if (!value_list) {
 			mysql_free_result (mysql_res);
-			bonobo_object_unref (BONOBO_OBJECT (recset));
+			g_object_unref (G_OBJECT (recset));
 
 			return NULL;
 		}
 
-		gda_server_recordset_model_append_row (recset, (const GList *) value_list);
+		gda_data_model_array_append_row (recset, (const GList *) value_list);
 
-		g_list_foreach (value_list, gda_value_free, NULL);
+		g_list_foreach (value_list, (GFunc) gda_value_free, NULL);
 		g_list_free (value_list);
 	}
 
 	mysql_free_result (mysql_res);
 
-	return GDA_SERVER_RECORDSET (recset);
+	return GDA_DATA_MODEL (recset);
 }
 
 /* get_schema handler for the GdaMysqlProvider class */
-static GdaServerRecordset *
+static GdaDataModel *
 gda_mysql_provider_get_schema (GdaServerProvider *provider,
-			       GdaServerConnection *cnc,
-			       GNOME_Database_Connection_Schema schema,
+			       GdaConnection *cnc,
+			       GdaConnectionSchema schema,
 			       GdaParameterList *params)
 {
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
-	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), NULL);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
 	switch (schema) {
-	case GNOME_Database_Connection_SCHEMA_AGGREGATES :
+	case GDA_CONNECTION_SCHEMA_AGGREGATES :
 		return get_mysql_aggregates (cnc, params);
-	case GNOME_Database_Connection_SCHEMA_DATABASES :
+	case GDA_CONNECTION_SCHEMA_DATABASES :
 		return get_mysql_databases (cnc, params);
-	case GNOME_Database_Connection_SCHEMA_FIELDS :
+	case GDA_CONNECTION_SCHEMA_FIELDS :
 		return get_table_fields (cnc, params);
-	case GNOME_Database_Connection_SCHEMA_TABLES :
+	case GDA_CONNECTION_SCHEMA_TABLES :
 		return get_mysql_tables (cnc, params);
-	case GNOME_Database_Connection_SCHEMA_TYPES :
+	case GDA_CONNECTION_SCHEMA_TYPES :
 		return get_mysql_types (cnc, params);
 	default :
 	}

@@ -38,14 +38,14 @@ static void gda_odbc_provider_init       (GdaOdbcProvider *provider,
 static void gda_odbc_provider_finalize   (GObject *object);
 
 static gboolean gda_odbc_provider_open_connection (GdaServerProvider *provider,
-						   GdaServerConnection *cnc,
+						   GdaConnection *cnc,
 						   GdaQuarkList *params,
 						   const gchar *username,
 						   const gchar *password);
 static gboolean gda_odbc_provider_close_connection (GdaServerProvider *provider,
-						    GdaServerConnection *cnc);
+						    GdaConnection *cnc);
 static GList *gda_odbc_provider_execute_command (GdaServerProvider *provider,
-						 GdaServerConnection *cnc,
+						 GdaConnection *cnc,
 						 GdaCommand *cmd,
 						 GdaParameterList *params);
 
@@ -101,9 +101,7 @@ gda_odbc_provider_get_type (void)
                         0,
                         (GInstanceInitFunc) gda_odbc_provider_init
                 };
-                type = g_type_register_static (PARENT_TYPE,
-                                               "GdaOdbcProvider",
-                                               &info, 0);
+                type = g_type_register_static (PARENT_TYPE, "GdaOdbcProvider", &info, 0);
         }
 
         return type;
@@ -112,7 +110,7 @@ gda_odbc_provider_get_type (void)
 /* open_connection handler for the GdaOdbcProvider class */
 static gboolean
 gda_odbc_provider_open_connection (GdaServerProvider *provider,
-				   GdaServerConnection *cnc,
+				   GdaConnection *cnc,
 				   GdaQuarkList *params,
 				   const gchar *username,
 				   const gchar *password)
@@ -122,7 +120,7 @@ gda_odbc_provider_open_connection (GdaServerProvider *provider,
 	SQLRETURN rc;
 
 	g_return_val_if_fail (GDA_IS_ODBC_PROVIDER (provider), FALSE);
-	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 
 	odbc_string = gda_quark_list_find (params, "STRING");
 
@@ -164,12 +162,12 @@ gda_odbc_provider_open_connection (GdaServerProvider *provider,
 /* close_connection handler for the GdaOdbcProvider class */
 static gboolean
 gda_odbc_provider_close_connection (GdaServerProvider *provider,
-				    GdaServerConnection *cnc)
+				    GdaConnection *cnc)
 {
 	GdaOdbcConnectionPrivate *priv_data;
 
 	g_return_val_if_fail (GDA_IS_ODBC_PROVIDER (provider), FALSE);
-	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 
 	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_ODBC_HANDLE);
         if (!priv_data)
@@ -188,11 +186,11 @@ gda_odbc_provider_close_connection (GdaServerProvider *provider,
 }
 
 static GList *
-process_sql_commands (GList *reclist, GdaServerConnection *cnc, GdaCommand *cmd)
+process_sql_commands (GList *reclist, GdaConnection *cnc, GdaCommand *cmd)
 {
 	GdaOdbcConnectionPrivate *priv_data;
 
-	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), NULL);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (cmd != NULL, NULL);
 
 	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_ODBC_HANDLE);
@@ -205,14 +203,14 @@ process_sql_commands (GList *reclist, GdaServerConnection *cnc, GdaCommand *cmd)
 /* execute_command handler for the GdaOdbcProvider class */
 static GList *
 gda_odbc_provider_execute_command (GdaServerProvider *provider,
-				   GdaServerConnection *cnc,
+				   GdaConnection *cnc,
 				   GdaCommand *cmd,
 				   GdaParameterList *params)
 {
 	GList *reclist = NULL;
 
 	g_return_val_if_fail (GDA_IS_ODBC_PROVIDER (provider), NULL);
-	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), NULL);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (cmd != NULL, NULL);
 
 

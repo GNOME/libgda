@@ -23,11 +23,10 @@
 
 #include <config.h>
 #include <time.h>
-#define ORBIT2_INTERNAL_API
-#include <orbit/orb-core/orbit-object.h>
-#undef ORBIT2_INTERNAL_API
-#include <bonobo/bonobo-arg.h>
-#include <bonobo/bonobo-i18n.h>
+#include <glib/gmessages.h>
+#include <glib/gstrfuncs.h>
+#include <glib/gstring.h>
+#include <libgda/gda-intl.h>
 #include <libgda/gda-value.h>
 
 /*
@@ -37,21 +36,23 @@
 static void
 clear_value (GdaValue *value)
 {
-	CORBA_Environment ev;
-
 	g_return_if_fail (value != NULL);
 
-	if (value->_type) {
-		CORBA_exception_init (&ev);
-		CORBA_Object_release ((CORBA_Object) value->_type, &ev);
-		CORBA_exception_free (&ev);
+	switch (value->type) {
+	case GDA_VALUE_TYPE_LIST :
+		g_list_foreach (value->value.v_list, (GFunc) gda_value_free, NULL);
+		g_list_free (value->value.v_list);
+		value->value.v_list = NULL;
+		break;
+	case GDA_VALUE_TYPE_STRING :
+		g_free (value->value.v_string);
+		value->value.v_string = NULL;
+		break;
+	default :
+		break;
 	}
 
-	if (value->_value)
-		CORBA_free (value->_value);
-
-	value->_type = CORBA_OBJECT_NIL;
-	value->_value = NULL;
+	value->type = GDA_VALUE_TYPE_UNKNOWN;
 }
 
 /**
@@ -64,7 +65,12 @@ clear_value (GdaValue *value)
 GdaValue *
 gda_value_new_null (void)
 {
-	return (GdaValue *) bonobo_arg_new (GDA_VALUE_TYPE_NULL);
+	GdaValue *value;
+
+	value = g_new0 (GdaValue, 1);
+	value->type = GDA_VALUE_TYPE_NULL;
+
+	return value;
 }
 
 /**
@@ -78,8 +84,12 @@ gda_value_new_null (void)
 GdaValue *
 gda_value_new_bigint (gint64 val)
 {
-	return (GdaValue *) bonobo_arg_new_from (GDA_VALUE_TYPE_BIGINT,
-						(gconstpointer) &val);
+	GdaValue *value;
+
+	value = g_new0 (GdaValue, 1);
+	gda_value_set_bigint (value, val);
+
+	return value;
 }
 
 /**
@@ -108,8 +118,12 @@ gda_value_new_binary (gconstpointer val)
 GdaValue *
 gda_value_new_boolean (gboolean val)
 {
-	return (GdaValue *) bonobo_arg_new_from (GDA_VALUE_TYPE_BOOLEAN,
-						(gconstpointer) &val);
+	GdaValue *value;
+
+	value = g_new0 (GdaValue, 1);
+	gda_value_set_boolean (value, val);
+
+	return value;
 }
 
 /**
@@ -123,10 +137,12 @@ gda_value_new_boolean (gboolean val)
 GdaValue *
 gda_value_new_date (const GdaDate *val)
 {
-	g_return_val_if_fail (val != NULL, NULL);
+	GdaValue *value;
 
-	return (GdaValue *) bonobo_arg_new_from (GDA_VALUE_TYPE_DATE,
-						(gconstpointer) val);
+	value = g_new0 (GdaValue, 1);
+	gda_value_set_date (value, val);
+
+	return value;
 }
 
 /**
@@ -140,9 +156,12 @@ gda_value_new_date (const GdaDate *val)
 GdaValue *
 gda_value_new_double (gdouble val)
 {
-	return (GdaValue *) bonobo_arg_new_from (GDA_VALUE_TYPE_DOUBLE,
-						(gconstpointer) &val);
+	GdaValue *value;
 
+	value = g_new0 (GdaValue, 1);
+	gda_value_set_double (value, val);
+
+	return value;
 }
 
 /**
@@ -157,10 +176,12 @@ gda_value_new_double (gdouble val)
 GdaValue *
 gda_value_new_geometric_point (const GdaGeometricPoint *val)
 {
-	g_return_val_if_fail (val != NULL, NULL);
+	GdaValue *value;
 
-	return (GdaValue *) bonobo_arg_new_from (
-			GDA_VALUE_TYPE_GEOMETRIC_POINT, (gconstpointer) val);
+	value = g_new0 (GdaValue, 1);
+	gda_value_set_geometric_point (value, val);
+
+	return value;
 }
 
 /**
@@ -174,8 +195,12 @@ gda_value_new_geometric_point (const GdaGeometricPoint *val)
 GdaValue *
 gda_value_new_integer (gint val)
 {
-	return (GdaValue *) bonobo_arg_new_from (GDA_VALUE_TYPE_INTEGER,
-						(gconstpointer) &val);
+	GdaValue *value;
+
+	value = g_new0 (GdaValue, 1);
+	gda_value_set_integer (value, val);
+
+	return value;
 }
 
 /**
@@ -189,10 +214,12 @@ gda_value_new_integer (gint val)
 GdaValue *
 gda_value_new_list (const GdaValueList *val)
 {
-	g_return_val_if_fail (val != NULL, NULL);
+	GdaValue *value;
 
-	return (GdaValue *) bonobo_arg_new_from (GDA_VALUE_TYPE_LIST,
-						 (gconstpointer) val);
+	value = g_new0 (GdaValue, 1);
+	gda_value_set_list (value, val);
+
+	return value;
 }
 
 /**
@@ -206,8 +233,12 @@ gda_value_new_list (const GdaValueList *val)
 GdaValue *
 gda_value_new_numeric (const GdaNumeric *val)
 {
-	return (GdaValue *) bonobo_arg_new_from (GDA_VALUE_TYPE_NUMERIC,
-						 (gconstpointer) val);
+	GdaValue *value;
+
+	value = g_new0 (GdaValue, 1);
+	gda_value_set_numeric (value, val);
+
+	return value;
 }
 
 /**
@@ -221,8 +252,12 @@ gda_value_new_numeric (const GdaNumeric *val)
 GdaValue *
 gda_value_new_single (gfloat val)
 {
-	return (GdaValue *) bonobo_arg_new_from (GDA_VALUE_TYPE_SINGLE,
-						(gconstpointer) &val);
+	GdaValue *value;
+
+	value = g_new0 (GdaValue, 1);
+	gda_value_set_single (value, val);
+
+	return value;
 }
 
 /**
@@ -236,8 +271,12 @@ gda_value_new_single (gfloat val)
 GdaValue *
 gda_value_new_smallint (gshort val)
 {
-	return (GdaValue *) bonobo_arg_new_from (GDA_VALUE_TYPE_SMALLINT,
-						(gconstpointer) &val);
+	GdaValue *value;
+
+	value = g_new0 (GdaValue, 1);
+	gda_value_set_smallint (value, val);
+
+	return value;
 }
 
 /**
@@ -251,10 +290,12 @@ gda_value_new_smallint (gshort val)
 GdaValue *
 gda_value_new_string (const gchar *val)
 {
-	g_return_val_if_fail (val != NULL, NULL);
+	GdaValue *value;
 
-	return (GdaValue *) bonobo_arg_new_from (GDA_VALUE_TYPE_STRING,
-						(gconstpointer) &val);
+	value = g_new0 (GdaValue, 1);
+	gda_value_set_string (value, val);
+
+	return value;
 }
 
 /**
@@ -268,10 +309,12 @@ gda_value_new_string (const gchar *val)
 GdaValue *
 gda_value_new_time (const GdaTime *val)
 {
-	g_return_val_if_fail (val != NULL, NULL);
+	GdaValue *value;
 
-	return (GdaValue *) bonobo_arg_new_from (GDA_VALUE_TYPE_TIME,
-						 (gconstpointer) val);
+	value = g_new0 (GdaValue, 1);
+	gda_value_set_time (value, val);
+
+	return value;
 }
 
 /**
@@ -285,10 +328,12 @@ gda_value_new_time (const GdaTime *val)
 GdaValue *
 gda_value_new_timestamp (const GdaTimestamp *val)
 {
-	g_return_val_if_fail (val != NULL, NULL);
+	GdaValue *value;
 
-	return (GdaValue *) bonobo_arg_new_from (GDA_VALUE_TYPE_TIMESTAMP,
-						(gconstpointer) val);
+	value = g_new0 (GdaValue, 1);
+	gda_value_set_timestamp (value, val);
+
+	return value;
 }
 
 /**
@@ -302,8 +347,12 @@ gda_value_new_timestamp (const GdaTimestamp *val)
 GdaValue *
 gda_value_new_tinyint (gchar val)
 {
-	return (GdaValue *) bonobo_arg_new_from (GDA_VALUE_TYPE_TINYINT,
-						(gconstpointer) &val);
+	GdaValue *value;
+
+	value = g_new0 (GdaValue, 1);
+	gda_value_set_tinyint (value, val);
+
+	return value;
 }
 
 /**
@@ -316,7 +365,9 @@ void
 gda_value_free (GdaValue *value)
 {
 	g_return_if_fail (value != NULL);
-	CORBA_free (value);
+
+	clear_value (value);
+	g_free (value);
 }
 
 /**
@@ -333,11 +384,7 @@ gboolean
 gda_value_isa (const GdaValue *value, GdaValueType type)
 {
 	g_return_val_if_fail (value != NULL, FALSE);
-
-	if (value->_type == NULL)
-		return FALSE;
-
-	return bonobo_arg_type_is_equal (type, value->_type, NULL);
+	return value->type == type;
 }
 
 /**
@@ -353,8 +400,7 @@ gboolean
 gda_value_is_null (GdaValue *value)
 {
 	g_return_val_if_fail (value != NULL, FALSE);
-	return bonobo_arg_type_is_equal (GDA_VALUE_TYPE_NULL, value->_type, 
-					NULL);
+	return value->type == GDA_VALUE_TYPE_NULL;
 }
 
 /**
@@ -366,10 +412,73 @@ gda_value_is_null (GdaValue *value)
  * Returns: a newly allocated #GdaValue with a copy of the data in @value.
  */
 GdaValue *
-gda_value_copy (GdaValue *value)
+gda_value_copy (const GdaValue *value)
 {
+	GdaValue *copy;
+	GList *l;
+
 	g_return_val_if_fail (value != NULL, NULL);
-	return (GdaValue *) bonobo_arg_copy (value);
+
+	copy = g_new0 (GdaValue, 1);
+	copy->type = value->type;
+
+	switch (value->type) {
+	case GDA_VALUE_TYPE_BIGINT :
+		copy->value.v_bigint = value->value.v_bigint;
+		break;
+	case GDA_VALUE_TYPE_BINARY :
+		copy->value.v_binary = NULL; /* FIXME */
+		break;
+	case GDA_VALUE_TYPE_BOOLEAN :
+		copy->value.v_boolean = value->value.v_boolean;
+		break;
+	case GDA_VALUE_TYPE_DATE :
+		memcpy (&copy->value.v_date, &value->value.v_date, sizeof (GdaDate));
+		break;
+	case GDA_VALUE_TYPE_DOUBLE :
+		copy->value.v_double = value->value.v_double;
+		break;
+	case GDA_VALUE_TYPE_GEOMETRIC_POINT :
+		memcpy (&copy->value.v_point, &value->value.v_point, sizeof (GdaGeometricPoint));
+		break;
+	case GDA_VALUE_TYPE_INTEGER :
+		copy->value.v_integer = value->value.v_integer;
+		break;
+	case GDA_VALUE_TYPE_LIST :
+		copy->value.v_list = NULL;
+		for (l = value->value.v_list; l != NULL; l = l->next) {
+			GdaValue *v = (GdaValue *) l->data;
+			copy->value.v_list = g_list_append (copy->value.v_list,
+							    gda_value_copy (v));
+		}
+		break;
+	case GDA_VALUE_TYPE_NUMERIC :
+		memcpy (&copy->value.v_numeric, &value->value.v_numeric, sizeof (GdaNumeric));
+		break;
+	case GDA_VALUE_TYPE_SINGLE :
+		copy->value.v_single = value->value.v_single;
+		break;
+	case GDA_VALUE_TYPE_SMALLINT :
+		copy->value.v_smallint = value->value.v_smallint;
+		break;
+	case GDA_VALUE_TYPE_STRING :
+		copy->value.v_string = g_strdup (value->value.v_string);
+		break;
+	case GDA_VALUE_TYPE_TIME :
+		memcpy (&copy->value.v_time, &value->value.v_time, sizeof (GdaTime));
+		break;
+	case GDA_VALUE_TYPE_TIMESTAMP :
+		memcpy (&copy->value.v_timestamp, &value->value.v_timestamp, sizeof (GdaTimestamp));
+		break;
+	case GDA_VALUE_TYPE_TINYINT :
+		copy->value.v_tinyint = value->value.v_tinyint;
+		break;
+	default :
+		memset (&copy->value, 0, sizeof (copy->value));
+		break;
+	}
+
+	return copy;
 }
 
 /**
@@ -384,7 +493,8 @@ gint64
 gda_value_get_bigint (GdaValue *value)
 {
 	g_return_val_if_fail (value != NULL, -1);
-	return BONOBO_ARG_GET_LONGLONG (value);
+	g_return_val_if_fail (gda_value_isa (value, GDA_VALUE_TYPE_BIGINT), -1);
+	return value->value.v_bigint;
 }
 
 /**
@@ -399,14 +509,9 @@ gda_value_set_bigint (GdaValue *value, gint64 val)
 {
 	g_return_if_fail (value != NULL);
 
-	if (!gda_value_isa (value, GDA_VALUE_TYPE_BIGINT)) {
-		clear_value (value);
-		value->_type = ORBit_RootObject_duplicate (GDA_VALUE_TYPE_BIGINT);
-	}
-	else if (value->_value);
-		CORBA_free (value->_value);
-
-	value->_value = ORBit_copy_value (&val, GDA_VALUE_TYPE_BIGINT);
+	clear_value (value);
+	value->type = GDA_VALUE_TYPE_BIGINT;
+	value->value.v_bigint = val;
 }
 
 /**
@@ -450,7 +555,8 @@ gboolean
 gda_value_get_boolean (GdaValue *value)
 {
 	g_return_val_if_fail (value != NULL, FALSE);
-	return BONOBO_ARG_GET_BOOLEAN (value);
+	g_return_val_if_fail (gda_value_isa (value, GDA_VALUE_TYPE_BOOLEAN), FALSE);
+	return value->value.v_boolean;
 }
 
 /**
@@ -465,14 +571,9 @@ gda_value_set_boolean (GdaValue *value, gboolean val)
 {
 	g_return_if_fail (value != NULL);
 
-	if (!gda_value_isa (value, GDA_VALUE_TYPE_BOOLEAN)) {
-		clear_value (value);
-		value->_type = ORBit_RootObject_duplicate (GDA_VALUE_TYPE_BOOLEAN);
-	}
-	else if (value->_value);
-		CORBA_free (value->_value);
-
-	value->_value = ORBit_copy_value (&val, GDA_VALUE_TYPE_BOOLEAN);
+	clear_value (value);
+	value->type = GDA_VALUE_TYPE_BOOLEAN;
+	value->value.v_boolean = val;
 }
 
 /**
@@ -488,8 +589,7 @@ gda_value_get_date (GdaValue *value)
 {
 	g_return_val_if_fail (value != NULL, NULL);
 	g_return_val_if_fail (gda_value_isa (value, GDA_VALUE_TYPE_DATE), NULL);
-
-	return (const GdaDate *) value->_value;
+	return (const GdaDate *) &value->value.v_date;
 }
 
 /**
@@ -500,19 +600,16 @@ gda_value_get_date (GdaValue *value)
  * Stores @val into @value.
  */
 void
-gda_value_set_date (GdaValue *value, GdaDate *val)
+gda_value_set_date (GdaValue *value, const GdaDate *val)
 {
 	g_return_if_fail (value != NULL);
 	g_return_if_fail (val != NULL);
-	
-	if (!gda_value_isa (value, GDA_VALUE_TYPE_DATE)) {
-		clear_value (value);
-		value->_type = ORBit_RootObject_duplicate (GDA_VALUE_TYPE_DATE);
-	}
-	else if (value->_value)
-		CORBA_free (value->_value);
 
-	value->_value = ORBit_copy_value (val, GDA_VALUE_TYPE_DATE);
+	clear_value (value);
+	value->type = GDA_VALUE_TYPE_DATE;
+	value->value.v_date.year = val->year;
+	value->value.v_date.month = val->month;
+	value->value.v_date.day = val->day;
 }
 
 /**
@@ -527,7 +624,8 @@ gdouble
 gda_value_get_double (GdaValue *value)
 {
 	g_return_val_if_fail (value != NULL, -1);
-	return BONOBO_ARG_GET_DOUBLE (value);
+	g_return_val_if_fail (gda_value_isa (value, GDA_VALUE_TYPE_DOUBLE), -1);
+	return value->value.v_double;
 }
 
 /**
@@ -542,14 +640,9 @@ gda_value_set_double (GdaValue *value, gdouble val)
 {
 	g_return_if_fail (value != NULL);
 
-	if (!gda_value_isa (value, GDA_VALUE_TYPE_DOUBLE)) {
-		clear_value (value);
-		value->_type = ORBit_RootObject_duplicate (GDA_VALUE_TYPE_DOUBLE);
-	}
-	else if (value->_value)
-		CORBA_free (value->_value);
-
-	value->_value = ORBit_copy_value (&val, GDA_VALUE_TYPE_DOUBLE);
+	clear_value (value);
+	value->type = GDA_VALUE_TYPE_DOUBLE;
+	value->value.v_double = val;
 }
 
 /**
@@ -564,10 +657,8 @@ const GdaGeometricPoint *
 gda_value_get_geometric_point (GdaValue *value)
 {
 	g_return_val_if_fail (value != NULL, NULL);
-	g_return_val_if_fail (gda_value_isa (value, 
-				GDA_VALUE_TYPE_GEOMETRIC_POINT), NULL);
-
-	return (const GdaGeometricPoint *) value->_value;
+	g_return_val_if_fail (gda_value_isa (value, GDA_VALUE_TYPE_GEOMETRIC_POINT), NULL);
+	return (const GdaGeometricPoint *) &value->value;
 }
 
 /**
@@ -578,20 +669,15 @@ gda_value_get_geometric_point (GdaValue *value)
  * Stores @val into @value.
  */
 void
-gda_value_set_geometric_point (GdaValue *value, GdaGeometricPoint *val)
+gda_value_set_geometric_point (GdaValue *value, const GdaGeometricPoint *val)
 {
 	g_return_if_fail (value != NULL);
 	g_return_if_fail (val != NULL);
 
-	if (!gda_value_isa (value, GDA_VALUE_TYPE_GEOMETRIC_POINT)) {
-		clear_value (value);
-		value->_type = ORBit_RootObject_duplicate (
-					GDA_VALUE_TYPE_GEOMETRIC_POINT);
-	}
-	else if (value->_value)
-		CORBA_free (value->_value);
-
-	value->_value = ORBit_copy_value (val, GDA_VALUE_TYPE_GEOMETRIC_POINT);
+	clear_value (value);
+	value->type = GDA_VALUE_TYPE_GEOMETRIC_POINT;
+	value->value.v_point.x = val->x;
+	value->value.v_point.y = val->y;
 }
 
 /**
@@ -606,7 +692,8 @@ gint
 gda_value_get_integer (GdaValue *value)
 {
 	g_return_val_if_fail (value != NULL, -1);
-	return BONOBO_ARG_GET_INT (value);
+	g_return_val_if_fail (gda_value_isa (value, GDA_VALUE_TYPE_INTEGER), -1);
+	return value->value.v_integer;
 }
 
 /**
@@ -621,14 +708,9 @@ gda_value_set_integer (GdaValue *value, gint val)
 {
 	g_return_if_fail (value != NULL);
 
-	if (!gda_value_isa (value, GDA_VALUE_TYPE_INTEGER)) {
-		clear_value (value);
-		value->_type = ORBit_RootObject_duplicate (GDA_VALUE_TYPE_INTEGER);
-	}
-	else if (value->_value)
-		CORBA_free (value->_value);
-
-	value->_value = ORBit_copy_value (&val, GDA_VALUE_TYPE_INTEGER);
+	clear_value (value);
+	value->type = GDA_VALUE_TYPE_INTEGER;
+	value->value.v_integer = val;
 }
 
 /**
@@ -643,10 +725,8 @@ const GdaValueList *
 gda_value_get_list (GdaValue *value)
 {
 	g_return_val_if_fail (value != NULL, NULL);
-	g_return_val_if_fail (gda_value_isa (value, 
-					     GDA_VALUE_TYPE_LIST), NULL);
-
-	return (const GdaValueList *) value->_value;
+	g_return_val_if_fail (gda_value_isa (value, GDA_VALUE_TYPE_LIST), NULL);
+	return (const GdaValueList *) value->value.v_list;
 }
 
 /**
@@ -657,19 +737,12 @@ gda_value_get_list (GdaValue *value)
  * Stores @val into @value.
  */
 void
-gda_value_set_list (GdaValue *value, GdaValueList *val)
+gda_value_set_list (GdaValue *value, const GdaValueList *val)
 {
 	g_return_if_fail (value != NULL);
 	g_return_if_fail (val != NULL);
 
-	if (!gda_value_isa (value, GDA_VALUE_TYPE_LIST)) {
-		clear_value (value);
-		value->_type = ORBit_RootObject_duplicate (GDA_VALUE_TYPE_LIST);
-	}
-	else if (value->_value)
-		CORBA_free (value->_value);
-
-	value->_value = ORBit_copy_value (val, GDA_VALUE_TYPE_LIST);
+	/* FIXME: implement */
 }
 
 /**
@@ -683,14 +756,8 @@ gda_value_set_null (GdaValue *value)
 {
 	g_return_if_fail (value != NULL);
 
-	if (!gda_value_isa (value, GDA_VALUE_TYPE_NULL)) {
-		clear_value (value);
-		value->_type = ORBit_RootObject_duplicate (GDA_VALUE_TYPE_NULL);
-	}
-	else if (value->_value)
-		CORBA_free (value->_value);
-
-	value->_value = NULL;
+	clear_value (value);
+	value->type = GDA_VALUE_TYPE_NULL;
 }
 
 /**
@@ -706,8 +773,7 @@ gda_value_get_numeric (GdaValue *value)
 {
 	g_return_val_if_fail (value != NULL, NULL);
 	g_return_val_if_fail (gda_value_isa (value, GDA_VALUE_TYPE_NUMERIC), NULL);
-
-	return (const GdaNumeric *) value->_value;
+	return (const GdaNumeric *) &value->value.v_numeric;
 }
 
 /**
@@ -718,19 +784,16 @@ gda_value_get_numeric (GdaValue *value)
  * Stores @val into @value.
  */
 void
-gda_value_set_numeric (GdaValue *value, GdaNumeric *val)
+gda_value_set_numeric (GdaValue *value, const GdaNumeric *val)
 {
 	g_return_if_fail (value != NULL);
 	g_return_if_fail (val != NULL);
 
-	if (!gda_value_isa (value, GDA_VALUE_TYPE_NUMERIC)) {
-		clear_value (value);
-		value->_type = ORBit_RootObject_duplicate (GDA_VALUE_TYPE_NUMERIC);
-	}
-	else if (value->_value)
-		CORBA_free (value->_value);
-
-	value->_value = ORBit_copy_value (val, GDA_VALUE_TYPE_NUMERIC);
+	clear_value (value);
+	value->type = GDA_VALUE_TYPE_NUMERIC;
+	value->value.v_numeric.number = g_strdup (val->number);
+	value->value.v_numeric.precision = val->precision;
+	value->value.v_numeric.width = val->width;
 }
 
 /**
@@ -745,7 +808,8 @@ gfloat
 gda_value_get_single (GdaValue *value)
 {
 	g_return_val_if_fail (value != NULL, -1);
-	return BONOBO_ARG_GET_FLOAT (value);
+	g_return_val_if_fail (gda_value_isa (value, GDA_VALUE_TYPE_SINGLE), -1);
+	return value->value.v_single;
 }
 
 /**
@@ -760,14 +824,9 @@ gda_value_set_single (GdaValue *value, gfloat val)
 {
 	g_return_if_fail (value != NULL);
 
-	if (!gda_value_isa (value, GDA_VALUE_TYPE_SINGLE)) {
-		clear_value (value);
-		value->_type = ORBit_RootObject_duplicate (GDA_VALUE_TYPE_SINGLE);
-	}
-	else if (value->_value)
-		CORBA_free (value->_value);
-
-	value->_value = ORBit_copy_value (&val, GDA_VALUE_TYPE_SINGLE);
+	clear_value (value);
+	value->type = GDA_VALUE_TYPE_SINGLE;
+	value->value.v_single = val;
 }
 
 /**
@@ -782,7 +841,8 @@ gshort
 gda_value_get_smallint (GdaValue *value)
 {
 	g_return_val_if_fail (value != NULL, -1);
-	return BONOBO_ARG_GET_SHORT (value);
+	g_return_val_if_fail (gda_value_isa (value, GDA_VALUE_TYPE_SMALLINT), -1);
+	return value->value.v_smallint;
 }
 
 /**
@@ -797,14 +857,9 @@ gda_value_set_smallint (GdaValue *value, gshort val)
 {
 	g_return_if_fail (value != NULL);
 
-	if (!gda_value_isa (value, GDA_VALUE_TYPE_SMALLINT)) {
-		clear_value (value);
-		value->_type = ORBit_RootObject_duplicate (GDA_VALUE_TYPE_SMALLINT);
-	}
-	else if (value->_value)
-		CORBA_free (value->_value);
-
-	value->_value = ORBit_copy_value (&val, GDA_VALUE_TYPE_SMALLINT);
+	clear_value (value);
+	value->type = GDA_VALUE_TYPE_SMALLINT;
+	value->value.v_smallint = val;
 }
 
 /**
@@ -819,7 +874,8 @@ const gchar *
 gda_value_get_string (GdaValue *value)
 {
 	g_return_val_if_fail (value != NULL, NULL);
-	return BONOBO_ARG_GET_STRING (value);
+	g_return_val_if_fail (gda_value_isa (value, GDA_VALUE_TYPE_STRING), NULL);
+	return (const gchar *) value->value.v_string;
 }
 
 /**
@@ -834,14 +890,9 @@ gda_value_set_string (GdaValue *value, const gchar *val)
 {
 	g_return_if_fail (value != NULL);
 
-	if (!gda_value_isa (value, GDA_VALUE_TYPE_STRING)) {
-		clear_value (value);
-		value->_type = ORBit_RootObject_duplicate (GDA_VALUE_TYPE_STRING);
-	}
-	else if (value->_value)
-		CORBA_free (value->_value);
-
-	value->_value = ORBit_copy_value (&val, GDA_VALUE_TYPE_STRING);
+	clear_value (value);
+	value->type = GDA_VALUE_TYPE_STRING;
+	value->value.v_string = g_strdup (val);
 }
 
 /**
@@ -857,8 +908,7 @@ gda_value_get_time (GdaValue *value)
 {
 	g_return_val_if_fail (value != NULL, NULL);
 	g_return_val_if_fail (gda_value_isa (value, GDA_VALUE_TYPE_TIME), NULL);
-
-	return (const GdaTime *) value->_value;
+	return (const GdaTime *) &value->value.v_time;
 }
 
 /**
@@ -869,19 +919,17 @@ gda_value_get_time (GdaValue *value)
  * Stores @val into @value.
  */
 void
-gda_value_set_time (GdaValue *value, GdaTime *val)
+gda_value_set_time (GdaValue *value, const GdaTime *val)
 {
 	g_return_if_fail (value != NULL);
 	g_return_if_fail (val != NULL);
 
-	if (!gda_value_isa (value, GDA_VALUE_TYPE_TIME)) {
-		clear_value (value);
-		value->_type = ORBit_RootObject_duplicate (GDA_VALUE_TYPE_TIME);
-	}
-	else if (value->_value)
-		CORBA_free (value->_value);
-
-	value->_value = ORBit_copy_value (val, GDA_VALUE_TYPE_TIME);
+	clear_value (value);
+	value->type = GDA_VALUE_TYPE_TIME;
+	value->value.v_time.hour = val->hour;
+	value->value.v_time.minute = val->minute;
+	value->value.v_time.second = val->second;
+	value->value.v_time.timezone = val->timezone;
 }
 
 /**
@@ -896,10 +944,8 @@ const GdaTimestamp *
 gda_value_get_timestamp (GdaValue *value)
 {
 	g_return_val_if_fail (value != NULL, NULL);
-	g_return_val_if_fail (gda_value_isa (value,
-				GDA_VALUE_TYPE_TIMESTAMP), NULL);
-
-	return (const GdaTimestamp *) value->_value;
+	g_return_val_if_fail (gda_value_isa (value, GDA_VALUE_TYPE_TIMESTAMP), NULL);
+	return (const GdaTimestamp *) &value->value.v_timestamp;
 }
 
 /**
@@ -910,19 +956,21 @@ gda_value_get_timestamp (GdaValue *value)
  * Stores @val into @value.
  */
 void
-gda_value_set_timestamp (GdaValue *value, GdaTimestamp *val)
+gda_value_set_timestamp (GdaValue *value, const GdaTimestamp *val)
 {
 	g_return_if_fail (value != NULL);
 	g_return_if_fail (val != NULL);
 
-	if (!gda_value_isa (value, GDA_VALUE_TYPE_TIMESTAMP)) {
-		clear_value (value);
-		value->_type = ORBit_RootObject_duplicate (GDA_VALUE_TYPE_TIMESTAMP);
-	}
-	else if (value->_value)
-		CORBA_free (value->_value);
-
-	value->_value = ORBit_copy_value (val, GDA_VALUE_TYPE_TIMESTAMP);
+	clear_value (value);
+	value->type = GDA_VALUE_TYPE_TIMESTAMP;
+	value->value.v_timestamp.year = val->year;
+	value->value.v_timestamp.month = val->month;
+	value->value.v_timestamp.day = val->day;
+	value->value.v_timestamp.hour = val->hour;
+	value->value.v_timestamp.minute = val->minute;
+	value->value.v_timestamp.second = val->second;
+	value->value.v_timestamp.fraction = val->fraction;
+	value->value.v_timestamp.timezone = val->timezone;
 }
 
 /**
@@ -937,7 +985,8 @@ gchar
 gda_value_get_tinyint (GdaValue *value)
 {
 	g_return_val_if_fail (value != NULL, -1);
-	return BONOBO_ARG_GET_CHAR (value);
+	g_return_val_if_fail (gda_value_isa (value, GDA_VALUE_TYPE_TINYINT), -1);
+	return value->value.v_tinyint;
 }
 
 /**
@@ -952,14 +1001,9 @@ gda_value_set_tinyint (GdaValue *value, gchar val)
 {
 	g_return_if_fail (value != NULL);
 
-	if (!gda_value_isa (value, GDA_VALUE_TYPE_TINYINT)) {
-		clear_value (value);
-		value->_type = ORBit_RootObject_duplicate (GDA_VALUE_TYPE_TINYINT);
-	}
-	else if (value->_value)
-		CORBA_free (value->_value);
-
-	value->_value = ORBit_copy_value (&val, GDA_VALUE_TYPE_TINYINT);
+	clear_value (value);
+	value->type = GDA_VALUE_TYPE_TINYINT;
+	value->value.v_tinyint = val;
 }
 
 /**
@@ -1002,35 +1046,36 @@ gda_value_stringify (GdaValue *value)
 
 		gdatime = gda_value_get_time (value);
 		retval = g_strdup_printf (gdatime->timezone == TIMEZONE_INVALID ?
-				   "%02u:%02u:%02u" : "%02u:%02u:%02u%+03d", 
-						gdatime->hour,
-						gdatime->minute,
-						gdatime->second,
-						gdatime->timezone/3600);
+					  "%02u:%02u:%02u" : "%02u:%02u:%02u%+03d", 
+					  gdatime->hour,
+					  gdatime->minute,
+					  gdatime->second,
+					  gdatime->timezone / 3600);
 	}
 	else if (gda_value_isa (value, GDA_VALUE_TYPE_DATE)) {
 		const GdaDate *gdadate;
 
 		gdadate = gda_value_get_date (value);
-		retval = g_strdup_printf ("%04u-%02u-%02u",gdadate->year,
-							   gdadate->month,
-							   gdadate->day);
+		retval = g_strdup_printf ("%04u-%02u-%02u",
+					  gdadate->year,
+					  gdadate->month,
+					  gdadate->day);
 	}
 	else if (gda_value_isa (value, GDA_VALUE_TYPE_TIMESTAMP)) {
 		const GdaTimestamp *timestamp;
 
 		timestamp = gda_value_get_timestamp (value);
 		retval = g_strdup_printf (timestamp->timezone == TIMEZONE_INVALID ?
-			"%04u-%02u-%02u %02u:%02u:%02u.%03d" :
-			"%04u-%02u-%02u %02u:%02u:%02u.%03d%+03d",
-						timestamp->year,
-						timestamp->month,
-						timestamp->day,
-						timestamp->hour,
-						timestamp->minute,
-						timestamp->second,
-						timestamp->fraction,
-						timestamp->timezone/3600);
+					  "%04u-%02u-%02u %02u:%02u:%02u.%03d" :
+					  "%04u-%02u-%02u %02u:%02u:%02u.%03d%+03d",
+					  timestamp->year,
+					  timestamp->month,
+					  timestamp->day,
+					  timestamp->hour,
+					  timestamp->minute,
+					  timestamp->second,
+					  timestamp->fraction,
+					  timestamp->timezone/3600);
 	}
 	else if (gda_value_isa (value, GDA_VALUE_TYPE_GEOMETRIC_POINT)) {
 		const GdaGeometricPoint *point;
@@ -1044,36 +1089,31 @@ gda_value_stringify (GdaValue *value)
 	}
 	else if (gda_value_isa (value, GDA_VALUE_TYPE_LIST)) {
 		const GdaValueList *list;
+		GList *l;
+		GString *str = NULL;
 
 		list = gda_value_get_list (value);
-		if (list) {
-			gint i;
-			GString *str = NULL;
+		for (l = (GList *) list; l != NULL; l = l->next) {
+			gchar *s;
 
-			for (i = 0; i < list->_length; i++) {
-				gchar *s;
-
-				s = gda_value_stringify (&list->_buffer[i]);
-				if (!str) {
-					str = g_string_new ("{ \"");
-					str = g_string_append (str, s);
-					str = g_string_append (str, "\"");
-				}
-				else {
-					str = g_string_append (str, ", \"");
-					str = g_string_append (str, s);
-					str = g_string_append (str, "\"");
-				}
-				g_free (s);
+			s = gda_value_stringify ((GdaValue *) l->data);
+			if (!str) {
+				str = g_string_new ("{ \"");
+				str = g_string_append (str, s);
+				str = g_string_append (str, "\"");
 			}
-
-			if (str) {
-				str = g_string_append (str, " }");
-				retval = str->str;
-				g_string_free (str, FALSE);
+			else {
+				str = g_string_append (str, ", \"");
+				str = g_string_append (str, s);
+				str = g_string_append (str, "\"");
 			}
-			else
-				retval = g_strdup ("");
+			g_free (s);
+		}
+
+		if (str) {
+			str = g_string_append (str, " }");
+			retval = str->str;
+			g_string_free (str, FALSE);
 		}
 		else
 			retval = g_strdup ("");

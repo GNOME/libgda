@@ -24,14 +24,13 @@
 #if !defined(__gda_default_recordset_h__)
 #  define __gda_default_recordset_h__
 
-#include <libgda/gda-server-connection.h>
-#include <libgda/gda-server-recordset.h>
+#include <libgda/gda-connection.h>
+#include <libgda/gda-recordset.h>
 #include "gda-default.h"
 
 G_BEGIN_DECLS
 
-GdaServerRecordset *gda_default_recordset_new (GdaServerConnection *cnc,
-					       DEFAULT_Recordset *drecset);
+GdaRecordset *gda_default_recordset_new (GdaConnection *cnc, DEFAULT_Recordset *drecset);
 
 G_END_DECLS
 

@@ -98,15 +98,6 @@ gda-parameter
 @Returns: 
 
 
-<!-- ##### FUNCTION gda_parameter_list_new_from_corba ##### -->
-<para>
-
-</para>
-
-@corba_list: 
-@Returns: 
-
-
 <!-- ##### FUNCTION gda_parameter_list_free ##### -->
 <para>
 
@@ -143,15 +134,6 @@ gda-parameter
 
 
 <!-- ##### FUNCTION gda_parameter_list_get_length ##### -->
-<para>
-
-</para>
-
-@plist: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_parameter_list_to_corba ##### -->
 <para>
 
 </para>

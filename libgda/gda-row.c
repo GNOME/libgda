@@ -20,6 +20,8 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#include <glib/gmessages.h>
+#include <glib/gstrfuncs.h>
 #include <libgda/gda-row.h>
 
 /**
@@ -33,21 +35,14 @@
 GdaRow *
 gda_row_new (gint count)
 {
-	GdaRow *row;
+	GdaRow *row = NULL;
 	gint i;
 
 	g_return_val_if_fail (count >= 0, NULL);
 
-	row = GNOME_Database_Row__alloc ();
-	CORBA_sequence_set_release (row, TRUE);
-	row->_length = count;
-	row->_buffer = CORBA_sequence_GNOME_Database_Field_allocbuf (count);
-
 	for (i = 0; i < count; i++) {
-		row->_buffer[i].attributes.name = CORBA_string_dup ("");
-		row->_buffer[i].attributes.references = CORBA_string_dup ("");
-		row->_buffer[i].value._type = CORBA_OBJECT_NIL;
-		row->_buffer[i].value._value = NULL;
+		GdaField *field = gda_field_new ();
+		row = g_list_append (row, field);
 	}
 
 	return row;
@@ -63,7 +58,9 @@ void
 gda_row_free (GdaRow *row)
 {
 	g_return_if_fail (row != NULL);
-	CORBA_free (row);
+
+	g_list_foreach (row, (GFunc) gda_field_free, NULL);
+	g_list_free (row);
 }
 
 /**
@@ -78,11 +75,13 @@ gda_row_free (GdaRow *row)
 GdaField *
 gda_row_get_field (GdaRow *row, gint num)
 {
+	GList *l;
+
 	g_return_val_if_fail (row != NULL, NULL);
 	g_return_val_if_fail (num >= 0, NULL);
-	g_return_val_if_fail (num < row->_length, NULL);
 
-	return &row->_buffer[num];
+	l = g_list_nth (row, num);
+	return l ? (GdaField *) l->data : NULL;
 }
 
 /**
@@ -96,19 +95,16 @@ gda_row_get_field (GdaRow *row, gint num)
 GdaRowAttributes *
 gda_row_attributes_new (gint count)
 {
-	GdaRowAttributes *attrs;
+	GdaRowAttributes *attrs = NULL;
 	gint i;
 
 	g_return_val_if_fail (count >= 0, NULL);
 
-	attrs = GNOME_Database_RowAttributes__alloc ();
-	CORBA_sequence_set_release (attrs, TRUE);
-	attrs->_length = count;
-	attrs->_buffer = CORBA_sequence_GNOME_Database_FieldAttributes_allocbuf (count);
-
 	for (i = 0; i < count; i++) {
-		attrs->_buffer[i].name = CORBA_string_dup ("");
-		attrs->_buffer[i].references = CORBA_string_dup ("");
+		GdaFieldAttributes *fa;
+
+		fa = gda_field_attributes_new ();
+		attrs = g_list_append (attrs, fa);
 	}
 
 	return attrs;
@@ -124,7 +120,19 @@ void
 gda_row_attributes_free (GdaRowAttributes *attrs)
 {
 	g_return_if_fail (attrs != NULL);
-	CORBA_free (attrs);
+
+	g_list_foreach (attrs, (GFunc) gda_field_attributes_free, NULL);
+	g_list_free (attrs);
+}
+
+/**
+ * gda_row_attributes_get_length
+ */
+gint
+gda_row_attributes_get_length (GdaRowAttributes *attrs)
+{
+	g_return_val_if_fail (attrs != NULL, -1);
+	return g_list_length (attrs);
 }
 
 /**
@@ -137,11 +145,13 @@ gda_row_attributes_free (GdaRowAttributes *attrs)
 GdaFieldAttributes *
 gda_row_attributes_get_field (GdaRowAttributes *attrs, gint num)
 {
+	GList *l;
+
 	g_return_val_if_fail (attrs != NULL, NULL);
 	g_return_val_if_fail (num >= 0, NULL);
-	g_return_val_if_fail (num < attrs->_length, NULL);
 
-	return &attrs->_buffer[num];
+	l = g_list_nth (attrs, num);
+	return l ? (GdaFieldAttributes *) l->data : NULL;
 }
 
 /**
@@ -152,7 +162,19 @@ gda_field_attributes_new (void)
 {
 	GdaFieldAttributes *fa;
 
-	fa = GNOME_Database_FieldAttributes__alloc ();
+	fa = g_new0 (GdaFieldAttributes, 1);
+	fa->defined_size = 0;
+	fa->name = NULL;
+	fa->scale = 0;
+	fa->gda_type = GDA_VALUE_TYPE_NULL;
+	fa->allow_null = TRUE;
+	fa->primary_key = FALSE;
+	fa->unique_key = FALSE;
+	fa->references = NULL;
+	fa->auto_increment = FALSE;
+	fa->auto_increment_start = 0;
+	fa->auto_increment_step = 0;
+
 	return fa;
 }
 
@@ -163,7 +185,10 @@ void
 gda_field_attributes_free (GdaFieldAttributes *fa)
 {
 	g_return_if_fail (fa != NULL);
-	CORBA_free (fa);
+
+	g_free (fa->name);
+	g_free (fa->references);
+	g_free (fa);
 }
 
 /**
@@ -176,7 +201,7 @@ glong
 gda_field_attributes_get_defined_size (GdaFieldAttributes *fa)
 {
 	g_return_val_if_fail (fa != NULL, 0);
-	return fa->definedSize;
+	return fa->defined_size;
 }
 
 /**
@@ -190,7 +215,7 @@ void
 gda_field_attributes_set_defined_size (GdaFieldAttributes *fa, glong size)
 {
 	g_return_if_fail (fa != NULL);
-	fa->definedSize = size;
+	fa->defined_size = size;
 }
 
 /**
@@ -220,8 +245,8 @@ gda_field_attributes_set_name (GdaFieldAttributes *fa, const gchar *name)
 	g_return_if_fail (name != NULL);
 
 	if (fa->name != NULL)
-		CORBA_free (fa->name);
-	fa->name = CORBA_string_dup (name);
+		g_free (fa->name);
+	fa->name = g_strdup (name);
 }
 
 /**
@@ -257,11 +282,11 @@ gda_field_attributes_set_scale (GdaFieldAttributes *fa, glong scale)
  *
  * Returns: the type of @fa.
  */
-GdaType
+GdaValueType
 gda_field_attributes_get_gdatype (GdaFieldAttributes *fa)
 {
-	g_return_val_if_fail (fa != NULL, GDA_TYPE_NULL);
-	return fa->gdaType;
+	g_return_val_if_fail (fa != NULL, GDA_VALUE_TYPE_NULL);
+	return fa->gda_type;
 }
 
 /**
@@ -272,10 +297,10 @@ gda_field_attributes_get_gdatype (GdaFieldAttributes *fa)
  * Sets the type of @fa to @type.
  */
 void
-gda_field_attributes_set_gdatype (GdaFieldAttributes *fa, GdaType type)
+gda_field_attributes_set_gdatype (GdaFieldAttributes *fa, GdaValueType type)
 {
 	g_return_if_fail (fa != NULL);
-	fa->gdaType = type;
+	fa->gda_type = type;
 }
 
 /**
@@ -290,7 +315,7 @@ gboolean
 gda_field_attributes_get_allow_null (GdaFieldAttributes *fa)
 {
 	g_return_val_if_fail (fa != NULL, FALSE);
-	return fa->allowNull;
+	return fa->allow_null;
 }
 
 /**
@@ -304,7 +329,7 @@ void
 gda_field_attributes_set_allow_null (GdaFieldAttributes *fa, gboolean allow)
 {
 	g_return_if_fail (fa != NULL);
-	fa->allowNull = allow;
+	fa->allow_null = allow;
 }
 
 /**
@@ -315,7 +340,7 @@ gboolean
 gda_field_attributes_get_primary_key (GdaFieldAttributes *fa)
 {
 	g_return_val_if_fail (fa != NULL, FALSE);
-	return fa->primaryKey;
+	return fa->primary_key;
 }
 
 /**
@@ -325,7 +350,7 @@ void
 gda_field_attributes_set_primary_key (GdaFieldAttributes *fa, gboolean pk)
 {
 	g_return_if_fail (fa != NULL);
-	fa->primaryKey = pk;
+	fa->primary_key = pk;
 }
 
 /**
@@ -335,7 +360,7 @@ gboolean
 gda_field_attributes_get_unique_key (GdaFieldAttributes *fa)
 {
 	g_return_val_if_fail (fa != NULL, FALSE);
-	return fa->primaryKey;
+	return fa->unique_key;
 }
 
 /**
@@ -345,7 +370,7 @@ void
 gda_field_attributes_set_unique_key (GdaFieldAttributes *fa, gboolean uk)
 {
 	g_return_if_fail (fa != NULL);
-	fa->uniqueKey = uk;
+	fa->unique_key = uk;
 }
 
 /**
@@ -367,12 +392,39 @@ gda_field_attributes_set_references (GdaFieldAttributes *fa, const gchar *ref)
 	g_return_if_fail (fa != NULL);
 
 	if (fa->references != NULL)
-		CORBA_free (fa->references);
+		g_free (fa->references);
 
 	if (ref)
-		fa->references = CORBA_string_dup (ref);
-	else
-		fa->references = CORBA_string_dup ("");
+		fa->references = g_strdup (ref);
+}
+
+/**
+ * gda_field_new
+ */
+GdaField *
+gda_field_new (void)
+{
+	GdaField *field;
+
+	field = g_new0 (GdaField, 1);
+	field->actual_size = 0;
+	field->value = gda_value_new_null ();
+	field->attributes = gda_field_attributes_new ();
+
+	return field;
+}
+
+/**
+ * gda_field_free
+ */
+void
+gda_field_free (GdaField *field)
+{
+	g_return_if_fail (field != NULL);
+
+	gda_value_free (field->value);
+	gda_field_attributes_free (field->attributes);
+	g_free (field);
 }
 
 /**
@@ -385,7 +437,7 @@ glong
 gda_field_get_actual_size (GdaField *field)
 {
 	g_return_val_if_fail (field != NULL, -1);
-	return field->actualSize;
+	return field->actual_size;
 }
 
 /**
@@ -399,7 +451,7 @@ void
 gda_field_set_actual_size (GdaField *field, glong size)
 {
 	g_return_if_fail (field != NULL);
-	field->actualSize = size;
+	field->actual_size = size;
 }
 
 /**
@@ -412,7 +464,7 @@ glong
 gda_field_get_defined_size (GdaField *field)
 {
 	g_return_val_if_fail (field != NULL, -1);
-	return field->attributes.definedSize;
+	return gda_field_attributes_get_defined_size (field->attributes);
 }
 
 /**
@@ -426,7 +478,7 @@ void
 gda_field_set_defined_size (GdaField *field, glong size)
 {
 	g_return_if_fail (field != NULL);
-	field->attributes.definedSize = size;
+	gda_field_attributes_set_defined_size (field->attributes, size);
 }
 
 /**
@@ -439,7 +491,7 @@ const gchar *
 gda_field_get_name (GdaField *field)
 {
 	g_return_val_if_fail (field != NULL, NULL);
-	return (const gchar *) field->attributes.name;
+	return gda_field_attributes_get_name (field->attributes);
 }
 
 /**
@@ -455,10 +507,7 @@ gda_field_set_name (GdaField *field, const gchar *name)
 	g_return_if_fail (field != NULL);
 	g_return_if_fail (name != NULL);
 
-	if (field->attributes.name != NULL)
-		CORBA_free (field->attributes.name);
-
-	field->attributes.name = CORBA_string_dup (name);
+	gda_field_attributes_set_name (field->attributes, name);
 }
 
 /**
@@ -471,7 +520,7 @@ glong
 gda_field_get_scale (GdaField *field)
 {
 	g_return_val_if_fail (field != NULL, -1);
-	return field->attributes.scale;
+	return gda_field_attributes_get_scale (field->attributes);
 }
 
 /**
@@ -485,7 +534,7 @@ void
 gda_field_set_scale (GdaField *field, glong scale)
 {
 	g_return_if_fail (field != NULL);
-	field->attributes.scale = scale;
+	gda_field_attributes_set_scale (field->attributes, scale);
 }
 
 /**
@@ -494,11 +543,11 @@ gda_field_set_scale (GdaField *field, glong scale)
  *
  * Returns: the type of @field.
  */
-GdaType
+GdaValueType
 gda_field_get_gdatype (GdaField *field)
 {
-	g_return_val_if_fail (field != NULL, GDA_TYPE_NULL);
-	return field->attributes.gdaType;
+	g_return_val_if_fail (field != NULL, GDA_VALUE_TYPE_NULL);
+	return gda_field_attributes_get_gdatype (field->attributes);
 }
 
 /**
@@ -509,10 +558,10 @@ gda_field_get_gdatype (GdaField *field)
  * Sets the type of @field to @type.
  */
 void
-gda_field_set_gdatype (GdaField *field, GdaType type)
+gda_field_set_gdatype (GdaField *field, GdaValueType type)
 {
 	g_return_if_fail (field != NULL);
-	field->attributes.gdaType = type;
+	gda_field_attributes_set_gdatype (field->attributes, type);
 }
 
 /**
@@ -523,7 +572,7 @@ gboolean
 gda_field_get_allow_null (GdaField *field)
 {
 	g_return_val_if_fail (field != NULL, FALSE);
-	return field->attributes.allowNull;
+	return gda_field_attributes_get_allow_null (field->attributes);
 }
 
 /**
@@ -535,7 +584,7 @@ void
 gda_field_set_allow_null (GdaField *field, gboolean allow)
 {
 	g_return_if_fail (field != NULL);
-	field->attributes.allowNull = allow;
+	gda_field_attributes_set_allow_null (field->attributes, allow);
 }
 
 /**
@@ -545,7 +594,7 @@ gboolean
 gda_field_get_primary_key (GdaField *field)
 {
 	g_return_val_if_fail (field != NULL, FALSE);
-	return field->attributes.primaryKey;
+	return gda_field_attributes_get_primary_key (field->attributes);
 }
 
 /**
@@ -555,7 +604,7 @@ void
 gda_field_set_primary_key (GdaField *field, gboolean pk)
 {
 	g_return_if_fail (field != NULL);
-	field->attributes.primaryKey = pk;
+	gda_field_attributes_set_primary_key (field->attributes, pk);
 }
 
 /**
@@ -565,7 +614,7 @@ gboolean
 gda_field_get_unique_key (GdaField *field)
 {
 	g_return_val_if_fail (field != NULL, FALSE);
-	return field->attributes.uniqueKey;
+	return gda_field_attributes_get_unique_key (field->attributes);
 }
 
 /**
@@ -575,7 +624,7 @@ void
 gda_field_set_unique_key (GdaField *field, gboolean uk)
 {
 	g_return_if_fail (field != NULL);
-	field->attributes.uniqueKey = uk;
+	gda_field_attributes_set_unique_key (field->attributes, uk);
 }
 
 /**
@@ -585,7 +634,7 @@ const gchar *
 gda_field_get_references (GdaField *field)
 {
 	g_return_val_if_fail (field != NULL, NULL);
-	return (const gchar *) field->attributes.references;
+	return gda_field_attributes_get_references (field->attributes);
 }
 
 /**
@@ -595,7 +644,7 @@ void
 gda_field_set_references (GdaField *field, const gchar *ref)
 {
 	g_return_if_fail (field != NULL);
-	gda_field_attributes_set_references (&field->attributes, ref);
+	gda_field_attributes_set_references (field->attributes, ref);
 }
 
 /**
@@ -609,7 +658,7 @@ gboolean
 gda_field_is_null (GdaField *field)
 {
 	g_return_val_if_fail (field != NULL, TRUE);
-	return gda_value_is_null (&field->value);
+	return gda_value_is_null (field->value);
 }
 
 /**
@@ -622,7 +671,7 @@ GdaValue *
 gda_field_get_value (GdaField *field)
 {
 	g_return_val_if_fail (field != NULL, NULL);
-	return &field->value;
+	return field->value;
 }
 
 /**
@@ -638,12 +687,9 @@ gda_field_set_value (GdaField *field, const GdaValue *value)
 	g_return_if_fail (field != NULL);
 	g_return_if_fail (value != NULL);
 
-	if (field->value._value)
-		CORBA_free (field->value._value);
-
-	field->value._type = value->_type;
-	field->value._release = value->_release;
-	field->value._value = ORBit_copy_value (value->_value, value->_type);
+	if (field->value)
+		gda_value_free (field->value);
+	field->value = gda_value_copy (value);
 }
 
 /**
@@ -656,7 +702,7 @@ gint64
 gda_field_get_bigint_value (GdaField *field)
 {
 	g_return_val_if_fail (field != NULL, -1);
-	return gda_value_get_bigint (&field->value);
+	return gda_value_get_bigint (field->value);
 }
 
 /**
@@ -671,10 +717,9 @@ gda_field_set_bigint_value (GdaField *field, gint64 value)
 {
 	g_return_if_fail (field != NULL);
 
-	field->attributes.gdaType = GDA_TYPE_BIGINT;
-	field->actualSize = sizeof (gint64);
-
-	gda_value_set_bigint (&field->value, value);
+	gda_field_set_gdatype (field, GDA_VALUE_TYPE_BIGINT);
+	field->actual_size = sizeof (gint64);
+	gda_value_set_bigint (field->value, value);
 }
 
 /**
@@ -715,7 +760,7 @@ gboolean
 gda_field_get_boolean_value (GdaField *field)
 {
 	g_return_val_if_fail (field != NULL, FALSE);
-	return gda_value_get_boolean (&field->value);
+	return gda_value_get_boolean (field->value);
 }
 
 /**
@@ -730,10 +775,9 @@ gda_field_set_boolean_value (GdaField *field, gboolean value)
 {
 	g_return_if_fail (field != NULL);
 
-	field->attributes.gdaType = GDA_TYPE_BOOLEAN;
-	field->actualSize = sizeof (gboolean);
-
-	gda_value_set_boolean (&field->value, value);
+	gda_field_set_gdatype (field, GDA_VALUE_TYPE_BOOLEAN);
+	field->actual_size = sizeof (gboolean);
+	gda_value_set_boolean (field->value, value);
 }
 
 /**
@@ -747,7 +791,7 @@ gda_field_get_date_value (GdaField *field)
 {
 	g_return_val_if_fail (field != NULL, NULL);
 
-	return gda_value_get_date (&field->value);
+	return gda_value_get_date (field->value);
 }
 
 /**
@@ -763,10 +807,9 @@ gda_field_set_date_value (GdaField *field, GdaDate *date)
 	g_return_if_fail (field != NULL);
 	g_return_if_fail (date != NULL);
 
-	field->attributes.gdaType = GDA_TYPE_DATE;
-	field->actualSize = sizeof (GdaDate);
-
-	gda_value_set_date (&field->value, date);
+	gda_field_set_gdatype (field, GDA_VALUE_TYPE_DATE);
+	field->actual_size = sizeof (GdaDate);
+	gda_value_set_date (field->value, date);
 }
 
 /**
@@ -779,7 +822,7 @@ gdouble
 gda_field_get_double_value (GdaField *field)
 {
 	g_return_val_if_fail (field != NULL, -1);
-	return gda_value_get_double (&field->value);
+	return gda_value_get_double (field->value);
 }
 
 /**
@@ -794,10 +837,9 @@ gda_field_set_double_value (GdaField *field, gdouble value)
 {
 	g_return_if_fail (field != NULL);
 
-	field->attributes.gdaType = GDA_TYPE_DOUBLE;
-	field->actualSize = sizeof (gdouble);
-
-	gda_value_set_double (&field->value, value);
+	gda_field_set_gdatype (field, GDA_VALUE_TYPE_DOUBLE);
+	field->actual_size = sizeof (gdouble);
+	gda_value_set_double (field->value, value);
 }
 
 /**
@@ -810,7 +852,7 @@ const GdaGeometricPoint *
 gda_field_get_geometric_point_value (GdaField *field)
 {
 	g_return_val_if_fail (field != NULL, NULL);
-	return gda_value_get_geometric_point (&field->value);
+	return gda_value_get_geometric_point (field->value);
 }
 
 /**
@@ -826,10 +868,9 @@ gda_field_set_geometric_point_value (GdaField *field, GdaGeometricPoint *value)
 	g_return_if_fail (field != NULL);
 	g_return_if_fail (value != NULL);
 
-	field->attributes.gdaType = GDA_TYPE_GEOMETRIC_POINT;
-	field->actualSize = sizeof (GdaGeometricPoint);
-
-	gda_value_set_geometric_point (&field->value, value);
+	gda_field_set_gdatype (field, GDA_VALUE_TYPE_GEOMETRIC_POINT);
+	field->actual_size = sizeof (GdaGeometricPoint);
+	gda_value_set_geometric_point (field->value, value);
 }
 
 /**
@@ -842,7 +883,7 @@ gint
 gda_field_get_integer_value (GdaField *field)
 {
 	g_return_val_if_fail (field != NULL, -1);
-	return gda_value_get_integer (&field->value);
+	return gda_value_get_integer (field->value);
 }
 
 /**
@@ -857,10 +898,9 @@ gda_field_set_integer_value (GdaField *field, gint value)
 {
 	g_return_if_fail (field != NULL);
 
-	field->attributes.gdaType = GDA_TYPE_INTEGER;
-	field->actualSize = sizeof (gint);
-
-	gda_value_set_integer (&field->value, value);
+	gda_field_set_gdatype (field, GDA_VALUE_TYPE_INTEGER);
+	field->actual_size = sizeof (gint);
+	gda_value_set_integer (field->value, value);
 }
 
 /**
@@ -873,7 +913,7 @@ const GdaValueList *
 gda_field_get_list_value (GdaField *field)
 {
 	g_return_val_if_fail (field != NULL, NULL);
-	return gda_value_get_list (&field->value);
+	return gda_value_get_list (field->value);
 }
 
 /**
@@ -889,10 +929,9 @@ gda_field_set_list_value (GdaField *field, GdaValueList *value)
 	g_return_if_fail (field != NULL);
 	g_return_if_fail (value != NULL);
 
-	field->attributes.gdaType = GDA_TYPE_LIST;
-	field->actualSize = sizeof (GdaValueList) * value->_length;
-
-	gda_value_set_list (&field->value, value);
+	gda_field_set_gdatype (field, GDA_VALUE_TYPE_LIST);
+	field->actual_size = sizeof (GdaValue) * g_list_length (value);
+	gda_value_set_list (field->value, value);
 }
 
 /**
@@ -906,8 +945,8 @@ gda_field_set_null_value (GdaField *field)
 {
 	g_return_if_fail (field != NULL);
 
-	field->actualSize = 0;
-	gda_value_set_null (&field->value);
+	field->actual_size = 0;
+	gda_value_set_null (field->value);
 }
 
 /**
@@ -920,7 +959,7 @@ const GdaNumeric *
 gda_field_get_numeric_value (GdaField *field)
 {
 	g_return_val_if_fail (field != NULL, NULL);
-	return gda_value_get_numeric (&field->value);
+	return gda_value_get_numeric (field->value);
 }
 
 /**
@@ -936,10 +975,9 @@ gda_field_set_numeric_value (GdaField *field, GdaNumeric *value)
 	g_return_if_fail (field != NULL);
 	g_return_if_fail (value != NULL);
 
-	field->attributes.gdaType = GDA_TYPE_NUMERIC;
-	field->actualSize = sizeof (GdaNumeric);
-
-	gda_value_set_numeric (&field->value, value);
+	gda_field_set_gdatype (field, GDA_VALUE_TYPE_NUMERIC);
+	field->actual_size = sizeof (GdaNumeric);
+	gda_value_set_numeric (field->value, value);
 }
 
 /**
@@ -952,7 +990,7 @@ gfloat
 gda_field_get_single_value (GdaField *field)
 {
 	g_return_val_if_fail (field != NULL, -1);
-	return gda_value_get_single (&field->value);
+	return gda_value_get_single (field->value);
 }
 
 /**
@@ -967,10 +1005,9 @@ gda_field_set_single_value (GdaField *field, gfloat value)
 {
 	g_return_if_fail (field != NULL);
 
-	field->attributes.gdaType = GDA_TYPE_SINGLE;
-	field->actualSize = sizeof (gfloat);
-
-	gda_value_set_single (&field->value, value);
+	gda_field_set_gdatype (field, GDA_VALUE_TYPE_SINGLE);
+	field->actual_size = sizeof (gfloat);
+	gda_value_set_single (field->value, value);
 }
 
 /**
@@ -983,7 +1020,7 @@ gshort
 gda_field_get_smallint_value (GdaField *field)
 {
 	g_return_val_if_fail (field != NULL, -1);
-	return gda_value_get_smallint (&field->value);
+	return gda_value_get_smallint (field->value);
 }
 
 /**
@@ -998,10 +1035,9 @@ gda_field_set_smallint_value (GdaField *field, gshort value)
 {
 	g_return_if_fail (field != NULL);
 
-	field->attributes.gdaType = GDA_TYPE_SMALLINT;
-	field->actualSize = sizeof (gshort);
-
-	gda_value_set_smallint (&field->value, value);
+	gda_field_set_gdatype (field, GDA_VALUE_TYPE_SMALLINT);
+	field->actual_size = sizeof (gshort);
+	gda_value_set_smallint (field->value, value);
 }
 
 /**
@@ -1014,7 +1050,7 @@ const gchar *
 gda_field_get_string_value (GdaField *field)
 {
 	g_return_val_if_fail (field != NULL, NULL);
-	return gda_value_get_string (&field->value);
+	return gda_value_get_string (field->value);
 }
 
 /**
@@ -1029,10 +1065,9 @@ gda_field_set_string_value (GdaField *field, const gchar *value)
 {
 	g_return_if_fail (field != NULL);
 
-	field->attributes.gdaType = GDA_TYPE_STRING;
-	field->actualSize = value ? strlen (value) : 0;
-
-	gda_value_set_string (&field->value, value);
+	gda_field_set_gdatype (field, GDA_VALUE_TYPE_STRING);
+	field->actual_size = value ? strlen (value) : 0;
+	gda_value_set_string (field->value, value);
 }
 
 /**
@@ -1045,8 +1080,7 @@ const GdaTime *
 gda_field_get_time_value (GdaField *field)
 {
 	g_return_val_if_fail (field != NULL, NULL);
-
-	return gda_value_get_time (&field->value);
+	return gda_value_get_time (field->value);
 }
 
 /**
@@ -1062,10 +1096,9 @@ gda_field_set_time_value (GdaField *field, GdaTime *value)
 	g_return_if_fail (field != NULL);
 	g_return_if_fail (value != NULL);
 	
-	field->attributes.gdaType = GDA_TYPE_TIME;
-	field->actualSize = sizeof (GdaTime);
-
-	gda_value_set_time (&field->value, value);
+	gda_field_set_gdatype (field, GDA_VALUE_TYPE_TIME);
+	field->actual_size = sizeof (GdaTime);
+	gda_value_set_time (field->value, value);
 }
 
 /**
@@ -1078,8 +1111,7 @@ const GdaTimestamp *
 gda_field_get_timestamp_value (GdaField *field)
 {
 	g_return_val_if_fail (field != NULL, NULL);
-
-	return gda_value_get_timestamp (&field->value);
+	return gda_value_get_timestamp (field->value);
 }
 
 /**
@@ -1094,10 +1126,9 @@ gda_field_set_timestamp_value (GdaField *field, GdaTimestamp *value)
 {
 	g_return_if_fail (field != NULL);
 
-	field->attributes.gdaType = GDA_TYPE_TIMESTAMP;
-	field->actualSize = sizeof (GdaTimestamp);
-
-	gda_value_set_timestamp (&field->value, value);
+        gda_field_set_gdatype (field, GDA_VALUE_TYPE_TIMESTAMP);
+	field->actual_size = sizeof (GdaTimestamp);
+	gda_value_set_timestamp (field->value, value);
 }
 
 /**
@@ -1110,7 +1141,7 @@ gchar
 gda_field_get_tinyint_value (GdaField *field)
 {
 	g_return_val_if_fail (field != NULL, -1);
-	return gda_value_get_tinyint (&field->value);
+	return gda_value_get_tinyint (field->value);
 }
 
 /**
@@ -1125,10 +1156,9 @@ gda_field_set_tinyint_value (GdaField *field, gchar value)
 {
 	g_return_if_fail (field != NULL);
 
-	field->attributes.gdaType = GDA_TYPE_TINYINT;
-	field->actualSize = sizeof (gchar);
-
-	gda_value_set_tinyint (&field->value, value);
+	gda_field_set_gdatype (field, GDA_VALUE_TYPE_TINYINT);
+	field->actual_size = sizeof (gchar);
+	gda_value_set_tinyint (field->value, value);
 }
 
 /**
@@ -1144,5 +1174,5 @@ gchar *
 gda_field_stringify (GdaField *field)
 {
 	g_return_val_if_fail (field != NULL, NULL);
-	return gda_value_stringify ((GdaValue *) &field->value);
+	return gda_value_stringify ((GdaValue *) field->value);
 }

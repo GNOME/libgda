@@ -22,19 +22,20 @@
  */
 
 #include <config.h>
-#include <bonobo/bonobo-i18n.h>
+#include <stdio.h>
 #include <libgda/gda-client.h>
 #include <libgda/gda-config.h>
 #include <libgda/gda-connection.h>
+#include <libgda/gda-intl.h>
 #include <libgda/gda-log.h>
 #include <libgda/gda-recordset.h>
-#include <bonobo/bonobo-exception.h>
+#include <libgda/gda-server-provider.h>
 
 #define PARENT_TYPE G_TYPE_OBJECT
 
 struct _GdaConnectionPrivate {
 	GdaClient *client;
-	GNOME_Database_Connection corba_cnc;
+	GdaServerProvider *provider_obj;
 	gchar *dsn;
 	gchar *cnc_string;
 	gchar *provider;
@@ -61,17 +62,17 @@ static GObjectClass *parent_class = NULL;
  * Callbacks
  */
 
-static void
-recset_weak_cb (gpointer user_data, GObject *object)
-{
-	GdaRecordset *recset = (GdaRecordset *) object;
-	GdaConnection *cnc = (GdaConnection *) user_data;
-
-	g_return_if_fail (GDA_IS_RECORDSET (recset));
-	g_return_if_fail (GDA_IS_CONNECTION (cnc));
-
-	cnc->priv->recset_list = g_list_remove (cnc->priv->recset_list, recset);
-}
+//static void
+//recset_weak_cb (gpointer user_data, GObject *object)
+//{
+//	GdaRecordset *recset = (GdaRecordset *) object;
+//	GdaConnection *cnc = (GdaConnection *) user_data;
+//
+//	g_return_if_fail (GDA_IS_RECORDSET (recset));
+//	g_return_if_fail (GDA_IS_CONNECTION (cnc));
+//
+//	cnc->priv->recset_list = g_list_remove (cnc->priv->recset_list, recset);
+//}
 
 /*
  * GdaConnection class implementation
@@ -103,7 +104,7 @@ gda_connection_init (GdaConnection *cnc, GdaConnectionClass *klass)
 
 	cnc->priv = g_new0 (GdaConnectionPrivate, 1);
 	cnc->priv->client = NULL;
-	cnc->priv->corba_cnc = CORBA_OBJECT_NIL;
+	cnc->priv->provider_obj = NULL;
 	cnc->priv->dsn = NULL;
 	cnc->priv->cnc_string = NULL;
 	cnc->priv->provider = NULL;
@@ -123,19 +124,12 @@ gda_connection_finalize (GObject *object)
 
 	/* free memory */
 	if (cnc->priv->is_open) {
-		CORBA_Environment ev;
-
 		/* close the connection to the provider */
-		CORBA_exception_init (&ev);
-		GNOME_Database_Connection_close (
-			cnc->priv->corba_cnc,
-			bonobo_object_corba_objref (BONOBO_OBJECT (cnc->priv->client)),
-			&ev);
-		CORBA_Object_release (cnc->priv->corba_cnc, &ev);
-		CORBA_exception_free (&ev);
-
-		cnc->priv->corba_cnc = CORBA_OBJECT_NIL;
+		gda_server_provider_close_connection (cnc->priv->provider_obj, cnc);
 	}
+
+	g_object_unref (G_OBJECT (cnc->priv->provider_obj));
+	cnc->priv->provider_obj = NULL;
 
 	g_free (cnc->priv->dsn);
 	g_free (cnc->priv->cnc_string);
@@ -182,7 +176,7 @@ gda_connection_get_type (void)
 /**
  * gda_connection_new
  * @client: a #GdaClient object.
- * @corba_cnc: a CORBA GNOME::Database::Connection object.
+ * @provider: a #GdaServerProvider object.
  * @dsn: GDA data source to connect to.
  * @username: user name to use to connect.
  * @password: password for @username.
@@ -195,18 +189,17 @@ gda_connection_get_type (void)
  */
 GdaConnection *
 gda_connection_new (GdaClient *client,
-		    GNOME_Database_Connection corba_cnc,
+		    GdaServerProvider *provider,
 		    const gchar *dsn,
 		    const gchar *username,
 		    const gchar *password)
 {
 	GdaConnection *cnc;
-	CORBA_Environment ev;
-	CORBA_boolean corba_res;
 	GdaDataSourceInfo *dsn_info;
+	GdaQuarkList *params;
 
 	g_return_val_if_fail (GDA_IS_CLIENT (client), NULL);
-	g_return_val_if_fail (corba_cnc != CORBA_OBJECT_NIL, NULL);
+	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
 
 	/* get the data source info */
 	dsn_info = gda_config_find_data_source (dsn);
@@ -218,7 +211,8 @@ gda_connection_new (GdaClient *client,
 	cnc = g_object_new (GDA_TYPE_CONNECTION, NULL);
 
 	gda_connection_set_client (cnc, client);
-	cnc->priv->corba_cnc = corba_cnc;
+	cnc->priv->provider_obj = provider;
+	g_object_ref (G_OBJECT (cnc->priv->provider_obj));
 	cnc->priv->dsn = g_strdup (dsn);
 	cnc->priv->cnc_string = g_strdup (dsn_info->cnc_string);
 	cnc->priv->provider = g_strdup (dsn_info->provider);
@@ -228,22 +222,14 @@ gda_connection_new (GdaClient *client,
 	gda_config_free_data_source_info (dsn_info);
 
 	/* try to open the connection */
-	CORBA_exception_init (&ev);
-
-	corba_res = GNOME_Database_Connection_open (
-		cnc->priv->corba_cnc,
-		bonobo_object_corba_objref (BONOBO_OBJECT (cnc->priv->client)),
-		(const CORBA_char *) cnc->priv->cnc_string,
-		(const CORBA_char *) cnc->priv->username,
-		(const CORBA_char *) cnc->priv->password, &ev);
-
-	if (!corba_res || BONOBO_EX (&ev)) {
-		gda_connection_add_error_list (cnc, gda_error_list_from_exception (&ev));
-		CORBA_exception_free (&ev);
+	params = gda_quark_list_new_from_string (cnc->priv->cnc_string);
+	if (!gda_server_provider_open_connection (provider, cnc, params, username, password)) {
+		gda_quark_list_free (params);
 		g_object_unref (G_OBJECT (cnc));
 		return NULL;
 	}
 
+	gda_quark_list_free (params);
 	cnc->priv->is_open = TRUE;
 
 	return cnc;
@@ -361,6 +347,40 @@ gda_connection_add_error (GdaConnection *cnc, GdaError *error)
 }
 
 /**
+ * gda_connection_add_error_string
+ * @cnc: A #GdaServerConnection object.
+ * @str: Error message.
+ *
+ * Adds a new error to the given connection object. This is just a convenience
+ * function that simply creates a @GdaError and then calls
+ * @gda_server_connection_add_error.
+ */
+void
+gda_connection_add_error_string (GdaConnection *cnc, const gchar *str, ...)
+{
+	GdaError *error;
+
+	va_list args;
+	gchar sz[2048];
+
+	g_return_if_fail (GDA_IS_CONNECTION (cnc));
+	g_return_if_fail (str != NULL);
+
+	/* build the message string */
+	va_start (args, str);
+	vsprintf (sz, str, args);
+	va_end (args);
+	
+	error = gda_error_new ();
+	gda_error_set_description (error, sz);
+	gda_error_set_number (error, -1);
+	gda_error_set_source (error, g_get_prgname ());
+	gda_error_set_sqlstate (error, "-1");
+	
+	gda_connection_add_error (cnc, error);
+}
+
+/**
  * gda_connection_add_error_list
  */
 void
@@ -391,47 +411,12 @@ gda_connection_execute_command (GdaConnection *cnc,
 				GdaCommand *cmd,
 				GdaParameterList *params)
 {
-	GNOME_Database_RecordsetList *corba_reclist;
-	Bonobo_PropertySet *corba_params;
-	CORBA_Environment ev;
-	GList *reclist = NULL;
-	gint n;
-
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (cmd != NULL, NULL);
 
-	corba_params = gda_parameter_list_to_corba (params);
-
-	/* call the CORBA method */
-	CORBA_exception_init (&ev);
-
-	corba_reclist = GNOME_Database_Connection_executeCommand (
-		cnc->priv->corba_cnc, cmd, corba_params, &ev);
-
-	CORBA_free (corba_params);
-
-	if (BONOBO_EX (&ev)) {
-		gda_connection_add_error_list (cnc, gda_error_list_from_exception (&ev));
-		CORBA_exception_free (&ev);
-
-		return NULL;
-	}
-
-	/* convert the RecordsetList in a GList of GdaRecordset objects */
-	for (n = 0; n < corba_reclist->_length; n++) {
-		GdaRecordset *recset;
-
-		recset = gda_recordset_new (cnc, corba_reclist->_buffer[n]);
-		if (!GDA_IS_RECORDSET (recset))
-			continue;
-
-		reclist = g_list_append (reclist, recset);
-
-		cnc->priv->recset_list = g_list_append (cnc->priv->recset_list, recset);
-		g_object_weak_ref (G_OBJECT (recset), (GWeakNotify) recset_weak_cb, cnc);
-	}
-
-	return reclist;
+	/* execute the command on the provider */
+	return gda_server_provider_execute_command (cnc->priv->provider_obj,
+						    cnc, cmd, params);
 }
 
 /**
@@ -455,7 +440,7 @@ gda_connection_execute_single_command (GdaConnection *cnc,
 	model = GDA_DATA_MODEL (reclist->data);
 	g_object_ref (G_OBJECT (model));
 
-	g_list_foreach (reclist, g_object_unref, NULL);
+	g_list_foreach (reclist, (GFunc) g_object_unref, NULL);
 	g_list_free (reclist);
 
 	return model;
@@ -467,24 +452,8 @@ gda_connection_execute_single_command (GdaConnection *cnc,
 gboolean
 gda_connection_begin_transaction (GdaConnection *cnc, const gchar *id)
 {
-	CORBA_boolean corba_res;
-	CORBA_Environment ev;
-
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-
-	CORBA_exception_init (&ev);
-
-	corba_res = GNOME_Database_Connection_beginTransaction (
-		cnc->priv->corba_cnc, id ? id : "", &ev);
-	if (!corba_res || BONOBO_EX (&ev)) {
-		gda_connection_add_error_list (cnc, gda_error_list_from_exception (&ev));
-		CORBA_exception_free (&ev);
-		return FALSE;
-	}
-
-	CORBA_exception_free (&ev);
-
-	return TRUE;
+	return gda_server_provider_begin_transaction (cnc->priv->provider_obj, cnc, id);
 }
 
 /**
@@ -493,24 +462,8 @@ gda_connection_begin_transaction (GdaConnection *cnc, const gchar *id)
 gboolean
 gda_connection_commit_transaction (GdaConnection *cnc, const gchar *id)
 {
-	CORBA_boolean corba_res;
-	CORBA_Environment ev;
-
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-
-	CORBA_exception_init (&ev);
-
-	corba_res = GNOME_Database_Connection_commitTransaction (
-		cnc->priv->corba_cnc, id ? id : "", &ev);
-	if (!corba_res || BONOBO_EX (&ev)) {
-		gda_connection_add_error_list (cnc, gda_error_list_from_exception (&ev));
-		CORBA_exception_free (&ev);
-		return FALSE;
-	}
-
-	CORBA_exception_free (&ev);
-
-	return TRUE;
+	return gda_server_provider_commit_transaction (cnc->priv->provider_obj, cnc, id);
 }
 
 /**
@@ -519,24 +472,8 @@ gda_connection_commit_transaction (GdaConnection *cnc, const gchar *id)
 gboolean
 gda_connection_rollback_transaction (GdaConnection *cnc, const gchar *id)
 {
-	CORBA_boolean corba_res;
-	CORBA_Environment ev;
-
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-
-	CORBA_exception_init (&ev);
-
-	corba_res = GNOME_Database_Connection_rollbackTransaction (
-		cnc->priv->corba_cnc, id ? id : "", &ev);
-	if (!corba_res || BONOBO_EX (&ev)) {
-		gda_connection_add_error_list (cnc, gda_error_list_from_exception (&ev));
-		CORBA_exception_free (&ev);
-		return FALSE;
-	}
-
-	CORBA_exception_free (&ev);
-
-	return TRUE;
+	return gda_server_provider_rollback_transaction (cnc->priv->provider_obj, cnc, id);
 }
 
 /**
@@ -545,24 +482,8 @@ gda_connection_rollback_transaction (GdaConnection *cnc, const gchar *id)
 gboolean
 gda_connection_supports (GdaConnection *cnc, GdaConnectionFeature feature)
 {
-	CORBA_Environment ev;
-	CORBA_boolean corba_res;
-
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-
-	CORBA_exception_init (&ev);
-
-	corba_res = GNOME_Database_Connection_supports (cnc->priv->corba_cnc,
-							feature, &ev);
-	if (BONOBO_EX (&ev)) {
-		gda_connection_add_error_list (cnc, gda_error_list_from_exception (&ev));
-		CORBA_exception_free (&ev);
-		return FALSE;
-	}
-
-	CORBA_exception_free (&ev);
-
-	return corba_res;
+	return gda_server_provider_supports (cnc->priv->provider_obj, cnc, feature);
 }
 
 /**
@@ -573,31 +494,6 @@ gda_connection_get_schema (GdaConnection *cnc,
 			   GdaConnectionSchema schema,
 			   GdaParameterList *params)
 {
-	Bonobo_PropertySet *corba_params;
-	GNOME_Database_Recordset corba_recset;
-	GdaRecordset *recset;
-	CORBA_Environment ev;
-
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
-
-	corba_params = gda_parameter_list_to_corba (params);
-
-	/* call the CORBA method */
-	CORBA_exception_init (&ev);
-
-	corba_recset = GNOME_Database_Connection_getSchema (cnc->priv->corba_cnc,
-							    schema,
-							    corba_params,
-							    &ev);
-	CORBA_free (corba_params);
-
-	if (BONOBO_EX (&ev)) {
-		gda_connection_add_error_list (cnc, gda_error_list_from_exception (&ev));
-		CORBA_exception_free (&ev);
-		return FALSE;
-	}
-
-	recset = gda_recordset_new (cnc, corba_recset);
-
-	return GDA_DATA_MODEL (recset);
+	return gda_server_provider_get_schema (cnc->priv->provider_obj, cnc, schema, params);
 }

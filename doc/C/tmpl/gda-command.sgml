@@ -22,39 +22,15 @@ providers.
 </para>
 
 
-<!-- ##### TYPEDEF GdaCommandOptions ##### -->
+<!-- ##### ENUM GdaCommandOptions ##### -->
 <para>
 And OR'ed combination of GDA_COMMAND_OPTIONS_* values.
 
 </para>
 
-
-<!-- ##### MACRO GDA_COMMAND_OPTION_IGNORE_ERRORS ##### -->
-<para>
-Instruct the provider to ignore errors in the execution of commands and 
-continue processing. Conflicts with #GDA_COMMAND_OPTION_STOP_ON_ERRORS.
-
-</para>
-
-
-
-<!-- ##### MACRO GDA_COMMAND_OPTION_STOP_ON_ERRORS ##### -->
-<para>
-Instruct the provider to stop in case of error when executing commands. The
-provider should add an error to the connection and return NULL.  Conflicts
-with #GDA_COMMAND_OPTION_IGNORE_ERRORS.
-
-</para>
-
-
-
-<!-- ##### MACRO GDA_COMMAND_OPTION_BAD_OPTION ##### -->
-<para>
-Returned value for #gda_command_get_option if the argument is NULL.
-
-</para>
-
-
+@GDA_COMMAND_OPTION_IGNORE_ERRORS: 
+@GDA_COMMAND_OPTION_STOP_ON_ERRORS: 
+@GDA_COMMAND_OPTION_BAD_OPTION: 
 
 <!-- ##### MACRO GDA_COMMAND_DEFAULT_OPTION ##### -->
 <para>

@@ -236,7 +236,7 @@ gda_data_model_describe_column (GdaDataModel *model, gint col)
 		gda_field_attributes_set_defined_size (fa, 0);
 		gda_field_attributes_set_name (fa, gda_data_model_get_column_title (model, col));
 		gda_field_attributes_set_scale (fa, 0);
-		gda_field_attributes_set_gdatype (fa, GDA_TYPE_STRING);
+		gda_field_attributes_set_gdatype (fa, GDA_VALUE_TYPE_STRING);
 		gda_field_attributes_set_allow_null (fa, TRUE);
 	}
 
@@ -347,7 +347,7 @@ export_to_separated (GdaDataModel *model, gchar sep)
 			gchar *txt;
 
 			value = gda_data_model_get_value_at (model, c, r);
-			txt = gda_value_stringify (value);
+			txt = gda_value_stringify ((GdaValue *) value);
 			if (c > 0)
 				str = g_string_append_c (str, sep);
 			str = g_string_append_c (str, '"');

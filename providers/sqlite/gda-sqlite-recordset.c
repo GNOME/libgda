@@ -25,8 +25,8 @@
 #  include <config.h>
 #endif
 
-#include <bonobo/bonobo-i18n.h>
-#include "gda-sqlite.h"
+#include <libgda/gda-intl.h>
+#include "gda-sqlite-recordset.h"
 
 #define OBJECT_DATA_RECSET_HANDLE "GDA_Sqlite_RecsetHandle"
 
@@ -40,12 +40,13 @@ free_srecset (gpointer data)
 	SQLITE_Recordset *srecset = (SQLITE_Recordset *) data;
 
 	g_return_if_fail (srecset != NULL);
+
 	sqlite_free_table(srecset->data);
 	g_free (srecset);
 }
 
 static GdaRow *
-fetch_func (GdaServerRecordset *recset, gulong rownum)
+fetch_func (GdaRecordset *recset, gulong rownum)
 {
 	GdaRow *row;
 	gint field_count;
@@ -54,12 +55,12 @@ fetch_func (GdaServerRecordset *recset, gulong rownum)
 	gint i;
 	SQLITE_Recordset *drecset;
 
-	g_return_val_if_fail (GDA_IS_SERVER_RECORDSET (recset), NULL);
+	g_return_val_if_fail (GDA_IS_RECORDSET (recset), NULL);
 
 	drecset = g_object_get_data (G_OBJECT (recset), OBJECT_DATA_RECSET_HANDLE);
 	if (!drecset) {
-		gda_server_connection_add_error_string (
-			gda_server_recordset_get_connection (recset),
+		gda_connection_add_error_string (
+			gda_recordset_get_connection (recset),
 			_("Invalid SQLITE handle"));
 		return NULL;
 	}
@@ -69,8 +70,8 @@ fetch_func (GdaServerRecordset *recset, gulong rownum)
 	field_count = drecset->ncols;
 
 	if (rownum < 0 || rownum >= row_count) {
-		gda_server_connection_add_error_string (
-			gda_server_recordset_get_connection (recset),
+		gda_connection_add_error_string (
+			gda_recordset_get_connection (recset),
 			_("Row number out of range"));
 		return NULL;
 	}
@@ -88,7 +89,7 @@ fetch_func (GdaServerRecordset *recset, gulong rownum)
 		gda_field_set_defined_size (field, strlen (drecset->data[rowpos +i]));
 		gda_field_set_name (field, drecset->data[i]);
 		gda_field_set_scale (field, 0);
-		gda_field_set_gdatype (field, GDA_TYPE_STRING);
+		gda_field_set_gdatype (field, GDA_VALUE_TYPE_STRING);
 
 		/* FIXME: We should look for a way to know the real type data */
 		gda_field_set_string_value (field, drecset->data[rowpos +i]);
@@ -98,19 +99,19 @@ fetch_func (GdaServerRecordset *recset, gulong rownum)
 }
 
 static GdaRowAttributes *
-describe_func (GdaServerRecordset *recset)
+describe_func (GdaRecordset *recset)
 {
 	SQLITE_Recordset *drecset;
 	gint field_count;
 	gint i;
 	GdaRowAttributes *attrs;
 
-	g_return_val_if_fail (GDA_IS_SERVER_RECORDSET (recset), NULL);
+	g_return_val_if_fail (GDA_IS_RECORDSET (recset), NULL);
 
 	drecset = g_object_get_data (G_OBJECT (recset), OBJECT_DATA_RECSET_HANDLE);
 	if (!drecset) {
-		gda_server_connection_add_error_string (
-			gda_server_recordset_get_connection (recset),
+		gda_connection_add_error_string (
+			gda_recordset_get_connection (recset),
 			_("Invalid Sqlite handle"));
 		return NULL;
 	}
@@ -127,8 +128,7 @@ describe_func (GdaServerRecordset *recset)
 		gda_field_attributes_set_defined_size (field_attrs,
 						       strlen (drecset->data[i]));
 		gda_field_attributes_set_scale (field_attrs, 0);
-		gda_field_attributes_set_gdatype (field_attrs,
-						  GDA_TYPE_STRING);
+		gda_field_attributes_set_gdatype (field_attrs, GDA_VALUE_TYPE_STRING);
 	}
 
 	return attrs;
@@ -138,17 +138,16 @@ describe_func (GdaServerRecordset *recset)
  * Public functions
  */
 
-GdaServerRecordset *
-gda_sqlite_recordset_new (GdaServerConnection *cnc, SQLITE_Recordset *srecset)
+GdaRecordset *
+gda_sqlite_recordset_new (GdaConnection *cnc, SQLITE_Recordset *srecset)
 {
-	GdaServerRecordset *recset;
+	GdaRecordset *recset;
 
-	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), NULL);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (srecset != NULL, NULL);
 
 	if (srecset->data) {
-		recset = gda_server_recordset_new (cnc, fetch_func,
-						   describe_func);
+		recset = gda_recordset_new (cnc, fetch_func, describe_func);
 		g_object_set_data_full (G_OBJECT (recset), OBJECT_DATA_RECSET_HANDLE,
 					srecset, (GDestroyNotify) free_srecset);
 		

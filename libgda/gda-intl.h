@@ -1,11 +1,9 @@
-/* GDA DB Postgres provider
- * Copyright (C) 1998-2002 The GNOME Foundation
+/* GDA library
+ * Copyright (C) 1998-2002 The GNOME Foundation.
  *
  * AUTHORS:
  *      Michael Lausch <michael@lausch.at>
  *	Rodrigo Moya <rodrigo@gnome-db.org>
- *      Vivien Malerba <malerba@gnome-db.org>
- *      Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
  *
  * This Library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -23,16 +21,27 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#if !defined(__gda_postgres_recordset_h__)
-#  define __gda_postgres_recordset_h__
+#if !defined(__gda_intl_h__)
+#  define __gda_intl_h__
 
-#include <libgda/gda-recordset.h>
-#include <libpq-fe.h>
+#include "config.h"
 
-G_BEGIN_DECLS
-
-GdaRecordset *gda_postgres_recordset_new (GdaConnection *cnc, PGresult *pgres);
-
-G_END_DECLS
+#ifdef ENABLE_NLS
+#include<libintl.h>
+#define _(String) dgettext(GETTEXT_PACKAGE,String)
+#ifdef gettext_noop
+#define N_(String) gettext_noop(String)
+#else
+#define N_(String) (String)
+#endif
+#else /* NLS is disabled */
+#define _(String) (String)
+#define N_(String) (String)
+#define textdomain(String) (String)
+#define gettext(String) (String)
+#define dgettext(Domain,String) (String)
+#define dcgettext(Domain,String,Type) (String)
+#define bindtextdomain(Domain,Directory) (Domain)
+#endif
 
 #endif

@@ -20,10 +20,11 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#define ORBIT2_INTERNAL_API
-#include <orbit/orb-core/orbit-object.h>
-#undef ORBIT2_INTERNAL_API
-#include "gda-parameter.h"
+#include <glib/ghash.h>
+#include <glib/gmem.h>
+#include <glib/gmessages.h>
+#include <glib/gstrfuncs.h>
+#include <libgda/gda-parameter.h>
 
 struct _GdaParameterList {
 	GHashTable *hash;
@@ -55,11 +56,10 @@ gda_parameter_new (const gchar *name, GdaValueType type)
 {
 	GdaParameter *param;
 
-	param = Bonobo_Pair__alloc ();
-	if (name)
-		gda_parameter_set_name (param, name);
-	CORBA_any_set_release (&param->value, TRUE);
-	param->value._type = (GdaValueType) CORBA_Object_duplicate ((CORBA_Object) type, NULL);
+	param = g_new0 (GdaParameter, 1);
+	param->name = g_strdup (name);
+	param->value = gda_value_new_null ();
+	param->value->type = type;
 
 	return param;
 }
@@ -81,11 +81,9 @@ gda_parameter_new_string (const gchar *name, const gchar *value)
 	g_return_val_if_fail (name != NULL, NULL);
 	g_return_val_if_fail (value != NULL, NULL);
 
-	param = Bonobo_Pair__alloc ();
-	gda_parameter_set_name (param, name);
-	CORBA_any_set_release (&param->value, TRUE);
-	param->value._type = ORBit_RootObject_duplicate (GDA_VALUE_TYPE_STRING);
-	param->value._value = ORBit_copy_value (&value, GDA_VALUE_TYPE_STRING);
+	param = g_new0 (GdaParameter, 1);
+	param->name = g_strdup (name);
+	param->value = gda_value_new_string (value);
 
 	return param;
 }
@@ -98,7 +96,10 @@ void
 gda_parameter_free (GdaParameter *param)
 {
 	g_return_if_fail (param != NULL);
-	CORBA_free (param);
+
+	g_free (param->name);
+	gda_value_free (param->value);
+	g_free (param);
 }
 
 /**
@@ -124,18 +125,18 @@ gda_parameter_set_name (GdaParameter *param, const gchar *name)
 	g_return_if_fail (name != NULL);
 
 	if (param->name != NULL)
-		CORBA_free (param->name);
-	param->name = CORBA_string_dup (name);
+		g_free (param->name);
+	param->name = g_strdup (name);
 }
 
 /**
  * gda_parameter_get_value
  */
-GdaValue *
+const GdaValue *
 gda_parameter_get_value (GdaParameter *param)
 {
 	g_return_val_if_fail (param != NULL, NULL);
-	return &param->value;
+	return param->value;
 }
 
 /**
@@ -159,38 +160,6 @@ gda_parameter_list_new (void)
 
 	plist = g_new0 (GdaParameterList, 1);
 	plist->hash = g_hash_table_new (g_str_hash, g_str_equal);
-
-	return plist;
-}
-
-/**
- * gda_parameter_list_new_from_corba
- * @corba_list: a #GNOME_Database_ParameterList.
- *
- * Create a new #GdaParameterList from a CORBA sequence
- * (#Bonobo_PropertySet)
- */
-GdaParameterList *
-gda_parameter_list_new_from_corba (Bonobo_PropertySet *corba_list)
-{
-	GdaParameterList *plist;
-	gint n;
-
-	g_return_val_if_fail (corba_list != NULL, NULL);
-
-	plist = gda_parameter_list_new ();
-
-	for (n = 0; n < corba_list->_length; n++) {
-		GdaParameter *param;
-
-		param = gda_parameter_new (corba_list->_buffer[n].name,
-					   corba_list->_buffer[n].value._type);
-		param->value._value = ORBit_copy_value (
-			corba_list->_buffer[n].value._value,
-			corba_list->_buffer[n].value._type);
-
-		gda_parameter_list_add_parameter (plist, param);
-	}
 
 	return plist;
 }
@@ -264,51 +233,4 @@ guint
 gda_parameter_list_get_length (GdaParameterList *plist)
 {
 	return plist ? g_hash_table_size (plist->hash) : 0;
-}
-
-typedef struct {
-	gint current;
-	Bonobo_PropertySet *corba_list;
-} tocorba_data_t;
-
-static void
-add_param (gpointer key, gpointer value, gpointer user_data)
-{
-	GdaParameter *param = (GdaParameter *) value;
-	tocorba_data_t *tocorba = (tocorba_data_t *) user_data;
-
-	g_return_if_fail (param != NULL);
-	g_return_if_fail (tocorba != NULL);
-
-	tocorba->corba_list->_buffer[tocorba->current].name = CORBA_string_dup (key);
-	CORBA_any__copy (&tocorba->corba_list->_buffer[tocorba->current].value, &param->value);
-
-	tocorba->current++;
-}
-
-/**
- * gda_parameter_list_to_corba
- */
-Bonobo_PropertySet *
-gda_parameter_list_to_corba (GdaParameterList *plist)
-{
-	Bonobo_PropertySet *corba_list;
-	gint length;
-	tocorba_data_t tocorba;
-
-	length = gda_parameter_list_get_length (plist);
-
-	corba_list = Bonobo_PropertySet__alloc ();
-	CORBA_sequence_set_release (corba_list, TRUE);
-	corba_list->_buffer = Bonobo_PropertySet_allocbuf (length);
-	corba_list->_length = length;
-
-	if (length > 0) {
-		/* put all parameters into the CORBA sequence */
-		tocorba.current = 0;
-		tocorba.corba_list = corba_list;
-		g_hash_table_foreach (plist->hash, (GHFunc) add_param, &tocorba);
-	}
-
-	return corba_list;
 }

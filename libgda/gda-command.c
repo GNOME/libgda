@@ -20,6 +20,9 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#include <glib/gmem.h>
+#include <glib/gmessages.h>
+#include <glib/gstrfuncs.h>
 #include <libgda/gda-command.h>
 
 /**
@@ -37,12 +40,11 @@
  * Returns: a newly allocated #GdaCommand.
  */
 GdaCommand *
-gda_command_new (const gchar *text, GdaCommandType type, 
-				    GdaCommandOptions options)
+gda_command_new (const gchar *text, GdaCommandType type, GdaCommandOptions options)
 {
 	GdaCommand *cmd;
 
-	cmd = GNOME_Database_Command__alloc ();
+	cmd = g_new0 (GdaCommand, 1);
 	gda_command_set_text (cmd, text);
 	gda_command_set_command_type (cmd, type);
 	cmd->options = GDA_COMMAND_OPTION_BAD_OPTION;
@@ -63,7 +65,9 @@ void
 gda_command_free (GdaCommand *cmd)
 {
 	g_return_if_fail (cmd != NULL);
-	CORBA_free (cmd);
+
+	g_free (cmd->text);
+	g_free (cmd);
 }
 
 /**
@@ -94,12 +98,12 @@ gda_command_set_text (GdaCommand *cmd, const gchar *text)
 	g_return_if_fail (cmd != NULL);
 
 	if (cmd->text != NULL) {
-		CORBA_free (cmd->text);
+		g_free (cmd->text);
 		cmd->text = NULL;
 	}
 
 	if (text != NULL)
-		cmd->text = CORBA_string_dup (text);
+		cmd->text = g_strdup (text);
 }
 
 /**
@@ -169,4 +173,3 @@ gda_command_set_options (GdaCommand *cmd, GdaCommandOptions options)
 
 	cmd->options = options;
 }
-

@@ -25,35 +25,32 @@
 #  define __gda_row_h__
 
 #include <libgda/gda-value.h>
-#include <libgda/GNOME_Database.h>
 #include <glib/gmacros.h>
 
 G_BEGIN_DECLS
 
-typedef GNOME_Database_Row             GdaRow;
-typedef GNOME_Database_RowAttributes   GdaRowAttributes;
-typedef GNOME_Database_FieldAttributes GdaFieldAttributes;
-typedef GNOME_Database_Field           GdaField;
-typedef enum {
-	GDA_TYPE_NULL = GNOME_Database_TYPE_NULL,
-	GDA_TYPE_BIGINT = GNOME_Database_TYPE_BIGINT,
-	GDA_TYPE_BINARY = GNOME_Database_TYPE_BINARY,
-	GDA_TYPE_BOOLEAN = GNOME_Database_TYPE_BOOLEAN,
-	GDA_TYPE_DATE = GNOME_Database_TYPE_DATE,
-	GDA_TYPE_DOUBLE = GNOME_Database_TYPE_DOUBLE,
-	GDA_TYPE_GEOMETRIC_POINT = GNOME_Database_TYPE_GEOMETRIC_POINT,
-	GDA_TYPE_INTEGER = GNOME_Database_TYPE_INTEGER,
-	GDA_TYPE_LIST = GNOME_Database_TYPE_LIST,
-	GDA_TYPE_NUMERIC = GNOME_Database_TYPE_NUMERIC,
-	GDA_TYPE_SINGLE = GNOME_Database_TYPE_SINGLE,
-	GDA_TYPE_SMALLINT = GNOME_Database_TYPE_SMALLINT,
-	GDA_TYPE_STRING = GNOME_Database_TYPE_STRING,
-	GDA_TYPE_TIME = GNOME_Database_TYPE_TIME,
-	GDA_TYPE_TIMESTAMP = GNOME_Database_TYPE_TIMESTAMP,
-	GDA_TYPE_TINYINT = GNOME_Database_TYPE_TINYINT,
-	GDA_TYPE_UNKNOWN = GNOME_Database_TYPE_UNKNOWN
-}
-GdaType;
+typedef struct {
+	gint defined_size;
+	gchar *name;
+	gint scale;
+	GdaValueType gda_type;
+	gboolean allow_null;
+	gboolean primary_key;
+	gboolean unique_key;
+	gchar *references;
+	gboolean auto_increment;
+	glong auto_increment_start;
+	glong auto_increment_step;
+} GdaFieldAttributes;
+
+typedef struct {
+	gint actual_size;
+	GdaValue *value;
+	GdaFieldAttributes *attributes;
+} GdaField;
+
+typedef GList GdaRow; /* a GList of GdaField's */
+typedef GList GdaRowAttributes; /* a GList of GdaFieldAttributes */
 
 GdaRow             *gda_row_new (gint count);
 void                gda_row_free (GdaRow *row);
@@ -61,6 +58,7 @@ GdaField           *gda_row_get_field (GdaRow *row, gint num);
 
 GdaRowAttributes   *gda_row_attributes_new (gint count);
 void                gda_row_attributes_free (GdaRowAttributes *attrs);
+gint                gda_row_attributes_get_length (GdaRowAttributes *attrs);
 GdaFieldAttributes *gda_row_attributes_get_field (GdaRowAttributes *attrs, gint num);
 
 GdaFieldAttributes *gda_field_attributes_new (void);
@@ -71,8 +69,9 @@ const gchar        *gda_field_attributes_get_name (GdaFieldAttributes *fa);
 void                gda_field_attributes_set_name (GdaFieldAttributes *fa, const gchar *name);
 glong               gda_field_attributes_get_scale (GdaFieldAttributes *fa);
 void                gda_field_attributes_set_scale (GdaFieldAttributes *fa, glong scale);
-GdaType             gda_field_attributes_get_gdatype (GdaFieldAttributes *fa);
-void                gda_field_attributes_set_gdatype (GdaFieldAttributes *fa, GdaType type);
+GdaValueType        gda_field_attributes_get_gdatype (GdaFieldAttributes *fa);
+void                gda_field_attributes_set_gdatype (GdaFieldAttributes *fa,
+						      GdaValueType type);
 gboolean            gda_field_attributes_get_allow_null (GdaFieldAttributes *fa);
 void                gda_field_attributes_set_allow_null (GdaFieldAttributes *fa, gboolean allow);
 gboolean            gda_field_attributes_get_primary_key (GdaFieldAttributes *fa);
@@ -82,6 +81,8 @@ void                gda_field_attributes_set_unique_key (GdaFieldAttributes *fa,
 const gchar        *gda_field_attributes_get_references (GdaFieldAttributes *fa);
 void                gda_field_attributes_set_references (GdaFieldAttributes *fa, const gchar *ref);
 
+GdaField           *gda_field_new (void);
+void                gda_field_free (GdaField *field);
 glong               gda_field_get_actual_size (GdaField *field);
 void                gda_field_set_actual_size (GdaField *field, glong size);
 glong               gda_field_get_defined_size (GdaField *field);
@@ -90,8 +91,8 @@ const gchar        *gda_field_get_name (GdaField *field);
 void                gda_field_set_name (GdaField *field, const gchar *name);
 glong               gda_field_get_scale (GdaField *field);
 void                gda_field_set_scale (GdaField *field, glong scale);
-GdaType             gda_field_get_gdatype (GdaField *field);
-void                gda_field_set_gdatype (GdaField *field, GdaType type);
+GdaValueType        gda_field_get_gdatype (GdaField *field);
+void                gda_field_set_gdatype (GdaField *field, GdaValueType type);
 gboolean            gda_field_get_allow_null (GdaField *field);
 void                gda_field_set_allow_null (GdaField *field, gboolean allow);
 gboolean            gda_field_get_primary_key (GdaField *field);

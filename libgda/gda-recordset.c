@@ -24,16 +24,14 @@
 #include <config.h>
 #include <libgda/gda-recordset.h>
 #include <libgda/gda-row.h>
-#include <glib-object.h>
-#include <bonobo/bonobo-exception.h>
 
 #define PARENT_TYPE GDA_TYPE_DATA_MODEL_ARRAY
 
 struct _GdaRecordsetPrivate {
 	GdaConnection *cnc;
-	GNOME_Database_Recordset corba_recset;
-	GNOME_Database_RowAttributes *attributes;
-	guint timeout_id;
+	GdaRecordsetFetchFunc fetch_func;
+	GdaRecordsetDescribeFunc describe_func;
+	GdaRowAttributes *attributes;
 
 	gint row_count;
 	gboolean load_completed;
@@ -63,22 +61,9 @@ gda_recordset_get_n_rows (GdaDataModel *model)
 
 	g_return_val_if_fail (GDA_IS_RECORDSET (recset), -1);
 
-	if (recset->priv->row_count == -1) {
-		CORBA_Environment ev;
+	/* FIXME: implement */
 
-		CORBA_exception_init (&ev);
-		recset->priv->row_count = GNOME_Database_Recordset_getRowCount (
-			recset->priv->corba_recset, &ev);
-		if (BONOBO_EX (&ev)) {
-			gda_connection_add_error_list (
-				recset->priv->cnc, gda_error_list_from_exception (&ev));
-			recset->priv->row_count = -1;
-		}
-
-		CORBA_exception_free (&ev);
-	}
-
-	return recset->priv->row_count;
+	return 0;
 }
 
 static gint
@@ -87,32 +72,21 @@ gda_recordset_get_n_columns (GdaDataModel *model)
 	GdaRecordset *recset = (GdaRecordset *) model;
 
 	g_return_val_if_fail (GDA_IS_RECORDSET (recset), -1);
-	g_return_val_if_fail (recset->priv->attributes != NULL, -1);
 
-	return recset->priv->attributes->_length;
+	/* FIXME: implement */
+
+	return 0;
 }
 
 static GdaFieldAttributes *
 gda_recordset_describe_column (GdaDataModel *model, gint col)
 {
-	GdaFieldAttributes *fa;
 	GdaRecordset *recset = (GdaRecordset *) model;
 
 	g_return_val_if_fail (GDA_IS_RECORDSET (recset), NULL);
 	g_return_val_if_fail (recset->priv->attributes != NULL, NULL);
 
-	if (col >= recset->priv->attributes->_length ||
-	    recset->priv->attributes <= 0)
-		return NULL;
-
-	fa = gda_field_attributes_new ();
-	gda_field_attributes_set_defined_size (fa, recset->priv->attributes->_buffer[col].definedSize);
-	gda_field_attributes_set_name (fa, recset->priv->attributes->_buffer[col].name);
-	gda_field_attributes_set_scale (fa, recset->priv->attributes->_buffer[col].scale);
-	gda_field_attributes_set_gdatype (fa, recset->priv->attributes->_buffer[col].gdaType);
-	gda_field_attributes_set_allow_null (fa, recset->priv->attributes->_buffer[col].allowNull);
-
-	return fa;
+	return NULL; /* FIXME: */
 }
 
 static const GdaValue *
@@ -137,29 +111,17 @@ gda_recordset_get_value_at (GdaDataModel *model, gint col, gint row)
 
 	for (i = fetched_count; i <= row; i++) {
 		GdaRow *row_data;
-		CORBA_Environment ev;
-		gint n;
 
-		CORBA_exception_init (&ev);
-
-		row_data = GNOME_Database_Recordset_fetch (recset->priv->corba_recset, &ev);
-		if (BONOBO_EX (&ev)) {
-			gda_connection_add_error_list (
-				recset->priv->cnc, gda_error_list_from_exception (&ev));
-			CORBA_exception_free (&ev);
-			return NULL;
-		}
-
-		CORBA_exception_free (&ev);
-
+		row_data = recset->priv->fetch_func (recset, i);
 		if (row_data) {
 			GList *value_list = NULL;
+			GList *l;
 
-			for (n = 0; n < row_data->_length; n++) {
+			for (l = row_data; l != NULL; l = l->next) {
 				GdaValue *value;
 				GdaField *field;
 
-				field = gda_row_get_field (row_data, n);
+				field = gda_row_get_field (row_data, i);
 				value = gda_field_get_value (field);
 				value_list = g_list_append (value_list, value);
 			}
@@ -169,11 +131,6 @@ gda_recordset_get_value_at (GdaDataModel *model, gint col, gint row)
 
 			gda_row_free (row_data);
 			g_list_free (value_list);
-
-			/* move to next row */
-			CORBA_exception_init (&ev);
-			GNOME_Database_Recordset_moveNext (recset->priv->corba_recset, &ev);
-			CORBA_exception_free (&ev);
 		}
 	}
 
@@ -232,9 +189,9 @@ gda_recordset_init (GdaRecordset *recset, GdaRecordsetClass *klass)
 	recset->priv = g_new0 (GdaRecordsetPrivate, 1);
 
 	recset->priv->cnc = NULL;
-	recset->priv->corba_recset = CORBA_OBJECT_NIL;
+	recset->priv->fetch_func = NULL;
+	recset->priv->describe_func = NULL;
 	recset->priv->attributes = NULL;
-	recset->priv->timeout_id = -1;
 	recset->priv->row_count = -1;
 	recset->priv->load_completed = FALSE;
 	recset->priv->cmd_text = NULL;
@@ -248,25 +205,16 @@ gda_recordset_finalize (GObject * object)
 
 	g_return_if_fail (GDA_IS_RECORDSET (recset));
 
-	/* remove timeout handler */
-	if (recset->priv->timeout_id != -1) {
-		g_source_remove (recset->priv->timeout_id);
-		recset->priv->timeout_id = -1;
-	}
-
 	/* free memory */
-	if (recset->priv->corba_recset != CORBA_OBJECT_NIL) {
-		CORBA_Environment ev;
-
-		CORBA_exception_init (&ev);
-		CORBA_Object_release (recset->priv->corba_recset, &ev);
-		CORBA_exception_free (&ev);
+	if (recset->priv->attributes != NULL) {
+		gda_row_attributes_free (recset->priv->attributes);
+		recset->priv->attributes = NULL;
 	}
-	if (recset->priv->attributes != NULL)
-		CORBA_free (recset->priv->attributes);
 
-	if (recset->priv->cmd_text != NULL)
-		CORBA_free (recset->priv->cmd_text);
+	if (recset->priv->cmd_text != NULL) {
+		g_free (recset->priv->cmd_text);
+		recset->priv->cmd_text = NULL;
+	}
 
 	g_free (recset->priv);
 	recset->priv = NULL;
@@ -284,64 +232,37 @@ gda_recordset_finalize (GObject * object)
  * Returns: the allocated recordset object
  */
 GdaRecordset *
-gda_recordset_new (GdaConnection *cnc, GNOME_Database_Recordset corba_recset)
+gda_recordset_new (GdaConnection *cnc,
+		   GdaRecordsetFetchFunc fetch_func,
+		   GdaRecordsetDescribeFunc desc_func)
 {
 	GdaRecordset *recset;
-	CORBA_Environment ev;
 	gint i;
+	gint length;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
-	g_return_val_if_fail (corba_recset != CORBA_OBJECT_NIL, NULL);
+	g_return_val_if_fail (fetch_func != NULL, NULL);
+	g_return_val_if_fail (desc_func != NULL, NULL);
 
 	recset = g_object_new (GDA_TYPE_RECORDSET, NULL);
 
 	recset->priv->cnc = cnc;
-	recset->priv->corba_recset = corba_recset;
+	recset->priv->fetch_func = fetch_func;
+	recset->priv->describe_func = desc_func;
 
 	/* get recordset description */
-	CORBA_exception_init (&ev);
+	recset->priv->attributes = recset->priv->describe_func (recset);
+	length = gda_row_attributes_get_length (recset->priv->attributes);
 
-	recset->priv->attributes = GNOME_Database_Recordset_describe (
-		recset->priv->corba_recset, &ev);
-	if (BONOBO_EX (&ev)) {
-		gda_connection_add_error_list (
-			cnc, gda_error_list_from_exception (&ev));
-		CORBA_exception_free (&ev);
-		g_object_unref (G_OBJECT (recset));
-		return NULL;
-	}
+	gda_data_model_array_set_n_columns (GDA_DATA_MODEL_ARRAY (recset), length);
+	for (i = 0; i < length; i++) {
+		GdaFieldAttributes *fa;
 
-	CORBA_exception_free (&ev);
-
-	gda_data_model_array_set_n_columns (GDA_DATA_MODEL_ARRAY (recset),
-					    recset->priv->attributes->_length);
-
-	for (i = 0; i < recset->priv->attributes->_length; i++) {
+		fa = gda_row_attributes_get_field (recset->priv->attributes, i);
 		gda_data_model_set_column_title (
 			GDA_DATA_MODEL (recset), i,
-			gda_field_attributes_get_name (
-				&recset->priv->attributes->_buffer[i]));
+			gda_field_attributes_get_name (fa));
 	}
-
-	/* retrieve all data from the underlying recordset */
-	CORBA_exception_init (&ev);
-	if (!GNOME_Database_Recordset_moveFirst (recset->priv->corba_recset, &ev)) {
-		if (BONOBO_EX (&ev)) {
-			gda_connection_add_error_list (
-				cnc, gda_error_list_from_exception (&ev));
-			CORBA_exception_free (&ev);
-			g_object_unref (G_OBJECT (recset));
-			return NULL;
-		}
-
-		recset->priv->load_completed = TRUE;
-	}
-
-	recset->priv->cmd_text = GNOME_Database_Recordset_getCommandText (
-					recset->priv->corba_recset, &ev);
-
-	recset->priv->cmd_type = GNOME_Database_Recordset_getCommandType (
-					recset->priv->corba_recset, &ev);
 
 	return recset;
 }
@@ -362,6 +283,20 @@ gda_recordset_get_command_text (GdaRecordset *recset)
 }
 
 /**
+ * gda_recordset_set_command_text
+ */
+void
+gda_recordset_set_command_text (GdaRecordset *recset, const gchar *txt)
+{
+	g_return_if_fail (GDA_IS_RECORDSET (recset));
+	g_return_if_fail (txt != NULL);
+
+	if (recset->priv->cmd_text)
+		g_free (recset->priv->cmd_text);
+	recset->priv->cmd_text = g_strdup (txt);
+}
+
+/**
  * gda_recordset_get_command_type
  * @recset: a #GdaRecordset.
  *
@@ -375,4 +310,14 @@ gda_recordset_get_command_type (GdaRecordset *recset)
 	g_return_val_if_fail (GDA_IS_RECORDSET (recset), GDA_COMMAND_TYPE_INVALID);
 	return recset->priv->cmd_type;
 
+}
+
+/**
+ * gda_recordset_set_command_type
+ */
+void
+gda_recordset_set_command_type (GdaRecordset *recset, GdaCommandType type)
+{
+	g_return_if_fail (GDA_IS_RECORDSET (recset));
+	recset->priv->cmd_type = type;
 }

@@ -23,7 +23,7 @@
  */
 
 #include <config.h>
-#include <bonobo/bonobo-i18n.h>
+#include <libgda/gda-intl.h>
 #include <stdlib.h>
 #include "gda-mysql.h"
 #include "gda-mysql-recordset.h"
@@ -44,7 +44,7 @@ free_mysql_res (gpointer data)
 }
 
 static GdaRow *
-fetch_func (GdaServerRecordset *recset, gulong rownum)
+fetch_func (GdaRecordset *recset, gulong rownum)
 {
 	GdaRow *row;
 	gint field_count;
@@ -55,12 +55,12 @@ fetch_func (GdaServerRecordset *recset, gulong rownum)
 	MYSQL_RES *mysql_res;
 	MYSQL_ROW mysql_row;
 
-	g_return_val_if_fail (GDA_IS_SERVER_RECORDSET (recset), NULL);
+	g_return_val_if_fail (GDA_IS_RECORDSET (recset), NULL);
 
 	mysql_res = g_object_get_data (G_OBJECT (recset), OBJECT_DATA_RECSET_HANDLE);
 	if (!mysql_res) {
-		gda_server_connection_add_error_string (
-			gda_server_recordset_get_connection (recset),
+		gda_connection_add_error_string (
+			gda_recordset_get_connection (recset),
 			_("Invalid MySQL handle"));
 		return NULL;
 	}
@@ -72,8 +72,8 @@ fetch_func (GdaServerRecordset *recset, gulong rownum)
 	field_count = mysql_num_fields (mysql_res);
 
 	if (rownum < 0 || rownum >= row_count) {
-		gda_server_connection_add_error_string (
-			gda_server_recordset_get_connection (recset),
+		gda_connection_add_error_string (
+			gda_recordset_get_connection (recset),
 			_("Row number out of range"));
 		return NULL;
 	}
@@ -152,19 +152,19 @@ fetch_func (GdaServerRecordset *recset, gulong rownum)
 }
 
 static GdaRowAttributes *
-describe_func (GdaServerRecordset *recset)
+describe_func (GdaRecordset *recset)
 {
 	MYSQL_RES *mysql_res;
 	gint field_count;
 	gint i;
 	GdaRowAttributes *attrs;
 
-	g_return_val_if_fail (GDA_IS_SERVER_RECORDSET (recset), NULL);
+	g_return_val_if_fail (GDA_IS_RECORDSET (recset), NULL);
 
 	mysql_res = g_object_get_data (G_OBJECT (recset), OBJECT_DATA_RECSET_HANDLE);
 	if (!mysql_res) {
-		gda_server_connection_add_error_string (
-			gda_server_recordset_get_connection (recset),
+		gda_connection_add_error_string (
+			gda_recordset_get_connection (recset),
 			_("Invalid MySQL handle"));
 		return NULL;
 	}
@@ -194,15 +194,15 @@ describe_func (GdaServerRecordset *recset)
  * Public functions
  */
 
-GdaServerRecordset *
-gda_mysql_recordset_new (GdaServerConnection *cnc, MYSQL_RES *mysql_res)
+GdaRecordset *
+gda_mysql_recordset_new (GdaConnection *cnc, MYSQL_RES *mysql_res)
 {
-	GdaServerRecordset *recset;
+	GdaRecordset *recset;
 
-	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), NULL);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (mysql_res != NULL, NULL);
 
-	recset = gda_server_recordset_new (cnc, fetch_func, describe_func);
+	recset = gda_recordset_new (cnc, fetch_func, describe_func);
 	g_object_set_data_full (G_OBJECT (recset), OBJECT_DATA_RECSET_HANDLE,
 				mysql_res, (GDestroyNotify) free_mysql_res);
 

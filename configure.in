@@ -3,7 +3,7 @@ AC_INIT(libgda/libgda.h)
 
 GDA_MAJOR_VERSION=0
 GDA_MINOR_VERSION=8
-GDA_MICRO_VERSION=106
+GDA_MICRO_VERSION=190
 GDA_VERSION=$GDA_MAJOR_VERSION.$GDA_MINOR_VERSION.$GDA_MICRO_VERSION
 
 AC_SUBST(GDA_MAJOR_VERSION)
@@ -18,7 +18,7 @@ AC_SUBST(GDA_VERSION)
 # - If interfaces is the same as the previous version, set GDA_REVISION += 1
 #
 GDA_CURRENT=1
-GDA_REVISION=0
+GDA_REVISION=1
 GDA_AGE=0
 
 AC_SUBST(GDA_CURRENT)
@@ -44,15 +44,6 @@ AC_PROG_CC
 AC_PROG_CXX
 AC_STDC_HEADERS
 AM_PROG_LIBTOOL
-
-ORBIT_IDL="`$PKG_CONFIG --variable=orbit_idl ORBit-2.0`"
-AC_SUBST(ORBIT_IDL)
-
-BONOBO_ACTIVATION_IDL_DIR="`$PKG_CONFIG --variable=idldir bonobo-activation-2.0`"
-AC_SUBST(BONOBO_ACTIVATION_IDL_DIR)
-
-BONOBO_IDL_DIR="`$PKG_CONFIG --variable=idldir libbonobo-2.0`"
-AC_SUBST(BONOBO_IDL_DIR)
 
 dnl ******************************
 dnl glib-genmarshal
@@ -84,7 +75,7 @@ AC_SUBST(CFLAGS)
 AC_SUBST(CPPFLAGS)
 AC_SUBST(LDFLAGS)
 
-PKG_CHECK_MODULES(LIBGDA, ORBit-2.0 >= 2.3.91 glib-2.0 >= 1.3.10 gobject-2.0 >= 1.3.1 gthread-2.0 >= 1.3.1 bonobo-activation-2.0 >= 0.7.0 libbonobo-2.0 libxml-2.0 gconf-2.0 >= 1.1.8 libxslt >= 1.0.9 gnome-vfs-2.0)
+PKG_CHECK_MODULES(LIBGDA, glib-2.0 >= 2.0.0 gobject-2.0 >= 2.0.0 gthread-2.0 >= 2.0.0 libxml-2.0 gconf-2.0 >= 1.1.8 libxslt >= 1.0.9 gnome-vfs-2.0)
 AC_SUBST(LIBGDA_CFLAGS)
 AC_SUBST(LIBGDA_LIBS)
 
@@ -523,9 +514,6 @@ AM_CONDITIONAL(SQLITE, test x$sqlitedir != x)
 dnl ******************************
 dnl Variables
 dnl ******************************
-IDL_FLAGS=`gnome-config --cflags idl`
-
-AC_SUBST(IDL_FLAGS)
 AC_SUBST(ODBC_LIBS)
 AC_SUBST(ODBC_CFLAGS)
 AC_SUBST(MYSQL_LIBS)
@@ -548,8 +536,6 @@ AC_SUBST(MDB_LIBS)
 AC_SUBST(MDB_CFLAGS)
 AC_SUBST(CAMEL_LIBS)
 AC_SUBST(CAMEL_CFLAGS)
-AC_SUBST(XML_LIBS)
-AC_SUBST(XML_CFLAGS)
 AC_SUBST(SQLITE_LIBS)
 AC_SUBST(SQLITE_CFLAGS)
 
@@ -571,10 +557,6 @@ providers/postgres/Makefile
 providers/sqlite/Makefile
 providers/sybase/Makefile
 tools/Makefile
-report/Makefile
-report/gda-report.dtd
-report/idl/Makefile
-report/libgda-report/Makefile
 testing/Makefile
 doc/Makefile
 doc/C/Makefile

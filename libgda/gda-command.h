@@ -23,27 +23,32 @@
 #if !defined(__gda_command_h__)
 #  define __gda_command_h__
 
-#include <libgda/GNOME_Database.h>
 #include <glib/gmacros.h>
+#include <glib/gtypes.h>
 
 G_BEGIN_DECLS
 
-typedef GNOME_Database_Command GdaCommand;
+typedef enum {
+	GDA_COMMAND_OPTION_IGNORE_ERRORS  = 1,
+	GDA_COMMAND_OPTION_STOP_ON_ERRORS = 1 << 1,
+	GDA_COMMAND_OPTION_BAD_OPTION     = 1 << 2
+} GdaCommandOptions;
 
-typedef GNOME_Database_CommandOptions GdaCommandOptions;
-#define GDA_COMMAND_OPTION_IGNORE_ERRORS  GNOME_Database_IGNORE_ERRORS
-#define GDA_COMMAND_OPTION_STOP_ON_ERRORS GNOME_Database_STOP_ON_ERRORS
-#define GDA_COMMAND_OPTION_BAD_OPTION     GNOME_Database_BAD_OPTION
-#define GDA_COMMAND_DEFAULT_OPTION        GNOME_Database_DEFAULT_OPTION
-
+#define GDA_COMMAND_DEFAULT_OPTION GDA_COMMAND_OPTION_IGNORE_ERRORS
 
 typedef enum {
-	GDA_COMMAND_TYPE_SQL = GNOME_Database_COMMAND_TYPE_SQL,
-	GDA_COMMAND_TYPE_XML = GNOME_Database_COMMAND_TYPE_XML,
-	GDA_COMMAND_TYPE_PROCEDURE = GNOME_Database_COMMAND_TYPE_PROCEDURE,
-	GDA_COMMAND_TYPE_TABLE = GNOME_Database_COMMAND_TYPE_TABLE,
-	GDA_COMMAND_TYPE_INVALID = GNOME_Database_COMMAND_TYPE_INVALID
+	GDA_COMMAND_TYPE_SQL,
+	GDA_COMMAND_TYPE_XML,
+	GDA_COMMAND_TYPE_PROCEDURE,
+	GDA_COMMAND_TYPE_TABLE,
+	GDA_COMMAND_TYPE_INVALID
 } GdaCommandType;
+
+typedef struct {
+	gchar *text;
+	GdaCommandType type;
+	GdaCommandOptions options;
+} GdaCommand;
 
 GdaCommand    *gda_command_new (const gchar *text, GdaCommandType type,
 				GdaCommandOptions options);

@@ -14,37 +14,3 @@ GdaServer
 
 </para>
 
-<!-- ##### STRUCT GdaServerPrivate ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### FUNCTION gda_server_new ##### -->
-<para>
-
-</para>
-
-@factory_iid: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gda_server_register_component ##### -->
-<para>
-
-</para>
-
-@server: 
-@iid: 
-@type: 
-
-
-<!-- ##### FUNCTION gda_server_unregister_component ##### -->
-<para>
-
-</para>
-
-@server: 
-@iid: 
-
-

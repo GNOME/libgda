@@ -26,16 +26,16 @@
 #  define __gda_mysql_h__
 
 #include <glib/gmacros.h>
-#include <bonobo/bonobo-i18n.h>
 #include <config.h>
-#include <libgda/gda-server.h>
+#include <libgda/gda-connection.h>
+#include <libgda/gda-server-provider.h>
+#include <libgda/gda-intl.h>
 #include <libgda/gda-value.h>
-#include <gda-mysql-provider.h>
+#include "gda-mysql-provider.h"
 #include <mysql.h>
 #include <mysql_com.h>
 
-#define GDA_MYSQL_COMPONENT_FACTORY_ID "OAFIID:GNOME_Database_MySQL_ComponentFactory"
-#define GDA_MYSQL_PROVIDER_ID          "OAFIID:GNOME_Database_MySQL_Provider"
+#define GDA_MYSQL_PROVIDER_ID          "GDA MySQL provider"
 
 G_BEGIN_DECLS
 
@@ -43,8 +43,8 @@ G_BEGIN_DECLS
  * Utility functions
  */
 
-GdaError *gda_mysql_make_error (MYSQL *handle);
-GdaType   gda_mysql_type_to_gda (enum enum_field_types mysql_type);
+GdaError     *gda_mysql_make_error (MYSQL *handle);
+GdaValueType  gda_mysql_type_to_gda (enum enum_field_types mysql_type);
 
 G_END_DECLS
 

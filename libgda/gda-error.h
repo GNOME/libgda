@@ -24,8 +24,7 @@
 #if !defined(__gda_error_h__)
 #  define __gda_error_h__
 
-#include <glib/gmacros.h>
-#include <libgda/GNOME_Database.h>
+#include <glib-object.h>
 
 G_BEGIN_DECLS
 
@@ -49,15 +48,7 @@ struct _GdaErrorClass {
 };
 
 GType         gda_error_get_type (void);
-
 GdaError     *gda_error_new (void);
-GList        *gda_error_list_from_exception (CORBA_Environment * ev);
-void          gda_error_to_exception (GdaError * error,
-				      CORBA_Environment * ev);
-void          gda_error_list_to_exception (GList * error_list,
-					   CORBA_Environment * ev);
-GNOME_Database_ErrorSeq *
-              gda_error_list_to_corba_seq (GList * error_list);
 void          gda_error_free (GdaError * error);
 void          gda_error_list_free (GList * errors);
 

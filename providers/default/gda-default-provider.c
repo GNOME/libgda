@@ -22,11 +22,10 @@
  */
 
 #include <config.h>
-#include <bonobo/bonobo-i18n.h>
 #include <stdlib.h>
+#include <libgda/gda-data-model-array.h>
+#include <libgda/gda-intl.h>
 #include <libgda/gda-row.h>
-#include <libgda/gda-server-recordset.h>
-#include <libgda/gda-server-recordset-model.h>
 #include <libgda/gda-util.h>
 #include "gda-default.h"
 #include "gda-default-recordset.h"
@@ -42,32 +41,32 @@ static void gda_default_provider_init       (GdaDefaultProvider *provider,
 static void gda_default_provider_finalize   (GObject *object);
 
 static gboolean gda_default_provider_open_connection (GdaServerProvider *provider,
-						      GdaServerConnection *cnc,
+						      GdaConnection *cnc,
 						      GdaQuarkList *params,
 						      const gchar *username,
 						      const gchar *password);
 static gboolean gda_default_provider_close_connection (GdaServerProvider *provider,
-						       GdaServerConnection *cnc);
+						       GdaConnection *cnc);
 static GList *gda_default_provider_execute_command (GdaServerProvider *provider,
-						    GdaServerConnection *cnc,
+						    GdaConnection *cnc,
 						    GdaCommand *cmd,
 						    GdaParameterList *params);
 static gboolean gda_default_provider_begin_transaction (GdaServerProvider *provider,
-							GdaServerConnection *cnc,
+							GdaConnection *cnc,
 							const gchar *trans_id);
 static gboolean gda_default_provider_commit_transaction (GdaServerProvider *provider,
-							 GdaServerConnection *cnc,
+							 GdaConnection *cnc,
 							 const gchar *trans_id);
 static gboolean gda_default_provider_rollback_transaction (GdaServerProvider *provider,
-							   GdaServerConnection *cnc,
+							   GdaConnection *cnc,
 							   const gchar *trans_id);
 static gboolean gda_default_provider_supports (GdaServerProvider *provider,
-					       GdaServerConnection *cnc,
-					       GNOME_Database_Feature feature);
-static GdaServerRecordset *gda_default_provider_get_schema (GdaServerProvider *provider,
-							    GdaServerConnection *cnc,
-							    GNOME_Database_Connection_Schema schema,
-							    GdaParameterList *params);
+					       GdaConnection *cnc,
+					       GdaConnectionFeature feature);
+static GdaDataModel *gda_default_provider_get_schema (GdaServerProvider *provider,
+						      GdaConnection *cnc,
+						      GdaConnectionSchema schema,
+						      GdaParameterList *params);
 
 static GObjectClass *parent_class = NULL;
 
@@ -140,7 +139,7 @@ gda_default_provider_get_type (void)
 /* open_connection handler for the GdaDefaultProvider class */
 static gboolean
 gda_default_provider_open_connection (GdaServerProvider *provider,
-				      GdaServerConnection *cnc,
+				      GdaConnection *cnc,
 				      GdaQuarkList *params,
 				      const gchar *username,
 				      const gchar *password)
@@ -151,16 +150,15 @@ gda_default_provider_open_connection (GdaServerProvider *provider,
 	GdaDefaultProvider *dfprv = (GdaDefaultProvider *) provider;
 
 	g_return_val_if_fail (GDA_IS_DEFAULT_PROVIDER (dfprv), FALSE);
-	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 
 	/* get all parameters received */
 	t_uri = gda_quark_list_find (params, "URI");
 
 	if (!t_uri) {
-		gda_server_connection_add_error_string (
-			cnc,
-			_("A full path must be specified on the "
-			  "connection string to open a database."));
+		gda_connection_add_error_string (cnc,
+						 _("A full path must be specified on the "
+						   "connection string to open a database."));
 		return FALSE;
 	}
 
@@ -179,13 +177,13 @@ gda_default_provider_open_connection (GdaServerProvider *provider,
 /* close_connection handler for the GdaDefaultProvider class */
 static gboolean
 gda_default_provider_close_connection (GdaServerProvider *provider,
-				       GdaServerConnection *cnc)
+				       GdaConnection *cnc)
 {
 	GdaXmlDatabase *xmldb;
 	GdaDefaultProvider *dfprv = (GdaDefaultProvider *) provider;
 
 	g_return_val_if_fail (GDA_IS_DEFAULT_PROVIDER (dfprv), FALSE);
-	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 
 	xmldb = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_DEFAULT_HANDLE);
 	if (!xmldb)
@@ -198,7 +196,7 @@ gda_default_provider_close_connection (GdaServerProvider *provider,
 }
 
 static GList *
-process_sql_commands (GList *reclist, GdaServerConnection *cnc, const gchar *sql)
+process_sql_commands (GList *reclist, GdaConnection *cnc, const gchar *sql)
 {
 	gchar **arr;
 
@@ -221,7 +219,7 @@ process_sql_commands (GList *reclist, GdaServerConnection *cnc, const gchar *sql
 /* execute_command handler for the GdaDefaultProvider class */
 static GList *
 gda_default_provider_execute_command (GdaServerProvider *provider,
-				      GdaServerConnection *cnc,
+				      GdaConnection *cnc,
 				      GdaCommand *cmd,
 				      GdaParameterList *params)
 {
@@ -229,7 +227,7 @@ gda_default_provider_execute_command (GdaServerProvider *provider,
 	GdaDefaultProvider *dfprv = (GdaDefaultProvider *) provider;
 
 	g_return_val_if_fail (GDA_IS_DEFAULT_PROVIDER (dfprv), NULL);
-	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), NULL);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (cmd != NULL, NULL);
 
 	switch (gda_command_get_command_type (cmd)) {
@@ -255,7 +253,7 @@ gda_default_provider_execute_command (GdaServerProvider *provider,
 /* begin_transaction handler for the GdaDefaultProvider class */
 static gboolean
 gda_default_provider_begin_transaction (GdaServerProvider *provider,
-					GdaServerConnection *cnc,
+					GdaConnection *cnc,
 					const gchar *trans_id)
 {
 	GdaXmlDatabase *xmldb;
@@ -273,7 +271,7 @@ gda_default_provider_begin_transaction (GdaServerProvider *provider,
 /* commit_transaction handler for the GdaDefaultProvider class */
 static gboolean
 gda_default_provider_commit_transaction (GdaServerProvider *provider,
-					 GdaServerConnection *cnc,
+					 GdaConnection *cnc,
 					 const gchar *trans_id)
 {
 	GdaXmlDatabase *xmldb;
@@ -291,7 +289,7 @@ gda_default_provider_commit_transaction (GdaServerProvider *provider,
 /* rollback_transaction handler for the GdaDefaultProvider class */
 static gboolean
 gda_default_provider_rollback_transaction (GdaServerProvider *provider,
-					   GdaServerConnection *cnc,
+					   GdaConnection *cnc,
 					   const gchar *trans_id)
 {
 	GdaXmlDatabase *xmldb;
@@ -310,20 +308,20 @@ gda_default_provider_rollback_transaction (GdaServerProvider *provider,
 /* supports handler for the GdaDefaultProvider class */
 static gboolean
 gda_default_provider_supports (GdaServerProvider *provider,
-			       GdaServerConnection *cnc,
-			       GNOME_Database_Feature feature)
+			       GdaConnection *cnc,
+			       GdaConnectionFeature feature)
 {
-	if (feature == GNOME_Database_FEATURE_TRANSACTIONS
-	    && feature == GNOME_Database_FEATURE_XML_QUERIES)
+	if (feature == GDA_CONNECTION_FEATURE_TRANSACTIONS
+	    && feature == GDA_CONNECTION_FEATURE_XML_QUERIES)
 		return TRUE;
 
 	return FALSE;
 }
 
-static GdaServerRecordset *
-get_table_fields (GdaServerConnection *cnc, GdaXmlDatabase *xmldb, GdaParameterList *params)
+static GdaDataModel *
+get_table_fields (GdaConnection *cnc, GdaXmlDatabase *xmldb, GdaParameterList *params)
 {
-	GdaServerRecordsetModel *recset;
+	GdaDataModelArray *recset;
 	GdaParameter *par;
 	GdaTable *table;
 	gint i;
@@ -331,52 +329,52 @@ get_table_fields (GdaServerConnection *cnc, GdaXmlDatabase *xmldb, GdaParameterL
 	const gchar *table_name;
 	struct {
 		const gchar *name;
-		GdaType type;
+		GdaValueType type;
 	} fields_desc[8] = {
-		{ N_("Field name")	, GDA_TYPE_STRING  },
-		{ N_("Data type")	, GDA_TYPE_STRING  },
-		{ N_("Size")		, GDA_TYPE_INTEGER },
-		{ N_("Scale")		, GDA_TYPE_INTEGER },
-		{ N_("Not null?")	, GDA_TYPE_BOOLEAN },
-		{ N_("Primary key?")	, GDA_TYPE_BOOLEAN },
-		{ N_("Unique index?")	, GDA_TYPE_BOOLEAN },
-		{ N_("References")	, GDA_TYPE_STRING  }
+		{ N_("Field name")	, GDA_VALUE_TYPE_STRING  },
+		{ N_("Data type")	, GDA_VALUE_TYPE_STRING  },
+		{ N_("Size")		, GDA_VALUE_TYPE_INTEGER },
+		{ N_("Scale")		, GDA_VALUE_TYPE_INTEGER },
+		{ N_("Not null?")	, GDA_VALUE_TYPE_BOOLEAN },
+		{ N_("Primary key?")	, GDA_VALUE_TYPE_BOOLEAN },
+		{ N_("Unique index?")	, GDA_VALUE_TYPE_BOOLEAN },
+		{ N_("References")	, GDA_VALUE_TYPE_STRING  }
 	};
 
-	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), NULL);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (GDA_IS_XML_DATABASE (xmldb), NULL);
 	g_return_val_if_fail (params != NULL, NULL);
 
 	/* get parameters sent by client */
 	par = gda_parameter_list_find (params, "name");
 	if (!par) {
-		gda_server_connection_add_error_string (cnc, _("Invalid argument"));
+		gda_connection_add_error_string (cnc, _("Invalid argument"));
 		return NULL;
 	}
 
-	table_name = gda_value_get_string (gda_parameter_get_value (par));
+	table_name = gda_value_get_string ((GdaValue *) gda_parameter_get_value (par));
 	if (!table_name) {
-		gda_server_connection_add_error_string (cnc, _("Invalid argument"));
+		gda_connection_add_error_string (cnc, _("Invalid argument"));
 		return NULL;
 	}
 
 	/* find the table */
 	table = gda_xml_database_find_table (xmldb, table_name);
 	if (!table) {
-		gda_server_connection_add_error_string (cnc, _("Table %s not found"), table_name);
+		gda_connection_add_error_string (cnc, _("Table %s not found"), table_name);
 		return NULL;
 	}
 
 	/* fill in the recordset to be returned */
-	recset = GDA_SERVER_RECORDSET_MODEL (gda_server_recordset_model_new (cnc, 8));
+	recset = GDA_DATA_MODEL_ARRAY (gda_data_model_array_new (8));
 	for (i = 0; i < sizeof (fields_desc) / sizeof (fields_desc[0]); i++) {
-		gint defined_size =  (fields_desc[i].type == GDA_TYPE_STRING) ? 64 : 
-			(fields_desc[i].type == GDA_TYPE_INTEGER) ? sizeof (gint) : 1;
+		gint defined_size =  (fields_desc[i].type == GDA_VALUE_TYPE_STRING) ? 64 : 
+			(fields_desc[i].type == GDA_VALUE_TYPE_INTEGER) ? sizeof (gint) : 1;
 
-		gda_server_recordset_model_set_field_defined_size (recset, i, defined_size);
-		gda_server_recordset_model_set_field_name (recset, i, _(fields_desc[i].name));
-		gda_server_recordset_model_set_field_scale (recset, i, 0);
-		gda_server_recordset_model_set_field_gdatype (recset, i, fields_desc[i].type);
+		//gda_server_recordset_model_set_field_defined_size (recset, i, defined_size);
+		gda_data_model_set_column_title (GDA_DATA_MODEL (recset), i, _(fields_desc[i].name));
+		//gda_server_recordset_model_set_field_scale (recset, i, 0);
+		//gda_server_recordset_model_set_field_gdatype (recset, i, fields_desc[i].type);
 	}
 
 	cols = gda_data_model_get_n_columns (GDA_DATA_MODEL (table));
@@ -386,8 +384,8 @@ get_table_fields (GdaServerConnection *cnc, GdaXmlDatabase *xmldb, GdaParameterL
 
 		fa = gda_data_model_describe_column (GDA_DATA_MODEL (table), i);
 		if (!fa) {
-			bonobo_object_unref (BONOBO_OBJECT (recset));
-			gda_server_connection_add_error_string (
+			g_object_unref (G_OBJECT (recset));
+			gda_connection_add_error_string (
 				cnc, _("Could not get description for column"));
 
 			return NULL;
@@ -405,16 +403,16 @@ get_table_fields (GdaServerConnection *cnc, GdaXmlDatabase *xmldb, GdaParameterL
 		gda_field_attributes_free (fa);
 	}
 
-	return GDA_SERVER_RECORDSET (recset);
+	return GDA_DATA_MODEL (recset);
 }
 
 static void
-add_string_row (GdaServerRecordsetModel *recset, const gchar *str)
+add_string_row (GdaDataModelArray *recset, const gchar *str)
 {
 	GdaValue *value;
 	GList list;
 
-	g_return_if_fail (GDA_IS_SERVER_RECORDSET_MODEL (recset));
+	g_return_if_fail (GDA_IS_DATA_MODEL_ARRAY (recset));
 	g_return_if_fail (str != NULL);
 
 	value = gda_value_new_string (str);
@@ -422,41 +420,41 @@ add_string_row (GdaServerRecordsetModel *recset, const gchar *str)
 	list.next = NULL;
 	list.prev = NULL;
 
-	gda_server_recordset_model_append_row (recset, &list);
+	gda_data_model_array_append_row (recset, &list);
 
 	gda_value_free (value);
 }
 
-static GdaServerRecordset *
-get_databases (GdaServerConnection *cnc, GdaXmlDatabase *xmldb)
+static GdaDataModel *
+get_databases (GdaConnection *cnc, GdaXmlDatabase *xmldb)
 {
-	GdaServerRecordsetModel *recset;
+	GdaDataModelArray *recset;
 
-	recset = GDA_SERVER_RECORDSET_MODEL (gda_server_recordset_model_new (cnc, 1));
-	gda_server_recordset_model_set_field_defined_size (recset, 0, 256);
-	gda_server_recordset_model_set_field_name (recset, 0, _("Name"));
-	gda_server_recordset_model_set_field_scale (recset, 0, 0);
-	gda_server_recordset_model_set_field_gdatype (recset, 0, GDA_TYPE_STRING);
+	recset = GDA_DATA_MODEL_ARRAY (gda_data_model_array_new (1));
+	//gda_server_recordset_model_set_field_defined_size (recset, 0, 256);
+	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 0, _("Name"));
+	//gda_server_recordset_model_set_field_scale (recset, 0, 0);
+	//gda_server_recordset_model_set_field_gdatype (recset, 0, GDA_TYPE_STRING);
 
 	add_string_row (recset, gda_xml_database_get_name (xmldb));
 
-	return recset;
+	return GDA_DATA_MODEL (recset);
 }
 
-static GdaServerRecordset *
-get_tables (GdaServerConnection *cnc, GdaXmlDatabase *xmldb)
+static GdaDataModel *
+get_tables (GdaConnection *cnc, GdaXmlDatabase *xmldb)
 {
-	GdaServerRecordsetModel *recset;
+	GdaDataModelArray *recset;
 	GList *tables;
 
-	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), NULL);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (GDA_IS_XML_DATABASE (xmldb), NULL);
 
-	recset = GDA_SERVER_RECORDSET_MODEL (gda_server_recordset_model_new (cnc, 1));
-	gda_server_recordset_model_set_field_defined_size (recset, 0, 256);
-	gda_server_recordset_model_set_field_name (recset, 0, _("Name"));
-	gda_server_recordset_model_set_field_scale (recset, 0, 0);
-	gda_server_recordset_model_set_field_gdatype (recset, 0, GDA_TYPE_STRING);
+	recset = GDA_DATA_MODEL_ARRAY (gda_data_model_array_new (1));
+	//gda_server_recordset_model_set_field_defined_size (recset, 0, 256);
+	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 0, _("Name"));
+	//gda_server_recordset_model_set_field_scale (recset, 0, 0);
+	//gda_server_recordset_model_set_field_gdatype (recset, 0, GDA_TYPE_STRING);
 
 	tables = gda_xml_database_get_tables (xmldb);
 	if (tables != NULL) {
@@ -468,8 +466,7 @@ get_tables (GdaServerConnection *cnc, GdaXmlDatabase *xmldb)
 
 			value = gda_value_new_string ((const gchar *) l->data);
 			value_list = g_list_append (NULL, value);
-			gda_server_recordset_model_append_row (recset,
-							       (const GList *) value_list);
+			gda_data_model_array_append_row (recset, (const GList *) value_list);
 
 			gda_value_free (value);
 			g_list_free (value_list);
@@ -478,22 +475,22 @@ get_tables (GdaServerConnection *cnc, GdaXmlDatabase *xmldb)
 		gda_xml_database_free_table_list (tables);
 	}
 
-	return GDA_SERVER_RECORDSET (recset);
+	return GDA_DATA_MODEL (recset);
 }
 
-static GdaServerRecordset *
-get_types (GdaServerConnection *cnc)
+static GdaDataModel *
+get_types (GdaConnection *cnc)
 {
-	GdaServerRecordsetModel *recset;
+	GdaDataModelArray *recset;
 
-	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), NULL);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
 	/* create the recordset */
-	recset = (GdaServerRecordsetModel *) gda_server_recordset_model_new (cnc, 1);
-	gda_server_recordset_model_set_field_defined_size (recset, 0, 32);
-	gda_server_recordset_model_set_field_name (recset, 0, _("Type"));
-	gda_server_recordset_model_set_field_scale (recset, 0, 0);
-	gda_server_recordset_model_set_field_gdatype (recset, 0, GDA_TYPE_STRING);
+	recset = GDA_DATA_MODEL_ARRAY (gda_data_model_array_new (1));
+	//gda_server_recordset_model_set_field_defined_size (recset, 0, 32);
+	gda_data_model_set_column_title (GDA_DATA_MODEL (recset), 0, _("Name"));
+	//gda_server_recordset_model_set_field_scale (recset, 0, 0);
+	//gda_server_recordset_model_set_field_gdatype (recset, 0, GDA_TYPE_STRING);
 
 	/* fill the recordset */
 	add_string_row (recset, "bigint");
@@ -512,14 +509,14 @@ get_types (GdaServerConnection *cnc)
 	add_string_row (recset, "timestamp");
 	add_string_row (recset, "tinyint");
 
-	return GDA_SERVER_RECORDSET (recset);
+	return GDA_DATA_MODEL (recset);
 }
 
 /* get_schema handler for the GdaDefaultProvider class */
-static GdaServerRecordset *
+static GdaDataModel *
 gda_default_provider_get_schema (GdaServerProvider *provider,
-				 GdaServerConnection *cnc,
-				 GNOME_Database_Connection_Schema schema,
+				 GdaConnection *cnc,
+				 GdaConnectionSchema schema,
 				 GdaParameterList *params)
 {
 	GdaXmlDatabase *xmldb;
@@ -532,13 +529,13 @@ gda_default_provider_get_schema (GdaServerProvider *provider,
 		return NULL;
 
 	switch (schema) {
-	case GNOME_Database_Connection_SCHEMA_DATABASES :
+	case GDA_CONNECTION_SCHEMA_DATABASES :
 		return get_databases (cnc, xmldb);
-	case GNOME_Database_Connection_SCHEMA_FIELDS :
+	case GDA_CONNECTION_SCHEMA_FIELDS :
 		return get_table_fields (cnc, xmldb, params);
-	case GNOME_Database_Connection_SCHEMA_TABLES :
+	case GDA_CONNECTION_SCHEMA_TABLES :
 		return get_tables (cnc, xmldb);
-	case GNOME_Database_Connection_SCHEMA_TYPES :
+	case GDA_CONNECTION_SCHEMA_TYPES :
 		return get_types (cnc);
 	default :
 	}

@@ -37,6 +37,7 @@ G_BEGIN_DECLS
 #define GDA_IS_CONNECTION(obj)         (G_TYPE_CHECK_INSTANCE_TYPE(obj, GDA_TYPE_CONNECTION))
 #define GDA_IS_CONNECTION_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), GDA_TYPE_CONNECTION))
 
+typedef struct _GdaServerProvider    GdaServerProvider;
 typedef struct _GdaConnection        GdaConnection;
 typedef struct _GdaConnectionClass   GdaConnectionClass;
 typedef struct _GdaConnectionPrivate GdaConnectionPrivate;
@@ -57,7 +58,7 @@ struct _GdaConnectionClass {
 
 GType          gda_connection_get_type (void);
 GdaConnection *gda_connection_new (GdaClient *client,
-				   GNOME_Database_Connection corba_cnc,
+				   GdaServerProvider *provider,
 				   const gchar *dsn,
 				   const gchar *username,
 				   const gchar *password);
@@ -74,6 +75,7 @@ const gchar   *gda_connection_get_username (GdaConnection *cnc);
 const gchar   *gda_connection_get_password (GdaConnection *cnc);
 
 void           gda_connection_add_error (GdaConnection *cnc, GdaError *error);
+void           gda_connection_add_error_string (GdaConnection *cnc, const gchar *str, ...);
 void           gda_connection_add_error_list (GdaConnection *cnc, GList *error_list);
 
 GList         *gda_connection_execute_command (GdaConnection *cnc,
@@ -88,23 +90,25 @@ gboolean       gda_connection_commit_transaction (GdaConnection *cnc, const gcha
 gboolean       gda_connection_rollback_transaction (GdaConnection *cnc, const gchar *id);
 
 typedef enum {
-	GDA_CONNECTION_FEATURE_TRANSACTIONS = GNOME_Database_FEATURE_TRANSACTIONS
+	GDA_CONNECTION_FEATURE_TRANSACTIONS,
+	GDA_CONNECTION_FEATURE_SQL,
+	GDA_CONNECTION_FEATURE_XML_QUERIES
 } GdaConnectionFeature;
 
 gboolean       gda_connection_supports (GdaConnection *cnc, GdaConnectionFeature feature);
 
 typedef enum {
-	GDA_CONNECTION_SCHEMA_AGGREGATES = GNOME_Database_Connection_SCHEMA_AGGREGATES,
-	GDA_CONNECTION_SCHEMA_DATABASES = GNOME_Database_Connection_SCHEMA_DATABASES,
-	GDA_CONNECTION_SCHEMA_FIELDS = GNOME_Database_Connection_SCHEMA_FIELDS,
-	GDA_CONNECTION_SCHEMA_INDEXES = GNOME_Database_Connection_SCHEMA_INDEXES,
-	GDA_CONNECTION_SCHEMA_PROCEDURES = GNOME_Database_Connection_SCHEMA_PROCEDURES,
-	GDA_CONNECTION_SCHEMA_SEQUENCES = GNOME_Database_Connection_SCHEMA_SEQUENCES,
-	GDA_CONNECTION_SCHEMA_TABLES = GNOME_Database_Connection_SCHEMA_TABLES,
-	GDA_CONNECTION_SCHEMA_TRIGGERS = GNOME_Database_Connection_SCHEMA_TRIGGERS,
-	GDA_CONNECTION_SCHEMA_TYPES = GNOME_Database_Connection_SCHEMA_TYPES,
-	GDA_CONNECTION_SCHEMA_USERS = GNOME_Database_Connection_SCHEMA_USERS,
-	GDA_CONNECTION_SCHEMA_VIEWS = GNOME_Database_Connection_SCHEMA_VIEWS
+	GDA_CONNECTION_SCHEMA_AGGREGATES,
+	GDA_CONNECTION_SCHEMA_DATABASES,
+	GDA_CONNECTION_SCHEMA_FIELDS,
+	GDA_CONNECTION_SCHEMA_INDEXES,
+	GDA_CONNECTION_SCHEMA_PROCEDURES,
+	GDA_CONNECTION_SCHEMA_SEQUENCES,
+	GDA_CONNECTION_SCHEMA_TABLES,
+	GDA_CONNECTION_SCHEMA_TRIGGERS,
+	GDA_CONNECTION_SCHEMA_TYPES,
+	GDA_CONNECTION_SCHEMA_USERS,
+	GDA_CONNECTION_SCHEMA_VIEWS
 } GdaConnectionSchema;
 
 GdaDataModel *gda_connection_get_schema (GdaConnection *cnc,

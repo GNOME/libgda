@@ -1,3 +1,34 @@
+2002-04-22  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* providers/default/*:
+	* providers/mysql/*:
+	* providers/postgres/*:
+	* providers/sqlite/*:
+	* providers/odbc/*: ported to the new non-CORBA architecture.
+
+	* doc/C/*:
+	* testing/*: compilation fixes.
+
+	* libgda/gda-row.[ch] (gda_row_attributes_get_length): new function.
+
+	* libgda/gda-connection.[ch] (gda_connection_add_error_string):
+	new function.
+
+2002-04-21  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* configure.in: bumped version to 0.8.190, and incremented library
+	version to 1.1.0. Removed CORBA dependencies. We still have a dependency
+	on GConf, which uses ORBit2, though.
+
+	* Makefile.am: removed report/* from build, until it is ready.
+
+	* libgda/Makefile.am: remove CORBA-generated files.
+
+	* libgda/*: compilation fixes, not really working yet.
+
+	* libgda/gda-server*: removed these files, as they can be merged
+	with the non-Server equivalents.
+	
 2002-04-11  Akira TAGOH  <tagoh@gnome-db.org>
 
 	* data/libgda.schemas: remove Datasources schema. it had an invalid

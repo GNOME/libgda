@@ -32,25 +32,25 @@
  * Returns: the name of the type.
  */
 const gchar *
-gda_type_to_string (GdaType type)
+gda_type_to_string (GdaValueType type)
 {
 	switch (type) {
-	case GDA_TYPE_NULL : return "null";
-	case GDA_TYPE_BIGINT : return "bigint";
-	case GDA_TYPE_BINARY : return "binary";
-	case GDA_TYPE_BOOLEAN : return "boolean";
-	case GDA_TYPE_DATE : return "date";
-	case GDA_TYPE_DOUBLE : return "double";
-	case GDA_TYPE_GEOMETRIC_POINT : return "point";
-	case GDA_TYPE_INTEGER : return "integer";
-	case GDA_TYPE_LIST : return "list";
-	case GDA_TYPE_NUMERIC : return "numeric";
-	case GDA_TYPE_SINGLE : return "single";
-	case GDA_TYPE_SMALLINT : return "smallint";
-	case GDA_TYPE_STRING : return "string";
-	case GDA_TYPE_TIME : return "time";
-	case GDA_TYPE_TIMESTAMP : return "timestamp";
-	case GDA_TYPE_TINYINT : return "tinyint";
+	case GDA_VALUE_TYPE_NULL : return "null";
+	case GDA_VALUE_TYPE_BIGINT : return "bigint";
+	case GDA_VALUE_TYPE_BINARY : return "binary";
+	case GDA_VALUE_TYPE_BOOLEAN : return "boolean";
+	case GDA_VALUE_TYPE_DATE : return "date";
+	case GDA_VALUE_TYPE_DOUBLE : return "double";
+	case GDA_VALUE_TYPE_GEOMETRIC_POINT : return "point";
+	case GDA_VALUE_TYPE_INTEGER : return "integer";
+	case GDA_VALUE_TYPE_LIST : return "list";
+	case GDA_VALUE_TYPE_NUMERIC : return "numeric";
+	case GDA_VALUE_TYPE_SINGLE : return "single";
+	case GDA_VALUE_TYPE_SMALLINT : return "smallint";
+	case GDA_VALUE_TYPE_STRING : return "string";
+	case GDA_VALUE_TYPE_TIME : return "time";
+	case GDA_VALUE_TYPE_TIMESTAMP : return "timestamp";
+	case GDA_VALUE_TYPE_TINYINT : return "tinyint";
 	default:
 	}
 
@@ -60,29 +60,29 @@ gda_type_to_string (GdaType type)
 /**
  * gda_type_from_string
  */
-GdaType
+GdaValueType
 gda_type_from_string (const gchar *str)
 {
-	g_return_val_if_fail (str != NULL, GDA_TYPE_UNKNOWN);
+	g_return_val_if_fail (str != NULL, GDA_VALUE_TYPE_UNKNOWN);
 
-	if (!g_strcasecmp (str, "null")) return GDA_TYPE_NULL;
-	else if (!g_strcasecmp (str, "bigint")) return GDA_TYPE_BIGINT;
-	else if (!g_strcasecmp (str, "binary")) return GDA_TYPE_BINARY;
-	else if (!g_strcasecmp (str, "boolean")) return GDA_TYPE_BOOLEAN;
-	else if (!g_strcasecmp (str, "date")) return GDA_TYPE_DATE;
-	else if (!g_strcasecmp (str, "double")) return GDA_TYPE_DOUBLE;
-	else if (!g_strcasecmp (str, "point")) return GDA_TYPE_GEOMETRIC_POINT;
-	else if (!g_strcasecmp (str, "integer")) return GDA_TYPE_INTEGER;
-	else if (!g_strcasecmp (str, "list")) return GDA_TYPE_LIST;
-	else if (!g_strcasecmp (str, "numeric")) return GDA_TYPE_NUMERIC;
-	else if (!g_strcasecmp (str, "single")) return GDA_TYPE_SINGLE;
-	else if (!g_strcasecmp (str, "smallint")) return GDA_TYPE_SMALLINT;
-	else if (!g_strcasecmp (str, "string")) return GDA_TYPE_STRING;
-	else if (!g_strcasecmp (str, "time")) return GDA_TYPE_TIME;
-	else if (!g_strcasecmp (str, "timestamp")) return GDA_TYPE_TIMESTAMP;
-	else if (!g_strcasecmp (str, "tinyint")) return GDA_TYPE_TINYINT;
+	if (!g_strcasecmp (str, "null")) return GDA_VALUE_TYPE_NULL;
+	else if (!g_strcasecmp (str, "bigint")) return GDA_VALUE_TYPE_BIGINT;
+	else if (!g_strcasecmp (str, "binary")) return GDA_VALUE_TYPE_BINARY;
+	else if (!g_strcasecmp (str, "boolean")) return GDA_VALUE_TYPE_BOOLEAN;
+	else if (!g_strcasecmp (str, "date")) return GDA_VALUE_TYPE_DATE;
+	else if (!g_strcasecmp (str, "double")) return GDA_VALUE_TYPE_DOUBLE;
+	else if (!g_strcasecmp (str, "point")) return GDA_VALUE_TYPE_GEOMETRIC_POINT;
+	else if (!g_strcasecmp (str, "integer")) return GDA_VALUE_TYPE_INTEGER;
+	else if (!g_strcasecmp (str, "list")) return GDA_VALUE_TYPE_LIST;
+	else if (!g_strcasecmp (str, "numeric")) return GDA_VALUE_TYPE_NUMERIC;
+	else if (!g_strcasecmp (str, "single")) return GDA_VALUE_TYPE_SINGLE;
+	else if (!g_strcasecmp (str, "smallint")) return GDA_VALUE_TYPE_SMALLINT;
+	else if (!g_strcasecmp (str, "string")) return GDA_VALUE_TYPE_STRING;
+	else if (!g_strcasecmp (str, "time")) return GDA_VALUE_TYPE_TIME;
+	else if (!g_strcasecmp (str, "timestamp")) return GDA_VALUE_TYPE_TIMESTAMP;
+	else if (!g_strcasecmp (str, "tinyint")) return GDA_VALUE_TYPE_TINYINT;
 
-	return GDA_TYPE_UNKNOWN;
+	return GDA_VALUE_TYPE_UNKNOWN;
 }
 
 /* function called by g_hash_table_foreach to add items to a GList */

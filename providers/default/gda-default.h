@@ -26,13 +26,11 @@
 
 #include <config.h>
 #include <glib/gmacros.h>
-#include <bonobo/bonobo-i18n.h>
-#include <libgda/gda-server.h>
+#include <libgda/gda-intl.h>
 #include <libgda/gda-xml-database.h>
-#include <gda-default-provider.h>
+#include "gda-default-provider.h"
 
-#define GDA_DEFAULT_COMPONENT_FACTORY_ID "OAFIID:GNOME_Database_Default_ComponentFactory"
-#define GDA_DEFAULT_PROVIDER_ID          "OAFIID:GNOME_Database_Default_Provider"
+#define GDA_DEFAULT_PROVIDER_ID "GDA default (XML-based) provider"
 
 typedef struct {
 } DEFAULT_Recordset;

@@ -30,14 +30,13 @@
 #endif
 
 #include <glib/gmacros.h>
-#include <bonobo/bonobo-i18n.h>
-#include <libgda/gda-server.h>
+#include <libgda/gda-intl.h>
+#include <libgda/gda-server-provider.h>
 #include <sql.h>
 #include <sqlext.h>
 #include "gda-odbc-provider.h"
 
-#define GDA_ODBC_COMPONENT_FACTORY_ID "OAFIID:GNOME_Database_ODBC_ComponentFactory"
-#define GDA_ODBC_PROVIDER_ID          "OAFIID:GNOME_Database_ODBC_Provider"
+#define GDA_ODBC_PROVIDER_ID "GDA ODBC Provider"
 
 G_BEGIN_DECLS
 

@@ -21,10 +21,10 @@
  */
 
 #include <config.h>
-#include <bonobo/bonobo-exception.h>
+#include <glib/gmessages.h>
 #include <libgda/gda-server-provider.h>
 
-#define PARENT_TYPE BONOBO_OBJECT_TYPE
+#define PARENT_TYPE G_TYPE_OBJECT
 #define CLASS(provider) (GDA_SERVER_PROVIDER_CLASS (G_OBJECT_GET_CLASS (provider)))
 
 struct _GdaServerProviderPrivate {
@@ -39,31 +39,6 @@ static void gda_server_provider_finalize   (GObject *object);
 static GObjectClass *parent_class = NULL;
 
 /*
- * CORBA methods implementation
- */
-
-static CORBA_char *
-impl_Provider_getVersion (PortableServer_Servant servant, CORBA_Environment *ev)
-{
-	return CORBA_string_dup (VERSION);
-}
-
-static GNOME_Database_Connection
-impl_Provider_createConnection (PortableServer_Servant servant, CORBA_Environment *ev)
-{
-	GdaServerConnection *cnc;
-	GdaServerProvider *provider = (GdaServerProvider *) bonobo_object (servant);
-
-	bonobo_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), CORBA_OBJECT_NIL, ev);
-
-	cnc = gda_server_connection_new (provider);
-	if (GDA_IS_SERVER_CONNECTION (cnc))
-		return bonobo_object_corba_objref (BONOBO_OBJECT (cnc));
-
-	return CORBA_OBJECT_NIL; 
-}
-
-/*
  * GdaServerProvider class implementation
  */
 
@@ -71,7 +46,6 @@ static void
 gda_server_provider_class_init (GdaServerProviderClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
-	POA_GNOME_Database_Provider__epv *epv;
 
 	parent_class = g_type_class_peek_parent (klass);
 
@@ -84,11 +58,6 @@ gda_server_provider_class_init (GdaServerProviderClass *klass)
 	klass->rollback_transaction = NULL;
 	klass->supports = NULL;
 	klass->get_schema = NULL;
-
-	/* set the epv */
-	epv = &klass->epv;
-	epv->getVersion = impl_Provider_getVersion;
-	epv->createConnection = impl_Provider_createConnection;
 }
 
 static void
@@ -118,15 +87,32 @@ gda_server_provider_finalize (GObject *object)
 	parent_class->finalize (object);
 }
 
-BONOBO_TYPE_FUNC_FULL (GdaServerProvider,
-			 GNOME_Database_Provider,
-			 PARENT_TYPE,
-			 gda_server_provider)
+GType
+gda_server_provider_get_type (void)
+{
+	static GType type = 0;
+
+	if (!type) {
+		static const GTypeInfo info = {
+			sizeof (GdaServerProviderClass),
+			(GBaseInitFunc) NULL,
+			(GBaseFinalizeFunc) NULL,
+			(GClassInitFunc) gda_server_provider_class_init,
+			NULL,
+			NULL,
+			sizeof (GdaServerProvider),
+			0,
+			(GInstanceInitFunc) gda_server_provider_init
+		};
+		type = g_type_register_static (PARENT_TYPE, "GdaServerProvider", &info, 0);
+	}
+	return type;
+}
 
 /**
  * gda_server_provider_open_connection
  * @provider: a #GdaServerProvider object.
- * @cnc: a #GdaServerConnection object.
+ * @cnc: a #GdaConnection object.
  * @cnc_string: connection string.
  * @username: user name for logging in.
  * @password: password for authentication.
@@ -139,7 +125,7 @@ BONOBO_TYPE_FUNC_FULL (GdaServerProvider,
  */
 gboolean
 gda_server_provider_open_connection (GdaServerProvider *provider,
-				     GdaServerConnection *cnc,
+				     GdaConnection *cnc,
 				     GdaQuarkList *params,
 				     const gchar *username,
 				     const gchar *password)
@@ -148,6 +134,7 @@ gda_server_provider_open_connection (GdaServerProvider *provider,
 	const gchar *pooling;
 
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), FALSE);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (CLASS (provider)->open_connection != NULL, FALSE);
 
 	/* check if POOLING is specified */
@@ -163,7 +150,7 @@ gda_server_provider_open_connection (GdaServerProvider *provider,
 	else {
 		/* unref the object if we've got no connections */
 		if (!provider->priv->connections)
-			bonobo_object_idle_unref (BONOBO_OBJECT (provider));
+			g_object_unref (G_OBJECT (provider));
 	}
 
 	return retcode;
@@ -173,12 +160,12 @@ gda_server_provider_open_connection (GdaServerProvider *provider,
  * gda_server_provider_close_connection
  */
 gboolean
-gda_server_provider_close_connection (GdaServerProvider *provider, GdaServerConnection *cnc)
+gda_server_provider_close_connection (GdaServerProvider *provider, GdaConnection *cnc)
 {
 	gboolean retcode;
 
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), FALSE);
-	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 
 	if (CLASS (provider)->close_connection != NULL)
 		retcode = CLASS (provider)->close_connection (provider, cnc);
@@ -187,7 +174,7 @@ gda_server_provider_close_connection (GdaServerProvider *provider, GdaServerConn
 
 	provider->priv->connections = g_list_remove (provider->priv->connections, cnc);
 	if (!provider->priv->connections)
-		bonobo_object_idle_unref (BONOBO_OBJECT (provider));
+		g_object_unref (G_OBJECT (provider));
 
 	return retcode;
 }
@@ -197,12 +184,12 @@ gda_server_provider_close_connection (GdaServerProvider *provider, GdaServerConn
  */
 GList *
 gda_server_provider_execute_command (GdaServerProvider *provider,
-				     GdaServerConnection *cnc,
+				     GdaConnection *cnc,
 				     GdaCommand *cmd,
 				     GdaParameterList *params)
 {
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
-	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), NULL);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (cmd != NULL, NULL);
 	g_return_val_if_fail (CLASS (provider)->execute_command != NULL, NULL);
 
@@ -214,11 +201,11 @@ gda_server_provider_execute_command (GdaServerProvider *provider,
  */
 gboolean
 gda_server_provider_begin_transaction (GdaServerProvider *provider,
-				       GdaServerConnection *cnc,
+				       GdaConnection *cnc,
 				       const gchar *trans_id)
 {
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), FALSE);
-	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (CLASS (provider)->begin_transaction != NULL, FALSE);
 
 	return CLASS (provider)->begin_transaction (provider, cnc, trans_id);
@@ -229,11 +216,11 @@ gda_server_provider_begin_transaction (GdaServerProvider *provider,
  */
 gboolean
 gda_server_provider_commit_transaction (GdaServerProvider *provider,
-				       GdaServerConnection *cnc,
-				       const gchar *trans_id)
+					GdaConnection *cnc,
+					const gchar *trans_id)
 {
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), FALSE);
-	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (CLASS (provider)->commit_transaction != NULL, FALSE);
 
 	return CLASS (provider)->commit_transaction (provider, cnc, trans_id);
@@ -244,11 +231,11 @@ gda_server_provider_commit_transaction (GdaServerProvider *provider,
  */
 gboolean
 gda_server_provider_rollback_transaction (GdaServerProvider *provider,
-					  GdaServerConnection *cnc,
+					  GdaConnection *cnc,
 					  const gchar *trans_id)
 {
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), FALSE);
-	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (CLASS (provider)->rollback_transaction != NULL, FALSE);
 
 	return CLASS (provider)->rollback_transaction (provider, cnc, trans_id);
@@ -259,10 +246,11 @@ gda_server_provider_rollback_transaction (GdaServerProvider *provider,
  */
 gboolean
 gda_server_provider_supports (GdaServerProvider *provider,
-			      GdaServerConnection *cnc,
-			      GNOME_Database_Feature feature)
+			      GdaConnection *cnc,
+			      GdaConnectionFeature feature)
 {
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), FALSE);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (CLASS (provider)->supports != NULL, FALSE);
 
 	return CLASS (provider)->supports (provider, cnc, feature);
@@ -271,13 +259,14 @@ gda_server_provider_supports (GdaServerProvider *provider,
 /**
  * gda_server_provider_get_schema
  */
-GdaServerRecordset *
+GdaDataModel *
 gda_server_provider_get_schema (GdaServerProvider *provider,
-				GdaServerConnection *cnc,
-				GNOME_Database_Connection_Schema schema,
+				GdaConnection *cnc,
+				GdaConnectionSchema schema,
 				GdaParameterList *params)
 {
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (CLASS (provider)->get_schema != NULL, NULL);
 
 	return CLASS (provider)->get_schema (provider, cnc, schema, params);

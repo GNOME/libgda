@@ -21,7 +21,7 @@
  */
 
 #include <config.h>
-#include <bonobo/bonobo-i18n.h>
+#include <libgda/gda-intl.h>
 #include <libgda/gda-log.h>
 #include <libgda/gda-table.h>
 
@@ -45,7 +45,7 @@ static GObjectClass *parent_class = NULL;
 static GdaFieldAttributes *
 gda_table_describe_column (GdaDataModel *model, gint col)
 {
-	GdaFieldAttributes *fa, *new_fa;
+	GdaFieldAttributes *fa = NULL, *new_fa;
 	GdaTable *table = (GdaTable *) model;
 
 	g_return_val_if_fail (GDA_IS_TABLE (table), NULL);
@@ -55,11 +55,11 @@ gda_table_describe_column (GdaDataModel *model, gint col)
 
 	/* FIXME: obtain 'fa' from hash table */
 	new_fa = gda_field_attributes_new ();
-	gda_field_attributes_set_defined_size (new_fa, fa->definedSize);
+	gda_field_attributes_set_defined_size (new_fa, fa->defined_size);
 	gda_field_attributes_set_name (new_fa, fa->name);
 	gda_field_attributes_set_scale (new_fa, fa->scale);
-	gda_field_attributes_set_gdatype (new_fa, fa->gdaType);
-	gda_field_attributes_set_allow_null (new_fa, fa->allowNull);
+	gda_field_attributes_set_gdatype (new_fa, fa->gda_type);
+	gda_field_attributes_set_allow_null (new_fa, fa->allow_null);
 
 	return new_fa;
 }
@@ -218,7 +218,7 @@ gda_table_new_from_model (const gchar *name, const GdaDataModel *model, gboolean
 void
 gda_table_add_field (GdaTable *table, const GdaFieldAttributes *fa)
 {
-	gchar *name;
+	const gchar *name;
 	GdaFieldAttributes *new_fa;
 
 	g_return_if_fail (GDA_IS_TABLE (table));

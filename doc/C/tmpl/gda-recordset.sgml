@@ -26,8 +26,11 @@ GdaRecordset
 </para>
 
 @cnc: 
-@corba_recset: 
+@fetch_func: 
+@desc_func: 
 @Returns: 
+<!-- # Unused Parameters # -->
+@corba_recset: 
 
 
 <!-- ##### FUNCTION gda_recordset_get_command_text ##### -->

@@ -49,12 +49,18 @@ struct _GdaRecordsetClass {
 	GdaDataModelArrayClass parent_class;
 };
 
-GType         gda_recordset_get_type (void);
-GdaRecordset *gda_recordset_new (GdaConnection *cnc,
-				 GNOME_Database_Recordset corba_recset);
+typedef GdaRow * (* GdaRecordsetFetchFunc) (GdaRecordset *recset, gulong rownum);
+typedef GdaRowAttributes * (* GdaRecordsetDescribeFunc) (GdaRecordset *recset);
 
+GType          gda_recordset_get_type (void);
+GdaRecordset  *gda_recordset_new (GdaConnection *cnc,
+				  GdaRecordsetFetchFunc fetch_func,
+				  GdaRecordsetDescribeFunc desc_func);
+GdaConnection *gda_recordset_get_connection (GdaRecordset *recset);
 const gchar   *gda_recordset_get_command_text (GdaRecordset *recset);
+void           gda_recordset_set_command_text (GdaRecordset *recset, const gchar *txt);
 GdaCommandType gda_recordset_get_command_type (GdaRecordset *recset);
+void           gda_recordset_set_command_type (GdaRecordset *recset, GdaCommandType type);
 
 G_END_DECLS
 

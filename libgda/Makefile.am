@@ -6,24 +6,6 @@ INCLUDES = \
 	-I$(top_builddir) \
 	-DLIBGDA_LOCALEDIR=\""$(datadir)/locale"\"
 
-BUILT_SOURCES = \
-	GNOME_Database-skels.c
-	GNOME_Database-stubs.c \
-	GNOME_Database-common.c \
-	GNOME_Database.h
-CLEANFILES += $(BUILT_SOURCES)
-IDL_FILES = \
-	$(top_builddir)/idl/GNOME_Database.idl
-
-gda_corba_built_files = \
-	GNOME_Database-skels.c \
-	GNOME_Database-stubs.c \
-	GNOME_Database-common.c \
-	GNOME_Database.h
-
-$(gda_corba_built_files): $(IDL_FILES) $(ORBIT_IDL)
-	$(ORBIT_IDL) -I$(top_builddir)/idl -I$(BONOBO_ACTIVATION_IDL_DIR) -I$(BONOBO_IDL_DIR) $(top_builddir)/idl/GNOME_Database.idl
-
 gda_marshal_built_files = gda-marshal.h gda-marshal.c
 
 gda-marshal.h: gda-marshal.list $(GLIB_GENMARSHAL)
@@ -32,7 +14,6 @@ gda-marshal.c: gda-marshal.list $(GLIB_GENMARSHAL)
 	$(GLIB_GENMARSHAL) $< --body --prefix=gda_marshal > $@
 
 gda_headers = \
-	GNOME_Database.h \
 	gda-client.h \
 	gda-command.h \
 	gda-config.h \
@@ -48,11 +29,7 @@ gda_headers = \
 	gda-quark-list.h \
 	gda-recordset.h \
 	gda-row.h \
-	gda-server.h \
-	gda-server-connection.h \
 	gda-server-provider.h \
-	gda-server-recordset.h \
-	gda-server-recordset-model.h \
 	gda-table.h \
 	gda-util.h \
 	gda-value.h \
@@ -85,9 +62,6 @@ $(libgda_2_la_OBJECTS): $(gda_marshal_built_files)
 
 libgda_2_la_SOURCES = \
 	$(gda_headers) \
-	GNOME_Database-common.c \
-	GNOME_Database-skels.c \
-	GNOME_Database-stubs.c \
 	gda-client.c \
 	gda-command.c \
 	gda-config.c \
@@ -98,16 +72,13 @@ libgda_2_la_SOURCES = \
 	gda-error.c \
 	gda-export.c \
 	gda-init.c \
+	gda-intl.h \
 	gda-log.c \
 	gda-parameter.c \
 	gda-quark-list.c \
 	gda-recordset.c \
 	gda-row.c \
-	gda-server.c \
-	gda-server-connection.c \
 	gda-server-provider.c \
-	gda-server-recordset.c \
-	gda-server-recordset-model.c \
 	gda-table.c \
 	gda-util.c \
 	gda-value.c \
@@ -141,10 +112,10 @@ libgda_2_la_LIBADD = $(LIBGDA_LIBS)
 gdaincludedir=$(includedir)/libgda
 gdainclude_HEADERS=$(gda_headers)
 
-CLEANFILES = $(gda_marshal_built_files) $(gda_corba_built_sources)
+CLEANFILES = $(gda_marshal_built_files)
 
 dist-hook:
-	cd $(distdir); rm -f $(gda_marshal_built_files) $(gda_corba_built_sources)
+	cd $(distdir); rm -f $(gda_marshal_built_files)
 
 EXTRA_DIST = \
 	gda-marshal.list

@@ -29,13 +29,12 @@
 #endif
 
 #include <glib/gmacros.h>
-#include <bonobo/bonobo-i18n.h>
-#include <libgda/gda-server.h>
+#include <libgda/gda-intl.h>
+#include <libgda/gda-server-provider.h>
 #include "gda-postgres-provider.h"
 #include "gda-postgres-recordset.h"
 
-#define GDA_POSTGRES_COMPONENT_FACTORY_ID "OAFIID:GNOME_Database_Postgres_ComponentFactory"
-#define GDA_POSTGRES_PROVIDER_ID          "OAFIID:GNOME_Database_Postgres_Provider"
+#define GDA_POSTGRES_PROVIDER_ID          "GDA PostgreSQL provider"
 
 G_BEGIN_DECLS
 
@@ -45,13 +44,13 @@ G_BEGIN_DECLS
 
 GdaError *gda_postgres_make_error (PGconn *pconn, PGresult *pg_res);
 void gda_postgres_set_field_data (GdaField *field, const gchar *fname,
-				GdaType type, const gchar *value, 
-				gint dbsize, gboolean isNull);
+				  GdaValueType type, const gchar *value, 
+				  gint dbsize, gboolean isNull);
 
-GdaType gda_postgres_type_oid_to_gda (GdaPostgresTypeOid *type_data, 
-				  gint ntypes, Oid postgres_type);
-GdaType gda_postgres_type_name_to_gda (GHashTable *h_table, const gchar *name);
-const gchar *gda_data_type_to_string (GdaType type);
+GdaValueType gda_postgres_type_oid_to_gda (GdaPostgresTypeOid *type_data, 
+					   gint ntypes, Oid postgres_type);
+GdaValueType gda_postgres_type_name_to_gda (GHashTable *h_table, const gchar *name);
+const gchar *gda_data_type_to_string (GdaValueType type);
 
 G_END_DECLS
 

@@ -23,12 +23,14 @@
 #if !defined(__gda_util_h__)
 #  define __gda_util_h__
 
+#include <glib/ghash.h>
+#include <glib/glist.h>
 #include <libgda/gda-row.h>
 
 G_BEGIN_DECLS
 
-const gchar *gda_type_to_string (GdaType type);
-GdaType      gda_type_from_string (const gchar *str);
+const gchar *gda_type_to_string (GdaValueType type);
+GdaValueType gda_type_from_string (const gchar *str);
 
 GList       *gda_string_hash_to_list (GHashTable *hash_table);
 

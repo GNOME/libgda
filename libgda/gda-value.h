@@ -1,4 +1,4 @@
-/* GDA common library
+/* GDA library
  * Copyright (C) 1998-2002 The GNOME Foundation.
  *
  * AUTHORS:
@@ -24,38 +24,89 @@
 #if !defined(__gda_value_h__)
 #  define __gda_value_h__
 
+#include <glib/glist.h>
 #include <glib/gmacros.h>
-#include <libgda/GNOME_Database.h>
 
 G_BEGIN_DECLS
 
 #define TIMEZONE_INVALID (2*12*60*60)
 
-typedef CORBA_any                     GdaValue;
-typedef GNOME_Database_ValueList      GdaValueList;
-typedef CORBA_TypeCode                GdaValueType;
-typedef GNOME_Database_Date           GdaDate;
-typedef GNOME_Database_GeometricPoint GdaGeometricPoint;
-typedef GNOME_Database_Numeric        GdaNumeric;
-typedef GNOME_Database_Time           GdaTime;
-typedef GNOME_Database_Timestamp      GdaTimestamp;
+typedef enum {
+	GDA_VALUE_TYPE_NULL,
+	GDA_VALUE_TYPE_BIGINT,
+	GDA_VALUE_TYPE_BINARY,
+	GDA_VALUE_TYPE_BOOLEAN,
+	GDA_VALUE_TYPE_DATE,
+	GDA_VALUE_TYPE_DOUBLE,
+	GDA_VALUE_TYPE_GEOMETRIC_POINT,
+	GDA_VALUE_TYPE_INTEGER,
+	GDA_VALUE_TYPE_LIST,
+	GDA_VALUE_TYPE_NUMERIC,
+	GDA_VALUE_TYPE_SINGLE,
+	GDA_VALUE_TYPE_SMALLINT,
+	GDA_VALUE_TYPE_STRING,
+	GDA_VALUE_TYPE_TIME,
+	GDA_VALUE_TYPE_TIMESTAMP,
+	GDA_VALUE_TYPE_TINYINT,
+	GDA_VALUE_TYPE_UNKNOWN
+} GdaValueType;
 
-#define GDA_VALUE_TYPE_NULL      TC_null
-#define GDA_VALUE_TYPE_BIGINT    TC_CORBA_long_long
-#define	GDA_VALUE_TYPE_BINARY    TC_null /* FIXME */
-#define GDA_VALUE_TYPE_BOOLEAN   TC_CORBA_boolean
-#define GDA_VALUE_TYPE_DATE      TC_GNOME_Database_Date
-#define GDA_VALUE_TYPE_DOUBLE    TC_CORBA_double
-#define GDA_VALUE_TYPE_GEOMETRIC_POINT     TC_GNOME_Database_GeometricPoint
-#define GDA_VALUE_TYPE_INTEGER   TC_CORBA_long
-#define GDA_VALUE_TYPE_LIST      TC_GNOME_Database_ValueList
-#define GDA_VALUE_TYPE_NUMERIC   TC_GNOME_Database_Numeric
-#define GDA_VALUE_TYPE_SINGLE    TC_CORBA_float
-#define GDA_VALUE_TYPE_SMALLINT  TC_CORBA_short
-#define GDA_VALUE_TYPE_STRING    TC_CORBA_string
-#define GDA_VALUE_TYPE_TIME      TC_GNOME_Database_Time
-#define GDA_VALUE_TYPE_TIMESTAMP TC_GNOME_Database_Timestamp
-#define GDA_VALUE_TYPE_TINYINT   TC_CORBA_char
+typedef struct {
+	gshort year;
+	gushort month;
+	gushort day;
+} GdaDate;
+
+typedef struct {
+	gdouble x;
+	gdouble y;
+} GdaGeometricPoint;
+
+typedef struct {
+	gchar *number;
+	glong precision;
+	glong width;
+} GdaNumeric;
+
+typedef struct {
+	gushort hour;
+	gushort minute;
+	gushort second;
+	glong timezone;	// # of seconds to the east UTC
+} GdaTime;
+
+typedef struct {
+	gshort year;
+	gushort month;
+	gushort day;
+	gushort hour;
+	gushort minute;
+	gushort second;
+	gulong fraction;
+	glong timezone;	// # of seconds to the east UTC
+} GdaTimestamp;
+
+typedef GList GdaValueList;
+typedef struct {
+	GdaValueType type;
+	union {
+		gint64 v_bigint;
+		gpointer v_binary;
+		gboolean v_boolean;
+		GdaDate v_date;
+		gdouble v_double;
+		GdaGeometricPoint v_point;
+		gint v_integer;
+		GdaValueList *v_list;
+		GdaNumeric v_numeric;
+		gfloat v_single;
+		gshort v_smallint;
+		gchar *v_string;
+		GdaTime v_time;
+		GdaTimestamp v_timestamp;
+		gchar v_tinyint;
+	} value;
+} GdaValue;
 
 GdaValue     *gda_value_new_null (void);
 GdaValue     *gda_value_new_bigint (gint64 val);
@@ -78,7 +129,7 @@ void          gda_value_free (GdaValue *value);
 
 gboolean      gda_value_isa (const GdaValue *value, GdaValueType type);
 gboolean      gda_value_is_null (GdaValue *value);
-GdaValue     *gda_value_copy (GdaValue *value);
+GdaValue     *gda_value_copy (const GdaValue *value);
 
 gint64        gda_value_get_bigint (GdaValue *value);
 void          gda_value_set_bigint (GdaValue *value, gint64 val);
@@ -87,18 +138,18 @@ void          gda_value_set_binary (GdaValue *value, gconstpointer val, glong si
 gboolean      gda_value_get_boolean (GdaValue *value);
 void          gda_value_set_boolean (GdaValue *value, gboolean val);
 const GdaDate *gda_value_get_date (GdaValue *value);
-void          gda_value_set_date (GdaValue *value, GdaDate *val);
+void          gda_value_set_date (GdaValue *value, const GdaDate *val);
 gdouble       gda_value_get_double (GdaValue *value);
 void          gda_value_set_double (GdaValue *value, gdouble val);
 const GdaGeometricPoint *gda_value_get_geometric_point (GdaValue *value);
-void          gda_value_set_geometric_point (GdaValue *value, GdaGeometricPoint *val);
+void          gda_value_set_geometric_point (GdaValue *value, const GdaGeometricPoint *val);
 gint          gda_value_get_integer (GdaValue *value);
 void          gda_value_set_integer (GdaValue *value, gint val);
 const GdaValueList *gda_value_get_list (GdaValue *value);
-void          gda_value_set_list (GdaValue *value, GdaValueList *val);
+void          gda_value_set_list (GdaValue *value, const GdaValueList *val);
 void          gda_value_set_null (GdaValue *value);
 const GdaNumeric *gda_value_get_numeric (GdaValue *value);
-void          gda_value_set_numeric (GdaValue *value, GdaNumeric *val);
+void          gda_value_set_numeric (GdaValue *value, const GdaNumeric *val);
 gfloat        gda_value_get_single (GdaValue *value);
 void          gda_value_set_single (GdaValue *value, gfloat val);
 gshort        gda_value_get_smallint (GdaValue *value);
@@ -106,9 +157,9 @@ void          gda_value_set_smallint (GdaValue *value, gshort val);
 const gchar  *gda_value_get_string (GdaValue *value);
 void          gda_value_set_string (GdaValue *value, const gchar *val);
 const GdaTime *gda_value_get_time (GdaValue *value);
-void          gda_value_set_time (GdaValue *value, GdaTime *val);
+void          gda_value_set_time (GdaValue *value, const GdaTime *val);
 const GdaTimestamp *gda_value_get_timestamp (GdaValue *value);
-void          gda_value_set_timestamp (GdaValue *value, GdaTimestamp *val);
+void          gda_value_set_timestamp (GdaValue *value, const GdaTimestamp *val);
 gchar         gda_value_get_tinyint (GdaValue *value);
 void          gda_value_set_tinyint (GdaValue *value, gchar val);
 

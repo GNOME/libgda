@@ -23,6 +23,7 @@
 #if !defined(__gda_data_model_h__)
 #  define __gda_data_model_h__
 
+#include <glib-object.h>
 #include <libgda/gda-row.h>
 #include <libgda/gda-value.h>
 

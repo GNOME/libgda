@@ -25,7 +25,6 @@
 #  define __gda_sqlite_provider_h__
 
 #include <libgda/gda-server-provider.h>
-#include <libgda/gda-server-recordset-model.h>
 
 #define GDA_TYPE_SQLITE_PROVIDER            (gda_sqlite_provider_get_type())
 #define GDA_SQLITE_PROVIDER(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_SQLITE_PROVIDER, GdaSqliteProvider))

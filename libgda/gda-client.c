@@ -24,13 +24,11 @@
 #include <config.h>
 #include <libgda/gda-client.h>
 #include <libgda/gda-config.h>
+#include <libgda/gda-intl.h>
 #include <libgda/gda-log.h>
-#include <bonobo/bonobo-i18n.h>
-#include <bonobo/bonobo-exception.h>
-#include <bonobo/bonobo-moniker-util.h>
 #include "gda-marshal.h"
 
-#define PARENT_TYPE BONOBO_OBJECT_TYPE
+#define PARENT_TYPE G_TYPE_OBJECT
 
 struct _GdaClientPrivate {
 	GHashTable *providers;
@@ -75,18 +73,6 @@ cnc_weak_cb (gpointer user_data, GObject *object)
 }
 
 /*
- * CORBA methods implementation
- */
-
-static void
-impl_Client_notifyAction (PortableServer_Servant servant,
-			  GNOME_Database_ActionId action,
-			  Bonobo_PropertySet *corba_params,
-			  CORBA_Environment *ev)
-{
-}
-
-/*
  * GdaClient class implementation
  */
 
@@ -94,7 +80,6 @@ static void
 gda_client_class_init (GdaClientClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
-	POA_GNOME_Database_Client__epv *epv;
 
 	parent_class = g_type_class_peek_parent (klass);
 
@@ -108,10 +93,6 @@ gda_client_class_init (GdaClientClass *klass)
 			      G_TYPE_NONE, 2, G_TYPE_POINTER, G_TYPE_POINTER);
 
 	object_class->finalize = gda_client_finalize;
-
-	/* set the epv */
-	epv = &klass->epv;
-	epv->notifyAction = (gpointer) impl_Client_notifyAction;
 }
 
 static void
@@ -127,15 +108,11 @@ gda_client_init (GdaClient *client, GdaClientClass *klass)
 static void
 free_hash_provider (gpointer key, gpointer value, gpointer user_data)
 {
-	CORBA_Environment ev;
 	gchar *iid = (gchar *) key;
-	GNOME_Database_Provider corba_provider = (GNOME_Database_Provider) value;
+	GdaServerProvider *provider = (GdaServerProvider *) value;
 
 	g_free (iid);
-
-	CORBA_exception_init (&ev);
-	CORBA_Object_release (corba_provider, &ev);
-	CORBA_exception_free (&ev);
+	g_object_unref (G_OBJECT (provider));
 }
 
 static void
@@ -159,10 +136,27 @@ gda_client_finalize (GObject *object)
 	parent_class->finalize (object);
 }
 
-BONOBO_TYPE_FUNC_FULL (GdaClient,
-			 GNOME_Database_Client,
-			 PARENT_TYPE,
-			 gda_client)
+GType
+gda_client_get_type (void)
+{
+	static GType type = 0;
+
+	if (!type) {
+		static const GTypeInfo info = {
+			sizeof (GdaClientClass),
+			(GBaseInitFunc) NULL,
+			(GBaseFinalizeFunc) NULL,
+			(GClassInitFunc) gda_client_class_init,
+			NULL,
+			NULL,
+			sizeof (GdaClient),
+			0,
+			(GInstanceInitFunc) gda_client_init
+		};
+		type = g_type_register_static (G_TYPE_OBJECT, "GdaClient", &info, 0);
+	}
+	return type;
+}
 
 /**
  * gda_client_new
@@ -186,9 +180,7 @@ gda_client_open_connection (GdaClient *client,
 			    const gchar *password)
 {
 	GdaConnection *cnc;
-	GNOME_Database_Provider corba_provider;
-	GNOME_Database_Connection corba_cnc;
-	CORBA_Environment ev;
+	GdaServerProvider *provider;
 	GdaDataSourceInfo *dsn_info;
 
 	g_return_val_if_fail (GDA_IS_CLIENT (client), NULL);
@@ -208,57 +200,18 @@ gda_client_open_connection (GdaClient *client,
 	}
 
 	/* try to find provider in our hash table */
-	corba_provider = g_hash_table_lookup (client->priv->providers, dsn_info->provider);
-	if (corba_provider) {
-		/* ping the provider object */
-		if (!bonobo_unknown_ping (corba_provider, NULL)) {
-			gpointer orig_key, orig_data;
-
-			if (g_hash_table_lookup_extended (client->priv->providers,
-							  dsn_info->provider,
-							  &orig_key, &orig_data)) {
-				g_hash_table_remove (client->priv->providers, dsn_info->provider);
-				free_hash_provider (orig_key, orig_data, NULL);
-			}
-
-			corba_provider = CORBA_OBJECT_NIL;
-		}
-	}
-
-	if (!corba_provider) {
+	provider = g_hash_table_lookup (client->priv->providers, dsn_info->provider);
+	if (!provider) {
 		/* not found, so load the new provider */
-		CORBA_exception_init (&ev);
-
-		corba_provider = bonobo_get_object (dsn_info->provider,
-						    "IDL:GNOME/Database/Provider:1.0",
-						    &ev);
-		if (BONOBO_EX (&ev)) {
-			gda_log_error (_("Could not activate object %s"), dsn_info->provider);
-			CORBA_exception_free (&ev);
-			gda_config_free_data_source_info (dsn_info);
-			return NULL;
-		}
+		/* FIXME: load GModule for this provider */
 
 		g_hash_table_insert (client->priv->providers,
 				     g_strdup (dsn_info->provider),
-				     corba_provider);
-
-		CORBA_exception_free (&ev);
+				     provider);
 	}
 
-	CORBA_exception_init (&ev);
-
-	corba_cnc = GNOME_Database_Provider_createConnection (corba_provider, &ev);
-	if (BONOBO_EX (&ev)) {
-		CORBA_exception_free (&ev);
-		gda_log_error (_("Could not create connection component"));
-		gda_config_free_data_source_info (dsn_info);
-		return NULL;
-	}
-
-	CORBA_exception_free (&ev);
-
-	cnc = gda_connection_new (client, corba_cnc, dsn,
+	/* FIXME: get the GdaConnection from the ServerProvider object */
+	cnc = gda_connection_new (client, provider, dsn,
 				  username ? username : "", password ? password : "");
 
 	if (!GDA_IS_CONNECTION (cnc)) {

@@ -25,13 +25,12 @@
 #if !defined(__gda_mysql_recordset_h__)
 #  define __gda_mysql_recordset_h__
 
-#include <libgda/gda-server-connection.h>
-#include <libgda/gda-server-recordset.h>
+#include <libgda/gda-connection.h>
+#include <libgda/gda-recordset.h>
 
 G_BEGIN_DECLS
 
-GdaServerRecordset *gda_mysql_recordset_new (GdaServerConnection *cnc,
-					     MYSQL_RES *mysql_res);
+GdaRecordset *gda_mysql_recordset_new (GdaConnection *cnc, MYSQL_RES *mysql_res);
 
 G_END_DECLS
 

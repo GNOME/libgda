@@ -21,7 +21,7 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include <bonobo/bonobo-i18n.h>
+#include <libgda/gda-intl.h>
 #include "gda-default-recordset.h"
 
 #define OBJECT_DATA_RECSET_HANDLE "GDA_Default_RecsetHandle"
@@ -31,13 +31,13 @@
  */
 
 static GdaRow *
-fetch_func (GdaServerRecordset *recset, gulong rownum)
+fetch_func (GdaRecordset *recset, gulong rownum)
 {
 	return NULL;
 }
 
 static GdaRowAttributes *
-describe_func (GdaServerRecordset *recset)
+describe_func (GdaRecordset *recset)
 {
 	return NULL;
 }
@@ -46,10 +46,10 @@ describe_func (GdaServerRecordset *recset)
  * Public functions
  */
 
-GdaServerRecordset *
-gda_default_recordset_new (GdaServerConnection *cnc, DEFAULT_Recordset *drecset)
+GdaRecordset *
+gda_default_recordset_new (GdaConnection *cnc, DEFAULT_Recordset *drecset)
 {
-	g_return_val_if_fail (GDA_IS_SERVER_CONNECTION (cnc), NULL);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (drecset != NULL, NULL);
 
 	return NULL;
