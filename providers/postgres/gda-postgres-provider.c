@@ -224,6 +224,23 @@ get_connection_type_list (GdaPostgresConnectionData *priv_td)
 	PGresult *pg_res;
 	gint nrows, i;
 
+	/* without namespace:
+	   SELECT t.oid, typname, usename, obj_description(t.oid)
+	   FROM pg_catalog.pg_type t, pg_catalog.pg_user u
+	   WHERE typowner=usesysid AND typrelid = 0 AND typname !~ '^_'
+	   AND pg_type_is_visible (t.oid)
+	   AND typname not in ('cstring', 'internal', 'void', 'opaque', 'SET', 'cid', 'oid', 'int2vector', 'oidvector', 'regproc', 'trigger', 'unknown', 'language_handler', 'any', 'anyarray', 'record', 'xid', 'tid', 'smgr')
+	   ORDER BY typname;
+
+	   with namespace:
+	   SELECT t.oid, typname, usename, obj_description(t.oid)
+	   FROM pg_catalog.pg_type t, pg_catalog.pg_user u, pg_catalog.pg_namespace ns
+	   WHERE typowner=usesysid AND typrelid = 0 AND typname !~ '^_'
+	   AND t.typnamespace=ns.oid AND (ns.nspname='pg_catalog' OR ns.nspname='public')
+	   AND typname not in ('cstring', 'internal', 'void', 'opaque', 'SET', 'cid', 'oid', 'int2vector', 'oidvector', 'regproc', 'trigger', 'unknown', 'language_handler', 'any', 'anyarray', 'record', 'xid', 'tid', 'smgr')
+	   ORDER BY typname;
+	*/
+
 	pg_res = PQexec (priv_td->pconn,
 			 "SELECT pg_type.oid, typname, usename, obj_description(pg_type.oid) "
 			 "FROM pg_type, pg_user "
@@ -266,6 +283,39 @@ gda_postgres_provider_get_version (GdaServerProvider *provider)
 
 	g_return_val_if_fail (GDA_IS_POSTGRES_PROVIDER (pg_prv), NULL);
 	return VERSION;
+}
+
+/* get the float version og a Postgres version which looks like:
+ * PostgreSQL 7.2.2 on i686-pc-linux-gnu, compiled by GCC 2.96 => returns 7.22
+ * PostgreSQL 7.3 on i686-pc-linux-gnu, compiled by GCC 2.95.3 => returns 7.3
+ * WARNING: no serious test is made on the validity of the string
+ */
+static gfloat 
+get_pg_version_float (const gchar *str)
+{
+	gfloat retval = 0.;
+	const gchar *ptr;
+	gfloat div = 1;
+
+	if (!str)
+		return retval;
+
+	/* go on  the first digit of version number */
+	ptr = str;
+	while (*ptr != ' ')
+		ptr++;
+	ptr++;
+	
+	/* elaborate the real version number */
+	while (*ptr != ' ') {
+		if (*ptr != '.') {
+			retval += (*ptr - '0')/div;
+			div *= 10;
+		}
+		ptr++;
+	}
+
+	return retval;
 }
 
 /* open_connection handler for the GdaPostgresProvider class */
@@ -350,7 +400,7 @@ gda_postgres_provider_open_connection (GdaServerProvider *provider,
 	pg_res = PQexec (pconn, "SET CLIENT_ENCODING TO 'UNICODE'");
 	PQclear (pg_res);
 
-	priv_data = g_new (GdaPostgresConnectionData, 1);
+	priv_data = g_new0 (GdaPostgresConnectionData, 1);
 	priv_data->pconn = pconn;
 	if (get_connection_type_list (priv_data) != 0) {
 		gda_connection_add_error (cnc, gda_postgres_make_error (pconn, NULL));
@@ -361,6 +411,7 @@ gda_postgres_provider_open_connection (GdaServerProvider *provider,
 	
 	pg_res = PQexec (pconn, "SELECT version ()");
 	priv_data->version = g_strdup (PQgetvalue(pg_res, 0, 0));
+	priv_data->version_float = get_pg_version_float (PQgetvalue(pg_res, 0, 0));
 	PQclear (pg_res);
 
 	g_object_set_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE, priv_data);
@@ -655,6 +706,7 @@ static gboolean gda_postgres_provider_supports (GdaServerProvider *provider,
 						GdaConnectionFeature feature)
 {
 	GdaPostgresProvider *pgprv = (GdaPostgresProvider *) provider;
+	GdaPostgresConnectionData *priv_data;
 
 	g_return_val_if_fail (GDA_IS_POSTGRES_PROVIDER (pgprv), FALSE);
 
@@ -670,6 +722,10 @@ static gboolean gda_postgres_provider_supports (GdaServerProvider *provider,
 	case GDA_CONNECTION_FEATURE_USERS :
 	case GDA_CONNECTION_FEATURE_VIEWS :
 		return TRUE;
+	case GDA_CONNECTION_FEATURE_NAMESPACES :
+		priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_POSTGRES_HANDLE);
+		if (priv_data->version_float >= 7.3)
+			return TRUE;
 	default :
 	}
  

@@ -110,6 +110,7 @@ gboolean             gda_connection_rollback_transaction (GdaConnection *cnc, Gd
 const GList         *gda_connection_get_errors (GdaConnection *cnc);
 
 typedef enum {
+	GDA_CONNECTION_FEATURE_NAMESPACES,
 	GDA_CONNECTION_FEATURE_AGGREGATES,
 	GDA_CONNECTION_FEATURE_INDEXES,
 	GDA_CONNECTION_FEATURE_INHERITANCE,
@@ -126,6 +127,7 @@ typedef enum {
 gboolean             gda_connection_supports (GdaConnection *cnc, GdaConnectionFeature feature);
 
 typedef enum {
+	GDA_CONNECTION_SCHEMA_NAMESPACES,
 	GDA_CONNECTION_SCHEMA_AGGREGATES,
 	GDA_CONNECTION_SCHEMA_DATABASES,
 	GDA_CONNECTION_SCHEMA_FIELDS,

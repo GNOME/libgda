@@ -2208,6 +2208,13 @@
 		<entry>name</entry>
 	      </row>
 	      <row>
+		<entry>Schemas (also namespaces), a feature supported by Postgres which allows to
+                       define multiple domains within a single database</entry>
+		<entry><parameter>GDA_CONNECTION_SCHEMA_NAMESPACES</parameter></entry>
+		<entry></entry>
+		<entry>name</entry>
+	      </row>
+	      <row>
 		<entry>Tables</entry>
 		<entry><parameter>GDA_CONNECTION_SCHEMA_TABLES</parameter></entry>
 		<entry>"name" (name of table, optional)</entry>

@@ -50,21 +50,33 @@ struct _GdaPostgresProviderClass {
 
 // Connection data.
 typedef struct {
-	gchar *name;
-	Oid oid;
-	GdaValueType type;
-	gchar *comments;
-	gchar *owner;
+	gchar              *name;
+	Oid                 oid;
+	GdaValueType        type;
+	gchar              *comments;
+	gchar              *owner;
 } GdaPostgresTypeOid;
 
 typedef struct {
-	PGconn *pconn;
-	gint ntypes;
+	PGconn             *pconn;
+	gint                ntypes;
 	GdaPostgresTypeOid *type_data;
-	GHashTable *h_table;
-	gchar *version;
+	GHashTable         *h_table;
+	gchar              *version;
+	gfloat              version_float;
 } GdaPostgresConnectionData;
 
+/* NOTE ABOUT THE POSTGRES VERSIONS:
+ * 
+ * From Postgres versions <= 7.2.x to version 7.3:
+ *  => introduction of schemas (namespaces) and the pg_namespace table
+ *  => introduction of the "qualified name" construction for the database objects
+ *  => introduction of dropped columns means that the column numbering may have gaps
+ *     to be teste with the "attisdropped" attribute
+ *  => tables names can start with "pg_" (so don't exclude them anymore)
+ *  => aggregates now haves entries in the pg_proc table (pg_aggregate is now only
+ *     an extension of pg_proc)
+ */
 
 G_BEGIN_DECLS
 

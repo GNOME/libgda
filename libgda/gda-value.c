@@ -1683,6 +1683,42 @@ gda_value_compare (const GdaValue *value1, const GdaValue *value2)
 	return retval;
 }
 
+/*
+ * to_string
+ * 
+ * The exact reverse process of set_from_string(), almost the same as gda_value_stingify ()
+ * because of some localization with gda_value_stingify ().
+ */
+static gchar *
+to_string (GdaValue *value)
+{
+	const GdaTime *gdatime;
+	const GdaDate *gdadate;
+	const GdaTimestamp *timestamp;
+	const GdaGeometricPoint *point;
+	const GdaValueList *list;
+	const GdaNumeric *numeric;
+	GList *l;
+	GString *str = NULL;
+	gchar *retval = NULL;
+
+	g_return_val_if_fail (value != NULL, NULL);
+
+	switch (value->type){
+	case GDA_VALUE_TYPE_BOOLEAN:
+		if (gda_value_get_boolean (value))
+			retval = g_strdup ("true");
+		else
+			retval = g_strdup ("false");
+		break;
+	default:
+		retval = gda_value_stringify (value);
+	}
+        	
+	return retval;
+}
+
+
 /**
  * gda_value_to_xml
  * @value: a #GdaValue.
@@ -1700,7 +1736,7 @@ gda_value_to_xml (GdaValue *value)
 
 	g_return_val_if_fail (value != NULL, NULL);
 
-	valstr = gda_value_stringify (value);
+	valstr = to_string (value);
 
 	retval = xmlNewNode (NULL, "value");
 	xmlSetProp (retval, "type", gda_type_to_string (value->type));
