@@ -1,13 +1,13 @@
 SUBDIRS = \
 	po \
 	idl \
+	libsql \
 	libgda \
 	providers \
 	report \
 	tools \
 	testing \
 	data \
-	libsql \
 	doc
 
 dist-hook: libgda.spec

@@ -1,3 +1,10 @@
+2002-06-18  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* Makefile.am: put libsql in the correct order.
+
+	* libsql/Makefile.am: removed hard-coded stuff, and install stuff in
+	$(includedir)/libgda/sql, not $(includedir)/bond.
+
 2002-06-18  Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
 
 	* configure.in: use AC_PROG_YACC instead of AM_PROG_YACC

@@ -1,27 +1,33 @@
 ## Process this file with automake to produce Makefile.in
 
-INCLUDES = -ggdb `glib-config --cflags` \
-	 -Wall -Wimplicit -Wreturn-type -Wunused -Wswitch -Wcomment -Wuninitialized -Wparentheses -Wtraditional -Wpointer-arith -Wmissing-prototypes\
-	 -g -fPIC 
+INCLUDES = \
+	-I$(top_srcdir) \
+	-I$(top_builddir) \
+	$(LIBGDA_CFLAGS)
 
 parser.c: parser.y
-	bison -v -d -o parser.c -p sql parser.y
+	$(YACC) -v -d -o parser.c -p sql parser.y
 
 lexer.c: lexer.l parser.c
-	flex -olexer.c -Psql lexer.l
+	$(LEX) -olexer.c -Psql lexer.l
 
 noinst_PROGRAMS = sql_parse_test
 
 lib_LTLIBRARIES = libgdasql.la
 
-libgdasql_la_SOURCES = parser.c lexer.c sql_parser.c mem.c sql_display.c \
-		sql_tree.c 
-libgdasqlincdir = $(includedir)/bond
+libgdasql_la_SOURCES = \
+	parser.c \
+	lexer.c \
+	sql_parser.c \
+	mem.c \
+	sql_display.c \
+	sql_tree.c 
+libgdasqlincdir = $(includedir)/libgda/sql
 libgdasqlinc_HEADERS = 
-libgdasql_la_LDFLAGS = `glib-config --libs`
+libgdasql_la_LDFLAGS = $(LIBGDA_LIBS)
 
 sql_parse_test_SOURCES=$(libgdasql_la_SOURCES) sql_parse_test.c
-sql_parse_test_LDFLAGS = `glib-config --libs`
+sql_parse_test_LDFLAGS = $(LIBGDA_LIBS)
 sql_parse_test_DEPENDENCIES =
 sql_parse_test_LDADD = 
 

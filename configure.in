@@ -605,6 +605,7 @@ libgda.spec
 libgda.pc
 po/Makefile.in
 idl/Makefile
+libsql/Makefile
 libgda/Makefile
 providers/Makefile
 providers/default/Makefile
@@ -625,6 +626,5 @@ testing/Makefile
 doc/Makefile
 doc/C/Makefile
 data/Makefile
-libsql/Makefile
 stamp.h
 ])
