@@ -16,6 +16,7 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include "config.h"
 #include "gdaErrorList.h"
 
 // Okay, this class doesn't exist in the C version - it is a list of errors
