@@ -21,9 +21,11 @@
  */
 
 #include <config.h>
+#include <string.h>
 #include <libgda/gda-intl.h>
 #include "gda-test.h"
 #include "postgres-test.h"
+#include "freetds-test.h"
 
 /* Shows the object schemas */
 static void
@@ -145,6 +147,8 @@ open_connection (GdaClient *client,
 	/* Postgres own tests */
 	if (!strcmp (dsn_info->provider, POSTGRES_PROVIDER_NAME))
 		do_postgres_test (cnc);
+	if (!strcmp (dsn_info->provider, FREETDS_PROVIDER_NAME))
+		do_freetds_test (cnc);
 	gda_config_free_data_source_info (dsn_info);
 
 	/* close the connection */

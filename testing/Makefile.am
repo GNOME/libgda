@@ -14,7 +14,10 @@ gda_test_SOURCES = \
 	gda-test.h \
 	value.c \
 	postgres-test.c \
-	postgres-test.h
+	postgres-test.h \
+	freetds-test.c \
+	freetds-test.h
+
 gda_test_LDADD = \
 	$(top_builddir)/libgda/libgda-2.la \
 	$(LIBGDA_LIBS)
