@@ -28,6 +28,8 @@ build_sqlite:
 	../sqlite/configure && \
 	make
 
+gda-default-command.c: build_sqlite
+
 gda-default.h: build_sqlite
 
 $(top_builddir)/providers/gda-default-server/libsqlite.a: build_sqlite
