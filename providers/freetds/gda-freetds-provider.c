@@ -80,9 +80,12 @@ static GdaDataModel *gda_freetds_provider_get_schema (GdaServerProvider *provide
                                                       GdaConnection *cnc,
                                                       GdaConnectionSchema schema,
                                                       GdaParameterList *params);
-
+static GdaDataModel * gda_freetds_execute_query (GdaConnection *cnc,
+                                                 const gchar* sql);
 static GdaDataModel *gda_freetds_get_databases (GdaConnection *cnc,
                                                 GdaParameterList *params);
+static GdaDataModel *gda_freetds_get_fields (GdaConnection *cnc,
+                                             GdaParameterList *params);
 
 static GList* gda_freetds_provider_process_sql_commands(GList         *reclist,
                                                         GdaConnection *cnc,
@@ -129,6 +132,7 @@ gda_freetds_provider_open_connection (GdaServerProvider *provider,
 	t_password = gda_quark_list_find (params, "PASSWORD");
 	t_port = gda_quark_list_find (params, "PORT");
 	
+	// These shall override environment variables or previous settings
 	tds_majver = gda_quark_list_find (params, "TDS_MAJVER");
 	tds_minver = gda_quark_list_find (params, "TDS_MINVER");
 	
@@ -151,10 +155,19 @@ gda_freetds_provider_open_connection (GdaServerProvider *provider,
 	if (tds_port)
 		t_port = tds_port;
 	
+	// sanity check
+	// FreeTDS SIGSEGV on NULL pointers
+	if ((t_user == NULL) || (t_host == NULL) || (t_password == NULL)) {
+		error = gda_freetds_make_error(_("Connection aborted. You must provide at least a host, username and password using DSN 'QUERY=;USER=;PASSWORD='."));
+		gda_connection_add_error(cnc, error);
+
+		return FALSE;
+	}
 	
 	tds_cnc = g_new0 (GdaFreeTDSConnectionData, 1);
 	g_return_val_if_fail(tds_cnc != NULL, FALSE);
 
+	// allocate login
 	tds_cnc->login = tds_alloc_login();
 	if (! tds_cnc->login) {
 		g_free(tds_cnc);
@@ -162,18 +175,14 @@ gda_freetds_provider_open_connection (GdaServerProvider *provider,
 		return FALSE;
 	}
 	
-	// FreeTDS SIGSEGV on NULL pointers
-	if ((t_user == NULL) || (t_host == NULL) || (t_password == NULL)) {
-		tds_free_login(tds_cnc->login);
-		tds_cnc->login = NULL;
-		g_free(tds_cnc);
-		tds_cnc = NULL;
-		error = gda_freetds_make_error("Connection aborted. You must provide at least a host, username and password using DSN 'QUERY=;USER=;PASSWORD='.");
-		gda_connection_add_error(cnc, error);
+	// set tds version
+	if ((tds_majver != NULL) & (tds_minver != NULL))
+		tds_set_version(tds_cnc->login,
+		                (short) atoi (tds_majver),
+		                (short) atoi (tds_minver)
+		               );
 
-		return FALSE;
-	}
-				
+	// apply connection settings
 	tds_set_user(tds_cnc->login, (char *) t_user);
 	tds_set_passwd(tds_cnc->login, (char *) t_password);
 	tds_set_app(tds_cnc->login, "libgda");
@@ -186,23 +195,19 @@ gda_freetds_provider_open_connection (GdaServerProvider *provider,
 	tds_set_language(tds_cnc->login, "us_english");
 	tds_set_packet(tds_cnc->login, 512);
 	
-	if ((tds_majver != NULL) & (tds_minver != NULL))
-		tds_set_version(tds_cnc->login,
-		                (short) atoi (tds_majver),
-		                (short) atoi (tds_minver)
-		               );
-
+	// establish connection
 	tds_cnc->socket = tds_connect(tds_cnc->login, NULL);
 	if (! tds_cnc->socket) {
 		tds_free_login(tds_cnc->login);
 		tds_cnc->login = NULL;
 		g_free(tds_cnc);
 		tds_cnc = NULL;
-		error = gda_freetds_make_error("Establishing connection failed.");
+		error = gda_freetds_make_error(_("Establishing connection failed."));
 		gda_connection_add_error(cnc, error);
 		return FALSE;
 	}
 
+	// try to receive connection info for sanity check
 	tds_cnc->config = tds_get_config(tds_cnc->socket, tds_cnc->login);
 	if (! tds_cnc->config) {
 		tds_free_socket(tds_cnc->socket);
@@ -211,8 +216,8 @@ gda_freetds_provider_open_connection (GdaServerProvider *provider,
 		tds_cnc->login = NULL;
 		g_free(tds_cnc);
 		tds_cnc = NULL;
-		error = gda_freetds_make_error("Failed getting connection info.");
-		gda_connection_add_error(cnc, error);
+		error = gda_freetds_make_error (_("Failed getting connection info."));
+		gda_connection_add_error (cnc, error);
 		return FALSE;
 	}
 
@@ -236,16 +241,19 @@ gda_freetds_provider_close_connection (GdaServerProvider *provider,
 	if (! tds_cnc)
 		return FALSE;
 
-	if (tds_cnc->socket)
-		tds_free_socket(tds_cnc->socket);
-	tds_cnc->socket = NULL;
-	if (tds_cnc->login)
-		tds_free_login(tds_cnc->login);
-	tds_cnc->login = NULL;
-	if (tds_cnc->config)
+	if (tds_cnc->config) {
 		tds_free_config(tds_cnc->config);
-	tds_cnc->config = NULL;
-
+		tds_cnc->config = NULL;
+	}
+	if (tds_cnc->socket) {
+		tds_free_socket(tds_cnc->socket);
+		tds_cnc->socket = NULL;
+	}
+	if (tds_cnc->login) {
+		tds_free_login(tds_cnc->login);
+		tds_cnc->login = NULL;
+	}
+	
 	g_free(tds_cnc);
 	tds_cnc = NULL;
 	
@@ -327,7 +335,6 @@ static GList
 			g_free(query);
 			query = NULL;
 			break;
-		default:
 	}
 
 	return reclist;
@@ -369,7 +376,6 @@ gda_freetds_provider_supports (GdaServerProvider *provider,
 	switch (feature) {
 		case GDA_CONNECTION_FEATURE_SQL:
 			return TRUE;
-		default:
 	}
 	
 	return FALSE;
@@ -381,17 +387,64 @@ static GdaDataModel
                                   GdaParameterList *params)
 {
 	GdaFreeTDSProvider *tds_prov = (GdaFreeTDSProvider *) provider;
+	gchar        *query = NULL;
+	GdaDataModel *recset = NULL;
 	
 	g_return_val_if_fail (GDA_IS_FREETDS_PROVIDER (tds_prov), NULL);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
 	switch (schema) {
 		case GDA_CONNECTION_SCHEMA_DATABASES:
-			return gda_freetds_get_databases (cnc, params);	
-		default:
+			return gda_freetds_get_databases (cnc, params);
+		case GDA_CONNECTION_SCHEMA_FIELDS:
+			return gda_freetds_get_fields (cnc, params);
+		case GDA_CONNECTION_SCHEMA_TABLES:
+			query = g_strdup ("SELECT name "
+			                  "FROM sysobjects "
+			                    "WHERE (type = 'U') AND "
+			                          "(name NOT LIKE 'spt_%') AND "
+						  "(name != 'syblicenseslog') "
+			                  "ORDER BY name");
+
+			recset =gda_freetds_execute_query (cnc, query);
+			g_free (query);
+			query = NULL;
+			gda_data_model_set_column_title (GDA_DATA_MODEL (recset),
+			                                 0, _("Tables"));
+			return recset;
+		case GDA_CONNECTION_SCHEMA_TYPES:
+			recset = gda_freetds_execute_query (cnc, "SELECT name FROM systypes ORDER BY name");
+			gda_data_model_set_column_title (GDA_DATA_MODEL (recset),
+			                                 0, _("Types"));
+			return recset;
 	}
 	
 	return NULL;
+}
+
+static GdaDataModel *
+gda_freetds_execute_query (GdaConnection *cnc, const gchar* sql)
+{
+	GdaFreeTDSConnectionData *tds_cnc;
+	GdaDataModel *recset;
+	
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+	tds_cnc = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_FREETDS_HANDLE);
+	g_return_val_if_fail (tds_cnc != NULL, NULL);
+	g_return_val_if_fail (tds_cnc->socket != NULL, NULL);
+
+	tds_cnc->rc = tds_submit_query(tds_cnc->socket, (gchar *) sql);
+
+	if (tds_cnc->rc != TDS_SUCCEED) {
+		return NULL;
+	}
+	recset = gda_freetds_recordset_new (cnc, TRUE);
+	if (GDA_IS_FREETDS_RECORDSET (recset)) {
+		gda_data_model_set_command_text (recset, sql);
+		gda_data_model_set_command_type (recset, GDA_COMMAND_TYPE_SQL);
+	}
+
+	return recset;
 }
 
 static GdaDataModel *
@@ -412,6 +465,62 @@ gda_freetds_get_databases (GdaConnection *cnc, GdaParameterList *params)
 	return GDA_DATA_MODEL (recset);
 }
 
+static GdaDataModel *
+gda_freetds_get_fields (GdaConnection *cnc, GdaParameterList *params)
+{
+	GdaDataModel *recset;
+	GdaParameter *parameter;
+	gchar *query;
+	const gchar *table;
+	
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+	g_return_val_if_fail (params != NULL, NULL);
+
+	parameter = gda_parameter_list_find (params, "name");
+	g_return_val_if_fail (parameter != NULL, NULL);
+
+	table = gda_value_get_string ((GdaValue *) gda_parameter_get_value (parameter));
+	g_return_val_if_fail (table != NULL, NULL);
+
+	query = g_strdup_printf ("SELECT c.name, "
+	                         "       t.name, "
+	                         "       c.length, "
+	                         "       c.prec, "
+	                         "       c.scale, "
+	                         "       t.allownulls, "
+	                         "       c.domain, "
+	                         "       c.printfmt "
+	                         "  FROM syscolumns c, sysobjects o, "
+	                         "       systypes t "
+	                         "    WHERE c.id = o.id "
+	                         "      AND c.usertype = t.usertype "
+	                         "    HAVING o.name = '%s' "
+	                         "  ORDER BY c.colid ASC", table);
+	recset = gda_freetds_execute_query (cnc, query);
+	g_free (query);
+	query = NULL;
+
+	if (GDA_IS_FREETDS_RECORDSET (recset)) {
+		gda_data_model_set_column_title (GDA_DATA_MODEL (recset),  0,
+		                                 _("Field Name"));
+		gda_data_model_set_column_title (GDA_DATA_MODEL (recset),  1,
+		                                 _("Data Type"));
+		gda_data_model_set_column_title (GDA_DATA_MODEL (recset),  2,
+		                                 _("Size"));
+		gda_data_model_set_column_title (GDA_DATA_MODEL (recset),  3,
+		                                 _("Precision"));
+		gda_data_model_set_column_title (GDA_DATA_MODEL (recset),  4,
+		                                 _("Scale"));
+		gda_data_model_set_column_title (GDA_DATA_MODEL (recset),  5,
+		                                 _("Nullable"));
+		gda_data_model_set_column_title (GDA_DATA_MODEL (recset),  6,
+		                                 _("Domain"));
+		gda_data_model_set_column_title (GDA_DATA_MODEL (recset),  7,
+		                                 _("Printfmt"));
+	}
+
+	return recset;
+}
 
 static GList* gda_freetds_provider_process_sql_commands(GList         *reclist,
                                                         GdaConnection *cnc,
@@ -423,17 +532,18 @@ static GList* gda_freetds_provider_process_sql_commands(GList         *reclist,
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	tds_cnc = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_FREETDS_HANDLE);
 	g_return_val_if_fail (tds_cnc != NULL, NULL);
+	g_return_val_if_fail (tds_cnc->socket != NULL, NULL);
 
 //	arr = gda_freetds_split_commandlist(sql);
 	arr = g_strsplit (sql, ";", 0);
 	if (arr) {
 		gint n = 0;
 		while (arr[n]) {
-			GdaFreeTDSRecordset *recset;
+			GdaDataModel *recset;
 			tds_cnc->rc = tds_submit_query(tds_cnc->socket, arr[n]);
 
 			// if (tds_cnc->rc == TDS_SUCEED) {
-			recset = gda_freetds_recordset_new(cnc, TRUE);
+			recset = gda_freetds_recordset_new (cnc, TRUE);
 			if (GDA_IS_FREETDS_RECORDSET (recset)) {
 				gda_data_model_set_command_text (recset, arr[n]);
 				gda_data_model_set_command_type (recset, GDA_COMMAND_TYPE_SQL);
