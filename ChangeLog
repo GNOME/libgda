@@ -1,3 +1,13 @@
+2002-10-16  Rodrigo Moya <rodrigo@gnome-db.org>
+
+	* providers/interbase/Makefile.am:
+	* providers/interbase/gda-interbase-provider.[ch]:
+	* providers/interbase/libmain.c: started GNOME 2 version of the
+	Interbase provider.
+
+	* providers/gda-oracle-provider.c (gda_oracle_provider_get_version):
+	(gda_oracle_provider_get_server_version): implemented missing methods.
+
 2002-10-13  Holger Thon <holger.thon@gnome-db.org>
 
 	* providers/freetds/gda-freetds-provider.h: added TDS_CONTEXT (v0.60)

@@ -38,6 +38,7 @@ static void gda_oracle_provider_init       (GdaOracleProvider *provider,
 					   GdaOracleProviderClass *klass);
 static void gda_oracle_provider_finalize   (GObject *object);
 
+static const gchar *gda_oracle_provider_get_version (GdaServerProvider *provider);
 static gboolean gda_oracle_provider_open_connection (GdaServerProvider *provider,
 						    GdaConnection *cnc,
 						    GdaQuarkList *params,
@@ -45,6 +46,8 @@ static gboolean gda_oracle_provider_open_connection (GdaServerProvider *provider
 						    const gchar *password);
 static gboolean gda_oracle_provider_close_connection (GdaServerProvider *provider,
 						     GdaConnection *cnc);
+static const gchar *gda_oracle_provider_get_server_version (GdaServerProvider *provider,
+							    GdaConnection *cnc);
 static const gchar *gda_oracle_provider_get_database (GdaServerProvider *provider,
 						     GdaConnection *cnc);
 static gboolean gda_oracle_provider_create_database (GdaServerProvider *provider,
@@ -100,8 +103,10 @@ gda_oracle_provider_class_init (GdaOracleProviderClass *klass)
 	parent_class = g_type_class_peek_parent (klass);
 
 	object_class->finalize = gda_oracle_provider_finalize;
+	provider_class->get_version = gda_oracle_provider_get_version;
 	provider_class->open_connection = gda_oracle_provider_open_connection;
 	provider_class->close_connection = gda_oracle_provider_close_connection;
+	provider_class->get_server_version = gda_oracle_provider_get_server_version;
 	provider_class->get_database = gda_oracle_provider_get_database;
 	provider_class->create_database = gda_oracle_provider_create_database;
 	provider_class->drop_database = gda_oracle_provider_drop_database;
@@ -158,6 +163,13 @@ gda_oracle_provider_new (void)
 
 	provider = g_object_new (gda_oracle_provider_get_type (), NULL);
 	return GDA_SERVER_PROVIDER (provider);
+}
+
+/* get_version handler for the GdaOracleProvider class */
+static const gchar *
+gda_oracle_provider_get_version (GdaServerProvider *provider)
+{
+	return VERSION;
 }
 
 /* open_connection handler for the GdaOracleProvider class */
@@ -416,6 +428,26 @@ gda_oracle_provider_close_connection (GdaServerProvider *provider, GdaConnection
 	g_object_set_data (G_OBJECT (cnc), OBJECT_DATA_ORACLE_HANDLE, NULL);
 
 	return TRUE;
+}
+
+/* get_server_version handler for the GdaOracleProvider class */
+static const gchar *
+gda_oracle_provider_get_server_version (GdaServerProvider *provider,
+					GdaConnection *cnc)
+{
+	GdaOracleConnectionData *priv_data;
+	static gchar version[512];
+
+	/* Get the OracleConnectionData */
+	priv_data = g_object_get_data (G_OBJECT (cnc), OBJECT_DATA_ORACLE_HANDLE);
+	if (!priv_data) {
+		gda_connection_add_error_string (cnc, _("Invalid Oracle handle"));
+		return NULL;
+	}
+
+	OCIServerVersion (priv_data->hservice, priv_data->herr, version, 255, OCI_HTYPE_SVCCTX);
+
+	return (const gchar *) version;
 }
 
 /* 
