@@ -1,3 +1,35 @@
+2005-01-19  Bas Driessen <bas.driessen@xobas.com>
+
+	* libgda/gda-data-model-hash.c:
+	introduce row mapping array (row_map) to keep track
+	of active rows in a data-model that are represented
+	by a hash table. Array added to struct
+	_GdaDataModelHashPrivate.
+	(gda_data_model_hash_remove_row): implemented
+	remove method function.
+	(gda_data_model_hash_append_row):
+	add new mapping entry to array when new row is
+	appended to data-model.
+	(gda_data_model_hash_get_row):
+	get row according to mapping.
+	(gda_data_model_hash_get_n_rows):
+	return active number of rows in data-model or -1
+	if not initialized.
+	(gda_data_model_hash_clear):
+	initialize array upon (re)creation of hash table.
+	(gda_data_model_hash_init):
+	initialize array pointer and hash row count.
+	(gda_data_model_hash_finalize):
+	free array when no longer needed.
+
+	* providers/postgres/gda-postgres-recordset.c
+	(gda_postgres_recordset_remove_row):
+	implemented new method for data-model.
+	(gda_postgres_recordset_get_n_rows):
+	return active number of data-model rows.
+	(gda_postgres_recordset_get_row):
+	correct call to parent class function.
+
 2005-01-15  Rodrigo Moya <rodrigo@gnome-db.org>
 
 	* configure.in: include version number in AC_PROG_INTLTOOL.
