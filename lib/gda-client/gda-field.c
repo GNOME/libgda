@@ -212,10 +212,25 @@ gda_string_2_fieldtype (gchar * type)
 	return (-1);
 }
 
+/**
+ * gda_stringify_value
+ * @bfr: buffer where the string will be copied.
+ * @maxlen: maximum length of @bfr.
+ * @f: a #GdaField object.
+ *
+ * Converts the value stored on the given #GdaField object
+ * into a human-readable string. You can either pass it an
+ * existing buffer (@bfr) or pass it NULL as the first
+ * parameter, in which case it will return a newly allocated
+ * string containing the value.
+ *
+ * Returns: a pointer to @bfr or to a newly allocated string,
+ * which should be g_free's when no longer needed.
+ */
 gchar *
 gda_stringify_value (gchar * bfr, gint maxlen, GdaField * f)
 {
-	gchar *retval = 0;
+	gchar *retval = NULL;
 	gchar tmp[40];
 	struct tm stm;
 
@@ -246,9 +261,9 @@ gda_stringify_value (gchar * bfr, gint maxlen, GdaField * f)
 		{
 			gchar *retstr;
 			if (gda_field_get_boolean_value (f))
-				retstr = _("TRUE");
+				retstr = _("true");
 			else
-				retstr = _("FALSE");
+				retstr = _("false");
 
 			if (bfr)
 				retval = strncpy (bfr, retstr, maxlen);
@@ -267,17 +282,15 @@ gda_stringify_value (gchar * bfr, gint maxlen, GdaField * f)
 						 _length + 1);
 				len = f->real_value->_u.v._u.lvb._length;
 			}
-			copylen =
-				min (len, f->real_value->_u.v._u.lvb._length);
-			fprintf (stderr, "GDA_TypeVarbin: Copying %d bytes\n",
-				 copylen);
-			memcpy (retval, f->real_value->_u.v._u.lvb._buffer,
-				copylen);
+			copylen = min (len, f->real_value->_u.v._u.lvb._length);
+			gda_log_message ("GDA_TypeVarbin: Copying %d bytes\n", copylen);
+			memcpy (retval, f->real_value->_u.v._u.lvb._buffer, copylen);
 			retval[len] = '\0';
 		}
 		break;
-	case GDA_TypeLongvarchar:
-	case GDA_TypeVarchar:
+	case GDA_TypeLongvarchar :
+	case GDA_TypeVarchar :
+	case GDA_TypeChar :
 		if (!bfr) {
 			if (f->real_value->_u.v._u.lvc != NULL)
 				retval = g_strdup (f->real_value->_u.v._u.lvc);
@@ -307,18 +320,6 @@ gda_stringify_value (gchar * bfr, gint maxlen, GdaField * f)
 			maxlen = 20;
 		}
 		g_snprintf (retval, maxlen, "%d", f->real_value->_u.v._u.si);
-		break;
-	case GDA_TypeChar:
-		if (!bfr)
-			retval = g_strdup (f->real_value->_u.v._u.lvc);
-		else {
-			strncpy (retval, f->real_value->_u.v._u.lvc,
-				 min (maxlen,
-				      strlen (f->real_value->_u.v._u.lvc)));
-			retval[min
-			       (maxlen,
-				strlen (f->real_value->_u.v._u.lvc))] = '\0';
-		}
 		break;
 	case GDA_TypeDecimal:
 	case GDA_TypeNumeric:

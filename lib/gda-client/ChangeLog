@@ -1,5 +1,7 @@
 2001-10-07  Rodrigo Moya <rodrigo@gnome-db.org>
 
+	* gda-field.c (gda_stringify_value): treat GDA_TypeChar as a string
+
 	* Makefile.am: install headers in version-based directory
 
 2001-09-13  Rodrigo Moya <rodrigo@gnome-db.org>
