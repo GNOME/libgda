@@ -466,7 +466,7 @@ gda_sybase_process_row_result (GdaConnection           *cnc,
 // for processing a single ct_results() step.
 // 
 // Therefore it may also return no result, e.g. if the resulttype is
-// CS_CMD_*, i.e. we are processing a command with no query results.
+// CS_CMD_DONE, i.e. we finished processing a command.
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 GdaDataModel *
 gda_sybase_recordset_new (GdaConnection *cnc,
@@ -528,8 +528,8 @@ gda_sybase_recordset_new (GdaConnection *cnc,
 			}
 			break;
 		case CS_CMD_FAIL:
-			sybase_debug_msg (_("%s returned CS_CMD_FAIL"),
-			                  "ct_results()");
+			sybase_debug_msg (_("%s returned %s"),
+			                  "ct_results()", "CS_CMD_FAIL");
 			break;
 	}
 
