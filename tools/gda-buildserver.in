@@ -9,9 +9,8 @@ shell=@shell@
 GNOME_CONFIG=@GNOME_CONFIG@
 
 TEMPLATES_DIR="${datadir}/gnome-db/templates"
-TMPL_C_FILES="gda-srv-command.c gda-srv-connection.c gda-srv-error.c gda-srv-field.c gda-srv-recordset.c main-srv.c"
-TMPL_H_FILES="gda-srv-command.h gda-srv-connection.h gda-srv-error.h gda-srv-field.h gda-srv-recordset.h"
-TMPL_FIXED_FILES="gda-srv.c gda-srv.h"
+TMPL_C_FILES="gda-srv-command.c gda-srv-connection.c gda-srv-recordset.c main-srv.c"
+TMPL_H_FILES="gda-srv.h"
 
 usage()
 {
@@ -35,8 +34,10 @@ buildskels()
 			exit 1
 		fi
 	done
+	mv gda-srv.h gda-${ARG_PROVIDER}.h
+
 	echo The following files have been created:
-    echo ${TMPL_C_FILES} ${TMPL_H_FILES}
+    echo ${TMPL_C_FILES} gda-${ARG_PROVIDER}.h
     echo
 	echo Now fill the gaps commented on these files
 }
@@ -91,29 +92,12 @@ done
 
 # Set variables
 INCLUDE_FLAGS="-I${prefix}/include/gda @GNOME_INCLUDEDIR@"
-IDL_FLAGS=`${GNOME_CONFIG} --cflags idl`
 LIBS_FLAGS="@GNORBA_LIBS@ @INTLLIBS@ -L${prefix}/lib -lgda-server -lgda-common"
-GENERATED_C_FILES="gda-skels.c gda-common.c"
-GENERATED_O_FILES="gda-skels.o gda-common.o"
-GENERATED_FILES="$GENERATED_C_FILES gda-stubs.c gda.h"
-
-# Generate and compile ORBit files
-if ! `orbit-idl -I${datadir}/idl ${IDL_FLAGS} ${datadir}/idl/gda.idl`
-then
-	echo "$0: error compiling IDL files"
-	exit 1
-fi
-for f in ${GENERATED_C_FILES}
-do
-	if ! `$CC ${INCLUDE_FLAGS} -c $f`
-	then
-		echo "$0: error compiling $f"
-		exit 1
-	fi
-done
 
 # Build the server
-if ! `$CC -o ${target} ${obj_files} ${GENERATED_O_FILES} ${files} ${LIBS_FLAGS}`
+cmd="$CC ${INCLUDE_FLAGS} -o ${target} ${obj_files} ${files} ${LIBS_FLAGS}"
+echo $cmd
+if ! `$cmd`
 then
 	echo "$0: error running $_"
 	exit 1
