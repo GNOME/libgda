@@ -3,8 +3,8 @@ bin_PROGRAMS = gda-run
 INCLUDES = \
 	-I. \
 	$(LIBGDA_CFLAGS) \
-	-I$(top_builddir)/libgda \
-	-I$(top_srcdir)/libgda
+	-I$(top_builddir) \
+	-I$(top_srcdir)
 
 gda_run_SOURCES = gda-run.c
 gda_run_LDADD = \
